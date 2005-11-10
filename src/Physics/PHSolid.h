@@ -1,8 +1,6 @@
 #ifndef PHSOLID_H
 #define PHSOLID_H
 
-#include <FileIO/FIDocScene.h>
-#include <SceneGraph/SGScene.h>
 #include <Base/TQuaternion.h>
 
 namespace Spr{;

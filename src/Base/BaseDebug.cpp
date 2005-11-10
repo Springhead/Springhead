@@ -1,13 +1,9 @@
-#ifdef _WIN32
- #include <WinBasis/WinBasis.h>
- #pragma hdrstop
-#else
- #include "Base.h"
-#endif
+#include "Base.h"
 #include "StrBufBase.h"
 
 #include <stdio.h>
 #include <iostream>
+#include <windows.h>
 
 namespace Spr {
 
