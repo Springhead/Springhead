@@ -2,7 +2,6 @@
 #define CDCOLLISIONENGINE_H
 
 #pragma once
-#include <SceneGraph/SGBehaviorEngine.h>
 #include <Collision/CDFramePair.h>
 #include <Collision/CDDetectorImp.h>
 #include <WinBasis/WBPreciseTimer.h>

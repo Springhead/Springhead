@@ -1,6 +1,5 @@
 #ifndef CDGEOMETRY_H
 #define CDGEOMETRY_H
-#include <SceneGraph/SGObject.h>
 
 namespace Spr {;
 

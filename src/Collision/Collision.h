@@ -5,8 +5,6 @@
 
 namespace Spr{}
 #include <Base/Base.h>
-#include <FileIO/FIDocScene.h>
-#include <ImpD3D/D3Render.h>
 #include "CDCollisionEngine.h"
 #include "CDConvex.h"
 #include "CDDetectorImp.h"
