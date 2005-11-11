@@ -1,7 +1,5 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #pragma hdrstop
-
-
 using namespace Spr;
 
 int main(int argc, char* argv[]){
@@ -23,4 +21,5 @@ int main(int argc, char* argv[]){
 		std::cout << solid2->GetFramePosition() << std::endl;
 //		std::cout << solid1->GetOrientation() << std::endl;
 	}
+	delete sdk;	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 }
