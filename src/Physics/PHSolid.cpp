@@ -1,42 +1,22 @@
 #include "Physics.h"
 #pragma hdrstop
+#include <float.h>
 
 using namespace PTM;
 namespace Spr{
 
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
-SGOBJECTIMP(PHSolid, SGObject);
+OBJECTIMP(PHSolid, Object);
+
 PHSolid::PHSolid(){
 	mass = 1.0;
 	inertia = Matrix3d::Unit();
-//	integrationMode = PHINT_ANALYTIC;
 	integrationMode = PHINT_SIMPLETIC;
 }
-bool PHSolid::AddChildObject(SGObject* o, SGScene* s){
-	if (DCAST(SGFrame, o)){
-		frame = (SGFrame*)o;
-		return true;
-	}
-	return false;
-}
-size_t PHSolid::NReferenceObjects(){
-	if (frame) return 1;
-	return 0;
-}
-SGObject* PHSolid::ReferenceObject(size_t i){
-	if (i != 0) return NULL;
-	return frame;
-}
-/*inline void Rotate(Quaterniond& quat, const Vec3d& drot){
-	double norm = drot.norm();
-	if(norm > 1.0e-10){
-		quat = Quaterniond::Rot(norm, drot) * quat;
-		quat.unitize();
-	}
-}*/
 
-void PHSolid::Step(SGScene* s){
+void PHSolid::Step(){
+	PHScene* s = ACAST(PHScene, scene);
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
 #ifdef _DEBUG
@@ -153,16 +133,6 @@ void PHSolid::Step(SGScene* s){
 		
 		break;
 	}
-	Matrix3f rot;
-	quat.to_matrix(rot);
-	frame->SetRotation(rot);
-	double loss = s->GetVelocityLossPerStep();
-	velocity *= loss;
-	angVelocity *= loss;
-}
-
-void PHSolid::Loaded(SGScene* scene){
-	quat.from_matrix(frame->GetRotation());
 }
 
 void PHSolid::AddForce(Vec3d f)
@@ -171,7 +141,7 @@ void PHSolid::AddForce(Vec3d f)
 }
 
 void PHSolid::AddForce(Vec3d f, Vec3d r){
-	torque += (r - frame->GetPosture() * center) ^ f;
+	torque += (r - (quat*center+pos)) ^ f;
 	force += f;
 }
 
@@ -188,20 +158,20 @@ void PHSolid::ClearForce(){
 //----------------------------------------------------------------------------
 //	PHSolverBase
 //
-SGOBJECTIMPABST(PHSolverBase, SGBehaviorEngine);
+OBJECTIMPABST(PHSolverBase, PHEngine);
 
 //----------------------------------------------------------------------------
 //	PHSolidContainer
 //
-SGOBJECTIMP(PHSolidContainer, PHSolverBase);
-bool PHSolidContainer::AddChildObject(SGObject* o, SGScene* s){
+OBJECTIMP(PHSolidContainer, PHSolverBase);
+bool PHSolidContainer::AddChildObject(Object* o, PHScene* s){
 	if (DCAST(PHSolid, o)){
 		solids.push_back((PHSolid*)o);
 		return true;
 	}
 	return false;
 }
-bool PHSolidContainer::DelChildObject(SGObject* o, SGScene* s){
+bool PHSolidContainer::DelChildObject(Object* o, PHScene* s){
 	PHSolid* so = DCAST(PHSolid, o);
 	if (so){
 		solids.Erase(so);
@@ -210,9 +180,9 @@ bool PHSolidContainer::DelChildObject(SGObject* o, SGScene* s){
 	return false;
 }
 
-void  PHSolidContainer::Step(SGScene* s){
+void  PHSolidContainer::Step(){
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it){
-		(*it)->Step(s);
+		(*it)->Step();
 	}
 }
 void PHSolidContainer::ClearForce(){
@@ -221,148 +191,15 @@ void PHSolidContainer::ClearForce(){
 	}
 }
 
-void  PHSolidContainer::Loaded(SGScene* scene){
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it){
-		(*it)->Loaded(scene);
-	}
-}
-
-class PHSolidState: public SGBehaviorState{
-public:
-	Vec3d pos;
-	Quaterniond ori;
-	Vec3d vel;
-	Vec3d angVel;
-	Vec3d force;
-	Vec3d torque;
-};
-void PHSolid::LoadState(const SGBehaviorStates& states){
-	PHSolidState* state = DCAST(PHSolidState, states.GetNext());
-	assert(state);
-	SetFramePosition( state->pos );
-	SetOrientation( state->ori );
-	SetVelocity( state->vel);
-	SetAngularVelocity( state->angVel);
-	SetForce( state->force);
-	SetTorque( state->torque);
-}
-void PHSolid::SaveState(SGBehaviorStates& states) const{
-	UTRef<PHSolidState> state = new PHSolidState;
-	states.push_back(state);
-	state->pos = GetFramePosition();
-	state->ori = GetOrientation();
-	state->vel = GetVelocity();
-	state->angVel = GetAngularVelocity();
-	state->force = GetForce();
-	state->torque = GetTorque();
-}
-
-
-
-class PHSolidContainerState: public SGBehaviorState, public std::vector<PHSolidState>{
-public:
-	SGOBJECTDEF(PHSolidContainerState);
-};
-SGOBJECTIMP(PHSolidContainerState, SGBehaviorState);
-
-void PHSolidContainer::LoadState(const SGBehaviorStates& states){
-	PHSolidContainerState* pState = DCAST(PHSolidContainerState, states.GetNext());
-	assert(pState);
-	PHSolidContainerState& state = *pState;
-	for(unsigned i=0; i<state.size(); ++i){
-		solids[i]->SetFramePosition( state[i].pos );
-		solids[i]->SetOrientation( state[i].ori );
-		solids[i]->SetVelocity( state[i].vel);
-		solids[i]->SetAngularVelocity( state[i].angVel);
-		solids[i]->SetForce( state[i].force);
-		solids[i]->SetTorque( state[i].torque);
-	}
-}
-void PHSolidContainer::SaveState(SGBehaviorStates& states) const{
-	UTRef<PHSolidContainerState> state = new PHSolidContainerState;
-	states.push_back(state);
-	for(PHSolids::const_iterator it = solids.begin(); it != solids.end(); ++it){
-		state->push_back(PHSolidState());
-		state->back().pos = (*it)->GetFramePosition();
-		state->back().ori = (*it)->GetOrientation();
-		state->back().vel = (*it)->GetVelocity();
-		state->back().angVel = (*it)->GetAngularVelocity();
-		state->back().force = (*it)->GetForce();
-		state->back().torque = (*it)->GetTorque();
-	}
-}
-
 //----------------------------------------------------------------------------
 //	PHSolidClearForce
 //
-SGOBJECTIMP(PHSolidClearForce, SGBehaviorEngine);
-void  PHSolidClearForce::Step(SGScene* s){
+OBJECTIMP(PHSolidClearForce, PHEngine);
+void  PHSolidClearForce::Step(){
 	for(PHSolvers::iterator it = solvers.begin(); it!=solvers.end(); ++it){
 		(*it)->ClearForce();
 	}
 }
-
-class PHSolidContainerLoader:public FIObjectLoader<PHSolidContainer>{
-	virtual bool LoadData(FILoadScene* ctx, PHSolidContainer* sc){
-		UTRef<PHSolidClearForce> clearForce;
-		ctx->scene->GetBehaviors().Find(clearForce);
-		if(!clearForce){
-			clearForce= new PHSolidClearForce;
-			ctx->scene->GetBehaviors().Add(clearForce);
-		}
-		clearForce->solvers.push_back(sc);
-		return true;
-	}
-};
-
-class PHSolidContainerSaver:public FIBaseSaver{
-public:
-	virtual UTString GetType() const{ return "PHSolidContainer"; }
-	virtual void Save(FISaveScene* ctx, SGObject* arg){
-		PHSolidContainer* sc = (PHSolidContainer*)arg;
-		FIDocNodeBase* doc = ctx->CreateDocNode("SolidContainer", sc);
-		ctx->docs.back()->AddChild(doc);
-		ctx->docs.push_back(doc);
-		for(PHSolids::iterator it = sc->solids.begin(); it != sc->solids.end(); ++it){
-			ctx->SaveRecursive(*it);
-		}
-		ctx->docs.pop_back();
-	}
-};
-DEF_REGISTER_BOTH(PHSolidContainer);
-
-class PHSolidLoader:public FIObjectLoader<PHSolid>{
-	virtual bool LoadData(FILoadScene* ctx, PHSolid* s){
-		SolidInfo info;
-		ctx->docs.Top()->GetWholeData(info);
-		s->SetMass				(info.mass);
-		s->SetInertia			(info.inertia);
-		s->SetCenter			(info.center);
-		s->SetVelocity			(info.velocity);
-		s->SetAngularVelocity	(info.angularVelocity);
-		return true;
-	}
-};
-
-class PHSolidSaver:public FIBaseSaver{
-	virtual UTString GetType() const{return "PHSolid";}
-	virtual void Save(FISaveScene* ctx, SGObject* arg){
-		PHSolid* s = (PHSolid*)arg;
-		FIDocNodeBase* doc = ctx->CreateDocNode("Solid", s);
-		ctx->docs.back()->AddChild(doc);
-		SolidInfo info;
-		info.mass				= (float)s->GetMass();
-		info.inertia			= s->GetInertia();
-		info.velocity			= s->GetVelocity();
-		info.angularVelocity	= s->GetAngularVelocity();
-		info.center				= s->GetCenter();
-		doc->SetWholeData(info);
-		if (s->GetFrame()){
-			doc->AddChild(ctx->CreateDocNode("REF", s->GetFrame()));
-		}
-	}
-};
-DEF_REGISTER_BOTH(PHSolid);
 
 
 }

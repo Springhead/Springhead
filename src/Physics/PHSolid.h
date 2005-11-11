@@ -1,11 +1,12 @@
 #ifndef PHSOLID_H
 #define PHSOLID_H
 
-#include <Base/TQuaternion.h>
+#include <Springhead.h>
+#include <Foundation/Object.h>
+#include <Physics/PHScene.h>
+#include <Physics/PHEngine.h>
 
 namespace Spr{;
-
-class SGFrame;
 
 enum PHIntegrationMode{
 		PHINT_NONE,			//積分しない
@@ -18,7 +19,7 @@ enum PHIntegrationMode{
 };
 
 ///	剛体
-class PHSolid : public SGObject{
+class PHSolid : public Object, public PHSolidIf{
 	Vec3d	_angvel[4];			///<	数値積分係数
 	Vec3d	_angacc[4];
 protected:
@@ -30,12 +31,8 @@ protected:
 	Vec3d		velocity;		///<	速度			(World)
 	Vec3d		angVelocity;	///<	角速度			(World)
 	Vec3d		center;			///<	質量中心の位置	(Local..frameのposture系)
+	Vec3d		pos;			///<	位置			(World)
 	Quaterniond quat;			///<	向き			(World)
-
-	/**	位置姿勢を表すフレーム．普通はWorldの直下のフレームを指定する．
-		同じ階層のフレームでなければならない．
-		このフレームには，スケーリングを加えてはならない．	*/
-	UTRef<SGFrame> frame;
 
 	///	積分方式
 	PHIntegrationMode integrationMode;
@@ -49,14 +46,15 @@ protected:
 			(t[2] - (I[1][1] - I[0][0]) * w.X() * w.Y()) / I[2][2]);
 	}
 public:
-	SGOBJECTDEF(PHSolid);
+	OBJECTDEF(PHSolid);
+	BASEIMP_OBJECT(Object);
+	void Print(std::ostream& os)const{Object::Print(os);}
 	PHSolid();											///< 構築
 	
-	bool		AddChildObject(SGObject* o, SGScene* s);///< ロード時に使用．
+	bool		AddChildObject(Object* o, PHScene* s);///< ロード時に使用．
 	size_t		NReferenceObjects();					///< 1
-	SGObject*	ReferenceObject(size_t i);				///< フレームを返す．
-	void		Loaded(SGScene* scene);					///< ロード終了時の初期化
-	void		Step(SGScene* s);						///< 時刻を進める．
+	Object*		ReferenceObject(size_t i);				///< フレームを返す．
+	void		Step();									///< 時刻を進める．
 	
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
 	void		AddTorque(Vec3d t){ torque += t; }		///< トルクを加える
@@ -69,8 +67,6 @@ public:
 	void		SetForce(Vec3d f){force = f;}			///< 力を設定する
 	void		SetTorque(Vec3d t){torque = t;}			///< トルクをセットする
 
-	SGFrame*	GetFrame(){ return frame; }				///< フレームの取得
-	void		SetFrame(SGFrame* f){ frame = f; }		///< フレームの設定 @see frame
 	double		GetMass(){return mass;}					///< 質量
 	double		GetMassInv(){return 1.0 / mass;}		///< 質量の逆数
 	void		SetMass(double m){mass = m;}			///< 質量の設定
@@ -92,12 +88,12 @@ public:
 	///	積分方式の設定
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
-	Vec3d		GetFramePosition() const {return frame->GetPosition();}
-	void		SetFramePosition(const Vec3d& p){frame->SetPosition(p);}
-	Vec3d		GetCenterPosition() const {return frame->GetPosture()*center;}
+	Vec3d		GetFramePosition() const {return pos;}
+	void		SetFramePosition(const Vec3d& p){pos = p;}
+	Vec3d		GetCenterPosition() const {return quat*center + pos;}
 														///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){		///< 重心位置の設定
-		frame->SetPosition(p - frame->GetRotation()*center);
+		pos = p - quat*center;
 	}
 
 	///	向きの取得
@@ -105,7 +101,6 @@ public:
 	///	向きの設定
 	void		SetRotation(const Matrix3d& r){
 		quat.from_matrix(r);
-		frame->SetRotation(r);
 	}
 
 	///	向きの取得
@@ -115,7 +110,6 @@ public:
 		quat = q;
 		Matrix3f m;
 		quat.to_matrix(m);
-		frame->SetRotation(m);
 	}
 
 	///	質量中心の速度の取得
@@ -133,10 +127,6 @@ public:
 	///	ローカルフレームから見た，剛体の質量中心位置の取得
 	void		SetCenter(const Vec3d& c){center = c;}		
 
-	///	状態の読み出し
-	virtual void LoadState(const SGBehaviorStates& states);
-	///	状態の保存
-	virtual void SaveState(SGBehaviorStates& states) const;
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{
@@ -159,47 +149,42 @@ public:
 };
 
 ///	Solidの積分を行うクラスのベース
-class PHSolverBase:public SGBehaviorEngine{
-	SGOBJECTDEFABST(PHSolverBase);
+class PHSolverBase:public PHEngine{
+	OBJECTDEFABST(PHSolverBase);
 public:
 	virtual void ClearForce()=0;
 };
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHSolverBase{
-	SGOBJECTDEF(PHSolidContainer);
+	OBJECTDEF(PHSolidContainer);
 public:
 	PHSolids solids;
-	bool AddChildObject(SGObject* o, SGScene* s);
-	bool DelChildObject(SGObject* o, SGScene* s);
+	bool AddChildObject(Object* o, PHScene* s);
+	bool DelChildObject(Object* o, PHScene* s);
 	///
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
 	///	速度→位置、加速度→速度の積分
-	virtual void Step(SGScene* s);
+	virtual void Step();
 	///	剛体にかかった力のクリア
 	virtual void ClearForce();
 	
-	virtual void Loaded(SGScene* scene);
-	virtual void Clear(SGScene* s){ solids.clear(); }
+	virtual void Clear(PHScene* s){ solids.clear(); }
 	///	所有しているsolidの数
 	virtual size_t NChildObjects(){ return solids.size(); }
 	///	所有しているsolid
-	virtual SGObject* ChildObject(size_t i){ return solids[i]; }
+	virtual Object* ChildObject(size_t i){ return solids[i]; }
 
-	///	状態の読み出し
-	virtual void LoadState(const SGBehaviorStates& states);
-	///	状態の保存
-	virtual void SaveState(SGBehaviorStates& states) const;
 };
 
 /**	Solidの力をクリアするクラス	*/
-class PHSolidClearForce:public SGBehaviorEngine{
-	SGOBJECTDEF(PHSolidClearForce);
+class PHSolidClearForce:public PHEngine{
+	OBJECTDEF(PHSolidClearForce);
 public:
 	typedef std::vector< UTRef<PHSolverBase> > PHSolvers;
 	PHSolvers solvers;
 	///	クリアする
-	virtual void Step(SGScene* s);
+	virtual void Step();
 	virtual int GetPriority() const { return SGBP_CLEARFORCE; }
 };
 
