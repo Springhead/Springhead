@@ -19,20 +19,11 @@ enum PHIntegrationMode{
 };
 
 ///	剛体
-class PHSolid : public Object, public PHSolidIf{
+class PHSolid : public Object, public PHSolidDesc, public PHSolidIf{
 	Vec3d	_angvel[4];			///<	数値積分係数
 	Vec3d	_angacc[4];
 protected:
-	double		mass;			///<	質量
-	Matrix3d	inertia;		///<	慣性テンソル
 	Matrix3d	inertia_inv;
-	Vec3d		force;			///<	力				(World)
-	Vec3d		torque;			///<	トルク			(World)
-	Vec3d		velocity;		///<	速度			(World)
-	Vec3d		angVelocity;	///<	角速度			(World)
-	Vec3d		center;			///<	質量中心の位置	(Local..frameのposture系)
-	Vec3d		pos;			///<	位置			(World)
-	Quaterniond quat;			///<	向き			(World)
 
 	///	積分方式
 	PHIntegrationMode integrationMode;
@@ -49,7 +40,7 @@ public:
 	OBJECTDEF(PHSolid);
 	BASEIMP_OBJECT(Object);
 	void Print(std::ostream& os)const{Object::Print(os);}
-	PHSolid();											///< 構築
+	PHSolid(const PHSolidDesc& desc=PHSolidDesc());
 	
 	bool		AddChildObject(Object* o, PHScene* s);///< ロード時に使用．
 	size_t		NReferenceObjects();					///< 1
@@ -88,28 +79,28 @@ public:
 	///	積分方式の設定
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
-	Vec3d		GetFramePosition() const {return pos;}
-	void		SetFramePosition(const Vec3d& p){pos = p;}
-	Vec3d		GetCenterPosition() const {return quat*center + pos;}
+	Vec3d		GetFramePosition() const {return position;}
+	void		SetFramePosition(const Vec3d& p){position = p;}
+	Vec3d		GetCenterPosition() const {return orientation*center + position;}
 														///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){		///< 重心位置の設定
-		pos = p - quat*center;
+		position = p - orientation*center;
 	}
 
 	///	向きの取得
-	Matrix3d	GetRotation() const { Matrix3d rv; quat.to_matrix(rv); return rv; }
+	Matrix3d	GetRotation() const { Matrix3d rv; orientation.to_matrix(rv); return rv; }
 	///	向きの設定
 	void		SetRotation(const Matrix3d& r){
-		quat.from_matrix(r);
+		orientation.from_matrix(r);
 	}
 
 	///	向きの取得
-	Quaterniond GetOrientation() const {return quat;}
+	Quaterniond GetOrientation() const {return orientation;}
 	///	向きの設定
 	void		SetOrientation(const Quaterniond& q){
-		quat = q;
+		orientation = q;
 		Matrix3f m;
-		quat.to_matrix(m);
+		orientation.to_matrix(m);
 	}
 
 	///	質量中心の速度の取得
