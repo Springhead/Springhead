@@ -23,9 +23,13 @@ protected:
 	double timeStep;
 	/// 積分した回数
 	unsigned int count;
+	///	元のSDK
+	PHSdkIf* sdk;
 public:
 	///	コンストラクタ
 	PHScene();
+	PHScene(PHSdkIf* s);
+	void Init();
 	///	デストラクタ
 	~PHScene(){Clear();}
 

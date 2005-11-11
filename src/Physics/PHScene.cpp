@@ -2,6 +2,7 @@
 #include <FLOAT.H>
 #include <Springhead.h>
 #include <Foundation/Object.h>
+#include "PHSdk.h"
 #include "PHScene.h"
 #include "PHSolid.h"
 
@@ -14,8 +15,14 @@ namespace Spr{;
 //	PHScene
 OBJECTIMP(PHScene, Scene);
 
-
+PHScene::PHScene(PHSdkIf* s){
+	Init();
+	sdk = sdk;
+}
 PHScene::PHScene(){
+	Init();
+}
+void PHScene::Init(){
 	timeStep = 0.005;
 	Scene::Clear();
 	PHSolidContainer* sc = new PHSolidContainer;
@@ -24,6 +31,7 @@ PHScene::PHScene(){
 	cf->solvers.push_back(sc);
 	engines.Add(cf);
 }
+
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	PHSolid* s = new PHSolid(desc);

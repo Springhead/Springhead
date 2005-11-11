@@ -49,8 +49,8 @@ public:
 	const char* GetNameSpace() const { return base::GetNameSpace(); }	\
 	void SetName(const char* n) { base::SetName(n); }					\
 	int AddRef(){return base::AddRef();}								\
-	int DelRef(){return base::AddRef();}								\
-	int RefCount(){return base::AddRef();}								\
+	int DelRef(){return base::DelRef();}								\
+	int RefCount(){return base::RefCount();}							\
 
 
 	///	デバッグ用の表示
