@@ -36,6 +36,7 @@ public:
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 
+	void SetGravity(const Vec3d& g);
 
 	/// 積分ステップを返す
 	double GetTimeStep()const{return timeStep;}

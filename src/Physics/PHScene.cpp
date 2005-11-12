@@ -5,6 +5,7 @@
 #include "PHSdk.h"
 #include "PHScene.h"
 #include "PHSolid.h"
+#include "PHForceField.h"
 
 #pragma hdrstop
 
@@ -17,7 +18,7 @@ OBJECTIMP(PHScene, Scene);
 
 PHScene::PHScene(PHSdkIf* s){
 	Init();
-	sdk = sdk;
+	sdk = s;
 }
 PHScene::PHScene(){
 	Init();
@@ -30,6 +31,8 @@ void PHScene::Init(){
 	PHSolidClearForce* cf = new PHSolidClearForce;
 	cf->solvers.push_back(sc);
 	engines.Add(cf);
+	PHGravityEngine* ge = new PHGravityEngine;
+	engines.Add(ge);
 }
 
 
@@ -45,6 +48,13 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 PHSolidIf* PHScene::CreateSolid(){
 	PHSolidDesc def;
 	return CreateSolid(def);
+}
+
+void PHScene::SetGravity(const Vec3d& g){
+	//GravityEngine‚ª–³‚¯‚ê‚Îì¬
+	PHGravityEngine* ge;
+	engines.Find(ge);
+
 }
 
 void PHScene::Clear(){
