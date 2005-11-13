@@ -7,8 +7,6 @@ namespace Spr{;
 struct PHSolidDesc{
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル
-	Vec3d		force;			///<	力				(World)
-	Vec3d		torque;			///<	トルク			(World)
 	Vec3d		velocity;		///<	速度			(World)
 	Vec3d		angVelocity;	///<	角速度			(World)
 	Vec3d		center;			///<	質量中心の位置	(Local..frameのposture系)

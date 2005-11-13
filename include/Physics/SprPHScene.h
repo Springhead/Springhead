@@ -21,10 +21,6 @@ struct PHSceneIf : public ObjectIf{
 	virtual void SetCount(unsigned c)=0;
 	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ
 	virtual void Step()=0;
-	///	シーンの時刻を進める（力のクリア）
-	virtual void ClearForce()=0;
-	///	シーンの時刻を進める（力の生成）
-	virtual void GenerateForce()=0;
 	///	シーンの時刻を進める（力と速度を積分して，速度と位置を更新）
 	virtual void Integrate()=0;
 	///	シーンを空にする．

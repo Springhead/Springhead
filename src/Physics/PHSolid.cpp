@@ -15,6 +15,11 @@ PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
 }
 
 void PHSolid::Step(){
+	force = nextForce;
+	torque = nextTorque;
+	nextForce.clear();
+	nextTorque.clear();
+
 	PHScene* s = ACAST(PHScene, scene);
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
@@ -133,15 +138,16 @@ void PHSolid::Step(){
 		break;
 	}
 }
-
-void PHSolid::AddForce(Vec3d f)
-{
-	force += f;
+void PHSolid::AddTorque(Vec3d t){
+	nextTorque += t; 
+}
+void PHSolid::AddForce(Vec3d f){
+	nextForce += f;
 }
 
 void PHSolid::AddForce(Vec3d f, Vec3d r){
-	torque += (r - (orientation*center+position)) ^ f;
-	force += f;
+	nextTorque += (r - (orientation*center+position)) ^ f;
+	nextForce += f;
 }
 
 /*void PHSolid::AddForceLocal(Vec3d f, Vec3d r){
@@ -149,20 +155,10 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 	force += f;
 }*/
 
-void PHSolid::ClearForce(){
-	force.clear();
-	torque.clear();
-}
-
-//----------------------------------------------------------------------------
-//	PHSolverBase
-//
-OBJECTIMPABST(PHSolverBase, PHEngine);
-
 //----------------------------------------------------------------------------
 //	PHSolidContainer
 //
-OBJECTIMP(PHSolidContainer, PHSolverBase);
+OBJECTIMP(PHSolidContainer, PHEngine);
 bool PHSolidContainer::AddChildObject(Object* o, PHScene* s){
 	if (DCAST(PHSolid, o)){
 		solids.push_back((PHSolid*)o);
@@ -182,21 +178,6 @@ bool PHSolidContainer::DelChildObject(Object* o, PHScene* s){
 void  PHSolidContainer::Step(){
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it){
 		(*it)->Step();
-	}
-}
-void PHSolidContainer::ClearForce(){
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it){
-		(*it)->ClearForce();
-	}
-}
-
-//----------------------------------------------------------------------------
-//	PHSolidClearForce
-//
-OBJECTIMP(PHSolidClearForce, PHEngine);
-void  PHSolidClearForce::Step(){
-	for(PHSolvers::iterator it = solvers.begin(); it!=solvers.end(); ++it){
-		(*it)->ClearForce();
 	}
 }
 

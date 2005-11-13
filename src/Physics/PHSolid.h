@@ -23,6 +23,10 @@ class PHSolid : public Object, public PHSolidDesc, public PHSolidIf{
 	Vec3d	_angvel[4];			///<	数値積分係数
 	Vec3d	_angacc[4];
 protected:
+	Vec3d		force;			///<	力				(World)
+	Vec3d		torque;			///<	トルク			(World)
+	Vec3d		nextForce;
+	Vec3d		nextTorque;
 	Matrix3d	inertia_inv;
 
 	///	積分方式
@@ -48,15 +52,12 @@ public:
 	void		Step();									///< 時刻を進める．
 	
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
-	void		AddTorque(Vec3d t){ torque += t; }		///< トルクを加える
+	void		AddTorque(Vec3d t);						///< トルクを加える
 	void		AddForce(Vec3d f, Vec3d r);				///< 力を 位置r(World系) に加える
 	//混乱するしGravityEngineしか使ってなかったので廃棄候補
 	//void		AddForceLocal(Vec3d f, Vec3d r);		///< 力を 位置r(Local系) に加える
-	void		ClearForce();							///< 力とトルクをクリア
 	Vec3d		GetForce() const {return force;}		///< 加えられた力
 	Vec3d		GetTorque() const {return torque;}		///< 加えられたトルク
-	void		SetForce(Vec3d f){force = f;}			///< 力を設定する
-	void		SetTorque(Vec3d t){torque = t;}			///< トルクをセットする
 
 	double		GetMass(){return mass;}					///< 質量
 	double		GetMassInv(){return 1.0 / mass;}		///< 質量の逆数
@@ -139,15 +140,8 @@ public:
 	}
 };
 
-///	Solidの積分を行うクラスのベース
-class PHSolverBase:public PHEngine{
-	OBJECTDEFABST(PHSolverBase);
-public:
-	virtual void ClearForce()=0;
-};
-
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
-class PHSolidContainer:public PHSolverBase{
+class PHSolidContainer:public PHEngine{
 	OBJECTDEF(PHSolidContainer);
 public:
 	PHSolids solids;
@@ -157,8 +151,6 @@ public:
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
-	///	剛体にかかった力のクリア
-	virtual void ClearForce();
 	
 	virtual void Clear(PHScene* s){ solids.clear(); }
 	///	所有しているsolidの数
@@ -166,17 +158,6 @@ public:
 	///	所有しているsolid
 	virtual Object* ChildObject(size_t i){ return solids[i]; }
 
-};
-
-/**	Solidの力をクリアするクラス	*/
-class PHSolidClearForce:public PHEngine{
-	OBJECTDEF(PHSolidClearForce);
-public:
-	typedef std::vector< UTRef<PHSolverBase> > PHSolvers;
-	PHSolvers solvers;
-	///	クリアする
-	virtual void Step();
-	virtual int GetPriority() const { return SGBP_CLEARFORCE; }
 };
 
 struct SolidInfo{

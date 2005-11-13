@@ -28,9 +28,6 @@ void PHScene::Init(){
 	Scene::Clear();
 	PHSolidContainer* sc = new PHSolidContainer;
 	engines.Add(sc);
-	PHSolidClearForce* cf = new PHSolidClearForce;
-	cf->solvers.push_back(sc);
-	engines.Add(cf);
 	PHGravityEngine* ge = new PHGravityEngine;
 	engines.Add(ge);
 }
