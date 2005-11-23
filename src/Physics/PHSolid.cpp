@@ -154,6 +154,11 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 	force += f;
 }*/
 
+
+void PHSolid::AddShape(CDShapeIf* shape){
+	shapes.push_back((CDShape*)shape);
+}
+
 //----------------------------------------------------------------------------
 //	PHSolidContainer
 //

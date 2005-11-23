@@ -5,7 +5,8 @@
 
 namespace Spr {;
 
-class PHShape;
+class CDShape;
+struct CDShapeDesc;
 
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
@@ -26,8 +27,8 @@ protected:
 	unsigned int count;
 	///	元のSDK
 	PHSdkIf* sdk;
-	///	PHShape
-	std::vector< UTRef<PHShape> > shapes;
+	///	CDShape
+	std::vector< UTRef<CDShape> > shapes;
 public:
 	///	コンストラクタ
 	PHScene();
@@ -38,7 +39,7 @@ public:
 
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
-	PHShapeIf* CreateShape(const PHShapeDesc& desc);
+	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 
 	void SetGravity(const Vec3d& g);
 

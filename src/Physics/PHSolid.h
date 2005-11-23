@@ -29,6 +29,8 @@ protected:
 	Vec3d		nextTorque;
 	Matrix3d	inertia_inv;
 
+	std::vector< UTRef<CDShape> > shapes;
+
 	///	積分方式
 	PHIntegrationMode integrationMode;
 
@@ -119,6 +121,7 @@ public:
 	///	ローカルフレームから見た，剛体の質量中心位置の取得
 	void		SetCenter(const Vec3d& c){center = c;}		
 
+	void		AddShape(CDShapeIf* shape);
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{

@@ -80,9 +80,9 @@ void PHScene::Integrate(){
 	count++;
 }
 
-PHShapeIf* PHScene::CreateShape(const PHShapeDesc& desc){
-	if (desc.type == PHShapeDesc::CONVEXMESH){
-		PHConvexMesh* mesh = new PHConvexMesh((const PHConvexMeshDesc&)desc);
+CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
+	if (desc.type == CDShapeDesc::CONVEXMESH){
+		CDConvexMesh* mesh = new CDConvexMesh((const CDConvexMeshDesc&)desc);
 		mesh->SetScene(this);
 		shapes.push_back(mesh);
 		return mesh;
