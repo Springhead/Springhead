@@ -82,10 +82,10 @@ void PHScene::Integrate(){
 
 CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
 	if (desc.type == CDShapeDesc::CONVEXMESH){
-		CDConvexMesh* mesh = new CDConvexMesh((const CDConvexMeshDesc&)desc);
-		mesh->SetScene(this);
-		shapes.push_back(mesh);
-		return mesh;
+		CDShape* s = new CDConvexMesh((const CDConvexMeshDesc&)desc);
+		s->SetScene(this);
+		shapes.push_back(s);
+		return s;
 	}else{
 		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
 		return NULL;

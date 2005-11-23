@@ -8,6 +8,57 @@
 
 namespace Spr{;
 
+///	バウンディングボックスの実装
+class PHBBox{
+	Vec3f bboxCenter;	///<	BBoxの中心(ローカル系)
+	Vec3f bboxExtent;	///<	BBoxの大きさ(ローカル系)
+public:
+	///	バウンディングボックスの設定
+	void SetBBoxCenterExtent(Vec3f c, Vec3f e){
+		bboxCenter = c;
+		bboxExtent = e;
+	}
+	///	バウンディングボックスの設定
+	void SetBBoxMinMax(Vec3f bmin, Vec3f bmax){
+		bboxCenter = (bmin+bmax)*0.5f;
+		bboxExtent = (bmax-bmin)*0.5f;
+	}
+	///	バウンディングボックスの追加
+	void AddBBox(Vec3f bmin, Vec3f bmax){
+		Vec3f bboxMin = GetBBoxMin();
+		Vec3f bboxMax = GetBBoxMax();
+		bboxMin.element_min(bmin);
+		bboxMax.element_max(bmax);
+		SetBBoxMinMax(bboxMin, bboxMax);
+	}
+	///	中心
+	Vec3f GetBBoxCenter(){ return bboxCenter; }
+	///	大きさ
+	Vec3f GetBBoxExtent(){ return bboxExtent; }
+	///	小さい端点
+	Vec3f GetBBoxMin(){ return bboxCenter-bboxExtent; }
+	///	大きい端点
+	Vec3f GetBBoxMax(){ return bboxCenter+bboxExtent; }
+	///	与えられたベクトルとの内積が最大と最小の点
+	void GetSupport(const Vec3f& dir, float& minS, float& maxS){
+		Vec3f ext0( bboxExtent.X(),  bboxExtent.Y(),  bboxExtent.Z());
+		Vec3f ext1(-bboxExtent.X(),  bboxExtent.Y(),  bboxExtent.Z());
+		Vec3f ext2( bboxExtent.X(), -bboxExtent.Y(),  bboxExtent.Z());
+		Vec3f ext3( bboxExtent.X(),  bboxExtent.Y(), -bboxExtent.Z());
+		float d = abs(dir*ext0);
+		float d1 = abs(dir*ext1);
+		if (d < d1) d = d1;
+		float d2 = abs(dir*ext2);
+		if (d < d2) d = d2;
+		float d3 = abs(dir*ext3);
+		if (d < d3) d = d3;
+		float c = dir * bboxCenter;
+		minS = c-d;
+		maxS = c+d;
+	}
+};
+
+
 enum PHIntegrationMode{
 		PHINT_NONE,			//積分しない
 		PHINT_ARISTOTELIAN,	//f = mv
@@ -29,8 +80,6 @@ protected:
 	Vec3d		nextTorque;
 	Matrix3d	inertia_inv;
 
-	std::vector< UTRef<CDShape> > shapes;
-
 	///	積分方式
 	PHIntegrationMode integrationMode;
 
@@ -43,10 +92,16 @@ protected:
 			(t[2] - (I[1][1] - I[0][0]) * w.X() * w.Y()) / I[2][2]);
 	}
 public:
+	CDShapes shapes;
+	PHBBox bbox;
+
 	OBJECTDEF(PHSolid);
 	BASEIMP_OBJECT(Object);
 	void Print(std::ostream& os)const{Object::Print(os);}
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc());
+
+	void CalcBBox();
+	void GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS);
 	
 	bool		AddChildObject(Object* o, PHScene* s);///< ロード時に使用．
 	size_t		NReferenceObjects();					///< 1
@@ -82,28 +137,29 @@ public:
 	///	積分方式の設定
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
-	Vec3d		GetFramePosition() const {return position;}
-	void		SetFramePosition(const Vec3d& p){position = p;}
-	Vec3d		GetCenterPosition() const {return orientation*center + position;}
+	Posed		GetPose() const { return pose; }
+	Vec3d		GetFramePosition() const {return pose.pos;}
+	void		SetFramePosition(const Vec3d& p){pose.pos = p;}
+	Vec3d		GetCenterPosition() const {return pose*center;}
 														///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){		///< 重心位置の設定
-		position = p - orientation*center;
+		pose.pos = p - pose.ori*center;
 	}
 
 	///	向きの取得
-	Matrix3d	GetRotation() const { Matrix3d rv; orientation.to_matrix(rv); return rv; }
+	Matrix3d	GetRotation() const { Matrix3d rv; pose.ori.to_matrix(rv); return rv; }
 	///	向きの設定
 	void		SetRotation(const Matrix3d& r){
-		orientation.from_matrix(r);
+		pose.ori.from_matrix(r);
 	}
 
 	///	向きの取得
-	Quaterniond GetOrientation() const {return orientation;}
+	Quaterniond GetOrientation() const {return pose.ori;}
 	///	向きの設定
 	void		SetOrientation(const Quaterniond& q){
-		orientation = q;
+		pose.ori = q;
 		Matrix3f m;
-		orientation.to_matrix(m);
+		pose.ori.to_matrix(m);
 	}
 
 	///	質量中心の速度の取得

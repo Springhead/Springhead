@@ -5,6 +5,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDShape
-OBJECTIMP(CDShape, CDShape);
+OBJECTIMPABST(CDShape, CDShape);
 
 }

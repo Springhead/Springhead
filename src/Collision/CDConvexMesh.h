@@ -55,14 +55,10 @@ inline std::ostream& operator << (std::ostream& os, const CDFace& f){
 class CDFaces:public std::vector<CDFace>{
 };
 
-
 class CDConvexMesh : public CDConvex, public CDConvexMeshIf{
 public:
 	OBJECTDEF(CDConvexMesh);
 	BASEIMP_OBJECT(Object);
-
-	CDConvexMesh();
-	CDConvexMesh(const CDConvexMeshDesc& desc);
 
 	///	探索開始頂点番号
 	mutable int curPos;
@@ -79,6 +75,9 @@ public:
 	CDFaces faces;
 	///	面(3角形のうち，MergeFace()で残った数)
 	int nPlanes;
+
+	CDConvexMesh();
+	CDConvexMesh(const CDConvexMeshDesc& desc);
 
 	///	ShapeType
 	virtual int ShapeType(){ return CDShapeDesc::CONVEXMESH; }

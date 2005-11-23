@@ -41,6 +41,7 @@ class PHScene;
 class PHEngine:public Object{
 	OBJECTDEF(PHEngine);
 public:
+
 	///	シーンをクリアするときの処理
 	virtual void Clear(){}
 	///	実行順序を決めるプライオリティ値．小さいほど早い

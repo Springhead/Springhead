@@ -41,6 +41,9 @@ CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
 void CDConvexMesh::Print(std::ostream& os) const {
 }
 
+void CalcBBox(Vec3f& bbmin, Vec3f& bbmax){
+	
+}
 
 class CDQhullVtx{
 public:

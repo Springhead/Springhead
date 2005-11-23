@@ -5,3 +5,4 @@
 #include "PHSdk.h"
 #include "PHScene.h"
 #include "PHForceField.h"
+#include "PHPenaltyEngine.h"

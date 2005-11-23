@@ -35,6 +35,7 @@ public:
 	OBJECTDEF(Object);
 
 	virtual void SetScene(Scene*s){ scene = s; }
+	virtual Scene* GetScene(){ return scene; }
 	///	–¼‘O‚ÌŽæ“¾
 	const char* GetName() const { return name.c_str(); }
 	const char* GetNameSpace() const { return nameSpace.c_str(); }

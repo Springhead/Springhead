@@ -337,6 +337,56 @@ typedef TQuaternion<float> Quaternionf;
 ///	double版TQuaternion.
 typedef TQuaternion<double> Quaterniond;
 
+
+template<class ET>
+class TPose:public PTM::TVectorBase<DIMENC(7), TVecDesc<TPose<ET>, ET> >{
+public:
+	typedef TVecDesc<TPose<ET>, ET> desc;
+	typedef PTM::TVectorBase<DIMENC(4), desc> base_type;
+	///	継承されない基本的なメンバの定義.	@see ::DEF_TVECTOR_BASIC_MEMBER
+	DEF_TVECTOR_BASIC_MEMBER(TPose);
+	union{
+		ET data[7];
+		struct{
+			TQuaternion<ET> ori;
+			TVec3<ET> pos;
+		};
+		struct{
+			ET w,x,y,z;
+			ET px, py, pz;
+		};
+	};
+
+	///	要素のアクセス
+	ET& item_impl(size_t i){ return data[i]; }
+	///	要素のアクセス
+	const ET& item_impl(size_t i) const { return data[i]; }
+	///	ストライド
+	size_t stride_impl() const { return 1; }
+
+	///	
+	TVec3<ET> Pos(){ return pos; }
+	TQuaternion<ET> Ori(){ return ori; }
+
+	TPose<ET> inv() const { 
+		TPose<ET> rv;
+		rv.ori = ori.inv();
+		rv.pos = -rv.ori*pos;
+		return rv;
+	}
+
+};
+template <class EP, class EV>
+TVec3<EV> operator * (const TPose<EP>& p, const TVec3<EV>& v){
+	return p.ori*v + v;
 }
 
+
+///	float版TPose.
+typedef TPose<float> Posef;
+///	double版TPose.
+typedef TPose<double> Posed;
+
+
+}
 #endif
