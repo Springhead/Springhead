@@ -1,4 +1,3 @@
-#include <Springhead.h>
 #include "Physics.h"
 #pragma hdrstop
 #include <float.h>

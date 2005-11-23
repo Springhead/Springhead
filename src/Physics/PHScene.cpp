@@ -1,13 +1,8 @@
+#include "Physics.h"
+#pragma hdrstop
 #include <sstream>
 #include <FLOAT.H>
-#include <Springhead.h>
-#include <Foundation/Object.h>
-#include "PHSdk.h"
-#include "PHScene.h"
-#include "PHSolid.h"
-#include "PHForceField.h"
 
-#pragma hdrstop
 
 
 namespace Spr{;
@@ -83,6 +78,18 @@ void PHScene::Integrate(){
 //	_controlfp(_MCW_EM, _MCW_EM);
 //	time += timeStep;
 	count++;
+}
+
+PHShapeIf* PHScene::CreateShape(const PHShapeDesc& desc){
+	if (desc.type == PHShapeDesc::CONVEXMESH){
+		PHConvexMesh* mesh = new PHConvexMesh((const PHConvexMeshDesc&)desc);
+		mesh->SetScene(this);
+		shapes.push_back(mesh);
+		return mesh;
+	}else{
+		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
+		return NULL;
+	}
 }
 
 

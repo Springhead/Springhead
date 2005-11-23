@@ -1,7 +1,5 @@
-#include <Springhead.h>
-#include <Foundation/Object.h>
-#include "PHSdk.h"
-#include "PHScene.h"
+#include "Physics.h"
+#pragma hdrstop
 
 #pragma hdrstop
 //	メモリリークチェッカ
