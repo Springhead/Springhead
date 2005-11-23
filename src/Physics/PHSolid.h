@@ -163,13 +163,6 @@ public:
 
 };
 
-struct SolidInfo{
-	float mass;				///<	質量
-	Matrix3f inertia;		///<	慣性モーメント
-	Vec3f velocity;			///<	速度
-	Vec3f angularVelocity;	///<	角速度
-	Vec3f center;			///<	中心位置
-};
 
 }	//	namespace Spr
 #endif
