@@ -38,9 +38,14 @@ void Display(){
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 	glPushMatrix();
-	glTranslatef(solid2->GetFramePosition().x,
+/*	glTranslatef(solid2->GetFramePosition().x,
 		solid2->GetFramePosition().y,
 		solid2->GetFramePosition().z+3.0);
+*/
+	Affinef af;
+	solid2->GetOrientation().to_matrix(af);
+	af.Pos() = solid2->GetFramePosition();
+	glMultMatrixf(af);
 	glutSolidTeapot(1.0);
 
 	glPopMatrix();
@@ -79,8 +84,8 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }
 void Idle(){
-	solid1->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
-	solid2->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
+	solid1->AddForce(Vec3f(1,0,0), Vec3f(0,2,0));
+	solid2->AddForce(Vec3f(1,0,0), Vec3f(0,2,0));
 	scene->Step();
 	glutPostRedisplay();
 	std::cout << solid1->GetFramePosition();
