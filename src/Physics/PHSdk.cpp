@@ -1,5 +1,4 @@
 #include "Physics.h"
-#pragma hdrstop
 
 #pragma hdrstop
 //	メモリリークチェッカ

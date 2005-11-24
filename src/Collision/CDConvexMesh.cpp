@@ -86,7 +86,9 @@ OBJECTIMP(CDConvexMesh, CDConvex);
 CDConvexMesh::CDConvexMesh(){
 }
 CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
+	material = desc.material;
 	base = desc.vertices;
+	tvtxs.resize(base.size());
 	for(unsigned i=0; i<base.size(); ++i) vtxIDs.push_back(i);
 	CalcFace();
 }

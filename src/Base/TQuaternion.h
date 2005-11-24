@@ -365,8 +365,10 @@ public:
 	size_t stride_impl() const { return 1; }
 
 	///	
-	TVec3<ET> Pos() const { return pos; }
-	TQuaternion<ET> Ori() const { return ori; }
+	TVec3<ET>& Pos() { return pos; }
+	const TVec3<ET>& Pos() const { return pos; }
+	TQuaternion<ET>& Ori() { return ori; }
+	const TQuaternion<ET>& Ori() const { return ori; }
 
 	TPose<ET> inv() const { 
 		TPose<ET> rv;
@@ -377,7 +379,7 @@ public:
 };
 template <class EP, class EV>
 TVec3<EV> operator * (const TPose<EP>& p, const TVec3<EV>& v){
-	return p.ori*v + v;
+	return p.ori*v + p.pos;
 }
 
 template <class EA, class EB>

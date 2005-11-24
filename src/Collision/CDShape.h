@@ -9,6 +9,8 @@ class CDShape : public CDShapeIf, public Object{
 protected:
 	Posef pose;
 public:
+	PHMaterial material;
+
 	OBJECTDEFABST(CDShape);
 	BASEIMP_OBJECT(Object);
 	Posef GetPose() const { return pose; }
