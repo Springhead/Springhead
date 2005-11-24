@@ -10,8 +10,7 @@ struct PHSolidDesc{
 	Vec3d		velocity;		///<	速度			(World)
 	Vec3d		angVelocity;	///<	角速度			(World)
 	Vec3d		center;			///<	質量中心の位置	(Local..frameのposture系)
-	Vec3d		position;		///<	位置			(World)
-	Quaterniond orientation;	///<	向き			(World)
+	Posed		pose;			///<	位置と向き		(World)
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
@@ -50,6 +49,9 @@ struct PHSolidIf : public ObjectIf{
 	virtual Vec3d		GetAngularVelocity() const =0;
 	///	角速度の設定
 	virtual void		SetAngularVelocity(const Vec3d& av)=0;
+
+	///	形状の追加
+	virtual void		AddShape(CDShapeIf* shape)=0;
 };
 
 }	//	namespace Spr

@@ -1,23 +1,27 @@
 #include "Collision.h"
 #pragma hdrstop
 #include "CDDetectorImp.h"
+#include "CDQuickHull3DImp.h"
 #include <float.h>
 
 namespace Spr {;
 bool bUseContactVolume=true;
 
-
-bool CDShapePair::Detect(Posed pose0, Posed pose1, unsigned ct){
+void CDShapePair::UpdateShapePose(Posed pose0, Posed pose1){
+	shapePoseW[0] = pose0 * shape[0]->GetPose();
+	shapePoseW[1] = pose1 * shape[1]->GetPose();
+}
+bool CDShapePair::Detect(unsigned ct){	
 	Vec3d sep;
 	CDConvex* conv[2] = {
 		(CDConvex*)shape[0],
 		(CDConvex*)shape[1],
 	};
 
-	bool r = FindCommonPoint(conv[0], conv[1], pose0, pose1,
+	bool r = FindCommonPoint(conv[0], conv[1], shapePoseW[0], shapePoseW[1],
 		sep, closestPoint[0], closestPoint[1]);
 	if (r){
-		commonPoint = pose0 * closestPoint[0];
+		commonPoint = shapePoseW[0] * closestPoint[0];
 		if (lastContactCount == unsigned(ct-1)){
 			state = CONTINUE;
 		}else{
@@ -34,24 +38,24 @@ bool CDShapePair::Detect(Posed pose0, Posed pose1, unsigned ct){
 #define CONTACT_ANALYSIS_BUFFER	2000
 CDContactAnalysis::Vtxs CDContactAnalysis::vtxs(CONTACT_ANALYSIS_BUFFER);
 CDQHPlanes<CDFace> CDContactAnalysis::planes(CONTACT_ANALYSIS_BUFFER);
-CDFace** CDContactAnalysis::FindIntersection(CDShapePair& cp, Posed* af){
+CDFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 	planes.Clear();
 	vtxs.clear();
 	if (bUseContactVolume){
-		if (DCAST(CDConvexMesh, cp.shape[0]) && DCAST(CDConvexMesh, cp.shape[1])){
+		if (DCAST(CDConvexMesh, cp->shape[0]) && DCAST(CDConvexMesh, cp->shape[1])){
 			isValid = true;
 			CDConvexMesh* poly[2];
-			poly[0] = (CDConvexMesh*) &*cp.shape[0];
-			poly[1] = (CDConvexMesh*) &*cp.shape[1];
+			poly[0] = (CDConvexMesh*) &*cp->shape[0];
+			poly[1] = (CDConvexMesh*) &*cp->shape[1];
 			for(int i=0; i<2; ++i){
-				Posed afw = af[i];
-				afw.Pos() -= cp.commonPoint;
+				Posed afw = cp->shapePoseW[i];
+				afw.Pos() -= cp->commonPoint;
 				for(CDVertexIDs::iterator it = poly[i]->vtxIDs.begin(); it != poly[i]->vtxIDs.end(); ++it){
 					poly[i]->tvtxs[*it] = afw * poly[i]->base[*it];
 				}
 				for(CDFaces::iterator it = poly[i]->faces.begin(); it != poly[i]->faces.begin()+poly[i]->nPlanes; ++it){
 					if (!it->CalcDualVtx(&*poly[i]->tvtxs.begin())){
-						DSTR << "Common Local: " << af[i].inv() * cp.commonPoint << std::endl;
+						DSTR << "Common Local: " << cp->shapePoseW[i].inv() * cp->commonPoint << std::endl;
 						for(unsigned int v=0; v<poly[i]->vtxIDs.size(); ++v){
 							DSTR << poly[i]->Vertex(v) << std::endl;
 						}
@@ -101,7 +105,7 @@ CDFace** CDContactAnalysis::FindIntersection(CDShapePair& cp, Posed* af){
 		i=1;
 		for(CDQHPlane<CDFace>* p = planes.begin; p != planes.end; ++p){
 			if (p->deleted) continue;
-			DSTR << "v"  << i++ << ":\t" << p->normal/p->dist + cp.commonPoint << std::endl;
+			DSTR << "v"  << i++ << ":\t" << p->normal/p->dist + cp->commonPoint << std::endl;
 			Sleep(1);
 		}
 		#endif
@@ -110,9 +114,9 @@ CDFace** CDContactAnalysis::FindIntersection(CDShapePair& cp, Posed* af){
 	}
 	return planes.vtxBegin;
 }
-void CDContactAnalysis::IntegrateNormal(CDShapePair& cp, Posed* af){
-//	Vec3f lastINormal = cp.iNormal;
-	cp.iNormal = Vec3d();
+void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
+//	Vec3f lastINormal = cp->iNormal;
+	cp->iNormal = Vec3d();
 	if (isValid){	//	両方ポリゴンの場合
 		double areaForCenter=0;
 		for(Vtxs::iterator it = vtxs.begin(); it != vtxs.end(); ++it){
@@ -125,10 +129,10 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair& cp, Posed* af){
 				p1 = p2;
 				p2 = face.CommonVtx(i);
 				Vec3d n = (p2-p0) ^ (p1-p0);
-				if (((CDConvexMesh*)&*cp.shape[0])->HasFace(&face)){
-					cp.iNormal += n;
+				if (((CDConvexMesh*)&*cp->shape[0])->HasFace(&face)){
+					cp->iNormal += n;
 				}else{
-					cp.iNormal -= n;
+					cp->iNormal -= n;
 				}
 				areaForCenter += n.norm();
 			}
@@ -138,72 +142,72 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair& cp, Posed* af){
 /*		CDSphere* sp[2];
 		Vec3f center[2];
 		for(int i=0; i<2; ++i){
-			sp[i] = DCAST(CDSphere, cp.shape[i]);
+			sp[i] = DCAST(CDSphere, cp->shape[i]);
 			if (sp[i]) center[i] = af[i] * sp[i]->center;
 		}
 		if (sp[0] && sp[1]){	//	両方球の場合
-			cp.iNormal = (center[1] - center[0]).unit();
+			cp->iNormal = (center[1] - center[0]).unit();
 		}else{
 			if (sp[0]){
-				cp.iNormal = (cp.commonPoint - center[0]).unit();
+				cp->iNormal = (cp->commonPoint - center[0]).unit();
 			}else if (sp[1]){
-				cp.iNormal = (center[1] - cp.commonPoint).unit();
+				cp->iNormal = (center[1] - cp->commonPoint).unit();
 			}else{
 //				assert(0);	//	知らない凸形状．
-				cp.iNormal = (af[1].Pos() - af[0].Pos()).unit();
+				cp->iNormal = (af[1].Pos() - af[0].Pos()).unit();
 			}
 		}
 */
 		assert(0);	//	知らない形状
 	}
-	if (cp.iNormal.square() < 1e-20){
+	if (cp->iNormal.square() < 1e-20){
 		DEBUG_EVAL( DSTR << "iNormal error."; )
 //		if (lastINormal.square() > 1e-20){
-//			cp.iNormal = lastINormal;
+//			cp->iNormal = lastINormal;
 //		}else{
-			cp.iNormal = Vec3f(0,1,0);
+			cp->iNormal = Vec3f(0,1,0);
 			DEBUG_EVAL( DSTR << "Set (0,1,0)"; )
 //		}
 		DEBUG_EVAL( DSTR << std::endl; )
 	}
-	cp.iNormal.unitize();
+	cp->iNormal.unitize();
 #ifdef _DEBUG
-	if (!_finite(cp.iNormal.norm())){
-		DSTR << "Error: iNormal is " << cp.iNormal << std::endl;
+	if (!_finite(cp->iNormal.norm())){
+		DSTR << "Error: iNormal is " << cp->iNormal << std::endl;
 	}
 #endif
 }
-void CDContactAnalysis::CalcNormal(CDShapePair& cp,  Posed* af){
-	if (cp.state == cp.NEW) {
+void CDContactAnalysis::CalcNormal(CDShapePair* cp){
+	if (cp->state == cp->NEW) {
 		//	新たな接触の場合は，法線を積分して初期値を求める
-		IntegrateNormal(cp, af);
-		cp.normal = cp.iNormal;
-		cp.depth = 1e-2;
+		IntegrateNormal(cp);
+		cp->normal = cp->iNormal;
+		cp->depth = 1e-2;
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
 	Vec3d n;			//	求める法線
 //	Vec3d closest[2];	//	最近傍点(ローカル系)
 	Posed trans;
 
-	if (cp.depth < 1e-2) cp.depth = 1e-2;
+	if (cp->depth < 1e-2) cp->depth = 1e-2;
 	while(1) {
-		cp.depth *= 2;						//	余裕を見て，深さの2倍動かす
-		trans = af[1];				//	動かす行列
-		trans.Pos() += cp.depth * cp.normal;
-		FindClosestPoints((CDConvex*)cp.shape[0], (CDConvex*)cp.shape[1], af[0], trans, cp.closestPoint[0], cp.closestPoint[1]);
-		cp.center = af[0] * cp.closestPoint[0];
-		n = trans * cp.closestPoint[1] - cp.center;
+		cp->depth *= 2;						//	余裕を見て，深さの2倍動かす
+		trans = cp->shapePoseW[1];			//	動かす行列
+		trans.Pos() += cp->depth * cp->normal;
+		FindClosestPoints((CDConvex*)cp->shape[0], (CDConvex*)cp->shape[1], cp->shapePoseW[0], trans, cp->closestPoint[0], cp->closestPoint[1]);
+		cp->center = cp->shapePoseW[0] * cp->closestPoint[0];
+		n = trans * cp->closestPoint[1] - cp->center;
 		if (n.square() > 1e-10) break;
 	}
-	cp.depth = cp.depth - n.norm();			//	動かした距離 - 2点の距離
-	cp.normal = n.unit();
-	cp.center += 0.5f*cp.depth*cp.normal;
+	cp->depth = cp->depth - n.norm();			//	動かした距離 - 2点の距離
+	cp->normal = n.unit();
+	cp->center += 0.5f*cp->depth*cp->normal;
 #ifdef _DEBUG
-	if (cp.normal * cp.iNormal < 0 || !_finite(cp.normal.norm())){
-		DSTR << "Error: Wrong normal:" << cp.normal << cp.iNormal << std::endl;
+	if (cp->normal * cp->iNormal < 0 || !_finite(cp->normal.norm())){
+		DSTR << "Error: Wrong normal:" << cp->normal << cp->iNormal << std::endl;
 		DSTR << trans;
-		DSTR << cp.closestPoint[0] << cp.closestPoint[1] << std::endl;
-		FindClosestPoints((CDConvex*)cp.shape[0], (CDConvex*)cp.shape[1], af[0], trans, cp.closestPoint[0], cp.closestPoint[1]);
+		DSTR << cp->closestPoint[0] << cp->closestPoint[1] << std::endl;
+		FindClosestPoints((CDConvex*)cp->shape[0], (CDConvex*)cp->shape[1], cp->shapePoseW[0], trans, cp->closestPoint[0], cp->closestPoint[1]);
 	}
 #endif
 }
@@ -225,12 +229,12 @@ void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 		CDFace& face = **it;
 		if (face.dualPlanes.size() < 3) continue;
 		Vec3f vbuf[3];
-		vbuf[0] = face.dualPlanes[0]->normal / face.dualPlanes[0]->dist + cp.commonPoint;
-		vbuf[2] = face.dualPlanes[1]->normal / face.dualPlanes[1]->dist + cp.commonPoint;
+		vbuf[0] = face.dualPlanes[0]->normal / face.dualPlanes[0]->dist + cp->commonPoint;
+		vbuf[2] = face.dualPlanes[1]->normal / face.dualPlanes[1]->dist + cp->commonPoint;
 
 		for(unsigned int i=2; i<face.dualPlanes.size(); ++i){
 			vbuf[1] = vbuf[2];
-			vbuf[2] = face.dualPlanes[i]->normal / face.dualPlanes[i]->dist + cp.commonPoint;
+			vbuf[2] = face.dualPlanes[i]->normal / face.dualPlanes[i]->dist + cp->commonPoint;
 			render->DrawDirect(GRRender::TRIANGLES, vbuf, vbuf+3);
 		}
 	}
@@ -241,7 +245,7 @@ void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 		Vec4f(0, 1, 1, 1),
 		0.0f);
 	render->SetMaterial(mat2);
-	Vec3f vtx(cp.commonPoint);
+	Vec3f vtx(cp->commonPoint);
 	render->SetLineWidth(3);
 	render->DrawDirect(GRRender::POINTS, &vtx, &vtx+1);
 	render->SetDepthFunc(GRRender::DF_LESS);

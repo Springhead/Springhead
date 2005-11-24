@@ -28,13 +28,18 @@ public:
 	Vec3d center;				///<	2つの最侵入点の中間の点，CDContactAnalysis::CalcNormal が更新する．
 	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
 
+	//	World系での形状の姿勢をキャッシュ
+	Posed shapePoseW[2];
 
 	///	
 	CDShapePair(CDShape* s0, CDShape* s1){
 		shape[0] = s0;
 		shape[1] = s1;
 	}
-	bool Detect(Posed pose0, Posed pose1, unsigned ct);
+	///	形状の姿勢(shapePoseW)の更新．各Shapeの親Solidの姿勢を渡す．
+	void UpdateShapePose(Posed pose0, Posed pose1);
+	///	接触判定
+	bool Detect(unsigned ct);
 };
 
 
@@ -67,16 +72,16 @@ public:
 		結果は，共通部分を構成する面を vtxs.begin() から返り値までに，
 		共通部分を構成する頂点を， planes.begin から planes.end のうちの
 		deleted==false のものに入れて返す．
-		convex[0], convex[1]の頂点をWorld系に変換する変換行列を
-		af0, af1 に渡さなければならない．	*/
-	CDFace** FindIntersection(CDShapePair& cp, Posed* af);
+		cp の shapePoseW に shape[0], shape[1]の頂点をWorld系に変換する
+		変換行列が入っていなければならない．	*/
+	CDFace** FindIntersection(CDShapePair* cp);
 	/**	交差部分の形状の法線を積分して，衝突の法線を求める．
 		物体AとBの衝突の法線は，交差部分の面のうち，Aの面の法線の積分
 		からBの面の法線の積分を引いたものになる．	*/
-	void IntegrateNormal(CDShapePair& cp, Posed* af);
+	void IntegrateNormal(CDShapePair* cp);
 	/**	法線の計算．前回の法線の向きに物体を動かし，
 		物体を離して最近傍点を求める．	*/
-	void CalcNormal(CDShapePair& cp,  Posed* af);
+	void CalcNormal(CDShapePair* cp);
 };
 
 }

@@ -5,11 +5,20 @@ namespace Spr{;
 
 struct PHSolidIf;
 struct PHSolidDesc;
+
+struct CDShapeIf;
+struct CDShapeDesc;
+
+
 ///	シーン
 struct PHSceneIf : public ObjectIf{
 	///	Solid作成
 	virtual PHSolidIf* CreateSolid()=0;
+	///	Solid作成
 	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc)=0;
+
+	///	Shape作成
+	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
 
 	/// 積分ステップを返す
 	virtual double GetTimeStep()const=0;

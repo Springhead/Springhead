@@ -6,10 +6,13 @@
 
 namespace Spr{;
 class CDShape : public CDShapeIf, public Object{
+protected:
+	Posef pose;
 public:
 	OBJECTDEFABST(CDShape);
 	BASEIMP_OBJECT(Object);
-	Posef pose;
+	Posef GetPose() const { return pose; }
+	void SetPose(Posef p){ pose = p; }
 	
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax)=0;
 };

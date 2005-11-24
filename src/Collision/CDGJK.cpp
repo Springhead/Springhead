@@ -143,7 +143,7 @@ inline bool IsDegenerate(const Vec3d& w) {
 }
 
 bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
-					 const Affinef& a2w, const Affinef& b2w,
+					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb) {
 	Vec3d w;
 
@@ -154,8 +154,8 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 		lastPoint = 0;
 		lastUsed = 1;
 		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
-		p[lastPoint] = a->Support(a2w.Rot().trans() * (-v));
-		q[lastPoint] = b->Support(b2w.Rot().trans() * v);
+		p[lastPoint] = a->Support(a2w.Ori().conjugated() * (-v));
+		q[lastPoint] = b->Support(b2w.Ori().conjugated() * v);
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
 		if (v*w > 0) return false;
 		if (IsDegenerate(w)) return false;
@@ -168,7 +168,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 }
 
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,
-					  const Affinef& a2w, const Affinef& b2w,
+					  const Posed& a2w, const Posed& b2w,
 					  Vec3d& pa, Vec3d& pb) {
 	Vec3d v = a2w * a->Support(Vec3d()) - b2w * b->Support(Vec3d());
 	double len = v.norm();
@@ -182,8 +182,8 @@ void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		lastPoint = 0;
 		lastUsed = 1;
 		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
-		p[lastPoint] = a->Support(a2w.Rot().trans() * (-v));
-		q[lastPoint] = b->Support(b2w.Rot().trans() * v);
+		p[lastPoint] = a->Support(a2w.Ori().conjugated() * (-v));
+		q[lastPoint] = b->Support(b2w.Ori().conjugated() * v);
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
 		setMax(mu, v*w/len);
 		if (len - mu <= len * relError) break;

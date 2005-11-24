@@ -62,6 +62,9 @@ public:
 	iterator motion;
 	iterator listener;
 protected:
+	friend class PHScene;
+	PHScene* scene;
+
 	iterator begin2() { return base::begin(); }
 	iterator end2() { return base::end(); }
 public:

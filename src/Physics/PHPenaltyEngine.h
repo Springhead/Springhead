@@ -29,6 +29,7 @@ protected:
 	PHSolids solids;
 	UTCombination<UTRef<PHSolidPair> > solidPairs;
 public:
+	void Add(PHSolid* s);
 	void Init();
 	///
 	int GetPriority() const {return SGBP_PENALTYENGINE;}

@@ -3,5 +3,6 @@
 
 #include "SprFoundation.h"
 #include "SprPhysics.h"
+#include "SprCollision.h"
 
 #endif

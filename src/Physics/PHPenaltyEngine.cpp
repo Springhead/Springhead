@@ -6,6 +6,8 @@
 using namespace PTM;
 namespace Spr{;
 
+OBJECTIMP(PHPenaltyEngine, PHEngine);
+
 void PHPenaltyEngine::PHSolidPair::Init(){
 	shapePairs.resize(solid[0]->shapes.size(), solid[1]->shapes.size());
 	for(unsigned i=0; i<solid[0]->shapes.size(); ++i){
@@ -15,17 +17,29 @@ void PHPenaltyEngine::PHSolidPair::Init(){
 	}
 }
 
+//	衝突検出と接触力の計算
 bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
+	static CDContactAnalysis analyzer;
 	bool rv = false;
+	int ct = ((PHScene*)engine->GetScene())->GetCount();
 	for(int i=0; i<shapePairs.height(); ++i){
 		for(int j=i; j<shapePairs.width(); ++j){
-			rv = rv || shapePairs.item(i,j)->Detect(solid[0]->GetPose(), solid[1]->GetPose(), 
-							((PHScene*)engine->GetScene())->GetCount() );
+			CDShapePair* shapePair = shapePairs.item(i,j);
+			shapePair->UpdateShapePose(solid[0]->GetPose(), solid[1]->GetPose());
+			if ( shapePair->Detect(ct) ){
+				rv = true;
+				analyzer.FindIntersection(shapePair);	//	接触形状の解析
+				analyzer.CalcNormal(shapePair);			//	法線ベクトルの計算
+			}
 		}
 	}
 	return rv;
 }
 
+void PHPenaltyEngine::Add(PHSolid* s){
+	solids.push_back(s);
+	Init();
+}
 void PHPenaltyEngine::Init(){
 	solidPairs.resize(solids.size(), solids.size());
 	for(unsigned i=0; i<solids.size(); ++i){
@@ -77,20 +91,7 @@ void PHPenaltyEngine::Step(){
 				if (f1 > f2) std::swap(f1, f2);
 				PHSolidPair* pair =  solidPairs.item(f1, f2);
 				//	SolidとSolidの衝突判定
-				if (pair->Detect(this)){	//	再帰的に衝突判定(GJKを使用)
-/*
-					listeners.Before(scene, pair);
-					for(CDIntersections::iterator it = pair->intersections.begin(); it != pair->intersections.end(); ++it){
-						timerQhull.Start();
-						analyzer.FindIntersection(*it->convexPair, it->geometryPair->posture);	//	接触形状の解析
-						timerQhull.Stop();
-						timerNormal.Start();
-						analyzer.CalcNormal(*(CDConvexPairWithNormal*)it->convexPair, it->geometryPair->posture);		//	法線ベクトルの計算
-						timerNormal.Stop();
-						listeners.Analyzed(scene, pair, it->geometryPair, (CDConvexPairWithRecord*) it->convexPair, &analyzer);
-					}
-					listeners.After(scene, pair);
-*/				}
+				pair->Detect(this);	//	再帰的に衝突判定(GJKを使用)
 //				DSTR << " " << *itf;
 			}
 //			DSTR << std::endl;

@@ -19,12 +19,15 @@ PHScene::PHScene(){
 	Init();
 }
 void PHScene::Init(){
+	engines.scene = this;
 	timeStep = 0.005;
 	Scene::Clear();
 	PHSolidContainer* sc = new PHSolidContainer;
 	engines.Add(sc);
 	PHGravityEngine* ge = new PHGravityEngine;
 	engines.Add(ge);
+	PHPenaltyEngine* pe = new PHPenaltyEngine;
+	engines.Add(pe);
 }
 
 
@@ -35,6 +38,13 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	engines.Find(sc);
 	assert(sc);
 	sc->AddChildObject(s, this);	
+
+	PHPenaltyEngine* pe;
+	engines.Find(pe);
+	assert(pe);
+	pe->Add(s);
+	pe->Init();
+
 	return s;
 }
 PHSolidIf* PHScene::CreateSolid(){

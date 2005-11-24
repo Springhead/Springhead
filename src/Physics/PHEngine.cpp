@@ -1,4 +1,5 @@
 #include "Springhead.h"
+#include "Physics.h"
 #pragma hdrstop
 #include "PHEngine.h"
 #include <sstream>
@@ -11,7 +12,9 @@ OBJECTIMP(PHEngine, Object);
 
 //----------------------------------------------------------------------------
 //	PHEngines
+
 void PHEngines::Add(PHEngine* e){
+	e->SetScene(scene);
 	push_back(e);
 	Sort();
 }
