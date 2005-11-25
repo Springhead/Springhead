@@ -16,9 +16,9 @@ public:
 	Vec3f	accel;
 
 	int GetPriority() const {return SGBP_GRAVITYENGINE;}
-	void Step(PHScene* s);
-	void Clear(PHScene* s){solids.clear();}
-	bool AddChildObject(Object* o, PHScene* s);
+	void Step();
+	void Clear(){solids.clear();}
+	bool AddChildObject(Object* o);
 };
 
 }

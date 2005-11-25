@@ -45,6 +45,11 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	pe->Add(s);
 	pe->Init();
 
+	PHGravityEngine* ge;
+	engines.Find(ge);
+	assert(ge);
+	ge->AddChildObject(s);
+
 	return s;
 }
 PHSolidIf* PHScene::CreateSolid(){
@@ -100,6 +105,19 @@ CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
 		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
 		return NULL;
 	}
+}
+
+void PHScene::SetGravity(Vec3f accel){
+	PHGravityEngine* ge;
+	engines.Find(ge);
+	assert(ge);
+	ge->accel = accel;
+}
+Vec3f PHScene::GetGravity(){
+	PHGravityEngine* ge;
+	engines.Find(ge);
+	assert(ge);
+	return ge->accel;
 }
 
 

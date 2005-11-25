@@ -114,48 +114,48 @@ bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 
 
 
-
 	//	接触判定終了後の処理
 	//	抗力とその作用点を求め，摩擦を計算し，抗力と摩擦力を物体に加える．
-	for(Contacts::iterator it = contacts.begin(); it != contacts.end(); ++it){
-		PHShapePair* cp = *it;
-		//	積分したペナルティと速度を面積で割る
-		cp->reflexSpringForce /= area;
-		cp->reflexDamperForce /= area;
-		cp->reflexSpringTorque /= area;
-		cp->reflexDamperTorque /= area;
-		cp->dynaFric /= area;
-		cp->dynaFricMom /= area;
-				
-		DEBUG_EVAL(
-			if ( !_finite( cp->reflexSpringForce.norm() )
-				|| !_finite( cp->frictionForce.norm() )
-				|| !_finite( cp->frictionTorque.norm() ) ){
-				DSTR << "Error: forces: " << cp->reflexSpringForce << cp->frictionForce << cp->frictionTorque << std::endl;
-			}
-		)
-		//	摩擦力を計算する
-		CalcFriction(cp);
-		//	力を加える．
-//		DSTR << "ref:" << cp->reflexSpringForce << cp->reflexDamperForce << std::endl;
-		Vec3f reflexForce = cp->reflexSpringForce + cp->reflexDamperForce;
-		Vec3f reflexTorque = cp->reflexSpringTorque + cp->reflexDamperTorque
-			- ((cocog - cp->commonPoint)^reflexForce);
-		reflexForce += reflexForce;
-		reflexTorque += reflexTorque;
-		frictionForce += cp->frictionForce;
-		frictionTorque += cp->frictionTorque
-			- ((cocog - (cp->reflexForcePoint+cp->commonPoint)) ^ cp->frictionForce);
+	if (rv){
+		for(Contacts::iterator it = contacts.begin(); it != contacts.end(); ++it){
+			PHShapePair* cp = *it;
+			//	積分したペナルティと速度を面積で割る
+			cp->reflexSpringForce /= area;
+			cp->reflexDamperForce /= area;
+			cp->reflexSpringTorque /= area;
+			cp->reflexDamperTorque /= area;
+			cp->dynaFric /= area;
+			cp->dynaFricMom /= area;
+					
+			DEBUG_EVAL(
+				if ( !_finite( cp->reflexSpringForce.norm() )
+					|| !_finite( cp->frictionForce.norm() )
+					|| !_finite( cp->frictionTorque.norm() ) ){
+					DSTR << "Error: forces: " << cp->reflexSpringForce << cp->frictionForce << cp->frictionTorque << std::endl;
+				}
+			)
+			//	摩擦力を計算する
+			CalcFriction(cp);
+			//	力を加える．
+	//		DSTR << "ref:" << cp->reflexSpringForce << cp->reflexDamperForce << std::endl;
+			Vec3f refF = cp->reflexSpringForce + cp->reflexDamperForce;
+			Vec3f refT = cp->reflexSpringTorque + cp->reflexDamperTorque
+				- ((cocog - cp->commonPoint)^reflexForce);
+			reflexForce += refF;
+			reflexTorque += refT;
+			frictionForce += cp->frictionForce;
+			frictionTorque += cp->frictionTorque
+				- ((cocog - (cp->reflexForcePoint+cp->commonPoint)) ^ cp->frictionForce);
+		}
+		//	DSTR << std::endl;
+		//	力を制限する．
+		//	LimitForces();
+		// 力を加える．
+		solid[0].solid->AddForce(reflexForce + frictionForce, cocog);
+		solid[0].solid->AddTorque(reflexTorque + frictionTorque);
+		solid[1].solid->AddForce(-(reflexForce + frictionForce), cocog);
+		solid[1].solid->AddTorque(-(reflexTorque + frictionTorque));
 	}
-//	DSTR << std::endl;
-	//	力を制限する．
-//	LimitForces();
-	// 力を加える．
-	solid[0].solid->AddForce(reflexForce + frictionForce, cocog);
-	solid[0].solid->AddTorque(reflexTorque + frictionTorque);
-	solid[1].solid->AddForce(-(reflexForce + frictionForce), cocog);
-	solid[1].solid->AddTorque(-(reflexTorque + frictionTorque));
-
 	return rv;
 }
 

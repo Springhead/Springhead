@@ -82,8 +82,9 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }
 void Idle(){
-	solid1->AddForce(Vec3f(1,0,0), Vec3f(0,2,0));
-	solid2->AddForce(Vec3f(1,0,0), Vec3f(0,2,0));
+	//	剛体の重心の1m上を右に押す．
+	solid1->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid1->GetCenterPosition());
+	solid2->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid2->GetCenterPosition());
 	scene->Step();
 	glutPostRedisplay();
 	std::cout << solid1->GetFramePosition();
@@ -94,16 +95,13 @@ int main(int argc, char* argv[]){
 	scene = sdk->CreateScene();			//	シーンの作成
 	
 	PHSolidDesc desc;					// 左のteapot
-	desc.mass = 20;						// 質量	
+	desc.mass = 2.0;					// 質量	
 	desc.inertia *=2.0;					// 慣性テンソル
 	desc.center = Vec3f(0,0,0);			// 質量中心の位置
 	solid1 = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
 	
-	PHSolidDesc desc2;					// 右のteapot
-	desc2.mass = 20;
-	desc2.inertia *= 1.0;
-	desc2.center = Vec3f(5,0,0);		
-	solid2 = scene->CreateSolid(desc2);	
+	desc.center = Vec3f(1,0,0);		//	重心の位置をSolidの原点から1m右にずらす．
+	solid2 = scene->CreateSolid(desc);	
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

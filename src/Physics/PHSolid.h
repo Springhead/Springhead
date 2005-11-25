@@ -178,6 +178,8 @@ public:
 	void		SetCenter(const Vec3d& c){center = c;}		
 
 	void		AddShape(CDShapeIf* shape);
+
+	void		SetGravity(bool bOn);
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{

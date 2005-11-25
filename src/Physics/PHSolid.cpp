@@ -183,6 +183,19 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	pe->Init();
 }
 
+void PHSolid::SetGravity(bool bOn){
+	PHScene* ps = (PHScene*)scene;
+	PHGravityEngine* ge;
+	ps->engines.Find(ge);
+	if (bOn == true){
+		if (ge->solids.Find(this)){
+			ge->solids.push_back(this);
+		}
+	}else{
+		ge->solids.Erase(this);
+	}
+}
+
 //----------------------------------------------------------------------------
 //	PHSolidContainer
 //

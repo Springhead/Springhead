@@ -7,7 +7,7 @@ namespace Spr{
 
 OBJECTIMP(PHGravityEngine, PHEngine);
 
-void PHGravityEngine::Step(PHScene*){
+void PHGravityEngine::Step(){
 	PHSolids::iterator it;
 	PHSolid* solid;
 	for(it = solids.begin(); it != solids.end(); it++){
@@ -16,7 +16,7 @@ void PHGravityEngine::Step(PHScene*){
 	}
 }
 
-bool PHGravityEngine::AddChildObject(Object* o, PHScene* s){
+bool PHGravityEngine::AddChildObject(Object* o){
 	if (DCAST(PHSolid, o)){
 		solids.push_back((PHSolid*)o);
 		return true;

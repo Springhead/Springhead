@@ -66,6 +66,9 @@ public:
 	///	デバッグ用
 	void Print(std::ostream& os) const { names.Print(os); }
 
+	virtual void SetGravity(Vec3f accel);
+	virtual Vec3f GetGravity();
+
 protected:
 	friend class Object;
 };
