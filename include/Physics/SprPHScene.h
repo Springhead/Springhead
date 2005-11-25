@@ -34,6 +34,10 @@ struct PHSceneIf : public ObjectIf{
 	virtual void Integrate()=0;
 	///	シーンを空にする．
 	virtual void Clear()=0;
+
+	///	重力の設定(ここに持たせるべきか要検討だが，Novodexはここ)
+	virtual void SetGravity(Vec3f accel)=0;
+	virtual Vec3f GetGravity()=0;
 };
 
 }	//	namespace Spr

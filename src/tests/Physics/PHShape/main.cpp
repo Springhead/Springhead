@@ -13,9 +13,12 @@ int main(int argc, char* argv[]){
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
-	solid1 = scene->CreateSolid(desc);	//	„‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
-	desc.center = Vec3f(1,0,0);
 	solid2 = scene->CreateSolid(desc);	//	„‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+
+	desc.mass = 1e20f;
+	desc.inertia *= 1e20f;
+	solid1 = scene->CreateSolid(desc);	//	„‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+	solid1->SetGravity(false);
 	
 	//	Œ`ó‚Ìì¬
 	CDConvexMeshDesc md;
@@ -27,14 +30,23 @@ int main(int argc, char* argv[]){
 	md.vertices.push_back(Vec3f( 1,-1, 1));
 	md.vertices.push_back(Vec3f( 1, 1,-1));
 	md.vertices.push_back(Vec3f( 1, 1, 1));
-	CDShapeIf* mesh1 = scene->CreateShape(md);
 	CDShapeIf* mesh2 = scene->CreateShape(md);
+
+	for(unsigned i=0; i<md.vertices.size(); ++i){
+		md.vertices[i].x *= 10;
+	}
+	CDShapeIf* mesh1 = scene->CreateShape(md);
+
 	solid1->AddShape(mesh1);
 	solid2->AddShape(mesh2);
+	solid1->SetFramePosition(Vec3f(0,-1,0));
+	solid2->SetFramePosition(Vec3f(0,2,0));
 
-	for(int i=0; i<10; ++i){
-		solid1->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
-		solid2->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
+	scene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ğİ’è
+
+	for(int i=0; i<200; ++i){
+//		solid1->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
+//		solid2->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
 		scene->Step();
 		std::cout << solid1->GetFramePosition();
 		std::cout << solid2->GetFramePosition() << std::endl;

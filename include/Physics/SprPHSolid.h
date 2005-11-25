@@ -52,6 +52,9 @@ struct PHSolidIf : public ObjectIf{
 
 	///	Œ`ó‚Ì’Ç‰Á
 	virtual void		AddShape(CDShapeIf* shape)=0;
+
+	///	d—Í‚ğ—LŒø/–³Œø‰»‚·‚é	‚±‚±‚Å‚æ‚¢‚©‹^–â
+	virtual void		SetGravity(bool bOn)=0;
 };
 
 }	//	namespace Spr
