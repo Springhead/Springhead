@@ -25,27 +25,25 @@ void Display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 
+	Affinef af;
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 	
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
 	glPushMatrix();
-	glTranslatef(solid1->GetFramePosition().x,
-		solid1->GetFramePosition().y,
-		solid1->GetFramePosition().z);
+	solid1->GetOrientation().to_matrix(af);
+	af.Pos() = solid1->GetFramePosition();
+	glMultMatrixf(af);
+	
 	glutSolidTeapot(1.0);
 	glPopMatrix();
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 	glPushMatrix();
-/*	glTranslatef(solid2->GetFramePosition().x,
-		solid2->GetFramePosition().y,
-		solid2->GetFramePosition().z+3.0);
-*/
-	Affinef af;
 	solid2->GetOrientation().to_matrix(af);
 	af.Pos() = solid2->GetFramePosition();
 	glMultMatrixf(af);
+	//glTranslatef(5.0, 0.0, 0.0);
 	glutSolidTeapot(1.0);
 
 	glPopMatrix();
@@ -65,8 +63,8 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(5.0, 3.0, 10.0, 
-		      5.0, 0.0, 0.0,
+	gluLookAt(2.0, 3.0, 10.0, 
+		      2.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -94,25 +92,22 @@ void Idle(){
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();				//	SDKの作成
 	scene = sdk->CreateScene();			//	シーンの作成
-	PHSolidDesc desc;
-	PHSolidDesc desc2;
-	desc.mass = 10;						// 質量	
-	desc2.mass = 20;
-	//desc.inertia *= 2.0;
+	
+	PHSolidDesc desc;					// 左のteapot
+	desc.mass = 20;						// 質量	
 	desc.inertia *=2.0;					// 慣性テンソル
-	desc2.inertia *= 2.0;
-
-	desc.velocity = Vec3f(2,0,0);		// 速度
-	desc2.velocity = Vec3f(1,0,0);
-
-	desc.center = Vec3f(0,0,0);
+	desc.center = Vec3f(0,0,0);			// 質量中心の位置
 	solid1 = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
-	desc2.center = Vec3f(0,0,0);		// 質量中心の位置
-	solid2 = scene->CreateSolid(desc2);	// 剛体をdesc2に基づいて作成
+	
+	PHSolidDesc desc2;					// 右のteapot
+	desc2.mass = 20;
+	desc2.inertia *= 1.0;
+	desc2.center = Vec3f(5,0,0);		
+	solid2 = scene->CreateSolid(desc2);	
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow("PHSimple");
+	glutCreateWindow("PHSimpleGL");
 
 	initialize();
 
