@@ -195,6 +195,12 @@ void PHSolid::SetGravity(bool bOn){
 		ge->solids.Erase(this);
 	}
 }
+int PHSolid::GetNShapes(){
+	return shapes.size();
+}
+CDShapeIf** PHSolid::GetShapes(){
+	return (CDShapeIf**)(void*)&shapes.front();
+}
 
 //----------------------------------------------------------------------------
 //	PHSolidContainer

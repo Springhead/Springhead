@@ -4,11 +4,29 @@
 #include <Springhead.h>
 #include <Base/Base.h>
 
-
 namespace Spr{;
 
 
-///	Object を継承したクラスはメンバとしてこのマクロを持つ．
+#define IF_IMP_COMMON(cls)															\
+	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
+	void* IfInfoImp<cls##If>::GetObject(ObjectIf* i)const{							\
+		return (Object*)(cls*)(cls##If*)i;											\
+	}																				\
+	ObjectIf* IfInfoImp<cls##If>::GetIf(void* obj)const{							\
+		return (ObjectIf*)(cls##If*)DCAST(cls, (Object*)obj);						\
+	}																				\
+
+///	ObjectIf インタフェースクラスの実行時型情報
+#define IF_IMP_BASE(cls)															\
+	IfInfo* cls##_BASEIF[] = {NULL};												\
+	IF_IMP_COMMON(cls)
+
+///	インタフェースクラスの実行時型情報
+#define IF_IMP(cls, base1)															\
+	IfInfo* cls##_BASEIF[] = {&base1##If::ifInfo, NULL};							\
+	IF_IMP_COMMON(cls)
+
+///	Object派生クラスの実行時型情報
 #define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)
 #define OBJECTDEFABST(cls)				DEF_UTTYPEINFOABSTDEF(cls)
 #define OBJECTIMPBASE(cls)				DEF_UTTYPEINFO(cls)
@@ -19,6 +37,8 @@ namespace Spr{;
 #define OBJECTIMPABST(cls, base)		DEF_UTTYPEINFOABST1(cls, base)
 #define OBJECTIMPABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
 #define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
+
+
 
 class Scene;
 /**	シーングラフのオブジェクト型．

@@ -9,16 +9,27 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
-
 ///	シーン
 struct PHSceneIf : public ObjectIf{
+public:
+
 	///	Solid作成
 	virtual PHSolidIf* CreateSolid()=0;
 	///	Solid作成
 	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc)=0;
+	///	Solidの数
+	virtual int GetNSolids()=0;
+	///	Solidの取得
+	virtual PHSolidIf** GetSolids()=0;
+
 
 	///	Shape作成
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
+	///	Shapeの数
+	virtual int GetNShape()=0;
+	///	Shapeの取得
+	virtual CDShapeIf** GetShapes()=0;
+
 
 	/// 積分ステップを返す
 	virtual double GetTimeStep()const=0;
@@ -38,6 +49,7 @@ struct PHSceneIf : public ObjectIf{
 	///	重力の設定(ここに持たせるべきか要検討だが，Novodexはここ)
 	virtual void SetGravity(Vec3f accel)=0;
 	virtual Vec3f GetGravity()=0;
+
 };
 
 }	//	namespace Spr

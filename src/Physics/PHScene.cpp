@@ -22,8 +22,8 @@ void PHScene::Init(){
 	engines.scene = this;
 	timeStep = 0.005;
 	Scene::Clear();
-	PHSolidContainer* sc = new PHSolidContainer;
-	engines.Add(sc);
+	solids = new PHSolidContainer;
+	engines.Add(solids);
 	PHGravityEngine* ge = new PHGravityEngine;
 	engines.Add(ge);
 	PHPenaltyEngine* pe = new PHPenaltyEngine;
@@ -34,10 +34,7 @@ void PHScene::Init(){
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	PHSolid* s = new PHSolid(desc);
 	s->SetScene(this);
-	PHSolidContainer* sc;
-	engines.Find(sc);
-	assert(sc);
-	sc->AddChildObject(s, this);	
+	solids->AddChildObject(s, this);	
 
 	PHPenaltyEngine* pe;
 	engines.Find(pe);
@@ -62,6 +59,19 @@ void PHScene::SetGravity(const Vec3d& g){
 	PHGravityEngine* ge;
 	engines.Find(ge);
 
+}
+
+int PHScene::GetNShape(){
+	return shapes.size();
+}
+CDShapeIf** PHScene::GetShapes(){
+	return (CDShapeIf**)&*shapes.begin();
+}
+int PHScene::GetNSolids(){
+	return solids->solids.size();
+}
+PHSolidIf** PHScene::GetSolids(){
+	return (PHSolidIf**)&*solids->solids.begin();
 }
 
 void PHScene::Clear(){

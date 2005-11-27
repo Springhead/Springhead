@@ -75,7 +75,7 @@ void Reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(60.0, (double)(w/h), 1.0, 500.0);
+	gluPerspective(60.0, (double)(w/h), 1.0, 500);
 	glMatrixMode(GL_MODELVIEW);
 }
 void keyboard(unsigned char key, int x, int y){

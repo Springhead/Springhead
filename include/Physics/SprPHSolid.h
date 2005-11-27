@@ -19,6 +19,7 @@ struct PHSolidDesc{
 	}
 };
 
+struct CDShapeIf; 
 ///	剛体
 struct PHSolidIf : public ObjectIf{
 	virtual void AddForce(Vec3d f)=0;					///< 力を質量中心に加える
@@ -55,6 +56,10 @@ struct PHSolidIf : public ObjectIf{
 
 	///	重力を有効/無効化する	ここでよいか疑問
 	virtual void		SetGravity(bool bOn)=0;
+
+	virtual int			GetNShapes()=0;
+	///	形状を取得
+	virtual CDShapeIf**	GetShapes()=0;
 };
 
 }	//	namespace Spr

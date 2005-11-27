@@ -20,7 +20,20 @@ namespace Spr{;
 */
 
 struct CDShapeIf : public ObjectIf{
+	IF_DEF(CDShape);
 };
+
+struct CDConvexIf : public CDShapeIf{
+	IF_DEF(CDConvex);
+};
+
+/**	面	*/
+struct CDFaceIf{
+	virtual int GetNIndices()=0;
+	virtual int* GetIndices()=0;
+};
+
+
 
 struct PHMaterial{
 	PHMaterial(){
@@ -47,7 +60,12 @@ struct CDConvexMeshDesc: public CDShapeDesc{
 /**
 	凸形状のメッシュ	頂点を追加
 */
-struct CDConvexMeshIf: public CDShapeIf{
+struct CDConvexMeshIf: public CDConvexIf{
+	IF_DEF(CDConvexMesh);
+	virtual CDFaceIf* GetFace(int i)=0;
+	virtual size_t GetNFaces()=0;
+	virtual Vec3f* GetVertices()=0;
+	virtual size_t GetNVertices()=0;
 };
 
 }

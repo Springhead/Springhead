@@ -7,6 +7,7 @@ namespace Spr {;
 
 class CDShape;
 struct CDShapeDesc;
+class PHSolidContainer;
 
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
@@ -29,6 +30,7 @@ protected:
 	PHSdkIf* sdk;
 	///	CDShape
 	std::vector< UTRef<CDShape> > shapes;
+	PHSolidContainer* solids;
 public:
 	///	コンストラクタ
 	PHScene();
@@ -68,6 +70,11 @@ public:
 
 	virtual void SetGravity(Vec3f accel);
 	virtual Vec3f GetGravity();
+
+	virtual int GetNShape();
+	virtual CDShapeIf** GetShapes();
+	virtual int GetNSolids();
+	virtual PHSolidIf** GetSolids();
 
 protected:
 	friend class Object;

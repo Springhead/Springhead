@@ -2,10 +2,10 @@
 #pragma hdrstop
 using namespace Spr;
 
-
 PHSdkIf* sdk;
 PHSceneIf* scene;
 PHSolidIf* solid1, *solid2;
+
 
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();				//	SDKの作成
@@ -44,14 +44,26 @@ int main(int argc, char* argv[]){
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
-	for(int i=0; i<200; ++i){
-//		solid1->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
-//		solid2->AddForce(Vec3f(10,0,0), Vec3f(0,2,0));
+	for(int i=0; i<2; ++i){
 		scene->Step();
 		std::cout << solid1->GetFramePosition();
 		std::cout << solid2->GetFramePosition() << std::endl;
 //		std::cout << solid1->GetOrientation() << std::endl;
 	}
+	
+	for(int i=0; i<solid1->GetNShapes();++i){
+		CDShapeIf** shapes = solid1->GetShapes();
+		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+		Vec3f* base = mesh->GetVertices();
+		for(size_t f=0; f<mesh->GetNFaces();++f){
+			CDFaceIf* face = mesh->GetFace(f);
+			for(int v=0; v<face->GetNIndices(); ++v){
+				DSTR << base[face->GetIndices()[v]];
+			}
+			DSTR << std::endl;
+		}
+	}
+
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 	delete sdk;
 

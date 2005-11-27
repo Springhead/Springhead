@@ -5,9 +5,10 @@
 #include <sstream>
 
 namespace Spr {;
-
 //----------------------------------------------------------------------------
 //	Object
+IF_IMP_BASE(Object);
+
 OBJECTIMPBASE(Object);
 
 void Object::Print(std::ostream& os) const {

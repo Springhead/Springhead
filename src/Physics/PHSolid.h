@@ -92,6 +92,7 @@ protected:
 			(t[2] - (I[1][1] - I[0][0]) * w.X() * w.Y()) / I[2][2]);
 	}
 public:
+	typedef std::vector<CDShape*> CDShapes;
 	CDShapes shapes;
 	PHBBox bbox;
 
@@ -180,6 +181,9 @@ public:
 	void		AddShape(CDShapeIf* shape);
 
 	void		SetGravity(bool bOn);
+
+	int			GetNShapes();
+	CDShapeIf**	GetShapes();
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{

@@ -14,7 +14,7 @@ class CDVertexIDs:public std::vector<int>{
 public:
 	int FindPos(int id) const;
 };
-class CDFace{
+class CDFace: public CDFaceIf{
 public:
 	class DualPlanes: public std::vector<CDQHPlane<CDFace>*>{
 	public:
@@ -47,6 +47,9 @@ public:
 	Vec3f CommonVtx(int i);
 	///	デバッグ用表示
 	void Print(std::ostream& os) const;
+
+	virtual int GetNIndices(){ return 3; }
+	virtual int* GetIndices(){ return vtxs; }
 };
 inline std::ostream& operator << (std::ostream& os, const CDFace& f){
 	f.Print(os);
@@ -55,7 +58,7 @@ inline std::ostream& operator << (std::ostream& os, const CDFace& f){
 class CDFaces:public std::vector<CDFace>{
 };
 
-class CDConvexMesh : public CDConvex, public CDConvexMeshIf{
+class CDConvexMesh : public CDConvexMeshIf, public CDConvex{
 public:
 	OBJECTDEF(CDConvexMesh);
 	BASEIMP_OBJECT(Object);
@@ -99,6 +102,11 @@ private:
 	bool VertexNear(int v1, int v2) const;
 
 	virtual void Print(std::ostream& os) const;
+
+	CDFaceIf* GetFace(int i);
+	size_t GetNFaces();
+	Vec3f* GetVertices();
+	size_t GetNVertices();
 };
 
 }	//	namespace Spr

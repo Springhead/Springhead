@@ -212,5 +212,17 @@ Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 	return Vertex(curPos);
 }
 
+CDFaceIf* CDConvexMesh::GetFace(int i){
+	return &faces.at(i);
+}
+size_t CDConvexMesh::GetNFaces(){
+	return faces.size();
+}
+Vec3f* CDConvexMesh::GetVertices(){
+	return &*base.begin();
+}
+size_t CDConvexMesh::GetNVertices(){
+	return base.size();
+}
 
 }
