@@ -67,7 +67,4 @@ int main(int argc, char* argv[]){
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 	delete sdk;
 
-	//	メモリリークのテスト．
-	//	デバッグありで実行するとメモリリークがVCのデバッグ出力に表示される．
-	char* memoryLeak = new char[123];
 }

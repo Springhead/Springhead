@@ -62,7 +62,7 @@ struct CDConvexMeshDesc: public CDShapeDesc{
 */
 struct CDConvexMeshIf: public CDConvexIf{
 	IF_DEF(CDConvexMesh);
-	virtual CDFaceIf* GetFace(int i)=0;
+	virtual CDFaceIf* GetFace(size_t i)=0;
 	virtual size_t GetNFaces()=0;
 	virtual Vec3f* GetVertices()=0;
 	virtual size_t GetNVertices()=0;
