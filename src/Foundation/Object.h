@@ -38,6 +38,12 @@ namespace Spr{;
 #define OBJECTIMPABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
 #define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
 
+///	インタフェース->オブジェクトへのキャスト
+#define OCAST(T, p)	OcastImp<T>(p)
+template <class T, class P> T* OcastImp(P p){
+	void* obj = p->GetIfInfo()->GetObject((ObjectIf*)p);
+	return (T*)(Object*)obj;
+}
 
 
 class Scene;

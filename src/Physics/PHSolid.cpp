@@ -176,7 +176,7 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 
 
 void PHSolid::AddShape(CDShapeIf* shape){
-	shapes.push_back((CDShape*)shape);
+	shapes.push_back(OCAST(CDShape,shape));
 	CalcBBox();
 	PHPenaltyEngine* pe;
 	((PHScene*)scene)->engines.Find(pe);

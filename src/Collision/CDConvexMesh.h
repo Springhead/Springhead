@@ -103,7 +103,7 @@ private:
 
 	virtual void Print(std::ostream& os) const;
 
-	CDFaceIf* GetFace(int i);
+	CDFaceIf* GetFace(size_t i);
 	size_t GetNFaces();
 	Vec3f* GetVertices();
 	size_t GetNVertices();
