@@ -443,6 +443,7 @@ public:
 
 	operator TAffine<ET>(){ 
 		TAffine<ET> rv;
+		ToAffine(rv);
 		return rv;
 	}
 };
