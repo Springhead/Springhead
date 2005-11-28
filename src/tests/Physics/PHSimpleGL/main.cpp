@@ -21,7 +21,7 @@ static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
 
-void Display(){
+void display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 
@@ -39,7 +39,6 @@ void Display(){
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 	glPushMatrix();
-	glTranslatef(3.5, 0.0, 0.0);
 	solid2->GetOrientation().to_matrix(af);
 	af.Pos() = solid2->GetFramePosition();
 	glMultMatrixf(af);
@@ -69,7 +68,7 @@ void initialize(){
 	glEnable(GL_NORMALIZE);
 	setLight();
 }
-void Reshape(int w, int h){
+void reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -79,7 +78,7 @@ void Reshape(int w, int h){
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }
-void Idle(){
+void idle(){
 	//	剛体の重心の1m上を右に押す．
 	solid1->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid1->GetCenterPosition());
 	solid2->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid2->GetCenterPosition());
@@ -99,6 +98,7 @@ int main(int argc, char* argv[]){
 	solid1 = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
 	
 	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
+	desc.pose.pos = Vec3f(3.5, 0.0, 0.0);
 	solid2 = scene->CreateSolid(desc);	
 
 	glutInit(&argc, argv);
@@ -107,10 +107,10 @@ int main(int argc, char* argv[]){
 
 	initialize();
 
-	glutDisplayFunc(Display);
-	glutReshapeFunc(Reshape);
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutIdleFunc(Idle);
+	glutIdleFunc(idle);
 
 	glutMainLoop();
 }
