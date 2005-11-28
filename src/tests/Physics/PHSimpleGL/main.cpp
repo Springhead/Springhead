@@ -22,26 +22,34 @@ static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
 
 void display(){
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 
-	Affinef af;
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+
+	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
+
+	Affined ad;
+
 	glPushMatrix();
-	solid1->GetOrientation().to_matrix(af);
-	af.Pos() = solid1->GetFramePosition();
-	glMultMatrixf(af);
+	Posed pose = solid1->GetPose();
+	pose.ToAffine(ad);
+
+//	solid1->GetOrientation().to_matrix(af);
+//	af.Pos() = solid1->GetFramePosition();
+
+	// pose‚Å‚Í¸“x‚Ídouble‚È‚Ì‚Åmatrixd‚É‚·‚é
+	glMultMatrixd(ad);
 	glutSolidTeapot(1.0);
 	glPopMatrix();
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
+
 	glPushMatrix();
-	solid2->GetOrientation().to_matrix(af);
-	af.Pos() = solid2->GetFramePosition();
-	glMultMatrixf(af);
+	pose = solid2->GetPose();
+	ad = Affined(pose);
+	glMultMatrixd(ad);
 	glutSolidTeapot(1.0);
 	glPopMatrix();
 
