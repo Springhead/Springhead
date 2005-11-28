@@ -34,18 +34,16 @@ void Display(){
 	solid1->GetOrientation().to_matrix(af);
 	af.Pos() = solid1->GetFramePosition();
 	glMultMatrixf(af);
-	
 	glutSolidTeapot(1.0);
 	glPopMatrix();
 
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 	glPushMatrix();
+	glTranslatef(3.5, 0.0, 0.0);
 	solid2->GetOrientation().to_matrix(af);
 	af.Pos() = solid2->GetFramePosition();
 	glMultMatrixf(af);
-	//glTranslatef(5.0, 0.0, 0.0);
 	glutSolidTeapot(1.0);
-
 	glPopMatrix();
 
 	glutSwapBuffers();
@@ -63,8 +61,8 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(2.0, 3.0, 10.0, 
-		      2.0, 0.0, 0.0,
+	gluLookAt(4.0, 3.0, 10.0, 
+		      4.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -100,7 +98,7 @@ int main(int argc, char* argv[]){
 	desc.center = Vec3f(0,0,0);			// 質量中心の位置
 	solid1 = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
 	
-	desc.center = Vec3f(1,0,0);		//	重心の位置をSolidの原点から1m右にずらす．
+	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
 	solid2 = scene->CreateSolid(desc);	
 
 	glutInit(&argc, argv);
