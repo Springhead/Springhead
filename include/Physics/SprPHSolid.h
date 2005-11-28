@@ -41,6 +41,9 @@ struct PHSolidIf : public ObjectIf{
 	///	向きの設定
 	virtual void		SetOrientation(const Quaterniond& q) =0;
 
+	/// 姿勢の取得
+	virtual Posed		GetPose() const = 0;
+
 	///	質量中心の速度の取得
 	virtual Vec3d		GetVelocity() const  =0;
 	///	質量中心の速度の設定
