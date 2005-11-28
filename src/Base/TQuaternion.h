@@ -3,6 +3,7 @@
 
 #include <Base/TinyVec.h>
 #include <Base/TinyMat.h>
+#include <Base/Affine.h>
 
 namespace Spr{;
 
@@ -370,11 +371,77 @@ public:
 	TQuaternion<ET>& Ori() { return ori; }
 	const TQuaternion<ET>& Ori() const { return ori; }
 
+	/**@name	要素へのアクセス	*/
+	//@{
+	/// 
+	ET& PosX() {return px;}
+	const ET& PosX() const {return px;}
+	/// 
+	ET& PosY() {return py;}
+	const ET& PosY() const {return py;}
+	/// 
+	ET& PosZ() {return pz;}
+	const ET& PosZ() const {return pz;}
+	/// 
+	ET& OriX() {return x;}
+	const ET& OriX() const {return x;}
+	/// 
+	ET& OriY() {return y;}
+	const ET& OriY() const {return y;}
+	/// 
+	ET& OriZ() {return z;}
+	const ET& OriZ() const {return z;}
+	/// 
+	ET& OriW() {return w;}
+	const ET& OriW() const {return w;}
+	
 	TPose<ET> inv() const { 
 		TPose<ET> rv;
 		rv.ori = ori.inv();
 		rv.pos = -rv.ori*pos;
 		return rv;
+	}
+	
+	/**@name	初期化と構築	*/
+	///	単位行列
+	static TPose<ET> Unit(){
+		TPose<ET> y;
+		//PTM::init_unitize(y);
+		y.pos = TVec3<ET>();
+		y.ori = TQuaternion<ET>();
+		return y;
+	}
+
+	/// 与えられた位置でのPoseを初期化して返す
+	static TPose<ET> Unit(TVec3<ET> &v){
+		TPose<ET> y;
+		//PTM::init_unitize(y);
+		y.pos = v;
+		y.ori = TQuaternion<ET>();
+		return y;
+	}
+
+	/// 与えられた回転でのPoseを初期化して返す
+	static TPose<ET> Unit(TQuaternion<ET> &q){
+		TPose<ET> y;
+		//PTM::init_unitize(y);
+		y.pos = TVec3<ET>();
+		y.ori = q;
+		return y;
+	}
+
+	static TPose<ET> UnitPos(TQuaternion<ET> &q){return Unit(q);}
+	static TPose<ET> UnitOri(TVec3<ET> &v){return Unit(v);}
+
+	/// Affine変換の行列に変換し返す
+	TAffine<ET>& to_Affine(){
+		/// Affine行列を生成
+		TAffine<ET> a = TAffine<ET>();
+		/// Affine行列の位置ベクトルにposeの位置をコピーする
+		a.Trn() = pos;
+		/// Oriからできる行列をAffine行列の対応する場所に上書き
+		ori.to_matrix(a);
+		return a;
 	}
 };
 template <class EP, class EV>
@@ -389,7 +456,6 @@ TPose<EA> operator * (const TPose<EA>& a, const TPose<EB>& b){
 	rv.ori = a.ori * b.ori;
 	return rv;
 }
-
 
 ///	float版TPose.
 typedef TPose<float> Posef;
