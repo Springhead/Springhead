@@ -434,14 +434,16 @@ public:
 	static TPose<ET> UnitOri(TVec3<ET> &v){return Unit(v);}
 
 	/// Affine変換の行列に変換し返す
-	TAffine<ET>& to_Affine(){
-		/// Affine行列を生成
-		TAffine<ET> a = TAffine<ET>();
+	void ToAffine(TAffine<ET> &f){
 		/// Affine行列の位置ベクトルにposeの位置をコピーする
-		a.Trn() = pos;
+		f->Trn() = pos;
 		/// Oriからできる行列をAffine行列の対応する場所に上書き
-		ori.to_matrix(a);
-		return a;
+		ori.to_matrix(f);
+	}
+
+	operator TAffine<ET>(){ 
+		TAffine<ET> rv;
+		return rv;
 	}
 };
 template <class EP, class EV>
