@@ -85,12 +85,11 @@ void PHSolid::Step(){
 		angVelocity = pose.ori.conjugated() * angVelocity;
 
 		dw = Euler(inertia, torque, angVelocity) * dt;			//角速度変化量
-		angVelocity += dw;
+		angVelocity += dw;										//角速度の積分
 		Quaterniond dq = Quaterniond::Rot(angVelocity * dt);
 		Vec3d dp = pose.ori * (dq*(-center) - (-center));
 		pose.ori = pose.ori * dq;
 		pose.ori.unitize();
-		angVelocity += dw;										//角速度の積分
 		torque = pose.ori * torque;									//トルクと角速度をワールドへ
 		angVelocity = pose.ori * angVelocity;
 		//平行移動量の積分
