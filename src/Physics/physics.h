@@ -6,3 +6,4 @@
 #include "PHScene.h"
 #include "PHForceField.h"
 #include "PHPenaltyEngine.h"
+#include "PHConstraintEngine.h"
