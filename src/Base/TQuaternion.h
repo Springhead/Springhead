@@ -436,7 +436,7 @@ public:
 	/// Affine変換の行列に変換し返す
 	void ToAffine(TAffine<ET> &f){
 		/// Affine行列の位置ベクトルにposeの位置をコピーする
-		f->Trn() = pos;
+		f.Trn() = pos;
 		/// Oriからできる行列をAffine行列の対応する場所に上書き
 		ori.to_matrix(f);
 	}
