@@ -1,3 +1,14 @@
+/** 
+ @file  Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
+ 
+ @brief ティーポットのある一箇所に力を加えたシミュレーションのサンプルプログラム 
+   
+ <PRE>  
+   左の赤いティーポット ：オブジェクトのローカル座標系を原点とし、重心の1m上を右に力を加える。
+   右の青いティーポット ：オブジェクトのローカル座標系の原点から1m右に重心をずらし、重心の1m上を右に力を加える。
+ </PRE>
+   
+ */
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <gl/glut.h>
 #include <stdlib.h>
@@ -10,17 +21,22 @@ using namespace Spr;
 PHSdkIf* sdk;
 PHSceneIf* scene;
 PHSolidIf* solid1, *solid2;
-
+// 光源の設定 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
 static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
 static GLfloat light_diffuse[]  = { 1.0, 1.0, 1.0, 1.0 }; 
 static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-
+// 材質の設定
 static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
 
+/**
+ @brief     glutDisplayFuncで指定したコールバック関数
+ @param	 	なし
+ @return 	なし
+ */
 void display(){
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -28,22 +44,22 @@ void display(){
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+	// 左の赤いティーポット
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
 
 	Affined ad;
-
 	glPushMatrix();
 	Posed pose = solid1->GetPose();
 	pose.ToAffine(ad);
-
-//	solid1->GetOrientation().to_matrix(af);
-//	af.Pos() = solid1->GetFramePosition();
-
+	//	solid1->GetOrientation().to_matrix(af);
+	//	af.Pos() = solid1->GetFramePosition();
 	// poseでは精度はdoubleなのでmatrixdにする
 	glMultMatrixd(ad);
 	glutSolidTeapot(1.0);
 	glPopMatrix();
 
+	// 右の青いティーポット
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 
 	glPushMatrix();
@@ -55,6 +71,12 @@ void display(){
 
 	glutSwapBuffers();
 }
+
+/**
+ @brief     光源の設定
+ @param	 	なし
+ @return 	なし
+ */
 void setLight() {
 	glEnable(GL_LIGHTING);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -63,6 +85,12 @@ void setLight() {
 	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 	glEnable(GL_LIGHT0);
 }
+
+/**
+ @brief     初期化処理
+ @param	 	なし
+ @return 	なし
+ */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
@@ -76,6 +104,13 @@ void initialize(){
 	glEnable(GL_NORMALIZE);
 	setLight();
 }
+
+/**
+ @brief  glutReshapeFuncで指定したコールバック関数
+ @param	 <in/--> w   幅
+ @param  <in/--> h   高さ
+ @return なし
+ */
 void reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
@@ -83,9 +118,23 @@ void reshape(int w, int h){
 	gluPerspective(60.0, (double)(w/h), 1.0, 500);
 	glMatrixMode(GL_MODELVIEW);
 }
+
+/**
+ @brief glutKeyboardFuncで指定したコールバック関数 
+ @param	<in/--> key     ASCIIコード
+ @param <in/--> x       キーが押された時のマウス座標
+ @param <in/--> y       キーが押された時のマウス座標
+ @return なし
+ */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }
+
+/**
+ @brief  glutIdleFuncで指定したコールバック関数
+ @param	 なし
+ @return なし
+ */
 void idle(){
 	//	剛体の重心の1m上を右に押す．
 	solid1->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid1->GetCenterPosition());
@@ -95,6 +144,13 @@ void idle(){
 	std::cout << solid1->GetFramePosition();
 	std::cout << solid2->GetFramePosition() << std::endl;
 }
+
+/**
+ @brief  メイン関数
+ @param	 <in/--> argc    コマンドライン入力の個数
+ @param  <in/--> argv    コマンドライン入力
+ @return  0 (正常終了)
+ */
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();				//	SDKの作成
 	scene = sdk->CreateScene();			//	シーンの作成
