@@ -247,7 +247,7 @@ ALIASES                =
 # documentation can be controlled using \showinitializer or \hideinitializer 
 # command in the documentation regardless of this setting.
 
-MAX_INITIALIZER_LINES  = 0
+MAX_INITIALIZER_LINES  = 50
 
 # Set the OPTIMIZE_OUTPUT_FOR_C tag to YES if your project consists of C sources 
 # only. Doxygen will then generate output that is more tailored for C. 
@@ -306,7 +306,8 @@ WARN_LOGFILE           = doxygen.log
 # with spaces.
 
 INPUT         = . \
-		../include Base Foundation Collision Physics
+		../include Base Foundation Collision Physics \
+		C:/Home/C/Project/Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
