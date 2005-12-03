@@ -22,7 +22,8 @@ class PHConstraintEngine: public PHEngine{
 	typedef std::vector<PHContactPoint> PHContactPoints;
 
 	/// Solid“¯m‚ÌŒğ·
-	struct PHContactVolume{
+	struct PHContact{
+		bool	bNew;				/// true => V‹K, false => Œp‘±
 		int solids[2];				/// ÚG‚µ‚Ä‚¢‚é„‘Ì
 		int shapes[2];				/// ÚG‚µ‚Ä‚¢‚éŒ`ó
 		CDShape* intersection;		/// Œğ·Œ`ó
@@ -30,16 +31,21 @@ class PHConstraintEngine: public PHEngine{
 		Vec3d center;				/// Œğ·Œ`ó‚ÌdS
 		PHContactPoints	points;		/// normal‚É’¼Œğ‚·‚é•½–Ê‚ÖË‰e‚µ‚½ÚG‘½–Ê‘Ì‚Ì’¸“_”z—ñ
 	};
-	typedef std::vector<PHContactVolume> PHContactVolumes;
+	/// ‘S‚Ä‚ÌÚG‚ğ•Û‚·‚éƒRƒ“ƒeƒi
+	class PHContacts : public std::vector<PHContact>{
+	public:
+		bool IsInContact(){}
+	};
 	
 
 protected:
-	PHSolids			solids;		//S‘©—ÍŒvZ‚Ì‘ÎÛ‚Æ‚È‚é„‘Ì
-	PHContactVolumes	contacts;	//„‘Ì“¯m‚ÌÚGî•ñ
+	PHSolids	solids;		//S‘©—ÍŒvZ‚Ì‘ÎÛ‚Æ‚È‚é„‘Ì
+	PHContacts	contacts;	//„‘Ì“¯m‚ÌÚGî•ñ
 
 	//UTCombination<UTRef<PHSolidPair> > solidPairs;
 public:
 	void Add(PHSolid* s);
+	void Del(PHSolid* s);
 	void Init();
 	///
 	int GetPriority() const {return 0/*SGBP_CONSTRAINTENGINE*/;}

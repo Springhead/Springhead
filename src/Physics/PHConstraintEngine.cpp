@@ -97,14 +97,14 @@ void PHConstraintEngine::Step(){
 		}
 	}
 */
-	//ここまでの処理でPHContactVolumeの配列を得る.
+	//ここまでの処理でPHContactの配列を得る.
 	//これをもとにLCP構築
 	//ヤコビ行列に値を詰める
 	Vec3d n, c, r[2], v[2], vrel, t[2];
 	Matrix3d rcross[2];
 	Posed q[2];
 	PHSolid* solid[2];
-	for(PHContactVolumes::iterator iv = contacts.begin(); iv != contacts.end(); iv++){
+	for(PHContacts::iterator iv = contacts.begin(); iv != contacts.end(); iv++){
 		n = iv->normal;	//法線
 		for(PHContactPoints::iterator ip = iv->points.begin(); ip != iv->points.end(); ip++){
 			c = ip->point;	//接触点
@@ -138,7 +138,65 @@ void PHConstraintEngine::Step(){
 	}
 
 	//LCPを解く
+	/*	u		: 各剛体の速度を並べたベクトル
+		udot	: uの時間微分
+		w		: 接触点での速度
+		J		: uからwを与えるヤコビ行列. w = J u
+		M		: 慣性行列
+		dt		: オイラー積分の時間ステップ
+		λ		: 接触力 * dt
+		Fext	: 外力およびコリオリ項
+
+		運動方程式は
+			M udot = J' λ/dt + Fext
+		オイラー積分により
+			u(t+1) = u(t) + M^-1 J' λ + dt M^-1 Fext
+		左からJをかけて
+			w = J M^-1 J' λ + J (u(t) + dt M^-1 Fext)
+		A = J M^-1 J'
+		b = J (u(t) + dt M^-1 Fext)
+		とおくと
+			w = A λ + b
+		さらに，垂直抗力，静止摩擦，動摩擦などを考慮することにより
+		以下の制約条件を得る
+			λ_i = λ_lo_i				 ==> w_i >= 0
+			λ_i = λ_hi_i				 ==> w_i <= 0
+			λ_lo_i < λ_i < λ_hi_i ==> w_i = 0
+		これの解λをLCP(A, b, λ_hi, λ_lo)と書く
+
+		反復解法:
+		A = D - Nとしたとき，適当なλ[0]を初期値として，漸化式
+			λ[k+1] = LCP(D, -N λ[k] + b, λ_hi, λ_lo)
+		によりλ[k]を更新していく．このとき
+			λ[k+1] = λ[k]
+		が成り立つならば
+			λ[k] = LCP(A, b, λ_hi, λ_lo)
+		となり元の問題が解けたことになる
+		さて，Dが対角行列ならば，LCP(D, -N λ[k] + b, λ_hi, λ_lo)の解は
+			λ[k+1] = min(max(λ_lo, D^-1(N λ[k] - b)), λ_hi)
+		で得られる．要するにこの式を繰り返し計算すればよい．
+	 */
+
+	/* 以下は詳細な式展開
+		N : 剛体の数
+		K : 接触の数
+		size(M) = (6N, 6N)
+		M(i,j) : Mの(i,j)3x3ブロック =
+			O		(i != j)
+			m_k * 1	(i = 2k)	m_kはk番目の剛体の質量, 1は3x3単位行列
+			I_k		(i = 2k+1)	I_kはk番目の剛体の慣性テンソル
+		size(J) = (3K, 6N)
+		J(i,j) : Jの(i,j)3x3ブロック =
+			J_lin(i,lhs(i))		(j == 2lhs(i))		lhs(i)はi番目の接触の「左側」の剛体
+			J_ang(i,lhs(i))		(j == 2lhs(i)+1)
+			J_lin(i,rhs(i))		(j == 2rhs(i))		rhs(i)はi番目の接触の「右側」の剛体
+			J_ang(i,rhs(i))		(j == 2rhs(i)+1)
+			O					(それ以外)
+	*/
+
+
 	//precomputation
+	
 
 	while(true){
 		//terminate condition
