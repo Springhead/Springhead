@@ -7,6 +7,7 @@
 using namespace PTM;
 namespace Spr{;
 
+
 /*
 //	衝突検出と接触力の計算
 bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
@@ -39,12 +40,26 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 //----------------------------------------------------------------------------
 OBJECTIMP(PHConstraintEngine, PHEngine);
 
-void PHConstraintEngine::Add(PHSolid* s){
-	solids.push_back(s);
+void PHConstraintEngine::AddSolid(PHSolid* s){
+	if(solids.Find(s) == 0)
+		solids.push_back(s);
+	Init();
+}
+
+void PHConstraintEngine::RemoveSolid(PHSolid* s){
+	solids.Erase(s);
 	Init();
 }
 
 void PHConstraintEngine::Init(){
+	int N = solids.size();
+	minv.resize(N);
+	Iinv.resize(N);
+	for(int i = 0; i < N; i++){
+		minv[i] = solids[i]->GetMassInv();
+		Iinv[i] = solids[i]->GetInertiaInv();
+	}
+
 }
 
 /**	Solidの端の位置をもち，ソートされるもの	*/
@@ -107,7 +122,7 @@ void PHConstraintEngine::Step(){
 	for(PHContacts::iterator iv = contacts.begin(); iv != contacts.end(); iv++){
 		n = iv->normal;	//法線
 		for(PHContactPoints::iterator ip = iv->points.begin(); ip != iv->points.end(); ip++){
-			c = ip->point;	//接触点
+			c = ip->pos;	//接触点
 			for(int i = 0; i < 2; i++){
 				solid[i] = solids[iv->solids[i]];
                 q[i] = solid[i]->GetPose();
@@ -122,18 +137,18 @@ void PHConstraintEngine::Step(){
 			t[0] = vrel - (n * vrel) * n;
 			t[1] = t[0] % n;
 
-			ip->J[0][0].row(0) = -n;
-			ip->J[0][0].row(1) = -t[0];
-			ip->J[0][0].row(2) = -t[1];
-			ip->J[0][1].row(0) = -rcross[0] * n;
-			ip->J[0][1].row(1) = -rcross[0] * t[0];
-			ip->J[0][1].row(2) = -rcross[0] * t[1];
-			ip->J[1][0].row(0) =  n;
-			ip->J[1][0].row(1) =  t[0];
-			ip->J[1][0].row(2) =  t[1];
-			ip->J[1][1].row(0) =  rcross[1] * n;
-			ip->J[1][1].row(1) =  rcross[1] * t[0];
-			ip->J[1][1].row(2) =  rcross[1] * t[1];
+			ip->Jlin[0].row(0) = -n;
+			ip->Jlin[0].row(1) = -t[0];
+			ip->Jlin[0].row(2) = -t[1];
+			ip->Jang[0].row(0) = -rcross[0] * n;
+			ip->Jang[0].row(1) = -rcross[0] * t[0];
+			ip->Jang[0].row(2) = -rcross[0] * t[1];
+			ip->Jlin[1].row(0) =  n;
+			ip->Jlin[1].row(1) =  t[0];
+			ip->Jlin[1].row(2) =  t[1];
+			ip->Jang[1].row(0) =  rcross[1] * n;
+			ip->Jang[1].row(1) =  rcross[1] * t[0];
+			ip->Jang[1].row(2) =  rcross[1] * t[1];
 		}
 	}
 
@@ -180,18 +195,56 @@ void PHConstraintEngine::Step(){
 	/* 以下は詳細な式展開
 		N : 剛体の数
 		K : 接触の数
+		lhs(i) : i番目の接触の「左側」の剛体の番号
+		rhs(i) : i番目の接触の「右側」の剛体の番号
+			lhs(i) < rhs(i)
+
+		[予備知識]
+		行列の積C = A Bについて
+		C(i,j) = Arow(i)' Bcol(j) = ∑_k=1^n A(i,k) B(k,j)		(n = Aの列数 = Bの行数)
+
+		[各行列の3x3ブロックの内容]
+		ある行列Aの(i,j)番目の3x3部分行列をA(i,j)と書く．
+
 		size(M) = (6N, 6N)
-		M(i,j) : Mの(i,j)3x3ブロック =
+		M(i,j) =
 			O		(i != j)
 			m_k * 1	(i = 2k)	m_kはk番目の剛体の質量, 1は3x3単位行列
 			I_k		(i = 2k+1)	I_kはk番目の剛体の慣性テンソル
+		
 		size(J) = (3K, 6N)
-		J(i,j) : Jの(i,j)3x3ブロック =
-			J_lin(i,lhs(i))		(j == 2lhs(i))		lhs(i)はi番目の接触の「左側」の剛体
+		J(i,j) =
+			J_lin(i,lhs(i))		(j == 2lhs(i))
 			J_ang(i,lhs(i))		(j == 2lhs(i)+1)
-			J_lin(i,rhs(i))		(j == 2rhs(i))		rhs(i)はi番目の接触の「右側」の剛体
+			J_lin(i,rhs(i))		(j == 2rhs(i))
 			J_ang(i,rhs(i))		(j == 2rhs(i)+1)
-			O					(それ以外)
+			O					otherwise
+
+        T := M^-1 J'
+		T(i,j)
+			= ∑_k=1^2N M^-1(i,k) J'(k,j)
+			= ∑_k=1^2N M(i,k)^-1 J(j,k)'
+			= M(i,i)^-1 J(j,i)'
+			=	1/m_lhs(j)  J_lin(j,lhs(j))'	(i == 2lhs(j))
+				I_lhs(j)^-1 J_ang(j,lhs(j))'	(i == 2lhs(j)+1)
+				1/m_rhs(j)  J_lin(j,rhs(j))'	(i == 2rhs(j))
+				I_rhs(j)^-1 J_ang(j,rhs(j))'	(i == 2rhs(j)+1)
+				O							otherwise
+
+		A = J M^-1 J' = J T
+		size(A) = (3K, 3K)
+		A(i,j) = ∑_k=1^2N J(i,k) T(k,j) =
+			δ(lhs(i),lhs(j)) * (1/m_lhs(i) J_lin(i,lhs(i)) J_lin(j,lhs(j))' + J_ang(i,lhs(i)) I_lhs(i)^-1 J_ang(j,lhs(j))') +
+			δ(rhs(i),rhs(j)) * (1/m_rhs(i) J_lin(i,rhs(i)) J_lin(j,rhs(j))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(j,rhs(j))') +
+			δ(lhs(i),rhs(j)) * (1/m_lhs(i) J_lin(i,lhs(i)) J_lin(j,rhs(j))' + J_ang(i,lhs(i)) I_lhs(i)^-1 J_ang(j,rhs(j))') +
+			δ(rhs(i),lhs(j)) * (1/m_rhs(i) J_lin(i,rhs(i)) J_lin(j,lhs(j))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(j,lhs(j))')
+		ただしδはクロネッカーデルタ(δ(i,j) == 1 if i == j or 0 otherwise)
+
+		b = J Vnc		(Vnc = u(t) + dt M^-1 Fext)
+		size(b) = 3K
+		b(i) = ∑_k=1^2N J(i,k) Vnc(k) =
+			J_lin(i,lhs(i)) Vnc(2lhs(i)) + J_ang(i,lhs(i)) Vnc(2lhs(i)+1) +
+			J_lin(i,rhs(i)) Vnc(2rhs(i)) + J_ang(i,rhs(i)) Vnc(2rhs(i)+1)
 	*/
 
 
