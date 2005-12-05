@@ -1,11 +1,19 @@
 /** 
  @file  Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
  
- @brief ティーポットのある一箇所に力を加えたシミュレーションのサンプルプログラム 
+@brief 2つの剛体の位置の変化を確認するテストプログラム（位置を出力,GL表示）
    
  <PRE>  
-   左の赤いティーポット ：オブジェクトのローカル座標系を原点とし、重心の1m上を右に力を加える。
-   右の青いティーポット ：オブジェクトのローカル座標系の原点から1m右に重心をずらし、重心の1m上を右に力を加える。
+ <B>テスト内容</B>
+  ・プログラムが正常終了したら0を返す。
+  
+ <B>プログラム概要</B>
+  ・シミュレーションに必要な情報(質量・重心・慣性テンソルなど)を設定する。
+    剛体の形状はOpenGLでティーポットを指定する。
+  ・シミュレーションが動き始めたら、下記条件で剛体に力を加える。
+      左の赤いティーポット：オブジェクトのローカル座標系を原点とし、重心の1m上を右に1Nの力を加える。
+      右の青いティーポット：オブジェクトのローカル座標系の原点から1m右に重心をずらし、重心の1m上を右に1Nの力を加える。
+  ・与えられた条件により⊿t秒後の位置の変化を積分し、剛体の位置情報を出力と、OpenGLレンダリングを行う。
  </PRE>
    
  */
@@ -137,8 +145,8 @@ void keyboard(unsigned char key, int x, int y){
  */
 void idle(){
 	//	剛体の重心の1m上を右に押す．
-	solid1->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid1->GetCenterPosition());
-	solid2->AddForce( Vec3f(1,0,0), Vec3f(0,1,0) +  solid2->GetCenterPosition());
+	solid1->AddForce( Vec3f(1,0,0), Vec3f(0,1,0)+solid1->GetCenterPosition());
+	solid2->AddForce( Vec3f(1,0,0), Vec3f(0,1,0)+solid2->GetCenterPosition());
 	scene->Step();
 	glutPostRedisplay();
 	std::cout << solid1->GetFramePosition();
@@ -177,5 +185,7 @@ int main(int argc, char* argv[]){
 	glutIdleFunc(idle);
 
 	glutMainLoop();
+	
+	return 0;
 }
 
