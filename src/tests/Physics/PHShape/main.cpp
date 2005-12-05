@@ -1,3 +1,20 @@
+/** 
+ @file  Springhead2/src/tests/Physics/PHShape/main.cpp
+
+@brief 剛体Solidに形状を持たせたテストプログラム（位置を出力、面の頂点座標を出力）
+
+ <PRE>
+ <B>テスト内容</B>
+  ・プログラムが正常終了したら0を返す。
+ 
+ <B>プログラム概要</B>
+  ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
+  　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。  
+  ・与えられた条件により⊿t秒後の位置の変化を2ステップ積分し、位置を出力する。
+　・デバッグ出力として、多面体の面(三角形)の頂点座標を出力する。
+ </PRE>
+     
+ */
 #include <Springhead.h>		//	Springheadのインタフェース
 #pragma hdrstop
 using namespace Spr;
@@ -6,7 +23,12 @@ PHSdkIf* sdk;
 PHSceneIf* scene;
 PHSolidIf* solid1, *solid2;
 
-
+/**
+ @brief  メイン関数
+ @param	 <in/--> argc    コマンドライン入力の個数
+ @param  <in/--> argv    コマンドライン入力
+ @return  0 (正常終了)
+ */
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();				//	SDKの作成
 	scene = sdk->CreateScene();			//	シーンの作成
@@ -48,9 +70,11 @@ int main(int argc, char* argv[]){
 		scene->Step();
 		std::cout << solid1->GetFramePosition();
 		std::cout << solid2->GetFramePosition() << std::endl;
-//		std::cout << solid1->GetOrientation() << std::endl;
+		// std::cout << solid1->GetOrientation() << std::endl;
 	}
 	
+	// デバッグ出力
+	DSTR << "***  solid1  ***\n";
 	for(int i=0; i<solid1->GetNShapes();++i){
 		CDShapeIf** shapes = solid1->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
@@ -63,6 +87,20 @@ int main(int argc, char* argv[]){
 			DSTR << std::endl;
 		}
 	}
+	DSTR << "***  solid2  ***\n";
+	for(int i=0; i<solid2->GetNShapes();++i){
+		CDShapeIf** shapes = solid2->GetShapes();
+		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+		Vec3f* base = mesh->GetVertices();
+		for(size_t f=0; f<mesh->GetNFaces();++f){
+			CDFaceIf* face = mesh->GetFace(f);
+			for(int v=0; v<face->GetNIndices(); ++v){
+				DSTR << base[face->GetIndices()[v]];
+			}
+			DSTR << std::endl;
+		}
+	}
+
 
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 	delete sdk;
