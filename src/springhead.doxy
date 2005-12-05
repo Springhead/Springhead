@@ -307,7 +307,11 @@ WARN_LOGFILE           = doxygen.log
 
 INPUT         = . \
 		../include Base Foundation Collision Physics \
-		C:/Home/C/Project/Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
+		tests/Physics/PHSimple/main.cpp \
+		tests/Physics/PHSimpleGL/main.cpp \
+		tests/Physics/PHShape/main.cpp \
+		tests/Physics/PHShapeGL/main.cpp
+		
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
