@@ -19,8 +19,6 @@
  */
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <gl/glut.h>
-#include <stdlib.h>
-#include <stdio.h>
 #pragma hdrstop
 using namespace Spr;
 
