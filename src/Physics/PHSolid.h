@@ -148,10 +148,10 @@ public:
 	}
 
 	///	Œü‚«‚Ìæ“¾
-	Matrix3d	GetRotation() const { Matrix3d rv; pose.ori.to_matrix(rv); return rv; }
+	Matrix3d	GetRotation() const { Matrix3d rv; pose.ori.ToMatrix(rv); return rv; }
 	///	Œü‚«‚Ìİ’è
 	void		SetRotation(const Matrix3d& r){
-		pose.ori.from_matrix(r);
+		pose.ori.FromMatrix(r);
 	}
 
 	///	Œü‚«‚Ìæ“¾
@@ -160,7 +160,7 @@ public:
 	void		SetOrientation(const Quaterniond& q){
 		pose.ori = q;
 		Matrix3f m;
-		pose.ori.to_matrix(m);
+		pose.ori.ToMatrix(m);
 	}
 
 	///	¿—Ê’†S‚Ì‘¬“x‚Ìæ“¾

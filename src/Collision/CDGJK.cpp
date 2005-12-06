@@ -154,8 +154,8 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 		lastPoint = 0;
 		lastUsed = 1;
 		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
-		p[lastPoint] = a->Support(a2w.Ori().conjugated() * (-v));
-		q[lastPoint] = b->Support(b2w.Ori().conjugated() * v);
+		p[lastPoint] = a->Support(a2w.Ori().Conjugated() * (-v));
+		q[lastPoint] = b->Support(b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
 		if (v*w > 0) return false;
 		if (IsDegenerate(w)) return false;
@@ -182,8 +182,8 @@ void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		lastPoint = 0;
 		lastUsed = 1;
 		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
-		p[lastPoint] = a->Support(a2w.Ori().conjugated() * (-v));
-		q[lastPoint] = b->Support(b2w.Ori().conjugated() * v);
+		p[lastPoint] = a->Support(a2w.Ori().Conjugated() * (-v));
+		q[lastPoint] = b->Support(b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
 		setMax(mu, v*w/len);
 		if (len - mu <= len * relError) break;

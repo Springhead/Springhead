@@ -55,7 +55,7 @@ CDFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 				}
 				for(CDFaces::iterator it = poly[i]->faces.begin(); it != poly[i]->faces.begin()+poly[i]->nPlanes; ++it){
 					if (!it->CalcDualVtx(&*poly[i]->tvtxs.begin())){
-						DSTR << "Common Local: " << cp->shapePoseW[i].inv() * cp->commonPoint << std::endl;
+						DSTR << "Common Local: " << cp->shapePoseW[i].Inv() * cp->commonPoint << std::endl;
 						for(unsigned int v=0; v<poly[i]->vtxIDs.size(); ++v){
 							DSTR << poly[i]->Vertex(v) << std::endl;
 						}
@@ -258,8 +258,8 @@ void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 bool BBoxIntersection(Posed poseA, Vec3f centerA, Vec3f extentA,
 					  Posed poseB, Vec3f centerB, Vec3f extentB){ 
 	Matrix3f postureA, postureB;
-	poseA.Ori().to_matrix(postureA);
-	poseB.Ori().to_matrix(postureB);
+	poseA.Ori().ToMatrix(postureA);
+	poseB.Ori().ToMatrix(postureB);
 
 
     // compute difference of box centers, D = C1-C0

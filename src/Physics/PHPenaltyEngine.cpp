@@ -354,8 +354,8 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	Vec3f reflexForcePoint = cp->reflexForcePoint + cp->commonPoint;	//	—Í‚Ìì—p“_(â‘ÎŒn)
 	if (cp->state == PHShapePair::NEW){
 		//	ƒoƒlƒ‚ƒfƒ‹‚ÌŽn“_‚ðÝ’è‚·‚éD
-		cp->transFrictionBase[0] = solid[0].ori.inv() * (reflexForcePoint - solid[0].pos);
-		cp->transFrictionBase[1] = solid[1].ori.inv() * (reflexForcePoint - solid[1].pos);
+		cp->transFrictionBase[0] = solid[0].ori.Inv() * (reflexForcePoint - solid[0].pos);
+		cp->transFrictionBase[1] = solid[1].ori.Inv() * (reflexForcePoint - solid[1].pos);
 		cp->rotSpring = 0;
 		cp->frictionState = PHShapePair::STATIC;
 		cp->frictionForce = Vec3f();
@@ -380,8 +380,8 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	if (transSpringNorm>1e-10f) frictionForceDicption = transSpring / transSpringNorm;
 
 	//	‰ñ“]ƒoƒl‚ÌŒvŽZ
-	Quaternionf delta[2] = { solid[0].ori*solid[0].lastOri.inv(), solid[1].ori*solid[1].lastOri.inv() };
-	cp->rotSpring += delta[1].rotation()*cp->normal - delta[0].rotation()*cp->normal;
+	Quaternionf delta[2] = { solid[0].ori*solid[0].lastOri.Inv(), solid[1].ori*solid[1].lastOri.Inv() };
+	cp->rotSpring += delta[1].Rotation()*cp->normal - delta[0].Rotation()*cp->normal;
 	float frictionSpringTorque = frictionSpring*cp->rotSpring;
 
 
@@ -446,8 +446,8 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	if (frictionSpring < 1e-12f){	//	–€ŽC‚Ì‚Î‚ËŒW”‚ª0‚¾‚ÆAL‚Ñ‚ªŒvŽZ‚Å‚«‚È‚­‚È‚éB
 		frictionSpring = 1e12f;		//	ŒW”0‚Ìê‡L‚Ñ‚Í–³Ž‹‚Å‚«‚é‚Ì‚ÅAL‚Ñ‚ð¬‚³‚È’l‚É‚µ‚Ä‚¨‚­B
 	}
-	cp->transFrictionBase[0] = solid[0].ori.inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[0].pos);
-	cp->transFrictionBase[1] = solid[1].ori.inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[1].pos);
+	cp->transFrictionBase[0] = solid[0].ori.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[0].pos);
+	cp->transFrictionBase[1] = solid[1].ori.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[1].pos);
 	cp->rotSpring = frictionSpringTorque / frictionSpring;
 }
 

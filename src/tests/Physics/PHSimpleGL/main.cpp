@@ -169,8 +169,12 @@ int main(int argc, char* argv[]){
 	
 	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
 	desc.pose.pos = Vec3f(3.5, 0.0, 0.0);
-	solid2 = scene->CreateSolid(desc);	
 
+	/// 手前に平行移動
+	desc.pose = desc.pose + Posed::Trn(0.0, 0.0, 3.0);
+	
+	solid2 = scene->CreateSolid(desc);	
+	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow("PHSimpleGL");

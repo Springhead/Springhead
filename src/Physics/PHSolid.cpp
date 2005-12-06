@@ -27,7 +27,7 @@ void PHSolid::CalcBBox(){
 //	DSTR << GetName() << bbox.GetBBoxMin() << bbox.GetBBoxMax() << std::endl;
 }
 void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
-		bbox.GetSupport(GetOrientation().inv()*dir, minS, maxS);
+		bbox.GetSupport(GetOrientation().Inv()*dir, minS, maxS);
 		float c = Vec3f(GetFramePosition()) * dir;
 		minS += c;
 		maxS += c;
@@ -60,10 +60,10 @@ void PHSolid::Step(){
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
 		velocity += force * (dt / mass);
 		//角速度からクウォータニオンの時間微分を求め、積分、正規化
-		pose.ori += pose.ori.derivative(angVelocity) * dt;
+		pose.ori += pose.ori.Derivative(angVelocity) * dt;
 		pose.ori.unitize();
-		torque		= pose.ori.conjugated() * torque;			//トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.conjugated() * angVelocity;
+		torque		= pose.ori.Conjugated() * torque;			//トルクと角速度をローカル座標へ
+		angVelocity = pose.ori.Conjugated() * angVelocity;
 		angVelocity += Euler(inertia, torque, angVelocity) * dt;	//オイラーの運動方程式
 		torque = pose.ori * torque;						//トルクと角速度をワールドへ
 		angVelocity = pose.ori * angVelocity;
@@ -71,18 +71,18 @@ void PHSolid::Step(){
 	case PHINT_ARISTOTELIAN:{
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
 		velocity = force / mass;		//速度は力に比例する
-		Vec3d tq = pose.ori.conjugated() * torque;	//トルクをローカルへ
+		Vec3d tq = pose.ori.Conjugated() * torque;	//トルクをローカルへ
 		angVelocity = pose.ori * (inertia_inv * tq);	//角速度はトルクに比例する
 		//クウォータニオンを積分、正規化
-		pose.ori += pose.ori.derivative(angVelocity) * dt;
+		pose.ori += pose.ori.Derivative(angVelocity) * dt;
 		pose.ori.unitize();
 		}break;
 	case PHINT_SIMPLETIC:{
 		//	x(dt) = x(0) + dt*v(0)/m
 		//	v(dt) = v(0) + dt*f(dt)
 		//回転量の積分
-		torque		= pose.ori.conjugated() * torque;				//	トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.conjugated() * angVelocity;
+		torque		= pose.ori.Conjugated() * torque;				//	トルクと角速度をローカル座標へ
+		angVelocity = pose.ori.Conjugated() * angVelocity;
 
 		dw = Euler(inertia, torque, angVelocity) * dt;			//角速度変化量
 		angVelocity += dw;										//角速度の積分
@@ -99,8 +99,8 @@ void PHSolid::Step(){
 	case PHINT_ANALYTIC:{
 		//回転量の積分
 		//回転は解析的に積分できないので、形式的に↑の公式を回転の場合に当てはめる
-		torque		= pose.ori.conjugated() * torque;					//トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.conjugated() * angVelocity;
+		torque		= pose.ori.Conjugated() * torque;					//トルクと角速度をローカル座標へ
+		angVelocity = pose.ori.Conjugated() * angVelocity;
 		dw = Euler(inertia, torque, angVelocity) * dt;			//角速度変化量
 
 		Quaterniond dq = Quaterniond::Rot((angVelocity+0.5*dw) * dt);
@@ -123,13 +123,13 @@ void PHSolid::Step(){
 		velocity += dv;
 		//回転量の計算
 		//回転は解析的に積分できないので、ルンゲクッタ公式を使う
-		torque		= pose.ori.conjugated() * torque;					//トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.conjugated() * angVelocity;
+		torque		= pose.ori.Conjugated() * torque;					//トルクと角速度をローカル座標へ
+		angVelocity = pose.ori.Conjugated() * angVelocity;
 		_angvel[0]	= angVelocity;
 		_angacc[0]	= Euler(inertia, torque, _angvel[0]);
 		_angvel[1]	= _angvel[0] + _angacc[0] * dt;
 		_angacc[1]	= Euler(inertia, torque, _angvel[1]);
-		pose.ori += pose.ori.derivative(pose.ori * (_angvel[0] + _angvel[1]) / 2.0) * dt;
+		pose.ori += pose.ori.Derivative(pose.ori * (_angvel[0] + _angvel[1]) / 2.0) * dt;
 		pose.ori.unitize();
 		angVelocity = pose.ori * (angVelocity + ((_angacc[0] + _angacc[1]) * (dt / 2.0)));
 		torque = pose.ori * torque;
@@ -148,7 +148,7 @@ void PHSolid::Step(){
 		_angacc[2]	= Euler(inertia, torque, _angvel[2]);
 		_angvel[3]	= _angvel[0] + _angacc[2] * dt;
 		_angacc[3]	= Euler(inertia, torque, _angvel[3]);
-		pose.ori += pose.ori.derivative(pose.ori * (_angvel[0] + 2.0 * (_angvel[1] + _angvel[2]) + _angvel[3]) / 6.0) * dt;
+		pose.ori += pose.ori.Derivative(pose.ori * (_angvel[0] + 2.0 * (_angvel[1] + _angvel[2]) + _angvel[3]) / 6.0) * dt;
 		pose.ori.unitize();
 		angVelocity = pose.ori * (angVelocity + (_angacc[0] + 2.0 * (_angacc[1] + _angacc[2]) + _angacc[3]) * (dt / 6.0));
 		torque = pose.ori * torque;

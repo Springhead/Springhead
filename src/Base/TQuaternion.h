@@ -71,7 +71,7 @@ public:
 	/// 
 	vector_type& V() {return sub_vector(1,vector_type());}
 	/// 回転ベクトル．0..PIの範囲で回転ベクトルを返す．
-	TVec3<ET> rotation_half() {
+	TVec3<ET> RotationHalf() {
 		TQuaternion<ET> tmp;
 		if (tmp.W() < 0) tmp = -*this;
 		else tmp = *this;
@@ -87,7 +87,7 @@ public:
 		return r;
 	}
 	///	回転ベクトル2． 0..2PIの範囲で回転ベクトルを返す．	angle から関数名変更
-	TVec3<ET> rotation() {
+	TVec3<ET> Rotation() {
 		//	W() = cos(theta/2) なので
 		TVec3<ET> r;
 		if (W() < -1) W() = -1;
@@ -103,7 +103,7 @@ public:
 	}
 
 	/// 回転軸
-	TVec3<ET> axis(){
+	TVec3<ET> Axis(){
 		TVec3<ET> r;
 		r = sub_vector(1, vector_type());
 		ET len = r.norm();
@@ -114,7 +114,7 @@ public:
 	}
 
 	/// 回転角度 (angleに関数名を変更する予定)
-	ET theta(){
+	ET Theta(){
 		return (ET)( acos(W()) * 2 );
 	}
 	//@}
@@ -152,14 +152,14 @@ public:
 
 	//@}
 	///共役
-	void conjugate() { V() = -V(); }
+	void Conjugate() { V() = -V(); }
 	///	
-	TQuaternion conjugated() const { TQuaternion rv(*this); rv.conjugate(); return rv;}
+	TQuaternion Conjugated() const { TQuaternion rv(*this); rv.Conjugate(); return rv;}
 	///逆
-	TQuaternion inv() const { return conjugated() / square(); }
+	TQuaternion Inv() const { return Conjugated() / square(); }
 
 	///回転行列変換
-	template<class AM> void from_matrix(const AM& m)
+	template<class AM> void FromMatrix(const AM& m)
 	{
 		ET tr = m[0][0] + m[1][1] + m[2][2] + 1;
 		if (tr > 1e-6f){
@@ -189,7 +189,7 @@ public:
 		}
 		unitize();
 	}
-	template<class AM> void to_matrix(AM& mat) const
+	template<class AM> void ToMatrix(AM& mat) const
 	{
 		typedef TYPENAME AM::element_type AMET;
 		mat[0][0] = AMET( 1.0 - 2.0 * (Y()*Y() + Z()*Z()) );
@@ -203,7 +203,7 @@ public:
 		mat[2][2] = AMET( 1.0 - 2.0 * (X()*X() + Y()*Y()) );
 	}
 	///	オイラー角へ変換
-	template <class ET> void to_eular(TVec3<ET>& v){
+	template <class ET> void ToEular(TVec3<ET>& v){
 		ET poleCheck = X()*Y() + Z()*W();
 		ET& heading = v[0];
 		ET& attitude = v[1];
@@ -221,7 +221,7 @@ public:
 		}
 	}
 	///
-	template <class ET> void from_eular(const TVec3<ET>& v){
+	template <class ET> void FromEular(const TVec3<ET>& v){
 		ET& heading = v[0];
 		ET& attitude = v[1];
 		ET& bank = v[2];
@@ -239,7 +239,7 @@ public:
 		Z() = c1 s2 c3 - s1 c2 s3;
 	}
 	///lhsを回転してrhsに一致させるクウォータニオン
-	void rotation_arc(const TVec3<ET>& lhs, const TVec3<ET>& rhs)
+	void RotationArc(const TVec3<ET>& lhs, const TVec3<ET>& rhs)
 	{
 		TVec3<ET> v0, v1, c;
 		ET d, s;
@@ -253,7 +253,7 @@ public:
 	}
 
 	///オイラー角で指定
-	void euler(ET yaw, ET pitch, ET roll) {
+	void Euler(ET yaw, ET pitch, ET roll) {
 		ET cosYaw	= cos(yaw / 2);
 		ET sinYaw	= sin(yaw / 2);
 		ET cosPitch	= cos(pitch / 2);
@@ -269,7 +269,7 @@ public:
 	//角速度からクウォータニオンの時間微分を計算
 	//w : 角速度（ワールド）
 	//q : クウォータニオン
-	TQuaternion<ET> derivative(const TVec3<ET>& w){
+	TQuaternion<ET> Derivative(const TVec3<ET>& w){
 		return 0.5 * TQuaternion<ET>(0.0, w.X(), w.Y(), w.Z()) * *this;
 	}
 };
@@ -289,7 +289,7 @@ TQuaternion<A> operator*(const TQuaternion<A>& q1, const TQuaternion<B>& q2){
 template <class ET, class BD>
 inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVectorBase<DIMENC(3), BD>& v){
 	TQuaternion<ET> qv(1, ET(v[0]), ET(v[1]), ET(v[2]));
-	TYPENAME BD::ret_type r = (q * qv * q.conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
+	TYPENAME BD::ret_type r = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
 	return r;
 }
 ///	TQuaternion の内積．
@@ -395,13 +395,13 @@ public:
 	ET& OriW() {return w;}
 	const ET& OriW() const {return w;}
 	
-	TPose<ET> inv() const { 
+	TPose<ET> Inv() const { 
 		TPose<ET> rv;
-		rv.ori = ori.inv();
+		rv.ori = ori.Inv();
 		rv.pos = -rv.ori*pos;
 		return rv;
 	}
-	
+
 	/**@name	初期化と構築	*/
 	///	単位行列
 	static TPose<ET> Unit(){
@@ -433,12 +433,22 @@ public:
 	static TPose<ET> UnitPos(TQuaternion<ET> &q){return Unit(q);}
 	static TPose<ET> UnitOri(TVec3<ET> &v){return Unit(v);}
 
+	///	平行移動
+	static TPose<ET> Trn(element_type px, element_type py, element_type pz){
+		TPose<ET> y;
+		y.PosX() = px;
+		y.PosY() = py;
+		y.PosZ() = pz;
+		y.Ori() = TQuaternion<ET>();
+		return y;
+	}
+
 	/// Affine変換の行列に変換し返す
 	void ToAffine(TAffine<ET> &f){
 		/// Affine行列の位置ベクトルにposeの位置をコピーする
 		f.Trn() = pos;
 		/// Oriからできる行列をAffine行列の対応する場所に上書き
-		ori.to_matrix(f);
+		ori.ToMatrix(f);
 	}
 
 	operator TAffine<ET>(){ 
