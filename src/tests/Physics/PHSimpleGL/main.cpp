@@ -153,6 +153,9 @@ void idle(){
 	glutPostRedisplay();
 	std::cout << solid1->GetFramePosition();
 	std::cout << solid2->GetFramePosition() << std::endl;
+	static int count;
+	count ++;
+	if (count > 1000) exit(0);
 }
 
 /**
