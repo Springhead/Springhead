@@ -29,12 +29,12 @@
 using namespace Spr;
 
 #define ESC				27
-#define RATIO			1.000001	// overflow
+#define RATIO			1.001	// overflow
 #define FALL_DISTANCE	-500		// 落下距離(異常終了時)
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
-PHSolidIf* solid1, *solid2;
+PHSolidIf* soFloor, *soBlock;
 
 // 光源の設定 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
@@ -92,16 +92,16 @@ void display(){
 
 	Affined ad;
 	
-	// 下の赤い剛体(solid1)
+	// 下の赤い剛体(soFloor)
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
 	glPushMatrix();
-	Posed pose = solid1->GetPose();
+	Posed pose = soFloor->GetPose();
 	pose.ToAffine(ad);
 	glMultMatrixd(ad);	
 
 	float normal[3];
-	for(int i=0; i<solid1->GetNShapes(); ++i){
-		CDShapeIf** shapes = solid1->GetShapes();
+	for(int i=0; i<soFloor->GetNShapes(); ++i){
+		CDShapeIf** shapes = soFloor->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->GetNFaces();++f){
@@ -119,14 +119,14 @@ void display(){
 	glPopMatrix();
 
 	
-	// 上の青い剛体(solid2)
+	// 上の青い剛体(soBlock)
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 	glPushMatrix();
-	pose = solid2->GetPose();
+	pose = soBlock->GetPose();
 	ad = Affined(pose);
 	glMultMatrixd(ad);
-		for(int i=0; i<solid2->GetNShapes(); ++i){
-		CDShapeIf** shapes = solid2->GetShapes();
+		for(int i=0; i<soBlock->GetNShapes(); ++i){
+		CDShapeIf** shapes = soBlock->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->GetNFaces();++f){
@@ -227,15 +227,15 @@ bool doubleEqual(double d1, double d2){
  */
 void idle(){
 	Vec3d prepos, curpos;	// position
-	prepos = solid2->GetFramePosition();
+	prepos = soBlock->GetFramePosition();
 
 	scene->Step();
 
 	// 位置情報を出力
-	std::cout << solid1->GetFramePosition();
-	std::cout << solid2->GetFramePosition() << std::endl;
+//	std::cout << soFloor->GetFramePosition();
+//	std::cout << soBlock->GetFramePosition() << std::endl;
 
-	curpos = solid2->GetFramePosition();
+	curpos = soBlock->GetFramePosition();
 
 	// 床の上に5秒静止したら正常終了とする。
 	if (doubleEqual(prepos.x, curpos.x) && doubleEqual(prepos.y, curpos.y) && doubleEqual(prepos.z, curpos.z)) {
@@ -271,8 +271,8 @@ void idle(){
 void dstrSolid(int solidID) {
 	PHSolidIf* solid;
 	DSTR << "***  solid" << solidID << "   ***\n";
-	if (solidID == 1)		solid = solid1;
-	else if (solidID == 2)	solid = solid2;
+	if (solidID == 1)		solid = soFloor;
+	else if (solidID == 2)	solid = soBlock;
 
 	for(int i=0; i<solid->GetNShapes(); ++i){
 		CDShapeIf** shapes = solid->GetShapes();
@@ -300,12 +300,15 @@ int main(int argc, char* argv[]){
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
-	solid2 = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
+	soBlock = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
+	Posef p;
+	p.ori = Quaternionf::Rot(Rad(0.0), 'z');
+	soBlock->SetPose(p);
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
-	solid1 = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
-	solid1->SetGravity(false);
+	soFloor = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
+	soFloor->SetGravity(false);
 	
 	//	形状の作成
 	CDConvexMeshDesc md;
@@ -317,19 +320,20 @@ int main(int argc, char* argv[]){
 	md.vertices.push_back(Vec3f( 1,-1, 1));
 	md.vertices.push_back(Vec3f( 1, 1,-1));
 	md.vertices.push_back(Vec3f( 1, 1, 1));
-	CDConvexMeshIf* mesh2 = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+	CDConvexMeshIf* meshBlock = ICAST(CDConvexMeshIf, scene->CreateShape(md));
 
-	// solid1(mesh1)に対してスケーリング
+	// soFloor(meshFloor)に対してスケーリング
 	for(unsigned i=0; i<md.vertices.size(); ++i){
-		md.vertices[i].x *= 1.5;
-		md.vertices[i].z *= 1.5;
+		md.vertices[i].x *= 3;
+		md.vertices[i].z *= 3;
 	}
-	CDConvexMeshIf* mesh1 = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+	CDConvexMeshIf* meshFloor = ICAST(CDConvexMeshIf, scene->CreateShape(md));
 
-	solid1->AddShape(mesh1);
-	solid2->AddShape(mesh2);
-	solid1->SetFramePosition(Vec3f(0,-1,0));
-	solid2->SetFramePosition(Vec3f(0,3,0));	
+	soFloor->AddShape(meshFloor);
+	soBlock->AddShape(meshBlock);
+	soFloor->SetFramePosition(Vec3f(0,-1,0));
+	soBlock->SetFramePosition(Vec3f(0.5,3,0));
+	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 

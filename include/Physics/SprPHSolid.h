@@ -43,6 +43,8 @@ struct PHSolidIf : public ObjectIf{
 
 	/// p¨‚Ìæ“¾
 	virtual Posed		GetPose() const = 0;
+	/// p¨‚Ìİ’è
+	virtual void		SetPose(const Posed& p) = 0;
 
 	///	¿—Ê’†S‚Ì‘¬“x‚Ìæ“¾
 	virtual Vec3d		GetVelocity() const  =0;

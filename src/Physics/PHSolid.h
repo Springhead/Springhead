@@ -139,6 +139,7 @@ public:
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
 	Posed		GetPose() const { return pose; }
+	void		SetPose(const Posed& p) { pose = p;}
 	Vec3d		GetFramePosition() const {return pose.pos;}
 	void		SetFramePosition(const Vec3d& p){pose.pos = p;}
 	Vec3d		GetCenterPosition() const {return pose*center;}

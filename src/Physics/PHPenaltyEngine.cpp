@@ -85,6 +85,7 @@ bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 			shapePair->UpdateShapePose(solid[0].solid->GetPose(), solid[1].solid->GetPose());
 			if ( shapePair->Detect(ct) ){
 				rv = true;
+
 				contacts.push_back(shapePair);
 				static CDContactAnalysis analyzer;
 				analyzer.FindIntersection(shapePair);	//	ÚGŒ`ó‚Ì‰ğÍ
@@ -140,12 +141,13 @@ bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 	//		DSTR << "ref:" << cp->reflexSpringForce << cp->reflexDamperForce << std::endl;
 			Vec3f refF = cp->reflexSpringForce + cp->reflexDamperForce;
 			Vec3f refT = cp->reflexSpringTorque + cp->reflexDamperTorque
-				- ((cocog - cp->commonPoint)^reflexForce);
+				+ ((cp->commonPoint - cocog)^refF);
+
 			reflexForce += refF;
 			reflexTorque += refT;
 			frictionForce += cp->frictionForce;
 			frictionTorque += cp->frictionTorque
-				- ((cocog - (cp->reflexForcePoint+cp->commonPoint)) ^ cp->frictionForce);
+				+ (((cp->reflexForcePoint+cp->commonPoint) - cocog) ^ cp->frictionForce);
 		}
 		//	DSTR << std::endl;
 		//	—Í‚ğ§ŒÀ‚·‚éD
