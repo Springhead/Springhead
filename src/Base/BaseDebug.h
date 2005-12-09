@@ -6,6 +6,18 @@
 
 /**	@file BaseDebug.h デバッグ用ユーティリティークラス・関数の定義.	*/
 
+#ifndef DBG_NEW
+# ifdef _DEBUG
+#  include <crtdbg.h>
+#  define _CRTDBG_MAP_ALLOC
+///	Debug用 new リーク時に行番号を表示
+#  define DBG_NEW  ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
+# else
+#  define DBG_NEW new
+# endif
+#endif
+
+
 /**	デバッグ用 printf 関数.
 	@verbatim
 	DPF("メッセージ:%s", msg);@endverbatim

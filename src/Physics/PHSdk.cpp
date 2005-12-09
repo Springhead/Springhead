@@ -16,7 +16,7 @@ struct Sdks{
 	_CrtMemState memStart;
 	Sdks(){
 		_CrtMemCheckpoint(&memStart);
-		cont = new Cont;
+		cont = DBG_NEW Cont;
 	}
 	~Sdks(){
 		while(cont->size()){
@@ -33,7 +33,7 @@ struct Sdks{
 };
 static Sdks sdks;
 PHSdkIf* CreatePHSdk(){
-	PHSdkIf* rv = new PHSdk;
+	PHSdkIf* rv = DBG_NEW PHSdk;
 	sdks.cont->push_back(rv);
 	rv->AddRef();
 	return rv;
@@ -53,7 +53,7 @@ PHSdk::~PHSdk(){
 }
 
 PHSceneIf* PHSdk::CreateScene(){
-	PHSceneIf* rv = new PHScene(this);
+	PHSceneIf* rv = DBG_NEW PHScene(this);
 	scenes.push_back(rv);
 	return rv;
 }

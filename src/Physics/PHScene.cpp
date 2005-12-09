@@ -22,17 +22,17 @@ void PHScene::Init(){
 	engines.scene = this;
 	timeStep = 0.005;
 	Scene::Clear();
-	solids = new PHSolidContainer;
+	solids = DBG_NEW PHSolidContainer;
 	engines.Add(solids);
-	PHGravityEngine* ge = new PHGravityEngine;
+	PHGravityEngine* ge = DBG_NEW PHGravityEngine;
 	engines.Add(ge);
-	PHPenaltyEngine* pe = new PHPenaltyEngine;
+	PHPenaltyEngine* pe = DBG_NEW PHPenaltyEngine;
 	engines.Add(pe);
 }
 
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
-	PHSolid* s = new PHSolid(desc);
+	PHSolid* s = DBG_NEW PHSolid(desc);
 	s->SetScene(this);
 	solids->AddChildObject(s, this);	
 
@@ -107,7 +107,7 @@ void PHScene::Integrate(){
 
 CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
 	if (desc.type == CDShapeDesc::CONVEXMESH){
-		CDShape* s = new CDConvexMesh((const CDConvexMeshDesc&)desc);
+		CDShape* s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
 		s->SetScene(this);
 		shapes.push_back(s);
 		return s;

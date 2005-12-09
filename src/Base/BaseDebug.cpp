@@ -7,7 +7,6 @@
 
 namespace Spr {
 
-
 typedef void (DebugOutFunc)(const char*);
 static DebugOutFunc* debugOutFunc;
 

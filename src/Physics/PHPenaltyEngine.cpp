@@ -458,7 +458,7 @@ void PHPenaltyEngine::PHSolidPair::Init(){
 	shapePairs.resize(solid[0].solid->shapes.size(), solid[1].solid->shapes.size());
 	for(unsigned i=0; i<solid[0].solid->shapes.size(); ++i){
 		for(unsigned j=0; j<solid[1].solid->shapes.size(); ++j){
-			shapePairs.item(i, j) = new PHShapePair(solid[0].solid->shapes[i], solid[1].solid->shapes[j]);
+			shapePairs.item(i, j) = DBG_NEW PHShapePair(solid[0].solid->shapes[i], solid[1].solid->shapes[j]);
 		}
 	}
 }
@@ -476,7 +476,7 @@ void PHPenaltyEngine::Init(){
 	solidPairs.resize(solids.size(), solids.size());
 	for(unsigned i=0; i<solids.size(); ++i){
 		for(unsigned j=i+1; j<solids.size(); ++j){
-			solidPairs.item(i, j) = new PHSolidPair(solids[i], solids[j]);
+			solidPairs.item(i, j) = DBG_NEW PHSolidPair(solids[i], solids[j]);
 			solidPairs.item(i, j)->Init();
 		}
 	}
