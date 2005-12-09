@@ -301,8 +301,8 @@ int main(int argc, char* argv[]){
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
 	soBlock = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
-	Posef p;
-	p.ori = Quaternionf::Rot(Rad(0.0), 'z');
+
+	Posed p = Posed::Rot(Rad(0.0), 'z');
 	soBlock->SetPose(p);
 
 	desc.mass = 1e20f;
@@ -359,5 +359,3 @@ int main(int argc, char* argv[]){
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 	delete sdk;
 }
-
-

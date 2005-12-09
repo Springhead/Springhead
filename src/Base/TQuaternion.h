@@ -365,7 +365,7 @@ public:
 	///	ストライド
 	size_t stride_impl() const { return 1; }
 
-	///	
+	///	要素のアクセス
 	TVec3<ET>& Pos() { return pos; }
 	const TVec3<ET>& Pos() const { return pos; }
 	TQuaternion<ET>& Ori() { return ori; }
@@ -430,16 +430,43 @@ public:
 		return y;
 	}
 
-	static TPose<ET> UnitPos(TQuaternion<ET> &q){return Unit(q);}
-	static TPose<ET> UnitOri(TVec3<ET> &v){return Unit(v);}
-
 	///	平行移動
 	static TPose<ET> Trn(element_type px, element_type py, element_type pz){
+		return Trn(TVec3<ET>(px, py, pz));
+	}
+	static TPose<ET> Trn(TVec3<ET> &v){
 		TPose<ET> y;
-		y.PosX() = px;
-		y.PosY() = py;
-		y.PosZ() = pz;
-		y.Ori() = TQuaternion<ET>();
+		y.pos = v;
+		y.ori = TQuaternion<ET>();
+		return y;
+	}
+
+	/// 回転
+	static TPose<ET> Rot(ET wi, ET xi, ET yi, ET zi){ 
+		TPose<ET> y;
+		y.pos = TVec3<ET>();
+		y.ori = TQuaternion<ET>(wi, xi, yi, zi);
+		return y;
+	}
+
+	static TPose<ET> Rot(ET angle, const TVec3<element_type>& axis){ 
+		TPose<ET> y;
+		y.pos = TVec3<ET>();
+		y.ori = TQuaternion<ET>::Rot(angle, axis);
+		return y;
+	}
+
+	static TPose<ET> Rot(ET angle, char axis){
+		TPose<ET> y;
+		y.pos = TVec3<ET>();
+		y.ori = TQuaternion<ET>::Rot(angle, axis);
+		return y;
+	}
+
+	static TPose<ET> Rot(const TVec3<ET>& rot){
+		TPose<ET> y;
+		y.pos = TVec3<ET>();
+		y.ori = TQuaternion<ET>::Rot(rot);
 		return y;
 	}
 
