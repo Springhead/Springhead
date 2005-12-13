@@ -22,15 +22,17 @@
    
  */
 #include <Springhead.h>		//	Springheadのインタフェース
+#include <ctime>
 #include <gl/glut.h>
 #pragma hdrstop
 using namespace Spr;
 
-#define ESC 27
+#define ESC		27
+#define RATIO	1.001
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
-PHSolidIf* solid1, *solid2;
+PHSolidIf* redTeapot, *blueTeapot;	// Solidタイプ
 // 光源の設定 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
 static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
@@ -41,6 +43,17 @@ static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
+
+static double stepCnt = 0.0;
+namespace {
+	Vec3d redForce = Vec3d(1.0, 0.0, 0.0);
+	Vec3d redVel = Vec3d(0.0, 0.0, 0.0);				// 速度
+	Vec3d redPos = Vec3d(0.0, 0.0, 0.0);				// 位置
+	
+	Vec3d blueForce = Vec3d(1.0, 0.0, 0.0);
+	Vec3d blueVel = Vec3d(0.0, 0.0, 0.0);				
+	Vec3d bluePos = Vec3d(0.0, 0.0, 0.0);				// 位置
+}
 
 /**
  @brief     glutDisplayFuncで指定したコールバック関数
@@ -60,10 +73,10 @@ void display(){
 
 	Affined ad;
 	glPushMatrix();
-	Posed pose = solid1->GetPose();
+	Posed pose = redTeapot->GetPose();
 	pose.ToAffine(ad);
-	//	solid1->GetOrientation().to_matrix(af);
-	//	af.Pos() = solid1->GetFramePosition();
+	//	redTeapot->GetOrientation().to_matrix(af);
+	//	af.Pos() = redTeapot->GetFramePosition();
 	// poseでは精度はdoubleなのでmatrixdにする
 	glMultMatrixd(ad);
 	glutSolidTeapot(1.0);
@@ -73,7 +86,7 @@ void display(){
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 
 	glPushMatrix();
-	pose = solid2->GetPose();
+	pose = blueTeapot->GetPose();
 	ad = Affined(pose);
 	glMultMatrixd(ad);
 	glutSolidTeapot(1.0);
@@ -145,17 +158,72 @@ void keyboard(unsigned char key, int x, int y){
  @param	 	なし
  @return 	なし
  */
+#define absMax(x,y) abs(x)>abs(y)? x:y
+Vec3d maxdiff = Vec3d(0.0, 0.0, 0.0);
+#define BLUE_1
 void idle(){
 	//	剛体の重心の1m上を右に押す．
-	solid1->AddForce( Vec3f(1,0,0), Vec3f(0,1,0)+solid1->GetCenterPosition());
-	solid2->AddForce( Vec3f(1,0,0), Vec3f(0,1,0)+solid2->GetCenterPosition());
+	Vec3d force = Vec3d(1, 0, 0);
+	redTeapot->AddForce( force, Vec3f(0,1,0)+redTeapot->GetCenterPosition());
+	blueTeapot->AddForce( force, Vec3f(0,1,0)+blueTeapot->GetCenterPosition());
+
+	//DSTR << "==============" << blueTeapot->GetCenterPosition() << std::endl;
 	scene->Step();
+
+	stepCnt += scene->GetTimeStep();
+	double dt = scene->GetTimeStep();
+
+
+
+	// 速度を導き、微少時間経過後の位置を計算 
+
+	redVel		+= force * redTeapot->GetMassInv() * dt;	// (force/m)*dt
+	redPos		+= redVel * dt;
+
+#ifdef BLUE_1
+	blueVel		+= force * blueTeapot->GetMassInv() * dt;	// (force/m)*dt
+	bluePos		+= blueVel * dt;
+	// MAXDIFF : x=-1.99999 y=-1.00015
+	// myCalcFrame:(28.5125      0      3) getFrame:(28.5135 -0.0450767      3) getCenter:(29.5125 0.00015      3)
+#else	
+
+bluePos		= Vec3d(3.5, 0, 3) + 0.5 * force * blueTeapot->GetMassInv() * stepCnt * stepCnt;
+	// maxdiff x=-2.01168 y=1.00015 
+    // (  28.5      0      3)(28.5135 -0.0450767      3)		diff:(-0.0135233 0.0450767      0)
+#endif
+
+
+	std::cout << redTeapot->GetFramePosition();
+	std::cout << blueTeapot->GetFramePosition() << std::endl;
+	
+	//DSTR << stepCnt << std::endl;		// 0.005 -> 0.01	// 微小時間 [s] 5msec相当
+
+
+
+Vec3d diff;
+#if 1
+	diff = bluePos-blueTeapot->GetFramePosition();
+	maxdiff.x = absMax(diff.x, maxdiff.x);
+	maxdiff.y = absMax(diff.y, maxdiff.y);
+	DSTR << bluePos << blueTeapot->GetFramePosition() << "\t\tdiff:" << diff;// << blueTeapot->GetCenterPosition();
+#else
+	diff = redPos-redTeapot->GetFramePosition();
+	DSTR << redPos << redTeapot->GetFramePosition() << "\t\tdiff:" << diff;
+#endif
+DSTR <<  std::endl;
+
+
+	//if (stepCnt >= 10.0) {	// 10秒
+	if (stepCnt >= 10.0) {	// 10秒
+		DSTR << "myCalcFrame:" << bluePos << " getFrame:" << blueTeapot->GetFramePosition() << " getCenter:" << blueTeapot->GetCenterPosition() << std::endl;
+		//DSTR << blueTeapot->GetCenterPosition() << redTeapot->GetCenterPosition() << std::endl;
+		DSTR << "MAXDIFF : " << "x=" << maxdiff.x << " y=" << maxdiff.y << std::endl;
+		DSTR << "\n正常終了." << std::endl;
+		exit(EXIT_SUCCESS);
+	} 
+	
+
 	glutPostRedisplay();
-	std::cout << solid1->GetFramePosition();
-	std::cout << solid2->GetFramePosition() << std::endl;
-	static int count;
-	count ++;
-	if (count > 1000) exit(0);
 }
 
 /**
@@ -172,16 +240,19 @@ int main(int argc, char* argv[]){
 	desc.mass = 2.0;					// 質量	
 	desc.inertia *=2.0;					// 慣性テンソル
 	desc.center = Vec3f(0,0,0);			// 質量中心の位置
-	solid1 = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
-	
+	redTeapot = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
+	redPos = redTeapot->GetFramePosition();
+
+
 	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
 	desc.pose.pos = Vec3f(3.5, 0.0, 0.0);
-
 	/// 手前に平行移動
-	desc.pose = desc.pose + Posed::Trn(0.0, 0.0, 3.0);
-	
-	solid2 = scene->CreateSolid(desc);	
-	
+	desc.pose = desc.pose * Posed::Trn(0.0, 0.0, 3.0);
+	blueTeapot = scene->CreateSolid(desc);	
+	bluePos = blueTeapot->GetFramePosition();
+	//bluePos = blueTeapot->GetCenterPosition();
+	DSTR << "-------------------"<< blueTeapot->GetFramePosition() << blueTeapot->GetCenterPosition() << std::endl;	// FrameはOK.(3.5,0,3) center(7.5,0,3)
+
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow("PHSimpleGL");
