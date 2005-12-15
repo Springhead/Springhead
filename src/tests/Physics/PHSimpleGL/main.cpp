@@ -1,7 +1,7 @@
 /** 
  @file  Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
  
-@brief 2つの剛体の位置の変化を確認するテストプログラム（位置を出力、GL表示）
+ @brief 2つの剛体の位置の変化を確認するテストプログラム（位置を出力、GL表示）
    
  <PRE>  
  <B>概要：</B>
@@ -9,7 +9,8 @@
   ・位置を出力し、OpenGLでシミュレーションを行う。
  
  <B>終了基準：</B>
-  ・プログラムが正常終了したら0を返す。
+  ・赤いティーポットと青いティーポットの10秒後の位置をそれぞれ計算し期待値とする。
+  　この期待値とシミュレーション結果を比較して、一致したら正常終了とする。
   
  <B>処理の流れ：</B>
   ・シミュレーションに必要な情報(質量・重心・慣性テンソルなど)を設定する。
@@ -28,7 +29,6 @@
 using namespace Spr;
 
 #define ESC		27
-#define RATIO	1.001
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
@@ -46,13 +46,10 @@ static GLfloat mat_shininess[]  = { 120.0 };
 
 static double stepCnt = 0.0;
 namespace {
-	Vec3d redForce = Vec3d(1.0, 0.0, 0.0);
-	Vec3d redVel = Vec3d(0.0, 0.0, 0.0);				// 速度
-	Vec3d redPos = Vec3d(0.0, 0.0, 0.0);				// 位置
-	
-	Vec3d blueForce = Vec3d(1.0, 0.0, 0.0);
+	Vec3d redVel = Vec3d(0.0, 0.0, 0.0);	// 速度
+	Vec3d redPos = Vec3d(0.0, 0.0, 0.0);	// 位置
 	Vec3d blueVel = Vec3d(0.0, 0.0, 0.0);				
-	Vec3d bluePos = Vec3d(0.0, 0.0, 0.0);				// 位置
+	Vec3d bluePos = Vec3d(0.0, 0.0, 0.0);				
 }
 
 /**
@@ -158,71 +155,44 @@ void keyboard(unsigned char key, int x, int y){
  @param	 	なし
  @return 	なし
  */
-#define absMax(x,y) abs(x)>abs(y)? x:y
-Vec3d maxdiff = Vec3d(0.0, 0.0, 0.0);
-#define BLUE_1
 void idle(){
 	//	剛体の重心の1m上を右に押す．
 	Vec3d force = Vec3d(1, 0, 0);
 	redTeapot->AddForce( force, Vec3f(0,1,0)+redTeapot->GetCenterPosition());
 	blueTeapot->AddForce( force, Vec3f(0,1,0)+blueTeapot->GetCenterPosition());
 
-	//DSTR << "==============" << blueTeapot->GetCenterPosition() << std::endl;
 	scene->Step();
-
-	stepCnt += scene->GetTimeStep();
+	stepCnt += scene->GetTimeStep();	// 微小時間[s] 5msec
 	double dt = scene->GetTimeStep();
 
-
-
-	// 速度を導き、微少時間経過後の位置を計算 
-
+	// 速度を導き、微少時間経過後の位置を計算（期待値)
 	redVel		+= force * redTeapot->GetMassInv() * dt;	// (force/m)*dt
 	redPos		+= redVel * dt;
-
-#ifdef BLUE_1
 	blueVel		+= force * blueTeapot->GetMassInv() * dt;	// (force/m)*dt
 	bluePos		+= blueVel * dt;
-	// MAXDIFF : x=-1.99999 y=-1.00015
-	// myCalcFrame:(28.5125      0      3) getFrame:(28.5135 -0.0450767      3) getCenter:(29.5125 0.00015      3)
-#else	
 
-bluePos		= Vec3d(3.5, 0, 3) + 0.5 * force * blueTeapot->GetMassInv() * stepCnt * stepCnt;
-	// maxdiff x=-2.01168 y=1.00015 
-    // (  28.5      0      3)(28.5135 -0.0450767      3)		diff:(-0.0135233 0.0450767      0)
-#endif
-
-
-	std::cout << redTeapot->GetFramePosition();
-	std::cout << blueTeapot->GetFramePosition() << std::endl;
+	std::cout << redTeapot->GetCenterPosition() << blueTeapot->GetCenterPosition() << std::endl;
 	
-	//DSTR << stepCnt << std::endl;		// 0.005 -> 0.01	// 微小時間 [s] 5msec相当
+	// 10secにシミュレーション結果と期待値を比較
+	if (stepCnt >= 10.0) {	
+		bool redApprox, blueApprox;
+		redApprox	= approx(redPos, redTeapot->GetCenterPosition());
+		blueApprox	= approx(bluePos, blueTeapot->GetCenterPosition());
 
-
-
-Vec3d diff;
-#if 1
-	diff = bluePos-blueTeapot->GetFramePosition();
-	maxdiff.x = absMax(diff.x, maxdiff.x);
-	maxdiff.y = absMax(diff.y, maxdiff.y);
-	DSTR << bluePos << blueTeapot->GetFramePosition() << "\t\tdiff:" << diff;// << blueTeapot->GetCenterPosition();
-#else
-	diff = redPos-redTeapot->GetFramePosition();
-	DSTR << redPos << redTeapot->GetFramePosition() << "\t\tdiff:" << diff;
-#endif
-DSTR <<  std::endl;
-
-
-	//if (stepCnt >= 10.0) {	// 10秒
-	if (stepCnt >= 10.0) {	// 10秒
-		DSTR << "myCalcFrame:" << bluePos << " getFrame:" << blueTeapot->GetFramePosition() << " getCenter:" << blueTeapot->GetCenterPosition() << std::endl;
-		//DSTR << blueTeapot->GetCenterPosition() << redTeapot->GetCenterPosition() << std::endl;
-		DSTR << "MAXDIFF : " << "x=" << maxdiff.x << " y=" << maxdiff.y << std::endl;
-		DSTR << "\n正常終了." << std::endl;
-		exit(EXIT_SUCCESS);
+		if (redApprox && blueApprox) {
+			DSTR << "\nシミュレーション結果は正しい結果となりました。" << std::endl;
+			exit(EXIT_SUCCESS);
+		} else if (redApprox) {
+			DSTR << "\nシミュレーションした結果、";
+			DSTR << "赤いティーポットは正しい結果が得られましたが、青いティーポットは正しい結果が得られませんでした。" << std::endl;
+			exit(EXIT_FAILURE);
+		} else {
+			DSTR << "\nシミュレーションした結果、";
+			DSTR << "青いティーポットは正しい結果が得られましたが、赤いティーポットは正しい結果が得られませんでした。" << std::endl;
+			exit(EXIT_FAILURE);
+		}
 	} 
 	
-
 	glutPostRedisplay();
 }
 
@@ -233,25 +203,22 @@ DSTR <<  std::endl;
  @return	0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	sdk = CreatePHSdk();				//	SDKの作成
-	scene = sdk->CreateScene();			//	シーンの作成
+	sdk = CreatePHSdk();					//	SDKの作成
+	scene = sdk->CreateScene();				//	シーンの作成
 	
-	PHSolidDesc desc;					// 左のteapot
-	desc.mass = 2.0;					// 質量	
-	desc.inertia *=2.0;					// 慣性テンソル
-	desc.center = Vec3f(0,0,0);			// 質量中心の位置
+	PHSolidDesc desc;						// 左のteapot
+	desc.mass = 2.0;						// 質量	
+	desc.inertia *=2.0;						// 慣性テンソル
+	desc.center = Vec3f(0,0,0);				// 質量中心の位置
 	redTeapot = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
 	redPos = redTeapot->GetFramePosition();
 
 
 	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
 	desc.pose.pos = Vec3f(3.5, 0.0, 0.0);
-	/// 手前に平行移動
-	desc.pose = desc.pose * Posed::Trn(0.0, 0.0, 3.0);
+	desc.pose = desc.pose * Posed::Trn(0.0, 0.0, 3.0);	// 手前に平行移動
 	blueTeapot = scene->CreateSolid(desc);	
-	bluePos = blueTeapot->GetFramePosition();
-	//bluePos = blueTeapot->GetCenterPosition();
-	DSTR << "-------------------"<< blueTeapot->GetFramePosition() << blueTeapot->GetCenterPosition() << std::endl;	// FrameはOK.(3.5,0,3) center(7.5,0,3)
+	bluePos = blueTeapot->GetCenterPosition();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
