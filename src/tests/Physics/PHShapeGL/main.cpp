@@ -24,12 +24,12 @@
 
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
+#include <string>
 #include <gl/glut.h>
 #pragma hdrstop
 using namespace Spr;
 
 #define ESC				27
-#define RATIO			1.001	// overflow
 #define FALL_DISTANCE	-500		// 落下距離(異常終了時)
 
 PHSdkIf* sdk;
@@ -52,9 +52,9 @@ static bool timeflag = false;
 
 /**
  @brief     多面体の面(三角形)の法線を求める
- @param	 	<in/out> normal　　法線
- @param     <in/-->  base　　　meshの頂点
- @param     <in/-->  face　　　多面体の面
+ @param	 	<in/out> normal　　 法線
+ @param     <in/-->  base　　　 meshの頂点
+ @param     <in/-->  face　　　 多面体の面
  @return 	なし
  */
 void genFaceNormal(float *normal, Vec3f* base, CDFaceIf* face){
@@ -180,10 +180,10 @@ void initialize(){
 }
 
 /**
- @brief　　glutReshapeFuncで指定したコールバック関数
- @param　　<in/--> w　　幅
- @param　　<in/--> h　　高さ
- @return 　なし
+ @brief		glutReshapeFuncで指定したコールバック関数
+ @param		<in/--> w　　幅
+ @param		<in/--> h　　高さ
+ @return	なし
  */
 void reshape(int w, int h){
 	glViewport(0, 0, w, h);
@@ -205,22 +205,6 @@ void keyboard(unsigned char key, int x, int y){
 }	
 
 /**
- @brief		オーバーフローに対する処理関数
- @param		<in/--> d1　　 入力パラメータ
- @param		<in/--> d2　　 入力パラメータ
- @return	true　　　　　 2つの入力データが等しいまたはほぼ等しい場合。
- */
-bool doubleEqual(double d1, double d2){
-	double ratio;
-	if (!d1 && !d2) {
-		return true;
-	} else {
-		ratio = max((double)(d1/d2), (double)(d2/d1));
-		return RATIO > ratio && ratio > 0;
-	}	
-}
-
-/**
  @brief  	glutIdleFuncで指定したコールバック関数
  @param	 	なし
  @return 	なし
@@ -232,13 +216,13 @@ void idle(){
 	scene->Step();
 
 	// 位置情報を出力
-//	std::cout << soFloor->GetFramePosition();
-//	std::cout << soBlock->GetFramePosition() << std::endl;
+	//std::cout << soFloor->GetFramePosition();
+	//std::cout << soBlock->GetFramePosition() << std::endl;
 
 	curpos = soBlock->GetFramePosition();
 
 	// 床の上に5秒静止したら正常終了とする。
-	if (doubleEqual(prepos.x, curpos.x) && doubleEqual(prepos.y, curpos.y) && doubleEqual(prepos.z, curpos.z)) {
+	if (approx(prepos, curpos)) {
 		if (timeflag == false){
 			starttime = clock();
 			timeflag = true;
@@ -265,14 +249,14 @@ void idle(){
 
 /**
  @brief 	多面体の面(三角形)の頂点座標をデバッグ出力させる。
- @param 	<in/--> solidID　　solidのID
+ @param 	<in/--> solidID　　 solidのID
  @return 	なし
  */
-void dstrSolid(int solidID) {
+void dstrSolid(std::string& solidName) {
 	PHSolidIf* solid;
-	DSTR << "***  solid" << solidID << "   ***\n";
-	if (solidID == 1)		solid = soFloor;
-	else if (solidID == 2)	solid = soBlock;
+	if (solidName == "soFloor")			solid = soFloor;
+	else if (solidName == "soBlock")	solid = soBlock;
+	DSTR << "***  " << solidName << "   ***\n";
 
 	for(int i=0; i<solid->GetNShapes(); ++i){
 		CDShapeIf** shapes = solid->GetShapes();
@@ -295,19 +279,19 @@ void dstrSolid(int solidID) {
  @return	0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	sdk = CreatePHSdk();				//	SDKの作成　
-	scene = sdk->CreateScene();			//	シーンの作成
+	sdk = CreatePHSdk();					// SDKの作成　
+	scene = sdk->CreateScene();				// シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
-	soBlock = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
+	soBlock = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 
 	Posed p = Posed::Rot(Rad(0.0), 'z');
 	soBlock->SetPose(p);
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
-	soFloor = scene->CreateSolid(desc);	//	剛体をdescに基づいて作成
+	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetGravity(false);
 	
 	//	形状の作成
@@ -342,8 +326,8 @@ int main(int argc, char* argv[]){
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
 	// デバッグ出力
-	dstrSolid(1);
-	dstrSolid(2);
+	dstrSolid(std::string("soFloor"));
+	dstrSolid(std::string("soBlock"));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
