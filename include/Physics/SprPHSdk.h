@@ -9,7 +9,7 @@ struct PHSceneIf;
 struct PHSdkIf : public ObjectIf{
 	virtual PHSceneIf* CreateScene() = NULL;
 };
-PHSdkIf* CreatePHSdk();
+PHSdkIf* _cdecl CreatePHSdk();
 
 }	//	namespace Spr
 #endif
