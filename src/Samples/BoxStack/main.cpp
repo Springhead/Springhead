@@ -212,7 +212,7 @@ void keyboard(unsigned char key, int x, int y){
 		case 'q':
 			exit(0);
 			break;
-		case ' ':		
+		case ' ':{
 			/*
 			soBlock.push_back(scene->CreateSolid(desc));
 			size_t index;
@@ -221,11 +221,24 @@ void keyboard(unsigned char key, int x, int y){
 			soBlock[index]->SetFramePosition(Vec3f(0.5,10,0));
 			soBlock[index]->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
 			*/
-				desc.mass = 2.0;
-				desc.inertia *= 2.0;
 			soBlock.push_back(scene->CreateSolid(desc));
 			size_t index;
 			index = soBlock.size() - 1;
+
+
+
+			CDConvexMeshDesc md;
+			md.vertices.push_back(Vec3f(-1,-1,-1));
+			md.vertices.push_back(Vec3f(-1,-1, 1));	
+			md.vertices.push_back(Vec3f(-1, 1,-1));	
+			md.vertices.push_back(Vec3f(-1, 1, 1));
+			md.vertices.push_back(Vec3f( 1,-1,-1));	
+			md.vertices.push_back(Vec3f( 1,-1, 1));
+			md.vertices.push_back(Vec3f( 1, 1,-1));
+			md.vertices.push_back(Vec3f( 1, 1, 1));
+			meshBlock = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+
+
 			soBlock[index]->AddShape(meshBlock);
 			soBlock[index]->SetFramePosition(Vec3f(0.5,3,0));
 			soBlock[index]->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
@@ -238,7 +251,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBlock[index]->SetFramePosition(Vec3f(0.5,10,0));
 			soBlock[index]->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
 */
-			break;
+				 }break;
 	
 		default:
 			break;
@@ -274,7 +287,7 @@ int main(int argc, char* argv[]){
 	
 	// soBlock—p‚Ìdesc
 	desc.mass = 2.0;
-	desc.inertia *= 2.0;
+	desc.inertia = 2.0*Matrix3d::Unit();
 
 	//	Œ`ó‚Ìì¬
 	{

@@ -13,9 +13,8 @@ struct Sdks{
 	typedef std::vector< PHSdkIf* > Cont;
 	Cont* cont;
 
-	_CrtMemState memStart;
 	Sdks(){
-		_CrtMemCheckpoint(&memStart);
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		cont = DBG_NEW Cont;
 	}
 	~Sdks(){
@@ -28,7 +27,6 @@ struct Sdks{
 			}
 		}
 		delete cont;
-		_CrtMemDumpAllObjectsSince(&memStart);
 	}
 };
 static Sdks sdks;

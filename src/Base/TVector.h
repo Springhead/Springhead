@@ -490,7 +490,7 @@ public:
 	THIS& operator +=(const PTM::VectorImp<D>& b){							\
 		exp().add(b); return *this;											\
 	}																		\
-	/*  ベクトル b を加算	*/												\
+	/*  ベクトル b を減算	*/												\
 	template <class D>														\
 	THIS& operator -=(const PTM::VectorImp<D>& b){							\
 		exp().sub(b); return *this;											\
