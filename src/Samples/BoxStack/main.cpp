@@ -212,47 +212,11 @@ void keyboard(unsigned char key, int x, int y){
 		case 'q':
 			exit(0);
 			break;
-		case ' ':{
-			/*
+		case ' ':
 			soBlock.push_back(scene->CreateSolid(desc));
-			size_t index;
-			index = soBlock.size() - 1;
-			soBlock[index]->AddShape(meshBlock);
-			soBlock[index]->SetFramePosition(Vec3f(0.5,10,0));
-			soBlock[index]->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
-			*/
-			soBlock.push_back(scene->CreateSolid(desc));
-			size_t index;
-			index = soBlock.size() - 1;
-
-
-
-			CDConvexMeshDesc md;
-			md.vertices.push_back(Vec3f(-1,-1,-1));
-			md.vertices.push_back(Vec3f(-1,-1, 1));	
-			md.vertices.push_back(Vec3f(-1, 1,-1));	
-			md.vertices.push_back(Vec3f(-1, 1, 1));
-			md.vertices.push_back(Vec3f( 1,-1,-1));	
-			md.vertices.push_back(Vec3f( 1,-1, 1));
-			md.vertices.push_back(Vec3f( 1, 1,-1));
-			md.vertices.push_back(Vec3f( 1, 1, 1));
-			meshBlock = ICAST(CDConvexMeshIf, scene->CreateShape(md));
-
-
-			soBlock[index]->AddShape(meshBlock);
-			soBlock[index]->SetFramePosition(Vec3f(0.5,3,0));
-			soBlock[index]->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
-
-				/*desc.mass = 2.0;
-				desc.inertia *= 2.0;
-			soBlock.push_back(scene->CreateSolid(desc));
-			index = soBlock.size() - 1;
-			soBlock[index]->AddShape(meshBlock);
-			soBlock[index]->SetFramePosition(Vec3f(0.5,10,0));
-			soBlock[index]->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
-*/
-				 }break;
-	
+			soBlock.back()->AddShape(meshBlock);
+			soBlock.back()->SetFramePosition(Vec3f(0.5,3,0));
+			soBlock.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));	
 		default:
 			break;
 	}
@@ -263,10 +227,10 @@ void keyboard(unsigned char key, int x, int y){
  @param	 	‚È‚µ
  @return 	‚È‚µ
  */
-void idle(){
-
-	scene->Step();
+void timer(int id){
+	for(int i=0; i<10; ++i) scene->Step();
 	glutPostRedisplay();
+	glutTimerFunc(20, timer, 0);
 }
 
 /**
@@ -323,7 +287,7 @@ int main(int argc, char* argv[]){
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutIdleFunc(idle);
+	glutTimerFunc(0, timer, 0);
 
 	glutMainLoop();
 

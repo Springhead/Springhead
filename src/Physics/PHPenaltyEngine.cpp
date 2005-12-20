@@ -173,21 +173,15 @@ void PHPenaltyEngine::PHSolidPair::CalcReflexForce(PHShapePair* cp, CDContactAna
 	};
 	if (bUseContactVolume){	//	’Êí true
 		for(CDContactAnalysis::Vtxs::iterator it = analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){
-			CDFace& face = **it;
-			if (face.NCommonVtx() < 3) continue;
-			int curID;
-			if (cmesh[0]->HasFace(&face)){
-				curID = 0;
-			}else{
-				curID = 1;
-				assert(cmesh[1]->HasFace(&face));
-			}
-			Vec3f p0 = face.CommonVtx(0);
+			CDContactAnalysisFace& qhVtx = **it;
+			if (qhVtx.NCommonVtx() < 3) continue;
+			int curID = qhVtx.id;
+			Vec3f p0 = qhVtx.CommonVtx(0);
 			Vec3f p1;
-			Vec3f p2 = face.CommonVtx(1);
-			for(unsigned i=2; i<face.NCommonVtx(); ++i){
+			Vec3f p2 = qhVtx.CommonVtx(1);
+			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
 				p1 = p2;
-				p2 = face.CommonVtx(i);
+				p2 = qhVtx.CommonVtx(i);
 				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID].vel, solid[curID].angVel);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !_finite(cp->reflexSpringForce.norm()) ){

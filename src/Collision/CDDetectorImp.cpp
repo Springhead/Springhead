@@ -7,6 +7,59 @@
 namespace Spr {;
 bool bUseContactVolume=true;
 
+
+void CDContactAnalysisFace::Print(std::ostream& os) const {
+	os << normal << "*" << dist;
+}
+
+Vec3f CDContactAnalysisFace::CommonVtx(int i){
+	/**car2.xÇ≈dualPlanes[i]->distÇ™0.000000000Ç…Ç»ÇÈ**/
+	double dist = dualPlanes[i]->dist;
+#ifdef _DEBUG
+	if (dist < CD_EPSILON){
+		DSTR << "Error: dist " << dist << std::endl;
+		DSTR << "normal:" << dualPlanes[i]->normal << std::endl;
+		Vec3d posAv;
+		for(int j=0; j<3; ++j){
+			DSTR << "Point" << j << ":" << dualPlanes[i]->vtx[j]->GetPos() << std::endl;
+			posAv += dualPlanes[i]->vtx[j]->GetPos();
+		}
+		DSTR << "PosAve:" << posAv << std::endl;
+		Vec3d pos0 = dualPlanes[i]->vtx[0]->GetPos();
+		Vec3d pos1 = dualPlanes[i]->vtx[1]->GetPos();
+		Vec3d pos2 = dualPlanes[i]->vtx[2]->GetPos();
+		Vec3d a = pos1 - pos0;
+		Vec3d b = pos2 - pos0;
+		DSTR << "a:" << a << "b:" << b << std::endl;
+		Vec3d normal = a ^ b;
+		assert(normal.norm());
+		normal.unitize();
+		dist = pos0 * normal;
+	}
+#endif
+	return Vec3f(dualPlanes[i]->normal / dist);
+}
+
+bool CDContactAnalysisFace::CalcDualVtx(Vec3f* base){
+	normal = (base[face->vtxs[1]] - base[face->vtxs[0]]) ^ 
+		(base[face->vtxs[2]] - base[face->vtxs[0]]);
+	DEBUG_EVAL( if ( normal.norm() < CD_EPSILON || !_finite(normal.norm()) ){
+		DSTR << "normal is too small." << std::endl; } 
+	)
+	normal.unitize();
+	dist = normal * base[face->vtxs[0]];
+#if 1	//	debug	hase
+	if (dist < -1e-3){
+		DSTR << "Error: distance=" << dist << " < 0" << std::endl;
+		return false; 
+	}
+#endif
+	if (dist < CD_EPSILON) dist = CD_EPSILON;
+	if (dist > CD_INFINITE) dist = CD_INFINITE;
+	return true;
+}
+
+
 void CDShapePair::UpdateShapePose(Posed pose0, Posed pose1){
 	shapePoseW[0] = pose0 * shape[0]->GetPose();
 	shapePoseW[1] = pose1 * shape[1]->GetPose();
@@ -36,10 +89,12 @@ bool CDShapePair::Detect(unsigned ct){
 //	CDContactAnalysis
 //
 #define CONTACT_ANALYSIS_BUFFER	2000
+CDContactAnalysis::VtxBuffer CDContactAnalysis::vtxBuffer(CONTACT_ANALYSIS_BUFFER);
 CDContactAnalysis::Vtxs CDContactAnalysis::vtxs(CONTACT_ANALYSIS_BUFFER);
-CDQHPlanes<CDFace> CDContactAnalysis::planes(CONTACT_ANALYSIS_BUFFER);
-CDFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
+CDQHPlanes<CDContactAnalysisFace> CDContactAnalysis::planes(CONTACT_ANALYSIS_BUFFER);
+CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 	planes.Clear();
+	vtxBuffer.clear();
 	vtxs.clear();
 	if (bUseContactVolume){
 		if (DCAST(CDConvexMesh, cp->shape[0]) && DCAST(CDConvexMesh, cp->shape[1])){
@@ -50,39 +105,50 @@ CDFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 			for(int i=0; i<2; ++i){
 				Posed afw = cp->shapePoseW[i];
 				afw.Pos() -= cp->commonPoint;
-				for(CDVertexIDs::iterator it = poly[i]->vtxIDs.begin(); it != poly[i]->vtxIDs.end(); ++it){
-					poly[i]->tvtxs[*it] = afw * poly[i]->base[*it];
+				tvtxs[i].resize(poly[i]->base.size());
+				for(CDVertexIDs::iterator it = poly[i]->vtxIDs.begin();
+					it != poly[i]->vtxIDs.end(); ++it){
+					tvtxs[i][*it] = afw * poly[i]->base[*it];
 				}
-				for(CDFaces::iterator it = poly[i]->faces.begin(); it != poly[i]->faces.begin()+poly[i]->nPlanes; ++it){
-					if (!it->CalcDualVtx(&*poly[i]->tvtxs.begin())){
-						DSTR << "Common Local: " << cp->shapePoseW[i].Inv() * cp->commonPoint << std::endl;
+				for(CDFaces::iterator it = poly[i]->faces.begin();
+					it != poly[i]->faces.begin() + poly[i]->nPlanes; ++it){
+					vtxBuffer.push_back(CDContactAnalysisFace());
+					vtxBuffer.back().face = &*it;
+					vtxBuffer.back().id = i;
+					if (!vtxBuffer.back().CalcDualVtx(&*tvtxs[i].begin())){
+						DSTR << "Common Local: " << cp->shapePoseW[i].Inv() * cp->commonPoint 
+							<< std::endl;
 						for(unsigned int v=0; v<poly[i]->vtxIDs.size(); ++v){
 							DSTR << poly[i]->Vertex(v) << std::endl;
 						}
 						assert(0);
 					}
-					vtxs.push_back(&*it);
 				}
 			}
+			for(VtxBuffer::iterator it=vtxBuffer.begin(); it != vtxBuffer.end(); ++it){
+				vtxs.push_back(&*it);
+			}
 			planes.CreateConvexHull(&*vtxs.begin(), &*vtxs.end());
-			for(CDFace** it = &*vtxs.begin(); it != &*vtxs.end(); ++it){
+			for(CDContactAnalysisFace** it = &*vtxs.begin(); it != &*vtxs.end(); ++it){
 				(*it)->dualPlanes.clear();
 			}
-			for(CDQHPlane<CDFace>* it = planes.begin; it != planes.end; ++it){
+			for(CDQHPlane<CDContactAnalysisFace>* it = planes.begin; it != planes.end; ++it){
 				if(it->deleted) continue;
 				for(int i=0; i!=3; ++i){
 					it->vtx[i]->dualPlanes.push_back(it);
 				}
 			}
 			for(Vtxs::iterator itv = vtxs.begin(); itv != planes.vtxBegin; ++itv){
-				for(CDFace::DualPlanes::iterator itp = (*itv)->dualPlanes.begin(); itp != (*itv)->dualPlanes.end(); ++itp){
-					CDFace::DualPlanes::iterator next = itp;
+				for(CDContactAnalysisFace::DualPlanes::iterator itp = (*itv)->dualPlanes.begin();
+					itp != (*itv)->dualPlanes.end(); ++itp){
+					CDContactAnalysisFace::DualPlanes::iterator next = itp;
 					++next;
 					int i;
 					for(i=0; i<3; ++i){
 						if ((*itp)->vtx[i] == *itv) break;
 					}
-					for(CDFace::DualPlanes::iterator it2 = next; it2 != (*itv)->dualPlanes.end(); ++it2){
+					for(CDContactAnalysisFace::DualPlanes::iterator it2 = next;
+						it2 != (*itv)->dualPlanes.end(); ++it2){
 						if ((*it2) == (*itp)->neighbor[i]){
 							std::swap(*next, *it2);
 							goto nextFace;
@@ -120,16 +186,17 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 	if (isValid){	//	óºï˚É|ÉäÉSÉìÇÃèÍçá
 		double areaForCenter=0;
 		for(Vtxs::iterator it = vtxs.begin(); it != vtxs.end(); ++it){
-			CDFace& face = **it;
-			if (face.NCommonVtx() < 3) continue;
-			Vec3f p0 = face.CommonVtx(0);
+			CDContactAnalysisFace& qhVtx = **it;
+//			CDFace& face = *qhVtx.face;
+			if (qhVtx.NCommonVtx() < 3) continue;
+			Vec3f p0 = qhVtx.CommonVtx(0);
 			Vec3f p1;
-			Vec3f p2 = face.CommonVtx(1);
-			for(unsigned i=2; i<face.NCommonVtx(); ++i){
+			Vec3f p2 = qhVtx.CommonVtx(1);
+			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
 				p1 = p2;
-				p2 = face.CommonVtx(i);
+				p2 = qhVtx.CommonVtx(i);
 				Vec3d n = (p2-p0) ^ (p1-p0);
-				if (((CDConvexMesh*)&*cp->shape[0])->HasFace(&face)){
+				if (qhVtx.id==0){
 					cp->iNormal += n;
 				}else{
 					cp->iNormal -= n;

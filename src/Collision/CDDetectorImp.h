@@ -1,6 +1,7 @@
 #ifndef CDDETECTORIMP_H
 #define CDDETECTORIMP_H
 #include "CDQuickHull3D.h"
+#include "CDConvexMesh.h"
 
 namespace Spr {;
 
@@ -57,24 +58,72 @@ void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					   const Posed& a2w, const Posed& b2w,
 					   Vec3d& pa, Vec3d& pb);
 
-/**	衝突判定結果(交叉部分の形状を求める機能/法線を求める機能付き)	*/
+class CDFace;
+
+
+///	ContactAnalysisが使用する凸多面体の面を表す．
+class CDContactAnalysisFace{
+public:
+	class DualPlanes: public std::vector<CDQHPlane<CDContactAnalysisFace>*>{};
+
+	CDFace* face;	///<	面を双対変換した頂点でQuickHullをするので，CDFaceがVtxs.
+	int id;			///<	どちらのSolidの面だか表すID．
+
+	//@group CDContactAnalysis が交差部分の形状を求める際に使う作業領域
+	//@{
+	Vec3f normal;	///<	面の法線ベクトル
+	float dist;		///<	原点からの距離
+	/**	QuickHullアルゴリズム用ワークエリア．
+		一番遠い頂点から見える面を削除したあと残った形状のエッジ部分
+		を一周接続しておくためのポインタ．
+		頂点→面の接続．	面→頂点は頂点の並び順から分かる．	*/
+	CDQHPlane<CDContactAnalysisFace>* horizon;
+	//@}
+	
+	///	QuickHullにとっての頂点．この面を双対変換してできる頂点
+	Vec3f GetPos() const { return normal / dist; }
+	/**	双対変換を行う．baseに渡す頂点バッファは，双対変換が可能なように
+		双対変換の中心が原点となるような座標系でなければならない．	*/
+	bool CalcDualVtx(Vec3f* base);
+
+	/**	この面を双対変換してできる頂点を含む面．
+		つまり，交差部分の形状を構成する頂点のうち，
+		この面にあるもの	*/
+	DualPlanes dualPlanes;
+	///	交差部分の形状を構成する頂点のうちこの面にあるものの数.
+	size_t NCommonVtx(){ return dualPlanes.size(); }
+	///	交差部分の形状を構成する頂点のうちこの面にあるもの.
+	Vec3f CommonVtx(int i);
+	///	デバッグ用表示
+	void Print(std::ostream& os) const;
+};
+inline std::ostream& operator << (std::ostream& os, const CDContactAnalysisFace& f){
+	f.Print(os);
+	return os;
+}
+
+/**	交差部分の解析をするクラス．(交差部分の形状を求める/初回の法線を積分で求める)	*/
 class CDContactAnalysis{
 public:
 	/// \addtogroup quickHull QuickHullのための頂点と平面
 	//@{
-	///	面を双対変換した頂点でQuickHullをするので，CDFaceがVtxs.
-	typedef std::vector<CDFace*> Vtxs;	
+	
+	typedef std::vector<CDContactAnalysisFace*> Vtxs;	
 	static Vtxs vtxs;					///<	QuickHullの頂点
-	static CDQHPlanes<CDFace> planes;	///<	面
+	typedef std::vector<CDContactAnalysisFace> VtxBuffer;	
+	static VtxBuffer vtxBuffer;
+
+	static CDQHPlanes<CDContactAnalysisFace> planes;	///<	面
 	bool isValid;						///<	交差部分のポリゴンは有効？
 	//@}
+	std::vector<Vec3f> tvtxs[2];		///<	対象の2つの凸多面体のCommonPoint系での頂点の座標
 	/**	共通部分の形状を求める．
 		結果は，共通部分を構成する面を vtxs.begin() から返り値までに，
 		共通部分を構成する頂点を， planes.begin から planes.end のうちの
 		deleted==false のものに入れて返す．
 		cp の shapePoseW に shape[0], shape[1]の頂点をWorld系に変換する
 		変換行列が入っていなければならない．	*/
-	CDFace** FindIntersection(CDShapePair* cp);
+	CDContactAnalysisFace** FindIntersection(CDShapePair* cp);
 	/**	交差部分の形状の法線を積分して，衝突の法線を求める．
 		物体AとBの衝突の法線は，交差部分の面のうち，Aの面の法線の積分
 		からBの面の法線の積分を引いたものになる．	*/
