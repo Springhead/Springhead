@@ -1,26 +1,23 @@
 /**
- @file	Springhead2/src/tests/Physics/PHShapeGL/main.cpp
+ @file	Springhead2/src/Samples/BoxStack/main.cpp
 
- @brief ユーザのキー入力(スペースキー)に対してボックスを生成し自然落下させる。
+ @brief ユーザのキー(スペースキー)入力に対してボックスを生成し、積み上げる。
   
  <PRE>
  <B>概要：</B>
   ・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
-  ・剛体を自然落下させ、床の上に2個のブロックを積み上げる。
-  ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
   
  <B>終了基準：</B>
-　・自由落下させた剛体が床の上で5秒間静止したら正常終了とする。
-  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
+　・Escキーで強制終了。
 	
  <B>処理の流れ：</B>
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
-  　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。  
-  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。
-　・デバッグ出力として、多面体の面(三角形)の頂点座標を出力する。   
+  　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。
+　・ユーザのキー入力に対しSolidを発生させる。
+  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。  
  </PRE>
  
- */
+*/
 
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
@@ -29,17 +26,15 @@
 #pragma hdrstop
 using namespace Spr;
 
-#define ESC				27
+#define ESC		27
 
 PHSdkIf* sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;
-PHSolidIf* soFloor;
 CDConvexMeshIf* meshFloor=NULL;
-CDConvexMeshIf* meshBlock=NULL;
-//PHSolidIf* soBlock, *soBlock2;
-std::vector<PHSolidIf*> soBlock;
-
+CDConvexMeshIf* meshBox=NULL;
+PHSolidIf* soFloor;
+std::vector<PHSolidIf*> soBox;
 
 // 光源の設定 
 static GLfloat light_position[] = { 25.0, 50.0, 20.0, 1.0 };
@@ -47,11 +42,10 @@ static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
 static GLfloat light_diffuse[]  = { 1.0, 1.0, 1.0, 1.0 }; 
 static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 // 材質の設定
-static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
-static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
+static GLfloat mat_floor[]      = { 1.0, 0.0, 0.0, 1.0 };
+static GLfloat mat_box[]        = { 0.8, 0.8, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
-
 
 /**
  @brief     多面体の面(三角形)の法線を求める
@@ -60,25 +54,12 @@ static GLfloat mat_shininess[]  = { 120.0 };
  @param     <in/-->  face　　　 多面体の面
  @return 	なし
  */
-void genFaceNormal(float *normal, Vec3f* base, CDFaceIf* face){
-		normal[0] = base[face->GetIndices()[0]].y * base[face->GetIndices()[1]].z
-						- base[face->GetIndices()[1]].y * base[face->GetIndices()[0]].z
-						+ base[face->GetIndices()[1]].y * base[face->GetIndices()[2]].z
-						- base[face->GetIndices()[2]].y * base[face->GetIndices()[1]].z
-						+ base[face->GetIndices()[2]].y * base[face->GetIndices()[0]].z
-						- base[face->GetIndices()[0]].y * base[face->GetIndices()[2]].z;
-		normal[1] = base[face->GetIndices()[0]].z * base[face->GetIndices()[1]].x
-						- base[face->GetIndices()[1]].z * base[face->GetIndices()[0]].x
-						+ base[face->GetIndices()[1]].z * base[face->GetIndices()[2]].x
-						- base[face->GetIndices()[2]].z * base[face->GetIndices()[1]].x
-						+ base[face->GetIndices()[2]].z * base[face->GetIndices()[0]].x
-						- base[face->GetIndices()[0]].z * base[face->GetIndices()[2]].x;
-		normal[2] = base[face->GetIndices()[0]].x * base[face->GetIndices()[1]].y
-						- base[face->GetIndices()[1]].x * base[face->GetIndices()[0]].y
-						+ base[face->GetIndices()[1]].x * base[face->GetIndices()[2]].y
-						- base[face->GetIndices()[2]].x * base[face->GetIndices()[1]].y
-						+ base[face->GetIndices()[2]].x * base[face->GetIndices()[0]].y
-						- base[face->GetIndices()[0]].x * base[face->GetIndices()[2]].y;
+void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
+	Vec3f edge0, edge1;
+	edge0 = base[face->GetIndices()[1]] - base[face->GetIndices()[0]];
+	edge1 = base[face->GetIndices()[2]] - base[face->GetIndices()[0]];
+	normal = edge0^edge1;
+	normal.unitize();	
 }
 
 /**
@@ -95,14 +76,14 @@ void display(){
 
 	Affined ad;
 	
-	// 下の赤い剛体(soFloor)
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
+	// 下の床(soFloor)
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_floor);
 	glPushMatrix();
 	Posed pose = soFloor->GetPose();
 	pose.ToAffine(ad);
 	glMultMatrixd(ad);	
 
-	float normal[3];
+	Vec3f normal;
 	for(int i=0; i<soFloor->GetNShapes(); ++i){
 		CDShapeIf** shapes = soFloor->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
@@ -112,7 +93,7 @@ void display(){
 			
 			glBegin(GL_POLYGON);
 			genFaceNormal(normal, base, face);
-			glNormal3fv(normal);
+			glNormal3fv(normal.data);
 			for(int v=0; v<face->GetNIndices(); ++v){	
 				glVertex3fv(base[face->GetIndices()[v]].data);
 			}
@@ -121,15 +102,15 @@ void display(){
 	}
 	glPopMatrix();
 	
-	// 上の青い剛体(soBlock)
-	for (unsigned int blockCnt = 0; blockCnt < soBlock.size(); blockCnt++) {	
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
+	// ボックス(soBox)
+	for (unsigned int boxCnt=0; boxCnt<soBox.size(); ++boxCnt) {	
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_box);
 		glPushMatrix();
-		pose = soBlock[blockCnt]->GetPose();
+		pose = soBox[boxCnt]->GetPose();
 		ad = Affined(pose);
 		glMultMatrixd(ad);
-			for(int i=0; i<soBlock[blockCnt]->GetNShapes(); ++i){
-				CDShapeIf** shapes = soBlock[blockCnt]->GetShapes();
+			for(int i=0; i<soBox[boxCnt]->GetNShapes(); ++i){
+				CDShapeIf** shapes = soBox[boxCnt]->GetShapes();
 				CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 				Vec3f* base = mesh->GetVertices();
 				for(size_t f=0; f<mesh->GetNFaces();++f){
@@ -137,7 +118,7 @@ void display(){
 				
 					glBegin(GL_POLYGON);
 					genFaceNormal(normal, base, face);
-					glNormal3fv(normal);	
+					glNormal3fv(normal.data);	
 					for(int v=0; v<face->GetNIndices(); ++v){	
 						glVertex3fv(base[face->GetIndices()[v]].data);
 					}
@@ -145,6 +126,7 @@ void display(){
 				}
 			}
 		glPopMatrix();
+		std::cout << "\rBox count : " << static_cast<unsigned int>(soBox.size());
 	}
 
 	glutSwapBuffers();
@@ -174,13 +156,12 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0,20.0,30.0, 
+	gluLookAt(0.0,25.0,40.0, 
 		      0.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
-
 
 	setLight();
 }
@@ -213,21 +194,22 @@ void keyboard(unsigned char key, int x, int y){
 			exit(0);
 			break;
 		case ' ':
-			soBlock.push_back(scene->CreateSolid(desc));
-			soBlock.back()->AddShape(meshBlock);
-			soBlock.back()->SetFramePosition(Vec3f(0.5,3,0));
-			soBlock.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));	
+			soBox.push_back(scene->CreateSolid(desc));
+			soBox.back()->AddShape(meshBox);
+			soBox.back()->SetFramePosition(Vec3f(0.5,40,0));
+			soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));	
 		default:
 			break;
 	}
 }	
 
 /**
- @brief  	glutIdleFuncで指定したコールバック関数
- @param	 	なし
+ @brief  	glutTimerFuncで指定したコールバック関数
+ @param	 	<in/--> id　　 タイマーの区別をするための情報
  @return 	なし
  */
 void timer(int id){
+	/// 時刻のチェックと画面の更新を行う
 	for(int i=0; i<10; ++i) scene->Step();
 	glutPostRedisplay();
 	glutTimerFunc(20, timer, 0);
@@ -249,9 +231,9 @@ int main(int argc, char* argv[]){
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetGravity(false);
 	
-	// soBlock用のdesc
+	// soBox用のdesc
 	desc.mass = 2.0;
-	desc.inertia = 2.0*Matrix3d::Unit();
+	desc.inertia = 2.0 * Matrix3d::Unit();
 
 	//	形状の作成
 	{
@@ -264,16 +246,15 @@ int main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1,-1, 1));
 		md.vertices.push_back(Vec3f( 1, 1,-1));
 		md.vertices.push_back(Vec3f( 1, 1, 1));
-		meshBlock = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+		meshBox = ICAST(CDConvexMeshIf, scene->CreateShape(md));
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 20;
-			md.vertices[i].z *= 10;
+			md.vertices[i].x *= 30;
+			md.vertices[i].z *= 20;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, scene->CreateShape(md));
 	}
-
 	soFloor->AddShape(meshFloor);
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
 
@@ -282,7 +263,7 @@ int main(int argc, char* argv[]){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow("PHShapeGL");
+	glutCreateWindow("BoxStack");
 	initialize();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
