@@ -57,25 +57,12 @@ static bool timeflag = false;
  @param     <in/-->  face　　　 多面体の面
  @return 	なし
  */
-void genFaceNormal(float *normal, Vec3f* base, CDFaceIf* face){
-		normal[0] = base[face->GetIndices()[0]].y * base[face->GetIndices()[1]].z
-						- base[face->GetIndices()[1]].y * base[face->GetIndices()[0]].z
-						+ base[face->GetIndices()[1]].y * base[face->GetIndices()[2]].z
-						- base[face->GetIndices()[2]].y * base[face->GetIndices()[1]].z
-						+ base[face->GetIndices()[2]].y * base[face->GetIndices()[0]].z
-						- base[face->GetIndices()[0]].y * base[face->GetIndices()[2]].z;
-		normal[1] = base[face->GetIndices()[0]].z * base[face->GetIndices()[1]].x
-						- base[face->GetIndices()[1]].z * base[face->GetIndices()[0]].x
-						+ base[face->GetIndices()[1]].z * base[face->GetIndices()[2]].x
-						- base[face->GetIndices()[2]].z * base[face->GetIndices()[1]].x
-						+ base[face->GetIndices()[2]].z * base[face->GetIndices()[0]].x
-						- base[face->GetIndices()[0]].z * base[face->GetIndices()[2]].x;
-		normal[2] = base[face->GetIndices()[0]].x * base[face->GetIndices()[1]].y
-						- base[face->GetIndices()[1]].x * base[face->GetIndices()[0]].y
-						+ base[face->GetIndices()[1]].x * base[face->GetIndices()[2]].y
-						- base[face->GetIndices()[2]].x * base[face->GetIndices()[1]].y
-						+ base[face->GetIndices()[2]].x * base[face->GetIndices()[0]].y
-						- base[face->GetIndices()[0]].x * base[face->GetIndices()[2]].y;
+void genFaceNormal(Vec3f* normal, Vec3f* base, CDFaceIf* face){
+	Vec3f edge0, edge1;
+	edge0 = base[face->GetIndices()[1]] - base[face->GetIndices()[0]];
+	edge1 = base[face->GetIndices()[2]] - base[face->GetIndices()[0]];
+	(*normal) = edge0 ^ edge1;
+	normal->unitize();	
 }
 
 /**
@@ -99,7 +86,7 @@ void display(){
 	pose.ToAffine(ad);
 	glMultMatrixd(ad);	
 
-	float normal[3];
+	Vec3f normal;
 	for(int i=0; i<soFloor->GetNShapes(); ++i){
 		CDShapeIf** shapes = soFloor->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
@@ -108,8 +95,8 @@ void display(){
 			CDFaceIf* face = mesh->GetFace(f);
 			
 			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal);
+			genFaceNormal(&normal, base, face);
+			glNormal3fv(normal.data);
 			for(int v=0; v<face->GetNIndices(); ++v){	
 				glVertex3fv(base[face->GetIndices()[v]].data);
 			}
@@ -133,8 +120,8 @@ void display(){
 			CDFaceIf* face = mesh->GetFace(f);
 			
 			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal);	
+			genFaceNormal(&normal, base, face);
+			glNormal3fv(normal.data);	
 			for(int v=0; v<face->GetNIndices(); ++v){	
 				glVertex3fv(base[face->GetIndices()[v]].data);
 			}
@@ -320,7 +307,7 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(0.5,3,0));
+	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
 	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
