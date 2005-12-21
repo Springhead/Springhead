@@ -57,12 +57,12 @@ static bool timeflag = false;
  @param     <in/-->  face@@@ ‘½–Ê‘Ì‚Ì–Ê
  @return 	‚È‚µ
  */
-void genFaceNormal(Vec3f* normal, Vec3f* base, CDFaceIf* face){
+void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 	Vec3f edge0, edge1;
 	edge0 = base[face->GetIndices()[1]] - base[face->GetIndices()[0]];
 	edge1 = base[face->GetIndices()[2]] - base[face->GetIndices()[0]];
-	(*normal) = edge0 ^ edge1;
-	normal->unitize();	
+	normal = edge0^edge1;
+	normal.unitize();	
 }
 
 /**
@@ -95,7 +95,7 @@ void display(){
 			CDFaceIf* face = mesh->GetFace(f);
 			
 			glBegin(GL_POLYGON);
-			genFaceNormal(&normal, base, face);
+			genFaceNormal(normal, base, face);
 			glNormal3fv(normal.data);
 			for(int v=0; v<face->GetNIndices(); ++v){	
 				glVertex3fv(base[face->GetIndices()[v]].data);
@@ -120,7 +120,7 @@ void display(){
 			CDFaceIf* face = mesh->GetFace(f);
 			
 			glBegin(GL_POLYGON);
-			genFaceNormal(&normal, base, face);
+			genFaceNormal(normal, base, face);
 			glNormal3fv(normal.data);	
 			for(int v=0; v<face->GetNIndices(); ++v){	
 				glVertex3fv(base[face->GetIndices()[v]].data);
