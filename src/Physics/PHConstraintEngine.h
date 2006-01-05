@@ -10,6 +10,49 @@
 
 namespace Spr{;
 
+/// 1つの接触点
+struct PHContactPoint{
+	int	contact;			/// 属する接触
+	Vec3d pos;					/// 接触点の位置
+	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック
+	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック
+	Vec3d b;					/// bベクトルのブロック
+	Vec3d fmin, fmax;			/// fの取り得る範囲
+	Vec3d f;					/// 接触力(LCPの相補変数)
+	Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
+	Vec3d df;					/// 各反復での接触力の変化量(収束判定に使用)
+};
+typedef std::vector<PHContactPoint> PHContactPoints;
+
+/// Shape同士の接触
+class PHContact{
+public:
+	//bool	bValid;				/// true => 有効, false => 無効
+	//bool	bNew;				/// true => 新規, false => 継続
+	int solid[2];				/// 接触している剛体
+	int shape[2];				/// 接触している形状
+	//CDShape* intersection;		/// 交差形状
+	Vec3d normal;				/// 法線
+	Vec3d center;				/// 交差形状の重心
+	
+	/// 交差形状を射影して接触点列を得る
+	void CreateContactPoints(PHContactPoints& points);
+
+	PHContact(int solid0, int solid1, int shape0, int shape1, Vec3d n, Vec3d c){
+		solid[0] = solid0;
+		solid[1] = solid1;
+		shape[0] = shape0;
+		shape[1] = shape1;
+		normal = n;
+		center = c;
+	}
+};
+
+/// 全ての接触を保持するコンテナ
+class PHContacts : public std::vector<PHContact>{
+public:
+};
+
 class PHConstraintEngine: public PHEngine{
 	OBJECTDEF(PHConstraintEngine);
 
@@ -17,64 +60,44 @@ class PHConstraintEngine: public PHEngine{
 	struct PHSolidAux{
 		double		minv;				/// 各剛体の質量の逆数
 		Matrix3d	Iinv;				/// 各剛体の慣性行列の逆行列
-		Vec3d		dVlin_nc, dVang_nc;
+		Vec3d		dVlin_nc, dVang_nc;	/// 接触力が0の場合の速度変化量
+		Vec3d		dVlin, dVang;		/// 接触力を考慮した速度変化量(LCPを解いて求める)
 	};
 	typedef std::vector<PHSolidAux> PHSolidAuxArray;
 
-	/// 1つの接触点
-	struct PHContactPoint{
-		Vec3d pos;					/// 接触点の位置
-		Matrix3d Jlin[2], Jang[2];	/// J行列のブロック
-		Matrix3d Tlin[2], Tang[2];	/// T行列のブロック
-		Vec3d b;					/// bベクトルのブロック
-
-	};
-	typedef std::vector<PHContactPoint> PHContactPoints;
-
-	/// Solid同士の接触
-	struct PHContact{
-		bool	bValid;				/// true => 有効, false => 無効
-		bool	bNew;				/// true => 新規, false => 継続
-		int solids[2];				/// 接触している剛体
-		int shapes[2];				/// 接触している形状
-		CDShape* intersection;		/// 交差形状
-		Vec3d normal;				/// 法線
-		Vec3d center;				/// 交差形状の重心
-		PHContactPoints	points;		/// normalに直交する平面へ射影した接触多面体の頂点配列
-	};
-
-	/// 全ての接触を保持するコンテナ
-	/** ・新しく接触が生じた場合，先頭からスキャンしてbValid == falseの要素に
-		　新たな接触が上書きされる．このときbNew = trueとなる
-		・同じ接触が2ステップ以上継続した場合bNew = falseとなる
-		・接触が解消された場合，該当する要素はbValid == falseとなり無効化される
-
-		＊＊上の方式は予定です。やめるかも。＊＊
-	  */
-	class PHContacts : public std::vector<PHContact>{
+	/// Solidの組み合わせの配列
+	class PHSolidPair{
 	public:
-		int	ncon;	/// 接触点の総数
+		/// Shapeの組み合わせの配列
+		typedef UTCombination<CDShapePair> CDShapePairs;
+		CDShapePairs	shapePairs;
 	};
+	typedef UTCombination<PHSolidPair> PHSolidPairs;
 
-	/// LCPを与える行列
-	class PHLCPMatrix : public std::vector<Matrix3d>{
-		int ncon;	/// 接触の数
+	/// LCPのA行列
+	class PHLCPMatrix : public UTCombination<Matrix3d>{
 	public:
-		typedef std::vector<Matrix3d> base_type;
-		void resize(size_t K){
-			base_type::resize(K * K);
-			ncon = K;
-		}
-		Matrix3d& item(int i, int j){return (*this)[i * ncon + j];}
+		typedef UTCombination<Matrix3d> base_type;
+		Matrix3d& item(int i, int j){return (*this)[i * width() + j];}
 	};
 	
 protected:
+	bool			bReady;		/// 
 	PHSolids		solids;		/// 拘束力計算の対象となる剛体
-	PHContacts		contacts;	/// 剛体同士の接触情報
-	PHSolidAuxArray	solidauxs;
-	PHLCPMatrix		A;
+	PHSolidAuxArray	solidAuxs;	/// 剛体の付加情報
+	PHSolidPairs	solidPairs;
+	PHContacts		contacts;	/// 剛体同士の接触の配列
+	PHContactPoints	points;		///	接触点の配列
+	PHLCPMatrix		A;			/// LCPのA行列
 
-	void Init();	/// 初期化
+	void Init();				/// 初期化
+	void DetectIntersection();	/// 全体の交差の検知
+	bool DetectIntersectionOfSolidPair(int s0, int s1, unsigned ct);	
+								/// Solid組ごとの交差検知
+	void SetupLCP();			/// LCPの準備
+	void SetInitialValue();		/// LCPの決定変数の初期値を設定
+	bool CheckConvergence();	/// 反復法における収束判定
+	void UpdateLCP();			/// 反復法における一度の更新
 
 public:
 	void AddSolid(PHSolid* s);
@@ -84,6 +107,9 @@ public:
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
 	virtual void Clear(PHScene* s){ solids.clear(); }
+
+	PHConstraintEngine();
+	~PHConstraintEngine();
 };
 
 }	//	namespace Spr
