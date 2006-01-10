@@ -4,5 +4,6 @@
 #include "SprFoundation.h"
 #include "SprPhysics.h"
 #include "SprCollision.h"
+#include "SprGraphics.h"
 
 #endif
