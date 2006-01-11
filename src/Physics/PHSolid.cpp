@@ -39,7 +39,7 @@ void PHSolid::Step(){
 	nextForce.clear();
 	nextTorque.clear();
 
-	PHScene* s = ACAST(PHScene, scene);
+	PHScene* s = OCAST(PHScene, GetScene());
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
 #ifdef _DEBUG
@@ -178,12 +178,12 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	shapes.push_back(OCAST(CDShape,shape));
 	CalcBBox();
 	PHPenaltyEngine* pe;
-	((PHScene*)scene)->engines.Find(pe);
+	((PHScene*)GetScene())->engines.Find(pe);
 	pe->Init();
 }
 
 void PHSolid::SetGravity(bool bOn){
-	PHScene* ps = (PHScene*)scene;
+	PHScene* ps = (PHScene*)GetScene();
 	PHGravityEngine* ge;
 	ps->engines.Find(ge);
 	if (bOn == true){

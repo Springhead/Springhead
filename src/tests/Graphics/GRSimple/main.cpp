@@ -31,6 +31,8 @@ using namespace Spr;
  @return	0 (³íI—¹)
  */
 int main(int argc, char* argv[]){
-	
+//	GRRenderIf* render = CreateDebugRender();
+//	GRDeviceIf* dev = CreateDeviceGL();
+//	render->SetDevice(dev);
 	return 0;
 }

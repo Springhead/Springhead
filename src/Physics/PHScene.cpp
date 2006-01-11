@@ -108,7 +108,7 @@ void PHScene::Integrate(){
 CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
 	if (desc.type == CDShapeDesc::CONVEXMESH){
 		CDShape* s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
-		s->SetScene(this);
+		s->SetNameManager(this);
 		shapes.push_back(s);
 		return s;
 	}else{

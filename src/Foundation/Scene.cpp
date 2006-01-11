@@ -17,7 +17,7 @@ ObjectNames::ObjectKey::ObjectKey(){
 ObjectNames::ObjectKey::~ObjectKey(){
 	DelRef();
 }
-bool ObjectNames::Add(Object* obj){
+bool ObjectNames::Add(NamedObject* obj){
 	if (!obj->GetName() || !strlen(obj->GetName())) return false;
 	std::pair<iterator, bool> rv = insert(obj);
 	if (rv.second){
@@ -44,7 +44,7 @@ void ObjectNames::Print(std::ostream& os) const{
 		os << std::endl;
 	}
 }
-bool ObjectNamesLess::operator () (Object* o1, Object* o2) const {
+bool ObjectNamesLess::operator () (NamedObject* o1, NamedObject* o2) const {
 	int name = strcmp(o1->GetName(), o2->GetName());
 	if (name < 0) return true;
 	if (name == 0){
@@ -53,18 +53,21 @@ bool ObjectNamesLess::operator () (Object* o1, Object* o2) const {
 			cls = strcmp(GETCLASSNAME(o1), GETCLASSNAME(o2));
 			if (cls < 0) return true;
 		}
-		if (cls == 0){
-			if (o1->GetNameSpace()[0] && o2->GetNameSpace()[0]){
-				if (strcmp(o1->GetNameSpace(), o2->GetNameSpace()) < 0) return true;
-			}
-		}
 	}
 	return false;
 }
+//----------------------------------------------------------------------------
+//	NameManager
+OBJECTIMP(NameManager, NamedObject);
+void NameManager::ClearName(){
+	names.clear();
+}
+
 
 //----------------------------------------------------------------------------
 //	Scene
-OBJECTIMP(Scene, Object);
+OBJECTIMP(Scene, NameManager);
+IF_IMP_BASE(Scene);
 
 Scene::Scene(){
 	Clear();
@@ -72,10 +75,6 @@ Scene::Scene(){
 void Scene::Clear(){
 	ClearName();
 	Print(DSTR);
-}
-
-void Scene::ClearName(){
-	names.clear();
 }
 
 }

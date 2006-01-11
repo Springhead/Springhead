@@ -38,7 +38,7 @@ enum PHBehaviorPriority{
 
 class PHScene;
 ///	動作エンジンの基本クラス．
-class PHEngine:public Object{
+class PHEngine:public SceneObject{
 	OBJECTDEF(PHEngine);
 public:
 

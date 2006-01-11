@@ -45,61 +45,62 @@ template <class T, class P> T* OcastImp(P p){
 	return (T*)(Object*)obj;
 }
 
-
-class Scene;
-/**	シーングラフのオブジェクト型．
-	クラス名を返す関数を持つ．	*/
+/**	全Objectの基本型	*/
 class Object:public ObjectIf, public UTTypeInfoBase, public UTRefCount{
-	friend class ObjectNames;
-	UTString name;				///<	名前
-	UTString nameSpace;			///<	名前
-protected:
-	Scene* scene;
 public:
-	Object():scene(NULL){}
-	///	クラス名の取得などの基本機能の実装
-	OBJECTDEF(Object);
+	OBJECTDEF(Object);		///<	クラス名の取得などの基本機能の実装
 
-	virtual void SetScene(Scene*s){ scene = s; }
-	virtual Scene* GetScene(){ return scene; }
-	///	名前の取得
-	const char* GetName() const { return name.c_str(); }
-	const char* GetNameSpace() const { return nameSpace.c_str(); }
-	///	名前の設定
-	void SetName(const char* n);
 	int AddRef(){return UTRefCount::AddRef();}
 	int DelRef(){return UTRefCount::DelRef();}
 	int RefCount(){return UTRefCount::RefCount();}
 
+	///	デバッグ用の表示
+	virtual void Print(std::ostream& os) const;
+};
 #define BASEIMP_OBJECT(base)											\
-	const char* GetName() const { return base::GetName(); }				\
-	const char* GetNameSpace() const { return base::GetNameSpace(); }	\
-	void SetName(const char* n) { base::SetName(n); }					\
 	int AddRef(){return base::AddRef();}								\
 	int DelRef(){return base::DelRef();}								\
 	int RefCount(){return base::RefCount();}							\
 
 
+class NameManager;
+/**	名前を持つObject型．
+	SDKやSceneに所有される．	*/
+class NamedObject:public NamedObjectIf, public Object{
+	OBJECTDEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
+protected:
+	friend class ObjectNames;
+	UTString name;				///<	名前
+	NameManager* nameManager;	///<	名前の検索や重複管理をするもの．SceneやSDKなど．
+public:
+	NamedObject():nameManager(NULL){}
+	///	名前の取得
+	const char* GetName() const { return name.c_str(); }
+	///	名前の設定
+	void SetName(const char* n);
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
-
-/*
-	///	所有しているオブジェクトの数
-	virtual size_t NChildObjects(){ return 0; }
-	///	所有しているオブジェクト
-	virtual Object* ChildObject(size_t i){ return NULL; }
-	///	参照しているオブジェクトの数
-	virtual size_t NReferenceObjects(){ return 0; }
-	///	参照しているオブジェクト
-	virtual Object* ReferenceObject(size_t i){ return NULL; };
-	///	子オブジェクトの追加(所有・参照を問わない)
-	virtual bool AddChildObject(Object* o){ return false; }
-	///	子オブジェクトの削除
-	virtual bool DelChildObject(Object* o){ return false; }
-	///	子になりえるオブジェクトの型情報の配列
-	virtual const UTTypeInfo** ChildCandidates(){ return NULL; }
-*/
+	virtual void SetNameManager(NameManager* s){ nameManager = s; }
+	virtual NameManager* GetNameManager(){ return nameManager; }
 };
+#define BASEIMP_NAMEDOBJECT(base)										\
+	BASEIMP_OBJECT(base)												\
+	const char* GetName() const { return base::GetName(); }				\
+	void SetName(const char* n) { base::SetName(n); }					\
+
+class Scene;
+/**	Sceneが所有するObject型．
+	所属するSceneへのポインタを持つ	*/
+class SceneObject:public SceneObjectIf, public NamedObject{
+	OBJECTDEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
+public:
+	virtual void SetScene(SceneIf* s);
+	virtual SceneIf* GetScene();
+};
+#define BASEIMP_SCENEOBJECT(base)										\
+	BASEIMP_NAMEDOBJECT(base)											\
+	SceneIf* GetScene() { return base::GetScene(); }					\
+	void SetScene(SceneIf* s) { base::SetScene(s); }					\
 
 ///	Objectのポインタの配列
 class Objects:public UTStack< UTRef<Object> >{

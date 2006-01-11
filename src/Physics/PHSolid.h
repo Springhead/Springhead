@@ -70,7 +70,7 @@ enum PHIntegrationMode{
 };
 
 ///	çÑëÃ
-class PHSolid : public Object, public PHSolidDesc, public PHSolidIf{
+class PHSolid : public SceneObject, public PHSolidDesc, public PHSolidIf{
 	Vec3d	_angvel[4];			///<	êîílêœï™åWêî
 	Vec3d	_angacc[4];
 protected:
@@ -97,7 +97,7 @@ public:
 	PHBBox bbox;
 
 	OBJECTDEF(PHSolid);
-	BASEIMP_OBJECT(Object);
+	BASEIMP_SCENEOBJECT(SceneObject);
 	void Print(std::ostream& os)const{Object::Print(os);}
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc());
 

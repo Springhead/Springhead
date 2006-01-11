@@ -18,6 +18,6 @@ IF_IMP(CDConvexMesh, CDConvex);
 
 //----------------------------------------------------------------------------
 //	CDShape
-OBJECTIMPABST(CDShape, Object);
+OBJECTIMPABST(CDShape, NamedObject);
 
 }

@@ -47,5 +47,6 @@ struct GRDebugRenderIf:public GRRenderIf{
 	virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
 };
 
+
 }
 #endif

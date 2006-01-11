@@ -5,7 +5,7 @@
 #include <Foundation/Object.h>
 
 namespace Spr{;
-class CDShape : public CDShapeIf, public Object{
+class CDShape : public CDShapeIf, public NamedObject{
 protected:
 	Posef pose;
 public:

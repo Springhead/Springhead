@@ -9,15 +9,15 @@ namespace Spr {;
 
 class ObjectNamesLess{
 public:
-	bool operator () (Object* o1, Object* o2) const;
+	bool operator () (NamedObject* o1, NamedObject* o2) const;
 };
 /**	名前とシーングラフのオブジェクトの対応表
 	名前をキーにしたセットを用意し，名前の一意性の保証とオブジェクトの
 	検索を実現する．	*/
-class ObjectNames:public std::set<UTRef<Object>, ObjectNamesLess >{
+class ObjectNames:public std::set<UTRef<NamedObject>, ObjectNamesLess >{
 public:
 	typedef std::map<UTString, UTString> TNameMap;
-	class ObjectKey:public Object{
+	class ObjectKey:public NamedObject{
 	public:
 		ObjectKey();
 		~ObjectKey();
@@ -29,9 +29,8 @@ public:
 
 	///	名前からオブジェクトを取得
 	typedef std::pair<iterator, iterator> range_type;
-	Object* Find(UTString name, UTString ns="", UTString cn="") const {
+	NamedObject* Find(UTString name, UTString cn="") const {
 		key.name = name;
-		key.nameSpace = ns;
 		UTString className = cn;
 		key.typeInfo.className = className.c_str();
 		const_iterator lb = lower_bound(&key);
@@ -44,9 +43,8 @@ public:
 		if(less(&key, *it)) return *lb;		//	等しいものは1つ
 		return NULL;						//	等しいものが複数有る場合
 	}
-	range_type Range(UTString name, UTString ns="", UTString cn=""){
+	range_type Range(UTString name, UTString cn=""){
 		key.name = name;
-		key.nameSpace = ns;
 		UTString className = cn;
 		key.typeInfo.className = className.c_str();
 		iterator lb = lower_bound(&key);
@@ -62,9 +60,9 @@ public:
 		名前のないオブジェクトは追加できない．この場合 false を返す．
 		追加に成功すると true． すでに登録されていた場合は false を返す．
 		名前がぶつかる場合は，追加するオブジェクトの名前が変更される．	*/
-	bool Add(Object* obj);
+	bool Add(NamedObject* obj);
 	///	オブジェクトの削除
-	bool Del(Object* key){
+	bool Del(NamedObject* key){
 		iterator it = find(key);
 		if (it==end()) return false;
 		erase(it);
@@ -72,7 +70,7 @@ public:
 	}
 	///	オブジェクトの削除
 	bool Del(UTString name){
-		Object key;
+		NamedObject key;
 		key.name = name;
 		key.AddRef();
 		iterator it = find(&key);
@@ -86,26 +84,16 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
 }
 
-/**	シーングラフのトップノード．光源・視点を持つ．
-	レンダラとシーングラフの関係が深いため，
-	レンダラが違うとシーングラフはそのまま使用できない．
-	シーングラフは，たとえばレンダラがOpenGLなら，displayList
-	を持っているし，D3Dならば ID3DXMeshを持っている．
-	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
-	セーブして，D3D形式でロードしなければならない．	*/
-class SPR_DLL Scene:public Object{
+class SPR_DLL NameManager:public NamedObject{
 public:
-	OBJECTDEF(Scene);
+	OBJECTDEF(NameManager);
 protected:
 	///	名前とオブジェクトの対応表	
 	ObjectNames names;
-public:
-	///	コンストラクタ
-	Scene();
-	virtual ~Scene(){Clear();}
 
+public:
 	///	名前からオブジェクトを取得
-	Object* FindObject(UTString name, UTString ns=""){ return names.Find(name, ns); }
+	NamedObject* FindObject(UTString name, UTString ns=""){ return names.Find(name, ns); }
 	///	型と名前からオブジェクトを取得
 	template <class T> void FindObject(UTRef<T>& t, UTString name, UTString ns=""){
 		T* p;
@@ -113,7 +101,7 @@ public:
 		t = p;
 	}
 	template <class T> void FindObject(T*& t, UTString name, UTString ns=""){
-		Object* p = names.Find(name, ns, GETCLASSNAMES(T));
+		NamedObject* p = names.Find(name, ns, GETCLASSNAMES(T));
 		t = DCAST(T, p);
 	}
 	typedef ObjectNames::iterator SetIt;
@@ -122,14 +110,29 @@ public:
 	
 	ObjectNames::TNameMap& GetNameMap(){ return names.nameMap; }
 
-	///	シーンを空にする．
-	void Clear();
 	///	名前表から，参照されていないオブジェクトを削除する．
 	void ClearName();
+
 	///	デバッグ用
 	void Print(std::ostream& os) const { names.Print(os); }
+	friend class NamedObject;
+};
 
-	friend class Object;
+/**	シーングラフのトップノード．光源・視点を持つ．
+	レンダラとシーングラフの関係が深いため，
+	レンダラが違うとシーングラフはそのまま使用できない．
+	シーングラフは，たとえばレンダラがOpenGLなら，displayList
+	を持っているし，D3Dならば ID3DXMeshを持っている．
+	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
+	セーブして，D3D形式でロードしなければならない．	*/
+class SPR_DLL Scene:public NameManager, public SceneIf{
+	OBJECTDEF(Scene);
+public:
+	///	コンストラクタ
+	Scene();
+	virtual ~Scene(){Clear();}
+	///	シーンを空にする．
+	void Clear();
 };
 
 }
