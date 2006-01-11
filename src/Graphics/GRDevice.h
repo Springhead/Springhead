@@ -1,7 +1,7 @@
 #ifndef GRDEVICE_H
 #define GRDEVICE_H
 
-#include <Springhead.h>
+#include <SprGraphics.h>
 
 namespace Spr{;
 

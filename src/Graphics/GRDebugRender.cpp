@@ -5,6 +5,7 @@ namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDebugRender
 OBJECTIMP(GRDebugRender, GRRender);
+IF_IMP(GRDebugRender, GRRender);
 
 void GRDebugRender::DrawSolid(PHSolidIf* so){
 	

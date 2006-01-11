@@ -1,6 +1,6 @@
 #ifndef GRSDK_H
 #define GRSDK_H
-#include <Graphics/GRRender.h>
+#include <SprGraphics.h>
 
 
 namespace Spr {;
@@ -12,8 +12,8 @@ public:
 	~GRSdk();
 	void Print(std::ostream& os) const {}
 	BASEIMP_OBJECT(Object);
-	GRRenderIf* CreateRender();
-	GRDeviceIf* CreateDevice();
+	GRDebugRenderIf* CreateDebugRender();
+	GRDeviceGLIf* CreateDeviceGL();
 public:
 };
 

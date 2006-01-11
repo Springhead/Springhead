@@ -1,7 +1,7 @@
 #ifndef PH_FORCEFIELD_H
 #define PH_FORCEFIELD_H
 
-#include <Springhead.h>
+#include <SprPhysics.h>
 #include <Foundation/Object.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>

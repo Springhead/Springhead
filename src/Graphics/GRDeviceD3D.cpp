@@ -2,6 +2,8 @@
 #pragma hdrstop
 
 namespace Spr {;
+OBJECTIMP(GRDeviceD3D, GRDevice);
+IF_IMP(GRDeviceD3D, GRDevice);
 
 //----------------------------------------------------------------------------
 //	GRDeviceD3D

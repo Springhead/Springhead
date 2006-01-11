@@ -1,7 +1,7 @@
 #ifndef PHSHAPE_H
 #define PHSHAPE_H
 
-#include <Springhead.h>
+#include <SprCollision.h>
 #include <Foundation/Object.h>
 
 namespace Spr{;

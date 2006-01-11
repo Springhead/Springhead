@@ -41,6 +41,7 @@ GRSdkIf* _cdecl CreateGRSdk(){
 //----------------------------------------------------------------------------
 //	GRSdk
 OBJECTIMP(GRSdk, Object);
+IF_IMP(GRSdk, Object);
 GRSdk::~GRSdk(){
 	for(GRSdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
 		if (*it == this){
@@ -50,11 +51,13 @@ GRSdk::~GRSdk(){
 		}
 	}
 }
-/*
-PHSceneIf* GRSdk::CreateGraphicsRender(){
-	GRRenderIf* rv = DBG_NEW GRRender(this);
+GRDebugRenderIf* GRSdk::CreateDebugRender(){
+	GRDebugRenderIf* rv = DBG_NEW GRDebugRender;
 	return rv;
 }
-*/
+GRDeviceGLIf* GRSdk::CreateDeviceGL(){
+	GRDeviceGL* rv = DBG_NEW GRDeviceGL;
+	return rv;
+}
 
 }

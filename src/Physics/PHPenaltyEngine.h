@@ -1,7 +1,7 @@
 #ifndef PHPENALTYENGINE_H
 #define PHPENALTYENGINE_H
 
-#include <Springhead.h>
+#include <SprPhysics.h>
 #include <Foundation/Object.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>

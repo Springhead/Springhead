@@ -1,7 +1,7 @@
 #ifndef CDCONVEXMESH_H
 #define CDCONVEXMESH_H
 
-#include <Springhead.h>
+#include <SprCollision.h>
 #include <Foundation/Object.h>
 #include "CDConvex.h"
 

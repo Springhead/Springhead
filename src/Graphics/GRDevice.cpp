@@ -5,5 +5,6 @@ namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDevice
 OBJECTIMPABST(GRDevice, Object);
+IF_IMP(GRDevice, Object);
 
 }	//	Spr

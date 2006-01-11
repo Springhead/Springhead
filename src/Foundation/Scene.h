@@ -1,6 +1,6 @@
 #ifndef SCENE_H
 #define SCENE_H
-#include <Foundation/Object.h>
+#include <SprFoundation.h>
 #include <set>
 #include <map>
 

@@ -1,7 +1,7 @@
 #ifndef PHSOLID_H
 #define PHSOLID_H
 
-#include <Springhead.h>
+#include <SprPhysics.h>
 #include <Foundation/Object.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>

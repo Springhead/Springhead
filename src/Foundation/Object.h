@@ -1,7 +1,7 @@
 #ifndef FOUNDATION_OBJECT_H
 #define FOUNDATION_OBJECT_H
 
-#include <Springhead.h>
+#include <SprFoundation.h>
 #include <Base/Base.h>
 
 namespace Spr{;

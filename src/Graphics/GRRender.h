@@ -1,7 +1,7 @@
 #ifndef GRRENDER_H
 #define GRRENDER_H
 
-#include <Springhead.h>
+#include <SprGraphics.h>
 
 namespace Spr{;
 

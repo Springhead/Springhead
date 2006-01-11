@@ -5,6 +5,7 @@ namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDeviceGL
 OBJECTIMP(GRDeviceGL, GRDevice);
+IF_IMP(GRDeviceGL, GRDevice);
 
 void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
 }

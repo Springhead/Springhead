@@ -39,6 +39,13 @@ struct GRDeviceIf: public ObjectIf{
 	///	材質の設定
 	virtual void SetMaterial(const GRMaterial& mat)=0;
 };
+struct GRDeviceGLIf: public GRDeviceIf{
+	IF_DEF(GRDeviceGL);
+};
+
+struct GRDeviceD3DIf: public GRDeviceIf{
+	IF_DEF(GRDeviceD3D);
+};
 
 /**	デバッグ情報レンダラー	*/
 struct GRDebugRenderIf:public GRRenderIf{
