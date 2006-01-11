@@ -1,25 +1,22 @@
 /** 
- @file  Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
+ Springhead2/src/tests/Physics/PHSimpleGL/main.cpp
  
- @brief 2つの剛体の位置の変化を確認するテストプログラム（位置を出力、GL表示）
-   
- <PRE>  
- <B>概要：</B>
+【概要】
+  2つの剛体の位置の変化を確認するテストプログラム（位置を出力、GL表示）
   ・剛体の運動を確認する。
   ・位置を出力し、OpenGLでシミュレーションを行う。
  
- <B>終了基準：</B>
+【終了基準】
   ・赤いティーポットと青いティーポットの10秒後の位置をそれぞれ計算し期待値とする。
   　この期待値とシミュレーション結果を比較して、一致したら正常終了とする。
   
- <B>処理の流れ：</B>
+【処理の流れ】
   ・シミュレーションに必要な情報(質量・重心・慣性テンソルなど)を設定する。
     剛体の形状はOpenGLでティーポットを指定する。
   ・シミュレーションが動き始めたら、下記条件で剛体に力を加える。
       左の赤いティーポット：オブジェクトのローカル座標系を原点とし、重心の1m上を右に1Nの力を加える。
       右の青いティーポット：オブジェクトのローカル座標系の原点から1m右に重心をずらし、重心の1m上を右に1Nの力を加える。
   ・与えられた条件により⊿t秒後の位置の変化を積分し、剛体の位置情報を出力と、OpenGLレンダリングを行う。
- </PRE>
    
  */
 #include <Springhead.h>		//	Springheadのインタフェース
@@ -53,9 +50,9 @@ namespace {
 }
 
 /**
- @brief     glutDisplayFuncで指定したコールバック関数
- @param	 	なし
- @return 	なし
+ brief     	glutDisplayFuncで指定したコールバック関数
+ param	 	なし
+ return 	なし
  */
 void display(){
 
@@ -93,9 +90,9 @@ void display(){
 }
 
 /**
- @brief     光源の設定
- @param	 	なし
- @return 	なし
+ brief     	光源の設定
+ param	 	なし
+ return 	なし
  */
 void setLight() {
 	glEnable(GL_LIGHTING);
@@ -107,9 +104,9 @@ void setLight() {
 }
 
 /**
- @brief     初期化処理
- @param	 	なし
- @return 	なし
+ brief     	初期化処理
+ param	 	なし
+ return 	なし
  */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -126,10 +123,10 @@ void initialize(){
 }
 
 /**
- @brief  	glutReshapeFuncで指定したコールバック関数
- @param	 	<in/--> w　　幅
- @param  	<in/--> h　　高さ
- @return 	なし
+ brief  	glutReshapeFuncで指定したコールバック関数
+ param	 	<in/--> w　　幅
+ param  	<in/--> h　　高さ
+ return 	なし
  */
 void reshape(int w, int h){
 	glViewport(0, 0, w, h);
@@ -140,20 +137,20 @@ void reshape(int w, int h){
 }
 
 /**
- @brief 	glutKeyboardFuncで指定したコールバック関数 
- @param		<in/--> key　　 ASCIIコード
- @param 	<in/--> x　　　 キーが押された時のマウス座標
- @param 	<in/--> y　　　 キーが押された時のマウス座標
- @return 	なし
+ brief 		glutKeyboardFuncで指定したコールバック関数 
+ param		<in/--> key　　 ASCIIコード
+ param 		<in/--> x　　　 キーが押された時のマウス座標
+ param 		<in/--> y　　　 キーが押された時のマウス座標
+ return 	なし
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }
 
 /**
- @brief  	glutIdleFuncで指定したコールバック関数
- @param	 	なし
- @return 	なし
+ brief  	glutIdleFuncで指定したコールバック関数
+ param	 	なし
+ return 	なし
  */
 void idle(){
 	//	剛体の重心の1m上を右に押す．
@@ -197,10 +194,10 @@ void idle(){
 }
 
 /**
- @brief		メイン関数
- @param		<in/--> argc　　コマンドライン入力の個数
- @param		<in/--> argv　　コマンドライン入力
- @return	0 (正常終了)
+ brief		メイン関数
+ param		<in/--> argc　　コマンドライン入力の個数
+ param		<in/--> argv　　コマンドライン入力
+ return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					//	SDKの作成

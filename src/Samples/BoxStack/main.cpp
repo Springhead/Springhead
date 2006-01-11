@@ -1,21 +1,18 @@
 /**
- @file	Springhead2/src/Samples/BoxStack/main.cpp
+ Springhead2/src/Samples/BoxStack/main.cpp
 
- @brief ユーザのキー(スペースキー)入力に対してボックスを生成し、積み上げる。
-  
- <PRE>
- <B>概要：</B>
+【概要】
+ ユーザのキー(スペースキー)入力に対してボックスを生成し、積み上げる。
   ・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
   
- <B>終了基準：</B>
+【終了基準】
 　・Escキーで強制終了。
 	
- <B>処理の流れ：</B>
+【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
   　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。
 　・ユーザのキー入力に対しSolidを発生させる。
   ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。  
- </PRE>
  
 */
 
@@ -48,11 +45,11 @@ static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
 
 /**
- @brief     多面体の面(三角形)の法線を求める
- @param	 	<in/out> normal　　 法線
- @param     <in/-->  base　　　 meshの頂点
- @param     <in/-->  face　　　 多面体の面
- @return 	なし
+ brief     	多面体の面(三角形)の法線を求める
+ param	 	<in/out> normal　　 法線
+ param     	<in/-->  base　　　 meshの頂点
+ param     	<in/-->  face　　　 多面体の面
+ return 	なし
  */
 void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 	Vec3f edge0, edge1;
@@ -63,9 +60,9 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 }
 
 /**
- @brief     glutDisplayFuncで指定したコールバック関数
- @param	 	なし
- @return 	なし
+ brief     	glutDisplayFuncで指定したコールバック関数
+ param	 	なし
+ return 	なし
  */
 void display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -133,9 +130,9 @@ void display(){
 }
 
 /**
- @brief     光源の設定
- @param	 	なし
- @return 	なし
+ brief     	光源の設定
+ param	 	なし
+ return 	なし
  */
 void setLight() {
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -147,9 +144,9 @@ void setLight() {
 }
 
 /**
- @brief     初期化処理
- @param	 	なし
- @return 	なし
+ brief     	初期化処理
+ param	 	なし
+ return 	なし
  */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -167,10 +164,10 @@ void initialize(){
 }
 
 /**
- @brief		glutReshapeFuncで指定したコールバック関数
- @param		<in/--> w　　幅
- @param		<in/--> h　　高さ
- @return	なし
+ brief		glutReshapeFuncで指定したコールバック関数
+ param		<in/--> w　　幅
+ param		<in/--> h　　高さ
+ return		なし
  */
 void reshape(int w, int h){
 	glViewport(0, 0, w, h);
@@ -181,11 +178,11 @@ void reshape(int w, int h){
 }
 
 /**
- @brief 	glutKeyboardFuncで指定したコールバック関数 
- @param		<in/--> key　　 ASCIIコード
- @param 	<in/--> x　　　 キーが押された時のマウス座標
- @param 	<in/--> y　　　 キーが押された時のマウス座標
- @return 	なし
+ brief 		glutKeyboardFuncで指定したコールバック関数 
+ param		<in/--> key　　 ASCIIコード
+ param 		<in/--> x　　　 キーが押された時のマウス座標
+ param 		<in/--> y　　　 キーが押された時のマウス座標
+ return 	なし
  */
 void keyboard(unsigned char key, int x, int y){
 	switch (key) {
@@ -204,9 +201,9 @@ void keyboard(unsigned char key, int x, int y){
 }	
 
 /**
- @brief  	glutTimerFuncで指定したコールバック関数
- @param	 	<in/--> id　　 タイマーの区別をするための情報
- @return 	なし
+ brief  	glutTimerFuncで指定したコールバック関数
+ param	 	<in/--> id　　 タイマーの区別をするための情報
+ return 	なし
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
@@ -216,10 +213,10 @@ void timer(int id){
 }
 
 /**
- @brief		メイン関数
- @param		<in/--> argc　　コマンドライン入力の個数
- @param		<in/--> argv　　コマンドライン入力
- @return	0 (正常終了)
+ brief		メイン関数
+ param		<in/--> argc　　コマンドライン入力の個数
+ param		<in/--> argv　　コマンドライン入力
+ return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　

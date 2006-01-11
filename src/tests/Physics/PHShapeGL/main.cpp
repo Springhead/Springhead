@@ -1,24 +1,21 @@
 /**
- @file	Springhead2/src/tests/Physics/PHShapeGL/main.cpp
+ Springhead2/src/tests/Physics/PHShapeGL/main.cpp
 
- @brief 剛体Solidに形状を持たせたテストプログラム（位置を出力、面の頂点座標を出力、GL表示）
-  
- <PRE>
- <B>概要：</B>
-  ・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
+【概要】
+  剛体Solidに形状を持たせたテストプログラム（位置を出力、面の頂点座標を出力、GL表示）
+　・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
   ・剛体を自然落下させ、床の上に2個のブロックを積み上げる。
   ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
   
- <B>終了基準：</B>
-　・自由落下させた剛体が床の上で5秒間静止したら正常終了とする。
+【終了基準】
+  ・自由落下させた剛体が床の上で5秒間静止したら正常終了とする。
   ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
  
- <B>処理の流れ：</B>
+【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
   　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。  
   ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。
 　・デバッグ出力として、多面体の面(三角形)の頂点座標を出力する。   
- </PRE>
  
  */
 
@@ -51,11 +48,11 @@ static clock_t starttime, endtime, count;
 static bool timeflag = false;
 
 /**
- @brief     多面体の面(三角形)の法線を求める
- @param	 	<in/out> normal　　 法線
- @param     <in/-->  base　　　 meshの頂点
- @param     <in/-->  face　　　 多面体の面
- @return 	なし
+ brief     多面体の面(三角形)の法線を求める
+ param	   <in/out> normal　　  法線
+ param     <in/-->   base　　　 meshの頂点
+ param     <in/-->   face　　　 多面体の面
+ return     なし
  */
 void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 	Vec3f edge0, edge1;
@@ -66,9 +63,9 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 }
 
 /**
- @brief     glutDisplayFuncで指定したコールバック関数
- @param	 	なし
- @return 	なし
+ brief     	glutDisplayFuncで指定したコールバック関数
+ param		なし
+ return 	なし
  */
 void display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -134,9 +131,9 @@ void display(){
 }
 
 /**
- @brief     光源の設定
- @param	 	なし
- @return 	なし
+ brief		光源の設定
+ param	 	なし
+ return 	なし
  */
 void setLight() {
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -148,9 +145,9 @@ void setLight() {
 }
 
 /**
- @brief     初期化処理
- @param	 	なし
- @return 	なし
+ brief     	初期化処理
+ param	 	なし
+ return 	なし
  */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -167,10 +164,10 @@ void initialize(){
 }
 
 /**
- @brief		glutReshapeFuncで指定したコールバック関数
- @param		<in/--> w　　幅
- @param		<in/--> h　　高さ
- @return	なし
+ brief		glutReshapeFuncで指定したコールバック関数
+ param		<in/--> w　　幅
+ param		<in/--> h　　高さ
+ return		 なし
  */
 void reshape(int w, int h){
 	glViewport(0, 0, w, h);
@@ -181,20 +178,20 @@ void reshape(int w, int h){
 }
 
 /**
- @brief 	glutKeyboardFuncで指定したコールバック関数 
- @param		<in/--> key　　 ASCIIコード
- @param 	<in/--> x　　　 キーが押された時のマウス座標
- @param 	<in/--> y　　　 キーが押された時のマウス座標
- @return 	なし
+ brief 		glutKeyboardFuncで指定したコールバック関数 
+ param		<in/--> key　　 ASCIIコード
+ param 		<in/--> x　　　 キーが押された時のマウス座標
+ param 		<in/--> y　　　 キーが押された時のマウス座標
+ return 	なし
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 
 /**
- @brief  	glutIdleFuncで指定したコールバック関数
- @param	 	なし
- @return 	なし
+ brief  	glutIdleFuncで指定したコールバック関数
+ param	 	なし
+ return 	なし
  */
 void idle(){
 	Vec3d prepos, curpos;	// position
@@ -235,9 +232,9 @@ void idle(){
 }
 
 /**
- @brief 	多面体の面(三角形)の頂点座標をデバッグ出力させる。
- @param 	<in/--> solidID　　 solidのID
- @return 	なし
+ brief 		多面体の面(三角形)の頂点座標をデバッグ出力させる。
+ param 		<in/--> solidID　　 solidのID
+ return 	なし
  */
 void dstrSolid(std::string& solidName) {
 	PHSolidIf* solid;
@@ -260,10 +257,10 @@ void dstrSolid(std::string& solidName) {
 }
 
 /**
- @brief		メイン関数
- @param		<in/--> argc　　コマンドライン入力の個数
- @param		<in/--> argv　　コマンドライン入力
- @return	0 (正常終了)
+ brief		メイン関数
+ param		<in/--> argc　　コマンドライン入力の個数
+ param		<in/--> argv　　コマンドライン入力
+ return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
