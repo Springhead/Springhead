@@ -39,9 +39,10 @@ namespace Spr{;
 #define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
 
 ///	インタフェース->オブジェクトへのキャスト
-#define OCAST(T, p)	OcastImp<T>(p)
-template <class T, class P> T* OcastImp(P p){
-	void* obj = p->GetIfInfo()->GetObject((ObjectIf*)p);
+#define OCAST(T, i)	OcastImp<T>(i)
+template <class T, class I> T* OcastImp(I* i){
+	ObjectIf* oi = i;
+	void* obj = i->GetIfInfo()->GetObject(oi);
 	return (T*)(Object*)obj;
 }
 

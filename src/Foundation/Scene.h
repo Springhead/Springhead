@@ -127,12 +127,15 @@ public:
 	セーブして，D3D形式でロードしなければならない．	*/
 class SPR_DLL Scene:public NameManager, public SceneIf{
 	OBJECTDEF(Scene);
+	BASEIMP_NAMEDOBJECT(NameManager);
 public:
 	///	コンストラクタ
 	Scene();
 	virtual ~Scene(){Clear();}
 	///	シーンを空にする．
 	void Clear();
+	///
+	void Print(std::ostream& os) const { NameManager::Print(os); }
 };
 
 }

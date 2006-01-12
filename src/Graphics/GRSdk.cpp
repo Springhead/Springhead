@@ -52,11 +52,13 @@ GRSdk::~GRSdk(){
 	}
 }
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
-	GRDebugRenderIf* rv = DBG_NEW GRDebugRender;
+	GRDebugRender* rv = DBG_NEW GRDebugRender;
+	objects.push_back(rv);
 	return rv;
 }
 GRDeviceGLIf* GRSdk::CreateDeviceGL(){
 	GRDeviceGL* rv = DBG_NEW GRDeviceGL;
+	objects.push_back(rv);
 	return rv;
 }
 
