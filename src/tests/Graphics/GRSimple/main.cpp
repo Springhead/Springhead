@@ -67,6 +67,9 @@ void keyboard(unsigned char key, int x, int y){
  */
 void idle(){
 	glutPostRedisplay();
+	static int count;
+	count ++;
+	if (count > 200) exit(0);
 }
 
 int main(int argc, char* argv[]){
