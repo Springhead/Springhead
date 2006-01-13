@@ -21,19 +21,111 @@
  */
 #include <Springhead.h>		//	Springheadのインタフェース
 #pragma hdrstop
+#include <gl/glut.h>
 using namespace Spr;
 
+GRSdkIf* grSdk;
+GRDebugRenderIf* render;
+GRDeviceGLIf* grDevice;
+
+PHSdkIf* phSdk;
+PHSceneIf* scene;
+PHSolidIf* soFloor, *soBlock;
+/**
+ @brief     glutDisplayFuncで指定したコールバック関数
+ @param	 	なし
+ @return 	なし
+ */
+void display(){
+}
 
 /**
- @brief		メイン関数
- @param		<in/--> argc　　コマンドライン入力の個数
- @param		<in/--> argv　　コマンドライン入力
- @return	0 (正常終了)
+ @brief		glutReshapeFuncで指定するコールバック関数
+ @param		<in/--> w　　幅
+ @param		<in/--> h　　高さ
+ @return	なし
  */
+void reshape(int w, int h){
+	render->Resize(Vec2f(w,h));
+}
+
+/**
+ @brief 	glutKeyboardFuncで指定したコールバック関数 
+ @param		<in/--> key　　 ASCIIコード
+ @param 	<in/--> x　　　 キーが押された時のマウス座標
+ @param 	<in/--> y　　　 キーが押された時のマウス座標
+ @return 	なし
+ */
+void keyboard(unsigned char key, int x, int y){
+	if (key == '\x1b') exit(0);
+}	
+
+/**
+ @brief  	glutIdleFuncで指定したコールバック関数
+ @param	 	なし
+ @return 	なし
+ */
+void idle(){
+	glutPostRedisplay();
+}
+
 int main(int argc, char* argv[]){
-	GRSdkIf* graphics = CreateGRSdk();
-	GRDebugRenderIf* debugRend = graphics->CreateDebugRender();
-	GRDeviceGLIf* device = graphics->CreateDeviceGL();
-	debugRend->SetDevice(device);
-	return 0;
+	phSdk = CreatePHSdk();						// SDKの作成　
+	scene = phSdk->CreateScene();				// シーンの作成
+	PHSolidDesc desc;
+	desc.mass = 2.0;
+	desc.inertia *= 2.0;
+	soBlock = scene->CreateSolid(desc);			// 剛体をdescに基づいて作成
+
+	Posed p = Posed::Rot(Rad(0.0), 'z');
+	soBlock->SetPose(p);
+
+	desc.mass = 1e20f;
+	desc.inertia *= 1e20f;
+	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+	soFloor->SetGravity(false);
+	
+	//	形状の作成
+	CDConvexMeshIf* meshFloor=NULL;
+	CDConvexMeshIf* meshBlock=NULL;
+	{
+		CDConvexMeshDesc md;
+		md.vertices.push_back(Vec3f(-1,-1,-1)); md.vertices.push_back(Vec3f(-1,-1, 1));	
+		md.vertices.push_back(Vec3f(-1, 1,-1));	md.vertices.push_back(Vec3f(-1, 1, 1));
+		md.vertices.push_back(Vec3f( 1,-1,-1));	md.vertices.push_back(Vec3f( 1,-1, 1));
+		md.vertices.push_back(Vec3f( 1, 1,-1));	md.vertices.push_back(Vec3f( 1, 1, 1));
+		meshBlock = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+
+		// soFloor(meshFloor)に対してスケーリング
+		for(unsigned i=0; i<md.vertices.size(); ++i){
+			md.vertices[i].x *= 3;
+			md.vertices[i].z *= 3;
+		}
+		meshFloor = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+	}
+	soFloor->AddShape(meshFloor);
+	soBlock->AddShape(meshBlock);
+	soFloor->SetFramePosition(Vec3f(0,-1,0));
+	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
+	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+
+	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
+
+
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	int window = glutCreateWindow("GRSimple");
+	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
+	glutIdleFunc(idle);
+	glutKeyboardFunc(keyboard);
+
+	grSdk = CreateGRSdk();
+	render = grSdk->CreateDebugRender();
+	grDevice = grSdk->CreateDeviceGL(window);
+	render->SetDevice(grDevice);
+
+	glutMainLoop();
+
+	//	SDKは開放しなくて良い．しなくてもmainを抜けてから開放される．
 }

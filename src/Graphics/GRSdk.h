@@ -14,7 +14,7 @@ public:
 	void Print(std::ostream& os) const {}
 	BASEIMP_OBJECT(Object);
 	GRDebugRenderIf* CreateDebugRender();
-	GRDeviceGLIf* CreateDeviceGL();
+	GRDeviceGLIf* CreateDeviceGL(int window);
 public:
 };
 

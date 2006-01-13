@@ -56,8 +56,8 @@ GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	objects.push_back(rv);
 	return rv;
 }
-GRDeviceGLIf* GRSdk::CreateDeviceGL(){
-	GRDeviceGL* rv = DBG_NEW GRDeviceGL;
+GRDeviceGLIf* GRSdk::CreateDeviceGL(int w){
+	GRDeviceGL* rv = DBG_NEW GRDeviceGL(w);
 	objects.push_back(rv);
 	return rv;
 }

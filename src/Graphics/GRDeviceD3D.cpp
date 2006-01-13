@@ -1,3 +1,4 @@
+#if 0
 #include "Graphics.h"
 #pragma hdrstop
 
@@ -17,3 +18,4 @@ void GRDeviceD3D::SetMaterial(const GRMaterial& mat){
 
 }	//	Spr
 
+#endif
