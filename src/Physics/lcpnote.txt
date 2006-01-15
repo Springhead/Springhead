@@ -1,3 +1,16 @@
+
+剛体の接触問題のLCPへの定式化
+
+tazz
+
+参照：
+http://www.diku.dk/undervisning/2005f/101/											
+
+
+1. LCP (Linear Complimentarity Program)の定式化
+
+記号リスト：
+
 u		: 各剛体の速度を並べたベクトル
 udot	: uの時間微分
 w		: 接触点での速度
@@ -6,6 +19,7 @@ M		: 慣性行列
 dt		: オイラー積分の時間ステップ
 λ		: 接触力 * dt
 Fext	: 外力およびコリオリ項
+
 
 運動方程式は
 	M udot = J' λ/dt + Fext
@@ -17,11 +31,12 @@ A = J M^-1 J'
 b = J (u(t) + dt M^-1 Fext)
 とおくと
 	w = A λ + b
+
 さらに，垂直抗力，静止摩擦，動摩擦などを考慮することにより
 以下の制約条件を得る
-	λ_i = λ_lo_i				 ==> w_i >= 0
-	λ_i = λ_hi_i				 ==> w_i <= 0
-	λ_lo_i < λ_i < λ_hi_i ==> w_i = 0
+	λ_i = λ_lo_i				==> w_i >= 0
+	λ_i = λ_hi_i				==> w_i <= 0
+	λ_lo_i < λ_i < λ_hi_i	==> w_i = 0
 これの解λをLCP(A, b, λ_hi, λ_lo)と書く
 
 反復解法:

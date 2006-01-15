@@ -12,39 +12,39 @@ namespace Spr{;
 
 /// 1つの接触点
 struct PHContactPoint{
-	int	contact;			/// 属する接触
+	int	contact;				/// 属する接触
 	Vec3d pos;					/// 接触点の位置
 	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック
 	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック
 	Vec3d b;					/// bベクトルのブロック
-	Vec3d fmin, fmax;			/// fの取り得る範囲
 	Vec3d f;					/// 接触力(LCPの相補変数)
 	Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
 	Vec3d df;					/// 各反復での接触力の変化量(収束判定に使用)
+
+	PHContactPoint(int c, Vec3d p){
+		contact = c;
+		pos = p;
+	}
 };
 typedef std::vector<PHContactPoint> PHContactPoints;
 
 /// Shape同士の接触
 class PHContact{
 public:
-	//bool	bValid;				/// true => 有効, false => 無効
-	//bool	bNew;				/// true => 新規, false => 継続
 	int solid[2];				/// 接触している剛体
 	int shape[2];				/// 接触している形状
-	//CDShape* intersection;		/// 交差形状
 	Vec3d normal;				/// 法線
 	Vec3d center;				/// 交差形状の重心
+	double mu;					/// 摩擦係数
 	
-	/// 交差形状を射影して接触点列を得る
-	void CreateContactPoints(PHContactPoints& points);
-
-	PHContact(int solid0, int solid1, int shape0, int shape1, Vec3d n, Vec3d c){
+	PHContact(int solid0, int solid1, int shape0, int shape1, Vec3d n, Vec3d c, double _mu){
 		solid[0] = solid0;
 		solid[1] = solid1;
 		shape[0] = shape0;
 		shape[1] = shape1;
 		normal = n;
 		center = c;
+		mu = _mu;
 	}
 };
 
@@ -54,6 +54,8 @@ public:
 };
 
 class PHConstraintEngine: public PHEngine{
+	friend class PHSolidPair;
+
 	OBJECTDEF(PHConstraintEngine);
 
 	/// 接触に関与する剛体の情報
@@ -71,6 +73,10 @@ class PHConstraintEngine: public PHEngine{
 		/// Shapeの組み合わせの配列
 		typedef UTCombination<CDShapePair> CDShapePairs;
 		CDShapePairs	shapePairs;
+
+		void Init(PHSolid* s0, PHSolid* s1);	/// 初期化
+		bool Detect(int s0, int s1, PHConstraintEngine* engine);	
+		
 	};
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
 
@@ -91,8 +97,7 @@ protected:
 	PHLCPMatrix		A;			/// LCPのA行列
 
 	void Init();				/// 初期化
-	void DetectIntersection();	/// 全体の交差の検知
-	bool DetectIntersectionOfSolidPair(int s0, int s1, unsigned ct);	
+	void Detect();	/// 全体の交差の検知
 								/// Solid組ごとの交差検知
 	void SetupLCP();			/// LCPの準備
 	void SetInitialValue();		/// LCPの決定変数の初期値を設定

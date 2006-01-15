@@ -17,9 +17,67 @@ struct Edge{
 typedef std::vector<Edge> Edges;
 
 //----------------------------------------------------------------------------
+// PHContact
 
-void PHContact::CreateContactPoints(PHContactPoints& points){
+//----------------------------------------------------------------------------
+// PHConstraintEngine
+
+//----------------------------------------------------------------------------
+//	PHSolidPair
+
+void PHConstraintEngine::PHSolidPair::Init(PHSolid* s0, PHSolid* s1){
+	int ns0 = s0->shapes.size(), ns1 = s1->shapes.size();
+	shapePairs.resize(ns0, ns1);
+	for(int i = 0; i < ns0; i++)for(int j = 0; j < ns1; j++){
+		CDShapePair& sp = shapePairs.item(i, j);
+		sp.shape[0] = s0->shapes[i];
+		sp.shape[1] = s1->shapes[j];
+	}
+}
+
+bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngine* engine){
+	// ＊ここでShapeについてBBoxレベル判定をすれば速くなるかも？
+	static CDContactAnalysis analyzer;
+
+	unsigned ct = ((PHScene*)(engine->GetScene()))->GetCount();
 	
+	PHSolid *s0 = engine->solids[is0], *s1 = engine->solids[is1];
+
+	// 全てのshape pairについて交差を調べる
+	bool found = false;
+	for(int i = 0; i < s0->shapes.size(); i++)for(int j = 0; j < s1->shapes.size(); j++){
+		CDShapePair& sp = shapePairs.item(i, j);
+		sp.UpdateShapePose(s0->GetPose(), s1->GetPose());
+		//このshape pairの交差判定
+		if(sp.Detect(ct)){
+			found = true;
+			//交差形状の計算
+			analyzer.FindIntersection(&sp);
+			//交差の法線と中心を得る
+			analyzer.CalcNormal(&sp);
+
+			//摩擦係数は両者の静止摩擦係数の平均とする
+			double mu = (sp.shape[0]->material.mu0 + sp.shape[1]->material.mu0) * 0.5;
+			//接触を作成
+			engine->contacts.push_back(PHContact(is0, is1, i, j, sp.normal, sp.center, mu));
+
+			//接触点の作成：
+			//交差形状を構成する頂点はanalyzer.planes.beginからendまでの内deleted==falseのもの
+			typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
+			Vec3d v, vproj;
+			for(Plane* p = analyzer.planes.begin; p != analyzer.planes.end; p++){
+				if(p->deleted)
+					continue;
+				//sp.centerを通りsp.normalを法線とする平面上に頂点を射影
+				//法線は正規化されているとする
+				v = p->normal;
+                vproj = v - ((v - sp.center) * sp.normal) * sp.normal;
+
+				engine->points.push_back(PHContactPoint(engine->contacts.size() - 1, vproj));
+			}
+		}
+	}
+	return found;
 }
 
 //----------------------------------------------------------------------------
@@ -55,29 +113,27 @@ void PHConstraintEngine::Init(){
 		solidAuxs[i].Iinv = solids[i]->GetInertiaInv();
 	}
 
+	//登録されているSolidの数に合わせてsolidPairsとshapePairsをresize
 	solidPairs.resize(N, N);
 	for(int i = 0; i < N; i++)for(int j = i+1; j < N; j++){
-		int ns0 = solids[i]->shapes.size();
-		int ns1 = solids[j]->shapes.size();
 		PHSolidPair& sp = solidPairs.item(i, j);
-
+		sp.Init(solids[i], solids[j]);
 	}
 
 	bReady = true;
 }
 
-void PHConstraintEngine::DetectIntersection(){
+void PHConstraintEngine::Detect(){
 	/* 以下の流れで交差を求める
 		1. SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外
 		2. 各Solidの組について
 			2a. ShapeのBBoxレベルでの交差判定 (未実装)
 			2b. 各Shapeの組についてGJKで交差形状を得る
 			2c. 交差形状から法線を求め、法線に関して形状を射影し，その頂点を接触点とする
+			2d. 得られた接触点情報をPHContactPointsに詰めていく
 	 */
 
 	contacts.clear();
-	//double   dt = GetScene()->GetTimeStep();
-	unsigned ct = ((PHScene*)GetScene())->GetCount();
 	int N = solids.size();
 
 	//1. BBoxレベルの衝突判定
@@ -102,58 +158,15 @@ void PHConstraintEngine::DetectIntersection(){
 				int f2 = *itf;
 				if (f1 > f2) std::swap(f1, f2);
 				//2. SolidとSolidの衝突判定
-				DetectIntersectionOfSolidPair(f1, f2, ct);
+				solidPairs.item(f1, f2).Detect(f1, f2, this);
 			}
 			cur.insert(it->index);
 		}else{
 			cur.erase(it->index);			//	終端なので削除．
 		}
 	}
-
-	//各接触の接触点配列を計算
-	points.clear();
-	for(PHContacts::iterator it = contacts.begin(); it != contacts.end(); it++){
-		it->CreateContactPoints(points);
-	}
-	
 }
 
-bool PHConstraintEngine::DetectIntersectionOfSolidPair(int is0, int is1, unsigned ct){
-	// ＊ここでShapeについてBBoxレベル判定をすれば速くなるかも？
-	static CDContactAnalysis analyzer;
-	PHSolid *s0 = solids[is0], *s1 = solids[is1];
-	// 全ての凸形状の組み合わせについて交差を調べる
-	bool found = false;
-	for(int i = 0; i < s0->shapes.size(); i++)for(int j = 0; j < s1->shapes.size(); j++){
-		CDShapePair& sp = solidPairs.item(is0, is1).shapePairs.item(i, j);
-		sp.UpdateShapePose(s0->GetPose(), s1->GetPose());
-		if(sp.Detect(ct)){
-			found = true;
-			//交差形状の計算
-			analyzer.FindIntersection(&sp);
-			//交差の法線と中心を得る
-			analyzer.CalcNormal(&sp);
-			//接触を作成
-			contacts.push_back(PHContact(is0, is1, i, j, sp.normal, sp.center));
-
-			//接触点の作成：
-			//交差形状を構成する頂点はanalyzer.planes.beginからendまでの内deleted==falseのもの
-			typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
-			Vec3d v, vproj;
-			for(Plane* p = analyzer.planes.begin; p != analyzer.planes.end; p++){
-				if(p->deleted)
-					continue;
-				//sp.centerを通りsp.normalを法線とする平面上に頂点を射影
-				//法線は正規化されているとする
-				v = p->normal;
-                vproj = v - ((v - sp.center) * sp.normal) * sp.normal;
-
-				//points.push_back(PHContactPoint(contacts.size() - 1, vproj));
-			}
-		}
-	}
-	return found;
-}
 
 void PHConstraintEngine::SetupLCP(){
 	double dt = ((PHSceneIf*)GetScene())->GetTimeStep();
@@ -296,6 +309,7 @@ bool PHConstraintEngine::CheckConvergence(){
 
 void PHConstraintEngine::UpdateLCP(){
 	PHContactPoints::iterator ip;
+	PHContact* con;
 	PHSolidAux* solidaux[2];
 	//接触力fの更新
 	Vec3d fnew;
@@ -303,16 +317,29 @@ void PHConstraintEngine::UpdateLCP(){
 	for(ip = points.begin(); ip != points.end(); ip++){
 		if(icon != ip->contact){
 			icon = ip->contact;
-			PHContact& con = contacts[icon];
+			con = &contacts[icon];
 			for(int i = 0; i < 2; i++)
-				solidaux[i] = &solidAuxs[con.solid[i]];
+				solidaux[i] = &solidAuxs[con->solid[i]];
 		}
 		fnew = ip->f - (ip->b +
 			ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
 			ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
-		for(int i = 0; i < 3; i++){
-			fnew[i] = Spr::min(Spr::max(ip->fmin[i], ip->f[i]), ip->fmax[i]);
-		}
+
+		//fmin = {  0, -mu * f[0], -mu * f[0]};
+		//fmax = {Inf,  mu * f[0],  mu * f[0]};
+		//fnew[i] = min(max(fmin[i], f[i]), fmax[i]);
+		//＊メモ：
+		//	・摩擦力の各成分が最大静止摩擦よりも小さくても合力は超える可能性があるので本当はおかしい。
+		//	・静止摩擦と動摩擦が同じ値でないと扱えない。
+		
+		//垂直抗力 >= 0の制約
+		fnew[0] = Spr::max(0.0, fnew[0]);
+		
+		//|摩擦力| <= 最大静止摩擦の制約
+		double flim = con->mu * fnew[0];		//最大静止摩擦
+		fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
+		fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
+
 		ip->df = fnew - ip->f;
 		ip->f = fnew;
 	}
@@ -337,7 +364,7 @@ void PHConstraintEngine::Step(){
 		Init();
 
 	//交差を検知
-	DetectIntersection();
+	Detect();
 
 	//LCPを設定
 	SetupLCP();
