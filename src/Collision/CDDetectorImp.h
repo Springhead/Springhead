@@ -33,6 +33,7 @@ public:
 	Posed shapePoseW[2];
 
 	///	
+	CDShapePair(){}
 	CDShapePair(CDShape* s0, CDShape* s1){
 		shape[0] = s0;
 		shape[1] = s1;
