@@ -305,8 +305,8 @@ WARN_LOGFILE           = doxygen.log
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT         = . \
-		../include Base Foundation Collision Physics \
+INPUT         = ./unistd.h \
+		../include Base Foundation Collision Physics Graphics \
 		tests/list.txt Samples/list.txt
 		
 
@@ -321,7 +321,7 @@ FILE_PATTERNS          = *.h
 # should be searched for input files as well. Possible values are YES and NO. 
 # If left blank NO is used.
 
-RECURSIVE              = NO
+RECURSIVE              = YES
 
 # The EXCLUDE tag can be used to specify files and/or directories that should 
 # excluded from the INPUT source files. This way you can easily exclude a 
