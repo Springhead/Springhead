@@ -23,14 +23,6 @@ public:
 	virtual PHSolidIf** GetSolids()=0;
 
 
-	///	Shape作成
-	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
-	///	Shapeの数
-	virtual int GetNShape()=0;
-	///	Shapeの取得
-	virtual CDShapeIf** GetShapes()=0;
-
-
 	/// 積分ステップを返す
 	virtual double GetTimeStep()const=0;
 	/// 積分ステップを設定する

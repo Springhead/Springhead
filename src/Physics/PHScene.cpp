@@ -61,12 +61,6 @@ void PHScene::SetGravity(const Vec3d& g){
 
 }
 
-int PHScene::GetNShape(){
-	return shapes.size();
-}
-CDShapeIf** PHScene::GetShapes(){
-	return (CDShapeIf**)&*shapes.begin();
-}
 int PHScene::GetNSolids(){
 	return solids->solids.size();
 }
@@ -103,18 +97,6 @@ void PHScene::Integrate(){
 //	_controlfp(_MCW_EM, _MCW_EM);
 //	time += timeStep;
 	count++;
-}
-
-CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
-	if (desc.type == CDShapeDesc::CONVEXMESH){
-		CDShape* s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
-		s->SetNameManager(this);
-		shapes.push_back(s);
-		return s;
-	}else{
-		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
-		return NULL;
-	}
 }
 
 void PHScene::SetGravity(Vec3f accel){

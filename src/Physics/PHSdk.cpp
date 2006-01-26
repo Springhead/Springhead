@@ -55,5 +55,29 @@ PHSceneIf* PHSdk::CreateScene(){
 	scenes.push_back(rv);
 	return rv;
 }
+int PHSdk::GetNScene(){
+	return scenes.size();
+}
+PHSceneIf** PHSdk::GetScenes(){
+	return (PHSceneIf**)&*scenes.begin();
+}
+
+CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
+	if (desc.type == CDShapeDesc::CONVEXMESH){
+		CDShape* s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
+		s->SetNameManager(this);
+		shapes.push_back(s);
+		return s;
+	}else{
+		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
+		return NULL;
+	}
+}
+int PHSdk::GetNShape(){
+	return shapes.size();
+}
+CDShapeIf** PHSdk::GetShapes(){
+	return (CDShapeIf**)&*shapes.begin();
+}
 
 }

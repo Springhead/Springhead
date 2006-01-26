@@ -28,8 +28,6 @@ protected:
 	unsigned int count;
 	///	元のSDK
 	PHSdkIf* sdk;
-	///	CDShape
-	std::vector< UTRef<CDShape> > shapes;
 	PHSolidContainer* solids;
 public:
 	///	コンストラクタ
@@ -71,8 +69,6 @@ public:
 	virtual void SetGravity(Vec3f accel);
 	virtual Vec3f GetGravity();
 
-	virtual int GetNShape();
-	virtual CDShapeIf** GetShapes();
 	virtual int GetNSolids();
 	virtual PHSolidIf** GetSolids();
 
