@@ -1,3 +1,7 @@
+/**
+  @file GRDeviceGL.h
+  @brief OpenGLグラフィックス　　
+*/
 #ifndef GRDEVICEGL_H
 #define GRDEVICEGL_H
 

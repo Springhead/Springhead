@@ -7,8 +7,10 @@ namespace Spr {;
 //	GRDeviceGL
 OBJECTIMP(GRDeviceGL, GRDevice);
 IF_IMP(GRDeviceGL, GRDevice);
-
+// 初期設定
 void GRDeviceGL::Init(){
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearDepth(1.0); 
 	glDrawBuffer(GL_BACK);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_CULL_FACE);
@@ -18,17 +20,37 @@ void GRDeviceGL::Init(){
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	gluLookAt(0.0, 3.0, 9.0, 
+	gluLookAt(0.0, 5.0, 10.0, 
 		      0.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
+}
+// 画面をクリアする
+void GRDeviceGL::ClearBuffer(){
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+void GRDeviceGL::BeginScene(){
+
+
+
 
 }
+void GRDeviceGL::EndScene(){
 
-void GRDeviceGL::ClearBuffer(){}
-void GRDeviceGL::BeginScene(){}
-void GRDeviceGL::EndScene(){}
-void GRDeviceGL::Resize(Vec2f screen){}
+
+
+
+}
+// glutReshapeFunc()で指定したコールバック関数
+// ウィンドウ生成時とリサイズ時に実行する関数
+void GRDeviceGL::Resize(Vec2f screen){
+	int w = static_cast<int>(screen.data[0]);
+	int h = static_cast<int>(screen.data[1]);
+	glViewport(0, 0, w, h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(60.0, (GLfloat)w/(GLfloat)h, 1.0, 500.0);
+	glMatrixMode(GL_MODELVIEW);
+}
 void GRDeviceGL::MultModelMatrix(const Affinef& afw){}
 void GRDeviceGL::PushModelMatrix(){}
 void GRDeviceGL::PopModelMatrix(){}
