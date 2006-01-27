@@ -85,9 +85,10 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
 }
 
-class SPR_DLL NameManager:public NamedObject{
+class SPR_DLL NameManager:public NameManagerIf, public NamedObject{
 public:
 	OBJECTDEF(NameManager);
+	BASEIMP_NAMEDOBJECT(NamedObject);
 protected:
 	///	名前とオブジェクトの対応表	
 	ObjectNames names;
@@ -102,9 +103,14 @@ public:
 		t = p;
 	}
 	template <class T> void FindObject(T*& t, UTString name, UTString ns=""){
-		NamedObject* p = names.Find(name, ns, GETCLASSNAMES(T));
+		NamedObject* p = names.Find(name, GETCLASSNAMES(T));
 		t = DCAST(T, p);
 	}
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls){
+		NamedObject* p = names.Find(name, cls);
+		return p;
+	}
+
 	typedef ObjectNames::iterator SetIt;
 	typedef std::pair<SetIt, SetIt> SetRange;
 	SetRange RangeObject(UTString n){ return names.Range(n); }
@@ -118,6 +124,11 @@ public:
 	void Print(std::ostream& os) const { names.Print(os); }
 	friend class NamedObject;
 };
+#define BASEIMP_NAMEMANAGER(base)	BASEIMP_NAMEDOBJECT(base)	\
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls){	\
+		return base::FindObject(name, cls);								\
+	}																	\
+
 
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
@@ -128,7 +139,7 @@ public:
 	セーブして，D3D形式でロードしなければならない．	*/
 class SPR_DLL Scene:public NameManager, public SceneIf{
 	OBJECTDEF(Scene);
-	BASEIMP_NAMEDOBJECT(NameManager);
+	BASEIMP_NAMEMANAGER(NameManager);
 public:
 	///	コンストラクタ
 	Scene();
@@ -138,6 +149,7 @@ public:
 	///
 	void Print(std::ostream& os) const { NameManager::Print(os); }
 };
+#define	BASEIMP_SCENE(base) 	BASEIMP_NAMEMANAGER(base);
 
 }
 #endif

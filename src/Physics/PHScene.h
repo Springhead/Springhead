@@ -18,7 +18,7 @@ class PHSolidContainer;
 	セーブして，D3D形式でロードしなければならない．	*/
 class SPR_DLL PHScene:public PHSceneIf, public Scene{
 	OBJECTDEF(PHScene);
-	BASEIMP_OBJECT(Scene);
+	BASEIMP_SCENE(Scene);
 public:
 	PHEngines engines;
 protected:

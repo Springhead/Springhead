@@ -59,6 +59,7 @@ bool ObjectNamesLess::operator () (NamedObject* o1, NamedObject* o2) const {
 //----------------------------------------------------------------------------
 //	NameManager
 OBJECTIMP(NameManager, NamedObject);
+IF_IMP(NameManager, NamedObject);
 void NameManager::ClearName(){
 	names.clear();
 }
@@ -67,7 +68,7 @@ void NameManager::ClearName(){
 //----------------------------------------------------------------------------
 //	Scene
 OBJECTIMP(Scene, NameManager);
-IF_IMP_BASE(Scene);
+IF_IMP(Scene, NameManager);
 
 Scene::Scene(){
 	Clear();
