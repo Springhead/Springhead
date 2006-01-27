@@ -121,7 +121,7 @@ void main(){
 		<li> Affinef::Rot(float rad, char axis):		回転行列を返す． axisは，'x', 'y', 'z'．
 		<li> Affinef::Rot(float rad, Vec3f axis):		回転行列を返す．
 		<li> Affinef::ProjectionD3D(Vec3f screen, Vec2f size, float f, float b): D3D用射影行列として初期化．
-		<li> Affinef::ProjectionGL(Vec3f screen, Vec2f size, float f, float b):  D3D用射影行列として初期化．
+		<li> Affinef::ProjectionGL(Vec3f screen, Vec2f size, float f, float b):  GL用射影行列として初期化．
 		<br>
 			OpenGL用射影行列として初期化(-Zが前)．
 			<ul>
