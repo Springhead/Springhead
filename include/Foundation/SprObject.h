@@ -56,18 +56,16 @@ struct ObjectIf{
 	virtual void Print(std::ostream& os) const =0;	
 };
 
-struct NamedObjectIf{
+struct NamedObjectIf: public ObjectIf{
 	IF_DEF(NamedObject);
 	///	名前の取得
 	virtual const char* GetName() const =0;
 	///	名前の設定
 	virtual void SetName(const char* n) =0;
-	///	デバッグ用の表示
-	virtual void Print(std::ostream& os) const =0;	
 };
 
 struct SceneIf;
-struct SceneObjectIf{
+struct SceneObjectIf: NamedObjectIf{
 	IF_DEF(SceneObject);
 	///	所属Sceneの取得
 	virtual SceneIf* GetScene() =0;

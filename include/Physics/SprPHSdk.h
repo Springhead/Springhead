@@ -7,6 +7,7 @@ namespace Spr{;
 struct PHSceneIf;
 ///	物理シミュレーションSDK
 struct PHSdkIf : public ObjectIf{
+	IF_DEF(PHSdk);
 	///	Sceneの作成
 	virtual PHSceneIf* CreateScene()=0;
 	///	Sceneの数を取得

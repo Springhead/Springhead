@@ -31,7 +31,7 @@ class CDFaces:public std::vector<CDFace>{
 class CDConvexMesh : public CDConvexMeshIf, public CDConvex{
 public:
 	OBJECTDEF(CDConvexMesh);
-	BASEIMP_OBJECT(Object);
+	BASEIMP_CDCONVEX(CDConvex);
 
 	///	íTçıäJéní∏ì_î‘çÜ
 	mutable int curPos;

@@ -27,7 +27,8 @@ struct PHSolidDesc: public PHSolidState{
 
 struct CDShapeIf; 
 ///	剛体
-struct PHSolidIf : public ObjectIf{
+struct PHSolidIf : public SceneObjectIf{
+	IF_DEF(PHSolid);
 	virtual void AddForce(Vec3d f)=0;					///< 力を質量中心に加える
 	virtual void AddTorque(Vec3d t)=0;					///< トルクを加える
 	virtual void AddForce(Vec3d f, Vec3d r)=0;			///< 力を 位置r(World系) に加える

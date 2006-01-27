@@ -19,6 +19,7 @@ public:
 	typedef std::map<UTString, UTString> TNameMap;
 	class ObjectKey:public NamedObject{
 	public:
+		BASEIMP_NAMEDOBJECT(NamedObject)
 		ObjectKey();
 		~ObjectKey();
 		DEF_UTTYPEINFODEF(ObjectKey);

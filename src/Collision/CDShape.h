@@ -12,12 +12,13 @@ public:
 	PHMaterial material;
 
 	OBJECTDEFABST(CDShape);
-	BASEIMP_OBJECT(Object);
+	BASEIMP_NAMEDOBJECT(NamedObject);
 	Posef GetPose() const { return pose; }
 	void SetPose(Posef p){ pose = p; }
 	
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax)=0;
 };
+#define	BASEIMP_CDSHAPE(base)	BASEIMP_NAMEDOBJECT(base)
 
 }	//	namespace Spr
 #endif

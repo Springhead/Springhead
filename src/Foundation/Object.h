@@ -69,6 +69,7 @@ class NameManager;
 	SDKやSceneに所有される．	*/
 class NamedObject:public NamedObjectIf, public Object{
 	OBJECTDEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
+	BASEIMP_OBJECT(Object);
 protected:
 	friend class ObjectNames;
 	UTString name;				///<	名前
@@ -83,6 +84,7 @@ public:
 	virtual void Print(std::ostream& os) const;
 	virtual void SetNameManager(NameManager* s){ nameManager = s; }
 	virtual NameManager* GetNameManager(){ return nameManager; }
+	///	デバッグ用の表示
 };
 #define BASEIMP_NAMEDOBJECT(base)										\
 	BASEIMP_OBJECT(base)												\
@@ -94,9 +96,12 @@ class Scene;
 	所属するSceneへのポインタを持つ	*/
 class SceneObject:public SceneObjectIf, public NamedObject{
 	OBJECTDEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
+	BASEIMP_NAMEDOBJECT(NamedObject)
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
+	///	デバッグ用の表示
+	virtual void Print(std::ostream& os) const {NamedObject::Print(os);}
 };
 #define BASEIMP_SCENEOBJECT(base)										\
 	BASEIMP_NAMEDOBJECT(base)											\

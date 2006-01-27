@@ -40,6 +40,7 @@ PHSdkIf* _cdecl CreatePHSdk(){
 //----------------------------------------------------------------------------
 //	PHSdk
 OBJECTIMP(PHSdk, Object);
+IF_IMP(PHSdk, Object);
 PHSdk::~PHSdk(){
 	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
 		if (*it == this){

@@ -45,9 +45,11 @@ OBJECTIMP(SceneObject, NamedObject);
 
 void SceneObject::SetScene(SceneIf* s){
 	SetNameManager(OCAST(NameManager, s));
+	nameManager->GetNameMap();
 }
 SceneIf* SceneObject::GetScene(){
-	return DCAST(Scene, GetNameManager());
+	NameManager* nm = GetNameManager();
+	return DCAST(Scene, nm);
 }
 
 }

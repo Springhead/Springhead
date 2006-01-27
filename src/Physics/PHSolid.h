@@ -70,7 +70,7 @@ enum PHIntegrationMode{
 };
 
 ///	剛体
-class PHSolid : public SceneObject, public PHSolidDesc, public PHSolidIf{
+class PHSolid : public PHSolidIf, public SceneObject, public PHSolidDesc{
 protected:
 
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)

@@ -39,7 +39,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 	// –‚±‚±‚ÅShape‚É‚Â‚¢‚ÄBBoxƒŒƒxƒ‹”»’è‚ğ‚·‚ê‚Î‘¬‚­‚È‚é‚©‚àH
 	static CDContactAnalysis analyzer;
 
-	unsigned ct = ((PHScene*)(engine->GetScene()))->GetCount();
+	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
 	
 	PHSolid *s0 = engine->solids[is0], *s1 = engine->solids[is1];
 

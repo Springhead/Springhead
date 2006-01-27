@@ -55,8 +55,8 @@ static float dynamicFriction;
 //	衝突検出と接触力の計算
 bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 	bool rv = false;
-	int ct = ((PHScene*)engine->GetScene())->GetCount();
-	double dt = ((PHScene*)engine->GetScene())->GetTimeStep();
+	int ct = OCAST(PHScene,engine->GetScene())->GetCount();
+	double dt = OCAST(PHScene,engine->GetScene())->GetTimeStep();
 
 	//	動力学計算の準備
 	Clear();

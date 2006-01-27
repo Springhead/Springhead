@@ -10,6 +10,7 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 //	PHScene
 OBJECTIMP(PHScene, Scene);
+IF_IMP(PHScene, Object);
 
 PHScene::PHScene(PHSdkIf* s){
 	Init();
@@ -36,7 +37,7 @@ PHSdkIf* PHScene::GetSdk(){
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	PHSolid* s = DBG_NEW PHSolid(desc);
-	s->SetScene(this);
+	s->SetScene((PHSceneIf*)this);
 	solids->AddChildObject(s, this);	
 
 	PHPenaltyEngine* pe;
@@ -55,13 +56,6 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 PHSolidIf* PHScene::CreateSolid(){
 	PHSolidDesc def;
 	return CreateSolid(def);
-}
-
-void PHScene::SetGravity(const Vec3d& g){
-	//GravityEngine‚ª–³‚¯‚ê‚Îì¬
-	PHGravityEngine* ge;
-	engines.Find(ge);
-
 }
 
 int PHScene::GetNSolids(){

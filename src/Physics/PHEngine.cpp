@@ -14,7 +14,7 @@ OBJECTIMP(PHEngine, SceneObject);
 //	PHEngines
 
 void PHEngines::Add(PHEngine* e){
-	e->SetScene(scene);
+	e->SetScene((PHSceneIf*)scene);
 	push_back(e);
 	Sort();
 }

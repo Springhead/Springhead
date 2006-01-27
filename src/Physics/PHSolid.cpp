@@ -8,6 +8,7 @@ namespace Spr{
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
 OBJECTIMP(PHSolid, Object);
+IF_IMP(PHSolid, Object);
 
 PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
 	integrationMode = PHINT_SIMPLETIC;
@@ -180,12 +181,12 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	shapes.push_back(OCAST(CDShape,shape));
 	CalcBBox();
 	PHPenaltyEngine* pe;
-	((PHScene*)GetScene())->engines.Find(pe);
+	OCAST(PHScene,GetScene())->engines.Find(pe);
 	pe->Init();
 }
 
 void PHSolid::SetGravity(bool bOn){
-	PHScene* ps = (PHScene*)GetScene();
+	PHScene* ps = OCAST(PHScene,GetScene());
 	PHGravityEngine* ge;
 	ps->engines.Find(ge);
 	if (bOn == true){

@@ -10,8 +10,10 @@ struct CDShapeIf;
 struct CDShapeDesc;
 
 ///	ƒV[ƒ“
-struct PHSceneIf : public ObjectIf{
+struct PHSceneIf : public SceneIf{
 public:
+	IF_DEF(PHScene);
+
 	///	‚±‚ÌScene‚ğ‚à‚ÂSDK‚ğ•Ô‚·
 	virtual PHSdkIf* GetSdk()=0;
 

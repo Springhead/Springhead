@@ -19,7 +19,7 @@ namespace Spr{;
 	階層構造は物理ライブラリとは別に，シーングラフライブラリが持つ
 */
 
-struct CDShapeIf : public ObjectIf{
+struct CDShapeIf : public NamedObjectIf{
 	IF_DEF(CDShape);
 };
 

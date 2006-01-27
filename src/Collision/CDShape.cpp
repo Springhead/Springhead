@@ -13,8 +13,6 @@ int IfInfoImp<CDShapeIf>::BaseOffset(){
 */
 
 IF_IMP(CDShape, Object);
-IF_IMP(CDConvex, CDShape);
-IF_IMP(CDConvexMesh, CDConvex);
 
 //----------------------------------------------------------------------------
 //	CDShape
