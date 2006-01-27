@@ -142,7 +142,7 @@ public:
 		return rv;
 	}
 	UTRef<T>* Find(const UTRef<T>& ref){
-		iterator it = std::find(begin(), end(), s);
+		iterator it = std::find(begin(), end(), ref);
 		if (it == end()) return NULL;
 		else return &*it;
 	}
