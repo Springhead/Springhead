@@ -54,12 +54,12 @@ int main(int argc, char* argv[]){
 	md.vertices.push_back(Vec3f( 1,-1, 1));
 	md.vertices.push_back(Vec3f( 1, 1,-1));
 	md.vertices.push_back(Vec3f( 1, 1, 1));
-	CDConvexMeshIf* mesh2 = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+	CDConvexMeshIf* mesh2 = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 	for(unsigned i=0; i<md.vertices.size(); ++i){
 		md.vertices[i].x *= 10;
 	}
-	CDConvexMeshIf* mesh1 = ICAST(CDConvexMeshIf, scene->CreateShape(md));
+	CDConvexMeshIf* mesh1 = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 	solid1->AddShape(mesh1);
 	solid2->AddShape(mesh2);
