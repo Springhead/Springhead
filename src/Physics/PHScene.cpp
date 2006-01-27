@@ -30,6 +30,9 @@ void PHScene::Init(){
 	engines.Add(pe);
 }
 
+PHSdkIf* PHScene::GetSdk(){
+	return sdk;	
+}
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	PHSolid* s = DBG_NEW PHSolid(desc);

@@ -53,7 +53,9 @@ void PHSolid::Step(){
 	//k4 = f(y + k3);
 	//y += (k1 + 2 * k2 + 2 * k3 + k4) * h / 6;
 	//	積分計算
-	Vec3d dv, dw;
+	Vec3d dv, dw;				//<	速度・角速度の変化量
+	Vec3d	_angvel[4];			//<	数値積分係数
+	Vec3d	_angacc[4];
 	switch(GetIntegrationMode()){
 	case PHINT_EULER:
 		//平行移動量の積分

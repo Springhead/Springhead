@@ -42,6 +42,7 @@ public:
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 
 	void SetGravity(const Vec3d& g);
+	PHSdkIf* GetSdk();
 
 	/// 積分ステップを返す
 	double GetTimeStep()const{return timeStep;}

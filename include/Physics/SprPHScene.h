@@ -12,6 +12,8 @@ struct CDShapeDesc;
 ///	シーン
 struct PHSceneIf : public ObjectIf{
 public:
+	///	このSceneをもつSDKを返す
+	virtual PHSdkIf* GetSdk()=0;
 
 	///	Solid作成
 	virtual PHSolidIf* CreateSolid()=0;
@@ -40,6 +42,7 @@ public:
 
 	///	重力の設定(ここに持たせるべきか要検討だが，Novodexはここ)
 	virtual void SetGravity(Vec3f accel)=0;
+	///	重力の取得
 	virtual Vec3f GetGravity()=0;
 
 };

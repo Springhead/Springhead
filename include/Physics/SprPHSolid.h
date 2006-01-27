@@ -3,14 +3,20 @@
 #include <Foundation/SprObject.h>
 
 namespace Spr{;
+struct PHSolidState{
+	Vec3d		velocity;		///<	‘¬“x			(WorldŒn)
+	Vec3d		angVelocity;	///<	Šp‘¬“x			(WorldŒn)
+	Vec3d		center;			///<	Ž¿—Ê’†S‚ÌˆÊ’u	(LocalŒn)
+	Posed		pose;			///<	ˆÊ’u‚ÆŒü‚«		(WorldŒn)
 
-struct PHSolidDesc{
+	Vec3d		force;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½—Í(WorldŒn)
+	Vec3d		torque;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½ƒgƒ‹ƒN(WorldŒn)
+	Vec3d		nextForce;		///<	ŽŸ‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚é—Í(WorldŒn)
+	Vec3d		nextTorque;		///<	ŽŸ‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚éƒgƒ‹ƒN(WorldŒn)
+};
+struct PHSolidDesc: public PHSolidState{
 	double		mass;			///<	Ž¿—Ê
-	Matrix3d	inertia;		///<	Šµ«ƒeƒ“ƒ\ƒ‹
-	Vec3d		velocity;		///<	‘¬“x			(World)
-	Vec3d		angVelocity;	///<	Šp‘¬“x			(World)
-	Vec3d		center;			///<	Ž¿—Ê’†S‚ÌˆÊ’u	(Local..frame‚ÌpostureŒn)
-	Posed		pose;			///<	ˆÊ’u‚ÆŒü‚«		(World)
+	Matrix3d	inertia;		///<	Šµ«ƒeƒ“ƒ\ƒ‹	(LocalŒn)
 
 	PHSolidDesc(){ Init(); }
 	void Init(){

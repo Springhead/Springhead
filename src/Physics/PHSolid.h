@@ -71,14 +71,9 @@ enum PHIntegrationMode{
 
 ///	剛体
 class PHSolid : public SceneObject, public PHSolidDesc, public PHSolidIf{
-	Vec3d	_angvel[4];			///<	数値積分係数
-	Vec3d	_angacc[4];
 protected:
-	Vec3d		force;			///<	力				(World)
-	Vec3d		torque;			///<	トルク			(World)
-	Vec3d		nextForce;
-	Vec3d		nextTorque;
-	Matrix3d	inertia_inv;
+
+	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
 	///	積分方式
 	PHIntegrationMode integrationMode;
