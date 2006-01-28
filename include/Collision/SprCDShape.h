@@ -50,6 +50,8 @@ struct CDShapeDesc{
 	} type;
 	CDShapeDesc(ShapeType t): type(t){}
 };
+
+
 /**	凸形状のメッシュの生成用
 */
 struct CDConvexMeshDesc: public CDShapeDesc{

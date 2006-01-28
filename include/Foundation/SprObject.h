@@ -27,7 +27,7 @@ public:
 	virtual ObjectIf* GetIf(void* obj)const;
 };
 
-///	実行時型情報を持つクラスが持つべきメンバの宣言部．抽象クラス版
+///	実行時型情報を持つクラスが持つべきメンバの宣言部．
 #define IF_DEF(cls)										\
 public:													\
 	static IfInfoImp<cls##If> ifInfo;					\
