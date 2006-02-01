@@ -8,7 +8,7 @@ namespace Spr {;
 OBJECTIMP(GRDebugRender, GRRender);
 IF_IMP(GRDebugRender, GRRender);
 
-// 剛体をレンダリングする
+/// 剛体をレンダリングする
 void GRDebugRender::DrawSolid(PHSolidIf* so){
 	for (int i=0; i<so->GetNShapes(); ++i) {	
 		CDShapeIf **shapes = so->GetShapes();
@@ -20,7 +20,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		}
 	}
 }
-// 面をレンダリングする
+/// 面をレンダリングする
 void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 	glBegin(GL_POLYGON);
 	for (int v=0; v<face->GetNIndices(); ++v) {

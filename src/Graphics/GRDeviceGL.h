@@ -15,10 +15,22 @@ class GRDeviceGL: public GRDevice, public GRDeviceGLIf{
 	BASEIMP_OBJECT(GRDevice);
 protected:
 	int window;
+	/** GLではModelを変えずにViewだけを変えるということができない.
+	　　視点を動かすには、ユーザがModelを覚えておく必要がある.
+	  　（DirectXの場合は、Modelを書き換えずにViewだけ書き換え、視点を動かすことができる）*/
+	Affinef viewMatrix;			/// 視点行列
+	Affinef modelMatrix;		/// モデル行列
+	Vec2f size;					/// （スクリーンのサイズ？単位はpixel？）
+	// Vec2f windowSize;		/// ウィンドウサイズ（幅、高さ）
+	Vec2f center;				/// カメラからのスクリーンのずれ？
+	/// vec2f viewport;			/// ビューポートの左下隅の座標
+	float front, back;			/// カメラとクリッピング平面との距離
+	//float near, far;			/// 視点からクリップ面までの相対距離（正の値で指定）
 public:
 	GRDeviceGL(int w=0):window(w){}
 	virtual void SetWindow(int w){window=w;}
 	virtual void Print(std::ostream& os) const{GRDevice::Print(os);}
+	/// 初期設定
 	virtual void Init();
 
 	///	バッファクリア
