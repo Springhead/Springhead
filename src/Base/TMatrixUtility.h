@@ -334,17 +334,17 @@ void init_quaternion(TVectorBase<DIMENC(4), QD>& q, T angle, char axis){
 
 /**	4行ベクトルを回転をあらわすクォータニオンとして初期化	*/
 template <class QD, class MD>
-void init_quaternion(TVectorBase<DIMENC(4), QD>& q, TMatrixBase<DIMENC(3), DIMENC(3), MD>& m){
+void init_quaternion(TVectorBase<DIMENC(4), QD>& qt, const TMatrixBase<DIMENC(3), DIMENC(3), MD>& m){
+	typedef TYPENAME QD::element_type QET;
 	// check the diagonal
 	double tr = m[0][0] + m[1][1] + m[2][2];
 	if (tr > 0){
 		double s = sqrt(tr+1);
-		typedef TYPENAME QD::element_type QET;
-		W() = QET(s/2);
+		qt.W() = QET(s/2);
 		s =	 QET(0.5/s);
-		X() = QET((m[1][2] - m[2][1]) * s);
-		Y() = QET((m[2][0] - m[0][2]) * s);
-		Z() = QET((m[0][1] - m[1][0]) * s);
+		qt.X() = QET((m[1][2] - m[2][1]) * s);
+		qt.Y() = QET((m[2][0] - m[0][2]) * s);
+		qt.Z() = QET((m[0][1] - m[1][0]) * s);
 	}else{	// diagonal is negative
 		double q[4];
 		int	i, j, k;
@@ -354,22 +354,22 @@ void init_quaternion(TVectorBase<DIMENC(4), QD>& q, TMatrixBase<DIMENC(3), DIMEN
 		if (m[2][2] > m[i][i]) i = 2;
 		j = nxt[i];
 		k = nxt[j];
-		s = sqrt((m[i][i] - (m[j][j] + m[k][k])) + 1.0f);
+		QET s = sqrt((m[i][i] - (m[j][j] + m[k][k])) + 1.0f);
 		q[i] = s * 0.5f;
 		if (s){
 			s = 0.5 / s;
 			q[3] = (m[j][k] - m[k][j]) * s;
 			q[j] = (m[i][j] + m[j][i]) * s;
 			q[k] = (m[i][k] + m[k][i]) * s;			
-			W() = q[0];
-		   	X() = q[1];
-			Y() = q[2];
-			Z() = q[3];
+			qt.W() = q[0];
+		   	qt.X() = q[1];
+			qt.Y() = q[2];
+			qt.Z() = q[3];
 		}else{
-			W() = 0;
-			X() = 1;
-			Y() = 0;
-			Z() = 0;
+			qt.W() = 0;
+			qt.X() = 1;
+			qt.Y() = 0;
+			qt.Z() = 0;
 		}
 	}
 }

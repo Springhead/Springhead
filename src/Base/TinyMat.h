@@ -35,14 +35,14 @@ public:
 	/**@name	基底ベクトルへのアクセス	*/
 	//@{
 	/// 
-	TVec2<element_type>& Ex(){ return *(TVec2<element_type>*)&col(0); }
+	TVec2<element_type>& Ex(){ return *(TVec2<element_type>*)&this->col(0); }
 	/// 
-	const TVec2<element_type>& Ex() const{ return *(TVec2<element_type>*)&col(0); }
+	const TVec2<element_type>& Ex() const{ return *(TVec2<element_type>*)&this->col(0); }
 	/// 
 	/// 
-	TVec2<element_type>& Ey(){ return *(TVec2<element_type>*)&col(1); }
+	TVec2<element_type>& Ey(){ return *(TVec2<element_type>*)&this->col(1); }
 	/// 
-	const TVec2<element_type>& Ey() const{ return *(TVec2<element_type>*)&col(1); }
+	const TVec2<element_type>& Ey() const{ return *(TVec2<element_type>*)&this->col(1); }
 	//@}
 	
 	///@name 初期化と構築
@@ -87,24 +87,24 @@ public:
 	/**@name 要素へのアクセス */
 	//@{
 	/// 
-	const element_type& ExX() const {return EX().X();}
-	element_type& ExX() {return EX().X();}
+	const element_type& ExX() const {return this->EX().X();}
+	element_type& ExX() {return this->EX().X();}
 	/// 
-	const element_type& ExY() const {return Ex().Y();}
-	element_type& ExY() {return Ex().Y();}
+	const element_type& ExY() const {return this->Ex().Y();}
+	element_type& ExY() {return this->Ex().Y();}
 	/// 
-	const element_type& EyX() const {return Ey().X();}
-	element_type& EyX() {return Ey().X();}
+	const element_type& EyX() const {return this->Ey().X();}
+	element_type& EyX() {return this->Ey().X();}
 	/// 
-	const element_type& EyY() const {return Ey().Y();}
-	element_type& EyY() {return Ey().Y();}
+	const element_type& EyY() const {return this->Ey().Y();}
+	element_type& EyY() {return this->Ey().Y();}
 	//@}
 
 	///@name 演算
 	//@{
 	/// 回転行列の回転角を返す
 	element_type angle() const{
-		return atan2(Ex().Y(), Ex().X());
+		return atan2(this->Ex().Y(), this->Ex().X());
 	}
 	//@}
 };
@@ -136,17 +136,17 @@ public:
 	/**@name	基底ベクトルへのアクセス	*/
 	//@{
 	/// 
-	TVec3<element_type>& Ex(){ return *(TVec3<element_type>*) &item(0,0); }
+	TVec3<element_type>& Ex(){ return *(TVec3<element_type>*) &this->item(0,0); }
 	///
-	const TVec3<element_type>& Ex() const { return *(TVec3<element_type>*) &item(0,0); }
+	const TVec3<element_type>& Ex() const { return *(TVec3<element_type>*) &this->item(0,0); }
 	/// 
-	TVec3<element_type>& Ey(){ return *(TVec3<element_type>*) &item(0,1); }
+	TVec3<element_type>& Ey(){ return *(TVec3<element_type>*) &this->item(0,1); }
 	///
-	const TVec3<element_type>& Ey() const { return *(TVec3<element_type>*) &item(0,1); }
+	const TVec3<element_type>& Ey() const { return *(TVec3<element_type>*) &this->item(0,1); }
 	/// 
-	TVec3<element_type>& Ez(){ return *(TVec3<element_type>*) &item(0,2); }
+	TVec3<element_type>& Ez(){ return *(TVec3<element_type>*) &this->item(0,2); }
 	///
-	const TVec3<element_type>& Ez() const { return *(TVec3<element_type>*) &item(0,2); }
+	const TVec3<element_type>& Ez() const { return *(TVec3<element_type>*) &this->item(0,2); }
 	//@}
 	/**@name 要素へのアクセス */
 	//@{

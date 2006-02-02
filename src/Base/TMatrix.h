@@ -1084,17 +1084,17 @@ public:
 	}
 	///	列ベクトル
 	col_vector_ref col_impl(size_t m){
-		return col_vector_ref(height(), stride(), &item(0,m));
+		return col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
 	const_col_vector_ref col_impl(size_t m) const {
-		return const_col_vector_ref(height(), stride(), &item(0,m));
+		return const_col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
 	///	転置
 	trans_ref trans_impl(){
-		return trans_ref(width(), height(), stride(), &item(0,0));
+		return trans_ref(this->width(), this->height(), this->stride(), &this->item(0,0));
 	}
 	const_trans_ref trans_impl() const {
-		return const_trans_ref(width(), height(), stride(), &item(0,0));
+		return const_trans_ref(this->width(), this->height(), this->stride(), &this->item(0,0));
 	}
 	///
 	void resize_impl(size_t h, size_t w) { assert(h==height_ && w==width_);}
@@ -1120,23 +1120,23 @@ public:
 	DEF_MATRIXD_BASIC_MEMBER(EMatrixBaseRow)
 	EMatrixBaseRow(size_t h, size_t w, const element_type* d):EMatrixBase<D>(h,w,d){}
 	///	要素のアクセス
-	element_type& item_impl(size_t i, size_t j){ return data[i*stride()+j]; }
-	const element_type& item_impl(size_t i, size_t j) const { return data[i*stride()+j]; }
+	element_type& item_impl(size_t i, size_t j){ return this->data[i*this->stride()+j]; }
+	const element_type& item_impl(size_t i, size_t j) const { return this->data[i*this->stride()+j]; }
 	///	ストライド
-	size_t stride_impl() const { return width_; }
+	size_t stride_impl() const { return this->width_; }
 	///	行ベクトル
 	row_vector_ref row_impl(size_t n){
-		return row_vector_ref(width(), 1, &item(n,0));
+		return row_vector_ref(this->width(), 1, &this->item(n,0));
 	}
 	const_row_vector_ref row_impl(size_t n) const {
-		return const_row_vector_ref(width(), 1, &item(n,0));
+		return const_row_vector_ref(this->width(), 1, &this->item(n,0));
 	}
 	///	列ベクトル
 	col_vector_ref col_impl(size_t m){
-		return col_vector_ref(height(), stride(), &item(0,m));
+		return col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
 	const_col_vector_ref col_impl(size_t m) const {
-		return const_col_vector_ref(height(), stride(), &item(0,m));
+		return const_col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
 };
 
@@ -1152,23 +1152,23 @@ public:
 	DEF_MATRIXD_BASIC_MEMBER(EMatrixBaseCol)
 	EMatrixBaseCol(size_t h, size_t w, const element_type* d):EMatrixBase<D>(h,w,d){}
 	///	要素のアクセス
-	element_type& item_impl(size_t i, size_t j){ return data[j*stride()+i]; }
-	const element_type& item_impl(size_t i, size_t j) const { return data[j*stride()+i]; }
+	element_type& item_impl(size_t i, size_t j){ return this->data[j*this->stride()+i]; }
+	const element_type& item_impl(size_t i, size_t j) const { return this->data[j*this->stride()+i]; }
 	///	ストライド
-	size_t stride_impl() const { return height_; }
+	size_t stride_impl() const { return this->height_; }
 	///	行ベクトル
 	row_vector_ref row_impl(size_t n){
-		return row_vector_ref(width(), stride(), &item(n,0));
+		return row_vector_ref(this->width(), this->stride(), &this->item(n,0));
 	}
 	const_row_vector_ref row_impl(size_t n) const {
-		return const_row_vector_ref(width(), stride(), &item(n,0));
+		return const_row_vector_ref(this->width(), this->stride(), &this->item(n,0));
 	}
 	///	列ベクトル
 	col_vector_ref col_impl(size_t m){
-		return col_vector_ref(height(), 1, &item(0,m));
+		return col_vector_ref(this->height(), 1, &this->item(0,m));
 	}
 	const_col_vector_ref col_impl(size_t m) const {
-		return const_col_vector_ref(height(), 1, &item(0,m));
+		return const_col_vector_ref(this->height(), 1, &this->item(0,m));
 	}
 };
 
@@ -1196,15 +1196,15 @@ public:
 	typedef EMatrixBaseRow<desc> base_type;		///<	基本クラス型
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(VMatrixRow);
-	VMatrixRow(const VMatrixRow& m){ init_buffer(); assign(m); }
-	~VMatrixRow(){ delete [] data; }
+	VMatrixRow(const VMatrixRow& m){ this->init_buffer(); this->assign(m); }
+	~VMatrixRow(){ delete [] this->data; }
 	///
 	void resize_impl(size_t h, size_t w) {
-		if (height()*width()<h*w){
-			delete [] data;
-			data = new T[h*w];
-			height_ = h;
-			width_ = w;
+		if (this->height()*this->width()<h*w){
+			delete [] this->data;
+			this->data = new T[h*w];
+			this->height_ = h;
+			this->width_ = w;
 		}
 	}
 };
@@ -1233,16 +1233,16 @@ public:
 	typedef EMatrixBaseCol<desc> base_type;		///<	基本クラス型
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(VMatrixCol);
-	VMatrixCol(const VMatrixCol& m){ init_buffer(); assign(m); }
-	~VMatrixCol(){ delete [] data; }
+	VMatrixCol(const VMatrixCol& m){ this->init_buffer(); this->assign(m); }
+	~VMatrixCol(){ delete [] this->data; }
 	///
 	void resize_impl(size_t h, size_t w) {
-		if (height()*width()<h*w){
-			delete [] data;
-			data = new T[h*w];
+		if (this->height()*this->width()<h*w){
+			delete [] this->data;
+			this->data = new T[h*w];
 		}
-		height_ = h;
-		width_ = w;
+		this->height_ = h;
+		this->width_ = w;
 	}
 };
 
@@ -1263,7 +1263,7 @@ public:
 	size_t stride_impl() const { return stride_; }
 protected:
 	size_t stride_;
-	void init_buffer() { height_=0; width_=0; stride_=0; data=0; }
+	void init_buffer() { this->height_=0; this->width_=0; this->stride_=0; this->data=0; }
 };
 
 ///	部分行列(変数版)
@@ -1282,7 +1282,7 @@ public:
 	size_t stride_impl() const { return stride_; }
 protected:
 	size_t stride_;
-	void init_buffer() { height_=0; width_=0; stride_=0; data=0; }
+	void init_buffer() { this->height_=0; this->width_=0; this->stride_=0; this->data=0; }
 };
 
 

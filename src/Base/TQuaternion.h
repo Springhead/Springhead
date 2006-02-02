@@ -156,7 +156,7 @@ public:
 	///	
 	TQuaternion Conjugated() const { TQuaternion rv(*this); rv.Conjugate(); return rv;}
 	///逆
-	TQuaternion Inv() const { return Conjugated() / square(); }
+	TQuaternion Inv() const { return Conjugated() / this->square(); }
 
 	///回転行列変換
 	template<class AM> void FromMatrix(const AM& m)
@@ -187,7 +187,7 @@ public:
 			Z() = ET(0.25) * s;
 			W() = (m[0][1] - m[1][0] ) / s;
 		}
-		unitize();
+		this->unitize();
 	}
 	template<class AM> void ToMatrix(AM& mat) const
 	{
@@ -203,11 +203,11 @@ public:
 		mat[2][2] = AMET( 1.0 - 2.0 * (X()*X() + Y()*Y()) );
 	}
 	///	オイラー角へ変換
-	template <class ET> void ToEular(TVec3<ET>& v){
+	template <class VET> void ToEular(TVec3<VET>& v){
 		ET poleCheck = X()*Y() + Z()*W();
-		ET& heading = v[0];
-		ET& attitude = v[1];
-		ET& bank = v[2];
+		VET& heading = v[0];
+		VET& attitude = v[1];
+		VET& bank = v[2];
 		if (poleCheck == 0.5){				//	north pole
 			heading = 2 * atan2(X(),W());
 			bank = 0;
@@ -215,16 +215,16 @@ public:
 			heading = -2 * atan2(X(),W());
 			bank = 0;
 		}else{
-			heading = atan2(2*Y()*W()-2*X()*Z() , 1 - 2*Y()2 - 2*Z()2);
+			heading = atan2(2*Y()*W()-2*X()*Z() , 1 - 2*Y()*Y() - 2*Z()*Z());
 			attitude = asin(2*X()*Y() + 2*Z()*W());
-			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()2 - 2*Z()2);
+			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()*X() - 2*Z()*Z());
 		}
 	}
 	///
-	template <class ET> void FromEular(const TVec3<ET>& v){
-		ET& heading = v[0];
-		ET& attitude = v[1];
-		ET& bank = v[2];
+	template <class VET> void FromEular(const TVec3<VET>& v){
+		VET& heading = v[0];
+		VET& attitude = v[1];
+		VET& bank = v[2];
 
 		ET c1 = cos(heading / 2);
 		ET c2 = cos(attitude / 2);
@@ -233,10 +233,10 @@ public:
 		ET s2 = sin(attitude / 2);
 		ET s3 = sin(bank / 2);
 		
-		W() = c1 c2 c3 - s1 s2 s3;
-		X() = s1 s2 c3 + c1 c2 s3;
-		Y() = s1 c2 c3 + c1 s2 s3;
-		Z() = c1 s2 c3 - s1 c2 s3;
+		W() = c1*c2*c3 - s1*s2*s3;
+		X() = s1*s2*c3 + c1*c2*s3;
+		Y() = s1*c2*c3 + c1*s2*s3;
+		Z() = c1*s2*c3 - s1*c2*s3;
 	}
 	///lhsを回転してrhsに一致させるクウォータニオン
 	void RotationArc(const TVec3<ET>& lhs, const TVec3<ET>& rhs)

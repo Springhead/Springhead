@@ -50,24 +50,24 @@ public:
 	///@name 変数アクセス
 	//@{
 	///	ベクトルのx成分
-	const element_type& X() const { return item(0); }
+	const element_type& X() const { return this->item(0); }
 	///	ベクトルのy成分
-	const element_type& Y() const { return item(1); }
+	const element_type& Y() const { return this->item(1); }
 	///	ベクトルのx成分
-	element_type& X() { return item(0); }
+	element_type& X() { return this->item(0); }
 	///	ベクトルのy成分
-	element_type& Y() { return item(1); }
+	element_type& Y() { return this->item(1); }
 	///	ベクトルのx成分
-	const element_type& U() const { return item(0); }
+	const element_type& U() const { return this->item(0); }
 	///	ベクトルのy成分
-	const element_type& V() const { return item(1); }
+	const element_type& V() const { return this->item(1); }
 	///	ベクトルのx成分
-	element_type& U() { return item(0); }
+	element_type& U() { return this->item(0); }
 	///	ベクトルのy成分
-	element_type& V() { return item(1); }
+	element_type& V() { return this->item(1); }
 	//@}
 protected:
-	void set_default(){clear();}
+	void set_default(){this->clear();}
 };
 
 //-----------------------------------------------------------------------------
@@ -103,24 +103,24 @@ public:
 	///@name 変数アクセス
 	//@{
 	///	x成分
-	const element_type& X() const { return item(0); }
+	const element_type& X() const { return this->item(0); }
 	///	y成分
-	const element_type& Y() const { return item(1); }
+	const element_type& Y() const { return this->item(1); }
 	///	z成分
-	const element_type& Z() const { return item(2); }
+	const element_type& Z() const { return this->item(2); }
 	///	x成分
-	element_type& X(){ return item(0); }
+	element_type& X(){ return this->item(0); }
 	///	y成分
-	element_type& Y(){ return item(1); }
+	element_type& Y(){ return this->item(1); }
 	///	z成分
-	element_type& Z(){ return item(2); }
+	element_type& Z(){ return this->item(2); }
 
-	const element_type& R() const { return item(0); }
-	const element_type& G() const { return item(1); }
-	const element_type& B() const { return item(2); }
-	element_type& R(){ return item(0); }
-	element_type& G(){ return item(1); }
-	element_type& B(){ return item(2); }
+	const element_type& R() const { return this->item(0); }
+	const element_type& G() const { return this->item(1); }
+	const element_type& B() const { return this->item(2); }
+	element_type& R(){ return this->item(0); }
+	element_type& G(){ return this->item(1); }
+	element_type& B(){ return this->item(2); }
 	//@}
 	
 	///@name 初期化・構築
@@ -133,11 +133,11 @@ public:
 		@return		内積の値(要素型)	*/
 	template <class D>
 	element_type dot(const PTM::VectorImp<D>& b) const {
-		assert(b.size() == size());
-		return item(0)*b[0] + item(1)*b[1] + item(2)*b[2];
+		assert(b.size() == this->size());
+		return this->item(0)*b[0] + this->item(1)*b[1] + this->item(2)*b[2];
 	}
 protected:
-	void set_default(){clear();}
+	void set_default(){this->clear();}
 };
 
 //-----------------------------------------------------------------------------
@@ -206,7 +206,7 @@ public:
 	TVec4 (TX xi, TY yi, TZ zi, TW wi){ X() = element_type(xi); Y() = element_type(yi); Z() = element_type(zi); W() = element_type(wi);}
 	//@}
 protected:
-	void set_default(){clear();}
+	void set_default(){this->clear();}
 };
 
 ///	float版2次元ベクトル

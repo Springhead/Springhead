@@ -255,27 +255,27 @@ public:
 	//@{
 	/// 
 	TVec2<element_type>& Ex(){
-		return *(TVec2<element_type>*) &item(0,0);
+		return *(TVec2<element_type>*) &this->item(0,0);
 	}
 	/// 
 	const TVec2<element_type>& Ex() const{
-		return *(TVec2<element_type>*) &item(0,0);
+		return *(TVec2<element_type>*) &this->item(0,0);
 	}
 	/// 
 	TVec2<element_type>& Ey(){
-		return *(TVec2<element_type>*) &item(0,1);
+		return *(TVec2<element_type>*) &this->item(0,1);
 	}
 	/// 
 	const TVec2<element_type>& Ey() const{
-		return *(TVec2<element_type>*) &item(0,1);
+		return *(TVec2<element_type>*) &this->item(0,1);
 	}
 	/// 
 	TVec2<element_type>& Trn(){
-		return *(TVec2<element_type>*) &item(0,2);
+		return *(TVec2<element_type>*) &this->item(0,2);
 	}
 	/// 
 	const TVec2<element_type>& Trn() const{
-		return *(TVec2<element_type>*) &item(0,2);
+		return *(TVec2<element_type>*) &this->item(0,2);
 	}
 	/// 
 	TVec2<element_type>& Pos(){ return Trn(); }
@@ -368,21 +368,21 @@ public:
 	/**@name	基底ベクトルへのアクセス	*/
 	//@{
 	/// 
-	TVec3<element_type>& Ex() { return (TVec3<element_type>&)col(0); }
+	TVec3<element_type>& Ex() { return (TVec3<element_type>&)this->col(0); }
 	/// 
-	const TVec3<element_type>& Ex() const { return (TVec3<element_type>&)col(0); }
+	const TVec3<element_type>& Ex() const { return (TVec3<element_type>&)this->col(0); }
 	/// 
-	TVec3<element_type>& Ey() { return (TVec3<element_type>&)col(1); }
+	TVec3<element_type>& Ey() { return (TVec3<element_type>&)this->col(1); }
 	/// 
-	const TVec3<element_type>& Ey() const { return (TVec3<element_type>&)col(1); }
+	const TVec3<element_type>& Ey() const { return (TVec3<element_type>&)this->col(1); }
 	/// 
-	TVec3<element_type>& Ez() { return (TVec3<element_type>&)col(2); }
+	TVec3<element_type>& Ez() { return (TVec3<element_type>&)this->col(2); }
 	/// 
-	const TVec3<element_type>& Ez() const { return (TVec3<element_type>&)col(2); }
+	const TVec3<element_type>& Ez() const { return (TVec3<element_type>&)this->col(2); }
 	/// 
-	TVec3<element_type>& Trn() { return (TVec3<element_type>&)col(3); }
+	TVec3<element_type>& Trn() { return (TVec3<element_type>&)this->col(3); }
 	/// 
-	const TVec3<element_type>& Trn() const { return (TVec3<element_type>&)col(3); }
+	const TVec3<element_type>& Trn() const { return (TVec3<element_type>&)this->col(3); }
 	///	平行移動成分(Trn()の別名)
 	TVec3<element_type>& Pos() {return Trn();}
 	///	平行移動成分(Trn()の別名,const 版)
@@ -437,26 +437,26 @@ public:
 	element_type& PosZ() {return TrnZ();}
 	const element_type& PosZ() const {return TrnZ();}
 	///
-	element_type& ExW() {return item(3,0);}
-	const element_type& ExW() const {return item(3,0);}
+	element_type& ExW() {return this->item(3,0);}
+	const element_type& ExW() const {return this->item(3,0);}
 	///
-	element_type& EyW() {return item(3,1);}
-	const element_type& EyW() const {return item(3,1);}
+	element_type& EyW() {return this->item(3,1);}
+	const element_type& EyW() const {return this->item(3,1);}
 	///
-	element_type& EzW() {return item(3,2);}
-	const element_type& EzW() const {return item(3,2);}
+	element_type& EzW() {return this->item(3,2);}
+	const element_type& EzW() const {return this->item(3,2);}
 	///
-	element_type& TrnW() {return item(3,3);}
-	const element_type& TrnW() const {return item(3,3);}
+	element_type& TrnW() {return this->item(3,3);}
+	const element_type& TrnW() const {return this->item(3,3);}
 	///
-	element_type& PosW() {return item(3,3);}
-	const element_type& PosW() const {return item(3,3);}
+	element_type& PosW() {return this->item(3,3);}
+	const element_type& PosW() const {return this->item(3,3);}
 	//@}
 
 	///	回転拡大変換部への参照を返す.
-	PTM::TSubMatrixCol<3,3, desc>& Rot(){ return sub_matrix(PTM::TSubMatrixDim<0,0,3,3>()); }
+	PTM::TSubMatrixCol<3,3, desc>& Rot(){ return this->sub_matrix(PTM::TSubMatrixDim<0,0,3,3>()); }
 	///	回転拡大変換部への参照を返す (const版).
-	const PTM::TSubMatrixCol<3,3, desc>& Rot() const { return sub_matrix(PTM::TSubMatrixDim<0,0,3,3>()); }
+	const PTM::TSubMatrixCol<3,3, desc>& Rot() const { return this->sub_matrix(PTM::TSubMatrixDim<0,0,3,3>()); }
 
 	/**@name	初期化と構築	*/
 	///	単位行列
