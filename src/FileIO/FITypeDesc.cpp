@@ -35,6 +35,15 @@ size_t FITypeDesc::Field::Size(){
 	}
 	return sz;
 }
+void FITypeDesc::Field::AddEnumConst(std::string name, int val){
+	enums.push_back(std::make_pair(name, val));
+}
+///
+void FITypeDesc::Field::AddEnumConst(std::string name){
+	int val = 0;
+	if (enums.size()) val = enums.back().second+1;
+	enums.push_back(std::make_pair(name, val));
+}
 void FITypeDesc::Field::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
@@ -79,6 +88,9 @@ void FITypeDesc::Composit::Print(std::ostream& os) const{
 	for(const_iterator it = begin(); it != end(); ++it){
 		it->Print(os);
 	}
+	if (size()){
+		if (!back().type || !back().type->IsComposit()) DSTR << std::endl;
+	}
 }
 void FITypeDesc::Composit::Link(FITypeDescDb* db) {
 	for(iterator it = begin(); it != end(); ++it){
@@ -89,7 +101,7 @@ void FITypeDesc::Composit::Link(FITypeDescDb* db) {
 //----------------------------------------------------------------------------
 //	FITypeDesc
 FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn, 
-										std::string n, std::string suf){
+	std::string n, std::string suf){
 	composit.push_back(Field());
 	if (pre.compare("vector") == 0) composit.back().bVector = true;
 	if (pre.compare("UTRef") == 0) composit.back().bReference = true;
@@ -104,7 +116,24 @@ FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn,
 	composit.back().name = n;
 
 	return &composit.back();
+};
+
+FITypeDesc::Field* FITypeDesc::AddBase(std::string tn){
+	Composit::iterator it;
+	if (composit.size()){
+		for(it = composit.begin(); it!=composit.end(); ++it){
+			if (it->name.size()) break;
+		}
+		--it;
+		it = composit.insert(it, Field());
+	}else{
+		composit.push_back(Field());
+		it = composit.begin();
+	}
+	it->typeName = tn;
+	return &*it;
 }
+
 void FITypeDesc::Link(FITypeDescDb* db) {
 	composit.Link(db);
 }

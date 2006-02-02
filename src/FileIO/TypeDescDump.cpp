@@ -15,10 +15,18 @@
 	
 	CDShapeDesc* pCDShapeDesc = NULL;
 	desc = new FITypeDesc("CDShapeDesc");
+	field = desc->AddField("ShapeType", "enum", "type",  "");
+	field->AddEnumConst("CONVEX");
+	field->AddEnumConst("CONVEXMESH");
+	field->size = sizeof(pCDShapeDesc->type);
+	field->offset = (char*)(&pCDShapeDesc->type) - (char*)pCDShapeDesc;
 	db->RegisterDesc(desc);
 	
 	CDConvexMeshDesc* pCDConvexMeshDesc = NULL;
 	desc = new FITypeDesc("CDConvexMeshDesc");
+	field = desc->AddBase("CDShapeDesc");
+	field->size = sizeof("CDShapeDesc");
+	field->offset = (char*)(CDShapeDesc*)pCDConvexMeshDesc - (char*)pCDConvexMeshDesc;
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
 	field->offset = (char*)&(pCDConvexMeshDesc->vertices) - (char*)pCDConvexMeshDesc;
 	field->size = sizeof(pCDConvexMeshDesc->vertices);
@@ -115,6 +123,9 @@
 	
 	PHSolidDesc* pPHSolidDesc = NULL;
 	desc = new FITypeDesc("PHSolidDesc");
+	field = desc->AddBase("PHSolidState");
+	field->size = sizeof("PHSolidState");
+	field->offset = (char*)(PHSolidState*)pPHSolidDesc - (char*)pPHSolidDesc;
 	field = desc->AddField("", "double", "mass", "");
 	field->offset = (char*)&(pPHSolidDesc->mass) - (char*)pPHSolidDesc;
 	field->size = sizeof(pPHSolidDesc->mass);

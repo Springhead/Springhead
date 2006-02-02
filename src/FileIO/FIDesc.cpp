@@ -16,6 +16,7 @@ void RegisterTypes(){
 	db->RegisterDesc(new FITypeDescNumber<BYTE>("BYTE"));
 	db->RegisterDesc(new FITypeDescNumber<WORD>("WORD"));
 	db->RegisterDesc(new FITypeDescNumber<DWORD>("DWORD"));
+	db->RegisterDesc(new FITypeDescNumber<DWORD>("enum"));
 	db->RegisterDesc(new FITypeDescNumber<float>("float"));
 	db->RegisterDesc(new FITypeDescNumber<double>("double"));
 

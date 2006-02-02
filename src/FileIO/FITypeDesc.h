@@ -85,6 +85,8 @@ public:
 	///	レコードのフィールドを表す
 	class SPR_DLL Field{
 	public:
+		typedef std::vector<std::pair<std::string, int> > Enums;
+		Enums enums;
 		Field(): length(1), bReference(false), bVector(false){}
 		~Field();
 		///	メンバ名
@@ -109,6 +111,9 @@ public:
 		size_t Size();
 		///
 		void Print(std::ostream& os) const;
+		///
+		void AddEnumConst(std::string name, int val);
+		void AddEnumConst(std::string name);
 	};
 	///	組み立て型をあらわす場合に使う
 	class SPR_DLL Composit: public std::vector<Field>{
@@ -146,7 +151,13 @@ public:
 	std::string SetTypeName(const char* s) { typeName = s; }
 	///	型のサイズ
 	size_t Size() { return size; }
+	///	フィールドの追加
 	Field* AddField(std::string pre, std::string ty, std::string n, std::string post);
+	///	baseの追加
+	Field* AddBase(std::string tn);
+
+	///	組み立て型かどうか
+	bool IsComposit(){ return composit.size()!=0; }
 	///	組み立て型の要素
 	Composit& GetComposit(){ return composit; }
 	///	フィールドの型情報のリンク
