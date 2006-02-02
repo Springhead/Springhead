@@ -538,7 +538,7 @@ void cholesky(MatrixImp<AD>& a, VectorImp<BD>& s){
 template <class AD, class XD, class BD>
 TYPENAME AD::element_type gauss(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
 	TYPENAME AD::element_type det_;		// 行列式
-	AD::col_vector_type::ret_type w;
+	TYPENAME AD::col_vector_type::ret_type w;
 	det_ = lu(a, ip, w);				// LU分解
 	if (det_ != 0) solve(a, x, b, ip);	// LU分解の結果を使って連立方程式を解く
 	return det_;						// 戻り値は行列式
@@ -840,10 +840,10 @@ protected:
 #define DEF_MATRIX_BASIC_MEMBER(THIS)										\
 	DEF_MATRIXD_BASIC_MEMBER(THIS)											\
 	/*	デフォルトコンストラクタ	*/										\
-	THIS(){ init_buffer(); set_default();} 									\
+	THIS(){ this->init_buffer(); this->set_default();} 			\
 	/*  行列 b による初期化		*/											\
 	template <class B>														\
-	THIS(const PTM::MatrixImp<B>& b){init_buffer(); assign(b);}				\
+	THIS(const PTM::MatrixImp<B>& b){ this->init_buffer(); this->assign(b);}	\
 
 //----------------------------------------------------------------------------
 //	次元をテンプレートで持つベクトル	T???Matrix
@@ -869,16 +869,16 @@ public:
 	///	列数
 	size_t width_impl() const { return DIMDEC(W); }
 	size_t stride_impl() const { return DIMDEC(D::STRIDE); }
-	void resize_impl(size_t h, size_t w) { assert(h==height() && w==width()); }
+	void resize_impl(size_t h, size_t w) { assert(h==this->height() && w==this->width()); }
 	///	行ベクトル
-	row_vector_ref row_impl(size_t n){ return (row_vector_ref)item(n,0); }
-	const_row_vector_ref row_impl(size_t n) const { return (row_vector_ref)item(n,0); }
+	row_vector_ref row_impl(size_t n){ return (row_vector_ref)this->item(n,0); }
+	const_row_vector_ref row_impl(size_t n) const { return (row_vector_ref)this->item(n,0); }
 	///	列ベクトル
-	col_vector_ref col_impl(size_t m){ return (col_vector_ref)item(0,m); }
-	const_col_vector_ref col_impl(size_t m) const { return (col_vector_ref)item(0,m); }
+	col_vector_ref col_impl(size_t m){ return (col_vector_ref)this->item(0,m); }
+	const_col_vector_ref col_impl(size_t m) const { return (col_vector_ref)this->item(0,m); }
 	///	転置
-	trans_ref trans_impl() { return (trans_ref)item(0,0); }
-	const_trans_ref trans_impl() const { return (const_trans_ref)item(0,0); }
+	trans_ref trans_impl() { return (trans_ref)this->item(0,0); }
+	const_trans_ref trans_impl() const { return (const_trans_ref)this->item(0,0); }
 };
 template<DIMTYPE H, DIMTYPE W, class D>
 class TMatrixBase: public TMatrixBaseBase<H,W,D> {
@@ -999,7 +999,7 @@ public:
 	element_type& item_impl(size_t i, size_t j){ return data[i][j]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[i][j]; }
 protected:
-	element_type data[DIMDEC(HEIGHT)][DIMDEC(STRIDE)];
+	element_type data[DIMDEC(HEIGHT)][DIMDEC(base_type::STRIDE)];
 };
 
 ///	部分行列(テンプレート版)
@@ -1017,7 +1017,7 @@ public:
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 protected:
-	element_type data[DIMDEC(WIDTH)][DIMDEC(STRIDE)];
+	element_type data[DIMDEC(WIDTH)][DIMDEC(base_type::STRIDE)];
 };
 
 //-----------------------------------------------------------------------------
@@ -1077,10 +1077,10 @@ public:
 		
 	///	行ベクトル
 	row_vector_ref row_impl(size_t n){
-		return row_vector_ref(width(), 1, &item(n,0)); 
+		return row_vector_ref(this->width(), 1, &this->item(n,0)); 
 	}
 	const_row_vector_ref row_impl(size_t n) const {
-		return const_row_vector_ref(width(), 1, &item(n,0));
+		return const_row_vector_ref(this->width(), 1, &this->item(n,0));
 	}
 	///	列ベクトル
 	col_vector_ref col_impl(size_t m){

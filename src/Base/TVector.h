@@ -483,21 +483,21 @@ public:
 	/*  ベクトル b を代入	*/												\
 	template <class D>														\
 	THIS& operator =(const PTM::VectorImp<D>& b){							\
-		exp().assign(b); return *this;										\
+		this->exp().assign(b); return *this;										\
 	}																		\
 	/*  ベクトル b を加算	*/												\
 	template <class D>														\
 	THIS& operator +=(const PTM::VectorImp<D>& b){							\
-		exp().add(b); return *this;											\
+		this->exp().add(b); return *this;											\
 	}																		\
 	/*  ベクトル b を減算	*/												\
 	template <class D>														\
 	THIS& operator -=(const PTM::VectorImp<D>& b){							\
-		exp().sub(b); return *this;											\
+		this->exp().sub(b); return *this;											\
 	}																		\
 	/*  要素数が等しい配列 p の代入	*/										\
 	THIS& operator =(const element_type* p){								\
-		exp().assign(p);													\
+		this->exp().assign(p);											\
 		return *this;														\
 	}																		\
 
@@ -505,13 +505,14 @@ public:
 	DEF_VECTOR_BASIC_MEMBER(THIS)											\
 	/*  ベクトル b による初期化		*/										\
 	template <class D>														\
-	THIS(const PTM::VectorImp<D>& b){init_buffer(); assign(b);}				\
+	THIS(const PTM::VectorImp<D>& b){										\
+		this->init_buffer(); this->assign(b);}								\
 	/*  要素数が等しい配列 p による初期化	*/								\
 	THIS(const element_type* p){											\
 		assign(p);															\
 	}																		\
 	/*	デフォルトコンストラクタ	*/										\
-	THIS(){ init_buffer(); set_default(); }									\
+	THIS(){ this->init_buffer(); this->set_default(); }			\
 
 //----------------------------------------------------------------------------
 /**	部分ベクトル型作成のためのユーティリティークラス.
@@ -619,7 +620,7 @@ public:
 	///	デフォルトコンストラクタ
 	VVector(){
 		init_buffer();
-		set_default();
+		this->set_default();
 	}
 	///	コピーコンストラクタ
 	VVector(const VVector& s){

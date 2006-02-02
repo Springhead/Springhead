@@ -1,6 +1,5 @@
 #ifndef SPR_TYPE_H
 #define SPR_TYPE_H
-#include <springhead.h>
 #include <iosfwd>
 
 namespace Spr{;

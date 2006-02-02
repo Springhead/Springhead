@@ -1,8 +1,14 @@
-rem include/*/*.h から， struct XXXDesc と struct XXXState の定義を抜き出して，
-rem FIDesc.cppに文字列定数の定義として書き出す．
+rem include/*/*.h から， struct の定義を抜き出して，
+rem FIDesc.cppにTypeDescの定義を作る．．
 rem bin/typedesc.exe が抜き出しを行う．
+set OUT=TypeDescDump.cpp
+set HEADER=TypeDescDump.h
 
 set PATH=%SPRINGHEAD2%\bin
-del FIDesc.cpp
-echo //	Don't edit. MakeTypeDesc.bat update this file.> FIDesc.cpp
-for /D %%p in (../../include/*) do for %%f in (../../include/%%p/*.h) do typedesc <../../include/%%p/%%f >> FIDesc.cpp
+del %OUT%
+del %HEADER%
+echo //	Do not edit. MakeTypeDesc.bat will update this file.> %OUT%
+for /D %%p in (../../include/*) do for %%f in (../../include/%%p/*.h) do echo #include "../../include/%%p/%%f" >> %HEADER%
+
+for /D %%p in (../../include/*) do for %%f in (../../include/%%p/*.h) do typedesc ../../include/%%p/%%f >> %OUT%
+typedesc FIBaseType.h >> %OUT%

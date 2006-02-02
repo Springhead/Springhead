@@ -39,7 +39,7 @@ struct UTMemberLess{
 	}
 };
 
-class SPR_DLL UTPadding{
+class UTPadding{
 public:
 	int len;
 	UTPadding(int i){len = i;}
@@ -131,23 +131,24 @@ public:
 };
 
 /// UTRefの配列
-template<class T, class ARRAY = std::vector< UTRef<T> > >
-class UTRefArray : public ARRAY{
+template<class T, class CO = std::vector< UTRef<T> > >
+class UTRefArray : public CO{
 public:
+	typedef typename CO::iterator iterator;
 	UTRef<T> Erase(const UTRef<T>& ref){
-		iterator it = std::find(begin(), end(), ref);
-		if (it == end()) return NULL;
+		iterator it = std::find(CO::begin(), CO::end(), ref);
+		if (it == CO::end()) return NULL;
 		UTRef<T> rv = *it;
 		erase(it);
 		return rv;
 	}
 	UTRef<T>* Find(const UTRef<T>& ref){
-		iterator it = std::find(begin(), end(), ref);
-		if (it == end()) return NULL;
+		iterator it = std::find(CO::begin(), CO::end(), ref);
+		if (it == CO::end()) return NULL;
 		else return &*it;
 	}
 	UTRef<T>* Find(const UTRef<T>& ref) const {
-		return ((UTRefArray<T, ARRAY>*)this)->Find(ref);
+		return ((UTRefArray<T, CO>*)this)->Find(ref);
 	}
 };
 
@@ -160,34 +161,34 @@ T& Singleton(){
 }
 
 ///	スタックつき vector 
-template <class T, class Cont=std::vector<T> >
-class UTStack: public Cont{
+template <class T, class CO=std::vector<T> >
+class UTStack: public CO{
 public:
 	T Pop(){
-		assert(size());
-		T t=back(); pop_back(); return t;
+		assert(CO::size());
+		T t=CO::back(); CO::pop_back(); return t;
 	}
-	void Push(const T& t=T()){ push_back(t); }
+	void Push(const T& t=T()){ CO::push_back(t); }
 	T& Top(){
-		assert(size());
-		return back();
+		assert(CO::size());
+		return CO::back();
 	}
 };
 
 ///	ツリーのノード(親子両方向参照)
-template <class T, class ARRAY=std DOUBLECOLON vector< UTRef<T> > >
+template <class T, class CO=std DOUBLECOLON vector< UTRef<T> > >
 class UTTreeNode{
 private:
 	void clear();
 protected:
 	T* parent;
-	ARRAY children;
+	CO children;
 public:
-	typedef ARRAY container_t;
+	typedef CO container_t;
 	///
 	UTTreeNode():parent(NULL){}
 	virtual ~UTTreeNode(){
-/*		for(ARRAY::iterator it = children.begin(); it != children.end(); ++it){
+/*		for(CO::iterator it = children.begin(); it != children.end(); ++it){
 			(*it)->parent = NULL;
 		}
 		children.clear();
@@ -208,15 +209,15 @@ public:
 		//	途中でRefCountが0になって消えないように，先に新しいノードの子にする．
 		if (n) n->children.push_back((T*)this);
 		if (parent) {									//	古い親ノードの子リストから削除
-			TYPENAME ARRAY::iterator it = std::find(parent->children.begin(), parent->children.end(), UTRef<T>((T*)this));
+			TYPENAME CO::iterator it = std::find(parent->children.begin(), parent->children.end(), UTRef<T>((T*)this));
 			if (it != parent->children.end()) parent->children.erase(it);
 		}
 		parent = n;										//	parent を新しいノードに切り替える．
 	}
 	///	子ノード．
-	ARRAY& Children(){ return children; }
+	CO& Children(){ return children; }
 	///	子ノード．
-	const ARRAY& Children() const { return children; }
+	const CO& Children() const { return children; }
 	///	子ノードを追加する
 	void AddChild(UTRef<T> c){ c->SetParent((T*)this); }
 	///	子ノードを削除する
@@ -231,7 +232,7 @@ public:
 	///
 	template <class M>
 	void ForEachChild(M m){
-		for(TYPENAME ARRAY::iterator it = children.begin(); it !=children.end(); ++it){
+		for(TYPENAME CO::iterator it = children.begin(); it !=children.end(); ++it){
 			T* t = *it;
 			(t->*m)();
 		}
@@ -240,28 +241,28 @@ public:
 	template <class M>
 	void Traverse(M m){
 		  m(this);
-		for(TYPENAME ARRAY::iterator it = children.begin(); it !=children.end(); ++it){
+		for(TYPENAME CO::iterator it = children.begin(); it !=children.end(); ++it){
 			(*it)->Traverse(m);
 		}
 	}
 	template <class M, class A>
 	void Traverse(M m, A a){
 		m((T*)this, a);
-		for(TYPENAME ARRAY::iterator it = children.begin(); it !=children.end(); ++it){
+		for(TYPENAME CO::iterator it = children.begin(); it !=children.end(); ++it){
 			(*it)->Traverse(m, a);
 		}
 	}
 	template <class T2, class M>
 	void MemberTraverse(T2 t, M m){
 		(t->*m)(this);
-		for(TYPENAME ARRAY::iterator it = children.begin(); it !=children.end(); ++it){
+		for(TYPENAME CO::iterator it = children.begin(); it !=children.end(); ++it){
 			(*it)->MemberTraverse(t, m);
 		}
 	}
 	template <class E, class M, class A>
 	void MemberTraverse(E e, M m, A& a){
 		(e->*m)((T*)this, a);
-		for(TYPENAME ARRAY::iterator it = children.begin(); it !=children.end(); ++it){
+		for(TYPENAME CO::iterator it = children.begin(); it !=children.end(); ++it){
 			(*it)->MemberTraverse(e, m, a);
 		}
 	}

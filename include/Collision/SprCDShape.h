@@ -1,6 +1,5 @@
 #ifndef SPR_CDSHAPEIF_H
 #define SPR_CDSHAPEIF_H
-#include <Springhead.h>
 #include <Foundation/Object.h>
 
 namespace Spr{;
@@ -39,7 +38,8 @@ struct PHMaterial{
 	PHMaterial(){
 		mu = mu0 = e = 0.2f;
 	}
-	float mu, mu0;	///<	“®–€ŽCCÃŽ~–€ŽCŒW”
+	float mu;		///<	“®–€ŽC–€ŽCŒW”
+	float mu0;		///<	ÃŽ~–€ŽCŒW”
 	float e;		///<	’µ‚Ë•Ô‚èŒW”
 };
 

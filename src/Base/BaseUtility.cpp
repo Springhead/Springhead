@@ -3,6 +3,7 @@
 #pragma hdrstop
 #endif
 
+#include "BaseUtility.h"
 #include <iostream>
 namespace Spr {
 using namespace std;

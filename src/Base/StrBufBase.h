@@ -26,7 +26,7 @@ class UTPrintfStream:public T
 	int SPR_CDECL printf(char* fmt, ...)
 		{
 		char buf[4096];
-		return _vsnprintf(buf, sizeof(buf), fmt, (char*)&fmt);
+		return vsprintf(buf, fmt, (char*)&fmt);
 		}
 	};
 class SPR_DLL UTStreambufBase:public std::streambuf

@@ -1,3 +1,15 @@
+#if 1
+#include <FileIO/FITypeDesc.h>
+namespace Spr{
+extern void RegisterTypes();
+extern FITypeDescDb typeDescDb;
+}
+void main(){
+	Spr::RegisterTypes();
+	Spr::typeDescDb.Print(DSTR);
+}
+
+#else
 /**
  Springhead2/src/tests/Physics/PHShapeGL/main.cpp
 
@@ -327,3 +339,4 @@ int main(int argc, char* argv[]){
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 	delete sdk;
 }
+#endif

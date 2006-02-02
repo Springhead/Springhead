@@ -2,6 +2,7 @@
 #define SPR_GRRENDER_H
 
 #include <float.h>
+#include <Physics/SprPHSolid.h>
 
 namespace Spr{;
 
@@ -63,7 +64,7 @@ struct GRMaterial{
 	Vec4f specular;					///<	
 	Vec4f emissive;					///<	
 	float power;					///<	
-	UTString texture;				///<	テクスチャファイル名
+	std::string texture;			///<	テクスチャファイル名
 	GRMaterial(){ power = 0.0f; }
 	GRMaterial(Vec4f d, Vec4f a, Vec4f s, Vec4f e, float p):
 		diffuse(d), ambient(a), specular(s), emissive(e), power(p){}
