@@ -180,6 +180,9 @@ void keyboard(unsigned char key, int x, int y){
 void idle(){
 	scene->Step();
 	glutPostRedisplay();
+	static int count;
+	//count++;
+	if (++count > 5000) exit(0);
 }
 /**
  brief		ƒƒCƒ“ŠÖ”
@@ -251,7 +254,7 @@ int main(int argc, char* argv[]){
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
-
+	
 	render->SetDevice(grDevice);	
 
 
