@@ -181,10 +181,13 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 	IF_DEF(GRDeviceD3D);
 };
 
-/**	デバッグ情報レンダラー	*/
+/**	@struct	GRDebugRenderIf
+    @brief	デバッグ情報レンダラーの基本クラス */
 struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
+	/// 剛体をレンダリングする
 	virtual void DrawSolid(PHSolidIf* so)=0;
+	/// 面をレンダリングする
 	virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
 };
 
