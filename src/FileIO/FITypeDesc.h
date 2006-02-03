@@ -87,7 +87,7 @@ public:
 	public:
 		typedef std::vector<std::pair<std::string, int> > Enums;
 		Enums enums;
-		Field(): length(1), bReference(false), bVector(false){}
+		Field(): length(1), offset(-1), bReference(false), bVector(false){}
 		~Field();
 		///	ƒƒ“ƒo–¼
 		std::string name;

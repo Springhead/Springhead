@@ -36,7 +36,7 @@ void FIPTNode::Print(std::ostream& os) const {
 	}
 	w -= 2;
 }
-void FIPTNode::GetTextR(FIString& t) const {
+void FIPTNode::GetTextR(std::string& t) const {
 	t.append(text);
 	for(unsigned i=0; i< children.size(); ++i){
 		children[i].GetTextR(t);

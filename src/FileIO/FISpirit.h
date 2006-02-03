@@ -19,7 +19,11 @@
 #endif
 
 #include <boost/spirit/core.hpp>
+#include <boost/spirit/dynamic/if.hpp>
+#include <boost/spirit/dynamic/while.hpp>
 #include <boost/spirit/utility/chset.hpp>
+#include <boost/spirit/utility/confix.hpp>
+#include <boost/spirit/utility/escape_char.hpp>
 #include <boost/shared_ptr.hpp>
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)

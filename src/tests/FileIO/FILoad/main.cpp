@@ -1,12 +1,18 @@
 #if 1
 #include <FileIO/FITypeDesc.h>
+#include <FileIO/FIFileX.h>
 namespace Spr{
 extern void RegisterTypes();
-extern FITypeDescDb typeDescDb;
+extern UTRef<FITypeDescDb> typeDescDb;
 }
 void main(){
 	Spr::RegisterTypes();
-	Spr::typeDescDb.Print(DSTR);
+
+	Spr::FIFileX fileX;
+	fileX.Init(Spr::typeDescDb);
+	fileX.Load("test.x");
+
+//	Spr::typeDescDb->Print(DSTR);
 }
 
 #else
