@@ -28,6 +28,8 @@ using namespace Spr;
 
 #define ESC				27
 #define FALL_DISTANCE	-500		// 落下距離(異常終了時)
+#define WINSIZE_WIDTH	480
+#define WINSIZE_HEIGHT	360
 
 GRSdkIf* grSdk;
 GRDebugRenderIf* render;
@@ -61,20 +63,21 @@ void display(){
 	 *	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);　を内部でコール. */
 	grDevice->ClearBuffer();
 
+	//std::cout << render->camera.mocomoco << std::endl;
 
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
 	Affined ad;
-#if 0	
+
+	// 視点を再設定する
 	Affinef view;
-	view.Pos() = Vec3f(5.0, 5.0, 10.0);	                        // eye
+	view.Pos() = Vec3f(5.0, 5.0, 10.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
-	// ビュー行列の逆行列をワールド行列とする
 	view = view.inv();	
 	render->SetViewMatrix(view);
-#endif
+
 	/********************************
 	 *     下の赤い剛体(soFloor)    *
 	 ********************************/
@@ -84,8 +87,8 @@ void display(){
 	pose.ToAffine(ad);
 
 	// MultModelMatrix(ad); は、glMultMatrixd(ad); と同等
-	//grDevice->MultModelMatrix(ad);		// 現在のmodelView * model
-	grDevice->SetModelMatrix(ad);
+	render->MultModelMatrix(ad);		// 現在のmodelView * model
+
 
 	render->DrawSolid(soFloor);
 	render->PopModelMatrix();		// 行列スタックをポップ
@@ -100,7 +103,8 @@ void display(){
 
 	// 内部でglMultMatrixd(ad); をコール.
 	//grDevice->MultModelMatrix(ad); としても同様.
-	grDevice->SetModelMatrix(ad);		// view * model
+	//grDevice->SetModelMatrix(ad);		// view * model
+	render->SetModelMatrix(ad);
 
 	render->DrawSolid(soBlock);
 	render->PopModelMatrix();
@@ -129,7 +133,7 @@ void setLight() {
  param	 	なし
  return 	なし
  */
-#if 1
+#if 0
 void initialize(){
 /*	Vec3f eye(0.0, 0.0, 3.0);
 	Vec3f center(0.0, 0.0, 0.0);
@@ -156,15 +160,8 @@ void initialize(){
  */
 void reshape(int w, int h){
 	// Viewportと射影行列を設定
-	grDevice->Resize(Vec2f(w,h));
-
-	/*glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(60.0, (GLfloat)w/(GLfloat)h, 1.0, 500.0);
-	glMatrixMode(GL_MODELVIEW);*/
+	render->Resize(Vec2f(w,h));
 }
-
 /**
  brief 		glutKeyboardFuncで指定したコールバック関数 
  param		<in/--> key　　 ASCIIコード
@@ -175,7 +172,6 @@ void reshape(int w, int h){
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
-
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
@@ -184,10 +180,7 @@ void keyboard(unsigned char key, int x, int y){
 void idle(){
 	scene->Step();
 	glutPostRedisplay();
-
 }
-
-
 /**
  brief		メイン関数
  param		<in/--> argc　　コマンドライン入力の個数
@@ -232,7 +225,7 @@ int main(int argc, char* argv[]){
 		}
 		meshFloor = ICAST(CDConvexMeshIf, phSdk->CreateShape(md));
 	}
-
+	
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
@@ -243,7 +236,7 @@ int main(int argc, char* argv[]){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(480, 360);
+	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
 	int window = glutCreateWindow("PHShapeGL");
 	grSdk = CreateGRSdk();
 	render = grSdk->CreateDebugRender();
@@ -259,8 +252,8 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
 
-
 	render->SetDevice(grDevice);	
+
 
 	glutMainLoop();
 
