@@ -1,26 +1,29 @@
 # Makefile for cygwin (gcc 3.4.4)
 
-INCLUDE=-I../include -I./Base/ -I.
+TARGET		= Base
+TARGET_DIR	= $(TARGET)
+LIB 		= $(TARGET_DIR)/$(TARGET).lib
 
-SRCS = Base/Affine.cpp \
-		Base/BaseDebug.cpp \
-		Base/BaseTypeINfo.cpp \
-		Base/BaseUtility.cpp \
-		Base/StrbufBase.cpp
-		
-OBJS = Base/Affine.o \
-		Base/BaseDebug.o \
-		Base/BaseTypeInfo.o \
-		Base/BaseUtility.o \
-		Base/StrbufBase.o
-		
-all: libbase
+SRCS		= $(wildcard $(TARGET_DIR)/*.cpp)
+OBJS 		= ${SRCS:.cpp=.o}
+INCLUDE		= -I../include -I./$(TARGET_DIR)/ -I.
+CXX			= g++
+AR			= ar
+RM			= rm -f
+RANLIB		= ranlib
 
-libbase: $(OBJS) $(SRCS)
-		g++ $(INCLUDE) -c $(SRCS)
+		
+all: $(LIB)
+
+$(LIB): $(OBJS)
+		-$(RM) $@
+		$(AR) r $@ $?	
+		$(RANLIB) $@
 	
 .cpp.o:
-		g++ $(INCLUDE) -c $<
+		$(CXX) $(INCLUDE) -c $< -o $@
+			
+clean:
+	-$(RM) $(OBJS) $(LIB)
 		
-
-
+		
