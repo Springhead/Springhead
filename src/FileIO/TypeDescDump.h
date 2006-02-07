@@ -7,3 +7,7 @@
 #include "../../include/Physics/SprPHScene.h" 
 #include "../../include/Physics/SprPHSdk.h" 
 #include "../../include/Physics/SprPHSolid.h" 
+#include "../Collision/Collision.h" 
+#include "../Foundation/Foundation.h" 
+#include "../Physics/Physics.h" 
+#include "../Graphics/Graphics.h" 

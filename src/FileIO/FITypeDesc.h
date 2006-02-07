@@ -2,6 +2,8 @@
 #define FITYPEDESC_H
 
 #include <Base/BaseUtility.h>
+#include <Base/BaseTypeInfo.h>
+#include <Foundation/Object.h>
 #include <set>
 #include <map>
 #include <algorithm>
@@ -77,6 +79,40 @@ public:
 	FIVVector& operator=(const std::vector<T>& v){ *(std::vector<T>*)this = v; return *this; }
 };
 
+///	対象の型にアクセスするためのクラス
+class FIAccessBase:public UTRefCount{
+public:
+	///	コンストラクタ呼び出し
+	virtual void* Construct(void* mem)=0;
+	///	デストラクタ呼び出し
+	virtual void Destruct(void* ptr)=0;
+	///	vector<T>::push_back(); return &back();
+	virtual void* VectorPush(void* v)=0;
+	///	vector<T>::pop_back();
+	virtual void VectorPop(void* v)=0;
+	///	vector<T>::at(pos);
+	virtual void* VectorAt(void* v, int pos)=0;
+	///
+	virtual size_t SizeOfVector()=0;
+};
+template <class T>
+class FIAccess:public FIAccessBase{
+	virtual void* Construct(void* mem){ return new(mem) T; }
+	virtual void Destruct(void* ptr){((T*)ptr)->~T(); }
+	virtual void* VectorPush(void* v){
+		((std::vector<T>*)v)->push_back(T());
+		return &((std::vector<T>*)v)->back();
+	}
+	virtual void VectorPop(void* v){
+		((std::vector<T>*)v)->pop_back();
+	}
+	virtual void* VectorAt(void* v, int pos){
+		return &((std::vector<T>*)v)->at(pos);
+	}
+	virtual size_t SizeOfVector(){
+		return sizeof(std::vector<T>);
+	}
+};
 
 class FITypeDescDb;
 ///	型を表す
@@ -87,7 +123,7 @@ public:
 	public:
 		typedef std::vector<std::pair<std::string, int> > Enums;
 		Enums enums;
-		Field(): length(1), offset(-1), bReference(false), bVector(false){}
+		Field(): length(1), offset(-1), isReference(false), varType(SINGLE){}
 		~Field();
 		///	メンバ名
 		std::string name;
@@ -95,25 +131,46 @@ public:
 		std::string typeName;
 		///	オフセット
 		int offset;
-		///	サイズ
-		size_t size;
 		///	型
 		UTRef<FITypeDesc> type;
 		///	配列の要素数．
 		int length;
 		///	要素数を別のフィールドからとる場合のフィールド名
 		std::string lengthFieldName;
-		///	vectorかどうか
-		int bVector;
+		///	vector/配列かどうか
+		enum VarType{
+			SINGLE, ARRAY, VECTOR
+		} varType;
 		///	参照かどうか
-		bool bReference;
+		bool isReference;
 		///	データのサイズ
-		size_t Size();
+		size_t GetSize();
 		///
 		void Print(std::ostream& os) const;
 		///
 		void AddEnumConst(std::string name, int val);
 		void AddEnumConst(std::string name);
+		///	フィールドのアドレスを計算
+		const void* FITypeDesc::Field::GetAddress(const void* base, int pos);
+		void* FITypeDesc::Field::GetAddress(void* base, int pos){
+			return (void*)GetAddress((const void*)base, pos); 
+		}
+		///	typeが数値の単純型の場合に，数値を読み出す関数
+		double ReadNumber(const void* base, int pos=0){
+			return type->ReadNumber(GetAddress(base, pos));
+		}
+		///	typeが数値の単純型の場合に，数値を書き込む関数
+		void WriteNumber(void* base, double val, int pos = 0){
+			type->WriteNumber(val, GetAddress(base, pos));
+		}
+		///	文字列読み出し
+		std::string ReadString(const void* base, int pos=0){
+			return type->ReadString(GetAddress(base, pos));
+		}
+		///	文字列書き込み
+		void WriteString(void* base, const char* val, int pos=0){
+			type->WriteString(val, GetAddress(base, pos));
+		}
 	};
 	///	組み立て型をあらわす場合に使う
 	class SPR_DLL Composit: public std::vector<Field>{
@@ -134,13 +191,19 @@ protected:
 	size_t size;
 	///	組み立て型の中身の記述．単純型の場合は，size() == 0
 	Composit composit;
+	///	IfInfo
+	const IfInfo* ifInfo;
+	///
+	UTRef<FIAccessBase> access;
 
 	friend class FITypeDescDb;
+	friend void RegisterTypes();
 public:
 	///	コンストラクタ
-	FITypeDesc():size(0){}
+	FITypeDesc():size(0), ifInfo(NULL){}
 	///	コンストラクタ
-	FITypeDesc(std::string tn, int sz=0): typeName(tn), size(sz){}
+	FITypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), 
+		ifInfo(NULL){}
 	///	
 	~FITypeDesc(){}
 	///
@@ -150,7 +213,7 @@ public:
 	///	型名
 	std::string SetTypeName(const char* s) { typeName = s; }
 	///	型のサイズ
-	size_t Size() { return size; }
+	size_t GetSize() { return size; }
 	///	フィールドの追加
 	Field* AddField(std::string pre, std::string ty, std::string n, std::string post);
 	///	baseの追加
@@ -162,15 +225,38 @@ public:
 	Composit& GetComposit(){ return composit; }
 	///	フィールドの型情報のリンク
 	void Link(FITypeDescDb* db);
+	///
+	const IfInfo* GetIfInfo(){ return ifInfo; }
 
-	///	数値読み出し
-	virtual double ReadNumber(const unsigned char* ptr){ assert(0); return 0;}
-	///	数値書き込み
-	virtual void WriteNumber(unsigned char* ptr, double val){ assert(0);}
+	//	ユーティリティ関数
+	///	TypeDescが数値の単純型の場合に，数値を読み出す関数
+	virtual double ReadNumber(const void* ptr){ assert(0); return 0;}
+	///	TypeDescが数値の単純型の場合に，数値を書き込む関数
+	virtual void WriteNumber(double val, void* ptr){ assert(0);}
 	///	文字列読み出し
-	virtual std::string ReadString(const unsigned char* ptr){ assert(0);  return 0;}
+	virtual std::string ReadString(const void* ptr){ assert(0);  return 0;}
 	///	文字列書き込み
-	virtual void WriteString(const unsigned char* ptr, const char* val){ assert(0); }
+	virtual void WriteString(const char* val, void* ptr){ assert(0); }
+
+	///	オブジェクトの構築
+	void* Construct(void* mem=NULL){
+		if (!mem) mem = new char[GetSize()];
+		access->Construct(mem);
+		return mem;
+	}
+	///	オブジェクトの後始末
+	void Destruct(void* ptr){ access->Destruct(ptr); }
+	///	オブジェクトの削除
+	void Delete(void* ptr){ Destruct(ptr); delete ptr; };
+	///	vector::push_back() return &vector::back();
+	void* VectorPush(void* v){ return access->VectorPush(v); }
+	///	vector::pop_back();
+	void VectorPop(void* v){ access->VectorPop(v); }
+	///	return &vector::at(pos);
+	void* VectorAt(void* v, int pos){ return access->VectorAt(v, pos); }
+	const void* VectorAt(const void* v, int pos){ return VectorAt((void*)v, pos); }
+	///
+	size_t SizeOfVector(){ return access->SizeOfVector(); }
 };
 inline bool operator < (const FITypeDesc& d1, const FITypeDesc& d2){
 	return d1.GetTypeName().compare(d2.GetTypeName()) < 0;
@@ -181,12 +267,13 @@ class SPR_DLL FITypeDescNumber:public FITypeDesc{
 public:
 	FITypeDescNumber(){}
 	FITypeDescNumber(std::string tn): FITypeDesc(tn, sizeof(N)){}
+protected:
 	///	数値読み出し
-	virtual double ReadNumber(const unsigned char* ptr){
+	virtual double ReadNumber(const void* ptr){
 		return *(const N*)ptr;
 	}
 	///	数値書き込み
-	virtual void WriteNumber(unsigned char* ptr, double val){
+	virtual void WriteNumber(double val, void* ptr){
 		*(N*)ptr = (N)val;
 	}
 };

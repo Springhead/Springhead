@@ -24,16 +24,24 @@ FITypeDesc::Field::~Field(){
 }
 
 
-size_t FITypeDesc::Field::Size(){
-	size_t sz = 0;
-	if (bVector){
-		sz = sizeof(FIVVector<int>);
-	}else if (bReference){
-		sz = sizeof(UTRef<FITypeDesc::Field>);
-	}else if (type){
-		sz = type->Size();
+size_t FITypeDesc::Field::GetSize(){
+	if (varType==VECTOR){
+		return type->SizeOfVector();
+	}else{
+		size_t sz = 0;
+		if (isReference){
+			sz = sizeof(void*);
+		}else{
+			sz = type->GetSize();
+		}
+		if (varType==SINGLE){
+			return sz; 
+		}else if (varType==ARRAY){
+			return sz * length;
+		}
 	}
-	return sz;
+	assert(0);
+	return 0;
 }
 void FITypeDesc::Field::AddEnumConst(std::string name, int val){
 	enums.push_back(std::make_pair(name, val));
@@ -44,13 +52,23 @@ void FITypeDesc::Field::AddEnumConst(std::string name){
 	if (enums.size()) val = enums.back().second+1;
 	enums.push_back(std::make_pair(name, val));
 }
+const void* FITypeDesc::Field::GetAddress(const void* base, int pos){
+	const void* ptr = (const char*)base + offset;
+	if (varType == VECTOR){
+		ptr = type->VectorAt(ptr, pos);
+	}else if (varType == ARRAY){
+		ptr = (const char*)ptr + type->GetSize()*pos;
+	}
+	return ptr;
+}
+
 void FITypeDesc::Field::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w) << name.c_str() << "(+" << offset << ") = ";
-	if (bVector){
+	if (varType==VECTOR || varType==ARRAY){
 		os << "Vector<";
-		if (bReference){
+		if (isReference){
 			os << "UTRef<" << type->GetTypeName().c_str() << ">";
 		}else{
 			if (type) os << type->GetTypeName().c_str();
@@ -59,7 +77,7 @@ void FITypeDesc::Field::Print(std::ostream& os) const{
 		os << ">";
 		if (length>1) os << " [" << length << "]";
 		os << " " << sizeof(FIVVector<int>) * length;
-	}else if (bReference){
+	}else if (isReference){
 		os << "UTRef<" << type->GetTypeName().c_str() << ">";
 		if (length>1) os << " [" << length << "]";
 		os << " " << sizeof(UTRef<FITypeDesc::Field>) * length;
@@ -79,7 +97,7 @@ int FITypeDesc::Composit::Size(UTString id){
 	int rv = 0;
 	for(iterator it = begin(); it != end(); ++it){
 		if (id.length()==0 || id.compare(it->name)){
-			rv += (int)it->Size();
+			rv += (int)it->GetSize();
 		}
 	}
 	return rv;
@@ -103,13 +121,18 @@ void FITypeDesc::Composit::Link(FITypeDescDb* db) {
 FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn, 
 	std::string n, std::string suf){
 	composit.push_back(Field());
-	if (pre.compare("vector") == 0) composit.back().bVector = true;
-	if (pre.compare("UTRef") == 0) composit.back().bReference = true;
-	if (pre.compare("pointer") == 0) composit.back().bReference = true;
+	if (pre.compare("vector") == 0) composit.back().varType = FITypeDesc::Field::VECTOR;
+	if (pre.compare("UTRef") == 0) composit.back().isReference = true;
+	if (pre.compare("pointer") == 0) composit.back().isReference = true;
 	if (suf.size()){
 		std::istringstream is(suf);
 		is >> composit.back().length;
-		if (!is.good()) composit.back().lengthFieldName = suf;
+		if (!is.good()){
+			composit.back().lengthFieldName = suf;
+		}
+		if (composit.back().varType == FITypeDesc::Field::SINGLE){
+			composit.back().varType = FITypeDesc::Field::ARRAY;
+		}
 	}
 
 	composit.back().typeName = tn;
@@ -133,7 +156,6 @@ FITypeDesc::Field* FITypeDesc::AddBase(std::string tn){
 	it->typeName = tn;
 	return &*it;
 }
-
 void FITypeDesc::Link(FITypeDescDb* db) {
 	composit.Link(db);
 }
@@ -150,7 +172,6 @@ void FITypeDesc::Print(std::ostream& os) const{
 	}
 	os.width(w);
 }
-
 
 //----------------------------------------------------------------------------
 //	FITypeDescDb

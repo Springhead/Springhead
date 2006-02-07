@@ -1,16 +1,20 @@
 #if 1
 #include <FileIO/FITypeDesc.h>
+#include <FileIO/FIFileContext.h>
 #include <FileIO/FIFileX.h>
 namespace Spr{
 extern void RegisterTypes();
 extern UTRef<FITypeDescDb> typeDescDb;
 }
 void main(){
-	Spr::RegisterTypes();
-
-	Spr::FIFileX fileX;
-	fileX.Init(Spr::typeDescDb);
-	fileX.Load("test.x");
+	using namespace Spr;
+	RegisterTypes();
+	FIFileContext fc;
+	fc.fileInfo.Push();
+	fc.fileInfo.back().Map("test.x");
+	FIFileX fileX;
+	fileX.Init(typeDescDb);
+	fileX.Load(&fc);
 
 //	Spr::typeDescDb->Print(DSTR);
 }

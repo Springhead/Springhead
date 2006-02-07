@@ -48,7 +48,7 @@ struct CDShapeDesc{
 		CONVEX,
 		CONVEXMESH,
 	} type;
-	CDShapeDesc(ShapeType t): type(t){}
+	CDShapeDesc(ShapeType t=CONVEXMESH): type(t){}
 };
 
 
