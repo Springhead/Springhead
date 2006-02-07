@@ -20,6 +20,7 @@ public:
 	void Print(std::ostream& os) const {}
 	BASEIMP_OBJECT(Object);
 	virtual PHSceneIf* CreateScene();
+	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int GetNScene();
 	virtual PHSceneIf** GetScenes();
 

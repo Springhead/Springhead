@@ -51,10 +51,13 @@ PHSdk::~PHSdk(){
 	}
 }
 
-PHSceneIf* PHSdk::CreateScene(){
-	PHSceneIf* rv = DBG_NEW PHScene(this);
+PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
+	PHSceneIf* rv = DBG_NEW PHScene(this, desc);
 	scenes.push_back(rv);
 	return rv;
+}
+PHSceneIf* PHSdk::CreateScene(){
+	return CreateScene(PHSceneDesc());
 }
 int PHSdk::GetNScene(){
 	return scenes.size();

@@ -12,7 +12,7 @@ namespace Spr{;
 OBJECTIMP(PHScene, Scene);
 IF_IMP(PHScene, Object);
 
-PHScene::PHScene(PHSdkIf* s){
+PHScene::PHScene(PHSdkIf* s, const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 	sdk = s;
 }
@@ -27,8 +27,18 @@ void PHScene::Init(){
 	engines.Add(solids);
 	PHGravityEngine* ge = DBG_NEW PHGravityEngine;
 	engines.Add(ge);
-	PHPenaltyEngine* pe = DBG_NEW PHPenaltyEngine;
-	engines.Add(pe);
+
+	switch(contact_solver){
+	case SOLVER_PENALTY:{
+		PHPenaltyEngine* pe = DBG_NEW PHPenaltyEngine;
+		engines.Add(pe);
+		}break;
+	case SOLVER_CONSTRAINT:{
+		PHConstraintEngine* ce = DBG_NEW PHConstraintEngine;
+		engines.Add(ce);
+		}break;
+	default: assert(false);
+	}
 }
 
 PHSdkIf* PHScene::GetSdk(){
@@ -40,11 +50,23 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	s->SetScene((PHSceneIf*)this);
 	solids->AddChildObject(s, this);	
 
-	PHPenaltyEngine* pe;
-	engines.Find(pe);
-	assert(pe);
-	pe->Add(s);
-	pe->Init();
+	switch(contact_solver){
+	case SOLVER_PENALTY:{
+		PHPenaltyEngine* pe;
+		engines.Find(pe);
+		assert(pe);
+		pe->Add(s);
+		pe->Init();
+		}break;
+	case SOLVER_CONSTRAINT:{
+		PHConstraintEngine* ce;
+		engines.Find(ce);
+		assert(ce);
+		ce->Add(s);
+		ce->Init();
+		}break;
+	default: assert(false);
+	}
 
 	PHGravityEngine* ge;
 	engines.Find(ge);

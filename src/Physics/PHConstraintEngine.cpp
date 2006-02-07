@@ -92,14 +92,14 @@ PHConstraintEngine::~PHConstraintEngine(){
 
 }
 
-void PHConstraintEngine::AddSolid(PHSolid* s){
+void PHConstraintEngine::Add(PHSolid* s){
 	if(solids.Find(s) == 0){
 		solids.push_back(s);
 		bReady = false;
 	}
 }
 
-void PHConstraintEngine::RemoveSolid(PHSolid* s){
+void PHConstraintEngine::Remove(PHSolid* s){
 	if(solids.Erase(s))
 		bReady = false;
 }

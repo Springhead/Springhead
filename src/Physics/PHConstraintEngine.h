@@ -96,7 +96,6 @@ protected:
 	PHContactPoints	points;		///	接触点の配列
 	PHLCPMatrix		A;			/// LCPのA行列
 
-	void Init();				/// 初期化
 	void Detect();	/// 全体の交差の検知
 								/// Solid組ごとの交差検知
 	void SetupLCP();			/// LCPの準備
@@ -105,8 +104,9 @@ protected:
 	void UpdateLCP();			/// 反復法における一度の更新
 
 public:
-	void AddSolid(PHSolid* s);
-	void RemoveSolid(PHSolid* s);
+	void Add(PHSolid* s);
+	void Remove(PHSolid* s);
+	void Init();				/// 初期化
 	///
 	int GetPriority() const {return 0/*SGBP_CONSTRAINTENGINE*/;}
 	///	速度→位置、加速度→速度の積分
