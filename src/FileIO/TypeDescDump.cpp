@@ -81,6 +81,18 @@
 	field = desc->AddField("", "float", "power", "");
 	field->offset = (char*)&(pGRMaterial->power) - (char*)pGRMaterial;
 	
+	PHSceneDesc* pPHSceneDesc = NULL;
+	desc = new FITypeDesc("PHSceneDesc");
+	desc->size = sizeof(PHSceneDesc);
+	desc->ifInfo = PHSceneIf::GetIfInfoStatic();
+	desc->access = new FIAccess<PHSceneDesc>;
+	field = desc->AddField("SolverType", "enum", "contact_solver",  "");
+	field->AddEnumConst("SOLVER_PENALTY");
+	field->AddEnumConst("SOLVER_CONSTRAINT");
+	field->AddEnumConst("SOLVER_CONSTRAINT");
+	field->offset = (char*)(&pPHSceneDesc->contact_solver) - (char*)pPHSceneDesc;
+	db->RegisterDesc(desc);
+	
 	PHSolidState* pPHSolidState = NULL;
 	desc = new FITypeDesc("PHSolidState");
 	desc->size = sizeof(PHSolidState);
@@ -114,6 +126,26 @@
 	field->offset = (char*)&(pPHSolidDesc->mass) - (char*)pPHSolidDesc;
 	field = desc->AddField("", "Matrix3d", "inertia", "");
 	field->offset = (char*)&(pPHSolidDesc->inertia) - (char*)pPHSolidDesc;
+	db->RegisterDesc(desc);
+	
+	Vec2f* pVec2f = NULL;
+	desc = new FITypeDesc("Vec2f");
+	desc->size = sizeof(Vec2f);
+	desc->access = new FIAccess<Vec2f>;
+	field = desc->AddField("", "float", "x", "");
+	field->offset = (char*)&(pVec2f->x) - (char*)pVec2f;
+	field = desc->AddField("", "float", "y", "");
+	field->offset = (char*)&(pVec2f->y) - (char*)pVec2f;
+	db->RegisterDesc(desc);
+	
+	Vec2d* pVec2d = NULL;
+	desc = new FITypeDesc("Vec2d");
+	desc->size = sizeof(Vec2d);
+	desc->access = new FIAccess<Vec2d>;
+	field = desc->AddField("", "double", "x", "");
+	field->offset = (char*)&(pVec2d->x) - (char*)pVec2d;
+	field = desc->AddField("", "double", "y", "");
+	field->offset = (char*)&(pVec2d->y) - (char*)pVec2d;
 	db->RegisterDesc(desc);
 	
 	Vec3f* pVec3f = NULL;
@@ -230,4 +262,20 @@
 	desc->access = new FIAccess<Matrix3d>;
 	field = desc->AddField("", "double", "data", "9");
 	field->offset = (char*)&(pMatrix3d->data) - (char*)pMatrix3d;
+	db->RegisterDesc(desc);
+	
+	Affinef* pAffinef = NULL;
+	desc = new FITypeDesc("Affinef");
+	desc->size = sizeof(Affinef);
+	desc->access = new FIAccess<Affinef>;
+	field = desc->AddField("", "float", "data", "16");
+	field->offset = (char*)&(pAffinef->data) - (char*)pAffinef;
+	db->RegisterDesc(desc);
+	
+	Affined* pAffined = NULL;
+	desc = new FITypeDesc("Affined");
+	desc->size = sizeof(Affined);
+	desc->access = new FIAccess<Affined>;
+	field = desc->AddField("", "double", "data", "16");
+	field->offset = (char*)&(pAffined->data) - (char*)pAffined;
 	db->RegisterDesc(desc);

@@ -1,5 +1,6 @@
 #ifndef PHSCENE_H
 #define PHSCENE_H
+#include <Physics/SprPHScene.h>
 #include <Foundation/Scene.h>
 #include <Physics/PHEngine.h>
 

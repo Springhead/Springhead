@@ -53,6 +53,8 @@ struct ObjectIf{
 	virtual ~ObjectIf(){}
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const =0;	
+	///	オブジェクトの作成
+	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
 };
 
 struct NamedObjectIf: public ObjectIf{

@@ -303,6 +303,14 @@ public:
 		}
 		db.insert(n);
 	}
+	/**	型名のAliasを登録	*/
+	void RegisterAlias(const char* src, const char* dest){
+		FITypeDesc* srcDesc = Find(src);
+		assert(srcDesc);
+		FITypeDesc* destDesc =new FITypeDesc(*srcDesc);
+		destDesc->typeName = dest;
+		RegisterDesc(destDesc);
+	}
 	/**	型情報をプロトタイプリストに登録	*/
 	void RegisterProto(FITypeDesc* n);
 	/**	型名のPrefix を設定．

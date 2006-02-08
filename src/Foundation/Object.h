@@ -57,19 +57,32 @@ public:
 
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
+	///	オブジェクトの作成
+	ObjectIf* CreateObject(const IfInfo* info, const void* desc){ return NULL; }
+};
+template <class base, class if1>
+class InheritObject:public base, if1{
+public:
+	virtual int AddRef(){return base::AddRef();}								
+	virtual int DelRef(){return base::DelRef();}								
+	virtual int RefCount(){return base::RefCount();}							
+	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){		
+		return Object::CreateObject(i,d);								
+	}																	
 };
 #define BASEIMP_OBJECT(base)											\
 	int AddRef(){return base::AddRef();}								\
 	int DelRef(){return base::DelRef();}								\
 	int RefCount(){return base::RefCount();}							\
-
+	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){		\
+		return Object::CreateObject(i,d);								\
+	}																	\
 
 class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
-class NamedObject:public NamedObjectIf, public Object{
+class NamedObject: public InheritObject<Object, NamedObjectIf>{
 	OBJECTDEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
-	BASEIMP_OBJECT(Object);
 protected:
 	friend class ObjectNames;
 	UTString name;				///<	名前

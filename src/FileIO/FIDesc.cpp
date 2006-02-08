@@ -1,5 +1,6 @@
 #include <Base/TQuaternion.h> 
 #include <FileIO/FITypeDesc.h> 
+#include <FileIO/FIBaseType.h> 
 #include <sstream>
 #include "TypeDescDump.h"
 

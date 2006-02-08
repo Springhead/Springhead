@@ -9,6 +9,13 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
+struct PHSceneDesc{
+	enum SolverType{
+		SOLVER_PENALTY,
+		SOLVER_CONSTRAINT
+	} contact_solver;
+};
+	
 ///	ÉVÅ[Éì
 struct PHSceneIf : public SceneIf{
 public:
