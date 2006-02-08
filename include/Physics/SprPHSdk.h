@@ -5,11 +5,15 @@
 namespace Spr{;
 
 struct PHSceneIf;
+struct PHSceneDesc;
+
 ///	物理シミュレーションSDK
 struct PHSdkIf : public ObjectIf{
 	IF_DEF(PHSdk);
 	///	Sceneの作成
 	virtual PHSceneIf* CreateScene()=0;
+	///	Sceneの作成
+	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc)=0;
 	///	Sceneの数を取得
 	virtual int GetNScene()=0;
 	///	Sceneの取得

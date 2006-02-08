@@ -9,13 +9,25 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
+/// 接触エンジンの種類
+enum PHSceneContactSolver{
+	SOLVER_PENALTY,
+	SOLVER_CONSTRAINT
+};
+
+/// シーンディスクリプタ
 struct PHSceneDesc{
 	enum SolverType{
 		SOLVER_PENALTY,
 		SOLVER_CONSTRAINT
 	} contact_solver;
+	PHSceneDesc(){Init();}
+	void Init(){
+		contact_solver = SOLVER_PENALTY;
+		//contact_solver = SOLVER_CONSTRAINT;
+	}
 };
-	
+
 ///	シーン
 struct PHSceneIf : public SceneIf{
 public:
@@ -32,7 +44,6 @@ public:
 	virtual int GetNSolids()=0;
 	///	Solidの取得
 	virtual PHSolidIf** GetSolids()=0;
-
 
 	/// 積分ステップを返す
 	virtual double GetTimeStep()const=0;
