@@ -13,7 +13,6 @@ public:
 	virtual Vec3f Support(const Vec3f& p) const =0;
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax);
 };
-#define		BASEIMP_CDCONVEX(base)	BASEIMP_CDSHAPE(base)
 
 }	//	namespace Spr
 #endif

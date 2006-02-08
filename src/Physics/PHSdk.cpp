@@ -83,5 +83,22 @@ int PHSdk::GetNShape(){
 CDShapeIf** PHSdk::GetShapes(){
 	return (CDShapeIf**)&*shapes.begin();
 }
+ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
+	if (info == CDShapeIf::GetIfInfoStatic()){
+		return CreateShape(*(const CDShapeDesc*)desc);
+	}else if(info == PHSceneIf::GetIfInfoStatic()){
+		return CreateScene(*(const PHSceneDesc*)desc);
+	}
+	return NULL;
+}
+void PHSdk::Print(std::ostream& os) const{
+	Object::Print(os);
+	int w = os.width();
+	for(size_t i=0; i<scenes.size(); ++i){
+		os.width(w+2);
+		scenes[i]->Print(os);
+	}
+	os.width(w);
+}
 
 }

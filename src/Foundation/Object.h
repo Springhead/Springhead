@@ -60,28 +60,21 @@ public:
 	///	オブジェクトの作成
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc){ return NULL; }
 };
-template <class base, class if1>
-class InheritObject:public base, if1{
-public:
-	virtual int AddRef(){return base::AddRef();}								
-	virtual int DelRef(){return base::DelRef();}								
-	virtual int RefCount(){return base::RefCount();}							
-	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){		
-		return Object::CreateObject(i,d);								
-	}																	
+template <class intf, class base>
+struct InheritObject:public intf, base{
+	virtual int AddRef(){return base::AddRef();}
+	virtual int DelRef(){return base::DelRef();}
+	virtual int RefCount(){return base::RefCount();}				
+	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){
+		return base::CreateObject(i,d);
+	}
+	virtual void Print(std::ostream& os) const{ base::Print(os); }
 };
-#define BASEIMP_OBJECT(base)											\
-	int AddRef(){return base::AddRef();}								\
-	int DelRef(){return base::DelRef();}								\
-	int RefCount(){return base::RefCount();}							\
-	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){		\
-		return Object::CreateObject(i,d);								\
-	}																	\
 
 class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
-class NamedObject: public InheritObject<Object, NamedObjectIf>{
+class NamedObject: public InheritObject<NamedObjectIf, Object>{
 	OBJECTDEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
 protected:
 	friend class ObjectNames;
@@ -99,27 +92,29 @@ public:
 	virtual NameManager* GetNameManager(){ return nameManager; }
 	///	デバッグ用の表示
 };
-#define BASEIMP_NAMEDOBJECT(base)										\
-	BASEIMP_OBJECT(base)												\
-	const char* GetName() const { return base::GetName(); }				\
-	void SetName(const char* n) { base::SetName(n); }					\
+
+template <class intf, class base>
+struct InheritNamedObject:public InheritObject<intf, base>{
+	const char* GetName() const { return base::GetName(); }
+	void SetName(const char* n) { base::SetName(n); }
+};
 
 class Scene;
 /**	Sceneが所有するObject型．
 	所属するSceneへのポインタを持つ	*/
-class SceneObject:public SceneObjectIf, public NamedObject{
+class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{
 	OBJECTDEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
-	BASEIMP_NAMEDOBJECT(NamedObject)
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const {NamedObject::Print(os);}
 };
-#define BASEIMP_SCENEOBJECT(base)										\
-	BASEIMP_NAMEDOBJECT(base)											\
-	SceneIf* GetScene() { return base::GetScene(); }					\
-	void SetScene(SceneIf* s) { base::SetScene(s); }					\
+template <class intf, class base>
+struct InheritSceneObject:public InheritNamedObject<intf, base>{
+	SceneIf* GetScene() { return base::GetScene(); }
+	void SetScene(SceneIf* s) { base::SetScene(s); }
+};
 
 ///	Objectのポインタの配列
 class Objects:public UTStack< UTRef<Object> >{

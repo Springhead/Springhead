@@ -17,9 +17,8 @@ class PHSolidContainer;
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
 	セーブして，D3D形式でロードしなければならない．	*/
-class SPR_DLL PHScene:public PHSceneIf, public Scene, public PHSceneDesc{
+class SPR_DLL PHScene:public InheritScene<PHSceneIf, Scene>, public PHSceneDesc{
 	OBJECTDEF(PHScene);
-	BASEIMP_SCENE(Scene);
 public:
 	PHEngines engines;
 protected:
@@ -73,6 +72,7 @@ public:
 
 	virtual int GetNSolids();
 	virtual PHSolidIf** GetSolids();
+	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 
 protected:
 	friend class Object;

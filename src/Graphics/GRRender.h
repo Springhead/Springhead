@@ -5,15 +5,13 @@
 
 namespace Spr{;
 
-class GRRenderBase: public Object, public GRRenderBaseIf{
+class GRRenderBase: public InheritObject<GRRenderBaseIf, Object>{
 	OBJECTDEFABST(GRRenderBase);
-	BASEIMP_OBJECT(Object);
 };
 
 /**	グラフィックスレンダラーの基本クラス	*/
-class GRRender: public GRRenderBase, public GRRenderIf{
+class GRRender: public InheritObject<GRRenderIf, GRRenderBase>{
 	OBJECTDEF(GRRender);
-	BASEIMP_OBJECT(GRRenderBase);
 protected:
 	UTRef<GRDeviceIf> device;		// デバイス
 	GRCamera camera;				// カメラ
@@ -32,9 +30,11 @@ public:
 		{ ptr SetViewMatrix(afv); }								\
 	virtual void SetProjectionMatrix(const Affinef& afp)		\
 		{ ptr SetProjectionMatrix(afp); }						\
-	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end)				\
+	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty,							\
+												Vec3f* begin, Vec3f* end)				\
 		{ ptr DrawDirect(ty, begin, end); }												\
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx)	\
+	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,							\
+												size_t* begin, size_t* end, Vec3f* vtx)	\
 		{ ptr DrawIndexed(ty, begin, end, vtx); }										\
 	virtual void DrawText(Vec2f pos, std::string str, const GRFont& font)				\
 		{ ptr DrawText(pos, str, font); }												\
@@ -44,30 +44,43 @@ public:
 	virtual void PopLight(){ptr PopLight(); }											\
 	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }							\
 	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }							\
-	virtual void SetDepthFunc(TDepthFunc f){ ptr SetDepthFunc(f); }						\
-	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)							\
+	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){ ptr SetDepthFunc(f); }		\
+	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src,							\
+							GRRenderBaseIf::TBlendFunc dest)							\
 		{ptr SetAlphaMode(src, dest); }													\
 
 	REDIRECTIMP_GRRENDERBASE(device->)
 
-#define BASEIMP_GRRENDERBASE(base)	BASEIMP_OBJECT(base)		\
-		REDIRECTIMP_GRRENDERBASE(base##::)						\
-
-#define BASEIMP_GRRENDER(base)	BASEIMP_GRRENDERBASE(base)		\
-		void SetDevice(GRDeviceIf* dev){base::SetDevice(dev);}	\
-		void SetCamera(GRCamera& cam){base::SetCamera(cam);}	\
-
-	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }		
+	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
 	virtual void SetCamera(GRCamera& cam){ camera = cam; }
 	virtual void Print(std::ostream& os) const;
 };
+template <class intf, class base>
+struct InheritGRRenderBase:public InheritObject<intf, base>{
+	REDIRECTIMP_GRRENDERBASE(base::)	
+};
+template <class intf, class base>
+struct InheritGRRender:public InheritGRRenderBase<intf, base>{
+	void SetDevice(GRDeviceIf* dev){
+		base::SetDevice(dev);
+	}
+	virtual void SetCamera(GRCamera& cam){
+		base::SetCamera(cam); 
+	}
+};
+
 
 /**	グラフィックス描画の実装	*/
-class GRDevice: public Object, public GRDeviceIf{
+class GRDevice: public InheritObject<GRDeviceIf, Object>{
 public:
 	OBJECTDEFABST(GRDevice);
-	BASEIMP_OBJECT(Object);
 	void Print(std::ostream& os) const { Object::Print(os); }
+};
+template <class intf, class base>
+struct InheritGRDevice:public InheritObject<intf, base>{
+	void SetDevice(GRDeviceIf* dev){
+		base::SetDevice(dev);
+	}
 };
 
 }

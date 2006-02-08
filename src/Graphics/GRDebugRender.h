@@ -11,9 +11,8 @@ namespace Spr{;
 
 /**	@class	GRDebugRender
     @brief	デバッグ情報レンダラーの実装　 */
-class GRDebugRender:public GRRender, public GRDebugRenderIf{
+class GRDebugRender:public InheritGRRender<GRDebugRenderIf, GRRender>{
 	OBJECTDEF(GRDebugRender);
-	BASEIMP_GRRENDER(GRRender);
 	/**	Viewportと射影行列を設定
 		@param	screen		ウィンドウサイズ */
 	void Reshape(Vec2f screen);

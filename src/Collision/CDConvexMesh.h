@@ -28,10 +28,9 @@ public:
 class CDFaces:public std::vector<CDFace>{
 };
 
-class CDConvexMesh : public CDConvexMeshIf, public CDConvex{
+class CDConvexMesh : public InheritNamedObject<CDConvexMeshIf, CDConvex>{
 public:
 	OBJECTDEF(CDConvexMesh);
-	BASEIMP_CDCONVEX(CDConvex);
 
 	///	íTçıäJéní∏ì_î‘çÜ
 	mutable int curPos;

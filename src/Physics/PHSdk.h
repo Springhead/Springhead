@@ -5,7 +5,7 @@
 
 namespace Spr {;
 
-class SPR_DLL PHSdk:public PHSdkIf, public NameManager{
+class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, NameManager>{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
@@ -17,8 +17,7 @@ protected:
 public:
 	OBJECTDEF(PHSdk);
 	~PHSdk();
-	void Print(std::ostream& os) const {}
-	BASEIMP_OBJECT(Object);
+	void Print(std::ostream& os) const;
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int GetNScene();
@@ -27,6 +26,7 @@ public:
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	virtual int GetNShape();
 	virtual CDShapeIf** GetShapes();
+	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 public:
 };
 

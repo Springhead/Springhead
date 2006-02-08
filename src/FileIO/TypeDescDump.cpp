@@ -1,9 +1,9 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
 	PHMaterial* pPHMaterial = NULL;
-	desc = new FITypeDesc("PHMaterial");
+	desc = DBG_NEW FITypeDesc("PHMaterial");
 	desc->size = sizeof(PHMaterial);
-	desc->access = new FIAccess<PHMaterial>;
+	desc->access = DBG_NEW FIAccess<PHMaterial>;
 	field = desc->AddField("", "float", "mu", "");
 	field->offset = (char*)&(pPHMaterial->mu) - (char*)pPHMaterial;
 	field = desc->AddField("", "float", "mu0", "");
@@ -13,10 +13,10 @@
 	db->RegisterDesc(desc);
 	
 	CDShapeDesc* pCDShapeDesc = NULL;
-	desc = new FITypeDesc("CDShapeDesc");
+	desc = DBG_NEW FITypeDesc("CDShapeDesc");
 	desc->size = sizeof(CDShapeDesc);
 	desc->ifInfo = CDShapeIf::GetIfInfoStatic();
-	desc->access = new FIAccess<CDShapeDesc>;
+	desc->access = DBG_NEW FIAccess<CDShapeDesc>;
 	field = desc->AddField("ShapeType", "enum", "type",  "");
 	field->AddEnumConst("CONVEX");
 	field->AddEnumConst("CONVEXMESH");
@@ -24,10 +24,10 @@
 	db->RegisterDesc(desc);
 	
 	CDConvexMeshDesc* pCDConvexMeshDesc = NULL;
-	desc = new FITypeDesc("CDConvexMeshDesc");
+	desc = DBG_NEW FITypeDesc("CDConvexMeshDesc");
 	desc->size = sizeof(CDConvexMeshDesc);
 	desc->ifInfo = CDConvexMeshIf::GetIfInfoStatic();
-	desc->access = new FIAccess<CDConvexMeshDesc>;
+	desc->access = DBG_NEW FIAccess<CDConvexMeshDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDConvexMeshDesc - (char*)pCDConvexMeshDesc;
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
@@ -37,9 +37,9 @@
 	db->RegisterDesc(desc);
 	
 	GRLight* pGRLight = NULL;
-	desc = new FITypeDesc("GRLight");
+	desc = DBG_NEW FITypeDesc("GRLight");
 	desc->size = sizeof(GRLight);
-	desc->access = new FIAccess<GRLight>;
+	desc->access = DBG_NEW FIAccess<GRLight>;
 	field = desc->AddField("", "Vec4f", "diffuse", "");
 	field->offset = (char*)&(pGRLight->diffuse) - (char*)pGRLight;
 	field = desc->AddField("", "Vec4f", "specular", "");
@@ -67,25 +67,42 @@
 	db->RegisterDesc(desc);
 	
 	GRMaterial* pGRMaterial = NULL;
-	desc = new FITypeDesc("GRMaterial");
+	desc = DBG_NEW FITypeDesc("GRMaterial");
 	desc->size = sizeof(GRMaterial);
-	desc->access = new FIAccess<GRMaterial>;
+	desc->access = DBG_NEW FIAccess<GRMaterial>;
 	field = desc->AddField("", "Vec4f", "diffuse", "");
 	field->offset = (char*)&(pGRMaterial->diffuse) - (char*)pGRMaterial;
 	field = desc->AddField("", "Vec4f", "ambient", "");
 	field->offset = (char*)&(pGRMaterial->ambient) - (char*)pGRMaterial;
 	field = desc->AddField("", "Vec4f", "specular", "");
 	field->offset = (char*)&(pGRMaterial->specular) - (char*)pGRMaterial;
-	field = desc->AddField("", "Vec4f", "emissive", "");
-	field->offset = (char*)&(pGRMaterial->emissive) - (char*)pGRMaterial;
+	field = desc->AddField("", "Vec4f", "emission", "");
+	field->offset = (char*)&(pGRMaterial->emission) - (char*)pGRMaterial;
 	field = desc->AddField("", "float", "power", "");
 	field->offset = (char*)&(pGRMaterial->power) - (char*)pGRMaterial;
+	field = desc->AddField("", "string", "texture", "");
+	field->offset = (char*)&(pGRMaterial->texture) - (char*)pGRMaterial;
+	db->RegisterDesc(desc);
+	
+	GRCamera* pGRCamera = NULL;
+	desc = DBG_NEW FITypeDesc("GRCamera");
+	desc->size = sizeof(GRCamera);
+	desc->access = DBG_NEW FIAccess<GRCamera>;
+	field = desc->AddField("", "Vec2f", "size", "");
+	field->offset = (char*)&(pGRCamera->size) - (char*)pGRCamera;
+	field = desc->AddField("", "Vec2f", "center", "");
+	field->offset = (char*)&(pGRCamera->center) - (char*)pGRCamera;
+	field = desc->AddField("", "float", "front", "");
+	field->offset = (char*)&(pGRCamera->front) - (char*)pGRCamera;
+	field = desc->AddField("", "float", "back", "");
+	field->offset = (char*)&(pGRCamera->back) - (char*)pGRCamera;
+	db->RegisterDesc(desc);
 	
 	PHSceneDesc* pPHSceneDesc = NULL;
-	desc = new FITypeDesc("PHSceneDesc");
+	desc = DBG_NEW FITypeDesc("PHSceneDesc");
 	desc->size = sizeof(PHSceneDesc);
 	desc->ifInfo = PHSceneIf::GetIfInfoStatic();
-	desc->access = new FIAccess<PHSceneDesc>;
+	desc->access = DBG_NEW FIAccess<PHSceneDesc>;
 	field = desc->AddField("SolverType", "enum", "contact_solver",  "");
 	field->AddEnumConst("SOLVER_PENALTY");
 	field->AddEnumConst("SOLVER_CONSTRAINT");
@@ -94,9 +111,9 @@
 	db->RegisterDesc(desc);
 	
 	PHSolidState* pPHSolidState = NULL;
-	desc = new FITypeDesc("PHSolidState");
+	desc = DBG_NEW FITypeDesc("PHSolidState");
 	desc->size = sizeof(PHSolidState);
-	desc->access = new FIAccess<PHSolidState>;
+	desc->access = DBG_NEW FIAccess<PHSolidState>;
 	field = desc->AddField("", "Vec3d", "velocity", "");
 	field->offset = (char*)&(pPHSolidState->velocity) - (char*)pPHSolidState;
 	field = desc->AddField("", "Vec3d", "angVelocity", "");
@@ -116,10 +133,10 @@
 	db->RegisterDesc(desc);
 	
 	PHSolidDesc* pPHSolidDesc = NULL;
-	desc = new FITypeDesc("PHSolidDesc");
+	desc = DBG_NEW FITypeDesc("PHSolidDesc");
 	desc->size = sizeof(PHSolidDesc);
 	desc->ifInfo = PHSolidIf::GetIfInfoStatic();
-	desc->access = new FIAccess<PHSolidDesc>;
+	desc->access = DBG_NEW FIAccess<PHSolidDesc>;
 	field = desc->AddBase("PHSolidState");
 	field->offset = (char*)(PHSolidState*)pPHSolidDesc - (char*)pPHSolidDesc;
 	field = desc->AddField("", "double", "mass", "");
@@ -129,9 +146,9 @@
 	db->RegisterDesc(desc);
 	
 	Vec2f* pVec2f = NULL;
-	desc = new FITypeDesc("Vec2f");
+	desc = DBG_NEW FITypeDesc("Vec2f");
 	desc->size = sizeof(Vec2f);
-	desc->access = new FIAccess<Vec2f>;
+	desc->access = DBG_NEW FIAccess<Vec2f>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pVec2f->x) - (char*)pVec2f;
 	field = desc->AddField("", "float", "y", "");
@@ -139,9 +156,9 @@
 	db->RegisterDesc(desc);
 	
 	Vec2d* pVec2d = NULL;
-	desc = new FITypeDesc("Vec2d");
+	desc = DBG_NEW FITypeDesc("Vec2d");
 	desc->size = sizeof(Vec2d);
-	desc->access = new FIAccess<Vec2d>;
+	desc->access = DBG_NEW FIAccess<Vec2d>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pVec2d->x) - (char*)pVec2d;
 	field = desc->AddField("", "double", "y", "");
@@ -149,9 +166,9 @@
 	db->RegisterDesc(desc);
 	
 	Vec3f* pVec3f = NULL;
-	desc = new FITypeDesc("Vec3f");
+	desc = DBG_NEW FITypeDesc("Vec3f");
 	desc->size = sizeof(Vec3f);
-	desc->access = new FIAccess<Vec3f>;
+	desc->access = DBG_NEW FIAccess<Vec3f>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pVec3f->x) - (char*)pVec3f;
 	field = desc->AddField("", "float", "y", "");
@@ -161,9 +178,9 @@
 	db->RegisterDesc(desc);
 	
 	Vec3d* pVec3d = NULL;
-	desc = new FITypeDesc("Vec3d");
+	desc = DBG_NEW FITypeDesc("Vec3d");
 	desc->size = sizeof(Vec3d);
-	desc->access = new FIAccess<Vec3d>;
+	desc->access = DBG_NEW FIAccess<Vec3d>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pVec3d->x) - (char*)pVec3d;
 	field = desc->AddField("", "double", "y", "");
@@ -173,9 +190,9 @@
 	db->RegisterDesc(desc);
 	
 	Vec4f* pVec4f = NULL;
-	desc = new FITypeDesc("Vec4f");
+	desc = DBG_NEW FITypeDesc("Vec4f");
 	desc->size = sizeof(Vec4f);
-	desc->access = new FIAccess<Vec4f>;
+	desc->access = DBG_NEW FIAccess<Vec4f>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pVec4f->x) - (char*)pVec4f;
 	field = desc->AddField("", "float", "y", "");
@@ -187,9 +204,9 @@
 	db->RegisterDesc(desc);
 	
 	Vec4d* pVec4d = NULL;
-	desc = new FITypeDesc("Vec4d");
+	desc = DBG_NEW FITypeDesc("Vec4d");
 	desc->size = sizeof(Vec4d);
-	desc->access = new FIAccess<Vec4d>;
+	desc->access = DBG_NEW FIAccess<Vec4d>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pVec4d->x) - (char*)pVec4d;
 	field = desc->AddField("", "double", "y", "");
@@ -201,9 +218,9 @@
 	db->RegisterDesc(desc);
 	
 	Quaternionf* pQuaternionf = NULL;
-	desc = new FITypeDesc("Quaternionf");
+	desc = DBG_NEW FITypeDesc("Quaternionf");
 	desc->size = sizeof(Quaternionf);
-	desc->access = new FIAccess<Quaternionf>;
+	desc->access = DBG_NEW FIAccess<Quaternionf>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pQuaternionf->x) - (char*)pQuaternionf;
 	field = desc->AddField("", "float", "y", "");
@@ -215,9 +232,9 @@
 	db->RegisterDesc(desc);
 	
 	Quaterniond* pQuaterniond = NULL;
-	desc = new FITypeDesc("Quaterniond");
+	desc = DBG_NEW FITypeDesc("Quaterniond");
 	desc->size = sizeof(Quaterniond);
-	desc->access = new FIAccess<Quaterniond>;
+	desc->access = DBG_NEW FIAccess<Quaterniond>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pQuaterniond->x) - (char*)pQuaterniond;
 	field = desc->AddField("", "double", "y", "");
@@ -229,9 +246,9 @@
 	db->RegisterDesc(desc);
 	
 	Posef* pPosef = NULL;
-	desc = new FITypeDesc("Posef");
+	desc = DBG_NEW FITypeDesc("Posef");
 	desc->size = sizeof(Posef);
-	desc->access = new FIAccess<Posef>;
+	desc->access = DBG_NEW FIAccess<Posef>;
 	field = desc->AddField("", "Quaternionf", "ori", "");
 	field->offset = (char*)&(pPosef->ori) - (char*)pPosef;
 	field = desc->AddField("", "Vec3f", "pos", "");
@@ -239,9 +256,9 @@
 	db->RegisterDesc(desc);
 	
 	Posed* pPosed = NULL;
-	desc = new FITypeDesc("Posed");
+	desc = DBG_NEW FITypeDesc("Posed");
 	desc->size = sizeof(Posed);
-	desc->access = new FIAccess<Posed>;
+	desc->access = DBG_NEW FIAccess<Posed>;
 	field = desc->AddField("", "Quaterniond", "ori", "");
 	field->offset = (char*)&(pPosed->ori) - (char*)pPosed;
 	field = desc->AddField("", "Vec3d", "pos", "");
@@ -249,33 +266,33 @@
 	db->RegisterDesc(desc);
 	
 	Matrix3f* pMatrix3f = NULL;
-	desc = new FITypeDesc("Matrix3f");
+	desc = DBG_NEW FITypeDesc("Matrix3f");
 	desc->size = sizeof(Matrix3f);
-	desc->access = new FIAccess<Matrix3f>;
+	desc->access = DBG_NEW FIAccess<Matrix3f>;
 	field = desc->AddField("", "float", "data", "9");
 	field->offset = (char*)&(pMatrix3f->data) - (char*)pMatrix3f;
 	db->RegisterDesc(desc);
 	
 	Matrix3d* pMatrix3d = NULL;
-	desc = new FITypeDesc("Matrix3d");
+	desc = DBG_NEW FITypeDesc("Matrix3d");
 	desc->size = sizeof(Matrix3d);
-	desc->access = new FIAccess<Matrix3d>;
+	desc->access = DBG_NEW FIAccess<Matrix3d>;
 	field = desc->AddField("", "double", "data", "9");
 	field->offset = (char*)&(pMatrix3d->data) - (char*)pMatrix3d;
 	db->RegisterDesc(desc);
 	
 	Affinef* pAffinef = NULL;
-	desc = new FITypeDesc("Affinef");
+	desc = DBG_NEW FITypeDesc("Affinef");
 	desc->size = sizeof(Affinef);
-	desc->access = new FIAccess<Affinef>;
+	desc->access = DBG_NEW FIAccess<Affinef>;
 	field = desc->AddField("", "float", "data", "16");
 	field->offset = (char*)&(pAffinef->data) - (char*)pAffinef;
 	db->RegisterDesc(desc);
 	
 	Affined* pAffined = NULL;
-	desc = new FITypeDesc("Affined");
+	desc = DBG_NEW FITypeDesc("Affined");
 	desc->size = sizeof(Affined);
-	desc->access = new FIAccess<Affined>;
+	desc->access = DBG_NEW FIAccess<Affined>;
 	field = desc->AddField("", "double", "data", "16");
 	field->offset = (char*)&(pAffined->data) - (char*)pAffined;
 	db->RegisterDesc(desc);

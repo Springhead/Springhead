@@ -79,6 +79,9 @@ PHSolidIf* PHScene::CreateSolid(){
 	PHSolidDesc def;
 	return CreateSolid(def);
 }
+CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
+	return sdk->CreateShape(desc);
+}
 
 int PHScene::GetNSolids(){
 	return solids->solids.size();
@@ -129,6 +132,14 @@ Vec3f PHScene::GetGravity(){
 	engines.Find(ge);
 	assert(ge);
 	return ge->accel;
+}
+ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
+	if (info == CDShapeIf::GetIfInfoStatic()){
+		return CreateShape(*(const CDShapeDesc*)desc);
+	}else if(info == PHSolidIf::GetIfInfoStatic()){
+		return CreateSolid(*(const PHSolidDesc*)desc);
+	}
+	return NULL;
 }
 
 

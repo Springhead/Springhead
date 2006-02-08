@@ -2,6 +2,7 @@
 #include <FileIO/FITypeDesc.h>
 #include <FileIO/FIFileContext.h>
 #include <FileIO/FIFileX.h>
+#include <Springhead.h>
 namespace Spr{
 extern void RegisterTypes();
 extern UTRef<FITypeDescDb> typeDescDb;
@@ -12,9 +13,12 @@ void main(){
 	FIFileContext fc;
 	fc.fileInfo.Push();
 	fc.fileInfo.back().Map("test.x");
+	PHSdkIf* sdk = CreatePHSdk();
+	fc.objects.Push(sdk);
 	FIFileX fileX;
 	fileX.Init(typeDescDb);
 	fileX.Load(&fc);
+	sdk->Print(DSTR);
 
 //	Spr::typeDescDb->Print(DSTR);
 }

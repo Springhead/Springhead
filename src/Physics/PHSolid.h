@@ -70,7 +70,7 @@ enum PHIntegrationMode{
 };
 
 ///	剛体
-class PHSolid : public PHSolidIf, public SceneObject, public PHSolidDesc{
+class PHSolid : public InheritSceneObject<PHSolidIf, SceneObject>, public PHSolidDesc{
 protected:
 
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
@@ -92,7 +92,6 @@ public:
 	PHBBox bbox;
 
 	OBJECTDEF(PHSolid);
-	BASEIMP_SCENEOBJECT(SceneObject);
 	void Print(std::ostream& os)const{Object::Print(os);}
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc());
 

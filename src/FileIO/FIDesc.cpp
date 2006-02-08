@@ -29,6 +29,7 @@ void RegisterTypes(){
 	db->RegisterDesc(new FITypeDescNumber<float>("FLOAT"));
 	db->RegisterDesc(new FITypeDescNumber<double>("DOUBLE"));
 
+	db->RegisterDesc(new FITypeDescString("string"));
 	#include "TypeDescDump.cpp"
 	db->Link();
 }

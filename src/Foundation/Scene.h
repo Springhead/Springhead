@@ -19,7 +19,6 @@ public:
 	typedef std::map<UTString, UTString> TNameMap;
 	class ObjectKey:public NamedObject{
 	public:
-		BASEIMP_NAMEDOBJECT(NamedObject)
 		ObjectKey();
 		~ObjectKey();
 		DEF_UTTYPEINFODEF(ObjectKey);
@@ -85,10 +84,9 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
 }
 
-class SPR_DLL NameManager:public NameManagerIf, public NamedObject{
+class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
 public:
 	OBJECTDEF(NameManager);
-	BASEIMP_NAMEDOBJECT(NamedObject);
 protected:
 	///	名前とオブジェクトの対応表	
 	ObjectNames names;
@@ -124,11 +122,12 @@ public:
 	void Print(std::ostream& os) const { names.Print(os); }
 	friend class NamedObject;
 };
-#define BASEIMP_NAMEMANAGER(base)	BASEIMP_NAMEDOBJECT(base)	\
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls){	\
-		return base::FindObject(name, cls);								\
-	}																	\
-
+template <class intf, class base>
+struct InheritNameManager:public InheritNamedObject<intf, base>{
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls){
+		return base::FindObject(name, cls);
+	}
+};
 
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
@@ -137,9 +136,8 @@ public:
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
 	セーブして，D3D形式でロードしなければならない．	*/
-class SPR_DLL Scene:public NameManager, public SceneIf{
+class SPR_DLL Scene:public InheritNameManager<SceneIf, NameManager>{
 	OBJECTDEF(Scene);
-	BASEIMP_NAMEMANAGER(NameManager);
 public:
 	///	コンストラクタ
 	Scene();
@@ -149,7 +147,9 @@ public:
 	///
 	void Print(std::ostream& os) const { NameManager::Print(os); }
 };
-#define	BASEIMP_SCENE(base) 	BASEIMP_NAMEMANAGER(base);
+template <class intf, class base>
+struct InheritScene:public InheritNameManager<intf, base>{
+};
 
 }
 #endif

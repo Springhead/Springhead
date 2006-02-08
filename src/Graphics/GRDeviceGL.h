@@ -10,9 +10,8 @@
 namespace Spr{;
 
 /**	OpenGLによるグラフィックス描画の実装	*/
-class GRDeviceGL: public GRDevice, public GRDeviceGLIf{
+class GRDeviceGL: public InheritGRDevice<GRDeviceGLIf, GRDevice>{
 	OBJECTDEF(GRDeviceGL);
-	BASEIMP_OBJECT(GRDevice);
 protected:
 	int window;
 	/** GLではModelを変えずにViewだけを変えるということができない.

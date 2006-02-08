@@ -240,7 +240,7 @@ public:
 
 	///	オブジェクトの構築
 	void* Construct(void* mem=NULL){
-		if (!mem) mem = new char[GetSize()];
+		if (!mem) mem = DBG_NEW char[GetSize()];
 		access->Construct(mem);
 		return mem;
 	}
@@ -278,6 +278,21 @@ protected:
 	}
 };
 
+class SPR_DLL FITypeDescString:public FITypeDesc{
+public:
+	FITypeDescString(){}
+	FITypeDescString(std::string tn): FITypeDesc(tn, sizeof(std::string)){}
+protected:
+	///	数値読み出し
+	virtual std::string ReadString(const void* ptr){
+		return *(std::string*)ptr;
+	}
+	///	数値書き込み
+	virtual void WriteString(const char* val, void* ptr){
+		*(std::string*)ptr = val;
+	}
+};
+
 ///	型のデータベース
 class SPR_DLL FITypeDescDb: public UTRefCount{
 public:
@@ -307,7 +322,7 @@ public:
 	void RegisterAlias(const char* src, const char* dest){
 		FITypeDesc* srcDesc = Find(src);
 		assert(srcDesc);
-		FITypeDesc* destDesc =new FITypeDesc(*srcDesc);
+		FITypeDesc* destDesc =DBG_NEW FITypeDesc(*srcDesc);
 		destDesc->typeName = dest;
 		RegisterDesc(destDesc);
 	}
@@ -329,7 +344,7 @@ public:
 #define VSIZE(x)
 
 ///	単純型を登録する．
-#define REG_FIELD(type)	RegisterDesc( new FITypeDesc(#type, sizeof(type)) )
+#define REG_FIELD(type)	RegisterDesc( DBG_NEW FITypeDesc(#type, sizeof(type)) )
 /**	ドキュメントからロード可能なクラスの定義．
 	クラスが基本クラスを持つ場合	*/
 #define DEF_RECORDBASE(Type, Base, Def)					\
