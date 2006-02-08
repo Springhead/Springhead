@@ -15,7 +15,6 @@ public:
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx);
 	virtual void SetMaterial(const GRMaterial& mat);
 	virtual void Print(std::ostream& os) const{GRDevice::Print(os);}
-	virtual void Reshape(int w, int h);
 	virtual void Init();
 };
 

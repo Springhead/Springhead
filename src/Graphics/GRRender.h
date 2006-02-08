@@ -15,13 +15,13 @@ class GRRender: public GRRenderBase, public GRRenderIf{
 	OBJECTDEF(GRRender);
 	BASEIMP_OBJECT(GRRenderBase);
 protected:
-	UTRef<GRDeviceIf> device;
+	UTRef<GRDeviceIf> device;		// デバイス
+	GRCamera camera;				// カメラ
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)							\
 	virtual void ClearBuffer(){ ptr ClearBuffer(); }			\
 	virtual void BeginScene(){ ptr BeginScene(); }				\
 	virtual void EndScene(){ ptr EndScene(); }					\
-	virtual void Resize(Vec2f scr){ ptr Resize(scr); }			\
 	virtual void MultModelMatrix(const Affinef& afw)			\
 		{ ptr MultModelMatrix(afw); }							\
 	virtual void PushModelMatrix(){ptr PushModelMatrix(); }		\
@@ -55,8 +55,10 @@ public:
 
 #define BASEIMP_GRRENDER(base)	BASEIMP_GRRENDERBASE(base)		\
 		void SetDevice(GRDeviceIf* dev){base::SetDevice(dev);}	\
+		void SetCamera(GRCamera& cam){base::SetCamera(cam);}	\
 
-	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
+	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }		
+	virtual void SetCamera(GRCamera& cam){ camera = cam; }
 	virtual void Print(std::ostream& os) const;
 };
 

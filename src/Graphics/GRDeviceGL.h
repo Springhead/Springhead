@@ -21,9 +21,6 @@ protected:
 	Affinef viewMatrix;			/// 視点行列
 	Affinef modelMatrix;		/// モデル行列
 	Affinef projectionMatrix;	/// 射影行列
-	Vec2f size;					/// スクリーンのサイズ
-	Vec2f center;				/// カメラからのスクリーンのずれ
-	float near, far;			/// 視点からクリップ面までの相対距離（正の値で指定）
 public:
 	GRDeviceGL(int w=0):window(w){}
 	virtual void SetWindow(int w){window=w;}
@@ -37,8 +34,6 @@ public:
 	virtual void BeginScene();
 	///	レンダリングの終了後に呼ぶ関数
 	virtual void EndScene();
-	///	Viewportと射影行列を設定
-	virtual void Resize(Vec2f screen);
 	///	モデル行列をかける
 	virtual void MultModelMatrix(const Affinef& afw);
 	///	モデル行列の行列スタックをPush
