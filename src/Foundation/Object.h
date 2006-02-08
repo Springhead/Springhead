@@ -59,6 +59,13 @@ public:
 	virtual void Print(std::ostream& os) const;
 	///	オブジェクトの作成
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc){ return NULL; }
+	///	子オブジェクトの数
+	size_t NChildObject() const { return 0; }
+	///	子オブジェクトの取得
+	ObjectIf* GetChildObject(size_t pos) { return NULL; }
+	const ObjectIf* GetChildObject(size_t pos) const { 
+		return ((Object*) this)->GetChildObject(pos);
+	}
 };
 template <class intf, class base>
 struct InheritObject:public intf, base{
@@ -69,6 +76,11 @@ struct InheritObject:public intf, base{
 		return base::CreateObject(i,d);
 	}
 	virtual void Print(std::ostream& os) const{ base::Print(os); }
+	virtual size_t NChildObject() const { return base::NChildObject(); }
+	virtual ObjectIf* GetChildObject(size_t pos){ return base::GetChildObject(pos); }
+	virtual const ObjectIf* GetChildObject(size_t pos) const{
+		return base::GetChildObject(pos);
+	}
 };
 
 class NameManager;
@@ -107,8 +119,6 @@ class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
-	///	デバッグ用の表示
-	virtual void Print(std::ostream& os) const {NamedObject::Print(os);}
 };
 template <class intf, class base>
 struct InheritSceneObject:public InheritNamedObject<intf, base>{

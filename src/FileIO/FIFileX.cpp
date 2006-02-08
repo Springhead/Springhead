@@ -12,52 +12,55 @@ static FIFileContext* fileContext;
 enum FieldType{
 	F_NONE, F_INT, F_REAL, F_STR, F_BLOCK
 };
-static FieldType nextField;
 static FIFileX* fileX;
 struct Field{
 	FITypeDesc* desc;
 	FITypeDesc::Composit::iterator field;
 	int arrayCount;
 	int arrayLength;
+	FieldType nextField;
 	Field(FITypeDesc* d){
 		desc = d;
 		field = d->GetComposit().end();
 		arrayCount = -1;
 		arrayLength = 0;
+		nextField=F_NONE;
 	}
 };
 static std::vector<Field> fieldStack;
-static FITypeDesc* tdesc;
-static bool Desc(){return tdesc;}
+static bool Desc(){return fieldStack.back().desc;}
 
 
 static void DataStart(const char* b, const char* e){
 	std::string tn(b,e);
 	DSTR << "loading " << tn << std::endl;
-	tdesc = fileX->GetDb()->Find(tn);
-	if(tdesc) fieldStack.push_back(Field(tdesc));
-	if (!tdesc){
+	FITypeDesc* desc = fileX->GetDb()->Find(tn);
+	if (!desc) desc = fileX->GetDb()->Find(tn + "Desc");
+	if (!desc){
 		DSTR << "Error: " << tn << " not defined." << std::endl;
 	}
+	if(desc) fieldStack.push_back(Field(desc));
 
 	//	ロード用の構造体の用意
 	fileContext->primitives.Push();
-	fileContext->primitives.Top() = tdesc->Construct();
+	fileContext->primitives.Top() = desc->Construct();
 }
 static void DataCreate(const char* b, const char* e){
-	ObjectIf* obj = fileContext->Create(tdesc->GetIfInfo(), fileContext->primitives.Top());
+	ObjectIf* obj = fileContext->Create(
+		fieldStack.back().desc->GetIfInfo(), fileContext->primitives.Top());
 	fileContext->objects.Push(obj);
 }
 static void DataEnd(char c){
-	DSTR << "DataEnd" << std::endl;
+	DSTR << "DataEnd " << fieldStack.back().desc->GetTypeName() << std::endl;
 	fileContext->objects.Pop();
-	tdesc->Delete(fileContext->primitives.Top());
+	fieldStack.back().desc->Delete(fileContext->primitives.Top());
 	fileContext->primitives.Pop();
+	fieldStack.pop_back();
 }
 static void BlockStart(const char* b, const char* e){
 	DSTR << "blockStart" << std::endl;
 	char* base = (char*)fileContext->primitives.Top();
-	void* ptr = fieldStack.back().field->GetAddress(base, fieldStack.back().arrayCount);
+	void* ptr = fieldStack.back().field->GetAddressEx(base, fieldStack.back().arrayCount);
 	fileContext->primitives.Push(ptr);
 	fieldStack.push_back(Field(fieldStack.back().field->type));
 }
@@ -74,7 +77,7 @@ static bool NextField(){
 	}else{
 		fieldStack.back().field++;
 		if (fieldStack.back().field == fieldStack.back().desc->GetComposit().end()){
-			nextField = F_NONE;
+			fieldStack.back().nextField = F_NONE;
 			return false;
 		}
 	}
@@ -82,7 +85,7 @@ static bool NextField(){
 	if (fieldStack.back().field->varType==FITypeDesc::Field::SINGLE){
 		fieldStack.back().arrayLength = 1;
 	}else if(fieldStack.back().field->varType==FITypeDesc::Field::VECTOR){
-		//	TODO lengthFieldName からとってくる．
+		fieldStack.back().arrayLength = fieldStack.back().field->length;
 	}else if(fieldStack.back().field->varType==FITypeDesc::Field::ARRAY){
 		fieldStack.back().arrayLength = fieldStack.back().field->length;
 	}
@@ -96,55 +99,69 @@ static bool NextField(){
 		||	fieldStack.back().field->type->GetTypeName().compare("short")==0
 		||	fieldStack.back().field->type->GetTypeName().compare("int")==0
 		||	fieldStack.back().field->type->GetTypeName().compare("enum")==0){
-		nextField = F_INT;
+		fieldStack.back().nextField = F_INT;
 	}else if (fieldStack.back().field->type->GetTypeName().compare("float")==0
 		||	fieldStack.back().field->type->GetTypeName().compare("double")==0
 		||	fieldStack.back().field->type->GetTypeName().compare("FLOAT")==0
 		||	fieldStack.back().field->type->GetTypeName().compare("DOUBLE")==0){
-		nextField = F_REAL;
+		fieldStack.back().nextField = F_REAL;
 	}else if (fieldStack.back().field->type->GetTypeName().compare("string")==0
 		||  fieldStack.back().field->type->GetTypeName().compare("STRING")==0){
-		nextField = F_STR;
+		fieldStack.back().nextField = F_STR;
 	}else if (fieldStack.back().field->type->IsComposit()){
-		nextField = F_BLOCK;
+		fieldStack.back().nextField = F_BLOCK;
 	}
 	return true;
 }
 static bool ArrayCount(){
 	fieldStack.back().arrayCount++;
-	return fieldStack.back().arrayLength-1 > fieldStack.back().arrayCount;
+	return fieldStack.back().arrayLength > fieldStack.back().arrayCount;
 }
-static bool IsFieldInt(){ return nextField==F_INT; }
-static bool IsFieldReal(){ return nextField==F_REAL; }
-static bool IsFieldStr(){ return nextField==F_STR; }
-static bool IsFieldBlock(){ return nextField==F_BLOCK; }
+static bool IsFieldInt(){ return fieldStack.back().nextField==F_INT; }
+static bool IsFieldReal(){ return fieldStack.back().nextField==F_REAL; }
+static bool IsFieldStr(){ return fieldStack.back().nextField==F_STR; }
+static bool IsFieldBlock(){ return fieldStack.back().nextField==F_BLOCK; }
 
+static double numValue;
+static std::string strValue;
 static void NumSet(double v){
-	if (fieldStack.back().arrayCount==0){
-		DSTR << fieldStack.back().field->name << " = " ;
-	}
-	DSTR << v;
-	if (fieldStack.back().arrayCount==fieldStack.back().arrayLength-1) DSTR << std::endl;
-
-	fieldStack.back().field->WriteNumber(
-		fileContext->primitives.Top(), v, fieldStack.back().arrayCount);
+	numValue = v;
 }
 static void StrSet(const char* b, const char* e){
-	std::string str(b,e);
-	if (fieldStack.back().arrayCount==0){
-		DSTR << fieldStack.back().field->name << " = " ;
+	strValue.assign(b,e);
+}
+static void ExpSet(const char* b, const char* e){
+	char ch = *b;
+	//	debug 出力
+	if (fieldStack.back().nextField!=F_NONE){
+		if (fieldStack.back().arrayCount==0){
+			DSTR << fieldStack.back().field->name << " = " ;
+		}
+		if (fieldStack.back().nextField == F_REAL || fieldStack.back().nextField == F_INT){
+			DSTR << numValue;
+		}else if (fieldStack.back().nextField == F_STR){
+			DSTR << strValue;
+		}
+		if (ch == ';') DSTR << std::endl;
 	}
-	DSTR << str;
-	if (fieldStack.back().arrayCount==fieldStack.back().arrayLength-1) DSTR << std::endl;
+	//	ここまで
 
-	fieldStack.back().field->WriteString(
-		fileContext->primitives.Top(), str.c_str(), fieldStack.back().arrayCount);
+	if(fieldStack.back().nextField == F_REAL || fieldStack.back().nextField == F_INT){
+		fieldStack.back().field->WriteNumber(
+			fileContext->primitives.Top(), numValue, fieldStack.back().arrayCount);
+	}else if(fieldStack.back().nextField == F_STR){
+		fieldStack.back().field->WriteString(
+			fileContext->primitives.Top(), strValue.c_str(), fieldStack.back().arrayCount);
+	}
+	if (ch == ';'){
+		fieldStack.back().arrayCount=FITypeDesc::BIGVALUE;
+	}
 }
 static void RefSet(const char* b, const char* e){
 	DSTR << "ref(" << std::string(b,e) << ")";
 }
 
-
+static FITypeDesc* tdesc;
 //	XFileのtemplateの読み出しの関数
 static void TempStart(const char* b, const char* e){
 	tdesc = DBG_NEW FITypeDesc(std::string(b,e));
@@ -207,16 +224,13 @@ void FIFileX::Init(FITypeDescDb* db_){
 	ref			= ch_p('{') >> id[&RefSet] >> ch_p('}');
 	block		= while_p(&NextField)[
 					while_p(&ArrayCount)[
-						if_p(&IsFieldInt)[ iNum >> ',' ] >>
-						if_p(&IsFieldReal)[ rNum  >> ',' ] >>
-						if_p(&IsFieldStr)[ str >> ',' ] >>
-						if_p(&IsFieldBlock)[ eps_p[&BlockStart] >> block[&BlockEnd] >> ',' ]
-					] >> 
-					if_p(&IsFieldInt)[ iNum >> ';' ] >>
-					if_p(&IsFieldReal)[ rNum  >> ';' ] >>
-					if_p(&IsFieldStr)[ str >> ';' ] >>
-					if_p(&IsFieldBlock)[ eps_p[&BlockStart] >> block[&BlockEnd] >> ';' ]
+						exp >> (ch_p(',')|ch_p(';'))[&ExpSet]
+					]
 				  ];
+	exp			= if_p(&IsFieldInt)[ iNum ] >>
+				  if_p(&IsFieldReal)[ rNum ] >>
+				  if_p(&IsFieldStr)[ str ] >>
+				  if_p(&IsFieldBlock)[ eps_p[&BlockStart] >> block[&BlockEnd] ];
 	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_') ];
 	iNum		= int_p[&NumSet];
 	rNum		= real_p[&NumSet];

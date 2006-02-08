@@ -13,6 +13,17 @@ IF_IMP(PHSolid, Object);
 PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
 	integrationMode = PHINT_SIMPLETIC;
 }
+CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
+	CDShapeIf* rv = ICAST(PHSceneIf, GetScene())->CreateShape(desc);
+	AddShape(rv);
+	return rv;
+}
+ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
+	if (CDConvexMeshIf::GetIfInfoStatic() == info){
+		return CreateShape(*(CDConvexMeshDesc*)desc);
+	}
+	return NULL;
+}
 
 void PHSolid::CalcBBox(){
 	Vec3f bboxMin = Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
@@ -182,7 +193,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	CalcBBox();
 	PHPenaltyEngine* pe;
 	OCAST(PHScene,GetScene())->engines.Find(pe);
-	pe->Init();
+	if(pe) pe->Init();
 }
 
 void PHSolid::SetGravity(bool bOn){
@@ -197,7 +208,7 @@ void PHSolid::SetGravity(bool bOn){
 		ge->solids.Erase(this);
 	}
 }
-int PHSolid::GetNShapes(){
+int PHSolid::NShape(){
 	return shapes.size();
 }
 CDShapeIf** PHSolid::GetShapes(){

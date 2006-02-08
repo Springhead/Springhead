@@ -80,10 +80,11 @@ PHSolidIf* PHScene::CreateSolid(){
 	return CreateSolid(def);
 }
 CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
-	return sdk->CreateShape(desc);
+	CDShapeIf* rv = sdk->CreateShape(desc);
+	return rv;
 }
 
-int PHScene::GetNSolids(){
+int PHScene::NSolids(){
 	return solids->solids.size();
 }
 PHSolidIf** PHScene::GetSolids(){
@@ -134,8 +135,8 @@ Vec3f PHScene::GetGravity(){
 	return ge->accel;
 }
 ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
-	if (info == CDShapeIf::GetIfInfoStatic()){
-		return CreateShape(*(const CDShapeDesc*)desc);
+	if (info == CDConvexMeshIf::GetIfInfoStatic()){
+		return CreateShape(*(const CDConvexMeshDesc*)desc);
 	}else if(info == PHSolidIf::GetIfInfoStatic()){
 		return CreateSolid(*(const PHSolidDesc*)desc);
 	}

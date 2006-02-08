@@ -23,7 +23,6 @@ protected:
 public:
 	GRDeviceGL(int w=0):window(w){}
 	virtual void SetWindow(int w){window=w;}
-	virtual void Print(std::ostream& os) const{GRDevice::Print(os);}
 	/// ‰Šúİ’è
 	virtual void Init();
 

@@ -15,14 +15,14 @@ struct PHSdkIf : public ObjectIf{
 	///	Scene‚Ìì¬
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc)=0;
 	///	Scene‚Ì”‚ğæ“¾
-	virtual int GetNScene()=0;
+	virtual int NScene()=0;
 	///	Scene‚Ìæ“¾
 	virtual PHSceneIf** GetScenes()=0;
 	
 	///	Shapeì¬
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
 	///	Shape‚Ì”
-	virtual int GetNShape()=0;
+	virtual int NShape()=0;
 	///	Shape‚Ìæ“¾
 	virtual CDShapeIf** GetShapes()=0;
 };

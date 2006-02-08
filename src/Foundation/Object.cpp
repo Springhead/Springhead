@@ -14,7 +14,18 @@ void Object::Print(std::ostream& os) const {
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w);
-	os << "<" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	if (NChildObject()){
+		os << "<" << GetTypeInfo()->ClassName() << ">" << std::endl;
+		os.widen(w+2);
+		for(size_t i=0; i<NChildObject(); ++i){
+			GetChildObject(i)->Print(os);
+		}
+		os.width(0);
+		os << UTPadding(w);
+		os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	}else{
+		os << "<" << GetTypeInfo()->ClassName() << "/>" << std::endl;
+	}
 	os.width(w);
 }
 
@@ -27,7 +38,18 @@ void NamedObject::Print(std::ostream& os) const {
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w);
-	os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << ">" << std::endl;
+	if (NChildObject()){
+		os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << ">" << std::endl;
+		os.width(w+2);
+		for(size_t i=0; i<NChildObject(); ++i){
+			GetChildObject(i)->Print(os);
+		}
+		os.width(0);
+		os << UTPadding(w);
+		os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	}else{
+		os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << "/>" << std::endl;
+	}
 	os.width(w);
 }
 void NamedObject::SetName(const char* n){

@@ -74,7 +74,6 @@ struct InheritGRRender:public InheritGRRenderBase<intf, base>{
 class GRDevice: public InheritObject<GRDeviceIf, Object>{
 public:
 	OBJECTDEFABST(GRDevice);
-	void Print(std::ostream& os) const { Object::Print(os); }
 };
 template <class intf, class base>
 struct InheritGRDevice:public InheritObject<intf, base>{

@@ -55,6 +55,11 @@ struct ObjectIf{
 	virtual void Print(std::ostream& os) const =0;	
 	///	オブジェクトの作成
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
+	///	子オブジェクトの数
+	virtual size_t NChildObject() const =0;
+	///	子オブジェクトの取得
+	virtual ObjectIf* GetChildObject(size_t pos) = 0;
+	virtual const ObjectIf* GetChildObject(size_t pos) const = 0;
 };
 
 struct NamedObjectIf: public ObjectIf{

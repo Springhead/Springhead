@@ -45,8 +45,6 @@ CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
 	for(unsigned i=0; i<base.size(); ++i) vtxIDs.push_back(i);
 	CalcFace();
 }
-void CDConvexMesh::Print(std::ostream& os) const {
-}
 
 void CalcBBox(Vec3f& bbmin, Vec3f& bbmax){
 	
@@ -168,13 +166,13 @@ Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 CDFaceIf* CDConvexMesh::GetFace(size_t i){
 	return &faces.at(i);
 }
-size_t CDConvexMesh::GetNFaces(){
+size_t CDConvexMesh::NFace(){
 	return faces.size();
 }
 Vec3f* CDConvexMesh::GetVertices(){
 	return &*base.begin();
 }
-size_t CDConvexMesh::GetNVertices(){
+size_t CDConvexMesh::NVertex(){
 	return base.size();
 }
 

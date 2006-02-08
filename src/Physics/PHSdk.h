@@ -17,16 +17,20 @@ protected:
 public:
 	OBJECTDEF(PHSdk);
 	~PHSdk();
-	void Print(std::ostream& os) const;
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
-	virtual int GetNScene();
+	virtual int NScene();
 	virtual PHSceneIf** GetScenes();
 
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc);
-	virtual int GetNShape();
+	virtual int NShape();
 	virtual CDShapeIf** GetShapes();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
+	virtual size_t NChildObject() const { return scenes.size()+shapes.size(); }
+	virtual ObjectIf* GetChildObject(size_t i) {
+		if (i<scenes.size()) return scenes[i];
+		return shapes[i-scenes.size()]; 
+	}
 public:
 };
 

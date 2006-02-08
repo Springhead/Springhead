@@ -64,16 +64,17 @@ public:
 	void Clear();
 	///	名前表から，参照されていないオブジェクトを削除する．
 	void ClearName();
-	///	デバッグ用
-	void Print(std::ostream& os) const { names.Print(os); }
 
 	virtual void SetGravity(Vec3f accel);
 	virtual Vec3f GetGravity();
 
-	virtual int GetNSolids();
+	virtual int NSolids();
 	virtual PHSolidIf** GetSolids();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-
+	virtual size_t NChildObject() const { return engines.size(); }
+	virtual ObjectIf* GetChildObject(size_t pos){
+		return (PHEngineIf*)engines[pos];
+	}
 protected:
 	friend class Object;
 };

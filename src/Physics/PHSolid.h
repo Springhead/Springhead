@@ -92,15 +92,20 @@ public:
 	PHBBox bbox;
 
 	OBJECTDEF(PHSolid);
-	void Print(std::ostream& os)const{Object::Print(os);}
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc());
+
+	CDShapeIf* CreateShape(const CDShapeDesc& desc);
+	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
+	size_t NChildObject() const{
+		return shapes.size();
+	}
+	const ObjectIf* GetChildObject(size_t pos) const{
+		return (CDShapeIf*)shapes[pos];
+	}
 
 	void CalcBBox();
 	void GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS);
 	
-	bool		AddChildObject(Object* o, PHScene* s);///< ロード時に使用．
-	size_t		NReferenceObjects();					///< 1
-	Object*		ReferenceObject(size_t i);				///< フレームを返す．
 	void		Step();									///< 時刻を進める．
 	
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
@@ -177,7 +182,7 @@ public:
 
 	void		SetGravity(bool bOn);
 
-	int			GetNShapes();
+	int			NShape();
 	CDShapeIf**	GetShapes();
 };
 
@@ -214,9 +219,9 @@ public:
 	
 	virtual void Clear(PHScene* s){ solids.clear(); }
 	///	所有しているsolidの数
-	virtual size_t NChildObjects(){ return solids.size(); }
+	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid
-	virtual Object* ChildObject(size_t i){ return solids[i]; }
+	virtual ObjectIf* GetChildObject(size_t i){ return (PHSolidIf*)solids[i]; }
 
 };
 

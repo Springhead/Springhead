@@ -92,6 +92,8 @@ public:
 	virtual void VectorPop(void* v)=0;
 	///	vector<T>::at(pos);
 	virtual void* VectorAt(void* v, int pos)=0;
+	///	vector<T>::size();
+	virtual size_t VectorSize(const void* v)=0;
 	///
 	virtual size_t SizeOfVector()=0;
 };
@@ -109,6 +111,9 @@ class FIAccess:public FIAccessBase{
 	virtual void* VectorAt(void* v, int pos){
 		return &((std::vector<T>*)v)->at(pos);
 	}
+	size_t VectorSize(const void* v){
+		return ((const std::vector<T>*)v)->size();
+	}
 	virtual size_t SizeOfVector(){
 		return sizeof(std::vector<T>);
 	}
@@ -118,6 +123,7 @@ class FITypeDescDb;
 ///	型を表す
 class SPR_DLL FITypeDesc:public UTRefCount{
 public:
+	enum { BIGVALUE= 0x40000000 };
 	///	レコードのフィールドを表す
 	class SPR_DLL Field{
 	public:
@@ -155,13 +161,15 @@ public:
 		void* FITypeDesc::Field::GetAddress(void* base, int pos){
 			return (void*)GetAddress((const void*)base, pos); 
 		}
+		///	フィールドのアドレスを計算．vectorを拡張する．
+		void* FITypeDesc::Field::GetAddressEx(void* base, int pos);
 		///	typeが数値の単純型の場合に，数値を読み出す関数
 		double ReadNumber(const void* base, int pos=0){
 			return type->ReadNumber(GetAddress(base, pos));
 		}
 		///	typeが数値の単純型の場合に，数値を書き込む関数
 		void WriteNumber(void* base, double val, int pos = 0){
-			type->WriteNumber(val, GetAddress(base, pos));
+			type->WriteNumber(val, GetAddressEx(base, pos));
 		}
 		///	文字列読み出し
 		std::string ReadString(const void* base, int pos=0){
@@ -169,7 +177,7 @@ public:
 		}
 		///	文字列書き込み
 		void WriteString(void* base, const char* val, int pos=0){
-			type->WriteString(val, GetAddress(base, pos));
+			type->WriteString(val, GetAddressEx(base, pos));
 		}
 	};
 	///	組み立て型をあらわす場合に使う
@@ -255,6 +263,8 @@ public:
 	///	return &vector::at(pos);
 	void* VectorAt(void* v, int pos){ return access->VectorAt(v, pos); }
 	const void* VectorAt(const void* v, int pos){ return VectorAt((void*)v, pos); }
+	///	return vector::size();
+	size_t VectorSize(const void * v){ return access->VectorSize(v); }
 	///
 	size_t SizeOfVector(){ return access->SizeOfVector(); }
 };

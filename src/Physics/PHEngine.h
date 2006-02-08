@@ -38,7 +38,7 @@ enum PHBehaviorPriority{
 
 class PHScene;
 ///	動作エンジンの基本クラス．
-class PHEngine:public SceneObject{
+class PHEngine:public InheritSceneObject<PHEngineIf, SceneObject>{
 	OBJECTDEF(PHEngine);
 public:
 
@@ -74,6 +74,7 @@ public:
 	const_iterator begin() const { return base::begin(); }
 	const_iterator end() const { return base::end(); }
 	size_t size(){ return base::size(); }
+	size_t size() const { return base::size(); }
 	UTRef<PHEngine>& operator [] (int id){ return base::begin()[id]; }
 	const UTRef<PHEngine>& operator [] (int id) const { return base::begin()[id]; }
 	///@name シミュレーションを進めるメソッド

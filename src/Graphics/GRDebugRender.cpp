@@ -17,11 +17,11 @@ void GRDebugRender::Reshape(Vec2f screen){
 }
 /// 剛体をレンダリングする
 void GRDebugRender::DrawSolid(PHSolidIf* so){
-	for (int i=0; i<so->GetNShapes(); ++i) {	
+	for (int i=0; i<so->NShape(); ++i) {	
 		CDShapeIf **shapes = so->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
-		for (size_t f=0; f<mesh->GetNFaces(); ++f) {	
+		for (size_t f=0; f<mesh->NFace(); ++f) {	
 			CDFaceIf* face = mesh->GetFace(f);
 			this->DrawFace(face, base);
 		}
@@ -30,7 +30,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 
 /// 面をレンダリングする
 void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
-	int numIndices = face->GetNIndices();
+	int numIndices = face->NIndex();
 	Vec3f *vtx = new Vec3f[numIndices];
 #if 0
 	for (int v=0; v<numIndices; ++v)

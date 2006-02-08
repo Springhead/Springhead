@@ -61,6 +61,16 @@ const void* FITypeDesc::Field::GetAddress(const void* base, int pos){
 	}
 	return ptr;
 }
+void* FITypeDesc::Field::GetAddressEx(void* base, int pos){
+	void* ptr = (char*)base + offset;
+	if (varType == VECTOR){
+		while((int)type->VectorSize(ptr)<=pos) type->VectorPush(ptr);
+		ptr = type->VectorAt(ptr, pos);
+	}else if (varType == ARRAY){
+		ptr = (char*)ptr + type->GetSize()*pos;
+	}
+	return ptr;
+}
 
 void FITypeDesc::Field::Print(std::ostream& os) const{
 	int w = os.width();
@@ -121,7 +131,10 @@ void FITypeDesc::Composit::Link(FITypeDescDb* db) {
 FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn, 
 	std::string n, std::string suf){
 	composit.push_back(Field());
-	if (pre.compare("vector") == 0) composit.back().varType = FITypeDesc::Field::VECTOR;
+	if (pre.compare("vector") == 0){
+		composit.back().varType = FITypeDesc::Field::VECTOR;
+		composit.back().length = FITypeDesc::BIGVALUE;
+	}
 	if (pre.compare("UTRef") == 0) composit.back().isReference = true;
 	if (pre.compare("pointer") == 0) composit.back().isReference = true;
 	if (suf.size()){

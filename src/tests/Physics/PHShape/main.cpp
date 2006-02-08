@@ -77,26 +77,26 @@ int main(int argc, char* argv[]){
 	
 	// デバッグ出力
 	DSTR << "***  solid1  ***\n";
-	for(int i=0; i<solid1->GetNShapes();++i){
+	for(int i=0; i<solid1->NShape();++i){
 		CDShapeIf** shapes = solid1->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->GetNFaces();++f){
+		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
-			for(int v=0; v<face->GetNIndices(); ++v){
+			for(int v=0; v<face->NIndex(); ++v){
 				DSTR << base[face->GetIndices()[v]];
 			}
 			DSTR << std::endl;
 		}
 	}
 	DSTR << "***  solid2  ***\n";
-	for(int i=0; i<solid2->GetNShapes();++i){
+	for(int i=0; i<solid2->NShape();++i){
 		CDShapeIf** shapes = solid2->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->GetNFaces();++f){
+		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
-			for(int v=0; v<face->GetNIndices(); ++v){
+			for(int v=0; v<face->NIndex(); ++v){
 				DSTR << base[face->GetIndices()[v]];
 			}
 			DSTR << std::endl;

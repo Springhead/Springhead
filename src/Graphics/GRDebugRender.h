@@ -23,8 +23,6 @@ class GRDebugRender:public InheritGRRender<GRDebugRenderIf, GRRender>{
 		@param	face　　　 面  
 		@param	base　　　 凸形状の頂点群 */
 	void DrawFace(CDFaceIf* face, Vec3f * base);
-	/** デバッグ用情報レポート */
-	void Print(std::ostream& os) const{ GRRender::Print(os); }
 };
 
 }

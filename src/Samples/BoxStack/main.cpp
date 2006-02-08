@@ -81,17 +81,17 @@ void display(){
 	glMultMatrixd(ad);	
 
 	Vec3f normal;
-	for(int i=0; i<soFloor->GetNShapes(); ++i){
+	for(int i=0; i<soFloor->NShape(); ++i){
 		CDShapeIf** shapes = soFloor->GetShapes();
 		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->GetNFaces();++f){
+		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
 			
 			glBegin(GL_POLYGON);
 			genFaceNormal(normal, base, face);
 			glNormal3fv(normal.data);
-			for(int v=0; v<face->GetNIndices(); ++v){	
+			for(int v=0; v<face->NIndex(); ++v){	
 				glVertex3fv(base[face->GetIndices()[v]].data);
 			}
 			glEnd();
@@ -106,17 +106,17 @@ void display(){
 		pose = soBox[boxCnt]->GetPose();
 		ad = Affined(pose);
 		glMultMatrixd(ad);
-			for(int i=0; i<soBox[boxCnt]->GetNShapes(); ++i){
+			for(int i=0; i<soBox[boxCnt]->NShape(); ++i){
 				CDShapeIf** shapes = soBox[boxCnt]->GetShapes();
 				CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
 				Vec3f* base = mesh->GetVertices();
-				for(size_t f=0; f<mesh->GetNFaces();++f){
+				for(size_t f=0; f<mesh->NFace();++f){
 					CDFaceIf* face = mesh->GetFace(f);
 				
 					glBegin(GL_POLYGON);
 					genFaceNormal(normal, base, face);
 					glNormal3fv(normal.data);	
-					for(int v=0; v<face->GetNIndices(); ++v){	
+					for(int v=0; v<face->NIndex(); ++v){	
 						glVertex3fv(base[face->GetIndices()[v]].data);
 					}
 					glEnd();

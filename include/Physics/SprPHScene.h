@@ -36,12 +36,14 @@ public:
 	///	‚±‚ÌScene‚ğ‚à‚ÂSDK‚ğ•Ô‚·
 	virtual PHSdkIf* GetSdk()=0;
 
+	///	Shape‚Ìì¬
+	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
 	///	Solidì¬
 	virtual PHSolidIf* CreateSolid()=0;
 	///	Solidì¬
 	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc)=0;
 	///	Solid‚Ì”
-	virtual int GetNSolids()=0;
+	virtual int NSolids()=0;
 	///	Solid‚Ìæ“¾
 	virtual PHSolidIf** GetSolids()=0;
 

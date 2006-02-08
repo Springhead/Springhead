@@ -119,7 +119,7 @@ public:
 	void ClearName();
 
 	///	デバッグ用
-	void Print(std::ostream& os) const { names.Print(os); }
+	void Print(std::ostream& os) const;
 	friend class NamedObject;
 };
 template <class intf, class base>
@@ -144,8 +144,6 @@ public:
 	virtual ~Scene(){Clear();}
 	///	シーンを空にする．
 	void Clear();
-	///
-	void Print(std::ostream& os) const { NameManager::Print(os); }
 };
 template <class intf, class base>
 struct InheritScene:public InheritNameManager<intf, base>{

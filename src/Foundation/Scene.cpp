@@ -63,6 +63,21 @@ IF_IMP(NameManager, NamedObject);
 void NameManager::ClearName(){
 	names.clear();
 }
+void NameManager::Print(std::ostream& os) const {
+	int w = os.width();
+	os.width(0);
+	os << UTPadding(w);
+	os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << ">" << std::endl;
+	os.width(w+2);
+	names.Print(os); 
+	for(size_t i=0; i<NChildObject(); ++i){
+		GetChildObject(i)->Print(os);
+	}
+	os.width(0);
+	os << UTPadding(w);
+	os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	os.width(w);
+}
 
 
 //----------------------------------------------------------------------------
@@ -75,7 +90,6 @@ Scene::Scene(){
 }
 void Scene::Clear(){
 	ClearName();
-	Print(DSTR);
 }
 
 }

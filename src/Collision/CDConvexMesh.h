@@ -20,7 +20,7 @@ public:
 	int vtxs[3];	///< –Ê‚Ì’¸“_ID
 
 	///
-	virtual int GetNIndices(){ return 3; }
+	virtual int NIndex(){ return 3; }
 	///
 	virtual int* GetIndices(){ return vtxs; }
 };
@@ -68,12 +68,10 @@ public:
 private:
 	bool VertexNear(int v1, int v2) const;
 
-	virtual void Print(std::ostream& os) const;
-
 	CDFaceIf* GetFace(size_t i);
-	size_t GetNFaces();
+	size_t NFace();
 	Vec3f* GetVertices();
-	size_t GetNVertices();
+	size_t NVertex();
 };
 
 }	//	namespace Spr

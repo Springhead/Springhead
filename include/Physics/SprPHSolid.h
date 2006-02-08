@@ -69,7 +69,7 @@ struct PHSolidIf : public SceneObjectIf{
 	///	d—Í‚ğ—LŒø/–³Œø‰»‚·‚é	‚±‚±‚Å‚æ‚¢‚©‹^–â
 	virtual void		SetGravity(bool bOn)=0;
 
-	virtual int			GetNShapes()=0;
+	virtual int			NShape()=0;
 	///	Œ`ó‚ğæ“¾
 	virtual CDShapeIf**	GetShapes()=0;
 };

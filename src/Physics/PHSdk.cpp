@@ -59,7 +59,7 @@ PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 PHSceneIf* PHSdk::CreateScene(){
 	return CreateScene(PHSceneDesc());
 }
-int PHSdk::GetNScene(){
+int PHSdk::NScene(){
 	return scenes.size();
 }
 PHSceneIf** PHSdk::GetScenes(){
@@ -77,28 +77,19 @@ CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 		return NULL;
 	}
 }
-int PHSdk::GetNShape(){
+int PHSdk::NShape(){
 	return shapes.size();
 }
 CDShapeIf** PHSdk::GetShapes(){
 	return (CDShapeIf**)&*shapes.begin();
 }
 ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
-	if (info == CDShapeIf::GetIfInfoStatic()){
-		return CreateShape(*(const CDShapeDesc*)desc);
+	if (info == CDConvexMeshIf::GetIfInfoStatic()){
+		return CreateShape(*(const CDConvexMeshDesc*)desc);
 	}else if(info == PHSceneIf::GetIfInfoStatic()){
 		return CreateScene(*(const PHSceneDesc*)desc);
 	}
 	return NULL;
-}
-void PHSdk::Print(std::ostream& os) const{
-	Object::Print(os);
-	int w = os.width();
-	for(size_t i=0; i<scenes.size(); ++i){
-		os.width(w+2);
-		scenes[i]->Print(os);
-	}
-	os.width(w);
 }
 
 }
