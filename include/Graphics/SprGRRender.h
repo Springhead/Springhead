@@ -6,7 +6,8 @@
 
 namespace Spr{;
 
-///	テキスト描画のフォント
+/**	@struct	GRFont
+    @brief	テキスト描画のフォント */
 class SPR_DLL GRFont{
 public:
 	int height;
@@ -29,23 +30,24 @@ public:
 	}
 };
 
-///	光源
+/**	@struct	GRLight
+    @brief	光源		*/
 struct GRLight{
     Vec4f diffuse;		///<	拡散光
-    Vec4f specular;		///<	
-    Vec4f ambient;
+    Vec4f specular;		///<	鏡面光
+    Vec4f ambient;		///<	環境光
     Vec4f position;		///<	光源の位置，w=0とすると無限遠(方向光源)になる．
     float range;		///<	光が届く範囲
     ///@name	減衰率．Atten = 1/( att0 + att1 * d + att2 * d^2)
 	//@{
-	float attenuation0;	///<	att0	0..∞
-    float attenuation1;	///<	att1	0..∞
-    float attenuation2;	///<	att2	0..∞
+	float attenuation0;	///<	att0　　 0..∞
+    float attenuation1;	///<	att1　　 0..∞
+    float attenuation2;	///<	att2　　 0..∞
 	//@}
 	Vec3f spotDirection;///<	スポットライトの場合の向き
-    float spotFalloff;	///<	減衰の早さ(大きいほど急峻)		0..∞
-	float spotInner;	///<	スポットライトの中心部分		0..spotCutoff
-	float spotCutoff;	///<	スポットライトの光が当たる範囲	0..π
+    float spotFalloff;	///<	減衰の早さ(大きいほど急峻)　　　 0..∞
+	float spotInner;	///<	スポットライトの中心部分　　　　 0..spotCutoff
+	float spotCutoff;	///<	スポットライトの光が当たる範囲　 0..π(pi)
 	GRLight(){
 		range = FLT_MAX;
 		attenuation0 = 0.0f;
@@ -57,39 +59,59 @@ struct GRLight{
 	}
 };
 
-///	グラフィックスの材質
+/**	@struct	GRMaterial
+    @brief	グラフィックスの材質 */
 struct GRMaterial{
-	Vec4f diffuse;					///<	
-	Vec4f ambient;					///<	
-	Vec4f specular;					///<	
-	Vec4f emissive;					///<	
+	Vec4f diffuse;					///<	拡散光に対する反射率
+	Vec4f ambient;					///<	環境光に対する反射率
+	Vec4f specular;					///<	鏡面光に対する反射率
+	//Vec4f emissive;				///<	放射輝度
+	Vec4f emission;					///<	放射輝度
 	float power;					///<	
+	//float shininess				///<	鏡面反射の強度、鏡面係数
 	std::string texture;			///<	テクスチャファイル名
 	GRMaterial(){ power = 0.0f; }
 	GRMaterial(Vec4f d, Vec4f a, Vec4f s, Vec4f e, float p):
-		diffuse(d), ambient(a), specular(s), emissive(e), power(p){}
+		diffuse(d), ambient(a), specular(s), emission(e), power(p){}
 	GRMaterial(Vec4f c, float p):
-		diffuse(c), ambient(c), specular(c), emissive(c), power(p){}
+		diffuse(c), ambient(c), specular(c), emission(c), power(p){}
 	GRMaterial(Vec4f c):
-		diffuse(c), ambient(c), specular(c), emissive(c), power(0.0f){}
-	bool IsOpaque(){
-		return diffuse.W() >= 1.0 && ambient.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
+		diffuse(c), ambient(c), specular(c), emission(c), power(0.0f){}
+	/**	W()要素は、アルファ値(0.0～1.0で透明度を表す). 1.0が不透明を表す.
+		materialのW()要素を判定して、不透明物体か、透明物体かを判定する. 
+		透明なオブジェクトを描くとき、遠くのものから順番に描画しないと、意図に反した結果となる. */
+	bool IsOpaque(){		
+		return diffuse.W() >= 1.0 && ambient.W() >= 1.0 && specular.W() >= 1.0 && emission.W() >= 1.0;
 	}
+};
+
+/**	@struct	GRCamera
+    @brief	カメラの情報 */
+struct GRCamera{
+	Vec2f size;				///<	スクリーンのサイズ
+	Vec2f center;			///<	カメラからのスクリーンのずれ
+	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
+	GRCamera(Vec2f initSize=Vec2f(480.0, 360.0), 
+				Vec2f initCenter=Vec2f(0.0, 0.0),
+				float initFront=1.0,
+				float initBack=5000.0) 
+			: size(initSize), center(initCenter), front(initFront), back(initBack) {}
 };
 
 struct GRDeviceIf;
 
-/**	グラフィックスレンダラーの基本クラス	*/
+/**	@struct	GRRenderBaseIf
+    @brief	グラフィックスレンダラーの基本クラス */
 struct GRRenderBaseIf: public ObjectIf{
 	IF_DEF(GRRenderBase);
 	///	プリミティブの種類
 	enum TPrimitiveType {
 		POINTS,
 		LINES,
-		LINESTRIP,
+		LINE_STRIP,
 		TRIANGLES,
-		TRIANGLESTRIP,
-		TRIANGLEFAN
+		TRIANGLE_STRIP,
+		TRIANGLE_FAN
 	};
 	///	Zバッファテスト関数
 	enum TDepthFunc{
@@ -120,8 +142,6 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void BeginScene()=0;
 	///	レンダリングの終了後に呼ぶ関数
 	virtual void EndScene()=0;
-	///	Viewportと射影行列を設定
-	virtual void Resize(Vec2f screen)=0;
 	///	モデル行列をかける
 	virtual void MultModelMatrix(const Affinef& afw)=0;
 	///	モデル行列の行列スタックをPush
@@ -158,13 +178,16 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
 };
 
-///	レンダラの基本クラス
+/**	@struct	GRRenderIf
+    @brief	レンダラの基本クラス */
 struct GRRenderIf: public GRRenderBaseIf{
 	IF_DEF(GRRender);
 	virtual void SetDevice(GRDeviceIf* dev)=0;
+	virtual void SetCamera(GRCamera& cam)=0;
 };
 
-/**	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ	*/
+/**	@struct	GRDeviceIf
+    @brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */
 struct GRDeviceIf: public GRRenderBaseIf{
 	IF_DEF(GRDevice);
 	///	初期化
@@ -172,11 +195,17 @@ struct GRDeviceIf: public GRRenderBaseIf{
 	///	デバッグ用の状態レポート
 	virtual void Print(std::ostream& os) const=0;
 };
+
+/**	@struct	GRDeviceGLIf
+    @brief	OpenGLのレンダラー基本クラス */
 struct GRDeviceGLIf: public GRDeviceIf{
 	IF_DEF(GRDeviceGL);
+	/// ウィンドウIDを設定する
 	virtual void SetWindow(int w)=0;
 };
 
+/**	@struct	GRDeviceD3DIf
+    @brief	DirectXのレンダラー基本クラス */
 struct GRDeviceD3DIf: public GRDeviceIf{
 	IF_DEF(GRDeviceD3D);
 };
@@ -185,6 +214,8 @@ struct GRDeviceD3DIf: public GRDeviceIf{
     @brief	デバッグ情報レンダラーの基本クラス */
 struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
+	///	Viewportと射影行列を設定
+	virtual void Reshape(Vec2f screen)=0;
 	/// 剛体をレンダリングする
 	virtual void DrawSolid(PHSolidIf* so)=0;
 	/// 面をレンダリングする
