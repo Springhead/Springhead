@@ -27,7 +27,6 @@
 using namespace Spr;
 
 #define ESC				27
-#define FALL_DISTANCE	-500		// 落下距離(異常終了時)
 #define WINSIZE_WIDTH	480
 #define WINSIZE_HEIGHT	360
 
@@ -49,9 +48,8 @@ static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
-
-static clock_t starttime, endtime, count;
-static bool timeflag = false;
+// カメラの設定
+GRCamera camera2(Vec2f(WINSIZE_WIDTH, WINSIZE_HEIGHT), Vec2f(0.0, 0.0), 1.0, 5000.0);
 
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
@@ -61,9 +59,7 @@ static bool timeflag = false;
 void display(){
 	/*	バッファクリア
 	 *	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);　を内部でコール. */
-	grDevice->ClearBuffer();
-
-	//std::cout << render->camera.mocomoco << std::endl;
+	render->ClearBuffer();
 
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -82,16 +78,15 @@ void display(){
 	 *     下の赤い剛体(soFloor)    *
 	 ********************************/
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
-	render->PushModelMatrix();		// 行列スタックをプッシュ
+	render->PushModelMatrix();			// 行列スタックをプッシュ
 	Posed pose = soFloor->GetPose();
 	pose.ToAffine(ad);
 
 	// MultModelMatrix(ad); は、glMultMatrixd(ad); と同等
 	render->MultModelMatrix(ad);		// 現在のmodelView * model
 
-
 	render->DrawSolid(soFloor);
-	render->PopModelMatrix();		// 行列スタックをポップ
+	render->PopModelMatrix();			// 行列スタックをポップ
 
 	/********************************
 	 *     上の青い剛体(soBlock)    *
@@ -101,10 +96,8 @@ void display(){
 	pose = soBlock->GetPose();
 	ad = Affined(pose);
 
-	// 内部でglMultMatrixd(ad); をコール.
-	//grDevice->MultModelMatrix(ad); としても同様.
-	//grDevice->SetModelMatrix(ad);		// view * model
-	render->SetModelMatrix(ad);
+	//この場合、render->MultModelMatrix(ad); としても同様.	
+	render->SetModelMatrix(ad);			// view * model
 
 	render->DrawSolid(soBlock);
 	render->PopModelMatrix();
@@ -151,7 +144,6 @@ void initialize(){
 	setLight();
 }
 #endif
-
 /**
  brief		glutReshapeFuncで指定したコールバック関数
  param		<in/--> w　　幅
@@ -160,7 +152,7 @@ void initialize(){
  */
 void reshape(int w, int h){
 	// Viewportと射影行列を設定
-	render->Resize(Vec2f(w,h));
+	render->Reshape(Vec2f(w,h));
 }
 /**
  brief 		glutKeyboardFuncで指定したコールバック関数 
@@ -181,7 +173,7 @@ void idle(){
 	scene->Step();
 	glutPostRedisplay();
 	static int count;
-	//count++;
+	count++;
 	if (++count > 5000) exit(0);
 }
 /**
@@ -232,7 +224,7 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
+	soBlock->SetFramePosition(Vec3f(-0.5,10,0));
 	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
@@ -248,6 +240,9 @@ int main(int argc, char* argv[]){
 	// 初期設定
 	// initialize();
 	grDevice->Init();
+	
+	
+	
 
 	setLight();
 	glutDisplayFunc(display);
@@ -256,6 +251,17 @@ int main(int argc, char* argv[]){
 	glutIdleFunc(idle);
 	
 	render->SetDevice(grDevice);	
+
+
+
+	//GRCamera camera;
+	//DSTR << camera.size << ' ' << camera.center << ' ' << camera.front << ' ' << camera.back << std::endl;
+	render->SetCamera(camera2);	
+
+
+	//DSTR << camera2.size << ' ' << camera2.center << ' ' << camera2.front << ' ' << camera2.back << std::endl;
+
+
 
 
 	glutMainLoop();
