@@ -9,12 +9,6 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
-/// 接触エンジンの種類
-enum PHSceneContactSolver{
-	SOLVER_PENALTY,
-	SOLVER_CONSTRAINT
-};
-
 /// シーンディスクリプタ
 struct PHSceneDesc{
 	enum SolverType{
