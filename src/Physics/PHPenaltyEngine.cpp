@@ -463,7 +463,7 @@ OBJECTIMP(PHPenaltyEngine, PHEngine);
 
 void PHPenaltyEngine::Add(PHSolid* s){
 	solids.push_back(s);
-	Init();
+	Invalidate();
 }
 
 void PHPenaltyEngine::Init(){
@@ -474,6 +474,7 @@ void PHPenaltyEngine::Init(){
 			solidPairs.item(i, j)->Init();
 		}
 	}
+	ready = true;
 }
 
 
@@ -486,6 +487,9 @@ struct PHSolidEdge{
 };
 
 void PHPenaltyEngine::Step(){
+	if(!ready)
+		Init();
+	
 	Vec3f dir(0,0,1);
 	typedef std::vector<PHSolidEdge> Edges;
 	Edges edges;

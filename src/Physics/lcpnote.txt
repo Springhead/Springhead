@@ -103,6 +103,14 @@ A(i,j) = ∑_k=1^2N J(i,k) T(k,j) =
 	δ(lhs(i),rhs(j)) * (1/m_lhs(i) J_lin(i,lhs(i)) J_lin(j,rhs(j))' + J_ang(i,lhs(i)) I_lhs(i)^-1 J_ang(j,rhs(j))') +
 	δ(rhs(i),lhs(j)) * (1/m_rhs(i) J_lin(i,rhs(i)) J_lin(j,lhs(j))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(j,lhs(j))') +
 	δ(rhs(i),rhs(j)) * (1/m_rhs(i) J_lin(i,rhs(i)) J_lin(j,rhs(j))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(j,rhs(j))')
+特に対角ブロックのみに注目すると
+A(i,i) =
+	J_lin(i,lhs(i)) T_lin(i,lhs(i)) + J_ang(i,lhs(i)) T_ang(i,lhs(i)) +
+	J_lin(i,rhs(i)) T_lin(i,rhs(i)) + J_ang(i,rhs(i)) T_ang(i,rhs(i))
+	=
+	1/m_lhs(i) J_lin(i,lhs(i)) J_lin(i,lhs(i))' + J_ang(i,lhs(i)) I_lhs(i)^-1 J_ang(i,lhs(i))' +
+	1/m_rhs(i) J_lin(i,rhs(i)) J_lin(i,rhs(i))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(i,rhs(i))'	
+
 ただしδはクロネッカーデルタ(δ(i,j) == 1 if i == j or 0 otherwise)
 
 b = J Vnc		(Vnc = u(t) + dt M^-1 Fext)
@@ -120,3 +128,4 @@ Arow[i]はAのi番目の行．A = J M^-1 J'よりArow[i] = Jrow[i] M^-1 J'．
 よって上式は
 	λ[k+1][i] = λ[k][i] - _b[i] - _Jrow[i] dV[k]
 ここで_b[i] = b[i]/D[i,i]，_Jrow[i] = Jrow[i]/D[i,i], dV[k] = M^-1 J' λ[k].
+＊結局A行列はその対角要素のみ計算すればよいことになる．

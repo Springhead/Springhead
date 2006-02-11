@@ -56,14 +56,12 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 		engines.Find(pe);
 		assert(pe);
 		pe->Add(s);
-		pe->Init();
 		}break;
 	case SOLVER_CONSTRAINT:{
 		PHConstraintEngine* ce;
 		engines.Find(ce);
 		assert(ce);
 		ce->Add(s);
-		ce->Init();
 		}break;
 	default: assert(false);
 	}

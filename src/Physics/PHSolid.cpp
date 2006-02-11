@@ -191,9 +191,21 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 void PHSolid::AddShape(CDShapeIf* shape){
 	shapes.push_back(OCAST(CDShape,shape));
 	CalcBBox();
-	PHPenaltyEngine* pe;
-	OCAST(PHScene,GetScene())->engines.Find(pe);
-	if(pe) pe->Init();
+	//ÚGƒGƒ“ƒWƒ“‚ðinvalidate
+	PHScene* scene = OCAST(PHScene,GetScene());
+	assert(scene);
+	switch(scene->contact_solver){
+	case PHScene::SOLVER_PENALTY:{
+		PHPenaltyEngine* pe;
+		scene->engines.Find(pe);
+		if(pe) pe->Invalidate();
+	}break;
+	case PHScene::SOLVER_CONSTRAINT:{
+		PHConstraintEngine* ce;
+		scene->engines.Find(ce);
+		if(ce) ce->Invalidate();
+	}break;
+	}
 }
 
 void PHSolid::SetGravity(bool bOn){

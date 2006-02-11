@@ -41,11 +41,14 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 
 	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
 	
+	// いずれかのSolidに形状が割り当てられていない場合はエラー
 	PHSolid *s0 = engine->solids[is0], *s1 = engine->solids[is1];
+	if(s0->NShape() == 0 || s1->NShape() == 0)
+		return false;
 
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
-	for(int i = 0; i < s0->shapes.size(); i++)for(int j = 0; j < s1->shapes.size(); j++){
+	for(int i = 0; i < (int)(s0->shapes.size()); i++)for(int j = 0; j < (int)(s1->shapes.size()); j++){
 		CDShapePair& sp = shapePairs.item(i, j);
 		sp.UpdateShapePose(s0->GetPose(), s1->GetPose());
 		//このshape pairの交差判定
@@ -85,7 +88,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	bReady = false;
+	ready = false;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -95,13 +98,13 @@ PHConstraintEngine::~PHConstraintEngine(){
 void PHConstraintEngine::Add(PHSolid* s){
 	if(solids.Find(s) == 0){
 		solids.push_back(s);
-		bReady = false;
+		Invalidate();
 	}
 }
 
 void PHConstraintEngine::Remove(PHSolid* s){
 	if(solids.Erase(s))
-		bReady = false;
+		Invalidate();
 }
 
 void PHConstraintEngine::Init(){
@@ -120,10 +123,10 @@ void PHConstraintEngine::Init(){
 		sp.Init(solids[i], solids[j]);
 	}
 
-	bReady = true;
+	ready = true;
 }
 
-void PHConstraintEngine::Detect(){
+bool PHConstraintEngine::Detect(){
 	/* 以下の流れで交差を求める
 		1. SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外
 		2. 各Solidの組について
@@ -151,6 +154,7 @@ void PHConstraintEngine::Detect(){
 	//端から見ていって，接触の可能性があるノードの判定をする．
 	typedef std::set<int> SolidSet;
 	SolidSet cur;							//	現在のSolidのセット
+	bool found = false;
 	for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
 		if (it->bMin){						//	初端だったら，リスト内の物体と判定
 			for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
@@ -158,13 +162,14 @@ void PHConstraintEngine::Detect(){
 				int f2 = *itf;
 				if (f1 > f2) std::swap(f1, f2);
 				//2. SolidとSolidの衝突判定
-				solidPairs.item(f1, f2).Detect(f1, f2, this);
+				found |= solidPairs.item(f1, f2).Detect(f1, f2, this);
 			}
 			cur.insert(it->index);
 		}else{
 			cur.erase(it->index);			//	終端なので削除．
 		}
 	}
+	return found;
 }
 
 
@@ -173,7 +178,7 @@ void PHConstraintEngine::SetupLCP(){
 
 	//LCP構築
 	//各Solidに関係する変数
-	for(int i = 0; i < solids.size(); i++){
+	for(int i = 0; i < (int)(solids.size()); i++){
 		solidAuxs[i].dVlin_nc = solids[i]->GetVelocity() + solidAuxs[i].minv * solids[i]->GetForce() * dt;
 		Vec3d w = solids[i]->GetAngularVelocity();
 		solidAuxs[i].dVang_nc = w + solidAuxs[i].Iinv * (solids[i]->GetTorque() - w % (solids[i]->GetInertia() * w)) * dt;
@@ -185,7 +190,7 @@ void PHConstraintEngine::SetupLCP(){
 	Posed q[2];
 	PHSolid* solid[2];
 	PHSolidAux* solidaux[2];
-	int icon = 0;
+	int icon = -1;
 	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
 		//接触のインデックスを必要なら更新
 		if(icon != ip->contact){
@@ -212,6 +217,7 @@ void PHConstraintEngine::SetupLCP(){
 		t[1] = t[0] % n;
 
 		for(int i = 0; i < 2; i++){
+			// J行列
 			ip->Jlin[i].row(0) = n;
 			ip->Jlin[i].row(1) = t[0];
 			ip->Jlin[i].row(2) = t[1];
@@ -222,69 +228,27 @@ void PHConstraintEngine::SetupLCP(){
 				ip->Jlin[i] *= -1.0;
 				ip->Jang[i] *= -1.0;
 			}
+			// T行列
 			ip->Tlin[i] = solidaux[i]->minv * ip->Jlin[i].trans();
 			ip->Tang[i] = solidaux[i]->Iinv * ip->Jang[i].trans();
 		}
+		// A行列
+		ip->A = ip->Jlin[0] * ip->Tlin[0] + ip->Jang[0] * ip->Tang[0] +
+				ip->Jlin[1] * ip->Tlin[1] + ip->Jang[1] * ip->Tang[1];
+		// bベクトル
 		ip->b = ip->Jlin[0] * solidaux[0]->dVlin_nc + ip->Jang[0] * solidaux[0]->dVang_nc +
 				ip->Jlin[1] * solidaux[1]->dVlin_nc + ip->Jang[1] * solidaux[1]->dVang_nc;
-	}
 
-	//A行列の設定
-	/*
-	δ(lhs(i),lhs(j)) * (1/m_lhs(i) J_lin(i,lhs(i)) J_lin(j,lhs(j))' + J_ang(i,lhs(i)) I_lhs(i)^-1 J_ang(j,lhs(j))') +
-	δ(lhs(i),rhs(j)) * (1/m_lhs(i) J_lin(i,lhs(i)) J_lin(j,rhs(j))' + J_ang(i,lhs(i)) I_lhs(i)^-1 J_ang(j,rhs(j))') +
-	δ(rhs(i),lhs(j)) * (1/m_rhs(i) J_lin(i,rhs(i)) J_lin(j,lhs(j))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(j,lhs(j))')
-	δ(rhs(i),rhs(j)) * (1/m_rhs(i) J_lin(i,rhs(i)) J_lin(j,rhs(j))' + J_ang(i,rhs(i)) I_rhs(i)^-1 J_ang(j,rhs(j))') +
-	*/
-	//Aは対称行列なので対角および上三角要素のみ計算
-	A.resize(points.size(), points.size());
-	PHContactPoints::iterator ip_row, ip_col;
-	PHLCPMatrix::iterator iA;
-	int icon_row, icon_col, solid_row[2], solid_col[2];
-	icon_row = 0;
-	for(ip_row = points.begin(); ip_row != points.end(); ip_row++){
-		if(ip_row->contact != icon_row){
-			icon_row = ip_row->contact;
-			PHContact& con = contacts[icon_row];
-			solid_row[0] = con.solid[0];
-			solid_row[1] = con.solid[1];
-		}
-		int i = ip_row - points.begin();
-		iA = &A.item(i, i);
-		icon_col = icon_row;
-		for(ip_col = ip_row; ip_col != points.end(); ip_col++){
-			if(ip_col->contact != icon_col){
-				icon_col = ip_col->contact;
-				PHContact& con = contacts[icon_col];
-				solid_col[0] = con.solid[0];
-				solid_col[1] = con.solid[1];
-			}		
-			iA->clear();
-			if(solid_row[0] == solid_col[0])
-				*iA += ip_row->Jlin[0] * ip_col->Tlin[0] + ip_row->Jang[0] * ip_col->Tang[0];
-			if(solid_row[0] == solid_col[1])
-				*iA += ip_row->Jlin[0] * ip_col->Tlin[1] + ip_row->Jang[0] * ip_col->Tang[1];
-			if(solid_row[1] == solid_col[0])
-				*iA += ip_row->Jlin[1] * ip_col->Tlin[0] + ip_row->Jang[1] * ip_col->Tang[0];
-			if(solid_row[1] == solid_col[1])
-				*iA += ip_row->Jlin[1] * ip_col->Tlin[1] + ip_row->Jang[1] * ip_col->Tang[1];
-			iA++;
-		}
-	}
-
-	//各接触点のbとJlin, JangをAの対角要素で割る
-	iA = A.begin();
-	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
+		// Jlin, Jang, bをAの対角要素で割る
 		for(int i = 0; i < 3; i++){
 			//0割りチェックは？
-			double diag_inv = 1.0 / (*iA)[i][i];
+			double diag_inv = 1.0 / ip->A[i][i];
 			ip->b[i] *= diag_inv;
 			ip->Jlin[0].row(i) *= diag_inv;
 			ip->Jlin[1].row(i) *= diag_inv;
 			ip->Jang[0].row(i) *= diag_inv;
 			ip->Jang[1].row(i) *= diag_inv;
 		}
-		iA += points.size() + 1;	//次の対角要素へ
 	}
 }
 
@@ -313,7 +277,7 @@ void PHConstraintEngine::UpdateLCP(){
 	PHSolidAux* solidaux[2];
 	//接触力fの更新
 	Vec3d fnew;
-	int icon = 0;
+	int icon = -1;
 	for(ip = points.begin(); ip != points.end(); ip++){
 		if(icon != ip->contact){
 			icon = ip->contact;
@@ -344,7 +308,7 @@ void PHConstraintEngine::UpdateLCP(){
 		ip->f = fnew;
 	}
 	//速度変化dVの更新
-	icon = 0;
+	icon = -1;
 	for(ip = points.begin(); ip != points.end(); ip++){
 		if(icon != ip->contact){
 			icon = ip->contact;
@@ -360,11 +324,12 @@ void PHConstraintEngine::UpdateLCP(){
 }
 
 void PHConstraintEngine::Step(){
-	if(!bReady)
+	if(!ready)
 		Init();
 
 	//交差を検知
-	Detect();
+	if(!Detect())
+		return;
 
 	//LCPを設定
 	SetupLCP();

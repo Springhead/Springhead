@@ -139,16 +139,20 @@ class PHPenaltyEngine: public PHEngine{
 
 
 protected:
+	bool	 ready;
 	PHSolids solids;
 	UTCombination<UTRef<PHSolidPair> > solidPairs;
 public:
-	void Add(PHSolid* s);
-	void Init();
+	void Add(PHSolid* s);	/// Solidを登録する
+	void Invalidate(){ready = false;}		/// readyフラグをリセットする
+	void Init();			/// 初期化し，readyフラグをセットする
 	///
 	int GetPriority() const {return SGBP_PENALTYENGINE;}
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
 	virtual void Clear(PHScene* s){ solids.clear(); }
+
+	PHPenaltyEngine():ready(false){}
 };
 
 }	//	namespace Spr

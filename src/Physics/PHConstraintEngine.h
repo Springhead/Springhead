@@ -5,8 +5,8 @@
 #include <Foundation/Object.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>
-#include <Base/Combination.h>
 #include <Collision/CDDetectorImp.h>
+#include <vector>
 
 namespace Spr{;
 
@@ -16,6 +16,7 @@ struct PHContactPoint{
 	Vec3d pos;					/// 接触点の位置
 	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック
 	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック
+	Matrix3d A;					/// A行列対角ブロック
 	Vec3d b;					/// bベクトルのブロック
 	Vec3d f;					/// 接触力(LCPの相補変数)
 	Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
@@ -79,24 +80,16 @@ class PHConstraintEngine: public PHEngine{
 		
 	};
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
-
-	/// LCPのA行列
-	class PHLCPMatrix : public UTCombination<Matrix3d>{
-	public:
-		typedef UTCombination<Matrix3d> base_type;
-		Matrix3d& item(int i, int j){return (*this)[i * width() + j];}
-	};
 	
 protected:
-	bool			bReady;		/// 
+	bool			ready;		/// 
 	PHSolids		solids;		/// 拘束力計算の対象となる剛体
 	PHSolidAuxArray	solidAuxs;	/// 剛体の付加情報
 	PHSolidPairs	solidPairs;
 	PHContacts		contacts;	/// 剛体同士の接触の配列
 	PHContactPoints	points;		///	接触点の配列
-	PHLCPMatrix		A;			/// LCPのA行列
 
-	void Detect();	/// 全体の交差の検知
+	bool Detect();	/// 全体の交差の検知
 								/// Solid組ごとの交差検知
 	void SetupLCP();			/// LCPの準備
 	void SetInitialValue();		/// LCPの決定変数の初期値を設定
@@ -104,9 +97,10 @@ protected:
 	void UpdateLCP();			/// 反復法における一度の更新
 
 public:
-	void Add(PHSolid* s);
-	void Remove(PHSolid* s);
-	void Init();				/// 初期化
+	void Add(PHSolid* s);		/// Solid を登録する
+	void Remove(PHSolid* s);	/// 登録されているSolidを削除する
+	void Invalidate(){ready = false;}	/// readyフラグをリセット
+	void Init();				/// 初期化し，readyフラグをセット
 	///
 	int GetPriority() const {return 0/*SGBP_CONSTRAINTENGINE*/;}
 	///	速度→位置、加速度→速度の積分
