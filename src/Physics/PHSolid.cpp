@@ -249,9 +249,34 @@ bool PHSolidContainer::DelChildObject(Object* o, PHScene* s){
 
 void  PHSolidContainer::Step(){
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it){
-		(*it)->Step();
+		PHSolid* solid = *it;
+		if(!solid->IsUpdated())
+			solid->Step();
 	}
 }
 
+//----------------------------------------------------------------------------
+//	PHSolidInitializer
+//
+OBJECTIMP(PHSolidInitializer, PHEngine);
+bool PHSolidInitializer::AddChildObject(Object* o, PHScene* s){
+	if (DCAST(PHSolid, o)){
+		solids.push_back((PHSolid*)o);
+		return true;
+	}
+	return false;
+}
+bool PHSolidInitializer::DelChildObject(Object* o, PHScene* s){
+	PHSolid* so = DCAST(PHSolid, o);
+	if (so){
+		solids.Erase(so);
+		return true;
+	}
+	return false;
+}
+void PHSolidInitializer::Step(){
+	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
+		(*it)->SetUpdated(false);
+}	
 
 }

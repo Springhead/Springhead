@@ -23,8 +23,12 @@ void PHScene::Init(){
 	engines.scene = this;
 	timeStep = 0.005;
 	Scene::Clear();
+
+	engines.Add(DBG_NEW PHSolidInitializer);
+	
 	solids = DBG_NEW PHSolidContainer;
 	engines.Add(solids);
+	
 	PHGravityEngine* ge = DBG_NEW PHGravityEngine;
 	engines.Add(ge);
 
@@ -48,7 +52,13 @@ PHSdkIf* PHScene::GetSdk(){
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	PHSolid* s = DBG_NEW PHSolid(desc);
 	s->SetScene((PHSceneIf*)this);
-	solids->AddChildObject(s, this);	
+
+	solids->AddChildObject(s, this);
+
+	PHSolidInitializer* si;
+	engines.Find(si);
+	assert(si);
+	si->AddChildObject(s, this);
 
 	switch(contact_solver){
 	case SOLVER_PENALTY:{

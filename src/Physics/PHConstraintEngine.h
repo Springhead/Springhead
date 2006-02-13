@@ -38,7 +38,8 @@ public:
 	Vec3d center;				/// 交差形状の重心
 	double mu;					/// 摩擦係数
 	
-	PHContact(int solid0, int solid1, int shape0, int shape1, Vec3d n, Vec3d c, double _mu){
+	PHContact(){}
+	/*PHContact(int solid0, int solid1, int shape0, int shape1, Vec3d n, Vec3d c, double _mu){
 		solid[0] = solid0;
 		solid[1] = solid1;
 		shape[0] = shape0;
@@ -46,7 +47,7 @@ public:
 		normal = n;
 		center = c;
 		mu = _mu;
-	}
+	}*/
 };
 
 /// 全ての接触を保持するコンテナ
@@ -66,7 +67,7 @@ class PHConstraintEngine: public PHEngine{
 		Vec3d		dVlin_nc, dVang_nc;	/// 接触力が0の場合の速度変化量
 		Vec3d		dVlin, dVang;		/// 接触力を考慮した速度変化量(LCPを解いて求める)
 	};
-	typedef std::vector<PHSolidAux> PHSolidAuxArray;
+	typedef std::vector<PHSolidAux> PHSolidAuxs;
 
 	/// Solidの組み合わせの配列
 	class PHSolidPair{
@@ -84,17 +85,18 @@ class PHConstraintEngine: public PHEngine{
 protected:
 	bool			ready;		/// 
 	PHSolids		solids;		/// 拘束力計算の対象となる剛体
-	PHSolidAuxArray	solidAuxs;	/// 剛体の付加情報
+	PHSolidAuxs		solidAuxs;	/// 剛体の付加情報
 	PHSolidPairs	solidPairs;
 	PHContacts		contacts;	/// 剛体同士の接触の配列
 	PHContactPoints	points;		///	接触点の配列
 
-	bool Detect();	/// 全体の交差の検知
-								/// Solid組ごとの交差検知
-	void SetupLCP();			/// LCPの準備
+	bool Detect();				/// 全体の交差の検知
+	void PrintContacts();
+	void SetupLCP(double dt);	/// LCPの準備
 	void SetInitialValue();		/// LCPの決定変数の初期値を設定
 	bool CheckConvergence();	/// 反復法における収束判定
-	void UpdateLCP();			/// 反復法における一度の更新
+	void Iteration();			/// 反復法における一度の更新
+	void UpdateSolids(double dt);		/// 結果をSolidに反映する
 
 public:
 	void Add(PHSolid* s);		/// Solid を登録する
@@ -102,7 +104,7 @@ public:
 	void Invalidate(){ready = false;}	/// readyフラグをリセット
 	void Init();				/// 初期化し，readyフラグをセット
 	///
-	int GetPriority() const {return 0/*SGBP_CONSTRAINTENGINE*/;}
+	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
 	virtual void Clear(PHScene* s){ solids.clear(); }

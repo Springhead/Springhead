@@ -72,7 +72,7 @@ enum PHIntegrationMode{
 ///	剛体
 class PHSolid : public InheritSceneObject<PHSolidIf, SceneObject>, public PHSolidDesc{
 protected:
-
+	bool		updated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
 	///	積分方式
@@ -106,6 +106,8 @@ public:
 	void CalcBBox();
 	void GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS);
 	
+	void		SetUpdated(bool set){updated = set;}	///< 
+	bool		IsUpdated(){return updated;}			///< 
 	void		Step();									///< 時刻を進める．
 	
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
@@ -222,7 +224,24 @@ public:
 	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid
 	virtual ObjectIf* GetChildObject(size_t i){ return (PHSolidIf*)solids[i]; }
+};
 
+/** Solidのリセットを行うエンジン．他のエンジンに先立って呼ばれる． */
+class PHSolidInitializer : public PHEngine{
+	OBJECTDEF(PHSolidInitializer);
+public:
+	PHSolids solids;
+	bool AddChildObject(Object* o, PHScene* s);
+	bool DelChildObject(Object* o, PHScene* s);
+	///
+	int GetPriority() const {return SGBP_SOLIDINITIALIZER;}
+	///	updatedフラグをリセットする
+	virtual void Step();
+	virtual void Clear(PHScene* s){ solids.clear(); }
+	///	所有しているsolidの数
+	virtual size_t NChildObject() const { return solids.size(); }
+	///	所有しているsolid
+	virtual ObjectIf* GetChildObject(size_t i){ return (PHSolidIf*)solids[i]; }
 };
 
 
