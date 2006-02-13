@@ -1,8 +1,6 @@
 // PHConstraintTest.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 //
 
-#include "stdafx.h"
-
 /**
  Springhead2/src/tests/Physics/PHConstraintTest.cpp
 
@@ -18,8 +16,11 @@
 #include <ctime>
 #include <string>
 #include <gl/glut.h>
+#include <windows.h>
 #pragma hdrstop
 using namespace Spr;
+
+GetObject();
 
 #define ESC				27
 #define FALL_DISTANCE	-500		// 落下距離(異常終了時)
@@ -149,7 +150,7 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0, 3.0, 9.0, 
+	gluLookAt(0.0, 0.0, 9.0, 
 		      0.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -201,7 +202,7 @@ void idle(){
 	curpos = soBlock->GetFramePosition();
 
 	// 床の上に5秒静止したら正常終了とする。
-	if (approx(prepos, curpos)) {
+	/*if (approx(prepos, curpos)) {
 		if (timeflag == false){
 			starttime = clock();
 			timeflag = true;
@@ -221,7 +222,7 @@ void idle(){
 			DSTR << "\n異常終了." << std::endl;
 			exit(EXIT_FAILURE);
 		}
-	}	
+	}*/	
 
 	glutPostRedisplay();
 }
@@ -289,17 +290,17 @@ int main(int argc, char* argv[]){
 		meshBlock = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 		// soFloor(meshFloor)に対してスケーリング
-		for(unsigned i=0; i<md.vertices.size(); ++i){
+		/*for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 3;
 			md.vertices[i].z *= 3;
-		}
+		}*/
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
 
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
+	soBlock->SetFramePosition(Vec3f(0,0.9,0));
 	//soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
