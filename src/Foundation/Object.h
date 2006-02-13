@@ -38,6 +38,7 @@ namespace Spr{;
 #define OBJECTIMPABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
 #define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
 
+class Object;	
 ///	インタフェース->オブジェクトへのキャスト
 #define OCAST(T, i)	OcastImp<T>(i)
 template <class T, class I> T* OcastImp(I* i){
@@ -45,7 +46,7 @@ template <class T, class I> T* OcastImp(I* i){
 	void* obj = i->GetIfInfo()->GetObject(oi);
 	return (T*)(Object*)obj;
 }
-
+	
 /**	全Objectの基本型	*/
 class Object:public ObjectIf, public UTTypeInfoBase, public UTRefCount{
 public:
