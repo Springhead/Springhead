@@ -9,7 +9,7 @@ namespace Spr{;
 
 #define IF_IMP_COMMON(cls)															\
 	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
-	void* IfInfoImp<cls##If>::GetObject(ObjectIf* i)const{							\
+	void* IfInfoImp<cls##If>::GetSprObject(ObjectIf* i)const{							\
 		return (Object*)(cls*)(cls##If*)i;											\
 	}																				\
 	ObjectIf* IfInfoImp<cls##If>::GetIf(void* obj)const{							\
@@ -43,7 +43,7 @@ class Object;
 #define OCAST(T, i)	OcastImp<T>(i)
 template <class T, class I> T* OcastImp(I* i){
 	ObjectIf* oi = i;
-	void* obj = i->GetIfInfo()->GetObject(oi);
+	void* obj = i->GetIfInfo()->GetSprObject(oi);
 	return (T*)(Object*)obj;
 }
 	
