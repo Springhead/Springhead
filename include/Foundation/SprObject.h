@@ -12,7 +12,7 @@ public:
 	IfInfo** base;
 	IfInfo(const char* cn, IfInfo** b): className(cn), base(b){}
 	virtual const char* ClassName() const =0;
-	virtual void* GetObject(ObjectIf* intf)const =0;
+	virtual void* GetSprObject(ObjectIf* intf)const =0;
 	virtual ObjectIf* GetIf(void* obj)const =0;
 };
 
@@ -22,7 +22,7 @@ public:
 	IfInfoImp(const char* cn, IfInfo** b): IfInfo(cn, b){}
 	virtual const char* ClassName() const { return className; }
 	virtual void* CreateInstance() const{ return 0;}
-	virtual void* GetObject(ObjectIf* intf)const;
+	virtual void* GetSprObject(ObjectIf* intf)const;
 	virtual ObjectIf* GetIf(void* obj)const;
 };
 
@@ -40,7 +40,7 @@ public:													\
 ///	インタフェースのキャスト
 #define ICAST(T, p)	UTIcastImp<T>(p)
 template <class T, class P> T* UTIcastImp(P p){
-	void* obj = p->GetIfInfo()->GetObject((ObjectIf*)p);
+	void* obj = p->GetIfInfo()->GetSprObject((ObjectIf*)p);
 	return (T*)T::GetIfInfoStatic()->GetIf(obj);
 }
 
