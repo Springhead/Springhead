@@ -300,8 +300,8 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(0,0.9,0));
-	//soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+	soBlock->SetFramePosition(Vec3f(0,5,0));
+	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ğİ’è
 
