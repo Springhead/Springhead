@@ -12,6 +12,7 @@ IF_IMP(PHSolid, Object);
 
 PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
 	integrationMode = PHINT_SIMPLETIC;
+	inertia_inv = inertia.inv();
 }
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
 	CDShapeIf* rv = ICAST(PHSceneIf, GetScene())->CreateShape(desc);

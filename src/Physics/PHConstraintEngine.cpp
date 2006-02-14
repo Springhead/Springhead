@@ -66,6 +66,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 			con.shape[1] = j;
 			con.solid[0] = is0;
 			con.solid[1] = is1;
+			con.normal = sp.normal;
 			//摩擦係数は両者の静止摩擦係数の平均とする
 			con.mu = (sp.shape[0]->material.mu0 + sp.shape[1]->material.mu0) * 0.5;
 			
@@ -146,6 +147,7 @@ bool PHConstraintEngine::Detect(){
 	 */
 
 	contacts.clear();
+	points.clear();
 	int N = solids.size();
 
 	//1. BBoxレベルの衝突判定
@@ -186,13 +188,13 @@ void PHConstraintEngine::SetupLCP(double dt){
 	//LCP構築
 	//各Solidに関係する変数
 	for(int i = 0; i < (int)(solids.size()); i++){
-		solidAuxs[i].dVlin_nc = /*solids[i]->GetVelocity() + */solidAuxs[i].minv * solids[i]->GetForce() * dt;
+		solidAuxs[i].dVlin_nc = /*solids[i]->GetVelocity() + */solidAuxs[i].minv * solids[i]->nextForce * dt;
 		Vec3d w = solids[i]->GetAngularVelocity();
-		solidAuxs[i].dVang_nc = /*w + */solidAuxs[i].Iinv * (solids[i]->GetTorque() - w % (solids[i]->GetInertia() * w)) * dt;
+		solidAuxs[i].dVang_nc = /*w + */solidAuxs[i].Iinv * (solids[i]->nextTorque - w % (solids[i]->GetInertia() * w)) * dt;
 	}
 
 	//各Contactに関係する変数
-	Vec3d n, c, p, r[2], v[2], vrel, t[2];
+	Vec3d n, c, p, r[2], v[2], vrel, vrelproj, t[2];
 	Matrix3d rcross[2];
 	Posed q[2];
 	PHSolid* solid[2];
@@ -222,18 +224,24 @@ void PHConstraintEngine::SetupLCP(double dt){
 		//接線ベクトルt[0], t[1]
 		// *t[0]は相対速度ベクトルに平行になるようにする(といいらしい)
 		vrel = v[1] - v[0];
-		//t[0] = (n % vrel) % n より変形
-		t[0] = (vrel - (n * vrel) * n).unit();
+		vrelproj = vrel - (n * vrel) * n;	//相対速度ベクトルを法線に直交する平面に射影したベクトル
+		double vrelproj_norm = vrelproj.norm();
+		if(vrelproj_norm < 1.0e-10){
+			t[0] = n % Vec3d(1.0, 0.0, 0.0);	
+			if(t[0].norm() < 1.0e-10)
+				t[0] = n % Vec3d(0.0, 1.0, 0.0);
+			t[0].unitize();
+		}
+		else{
+			t[0] = vrelproj / vrelproj_norm;
+		}
 		t[1] = t[0] % n;
-
 		for(int i = 0; i < 2; i++){
 			// J行列
 			ip->Jlin[i].row(0) = n;
 			ip->Jlin[i].row(1) = t[0];
 			ip->Jlin[i].row(2) = t[1];
-			ip->Jang[i].row(0) = rcross[0] * n;
-			ip->Jang[i].row(1) = rcross[0] * t[0];
-			ip->Jang[i].row(2) = rcross[0] * t[1];
+			ip->Jang[i] = ip->Jlin[i] * (-rcross[i]);
 			if(i == 0){
 				ip->Jlin[i] *= -1.0;
 				ip->Jang[i] *= -1.0;
@@ -252,9 +260,10 @@ void PHConstraintEngine::SetupLCP(double dt){
 				ip->Jang[1] * (solid[1]->GetAngularVelocity() + solidaux[1]->dVang_nc);
 
 		// Jlin, Jang, bをAの対角要素で割る
+		double diag_inv;
 		for(int i = 0; i < 3; i++){
 			//0割りチェックは？
-			double diag_inv = 1.0 / ip->A[i][i];
+			diag_inv = 1.0 / ip->A[i][i];
 			ip->b[i] *= diag_inv;
 			ip->Jlin[0].row(i) *= diag_inv;
 			ip->Jlin[1].row(i) *= diag_inv;
@@ -267,8 +276,8 @@ void PHConstraintEngine::SetupLCP(double dt){
 void PHConstraintEngine::SetInitialValue(){
 	//速度変化量は無負荷の場合で初期化
 	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
-		is->dVlin = is->dVlin_nc;
-		is->dVang = is->dVang_nc;
+		is->dVlin.clear();
+		is->dVang.clear();
 	}
 	//接触力は0で初期化
 	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
@@ -298,7 +307,7 @@ void PHConstraintEngine::Iteration(){
 			for(int i = 0; i < 2; i++)
 				solidaux[i] = &solidAuxs[con->solid[i]];
 		}
-		fnew = ip->f - (ip->b +
+		fnew = ip->f - 0.1 * (ip->b +
 			ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
 			ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
 
@@ -330,10 +339,12 @@ void PHConstraintEngine::Iteration(){
 			for(int i = 0; i < 2; i++)
 				solidaux[i] = &solidAuxs[con.solid[i]];
 		}
-		solidaux[0]->dVlin = ip->Tlin[0] * ip->f;
-		solidaux[0]->dVang = ip->Tang[0] * ip->f;
-		solidaux[1]->dVlin = ip->Tlin[1] * ip->f;
-		solidaux[1]->dVang = ip->Tang[1] * ip->f;
+		solidaux[0]->dVlin += ip->Tlin[0] * ip->df;
+		solidaux[0]->dVang += ip->Tang[0] * ip->df;
+		solidaux[1]->dVlin += ip->Tlin[1] * ip->df;
+		solidaux[1]->dVang += ip->Tang[1] * ip->df;
+		//DSTR << solidaux[0]->dVlin << ";" << solidaux[0]->dVang << ";" <<
+		//		solidaux[1]->dVlin << ";" << solidaux[1]->dVang << endl;
 	}
 }
 
@@ -356,7 +367,8 @@ void PHConstraintEngine::PrintContacts(){
 			PHContact& con = contacts[icon];
 			DSTR << "contact: " << icon << " normal: " << con.normal << " center: " << con.center << endl;
 		}
-		DSTR << "point: " << ip->pos << endl;
+		DSTR << "point: " << ip->pos <<
+			" normal: " << ip->Jlin[0].row(0) << "tangent0: " << ip->Jlin[0].row(1) << endl;
 	}
 }
 
@@ -368,22 +380,26 @@ void PHConstraintEngine::Step(){
 	if(!Detect())
 		return;
 
-	PrintContacts();
-
 	double dt = OCAST(PHScene, GetScene())->GetTimeStep();
 
 	//LCPを設定
 	SetupLCP(dt);
 
+	PrintContacts();
+
 	//決定変数の初期値を設定
 	SetInitialValue();
 
+	int count = 0;
 	while(true){
 		//反復
 		Iteration();
+		count++;
 		//終了判定
-		if(CheckConvergence())
-			break;		
+		if(CheckConvergence()){
+			DSTR << "converged. iteration count: " << count << endl;
+			break;
+		}
 	}
 
 	//Solidに反映
