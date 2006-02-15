@@ -217,7 +217,7 @@ void PHConstraintEngine::SetupLCP(double dt){
 		ip->pos = ip->pos - ((ip->pos - c) * n) * n;
 
 		for(int i = 0; i < 2; i++){
-			r[i] = ip->pos - q[i].pos;	//剛体の中心から接触点までのベクトル
+			r[i] = ip->pos - q[i].Pos();	//剛体の中心から接触点までのベクトル
 			rcross[i] = Matrix3d::Cross(r[i]);
 			v[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % r[i];	//接触点での速度
 		}

@@ -141,28 +141,28 @@ public:
 
 	Posed		GetPose() const { return pose; }
 	void		SetPose(const Posed& p) { pose = p;}
-	Vec3d		GetFramePosition() const {return pose.pos;}
-	void		SetFramePosition(const Vec3d& p){pose.pos = p;}
+	Vec3d		GetFramePosition() const {return pose.Pos();}
+	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetCenterPosition() const {return pose*center;}
 														///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){		///< 重心位置の設定
-		pose.pos = p - pose.ori*center;
+		pose.Pos() = p - pose.Ori()*center;
 	}
 
 	///	向きの取得
-	Matrix3d	GetRotation() const { Matrix3d rv; pose.ori.ToMatrix(rv); return rv; }
+	Matrix3d	GetRotation() const { Matrix3d rv; pose.Ori().ToMatrix(rv); return rv; }
 	///	向きの設定
 	void		SetRotation(const Matrix3d& r){
-		pose.ori.FromMatrix(r);
+		pose.Ori().FromMatrix(r);
 	}
 
 	///	向きの取得
-	Quaterniond GetOrientation() const {return pose.ori;}
+	Quaterniond GetOrientation() const {return pose.Ori();}
 	///	向きの設定
 	void		SetOrientation(const Quaterniond& q){
-		pose.ori = q;
+		pose.Ori() = q;
 		Matrix3f m;
-		pose.ori.ToMatrix(m);
+		pose.Ori().ToMatrix(m);
 	}
 
 	///	質量中心の速度の取得

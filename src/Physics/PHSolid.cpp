@@ -75,38 +75,38 @@ void PHSolid::Step(){
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
 		velocity += force * (dt / mass);
 		//角速度からクウォータニオンの時間微分を求め、積分、正規化
-		pose.ori += pose.ori.Derivative(angVelocity) * dt;
-		pose.ori.unitize();
-		torque		= pose.ori.Conjugated() * torque;			//トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.Conjugated() * angVelocity;
+		pose.Ori() += pose.Ori().Derivative(angVelocity) * dt;
+		pose.Ori().unitize();
+		torque		= pose.Ori().Conjugated() * torque;			//トルクと角速度をローカル座標へ
+		angVelocity = pose.Ori().Conjugated() * angVelocity;
 		angVelocity += Euler(inertia, torque, angVelocity) * dt;	//オイラーの運動方程式
-		torque = pose.ori * torque;						//トルクと角速度をワールドへ
-		angVelocity = pose.ori * angVelocity;
+		torque = pose.Ori() * torque;						//トルクと角速度をワールドへ
+		angVelocity = pose.Ori() * angVelocity;
 		break;
 	case PHINT_ARISTOTELIAN:{
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
 		velocity = force / mass;		//速度は力に比例する
-		Vec3d tq = pose.ori.Conjugated() * torque;	//トルクをローカルへ
-		angVelocity = pose.ori * (inertia_inv * tq);	//角速度はトルクに比例する
+		Vec3d tq = pose.Ori().Conjugated() * torque;	//トルクをローカルへ
+		angVelocity = pose.Ori() * (inertia_inv * tq);	//角速度はトルクに比例する
 		//クウォータニオンを積分、正規化
-		pose.ori += pose.ori.Derivative(angVelocity) * dt;
-		pose.ori.unitize();
+		pose.Ori() += pose.Ori().Derivative(angVelocity) * dt;
+		pose.Ori().unitize();
 		}break;
 	case PHINT_SIMPLETIC:{
 		//	x(dt) = x(0) + dt*v(0)/m
 		//	v(dt) = v(0) + dt*f(dt)
 		//回転量の積分
-		torque		= pose.ori.Conjugated() * torque;				//	トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.Conjugated() * angVelocity;
+		torque		= pose.Ori().Conjugated() * torque;				//	トルクと角速度をローカル座標へ
+		angVelocity = pose.Ori().Conjugated() * angVelocity;
 
 		dw = Euler(inertia, torque, angVelocity) * dt;			//角速度変化量
 		angVelocity += dw;										//角速度の積分
 		Quaterniond dq = Quaterniond::Rot(angVelocity * dt);
-		Vec3d dp = pose.ori * (dq*(-center) - (-center));
-		pose.ori = pose.ori * dq;
-		pose.ori.unitize();
-		torque = pose.ori * torque;									//トルクと角速度をワールドへ
-		angVelocity = pose.ori * angVelocity;
+		Vec3d dp = pose.Ori() * (dq*(-center) - (-center));
+		pose.Ori() = pose.Ori() * dq;
+		pose.Ori().unitize();
+		torque = pose.Ori() * torque;									//トルクと角速度をワールドへ
+		angVelocity = pose.Ori() * angVelocity;
 		//平行移動量の積分
 		velocity += force * (dt / mass);								//	速度の積分
 		SetCenterPosition(GetCenterPosition() + velocity * dt + dp);	//	位置の積分
@@ -114,18 +114,18 @@ void PHSolid::Step(){
 	case PHINT_ANALYTIC:{
 		//回転量の積分
 		//回転は解析的に積分できないので、形式的に↑の公式を回転の場合に当てはめる
-		torque		= pose.ori.Conjugated() * torque;					//トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.Conjugated() * angVelocity;
+		torque		= pose.Ori().Conjugated() * torque;					//トルクと角速度をローカル座標へ
+		angVelocity = pose.Ori().Conjugated() * angVelocity;
 		dw = Euler(inertia, torque, angVelocity) * dt;			//角速度変化量
 
 		Quaterniond dq = Quaterniond::Rot((angVelocity+0.5*dw) * dt);
-		Vec3d dp = pose.ori * (dq*(-center) - (-center));
-		pose.ori = pose.ori * dq;
-		pose.ori.unitize();
+		Vec3d dp = pose.Ori() * (dq*(-center) - (-center));
+		pose.Ori() = pose.Ori() * dq;
+		pose.Ori().unitize();
 
 		angVelocity += dw;										//角速度の積分
-		torque = pose.ori * torque;									//トルクと角速度をワールドへ
-		angVelocity = pose.ori * angVelocity;
+		torque = pose.Ori() * torque;									//トルクと角速度をワールドへ
+		angVelocity = pose.Ori() * angVelocity;
 		//平行移動量の積分（解析解に一致）
 		dv = force * (dt / mass);									//速度変化量
 		SetCenterPosition(GetCenterPosition() + (velocity+0.5*dv) * dt + dp);	//	位置の積分
@@ -138,16 +138,16 @@ void PHSolid::Step(){
 		velocity += dv;
 		//回転量の計算
 		//回転は解析的に積分できないので、ルンゲクッタ公式を使う
-		torque		= pose.ori.Conjugated() * torque;					//トルクと角速度をローカル座標へ
-		angVelocity = pose.ori.Conjugated() * angVelocity;
+		torque		= pose.Ori().Conjugated() * torque;					//トルクと角速度をローカル座標へ
+		angVelocity = pose.Ori().Conjugated() * angVelocity;
 		_angvel[0]	= angVelocity;
 		_angacc[0]	= Euler(inertia, torque, _angvel[0]);
 		_angvel[1]	= _angvel[0] + _angacc[0] * dt;
 		_angacc[1]	= Euler(inertia, torque, _angvel[1]);
-		pose.ori += pose.ori.Derivative(pose.ori * (_angvel[0] + _angvel[1]) / 2.0) * dt;
-		pose.ori.unitize();
-		angVelocity = pose.ori * (angVelocity + ((_angacc[0] + _angacc[1]) * (dt / 2.0)));
-		torque = pose.ori * torque;
+		pose.Ori() += pose.Ori().Derivative(pose.Ori() * (_angvel[0] + _angvel[1]) / 2.0) * dt;
+		pose.Ori().unitize();
+		angVelocity = pose.Ori() * (angVelocity + ((_angacc[0] + _angacc[1]) * (dt / 2.0)));
+		torque = pose.Ori() * torque;
 		break;
 	case PHINT_RUNGEKUTTA4:
 		//平行移動量の積分(まじめにルンゲクッタ公式に従っても結果は同じ＝解析解)
@@ -163,10 +163,10 @@ void PHSolid::Step(){
 		_angacc[2]	= Euler(inertia, torque, _angvel[2]);
 		_angvel[3]	= _angvel[0] + _angacc[2] * dt;
 		_angacc[3]	= Euler(inertia, torque, _angvel[3]);
-		pose.ori += pose.ori.Derivative(pose.ori * (_angvel[0] + 2.0 * (_angvel[1] + _angvel[2]) + _angvel[3]) / 6.0) * dt;
-		pose.ori.unitize();
-		angVelocity = pose.ori * (angVelocity + (_angacc[0] + 2.0 * (_angacc[1] + _angacc[2]) + _angacc[3]) * (dt / 6.0));
-		torque = pose.ori * torque;
+		pose.Ori() += pose.Ori().Derivative(pose.Ori() * (_angvel[0] + 2.0 * (_angvel[1] + _angvel[2]) + _angvel[3]) / 6.0) * dt;
+		pose.Ori().unitize();
+		angVelocity = pose.Ori() * (angVelocity + (_angacc[0] + 2.0 * (_angacc[1] + _angacc[2]) + _angacc[3]) * (dt / 6.0));
+		torque = pose.Ori() * torque;
 		
 		break;
 	}
@@ -184,7 +184,7 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 }
 
 /*void PHSolid::AddForceLocal(Vec3d f, Vec3d r){
-	torque += cross(pose.ori * (r - center), f);
+	torque += cross(pose.Ori() * (r - center), f);
 	force += f;
 }*/
 

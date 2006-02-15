@@ -2,6 +2,10 @@
 #ifdef _WIN32
 #pragma hdrstop
 #endif
+#include "TQuaternion.h"
+
+
+
 namespace Spr{;
 
 class TAffineTest: public TAffine<float>{
@@ -13,6 +17,20 @@ public:
 //	DEF_TAFFINE_CONSTRUCTORS(TAffineTest);
 //	DEF_TAFFINE_CONSTRUCTORS2(TAffineTest);
 };
-
+/*
+	struct A{
+		int a;
+		A(){}
+	};
+	union TestU{
+		TestU(){}
+		TestU(const TestU& t){}
+		A a;
+		int i;
+	};
+*/
+	static void Test(){
+	TPose<float> pose;
+	}
 
 };

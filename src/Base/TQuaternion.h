@@ -348,10 +348,10 @@ public:
 	DEF_TVECTOR_BASIC_MEMBER(TPose);
 	union{
 		ET data[7];
-		struct{
-			TQuaternion<ET> ori;
-			TVec3<ET> pos;
-		};
+//		struct{
+//			TQuaternion<ET> Ori();
+//			TVec3<ET> Pos();
+//		};
 		struct{
 			ET w,x,y,z;
 			ET px, py, pz;
@@ -366,10 +366,10 @@ public:
 	size_t stride_impl() const { return 1; }
 
 	///	要素のアクセス
-	TVec3<ET>& Pos() { return pos; }
-	const TVec3<ET>& Pos() const { return pos; }
-	TQuaternion<ET>& Ori() { return ori; }
-	const TQuaternion<ET>& Ori() const { return ori; }
+	TVec3<ET>& Pos() { return *(TVec3<ET>*)(data+4); }
+	const TVec3<ET>& Pos() const { return *(TVec3<ET>*)(data+4); }
+	TQuaternion<ET>& Ori() { return *(TQuaternion<ET>*)(data); }
+	const TQuaternion<ET>& Ori() const { return *(TQuaternion<ET>*)(data+4); }
 
 	/**@name	要素へのアクセス	*/
 	//@{
@@ -397,8 +397,8 @@ public:
 	
 	TPose<ET> Inv() const { 
 		TPose<ET> rv;
-		rv.ori = ori.Inv();
-		rv.pos = -rv.ori*pos;
+		rv.Ori() = Ori().Inv();
+		rv.Pos() = -rv.Ori()*Pos();
 		return rv;
 	}
 
@@ -407,8 +407,8 @@ public:
 	static TPose<ET> Unit(){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
-		y.pos = TVec3<ET>();
-		y.ori = TQuaternion<ET>();
+		y.Pos() = TVec3<ET>();
+		y.Ori() = TQuaternion<ET>();
 		return y;
 	}
 
@@ -416,8 +416,8 @@ public:
 	static TPose<ET> Unit(TVec3<ET> &v){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
-		y.pos = v;
-		y.ori = TQuaternion<ET>();
+		y.Pos() = v;
+		y.Ori() = TQuaternion<ET>();
 		return y;
 	}
 
@@ -425,8 +425,8 @@ public:
 	static TPose<ET> Unit(TQuaternion<ET> &q){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
-		y.pos = TVec3<ET>();
-		y.ori = q;
+		y.Pos() = TVec3<ET>();
+		y.Ori() = q;
 		return y;
 	}
 
@@ -436,46 +436,46 @@ public:
 	}
 	static TPose<ET> Trn(TVec3<ET> &v){
 		TPose<ET> y;
-		y.pos = v;
-		y.ori = TQuaternion<ET>();
+		y.Pos() = v;
+		y.Ori() = TQuaternion<ET>();
 		return y;
 	}
 
 	/// 回転
 	static TPose<ET> Rot(ET wi, ET xi, ET yi, ET zi){ 
 		TPose<ET> y;
-		y.pos = TVec3<ET>();
-		y.ori = TQuaternion<ET>(wi, xi, yi, zi);
+		y.Pos() = TVec3<ET>();
+		y.Ori() = TQuaternion<ET>(wi, xi, yi, zi);
 		return y;
 	}
 
 	static TPose<ET> Rot(ET angle, const TVec3<element_type>& axis){ 
 		TPose<ET> y;
-		y.pos = TVec3<ET>();
-		y.ori = TQuaternion<ET>::Rot(angle, axis);
+		y.Pos() = TVec3<ET>();
+		y.Ori() = TQuaternion<ET>::Rot(angle, axis);
 		return y;
 	}
 
 	static TPose<ET> Rot(ET angle, char axis){
 		TPose<ET> y;
-		y.pos = TVec3<ET>();
-		y.ori = TQuaternion<ET>::Rot(angle, axis);
+		y.Pos() = TVec3<ET>();
+		y.Ori() = TQuaternion<ET>::Rot(angle, axis);
 		return y;
 	}
 
 	static TPose<ET> Rot(const TVec3<ET>& rot){
 		TPose<ET> y;
-		y.pos = TVec3<ET>();
-		y.ori = TQuaternion<ET>::Rot(rot);
+		y.Pos() = TVec3<ET>();
+		y.Ori() = TQuaternion<ET>::Rot(rot);
 		return y;
 	}
 
 	/// Affine変換の行列に変換し返す
 	void ToAffine(TAffine<ET> &f){
 		/// Affine行列の位置ベクトルにposeの位置をコピーする
-		f.Trn() = pos;
+		f.Trn() = Pos();
 		/// Oriからできる行列をAffine行列の対応する場所に上書き
-		ori.ToMatrix(f);
+		Ori().ToMatrix(f);
 	}
 
 	operator TAffine<ET>(){ 
@@ -486,14 +486,14 @@ public:
 };
 template <class EP, class EV>
 TVec3<EV> operator * (const TPose<EP>& p, const TVec3<EV>& v){
-	return p.ori*v + p.pos;
+	return p.Ori()*v + p.Pos();
 }
 
 template <class EA, class EB>
 TPose<EA> operator * (const TPose<EA>& a, const TPose<EB>& b){
 	TPose<EA> rv;
-	rv.pos = a.pos + a.ori * b.pos;
-	rv.ori = a.ori * b.ori;
+	rv.Pos() = a.Pos() + a.Ori() * b.Pos();
+	rv.Ori() = a.Ori() * b.Ori();
 	return rv;
 }
 
