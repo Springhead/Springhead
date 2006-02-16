@@ -78,7 +78,9 @@ J(i,j) =
 	J_lin(i,rhs(i))		(j == 2rhs(i))
 	J_ang(i,rhs(i))		(j == 2rhs(i)+1)
 	O					otherwise
-＊J_lin, J_angの定義は省略（lecture12.pdfを参照してください）
+ここでJlinは(i, j)は剛体jのvelocity (剛体jのローカル座標)から接触点iの速度（接触点座標）へのヤコビ行列，
+Jangは(i, j)は剛体jのangular velocity (剛体jのローカル座標)から接触点iの速度（接触点座標）へのヤコビ行列．
+つまりu = Jlin * v + Jang * w (u:接触点速度，v:剛体速度，w:剛体角速度)
 
 T := M^-1 J'
 T(i,j)

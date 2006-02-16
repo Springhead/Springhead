@@ -183,19 +183,25 @@ bool PHConstraintEngine::Detect(){
 	return found;
 }
 
-
+//LCP構築
 void PHConstraintEngine::SetupLCP(double dt){
-	//LCP構築
 	//各Solidに関係する変数
-	for(int i = 0; i < (int)(solids.size()); i++){
-		solidAuxs[i].dVlin_nc = /*solids[i]->GetVelocity() + */solidAuxs[i].minv * solids[i]->nextForce * dt;
-		Vec3d w = solids[i]->GetAngularVelocity();
-		solidAuxs[i].dVang_nc = /*w + */solidAuxs[i].Iinv * (solids[i]->nextTorque - w % (solids[i]->GetInertia() * w)) * dt;
+	{
+		Quaterniond q;
+		Vec3d v, w, f, t;
+		for(int i = 0; i < (int)(solids.size()); i++){
+			q = solids[i]->GetOrientation();
+			v = q.Conjugated() * solids[i]->GetVelocity();
+			w = q.Conjugated() * solids[i]->GetAngularVelocity();
+			f = q.Conjugated() * solids[i]->nextForce;
+			t = q.Conjugated() * solids[i]->nextTorque;
+			solidAuxs[i].dVlin_nc = v + solidAuxs[i].minv * f * dt;
+			solidAuxs[i].dVang_nc = w + solidAuxs[i].Iinv * (t - w % (solids[i]->GetInertia() * w)) * dt;
+		}
 	}
-
 	//各Contactに関係する変数
 	Vec3d n, c, p, r[2], v[2], vrel, vrelproj, t[2];
-	Matrix3d rcross[2];
+	Matrix3d rcross[2], R[2];
 	Posed q[2];
 	PHSolid* solid[2];
 	PHSolidAux* solidaux[2];
@@ -211,6 +217,7 @@ void PHConstraintEngine::SetupLCP(double dt){
 				solid[i]    =  solids[con.solid[i]];
 				solidaux[i] = &solidAuxs[con.solid[i]];
 				q[i] = solid[i]->GetPose();
+				q[i].Ori().ToMatrix(R[i]);
 			}
 		}
 		//この時点ではposは交差形状の頂点なので，これを交差形状の重心を通る平面へ射影する
@@ -242,6 +249,8 @@ void PHConstraintEngine::SetupLCP(double dt){
 			ip->Jlin[i].row(1) = t[0];
 			ip->Jlin[i].row(2) = t[1];
 			ip->Jang[i] = ip->Jlin[i] * (-rcross[i]);
+			ip->Jlin[i] = ip->Jlin[i] * solid[i]->GetRotation();
+			ip->Jang[i] = ip->Jang[i] * solid[i]->GetRotation();
 			if(i == 0){
 				ip->Jlin[i] *= -1.0;
 				ip->Jang[i] *= -1.0;
@@ -254,13 +263,13 @@ void PHConstraintEngine::SetupLCP(double dt){
 		ip->A = ip->Jlin[0] * ip->Tlin[0] + ip->Jang[0] * ip->Tang[0] +
 				ip->Jlin[1] * ip->Tlin[1] + ip->Jang[1] * ip->Tang[1];
 		// bベクトル
-		ip->b = ip->Jlin[0] * (solid[0]->GetVelocity() + solidaux[0]->dVlin_nc) + 
-				ip->Jang[0] * (solid[0]->GetAngularVelocity() + solidaux[0]->dVang_nc) +
-				ip->Jlin[1] * (solid[1]->GetVelocity() + solidaux[1]->dVlin_nc) +
-				ip->Jang[1] * (solid[1]->GetAngularVelocity() + solidaux[1]->dVang_nc);
+		ip->b = ip->Jlin[0] * (solidaux[0]->dVlin_nc) + 
+				ip->Jang[0] * (solidaux[0]->dVang_nc) +
+				ip->Jlin[1] * (solidaux[1]->dVlin_nc) +
+				ip->Jang[1] * (solidaux[1]->dVang_nc);
 
 		// Jlin, Jang, bをAの対角要素で割る
-		double diag_inv;
+		/*double diag_inv;
 		for(int i = 0; i < 3; i++){
 			//0割りチェックは？
 			diag_inv = 1.0 / ip->A[i][i];
@@ -269,7 +278,13 @@ void PHConstraintEngine::SetupLCP(double dt){
 			ip->Jlin[1].row(i) *= diag_inv;
 			ip->Jang[0].row(i) *= diag_inv;
 			ip->Jang[1].row(i) *= diag_inv;
-		}
+		}*/
+		Matrix3d Ainv = ip->A.inv();
+		ip->b = Ainv * ip->b;
+		ip->Jlin[0] = Ainv * ip->Jlin[0];
+		ip->Jang[0] = Ainv * ip->Jang[0];
+		ip->Jlin[1] = Ainv * ip->Jlin[1];
+		ip->Jang[1] = Ainv * ip->Jang[1];
 	}
 }
 
@@ -289,7 +304,7 @@ bool PHConstraintEngine::CheckConvergence(){
 	double e = 0.0;
 	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++)
 		e += ip->df.norm();
-	DSTR << e << endl;
+	//DSTR << e << endl;
 	return e < 0.001;
 }
 
@@ -307,7 +322,7 @@ void PHConstraintEngine::Iteration(){
 			for(int i = 0; i < 2; i++)
 				solidaux[i] = &solidAuxs[con->solid[i]];
 		}
-		fnew = ip->f - 0.1 * (ip->b +
+		fnew = ip->f - 0.5 * (ip->b +
 			ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
 			ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
 
@@ -328,10 +343,11 @@ void PHConstraintEngine::Iteration(){
 
 		ip->df = fnew - ip->f;
 		ip->f = fnew;
-		DSTR << ip->df << ';' << ip->f << endl;
+		//DSTR << ip->df << ';' << ip->f << endl;
 	}
 	//速度変化dVの更新
 	icon = -1;
+	double k = 0.5;
 	for(ip = points.begin(); ip != points.end(); ip++){
 		if(icon != ip->contact){
 			icon = ip->contact;
@@ -339,10 +355,10 @@ void PHConstraintEngine::Iteration(){
 			for(int i = 0; i < 2; i++)
 				solidaux[i] = &solidAuxs[con.solid[i]];
 		}
-		solidaux[0]->dVlin += ip->Tlin[0] * ip->df;
-		solidaux[0]->dVang += ip->Tang[0] * ip->df;
-		solidaux[1]->dVlin += ip->Tlin[1] * ip->df;
-		solidaux[1]->dVang += ip->Tang[1] * ip->df;
+		solidaux[0]->dVlin += k * (ip->Tlin[0] * ip->df);
+		solidaux[0]->dVang += k * (ip->Tang[0] * ip->df);
+		solidaux[1]->dVlin += k * (ip->Tlin[1] * ip->df);
+		solidaux[1]->dVang += k * (ip->Tang[1] * ip->df);
 		//DSTR << solidaux[0]->dVlin << ";" << solidaux[0]->dVang << ";" <<
 		//		solidaux[1]->dVlin << ";" << solidaux[1]->dVang << endl;
 	}
@@ -352,8 +368,14 @@ void PHConstraintEngine::UpdateSolids(double dt){
 	PHSolids::iterator is;
 	PHSolidAuxs::iterator isaux;
 	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
-		(*is)->SetVelocity((*is)->GetVelocity() + (isaux->dVlin_nc + isaux->dVlin) * dt);
-		(*is)->SetAngularVelocity((*is)->GetAngularVelocity() + (isaux->dVang_nc + isaux->dVang) * dt);
+		PHSolid* s = *is;
+		//velocity update
+		s->SetVelocity       (s->GetRotation() * (isaux->dVlin_nc + isaux->dVlin));
+		s->SetAngularVelocity(s->GetRotation() * (isaux->dVang_nc + isaux->dVang));
+		//position update
+		s->SetCenterPosition(s->GetCenterPosition() + s->GetVelocity() * dt);
+		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt);
+
 		(*is)->SetUpdated(true);
 	}
 }
@@ -365,10 +387,10 @@ void PHConstraintEngine::PrintContacts(){
 		if(icon != ip->contact){
 			icon = ip->contact;
 			PHContact& con = contacts[icon];
-			DSTR << "contact: " << icon << " normal: " << con.normal << " center: " << con.center << endl;
+			//DSTR << "contact: " << icon << " normal: " << con.normal << " center: " << con.center << endl;
 		}
-		DSTR << "point: " << ip->pos <<
-			" normal: " << ip->Jlin[0].row(0) << "tangent0: " << ip->Jlin[0].row(1) << endl;
+		//DSTR << "point: " << ip->pos <<
+		//	" normal: " << ip->Jlin[0].row(0) << "tangent0: " << ip->Jlin[0].row(1) << endl;
 	}
 }
 
@@ -397,7 +419,11 @@ void PHConstraintEngine::Step(){
 		count++;
 		//終了判定
 		if(CheckConvergence()){
-			DSTR << "converged. iteration count: " << count << endl;
+			//DSTR << "converged. iteration count: " << count << endl;
+			break;
+		}
+		if(count == 10){
+			//DSTR << "max count." << endl;
 			break;
 		}
 	}
