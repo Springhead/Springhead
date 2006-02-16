@@ -122,9 +122,6 @@ public:
 	///@name 初期化・構築
 	//@{
 	///	コンストラクタ
-	void set_default(){ W() = 1; X() = 0; Y() = 0; Z() = 0;}
-
-	///	コンストラクタ
 	TQuaternion(element_type wi, element_type xi, element_type yi, element_type zi){ W() = wi; X() = xi; Y() = yi; Z() = zi;}
 	template <class B>
 	void InitDirect(element_type a, const PTM::TVectorBase<DIMENC(3), B> v){
@@ -272,6 +269,9 @@ public:
 	TQuaternion<ET> Derivative(const TVec3<ET>& w){
 		return 0.5 * TQuaternion<ET>(0.0, w.X(), w.Y(), w.Z()) * *this;
 	}
+	protected:
+	///	コンストラクタ
+	void set_default(){ W() = 1; X() = 0; Y() = 0; Z() = 0;}
 };
 
 ///	TQuaternion 同士の掛け算．回転変換としては，合成になる．
@@ -370,6 +370,20 @@ public:
 	const TVec3<ET>& Pos() const { return *(TVec3<ET>*)(data+4); }
 	TQuaternion<ET>& Ori() { return *(TQuaternion<ET>*)(data); }
 	const TQuaternion<ET>& Ori() const { return *(TQuaternion<ET>*)(data); }
+	ET& W(){return w;}
+	const ET& W() const{return w;}
+	ET& X(){return x;}
+	const ET& X() const{return x;}
+	ET& Y(){return y;}
+	const ET& Y() const{return y;}
+	ET& Z(){return z;}
+	const ET& Z() const{return z;}
+	ET& Px(){return px;}
+	const ET& Px() const{return px;}
+	ET& Py(){return py;}
+	const ET& Py() const{return py;}
+	ET& Pz(){return pz;}
+	const ET& Pz() const{return pz;}
 
 	/**@name	要素へのアクセス	*/
 	//@{
@@ -482,6 +496,12 @@ public:
 		TAffine<ET> rv;
 		ToAffine(rv);
 		return rv;
+	}
+protected:
+	///	コンストラクタ
+	void set_default(){ 
+		W() = 1; X() = 0; Y() = 0; Z() = 0;
+		Pos().clear();
 	}
 };
 template <class EP, class EV>
