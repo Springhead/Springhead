@@ -369,7 +369,7 @@ public:
 	TVec3<ET>& Pos() { return *(TVec3<ET>*)(data+4); }
 	const TVec3<ET>& Pos() const { return *(TVec3<ET>*)(data+4); }
 	TQuaternion<ET>& Ori() { return *(TQuaternion<ET>*)(data); }
-	const TQuaternion<ET>& Ori() const { return *(TQuaternion<ET>*)(data+4); }
+	const TQuaternion<ET>& Ori() const { return *(TQuaternion<ET>*)(data); }
 
 	/**@name	要素へのアクセス	*/
 	//@{
