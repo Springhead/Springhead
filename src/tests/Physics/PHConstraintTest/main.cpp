@@ -13,6 +13,7 @@
  */
 
 #include <Springhead.h>		//	Springheadのインタフェース
+#include <../src/WinBasis/WBPreciseTimer.h>
 #include <ctime>
 #include <string>
 #include <gl/glut.h>
@@ -63,7 +64,7 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
  param		なし
  return 	なし
  */
-void display(){
+void _cdecl display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
@@ -165,7 +166,7 @@ void initialize(){
  param		<in/--> h　　高さ
  return		 なし
  */
-void reshape(int w, int h){
+void _cdecl reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -180,7 +181,7 @@ void reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void keyboard(unsigned char key, int x, int y){
+void _cdecl keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 
@@ -189,7 +190,7 @@ void keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void idle(){
+void _cdecl idle(){
 	Vec3d prepos, curpos;	// position
 	prepos = soBlock->GetFramePosition();
 
@@ -226,8 +227,12 @@ void idle(){
 
 	glutPostRedisplay();
 }
-void timer(int id){
-	for(int i=0; i<10;++i) idle();
+void _cdecl timer(int id){
+//	for(int i=0; i<10;++i) 
+	static WBPreciseTimer pt;
+	pt.CountUS();
+	idle();
+	DSTR << pt.CountUS() << std::endl;
 	glutTimerFunc(30, timer, 0);
 }
 
@@ -262,11 +267,12 @@ void dstrSolid(std::string& solidName) {
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int main(int argc, char* argv[]){
+int _cdecl main(int argc, char* argv[]){
 	sdk = CreatePHSdk();						// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.contact_solver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
 	scene = sdk->CreateScene(dscene);				// シーンの作成
+	scene->SetTimeStep(0.03f);
 
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
@@ -294,10 +300,10 @@ int main(int argc, char* argv[]){
 		meshBlock = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 		// soFloor(meshFloor)に対してスケーリング
-		/*for(unsigned i=0; i<md.vertices.size(); ++i){
+		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 3;
 			md.vertices[i].z *= 3;
-		}*/
+		}
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
 
