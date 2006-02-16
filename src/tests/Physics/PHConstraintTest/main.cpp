@@ -28,7 +28,7 @@ GetObject();
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
-PHSolidIf* soFloor, *soBlock;
+PHSolidIf* soFloor, *soBlock[2];
 
 // 光源の設定 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
@@ -43,6 +43,9 @@ static GLfloat mat_shininess[]  = { 120.0 };
 
 static clock_t starttime, endtime, count;
 static bool timeflag = false;
+
+static int elapse = 50;		//timer周期[ms]
+static double dt = 0.005;	//積分ステップ[s]
 
 /**
  brief     多面体の面(三角形)の法線を求める
@@ -100,30 +103,31 @@ void _cdecl display(){
 	glPopMatrix();
 
 	
-	// 上の青い剛体(soBlock)
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
-	glPushMatrix();
-	pose = soBlock->GetPose();
-	ad = Affined(pose);
-	glMultMatrixd(ad);
-		for(int i=0; i<soBlock->NShape(); ++i){
-		CDShapeIf** shapes = soBlock->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			
-			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal.data);	
-			for(int v=0; v<face->NIndex(); ++v){	
-				glVertex3fv(base[face->GetIndices()[v]].data);
+	for(int n = 0; n < 2; n++){
+		// 上の青い剛体(soBlock)
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
+		glPushMatrix();
+		pose = soBlock[n]->GetPose();
+		ad = Affined(pose);
+		glMultMatrixd(ad);
+			for(int i=0; i<soBlock[n]->NShape(); ++i){
+			CDShapeIf** shapes = soBlock[i]->GetShapes();
+			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+			Vec3f* base = mesh->GetVertices();
+			for(size_t f=0; f<mesh->NFace();++f){
+				CDFaceIf* face = mesh->GetFace(f);
+				
+				glBegin(GL_POLYGON);
+				genFaceNormal(normal, base, face);
+				glNormal3fv(normal.data);	
+				for(int v=0; v<face->NIndex(); ++v){	
+					glVertex3fv(base[face->GetIndices()[v]].data);
+				}
+				glEnd();
 			}
-			glEnd();
 		}
-	}
-	glPopMatrix();
-	
+		glPopMatrix();
+	}	
 	glutSwapBuffers();
 }
 
@@ -191,8 +195,8 @@ void _cdecl keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void _cdecl idle(){
-	Vec3d prepos, curpos;	// position
-	prepos = soBlock->GetFramePosition();
+	//Vec3d prepos, curpos;	// position
+	//prepos = soBlock->GetFramePosition();
 
 	scene->Step();
 
@@ -200,7 +204,7 @@ void _cdecl idle(){
 	//std::cout << soFloor->GetFramePosition();
 	//std::cout << soBlock->GetFramePosition() << std::endl;
 
-	curpos = soBlock->GetFramePosition();
+	//curpos = soBlock->GetFramePosition();
 
 	// 床の上に5秒静止したら正常終了とする。
 	/*if (approx(prepos, curpos)) {
@@ -231,9 +235,12 @@ void _cdecl timer(int id){
 //	for(int i=0; i<10;++i) 
 	static WBPreciseTimer pt;
 	pt.CountUS();
-	idle();
+
+	int n = (double)(elapse) / 1000.0 / dt;
+	for(int i = 0; i < n; i++)
+		idle();
 	DSTR << pt.CountUS() << std::endl;
-	glutTimerFunc(30, timer, 0);
+	glutTimerFunc(elapse, timer, 0);
 }
 
 /**
@@ -241,11 +248,11 @@ void _cdecl timer(int id){
  param 		<in/--> solidID　　 solidのID
  return 	なし
  */
-void dstrSolid(std::string& solidName) {
+/*void dstrSolid(std::string& solidName) {
 	PHSolidIf* solid;
 	if (solidName == "soFloor")			solid = soFloor;
 	else if (solidName == "soBlock")	solid = soBlock;
-	DSTR << "***  " << solidName << "   ***\n";
+	//DSTR << "***  " << solidName << "   ***\n";
 
 	for(int i=0; i<solid->NShape(); ++i){
 		CDShapeIf** shapes = solid->GetShapes();
@@ -254,12 +261,12 @@ void dstrSolid(std::string& solidName) {
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
 			for(int v=0; v<face->NIndex(); ++v){
-				DSTR << base[face->GetIndices()[v]];
+				//DSTR << base[face->GetIndices()[v]];
 			}
-			DSTR << std::endl;
+			//DSTR << std::endl;
 		}
 	}
-}
+}*/
 
 /**
  brief		メイン関数
@@ -272,12 +279,13 @@ int _cdecl main(int argc, char* argv[]){
 	PHSceneDesc dscene;
 	dscene.contact_solver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
 	scene = sdk->CreateScene(dscene);				// シーンの作成
-	scene->SetTimeStep(0.03f);
+	scene->SetTimeStep(dt);
 
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
 	dsolid.inertia *= 2.0;
-	soBlock = scene->CreateSolid(dsolid);			// 剛体をdescに基づいて作成
+	soBlock[0] = scene->CreateSolid(dsolid);			// 剛体をdescに基づいて作成
+	soBlock[1] = scene->CreateSolid(dsolid);
 
 	dsolid.mass = 1e20f;
 	dsolid.inertia *= 1e20f;
@@ -308,16 +316,18 @@ int _cdecl main(int argc, char* argv[]){
 	}
 
 	soFloor->AddShape(meshFloor);
-	soBlock->AddShape(meshBlock);
+	soBlock[0]->AddShape(meshBlock);
+	soBlock[1]->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(0,5,0));
-	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+	soBlock[0]->SetFramePosition(Vec3f(0,5,0));
+	soBlock[1]->SetFramePosition(Vec3f(0,10,0));
+	//soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
 	// デバッグ出力
-	dstrSolid(std::string("soFloor"));
-	dstrSolid(std::string("soBlock"));
+	//dstrSolid(std::string("soFloor"));
+	//dstrSolid(std::string("soBlock"));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
