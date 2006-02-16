@@ -226,6 +226,10 @@ void idle(){
 
 	glutPostRedisplay();
 }
+void timer(int id){
+	for(int i=0; i<10;++i) idle();
+	glutTimerFunc(30, timer, 0);
+}
 
 /**
  brief 		多面体の面(三角形)の頂点座標をデバッグ出力させる。
@@ -316,7 +320,7 @@ int main(int argc, char* argv[]){
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutIdleFunc(idle);
+	glutTimerFunc(0, timer, 0);
 
 	glutMainLoop();
 }
