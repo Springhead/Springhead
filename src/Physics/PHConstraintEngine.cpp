@@ -2,6 +2,8 @@
 #pragma hdrstop
 #include <float.h>
 #include <Collision/CDDetectorImp.h>
+#include <Collision/CDQuickHull2D.h>
+#include <Collision/CDQuickHull2DImp.h>
 
 
 using namespace PTM;
@@ -35,6 +37,18 @@ void PHConstraintEngine::PHSolidPair::Init(PHSolid* s0, PHSolid* s1){
 		sp.shape[1] = s1->shapes[j];
 	}
 }
+
+class ContactVertex: public Vec3d{
+public:
+	static Vec3d ex, ey;
+	ContactVertex(){}
+	ContactVertex(const Vec3d& v):Vec3d(v){}
+	Vec2d GetPos(){
+		return Vec2d( (*(Vec3d*)this)*ex, (*(Vec3d*)this)*ey );
+	}
+};
+Vec3d ContactVertex::ex;
+Vec3d ContactVertex::ey;
 
 bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngine* engine){
 	// ＊ここでShapeについてBBoxレベル判定をすれば速くなるかも？
@@ -74,20 +88,45 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 			//接触点の作成：
 			//交差形状を構成する頂点はanalyzer.planes.beginからendまでの内deleted==falseのもの
 			typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
-			Vec3d v, vsum, vproj;
-			int numv = 0;
+			static std::vector<ContactVertex> isVtxs;
+			isVtxs.clear();
 			for(Plane* p = analyzer.planes.begin; p != analyzer.planes.end; p++){
-				if(p->deleted)
-					continue;
-				numv++;
-				//sp.centerを通りsp.normalを法線とする平面上に頂点を射影
-				//法線は正規化されているとする
-				v = p->normal / p->dist + sp.commonPoint;
-				vsum += v;
+				if(p->deleted) continue;
+				isVtxs.push_back(p->normal / p->dist);
+			}
+			ContactVertex::ex = (-0.1<con.normal.z && con.normal.z < 0.1) ?
+				con.normal ^ Vec3f(0,0,1) : con.normal ^ Vec3f(1,0,0);
+			ContactVertex::ex.unitize();
+			ContactVertex::ey = con.normal ^ ContactVertex::ex;
 
+			//	すべての接触点を含む最小の凸多角形
+			static CDQHLines<ContactVertex> supportConvex(1000);
+			supportConvex.Clear();
+			supportConvex.epsilon = 0.01f;
+
+			static std::vector<ContactVertex*> isVtxPtrs;
+			isVtxPtrs.clear();
+			isVtxPtrs.resize(isVtxs.size());
+			for(size_t i=0; i<isVtxPtrs.size(); ++i) isVtxPtrs[i] = &isVtxs[i];
+			supportConvex.CreateConvexHull(&isVtxPtrs.front(), &isVtxPtrs.back()+1);
+			
+			typedef CDQHLines<ContactVertex>::CDQHLine Line;
+//#define DEBUG_CONTACTOUT
+#ifdef DEBUG_CONTACTOUT
+			int n = engine->points.size();
+#endif
+			for(Line* l = supportConvex.begin; l!=supportConvex.end; ++l){
+				if (l->deleted) continue;
+				Vec3d v = *l->vtx[0]+sp.commonPoint;
 				engine->points.push_back(PHContactPoint(engine->contacts.size(), v));
 			}
-			con.center = vsum / (double)numv;
+#ifdef DEBUG_CONTACTOUT
+			DSTR << engine->points.size()-n << " contacts:";
+			for(unsigned i=n; i<engine->points.size(); ++i){
+				DSTR << engine->points[i].pos;
+			}
+			DSTR << std::endl;
+#endif
 			engine->contacts.push_back(con);
 		}
 	}
@@ -100,7 +139,7 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
-	max_iter_dynamics = 10;
+	max_iter_dynamics = 100;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -202,7 +241,7 @@ void PHConstraintEngine::Setup(double dt){
 		}
 	}
 	//各Contactに関係する変数
-	Vec3d n, c, p, r[2], v[2], vrel, vrelproj, t[2];
+	Vec3d n, p, r[2], v[2], vrel, vrelproj, t[2];
 	Matrix3d rcross[2], R[2];
 	Posed q[2];
 	PHSolid* solid[2];
@@ -214,7 +253,6 @@ void PHConstraintEngine::Setup(double dt){
 			icon = ip->contact;
 			PHContact& con = contacts[icon];
 			n = con.normal;	//法線
-			c = con.center; //重心
 			for(int i = 0; i < 2; i++){
 				solid[i]    =  solids[con.solid[i]];
 				solidaux[i] = &solidAuxs[con.solid[i]];
@@ -222,8 +260,6 @@ void PHConstraintEngine::Setup(double dt){
 				q[i].Ori().ToMatrix(R[i]);
 			}
 		}
-		//この時点ではposは交差形状の頂点なので，これを交差形状の重心を通る平面へ射影する
-		ip->pos = ip->pos - ((ip->pos - c) * n) * n;
 
 		for(int i = 0; i < 2; i++){
 			r[i] = ip->pos - q[i].Pos();	//剛体の中心から接触点までのベクトル

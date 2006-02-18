@@ -9,16 +9,29 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
-/// シーンディスクリプタ
-struct PHSceneDesc{
+/// 物理エンジンのシーンの状態
+struct PHSceneState{
+	/// 積分ステップ
+	double timeStep;
+	/// 積分した回数
+	unsigned int count;
+	PHSceneState(){Init();}
+	void Init(){
+		timeStep = 0.005;
+		count = 0;
+	}
+};
+/// 物理エンジンのシーンのデスクリプタ
+struct PHSceneDesc: public PHSceneState{
+	///	接触・拘束解決エンジンの種類
 	enum SolverType{
 		SOLVER_PENALTY,
 		SOLVER_CONSTRAINT
-	} contact_solver;
+	} contactSolver;
 	PHSceneDesc(){Init();}
 	void Init(){
-		contact_solver = SOLVER_PENALTY;
-		//contact_solver = SOLVER_CONSTRAINT;
+		contactSolver = SOLVER_PENALTY;
+		//contactSolver = SOLVER_CONSTRAINT;
 	}
 };
 

@@ -37,7 +37,7 @@ public:
 	int solid[2];				/// 接触している剛体
 	int shape[2];				/// 接触している形状
 	Vec3d normal;				/// 法線
-	Vec3d center;				/// 交差形状の重心
+//	Vec3d center;				/// 交差形状の重心
 	double depth;
 	double mu;					/// 摩擦係数
 	
