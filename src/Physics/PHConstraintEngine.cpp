@@ -139,7 +139,10 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
-	max_iter_dynamics = 1000;
+	max_iter_dynamics = 10;
+	max_iter_correction = 0;
+	step_size = 1.0;
+	converge_criteria = 0.00000001;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -224,8 +227,22 @@ bool PHConstraintEngine::Detect(){
 	return found;
 }
 
+/*void PHConstraintEngine::PrintContacts(){
+	PHContactPoints::iterator ip;
+	int icon = -1;
+	for(ip = points.begin(); ip != points.end(); ip++){
+		if(icon != ip->contact){
+			icon = ip->contact;
+			PHContact& con = contacts[icon];
+			DSTR << "contact: " << icon << " normal: " << con.normal << " center: " << con.center << endl;
+		}
+		DSTR << "point: " << ip->pos <<
+			" normal: " << ip->Jlin[0].row(0) << "tangent0: " << ip->Jlin[0].row(1) << endl;
+	}
+}*/
+
 //LCP\’z
-void PHConstraintEngine::Setup(double dt){
+void PHConstraintEngine::SetupDynamics(double dt){
 	//ŠeSolid‚ÉŠÖŒW‚·‚é•Ï”
 	{
 		Quaterniond q;
@@ -300,12 +317,17 @@ void PHConstraintEngine::Setup(double dt){
 		// As—ñ
 		ip->A = ip->Jlin[0] * ip->Tlin[0] + ip->Jang[0] * ip->Tang[0] +
 				ip->Jlin[1] * ip->Tlin[1] + ip->Jang[1] * ip->Tang[1];
+		ip->Ainv = ip->A.inv();
 		// bƒxƒNƒgƒ‹
 		ip->b = ip->Jlin[0] * (solidaux[0]->Vlin0) + 
 				ip->Jang[0] * (solidaux[0]->Vang0) +
 				ip->Jlin[1] * (solidaux[1]->Vlin0) +
 				ip->Jang[1] * (solidaux[1]->Vang0);
-
+		ip->b = ip->Ainv * ip->b;
+		ip->Jlin[0] = ip->Ainv * ip->Jlin[0];
+		ip->Jang[0] = ip->Ainv * ip->Jang[0];
+		ip->Jlin[1] = ip->Ainv * ip->Jlin[1];
+		ip->Jang[1] = ip->Ainv * ip->Jang[1];
 		// Jlin, Jang, b‚ğA‚Ì‘ÎŠp—v‘f‚ÅŠ„‚é
 		/*double diag_inv;
 		for(int i = 0; i < 3; i++){
@@ -317,146 +339,10 @@ void PHConstraintEngine::Setup(double dt){
 			ip->Jang[0].row(i) *= diag_inv;
 			ip->Jang[1].row(i) *= diag_inv;
 		}*/
-		Matrix3d Ainv = ip->A.inv();
-		ip->b = Ainv * ip->b;
-		ip->Jlin[0] = Ainv * ip->Jlin[0];
-		ip->Jang[0] = Ainv * ip->Jang[0];
-		ip->Jlin[1] = Ainv * ip->Jlin[1];
-		ip->Jang[1] = Ainv * ip->Jang[1];
 	}
 }
 
-bool PHConstraintEngine::CheckConvergence(){
-	error = 0.0;
-	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++)
-		error += ip->df.norm();
-	//DSTR << e << endl;
-	return error < 0.001;
-}
-
-//void PHConstraintEngine::DynamicsIteration(){
-//}
-
-void PHConstraintEngine::UpdateSolids(double dt){
-	PHSolids::iterator is;
-	PHSolidAuxs::iterator isaux;
-	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
-		PHSolid* s = *is;
-		//velocity update
-		s->SetVelocity       (s->GetRotation() * (isaux->Vlin0 + isaux->dVlin));
-		s->SetAngularVelocity(s->GetRotation() * (isaux->Vang0 + isaux->dVang));
-		//position update
-		s->SetCenterPosition(s->GetCenterPosition() + s->GetVelocity() * dt);
-		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt);
-
-		(*is)->SetUpdated(true);
-	}
-}
-
-void PHConstraintEngine::PrintContacts(){
-	PHContactPoints::iterator ip;
-	int icon = -1;
-	for(ip = points.begin(); ip != points.end(); ip++){
-		if(icon != ip->contact){
-			icon = ip->contact;
-			PHContact& con = contacts[icon];
-			//DSTR << "contact: " << icon << " normal: " << con.normal << " center: " << con.center << endl;
-		}
-		//DSTR << "point: " << ip->pos <<
-		//	" normal: " << ip->Jlin[0].row(0) << "tangent0: " << ip->Jlin[0].row(1) << endl;
-	}
-}
-
-void PHConstraintEngine::Dynamics(double dt){
-	//Œˆ’è•Ï”‚Ì‰Šú’l‚ğİ’è
-	//‘¬“x•Ï‰»—Ê‚Í–³•‰‰×‚Ìê‡‚Å‰Šú‰»
-	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
-		is->dVlin.clear();
-		is->dVang.clear();
-	}
-	//ÚG—Í‚Í0‚Å‰Šú‰»
-	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
-		ip->f.clear();
-	}
-
-	PHContactPoints::iterator ip;
-	PHContact* con;
-	PHSolidAux* solidaux[2];
-	Vec3d fnew;
-	int count = 0;
-	while(true){
-		//”½•œ
-		//ÚG—Íf‚ÌXV
-		int icon = -1;
-		for(ip = points.begin(); ip != points.end(); ip++){
-			if(icon != ip->contact){
-				icon = ip->contact;
-				con = &contacts[icon];
-				for(int i = 0; i < 2; i++)
-					solidaux[i] = &solidAuxs[con->solid[i]];
-			}
-			fnew = ip->f - 1.0 * (ip->b +
-				ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
-				ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
-
-			//‚’¼R—Í >= 0‚Ì§–ñ
-			fnew[0] = Spr::max(0.0, fnew[0]);
-			
-			//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
-			double flim = con->mu * fnew[0];		//Å‘åÃ~–€C
-			fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
-			fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
-
-			ip->df = fnew - ip->f;
-			ip->f = fnew;
-			
-			solidaux[0]->dVlin += (ip->Tlin[0] * ip->df);
-			solidaux[0]->dVang += (ip->Tang[0] * ip->df);
-			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
-			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
-			
-			//fmin = {  0, -mu * f[0], -mu * f[0]};
-			//fmax = {Inf,  mu * f[0],  mu * f[0]};
-			//fnew[i] = min(max(fmin[i], f[i]), fmax[i]);
-			//–ƒƒ‚F
-			//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
-			//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
-			
-			//DSTR << ip->df << ';' << ip->f << endl;
-		}
-		//‘¬“x•Ï‰»dV‚ÌXV
-		/*icon = -1;
-		for(ip = points.begin(); ip != points.end(); ip++){
-			if(icon != ip->contact){
-				icon = ip->contact;
-				PHContact& con = contacts[icon];
-				for(int i = 0; i < 2; i++)
-					solidaux[i] = &solidAuxs[con.solid[i]];
-			}
-			solidaux[0]->dVlin += (ip->Tlin[0] * ip->df);
-			solidaux[0]->dVang += (ip->Tang[0] * ip->df);
-			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
-			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
-			//DSTR << solidaux[0]->dVlin << ";" << solidaux[0]->dVang << ";" <<
-			//		solidaux[1]->dVlin << ";" << solidaux[1]->dVang << endl;
-		}*/
-		count++;
-		//I—¹”»’è
-		if(CheckConvergence()){
-			DSTR << "converged. iteration count: " << count << endl;
-			break;
-		}
-		if(count == max_iter_dynamics){
-			DSTR << "max count. error=" << error  << endl;
-			break;
-		}
-	}
-
-	//Solid‚É”½‰f
-	UpdateSolids(dt);
-}
-
-/*void PHConstraintEngine::Correction(){
+void PHConstraintEngine::SetupCorrection(){
 	PHContactPoints::iterator ip;
 	PHContact* con;
 	PHSolidAux* solidaux[2];
@@ -474,13 +360,115 @@ void PHConstraintEngine::Dynamics(double dt){
 				Vang[i] = solidaux[i]->Vang0 + solidaux[i]->dVang;
 			}
 		}
-		ip->B = con->depth +
-			(ip->Jlin[0] * Vlin[0] + ip->Jang[0] * Vang[0] + ip->Jlin[1] * Vlin[1] + ip->Jang[1] * Vang[1])[0];
+		ip->f.clear();
+		ip->b = 0.1 * Vec3d(-con->depth +
+			(ip->Jlin[0] * Vlin[0] + ip->Jang[0] * Vang[0] + ip->Jlin[1] * Vlin[1] + ip->Jang[1] * Vang[1])[0],
+			0.0, 0.0);
+		ip->b = ip->Ainv * ip->b;
 	}
 
-	
+}
 
-}*/
+void PHConstraintEngine::Iterate(int max_iter){
+	//Œˆ’è•Ï”‚Ì‰Šú’l‚ğİ’è
+	//‘¬“x•Ï‰»—Ê‚Í–³•‰‰×‚Ìê‡‚Å‰Šú‰»
+	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
+		is->dVlin.clear();
+		is->dVang.clear();
+	}
+	//ÚG—Í‚Í0‚Å‰Šú‰»
+	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
+		ip->f.clear();
+	}
+
+	PHContactPoints::iterator ip;
+	PHContact* con;
+	PHSolidAux* solidaux[2];
+	Vec3d fnew;
+	int count = 0;
+	while(true){
+		if(count == max_iter){
+			DSTR << "max count." << " iteration count: " << count << " dfsum: " << dfsum << endl;
+			break;
+		}
+		dfsum = 0.0;
+		//”½•œ
+		//ÚG—Íf‚ÌXV
+		int icon = -1;
+		for(ip = points.begin(); ip != points.end(); ip++){
+			if(icon != ip->contact){
+				icon = ip->contact;
+				con = &contacts[icon];
+				for(int i = 0; i < 2; i++)
+					solidaux[i] = &solidAuxs[con->solid[i]];
+			}
+
+			fnew = ip->f - step_size * (ip->b +
+				ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
+				ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
+
+			//‚’¼R—Í >= 0‚Ì§–ñ
+			fnew[0] = Spr::max(0.0, fnew[0]);
+			
+			//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
+			//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
+			//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
+			double flim = con->mu * fnew[0];		//Å‘åÃ~–€C
+			fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
+			fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
+
+			ip->df = fnew - ip->f;
+			dfsum += ip->df.square();
+			ip->f = fnew;
+			
+			solidaux[0]->dVlin += (ip->Tlin[0] * ip->df);
+			solidaux[0]->dVang += (ip->Tang[0] * ip->df);
+			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
+			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
+
+			if(solidaux[0]->dVlin.norm() > 10.0){
+				int hoge = 0;
+			}
+		}
+		count++;
+		//I—¹”»’è
+		if(dfsum < converge_criteria){
+			DSTR << "converged." << " iteration count: " << count << " dfsum: " << dfsum << endl;
+			break;
+		}
+	}
+}
+
+void PHConstraintEngine::UpdateDynamics(double dt){
+	PHSolids::iterator is;
+	PHSolidAuxs::iterator isaux;
+	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
+		PHSolid* s = *is;
+		//velocity update
+		s->SetVelocity       (s->GetOrientation() * (isaux->Vlin0 + isaux->dVlin));
+		s->SetAngularVelocity(s->GetOrientation() * (isaux->Vang0 + isaux->dVang));
+		//position update
+		s->SetCenterPosition(s->GetCenterPosition() + s->GetVelocity() * dt);
+		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt);
+
+		DSTR << s->GetVelocity() << " ; " << s->GetCenterPosition() << endl;
+
+		(*is)->SetUpdated(true);
+	}
+}
+
+void PHConstraintEngine::UpdateCorrection(){
+	PHSolids::iterator is;
+	PHSolidAuxs::iterator isaux;
+	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
+		PHSolid* s = *is;
+		//position update
+		s->SetCenterPosition(s->GetCenterPosition() + s->GetOrientation() * isaux->dVlin);
+		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetOrientation() * isaux->dVang));
+
+		(*is)->SetUpdated(true);
+	}
+}
 
 void PHConstraintEngine::Step(){
 	if(!ready)
@@ -492,15 +480,17 @@ void PHConstraintEngine::Step(){
 
 	double dt = OCAST(PHScene, GetScene())->GetTimeStep();
 
-	//LCP‚ğİ’è
-	Setup(dt);
-	PrintContacts();
+	//PrintContacts();
 
-	//
-	Dynamics(dt);
-
-	//
-	//Correction();
+	DSTR << "dynamics: " << endl;
+	SetupDynamics(dt);
+	Iterate(max_iter_dynamics);
+	UpdateDynamics(dt);
+	
+	DSTR << "correction: " << endl;
+	SetupCorrection();
+	Iterate(max_iter_correction);
+	UpdateCorrection();
 
 }
 

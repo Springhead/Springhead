@@ -17,7 +17,7 @@ struct PHContactPoint{
 	double depth;				/// 交差深度
 	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック		接触している剛体の速度から接触点での速度を与えるヤコビ行列
 	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック		接触力から剛体の速度変化を与える行列
-	Matrix3d A;					/// A行列対角ブロック	この接触点の慣性行列
+	Matrix3d A, Ainv;			/// A行列対角ブロック	この接触点の慣性行列
 	Vec3d b;					/// bベクトルのブロック	接触力を0とした場合のdt後の接触点での相対速度
 	double B;					/// Bベクトルの要素		接触力を考慮したdt後の交差深度
 	Vec3d f;					/// 接触力(LCPの相補変数)
@@ -92,20 +92,23 @@ protected:
 	PHSolidPairs	solidPairs;
 	PHContacts		contacts;	/// 剛体同士の接触の配列
 	PHContactPoints	points;		///	接触点の配列
+	double			dfsum;		/// 接触力変化の2乗総和
 	int max_iter_dynamics;		/// Dynamics()の反復回数
 	int max_iter_correction;	/// Correction()の反復回数
+	double step_size;			/// LCPのステップ幅
+	double converge_criteria;	/// 収束判定の閾値
 
 	bool Detect();				/// 全体の交差の検知
 	void PrintContacts();
-	void Setup(double dt);	/// LCPの準備
+	void SetupDynamics(double dt);	/// LCPの準備
+	void SetupCorrection();			/// 誤差の修正
+	//void IterateDynamics();			/// Correction()での一度の反復
+	//void IterateCorrection();		/// Correction()での一度の反復
+	void Iterate(int max_iter);
+	void UpdateDynamics(double dt);	/// 結果をSolidに反映する
+	void UpdateCorrection();		/// 結果をSolidに反映する
 	//void SetInitialValue();		/// LCPの決定変数の初期値を設定
-	bool CheckConvergence();	/// 反復法における収束判定
-	void Dynamics(double dt);			/// 速度と位置の更新
-	void Correction();			/// 誤差の修正
-	void IterateDynamics();	/// Dynamics()での一度の反復		
-	void IterateCorrection();	/// Correction()での一度の反復
-	void UpdateSolids(double dt);		/// 結果をSolidに反映する
-
+	
 public:
 	double error;
 	void Add(PHSolid* s);		/// Solid を登録する

@@ -54,6 +54,10 @@ void PHSolid::Step(){
 	nextForce.clear();
 	nextTorque.clear();
 
+	//既に他のエンジンによって更新が成された場合は積分を行わない
+	if(IsUpdated())
+		return;
+
 	PHScene* s = OCAST(PHScene, GetScene());
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
@@ -251,11 +255,8 @@ bool PHSolidContainer::DelChildObject(Object* o, PHScene* s){
 }
 
 void  PHSolidContainer::Step(){
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it){
-		PHSolid* solid = *it;
-		if(!solid->IsUpdated())
-			solid->Step();
-	}
+	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it)
+		(*it)->Step();
 }
 
 //----------------------------------------------------------------------------
