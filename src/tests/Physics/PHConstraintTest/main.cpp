@@ -239,7 +239,7 @@ void _cdecl timer(int id){
 	int n = (double)(elapse) / 1000.0 / dt;
 	for(int i = 0; i < n; i++)
 		idle();
-	DSTR << pt.CountUS() << std::endl;
+	//DSTR << pt.CountUS() << std::endl;
 	glutTimerFunc(elapse, timer, 0);
 }
 
@@ -309,8 +309,8 @@ int _cdecl main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 3;
-			md.vertices[i].z *= 3;
+			md.vertices[i].x *= 2;
+			md.vertices[i].z *= 2;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
@@ -321,7 +321,8 @@ int _cdecl main(int argc, char* argv[]){
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
 	soBlock[0]->SetFramePosition(Vec3f(0,5,0));
 	soBlock[1]->SetFramePosition(Vec3f(0,10,0));
-	//soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+	soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(-45), 'z'));
+	soBlock[1]->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
