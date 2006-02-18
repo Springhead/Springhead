@@ -14,10 +14,12 @@ namespace Spr{;
 struct PHContactPoint{
 	int	contact;				/// 属する接触
 	Vec3d pos;					/// 接触点の位置
-	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック
-	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック
-	Matrix3d A;					/// A行列対角ブロック
-	Vec3d b;					/// bベクトルのブロック
+	double depth;				/// 交差深度
+	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック		接触している剛体の速度から接触点での速度を与えるヤコビ行列
+	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック		接触力から剛体の速度変化を与える行列
+	Matrix3d A;					/// A行列対角ブロック	この接触点の慣性行列
+	Vec3d b;					/// bベクトルのブロック	接触力を0とした場合のdt後の接触点での相対速度
+	double B;					/// Bベクトルの要素		接触力を考慮したdt後の交差深度
 	Vec3d f;					/// 接触力(LCPの相補変数)
 	Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
 	Vec3d df;					/// 各反復での接触力の変化量(収束判定に使用)
@@ -36,6 +38,7 @@ public:
 	int shape[2];				/// 接触している形状
 	Vec3d normal;				/// 法線
 	Vec3d center;				/// 交差形状の重心
+	double depth;
 	double mu;					/// 摩擦係数
 	
 	PHContact(){}
@@ -64,7 +67,7 @@ class PHConstraintEngine: public PHEngine{
 	struct PHSolidAux{
 		double		minv;				/// 各剛体の質量の逆数
 		Matrix3d	Iinv;				/// 各剛体の慣性行列の逆行列
-		Vec3d		dVlin_nc, dVang_nc;	/// 接触力が0の場合の速度変化量
+		Vec3d		Vlin0, Vang0;		/// 接触力が0の場合のdt後の速度
 		Vec3d		dVlin, dVang;		/// 接触力を考慮した速度変化量(LCPを解いて求める)
 	};
 	typedef std::vector<PHSolidAux> PHSolidAuxs;
@@ -89,13 +92,18 @@ protected:
 	PHSolidPairs	solidPairs;
 	PHContacts		contacts;	/// 剛体同士の接触の配列
 	PHContactPoints	points;		///	接触点の配列
+	int max_iter_dynamics;		/// Dynamics()の反復回数
+	int max_iter_correction;	/// Correction()の反復回数
 
 	bool Detect();				/// 全体の交差の検知
 	void PrintContacts();
-	void SetupLCP(double dt);	/// LCPの準備
-	void SetInitialValue();		/// LCPの決定変数の初期値を設定
+	void Setup(double dt);	/// LCPの準備
+	//void SetInitialValue();		/// LCPの決定変数の初期値を設定
 	bool CheckConvergence();	/// 反復法における収束判定
-	void Iteration();			/// 反復法における一度の更新
+	void Dynamics(double dt);			/// 速度と位置の更新
+	void Correction();			/// 誤差の修正
+	void IterateDynamics();	/// Dynamics()での一度の反復		
+	void IterateCorrection();	/// Correction()での一度の反復
 	void UpdateSolids(double dt);		/// 結果をSolidに反映する
 
 public:

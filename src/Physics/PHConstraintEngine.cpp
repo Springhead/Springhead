@@ -67,6 +67,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 			con.solid[0] = is0;
 			con.solid[1] = is1;
 			con.normal = sp.normal;
+			con.depth = sp.depth;
 			//–€CŒW”‚Í—¼Ò‚ÌÃ~–€CŒW”‚Ì•½‹Ï‚Æ‚·‚é
 			con.mu = (sp.shape[0]->material.mu0 + sp.shape[1]->material.mu0) * 0.5;
 			
@@ -99,6 +100,7 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
+	max_iter_dynamics = 10;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -184,7 +186,7 @@ bool PHConstraintEngine::Detect(){
 }
 
 //LCP\’z
-void PHConstraintEngine::SetupLCP(double dt){
+void PHConstraintEngine::Setup(double dt){
 	//ŠeSolid‚ÉŠÖŒW‚·‚é•Ï”
 	{
 		Quaterniond q;
@@ -195,8 +197,8 @@ void PHConstraintEngine::SetupLCP(double dt){
 			w = q.Conjugated() * solids[i]->GetAngularVelocity();
 			f = q.Conjugated() * solids[i]->nextForce;
 			t = q.Conjugated() * solids[i]->nextTorque;
-			solidAuxs[i].dVlin_nc = v + solidAuxs[i].minv * f * dt;
-			solidAuxs[i].dVang_nc = w + solidAuxs[i].Iinv * (t - w % (solids[i]->GetInertia() * w)) * dt;
+			solidAuxs[i].Vlin0 = v + solidAuxs[i].minv * f * dt;
+			solidAuxs[i].Vang0 = w + solidAuxs[i].Iinv * (t - w % (solids[i]->GetInertia() * w)) * dt;
 		}
 	}
 	//ŠeContact‚ÉŠÖŒW‚·‚é•Ï”
@@ -263,10 +265,10 @@ void PHConstraintEngine::SetupLCP(double dt){
 		ip->A = ip->Jlin[0] * ip->Tlin[0] + ip->Jang[0] * ip->Tang[0] +
 				ip->Jlin[1] * ip->Tlin[1] + ip->Jang[1] * ip->Tang[1];
 		// bƒxƒNƒgƒ‹
-		ip->b = ip->Jlin[0] * (solidaux[0]->dVlin_nc) + 
-				ip->Jang[0] * (solidaux[0]->dVang_nc) +
-				ip->Jlin[1] * (solidaux[1]->dVlin_nc) +
-				ip->Jang[1] * (solidaux[1]->dVang_nc);
+		ip->b = ip->Jlin[0] * (solidaux[0]->Vlin0) + 
+				ip->Jang[0] * (solidaux[0]->Vang0) +
+				ip->Jlin[1] * (solidaux[1]->Vlin0) +
+				ip->Jang[1] * (solidaux[1]->Vang0);
 
 		// Jlin, Jang, b‚ğA‚Ì‘ÎŠp—v‘f‚ÅŠ„‚é
 		/*double diag_inv;
@@ -288,18 +290,6 @@ void PHConstraintEngine::SetupLCP(double dt){
 	}
 }
 
-void PHConstraintEngine::SetInitialValue(){
-	//‘¬“x•Ï‰»—Ê‚Í–³•‰‰×‚Ìê‡‚Å‰Šú‰»
-	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
-		is->dVlin.clear();
-		is->dVang.clear();
-	}
-	//ÚG—Í‚Í0‚Å‰Šú‰»
-	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
-		ip->f.clear();
-	}
-}
-
 bool PHConstraintEngine::CheckConvergence(){
 	double e = 0.0;
 	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++)
@@ -308,61 +298,8 @@ bool PHConstraintEngine::CheckConvergence(){
 	return e < 0.001;
 }
 
-void PHConstraintEngine::Iteration(){
-	PHContactPoints::iterator ip;
-	PHContact* con;
-	PHSolidAux* solidaux[2];
-	//ÚG—Íf‚ÌXV
-	Vec3d fnew;
-	int icon = -1;
-	for(ip = points.begin(); ip != points.end(); ip++){
-		if(icon != ip->contact){
-			icon = ip->contact;
-			con = &contacts[icon];
-			for(int i = 0; i < 2; i++)
-				solidaux[i] = &solidAuxs[con->solid[i]];
-		}
-		fnew = ip->f - 0.5 * (ip->b +
-			ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
-			ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
-
-		//fmin = {  0, -mu * f[0], -mu * f[0]};
-		//fmax = {Inf,  mu * f[0],  mu * f[0]};
-		//fnew[i] = min(max(fmin[i], f[i]), fmax[i]);
-		//–ƒƒ‚F
-		//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
-		//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
-		
-		//‚’¼R—Í >= 0‚Ì§–ñ
-		fnew[0] = Spr::max(0.0, fnew[0]);
-		
-		//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
-		double flim = con->mu * fnew[0];		//Å‘åÃ~–€C
-		fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
-		fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
-
-		ip->df = fnew - ip->f;
-		ip->f = fnew;
-		//DSTR << ip->df << ';' << ip->f << endl;
-	}
-	//‘¬“x•Ï‰»dV‚ÌXV
-	icon = -1;
-	double k = 0.5;
-	for(ip = points.begin(); ip != points.end(); ip++){
-		if(icon != ip->contact){
-			icon = ip->contact;
-			PHContact& con = contacts[icon];
-			for(int i = 0; i < 2; i++)
-				solidaux[i] = &solidAuxs[con.solid[i]];
-		}
-		solidaux[0]->dVlin += k * (ip->Tlin[0] * ip->df);
-		solidaux[0]->dVang += k * (ip->Tang[0] * ip->df);
-		solidaux[1]->dVlin += k * (ip->Tlin[1] * ip->df);
-		solidaux[1]->dVang += k * (ip->Tang[1] * ip->df);
-		//DSTR << solidaux[0]->dVlin << ";" << solidaux[0]->dVang << ";" <<
-		//		solidaux[1]->dVlin << ";" << solidaux[1]->dVang << endl;
-	}
-}
+//void PHConstraintEngine::DynamicsIteration(){
+//}
 
 void PHConstraintEngine::UpdateSolids(double dt){
 	PHSolids::iterator is;
@@ -370,8 +307,8 @@ void PHConstraintEngine::UpdateSolids(double dt){
 	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
 		PHSolid* s = *is;
 		//velocity update
-		s->SetVelocity       (s->GetRotation() * (isaux->dVlin_nc + isaux->dVlin));
-		s->SetAngularVelocity(s->GetRotation() * (isaux->dVang_nc + isaux->dVang));
+		s->SetVelocity       (s->GetRotation() * (isaux->Vlin0 + isaux->dVlin));
+		s->SetAngularVelocity(s->GetRotation() * (isaux->Vang0 + isaux->dVang));
 		//position update
 		s->SetCenterPosition(s->GetCenterPosition() + s->GetVelocity() * dt);
 		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt);
@@ -394,6 +331,123 @@ void PHConstraintEngine::PrintContacts(){
 	}
 }
 
+void PHConstraintEngine::Dynamics(double dt){
+	//Œˆ’è•Ï”‚Ì‰Šú’l‚ğİ’è
+	//‘¬“x•Ï‰»—Ê‚Í–³•‰‰×‚Ìê‡‚Å‰Šú‰»
+	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
+		is->dVlin.clear();
+		is->dVang.clear();
+	}
+	//ÚG—Í‚Í0‚Å‰Šú‰»
+	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
+		ip->f.clear();
+	}
+
+	PHContactPoints::iterator ip;
+	PHContact* con;
+	PHSolidAux* solidaux[2];
+	Vec3d fnew;
+	int count = 0;
+	while(true){
+		//”½•œ
+		//ÚG—Íf‚ÌXV
+		int icon = -1;
+		for(ip = points.begin(); ip != points.end(); ip++){
+			if(icon != ip->contact){
+				icon = ip->contact;
+				con = &contacts[icon];
+				for(int i = 0; i < 2; i++)
+					solidaux[i] = &solidAuxs[con->solid[i]];
+			}
+			fnew = ip->f - 1.5 * (ip->b +
+				ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
+				ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
+
+			ip->df = fnew - ip->f;
+			ip->f = fnew;
+			
+			solidaux[0]->dVlin += (ip->Tlin[0] * ip->df);
+			solidaux[0]->dVang += (ip->Tang[0] * ip->df);
+			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
+			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
+			
+			//fmin = {  0, -mu * f[0], -mu * f[0]};
+			//fmax = {Inf,  mu * f[0],  mu * f[0]};
+			//fnew[i] = min(max(fmin[i], f[i]), fmax[i]);
+			//–ƒƒ‚F
+			//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
+			//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
+			
+			//‚’¼R—Í >= 0‚Ì§–ñ
+			fnew[0] = Spr::max(0.0, fnew[0]);
+			
+			//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
+			double flim = con->mu * fnew[0];		//Å‘åÃ~–€C
+			fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
+			fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
+
+			ip->df = fnew - ip->f;
+			ip->f = fnew;
+			//DSTR << ip->df << ';' << ip->f << endl;
+		}
+		//‘¬“x•Ï‰»dV‚ÌXV
+		/*icon = -1;
+		for(ip = points.begin(); ip != points.end(); ip++){
+			if(icon != ip->contact){
+				icon = ip->contact;
+				PHContact& con = contacts[icon];
+				for(int i = 0; i < 2; i++)
+					solidaux[i] = &solidAuxs[con.solid[i]];
+			}
+			solidaux[0]->dVlin += (ip->Tlin[0] * ip->df);
+			solidaux[0]->dVang += (ip->Tang[0] * ip->df);
+			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
+			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
+			//DSTR << solidaux[0]->dVlin << ";" << solidaux[0]->dVang << ";" <<
+			//		solidaux[1]->dVlin << ";" << solidaux[1]->dVang << endl;
+		}*/
+		count++;
+		//I—¹”»’è
+		if(CheckConvergence()){
+			DSTR << "converged. iteration count: " << count << endl;
+			break;
+		}
+		if(count == max_iter_dynamics){
+			DSTR << "max count." << endl;
+			break;
+		}
+	}
+
+	//Solid‚É”½‰f
+	UpdateSolids(dt);
+}
+
+/*void PHConstraintEngine::Correction(){
+	PHContactPoints::iterator ip;
+	PHContact* con;
+	PHSolidAux* solidaux[2];
+	Vec3d Vlin[2], Vang[2];
+	
+	//Dynamics‚Ì‰e‹¿‚ğl—¶‚µ‚½ã‚Å‚ÌŠeÚG“_‚Å‚ÌŒğ·[“x
+	int icon = -1;
+	for(ip = points.begin(); ip != points.end(); ip++){
+		if(icon != ip->contact){
+			icon = ip->contact;
+			con = &contacts[icon];
+			for(int i = 0; i < 2; i++){
+				solidaux[i] = &solidAuxs[con->solid[i]];
+				Vlin[i] = solidaux[i]->Vlin0 + solidaux[i]->dVlin;
+				Vang[i] = solidaux[i]->Vang0 + solidaux[i]->dVang;
+			}
+		}
+		ip->B = con->depth +
+			(ip->Jlin[0] * Vlin[0] + ip->Jang[0] * Vang[0] + ip->Jlin[1] * Vlin[1] + ip->Jang[1] * Vang[1])[0];
+	}
+
+	
+
+}*/
+
 void PHConstraintEngine::Step(){
 	if(!ready)
 		Init();
@@ -405,31 +459,14 @@ void PHConstraintEngine::Step(){
 	double dt = OCAST(PHScene, GetScene())->GetTimeStep();
 
 	//LCP‚ğİ’è
-	SetupLCP(dt);
-
+	Setup(dt);
 	PrintContacts();
 
-	//Œˆ’è•Ï”‚Ì‰Šú’l‚ğİ’è
-	SetInitialValue();
+	//
+	Dynamics(dt);
 
-	int count = 0;
-	while(true){
-		//”½•œ
-		Iteration();
-		count++;
-		//I—¹”»’è
-		if(CheckConvergence()){
-			//DSTR << "converged. iteration count: " << count << endl;
-			break;
-		}
-		if(count == 10){
-			//DSTR << "max count." << endl;
-			break;
-		}
-	}
-
-	//Solid‚É”½‰f
-	UpdateSolids(dt);
+	//
+	//Correction();
 
 }
 
