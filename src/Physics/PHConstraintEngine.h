@@ -21,8 +21,10 @@ struct PHContactPoint{
 	Vec3d b;					/// bベクトルのブロック	接触力を0とした場合のdt後の接触点での相対速度
 	double B;					/// Bベクトルの要素		接触力を考慮したdt後の交差深度
 	Vec3d f;					/// 接触力(LCPの相補変数)
-	Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
+	//Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
 	Vec3d df;					/// 各反復での接触力の変化量(収束判定に使用)
+	double F;
+	double dF;
 
 	PHContactPoint(int c, Vec3d p){
 		contact = c;
@@ -92,7 +94,6 @@ protected:
 	PHSolidPairs	solidPairs;
 	PHContacts		contacts;	/// 剛体同士の接触の配列
 	PHContactPoints	points;		///	接触点の配列
-	double			dfsum;		/// 接触力変化の2乗総和
 	int max_iter_dynamics;		/// Dynamics()の反復回数
 	int max_iter_correction;	/// Correction()の反復回数
 	double step_size;			/// LCPのステップ幅
@@ -102,15 +103,14 @@ protected:
 	void PrintContacts();
 	void SetupDynamics(double dt);	/// LCPの準備
 	void SetupCorrection();			/// 誤差の修正
-	//void IterateDynamics();			/// Correction()での一度の反復
-	//void IterateCorrection();		/// Correction()での一度の反復
-	void Iterate(int max_iter);
+	void IterateDynamics();			/// Correction()での一度の反復
+	void IterateCorrection();		/// Correction()での一度の反復
+	//void Iterate(int max_iter);
 	void UpdateDynamics(double dt);	/// 結果をSolidに反映する
 	void UpdateCorrection();		/// 結果をSolidに反映する
 	//void SetInitialValue();		/// LCPの決定変数の初期値を設定
 	
 public:
-	double error;
 	void Add(PHSolid* s);		/// Solid を登録する
 	void Remove(PHSolid* s);	/// 登録されているSolidを削除する
 	void Invalidate(){ready = false;}	/// readyフラグをリセット

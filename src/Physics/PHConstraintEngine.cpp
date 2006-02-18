@@ -116,7 +116,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 			int n = engine->points.size();
 #endif
 			for(Line* l = supportConvex.begin; l!=supportConvex.end; ++l){
-				if (l->deleted) continue;
+				//if (l->deleted) continue;
 				Vec3d v = *l->vtx[0]+sp.commonPoint;
 				engine->points.push_back(PHContactPoint(engine->contacts.size(), v));
 			}
@@ -140,7 +140,7 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
 	max_iter_dynamics = 10;
-	max_iter_correction = 0;
+	max_iter_correction = 10;
 	step_size = 1.0;
 	converge_criteria = 0.00000001;
 }
@@ -255,6 +255,8 @@ void PHConstraintEngine::SetupDynamics(double dt){
 			t = q.Conjugated() * solids[i]->nextTorque;
 			solidAuxs[i].Vlin0 = v + solidAuxs[i].minv * f * dt;
 			solidAuxs[i].Vang0 = w + solidAuxs[i].Iinv * (t - w % (solids[i]->GetInertia() * w)) * dt;
+			solidAuxs[i].dVlin.clear();
+			solidAuxs[i].dVang.clear();
 		}
 	}
 	//ŠeContact‚ÉŠÖŒW‚·‚é•Ï”
@@ -328,6 +330,7 @@ void PHConstraintEngine::SetupDynamics(double dt){
 		ip->Jang[0] = ip->Ainv * ip->Jang[0];
 		ip->Jlin[1] = ip->Ainv * ip->Jlin[1];
 		ip->Jang[1] = ip->Ainv * ip->Jang[1];
+		ip->f.clear();
 		// Jlin, Jang, b‚ğA‚Ì‘ÎŠp—v‘f‚ÅŠ„‚é
 		/*double diag_inv;
 		for(int i = 0; i < 3; i++){
@@ -347,7 +350,6 @@ void PHConstraintEngine::SetupCorrection(){
 	PHContact* con;
 	PHSolidAux* solidaux[2];
 	Vec3d Vlin[2], Vang[2];
-	
 	//Dynamics‚Ì‰e‹¿‚ğl—¶‚µ‚½ã‚Å‚ÌŠeÚG“_‚Å‚ÌŒğ·[“x
 	int icon = -1;
 	for(ip = points.begin(); ip != points.end(); ip++){
@@ -360,34 +362,27 @@ void PHConstraintEngine::SetupCorrection(){
 				Vang[i] = solidaux[i]->Vang0 + solidaux[i]->dVang;
 			}
 		}
-		ip->f.clear();
-		ip->b = 0.1 * Vec3d(-con->depth +
-			(ip->Jlin[0] * Vlin[0] + ip->Jang[0] * Vang[0] + ip->Jlin[1] * Vlin[1] + ip->Jang[1] * Vang[1])[0],
-			0.0, 0.0);
-		ip->b = ip->Ainv * ip->b;
+		ip->B = -con->depth +
+			ip->Jlin[0].row(0) * Vlin[0] + ip->Jang[0].row(0) * Vang[0] + ip->Jlin[1].row(0) * Vlin[1] + ip->Jang[1].row(0) * Vang[1];
+		ip->B *= (0.1 / ip->A[0][0]);
+		ip->F = 0.0;
+		//ip->b = ip->Ainv * ip->b;
 	}
-
-}
-
-void PHConstraintEngine::Iterate(int max_iter){
-	//Œˆ’è•Ï”‚Ì‰Šú’l‚ğİ’è
-	//‘¬“x•Ï‰»—Ê‚Í–³•‰‰×‚Ìê‡‚Å‰Šú‰»
 	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
 		is->dVlin.clear();
 		is->dVang.clear();
 	}
-	//ÚG—Í‚Í0‚Å‰Šú‰»
-	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
-		ip->f.clear();
-	}
+}
 
+void PHConstraintEngine::IterateDynamics(){
 	PHContactPoints::iterator ip;
 	PHContact* con;
 	PHSolidAux* solidaux[2];
 	Vec3d fnew;
+	double dfsum;
 	int count = 0;
 	while(true){
-		if(count == max_iter){
+		if(count == max_iter_dynamics){
 			DSTR << "max count." << " iteration count: " << count << " dfsum: " << dfsum << endl;
 			break;
 		}
@@ -426,14 +421,59 @@ void PHConstraintEngine::Iterate(int max_iter){
 			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
 			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
 
-			if(solidaux[0]->dVlin.norm() > 10.0){
-				int hoge = 0;
-			}
 		}
 		count++;
 		//I—¹”»’è
 		if(dfsum < converge_criteria){
 			DSTR << "converged." << " iteration count: " << count << " dfsum: " << dfsum << endl;
+			break;
+		}
+	}
+}
+
+void PHConstraintEngine::IterateCorrection(){
+	PHContactPoints::iterator ip;
+	PHContact* con;
+	PHSolidAux* solidaux[2];
+	double Fnew, dFsum;
+	int count = 0;
+	while(true){
+		if(count == max_iter_correction){
+			DSTR << "max count." << " iteration count: " << count << " dFsum: " << dFsum << endl;
+			break;
+		}
+		dFsum = 0.0;
+		
+		int icon = -1;
+		for(ip = points.begin(); ip != points.end(); ip++){
+			if(icon != ip->contact){
+				icon = ip->contact;
+				con = &contacts[icon];
+				for(int i = 0; i < 2; i++)
+					solidaux[i] = &solidAuxs[con->solid[i]];
+			}
+
+			Fnew = ip->F - step_size * (ip->B +
+				ip->Jlin[0].row(0) * solidaux[0]->dVlin + ip->Jang[0].row(0) * solidaux[0]->dVang +
+				ip->Jlin[1].row(0) * solidaux[1]->dVlin + ip->Jang[1].row(0) * solidaux[1]->dVang);
+
+			//‚’¼R—Í >= 0‚Ì§–ñ
+			Fnew = Spr::max(0.0, Fnew);
+			
+			ip->dF = Fnew - ip->F;
+			dFsum += ip->dF * ip->dF;
+			ip->F = Fnew;
+			
+			solidaux[0]->dVlin += (ip->Tlin[0].col(0) * ip->dF);
+			solidaux[0]->dVang += (ip->Tang[0].col(0) * ip->dF);
+			solidaux[1]->dVlin += (ip->Tlin[1].col(0) * ip->dF);
+			solidaux[1]->dVang += (ip->Tang[1].col(0) * ip->dF);
+
+		}
+		count++;
+		//I—¹”»’è
+		if(dFsum < converge_criteria){
+			DSTR << "converged." << " iteration count: " << count << " dFsum: " << dFsum << endl;
 			break;
 		}
 	}
@@ -484,12 +524,12 @@ void PHConstraintEngine::Step(){
 
 	DSTR << "dynamics: " << endl;
 	SetupDynamics(dt);
-	Iterate(max_iter_dynamics);
+	IterateDynamics();
 	UpdateDynamics(dt);
 	
 	DSTR << "correction: " << endl;
 	SetupCorrection();
-	Iterate(max_iter_correction);
+	IterateCorrection();
 	UpdateCorrection();
 
 }
