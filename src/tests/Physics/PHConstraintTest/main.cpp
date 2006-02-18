@@ -47,7 +47,7 @@ static GLfloat mat_shininess[]  = { 120.0 };
 static clock_t starttime, endtime, count;
 static bool timeflag = false;
 
-static int elapse = 100;		//timer周期[ms]
+static int elapse = 100;	//timer周期[ms]
 static double dt = 0.05;	//積分ステップ[s]
 
 /**
@@ -158,7 +158,7 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0, 3.0, 30.0, 
+	gluLookAt(0.0, 3.0, 15.0, 
 		      0.0, 3.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -217,7 +217,7 @@ void _cdecl timer(int id){
 	int n = (double)(elapse) / 1000.0 / dt;
 	for(int i = 0; i < n; i++)
 		idle();
-	//DSTR << pt.CountUS() << std::endl;
+	DSTR << pt.CountUS() << std::endl;
 	glutTimerFunc(elapse, timer, 0);
 }
 
@@ -276,7 +276,7 @@ int _cdecl main(int argc, char* argv[]){
 	for(int i = 0; i < NUM_BOX; i++)
 		soBlock[i]->SetFramePosition(*(Vec3f*)&boxpos[i]);
 	//soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
-	//soBlock[1]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
+	soBlock[5]->SetOrientation(Quaternionf::Rot(Rad(45), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 

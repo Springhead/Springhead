@@ -140,7 +140,7 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
 	max_iter_dynamics = 10;
-	max_iter_correction = 10;
+	max_iter_correction = 5;
 	step_size = 1.0;
 	converge_criteria = 0.00000001;
 }
