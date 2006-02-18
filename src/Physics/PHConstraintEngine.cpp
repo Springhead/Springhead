@@ -363,6 +363,14 @@ void PHConstraintEngine::Dynamics(double dt){
 				ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
 				ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
 
+			//‚’¼R—Í >= 0‚Ì§–ñ
+			fnew[0] = Spr::max(0.0, fnew[0]);
+			
+			//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
+			double flim = con->mu * fnew[0];		//Å‘åÃ~–€C
+			fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
+			fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
+
 			ip->df = fnew - ip->f;
 			ip->f = fnew;
 			
@@ -378,16 +386,6 @@ void PHConstraintEngine::Dynamics(double dt){
 			//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
 			//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
 			
-			//‚’¼R—Í >= 0‚Ì§–ñ
-			fnew[0] = Spr::max(0.0, fnew[0]);
-			
-			//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
-			double flim = con->mu * fnew[0];		//Å‘åÃ~–€C
-			fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
-			fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
-
-			ip->df = fnew - ip->f;
-			ip->f = fnew;
 			//DSTR << ip->df << ';' << ip->f << endl;
 		}
 		//‘¬“x•Ï‰»dV‚ÌXV
