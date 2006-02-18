@@ -44,8 +44,8 @@ static GLfloat mat_shininess[]  = { 120.0 };
 static clock_t starttime, endtime, count;
 static bool timeflag = false;
 
-static int elapse = 50;		//timer周期[ms]
-static double dt = 0.005;	//積分ステップ[s]
+static int elapse = 100;		//timer周期[ms]
+static double dt = 0.1;	//積分ステップ[s]
 
 /**
  brief     多面体の面(三角形)の法線を求める
@@ -309,8 +309,8 @@ int _cdecl main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 2;
-			md.vertices[i].z *= 2;
+			md.vertices[i].x *= 5;
+			md.vertices[i].z *= 5;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
@@ -319,10 +319,10 @@ int _cdecl main(int argc, char* argv[]){
 	soBlock[0]->AddShape(meshBlock);
 	soBlock[1]->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock[0]->SetFramePosition(Vec3f(0,5,0));
-	soBlock[1]->SetFramePosition(Vec3f(0,10,0));
-//	soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(-45), 'z'));
-//	soBlock[1]->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+	soBlock[0]->SetFramePosition(Vec3f(0,1,0));
+	soBlock[1]->SetFramePosition(Vec3f(0,3,0));
+	soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
+	soBlock[1]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
