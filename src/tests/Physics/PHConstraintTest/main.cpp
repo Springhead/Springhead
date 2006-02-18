@@ -21,14 +21,17 @@
 #pragma hdrstop
 using namespace Spr;
 
-GetObject();
-
 #define ESC				27
-#define FALL_DISTANCE	-500		// 落下距離(異常終了時)
+#define NUM_BOX			6
+
+float boxpos[10][3] = {
+	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
+	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
+};
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
-PHSolidIf* soFloor, *soBlock[2];
+PHSolidIf* soFloor, *soBlock[NUM_BOX];
 
 // 光源の設定 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
@@ -45,7 +48,7 @@ static clock_t starttime, endtime, count;
 static bool timeflag = false;
 
 static int elapse = 100;		//timer周期[ms]
-static double dt = 0.1;	//積分ステップ[s]
+static double dt = 0.05;	//積分ステップ[s]
 
 /**
  brief     多面体の面(三角形)の法線を求める
@@ -103,7 +106,7 @@ void _cdecl display(){
 	glPopMatrix();
 
 	
-	for(int n = 0; n < 2; n++){
+	for(int n = 0; n < NUM_BOX; n++){
 		// 上の青い剛体(soBlock)
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 		glPushMatrix();
@@ -155,8 +158,8 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0, 3.0, 9.0, 
-		      0.0, 0.0, 0.0,
+	gluLookAt(0.0, 3.0, 30.0, 
+		      0.0, 3.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -195,44 +198,19 @@ void _cdecl keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void _cdecl idle(){
-	//Vec3d prepos, curpos;	// position
-	//prepos = soBlock->GetFramePosition();
-
 	scene->Step();
 
-	// 位置情報を出力
-	//std::cout << soFloor->GetFramePosition();
-	//std::cout << soBlock->GetFramePosition() << std::endl;
-
-	//curpos = soBlock->GetFramePosition();
-
 	// 床の上に5秒静止したら正常終了とする。
-	/*if (approx(prepos, curpos)) {
-		if (timeflag == false){
-			starttime = clock();
-			timeflag = true;
-		} else {
-			endtime = clock();
-			count = (endtime - starttime) / (float)CLOCKS_PER_SEC;
-			if (count > 5) {
-				DSTR << "\n正常終了." << std::endl;
-				exit(EXIT_SUCCESS);
-			} 
-		}		
-	}
-	else {
-		// 自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
-		timeflag = false;
-		if (curpos.y < FALL_DISTANCE) {	
-			DSTR << "\n異常終了." << std::endl;
-			exit(EXIT_FAILURE);
-		}
-	}*/	
+	endtime = clock();
+	count = (endtime - starttime) / (float)CLOCKS_PER_SEC;
+	if (count > 30) {
+		DSTR << "\n正常終了." << std::endl;
+		exit(EXIT_SUCCESS);
+	} 
 
 	glutPostRedisplay();
 }
 void _cdecl timer(int id){
-//	for(int i=0; i<10;++i) 
 	static WBPreciseTimer pt;
 	pt.CountUS();
 
@@ -242,31 +220,6 @@ void _cdecl timer(int id){
 	//DSTR << pt.CountUS() << std::endl;
 	glutTimerFunc(elapse, timer, 0);
 }
-
-/**
- brief 		多面体の面(三角形)の頂点座標をデバッグ出力させる。
- param 		<in/--> solidID　　 solidのID
- return 	なし
- */
-/*void dstrSolid(std::string& solidName) {
-	PHSolidIf* solid;
-	if (solidName == "soFloor")			solid = soFloor;
-	else if (solidName == "soBlock")	solid = soBlock;
-	//DSTR << "***  " << solidName << "   ***\n";
-
-	for(int i=0; i<solid->NShape(); ++i){
-		CDShapeIf** shapes = solid->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			for(int v=0; v<face->NIndex(); ++v){
-				//DSTR << base[face->GetIndices()[v]];
-			}
-			//DSTR << std::endl;
-		}
-	}
-}*/
 
 /**
  brief		メイン関数
@@ -284,9 +237,9 @@ int _cdecl main(int argc, char* argv[]){
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
 	dsolid.inertia *= 2.0;
-	soBlock[0] = scene->CreateSolid(dsolid);			// 剛体をdescに基づいて作成
-	soBlock[1] = scene->CreateSolid(dsolid);
-
+	for(int i = 0; i < NUM_BOX; i++)
+		soBlock[i] = scene->CreateSolid(dsolid);			// 剛体をdescに基づいて作成
+	
 	dsolid.mass = 1e20f;
 	dsolid.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(dsolid);			// 剛体をdescに基づいて作成
@@ -316,13 +269,14 @@ int _cdecl main(int argc, char* argv[]){
 	}
 
 	soFloor->AddShape(meshFloor);
-	soBlock[0]->AddShape(meshBlock);
-	soBlock[1]->AddShape(meshBlock);
+	for(int i = 0; i < NUM_BOX; i++)
+		soBlock[i]->AddShape(meshBlock);
+	
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock[0]->SetFramePosition(Vec3f(0,1,0));
-	soBlock[1]->SetFramePosition(Vec3f(0,3,0));
-	soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
-	soBlock[1]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
+	for(int i = 0; i < NUM_BOX; i++)
+		soBlock[i]->SetFramePosition(*(Vec3f*)&boxpos[i]);
+	//soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
+	//soBlock[1]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
