@@ -20,6 +20,7 @@
 #include <ctime>
 #include <string>
 #include <gl/glut.h>
+#include <sstream>
 #pragma hdrstop
 using namespace Spr;
 
@@ -153,7 +154,7 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0,25.0,40.0, 
+	gluLookAt(0.0,15.0,30.0, 
 		      0.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -191,10 +192,15 @@ void keyboard(unsigned char key, int x, int y){
 			exit(0);
 			break;
 		case ' ':
-			soBox.push_back(scene->CreateSolid(desc));
-			soBox.back()->AddShape(meshBox);
-			soBox.back()->SetFramePosition(Vec3f(0.5,8+soBox.size(),0));
-			soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));	
+			{
+				soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->SetFramePosition(Vec3f(0.5,10 + 8+soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
+				std::ostringstream os;
+				os << "box" << soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+			}
 		default:
 			break;
 	}
@@ -222,9 +228,9 @@ void timer(int id){
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.contact_solver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	dscene.timeStep = 0.01;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
-	scene->SetTimeStep(0.01f);
 
 	// soFloor用のdesc
 	desc.mass = 1e20f;

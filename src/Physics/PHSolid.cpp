@@ -2,6 +2,8 @@
 #pragma hdrstop
 #include <float.h>
 
+#define _DEBUG
+
 using namespace PTM;
 namespace Spr{
 

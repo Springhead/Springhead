@@ -107,6 +107,7 @@ protected:
 	void UpdateSolids(double dt);		/// Œ‹‰Ê‚ğSolid‚É”½‰f‚·‚é
 
 public:
+	double error;
 	void Add(PHSolid* s);		/// Solid ‚ğ“o˜^‚·‚é
 	void Remove(PHSolid* s);	/// “o˜^‚³‚ê‚Ä‚¢‚éSolid‚ğíœ‚·‚é
 	void Invalidate(){ready = false;}	/// readyƒtƒ‰ƒO‚ğƒŠƒZƒbƒg

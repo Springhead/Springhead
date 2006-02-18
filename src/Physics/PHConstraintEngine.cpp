@@ -139,7 +139,7 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
-	max_iter_dynamics = 100;
+	max_iter_dynamics = 1000;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -327,11 +327,11 @@ void PHConstraintEngine::Setup(double dt){
 }
 
 bool PHConstraintEngine::CheckConvergence(){
-	double e = 0.0;
+	error = 0.0;
 	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++)
-		e += ip->df.norm();
+		error += ip->df.norm();
 	//DSTR << e << endl;
-	return e < 0.001;
+	return error < 0.001;
 }
 
 //void PHConstraintEngine::DynamicsIteration(){
@@ -395,7 +395,7 @@ void PHConstraintEngine::Dynamics(double dt){
 				for(int i = 0; i < 2; i++)
 					solidaux[i] = &solidAuxs[con->solid[i]];
 			}
-			fnew = ip->f - 1.5 * (ip->b +
+			fnew = ip->f - 1.0 * (ip->b +
 				ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
 				ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
 
@@ -447,7 +447,7 @@ void PHConstraintEngine::Dynamics(double dt){
 			break;
 		}
 		if(count == max_iter_dynamics){
-			DSTR << "max count." << endl;
+			DSTR << "max count. error=" << error  << endl;
 			break;
 		}
 	}
