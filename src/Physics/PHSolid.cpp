@@ -195,7 +195,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	//ÚGƒGƒ“ƒWƒ“‚ğinvalidate
 	PHScene* scene = OCAST(PHScene,GetScene());
 	assert(scene);
-	switch(scene->contact_solver){
+	switch(scene->contactSolver){
 	case PHScene::SOLVER_PENALTY:{
 		PHPenaltyEngine* pe;
 		scene->engines.Find(pe);

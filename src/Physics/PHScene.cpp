@@ -21,7 +21,6 @@ PHScene::PHScene(){
 }
 void PHScene::Init(){
 	engines.scene = this;
-	timeStep = 0.005;
 	Scene::Clear();
 
 	engines.Add(DBG_NEW PHSolidInitializer);
@@ -32,7 +31,7 @@ void PHScene::Init(){
 	PHGravityEngine* ge = DBG_NEW PHGravityEngine;
 	engines.Add(ge);
 
-	switch(contact_solver){
+	switch(contactSolver){
 	case SOLVER_PENALTY:{
 		PHPenaltyEngine* pe = DBG_NEW PHPenaltyEngine;
 		engines.Add(pe);
@@ -60,7 +59,7 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	assert(si);
 	si->AddChildObject(s, this);
 
-	switch(contact_solver){
+	switch(contactSolver){
 	case SOLVER_PENALTY:{
 		PHPenaltyEngine* pe;
 		engines.Find(pe);

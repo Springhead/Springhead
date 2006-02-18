@@ -193,7 +193,7 @@ void keyboard(unsigned char key, int x, int y){
 		case ' ':
 			soBox.push_back(scene->CreateSolid(desc));
 			soBox.back()->AddShape(meshBox);
-			soBox.back()->SetFramePosition(Vec3f(0.5,40,0));
+			soBox.back()->SetFramePosition(Vec3f(0.5,8+soBox.size(),0));
 			soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));	
 		default:
 			break;
@@ -207,7 +207,8 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-	for(int i=0; i<10; ++i) scene->Step();
+//	for(int i=0; i<10; ++i) 
+		scene->Step();
 	glutPostRedisplay();
 	glutTimerFunc(20, timer, 0);
 }
@@ -220,7 +221,10 @@ void timer(int id){
  */
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
-	scene = sdk->CreateScene();				// シーンの作成
+	PHSceneDesc dscene;
+	dscene.contact_solver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	scene = sdk->CreateScene(dscene);				// シーンの作成
+	scene->SetTimeStep(0.01f);
 
 	// soFloor用のdesc
 	desc.mass = 1e20f;

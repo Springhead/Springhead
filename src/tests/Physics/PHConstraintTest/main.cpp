@@ -277,9 +277,9 @@ void _cdecl timer(int id){
 int _cdecl main(int argc, char* argv[]){
 	sdk = CreatePHSdk();						// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.contact_solver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	dscene.timeStep = dt;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
-	scene->SetTimeStep(dt);
 
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;

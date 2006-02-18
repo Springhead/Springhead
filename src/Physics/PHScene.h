@@ -22,10 +22,6 @@ class SPR_DLL PHScene:public InheritScene<PHSceneIf, Scene>, public PHSceneDesc{
 public:
 	PHEngines engines;
 protected:
-	/// 積分ステップ
-	double timeStep;
-	/// 積分した回数
-	unsigned int count;
 	///	元のSDK
 	PHSdkIf* sdk;
 	PHSolidContainer* solids;
