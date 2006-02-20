@@ -1,0 +1,49 @@
+#####################################################################
+#
+# 	The make.header file is more complex than the Makefile.
+#
+#####################################################################
+
+#####################################################################
+#	User Defined
+#####################################################################
+# -DDEBUG / -DNDEBUG
+DEBUG_FLAG	= -DDEBUG
+
+#####################################################################
+#	common rules
+#####################################################################
+
+CXX				= g++
+AR				= ar
+RANLIB			= ranlib
+RM				= rm -f
+
+#--------------------------------------------------
+#	cygwin
+#--------------------------------------------------
+#ifeq ($(findstring CYGWIN, $(UNAME)), CYGWIN)
+ifeq ($(findstring CYGWIN, $(shell /bin/uname)), CYGWIN)
+MOCO 	= /moco/masa
+LDFLAGS.EXTRA 	=	
+LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lm
+INCLUDES 		= -I/usr/include \
+					-I/usr/local/include
+endif
+# ----------------------------------------------------------
+# Linux
+# ----------------------------------------------------------
+ifeq ($(findstring Linux, $(shell /bin/uname)), Linux)
+LDFLAGS.EXTRA 	=	-L/usr/X11R6/lib	
+LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm
+INCLUDES 		= -I/usr/X11R6/include/
+endif				
+					
+CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG) $(INCLUDES)
+LDFLAGS 		= $(LDFLAGS.EXTRA) $(LDFLAGS.GL)
+
+
+#####################################################################
+# 	THE END
+#####################################################################
+

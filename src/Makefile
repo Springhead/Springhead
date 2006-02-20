@@ -1,29 +1,54 @@
-# Makefile for cygwin (gcc 3.4.4)
+################################################################
+#
+# 	Makefile for gcc 3.4 on cygwin and Linux.
+#
+################################################################
 
-TARGET		= Base
-TARGET_DIR	= $(TARGET)
-LIB 		= $(TARGET_DIR)/$(TARGET).lib
+################################################################
+#	A rule to make sub directories.
+################################################################
 
-SRCS		= $(wildcard $(TARGET_DIR)/*.cpp)
-OBJS 		= ${SRCS:.cpp=.o}
-INCLUDE		= -I../include -I./$(TARGET_DIR)/ -I.
-CXX			= g++
-AR			= ar
-RM			= rm -f
-RANLIB		= ranlib
+export SRC_DIR := $(shell /bin/pwd)
+include $(SRC_DIR)/make.header
 
-		
-all: $(LIB)
+SUB_DIRS		= Base \
+				Collision \
+				FileIO \
+				Graphics \
+				Physics
 
-$(LIB): $(OBJS)
-		-$(RM) $@
-		$(AR) r $@ $?	
-		$(RANLIB) $@
-	
-.cpp.o:
-		$(CXX) $(INCLUDE) -c $< -o $@
-			
+all:
+	@for dir in $(SUB_DIRS); \
+	do $(MAKE) -C $$dir all || exit; \
+	done
+
+################################################################
+#	Default rules
+################################################################
+
 clean:
-	-$(RM) $(OBJS) $(LIB)
-		
-		
+	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo " [clean] : delete all the object files. "
+	@echo "*----*----*----*----*----*----*----*----*----*"
+	@for dir in $(SUB_DIRS); \
+	do $(MAKE) -C $$dir  clean || exit; \
+	done
+	
+realclean:
+	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo " [realclean] : delete all generated files. "
+	@echo "*----*----*----*----*----*----*----*----*----*"
+	@for dir in $(SUB_DIRS); \
+	do $(MAKE) -C $$dir  realclean || exit; \
+	done 
+
+help:
+	@echo "Other targets are"
+	@echo "  help       show this help message."
+	@echo "  clean      delete all the object files."
+	@echo "  realclean  delete all generated files. "
+
+
+################################################################
+# 	THE END
+################################################################
