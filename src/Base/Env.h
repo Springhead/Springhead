@@ -36,12 +36,24 @@
  #define SPR_DLL
 #endif
 
-//	__cdecl
+/**	__cdecl
+	Microsoft compiler または Borland C++ compiler の場合は、__cdeclを指定
+ */
 #if defined _MSC_VER || defined __BORLANDC__
  #define SPR_CDECL	__cdecl
 #else
  #define SPR_CDECL
 #endif
+
+/**	__cdecl
+　　Linuxの場合、「#pragma hdrstop を無視します」という警告が出る。
+ */
+#if !defined LINUX
+ #define HDRSTOP hdrstop
+#else
+ #define HDRSTOP
+#endif
+
 
 //	for VC6 class view
 #define DOUBLECOLON ::
