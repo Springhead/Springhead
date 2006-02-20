@@ -2,33 +2,29 @@
  Springhead2/src/tests/Physics/PHShapeGL/main.cpp
 
 【概要】
-  剛体Solidに形状を持たせたテストプログラム（位置を出力、面の頂点座標を出力、GL表示）
-　・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
-  ・剛体を自然落下させ、床の上に2個のブロックを積み上げる。
-  ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
+  グラフィックスレンダラークラスのAPIを使い、GLデバイスでレンダリングを行う。　
   
 【終了基準】
-  ・自由落下させた剛体が床の上で5秒間静止したら正常終了とする。
-  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
- 
-【処理の流れ】
-  ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
-  　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。  
-  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。
-　・デバッグ出力として、多面体の面(三角形)の頂点座標を出力する。   
- 
- */
+  ・5秒後に強制終了。
 
+【処理の流れ】
+  ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。  
+  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。
+
+ */
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
+#include <WinBasis/WinBasis.h>
+#include <windows.h>
 #include <gl/glut.h>
 #pragma hdrstop
 using namespace Spr;
-
 #define ESC				27
+#define EXIT_TIMER		3000
 #define WINSIZE_WIDTH	480
 #define WINSIZE_HEIGHT	360
+#define NUM_BLOCKS		5
 
 GRSdkIf* grSdk;
 GRDebugRenderIf* render;
@@ -36,20 +32,25 @@ GRDeviceGLIf* grDevice;
 
 PHSdkIf* phSdk;
 PHSceneIf* scene;
-PHSolidIf* soFloor, *soBlock;
+PHSolidIf* soFloor;
+std::vector<PHSolidIf*> soBlock;
 
-// 光源の設定 
-static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
-static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
-static GLfloat light_diffuse[]  = { 1.0, 1.0, 1.0, 1.0 }; 
-static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 // 材質の設定
-static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
-static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
-static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
-static GLfloat mat_shininess[]  = { 120.0 };
+GRMaterial mat_blue(Vec4f(0.5, 0.5, 0.7, 0.85),		// ambient	
+					Vec4f(0.1, 0.5, 0.8, 0.85),		// diffuse			
+					Vec4f(1.0, 1.0, 1.0, 0.85),		// specular		
+					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive		
+					100.0);							// power	
+
+GRMaterial mat_white(Vec4f(0.5, 0.5, 0.5, 0.85),	
+					 Vec4f(1.0, 1.0, 1.0, 1.0),			
+					 Vec4f(0.8, 0.8, 0.8, 0.85),		
+					 Vec4f(0.0, 0.0, 0.0, 0.85),		
+					 20.0);
+
 // カメラの設定
 GRCamera camera2(Vec2f(WINSIZE_WIDTH, WINSIZE_HEIGHT), Vec2f(0.0, 0.0), 1.0, 5000.0);
+
 
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
@@ -57,53 +58,83 @@ GRCamera camera2(Vec2f(WINSIZE_WIDTH, WINSIZE_HEIGHT), Vec2f(0.0, 0.0), 1.0, 500
  return 	なし
  */
 void display(){
-	/*	バッファクリア
-	 *	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);　を内部でコール. */
+	//	バッファクリア
 	render->ClearBuffer();
-
-	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
-	Affined ad;
 
 	// 視点を再設定する
 	Affinef view;
-	view.Pos() = Vec3f(5.0, 5.0, 10.0);								// eye
-	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
+	view.Pos() = Vec3f(5.0, 15.0, 15.0);								// eye
+	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	/********************************
-	 *     下の赤い剛体(soFloor)    *
-	 ********************************/
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
+	Affined ad;
+	//-----------------------------------
+	//		床(soFloor) 
+	//-----------------------------------
+	render->SetAlphaTest(true);
+	render->SetAlphaMode(render->BF_ONE, render->BF_ZERO);
+
+	render->SetMaterial(mat_white);		// マテリアル設定
 	render->PushModelMatrix();			// 行列スタックをプッシュ
 	Posed pose = soFloor->GetPose();
 	pose.ToAffine(ad);
-
-	// MultModelMatrix(ad); は、glMultMatrixd(ad); と同等
 	render->MultModelMatrix(ad);		// 現在のmodelView * model
-
 	render->DrawSolid(soFloor);
 	render->PopModelMatrix();			// 行列スタックをポップ
 
-	/********************************
-	 *     上の青い剛体(soBlock)    *
-	 ********************************/
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
-	render->PushModelMatrix();
-	pose = soBlock->GetPose();
-	ad = Affined(pose);
+	//-----------------------------------
+	//		ブロック(soBlock)
+	//-----------------------------------
+	render->SetDepthWrite(false);
+	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_INVSRCALPHA);
 
-	//この場合、render->MultModelMatrix(ad); としても同様.	
-	render->SetModelMatrix(ad);			// view * model
+	for(unsigned int blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
+		render->SetMaterial(mat_blue);
+		render->PushModelMatrix();
+		pose = soBlock[blockCnt]->GetPose();
+		ad = Affined(pose);
+		render->SetModelMatrix(ad);			// view * model（この場合、render->MultModelMatrix(ad); としても同様）
+		render->DrawSolid(soBlock[blockCnt]);
+		render->PopModelMatrix();
+	}
 
-	render->DrawSolid(soBlock);
-	render->PopModelMatrix();
+	render->SetDepthWrite(true);
+	render->SetAlphaTest(true);
 
-	/* ダブルバッファモード時、カレントウィンドウのバッファ交換を行い、
-	   sceneのレンダリングを終了. glutSwapBuffers();を内部でコール. */
+	//-----------------------------------
+	//				軸
+	//-----------------------------------
+	render->SetMaterial(mat_white);
+	Vec3f vtx[4] = {Vec3f(0,0,0), Vec3f(10,0,0), Vec3f(0,10,0), Vec3f(0,0,10)};
+	size_t vtxIndex[6] = {0, 1, 0, 2, 0, 3};
+	render->SetLineWidth(2.0);
+	render->DrawIndexed(render->LINES, vtxIndex, vtxIndex + 6, vtx);
+
+	//-----------------------------------
+	//		テキスト描画/フォント
+	//-----------------------------------
+	GRFont font1;
+	font1.height = 30.0;
+	font1.width	= 0.0;
+	font1.weight	= FW_NORMAL;
+	font1.color  = 0xFFFFFF;
+	font1.bItalic = TRUE;
+	font1.face   = "ARIAL";
+	std::string str = "X";
+	render->DrawFont(Vec3f(10.0, 1.0, -1.0), str, font1);	
+	font1.face = "ＭＳ 明朝";
+	font1.color = 0xFFFF00;
+	str = "Y";
+	render->DrawFont(Vec3f(1.0, 10.0, 0.0), str, font1);		
+	GRFont font2;
+	font2 = font1;
+	font2.color = 0x00FFFF;
+	str = "Z";
+	render->DrawFont(Vec3f(-2.0, 1.0, 10.0), str, font2);	
+
+
+
 	render->EndScene();
 }
 
@@ -113,37 +144,26 @@ void display(){
  return 	なし
  */
 void setLight() {
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	GRLight light0;
+	light0.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
+	light0.diffuse	= Vec4f(0.7, 1.0, 0.7, 1.0);
+	light0.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
+	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
+	light0.attenuation0  = 1.0;
+	light0.attenuation1  = 0.0;
+	light0.attenuation2  = 0.0;
+	light0.spotDirection = Vec3f(-2.0, -3.0, -5.0);
+	light0.spotFalloff   = 0.0;
+	light0.spotCutoff	 = 70.0;
+	render->PushLight(light0);
+
+	GRLight light1;
+	light1.ambient	= Vec4f(0.5, 0.0, 1.0, 1.0);
+	light1.diffuse	= Vec4f(1.0, 0.0, 1.0, 1.0);
+	light1.specular	= Vec4f(0.0, 1.0, 0.0, 1.0);
+	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	render->PushLight(light1);
 }
-
-/**
- brief     	初期化処理
- param	 	なし
- return 	なし
- */
-#if 0
-void initialize(){
-/*	Vec3f eye(0.0, 0.0, 3.0);
-	Vec3f center(0.0, 0.0, 0.0);
-	Vec3f up(0.0, 1.0, 0.0);
-*/	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	gluLookAt(0.0, 3.0, 9.0, 
-		      0.0, 0.0, 0.0,
-		 	  0.0, 1.0, 0.0);
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-	setLight();
-}
-#endif
 /**
  brief		glutReshapeFuncで指定したコールバック関数
  param		<in/--> w　　幅
@@ -163,6 +183,7 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
+
 }	
 /**
  brief  	glutIdleFuncで指定したコールバック関数
@@ -174,7 +195,7 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count++;
-	if (++count > 5000) exit(0);
+	if (++count > EXIT_TIMER) exit(0);
 }
 /**
  brief		メイン関数
@@ -188,10 +209,11 @@ int main(int argc, char* argv[]){
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
-	soBlock = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 
-	Posed p = Posed::Rot(Rad(0.0), 'z');
-	soBlock->SetPose(p);
+	unsigned int blockCnt;
+	for (blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
+		soBlock.push_back(scene->CreateSolid(desc));		// 剛体をdescに基づいて作成
+	}
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
@@ -215,54 +237,41 @@ int main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 3;
-			md.vertices[i].z *= 3;
+			md.vertices[i].x *= 30;
+			md.vertices[i].z *= 30;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, phSdk->CreateShape(md));
 	}
 	
 	soFloor->AddShape(meshFloor);
-	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(-0.5,10,0));
-	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+	for (blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
+		soBlock[blockCnt]->AddShape(meshBlock);
+		soBlock[blockCnt]->SetFramePosition(Vec3f(3, 15*(blockCnt+1), 3));
+	}
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
-	int window = glutCreateWindow("PHShapeGL");
+	int window = glutCreateWindow("GRSimple");
 	grSdk = CreateGRSdk();
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL(window);
 
 	// 初期設定
-	// initialize();
 	grDevice->Init();
-	
-	
-	
 
-	setLight();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
 	
 	render->SetDevice(grDevice);	
-
-
-
-	//GRCamera camera;
-	//DSTR << camera.size << ' ' << camera.center << ' ' << camera.front << ' ' << camera.back << std::endl;
 	render->SetCamera(camera2);	
 
-
-	//DSTR << camera2.size << ' ' << camera2.center << ' ' << camera2.front << ' ' << camera2.back << std::endl;
-
-
-
+	setLight();
 
 	glutMainLoop();
 
