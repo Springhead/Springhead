@@ -212,7 +212,8 @@ int main(int argc, char* argv[]){
 
 
 	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
-	desc.pose.pos = Vec3f(3.5, 0.0, 0.0);
+	//desc.pose.pos = Vec3f(3.5, 0.0, 0.0);
+	desc.pose.Pos() = Vec3f(3.5, 0.0, 0.0);
 	desc.pose = desc.pose * Posed::Trn(0.0, 0.0, 3.0);	// 手前に平行移動
 	blueTeapot = scene->CreateSolid(desc);	
 	bluePos = blueTeapot->GetCenterPosition();
