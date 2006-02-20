@@ -1,3 +1,7 @@
+/**
+ *	@file SprGRSdk.h
+ *	@brief グラフィックスSDKの基本クラス
+ */
 #ifndef SPR_GRSDK_H
 #define SPR_GRSDK_H
 
@@ -8,7 +12,8 @@ namespace Spr{;
 struct GRDeviceGLIf;
 struct GRDebugRenderIf;
 
-/**	グラフィックスSDK	*/
+/**	@class	GRSdkIf
+    @brief	グラフィックスSDKの基本クラス　 */
 struct GRSdkIf: public ObjectIf{
 	IF_DEF(GRSdk);
 	virtual GRDebugRenderIf* CreateDebugRender()=0;

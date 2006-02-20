@@ -1,3 +1,7 @@
+/**
+ *	@file SprGRRender.h
+ *	@brief グラフィックスレンダラーの基本クラス、基本インタフェース
+ */
 #ifndef SPR_GRRENDER_H
 #define SPR_GRRENDER_H
 
@@ -6,16 +10,16 @@
 
 namespace Spr{;
 
-/**	@struct	GRFont
+/**	@class	GRFont
     @brief	テキスト描画のフォント */
 class SPR_DLL GRFont{
 public:
-	int height;
-	int width;
-	int weight;
-	std::string face;
-	unsigned long color;
-	bool bItalic;
+	int height;				///<	フォントの高さ
+	int width;				///<	平均文字幅
+	int weight;				///<	フォントの太さ
+	std::string face;		///<	タイプフェイス
+	unsigned long color;	///<	フォントの色
+	bool bItalic;			///<	イタリック体
 	GRFont(int h=20, const char* f=NULL){
 		height=h; width=0;
 		face=f ? f : "";
@@ -28,60 +32,76 @@ public:
 		if (color < f.color) return true;
 		return false;
 	}
+	GRFont& operator=(const GRFont& rhs) {
+		if (this==&rhs)	return *this;
+		height	= rhs.height;
+		width	= rhs.width;
+		weight	= rhs.weight;
+		face	= rhs.face;
+		color	= rhs.color;
+		bItalic	= rhs.bItalic;
+		return *this;
+	}
 };
 
 /**	@struct	GRLight
     @brief	光源		*/
 struct GRLight{
+    Vec4f ambient;		///<	環境光
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
-    Vec4f ambient;		///<	環境光
-    Vec4f position;		///<	光源の位置，w=0とすると無限遠(方向光源)になる．
-    float range;		///<	光が届く範囲
-    ///@name	減衰率．Atten = 1/( att0 + att1 * d + att2 * d^2)
-	//@{
-	float attenuation0;	///<	att0　　 0..∞
-    float attenuation1;	///<	att1　　 0..∞
-    float attenuation2;	///<	att2　　 0..∞
-	//@}
-	Vec3f spotDirection;///<	スポットライトの場合の向き
-    float spotFalloff;	///<	減衰の早さ(大きいほど急峻)　　　 0..∞
-	float spotInner;	///<	スポットライトの中心部分　　　　 0..spotCutoff
-	float spotCutoff;	///<	スポットライトの光が当たる範囲　 0..π(pi)
+    Vec4f position;		///<	光源位置（w=1.0で点光源、w=0.0で平行光源）
+    float range;		///<	光が届く範囲（deviceがDirectXの場合のみ利用可能）
+	/**
+	 *	@name	減衰パラメータ
+	 *　　 これらを設定することで光の減衰を表現できる。 \n
+	 *　　 減衰のパラメータを設定すると、光源から離れるほど高原による効果は小さくなる。 \n
+	 *　　 デフォルトでは、減衰なしに設定されている。 \n
+	 *　　 平行光源の場合、減衰はさせない。 \n
+	 *　　　　 減衰係数 = 1/( att0 + att1 * d + att2 * d^2)　　　d:距離
+	 *	@{
+	 */
+	float attenuation0;	///<	一定減衰率
+    float attenuation1;	///<	線形減衰率
+    float attenuation2;	///<	2次減衰率
+	/** @} */	// end of 減衰パラメータ
+
+	Vec3f spotDirection;///<	スポットライトの向き
+    float spotFalloff;	///<	スポットライトの円錐内での減衰率(大きいほど急峻) 0..∞
+	float spotInner;	///<	スポットライトの中心部分(内部コーン)（deviceがDirectXの場合のみ利用可能） 0..spotCutoff
+	float spotCutoff;	///<	スポットライトの広がり角度(度)(外部コーン) 0..π(pi)
 	GRLight(){
 		range = FLT_MAX;
-		attenuation0 = 0.0f;
+		attenuation0 = 1.0f;
 		attenuation1 = 0.0f;
 		attenuation2 = 0.0f;
-		spotFalloff = 0.0f;
-		spotInner = 0.0f;
-		spotCutoff = 0.0f;
+		spotFalloff  = 0.0f;
+		spotInner    = 0.0f;
+		spotCutoff   = 180.0f;
 	}
 };
 
 /**	@struct	GRMaterial
     @brief	グラフィックスの材質 */
 struct GRMaterial{
-	Vec4f diffuse;					///<	拡散光に対する反射率
 	Vec4f ambient;					///<	環境光に対する反射率
+	Vec4f diffuse;					///<	拡散光に対する反射率
 	Vec4f specular;					///<	鏡面光に対する反射率
-	//Vec4f emissive;				///<	放射輝度
-	Vec4f emission;					///<	放射輝度
-	float power;					///<	
-	//float shininess				///<	鏡面反射の強度、鏡面係数
+	Vec4f emissive;					///<	放射輝度
+	float power;					///<	鏡面反射の強度、鏡面係数
 	std::string texture;			///<	テクスチャファイル名
 	GRMaterial(){ power = 0.0f; }
-	GRMaterial(Vec4f d, Vec4f a, Vec4f s, Vec4f e, float p):
-		diffuse(d), ambient(a), specular(s), emission(e), power(p){}
+	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p):
+		ambient(a), diffuse(d), specular(s), emissive(e), power(p){}
 	GRMaterial(Vec4f c, float p):
-		diffuse(c), ambient(c), specular(c), emission(c), power(p){}
+		ambient(c), diffuse(c), specular(c), emissive(c), power(p){}
 	GRMaterial(Vec4f c):
-		diffuse(c), ambient(c), specular(c), emission(c), power(0.0f){}
+		ambient(c), diffuse(c), specular(c), emissive(c), power(0.0f){}
 	/**	W()要素は、アルファ値(0.0～1.0で透明度を表す). 1.0が不透明を表す.
 		materialのW()要素を判定して、不透明物体か、透明物体かを判定する. 
 		透明なオブジェクトを描くとき、遠くのものから順番に描画しないと、意図に反した結果となる. */
 	bool IsOpaque(){		
-		return diffuse.W() >= 1.0 && ambient.W() >= 1.0 && specular.W() >= 1.0 && emission.W() >= 1.0;
+		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
 };
 
@@ -101,7 +121,7 @@ struct GRCamera{
 struct GRDeviceIf;
 
 /**	@struct	GRRenderBaseIf
-    @brief	グラフィックスレンダラーの基本クラス */
+    @brief	グラフィックスレンダラーの基本クラス（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
 	IF_DEF(GRRenderBase);
 	///	プリミティブの種類
@@ -113,29 +133,46 @@ struct GRRenderBaseIf: public ObjectIf{
 		TRIANGLE_STRIP,
 		TRIANGLE_FAN
 	};
-	///	Zバッファテスト関数
+	/**
+	 *	@name	デプスバッファ法に用いる判定条件
+	 *	@{
+	 */
 	enum TDepthFunc{
-		DF_NEVER, DF_LESS, DF_EQUAL, DF_LEQUAL, DF_GREATER, DF_NOTEQUAL, 
-		DF_GEQUAL, DF_ALWAYS
+		DF_NEVER,		///<	新しいZ値に関係なく更新しない
+		DF_LESS,		///<	新しいZ値が小さければ更新する（default)
+		DF_EQUAL,		///<	新しいZ値が等しければ描かれる
+		DF_LEQUAL,		///<	新しいZ値が大きくなければ描かれる
+		DF_GREATER,		///<	新しいZ値が大きければ描かれる
+		DF_NOTEQUAL,	///<	新しいZ値と等しくなければ描かれる
+		DF_GEQUAL,		///<	新しいZ値が小さくなければ描かれる
+		DF_ALWAYS		///<	新しいZ値に関係なく更新する
 	};
-	///	アルファブレンド関数
+	/** @} */	
+	/**
+	 *	@name	アルファブレンディングの混合係数
+	 *　　 SRCがこれから描画される色、合成させたい色、DESTがすでに描かれたカラーバッファの色    \n
+	 *　　 合成結果 =SRC * SRCのブレンディング係数 + DEST * DESTのブレンディング係数 			\n
+	 *　　 ただし、BF_BOTHINVSRCALPHA、BF_BLENDFACTOR、BF_INVBLENDFACTOR に関しては、			\n
+	 *　　 deviceがDirectXのときのみ利用可能。指定してもBF_ZEROとして扱う。
+	 *	@{
+	 */
 	enum TBlendFunc{
-		BF_ZERO = 1,
-		BF_ONE = 2,
-		BF_SRCCOLOR = 3,
-		BF_INVSRCCOLOR = 4,
-		BF_SRCALPHA = 5,
-		BF_INVSRCALPHA = 6,
-		BF_DESTALPHA = 7,
-		BF_INVDESTALPHA = 8,
-		BF_DESTCOLOR = 9,
-		BF_INVDESTCOLOR = 10,
-		BF_SRCALPHASAT = 11,
-		BF_BOTHSRCALPHA = 12,
-		BF_BOTHINVSRCALPHA = 13,
-		BF_BLENDFACTOR = 14,
-		BF_INVBLENDFACTOR = 15
+		BF_ZERO,				///<	(0,0,0,0)	
+		BF_ONE,					///<	(1,1,1,1)
+		BF_SRCCOLOR,			///<	(Rs, Gs, Bs, As)
+		BF_INVSRCCOLOR,			///<	(1-Rs, 1-Gs, 1-Bs, 1-As) 
+		BF_SRCALPHA,			///<	(As, As, As, As) 
+		BF_INVSRCALPHA,			///<	(1-As, 1-As, 1-As, 1-As)
+		BF_DESTALPHA,			///<	(Ad, Ad, Ad, Ad)  
+		BF_INVDESTALPHA,		///<	(1-Ad, 1-Ad, 1-Ad, 1-Ad) 
+		BF_DESTCOLOR,			///<	(Rd, Gd, Bd, Ad)
+		BF_INVDESTCOLOR,		///<	(1-Rd, 1-Gd, 1-Bd, 1-Ad) 
+		BF_SRCALPHASAT,			///<	(f, f, f, 1)、f = min(As, 1-Ad) 
+		BF_BOTHINVSRCALPHA,		///<	SRCブレンディング係数は(1-As, 1-As, 1-As, 1-As)。DSTブレンディング係数は(As, As, As, As)。
+		BF_BLENDFACTOR,			///<	フレームバッファ合成時に使われる定数色で合成
+		BF_INVBLENDFACTOR		///<	フレームバッファ合成時に使われる定数色を反転した色で合成
 	};
+	/** @} */	
 	///	バッファクリア
 	virtual void ClearBuffer()=0;
 	///	レンダリングの開始前に呼ぶ関数
@@ -158,28 +195,31 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end)=0;
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx)=0;
-	///	2次元テキストの描画
-	virtual void DrawText(Vec2f pos, std::string str, const GRFont& font)=0;
+	///	3次元テキストの描画
+	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0)=0;
+	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0)=0;
 	///	描画の材質の設定
 	virtual void SetMaterial(const GRMaterial& mat)=0;
 	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w)=0;
 	///	光源スタックをPush
-	virtual void PushLight(const GRLight& m)=0;
+	virtual void PushLight(const GRLight& light)=0;
 	///	光源スタックをPop
 	virtual void PopLight()=0;
-	///	描画時に深度バッファへ書き込むかどうか
+	///	デプスバッファへの書き込みを許可/禁止する
 	virtual void SetDepthWrite(bool b)=0;
-	///	描画時に深度テストを行うかどうか
+	///	デプステストを有効/無効にする
 	virtual void SetDepthTest(bool b)=0;
-	///	深度テストのテスト関数
+	///	デプスバッファ法に用いる判定条件を指定する
 	virtual void SetDepthFunc(TDepthFunc f)=0;
-	///	アルファブレンドのモード設定
+	/// アルファブレンディングを有効/無効にする
+	virtual void SetAlphaTest(bool b)=0;
+	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
 };
 
 /**	@struct	GRRenderIf
-    @brief	レンダラの基本クラス */
+    @brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */
 struct GRRenderIf: public GRRenderBaseIf{
 	IF_DEF(GRRender);
 	virtual void SetDevice(GRDeviceIf* dev)=0;
