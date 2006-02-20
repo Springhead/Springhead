@@ -1,3 +1,7 @@
+/**
+ *	@file GRDeviceD3D.h
+ *	@brief Direct3Dによるグラフィックス描画の実装　　
+ */
 #if 0
 #ifndef GRDEVICED3D_H
 #define GRDEVICED3D_H

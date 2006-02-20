@@ -1,3 +1,7 @@
+/**
+ *	@file GRRender.h
+ *	@brief グラフィックスレンダラーの基本クラス　　
+ */
 #ifndef GRRENDER_H
 #define GRRENDER_H
 
@@ -5,19 +9,22 @@
 
 namespace Spr{;
 
+/**	@class	GRRenderBase
+    @brief	グラフィックスレンダラーの基本クラス（Object派生クラスの実行時型情報を管理） */
 class GRRenderBase: public InheritObject<GRRenderBaseIf, Object>{
 	OBJECTDEFABST(GRRenderBase);
 };
 
-/**	グラフィックスレンダラーの基本クラス	*/
+/**	@class	GRRender
+    @brief	グラフィックスレンダラーの基本クラス（デバイスの切り分け）　 */
 class GRRender: public InheritObject<GRRenderIf, GRRenderBase>{
 	OBJECTDEF(GRRender);
 protected:
-	UTRef<GRDeviceIf> device;		// デバイス
-	GRCamera camera;				// カメラ
+	UTRef<GRDeviceIf> device;		///<	デバイス
+	GRCamera camera;				///<	カメラ
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)							\
-	virtual void ClearBuffer(){ ptr ClearBuffer(); }			\
+		virtual void ClearBuffer(){ ptr ClearBuffer(); }		\
 	virtual void BeginScene(){ ptr BeginScene(); }				\
 	virtual void EndScene(){ ptr EndScene(); }					\
 	virtual void MultModelMatrix(const Affinef& afw)			\
@@ -36,15 +43,22 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,							\
 												size_t* begin, size_t* end, Vec3f* vtx)	\
 		{ ptr DrawIndexed(ty, begin, end, vtx); }										\
-	virtual void DrawText(Vec2f pos, std::string str, const GRFont& font)				\
-		{ ptr DrawText(pos, str, font); }												\
+	virtual void DrawFont(Vec2f pos, const std::string str)								\
+		{ ptr DrawFont(pos, str); }														\
+    virtual void DrawFont(Vec3f pos, const std::string str)								\
+		{ ptr DrawFont(pos, str); }														\
+	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font)			\
+		{ ptr DrawFont(pos, str, font); }												\
+	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font)			\
+		{ ptr DrawFont(pos, str, font); }												\
 	virtual void SetMaterial(const GRMaterial& mat){ ptr SetMaterial(mat); }			\
 	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }							\
-	virtual void PushLight(const GRLight& m){ptr PushLight(m);}							\
+	virtual void PushLight(const GRLight& light){ptr PushLight(light);}					\
 	virtual void PopLight(){ptr PopLight(); }											\
 	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }							\
 	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }							\
 	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){ ptr SetDepthFunc(f); }		\
+	virtual void SetAlphaTest(bool b){ptr SetAlphaTest(b); }							\
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src,							\
 							GRRenderBaseIf::TBlendFunc dest)							\
 		{ptr SetAlphaMode(src, dest); }													\
@@ -69,8 +83,8 @@ struct InheritGRRender:public InheritGRRenderBase<intf, base>{
 	}
 };
 
-
-/**	グラフィックス描画の実装	*/
+/**	@class	GRDevice
+    @brief	グラフィックス描画の実装　 */
 class GRDevice: public InheritObject<GRDeviceIf, Object>{
 public:
 	OBJECTDEFABST(GRDevice);

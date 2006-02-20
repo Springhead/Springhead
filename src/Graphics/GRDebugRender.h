@@ -1,6 +1,6 @@
 /**
-  @file GRDebugRender.h
-  @brief デバッグ情報レンダラー（剛体、面）　　
+ *	@file GRDebugRender.h
+ *	@brief デバッグ情報レンダラー（剛体、面）　　
 */
 #ifndef GRDEBUGRENDER_H
 #define GRDEBUGRENDER_H

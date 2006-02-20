@@ -1,3 +1,7 @@
+/**
+ *	@file Graphics.h
+ *	@brief グラフィックスレンダラーのヘッダファイル群
+*/
 #include <Springhead.h>
 #include <Foundation/Object.h>
 #include "GRSdk.h"

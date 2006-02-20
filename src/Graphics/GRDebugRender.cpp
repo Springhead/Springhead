@@ -27,27 +27,27 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		}
 	}
 }
-
 /// 面をレンダリングする
 void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
-	int numIndices = face->NIndex();
+	int numIndices = face->NIndex();			// (=3 :三角形なので3頂点)
 	Vec3f *vtx = new Vec3f[numIndices];
-#if 0
+#if 1
+	// DrawDirect版
 	for (int v=0; v<numIndices; ++v)
 		vtx[v] = base[face->GetIndices()[v]].data;
 	DrawDirect(TRIANGLES, vtx, vtx + numIndices);
 #else
+	// DrawIndexed版
 	size_t *vtxIndex = new size_t[numIndices];
 	for (int v=0; v<numIndices; ++v) {
 		vtx[v] = base[face->GetIndices()[v]].data;
 		vtxIndex[v] = v;
 	}
 	DrawIndexed(TRIANGLES, vtxIndex, vtxIndex + numIndices, vtx);
-
+	
 	delete[] vtxIndex;
 #endif
-
-		delete[] vtx;
+	delete[] vtx;
 }
 
 }	//	Spr
