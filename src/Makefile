@@ -11,12 +11,11 @@
 export SRC_DIR := $(shell /bin/pwd)
 include $(SRC_DIR)/make.header
 
-#SUB_DIRS		= Base \
+SUB_DIRS		= Base \
 				Collision \
 				FileIO \
 				Graphics \
 				Physics
-SUB_DIRS	= Physics
 
 all:
 	@for dir in $(SUB_DIRS); \
