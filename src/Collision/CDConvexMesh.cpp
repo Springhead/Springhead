@@ -2,7 +2,6 @@
 #include <Foundation/Object.h>
 #include "Collision.h"
 #include <set>
-#include "Collision.h"
 
 #pragma hdrstop
 #include "CDQuickHull3DImp.h"
