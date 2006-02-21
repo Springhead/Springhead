@@ -134,7 +134,7 @@ template <class TVtx>
 void CDQHLines<TVtx>::CreateFirstConvex(){
 	CDQHLines& lines = *this;
 	double xMin, xMax;
-	TVtxs::iterator it, xMinVtx, xMaxVtx;
+	typename TVtxs::iterator it, xMinVtx, xMaxVtx;
 	xMin = xMax = (*vtxBegin)->GetPos().X();
 	xMinVtx = xMaxVtx = vtxBegin;
 	//	Å‘å‚ÆÅ¬‚ğŒ©‚Â‚¯‚é

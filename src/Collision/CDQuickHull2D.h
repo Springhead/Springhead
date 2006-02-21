@@ -49,7 +49,7 @@ public:
 	class TVtxs: public std::vector<TVtx*>{
 	public:
 		void Print(std::ostream& os) const{
-			for(TVtxs::const_iterator it = begin(); it != end(); ++it){
+			for(typename TVtxs::const_iterator it = begin(); it != end(); ++it){
 				(*it)->Print(os);
 			}
 		}
