@@ -73,7 +73,7 @@ struct FISkipParser: boost::spirit::parser<FISkipParser>{
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
 	template <class T>
     FISkipParser(const T& p){
-		ptr_.reset(new impl::concrete_parser<T, SkipperScannerT, Result>(p));
+		ptr_.reset(new boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 	}
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
 	template <class T>
@@ -126,7 +126,7 @@ private:
     container_t text;
     bool is_root_;
     boost::spirit::parser_id parser_id_;
-//    ValueT value_;
+    ValueT value_;
 
 public:
     FIPTNodeValData() : text(), is_root_(false){}
@@ -237,7 +237,7 @@ struct FIPTMatch{
     template <typename T2>
     FIPTMatch& operator=(FIPTMatch<T2> const& other) {
         len = other.length();
-        val = impl::FIPTMatchAttr<T>::get(other);
+        val = FIPTMatchAttr<AttrT>::get(other);
         cp_swap(trees, other.trees);
         return *this;
     }
@@ -267,7 +267,7 @@ struct FIPTMatch{
         BOOST_SPIRIT_ASSERT(*this && other);
         len += other.length();
         std::copy(other.trees.begin(), other.trees.end(),
-            std::back_insert_iterator<FIPTMatch::container_t>(trees));
+            std::back_insert_iterator<typename FIPTMatch::container_t>(trees));
     }
 
 };
@@ -303,7 +303,7 @@ struct FIPTMatchPolicy{
     group_match(MatchT& m, boost::spirit::parser_id const& id,
         FIIteratorT const& first, FIIteratorT const& last) const {
         if (!m) return;
-		FIPTNodeValData<MatchT::attr_t> newVal(first, last, true, id);
+		FIPTNodeValData<typename MatchT::attr_t> newVal(first, last, true, id);
 		MatchT newmatch(m.length(), newVal);
         std::swap(newmatch.trees.begin()->children, m.trees);
         m = newmatch;

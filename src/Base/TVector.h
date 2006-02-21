@@ -6,7 +6,7 @@
 	管理情報をメモリに持たずに，一般の行列を扱う．
 	配列をキャストしてベクトルにすることもできる．*/
 #include <algorithm>
-#include <iosfwd>
+#include <iostream>
 #include <math.h>
 #include <assert.h>
 #include <stddef.h>

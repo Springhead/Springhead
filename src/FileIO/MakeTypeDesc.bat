@@ -1,7 +1,7 @@
 rem include/*/*.h から， struct の定義を抜き出して，
 rem FIDesc.cppにTypeDescの定義を作る．．
 rem bin/typedesc.exe が抜き出しを行う．
-set OUT=TypeDescDump.cpp
+set OUT=TypeDescDumpImp.h
 set HEADER=TypeDescDump.h
 
 set PATH=%SPRINGHEAD2%\bin

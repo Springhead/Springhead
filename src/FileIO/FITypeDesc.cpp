@@ -86,7 +86,7 @@ void FITypeDesc::Field::Print(std::ostream& os) const{
 		}
 		os << ">";
 		if (length>1) os << " [" << length << "]";
-		os << " " << sizeof(FIVVector<int>) * length;
+		os << " " << (unsigned int)type->GetSize() * length;
 	}else if (isReference){
 		os << "UTRef<" << type->GetTypeName().c_str() << ">";
 		if (length>1) os << " [" << length << "]";

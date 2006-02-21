@@ -73,6 +73,10 @@ public:
 	typedef std::vector< UTRef<PHEngine> > base;
 	typedef base::iterator iterator;
 	typedef base::const_iterator const_iterator;
+
+	PHEngines();
+	virtual ~PHEngines(){}
+	
 	const_iterator begin() const { return base::begin(); }
 	const_iterator end() const { return base::end(); }
 	size_t size(){ return base::size(); }
@@ -91,8 +95,6 @@ public:
 	void Add(PHEngine* e);
 	bool Del(PHEngine* e);
 	void Sort();
-	///
-	PHEngines();
 	///	シーンをクリアするときの処理
 	virtual void Clear();
 	///	指定した型を継承したエンジンを見つける (最初に見つかったものを返す)

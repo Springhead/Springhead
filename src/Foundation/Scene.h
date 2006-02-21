@@ -88,7 +88,8 @@ class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
 public:
 	OBJECTDEF(NameManager);
 protected:
-	///	名前とオブジェクトの対応表	
+	/*	名前とオブジェクトの対応表  */
+
 	ObjectNames names;
 
 public:

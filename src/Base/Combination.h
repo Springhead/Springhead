@@ -20,7 +20,7 @@ public:
 		if (h*w > height_*width_){	//	大きくなるなら，先にリサイズ
 			base_type::resize(h * w);
 		}
-		iterator b = begin();
+		typename base_type::iterator b = this->begin();
 		if (h < height_){	//	使わなくなった行をクリア
 			for(int l=h; l<height_; ++l){
 				for(int x=0; x<width_; ++x) b[width_*l+x] = T();
@@ -47,7 +47,7 @@ public:
 	T& item(int i, int j){
 		assert(i < height());
 		assert(j < width());
-		return begin()[i*width() + j];
+		return this->begin()[i*width() + j];
 	}
 	void clear(){
 		base_type::clear();

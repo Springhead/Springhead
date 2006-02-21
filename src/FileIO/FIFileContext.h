@@ -12,6 +12,7 @@ namespace Spr{;
 class FIFileContext{
 public:
 	struct FileInfo{
+		~FileInfo();
 		std::string name;	///<	ファイル名
 		int line;			///<	行番号
 		const char* start;	///<	メモリマップされたファイルの先頭

@@ -44,6 +44,7 @@ namespace Spr{;
 	そこで，型記述型オブジェクト(FITypeDesc)を使って記述しておく．
 */
 
+#if 0
 /**	FIVVectorの基本クラス．
 	ベクタへのロードとセーブのサポートに必要な仮想関数を用意	*/
 class FIVVectorBase{
@@ -78,10 +79,12 @@ public:
 	FIVVector(const std::vector<T>& v):std::vector<T>(v){}
 	FIVVector& operator=(const std::vector<T>& v){ *(std::vector<T>*)this = v; return *this; }
 };
+#endif
 
 ///	対象の型にアクセスするためのクラス
 class FIAccessBase:public UTRefCount{
 public:
+	virtual ~FIAccessBase(){}
 	///	コンストラクタ呼び出し
 	virtual void* Construct(void* mem)=0;
 	///	デストラクタ呼び出し
@@ -129,16 +132,14 @@ public:
 	public:
 		typedef std::vector<std::pair<std::string, int> > Enums;
 		Enums enums;
-		Field(): length(1), offset(-1), isReference(false), varType(SINGLE){}
-		~Field();
 		///	メンバ名
 		std::string name;
 		///	型名
 		std::string typeName;
-		///	オフセット
-		int offset;
 		///	型
 		UTRef<FITypeDesc> type;
+		///	オフセット
+		int offset;
 		///	配列の要素数．
 		int length;
 		///	要素数を別のフィールドからとる場合のフィールド名
@@ -149,6 +150,9 @@ public:
 		} varType;
 		///	参照かどうか
 		bool isReference;
+
+		Field(): offset(-1), length(1), varType(SINGLE), isReference(false){}
+		~Field();
 		///	データのサイズ
 		size_t GetSize();
 		///
@@ -213,13 +217,13 @@ public:
 	FITypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), 
 		ifInfo(NULL){}
 	///	
-	~FITypeDesc(){}
+	virtual ~FITypeDesc(){}
 	///
 	void Print(std::ostream& os) const;
 	///	型名
 	std::string GetTypeName() const { return typeName; }
 	///	型名
-	std::string SetTypeName(const char* s) { typeName = s; }
+	void SetTypeName(const char* s) { typeName = s; }
 	///	型のサイズ
 	size_t GetSize() { return size; }
 	///	フィールドの追加
