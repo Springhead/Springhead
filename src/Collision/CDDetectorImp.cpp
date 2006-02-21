@@ -138,7 +138,7 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 					it->vtx[i]->dualPlanes.push_back(it);
 				}
 			}
-			for(Vtxs::iterator itv = vtxs.begin(); itv != planes.vtxBegin; ++itv){
+			for(CDContactAnalysisFace** itv = &*vtxs.begin(); itv != planes.vtxBegin; ++itv){
 				for(CDContactAnalysisFace::DualPlanes::iterator itp = (*itv)->dualPlanes.begin();
 					itp != (*itv)->dualPlanes.end(); ++itp){
 					CDContactAnalysisFace::DualPlanes::iterator next = itp;

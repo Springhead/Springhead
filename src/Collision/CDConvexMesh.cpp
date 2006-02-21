@@ -135,7 +135,7 @@ void CDConvexMesh::MergeFace(){
 Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 	int lastPos = -1;
 	float h = Vertex(curPos) * v;
-	float d;
+	float d=0;
 	int count = 0;
 	while (1) {
 		const std::vector<int>& curNeighbor = neighbor[curPos];

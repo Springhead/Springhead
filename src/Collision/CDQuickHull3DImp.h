@@ -134,7 +134,9 @@ template <class TVtx>
 void CDQHPlanes<TVtx>::CreateFirstConvex(){
 	CDQHPlanes& planes = *this;
 	double xMin, xMax;
-	TVtxs::iterator it, xMinVtx, xMaxVtx;
+	TVtx** it;
+	TVtx**  xMinVtx;
+	TVtx**  xMaxVtx;
 	xMin = xMax = (*vtxBegin)->GetPos().X();
 	xMinVtx = xMaxVtx = vtxBegin;
 	//	Å‘å‚ÆÅ¬‚ğŒ©‚Â‚¯‚é
@@ -161,7 +163,7 @@ void CDQHPlanes<TVtx>::CreateFirstConvex(){
 	Vec3d dir = vtxBegin[1]->GetPos() - vtxBegin[0]->GetPos();
 	dir.unitize();
 	double maxDist = -1;
-	TVtxs::iterator third;
+	TVtx** third=NULL;
 	for(it = vtxBegin+2; it != vtxEnd; ++it){
 		Vec3d v0 = Vec3d((*it)->GetPos()) - Vec3d(vtxBegin[0]->GetPos());
 		Vec3d v1 = Vec3d((*it)->GetPos()) - Vec3d(vtxBegin[1]->GetPos());
@@ -214,7 +216,7 @@ void CDQHPlanes<TVtx>::FindHorizon(TVtx*& rv, CDQHPlane* cur, TVtx* vtx){
 	nPlanes --;
 	//	—×‚Ì–Ê‚É‚Â‚¢‚ÄC— •\‚ğ”»’è‚µ‚Äˆ—
 	bool bRecurse = false;
-	TVtx* rvc;
+	TVtx* rvc=NULL;
 	for(int i=0; i<3; ++i){
 		CDQHPlane* next = cur->neighbor[i];
 		if (!next) continue;
