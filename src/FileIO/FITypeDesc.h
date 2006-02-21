@@ -255,7 +255,7 @@ public:
 	///	オブジェクトの後始末
 	void Destruct(void* ptr){ access->Destruct(ptr); }
 	///	オブジェクトの削除
-	void Delete(void* ptr){ Destruct(ptr); delete ptr; };
+	void Delete(void* ptr){ Destruct(ptr); delete [] (char*)ptr; };
 	///	vector::push_back() return &vector::back();
 	void* VectorPush(void* v){ return access->VectorPush(v); }
 	///	vector::pop_back();

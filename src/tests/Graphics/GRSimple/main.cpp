@@ -205,7 +205,10 @@ void idle(){
  */
 int main(int argc, char* argv[]){
 	phSdk = CreatePHSdk();					// SDKの作成　
-	scene = phSdk->CreateScene();				// シーンの作成
+	PHSceneDesc sd;
+	sd.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;
+	sd.timeStep = 0.01;
+	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
