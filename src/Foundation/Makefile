@@ -39,7 +39,6 @@ BAK		= $(wildcard *.BAK)
 BACK	= $(wildcard *.back)
 CORE	= $(wildcard core*)
 realclean:
-	echo $(INCLUDES)
 	-$(RM) $(OBJS) $(TARGET_LIB) $(BAK) $(BACK) $(CORE)
 			
 ################################################################
