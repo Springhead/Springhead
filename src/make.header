@@ -39,8 +39,9 @@ LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm
 INCLUDES 		= -I/usr/X11R6/include/
 endif				
 					
-CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG) $(INCLUDES)
+CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG)
 LDFLAGS 		= $(LDFLAGS.EXTRA) $(LDFLAGS.GL)
+INCLUDES		+= -I$(SRC_DIR)/../include -I$(SRC_DIR) 
 
 
 #####################################################################

@@ -16,7 +16,7 @@ TARGET_LIB	:= lib$(TARGET_NAME).a
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 	
-TARGET_INCLUDES		= -I$(SRC_DIR)/../include -I$(SRC_DIR) -I.
+INCLUDES		+= -I.
 
 ################################################################
 #	build management
@@ -30,7 +30,7 @@ $(TARGET_LIB): $(OBJS)
 		$(RANLIB) $@
 	
 .cpp.o:
-	$(CXX) $(CXXFLAGS) $(TARGET_INCLUDES) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 			
 clean:
 	-$(RM) $(OBJS)
