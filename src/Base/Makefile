@@ -25,6 +25,7 @@ TARGET_INCLUDES		= -I$(SRC_DIR)/../include -I$(SRC_DIR) -I.
 all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
+		$(RM) $@
 		$(AR) r $@ $?	
 		$(RANLIB) $@
 	
