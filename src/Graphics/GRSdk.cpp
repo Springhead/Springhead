@@ -1,12 +1,5 @@
 #include <Graphics/Graphics.h>
-
 #pragma hdrstop
-
-//	メモリリークチェッカ
-#define CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
 
 namespace Spr{;
 
@@ -15,7 +8,10 @@ struct GRSdks{
 	Cont* cont;
 
 	GRSdks(){
+#if defined _MSC_VER && _DEBUG
+		// この関数を呼んだ時点で開放されていないメモリの情報を表示する
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif		
 		cont = DBG_NEW Cont;
 	}
 	~GRSdks(){

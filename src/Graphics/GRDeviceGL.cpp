@@ -76,7 +76,7 @@ void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){
 }
 /// 頂点座標を指定してプリミティブを描画
 void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
-	GLenum mode;
+	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS: 
 			mode = GL_POINTS;
@@ -109,7 +109,7 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
 void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx){
-	GLenum mode;
+	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;
 		case LINES:				mode = GL_LINES;			break;
@@ -148,7 +148,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 }
 /// 3次元テキストの描画 ... Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
-	GLuint	base;							// DisplayList開始指標番号
+	GLuint	base = 0;							// DisplayList開始指標番号
 	bool	findFont = false;				// fontListの検索結果
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
 	unsigned long color=font.color;			//	フォントの色
@@ -221,7 +221,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 }
 /// 3次元テキストの描画  ... Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
-	GLuint	base;							// DisplayList開始指標番号
+	GLuint	base = 0;							// DisplayList開始指標番号
 	bool	findFont = false;				// fontListの検索結果
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
 	unsigned long color=font.color;			//	フォントの色
@@ -340,20 +340,20 @@ if (b) glEnable(GL_DEPTH_TEST);
 }
 /// デプスバッファ法に用いる判定条件を指定する
 void GRDeviceGL::SetDepthFunc(TDepthFunc f){
-	GLenum func;
+	GLenum dfunc = GL_LESS;
 	switch(f){
-		case DF_NEVER:		func = GL_NEVER;	break;
-		case DF_LESS:		func = GL_LESS;		break;
-		case DF_EQUAL:		func = GL_EQUAL;	break;
-		case DF_LEQUAL:		func = GL_LEQUAL;	break;
-		case DF_GREATER:	func = GL_GREATER;	break;
-		case DF_NOTEQUAL:	func = GL_NOTEQUAL; break;
-		case DF_GEQUAL:		func = GL_GEQUAL;	break;
-		case DF_ALWAYS:		func = GL_ALWAYS;	break;
-		default:			/* DO NOTHING */	break;
+		case DF_NEVER:		dfunc = GL_NEVER;		break;
+		case DF_LESS:		dfunc = GL_LESS;		break;
+		case DF_EQUAL:		dfunc = GL_EQUAL;		break;
+		case DF_LEQUAL:		dfunc = GL_LEQUAL;		break;
+		case DF_GREATER:	dfunc = GL_GREATER;		break;
+		case DF_NOTEQUAL:	dfunc = GL_NOTEQUAL;	break;
+		case DF_GEQUAL:		dfunc = GL_GEQUAL;		break;
+		case DF_ALWAYS:		dfunc = GL_ALWAYS;		break;
+		default:			/* DO NOTHING */		break;
 
 	}
-	glDepthFunc(func);
+	glDepthFunc(dfunc);
 }
 /// アルファブレンディングを有効/無効にする
 void GRDeviceGL::SetAlphaTest(bool b){
