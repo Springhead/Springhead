@@ -18,10 +18,10 @@ SRCS			= $(wildcard *.cpp)
 OBJS 			= ${SRCS:.cpp=.o}
 
 INCLUDES		+=  -I.
-LDFLAGS			+= -L../../../Base/ \
-					-L../../../Collision/ \
-					-L../../../Foundation/ \
-					-L../../../Physics/ \
+LDFLAGS			+= -L$(SRC_DIR)/Base/ \
+					-L$(SRC_DIR)/Collision/ \
+					-L$(SRC_DIR)/Foundation/ \
+					-L$(SRC_DIR)/Physics/ \
 					-lBase -lCollision -lFoundation -lPhysics
 
 ################################################################
