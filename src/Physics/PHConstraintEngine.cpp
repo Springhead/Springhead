@@ -489,7 +489,9 @@ void PHConstraintEngine::UpdateDynamics(double dt){
 		s->SetAngularVelocity(s->GetOrientation() * (isaux->Vang0 + isaux->dVang));
 		//position update
 		s->SetCenterPosition(s->GetCenterPosition() + s->GetVelocity() * dt);
-		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt);
+		s->SetOrientation(
+			(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt).unit()
+		);
 
 		DSTR << s->GetVelocity() << " ; " << s->GetCenterPosition() << endl;
 
