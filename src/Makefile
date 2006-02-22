@@ -71,9 +71,13 @@ realclean:
 
 help:
 	@echo "Other targets are"
-	@echo "  help       show this help message."
-	@echo "  clean      delete all the object files."
-	@echo "  realclean  delete all generated files. "
+	@echo "  help          show this help message"
+	@echo "  all           builds project - DEFAULT"
+	@echo "  library       creates library"
+	@echo "  tests-all     builds tests"
+	@echo "  Samples-all   builds Samples"
+	@echo "  clean         removes objects, binary"
+	@echo "  realclean     remove  all generated files" 
 
 
 ################################################################

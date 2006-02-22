@@ -2,9 +2,10 @@
 #pragma hdrstop
 #include <gl/glut.h>
 
+#ifdef _MSC_VER
 #include <WinBasis/WinBasis.h>
 #include <windows.h>
-
+#endif
 
 namespace Spr {;
 //----------------------------------------------------------------------------
@@ -148,6 +149,8 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 }
 /// 3次元テキストの描画 ... Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
+/// VC版のみfontをサポートする。
+#ifdef _MSC_VER	
 	GLuint	base = 0;							// DisplayList開始指標番号
 	bool	findFont = false;				// fontListの検索結果
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
@@ -218,9 +221,15 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 	glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
 	glPopAttrib();
 	glEnable(GL_LIGHTING);
+#else	// _MSC_VER	
+	// VC以外の環境では、fontをサポートしない。
+	DrawFont(pos, str);
+#endif	
 }
 /// 3次元テキストの描画  ... Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
+/// VC版のみfontをサポートする。
+#ifdef _MSC_VER		
 	GLuint	base = 0;							// DisplayList開始指標番号
 	bool	findFont = false;				// fontListの検索結果
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
@@ -291,6 +300,10 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 	glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
 	glPopAttrib();
 	glEnable(GL_LIGHTING);
+#else	// _MSC_VER	
+	// VC以外の環境では、fontをサポートしない。
+	DrawFont(pos, str);
+#endif	
 }
 /// 描画の材質の設定
 void GRDeviceGL::SetMaterial(const GRMaterial& mat){

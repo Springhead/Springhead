@@ -150,8 +150,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	/** @} */	
 	/**
 	 *	@name	アルファブレンディングの混合係数
-	 *　　 SRCがこれから描画される色、合成させたい色、DESTがすでに描かれたカラーバッファの色    \n
-	 *　　 合成結果 =SRC * SRCのブレンディング係数 + DEST * DESTのブレンディング係数 			\n
+	 *　　 SRCがこれから描画される合成させたい色、DESTがすでに描かれたカラーバッファの色    \n
+	 *　　　　 合成結果 =SRC * SRCのブレンディング係数 + DEST * DESTのブレンディング係数 			\n
 	 *　　 ただし、BF_BOTHINVSRCALPHA、BF_BLENDFACTOR、BF_INVBLENDFACTOR に関しては、			\n
 	 *　　 deviceがDirectXのときのみ利用可能。指定してもBF_ZEROとして扱う。
 	 *	@{
@@ -195,8 +195,9 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end)=0;
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx)=0;
-	///	3次元テキストの描画
+	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
 	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0)=0;
+	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
 	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0)=0;
 	///	描画の材質の設定
 	virtual void SetMaterial(const GRMaterial& mat)=0;

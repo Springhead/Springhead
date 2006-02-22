@@ -34,11 +34,12 @@ $(TARGET_LIB): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 			
 clean:
-	-$(RM) $(OBJS)
+	-$(RM) $(OBJS) $(TARGET_LIB)
 	
-VCBUILD = $(wildcard *.lib Debug* Release*)
-realclean:
-	-$(RM) $(OBJS) $(EXECUTABLE) $(VCBUILD)
+VCPROOUT 	= $(wildcard *.lib Debug* Release*)
+DOXYOUT 	= $(wildcard html *.tag *.log *.tmp)
+realclean: clean
+	-$(RM) $(VCPROOUT) $(DOXYOUT)
 		
 			
 ################################################################

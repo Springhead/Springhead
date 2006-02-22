@@ -36,13 +36,13 @@ $(EXECUTABLE):$(OBJS)
 	$(CXX) $(OBJS) -o $(EXECUTABLE) $(LDFLAGS)
 			
 clean:
-	-$(RM) $(OBJS)
+	-$(RM) $(OBJS) $(EXECUTABLE)
 	
 VCBUILD = $(wildcard *.ncb *.suo Debug* Release*)
-realclean:
-	-$(RM) $(OBJS) $(EXECUTABLE) $(VCBUILD)
-	
-			
+realclean: clean
+	-$(RM) $(VCBUILD)
+
+ 			
 ################################################################
 #	THE END
 ################################################################

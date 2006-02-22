@@ -43,12 +43,6 @@ realclean:
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 
-help:
-	@echo "Other targets are"
-	@echo "  help       show this help message."
-	@echo "  clean      delete all the object files."
-	@echo "  realclean  delete all generated files. "
-
 
 ################################################################
 # 	THE END
