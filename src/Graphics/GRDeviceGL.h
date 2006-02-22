@@ -8,9 +8,6 @@
 #include <map>
 #include <SprGraphics.h>
 
-#include <WinBasis/WinBasis.h>
-#include <windows.h>
-
 namespace Spr{;
 
 /**	@class	GRDeviceGL

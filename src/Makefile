@@ -76,8 +76,8 @@ help:
 	@echo "  library       creates library"
 	@echo "  tests-all     builds tests"
 	@echo "  Samples-all   builds Samples"
-	@echo "  clean         removes objects, binary"
-	@echo "  realclean     remove  all generated files" 
+	@echo "  clean         removes objects and binary"
+	@echo "  realclean     remove all generated files" 
 
 
 ################################################################

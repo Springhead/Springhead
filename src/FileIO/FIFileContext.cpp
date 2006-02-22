@@ -19,8 +19,8 @@ bool FIFileContext::FileInfo::Map(std::string fn){
 		return true;
 	}
 	return false;
-#else
-	
+#else	
+	return false;
 #endif
 }
 void FIFileContext::FileInfo::Unmap(){
