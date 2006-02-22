@@ -15,7 +15,8 @@ LIB_DIRS		= Base \
 				Collision \
 				FileIO \
 				Graphics \
-				Physics
+				Physics \
+				Foundation
 TESTS_DIR		= tests 
 SAMPLES_DIR		= Samples
 

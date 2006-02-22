@@ -26,7 +26,7 @@ struct PHSdkIf : public ObjectIf{
 	///	Shape�̎擾
 	virtual CDShapeIf** GetShapes()=0;
 };
-PHSdkIf* _cdecl CreatePHSdk();
+PHSdkIf* SPR_CDECL CreatePHSdk();
 
 }	//	namespace Spr
 #endif

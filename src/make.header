@@ -8,7 +8,7 @@
 #	User Defined
 #####################################################################
 # -DDEBUG / -DNDEBUG
-DEBUG_FLAG	= -DDEBUG
+DEBUG_FLAG	= -DDEBUG -D_DEBUG
 
 
 #####################################################################
@@ -18,7 +18,7 @@ DEBUG_FLAG	= -DDEBUG
 CXX				= g++
 AR				= ar
 RANLIB			= ranlib
-RM				= rm -f
+RM				= rm -rf
 
 #--------------------------------------------------
 #	cygwin

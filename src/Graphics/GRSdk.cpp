@@ -27,7 +27,7 @@ struct GRSdks{
 	}
 };
 static GRSdks sdks;
-GRSdkIf* _cdecl CreateGRSdk(){
+GRSdkIf* SPR_CDECL CreateGRSdk(){
 	GRSdkIf* rv = DBG_NEW GRSdk;
 	sdks.cont->push_back(rv);
 	rv->AddRef();

@@ -70,7 +70,7 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
  param		なし
  return 	なし
  */
-void _cdecl display(){
+void SPR_CDECL display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
@@ -173,7 +173,7 @@ void initialize(){
  param		<in/--> h　　高さ
  return		 なし
  */
-void _cdecl reshape(int w, int h){
+void SPR_CDECL reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -188,7 +188,7 @@ void _cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void _cdecl keyboard(unsigned char key, int x, int y){
+void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 
@@ -197,7 +197,7 @@ void _cdecl keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void _cdecl idle(){
+void SPR_CDECL idle(){
 	scene->Step();
 
 	// 床の上に5秒静止したら正常終了とする。
@@ -210,7 +210,7 @@ void _cdecl idle(){
 
 	glutPostRedisplay();
 }
-void _cdecl timer(int id){
+void SPR_CDECL timer(int id){
 	static WBPreciseTimer pt;
 	pt.CountUS();
 
@@ -227,7 +227,7 @@ void _cdecl timer(int id){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int _cdecl main(int argc, char* argv[]){
+int SPR_CDECL main(int argc, char* argv[]){
 	sdk = CreatePHSdk();						// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ

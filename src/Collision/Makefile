@@ -36,11 +36,9 @@ $(TARGET_LIB): $(OBJS)
 clean:
 	-$(RM) $(OBJS)
 	
-BAK		= $(wildcard *.BAK)
-BACK	= $(wildcard *.back)
-CORE	= $(wildcard core*)
+VCBUILD = $(wildcard *.lib Debug* Release*)
 realclean:
-	-$(RM) $(OBJS) $(TARGET_LIB) $(BAK) $(BACK) $(CORE)
+	-$(RM) $(OBJS) $(EXECUTABLE) $(VCBUILD)
 			
 			
 ################################################################

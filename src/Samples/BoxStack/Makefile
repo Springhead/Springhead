@@ -38,11 +38,9 @@ $(EXECUTABLE):$(OBJS)
 clean:
 	-$(RM) $(OBJS)
 	
-BAK		= $(wildcard *.BAK)
-BACK	= $(wildcard *.back)
-CORE	= $(wildcard core*)
+VCBUILD = $(wildcard *.ncb *.suo Debug* Release*)
 realclean:
-	-$(RM) $(OBJS) $(EXECUTABLE) $(BAK) $(BACK) $(CORE)
+	-$(RM) $(OBJS) $(EXECUTABLE) $(VCBUILD)
 	
 			
 ################################################################

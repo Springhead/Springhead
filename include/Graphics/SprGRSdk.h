@@ -19,7 +19,7 @@ struct GRSdkIf: public ObjectIf{
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
 	virtual GRDeviceGLIf* CreateDeviceGL(int window)=0;
 };
-GRSdkIf* _cdecl CreateGRSdk();
+GRSdkIf* SPR_CDECL CreateGRSdk();
 
 }
 #endif

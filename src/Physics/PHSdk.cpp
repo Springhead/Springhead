@@ -30,7 +30,7 @@ struct Sdks{
 	}
 };
 static Sdks sdks;
-PHSdkIf* _cdecl CreatePHSdk(){
+PHSdkIf* SPR_CDECL CreatePHSdk(){
 	PHSdkIf* rv = DBG_NEW PHSdk;
 	sdks.cont->push_back(rv);
 	rv->AddRef();
