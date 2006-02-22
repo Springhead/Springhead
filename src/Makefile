@@ -19,7 +19,7 @@ LIB_DIRS		= Base \
 TESTS_DIR		= tests 
 SAMPLES_DIR		= Samples
 
-SUB_DIRS = $(LIB_DIRS) $(TEST_DIRS) $(SAMPLES_DIR)
+SUB_DIRS = $(LIB_DIRS) $(TESTS_DIR) $(SAMPLES_DIR)
 
 library:
 	@for dir in $(LIB_DIRS); \

@@ -30,17 +30,11 @@ all:
 ################################################################
 
 clean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
-	@echo " [clean] : delete all the object files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
-	@echo " [realclean] : delete all generated files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
