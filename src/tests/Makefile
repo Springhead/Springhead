@@ -14,10 +14,7 @@ SUB_DIRS	= FileIO Graphics Physics
 
 all:
 	@for dir in $(SUB_DIRS); \
-	do echo "---------------------------------------------"; \
-	   echo "                 $$dir 				      "; \
-	   echo "---------------------------------------------"; \
-	$(MAKE) -C $$dir all || exit; \
+	do $(MAKE) -C $$dir all || exit; \
 	done
 
 
@@ -26,17 +23,17 @@ all:
 ################################################################
 
 clean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
-	@echo " [clean] : delete all the object files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
+	@echo " [clean] : delete all the object files in tests directory. "
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
-	@echo " [realclean] : delete all generated files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
+	@echo " [realclean] : delete all generated files in tests directory. "
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 

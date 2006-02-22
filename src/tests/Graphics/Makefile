@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for FileIO test
+# 	Makefile for Graphics test
 #
 ################################################################
 
@@ -10,7 +10,7 @@
 
 SRC_DIR 	= ../..
 
-SUB_DIRS	= FILoad
+SUB_DIRS	= GRSimple
 
 all:
 	@for dir in $(SUB_DIRS); \

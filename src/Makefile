@@ -16,24 +16,36 @@ LIB_DIRS		= Base \
 				FileIO \
 				Graphics \
 				Physics
+TESTS_DIR		= tests 
+SAMPLES_DIR		= Samples
 
-TEST_DIRS		= tests 
+SUB_DIRS = $(LIB_DIRS) $(TEST_DIRS) $(SAMPLES_DIR)
 
-SUB_DIRS = $(LIB_DIRS) $(TEST_DIRS)
-
-all:
+library:
 	@for dir in $(LIB_DIRS); \
-	do echo "---------------------------------------------"; \
-	   echo "                 $$dir 				      "; \
-	   echo "---------------------------------------------"; \
+	do echo "============================================="; \
+	   echo "       Make a $$dir library. 				  "; \
+	   echo "============================================="; \
+	$(MAKE) -C $$dir all || exit; \
+	done	
+
+tests-all:		
+	@for dir in $(TESTS_DIR); \
+	do echo "============================================="; \
+	   echo "             Entring $$dir 			      "; \
+	   echo "============================================="; \
 	$(MAKE) -C $$dir all || exit; \
 	done
-	@for dir in $(TEST_DIRS); \
-	do echo "=============================================";; \
-	   echo "                 $$dir 				      "; \
+	
+Samples-all:		
+	@for dir in $(SAMPLES_DIR); \
+	do echo "============================================="; \
+	   echo "             Entring $$dir 			      "; \
 	   echo "============================================="; \
-	$(MAKE) -C $$dir all || exit; \	
-	done
+	$(MAKE) -C $$dir all || exit; \
+	done	
+
+all: library tests-all Samles-all
 
 
 ################################################################
@@ -41,17 +53,17 @@ all:
 ################################################################
 
 clean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@echo " [clean] : delete all the object files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@echo " [realclean] : delete all generated files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 

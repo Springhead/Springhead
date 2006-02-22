@@ -24,6 +24,7 @@ LDFLAGS			+= -L$(SRC_DIR)/Base/ \
 					-L$(SRC_DIR)/Physics/ \
 					-lBase -lCollision -lFoundation -lPhysics
 
+
 ################################################################
 #	build management
 ################################################################
@@ -42,6 +43,7 @@ BACK	= $(wildcard *.back)
 CORE	= $(wildcard core*)
 realclean:
 	-$(RM) $(OBJS) $(EXECUTABLE) $(BAK) $(BACK) $(CORE)
+		
 			
 ################################################################
 #	THE END

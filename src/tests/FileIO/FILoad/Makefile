@@ -22,7 +22,9 @@ LDFLAGS			+= -L$(SRC_DIR)/Base/ \
 					-L$(SRC_DIR)/Collision/ \
 					-L$(SRC_DIR)/Foundation/ \
 					-L$(SRC_DIR)/Physics/ \
-					-lBase -lCollision -lFoundation -lPhysics
+					-L$(SRC_DIR)/Graphics/ \
+					-L$(SRC_DIR)/FileIO/ \
+					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO
 
 
 ################################################################

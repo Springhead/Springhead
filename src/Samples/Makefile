@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for FileIO test
+# 	Makefile for Samples
 #
 ################################################################
 
@@ -8,9 +8,9 @@
 #	A rule to make sub directories.
 ################################################################
 
-SRC_DIR 	= ../..
+SRC_DIR 	= ..
 
-SUB_DIRS	= FILoad
+SUB_DIRS	= BoxStack
 
 all:
 	@for dir in $(SUB_DIRS); \
@@ -26,17 +26,17 @@ all:
 ################################################################
 
 clean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
-	@echo " [clean] : delete all the object files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
+	@echo " [clean] : delete all the object files in Samples directory. "
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@echo "*----*----*----*----*----*----*----*----*----*"
-	@echo " [realclean] : delete all generated files. "
-	@echo "*----*----*----*----*----*----*----*----*----*"
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
+	@echo " [realclean] : delete all generated files in Samples directory. "
+	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 

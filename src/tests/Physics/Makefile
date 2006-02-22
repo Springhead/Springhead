@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for FileIO test
+# 	Makefile for Physics test
 #
 ################################################################
 
@@ -10,7 +10,11 @@
 
 SRC_DIR 	= ../..
 
-SUB_DIRS	= FILoad
+SUB_DIRS	= PHConstraintTest \
+				PHShape \
+				PHShapeGL \
+				PHSimple \
+				PHSimpleGL
 
 all:
 	@for dir in $(SUB_DIRS); \

@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for BoxStack
+# 	Makefile for GRSimple
 #
 ################################################################
 
@@ -8,7 +8,7 @@
 #	common rules
 ################################################################
 
-SRC_DIR 		= ../..
+SRC_DIR 		= ../../..
 include 		$(SRC_DIR)/make.header
 TARGET_DIR  	:= $(shell /bin/pwd)
 TARGET_NAME		:= $(shell /bin/basename $(TARGET_DIR))
@@ -22,7 +22,8 @@ LDFLAGS			+= -L$(SRC_DIR)/Base/ \
 					-L$(SRC_DIR)/Collision/ \
 					-L$(SRC_DIR)/Foundation/ \
 					-L$(SRC_DIR)/Physics/ \
-					-lBase -lCollision -lFoundation -lPhysics
+					-L$(SRC_DIR)/Graphics/ \
+					-lBase -lCollision -lFoundation -lPhysics -lGraphics
 
 
 ################################################################
@@ -43,7 +44,7 @@ BACK	= $(wildcard *.back)
 CORE	= $(wildcard core*)
 realclean:
 	-$(RM) $(OBJS) $(EXECUTABLE) $(BAK) $(BACK) $(CORE)
-	
+		
 			
 ################################################################
 #	THE END
