@@ -5,7 +5,7 @@
   グラフィックスレンダラークラスのAPIを使い、GLデバイスでレンダリングを行う。　
   
 【終了基準】
-  ・5秒後に強制終了。
+  ・2000step後に強制終了。
 
 【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。  
@@ -21,7 +21,7 @@
 #pragma hdrstop
 using namespace Spr;
 #define ESC				27
-#define EXIT_TIMER		3000
+#define EXIT_TIMER		2000
 #define WINSIZE_WIDTH	480
 #define WINSIZE_HEIGHT	360
 #define NUM_BLOCKS		5
