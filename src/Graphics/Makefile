@@ -27,7 +27,7 @@ all: $(TARGET_LIB)
 $(TARGET_LIB): $(OBJS)
 		$(RM) $@
 		$(AR) r $@ $?	
-		$(RANLIB) $@
+		-$(RANLIB) $@
 	
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@

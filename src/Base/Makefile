@@ -25,7 +25,7 @@ INCLUDES		+= -I.
 all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
-		$(RM) $@
+		-$(RM) $@
 		$(AR) r $@ $?	
 		$(RANLIB) $@
 	

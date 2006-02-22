@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for gcc 3.4 on cygwin and Linux.
+# 	Makefile for tests
 #
 ################################################################
 
@@ -8,31 +8,16 @@
 #	A rule to make sub directories.
 ################################################################
 
-export SRC_DIR := $(shell /bin/pwd)
-include $(SRC_DIR)/make.header
+SRC_DIR 	= ..
 
-LIB_DIRS		= Base \
-				Collision \
-				FileIO \
-				Graphics \
-				Physics
-
-TEST_DIRS		= tests 
-
-SUB_DIRS = $(LIB_DIRS) $(TEST_DIRS)
+SUB_DIRS	= FileIO Graphics Physics
 
 all:
-	@for dir in $(LIB_DIRS); \
+	@for dir in $(SUB_DIRS); \
 	do echo "---------------------------------------------"; \
 	   echo "                 $$dir 				      "; \
 	   echo "---------------------------------------------"; \
 	$(MAKE) -C $$dir all || exit; \
-	done
-	@for dir in $(TEST_DIRS); \
-	do echo "=============================================";; \
-	   echo "                 $$dir 				      "; \
-	   echo "============================================="; \
-	$(MAKE) -C $$dir all || exit; \	
 	done
 
 
