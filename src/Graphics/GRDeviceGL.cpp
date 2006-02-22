@@ -1,10 +1,12 @@
 #include "Graphics.h"
 #pragma hdrstop
-#include <gl/glut.h>
 
 #ifdef _MSC_VER
-#include <WinBasis/WinBasis.h>
-#include <windows.h>
+# include <WinBasis/WinBasis.h>
+# include <windows.h>
+# include <gl/glut.h>
+#else
+# include <GL/glut.h>
 #endif
 
 namespace Spr {;

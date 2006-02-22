@@ -1,6 +1,5 @@
 #ifndef FIFILECONTEXT_H
 #define FIFILECONTEXT_H
-#pragma once
 
 #include <Foundation/Object.h>
 #include <string>
@@ -43,4 +42,4 @@ public:
 
 }
 
-#endif
+#endif	// FIFILECONTEXT_H

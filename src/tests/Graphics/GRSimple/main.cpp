@@ -15,9 +15,13 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <WinBasis/WinBasis.h>
-#include <windows.h>
-#include <gl/glut.h>
+
+#ifdef _MSC_VER
+# include <gl/glut.h>
+#else
+# include <GL/glut.h>
+#endif
+
 #pragma hdrstop
 using namespace Spr;
 #define ESC				27
@@ -117,9 +121,9 @@ void display(){
 	GRFont font1;
 	font1.height = 30.0;
 	font1.width	= 0.0;
-	font1.weight	= FW_NORMAL;
+	font1.weight = 400;
 	font1.color  = 0xFFFFFF;
-	font1.bItalic = TRUE;
+	font1.bItalic = true;
 	font1.face   = "ARIAL";
 	std::string str = "X";
 	render->DrawFont(Vec3f(10.0, 1.0, -1.0), str, font1);	
@@ -132,8 +136,6 @@ void display(){
 	font2.color = 0x00FFFF;
 	str = "Z";
 	render->DrawFont(Vec3f(-2.0, 1.0, 10.0), str, font2);	
-
-
 
 	render->EndScene();
 }

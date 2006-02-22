@@ -16,7 +16,13 @@
 #include <../src/WinBasis/WBPreciseTimer.h>
 #include <ctime>
 #include <string>
-#include <gl/glut.h>
+
+#ifdef _MSC_VER
+# include <gl/glut.h>
+#else
+# include <GL/glut.h>
+#endif
+
 #include <windows.h>
 #pragma hdrstop
 using namespace Spr;

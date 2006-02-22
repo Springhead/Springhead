@@ -22,7 +22,13 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <gl/glut.h>
+
+#ifdef _MSC_VER
+# include <gl/glut.h>
+#else
+# include <GL/glut.h>
+#endif
+
 #pragma hdrstop
 using namespace Spr;
 
