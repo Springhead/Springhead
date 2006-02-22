@@ -260,7 +260,7 @@ void PHConstraintEngine::SetupDynamics(double dt){
 		}
 	}
 	//ŠeContact‚ÉŠÖŒW‚·‚é•Ï”
-	Vec3d n, p, r[2], v[2], vrel, vrelproj, t[2];
+	Vec3d n, r[2], v[2], vrel, vrelproj, t[2];
 	Matrix3d rcross[2], R[2];
 	Posed q[2];
 	PHSolid* solid[2];

@@ -16,7 +16,7 @@ class SPR_DLL GRFont{
 public:
 	int height;				///<	フォントの高さ
 	int width;				///<	平均文字幅
-	int weight;				///<	フォントの太さ
+	int weight;				///<	フォントの太さ（0 - 900）
 	std::string face;		///<	タイプフェイス
 	unsigned long color;	///<	フォントの色
 	bool bItalic;			///<	イタリック体
