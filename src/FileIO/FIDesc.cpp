@@ -4,6 +4,7 @@
 #include <sstream>
 #include "TypeDescDump.h"
 
+
 namespace Spr{ 
 static FITypeDesc* desc; 
 static FITypeDesc::Field* field; 
@@ -20,6 +21,7 @@ void RegisterTypes(){
 	db->RegisterDesc(new FITypeDescNumber<BYTE>("BYTE"));
 	db->RegisterDesc(new FITypeDescNumber<WORD>("WORD"));
 	db->RegisterDesc(new FITypeDescNumber<DWORD>("DWORD"));
+	db->RegisterDesc(new FITypeDescNumber<unsigned>("unsigned"));
 	db->RegisterDesc(new FITypeDescNumber<DWORD>("enum"));
 
 	db->RegisterDesc(new FITypeDescNumber<float>("float"));

@@ -104,6 +104,9 @@
 	desc->access = DBG_NEW FIAccess<PHSceneState>;
 	field = desc->AddField("", "double", "timeStep", "");
 	field->offset = (char*)&(pPHSceneState->timeStep) - (char*)pPHSceneState;
+	field = desc->AddField("", "unsigned", "count", "");
+	field->offset = (char*)&(pPHSceneState->count) - (char*)pPHSceneState;
+	db->RegisterDesc(desc);
 	
 	PHSceneDesc* pPHSceneDesc = NULL;
 	desc = DBG_NEW FITypeDesc("PHSceneDesc");

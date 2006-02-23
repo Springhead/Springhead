@@ -10,7 +10,7 @@ namespace Spr{;
 //	FIFileContext::FileInfo
 bool FIFileContext::FileInfo::Map(std::string fn){
 #ifdef _WIN32
-	HANDLE hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
+	hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
 	if (hFile){
 		DWORD len = GetFileSize(hFile,NULL);
 		hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);

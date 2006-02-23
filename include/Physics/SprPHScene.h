@@ -14,7 +14,7 @@ struct PHSceneState{
 	/// 積分ステップ
 	double timeStep;
 	/// 積分した回数
-	unsigned int count;
+	unsigned count;
 	PHSceneState(){Init();}
 	void Init(){
 		timeStep = 0.005;
