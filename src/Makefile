@@ -27,7 +27,7 @@ all: library tests-all Samles-all
 library:
 	@for dir in $(LIB_DIRS); \
 	do echo "============================================="; \
-	   echo "       Make a $$dir library. 				  "; \
+	   echo "       Make $$dir library.   			      "; \
 	   echo "============================================="; \
 	$(MAKE) -C $$dir all || exit; \
 	done	
@@ -55,7 +55,7 @@ Samples-all:
 
 clean:
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo " [clean] : delete all the object files. "
+	@echo " [clean] : removes objects and binary. "
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  clean || exit; \
@@ -63,7 +63,7 @@ clean:
 	
 realclean:
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo " [realclean] : delete all generated files. "
+	@echo " [realclean] : remove all generated files. "
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir  realclean || exit; \

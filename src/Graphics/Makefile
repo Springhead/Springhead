@@ -16,8 +16,6 @@ TARGET_LIB	:= lib$(TARGET_NAME).a
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 	
-INCLUDES		+= -I.
-
 
 ################################################################
 #	build management

@@ -12,7 +12,7 @@ DEBUG_FLAG	= -DDEBUG # -D_DEBUG
 
 
 #####################################################################
-#	common rules
+#	Macros
 #####################################################################
 
 CXX				= g++
@@ -20,10 +20,9 @@ AR				= ar
 RANLIB			= ranlib
 RM				= rm -rf
 
-#--------------------------------------------------
-#	cygwin
-#--------------------------------------------------
-#ifeq ($(findstring CYGWIN, $(UNAME)), CYGWIN)
+# ----------------------------------------------------------
+#	Cygwin
+# ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell /bin/uname)), CYGWIN)
 MOCO 	= /moco/masa
 LDFLAGS.EXTRA 	=	
@@ -31,18 +30,33 @@ LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
 endif
+
 # ----------------------------------------------------------
-# Linux
+# 	Linux
 # ----------------------------------------------------------
 ifeq ($(findstring Linux, $(shell /bin/uname)), Linux)
 LDFLAGS.EXTRA 	=	-L/usr/X11R6/lib	
 LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm
 INCLUDES 		= -I/usr/X11R6/include/
 endif				
-					
+
+# ----------------------------------------------------------
+# 	common rules
+# ----------------------------------------------------------					
 CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG)
-LDFLAGS 		= $(LDFLAGS.EXTRA) $(LDFLAGS.GL)
-INCLUDES		+= -I$(SRC_DIR)/../include -I$(SRC_DIR) 
+LDFLAGS 		= \
+					-L$(SRC_DIR)/Base/ \
+					-L$(SRC_DIR)/Collision/ \
+					-L$(SRC_DIR)/Foundation/ \
+					-L$(SRC_DIR)/Physics/ \
+					-L$(SRC_DIR)/Graphics/ \
+					-L$(SRC_DIR)/FileIO/ \
+					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
+					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
+					$(LDFLAGS.EXTRA) \
+					$(LDFLAGS.GL)
+					
+INCLUDES		+= -I$(SRC_DIR)/../include -I$(SRC_DIR) -I.
 
 
 #####################################################################

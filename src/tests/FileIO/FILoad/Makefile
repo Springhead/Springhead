@@ -17,16 +17,6 @@ EXECUTABLE		= $(TARGET_NAME).exe
 SRCS			= $(wildcard *.cpp)
 OBJS 			= ${SRCS:.cpp=.o}
 
-INCLUDES		+=  -I.
-LDFLAGS			+= -L$(SRC_DIR)/Base/ \
-					-L$(SRC_DIR)/Collision/ \
-					-L$(SRC_DIR)/Foundation/ \
-					-L$(SRC_DIR)/Physics/ \
-					-L$(SRC_DIR)/Graphics/ \
-					-L$(SRC_DIR)/FileIO/ \
-					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
-					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO
-
 
 ################################################################
 #	build management
