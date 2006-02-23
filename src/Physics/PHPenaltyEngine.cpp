@@ -129,9 +129,9 @@ bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 			cp->dynaFricMom /= area;
 					
 			DEBUG_EVAL(
-				if ( !_finite( cp->reflexSpringForce.norm() )
-					|| !_finite( cp->frictionForce.norm() )
-					|| !_finite( cp->frictionTorque.norm() ) ){
+				if ( !finite( cp->reflexSpringForce.norm() )
+					|| !finite( cp->frictionForce.norm() )
+					|| !finite( cp->frictionTorque.norm() ) ){
 					DSTR << "Error: forces: " << cp->reflexSpringForce << cp->frictionForce << cp->frictionTorque << std::endl;
 				}
 			)
@@ -172,7 +172,8 @@ void PHPenaltyEngine::PHSolidPair::CalcReflexForce(PHShapePair* cp, CDContactAna
 		(CDConvexMesh*)cp->shape[1]
 	};
 	if (bUseContactVolume){	//	通常 true
-		for(CDContactAnalysis::Vtxs::iterator it = analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){
+		//for(CDContactAnalysis::Vtxs::iterator it = analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){
+		for (CDContactAnalysisFace** it = &*analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){	// これでいいの？
 			CDContactAnalysisFace& qhVtx = **it;
 			if (qhVtx.NCommonVtx() < 3) continue;
 			int curID = qhVtx.id;
@@ -304,11 +305,13 @@ void PHPenaltyEngine::PHSolidPair::CalcTriangleReflexForce(PHShapePair* cp, Vec3
 			+	((1.0f/24.0f)*refDa0 + (1.0f/24.0f)*refDa1 + (1.0f/12.0f)*refDa2) * p2
 		  ) ^ a_b;
 #ifdef _DEBUG
-	if (refSp0 > 10000 || refSp1 > 10000 || refSp2 > 10000 || !_finite(triRefSp.norm()) ){
+	if (refSp0 > 10000 || refSp1 > 10000 || refSp2 > 10000 || !finite(triRefSp.norm()) ){
 		DSTR << "Error: The reflection spring force is too large: " << triRefSp << std::endl;
 	}
 #endif
-	assert(_finite(triRefMomSp.norm()));
+	// 数値演算範囲エラーのチェック
+	//  与えられた倍精度の浮動小数点値が有限であるかどうか
+	assert(finite(triRefMomSp.norm()));	
 
 	//	3角形の面積の計算
 	float triArea = a_b_normal / 4;
@@ -330,8 +333,8 @@ void PHPenaltyEngine::PHSolidPair::CalcTriangleReflexForce(PHShapePair* cp, Vec3
 			+	(p1 ^ ((1.0f/24.0f)*fric0 + (1.0f/12.0f)*fric1 + (1.0f/24.0f)*fric2))
 			+	(p2 ^ ((1.0f/24.0f)*fric0 + (1.0f/24.0f)*fric1 + (1.0f/12.0f)*fric2))
 		  ) * a_b_normal;
-	assert(_finite(triFric.norm()));
-	assert(_finite(triFricMom.norm()));
+	assert(finite(triFric.norm()));
+	assert(finite(triFricMom.norm()));
 	//---------------------------------------------------------------
 	//	結果を加える
 	cp->area += triArea;
@@ -392,8 +395,8 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 		
 		
 	float maxRotFric = fricCoeff * (cp->dynaFricMom - (cp->reflexForcePoint^cp->dynaFric)).norm();
-	assert(_finite(maxFric));
-	DEBUG_EVAL( if(!_finite(maxRotFric)){ DSTR << "FricMax:" << maxFric << "  " << maxRotFric << std::endl; } )
+	assert(finite(maxFric));
+	DEBUG_EVAL( if(!finite(maxRotFric)){ DSTR << "FricMax:" << maxFric << "  " << maxRotFric << std::endl; } )
 
 	cp->frictionState = PHShapePair::STATIC;
 	if (frictionSpringForce > maxFric){
@@ -414,7 +417,7 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 		cp->frictionForce += frictionDamper * frictionVel;
 		
 		Vec3f frictionAngVel = solid[1].angVel - solid[0].angVel;
-		DEBUG_EVAL( if (!_finite(frictionAngVel.norm())){ DSTR << "frictionAngVel: " << frictionAngVel << std::endl; } )
+		DEBUG_EVAL( if (!finite(frictionAngVel.norm())){ DSTR << "frictionAngVel: " << frictionAngVel << std::endl; } )
 		
 
 		frictionAngVel = (frictionAngVel * cp->normal) * cp->normal;
@@ -497,7 +500,7 @@ void PHPenaltyEngine::Step(){
 	Edges::iterator eit = edges.begin();
 	for(unsigned int i = 0; i < solids.size(); ++i){
 		solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-		if (!_finite(eit[0].edge) || !_finite(eit[1].edge)){
+		if (!finite(eit[0].edge) || !finite(eit[1].edge)){
 			DSTR << solids[i]->GetName() << " min:" << eit[0].edge << " max:" << eit[1].edge << std::endl;
 			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 		}

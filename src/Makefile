@@ -22,6 +22,8 @@ SAMPLES_DIR		= Samples
 
 SUB_DIRS = $(LIB_DIRS) $(TESTS_DIR) $(SAMPLES_DIR)
 
+all: library tests-all Samles-all
+
 library:
 	@for dir in $(LIB_DIRS); \
 	do echo "============================================="; \
@@ -45,8 +47,6 @@ Samples-all:
 	   echo "============================================="; \
 	$(MAKE) -C $$dir all || exit; \
 	done	
-
-all: library tests-all Samles-all
 
 
 ################################################################

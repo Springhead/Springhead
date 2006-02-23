@@ -43,7 +43,7 @@ Vec3f CDContactAnalysisFace::CommonVtx(int i){
 bool CDContactAnalysisFace::CalcDualVtx(Vec3f* base){
 	normal = (base[face->vtxs[1]] - base[face->vtxs[0]]) ^ 
 		(base[face->vtxs[2]] - base[face->vtxs[0]]);
-	DEBUG_EVAL( if ( normal.norm() < CD_EPSILON || !_finite(normal.norm()) ){
+	DEBUG_EVAL( if ( normal.norm() < CD_EPSILON || !finite(normal.norm()) ){
 		DSTR << "normal is too small." << std::endl; } 
 	)
 	normal.unitize();
@@ -239,7 +239,7 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 	}
 	cp->iNormal.unitize();
 #ifdef _DEBUG
-	if (!_finite(cp->iNormal.norm())){
+	if (!finite(cp->iNormal.norm())){
 		DSTR << "Error: iNormal is " << cp->iNormal << std::endl;
 	}
 #endif
@@ -270,7 +270,7 @@ void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 	cp->normal = n.unit();
 	cp->center += 0.5f*cp->depth*cp->normal;
 #ifdef _DEBUG
-	if (cp->normal * cp->iNormal < 0 || !_finite(cp->normal.norm())){
+	if (cp->normal * cp->iNormal < 0 || !finite(cp->normal.norm())){
 		DSTR << "Error: Wrong normal:" << cp->normal << cp->iNormal << std::endl;
 		DSTR << trans;
 		DSTR << cp->closestPoint[0] << cp->closestPoint[1] << std::endl;

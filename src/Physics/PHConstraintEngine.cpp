@@ -347,7 +347,7 @@ void PHConstraintEngine::SetupDynamics(double dt){
 
 void PHConstraintEngine::SetupCorrection(){
 	PHContactPoints::iterator ip;
-	PHContact* con;
+	PHContact* con = NULL;
 	PHSolidAux* solidaux[2];
 	Vec3d Vlin[2], Vang[2];
 	//Dynamics‚Ì‰e‹¿‚ğl—¶‚µ‚½ã‚Å‚ÌŠeÚG“_‚Å‚ÌŒğ·[“x
@@ -376,10 +376,10 @@ void PHConstraintEngine::SetupCorrection(){
 
 void PHConstraintEngine::IterateDynamics(){
 	PHContactPoints::iterator ip;
-	PHContact* con;
+	PHContact* con = NULL;
 	PHSolidAux* solidaux[2];
 	Vec3d fnew;
-	double dfsum;
+	double dfsum = 0.0;
 	int count = 0;
 	while(true){
 		if(count == max_iter_dynamics){
@@ -435,7 +435,7 @@ void PHConstraintEngine::IterateCorrection(){
 	PHContactPoints::iterator ip;
 	PHContact* con;
 	PHSolidAux* solidaux[2];
-	double Fnew, dFsum;
+	double Fnew=0.0, dFsum=0.0;
 	int count = 0;
 	while(true){
 		if(count == max_iter_correction){

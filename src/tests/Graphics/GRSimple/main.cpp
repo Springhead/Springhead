@@ -17,9 +17,9 @@
 #include <string>
 
 #ifdef _MSC_VER
-# include <gl/glut.h>
+#include <gl/glut.h>
 #else
-# include <GL/glut.h>
+#include <GL/glut.h>
 #endif
 
 #pragma hdrstop

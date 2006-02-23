@@ -7,7 +7,8 @@ namespace Spr{
 extern void RegisterTypes();
 extern UTRef<FITypeDescDb> typeDescDb;
 }
-void main(){
+
+int main(){
 	using namespace Spr;
 	RegisterTypes();
 	FIFileContext fc;

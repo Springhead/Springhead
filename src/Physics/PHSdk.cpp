@@ -1,11 +1,6 @@
 #include "Physics.h"
-
 #pragma hdrstop
-//	メモリリークチェッカ
-#define CRTDBG_MAP_ALLOC
 #include <stdlib.h>
-#include <crtdbg.h>
-
 
 namespace Spr{;
 
@@ -14,7 +9,10 @@ struct Sdks{
 	Cont* cont;
 
 	Sdks(){
+#if defined _DEBUG && _MSC_VER			
+		// メモリリークチェッカ
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif		
 		cont = DBG_NEW Cont;
 	}
 	~Sdks(){

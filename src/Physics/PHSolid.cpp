@@ -60,7 +60,7 @@ void PHSolid::Step(){
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
 #ifdef _DEBUG
-	if (!_finite(velocity.norm()) || velocity.norm() > 100 || angVelocity.norm() > 100){	
+	if (!finite(velocity.norm()) || velocity.norm() > 100 || angVelocity.norm() > 100){	
 		DSTR << "Warning: solid '" << GetName() << "' has a very fast velocity. v:" << velocity << "w:" << angVelocity << std::endl;
 	}
 #endif
@@ -171,7 +171,9 @@ void PHSolid::Step(){
 		pose.Ori().unitize();
 		angVelocity = pose.Ori() * (angVelocity + (_angacc[0] + 2.0 * (_angacc[1] + _angacc[2]) + _angacc[3]) * (dt / 6.0));
 		torque = pose.Ori() * torque;
-		
+		break;
+	default:			
+		/* DO NOTHING */		
 		break;
 	}
 }
