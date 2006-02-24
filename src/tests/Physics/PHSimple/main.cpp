@@ -53,7 +53,7 @@ int main(int argc, char* argv[]){
 
 	//	メモリリークのテスト．
 	//	デバッグありで実行するとメモリリークがVCのデバッグ出力に表示される．
-	char* memoryLeak = new char[123];
+	char* memoryLeak = DBG_NEW char[123];
 	
 	return 0;
 }

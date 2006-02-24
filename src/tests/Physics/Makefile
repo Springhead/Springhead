@@ -8,16 +8,16 @@
 #	A rule to make sub directories.
 ################################################################
 
-SRC_DIR 	= ../..
+SRC_DIR 		= ../..
 
-SUB_DIRS	= PHConstraintTest \
-				PHShape \
-				PHShapeGL \
-				PHSimple \
-				PHSimpleGL
+PHYSICS_DIR		= PHConstraintTest \
+					PHShape \
+					PHShapeGL \
+					PHSimple \
+					PHSimpleGL
 
 all:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(PHYSICS_DIR); \
 	do echo "---------------------------------------------"; \
 	   echo "             make $$dir    			      "; \
 	   echo "---------------------------------------------"; \
@@ -30,12 +30,12 @@ all:
 ################################################################
 
 clean:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(PHYSICS_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(PHYSICS_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 

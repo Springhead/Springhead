@@ -10,10 +10,10 @@
 
 SRC_DIR 	= ../..
 
-SUB_DIRS	= FILoad
+FILEIO_DIR	= FILoad
 
 all:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(FILEIO_DIR); \
 	do echo "---------------------------------------------"; \
 	   echo "             make $$dir    			      "; \
 	   echo "---------------------------------------------"; \
@@ -26,12 +26,12 @@ all:
 ################################################################
 
 clean:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(FILEIO_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(FILEIO_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 

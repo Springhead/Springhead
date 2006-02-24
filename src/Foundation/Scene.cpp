@@ -2,7 +2,7 @@
 #include <Foundation/Object.h>
 #include "Scene.h"
 #include <sstream>
-#include <FLOAT.H>
+//#include <FLOAT.H>
 
 #pragma hdrstop
 

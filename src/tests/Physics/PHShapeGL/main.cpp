@@ -8,8 +8,8 @@
   ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
   
 【終了基準】
-  ・自由落下させた剛体が床の上で5秒間静止したら正常終了とする。
-  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
+  ・自由落下させた剛体が床の上で5秒間静止したら正常終了(success)とする。
+  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了(failure)とする。
  
 【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
@@ -22,13 +22,7 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-
-#ifdef _MSC_VER
-# include <gl/glut.h>
-#else
 # include <GL/glut.h>
-#endif
-
 #pragma hdrstop
 using namespace Spr;
 
@@ -76,7 +70,6 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 void display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
@@ -218,9 +211,9 @@ void idle(){
 			timeflag = true;
 		} else {
 			endtime = clock();
-			count = (endtime - starttime) / (float)CLOCKS_PER_SEC;
+			count = (clock_t)((float)(endtime - starttime) / (float)CLOCKS_PER_SEC);
 			if (count > 5) {
-				DSTR << "\n正常終了." << std::endl;
+				DSTR << "\nPHShapeGL success." << std::endl;
 				exit(EXIT_SUCCESS);
 			} 
 		}		
@@ -229,7 +222,7 @@ void idle(){
 		// 自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
 		timeflag = false;
 		if (curpos.y < FALL_DISTANCE) {	
-			DSTR << "\n異常終了." << std::endl;
+			DSTR << "\nPHShapeGL failure." << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	}	
@@ -242,8 +235,8 @@ void idle(){
  param 		<in/--> solidID　　 solidのID
  return 	なし
  */
-void dstrSolid(std::string& solidName) {
-	PHSolidIf* solid;
+void dstrSolid(const std::string& solidName) {
+	PHSolidIf* solid = NULL;
 	if (solidName == "soFloor")			solid = soFloor;
 	else if (solidName == "soBlock")	solid = soBlock;
 	DSTR << "***  " << solidName << "   ***\n";
@@ -316,9 +309,9 @@ int main(int argc, char* argv[]){
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
 	// デバッグ出力
-	dstrSolid(std::string("soFloor"));
-	dstrSolid(std::string("soBlock"));
-
+	dstrSolid("soFloor");
+	dstrSolid("soBlock");
+	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow("PHShapeGL");

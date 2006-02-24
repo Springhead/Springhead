@@ -22,12 +22,12 @@ SAMPLES_DIR		= Samples
 
 SUB_DIRS = $(LIB_DIRS) $(TESTS_DIR) $(SAMPLES_DIR)
 
-all: library tests-all Samles-all
+all: library tests-all samples-all
 
 library:
 	@for dir in $(LIB_DIRS); \
 	do echo "============================================="; \
-	   echo "       Make $$dir library.   			      "; \
+	   echo "       Make $$dir Library.   			      "; \
 	   echo "============================================="; \
 	$(MAKE) -C $$dir all || exit; \
 	done	
@@ -40,7 +40,7 @@ tests-all:
 	$(MAKE) -C $$dir all || exit; \
 	done
 	
-Samples-all:		
+samples-all:		
 	@for dir in $(SAMPLES_DIR); \
 	do echo "============================================="; \
 	   echo "             Entring $$dir 			      "; \
@@ -75,7 +75,7 @@ help:
 	@echo "  all           builds project - DEFAULT"
 	@echo "  library       creates library"
 	@echo "  tests-all     builds tests"
-	@echo "  Samples-all   builds Samples"
+	@echo "  samples-all   builds Samples"
 	@echo "  clean         removes objects and binary"
 	@echo "  realclean     remove all generated files" 
 

@@ -5,7 +5,7 @@
   グラフィックスレンダラークラスのAPIを使い、GLデバイスでレンダリングを行う。　
   
 【終了基準】
-  ・2000step後に強制終了。
+  ・2000ステップ後に強制終了。
 
 【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。  
@@ -15,13 +15,7 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-
-#ifdef _MSC_VER
-#include <gl/glut.h>
-#else
 #include <GL/glut.h>
-#endif
-
 #pragma hdrstop
 using namespace Spr;
 #define ESC				27
@@ -114,13 +108,13 @@ void display(){
 	size_t vtxIndex[6] = {0, 1, 0, 2, 0, 3};
 	render->SetLineWidth(2.0);
 	render->DrawIndexed(render->LINES, vtxIndex, vtxIndex + 6, vtx);
-
+	
 	//-----------------------------------
 	//		テキスト描画/フォント
 	//-----------------------------------
 	GRFont font1;
-	font1.height = 30.0;
-	font1.width	= 0.0;
+	font1.height = 30;
+	font1.width	= 0;
 	font1.weight = 400;
 	font1.color  = 0xFFFFFF;
 	font1.bItalic = true;
@@ -249,7 +243,7 @@ int main(int argc, char* argv[]){
 	}
 	
 	soFloor->AddShape(meshFloor);
-	soFloor->SetFramePosition(Vec3f(0,-1,0));
+	soFloor->SetFramePosition(Vec3f(0,-3,0));
 	for (blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
 		soBlock[blockCnt]->AddShape(meshBlock);
 		soBlock[blockCnt]->SetFramePosition(Vec3f(3, 15*(blockCnt+1), 3));

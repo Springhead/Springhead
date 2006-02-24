@@ -19,7 +19,7 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <gl/glut.h>
+#include <GL/glut.h>
 #include <sstream>
 #pragma hdrstop
 using namespace Spr;
@@ -68,7 +68,6 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 void display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 

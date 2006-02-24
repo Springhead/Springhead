@@ -1,4 +1,4 @@
-#include "springhead.h"
+//#include "springhead.h"
 #include "Object.h"
 #include "Scene.h"
 #pragma hdrstop

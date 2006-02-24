@@ -44,7 +44,8 @@ endif
 # 	common rules
 # ----------------------------------------------------------					
 CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG)
-LDFLAGS 		= \
+LDFLAGS 		= $(LDFLAGS.EXTRA) \
+					$(LDFLAGS.GL) \
 					-L$(SRC_DIR)/Base/ \
 					-L$(SRC_DIR)/Collision/ \
 					-L$(SRC_DIR)/Foundation/ \

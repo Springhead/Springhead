@@ -8,7 +8,7 @@
  
 【終了基準】
   ・赤いティーポットと青いティーポットの10秒後の位置をそれぞれ計算し期待値とする。
-  　この期待値とシミュレーション結果を比較して、一致したら正常終了とする。
+  　この期待値とシミュレーション結果を比較して、一致したら正常終了(success)とする。
   
 【処理の流れ】
   ・シミュレーションに必要な情報(質量・重心・慣性テンソルなど)を設定する。
@@ -21,13 +21,7 @@
  */
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
-
-#ifdef _MSC_VER
-# include <gl/glut.h>
-#else
 # include <GL/glut.h>
-#endif
-
 #pragma hdrstop
 using namespace Spr;
 
@@ -181,16 +175,17 @@ void idle(){
 		redApprox	= approx(redPos, redTeapot->GetCenterPosition());
 		blueApprox	= approx(bluePos, blueTeapot->GetCenterPosition());
 
-		if (redApprox && blueApprox) {
-			DSTR << "\nシミュレーション結果は正しい結果となりました。" << std::endl;
+		if (redApprox && blueApprox) {	// シミュレーション結果は正しい結果となりました。
+			DSTR << "\nPHSimple success (redTeapot:success, blueTeapot:success)" << std::endl;
 			exit(EXIT_SUCCESS);
-		} else if (redApprox) {
-			DSTR << "\nシミュレーションした結果、";
-			DSTR << "赤いティーポットは正しい結果が得られましたが、青いティーポットは正しい結果が得られませんでした。" << std::endl;
+		} else if (redApprox) {			// 赤いティーポットは正しい結果が得られましたが、青いティーポットは正しい結果が得られませんでした。
+			DSTR << "\nPHSimple failure (redTeapot:success, blueTeapot:failure)" << std::endl;
 			exit(EXIT_FAILURE);
-		} else {
-			DSTR << "\nシミュレーションした結果、";
-			DSTR << "青いティーポットは正しい結果が得られましたが、赤いティーポットは正しい結果が得られませんでした。" << std::endl;
+		} else if (blueApprox) {		// 青いティーポットは正しい結果が得られましたが、赤いティーポットは正しい結果が得られませんでした。		
+			DSTR << "\nPHSimple failure (redTeapot:failure, blueTeapot:success)" << std::endl;
+			exit(EXIT_FAILURE);
+		} else {						// 青いティーポットと赤いティーポットはともに正しい結果が得られませんでした。
+			DSTR << "\nPHSimple failure (redTeapot:failure, blueTeapot:failure)" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	} 

@@ -11,23 +11,18 @@
 【処理の流れ】
  
  */
-
 #include <Springhead.h>		//	Springheadのインタフェース
-#include <../src/WinBasis/WBPreciseTimer.h>
-#include <ctime>
 #include <string>
-
 #ifdef _MSC_VER
-# include <gl/glut.h>
-#else
-# include <GL/glut.h>
+# include <../src/WinBasis/WBPreciseTimer.h>
+# include <windows.h>
 #endif
-
-#include <windows.h>
+#include <GL/glut.h>
 #pragma hdrstop
 using namespace Spr;
 
 #define ESC				27
+#define EXIT_TIMER		200
 #define NUM_BOX			6
 
 float boxpos[10][3] = {
@@ -49,9 +44,6 @@ static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
-
-static clock_t starttime, endtime, count;
-static bool timeflag = false;
 
 static int elapse = 100;	//timer周期[ms]
 static double dt = 0.05;	//積分ステップ[s]
@@ -79,7 +71,6 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 void SPR_CDECL display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-	glMaterialf(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, (1.f,1.f,1.f,1.f));
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
 
@@ -205,25 +196,26 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  */
 void SPR_CDECL idle(){
 	scene->Step();
-
-	// 床の上に5秒静止したら正常終了とする。
-	endtime = clock();
-	count = (endtime - starttime) / (float)CLOCKS_PER_SEC;
-	if (count > 30) {
-		DSTR << "\n正常終了." << std::endl;
-		exit(EXIT_SUCCESS);
-	} 
-
 	glutPostRedisplay();
+	static int count;
+	count++;
+	if (++count > EXIT_TIMER) exit(0);
 }
-void SPR_CDECL timer(int id){
-	static WBPreciseTimer pt;
-	pt.CountUS();
 
-	int n = (double)(elapse) / 1000.0 / dt;
+/**
+ brief  	glutTimerFuncで指定したコールバック関数
+ param	 	<in/--> id　　 タイマーの区別をするための情報
+ return 	なし
+ */
+void SPR_CDECL timer(int id){
+	int n = (int)((double)(elapse) / 1000.0 / dt);
 	for(int i = 0; i < n; i++)
 		idle();
+#ifdef _MSC_VER	
+	static WBPreciseTimer pt;
+	pt.CountUS();
 	DSTR << pt.CountUS() << std::endl;
+#endif
 	glutTimerFunc(elapse, timer, 0);
 }
 

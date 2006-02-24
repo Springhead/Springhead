@@ -8,12 +8,12 @@
 #	A rule to make sub directories.
 ################################################################
 
-SRC_DIR 	= ..
+SRC_DIR 		= ..
 
-SUB_DIRS	= BoxStack
+SAMPLES_DIR		= BoxStack
 
 all:
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(SAMPLES_DIR); \
 	do echo "---------------------------------------------"; \
 	   echo "             make $$dir    			      "; \
 	   echo "---------------------------------------------"; \
@@ -30,7 +30,7 @@ clean:
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@echo " [clean] : delete all the object files in Samples directory. "
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(SAMPLES_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
@@ -39,7 +39,7 @@ realclean:
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@echo " [realclean] : delete all generated files in Samples directory. "
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(SAMPLES_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 

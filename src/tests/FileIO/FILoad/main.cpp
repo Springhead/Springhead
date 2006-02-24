@@ -35,8 +35,8 @@ int main(){
   ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
   
 【終了基準】
-  ・自由落下させた剛体が床の上で5秒間静止したら正常終了とする。
-  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
+  ・自由落下させた剛体が床の上で5秒間静止したら正常終了(success)とする。
+  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了(failure)とする。
  
 【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
@@ -241,7 +241,7 @@ void idle(){
 			endtime = clock();
 			count = (endtime - starttime) / (float)CLOCKS_PER_SEC;
 			if (count > 5) {
-				DSTR << "\n正常終了." << std::endl;
+				DSTR << "\nFILoad success." << std::endl;
 				exit(EXIT_SUCCESS);
 			} 
 		}		
@@ -250,7 +250,7 @@ void idle(){
 		// 自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
 		timeflag = false;
 		if (curpos.y < FALL_DISTANCE) {	
-			DSTR << "\n異常終了." << std::endl;
+			DSTR << "\nFILoad failure." << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	}	

@@ -1,7 +1,7 @@
 #include "Physics.h"
 #pragma hdrstop
 #include <sstream>
-#include <FLOAT.H>
+//#include <FLOAT.H>
 
 
 

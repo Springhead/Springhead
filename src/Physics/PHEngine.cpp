@@ -3,7 +3,7 @@
 #pragma hdrstop
 #include "PHEngine.h"
 #include <sstream>
-#include <FLOAT.H>
+//#include <FLOAT.H>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
