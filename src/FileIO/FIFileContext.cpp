@@ -35,9 +35,9 @@ bool FIFileContext::FileInfo::Map(std::string fn){
 	fseek(hFile, 0, SEEK_END);
 	int const len = ftell(hFile);
 	fseek(hFile, 0, SEEK_SET);
-	char *buf = new char[len];
-	fread(buf, 1, len, hFile);
-	start = buf;
+	buffer = DBG_NEW char[len];
+	fread(buffer, 1, len, hFile);
+	start = buffer;
 	end = start + len;
 #endif
 	return true;
@@ -50,6 +50,7 @@ void FIFileContext::FileInfo::Unmap(){
 	CloseHandle(hFile);			// ファイルのハンドルをクローズ
 #else
 	fclose(hFile);
+	delete[] buffer;
 #endif
 	start = end = NULL;
 }

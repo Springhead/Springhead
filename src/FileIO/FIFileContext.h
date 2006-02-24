@@ -20,6 +20,7 @@ public:
 		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
 #else 
 		FILE *hFile;
+		char *buffer;
 #endif
 		// コンストラクタ
 		FileInfo():line(0),start(NULL), end(NULL){}
