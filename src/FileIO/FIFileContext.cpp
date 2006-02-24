@@ -8,30 +8,50 @@
 namespace Spr{;
 //---------------------------------------------------------------------------
 //	FIFileContext::FileInfo
+// ファイル マッピング
+// ファイルfnを読み属性でマップし、その先頭アドレスをポインタstartに取得
 bool FIFileContext::FileInfo::Map(std::string fn){
 #ifdef _WIN32
-	hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);
-	if (hFile){
-		DWORD len = GetFileSize(hFile,NULL);
-		hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-		start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
-		end = start + len;
-		return true;
-	}
-	return false;
+	//  ファイルをメモリにマッピングすることで高速かつ簡単にファイルを扱える
+	// ファイルオープン
+	hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
+	if (!hFile){
+		DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
+		return false;	
+	}		
+	// ファイルサイズの取得
+	DWORD len = GetFileSize(hFile,NULL);	
+	// ファイルマッピングオブジェクト作成
+	hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+	// ファイルをマップ
+	start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
+	end = start + len;
 #else	
-	return false;
+	hFile = fopen(fn.c_str(), "rb");
+	if (!hFile) {
+		DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
+		return false;	
+	}		
+	fseek(hFile, 0, SEEK_END);
+	int const len = ftell(hFile);
+	fseek(hFile, 0, SEEK_SET);
+	char *buf = new char[len];
+	fread(buf, 1, len, hFile);
+	start = buf;
+	end = start + len;
 #endif
+	return true;
 }
+// ファイル アンマッピング
 void FIFileContext::FileInfo::Unmap(){
 #ifdef _WIN32
-	UnmapViewOfFile(start);
-	CloseHandle(hFileMap);
-	CloseHandle(hFile);
-	start = end = NULL;
+	UnmapViewOfFile(start);		// マップしたファイルをアンマップ
+	CloseHandle(hFileMap);		// ファイルマッピングオブジェクトをクローズ
+	CloseHandle(hFile);			// ファイルのハンドルをクローズ
 #else
-
+	fclose(hFile);
 #endif
+	start = end = NULL;
 }
 FIFileContext::FileInfo::~FileInfo(){
 	if (start) Unmap();

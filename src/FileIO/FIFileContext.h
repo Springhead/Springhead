@@ -17,11 +17,15 @@ public:
 		const char* start;	///<	メモリマップされたファイルの先頭
 		const char* end;	///<	メモリマップされたファイルの終端
 #ifdef _WIN32
-		HANDLE hFile, hFileMap;
+		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
+#else 
+		FILE *hFile;
 #endif
-
+		// コンストラクタ
 		FileInfo():line(0),start(NULL), end(NULL){}
+		// ファイル マッピング		
 		bool Map(std::string fn);
+		// ファイル アンマッピング
 		void Unmap();
 	};
 	UTStack<FileInfo> fileInfo;
