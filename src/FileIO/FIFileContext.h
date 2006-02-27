@@ -5,7 +5,11 @@
 #include <string>
 #ifdef _WIN32
 #include <WinBasis/WinBasis.h>
+#else 
+#include <sys/stat.h>
 #endif
+
+
 namespace Spr{;
 
 class FIFileContext{
@@ -19,8 +23,11 @@ public:
 #ifdef _WIN32
 		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
 #else 
-		FILE *hFile;
-		char *buffer;
+		//FILE *hFile;
+		//char *buffer;
+		int fd;					///<	ファイルディスクリプタ
+		struct stat filestat;	///<	ファイルサイズを得るのに使う
+		void *sourceptr;
 #endif
 		// コンストラクタ
 		FileInfo():line(0),start(NULL), end(NULL){}
