@@ -238,6 +238,10 @@ CDShapeIf** PHSolid::GetShapes(){
 //	PHSolidContainer
 //
 OBJECTIMP(PHSolidContainer, PHEngine);
+
+PHSolidContainer::PHSolidContainer(){
+}
+
 bool PHSolidContainer::AddChildObject(Object* o, PHScene* s){
 	if (DCAST(PHSolid, o)){
 		solids.push_back((PHSolid*)o);
@@ -254,7 +258,12 @@ bool PHSolidContainer::DelChildObject(Object* o, PHScene* s){
 	return false;
 }
 
-void  PHSolidContainer::Step(){
+void PHSolidContainer::Reset(){
+	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it)
+		(*it)->SetUpdated(false);
+}
+
+void PHSolidContainer::Step(){
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it)
 		(*it)->Step();
 }
@@ -263,24 +272,8 @@ void  PHSolidContainer::Step(){
 //	PHSolidInitializer
 //
 OBJECTIMP(PHSolidInitializer, PHEngine);
-bool PHSolidInitializer::AddChildObject(Object* o, PHScene* s){
-	if (DCAST(PHSolid, o)){
-		solids.push_back((PHSolid*)o);
-		return true;
-	}
-	return false;
-}
-bool PHSolidInitializer::DelChildObject(Object* o, PHScene* s){
-	PHSolid* so = DCAST(PHSolid, o);
-	if (so){
-		solids.Erase(so);
-		return true;
-	}
-	return false;
-}
 void PHSolidInitializer::Step(){
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
-		(*it)->SetUpdated(false);
-}	
+		container->Reset();	
+}
 
 }

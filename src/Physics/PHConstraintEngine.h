@@ -111,10 +111,11 @@ protected:
 	//void SetInitialValue();		/// LCPの決定変数の初期値を設定
 	
 public:
-	void Add(PHSolid* s);		/// Solid を登録する
-	void Remove(PHSolid* s);	/// 登録されているSolidを削除する
+	void Add(PHSolid* s);			/// Solid を登録する
+	void Remove(PHSolid* s);		/// 登録されているSolidを削除する
+	void AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
 	void Invalidate(){ready = false;}	/// readyフラグをリセット
-	void Init();				/// 初期化し，readyフラグをセット
+	void Init();						/// 初期化し，readyフラグをセット
 	///
 	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	///	速度→位置、加速度→速度の積分

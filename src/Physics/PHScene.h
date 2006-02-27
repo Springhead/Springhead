@@ -9,6 +9,7 @@ namespace Spr {;
 class CDShape;
 struct CDShapeDesc;
 class PHSolidContainer;
+struct PHJointDesc;
 
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
@@ -36,6 +37,7 @@ public:
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
+	void	   CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 
 	void SetGravity(const Vec3d& g);
 	PHSdkIf* GetSdk();

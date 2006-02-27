@@ -161,6 +161,10 @@ void PHConstraintEngine::Remove(PHSolid* s){
 		Invalidate();
 }
 
+void PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
+
+}
+
 void PHConstraintEngine::Init(){
 	int N = solids.size();
 

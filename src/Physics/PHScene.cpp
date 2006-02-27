@@ -23,10 +23,11 @@ void PHScene::Init(){
 	engines.scene = this;
 	Scene::Clear();
 
-	engines.Add(DBG_NEW PHSolidInitializer);
-	
 	solids = DBG_NEW PHSolidContainer;
 	engines.Add(solids);
+	PHSolidInitializer* si = DBG_NEW PHSolidInitializer;
+	si->container = solids;
+	engines.Add(si);
 	
 	PHGravityEngine* ge = DBG_NEW PHGravityEngine;
 	engines.Add(ge);
@@ -53,11 +54,6 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	s->SetScene((PHSceneIf*)this);
 
 	solids->AddChildObject(s, this);
-
-	PHSolidInitializer* si;
-	engines.Find(si);
-	assert(si);
-	si->AddChildObject(s, this);
 
 	switch(contactSolver){
 	case SOLVER_PENALTY:{
@@ -96,6 +92,13 @@ int PHScene::NSolids(){
 }
 PHSolidIf** PHScene::GetSolids(){
 	return (PHSolidIf**)&*solids->solids.begin();
+}
+
+void PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
+	PHConstraintEngine* ce;
+	engines.Find(ce);
+	assert(ce);
+	ce->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc);	
 }
 
 void PHScene::Clear(){

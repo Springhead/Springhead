@@ -9,6 +9,8 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
+struct PHJointDesc;
+
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
 	/// 積分ステップ
@@ -53,6 +55,9 @@ public:
 	virtual int NSolids()=0;
 	///	Solidの取得
 	virtual PHSolidIf** GetSolids()=0;
+
+	/// 関節の作成
+	virtual void CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
 	/// 積分ステップを返す
 	virtual double GetTimeStep()const=0;

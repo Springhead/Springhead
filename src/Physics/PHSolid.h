@@ -216,6 +216,8 @@ public:
 	bool DelChildObject(Object* o, PHScene* s);
 	///
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
+	/// solidのリセット
+	void Reset();
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
 	
@@ -224,24 +226,20 @@ public:
 	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid
 	virtual ObjectIf* GetChildObject(size_t i){ return (PHSolidIf*)solids[i]; }
+
+	PHSolidContainer();
 };
 
-/** Solidのリセットを行うエンジン．他のエンジンに先立って呼ばれる． */
+/** SolidContainerのResetを呼ぶためだけのエンジン */
 class PHSolidInitializer : public PHEngine{
 	OBJECTDEF(PHSolidInitializer);
 public:
-	PHSolids solids;
-	bool AddChildObject(Object* o, PHScene* s);
-	bool DelChildObject(Object* o, PHScene* s);
+	PHSolidContainer* container;
+	
 	///
 	int GetPriority() const {return SGBP_SOLIDINITIALIZER;}
 	///	updatedフラグをリセットする
 	virtual void Step();
-	virtual void Clear(PHScene* s){ solids.clear(); }
-	///	所有しているsolidの数
-	virtual size_t NChildObject() const { return solids.size(); }
-	///	所有しているsolid
-	virtual ObjectIf* GetChildObject(size_t i){ return (PHSolidIf*)solids[i]; }
 };
 
 
