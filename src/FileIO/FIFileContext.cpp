@@ -14,8 +14,7 @@ namespace Spr{;
 //---------------------------------------------------------------------------
 //	FIFileContext::FileInfo
 // ファイル マッピング
-// ファイルfnを読み属性でマップし、その先頭アドレスをポインタstartに取得
-//  ファイルをメモリにマッピングすることで高速かつ簡単にファイルを扱える
+//   既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
 bool FIFileContext::FileInfo::Map(std::string fn){
 #ifdef _WIN32
 	// ファイルオープン
@@ -28,7 +27,7 @@ bool FIFileContext::FileInfo::Map(std::string fn){
 	DWORD len = GetFileSize(hFile,NULL);	
 	// ファイルマッピングオブジェクト作成
 	hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-	// ファイルをマップ
+	// ファイルfnを読み属性でマップし、その先頭アドレスを取得
 	start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
 	end = start + len;
 	return true;	

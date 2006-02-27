@@ -34,7 +34,7 @@ $(TARGET_LIB): $(OBJS)
 clean:
 	-$(RM) $(OBJS) $(TARGET_LIB)
 	
-VCPROOUT 	= $(wildcard *.lib Debug* Release*)
+VCPROOUT 	= $(wildcard *.lib Debug* Release* *.ncb)
 DOXYOUT 	= $(wildcard html *.tag *.log *.tmp)
 realclean: clean
 	-$(RM) $(VCPROOUT) $(DOXYOUT)
