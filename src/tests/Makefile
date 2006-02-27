@@ -8,7 +8,7 @@
 #	A rule to make sub directories.
 ################################################################
 
-SRC_DIR 	= ..
+TOP_DIR 	= ../..
 
 TESTS_DIR	= FileIO Graphics Physics
 
@@ -25,7 +25,7 @@ all:
 clean:
 	@echo ""
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo " [clean] : delete all the object files in tests directory. "
+	@echo "               making clean in tests ...                          "
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(TESTS_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
@@ -34,13 +34,13 @@ clean:
 realclean:
 	@echo ""
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo " [realclean] : delete all generated files in tests directory. "
+	@echo "               making realclean in tests ...                      "
 	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
 	@for dir in $(TESTS_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
-	done 
+	done
 
-
+	
 ################################################################
 # 	THE END
 ################################################################

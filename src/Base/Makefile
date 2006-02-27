@@ -7,8 +7,8 @@
 ################################################################
 #	common rules
 ################################################################
-SRC_DIR 	= ..
-include 	$(SRC_DIR)/make.header
+TOP_DIR 	= ../..
+include 	$(TOP_DIR)/make.header
 TARGET_DIR  := $(shell /bin/pwd)
 TARGET_NAME	:= $(shell /bin/basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a

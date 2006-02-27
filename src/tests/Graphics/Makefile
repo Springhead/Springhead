@@ -8,7 +8,7 @@
 #	A rule to make sub directories.
 ################################################################
 
-SRC_DIR 		= ../..
+TOP_DIR 		= ../../..
 
 GRAPHICS_DIR	= GRSimple
 

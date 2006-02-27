@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for gcc 3.4 on cygwin and Linux.
+# 	Makefile for src
 #
 ################################################################
 
@@ -8,10 +8,9 @@
 #	A rule to make sub directories.
 ################################################################
 
-export SRC_DIR := $(shell /bin/pwd)
-include $(SRC_DIR)/make.header
+TOP_DIR			= ..
 
-LIB_DIRS		= Base \
+LIBS_DIR		= Base \
 				Collision \
 				FileIO \
 				Graphics \
@@ -20,12 +19,12 @@ LIB_DIRS		= Base \
 TESTS_DIR		= tests 
 SAMPLES_DIR		= Samples
 
-SUB_DIRS = $(LIB_DIRS) $(TESTS_DIR) $(SAMPLES_DIR)
+SRC_SUB_DIRS = $(LIBS_DIR) $(TESTS_DIR) $(SAMPLES_DIR)
 
 all: library tests-all samples-all
 
 library:
-	@for dir in $(LIB_DIRS); \
+	@for dir in $(LIBS_DIR); \
 	do echo "============================================="; \
 	   echo "       Make $$dir Library.   			      "; \
 	   echo "============================================="; \
@@ -54,18 +53,12 @@ samples-all:
 ################################################################
 
 clean:
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo " [clean] : removes objects and binary. "
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(SRC_SUB_DIRS); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@echo " [realclean] : remove all generated files. "
-	@echo "*----*----*----*----*----*----*----*----*----*----*----*----*----*"
-	@for dir in $(SUB_DIRS); \
+	@for dir in $(SRC_SUB_DIRS); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 

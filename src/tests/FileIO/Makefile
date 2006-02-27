@@ -8,7 +8,7 @@
 #	A rule to make sub directories.
 ################################################################
 
-SRC_DIR 	= ../..
+TOP_DIR 	= ../../..
 
 FILEIO_DIR	= FILoad
 

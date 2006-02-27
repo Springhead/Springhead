@@ -7,8 +7,8 @@
 ################################################################
 #	common rules
 ################################################################
-SRC_DIR 	= ..
-include 	$(SRC_DIR)/make.header
+TOP_DIR 	= ../..
+include 	$(TOP_DIR)/make.header
 TARGET_DIR  := $(shell /bin/pwd)
 TARGET_NAME	:= $(shell /bin/basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
@@ -24,9 +24,9 @@ OBJS 		= ${SRCS:.cpp=.o}
 all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
-		$(RM) $@
+		-$(RM) $@
 		$(AR) r $@ $?	
-		-$(RANLIB) $@
+		$(RANLIB) $@
 	
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
@@ -38,7 +38,7 @@ VCPROOUT 	= $(wildcard *.lib Debug* Release*)
 DOXYOUT 	= $(wildcard html *.tag *.log *.tmp)
 realclean: clean
 	-$(RM) $(VCPROOUT) $(DOXYOUT)
-			
+	
 			
 ################################################################
 #	THE END
