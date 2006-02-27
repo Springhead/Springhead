@@ -46,18 +46,18 @@ endif
 CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG)
 LDFLAGS 		= $(LDFLAGS.EXTRA) \
 					$(LDFLAGS.GL) \
-					-L$(SRC_DIR)/Base/ \
-					-L$(SRC_DIR)/Collision/ \
-					-L$(SRC_DIR)/Foundation/ \
-					-L$(SRC_DIR)/Physics/ \
-					-L$(SRC_DIR)/Graphics/ \
-					-L$(SRC_DIR)/FileIO/ \
+					-L$(TOP_DIR)/src/Base/ \
+					-L$(TOP_DIR)/src/Collision/ \
+					-L$(TOP_DIR)/src/Foundation/ \
+					-L$(TOP_DIR)/src/Physics/ \
+					-L$(TOP_DIR)/src/Graphics/ \
+					-L$(TOP_DIR)/src/FileIO/ \
 					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
 					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
 					$(LDFLAGS.EXTRA) \
 					$(LDFLAGS.GL)
 					
-INCLUDES		+= -I$(SRC_DIR)/../include -I$(SRC_DIR) -I.
+INCLUDES		+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 
 
 #####################################################################
