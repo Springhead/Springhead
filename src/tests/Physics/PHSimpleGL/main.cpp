@@ -176,16 +176,16 @@ void idle(){
 		blueApprox	= approx(bluePos, blueTeapot->GetCenterPosition());
 
 		if (redApprox && blueApprox) {	// シミュレーション結果は正しい結果となりました。
-			DSTR << "\nPHSimple success (redTeapot:success, blueTeapot:success)" << std::endl;
+			DSTR << "\nPHSimpleGL success (redTeapot:success, blueTeapot:success)" << std::endl;
 			exit(EXIT_SUCCESS);
 		} else if (redApprox) {			// 赤いティーポットは正しい結果が得られましたが、青いティーポットは正しい結果が得られませんでした。
-			DSTR << "\nPHSimple failure (redTeapot:success, blueTeapot:failure)" << std::endl;
+			DSTR << "\nPHSimpleGL failure (redTeapot:success, blueTeapot:failure)" << std::endl;
 			exit(EXIT_FAILURE);
 		} else if (blueApprox) {		// 青いティーポットは正しい結果が得られましたが、赤いティーポットは正しい結果が得られませんでした。		
-			DSTR << "\nPHSimple failure (redTeapot:failure, blueTeapot:success)" << std::endl;
+			DSTR << "\nPHSimpleGL failure (redTeapot:failure, blueTeapot:success)" << std::endl;
 			exit(EXIT_FAILURE);
 		} else {						// 青いティーポットと赤いティーポットはともに正しい結果が得られませんでした。
-			DSTR << "\nPHSimple failure (redTeapot:failure, blueTeapot:failure)" << std::endl;
+			DSTR << "\nPHSimpleGL failure (redTeapot:failure, blueTeapot:failure)" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	} 
