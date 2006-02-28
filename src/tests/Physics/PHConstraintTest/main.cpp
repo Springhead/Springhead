@@ -1,15 +1,12 @@
-// PHConstraintTest.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
-//
-
 /**
  Springhead2/src/tests/Physics/PHConstraintTest.cpp
 
 【概要】
+  ・接触エンジンを拘束法（SOLVER_CONSTRAINT）に設定し、シミュレーションする。
   
 【終了基準】
- 
-【処理の流れ】
- 
+　・数ステップ間、床の上に静止したら正常終了。　
+   
  */
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <string>
@@ -22,8 +19,10 @@
 using namespace Spr;
 
 #define ESC				27
-#define EXIT_TIMER		200
-#define NUM_BOX			6
+//#define EXIT_TIMER		200		
+#define EXIT_TIMER		20		
+//#define NUM_BLOCK		6
+#define NUM_BLOCK		1
 
 float boxpos[10][3] = {
 	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
@@ -32,7 +31,10 @@ float boxpos[10][3] = {
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
-PHSolidIf* soFloor, *soBlock[NUM_BOX];
+PHSolidIf* soFloor, *soBlock[NUM_BLOCK];
+static int	 stillStepCnt[NUM_BLOCK];			// 静止したステップカウント
+static Vec3d prepos[NUM_BLOCK];				// previous position
+static Vec3d curpos[NUM_BLOCK];				// current position
 
 // 光源の設定 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
@@ -103,7 +105,7 @@ void SPR_CDECL display(){
 	glPopMatrix();
 
 	
-	for(int n = 0; n < NUM_BOX; n++){
+	for(int n = 0; n < NUM_BLOCK; n++){
 		// 上の青い剛体(soBlock)
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 		glPushMatrix();
@@ -195,11 +197,34 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void SPR_CDECL idle(){
+	int iCnt = 0;
+	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
+		prepos[iCnt] = soBlock[iCnt]->GetFramePosition();
+	}
 	scene->Step();
+	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
+		curpos[iCnt] = soBlock[iCnt]->GetFramePosition();
+	}
+
+	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
+		if (approx(prepos[iCnt], curpos[iCnt])){			// 一致した場合はインクリメント
+			stillStepCnt[iCnt]++;
+		} else {											// 一致しなかった場合はカウントを0に初期化
+			stillStepCnt[iCnt] = 0;
+		}
+	}
+
+	iCnt = 0;
+	while(stillStepCnt[iCnt] > EXIT_TIMER){
+		if (iCnt == NUM_BLOCK-1){
+			DSTR << "\nPHConstraintTest success." << std::endl;
+			exit(EXIT_SUCCESS);
+		}
+	}
+
+	std::cout << prepos[NUM_BLOCK-1] << ' ' << curpos[NUM_BLOCK-1] << ' ' << prepos[NUM_BLOCK-1]-curpos[NUM_BLOCK-1] << std::endl;
 	glutPostRedisplay();
-	static int count;
-	count++;
-	if (++count > EXIT_TIMER) exit(0);
+
 }
 
 /**
@@ -226,7 +251,7 @@ void SPR_CDECL timer(int id){
  return		0 (正常終了)
  */
 int SPR_CDECL main(int argc, char* argv[]){
-	sdk = CreatePHSdk();						// SDKの作成　
+	sdk = CreatePHSdk();							// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
 	dscene.timeStep = dt;
@@ -235,8 +260,8 @@ int SPR_CDECL main(int argc, char* argv[]){
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
 	dsolid.inertia *= 2.0;
-	for(int i = 0; i < NUM_BOX; i++)
-		soBlock[i] = scene->CreateSolid(dsolid);			// 剛体をdescに基づいて作成
+	for(int i = 0; i < NUM_BLOCK; i++)
+		soBlock[i] = scene->CreateSolid(dsolid);	// 剛体をdescに基づいて作成
 	
 	dsolid.mass = 1e20f;
 	dsolid.inertia *= 1e20f;
@@ -260,27 +285,23 @@ int SPR_CDECL main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 5;
+			md.vertices[i].x *= 10;		
 			md.vertices[i].z *= 5;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
 
 	soFloor->AddShape(meshFloor);
-	for(int i = 0; i < NUM_BOX; i++)
+	for(int i = 0; i < NUM_BLOCK; i++)
 		soBlock[i]->AddShape(meshBlock);
 	
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	for(int i = 0; i < NUM_BOX; i++)
+	for(int i = 0; i < NUM_BLOCK; i++)
 		soBlock[i]->SetFramePosition(*(Vec3f*)&boxpos[i]);
-	//soBlock[0]->SetOrientation(Quaternionf::Rot(Rad(0), 'z'));
-	soBlock[5]->SetOrientation(Quaternionf::Rot(Rad(45), 'z'));
+	//soBlock[5]->SetOrientation(Quaternionf::Rot(Rad(45), 'z'));
+	soBlock[NUM_BLOCK-1]->SetOrientation(Quaternionf::Rot(Rad(45), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
-
-	// デバッグ出力
-	//dstrSolid(std::string("soFloor"));
-	//dstrSolid(std::string("soBlock"));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
