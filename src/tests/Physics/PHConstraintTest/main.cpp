@@ -19,10 +19,9 @@
 using namespace Spr;
 
 #define ESC				27
-//#define EXIT_TIMER		200		
-#define EXIT_TIMER		20		
-//#define NUM_BLOCK		6
-#define NUM_BLOCK		1
+#define EXIT_TIMER		200		
+#define NUM_BLOCK		6
+//#define NUM_BLOCK		1
 
 float boxpos[10][3] = {
 	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
@@ -197,6 +196,7 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  return 	‚È‚µ
  */
 void SPR_CDECL idle(){
+#if 0	
 	int iCnt = 0;
 	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
 		prepos[iCnt] = soBlock[iCnt]->GetFramePosition();
@@ -224,7 +224,13 @@ void SPR_CDECL idle(){
 
 	std::cout << prepos[NUM_BLOCK-1] << ' ' << curpos[NUM_BLOCK-1] << ' ' << prepos[NUM_BLOCK-1]-curpos[NUM_BLOCK-1] << std::endl;
 	glutPostRedisplay();
-
+#else
+	scene->Step();
+	glutPostRedisplay();
+	static int count;
+	count++;
+	if (++count > 200) exit(0);
+#endif	
 }
 
 /**
