@@ -375,29 +375,29 @@ if (b) glEnable(GL_BLEND);
 }
 /// アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
-	TBlendFunc  bfFactor[2] = { src, dest };
-	GLenum glFactor[2];
+	TBlendFunc  bffac[2] = { src, dest };
+	GLenum glfac[2];
 
 	for (int iCnt=0; iCnt<2; ++iCnt){
-		switch(bfFactor[iCnt]) {
-			case BF_ZERO:				glFactor[iCnt] = GL_ZERO;					break;
-			case BF_ONE:				glFactor[iCnt] = GL_ONE;					break;
-			case BF_SRCCOLOR:			glFactor[iCnt] = GL_SRC_COLOR;				break;
-			case BF_INVSRCCOLOR:		glFactor[iCnt] = GL_ONE_MINUS_SRC_COLOR;	break;
-			case BF_SRCALPHA:			glFactor[iCnt] = GL_SRC_ALPHA;				break;
-			case BF_INVSRCALPHA:		glFactor[iCnt] = GL_ONE_MINUS_SRC_ALPHA;	break;
-			case BF_DESTALPHA:			glFactor[iCnt] = GL_DST_ALPHA;				break;
-			case BF_INVDESTALPHA:		glFactor[iCnt] = GL_ONE_MINUS_DST_ALPHA;	break;
-			case BF_DESTCOLOR:			glFactor[iCnt] = GL_DST_COLOR;				break;
-			case BF_INVDESTCOLOR:		glFactor[iCnt] = GL_ONE_MINUS_DST_COLOR;	break;
-			case BF_SRCALPHASAT:		glFactor[iCnt] = GL_SRC_ALPHA_SATURATE;		break;
-			case BF_BOTHINVSRCALPHA:	glFactor[iCnt] = 0;							break;
-			case BF_BLENDFACTOR:		glFactor[iCnt] = 0;							break;
-			case BF_INVBLENDFACTOR:		glFactor[iCnt] = 0;							break;
-			default:					/* DO NOTHING */							break;
+		switch(bffac[iCnt]) {
+			case BF_ZERO:				glfac[iCnt] = GL_ZERO;					break;
+			case BF_ONE:				glfac[iCnt] = GL_ONE;					break;
+			case BF_SRCCOLOR:			glfac[iCnt] = GL_SRC_COLOR;				break;
+			case BF_INVSRCCOLOR:		glfac[iCnt] = GL_ONE_MINUS_SRC_COLOR;	break;
+			case BF_SRCALPHA:			glfac[iCnt] = GL_SRC_ALPHA;				break;
+			case BF_INVSRCALPHA:		glfac[iCnt] = GL_ONE_MINUS_SRC_ALPHA;	break;
+			case BF_DESTALPHA:			glfac[iCnt] = GL_DST_ALPHA;				break;
+			case BF_INVDESTALPHA:		glfac[iCnt] = GL_ONE_MINUS_DST_ALPHA;	break;
+			case BF_DESTCOLOR:			glfac[iCnt] = GL_DST_COLOR;				break;
+			case BF_INVDESTCOLOR:		glfac[iCnt] = GL_ONE_MINUS_DST_COLOR;	break;
+			case BF_SRCALPHASAT:		glfac[iCnt] = GL_SRC_ALPHA_SATURATE;	break;
+			case BF_BOTHINVSRCALPHA:	glfac[iCnt] = 0;						break;
+			case BF_BLENDFACTOR:		glfac[iCnt] = 0;						break;
+			case BF_INVBLENDFACTOR:		glfac[iCnt] = 0;						break;
+			default:					/* DO NOTHING */						break;
 		}
 	}
-	glBlendFunc(glFactor[0], glFactor[1]);
+	glBlendFunc(glfac[0], glfac[1]);
 
 }
 
