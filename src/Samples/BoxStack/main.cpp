@@ -2,8 +2,7 @@
  Springhead2/src/Samples/BoxStack/main.cpp
 
 【概要】
- ユーザのキー(スペースキー)入力に対してボックスを生成し、積み上げる。
-  ・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
+  ・ユーザのキー(スペースキー)入力に対してボックスを生成し、積み上げる。
   
 【終了基準】
 　・Escキーで強制終了。
@@ -11,14 +10,14 @@
 【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
   　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。
+  ・接触エンジンを拘束エンジンに設定する。
+  ・与えられた条件により⊿t(=0.1)秒後の位置の変化を積分し、OpenGLでシミュレーションする。  
 　・ユーザのキー入力に対しSolidを発生させる。
-  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。  
  
 */
 
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
-#include <string>
 #ifdef __APPLE__
 # include <GLUT/glut.h>
 #else
@@ -50,6 +49,19 @@ static GLfloat mat_floor[]      = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_box[]        = { 0.8, 0.8, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
+
+
+int frame=0,timepassed=0,timebase=0;
+
+void fps(){
+	frame++; 
+	timepassed = glutGet(GLUT_ELAPSED_TIME); 
+	if (1000 < timepassed - timebase) {
+		std::cout << "   FPS:" << frame*1000.0/(timepassed - timebase);
+		timebase = timepassed;		
+		frame = 0;
+	}
+}
 
 /**
  brief     	多面体の面(三角形)の法線を求める
@@ -130,7 +142,10 @@ void display(){
 			}
 		glPopMatrix();
 		std::cout << "\rBox count : " << static_cast<unsigned int>(soBox.size());
+		fps();
 	}
+
+
 
 	glutSwapBuffers();
 }
@@ -159,7 +174,7 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0,10.0,30.0, 
+	gluLookAt(0.0,10.0,25.0, 
 		      0.0,10.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -200,12 +215,12 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
-				soBox.back()->SetFramePosition(Vec3f(0.5,20 + 8+soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "box" << soBox.size();
 				soBox.back()->SetName(os.str().c_str());
-			}
+			} 
 		default:
 			break;
 	}
@@ -221,7 +236,7 @@ void timer(int id){
 //	for(int i=0; i<10; ++i) 
 		scene->Step();
 	glutPostRedisplay();
-	glutTimerFunc(20, timer, 0);
+	glutTimerFunc(33, timer, 0);
 }
 
 /**
@@ -234,7 +249,8 @@ int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
-	dscene.timeStep = 0.01;
+	//dscene.timeStep = 0.01;
+	dscene.timeStep = 0.033;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc
