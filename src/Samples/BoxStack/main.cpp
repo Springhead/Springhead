@@ -19,9 +19,15 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <GL/glut.h>
+#ifdef __APPLE__
+# include <GLUT/glut.h>
+#else
+# include <GL/glut.h>
+#endif
 #include <sstream>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 using namespace Spr;
 
 #define ESC		27
@@ -153,8 +159,8 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0,15.0,30.0, 
-		      0.0, 0.0, 0.0,
+	gluLookAt(0.0,10.0,30.0, 
+		      0.0,10.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -194,8 +200,8 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
-				soBox.back()->SetFramePosition(Vec3f(0.5,10 + 8+soBox.size(),0));
-				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
+				soBox.back()->SetFramePosition(Vec3f(0.5,20 + 8+soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "box" << soBox.size();
 				soBox.back()->SetName(os.str().c_str());

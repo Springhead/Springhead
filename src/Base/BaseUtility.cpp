@@ -1,5 +1,5 @@
 #include "Base.h"
-#ifdef _WIN32
+#ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 

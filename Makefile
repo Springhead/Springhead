@@ -8,7 +8,7 @@
 #	A rule to make sub directories.
 ################################################################
 
-export TOP_DIR := $(shell /bin/pwd)
+export TOP_DIR := $(shell env pwd)
 include $(TOP_DIR)/make.header
 
 SUB_DIRS		= src

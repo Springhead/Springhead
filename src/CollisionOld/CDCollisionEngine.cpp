@@ -1,5 +1,7 @@
 #include "Collision.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include <Graphics/GRMaterial.h>
 
 namespace Spr{;

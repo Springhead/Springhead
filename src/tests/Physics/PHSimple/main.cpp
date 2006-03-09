@@ -17,7 +17,9 @@
     
  */
 #include <Springhead.h>		//	Springheadのインタフェース
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 using namespace Spr;
 
 

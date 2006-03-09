@@ -20,7 +20,6 @@ public:
 	void Print(std::ostream& os) const {}
 	GRDebugRenderIf* CreateDebugRender();
 	GRDeviceGLIf* CreateDeviceGL(int window);
-public:
 };
 
 }

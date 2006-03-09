@@ -14,6 +14,8 @@ public:
 	virtual const char* ClassName() const =0;
 	virtual void* GetSprObject(ObjectIf* intf)const =0;
 	virtual ObjectIf* GetIf(void* obj)const =0;
+protected:
+	virtual ~IfInfo() {};
 };
 
 template <class T>

@@ -50,7 +50,9 @@ int main(){
 #include <ctime>
 #include <string>
 #include <gl/glut.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 using namespace Spr;
 
 #define ESC				27

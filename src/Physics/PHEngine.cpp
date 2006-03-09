@@ -1,6 +1,8 @@
 #include "Springhead.h"
 #include "Physics.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include "PHEngine.h"
 #include <sstream>
 //#include <FLOAT.H>

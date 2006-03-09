@@ -2,9 +2,9 @@
 #include <Foundation/Object.h>
 #include "Scene.h"
 #include <sstream>
-//#include <FLOAT.H>
-
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 
 namespace Spr{;

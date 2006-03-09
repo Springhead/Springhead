@@ -30,6 +30,8 @@ struct CDConvexIf : public CDShapeIf{
 struct CDFaceIf{
 	virtual int NIndex()=0;
 	virtual int* GetIndices()=0;
+protected:
+	virtual ~CDFaceIf() {};
 };
 
 

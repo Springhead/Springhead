@@ -1,5 +1,7 @@
 #include <FileIO/FIDocScene.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 namespace Spr{;
 void SPR_DLL RegisterLoaderForCollision(FILoadScene* l){

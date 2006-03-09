@@ -1,9 +1,8 @@
 #include "Physics.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include <sstream>
-//#include <FLOAT.H>
-
-
 
 namespace Spr{;
 

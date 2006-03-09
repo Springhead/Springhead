@@ -1,10 +1,17 @@
 #include "Graphics.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #ifdef _MSC_VER
 # include <WinBasis/WinBasis.h>
 # include <windows.h>
 #endif
+#ifdef __APPLE__	// Mac OS X's OpenGL layer for Aqua.
+# include <GLUT/glut.h>
+#else
 # include <GL/glut.h>
+#endif
+
 
 
 namespace Spr {;

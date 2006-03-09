@@ -1,7 +1,9 @@
 //#include "springhead.h"
 #include "Object.h"
 #include "Scene.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include <sstream>
 
 namespace Spr {;

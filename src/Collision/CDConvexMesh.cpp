@@ -2,8 +2,9 @@
 #include <Foundation/Object.h>
 #include "Collision.h"
 #include <set>
-
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include "CDQuickHull3DImp.h"
 
 #define CD_EPSILON	HULL_EPSILON

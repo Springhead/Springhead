@@ -1,5 +1,7 @@
 #include "Physics.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include <float.h>
 #include <Collision/CDDetectorImp.h>
 #include <Collision/CDQuickHull2D.h>

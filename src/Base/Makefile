@@ -9,8 +9,8 @@
 ################################################################
 TOP_DIR 	= ../..
 include 	$(TOP_DIR)/make.header
-TARGET_DIR  := $(shell /bin/pwd)
-TARGET_NAME	:= $(shell /bin/basename $(TARGET_DIR))
+TARGET_DIR  := $(shell env pwd)
+TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
 SRCS		= $(wildcard *.cpp)
@@ -25,7 +25,7 @@ all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
 		-$(RM) $@
-		$(AR) r $@ $?	
+		$(AR) $(ARFLAGS) $@ $?	
 		$(RANLIB) $@
 	
 .cpp.o:

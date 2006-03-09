@@ -23,22 +23,33 @@ RM				= rm -rf
 # ----------------------------------------------------------
 #	Cygwin
 # ----------------------------------------------------------
-ifeq ($(findstring CYGWIN, $(shell /bin/uname)), CYGWIN)
-MOCO 	= /moco/masa
+ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
 LDFLAGS.EXTRA 	=	
 LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
+ARFLAGS			= r					
 endif
 
 # ----------------------------------------------------------
 # 	Linux
 # ----------------------------------------------------------
-ifeq ($(findstring Linux, $(shell /bin/uname)), Linux)
+ifeq ($(findstring Linux, $(shell env uname)), Linux)
 LDFLAGS.EXTRA 	=	-L/usr/X11R6/lib	
 LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm
 INCLUDES 		= -I/usr/X11R6/include/
+ARFLAGS			= r	
 endif				
+
+# ----------------------------------------------------------
+# 	Mac OS X(PowerPC, Aqua)
+# ----------------------------------------------------------
+ifeq ($(findstring Darwin, $(shell env uname)), Darwin)
+LDFLAGS.EXTRA 	=	-L/usr/local/lib	
+LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation 
+INCLUDES 		= -I/usr/local/include/
+ARFLAGS			= rcu
+endif		
 
 # ----------------------------------------------------------
 # 	common rules

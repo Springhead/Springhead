@@ -9,9 +9,11 @@ namespace Spr{;
 
 #define IF_IMP_COMMON(cls)															\
 	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
+	template <> \
 	void* IfInfoImp<cls##If>::GetSprObject(ObjectIf* i)const{							\
 		return (Object*)(cls*)(cls##If*)i;											\
 	}																				\
+	template <> \
 	ObjectIf* IfInfoImp<cls##If>::GetIf(void* obj)const{							\
 		return (ObjectIf*)(cls##If*)DCAST(cls, (Object*)obj);						\
 	}																				\

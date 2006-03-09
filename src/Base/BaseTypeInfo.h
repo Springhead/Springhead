@@ -16,6 +16,8 @@ public:
 	virtual bool Inherit(const char* str) const ;
 	virtual const char* ClassName() const = 0;
 	virtual void* CreateInstance() const = 0;
+protected:
+	virtual ~UTTypeInfo() {};
 };
 
 ///	ÀsŒ^î•ñƒNƒ‰ƒX‚ÌÀ‘•
@@ -40,6 +42,8 @@ public:
 class UTTypeInfoBase{
 public:
 	virtual const UTTypeInfo* GetTypeInfo() const =0;
+protected:
+	virtual ~UTTypeInfoBase() {};
 };
 
 //----------------------------------------------------------------------

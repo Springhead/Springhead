@@ -1,5 +1,7 @@
 #include "Collision.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 #define NO_DEBUG_EVAL	//	DEBUG_EVAL‚Ì–³Œø‰»
 #include "CDQuickHull3DImp.h"

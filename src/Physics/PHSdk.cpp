@@ -1,5 +1,7 @@
 #include "Physics.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include <stdlib.h>
 
 namespace Spr{;

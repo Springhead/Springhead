@@ -10,8 +10,8 @@
 
 TOP_DIR 		= ../../../..
 include 		$(TOP_DIR)/make.header
-TARGET_DIR  	:= $(shell /bin/pwd)
-TARGET_NAME		:= $(shell /bin/basename $(TARGET_DIR))
+TARGET_DIR  	:= $(shell env pwd)
+TARGET_NAME		:= $(shell env basename $(TARGET_DIR))
 EXECUTABLE		= $(TARGET_NAME).exe
 
 SRCS			= $(wildcard *.cpp)

@@ -46,12 +46,11 @@
 #endif
 
 /**	hdrstop
-　　Linuxの場合、「#pragma hdrstop を無視します」という警告が出る。
+	　Microsoft compiler、Borland C++ compiler、 Intel C++ compiler などの場合は、 
+	　プリコンパイルヘッダー制御を行う。
  */
-#if !defined LINUX
- #define HDRSTOP hdrstop
-#else
- #define HDRSTOP
+#ifndef __GNUC__
+# define USE_HDRSTOP
 #endif
 
 /** 数値演算範囲エラーのチェック
