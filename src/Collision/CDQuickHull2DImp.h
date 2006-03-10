@@ -62,7 +62,7 @@ unsigned CDQHLines<TVtx>::size(){
 	return end - begin; 
 }
 template <class TVtx>
-CDQHLines<TVtx>::CDQHLines(int l):len(l), epsilon(1e-6), infinite(1e8){
+CDQHLines<TVtx>::CDQHLines(int l):epsilon(1e-6), infinite(1e8), len(l){
 	buffer = new CDQHLine[len];
 	Clear();
 }
