@@ -40,17 +40,22 @@ PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBlock;
 
 // 材質の設定
-GRMaterial mat_blue(Vec4f(0.5, 0.5, 0.7, 0.85),		// ambient	
-					Vec4f(0.1, 0.5, 0.8, 0.85),		// diffuse			
-					Vec4f(1.0, 1.0, 1.0, 0.85),		// specular		
-					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive		
-					100.0);							// power	
+GRMaterial matFloor(Vec4f(0.5, 0.5, 0.5, 1.0),		// ambient
+					Vec4f(1.0, 1.0, 1.0, 1.0),		// diffuse
+					Vec4f(0.8, 0.8, 0.8, 1.0),		// specular
+					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
+					20.0);							// power
+GRMaterial matBlock(Vec4f(0.5, 0.5, 0.7, 0.85),		
+					Vec4f(0.1, 0.5, 0.8, 0.85),		
+					Vec4f(1.0, 1.0, 1.0, 0.85),		
+					Vec4f(0.0, 0.0, 0.0, 1.0),		
+					100.0);							
+GRMaterial matLine(Vec4f(1.0, 1.0, 1.0, 1.0),		
+					Vec4f(1.0, 1.0, 1.0, 1.0),		
+					Vec4f(1.0, 1.0, 1.0, 1.0),		
+					Vec4f(0.0, 0.0, 0.0, 1.0),		
+					100.0);	
 
-GRMaterial mat_white(Vec4f(0.5, 0.5, 0.5, 0.85),	
-					 Vec4f(1.0, 1.0, 1.0, 1.0),			
-					 Vec4f(0.8, 0.8, 0.8, 0.85),		
-					 Vec4f(0.0, 0.0, 0.0, 0.85),		
-					 20.0);
 
 // カメラの設定
 GRCamera camera2(Vec2f(WINSIZE_WIDTH, WINSIZE_HEIGHT), Vec2f(0.0, 0.0), 1.0, 5000.0);
@@ -79,7 +84,7 @@ void display(){
 	render->SetAlphaTest(true);
 	render->SetAlphaMode(render->BF_ONE, render->BF_ZERO);
 
-	render->SetMaterial(mat_white);		// マテリアル設定
+	render->SetMaterial(matFloor);		// マテリアル設定
 	render->PushModelMatrix();			// 行列スタックをプッシュ
 	Posed pose = soFloor->GetPose();
 	pose.ToAffine(ad);
@@ -94,7 +99,7 @@ void display(){
 	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_INVSRCALPHA);
 
 	for(unsigned int blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
-		render->SetMaterial(mat_blue);
+		render->SetMaterial(matBlock);
 		render->PushModelMatrix();
 		pose = soBlock[blockCnt]->GetPose();
 		ad = Affined(pose);
@@ -109,7 +114,7 @@ void display(){
 	//-----------------------------------
 	//				軸
 	//-----------------------------------
-	render->SetMaterial(mat_white);
+	render->SetMaterial(matLine);
 	Vec3f vtx[4] = {Vec3f(0,0,0), Vec3f(10,0,0), Vec3f(0,10,0), Vec3f(0,0,10)};
 	size_t vtxIndex[6] = {0, 1, 0, 2, 0, 3};
 	render->SetLineWidth(2.0);
