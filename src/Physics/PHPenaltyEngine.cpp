@@ -3,6 +3,7 @@
 #pragma hdrstop
 #endif
 #include <float.h>
+#include <Base/Base.h>
 #include <Collision/CDDetectorImp.h>
 
 

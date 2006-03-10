@@ -4,6 +4,7 @@
 #endif
 #include "CDDetectorImp.h"
 #include "CDQuickHull3DImp.h"
+#include <Base/Base.h>
 #include <float.h>
 
 namespace Spr {;
