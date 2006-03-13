@@ -5,7 +5,6 @@
 #endif
 #include "PHEngine.h"
 #include <sstream>
-//#include <FLOAT.H>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
