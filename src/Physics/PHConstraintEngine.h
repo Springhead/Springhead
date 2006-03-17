@@ -10,54 +10,117 @@
 
 namespace Spr{;
 
-/// 1つの接触点
-struct PHContactPoint{
-	int	contact;				/// 属する接触
-	Vec3d pos;					/// 接触点の位置
-	double depth;				/// 交差深度
-	Matrix3d Jlin[2], Jang[2];	/// J行列のブロック		接触している剛体の速度から接触点での速度を与えるヤコビ行列
-	Matrix3d Tlin[2], Tang[2];	/// T行列のブロック		接触力から剛体の速度変化を与える行列
-	Matrix3d A, Ainv;			/// A行列対角ブロック	この接触点の慣性行列
-	Vec3d b;					/// bベクトルのブロック	接触力を0とした場合のdt後の接触点での相対速度
-	double B;					/// Bベクトルの要素		接触力を考慮したdt後の交差深度
-	Vec3d f;					/// 接触力(LCPの相補変数)
-	//Vec3d f0;					/// 反復での初期値(もしあれば前回の解)
-	Vec3d df;					/// 各反復での接触力の変化量(収束判定に使用)
-	double F;
-	double dF;
-
-	PHContactPoint(int c, Vec3d p){
-		contact = c;
-		pos = p;
+/// 剛体の情報
+struct PHSolidAux{
+	PHSolid*	solid;		/// PHSolidへの参照
+	double		minv;		/// 質量の逆数
+	Matrix3d	Iinv;		/// 慣性行列の逆行列
+	Vec3d		v0, w0;		/// 接触力が0の場合のdt後の速度
+	Vec3d		dv, dw;		/// 接触力を考慮した速度変化量
+	Vec3d		dV, dW;		/// Correctionによる移動量，回転量
+	void SetupDynamics(double dt);
+	void SetupCorrection();
+};
+class PHSolidAuxs : public std::vector<PHSolidAux>{
+public:
+	iterator Find(PHSolid* s){
+		iterator is;
+		for(is = begin(); is != end(); is++)
+			if(is->solid == s)
+				break;
+		return is;
+	};
+	void SetupDynamics(double dt){
+		for(iterator is = begin(); is != end(); is++)
+			is->SetupDynamics(dt);
+	}
+	void SetupCorrection(){
+		for(iterator is = begin(); is != end(); is++)
+			is->SetupCorrection();
 	}
 };
-typedef std::vector<PHContactPoint> PHContactPoints;
 
-/// Shape同士の接触
-class PHContact{
+///
+class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
 public:
-	int solid[2];				/// 接触している剛体
-	int shape[2];				/// 接触している形状
-	Vec3d normal;				/// 法線
-//	Vec3d center;				/// 交差形状の重心
-	double depth;
-	double mu;					/// 摩擦係数
-	
-	PHContact(){}
-	/*PHContact(int solid0, int solid1, int shape0, int shape1, Vec3d n, Vec3d c, double _mu){
-		solid[0] = solid0;
-		solid[1] = solid1;
-		shape[0] = shape0;
-		shape[1] = shape1;
-		normal = n;
-		center = c;
-		mu = _mu;
-	}*/
+	PHSolidAux* solid[2];
+	Matrix3d	Rj[2];		/// 各剛体に張り付いた関節フレーム
+	Vec3d		rj[2];
+	Matrix3d	Rjrel;		/// 関節フレーム間の位置関係
+	Vec3d		rjrel;
+	Matrix3d	Jvrel_v[2], Jvrel_w[2], Jwrel_v[2], Jwrel_w[2];
+	void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
+		solid[0] = lhs, solid[1] = rhs;
+		for(int i = 0; i < 2; i++){
+			desc.poseJoint[i].Ori().ToMatrix(Rj[i]);
+			rj[i] = desc.poseJoint[i].Pos();
+		}
+	}
+	void CompRelativeVelJacobian();
+	virtual void SetupDynamics(double dt) = 0;
+	virtual void SetupCorrection(double dt) = 0;
+	virtual void IterateDynamics() = 0;
+	virtual void IterateCorrection() = 0;
+};
+class PHConstraints : public std::vector< UTRef<PHConstraint> >{
+public:
+	void SetupDynamics(double dt){
+		for(iterator it = begin(); it != end(); it++)
+			(*it)->SetupDynamics(dt);
+	}
+	void SetupCorrection(double dt){
+		for(iterator it = begin(); it != end(); it++)
+			(*it)->SetupCorrection(dt);
+	}
+	void IterateDynamics(){
+		for(iterator it = begin(); it != end(); it++)
+			(*it)->IterateDynamics();
+	}
+	void IterateCorrection(){
+		for(iterator it = begin(); it != end(); it++)
+			(*it)->IterateCorrection();
+	}
 };
 
-/// 全ての接触を保持するコンテナ
-class PHContacts : public std::vector<PHContact>{
+template<int N>
+class PHConstraintND : public PHConstraint{
 public:
+	typedef PTM::TVector<N, double> VecNd;
+	VecNd	f, F, b, B;
+	PTM::TMatrixCol<N, 3, double>	Jvrel, Jwrel;
+	PTM::TMatrixCol<N, 3, double>	Jv[2], Jw[2];
+	PTM::TMatrixCol<3, N, double>	Tv[2], Tw[2];
+	PTM::TMatrixCol<N, N, double>	A, Ainv;
+	PTM::TVector<6-N, double>		u;
+	virtual void CompJacobian();
+	virtual void SetupDynamics(double dt);
+	virtual void SetupCorrection(double dt);
+	virtual void IterateDynamics();
+	virtual void IterateCorrection();
+	virtual void CompJointJacobian(){}
+	virtual void ProjectionDynamics(VecNd& f){}
+	virtual void ProjectionCorrection(VecNd& F){}
+	virtual void CompError() = 0;
+};
+
+class PHContactPoint : public PHConstraintND<3>{
+public:
+	CDShapePair* shapePair;
+	Vec3d pos;
+	virtual void CompJacobian();
+	virtual void CompError();
+	virtual void ProjectionDynamics(VecNd& f);
+	virtual void ProjectionCorrection(VecNd& F);
+	PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1):shapePair(sp), pos(p){
+		solid[0] = s0, solid[1] = s1;
+	}
+};
+	
+class PHHingeJoint : public PHConstraintND<5>{
+public:
+	virtual void CompJointJacobian();
+	virtual void CompError();
+	PHHingeJoint();
 };
 
 class PHConstraintEngine: public PHEngine{
@@ -65,55 +128,45 @@ class PHConstraintEngine: public PHEngine{
 
 	OBJECTDEF(PHConstraintEngine);
 
-	/// 接触に関与する剛体の情報
-	struct PHSolidAux{
-		double		minv;				/// 各剛体の質量の逆数
-		Matrix3d	Iinv;				/// 各剛体の慣性行列の逆行列
-		Vec3d		Vlin0, Vang0;		/// 接触力が0の場合のdt後の速度
-		Vec3d		dVlin, dVang;		/// 接触力を考慮した速度変化量(LCPを解いて求める)
-	};
-	typedef std::vector<PHSolidAux> PHSolidAuxs;
-
 	/// Solidの組み合わせの配列
 	class PHSolidPair{
 	public:
+		PHSolidAux* solid[2];
 		/// Shapeの組み合わせの配列
 		typedef UTCombination<CDShapePair> CDShapePairs;
 		CDShapePairs	shapePairs;
 
-		void Init(PHSolid* s0, PHSolid* s1);	/// 初期化
-		bool Detect(int s0, int s1, PHConstraintEngine* engine);	
+		void Init(PHSolidAux* s0, PHSolidAux* s1);	/// 初期化
+		bool Detect(PHConstraintEngine* engine);	
 		
 	};
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
 	
 protected:
-	bool			ready;		/// 
-	PHSolids		solids;		/// 拘束力計算の対象となる剛体
-	PHSolidAuxs		solidAuxs;	/// 剛体の付加情報
-	PHSolidPairs	solidPairs;
-	PHContacts		contacts;	/// 剛体同士の接触の配列
-	PHContactPoints	points;		///	接触点の配列
-	int max_iter_dynamics;		/// Dynamics()の反復回数
-	int max_iter_correction;	/// Correction()の反復回数
-	double step_size;			/// LCPのステップ幅
-	double converge_criteria;	/// 収束判定の閾値
+	bool			ready;			/// 
+	PHSolidAuxs		solids;			/// 剛体の配列
+	PHSolidPairs	solidPairs;	
+	PHConstraints	points;			///	接触点の配列
+	PHConstraints	joints;			///	関節の配列
+	int max_iter_dynamics;			/// Dynamics()の反復回数
+	int max_iter_correction;		/// Correction()の反復回数
+	double step_size;				/// LCPのステップ幅
+	double converge_criteria;		/// 収束判定の閾値
 
-	bool Detect();				/// 全体の交差の検知
+	bool DetectPenetration();		/// 全体の交差の検知
 	void PrintContacts();
 	void SetupDynamics(double dt);	/// LCPの準備
-	void SetupCorrection();			/// 誤差の修正
+	void SetupCorrection(double dt);/// 誤差の修正
 	void IterateDynamics();			/// Correction()での一度の反復
 	void IterateCorrection();		/// Correction()での一度の反復
-	//void Iterate(int max_iter);
-	void UpdateDynamics(double dt);	/// 結果をSolidに反映する
-	void UpdateCorrection();		/// 結果をSolidに反映する
+	void UpdateSolids(double dt);	/// 結果をSolidに反映する
 	//void SetInitialValue();		/// LCPの決定変数の初期値を設定
 	
 public:
 	void Add(PHSolid* s);			/// Solid を登録する
 	void Remove(PHSolid* s);		/// 登録されているSolidを削除する
 	void AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
+	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
 	void Invalidate(){ready = false;}	/// readyフラグをリセット
 	void Init();						/// 初期化し，readyフラグをセット
 	///

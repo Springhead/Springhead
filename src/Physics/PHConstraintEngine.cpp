@@ -7,36 +7,270 @@
 #include <Collision/CDQuickHull2D.h>
 #include <Collision/CDQuickHull2DImp.h>
 
-
 using namespace PTM;
 using namespace std;
 namespace Spr{;
 
-// AABBでソートするための構造体
-struct Edge{
-	float edge;				///<	端の位置(グローバル系)
-	int	index;				///<	元の solidの位置
-	bool bMin;				///<	初端ならtrue
-	bool operator < (const Edge& s) const { return edge < s.edge; }
-};
-typedef std::vector<Edge> Edges;
+#define SUBMAT(r, c, h, w) sub_matrix(TSubMatrixDim<r, c, h, w>())
+#define SUBVEC(o, l) sub_vector(TSubVectorDim<o, l>())
 
 //----------------------------------------------------------------------------
-// PHContact
+// PHSolidAux
+void PHSolidAux::SetupDynamics(double dt){
+	Quaterniond q;
+	Vec3d v, w, f, t;
+	q = solid->GetOrientation();
+	v = q.Conjugated() * solid->GetVelocity();
+	w = q.Conjugated() * solid->GetAngularVelocity();
+	f = q.Conjugated() * solid->nextForce;
+	t = q.Conjugated() * solid->nextTorque;
+	v0 = v + minv * f * dt;
+	w0 = w + Iinv * (t - w % (solid->GetInertia() * w)) * dt;
+	dv.clear();
+	dw.clear();
+}
+void PHSolidAux::SetupCorrection(){
+	dV.clear();
+	dW.clear();
+}
 
 //----------------------------------------------------------------------------
-// PHConstraintEngine
+// PHConstraint
+void PHConstraint::CompRelativeVelJacobian(){
+	//写像元：[v1, w1, v2, w2]	(vi, wi)は剛体i (i=0,1) の速度，角速度（ローカル座標）
+	//写像先：[vrel, wrel]		剛体0の関節フレームと剛体1の関節フレームの相対速度（剛体0関節フレームローカル）
+	Matrix3d	R[2];
+	Vec3d		r[2];
+	R[0] = solid[0]->solid->GetRotation();
+	R[1] = solid[1]->solid->GetRotation();
+	r[0] = solid[0]->solid->GetCenterPosition();
+	r[1] = solid[1]->solid->GetCenterPosition();
+	Matrix3d	Rjabs[2];
+	Rjabs[0] = R[0] * Rj[0];
+	Rjabs[1] = R[1] * Rj[1];
+	Rjrel = Rjabs[0].trans() * Rjabs[1];
+	rjrel = Rjabs[0].trans() * ((R[1] * rj[1] + r[1]) - (R[0] * rj[0] + r[0]));
+	Jvrel_v[0] = -Rj[0].trans();
+	Jvrel_w[0] = -Rj[0].trans() * (-Matrix3d::Cross(rj[0]));
+	Jvrel_v[1] =  Rjabs[0].trans() * R[1];
+	Jvrel_w[1] =  Jvrel_v[1] * (-Matrix3d::Cross(rj[1]));
+	//Jwrel_v[0].clear();
+	//Jwrel_w[0] = Jvrel_v[0];
+	//Jwrel_v[1].clear();
+	//Jwrel_w[1] = Jvrel_v[1];
+}
+
+//----------------------------------------------------------------------------
+// PHConstraintND
+template<int N>
+void PHConstraintND<N>::CompJacobian(){
+	CompRelativeVelJacobian();
+	CompJointJacobian();
+	Jv[0] = Jvrel * Jvrel_v[0];
+	Jw[0] = Jvrel * Jvrel_w[0] + Jwrel * Jvrel_v[0];
+	Jv[1] = Jvrel * Jvrel_v[1];
+	Jw[1] = Jvrel * Jvrel_w[1] + Jwrel * Jvrel_v[1];
+}
+template<int N>
+void PHConstraintND<N>::SetupDynamics(double dt){
+	CompJacobian();
+	
+	Tv[0] = solid[0]->minv * Jv[0].trans();
+	Tw[0] = solid[0]->Iinv * Jw[0].trans();
+	Tv[1] = solid[1]->minv * Jv[1].trans();
+	Tw[1] = solid[1]->Iinv * Jw[1].trans();
+	
+	A = Jv[0] * Tv[0] + Jw[0] * Tw[0] + Jv[1] * Tv[1] + Jw[1] * Tw[1];
+	
+	b = Jv[0] * (solid[0]->v0) + Jw[0] * (solid[0]->w0) + Jv[1] * (solid[1]->v0) + Jw[1] * (solid[1]->w0);
+	double tmp;
+	for(int i = 0; i < N; i++){
+		tmp = 1.0 / A[i][i];
+		b[i] *= tmp;
+		Jv[0].row(i) *= tmp;
+		Jw[0].row(i) *= tmp;
+		Jv[1].row(i) *= tmp;
+		Jw[1].row(i) *= tmp;
+	}
+	/*Ainv = A.inv();
+	b = Ainv * b;
+	Jv[0] = Ainv * Jv[0];
+	Jw[0] = Ainv * Jw[0];
+	Jv[1] = Ainv * Jv[1];
+	Jw[1] = Ainv * Jw[1];*/
+
+	f.clear();
+}
+template<int N>
+void PHConstraintND<N>::SetupCorrection(double dt){
+	CompError();
+	for(int i = 0; i < N; i++)
+		B[i] /= A[i][i];
+	//B = Ainv * B;
+	Vec3d v[2], w[2];
+	for(int i = 0; i < 2; i++){
+		v[i] = solid[i]->v0 + solid[i]->dv;
+		w[i] = solid[i]->w0 + solid[i]->dw;
+	}
+	// velocity updateによる影響を加算
+	B += (Jv[0] * v[0] + Jw[0] * w[0] + Jv[1] * v[1] + Jw[1] * w[1]) * dt;
+	B *= 0.1;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
+	DSTR << B.norm() << endl;
+	F.clear();
+}
+template<int N>
+void PHConstraintND<N>::IterateDynamics(){
+	//dfsum = 0.0;
+	//反復
+	//接触力fの更新
+	VecNd fnew, df;
+	
+	/*fnew = f - (b + Jv[0] * solid[0]->dv + Jw[0] * solid[0]->dw + Jv[1] * solid[1]->dv + Jw[1] * solid[1]->dw);
+	ProjectionDynamics(fnew);
+	VecNd df = fnew - f;
+	//dfsum += df.square();
+	f = fnew;
+	//DSTR << "f : " << f << endl;
+	solid[0]->dv += Tv[0] * df;
+	solid[0]->dw += Tw[0] * df;
+	solid[1]->dv += Tv[1] * df;
+	solid[1]->dw += Tw[1] * df;*/
+
+	for(int i = 0; i < N; i++){
+		fnew[i] = f[i] - (b[i] + Jv[0].row(i) * solid[0]->dv + Jw[0].row(i) * solid[0]->dw + Jv[1].row(i) * solid[1]->dv + Jw[1].row(i) * solid[1]->dw);
+		ProjectionDynamics(fnew);
+		df[i] = fnew[i] - f[i];
+		//dfsum += df.square();
+		f[i] = fnew[i];
+		//DSTR << "f : " << f << endl;
+		solid[0]->dv += Tv[0].col(i) * df[i];
+		solid[0]->dw += Tw[0].col(i) * df[i];
+		solid[1]->dv += Tv[1].col(i) * df[i];
+		solid[1]->dw += Tw[1].col(i) * df[i];	
+	}
+}
+template<int N>
+void PHConstraintND<N>::IterateCorrection(){
+	VecNd Fnew, dF;
+	
+	/*Fnew = F - (B + Jv[0] * solid[0]->dV + Jw[0] * solid[0]->dW + Jv[1] * solid[1]->dV + Jw[1] * solid[1]->dW);
+	ProjectionCorrection(Fnew);
+	VecNd dF = Fnew - F;
+	//dFsum += ip->dF * ip->dF;
+	F = Fnew;
+	//DSTR << "F : " << F << endl;
+	solid[0]->dV += Tv[0] * dF;
+	solid[0]->dW += Tw[0] * dF;
+	solid[1]->dV += Tv[1] * dF;
+	solid[1]->dW += Tw[1] * dF;*/
+
+	for(int i = 0; i < N; i++){
+		Fnew[i] = F[i] - (B[i] + Jv[0].row(i) * solid[0]->dV + Jw[0].row(i) * solid[0]->dW + Jv[1].row(i) * solid[1]->dV + Jw[1].row(i) * solid[1]->dW);
+		ProjectionCorrection(Fnew);
+		dF[i] = Fnew[i] - F[i];
+		//dFsum += ip->dF * ip->dF;
+		F[i] = Fnew[i];
+		//DSTR << "F : " << F << endl;
+		solid[0]->dV += Tv[0].col(i) * dF[i];
+		solid[0]->dW += Tw[0].col(i) * dF[i];
+		solid[1]->dV += Tv[1].col(i) * dF[i];
+		solid[1]->dW += Tw[1].col(i) * dF[i];
+	}
+}
+
+//----------------------------------------------------------------------------
+// PHContactPoint
+void PHContactPoint::CompJacobian(){
+
+	Vec3d rjabs[2], vjabs[2];
+	for(int i = 0; i < 2; i++){
+		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		vjabs[i] = solid[i]->solid->GetVelocity() + solid[i]->solid->GetAngularVelocity() % rjabs[i];	//接触点での速度
+	}
+	//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
+	Vec3d n, t[2], vjrel, vjrelproj;
+	n = shapePair->normal;
+	vjrel = vjabs[1] - vjabs[0];
+	vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
+	double vjrelproj_norm = vjrelproj.norm();
+	if(vjrelproj_norm < 1.0e-10){
+		t[0] = n % Vec3d(1.0, 0.0, 0.0);	
+		if(t[0].norm() < 1.0e-10)
+			t[0] = n % Vec3d(0.0, 1.0, 0.0);
+		t[0].unitize();
+	}
+	else{
+		t[0] = vjrelproj / vjrelproj_norm;
+	}
+	t[1] = t[0] % n;
+	Matrix3d Rjabs;
+	// 接触点の関節フレームはx軸, y軸を接線，z軸を法線とする
+	Rjabs.col(0) = n;
+	Rjabs.col(1) = t[0];
+	Rjabs.col(2) = t[1];
+	
+	for(int i = 0; i < 2; i++){
+		Rj[i] = solid[i]->solid->GetRotation().trans() * Rjabs;
+		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];
+	}
+
+	CompRelativeVelJacobian();
+	Jv[0] = Jvrel_v[0];
+	Jw[0] = Jvrel_w[0];
+	Jv[1] = Jvrel_v[1];
+	Jw[1] = Jvrel_w[1];
+}
+void PHContactPoint::ProjectionDynamics(VecNd& f){
+	//垂直抗力 >= 0の制約
+	f[0] = Spr::max(0.0, f[0]);
+	
+	//|摩擦力| <= 最大静止摩擦の制約
+	//	・摩擦力の各成分が最大静止摩擦よりも小さくても合力は超える可能性があるので本当はおかしい。
+	//	・静止摩擦と動摩擦が同じ値でないと扱えない。
+	//摩擦係数は両者の静止摩擦係数の平均とする
+	double flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f[0];	//最大静止摩擦
+	f[1] = Spr::min(Spr::max(-flim, f[1]), flim);
+	f[2] = Spr::min(Spr::max(-flim, f[2]), flim);
+}
+void PHContactPoint::CompError(){
+	B = Vec3d(-shapePair->depth, 0.0, 0.0);
+}
+void PHContactPoint::ProjectionCorrection(VecNd& F){
+	//垂直抗力 >= 0の制約
+	F[0] = Spr::max(0.0, F[0]);
+	F[1] = F[2] = 0.0;
+}
+
+//----------------------------------------------------------------------------
+// PHHingeJoint
+PHHingeJoint::PHHingeJoint(){
+	Matrix3d unit = Matrix3d::Unit();
+	Jvrel.SUBMAT(0, 0, 3, 3) = unit;
+	Jvrel.SUBMAT(3, 0, 2, 3) = unit.SUBMAT(0, 0, 2, 3);
+	Jwrel.SUBMAT(0, 0, 3, 3).clear();
+}
+void PHHingeJoint::CompJointJacobian(){
+	//写像元：[vrel, wrel]
+	//写像先：y	[y[0], y[1], y[2]] = vrel,
+	//		    [y[3], y[4]] = 剛体0関節フレームから見た剛体1関節フレーム上の[0,0,1]の速度のx, y成分
+	Jwrel.SUBMAT(3, 0, 2, 3) = -Matrix3d::Cross(Rjrel * Vec3d(0.0, 0.0, 1.0)).SUBMAT(0, 0, 2, 3);
+}
+void PHHingeJoint::CompError(){
+	B.SUBVEC(0, 3) = rjrel;
+	B.SUBVEC(3, 2) = (Rjrel * Vec3d(0.0, 0.0, 1.0)).SUBVEC(0, 2);
+}
 
 //----------------------------------------------------------------------------
 //	PHSolidPair
-
-void PHConstraintEngine::PHSolidPair::Init(PHSolid* s0, PHSolid* s1){
-	int ns0 = s0->shapes.size(), ns1 = s1->shapes.size();
+void PHConstraintEngine::PHSolidPair::Init(PHSolidAux* s0, PHSolidAux* s1){
+	solid[0] = s0;
+	solid[1] = s1;
+	int ns0 = solid[0]->solid->shapes.size(), ns1 = solid[1]->solid->shapes.size();
 	shapePairs.resize(ns0, ns1);
 	for(int i = 0; i < ns0; i++)for(int j = 0; j < ns1; j++){
 		CDShapePair& sp = shapePairs.item(i, j);
-		sp.shape[0] = s0->shapes[i];
-		sp.shape[1] = s1->shapes[j];
+		sp.shape[0] = solid[0]->solid->shapes[i];
+		sp.shape[1] = solid[1]->solid->shapes[j];
 	}
 }
 
@@ -52,41 +286,27 @@ public:
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
 
-bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngine* engine){
+bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	// ＊ここでShapeについてBBoxレベル判定をすれば速くなるかも？
 	static CDContactAnalysis analyzer;
 
 	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
 	
 	// いずれかのSolidに形状が割り当てられていない場合はエラー
-	PHSolid *s0 = engine->solids[is0], *s1 = engine->solids[is1];
-	if(s0->NShape() == 0 || s1->NShape() == 0)
+	if(solid[0]->solid->NShape() == 0 || solid[1]->solid->NShape() == 0)
 		return false;
 
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
-	for(int i = 0; i < (int)(s0->shapes.size()); i++)for(int j = 0; j < (int)(s1->shapes.size()); j++){
+	for(int i = 0; i < (int)(solid[0]->solid->shapes.size()); i++)for(int j = 0; j < (int)(solid[1]->solid->shapes.size()); j++){
 		CDShapePair& sp = shapePairs.item(i, j);
-		sp.UpdateShapePose(s0->GetPose(), s1->GetPose());
-		//このshape pairの交差判定
+		sp.UpdateShapePose(solid[0]->solid->GetPose(), solid[1]->solid->GetPose());
+
 		if(sp.Detect(ct)){
 			found = true;
-			//交差形状の計算
-			analyzer.FindIntersection(&sp);
-			//交差の法線と中心を得る
-			analyzer.CalcNormal(&sp);
+			analyzer.FindIntersection(&sp);			//交差形状の計算
+			analyzer.CalcNormal(&sp);				//交差の法線と中心を得る
 
-			//接触を作成
-			PHContact con;
-			con.shape[0] = i;
-			con.shape[1] = j;
-			con.solid[0] = is0;
-			con.solid[1] = is1;
-			con.normal = sp.normal;
-			con.depth = sp.depth;
-			//摩擦係数は両者の静止摩擦係数の平均とする
-			con.mu = (sp.shape[0]->material.mu0 + sp.shape[1]->material.mu0) * 0.5;
-			
 			//接触点の作成：
 			//交差形状を構成する頂点はanalyzer.planes.beginからendまでの内deleted==falseのもの
 			typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
@@ -96,10 +316,10 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 				if(p->deleted) continue;
 				isVtxs.push_back(p->normal / p->dist);
 			}
-			ContactVertex::ex = (-0.1<con.normal.z && con.normal.z < 0.1) ?
-				con.normal ^ Vec3f(0,0,1) : con.normal ^ Vec3f(1,0,0);
+			ContactVertex::ex = (-0.1 < sp.normal.z && sp.normal.z < 0.1) ?
+				sp.normal ^ Vec3f(0,0,1) : sp.normal ^ Vec3f(1,0,0);
 			ContactVertex::ex.unitize();
-			ContactVertex::ey = con.normal ^ ContactVertex::ex;
+			ContactVertex::ey = sp.normal ^ ContactVertex::ex;
 
 			//	すべての接触点を含む最小の凸多角形
 			static CDQHLines<ContactVertex> supportConvex(1000);
@@ -120,7 +340,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 			for(Line* l = supportConvex.begin; l!=supportConvex.end; ++l){
 				//if (l->deleted) continue;
 				Vec3d v = *l->vtx[0]+sp.commonPoint;
-				engine->points.push_back(PHContactPoint(engine->contacts.size(), v));
+				engine->points.push_back(DBG_NEW PHContactPoint(&sp, v, solid[0], solid[1]));
 			}
 #ifdef DEBUG_CONTACTOUT
 			DSTR << engine->points.size()-n << " contacts:";
@@ -129,19 +349,18 @@ bool PHConstraintEngine::PHSolidPair::Detect(int is0, int is1, PHConstraintEngin
 			}
 			DSTR << std::endl;
 #endif
-			engine->contacts.push_back(con);
 		}
 	}
 	return found;
 }
 
 //----------------------------------------------------------------------------
-
+// PHConstraintEngine
 OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
-	max_iter_dynamics = 10;
+	max_iter_dynamics = 5;
 	max_iter_correction = 5;
 	step_size = 1.0;
 	converge_criteria = 0.00000001;
@@ -152,41 +371,72 @@ PHConstraintEngine::~PHConstraintEngine(){
 }
 
 void PHConstraintEngine::Add(PHSolid* s){
-	if(solids.Find(s) == 0){
-		solids.push_back(s);
+	if(solids.Find(s) == solids.end()){
+		solids.push_back(PHSolidAux());
+		solids.back().solid = s;
 		Invalidate();
 	}
 }
 
 void PHConstraintEngine::Remove(PHSolid* s){
-	if(solids.Erase(s))
+	PHSolidAuxs::iterator is = solids.Find(s);
+	if(is != solids.end()){
+		solids.erase(is);
 		Invalidate();
+	}
 }
 
 void PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
+	PHSolidAuxs::iterator islhs, isrhs;
+	islhs = solids.Find(lhs);
+	isrhs = solids.Find(rhs);
+	if(islhs == solids.end() || isrhs == solids.end())
+		return;
+	
+	PHConstraint* joint;
+	switch(desc.type){
+	case PHJointDesc::JOINT_HINGE:
+		joint = DBG_NEW PHHingeJoint();
+		joint->Init(&*islhs, &*isrhs, desc);
+		break;
+	}
+	joints.push_back(joint);
 
+	//関節でつなげられた剛体間の接触は無効化
+	//EnableContact(lhs, rhs, false);
+}
+
+void PHConstraintEngine::EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable){
+	//solidPairs.
 }
 
 void PHConstraintEngine::Init(){
 	int N = solids.size();
-
-	solidAuxs.resize(N);
 	for(int i = 0; i < N; i++){
-		solidAuxs[i].minv = solids[i]->GetMassInv();
-		solidAuxs[i].Iinv = solids[i]->GetInertiaInv();
+		solids[i].minv = solids[i].solid->GetMassInv();
+		solids[i].Iinv = solids[i].solid->GetInertiaInv();
 	}
 
 	//登録されているSolidの数に合わせてsolidPairsとshapePairsをresize
 	solidPairs.resize(N, N);
 	for(int i = 0; i < N; i++)for(int j = i+1; j < N; j++){
 		PHSolidPair& sp = solidPairs.item(i, j);
-		sp.Init(solids[i], solids[j]);
+		sp.Init(&solids[i], &solids[j]);
 	}
 
 	ready = true;
 }
 
-bool PHConstraintEngine::Detect(){
+// AABBでソートするための構造体
+struct Edge{
+	float edge;				///<	端の位置(グローバル系)
+	int	index;				///<	元の solidの位置
+	bool bMin;				///<	初端ならtrue
+	bool operator < (const Edge& s) const { return edge < s.edge; }
+};
+typedef std::vector<Edge> Edges;
+
+bool PHConstraintEngine::DetectPenetration(){
 	/* 以下の流れで交差を求める
 		1. SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外
 		2. 各Solidの組について
@@ -195,8 +445,6 @@ bool PHConstraintEngine::Detect(){
 			2c. 交差形状から法線を求め、法線に関して形状を射影し，その頂点を接触点とする
 			2d. 得られた接触点情報をPHContactPointsに詰めていく
 	 */
-
-	contacts.clear();
 	points.clear();
 	int N = solids.size();
 
@@ -206,7 +454,7 @@ bool PHConstraintEngine::Detect(){
 	edges.resize(2 * N);
 	Edges::iterator eit = edges.begin();
 	for(int i = 0; i < N; ++i){
-		solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+		solids[i].solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 		eit[0].index = i; eit[0].bMin = true;
 		eit[1].index = i; eit[1].bMin = false;
 		eit += 2;
@@ -223,7 +471,7 @@ bool PHConstraintEngine::Detect(){
 				int f2 = *itf;
 				if (f1 > f2) std::swap(f1, f2);
 				//2. SolidとSolidの衝突判定
-				found |= solidPairs.item(f1, f2).Detect(f1, f2, this);
+				found |= solidPairs.item(f1, f2).Detect(this);
 			}
 			cur.insert(it->index);
 		}else{
@@ -232,159 +480,17 @@ bool PHConstraintEngine::Detect(){
 	}
 	return found;
 }
-
-/*void PHConstraintEngine::PrintContacts(){
-	PHContactPoints::iterator ip;
-	int icon = -1;
-	for(ip = points.begin(); ip != points.end(); ip++){
-		if(icon != ip->contact){
-			icon = ip->contact;
-			PHContact& con = contacts[icon];
-			DSTR << "contact: " << icon << " normal: " << con.normal << " center: " << con.center << endl;
-		}
-		DSTR << "point: " << ip->pos <<
-			" normal: " << ip->Jlin[0].row(0) << "tangent0: " << ip->Jlin[0].row(1) << endl;
-	}
-}*/
-
-//LCP構築
 void PHConstraintEngine::SetupDynamics(double dt){
-	//各Solidに関係する変数
-	{
-		Quaterniond q;
-		Vec3d v, w, f, t;
-		for(int i = 0; i < (int)(solids.size()); i++){
-			q = solids[i]->GetOrientation();
-			v = q.Conjugated() * solids[i]->GetVelocity();
-			w = q.Conjugated() * solids[i]->GetAngularVelocity();
-			f = q.Conjugated() * solids[i]->nextForce;
-			t = q.Conjugated() * solids[i]->nextTorque;
-			solidAuxs[i].Vlin0 = v + solidAuxs[i].minv * f * dt;
-			solidAuxs[i].Vang0 = w + solidAuxs[i].Iinv * (t - w % (solids[i]->GetInertia() * w)) * dt;
-			solidAuxs[i].dVlin.clear();
-			solidAuxs[i].dVang.clear();
-		}
-	}
-	//各Contactに関係する変数
-	Vec3d n, r[2], v[2], vrel, vrelproj, t[2];
-	Matrix3d rcross[2], R[2];
-	Posed q[2];
-	PHSolid* solid[2];
-	PHSolidAux* solidaux[2];
-	int icon = -1;
-	for(PHContactPoints::iterator ip = points.begin(); ip != points.end(); ip++){
-		//接触のインデックスを必要なら更新
-		if(icon != ip->contact){
-			icon = ip->contact;
-			PHContact& con = contacts[icon];
-			n = con.normal;	//法線
-			for(int i = 0; i < 2; i++){
-				solid[i]    =  solids[con.solid[i]];
-				solidaux[i] = &solidAuxs[con.solid[i]];
-				q[i] = solid[i]->GetPose();
-				q[i].Ori().ToMatrix(R[i]);
-			}
-		}
-
-		for(int i = 0; i < 2; i++){
-			r[i] = ip->pos - q[i].Pos();	//剛体の中心から接触点までのベクトル
-			rcross[i] = Matrix3d::Cross(r[i]);
-			v[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % r[i];	//接触点での速度
-		}
-		//接線ベクトルt[0], t[1]
-		// *t[0]は相対速度ベクトルに平行になるようにする(といいらしい)
-		vrel = v[1] - v[0];
-		vrelproj = vrel - (n * vrel) * n;	//相対速度ベクトルを法線に直交する平面に射影したベクトル
-		double vrelproj_norm = vrelproj.norm();
-		if(vrelproj_norm < 1.0e-10){
-			t[0] = n % Vec3d(1.0, 0.0, 0.0);	
-			if(t[0].norm() < 1.0e-10)
-				t[0] = n % Vec3d(0.0, 1.0, 0.0);
-			t[0].unitize();
-		}
-		else{
-			t[0] = vrelproj / vrelproj_norm;
-		}
-		t[1] = t[0] % n;
-		for(int i = 0; i < 2; i++){
-			// J行列
-			ip->Jlin[i].row(0) = n;
-			ip->Jlin[i].row(1) = t[0];
-			ip->Jlin[i].row(2) = t[1];
-			ip->Jang[i] = ip->Jlin[i] * (-rcross[i]);
-			ip->Jlin[i] = ip->Jlin[i] * solid[i]->GetRotation();
-			ip->Jang[i] = ip->Jang[i] * solid[i]->GetRotation();
-			if(i == 0){
-				ip->Jlin[i] *= -1.0;
-				ip->Jang[i] *= -1.0;
-			}
-			// T行列
-			ip->Tlin[i] = solidaux[i]->minv * ip->Jlin[i].trans();
-			ip->Tang[i] = solidaux[i]->Iinv * ip->Jang[i].trans();
-		}
-		// A行列
-		ip->A = ip->Jlin[0] * ip->Tlin[0] + ip->Jang[0] * ip->Tang[0] +
-				ip->Jlin[1] * ip->Tlin[1] + ip->Jang[1] * ip->Tang[1];
-		ip->Ainv = ip->A.inv();
-		// bベクトル
-		ip->b = ip->Jlin[0] * (solidaux[0]->Vlin0) + 
-				ip->Jang[0] * (solidaux[0]->Vang0) +
-				ip->Jlin[1] * (solidaux[1]->Vlin0) +
-				ip->Jang[1] * (solidaux[1]->Vang0);
-		ip->b = ip->Ainv * ip->b;
-		ip->Jlin[0] = ip->Ainv * ip->Jlin[0];
-		ip->Jang[0] = ip->Ainv * ip->Jang[0];
-		ip->Jlin[1] = ip->Ainv * ip->Jlin[1];
-		ip->Jang[1] = ip->Ainv * ip->Jang[1];
-		ip->f.clear();
-		// Jlin, Jang, bをAの対角要素で割る
-		/*double diag_inv;
-		for(int i = 0; i < 3; i++){
-			//0割りチェックは？
-			diag_inv = 1.0 / ip->A[i][i];
-			ip->b[i] *= diag_inv;
-			ip->Jlin[0].row(i) *= diag_inv;
-			ip->Jlin[1].row(i) *= diag_inv;
-			ip->Jang[0].row(i) *= diag_inv;
-			ip->Jang[1].row(i) *= diag_inv;
-		}*/
-	}
+	solids.SetupDynamics(dt);
+	points.SetupDynamics(dt);
+	joints.SetupDynamics(dt);
 }
-
-void PHConstraintEngine::SetupCorrection(){
-	PHContactPoints::iterator ip;
-	PHContact* con = NULL;
-	PHSolidAux* solidaux[2];
-	Vec3d Vlin[2], Vang[2];
-	//Dynamicsの影響を考慮した上での各接触点での交差深度
-	int icon = -1;
-	for(ip = points.begin(); ip != points.end(); ip++){
-		if(icon != ip->contact){
-			icon = ip->contact;
-			con = &contacts[icon];
-			for(int i = 0; i < 2; i++){
-				solidaux[i] = &solidAuxs[con->solid[i]];
-				Vlin[i] = solidaux[i]->Vlin0 + solidaux[i]->dVlin;
-				Vang[i] = solidaux[i]->Vang0 + solidaux[i]->dVang;
-			}
-		}
-		ip->B = -con->depth +
-			ip->Jlin[0].row(0) * Vlin[0] + ip->Jang[0].row(0) * Vang[0] + ip->Jlin[1].row(0) * Vlin[1] + ip->Jang[1].row(0) * Vang[1];
-		ip->B *= (0.1 / ip->A[0][0]);
-		ip->F = 0.0;
-		//ip->b = ip->Ainv * ip->b;
-	}
-	for(PHSolidAuxs::iterator is = solidAuxs.begin(); is != solidAuxs.end(); is++){
-		is->dVlin.clear();
-		is->dVang.clear();
-	}
+void PHConstraintEngine::SetupCorrection(double dt){
+	solids.SetupCorrection();
+	points.SetupCorrection(dt);
+	joints.SetupCorrection(dt);
 }
-
 void PHConstraintEngine::IterateDynamics(){
-	PHContactPoints::iterator ip;
-	PHContact* con = NULL;
-	PHSolidAux* solidaux[2];
-	Vec3d fnew;
 	double dfsum = 0.0;
 	int count = 0;
 	while(true){
@@ -392,56 +498,19 @@ void PHConstraintEngine::IterateDynamics(){
 			DSTR << "max count." << " iteration count: " << count << " dfsum: " << dfsum << endl;
 			break;
 		}
-		dfsum = 0.0;
-		//反復
-		//接触力fの更新
-		int icon = -1;
-		for(ip = points.begin(); ip != points.end(); ip++){
-			if(icon != ip->contact){
-				icon = ip->contact;
-				con = &contacts[icon];
-				for(int i = 0; i < 2; i++)
-					solidaux[i] = &solidAuxs[con->solid[i]];
-			}
+		points.IterateDynamics();
+		joints.IterateDynamics();
 
-			fnew = ip->f - step_size * (ip->b +
-				ip->Jlin[0] * solidaux[0]->dVlin + ip->Jang[0] * solidaux[0]->dVang +
-				ip->Jlin[1] * solidaux[1]->dVlin + ip->Jang[1] * solidaux[1]->dVang);
-
-			//垂直抗力 >= 0の制約
-			fnew[0] = Spr::max(0.0, fnew[0]);
-			
-			//|摩擦力| <= 最大静止摩擦の制約
-			//	・摩擦力の各成分が最大静止摩擦よりも小さくても合力は超える可能性があるので本当はおかしい。
-			//	・静止摩擦と動摩擦が同じ値でないと扱えない。
-			double flim = con->mu * fnew[0];		//最大静止摩擦
-			fnew[1] = Spr::min(Spr::max(-flim, fnew[1]), flim);
-			fnew[2] = Spr::min(Spr::max(-flim, fnew[2]), flim);		
-
-			ip->df = fnew - ip->f;
-			dfsum += ip->df.square();
-			ip->f = fnew;
-			
-			solidaux[0]->dVlin += (ip->Tlin[0] * ip->df);
-			solidaux[0]->dVang += (ip->Tang[0] * ip->df);
-			solidaux[1]->dVlin += (ip->Tlin[1] * ip->df);
-			solidaux[1]->dVang += (ip->Tang[1] * ip->df);
-
-		}
 		count++;
 		//終了判定
-		if(dfsum < converge_criteria){
+		/*if(dfsum < converge_criteria){
 			DSTR << "converged." << " iteration count: " << count << " dfsum: " << dfsum << endl;
 			break;
-		}
+		}*/
 	}
 }
-
 void PHConstraintEngine::IterateCorrection(){
-	PHContactPoints::iterator ip;
-	PHContact* con;
-	PHSolidAux* solidaux[2];
-	double Fnew=0.0, dFsum=0.0;
+	double dFsum = 0.0;
 	int count = 0;
 	while(true){
 		if(count == max_iter_correction){
@@ -450,71 +519,33 @@ void PHConstraintEngine::IterateCorrection(){
 		}
 		dFsum = 0.0;
 		
-		int icon = -1;
-		for(ip = points.begin(); ip != points.end(); ip++){
-			if(icon != ip->contact){
-				icon = ip->contact;
-				con = &contacts[icon];
-				for(int i = 0; i < 2; i++)
-					solidaux[i] = &solidAuxs[con->solid[i]];
-			}
+		points.IterateCorrection();
+		joints.IterateCorrection();
 
-			Fnew = ip->F - step_size * (ip->B +
-				ip->Jlin[0].row(0) * solidaux[0]->dVlin + ip->Jang[0].row(0) * solidaux[0]->dVang +
-				ip->Jlin[1].row(0) * solidaux[1]->dVlin + ip->Jang[1].row(0) * solidaux[1]->dVang);
-
-			//垂直抗力 >= 0の制約
-			Fnew = Spr::max(0.0, Fnew);
-			
-			ip->dF = Fnew - ip->F;
-			dFsum += ip->dF * ip->dF;
-			ip->F = Fnew;
-			
-			solidaux[0]->dVlin += (ip->Tlin[0].col(0) * ip->dF);
-			solidaux[0]->dVang += (ip->Tang[0].col(0) * ip->dF);
-			solidaux[1]->dVlin += (ip->Tlin[1].col(0) * ip->dF);
-			solidaux[1]->dVang += (ip->Tang[1].col(0) * ip->dF);
-
-		}
 		count++;
 		//終了判定
-		if(dFsum < converge_criteria){
+		/*if(dFsum < converge_criteria){
 			DSTR << "converged." << " iteration count: " << count << " dFsum: " << dFsum << endl;
 			break;
-		}
+		}*/
 	}
 }
 
-void PHConstraintEngine::UpdateDynamics(double dt){
-	PHSolids::iterator is;
-	PHSolidAuxs::iterator isaux;
-	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
-		PHSolid* s = *is;
+void PHConstraintEngine::UpdateSolids(double dt){
+	PHSolidAuxs::iterator is;
+	for(is = solids.begin(); is != solids.end(); is++){
+		PHSolid* solid = is->solid;
 		//velocity update
-		s->SetVelocity       (s->GetOrientation() * (isaux->Vlin0 + isaux->dVlin));
-		s->SetAngularVelocity(s->GetOrientation() * (isaux->Vang0 + isaux->dVang));
+		solid->SetVelocity       (solid->GetOrientation() * (is->v0 + is->dv));
+		solid->SetAngularVelocity(solid->GetOrientation() * (is->w0 + is->dw));
 		//position update
-		s->SetCenterPosition(s->GetCenterPosition() + s->GetVelocity() * dt);
-		s->SetOrientation(
-			(s->GetOrientation() + s->GetOrientation().Derivative(s->GetAngularVelocity()) * dt).unit()
+		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt + solid->GetOrientation() * is->dV);
+		solid->SetOrientation(
+			(solid->GetOrientation() * Quaterniond::Rot((is->w0 + is->dw) * dt + is->dW)).unit()
 		);
-
-		DSTR << s->GetVelocity() << " ; " << s->GetCenterPosition() << endl;
-
-		(*is)->SetUpdated(true);
-	}
-}
-
-void PHConstraintEngine::UpdateCorrection(){
-	PHSolids::iterator is;
-	PHSolidAuxs::iterator isaux;
-	for(is = solids.begin(), isaux = solidAuxs.begin(); is != solids.end(); is++, isaux++){
-		PHSolid* s = *is;
-		//position update
-		s->SetCenterPosition(s->GetCenterPosition() + s->GetOrientation() * isaux->dVlin);
-		s->SetOrientation(s->GetOrientation() + s->GetOrientation().Derivative(s->GetOrientation() * isaux->dVang));
-
-		(*is)->SetUpdated(true);
+		//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
+		solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */is->dW)).unit());
+		solid->SetUpdated(true);
 	}
 }
 
@@ -523,23 +554,26 @@ void PHConstraintEngine::Step(){
 		Init();
 
 	//交差を検知
-	if(!Detect())
-		return;
-
+	DetectPenetration();
+	
 	double dt = OCAST(PHScene, GetScene())->GetTimeStep();
 
 	//PrintContacts();
 
-	DSTR << "dynamics: " << endl;
+	//DSTR << "dynamics: " << endl;
 	SetupDynamics(dt);
 	IterateDynamics();
-	UpdateDynamics(dt);
 	
-	DSTR << "correction: " << endl;
-	SetupCorrection();
+	//DSTR << "correction: " << endl;
+	SetupCorrection(dt);
 	IterateCorrection();
-	UpdateCorrection();
+
+	UpdateSolids(dt);
 
 }
 
+#undef SUBMAT
+#undef SUBVEC
+
 }
+

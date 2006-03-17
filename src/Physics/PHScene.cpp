@@ -131,6 +131,13 @@ void PHScene::Integrate(){
 	count++;
 }
 
+void PHScene::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
+	PHConstraintEngine* ce;
+	engines.Find(ce);
+	assert(ce);
+	ce->EnableContact((PHSolid*)lhs, (PHSolid*)rhs, bEnable);
+}
+
 void PHScene::SetGravity(Vec3f accel){
 	PHGravityEngine* ge;
 	engines.Find(ge);
