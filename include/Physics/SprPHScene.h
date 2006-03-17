@@ -56,6 +56,9 @@ public:
 	///	Solid‚Ìæ“¾
 	virtual PHSolidIf** GetSolids()=0;
 
+	/// ÚG‚à—LŒøE–³Œø‰»
+	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true)=0;
+
 	/// ŠÖß‚Ìì¬
 	virtual void CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
