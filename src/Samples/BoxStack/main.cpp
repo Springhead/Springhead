@@ -21,7 +21,7 @@
 #ifdef __APPLE__
 # include <GLUT/glut.h>
 #else
-# include <GL/glut.h>
+# include <win32/GL/glut.h>
 #endif
 #include <sstream>
 #ifdef USE_HDRSTOP
