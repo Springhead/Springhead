@@ -2,4 +2,5 @@
 #include "Physics/SprPHSdk.h"
 #include "Physics/SprPHScene.h"
 #include "Physics/SprPHSolid.h"
+#include "Physics/SprPHJoint.h"
 #include "Physics/SprPHEngine.h"
