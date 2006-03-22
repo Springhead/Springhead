@@ -393,7 +393,7 @@ void PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc&
 	if(islhs == solids.end() || isrhs == solids.end())
 		return;
 	
-	PHConstraint* joint;
+	PHConstraint* joint = NULL;
 	switch(desc.type){
 	case PHJointDesc::JOINT_HINGE:
 		joint = DBG_NEW PHHingeJoint();
