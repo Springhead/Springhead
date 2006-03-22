@@ -26,7 +26,10 @@ class UTPrintfStream:public T
 	int SPR_CDECL printf(char* fmt, ...)
 		{
 		char buf[4096];
-		return vsprintf(buf, fmt, (char*)&fmt);
+		//return vsprintf(buf, fmt, (char*)&fmt);
+	 	va_list argp;
+ 		va_start(argp, fmt);
+ 		return vsprintf(buf, fmt, argp);
 		}
 	};
 class SPR_DLL UTStreambufBase:public std::streambuf
