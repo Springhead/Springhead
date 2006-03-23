@@ -5,8 +5,11 @@
 namespace Spr{;
 
 struct PHJointDesc{
-	enum {
-		JOINT_HINGE
+	enum JointType{
+		JOINT_CONTACT,
+		JOINT_HINGE,
+		JOINT_SLIDER,
+		JOINT_BALL,
 	} type;
 	Posed poseJoint[2];
 };

@@ -43,12 +43,31 @@ public:
 ///
 class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
 public:
+	PHJointDesc::JointType	type;
+	int			dim_v, dim_w, dim_q;
+	int			idx_v[3], idx_w[3], idx_q[3];
+	bool		bFeasible;			/// 両方の剛体がundynamicalな場合true
+
 	PHSolidAux* solid[2];
-	Matrix3d	Rj[2];		/// 各剛体に張り付いた関節フレーム
+	Matrix3d	Rj[2];				/// 各剛体に張り付いた関節フレーム
 	Vec3d		rj[2];
-	Matrix3d	Rjrel;		/// 関節フレーム間の位置関係
+	Matrix3d	Rjrel;				/// 関節フレーム間の位置関係
 	Vec3d		rjrel;
-	Matrix3d	Jvrel_v[2], Jvrel_w[2], Jwrel_v[2], Jwrel_w[2];
+			/// 各剛体の速度，角速度から相対速度へのヤコビ行列
+			/// 各剛体の速度，角速度から相対角速度へのヤコビ行列
+			/// 各剛体の速度，角速度から相対quaternionの時間微分へのヤコビ行列
+	/**
+				|	  v[0]	  w[0]	  v[1]	  w[1]
+	  ----------+---------------------------------
+		vrel	|	Jvv[0]	Jvw[0]	Jvv[1]	Jvw[1]
+		wrel	|	Jwv[0]	Jww[0]	Jwv[1]	Jww[1]
+		qdrel	|	Jqv[0]	Jqw[0]	Jqv[1]	Jqw[1]
+	*/
+	Matrix3d	Jvv[2], Jvw[2], Jwv[2], Jww[2], Jqv[2], Jqw[2];
+	Matrix3d	Tvv[2], Tvw[2], Twv[2], Tww[2], Tqv[2], Tqw[2];
+	Vec3d		fv, fw, Fv, Fq, bv, bw, Bv, Bq;
+	Vec3d		Av, Aw, Aq;
+	
 	void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
 		solid[0] = lhs, solid[1] = rhs;
 		for(int i = 0; i < 2; i++){
@@ -56,11 +75,18 @@ public:
 			rj[i] = desc.poseJoint[i].Pos();
 		}
 	}
-	void CompRelativeVelJacobian();
-	virtual void SetupDynamics(double dt) = 0;
-	virtual void SetupCorrection(double dt) = 0;
-	virtual void IterateDynamics() = 0;
-	virtual void IterateCorrection() = 0;
+	void CompJacobian(bool bCompAngular);
+	void SetupDynamics(double dt);
+	void SetupCorrection(double dt);
+	void IterateDynamics();
+	void IterateCorrection();
+	virtual void Projectionfv(double& f, int k){}
+	virtual void Projectionfw(double& f, int k){}
+	virtual void ProjectionFv(double& F, int k){}
+	virtual void ProjectionFq(double& F, int k){}
+	virtual void CompError() = 0;
+
+	PHConstraint(PHJointDesc::JointType t);
 };
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{
 public:
@@ -82,45 +108,29 @@ public:
 	}
 };
 
-template<int N>
-class PHConstraintND : public PHConstraint{
-public:
-	typedef PTM::TVector<N, double> VecNd;
-	VecNd	f, F, b, B;
-	PTM::TMatrixCol<N, 3, double>	Jvrel, Jwrel;
-	PTM::TMatrixCol<N, 3, double>	Jv[2], Jw[2];
-	PTM::TMatrixCol<3, N, double>	Tv[2], Tw[2];
-	PTM::TMatrixCol<N, N, double>	A, Ainv;
-	PTM::TVector<6-N, double>		u;
-	virtual void CompJacobian();
-	virtual void SetupDynamics(double dt);
-	virtual void SetupCorrection(double dt);
-	virtual void IterateDynamics();
-	virtual void IterateCorrection();
-	virtual void CompJointJacobian(){}
-	virtual void ProjectionDynamics(VecNd& f){}
-	virtual void ProjectionCorrection(VecNd& F){}
-	virtual void CompError() = 0;
-};
-
-class PHContactPoint : public PHConstraintND<3>{
+class PHContactPoint : public PHConstraint{
 public:
 	CDShapePair* shapePair;
 	Vec3d pos;
-	virtual void CompJacobian();
 	virtual void CompError();
-	virtual void ProjectionDynamics(VecNd& f);
-	virtual void ProjectionCorrection(VecNd& F);
-	PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1):shapePair(sp), pos(p){
-		solid[0] = s0, solid[1] = s1;
-	}
+	virtual void Projectionfv(double& f, int k);
+	virtual void ProjectionFv(double& F, int k);
+	PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1);
 };
 	
-class PHHingeJoint : public PHConstraintND<5>{
+class PHHingeJoint : public PHConstraint{
 public:
-	virtual void CompJointJacobian();
 	virtual void CompError();
 	PHHingeJoint();
+};
+class PHSliderJoint : public PHConstraint{
+	virtual void CompError();
+	PHSliderJoint();
+
+};
+class PHBallJoint : public PHConstraint{
+	virtual void CompError();
+	PHBallJoint();
 };
 
 class PHConstraintEngine: public PHEngine{

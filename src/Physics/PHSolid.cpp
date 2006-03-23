@@ -13,6 +13,7 @@ OBJECTIMP(PHSolid, Object);
 IF_IMP(PHSolid, Object);
 
 PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
+	bDynamical = true;
 	integrationMode = PHINT_SIMPLETIC;
 	inertia_inv = inertia.inv();
 }

@@ -12,7 +12,7 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <GL/glut.h>
+#include <win32/GL/glut.h>
 #include <sstream>
 #pragma hdrstop
 using namespace Spr;
@@ -219,10 +219,11 @@ int main(int argc, char* argv[]){
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc
-	desc.mass = 1e20f;
-	desc.inertia *= 1e20f;
+	//desc.mass = 1e20f;
+	//desc.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	soFloor->SetGravity(false);
+	//soFloor->SetGravity(false);
+	soFloor->SetDynamical(false);
 	
 	//	形状の作成
 	{

@@ -14,6 +14,10 @@ namespace Spr{;
 #define SUBMAT(r, c, h, w) sub_matrix(TSubMatrixDim<r, c, h, w>())
 #define SUBVEC(o, l) sub_vector(TSubVectorDim<o, l>())
 
+inline double rowtimes(const Matrix3d& M, int k, const Vec3d& v){
+	return M.item(k, 0) * v[0] + M.item(k, 1) * v[1] + M.item(k, 2) * v[2];
+}
+
 //----------------------------------------------------------------------------
 // PHSolidAux
 void PHSolidAux::SetupDynamics(double dt){
@@ -22,10 +26,16 @@ void PHSolidAux::SetupDynamics(double dt){
 	q = solid->GetOrientation();
 	v = q.Conjugated() * solid->GetVelocity();
 	w = q.Conjugated() * solid->GetAngularVelocity();
-	f = q.Conjugated() * solid->nextForce;
-	t = q.Conjugated() * solid->nextTorque;
-	v0 = v + minv * f * dt;
-	w0 = w + Iinv * (t - w % (solid->GetInertia() * w)) * dt;
+	if(solid->IsDynamical()){
+		f = q.Conjugated() * solid->nextForce;
+		t = q.Conjugated() * solid->nextTorque;
+		v0 = v + minv * f * dt;
+		w0 = w + Iinv * (t - w % (solid->GetInertia() * w)) * dt;
+	}
+	else{
+		v0 = v;
+		w0 = w;
+	}
 	dv.clear();
 	dw.clear();
 }
@@ -36,76 +46,117 @@ void PHSolidAux::SetupCorrection(){
 
 //----------------------------------------------------------------------------
 // PHConstraint
-void PHConstraint::CompRelativeVelJacobian(){
-	//写像元：[v1, w1, v2, w2]	(vi, wi)は剛体i (i=0,1) の速度，角速度（ローカル座標）
-	//写像先：[vrel, wrel]		剛体0の関節フレームと剛体1の関節フレームの相対速度（剛体0関節フレームローカル）
+PHConstraint::PHConstraint(PHJointDesc::JointType t){
+	type = t;
+	fv.clear();
+	fw.clear();
+	Fv.clear();
+	Fq.clear();
+}
+void PHConstraint::CompJacobian(bool bCompAngular){
+	Quaterniond qrel;
 	Matrix3d	R[2];
+	Matrix3d	Rjabs[2];
 	Vec3d		r[2];
 	R[0] = solid[0]->solid->GetRotation();
 	R[1] = solid[1]->solid->GetRotation();
 	r[0] = solid[0]->solid->GetCenterPosition();
 	r[1] = solid[1]->solid->GetCenterPosition();
-	Matrix3d	Rjabs[2];
 	Rjabs[0] = R[0] * Rj[0];
 	Rjabs[1] = R[1] * Rj[1];
 	Rjrel = Rjabs[0].trans() * Rjabs[1];
 	rjrel = Rjabs[0].trans() * ((R[1] * rj[1] + r[1]) - (R[0] * rj[0] + r[0]));
-	Jvrel_v[0] = -Rj[0].trans();
-	Jvrel_w[0] = -Rj[0].trans() * (-Matrix3d::Cross(rj[0]));
-	Jvrel_v[1] =  Rjabs[0].trans() * R[1];
-	Jvrel_w[1] =  Jvrel_v[1] * (-Matrix3d::Cross(rj[1]));
-	//Jwrel_v[0].clear();
-	//Jwrel_w[0] = Jvrel_v[0];
-	//Jwrel_v[1].clear();
-	//Jwrel_w[1] = Jvrel_v[1];
-}
-
-//----------------------------------------------------------------------------
-// PHConstraintND
-template<int N>
-void PHConstraintND<N>::CompJacobian(){
-	CompRelativeVelJacobian();
-	CompJointJacobian();
-	Jv[0] = Jvrel * Jvrel_v[0];
-	Jw[0] = Jvrel * Jvrel_w[0] + Jwrel * Jvrel_v[0];
-	Jv[1] = Jvrel * Jvrel_v[1];
-	Jw[1] = Jvrel * Jvrel_w[1] + Jwrel * Jvrel_v[1];
-}
-template<int N>
-void PHConstraintND<N>::SetupDynamics(double dt){
-	CompJacobian();
+	Jvv[0] = -Rj[0].trans();
+	Jvw[0] = -Rj[0].trans() * (-Matrix3d::Cross(rj[0]));
+	Jvv[1] =  Rjabs[0].trans() * R[1];
+	Jvw[1] =  Jvv[1] * (-Matrix3d::Cross(rj[1]));
 	
-	Tv[0] = solid[0]->minv * Jv[0].trans();
-	Tw[0] = solid[0]->Iinv * Jw[0].trans();
-	Tv[1] = solid[1]->minv * Jv[1].trans();
-	Tw[1] = solid[1]->Iinv * Jw[1].trans();
-	
-	A = Jv[0] * Tv[0] + Jw[0] * Tw[0] + Jv[1] * Tv[1] + Jw[1] * Tw[1];
-	
-	b = Jv[0] * (solid[0]->v0) + Jw[0] * (solid[0]->w0) + Jv[1] * (solid[1]->v0) + Jw[1] * (solid[1]->w0);
-	double tmp;
-	for(int i = 0; i < N; i++){
-		tmp = 1.0 / A[i][i];
-		b[i] *= tmp;
-		Jv[0].row(i) *= tmp;
-		Jw[0].row(i) *= tmp;
-		Jv[1].row(i) *= tmp;
-		Jw[1].row(i) *= tmp;
+	if(bCompAngular){
+		Jwv[0].clear();
+		Jww[0] = Jvv[0];
+		Jwv[1].clear();
+		Jww[1] = Jvv[1];
+		
+		qrel.FromMatrix(Rjrel);
+		Matrix3d E(
+			 qrel.W(),  qrel.Z(), -qrel.Y(),
+			-qrel.Z(),  qrel.W(), qrel.X(),
+			 qrel.Y(), -qrel.X(), qrel.W());
+		E *= 0.5;
+		Jqv[0].clear();
+		Jqw[0] = E * Jww[0];
+		Jqv[1].clear();
+		Jqw[1] = E * Jww[1];
 	}
-	/*Ainv = A.inv();
-	b = Ainv * b;
-	Jv[0] = Ainv * Jv[0];
-	Jw[0] = Ainv * Jw[0];
-	Jv[1] = Ainv * Jv[1];
-	Jw[1] = Ainv * Jw[1];*/
-
-	f.clear();
 }
-template<int N>
-void PHConstraintND<N>::SetupCorrection(double dt){
+
+void PHConstraint::SetupDynamics(double dt){
+	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
+	if(!bFeasible)return;
+
+	CompJacobian(type != PHJointDesc::JOINT_CONTACT);		//接触拘束の場合は回転関係のヤコビ行列は必要ない
+	
+	int i, j, k;
+	Av.clear();
+	Aw.clear();
+	Aq.clear();
+	for(i = 0; i < 2; i++){
+		if(solid[i]->solid->IsDynamical()){
+			for(j = 0; j < dim_v; j++){
+				k = idx_v[j];
+				Tvv[i].row(k) = Jvv[i].row(k) * solid[i]->minv;
+				Tvw[i].row(k) = Jvw[i].row(k) * solid[i]->Iinv;
+				Av[k] += Jvv[i].row(k) * Tvv[i].row(k) + Jvw[i].row(k) * Tvw[i].row(k);
+			}
+			for(j = 0; j < dim_w; j++){
+				k = idx_w[j];
+				Twv[i].row(k) = Jwv[i].row(k) * solid[i]->minv;
+				Tww[i].row(k) = Jww[i].row(k) * solid[i]->Iinv;
+				Aw[k] += Jwv[i].row(k) * Twv[i].row(k) + Jww[i].row(k) * Tww[i].row(k);
+			}
+			for(j = 0; j < dim_q; j++){
+				k = idx_q[j];
+				Tqv[i].row(k) = Jqv[i].row(k) * solid[i]->minv;
+				Tqw[i].row(k) = Jqw[i].row(k) * solid[i]->Iinv;
+				Aq[k] += Jqv[i].row(k) * Tqv[i].row(k) + Jqw[i].row(k) * Tqw[i].row(k);
+			}
+		}
+	}
+	if(dim_v)for(i = 0; i < 3; i++)
+		Av[i] = 1.0 / Av[i];
+	if(dim_w)for(i = 0; i < 3; i++)
+		Aw[i] = 1.0 / Aw[i];
+	if(dim_q)for(i = 0; i < 3; i++)
+		Aq[i] = 1.0 / Aq[i];
+	
+	for(j = 0; j < dim_v; j++){
+		k = idx_v[j];
+		bv[k] = rowtimes(Jvv[0], k, solid[0]->v0) + rowtimes(Jvw[0], k, solid[0]->w0) +
+				rowtimes(Jvv[1], k, solid[1]->v0) + rowtimes(Jvw[1], k, solid[1]->w0);
+		bv[k] *= Av[k];
+		Jvv[0].row(k) *= Av[k];
+		Jvw[0].row(k) *= Av[k];
+		Jvv[1].row(k) *= Av[k];
+		Jvw[1].row(k) *= Av[k];
+	}
+	for(int j = 0; j < dim_w; j++){
+		k = idx_w[j];
+		bw[k] = rowtimes(Jwv[0], k, solid[0]->v0) + rowtimes(Jww[0], k, solid[0]->w0) +
+				rowtimes(Jwv[1], k, solid[1]->v0) + rowtimes(Jww[1], k, solid[1]->w0);
+		bw[k] *= Aw[k];
+		Jwv[0].row(k) *= Aw[k];
+		Jww[0].row(k) *= Aw[k];
+		Jwv[1].row(k) *= Aw[k];
+		Jww[1].row(k) *= Aw[k];
+	}
+	//fv.clear();
+	//fw.clear();
+}
+void PHConstraint::SetupCorrection(double dt){
+	if(!bFeasible)return;
+
 	CompError();
-	for(int i = 0; i < N; i++)
-		B[i] /= A[i][i];
+	int j, k;
 	//B = Ainv * B;
 	Vec3d v[2], w[2];
 	for(int i = 0; i < 2; i++){
@@ -113,75 +164,104 @@ void PHConstraintND<N>::SetupCorrection(double dt){
 		w[i] = solid[i]->w0 + solid[i]->dw;
 	}
 	// velocity updateによる影響を加算
-	B += (Jv[0] * v[0] + Jw[0] * w[0] + Jv[1] * v[1] + Jw[1] * w[1]) * dt;
-	B *= 0.1;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
-	DSTR << B.norm() << endl;
-	F.clear();
-}
-template<int N>
-void PHConstraintND<N>::IterateDynamics(){
-	//dfsum = 0.0;
-	//反復
-	//接触力fの更新
-	VecNd fnew, df;
-	
-	/*fnew = f - (b + Jv[0] * solid[0]->dv + Jw[0] * solid[0]->dw + Jv[1] * solid[1]->dv + Jw[1] * solid[1]->dw);
-	ProjectionDynamics(fnew);
-	VecNd df = fnew - f;
-	//dfsum += df.square();
-	f = fnew;
-	//DSTR << "f : " << f << endl;
-	solid[0]->dv += Tv[0] * df;
-	solid[0]->dw += Tw[0] * df;
-	solid[1]->dv += Tv[1] * df;
-	solid[1]->dw += Tw[1] * df;*/
+	for(j = 0; j < dim_v; j++){
+		k = idx_v[j];
+		Bv[k] *= Av[k];
+		Bv[k] += rowtimes(Jvv[0], k, v[0]) + rowtimes(Jvw[0], k, w[0]) +
+				 rowtimes(Jvv[1], k, v[1]) + rowtimes(Jvw[1], k, w[1]);
+	}
+	for(j = 0; j < dim_q; j++){
+		k = idx_w[j];
+		Bq[k] *= Aq[k];
+		Bq[k] += rowtimes(Jqv[0], k, v[0]) + rowtimes(Jqw[0], k, w[0]) +
+				 rowtimes(Jqv[1], k, v[1]) + rowtimes(Jqw[1], k, w[1]);
+	}
 
-	for(int i = 0; i < N; i++){
-		fnew[i] = f[i] - (b[i] + Jv[0].row(i) * solid[0]->dv + Jw[0].row(i) * solid[0]->dw + Jv[1].row(i) * solid[1]->dv + Jw[1].row(i) * solid[1]->dw);
-		ProjectionDynamics(fnew);
-		df[i] = fnew[i] - f[i];
-		//dfsum += df.square();
-		f[i] = fnew[i];
-		//DSTR << "f : " << f << endl;
-		solid[0]->dv += Tv[0].col(i) * df[i];
-		solid[0]->dw += Tw[0].col(i) * df[i];
-		solid[1]->dv += Tv[1].col(i) * df[i];
-		solid[1]->dw += Tw[1].col(i) * df[i];	
+	Bv *= 0.1;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
+	Bq *= 0.1;
+	//DSTR << B.norm() << endl;
+	//Fv.clear();
+	//Fq.clear();
+}
+void PHConstraint::IterateDynamics(){
+	if(!bFeasible)return;
+
+	Vec3d fvnew, fwnew, dfv, dfw;
+	int i, j, k;
+	for(j = 0; j < dim_v; j++){
+		k = idx_v[j];
+		fvnew[k] = fv[k] - (bv[k] + 
+			rowtimes(Jvv[0], k, solid[0]->dv) + rowtimes(Jvw[0], k, solid[0]->dw) +
+			rowtimes(Jvv[1], k, solid[1]->dv) + rowtimes(Jvw[1], k, solid[1]->dw));
+		Projectionfv(fvnew[k], k);
+		dfv[k] = fvnew[k] - fv[k];
+		for(i = 0; i < 2; i++){
+			if(solid[i]->solid->IsDynamical()){
+				solid[i]->dv += Tvv[i].row(k) * dfv[k];
+				solid[i]->dw += Tvw[i].row(k) * dfv[k];
+			}
+		}
+	}
+	for(j = 0; j < dim_w; j++){
+		k = idx_w[j];
+		fwnew[k] = fw[k] - (bw[k] + 
+			rowtimes(Jwv[0], k, solid[0]->dv) + rowtimes(Jww[0], k, solid[0]->dw) +
+			rowtimes(Jwv[1], k, solid[1]->dv) + rowtimes(Jww[1], k, solid[1]->dw));
+		Projectionfw(fwnew[k], k);
+		dfw[k] = fwnew[k] - fw[k];
+		for(i = 0; i < 2; i++){
+			if(solid[i]->solid->IsDynamical()){
+				solid[i]->dv += Twv[i].row(k) * dfw[k];
+				solid[i]->dw += Tww[i].row(k) * dfw[k];
+			}
+		}
 	}
 }
-template<int N>
-void PHConstraintND<N>::IterateCorrection(){
-	VecNd Fnew, dF;
-	
-	/*Fnew = F - (B + Jv[0] * solid[0]->dV + Jw[0] * solid[0]->dW + Jv[1] * solid[1]->dV + Jw[1] * solid[1]->dW);
-	ProjectionCorrection(Fnew);
-	VecNd dF = Fnew - F;
-	//dFsum += ip->dF * ip->dF;
-	F = Fnew;
-	//DSTR << "F : " << F << endl;
-	solid[0]->dV += Tv[0] * dF;
-	solid[0]->dW += Tw[0] * dF;
-	solid[1]->dV += Tv[1] * dF;
-	solid[1]->dW += Tw[1] * dF;*/
-
-	for(int i = 0; i < N; i++){
-		Fnew[i] = F[i] - (B[i] + Jv[0].row(i) * solid[0]->dV + Jw[0].row(i) * solid[0]->dW + Jv[1].row(i) * solid[1]->dV + Jw[1].row(i) * solid[1]->dW);
-		ProjectionCorrection(Fnew);
-		dF[i] = Fnew[i] - F[i];
-		//dFsum += ip->dF * ip->dF;
-		F[i] = Fnew[i];
-		//DSTR << "F : " << F << endl;
-		solid[0]->dV += Tv[0].col(i) * dF[i];
-		solid[0]->dW += Tw[0].col(i) * dF[i];
-		solid[1]->dV += Tv[1].col(i) * dF[i];
-		solid[1]->dW += Tw[1].col(i) * dF[i];
+void PHConstraint::IterateCorrection(){
+	Vec3d Fvnew, Fqnew, dFv, dFq;
+	int i, j, k;
+	for(j = 0; j < dim_v; j++){
+		k = idx_v[j];
+		Fvnew[k] = Fv[k] - (Bv[k] + 
+			rowtimes(Jvv[0], k, solid[0]->dV) + rowtimes(Jvw[0], k, solid[0]->dW) +
+			rowtimes(Jvv[1], k, solid[1]->dV) + rowtimes(Jvw[1], k, solid[1]->dW));
+		ProjectionFv(Fvnew[k], k);
+		dFv[k] = Fvnew[k] - Fv[k];
+		for(i = 0; i < 2; i++){
+			if(solid[i]->solid->IsDynamical()){
+				solid[i]->dV += Tvv[i].row(k) * dFv[k];
+				solid[i]->dW += Tvw[i].row(k) * dFv[k];
+			}
+		}
+	}
+	for(j = 0; j < dim_q; j++){
+		k = idx_q[j];
+		Fqnew[k] = Fq[k] - (Bq[k] + 
+			rowtimes(Jqv[0], k, solid[0]->dV) + rowtimes(Jqw[0], k, solid[0]->dW) +
+			rowtimes(Jqv[1], k, solid[1]->dV) + rowtimes(Jqw[1], k, solid[1]->dW));
+		ProjectionFq(Fqnew[k], k);
+		dFq[k] = Fqnew[k] - Fq[k];
+		for(i = 0; i < 2; i++){
+			if(solid[i]->solid->IsDynamical()){
+				solid[i]->dV += Tqv[i].row(k) * dFq[k];
+				solid[i]->dW += Tqw[i].row(k) * dFq[k];
+			}
+		}
 	}
 }
 
 //----------------------------------------------------------------------------
 // PHContactPoint
-void PHContactPoint::CompJacobian(){
+PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1):
+	PHConstraint(PHJointDesc::JOINT_CONTACT), shapePair(sp), pos(p)
+{
+	solid[0] = s0, solid[1] = s1;
 
+	dim_v = 3;
+	dim_w = 0;
+	dim_q = 0;
+	idx_v[0] = 0, idx_v[1] = 1; idx_v[2] = 2;
+	
 	Vec3d rjabs[2], vjabs[2];
 	for(int i = 0; i < 2; i++){
 		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//剛体の中心から接触点までのベクトル
@@ -213,51 +293,55 @@ void PHContactPoint::CompJacobian(){
 		Rj[i] = solid[i]->solid->GetRotation().trans() * Rjabs;
 		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];
 	}
-
-	CompRelativeVelJacobian();
-	Jv[0] = Jvrel_v[0];
-	Jw[0] = Jvrel_w[0];
-	Jv[1] = Jvrel_v[1];
-	Jw[1] = Jvrel_w[1];
 }
-void PHContactPoint::ProjectionDynamics(VecNd& f){
-	//垂直抗力 >= 0の制約
-	f[0] = Spr::max(0.0, f[0]);
-	
-	//|摩擦力| <= 最大静止摩擦の制約
-	//	・摩擦力の各成分が最大静止摩擦よりも小さくても合力は超える可能性があるので本当はおかしい。
-	//	・静止摩擦と動摩擦が同じ値でないと扱えない。
-	//摩擦係数は両者の静止摩擦係数の平均とする
-	double flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f[0];	//最大静止摩擦
-	f[1] = Spr::min(Spr::max(-flim, f[1]), flim);
-	f[2] = Spr::min(Spr::max(-flim, f[2]), flim);
+void PHContactPoint::Projectionfv(double& f, int k){
+	static double flim;
+	if(k == 0){	//垂直抗力 >= 0の制約
+		f = Spr::max(0.0, f);
+		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	//最大静止摩擦
+	}
+	else{
+		//|摩擦力| <= 最大静止摩擦の制約
+		//	・摩擦力の各成分が最大静止摩擦よりも小さくても合力は超える可能性があるので本当はおかしい。
+		//	・静止摩擦と動摩擦が同じ値でないと扱えない。
+		//摩擦係数は両者の静止摩擦係数の平均とする
+		f = Spr::min(Spr::max(-flim, f), flim);
+	}
 }
 void PHContactPoint::CompError(){
-	B = Vec3d(-shapePair->depth, 0.0, 0.0);
+	Bv = Vec3d(-shapePair->depth, 0.0, 0.0);
 }
-void PHContactPoint::ProjectionCorrection(VecNd& F){
+void PHContactPoint::ProjectionFv(double& F, int k){
 	//垂直抗力 >= 0の制約
-	F[0] = Spr::max(0.0, F[0]);
-	F[1] = F[2] = 0.0;
+	if(k == 0)
+		 F = Spr::max(0.0, F);
+	else F = 0.0;
 }
 
 //----------------------------------------------------------------------------
 // PHHingeJoint
-PHHingeJoint::PHHingeJoint(){
-	Matrix3d unit = Matrix3d::Unit();
-	Jvrel.SUBMAT(0, 0, 3, 3) = unit;
-	Jvrel.SUBMAT(3, 0, 2, 3) = unit.SUBMAT(0, 0, 2, 3);
-	Jwrel.SUBMAT(0, 0, 3, 3).clear();
-}
-void PHHingeJoint::CompJointJacobian(){
-	//写像元：[vrel, wrel]
-	//写像先：y	[y[0], y[1], y[2]] = vrel,
-	//		    [y[3], y[4]] = 剛体0関節フレームから見た剛体1関節フレーム上の[0,0,1]の速度のx, y成分
-	Jwrel.SUBMAT(3, 0, 2, 3) = -Matrix3d::Cross(Rjrel * Vec3d(0.0, 0.0, 1.0)).SUBMAT(0, 0, 2, 3);
+PHHingeJoint::PHHingeJoint():PHConstraint(PHJointDesc::JOINT_HINGE){
+	dim_v = 3;
+	dim_w = 2;
+	dim_q = 2;
+	idx_v[0] = 0, idx_v[1] = 1, idx_v[2] = 2;
+	idx_w[0] = 0, idx_w[1] = 1;
+	idx_q[0] = 0, idx_q[1] = 1;
 }
 void PHHingeJoint::CompError(){
-	B.SUBVEC(0, 3) = rjrel;
-	B.SUBVEC(3, 2) = (Rjrel * Vec3d(0.0, 0.0, 1.0)).SUBVEC(0, 2);
+	Bv = rjrel;
+	Quaterniond qrel;
+	qrel.FromMatrix(Rjrel);
+	Bq[0] = qrel.X();
+	Bq[1] = qrel.Y();
+}
+
+//----------------------------------------------------------------------------
+// PHSliderJoint
+PHSliderJoint::PHSliderJoint():PHConstraint(PHJointDesc::JOINT_SLIDER){
+	
+}
+void PHSliderJoint::CompError(){
 }
 
 //----------------------------------------------------------------------------
@@ -495,7 +579,7 @@ void PHConstraintEngine::IterateDynamics(){
 	int count = 0;
 	while(true){
 		if(count == max_iter_dynamics){
-			DSTR << "max count." << " iteration count: " << count << " dfsum: " << dfsum << endl;
+			//DSTR << "max count." << " iteration count: " << count << " dfsum: " << dfsum << endl;
 			break;
 		}
 		points.IterateDynamics();
@@ -514,7 +598,7 @@ void PHConstraintEngine::IterateCorrection(){
 	int count = 0;
 	while(true){
 		if(count == max_iter_correction){
-			DSTR << "max count." << " iteration count: " << count << " dFsum: " << dFsum << endl;
+			//DSTR << "max count." << " iteration count: " << count << " dFsum: " << dFsum << endl;
 			break;
 		}
 		dFsum = 0.0;
@@ -549,24 +633,41 @@ void PHConstraintEngine::UpdateSolids(double dt){
 	}
 }
 
+//#include <windows.h>
+
 void PHConstraintEngine::Step(){
 	if(!ready)
 		Init();
-
-	//交差を検知
-	DetectPenetration();
+	//LARGE_INTEGER freq, val[2];
+	//QueryPerformanceFrequency(&freq);
 	
+	//交差を検知
+	//QueryPerformanceCounter(&val[0]);
+	DetectPenetration();
+	//QueryPerformanceCounter(&val[1]);
+	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+
 	double dt = OCAST(PHScene, GetScene())->GetTimeStep();
 
-	//PrintContacts();
-
-	//DSTR << "dynamics: " << endl;
+	//QueryPerformanceCounter(&val[0]);
 	SetupDynamics(dt);
+	//QueryPerformanceCounter(&val[1]);
+	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+
+	//QueryPerformanceCounter(&val[0]);
 	IterateDynamics();
-	
-	//DSTR << "correction: " << endl;
+	//QueryPerformanceCounter(&val[1]);
+	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+
+	//QueryPerformanceCounter(&val[0]);
 	SetupCorrection(dt);
+	//QueryPerformanceCounter(&val[1]);
+	//DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+
+	//QueryPerformanceCounter(&val[0]);
 	IterateCorrection();
+	//QueryPerformanceCounter(&val[1]);
+	//DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	UpdateSolids(dt);
 

@@ -72,7 +72,8 @@ enum PHIntegrationMode{
 ///	剛体
 class PHSolid : public InheritSceneObject<PHSolidIf, SceneObject>, public PHSolidDesc{
 protected:
-	bool		updated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
+	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
+	bool		bDynamical;		///<	動力学的かどうかのフラグ
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
 	///	積分方式
@@ -106,8 +107,8 @@ public:
 	void CalcBBox();
 	void GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS);
 	
-	void		SetUpdated(bool set){updated = set;}	///< 
-	bool		IsUpdated(){return updated;}			///< 
+	void		SetUpdated(bool set){bUpdated = set;}	///< 
+	bool		IsUpdated(){return bUpdated;}			///< 
 	void		Step();									///< 時刻を進める．
 	
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
@@ -183,6 +184,8 @@ public:
 	void		AddShape(CDShapeIf* shape);
 
 	void		SetGravity(bool bOn);
+	void		SetDynamical(bool bOn){bDynamical = bOn;}
+	bool		IsDynamical(){return bDynamical;}
 
 	int			NShape();
 	CDShapeIf**	GetShapes();
