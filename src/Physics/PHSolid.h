@@ -181,6 +181,11 @@ public:
 	///	ローカルフレームから見た，剛体の質量中心位置の取得
 	void		SetCenter(const Vec3d& c){center = c;}		
 
+	///	任意の位置での速度の取得
+	Vec3d		GetPointVelocity(Vec3f posW) const {
+		return velocity + (angVelocity^(posW - pose*center));
+	}
+
 	void		AddShape(CDShapeIf* shape);
 
 	void		SetGravity(bool bOn);

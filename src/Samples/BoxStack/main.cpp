@@ -233,10 +233,11 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-//	for(int i=0; i<10; ++i) 
-		scene->Step();
+	float DT = 0.05f;
+	int times = DT / scene->GetTimeStep();
+	for(int i=0; i<times; ++i) scene->Step();
 	glutPostRedisplay();
-	glutTimerFunc(33, timer, 0);
+	glutTimerFunc(1000*DT, timer, 0);
 }
 
 /**
