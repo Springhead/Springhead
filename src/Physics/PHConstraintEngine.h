@@ -11,7 +11,7 @@
 namespace Spr{;
 
 /// „‘Ì‚Ìî•ñ
-struct PHSolidAux{
+struct PHSolidAux : public Object{
 	PHSolid*	solid;		/// PHSolid‚Ö‚ÌQÆ
 	double		minv;		/// ¿—Ê‚Ì‹t”
 	Matrix3d	Iinv;		/// Šµ«s—ñ‚Ì‹ts—ñ
@@ -21,22 +21,23 @@ struct PHSolidAux{
 	void SetupDynamics(double dt);
 	void SetupCorrection();
 };
-class PHSolidAuxs : public std::vector<PHSolidAux>{
+class PHSolidAuxs : public std::vector< UTRef<PHSolidAux> >{
 public:
 	iterator Find(PHSolid* s){
 		iterator is;
 		for(is = begin(); is != end(); is++)
-			if(is->solid == s)
+			if((*is)->solid == s)
 				break;
 		return is;
 	};
+	void Init();
 	void SetupDynamics(double dt){
 		for(iterator is = begin(); is != end(); is++)
-			is->SetupDynamics(dt);
+			(*is)->SetupDynamics(dt);
 	}
 	void SetupCorrection(){
 		for(iterator is = begin(); is != end(); is++)
-			is->SetupCorrection();
+			(*is)->SetupCorrection();
 	}
 };
 
@@ -80,11 +81,11 @@ public:
 	void SetupCorrection(double dt);
 	void IterateDynamics();
 	void IterateCorrection();
+	virtual void CompError();
 	virtual void Projectionfv(double& f, int k){}
 	virtual void Projectionfw(double& f, int k){}
 	virtual void ProjectionFv(double& F, int k){}
 	virtual void ProjectionFq(double& F, int k){}
-	virtual void CompError() = 0;
 
 	PHConstraint(PHJointDesc::JointType t);
 };
@@ -120,16 +121,14 @@ public:
 	
 class PHHingeJoint : public PHConstraint{
 public:
-	virtual void CompError();
 	PHHingeJoint();
 };
 class PHSliderJoint : public PHConstraint{
-	virtual void CompError();
+public:
 	PHSliderJoint();
-
 };
 class PHBallJoint : public PHConstraint{
-	virtual void CompError();
+public:
 	PHBallJoint();
 };
 

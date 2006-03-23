@@ -183,10 +183,16 @@ void keyboard(unsigned char key, int x, int y){
 		case 'q':
 			exit(0);
 			break;
-		case ' ':
-			{
-
-			}
+		case ' ':{
+			soBox.push_back(scene->CreateSolid(desc));
+			soBox.back()->AddShape(meshBox);
+			soBox.back()->SetFramePosition(Vec3f(0.0, 1.0, 0.0));
+			PHHingeJointDesc jdesc;
+			jdesc.poseJoint[0].Pos() = Vec3d( 1,  1,  0);
+			jdesc.poseJoint[1].Pos() = Vec3d(-1, -1,  0);
+			int n = soBox.size();
+			scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc);
+		}break;
 		default:
 			break;
 	}
@@ -219,10 +225,7 @@ int main(int argc, char* argv[]){
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc
-	//desc.mass = 1e20f;
-	//desc.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	//soFloor->SetGravity(false);
 	soFloor->SetDynamical(false);
 	
 	//	形状の作成
@@ -250,27 +253,14 @@ int main(int argc, char* argv[]){
 	desc.inertia = 2.0 * Matrix3d::Unit();
 	soBox.push_back(scene->CreateSolid(desc));
 	soBox.back()->AddShape(meshBox);
-	soBox.back()->SetFramePosition(Vec3f(0.0, 3.0, 0.0));
-	soBox.back()->SetOrientation(Quaterniond::Rot(1.5, Vec3d(0.0, 0.0, 1.0)));
-	
-	soBox.push_back(scene->CreateSolid(desc));
-	soBox.back()->AddShape(meshBox);
-	soBox.back()->SetFramePosition(Vec3f(3, 4.0, 3));
-	
-	soBox.push_back(scene->CreateSolid(desc));
-	soBox.back()->AddShape(meshBox);
-	soBox.back()->SetFramePosition(Vec3f(6, 3.0, 6));
-	
-	PHHingeJointDesc jdesc;
-	jdesc.poseJoint[0].Pos() = Vec3d( 1,  1,  0);
-	jdesc.poseJoint[1].Pos() = Vec3d(-1, -1,  0);
-	scene->CreateJoint(soBox[0], soBox[1], jdesc);
-	scene->CreateJoint(soBox[1], soBox[2], jdesc);
-	
+	soBox.back()->SetFramePosition(Vec3f(0.0, 10.0, 0.0));
+	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
+	soBox.back()->SetDynamical(false);
+
 	soFloor->AddShape(meshFloor);
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
 
-	scene->SetGravity(Vec3f(0, -5, 0));	// 重力を設定
+	scene->SetGravity(Vec3f(0, -9.8, 0));	// 重力を設定
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

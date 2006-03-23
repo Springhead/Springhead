@@ -20,6 +20,13 @@ inline double rowtimes(const Matrix3d& M, int k, const Vec3d& v){
 
 //----------------------------------------------------------------------------
 // PHSolidAux
+void PHSolidAuxs::Init(){
+	for(iterator it = begin(); it != end(); it++){
+		PHSolidAux* s = *it;
+		s->minv = s->solid->GetMassInv();
+		s->Iinv = s->solid->GetInertiaInv();
+	}
+}
 void PHSolidAux::SetupDynamics(double dt){
 	Quaterniond q;
 	Vec3d v, w, f, t;
@@ -152,17 +159,22 @@ void PHConstraint::SetupDynamics(double dt){
 	//fv.clear();
 	//fw.clear();
 }
+void PHConstraint::CompError(){
+	Bv = rjrel;
+	Quaterniond qrel;
+	qrel.FromMatrix(Rjrel);
+	Bq = qrel.V();
+}
 void PHConstraint::SetupCorrection(double dt){
 	if(!bFeasible)return;
 
-	CompError();
 	int j, k;
-	//B = Ainv * B;
 	Vec3d v[2], w[2];
 	for(int i = 0; i < 2; i++){
 		v[i] = solid[i]->v0 + solid[i]->dv;
 		w[i] = solid[i]->w0 + solid[i]->dw;
 	}
+	CompError();
 	// velocity update‚É‚æ‚é‰e‹¿‚ğ‰ÁZ
 	for(j = 0; j < dim_v; j++){
 		k = idx_v[j];
@@ -328,20 +340,25 @@ PHHingeJoint::PHHingeJoint():PHConstraint(PHJointDesc::JOINT_HINGE){
 	idx_w[0] = 0, idx_w[1] = 1;
 	idx_q[0] = 0, idx_q[1] = 1;
 }
-void PHHingeJoint::CompError(){
-	Bv = rjrel;
-	Quaterniond qrel;
-	qrel.FromMatrix(Rjrel);
-	Bq[0] = qrel.X();
-	Bq[1] = qrel.Y();
-}
 
 //----------------------------------------------------------------------------
 // PHSliderJoint
 PHSliderJoint::PHSliderJoint():PHConstraint(PHJointDesc::JOINT_SLIDER){
-	
+	dim_v = 2;
+	dim_w = 3;
+	dim_q = 3;
+	idx_v[0] = 0, idx_v[1] = 1;
+	idx_w[0] = 0, idx_w[1] = 1, idx_w[2] = 2;
+	idx_q[0] = 0, idx_q[1] = 1, idx_q[2] = 2;
 }
-void PHSliderJoint::CompError(){
+
+//----------------------------------------------------------------------------
+// PHBallJoint
+PHBallJoint::PHBallJoint():PHConstraint(PHJointDesc::JOINT_BALL){
+	dim_v = 3;
+	dim_w = 0;
+	dim_q = 0;
+	idx_v[0] = 0, idx_v[1] = 1, idx_v[2] = 2;
 }
 
 //----------------------------------------------------------------------------
@@ -456,8 +473,8 @@ PHConstraintEngine::~PHConstraintEngine(){
 
 void PHConstraintEngine::Add(PHSolid* s){
 	if(solids.Find(s) == solids.end()){
-		solids.push_back(PHSolidAux());
-		solids.back().solid = s;
+		solids.push_back(DBG_NEW PHSolidAux());
+		solids.back()->solid = s;
 		Invalidate();
 	}
 }
@@ -481,7 +498,7 @@ void PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc&
 	switch(desc.type){
 	case PHJointDesc::JOINT_HINGE:
 		joint = DBG_NEW PHHingeJoint();
-		joint->Init(&*islhs, &*isrhs, desc);
+		joint->Init(*islhs, *isrhs, desc);
 		break;
 	}
 	joints.push_back(joint);
@@ -495,17 +512,14 @@ void PHConstraintEngine::EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable)
 }
 
 void PHConstraintEngine::Init(){
-	int N = solids.size();
-	for(int i = 0; i < N; i++){
-		solids[i].minv = solids[i].solid->GetMassInv();
-		solids[i].Iinv = solids[i].solid->GetInertiaInv();
-	}
+	solids.Init();
 
 	//“o˜^‚³‚ê‚Ä‚¢‚éSolid‚Ì”‚É‡‚í‚¹‚ÄsolidPairs‚ÆshapePairs‚ğresize
+	int N = solids.size();
 	solidPairs.resize(N, N);
 	for(int i = 0; i < N; i++)for(int j = i+1; j < N; j++){
 		PHSolidPair& sp = solidPairs.item(i, j);
-		sp.Init(&solids[i], &solids[j]);
+		sp.Init(solids[i], solids[j]);
 	}
 
 	ready = true;
@@ -538,7 +552,7 @@ bool PHConstraintEngine::DetectPenetration(){
 	edges.resize(2 * N);
 	Edges::iterator eit = edges.begin();
 	for(int i = 0; i < N; ++i){
-		solids[i].solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+		solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 		eit[0].index = i; eit[0].bMin = true;
 		eit[1].index = i; eit[1].bMin = false;
 		eit += 2;
@@ -617,18 +631,21 @@ void PHConstraintEngine::IterateCorrection(){
 
 void PHConstraintEngine::UpdateSolids(double dt){
 	PHSolidAuxs::iterator is;
+	PHSolidAux* aux;
+	PHSolid* solid;
 	for(is = solids.begin(); is != solids.end(); is++){
-		PHSolid* solid = is->solid;
+		aux = *is;
+        solid = aux->solid;
 		//velocity update
-		solid->SetVelocity       (solid->GetOrientation() * (is->v0 + is->dv));
-		solid->SetAngularVelocity(solid->GetOrientation() * (is->w0 + is->dw));
+		solid->SetVelocity       (solid->GetOrientation() * (aux->v0 + aux->dv));
+		solid->SetAngularVelocity(solid->GetOrientation() * (aux->w0 + aux->dw));
 		//position update
-		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt + solid->GetOrientation() * is->dV);
+		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt + solid->GetOrientation() * aux->dV);
 		solid->SetOrientation(
-			(solid->GetOrientation() * Quaterniond::Rot((is->w0 + is->dw) * dt + is->dW)).unit()
+			(solid->GetOrientation() * Quaterniond::Rot((aux->w0 + aux->dw) * dt + aux->dW)).unit()
 		);
 		//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
-		solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */is->dW)).unit());
+		solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */aux->dW)).unit());
 		solid->SetUpdated(true);
 	}
 }
