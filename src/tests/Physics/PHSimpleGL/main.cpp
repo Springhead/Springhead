@@ -164,7 +164,7 @@ void idle(){
 	blueTeapot->AddForce( force, Vec3f(0,1,0)+blueTeapot->GetCenterPosition());
 
 	scene->Step();
-	stepCnt += scene->GetTimeStep();	// 微小時間[s] 5msec
+	stepCnt += scene->GetTimeStep();	// 微小時間[msec]
 	double dt = scene->GetTimeStep();
 
 	// 速度を導き、微少時間経過後の位置を計算（期待値)
