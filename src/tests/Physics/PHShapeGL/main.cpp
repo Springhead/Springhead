@@ -284,27 +284,23 @@ int main(int argc, char* argv[]){
 	soFloor->SetGravity(false);
 	
 	//	形状の作成
-	CDConvexMeshIf* meshFloor=NULL;
-	CDConvexMeshIf* meshBlock=NULL;
-	{
-		CDConvexMeshDesc md;
-		md.vertices.push_back(Vec3f(-1,-1,-1));
-		md.vertices.push_back(Vec3f(-1,-1, 1));	
-		md.vertices.push_back(Vec3f(-1, 1,-1));	
-		md.vertices.push_back(Vec3f(-1, 1, 1));
-		md.vertices.push_back(Vec3f( 1,-1,-1));	
-		md.vertices.push_back(Vec3f( 1,-1, 1));
-		md.vertices.push_back(Vec3f( 1, 1,-1));
-		md.vertices.push_back(Vec3f( 1, 1, 1));
-		meshBlock = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	CDConvexMeshDesc md;
+	md.vertices.push_back(Vec3f(-1,-1,-1));
+	md.vertices.push_back(Vec3f(-1,-1, 1));	
+	md.vertices.push_back(Vec3f(-1, 1,-1));	
+	md.vertices.push_back(Vec3f(-1, 1, 1));
+	md.vertices.push_back(Vec3f( 1,-1,-1));	
+	md.vertices.push_back(Vec3f( 1,-1, 1));
+	md.vertices.push_back(Vec3f( 1, 1,-1));
+	md.vertices.push_back(Vec3f( 1, 1, 1));
+	CDConvexMeshIf* meshBlock = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 
-		// soFloor(meshFloor)に対してスケーリング
-		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 3;
-			md.vertices[i].z *= 3;
-		}
-		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	// soFloor(meshFloor)に対してスケーリング
+	for(unsigned i=0; i<md.vertices.size(); ++i){
+		md.vertices[i].x *= 3;
+		md.vertices[i].z *= 3;
 	}
+	CDConvexMeshIf* meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
