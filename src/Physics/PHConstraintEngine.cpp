@@ -11,6 +11,7 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
+
 #define SUBMAT(r, c, h, w) sub_matrix(TSubMatrixDim<r, c, h, w>())
 #define SUBVEC(o, l) sub_vector(TSubVectorDim<o, l>())
 
@@ -369,7 +370,7 @@ void PHConstraintEngine::PHSolidPair::Init(PHSolidAux* s0, PHSolidAux* s1){
 	int ns0 = solid[0]->solid->shapes.size(), ns1 = solid[1]->solid->shapes.size();
 	shapePairs.resize(ns0, ns1);
 	for(int i = 0; i < ns0; i++)for(int j = 0; j < ns1; j++){
-		CDShapePair& sp = shapePairs.item(i, j);
+		PHShapePair& sp = shapePairs.item(i, j);
 		sp.shape[0] = solid[0]->solid->shapes[i];
 		sp.shape[1] = solid[1]->solid->shapes[j];
 	}
@@ -384,9 +385,175 @@ public:
 		return Vec2d( (*(Vec3d*)this)*ex, (*(Vec3d*)this)*ey );
 	}
 };
+class CutLine{
+public:
+	Vec2d normal;
+	double dist;
+};
+typedef std::vector<CutLine> CutLines;
+
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
+bool PHConstraintEngine::PHShapePair::FindCut(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
+	//	center と normalが作る面と交差する面を求めないといけない．
+	//	面の頂点が別の側にある面だけが対象．
+	//	quick hull は n log r だから，線形時間で出来ることはやっておくべき．
 
+	//	各3角形について，頂点がどちら側にあるか判定し，両側にあるものを対象とする．
+	//	交線を，法線＋数値の形で表現する．
+	//	この処理は凸形状が持っていて良い．
+	//	＃交線の表現形式として，2次曲線も許す．その場合，直線は返さない
+	//	＃2次曲線はMullar＆Preparataには入れないで別にしておく．
+	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
+
+	CutLines cutLines;
+
+	//2Dへの変換がいる．どうする？
+	//	適当に速度？
+
+//	conv[0]->FindCutLine(normal, center, cutLines);
+//	conv[1]->FindCutLine(normal, center, cutLines);
+
+	//	Mullar＆Preparataで，形を求める
+//	cutLines->CreateHull();
+	return false;	
+}
+void PHConstraintEngine::PHShapePair::UpdateShapePose(Posed p0, Posed p1){
+	shapePoseW[0] = p0 * shape[0]->GetPose();
+	shapePoseW[1] = p1 * shape[1]->GetPose();
+}
+#if 0
+bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
+	UpdateShapePose(solid0->solid->GetPose() * shape[0]->GetPose(), solid1->solid->GetPose() * shape[1]->GetPose());
+	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
+	Vec3d sep;
+	bool r = FindCommonPoint(conv[0], conv[1], shapePoseW[0], shapePoseW[1], sep, closestPoint[0], closestPoint[1]);
+	if (r){
+		commonPoint = shapePoseW[0] * closestPoint[0];
+		if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
+		else state = NEW;
+		lastContactCount = ct;
+
+		//	法線を求める
+		Vec3d n;			//	求める法線
+		if (state == NEW){
+			n = solid0->solid->GetPointVelocity(commonPoint) - solid1->solid->GetPointVelocity(commonPoint);
+			n.unitize();
+			depth = 1e-2;
+		}
+		//	前回の法線の向きに動かして，最近傍点を求める
+		if (depth < 1e-2) depth = 1e-2;
+		Posed trans;
+		while(1) {
+			depth *= 2;							//	余裕を見て，深さの2倍動かす
+			trans = shapePoseW[1];				//	動かす行列
+			trans.Pos() += depth * n;
+			FindClosestPoints(conv[0], conv[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
+			center = shapePoseW[0] * closestPoint[0];
+			n = trans * closestPoint[1] - center;
+			if (n.square() > 1e-10) break;
+		}
+		depth = depth - n.norm();			//	動かした距離 - 2点の距離
+		normal = n.unit();
+		center += 0.5f*depth*normal;
+		#ifdef _DEBUG
+		if (!finite(normal.norm())){
+			DSTR << "Error: Wrong normal:" << normal << std::endl;
+			DSTR << trans;
+			DSTR << closestPoint[0] << closestPoint[1] << std::endl;
+			FindClosestPoints(conv[0], conv[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
+		}
+		#endif
+	}
+	return r;
+}
+#else
+bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
+	return CDShapePair::Detect(ct);
+}
+#endif
+//--------------------------------------------------------------------------
+#if 0	//	体積を使わない接触判定
+bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
+	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
+	// いずれかのSolidに形状が割り当てられていない場合は接触なし
+	PHSolid *s0 = engine->solids[is0], *s1 = engine->solids[is1];
+	if(s0->NShape() == 0 || s1->NShape() == 0) return false;
+
+	// 全てのshape pairについて交差を調べる
+	bool found = false;
+	for(int i = 0; i < (int)(s0->shapes.size()); i++){
+		for(int j = i+1; j < (int)(s1->shapes.size()); j++){
+			PHShapePair& sp = shapePairs2.item(i, j);
+			//このshape pairの交差判定/法線と接触の位置を求める．
+			if(sp.Detect(ct, s0, s1)){
+				found = true;
+				//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
+				sp.FindCut();
+				
+
+				//接触を作成
+				PHContact con;
+				con.shape[0] = i;
+				con.shape[1] = j;
+				con.solid[0] = is0;
+				con.solid[1] = is1;
+				con.normal = sp.normal;
+				con.depth = sp.depth;
+				//摩擦係数は両者の静止摩擦係数の平均とする
+				con.mu = (sp.shape[0]->material.mu0 + sp.shape[1]->material.mu0) * 0.5;
+				
+				//接触点の作成：
+				//交差形状を構成する頂点はanalyzer.planes.beginからendまでの内deleted==falseのもの
+				typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
+				static std::vector<ContactVertex> isVtxs;
+				isVtxs.clear();
+				for(Plane* p = analyzer.planes.begin; p != analyzer.planes.end; p++){
+					if(p->deleted) continue;
+					isVtxs.push_back(p->normal / p->dist);
+				}
+				ContactVertex::ex = (-0.1<con.normal.z && con.normal.z < 0.1) ?
+					con.normal ^ Vec3f(0,0,1) : con.normal ^ Vec3f(1,0,0);
+				ContactVertex::ex.unitize();
+				ContactVertex::ey = con.normal ^ ContactVertex::ex;
+
+				//	すべての接触点を含む最小の凸多角形
+				static CDQHLines<ContactVertex> supportConvex(1000);
+				supportConvex.Clear();
+				supportConvex.epsilon = 0.01f;
+
+				static std::vector<ContactVertex*> isVtxPtrs;
+				isVtxPtrs.clear();
+				isVtxPtrs.resize(isVtxs.size());
+				for(size_t i=0; i<isVtxPtrs.size(); ++i) isVtxPtrs[i] = &isVtxs[i];
+				supportConvex.CreateConvexHull(&isVtxPtrs.front(), &isVtxPtrs.back()+1);
+				
+				typedef CDQHLines<ContactVertex>::CDQHLine Line;
+	//#define DEBUG_CONTACTOUT
+	#ifdef DEBUG_CONTACTOUT
+				int n = engine->points.size();
+	#endif
+				for(Line* l = supportConvex.begin; l!=supportConvex.end; ++l){
+					//if (l->deleted) continue;
+					Vec3d v = *l->vtx[0]+sp.commonPoint;
+					engine->points.push_back(PHContactPoint(engine->contacts.size(), v));
+				}
+	#ifdef DEBUG_CONTACTOUT
+				DSTR << engine->points.size()-n << " contacts:";
+				for(unsigned i=n; i<engine->points.size(); ++i){
+					DSTR << engine->points[i].pos;
+				}
+				DSTR << std::endl;
+	#endif
+				engine->contacts.push_back(con);
+			}
+		}
+	}
+	return found;
+}
+
+//--------------------------------------------------------------------------
+#else	//	体積を使う接触判定
 bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	// ＊ここでShapeについてBBoxレベル判定をすれば速くなるかも？
 	static CDContactAnalysis analyzer;
@@ -400,10 +567,10 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
 	for(int i = 0; i < (int)(solid[0]->solid->shapes.size()); i++)for(int j = 0; j < (int)(solid[1]->solid->shapes.size()); j++){
-		CDShapePair& sp = shapePairs.item(i, j);
+		PHShapePair& sp = shapePairs.item(i, j);
 		sp.UpdateShapePose(solid[0]->solid->GetPose(), solid[1]->solid->GetPose());
 
-		if(sp.Detect(ct)){
+		if(sp.Detect(ct, solid[0], solid[1])){
 			found = true;
 			analyzer.FindIntersection(&sp);			//交差形状の計算
 			analyzer.CalcNormal(&sp);				//交差の法線と中心を得る
@@ -454,6 +621,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	}
 	return found;
 }
+#endif
 
 //----------------------------------------------------------------------------
 // PHConstraintEngine

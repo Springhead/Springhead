@@ -137,17 +137,50 @@ class PHConstraintEngine: public PHEngine{
 
 	OBJECTDEF(PHConstraintEngine);
 
+	///	Shapeの組合わせ
+	class PHShapePair: public CDShapePair{
+//	class PHShapePair: public UTRefCount{
+	public:
+/*		//	判定対象のShape
+		CDShape* shape[2];
+		//	接触判定結果
+		Vec3d closestPoint[2]; // ローカル座標系
+		Vec3d commonPoint;     // World座標系
+		unsigned int lastContactCount;
+		enum State{
+			NEW,
+			CONTINUE,
+		} state;
+		//	法線計算結果
+		Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
+		Vec3d center;				///<	2つの最侵入点の中間の点
+		double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
+		//	World系での形状の姿勢をキャッシュ
+		Posed shapePoseW[2];
+*/
+		///	
+		PHShapePair(){}
+		PHShapePair(CDShape* s0, CDShape* s1){
+			shape[0] = s0;
+			shape[1] = s1;
+		}
+		///	接触判定
+		bool Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
+		///	
+		bool FindCut(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
+		void UpdateShapePose(Posed p1, Posed p2);
+	};
 	/// Solidの組み合わせの配列
 	class PHSolidPair{
 	public:
 		PHSolidAux* solid[2];
 		/// Shapeの組み合わせの配列
-		typedef UTCombination<CDShapePair> CDShapePairs;
-		CDShapePairs	shapePairs;
+		typedef UTCombination<PHShapePair> PHShapePairs;
+		PHShapePairs	shapePairs;
 
 		void Init(PHSolidAux* s0, PHSolidAux* s1);	/// 初期化
 		bool Detect(PHConstraintEngine* engine);	
-		
+
 	};
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
 	
@@ -187,6 +220,7 @@ public:
 	PHConstraintEngine();
 	~PHConstraintEngine();
 };
+
 
 }	//	namespace Spr
 #endif
