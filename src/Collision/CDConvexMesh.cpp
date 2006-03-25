@@ -42,9 +42,22 @@ CDConvexMesh::CDConvexMesh(){
 CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
 	material = desc.material;
 	base = desc.vertices;
-	for(unsigned i=0; i<base.size(); ++i) vtxIDs.push_back(i);
 	CalcFace();
 }
+
+void CDConvexMesh::FindCutRing(CDCutRing& r, const Affined& toW){	
+#if 0
+	Affined toL	= toW.inv();
+	//	頂点がどっち側にあるか調べる．
+	for(
+	//	またがっている面の場合，交線を求める
+	r.center
+	
+	r.local_inv *
+#endif
+}
+
+
 
 void CalcBBox(Vec3f& bbmin, Vec3f& bbmax){
 	
@@ -65,17 +78,18 @@ void CDConvexMesh::CalcFace(){
 	faces.clear();
 	neighbor.clear();
 	
+	//	baseの点から凸多面体を作る．
 	std::vector<CDQhullVtx> vtxs;
 	std::vector<CDQhullVtx*> pvtxs;
-	vtxs.resize(vtxIDs.size());
-	pvtxs.resize(vtxIDs.size());
-	neighbor.resize(vtxIDs.size());
-	for(unsigned int i=0; i<vtxIDs.size(); ++i){
-		vtxs[i].vtxID = vtxIDs[i];
+	vtxs.resize(base.size());
+	pvtxs.resize(base.size());
+	neighbor.resize(base.size());
+	for(unsigned int i=0; i<base.size(); ++i){
+		vtxs[i].vtxID = i;
 		pvtxs[i] = &vtxs[i];
 	}
 	CDQhullVtx::base = &*base.begin();
-	int n = vtxIDs.size();
+	int n = base.size();
 //	CDQHPlanes<CDQhullVtx> planes(n*(n-1)*(n-2)/6);
 	CDQHPlanes<CDQhullVtx> planes(n*10);
 	planes.CreateConvexHull(&*pvtxs.begin(), &*pvtxs.end());
@@ -88,24 +102,38 @@ void CDConvexMesh::CalcFace(){
 			usedVtxs.insert(plane->vtx[i]->VtxID());
 		}
 	}
-	vtxIDs.clear();
+	//	凸多面体に使われた頂点だけを列挙
+	CDVertexIDs vtxIds;
 	for(std::set<int>::iterator it = usedVtxs.begin(); it != usedVtxs.end(); ++it){
-		vtxIDs.push_back(*it);
+		vtxIds.push_back(*it);
 	}
-	neighbor.resize(vtxIDs.size());
+	//	baseから不要な頂点を削除
+	int pos = base.size()-1;
+	for(int i=vtxIds.size()-1; i>=0; --i){
+		for(; pos>vtxIds[i] && pos>=0; --pos){
+			base.erase(base.begin()+pos);
+		}
+		--pos;
+	}
+	//	面の頂点IDを振りなおす
 	for(CDFaces::iterator it = faces.begin(); it != faces.end(); ++it){
 		for(int i=0; i<3; ++i){
-			int pos = vtxIDs.FindPos(it->vtxs[i]);
-			int next = vtxIDs.FindPos(it->vtxs[(i+1)%3]);
+			it->vtxs[i] = vtxIds.FindPos(it->vtxs[i]);
+		}
+	}
+	//	隣の頂点リストを作る．(GJKのSupportに使用)
+	neighbor.resize(vtxIds.size());
+	for(CDFaces::iterator it = faces.begin(); it != faces.end(); ++it){
+		//	各辺は2つの面に逆向きに使われるので，全部の面を巡回すると，
+		//	ちょうど隣の頂点リストが完成する．
+		for(int i=0; i<3; ++i){
+			int pos = it->vtxs[i];
+			int next = it->vtxs[(i+1)%3];
 			neighbor[pos].push_back(next);
 		}
 	}
+	//	凸多面体の面のうち，半平面表現に必要な面だけを前半に集める．
 	MergeFace();
-}
-
-bool CDConvexMesh::VertexNear(int v1, int v2) const{
-	if ((base[v1]-base[v2]).norm() < 1e-8) return true;
-	return false;
 }
 void CDConvexMesh::MergeFace(){
 	//int nf = faces.size();
@@ -134,7 +162,7 @@ void CDConvexMesh::MergeFace(){
 }
 Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 	int lastPos = -1;
-	float h = Vertex(curPos) * v;
+	float h = base[curPos] * v;
 	float d=0;
 	int count = 0;
 	while (1) {
@@ -146,7 +174,7 @@ Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 			if (curNeighbor[i] == lastPos){
 				++i;
 			}else{
-				d = Vertex(curNeighbor[i])*v;
+				d = base[curNeighbor[i]]*v;
 				if (count > 1000){	//hase	この処理をなくすと，VC7.1では，最適化がおかしくなって，無限ループになる．なぞ．
 					DSTR << "d:" << d << " h:" << h;
 					DSTR << " CN:" << curNeighbor[i] << " i:" <<i << " n:" << n << std::endl;
@@ -160,7 +188,7 @@ Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 		curPos = curNeighbor[i];
 		h = d;
 	}
-	return Vertex(curPos);
+	return base[curPos];
 }
 
 CDFaceIf* CDConvexMesh::GetFace(size_t i){

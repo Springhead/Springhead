@@ -108,9 +108,8 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 				Posed afw = cp->shapePoseW[i];
 				afw.Pos() -= cp->commonPoint;
 				tvtxs[i].resize(poly[i]->base.size());
-				for(CDVertexIDs::iterator it = poly[i]->vtxIDs.begin();
-					it != poly[i]->vtxIDs.end(); ++it){
-					tvtxs[i][*it] = afw * poly[i]->base[*it];
+				for(unsigned v=0; v<tvtxs[i].size(); ++v){
+					tvtxs[i][v] = afw * poly[i]->base[v];
 				}
 				for(CDFaces::iterator it = poly[i]->faces.begin();
 					it != poly[i]->faces.begin() + poly[i]->nPlanes; ++it){
@@ -120,8 +119,8 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 					if (!vtxBuffer.back().CalcDualVtx(&*tvtxs[i].begin())){
 						DSTR << "Common Local: " << cp->shapePoseW[i].Inv() * cp->commonPoint 
 							<< std::endl;
-						for(unsigned int v=0; v<poly[i]->vtxIDs.size(); ++v){
-							DSTR << poly[i]->Vertex(v) << std::endl;
+						for(unsigned int v=0; v<poly[i]->base.size(); ++v){
+							DSTR << poly[i]->base[v] << std::endl;
 						}
 						assert(0);
 					}

@@ -6,6 +6,7 @@
 #include <Collision/CDDetectorImp.h>
 #include <Collision/CDQuickHull2D.h>
 #include <Collision/CDQuickHull2DImp.h>
+#include <Collision/CDCutRing.h>
 
 using namespace PTM;
 using namespace std;
@@ -385,12 +386,6 @@ public:
 		return Vec2d( (*(Vec3d*)this)*ex, (*(Vec3d*)this)*ey );
 	}
 };
-class CutLine{
-public:
-	Vec2d normal;
-	double dist;
-};
-typedef std::vector<CutLine> CutLines;
 
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
@@ -406,23 +401,39 @@ bool PHConstraintEngine::PHShapePair::FindCut(unsigned ct, PHSolidAux* solid0, P
 	//	＃2次曲線はMullar＆Preparataには入れないで別にしておく．
 	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
 
-	CutLines cutLines;
 
 	//2Dへの変換がいる．どうする？
 	//	適当に速度？
+	Vec3d v0 = solid0->solid->GetPointVelocity(center);
+	Vec3d v1 = solid1->solid->GetPointVelocity(center);
+	Matrix3d ccs;	//	contact coodinate system 接触の座標系
+	ccs.Ez() = normal;
+	ccs.Ex() = v1-v0;
+	ccs.Ex() -= ccs.Ex() * normal * normal;
+	if (ccs.Ex().square() > 1e-20){
+		ccs.Ex().unitize(); 
+	}else{
+		if (Square(normal.x) < 0.5) ccs.Ex()= (normal ^ Vec3f(1,0,0)).unit();
+		else ccs.Ex() = (normal ^ Vec3f(0,1,0)).unit();
+	}
+	ccs.Ey() =  ccs.Ez() ^ ccs.Ex();
 
-//	conv[0]->FindCutLine(normal, center, cutLines);
-//	conv[1]->FindCutLine(normal, center, cutLines);
+	//	切り口を求める１：切り口を構成する線分の列挙
+	CDCutRing cutRing(center, ccs);
+	conv[0]->FindCutRing(cutRing, shapePoseW[0]);
+	conv[1]->FindCutRing(cutRing, shapePoseW[1]);
 
-	//	Mullar＆Preparataで，形を求める
-//	cutLines->CreateHull();
+	//	切り口を求める２：線分をつないで輪を作る
+	cutRing.MakeRing();
 	return false;	
 }
 void PHConstraintEngine::PHShapePair::UpdateShapePose(Posed p0, Posed p1){
 	shapePoseW[0] = p0 * shape[0]->GetPose();
 	shapePoseW[1] = p1 * shape[1]->GetPose();
 }
-#if 0
+#define USE_VOLUME
+
+#ifndef USE_VOLUME
 bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	UpdateShapePose(solid0->solid->GetPose() * shape[0]->GetPose(), solid1->solid->GetPose() * shape[1]->GetPose());
 	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
@@ -473,79 +484,23 @@ bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PH
 }
 #endif
 //--------------------------------------------------------------------------
-#if 0	//	体積を使わない接触判定
+#ifndef USE_VOLUME	//	体積を使わない接触判定
 bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
 	// いずれかのSolidに形状が割り当てられていない場合は接触なし
-	PHSolid *s0 = engine->solids[is0], *s1 = engine->solids[is1];
+	PHSolid *s0 = solid[0]->solid, *s1 = solid[1]->solid;
 	if(s0->NShape() == 0 || s1->NShape() == 0) return false;
 
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
 	for(int i = 0; i < (int)(s0->shapes.size()); i++){
 		for(int j = i+1; j < (int)(s1->shapes.size()); j++){
-			PHShapePair& sp = shapePairs2.item(i, j);
+			PHShapePair& sp = shapePairs.item(i, j);
 			//このshape pairの交差判定/法線と接触の位置を求める．
-			if(sp.Detect(ct, s0, s1)){
+			if(sp.Detect(ct, solid[0], solid[1])){
 				found = true;
 				//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-				sp.FindCut();
-				
-
-				//接触を作成
-				PHContact con;
-				con.shape[0] = i;
-				con.shape[1] = j;
-				con.solid[0] = is0;
-				con.solid[1] = is1;
-				con.normal = sp.normal;
-				con.depth = sp.depth;
-				//摩擦係数は両者の静止摩擦係数の平均とする
-				con.mu = (sp.shape[0]->material.mu0 + sp.shape[1]->material.mu0) * 0.5;
-				
-				//接触点の作成：
-				//交差形状を構成する頂点はanalyzer.planes.beginからendまでの内deleted==falseのもの
-				typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
-				static std::vector<ContactVertex> isVtxs;
-				isVtxs.clear();
-				for(Plane* p = analyzer.planes.begin; p != analyzer.planes.end; p++){
-					if(p->deleted) continue;
-					isVtxs.push_back(p->normal / p->dist);
-				}
-				ContactVertex::ex = (-0.1<con.normal.z && con.normal.z < 0.1) ?
-					con.normal ^ Vec3f(0,0,1) : con.normal ^ Vec3f(1,0,0);
-				ContactVertex::ex.unitize();
-				ContactVertex::ey = con.normal ^ ContactVertex::ex;
-
-				//	すべての接触点を含む最小の凸多角形
-				static CDQHLines<ContactVertex> supportConvex(1000);
-				supportConvex.Clear();
-				supportConvex.epsilon = 0.01f;
-
-				static std::vector<ContactVertex*> isVtxPtrs;
-				isVtxPtrs.clear();
-				isVtxPtrs.resize(isVtxs.size());
-				for(size_t i=0; i<isVtxPtrs.size(); ++i) isVtxPtrs[i] = &isVtxs[i];
-				supportConvex.CreateConvexHull(&isVtxPtrs.front(), &isVtxPtrs.back()+1);
-				
-				typedef CDQHLines<ContactVertex>::CDQHLine Line;
-	//#define DEBUG_CONTACTOUT
-	#ifdef DEBUG_CONTACTOUT
-				int n = engine->points.size();
-	#endif
-				for(Line* l = supportConvex.begin; l!=supportConvex.end; ++l){
-					//if (l->deleted) continue;
-					Vec3d v = *l->vtx[0]+sp.commonPoint;
-					engine->points.push_back(PHContactPoint(engine->contacts.size(), v));
-				}
-	#ifdef DEBUG_CONTACTOUT
-				DSTR << engine->points.size()-n << " contacts:";
-				for(unsigned i=n; i<engine->points.size(); ++i){
-					DSTR << engine->points[i].pos;
-				}
-				DSTR << std::endl;
-	#endif
-				engine->contacts.push_back(con);
+				sp.FindCut(ct, solid[0], solid[1]);
 			}
 		}
 	}

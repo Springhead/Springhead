@@ -28,14 +28,13 @@ public:
 class CDFaces:public std::vector<CDFace>{
 };
 
+///	凸多面体
 class CDConvexMesh : public InheritNamedObject<CDConvexMeshIf, CDConvex>{
 public:
 	OBJECTDEF(CDConvexMesh);
 
 	///	探索開始頂点番号
 	mutable int curPos;
-	///	この凸多面体を構成する頂点たち．posはこの配列内の位置を表す．
-	CDVertexIDs vtxIDs;
 	///	頂点の座標(ローカル座標系)
 	std::vector<Vec3f> base;
 
@@ -46,27 +45,23 @@ public:
 	///	面(3角形のうち，MergeFace()で残った数)
 	int nPlanes;
 
+public:
 	CDConvexMesh();
 	CDConvexMesh(const CDConvexMeshDesc& desc);
 
 	///	ShapeType
 	virtual int ShapeType(){ return CDShapeDesc::CONVEXMESH; }
-	///	頂点の座標を返す．
-	Vec3f Vertex(int pos) const { return base[pos]; }
 
 	///	頂点から面や接続情報を生成する．
 	void CalcFace();
 	///	同一平面上で接続されている3角形をマージする
 	void MergeFace();
 	
-	///	面を持っているかどうか調べる
-/*	bool HasFace(CDFace* face){
-		return &*faces.begin() <= face && face <= &*faces.end();
-	}
-*/	///	サポートポイントを求める．
+	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
-private:
-	bool VertexNear(int v1, int v2) const;
+	
+	///	切り口を求める．接触解析に使う．
+	virtual void FindCutRing(CDCutRing& r, const Affined& toW);
 
 	CDFaceIf* GetFace(size_t i);
 	size_t NFace();
