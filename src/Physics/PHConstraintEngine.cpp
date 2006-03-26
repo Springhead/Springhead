@@ -55,12 +55,20 @@ void PHSolidAux::SetupCorrection(){
 
 //----------------------------------------------------------------------------
 // PHConstraint
-PHConstraint::PHConstraint(PHJointDesc::JointType t){
-	type = t;
+PHConstraint::PHConstraint(){
 	fv.clear();
 	fw.clear();
 	Fv.clear();
 	Fq.clear();
+	bEnabled = true;
+}
+void PHConstraint::Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
+	solid[0] = lhs, solid[1] = rhs;
+	for(int i = 0; i < 2; i++){
+		desc.poseJoint[i].Ori().ToMatrix(Rj[i]);
+		rj[i] = desc.poseJoint[i].Pos();
+	}
+	bEnabled = desc.bEnabled;
 }
 void PHConstraint::CompJacobian(bool bCompAngular){
 	Quaterniond qrel;
@@ -74,6 +82,7 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 	Rjabs[0] = R[0] * Rj[0];
 	Rjabs[1] = R[1] * Rj[1];
 	Rjrel = Rjabs[0].trans() * Rjabs[1];
+	qjrel.FromMatrix(Rjrel);
 	rjrel = Rjabs[0].trans() * ((R[1] * rj[1] + r[1]) - (R[0] * rj[0] + r[0]));
 	Jvv[0] = -Rj[0].trans();
 	Jvw[0] = -Rj[0].trans() * (-Matrix3d::Cross(rj[0]));
@@ -101,33 +110,43 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 
 void PHConstraint::SetupDynamics(double dt){
 	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
-	if(!bFeasible)return;
+	if(!bEnabled || !bFeasible)return;
 
-	CompJacobian(type != PHJointDesc::JOINT_CONTACT);		//ê⁄êGçSë©ÇÃèÍçáÇÕâÒì]ä÷åWÇÃÉÑÉRÉrçsóÒÇÕïKóvÇ»Ç¢
-	
-	int i, j, k;
+	CompJacobian(GetJointType() != PHJointDesc::JOINT_CONTACT);		//ê⁄êGçSë©ÇÃèÍçáÇÕâÒì]ä÷åWÇÃÉÑÉRÉrçsóÒÇÕïKóvÇ»Ç¢
+	CompDof();
+
+	int i, j;
 	Av.clear();
 	Aw.clear();
 	Aq.clear();
 	for(i = 0; i < 2; i++){
 		if(solid[i]->solid->IsDynamical()){
 			for(j = 0; j < dim_v; j++){
-				k = idx_v[j];
-				Tvv[i].row(k) = Jvv[i].row(k) * solid[i]->minv;
-				Tvw[i].row(k) = Jvw[i].row(k) * solid[i]->Iinv;
-				Av[k] += Jvv[i].row(k) * Tvv[i].row(k) + Jvw[i].row(k) * Tvw[i].row(k);
+				Tvv[i].row(j) = Jvv[i].row(j) * solid[i]->minv;
+				Tvw[i].row(j) = Jvw[i].row(j) * solid[i]->Iinv;
+				Av[j] += Jvv[i].row(j) * Tvv[i].row(j) + Jvw[i].row(j) * Tvw[i].row(j);
+			}
+			if(mode == MODE_TORQUE){
+				for(; j < 3; j++){
+					solid[i]->dv += Tvv[i].row(j) * fv[j];
+					solid[i]->dw += Tvw[i].row(j) * fv[j];
+				}
 			}
 			for(j = 0; j < dim_w; j++){
-				k = idx_w[j];
-				Twv[i].row(k) = Jwv[i].row(k) * solid[i]->minv;
-				Tww[i].row(k) = Jww[i].row(k) * solid[i]->Iinv;
-				Aw[k] += Jwv[i].row(k) * Twv[i].row(k) + Jww[i].row(k) * Tww[i].row(k);
+				Twv[i].row(j) = Jwv[i].row(j) * solid[i]->minv;
+				Tww[i].row(j) = Jww[i].row(j) * solid[i]->Iinv;
+				Aw[j] += Jwv[i].row(j) * Twv[i].row(j) + Jww[i].row(j) * Tww[i].row(j);
+			}
+			if(mode == MODE_TORQUE){
+				for(; j < 3; j++){
+					solid[i]->dv += Twv[i].row(j) * fw[j];
+					solid[i]->dw += Tww[i].row(j) * fw[j];
+				}
 			}
 			for(j = 0; j < dim_q; j++){
-				k = idx_q[j];
-				Tqv[i].row(k) = Jqv[i].row(k) * solid[i]->minv;
-				Tqw[i].row(k) = Jqw[i].row(k) * solid[i]->Iinv;
-				Aq[k] += Jqv[i].row(k) * Tqv[i].row(k) + Jqw[i].row(k) * Tqw[i].row(k);
+				Tqv[i].row(j) = Jqv[i].row(j) * solid[i]->minv;
+				Tqw[i].row(j) = Jqw[i].row(j) * solid[i]->Iinv;
+				Aq[j] += Jqv[i].row(j) * Tqv[i].row(j) + Jqw[i].row(j) * Tqw[i].row(j);
 			}
 		}
 	}
@@ -139,24 +158,24 @@ void PHConstraint::SetupDynamics(double dt){
 		Aq[i] = 1.0 / Aq[i];
 	
 	for(j = 0; j < dim_v; j++){
-		k = idx_v[j];
-		bv[k] = rowtimes(Jvv[0], k, solid[0]->v0) + rowtimes(Jvw[0], k, solid[0]->w0) +
-				rowtimes(Jvv[1], k, solid[1]->v0) + rowtimes(Jvw[1], k, solid[1]->w0);
-		bv[k] *= Av[k];
-		Jvv[0].row(k) *= Av[k];
-		Jvw[0].row(k) *= Av[k];
-		Jvv[1].row(k) *= Av[k];
-		Jvw[1].row(k) *= Av[k];
+		bv[j] = rowtimes(Jvv[0], j, solid[0]->v0) + rowtimes(Jvw[0], j, solid[0]->w0) +
+				rowtimes(Jvv[1], j, solid[1]->v0) + rowtimes(Jvw[1], j, solid[1]->w0);
+		bv[j] -= bv_bias[j];
+		bv[j] *= Av[j];
+		Jvv[0].row(j) *= Av[j];
+		Jvw[0].row(j) *= Av[j];
+		Jvv[1].row(j) *= Av[j];
+		Jvw[1].row(j) *= Av[j];
 	}
 	for(int j = 0; j < dim_w; j++){
-		k = idx_w[j];
-		bw[k] = rowtimes(Jwv[0], k, solid[0]->v0) + rowtimes(Jww[0], k, solid[0]->w0) +
-				rowtimes(Jwv[1], k, solid[1]->v0) + rowtimes(Jww[1], k, solid[1]->w0);
-		bw[k] *= Aw[k];
-		Jwv[0].row(k) *= Aw[k];
-		Jww[0].row(k) *= Aw[k];
-		Jwv[1].row(k) *= Aw[k];
-		Jww[1].row(k) *= Aw[k];
+		bw[j] = rowtimes(Jwv[0], j, solid[0]->v0) + rowtimes(Jww[0], j, solid[0]->w0) +
+				rowtimes(Jwv[1], j, solid[1]->v0) + rowtimes(Jww[1], j, solid[1]->w0);
+		bw[j] -= bw_bias[j];
+		bw[j] *= Aw[j];
+		Jwv[0].row(j) *= Aw[j];
+		Jww[0].row(j) *= Aw[j];
+		Jwv[1].row(j) *= Aw[j];
+		Jww[1].row(j) *= Aw[j];
 	}
 	//fv.clear();
 	//fw.clear();
@@ -167,10 +186,10 @@ void PHConstraint::CompError(){
 	qrel.FromMatrix(Rjrel);
 	Bq = qrel.V();
 }
-void PHConstraint::SetupCorrection(double dt){
-	if(!bFeasible)return;
+void PHConstraint::SetupCorrection(double dt, double max_error){
+	if(!bEnabled || !bFeasible)return;
 
-	int j, k;
+	int j;
 	Vec3d v[2], w[2];
 	for(int i = 0; i < 2; i++){
 		v[i] = solid[i]->v0 + solid[i]->dv;
@@ -179,86 +198,89 @@ void PHConstraint::SetupCorrection(double dt){
 	CompError();
 	// velocity updateÇ…ÇÊÇÈâeãøÇâ¡éZ
 	for(j = 0; j < dim_v; j++){
-		k = idx_v[j];
-		Bv[k] *= Av[k];
-		Bv[k] += rowtimes(Jvv[0], k, v[0]) + rowtimes(Jvw[0], k, w[0]) +
-				 rowtimes(Jvv[1], k, v[1]) + rowtimes(Jvw[1], k, w[1]);
+		Bv[j] *= Av[j];
+		Bv[j] += rowtimes(Jvv[0], j, v[0]) + rowtimes(Jvw[0], j, w[0]) +
+				 rowtimes(Jvv[1], j, v[1]) + rowtimes(Jvw[1], j, w[1]);
 	}
 	for(j = 0; j < dim_q; j++){
-		k = idx_w[j];
-		Bq[k] *= Aq[k];
-		Bq[k] += rowtimes(Jqv[0], k, v[0]) + rowtimes(Jqw[0], k, w[0]) +
-				 rowtimes(Jqv[1], k, v[1]) + rowtimes(Jqw[1], k, w[1]);
+		Bq[j] *= Aq[j];
+		Bq[j] += rowtimes(Jqv[0], j, v[0]) + rowtimes(Jqw[0], j, w[0]) +
+				 rowtimes(Jqv[1], j, v[1]) + rowtimes(Jqw[1], j, w[1]);
 	}
 
 	Bv *= 0.1;	//àÍìxÇ…åÎç∑Ç0Ç…ÇµÇÊÇ§Ç∆Ç∑ÇÈÇ∆Ç‚Ç‚êUìÆìIÇ…Ç»ÇÈÇÃÇ≈ìKìñÇ…åÎç∑Çè¨Ç≥Ç≠å©ÇπÇÈ
 	Bq *= 0.1;
+	double tmp;
+	tmp = max(max(Bv[0], Bv[1]), Bv[2]);
+	if(tmp > max_error)
+		Bv *= (max_error / tmp);
+	tmp = max(max(Bq[0], Bq[1]), Bq[2]);
+	if(tmp > max_error)
+		Bq *= (max_error / tmp);
 	//DSTR << B.norm() << endl;
 	//Fv.clear();
 	//Fq.clear();
 }
 void PHConstraint::IterateDynamics(){
-	if(!bFeasible)return;
+	if(!bEnabled || !bFeasible)return;
 
 	Vec3d fvnew, fwnew, dfv, dfw;
-	int i, j, k;
+	int i, j;
 	for(j = 0; j < dim_v; j++){
-		k = idx_v[j];
-		fvnew[k] = fv[k] - (bv[k] + 
-			rowtimes(Jvv[0], k, solid[0]->dv) + rowtimes(Jvw[0], k, solid[0]->dw) +
-			rowtimes(Jvv[1], k, solid[1]->dv) + rowtimes(Jvw[1], k, solid[1]->dw));
-		Projectionfv(fvnew[k], k);
-		dfv[k] = fvnew[k] - fv[k];
+		fvnew[j] = fv[j] - (bv[j] + 
+			rowtimes(Jvv[0], j, solid[0]->dv) + rowtimes(Jvw[0], j, solid[0]->dw) +
+			rowtimes(Jvv[1], j, solid[1]->dv) + rowtimes(Jvw[1], j, solid[1]->dw));
+		Projectionfv(fvnew[j], j);
+		dfv[j] = fvnew[j] - fv[j];
 		for(i = 0; i < 2; i++){
 			if(solid[i]->solid->IsDynamical()){
-				solid[i]->dv += Tvv[i].row(k) * dfv[k];
-				solid[i]->dw += Tvw[i].row(k) * dfv[k];
+				solid[i]->dv += Tvv[i].row(j) * dfv[j];
+				solid[i]->dw += Tvw[i].row(j) * dfv[j];
 			}
 		}
 	}
 	for(j = 0; j < dim_w; j++){
-		k = idx_w[j];
-		fwnew[k] = fw[k] - (bw[k] + 
-			rowtimes(Jwv[0], k, solid[0]->dv) + rowtimes(Jww[0], k, solid[0]->dw) +
-			rowtimes(Jwv[1], k, solid[1]->dv) + rowtimes(Jww[1], k, solid[1]->dw));
-		Projectionfw(fwnew[k], k);
-		dfw[k] = fwnew[k] - fw[k];
+		fwnew[j] = fw[j] - (bw[j] + 
+			rowtimes(Jwv[0], j, solid[0]->dv) + rowtimes(Jww[0], j, solid[0]->dw) +
+			rowtimes(Jwv[1], j, solid[1]->dv) + rowtimes(Jww[1], j, solid[1]->dw));
+		Projectionfw(fwnew[j], j);
+		dfw[j] = fwnew[j] - fw[j];
 		for(i = 0; i < 2; i++){
 			if(solid[i]->solid->IsDynamical()){
-				solid[i]->dv += Twv[i].row(k) * dfw[k];
-				solid[i]->dw += Tww[i].row(k) * dfw[k];
+				solid[i]->dv += Twv[i].row(j) * dfw[j];
+				solid[i]->dw += Tww[i].row(j) * dfw[j];
 			}
 		}
 	}
 }
 void PHConstraint::IterateCorrection(){
+	if(!bEnabled || !bFeasible)return;
+
 	Vec3d Fvnew, Fqnew, dFv, dFq;
-	int i, j, k;
+	int i, j;
 	for(j = 0; j < dim_v; j++){
-		k = idx_v[j];
-		Fvnew[k] = Fv[k] - (Bv[k] + 
-			rowtimes(Jvv[0], k, solid[0]->dV) + rowtimes(Jvw[0], k, solid[0]->dW) +
-			rowtimes(Jvv[1], k, solid[1]->dV) + rowtimes(Jvw[1], k, solid[1]->dW));
-		ProjectionFv(Fvnew[k], k);
-		dFv[k] = Fvnew[k] - Fv[k];
+		Fvnew[j] = Fv[j] - (Bv[j] + 
+			rowtimes(Jvv[0], j, solid[0]->dV) + rowtimes(Jvw[0], j, solid[0]->dW) +
+			rowtimes(Jvv[1], j, solid[1]->dV) + rowtimes(Jvw[1], j, solid[1]->dW));
+		ProjectionFv(Fvnew[j], j);
+		dFv[j] = Fvnew[j] - Fv[j];
 		for(i = 0; i < 2; i++){
 			if(solid[i]->solid->IsDynamical()){
-				solid[i]->dV += Tvv[i].row(k) * dFv[k];
-				solid[i]->dW += Tvw[i].row(k) * dFv[k];
+				solid[i]->dV += Tvv[i].row(j) * dFv[j];
+				solid[i]->dW += Tvw[i].row(j) * dFv[j];
 			}
 		}
 	}
 	for(j = 0; j < dim_q; j++){
-		k = idx_q[j];
-		Fqnew[k] = Fq[k] - (Bq[k] + 
-			rowtimes(Jqv[0], k, solid[0]->dV) + rowtimes(Jqw[0], k, solid[0]->dW) +
-			rowtimes(Jqv[1], k, solid[1]->dV) + rowtimes(Jqw[1], k, solid[1]->dW));
-		ProjectionFq(Fqnew[k], k);
-		dFq[k] = Fqnew[k] - Fq[k];
+		Fqnew[j] = Fq[j] - (Bq[j] + 
+			rowtimes(Jqv[0], j, solid[0]->dV) + rowtimes(Jqw[0], j, solid[0]->dW) +
+			rowtimes(Jqv[1], j, solid[1]->dV) + rowtimes(Jqw[1], j, solid[1]->dW));
+		ProjectionFq(Fqnew[j], j);
+		dFq[j] = Fqnew[j] - Fq[j];
 		for(i = 0; i < 2; i++){
 			if(solid[i]->solid->IsDynamical()){
-				solid[i]->dV += Tqv[i].row(k) * dFq[k];
-				solid[i]->dW += Tqw[i].row(k) * dFq[k];
+				solid[i]->dV += Tqv[i].row(j) * dFq[j];
+				solid[i]->dW += Tqw[i].row(j) * dFq[j];
 			}
 		}
 	}
@@ -266,15 +288,14 @@ void PHConstraint::IterateCorrection(){
 
 //----------------------------------------------------------------------------
 // PHContactPoint
-PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1):
-	PHConstraint(PHJointDesc::JOINT_CONTACT), shapePair(sp), pos(p)
-{
+PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
+	shapePair = sp;
+	pos = p;
 	solid[0] = s0, solid[1] = s1;
 
 	dim_v = 3;
 	dim_w = 0;
 	dim_q = 0;
-	idx_v[0] = 0, idx_v[1] = 1; idx_v[2] = 2;
 	
 	Vec3d rjabs[2], vjabs[2];
 	for(int i = 0; i < 2; i++){
@@ -334,33 +355,60 @@ void PHContactPoint::ProjectionFv(double& F, int k){
 
 //----------------------------------------------------------------------------
 // PHHingeJoint
-PHHingeJoint::PHHingeJoint():PHConstraint(PHJointDesc::JOINT_HINGE){
-	dim_v = 3;
-	dim_w = 2;
-	dim_q = 2;
-	idx_v[0] = 0, idx_v[1] = 1, idx_v[2] = 2;
-	idx_w[0] = 0, idx_w[1] = 1;
-	idx_q[0] = 0, idx_q[1] = 1;
+//OBJECTIMP(PHHingeJoint, PHJoint1D)
+//IF_IMP(PHHingeJoint, PHJoint1D)
+void PHHingeJoint::CompDof(){
+	double theta = qjrel.Theta();	//é≤ï˚å¸ÇÃçSë©ÇÕçáívÇµÇƒÇ¢ÇÈÇ‡ÇÃÇ∆âºíËÇµÇƒäpìxÇå©ÇÈ
+	on_lower = on_upper = false;
+	if(lower < upper){
+		on_lower = (theta <= lower);
+		on_upper = (theta >= upper);
+	}
+	if(on_lower || on_upper || mode == MODE_POSITION){
+		dim_v = 3;
+		dim_w = 3;
+		dim_q = 3;
+	}
+	else{
+		dim_v = 3;
+		dim_w = 2;
+		dim_q = 2;
+	}
+}
+void PHHingeJoint::CompVelocityBias(){
+	bw_bias[2] = vel_d;
+}
+void PHHingeJoint::Projectionfw(double& f, int k){
+	if(k == 2){
+		if(on_lower)
+			f = max(0.0, f);
+		if(on_upper)
+			f = min(0.0, f);
+	}
+}
+void PHHingeJoint::ProjectionFq(double& F, int k){
+	if(k == 2){
+		if(on_lower)
+			F = max(0.0, F);
+		if(on_upper)
+			F = min(0.0, F);
+	}
 }
 
 //----------------------------------------------------------------------------
 // PHSliderJoint
-PHSliderJoint::PHSliderJoint():PHConstraint(PHJointDesc::JOINT_SLIDER){
+void PHSliderJoint::CompDof(){
 	dim_v = 2;
 	dim_w = 3;
 	dim_q = 3;
-	idx_v[0] = 0, idx_v[1] = 1;
-	idx_w[0] = 0, idx_w[1] = 1, idx_w[2] = 2;
-	idx_q[0] = 0, idx_q[1] = 1, idx_q[2] = 2;
 }
 
 //----------------------------------------------------------------------------
 // PHBallJoint
-PHBallJoint::PHBallJoint():PHConstraint(PHJointDesc::JOINT_BALL){
+void PHBallJoint::CompDof(){
 	dim_v = 3;
 	dim_w = 0;
 	dim_q = 0;
-	idx_v[0] = 0, idx_v[1] = 1, idx_v[2] = 2;
 }
 
 //----------------------------------------------------------------------------
@@ -584,14 +632,22 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
-	max_iter_dynamics = 5;
-	max_iter_correction = 5;
-	step_size = 1.0;
-	converge_criteria = 0.00000001;
+	max_iter_dynamics = 10;
+	max_iter_correction = 10;
+	//step_size = 1.0;
+	//converge_criteria = 0.00000001;
+	max_error = 0.1;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
 
+}
+
+void PHConstraintEngine::Clear(PHScene* s){
+	points.clear();
+	joints.clear();
+	solidPairs.clear();
+	solids.clear();
 }
 
 void PHConstraintEngine::Add(PHSolid* s){
@@ -610,12 +666,12 @@ void PHConstraintEngine::Remove(PHSolid* s){
 	}
 }
 
-void PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
+PHConstraint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
 	PHSolidAuxs::iterator islhs, isrhs;
 	islhs = solids.Find(lhs);
 	isrhs = solids.Find(rhs);
 	if(islhs == solids.end() || isrhs == solids.end())
-		return;
+		return NULL;
 	
 	PHConstraint* joint = NULL;
 	switch(desc.type){
@@ -628,6 +684,8 @@ void PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc&
 
 	//ä÷êﬂÇ≈Ç¬Ç»Ç∞ÇÁÇÍÇΩçÑëÃä‘ÇÃê⁄êGÇÕñ≥å¯âª
 	//EnableContact(lhs, rhs, false);
+
+	return joint;
 }
 
 void PHConstraintEngine::EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable){
@@ -708,8 +766,8 @@ void PHConstraintEngine::SetupDynamics(double dt){
 }
 void PHConstraintEngine::SetupCorrection(double dt){
 	solids.SetupCorrection();
-	points.SetupCorrection(dt);
-	joints.SetupCorrection(dt);
+	points.SetupCorrection(dt, max_error);
+	joints.SetupCorrection(dt, max_error);
 }
 void PHConstraintEngine::IterateDynamics(){
 	double dfsum = 0.0;

@@ -41,19 +41,43 @@ public:
 	}
 };
 
-///
-class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
+/// PHConstraint派生クラスのためのルータ
+template<class inf, class base>
+class InheritConstraint : public InheritSceneObject<inf, base>{
 public:
-	PHJointDesc::JointType	type;
+	void Enable(bool bEnable = true){base::Enable(bEnable);}
+	bool IsEnabled(){return base::IsEnabled();}
+};
+template<class inf, class base>
+class InheritJoint1D : public InheritConstraint<inf, base>{
+public:
+	void	SetRange(double lower, double upper){base::SetRange(lower, upper);}
+	// void	SetDesiredPosition(double p, double t) = 0;	/// 目標変位を設定する
+	// double	GetDesiredPosition() = 0;				/// 目標変位を取得する
+	void	SetDesiredVelocity(double v){base::SetDesiredVelocity(v);}
+	double	GetDesiredVelocity(){return base::GetDesiredVelocity();}
+};
+
+///
+class PHConstraint : public InheritSceneObject<PHJointIf, SceneObject>{
+public:
+	enum PHControlMode{
+		MODE_TORQUE,
+		MODE_POSITION,
+		MODE_VELOCITY
+	} mode;
 	int			dim_v, dim_w, dim_q;
-	int			idx_v[3], idx_w[3], idx_q[3];
+	//int			idx_v[3], idx_w[3], idx_q[3];
+	bool		bEnabled;			/// 有効化されている場合にtrue
 	bool		bFeasible;			/// 両方の剛体がundynamicalな場合true
 
 	PHSolidAux* solid[2];
 	Matrix3d	Rj[2];				/// 各剛体に張り付いた関節フレーム
 	Vec3d		rj[2];
 	Matrix3d	Rjrel;				/// 関節フレーム間の位置関係
+	Quaterniond	qjrel;
 	Vec3d		rjrel;
+	Vec3d		vjrel, wjrel;
 			/// 各剛体の速度，角速度から相対速度へのヤコビ行列
 			/// 各剛体の速度，角速度から相対角速度へのヤコビ行列
 			/// 各剛体の速度，角速度から相対quaternionの時間微分へのヤコビ行列
@@ -66,28 +90,29 @@ public:
 	*/
 	Matrix3d	Jvv[2], Jvw[2], Jwv[2], Jww[2], Jqv[2], Jqw[2];
 	Matrix3d	Tvv[2], Tvw[2], Twv[2], Tww[2], Tqv[2], Tqw[2];
-	Vec3d		fv, fw, Fv, Fq, bv, bw, Bv, Bq;
+	Vec3d		fv, fw;	/// dynamicsにおける関節力
+	Vec3d		Fv, Fq; /// correctionにおける関節力
+	Vec3d		bv, bw;	/// dynamicsにおける拘束速度
+	Vec3d		bv_bias, bw_bias;	/// 速度制御を実現するためのbv, bwのオフセット量
+	Vec3d		Bv, Bq; /// correctionにおける拘束誤差
 	Vec3d		Av, Aw, Aq;
 	
-	void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
-		solid[0] = lhs, solid[1] = rhs;
-		for(int i = 0; i < 2; i++){
-			desc.poseJoint[i].Ori().ToMatrix(Rj[i]);
-			rj[i] = desc.poseJoint[i].Pos();
-		}
-	}
+	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
+	virtual bool IsEnabled(){return bEnabled;}
+	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc);
 	void CompJacobian(bool bCompAngular);
 	void SetupDynamics(double dt);
-	void SetupCorrection(double dt);
+	void SetupCorrection(double dt, double max_error);
 	void IterateDynamics();
 	void IterateCorrection();
-	virtual void CompError();
+	virtual void CompDof(){}			/// dim_v, dim_w, dim_qを設定する
+	virtual void CompVelocityBias(){}	/// bv_bias, bw_biasを設定する
+	virtual void CompError();			/// Bv, Bqを設定する
 	virtual void Projectionfv(double& f, int k){}
 	virtual void Projectionfw(double& f, int k){}
 	virtual void ProjectionFv(double& F, int k){}
 	virtual void ProjectionFq(double& F, int k){}
-
-	PHConstraint(PHJointDesc::JointType t);
+	PHConstraint();
 };
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{
 public:
@@ -95,9 +120,9 @@ public:
 		for(iterator it = begin(); it != end(); it++)
 			(*it)->SetupDynamics(dt);
 	}
-	void SetupCorrection(double dt){
+	void SetupCorrection(double dt, double max_error){
 		for(iterator it = begin(); it != end(); it++)
-			(*it)->SetupCorrection(dt);
+			(*it)->SetupCorrection(dt, max_error);
 	}
 	void IterateDynamics(){
 		for(iterator it = begin(); it != end(); it++)
@@ -109,27 +134,60 @@ public:
 	}
 };
 
-class PHContactPoint : public PHConstraint{
+class PHContactPoint : public InheritConstraint<PHContactPointIf, PHConstraint>{
 public:
 	CDShapePair* shapePair;
 	Vec3d pos;
+	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_CONTACT;}
 	virtual void CompError();
 	virtual void Projectionfv(double& f, int k);
 	virtual void ProjectionFv(double& F, int k);
 	PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1);
 };
 	
-class PHHingeJoint : public PHConstraint{
+class PHJoint1D : public InheritConstraint<PHJoint1DIf, PHConstraint>{
 public:
-	PHHingeJoint();
+	bool on_lower, on_upper;	/// 可動範囲の下限、上限に達している場合にtrue
+	double lower, upper;		/// 可動範囲の下限、上限
+	double pos_d, vel_d;		/// 目標変位、目標速度
+	
+	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
+		PHConstraint::Init(lhs, rhs, desc);
+		const PHJoint1DDesc& desc1D = (const PHJoint1DDesc&)desc;
+		lower = desc1D.lower;
+		upper = desc1D.upper;
+	}
+	virtual void SetRange(double l, double u){lower = l, upper = u;}
+	//virtual void SetDesiredPosition(double p){mode = MODE_POSITION; pos_d = p;}
+	//virtual double GetDesiredPosition(){return pos_d;}
+	virtual void SetDesiredVelocity(double v){mode = MODE_VELOCITY; vel_d = v;}
+	virtual double GetDesiredVelocity(){return vel_d;}
 };
-class PHSliderJoint : public PHConstraint{
+
+class PHHingeJoint : public InheritJoint1D<PHHingeJointIf, PHJoint1D>{
 public:
-	PHSliderJoint();
+	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_HINGE;}
+	virtual void SetTorque(double t){mode = MODE_TORQUE; fw[2] = t;}
+	virtual double GetTorque(){return fw[2];}
+	virtual double GetPosition(){return qjrel.Theta();}
+	virtual double GetVelocity(){return wjrel[2];}
+	virtual void CompDof();
+	virtual void CompVelocityBias();
+	virtual void Projectionfw(double& f, int k);
+	virtual void ProjectionFq(double& F, int k);
+	PHHingeJoint(){}
 };
-class PHBallJoint : public PHConstraint{
+class PHSliderJoint : public InheritJoint1D<PHSliderJointIf, PHJoint1D>{
 public:
-	PHBallJoint();
+	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_SLIDER;}
+	virtual void CompDof();
+	PHSliderJoint(){}
+};
+class PHBallJoint : public InheritConstraint<PHBallJointIf, PHConstraint>{
+public:
+	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_BALL;}
+	virtual void CompDof();
+	PHBallJoint(){}
 };
 
 class PHConstraintEngine: public PHEngine{
@@ -192,8 +250,9 @@ protected:
 	PHConstraints	joints;			///	関節の配列
 	int max_iter_dynamics;			/// Dynamics()の反復回数
 	int max_iter_correction;		/// Correction()の反復回数
-	double step_size;				/// LCPのステップ幅
-	double converge_criteria;		/// 収束判定の閾値
+	//double step_size;				/// LCPのステップ幅
+	//double converge_criteria;		/// 収束判定の閾値
+	double max_error;
 
 	bool DetectPenetration();		/// 全体の交差の検知
 	void PrintContacts();
@@ -207,7 +266,7 @@ protected:
 public:
 	void Add(PHSolid* s);			/// Solid を登録する
 	void Remove(PHSolid* s);		/// 登録されているSolidを削除する
-	void AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
+	PHConstraint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
 	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
 	void Invalidate(){ready = false;}	/// readyフラグをリセット
 	void Init();						/// 初期化し，readyフラグをセット
@@ -215,7 +274,7 @@ public:
 	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
-	virtual void Clear(PHScene* s){ solids.clear(); }
+	virtual void Clear(PHScene* s);
 
 	PHConstraintEngine();
 	~PHConstraintEngine();

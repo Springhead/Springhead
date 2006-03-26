@@ -32,12 +32,12 @@ public:
 	PHScene(PHSdkIf* s, const PHSceneDesc& desc);
 	void Init();
 	///	デストラクタ
-	~PHScene(){Clear();}
+	~PHScene(){}
 
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
-	void	   CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
+	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true);
 	void SetGravity(const Vec3d& g);
 	PHSdkIf* GetSdk();

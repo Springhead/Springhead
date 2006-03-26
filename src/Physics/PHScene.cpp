@@ -42,6 +42,8 @@ void PHScene::Init(){
 		}break;
 	default: assert(false);
 	}
+
+	count = 0;
 }
 
 PHSdkIf* PHScene::GetSdk(){
@@ -93,16 +95,16 @@ PHSolidIf** PHScene::GetSolids(){
 	return (PHSolidIf**)&*solids->solids.begin();
 }
 
-void PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
+PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
 	PHConstraintEngine* ce;
 	engines.Find(ce);
 	assert(ce);
-	ce->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc);	
+	return ce->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc);	
 }
 
 void PHScene::Clear(){
-	Scene::Clear();
-	count = 0;
+	engines.Clear();
+	Init();
 }
 
 void PHScene::SetTimeStep(double dt){
