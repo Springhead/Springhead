@@ -59,8 +59,9 @@ public:
 };
 
 ///
-class PHConstraint : public InheritSceneObject<PHJointIf, SceneObject>{
+class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
 public:
+	//OBJECTDEF(PHConstraint);
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,
@@ -136,6 +137,7 @@ public:
 
 class PHContactPoint : public InheritConstraint<PHContactPointIf, PHConstraint>{
 public:
+	//OBJECTDEF(PHContactPoint);
 	CDShapePair* shapePair;
 	Vec3d pos;
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_CONTACT;}
@@ -144,9 +146,14 @@ public:
 	virtual void ProjectionFv(double& F, int k);
 	PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1);
 };
-	
-class PHJoint1D : public InheritConstraint<PHJoint1DIf, PHConstraint>{
+
+class PHJoint : public InheritConstraint<PHJointIf, PHConstraint>{
 public:
+
+};
+class PHJoint1D : public InheritConstraint<PHJoint1DIf, PHJoint>{
+public:
+	//OBJECTDEF(PHJoint1D);
 	bool on_lower, on_upper;	/// 可動範囲の下限、上限に達している場合にtrue
 	double lower, upper;		/// 可動範囲の下限、上限
 	double pos_d, vel_d;		/// 目標変位、目標速度
@@ -166,6 +173,7 @@ public:
 
 class PHHingeJoint : public InheritJoint1D<PHHingeJointIf, PHJoint1D>{
 public:
+	//OBJECTDEF(PHHingeJoint);
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_HINGE;}
 	virtual void SetTorque(double t){mode = MODE_TORQUE; fw[2] = t;}
 	virtual double GetTorque(){return fw[2];}
@@ -179,12 +187,14 @@ public:
 };
 class PHSliderJoint : public InheritJoint1D<PHSliderJointIf, PHJoint1D>{
 public:
+	//OBJECTDEF(PHSliderJoint);
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_SLIDER;}
 	virtual void CompDof();
 	PHSliderJoint(){}
 };
 class PHBallJoint : public InheritConstraint<PHBallJointIf, PHConstraint>{
 public:
+	//OBJECTDEF(PHBallJoint);
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_BALL;}
 	virtual void CompDof();
 	PHBallJoint(){}
@@ -266,7 +276,7 @@ protected:
 public:
 	void Add(PHSolid* s);			/// Solid を登録する
 	void Remove(PHSolid* s);		/// 登録されているSolidを削除する
-	PHConstraint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
+	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
 	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
 	void Invalidate(){ready = false;}	/// readyフラグをリセット
 	void Init();						/// 初期化し，readyフラグをセット

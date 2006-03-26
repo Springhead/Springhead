@@ -1,12 +1,15 @@
 /**
  Springhead2/src/Samples/Joints/main.cpp
 
-【概要】
-  
-【終了基準】
-	
-【処理の流れ】
- 
+【概要】関節機能のデモ
+【仕様】
+  ・シーン番号0, 1, ...をタイプすると対応するシーンに切り替わる
+  ・シーン0：鎖
+		space : 鎖を伸ばす
+  　シーン1：アクチュエータ
+		a : 正転トルク
+		s : 脱力
+		d : 逆転トルク
 */
 
 #include <Springhead.h>		//	Springheadのインタフェース
@@ -19,13 +22,20 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* sdk;
-PHSolidDesc desc;
-PHSceneIf* scene;
-CDConvexMeshIf* meshFloor=NULL;
-CDConvexMeshIf* meshBox=NULL;
-PHSolidIf* soFloor;
-std::vector<PHSolidIf*> soBox;
+PHSdkIf* sdk;			// SDKインタフェース
+PHSceneIf* scene;		// Sceneインタフェース
+
+double lookAtY, lookAtZ;
+
+int sceneNo;			// シーン番号
+
+PHSolidDesc descFloor;					//床剛体のディスクリプタ
+PHSolidDesc descBox;					//箱剛体のディスクリプタ
+CDConvexMeshIf* meshFloor;				//床形状のインタフェース
+CDConvexMeshIf* meshBox;				//箱形状のインタフェース
+PHSolidIf* soFloor;						//床剛体のインタフェース
+std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
+std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
 // 光源の設定 
 static GLfloat light_position[] = { 25.0, 50.0, 20.0, 1.0 };
@@ -37,6 +47,13 @@ static GLfloat mat_floor[]      = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_box[]        = { 0.8, 0.8, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
+
+void BuildScene();
+void BuildScene0();
+void BuildScene1();
+void OnKey(char key);
+void OnKey0(char key);
+void OnKey1(char key);
 
 /**
  brief     	多面体の面(三角形)の法線を求める
@@ -146,7 +163,9 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0,15.0,15.0, 
+	lookAtY = 15.0;
+	lookAtZ = 30.0;
+	gluLookAt(0.0,15.0,30.0, 
 		      0.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -179,21 +198,21 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	switch (key) {
+		//終了
 		case ESC:		
 		case 'q':
 			exit(0);
 			break;
-		case ' ':{
-			soBox.push_back(scene->CreateSolid(desc));
-			soBox.back()->AddShape(meshBox);
-			soBox.back()->SetFramePosition(Vec3f(0.0, 1.0, 0.0));
-			PHHingeJointDesc jdesc;
-			jdesc.poseJoint[0].Pos() = Vec3d( 1,  1,  0);
-			jdesc.poseJoint[1].Pos() = Vec3d(-1, -1,  0);
-			int n = soBox.size();
-			scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc);
-		}break;
+		//シーン切り替え
+		case '0': case '1':
+			scene->Clear();
+			soFloor = NULL;
+			soBox.clear();
+			sceneNo = key - '0';
+			BuildScene();
+			break;
 		default:
+			OnKey(key);
 			break;
 	}
 }	
@@ -218,61 +237,163 @@ void timer(int id){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	sdk = CreatePHSdk();					// SDKの作成　
+	// SDKの作成　
+	sdk = CreatePHSdk();
+	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
 	dscene.timeStep = 0.05;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
-
-	// soFloor用のdesc
-	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	soFloor->SetDynamical(false);
-	
-	//	形状の作成
-	{
-		CDConvexMeshDesc md;
-		md.vertices.push_back(Vec3f(-1,-1,-1));
-		md.vertices.push_back(Vec3f(-1,-1, 1));	
-		md.vertices.push_back(Vec3f(-1, 1,-1));	
-		md.vertices.push_back(Vec3f(-1, 1, 1));
-		md.vertices.push_back(Vec3f( 1,-1,-1));	
-		md.vertices.push_back(Vec3f( 1,-1, 1));
-		md.vertices.push_back(Vec3f( 1, 1,-1));
-		md.vertices.push_back(Vec3f( 1, 1, 1));
-		meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
-
-		// soFloor(meshFloor)に対してスケーリング
-		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 30;
-			md.vertices[i].z *= 20;
-		}
-		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
-	}
-	// soBox用のdesc
-	desc.mass = 2.0;
-	desc.inertia = 2.0 * Matrix3d::Unit();
-	soBox.push_back(scene->CreateSolid(desc));
-	soBox.back()->AddShape(meshBox);
-	soBox.back()->SetFramePosition(Vec3f(0.0, 10.0, 0.0));
-	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
-	soBox.back()->SetDynamical(false);
-
-	soFloor->AddShape(meshFloor);
-	soFloor->SetFramePosition(Vec3f(0,-2,0));
-
-	scene->SetGravity(Vec3f(0, -9.8, 0));	// 重力を設定
+	// シーンの構築
+	sceneNo = 0;
+	BuildScene();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow("BoxStack");
+	glutCreateWindow("Joints");
 	initialize();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(0, timer, 0);
 
+	
 	glutMainLoop();
 
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
 	delete sdk;
+}
+
+void BuildScene(){
+	switch(sceneNo){
+	case 0: BuildScene0(); break;
+	case 1: BuildScene1(); break;
+	}
+}
+
+// CDConvexMeshDescを立方体に初期化
+void InitCube(CDConvexMeshDesc& md){
+	md.vertices.push_back(Vec3f(-1,-1,-1));
+	md.vertices.push_back(Vec3f(-1,-1, 1));	
+	md.vertices.push_back(Vec3f(-1, 1,-1));	
+	md.vertices.push_back(Vec3f(-1, 1, 1));
+	md.vertices.push_back(Vec3f( 1,-1,-1));	
+	md.vertices.push_back(Vec3f( 1,-1, 1));
+	md.vertices.push_back(Vec3f( 1, 1,-1));
+	md.vertices.push_back(Vec3f( 1, 1, 1));
+}
+
+// シーン0 : 鎖のデモ。space keyで箱が増える
+void BuildScene0(){	
+	//箱の形状を作成
+	CDConvexMeshDesc md;
+	InitCube(md);
+	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+
+	//床の形状を作成
+	for(unsigned i=0; i<md.vertices.size(); ++i){
+		md.vertices[i].x *= 30;
+		md.vertices[i].z *= 20;
+	}
+	meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	
+	// 床を作成
+	soFloor = scene->CreateSolid(descFloor);
+	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
+	soFloor->AddShape(meshFloor);
+	soFloor->SetFramePosition(Vec3f(0,-2,0));
+
+	//鎖の根になる箱を作成
+	descBox.mass = 2.0;
+	descBox.inertia = 2.0 * Matrix3d::Unit();
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(meshBox);
+	//空中に固定する
+	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
+	soBox.back()->SetDynamical(false);
+
+	// 重力を設定
+	scene->SetGravity(Vec3f(0, -9.8, 0));
+}
+
+// シーン1 : アクチュエータのデモ
+void BuildScene1(){
+	//箱の形状を作成
+	CDConvexMeshDesc mdCube, mdBox, mdFloor;
+	InitCube(mdCube);
+	mdBox.vertices.insert(mdBox.vertices.begin(), mdCube.vertices.begin(), mdCube.vertices.end());
+	for(unsigned i=0; i < mdBox.vertices.size(); ++i){
+		mdBox.vertices[i].x *= 0.5;
+		mdBox.vertices[i].y *= 3;
+		mdBox.vertices[i].z *= 0.5;
+	}
+	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(mdBox));
+
+	//床の形状を作成
+	mdFloor.vertices.insert(mdFloor.vertices.begin(), mdCube.vertices.begin(), mdCube.vertices.end());
+	for(unsigned i=0; i < mdFloor.vertices.size(); ++i){
+		mdFloor.vertices[i].x *= 30;
+		mdFloor.vertices[i].z *= 20;
+	}
+	meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(mdFloor));
+	
+	// 床を作成
+	soFloor = scene->CreateSolid(descFloor);
+	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
+	soFloor->AddShape(meshFloor);
+	soFloor->SetFramePosition(Vec3f(0,-2,0));
+
+	//アームを作成
+	descBox.mass = 2.0;
+	descBox.inertia = 2.0 * Matrix3d::Unit();
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(meshBox);
+	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	
+	//関節を作成
+	PHHingeJointDesc jd;
+	jd.poseJoint[0].Pos() = Vec3d(0.0, 8.0, 0.0);
+	jd.poseJoint[1].Pos() = Vec3d(0.0, -3.0, 0.0);
+	//jd.lower = 
+	//jd.upper =
+	jntLink.push_back(scene->CreateJoint(soFloor, soBox[0], jd));
+
+	// 重力を設定
+	scene->SetGravity(Vec3f(0, -9.8, 0));
+}
+
+void OnKey(char key){
+	switch(sceneNo){
+	case 0: OnKey0(key); break;
+	case 1: OnKey1(key); break;
+	}
+}	
+void OnKey0(char key){
+	switch(key){
+	case ' ':{
+		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.back()->AddShape(meshBox);
+		soBox.back()->SetFramePosition(Vec3f(0.0, 1.0, 0.0));
+		PHHingeJointDesc jdesc;
+		jdesc.poseJoint[0].Pos() = Vec3d( 1,  1,  0);
+		jdesc.poseJoint[1].Pos() = Vec3d(-1, -1,  0);
+		int n = soBox.size();
+		scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc);
+		}break;
+	}
+}
+void OnKey1(char key){
+	PHHingeJointIf* hinge = ICAST(PHHingeJointIf, jntLink[0]);
+	switch(key){
+	case 'a':
+		hinge->SetTorque(1.0);
+		break;
+	case 's':
+		hinge->SetTorque(0.0);
+		break;
+	case 'd':
+		hinge->SetTorque(-1.0);
+		break;
+	}
 }

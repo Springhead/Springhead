@@ -55,6 +55,8 @@ void PHSolidAux::SetupCorrection(){
 
 //----------------------------------------------------------------------------
 // PHConstraint
+//OBJECTIMP(PHConstraint, SceneObject);
+IF_IMP(PHConstraint, SceneObject);
 PHConstraint::PHConstraint(){
 	fv.clear();
 	fw.clear();
@@ -288,6 +290,8 @@ void PHConstraint::IterateCorrection(){
 
 //----------------------------------------------------------------------------
 // PHContactPoint
+//OBJECTIMP(PHContactPoint, PHConstraint);
+IF_IMP(PHContactPoint, PHConstraint);
 PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
 	shapePair = sp;
 	pos = p;
@@ -354,9 +358,15 @@ void PHContactPoint::ProjectionFv(double& F, int k){
 }
 
 //----------------------------------------------------------------------------
+// PHJoint
+IF_IMP(PHJoint, PHConstraint);
+//----------------------------------------------------------------------------
+// PHJoint1D
+IF_IMP(PHJoint1D, PHJoint);
+//----------------------------------------------------------------------------
 // PHHingeJoint
 //OBJECTIMP(PHHingeJoint, PHJoint1D)
-//IF_IMP(PHHingeJoint, PHJoint1D)
+IF_IMP(PHHingeJoint, PHJoint1D)
 void PHHingeJoint::CompDof(){
 	double theta = qjrel.Theta();	//é≤ï˚å¸ÇÃçSë©ÇÕçáívÇµÇƒÇ¢ÇÈÇ‡ÇÃÇ∆âºíËÇµÇƒäpìxÇå©ÇÈ
 	on_lower = on_upper = false;
@@ -397,6 +407,8 @@ void PHHingeJoint::ProjectionFq(double& F, int k){
 
 //----------------------------------------------------------------------------
 // PHSliderJoint
+//OBJECTIMP(PHSliderJoint, PHJoint1D)
+IF_IMP(PHSliderJoint, PHJoint1D)
 void PHSliderJoint::CompDof(){
 	dim_v = 2;
 	dim_w = 3;
@@ -405,6 +417,8 @@ void PHSliderJoint::CompDof(){
 
 //----------------------------------------------------------------------------
 // PHBallJoint
+//OBJECTIMP(PHBallJoint, PHJoint1D)
+IF_IMP(PHBallJoint, PHJoint1D)
 void PHBallJoint::CompDof(){
 	dim_v = 3;
 	dim_w = 0;
@@ -636,7 +650,7 @@ PHConstraintEngine::PHConstraintEngine(){
 	max_iter_correction = 10;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
-	max_error = 0.1;
+	max_error = 1.0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -666,14 +680,14 @@ void PHConstraintEngine::Remove(PHSolid* s){
 	}
 }
 
-PHConstraint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
+PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
 	PHSolidAuxs::iterator islhs, isrhs;
 	islhs = solids.Find(lhs);
 	isrhs = solids.Find(rhs);
 	if(islhs == solids.end() || isrhs == solids.end())
 		return NULL;
 	
-	PHConstraint* joint = NULL;
+	PHJoint* joint = NULL;
 	switch(desc.type){
 	case PHJointDesc::JOINT_HINGE:
 		joint = DBG_NEW PHHingeJoint();

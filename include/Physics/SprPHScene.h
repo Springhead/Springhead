@@ -9,6 +9,7 @@ struct PHSolidDesc;
 struct CDShapeIf;
 struct CDShapeDesc;
 
+struct PHJointIf;
 struct PHJointDesc;
 
 /// 物理エンジンのシーンの状態
@@ -60,7 +61,7 @@ public:
 	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true)=0;
 
 	/// 関節の作成
-	virtual void CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
+	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
 	/// 積分ステップを返す
 	virtual double GetTimeStep()const=0;
