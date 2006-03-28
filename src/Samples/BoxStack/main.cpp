@@ -215,7 +215,11 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				if (soBox.size() < 30) {
+					soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				} else {
+					soBox.back()->SetFramePosition(Vec3f(0.5,100,0));
+				}
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "box" << soBox.size();
