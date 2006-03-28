@@ -208,6 +208,7 @@ void keyboard(unsigned char key, int x, int y){
 			scene->Clear();
 			soFloor = NULL;
 			soBox.clear();
+			jntLink.clear();
 			sceneNo = key - '0';
 			BuildScene();
 			break;
@@ -394,6 +395,15 @@ void OnKey1(char key){
 		break;
 	case 'd':
 		hinge->SetTorque(-1.0);
+		break;
+	case 'f':
+		hinge->SetDesiredVelocity(Rad(90.0));
+		break;
+	case 'g':
+		hinge->SetDesiredVelocity(Rad(0.0));
+		break;
+	case 'h':
+		hinge->SetDesiredVelocity(Rad(-90.0));
 		break;
 	}
 }

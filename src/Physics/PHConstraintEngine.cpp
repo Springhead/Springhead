@@ -116,6 +116,7 @@ void PHConstraint::SetupDynamics(double dt){
 
 	CompJacobian(GetJointType() != PHJointDesc::JOINT_CONTACT);		//接触拘束の場合は回転関係のヤコビ行列は必要ない
 	CompDof();
+	CompVelocityBias();
 
 	int i, j;
 	Av.clear();
@@ -379,6 +380,11 @@ void PHHingeJoint::CompDof(){
 		dim_w = 3;
 		dim_q = 3;
 	}
+	if(mode == MODE_VELOCITY){
+		dim_v = 3;
+		dim_w = 3;
+		dim_q = 2;
+	}
 	else{
 		dim_v = 3;
 		dim_w = 2;
@@ -386,7 +392,8 @@ void PHHingeJoint::CompDof(){
 	}
 }
 void PHHingeJoint::CompVelocityBias(){
-	bw_bias[2] = vel_d;
+	bv_bias.clear();
+	bw_bias = Vec3d(0.0, 0.0, (mode == MODE_VELOCITY ? vel_d : 0.0));
 }
 void PHHingeJoint::Projectionfw(double& f, int k){
 	if(k == 2){
