@@ -241,6 +241,7 @@ class PHConstraintEngine: public PHEngine{
 	/// Solidの組み合わせの配列
 	class PHSolidPair{
 	public:
+		bool bEnabled;
 		PHSolidAux* solid[2];
 		/// Shapeの組み合わせの配列
 		typedef UTCombination<PHShapePair> PHShapePairs;

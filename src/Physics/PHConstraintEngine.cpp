@@ -444,6 +444,7 @@ void PHConstraintEngine::PHSolidPair::Init(PHSolidAux* s0, PHSolidAux* s1){
 		sp.shape[0] = solid[0]->solid->shapes[i];
 		sp.shape[1] = solid[1]->solid->shapes[j];
 	}
+	bEnabled = true;
 }
 
 class ContactVertex: public Vec3d{
@@ -555,6 +556,8 @@ bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PH
 //--------------------------------------------------------------------------
 #ifndef USE_VOLUME	//	‘ÌÏ‚ðŽg‚í‚È‚¢ÚG”»’è
 bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
+	if(!bEnabled)return false;
+
 	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
 	// ‚¢‚¸‚ê‚©‚ÌSolid‚ÉŒ`ó‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢ê‡‚ÍÚG‚È‚µ
 	PHSolid *s0 = solid[0]->solid, *s1 = solid[1]->solid;
@@ -579,7 +582,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 //--------------------------------------------------------------------------
 #else	//	‘ÌÏ‚ðŽg‚¤ÚG”»’è
 bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
-	// –‚±‚±‚ÅShape‚É‚Â‚¢‚ÄBBoxƒŒƒxƒ‹”»’è‚ð‚·‚ê‚Î‘¬‚­‚È‚é‚©‚àH
+	if(!bEnabled)return false;
 	static CDContactAnalysis analyzer;
 
 	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
@@ -710,7 +713,12 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 }
 
 void PHConstraintEngine::EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable){
-	//solidPairs.
+	if(!ready)
+		Init();
+	PHSolidAuxs::iterator ilhs = solids.Find(lhs), irhs = solids.Find(rhs);
+	if(ilhs == solids.end() || irhs == solids.end())
+		return;
+	solidPairs.item(ilhs - solids.begin(), irhs - solids.begin()).bEnabled = bEnable;
 }
 
 void PHConstraintEngine::Init(){

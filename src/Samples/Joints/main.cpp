@@ -31,7 +31,6 @@ int sceneNo;			// シーン番号
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
 PHSolidDesc descBox;					//箱剛体のディスクリプタ
-CDConvexMeshIf* meshFloor;				//床形状のインタフェース
 CDConvexMeshIf* meshBox;				//箱形状のインタフェース
 PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
@@ -272,39 +271,33 @@ void BuildScene(){
 	}
 }
 
-// CDConvexMeshDescを立方体に初期化
-void InitCube(CDConvexMeshDesc& md){
-	md.vertices.push_back(Vec3f(-1,-1,-1));
-	md.vertices.push_back(Vec3f(-1,-1, 1));	
-	md.vertices.push_back(Vec3f(-1, 1,-1));	
-	md.vertices.push_back(Vec3f(-1, 1, 1));
-	md.vertices.push_back(Vec3f( 1,-1,-1));	
-	md.vertices.push_back(Vec3f( 1,-1, 1));
-	md.vertices.push_back(Vec3f( 1, 1,-1));
-	md.vertices.push_back(Vec3f( 1, 1, 1));
+// CDConvexMeshDescを直方体に初期化
+void InitBoxMesh(CDConvexMeshDesc& md, double x, double y, double z){
+	md.vertices.clear();
+	md.vertices.push_back(Vec3f(-x,-y,-z));
+	md.vertices.push_back(Vec3f(-x,-y, z));	
+	md.vertices.push_back(Vec3f(-x, y,-z));	
+	md.vertices.push_back(Vec3f(-x, y, z));
+	md.vertices.push_back(Vec3f( x,-y,-z));	
+	md.vertices.push_back(Vec3f( x,-y, z));
+	md.vertices.push_back(Vec3f( x, y,-z));
+	md.vertices.push_back(Vec3f( x, y, z));
 }
 
 // シーン0 : 鎖のデモ。space keyで箱が増える
 void BuildScene0(){	
-	//箱の形状を作成
 	CDConvexMeshDesc md;
-	InitCube(md);
-	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
-
-	//床の形状を作成
-	for(unsigned i=0; i<md.vertices.size(); ++i){
-		md.vertices[i].x *= 30;
-		md.vertices[i].z *= 20;
-	}
-	meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	
 	// 床を作成
+	InitBoxMesh(md, 30.0, 1.0, 20.0);
 	soFloor = scene->CreateSolid(descFloor);
-	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
-	soFloor->AddShape(meshFloor);
+	soFloor->AddShape(sdk->CreateShape(md));
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
-
+	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
+	
 	//鎖の根になる箱を作成
+	InitBoxMesh(md, 1.0, 1.0, 1.0);
+	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	descBox.mass = 2.0;
 	descBox.inertia = 2.0 * Matrix3d::Unit();
 	soBox.push_back(scene->CreateSolid(descBox));
@@ -320,45 +313,52 @@ void BuildScene0(){
 
 // シーン1 : アクチュエータのデモ
 void BuildScene1(){
-	//箱の形状を作成
-	CDConvexMeshDesc mdCube, mdBox, mdFloor;
-	InitCube(mdCube);
-	mdBox.vertices.insert(mdBox.vertices.begin(), mdCube.vertices.begin(), mdCube.vertices.end());
-	for(unsigned i=0; i < mdBox.vertices.size(); ++i){
-		mdBox.vertices[i].x *= 0.5;
-		mdBox.vertices[i].y *= 3;
-		mdBox.vertices[i].z *= 0.5;
-	}
-	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(mdBox));
-
-	//床の形状を作成
-	mdFloor.vertices.insert(mdFloor.vertices.begin(), mdCube.vertices.begin(), mdCube.vertices.end());
-	for(unsigned i=0; i < mdFloor.vertices.size(); ++i){
-		mdFloor.vertices[i].x *= 30;
-		mdFloor.vertices[i].z *= 20;
-	}
-	meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(mdFloor));
+	CDConvexMeshDesc md;
 	
 	// 床を作成
+	InitBoxMesh(md, 30.0, 1.0, 20.0);
 	soFloor = scene->CreateSolid(descFloor);
-	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
-	soFloor->AddShape(meshFloor);
+	soFloor->AddShape(sdk->CreateShape(md));
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
-
-	//アームを作成
-	descBox.mass = 2.0;
-	descBox.inertia = 2.0 * Matrix3d::Unit();
-	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(meshBox);
-	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
 	
-	//関節を作成
+	soBox.resize(3);
+	
+	InitBoxMesh(md, 0.5, 1.0, 0.5);
+	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0]->AddShape(sdk->CreateShape(md));
+	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+
+	InitBoxMesh(md, 0.5, 2.5, 0.5);
+	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1]->AddShape(sdk->CreateShape(md));
+	soBox[1]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+
+	InitBoxMesh(md, 0.5, 5.0, 0.5);
+	soBox[2] = scene->CreateSolid(descBox);
+	soBox[2]->AddShape(sdk->CreateShape(md));
+	soBox[2]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+
 	PHHingeJointDesc jd;
+	jntLink.resize(4);
 	jd.poseJoint[0].Pos() = Vec3d(0.0, 8.0, 0.0);
-	jd.poseJoint[1].Pos() = Vec3d(0.0, -3.0, 0.0);
-	//jd.lower = 
-	//jd.upper =
-	jntLink.push_back(scene->CreateJoint(soFloor, soBox[0], jd));
+	jd.poseJoint[1].Pos() = Vec3d(0.0, -1.0, 0.0);
+	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], jd);
+
+	jd.poseJoint[0].Pos() = Vec3d(4.0, 8.0, 0.0);
+	jd.poseJoint[1].Pos() = Vec3d(0.0, -2.5, 0.0);
+	jntLink[1] = scene->CreateJoint(soFloor, soBox[1], jd);
+
+	jd.poseJoint[0].Pos() = Vec3d(0.0, 1.0, 0.0);
+	jd.poseJoint[1].Pos() = Vec3d(0.0, -5.0, 0.0);
+	jntLink[2] = scene->CreateJoint(soBox[0], soBox[2], jd);
+
+	jd.poseJoint[0].Pos() = Vec3d(0.0, 2.5, 0.0);
+	jd.poseJoint[1].Pos() = Vec3d(0.0, 0.0, 0.0);
+	jntLink[3] = scene->CreateJoint(soBox[1], soBox[2], jd);
+
+	scene->EnableContact(soBox[0], soBox[2], false);
+	scene->EnableContact(soBox[1], soBox[2], false);
 
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
@@ -404,6 +404,9 @@ void OnKey1(char key){
 		break;
 	case 'h':
 		hinge->SetDesiredVelocity(Rad(-90.0));
+		break;
+	case 'j':
+		jntLink[3]->Enable(false);
 		break;
 	}
 }
