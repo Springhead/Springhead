@@ -13,12 +13,10 @@ struct PHJointDesc{
 	} type;					/// ŠÖß‚Ìí—Ş
 	bool bEnabled;
 	Posed poseJoint[2];		/// „‘Ì‚©‚çŒ©‚½ŠÖß‚ÌˆÊ’u‚ÆŒX‚«
-protected:
 	PHJointDesc():bEnabled(true){}
 };
 struct PHJoint1DDesc : public PHJointDesc{
 	double	lower, upper;	/// ‰Â“®”ÍˆÍ. lower < upper‚Ì‚Æ‚«‚É—LŒø‚Æ‚È‚é
-protected:
 	PHJoint1DDesc():lower(0.0), upper(0.0){}
 };
 struct PHHingeJointDesc : public PHJoint1DDesc{

@@ -211,6 +211,13 @@ void keyboard(unsigned char key, int x, int y){
 			sceneNo = key - '0';
 			BuildScene();
 			break;
+		case 'x':
+			{
+				static bool bEnable = true;
+				bEnable = !bEnable;
+				for(int i = 0; i < jntLink.size(); i++)
+					jntLink[i]->Enable(bEnable);
+			}break;
 		default:
 			OnKey(key);
 			break;
@@ -341,11 +348,11 @@ void BuildScene1(){
 
 	PHHingeJointDesc jd;
 	jntLink.resize(4);
-	jd.poseJoint[0].Pos() = Vec3d(0.0, 8.0, 0.0);
+	jd.poseJoint[0].Pos() = Vec3d(0.0, 10.0, 0.0);
 	jd.poseJoint[1].Pos() = Vec3d(0.0, -1.0, 0.0);
 	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], jd);
 
-	jd.poseJoint[0].Pos() = Vec3d(4.0, 8.0, 0.0);
+	jd.poseJoint[0].Pos() = Vec3d(4.0, 10.0, 0.0);
 	jd.poseJoint[1].Pos() = Vec3d(0.0, -2.5, 0.0);
 	jntLink[1] = scene->CreateJoint(soFloor, soBox[1], jd);
 
@@ -380,7 +387,7 @@ void OnKey0(char key){
 		jdesc.poseJoint[0].Pos() = Vec3d( 1,  1,  0);
 		jdesc.poseJoint[1].Pos() = Vec3d(-1, -1,  0);
 		int n = soBox.size();
-		scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc);
+		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
 	}
 }
