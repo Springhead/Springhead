@@ -200,44 +200,23 @@ public:
 	PHBallJoint(){}
 };
 
+class PHConstraintEngine;
+///	Shapeの組合わせ
+class PHShapePair: public CDShapePair{
+public:
+	///	
+	PHShapePair(){}
+	PHShapePair(CDShape* s0, CDShape* s1):CDShapePair(s0, s1){}
+	///	接触判定．接触の中心(center 最侵入点の中点)と法線ベクトルまで求める
+	bool Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
+	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
+	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
+};
 class PHConstraintEngine: public PHEngine{
 	friend class PHSolidPair;
 
 	OBJECTDEF(PHConstraintEngine);
 
-	///	Shapeの組合わせ
-	class PHShapePair: public CDShapePair{
-//	class PHShapePair: public UTRefCount{
-	public:
-/*		//	判定対象のShape
-		CDShape* shape[2];
-		//	接触判定結果
-		Vec3d closestPoint[2]; // ローカル座標系
-		Vec3d commonPoint;     // World座標系
-		unsigned int lastContactCount;
-		enum State{
-			NEW,
-			CONTINUE,
-		} state;
-		//	法線計算結果
-		Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
-		Vec3d center;				///<	2つの最侵入点の中間の点
-		double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
-		//	World系での形状の姿勢をキャッシュ
-		Posed shapePoseW[2];
-*/
-		///	
-		PHShapePair(){}
-		PHShapePair(CDShape* s0, CDShape* s1){
-			shape[0] = s0;
-			shape[1] = s1;
-		}
-		///	接触判定
-		bool Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
-		///	
-		bool FindCut(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
-		void UpdateShapePose(Posed p1, Posed p2);
-	};
 	/// Solidの組み合わせの配列
 	class PHSolidPair{
 	public:
@@ -289,6 +268,8 @@ public:
 
 	PHConstraintEngine();
 	~PHConstraintEngine();
+
+	friend class PHShapePair;
 };
 
 

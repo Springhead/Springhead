@@ -2,16 +2,25 @@
 #define CDCUTRING_H
 
 #include <SprCollision.h>
+#include <Collision/CDQuickHull2D.h>
 #include <Foundation/Object.h>
 
 namespace Spr{;
 
 ///	接触解析に使うクラス．接触部分の切り口の線分を表す．
 class CDCutLine{
-public:
-	CDCutLine(Vec2d n, double d):normal(n), dist(d){}
+protected:
 	Vec2d normal;
 	double dist;
+	double distInv;
+public:
+	CDCutLine(Vec2d n, double d):normal(n), dist(d){
+		distInv = 1/dist;
+	}
+	Vec2d GetPos() const { 
+		return normal*distInv; 
+	}
+	friend class CDCutRing;
 };
 ///	接触解析に使うクラス．接触部分の切り口
 class CDCutRing{
@@ -22,6 +31,9 @@ public:
 	Posed local, localInv;
 	///	切り口を構成する直線
 	std::vector<CDCutLine> lines;
+	///	双対変換 → QuickHull で一番内側の凸多角形の頂点を求める．
+	static CDQHLines<CDCutLine> vtxs;	//	一番内側の凸多角形の頂点
+
 	CDCutRing(Vec3d c, Matrix3d ccs){
 		local.Ori().FromMatrix(ccs);
 		local.Pos() = c;

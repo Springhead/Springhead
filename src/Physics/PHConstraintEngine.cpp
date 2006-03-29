@@ -456,10 +456,10 @@ public:
 		return Vec2d( (*(Vec3d*)this)*ex, (*(Vec3d*)this)*ey );
 	}
 };
-
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
-bool PHConstraintEngine::PHShapePair::FindCut(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
+
+void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	//	center と normalが作る面と交差する面を求めないといけない．
 	//	面の頂点が別の側にある面だけが対象．
 	//	quick hull は n log r だから，線形時間で出来ることはやっておくべき．
@@ -492,20 +492,24 @@ bool PHConstraintEngine::PHShapePair::FindCut(unsigned ct, PHSolidAux* solid0, P
 	CDCutRing cutRing(center, ccs);
 	conv[0]->FindCutRing(cutRing, shapePoseW[0]);
 	conv[1]->FindCutRing(cutRing, shapePoseW[1]);
-	cutRing.Print(DSTR);
-
 	//	切り口を求める２：線分をつないで輪を作る
 	cutRing.MakeRing();
-	return false;	
+//	cutRing.Print(DSTR);
+	
+	DSTR << "contact center:" << center << "  vtxs:" << std::endl;
+	for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
+		if (vtx->deleted) continue;
+		Vec3d pos;
+		pos.sub_vector(0, Vec2d()) = vtx->normal / vtx->dist;
+		pos = cutRing.local * pos;
+		engine->points.push_back(DBG_NEW PHContactPoint(this, pos, solid0, solid1));
+		DSTR << "  " << pos << std::endl;
+	}
 }
-void PHConstraintEngine::PHShapePair::UpdateShapePose(Posed p0, Posed p1){
-	shapePoseW[0] = p0 * shape[0]->GetPose();
-	shapePoseW[1] = p1 * shape[1]->GetPose();
-}
-#define USE_VOLUME
+//#define USE_VOLUME
 
 #ifndef USE_VOLUME
-bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
+bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	UpdateShapePose(solid0->solid->GetPose() * shape[0]->GetPose(), solid1->solid->GetPose() * shape[1]->GetPose());
 	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
 	Vec3d sep;
@@ -546,7 +550,7 @@ bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PH
 		depth = depth - n.norm();		//	動かした距離 - 2点の距離
 		normal = n.unit();
 		center -= 0.5f*depth*normal;
-		DSTR << "Normal:" << normal << " center:" << center << " depth:" << depth << std::endl;
+//		DSTR << "Normal:" << normal << " center:" << center << " depth:" << depth << std::endl;
 		#ifdef _DEBUG
 		if (!finite(normal.norm())){
 			DSTR << "Error: Wrong normal:" << normal << std::endl;
@@ -559,7 +563,7 @@ bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PH
 	return r;
 }
 #else
-bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
+bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	return CDShapePair::Detect(ct);
 }
 #endif
@@ -582,7 +586,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 			if(sp.Detect(ct, solid[0], solid[1])){
 				found = true;
 				//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-				sp.FindCut(ct, solid[0], solid[1]);
+				sp.EnumVertex(engine, ct, solid[0], solid[1]);
 			}
 		}
 	}

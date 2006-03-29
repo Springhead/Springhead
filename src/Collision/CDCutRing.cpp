@@ -3,19 +3,41 @@
 #pragma hdrstop
 #endif
 #include "CDCutRing.h"
+#include <Collision/CDQuickHull2DImp.h>
 
 namespace Spr{;
+CDQHLines<CDCutLine> CDCutRing::vtxs(1000);		//	一番内側の凸多角形の頂点
 
 void CDCutRing::MakeRing(){
 	//	Mullar＆Preparataで，形を求める
 	//	cutLines->CreateHull();
+	std::vector<CDCutLine*> linePtrs;
+	linePtrs.resize(lines.size());
+	for(unsigned i=0; i<lines.size(); ++i) linePtrs[i] = &lines[i];
+	vtxs.Clear();
+	vtxs.CreateConvexHull(&*linePtrs.begin(), &*linePtrs.end());
 }
 void CDCutRing::Print(std::ostream& os){
-	DSTR << lines.size() << " lines" << std::endl;
-	for(unsigned i=0; i<lines.size(); ++i){
-		Vec3d n(lines[i].normal.x, lines[i].normal.y, 0);
-		n = local.Ori() * n;
-		DSTR << n << " d=" << lines[i].dist << std::endl;
+	if (vtxs.size()){
+		int nDel=0;
+		for(CDQHLine<CDCutLine>* vtx = vtxs.begin; vtx!=vtxs.end; ++vtx){
+			if (vtx->deleted) nDel ++;
+		}
+		DSTR << vtxs.size()-nDel << "lines are used." << std::endl;
+		for(CDQHLine<CDCutLine>* vtx = vtxs.begin; vtx!=vtxs.end; ++vtx){
+			if (vtx->deleted) continue;
+			CDCutLine* line = vtx->vtx[0];
+			Vec3d n(line->normal.x, line->normal.y, 0);
+			n = local.Ori() * n;
+			DSTR << n << " d=" << line->dist << std::endl;
+		}
+	}else{
+		DSTR << lines.size() << " lines" << std::endl;
+		for(unsigned i=0; i<lines.size(); ++i){
+			Vec3d n(lines[i].normal.x, lines[i].normal.y, 0);
+			n = local.Ori() * n;
+			DSTR << n << " d=" << lines[i].dist << std::endl;
+		}
 	}
 };
 
