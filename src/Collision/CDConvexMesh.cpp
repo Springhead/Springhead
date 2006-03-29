@@ -45,19 +45,55 @@ CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
 	CalcFace();
 }
 
-void CDConvexMesh::FindCutRing(CDCutRing& r, const Affined& toW){	
-#if 0
-	Affined toL	= toW.inv();
+void CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
+	Posed toL	= toW.Inv();
 	//	頂点がどっち側にあるか調べる．
-	for(
+	Vec3d planePosL = toL * ring.local.Pos();
+	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(0,0,1);
+	std::vector<bool> inside;
+	inside.resize(base.size());
+	double d = planeNormalL * planePosL;
+	for(unsigned i=0; i<base.size(); ++i){
+		double vtxDist = planeNormalL * base[i];
+		inside[i] = vtxDist >= d;
+	}
 	//	またがっている面の場合，交線を求める
-	r.center
-	
-	r.local_inv *
-#endif
+	for(unsigned i=0; i<faces.size(); ++i){
+		if (inside[faces[i].vtxs[0]] == inside[faces[i].vtxs[1]] && //	全部同じ側のときは，
+			inside[faces[i].vtxs[0]] == inside[faces[i].vtxs[2]]) continue;	//	パス
+		//	接触面(plane,面1)と多面体の面(face,面2)の交線を求める
+		/*	直線をとおる1点を見つけるのは
+						|面2
+						|n2
+						|d2
+				   O	|
+			-------+----+----面1 n1,d1=0
+						|P
+			P = a*n1 + b*n2;
+				a = (d1 - d2*(n1*n2)) / (1-(n1*n2)^2)
+				b = (d2 - d1*(n1*n2)) / (1-(n1*n2)^2)
+			が面1(plane)と面2(face)が作る直線を通る1点
+			O:		planePosL
+			n1,d1	planeの法線(planeNormalL)，Oからの距離=0
+			n2,d2	faceの法線(faceNormal)，Oからの距離			
+		*/
+		Vec3d faceNormal = ((base[faces[i].vtxs[1]] - base[faces[i].vtxs[0]]) ^ (base[faces[i].vtxs[2]] - base[faces[i].vtxs[0]])).unit();
+		double faceDist = faceNormal * (base[faces[i].vtxs[0]] - planePosL);
+		Vec3d lineDirection = (planeNormalL ^ faceNormal).unit();
+		double ip = planeNormalL * faceNormal;
+		double a = -faceDist*ip / (1-(ip*ip));
+		double b = faceDist / (1-(ip*ip));
+		Vec3d lineOff = a*planeNormalL + b*faceNormal;
+		Vec3d lineNormal = planeNormalL ^ lineDirection;
+		double lineDist = lineNormal * lineOff;
+
+		//	local -> world -> ring2次元系に変換
+		Posed to2D = ring.localInv * toW;
+		Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(0, Vec2d());
+		//	線は内側を向かせたいので， normal, dist を反転して ring.lines に追加
+		ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
+	}
 }
-
-
 
 void CalcBBox(Vec3f& bbmin, Vec3f& bbmax){
 	

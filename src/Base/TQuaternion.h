@@ -414,7 +414,7 @@ public:
 	TPose<ET> Inv() const { 
 		TPose<ET> rv;
 		rv.Ori() = Ori().Inv();
-		rv.Pos() = -rv.Ori()*Pos();
+		rv.Pos() = -(rv.Ori()*Pos());
 		return rv;
 	}
 

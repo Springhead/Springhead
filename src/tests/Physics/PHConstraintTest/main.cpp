@@ -26,10 +26,11 @@ using namespace Spr;
 
 #define ESC				27
 #define EXIT_TIMER		200		
-#define NUM_BLOCK		6
-//#define NUM_BLOCK		1
+//#define NUM_BLOCK		6
+#define NUM_BLOCK		1
 
-float boxpos[10][3] = {
+float boxpos[][3] = {
+	{0, 2, 0},
 	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
 	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
 };
