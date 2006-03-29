@@ -492,6 +492,7 @@ bool PHConstraintEngine::PHShapePair::FindCut(unsigned ct, PHSolidAux* solid0, P
 	CDCutRing cutRing(center, ccs);
 	conv[0]->FindCutRing(cutRing, shapePoseW[0]);
 	conv[1]->FindCutRing(cutRing, shapePoseW[1]);
+	cutRing.Print(DSTR);
 
 	//	切り口を求める２：線分をつないで輪を作る
 	cutRing.MakeRing();
@@ -516,27 +517,36 @@ bool PHConstraintEngine::PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PH
 		lastContactCount = ct;
 
 		//	法線を求める
-		Vec3d n;			//	求める法線
 		if (state == NEW){
-			n = solid0->solid->GetPointVelocity(commonPoint) - solid1->solid->GetPointVelocity(commonPoint);
-			n.unitize();
+			normal = solid0->solid->GetPointVelocity(commonPoint) - solid1->solid->GetPointVelocity(commonPoint);
+			double norm = normal.norm();
+			if (norm<1e-10){
+				normal = solid1->solid->GetCenterPosition() - solid0->solid->GetCenterPosition();
+				double norm = normal.norm();
+				if (norm<1e-10){
+					normal = Vec3d(1,0,0);
+				}
+			}
+			normal.unitize();
 			depth = 1e-2;
 		}
 		//	前回の法線の向きに動かして，最近傍点を求める
 		if (depth < 1e-2) depth = 1e-2;
 		Posed trans;
+		Vec3f n;
 		while(1) {
 			depth *= 2;							//	余裕を見て，深さの2倍動かす
 			trans = shapePoseW[1];				//	動かす行列
-			trans.Pos() += depth * n;
+			trans.Pos() += depth * normal;
 			FindClosestPoints(conv[0], conv[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
 			center = shapePoseW[0] * closestPoint[0];
 			n = trans * closestPoint[1] - center;
 			if (n.square() > 1e-10) break;
 		}
-		depth = depth - n.norm();			//	動かした距離 - 2点の距離
+		depth = depth - n.norm();		//	動かした距離 - 2点の距離
 		normal = n.unit();
-		center += 0.5f*depth*normal;
+		center -= 0.5f*depth*normal;
+		DSTR << "Normal:" << normal << " center:" << center << " depth:" << depth << std::endl;
 		#ifdef _DEBUG
 		if (!finite(normal.norm())){
 			DSTR << "Error: Wrong normal:" << normal << std::endl;
@@ -566,7 +576,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
 	for(int i = 0; i < (int)(s0->shapes.size()); i++){
-		for(int j = i+1; j < (int)(s1->shapes.size()); j++){
+		for(int j = 0; j < (int)(s1->shapes.size()); j++){
 			PHShapePair& sp = shapePairs.item(i, j);
 			//このshape pairの交差判定/法線と接触の位置を求める．
 			if(sp.Detect(ct, solid[0], solid[1])){
