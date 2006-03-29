@@ -235,7 +235,7 @@ void SPR_CDECL idle(){
 	glutPostRedisplay();
 	static int count;
 	count++;
-	if (++count > 200) exit(0);
+	//if (++count > 200) exit(0);
 #endif	
 }
 
@@ -279,6 +279,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	dsolid.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(dsolid);			// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
 	soFloor->SetGravity(false);
+	soFloor->SetDynamical(false);
 	
 	//	Œ`ó‚Ìì¬
 	CDConvexMeshIf* meshFloor=NULL;

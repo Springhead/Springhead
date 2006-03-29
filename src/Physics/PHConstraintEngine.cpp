@@ -241,6 +241,7 @@ void PHConstraint::IterateDynamics(){
 				solid[i]->dw += Tvw[i].row(j) * dfv[j];
 			}
 		}
+		fv[j] = fvnew[j];
 	}
 	for(j = 0; j < dim_w; j++){
 		fwnew[j] = fw[j] - (bw[j] + 
@@ -254,6 +255,7 @@ void PHConstraint::IterateDynamics(){
 				solid[i]->dw += Tww[i].row(j) * dfw[j];
 			}
 		}
+		fw[j] = fwnew[j];
 	}
 }
 void PHConstraint::IterateCorrection(){
@@ -273,6 +275,7 @@ void PHConstraint::IterateCorrection(){
 				solid[i]->dW += Tvw[i].row(j) * dFv[j];
 			}
 		}
+		Fv[j] = Fvnew[j];
 	}
 	for(j = 0; j < dim_q; j++){
 		Fqnew[j] = Fq[j] - (Bq[j] + 
@@ -286,6 +289,7 @@ void PHConstraint::IterateCorrection(){
 				solid[i]->dW += Tqw[i].row(j) * dFq[j];
 			}
 		}
+		Fq[j] = Fqnew[j];
 	}
 }
 
@@ -496,14 +500,14 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	cutRing.MakeRing();
 //	cutRing.Print(DSTR);
 	
-	DSTR << "contact center:" << center << "  vtxs:" << std::endl;
+	//DSTR << "contact center:" << center << "  vtxs:" << std::endl;
 	for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 		if (vtx->deleted) continue;
 		Vec3d pos;
 		pos.sub_vector(0, Vec2d()) = vtx->normal / vtx->dist;
 		pos = cutRing.local * pos;
 		engine->points.push_back(DBG_NEW PHContactPoint(this, pos, solid0, solid1));
-		DSTR << "  " << pos << std::endl;
+		//DSTR << "  " << pos << std::endl;
 	}
 }
 //#define USE_VOLUME
@@ -553,9 +557,9 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 //		DSTR << "Normal:" << normal << " center:" << center << " depth:" << depth << std::endl;
 		#ifdef _DEBUG
 		if (!finite(normal.norm())){
-			DSTR << "Error: Wrong normal:" << normal << std::endl;
-			DSTR << trans;
-			DSTR << closestPoint[0] << closestPoint[1] << std::endl;
+			//DSTR << "Error: Wrong normal:" << normal << std::endl;
+			//DSTR << trans;
+			//DSTR << closestPoint[0] << closestPoint[1] << std::endl;
 			FindClosestPoints(conv[0], conv[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
 		}
 		#endif
@@ -652,11 +656,11 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 				engine->points.push_back(DBG_NEW PHContactPoint(&sp, v, solid[0], solid[1]));
 			}
 #ifdef DEBUG_CONTACTOUT
-			DSTR << engine->points.size()-n << " contacts:";
+			//DSTR << engine->points.size()-n << " contacts:";
 			for(unsigned i=n; i<engine->points.size(); ++i){
-				DSTR << engine->points[i].pos;
+				//DSTR << engine->points[i].pos;
 			}
-			DSTR << std::endl;
+			//DSTR << std::endl;
 #endif
 		}
 	}
@@ -897,6 +901,9 @@ void PHConstraintEngine::Step(){
 
 	//QueryPerformanceCounter(&val[0]);
 	IterateDynamics();
+	//DSTR << points.size() << endl;
+	//for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+	//	DSTR << (*it)->fv << (*it)->fw << endl;
 	//QueryPerformanceCounter(&val[1]);
 	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
