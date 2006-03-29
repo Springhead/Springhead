@@ -15,6 +15,8 @@ protected:
 	double distInv;
 public:
 	CDCutLine(Vec2d n, double d):normal(n), dist(d){
+		const double epsilon = 1e-10;
+		if (dist < epsilon) dist = epsilon;
 		distInv = 1/dist;
 	}
 	Vec2d GetPos() const { 

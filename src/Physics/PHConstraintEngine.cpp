@@ -499,8 +499,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	//	Ø‚èŒû‚ğ‹‚ß‚é‚QFü•ª‚ğ‚Â‚È‚¢‚Å—Ö‚ğì‚é
 	cutRing.MakeRing();
 //	cutRing.Print(DSTR);
-	
-	//DSTR << "contact center:" << center << "  vtxs:" << std::endl;
+//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
 	for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 		if (vtx->deleted) continue;
 		Vec3d pos;
