@@ -283,8 +283,8 @@ int main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 30;
-			md.vertices[i].z *= 20;
+			md.vertices[i].x *= 300;
+			md.vertices[i].z *= 200;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
