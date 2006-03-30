@@ -3,6 +3,7 @@
 #include <Foundation/SprObject.h>
 
 namespace Spr{;
+///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)
 	Vec3d		angVelocity;	///<	角速度			(World系)
@@ -14,6 +15,7 @@ struct PHSolidState{
 	Vec3d		nextForce;		///<	次の積分でこの剛体に加わる力(World系)
 	Vec3d		nextTorque;		///<	次の積分でこの剛体に加わるトルク(World系)
 };
+///	剛体のディスクリプタ
 struct PHSolidDesc: public PHSolidState{
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
