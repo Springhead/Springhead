@@ -53,6 +53,8 @@ static GLfloat mat_shininess[]  = { 120.0 };
 
 int frame=0,timepassed=0,timebase=0;
 
+
+int boxStep = 0;
 void fps(){
 	frame++; 
 	timepassed = glutGet(GLUT_ELAPSED_TIME); 
@@ -174,8 +176,10 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0,10.0,25.0, 
-		      0.0,10.0, 0.0,
+	//gluLookAt(0.0,10.0,25.0, 
+		      
+	gluLookAt(0.0,10.0,100.0, 
+		0.0,10.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -213,6 +217,7 @@ void keyboard(unsigned char key, int x, int y){
 			break;
 		case ' ':
 			{
+				/*
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
 				if (soBox.size() < 30) {
@@ -224,6 +229,8 @@ void keyboard(unsigned char key, int x, int y){
 				std::ostringstream os;
 				os << "box" << soBox.size();
 				soBox.back()->SetName(os.str().c_str());
+				*/
+				
 			} 
 		default:
 			break;
@@ -242,6 +249,24 @@ void timer(int id){
 	for(int i=0; i<times; ++i) scene->Step();
 	glutPostRedisplay();
 	glutTimerFunc((unsigned int)1000*DT, timer, 0);
+	//boxStep++;
+	
+	//if (boxStep > 5) {
+						soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->AddShape(meshBox);
+				if (soBox.size() < 30) {
+					soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				} else {
+					soBox.back()->SetFramePosition(Vec3f(0.5,100,0));
+				}
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				std::ostringstream os;
+				os << "box" << soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+
+	//			boxStep = 0;
+	//}
+
 }
 
 /**
