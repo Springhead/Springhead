@@ -27,17 +27,15 @@ public:
 ///	接触解析に使うクラス．接触部分の切り口
 class CDCutRing{
 public:
-	///	切り口の中の1点と，切り口面の座標系
-//	Vec3d center;
-//	Matrix3d local, localInv;
+	///	切り口の中の1点と，切り口面の座標系．ex が法線
 	Posed local, localInv;
 	///	切り口を構成する直線
 	std::vector<CDCutLine> lines;
 	///	双対変換 → QuickHull で一番内側の凸多角形の頂点を求める．
 	static CDQHLines<CDCutLine> vtxs;	//	一番内側の凸多角形の頂点
 
-	CDCutRing(Vec3d c, Matrix3d ccs){
-		local.Ori().FromMatrix(ccs);
+	CDCutRing(Vec3d c, Matrix3d l){
+		local.Ori().FromMatrix(l);
 		local.Pos() = c;
 		localInv = local.Inv();
 	}

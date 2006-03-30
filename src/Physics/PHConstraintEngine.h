@@ -145,6 +145,7 @@ public:
 	virtual void Projectionfv(double& f, int k);
 	virtual void ProjectionFv(double& F, int k);
 	PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1);
+	PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1);
 };
 
 class PHJoint : public InheritConstraint<PHJointIf, PHConstraint>{

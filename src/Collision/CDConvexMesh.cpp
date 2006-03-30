@@ -49,7 +49,7 @@ void CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();
 	//	’¸“_‚ª‚Ç‚Á‚¿‘¤‚É‚ ‚é‚©’²‚×‚éD
 	Vec3d planePosL = toL * ring.local.Pos();
-	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(0,0,1);
+	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(1,0,0);
 	std::vector<bool> inside;
 	inside.resize(base.size());
 	double d = planeNormalL * planePosL;
@@ -89,7 +89,7 @@ void CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 
 		//	local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
 		Posed to2D = ring.localInv * toW;
-		Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(0, Vec2d());
+		Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
 		//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
 		ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
 	}

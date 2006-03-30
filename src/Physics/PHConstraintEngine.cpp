@@ -297,6 +297,27 @@ void PHConstraint::IterateCorrection(){
 // PHContactPoint
 //OBJECTIMP(PHContactPoint, PHConstraint);
 IF_IMP(PHContactPoint, PHConstraint);
+PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
+	shapePair = sp;
+	pos = p;
+	solid[0] = s0, solid[1] = s1;
+
+	dim_v = 3;
+	dim_w = 0;
+	dim_q = 0;
+	
+	Vec3d rjabs[2];
+	for(int i = 0; i < 2; i++){
+		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+	}
+	// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
+	
+	for(int i = 0; i < 2; i++){
+		Rj[i] = solid[i]->solid->GetRotation().trans() * local;
+		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];
+	}
+}
+
 PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
 	shapePair = sp;
 	pos = p;
@@ -480,20 +501,20 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	//	適当に速度？
 	Vec3d v0 = solid0->solid->GetPointVelocity(center);
 	Vec3d v1 = solid1->solid->GetPointVelocity(center);
-	Matrix3d ccs;	//	contact coodinate system 接触の座標系
-	ccs.Ez() = normal;
-	ccs.Ex() = v1-v0;
-	ccs.Ex() -= ccs.Ex() * normal * normal;
-	if (ccs.Ex().square() > 1e-20){
-		ccs.Ex().unitize(); 
+	Matrix3d local;	//	contact coodinate system 接触の座標系
+	local.Ex() = normal;
+	local.Ey() = v1-v0;
+	local.Ey() -= local.Ey() * normal * normal;
+	if (local.Ey().square() > 1e-20){
+		local.Ey().unitize(); 
 	}else{
-		if (Square(normal.x) < 0.5) ccs.Ex()= (normal ^ Vec3f(1,0,0)).unit();
-		else ccs.Ex() = (normal ^ Vec3f(0,1,0)).unit();
+		if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
+		else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
 	}
-	ccs.Ey() =  ccs.Ez() ^ ccs.Ex();
+	local.Ez() =  local.Ex() ^ local.Ey();
 
 	//	切り口を求める１：切り口を構成する線分の列挙
-	CDCutRing cutRing(center, ccs);
+	CDCutRing cutRing(center, local);
 	conv[0]->FindCutRing(cutRing, shapePoseW[0]);
 	conv[1]->FindCutRing(cutRing, shapePoseW[1]);
 	//	切り口を求める２：線分をつないで輪を作る
@@ -505,7 +526,10 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 		Vec3d pos;
 		pos.sub_vector(0, Vec2d()) = vtx->normal / vtx->dist;
 		pos = cutRing.local * pos;
-		engine->points.push_back(DBG_NEW PHContactPoint(this, pos, solid0, solid1));
+//		engine->points.push_back(DBG_NEW PHContactPoint(this, pos, solid0, solid1));
+		Matrix3d local;
+		cutRing.local.Ori().ToMatrix(local);
+		engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
 		//DSTR << "  " << pos << std::endl;
 	}
 }
