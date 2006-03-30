@@ -10,14 +10,14 @@
 
 TOP_DIR 		= ../../..
 
-PHYSICS_DIR		= PHConstraintTest \
+PHYSICS_TEST_DIR		= PHConstraintTest \
 					PHShape \
 					PHShapeGL \
 					PHSimple \
 					PHSimpleGL
 
 all:
-	@for dir in $(PHYSICS_DIR); \
+	@for dir in $(PHYSICS_TEST_DIR); \
 	do echo "---------------------------------------------"; \
 	   echo "             make $$dir    			      "; \
 	   echo "---------------------------------------------"; \
@@ -30,12 +30,12 @@ all:
 ################################################################
 
 clean:
-	@for dir in $(PHYSICS_DIR); \
+	@for dir in $(PHYSICS_TEST_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@for dir in $(PHYSICS_DIR); \
+	@for dir in $(PHYSICS_TEST_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 

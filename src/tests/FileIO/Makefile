@@ -8,12 +8,12 @@
 #	A rule to make sub directories.
 ################################################################
 
-TOP_DIR 	= ../../..
+TOP_DIR 		= ../../..
 
-FILEIO_DIR	= FILoad
+FILEIO_TEST_DIR	= FILoadTestX FILoader
 
 all:
-	@for dir in $(FILEIO_DIR); \
+	@for dir in $(FILEIO_TEST_DIR); \
 	do echo "---------------------------------------------"; \
 	   echo "             make $$dir    			      "; \
 	   echo "---------------------------------------------"; \
@@ -26,12 +26,12 @@ all:
 ################################################################
 
 clean:
-	@for dir in $(FILEIO_DIR); \
+	@for dir in $(FILEIO_TEST_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@for dir in $(FILEIO_DIR); \
+	@for dir in $(FILEIO_TEST_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 

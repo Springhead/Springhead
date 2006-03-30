@@ -10,10 +10,10 @@
 
 TOP_DIR 		= ../../..
 
-GRAPHICS_DIR	= GRSimple
+GRAPHICS_TEST_DIR	= GRSimple
 
 all:
-	@for dir in $(GRAPHICS_DIR); \
+	@for dir in $(GRAPHICS_TEST_DIR); \
 	do echo "---------------------------------------------"; \
 	   echo "             make $$dir    			      "; \
 	   echo "---------------------------------------------"; \
@@ -26,12 +26,12 @@ all:
 ################################################################
 
 clean:
-	@for dir in $(GRAPHICS_DIR); \
+	@for dir in $(GRAPHICS_TEST_DIR); \
 	do $(MAKE) -C $$dir  clean || exit; \
 	done
 	
 realclean:
-	@for dir in $(GRAPHICS_DIR); \
+	@for dir in $(GRAPHICS_TEST_DIR); \
 	do $(MAKE) -C $$dir  realclean || exit; \
 	done 
 
