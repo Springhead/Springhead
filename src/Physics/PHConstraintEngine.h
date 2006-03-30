@@ -15,8 +15,10 @@ struct PHSolidAux : public Object{
 	PHSolid*	solid;		/// PHSolidへの参照
 	double		minv;		/// 質量の逆数
 	Matrix3d	Iinv;		/// 慣性行列の逆行列
-	Vec3d		v0, w0;		/// 接触力が0の場合のdt後の速度
-	Vec3d		dv, dw;		/// 接触力を考慮した速度変化量
+	Vec3d		f, t;		/// ローカル座標での外力
+	Vec3d		v, w;		/// ローカル座標での現在の速度
+	Vec3d		dv0, dw0;	/// 拘束力以外の外力による速度変化量
+	Vec3d		dv, dw;		/// 拘束力による速度変化量
 	Vec3d		dV, dW;		/// Correctionによる移動量，回転量
 	void SetupDynamics(double dt);
 	void SetupCorrection();
@@ -52,10 +54,19 @@ template<class inf, class base>
 class InheritJoint1D : public InheritConstraint<inf, base>{
 public:
 	void	SetRange(double lower, double upper){base::SetRange(lower, upper);}
+	void	GetRange(double& lower, double& upper){base::GetRange(lower, upper);}
+	void	SetMotorTorque(double t){base::SetMotorTorque(t);}
+	double	GetMotorTorque(){return base::GetMotorTorque();}
 	// void	SetDesiredPosition(double p, double t) = 0;	/// 目標変位を設定する
 	// double	GetDesiredPosition() = 0;				/// 目標変位を取得する
 	void	SetDesiredVelocity(double v){base::SetDesiredVelocity(v);}
 	double	GetDesiredVelocity(){return base::GetDesiredVelocity();}
+	void	SetSpring(double K){base::SetSpring(K);}
+	double	GetSpring(){return base::GetSpring();}
+	void	SetSpringOrigin(double org){base::SetSpringOrigin(org);}
+	double	GetSpringOrigin(){return base::GetSpringOrigin();}
+	void	SetDamper(double D){base::SetDamper(D);}
+	double	GetDamper(){return base::GetDamper();}
 };
 
 ///
@@ -78,10 +89,10 @@ public:
 	Matrix3d	Rjrel;				/// 関節フレーム間の位置関係
 	Quaterniond	qjrel;
 	Vec3d		rjrel;
-	Vec3d		vjrel, wjrel;
-			/// 各剛体の速度，角速度から相対速度へのヤコビ行列
-			/// 各剛体の速度，角速度から相対角速度へのヤコビ行列
-			/// 各剛体の速度，角速度から相対quaternionの時間微分へのヤコビ行列
+	Vec3d		vjrel, wjrel;		/// 関節フレーム間の相対速度
+	/// Jvv, Jvw : 各剛体の速度，角速度から相対速度へのヤコビ行列
+	/// Jwv, Jww : 各剛体の速度，角速度から相対角速度へのヤコビ行列
+	/// Jqv, Jqw : 各剛体の速度，角速度から相対quaternionの時間微分へのヤコビ行列
 	/**
 				|	  v[0]	  w[0]	  v[1]	  w[1]
 	  ----------+---------------------------------
@@ -106,8 +117,9 @@ public:
 	void SetupCorrection(double dt, double max_error);
 	void IterateDynamics();
 	void IterateCorrection();
-	virtual void CompDof(){}			/// dim_v, dim_w, dim_qを設定する
-	virtual void CompVelocityBias(){}	/// bv_bias, bw_biasを設定する
+	virtual void CompDof(){}					/// dim_v, dim_w, dim_qを設定する
+	virtual void CompMotorForce(){}				/// fv, fwにモータによる影響を設定する
+	virtual void CompVelocityBias(double dt){}	/// bv_bias, bw_biasを設定する
 	virtual void CompError();			/// Bv, Bqを設定する
 	virtual void Projectionfv(double& f, int k){}
 	virtual void Projectionfw(double& f, int k){}
@@ -157,31 +169,46 @@ public:
 	//OBJECTDEF(PHJoint1D);
 	bool on_lower, on_upper;	/// 可動範囲の下限、上限に達している場合にtrue
 	double lower, upper;		/// 可動範囲の下限、上限
+	double torque;
 	double pos_d, vel_d;		/// 目標変位、目標速度
+	double spring, origin, damper;	/// バネ係数、バネ原点、ダンパ係数
 	
 	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
 		PHConstraint::Init(lhs, rhs, desc);
 		const PHJoint1DDesc& desc1D = (const PHJoint1DDesc&)desc;
 		lower = desc1D.lower;
 		upper = desc1D.upper;
+		spring = desc1D.spring;
+		origin = desc1D.origin;
+		damper = desc1D.damper;
+		torque = desc1D.torque;
 	}
-	virtual void SetRange(double l, double u){lower = l, upper = u;}
+	virtual void	SetRange(double l, double u){lower = l, upper = u;}
+	virtual void	GetRange(double& l, double& u){l = lower, u = upper;}
+	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}
+	virtual double	GetMotorTorque(){return torque;}
 	//virtual void SetDesiredPosition(double p){mode = MODE_POSITION; pos_d = p;}
 	//virtual double GetDesiredPosition(){return pos_d;}
-	virtual void SetDesiredVelocity(double v){mode = MODE_VELOCITY; vel_d = v;}
-	virtual double GetDesiredVelocity(){return vel_d;}
+	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; vel_d = v;}
+	virtual double	GetDesiredVelocity(){return vel_d;}
+	virtual void	SetSpring(double K){spring = K;}
+	virtual double	GetSpring(){return spring;}
+	virtual void	SetSpringOrigin(double org){origin = org;}
+	virtual double	GetSpringOrigin(){return origin;}
+	virtual void	SetDamper(double D){damper = D;}
+	virtual double	GetDamper(){return damper;}
+	
 };
 
 class PHHingeJoint : public InheritJoint1D<PHHingeJointIf, PHJoint1D>{
 public:
 	//OBJECTDEF(PHHingeJoint);
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_HINGE;}
-	virtual void SetTorque(double t){mode = MODE_TORQUE; fw[2] = t;}
-	virtual double GetTorque(){return fw[2];}
-	virtual double GetPosition(){return qjrel.Theta();}
-	virtual double GetVelocity(){return wjrel[2];}
+	virtual double GetPosition();
+	virtual double GetVelocity();
 	virtual void CompDof();
-	virtual void CompVelocityBias();
+	virtual void CompMotorForce();
+	virtual void CompVelocityBias(double dt);
 	virtual void Projectionfw(double& f, int k);
 	virtual void ProjectionFq(double& F, int k);
 	PHHingeJoint(){}

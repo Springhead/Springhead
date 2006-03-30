@@ -16,8 +16,10 @@ struct PHJointDesc{
 	PHJointDesc():bEnabled(true){}
 };
 struct PHJoint1DDesc : public PHJointDesc{
-	double	lower, upper;	/// 可動範囲. lower < upperのときに有効となる
-	PHJoint1DDesc():lower(0.0), upper(0.0){}
+	double	lower, upper;			/// 可動範囲. lower < upperのときに有効となる
+	double	spring, origin, damper;	/// バネ係数、バネ原点、ダンパ係数
+	double	torque;					/// モータトルク
+	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), torque(0.0){}
 };
 struct PHHingeJointDesc : public PHJoint1DDesc{
 	PHHingeJointDesc(){
@@ -52,12 +54,19 @@ struct PHJointIf : public PHConstraintIf{
 struct PHJoint1DIf : public PHJointIf{
 	IF_DEF(PHJoint1D);
 	virtual void	SetRange(double lower, double upper) = 0;	/// 可動範囲を設定する
-	virtual void	SetTorque(double t) = 0;					/// 関節トルクを設定する
-	virtual double	GetTorque() = 0;							/// 関節トルクを取得する
+	virtual void	GetRange(double& lower, double& upper) = 0;	/// 可動範囲を取得する
+	virtual void	SetMotorTorque(double t) = 0;				/// 関節トルクを設定する
+	virtual double	GetMotorTorque() = 0;						/// 関節トルクを取得する
 	//virtual void	SetDesiredPosition(double p, double t) = 0;	/// 目標変位を設定する
 	//virtual double	GetDesiredPosition() = 0;				/// 目標変位を取得する
 	virtual void	SetDesiredVelocity(double v) = 0;			/// 目標速度を設定する
 	virtual double	GetDesiredVelocity() = 0;					/// 目標速度を取得する
+	virtual void	SetSpring(double K) = 0;
+	virtual double	GetSpring() = 0;
+	virtual void	SetSpringOrigin(double origin) = 0;
+	virtual double	GetSpringOrigin() = 0;
+	virtual void	SetDamper(double D) = 0;
+	virtual double	GetDamper() = 0;
 	virtual double	GetPosition() = 0;							/// 変位を取得する
 	virtual double	GetVelocity() = 0;							/// 速度を取得する
 };

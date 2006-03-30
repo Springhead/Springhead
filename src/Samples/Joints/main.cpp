@@ -394,26 +394,17 @@ void OnKey0(char key){
 void OnKey1(char key){
 	PHHingeJointIf* hinge = ICAST(PHHingeJointIf, jntLink[0]);
 	switch(key){
-	case 'a':
-		hinge->SetTorque(1.0);
-		break;
-	case 's':
-		hinge->SetTorque(0.0);
-		break;
-	case 'd':
-		hinge->SetTorque(-1.0);
-		break;
-	case 'f':
-		hinge->SetDesiredVelocity(Rad(90.0));
-		break;
-	case 'g':
-		hinge->SetDesiredVelocity(Rad(0.0));
-		break;
-	case 'h':
-		hinge->SetDesiredVelocity(Rad(-90.0));
-		break;
-	case 'j':
-		jntLink[3]->Enable(false);
+	case 'a': hinge->SetMotorTorque(1.0);	break;
+	case 's': hinge->SetMotorTorque(0.0);	break;
+	case 'd': hinge->SetMotorTorque(-1.0);	break;
+	case 'f': hinge->SetDesiredVelocity(Rad(90.0));	break;
+	case 'g': hinge->SetDesiredVelocity(Rad(0.0));	break;
+	case 'h': hinge->SetDesiredVelocity(Rad(-90.0));	break;
+	case 'j': hinge->SetDamper(1.0);	break;
+	case 'k': hinge->SetDamper(0.0);	break;
+	case 'l':
+		hinge->SetSpring(5.0);
+		hinge->SetSpringOrigin(0.0);
 		break;
 	}
 }
