@@ -1,6 +1,6 @@
 /** 
 \mainpage –ÚŸ
- - \subpage user_manual
+ - \subpage users_guide
  - \subpage tutorial
  - \subpage reference_manual
 */
