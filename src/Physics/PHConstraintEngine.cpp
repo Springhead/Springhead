@@ -565,13 +565,12 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 		if (vtx->deleted) continue;
 		Vec3d pos;
-		pos.sub_vector(0, Vec2d()) = vtx->normal / vtx->dist;
+		pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
 		pos = cutRing.local * pos;
-//		engine->points.push_back(DBG_NEW PHContactPoint(this, pos, solid0, solid1));
 		Matrix3d local;
 		cutRing.local.Ori().ToMatrix(local);
 		engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
-		//DSTR << "  " << pos << std::endl;
+//		DSTR << "  " << pos << std::endl;
 	}
 }
 //#define USE_VOLUME
