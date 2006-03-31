@@ -164,7 +164,7 @@ void initialize(){
 
 	lookAtY = 15.0;
 	lookAtZ = 30.0;
-	gluLookAt(0.0,15.0,30.0, 
+	gluLookAt(0.0,15.0,40.0, 
 		      0.0, 0.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -364,6 +364,7 @@ void BuildScene1(){
 	jd.poseJoint[1].Pos() = Vec3d(0.0, 0.0, 0.0);
 	jntLink[3] = scene->CreateJoint(soBox[1], soBox[2], jd);
 
+	scene->EnableContact(soBox[0], soBox[1], false);
 	scene->EnableContact(soBox[0], soBox[2], false);
 	scene->EnableContact(soBox[1], soBox[2], false);
 
@@ -400,11 +401,27 @@ void OnKey1(char key){
 	case 'f': hinge->SetDesiredVelocity(Rad(90.0));	break;
 	case 'g': hinge->SetDesiredVelocity(Rad(0.0));	break;
 	case 'h': hinge->SetDesiredVelocity(Rad(-90.0));	break;
-	case 'j': hinge->SetDamper(1.0);	break;
-	case 'k': hinge->SetDamper(0.0);	break;
-	case 'l':
-		hinge->SetSpring(5.0);
-		hinge->SetSpringOrigin(0.0);
+	case 'j':
+		hinge->SetSpring(30.0);
+		hinge->SetSpringOrigin(1.0);
+		//hinge->SetDamper(1.0);
 		break;
+	case 'k':
+		hinge->SetSpring(30.0);
+		hinge->SetSpringOrigin(0.0);
+		//hinge->SetDamper(0.0);
+		break;
+	case 'l':
+		hinge->SetSpring(30.0);
+		hinge->SetSpringOrigin(-1.0);
+		break;
+	case 'z':{
+		CDConvexMeshDesc md;
+		InitBoxMesh(md, 1.0, 1.0, 1.0);
+		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.back()->AddShape(sdk->CreateShape(md));
+		soBox.back()->SetFramePosition(Vec3f(7.0, 40.0, 0.0));
+		//soBox.back()->SetGravity(false);
+		}break;	
 	}
 }

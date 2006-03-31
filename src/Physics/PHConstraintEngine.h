@@ -105,7 +105,7 @@ public:
 	Vec3d		fv, fw;	/// dynamicsにおける関節力
 	Vec3d		Fv, Fq; /// correctionにおける関節力
 	Vec3d		bv, bw;	/// dynamicsにおける拘束速度
-	Vec3d		bv_bias, bw_bias;	/// 速度制御を実現するためのbv, bwのオフセット量
+	//Vec3d		bv_bias, bw_bias;	/// 速度制御を実現するためのbv, bwのオフセット量
 	Vec3d		Bv, Bq; /// correctionにおける拘束誤差
 	Vec3d		Av, Aw, Aq;
 	
@@ -119,7 +119,7 @@ public:
 	void IterateCorrection();
 	virtual void CompDof(){}					/// dim_v, dim_w, dim_qを設定する
 	virtual void CompMotorForce(){}				/// fv, fwにモータによる影響を設定する
-	virtual void CompVelocityBias(double dt){}	/// bv_bias, bw_biasを設定する
+	virtual void CompBias(double dt){}	/// 
 	virtual void CompError();			/// Bv, Bqを設定する
 	virtual void Projectionfv(double& f, int k){}
 	virtual void Projectionfw(double& f, int k){}
@@ -208,7 +208,7 @@ public:
 	virtual double GetVelocity();
 	virtual void CompDof();
 	virtual void CompMotorForce();
-	virtual void CompVelocityBias(double dt);
+	virtual void CompBias(double dt);
 	virtual void Projectionfw(double& f, int k);
 	virtual void ProjectionFq(double& F, int k);
 	PHHingeJoint(){}
@@ -249,7 +249,7 @@ class PHConstraintEngine: public PHEngine{
 	class PHSolidPair{
 	public:
 		bool bEnabled;
-		PHSolidAux* solid[2];
+		UTRef<PHSolidAux> solid[2];
 		/// Shapeの組み合わせの配列
 		typedef UTCombination<PHShapePair> PHShapePairs;
 		PHShapePairs	shapePairs;

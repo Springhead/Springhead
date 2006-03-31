@@ -151,7 +151,18 @@ void PHConstraint::SetupDynamics(double dt){
 		}
 	}
 	
-	CompVelocityBias(dt);
+	for(j = 0; j < dim_v; j++){
+		bv[j] = vjrel[j] +
+			rowtimes(Jvv[0], j, solid[0]->dv0) + rowtimes(Jvw[0], j, solid[0]->dw0) +
+			rowtimes(Jvv[1], j, solid[1]->dv0) + rowtimes(Jvw[1], j, solid[1]->dw0);
+	}
+	for(int j = 0; j < dim_w; j++){
+		bw[j] = wjrel[j] + 
+			rowtimes(Jwv[0], j, solid[0]->dv0) + rowtimes(Jww[0], j, solid[0]->dw0) +
+			rowtimes(Jwv[1], j, solid[1]->dv0) + rowtimes(Jww[1], j, solid[1]->dw0);
+	}
+
+	CompBias(dt);
 
 	if(dim_v)for(i = 0; i < 3; i++)
 		Av[i] = 1.0 / Av[i];
@@ -161,10 +172,6 @@ void PHConstraint::SetupDynamics(double dt){
 		Aq[i] = 1.0 / Aq[i];
 
 	for(j = 0; j < dim_v; j++){
-		bv[j] = vjrel[j] +
-			rowtimes(Jvv[0], j, solid[0]->dv0) + rowtimes(Jvw[0], j, solid[0]->dw0) +
-			rowtimes(Jvv[1], j, solid[1]->dv0) + rowtimes(Jvw[1], j, solid[1]->dw0);
-		bv[j] -= bv_bias[j];
 		bv[j] *= Av[j];
 		Jvv[0].row(j) *= Av[j];
 		Jvw[0].row(j) *= Av[j];
@@ -172,10 +179,6 @@ void PHConstraint::SetupDynamics(double dt){
 		Jvw[1].row(j) *= Av[j];
 	}
 	for(int j = 0; j < dim_w; j++){
-		bw[j] = wjrel[j] + 
-			rowtimes(Jwv[0], j, solid[0]->dv0) + rowtimes(Jww[0], j, solid[0]->dw0) +
-			rowtimes(Jwv[1], j, solid[1]->dv0) + rowtimes(Jww[1], j, solid[1]->dw0);
-		bw[j] -= bw_bias[j];
 		bw[j] *= Aw[j];
 		Jwv[0].row(j) *= Aw[j];
 		Jww[0].row(j) *= Aw[j];
@@ -431,15 +434,15 @@ void PHHingeJoint::CompDof(){
 void PHHingeJoint::CompMotorForce(){
 	fw[2] = torque;
 }
-void PHHingeJoint::CompVelocityBias(double dt){
+void PHHingeJoint::CompBias(double dt){
 	double vnext, diff;
 	if(spring != 0.0 || damper != 0.0){
 		diff = GetPosition() - origin;
 		if(diff >  M_PI) diff -= 2 * M_PI;
 		if(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = dt / Aw[2];
-		vnext = (GetVelocity() + tmp * (-spring * diff + GetMotorTorque()))
-			/ (1.0 + tmp * damper + tmp * dt * spring);
+		Aw[2] += tmp / dt;
+		bw[2] += spring * (diff) * tmp;
 		/*
 		バネダンパと外力の運動方程式：
 		#mimetex(  f=kx+bv+f_e  )
@@ -455,11 +458,8 @@ void PHHingeJoint::CompVelocityBias(double dt){
 		*/
 	}
 	else if(mode == MODE_VELOCITY){
-		vnext = vel_d;
+		bw[2] -= vel_d;
 	}
-	else vnext = 0.0;
-	bv_bias.clear();
-	bw_bias = Vec3d(0.0, 0.0, vnext);
 }
 void PHHingeJoint::Projectionfw(double& f, int k){
 	if(k == 2){
@@ -795,25 +795,49 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 }
 
 void PHConstraintEngine::EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable){
-	if(!ready)
-		Init();
 	PHSolidAuxs::iterator ilhs = solids.Find(lhs), irhs = solids.Find(rhs);
 	if(ilhs == solids.end() || irhs == solids.end())
 		return;
-	solidPairs.item(ilhs - solids.begin(), irhs - solids.begin()).bEnabled = bEnable;
+	int i = ilhs - solids.begin(), j = irhs - solids.begin();
+	if(i > j)swap(i, j);
+	if(!ready || i >= solidPairs.height() || j >= solidPairs.width())
+		Init();
+	solidPairs.item(i, j).bEnabled = bEnable;
 }
 
 void PHConstraintEngine::Init(){
 	solids.Init();
 
-	//登録されているSolidの数に合わせてsolidPairsとshapePairsをresize
-	int N = solids.size();
-	solidPairs.resize(N, N);
-	for(int i = 0; i < N; i++)for(int j = i+1; j < N; j++){
-		PHSolidPair& sp = solidPairs.item(i, j);
-		sp.Init(solids[i], solids[j]);
-	}
+	//solidPairsの作り直し
+	int i, j, N = solids.size(), Nold = solidPairs.height();
+	PHSolidPairs oldPairs;
+	oldPairs.resize(Nold, Nold);	//private変数height_とwidth_を変えたいだけ…
+	oldPairs.swap(solidPairs);
 
+    solidPairs.resize(N, N);
+	for(i = 0; i < N-1; i++)for(j = i+1; j < N; j++)
+		solidPairs.item(i, j).Init(solids[i], solids[j]);
+
+	//Enableフラグを引き継ぐ
+	if(!oldPairs.empty()){
+		vector<int> index_map(Nold);
+		PHSolidAuxs::iterator it;
+		for(i = 0; i < Nold-1; i++){
+			it = find(solids.begin(), solids.end(), oldPairs.item(i, i+1).solid[0]);
+			index_map[i] = (it != solids.end() ? it - solids.begin() : -1);
+		}
+		it = find(solids.begin(), solids.end(), oldPairs.item(Nold-2, Nold-1).solid[1]);
+		index_map[Nold-1] = (it != solids.end() ? it - solids.begin() : -1);
+
+		for(i = 0; i < Nold-1; i++){
+			if(index_map[i] == -1)continue;
+			for(j = i+1; j < Nold; j++){
+				if(index_map[j] == -1)continue;
+				solidPairs.item(index_map[i], index_map[j]).bEnabled = oldPairs.item(i, j).bEnabled;
+			}
+		}
+	}
+	
 	ready = true;
 }
 

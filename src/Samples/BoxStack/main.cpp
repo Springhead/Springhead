@@ -247,8 +247,8 @@ int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
-	//dscene.timeStep = 0.01;
-	dscene.timeStep = 0.033;
+	dscene.timeStep = 0.01;
+	//dscene.timeStep = 0.033;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc
