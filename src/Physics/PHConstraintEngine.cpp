@@ -440,7 +440,7 @@ void PHHingeJoint::CompBias(double dt){
 		diff = GetPosition() - origin;
 		if(diff >  M_PI) diff -= 2 * M_PI;
 		if(diff < -M_PI) diff += 2 * M_PI;
-		double tmp = dt / Aw[2];
+		double tmp = 1.0 / (damper + spring * dt);
 		Aw[2] += tmp / dt;
 		bw[2] += spring * (diff) * tmp;
 		/*
