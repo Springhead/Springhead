@@ -440,6 +440,19 @@ void PHHingeJoint::CompVelocityBias(double dt){
 		double tmp = dt / Aw[2];
 		vnext = (GetVelocity() + tmp * (-spring * diff + GetMotorTorque()))
 			/ (1.0 + tmp * damper + tmp * dt * spring);
+		/*
+		バネダンパと外力の運動方程式：
+		#mimetex(  f=kx+bv+f_e  )
+		#mimetex(  v_{t+1} = f_{t+1} \Delta t + v_t  )
+		#mimetex(  v_{t+1} = (kx_{t+1}+bv_{t+1}+f_e_{t+1}) \Delta t + v_t  )
+		#mimetex(  x_{t+1} = v_{t+1} \Delta t + x_t  )
+		~
+		#mimetex(  v_{t+1} = (k(v_{t+1}\Delta t+x_t) +bv_{t+1}+f_e_{t+1}) \Delta t + v_t  )
+		速度の更新の式：
+		#mimetex(  (1-k\Delta t^2 - b \Delta t)v_{t+1} = (f_e_{t+1}+k x_t)\Delta t + v_t)
+		なので，関節につながる２剛体に加わる力を，関節トルクに変換して，
+		拘束条件としてあたえる vnext を更新すれば，外力を考慮したダンパになる？
+		*/
 	}
 	else if(mode == MODE_VELOCITY){
 		vnext = vel_d;
