@@ -27,14 +27,14 @@ void CDCutRing::Print(std::ostream& os){
 		for(CDQHLine<CDCutLine>* vtx = vtxs.begin; vtx!=vtxs.end; ++vtx){
 			if (vtx->deleted) continue;
 			CDCutLine* line = vtx->vtx[0];
-			Vec3d n(line->normal.x, line->normal.y, 0);
+			Vec3d n(0, line->normal.x, line->normal.y);
 			n = local.Ori() * n;
 			DSTR << n << " d=" << line->dist << std::endl;
 		}
 	}else{
 		DSTR << lines.size() << " lines" << std::endl;
 		for(unsigned i=0; i<lines.size(); ++i){
-			Vec3d n(lines[i].normal.x, lines[i].normal.y, 0);
+			Vec3d n(0, lines[i].normal.x, lines[i].normal.y);
 			n = local.Ori() * n;
 			DSTR << n << " d=" << lines[i].dist << std::endl;
 		}

@@ -26,10 +26,15 @@ using namespace Spr;
 
 #define ESC				27
 #define EXIT_TIMER		200		
-#define NUM_BLOCK		1//6
+#define NUM_BLOCK		4//6
 
 float boxpos[][3] = {
 	{0,2,0},
+	{0,4,0},
+	{0,6,0},
+	{0,8,0},
+	{0,10,0},
+
 	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
 	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
 };
@@ -251,7 +256,7 @@ void SPR_CDECL timer(int id){
 #ifdef _MSC_VER	
 	static WBPreciseTimer pt;
 	pt.CountUS();
-	DSTR << pt.CountUS() << std::endl;
+//	DSTR << pt.CountUS() << std::endl;
 #endif
 	glutTimerFunc(elapse, timer, 0);
 }
@@ -311,7 +316,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
 	for(int i = 0; i < NUM_BLOCK; i++)
 		soBlock[i]->SetFramePosition(*(Vec3f*)&boxpos[i]);
-	soBlock[NUM_BLOCK-1]->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+//	soBlock[NUM_BLOCK-1]->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// èdóÕÇê›íË
 

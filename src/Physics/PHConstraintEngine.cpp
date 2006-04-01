@@ -435,7 +435,7 @@ void PHHingeJoint::CompMotorForce(){
 	fw[2] = torque;
 }
 void PHHingeJoint::CompBias(double dt){
-	double vnext, diff;
+	double diff;
 	if(spring != 0.0 || damper != 0.0){
 		diff = GetPosition() - origin;
 		if(diff >  M_PI) diff -= 2 * M_PI;
@@ -546,7 +546,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	local.Ex() = normal;
 	local.Ey() = v1-v0;
 	local.Ey() -= local.Ey() * normal * normal;
-	if (local.Ey().square() > 1e-20){
+	if (local.Ey().square() > 1e-8){
 		local.Ey().unitize(); 
 	}else{
 		if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
@@ -581,6 +581,7 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
 	Vec3d sep;
 	bool r = FindCommonPoint(conv[0], conv[1], shapePoseW[0], shapePoseW[1], sep, closestPoint[0], closestPoint[1]);
+	const double depthEpsilon = 0.01;
 	if (r){
 		commonPoint = shapePoseW[0] * closestPoint[0];
 		if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
@@ -599,10 +600,10 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 				}
 			}
 			normal.unitize();
-			depth = 1e-2;
+			depth = depthEpsilon;
 		}
 		//	前回の法線の向きに動かして，最近傍点を求める
-		if (depth < 1e-2) depth = 1e-2;
+		if (depth < depthEpsilon) depth = depthEpsilon;
 		Posed trans;
 		Vec3f n;
 		while(1) {
@@ -612,7 +613,7 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 			FindClosestPoints(conv[0], conv[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
 			center = shapePoseW[0] * closestPoint[0];
 			n = trans * closestPoint[1] - center;
-			if (n.square() > 1e-10) break;
+			if (n.square() > 1e-5) break;
 		}
 		depth = depth - n.norm();		//	動かした距離 - 2点の距離
 		normal = n.unit();
@@ -654,6 +655,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 				found = true;
 				//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 				sp.EnumVertex(engine, ct, solid[0], solid[1]);
+				DSTR << sp.normal;
 			}
 		}
 	}
@@ -877,6 +879,7 @@ bool PHConstraintEngine::DetectPenetration(){
 	typedef std::set<int> SolidSet;
 	SolidSet cur;							//	現在のSolidのセット
 	bool found = false;
+	DSTR << "Contact normals: ";
 	for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
 		if (it->bMin){						//	初端だったら，リスト内の物体と判定
 			for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
@@ -891,6 +894,7 @@ bool PHConstraintEngine::DetectPenetration(){
 			cur.erase(it->index);			//	終端なので削除．
 		}
 	}
+	DSTR << std::endl;
 	return found;
 }
 void PHConstraintEngine::SetupDynamics(double dt){
