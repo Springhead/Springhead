@@ -555,6 +555,10 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 		else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
 	}
 	local.Ez() =  local.Ex() ^ local.Ey();
+	if (local.det() < 0.99) {
+		DSTR << "Error: local coordinate error." << std::endl;
+		assert(0);
+	}
 
 	//	Ø‚èŒû‚ð‹‚ß‚é‚PFØ‚èŒû‚ð\¬‚·‚éü•ª‚Ì—ñ‹“
 	CDCutRing cutRing(center, local);
