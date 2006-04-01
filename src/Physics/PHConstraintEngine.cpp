@@ -206,7 +206,7 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 		Bv[j] += (rowtimes(Jvv[0], j, v[0]) + rowtimes(Jvw[0], j, w[0]) +
 				  rowtimes(Jvv[1], j, v[1]) + rowtimes(Jvw[1], j, w[1])) * dt;
 	}
-	Bv *= 0.2;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
+	Bv *= 0.1;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
 	tmp = max(max(Bv[0], Bv[1]), Bv[2]);
 	if(tmp > max_error)
 		Bv *= (max_error / tmp);
@@ -215,7 +215,7 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 		Bq[j] += (rowtimes(Jqv[0], j, v[0]) + rowtimes(Jqw[0], j, w[0]) +
 				  rowtimes(Jqv[1], j, v[1]) + rowtimes(Jqw[1], j, w[1])) * dt;
 	}
-	Bq *= 0.2;
+	Bq *= 0.1;
 	tmp = max(max(Bq[0], Bq[1]), Bq[2]);
 	if(tmp > max_error)
 		Bq *= (max_error / tmp);
@@ -749,8 +749,8 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 5;
-	max_iter_correction = 6;
+	max_iter_dynamics = 10;//5;
+	max_iter_correction = 20;//6;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
 	max_error = 1.0;
