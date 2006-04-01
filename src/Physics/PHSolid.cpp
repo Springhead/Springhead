@@ -199,7 +199,9 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 
 
 void PHSolid::AddShape(CDShapeIf* shape){
-	shapes.push_back(OCAST(CDShape,shape));
+	CDShape* sh = OCAST(CDShape, shape);
+	assert(find(shapes.begin(), shapes.end(), sh) == shapes.end());
+	shapes.push_back(sh);
 	CalcBBox();
 	//ÚGƒGƒ“ƒWƒ“‚ðinvalidate
 	PHScene* scene = OCAST(PHScene,GetScene());
@@ -213,7 +215,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	case PHScene::SOLVER_CONSTRAINT:{
 		PHConstraintEngine* ce;
 		scene->engines.Find(ce);
-		if(ce) ce->Invalidate();
+		ce->UpdateShapePairs(this);
 	}break;
 	}
 }

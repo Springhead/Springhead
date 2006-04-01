@@ -1,10 +1,7 @@
 #ifndef BASE_COMBINATION_H
 #define BASE_COMBINATION_H
-#include "Env.h"
-#include <list>
-#include <set>
 
-/**	@file Combination.h キーワード検索機能つきリストの定義*/
+/**	@file Combination.h 組み合わせ配列の定義*/
 namespace Spr {;
 
 /**	組み合わせ配列（入れ替え不可，4角形になる）*/
@@ -15,32 +12,60 @@ class UTCombination:public std::vector<T>{
 public:
 	typedef std::vector<T> base_type;
 	UTCombination(){ height_ = 0; width_ = 0; }
-	///	サイズの設定	
-	void resize(int h, int w){
-		if (h*w > height_*width_){	//	大きくなるなら，先にリサイズ
-			base_type::resize(h * w);
+	
+	///	サイズの変更
+	/// [0, min(height(), hnew))行，[0, min(width(), wnew)列の要素は保存される
+	/// 新しくできる要素にはT()が代入される
+	void resize(int hnew, int wnew){
+		if (hnew * wnew > height_ * width_){	//	大きくなるなら，先にリサイズ
+			base_type::resize(hnew * wnew);
 		}
 		typename base_type::iterator b = this->begin();
-		if (h < height_){	//	使わなくなった行をクリア
-			for(int l=h; l<height_; ++l){
-				for(int x=0; x<width_; ++x) b[width_*l+x] = T();
+		int hmin = min(hnew, height_);
+		int r, c;
+		if (wnew > width_){	//	幅が増える場合，後ろから移動
+			for(r = hmin-1; r >= 0; --r){
+				for(c = wnew-1; c >= width_; --c)
+					b[wnew * r + c] = T();
+				for(; c >= 0; --c)
+					b[wnew * r + c] = b[width_ * r + c];
 			}
 		}
-		if (w > width_){	//	幅が増える場合，後ろから移動
-			for(int l=height_-1; l>=0; --l){
-				for(int x=w; x > width_-1; --x) b[w*l+x]=T();
-				for(int x=width_-1; x>=0; --x) b[w*l+x] = b[width_*l+x];
-			}
-		}else if (w < width_){	//	幅が減る場合，前から移動
-			for(int l=1; l<height_; ++l){
-				for(int x=0; x<width_; ++x) b[w*l+x] = b[width_*l+x];
+		else if (wnew < width_){	//	幅が減る場合，前から移動
+			for(r = 1; r < hmin; ++r){
+				for(c = 0; c < wnew; ++c)
+					b[wnew * r + c] = b[width_ * r + c];
 			}
 		}
-		if (h*w > height_*width_){	//	小さくなるなら最後にリサイズ
-			base_type::resize(h * w);
+		if (hnew * wnew < height_ * width_)	// 小さくなるなら最後にリサイズ
+			base_type::resize(hnew * wnew);
+
+		height_ = hnew;
+		width_ = wnew;
+	}
+	/// r番目の行を削除し，[r+1, height())番目の行を1つ上に詰める
+	void erase_row(int row){
+		assert(0 <= row && row < height_);
+		if(row != height_ - 1){
+			int r, c;
+			for(r = row+1; r < height_; r++)
+				for(c = 0; c < width_; c++)
+					item(r, c) = item(r-1, c);
 		}
-		height_ = h;
-		width_ = w;
+		height_--;
+		base_type::resize(height_ * width_);
+	}
+	/// c番目の列を削除し，[c+1, width())番目の列を1つ左に詰める
+	void erase_col(int col){
+		assert(0 <= col && col < width_);
+		if(col != width_ - 1){
+			int r, c;
+			for(c = col+1; c < width_; c++)
+				for(r = 0; r < height_; r++)
+					item(r, c) = item(r, c-1);
+		}
+		width_--;
+		base_type::resize(height_ * width_);
 	}
 	int height(){ return height_; };
 	int width(){ return width_; };
@@ -55,8 +80,6 @@ public:
 		width_ = 0;
 	}
 	const T& item(int i, int j) const { return ((UTCombination<T>*)this)->item(i,j); }
-//	T& operator [] (int i, int j){ item(i,j); }
-//	const T& operator [] (int i, int j) const { item(i,j); }
 };
 
 }

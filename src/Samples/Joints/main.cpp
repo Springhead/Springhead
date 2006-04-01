@@ -404,23 +404,26 @@ void OnKey1(char key){
 	case 'j':
 		hinge->SetSpring(30.0);
 		hinge->SetSpringOrigin(1.0);
-		//hinge->SetDamper(1.0);
+		hinge->SetDamper(10.0);
 		break;
 	case 'k':
 		hinge->SetSpring(30.0);
 		hinge->SetSpringOrigin(0.0);
-		//hinge->SetDamper(0.0);
+		hinge->SetDamper(10.0);
 		break;
 	case 'l':
 		hinge->SetSpring(30.0);
 		hinge->SetSpringOrigin(-1.0);
+		hinge->SetDamper(10.0);
 		break;
 	case 'z':{
 		CDConvexMeshDesc md;
 		InitBoxMesh(md, 1.0, 1.0, 1.0);
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(sdk->CreateShape(md));
-		soBox.back()->SetFramePosition(Vec3f(7.0, 40.0, 0.0));
+		soBox.back()->SetFramePosition(Vec3f(7.0, 11.0, 0.0));
+		soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+		soBox.back()->SetMass(5.0);
 		//soBox.back()->SetGravity(false);
 		}break;	
 	}

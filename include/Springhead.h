@@ -1,3 +1,7 @@
+/**
+ *	@file Springhead.h
+ *	@brief Springheadのヘッダファイル群
+*/
 #ifndef SPRINGHEAD_H
 #define SPRINGHEAD_H
 

@@ -22,14 +22,9 @@ inline double rowtimes(const Matrix3d& M, int k, const Vec3d& v){
 
 //----------------------------------------------------------------------------
 // PHSolidAux
-void PHSolidAuxs::Init(){
-	for(iterator it = begin(); it != end(); it++){
-		PHSolidAux* s = *it;
-		s->minv = s->solid->GetMassInv();
-		s->Iinv = s->solid->GetInertiaInv();
-	}
-}
 void PHSolidAux::SetupDynamics(double dt){
+	minv = solid->GetMassInv();
+	Iinv = solid->GetInertiaInv();
 	Quaterniond q = solid->GetOrientation();
 	v = q.Conjugated() * solid->GetVelocity();
 	w = q.Conjugated() * solid->GetAngularVelocity();
@@ -378,11 +373,11 @@ void PHContactPoint::Projectionfv(double& f, int k){
 	}
 }
 void PHContactPoint::CompError(){
-	const double eps = 0.0001;
+	const double eps = 0.01;
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる
 	double error = min(0.0, -shapePair->depth + eps);
-	Bv = Vec3d(eps, 0.0, 0.0);
+	Bv = Vec3d(error, 0.0, 0.0);
 }
 void PHContactPoint::ProjectionFv(double& F, int k){
 	//垂直抗力 >= 0の制約
@@ -579,7 +574,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 //		DSTR << "  " << pos << std::endl;
 	}
 }
-#define USE_VOLUME
+//#define USE_VOLUME
 
 #ifndef USE_VOLUME
 bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
@@ -591,7 +586,10 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	if (r){
 		commonPoint = shapePoseW[0] * closestPoint[0];
 		if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
-		else state = NEW;
+		else{
+			state = NEW;
+			DSTR << "NEW" << endl;
+		}
 		lastContactCount = ct;
 
 		//	法線を求める
@@ -668,7 +666,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 				found = true;
 				//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 				sp.EnumVertex(engine, ct, solid[0], solid[1]);
-				DSTR << sp.normal;
+				//DSTR << sp.normal << endl;
 			}
 		}
 	}
@@ -751,7 +749,6 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	ready = false;
 	max_iter_dynamics = 5;
 	max_iter_correction = 6;
 	//step_size = 1.0;
@@ -772,17 +769,23 @@ void PHConstraintEngine::Clear(PHScene* s){
 
 void PHConstraintEngine::Add(PHSolid* s){
 	if(solids.Find(s) == solids.end()){
-		solids.push_back(DBG_NEW PHSolidAux());
-		solids.back()->solid = s;
-		Invalidate();
+		solids.push_back(DBG_NEW PHSolidAux(s));
+		
+		int N = solids.size();
+		assert(solidPairs.height() == N-1 && solidPairs.width() == N-1);
+		solidPairs.resize(N, N);
+		for(int i = 0; i < N-1; i++)
+			solidPairs.item(i, N-1).Init(solids[i], solids[N-1]);
 	}
 }
 
 void PHConstraintEngine::Remove(PHSolid* s){
 	PHSolidAuxs::iterator is = solids.Find(s);
 	if(is != solids.end()){
+		int idx = is - solids.begin();
 		solids.erase(is);
-		Invalidate();
+		solidPairs.erase_row(idx);
+		solidPairs.erase_col(idx);
 	}
 }
 
@@ -808,51 +811,39 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 	return joint;
 }
 
+// solidPairs, shapePairsの更新処理
+//	solid  : AddShapeが呼ばれたSolid. 新規追加されたShapeはsolid->shapes.back()で取得されるもの.
+void PHConstraintEngine::UpdateShapePairs(PHSolid* solid){
+	int isolid = (solids.Find(solid) - solids.begin());
+	int i, j;
+	for(i = 0; i < isolid; i++){
+		PHSolidPair& sp = solidPairs.item(i, isolid);
+		PHSolid* slhs = sp.solid[0]->solid;
+		sp.shapePairs.resize(sp.shapePairs.height(), solid->NShape());
+		for(j = 0; j < slhs->NShape(); j++){
+			sp.shapePairs.item(j, solid->NShape()-1).shape[0] = slhs->shapes[j];
+			sp.shapePairs.item(j, solid->NShape()-1).shape[1] = solid->shapes.back();
+		}
+	}
+	for(i = isolid+1; i < solids.size(); i++){
+		PHSolidPair& sp = solidPairs.item(isolid, i);
+		PHSolid* srhs = sp.solid[1]->solid;
+		sp.shapePairs.resize(solid->NShape(), sp.shapePairs.width());
+		for(j = 0; j < srhs->NShape(); j++){
+			sp.shapePairs.item(solid->NShape()-1, j).shape[0] = solid->shapes.back();
+			sp.shapePairs.item(solid->NShape()-1, j).shape[1] = srhs->shapes[j];
+		}
+	}
+}
+
 void PHConstraintEngine::EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable){
 	PHSolidAuxs::iterator ilhs = solids.Find(lhs), irhs = solids.Find(rhs);
 	if(ilhs == solids.end() || irhs == solids.end())
 		return;
 	int i = ilhs - solids.begin(), j = irhs - solids.begin();
 	if(i > j)swap(i, j);
-	if(!ready || i >= solidPairs.height() || j >= solidPairs.width())
-		Init();
+	assert(i < solidPairs.height() && j < solidPairs.width());
 	solidPairs.item(i, j).bEnabled = bEnable;
-}
-
-void PHConstraintEngine::Init(){
-	solids.Init();
-
-	//solidPairsの作り直し
-	int i, j, N = solids.size(), Nold = solidPairs.height();
-	PHSolidPairs oldPairs;
-	oldPairs.resize(Nold, Nold);	//private変数height_とwidth_を変えたいだけ…
-	oldPairs.swap(solidPairs);
-
-    solidPairs.resize(N, N);
-	for(i = 0; i < N-1; i++)for(j = i+1; j < N; j++)
-		solidPairs.item(i, j).Init(solids[i], solids[j]);
-
-	//Enableフラグを引き継ぐ
-	if(!oldPairs.empty()){
-		vector<int> index_map(Nold);
-		PHSolidAuxs::iterator it;
-		for(i = 0; i < Nold-1; i++){
-			it = find(solids.begin(), solids.end(), oldPairs.item(i, i+1).solid[0]);
-			index_map[i] = (it != solids.end() ? it - solids.begin() : -1);
-		}
-		it = find(solids.begin(), solids.end(), oldPairs.item(Nold-2, Nold-1).solid[1]);
-		index_map[Nold-1] = (it != solids.end() ? it - solids.begin() : -1);
-
-		for(i = 0; i < Nold-1; i++){
-			if(index_map[i] == -1)continue;
-			for(j = i+1; j < Nold; j++){
-				if(index_map[j] == -1)continue;
-				solidPairs.item(index_map[i], index_map[j]).bEnabled = oldPairs.item(i, j).bEnabled;
-			}
-		}
-	}
-	
-	ready = true;
 }
 
 // AABBでソートするための構造体
@@ -986,8 +977,6 @@ void PHConstraintEngine::UpdateSolids(double dt){
 //#include <windows.h>
 
 void PHConstraintEngine::Step(){
-	if(!ready)
-		Init();
 	//LARGE_INTEGER freq, val[2];
 	//QueryPerformanceFrequency(&freq);
 	

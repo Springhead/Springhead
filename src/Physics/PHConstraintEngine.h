@@ -22,6 +22,7 @@ struct PHSolidAux : public Object{
 	Vec3d		dV, dW;		/// Correctionによる移動量，回転量
 	void SetupDynamics(double dt);
 	void SetupCorrection();
+	PHSolidAux::PHSolidAux(PHSolid* s):solid(s){}
 };
 class PHSolidAuxs : public std::vector< UTRef<PHSolidAux> >{
 public:
@@ -32,7 +33,6 @@ public:
 				break;
 		return is;
 	};
-	void Init();
 	void SetupDynamics(double dt){
 		for(iterator is = begin(); is != end(); is++)
 			(*is)->SetupDynamics(dt);
@@ -242,6 +242,7 @@ public:
 };
 class PHConstraintEngine: public PHEngine{
 	friend class PHSolidPair;
+	friend class PHSolid;
 
 	OBJECTDEF(PHConstraintEngine);
 
@@ -261,7 +262,6 @@ class PHConstraintEngine: public PHEngine{
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
 	
 protected:
-	bool			ready;			/// 
 	PHSolidAuxs		solids;			/// 剛体の配列
 	PHSolidPairs	solidPairs;	
 	PHConstraints	points;			///	接触点の配列
@@ -281,13 +281,14 @@ protected:
 	void UpdateSolids(double dt);	/// 結果をSolidに反映する
 	//void SetInitialValue();		/// LCPの決定変数の初期値を設定
 	
+	/// SolidにShapeが追加されたときにSolidから呼ばれる
+	void UpdateShapePairs(PHSolid* solid); 
+	
 public:
 	void Add(PHSolid* s);			/// Solid を登録する
 	void Remove(PHSolid* s);		/// 登録されているSolidを削除する
 	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// 関節の追加する
 	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
-	void Invalidate(){ready = false;}	/// readyフラグをリセット
-	void Init();						/// 初期化し，readyフラグをセット
 	///
 	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	///	速度→位置、加速度→速度の積分
