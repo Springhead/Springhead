@@ -378,7 +378,11 @@ void PHContactPoint::Projectionfv(double& f, int k){
 	}
 }
 void PHContactPoint::CompError(){
-	Bv = Vec3d(-shapePair->depth, 0.0, 0.0);
+	const double eps = 0.0001;
+	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
+	//誤差をepsだけ小さく見せる
+	double error = min(0.0, -shapePair->depth + eps);
+	Bv = Vec3d(eps, 0.0, 0.0);
 }
 void PHContactPoint::ProjectionFv(double& F, int k){
 	//垂直抗力 >= 0の制約
