@@ -544,7 +544,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	local.Ex() = normal;
 	local.Ey() = v1-v0;
 	local.Ey() -= local.Ey() * normal * normal;
-	if (local.Ey().square() > 1e-8){
+	if (local.Ey().square() > 1e-6){
 		local.Ey().unitize(); 
 	}else{
 		if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
@@ -599,6 +599,13 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 			}
 			normal.unitize();
 			depth = depthEpsilon;
+/*
+			if (normal.y < 0.8){
+				DSTR << std::endl;
+				DSTR << (state == NEW ? "new" : "cont");
+				DSTR << normal << std::endl;
+			} 
+*/
 		}
 		//	前回の法線の向きに動かして，最近傍点を求める
 		if (depth < depthEpsilon) depth = depthEpsilon;
@@ -877,7 +884,6 @@ bool PHConstraintEngine::DetectPenetration(){
 	typedef std::set<int> SolidSet;
 	SolidSet cur;							//	現在のSolidのセット
 	bool found = false;
-	DSTR << "Contact normals: ";
 	for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
 		if (it->bMin){						//	初端だったら，リスト内の物体と判定
 			for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
@@ -892,7 +898,6 @@ bool PHConstraintEngine::DetectPenetration(){
 			cur.erase(it->index);			//	終端なので削除．
 		}
 	}
-	DSTR << std::endl;
 	return found;
 }
 void PHConstraintEngine::SetupDynamics(double dt){
