@@ -1,4 +1,4 @@
-/** \page reference_manual		リファレンスマニュアル
+/** \page page_reference_manual	リファレンスマニュアル
 
 ここにリファレンスマニュアルのトップページを書きます．
 
