@@ -205,23 +205,22 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 	}
 	CompError();
 	// velocity updateによる影響を加算
+	double tmp;
 	for(j = 0; j < dim_v; j++){
 		Bv[j] *= Av[j];
-		Bv[j] += rowtimes(Jvv[0], j, v[0]) + rowtimes(Jvw[0], j, w[0]) +
-				 rowtimes(Jvv[1], j, v[1]) + rowtimes(Jvw[1], j, w[1]);
+		Bv[j] += (rowtimes(Jvv[0], j, v[0]) + rowtimes(Jvw[0], j, w[0]) +
+				  rowtimes(Jvv[1], j, v[1]) + rowtimes(Jvw[1], j, w[1])) * dt;
 	}
-	for(j = 0; j < dim_q; j++){
-		Bq[j] *= Aq[j];
-		Bq[j] += rowtimes(Jqv[0], j, v[0]) + rowtimes(Jqw[0], j, w[0]) +
-				 rowtimes(Jqv[1], j, v[1]) + rowtimes(Jqw[1], j, w[1]);
-	}
-
-	Bv *= 0.1;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
-	Bq *= 0.1;
-	double tmp;
+	Bv *= 0.2;	//一度に誤差を0にしようとするとやや振動的になるので適当に誤差を小さく見せる
 	tmp = max(max(Bv[0], Bv[1]), Bv[2]);
 	if(tmp > max_error)
 		Bv *= (max_error / tmp);
+	for(j = 0; j < dim_q; j++){
+		Bq[j] *= Aq[j];
+		Bq[j] += (rowtimes(Jqv[0], j, v[0]) + rowtimes(Jqw[0], j, w[0]) +
+				  rowtimes(Jqv[1], j, v[1]) + rowtimes(Jqw[1], j, w[1])) * dt;
+	}
+	Bq *= 0.2;
 	tmp = max(max(Bq[0], Bq[1]), Bq[2]);
 	if(tmp > max_error)
 		Bq *= (max_error / tmp);
@@ -435,9 +434,11 @@ void PHHingeJoint::CompMotorForce(){
 	fw[2] = torque;
 }
 void PHHingeJoint::CompBias(double dt){
-	double diff;
-	if(spring != 0.0 || damper != 0.0){
-		diff = GetPosition() - origin;
+	if(mode == MODE_VELOCITY){
+		bw[2] -= vel_d;
+	}
+	else if(spring != 0.0 || damper != 0.0){
+		double diff = GetPosition() - origin;
 		if(diff >  M_PI) diff -= 2 * M_PI;
 		if(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * dt);
@@ -456,9 +457,6 @@ void PHHingeJoint::CompBias(double dt){
 		なので，関節につながる２剛体に加わる力を，関節トルクに変換して，
 		拘束条件としてあたえる vnext を更新すれば，外力を考慮したダンパになる？
 		*/
-	}
-	else if(mode == MODE_VELOCITY){
-		bw[2] -= vel_d;
 	}
 }
 void PHHingeJoint::Projectionfw(double& f, int k){
@@ -573,7 +571,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 //		DSTR << "  " << pos << std::endl;
 	}
 }
-//#define USE_VOLUME
+#define USE_VOLUME
 
 #ifndef USE_VOLUME
 bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
@@ -739,8 +737,8 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	ready = false;
-	max_iter_dynamics = 30;
-	max_iter_correction = 10;
+	max_iter_dynamics = 5;
+	max_iter_correction = 6;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
 	max_error = 1.0;
