@@ -7,24 +7,25 @@
 
 namespace Spr{;
 
-/**	そのうち入れたい，オイラー角への変換．
-heading = atan2(2*qy*qw-2*qx*qz , 1 - 2*qy2 - 2*qz2)
-attitude = asin(2*qx*qy + 2*qz*qw) 
-bank = atan2(2*qx*qw-2*qy*qz , 1 - 2*qx2 - 2*qz2)
+/**	Quaternion/4元数．3x3行列の代わりに回転を表すために使える．
+	4変数で済む．補間や微分・積分がやりやすい．<br>
+	TVec3との掛け算は，回転変換でオーバーロードされている．
 
-except when qx*qy + qz*qw = 0.5 (north pole)
-which gives:
-heading = 2 * atan2(x,w)
-bank = 0
-and when qx*qy + qz*qw = -0.5 (south pole)
-which gives:
-heading = -2 * atan2(x,w)
-bank = 0 
+	
+	そのうち入れたい，オイラー角への変換．
+	heading = atan2(2*qy*qw-2*qx*qz , 1 - 2*qy2 - 2*qz2)
+	attitude = asin(2*qx*qy + 2*qz*qw) 
+	bank = atan2(2*qx*qw-2*qy*qz , 1 - 2*qx2 - 2*qz2)
+
+	except when qx*qy + qz*qw = 0.5 (north pole)
+	which gives:
+	heading = 2 * atan2(x,w)
+	bank = 0
+	and when qx*qy + qz*qw = -0.5 (south pole)
+	which gives:
+	heading = -2 * atan2(x,w)
+	bank = 0 
 */
-
-//-----------------------------------------------------------------------------
-//		TQuaternion
-///		4元数クラス.
 template<class ET>
 class TQuaternion:public PTM::TVectorBase<DIMENC(4), TVecDesc<TQuaternion<ET>, ET> >{
 public:
@@ -341,6 +342,10 @@ typedef TQuaternion<float> Quaternionf;
 typedef TQuaternion<double> Quaterniond;
 
 
+/**	姿勢．位置と向きを表すクラス．
+	TQuaternion と TVec3 で向きと位置を表す．
+	TAffineの代わりに使える．
+*/
 template<class ET>
 class TPose:public PTM::TVectorBase<DIMENC(7), TVecDesc<TPose<ET>, ET> >{
 public:

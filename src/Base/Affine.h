@@ -1,10 +1,10 @@
 #ifndef AFFINE_H
 #define AFFINE_H
 
-/** @page Affine @!JPアフィン行列クラスライブラリ @!EN Affine Matrix Library @!*
-	@section intro @!JP はじめに @!EN Introduction @!*
-		@!JP
-		このドキュメントはAffine行列クラスライブラリのドキュメントです．
+/** \page page_affine @!JAAffine行列クラスの概要@!ENA Guide for Affine Matrix@!*
+	\section sec_intro @!JAはじめに@!ENIntroduction@!*
+		@!JA
+		このページはAffine行列クラス(Spr::TAffine, Spr::TAffine2)の説明です．
 		Affine行列クラスライブラリは，3Dシミュレーションに必須な
 		Affine行列をC++のクラスにしたものです．
 		@!EN
@@ -12,8 +12,8 @@
 		Affine Matrix Library is a set of classes for affine matrix,
 		which are necessary for 3D simulation.
 		@!*
-	@section affine_usage @!JP 使い方 @!EN Usage @!*
-	@!JP
+	\section sec_affine_usage @!JA使い方@!ENUsage@!*
+	@!JA
 	Affine 行列クラスライブラリは，ヘッダファイルだけからなる
 	クラスライブラリなので, TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h
 	を同じフォルダに入れておき，.cppファイルからヘッダをインクルードするだけで
@@ -24,29 +24,29 @@
 	(TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h)
 	and including them from your .cpp files.
 	@!*
-	@subsection sample @!JA サンプル @!EN Sample
-	@verbatim
-#include "Affine.h"							//	TAffine行列ライブラリのインクルードする．
+	\subsection sample @!JA サンプル @!EN Sample@!*
+	\verbatim
+#include "Affine.h"                         //  TAffine行列ライブラリのインクルードする．
 #include <iostream>
-	//	@!JA Affine行列クラスはSpr名前空間の中で宣言されている．
-		@!EN Affine matrix class is declared in the name space of Spr.
-		@!*
+
+using namespace Spr;	//  @!JA Affine行列クラスはSpr名前空間の中で宣言されている．@!EN Affine matrix class is declared in the name space of Spr.@!*
+
 void main(){
-	Affinef af=Affinef::Rad(Rad(30), 'z');	//	@!JA要素がfloatなTAffine行列を宣言. 
-												@!ENDeclare an Affine matrix of float element.
-												@!*
-												@!JPz軸回り30度回転行列に初期化
-												@!ENInitializing as a matrix of rotation of 30 degrees around z axis.
-												@!*
-												
-	Vec3f vec(1,0,0);						//	@!JA要素がfloatな3次元のベクトルを宣言
-												@!ENDeclare a vector of float element.
-												@!*
-	std::cout << af;
-	std::cout << vec << std::endl;
-	std::cout << af * vec << std::endl;
-}@endverbatim
-	@subsection af_vec @!JA Affine行列・ベクトルの機能 @!EN Functions of Affine matrixs and vectors. @!*
+    Affinef af=Affinef::Rad(Rad(30), 'z');  //  @!JA要素がfloatなTAffine行列を宣言. 
+                                                @!ENDeclare an Affine matrix of float element.
+                                                @!*
+                                                @!JAz軸回り30度回転行列に初期化
+                                                @!ENInitializing as a matrix of rotation of 30 degrees around z axis.
+                                                @!*
+                                                
+    Vec3f vec(1,0,0);                       //  @!JA要素がfloatな3次元のベクトルを宣言
+                                                @!ENDeclare a vector of float element.
+                                                @!*
+    std::cout << af;
+    std::cout << vec << std::endl;
+    std::cout << af * vec << std::endl;
+}\endverbatim
+	\subsection sec_afineVecFunc @!JA Affine行列・ベクトルのメンバと演算  @!EN Functions of Affine matrixs and vectors. @!*
 	@!JA
 	普通に演算ができます．
 	<ul>
@@ -65,15 +65,15 @@ void main(){
 	@!*
 	@!JA
 	Affine変換は，
-	@verbatim
+	\verbatim
 	TAffine<float> af; TVec3<float> v, af_v;
-	af_v = af * v;@endverbatim
+	af_v = af * v;\endverbatim
 	とすればできます．
 	@!EN
 	Affine transformation is executed by:
-	@verbatim
+	\verbatim
 	TAffine<float> af; TVec3<float> v, af_v;
-	af_v = af * v;@endverbatim
+	af_v = af * v;\endverbatim
 	@!*
 	@!JA
 	また，次のようにTAffine行列の部分を取り出すことができます．
@@ -97,10 +97,10 @@ void main(){
 	@!JA 部分への代入などもできます．
 	@!EN You can assign portion of affine matrx.
 	@!*
-	@verbatim
+	\verbatim
 	TAffine<float> af;
 	af.Pos() = Vec3f(10,0,0);
-	af.Rot() = TAffine<float>::Rot(Rad(30), 'x').Rot() * af.Rot();@endverbatim
+	af.Rot() = TAffine<float>::Rot(Rad(30), 'x').Rot() * af.Rot();\endverbatim
 	@!JA ベクトルは次のようなメンバ関数を持ちます．
 	@!EN a vector has following members.
 	@!*
@@ -112,29 +112,30 @@ void main(){
 				 @!EN return the size (norm) of a vector.
 				 @!*
 	</ul>
-	@subsection affConstract Affine行列の初期化機能
+	\subsection sec_affineConstract Affine行列の初期化 
 	TAffine行列(Spr::TAffine)には便利なコンストラクタや初期化関数を用意しました．
 	いくつかをここで紹介します．
 	<ul>
-		<li> Affinef(float x, float y, float z):		(x,y,z) 平行移動する行列に初期化
-		<li> Affinef(Vec3f ex, Vec3f ey, Vec3f pos):	直接代入して初期化, ez = ex%ey とする．
-		<li> Affinef::Rot(float rad, char axis):		回転行列を返す． axisは，'x', 'y', 'z'．
-		<li> Affinef::Rot(float rad, Vec3f axis):		回転行列を返す．
-		<li> Affinef::ProjectionD3D(Vec3f screen, Vec2f size, float f, float b): D3D用射影行列として初期化．
-		<li> Affinef::ProjectionGL(Vec3f screen, Vec2f size, float f, float b):  GL用射影行列として初期化．
+		<li> Spr::TAffine::Trn (T px, T py, T pz):	
+				平行移動する行列に初期化．TはTAffine<T>のT．floatやdoubleなどで良い．
+		<li> Spr::TAffine::Rot(element_type th, char axis):
+				回転行列を返す．thはラジアン．axisは，'x', 'y', 'z'．element_typeはTのこと．
+		<li> Spr::TAffine::ProjectionD3D (TVec3 screen, TVec2 size, T front=1.0f, T back=10000.0f):
+				D3D用射影行列として初期化．
+		<li> Spr::TAffine::ProjectionGL (TVec3 screen, TVec2 size, T front=1.0f, T back=10000.0f):
 		<br>
 			OpenGL用射影行列として初期化(-Zが前)．
 			<ul>
-				<li> screen   カメラから見たビューポートの中心の位置  
-				<li> size   ビューポートのサイズ  
-				<li> f      手前のクリッピング平面とカメラの距離  
-				<li> b      奥のクリッピング平面とカメラの距離  
+				<li> screen  カメラから見たビューポートの中心の位置
+				<li> size    ビューポートのサイズ
+				<li> front   手前のクリッピング平面とカメラの距離
+				<li> back    奥のクリッピング平面とカメラの距離
 			</ul>
-		<li> void LookAtGL(Vec3f posz, Vec3f posy):位置はそのままで，poszに-Ez(), posy に Ey()
-			が向くようなTAffine行列
+		<li> Spr::TAffine::LookAtGL (TVec3 posz, TVec3 posy)
+			位置はそのままで，poszに-Ez(), posy に Ey()が向くようなAffine行列
 	</ul>
 	
-	@section thanks 謝辞
+	\section thanks 謝辞
 	LU分解，逆行列，ガウス消去法などの行列計算アルゴリズムは，<br>
     「『Ｃ言語による最新アルゴリズム事典』全ソースコード」<br>
     ftp://ftp.matsusaka-u.ac.jp/pub/algorithms<br>
@@ -164,20 +165,20 @@ namespace Spr {
  #endif
 #endif
 
-/**@defgroup TAffine	2/3次元ベクトル・TAffine行列	*/
+/**\defgroup TAffine	2/3次元ベクトル・TAffine行列	*/
 //@{
 #undef M_PI
-///	円周率π
 #ifdef __BORLANDC__
 #define M_PI 3.14159265358979323846
 #else
+///	円周率π
 const double M_PI = 3.14159265358979323846;
 #endif
 
 #undef abs
-/**	絶対値．BCB6が違う関数をリンクしてしまう(たぶんバグ)ので，template は使用していない
-	std::abs とぶつかるためだと思われる．	*/
 #ifdef __BORLANDC__
+/*	絶対値．BCB6が違う関数をリンクしてしまう(たぶんバグ)ので，template は使用していない
+	std::abs とぶつかるためだと思われる．	*/
 #define DEF_ABS_FUNC(T)		inline T abs(T t){ return t > T()  ?  t  :  -t; }
 DEF_ABS_FUNC(float)
 DEF_ABS_FUNC(double)
@@ -230,14 +231,16 @@ inline SC Det2(SC a, SC b, SC c, SC d){
 //-----------------------------------------------------------------------------
 //	TAffine2
 
-/**	TAffine2行列(回転,拡大,平行移動を表す)行列のクラス.	*/
+/**	TAffine2行列(回転,拡大,平行移動を表す)行列.
+	概要は，\ref page_affine 参照．
+*/
 template <class T>
 class TAffine2:public PTM::TMatrixBase<DIMENC(3),DIMENC(3),
 	PTM::TMatrixDescCol< TAffine2<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TAffine2<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> desc;
 	typedef PTM::TMatrixBase<DIMENC(3),DIMENC(3),desc> base_type;
-	///	基本的なメンバの定義 @see ::DEF_TMATRIX_BASIC_MEMBER
+	///	基本的なメンバの定義 @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TAffine2);
 	union{
 		struct{
@@ -342,7 +345,9 @@ public:
 
 //-----------------------------------------------------------------------------
 //	TAffine
-///	TAffine行列(回転,拡大,平行移動を表す)行列のもとになるクラス.
+/**	TAffine行列(回転,拡大,平行移動を表す)行列.
+	概要は，\ref page_affine 参照．	*/
+
 template <class T>
 class TAffine:public PTM::TMatrixBase<DIMENC(4),DIMENC(4),
 	PTM::TMatrixDescCol< TAffine<T>, PTM::TMatrixRow<4,4,T>, 4,4,4,T> >{
@@ -350,7 +355,7 @@ public:
 	typedef PTM::TMatrixDescCol< TAffine<T>, PTM::TMatrixRow<4,4,T>, 4,4,4,T> desc;
 	typedef PTM::TMatrixBase<DIMENC(4),DIMENC(4),desc> base_type;
 	/**	継承されない基本的なメンバの定義.
-		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
+		@see ::DEF_MATRIX_BASIC_MEMBER	*/
 	DEF_MATRIX_BASIC_MEMBER(TAffine);
 	union{
 		struct{
@@ -485,12 +490,15 @@ public:
 #endif
 		return y;
 	}
-	/**	任意軸まわり回転 @verbatim
+	/**	任意軸まわり回転
+\verbatim
 		+																	   +
 		|u^2+(1-u^2)cos(th)      uv(1-cos(th))-wsin(th)  wu(1-cos(th))+vsin(th)|
 	R =	|uv(1-cos(th))+wsin(th)  v^2+(1-v^2)cos(th)      vw(1-cos(th))-usin(th)|
 		|wu(1-cos(th))-vsin(th)  vw(1-cos(th))+usin(th)  w^2+(1-w^2)cos(th)    |
-		+																	   +@endverbatim*/
+		+																	   +
+\endverbatim
+*/
 	template <class BUF>
 	static TAffine<T> Rot(element_type th, const PTM::TVectorBase<DIMENC(3), BUF>& axis)
 	{
@@ -564,19 +572,22 @@ public:
 	///コンストラクタ
 	void set_default(){PTM::init_unitize(*this);}
 };
+
+/**	TAffineのコンストラクタ定義のマクロ．コンストラクタは継承されないが，
+	これをDefineすることで，コンストラクタを引き継ぐことができる．	*/
 #define DEF_TAFFINE_CONSTRUCTORS(TAffine)												\
 	TAffine(){*this=Unit();}															\
 	TAffine(element_type px, element_type py, element_type pz){*this=Trn(px, py, pz);}	\
 	template <class BUFX, class BUFY>													\
-	TAffine(const PTM::TVectorBase<DIMENC(3), BUFX>& exi,									\
+	TAffine(const PTM::TVectorBase<DIMENC(3), BUFX>& exi,								\
 			const PTM::TVectorBase<DIMENC(3), BUFY>& eyi){								\
 			PTM::init_direct(Rot(), exi, eyi, 'x');										\
 			item(3, 0) = 0; item(3, 1) = 0; item(3, 2) = 0; item(3, 3) = 1;				\
 			item(0, 3) = 0; item(1, 3) = 0; item(2, 3) = 0;								\
 	}																					\
 	template <class BUFX, class BUFY, class BUFP>										\
-	TAffine(	const PTM::TVectorBase<DIMENC(3), BUFX>& exi,								\
-			const PTM::TVectorBase<DIMENC(3), BUFY>& eyi,									\
+	TAffine(	const PTM::TVectorBase<DIMENC(3), BUFX>& exi,							\
+			const PTM::TVectorBase<DIMENC(3), BUFY>& eyi,								\
 			const PTM::TVectorBase<DIMENC(3), BUFP>& posi){								\
 			PTM::init_direct(Rot(), exi, eyi, 'x');										\
 			item(3, 0) = 0; item(3, 1) = 0; item(3, 2) = 0; item(3, 3) = 1;				\
@@ -599,6 +610,8 @@ public:
 			item(0, 3) = posi.X(); item(1, 3) = posi.Y(); item(2, 3) = posi.Z();		\
 			}
 
+/**	TAffine2のコンストラクタ定義のマクロ．コンストラクタは継承されないが，
+	これをDefineすることで，コンストラクタを引き継ぐことができる．	*/
 #define DEF_TAFFINE_CONSTRUCTORS2(TAffine)												\
 	TAffine(element_type th, char axis) {												\
 		*this=Rot(th, axis);															\
@@ -608,7 +621,7 @@ public:
 		const PTM::TVectorBase<DIMENC(3), BUF>& posi) {									\
 		*this = Rot(th, axis); Pos() = posi; }											\
 	template <class BUFA>																\
-	TAffine(element_type th, const PTM::TVectorBase<DIMENC(3), BUFA>& axis){				\
+	TAffine(element_type th, const PTM::TVectorBase<DIMENC(3), BUFA>& axis){			\
 		*this = Rot(th, axis.unit());			                                        \
 	}                                                                                   \
 	template <class BUFA, class BUFP>													\
