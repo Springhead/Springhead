@@ -23,8 +23,8 @@ CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
 	return rv;
 }
 ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
-	if (CDConvexMeshIf::GetIfInfoStatic() == info){
-		return CreateShape(*(CDConvexMeshDesc*)desc);
+	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
+		return CreateShape(*(CDShapeDesc*)desc);
 	}
 	return NULL;
 }

@@ -153,8 +153,11 @@ Vec3f PHScene::GetGravity(){
 	return ge->accel;
 }
 ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
-	if (info == CDConvexMeshIf::GetIfInfoStatic()){
-		return CreateShape(*(const CDConvexMeshDesc*)desc);
+	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
+		return CreateShape(*(CDShapeDesc*)desc);
+	}else if (info->Inherit(PHJointIf::GetIfInfoStatic())){
+//		return CreateJoint(*(PHJointDesc*)desc);
+		assert(0);
 	}else if(info == PHSolidIf::GetIfInfoStatic()){
 		return CreateSolid(*(const PHSolidDesc*)desc);
 	}

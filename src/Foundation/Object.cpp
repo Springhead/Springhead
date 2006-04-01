@@ -7,6 +7,30 @@
 #include <sstream>
 
 namespace Spr {;
+
+bool IfInfo::Inherit(const char* key) const {
+	if(strcmp(ClassName(),key)==0) return true;
+	IfInfo** pb = base;
+	while(*pb){
+		if ((*pb)->Inherit(key)) return true;
+		++pb;
+	}
+	return false;
+}
+bool IfInfo::Inherit(const IfInfo* key) const {
+#ifdef __BORLANDC__
+	if(strcmp(ClassName(),key->ClassName())==0) return true;
+#else
+	if(this == key) return true;
+#endif
+	IfInfo** pb = base;
+	while(*pb){
+		if ((*pb)->Inherit(key)) return true;
+		++pb;
+	}
+	return false;
+}
+
 //----------------------------------------------------------------------------
 //	Object
 IF_IMP_BASE(Object);

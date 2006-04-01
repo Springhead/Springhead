@@ -98,6 +98,73 @@
 	field->offset = (char*)&(pGRCamera->back) - (char*)pGRCamera;
 	db->RegisterDesc(desc);
 	
+	PHJointDesc* pPHJointDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHJointDesc");
+	desc->size = sizeof(PHJointDesc);
+	desc->ifInfo = PHJointIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHJointDesc>;
+	field = desc->AddField("JointType", "enum", "type",  "");
+	field->AddEnumConst("JOINT_CONTACT");
+	field->AddEnumConst("JOINT_HINGE");
+	field->AddEnumConst("JOINT_SLIDER");
+	field->AddEnumConst("JOINT_BALL");
+	field->offset = (char*)(&pPHJointDesc->type) - (char*)pPHJointDesc;
+	field = desc->AddField("", "bool", "bEnabled", "");
+	field->offset = (char*)&(pPHJointDesc->bEnabled) - (char*)pPHJointDesc;
+	field = desc->AddField("", "Posed", "poseJoint", "2");
+	field->offset = (char*)&(pPHJointDesc->poseJoint) - (char*)pPHJointDesc;
+	db->RegisterDesc(desc);
+	
+	PHJoint1DDesc* pPHJoint1DDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHJoint1DDesc");
+	desc->size = sizeof(PHJoint1DDesc);
+	desc->ifInfo = PHJoint1DIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHJoint1DDesc>;
+	field = desc->AddBase("PHJointDesc");
+	field->offset = (char*)(PHJointDesc*)pPHJoint1DDesc - (char*)pPHJoint1DDesc;
+	field = desc->AddField("", "double", "lower", "");
+	field->offset = (char*)&(pPHJoint1DDesc->lower) - (char*)pPHJoint1DDesc;
+	field = desc->AddField("", "double", "upper", "");
+	field->offset = (char*)&(pPHJoint1DDesc->upper) - (char*)pPHJoint1DDesc;
+	field = desc->AddField("", "double", "spring", "");
+	field->offset = (char*)&(pPHJoint1DDesc->spring) - (char*)pPHJoint1DDesc;
+	field = desc->AddField("", "double", "origin", "");
+	field->offset = (char*)&(pPHJoint1DDesc->origin) - (char*)pPHJoint1DDesc;
+	field = desc->AddField("", "double", "damper", "");
+	field->offset = (char*)&(pPHJoint1DDesc->damper) - (char*)pPHJoint1DDesc;
+	field = desc->AddField("", "double", "torque", "");
+	field->offset = (char*)&(pPHJoint1DDesc->torque) - (char*)pPHJoint1DDesc;
+	db->RegisterDesc(desc);
+	
+	PHHingeJointDesc* pPHHingeJointDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHHingeJointDesc");
+	desc->size = sizeof(PHHingeJointDesc);
+	desc->ifInfo = PHHingeJointIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHHingeJointDesc>;
+	field = desc->AddBase("PHJoint1DDesc");
+	field->offset = (char*)(PHJoint1DDesc*)pPHHingeJointDesc - (char*)pPHHingeJointDesc;
+	db->RegisterDesc(desc);
+	
+	PHSliderJointDesc* pPHSliderJointDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHSliderJointDesc");
+	desc->size = sizeof(PHSliderJointDesc);
+	desc->ifInfo = PHSliderJointIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHSliderJointDesc>;
+	field = desc->AddBase("PHJoint1DDesc");
+	field->offset = (char*)(PHJoint1DDesc*)pPHSliderJointDesc - (char*)pPHSliderJointDesc;
+	db->RegisterDesc(desc);
+	
+	PHBallJointDesc* pPHBallJointDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHBallJointDesc");
+	desc->size = sizeof(PHBallJointDesc);
+	desc->ifInfo = PHBallJointIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHBallJointDesc>;
+	field = desc->AddBase("PHJointDesc");
+	field->offset = (char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc;
+	field = desc->AddField("", "double", "max_angle", "");
+	field->offset = (char*)&(pPHBallJointDesc->max_angle) - (char*)pPHBallJointDesc;
+	db->RegisterDesc(desc);
+	
 	PHSceneState* pPHSceneState = NULL;
 	desc = DBG_NEW FITypeDesc("PHSceneState");
 	desc->size = sizeof(PHSceneState);

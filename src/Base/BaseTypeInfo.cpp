@@ -4,6 +4,15 @@
 #endif
 
 namespace Spr{;
+bool UTTypeInfo::Inherit(const char* key) const {
+	if(strcmp(ClassName(),key)==0) return true;
+	UTTypeInfo** pb = base;
+	while(*pb){
+		if ((*pb)->Inherit(key)) return true;
+		++pb;
+	}
+	return false;
+}
 bool UTTypeInfo::Inherit(const UTTypeInfo* key) const {
 #ifdef __BORLANDC__
 	if(strcmp(ClassName(),key->ClassName())==0) return true;
@@ -31,15 +40,6 @@ bool UTTypeInfo::Inherit(const UTTypeInfo* key) const {
 	return false;
 }
 */
-bool UTTypeInfo::Inherit(const char* key) const {
-	if(strcmp(ClassName(),key)==0) return true;
-	UTTypeInfo** pb = base;
-	while(*pb){
-		if ((*pb)->Inherit(key)) return true;
-		++pb;
-	}
-	return false;
-}
 /*
 bool UTTypeInfo::Inherit(const char* key) const {
 	const UTTypeInfo* info = this;

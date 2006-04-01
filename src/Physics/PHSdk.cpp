@@ -84,8 +84,8 @@ CDShapeIf** PHSdk::GetShapes(){
 	return (CDShapeIf**)&*shapes.begin();
 }
 ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
-	if (info == CDConvexMeshIf::GetIfInfoStatic()){
-		return CreateShape(*(const CDConvexMeshDesc*)desc);
+	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
+		return CreateShape(*(CDShapeDesc*)desc);
 	}else if(info == PHSceneIf::GetIfInfoStatic()){
 		return CreateScene(*(const PHSceneDesc*)desc);
 	}

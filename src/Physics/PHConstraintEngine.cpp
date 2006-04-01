@@ -825,7 +825,7 @@ void PHConstraintEngine::UpdateShapePairs(PHSolid* solid){
 			sp.shapePairs.item(j, solid->NShape()-1).shape[1] = solid->shapes.back();
 		}
 	}
-	for(i = isolid+1; i < solids.size(); i++){
+	for(i = isolid+1; i < (int)solids.size(); i++){
 		PHSolidPair& sp = solidPairs.item(isolid, i);
 		PHSolid* srhs = sp.solid[1]->solid;
 		sp.shapePairs.resize(solid->NShape(), sp.shapePairs.width());
