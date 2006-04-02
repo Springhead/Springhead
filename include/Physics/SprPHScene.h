@@ -1,3 +1,7 @@
+/**
+ *	@file SprPHScene.h
+ *	@brief シーン
+*/
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
 
@@ -33,8 +37,8 @@ struct PHSceneDesc: public PHSceneState{
 	} contactSolver;
 	PHSceneDesc(){Init();}
 	void Init(){
-		contactSolver = SOLVER_PENALTY;
-		//contactSolver = SOLVER_CONSTRAINT;
+		//contactSolver = SOLVER_PENALTY;
+		contactSolver = SOLVER_CONSTRAINT;
 	}
 };
 
@@ -107,26 +111,29 @@ public:
 		シーンが作成されてから現在までにStep()を実行した回数を返す．
 	 */
 	virtual unsigned GetCount()const=0;
-	/// カウント数を設定する
-	virtual void SetCount(unsigned c)=0;
+
+	/** @brief カウント数を設定する
+		@param count カウント数
+	 */
+	virtual void SetCount(unsigned count)=0;
 	
-	///	シーンの時刻を進める
-	/** ClearForce(); GenerateForce(); Integrate(); と等価である． */
+	/** @brief シーンの時刻を進める
+	 */
 	virtual void Step()=0;
 
-	///	シーンの時刻を進める
-	/** 力と速度を積分して，速度と位置を更新する． */
-	virtual void Integrate()=0;
-	
-	///	シーンを空にする
+	/** @brief シーンを空にする
+	 */
 	virtual void Clear()=0;
 
-	///	重力を設定する
-	/** ＊ここに持たせるべきか要検討だが，Novodexはここ */
-	virtual void SetGravity(
-		Vec3f accel		/// 重力加速度ベクトル
-		)=0;
-	///	重力を取得する
+	/** @brief 重力を設定する
+		@param accel 重力加速度ベクトル
+	 */
+	//ここに持たせるべきか要検討だが，Novodexはここ 
+	virtual void SetGravity(Vec3f accel)=0;
+	
+	/** @brief 重力を取得する
+		@return 重力加速度ベクトル
+	 */
 	virtual Vec3f GetGravity()=0;
 
 };
