@@ -1,5 +1,5 @@
 if "%1"=="execute" goto execute
-del *.h
+del ..\..\include\Base\*.h
 set HEADERS=Env BaseDebug BaseUtility TVector TMatrix TinyVec TinyMat Affine TQuaternion TMatrixUtility
 for %%f in (%HEADERS%) do call %0 execute %%f
 goto end

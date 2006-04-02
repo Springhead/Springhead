@@ -1,5 +1,6 @@
-#ifndef SPR_TYPE_H
-#define SPR_TYPE_H
+#ifndef SPR_OBJECT_H
+#define SPR_OBJECT_H
+#include "../SprBase.h"
 #include <iosfwd>
 
 namespace Spr{;
