@@ -19,7 +19,7 @@
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = ./docsrc
+INPUT                  = ./docsrc/
 
 # If the value of the INPUT tag contains directories, you can use the 
 # FILE_PATTERNS tag to specify one or more wildcard pattern (like *.cpp 
@@ -738,7 +738,7 @@ TREEVIEW_WIDTH         = 250
 # If the GENERATE_LATEX tag is set to YES (the default) Doxygen will 
 # generate Latex output.
 
-GENERATE_LATEX         = NO
+GENERATE_LATEX         = YES
 
 # The LATEX_OUTPUT tag is used to specify where the LaTeX docs will be put. 
 # If a relative path is entered the value of OUTPUT_DIRECTORY will be 
@@ -786,13 +786,13 @@ LATEX_HEADER           =
 # contain links (just like the HTML output) instead of page references 
 # This makes the output suitable for online browsing using a pdf viewer.
 
-PDF_HYPERLINKS         = NO
+PDF_HYPERLINKS         = YES
 
 # If the USE_PDFLATEX tag is set to YES, pdflatex will be used instead of 
 # plain latex in the generated Makefile. Set this option to YES to get a 
 # higher quality PDF documentation.
 
-USE_PDFLATEX           = NO
+USE_PDFLATEX           = YES
 
 # If the LATEX_BATCHMODE tag is set to YES, doxygen will add the \\batchmode. 
 # command to the generated LaTeX files. This will instruct LaTeX to keep 
@@ -827,7 +827,7 @@ RTF_OUTPUT             = rtf
 # RTF documents. This may be useful for small projects and may help to 
 # save some trees in general.
 
-COMPACT_RTF            = NO
+COMPACT_RTF            = YES
 
 # If the RTF_HYPERLINKS tag is set to YES, the RTF that is generated 
 # will contain hyperlink fields. The RTF file will 
@@ -836,7 +836,7 @@ COMPACT_RTF            = NO
 # programs which support those fields. 
 # Note: wordpad (write) and others do not support links.
 
-RTF_HYPERLINKS         = NO
+RTF_HYPERLINKS         = YES
 
 # Load stylesheet definitions from file. Syntax is similar to doxygen's 
 # config file, i.e. a series of assignments. You only have to provide 
