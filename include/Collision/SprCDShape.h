@@ -1,6 +1,6 @@
 #ifndef SPR_CDSHAPEIF_H
 #define SPR_CDSHAPEIF_H
-#include <Foundation/Object.h>
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
 /*	memo
