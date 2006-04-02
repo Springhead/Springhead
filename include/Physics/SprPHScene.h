@@ -43,44 +43,90 @@ struct PHSceneIf : public SceneIf{
 public:
 	IF_DEF(PHScene);
 
-	///	このSceneをもつSDKを返す
+	/** @brief このSceneをもつSDKを返す
+		@return SDKのインタフェース
+	 */
 	virtual PHSdkIf* GetSdk()=0;
 
-	///	Shapeの作成
+	/** @brief Shapeを作成する
+		@param desc 作成するShapeのディスクリプタ
+		@return Shapeのインタフェース
+	 */
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
-	///	Solid作成
+	
+	/** @brief Solidを作成する
+		@return Solidのインタフェース
+
+		PHSolidDescのデフォルト値を用いてSolidを作成する．
+	 */
 	virtual PHSolidIf* CreateSolid()=0;
-	///	Solid作成
+	
+	/** @brief Solidを作成する
+		@param desc 作成するSolidのディスクリプタ
+		@return Solidのインタフェース
+	*/
 	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc)=0;
-	///	Solidの数
+	
+	/** @brief Solidの数を取得する
+		@return Solidの数
+	 */
 	virtual int NSolids()=0;
-	///	Solidの取得
+
+	/** @brief Solidを取得する
+		@return Solidのインタフェースの配列へのポインタ
+	 */
 	virtual PHSolidIf** GetSolids()=0;
 
-	/// 接触も有効・無効化
-	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true)=0;
+	/** @brief 特定のSolidの組について接触を有効化/無効化する
+		@param bEnable trueならば有効化する．falseならば無効化する．
 
-	/// 関節の作成
+		Solid lhsとSolid rhsとの接触を有効化/無効化する．
+		無効化された場合，衝突判定や接触力の計算は行われない．
+	  */
+	virtual void EnableContact(PHSolidIf* lhs,	PHSolidIf* rhs, bool bEnable = true)=0;
+
+	/** @brief 関節を作成する
+		@param desc 関節のディスクリプタ
+		@return 関節のインタフェース
+		Solid lhsとSolid rhsを連結する関節を作成する．
+	 */
 	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
-	/// 積分ステップを返す
+	/** @brief 積分ステップを取得する
+		@return 積分ステップ
+	 */
 	virtual double GetTimeStep()const=0;
-	/// 積分ステップを設定する
+	
+	/** @brief 積分ステップを設定する
+		@param dt 積分ステップ
+	 */
 	virtual void SetTimeStep(double dt)=0;
-	/// カウント数を返す
+	
+	/** @brief カウント数を取得する
+		@return カウント数
+		シーンが作成されてから現在までにStep()を実行した回数を返す．
+	 */
 	virtual unsigned GetCount()const=0;
 	/// カウント数を設定する
 	virtual void SetCount(unsigned c)=0;
-	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ
+	
+	///	シーンの時刻を進める
+	/** ClearForce(); GenerateForce(); Integrate(); と等価である． */
 	virtual void Step()=0;
-	///	シーンの時刻を進める（力と速度を積分して，速度と位置を更新）
+
+	///	シーンの時刻を進める
+	/** 力と速度を積分して，速度と位置を更新する． */
 	virtual void Integrate()=0;
-	///	シーンを空にする．
+	
+	///	シーンを空にする
 	virtual void Clear()=0;
 
-	///	重力の設定(ここに持たせるべきか要検討だが，Novodexはここ)
-	virtual void SetGravity(Vec3f accel)=0;
-	///	重力の取得
+	///	重力を設定する
+	/** ＊ここに持たせるべきか要検討だが，Novodexはここ */
+	virtual void SetGravity(
+		Vec3f accel		/// 重力加速度ベクトル
+		)=0;
+	///	重力を取得する
 	virtual Vec3f GetGravity()=0;
 
 };
