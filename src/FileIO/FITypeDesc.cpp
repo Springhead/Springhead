@@ -192,6 +192,7 @@ FITypeDescDb::ProtoDescs FITypeDescDb::protoDescs;
 
 FITypeDescDb::~FITypeDescDb(){
 	db.clear();
+	protoDescs.clear();
 }
 FITypeDesc* FITypeDescDb::Find(UTString tn){
 	UTRef<FITypeDesc> key = new FITypeDesc;

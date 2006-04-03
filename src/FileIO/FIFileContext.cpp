@@ -1,4 +1,5 @@
 #include "FIFileContext.h"
+#include "FITypeDesc.h"
 #include <fstream>
 #include <sstream>
 #ifdef _WIN32
@@ -11,6 +12,14 @@
 #endif
 
 namespace Spr{;
+//---------------------------------------------------------------------------
+//	FIFileContext::Primitive
+FIFileContext::Primitive::Primitive(FITypeDesc* d, void* o):desc(d), obj(o){
+	if (!obj && desc) obj = desc->Create();
+}
+FIFileContext::Primitive::~Primitive(){
+	if (desc && obj) desc->Delete(obj);
+}
 //---------------------------------------------------------------------------
 //	FIFileContext::FileInfo
 // ファイル マッピング

@@ -155,6 +155,34 @@ public:
 	}
 };
 
+/**	一般オブジェクト用，自動delete ポインタ
+	ポインタが消えるときにオブジェクトをdeleteをする．
+*/
+template <class T>
+class UTDeleteRef{
+	T* obj;
+	T*& Obj() const {return (T*&) obj;}
+	UTDeleteRef(const UTDeleteRef<T>& r){
+		assert(0);	//	コピーしちゃだめ．
+	}
+public:
+	UTDeleteRef(T* t = NULL){
+		Obj() = t;
+	}
+	~UTDeleteRef(){ delete Obj(); }
+	UTDeleteRef& operator =(T* t){
+		Obj() = t;
+		return *this;
+	}
+	operator T*() const {return Obj();}
+	T* operator->() const {return Obj();}
+	bool operator <(const UTDeleteRef& r) const { return Obj() < r.Obj(); }
+	UTRef& operator =(T* r){
+		delete Obj();
+		Obj() = r;
+		return *this;
+	}
+};
 
 ///	シングルトンクラス
 template <class T>
@@ -167,6 +195,7 @@ T& Singleton(){
 template <class T, class CO=std::vector<T> >
 class UTStack: public CO{
 public:
+	typedef CO container;
 	T Pop(){
 		assert(CO::size());
 		T t=CO::back(); CO::pop_back(); return t;

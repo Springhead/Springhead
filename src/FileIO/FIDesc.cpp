@@ -9,6 +9,7 @@ namespace Spr{
 static FITypeDesc* desc; 
 static FITypeDesc::Field* field; 
 UTRef<FITypeDescDb> typeDescDb;
+
 void RegisterTypes(){
 	if(!typeDescDb) typeDescDb = new FITypeDescDb;
 	FITypeDescDb* db = typeDescDb;

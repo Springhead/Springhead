@@ -43,25 +43,24 @@ static void DataStart(const char* b, const char* e){
 
 	//	ロード用の構造体の用意
 	fileContext->primitives.Push();
-	fileContext->primitives.Top() = desc->Construct();
+	fileContext->primitives.Top() = new FIFileContext::Primitive(desc);
 }
 static void DataCreate(const char* b, const char* e){
 	ObjectIf* obj = fileContext->Create(
-		fieldStack.back().desc->GetIfInfo(), fileContext->primitives.Top());
+		fieldStack.back().desc->GetIfInfo(), fileContext->primitives.Top()->obj);
 	fileContext->objects.Push(obj);
 }
 static void DataEnd(char c){
 	DSTR << "DataEnd " << fieldStack.back().desc->GetTypeName() << std::endl;
 	fileContext->objects.Pop();
-	fieldStack.back().desc->Delete(fileContext->primitives.Top());
 	fileContext->primitives.Pop();
 	fieldStack.pop_back();
 }
 static void BlockStart(const char* b, const char* e){
 	DSTR << "blockStart" << std::endl;
-	char* base = (char*)fileContext->primitives.Top();
+	char* base = (char*)fileContext->primitives.Top()->obj;
 	void* ptr = fieldStack.back().field->GetAddressEx(base, fieldStack.back().arrayCount);
-	fileContext->primitives.Push(ptr);
+	fileContext->primitives.Push(new FIFileContext::Primitive(NULL, ptr));
 	fieldStack.push_back(Field(fieldStack.back().field->type));
 }
 static void BlockEnd(const char* b, const char* e){
@@ -132,29 +131,31 @@ static void StrSet(const char* b, const char* e){
 }
 static void ExpSet(const char* b, const char* e){
 	char ch = *b;
+
+	Field& curField = fieldStack.back();
 	//	debug 出力
-	if (fieldStack.back().nextField!=F_NONE){
-		if (fieldStack.back().arrayCount==0){
-			DSTR << fieldStack.back().field->name << " = " ;
+	if (curField.nextField!=F_NONE){
+		if (curField.arrayCount==0){
+			DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 		}
-		if (fieldStack.back().nextField == F_REAL || fieldStack.back().nextField == F_INT){
+		if (curField.nextField == F_REAL || curField.nextField == F_INT){
 			DSTR << numValue;
-		}else if (fieldStack.back().nextField == F_STR){
+		}else if (curField.nextField == F_STR){
 			DSTR << strValue;
 		}
 		if (ch == ';') DSTR << std::endl;
 	}
 	//	ここまで
 
-	if(fieldStack.back().nextField == F_REAL || fieldStack.back().nextField == F_INT){
-		fieldStack.back().field->WriteNumber(
-			fileContext->primitives.Top(), numValue, fieldStack.back().arrayCount);
-	}else if(fieldStack.back().nextField == F_STR){
-		fieldStack.back().field->WriteString(
-			fileContext->primitives.Top(), strValue.c_str(), fieldStack.back().arrayCount);
+	if(curField.nextField == F_REAL || curField.nextField == F_INT){
+		curField.field->WriteNumber(
+			fileContext->primitives.Top()->obj, numValue, curField.arrayCount);
+	}else if(curField.nextField == F_STR){
+		curField.field->WriteString(
+			fileContext->primitives.Top()->obj, strValue.c_str(), curField.arrayCount);
 	}
 	if (ch == ';'){
-		fieldStack.back().arrayCount=FITypeDesc::BIGVALUE;
+		curField.arrayCount=FITypeDesc::BIGVALUE;
 	}
 }
 static void RefSet(const char* b, const char* e){

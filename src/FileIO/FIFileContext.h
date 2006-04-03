@@ -11,6 +11,7 @@
 
 
 namespace Spr{;
+class FITypeDesc;
 
 class FIFileContext{
 public:
@@ -43,8 +44,16 @@ public:
 	IfStack objects;
 	///	コンテナが必要なばあい
 	IfStack container;
+	
+	///
+	struct Primitive: UTRefCount{
+		FITypeDesc* desc;
+		void* obj;
+		Primitive(FITypeDesc* d=NULL, void* o=NULL);
+		~Primitive();
+	};
 	///	
-	UTStack<void*> primitives;
+	UTStack< UTRef<Primitive> > primitives;
 
 	FIFileContext(){
 	}

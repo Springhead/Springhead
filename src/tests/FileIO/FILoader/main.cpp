@@ -121,12 +121,12 @@ void idle(){
 
 int main(int argc, char* argv[]){
 	RegisterTypes();
-	FIFileContext fc;
+	static FIFileContext fc;
 	fc.fileInfo.Push();
 	fc.fileInfo.back().Map("test.x");
 	phSdk = CreatePHSdk();
 	fc.objects.Push(phSdk);
-	FIFileX fileX;
+	static FIFileX fileX;	//<	glutは exitで終わるため，staticにしないとこの変数のCleanupが行われなくなる．
 	fileX.Init(typeDescDb);
 	fileX.Load(&fc);
 	phSdk->Print(DSTR);

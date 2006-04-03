@@ -85,10 +85,10 @@ public:
 class FIAccessBase:public UTRefCount{
 public:
 	virtual ~FIAccessBase(){}
-	///	コンストラクタ呼び出し
-	virtual void* Construct(void* mem)=0;
-	///	デストラクタ呼び出し
-	virtual void Destruct(void* ptr)=0;
+	///	オブジェクトの構築
+	virtual void* Create()=0;
+	///	オブジェクトの破棄
+	virtual void Delete(void* ptr)=0;
 	///	vector<T>::push_back(); return &back();
 	virtual void* VectorPush(void* v)=0;
 	///	vector<T>::pop_back();
@@ -102,8 +102,8 @@ public:
 };
 template <class T>
 class FIAccess:public FIAccessBase{
-	virtual void* Construct(void* mem){ return new(mem) T; }
-	virtual void Destruct(void* ptr){((T*)ptr)->~T(); }
+	virtual void* Create(){ return DBG_NEW T; }
+	virtual void Delete(void* ptr){delete (T*)ptr; }
 	virtual void* VectorPush(void* v){
 		((std::vector<T>*)v)->push_back(T());
 		return &((std::vector<T>*)v)->back();
@@ -251,15 +251,11 @@ public:
 	virtual void WriteString(const char* val, void* ptr){ assert(0); }
 
 	///	オブジェクトの構築
-	void* Construct(void* mem=NULL){
-		if (!mem) mem = DBG_NEW char[GetSize()];
-		access->Construct(mem);
-		return mem;
+	void* Create(){
+		return access->Create();
 	}
 	///	オブジェクトの後始末
-	void Destruct(void* ptr){ access->Destruct(ptr); }
-	///	オブジェクトの削除
-	void Delete(void* ptr){ Destruct(ptr); delete [] (char*)ptr; };
+	void Delete(void* ptr){ access->Delete(ptr); }
 	///	vector::push_back() return &vector::back();
 	void* VectorPush(void* v){ return access->VectorPush(v); }
 	///	vector::pop_back();
