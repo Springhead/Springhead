@@ -21,6 +21,7 @@ struct GRSdkIf: public ObjectIf{
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
 	virtual GRDeviceGLIf* CreateDeviceGL(int window)=0;
 };
+///	グラフィックスSDK
 GRSdkIf* SPR_CDECL CreateGRSdk();
 //@}
 }
