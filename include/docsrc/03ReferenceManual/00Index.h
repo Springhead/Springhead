@@ -1,4 +1,4 @@
-/** \page page_reference_manual	【リファレンスマニュアル】
+/** \page pageReferenceManual	【リファレンスマニュアル】
 
 リファレンスマニュアルでは，APIやAPIを呼び出すために使う構造体や定数の詳細を説明します．
 SDKが内部で使用しているクラスや関数の説明は含まれていません．

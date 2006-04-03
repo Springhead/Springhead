@@ -1,4 +1,4 @@
-/** \page page_tutorial	【チュートリアル】
+/** \page pageTutorial	【チュートリアル】
 ここにチュートリアルのトップページが着ます．
 
 */

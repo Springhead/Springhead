@@ -1,6 +1,6 @@
-/** \page page_users_guide	【ユーザーズガイド】
+/** \page pageUsersGuide	【ユーザーズガイド】
 
-\ref page_users_guide は，
+\ref pageUsersGuide は，
  - \subpage pageIntroduction
  - \subpage pageGettingStarted
  - \subpage pageConcept
