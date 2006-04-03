@@ -1,5 +1,5 @@
 /**
-\page page_getting_started	とりあえず使ってみよう
+\page pageGettingStarted	とりあえず使ってみよう
 
 \section sec_install	インストール
 TODO: インストールからビルドまでは， tutorial ではなく，こちらに書く．

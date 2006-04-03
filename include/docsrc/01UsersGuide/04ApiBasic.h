@@ -1,5 +1,7 @@
 /**
-\page page_api_basic	APIの基礎
+\page pageApiBasic	APIの基礎
+ここでは，Springhead2 SDKのAPIの形式について説明します．
+
 SDKは，実装を持たないAPIクラスを介して使います．
 
 \subsection apiClass APIクラス

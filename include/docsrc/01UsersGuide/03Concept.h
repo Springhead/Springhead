@@ -1,4 +1,4 @@
-/** \page page_concept	コンセプト
+/** \page pageConcept	コンセプト
 
 \subsection solid	剛体
 剛体は，質量，慣性モーメント，重心位置を持ち，

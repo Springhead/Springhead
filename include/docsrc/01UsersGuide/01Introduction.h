@@ -1,5 +1,5 @@
 /**
-\page page_introduction はじめに
+\page pageIntroduction はじめに
 Springhead2は，安定で高速な，多くの用途に十分な機能を持つ物理シミュレータです．
 
 \section sec_characteristic	特徴
