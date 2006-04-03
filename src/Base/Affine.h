@@ -1,6 +1,9 @@
 #ifndef AFFINE_H
 #define AFFINE_H
 
+/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
+
 /** \page page_affine @!JAAffine行列クラスの概要@!ENA Guide for Affine Matrix@!*
 	\section sec_intro @!JAはじめに@!ENIntroduction@!*
 		@!JA
@@ -165,8 +168,6 @@ namespace Spr {
  #endif
 #endif
 
-/**\defgroup TAffine	2/3次元ベクトル・TAffine行列	*/
-//@{
 #undef M_PI
 #ifdef __BORLANDC__
 #define M_PI 3.14159265358979323846
@@ -665,6 +666,7 @@ typedef TAffine<float> Affinef;
 ///	double版3次元アフィン行列.
 typedef TAffine<double> Affined;
 //@}
+
 
 #ifdef _WIN32
  #ifdef _DEBUG
