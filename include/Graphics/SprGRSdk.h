@@ -1,4 +1,7 @@
-/**
+/**	\addtogroup	gpGraphics	*/
+//@{
+
+	/**
  *	@file SprGRSdk.h
  *	@brief グラフィックスSDKの基本クラス
  */
@@ -20,6 +23,6 @@ struct GRSdkIf: public ObjectIf{
 	virtual GRDeviceGLIf* CreateDeviceGL(int window)=0;
 };
 GRSdkIf* SPR_CDECL CreateGRSdk();
-
+//@}
 }
 #endif

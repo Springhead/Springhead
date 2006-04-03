@@ -13,6 +13,7 @@ SDKを使うための基本的なクラス・構造体です．
 
 \section sec_refPhysics 物理エンジン
  - \ref gpPhysics
+ - \ref gpShape
  - \ref gpJoint
 
 \section sec_refGraphics グラフィックス

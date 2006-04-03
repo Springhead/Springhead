@@ -4,7 +4,7 @@
 
 namespace Spr{;
 
-/** \addtogroup gpPhysics 物理エンジンクラス	*/
+/** \addtogroup gpPhysics 物理エンジンの基礎	*/
 //@{
 
 struct PHSceneIf;

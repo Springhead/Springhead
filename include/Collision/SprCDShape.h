@@ -3,6 +3,10 @@
 #include <Foundation/SprObject.h>
 
 namespace Spr{;
+
+/**	\addtogroup	gpShape	形状・接触判定クラス	*/	
+//@{
+
 /*	memo
 	shapeに階層構造を持たせるかどうか．
 	Novodex ODEとも 階層構造は持っていない．
@@ -18,10 +22,12 @@ namespace Spr{;
 	階層構造は物理ライブラリとは別に，シーングラフライブラリが持つ
 */
 
+///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	IF_DEF(CDShape);
 };
 
+///	凸形状の基本クラス
 struct CDConvexIf : public CDShapeIf{
 	IF_DEF(CDConvex);
 };
@@ -36,6 +42,7 @@ protected:
 
 
 
+///	物理シミュレーションに関係する材質
 struct PHMaterial{
 	PHMaterial(){
 		mu = mu0 = e = 0.2f;
@@ -45,6 +52,7 @@ struct PHMaterial{
 	float e;		///<	跳ね返り係数
 };
 
+///	形状のディスクリプタ(基本クラス)
 struct CDShapeDesc{
 	enum ShapeType{
 		CONVEX,
@@ -54,16 +62,13 @@ struct CDShapeDesc{
 };
 
 
-/**	凸形状のメッシュの生成用
-*/
+/**	凸形状のメッシュのディスクリプタ	*/
 struct CDConvexMeshDesc: public CDShapeDesc{
 	CDConvexMeshDesc():CDShapeDesc(CONVEXMESH){}
 	std::vector<Vec3f> vertices;	///<	頂点の座標
 	PHMaterial material;			///<	材質
 };
-/**
-	凸形状のメッシュ	頂点を追加
-*/
+/**	凸形状のメッシュ*/
 struct CDConvexMeshIf: public CDConvexIf{
 	IF_DEF(CDConvexMesh);
 	virtual CDFaceIf* GetFace(size_t i)=0;
@@ -71,6 +76,8 @@ struct CDConvexMeshIf: public CDConvexIf{
 	virtual Vec3f* GetVertices()=0;
 	virtual size_t NVertex()=0;
 };
+
+//@}
 
 }
 

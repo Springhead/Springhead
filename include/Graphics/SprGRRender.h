@@ -1,3 +1,6 @@
+/**	\addtogroup	gpGraphics	グラフィックス	*/
+//@{
+
 /**
  *	@file SprGRRender.h
  *	@brief グラフィックスレンダラーの基本クラス、基本インタフェース
@@ -265,4 +268,5 @@ struct GRDebugRenderIf:public GRRenderIf{
 
 
 }
+//@}
 #endif
