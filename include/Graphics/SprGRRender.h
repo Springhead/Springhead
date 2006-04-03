@@ -6,15 +6,15 @@
 
 namespace Spr{;
 
-/**	\defgroup	gpGraphics	グラフィックス	*/
+/**	\addtogroup	gpGraphics	グラフィックス	*/
 //@{
 
 /**
  *	@file SprGRRender.h
- *	グラフィックスレンダラーの基本クラス、基本インタフェース
+ *	@brief グラフィックスレンダラーの基本クラス、基本インタフェース
  */
 
-/**	テキスト描画のフォント */
+/**	@brief	テキスト描画のフォント */
 class SPR_DLL GRFont{
 public:
 	int height;				///<	フォントの高さ
@@ -47,7 +47,7 @@ public:
 	}
 };
 
-/**	光源		*/
+/**	@brief	光源		*/
 struct GRLight{
     Vec4f ambient;		///<	環境光
     Vec4f diffuse;		///<	拡散光
@@ -83,7 +83,7 @@ struct GRLight{
 	}
 };
 
-/**	グラフィックスの材質 */
+/**	@brief	グラフィックスの材質 */
 struct GRMaterial{
 	Vec4f ambient;					///<	環境光に対する反射率
 	Vec4f diffuse;					///<	拡散光に対する反射率
@@ -106,7 +106,7 @@ struct GRMaterial{
 	}
 };
 
-/**	カメラの情報 */
+/**	@brief	カメラの情報 */
 struct GRCamera{
 	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
@@ -120,7 +120,7 @@ struct GRCamera{
 
 struct GRDeviceIf;
 
-/**	グラフィックスレンダラーの基本クラス（ユーザインタフェース） */
+/**	@brief	グラフィックスレンダラーの基本クラス（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
 	IF_DEF(GRRenderBase);
 	///	プリミティブの種類
@@ -218,14 +218,14 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
 };
 
-/**	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */
+/**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */
 struct GRRenderIf: public GRRenderBaseIf{
 	IF_DEF(GRRender);
 	virtual void SetDevice(GRDeviceIf* dev)=0;
 	virtual void SetCamera(GRCamera& cam)=0;
 };
 
-/**	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */
+/**	@brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */
 struct GRDeviceIf: public GRRenderBaseIf{
 	IF_DEF(GRDevice);
 	///	初期化
@@ -234,19 +234,19 @@ struct GRDeviceIf: public GRRenderBaseIf{
 	virtual void Print(std::ostream& os) const=0;
 };
 
-/**	OpenGLのレンダラー基本クラス */
+/**	@brief	OpenGLのレンダラー基本クラス */
 struct GRDeviceGLIf: public GRDeviceIf{
 	IF_DEF(GRDeviceGL);
 	/// ウィンドウIDを設定する
 	virtual void SetWindow(int w)=0;
 };
 
-/**	DirectXのレンダラー基本クラス */
+/**	@brief	DirectXのレンダラー基本クラス */
 struct GRDeviceD3DIf: public GRDeviceIf{
 	IF_DEF(GRDeviceD3D);
 };
 
-/**	デバッグ情報レンダラーの基本クラス */
+/**	@brief	デバッグ情報レンダラーの基本クラス */
 struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
 	///	Viewportと射影行列を設定
