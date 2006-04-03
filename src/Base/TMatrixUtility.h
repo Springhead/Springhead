@@ -2,6 +2,10 @@
 #define PTMATRIX_TMATRIXUTILITY
 #include "TVector.h"
 #include "TMatrix.h"
+
+/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
+
 /**	@file TMatrixUtility.h
 	行列初期化ユーティリティー．*/
 
@@ -373,6 +377,7 @@ void init_quaternion(TVectorBase<DIMENC(4), QD>& qt, const TMatrixBase<DIMENC(3)
 		}
 	}
 }
+//@}
 
 }	//	namespace PTM
 #endif

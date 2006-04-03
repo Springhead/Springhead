@@ -10,6 +10,8 @@ namespace Spr{;
  #pragma pack(push, 4)
 #endif
 
+/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
 //-----------------------------------------------------------------------------
 //		TVec2
 template <class EXP, class T> class TVecDesc: public PTM::TVectorDesc<1, EXP, EXP, T>{};
@@ -221,6 +223,7 @@ typedef TVec3<double> Vec3d;
 typedef TVec4<float> Vec4f;
 ///	double版4次元ベクトル
 typedef TVec4<double> Vec4d;
+//@}
 
 #ifdef _WIN32
 #pragma pack(pop)

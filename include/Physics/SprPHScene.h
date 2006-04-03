@@ -1,3 +1,7 @@
+
+/** \addtogroup gpPhysics 	*/
+//@{
+
 /**
  *	@file SprPHScene.h
  *	@brief ÉVÅ[Éì
@@ -137,6 +141,8 @@ public:
 	virtual Vec3f GetGravity()=0;
 
 };
+
+//@}
 
 }	//	namespace Spr
 #endif

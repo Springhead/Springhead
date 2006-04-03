@@ -4,6 +4,9 @@
 
 namespace Spr{;
 
+/** \addtogroup gpPhysics 物理エンジンクラス	*/
+//@{
+
 struct PHSceneIf;
 struct PHSceneDesc;
 
@@ -27,6 +30,8 @@ struct PHSdkIf : public ObjectIf{
 	virtual CDShapeIf** GetShapes()=0;
 };
 PHSdkIf* SPR_CDECL CreatePHSdk();
+
+//@}
 
 }	//	namespace Spr
 #endif

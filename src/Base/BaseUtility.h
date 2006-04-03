@@ -6,9 +6,12 @@
 #include <vector>
 #include <typeinfo>
 
-/**	@file	BaseUtility.h	その他のユーティリティークラス・関数．*/
-
 namespace Spr {
+
+/**	\addtogroup gpBaseUtility ユーティリティクラス	*/
+//@{
+
+/**	@file	BaseUtility.h	その他のユーティリティークラス・関数．*/
 
 typedef std::string UTString;
 inline bool operator < (const UTString& u1, const UTString& u2){
@@ -283,7 +286,7 @@ inline T assert_cast(U u){
 	return static_cast<T>(u);
 #endif
 }
-
+//@}
 
 }	//	namespace Spr
 

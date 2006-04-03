@@ -2,6 +2,8 @@
 #define SPR_PHSolidIf_H
 #include <Foundation/SprObject.h>
 
+/**	\addtogroup gpPhysics	*/
+//@{
 namespace Spr{;
 ///	剛体のステート
 struct PHSolidState{
@@ -79,6 +81,8 @@ struct PHSolidIf : public SceneObjectIf{
 	virtual CDShapeIf**	GetShapes()=0;
 
 };
+
+//@}
 
 }	//	namespace Spr
 #endif

@@ -11,6 +11,9 @@ namespace Spr{;
 #ifdef _WIN32
  #pragma pack(push,4)
 #endif
+
+/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
 //-----------------------------------------------------------------------------
 //		TMatrix2
 /**	2x2行列クラス.	*/
@@ -280,6 +283,7 @@ bool IsUnitary(TMatrix3<T> r){
 #endif
 	return bGood;
 }
+//@}
 
 #ifdef _WIN32
  #pragma pack(pop)

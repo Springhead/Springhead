@@ -1,5 +1,8 @@
 #ifndef PTMATRIX_TVECTOR_H
 #define PTMATRIX_TVECTOR_H
+
+/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
 /**	@file TVector.h
 	テンプレートによるN次元ベクトルの定義.
 	要素の型とサイズをテンプレートの引数にすることで，
@@ -892,6 +895,7 @@ TYPENAME AD::ret_type operator ^ (const TVectorBase<DIMENC(3), AD>& a, const TVe
 	return cross(a, b);
 }
 
+//@}
 
 #ifdef _WIN32
  #ifdef _DEBUG

@@ -3,9 +3,8 @@
 
 /**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
 //@{
-
-/** \page page_affine @!JAAffine行列クラスの概要@!ENA Guide for Affine Matrix@!*
-	\section sec_intro @!JAはじめに@!ENIntroduction@!*
+/** \page pageAffine @!JAAffine行列クラスの概要@!ENA Guide for Affine Matrix@!*
+	\section secAffineIntro @!JAはじめに@!ENIntroduction@!*
 		@!JA
 		このページはAffine行列クラス(Spr::TAffine, Spr::TAffine2)の説明です．
 		Affine行列クラスライブラリは，3Dシミュレーションに必須な
@@ -15,7 +14,7 @@
 		Affine Matrix Library is a set of classes for affine matrix,
 		which are necessary for 3D simulation.
 		@!*
-	\section sec_affine_usage @!JA使い方@!ENUsage@!*
+	\section secAffineUsage @!JA使い方@!ENUsage@!*
 	@!JA
 	Affine 行列クラスライブラリは，ヘッダファイルだけからなる
 	クラスライブラリなので, TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h
@@ -27,7 +26,7 @@
 	(TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h)
 	and including them from your .cpp files.
 	@!*
-	\subsection sample @!JA サンプル @!EN Sample@!*
+	\subsection secAffineSample @!JA サンプル @!EN sample@!*
 	\verbatim
 #include "Affine.h"                         //  TAffine行列ライブラリのインクルードする．
 #include <iostream>
@@ -49,7 +48,7 @@ void main(){
     std::cout << vec << std::endl;
     std::cout << af * vec << std::endl;
 }\endverbatim
-	\subsection sec_afineVecFunc @!JA Affine行列・ベクトルのメンバと演算  @!EN Functions of Affine matrixs and vectors. @!*
+	\subsection secAffineVecFunc @!JA Affine行列・ベクトルのメンバと演算  @!EN Functions of Affine matrixs and vectors. @!*
 	@!JA
 	普通に演算ができます．
 	<ul>
@@ -115,7 +114,7 @@ void main(){
 				 @!EN return the size (norm) of a vector.
 				 @!*
 	</ul>
-	\subsection sec_affineConstract Affine行列の初期化 
+	\subsection secAffineConstruct Affine行列の初期化 
 	TAffine行列(Spr::TAffine)には便利なコンストラクタや初期化関数を用意しました．
 	いくつかをここで紹介します．
 	<ul>
@@ -233,7 +232,7 @@ inline SC Det2(SC a, SC b, SC c, SC d){
 //	TAffine2
 
 /**	TAffine2行列(回転,拡大,平行移動を表す)行列.
-	概要は，\ref page_affine 参照．
+	概要は，\ref pageAffine 参照．
 */
 template <class T>
 class TAffine2:public PTM::TMatrixBase<DIMENC(3),DIMENC(3),
@@ -347,7 +346,7 @@ public:
 //-----------------------------------------------------------------------------
 //	TAffine
 /**	TAffine行列(回転,拡大,平行移動を表す)行列.
-	概要は，\ref page_affine 参照．	*/
+	概要は，\ref pageAffine 参照．	*/
 
 template <class T>
 class TAffine:public PTM::TMatrixBase<DIMENC(4),DIMENC(4),

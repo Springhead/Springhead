@@ -8,6 +8,10 @@
 
 namespace Spr{;
 
+/** \addtogroup gpJoint 関節クラス	*/
+//@{
+
+
 /// 関節のディスクリプタ
 struct PHJointDesc{
 	/// 関節の種類
@@ -183,6 +187,8 @@ struct PHSliderJointIf : public PHJoint1DIf{
 struct PHBallJointIf : public PHConstraintIf{
 	IF_DEF(PHBallJoint);
 };
+
+//@}
 
 }
 

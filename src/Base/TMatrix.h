@@ -1,5 +1,8 @@
 #ifndef PTMATRIX_TMATRIX_H
 #define PTMATRIX_TMATRIX_H
+
+/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
 /** 
 	@page PTM ポータブル テンプレート 行列クラスライブラリ
 	
@@ -1386,6 +1389,7 @@ std::istream& operator >> (std::istream& is, MatrixImp<D>& m){
 	m.input(is);
 	return is;
 }
+//@}
 
 #ifdef _WIN32
  #ifdef _DEBUG
