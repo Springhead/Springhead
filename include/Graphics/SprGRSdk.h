@@ -15,8 +15,7 @@ namespace Spr{;
 struct GRDeviceGLIf;
 struct GRDebugRenderIf;
 
-/**	@class	GRSdkIf
-    @brief	グラフィックスSDKの基本クラス　 */
+/**	@brief	グラフィックスSDKの基本クラス　 */
 struct GRSdkIf: public ObjectIf{
 	IF_DEF(GRSdk);
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
