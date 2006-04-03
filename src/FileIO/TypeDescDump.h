@@ -1,8 +1,4 @@
 #include "../../include/Collision/SprCDShape.h" 
-#include "../../include/docsrc/main.h" 
-#include "../../include/docsrc/reference_manual.h" 
-#include "../../include/docsrc/tutorial.h" 
-#include "../../include/docsrc/users_guide.h" 
 #include "../../include/Foundation/SprObject.h" 
 #include "../../include/Foundation/SprScene.h" 
 #include "../../include/Graphics/SprGRRender.h" 
