@@ -5,7 +5,7 @@
  - \subpage pageGettingStarted
  - \subpage pageConcept
  - \subpage pageApiBasic
- - \subpage pageLibStructure
+ - \subpage pageApiDetail
 から構成されます．
 
 \ref pageIntroduction
@@ -20,7 +20,7 @@
 \ref pageApiBasic
 では，SDKのAPIの基礎(APIの仕組み，共通する使い方など)を説明します．
 
-\ref pageLibStructure
+\ref pageApiDetail
 では，SDKのAPIの詳細を説明します．
 
 */
