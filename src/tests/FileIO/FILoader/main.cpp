@@ -108,7 +108,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	‚È‚µ
  */
 void idle(){
-	(*(scene))->Step();
+	if(scene && *scene) (*(scene))->Step();
 	glutPostRedisplay();
 	static int count;
 	count ++;
@@ -125,6 +125,7 @@ void idle(){
 int main(int argc, char* argv[]){
 	RegisterTypes();
 	static FIFileContext fc;
+	fc.errorStream=&std::cout;
 	fc.fileInfo.Push();
 	fc.fileInfo.back().Map("test.x");
 	phSdk = CreatePHSdk();

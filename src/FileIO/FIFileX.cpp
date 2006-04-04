@@ -6,6 +6,13 @@
 
 namespace Spr{;
 
+//#define TRACE_PARSE
+#ifdef TRACE_PARSE
+# define PDEBUG(x)	x
+#else 
+# define PDEBUG(x)
+#endif
+
 namespace FileX{
 static FIFileContext* fileContext;
 
@@ -39,11 +46,11 @@ static bool DescAvail(){return fieldStack.back().desc;}
 ///	ノード(テンプレートのデータ)のデータ読み出しの準備
 static void NodeStart(const char* b, const char* e){
 	std::string tn(b,e);
-	DSTR << "NodeStart " << tn << std::endl;
+	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
 	FITypeDesc* desc = fileX->GetDb()->Find(tn);
 	if (!desc) desc = fileX->GetDb()->Find(tn + "Desc");
 	if (!desc){
-		DSTR << "Error: " << tn << " not defined." << std::endl;
+		PDEBUG(DSTR << "Error: " << tn << " not defined." << std::endl);
 	}
 	if(desc) fieldStack.push_back(FIXField(desc));
 
@@ -61,7 +68,7 @@ static void CreateNode(const char* b, const char* e){
 
 ///	ノード読み出しの後処理
 static void NodeEnd(const char* b, const char* e){
-	DSTR << "NodeEnd " << fieldStack.back().desc->GetTypeName() << std::endl;
+	PDEBUG(DSTR << "NodeEnd " << fieldStack.back().desc->GetTypeName() << std::endl);
 	fileContext->objects.Pop();
 	fileContext->primitives.Pop();
 	fieldStack.pop_back();
@@ -69,7 +76,7 @@ static void NodeEnd(const char* b, const char* e){
 
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
-	DSTR << "blockStart" << std::endl;
+	PDEBUG(DSTR << "blockStart" << std::endl);
 	char* base = (char*)fileContext->primitives.Top()->obj;
 	void* ptr = fieldStack.back().field->GetAddressEx(base, fieldStack.back().arrayCount);
 	fileContext->primitives.Push(new FIFileContext::Primitive(NULL, ptr));
@@ -78,7 +85,7 @@ static void BlockStart(const char* b, const char* e){
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
-	DSTR << "blockEnd" << std::endl;
+	PDEBUG(DSTR << "blockEnd" << std::endl);
 	fieldStack.pop_back();
 	fileContext->primitives.Pop();
 }
@@ -156,6 +163,7 @@ static void SetVal(const char* b, const char* e){
 
 	FIXField& curField = fieldStack.back();
 	//	debug 出力
+#ifdef TRACE_PARSE
 	if (curField.nextField!=F_NONE){
 		if (curField.nextField==F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
@@ -171,6 +179,7 @@ static void SetVal(const char* b, const char* e){
 		}
 		if (ch == ';') DSTR << std::endl;
 	}
+#endif
 	//	ここまで
 
 	if(curField.nextField == F_REAL || curField.nextField == F_INT){
@@ -212,7 +221,7 @@ static void ArrayNum(int n){
 }
 static void TempEnd(char c){
 	tdesc->Link(fileX->GetDb());
-	DSTR << "load template:" << std::endl;
+	PDEBUG(DSTR << "load template:" << std::endl);
 	tdesc->Print(DSTR);
 	fileX->GetDb()->RegisterDesc(tdesc);
 }
@@ -220,25 +229,21 @@ static void TempEnd(char c){
 using namespace FileX;
 
 
-
 class ExpectParser {
 	std::string msg; 
-	mutable const char* last;
 public:
     ExpectParser(const char *m) : msg(m) {}
+	static std::ostream* errorStr;
+
 	typedef boost::spirit::nil_t result_t;
     
     template <typename ScannerT>
-    int operator()(ScannerT const& scan, result_t& /*result*/) const { 
-		if (last == scan.first) exit(-1);
-		last = scan.first;
-		int len = scan.last - scan.first;
-		if (len > 60) len = 60;
-		DSTR << "Error:";
-		DSTR.write(scan.first, len);
-		DSTR << std::endl;
-		DSTR << " " << msg << " is expected." <<std::endl; 
-		return 0;
+	int operator()(ScannerT const& scan, result_t& /*result*/) const {
+		if (!scan.at_end()){
+			std::string str = msg + std::string(" is expected");
+			fileContext->ErrorMessage(scan.first, str.c_str());
+		}
+		return -1;
     }
 }; 
 
@@ -259,7 +264,7 @@ void FIFileX::Init(FITypeDescDb* db_){
 	//	パーサの定義
 	//	本文用パーサ
 	start		= (str_p("xof 0302txt 0064") | str_p("'xof 0303txt 0032'") | ExpP("'xof 0303txt 0032'")) 
-					>> *(temp | data);
+					>> *(temp | data | ExpP("template or data"));
 
 	temp		= str_p("template") >> id[&TempStart] >> ch_p('{') >> !uuid
 					>> *define >> ch_p('}')[&TempEnd];
@@ -272,9 +277,10 @@ void FIFileX::Init(FITypeDescDb* db_){
 	defRestrict	= ch_p('[') >> *(id >> ',') >> id >> ']';
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
-	data		= id[&NodeStart] >> !id >> (ch_p('{') | ExpP("'{'1")) >>
+	data		= id[&NodeStart] >> !id >> (ch_p('{') | ExpP("'{'")) >>
 				  if_p(&DescAvail)[ block[&CreateNode] >> *(data|ref) ].
-				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
+//				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
+				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	blockSkip	= ch_p('{') >> *(blockSkip|~ch_p('}')) >> ch_p('}');
 	ref			= ch_p('{') >> (id[&RefSet] | ExpP("id")) >> (ch_p('}')|ExpP("'}'"));
@@ -305,17 +311,12 @@ void FIFileX::Load(FIFileContext* fc){
 	using namespace Spr;
 
 	fileContext = fc;
-	fileX = this;
-	parse_info<const char*> info = parse(fileContext->fileInfo.back().start, 
-		fileContext->fileInfo.back().end, start, cmt);
-/*
-	const char* e = b+strlen(b);
-	int len = e-info.stop;
-	if (len > 70) len = 70;
-	string stop(info.stop, info.stop+len);
-	DSTR << info.stop-b;
-	DSTR << "Error: near \'" << stop << "\'" << std::endl;
-*/
+	if (fileContext->IsGood()){
+		fileX = this;
+		parse_info<const char*> info = parse(
+			fileContext->fileInfo.back().start, 
+			fileContext->fileInfo.back().end, start, cmt);
+	}
 }
 
 };

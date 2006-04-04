@@ -25,6 +25,7 @@ FIFileContext::Primitive::~Primitive(){
 // ファイル マッピング
 //   既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
 bool FIFileContext::FileInfo::Map(std::string fn){
+	name = fn;
 #ifdef _WIN32
 	// ファイルオープン
 	hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
@@ -88,15 +89,54 @@ void FIFileContext::FileInfo::Unmap(){
 FIFileContext::FileInfo::~FileInfo(){
 	if (start) Unmap();
 }
+bool FIFileContext::FileInfo::IsGood(){
+	return start && end && (end != (char*)-1);
+}
 
 //---------------------------------------------------------------------------
 //	FIFileContext
+bool FIFileContext::IsGood(){
+	if (!fileInfo.size()) return false;
+	return fileInfo.back().IsGood();
+}
 ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* desc){
 	for(IfStack::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
 		ObjectIf* obj = (*it)->CreateObject(ifInfo, desc);
 		if (obj) return obj;
 	}
 	return NULL;
+}
+
+void FIFileContext::ErrorMessage(const char* pos, const char* msg){
+	std::string m("error: ");
+	m.append(msg);
+	Message(pos, m.c_str());
+}
+void FIFileContext::Message(const char* pos, const char* msg){
+	const char* ptr = fileInfo.back().start;
+	int lines=0;
+	int returns=0;
+	const char* line=NULL;
+	for(;ptr < pos; ++ptr){
+		if (*ptr == '\n'){
+			++lines;
+			line = ptr+1;
+		}
+		if (*ptr == '\r'){
+			++returns;
+			line = ptr+1;
+		}
+	}
+	for(;ptr < fileInfo.back().end; ++ptr){
+		if (*ptr == '\n' || *ptr == '\r'){
+			break;
+		}
+	}
+	lines = std::max(lines, returns);
+	std::ostream& os = *errorStream;
+	os << fileInfo.back().name << "(" << lines+1 << ") : ";
+	os << msg << std::endl;
+	os << std::string(line, ptr) << std::endl;
 }
 
 };
