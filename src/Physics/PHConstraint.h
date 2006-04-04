@@ -3,6 +3,9 @@
 
 #include <SprPhysics.h>
 
+#define SUBMAT(r, c, h, w) sub_matrix(TSubMatrixDim<r, c, h, w>())
+#define SUBVEC(o, l) sub_vector(TSubVectorDim<o, l>())
+
 namespace Spr{;
 
 /// 剛体の情報
@@ -73,8 +76,7 @@ public:
 		MODE_POSITION,
 		MODE_VELOCITY
 	} mode;
-	int			dim_v, dim_w, dim_q;
-	//int			idx_v[3], idx_w[3], idx_q[3];
+	
 	bool		bEnabled;			/// 有効化されている場合にtrue
 	bool		bFeasible;			/// 両方の剛体がundynamicalな場合true
 
@@ -91,18 +93,33 @@ public:
 	/**
 				|	  v[0]	  w[0]	  v[1]	  w[1]
 	  ----------+---------------------------------
-		vrel	|	Jvv[0]	Jvw[0]	Jvv[1]	Jvw[1]
-		wrel	|	Jwv[0]	Jww[0]	Jwv[1]	Jww[1]
-		qdrel	|	Jqv[0]	Jqw[0]	Jqv[1]	Jqw[1]
+		vjrel	|	Jvv[0]	Jvw[0]	Jvv[1]	Jvw[1]
+		wjrel	|	Jwv[0]	Jww[0]	Jwv[1]	Jww[1]
+		qjrel	|	Jqv[0]	Jqw[0]	Jqv[1]	Jqw[1]
 	*/
 	Matrix3d	Jvv[2], Jvw[2], Jwv[2], Jww[2], Jqv[2], Jqw[2];
-	Matrix3d	Tvv[2], Tvw[2], Twv[2], Tww[2], Tqv[2], Tqw[2];
-	Vec3d		fv, fw;	/// dynamicsにおける関節力
-	Vec3d		Fv, Fq; /// correctionにおける関節力
-	Vec3d		bv, bw;	/// dynamicsにおける拘束速度
+	
+	int			dim_d, dim_c;	// 拘束の次元
+
+	typedef PTM::TMatrixCol<6, 3, double> Matrix63d;
+	typedef PTM::TVector<6, double> Vec6d;
+	Matrix63d	Jdv[2], Jdw[2];	// Dynamics用の拘束ヤコビ行列
+	Matrix63d	Tdv[2], Tdw[2];
+	
+	Matrix63d	Jcv[2], Jcw[2];	// Correction用の拘束ヤコビ行列
+	Matrix63d	Tcv[2], Tcw[2];
+
+	Vec6d		f, F;
+	//Vec3d		fv, fw;	/// dynamicsにおける関節力
+	//Vec6d		F;
+	//Vec3d		Fv, Fq; /// correctionにおける関節力
+
+	Vec6d		b, B;	// bベクトル．dynamics用とcorrection用
+	//Vec3d		bv, bw;	/// dynamicsにおける拘束速度
 	//Vec3d		bv_bias, bw_bias;	/// 速度制御を実現するためのbv, bwのオフセット量
-	Vec3d		Bv, Bq; /// correctionにおける拘束誤差
-	Vec3d		Av, Aw, Aq;
+	//Vec3d		Bv, Bq; /// correctionにおける拘束誤差
+	Vec6d		Ad, Ac;	// A行列の対角成分．dynamics用とcorrection用
+	//Vec3d		Av, Aw, Aq;
 	
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool IsEnabled(){return bEnabled;}
@@ -112,14 +129,13 @@ public:
 	void SetupCorrection(double dt, double max_error);
 	void IterateDynamics();
 	void IterateCorrection();
-	virtual void CompDof(){}					/// dim_v, dim_w, dim_qを設定する
-	virtual void CompMotorForce(){}				/// fv, fwにモータによる影響を設定する
+	//virtual void CompDof(){}					/// dim_v, dim_w, dim_qを設定する
+	//virtual void CompMotorForce(){}				/// fv, fwにモータによる影響を設定する
+	virtual void CompConstraintJacobian()=0;
 	virtual void CompBias(double dt){}	/// 
 	virtual void CompError();			/// Bv, Bqを設定する
-	virtual void Projectionfv(double& f, int k){}
-	virtual void Projectionfw(double& f, int k){}
-	virtual void ProjectionFv(double& F, int k){}
-	virtual void ProjectionFq(double& F, int k){}
+	virtual void ProjectionDynamics(double& f, int k){}
+	virtual void ProjectionCorrection(double& F, int k){}
 	PHConstraint();
 };
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{

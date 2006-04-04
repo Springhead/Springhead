@@ -425,7 +425,7 @@ void OnKey1(char key){
 		soBox.back()->AddShape(sdk->CreateShape(md));
 		soBox.back()->SetFramePosition(Vec3f(-10.0, 15.0, 0.0));
 		soBox.back()->SetVelocity(Vec3d(20.0, 0.0, 0.0));
-		soBox.back()->SetMass(5.0);
+		soBox.back()->SetMass(2.0);
 		//soBox.back()->SetGravity(false);
 		}break;	
 	}

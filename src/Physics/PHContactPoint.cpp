@@ -11,15 +11,12 @@ namespace Spr{;
 // PHContactPoint
 //OBJECTIMP(PHContactPoint, PHConstraint);
 IF_IMP(PHContactPoint, PHConstraint);
+
 PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
 	shapePair = sp;
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
 
-	dim_v = 3;
-	dim_w = 0;
-	dim_q = 0;
-	
 	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){
 		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//çÑëÃÇÃíÜêSÇ©ÇÁê⁄êGì_Ç‹Ç≈ÇÃÉxÉNÉgÉã
@@ -37,10 +34,6 @@ PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolid
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
 
-	dim_v = 3;
-	dim_w = 0;
-	dim_q = 0;
-	
 	Vec3d rjabs[2], vjabs[2];
 	for(int i = 0; i < 2; i++){
 		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//çÑëÃÇÃíÜêSÇ©ÇÁê⁄êGì_Ç‹Ç≈ÇÃÉxÉNÉgÉã
@@ -73,10 +66,34 @@ PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolid
 		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];
 	}
 }
-void PHContactPoint::Projectionfv(double& f, int k){
+
+void PHContactPoint::CompConstraintJacobian(){
+	dim_d = 3;
+	dim_c = 1;
+	
+	for(int i = 0; i < 2; i++){
+		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
+		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
+		Jcv[i].row(0) = Jdv[i].row(0);
+		Jcw[i].row(0) = Jdw[i].row(0);
+		if(solid[i]->solid->IsDynamical()){
+			Tdv[i].SUBMAT(0, 0, 3, 3) = Jdv[i].SUBMAT(0, 0, 3, 3) * solid[i]->minv;
+			Tdw[i].SUBMAT(0, 0, 3, 3) = Jdw[i].SUBMAT(0, 0, 3, 3) * solid[i]->Iinv;
+			Tcv[i].row(0) = Tdv[i].row(0);
+			Tcw[i].row(0) = Tdw[i].row(0);
+		}
+	}
+
+	for(int j = 0; j < 3; j++)
+		Ad[j] = Jdv[0].row(j) * Tdv[0].row(j) + Jdw[0].row(j) * Tdw[0].row(j) +
+				Jdv[1].row(j) * Tdv[1].row(j) + Jdw[1].row(j) * Tdw[1].row(j);
+	Ac[0] = Ad[0];
+}
+
+void PHContactPoint::ProjectionDynamics(double& f, int k){
 	static double flim;
 	if(k == 0){	//êÇíºçRóÕ >= 0ÇÃêßñÒ
-		f = Spr::max(0.0, f);
+		f = max(0.0, f);
 		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	//ç≈ëÂê√é~ñÄéC
 	}
 	else{
@@ -84,21 +101,20 @@ void PHContactPoint::Projectionfv(double& f, int k){
 		//	ÅEñÄéCóÕÇÃäeê¨ï™Ç™ç≈ëÂê√é~ñÄéCÇÊÇËÇ‡è¨Ç≥Ç≠ÇƒÇ‡çáóÕÇÕí¥Ç¶ÇÈâ¬î\ê´Ç™Ç†ÇÈÇÃÇ≈ñ{ìñÇÕÇ®Ç©ÇµÇ¢ÅB
 		//	ÅEê√é~ñÄéCÇ∆ìÆñÄéCÇ™ìØÇ∂ílÇ≈Ç»Ç¢Ç∆àµÇ¶Ç»Ç¢ÅB
 		//ñÄéCåWêîÇÕóºé“ÇÃê√é~ñÄéCåWêîÇÃïΩãœÇ∆Ç∑ÇÈ
-		f = Spr::min(Spr::max(-flim, f), flim);
+		f = min(max(-flim, f), flim);
 	}
 }
+
 void PHContactPoint::CompError(){
-	const double eps = 0.01;
+	const double eps = 0.0;
 	//è’ìÀîªíËÉAÉãÉSÉäÉYÉÄÇÃìsçáè„ÅACorrectionÇ…ÇÊÇ¡ÇƒäÆëSÇ…çÑëÃÇ™ó£ÇÍÇƒÇµÇ‹Ç§ÇÃÇÕç¢ÇÈÇÃÇ≈
 	//åÎç∑ÇepsÇæÇØè¨Ç≥Ç≠å©ÇπÇÈ
-	double error = min(0.0, -shapePair->depth + eps);
-	Bv = Vec3d(error, 0.0, 0.0);
+	B[0] = min(0.0, -shapePair->depth + eps);
 }
-void PHContactPoint::ProjectionFv(double& F, int k){
+
+void PHContactPoint::ProjectionCorrection(double& F, int k){
 	//êÇíºçRóÕ >= 0ÇÃêßñÒ
-	if(k == 0)
-		 F = Spr::max(0.0, F);
-	else F = 0.0;
+	F = Spr::max(0.0, F);
 }
 
 }

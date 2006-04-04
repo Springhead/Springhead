@@ -10,7 +10,6 @@ class PHSliderJoint : public InheritJoint1D<PHSliderJointIf, PHJoint1D>{
 public:
 	//OBJECTDEF(PHSliderJoint);
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_SLIDER;}
-	virtual void CompDof();
 	PHSliderJoint(){}
 };
 

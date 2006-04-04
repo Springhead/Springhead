@@ -41,6 +41,7 @@ struct PHSolidIf : public SceneObjectIf{
 	virtual double		GetMassInv()=0;						///< Ž¿—Ê‚Ì‹t”
 	virtual void		SetMass(double m)=0;						///< Ž¿—Ê‚ÌÝ’è
 	virtual Matrix3d	GetInertia()=0;					///< Šµ«ƒeƒ“ƒ\ƒ‹
+	virtual void		SetInertia(const Matrix3d& I)=0;
 
 	virtual Vec3d		GetFramePosition() const =0;
 	virtual void		SetFramePosition(const Vec3d& p) =0;

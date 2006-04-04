@@ -19,16 +19,7 @@ public:
 	double pos_d, vel_d;		/// 目標変位、目標速度
 	double spring, origin, damper;	/// バネ係数、バネ原点、ダンパ係数
 	
-	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
-		PHConstraint::Init(lhs, rhs, desc);
-		const PHJoint1DDesc& desc1D = (const PHJoint1DDesc&)desc;
-		lower = desc1D.lower;
-		upper = desc1D.upper;
-		spring = desc1D.spring;
-		origin = desc1D.origin;
-		damper = desc1D.damper;
-		torque = desc1D.torque;
-	}
+	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc);
 	virtual void	SetRange(double l, double u){lower = l, upper = u;}
 	virtual void	GetRange(double& l, double& u){l = lower, u = upper;}
 	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}

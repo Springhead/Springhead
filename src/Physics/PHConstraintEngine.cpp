@@ -427,7 +427,6 @@ void PHConstraintEngine::SetupCorrection(double dt){
 	joints.SetupCorrection(dt, max_error);
 }
 void PHConstraintEngine::IterateDynamics(){
-	double dfsum = 0.0;
 	int count = 0;
 	while(true){
 		if(count == max_iter_dynamics){
@@ -438,32 +437,19 @@ void PHConstraintEngine::IterateDynamics(){
 		joints.IterateDynamics();
 
 		count++;
-		//èIóπîªíË
-		/*if(dfsum < converge_criteria){
-			DSTR << "converged." << " iteration count: " << count << " dfsum: " << dfsum << endl;
-			break;
-		}*/
 	}
 }
 void PHConstraintEngine::IterateCorrection(){
-	double dFsum = 0.0;
 	int count = 0;
 	while(true){
 		if(count == max_iter_correction){
 			//DSTR << "max count." << " iteration count: " << count << " dFsum: " << dFsum << endl;
 			break;
 		}
-		dFsum = 0.0;
-		
 		points.IterateCorrection();
 		joints.IterateCorrection();
 
 		count++;
-		//èIóπîªíË
-		/*if(dFsum < converge_criteria){
-			DSTR << "converged." << " iteration count: " << count << " dFsum: " << dFsum << endl;
-			break;
-		}*/
 	}
 }
 
@@ -531,9 +517,6 @@ void PHConstraintEngine::Step(){
 	UpdateSolids(dt);
 
 }
-
-#undef SUBMAT
-#undef SUBVEC
 
 }
 

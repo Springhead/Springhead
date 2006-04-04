@@ -11,6 +11,7 @@ namespace Spr{;
 // PHHingeJoint
 //OBJECTIMP(PHHingeJoint, PHJoint1D)
 IF_IMP(PHHingeJoint, PHJoint1D)
+
 double PHHingeJoint::GetPosition(){
 	//軸方向の拘束は合致しているものと仮定して角度を見る
 	double theta = qjrel.Theta();
@@ -18,46 +19,70 @@ double PHHingeJoint::GetPosition(){
 		theta = -theta;
 	return theta;
 }
+
 double PHHingeJoint::GetVelocity(){
 	return wjrel[2];
 }
-void PHHingeJoint::CompDof(){
+
+void PHHingeJoint::CompConstraintJacobian(){
 	on_lower = on_upper = false;
 	if(lower < upper){
 		double theta = GetPosition();
 		on_lower = (theta <= lower);
 		on_upper = (theta >= upper);
 	}
-	if(on_lower || on_upper || mode == MODE_POSITION){
-		dim_v = 3;
-		dim_w = 3;
-		dim_q = 3;
+	if(on_lower || on_upper){
+		dim_d = 6;
+		dim_c = 6;
 	}
 	if(mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
-		dim_v = 3;
-		dim_w = 3;
-		dim_q = 2;
+		dim_d = 6;
+		dim_c = 5;
 	}
 	else{
-		dim_v = 3;
-		dim_w = 2;
-		dim_q = 2;
+		dim_d = 5;
+		dim_c = 5;
+	}
+	Ad.clear();
+	Ac.clear();
+	for(int i = 0; i < 2; i++){
+		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
+		Jdv[i].SUBMAT(3, 0, 3, 3) = Jwv[i];
+		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
+		Jdw[i].SUBMAT(3, 0, 3, 3) = Jww[i];
+		Jcv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
+		Jcv[i].SUBMAT(3, 0, 3, 3) = Jqv[i];
+		Jcw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
+		Jcw[i].SUBMAT(3, 0, 3, 3) = Jqw[i];
+		if(solid[i]->solid->IsDynamical()){
+			Tdv[i] = Jdv[i] * solid[i]->minv;
+			Tdw[i] = Jdw[i] * solid[i]->Iinv;
+			solid[i]->dv += Tdv[i].row(5) * torque;
+			solid[i]->dw += Tdw[i].row(5) * torque;
+			Tcv[i].SUBMAT(0, 0, 3, 3) = Tdv[i].SUBMAT(0, 0, 3, 3);
+			Tcv[i].SUBMAT(3, 0, 3, 3) = Jqv[i] * solid[i]->minv;
+			Tcw[i].SUBMAT(0, 0, 3, 3) = Tdw[i].SUBMAT(0, 0, 3, 3);
+			Tcw[i].SUBMAT(3, 0, 3, 3) = Jqw[i] * solid[i]->Iinv;
+			for(int j = 0; j < 6; j++)
+				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
+			Ac.SUBVEC(0, 3) += Ad.SUBVEC(0, 3);
+			for(int j = 3; j < 6; j++)
+				Ac[j] += Jcv[i].row(j) * Tcv[i].row(j) + Jcw[i].row(j) * Tcw[i].row(j);
+		}
 	}
 }
-void PHHingeJoint::CompMotorForce(){
-	fw[2] = torque;
-}
+
 void PHHingeJoint::CompBias(double dt){
 	if(mode == MODE_VELOCITY){
-		bw[2] -= vel_d;
+		b[5] -= vel_d;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
 		if(diff >  M_PI) diff -= 2 * M_PI;
 		if(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * dt);
-		Aw[2] += tmp / dt;
-		bw[2] += spring * (diff) * tmp;
+		Ad[5] += tmp / dt;
+		b[5] += spring * (diff) * tmp;
 		/*
 		バネダンパと外力の運動方程式：
 		#mimetex(  f=kx+bv+f_e  )
@@ -73,16 +98,18 @@ void PHHingeJoint::CompBias(double dt){
 		*/
 	}
 }
-void PHHingeJoint::Projectionfw(double& f, int k){
-	if(k == 2){
+
+void PHHingeJoint::ProjectionDynamics(double& f, int k){
+	if(k == 5){
 		if(on_lower)
 			f = max(0.0, f);
 		if(on_upper)
 			f = min(0.0, f);
 	}
 }
-void PHHingeJoint::ProjectionFq(double& F, int k){
-	if(k == 2){
+
+void PHHingeJoint::ProjectionCorrection(double& F, int k){
+	if(k == 5){
 		if(on_lower)
 			F = max(0.0, F);
 		if(on_upper)

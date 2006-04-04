@@ -12,11 +12,10 @@ public:
 	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_HINGE;}
 	virtual double GetPosition();
 	virtual double GetVelocity();
-	virtual void CompDof();
-	virtual void CompMotorForce();
+	virtual void CompConstraintJacobian();
 	virtual void CompBias(double dt);
-	virtual void Projectionfw(double& f, int k);
-	virtual void ProjectionFq(double& F, int k);
+	virtual void ProjectionDynamics(double& f, int k);
+	virtual void ProjectionCorrection(double& F, int k);
 	PHHingeJoint(){}
 };
 
