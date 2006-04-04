@@ -24,6 +24,7 @@
 #include <boost/spirit/utility/chset.hpp>
 #include <boost/spirit/utility/confix.hpp>
 #include <boost/spirit/utility/escape_char.hpp>
+#include <boost/spirit/utility/functor_parser.hpp>
 #include <boost/shared_ptr.hpp>
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)
