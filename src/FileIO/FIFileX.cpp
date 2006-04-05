@@ -30,41 +30,37 @@ static void NodeStart(const char* b, const char* e){
 	//	型情報の取得
 	FITypeDesc* type = fileX->GetDb()->Find(tn);
 	if (!type) type = fileX->GetDb()->Find(tn + "Desc");
-	if (!type){
+	
+	if (type){
+		fileContext->PushType(type);	//	これからロードする型としてPush
+	}else{
 		tn.append(" not defined.");
 		fileContext->ErrorMessage(b, tn.c_str());
 	}
-	if (type) fileContext->PushType(type);
 }
 
-///	ノードを読んで作ったObjectDescから，オブジェクトを作成する．
+///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
 static void LoadNode(const char* b, const char* e){
-	fileContext->objects.Push();
 	fileContext->LoadNode();
 }
 
 ///	ノード読み出しの後処理
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().desc->GetTypeName() << std::endl);
-	fileContext->objects.Pop();
-	fileContext->datas.Pop();
-	fileContext->fieldIts.pop_back();
+	fileContext->EndNode();
+	fileContext->PopType();
 }
 
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	char* base = (char*)fileContext->datas.Top()->data;
-	void* ptr = fileContext->fieldIts.back().field->GetAddressEx(base, fileContext->fieldIts.ArrayPos());
-	fileContext->datas.Push(new FIFileContext::Data(NULL, ptr));
-	fileContext->fieldIts.push_back(FIFileContext::FieldIt(fileContext->fieldIts.back().field->type));
+	fileContext->EnterBlock();
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileContext->fieldIts.Pop();
-	fileContext->datas.Pop();
+	fileContext->LeaveBlock();
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
@@ -116,13 +112,11 @@ static void SetVal(const char* b, const char* e){
 	}
 #endif
 	//	ここまで
-
-	if(curField.nextField == FIFileContext::F_REAL || curField.nextField == FIFileContext::F_INT){
-		curField.field->WriteNumber(
-			fileContext->datas.Top()->data, numValue, curField.arrayPos);
-	}else if(curField.nextField == FIFileContext::F_STR){
-		curField.field->WriteString(
-			fileContext->datas.Top()->data, strValue.c_str(), curField.arrayPos);
+	
+	if (fileContext->fieldIts.IsNumber()){
+		fileContext->WriteNumber(numValue);
+	}else if (fileContext->fieldIts.IsString()){
+		fileContext->WriteString(strValue);
 	}
 	if (ch == ';'){
 		curField.arrayPos=FITypeDesc::BIGVALUE;

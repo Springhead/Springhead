@@ -156,11 +156,23 @@ bool FIFileContext::FieldIt::NextField(){
 
 //---------------------------------------------------------------------------
 //	FIFileContext
+void FIFileContext::WriteNumber(double v){
+	FIFileContext::FieldIt& curField = fieldIts.back();
+	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
+}
+void FIFileContext::WriteString(std::string v){
+	FIFileContext::FieldIt& curField = fieldIts.back();
+	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
+}
 void FIFileContext::PushType(FITypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	読み出したデータを構造体の用意
 	datas.Push(new Data(type));
+}
+void FIFileContext::PopType(){
+	datas.Pop();
+	fieldIts.Pop();
 }
 bool FIFileContext::IsGood(){
 	if (!fileInfo.size()) return false;
@@ -169,10 +181,27 @@ bool FIFileContext::IsGood(){
 void FIFileContext::LoadNode(){
 	if (datas.Top()->type->GetIfInfo()){
 		//	ロードしたデータからオブジェクトを作る．
-		objects.Top() = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
+		objects.Push(Create(datas.Top()->type->GetIfInfo(), datas.Top()->data));
 	}else{
 		//	Create以外の仕事をする．
 		//	衝突判定の無効ペアの設定や重力の設定など．
+	}
+}
+void FIFileContext::EnterBlock(){
+	char* base = (char*)datas.Top()->data;
+	void* ptr = fieldIts.back().field->GetAddressEx(base, fieldIts.ArrayPos());
+	datas.Push(new Data(NULL, ptr));
+	fieldIts.push_back(FieldIt(fieldIts.back().field->type));
+}
+void FIFileContext::LeaveBlock(){
+	fieldIts.Pop();
+	datas.Pop();
+}
+void FIFileContext::EndNode(){
+	if (datas.Top()->type->GetIfInfo()){
+		objects.Pop();
+	}else{
+		//	Create以外の終了処理．
 	}
 }
 ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){

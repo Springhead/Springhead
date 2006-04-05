@@ -108,6 +108,12 @@ public:
 			if (!size()) return false;
 			return back().arrayPos < back().arrayLength;
 		}
+		bool IsNumber(){
+			return back().nextField==F_INT || back().nextField==F_REAL;
+		}
+		bool IsString(){
+			return back().nextField==F_STR;
+		}
 	};
 	
 	//--------------------------------------------------------------------------
@@ -131,6 +137,12 @@ public:
 	}
 	///	ノードのロード
 	void LoadNode();
+	///	ノードのロードの終了
+	void EndNode();
+	///	ブロック(組み立て型)に入る
+	void EnterBlock();
+	///	ブロック(組み立て型)から出る
+	void LeaveBlock();
 	///	オブジェクトの生成
 	ObjectIf* Create(const IfInfo* ifInfo, const void* desc);
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
@@ -141,6 +153,12 @@ public:
 	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)
 	void PushType(FITypeDesc* type);
+	////
+	void PopType();
+	///
+	void WriteString(std::string v);
+	///
+	void WriteNumber(double d);
 };
 
 
