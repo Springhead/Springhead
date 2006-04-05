@@ -13,12 +13,17 @@
 
 namespace Spr{;
 //---------------------------------------------------------------------------
-//	FIFileContext::Primitive
-FIFileContext::Primitive::Primitive(FITypeDesc* d, void* o):desc(d), obj(o){
-	if (!obj && desc) obj = desc->Create();
+//	FIFileContext::Data
+FIFileContext::Data::Data(FITypeDesc* t, void* d):type(t), data(d){
+	if (!data && type){
+		data = type->Create();
+		haveData = true;
+	}else{
+		haveData = false;
+	}
 }
-FIFileContext::Primitive::~Primitive(){
-	if (desc && obj) desc->Delete(obj);
+FIFileContext::Data::~Data(){
+	if (haveData) type->Delete(data);
 }
 //---------------------------------------------------------------------------
 //	FIFileContext::FileInfo
@@ -93,16 +98,89 @@ bool FIFileContext::FileInfo::IsGood(){
 	return start && end && (end != (char*)-1);
 }
 
+
+//---------------------------------------------------------------------------
+//	FIFileContext::FieldIt
+
+FIFileContext::FieldIt::FieldIt(FITypeDesc* d){
+	type = d;
+	field = d->GetComposit().end();
+	arrayPos = -1;
+	arrayLength = 0;
+	nextField=F_NONE;
+}
+bool FIFileContext::FieldIt::NextField(){
+	if (!type->IsComposit()) return false;
+	//	次のフィールドへ進む
+	if (field==type->GetComposit().end()){
+		field=type->GetComposit().begin();
+	}else{
+		++field;
+		if (field == type->GetComposit().end()){
+			nextField = F_NONE;
+			return false;
+		}
+	}
+	//	フィールドの配列要素数を設定
+	if (field->varType==FITypeDesc::Field::SINGLE){
+		arrayLength = 1;
+	}else if(field->varType==FITypeDesc::Field::VECTOR){
+		arrayLength = field->length;
+	}else if(field->varType==FITypeDesc::Field::ARRAY){
+		arrayLength = field->length;
+	}
+	//	配列カウントを初期化
+	arrayPos = -1;
+	//	フィールドの型を設定
+	if (	field->type->GetTypeName().compare("BYTE")==0
+		||	field->type->GetTypeName().compare("WORD")==0
+		||	field->type->GetTypeName().compare("DWORD")==0
+		||	field->type->GetTypeName().compare("char")==0
+		||	field->type->GetTypeName().compare("short")==0
+		||	field->type->GetTypeName().compare("int")==0
+		||	field->type->GetTypeName().compare("enum")==0){
+		nextField = F_INT;
+	}else if (field->type->GetTypeName().compare("float")==0
+		||	field->type->GetTypeName().compare("double")==0
+		||	field->type->GetTypeName().compare("FLOAT")==0
+		||	field->type->GetTypeName().compare("DOUBLE")==0){
+		nextField = F_REAL;
+	}else if (field->type->GetTypeName().compare("string")==0
+		||  field->type->GetTypeName().compare("STRING")==0){
+		nextField = F_STR;
+	}else if (field->type->IsComposit()){
+		nextField = F_BLOCK;
+	}
+	return true;
+}
+
 //---------------------------------------------------------------------------
 //	FIFileContext
+void FIFileContext::PushType(FITypeDesc* type){
+	//	ロードすべきtypeとしてセット
+	fieldIts.PushType(type);
+	//	読み出したデータを構造体の用意
+	datas.Push(new Data(type));
+}
 bool FIFileContext::IsGood(){
 	if (!fileInfo.size()) return false;
 	return fileInfo.back().IsGood();
 }
-ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* desc){
-	for(IfStack::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
-		ObjectIf* obj = (*it)->CreateObject(ifInfo, desc);
-		if (obj) return obj;
+void FIFileContext::LoadNode(){
+	if (datas.Top()->type->GetIfInfo()){
+		//	ロードしたデータからオブジェクトを作る．
+		objects.Top() = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
+	}else{
+		//	Create以外の仕事をする．
+		//	衝突判定の無効ペアの設定や重力の設定など．
+	}
+}
+ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){
+	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
+		if (*it){
+			ObjectIf* obj = (*it)->CreateObject(ifInfo, data);
+			if (obj) return obj;
+		}
 	}
 	return NULL;
 }

@@ -125,7 +125,7 @@ void idle(){
 int main(int argc, char* argv[]){
 	RegisterTypes();
 	static FIFileContext fc;
-	fc.errorStream=&std::cout;
+	fc.errorStream=&DSTR;
 	fc.fileInfo.Push();
 	fc.fileInfo.back().Map("test.x");
 	phSdk = CreatePHSdk();

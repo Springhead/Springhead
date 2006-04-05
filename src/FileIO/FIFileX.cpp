@@ -15,138 +15,73 @@ namespace Spr{;
 
 namespace FileX{
 static FIFileContext* fileContext;
-
-///	XFileのフィールドの種類
-enum FIXFieldType{
-	F_NONE, F_INT, F_REAL, F_STR, F_BLOCK
-};
-///	Xファイルのフィールド
-struct FIXField{
-	FITypeDesc* desc;
-	FITypeDesc::Composit::iterator field;
-	int arrayCount;
-	int arrayLength;
-	FIXFieldType nextField;
-	FIXField(FITypeDesc* d){
-		desc = d;
-		field = d->GetComposit().end();
-		arrayCount = -1;
-		arrayLength = 0;
-		nextField=F_NONE;
-	}
-};
-
 static FIFileX* fileX;
-///	ロード中のフィールド
-static std::vector<FIXField> fieldStack;
 
 ///	テンプレートのTypeDescがあるかどうか．
-static bool DescAvail(){return fieldStack.back().desc;}
+static bool TypeAvail(){
+	return fileContext->fieldIts.back().type;
+}
 
-///	ノード(テンプレートのデータ)のデータ読み出しの準備
+///	ノードデータの読み出し準備
 static void NodeStart(const char* b, const char* e){
 	std::string tn(b,e);
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
-	FITypeDesc* desc = fileX->GetDb()->Find(tn);
-	if (!desc) desc = fileX->GetDb()->Find(tn + "Desc");
-	if (!desc){
-		PDEBUG(DSTR << "Error: " << tn << " not defined." << std::endl);
-	}
-	if(desc) fieldStack.push_back(FIXField(desc));
 
-	//	ロード用の構造体の用意
-	fileContext->primitives.Push();
-	fileContext->primitives.Top() = new FIFileContext::Primitive(desc);
+	//	型情報の取得
+	FITypeDesc* type = fileX->GetDb()->Find(tn);
+	if (!type) type = fileX->GetDb()->Find(tn + "Desc");
+	if (!type){
+		tn.append(" not defined.");
+		fileContext->ErrorMessage(b, tn.c_str());
+	}
+	if (type) fileContext->PushType(type);
 }
 
 ///	ノードを読んで作ったObjectDescから，オブジェクトを作成する．
-static void CreateNode(const char* b, const char* e){
-	ObjectIf* obj = fileContext->Create(
-		fieldStack.back().desc->GetIfInfo(), fileContext->primitives.Top()->obj);
-	fileContext->objects.Push(obj);
+static void LoadNode(const char* b, const char* e){
+	fileContext->objects.Push();
+	fileContext->LoadNode();
 }
 
 ///	ノード読み出しの後処理
 static void NodeEnd(const char* b, const char* e){
-	PDEBUG(DSTR << "NodeEnd " << fieldStack.back().desc->GetTypeName() << std::endl);
+	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().desc->GetTypeName() << std::endl);
 	fileContext->objects.Pop();
-	fileContext->primitives.Pop();
-	fieldStack.pop_back();
+	fileContext->datas.Pop();
+	fileContext->fieldIts.pop_back();
 }
 
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	char* base = (char*)fileContext->primitives.Top()->obj;
-	void* ptr = fieldStack.back().field->GetAddressEx(base, fieldStack.back().arrayCount);
-	fileContext->primitives.Push(new FIFileContext::Primitive(NULL, ptr));
-	fieldStack.push_back(FIXField(fieldStack.back().field->type));
+	char* base = (char*)fileContext->datas.Top()->data;
+	void* ptr = fileContext->fieldIts.back().field->GetAddressEx(base, fileContext->fieldIts.ArrayPos());
+	fileContext->datas.Push(new FIFileContext::Data(NULL, ptr));
+	fileContext->fieldIts.push_back(FIFileContext::FieldIt(fileContext->fieldIts.back().field->type));
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fieldStack.pop_back();
-	fileContext->primitives.Pop();
+	fileContext->fieldIts.Pop();
+	fileContext->datas.Pop();
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	if (!fieldStack.back().desc->IsComposit()) return false;
-	//	次のフィールドへ進む
-	if (fieldStack.back().field==fieldStack.back().desc->GetComposit().end()){
-		fieldStack.back().field = fieldStack.back().desc->GetComposit().begin();
-	}else{
-		fieldStack.back().field++;
-		if (fieldStack.back().field == fieldStack.back().desc->GetComposit().end()){
-			fieldStack.back().nextField = F_NONE;
-			return false;
-		}
-	}
-	//	フィールドの配列要素数を設定
-	if (fieldStack.back().field->varType==FITypeDesc::Field::SINGLE){
-		fieldStack.back().arrayLength = 1;
-	}else if(fieldStack.back().field->varType==FITypeDesc::Field::VECTOR){
-		fieldStack.back().arrayLength = fieldStack.back().field->length;
-	}else if(fieldStack.back().field->varType==FITypeDesc::Field::ARRAY){
-		fieldStack.back().arrayLength = fieldStack.back().field->length;
-	}
-	//	配列カウントを初期化
-	fieldStack.back().arrayCount = -1;
-	//	フィールドの型を設定
-	if (	fieldStack.back().field->type->GetTypeName().compare("BYTE")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("WORD")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("DWORD")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("char")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("short")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("int")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("enum")==0){
-		fieldStack.back().nextField = F_INT;
-	}else if (fieldStack.back().field->type->GetTypeName().compare("float")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("double")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("FLOAT")==0
-		||	fieldStack.back().field->type->GetTypeName().compare("DOUBLE")==0){
-		fieldStack.back().nextField = F_REAL;
-	}else if (fieldStack.back().field->type->GetTypeName().compare("string")==0
-		||  fieldStack.back().field->type->GetTypeName().compare("STRING")==0){
-		fieldStack.back().nextField = F_STR;
-	}else if (fieldStack.back().field->type->IsComposit()){
-		fieldStack.back().nextField = F_BLOCK;
-	}
-	return true;
+	return fileContext->fieldIts.NextField();
 }
 ///	配列のカウント．まだ読み出すべきデータが残っていれば true を返す．
 static bool ArrayCount(){
-	fieldStack.back().arrayCount++;
-	return fieldStack.back().arrayLength > fieldStack.back().arrayCount;
+	return fileContext->fieldIts.IncArrayPos();
 }
 
-static bool IsFieldInt(){ return fieldStack.back().nextField==F_INT; }
-static bool IsFieldReal(){ return fieldStack.back().nextField==F_REAL; }
-static bool IsFieldStr(){ return fieldStack.back().nextField==F_STR; }
-static bool IsFieldBlock(){ return fieldStack.back().nextField==F_BLOCK; }
+static bool IsFieldInt(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_INT; }
+static bool IsFieldReal(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_REAL; }
+static bool IsFieldStr(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_STR; }
+static bool IsFieldBlock(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_BLOCK; }
 
 static double numValue;
 static std::string strValue;
@@ -161,14 +96,14 @@ static void StrSet(const char* b, const char* e){
 static void SetVal(const char* b, const char* e){
 	char ch = *b;
 
-	FIXField& curField = fieldStack.back();
+	FIFileContext::FieldIt& curField = fileContext->fieldIts.back();
 	//	debug 出力
 #ifdef TRACE_PARSE
 	if (curField.nextField!=F_NONE){
 		if (curField.nextField==F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
 		}else{
-			if (curField.arrayCount==0){
+			if (curField.arrayPos==0){
 				DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 			}
 		}
@@ -182,15 +117,15 @@ static void SetVal(const char* b, const char* e){
 #endif
 	//	ここまで
 
-	if(curField.nextField == F_REAL || curField.nextField == F_INT){
+	if(curField.nextField == FIFileContext::F_REAL || curField.nextField == FIFileContext::F_INT){
 		curField.field->WriteNumber(
-			fileContext->primitives.Top()->obj, numValue, curField.arrayCount);
-	}else if(curField.nextField == F_STR){
+			fileContext->datas.Top()->data, numValue, curField.arrayPos);
+	}else if(curField.nextField == FIFileContext::F_STR){
 		curField.field->WriteString(
-			fileContext->primitives.Top()->obj, strValue.c_str(), curField.arrayCount);
+			fileContext->datas.Top()->data, strValue.c_str(), curField.arrayPos);
 	}
 	if (ch == ';'){
-		curField.arrayCount=FITypeDesc::BIGVALUE;
+		curField.arrayPos=FITypeDesc::BIGVALUE;
 	}
 }
 
@@ -278,7 +213,7 @@ void FIFileX::Init(FITypeDescDb* db_){
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
 	data		= id[&NodeStart] >> !id >> (ch_p('{') | ExpP("'{'")) >>
-				  if_p(&DescAvail)[ block[&CreateNode] >> *(data|ref) ].
+				  if_p(&TypeAvail)[ block[&LoadNode] >> *(data|ref) ].
 //				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
 				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
