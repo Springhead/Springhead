@@ -20,7 +20,7 @@ namespace Spr{;
 	そのあと，オブジェクトを生成する．	*/
 class FIFileContext{
 public:
-	
+	typedef UTStack<ObjectIf*> IfStack;
 	//--------------------------------------------------------------------------
 	//	クラス定義
 	struct FileInfo{
@@ -115,19 +115,28 @@ public:
 			return back().nextField==F_STR;
 		}
 	};
+	struct Link{
+		std::vector<NameManagerIf*> nameManagers;
+		std::string ref;
+		ObjectIf* object;
+		const char* pos;
+		Link(const IfStack& objs, const char* p, ObjectIf* o, std::string r);
+	};
 	
 	//--------------------------------------------------------------------------
 	//	変数
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
 	UTStack<FileInfo> fileInfo;	
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
-	UTStack<ObjectIf*> objects;
+	IfStack objects;
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<Data> > datas;
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
 	FieldItStack fieldIts;
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
+	///
+	UTStack<Link> links;
 
 	//---------------------------------------------------------------------------
 	//	関数
@@ -159,6 +168,10 @@ public:
 	void WriteString(std::string v);
 	///
 	void WriteNumber(double d);
+	///
+	void AddLink(std::string ref, const char* pos);
+	///
+	void DoLink();
 };
 
 

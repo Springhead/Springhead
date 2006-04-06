@@ -13,10 +13,10 @@ struct NameManagerIf: public NamedObjectIf{
 		t = p;
 	}
 	template <class T> void FindObject(T*& t, UTString name, UTString ns=""){
-		NamedObjectIf* p = FindObject(name, ns, GETCLASSNAMES(T));
+		NamedObjectIf* p = FindObject(name,T::GetIfInfoStatic()->className, ns);
 		t = ICAST(T, p);
 	}
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls)=0;
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls, UTString ns)=0;
 };
 
 struct SceneIf: public NameManagerIf{

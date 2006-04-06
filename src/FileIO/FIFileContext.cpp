@@ -153,7 +153,16 @@ bool FIFileContext::FieldIt::NextField(){
 	}
 	return true;
 }
-
+//---------------------------------------------------------------------------
+//	FIFileContext::Link
+FIFileContext::Link::Link(const IfStack& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
+	for(unsigned i=0; i<objs.size(); ++i){
+		NameManagerIf* nm = ICAST(NameManagerIf, objs[i]);
+		if (nm){
+			nameManagers.push_back(nm);
+		}
+	}
+}
 //---------------------------------------------------------------------------
 //	FIFileContext
 void FIFileContext::WriteNumber(double v){
@@ -212,6 +221,27 @@ ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){
 		}
 	}
 	return NULL;
+}
+void FIFileContext::AddLink(std::string ref, const char* pos){
+	links.Push(Link(objects, pos, objects.back(), ref));
+}
+void FIFileContext::DoLink(){
+	for(unsigned i=0; i<links.size(); ++i){
+		Link& link = links[i];
+		ObjectIf* refObj = NULL;
+		for(unsigned i=0; i<link.nameManagers.size(); ++i){
+			link.nameManagers[i]->FindObject(refObj, link.ref);
+			if (refObj) break;
+		}
+		if (refObj){
+			link.object->AddChildObject(refObj);
+		}else{
+			std::string err("Referenced object '");
+			err.append(link.ref);
+			err.append("' not found.");
+			ErrorMessage(link.pos, err.c_str());
+		}
+	}
 }
 
 void FIFileContext::ErrorMessage(const char* pos, const char* msg){

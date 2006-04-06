@@ -105,7 +105,7 @@ public:
 		NamedObject* p = names.Find(name, GETCLASSNAMES(T));
 		t = DCAST(T, p);
 	}
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls){
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls, UTString ns){
 		NamedObject* p = names.Find(name, cls);
 		return p;
 	}
@@ -125,8 +125,8 @@ public:
 };
 template <class intf, class base>
 struct InheritNameManager:public InheritNamedObject<intf, base>{
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls){
-		return base::FindObject(name, cls);
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls, UTString ns){
+		return base::FindObject(name, cls, ns);
 	}
 };
 

@@ -125,7 +125,9 @@ static void SetVal(const char* b, const char* e){
 
 ///	QÆŒ^‚ğ‘‚«‚ŞD(–¢Š®¬)
 static void RefSet(const char* b, const char* e){
-	DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
+	//DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
+	std::string ref(b,e);
+	fileContext->AddLink(ref, b);
 }
 
 static FITypeDesc* tdesc;

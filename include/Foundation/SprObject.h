@@ -65,6 +65,8 @@ struct ObjectIf{
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos) = 0;
 	virtual const ObjectIf* GetChildObject(size_t pos) const = 0;
+	///	子オブジェクトの追加
+	virtual bool AddChildObject(ObjectIf* o)=0;
 };
 
 struct NamedObjectIf: public ObjectIf{

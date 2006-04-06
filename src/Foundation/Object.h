@@ -69,6 +69,8 @@ public:
 	const ObjectIf* GetChildObject(size_t pos) const { 
 		return ((Object*) this)->GetChildObject(pos);
 	}
+	///	子オブジェクトの追加
+	bool AddChildObject(ObjectIf* o){ return false; }
 };
 template <class intf, class base>
 struct InheritObject:public intf, base{
@@ -83,6 +85,9 @@ struct InheritObject:public intf, base{
 	virtual ObjectIf* GetChildObject(size_t pos){ return base::GetChildObject(pos); }
 	virtual const ObjectIf* GetChildObject(size_t pos) const{
 		return base::GetChildObject(pos);
+	}
+	virtual bool AddChildObject(ObjectIf* o){
+		return base::AddChildObject(o);		
 	}
 };
 
