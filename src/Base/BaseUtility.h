@@ -177,7 +177,7 @@ public:
 	operator T*() const {return Obj();}
 	T* operator->() const {return Obj();}
 	bool operator <(const UTDeleteRef& r) const { return Obj() < r.Obj(); }
-	UTRef& operator =(T* r){
+	UTDeleteRef& operator =(T* r){
 		delete Obj();
 		Obj() = r;
 		return *this;
