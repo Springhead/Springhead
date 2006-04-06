@@ -11,7 +11,7 @@ struct PHSceneIf;
 struct PHSceneDesc;
 
 ///	物理シミュレーションSDK
-struct PHSdkIf : public ObjectIf{
+struct PHSdkIf : public NameManagerIf{
 	IF_DEF(PHSdk);
 	///	Sceneの作成
 	virtual PHSceneIf* CreateScene()=0;

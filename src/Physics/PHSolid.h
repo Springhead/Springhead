@@ -97,6 +97,7 @@ public:
 
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
+	bool AddChildObject(ObjectIf* obj);
 	size_t NChildObject() const{
 		return shapes.size();
 	}

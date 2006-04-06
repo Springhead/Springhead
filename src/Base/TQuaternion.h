@@ -494,12 +494,22 @@ public:
 		return y;
 	}
 
-	/// Affine変換の行列に変換し返す
-	void ToAffine(TAffine<ET> &f){
+	/// Affine変換の行列から読み出します．
+	template <class AT>
+	void FromAffine(const TAffine<AT>& f){
 		/// Affine行列の位置ベクトルにposeの位置をコピーする
-		f.Trn() = Pos();
+		Pos() = f.Trn();
 		/// Oriからできる行列をAffine行列の対応する場所に上書き
-		Ori().ToMatrix(f);
+		Ori().FromMatrix(f.Rot());
+	}
+
+	/// Affine変換の行列に変換し返す
+	template <class B>
+	void ToAffine(TAffine<B>& af) const {
+		/// Affine行列の位置ベクトルにposeの位置をコピーする
+		af.Trn() = Pos();
+		/// Oriからできる行列をAffine行列の対応する場所に上書き
+		Ori().ToMatrix(af.Rot());
 	}
 
 	operator TAffine<ET>(){ 

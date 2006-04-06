@@ -57,10 +57,12 @@ void GRDeviceGL::MultModelMatrix(const Affinef& afw){
 }
 /// モデル行列の行列スタックをPush
 void GRDeviceGL::PushModelMatrix(){
+	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 }
 /// モデル行列の行列スタックをPop
 void GRDeviceGL::PopModelMatrix(){
+	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
 /// モデル行列を設定

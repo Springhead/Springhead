@@ -156,7 +156,7 @@ bool FIFileContext::FieldIt::NextField(){
 //---------------------------------------------------------------------------
 //	FIFileContext::Link
 FIFileContext::Link::Link(const IfStack& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
-	for(unsigned i=0; i<objs.size(); ++i){
+	for(int i=objs.size()-1; i>=0; --i){
 		NameManagerIf* nm = ICAST(NameManagerIf, objs[i]);
 		if (nm){
 			nameManagers.push_back(nm);
@@ -190,7 +190,19 @@ bool FIFileContext::IsGood(){
 void FIFileContext::LoadNode(){
 	if (datas.Top()->type->GetIfInfo()){
 		//	ロードしたデータからオブジェクトを作る．
-		objects.Push(Create(datas.Top()->type->GetIfInfo(), datas.Top()->data));
+		ObjectIf* obj = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
+		NamedObjectIf* n = ICAST(NamedObjectIf, obj);
+		if (datas.Top()->name.length()){
+			if (n){
+				n->SetName(datas.Top()->name.c_str());
+			}else{
+				UTString err("Can not give name to an object of ");
+				err.append(obj->GetIfInfo()->ClassName());
+				err.append(".");
+				ErrorMessage(NULL, err.c_str());
+			}
+		}
+		objects.Push(obj);
 	}else{
 		//	Create以外の仕事をする．
 		//	衝突判定の無効ペアの設定や重力の設定など．
@@ -234,7 +246,14 @@ void FIFileContext::DoLink(){
 			if (refObj) break;
 		}
 		if (refObj){
-			link.object->AddChildObject(refObj);
+			if (!link.object->AddChildObject(refObj)){
+				std::string err("Can not link referenced object '");
+				err.append(link.ref);
+				err.append("' to '");
+				err.append(link.object->GetIfInfo()->ClassName());
+				err.append("'.");
+				ErrorMessage(link.pos, err.c_str());
+			}
 		}else{
 			std::string err("Referenced object '");
 			err.append(link.ref);
@@ -254,22 +273,24 @@ void FIFileContext::Message(const char* pos, const char* msg){
 	int lines=0;
 	int returns=0;
 	const char* line=NULL;
-	for(;ptr < pos; ++ptr){
-		if (*ptr == '\n'){
-			++lines;
-			line = ptr+1;
+	if (pos){
+		for(;ptr < pos; ++ptr){
+			if (*ptr == '\n'){
+				++lines;
+				line = ptr+1;
+			}
+			if (*ptr == '\r'){
+				++returns;
+				line = ptr+1;
+			}
 		}
-		if (*ptr == '\r'){
-			++returns;
-			line = ptr+1;
+		for(;ptr < fileInfo.back().end; ++ptr){
+			if (*ptr == '\n' || *ptr == '\r'){
+				break;
+			}
 		}
+		lines = std::max(lines, returns);
 	}
-	for(;ptr < fileInfo.back().end; ++ptr){
-		if (*ptr == '\n' || *ptr == '\r'){
-			break;
-		}
-	}
-	lines = std::max(lines, returns);
 	std::ostream& os = *errorStream;
 	os << fileInfo.back().name << "(" << lines+1 << ") : ";
 	os << msg << std::endl;

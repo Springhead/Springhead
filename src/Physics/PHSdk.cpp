@@ -39,8 +39,8 @@ PHSdkIf* SPR_CDECL CreatePHSdk(){
 
 //----------------------------------------------------------------------------
 //	PHSdk
-OBJECTIMP(PHSdk, Object);
-IF_IMP(PHSdk, Object);
+OBJECTIMP(PHSdk, NameManager);
+IF_IMP(PHSdk, NameManager);
 PHSdk::~PHSdk(){
 	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
 		if (*it == this){
@@ -52,7 +52,8 @@ PHSdk::~PHSdk(){
 }
 
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
-	PHSceneIf* rv = DBG_NEW PHScene(this, desc);
+	PHScene* rv = DBG_NEW PHScene(this, desc);
+	rv->SetNameManager(this);
 	scenes.push_back(rv);
 	return rv;
 }

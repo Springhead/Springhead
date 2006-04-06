@@ -38,7 +38,10 @@ static void NodeStart(const char* b, const char* e){
 		fileContext->ErrorMessage(b, tn.c_str());
 	}
 }
-
+///	ノードの名前の設定
+static void NameSet(const char* b, const char* e){
+	fileContext->datas.back()->name = UTString(b,e);
+}
 ///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
 static void LoadNode(const char* b, const char* e){
 	fileContext->LoadNode();
@@ -208,7 +211,7 @@ void FIFileX::Init(FITypeDescDb* db_){
 	defRestrict	= ch_p('[') >> *(id >> ',') >> id >> ']';
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
-	data		= id[&NodeStart] >> !id >> (ch_p('{') | ExpP("'{'")) >>
+	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
 				  if_p(&TypeAvail)[ block[&LoadNode] >> *(data|ref) ].
 //				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
 				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
@@ -234,7 +237,8 @@ void FIFileX::Init(FITypeDescDb* db_){
 	//	スキップパーサ(スペースとコメントを読み出すパーサ)の定義
 	cmt		=	space_p
 				|	"/*" >> *(~ch_p('*') | '*'>>~ch_p('/')) >> !ch_p('*') >> '/'
-				|	"//" >> *~ch_p('\n') >> '\n';
+				|	"//" >> *~ch_p('\n') >> '\n'
+				|	"#" >> *~ch_p('\n') >> '\n';
 }
 void FIFileX::Load(FIFileContext* fc){
 	using namespace std;
@@ -248,6 +252,7 @@ void FIFileX::Load(FIFileContext* fc){
 			fileContext->fileInfo.back().start, 
 			fileContext->fileInfo.back().end, start, cmt);
 	}
+	fileContext->DoLink();
 }
 
 };

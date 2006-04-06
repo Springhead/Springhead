@@ -9,7 +9,7 @@ namespace Spr {;
 
 class ObjectNamesLess{
 public:
-	bool operator () (NamedObject* o1, NamedObject* o2) const;
+	bool operator () (const NamedObject* o1, const NamedObject* o2) const;
 };
 /**	名前とシーングラフのオブジェクトの対応表
 	名前をキーにしたセットを用意し，名前の一意性の保証とオブジェクトの
@@ -31,6 +31,7 @@ public:
 	typedef std::pair<iterator, iterator> range_type;
 	NamedObject* Find(UTString name, UTString cn="") const {
 		key.name = name;
+/*		setなのになぜこんなことをしていたかなぞ．
 		UTString className = cn;
 		key.typeInfo.className = className.c_str();
 		const_iterator lb = lower_bound(&key);
@@ -42,7 +43,14 @@ public:
 		if (it == end()) return *lb;
 		if(less(&key, *it)) return *lb;		//	等しいものは1つ
 		return NULL;						//	等しいものが複数有る場合
+*/
+		iterator it = ((ObjectNames*)this)->find(&key);
+		if (it == end()) return NULL;
+		NamedObject* obj = *it;
+		if (obj->GetTypeInfo()->Inherit(cn.c_str())) return obj;
+		return NULL;
 	}
+/*		set で range というのは変．
 	range_type Range(UTString name, UTString cn=""){
 		key.name = name;
 		UTString className = cn;
@@ -56,6 +64,7 @@ public:
 		}
 		return range_type(lb, it);
 	}
+*/
 	/**	オブジェクトの追加，
 		名前のないオブジェクトは追加できない．この場合 false を返す．
 		追加に成功すると true． すでに登録されていた場合は false を返す．
@@ -111,8 +120,8 @@ public:
 	}
 
 	typedef ObjectNames::iterator SetIt;
-	typedef std::pair<SetIt, SetIt> SetRange;
-	SetRange RangeObject(UTString n){ return names.Range(n); }
+//	typedef std::pair<SetIt, SetIt> SetRange;
+//	SetRange RangeObject(UTString n){ return names.Range(n); }
 	
 	ObjectNames::TNameMap& GetNameMap(){ return names.nameMap; }
 

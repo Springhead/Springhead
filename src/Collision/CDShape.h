@@ -13,9 +13,14 @@ public:
 
 	OBJECTDEFABST(CDShape);
 	Posef GetPose() const { return pose; }
-	void SetPose(Posef p){ pose = p; }
+	void SetPose(const Posef& p){ pose = p; }
 	
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax)=0;
+};
+template <class intf, class base>
+struct InheritCDShape:public InheritNamedObject<intf, base>{
+	void SetPose(const Posef& p){ base::SetPose(p); }
+	Posef GetPose() const { return base::GetPose(); }
 };
 
 }	//	namespace Spr

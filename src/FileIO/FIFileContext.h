@@ -50,9 +50,10 @@ public:
 	/**	ファイルから自動的に読み出したり，ファイルに自動的に書き込んだりする
 	データ．メモリの管理も行う．	*/
 	struct Data: UTRefCount{
-		FITypeDesc* type;
-		void* data;
-		bool haveData;		//	データをdeleteすべきかどうか．
+		FITypeDesc* type;	///<	データの型 
+		UTString name;		///<	名前
+		void* data;			///<	ロードしたデータ
+		bool haveData;		///<	dataをdeleteすべきかどうか．
 		Data(FITypeDesc* t=NULL, void* d=NULL);
 		~Data();
 	};

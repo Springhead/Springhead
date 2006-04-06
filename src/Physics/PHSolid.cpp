@@ -9,8 +9,8 @@ namespace Spr{
 
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
-OBJECTIMP(PHSolid, Object);
-IF_IMP(PHSolid, Object);
+OBJECTIMP(PHSolid, SceneObject);
+IF_IMP(PHSolid, SceneObject);
 
 PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
 	bDynamical = true;
@@ -27,6 +27,13 @@ ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
 		return CreateShape(*(CDShapeDesc*)desc);
 	}
 	return NULL;
+}
+bool PHSolid::AddChildObject(ObjectIf* obj){
+	if (ICAST(CDShapeIf, obj)){
+		AddShape(ICAST(CDShapeIf, obj));
+		return true;
+	}
+	return false;
 }
 
 void PHSolid::CalcBBox(){

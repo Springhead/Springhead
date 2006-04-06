@@ -51,6 +51,36 @@ GRMaterial material(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
+	render->SetMaterial(material);	
+
+	PHSceneIf* scene = NULL;
+	if (phSdk->NScene()){
+		PHSceneIf** s = phSdk->GetScenes();
+		scene = *s;
+	}
+	PHSolidIf **solids = scene->GetSolids();
+	for (int num=0; num < scene->NSolids(); ++num){
+		Affinef af;
+		solids[num]->GetPose().ToAffine(af);
+		render->PushModelMatrix();
+		render->MultModelMatrix(af);
+		CDShapeIf** shapes = solids[num]->GetShapes();
+		for(int s=0; s<solids[num]->NShape(); ++s){
+			Affinef af;
+			shapes[s]->GetPose().ToAffine(af);
+			render->PushModelMatrix();
+			render->MultModelMatrix(af);
+			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[s]);
+			Vec3f* base = mesh->GetVertices();
+			for (size_t f=0; f<mesh->NFace(); ++f) {	
+				CDFaceIf* face = mesh->GetFace(f);
+				render->DrawFace(face, base);
+			}
+			render->PopModelMatrix();
+		}
+		render->PopModelMatrix();
+	}
+/*
 
 	render->SetMaterial(material);	
 	for (int num=0; num < phSdk->NShape(); ++num){
@@ -62,10 +92,9 @@ void display(){
 			render->DrawFace(face, base);
 		}
 	}
-
+*/
 	render->EndScene();
 }
-
 /**
  brief     	光源の設定
  param	 	なし
@@ -137,7 +166,8 @@ int main(int argc, char* argv[]){
 
 	scene = phSdk->GetScenes();		// Sceneの取得
 	shape = phSdk->GetShapes();		// Shapeの取得
-	DSTR << "(debug) : " << "NScene=" << phSdk->NScene() << ", NSphape=" << phSdk->NShape() << std::endl;
+	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NSphape=" << phSdk->NShape() << std::endl;
+	if (phSdk->NScene()) (*scene)->SetGravity(Vec3f(0,0,0));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

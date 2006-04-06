@@ -45,7 +45,7 @@ public:													\
 ///	インタフェースのキャスト
 #define ICAST(T, p)	UTIcastImp<T>(p)
 template <class T, class P> T* UTIcastImp(P p){
-	void* obj = p->GetIfInfo()->GetSprObject((ObjectIf*)p);
+	void* obj = p ? p->GetIfInfo()->GetSprObject((ObjectIf*)p) : NULL;
 	return (T*)T::GetIfInfoStatic()->GetIf(obj);
 }
 

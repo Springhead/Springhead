@@ -39,21 +39,26 @@ bool ObjectNames::Add(NamedObject* obj){
 	return true;
 }
 void ObjectNames::Print(std::ostream& os) const{
+	int w = os.width();
+	os.width(0);
 	for(const_iterator it = begin(); it != end(); ++it){
+		os << UTPadding(w);
 		os << (*it)->GetName() << " : " << (*it)->GetTypeInfo()->ClassName();
 		os << std::endl;
 	}
+	os.width(w);
 }
-bool ObjectNamesLess::operator () (NamedObject* o1, NamedObject* o2) const {
+bool ObjectNamesLess::operator () (const NamedObject* o1, const NamedObject* o2) const {
 	int name = strcmp(o1->GetName(), o2->GetName());
 	if (name < 0) return true;
-	if (name == 0){
+/*	if (name == 0){
 		int cls = 0;
 		if (GETCLASSNAME(o1)[0] && GETCLASSNAME(o2)[0]){
 			cls = strcmp(GETCLASSNAME(o1), GETCLASSNAME(o2));
 			if (cls < 0) return true;
 		}
 	}
+*/
 	return false;
 }
 //----------------------------------------------------------------------------

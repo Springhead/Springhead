@@ -177,11 +177,6 @@ public:
 	operator T*() const {return Obj();}
 	T* operator->() const {return Obj();}
 	bool operator <(const UTDeleteRef& r) const { return Obj() < r.Obj(); }
-	UTDeleteRef& operator =(T* r){
-		delete Obj();
-		Obj() = r;
-		return *this;
-	}
 };
 
 ///	シングルトンクラス

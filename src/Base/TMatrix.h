@@ -445,7 +445,7 @@ TYPENAME AD::element_type lu(MatrixImp<AD>& a, int* ip, TYPENAME AD::element_typ
 #define ABS_LU_MATRIX(a)	((a)>0 ? (a) : -(a))
 	assert(a.width() == a.height());
 	int i, j, k, ii, ik;
-	int n = a.height();
+	int n = (int)a.height();
 	TYPENAME AD::element_type t, u, det_;
 	
 	det_ = 0;                   // çsóÒéÆ
@@ -558,7 +558,7 @@ TYPENAME AD::element_type inv(MatrixImp<RD>& r, MatrixImp<AD>& a, int* ip, TYPEN
 	assert(a.height() == a.width());
 	r.resize(a.height(), a.width());
 	int i, j, k, ii;
-	int n = a.height();
+	int n = (int)a.height();
 	TYPENAME AD::element_type t, det;
 
 	det = a.lu(ip, weight);
