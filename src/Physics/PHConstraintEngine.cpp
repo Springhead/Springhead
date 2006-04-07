@@ -39,6 +39,7 @@ public:
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
 
+// 接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．	
 void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	//	center と normalが作る面と交差する面を求めないといけない．
 	//	面の頂点が別の側にある面だけが対象．
@@ -72,23 +73,36 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 		assert(0);
 	}
 
-	//	切り口を求める１：切り口を構成する線分の列挙
-	CDCutRing cutRing(center, local);
-	conv[0]->FindCutRing(cutRing, shapePoseW[0]);
-	conv[1]->FindCutRing(cutRing, shapePoseW[1]);
-	//	切り口を求める２：線分をつないで輪を作る
-	cutRing.MakeRing();
-//	cutRing.Print(DSTR);
-//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
-	for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
-		if (vtx->deleted) continue;
-		Vec3d pos;
-		pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
-		pos = cutRing.local * pos;
-		Matrix3d local;
-		cutRing.local.Ori().ToMatrix(local);
-		engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
-//		DSTR << "  " << pos << std::endl;
+	// 凸多面同士の場合は、面と面が触れる場合があるので、接触が凸多角形になることがある。
+	// 球と凸形状の接触は必ず１点になる。
+	CDSphere* sp[2];
+	sp[0] = DCAST(CDSphere, shape[0]);	// CDSphereへダイナミックキャスト
+	sp[1] = DCAST(CDSphere, shape[1]);
+	// 接触解析を行う２つの物体の片方or両方が球の場合
+	if (sp[0] || sp[1]) {		
+		// 接触点の配列(engine->points)に、球の最進入点と相手の最進入点の中点centerを追加する
+		engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
+	}
+	// 接触解析を行う２つの物体がどちらとも球ではない場合
+	else {						
+		//	切り口を求める１：切り口を構成する線分の列挙
+		CDCutRing cutRing(center, local);
+		conv[0]->FindCutRing(cutRing, shapePoseW[0]);
+		conv[1]->FindCutRing(cutRing, shapePoseW[1]);
+		//	切り口を求める２：線分をつないで輪を作る
+		cutRing.MakeRing();
+		//	cutRing.Print(DSTR);
+		//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
+		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
+			if (vtx->deleted) continue;
+			Vec3d pos;
+			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+			pos = cutRing.local * pos;
+			Matrix3d local;
+			cutRing.local.Ori().ToMatrix(local);
+			engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
+	//		DSTR << "  " << pos << std::endl;
+		}
 	}
 }
 //#define USE_VOLUME

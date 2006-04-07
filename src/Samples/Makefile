@@ -10,7 +10,7 @@
 
 TOP_DIR 		= ../..
 
-SAMPLES_DIR		= BoxStack
+SAMPLES_DIR		= BoxStack Joints
 
 all:
 	@for dir in $(SAMPLES_DIR); \

@@ -15,9 +15,15 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <win32/GL/glut.h>
+#ifdef __APPLE__
+# include <GLUT/glut.h>
+#else
+# include <GL/glut.h>
+#endif
 #include <sstream>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 using namespace Spr;
 
 #define ESC		27

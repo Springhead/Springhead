@@ -3,3 +3,4 @@
 #include "CDShape.h"
 #include "CDConvex.h"
 #include "CDConvexMesh.h"
+#include "CDSphere.h"

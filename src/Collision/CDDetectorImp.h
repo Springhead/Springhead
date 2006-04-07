@@ -2,6 +2,7 @@
 #define CDDETECTORIMP_H
 #include "CDQuickHull3D.h"
 #include "CDConvexMesh.h"
+#include "CDSphere.h"
 
 namespace Spr {;
 

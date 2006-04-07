@@ -59,6 +59,7 @@ struct CDShapeDesc{
 	enum ShapeType{
 		CONVEX,
 		CONVEXMESH,
+		SPHERE		
 	} type;
 	CDShapeDesc(ShapeType t=CONVEXMESH): type(t){}
 };
@@ -78,6 +79,21 @@ struct CDConvexMeshIf: public CDConvexIf{
 	virtual Vec3f* GetVertices()=0;
 	virtual size_t NVertex()=0;
 };
+	
+/** 球体のディスクリプタ　*/
+struct CDSphereDesc: public CDShapeDesc{
+	CDSphereDesc():CDShapeDesc(CONVEX){}
+	Vec3f center;					// 球体の中心座標
+	float radius;					// 球体の半径
+	PHMaterial material;			// マテリアル
+};	
+
+/** 球体　*/
+struct CDSphereIf: public CDConvexIf{
+	IF_DEF(CDSphere);
+	virtual Vec3f GetCenter()=0;
+	virtual float GetRadius()=0;
+};	
 
 //@}
 

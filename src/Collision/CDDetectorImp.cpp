@@ -207,11 +207,12 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 		}
 	}else{
 		//	球かどうか調べる．
-/*		CDSphere* sp[2];
+/**/		CDSphere* sp[2];
 		Vec3f center[2];
 		for(int i=0; i<2; ++i){
 			sp[i] = DCAST(CDSphere, cp->shape[i]);
-			if (sp[i]) center[i] = af[i] * sp[i]->center;
+			//if (sp[i]) center[i] = af[i] * sp[i]->center;
+			if (sp[i]) center[i] = cp->shapePoseW[i] * sp[i]->center;
 		}
 		if (sp[0] && sp[1]){	//	両方球の場合
 			cp->iNormal = (center[1] - center[0]).unit();
@@ -222,10 +223,11 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 				cp->iNormal = (center[1] - cp->commonPoint).unit();
 			}else{
 //				assert(0);	//	知らない凸形状．
-				cp->iNormal = (af[1].Pos() - af[0].Pos()).unit();
+				//cp->iNormal = (af[1].Pos() - af[0].Pos()).unit();
+				cp->iNormal = (cp->shapePoseW[1].Pos() - cp->shapePoseW[0].Pos()).unit();
 			}
 		}
-*/
+/**/
 		assert(0);	//	知らない形状
 	}
 	if (cp->iNormal.square() < 1e-20){
