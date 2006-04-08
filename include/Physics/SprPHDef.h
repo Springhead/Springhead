@@ -1,5 +1,6 @@
 #ifndef SPR_PHDEF_H
 #define SPR_PHDEF_H
+#include <Foundation/SprScene.h>
 
 namespace Spr {;
 /** \addtogroup gpPhysics 物理エンジンクラス	*/

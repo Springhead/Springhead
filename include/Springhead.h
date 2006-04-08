@@ -7,8 +7,10 @@
 
 #include "SprBase.h"
 #include "SprFoundation.h"
-#include "SprPhysics.h"
 #include "SprCollision.h"
+#include "SprPhysics.h"
+
 #include "SprGraphics.h"
+#include "SprFileIO.h"
 
 #endif

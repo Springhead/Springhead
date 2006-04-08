@@ -245,6 +245,14 @@
 	field->offset = (char*)&(pPHSolidDesc->gravity) - (char*)pPHSolidDesc;
 	db->RegisterDesc(desc);
 	
+	FIInactiveSolids* pFIInactiveSolids = NULL;
+	desc = DBG_NEW FITypeDesc("FIInactiveSolids");
+	desc->size = sizeof(FIInactiveSolids);
+	desc->access = DBG_NEW FIAccess<FIInactiveSolids>;
+	field = desc->AddField("vector", "string", "solids", "");
+	field->offset = (char*)&(pFIInactiveSolids->solids) - (char*)pFIInactiveSolids;
+	db->RegisterDesc(desc);
+	
 	Vec2f* pVec2f = NULL;
 	desc = DBG_NEW FITypeDesc("Vec2f");
 	desc->size = sizeof(Vec2f);

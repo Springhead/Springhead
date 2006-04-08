@@ -21,7 +21,9 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 }
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
 	CDShapeIf* rv = ICAST(PHSceneIf, GetScene())->CreateShape(desc);
-	AddShape(rv);
+	if (rv){
+		AddShape(rv);
+	}
 	return rv;
 }
 ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){

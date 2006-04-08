@@ -78,10 +78,19 @@ void display(){
 			render->PushModelMatrix();
 			render->MultModelMatrix(af);
 			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[s]);
-			Vec3f* base = mesh->GetVertices();
-			for (size_t f=0; f<mesh->NFace(); ++f) {	
-				CDFaceIf* face = mesh->GetFace(f);
-				render->DrawFace(face, base);
+			if (mesh){
+				Vec3f* base = mesh->GetVertices();
+				for (size_t f=0; f<mesh->NFace(); ++f) {	
+					CDFaceIf* face = mesh->GetFace(f);
+					render->DrawFace(face, base);
+				}
+			}
+			CDSphereIf* sphere = ICAST(CDSphereIf, shapes[s]);
+			if (sphere){
+				float r = sphere->GetRadius();
+				GLUquadricObj* quad = gluNewQuadric();
+				gluSphere(quad, r, 16, 8);
+				gluDeleteQuadric(quad);
 			}
 			render->PopModelMatrix();
 		}

@@ -1,3 +1,8 @@
+#include "FileIO.h"
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
+
 #include "FIFileX.h"
 #include "FITypeDesc.h"
 #include "FINodeHandler.h"
@@ -99,7 +104,7 @@ static void BoolSet(const char* b, const char* e){
 	boolValue = (v.compare("true")==0) || (v.compare("TRUE")==0) || (v.compare("1")==0);
 }
 static void StrSet(const char* b, const char* e){
-	strValue.assign(b,e);
+	strValue.assign(b+1,e-1);
 }
 
 ///	ObjectDesc‚É“Ç‚Ýo‚µ‚½’l‚ð‘‚«ž‚Þ
@@ -281,7 +286,8 @@ void FIFileX::Load(FIFileContext* fc){
 			fileContext->fileInfo.back().start, 
 			fileContext->fileInfo.back().end, start, cmt);
 	}
-	fileContext->DoLink();
+	fileContext->Link();
+	fileContext->PostTask();
 }
 
 };

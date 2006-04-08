@@ -1,5 +1,7 @@
-#include "FISpirit.h"
-#include "FITypeDesc.h"
+#include "FileIO.h"
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 #include <sstream>
 
 

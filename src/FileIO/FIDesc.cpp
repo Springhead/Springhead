@@ -1,3 +1,8 @@
+#include "FileIO.h"
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
+
 #include <Base/TQuaternion.h> 
 #include <FileIO/FITypeDesc.h> 
 #include <FileIO/FIBaseType.h> 

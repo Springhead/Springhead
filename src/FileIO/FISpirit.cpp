@@ -1,4 +1,7 @@
-#include "FISpirit.h"
+#include "FileIO.h"
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 #if defined(__BORLANDC__)
 # pragma option push -pc

@@ -1,3 +1,8 @@
+#include "FileIO.h"
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
+
 #include "FIFileContext.h"
 #include "FINodeHandler.h"
 #include "FITypeDesc.h"
@@ -157,9 +162,20 @@ bool FIFileContext::FieldIt::NextField(){
 	}
 	return true;
 }
+
+
 //---------------------------------------------------------------------------
-//	FIFileContext::Link
-FIFileContext::Link::Link(const IfStack& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
+//	FIFileContext::Tasks
+void FIFileContext::Tasks::Execute(FIFileContext* ctx){
+	for(iterator it = begin(); it!=end(); ++it){
+		(*it)->Execute(ctx);
+	}
+	clear();
+}
+
+//---------------------------------------------------------------------------
+//	FIFileContext::LinkTask
+FIFileContext::LinkTask::LinkTask(const IfStack& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
 	for(int i=objs.size()-1; i>=0; --i){
 		NameManagerIf* nm = ICAST(NameManagerIf, objs[i]);
 		if (nm){
@@ -167,6 +183,29 @@ FIFileContext::Link::Link(const IfStack& objs, const char* p, ObjectIf* o, std::
 		}
 	}
 }
+void FIFileContext::LinkTask::Execute(FIFileContext* ctx){
+	ObjectIf* refObj = NULL;
+	for(unsigned i=0; i<nameManagers.size(); ++i){
+		nameManagers[i]->FindObject(refObj, ref);
+		if (refObj) break;
+	}
+	if (refObj){
+		if (!object->AddChildObject(refObj)){
+			std::string err("Can not link referenced object '");
+			err.append(ref);
+			err.append("' to '");
+			err.append(object->GetIfInfo()->ClassName());
+			err.append("'.");
+			ctx->ErrorMessage(pos, err.c_str());
+		}
+	}else{
+		std::string err("Referenced object '");
+		err.append(ref);
+		err.append("' not found.");
+		ctx->ErrorMessage(pos, err.c_str());
+	}
+}
+
 //---------------------------------------------------------------------------
 //	FIFileContext
 void FIFileContext::WriteBool(bool v){
@@ -185,7 +224,7 @@ void FIFileContext::PushType(FITypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	読み出したデータを構造体の用意
-	datas.Push(new Data(type));
+	datas.Push(DBG_NEW Data(type));
 }
 void FIFileContext::PopType(){
 	datas.Pop();
@@ -212,14 +251,16 @@ void FIFileContext::LoadNode(){
 		}
 		objects.Push(obj);
 	}else{
-		FINodeHandler key;
+		static FINodeHandler key;
 		key.AddRef();
 		key.type = datas.Top()->type->GetTypeName();
 		FINodeHandlers::iterator it = handlers->lower_bound(&key);
 		FINodeHandlers::iterator end = handlers->upper_bound(&key);
+		if (end != handlers->end()) ++end;
 		for(; it != end; ++it){
 			(*it)->Load(this);
 		}
+		key.DelRef();
 		//	Create以外の仕事をする．
 		//	衝突判定の無効ペアの設定や重力の設定など．
 	}
@@ -227,7 +268,7 @@ void FIFileContext::LoadNode(){
 void FIFileContext::EnterBlock(){
 	char* base = (char*)datas.Top()->data;
 	void* ptr = fieldIts.back().field->GetAddressEx(base, fieldIts.ArrayPos());
-	datas.Push(new Data(NULL, ptr));
+	datas.Push(DBG_NEW Data(NULL, ptr));
 	fieldIts.push_back(FieldIt(fieldIts.back().field->type));
 }
 void FIFileContext::LeaveBlock(){
@@ -251,32 +292,13 @@ ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){
 	return NULL;
 }
 void FIFileContext::AddLink(std::string ref, const char* pos){
-	links.Push(Link(objects, pos, objects.back(), ref));
+	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));
 }
-void FIFileContext::DoLink(){
-	for(unsigned i=0; i<links.size(); ++i){
-		Link& link = links[i];
-		ObjectIf* refObj = NULL;
-		for(unsigned i=0; i<link.nameManagers.size(); ++i){
-			link.nameManagers[i]->FindObject(refObj, link.ref);
-			if (refObj) break;
-		}
-		if (refObj){
-			if (!link.object->AddChildObject(refObj)){
-				std::string err("Can not link referenced object '");
-				err.append(link.ref);
-				err.append("' to '");
-				err.append(link.object->GetIfInfo()->ClassName());
-				err.append("'.");
-				ErrorMessage(link.pos, err.c_str());
-			}
-		}else{
-			std::string err("Referenced object '");
-			err.append(link.ref);
-			err.append("' not found.");
-			ErrorMessage(link.pos, err.c_str());
-		}
-	}
+void FIFileContext::Link(){
+	links.Execute(this);
+}
+void FIFileContext::PostTask(){
+	postTasks.Execute(this);
 }
 
 void FIFileContext::ErrorMessage(const char* pos, const char* msg){

@@ -122,13 +122,26 @@ public:
 			return back().nextField==F_STR;
 		}
 	};
+	///	タスククラス．ロード後にまとめて仕事をさせるためのもの．
+	class Task:public UTRefCount{
+	public:
+		virtual ~Task(){}
+		virtual void Execute(FIFileContext* ctx)=0;	
+	};
+	///	タスクリスト
+	class Tasks:public std::vector< UTRef<Task> >{
+	public:
+		void Execute(FIFileContext* ctx);
+	};
 	///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
-	struct Link{
+	class LinkTask: public Task{
+	public:
 		std::vector<NameManagerIf*> nameManagers;
 		std::string ref;
 		ObjectIf* object;
 		const char* pos;
-		Link(const IfStack& objs, const char* p, ObjectIf* o, std::string r);
+		LinkTask(const IfStack& objs, const char* p, ObjectIf* o, std::string r);
+		void Execute(FIFileContext* ctx);
 	};
 	
 	//--------------------------------------------------------------------------
@@ -144,7 +157,9 @@ public:
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
 	///	リファレンスを後でリンクするための記録．
-	UTStack<Link> links;
+	Tasks links;
+	///	ロードとリンクが終わってから処理するタスク
+	Tasks postTasks;
 	///	型DB
 	FITypeDescDb* typeDb;
 	///	ノードハンドラ
@@ -185,7 +200,9 @@ public:
 	///
 	void AddLink(std::string ref, const char* pos);
 	///
-	void DoLink();
+	void Link();
+	///
+	void PostTask();
 };
 
 

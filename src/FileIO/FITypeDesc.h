@@ -287,8 +287,12 @@ inline bool operator < (const FITypeDesc& d1, const FITypeDesc& d2){
 template <class N>
 class SPR_DLL FITypeDescNumber:public FITypeDesc{
 public:
-	FITypeDescNumber(){}
-	FITypeDescNumber(std::string tn): FITypeDesc(tn, sizeof(N)){}
+	FITypeDescNumber(){
+		access = DBG_NEW FIAccess<N>;
+	}
+	FITypeDescNumber(std::string tn): FITypeDesc(tn, sizeof(N)){
+		access = DBG_NEW FIAccess<N>;
+	}
 protected:
 	///	数値読み出し
 	virtual double ReadNumber(const void* ptr){
@@ -303,8 +307,12 @@ protected:
 template <class N>
 class SPR_DLL FITypeDescBool:public FITypeDesc{
 public:
-	FITypeDescBool(){}
-	FITypeDescBool(std::string tn): FITypeDesc(tn, sizeof(N)){}
+	FITypeDescBool(){
+		access = DBG_NEW FIAccess<N>;
+	}
+	FITypeDescBool(std::string tn): FITypeDesc(tn, sizeof(N)){
+		access = DBG_NEW FIAccess<N>;
+	}
 protected:
 	///	数値読み出し
 	virtual bool ReadBool(const void* ptr){
@@ -318,8 +326,12 @@ protected:
 
 class SPR_DLL FITypeDescString:public FITypeDesc{
 public:
-	FITypeDescString(){}
-	FITypeDescString(std::string tn): FITypeDesc(tn, sizeof(std::string)){}
+	FITypeDescString(){
+		access = DBG_NEW FIAccess<std::string>;
+	}
+	FITypeDescString(std::string tn): FITypeDesc(tn, sizeof(std::string)){
+		access = DBG_NEW FIAccess<std::string>;
+	}
 protected:
 	///	数値読み出し
 	virtual std::string ReadString(const void* ptr){
