@@ -332,10 +332,10 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 	case PHConstraintDesc::BALLJOINT:
 		joint = DBG_NEW PHBallJoint();
 		break;
-	case PHConstraintDesc::PARAMETRICJOINT:
+/*	case PHConstraintDesc::PARAMETRICJOINT:
 		joint = DBG_NEW PHParametricJoint();
 		break;
-	}
+*/	}
 	joint->SetDesc(desc);
 	return joint;
 }
