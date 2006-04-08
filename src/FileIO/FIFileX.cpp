@@ -1,5 +1,6 @@
 #include "FIFileX.h"
 #include "FITypeDesc.h"
+#include "FINodeHandler.h"
 #include <fstream>
 #include <sstream>
 #include <Springhead.h>
@@ -12,6 +13,10 @@ namespace Spr{;
 #else 
 # define PDEBUG(x)
 #endif
+
+extern void RegisterTypes();
+extern void RegisterNodeHandlers();
+
 
 namespace FileX{
 static FIFileContext* fileContext;
@@ -193,8 +198,20 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 
 
 
-void FIFileX::Init(FITypeDescDb* db_){
-	typeDb = *db_;
+void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
+	if (!FITypeDescDb::theTypeDescDb) RegisterTypes();
+	if (!FINodeHandlers::theNodeHandlers) RegisterNodeHandlers();
+	if (h){
+		handlers = *h;
+	}else{
+		handlers = *FINodeHandlers::theNodeHandlers;
+	}
+	if (db){
+		typeDb = *db;
+	}else{
+		typeDb = *FITypeDescDb::theTypeDescDb;
+		extern UTRef<FITypeDescDb> typeDescDb;
+	}
 	typeDb.RegisterAlias("Vec3f", "Vector");
 	typeDb.RegisterAlias("Vec2f", "Coords2d");
 	typeDb.RegisterAlias("Affinef", "Matrix3x3");
@@ -254,9 +271,11 @@ void FIFileX::Load(FIFileContext* fc){
 	using namespace std;
 	using namespace boost::spirit;
 	using namespace Spr;
-
 	fileContext = fc;
 	if (fileContext->IsGood()){
+		fileContext->typeDb = &typeDb;
+		fileContext->handlers = &handlers;
+
 		fileX = this;
 		parse_info<const char*> info = parse(
 			fileContext->fileInfo.back().start, 

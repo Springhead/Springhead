@@ -8,11 +8,10 @@
 namespace Spr{ 
 static FITypeDesc* desc; 
 static FITypeDesc::Field* field; 
-UTRef<FITypeDescDb> typeDescDb;
 
 void RegisterTypes(){
-	if(!typeDescDb) typeDescDb = new FITypeDescDb;
-	FITypeDescDb* db = typeDescDb;
+	if(!FITypeDescDb::theTypeDescDb) FITypeDescDb::theTypeDescDb = new FITypeDescDb;
+	FITypeDescDb* db = FITypeDescDb::theTypeDescDb;
 	typedef unsigned char BYTE;
 	typedef unsigned short WORD;
 	typedef unsigned int DWORD;

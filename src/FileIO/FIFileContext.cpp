@@ -1,4 +1,5 @@
 #include "FIFileContext.h"
+#include "FINodeHandler.h"
 #include "FITypeDesc.h"
 #include <fstream>
 #include <sstream>
@@ -211,6 +212,14 @@ void FIFileContext::LoadNode(){
 		}
 		objects.Push(obj);
 	}else{
+		FINodeHandler key;
+		key.AddRef();
+		key.type = datas.Top()->type->GetTypeName();
+		FINodeHandlers::iterator it = handlers->lower_bound(&key);
+		FINodeHandlers::iterator end = handlers->upper_bound(&key);
+		for(; it != end; ++it){
+			(*it)->Load(this);
+		}
 		//	Create以外の仕事をする．
 		//	衝突判定の無効ペアの設定や重力の設定など．
 	}

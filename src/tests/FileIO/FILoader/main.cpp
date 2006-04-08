@@ -24,8 +24,6 @@
 #endif
 #define	ESC		27
 namespace Spr{
-	extern void RegisterTypes();
-	extern UTRef<FITypeDescDb> typeDescDb;
 	PHSdkIf* phSdk;
 	PHSceneIf** scene;
 	CDShapeIf** shape;
@@ -152,7 +150,6 @@ void idle(){
  */
 
 int main(int argc, char* argv[]){
-	RegisterTypes();
 	static FIFileContext fc;
 	fc.errorStream=&DSTR;
 	fc.fileInfo.Push();
@@ -160,7 +157,7 @@ int main(int argc, char* argv[]){
 	phSdk = CreatePHSdk();
 	fc.objects.Push(phSdk);
 	static FIFileX fileX;	//<	glutは exitで終わるため，staticにしないとこの変数のCleanupが行われなくなる．
-	fileX.Init(typeDescDb);
+	fileX.Init();
 	fileX.Load(&fc);
 	phSdk->Print(DSTR);
 

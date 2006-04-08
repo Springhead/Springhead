@@ -13,6 +13,7 @@
 
 namespace Spr{;
 
+class FINodeHandlers;
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
@@ -20,9 +21,11 @@ namespace Spr{;
 	そのあと，オブジェクトを生成する．	*/
 class FIFileContext{
 public:
-	typedef UTStack<ObjectIf*> IfStack;
 	//--------------------------------------------------------------------------
 	//	クラス定義
+	///
+	typedef UTStack<ObjectIf*> IfStack;
+	///
 	struct FileInfo{
 		~FileInfo();
 		std::string name;	///<	ファイル名
@@ -119,6 +122,7 @@ public:
 			return back().nextField==F_STR;
 		}
 	};
+	///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
 	struct Link{
 		std::vector<NameManagerIf*> nameManagers;
 		std::string ref;
@@ -139,8 +143,12 @@ public:
 	FieldItStack fieldIts;
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
-	///
+	///	リファレンスを後でリンクするための記録．
 	UTStack<Link> links;
+	///	型DB
+	FITypeDescDb* typeDb;
+	///	ノードハンドラ
+	FINodeHandlers* handlers;
 
 	//---------------------------------------------------------------------------
 	//	関数

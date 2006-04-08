@@ -334,6 +334,8 @@ protected:
 ///	型のデータベース
 class SPR_DLL FITypeDescDb: public UTRefCount{
 public:
+	///
+	static UTRef<FITypeDescDb> theTypeDescDb;
 	///	コンテナの型
 	typedef std::set< UTRef<FITypeDesc>, UTContentsLess< UTRef<FITypeDesc> > > Db;
 	struct ProtoDesc{

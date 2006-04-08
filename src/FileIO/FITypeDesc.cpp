@@ -188,6 +188,7 @@ void FITypeDesc::Print(std::ostream& os) const{
 
 //----------------------------------------------------------------------------
 //	FITypeDescDb
+UTRef<FITypeDescDb> FITypeDescDb::theTypeDescDb;
 FITypeDescDb::ProtoDescs FITypeDescDb::protoDescs;
 
 FITypeDescDb::~FITypeDescDb(){
