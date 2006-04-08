@@ -40,6 +40,9 @@ void RegisterTypes(){
 
 	db->RegisterDesc(new FITypeDescString("string"));
 	#include "TypeDescDumpImp.h"
+	
+	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");
+
 	db->Link();
 }
 }

@@ -9,7 +9,8 @@ namespace Spr {;
 class CDShape;
 struct CDShapeDesc;
 class PHSolidContainer;
-struct PHJointDesc;
+struct PHConstraintDesc;
+typedef PHConstraintDesc PHJointDesc;
 
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，

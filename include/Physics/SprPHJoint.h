@@ -28,8 +28,8 @@ struct PHConstraintDesc{
 	PHConstraintDesc():bEnabled(true){}
 };
 
-/// 関節のディスクリプタ
-struct PHJointDesc : public PHConstraintDesc{};
+/// 関節のディスクリプタ	<	何もメンバを追加しない場合は，typedefと別名定義を FIDesc.cppに追加で．
+typedef PHConstraintDesc	PHJointDesc;
 
 /// 1軸関節のディスクリプタ
 struct PHJoint1DDesc : public PHJointDesc{

@@ -134,14 +134,6 @@
 	field->offset = (char*)&(pPHConstraintDesc->pose) - (char*)pPHConstraintDesc;
 	db->RegisterDesc(desc);
 	
-	PHJointDesc* pPHJointDesc = NULL;
-	desc = DBG_NEW FITypeDesc("PHJointDesc");
-	desc->size = sizeof(PHJointDesc);
-	desc->ifInfo = PHJointIf::GetIfInfoStatic();
-	desc->access = DBG_NEW FIAccess<PHJointDesc>;
-	field = desc->AddBase("PHConstraintDesc");
-	field->offset = (char*)(PHConstraintDesc*)pPHJointDesc - (char*)pPHJointDesc;
-	
 	PHJoint1DDesc* pPHJoint1DDesc = NULL;
 	desc = DBG_NEW FITypeDesc("PHJoint1DDesc");
 	desc->size = sizeof(PHJoint1DDesc);

@@ -18,7 +18,8 @@ struct CDShapeIf;
 struct CDShapeDesc;
 
 struct PHJointIf;
-struct PHJointDesc;
+struct PHConstraintDesc;
+typedef PHConstraintDesc PHJointDesc;
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{

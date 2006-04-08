@@ -157,7 +157,7 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count ++;
-	if (count > 5000) exit(0);
+	if (count > 1000) exit(0);
 }
 
 /**
@@ -171,7 +171,11 @@ int main(int argc, char* argv[]){
 	static FIFileContext fc;
 	fc.errorStream=&DSTR;
 	fc.fileInfo.Push();
-	fc.fileInfo.back().Map("test.x");
+	if (argc>=2){
+		fc.fileInfo.back().Map(argv[1]);
+	}else{
+		fc.fileInfo.back().Map("test.x");
+	}
 	phSdk = CreatePHSdk();
 	fc.objects.Push(phSdk);
 	static FIFileX fileX;	//<	glutは exitで終わるため，staticにしないとこの変数のCleanupが行われなくなる．
