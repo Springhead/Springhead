@@ -20,6 +20,8 @@
 	field = desc->AddField("ShapeType", "enum", "type",  "");
 	field->AddEnumConst("CONVEX");
 	field->AddEnumConst("CONVEXMESH");
+	field->AddEnumConst("SPHERE");
+	field->AddEnumConst("SPHERE");
 	field->offset = (char*)(&pCDShapeDesc->type) - (char*)pCDShapeDesc;
 	db->RegisterDesc(desc);
 	
@@ -34,6 +36,21 @@
 	field->offset = (char*)&(pCDConvexMeshDesc->vertices) - (char*)pCDConvexMeshDesc;
 	field = desc->AddField("", "PHMaterial", "material", "");
 	field->offset = (char*)&(pCDConvexMeshDesc->material) - (char*)pCDConvexMeshDesc;
+	db->RegisterDesc(desc);
+	
+	CDSphereDesc* pCDSphereDesc = NULL;
+	desc = DBG_NEW FITypeDesc("CDSphereDesc");
+	desc->size = sizeof(CDSphereDesc);
+	desc->ifInfo = CDSphereIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<CDSphereDesc>;
+	field = desc->AddBase("CDShapeDesc");
+	field->offset = (char*)(CDShapeDesc*)pCDSphereDesc - (char*)pCDSphereDesc;
+	field = desc->AddField("", "Vec3f", "center", "");
+	field->offset = (char*)&(pCDSphereDesc->center) - (char*)pCDSphereDesc;
+	field = desc->AddField("", "float", "radius", "");
+	field->offset = (char*)&(pCDSphereDesc->radius) - (char*)pCDSphereDesc;
+	field = desc->AddField("", "PHMaterial", "material", "");
+	field->offset = (char*)&(pCDSphereDesc->material) - (char*)pCDSphereDesc;
 	db->RegisterDesc(desc);
 	
 	GRLight* pGRLight = NULL;
@@ -187,6 +204,8 @@
 	field->AddEnumConst("SOLVER_CONSTRAINT");
 	field->AddEnumConst("SOLVER_CONSTRAINT");
 	field->offset = (char*)(&pPHSceneDesc->contactSolver) - (char*)pPHSceneDesc;
+	field = desc->AddField("", "Vec3f", "gravity", "");
+	field->offset = (char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc;
 	db->RegisterDesc(desc);
 	
 	PHSolidState* pPHSolidState = NULL;
@@ -222,6 +241,8 @@
 	field->offset = (char*)&(pPHSolidDesc->mass) - (char*)pPHSolidDesc;
 	field = desc->AddField("", "Matrix3d", "inertia", "");
 	field->offset = (char*)&(pPHSolidDesc->inertia) - (char*)pPHSolidDesc;
+	field = desc->AddField("", "bool", "gravity", "");
+	field->offset = (char*)&(pPHSolidDesc->gravity) - (char*)pPHSolidDesc;
 	db->RegisterDesc(desc);
 	
 	Vec2f* pVec2f = NULL;

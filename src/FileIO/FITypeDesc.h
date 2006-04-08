@@ -167,6 +167,14 @@ public:
 		}
 		///	フィールドのアドレスを計算．vectorを拡張する．
 		void* FITypeDesc::Field::GetAddressEx(void* base, int pos);
+		///	typeがboolの単純型の場合に，boolを読み出す関数
+		bool ReadBool(const void* base, int pos=0){
+			return type->ReadBool(GetAddress(base, pos));
+		}
+		///	typeがboolの単純型の場合に，boolを書き込む関数
+		void WriteBool(void* base, bool val, int pos = 0){
+			type->WriteBool(val, GetAddressEx(base, pos));
+		}
 		///	typeが数値の単純型の場合に，数値を読み出す関数
 		double ReadNumber(const void* base, int pos=0){
 			return type->ReadNumber(GetAddress(base, pos));
@@ -241,6 +249,10 @@ public:
 	const IfInfo* GetIfInfo(){ return ifInfo; }
 
 	//	ユーティリティ関数
+	///	TypeDescがboolの単純型の場合に，boolを読み出す関数
+	virtual bool ReadBool(const void* ptr){ assert(0); return 0;}
+	///	TypeDescが数値の単純型の場合に，数値を書き込む関数
+	virtual void WriteBool(bool val, void* ptr){ assert(0);}
 	///	TypeDescが数値の単純型の場合に，数値を読み出す関数
 	virtual double ReadNumber(const void* ptr){ assert(0); return 0;}
 	///	TypeDescが数値の単純型の場合に，数値を書き込む関数
@@ -284,6 +296,22 @@ protected:
 	}
 	///	数値書き込み
 	virtual void WriteNumber(double val, void* ptr){
+		*(N*)ptr = (N)val;
+	}
+};
+
+template <class N>
+class SPR_DLL FITypeDescBool:public FITypeDesc{
+public:
+	FITypeDescBool(){}
+	FITypeDescBool(std::string tn): FITypeDesc(tn, sizeof(N)){}
+protected:
+	///	数値読み出し
+	virtual bool ReadBool(const void* ptr){
+		return *(const N*)ptr != 0;
+	}
+	///	数値書き込み
+	virtual void WriteBool(bool val, void* ptr){
 		*(N*)ptr = (N)val;
 	}
 };

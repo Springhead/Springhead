@@ -132,7 +132,7 @@ bool FIFileContext::FieldIt::NextField(){
 	//	配列カウントを初期化
 	arrayPos = -1;
 	//	フィールドの型を設定
-	if (	field->type->GetTypeName().compare("BYTE")==0
+	if(		field->type->GetTypeName().compare("BYTE")==0
 		||	field->type->GetTypeName().compare("WORD")==0
 		||	field->type->GetTypeName().compare("DWORD")==0
 		||	field->type->GetTypeName().compare("char")==0
@@ -140,6 +140,9 @@ bool FIFileContext::FieldIt::NextField(){
 		||	field->type->GetTypeName().compare("int")==0
 		||	field->type->GetTypeName().compare("enum")==0){
 		nextField = F_INT;
+	}else if (field->type->GetTypeName().compare("bool")==0
+		||	field->type->GetTypeName().compare("BOOL")==0){
+		nextField = F_BOOL;
 	}else if (field->type->GetTypeName().compare("float")==0
 		||	field->type->GetTypeName().compare("double")==0
 		||	field->type->GetTypeName().compare("FLOAT")==0
@@ -165,6 +168,10 @@ FIFileContext::Link::Link(const IfStack& objs, const char* p, ObjectIf* o, std::
 }
 //---------------------------------------------------------------------------
 //	FIFileContext
+void FIFileContext::WriteBool(bool v){
+	FIFileContext::FieldIt& curField = fieldIts.back();
+	curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
+}
 void FIFileContext::WriteNumber(double v){
 	FIFileContext::FieldIt& curField = fieldIts.back();
 	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);

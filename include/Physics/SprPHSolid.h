@@ -21,11 +21,13 @@ struct PHSolidState{
 struct PHSolidDesc: public PHSolidState{
 	double		mass;			///<	Ž¿—Ê
 	Matrix3d	inertia;		///<	Šµ«ƒeƒ“ƒ\ƒ‹	(LocalŒn)
+	bool		gravity;		///<	d—Í‚Ì‰e‹¿‚ðŽó‚¯‚é‚©
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
 		mass = 1.0f;
 		inertia=Matrix3d::Unit();
+		gravity=true;
 	}
 };
 

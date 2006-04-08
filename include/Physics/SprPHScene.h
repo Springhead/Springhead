@@ -39,10 +39,12 @@ struct PHSceneDesc: public PHSceneState{
 		SOLVER_PENALTY,
 		SOLVER_CONSTRAINT
 	} contactSolver;
+	Vec3f gravity;
 	PHSceneDesc(){Init();}
 	void Init(){
 		//contactSolver = SOLVER_PENALTY;
 		contactSolver = SOLVER_CONSTRAINT;
+		gravity=Vec3f(0,-9.8f,0);
 	}
 };
 

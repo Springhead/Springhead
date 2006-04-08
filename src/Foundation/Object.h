@@ -45,7 +45,7 @@ class Object;
 #define OCAST(T, i)	OcastImp<T>(i)
 template <class T, class I> T* OcastImp(I* i){
 	ObjectIf* oi = i;
-	void* obj = i->GetIfInfo()->GetSprObject(oi);
+	void* obj = i ? i->GetIfInfo()->GetSprObject(oi) : i;
 	return (T*)(Object*)obj;
 }
 	

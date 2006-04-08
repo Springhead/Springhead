@@ -63,7 +63,7 @@ public:
 		組み立て型は，FITypeDescを参照して読み出すので，F_BLOCKを用意した．
 	*/
 	enum FieldType{
-		F_NONE, F_INT, F_REAL, F_STR, F_BLOCK
+		F_NONE, F_BOOL, F_INT, F_REAL, F_STR, F_BLOCK
 	};
 	/**	TypeDescのフィールドのイタレータ
 		バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，
@@ -108,6 +108,9 @@ public:
 		bool IsArrayRest(){
 			if (!size()) return false;
 			return back().arrayPos < back().arrayLength;
+		}
+		bool IsBool(){
+			return back().nextField==F_BOOL;
 		}
 		bool IsNumber(){
 			return back().nextField==F_INT || back().nextField==F_REAL;
@@ -169,6 +172,8 @@ public:
 	void WriteString(std::string v);
 	///
 	void WriteNumber(double d);
+	///
+	void WriteBool(bool b);
 	///
 	void AddLink(std::string ref, const char* pos);
 	///

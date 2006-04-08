@@ -81,11 +81,17 @@ static bool IsFieldInt(){ return fileContext->fieldIts.back().nextField==FIFileC
 static bool IsFieldReal(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_REAL; }
 static bool IsFieldStr(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_STR; }
 static bool IsFieldBlock(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_BLOCK; }
+static bool IsFieldBool(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_BOOL; }
 
 static double numValue;
 static std::string strValue;
+static bool boolValue;
 static void NumSet(double v){
 	numValue = v;
+}
+static void BoolSet(const char* b, const char* e){
+	UTString v(b,e);
+	boolValue = (v.compare("true")==0) || (v.compare("TRUE")==0) || (v.compare("1")==0);
 }
 static void StrSet(const char* b, const char* e){
 	strValue.assign(b,e);
@@ -116,7 +122,9 @@ static void SetVal(const char* b, const char* e){
 #endif
 	//	‚±‚±‚Ü‚Å
 	
-	if (fileContext->fieldIts.IsNumber()){
+	if (fileContext->fieldIts.IsBool()){
+		fileContext->WriteBool(boolValue);
+	}else if (fileContext->fieldIts.IsNumber()){
 		fileContext->WriteNumber(numValue);
 	}else if (fileContext->fieldIts.IsString()){
 		fileContext->WriteString(strValue);
@@ -223,11 +231,13 @@ void FIFileX::Init(FITypeDescDb* db_){
 						exp >> ((ch_p(',')|ch_p(';'))[&SetVal] | ExpP("',' or ';'"))
 					]
 				  ];
-	exp			= if_p(&IsFieldInt)[ iNum | ExpP("int value") ] >>
+	exp			= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
+				  if_p(&IsFieldInt)[ iNum | ExpP("int value") ] >>
 				  if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ] >>
 				  if_p(&IsFieldStr)[ str | ExpP("string") ] >>
 				  if_p(&IsFieldBlock)[ eps_p[&BlockStart] >> block[&BlockEnd] ];
 	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_') ];
+	boolVal		= (str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
 	iNum		= int_p[&NumSet];
 	rNum		= real_p[&NumSet];
 	str			= lexeme_d[ 

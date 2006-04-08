@@ -93,7 +93,7 @@ public:
 	PHBBox bbox;
 
 	OBJECTDEF(PHSolid);
-	PHSolid(const PHSolidDesc& desc=PHSolidDesc());
+	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
@@ -199,19 +199,19 @@ public:
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{
 public:
-	UTRef<PHSolid> Erase(const UTRef<PHSolid>& s){
+	UTRef<PHSolid> Erase(const PHSolid* s){
 		iterator it = std::find(begin(), end(), s);
 		if (it == end()) return NULL;
 		UTRef<PHSolid> rv = *it;
 		erase(it);
 		return *it;
 	}
-	UTRef<PHSolid>* Find(const UTRef<PHSolid>& s){
+	UTRef<PHSolid>* Find(const PHSolid* s){
 		iterator it = std::find(begin(), end(), s);
 		if (it == end()) return NULL;
 		else return &*it;
 	}
-	UTRef<PHSolid>* Find(const UTRef<PHSolid>& s) const {
+	UTRef<PHSolid>* Find(const PHSolid* s) const {
 		return ((PHSolids*)this)->Find(s);
 	}
 };

@@ -7,7 +7,8 @@ namespace Spr{;
 class FIFileX{
 protected:
 	FIPhraseParser start, temp, uuid, define, defNormal, defArray, blockSkip, 
-		defOpen, defRestrict, arraySuffix, data, block, exp, ref, id, iNum, rNum, str;
+		defOpen, defRestrict, arraySuffix, data, block, exp, ref, id, 
+		boolVal, iNum, rNum, str;
 	FISkipParser cmt;
 	FITypeDescDb typeDb;
 public:

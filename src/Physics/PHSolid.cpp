@@ -12,10 +12,12 @@ namespace Spr{
 OBJECTIMP(PHSolid, SceneObject);
 IF_IMP(PHSolid, SceneObject);
 
-PHSolid::PHSolid(const PHSolidDesc& desc):PHSolidDesc(desc){
+PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
+	SetScene(s);
 	bDynamical = true;
 	integrationMode = PHINT_SIMPLETIC;
 	inertia_inv = inertia.inv();
+	SetGravity(gravity);
 }
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
 	CDShapeIf* rv = ICAST(PHSceneIf, GetScene())->CreateShape(desc);
@@ -232,12 +234,13 @@ void PHSolid::SetGravity(bool bOn){
 	PHGravityEngine* ge;
 	ps->engines.Find(ge);
 	if (bOn == true){
-		if (ge->solids.Find(this)){
+		if (!ge->solids.Find(this)){
 			ge->solids.push_back(this);
 		}
 	}else{
 		ge->solids.Erase(this);
 	}
+	gravity = bOn;
 }
 int PHSolid::NShape(){
 	return shapes.size();

@@ -167,7 +167,6 @@ int main(int argc, char* argv[]){
 	scene = phSdk->GetScenes();		// Scene�̎擾
 	shape = phSdk->GetShapes();		// Shape�̎擾
 	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NSphape=" << phSdk->NShape() << std::endl;
-	if (phSdk->NScene()) (*scene)->SetGravity(Vec3f(0,0,0));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

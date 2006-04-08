@@ -16,6 +16,8 @@ void RegisterTypes(){
 	typedef unsigned char BYTE;
 	typedef unsigned short WORD;
 	typedef unsigned int DWORD;
+	db->RegisterDesc(new FITypeDescBool<bool>("bool"));
+	db->RegisterDesc(new FITypeDescBool<bool>("BOOL"));
 	db->RegisterDesc(new FITypeDescNumber<char>("char"));
 	db->RegisterDesc(new FITypeDescNumber<short>("short"));
 	db->RegisterDesc(new FITypeDescNumber<int>("int"));
