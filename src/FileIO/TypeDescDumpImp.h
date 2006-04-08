@@ -115,22 +115,32 @@
 	field->offset = (char*)&(pGRCamera->back) - (char*)pGRCamera;
 	db->RegisterDesc(desc);
 	
+	PHConstraintDesc* pPHConstraintDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHConstraintDesc");
+	desc->size = sizeof(PHConstraintDesc);
+	desc->ifInfo = PHConstraintIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHConstraintDesc>;
+	field = desc->AddField("ConstraintType", "enum", "type",  "");
+	field->AddEnumConst("CONTACT");
+	field->AddEnumConst("HINGEJOINT");
+	field->AddEnumConst("SLIDERJOINT");
+	field->AddEnumConst("BALLJOINT");
+	field->AddEnumConst("PARAMETRICJOINT");
+	field->AddEnumConst("PARAMETRICJOINT");
+	field->offset = (char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc;
+	field = desc->AddField("", "bool", "bEnabled", "");
+	field->offset = (char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc;
+	field = desc->AddField("", "Posed", "pose", "2");
+	field->offset = (char*)&(pPHConstraintDesc->pose) - (char*)pPHConstraintDesc;
+	db->RegisterDesc(desc);
+	
 	PHJointDesc* pPHJointDesc = NULL;
 	desc = DBG_NEW FITypeDesc("PHJointDesc");
 	desc->size = sizeof(PHJointDesc);
 	desc->ifInfo = PHJointIf::GetIfInfoStatic();
 	desc->access = DBG_NEW FIAccess<PHJointDesc>;
-	field = desc->AddField("JointType", "enum", "type",  "");
-	field->AddEnumConst("JOINT_CONTACT");
-	field->AddEnumConst("JOINT_HINGE");
-	field->AddEnumConst("JOINT_SLIDER");
-	field->AddEnumConst("JOINT_BALL");
-	field->offset = (char*)(&pPHJointDesc->type) - (char*)pPHJointDesc;
-	field = desc->AddField("", "bool", "bEnabled", "");
-	field->offset = (char*)&(pPHJointDesc->bEnabled) - (char*)pPHJointDesc;
-	field = desc->AddField("", "Posed", "poseJoint", "2");
-	field->offset = (char*)&(pPHJointDesc->poseJoint) - (char*)pPHJointDesc;
-	db->RegisterDesc(desc);
+	field = desc->AddBase("PHConstraintDesc");
+	field->offset = (char*)(PHConstraintDesc*)pPHJointDesc - (char*)pPHJointDesc;
 	
 	PHJoint1DDesc* pPHJoint1DDesc = NULL;
 	desc = DBG_NEW FITypeDesc("PHJoint1DDesc");
@@ -180,6 +190,8 @@
 	field->offset = (char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc;
 	field = desc->AddField("", "double", "max_angle", "");
 	field->offset = (char*)&(pPHBallJointDesc->max_angle) - (char*)pPHBallJointDesc;
+	field = desc->AddField("", "Vec3d", "torque", "");
+	field->offset = (char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc;
 	db->RegisterDesc(desc);
 	
 	PHSceneState* pPHSceneState = NULL;
