@@ -35,8 +35,14 @@ using namespace Spr;
 
 
 // 材質の設定
-GRMaterial material(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+GRMaterial matFloor(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 					Vec4f(0.9, 0.0, 0.0, 1.0),		// diffuse
+					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
+					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
+					20.0);							// power
+
+GRMaterial matBox(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+					Vec4f(0.0, 0.2, 0.8, 1.0),		// diffuse
 					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
 					20.0);							// power
@@ -49,7 +55,7 @@ GRMaterial material(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
-	render->SetMaterial(material);	
+	render->SetMaterial(matFloor);	
 
 	PHSceneIf* scene = NULL;
 	if (phSdk->NScene()){
@@ -58,6 +64,9 @@ void display(){
 	}
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
+		if (num == 1){
+			render->SetMaterial(matBox);	
+		}
 		Affinef af;
 		solids[num]->GetPose().ToAffine(af);
 		render->PushModelMatrix();
