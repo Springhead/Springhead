@@ -8,9 +8,32 @@ namespace Spr{;
 
 class PHJoint : public InheritConstraint<PHJointIf, PHConstraint>{
 public:
-
 };
+
+/// PHJoint1Dから派生するクラスのためのルータ
+template<class inf, class base>
+class InheritJoint1D : public InheritConstraint<inf, base>{
+public:
+	void	SetRange(double lower, double upper){base::SetRange(lower, upper);}
+	void	GetRange(double& lower, double& upper){base::GetRange(lower, upper);}
+	void	SetMotorTorque(double t){base::SetMotorTorque(t);}
+	double	GetMotorTorque(){return base::GetMotorTorque();}
+	// void	SetDesiredPosition(double p, double t) = 0;	/// 目標変位を設定する
+	// double	GetDesiredPosition() = 0;				/// 目標変位を取得する
+	void	SetDesiredVelocity(double v){base::SetDesiredVelocity(v);}
+	double	GetDesiredVelocity(){return base::GetDesiredVelocity();}
+	void	SetSpring(double K){base::SetSpring(K);}
+	double	GetSpring(){return base::GetSpring();}
+	void	SetSpringOrigin(double org){base::SetSpringOrigin(org);}
+	double	GetSpringOrigin(){return base::GetSpringOrigin();}
+	void	SetDamper(double D){base::SetDamper(D);}
+	double	GetDamper(){return base::GetDamper();}
+};
+
 class PHJoint1D : public InheritConstraint<PHJoint1DIf, PHJoint>{
+protected:
+	void	CompDof();
+
 public:
 	//OBJECTDEF(PHJoint1D);
 	bool on_lower, on_upper;	/// 可動範囲の下限、上限に達している場合にtrue
@@ -19,7 +42,6 @@ public:
 	double pos_d, vel_d;		/// 目標変位、目標速度
 	double spring, origin, damper;	/// バネ係数、バネ原点、ダンパ係数
 	
-	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc);
 	virtual void	SetRange(double l, double u){lower = l, upper = u;}
 	virtual void	GetRange(double& l, double& u){l = lower, u = upper;}
 	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}
@@ -35,6 +57,7 @@ public:
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper(){return damper;}
 	
+	virtual void	SetDesc(const PHJointDesc& desc);
 };
 
 }

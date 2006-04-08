@@ -43,11 +43,34 @@ PHConstraint::PHConstraint(){
 	bEnabled = true;
 }
 
-void PHConstraint::Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc){
-	solid[0] = lhs, solid[1] = rhs;
+bool PHConstraint::AddChildObject(ObjectIf* o){
+	PHSolid* s = OCAST(PHSolid, o);
+	if(s){
+		PHScene* scene = OCAST(PHScene, GetScene());
+		assert(scene);
+		PHConstraintEngine* ce;
+		scene->engines.Find(ce);
+		assert(ce);
+		PHSolidAuxs::iterator it = ce->solids.Find(s);
+		if(it == ce->solids.end())
+			return false;
+		if(!solid[0]){
+			solid[0] = *it;
+			return true;
+		}
+		if(!solid[1]){
+			solid[1] = *it;
+			return true;
+		}
+	}
+	return false;
+
+}
+
+void PHConstraint::SetDesc(const PHConstraintDesc& desc){
 	for(int i = 0; i < 2; i++){
-		desc.poseJoint[i].Ori().ToMatrix(Rj[i]);
-		rj[i] = desc.poseJoint[i].Pos();
+		desc.pose[i].Ori().ToMatrix(Rj[i]);
+		rj[i] = desc.pose[i].Pos();
 	}
 	bEnabled = desc.bEnabled;
 }
@@ -77,6 +100,7 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 		Jww[1] = Jvv[1];
 		wjrel = Jwv[0] * solid[0]->v + Jww[0] * solid[0]->w + Jwv[1] * solid[1]->v + Jww[1] * solid[1]->w;
 		
+		//角速度の左からかけるとquaternionの時間微分が得られる行列
 		Matrix3d E(
 			 qjrel.W(),  qjrel.Z(), -qjrel.Y(),
 			-qjrel.Z(),  qjrel.W(),  qjrel.X(),
@@ -96,7 +120,7 @@ void PHConstraint::SetupDynamics(double dt){
 
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
-	CompJacobian(GetJointType() != PHJointDesc::JOINT_CONTACT);
+	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
 	
 	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
 	//	拘束の種類ごとに異なる

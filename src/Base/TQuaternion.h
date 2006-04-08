@@ -267,13 +267,30 @@ public:
 		Z() = cosRoll * sinPitch * cosYaw - sinRoll * cosPitch * sinYaw;
 	}
 
-	//角速度からクウォータニオンの時間微分を計算
-	//w : 角速度（ワールド）
-	//q : クウォータニオン
+	/** @brief 角速度からquaternionの時間微分を計算
+		@param w 角速度
+
+		このquaternionと角速度wから，quaternionの時間微分を計算する．
+		ただしwは回転元（ワールド）座標系から見た回転先（ローカル）座標系の角速度を
+		回転元座標系で表わしたもの．
+	 */
 	TQuaternion<ET> Derivative(const TVec3<ET>& w){
 		return 0.5 * TQuaternion<ET>(0.0, w.X(), w.Y(), w.Z()) * *this;
 	}
-	protected:
+
+	/** @brief クウォータニオンの時間微分から角速度を計算
+		@param qd quaternionの時間微分
+		@return 角速度
+
+		このquaternionとその時間微分qdから角速度wを計算する．
+		ただしwは回転元（ワールド）座標系から見た回転先（ローカル）座標系の角速度を
+		回転元座標系で表わしたもの．
+	 */
+	TVec3<ET> AngularVelocity(const TQuaternion<ET>& qd){
+		return 2.0 * (qd * Conjugated()).V();
+	}
+
+protected:
 	///	コンストラクタ
 	void set_default(){ W() = 1; X() = 0; Y() = 0; Z() = 0;}
 };

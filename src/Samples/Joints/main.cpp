@@ -354,20 +354,20 @@ void BuildScene1(){
 
 	PHHingeJointDesc jd;
 	jntLink.resize(4);
-	jd.poseJoint[0].Pos() = Vec3d(0.0, 10.0, 0.0);
-	jd.poseJoint[1].Pos() = Vec3d(0.0, -1.0, 0.0);
+	jd.pose[0].Pos() = Vec3d(0.0, 10.0, 0.0);
+	jd.pose[1].Pos() = Vec3d(0.0, -1.0, 0.0);
 	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], jd);
 
-	jd.poseJoint[0].Pos() = Vec3d(4.0, 10.0, 0.0);
-	jd.poseJoint[1].Pos() = Vec3d(0.0, -2.5, 0.0);
+	jd.pose[0].Pos() = Vec3d(4.0, 10.0, 0.0);
+	jd.pose[1].Pos() = Vec3d(0.0, -2.5, 0.0);
 	jntLink[1] = scene->CreateJoint(soFloor, soBox[1], jd);
 
-	jd.poseJoint[0].Pos() = Vec3d(0.0, 1.0, 0.0);
-	jd.poseJoint[1].Pos() = Vec3d(0.0, -5.0, 0.0);
+	jd.pose[0].Pos() = Vec3d(0.0, 1.0, 0.0);
+	jd.pose[1].Pos() = Vec3d(0.0, -5.0, 0.0);
 	jntLink[2] = scene->CreateJoint(soBox[0], soBox[2], jd);
 
-	jd.poseJoint[0].Pos() = Vec3d(0.0, 2.5, 0.0);
-	jd.poseJoint[1].Pos() = Vec3d(0.0, 0.0, 0.0);
+	jd.pose[0].Pos() = Vec3d(0.0, 2.5, 0.0);
+	jd.pose[1].Pos() = Vec3d(0.0, 0.0, 0.0);
 	jntLink[3] = scene->CreateJoint(soBox[1], soBox[2], jd);
 
 	scene->EnableContact(soBox[0], soBox[1], false);
@@ -391,8 +391,8 @@ void OnKey0(char key){
 		soBox.back()->AddShape(meshBox);
 		soBox.back()->SetFramePosition(Vec3f(0.0, 1.0, 0.0));
 		PHHingeJointDesc jdesc;
-		jdesc.poseJoint[0].Pos() = Vec3d( 1,  1,  0);
-		jdesc.poseJoint[1].Pos() = Vec3d(-1, -1,  0);
+		jdesc.pose[0].Pos() = Vec3d( 1,  1,  0);
+		jdesc.pose[1].Pos() = Vec3d(-1, -1,  0);
 		int n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
@@ -434,5 +434,16 @@ void OnKey1(char key){
 		soBox.back()->SetMass(2.0);
 		//soBox.back()->SetGravity(false);
 		}break;	
+	case 'c':{
+		//PHParametricJointDesc desc;
+		hinge->SetSpring(K);
+		hinge->SetDamper(B);
+		for(double theta = -360.0; theta < 360.0; theta += 1.0){
+			hinge->SetSpringOrigin(Rad(theta));
+			for(int i = 0; i < 5; i++)
+				scene->Step();
+
+		}
+		}break;
 	}
 }

@@ -29,6 +29,7 @@ public:
 class PHConstraintEngine: public PHEngine{
 	friend class PHSolidPair;
 	friend class PHSolid;
+	friend class PHConstraint;
 
 	OBJECTDEF(PHConstraintEngine);
 
@@ -46,6 +47,8 @@ class PHConstraintEngine: public PHEngine{
 
 	};
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
+
+	PHJoint* CreateJoint(const PHJointDesc& desc);
 	
 protected:
 	PHSolidAuxs		solids;			/// „‘Ì‚Ì”z—ñ
@@ -71,9 +74,10 @@ protected:
 	void UpdateShapePairs(PHSolid* solid); 
 	
 public:
-	void Add(PHSolid* s);			/// Solid ‚ğ“o˜^‚·‚é
-	void Remove(PHSolid* s);		/// “o˜^‚³‚ê‚Ä‚¢‚éSolid‚ğíœ‚·‚é
-	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	/// ŠÖß‚Ì’Ç‰Á‚·‚é
+	void Add(PHSolid* s);			///< Solid ‚ğ“o˜^‚·‚é
+	void Remove(PHSolid* s);		///< “o˜^‚³‚ê‚Ä‚¢‚éSolid‚ğíœ‚·‚é
+	PHJoint* AddJoint(const PHJointDesc& desc);	///< ŠÖß‚ğ’Ç‰Á‚·‚éiƒtƒ@ƒCƒ‹ƒ[ƒ_—pj
+	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	///< ŠÖß‚Ì’Ç‰Á‚·‚é
 	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
 	///
 	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}

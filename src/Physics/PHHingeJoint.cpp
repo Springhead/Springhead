@@ -25,24 +25,7 @@ double PHHingeJoint::GetVelocity(){
 }
 
 void PHHingeJoint::CompConstraintJacobian(){
-	on_lower = on_upper = false;
-	if(lower < upper){
-		double theta = GetPosition();
-		on_lower = (theta <= lower);
-		on_upper = (theta >= upper);
-	}
-	if(on_lower || on_upper){
-		dim_d = 6;
-		dim_c = 6;
-	}
-	if(mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
-		dim_d = 6;
-		dim_c = 5;
-	}
-	else{
-		dim_d = 5;
-		dim_c = 5;
-	}
+	CompDof();
 	Ad.clear();
 	Ac.clear();
 	for(int i = 0; i < 2; i++){

@@ -11,22 +11,25 @@ namespace Spr{;
 /** \addtogroup gpJoint 関節クラス	*/
 //@{
 
-
-/// 関節のディスクリプタ
-struct PHJointDesc{
-	/// 関節の種類
-	enum JointType{
-		JOINT_CONTACT,
-		JOINT_HINGE,
-		JOINT_SLIDER,
-		JOINT_BALL,
+/// 拘束のディスクリプタ
+struct PHConstraintDesc{
+	/// 拘束の種類
+	enum ConstraintType{
+		CONTACT,
+		HINGEJOINT,
+		SLIDERJOINT,
+		BALLJOINT,
+		PARAMETRICJOINT
 	} type;
 	/// 有効/無効フラグ
 	bool bEnabled;
 	/// 剛体から見た関節の位置と傾き
-	Posed poseJoint[2];
-	PHJointDesc():bEnabled(true){}
+	Posed pose[2];
+	PHConstraintDesc():bEnabled(true){}
 };
+
+/// 関節のディスクリプタ
+struct PHJointDesc : public PHConstraintDesc{};
 
 /// 1軸関節のディスクリプタ
 struct PHJoint1DDesc : public PHJointDesc{
@@ -41,22 +44,23 @@ struct PHJoint1DDesc : public PHJointDesc{
 /// ヒンジのディスクリプタ
 struct PHHingeJointDesc : public PHJoint1DDesc{
 	PHHingeJointDesc(){
-		type = JOINT_HINGE;
+		type = HINGEJOINT;
 	}
 };
 
 /// スライダのディスクリプタ
 struct PHSliderJointDesc : public PHJoint1DDesc{
 	PHSliderJointDesc(){
-		type = JOINT_SLIDER;
+		type = SLIDERJOINT;
 	}
 };
 
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
-	double	max_angle;		/// 円錐状の可動範囲
+	double	max_angle;		///< 円錐状の可動範囲
+	Vec3d	torque;			///< モータトルク
 	PHBallJointDesc(){
-		type = JOINT_BALL;
+		type = BALLJOINT;
 		max_angle = 0.0;
 	}
 };
@@ -78,7 +82,7 @@ struct PHConstraintIf : public SceneObjectIf{
 	/** @brief 拘束の種類を取得する
 		@return 拘束の種類
 	 */
-	virtual PHJointDesc::JointType GetJointType() = 0;
+	virtual PHConstraintDesc::ConstraintType GetConstraintType() = 0;
 };
 
 /// 接触点拘束のインタフェース
@@ -183,9 +187,45 @@ struct PHSliderJointIf : public PHJoint1DIf{
 	IF_DEF(PHSliderJoint);
 };
 
+/// パラメトリックジョイントのインタフェース
+struct PHParametricJointIf : public PHJoint1DIf{
+	IF_DEF(PHParametricJoint);
+};
+
 /// ボールジョイントのインタフェース
 struct PHBallJointIf : public PHConstraintIf{
 	IF_DEF(PHBallJoint);
+
+	/** @brief 最大角度を設定する
+		@param angle 最大角度
+	 */
+	virtual void SetMaxAngle(double angle) = 0;
+
+	/** @brief 最大角度を取得する
+		@return 最大角度
+	 */
+	virtual double GetMaxAngle() = 0;
+
+	/** @brief モータトルクを設定する
+		@param torque モータトルク
+	 */
+	virtual void SetMotorTorque(const Vec3d& torque)=0;
+
+	/** @brief モータトルクを取得する
+		@return モータトルク
+	 */
+	virtual Vec3d GetMotorTorque()=0;
+
+	/** @brief 関節変位を取得する
+		@return 関節変位
+	 */
+	virtual Quaterniond	GetPosition() = 0;
+
+	/** @brief 関節速度を取得する
+		@return 関節速度
+	 */
+	virtual Vec3d GetVelocity() = 0;
+
 };
 
 //@}

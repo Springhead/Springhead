@@ -89,6 +89,13 @@ PHSolidIf** PHScene::GetSolids(){
 	return (PHSolidIf**)&*solids->solids.begin();
 }
 
+PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
+	PHConstraintEngine* ce;
+	engines.Find(ce);
+	assert(ce);
+	return ce->AddJoint(desc);
+}
+
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
 	PHConstraintEngine* ce;
 	engines.Find(ce);
@@ -150,8 +157,8 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
 		return CreateShape(*(CDShapeDesc*)desc);
 	}else if (info->Inherit(PHJointIf::GetIfInfoStatic())){
-//		return CreateJoint(*(PHJointDesc*)desc);
-		assert(0);
+		//‚±‚Ì’iŠK‚ÅPHSolid‚Ö‚ÌQÆ‚ÍNULLDAddChildObject‚Å‰ğŒˆ‚³‚ê‚é
+		return CreateJoint(*(PHJointDesc*)desc);
 	}else if(info == PHSolidIf::GetIfInfoStatic()){
 		return CreateSolid(*(const PHSolidDesc*)desc);
 	}

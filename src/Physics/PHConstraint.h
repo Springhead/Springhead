@@ -8,6 +8,10 @@
 
 namespace Spr{;
 
+typedef PTM::TMatrixCol<6, 6, double> Matrix6d;
+typedef PTM::TMatrixCol<6, 3, double> Matrix63d;
+typedef PTM::TVector<6, double> Vec6d;
+
 /// 剛体の情報
 struct PHSolidAux : public Object{
 	PHSolid*	solid;		/// PHSolidへの参照
@@ -48,24 +52,6 @@ public:
 	void Enable(bool bEnable = true){base::Enable(bEnable);}
 	bool IsEnabled(){return base::IsEnabled();}
 };
-template<class inf, class base>
-class InheritJoint1D : public InheritConstraint<inf, base>{
-public:
-	void	SetRange(double lower, double upper){base::SetRange(lower, upper);}
-	void	GetRange(double& lower, double& upper){base::GetRange(lower, upper);}
-	void	SetMotorTorque(double t){base::SetMotorTorque(t);}
-	double	GetMotorTorque(){return base::GetMotorTorque();}
-	// void	SetDesiredPosition(double p, double t) = 0;	/// 目標変位を設定する
-	// double	GetDesiredPosition() = 0;				/// 目標変位を取得する
-	void	SetDesiredVelocity(double v){base::SetDesiredVelocity(v);}
-	double	GetDesiredVelocity(){return base::GetDesiredVelocity();}
-	void	SetSpring(double K){base::SetSpring(K);}
-	double	GetSpring(){return base::GetSpring();}
-	void	SetSpringOrigin(double org){base::SetSpringOrigin(org);}
-	double	GetSpringOrigin(){return base::GetSpringOrigin();}
-	void	SetDamper(double D){base::SetDamper(D);}
-	double	GetDamper(){return base::GetDamper();}
-};
 
 ///
 class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
@@ -101,8 +87,6 @@ public:
 	
 	int			dim_d, dim_c;	// 拘束の次元
 
-	typedef PTM::TMatrixCol<6, 3, double> Matrix63d;
-	typedef PTM::TVector<6, double> Vec6d;
 	Matrix63d	Jdv[2], Jdw[2];	// Dynamics用の拘束ヤコビ行列
 	Matrix63d	Tdv[2], Tdw[2];
 	
@@ -120,10 +104,12 @@ public:
 	//Vec3d		Bv, Bq; /// correctionにおける拘束誤差
 	Vec6d		Ad, Ac;	// A行列の対角成分．dynamics用とcorrection用
 	//Vec3d		Av, Aw, Aq;
-	
+
+	virtual void SetDesc(const PHConstraintDesc& desc);
+	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool IsEnabled(){return bEnabled;}
-	virtual void Init(PHSolidAux* lhs, PHSolidAux* rhs, const PHJointDesc& desc);
+	void Init();
 	void CompJacobian(bool bCompAngular);
 	void SetupDynamics(double dt);
 	void SetupCorrection(double dt, double max_error);

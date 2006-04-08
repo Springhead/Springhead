@@ -320,6 +320,32 @@ void PHConstraintEngine::Remove(PHSolid* s){
 	}
 }
 
+PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
+	PHJoint* joint;
+	switch(desc.type){
+	case PHConstraintDesc::HINGEJOINT:
+		joint = DBG_NEW PHHingeJoint();
+		break;
+	case PHConstraintDesc::SLIDERJOINT:
+		joint = DBG_NEW PHSliderJoint();
+		break;
+	case PHConstraintDesc::BALLJOINT:
+		joint = DBG_NEW PHBallJoint();
+		break;
+	case PHConstraintDesc::PARAMETRICJOINT:
+		joint = DBG_NEW PHParametricJoint();
+		break;
+	}
+	joint->SetDesc(desc);
+	return joint;
+}
+
+PHJoint* PHConstraintEngine::AddJoint(const PHJointDesc& desc){
+	PHJoint* joint = CreateJoint(desc);
+	joints.push_back(joint);
+	return joint;
+}
+
 PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
 	PHSolidAuxs::iterator islhs, isrhs;
 	islhs = solids.Find(lhs);
@@ -327,13 +353,9 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 	if(islhs == solids.end() || isrhs == solids.end())
 		return NULL;
 	
-	PHJoint* joint = NULL;
-	switch(desc.type){
-	case PHJointDesc::JOINT_HINGE:
-		joint = DBG_NEW PHHingeJoint();
-		joint->Init(*islhs, *isrhs, desc);
-		break;
-	}
+	PHJoint* joint = CreateJoint(desc);
+	joint->solid[0] = *islhs;
+	joint->solid[1] = *isrhs;
 	joints.push_back(joint);
 
 	//ŠÖß‚Å‚Â‚È‚°‚ç‚ê‚½„‘ÌŠÔ‚ÌÚG‚Í–³Œø‰»

@@ -13,7 +13,7 @@ public:
 	//OBJECTDEF(PHContactPoint);
 	CDShapePair* shapePair;
 	Vec3d pos;
-	virtual PHJointDesc::JointType GetJointType(){return PHJointDesc::JOINT_CONTACT;}
+	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
 	virtual void CompConstraintJacobian();
 	virtual void CompError();
 	virtual void ProjectionDynamics(double& f, int k);
