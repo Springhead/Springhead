@@ -35,7 +35,7 @@ namespace Spr {
 
 class SPR_DLL DebugPrintf{
 public:
-	static DebugPrintf* GetInstance();
+	static DebugPrintf* _fastcall GetInstance();
 	struct SPR_DLL PrintfFunc{
 		const char* file;
 		int line;
