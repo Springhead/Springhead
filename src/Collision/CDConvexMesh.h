@@ -61,7 +61,7 @@ public:
 	virtual Vec3f Support(const Vec3f& p) const;
 	
 	///	Ø‚èŒû‚ğ‹‚ß‚éDÚG‰ğÍ‚Ég‚¤D
-	virtual void FindCutRing(CDCutRing& r, const Posed& toW);
+	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 
 	CDFaceIf* GetFace(size_t i);
 	size_t NFace();

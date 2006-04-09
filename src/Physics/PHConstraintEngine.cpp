@@ -87,21 +87,22 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	else {						
 		//	切り口を求める１：切り口を構成する線分の列挙
 		CDCutRing cutRing(center, local);
-		conv[0]->FindCutRing(cutRing, shapePoseW[0]);
-		conv[1]->FindCutRing(cutRing, shapePoseW[1]);
-		//	切り口を求める２：線分をつないで輪を作る
-		cutRing.MakeRing();
-		//	cutRing.Print(DSTR);
-		//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
-		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
-			if (vtx->deleted) continue;
-			Vec3d pos;
-			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
-			pos = cutRing.local * pos;
-			Matrix3d local;
-			cutRing.local.Ori().ToMatrix(local);
-			engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
-	//		DSTR << "  " << pos << std::endl;
+		if (conv[0]->FindCutRing(cutRing, shapePoseW[0]) && conv[1]->FindCutRing(cutRing, shapePoseW[1])){
+			//	切り口がある場合（数値誤差で切り口が見つからない場合もある）
+			//	切り口を求める２：線分をつないで輪を作る
+			cutRing.MakeRing();
+			//	cutRing.Print(DSTR);
+			//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
+			for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
+				if (vtx->deleted) continue;
+				Vec3d pos;
+				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+				pos = cutRing.local * pos;
+				Matrix3d local;
+				cutRing.local.Ori().ToMatrix(local);
+				engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
+		//		DSTR << "  " << pos << std::endl;
+			}
 		}
 	}
 }

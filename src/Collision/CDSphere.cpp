@@ -36,8 +36,9 @@ Vec3f CDSphere::Support(const Vec3f& p) const {
 }
 
 // Ø‚èŒû‚ğ‹‚ß‚é. ÚG‰ğÍ‚ğs‚¤.
-void CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
-	assert(0);	
+bool CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
+	assert(0);
+	return false;
 }
 
 // ‹…‘Ì‚Ì’†SÀ•W‚ğæ“¾

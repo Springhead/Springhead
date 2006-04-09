@@ -45,7 +45,7 @@ CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
 	CalcFace();
 }
 
-void CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
+bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();
 	//	頂点がどっち側にあるか調べる．
 	Vec3d planePosL = toL * ring.local.Pos();
@@ -57,6 +57,7 @@ void CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		double vtxDist = planeNormalL * base[i];
 		inside[i] = vtxDist >= d;
 	}
+	bool rv = false;
 	//	またがっている面の場合，交線を求める
 	for(unsigned i=0; i<faces.size(); ++i){
 		if (inside[faces[i].vtxs[0]] == inside[faces[i].vtxs[1]] && //	全部同じ側のときは，
@@ -92,7 +93,9 @@ void CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
 		//	線は内側を向かせたいので， normal, dist を反転して ring.lines に追加
 		ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
+		rv = true;
 	}
+	return rv;
 }
 
 void CalcBBox(Vec3f& bbmin, Vec3f& bbmax){
