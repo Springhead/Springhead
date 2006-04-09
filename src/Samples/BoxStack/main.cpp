@@ -256,6 +256,7 @@ int main(int argc, char* argv[]){
 	desc.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
 	soFloor->SetGravity(false);
+	soFloor->SetDynamical(false);
 	
 	// soBox—p‚Ìdesc
 	desc.mass = 2.0;

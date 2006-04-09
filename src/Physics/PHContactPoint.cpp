@@ -16,6 +16,9 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, 
 	shapePair = sp;
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
+	if(abs(p.z ) > 1.0){
+		DSTR << p << endl;
+	}
 
 	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){

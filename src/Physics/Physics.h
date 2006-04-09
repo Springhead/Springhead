@@ -13,4 +13,4 @@
 #include "PHHingeJoint.h"
 #include "PHSliderJoint.h"
 #include "PHBallJoint.h"
-//#include "PHParametricJoint.h"
+#include "PHPathJoint.h"

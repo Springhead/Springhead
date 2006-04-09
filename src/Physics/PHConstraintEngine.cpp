@@ -497,7 +497,10 @@ void PHConstraintEngine::UpdateSolids(double dt){
 	Vec3d vnew, wnew;
 	for(is = solids.begin(); is != solids.end(); is++){
 		aux = *is;
-        solid = aux->solid;
+		if(aux->dV.norm() > 0.1){
+			DSTR << aux->dv << aux->dV << endl;
+		}
+		solid = aux->solid;
 		//velocity update
 		vnew = aux->v + aux->dv0 + aux->dv;
 		wnew = aux->w + aux->dw0 + aux->dw;

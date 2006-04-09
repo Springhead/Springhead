@@ -435,15 +435,17 @@ void OnKey1(char key){
 		//soBox.back()->SetGravity(false);
 		}break;	
 	case 'c':{
-		//PHParametricJointDesc desc;
+		/*PHPathJointDesc desc;
+		PHPathIf* trajectory = scene->CreatePath();
+
 		hinge->SetSpring(K);
 		hinge->SetDamper(B);
-		for(double theta = -360.0; theta < 360.0; theta += 1.0){
+		for(double theta = -180.0; theta < 180.0; theta += 1.0){
 			hinge->SetSpringOrigin(Rad(theta));
 			for(int i = 0; i < 5; i++)
 				scene->Step();
-
-		}
+			
+		}*/
 		}break;
 	}
 }

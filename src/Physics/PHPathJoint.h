@@ -1,5 +1,5 @@
-#ifndef PHPARAMETRICJOINT_H
-#define PHPARAMETRICJOINT_H
+#ifndef PHPATHJOINT_H
+#define PHPATHJOINT_H
 
 #include <SprPhysics.h>
 #include "PHConstraint.h"
@@ -24,30 +24,30 @@ namespace Spr{;
  */
 
 /// 関節の軌道のキーフレームを持ち，補完して返したりヤコビアンを計算したりするクラス
-struct PHJointTrajectoryPoint{
-	double		q;
-	Posed		pose;
+struct PHPathPointWithJacobian : public PHPathPoint{
 	Matrix6d	J;
 };
-class PHJointTrajectory : public std::vector<PHJointTrajectoryPoint>, public Object{
-	iterator Find(double q);
-	bool bRevolutive;	//[-pi, pi]の無限回転関節
+
+class PHPath : public std::vector<PHPathPointWithJacobian>, public InheritSceneObject<PHPathIf, SceneObject>{
+	iterator Find(double s);
+	bool bLoop;	//[-pi, pi]の無限回転関節
 public:
-	void SetRevolutive(bool OnOff = true){bRevolutive = OnOff;}
-	bool IsRevolutive(){return bRevolutive;}
-	void AddPoint(const Posed& pose, double q);
-	void CreateDB();
-	void GetPose(Posed& pose, double q);
-	void GetJacobian(Matrix6d& J, double q);
+	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
+	virtual bool IsLoop(){return bLoop;}
+	void AddPoint(double s, const Posed& pose);
+	void CompJacobian();
+	void GetPose(double s, Posed& pose);
+	void GetJacobian(double s, Matrix6d& J);
 };
 
-class PHParametricJoint : public InheritJoint1D<PHParametricJointIf, PHJoint1D>{
-	UTRef<PHJointTrajectory> trajectory;
+class PHPathJoint : public InheritJoint1D<PHPathJointIf, PHJoint1D>{
+	UTRef<PHPath> path;
 public:
 	double	q, qd;				// 関節変位と関節角度
 	//Matrix53d	Jcvrel, Jcwrel;	// 相対速度から拘束速度，相対角速度から拘束速度へのヤコビ行列
 
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PARAMETRICJOINT;}
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
 	virtual double GetPosition();
 	virtual double GetVelocity();
 	virtual void CompConstraintJacobian();
@@ -55,7 +55,7 @@ public:
 	virtual void CompError(double dt);
 	virtual void ProjectionDynamics(double& f, int k);
 	virtual void ProjectionCorrection(double& F, int k);
-	PHParametricJoint();
+	PHPathJoint();
 };
 
 }

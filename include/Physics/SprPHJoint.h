@@ -19,7 +19,7 @@ struct PHConstraintDesc{
 		HINGEJOINT,
 		SLIDERJOINT,
 		BALLJOINT,
-		PARAMETRICJOINT
+		PATHJOINT
 	} type;
 	/// 有効/無効フラグ
 	bool bEnabled;
@@ -55,6 +55,23 @@ struct PHSliderJointDesc : public PHJoint1DDesc{
 	}
 };
 
+/// パスのディスクリプタ
+struct PHPathPoint{
+	double	s;			///< スカラーパラメータ
+	Posed	pose;		///< 位置と傾き
+};
+struct PHPathDesc{
+	std::vector<PHPathPoint> path;	///< パス
+	bool bLoop;						///< trueならばループパス，falseならばオープンパス
+};
+
+/// パスジョイントのディスクリプタ
+struct PHPathJointDesc : public PHJoint1DDesc{
+	PHPathJointDesc(){
+		type = PATHJOINT;
+	}
+};
+
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
 	double	max_angle;		///< 円錐状の可動範囲
@@ -64,6 +81,7 @@ struct PHBallJointDesc : public PHJointDesc{
 		max_angle = 0.0;
 	}
 };
+
 
 /// 拘束のインタフェース
 struct PHConstraintIf : public SceneObjectIf{
@@ -187,9 +205,17 @@ struct PHSliderJointIf : public PHJoint1DIf{
 	IF_DEF(PHSliderJoint);
 };
 
-/// パラメトリックジョイントのインタフェース
-struct PHParametricJointIf : public PHJoint1DIf{
-	IF_DEF(PHParametricJoint);
+/// パスのインタフェース
+struct PHPathIf : public SceneObjectIf{
+	IF_DEF(PHPath);
+	virtual void AddPoint(double s, const Posed& pose) = 0;
+	virtual void SetLoop(bool bOnOff = true) = 0;
+	virtual bool IsLoop() = 0;
+};
+
+/// パスジョイントのインタフェース
+struct PHPathJointIf : public PHJoint1DIf{
+	IF_DEF(PHPathJoint);
 };
 
 /// ボールジョイントのインタフェース

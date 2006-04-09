@@ -8,22 +8,23 @@ using namespace std;
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// PHJointTrajectory
+// PHPath
+IF_IMP(PHPath, SceneObject)
 
-PHJointTrajectory::iterator PHJointTrajectory::Find(double q){
+PHPath::iterator PHPath::Find(double s){
 	iterator it;
 	for(it = begin(); it != end(); it++){
-		if(it->q > q)
+		if(it->s > s)
 			return it;
 	}
 	return it;
 }
 
-void PHJointTrajectory::AddPoint(const Posed& pose, double q){
-	PHJointTrajectoryPoint p;
-	p.q = q;
+void PHPath::AddPoint(double s, const Posed& pose){
+	PHPathPointWithJacobian p;
+	p.s = s;
 	p.pose = pose;
-	insert(Find(q), p);
+	insert(Find(s), p);
 }
 
 //6x6行列Jの一番下の行ベクトルは与えられているとして，
@@ -48,16 +49,16 @@ void Orthogonalize(Matrix6d& J){
 	}
 }
 
-void PHJointTrajectory::CreateDB(){
-	double delta = (back().q - front().q) / 1000.0;		//数値微分の離散化幅．いいかげん．
+void PHPath::CompJacobian(){
+	double delta = (back().s - front().s) / 1000.0;		//数値微分の離散化幅．いいかげん．
 	double div = 1.0 / (2.0 * delta);
 	Posed p, p0, p1, pd;
 	Vec3d v, w;
 	Quaterniond qd;
 	for(iterator it = begin(); it != end(); it++){
 		//一般化座標qについて偏微分して相対速度を出す
-		GetPose(p0, it->q - delta);
-		GetPose(p1, it->q + delta);
+		GetPose(it->s - delta, p0);
+		GetPose(it->s + delta, p1);
 		pd = (p1 - p0) * div;
 		v = pd.Pos();
 		qd = pd.Ori();
@@ -68,8 +69,8 @@ void PHJointTrajectory::CreateDB(){
 	}
 }
 
-void PHJointTrajectory::GetPose(Posed& pose, double q){
-	iterator it = Find(q);
+void PHPath::GetPose(double s, Posed& pose){
+	iterator it = Find(s);
 	if(it == begin()){
 		pose = front().pose;
 		return;
@@ -78,13 +79,13 @@ void PHJointTrajectory::GetPose(Posed& pose, double q){
 		pose = back().pose;
 		return;
 	}
-	PHJointTrajectoryPoint &rhs = *it, &lhs = *--it;
-	double tmp = 1.0 / (rhs.q - lhs.q);
-	pose = ((rhs.q - q) * tmp) * lhs.pose + ((q - lhs.q) * tmp) * rhs.pose;
+	PHPathPointWithJacobian &rhs = *it, &lhs = *--it;
+	double tmp = 1.0 / (rhs.s - lhs.s);
+	pose = ((rhs.s - s) * tmp) * lhs.pose + ((s - lhs.s) * tmp) * rhs.pose;
 }
 
-void PHJointTrajectory::GetJacobian(Matrix6d& J, double q){
-	iterator it = Find(q);
+void PHPath::GetJacobian(double s, Matrix6d& J){
+	iterator it = Find(s);
 	if(it == begin()){
 		J = front().J;
 		return;
@@ -93,32 +94,42 @@ void PHJointTrajectory::GetJacobian(Matrix6d& J, double q){
 		J = back().J;
 		return;
 	}
-	PHJointTrajectoryPoint &rhs = *it, &lhs = *--it;
-	double tmp = 1.0 / (rhs.q - lhs.q);
-	J = ((rhs.q - q) * tmp) * lhs.J + ((q - lhs.q) * tmp) * rhs.J;
+	PHPathPointWithJacobian &rhs = *it, &lhs = *--it;
+	double tmp = 1.0 / (rhs.s - lhs.s);
+	J = ((rhs.s - s) * tmp) * lhs.J + ((s - lhs.s) * tmp) * rhs.J;
 }
 
 //----------------------------------------------------------------------------
-// PHParametricJoint
+// PHPathJoint
 
-IF_IMP(PHParametricJoint, PHJoint1D)
+IF_IMP(PHPathJoint, PHJoint1D)
 
-PHParametricJoint::PHParametricJoint(){
+PHPathJoint::PHPathJoint(){
 	q = qd = 0.0;
 }
 
-double PHParametricJoint::GetPosition(){
+bool PHPathJoint::AddChildObject(ObjectIf* o){
+	PHPath* p = OCAST(PHPath, o);
+	if(p){
+		path = p;
+		return true;
+	}
+	return PHConstraint::AddChildObject(o);
+}
+
+double PHPathJoint::GetPosition(){
 	return q;
 }
 
-double PHParametricJoint::GetVelocity(){
+double PHPathJoint::GetVelocity(){
 	return qd;
 }
 
-void PHParametricJoint::CompConstraintJacobian(){
+void PHPathJoint::CompConstraintJacobian(){
+	if(!path)return;
 	CompDof();
 	Matrix6d J;
-	trajectory->GetJacobian(J, q);
+	path->GetJacobian(q, J);
 	Ad.clear();
 	Ac.clear();
 	for(int i = 0; i < 2; i++){
@@ -147,11 +158,12 @@ void PHParametricJoint::CompConstraintJacobian(){
 	}
 }
 
-void PHParametricJoint::CompBias(double dt){
+void PHPathJoint::CompBias(double dt){
 
 }
 
-void PHParametricJoint::CompError(double dt){
+void PHPathJoint::CompError(double dt){
+	if(!path)return;
 	//B.SUBVEC(0, 3) = rjrel;
 	//B.SUBVEC(3, 3) = qjrel.V();
 	PHConstraint::CompError();
@@ -166,16 +178,16 @@ void PHParametricJoint::CompError(double dt){
 				Jdv[1].row(5) * v[1] + Jdw[1].row(5) * w[1];
 	q += qd * dt;
 	Posed pnew;
-	trajectory->GetPose(pnew, q);
+	path->GetPose(q, pnew);
 	B.SUBVEC(0, 3) -= pnew.Pos();
 	B.SUBVEC(3, 3) -= pnew.Ori().V();
 }
 
-void PHParametricJoint::ProjectionDynamics(double& f, int k){
+void PHPathJoint::ProjectionDynamics(double& f, int k){
 
 }
 
-void PHParametricJoint::ProjectionCorrection(double& F, int k){
+void PHPathJoint::ProjectionCorrection(double& F, int k){
 
 }
 
