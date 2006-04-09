@@ -16,6 +16,7 @@ IF_IMP(PHJoint, PHConstraint);
 IF_IMP(PHJoint1D, PHJoint);
 
 void PHJoint1D::SetDesc(const PHJointDesc& desc){
+	PHConstraint::SetDesc(desc);
 	const PHJoint1DDesc& desc1D = (const PHJoint1DDesc&)desc;
 	lower = desc1D.lower;
 	upper = desc1D.upper;

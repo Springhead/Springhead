@@ -71,6 +71,7 @@ void PHContactPoint::CompConstraintJacobian(){
 	dim_d = 3;
 	dim_c = 1;
 	
+	Ad.clear();
 	for(int i = 0; i < 2; i++){
 		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
 		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
@@ -81,12 +82,10 @@ void PHContactPoint::CompConstraintJacobian(){
 			Tdw[i].SUBMAT(0, 0, 3, 3) = Jdw[i].SUBMAT(0, 0, 3, 3) * solid[i]->Iinv;
 			Tcv[i].row(0) = Tdv[i].row(0);
 			Tcw[i].row(0) = Tdw[i].row(0);
+			for(int j = 0; j < 3; j++)
+				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
 		}
 	}
-
-	for(int j = 0; j < 3; j++)
-		Ad[j] = Jdv[0].row(j) * Tdv[0].row(j) + Jdw[0].row(j) * Tdw[0].row(j) +
-				Jdv[1].row(j) * Tdv[1].row(j) + Jdw[1].row(j) * Tdw[1].row(j);
 	Ac[0] = Ad[0];
 }
 

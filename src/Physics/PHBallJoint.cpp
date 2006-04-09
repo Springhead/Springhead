@@ -13,6 +13,7 @@ namespace Spr{;
 IF_IMP(PHBallJoint, PHJoint1D)
 
 void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
+	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = (const PHBallJointDesc&)desc;
 	max_angle = descBall.max_angle;
 	torque = descBall.torque;
