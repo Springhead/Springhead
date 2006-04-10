@@ -35,14 +35,20 @@ using namespace Spr;
 
 
 // 材質の設定
-GRMaterial matFloor(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
-					Vec4f(0.9, 0.0, 0.0, 1.0),		// diffuse
+GRMaterial mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+					Vec4f(0.7, 0.0, 0.0, 1.0),		// diffuse
+					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
+					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
+					100.0);							// power
+
+GRMaterial mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+					Vec4f(0.0, 0.7, 0.0, 1.0),		// diffuse
 					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
 					20.0);							// power
 
-GRMaterial matBox(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
-					Vec4f(0.0, 0.2, 0.8, 1.0),		// diffuse
+GRMaterial mat_blue(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+					Vec4f(0.0, 0.0, 0.7, 1.0),		// diffuse
 					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
 					20.0);							// power
@@ -55,7 +61,7 @@ GRMaterial matBox(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
-	render->SetMaterial(matFloor);	
+	render->SetMaterial(mat_red);	
 
 	PHSceneIf* scene = NULL;
 	if (phSdk->NScene()){
@@ -65,7 +71,9 @@ void display(){
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
 		if (num == 1){
-			render->SetMaterial(matBox);	
+			render->SetMaterial(mat_green);	
+		} else if (num == 2) {
+			render->SetMaterial(mat_blue);	
 		}
 		Affinef af;
 		solids[num]->GetPose().ToAffine(af);
@@ -96,19 +104,7 @@ void display(){
 		}
 		render->PopModelMatrix();
 	}
-/*
 
-	render->SetMaterial(material);	
-	for (int num=0; num < phSdk->NShape(); ++num){
-		CDShapeIf **shapes = phSdk->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[num]);
-		Vec3f* base = mesh->GetVertices();
-		for (size_t f=0; f<mesh->NFace(); ++f) {	
-			CDFaceIf* face = mesh->GetFace(f);
-			render->DrawFace(face, base);
-		}
-	}
-*/
 	render->EndScene();
 }
 /**
@@ -121,8 +117,22 @@ void setLight() {
 	light0.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
 	light0.diffuse	= Vec4f(0.9, 0.9, 0.9, 1.0);
 	light0.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
-	light0.position = Vec4f(2.0, 0.0, 3.0, 1.0);
+	light0.position = Vec4f(0.0, 10.0, -5.0, 1.0);
 	render->PushLight(light0);
+	
+	GRLight light1;
+	light1.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
+	light1.diffuse	= Vec4f(0.9, 0.9, 0.9, 1.0);
+	light1.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
+	light1.position = Vec4f(0.0, 5.0, 10.0, 1.0);
+	render->PushLight(light1);
+
+	GRLight light2;
+	light2.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
+	light2.diffuse	= Vec4f(0.9, 0.9, 0.9, 1.0);
+	light2.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
+	light2.position = Vec4f(-5.0, 5.0, -10.0, 1.0);
+	render->PushLight(light2);
 
 }
 
@@ -157,7 +167,7 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count ++;
-	if (count > 1000) exit(0);
+	if (count > 1200) exit(0);
 }
 
 /**
@@ -200,7 +210,7 @@ int main(int argc, char* argv[]){
 
 	// 視点設定
 	Affinef view;
-	view.Pos() = Vec3f(2.0, 2.0, 3.0);								// eye
+	view.Pos() = Vec3f(-2.0, 3.0, 5.0);									// eye
 		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
