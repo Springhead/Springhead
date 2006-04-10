@@ -82,6 +82,11 @@ void PHHingeJoint::CompBias(double dt){
 	}
 }
 
+void PHHingeJoint::CompError(){
+	B.SUBVEC(0, 3) = rjrel;
+	B.SUBVEC(3, 3) = qjrel.V();
+}
+
 void PHHingeJoint::ProjectionDynamics(double& f, int k){
 	if(k == 5){
 		if(on_lower)

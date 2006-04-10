@@ -3,13 +3,13 @@
 
 【概要】関節機能のデモ
 【仕様】
-  ・シーン番号0, 1, ...をタイプすると対応するシーンに切り替わる
-  ・シーン0：鎖
-		space : 鎖を伸ばす
-  　シーン1：アクチュエータ
-		a : 正転トルク
-		s : 脱力
-		d : 逆転トルク
+	共通の操作：
+		・シーン番号0, 1, ...をタイプすると対応するシーンに切り替わる
+		・'x'をタイプすると関節の有効/無効が切り替わる
+
+  ・シーン0：ヒンジの鎖
+  ・シーン1：チェビシェフリンク
+　・シーン2：ボールジョイントの鎖
 */
 
 #include <Springhead.h>		//	Springheadのインタフェース
@@ -56,9 +56,13 @@ static GLfloat mat_shininess[]  = { 120.0 };
 void BuildScene();
 void BuildScene0();
 void BuildScene1();
+void BuildScene2();
+void BuildScene3();
 void OnKey(char key);
 void OnKey0(char key);
 void OnKey1(char key);
+void OnKey2(char key);
+void OnKey3(char key);
 
 /**
  brief     	多面体の面(三角形)の法線を求める
@@ -209,7 +213,7 @@ void keyboard(unsigned char key, int x, int y){
 			exit(0);
 			break;
 		//シーン切り替え
-		case '0': case '1':
+		case '0': case '1': case '2': case '3':
 			scene->Clear();
 			soFloor = NULL;
 			soBox.clear();
@@ -264,6 +268,7 @@ int main(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow("Joints");
+	glutReshapeWindow(640, 480);
 	initialize();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
@@ -281,6 +286,8 @@ void BuildScene(){
 	switch(sceneNo){
 	case 0: BuildScene0(); break;
 	case 1: BuildScene1(); break;
+	case 2: BuildScene2(); break;
+	case 3: BuildScene3(); break;
 	}
 }
 
@@ -311,8 +318,6 @@ void BuildScene0(){
 	//鎖の根になる箱を作成
 	InitBoxMesh(md, 1.0, 1.0, 1.0);
 	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
-	descBox.mass = 2.0;
-	descBox.inertia = 2.0 * Matrix3d::Unit();
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(meshBox);
 	//空中に固定する
@@ -378,10 +383,50 @@ void BuildScene1(){
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
+void BuildScene2(){
+	CDConvexMeshDesc md;
+	
+	InitBoxMesh(md, 30.0, 1.0, 20.0);
+	soFloor = scene->CreateSolid(descFloor);
+	soFloor->AddShape(sdk->CreateShape(md));
+	soFloor->SetFramePosition(Vec3f(0,-2,0));
+	soFloor->SetDynamical(false);
+	
+	InitBoxMesh(md, 1.0, 1.0, 1.0);
+	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(meshBox);
+	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soBox.back()->SetDynamical(false);
+
+	scene->SetGravity(Vec3f(0, -9.8, 0));	
+}
+
+void BuildScene3(){
+	CDConvexMeshDesc md;
+	
+	InitBoxMesh(md, 30.0, 1.0, 20.0);
+	soFloor = scene->CreateSolid(descFloor);
+	soFloor->AddShape(sdk->CreateShape(md));
+	soFloor->SetFramePosition(Vec3f(0,-2,0));
+	soFloor->SetDynamical(false);
+	
+	InitBoxMesh(md, 1.0, 1.0, 1.0);
+	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(meshBox);
+	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soBox.back()->SetDynamical(false);
+
+	scene->SetGravity(Vec3f(0, -9.8, 0));	
+}
+
 void OnKey(char key){
 	switch(sceneNo){
 	case 0: OnKey0(key); break;
 	case 1: OnKey1(key); break;
+	case 2: OnKey2(key); break;
+	case 3: OnKey3(key); break;
 	}
 }	
 void OnKey0(char key){
@@ -389,7 +434,7 @@ void OnKey0(char key){
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(meshBox);
-		soBox.back()->SetFramePosition(Vec3f(0.0, 1.0, 0.0));
+		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHHingeJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d( 1,  1,  0);
 		jdesc.pose[1].Pos() = Vec3d(-1, -1,  0);
@@ -432,7 +477,6 @@ void OnKey1(char key){
 		soBox.back()->SetFramePosition(Vec3f(-10.0, 15.0, 0.0));
 		soBox.back()->SetVelocity(Vec3d(20.0, 0.0, 0.0));
 		soBox.back()->SetMass(2.0);
-		//soBox.back()->SetGravity(false);
 		}break;	
 	case 'c':{
 		/*PHPathJointDesc desc;
@@ -446,6 +490,42 @@ void OnKey1(char key){
 				scene->Step();
 			
 		}*/
+		}break;
+	}
+}
+
+void OnKey2(char key){
+	switch(key){
+	case ' ':{
+		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.back()->AddShape(meshBox);
+		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
+		PHBallJointDesc jdesc;
+		jdesc.pose[0].Pos() = Vec3d(-1, -1, -1);
+		jdesc.pose[1].Pos() = Vec3d( 1,  1,  1);
+		int n = soBox.size();
+		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		}break;
+	}
+}
+
+void OnKey3(char key){
+	switch(key){
+	case ' ':{
+		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.back()->AddShape(meshBox);
+		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
+		PHSliderJointDesc jdesc;
+		jdesc.pose[0].Pos() = Vec3d(0, -1.1, 0);
+		jdesc.pose[0].Ori() = Quaterniond::Rot(Rad(90.0), 'y');
+		jdesc.pose[1].Pos() = Vec3d(0,  1.1, 0);
+		jdesc.pose[1].Ori() = Quaterniond::Rot(Rad(90.0), 'y');
+		int n = soBox.size();
+		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		PHSliderJointIf* slider = ICAST(PHSliderJointIf, jntLink.back());
+		slider->SetSpring(1.0);
+		slider->SetDamper(0.1);
+		slider->SetSpringOrigin(0.0);
 		}break;
 	}
 }

@@ -169,11 +169,6 @@ void PHConstraint::IterateDynamics(){
 	}
 }
 
-void PHConstraint::CompError(){
-	B.SUBVEC(0, 3) = rjrel;
-	B.SUBVEC(3, 3) = qjrel.V();
-}
-
 void PHConstraint::SetupCorrection(double dt, double max_error){
 	if(!bEnabled || !bFeasible)return;
 

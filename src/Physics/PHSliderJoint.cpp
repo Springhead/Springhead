@@ -37,7 +37,7 @@ void PHSliderJoint::CompConstraintJacobian(){
 		Jcv[i].row(5) = Jvv[i].row(2);
 		Jcw[i].SUBMAT(0, 0, 2, 3) = Jvw[i].SUBMAT(0, 0, 2, 3);
 		Jcw[i].SUBMAT(2, 0, 3, 3) = Jqw[i];
-		Jcw[i].row(5) = Jqw[i].row(2);
+		Jcw[i].row(5) = Jvw[i].row(2);
 
 		if(solid[i]->solid->IsDynamical()){
 			Tdv[i] = Jdv[i] * solid[i]->minv;
@@ -71,6 +71,15 @@ void PHSliderJoint::CompBias(double dt){
 		Ad[5] += tmp / dt;
 		b[5] += spring * (diff) * tmp;
 	}
+}
+
+void PHSliderJoint::CompError(){
+	B[0] = rjrel.x;
+	B[1] = rjrel.y;
+	B[2] = qjrel.x;
+	B[3] = qjrel.y;
+	B[4] = qjrel.z;
+	B[5] = rjrel.z;
 }
 
 void PHSliderJoint::ProjectionDynamics(double& f, int k){

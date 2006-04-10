@@ -58,6 +58,11 @@ void PHBallJoint::CompBias(double dt){
 	
 }
 
+void PHBallJoint::CompError(){
+	B.SUBVEC(0, 3) = rjrel;
+	B.SUBVEC(3, 3) = qjrel.V();
+}
+
 void PHBallJoint::ProjectionDynamics(double& f, int k){
 	
 }

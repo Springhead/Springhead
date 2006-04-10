@@ -21,6 +21,7 @@ public:
 	virtual Vec3d GetVelocity();
 	virtual void CompConstraintJacobian();
 	virtual void CompBias(double dt);
+	virtual void CompError();
 	virtual void ProjectionDynamics(double& f, int k);
 	virtual void ProjectionCorrection(double& F, int k);
 	PHBallJoint(){}
