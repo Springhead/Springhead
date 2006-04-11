@@ -436,8 +436,8 @@ void OnKey0(char key){
 		soBox.back()->AddShape(meshBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHHingeJointDesc jdesc;
-		jdesc.pose[0].Pos() = Vec3d( 1,  1,  0);
-		jdesc.pose[1].Pos() = Vec3d(-1, -1,  0);
+		jdesc.pose[0].Pos() = Vec3d( 1.1,  1.1,  0);
+		jdesc.pose[1].Pos() = Vec3d(-1.1, -1.1,  0);
 		int n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
@@ -501,8 +501,8 @@ void OnKey2(char key){
 		soBox.back()->AddShape(meshBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.pose[0].Pos() = Vec3d(-1, -1, -1);
-		jdesc.pose[1].Pos() = Vec3d( 1,  1,  1);
+		jdesc.pose[0].Pos() = Vec3d(-1.1, -1.1, -1.1);
+		jdesc.pose[1].Pos() = Vec3d( 1.1,  1.1,  1.1);
 		int n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
@@ -523,9 +523,12 @@ void OnKey3(char key){
 		int n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		PHSliderJointIf* slider = ICAST(PHSliderJointIf, jntLink.back());
+		//slider->SetRange(-0.5, 0.5);
 		slider->SetSpring(1.0);
-		slider->SetDamper(0.1);
+		slider->SetDamper(1);
 		slider->SetSpringOrigin(0.0);
 		}break;
+	case 'a': scene->SetGravity(Vec3f(5.0, -5, 0.0)); break;
+	case 'd': scene->SetGravity(Vec3f(-5.0, -5, 0.0)); break;
 	}
 }

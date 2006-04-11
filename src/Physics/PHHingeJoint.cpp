@@ -40,8 +40,6 @@ void PHHingeJoint::CompConstraintJacobian(){
 		if(solid[i]->solid->IsDynamical()){
 			Tdv[i] = Jdv[i] * solid[i]->minv;
 			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			solid[i]->dv += Tdv[i].row(5) * torque;
-			solid[i]->dw += Tdw[i].row(5) * torque;
 			Tcv[i].SUBMAT(0, 0, 3, 3) = Tdv[i].SUBMAT(0, 0, 3, 3);
 			Tcv[i].SUBMAT(3, 0, 3, 3) = Jqv[i] * solid[i]->minv;
 			Tcw[i].SUBMAT(0, 0, 3, 3) = Tdw[i].SUBMAT(0, 0, 3, 3);

@@ -118,10 +118,7 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 	if (r){
 		commonPoint = shapePoseW[0] * closestPoint[0];
 		if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
-		else{
-			state = NEW;
-			DSTR << "NEW" << endl;
-		}
+		else state = NEW;
 		lastContactCount = ct;
 
 		//	–@ü‚ð‹‚ß‚é
@@ -282,7 +279,7 @@ OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	max_iter_dynamics = 10;//5;
-	max_iter_correction = 20;//6;
+	max_iter_correction = 5;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
 	max_error = 1.0;
@@ -497,9 +494,6 @@ void PHConstraintEngine::UpdateSolids(double dt){
 	Vec3d vnew, wnew;
 	for(is = solids.begin(); is != solids.end(); is++){
 		aux = *is;
-		if(aux->dV.norm() > 0.1){
-			DSTR << aux->dv << aux->dV << endl;
-		}
 		solid = aux->solid;
 		//velocity update
 		vnew = aux->v + aux->dv0 + aux->dv;
@@ -539,8 +533,8 @@ void PHConstraintEngine::Step(){
 	//QueryPerformanceCounter(&val[0]);
 	IterateDynamics();
 	//DSTR << points.size() << endl;
-	//for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
-	//	DSTR << (*it)->fv << (*it)->fw << endl;
+	//for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+	//	DSTR << (*it)->f << endl;
 	//QueryPerformanceCounter(&val[1]);
 	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 

@@ -13,11 +13,12 @@ namespace Spr{;
 IF_IMP(PHSliderJoint, PHJoint1D)
 
 double PHSliderJoint::GetPosition(){
-	return rjrel[2];
+	DSTR<<rjrel.z <<endl;
+	return rjrel.z;
 }
 
 double PHSliderJoint::GetVelocity(){
-	return vjrel[2];
+	return vjrel.z;
 }
 
 void PHSliderJoint::CompConstraintJacobian(){
@@ -42,15 +43,12 @@ void PHSliderJoint::CompConstraintJacobian(){
 		if(solid[i]->solid->IsDynamical()){
 			Tdv[i] = Jdv[i] * solid[i]->minv;
 			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			solid[i]->dv += Tdv[i].row(5) * torque;
-			solid[i]->dw += Tdw[i].row(5) * torque;
-
 			Tcv[i].SUBMAT(0, 0, 2, 3) = Tdv[i].SUBMAT(0, 0, 2, 3);
 			Tcv[i].SUBMAT(2, 0, 3, 3) = Jqv[i] * solid[i]->minv;
-			Tcv[i].row(5) = Tdv[i].row(2);
+			Tcv[i].row(5) = Tdv[i].row(5);
 			Tcw[i].SUBMAT(0, 0, 2, 3) = Tdw[i].SUBMAT(0, 0, 2, 3);
 			Tcw[i].SUBMAT(2, 0, 3, 3) = Jqw[i] * solid[i]->Iinv;
-			Tcw[i].row(5) = Tdw[i].row(2);
+			Tcw[i].row(5) = Tdw[i].row(5);
 			for(int j = 0; j < 6; j++)
 				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
 			Ac.SUBVEC(0, 2) += Ad.SUBVEC(0, 2);
@@ -79,7 +77,10 @@ void PHSliderJoint::CompError(){
 	B[2] = qjrel.x;
 	B[3] = qjrel.y;
 	B[4] = qjrel.z;
-	B[5] = rjrel.z;
+	if(on_upper)
+		B[5] = rjrel.z - upper;
+	if(on_lower)
+		B[5] = rjrel.z - lower;
 }
 
 void PHSliderJoint::ProjectionDynamics(double& f, int k){

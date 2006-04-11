@@ -146,8 +146,6 @@ void PHPathJoint::CompConstraintJacobian(){
 		if(solid[i]->solid->IsDynamical()){
 			Tdv[i] = Jdv[i] * solid[i]->minv;
 			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			solid[i]->dv += Tdv[i].row(5) * torque;
-			solid[i]->dw += Tdw[i].row(5) * torque;
 			Tcv[i] = Jcv[i] * solid[i]->minv;
 			Tcw[i] = Jcw[i] * solid[i]->Iinv;
 			for(int j = 0; j < 6; j++)

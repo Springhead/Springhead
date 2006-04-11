@@ -23,7 +23,7 @@ void PHJoint1D::SetDesc(const PHJointDesc& desc){
 	spring = desc1D.spring;
 	origin = desc1D.origin;
 	damper = desc1D.damper;
-	torque = desc1D.torque;
+	SetMotorTorque(desc1D.torque);
 }
 
 void PHJoint1D::CompDof(){
@@ -37,7 +37,7 @@ void PHJoint1D::CompDof(){
 		dim_d = 6;
 		dim_c = 6;
 	}
-	if(mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
+	else if(mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
 		dim_d = 6;
 		dim_c = 5;
 	}

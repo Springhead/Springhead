@@ -126,7 +126,14 @@ void PHConstraint::SetupDynamics(double dt){
 	//	çSë©ÇÃéÌóﬁÇ≤Ç∆Ç…àŸÇ»ÇÈ
 	CompConstraintJacobian();
 	
-	int j;
+	int i, j;
+	for(i = 0; i < 2; i++){
+		if(solid[i]->solid->IsDynamical()){
+			solid[i]->dv += Tdv[i].trans() * f;
+			solid[i]->dw += Tdw[i].trans() * f;
+		}
+	}
+
 	for(j = 0; j < dim_d; j++){
 		b[j] = 
 			Jdv[0].row(j) * (solid[0]->v + solid[0]->dv0) +
@@ -175,6 +182,13 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 	CompError();
 
 	int i, j;
+	for(i = 0; i < 2; i++){
+		if(solid[i]->solid->IsDynamical()){
+			solid[i]->dV += Tcv[i].trans() * F;
+			solid[i]->dW += Tcw[i].trans() * F;
+		}
+	}
+	
 	Vec3d v[2], w[2];
 	for(i = 0; i < 2; i++){
 		v[i] = solid[i]->v + solid[i]->dv0 + solid[i]->dv;

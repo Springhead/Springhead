@@ -16,7 +16,7 @@ void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = (const PHBallJointDesc&)desc;
 	max_angle = descBall.max_angle;
-	torque = descBall.torque;
+	SetMotorTorque(descBall.torque);
 }
 
 Quaterniond PHBallJoint::GetPosition(){
@@ -42,9 +42,6 @@ void PHBallJoint::CompConstraintJacobian(){
 		if(solid[i]->solid->IsDynamical()){
 			Tdv[i] = Jdv[i] * solid[i]->minv;
 			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			solid[i]->dv += Tdv[i].SUBMAT(3, 0, 3, 3).trans() * torque;
-			solid[i]->dw += Tdw[i].SUBMAT(3, 0, 3, 3).trans() * torque;
-
 			Tcv[i].SUBMAT(0, 0, 3, 3) = Tdv[i].SUBMAT(0, 0, 3, 3);
 			Tcw[i].SUBMAT(0, 0, 3, 3) = Tdw[i].SUBMAT(0, 0, 3, 3);
 			for(int j = 0; j < 6; j++)

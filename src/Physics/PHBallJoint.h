@@ -8,15 +8,14 @@ namespace Spr{;
 
 class PHBallJoint : public InheritConstraint<PHBallJointIf, PHJoint>{
 	double	max_angle;
-	Vec3d	torque;
 public:
 	//OBJECTDEF(PHBallJoint);
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	virtual void SetMaxAngle(double angle){max_angle = angle;}
 	virtual double GetMaxAngle(){return max_angle;}
-	virtual void SetMotorTorque(const Vec3d& t){torque = t;}
-	virtual Vec3d GetMotorTorque(){return torque;}
+	virtual void SetMotorTorque(const Vec3d& t){f.SUBVEC(3, 3) = t;}
+	virtual Vec3d GetMotorTorque(){return f.SUBVEC(3, 3);}
 	virtual Quaterniond GetPosition();
 	virtual Vec3d GetVelocity();
 	virtual void CompConstraintJacobian();

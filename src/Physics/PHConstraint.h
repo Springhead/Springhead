@@ -3,8 +3,8 @@
 
 #include <SprPhysics.h>
 
-#define SUBMAT(r, c, h, w) sub_matrix(TSubMatrixDim<r, c, h, w>())
-#define SUBVEC(o, l) sub_vector(TSubVectorDim<o, l>())
+#define SUBMAT(r, c, h, w) sub_matrix(PTM::TSubMatrixDim<r, c, h, w>())
+#define SUBVEC(o, l) sub_vector(PTM::TSubVectorDim<o, l>())
 
 namespace Spr{;
 
