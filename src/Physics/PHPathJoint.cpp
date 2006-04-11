@@ -164,9 +164,8 @@ void PHPathJoint::CompBias(double dt){
 
 void PHPathJoint::CompError(double dt){
 	if(!path)return;
-	//B.SUBVEC(0, 3) = rjrel;
-	//B.SUBVEC(3, 3) = qjrel.V();
-	PHConstraint::CompError();
+	B.SUBVEC(0, 3) = rjrel;
+	B.SUBVEC(3, 3) = qjrel.V();
 	
 	//velocity updateå„ÇÃä÷êﬂë¨ìxÇÃíl
 	Vec3d v[2], w[2];
