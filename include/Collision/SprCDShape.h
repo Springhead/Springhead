@@ -91,7 +91,6 @@ struct CDSphereDesc: public CDShapeDesc{
 /** ‹…‘Ì@*/
 struct CDSphereIf: public CDConvexIf{
 	IF_DEF(CDSphere);
-	virtual Vec3f GetCenter()=0;
 	virtual float GetRadius()=0;
 };	
 

@@ -18,18 +18,18 @@ CDSphere::CDSphere() {
 }
 
 CDSphere::CDSphere(const CDSphereDesc& desc) {
-	center = desc.center;
 	radius = desc.radius;
 }
 
 // サポートポイントを求める
 Vec3f CDSphere::Support(const Vec3f& p) const {	
+	Vec3f center = GetPose().Pos();		// 球体の中心座標を取得
 	Vec3f p_ = p;
-	p_ -= center;					// centerからpへのベクトルを求める
-	float s = p_.norm();			// centerからpへのベクトルのlength
+	p_ -= center;						// centerからpへのベクトルを求める
+	float s = p_.norm();				// centerからpへのベクトルのlength
 	if (s > 1e-8f) {		
 		float r = radius / s;	
-		return r*p_ + center;		// 衝突検出に必要な球の最近傍点
+		return r*p_ + center;			// 衝突検出に必要な球の最近傍点
 	}else{
 		return center;
 	}	
@@ -40,11 +40,6 @@ bool CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
 	assert(0);
 	return false;
 }
-
-// 球体の中心座標を取得
-Vec3f CDSphere::GetCenter() {
-	return center;
-}	
 
 // 球体の半径を取得
 float CDSphere::GetRadius() {

@@ -9,13 +9,12 @@ namespace Spr{;
 
 	
 /// 球体
-//class CDSphere: public InheritNamedObject<CDSphereIf, CDConvex>{
 class CDSphere: public  InheritCDShape<CDSphereIf, CDConvex>{
 public:
 	OBJECTDEF(CDSphere);
 	
 	mutable Vec3f curPos;			/// 探索開始番号
-	Vec3f center;					///	球体の中心座標
+	//Vec3f center;					///	球体の中心座標
 	float radius;					/// 球体の半径
 
 	CDSphere();
@@ -32,8 +31,6 @@ public:
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
-	/// 球体の中心座標を取得
-	virtual Vec3f GetCenter();
 	/// 球体の半径を取得
 	virtual float GetRadius();
 };

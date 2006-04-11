@@ -211,8 +211,8 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 		Vec3f center[2];
 		for(int i=0; i<2; ++i){
 			sp[i] = DCAST(CDSphere, cp->shape[i]);
-			//if (sp[i]) center[i] = af[i] * sp[i]->center;
-			if (sp[i]) center[i] = cp->shapePoseW[i] * sp[i]->center;
+			//if (sp[i]) center[i] = cp->shapePoseW[i] * sp[i]->center;
+			if (sp[i]) center[i] = cp->shapePoseW[i] * cp->shape[i]->GetPose().Pos();
 		}
 		if (sp[0] && sp[1]){	//	—¼•û‹…‚Ìê‡
 			cp->iNormal = (center[1] - center[0]).unit();
