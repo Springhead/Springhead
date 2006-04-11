@@ -83,7 +83,6 @@ struct CDConvexMeshIf: public CDConvexIf{
 /** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
 	CDSphereDesc():CDShapeDesc(CONVEX){}
-	Vec3f center;					// 球体の中心座標
 	float radius;					// 球体の半径
 	PHMaterial material;			// マテリアル
 };	
