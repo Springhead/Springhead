@@ -10,4 +10,3 @@ Springhead2					2005年11月 長谷川晶一
 	[マイ コンピュータ]を右クリック→[プロパティ]→[詳細設定]ページ→[環境変数]
 	→[新規]→ 変数名：	Springhead2		変数値:	C:\Home\svn\Project\Springhead2 など
 ３．src/tests/physics/ にサンプルの.sln があるので，ビルド→実行してみる．
-
