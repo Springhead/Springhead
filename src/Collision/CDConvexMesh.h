@@ -19,9 +19,9 @@ class CDFace: public CDFaceIf{
 public:
 	int vtxs[3];	///< 面の頂点ID
 
-	///
+	/// CDFaceの面のインデックス数
 	virtual int NIndex(){ return 3; }
-	///
+	/// CDFaceのインデックス配列を取得
 	virtual int* GetIndices(){ return vtxs; }
 };
 

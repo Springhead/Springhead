@@ -13,7 +13,7 @@ class CDSphere: public  InheritCDShape<CDSphereIf, CDConvex>{
 public:
 	OBJECTDEF(CDSphere);
 	
-	mutable Vec3f curPos;			/// 探索開始番号
+	//mutable Vec3f curPos;			/// 探索開始番号
 	//Vec3f center;					///	球体の中心座標
 	float radius;					/// 球体の半径
 
@@ -23,7 +23,7 @@ public:
 	CDSphere(const CDSphereDesc& desc);
 	
 	/// ShapeType
-	virtual int SphereType(){ return CDSphereDesc::SPHERE; }
+	virtual int ShapeType(){ return CDShapeDesc::SPHERE; }
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
 	///	切り口を求める．接触解析に使う．

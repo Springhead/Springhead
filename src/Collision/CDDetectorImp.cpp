@@ -182,13 +182,11 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 	return planes.vtxBegin;
 }
 void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
-//	Vec3f lastINormal = cp->iNormal;
 	cp->iNormal = Vec3d();
 	if (isValid){	//	—¼•ûƒ|ƒŠƒSƒ“‚Ìê‡
 		double areaForCenter=0;
 		for(Vtxs::iterator it = vtxs.begin(); it != vtxs.end(); ++it){
 			CDContactAnalysisFace& qhVtx = **it;
-//			CDFace& face = *qhVtx.face;
 			if (qhVtx.NCommonVtx() < 3) continue;
 			Vec3f p0 = qhVtx.CommonVtx(0);
 			Vec3f p1;

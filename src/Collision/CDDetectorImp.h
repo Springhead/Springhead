@@ -3,6 +3,7 @@
 #include "CDQuickHull3D.h"
 #include "CDConvexMesh.h"
 #include "CDSphere.h"
+#include "CDBox.h"
 
 namespace Spr {;
 

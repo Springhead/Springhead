@@ -57,9 +57,10 @@ struct PHMaterial{
 ///	形状のディスクリプタ(基本クラス)
 struct CDShapeDesc{
 	enum ShapeType{
-		CONVEX,
-		CONVEXMESH,
-		SPHERE		
+		CONVEX,			// 凸形状
+		CONVEXMESH,		// 凸形状メッシュ
+		SPHERE,			// 球体
+		BOX				// 直方体
 	} type;
 	CDShapeDesc(ShapeType t=CONVEXMESH): type(t){}
 };
@@ -71,6 +72,7 @@ struct CDConvexMeshDesc: public CDShapeDesc{
 	std::vector<Vec3f> vertices;	///<	頂点の座標
 	PHMaterial material;			///<	材質
 };
+	
 /**	凸形状のメッシュ*/
 struct CDConvexMeshIf: public CDConvexIf{
 	IF_DEF(CDConvexMesh);
@@ -82,7 +84,7 @@ struct CDConvexMeshIf: public CDConvexIf{
 	
 /** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
-	CDSphereDesc():CDShapeDesc(CONVEX){}
+	CDSphereDesc():CDShapeDesc(SPHERE){}
 	float radius;					// 球体の半径
 	PHMaterial material;			// マテリアル
 };	
@@ -92,6 +94,20 @@ struct CDSphereIf: public CDConvexIf{
 	IF_DEF(CDSphere);
 	virtual float GetRadius()=0;
 };	
+
+/** 直方体のディスクリプタ */
+struct CDBoxDesc: public CDShapeDesc{
+	CDBoxDesc():CDShapeDesc(BOX){}
+	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
+	PHMaterial material;
+};	
+	
+/** 直方体 */
+struct CDBoxIf: public CDConvexIf{
+	IF_DEF(CDBox);
+	virtual Vec3f GetBoxSize()=0;
+};
+
 
 //@}
 

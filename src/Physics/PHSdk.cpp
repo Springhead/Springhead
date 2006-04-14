@@ -78,6 +78,11 @@ CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 		s->SetNameManager(this);
 		shapes.push_back(s);
 		return s;
+	}else if (desc.type == CDShapeDesc::BOX){
+		CDShape*s = DBG_NEW CDBox((const CDBoxDesc&)desc);
+		s->SetNameManager(this);
+		shapes.push_back(s);
+		return s;
 	}else{
 		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
 		return NULL;
