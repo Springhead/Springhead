@@ -125,8 +125,8 @@
 	field->AddEnumConst("HINGEJOINT");
 	field->AddEnumConst("SLIDERJOINT");
 	field->AddEnumConst("BALLJOINT");
-	field->AddEnumConst("PARAMETRICJOINT");
-	field->AddEnumConst("PARAMETRICJOINT");
+	field->AddEnumConst("PATHJOINT");
+	field->AddEnumConst("PATHJOINT");
 	field->offset = (char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc;
 	field = desc->AddField("", "bool", "bEnabled", "");
 	field->offset = (char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc;
@@ -171,6 +171,36 @@
 	desc->access = DBG_NEW FIAccess<PHSliderJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
 	field->offset = (char*)(PHJoint1DDesc*)pPHSliderJointDesc - (char*)pPHSliderJointDesc;
+	db->RegisterDesc(desc);
+	
+	PHPathPoint* pPHPathPoint = NULL;
+	desc = DBG_NEW FITypeDesc("PHPathPoint");
+	desc->size = sizeof(PHPathPoint);
+	desc->access = DBG_NEW FIAccess<PHPathPoint>;
+	field = desc->AddField("", "double", "s", "");
+	field->offset = (char*)&(pPHPathPoint->s) - (char*)pPHPathPoint;
+	field = desc->AddField("", "Posed", "pose", "");
+	field->offset = (char*)&(pPHPathPoint->pose) - (char*)pPHPathPoint;
+	db->RegisterDesc(desc);
+	
+	PHPathDesc* pPHPathDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHPathDesc");
+	desc->size = sizeof(PHPathDesc);
+	desc->ifInfo = PHPathIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHPathDesc>;
+	field = desc->AddField("vector", "PHPathPoint", "path", "");
+	field->offset = (char*)&(pPHPathDesc->path) - (char*)pPHPathDesc;
+	field = desc->AddField("", "bool", "bLoop", "");
+	field->offset = (char*)&(pPHPathDesc->bLoop) - (char*)pPHPathDesc;
+	db->RegisterDesc(desc);
+	
+	PHPathJointDesc* pPHPathJointDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHPathJointDesc");
+	desc->size = sizeof(PHPathJointDesc);
+	desc->ifInfo = PHPathJointIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHPathJointDesc>;
+	field = desc->AddBase("PHJoint1DDesc");
+	field->offset = (char*)(PHJoint1DDesc*)pPHPathJointDesc - (char*)pPHPathJointDesc;
 	db->RegisterDesc(desc);
 	
 	PHBallJointDesc* pPHBallJointDesc = NULL;

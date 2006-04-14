@@ -9,6 +9,8 @@ struct ObjectIf;
 
 class IfInfo{
 public:
+//	static int maxId;
+//	int id;
 	const char* className;
 	IfInfo** base;
 	IfInfo(const char* cn, IfInfo** b): className(cn), base(b){}
