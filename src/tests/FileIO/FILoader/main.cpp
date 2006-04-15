@@ -68,6 +68,7 @@ void display(){
 		PHSceneIf** s = phSdk->GetScenes();
 		scene = *s;
 	}
+	if (!scene) exit(-1);
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
 		if (num == 1){
