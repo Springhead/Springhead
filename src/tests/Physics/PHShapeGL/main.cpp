@@ -232,7 +232,7 @@ void idle(){
 			exit(EXIT_FAILURE);
 		}
 	}
-	int count=0;
+	static int count=0;
 	count ++;
 	if (count > 1000){
 		exit(-1);
