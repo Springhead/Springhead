@@ -207,7 +207,7 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  return 	‚È‚µ
  */
 void SPR_CDECL idle(){
-#if 0	
+#if 1
 	int iCnt = 0;
 	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
 		prepos[iCnt] = soBlock[iCnt]->GetFramePosition();
