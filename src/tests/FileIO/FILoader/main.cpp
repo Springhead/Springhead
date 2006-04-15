@@ -68,7 +68,10 @@ void display(){
 		PHSceneIf** s = phSdk->GetScenes();
 		scene = *s;
 	}
-	if (!scene) exit(-1);
+	if (!scene){
+		std::cout << "scene == NULL. File may not found." << std::endl;
+		exit(-1);
+	}
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
 		if (num == 1){
@@ -168,7 +171,10 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count ++;
-	if (count > 1200) exit(0);
+	if (count > 1200){
+		std::cout << "1200 count passed." << std::endl;
+		exit(0);
+	}
 }
 
 /**
