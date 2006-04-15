@@ -232,6 +232,11 @@ void SPR_CDECL idle(){
 			exit(EXIT_SUCCESS);
 		}
 	}
+	static int count = 0;
+	count ++;
+	if (count > 1000){
+		exit(-1);
+	}
 
 	std::cout << prepos[NUM_BLOCK-1] << ' ' << curpos[NUM_BLOCK-1] << ' ' << prepos[NUM_BLOCK-1]-curpos[NUM_BLOCK-1] << std::endl;
 	glutPostRedisplay();

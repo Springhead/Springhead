@@ -231,7 +231,12 @@ void idle(){
 			DSTR << "\nPHShapeGL failure." << std::endl;
 			exit(EXIT_FAILURE);
 		}
-	}	
+	}
+	int count=0;
+	count ++;
+	if (count > 1000){
+		exit(-1);
+	}
 
 	glutPostRedisplay();
 }
