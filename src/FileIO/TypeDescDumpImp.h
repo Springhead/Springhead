@@ -21,7 +21,8 @@
 	field->AddEnumConst("CONVEX");
 	field->AddEnumConst("CONVEXMESH");
 	field->AddEnumConst("SPHERE");
-	field->AddEnumConst("SPHERE");
+	field->AddEnumConst("BOX");
+	field->AddEnumConst("BOX");
 	field->offset = (char*)(&pCDShapeDesc->type) - (char*)pCDShapeDesc;
 	db->RegisterDesc(desc);
 	
@@ -45,12 +46,23 @@
 	desc->access = DBG_NEW FIAccess<CDSphereDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDSphereDesc - (char*)pCDSphereDesc;
-	field = desc->AddField("", "Vec3f", "center", "");
-	field->offset = (char*)&(pCDSphereDesc->center) - (char*)pCDSphereDesc;
 	field = desc->AddField("", "float", "radius", "");
 	field->offset = (char*)&(pCDSphereDesc->radius) - (char*)pCDSphereDesc;
 	field = desc->AddField("", "PHMaterial", "material", "");
 	field->offset = (char*)&(pCDSphereDesc->material) - (char*)pCDSphereDesc;
+	db->RegisterDesc(desc);
+	
+	CDBoxDesc* pCDBoxDesc = NULL;
+	desc = DBG_NEW FITypeDesc("CDBoxDesc");
+	desc->size = sizeof(CDBoxDesc);
+	desc->ifInfo = CDBoxIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<CDBoxDesc>;
+	field = desc->AddBase("CDShapeDesc");
+	field->offset = (char*)(CDShapeDesc*)pCDBoxDesc - (char*)pCDBoxDesc;
+	field = desc->AddField("", "Vec3f", "boxsize", "");
+	field->offset = (char*)&(pCDBoxDesc->boxsize) - (char*)pCDBoxDesc;
+	field = desc->AddField("", "PHMaterial", "material", "");
+	field->offset = (char*)&(pCDBoxDesc->material) - (char*)pCDBoxDesc;
 	db->RegisterDesc(desc);
 	
 	GRLight* pGRLight = NULL;
