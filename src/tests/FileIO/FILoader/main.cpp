@@ -180,13 +180,14 @@ void idle(){
 int main(int argc, char* argv[]){
 	FISdkIf* fiSdk = CreateFISdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
-	phSdk = CreatePHSdk();
 	ObjectIfs objs;
-	objs.push_back(phSdk);
 	if (argc>=2){
-		fileX->Load(objs, argv[1]);
+		phSdk = CreatePHSdk();		//	PHSDKを用意して，
+		objs.push_back(phSdk);		
+		fileX->Load(objs, argv[1]);	//	ファイルローダに渡す方式
 	}else{
-		fileX->Load(objs, "test.x");
+		fileX->Load(objs, "test.x");	//	PHSDKごとロードして，
+		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();

@@ -10,6 +10,10 @@ namespace Spr{;
 struct PHSceneIf;
 struct PHSceneDesc;
 
+//	自動ロードのための中身なしのデスクリプタ
+struct PHSdkDesc{
+};
+
 ///	物理シミュレーションSDK
 struct PHSdkIf : public NameManagerIf{
 	IF_DEF(PHSdk);
