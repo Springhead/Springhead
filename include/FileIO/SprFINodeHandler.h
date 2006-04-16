@@ -5,11 +5,12 @@
 namespace Spr {;
 /** \addtogroup gpFileIO	*/
 //@{
-///	剛体のステート
-
+///	お互いに衝突しない剛体を設定
 struct FIInactiveSolids{
-	std::vector<std::string> solids;
+	std::vector<std::string> solids;	//	衝突しない剛体のリスト
 };
+
+//@}
 
 }	//	namespace Spr
 

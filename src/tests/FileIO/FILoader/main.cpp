@@ -13,15 +13,8 @@
   ・Physicsエンジンと接続し、シミュレーションさせる。
   
  */
-#include <FileIO/FITypeDesc.h>
-#include <FileIO/FIFileContext.h>
-#include <FileIO/FIFileX.h>
 #include <Springhead.h>
-#ifdef __APPLE__
-# include <GLUT/glut.h>
-#else
-# include <GL/glut.h>
-#endif
+#include <GL/glut.h>
 #define	ESC		27
 namespace Spr{
 	PHSdkIf* phSdk;
@@ -185,19 +178,18 @@ void idle(){
  */
 
 int main(int argc, char* argv[]){
-	static FIFileContext fc;
-	fc.errorStream=&DSTR;
-	fc.fileInfo.Push();
-	if (argc>=2){
-		fc.fileInfo.back().Map(argv[1]);
-	}else{
-		fc.fileInfo.back().Map("test.x");
-	}
+	FISdkIf* fiSdk = CreateFISdk();
+	FIFileXIf* fileX = fiSdk->CreateFileX();
 	phSdk = CreatePHSdk();
-	fc.objects.Push(phSdk);
-	static FIFileX fileX;	//<	glutは exitで終わるため，staticにしないとこの変数のCleanupが行われなくなる．
-	fileX.Init();
-	fileX.Load(&fc);
+	ObjectIfs objs;
+	objs.push_back(phSdk);
+	if (argc>=2){
+		fileX->Load(objs, argv[1]);
+	}else{
+		fileX->Load(objs, "test.x");
+	}
+	fiSdk->Clear();
+	objs.clear();
 	phSdk->Print(DSTR);
 
 	scene = phSdk->GetScenes();		// Sceneの取得

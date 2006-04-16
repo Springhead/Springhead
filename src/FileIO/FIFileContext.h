@@ -29,7 +29,6 @@ public:
 	struct FileInfo{
 		~FileInfo();
 		std::string name;	///<	ファイル名
-		int line;			///<	行番号
 		const char* start;	///<	メモリマップされたファイルの先頭
 		const char* end;	///<	メモリマップされたファイルの終端
 #ifdef _WIN32
@@ -42,7 +41,7 @@ public:
 		void *sourceptr;
 #endif
 		/// コンストラクタ
-		FileInfo():line(0),start(NULL), end(NULL){}
+		FileInfo():start(NULL), end(NULL){}
 		/// ファイル マッピング		
 		bool Map(std::string fn);
 		/// ファイル アンマッピング
@@ -150,6 +149,8 @@ public:
 	UTStack<FileInfo> fileInfo;	
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
 	IfStack objects;
+	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
+	ObjectIfs rootObjects;
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<Data> > datas;
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．

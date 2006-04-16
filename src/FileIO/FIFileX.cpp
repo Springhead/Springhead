@@ -12,6 +12,13 @@
 
 namespace Spr{;
 
+IF_IMP(FIFile, Object);
+OBJECTIMPABST(FIFile, Object);
+
+IF_IMP(FIFileX, FIFile);
+OBJECTIMP(FIFileX, FIFile);
+
+
 //#define TRACE_PARSE
 #ifdef TRACE_PARSE
 # define PDEBUG(x)	x
@@ -202,7 +209,9 @@ public:
 typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 
 
-
+FIFileX::FIFileX(){
+	Init();
+}
 void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
 	if (!FITypeDescDb::theTypeDescDb) RegisterTypes();
 	if (!FINodeHandlers::theNodeHandlers) RegisterNodeHandlers();
@@ -272,6 +281,22 @@ void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
 				|	"//" >> *~ch_p('\n') >> '\n'
 				|	"#" >> *~ch_p('\n') >> '\n';
 }
+
+
+
+//------------------------------------------------------------------------------
+bool FIFileX::Load(ObjectIfs& objs, const char* fn){
+	FIFileContext fc;
+	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
+	fc.fileInfo.Push();
+	fc.fileInfo.back().Map(fn);
+	Load(&fc);
+	if (fc.rootObjects.size()){
+		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
+		return true;
+	}
+	return false;
+}
 void FIFileX::Load(FIFileContext* fc){
 	using namespace std;
 	using namespace boost::spirit;
@@ -288,6 +313,9 @@ void FIFileX::Load(FIFileContext* fc){
 	}
 	fileContext->Link();
 	fileContext->PostTask();
+}
+bool FIFileX::Save(const ObjectIfs& objs, const char* fn){
+	return false;
 }
 
 };

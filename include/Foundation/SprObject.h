@@ -7,6 +7,8 @@ namespace Spr{;
 
 struct ObjectIf;
 
+/**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，ICAST()などが利用する．
+1つのインタフェースクラスに付き1個のインスタンスができる．	*/
 class IfInfo{
 public:
 //	static int maxId;
@@ -22,7 +24,7 @@ public:
 protected:
 	virtual ~IfInfo() {};
 };
-
+///	IfInfoの実装．1クラス1インスタンス
 template <class T>
 class IfInfoImp: public IfInfo{
 public:
@@ -44,13 +46,14 @@ public:													\
 		return &ifInfo;									\
 	}													\
 
-///	インタフェースのキャスト
+///	インタフェースクラスのキャスト
 #define ICAST(T, p)	UTIcastImp<T>(p)
 template <class T, class P> T* UTIcastImp(P p){
 	void* obj = p ? p->GetIfInfo()->GetSprObject((ObjectIf*)p) : NULL;
 	return (T*)T::GetIfInfoStatic()->GetIf(obj);
 }
 
+///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	IF_DEF(Object);
 	virtual int AddRef()=0;
@@ -71,6 +74,11 @@ struct ObjectIf{
 	virtual bool AddChildObject(ObjectIf* o)=0;
 };
 
+///	インタフェースクラスへのポインタの配列
+struct ObjectIfs: public std::vector<ObjectIf*>{
+};
+
+///	名前を持つオブジェクトのインタフェース
 struct NamedObjectIf: public ObjectIf{
 	IF_DEF(NamedObject);
 	///	名前の取得
@@ -80,6 +88,7 @@ struct NamedObjectIf: public ObjectIf{
 };
 
 struct SceneIf;
+///	シーングラフを構成するノードのインタフェース
 struct SceneObjectIf: NamedObjectIf{
 	IF_DEF(SceneObject);
 	///	所属Sceneの取得

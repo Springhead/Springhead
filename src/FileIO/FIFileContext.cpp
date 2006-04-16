@@ -250,6 +250,7 @@ void FIFileContext::LoadNode(){
 			}
 		}
 		objects.Push(obj);
+		if (objects.size() == 1) rootObjects.push_back(objects.Top());
 	}else{
 		static FINodeHandler key;
 		key.AddRef();
@@ -289,7 +290,8 @@ ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){
 			if (obj) return obj;
 		}
 	}
-	return NULL;
+	ObjectIf* obj = CreateSdk(ifInfo, data);
+	return obj;
 }
 void FIFileContext::AddLink(std::string ref, const char* pos){
 	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));
