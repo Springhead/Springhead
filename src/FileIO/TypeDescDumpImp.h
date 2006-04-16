@@ -260,7 +260,6 @@
 	desc->ifInfo = PHSdkIf::GetIfInfoStatic();
 	desc->access = DBG_NEW FIAccess<PHSdkDesc>;
 	db->RegisterDesc(desc);
-
 	
 	PHSolidState* pPHSolidState = NULL;
 	desc = DBG_NEW FITypeDesc("PHSolidState");

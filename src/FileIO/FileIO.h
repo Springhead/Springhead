@@ -5,4 +5,5 @@
 #include "FISpirit.h"
 #include "FITypeDesc.h"
 #include "FIFileContext.h"
+#include "FISaveContext.h"
 #include "FINodeHandler.h"

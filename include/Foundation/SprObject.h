@@ -72,6 +72,10 @@ struct ObjectIf{
 	virtual const ObjectIf* GetChildObject(size_t pos) const = 0;
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o)=0;
+	///	データの読み出し(参照版 NULLを返すこともある)
+	virtual void* GetDescAddress() = 0;
+	///	データの読み出し(コピー版 必ず実装されている(はず))
+	virtual void GetDesc(void* desc) = 0;
 };
 
 ///	インタフェースクラスへのポインタの配列

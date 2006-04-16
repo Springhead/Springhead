@@ -3,17 +3,18 @@
 
 #include <SprFileIO.h>
 #include <FileIO/FITypeDesc.h>
-#include "FIFileContext.h"
 #include "FINodeHandler.h"
 
 namespace Spr{;
-
+class FIFileContext;
+class FISaveContext;
 class FIFile:public InheritObject<FIFileIf, Object>{
 public:
 	OBJECTDEFABST(FIFile);
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FIFileContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
+	virtual void Save(FISaveContext* sc);
 protected:
 	///	ファイルにセーブ・ファイルからロードする型の情報(FITypeDesc)
 	FITypeDescDb typeDb;

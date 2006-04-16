@@ -54,23 +54,27 @@ class Object:public ObjectIf, public UTTypeInfoBase, public UTRefCount{
 public:
 	OBJECTDEF(Object);		///<	クラス名の取得などの基本機能の実装
 
-	int AddRef(){return UTRefCount::AddRef();}
-	int DelRef(){return UTRefCount::DelRef();}
-	int RefCount(){return UTRefCount::RefCount();}
+	virtual int AddRef(){return UTRefCount::AddRef();}
+	virtual int DelRef(){return UTRefCount::DelRef();}
+	virtual int RefCount(){return UTRefCount::RefCount();}
 
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
 	///	オブジェクトの作成
-	ObjectIf* CreateObject(const IfInfo* info, const void* desc){ return NULL; }
+	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc){ return NULL; }
 	///	子オブジェクトの数
-	size_t NChildObject() const { return 0; }
+	virtual size_t NChildObject() const { return 0; }
 	///	子オブジェクトの取得
-	ObjectIf* GetChildObject(size_t pos) { return NULL; }
-	const ObjectIf* GetChildObject(size_t pos) const { 
+	virtual ObjectIf* GetChildObject(size_t pos) { return NULL; }
+	virtual const ObjectIf* GetChildObject(size_t pos) const { 
 		return ((Object*) this)->GetChildObject(pos);
 	}
 	///	子オブジェクトの追加
-	bool AddChildObject(ObjectIf* o){ return false; }
+	virtual bool AddChildObject(ObjectIf* o){ return false; }
+	///	データの読み出し
+	virtual void GetDesc(void* desc){}
+	///	データの読み出し
+	virtual void* GetDescAddress(){ return NULL; }
 };
 template <class intf, class base>
 struct InheritObject:public intf, base{
@@ -89,6 +93,8 @@ struct InheritObject:public intf, base{
 	virtual bool AddChildObject(ObjectIf* o){
 		return base::AddChildObject(o);		
 	}
+	virtual void GetDesc(void* desc){ base::GetDesc(desc); }
+	virtual void* GetDescAddress(){ return base::GetDescAddress(); }
 };
 
 class NameManager;

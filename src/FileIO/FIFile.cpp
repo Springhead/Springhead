@@ -31,8 +31,13 @@ void FIFile::Load(FIFileContext* fc){
 }
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
-
+	FISaveContext sc;
+	sc.Open(fn);
+	sc.rootObjects = objs;
+	Save(&sc);
 	return false;
+}
+void FIFile::Save(FISaveContext* sc){
 }
 
 
