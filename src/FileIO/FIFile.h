@@ -13,7 +13,7 @@ public:
 	OBJECTDEFABST(FIFile);
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FIFileContext* fc);
-	virtual bool Save(const ObjectIfs& objs, const char* fn){ return false; }
+	virtual bool Save(const ObjectIfs& objs, const char* fn);
 protected:
 	///	ファイルにセーブ・ファイルからロードする型の情報(FITypeDesc)
 	FITypeDescDb typeDb;

@@ -30,4 +30,10 @@ void FIFile::Load(FIFileContext* fc){
 	fc->PostTask();
 }
 
+bool FIFile::Save(const ObjectIfs& objs, const char* fn){
+
+	return false;
+}
+
+
 };
