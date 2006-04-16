@@ -188,7 +188,7 @@ int main(int argc, char* argv[]){
 	}else{
 		fileX->Load(objs, "test.x");
 	}
-	fiSdk->Clear();
+	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
 	phSdk->Print(DSTR);
 
