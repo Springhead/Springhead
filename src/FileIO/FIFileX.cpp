@@ -12,9 +12,6 @@
 
 namespace Spr{;
 
-IF_IMP(FIFile, Object);
-OBJECTIMPABST(FIFile, Object);
-
 IF_IMP(FIFileX, FIFile);
 OBJECTIMP(FIFileX, FIFile);
 
@@ -36,7 +33,7 @@ static FIFileX* fileX;
 
 ///	テンプレートのTypeDescがあるかどうか．
 static bool TypeAvail(){
-	return fileContext->fieldIts.back().type;
+	return fileContext->fieldIts.size() && fileContext->fieldIts.back().type;
 }
 
 ///	ノードデータの読み出し準備
@@ -285,34 +282,15 @@ void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
 
 
 //------------------------------------------------------------------------------
-bool FIFileX::Load(ObjectIfs& objs, const char* fn){
-	FIFileContext fc;
-	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
-	fc.fileInfo.Push();
-	fc.fileInfo.back().Map(fn);
-	Load(&fc);
-	if (fc.rootObjects.size()){
-		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
-		return true;
-	}
-	return false;
-}
-void FIFileX::Load(FIFileContext* fc){
+void FIFileX::LoadImp(FIFileContext* fc){
 	using namespace std;
 	using namespace boost::spirit;
 	using namespace Spr;
 	fileContext = fc;
-	if (fileContext->IsGood()){
-		fileContext->typeDb = &typeDb;
-		fileContext->handlers = &handlers;
-
-		fileX = this;
-		parse_info<const char*> info = parse(
-			fileContext->fileInfo.back().start, 
-			fileContext->fileInfo.back().end, start, cmt);
-	}
-	fileContext->Link();
-	fileContext->PostTask();
+	fileX = this;
+	parse_info<const char*> info = parse(
+		fileContext->fileInfo.back().start, 
+		fileContext->fileInfo.back().end, start, cmt);
 }
 bool FIFileX::Save(const ObjectIfs& objs, const char* fn){
 	return false;

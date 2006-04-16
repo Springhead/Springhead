@@ -254,6 +254,13 @@
 	field->offset = (char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc;
 	db->RegisterDesc(desc);
 	
+	PHSdkDesc* pPHSdkDesc = NULL;
+	desc = DBG_NEW FITypeDesc("PHSdkDesc");
+	desc->size = sizeof(PHSdkDesc);
+	desc->ifInfo = PHSdkIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<PHSdkDesc>;
+	db->RegisterDesc(desc);
+	
 	PHSolidState* pPHSolidState = NULL;
 	desc = DBG_NEW FITypeDesc("PHSolidState");
 	desc->size = sizeof(PHSolidState);
