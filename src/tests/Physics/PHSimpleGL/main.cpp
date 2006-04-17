@@ -21,11 +21,7 @@
  */
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
-#ifdef __APPLE__
-# include <GLUT/glut.h>
-#else
-# include <GL/glut.h>
-#endif
+#include <GL/glut.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

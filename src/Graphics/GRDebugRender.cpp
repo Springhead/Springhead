@@ -2,11 +2,7 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-#ifdef __APPLE__
-# include <GLUT/glut.h>		// Mac OS X's OpenGL layer for Aqua.
-#else
-# include <GL/glut.h>
-#endif
+#include <GL/glut.h>
 
 namespace Spr {;
 //----------------------------------------------------------------------------
