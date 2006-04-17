@@ -41,45 +41,9 @@ namespace Spr{;
 /**	@page FITypeDesc ドキュメントオブジェクトと型記述
 	C++の構造体からデータを書き出す場合など，構造体やデータには，
 	変数名や変数の型と言った情報はない．
-	そこで，型記述型オブジェクト(FITypeDesc)を使って記述しておく．
-*/
-
-#if 0
-/**	FIVVectorの基本クラス．
-	ベクタへのロードとセーブのサポートに必要な仮想関数を用意	*/
-class FIVVectorBase{
-public:
-	virtual size_t VItemSize() = 0;
-	virtual size_t VSize() = 0;
-	virtual void VResize(size_t s) = 0;
-	virtual char* VBegin() = 0;
-	virtual char* VEnd() = 0;
-	virtual void VInsert(int pos, void* v) = 0;
-	virtual void VPushBack(void* v) = 0;
-	virtual void VPushBack() = 0;
-	virtual void VPopBack() = 0;
-};
-
-/**	FITypeDesc が理解できるstd::vector
-	ベクタへのロードとセーブのサポートに必要な仮想関数が実装される．
-	FITypeDesc は普通のvector を含むクラスはサポートしない．*/
-template <class T>
-class FIVVector: public FIVVectorBase, public std::vector<T>{
-	virtual size_t VItemSize(){ return sizeof(T); }
-	virtual size_t VSize(){ return size(); }
-	virtual void VResize(size_t s){ resize(s); }
-	virtual char* VBegin(){ return (char*)&*begin(); }
-	virtual char* VEnd(){ return (char*) &*end(); }
-	virtual void VInsert(int pos, void* v){ insert(begin()+pos, *(T*)v); }
-	virtual void VPushBack(void* v){ push_back(*(T*)v); }
-	virtual void VPushBack(){ push_back(T()); }
-	virtual void VPopBack(){ pop_back(); }
-public:
-	FIVVector(){}
-	FIVVector(const std::vector<T>& v):std::vector<T>(v){}
-	FIVVector& operator=(const std::vector<T>& v){ *(std::vector<T>*)this = v; return *this; }
-};
-#endif
+	そこで，型記述型オブジェクト(FITypeDesc)を使って記述する．
+	FITypeDescのオブジェクトを作るためのソースはヘッダファイルを typedesc.exe が
+	パースして自動生成する．*/
 
 ///	対象の型にアクセスするためのクラス
 class FIAccessBase:public UTRefCount{
@@ -392,8 +356,83 @@ public:
 	void Print(std::ostream& os) const ;
 };
 
-///	FIVVectorのサイズ指定．x にはフィールド名(メンバ変数名)を指定する．
-#define VSIZE(x)
+
+/**	ファイルからObjectDescを読み出したり，ファイルに書き込んだりするためのデータ．
+	ObjectDesc へのポインタ(data) と 型情報 (type) を持つ．
+	メモリの管理も行う．	*/
+class FINodeData: public UTRefCount{
+public:
+	FITypeDesc* type;	///<	データの型 
+	UTString name;		///<	名前
+	void* data;			///<	ロードしたデータ
+	bool haveData;		///<	dataをdeleteすべきかどうか．
+	FINodeData(FITypeDesc* t=NULL, void* d=NULL);
+	~FINodeData();
+};
+/**	TypeDescのフィールドのイタレータ
+	バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，
+	読み出し中のデータがFITypeDescのツリーのどこに対応するかを保持しておく必要がある．
+*/
+class FIFieldIt{
+public:
+	/**	フィールドの種類を示すフラグ．
+		ほとんどのファイルフォーマットで，整数，実数，文字列で，異なるパーサが必要になる．
+		そこで，それらで分類．
+		組み立て型は，FITypeDescを参照して読み出すので，F_BLOCKを用意した．
+	*/
+	enum FieldType{
+		F_NONE, F_BOOL, F_INT, F_REAL, F_STR, F_BLOCK
+	};
+	FITypeDesc* type;						///<	読み出し中のFITypeDesc
+	FITypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
+	int arrayPos;							///<	配列の場合，読み出し中の添え字
+	int arrayLength;						///<	固定長の場合の配列の長さ
+	FieldType fieldType;					///<	読み出すフィールドの型
+
+	FIFieldIt(FITypeDesc* d);					///<	コンストラクタ
+	bool NextField();						///<	次のフィールドに進む
+};
+class FIFieldIts:public UTStack<FIFieldIt>{
+public:
+	///
+	void PushType(FITypeDesc* t){
+		Push(FIFieldIt(t));
+	}
+	///	次のフィールドに進む
+	bool NextField(){
+		if(size()) return back().NextField();
+		return false;
+	}
+	///	配列中での位置
+	int ArrayPos(){
+		if(size()) return back().arrayPos;
+		return -1;
+	}
+	///	配列の長さ
+	int ArrayLength(){
+		if(size()) return back().arrayLength;
+		return 0;
+	}
+	bool IncArrayPos(){
+		if(!size()) return false;
+		++ back().arrayPos;
+		return back().arrayPos < back().arrayLength;
+	}
+	bool IsArrayRest(){
+		if (!size()) return false;
+		return back().arrayPos < back().arrayLength;
+	}
+	bool IsBool(){
+		return back().fieldType==FIFieldIt::F_BOOL;
+	}
+	bool IsNumber(){
+		return back().fieldType==FIFieldIt::F_INT || back().fieldType==FIFieldIt::F_REAL;
+	}
+	bool IsString(){
+		return back().fieldType==FIFieldIt::F_STR;
+	}
+};
+
 
 ///	単純型を登録する．
 #define REG_FIELD(type)	RegisterDesc( DBG_NEW FITypeDesc(#type, sizeof(type)) )

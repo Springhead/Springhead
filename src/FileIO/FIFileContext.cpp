@@ -19,8 +19,8 @@
 
 namespace Spr{;
 //---------------------------------------------------------------------------
-//	FIFileContext::Data
-FIFileContext::Data::Data(FITypeDesc* t, void* d):type(t), data(d){
+//	FINodeData
+FINodeData::FINodeData(FITypeDesc* t, void* d):type(t), data(d){
 	if (!data && type){
 		data = type->Create();
 		haveData = true;
@@ -28,7 +28,7 @@ FIFileContext::Data::Data(FITypeDesc* t, void* d):type(t), data(d){
 		haveData = false;
 	}
 }
-FIFileContext::Data::~Data(){
+FINodeData::~FINodeData(){
 	if (haveData) type->Delete(data);
 }
 //---------------------------------------------------------------------------
@@ -106,65 +106,6 @@ bool FIFileContext::FileInfo::IsGood(){
 
 
 //---------------------------------------------------------------------------
-//	FIFileContext::FieldIt
-
-FIFileContext::FieldIt::FieldIt(FITypeDesc* d){
-	type = d;
-	field = d->GetComposit().end();
-	arrayPos = -1;
-	arrayLength = 0;
-	nextField=F_NONE;
-}
-bool FIFileContext::FieldIt::NextField(){
-	if (!type->IsComposit()) return false;
-	//	次のフィールドへ進む
-	if (field==type->GetComposit().end()){
-		field=type->GetComposit().begin();
-	}else{
-		++field;
-		if (field == type->GetComposit().end()){
-			nextField = F_NONE;
-			return false;
-		}
-	}
-	//	フィールドの配列要素数を設定
-	if (field->varType==FITypeDesc::Field::SINGLE){
-		arrayLength = 1;
-	}else if(field->varType==FITypeDesc::Field::VECTOR){
-		arrayLength = field->length;
-	}else if(field->varType==FITypeDesc::Field::ARRAY){
-		arrayLength = field->length;
-	}
-	//	配列カウントを初期化
-	arrayPos = -1;
-	//	フィールドの型を設定
-	if(		field->type->GetTypeName().compare("BYTE")==0
-		||	field->type->GetTypeName().compare("WORD")==0
-		||	field->type->GetTypeName().compare("DWORD")==0
-		||	field->type->GetTypeName().compare("char")==0
-		||	field->type->GetTypeName().compare("short")==0
-		||	field->type->GetTypeName().compare("int")==0
-		||	field->type->GetTypeName().compare("enum")==0){
-		nextField = F_INT;
-	}else if (field->type->GetTypeName().compare("bool")==0
-		||	field->type->GetTypeName().compare("BOOL")==0){
-		nextField = F_BOOL;
-	}else if (field->type->GetTypeName().compare("float")==0
-		||	field->type->GetTypeName().compare("double")==0
-		||	field->type->GetTypeName().compare("FLOAT")==0
-		||	field->type->GetTypeName().compare("DOUBLE")==0){
-		nextField = F_REAL;
-	}else if (field->type->GetTypeName().compare("string")==0
-		||  field->type->GetTypeName().compare("STRING")==0){
-		nextField = F_STR;
-	}else if (field->type->IsComposit()){
-		nextField = F_BLOCK;
-	}
-	return true;
-}
-
-
-//---------------------------------------------------------------------------
 //	FIFileContext::Tasks
 void FIFileContext::Tasks::Execute(FIFileContext* ctx){
 	for(iterator it = begin(); it!=end(); ++it){
@@ -175,7 +116,7 @@ void FIFileContext::Tasks::Execute(FIFileContext* ctx){
 
 //---------------------------------------------------------------------------
 //	FIFileContext::LinkTask
-FIFileContext::LinkTask::LinkTask(const IfStack& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
+FIFileContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
 	for(int i=objs.size()-1; i>=0; --i){
 		NameManagerIf* nm = ICAST(NameManagerIf, objs[i]);
 		if (nm){
@@ -209,22 +150,22 @@ void FIFileContext::LinkTask::Execute(FIFileContext* ctx){
 //---------------------------------------------------------------------------
 //	FIFileContext
 void FIFileContext::WriteBool(bool v){
-	FIFileContext::FieldIt& curField = fieldIts.back();
+	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
 }
 void FIFileContext::WriteNumber(double v){
-	FIFileContext::FieldIt& curField = fieldIts.back();
+	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
 }
 void FIFileContext::WriteString(std::string v){
-	FIFileContext::FieldIt& curField = fieldIts.back();
+	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
 void FIFileContext::PushType(FITypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	読み出したデータを構造体の用意
-	datas.Push(DBG_NEW Data(type));
+	datas.Push(DBG_NEW FINodeData(type));
 }
 void FIFileContext::PopType(){
 	datas.Pop();
@@ -269,8 +210,8 @@ void FIFileContext::LoadNode(){
 void FIFileContext::EnterBlock(){
 	char* base = (char*)datas.Top()->data;
 	void* ptr = fieldIts.back().field->GetAddressEx(base, fieldIts.ArrayPos());
-	datas.Push(DBG_NEW Data(NULL, ptr));
-	fieldIts.push_back(FieldIt(fieldIts.back().field->type));
+	datas.Push(DBG_NEW FINodeData(NULL, ptr));
+	fieldIts.push_back(FIFieldIt(fieldIts.back().field->type));
 }
 void FIFileContext::LeaveBlock(){
 	fieldIts.Pop();

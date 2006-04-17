@@ -24,8 +24,6 @@ public:
 	//--------------------------------------------------------------------------
 	//	クラス定義
 	///
-	typedef UTStack<ObjectIf*> IfStack;
-	///
 	struct FileInfo{
 		~FileInfo();
 		std::string name;	///<	ファイル名
@@ -49,78 +47,6 @@ public:
 		///	ロードできる状態ならtrue
 		bool IsGood();
 	};
-	/**	ファイルから自動的に読み出したり，ファイルに自動的に書き込んだりする
-	データ．メモリの管理も行う．	*/
-	struct Data: UTRefCount{
-		FITypeDesc* type;	///<	データの型 
-		UTString name;		///<	名前
-		void* data;			///<	ロードしたデータ
-		bool haveData;		///<	dataをdeleteすべきかどうか．
-		Data(FITypeDesc* t=NULL, void* d=NULL);
-		~Data();
-	};
-	/**	フィールドの種類を示すフラグ．
-		ほとんどのファイルフォーマットで，整数，実数，文字列で，異なるパーサが必要になる．
-		そこで，それらで分類．
-		組み立て型は，FITypeDescを参照して読み出すので，F_BLOCKを用意した．
-	*/
-	enum FieldType{
-		F_NONE, F_BOOL, F_INT, F_REAL, F_STR, F_BLOCK
-	};
-	/**	TypeDescのフィールドのイタレータ
-		バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，
-		読み出し中のデータがFITypeDescのツリーのどこに対応するかを保持しておく必要がある．
-	*/
-	struct FieldIt{
-		FITypeDesc* type;						///<	読み出し中のFITypeDesc
-		FITypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
-		int arrayPos;							///<	配列の場合，読み出し中の添え字
-		int arrayLength;						///<	固定長の場合の配列の長さ
-		FieldType nextField;					///<	読み出すフィールドの型
-
-		FieldIt(FITypeDesc* d);					///<	コンストラクタ
-		bool NextField();						///<	次のフィールドに進む
-	};
-	class FieldItStack:public UTStack<FieldIt>{
-	public:
-		///
-		void PushType(FITypeDesc* t){
-			Push(FIFileContext::FieldIt(t));
-		}
-		///	次のフィールドに進む
-		bool NextField(){
-			if(size()) return back().NextField();
-			return false;
-		}
-		///	配列中での位置
-		int ArrayPos(){
-			if(size()) return back().arrayPos;
-			return -1;
-		}
-		///	配列の長さ
-		int ArrayLength(){
-			if(size()) return back().arrayLength;
-			return 0;
-		}
-		bool IncArrayPos(){
-			if(!size()) return false;
-			++ back().arrayPos;
-			return back().arrayPos < back().arrayLength;
-		}
-		bool IsArrayRest(){
-			if (!size()) return false;
-			return back().arrayPos < back().arrayLength;
-		}
-		bool IsBool(){
-			return back().nextField==F_BOOL;
-		}
-		bool IsNumber(){
-			return back().nextField==F_INT || back().nextField==F_REAL;
-		}
-		bool IsString(){
-			return back().nextField==F_STR;
-		}
-	};
 	///	タスククラス．ロード後にまとめて仕事をさせるためのもの．
 	class Task:public UTRefCount{
 	public:
@@ -139,7 +65,7 @@ public:
 		std::string ref;
 		ObjectIf* object;
 		const char* pos;
-		LinkTask(const IfStack& objs, const char* p, ObjectIf* o, std::string r);
+		LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r);
 		void Execute(FIFileContext* ctx);
 	};
 	
@@ -148,13 +74,13 @@ public:
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
 	UTStack<FileInfo> fileInfo;	
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
-	IfStack objects;
+	ObjectIfs objects;
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
 	ObjectIfs rootObjects;
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
-	UTStack< UTRef<Data> > datas;
+	UTStack< UTRef<FINodeData> > datas;
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
-	FieldItStack fieldIts;
+	FIFieldIts fieldIts;
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
 	///	リファレンスを後でリンクするための記録．

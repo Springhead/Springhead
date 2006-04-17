@@ -91,11 +91,11 @@ static bool ArrayCount(){
 	return fileContext->fieldIts.IncArrayPos();
 }
 
-static bool IsFieldInt(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_INT; }
-static bool IsFieldReal(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_REAL; }
-static bool IsFieldStr(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_STR; }
-static bool IsFieldBlock(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_BLOCK; }
-static bool IsFieldBool(){ return fileContext->fieldIts.back().nextField==FIFileContext::F_BOOL; }
+static bool IsFieldInt(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_INT; }
+static bool IsFieldReal(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_REAL; }
+static bool IsFieldStr(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_STR; }
+static bool IsFieldBlock(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_BLOCK; }
+static bool IsFieldBool(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_BOOL; }
 
 static double numValue;
 static std::string strValue;
@@ -115,20 +115,20 @@ static void StrSet(const char* b, const char* e){
 static void SetVal(const char* b, const char* e){
 	char ch = *b;
 
-	FIFileContext::FieldIt& curField = fileContext->fieldIts.back();
+	FIFieldIt& curField = fileContext->fieldIts.back();
 	//	debug èoóÕ
 #ifdef TRACE_PARSE
-	if (curField.nextField!=F_NONE){
-		if (curField.nextField==F_BLOCK){
+	if (curField.fieldType!=F_NONE){
+		if (curField.fieldType==F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
 		}else{
 			if (curField.arrayPos==0){
 				DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 			}
 		}
-		if (curField.nextField == F_REAL || curField.nextField == F_INT){
+		if (curField.fieldType == F_REAL || curField.fieldType == F_INT){
 			DSTR << " " << numValue;
-		}else if (curField.nextField == F_STR){
+		}else if (curField.fieldType == F_STR){
 			DSTR << " " << strValue;
 		}
 		if (ch == ';') DSTR << std::endl;

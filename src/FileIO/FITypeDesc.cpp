@@ -6,15 +6,6 @@
 
 
 namespace Spr{;
-/**	構造体のアライメント(変数の位置あわせ)に対応するために作ったが
-	簡単には行かないことが分かった．（アライメント8でも，DWORDが2個
-	並ぶと，8バイトしか使わない．(隙間ができない)．	*/
-const int STRUCTALIGN = 4;
-const int VECTORALIGN = 1;
-inline size_t AlignSize(size_t sz, size_t align){
-	size_t asz = (sz/align)*align + (sz%align ? align : 0);
-	return asz;
-}
 
 //----------------------------------------------------------------------------
 //	FITypeDesc::Field
@@ -238,5 +229,65 @@ void FITypeDescDb::RegisterProto(FITypeDesc* n){
 	protoDescs.back().fileType = prefix;
 	protoDescs.back().desc = n;
 }
+
+
+//---------------------------------------------------------------------------
+//	FIFieldIt
+
+FIFieldIt::FIFieldIt(FITypeDesc* d){
+	type = d;
+	field = d->GetComposit().end();
+	arrayPos = -1;
+	arrayLength = 0;
+	fieldType=F_NONE;
+}
+bool FIFieldIt::NextField(){
+	if (!type->IsComposit()) return false;
+	//	次のフィールドへ進む
+	if (field==type->GetComposit().end()){
+		field=type->GetComposit().begin();
+	}else{
+		++field;
+		if (field == type->GetComposit().end()){
+			fieldType = F_NONE;
+			return false;
+		}
+	}
+	//	フィールドの配列要素数を設定
+	if (field->varType==FITypeDesc::Field::SINGLE){
+		arrayLength = 1;
+	}else if(field->varType==FITypeDesc::Field::VECTOR){
+		arrayLength = field->length;
+	}else if(field->varType==FITypeDesc::Field::ARRAY){
+		arrayLength = field->length;
+	}
+	//	配列カウントを初期化
+	arrayPos = -1;
+	//	フィールドの型を設定
+	if(		field->type->GetTypeName().compare("BYTE")==0
+		||	field->type->GetTypeName().compare("WORD")==0
+		||	field->type->GetTypeName().compare("DWORD")==0
+		||	field->type->GetTypeName().compare("char")==0
+		||	field->type->GetTypeName().compare("short")==0
+		||	field->type->GetTypeName().compare("int")==0
+		||	field->type->GetTypeName().compare("enum")==0){
+		fieldType = F_INT;
+	}else if (field->type->GetTypeName().compare("bool")==0
+		||	field->type->GetTypeName().compare("BOOL")==0){
+		fieldType = F_BOOL;
+	}else if (field->type->GetTypeName().compare("float")==0
+		||	field->type->GetTypeName().compare("double")==0
+		||	field->type->GetTypeName().compare("FLOAT")==0
+		||	field->type->GetTypeName().compare("DOUBLE")==0){
+		fieldType = F_REAL;
+	}else if (field->type->GetTypeName().compare("string")==0
+		||  field->type->GetTypeName().compare("STRING")==0){
+		fieldType = F_STR;
+	}else if (field->type->IsComposit()){
+		fieldType = F_BLOCK;
+	}
+	return true;
+}
+
 
 }

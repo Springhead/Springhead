@@ -79,7 +79,7 @@ struct ObjectIf{
 };
 
 ///	インタフェースクラスへのポインタの配列
-struct ObjectIfs: public std::vector<ObjectIf*>{
+struct ObjectIfs: public UTStack<ObjectIf*>{
 };
 
 ///	名前を持つオブジェクトのインタフェース
