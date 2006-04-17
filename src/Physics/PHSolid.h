@@ -101,7 +101,7 @@ public:
 	size_t NChildObject() const{
 		return shapes.size();
 	}
-	const ObjectIf* GetChildObject(size_t pos) const{
+	ObjectIf* GetChildObject(size_t pos) {
 		return (CDShapeIf*)shapes[pos];
 	}
 
@@ -195,6 +195,8 @@ public:
 
 	int			NShape();
 	CDShapeIf**	GetShapes();
+protected:
+	void* GetDescAddress(){ return (PHSolidDesc*)this; }
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{

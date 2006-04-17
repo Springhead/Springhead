@@ -30,18 +30,35 @@ protected:
 
 	///	保存処理のハンドラー
 	//@{
+	///	ファイル開始時の処理
+	virtual void OnSaveFileStart(FISaveContext* sc){}
+	///	ファイル終了時の処理
+	virtual void OnSaveFileEnd(FISaveContext* sc){}
 	///	ノード開始時の処理
 	virtual void OnSaveNodeStart(FISaveContext* sc){}
 	///	ノード終了時の処理
 	virtual void OnSaveNodeEnd(FISaveContext* sc){}
-	///	ブロック開始時の処理
-	virtual void OnSaveBlockStart(FISaveContext* sc){}
-	///	ブロック終了時の処理
-	virtual void OnSaveBlockEnd(FISaveContext* sc){}
+	///	データ開始時の処理
+	virtual void OnSaveDataStart(FISaveContext* sc){}
+	///	データ終了時の処理
+	virtual void OnSaveDataEnd(FISaveContext* sc){}
 	///	子オブジェクトの保存開始時の処理
 	virtual void OnSaveChildStart(FISaveContext* sc){}
 	///	子オブジェクトの保存終了時の処理
 	virtual void OnSaveChildEnd(FISaveContext* sc){}
+
+	///	ブロック開始時の処理
+	virtual void OnSaveBlockStart(FISaveContext* sc){}
+	///	ブロック終了時の処理
+	virtual void OnSaveBlockEnd(FISaveContext* sc){}
+	///	フィールド開始時の処理
+	virtual void OnSaveFieldStart(FISaveContext* sc, int nElements){}
+	///	フィールド終了時の処理
+	virtual void OnSaveFieldEnd(FISaveContext* sc, int nElements){}
+	///	要素開始時の処理
+	virtual void OnSaveElementStart(FISaveContext* sc, int pos, bool last){}
+	///	要素終了時の処理
+	virtual void OnSaveElementEnd(FISaveContext* sc, int pos, bool last){}
 	///	bool値の保存
 	virtual void OnSaveBool(FISaveContext* sc, bool val){}
 	///	int値の保存

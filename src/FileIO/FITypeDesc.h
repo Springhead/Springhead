@@ -131,6 +131,10 @@ public:
 		}
 		///	フィールドのアドレスを計算．vectorを拡張する．
 		void* FITypeDesc::Field::GetAddressEx(void* base, int pos);
+		///	フィールドがstd::vectorの場合，vector::size() を呼び出す．
+		size_t VectorSize(const void * base){ 
+			return type->access->VectorSize(((char*)base)+offset); 
+		}
 		///	typeがboolの単純型の場合に，boolを読み出す関数
 		bool ReadBool(const void* base, int pos=0){
 			return type->ReadBool(GetAddress(base, pos));

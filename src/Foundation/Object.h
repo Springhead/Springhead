@@ -72,7 +72,7 @@ public:
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o){ return false; }
 	///	データの読み出し
-	virtual void GetDesc(void* desc){}
+	virtual bool GetDesc(void* desc){ return false; }
 	///	データの読み出し
 	virtual void* GetDescAddress(){ return NULL; }
 };
@@ -93,7 +93,7 @@ struct InheritObject:public intf, base{
 	virtual bool AddChildObject(ObjectIf* o){
 		return base::AddChildObject(o);		
 	}
-	virtual void GetDesc(void* desc){ base::GetDesc(desc); }
+	virtual bool GetDesc(void* desc){ return base::GetDesc(desc); }
 	virtual void* GetDescAddress(){ return base::GetDescAddress(); }
 };
 

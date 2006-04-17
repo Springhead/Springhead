@@ -37,19 +37,22 @@ bool FIFile::Save(const ObjectIfs& objs, const char* fn){
 	return false;
 }
 void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){
+	OnSaveFileStart(sc);
 	for(ObjectIfs::const_iterator it = objs.begin(); it != objs.end(); ++it){
 		SaveNode(sc, *it);
 	}
+	OnSaveFileEnd(sc);
 }
 void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 	//	セーブ中のノードを記録
 	sc->objects.Push(obj);
-	OnSaveNodeStart(sc);
 
 	UTString tn = obj->GetIfInfo()->ClassName();
 	tn.append("Desc");
 	FITypeDesc* type = typeDb.Find(tn);
 	if(type){
+		//	セーブ位置を設定
+		sc->fieldIts.Push(FIFieldIt(type));
 		//	オブジェクトからデータを取り出す．
 		void* data = obj->GetDescAddress();
 		if (data){
@@ -59,72 +62,97 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 			data = sc->datas.back()->data;
 			obj->GetDesc(data);
 		}
+		OnSaveNodeStart(sc);
+		OnSaveDataStart(sc);
 		//	データのセーブ
 		SaveBlock(sc);
+		sc->datas.Pop();
+		sc->fieldIts.Pop();
+		OnSaveDataEnd(sc);
+		//	子ノードのセーブ
+		size_t nChild = obj->NChildObject();
+		if (nChild){
+			OnSaveChildStart(sc);
+			for(size_t i=0; i<nChild; ++i){
+				ObjectIf* child = obj->GetChildObject(i);
+				assert(child);
+				SaveNode(sc, child);
+			}
+			OnSaveChildEnd(sc);
+		}
+		OnSaveNodeEnd(sc);
 	}else{
 		UTString err("Node '");
 		err.append(tn);
 		err.append("' not found. can not save data.");
 		sc->ErrorMessage(err.c_str());
-	}
-	//	子ノードのセーブ
-	size_t nChild = obj->NChildObject();
-	if (nChild){
-		OnSaveChildStart(sc);
-		for(size_t i=0; i<nChild; ++i){
-			ObjectIf* child = obj->GetChildObject(i);
-			SaveNode(sc, child);
+		//	子ノードのセーブ
+		size_t nChild = obj->NChildObject();
+		if (nChild){
+			OnSaveChildStart(sc);
+			for(size_t i=0; i<nChild; ++i){
+				ObjectIf* child = obj->GetChildObject(i);
+				assert(child);
+				SaveNode(sc, child);
+			}
+			OnSaveChildEnd(sc);
 		}
-		OnSaveChildEnd(sc);
 	}
-	OnSaveNodeEnd(sc);
 	//	記録をPOP
 	sc->objects.Pop();
 }
 void FIFile::SaveBlock(FISaveContext* sc){
 	OnSaveBlockStart(sc);
-	sc->fieldIts.Push(FIFieldIt(sc->datas.back()->type));
+	void* base = sc->datas.Top()->data;
 	while(sc->fieldIts.back().NextField()){
 		FITypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
-		void* fieldData = ((char*)sc->datas.back()->data) + field->offset;	//	フィールドのデータ
 		//	要素数の取得
 		int nElements = 1;
 		if (field->varType == FITypeDesc::Field::VECTOR){
-			nElements = field->type->VectorSize(fieldData);
+			nElements = field->VectorSize(base);
 		}else if (field->varType == FITypeDesc::Field::ARRAY){
 			nElements = field->length;
 		}
+		OnSaveFieldStart(sc, nElements);
+		DSTR << "Save field '" << field->name << "' : " << field->typeName << " = ";
 		for(int pos=0; pos<nElements; ++pos){
-			void* elementData = fieldData;
-			if (field->varType == FITypeDesc::Field::VECTOR){
-				elementData = field->type->VectorAt(fieldData, pos);
-			}else if (field->varType == FITypeDesc::Field::ARRAY){
-				elementData = ((char*)fieldData) + field->type->GetSize()*pos;
-			}
+			OnSaveElementStart(sc, pos, (pos==nElements-1));
 			switch(sc->fieldIts.back().fieldType){
-				case FIFieldIt::F_BLOCK:
+				case FIFieldIt::F_BLOCK:{
+					DSTR << "=" << std::endl;
+					void* blockData = field->GetAddress(base, pos);
+					sc->datas.Push(new FINodeData(field->type, blockData));
 					sc->fieldIts.Push(FIFieldIt(field->type));
-					sc->datas.Push(new FINodeData(field->type, elementData));
 					SaveBlock(sc);
-					break;
+					sc->fieldIts.Pop();
+					sc->datas.Pop();
+					}break;
 				case FIFieldIt::F_BOOL:{
-					bool val = field->ReadBool(elementData, pos);
+					bool val = field->ReadBool(base, pos);
+					DSTR << val ? "true" : "false";
 					OnSaveBool(sc, val);
 					}break;
 				case FIFieldIt::F_INT:{
-					int val = field->ReadNumber(elementData, pos);
+					int val = (int)field->ReadNumber(base, pos);
+					DSTR << val;
 					OnSaveInt(sc, val);
 					}break;
 				case FIFieldIt::F_REAL:{
-					double val = field->ReadNumber(elementData, pos);
+					double val = field->ReadNumber(base, pos);
+					DSTR << val;
 					OnSaveReal(sc, val);
 					}break;
 				case FIFieldIt::F_STR:{
-					UTString val = field->ReadString(elementData, pos);
+					UTString val = field->ReadString(base, pos);
+					DSTR << val;
 					OnSaveString(sc, val);
 					}break;
 			}
+			if (pos<nElements-1) DSTR << ", ";
+			OnSaveElementEnd(sc, pos, (pos==nElements-1));
 		}
+		DSTR << ";" << std::endl;
+		OnSaveFieldEnd(sc, nElements);
 	}
 	OnSaveBlockEnd(sc);
 }

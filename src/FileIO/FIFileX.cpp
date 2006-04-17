@@ -292,8 +292,58 @@ void FIFileX::LoadImp(FIFileContext* fc){
 		fileContext->fileInfo.back().start, 
 		fileContext->fileInfo.back().end, start, cmt);
 }
-bool FIFileX::Save(const ObjectIfs& objs, const char* fn){
-	return false;
+#define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
+//<< (sc->objects.size()+x)
+void FIFileX::OnSaveFileStart(FISaveContext* sc){
+	sc->file << "xof 0302txt 0064" << std::endl;
 }
+static bool cont;
+void FIFileX::OnSaveNodeStart(FISaveContext* sc){
+	sc->file << INDENT(-1) << sc->datas.back()->type->GetTypeName();
+	NamedObjectIf* n = ICAST(NamedObjectIf, sc->objects.back());
+	if (n && n->GetName()) sc->file << " " << n->GetName();
+	sc->file << "{" << std::endl;
+	cont = false;
+}
+void FIFileX::OnSaveNodeEnd(FISaveContext* sc){
+	sc->file << INDENT(-1) << "}" << std::endl;
+}
+void FIFileX::OnSaveDataEnd(FISaveContext* sc){
+	if (cont) sc->file << std::endl;
+}
+
+void FIFileX::OnSaveFieldStart(FISaveContext* sc, int nElements){
+	if (!cont){
+		sc->file << INDENT(0);
+		cont = true;
+	}
+}
+void FIFileX::OnSaveFieldEnd(FISaveContext* sc, int nElements){
+	if (!cont) sc->file << INDENT(0);
+	sc->file << ";";
+	cont = true;
+	if (sc->fieldIts.Top().fieldType == FIFieldIt::F_BLOCK){
+		sc->file << std::endl;
+		cont = false;
+	}
+}
+void FIFileX::OnSaveElementEnd(FISaveContext* sc, int nElements, bool last){
+	if (!last) sc->file << ",";
+}
+void FIFileX::OnSaveBool(FISaveContext* sc, bool val){
+	sc->file << (val ? "TRUE" : "FALSE");
+}
+void FIFileX::OnSaveInt(FISaveContext* sc, int val){
+	sc->file << val;
+}
+///	real’l‚Ì•Û‘¶
+void FIFileX::OnSaveReal(FISaveContext* sc, double val){
+	sc->file << val;
+}
+///	string’l‚Ì•Û‘¶
+void FIFileX::OnSaveString(FISaveContext* sc, UTString val){
+	sc->file << '"' << val << '"' << std::endl;
+}
+
 
 };

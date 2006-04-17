@@ -189,6 +189,11 @@ int main(int argc, char* argv[]){
 		fileX->Load(objs, "test.x");	//	PHSDKごとロードして，
 		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
+	if (phSdk){
+		ObjectIfs objs;
+		objs.Push(phSdk);
+		fileX->Save(objs, "out.x");
+	}
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
 	phSdk->Print(DSTR);

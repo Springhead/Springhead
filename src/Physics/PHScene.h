@@ -77,6 +77,7 @@ public:
 	}
 protected:
 	friend class Object;
+	void* GetDescAddress(){ return (PHSceneDesc*)this; }
 };
 
 }

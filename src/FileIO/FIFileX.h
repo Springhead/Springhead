@@ -21,7 +21,19 @@ public:
 	void Init(FITypeDescDb* db=NULL, FINodeHandlers* h=NULL);
 protected:
 	void LoadImp(FIFileContext* fc);
-	bool Save(const ObjectIfs& objs, const char* fn);
+
+	//	ï€ë∂èàóùÇÃÉnÉìÉhÉâÅ[
+	virtual void OnSaveFileStart(FISaveContext* sc);
+	virtual void OnSaveNodeStart(FISaveContext* sc);
+	virtual void OnSaveNodeEnd(FISaveContext* sc);
+	virtual void OnSaveDataEnd(FISaveContext* sc);
+	virtual void OnSaveBool(FISaveContext* sc, bool val);
+	virtual void OnSaveInt(FISaveContext* sc, int val);
+	virtual void OnSaveReal(FISaveContext* sc, double val);
+	virtual void OnSaveString(FISaveContext* sc, UTString val);
+	virtual void OnSaveFieldStart(FISaveContext* sc, int nElements);
+	virtual void OnSaveFieldEnd(FISaveContext* sc, int nElements);
+	virtual void OnSaveElementEnd(FISaveContext* sc, int pos, bool last);
 };
 
 
