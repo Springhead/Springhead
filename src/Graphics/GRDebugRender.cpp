@@ -41,6 +41,12 @@ void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 	// DrawDirect”Å
 	for (int v=0; v<numIndices; ++v)
 		vtx[v] = base[face->GetIndices()[v]].data;
+	Vec3f normal, edge0, edge1;
+	edge0 = vtx[1] - vtx[0];
+	edge1 = vtx[2] - vtx[0];
+	normal = edge0^edge1;
+	normal.unitize();
+	glNormal3fv(normal);
 	DrawDirect(TRIANGLES, vtx, vtx + numIndices);
 #else
 	// DrawIndexed”Å

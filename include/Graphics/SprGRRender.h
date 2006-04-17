@@ -77,6 +77,7 @@ struct GRLight{
 		attenuation0 = 1.0f;
 		attenuation1 = 0.0f;
 		attenuation2 = 0.0f;
+		spotDirection = Vec3f(0.0, -1.0, 0.0);
 		spotFalloff  = 0.0f;
 		spotInner    = 0.0f;
 		spotCutoff   = 180.0f;

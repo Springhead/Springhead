@@ -24,7 +24,6 @@ void GRDeviceGL::Init(){
 	glDrawBuffer(GL_BACK);
 	nLights = 0;
 	glEnable(GL_LIGHTING);
-	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_BLEND);

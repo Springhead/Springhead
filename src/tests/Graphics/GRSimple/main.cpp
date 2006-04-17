@@ -40,16 +40,16 @@ PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBlock;
 
 // ÞŽ¿‚ÌÝ’è
-GRMaterial matFloor(Vec4f(0.5, 0.5, 0.5, 1.0),		// ambient
-					Vec4f(1.0, 1.0, 1.0, 1.0),		// diffuse
-					Vec4f(0.8, 0.8, 0.8, 1.0),		// specular
+GRMaterial matFloor(Vec4f(0.2, 0.2, 0.2, 1.0),		// ambient
+					Vec4f(0.6, 0.6, 0.6, 1.0),		// diffuse
+					Vec4f(0.2, 0.2, 0.2, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
-					20.0);							// power
-GRMaterial matBlock(Vec4f(0.5, 0.5, 0.7, 0.85),		
-					Vec4f(0.1, 0.5, 0.8, 0.85),		
-					Vec4f(1.0, 1.0, 1.0, 0.85),		
+					10.0);							// power
+GRMaterial matBlock(Vec4f(0.5, 0.5, 0.7, 0.9),		
+					Vec4f(0.1, 0.5, 0.8, 0.9),		
+					Vec4f(1.0, 1.0, 1.0, 0.9),			
 					Vec4f(0.0, 0.0, 0.0, 1.0),		
-					100.0);							
+					10.0);
 GRMaterial matLine(Vec4f(1.0, 1.0, 1.0, 1.0),		
 					Vec4f(1.0, 1.0, 1.0, 1.0),		
 					Vec4f(1.0, 1.0, 1.0, 1.0),		
@@ -95,9 +95,8 @@ void display(){
 	//-----------------------------------
 	//		ƒuƒƒbƒN(soBlock)
 	//-----------------------------------
-	render->SetDepthWrite(false);
-	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_INVSRCALPHA);
-
+	render->SetDepthWrite(false); 
+	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
 	for(unsigned int blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
 		render->SetMaterial(matBlock);
 		render->PushModelMatrix();
@@ -109,7 +108,7 @@ void display(){
 	}
 
 	render->SetDepthWrite(true);
-	render->SetAlphaTest(true);
+	render->SetAlphaTest(false);
 
 	//-----------------------------------
 	//				Ž²

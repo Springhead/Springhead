@@ -78,9 +78,13 @@ CDBox::CDBox(const CDBoxDesc& desc) {
 // サポートポイントを求める
 Vec3f CDBox::Support(const Vec3f& p) const {
 	Vec3f boxpos = GetPose().Pos();		// 直方体の位置(Boxの中心位置)を取得
-	return Vec3f(p.x < 0.0 ? boxpos.x+boxsize.x/2 : boxpos.x-boxsize.x/2,
+	/*return Vec3f(p.x < 0.0 ? boxpos.x+boxsize.x/2 : boxpos.x-boxsize.x/2,
 				 p.y < 0.0 ? boxpos.y+boxsize.y/2 : boxpos.y-boxsize.y/2,
-				 p.z < 0.0 ? boxpos.z+boxsize.z/2 : boxpos.z-boxsize.z/2);	
+				 p.z < 0.0 ? boxpos.z+boxsize.z/2 : boxpos.z-boxsize.z/2);	*/
+	Vec3f halfsize = Vec3f(boxsize.x/2.0, boxsize.y/2.0, boxsize.z/2.0);
+	return Vec3f(p.x < 0.0 ? halfsize.x : -halfsize.x,
+				p.y < 0.0 ? halfsize.y : -halfsize.y,
+				p.z < 0.0 ? halfsize.z : -halfsize.z);
 }
 
 // 切り口を求める. 接触解析を行う.

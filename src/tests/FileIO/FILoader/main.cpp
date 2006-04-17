@@ -40,7 +40,7 @@ GRMaterial mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
 					20.0);							// power
 
-GRMaterial mat_blue(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+GRMaterial mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		// ambient
 					Vec4f(0.0, 0.0, 0.7, 1.0),		// diffuse
 					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
@@ -97,6 +97,11 @@ void display(){
 				gluSphere(quad, r, 16, 8);
 				gluDeleteQuadric(quad);
 			}
+			CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
+			if (box){
+				Vec3f boxsize = box->GetBoxSize();
+				glutSolidCube(1.0);
+			}
 			render->PopModelMatrix();
 		}
 		render->PopModelMatrix();
@@ -111,26 +116,21 @@ void display(){
  */
 void setLight() {
 	GRLight light0;
-	light0.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
-	light0.diffuse	= Vec4f(0.9, 0.9, 0.9, 1.0);
-	light0.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
-	light0.position = Vec4f(0.0, 10.0, -5.0, 1.0);
+	light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
+	light0.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+	light0.position			= Vec4f(0.0f, 10.0f, 0.0f, 1.0f);
+	light0.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
+	light0.spotCutoff		= 145.0f;
+	light0.spotFalloff		= 30.0f;
 	render->PushLight(light0);
-	
+
 	GRLight light1;
-	light1.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
-	light1.diffuse	= Vec4f(0.9, 0.9, 0.9, 1.0);
-	light1.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
-	light1.position = Vec4f(0.0, 5.0, 10.0, 1.0);
+	light1.diffuse			= Vec4f(0.8f, 0.8f, 0.8f, 1.0f);
+	light1.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+	light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);
+	light1.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
 	render->PushLight(light1);
-
-	GRLight light2;
-	light2.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
-	light2.diffuse	= Vec4f(0.9, 0.9, 0.9, 1.0);
-	light2.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
-	light2.position = Vec4f(-5.0, 5.0, -10.0, 1.0);
-	render->PushLight(light2);
-
 }
 
 /**
@@ -210,7 +210,7 @@ int main(int argc, char* argv[]){
 
 	// Ž‹“_Ý’è
 	Affinef view;
-	view.Pos() = Vec3f(-2.0, 3.0, 5.0);									// eye
+	view.Pos() = Vec3f(0.0, 3.0, 3.0);									// eye
 		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
