@@ -44,7 +44,7 @@ void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){
 void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 	//	セーブ中のノードを記録
 	sc->objects.Push(obj);
-	OnNodeStart(sc);
+	OnSaveNodeStart(sc);
 
 	UTString tn = obj->GetIfInfo()->ClassName();
 	tn.append("Desc");
@@ -70,19 +70,19 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 	//	子ノードのセーブ
 	size_t nChild = obj->NChildObject();
 	if (nChild){
-		OnChildStart(sc);
+		OnSaveChildStart(sc);
 		for(size_t i=0; i<nChild; ++i){
 			ObjectIf* child = obj->GetChildObject(i);
 			SaveNode(sc, child);
 		}
-		OnChildEnd(sc);
+		OnSaveChildEnd(sc);
 	}
-	OnNodeEnd(sc);
+	OnSaveNodeEnd(sc);
 	//	記録をPOP
 	sc->objects.Pop();
 }
 void FIFile::SaveBlock(FISaveContext* sc){
-	OnBlockStart(sc);
+	OnSaveBlockStart(sc);
 	sc->fieldIts.Push(FIFieldIt(sc->datas.back()->type));
 	while(sc->fieldIts.back().NextField()){
 		FITypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
@@ -107,14 +107,26 @@ void FIFile::SaveBlock(FISaveContext* sc){
 					sc->datas.Push(new FINodeData(field->type, elementData));
 					SaveBlock(sc);
 					break;
-				case FIFieldIt::F_BOOL:
-//					field->ReadBool(
-//					OnBool();
-					break;
+				case FIFieldIt::F_BOOL:{
+					bool val = field->ReadBool(elementData, pos);
+					OnSaveBool(sc, val);
+					}break;
+				case FIFieldIt::F_INT:{
+					int val = field->ReadNumber(elementData, pos);
+					OnSaveInt(sc, val);
+					}break;
+				case FIFieldIt::F_REAL:{
+					double val = field->ReadNumber(elementData, pos);
+					OnSaveReal(sc, val);
+					}break;
+				case FIFieldIt::F_STR:{
+					UTString val = field->ReadString(elementData, pos);
+					OnSaveString(sc, val);
+					}break;
 			}
 		}
 	}
-	OnBlockEnd(sc);
+	OnSaveBlockEnd(sc);
 }
 
 

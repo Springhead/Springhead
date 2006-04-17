@@ -31,18 +31,25 @@ protected:
 	///	保存処理のハンドラー
 	//@{
 	///	ノード開始時の処理
-	virtual void OnNodeStart(FISaveContext* sc){}
+	virtual void OnSaveNodeStart(FISaveContext* sc){}
 	///	ノード終了時の処理
-	virtual void OnNodeEnd(FISaveContext* sc){}
+	virtual void OnSaveNodeEnd(FISaveContext* sc){}
 	///	ブロック開始時の処理
-	virtual void OnBlockStart(FISaveContext* sc){}
+	virtual void OnSaveBlockStart(FISaveContext* sc){}
 	///	ブロック終了時の処理
-	virtual void OnBlockEnd(FISaveContext* sc){}
+	virtual void OnSaveBlockEnd(FISaveContext* sc){}
 	///	子オブジェクトの保存開始時の処理
-	virtual void OnChildStart(FISaveContext* sc){}
+	virtual void OnSaveChildStart(FISaveContext* sc){}
 	///	子オブジェクトの保存終了時の処理
-	virtual void OnChildEnd(FISaveContext* sc){}
-
+	virtual void OnSaveChildEnd(FISaveContext* sc){}
+	///	bool値の保存
+	virtual void OnSaveBool(FISaveContext* sc, bool val){}
+	///	int値の保存
+	virtual void OnSaveInt(FISaveContext* sc, int val){}
+	///	real値の保存
+	virtual void OnSaveReal(FISaveContext* sc, double val){}
+	///	string値の保存
+	virtual void OnSaveString(FISaveContext* sc, UTString val){}
 	//@}
 
 };
