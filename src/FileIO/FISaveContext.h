@@ -34,6 +34,9 @@ public:
 	void Message(const char* msg);
 	///	エラーメッセージの出力
 	void ErrorMessage(const char* msg);
+
+	UTString GetNodeTypeName();
+	UTString GetNodeName();
 };
 
 }

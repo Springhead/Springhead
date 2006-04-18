@@ -299,9 +299,9 @@ void FIFileX::OnSaveFileStart(FISaveContext* sc){
 }
 static bool cont;
 void FIFileX::OnSaveNodeStart(FISaveContext* sc){
-	sc->file << INDENT(-1) << sc->datas.back()->type->GetTypeName();
-	NamedObjectIf* n = ICAST(NamedObjectIf, sc->objects.back());
-	if (n && n->GetName()) sc->file << " " << n->GetName();
+	sc->file << INDENT(-1) << sc->GetNodeTypeName();
+	UTString name = sc->GetNodeName();
+	if (name.length()) sc->file << " " << name;
 	sc->file << "{" << std::endl;
 	cont = false;
 }
