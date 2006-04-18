@@ -28,7 +28,7 @@ extern void RegisterNodeHandlers();
 
 
 namespace FileX{
-static FIFileContext* fileContext;
+static FILoadContext* fileContext;
 static FIFileX* fileX;
 
 ///	テンプレートのTypeDescがあるかどうか．
@@ -282,7 +282,7 @@ void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
 
 
 //------------------------------------------------------------------------------
-void FIFileX::LoadImp(FIFileContext* fc){
+void FIFileX::LoadImp(FILoadContext* fc){
 	using namespace std;
 	using namespace boost::spirit;
 	using namespace Spr;

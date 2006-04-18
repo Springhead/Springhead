@@ -1,5 +1,5 @@
-#ifndef FIFILECONTEXT_H
-#define FIFILECONTEXT_H
+#ifndef FILoadContext_H
+#define FILoadContext_H
 
 #include <Foundation/Object.h>
 #include <FileIO/FITypeDesc.h>
@@ -19,7 +19,7 @@ class FINodeHandlers;
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
 	まずロードする．
 	そのあと，オブジェクトを生成する．	*/
-class FIFileContext{
+class FILoadContext{
 public:
 	//--------------------------------------------------------------------------
 	//	クラス定義
@@ -51,12 +51,12 @@ public:
 	class Task:public UTRefCount{
 	public:
 		virtual ~Task(){}
-		virtual void Execute(FIFileContext* ctx)=0;	
+		virtual void Execute(FILoadContext* ctx)=0;	
 	};
 	///	タスクリスト
 	class Tasks:public std::vector< UTRef<Task> >{
 	public:
-		void Execute(FIFileContext* ctx);
+		void Execute(FILoadContext* ctx);
 	};
 	///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
 	class LinkTask: public Task{
@@ -66,7 +66,7 @@ public:
 		ObjectIf* object;
 		const char* pos;
 		LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r);
-		void Execute(FIFileContext* ctx);
+		void Execute(FILoadContext* ctx);
 	};
 	
 	//--------------------------------------------------------------------------
@@ -95,7 +95,7 @@ public:
 	//---------------------------------------------------------------------------
 	//	関数
 	///
-	FIFileContext():errorStream(NULL){
+	FILoadContext():errorStream(NULL){
 		errorStream=&DSTR;
 	}
 	///	ノードのロード
@@ -135,4 +135,4 @@ public:
 
 }
 
-#endif	// FIFILECONTEXT_H
+#endif	// FILoadContext_H

@@ -3,7 +3,7 @@
 #pragma hdrstop
 #endif
 
-#include "FIFileContext.h"
+#include "FILoadContext.h"
 #include "FINodeHandler.h"
 #include "FITypeDesc.h"
 #include <fstream>
@@ -32,10 +32,10 @@ FINodeData::~FINodeData(){
 	if (haveData) type->Delete(data);
 }
 //---------------------------------------------------------------------------
-//	FIFileContext::FileInfo
+//	FILoadContext::FileInfo
 // ファイル マッピング
 //   既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
-bool FIFileContext::FileInfo::Map(std::string fn){
+bool FILoadContext::FileInfo::Map(std::string fn){
 	name = fn;
 #ifdef _WIN32
 	// ファイルオープン
@@ -85,7 +85,7 @@ bool FIFileContext::FileInfo::Map(std::string fn){
 
 }
 // ファイル アンマッピング
-void FIFileContext::FileInfo::Unmap(){
+void FILoadContext::FileInfo::Unmap(){
 #ifdef _WIN32
 	UnmapViewOfFile(start);		// マップしたファイルをアンマップ
 	CloseHandle(hFileMap);		// ファイルマッピングオブジェクトをクローズ
@@ -97,17 +97,17 @@ void FIFileContext::FileInfo::Unmap(){
 #endif
 	start = end = NULL;
 }
-FIFileContext::FileInfo::~FileInfo(){
+FILoadContext::FileInfo::~FileInfo(){
 	if (start) Unmap();
 }
-bool FIFileContext::FileInfo::IsGood(){
+bool FILoadContext::FileInfo::IsGood(){
 	return start && end && (end != (char*)-1);
 }
 
 
 //---------------------------------------------------------------------------
-//	FIFileContext::Tasks
-void FIFileContext::Tasks::Execute(FIFileContext* ctx){
+//	FILoadContext::Tasks
+void FILoadContext::Tasks::Execute(FILoadContext* ctx){
 	for(iterator it = begin(); it!=end(); ++it){
 		(*it)->Execute(ctx);
 	}
@@ -115,8 +115,8 @@ void FIFileContext::Tasks::Execute(FIFileContext* ctx){
 }
 
 //---------------------------------------------------------------------------
-//	FIFileContext::LinkTask
-FIFileContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
+//	FILoadContext::LinkTask
+FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
 	for(int i=objs.size()-1; i>=0; --i){
 		NameManagerIf* nm = ICAST(NameManagerIf, objs[i]);
 		if (nm){
@@ -124,7 +124,7 @@ FIFileContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf
 		}
 	}
 }
-void FIFileContext::LinkTask::Execute(FIFileContext* ctx){
+void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
 	ObjectIf* refObj = NULL;
 	for(unsigned i=0; i<nameManagers.size(); ++i){
 		nameManagers[i]->FindObject(refObj, ref);
@@ -148,34 +148,34 @@ void FIFileContext::LinkTask::Execute(FIFileContext* ctx){
 }
 
 //---------------------------------------------------------------------------
-//	FIFileContext
-void FIFileContext::WriteBool(bool v){
+//	FILoadContext
+void FILoadContext::WriteBool(bool v){
 	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
 }
-void FIFileContext::WriteNumber(double v){
+void FILoadContext::WriteNumber(double v){
 	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
 }
-void FIFileContext::WriteString(std::string v){
+void FILoadContext::WriteString(std::string v){
 	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
-void FIFileContext::PushType(FITypeDesc* type){
+void FILoadContext::PushType(FITypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	読み出したデータを構造体の用意
 	datas.Push(DBG_NEW FINodeData(type));
 }
-void FIFileContext::PopType(){
+void FILoadContext::PopType(){
 	datas.Pop();
 	fieldIts.Pop();
 }
-bool FIFileContext::IsGood(){
+bool FILoadContext::IsGood(){
 	if (!fileInfo.size()) return false;
 	return fileInfo.back().IsGood();
 }
-void FIFileContext::LoadNode(){
+void FILoadContext::LoadNode(){
 	if (datas.Top()->type->GetIfInfo()){
 		//	ロードしたデータからオブジェクトを作る．
 		ObjectIf* obj = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
@@ -207,24 +207,24 @@ void FIFileContext::LoadNode(){
 		//	衝突判定の無効ペアの設定や重力の設定など．
 	}
 }
-void FIFileContext::EnterBlock(){
+void FILoadContext::EnterBlock(){
 	char* base = (char*)datas.Top()->data;
 	void* ptr = fieldIts.back().field->GetAddressEx(base, fieldIts.ArrayPos());
 	datas.Push(DBG_NEW FINodeData(NULL, ptr));
 	fieldIts.push_back(FIFieldIt(fieldIts.back().field->type));
 }
-void FIFileContext::LeaveBlock(){
+void FILoadContext::LeaveBlock(){
 	fieldIts.Pop();
 	datas.Pop();
 }
-void FIFileContext::EndNode(){
+void FILoadContext::EndNode(){
 	if (datas.Top()->type->GetIfInfo()){
 		objects.Pop();
 	}else{
 		//	Create以外の終了処理．
 	}
 }
-ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){
+ObjectIf* FILoadContext::Create(const IfInfo* ifInfo, const void* data){
 	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
 		if (*it){
 			ObjectIf* obj = (*it)->CreateObject(ifInfo, data);
@@ -234,22 +234,22 @@ ObjectIf* FIFileContext::Create(const IfInfo* ifInfo, const void* data){
 	ObjectIf* obj = CreateSdk(ifInfo, data);
 	return obj;
 }
-void FIFileContext::AddLink(std::string ref, const char* pos){
+void FILoadContext::AddLink(std::string ref, const char* pos){
 	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));
 }
-void FIFileContext::Link(){
+void FILoadContext::Link(){
 	links.Execute(this);
 }
-void FIFileContext::PostTask(){
+void FILoadContext::PostTask(){
 	postTasks.Execute(this);
 }
 
-void FIFileContext::ErrorMessage(const char* pos, const char* msg){
+void FILoadContext::ErrorMessage(const char* pos, const char* msg){
 	std::string m("error: ");
 	m.append(msg);
 	Message(pos, m.c_str());
 }
-void FIFileContext::Message(const char* pos, const char* msg){
+void FILoadContext::Message(const char* pos, const char* msg){
 	const char* ptr = fileInfo.back().start;
 	int lines=0;
 	int returns=0;

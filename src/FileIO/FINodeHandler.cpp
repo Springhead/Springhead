@@ -4,7 +4,7 @@
 #endif
 
 #include "FINodeHandler.h"
-#include "FIFileContext.h"
+#include "FILoadContext.h"
 namespace Spr{;
 
 #define REGISTER(x)	\
@@ -20,27 +20,27 @@ public:
 		type = t;
 	}
 	template <class S>
-	void Get(S*& s, FIFileContext* ctx){
+	void Get(S*& s, FILoadContext* ctx){
 		s = NULL;
 		for(int i=ctx->objects.size()-1; i>=0 && !s; --i){
 			s = ICAST(S, ctx->objects[i]);
 		}
 		assert(s);
 	}
-	void Load(FIFileContext* ctx){
+	void Load(FILoadContext* ctx){
 		T* desc = (T*)ctx->datas.Top()->data;
 		Load(*desc, ctx);
 	}
-	virtual void Load(T& t, FIFileContext* ctx)=0;
+	virtual void Load(T& t, FILoadContext* ctx)=0;
 };
 
 class FINodeHandlerFIInactiveSolids: public FINodeHandlerImp<FIInactiveSolids>{
 public:
-	struct Task:public FIFileContext::Task{
+	struct Task:public FILoadContext::Task{
 		FIInactiveSolids desc;
 		PHSceneIf* scene;
 		Task(const FIInactiveSolids& d, PHSceneIf* s):desc(d), scene(s){}
-		void Execute(FIFileContext* ctx){
+		void Execute(FILoadContext* ctx){
 			for(unsigned i=0; i<desc.solids.size(); ++i){
 				PHSolidIf* s1;
 				scene->FindObject(s1, desc.solids[i]);
@@ -54,7 +54,7 @@ public:
 	};
 
 	FINodeHandlerFIInactiveSolids(): FINodeHandlerImp<DESC>("FIInactiveSolids"){}
-	void Load(FIInactiveSolids& desc, FIFileContext* ctx){
+	void Load(FIInactiveSolids& desc, FILoadContext* ctx){
 		PHSceneIf* scene;
 		Get(scene, ctx);
 		ctx->postTasks.push_back(new Task(desc, scene));

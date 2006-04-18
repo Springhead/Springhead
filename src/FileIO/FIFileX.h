@@ -20,7 +20,7 @@ public:
 	FITypeDescDb* GetDb(){return &typeDb;}
 	void Init(FITypeDescDb* db=NULL, FINodeHandlers* h=NULL);
 protected:
-	void LoadImp(FIFileContext* fc);
+	void LoadImp(FILoadContext* fc);
 
 	//	•Û‘¶ˆ—‚Ìƒnƒ“ƒhƒ‰[
 	virtual void OnSaveFileStart(FISaveContext* sc);

@@ -7,15 +7,15 @@
 
 namespace Spr{;
 
-class FIFileContext;
+class FILoadContext;
 
 /**	自動ローダ・セーバで対応できないノードのロード・セーブをするクラス．
 */
 class FINodeHandler:public UTRefCount{
 public:
 	UTString type;
-	virtual void Load(FIFileContext* ctx){};
-	virtual void Save(FIFileContext* ctx){};
+	virtual void Load(FILoadContext* ctx){};
+	virtual void Save(FILoadContext* ctx){};
 };
 struct FINodeHandlerLess{
 	bool operator()(const FINodeHandler* h1, const FINodeHandler* h2) const{

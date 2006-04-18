@@ -6,7 +6,7 @@
 #include "FINodeHandler.h"
 
 namespace Spr{;
-class FIFileContext;
+class FILoadContext;
 class FISaveContext;
 class FIFile:public InheritObject<FIFileIf, Object>{
 protected:
@@ -17,12 +17,12 @@ protected:
 public:
 	OBJECTDEFABST(FIFile);
 	virtual bool Load(ObjectIfs& objs, const char* fn);
-	virtual void Load(FIFileContext* fc);
+	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
 	virtual void Save(const ObjectIfs& objs, FISaveContext* sc);
 protected:
 	///	ÉçÅ[ÉhÇÃé¿ëï
-	virtual void LoadImp(FIFileContext* fc)=0;
+	virtual void LoadImp(FILoadContext* fc)=0;
 	///
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);
 	///

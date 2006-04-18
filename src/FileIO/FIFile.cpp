@@ -9,7 +9,7 @@ IF_IMP(FIFile, Object);
 OBJECTIMPABST(FIFile, Object);
 
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
-	FIFileContext fc;
+	FILoadContext fc;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
 	fc.fileInfo.Push();
 	fc.fileInfo.back().Map(fn);
@@ -20,7 +20,7 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	}
 	return false;
 }
-void FIFile::Load(FIFileContext* fc){
+void FIFile::Load(FILoadContext* fc){
 	if (fc->IsGood()){
 		fc->typeDb = &typeDb;
 		fc->handlers = &handlers;
