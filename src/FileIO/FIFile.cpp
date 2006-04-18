@@ -47,7 +47,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 	//	セーブ中のノードを記録
 	sc->objects.Push(obj);
 
-	UTString tn = obj->GetIfInfo()->ClassName();
+	UTString tn = sc->GetNodeTypeName();
 	tn.append("Desc");
 	FITypeDesc* type = typeDb.Find(tn);
 	if(type){

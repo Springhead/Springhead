@@ -29,6 +29,7 @@ namespace Spr{;
 	IF_IMP_COMMON(cls)
 
 ///	Objectîhê∂ÉNÉâÉXÇÃé¿çséûå^èÓïÒ
+
 #define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)
 #define OBJECTDEFABST(cls)				DEF_UTTYPEINFOABSTDEF(cls)
 #define OBJECTIMPBASE(cls)				DEF_UTTYPEINFO(cls)

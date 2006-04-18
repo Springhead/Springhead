@@ -27,10 +27,7 @@ void FISaveContext::ErrorMessage(const char* msg){
 	*errorStream << "error: " << msg << std::endl;
 }
 UTString FISaveContext::GetNodeTypeName(){
-	UTString rv(objects.back()->GetIfInfo()->ClassName());
-	if (rv.substr(rv.length()-2, 2).compare("If") == 0){
-		rv = rv.substr(rv.length()-2, 2);
-	}
+	UTString rv(OCAST(Object, objects.back())->GetTypeInfo()->ClassName());
 	return rv;
 }
 UTString FISaveContext::GetNodeName(){
