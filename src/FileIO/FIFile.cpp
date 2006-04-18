@@ -44,6 +44,13 @@ void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){
 	OnSaveFileEnd(sc);
 }
 void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
+	if (!sc->savedObjects.insert(obj).second){
+		sc->objects.Push(obj);
+		OnSaveRef(sc);
+		sc->objects.Pop();
+		return;
+	}
+	
 	//	セーブ中のノードを記録
 	sc->objects.Push(obj);
 

@@ -24,6 +24,8 @@ public:
 	FIFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<FINodeData> > datas;
+	///
+	std::set<ObjectIf*> savedObjects;
 	
 	FISaveContext();
 	///	セーブ中のオブジェクトのスタック

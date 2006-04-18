@@ -344,6 +344,10 @@ void FIFileX::OnSaveReal(FISaveContext* sc, double val){
 void FIFileX::OnSaveString(FISaveContext* sc, UTString val){
 	sc->file << '"' << val << '"' << std::endl;
 }
+void FIFileX::OnSaveRef(FISaveContext* sc){
+	NamedObjectIf* n = ICAST(NamedObjectIf, sc->objects.Top());
+	sc->file << INDENT(-1) << "{" << n->GetName() << "}" << std::endl;
+}
 
 
 };

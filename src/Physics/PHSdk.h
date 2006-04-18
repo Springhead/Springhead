@@ -27,10 +27,7 @@ public:
 	virtual CDShapeIf** GetShapes();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const { return scenes.size()+shapes.size(); }
-	virtual ObjectIf* GetChildObject(size_t i) {
-		if (i<scenes.size()) return scenes[i];
-		return shapes[i-scenes.size()]; 
-	}
+	virtual ObjectIf* GetChildObject(size_t i);
 public:
 };
 

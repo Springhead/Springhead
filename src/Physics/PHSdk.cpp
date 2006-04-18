@@ -102,5 +102,9 @@ ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
 	}
 	return NULL;
 }
+ObjectIf* PHSdk::GetChildObject(size_t i){		
+	if (i<shapes.size()) return shapes[i];
+	return scenes[i-shapes.size()];
+}
 
 }

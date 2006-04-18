@@ -67,6 +67,7 @@ protected:
 	virtual void OnSaveReal(FISaveContext* sc, double val){}
 	///	string’l‚Ì•Û‘¶
 	virtual void OnSaveString(FISaveContext* sc, UTString val){}
+	virtual void OnSaveRef(FISaveContext* sc){}
 	//@}
 
 };
