@@ -174,8 +174,8 @@ void idle(){
 	// 10secにシミュレーション結果と期待値を比較
 	if (stepCnt >= 10.0) {	
 		bool redApprox, blueApprox;
-		redApprox	= approx(redPos, redTeapot->GetCenterPosition());
-		blueApprox	= approx(bluePos, blueTeapot->GetCenterPosition());
+		redApprox	= approx(redPos, redTeapot->GetFramePosition());
+		blueApprox	= approx(bluePos, blueTeapot->GetFramePosition());
 
 		if (redApprox && blueApprox) {	// シミュレーション結果は正しい結果となりました。
 			DSTR << "\nPHSimpleGL success (redTeapot:success, blueTeapot:success)" << std::endl;
@@ -210,8 +210,8 @@ int main(int argc, char* argv[]){
 	desc.inertia *=2.0;						// 慣性テンソル
 	desc.center = Vec3f(0,0,0);				// 質量中心の位置
 	redTeapot = scene->CreateSolid(desc);	// 剛体をdescに基づいて作成
+	redTeapot->SetGravity(false);			// 重力を無効にする
 	redPos = redTeapot->GetFramePosition();
-
 
 	desc.center = Vec3f(1,0,0);			//	重心の位置をSolidの原点から1m右にずらす．
 	desc.pose.Pos() = Vec3f(3.5, 0.0, 0.0);
@@ -219,7 +219,8 @@ int main(int argc, char* argv[]){
 	Vec3d trn = Vec3d(0.0, 0.0, 3.0);
 	desc.pose = desc.pose * Posed::Trn(trn);				// 手前に平行移動
 	blueTeapot = scene->CreateSolid(desc);	
-	bluePos = blueTeapot->GetCenterPosition();
+	blueTeapot->SetGravity(false);
+	bluePos = blueTeapot->GetFramePosition();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
