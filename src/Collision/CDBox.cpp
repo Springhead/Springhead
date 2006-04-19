@@ -19,15 +19,6 @@ CDBox::CDBox() {
 
 CDBox::CDBox(const CDBoxDesc& desc) {
 	boxsize = desc.boxsize;
-	/*
-	Vec3f boxpos = GetPose().Pos();
-	float minx = boxpos.x - boxsize.x / 2;
-	float maxx = boxpos.x + boxsize.x / 2;
-	float miny = boxpos.y - boxsize.y / 2;
-	float maxy = boxpos.y + boxsize.y / 2;
-	float minz = boxpos.z - boxsize.z / 2;
-	float maxz = boxpos.z + boxsize.z / 2;
-	*/
 	// ローカル座標系で、boxの位置を設定
 	Vec3f halfsize = Vec3f(boxsize.x/2.0, boxsize.y/2.0, boxsize.z/2.0);
 	base.push_back(Vec3f( halfsize.x,  halfsize.y, -halfsize.z));
@@ -77,43 +68,17 @@ CDBox::CDBox(const CDBoxDesc& desc) {
 
 // サポートポイントを求める
 Vec3f CDBox::Support(const Vec3f& p) const {
-	Vec3f halfsize 	= Vec3f(boxsize.x/2.0, boxsize.y/2.0, boxsize.z/2.0);
-	Vec3f center 		= GetPose().Pos();			// 直方体の位置(Boxの中心位置)を取得
-
-	/*
-	return Vec3f(p.x < 0.0 ? center.x+halfsize.x : center.x-halfsize.x,
-				p.y < 0.0 ? center.y+halfsize.y : center.y-halfsize.y,
-				p.z < 0.0 ? center.z+halfsize.z : center.z-halfsize.z);
-	*/
-
-	// 与えられた方向pに一番遠い点（内積最大の点を求める）
-	bool slopFlag = false;
-	Vec3f spPoint;
-	for (unsigned int nface=0; nface<6; ++nface){			// 6面
-		Vec3f faceNormal = qfaces[nface].normal;
-		float dot = faceNormal * p.unit();
-		// ベクトルpと逆向きの法線をもつ面で接触している場合
-		if (approx(dot, -1.0)) {	
-			float len = faceNormal * halfsize;
-			spPoint = faceNormal * len + center;
-			slopFlag = true;
-		} 
-	}
-	// 傾いてboxが衝突してくる場合は、内積最大の点をサポートポイントとする
-	if (slopFlag == false) {
-		float d1=0.0, d2=0.0;
-		unsigned int pos = 0;
-		for (unsigned int curPos=0; curPos<8; ++curPos){		// 8頂点
-			d1 = base[curPos] * p;
-			if (d1 > d2) { 
-				d2 = d1;
-				pos = curPos;
-			}
+	// 与えられた方向pに一番遠い点（内積最大の点をサポートポイントとする）
+	float d1=0.0, d2=0.0;
+	unsigned int pos = 0;
+	for (unsigned int curPos=0; curPos<8; ++curPos){		// 8頂点
+		d1 = base[curPos] * p;
+		if (d1 > d2) { 
+			d2 = d1;
+			pos = curPos;
 		}
-		spPoint = base[pos];
 	}
-	
-	return spPoint;
+	return base[pos];
 }
 
 // 切り口を求める. 接触解析を行う.

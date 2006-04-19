@@ -101,7 +101,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 				Matrix3d local;
 				cutRing.local.Ori().ToMatrix(local);
 				engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
-		//		DSTR << "  " << pos << std::endl;
+			//	DSTR << "  " << pos << std::endl;
 			}
 		}
 	}
