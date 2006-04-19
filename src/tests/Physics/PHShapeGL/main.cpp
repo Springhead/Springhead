@@ -8,8 +8,8 @@
   ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
   
 【終了基準】
-  ・自由落下させた剛体が床の上で5秒間静止したら正常終了(success)とする。
-  ・自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了(failure)とする。
+  ・自由落下させた剛体が床の上で一定時間静止したら正常終了(success)とする。
+  ・自由落下させた剛体が床の上で静止しない場合は、異常終了(failure)とする。
  
 【処理の流れ】
   ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
@@ -28,8 +28,9 @@
 #endif
 using namespace Spr;
 
-#define ESC				27
-#define FALL_DISTANCE	-500		// 落下距離(異常終了時)
+#define ESC					27		// ESC key
+#define STAY_COUNTER		40		// 静止判定カウント
+#define TOTAL_IDLE_COUNTER	5000	// 静止しない場合に利用
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
@@ -45,9 +46,6 @@ static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
-
-static clock_t starttime, endtime, count;
-static bool timeflag = false;
 
 /**
  brief     多面体の面(三角形)の法線を求める
@@ -187,6 +185,7 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
+	if (key == 'q') exit(0);
 }	
 
 /**
@@ -200,40 +199,27 @@ void idle(){
 
 	scene->Step();
 
-	// 位置情報を出力
-	//std::cout << soFloor->GetFramePosition();
-	//std::cout << soBlock->GetFramePosition() << std::endl;
-
 	curpos = soBlock->GetFramePosition();
 
-	// 床の上に5秒静止したら正常終了とする。
-	if (approx(prepos, curpos)) {
-		if (timeflag == false){
-			starttime = clock();
-			timeflag = true;
-		} else {
-			endtime = clock();
-			count = (clock_t)((float)(endtime - starttime) / (float)CLOCKS_PER_SEC);
-			if (count > 5) {
+	static int total=0;
+	static int stay=0;
+	total++;
+	if (total > TOTAL_IDLE_COUNTER){
+		DSTR << "\nPHShapeGL failure." << std::endl;
+		exit(EXIT_FAILURE);
+	} else {
+		if (approx(prepos, curpos)){
+			stay++;
+			if (stay > STAY_COUNTER){				// 静止判定カウント
 				DSTR << "\nPHShapeGL success." << std::endl;
 				exit(EXIT_SUCCESS);
-			} 
-		}		
-	}
-	else {
-		// 自由落下させた剛体が床の上で静止せず、-500m地点まで落下した場合、異常終了とする。
-		timeflag = false;
-		if (curpos.y < FALL_DISTANCE) {	
-			DSTR << "\nPHShapeGL failure." << std::endl;
-			exit(EXIT_FAILURE);
+			}
+		} else {
+			stay = 0;
 		}
 	}
-	static int count=0;
-	count ++;
-	if (count > 1000){
-		exit(-1);
-	}
-
+	//std::cout << prepos << " " << curpos << std::endl;
+	DSTR << prepos << " " << curpos << std::endl;
 	glutPostRedisplay();
 }
 
