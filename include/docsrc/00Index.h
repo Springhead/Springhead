@@ -4,7 +4,9 @@
  - \subpage pageUsersGuide
  - \subpage pageTutorial
  - \subpage pageReferenceManual
- から構成されます．
+ 
+から構成されます．
+<br><br><br>
 
  \ref pageUsersGuide は，SDKのインストール・ビルドから，
  SDKの設計，動作，使い方の概要を示します．
@@ -13,4 +15,7 @@
  SDKの使い方を学ぶためのチュートリアルです．
  
  \ref pageReferenceManual は，SDKのAPIと基本的なクラスのリファレンスです．
+ 
+<br>
+
 */

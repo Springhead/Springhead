@@ -6,7 +6,9 @@
  - \subpage pageConcept
  - \subpage pageApiBasic
  - \subpage pageApiDetail
+
 から構成されます．
+<br><br><br>
 
 \ref pageIntroduction
 では，Springhead2の特徴を簡単に紹介すると共に，他の物理エンジンSDKの紹介と比較をします．
@@ -22,5 +24,7 @@
 
 \ref pageApiDetail
 では，SDKのAPIの詳細を説明します．
+
+<br>
 
 */

@@ -146,7 +146,7 @@
 <ol>
 	<li> GRSimple ディレクトリへ移動し、GRSimple.exe があることを確認します。</li>
 	<li> 以下のコマンドを実行し、アプリケーションを起動します。<br>
-		 &nbsp;&nbsp;&nbsp; % ./GRSimple.exe
+		 &nbsp;&nbsp;&nbsp; %  ．/GRSimple.exe
 	</li>
 </ol>
 
@@ -154,7 +154,7 @@
 <ol>
 	<li> GRSimple ディレクトリへ移動し、GRSimple.exe があることを確認します。</li>
 	<li> 以下のコマンドを実行し、アプリケーションを起動します。<br>
-		 &nbsp;&nbsp;&nbsp; % ./GRSimple.exe
+		 &nbsp;&nbsp;&nbsp; %  ．/GRSimple.exe
 	</li>
 </ol>
 
@@ -162,7 +162,7 @@
 <ol>
 	<li> GRSimple ディレクトリへ移動し、GRSimple.exe があることを確認します。</li>
 	<li> 以下のコマンドを実行し、アプリケーションを起動します。<br>
-		 &nbsp;&nbsp;&nbsp; % ./GRSimple.exe
+		 &nbsp;&nbsp;&nbsp; %  ．/GRSimple.exe
 	</li>
 </ol>
 <br>
