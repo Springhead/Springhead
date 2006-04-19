@@ -76,6 +76,7 @@ void display(){
 		solids[num]->GetPose().ToAffine(af);
 		render->PushModelMatrix();
 		render->MultModelMatrix(af);
+		
 		CDShapeIf** shapes = solids[num]->GetShapes();
 		for(int s=0; s<solids[num]->NShape(); ++s){
 			Affinef af;
@@ -99,13 +100,34 @@ void display(){
 			}
 			CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
 			if (box){
+#if 0				
 				Vec3f boxsize = box->GetBoxSize();
 				glutSolidCube(1.0);
+				glScalef(boxsize.x, boxsize.y, boxsize.z);			
+#else
+				Vec3f *vtx = new Vec3f[4];
+				Vec3f* base =  box->GetVertices();
+				for (size_t f=0; f<6; ++f) {	
+					CDFaceIf* face = box->GetFace(f);
+
+					for (int v=0; v<4; ++v)
+						vtx[v] = base[face->GetIndices()[v]].data;
+					Vec3f normal, edge0, edge1;
+					edge0 = vtx[1] - vtx[0];
+					edge1 = vtx[2] - vtx[0];
+					normal = edge0^edge1;
+					normal.unitize();
+					glNormal3fv(normal);
+					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, vtx+4);
+				}
+#endif 					
 			}
 			render->PopModelMatrix();
 		}
 		render->PopModelMatrix();
 	}
+
+
 
 	render->EndScene();
 }
@@ -176,7 +198,6 @@ void idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-
 int main(int argc, char* argv[]){
 	FISdkIf* fiSdk = CreateFISdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
@@ -231,4 +252,3 @@ int main(int argc, char* argv[]){
 
 	return 0;
 }
-

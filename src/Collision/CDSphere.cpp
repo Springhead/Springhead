@@ -25,8 +25,8 @@ CDSphere::CDSphere(const CDSphereDesc& desc) {
 Vec3f CDSphere::Support(const Vec3f& p) const {	
 	Vec3f center = GetPose().Pos();		// 球体の中心座標を取得
 	Vec3f p_ = p;
-	p_ -= center;						// centerからpへのベクトルを求める
-	float s = p_.norm();				// centerからpへのベクトルのlength
+	p_ -= center;						// pからcenterへのベクトルを求める
+	float s = p_.norm();				// pからcenterへのベクトルの長さ
 	if (s > 1e-8f) {		
 		float r = radius / s;	
 		return r*p_ + center;			// 衝突検出に必要な球の最近傍点

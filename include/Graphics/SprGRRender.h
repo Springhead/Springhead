@@ -131,7 +131,8 @@ struct GRRenderBaseIf: public ObjectIf{
 		LINE_STRIP,
 		TRIANGLES,
 		TRIANGLE_STRIP,
-		TRIANGLE_FAN
+		TRIANGLE_FAN,
+		QUADS
 	};
 	/**
 	 *	@name	デプスバッファ法に用いる判定条件

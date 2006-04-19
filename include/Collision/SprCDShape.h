@@ -106,6 +106,8 @@ struct CDBoxDesc: public CDShapeDesc{
 struct CDBoxIf: public CDConvexIf{
 	IF_DEF(CDBox);
 	virtual Vec3f GetBoxSize()=0;
+	virtual Vec3f* GetVertices()=0;
+	virtual CDFaceIf* GetFace(size_t i)=0;
 };
 
 

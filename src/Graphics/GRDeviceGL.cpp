@@ -83,27 +83,14 @@ void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){
 void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
-		case POINTS: 
-			mode = GL_POINTS;
-			break;
-		case LINES:
-			mode = GL_LINES;
-			break;
-		case LINE_STRIP:
-			mode = GL_LINE_STRIP;
-			break;
-		case TRIANGLES:
-			mode = GL_TRIANGLES;
-			break;
-		case TRIANGLE_STRIP:
-			mode = GL_TRIANGLE_STRIP;
-			break;
-		case TRIANGLE_FAN:
-			mode = GL_TRIANGLE_FAN;
-			break;
-		default:
-			/* DO NOTHING */
-			break;
+		case POINTS:			mode = GL_POINTS;			break;
+		case LINES:				mode = GL_LINES;			break;
+		case LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case TRIANGLES:			mode = GL_TRIANGLES;		break;
+		case TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
+		case TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
+		case QUADS:				mode = GL_QUADS;			break;
+		default:				/* DO NOTHING */			break;
 	}
 	// STLのAPIにあわせ、vtxのbegin, endで引数を指定. 
 	// begin ～ end-1 までのレンダリングを行う.
@@ -122,6 +109,7 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3
 		case TRIANGLES:			mode = GL_TRIANGLES;		break;
 		case TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
 		case TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
+		case QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
 	// STLのAPIにあわせ、vtxのbegin, endで引数を指定. 
