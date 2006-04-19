@@ -62,8 +62,6 @@ public:
 	void Integrate();
 	///	シーンを空にする．
 	void Clear();
-	///	名前表から，参照されていないオブジェクトを削除する．
-	void ClearName();
 
 	virtual void SetGravity(Vec3f accel);
 	virtual Vec3f GetGravity();
@@ -71,10 +69,8 @@ public:
 	virtual int NSolids();
 	virtual PHSolidIf** GetSolids();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-	virtual size_t NChildObject() const { return engines.size(); }
-	virtual ObjectIf* GetChildObject(size_t pos){
-		return (PHEngineIf*)engines[pos];
-	}
+	virtual size_t NChildObject() const;
+	virtual ObjectIf* GetChildObject(size_t pos);
 protected:
 	friend class Object;
 	void* GetDescAddress(){ return (PHSceneDesc*)this; }

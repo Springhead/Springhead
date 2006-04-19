@@ -103,18 +103,19 @@ void CDQHLines<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 	vtxBegin = b;
 	vtxEnd = e;
 	//	最初の面を作る
-	CreateFirstConvex();
-	HULL_DEBUG_EVAL(
-		DSTR << "First:" << begin->vtx[0]->GetPos() << begin->vtx[1]->GetPos() << std::endl;
-		if ((begin->vtx[1]->GetPos() - begin->vtx[0]->GetPos()).norm() < 0.001) {
-			DSTR << "same error" << std::endl;
+	if (CreateFirstConvex()){
+		HULL_DEBUG_EVAL(
+			DSTR << "First:" << begin->vtx[0]->GetPos() << begin->vtx[1]->GetPos() << std::endl;
+			if ((begin->vtx[1]->GetPos() - begin->vtx[0]->GetPos()).norm() < 0.001) {
+				DSTR << "same error" << std::endl;
+			}
+			DSTR << begin->dist << begin->normal << std::endl;
+		)
+		for(CDQHLine* cur = begin; cur != end; ++cur){
+			if (cur->deleted) continue;
+			TreatPlane(cur);
+			assert(end < buffer+len);
 		}
-		DSTR << begin->dist << begin->normal << std::endl;
-	)
-	for(CDQHLine* cur = begin; cur != end; ++cur){
-		if (cur->deleted) continue;
-		TreatPlane(cur);
-		assert(end < buffer+len);
 	}
 }
 	
@@ -131,31 +132,49 @@ void CDQHLines<TVtx>::Print(std::ostream& os) const {
 }
 
 template <class TVtx>
-void CDQHLines<TVtx>::CreateFirstConvex(){
+bool CDQHLines<TVtx>::CreateFirstConvex(){
 	CDQHLines& lines = *this;
-	double xMin, xMax;
-	//typename TVtxs::iterator it, xMinVtx, xMaxVtx;
-	TVtx** it, **xMinVtx, **xMaxVtx;	
-	xMin = xMax = (*vtxBegin)->GetPos().X();
-	xMinVtx = xMaxVtx = vtxBegin;
-	//	最大と最小を見つける
+	double minVal, maxVal;
+	//typename TVtxs::iterator it, minVtx, maxVtx;
+	TVtx** it, **minVtx, **maxVtx;	
+	minVal = maxVal = (*vtxBegin)->GetPos().X();
+	minVtx = maxVtx = vtxBegin;
+	//	xの最大と最小を見つける
 	for(it = vtxBegin+1; it != vtxEnd; ++it){
 		double x = (*it)->GetPos().X();
-		if (x < xMin){
-			xMin = x;
-			xMinVtx = it;
+		if (x < minVal){
+			minVal = x;
+			minVtx = it;
 		}
-		if (x > xMax){
-			xMax = x;
-			xMaxVtx = it;
+		if (x > maxVal){
+			maxVal = x;
+			maxVtx = it;
 		}
-	}	
+	}
+	if (maxVal - minVal < epsilon){	//	もし xの最大・最小が等しかったら
+		//	yの最大最小を見つける
+		for(it = vtxBegin+1; it != vtxEnd; ++it){
+			double x = (*it)->GetPos().Y();
+			if (x < minVal){
+				minVal = x;
+				minVtx = it;
+			}
+			if (x > maxVal){
+				maxVal = x;
+				maxVtx = it;
+			}
+		}
+	}
+	if (maxVal - minVal < epsilon){	//	どちらも等しい＝1点しかない
+		return false;
+	}
+
 	//	最大を最初，最小を最初から2番目に置く
-	std::swap(*xMaxVtx, vtxBegin[0]);		//	先頭と最大を入れ替え
-	if (xMinVtx == vtxBegin){				//	先頭が最小だったら
-		std::swap(*xMaxVtx, vtxBegin[1]);	//	最大だった場所=先頭が入っている場所が最小
+	std::swap(*maxVtx, vtxBegin[0]);		//	先頭と最大を入れ替え
+	if (minVtx == vtxBegin){				//	先頭が最小だったら
+		std::swap(*maxVtx, vtxBegin[1]);	//	最大だった場所=先頭が入っている場所が最小
 	}else{
-		std::swap(*xMinVtx, vtxBegin[1]);	//	最小を先頭から2番目と入れ替え
+		std::swap(*minVtx, vtxBegin[1]);	//	最小を先頭から2番目と入れ替え
 	}
 
 	//	最初の辺を作る
@@ -176,6 +195,7 @@ void CDQHLines<TVtx>::CreateFirstConvex(){
 	//	使用した頂点を頂点リストからはずす．
 	vtxBegin += 2;
 	nLines = 2;
+	return true;
 }
 
 /**	辺curと，その面から一番遠い頂点 top を受け取り，

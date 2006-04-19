@@ -151,7 +151,6 @@ void main(){
 #include "TMatrixUtility.h"
 #include "TinyVec.h"
 #include "TinyMat.h"
-#include "TQuaternion.h"
 
 /**	@file Affine.h 2/3次元アフィン行列*/
 

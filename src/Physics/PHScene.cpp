@@ -164,6 +164,12 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 	}
 	return NULL;
 }
+size_t PHScene::NChildObject() const{
+	return engines.size();
+}
+ObjectIf* GetChildObject(size_t pos){
+	return engines[i];
+}
 
 
 }

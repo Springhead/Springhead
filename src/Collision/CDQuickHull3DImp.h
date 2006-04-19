@@ -285,12 +285,12 @@ void CDQHPlanes<TVtx>::CreateCone(TVtx* firstVtx, TVtx* top){
 			for(TVtx** p = vtxBeginInput; p != vtxEndInput; ++p){
 				DSTR << (*p)->GetPos() << std::endl;
 			}
-			DSTR << vtxEndInput - vtxBeginInput << " vertices." << std::endl;
+			DSTR << (int)(vtxEndInput - vtxBeginInput) << " vertices." << std::endl;
 
 			curHorizon = firstVtx->horizon;
 			for(TVtx** p = vtxBeginInput; p != vtxEndInput; ++p){
 				if (firstVtx == *p){
-					DSTR << p - vtxBeginInput << " ";
+					DSTR << (int)(p - vtxBeginInput) << " ";
 				}
 			}
 			for(int i=0; i<len; ++i){
@@ -300,7 +300,7 @@ void CDQHPlanes<TVtx>::CreateCone(TVtx* firstVtx, TVtx* top){
 				curHorizon = curVtx->horizon;
 				for(TVtx** p = vtxBeginInput; p != vtxEndInput; ++p){
 					if (curVtx == *p){
-						DSTR << p - vtxBeginInput << " ";
+						DSTR << int(p - vtxBeginInput) << " ";
 					}
 				}
 			}

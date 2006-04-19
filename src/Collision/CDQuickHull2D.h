@@ -77,7 +77,7 @@ public:
 private:
 	/**	最初の凸多面体＝2本の辺(表裏)を作る．
 		できるだけ大きい辺を作ると効率が良い．	*/
-	void CreateFirstConvex();
+	bool CreateFirstConvex();
 	/**	辺curと，その面から一番遠い頂点 top を受け取り，
 		curとその周囲の辺を削除し，凸包にtopを含める．
 		end[-1], end[-2]が新たに作られた辺になる．	*/
