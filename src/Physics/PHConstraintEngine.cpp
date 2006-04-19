@@ -93,6 +93,7 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 			cutRing.MakeRing();
 			//	cutRing.Print(DSTR);
 			//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
+			int nPoint = engine->points.size();
 			for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 				if (vtx->deleted) continue;
 				Vec3d pos;
@@ -102,6 +103,10 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 				cutRing.local.Ori().ToMatrix(local);
 				engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
 			//	DSTR << "  " << pos << std::endl;
+			}
+			if (nPoint == engine->points.size()){	//	‚Ð‚Æ‚Â‚à’Ç‰Á‚µ‚Ä‚¢‚È‚¢ConvexHull‚ªì‚ê‚È‚©‚Á‚½D
+				//	‚«‚Á‚Æ1“_‚ÅÚG‚µ‚Ä‚¢‚éD
+				engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
 			}
 		}
 	}
