@@ -8,14 +8,22 @@
   ・プログラムが正常終了したら0を返す。  
  
 【処理の流れ】
-  ・test.xファイルをロードする。
+  ・Xファイルをロードする。
   ・ロードした情報を出力する。
   ・Physicsエンジンと接続し、シミュレーションさせる。
-  
+
+【テストパターン】
+　  test1.x	：凸形状(mesh)のテスト
+    test2.x	：凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
+    test3.x	：凸形状(mesh)と球(sphere)のテスト
+	test4.x	：凸形状(mesh)と球(sphere)と立方体(box)のテスト
+
  */
 #include <Springhead.h>
 #include <GL/glut.h>
-#define	ESC		27
+#define	ESC				27
+#define EXIT_TIMER		2000
+
 namespace Spr{
 	PHSdkIf* phSdk;
 	PHSceneIf** scene;
@@ -33,18 +41,22 @@ GRMaterial mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
 					100.0);							// power
-
-GRMaterial mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
-					Vec4f(0.0, 0.7, 0.0, 1.0),		// diffuse
-					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
-					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
-					20.0);							// power
-
-GRMaterial mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		// ambient
-					Vec4f(0.0, 0.0, 0.7, 1.0),		// diffuse
-					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
-					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
-					20.0);							// power
+GRMaterial mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		
+					Vec4f(0.0, 0.7, 0.0, 1.0),		
+					Vec4f(1.0, 1.0, 1.0, 1.0),		
+					Vec4f(0.0, 0.0, 0.0, 1.0),		
+					20.0);							
+GRMaterial mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		
+					Vec4f(0.0, 0.0, 0.7, 1.0),		
+					Vec4f(1.0, 1.0, 1.0, 1.0),		
+					Vec4f(0.0, 0.0, 0.0, 1.0),		
+					20.0);							
+GRMaterial mat_yellow(Vec4f(0.0, 0.0, 1.0, 1.0),		
+					  Vec4f(1.0, 0.7, 0.0, 1.0),		
+					  Vec4f(1.0, 1.0, 1.0, 1.0),		
+					  Vec4f(0.0, 0.0, 0.0, 1.0),		
+					  20.0);							
+std::vector<GRMaterial> material;
 
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
@@ -54,7 +66,7 @@ GRMaterial mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		// ambient
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
-	render->SetMaterial(mat_red);	
+	//render->SetMaterial(mat_red);	
 
 	PHSceneIf* scene = NULL;
 	if (phSdk->NScene()){
@@ -67,11 +79,8 @@ void display(){
 	}
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
-		if (num == 1){
-			render->SetMaterial(mat_green);	
-		} else if (num == 2) {
-			render->SetMaterial(mat_blue);	
-		}
+		render->SetMaterial(material[num]);			// 材質設定
+
 		Affinef af;
 		solids[num]->GetPose().ToAffine(af);
 		render->PushModelMatrix();
@@ -102,8 +111,8 @@ void display(){
 			if (box){
 #if 0				
 				Vec3f boxsize = box->GetBoxSize();
-				glutSolidCube(1.0);
-				glScalef(boxsize.x, boxsize.y, boxsize.z);			
+				glScalef(boxsize.x, boxsize.y, boxsize.z);	
+				glutSolidCube(1.0);		
 #else
 				Vec3f *vtx = new Vec3f[4];
 				Vec3f* base =  box->GetVertices();
@@ -154,6 +163,17 @@ void setLight() {
 	light1.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
 	render->PushLight(light1);
 }
+/**
+ brief     	材質の設定
+ param	 	なし
+ return 	なし
+ */
+void setMaterial() {
+	material.push_back(mat_red);
+	material.push_back(mat_green);
+	material.push_back(mat_blue);
+	material.push_back(mat_yellow);
+}
 
 /**
  brief  	glutReshapeFuncで指定したコールバック関数
@@ -186,8 +206,8 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count ++;
-	if (count > 1200){
-		std::cout << "1200 count passed." << std::endl;
+	if (count > EXIT_TIMER){
+		std::cout << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
 	}
 }
@@ -207,7 +227,7 @@ int main(int argc, char* argv[]){
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);	//	ファイルローダに渡す方式
 	}else{
-		fileX->Load(objs, "test.x");	//	PHSDKごとロードして，
+		fileX->Load(objs, "test1.x");	//	PHSDKごとロードして，
 		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
 	if (phSdk && phSdk->NScene()){
@@ -241,8 +261,8 @@ int main(int argc, char* argv[]){
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	// 光源設定
-	setLight();
+	setLight();			// 光源設定
+	setMaterial();		// 材質設定
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
