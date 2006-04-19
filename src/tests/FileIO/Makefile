@@ -10,7 +10,7 @@
 
 TOP_DIR 		= ../../..
 
-FILEIO_TEST_DIR	= FILoadTestX FILoader
+FILEIO_TEST_DIR	= FILoader
 
 all:
 	@for dir in $(FILEIO_TEST_DIR); \
