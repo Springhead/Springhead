@@ -241,7 +241,7 @@ void SPR_CDECL idle(){
 	glutPostRedisplay();
 	static int count;
 	count++;
-	//if (++count > 200) exit(0);
+	if (++count > 200) exit(0);
 #endif	
 }
 

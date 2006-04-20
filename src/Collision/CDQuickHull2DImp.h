@@ -240,6 +240,7 @@ void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
 /**	一番遠くの頂点を見つける．見つけたらそれを頂点リストからはずす	*/
 template <class TVtx>
 bool CDQHLines<TVtx>::FindFarthest(CDQHLine* line){
+#if 0	
 	TVtx** maxVtx=NULL;
 	double maxDist = epsilon;
 	for(TVtx** it=vtxBegin; it!= vtxEnd; ++it){
@@ -266,6 +267,43 @@ bool CDQHLines<TVtx>::FindFarthest(CDQHLine* line){
 		return true;
 	}
 	return false;
+#endif
+	
+	TVtx** maxVtx=NULL;
+	double maxDist = epsilon;
+
+	for(TVtx** it=vtxBegin; it!= vtxEnd; ++it){
+		double dist = line->CalcDist(*it);
+		if (dist > maxDist){
+			maxDist = dist; 
+			maxVtx = it;
+		}
+	}
+	if (maxVtx){
+		if (maxVtx[0]->GetPos() == line->vtx[0]->GetPos()
+			||	maxVtx[0]->GetPos() == line->vtx[1]->GetPos()){
+				return false;
+		} else {
+			std::swap(*vtxBegin, *maxVtx);
+			vtxBegin++;
+			
+#ifdef _DEBUG
+			if (vtxBegin[-1]->GetPos() == line->vtx[0]->GetPos()
+				||	vtxBegin[-1]->GetPos() == line->vtx[1]->GetPos()){
+			
+				DSTR << "Error: same position." << std::endl;
+				for(int i=0; i<2; ++i){
+					DSTR << "V" << i << ": " << line->vtx[i]->GetPos() << std::endl;
+				}
+				DSTR << "P : " << vtxBegin[-1]->GetPos() << std::endl;
+				assert(0);
+			}
+#endif
+			return true;
+		}
+	}
+	return false;
+	
 }
 /*	外側 内側 の順に並べる．
 外側の終わり＝内側の始まりが inner	*/
