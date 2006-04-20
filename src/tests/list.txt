@@ -10,3 +10,15 @@
 /** @example PHShapeGL/main.cpp
 				* 剛体Solidに形状を持たせたテストプログラム（位置を出力、面の頂点座標を出力、GL表示） 
 				*/
+/** @example PHConstraintTest/main.cpp
+				* 拘束法のテストプログラム
+				*/
+/** @example GRSimple/main.cpp
+				* グラフィックスレンダラー(補助ライブラリ)を使ったテストプログラム
+				*/
+/** @example FILoader/main.cpp
+				* Xファイルのロードテストプログラム
+				*/
+/** @example QuickHull2D/main.cpp
+				* QuickHull2D/3Dのテストプログラム
+				*/

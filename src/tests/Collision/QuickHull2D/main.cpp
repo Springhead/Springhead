@@ -1,3 +1,18 @@
+/** 
+ Springhead2/src/tests/Collision/QuickHull2D/main.cpp
+
+【概要】
+  ・QucickHull2D および QuickHull3D のテストプログラム
+  
+【終了基準】
+  ・プログラムが正常終了したら0を返す。
+ 
+【処理の流れ】
+  ・QuickHullが使用する頂点を登録する。
+  ・設定した頂点から凸包を作り、出来た面を出力する。
+    また、QuickHull2Dの場合は、エクセルに出来た面を出力する。
+
+ */
 #include "Collision/CDQuickHull3DImp.h"
 #include "Collision/CDQuickHull2DImp.h"
 #include <iostream>

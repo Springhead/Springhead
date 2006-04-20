@@ -10,7 +10,7 @@
 
 TOP_DIR 	= ../..
 
-TESTS_DIR	= FileIO Graphics Physics
+TESTS_DIR	= FileIO Graphics Physics Collision
 
 all:
 	@for dir in $(TESTS_DIR); \
