@@ -20,9 +20,10 @@
 #endif
 using namespace Spr;
 
-#define ESC				27
-#define EXIT_TIMER		200		
-#define NUM_BLOCK		4//6
+#define ESC					27		// ESC key
+#define STAY_COUNTER		10		// 静止判定カウント
+#define TOTAL_IDLE_COUNTER	1000	// 静止しない場合に利用	
+#define NUM_BLOCK			4//6	// 生成するボックス数
 
 float boxpos[][3] = {
 	{0,2,0},
@@ -38,7 +39,8 @@ float boxpos[][3] = {
 PHSdkIf* sdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor, *soBlock[NUM_BLOCK];
-static int	 stillStepCnt[NUM_BLOCK];			// 静止したステップカウント
+static int stepCnt = 0;						// 静止したステップカウント
+static int totalStep = 0;					// 全実行ステップ数（終了判定で使用）
 static Vec3d prepos[NUM_BLOCK];				// previous position
 static Vec3d curpos[NUM_BLOCK];				// current position
 
@@ -203,7 +205,7 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void SPR_CDECL idle(){
-#if 1
+#if 0
 	int iCnt = 0;
 	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
 		prepos[iCnt] = soBlock[iCnt]->GetFramePosition();
@@ -212,36 +214,41 @@ void SPR_CDECL idle(){
 	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
 		curpos[iCnt] = soBlock[iCnt]->GetFramePosition();
 	}
-
-	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
-		if (approx(prepos[iCnt], curpos[iCnt])){			// 一致した場合はインクリメント
-			stillStepCnt[iCnt]++;
-		} else {											// 一致しなかった場合はカウントを0に初期化
-			stillStepCnt[iCnt] = 0;
-		}
-	}
-
 	iCnt = 0;
-	while(stillStepCnt[iCnt] > EXIT_TIMER){
-		if (iCnt == NUM_BLOCK-1){
-			DSTR << "\nPHConstraintTest success." << std::endl;
-			exit(EXIT_SUCCESS);
+	bool flag = true;
+	// preposとcurposが一致しないboxがあるか
+	while(iCnt < NUM_BLOCK){
+		if (!approx(prepos[iCnt], curpos[iCnt])) {	
+			flag = false;
+			break;
 		}
+		iCnt++;
 	}
-	static int count = 0;
-	count ++;
-	if (count > 1000){
-		exit(-1);
+	// 静止ステップ数のカウント
+	if (flag == true){
+		stepCnt++;
+		std::cout << "true" << std::endl;
+	} else {
+		std::cout << "               false    " << prepos[0]-curpos[0] <<  std::endl;
+		stepCnt = 0;
 	}
-
-	std::cout << prepos[NUM_BLOCK-1] << ' ' << curpos[NUM_BLOCK-1] << ' ' << prepos[NUM_BLOCK-1]-curpos[NUM_BLOCK-1] << std::endl;
+	// 終了判定
+	if (stepCnt > STAY_COUNTER){
+		DSTR << "\nPHConstraintTest success." << std::endl;
+		exit(EXIT_SUCCESS);
+	}
+	totalStep++;
+	if (totalStep > TOTAL_IDLE_COUNTER){
+		DSTR << "\nPHShapeGL failure." << std::endl;
+		exit(EXIT_FAILURE);
+	}
 	glutPostRedisplay();
 #else
 	scene->Step();
 	glutPostRedisplay();
 	static int count;
 	count++;
-	if (++count > 200) exit(0);
+	if (count > 200) exit(0);
 #endif	
 }
 
@@ -272,6 +279,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	sdk = CreatePHSdk();							// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	//dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;
 	dscene.timeStep = dt;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
