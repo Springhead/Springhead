@@ -29,8 +29,9 @@ struct PHPathPointWithJacobian : public PHPathPoint{
 };
 
 class PHPath : public std::vector<PHPathPointWithJacobian>, public InheritSceneObject<PHPathIf, SceneObject>{
-	iterator Find(double s);
+	bool bReady;
 	bool bLoop;	//[-pi, pi]ÇÃñ≥å¿âÒì]ä÷êﬂ
+	iterator Find(double s);
 public:
 	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
 	virtual bool IsLoop(){return bLoop;}
@@ -38,6 +39,7 @@ public:
 	void CompJacobian();
 	void GetPose(double s, Posed& pose);
 	void GetJacobian(double s, Matrix6d& J);
+	PHPath(const PHPathDesc& desc);
 };
 
 class PHPathJoint : public InheritJoint1D<PHPathJointIf, PHJoint1D>{

@@ -55,7 +55,7 @@ void PHBallJoint::CompBias(double dt){
 	
 }
 
-void PHBallJoint::CompError(){
+void PHBallJoint::CompError(double dt){
 	B.SUBVEC(0, 3) = rjrel;
 	B.SUBVEC(3, 3) = qjrel.V();
 }

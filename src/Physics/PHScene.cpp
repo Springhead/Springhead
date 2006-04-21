@@ -96,6 +96,10 @@ PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
 	return ce->AddJoint(desc);
 }
 
+PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
+	return DBG_NEW PHPath(desc);
+}
+
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
 	PHConstraintEngine* ce;
 	engines.Find(ce);

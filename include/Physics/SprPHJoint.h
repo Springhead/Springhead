@@ -61,7 +61,7 @@ struct PHPathPoint{
 	Posed	pose;		///< 位置と傾き
 };
 struct PHPathDesc{
-	std::vector<PHPathPoint> path;	///< パス
+	std::vector<PHPathPoint> points;	///< パス
 	bool bLoop;						///< trueならばループパス，falseならばオープンパス
 };
 

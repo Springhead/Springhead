@@ -21,6 +21,9 @@ struct PHJointIf;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
+struct PHPathIf;
+struct PHPathDesc;
+
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
 	/// 積分ステップ
@@ -40,6 +43,7 @@ struct PHSceneDesc: public PHSceneState{
 		SOLVER_PENALTY,
 		SOLVER_CONSTRAINT
 	} contactSolver;
+	/// 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
 	Vec3f gravity;
 	PHSceneDesc(){Init();}
 	void Init(){
@@ -102,6 +106,11 @@ public:
 		Solid lhsとSolid rhsを連結する関節を作成する．
 	 */
 	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
+
+	/** @brief パスを作成する
+		@param desc パスのディスクリプタ
+	 */
+	virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ

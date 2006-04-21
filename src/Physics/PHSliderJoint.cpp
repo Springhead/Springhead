@@ -71,7 +71,7 @@ void PHSliderJoint::CompBias(double dt){
 	}
 }
 
-void PHSliderJoint::CompError(){
+void PHSliderJoint::CompError(double dt){
 	B[0] = rjrel.x;
 	B[1] = rjrel.y;
 	B[2] = qjrel.x;

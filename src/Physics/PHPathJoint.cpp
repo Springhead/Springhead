@@ -11,6 +11,16 @@ namespace Spr{;
 // PHPath
 IF_IMP(PHPath, SceneObject)
 
+PHPath::PHPath(const PHPathDesc& desc){
+	resize(desc.points.size());
+	for(int i = 0; i < desc.points.size(); i++){
+		(*this)[i].s = desc.points[i].s;
+		(*this)[i].pose = desc.points[i].pose;
+	}
+	bLoop = desc.bLoop;
+	bReady = false;
+}
+
 PHPath::iterator PHPath::Find(double s){
 	iterator it;
 	for(it = begin(); it != end(); it++){
@@ -25,6 +35,7 @@ void PHPath::AddPoint(double s, const Posed& pose){
 	p.s = s;
 	p.pose = pose;
 	insert(Find(s), p);
+	bReady = false;
 }
 
 //6x6行列Jの一番下の行ベクトルは与えられているとして，
@@ -67,6 +78,7 @@ void PHPath::CompJacobian(){
 		it->J.row(5).SUBVEC(3, 3) =  w;
 		Orthogonalize(it->J);
 	}
+	bReady = true;
 }
 
 void PHPath::GetPose(double s, Posed& pose){
@@ -85,6 +97,7 @@ void PHPath::GetPose(double s, Posed& pose){
 }
 
 void PHPath::GetJacobian(double s, Matrix6d& J){
+	if(!bReady)CompJacobian();
 	iterator it = Find(s);
 	if(it == begin()){
 		J = front().J;

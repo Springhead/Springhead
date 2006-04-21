@@ -59,8 +59,8 @@ void PHHingeJoint::CompBias(double dt){
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
-		if(diff >  M_PI) diff -= 2 * M_PI;
-		if(diff < -M_PI) diff += 2 * M_PI;
+		while(diff >  M_PI) diff -= 2 * M_PI;
+		while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * dt);
 		Ad[5] += tmp / dt;
 		b[5] += spring * (diff) * tmp;
@@ -80,7 +80,7 @@ void PHHingeJoint::CompBias(double dt){
 	}
 }
 
-void PHHingeJoint::CompError(){
+void PHHingeJoint::CompError(double dt){
 	B.SUBVEC(0, 3) = rjrel;
 	B.SUBVEC(3, 3) = qjrel.V();
 }

@@ -119,7 +119,7 @@ public:
 	//virtual void CompMotorForce(){}				/// fv, fw‚Éƒ‚[ƒ^‚É‚æ‚é‰e‹¿‚ğİ’è‚·‚é
 	virtual void CompConstraintJacobian()=0;
 	virtual void CompBias(double dt){}	/// 
-	virtual void CompError()=0;			/// Bv, Bq‚ğİ’è‚·‚é
+	virtual void CompError(double dt)=0;			/// Bv, Bq‚ğİ’è‚·‚é
 	virtual void ProjectionDynamics(double& f, int k){}
 	virtual void ProjectionCorrection(double& F, int k){}
 	PHConstraint();

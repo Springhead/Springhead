@@ -104,7 +104,7 @@ void PHContactPoint::ProjectionDynamics(double& f, int k){
 	}
 }
 
-void PHContactPoint::CompError(){
+void PHContactPoint::CompError(double dt){
 	const double eps = 0.0;
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる

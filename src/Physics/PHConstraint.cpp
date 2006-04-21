@@ -120,7 +120,7 @@ void PHConstraint::SetupDynamics(double dt){
 
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
-	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
+ 	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
 	
 	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
 	//	拘束の種類ごとに異なる
@@ -179,7 +179,7 @@ void PHConstraint::IterateDynamics(){
 void PHConstraint::SetupCorrection(double dt, double max_error){
 	if(!bEnabled || !bFeasible)return;
 
-	CompError();
+	CompError(dt);
 
 	int i, j;
 	for(i = 0; i < 2; i++){

@@ -40,6 +40,7 @@ public:
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	PHJointIf* CreateJoint(const PHJointDesc& desc);	///< ファイルローダ用
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
+	PHPathIf*  CreatePath(const PHPathDesc& desc);
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true);
 	void SetGravity(const Vec3d& g);
 	PHSdkIf* GetSdk();
