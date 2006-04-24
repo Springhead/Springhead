@@ -200,8 +200,8 @@
 	desc->size = sizeof(PHPathDesc);
 	desc->ifInfo = PHPathIf::GetIfInfoStatic();
 	desc->access = DBG_NEW FIAccess<PHPathDesc>;
-	field = desc->AddField("vector", "PHPathPoint", "path", "");
-	field->offset = (char*)&(pPHPathDesc->path) - (char*)pPHPathDesc;
+	field = desc->AddField("vector", "PHPathPoint", "points", "");
+	field->offset = (char*)&(pPHPathDesc->points) - (char*)pPHPathDesc;
 	field = desc->AddField("", "bool", "bLoop", "");
 	field->offset = (char*)&(pPHPathDesc->bLoop) - (char*)pPHPathDesc;
 	db->RegisterDesc(desc);
