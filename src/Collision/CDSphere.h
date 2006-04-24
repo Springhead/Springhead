@@ -32,7 +32,7 @@ public:
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
 	/// ‹…‘Ì‚Ì”¼Œa‚ðŽæ“¾
-	virtual float GetRadius();
+	float GetRadius();
 };
 
 	

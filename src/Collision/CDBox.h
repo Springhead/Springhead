@@ -48,7 +48,7 @@ public:
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
 	/// ’¼•û‘Ì‚ÌƒTƒCƒY‚ðŽæ“¾
-	virtual Vec3f GetBoxSize();
+	Vec3f GetBoxSize();
 	Vec3f* GetVertices();
 	CDFaceIf* GetFace(size_t i);
 };

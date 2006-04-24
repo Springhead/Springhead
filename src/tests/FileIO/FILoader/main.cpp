@@ -223,11 +223,11 @@ int main(int argc, char* argv[]){
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
 	if (argc>=2){
-		phSdk = CreatePHSdk();		//	PHSDKを用意して，
+		phSdk = CreatePHSdk();					//	PHSDKを用意して，
 		objs.push_back(phSdk);		
-		fileX->Load(objs, argv[1]);	//	ファイルローダに渡す方式
+		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
-		fileX->Load(objs, "test1.x");	//	PHSDKごとロードして，
+		fileX->Load(objs, "test1.x");			//	PHSDKごとロードして，
 		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
 	if (phSdk && phSdk->NScene()){
@@ -241,7 +241,7 @@ int main(int argc, char* argv[]){
 
 	scene = phSdk->GetScenes();		// Sceneの取得
 	shape = phSdk->GetShapes();		// Shapeの取得
-	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NSphape=" << phSdk->NShape() << std::endl;
+	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
