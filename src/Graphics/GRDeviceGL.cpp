@@ -23,6 +23,8 @@ void GRDeviceGL::Init(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
+
 	// éãì_çsóÒÇÃê›íË
 	viewMatrix.Pos() = Vec3f(0.0, 0.0, 1.0);	                        // eye
 	viewMatrix.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));	// center, up 
