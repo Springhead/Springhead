@@ -16,7 +16,8 @@
 　  test1.x	：凸形状(mesh)のテスト
     test2.x	：凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
     test3.x	：凸形状(mesh)と球(sphere)のテスト
-	test4.x	：凸形状(mesh)と球(sphere)と立方体(box)のテスト
+	test4.x	：凸形状(mesh)と球(sphere)と直方体(box)のテスト
+	test5.x : timeStep=0.001におけるテスト
 
  */
 #include <Springhead.h>
@@ -232,7 +233,10 @@ int main(int argc, char* argv[]){
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
-		fileX->Load(objs, "test1.x");			//	PHSDKごとロードして，
+		if (! fileX->Load(objs, "test5.x") ) {	//	PHSDKごとロードして，
+			DSTR << "Error: Cannot open load file. " << std::endl;
+			exit(EXIT_FAILURE);
+		}
 		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
 	if (phSdk && phSdk->NScene()){
