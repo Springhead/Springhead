@@ -34,6 +34,8 @@ namespace Spr{
 }
 using namespace Spr;
 
+Vec3f *vtx=NULL;
+
 
 // 材質の設定
 GRMaterial mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
@@ -114,7 +116,6 @@ void display(){
 				glScalef(boxsize.x, boxsize.y, boxsize.z);	
 				glutSolidCube(1.0);		
 #else
-				Vec3f *vtx = new Vec3f[4];
 				Vec3f* base =  box->GetVertices();
 				for (size_t f=0; f<6; ++f) {	
 					CDFaceIf* face = box->GetFace(f);
@@ -193,7 +194,10 @@ void reshape(int w, int h){
  return 	なし
  */
 void keyboard(unsigned char key, int x, int y){
-	if (key == ESC) exit(0);
+	if (key == ESC) {
+		delete[] vtx;
+		exit(0);
+	}
 }
 
 /**
@@ -207,6 +211,7 @@ void idle(){
 	static int count;
 	count ++;
 	if (count > EXIT_TIMER){
+		delete[] vtx;
 		std::cout << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
 	}
@@ -227,7 +232,7 @@ int main(int argc, char* argv[]){
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
-		fileX->Load(objs, "test4.x");			//	PHSDKごとロードして，
+		fileX->Load(objs, "test1.x");			//	PHSDKごとロードして，
 		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
 	if (phSdk && phSdk->NScene()){
@@ -264,11 +269,13 @@ int main(int argc, char* argv[]){
 	setLight();			// 光源設定
 	setMaterial();		// 材質設定
 
+	vtx = DBG_NEW Vec3f[4];
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
 	glutMainLoop();		// これ追加すると大量のmemory leakが発生する
 
+	
 	return 0;
 }
