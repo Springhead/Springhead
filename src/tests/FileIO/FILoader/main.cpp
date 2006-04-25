@@ -22,7 +22,7 @@
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27
-#define EXIT_TIMER		2000
+#define EXIT_TIMER		3000
 
 namespace Spr{
 	PHSdkIf* phSdk;
@@ -227,7 +227,7 @@ int main(int argc, char* argv[]){
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
-		fileX->Load(objs, "test1.x");			//	PHSDKごとロードして，
+		fileX->Load(objs, "test4.x");			//	PHSDKごとロードして，
 		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
 	}
 	if (phSdk && phSdk->NScene()){
