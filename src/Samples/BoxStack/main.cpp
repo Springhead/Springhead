@@ -230,7 +230,8 @@ void timer(int id){
 	int times = (int)(DT / scene->GetTimeStep());
 	for(int i=0; i<times; ++i) scene->Step();
 	glutPostRedisplay();
-	glutTimerFunc((unsigned int)1000*DT, timer, 0);
+	unsigned int msecs = static_cast<unsigned int>(1000*DT);
+	glutTimerFunc(msecs, timer, 0);
 }
 
 /**

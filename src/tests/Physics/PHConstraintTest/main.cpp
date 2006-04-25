@@ -39,8 +39,6 @@ float boxpos[][3] = {
 PHSdkIf* sdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor, *soBlock[NUM_BLOCK];
-static int stepCnt = 0;						// 静止したステップカウント
-static int totalStep = 0;					// 全実行ステップ数（終了判定で使用）
 static Vec3d prepos[NUM_BLOCK];				// previous position
 static Vec3d curpos[NUM_BLOCK];				// current position
 
@@ -206,6 +204,9 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  */
 void SPR_CDECL idle(){
 #if 0
+	static int stepCnt = 0;						// 静止したステップカウント
+	static int totalStep = 0;					// 全実行ステップ数（終了判定で使用）
+	
 	int iCnt = 0;
 	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
 		prepos[iCnt] = soBlock[iCnt]->GetFramePosition();

@@ -229,7 +229,7 @@ void OnKey0(char key){
 		PHHingeJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d( 1.1,  1.1,  0);
 		jdesc.pose[1].Pos() = Vec3d(-1.1, -1.1,  0);
-		int n = soBox.size();
+		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
 	}
@@ -285,7 +285,7 @@ void OnKey2(char key){
 		PHBallJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d(-1.1, -1.1, -1.1);
 		jdesc.pose[1].Pos() = Vec3d( 1.1,  1.1,  1.1);
-		int n = soBox.size();
+		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
 	}
@@ -302,7 +302,7 @@ void OnKey3(char key){
 		jdesc.pose[0].Ori() = Quaterniond::Rot(Rad(90.0), 'y');
 		jdesc.pose[1].Pos() = Vec3d(0,  1.1, 0);
 		jdesc.pose[1].Ori() = Quaterniond::Rot(Rad(90.0), 'y');
-		int n = soBox.size();
+		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		PHSliderJointIf* slider = ICAST(PHSliderJointIf, jntLink.back());
 		slider->SetRange(-0.3, 0.3);
@@ -471,6 +471,7 @@ void reshape(int w, int h){
  return 	‚È‚µ
  */
 void keyboard(unsigned char key, int x, int y){
+	unsigned int i = 0;
 	switch (key) {
 		//I—¹
 		case ESC:		
@@ -490,7 +491,7 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				static bool bEnable = true;
 				bEnable = !bEnable;
-				for(int i = 0; i < jntLink.size(); i++)
+				for(i = 0; i < jntLink.size(); i++)
 					jntLink[i]->Enable(bEnable);
 			}break;
 		case 'z':{

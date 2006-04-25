@@ -41,8 +41,10 @@
  */
 #if defined _MSC_VER || defined __BORLANDC__
  #define SPR_CDECL	__cdecl
+ #define FASTCALL	_fastcall
 #else
  #define SPR_CDECL
+ #define FASTCALL
 #endif
 
 /**	hdrstop

@@ -22,7 +22,6 @@ using namespace Spr;
 
 //	2Dのテスト
 int main2D(){
-	int id = 0;
 	std::vector<CDQHVtx2DSample> vtxBufs;
 #if 0
 	for(int i=0; i<6; ++i){
@@ -79,7 +78,6 @@ int main2D(){
 
 //	3Dのテスト
 int main3D(){
-	int id = 0;
 	std::vector<CDQHVtx3DSample> vtxBufs;
 	struct NormalDist{
 		NormalDist(Vec3f n, double d):normal(n),dist(d){}

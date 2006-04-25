@@ -13,7 +13,7 @@ IF_IMP(PHPath, SceneObject)
 
 PHPath::PHPath(const PHPathDesc& desc){
 	resize(desc.points.size());
-	for(int i = 0; i < desc.points.size(); i++){
+	for(unsigned int i = 0; i < desc.points.size(); i++){
 		(*this)[i].s = desc.points[i].s;
 		(*this)[i].pose = desc.points[i].pose;
 	}

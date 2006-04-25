@@ -305,7 +305,7 @@ void init_quaternion(TVectorBase<DIMENC(4), QD>& q, T angle, const TVectorBase<D
 	TYPENAME QD::element_type d = axis.norm();
 	assert(d);
 	TYPENAME QD::element_type s = (TYPENAME QD::element_type)(sin(angle / 2) / d);
-	q[0] = TVectorBase<DIMENC(4), QD>::element_type( cos(angle / 2) );
+	q[0] = TYPENAME TVectorBase<DIMENC(4), QD>::element_type( cos(angle / 2) );
 	q.sub_vector(TSubVectorDim<1,3>()) = s * axis;
 }
 
