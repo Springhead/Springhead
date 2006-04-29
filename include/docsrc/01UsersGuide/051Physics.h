@@ -1,8 +1,52 @@
 /** \page pagePhysics 物理シミュレーションライブラリ
 
+-\ref scene
+--\ref scene_create
+--\ref scene_gravity
+-\ref solid
+--\ref solid_create
+--\ref solid_shape
+-\ref joint
+
+\section scene シーン
+
+シーンとは物理シミュレーションの舞台となる空間のことです．
+シーンの操作はPHSceneIfクラスを介して行ないます．
+
+\subsection scene_create シーンの作成
+
+シーンを作成するにはPHSdkIf::CreateScene関数を呼びます．
+
+\subsection scene_gravity 重力の設定
+
+シーンに働く重力を設定するには\link Spr::PHSceneIf::SetGravity() PHSceneIf::SetGravity\endlinkを呼び出します．
+デフォルトで，シーンの重力加速度は(0.0, -9.8, 0.0)に設定されています．
+重力を無効化するにはSetGravity(Vec3f(0.0f, 0.0f, 0.0f))とします．
+また，個々の剛体に対して重力の作用を有効・無効化するには
+\link Spr::PHSolidIf::SetGravity() PHSolidIf::SetGravity\endlinkを使います．
+
 \section solid	剛体
-剛体は，質量，慣性モーメント，重心位置を持ち，
+
+剛体とは，物理法則に従ってシーン中を運動する物体です．
+
+\subsection solid_create 剛体の作成
+
+剛体を作成し，シーンに追加するにはPHSceneIf
+
+\subsection solid_pose 剛体の位置情報
+1つの剛体には，1つの座標系が貼り付いています．これを剛体座標系と呼びます．
+シーン中の剛体の位置と傾きは，シーン座標系に対する剛体座標系の位置と傾きとして表現されます．
+
+剛体の位置と傾きを設定・取得するには
+-\link Spr::PHSceneIf::SetPose
+
+\subsection solid_mass 剛体の質量
+
+質量，慣性モーメント，重心位置を持ち，
+
 位置・向き，速度・角速度を状態として持ちます．
+
+\subsection solid_shape 剛体への形状の割り当て
 
 また，\ref shape を持ち，互いに重ならないように保たれます．
 

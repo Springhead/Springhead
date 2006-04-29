@@ -33,11 +33,7 @@ void PHJoint1D::CompDof(){
 		on_lower = (theta <= lower);
 		on_upper = (theta >= upper);
 	}
-	if(on_lower || on_upper){
-		dim_d = 6;
-		dim_c = 6;
-	}
-	else if(mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
+	if(on_lower || on_upper || mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
 		dim_d = 6;
 		dim_c = 5;
 	}

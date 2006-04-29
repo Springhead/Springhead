@@ -48,6 +48,7 @@ public:
 	double	q, qd;				// 関節変位と関節角度
 	//Matrix53d	Jcvrel, Jcwrel;	// 相対速度から拘束速度，相対角速度から拘束速度へのヤコビ行列
 
+	virtual void SetPosition(double _q){q = _q;}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
 	virtual double GetPosition();

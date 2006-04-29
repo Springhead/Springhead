@@ -41,10 +41,10 @@ void PHPath::AddPoint(double s, const Posed& pose){
 //6x6行列Jの一番下の行ベクトルは与えられているとして，
 //gram-schmidtの直交化で残る5本の行ベクトルを設定する
 void Orthogonalize(Matrix6d& J){
-	Vec6d v = J.row(5);
-	v.unitize();
+	double n5 = J.row(5).norm();
+	J.row(5) *= (1.0 / n5);
 	int i, j, k;
-	for(i = 4; i <= 0; i--){
+	for(i = 4; i >= 0; i--){
 		for(k = 0; k < 6; k++){
 			J.row(i).clear();
 			J.row(i)[k] = 1.0;
@@ -58,6 +58,7 @@ void Orthogonalize(Matrix6d& J){
 			break;
 		}
 	}
+	J.row(5) *= n5;
 }
 
 void PHPath::CompJacobian(){
@@ -93,7 +94,14 @@ void PHPath::GetPose(double s, Posed& pose){
 	}
 	PHPathPointWithJacobian &rhs = *it, &lhs = *--it;
 	double tmp = 1.0 / (rhs.s - lhs.s);
-	pose = ((rhs.s - s) * tmp) * lhs.pose + ((s - lhs.s) * tmp) * rhs.pose;
+	pose.Pos() = ((rhs.s - s) * tmp) * lhs.pose.Pos() + ((s - lhs.s) * tmp) * rhs.pose.Pos();
+	Quaterniond qrel = lhs.pose.Ori().Conjugated() * rhs.pose.Ori();
+	Vec3d axis = qrel.Axis();
+	double angle = qrel.Theta();
+	if(angle >  M_PI) angle -= 2 * M_PI;
+	if(angle < -M_PI) angle += 2 * M_PI;
+	angle *= (s - lhs.s) * tmp;
+	pose.Ori() = lhs.pose.Ori() * Quaterniond::Rot(angle, axis);
 }
 
 void PHPath::GetJacobian(double s, Matrix6d& J){
@@ -125,6 +133,16 @@ bool PHPathJoint::AddChildObject(ObjectIf* o){
 	PHPath* p = OCAST(PHPath, o);
 	if(p){
 		path = p;
+		//可動範囲はリセットされる
+		// 周期パスならば可動範囲無し
+		// 非周期パスならば初端と終端を可動範囲とする
+		if(path->IsLoop()){
+			lower = upper = 0.0;
+		}
+		else{
+			lower = path->front().s;
+			upper = path->back().s;
+		}
 		return true;
 	}
 	return PHConstraint::AddChildObject(o);
@@ -141,6 +159,7 @@ double PHPathJoint::GetVelocity(){
 void PHPathJoint::CompConstraintJacobian(){
 	if(!path)return;
 	CompDof();
+	dim_c = 6;
 	Matrix6d J;
 	path->GetJacobian(q, J);
 	Ad.clear();
@@ -175,8 +194,6 @@ void PHPathJoint::CompBias(double dt){
 
 void PHPathJoint::CompError(double dt){
 	if(!path)return;
-	B.SUBVEC(0, 3) = rjrel;
-	B.SUBVEC(3, 3) = qjrel.V();
 	
 	//velocity update後の関節速度の値
 	Vec3d v[2], w[2];
@@ -189,16 +206,32 @@ void PHPathJoint::CompError(double dt){
 	q += qd * dt;
 	Posed pnew;
 	path->GetPose(q, pnew);
-	B.SUBVEC(0, 3) -= pnew.Pos();
-	B.SUBVEC(3, 3) -= pnew.Ori().V();
+	B.SUBVEC(0, 3) = rjrel - pnew.Pos();
+	if(qjrel.V() * pnew.Ori().V() < 0.0)
+		 B.SUBVEC(3, 3) = qjrel.V() + pnew.Ori().V();
+	else B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
+	//B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
+	//B = -B;
 }
 
 void PHPathJoint::ProjectionDynamics(double& f, int k){
-
+	if(k == 5){
+		if(on_lower){
+			DSTR << "f " << f << endl;
+			f = max(0.0, f);
+		}
+		if(on_upper)
+			f = min(0.0, f);
+	}
 }
 
 void PHPathJoint::ProjectionCorrection(double& F, int k){
-
+	if(k == 5){
+		if(on_lower)
+			F = max(0.0, F);
+		if(on_upper)
+			F = min(0.0, F);
+	}
 }
 
 }

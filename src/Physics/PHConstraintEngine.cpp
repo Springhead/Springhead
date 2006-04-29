@@ -283,8 +283,8 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 OBJECTIMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 10;//5;
-	max_iter_correction = 5;
+	max_iter_dynamics = 5;
+	max_iter_correction = 3;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
 	max_error = 1.0;

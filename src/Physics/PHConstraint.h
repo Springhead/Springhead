@@ -8,8 +8,8 @@
 
 namespace Spr{;
 
-typedef PTM::TMatrixCol<6, 6, double> Matrix6d;
-typedef PTM::TMatrixCol<6, 3, double> Matrix63d;
+typedef PTM::TMatrixRow<6, 6, double> Matrix6d;
+typedef PTM::TMatrixRow<6, 3, double> Matrix63d;
 typedef PTM::TVector<6, double> Vec6d;
 
 /// „‘Ì‚Ìî•ñ

@@ -22,7 +22,10 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, 
 		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//剛体の中心から接触点までのベクトル
 	}
 	// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
-	
+	if(!(p[0] >= 0.0 || p[0] <= 0.0)){
+		int hoge = 0;
+	}
+	DSTR << "p" << p << endl;
 	for(int i = 0; i < 2; i++){
 		Rj[i] = solid[i]->solid->GetRotation().trans() * local;
 		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];

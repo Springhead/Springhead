@@ -55,14 +55,16 @@ struct PHSliderJointDesc : public PHJoint1DDesc{
 	}
 };
 
-/// パスのディスクリプタ
+/// パス上の1つの点
 struct PHPathPoint{
 	double	s;			///< スカラーパラメータ
 	Posed	pose;		///< 位置と傾き
 };
+/// パスのディスクリプタ
 struct PHPathDesc{
-	std::vector<PHPathPoint> points;	///< パス
-	bool bLoop;						///< trueならばループパス，falseならばオープンパス
+	std::vector<PHPathPoint> points;	///< パス上の点列
+	bool bLoop;							///< trueならばループパス，falseならばオープンパス．デフォルトはfalse．
+	PHPathDesc():bLoop(false){}
 };
 
 /// パスジョイントのディスクリプタ
@@ -216,6 +218,7 @@ struct PHPathIf : public SceneObjectIf{
 /// パスジョイントのインタフェース
 struct PHPathJointIf : public PHJoint1DIf{
 	IF_DEF(PHPathJoint);
+	virtual void SetPosition(double q)=0;
 };
 
 /// ボールジョイントのインタフェース
