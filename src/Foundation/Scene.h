@@ -14,7 +14,7 @@ public:
 /**	名前とシーングラフのオブジェクトの対応表
 	名前をキーにしたセットを用意し，名前の一意性の保証とオブジェクトの
 	検索を実現する．	*/
-class ObjectNames:public std::set<UTRef<NamedObject>, ObjectNamesLess >{
+class ObjectNames:public std::set<NamedObject*, ObjectNamesLess >{
 public:
 	typedef std::map<UTString, UTString> TNameMap;
 	class ObjectKey:public NamedObject{

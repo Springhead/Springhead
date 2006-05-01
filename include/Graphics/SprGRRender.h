@@ -84,28 +84,31 @@ struct GRLight{
 	}
 };
 
-/**	@brief	グラフィックスの材質 */
-struct GRMaterial{
+struct GRMaterialDesc{
 	Vec4f ambient;					///<	環境光に対する反射率
 	Vec4f diffuse;					///<	拡散光に対する反射率
 	Vec4f specular;					///<	鏡面光に対する反射率
 	Vec4f emissive;					///<	放射輝度
 	float power;					///<	鏡面反射の強度、鏡面係数
 	std::string texture;			///<	テクスチャファイル名
-	GRMaterial(){ power = 0.0f; }
-	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p):
+	GRMaterialDesc():power(0){}
+	GRMaterialDesc(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p):
 		ambient(a), diffuse(d), specular(s), emissive(e), power(p){}
-	GRMaterial(Vec4f c, float p):
+	GRMaterialDesc(Vec4f c, float p):
 		ambient(c), diffuse(c), specular(c), emissive(c), power(p){}
-	GRMaterial(Vec4f c):
+	GRMaterialDesc(Vec4f c):
 		ambient(c), diffuse(c), specular(c), emissive(c), power(0.0f){}
 	/**	W()要素は、アルファ値(0.0～1.0で透明度を表す). 1.0が不透明を表す.
 		materialのW()要素を判定して、不透明物体か、透明物体かを判定する. 
 		透明なオブジェクトを描くとき、遠くのものから順番に描画しないと、意図に反した結果となる. */
-	bool IsOpaque(){		
+	bool IsOpaque() const {		
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
 };
+struct GRMaterialIf: public SceneObjectIf{
+	virtual bool IsOpaque() const = 0;
+};
+
 
 /**	@brief	カメラの情報 */
 struct GRCamera{
@@ -201,7 +204,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
 	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0)=0;
 	///	描画の材質の設定
-	virtual void SetMaterial(const GRMaterial& mat)=0;
+	virtual void SetMaterial(const GRMaterialDesc& mat)=0;
+	virtual void SetMaterial(const GRMaterialIf* mat)=0;
 	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w)=0;
 	///	光源スタックをPush

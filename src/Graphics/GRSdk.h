@@ -8,6 +8,7 @@
 
 
 namespace Spr {;
+struct GRSceneIf;
 
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
@@ -20,6 +21,10 @@ public:
 	void Print(std::ostream& os) const {}
 	GRDebugRenderIf* CreateDebugRender();
 	GRDeviceGLIf* CreateDeviceGL(int window);
+	GRSceneIf* GRSdk::CreateScene();
+	virtual size_t NChildObject() const { return objects.size(); }
+	virtual ObjectIf* GetChildObject(size_t i);
+	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 };
 
 }

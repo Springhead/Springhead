@@ -44,6 +44,11 @@ namespace Spr{;
 class Object;	
 ///	インタフェース->オブジェクトへのキャスト
 #define OCAST(T, i)	OcastImp<T>(i)
+template <class T, class I> const T* OcastImp(const I* i){
+	ObjectIf* oi = (I*)i;
+	const void* obj = i ? i->GetIfInfo()->GetSprObject(oi) : i;
+	return (const T*)(const Object*)obj;
+}
 template <class T, class I> T* OcastImp(I* i){
 	ObjectIf* oi = i;
 	void* obj = i ? i->GetIfInfo()->GetSprObject(oi) : i;

@@ -300,7 +300,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 #endif	
 }
 /// ï`âÊÇÃçﬁéøÇÃê›íË
-void GRDeviceGL::SetMaterial(const GRMaterial& mat){
+void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,   mat.ambient);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,   mat.diffuse);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  mat.specular);

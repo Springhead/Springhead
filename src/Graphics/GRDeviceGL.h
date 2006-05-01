@@ -76,7 +76,7 @@ public:
 	///	3次元テキストの描画
 	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font);
 	///	描画の材質の設定
-	virtual void SetMaterial(const GRMaterial& mat);
+	virtual void SetMaterial(const GRMaterialDesc& mat);
 	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w);
 	///	光源スタックをPush

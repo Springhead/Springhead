@@ -50,6 +50,7 @@ static void NodeStart(const char* b, const char* e){
 	}else{
 		tn.append(" not defined.");
 		fileContext->ErrorMessage(b, tn.c_str());
+		fileContext->PushType(NULL);	//	Popに備えて，Pushしておく
 	}
 }
 ///	ノードの名前の設定

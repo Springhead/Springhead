@@ -236,7 +236,11 @@ void FITypeDescDb::RegisterProto(FITypeDesc* n){
 
 FIFieldIt::FIFieldIt(FITypeDesc* d){
 	type = d;
-	field = d->GetComposit().end();
+	if (type){
+		field = type->GetComposit().end();
+	}else{
+		field = NULL;
+	}
 	arrayPos = -1;
 	arrayLength = 0;
 	fieldType=F_NONE;

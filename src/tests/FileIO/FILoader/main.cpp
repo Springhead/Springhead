@@ -27,9 +27,9 @@
 
 namespace Spr{
 	PHSdkIf* phSdk;
+	GRSdkIf* grSdk;
 	PHSceneIf** scene;
 	CDShapeIf** shape;
-	GRSdkIf* grSdk;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
 }
@@ -39,27 +39,27 @@ Vec3f *vtx=NULL;
 
 
 // 材質の設定
-GRMaterial mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
-					Vec4f(0.7, 0.0, 0.0, 1.0),		// diffuse
-					Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
-					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
-					100.0);							// power
-GRMaterial mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		
-					Vec4f(0.0, 0.7, 0.0, 1.0),		
-					Vec4f(1.0, 1.0, 1.0, 1.0),		
-					Vec4f(0.0, 0.0, 0.0, 1.0),		
-					20.0);							
-GRMaterial mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		
-					Vec4f(0.0, 0.0, 0.7, 1.0),		
-					Vec4f(1.0, 1.0, 1.0, 1.0),		
-					Vec4f(0.0, 0.0, 0.0, 1.0),		
-					20.0);							
-GRMaterial mat_yellow(Vec4f(0.0, 0.0, 1.0, 1.0),		
-					  Vec4f(1.0, 0.7, 0.0, 1.0),		
-					  Vec4f(1.0, 1.0, 1.0, 1.0),		
-					  Vec4f(0.0, 0.0, 0.0, 1.0),		
-					  20.0);							
-std::vector<GRMaterial> material;
+GRMaterialDesc mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
+						Vec4f(0.7, 0.0, 0.0, 1.0),		// diffuse
+						Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
+						Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
+						100.0);							// power
+GRMaterialDesc mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		
+						Vec4f(0.0, 0.7, 0.0, 1.0),		
+						Vec4f(1.0, 1.0, 1.0, 1.0),		
+						Vec4f(0.0, 0.0, 0.0, 1.0),		
+						20.0);							
+GRMaterialDesc mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		
+						Vec4f(0.0, 0.0, 0.7, 1.0),		
+						Vec4f(1.0, 1.0, 1.0, 1.0),		
+						Vec4f(0.0, 0.0, 0.0, 1.0),		
+						20.0);							
+GRMaterialDesc mat_yellow(Vec4f(0.0, 0.0, 1.0, 1.0),		
+						  Vec4f(1.0, 0.7, 0.0, 1.0),		
+						  Vec4f(1.0, 1.0, 1.0, 1.0),		
+						  Vec4f(0.0, 0.0, 0.0, 1.0),		
+						  20.0);							
+std::vector<GRMaterialDesc> material;
 
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
@@ -234,14 +234,22 @@ int main(int argc, char* argv[]){
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
 		if (! fileX->Load(objs, "test5.x") ) {	//	PHSDKごとロードして，
+//		if (! fileX->Load(objs, "GRTest.x") ) {	//	
 			DSTR << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
 		}
-		phSdk = ICAST(PHSdkIf, objs.front());	//	PHSDKを受け取る方式
+		phSdk = NULL;
+		grSdk = NULL;
+		for(unsigned  i=0; i<objs.size(); ++i){	
+			if(!phSdk) phSdk = ICAST(PHSdkIf, objs[i]);	//	PHSDKを受け取る方式
+			if(!grSdk) grSdk = ICAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
+		}
 	}
 	if (phSdk && phSdk->NScene()){
 		ObjectIfs objs;
-		objs.Push(phSdk->GetScenes()[0]);
+//		objs.Push(phSdk->GetScenes()[0]);
+		objs.Push(phSdk);
+		if(grSdk) objs.Push(grSdk);
 		fileX->Save(objs, "out.x");
 	}
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．

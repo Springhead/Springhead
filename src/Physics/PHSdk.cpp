@@ -106,5 +106,4 @@ ObjectIf* PHSdk::GetChildObject(size_t i){
 	if (i<shapes.size()) return shapes[i];
 	return scenes[i-shapes.size()];
 }
-
 }

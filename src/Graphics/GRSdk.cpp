@@ -2,6 +2,7 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+#include "GRScene.h"
 
 namespace Spr{;
 
@@ -58,6 +59,21 @@ GRDeviceGLIf* GRSdk::CreateDeviceGL(int w){
 	GRDeviceGL* rv = DBG_NEW GRDeviceGL(w);
 	objects.push_back(rv);
 	return rv;
+}
+GRSceneIf* GRSdk::CreateScene(){
+	GRScene* rv = DBG_NEW GRScene;
+	objects.push_back(rv);
+	return rv;
+}
+ObjectIf* GRSdk::CreateObject(const IfInfo* info, const void* desc){
+	if (info->Inherit(GRSceneIf::GetIfInfoStatic())){
+		return CreateScene();
+	}
+	return NULL;
+}
+
+ObjectIf* GRSdk::GetChildObject(size_t i){
+	return objects[i];	
 }
 
 }

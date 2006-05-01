@@ -15,11 +15,17 @@ namespace Spr{;
 struct GRDeviceGLIf;
 struct GRDebugRenderIf;
 
+///	@brief GRSdkDesc GRSDKの設定．DirectXを使うかOpenGLを使うかの選択などがここに入る予定．
+struct GRSdkDesc{
+};
+
 /**	@brief	グラフィックスSDKの基本クラス　 */
 struct GRSdkIf: public ObjectIf{
 	IF_DEF(GRSdk);
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
 	virtual GRDeviceGLIf* CreateDeviceGL(int window)=0;
+	virtual size_t NChildObject() const = 0;
+	virtual ObjectIf* GetChildObject(size_t i) = 0;
 };
 ///	グラフィックスSDK
 GRSdkIf* SPR_CDECL CreateGRSdk();

@@ -20,7 +20,7 @@ void GRRender::Print(std::ostream& os) const{
 
 //----------------------------------------------------------------------------
 //	GRDevice
-OBJECTIMPABST(GRDevice, Object);
+OBJECTIMPABST(GRDevice, GRRenderBase);
 IF_IMP(GRDevice, GRRenderBase);
 
 }	//	Spr

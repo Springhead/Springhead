@@ -65,6 +65,36 @@
 	field->offset = (char*)&(pCDBoxDesc->material) - (char*)pCDBoxDesc;
 	db->RegisterDesc(desc);
 	
+	GRFrameTransformMatrix* pGRFrameTransformMatrix = NULL;
+	desc = DBG_NEW FITypeDesc("GRFrameTransformMatrix");
+	desc->size = sizeof(GRFrameTransformMatrix);
+	desc->access = DBG_NEW FIAccess<GRFrameTransformMatrix>;
+	field = desc->AddField("", "Affinef", "transform", "");
+	field->offset = (char*)&(pGRFrameTransformMatrix->transform) - (char*)pGRFrameTransformMatrix;
+	db->RegisterDesc(desc);
+	
+	GRFrameDesc* pGRFrameDesc = NULL;
+	desc = DBG_NEW FITypeDesc("GRFrameDesc");
+	desc->size = sizeof(GRFrameDesc);
+	desc->ifInfo = GRFrameIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<GRFrameDesc>;
+	field = desc->AddField("", "Affinef", "transform", "");
+	field->offset = (char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc;
+	db->RegisterDesc(desc);
+	
+	GRMeshDesc* pGRMeshDesc = NULL;
+	desc = DBG_NEW FITypeDesc("GRMeshDesc");
+	desc->size = sizeof(GRMeshDesc);
+	desc->ifInfo = GRMeshIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<GRMeshDesc>;
+	field = desc->AddField("vector", "Vec3f", "vertices", "");
+	field->offset = (char*)&(pGRMeshDesc->vertices) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "Vec3f", "normals", "");
+	field->offset = (char*)&(pGRMeshDesc->normals) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "int", "faces", "");
+	field->offset = (char*)&(pGRMeshDesc->faces) - (char*)pGRMeshDesc;
+	db->RegisterDesc(desc);
+	
 	GRLight* pGRLight = NULL;
 	desc = DBG_NEW FITypeDesc("GRLight");
 	desc->size = sizeof(GRLight);
@@ -95,23 +125,23 @@
 	field->offset = (char*)&(pGRLight->spotCutoff) - (char*)pGRLight;
 	db->RegisterDesc(desc);
 	
-	GRMaterial* pGRMaterial = NULL;
-	desc = DBG_NEW FITypeDesc("GRMaterial");
-	desc->size = sizeof(GRMaterial);
-	desc->access = DBG_NEW FIAccess<GRMaterial>;
+	GRMaterialDesc* pGRMaterialDesc = NULL;
+	desc = DBG_NEW FITypeDesc("GRMaterialDesc");
+	desc->size = sizeof(GRMaterialDesc);
+	desc->ifInfo = GRMaterialIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<GRMaterialDesc>;
 	field = desc->AddField("", "Vec4f", "ambient", "");
-	field->offset = (char*)&(pGRMaterial->ambient) - (char*)pGRMaterial;
+	field->offset = (char*)&(pGRMaterialDesc->ambient) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "Vec4f", "diffuse", "");
-	field->offset = (char*)&(pGRMaterial->diffuse) - (char*)pGRMaterial;
+	field->offset = (char*)&(pGRMaterialDesc->diffuse) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "Vec4f", "specular", "");
-	field->offset = (char*)&(pGRMaterial->specular) - (char*)pGRMaterial;
+	field->offset = (char*)&(pGRMaterialDesc->specular) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "Vec4f", "emissive", "");
-	field->offset = (char*)&(pGRMaterial->emissive) - (char*)pGRMaterial;
+	field->offset = (char*)&(pGRMaterialDesc->emissive) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "float", "power", "");
-	field->offset = (char*)&(pGRMaterial->power) - (char*)pGRMaterial;
+	field->offset = (char*)&(pGRMaterialDesc->power) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "string", "texture", "");
-	field->offset = (char*)&(pGRMaterial->texture) - (char*)pGRMaterial;
-	db->RegisterDesc(desc);
+	field->offset = (char*)&(pGRMaterialDesc->texture) - (char*)pGRMaterialDesc;
 	
 	GRCamera* pGRCamera = NULL;
 	desc = DBG_NEW FITypeDesc("GRCamera");
@@ -125,6 +155,20 @@
 	field->offset = (char*)&(pGRCamera->front) - (char*)pGRCamera;
 	field = desc->AddField("", "float", "back", "");
 	field->offset = (char*)&(pGRCamera->back) - (char*)pGRCamera;
+	db->RegisterDesc(desc);
+	
+	GRSceneDesc* pGRSceneDesc = NULL;
+	desc = DBG_NEW FITypeDesc("GRSceneDesc");
+	desc->size = sizeof(GRSceneDesc);
+	desc->ifInfo = GRSceneIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<GRSceneDesc>;
+	db->RegisterDesc(desc);
+	
+	GRSdkDesc* pGRSdkDesc = NULL;
+	desc = DBG_NEW FITypeDesc("GRSdkDesc");
+	desc->size = sizeof(GRSdkDesc);
+	desc->ifInfo = GRSdkIf::GetIfInfoStatic();
+	desc->access = DBG_NEW FIAccess<GRSdkDesc>;
 	db->RegisterDesc(desc);
 	
 	PHConstraintDesc* pPHConstraintDesc = NULL;
