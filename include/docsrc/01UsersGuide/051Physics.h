@@ -1,12 +1,21 @@
 /** \page pagePhysics 物理シミュレーションライブラリ
 
--\ref scene
---\ref scene_create
---\ref scene_gravity
--\ref solid
---\ref solid_create
---\ref solid_shape
--\ref joint
+- \ref sec_PHSdk
+- \ref scene
+ - \ref scene_create
+ - \ref scene_gravity
+- \ref solid
+ - \ref solid_create
+ - \ref solid_shape
+- \ref joint
+
+\section sec_PHSdk 物理エンジンのオブジェクトのイメージ
+1つの物理エンジン(PHSdk)は，いくつかのシーン(PHScene)を持つことができ，
+シーンには剛体(PHSolid)，関節(PHJoint)があります．
+剛体は形状(CDConvexMesh, CDSphere, CDBox, ...)を参照して形を持つことができます．
+関節は2つの剛体を結び付けます．
+物理エンジン内のオブジェクトの参照関係の例を図に示します．
+<img src="../../include/docsrc/01UsersGuide/PHSdkScene.jpg">
 
 \section scene シーン
 
@@ -38,7 +47,7 @@
 シーン中の剛体の位置と傾きは，シーン座標系に対する剛体座標系の位置と傾きとして表現されます．
 
 剛体の位置と傾きを設定・取得するには
--\link Spr::PHSceneIf::SetPose
+- \link Spr::PHSceneIf::SetPose \endlink
 
 \subsection solid_mass 剛体の質量
 
