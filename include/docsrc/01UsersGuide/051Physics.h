@@ -1,4 +1,4 @@
-/** \page pagePhysics 物理シミュレーションライブラリ
+/** \page pagePhysics 物理シミュレーションSDK
 
 - \ref sec_PHSdk
 - \ref scene

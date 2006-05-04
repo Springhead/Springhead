@@ -1,6 +1,32 @@
 /**
 \page pageIntroduction はじめに
+
 Springheadは，安定で高速な，多くの用途に十分な機能を持つ物理シミュレータです．
+オープンソースですので，計測や検証，変更がしやすく研究用途にも向いています．
+また，安定で高速なシミュレーションができますので，ゲーム，VR，メディアアートなどに加えて，
+歩行ロボットのシミュレーションなどにも使えると思います．
+
+\ref pagePhysics としては，次の機能が使えます：
+- 多数の剛体のシミュレーション
+- 凸多面体・直方体・球を扱うことができる接触判定
+- 跳ね返り係数，静止摩擦，動摩擦を扱うことができる接触力計算
+- 関節(蝶番，スライダ，ユニバーサルジョイント，ボールジョイント，パラメトリックジョイント)．
+- 安定なバネダンパモデル
+また，\ref pagePhysics をサポートするSDKとして次の機能があります：
+- \ref pageGraphics 物理エンジンの状態をOpenGLを用いて表示するデバッグレンダリング
+- \ref pageFileIO 剛体，形状，関節などの情報のロード・セーブ
+
+また，2006年秋・冬をめどに次の機能を付けたいと思っています．
+- 流体シミュレーション機能
+- キャラクタモーション機能
+
+\section sec_history 歴史
+Springheadは，長谷川晶一と田崎勇一が中心となって，
+東工大精密工学研究所佐藤誠研の学生と共に開発してきました．
+力覚インタフェースSPIDARと共に使える物理シミュレータとしてペナルティ法に基づくシミュレータSpringhead1
+を開発してきましたが，このたび安定性と高速性を重視してゲームのための物理エンジンや
+バーチャルヒューマンの研究に使えるシミュレータとしてSpringhead2(このマニュアルで説明するSpringhead)
+を開発しています．
 
 \section sec_characteristic	Springheadの特徴
 Springheadは，接触，関節，バネ・ダンパなどが発生する力を拘束条件と捕らえ，
@@ -12,23 +38,23 @@ Springheadは，接触，関節，バネ・ダンパなどが発生する力を拘束条件と捕らえ，
 接触解析が高速で正確といった特徴を持ちます．
 
 \subsection sec_others	他のシミュレータ
- Springhead(Springhead2)以外のシミュレータを紹介しながら，Springheadと比較します．
- - Springhead1 (OpenSource BSD Apache)
-  - Springheadの前作．長谷川が接触，田崎が関節を主に開発した．
-  - 高精度な接触力計算．
-  - ペナルティ法のため，1ステップの計算が高速だが，ステップを大きくできない．
- - Open Tissue (OpenSource GPL)
-  - Copenhagen University の Kenny Erlebenさんが剛体物理まわりを作っている．
-  - LCPを用いた定式化で，剛体のシミュレーションを行う．
-  - boost を多用した綺麗だが難しいプログラム．ホワイトボックス．
-  - ソースには，いろいろなアルゴリズムを試した跡があり，テンプレート引数で切り替えられるようになっている．
- - Open Dynamics Engine (OpenSource BSD GPL)
-  - Russell Smith さんが作っている．
-  - LCPを用いた定式化で，剛体のシミュレーションを行う．
- - Novodex (Closed Souce 試用・教育研究用は無料)
-  - ゲーム用物理エンジン．物理エンジンハードウェア開発会社AGEIAが開発．
-  - 剛体物理はおそらく，LCP．
-  - ConvexMeshやHeightMapをサポート
+Springhead(Springhead2)以外のシミュレータを紹介しながら，Springheadと比較します．
+- Springhead1 (OpenSource BSD Apache)
+ - Springheadの前作．長谷川が接触，田崎が関節を主に開発した．
+ - 高精度な接触力計算．
+ - ペナルティ法のため，1ステップの計算が高速だが，ステップを大きくできない．
+- Open Tissue (OpenSource GPL)
+ - Copenhagen University の Kenny Erlebenさんが剛体物理まわりを作っている．
+ - LCPを用いた定式化で，剛体のシミュレーションを行う．
+ - boost を多用した綺麗だが難しいプログラム．ホワイトボックス．
+ - ソースには，いろいろなアルゴリズムを試した跡があり，テンプレート引数で切り替えられるようになっている．
+- Open Dynamics Engine (OpenSource BSD GPL)
+ - Russell Smith さんが作っている．
+ - LCPを用いた定式化で，剛体のシミュレーションを行う．
+- Novodex (Closed Souce 試用・教育研究用は無料)
+ - ゲーム用物理エンジン．物理エンジンハードウェア開発会社AGEIAが開発．
+ - 剛体物理はおそらく，LCP．
+ - ConvexMeshやHeightMapをサポート
 
 Springheadは，拘束条件をLCPとして定式化してガウスサイデル法を用いて解析解を近似的に求めています．
 ここまでは，2006年現在もっとも一般的な物理シミュレーション手法だといえます．
