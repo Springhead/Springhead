@@ -1,15 +1,16 @@
-/** \page pagePhysics 物理シミュレーションSDK
+/** \page pageGraphics グラフィックスSDK
 
 - \ref sec_GRSdk
-- \ref scene
+- \ref sec_GRScene
 
-\section sec_GRSdk 物理エンジンのオブジェクトのイメージ
-1つの物理エンジン(PHSdk)は，いくつかのシーン(PHScene)を持つことができ，
-シーンには剛体(PHSolid)，関節(PHJoint)があります．
-剛体は形状(CDConvexMesh, CDSphere, CDBox, ...)を参照して形を持つことができます．
-関節は2つの剛体を結び付けます．
-物理エンジン内のオブジェクトの参照関係の例を図に示します．
-<img src="../../include/docsrc/01UsersGuide/PHSdkScene.jpg">
+\section sec_GRSdk グラフィックスSDKのオブジェクトのイメージ
+1つのグラフィックスSDK(GRSdk)は，いくつかのシーン(GRScene)を持つことができ，
+シーンには座標系(Frame)のツリーの中に，メッシュ(GRMesh)，光源(GRLight)，材質(GRMaterial)
+などがあります．
+グラフィックスSDK内のオブジェクトの参照関係の例を図に示します．
+<img src="../../include/docsrc/01UsersGuide/GRSdkScene.jpg">
 
-\section scene シーン
+\section sec_GRScene グラフィックスのシーン
+
+
 */

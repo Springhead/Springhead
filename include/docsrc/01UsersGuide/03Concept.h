@@ -1,10 +1,9 @@
-/** \page pageConcept	コンセプト
+/** \page pageConcept	Springheadの構成
 
-\section secArchitecture Springheadの構成
 Springheadは大きく分けて以下の3つのモジュールから構成されています．
-- Springhead Physics 物理シミュレーションエンジン
-- Springhead File I/O ファイルローダ
-- Springhead Graphics グラフィックレンダラ
+- Springhead Physics \ref pagePhysics
+- Springhead Graphics \ref pageGraphics
+- Springhead File I/O \ref pageFileIO
 
 これらのモジュールは，個別に用いることもできるように設計されています．
 例えば，ユーザの中にはレンダリングは手持ちのライブラリを使い，物理シミュレーションのみを
