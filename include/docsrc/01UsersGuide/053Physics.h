@@ -15,7 +15,7 @@
 剛体は形状(CDConvexMesh, CDSphere, CDBox, ...)を参照して形を持つことができます．
 関節は2つの剛体を結び付けます．
 物理エンジン内のオブジェクトの参照関係の例を図に示します．
-<img src="../../include/docsrc/01UsersGuide/PHSdkScene.jpg">
+<img src="../../include/docsrc/01UsersGuide/PHSdkScene.png">
 
 \section scene シーン
 

@@ -3,11 +3,6 @@
 <br>
 
 \section contentsMoreTutorial	◇ Contents ◇
-	&nbsp;&nbsp;&nbsp; \ref moreTutDataType  						<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ref  moreTutVec2			<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ref  moreTutVec3			<br>
-	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ref  moreTutVec4			<br>
-	&nbsp;&nbsp;&nbsp; \ref moreTutUTRef 						 	<br>
 	&nbsp;&nbsp;&nbsp; \ref moreTutPHSDK					     	<br>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ref moreTutCreatePHSdk	  	<br>
 	&nbsp;&nbsp;&nbsp; \ref moreTutSceneDesc						<br>
@@ -22,70 +17,6 @@
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ref moreTutPos 				<br>
 	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; \ref moreTutForce 			<br>
 <br><br>
-<hr>
-
-<!-------------------- 1．　データ型 ----------------------------------------------->
-\section moreTutDataType	1．　データ型
-Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています。<br>
-より詳細な説明は\ref pageAffine を参照して下さい。
-<br>
-\subsection moreTutVec2		1.1．　2次元ベクトル
-2つの単精度float型データを持つベクトル型はVec2f型、2つの倍精度double型データを持つベクトル型をVec2d型となります。
-\verbatim	
-    Vec2f vec(a, b);                            // a、b で初期化
-    Vec2f vec = Vec2f(a, b);                    // a、b で初期化
-    vec[0] = a;                                 // vec.x = a;
-    vec[1] = b;                                 // vec.y = b;
-    Vec2f vec2= vec + Vec2f(x, y);              // 加算
-\endverbatim
-<br>
-
-\subsection moreTutVec3		1.2．　3次元ベクトル
-3つの単精度float型データを持つベクトル型はVec3f型、3つの倍精度double型データを持つベクトル型をVec3d型となります。
-\verbatim	
-    Vec3f vec(a, b, c);                         // a、b、c で初期化
-    Vec3f vec = Vec3f(a, b, c);                 // a、b、c で初期化
-    vec[0] = a;                                 // vec.x = a;
-    vec[1] = b;                                 // vec.y = b;
-    vec[2] = c;                                 // vec.z = c;
-    Vec3f vec2= vec + Vec3f(x, y, z);           // 加算
-\endverbatim
-<br>
-
-\subsection moreTutVec4		1.3．　4次元ベクトル
-4つの単精度float型データを持つベクトル型はVec4f型、4つの倍精度double型データを持つベクトル型をVec4d型となります。
-\verbatim	
-    Vec4f vec(a, b, c);                         // a、b、c で初期化
-    Vec4f vec = Vec4f(a, b, c);                 // a、b、c で初期化
-    vec[0] = a;                                 // vec.x = a;
-    vec[1] = b;                                 // vec.y = b;
-    vec[2] = c;                                 // vec.z = c;
-    Vec4f vec2= vec + Vec4f(x, y, z);           // 加算
-\endverbatim
-<br><br><br>
-<div align="right">
-<a href="#pageMoreTutorial">top of page</a>
-</div> 
-<hr>
-
-<!-------------------- 2．　参照カウンタと参照ポインタ ----------------------------->
-\section moreTutUTRef		2．　参照カウンタと参照ポインタ
-メモリリーク対策として、参照カウンタを持つ基底クラスとカウンタを管理するスマートポインタのテンプレートを実装しています。<br>
-<a href="../../src/html/classSpr_1_1UTRef.html">UTRef<クラス名></a>が参照ポインタ、
-<a href="../../src/html/classSpr_1_1UTRefCount.html">UTRefCount</a>が参照カウンタとなります。<br>
-<a href="../../src/html/classSpr_1_1UTRefCount.html">UTRefCount</a>を基本クラスに持つクラスAがある場合，次のように使うことができます。<br>
-forループにて10回のメモリ確保をnewで行い、deleteでのメモリ開放を行っていませんが、メモリリークは発生しません。
-\verbatim	
-    UTRef<A> p;
-    for(int i=0; i10; ++i){
-        p = new A;
-        p->Aのメソッド()
-    }
-\endverbatim
-<br><br><br>
-<div align="right">
-<a href="#pageMoreTutorial">top of page</a>
-</div> 
 <hr>
 
 <!-------------------- 3．　物理エンジンSDK ---------------------------------------------------->
