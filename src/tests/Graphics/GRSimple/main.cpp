@@ -36,17 +36,17 @@ PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBlock;
 
 // çﬁéøÇÃê›íË
-GRMaterial matFloor(Vec4f(0.2, 0.2, 0.2, 1.0),		// ambient
+GRMaterialDesc matFloor(Vec4f(0.2, 0.2, 0.2, 1.0),		// ambient
 					Vec4f(0.6, 0.6, 0.6, 1.0),		// diffuse
 					Vec4f(0.2, 0.2, 0.2, 1.0),		// specular
 					Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
 					10.0);							// power
-GRMaterial matBlock(Vec4f(0.5, 0.5, 0.7, 0.9),		
+GRMaterialDesc matBlock(Vec4f(0.5, 0.5, 0.7, 0.9),		
 					Vec4f(0.1, 0.5, 0.8, 0.9),		
 					Vec4f(1.0, 1.0, 1.0, 0.9),			
 					Vec4f(0.0, 0.0, 0.0, 1.0),		
 					10.0);
-GRMaterial matLine(Vec4f(1.0, 1.0, 1.0, 1.0),		
+GRMaterialDesc matLine(Vec4f(1.0, 1.0, 1.0, 1.0),		
 					Vec4f(1.0, 1.0, 1.0, 1.0),		
 					Vec4f(1.0, 1.0, 1.0, 1.0),		
 					Vec4f(0.0, 0.0, 0.0, 1.0),		
