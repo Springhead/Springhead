@@ -1,0 +1,54 @@
+#include "Graphics.h"
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
+#include "GRScene.h"
+#include <sstream>
+
+namespace Spr{;
+
+//----------------------------------------------------------------------------
+//	GRScene
+OBJECTIMP(GRScene, Scene);
+IF_IMP(GRScene, Scene);
+
+GRScene::GRScene(GRSdkIf* s, const GRSceneDesc& desc):GRSceneDesc(desc){
+	Init();
+	sdk = s;
+}
+GRScene::GRScene(){
+	Init();
+}
+void GRScene::Init(){
+	Scene::Clear();
+}
+
+GRSdkIf* GRScene::GetSdk(){
+	return sdk;
+}
+
+void GRScene::Clear(){
+	world = NULL;
+	Init();
+}
+GRFrameIf* GRScene::CreateFrame(const GRFrameDesc& desc){
+	GRFrame* fr = DBG_NEW GRFrame;
+	frames.push_back(fr);
+	return fr;
+}
+size_t GRScene::NChildObject() const{
+	return frames.size();
+}
+ObjectIf* GRScene::GetChildObject(size_t pos){
+	return (GRFrameIf*)frames[pos];
+}
+
+ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
+	if (info->Inherit(GRFrameIf::GetIfInfoStatic())){
+		return CreateFrame(*(GRFrameDesc*)desc);
+	}
+	return NULL;
+}
+
+
+}
