@@ -24,12 +24,12 @@
 
 \subsection scene_create シーンの作成
 
-シーンを作成するにはPHSdkIf::CreateScene関数を呼びます．
+シーンを作成するには\link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene\endlinkを呼びます．
 
 \subsection scene_gravity 重力の設定
 
-シーンに働く重力を設定するには\link Spr::PHSceneIf::SetGravity() PHSceneIf::SetGravity\endlinkを呼び出します．
-デフォルトで，シーンの重力加速度は(0.0, -9.8, 0.0)に設定されています．
+シーンに働く重力を設定するには\link Spr::PHSceneIf::SetGravity() PHSceneIf::SetGravity\endlinkを呼びます．
+デフォルトで，シーンの重力加速度はVec3f(0.0f, -9.8f, 0.0f)に設定されています．
 重力を無効化するにはSetGravity(Vec3f(0.0f, 0.0f, 0.0f))とします．
 また，個々の剛体に対して重力の作用を有効・無効化するには
 \link Spr::PHSolidIf::SetGravity() PHSolidIf::SetGravity\endlinkを使います．
@@ -40,20 +40,44 @@
 
 \subsection solid_create 剛体の作成
 
-剛体を作成し，シーンに追加するにはPHSceneIf
+剛体を作成し，シーンに追加するには\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid\endlinkを呼びます．
 
 \subsection solid_pose 剛体の位置情報
 1つの剛体には，1つの座標系が貼り付いています．これを剛体座標系と呼びます．
 シーン中の剛体の位置と傾きは，シーン座標系に対する剛体座標系の位置と傾きとして表現されます．
+ここで，位置はVec3d型，傾きはQuaterniond型で保持されます．
 
 剛体の位置と傾きを設定・取得するには
-- \link Spr::PHSceneIf::SetPose \endlink
+- \link Spr::PHSolidIf::SetPose() PHSolidIf::SetPose\endlink
+- \link Spr::PHSolidIf::GetPose() PHSolidIf::GetPose\endlink
 
 \subsection solid_mass 剛体の質量
+剛体の質量情報は，全質量mと，重心に関する慣性行列Iで表現されます．
+重心位置はデフォルトでは剛体座標系の原点と一致していますが，
+\link Spr::PHSolidIf::GetCenterOfMass() PHSolidIf::GetCenterOfMass \endlink，\link Spr::PHSolidIf::SetCenterOfMass() PHSolidIf::SetCenterOfMass \endlink，
+あるいは\link Spr::PHSolidDesc::center PHSolidDesc::center\endlinkを用いて取得・設定できます．
 
-質量，慣性モーメント，重心位置を持ち，
+\subsection solid_force 剛体へ力を加える
+剛体へ並進力加えるには\link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce\endlink，
+トルクを加えるには\link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque\endlinkを呼びます．
+剛体に加えられている力・トルクは，\link Spr::PHSceneIf::Step() PHSceneIf::Step\endlinkを呼ぶ度に0にクリアされます．
+このため，定常的に力・トルクを加え続けるためには，\link Spr::PHSceneIf::Step() PHSceneIf::Step\endlinkを呼ぶ前に毎回
+AddForce/AddTorqueを呼ぶ必要があります．
 
-位置・向き，速度・角速度を状態として持ちます．
+\subsection solid_dynamical 物理法則の影響を受けないようにする
+場合によって，他の剛体との接触や重力からの影響を受けない剛体を作りたくなることがあります．
+このような剛体を非動力学的な剛体と呼びます．
+剛体を非動力学的としたり，元に戻したりするには\link Spr::PHSolidIf::SetDynamical() PHSolidIf::SetDynamical\endlinkを呼びます．
+非動力学的とすることが有効な1つの典型的な例はシーンの地面です．
+普通，地面は空間に固定されていて，他の剛体との衝突や重力によって位置を変化させないことが求められます．
+これは，
+\bervatim
+floor->SetDynamical(false);		//floorはPHSolidIf*型の変数
+\endbervatim
+とすることで実現できます．
+また，ある剛体が非動力学的かどうかは\link Spr::PHSolidIf::IsDynamical PHSolidIf::IsDynamical \endlinkを呼ぶことで取得できます．
+
+非動力学的な剛体でも位置，傾き，速度，角速度の変更は可能です．
 
 \subsection solid_shape 剛体への形状の割り当て
 
