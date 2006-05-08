@@ -13,6 +13,7 @@
   ・Physicsエンジンと接続し、シミュレーションさせる。
 
 【テストパターン】
+  ※ 本ファイルの28行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
 　  test1.x	：凸形状(mesh)のテスト
     test2.x	：凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
     test3.x	：凸形状(mesh)と球(sphere)のテスト
@@ -22,8 +23,10 @@
  */
 #include <Springhead.h>
 #include <GL/glut.h>
-#define	ESC				27
-#define EXIT_TIMER		3000
+#define	ESC				27				// Esc key
+#define EXIT_TIMER		3000			// 強制終了させるステップ数
+//#define TEST_FILEX	"test.x"		// ロードするXファイル
+#define TEST_FILEX	"test4.x"		
 
 namespace Spr{
 	PHSdkIf* phSdk;
@@ -112,11 +115,11 @@ void display(){
 			}
 			CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
 			if (box){
-#if 0				
+#if 0			// glutによる直方体の描画版			
 				Vec3f boxsize = box->GetBoxSize();
 				glScalef(boxsize.x, boxsize.y, boxsize.z);	
 				glutSolidCube(1.0);		
-#else
+#else			// デバッグ版
 				Vec3f* base =  box->GetVertices();
 				for (size_t f=0; f<6; ++f) {	
 					CDFaceIf* face = box->GetFace(f);
@@ -137,8 +140,6 @@ void display(){
 		}
 		render->PopModelMatrix();
 	}
-
-
 
 	render->EndScene();
 }
@@ -233,8 +234,7 @@ int main(int argc, char* argv[]){
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
-		if (! fileX->Load(objs, "test5.x") ) {	//	PHSDKごとロードして，
-//		if (! fileX->Load(objs, "GRTest.x") ) {	//	
+		if (! fileX->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
 			DSTR << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
 		}
