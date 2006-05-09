@@ -40,6 +40,9 @@ Springheadは，接触，関節，バネ・ダンパなどが発生する力を拘束条件と捕らえ，
 
 \subsection sec_others	他のシミュレータ
 Springhead(Springhead2)以外のシミュレータを紹介しながら，Springheadと比較します．
+図は拘束力の求め方で物理シミュレータを分類したものです．
+<img src="../../include/docsrc/01UsersGuide/PhysicsEngineTaxonomy.png">
+
 - Springhead1 (OpenSource BSD Apache)
  - Springheadの前作．長谷川が接触，田崎が関節を主に開発した．
  - 高精度な接触力計算．
