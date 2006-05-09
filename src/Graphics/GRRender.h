@@ -102,7 +102,7 @@ public:
 };
 template <class intf, class base>
 struct InheritGRRender:public InheritObject<intf, base>{
-	REDIRECTIMP_GRRENDERBASE(device->)
+	REDIRECTIMP_GRRENDERBASE(base::device->)
 	void SetDevice(GRDeviceIf* dev){
 		base::SetDevice(dev);
 	}
