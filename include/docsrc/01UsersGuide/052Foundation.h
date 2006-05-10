@@ -1,10 +1,10 @@
 /** \page pageFoundation 基本SDK
 
 \section sec_BaseType	基本型
-Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています。<br>
-より詳細な説明は\ref pageAffine を参照して下さい。
+Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています．<br>
+より詳細な説明は\ref pageAffine を参照して下さい．
 \subsection sec_baseVec2		2次元ベクトル
-2つの単精度float型データを持つベクトル型はVec2f型、2つの倍精度double型データを持つベクトル型をVec2d型となります。
+2つの単精度float型データを持つベクトル型はVec2f型、2つの倍精度double型データを持つベクトル型をVec2d型となります．
 \verbatim	
     Vec2f vec(a, b);                            // a、b で初期化
     Vec2f vec = Vec2f(a, b);                    // a、b で初期化
@@ -15,7 +15,7 @@ Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています。<br>
 <br>
 
 \subsection sec_baseVec3		3次元ベクトル
-3つの単精度float型データを持つベクトル型はVec3f型、3つの倍精度double型データを持つベクトル型をVec3d型となります。
+3つの単精度float型データを持つベクトル型はVec3f型、3つの倍精度double型データを持つベクトル型をVec3d型となります．
 \verbatim	
     Vec3f vec(a, b, c);                         // a、b、c で初期化
     Vec3f vec = Vec3f(a, b, c);                 // a、b、c で初期化
@@ -27,7 +27,7 @@ Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています。<br>
 <br>
 
 \subsection sec_baseVec4		4次元ベクトル
-4つの単精度float型データを持つベクトル型はVec4f型、4つの倍精度double型データを持つベクトル型をVec4d型となります。
+4つの単精度float型データを持つベクトル型はVec4f型、4つの倍精度double型データを持つベクトル型をVec4d型となります．
 \verbatim	
     Vec4f vec(a, b, c);                         // a、b、c で初期化
     Vec4f vec = Vec4f(a, b, c);                 // a、b、c で初期化
@@ -39,11 +39,11 @@ Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています。<br>
 <hr>
 
 \subsection sec_baseUTRef		参照カウンタと参照ポインタ
-メモリリーク対策として、参照カウンタを持つ基底クラスとカウンタを管理するスマートポインタのテンプレートを実装しています。<br>
+メモリリーク対策として、参照カウンタを持つ基底クラスとカウンタを管理するスマートポインタのテンプレートを実装しています．<br>
 <a href="../../src/html/classSpr_1_1UTRef.html">UTRef<クラス名></a>が参照ポインタ、
-<a href="../../src/html/classSpr_1_1UTRefCount.html">UTRefCount</a>が参照カウンタとなります。<br>
-<a href="../../src/html/classSpr_1_1UTRefCount.html">UTRefCount</a>を基本クラスに持つクラスAがある場合，次のように使うことができます。<br>
-forループにて10回のメモリ確保をnewで行い、deleteでのメモリ開放を行っていませんが、メモリリークは発生しません。
+<a href="../../src/html/classSpr_1_1UTRefCount.html">UTRefCount</a>が参照カウンタとなります．<br>
+<a href="../../src/html/classSpr_1_1UTRefCount.html">UTRefCount</a>を基本クラスに持つクラスAがある場合，次のように使うことができます．<br>
+forループにて10回のメモリ確保をnewで行い、deleteでのメモリ開放を行っていませんが、メモリリークは発生しません．
 \verbatim	
     UTRef<A> p;
     for(int i=0; i10; ++i){

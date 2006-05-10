@@ -7,8 +7,8 @@
  - \subpage pageSimpleExample
  - \subpage pageMoreTutorial
  
-から構成されます。<br>以上の項目から確認したい項目をクリックしていただくか、
-このページの上から順に読み進めていただくことで、Springhead2の操作を一通り理解することができます。
+から構成されます．<br>以上の項目から確認したい項目をクリックしていただくか、
+このページの上から順に読み進めていただくことで、Springhead2の操作を一通り理解することができます．
 <br><br><br>
 
 \ref pageTutStarting
