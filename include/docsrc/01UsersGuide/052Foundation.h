@@ -59,5 +59,5 @@ Sceneクラスを継承したPHSceneクラスやGRSceneクラスが対応します．
 オブジェクトには名前をつけることができ，\ref pageFileIO でロードした場合などは，
 名前を指定してオブジェクトへのポインタを取得できます．
 また，ファイルに保存するときには，オブジェクトへの参照は名前で保存されます．
-これらは \ref pagePhysics や \ref pageGraphics で共通で pageFoundation にあります．
+これらは \ref pagePhysics や \ref pageGraphics で共通で \ref pageFoundation にあります．
 */

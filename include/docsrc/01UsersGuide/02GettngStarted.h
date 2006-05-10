@@ -63,11 +63,14 @@
    <li><strong>Visual C++ .NET 2003 のインストール </strong><br>
   				 Visual C++ .NET 2003 をインストールして下さい。<br>
    </li><br>
+<!--
+	現時点ではDirectXには対応しておらずインストールは不要です．<br>
    <li><strong> DirectX SDK 9.0 のインストール </strong><br>
   				 DirectX SDK 9.0 をインストールして下さい。<br>
   				 Microsoftのダウンロードサイトから手に入れることができます。<br>
   				 インストール先は C:￥DXSDK として下さい。<br>
    </li><br>
+-->
    <li><strong> 環境変数の設定 </strong><br>
   				 <ol type="i">
   				    <li>「マイコンピュータを右クリック → 詳細設定タブ → 環境変数」を選択します。</li>
@@ -79,6 +82,11 @@
   				    </li>
   				 </ol>
   				 <img src="../../include/docsrc/01UsersGuide/setenv.jpg" width="423" height="154"><br>
+   </li>
+   <li><strong> GLUTの設定 </strong><br>
+				\$(SPRINGHEAD2)/bin/win32/glut32.dll をC:\Windows など
+				PATHの通ったフォルダにコピーするか，
+				\$(SPRINGHEAD2)/bin/win32 を環境変数PATHに追加してください．
    </li>
    <li><strong> Visual C++ 開発環境の設定 </strong><br>
                 Springhead2の開発を始める前に、Visual C++ の環境設定を行う必要があります。
