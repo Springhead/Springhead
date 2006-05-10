@@ -37,22 +37,45 @@
 \section solid	剛体
 
 剛体とは，物理法則に従ってシーン中を運動する物体です．
+剛体に対する操作は\link Spr::PHSolidIf PHSolidIf\endlinkを介して行います．
 
 \subsection solid_create 剛体の作成
 
 剛体を作成し，シーンに追加するには\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid\endlinkを呼びます．
 
-\subsection solid_pose 剛体の位置情報
+\subsection solid_pose 剛体の位置と速度
 1つの剛体には，1つの座標系が貼り付いています．これを剛体座標系と呼びます．
 シーン中の剛体の位置と傾きは，シーン座標系に対する剛体座標系の位置と傾きとして表現されます．
-ここで，位置はVec3d型，傾きはQuaterniond型で保持されます．
+剛体の位置を設定・取得するには
+\link Spr::PHSolidIf::SetFramePosition() PHSolidIf::SetFramePosition\endlinkと
+\link Spr::PHSolidIf::GetFramePosition() PHSolidIf::GetFramePosition\endlink
+を呼びます．
+また，シーン座標系に対する重心の位置によって剛体の位置を設定・取得することも出来ます．これには
+\link Spr::PHSolidIf::SetCenterPosition() PHSolidIf::SetCenterPosition\endlinkと
+\link Spr::PHSolidIf::GetCenterPosition() PHSolidIf::GetCenterPosition\endlink
+を使います．
+剛体の傾きを取得するには
+\link Spr::PHSolidIf::SetOrientation() PHSolidIf::SetOrientation\endlinkと
+\link Spr::PHSolidIf::GetOrientation() PHSolidIf::GetOrientation\endlink
+を使います．
+剛体の位置と傾きを同時に設定・取得することも出来ます．これには
+\link Spr::PHSolidIf::SetPose() PHSolidIf::SetPose\endlinkと
+\link Spr::PHSolidIf::GetPose() PHSolidIf::GetPose\endlink
+を使います．
 
-剛体の位置と傾きを設定・取得するには
-- \link Spr::PHSolidIf::SetPose() PHSolidIf::SetPose\endlink
-- \link Spr::PHSolidIf::GetPose() PHSolidIf::GetPose\endlink
+剛体の速度は
+\link Spr::PHSolidIf::SetVelocity() PHSolidIf::SetVelocity\endlinkと
+\link Spr::PHSolidIf::GetVelocity() PHSolidIf::GetVelocity\endlink
+を呼ぶことで設定・取得できます．
+ここで剛体の速度は，シーン座標系から観測した剛体座標系原点の速度で表わされます．
+同様に剛体の角速度は
+\link Spr::PHSolidIf::SetVelocity() PHSolidIf::SetVelocity\endlinkと
+\link Spr::PHSolidIf::GetVelocity() PHSolidIf::GetVelocity\endlink
+を呼ぶことで設定・取得できます．
+剛体の角速度は，シーン座標系から観測した剛体座標系の角速度です．
 
 \subsection solid_mass 剛体の質量
-剛体の質量情報は，全質量mと，重心に関する慣性行列Iで表現されます．
+剛体の質量情報は，全質量と，重心に関する慣性行列で表現されます．
 重心位置はデフォルトでは剛体座標系の原点と一致していますが，
 \link Spr::PHSolidIf::GetCenterOfMass() PHSolidIf::GetCenterOfMass \endlink，\link Spr::PHSolidIf::SetCenterOfMass() PHSolidIf::SetCenterOfMass \endlink，
 あるいは\link Spr::PHSolidDesc::center PHSolidDesc::center\endlinkを用いて取得・設定できます．
@@ -71,17 +94,23 @@ AddForce/AddTorqueを呼ぶ必要があります．
 非動力学的とすることが有効な1つの典型的な例はシーンの地面です．
 普通，地面は空間に固定されていて，他の剛体との衝突や重力によって位置を変化させないことが求められます．
 これは，
-\bervatim
+\verbatim
 floor->SetDynamical(false);		//floorはPHSolidIf*型の変数
-\endbervatim
+\endverbatim
 とすることで実現できます．
 また，ある剛体が非動力学的かどうかは\link Spr::PHSolidIf::IsDynamical PHSolidIf::IsDynamical \endlinkを呼ぶことで取得できます．
 
 非動力学的な剛体でも位置，傾き，速度，角速度の変更は可能です．
 
 \subsection solid_shape 剛体への形状の割り当て
+剛体には1つ以上の形状を割り当てることができます．
+Springhead 物理シミュレーションSDKは，形状の交差を検知し，
+剛体間に働く接触力を自動的に計算します．
+剛体に割り当てることのできる形状の種類および作成方法については\ref shapeを参照してください．
 
-また，\ref shape を持ち，互いに重ならないように保たれます．
+剛体に形状を割り当てるには\link Spr::PHSolidIf::AddShape() PHSolidIf::AddShape\endlinkを使います．
+剛体は，割り当てられた形状への参照を保持するだけですので，1つの形状を複数の剛体に割り当てても問題ありません．
+こうすることによって，多数の同じ形の剛体を作成したい場合にメモリを節約できます．
 
 \section shape	形状
 剛体には1つ以上の形状を割り当てることができます．
