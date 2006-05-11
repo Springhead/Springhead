@@ -33,9 +33,8 @@ $(EXECUTABLE):$(OBJS)
 clean:
 	-$(RM) $(OBJS) $(EXECUTABLE)
 	
-VCBUILD = $(wildcard *.ncb *.suo Debug* Release*)
 realclean: clean
-	-$(RM) $(VCBUILD)
+	-$(RM) $(REALCLEAN_TARGET)
 
  			
 ################################################################
