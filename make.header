@@ -70,6 +70,9 @@ LDFLAGS 		= $(LDFLAGS.EXTRA) \
 					
 INCLUDES		+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 
+REALCLEAN_TARGET	= $(wildcard *.lib *.ncb *.suo Debug7 Release7) \
+						$(wildcard *.tag *.log *.tmp out.x)
+
 
 #####################################################################
 # 	THE END
