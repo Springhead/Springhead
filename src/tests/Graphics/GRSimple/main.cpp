@@ -1,5 +1,5 @@
 /**
- Springhead2/src/tests/Physics/PHShapeGL/main.cpp
+ Springhead2/src/tests/Graphics/GRSimple/main.cpp
 
 【概要】
   グラフィックスレンダラークラスのAPIを使い、GLデバイスでレンダリングを行う。　

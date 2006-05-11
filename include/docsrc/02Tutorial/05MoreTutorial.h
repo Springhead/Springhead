@@ -48,9 +48,9 @@ SDK‚ğì¬‚µ‚Ü‚·D
 Springhead2‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@‚Å‰ğ‚­è–@‚ğ—pˆÓ‚µ‚Ä‚¢‚Ü‚·D<br>
 ‰Šúİ’è‚Å‚ÍA‰ğÍ–@‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·DƒGƒ“ƒWƒ“‚ÌØ‚è‘Ö‚¦‚ÍˆÈ‰º‚Ì‚æ‚¤‚És‚Á‚Ä‚­‚¾‚³‚¢D<br>
 \verbatim
-	PHSceneDesc dscene;
-	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;      // ‰ğÍ–@
-	dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;         // ƒyƒiƒ‹ƒeƒB–@
+    PHSceneDesc dscene;
+    dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;      // ‰ğÍ–@
+    dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;         // ƒyƒiƒ‹ƒeƒB–@
 \endverbatim
 <br>
 
@@ -97,8 +97,8 @@ Springhead2‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@‚
 ‰Šúİ’è‚Å‚ÍA¿—Ê‚Í 1.0f ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·D<br>
 „‘ÌƒfƒXƒNƒŠƒvƒ^‚É‚ÄA„‘Ì‚É‘Î‚·‚é¿—Ê‚ğİ’è‚·‚é‚É‚ÍAˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
 \verbatim
-	PHSolidDesc desc;
-	desc.mass = 2.0;
+    PHSolidDesc desc;
+    desc.mass = 2.0;
 \endverbatim
 <br>	
 
@@ -106,8 +106,8 @@ Springhead2‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@‚
 ‰Šúİ’è‚Å‚ÍAŠµ«ƒeƒ“ƒ\ƒ‹‚Í’PˆÊs—ñ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·D<br>
 „‘ÌƒfƒXƒNƒŠƒvƒ^‚É‚ÄA„‘Ì‚É‘Î‚·‚éŠµ«ƒeƒ“ƒ\ƒ‹‚ğİ’è‚·‚é‚É‚ÍAˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
 \verbatim
-	PHSolidDesc desc;
-	desc.inertia = 2.0 * Matrix3d::Unit();
+    PHSolidDesc desc;
+    desc.inertia = 2.0 * Matrix3d::Unit();
 \endverbatim
 <br>
 
@@ -115,8 +115,8 @@ Springhead2‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@‚
 ‰Šúİ’è‚Å‚ÍAd—Ê‚Ì‰e‹¿‚ğó‚¯‚é‚æ‚¤‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·D<br>
 „‘ÌƒfƒXƒNƒŠƒvƒ^‚É‚ÄA„‘Ì‚É‘Î‚·‚éd—Í‚Ì‰e‹¿‚Ì—L–³‚ğİ’è‚·‚é‚É‚ÍAˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
 \verbatim
-	PHSolidDesc desc;
-	desc.gravity = false;                   // d—Í‚Ì‰e‹¿‚ğó‚¯‚È‚¢‚æ‚¤‚Éİ’è
+    PHSolidDesc desc;
+    desc.gravity = false;                   // d—Í‚Ì‰e‹¿‚ğó‚¯‚È‚¢‚æ‚¤‚Éİ’è
 \endverbatim
 <br><br>
 <div align="right">
@@ -133,12 +133,12 @@ Springhead2‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@‚
 \subsection moreTutCenter		5.1D@„‘Ì‚ÌdS
 „‘Ì‚ÌdS‚ÍAˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Äİ’è‚µ‚Ü‚·D
 \verbatim	
-	Vec3d center = Vec3d(0.0, 1.0, 0.0);
-	solid->SetCenterPosition(center);
+    Vec3d center = Vec3d(0.0, 1.0, 0.0);
+    solid->SetCenterPosition(center);
 \endverbatim
 ‚Ü‚½AŸ‚Ì‚æ‚¤‚É‚µ‚ÄA„‘Ì‚ÌdS‚ğæ“¾‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
 \verbatim	
-	Vec3d center = solid->GetCenterPosition();
+    Vec3d center = solid->GetCenterPosition();
 \endverbatim
 <br>
 
@@ -187,7 +187,7 @@ PosedŒ^‚ÍAAffine‚Æ“¯‚¶‹@”\‚ğ‚Â7ŸŒ³ƒxƒNƒgƒ‹‚ÅA\ref moreTutOri ‚Æ \ref moreTu
 
 \subsection moreTutForce		5.5D@„‘Ì‚É—Í‚ğ‰Á‚¦‚é
 „‘Ì‚É‘Î‚µ‚ÄA‰º}‚Ì‚æ‚¤‚È—Í‚ğ‰Á‚¦‚½ê‡‚ğl‚¦‚Ü‚·D
-<img src="../../include/docsrc/02Tutorial/force.jpg" width="682" height="146">
+	\image html force.jpg
 „‘Ì‚É—Í‚ªì—p‚·‚éê‡‚ğl‚¦A¿—Ê’†S‚É—Í‚ğ‰Á‚¦‚é‚É‚ÍAˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
 \verbatim
     solid->AddForce(Vec3f(10, 0, 0);                                                // ¿—Ê’†S‚É‰E•ûŒü‚Ö10N‚Ì—Í‚ğ‰Á‚¦‚é

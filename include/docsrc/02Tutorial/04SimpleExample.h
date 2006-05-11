@@ -2,11 +2,11 @@
 
 <br>
 
-ここでは、簡単なプログラムとして、<a href="../../src/html/PHSimple_2main_8cpp-example.html">PHSimple</a>
+ここでは、簡単なプログラムとして、<a class="el" href="../../src/html/PHSimple_2main_8cpp-example.html">PHSimple</a>
 に沿って説明します．<br>
 2つのティーポットにある一定の力を加え、10ステップ後の位置を出力するサンプルプログラムです．<br>
-<a href="../../src/html/PHSimple_2main_8cpp-example.html">PHSimple</a>をOpenGLでレンダリングした
-サンプルプログラムは、<a href="../../src/html/PHSimpleGL_2main_8cpp-example.html">PHSimpleGL</a>にあります．<br>
+<a class="el" href="../../src/html/PHSimple_2main_8cpp-example.html">PHSimple</a>をOpenGLでレンダリングした
+サンプルプログラムは、<a class="el" href="../../src/html/PHSimpleGL_2main_8cpp-example.html">PHSimpleGL</a>にあります．<br>
 <br>
 
 まずはインクルードファイルを定義します．
