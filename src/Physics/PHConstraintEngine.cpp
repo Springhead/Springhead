@@ -96,6 +96,8 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 			int nPoint = engine->points.size();
 			for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 				if (vtx->deleted) continue;
+				assert(_finite(vtx->dist));
+
 				Vec3d pos;
 				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
 				pos = cutRing.local * pos;

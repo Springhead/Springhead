@@ -90,18 +90,23 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		double faceDist = faceNormal * (base[faces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ faceNormal).unit();
 		double ip = planeNormalL * faceNormal;
-		double a = -faceDist*ip / (1-(ip*ip));
-		double b = faceDist / (1-(ip*ip));
-		Vec3d lineOff = a*planeNormalL + b*faceNormal;
-		Vec3d lineNormal = planeNormalL ^ lineDirection;
-		double lineDist = lineNormal * lineOff;
+		if (ip < 1 - 1e-8){	//	•½s‚È–Ê‚Í–³‹
+			double a = -faceDist*ip / (1-(ip*ip));
+			double b = faceDist / (1-(ip*ip));
+			Vec3d lineOff = a*planeNormalL + b*faceNormal;
+			Vec3d lineNormal = planeNormalL ^ lineDirection;
+			double lineDist = lineNormal * lineOff;
 
-		//	local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
-		Posed to2D = ring.localInv * toW;
-		Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
-		//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
-		ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
-		rv = true;
+			//	local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
+			Posed to2D = ring.localInv * toW;
+			Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
+			assert(_finite(lineNormal2D.x));
+			assert(_finite(lineNormal2D.y));
+
+			//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
+			ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
+			rv = true;
+		}
 	}
 	return rv;
 }
