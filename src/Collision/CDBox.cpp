@@ -125,18 +125,20 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		double qfaceDist = qfaceNormal * (base[qfaces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ qfaceNormal).unit();
 		double ip = planeNormalL * qfaceNormal;
-		double a = -qfaceDist*ip / (1-(ip*ip));
-		double b = qfaceDist / (1-(ip*ip));
-		Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
-		Vec3d lineNormal = planeNormalL ^ lineDirection;
-		double lineDist = lineNormal * lineOff;
+		if (ip < 1 - epsilon){	//	•½s‚È–Ê‚Í–³‹
+			double a = -qfaceDist*ip / (1-(ip*ip));
+			double b = qfaceDist / (1-(ip*ip));
+			Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
+			Vec3d lineNormal = planeNormalL ^ lineDirection;
+			double lineDist = lineNormal * lineOff;
 
-		// local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
-		Posed to2D = ring.localInv * toW;
-		Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
-		//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
-		ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
-		rv = true;
+			// local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
+			Posed to2D = ring.localInv * toW;
+			Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
+			//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
+			ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
+			rv = true;
+		}
 	}
 	//bool Õ“Ë‚Ì—L–³
 	return rv;

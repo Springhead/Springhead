@@ -10,6 +10,7 @@ protected:
 	Posef pose;
 public:
 	PHMaterial material;
+	static double epsilon;
 
 	OBJECTDEFABST(CDShape);
 	Posef GetPose() const { return pose; }
