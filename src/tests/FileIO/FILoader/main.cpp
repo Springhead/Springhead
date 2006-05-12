@@ -24,7 +24,7 @@
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-#define EXIT_TIMER		5000			// 強制終了させるステップ数
+#define EXIT_TIMER		6000			// 強制終了させるステップ数
 //#define TEST_FILEX	"test.x"		// ロードするXファイル
 #define TEST_FILEX	"test4.x"		
 

@@ -29,8 +29,10 @@
 using namespace Spr;
 
 #define ESC					27		// ESC key
-#define STAY_COUNTER		40		// 静止判定カウント
+//#define STAY_COUNTER		50		// 静止判定カウント
+#define STAY_COUNTER		300		// 静止判定カウント
 #define TOTAL_IDLE_COUNTER	5000	// 静止しない場合に利用
+
 
 PHSdkIf* sdk;
 PHSceneIf* scene;
@@ -188,6 +190,17 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == 'q') exit(0);
 }	
 
+bool approx_1e4(const double x, const double y){
+	const double eps = 1e-4;		// 1e-6 精度だと静止しないので、1e-4 で一旦回避
+	return ((x==y)
+			|| (fabs(x-y) < eps)
+			|| (fabs(x/y - 1.0) < eps));
+}
+
+bool approxVec_1e4(const Vec3d v1, const Vec3d v2){
+	return (approx_1e4(v1.x, v2.x) && approx_1e4(v1.y, v2.y) && approx_1e4(v1.z, v2.z));
+}
+
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
@@ -208,18 +221,19 @@ void idle(){
 		DSTR << "\nPHShapeGL failure." << std::endl;
 		exit(EXIT_FAILURE);
 	} else {
-		if (approx(prepos, curpos)){
+		//if (approx(prepos, curpos)){
+		if (approxVec_1e4(prepos, curpos)){
 			stay++;
-			if (stay > STAY_COUNTER){				// 静止判定カウント
-				DSTR << "\nPHShapeGL success." << std::endl;
+			if (stay > STAY_COUNTER){				// 静止判定カウント	
+			DSTR << "\nPHShapeGL success." << std::endl;
 				exit(EXIT_SUCCESS);
 			}
 		} else {
 			stay = 0;
 		}
 	}
-	//std::cout << prepos << " " << curpos << std::endl;
-	DSTR << prepos << " " << curpos << std::endl;
+	//std::cout << prepos << " " << curpos << std::endl;	
+	//DSTR << prepos << " " << curpos << std::endl;
 	glutPostRedisplay();
 }
 

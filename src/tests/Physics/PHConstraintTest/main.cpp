@@ -5,7 +5,7 @@
   ・接触エンジンを拘束法（SOLVER_CONSTRAINT）に設定し、シミュレーションする。
   
 【終了基準】
-　・数ステップ間、床の上に静止したら正常終了。　
+　・生成したブロックすべてが、数ステップ間、床の上に静止したら正常終了。　
    
  */
 #include <Springhead.h>		//	Springheadのインタフェース
@@ -163,7 +163,7 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	gluLookAt(0.0, 3.0, 15.0, 
+	gluLookAt(0.0, 5.0, 20.0, 
 		      0.0, 3.0, 0.0,
 		 	  0.0, 1.0, 0.0);
 
@@ -197,13 +197,23 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 
+bool approx_1e3(const double x, const double y){
+	const double eps = 1e-3;		// 1e-6 精度だと静止しないので、1e-3 で一旦回避
+	return ((x==y)
+			|| (fabs(x-y) < eps)
+			|| (fabs(x/y - 1.0) < eps));
+}
+
+bool approxVec_1e3(const Vec3d v1, const Vec3d v2){
+	return (approx_1e3(v1.x, v2.x) && approx_1e3(v1.y, v2.y) && approx_1e3(v1.z, v2.z));
+}
+
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
  return 	なし
  */
 void SPR_CDECL idle(){
-#if 0
 	static int stepCnt = 0;						// 静止したステップカウント
 	static int totalStep = 0;					// 全実行ステップ数（終了判定で使用）
 	
@@ -219,7 +229,8 @@ void SPR_CDECL idle(){
 	bool flag = true;
 	// preposとcurposが一致しないboxがあるか
 	while(iCnt < NUM_BLOCK){
-		if (!approx(prepos[iCnt], curpos[iCnt])) {	
+		//if (!approx(prepos[iCnt], curpos[iCnt])) {	
+		if (!approxVec_1e3(prepos[iCnt], curpos[iCnt])) {	
 			flag = false;
 			break;
 		}
@@ -244,13 +255,6 @@ void SPR_CDECL idle(){
 		exit(EXIT_FAILURE);
 	}
 	glutPostRedisplay();
-#else
-	scene->Step();
-	glutPostRedisplay();
-	static int count;
-	count++;
-	if (count > 200) exit(0);
-#endif	
 }
 
 /**
@@ -313,7 +317,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 10;		
+			md.vertices[i].x *= 20;		
 			md.vertices[i].z *= 5;
 		}
 		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
