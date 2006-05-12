@@ -142,6 +142,7 @@
 	field->offset = (char*)&(pGRMaterialDesc->power) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "string", "texture", "");
 	field->offset = (char*)&(pGRMaterialDesc->texture) - (char*)pGRMaterialDesc;
+	db->RegisterDesc(desc);
 	
 	GRCamera* pGRCamera = NULL;
 	desc = DBG_NEW FITypeDesc("GRCamera");
