@@ -196,7 +196,7 @@ public:
 	int			NShape();
 	CDShapeIf**	GetShapes();
 protected:
-	void* GetDescAddress(){ return (PHSolidDesc*)this; }
+	DEF_DESC_STATE(PHSolid);
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{

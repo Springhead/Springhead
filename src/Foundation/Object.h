@@ -6,11 +6,10 @@
 
 namespace Spr{;
 
-
 #define IF_IMP_COMMON(cls)															\
 	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
 	template <> \
-	void* IfInfoImp<cls##If>::GetSprObject(ObjectIf* i)const{							\
+	void* IfInfoImp<cls##If>::GetSprObject(ObjectIf* i)const{						\
 		return (Object*)(cls*)(cls##If*)i;											\
 	}																				\
 	template <> \
@@ -30,10 +29,12 @@ namespace Spr{;
 
 ///	Object派生クラスの実行時型情報
 
-#define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)
 #define OBJECTDEFABST(cls)				DEF_UTTYPEINFOABSTDEF(cls)
-#define OBJECTIMPBASE(cls)				DEF_UTTYPEINFO(cls)
+#define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)
+
+///	実行時型情報を持つクラスが持つべきメンバの実装．
 #define OBJECTIMPBASEABST(cls)			DEF_UTTYPEINFOABST(cls)
+#define OBJECTIMPBASE(cls)				DEF_UTTYPEINFO(cls)
 #define OBJECTIMP(cls, base)			DEF_UTTYPEINFO1(cls, base)
 #define OBJECTIMP2(cls, b1, b2)			DEF_UTTYPEINFO2(cls, b1, b2)
 #define OBJECTIMP3(cls, b1, b2, b3)		DEF_UTTYPEINFO3(cls, b1, b2, b3)
@@ -41,7 +42,22 @@ namespace Spr{;
 #define OBJECTIMPABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
 #define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
 
-class Object;	
+#define DEF_STATE(cls)																\
+	virtual void* GetStateAddress(){ return (cls##State*)this; }					\
+	virtual bool GetState(void* s){ *(cls##State*)s=*this; return true; }			\
+	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
+	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
+	virtual void ConstructState(void* m){ new(m) cls##State;}						\
+	virtual void DestructState(void* m){ ((cls##State*)m)->~cls##State(); }			\
+
+#define DEF_DESC(cls)																\
+	virtual void* GetDescAddress(){ return (cls##Desc*)this; }						\
+	virtual bool GetDesc(void* d){ *(cls##Desc*)d=*this; return true; }				\
+	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
+
+#define DEF_DESC_STATE(cls) DEF_STATE(cls) DEF_DESC(cls)
+
+class Object;
 ///	インタフェース->オブジェクトへのキャスト
 #define OCAST(T, i)	OcastImp<T>(i)
 template <class T, class I> T* OcastImp(const I* i){
@@ -49,9 +65,9 @@ template <class T, class I> T* OcastImp(const I* i){
 	void* obj = i ? i->GetIfInfo()->GetSprObject(oi) : NULL;
 	return (T*)(Object*)obj;
 }
-	
+
 /**	全Objectの基本型	*/
-class Object:public ObjectIf, public UTTypeInfoBase, public UTRefCount{
+class Object:public ObjectIf, public UTTypeInfoObjectBase, public UTRefCount{
 public:
 	OBJECTDEF(Object);		///<	クラス名の取得などの基本機能の実装
 
@@ -72,10 +88,25 @@ public:
 	}
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o){ return false; }
-	///	データの読み出し
-	virtual bool GetDesc(void* desc){ return false; }
-	///	データの読み出し
-	virtual void* GetDescAddress(){ return NULL; }
+
+	///	デスクリプタの読み出し(コピー版)
+	virtual bool GetDesc(void* desc) const { return false; }
+	///	デスクリプタの読み出し(参照版)
+	virtual const void* GetDescAddress() const { return NULL; }
+	///	デスクリプタのサイズ
+	virtual size_t GetDescSize() const { return 0; };
+	///	状態の読み出し(コピー版)
+	virtual bool GetState(void* state) const { return false; }
+	///	状態の読み出し(参照版)
+	virtual const void* GetStateAddress() const { return NULL; }
+	///	状態の設定
+	virtual void SetState(const void* state){}
+	///	状態のサイズ
+	virtual size_t GetStateSize() const { return 0; };
+	///	メモリブロックを状態型に初期化
+	virtual void ConstructState(void* m) const {}
+	///	状態型をメモリブロックに戻す
+	virtual void DestructState(void* m) const {}
 };
 template <class intf, class base>
 struct InheritObject:public intf, base{
@@ -94,8 +125,15 @@ struct InheritObject:public intf, base{
 	virtual bool AddChildObject(ObjectIf* o){
 		return base::AddChildObject(o);		
 	}
-	virtual bool GetDesc(void* desc){ return base::GetDesc(desc); }
-	virtual void* GetDescAddress(){ return base::GetDescAddress(); }
+	virtual bool GetDesc(void* desc) const { return base::GetDesc(desc); }
+	virtual const void* GetDescAddress() const { return base::GetDescAddress(); }
+	virtual size_t GetDescSize() const { return base::GetDescSize(); }
+	virtual bool GetState(void* state) const { return base::GetState(state); }
+	virtual const void* GetStateAddress() const { return base::GetStateAddress(); }
+	virtual size_t GetStateSize() const { return base::GetStateSize(); }
+	virtual void SetState(const void* s){ return base::SetState(s); }
+	virtual void ConstructState(void* m) const { base::ConstructState(m); }
+	virtual void DestructState(void* m) const { base::DestructState(m); }
 };
 
 class NameManager;
@@ -156,6 +194,30 @@ public:
 		}
 		return false;
 	}
+};
+
+class ObjectStates{
+protected:
+	char* state;
+	void DestructState(ObjectIf* o, char*& s);
+	void SaveState(ObjectIf* o, char*& s);
+
+public:
+	ObjectStates():state(NULL), size(0){}
+	~ObjectStates(){ delete state; }
+	size_t size;
+	///	oとその子孫をセーブするために必要なメモリを確保する．
+	void AllocateState(ObjectIf* o);
+	///	状態をセーブする．
+	void SaveState(ObjectIf* o);
+	///	状態をロードする．
+	void LoadState(ObjectIf* o);
+	///	
+	void ReleaseState(ObjectIf* o);
+	///	
+	size_t CalcStateSize(ObjectIf* o);
+	///
+	void ConstructState(ObjectIf* o, char*& s);
 };
 
 

@@ -61,7 +61,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		//	セーブ位置を設定
 		sc->fieldIts.Push(FIFieldIt(type));
 		//	オブジェクトからデータを取り出す．
-		void* data = obj->GetDescAddress();
+		void* data = (void*)obj->GetDescAddress();
 		if (data){
 			sc->datas.Push(DBG_NEW FINodeData(type, data));
 		}else{

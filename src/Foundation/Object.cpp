@@ -100,4 +100,63 @@ SceneIf* SceneObject::GetScene(){
 	return DCAST(Scene, nm);
 }
 
+
+//----------------------------------------------------------------------------
+//	ObjectStates
+size_t ObjectStates::CalcStateSize(ObjectIf* o){
+	size_t sz = o->GetStateSize();
+	size_t n = o->NChildObject();
+	for(size_t i=0; i<n; ++i){
+		sz += CalcStateSize(o->GetChildObject(i));
+	}
+	return sz;
 }
+void ObjectStates::ReleaseState(ObjectIf* o){
+	char* s = state;
+	DestructState(o, s);
+	delete state;
+	state = NULL;
+	size=0;
+}
+void ObjectStates::DestructState(ObjectIf* o, char*& s){
+	o->DestructState(s);
+	s += o->GetStateSize();
+	size_t n = o->NChildObject();
+	for(size_t i=0; i<n; ++i){
+		DestructState(o->GetChildObject(i), s);
+	}
+}
+void ObjectStates::ConstructState(ObjectIf* o, char*& s){
+	o->ConstructState(s);
+	s += o->GetStateSize();
+	size_t n = o->NChildObject();
+	for(size_t i=0; i<n; ++i){
+		ConstructState(o->GetChildObject(i), s);
+	}	
+}
+void ObjectStates::AllocateState(ObjectIf* o){
+	if (state) ReleaseState(o);
+	size = CalcStateSize(o);
+	state = new char[size];
+	char* s = state;
+	ConstructState(o, s);
+}
+void ObjectStates::SaveState(ObjectIf* o){
+	char* s = state;
+	SaveState(o, s);
+}
+void ObjectStates::SaveState(ObjectIf* o, char*& s){
+	o->GetState(s);
+	s += o->GetStateSize();
+	size_t n = o->NChildObject();
+	for(size_t i=0; i<n; ++i){
+		SaveState(o->GetChildObject(i), s);
+	}
+}
+void ObjectStates::LoadState(ObjectIf* o){
+}
+
+
+
+
+}	//	namespace Spr

@@ -74,7 +74,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 protected:
 	friend class Object;
-	void* GetDescAddress(){ return (PHSceneDesc*)this; }
+	DEF_DESC_STATE(PHScene);
 };
 
 }

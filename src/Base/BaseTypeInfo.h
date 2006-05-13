@@ -39,11 +39,11 @@ public:
 };
 
 ///	実行時型情報を持つクラスの基本クラス
-class UTTypeInfoBase{
+class UTTypeInfoObjectBase{
 public:
 	virtual const UTTypeInfo* GetTypeInfo() const =0;
 protected:
-	virtual ~UTTypeInfoBase() {};
+	virtual ~UTTypeInfoObjectBase() {};
 };
 
 //----------------------------------------------------------------------

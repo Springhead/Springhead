@@ -72,10 +72,28 @@ struct ObjectIf{
 	virtual const ObjectIf* GetChildObject(size_t pos) const = 0;
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o)=0;
-	///	データの読み出し(参照版 NULLを返すこともある)
-	virtual void* GetDescAddress() = 0;
-	///	データの読み出し(コピー版 必ず実装されている(はず))
-	virtual bool GetDesc(void* desc) = 0;
+	/**	デスクリプタの読み出し(参照版 NULLを返すこともある)．
+		これが実装されていなくても，ObjectIf::GetDesc()は実装されていることが多い．	*/
+	virtual const void* GetDescAddress() const = 0;
+	/**	デスクリプタの読み出し(コピー版 失敗する(falseを返す)こともある)．
+		ObjectIf::GetDescAddress() が実装されていなくても，こちらは実装されていることがある．	*/
+	virtual bool GetDesc(void* desc) const = 0;
+	/**	ディスクリプタのサイズ	*/
+	virtual size_t GetDescSize() const = 0;
+	/**	状態の読み出し(参照版 NULLを返すこともある)．
+		これが実装されていなくても，ObjectIf::GetState()は実装されていることがある．	*/
+	virtual const void* GetStateAddress() const = 0;
+	/**	状態の読み出し(コピー版 失敗する(falseを返す)こともある)．
+		ObjectIf::GetStateAddress() が実装されていなくても，こちらは実装されていることがある．	*/
+	virtual bool GetState(void* state) const = 0;
+	/**	状態の設定	*/
+	virtual void SetState(const void* state) = 0;
+	/**	状態のサイズ	*/
+	virtual size_t GetStateSize() const = 0;
+	/**	メモリブロックを状態型に初期化	*/
+	virtual void ConstructState(void* m) const = 0;
+	/**	状態型をメモリブロックに戻す	*/
+	virtual void DestructState(void* m) const = 0;
 };
 
 ///	インタフェースクラスへのポインタの配列
