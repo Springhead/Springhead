@@ -84,7 +84,9 @@ struct CDConvexMeshIf: public CDConvexIf{
 	
 /** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
-	CDSphereDesc():CDShapeDesc(SPHERE){}
+	CDSphereDesc():CDShapeDesc(SPHERE){
+		radius = 1.0f;
+	}
 	float radius;					// 球体の半径
 	PHMaterial material;			// マテリアル
 };	
@@ -97,7 +99,9 @@ struct CDSphereIf: public CDConvexIf{
 
 /** 直方体のディスクリプタ */
 struct CDBoxDesc: public CDShapeDesc{
-	CDBoxDesc():CDShapeDesc(BOX){}
+	CDBoxDesc():CDShapeDesc(BOX){
+		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
+	}
 	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
 	PHMaterial material;
 };	

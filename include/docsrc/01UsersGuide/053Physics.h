@@ -1,21 +1,74 @@
 /** \page pagePhysics 物理シミュレーションSDK
 
 - \ref sec_PHSdk
+ - \ref sdk_create
+ - \ref sdk_finialize
 - \ref scene
  - \ref scene_create
  - \ref scene_gravity
+ - \ref scene_step
 - \ref solid
  - \ref solid_create
+ - \ref solid_pose
+ - \ref solid_mass
+ - \ref solid_force
+ - \ref solid_dynamical
  - \ref solid_shape
+- \ref shape
 - \ref joint
 
-\section sec_PHSdk 物理エンジンのオブジェクトのイメージ
-1つの物理エンジン(PHSdk)は，いくつかのシーン(PHScene)を持つことができ，
-シーンには剛体(PHSolid)，関節(PHJoint)があります．
-剛体は形状(CDConvexMesh, CDSphere, CDBox, ...)を参照して形を持つことができます．
+\section sec_PHSdk 物理シミュレーションSDKの初期化と終了
+
+はじめに，Springhead 物理シミュレーションSDKを使用した最も典型的なコードの例を示します．
+
+\verbatim
+
+#include <Springhead.h>
+
+using namespace Spr;
+
+int main(int argc, char* argv[]){
+	// Physics SDKの初期化
+	PHSdkIf* sdk = CreatePHSdk();
+	
+	// シーンの作成
+	PHSceneDesc dscene;
+	PHSceneIf* scene = sdk->CreateScene(dscene);
+
+	// 剛体の作成
+	PHSolidDesc dsolid;
+	PHSolidIf* soBall = scene->CreateSolid(dsolid);
+
+	// 剛体に形状を割り当てる
+	CDSphereDesc dsphere;
+	soBall->AddShape(sdk->CreateShape(dsphere));
+	
+	while(true){
+		// シーンの時間を進める
+		scene->Step();
+	}
+}
+
+\endverbatim
+
+1つのSDKは，1つ以上のシーン(PHScene)を持つことができ，
+1つのシーンは1つ以上の剛体(PHSolid)と関節(PHJoint)を持つことができます．
+さらに，剛体は形状(CDConvexMesh, CDSphere, CDBox, ...)を参照して形を持つことができます．
 関節は2つの剛体を結び付けます．
 物理エンジン内のオブジェクトの参照関係の例を図に示します．
 <img src="../../include/docsrc/01UsersGuide/PHSdkScene.png">
+
+\subsection sdk_create SDKの初期化
+
+Springhead 物理シミュレーションSDKの使用は，グローバル関数CreatePHSdkを呼ぶことによりSDKを初期化することから始まります．
+\verbatim
+	PHSdkIf* sdk = CreatePHSdk();
+\endverbatim
+
+\subsection sdk_finalize SDKの終了
+
+SDKの終了処理は内部で自動的に行われます．ユーザから明示的にSDKを解放する必要はありません．
+
 
 \section scene シーン
 
@@ -25,6 +78,7 @@
 \subsection scene_create シーンの作成
 
 シーンを作成するには\link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene\endlinkを呼びます．
+シーンを複数作成することは可能ですが，異なるシーン同士は互いにインタラクションすることはできません．
 
 \subsection scene_gravity 重力の設定
 
@@ -33,6 +87,10 @@
 重力を無効化するにはSetGravity(Vec3f(0.0f, 0.0f, 0.0f))とします．
 また，個々の剛体に対して重力の作用を有効・無効化するには
 \link Spr::PHSolidIf::SetGravity() PHSolidIf::SetGravity\endlinkを使います．
+
+\subsection scene_step シミュレーションの実行
+
+
 
 \section solid	剛体
 
@@ -98,7 +156,7 @@ AddForce/AddTorqueを呼ぶ必要があります．
 floor->SetDynamical(false);		//floorはPHSolidIf*型の変数
 \endverbatim
 とすることで実現できます．
-また，ある剛体が非動力学的かどうかは\link Spr::PHSolidIf::IsDynamical PHSolidIf::IsDynamical \endlinkを呼ぶことで取得できます．
+また，ある剛体が非動力学的かどうかは\link Spr::PHSolidIf::IsDynamical() PHSolidIf::IsDynamical \endlinkを呼ぶことで取得できます．
 
 非動力学的な剛体でも位置，傾き，速度，角速度の変更は可能です．
 
@@ -106,7 +164,7 @@ floor->SetDynamical(false);		//floorはPHSolidIf*型の変数
 剛体には1つ以上の形状を割り当てることができます．
 Springhead 物理シミュレーションSDKは，形状の交差を検知し，
 剛体間に働く接触力を自動的に計算します．
-剛体に割り当てることのできる形状の種類および作成方法については\ref shapeを参照してください．
+剛体に割り当てることのできる形状の種類および作成方法については\ref shapeの項を参照してください．
 
 剛体に形状を割り当てるには\link Spr::PHSolidIf::AddShape() PHSolidIf::AddShape\endlinkを使います．
 剛体は，割り当てられた形状への参照を保持するだけですので，1つの形状を複数の剛体に割り当てても問題ありません．
@@ -133,29 +191,63 @@ Springheadがサポートする関節の種類を以下に示します．
 
 <img src="../../include/docsrc/01UsersGuide/joints.png">
 
-□関節フレーム
+\subsection joint_create 関節の作成
 
-剛体同士を関節でつなげるには，剛体のどの場所に関節を取り付けるかを指定する必要があります．
-このためにSpringheadでは関節座標系という概念を用います．
+関節を作成し，二つの剛体を連結する典型的なコードを以下に示します．
+
+\verbatim
+PHHingeJointDesc descJoint;                         //ディスクリプタを作成
+descJoint.pose[0].Pos() = Vec3d( 1.0, 0.0, 0.0);    //ソケットの位置を設定
+descJoint.pose[1].Pos() = Vec3d(-1.0, 0.0, 0.0);    //プラグの位置を設定
+scene->CreateJoint(solid0, solid1, descJoint));     //関節を作成
+\endverbatim
+
+各関節のディスクリプタは，対応する関節クラス名からIfをとってDescをつけた名前を持ち，
+以下のような継承関係にあります．
+
+＜ディスクリプタの継承関係＞
+
+関節を作成するには，まず作成したい関節の種類に対応するディスクリプタを作成し，
+必要ならばディスクリプタのプロパティを設定します．
+次に，\link Spr::PHSceneIf::CreateJoint() PHSceneIf::CreateJoint\endlink関数を，
+連結したい剛体への参照と，先に作成したディスリプタを引数として呼びます．
+\link Spr::PHSceneIf::CreateJoint() PHSceneIf::CreateJoint\endlinkは，渡されたディスクリプタの
+種類を内部で判別し，対応する関節を作成し，その参照を返します．
+
+\subsection joint_frame プラグとソケット
+
+剛体と関節の位置関係は下の図のようになっています．
 
 ＜ 関節フレームの図 ＞
 
-図のように，連結するそれぞれの剛体に関節座標系を取り付けます
-（ソケットとプラグのように考えると分かり易いでしょう）．
+片方の剛体にはソケット，もう片方の剛体にはプラグと呼ばれる座標系が取り付けられます．
+関節の種類に応じて，ソケットとプラグの相対位置関係が拘束されます．
+例えばヒンジの場合，ソケットとプラグの原点を一致させ，同時に両者のZ軸同士が平行となるように拘束されます．
 
-二つの関節座標系（ソケットとプラグ）がどのように拘束されるかは，関節の種類毎に異なります．
-例えばヒンジの場合，関節座標系の原点を一致させ，かつZ軸同士が平行となるように拘束されます．
+ソケットおよびプラグの取り付け位置は\link Spr::PHConstraintDesc::pose PHConstraintDesc::pose[2]\endlinkで
+指定します（実際にはPHConstraintDescから派生したディスクリプタを使います）．
+pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケットの位置・傾きを表わします．
+同様にpose[1]はプラグを取り付ける剛体（CreateJointの第2引数)の座標系に対するプラグの位置・傾きを表わします．
 
-□関節の有効/無効化
+\subsection joint_enable 関節の有効化・無効化
 
-□1自由度関節
+関節を作成する処理は比較的ハイコストです．このため，一時的に関節による拘束を解除し，しばらくして
+元に戻すような処理をするときに，その都度関節の作成・削除を繰り返すのはお勧めしません．
+\link Spr::PHConstraintIf::Enable() PHConstraintIf::Enable\endlinkを呼ぶことによって関節を一時的に
+無効化したり，再び有効化することができます．また，ある時点で関節が有効かどうかは
+\link Spr::PHConstraintIf::IsEnabled() PHConstraintIf::IsEnabled\endlink呼ぶことで知ることができます．
+
+\subsection joint_1dof 1自由度関節
+
 1自由度関節とは，1自由度の相対運動を実現する（言い換えると5つの自由度を拘束する）関節で，
 以下のものがあります：
-- ヒンジ
-- スライダ
-- パスジョイント
+- \ref joint_hinge
+- \ref joint_slider
+- \ref joint_path
 
-ここでは1自由度関節に共通する機能を紹介します．
+全ての1自由度関節はPHJoint1DIfを親クラスに持ち，共通のインタフェースで状態の取得や操作が可能です．
+
+
 ＊関節変位
 ＊関節速度
 ＊可動範囲
