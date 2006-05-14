@@ -200,6 +200,16 @@ void keyboard(unsigned char key, int x, int y){
 		delete[] vtx;
 		exit(0);
 	}
+	if ('0'<= key && key <= '1' && phSdk->NScene()){
+		int i = key-'0';
+		static UTRef<Spr::ObjectStatesIf> states[10];
+		if (states[i]){
+			states[i]->LoadState(scene[0]);
+		}else{
+			states[i] = CreateObjectStates();
+			states[i]->SaveState(scene[0]);
+		}
+	}
 }
 
 /**

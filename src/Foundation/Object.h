@@ -196,28 +196,33 @@ public:
 	}
 };
 
-class ObjectStates{
+class ObjectStates:public InheritObject<ObjectStatesIf, Object>{
 protected:
-	char* state;
+	char* state;	///<	状態(XXxxxxState)を並べたもの
+	size_t size;	///<	状態の長さ
+	///	sをoのStateとして初期化する．
+	void ConstructState(ObjectIf* o, char*& s);
+	///	sをoのStateからメモリブロックに戻す．
 	void DestructState(ObjectIf* o, char*& s);
+	///	状態セーブの再起部分
 	void SaveState(ObjectIf* o, char*& s);
+	///	状態ロードの再起部分
+	void LoadState(ObjectIf* o, char*& s);
 
 public:
+	OBJECTDEF(ObjectStates);
 	ObjectStates():state(NULL), size(0){}
 	~ObjectStates(){ delete state; }
-	size_t size;
 	///	oとその子孫をセーブするために必要なメモリを確保する．
 	void AllocateState(ObjectIf* o);
 	///	状態をセーブする．
 	void SaveState(ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
-	///	
+	///	状態のメモリを解放する
 	void ReleaseState(ObjectIf* o);
-	///	
+	///	状態のサイズを求める
 	size_t CalcStateSize(ObjectIf* o);
-	///
-	void ConstructState(ObjectIf* o, char*& s);
 };
 
 

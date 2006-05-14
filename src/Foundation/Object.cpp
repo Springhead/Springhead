@@ -5,6 +5,7 @@
 #pragma hdrstop
 #endif
 #include <sstream>
+#include <iomanip>
 
 namespace Spr {;
 
@@ -103,6 +104,10 @@ SceneIf* SceneObject::GetScene(){
 
 //----------------------------------------------------------------------------
 //	ObjectStates
+
+IF_IMP(ObjectStates, Object);
+OBJECTIMP(ObjectStates, Object);
+
 size_t ObjectStates::CalcStateSize(ObjectIf* o){
 	size_t sz = o->GetStateSize();
 	size_t n = o->NChildObject();
@@ -142,10 +147,15 @@ void ObjectStates::AllocateState(ObjectIf* o){
 	ConstructState(o, s);
 }
 void ObjectStates::SaveState(ObjectIf* o){
+	if (!state) AllocateState(o);
 	char* s = state;
+	DSTR << "Save:" << std::endl;
 	SaveState(o, s);
 }
 void ObjectStates::SaveState(ObjectIf* o, char*& s){
+	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
+	DSTR << o->GetIfInfo()->ClassName() << std::endl;
+
 	o->GetState(s);
 	s += o->GetStateSize();
 	size_t n = o->NChildObject();
@@ -154,8 +164,25 @@ void ObjectStates::SaveState(ObjectIf* o, char*& s){
 	}
 }
 void ObjectStates::LoadState(ObjectIf* o){
+	char* s = state;
+	DSTR << "Load:" << std::endl;
+	LoadState(o, s);
+}
+void ObjectStates::LoadState(ObjectIf* o, char*& s){
+	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
+	DSTR << o->GetIfInfo()->ClassName() << std::endl;
+
+	o->SetState(s);
+	s += o->GetStateSize();
+	size_t n = o->NChildObject();
+	for(size_t i=0; i<n; ++i){
+		LoadState(o->GetChildObject(i), s);
+	}
 }
 
+ObjectStatesIf* CreateObjectStates(){
+	return new ObjectStates;
+}
 
 
 

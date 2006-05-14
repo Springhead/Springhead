@@ -8,6 +8,9 @@ namespace Spr{;
 IF_IMP(FIFile, Object);
 OBJECTIMPABST(FIFile, Object);
 
+//#define PDEBUG_EVAL(x)	x
+#define PDEBUG_EVAL(x)
+
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	FILoadContext fc;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
@@ -121,12 +124,12 @@ void FIFile::SaveBlock(FISaveContext* sc){
 			nElements = field->length;
 		}
 		OnSaveFieldStart(sc, nElements);
-		DSTR << "Save field '" << field->name << "' : " << field->typeName << " = ";
+		PDEBUG_EVAL( DSTR << "Save field '" << field->name << "' : " << field->typeName << " = "; )
 		for(int pos=0; pos<nElements; ++pos){
 			OnSaveElementStart(sc, pos, (pos==nElements-1));
 			switch(sc->fieldIts.back().fieldType){
 				case FIFieldIt::F_BLOCK:{
-					DSTR << "=" << std::endl;
+					PDEBUG_EVAL( DSTR << "=" << std::endl; )
 					void* blockData = field->GetAddress(base, pos);
 					sc->datas.Push(new FINodeData(field->type, blockData));
 					sc->fieldIts.Push(FIFieldIt(field->type));
@@ -136,29 +139,29 @@ void FIFile::SaveBlock(FISaveContext* sc){
 					}break;
 				case FIFieldIt::F_BOOL:{
 					bool val = field->ReadBool(base, pos);
-					DSTR << val ? "true" : "false";
+					PDEBUG_EVAL( DSTR << val ? "true" : "false"; )
 					OnSaveBool(sc, val);
 					}break;
 				case FIFieldIt::F_INT:{
 					int val = (int)field->ReadNumber(base, pos);
-					DSTR << val;
+					PDEBUG_EVAL( DSTR << val; )
 					OnSaveInt(sc, val);
 					}break;
 				case FIFieldIt::F_REAL:{
 					double val = field->ReadNumber(base, pos);
-					DSTR << val;
+					PDEBUG_EVAL( DSTR << val; )
 					OnSaveReal(sc, val);
 					}break;
 				case FIFieldIt::F_STR:{
 					UTString val = field->ReadString(base, pos);
-					DSTR << val;
+					PDEBUG_EVAL( DSTR << val; )
 					OnSaveString(sc, val);
 					}break;
 			}
-			if (pos<nElements-1) DSTR << ", ";
+			PDEBUG_EVAL( if (pos<nElements-1) DSTR << ", "; )
 			OnSaveElementEnd(sc, pos, (pos==nElements-1));
 		}
-		DSTR << ";" << std::endl;
+		PDEBUG_EVAL( DSTR << ";" << std::endl; )
 		OnSaveFieldEnd(sc, nElements);
 	}
 	OnSaveBlockEnd(sc);

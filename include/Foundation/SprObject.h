@@ -117,6 +117,25 @@ struct SceneObjectIf: NamedObjectIf{
 	virtual SceneIf* GetScene() =0;
 };
 
+
+///	オブジェクトツリーの状態をメモリ上に保存しておくクラス
+struct ObjectStatesIf: public ObjectIf{
+	IF_DEF(ObjectStates);
+
+	///	oとその子孫をセーブするために必要なメモリを確保する．
+	virtual void AllocateState(ObjectIf* o) = 0;
+	///	状態のメモリを解放する
+	virtual void ReleaseState(ObjectIf* o) = 0;
+	///	状態のサイズを求める
+	virtual size_t CalcStateSize(ObjectIf* o) = 0;
+
+	///	状態をセーブする．
+	virtual void SaveState(ObjectIf* o) = 0;
+	///	状態をロードする．
+	virtual void LoadState(ObjectIf* o) = 0;
+};
+ObjectStatesIf* CreateObjectStates();
+
 }
 
 #endif
