@@ -20,7 +20,7 @@ public:
 	//	ÚG”»’èŒ‹‰Ê
 	Vec3d closestPoint[2]; // ƒ[ƒJƒ‹À•WŒn
 	Vec3d commonPoint;     // WorldÀ•WŒn
-	unsigned int lastContactCount;
+	unsigned lastContactCount;
 	enum State{
 		NEW,
 		CONTINUE,

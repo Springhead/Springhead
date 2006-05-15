@@ -2,6 +2,7 @@
 #define PHEngine_H
 
 #include <Foundation/Object.h>
+#include <SprPhysics.h>
 
 namespace Spr {;
 

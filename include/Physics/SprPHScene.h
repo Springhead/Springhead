@@ -11,6 +11,8 @@
 
 namespace Spr{;
 
+struct PHSdkIf;
+
 struct PHSolidIf;
 struct PHSolidDesc;
 

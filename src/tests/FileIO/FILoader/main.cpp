@@ -200,7 +200,7 @@ void keyboard(unsigned char key, int x, int y){
 		delete[] vtx;
 		exit(0);
 	}
-	if ('0'<= key && key <= '1' && phSdk->NScene()){
+	if ('0'<= key && key <= '9' && phSdk->NScene()){
 		int i = key-'0';
 		static UTRef<Spr::ObjectStatesIf> states[10];
 		if (states[i]){

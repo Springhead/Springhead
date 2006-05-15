@@ -14,7 +14,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	PHSolidPair
-void PHConstraintEngine::PHSolidPair::Init(PHSolidAux* s0, PHSolidAux* s1){
+void PHSolidPair::Init(PHSolidAux* s0, PHSolidAux* s1){
 	solid[0] = s0;
 	solid[1] = s1;
 	int ns0 = solid[0]->solid->shapes.size(), ns1 = solid[1]->solid->shapes.size();
@@ -184,7 +184,7 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 #endif
 //--------------------------------------------------------------------------
 #ifndef USE_VOLUME	//	体積を使わない接触判定
-bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
+bool PHSolidPair::Detect(PHConstraintEngine* engine){
 	if(!bEnabled)return false;
 
 	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
@@ -211,7 +211,7 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 
 //--------------------------------------------------------------------------
 #else	//	体積を使う接触判定
-bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
+bool PHSolidPair::Detect(PHConstraintEngine* engine){
 	if(!bEnabled)return false;
 	static CDContactAnalysis analyzer;
 
@@ -279,6 +279,29 @@ bool PHConstraintEngine::PHSolidPair::Detect(PHConstraintEngine* engine){
 	return found;
 }
 #endif
+
+void PHShapePair::SetState(const PHShapePairState& s){
+	lastContactCount = s.lastContactCount;
+	depth = s.depth;
+	normal = s.normal;
+}
+
+
+
+//----------------------------------------------------------------------------
+// PHConstraintEngineState
+PHConstraintEngineState::PHConstraintEngineState(const PHConstraintEngine& ce){
+	nSolidPair = 0;
+	nShapePair = 0;
+	//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
+	for(int j=0; j<ce.solidPairs.width(); ++j){
+		nSolidPair += j;
+		for(int i=0; i<j; ++i){
+			const PHSolidPair& sp = ce.solidPairs.item(i, j);
+			nShapePair += sp.shapePairs.height()*sp.shapePairs.width();
+		}
+	}
+}
 
 //----------------------------------------------------------------------------
 // PHConstraintEngine
@@ -560,10 +583,58 @@ void PHConstraintEngine::Step(){
 
 }
 
-bool PHConstraintEngine::GetState(void* s){
-	return false;
+size_t PHConstraintEngine::GetStateSize() const {
+	PHConstraintEngineState s(*this);
+	return s.GetSize();
+}
+void PHConstraintEngine::ConstructState(void* m) const {
+	new (m) PHConstraintEngineState(*this);
+}
+void PHConstraintEngine::DestructState(void* m) const {
+	((PHConstraintEngineState*)m)->~PHConstraintEngineState();
+}
+bool PHConstraintEngine::GetState(void* s) const {
+	PHConstraintEngineState* es = ((PHConstraintEngineState*)s);
+	PHSolidPairState* solidStates = es->SolidStates();
+	PHShapePairState* shapeStates = es->ShapeStates();
+	//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
+	int solidPos=0;
+	int shapePos=0;
+	for(int j=0; j<solidPairs.width(); ++j){
+		for(int i=0; i<j; ++i){
+			const PHSolidPair& sp = solidPairs.item(i, j);
+			solidStates[solidPos] = sp;
+			++solidPos;
+			for(int r=0; r<sp.shapePairs.height(); ++r){
+				for(int c=0; c<sp.shapePairs.width(); ++c){
+					shapeStates[shapePos] = sp.shapePairs.item(r, c);
+					++shapePos;
+				}
+			}
+		}
+	}
+	return true;
 }
 void PHConstraintEngine::SetState(const void* s){
+	PHConstraintEngineState* es = ((PHConstraintEngineState*)s);
+	PHSolidPairState* solidStates = es->SolidStates();
+	PHShapePairState* shapeStates = es->ShapeStates();
+	//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
+	int solidPos=0;
+	int shapePos=0;
+	for(int j=0; j<solidPairs.width(); ++j){
+		for(int i=0; i<j; ++i){
+			PHSolidPair& sp = solidPairs.item(i, j);
+			sp.SetState(solidStates[solidPos]);
+			++solidPos;
+			for(int r=0; r<sp.shapePairs.height(); ++r){
+				for(int c=0; c<sp.shapePairs.width(); ++c){
+					sp.shapePairs.item(r, c).SetState(shapeStates[shapePos]);
+					++shapePos;
+				}
+			}
+		}
+	}
 }
 
 }

@@ -44,18 +44,18 @@ namespace Spr{;
 
 #define DEF_STATE_NOINHERIT(cls)													\
 	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
-	virtual void ConstructState(void* m){ new(m) cls##State;}						\
-	virtual void DestructState(void* m){ ((cls##State*)m)->~cls##State(); }			\
+	virtual void ConstructState(void* m) const { new(m) cls##State;}				\
+	virtual void DestructState(void* m) const { ((cls##State*)m)->~cls##State(); }	\
 
 #define DEF_STATE(cls)																\
 	DEF_STATE_NOINHERIT(cls)														\
-	virtual void* GetStateAddress(){ return (cls##State*)this; }					\
-	virtual bool GetState(void* s){ *(cls##State*)s=*this; return true; }			\
+	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
+	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
 
 #define DEF_DESC(cls)																\
-	virtual void* GetDescAddress(){ return (cls##Desc*)this; }						\
-	virtual bool GetDesc(void* d){ *(cls##Desc*)d=*this; return true; }				\
+	virtual const void* GetDescAddress() const { return (cls##Desc*)this; }			\
+	virtual bool GetDesc(void* d) const { *(cls##Desc*)d=*this; return true; }		\
 	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
 
 #define DEF_DESC_STATE(cls) DEF_STATE(cls) DEF_DESC(cls)

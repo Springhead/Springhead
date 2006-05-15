@@ -351,21 +351,6 @@
 	field->offset = (char*)&(pFIInactiveSolids->solids) - (char*)pFIInactiveSolids;
 	db->RegisterDesc(desc);
 	
-	CRSimpleState* pCRSimpleState = NULL;
-	desc = DBG_NEW FITypeDesc("CRSimpleState");
-	desc->size = sizeof(CRSimpleState);
-	desc->access = DBG_NEW FIAccess<CRSimpleState>;
-	db->RegisterDesc(desc);
-	
-	CRSimpleDesc* pCRSimpleDesc = NULL;
-	desc = DBG_NEW FITypeDesc("CRSimpleDesc");
-	desc->size = sizeof(CRSimpleDesc);
-	desc->ifInfo = CRSimpleIf::GetIfInfoStatic();
-	desc->access = DBG_NEW FIAccess<CRSimpleDesc>;
-	field = desc->AddBase("CRSimpleState");
-	field->offset = (char*)(CRSimpleState*)pCRSimpleDesc - (char*)pCRSimpleDesc;
-	db->RegisterDesc(desc);
-	
 	Vec2f* pVec2f = NULL;
 	desc = DBG_NEW FITypeDesc("Vec2f");
 	desc->size = sizeof(Vec2f);

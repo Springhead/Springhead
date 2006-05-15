@@ -15,7 +15,8 @@ class PHSolid;
 class PHJoint;
 class PHConstraintEngine;
 
-///	Shapeの組合わせ
+struct PHShapePairState;
+///	Shapeの組
 class PHShapePair: public CDShapePair{
 public:
 	///	
@@ -25,8 +26,55 @@ public:
 	bool Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
+	void SetState(const PHShapePairState& s);
 };
+/// Shapeの組の状態
+struct PHShapePairState{
+	unsigned lastContactCount;
+	Vec3d normal;
+	double depth;
+	PHShapePairState(const PHShapePair& s):
+		lastContactCount(s.lastContactCount),normal(s.normal), depth(s.depth){}
+};
+
+/// Solidの組の状態部分
+struct PHSolidPairState{
+	bool bEnabled;
+};
+/// Solidの組
+class PHSolidPair: public PHSolidPairState{
+public:
+	UTRef<PHSolidAux> solid[2];
+	/// Shapeの組み合わせの配列
+	typedef UTCombination<PHShapePair> PHShapePairs;
+	PHShapePairs	shapePairs;
+
+	void Init(PHSolidAux* s0, PHSolidAux* s1);	/// 初期化
+	bool Detect(PHConstraintEngine* engine);
+	void SetState(const PHSolidPairState& s){
+		*((PHSolidPairState*)this) = s;
+	}
+};
+
+
+class PHConstraintEngine;
+///	PHConstraintEngineの状態
 struct PHConstraintEngineState{
+	size_t nSolidPair;	//	SolidPairの数
+	size_t nShapePair;	//	ShapePairの数
+	PHSolidPairState* SolidStates(){
+		char* ptr = ((char*)this) + sizeof(*this);
+		return (PHSolidPairState*)ptr;
+	}
+	PHShapePairState* ShapeStates(){
+		char* ptr = ((char*)this) + sizeof(*this) + nSolidPair*sizeof(PHSolidPairState);
+		return (PHShapePairState*)ptr;
+	}
+	size_t GetSize(){
+		return sizeof(*this) + nSolidPair*sizeof(PHSolidPairState)
+			+ nShapePair*sizeof(PHShapePairState);
+	}
+	PHConstraintEngineState(const PHConstraintEngine& ce);
 };
 class PHConstraintEngine: public PHEngine{
 	friend class PHSolidPair;
@@ -35,19 +83,6 @@ class PHConstraintEngine: public PHEngine{
 
 	OBJECTDEF(PHConstraintEngine);
 
-	/// Solidの組み合わせの配列
-	class PHSolidPair{
-	public:
-		bool bEnabled;
-		UTRef<PHSolidAux> solid[2];
-		/// Shapeの組み合わせの配列
-		typedef UTCombination<PHShapePair> PHShapePairs;
-		PHShapePairs	shapePairs;
-
-		void Init(PHSolidAux* s0, PHSolidAux* s1);	/// 初期化
-		bool Detect(PHConstraintEngine* engine);	
-
-	};
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
 
 	PHJoint* CreateJoint(const PHJointDesc& desc);
@@ -89,11 +124,14 @@ protected:
 	/// SolidにShapeが追加されたときにSolidから呼ばれる
 	void UpdateShapePairs(PHSolid* solid); 
 
-	DEF_STATE_NOINHERIT(PHConstraintEngine);
-	virtual bool GetState(void* s);
+	virtual size_t GetStateSize() const ;
+	virtual void ConstructState(void* m) const ;
+	virtual void DestructState(void* m) const ;
+	virtual bool GetState(void* s) const;
 	virtual void SetState(const void* s);
 
 	friend class PHShapePair;
+	friend struct PHConstraintEngineState;
 };
 
 

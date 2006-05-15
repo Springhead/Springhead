@@ -3,7 +3,7 @@ rem FIDesc.cppにTypeDescの定義を作る．．
 rem bin/typedesc.exe が抜き出しを行う．
 set OUT=TypeDescDumpImp.h
 set HEADER=TypeDescDump.h
-set TARGET=Collision Foundation Graphics Physics FileIO Creature
+set TARGET=Collision Foundation Graphics Physics FileIO
 
 set PATH=%SPRINGHEAD2%\bin
 del %OUT%
