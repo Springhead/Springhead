@@ -21,7 +21,7 @@
 #endif
 using namespace Spr;
 #define ESC				27
-#define EXIT_TIMER		2000
+#define EXIT_TIMER		5000
 #define WINSIZE_WIDTH	480
 #define WINSIZE_HEIGHT	360
 #define NUM_BLOCKS		5
