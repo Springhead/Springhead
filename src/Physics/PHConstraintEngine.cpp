@@ -560,5 +560,11 @@ void PHConstraintEngine::Step(){
 
 }
 
+bool PHConstraintEngine::GetState(void* s){
+	return false;
+}
+void PHConstraintEngine::SetState(const void* s){
+}
+
 }
 

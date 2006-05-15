@@ -26,6 +26,8 @@ public:
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
 };
+struct PHConstraintEngineState{
+};
 class PHConstraintEngine: public PHEngine{
 	friend class PHSolidPair;
 	friend class PHSolid;
@@ -50,6 +52,20 @@ class PHConstraintEngine: public PHEngine{
 
 	PHJoint* CreateJoint(const PHJointDesc& desc);
 	
+public:
+	PHConstraintEngine();
+	~PHConstraintEngine();
+	void Add(PHSolid* s);			///< Solid を登録する
+	void Remove(PHSolid* s);		///< 登録されているSolidを削除する
+	PHJoint* AddJoint(const PHJointDesc& desc);	///< 関節を追加する（ファイルローダ用）
+	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	///< 関節の追加する
+	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
+	///
+	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
+	///	速度→位置、加速度→速度の積分
+	virtual void Step();
+	virtual void Clear(PHScene* s);
+
 protected:
 	PHSolidAuxs		solids;			/// 剛体の配列
 	PHSolidPairs	solidPairs;	
@@ -72,21 +88,10 @@ protected:
 	
 	/// SolidにShapeが追加されたときにSolidから呼ばれる
 	void UpdateShapePairs(PHSolid* solid); 
-	
-public:
-	void Add(PHSolid* s);			///< Solid を登録する
-	void Remove(PHSolid* s);		///< 登録されているSolidを削除する
-	PHJoint* AddJoint(const PHJointDesc& desc);	///< 関節を追加する（ファイルローダ用）
-	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	///< 関節の追加する
-	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable);
-	///
-	int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
-	///	速度→位置、加速度→速度の積分
-	virtual void Step();
-	virtual void Clear(PHScene* s);
 
-	PHConstraintEngine();
-	~PHConstraintEngine();
+	DEF_STATE_NOINHERIT(PHConstraintEngine);
+	virtual bool GetState(void* s);
+	virtual void SetState(const void* s);
 
 	friend class PHShapePair;
 };

@@ -218,7 +218,7 @@ void FILoadContext::LeaveBlock(){
 	datas.Pop();
 }
 void FILoadContext::EndNode(){
-	if (datas.Top()->type->GetIfInfo()){
+	if (datas.Top()->type && datas.Top()->type->GetIfInfo()){
 		objects.Pop();
 	}else{
 		//	CreateˆÈŠO‚ÌI—¹ˆ—D

@@ -42,13 +42,16 @@ namespace Spr{;
 #define OBJECTIMPABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
 #define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
 
-#define DEF_STATE(cls)																\
-	virtual void* GetStateAddress(){ return (cls##State*)this; }					\
-	virtual bool GetState(void* s){ *(cls##State*)s=*this; return true; }			\
+#define DEF_STATE_NOINHERIT(cls)													\
 	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
-	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
 	virtual void ConstructState(void* m){ new(m) cls##State;}						\
 	virtual void DestructState(void* m){ ((cls##State*)m)->~cls##State(); }			\
+
+#define DEF_STATE(cls)																\
+	DEF_STATE_NOINHERIT(cls)														\
+	virtual void* GetStateAddress(){ return (cls##State*)this; }					\
+	virtual bool GetState(void* s){ *(cls##State*)s=*this; return true; }			\
+	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
 
 #define DEF_DESC(cls)																\
 	virtual void* GetDescAddress(){ return (cls##Desc*)this; }						\
