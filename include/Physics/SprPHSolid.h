@@ -39,9 +39,9 @@ struct PHSolidIf : public SceneObjectIf{
 	virtual void AddTorque(Vec3d t)=0;					///< ƒgƒ‹ƒN‚ð‰Á‚¦‚é
 	virtual void AddForce(Vec3d f, Vec3d r)=0;			///< —Í‚ð ˆÊ’ur(WorldŒn) ‚É‰Á‚¦‚é
 
-	virtual double		GetMass()=0;							///< Ž¿—Ê
-	virtual double		GetMassInv()=0;						///< Ž¿—Ê‚Ì‹t”
-	virtual void		SetMass(double m)=0;						///< Ž¿—Ê‚ÌÝ’è
+	virtual double		GetMass()=0;					///< Ž¿—Ê
+	virtual double		GetMassInv()=0;					///< Ž¿—Ê‚Ì‹t”
+	virtual void		SetMass(double m)=0;			///< Ž¿—Ê‚ÌÝ’è
 	virtual Matrix3d	GetInertia()=0;					///< Šµ«ƒeƒ“ƒ\ƒ‹
 	virtual void		SetInertia(const Matrix3d& I)=0;
 
