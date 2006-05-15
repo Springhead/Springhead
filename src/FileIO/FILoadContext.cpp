@@ -179,19 +179,26 @@ void FILoadContext::LoadNode(){
 	if (datas.Top()->type->GetIfInfo()){
 		//	ロードしたデータからオブジェクトを作る．
 		ObjectIf* obj = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
-		NamedObjectIf* n = ICAST(NamedObjectIf, obj);
-		if (datas.Top()->name.length()){
-			if (n){
-				n->SetName(datas.Top()->name.c_str());
-			}else{
-				UTString err("Can not give name to an object of ");
-				err.append(obj->GetIfInfo()->ClassName());
-				err.append(".");
-				ErrorMessage(NULL, err.c_str());
+		if (obj){
+			NamedObjectIf* n = ICAST(NamedObjectIf, obj);
+			if (datas.Top()->name.length()){
+				if (n){
+					n->SetName(datas.Top()->name.c_str());
+				}else{
+					UTString err("Can not give name to an object of '");
+					err.append(obj->GetIfInfo()->ClassName());
+					err.append("'.");
+					ErrorMessage(NULL, err.c_str());
+				}
 			}
+		}else{
+			UTString err("Can not create '");
+			err.append(datas.Top()->type->GetIfInfo()->ClassName());
+			err.append("'. Ancestor objects don't know how to make it.");
+			ErrorMessage(NULL, err.c_str());
 		}
 		objects.Push(obj);
-		if (objects.size() == 1) rootObjects.push_back(objects.Top());
+		if (obj && objects.size() == 1) rootObjects.push_back(objects.Top());
 	}else{
 		static FINodeHandler key;
 		key.AddRef();
@@ -253,7 +260,7 @@ void FILoadContext::Message(const char* pos, const char* msg){
 	const char* ptr = fileInfo.back().start;
 	int lines=0;
 	int returns=0;
-	const char* line=NULL;
+	const char* line=ptr;
 	if (pos){
 		for(;ptr < pos; ++ptr){
 			if (*ptr == '\n'){
