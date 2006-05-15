@@ -197,23 +197,13 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 
-bool approx_1e3(const double x, const double y){
-	const double eps = 1e-3;		// 1e-6 精度だと静止しないので、1e-3 で一旦回避
-	return ((x==y)
-			|| (fabs(x-y) < eps)
-			|| (fabs(x/y - 1.0) < eps));
-}
-
-bool approxVec_1e3(const Vec3d v1, const Vec3d v2){
-	return (approx_1e3(v1.x, v2.x) && approx_1e3(v1.y, v2.y) && approx_1e3(v1.z, v2.z));
-}
-
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
  return 	なし
  */
 void SPR_CDECL idle(){
+#if 0	
 	static int stepCnt = 0;						// 静止したステップカウント
 	static int totalStep = 0;					// 全実行ステップ数（終了判定で使用）
 	
@@ -227,11 +217,12 @@ void SPR_CDECL idle(){
 	}
 	iCnt = 0;
 	bool flag = true;
+	int boxIndex = 0;
 	// preposとcurposが一致しないboxがあるか
 	while(iCnt < NUM_BLOCK){
-		//if (!approx(prepos[iCnt], curpos[iCnt])) {	
-		if (!approxVec_1e3(prepos[iCnt], curpos[iCnt])) {	
+		if (!approx(prepos[iCnt], curpos[iCnt])) {	
 			flag = false;
+			boxIndex = iCnt;
 			break;
 		}
 		iCnt++;
@@ -241,7 +232,7 @@ void SPR_CDECL idle(){
 		stepCnt++;
 		std::cout << "true" << std::endl;
 	} else {
-		std::cout << "               false    " << prepos[0]-curpos[0] <<  std::endl;
+		std::cout << boxIndex << "               false    " << prepos[boxIndex]-curpos[boxIndex] <<  std::endl;
 		stepCnt = 0;
 	}
 	// 終了判定
@@ -255,6 +246,13 @@ void SPR_CDECL idle(){
 		exit(EXIT_FAILURE);
 	}
 	glutPostRedisplay();
+#else
+	scene->Step();
+	glutPostRedisplay();
+	static int count;
+	count++;
+	if (count > TOTAL_IDLE_COUNTER) exit(0);	
+#endif	
 }
 
 /**
