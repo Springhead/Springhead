@@ -16,9 +16,9 @@ protected:
 public:
 	CDCutLine(Vec2d n, double d):normal(n), dist(d){
 		const double epsilon = 1e-10;
-		assert(_finite(n.x));
-		assert(_finite(n.y));
-		assert(_finite(d));
+		assert(finite(n.x));
+		assert(finite(n.y));
+		assert(finite(d));
 		if (dist < epsilon) dist = epsilon;
 		distInv = 1/dist;
 	}
