@@ -190,15 +190,15 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == 'q') exit(0);
 }	
 
-bool approx_1e4(const double x, const double y){
-	const double eps = 1e-4;		// 1e-6 精度だと静止しないので、1e-4 で一旦回避
+bool approx_1e3(const double x, const double y){
+	const double eps = 1e-3;		// 1e-6 精度だと静止しないので、1e-4 で一旦回避
 	return ((x==y)
 			|| (fabs(x-y) < eps)
 			|| (fabs(x/y - 1.0) < eps));
 }
 
-bool approxVec_1e4(const Vec3d v1, const Vec3d v2){
-	return (approx_1e4(v1.x, v2.x) && approx_1e4(v1.y, v2.y) && approx_1e4(v1.z, v2.z));
+bool approxVec_1e3(const Vec3d v1, const Vec3d v2){
+	return (approx_1e3(v1.x, v2.x) && approx_1e3(v1.y, v2.y) && approx_1e3(v1.z, v2.z));
 }
 
 /**
@@ -222,7 +222,7 @@ void idle(){
 		exit(EXIT_FAILURE);
 	} else {
 		//if (approx(prepos, curpos)){
-		if (approxVec_1e4(prepos, curpos)){
+		if (approxVec_1e3(prepos, curpos)){
 			stay++;
 			if (stay > STAY_COUNTER){				// 静止判定カウント	
 			DSTR << "\nPHShapeGL success." << std::endl;
