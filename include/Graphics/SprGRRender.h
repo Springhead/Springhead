@@ -257,6 +257,8 @@ struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
 	///	Viewportと射影行列を設定
 	virtual void Reshape(Vec2f screen)=0;
+	/// シーン内の全てのオブジェクトをレンダリングする
+	virtual void DrawScene(PHSceneIf* scene)=0;
 	/// 剛体をレンダリングする
 	virtual void DrawSolid(PHSolidIf* so)=0;
 	/// 面をレンダリングする

@@ -9,6 +9,7 @@ namespace Spr {;
 //	GRDebugRender
 OBJECTIMP(GRDebugRender, GRRender);
 IF_IMP(GRDebugRender, GRRender);
+
 ///	Viewportと射影行列を設定
 void GRDebugRender::Reshape(Vec2f screen){
 	glViewport(0, 0, static_cast<GLsizei>(screen.x), static_cast<GLsizei>(screen.y));
@@ -17,18 +18,54 @@ void GRDebugRender::Reshape(Vec2f screen){
 											camera.front, camera.back);
 	SetProjectionMatrix(afProj);
 }
+
+/// シーン内の全てのオブジェクトをレンダリングする
+void GRDebugRender::DrawScene(PHSceneIf* scene){
+	PHSolidIf **solids = scene->GetSolids();
+	for (int num=0; num < scene->NSolids(); ++num){
+		this->DrawSolid(solids[num]);
+	}	
+}
+
 /// 剛体をレンダリングする
 void GRDebugRender::DrawSolid(PHSolidIf* so){
-	for (int i=0; i<so->NShape(); ++i) {	
-		CDShapeIf **shapes = so->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
-		Vec3f* base = mesh->GetVertices();
-		for (size_t f=0; f<mesh->NFace(); ++f) {	
-			CDFaceIf* face = mesh->GetFace(f);
-			this->DrawFace(face, base);
+	Affinef soaf;
+	so->GetPose().ToAffine(soaf);
+	this->PushModelMatrix();
+	this->MultModelMatrix(soaf);
+	
+	CDShapeIf** shapes = so->GetShapes();
+	for(int s=0; s<so->NShape(); ++s){
+		Affinef af;
+		shapes[s]->GetPose().ToAffine(af);
+		this->PushModelMatrix();
+		this->MultModelMatrix(af);
+		
+		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[s]);
+		if (mesh){
+			Vec3f* base = mesh->GetVertices();
+			for (size_t f=0; f<mesh->NFace(); ++f) {	
+				CDFaceIf* face = mesh->GetFace(f);
+				this->DrawFace(face, base);
+			}
 		}
+		CDSphereIf* sphere = ICAST(CDSphereIf, shapes[s]);
+		if (sphere){
+			float r = sphere->GetRadius();
+			glutSolidSphere(r, 10, 10);
+		}
+		CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
+		if (box){
+			Vec3f boxsize = box->GetBoxSize();
+			glScalef(boxsize.x, boxsize.y, boxsize.z);	
+			glutSolidCube(1.0);		
+		}
+		this->PopModelMatrix();
 	}
+
+	this->PopModelMatrix();
 }
+		
 /// 面をレンダリングする
 void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 	int numIndices = face->NIndex();			// (=3 :三角形なので3頂点)

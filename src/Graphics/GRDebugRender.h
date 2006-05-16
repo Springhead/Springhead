@@ -16,6 +16,9 @@ class GRDebugRender:public InheritGRRender<GRDebugRenderIf, GRRender>{
 	/**	Viewportと射影行列を設定
 		@param	screen		ウィンドウサイズ */
 	void Reshape(Vec2f screen);
+	/** シーン内の全てのオブジェクトをレンダリングする
+	    @param  scene		シーン */
+	void DrawScene(PHSceneIf* scene);
 	/** 剛体をレンダリングする
 	    @param	so　　　	剛体 */
 	void DrawSolid(PHSolidIf* so);

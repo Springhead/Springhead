@@ -81,13 +81,7 @@ void display(){
 	render->SetAlphaMode(render->BF_ONE, render->BF_ZERO);
 
 	render->SetMaterial(matFloor);		// マテリアル設定
-	render->PushModelMatrix();			// 行列スタックをプッシュ
-	Posed pose = soFloor->GetPose();
-	pose.ToAffine(ad);
-	render->MultModelMatrix(ad);		// 現在のmodelView * model
 	render->DrawSolid(soFloor);
-	render->PopModelMatrix();			// 行列スタックをポップ
-
 	//-----------------------------------
 	//		ブロック(soBlock)
 	//-----------------------------------
@@ -95,12 +89,7 @@ void display(){
 	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
 	for(unsigned int blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
 		render->SetMaterial(matBlock);
-		render->PushModelMatrix();
-		pose = soBlock[blockCnt]->GetPose();
-		ad = Affined(pose);
-		render->SetModelMatrix(ad);			// view * model（この場合、render->MultModelMatrix(ad); としても同様）
 		render->DrawSolid(soBlock[blockCnt]);
-		render->PopModelMatrix();
 	}
 
 	render->SetDepthWrite(true);
