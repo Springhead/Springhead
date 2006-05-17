@@ -52,7 +52,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		CDSphereIf* sphere = ICAST(CDSphereIf, shapes[s]);
 		if (sphere){
 			float r = sphere->GetRadius();
-			glutSolidSphere(r, 10, 10);
+			glutSolidSphere(r, 20, 20);
 		}
 		CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
 		if (box){

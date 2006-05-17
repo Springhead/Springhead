@@ -92,12 +92,13 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		double ip = planeNormalL * faceNormal;
 		//if (ip < 1 - epsilon){	//	•½s‚È–Ê‚Í–³Ž‹
 		if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){
-			double a = -faceDist*ip / (1-(ip*ip));
-			double b = faceDist / (1-(ip*ip));
+			double a = -faceDist*ip / (1.0-(ip*ip));
+			double b = faceDist / (1.0-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*faceNormal;
 			Vec3d lineNormal = planeNormalL ^ lineDirection;
 			double lineDist = lineNormal * lineOff;
-			if (finite(lineDist)) {		
+			if (finite(lineDist)) {	
+				if (lineDist < epsilon) lineDist = epsilon;
 				//	local -> world -> ring2ŽŸŒ³Œn‚É•ÏŠ·
 				Posed to2D = ring.localInv * toW;
 				Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());

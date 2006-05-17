@@ -132,7 +132,8 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 			Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
 			Vec3d lineNormal = planeNormalL ^ lineDirection;
 			double lineDist = lineNormal * lineOff;
-			if (finite(lineDist)) {		
+			if (finite(lineDist)) {	
+				if (lineDist < epsilon) lineDist = epsilon;
 				// local -> world -> ring2ŽŸŒ³Œn‚É•ÏŠ·
 				Posed to2D = ring.localInv * toW;
 				Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
