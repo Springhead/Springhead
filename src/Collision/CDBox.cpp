@@ -125,8 +125,8 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		double qfaceDist = qfaceNormal * (base[qfaces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ qfaceNormal).unit();
 		double ip = planeNormalL * qfaceNormal;
-		//if (ip < 1 - epsilon){	//	•½s‚È–Ê‚Í–³Ž‹
-		if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){
+		if (ip < 1 - epsilon){	//	•½s‚È–Ê‚Í–³Ž‹
+		//if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){
 			double a = -qfaceDist*ip / (1-(ip*ip));
 			double b = qfaceDist / (1-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*qfaceNormal;

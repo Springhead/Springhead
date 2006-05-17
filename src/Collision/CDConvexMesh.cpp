@@ -90,8 +90,8 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		double faceDist = faceNormal * (base[faces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ faceNormal).unit();
 		double ip = planeNormalL * faceNormal;
-		//if (ip < 1 - epsilon){	//	•½s‚È–Ê‚Í–³Ž‹
-		if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){
+		if (ip < 1 - epsilon){	//	•½s‚È–Ê‚Í–³Ž‹
+		//if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){
 			double a = -faceDist*ip / (1.0-(ip*ip));
 			double b = faceDist / (1.0-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*faceNormal;
