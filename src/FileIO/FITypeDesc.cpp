@@ -237,7 +237,7 @@ void FITypeDescDb::RegisterProto(FITypeDesc* n){
 FIFieldIt::FIFieldIt(FITypeDesc* d){
 	type = d;
 	if (type){
-		field = type->GetComposit().end();
+		field = &*type->GetComposit().end();
 	}else{
 		field = NULL;
 	}
@@ -248,11 +248,11 @@ FIFieldIt::FIFieldIt(FITypeDesc* d){
 bool FIFieldIt::NextField(){
 	if (!type->IsComposit()) return false;
 	//	次のフィールドへ進む
-	if (field==type->GetComposit().end()){
-		field=type->GetComposit().begin();
+	if (field == &*type->GetComposit().end()){
+		field = &*type->GetComposit().begin();
 	}else{
 		++field;
-		if (field == type->GetComposit().end()){
+		if (field == &*type->GetComposit().end()){
 			fieldType = F_NONE;
 			return false;
 		}
