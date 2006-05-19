@@ -73,6 +73,10 @@ struct GRLight{
 	float spotInner;	///<	スポットライトの中心部分(内部コーン)（deviceがDirectXの場合のみ利用可能） 0..spotCutoff
 	float spotCutoff;	///<	スポットライトの広がり角度(度)(外部コーン) 0..π(pi)
 	GRLight(){
+		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
+		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
+		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
+		position = Vec4f(0.0, 0.0, 1.0, 1.0);
 		range = FLT_MAX;
 		attenuation0 = 1.0f;
 		attenuation1 = 0.0f;
@@ -84,6 +88,7 @@ struct GRLight{
 	}
 };
 
+/**	@brief	材質	*/
 struct GRMaterialDesc{
 	Vec4f ambient;					///<	環境光に対する反射率
 	Vec4f diffuse;					///<	拡散光に対する反射率
@@ -91,7 +96,13 @@ struct GRMaterialDesc{
 	Vec4f emissive;					///<	放射輝度
 	float power;					///<	鏡面反射の強度、鏡面係数
 	std::string texture;			///<	テクスチャファイル名
-	GRMaterialDesc():power(0){}
+	GRMaterialDesc(){
+		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);
+		diffuse = Vec4f(0.8, 0.8, 0.8, 1.0);
+		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
+		emissive = Vec4f(0.0, 0.0, 0.0, 1.0);
+		power = 20.0;
+	}
 	GRMaterialDesc(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p):
 		ambient(a), diffuse(d), specular(s), emissive(e), power(p){}
 	GRMaterialDesc(Vec4f c, float p):
@@ -105,6 +116,7 @@ struct GRMaterialDesc{
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
 };
+/** @brief　　材質の基本クラス　　 */
 struct GRMaterialIf: public SceneObjectIf{
 	virtual bool IsOpaque() const = 0;
 };
@@ -255,6 +267,34 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 /**	@brief	デバッグ情報レンダラーの基本クラス */
 struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
+	///	レンダラーで用意してある材質(24種類)
+	enum MaterialSample {
+		RED,
+		GREEN,
+		BLUE,
+		YELLOW,
+		CYAN,
+		MAGENTA,
+		WHITE,
+		GRAY,
+		ORANGE,
+		BLOWN,
+		LIGHT_BLUE,
+		MIDIUM_PURPLE,
+		DARK_GREEN,
+		DARK_VIOLET,
+		DARK_CYAN,
+		GREEN_YELLOW,
+		LIME_GREEN,
+		INDIAN_RED,
+		INDIGO,
+		GREEN_INDIGO,
+		OLIVE_GREEN,
+		NAVY_BLUE,
+		TURQUOISE_BLUE,
+		EMERALD_GREEN
+	};
+
 	///	Viewportと射影行列を設定
 	virtual void Reshape(Vec2f screen)=0;
 	/// シーン内の全てのオブジェクトをレンダリングする
@@ -263,6 +303,8 @@ struct GRDebugRenderIf:public GRRenderIf{
 	virtual void DrawSolid(PHSolidIf* so)=0;
 	/// 面をレンダリングする
 	virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
+	/// 指定した材質(マテリアルサンプル)を割り当てる
+	virtual void SetMaterialSample(MaterialSample matname)=0;
 };
 
 //@}
