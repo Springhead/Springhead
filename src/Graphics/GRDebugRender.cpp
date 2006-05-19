@@ -12,7 +12,8 @@ IF_IMP(GRDebugRender, GRRender);
 
 /// コンストラクタ
 GRDebugRender::GRDebugRender(){
-	matSample.resize(24);
+	matSampleCount = 24;		// 24種類
+	matSample.resize(matSampleCount);
 	std::vector<GRMaterialDesc>::iterator itr;
 	itr = matSample.begin();
 	(itr++)->diffuse = Vec4f(1.0, 0.0, 0.0, 1.0);			// red
@@ -128,7 +129,14 @@ void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 }
 
 void GRDebugRender::SetMaterialSample(MaterialSample matname){
-	this->SetMaterial(matSample[matname]);
+	int matID = 0;
+	if (matname > EMERALD_GREEN) {
+		matID = (int)matname;
+		matID = matID % matSampleCount;
+	} else {
+		matID = (int)matname;
+	}
+	this->SetMaterial(matSample[matID]);
 }
 
 }	//	Spr
