@@ -1,15 +1,12 @@
 /**
- Springhead2/src/tests/Graphics/GRSimple/main.cpp
+ Springhead2/src/tests/Graphics/GRColorSpheres/main.cpp
 
 【概要】
-  グラフィックスレンダラークラスのAPIを使い、GLデバイスでレンダリングを行う。　
+  グラフィックスレンダラークラスの DrawScene APIを使い、シーンを一括でレンダリングする。
+  DrawScene API で設定されているマテリアルマテリアルサンプルを用いて、カラフルなボックスをレンダリングする。　
   
 【終了基準】
   ・5000ステップ後に強制終了。
-
-【処理の流れ】
-  ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。  
-  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。
 
  */
 #include <Springhead.h>		//	Springheadのインタフェース
@@ -24,7 +21,7 @@ using namespace Spr;
 #define EXIT_TIMER		5000
 #define WINSIZE_WIDTH	480
 #define WINSIZE_HEIGHT	360
-#define NUM_BLOCKS		5
+#define NUM_BLOCKS		30
 
 GRSdkIf* grSdk;
 GRDebugRenderIf* render;
@@ -53,79 +50,14 @@ GRMaterialDesc matLine(Vec4f(1.0, 1.0, 1.0, 1.0),
 					100.0);	
 
 
-// カメラの設定
-GRCamera camera2(Vec2f(WINSIZE_WIDTH, WINSIZE_HEIGHT), Vec2f(0.0, 0.0), 1.0, 5000.0);
-
-
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
  param		なし
  return 	なし
  */
 void display(){
-	//	バッファクリア
 	render->ClearBuffer();
-
-	// 視点を再設定する
-	Affinef view;
-	view.Pos() = Vec3f(5.0, 15.0, 15.0);								// eye
-	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
-	view = view.inv();	
-	render->SetViewMatrix(view);
-
-	Affined ad;
-	//-----------------------------------
-	//		床(soFloor) 
-	//-----------------------------------
-	render->SetAlphaTest(true);
-	render->SetAlphaMode(render->BF_ONE, render->BF_ZERO);
-
-	render->SetMaterial(matFloor);		// マテリアル設定
-	render->DrawSolid(soFloor);
-	//-----------------------------------
-	//		ブロック(soBlock)
-	//-----------------------------------
-	render->SetDepthWrite(false); 
-	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
-	for(unsigned int blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
-		render->SetMaterial(matBlock);
-		render->DrawSolid(soBlock[blockCnt]);
-	}
-
-	render->SetDepthWrite(true);
-	render->SetAlphaTest(false);
-
-	//-----------------------------------
-	//				軸
-	//-----------------------------------
-	render->SetMaterial(matLine);
-	Vec3f vtx[4] = {Vec3f(0,0,0), Vec3f(10,0,0), Vec3f(0,10,0), Vec3f(0,0,10)};
-	size_t vtxIndex[6] = {0, 1, 0, 2, 0, 3};
-	render->SetLineWidth(2.0);
-	render->DrawIndexed(render->LINES, vtxIndex, vtxIndex + 6, vtx);
-	
-	//-----------------------------------
-	//		テキスト描画/フォント
-	//-----------------------------------
-	GRFont font1;
-	font1.height = 30;
-	font1.width	= 0;
-	font1.weight = 400;
-	font1.color  = 0xFFFFFF;
-	font1.bItalic = true;
-	font1.face   = "ARIAL";
-	std::string str = "X";
-	render->DrawFont(Vec3f(10.0, 1.0, -1.0), str, font1);	
-	font1.face = "ＭＳ 明朝";
-	font1.color = 0xFFFF00;
-	str = "Y";
-	render->DrawFont(Vec3f(1.0, 10.0, 0.0), str, font1);		
-	GRFont font2;
-	font2 = font1;
-	font2.color = 0x00FFFF;
-	str = "Z";
-	render->DrawFont(Vec3f(-2.0, 1.0, 10.0), str, font2);	
-
+	render->DrawScene(scene);
 	render->EndScene();
 }
 
@@ -135,24 +67,10 @@ void display(){
  return 	なし
  */
 void setLight() {
-	GRLight light0;
-	light0.ambient	= Vec4f(0.0, 0.0, 0.0, 1.0);
-	light0.diffuse	= Vec4f(0.7, 1.0, 0.7, 1.0);
-	light0.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
+	GRLight light0, light1;
 	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
-	light0.attenuation0  = 1.0;
-	light0.attenuation1  = 0.0;
-	light0.attenuation2  = 0.0;
-	light0.spotDirection = Vec3f(-2.0, -3.0, -5.0);
-	light0.spotFalloff   = 0.0;
-	light0.spotCutoff	 = 70.0;
-	render->PushLight(light0);
-
-	GRLight light1;
-	light1.ambient	= Vec4f(0.5, 0.0, 1.0, 1.0);
-	light1.diffuse	= Vec4f(1.0, 0.0, 1.0, 1.0);
-	light1.specular	= Vec4f(0.0, 1.0, 0.0, 1.0);
 	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	render->PushLight(light0);
 	render->PushLight(light1);
 }
 /**
@@ -262,9 +180,16 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
 	
-	render->SetDevice(grDevice);	
-	render->SetCamera(camera2);	
+	render->SetDevice(grDevice);	// デバイスの設定
 
+	// 視点を設定する
+	Affinef view;
+	view.Pos() = Vec3f(5.0, 15.0, 15.0);								// eye
+	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
+	view = view.inv();	
+	render->SetViewMatrix(view);
+	
+	
 	setLight();
 
 	glutMainLoop();

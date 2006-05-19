@@ -10,7 +10,7 @@
 
 TOP_DIR 		= ../../..
 
-GRAPHICS_TEST_DIR	= GRSimple
+GRAPHICS_TEST_DIR	= GRSimple GRColorSpheres
 
 all:
 	@for dir in $(GRAPHICS_TEST_DIR); \
