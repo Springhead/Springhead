@@ -88,7 +88,7 @@ Springhead2 では、視点行列、モデル行列、射影行列を記憶する行列を内部で持っていま
 \subsection moreTutoLookAt		4.1．　視点・参照点の位置の指定
 視点と参照点の位置を設定できます．以下の手順に従って下さい．
 \verbatim
-    Affinef view;                                                       // アフィン行列
+    Affinef view;                                                            // アフィン行列
 	view.Pos() = Vec3f(0.0, 15.0, 15.0);                                // 視点
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));          // 参照点、上方向ベクトル
 	view = view.inv();                                                  // 逆行列を求める
