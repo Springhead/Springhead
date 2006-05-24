@@ -115,7 +115,8 @@ void FIFile::SaveBlock(FISaveContext* sc){
 	OnSaveBlockStart(sc);
 	void* base = sc->datas.Top()->data;
 	while(sc->fieldIts.back().NextField()){
-		FITypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
+		//FITypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
+		FITypeDesc::Field* field = sc->fieldIts.back().field;
 		//	要素数の取得
 		int nElements = 1;
 		if (field->varType == FITypeDesc::Field::VECTOR){

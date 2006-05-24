@@ -73,7 +73,6 @@ void display(){
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	Affined ad;
 	//-----------------------------------
 	//		è∞(soFloor) 
 	//-----------------------------------

@@ -14,19 +14,19 @@
 
 【テストパターン】
   ※ 本ファイルの28行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
-　  test1.x	：凸形状(mesh)のテスト
-    test2.x	：凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
-    test3.x	：凸形状(mesh)と球(sphere)のテスト
-	test4.x	：凸形状(mesh)と球(sphere)と直方体(box)のテスト
-	test5.x : timeStep=0.001におけるテスト
+　  test1.x  : 凸形状(mesh)のテスト
+    test2.x  : 凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
+    test3.x  : 凸形状(mesh)と球(sphere)のテスト
+	test4.x  : 凸形状(mesh)と球(sphere)と直方体(box)のテスト
+	test5.x  : timeStep=0.001におけるテスト
+	GRTest.x : XファイルからのグラフィックスSDKの入力テスト
 
  */
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define EXIT_TIMER	12000			// 強制終了させるステップ数
-//#define TEST_FILEX	"test1.x"		// ロードするXファイル
-#define TEST_FILEX	"test4.x"		
+#define TEST_FILEX	"test1.x"		// ロードするXファイル
 
 namespace Spr{
 	PHSdkIf* phSdk;
