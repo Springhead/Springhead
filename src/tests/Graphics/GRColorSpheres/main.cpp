@@ -18,7 +18,7 @@
 #endif
 using namespace Spr;
 #define ESC				27			// ESC key
-#define EXIT_TIMER		5000		// 実行ステップ数
+#define EXIT_TIMER		7000		// 実行ステップ数
 #define WINSIZE_WIDTH	480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		10			// sphere数
