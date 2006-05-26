@@ -10,6 +10,6 @@ namespace Spr{;
 
 IF_IMP(CDShape, Object);
 OBJECTIMPABST(CDShape, NamedObject);
-double CDShape::epsilon = 1e-3;		// 1e-8;
+double CDShape::epsilon = 1e-4;		// 1e-8;
 
 }
