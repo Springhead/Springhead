@@ -25,7 +25,7 @@ all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
 		-$(RM) $@
-		$(AR) $(ARFLAGS) $@ $?	
+		$(AR) $(ARFLAGS) $@ $(OBJS)	
 		$(RANLIB) $@
 	
 .cpp.o:
