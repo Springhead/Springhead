@@ -155,7 +155,7 @@ int main(int argc, char* argv[]){
 
 	// Ž‹“_‚ðÝ’è‚·‚é
 	Affinef view;
-	view.Pos() = Vec3f(0.0, 15.0, 15.0);								// eye
+	view.Pos() = Vec3f(0.0, 10.0, 10.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
