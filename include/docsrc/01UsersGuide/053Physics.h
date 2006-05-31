@@ -2,7 +2,7 @@
 
 - \ref sec_PHSdk
  - \ref sdk_create
- - \ref sdk_finialize
+ - \ref sdk_finalize
 - \ref scene
  - \ref scene_create
  - \ref scene_gravity

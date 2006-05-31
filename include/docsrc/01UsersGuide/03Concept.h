@@ -1,9 +1,9 @@
 /** \page pageConcept	Springhead‚Ì\¬
 
 Springhead‚Í‘å‚«‚­•ª‚¯‚ÄˆÈ‰º‚Ì3‚Â‚Ìƒ‚ƒWƒ…[ƒ‹‚©‚ç\¬‚³‚ê‚Ä‚¢‚Ü‚·D
-- ‚r‚‚’‚‰‚Ž‚‡‚ˆ‚…‚‚„@‚o‚ˆ‚™‚“‚‰‚ƒ‚“@@Ë@ \ref pagePhysics
-- ‚r‚‚’‚‰‚Ž‚‡‚ˆ‚…‚‚„@‚f‚’‚‚‚ˆ‚‰‚ƒ‚“@Ë@ \ref pageGraphics
-- ‚r‚‚’‚‰‚Ž‚‡‚ˆ‚…‚‚„@‚e‚‰‚Œ‚…@‚h^‚n@Ë@ \ref pageFileIO
+- @ \c Springhead \c Physics@ Ë@ \ref pagePhysics
+- @ \c Springhead \c Graphics@ Ë@ \ref pageGraphics  
+- @ \c Springhead \c File \c I/O@ Ë@ \ref pageFileIO
 
 <br>
 
@@ -16,15 +16,15 @@ Springhead‚Ås‚¢‚½‚¢‚Æl‚¦‚Ä‚¢‚él‚à‚¢‚é‚Å‚µ‚å‚¤D‚±‚Ì‚æ‚¤‚Èê‡‚É‚àC•K—vÅ’áŒÀ
 <br><br><br>
 
 
-\section sec_physics y •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK z
+\section sec_physics @*-*-*@•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK@*-*-*-*-*-*-*-*-*-*-*-*-*
 \par
 \ref pagePhysics ‚ÍC•¨—ƒVƒ~ƒ…ƒŒ[ƒ^–{‘Ì‚Å‚·DÚG”»’è‚â•¨‘Ì‰^“®‚ÌƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ðs‚¢‚Ü‚·D
 •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌƒV[ƒ“(¢ŠE)‚É‚ÍC•¨‘Ì‚ÌŽ¿—Ê‚âŠµ«ƒ‚[ƒƒ“ƒgCŠÖß‚Ì’è‹`C–€ŽCŒW”‚â’µ‚Ë•Ô‚èŒW”Cƒoƒlƒ_ƒ“ƒp‚È‚Ç‚ª‚ ‚è‚Ü‚·D
 •¨‘Ì‚ÌF‚âŒõŒ¹‚È‚ÇC•¨‘Ì‚ÌŒ©‚½–Ú‚É‚Â‚¢‚Ä‚ÍGraphcis‚Åˆµ‚¢‚Ü‚·DPhysics‚É‚Í‚ ‚è‚Ü‚¹‚ñD
-<br><br><br>
+<br><br><br><br>
 
 
-\section sec_graphics y ƒOƒ‰ƒtƒBƒbƒNƒXSDK z
+\section sec_graphics @*-*-*@ƒOƒ‰ƒtƒBƒbƒNƒXSDK@*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 \par
 \ref pageGraphics ‚ÍCƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰‚Å‚·D
 Physics‚É‚Í‚Ü‚Á‚½‚­ƒV[ƒ“‚ð•`‰æ‚·‚é‹@”\‚ª–³‚¢‚½‚ßCƒV[ƒ“‚Ì—lŽq‚ð–Ú‚ÅŒ©‚é‚±‚Æ‚ª‚Å‚«‚Ü‚¹‚ñD
@@ -39,10 +39,10 @@ Graphics‚ðŽg‚í‚¸‚ÉCPhysics‚ÌŒvŽZŒ‹‰Ê‚ðŽ©•ª‚Ì•`‰æƒvƒƒOƒ‰ƒ€‚©‚çŽQÆ‚µ‚ÄC
 “ÆŽ©‚Ì•`‰æƒvƒƒOƒ‰ƒ€‚ðì‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
 ‚Ü‚½C‘¼‚ÌƒOƒ‰ƒtƒBƒbƒNƒX‚âƒV[ƒ“ƒOƒ‰ƒt‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ðŽg‚Á‚Ä•`‰æ‚µCPhysics‚ÌŒvŽZŒ‹‰Ê‚ð
 ƒ‰ƒCƒuƒ‰ƒŠ“`‚¦‚éƒvƒƒOƒ‰ƒ€‚¾‚¯‚ðŽ©•ª‚Å—pˆÓ‚·‚éŽè‚à‚ ‚è‚Ü‚·D
-<br><br><br>
+<br><br><br><br>
 
 
-\section sec_fileio y ƒtƒ@ƒCƒ‹“üo—ÍSDK z
+\section sec_fileio @*-*-*@ƒtƒ@ƒCƒ‹“üo—ÍSDK@*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 \par
 \ref pageFileIO ‚ÍCƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÆƒZ[ƒo‚Å‚·DƒV[ƒ“ƒOƒ‰ƒt‚Ìƒ[ƒh‚ÆƒZ[ƒu‚ðs‚¢‚Ü‚·D
 FileIO‚ðŽg‚¤‚ÆCƒV[ƒ“ƒOƒ‰ƒt(ƒIƒuƒWƒFƒNƒg‚ÌƒcƒŠ[)‚ðƒf[ƒ^ƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚µ‚½‚èC
@@ -52,5 +52,5 @@ FileIO‚Í‘¼‚Ìƒ‚ƒWƒ…[ƒ‹‚ÌAPI‚ð—˜—p‚µ‚Äƒ[ƒh‚µ‚½ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ð¶¬‚µ‚½‚
 
 \par
 FileIO‚ðŽg‚í‚¸‚ÉCŽ©•ª‚Å1‚©‚çƒf[ƒ^ƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚éŽd‘g‚Ý‚ðì‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
-<br><br><br>
+<br><br><br><br>
 */
