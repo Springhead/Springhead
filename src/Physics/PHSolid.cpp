@@ -236,11 +236,14 @@ void PHSolid::AddShape(CDShapeIf* shape){
 }
 
 Posed	PHSolid::GetShapePose(int i){
-	return shapes[i].pose;
+	if(0 <= i && i < shapes.size())
+		return shapes[i].pose;
+	return Posed();
 }
 
 void	PHSolid::SetShapePose(int i, const Posed& pose){
-	shapes[i].pose = pose;
+	if(0 <= i && i < shapes.size())
+		shapes[i].pose = pose;
 }
 
 void PHSolid::SetGravity(bool bOn){

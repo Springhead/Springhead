@@ -67,14 +67,15 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 	this->PushModelMatrix();
 	this->MultModelMatrix(soaf);
 	
-	CDShapeIf** shapes = so->GetShapes();
 	for(int s=0; s<so->NShape(); ++s){
+		CDShapeIf* shape = so->GetShape(s);
+
 		Affinef af;
-		shapes[s]->GetPose().ToAffine(af);
+		so->GetShapePose(s).ToAffine(af);
 		this->PushModelMatrix();
 		this->MultModelMatrix(af);
 		
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[s]);
+		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shape);
 		if (mesh){
 			Vec3f* base = mesh->GetVertices();
 			for (size_t f=0; f<mesh->NFace(); ++f) {	
@@ -82,12 +83,12 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 				this->DrawFace(face, base);
 			}
 		}
-		CDSphereIf* sphere = ICAST(CDSphereIf, shapes[s]);
+		CDSphereIf* sphere = ICAST(CDSphereIf, shape);
 		if (sphere){
 			float r = sphere->GetRadius();
 			glutSolidSphere(r, 20, 20);
 		}
-		CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
+		CDBoxIf* box = ICAST(CDBoxIf, shape);
 		if (box){
 			Vec3f boxsize = box->GetBoxSize();
 			glScalef(boxsize.x, boxsize.y, boxsize.z);	
