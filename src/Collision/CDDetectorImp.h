@@ -15,8 +15,11 @@ class CDConvex;
 
 class CDShapePair: public UTRefCount{
 public:
-	//	判定対象のShape
-	CDShape* shape[2];
+	CDShapeRefWithPose*	shape[2];
+	//CDShape* shape[2];		// 判定対象の形状
+	//Posed	 pose[2];		// 剛体から見た形状のpose
+	Posed shapePoseW[2];	// World系での形状の姿勢のキャッシュ
+
 	//	接触判定結果
 	Vec3d closestPoint[2]; // ローカル座標系
 	Vec3d commonPoint;     // World座標系
@@ -31,12 +34,10 @@ public:
 	Vec3d center;				///<	2つの最侵入点の中間の点，CDContactAnalysis::CalcNormal が更新する．
 	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
 
-	//	World系での形状の姿勢をキャッシュ
-	Posed shapePoseW[2];
 
 	///	
 	CDShapePair(){}
-	CDShapePair(CDShape* s0, CDShape* s1){
+	CDShapePair(CDShapeRefWithPose* s0, CDShapeRefWithPose* s1){
 		shape[0] = s0;
 		shape[1] = s1;
 	}

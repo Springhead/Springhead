@@ -92,7 +92,7 @@ void PHContactPoint::ProjectionDynamics(double& f, int k){
 	static double flim;
 	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
 		f = max(0.0, f);
-		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	//Å‘åÃ~–€C
+		flim = 0.5 * (shapePair->shape[0]->shape->material.mu0 + shapePair->shape[1]->shape->material.mu0) * f;	//Å‘åÃ~–€C
 	}
 	else{
 		//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ

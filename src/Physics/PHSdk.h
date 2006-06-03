@@ -24,7 +24,7 @@ public:
 
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	virtual int NShape();
-	virtual CDShapeIf** GetShapes();
+	virtual CDShapeIf* GetShape(int i);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const { return scenes.size()+shapes.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);

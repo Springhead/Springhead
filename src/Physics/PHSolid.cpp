@@ -43,8 +43,8 @@ bool PHSolid::AddChildObject(ObjectIf* obj){
 void PHSolid::CalcBBox(){
 	Vec3f bboxMin = Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
 	Vec3f bboxMax = Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);
-	for(CDShapes::iterator it=shapes.begin(); it != shapes.end(); ++it){
-		(*it)->CalcBBox(bboxMin, bboxMax);
+	for(int i = 0; i < (int)shapes.size(); i++){
+		shapes[i].shape->CalcBBox(bboxMin, bboxMax, shapes[i].pose);
 	}
 	if (bboxMin.X() == FLT_MAX){
 		bbox.SetBBoxMinMax(Vec3f(0,0,0), Vec3f(-1,-1,-1));
@@ -211,8 +211,12 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = OCAST(CDShape, shape);
-	assert(find(shapes.begin(), shapes.end(), sh) == shapes.end());
-	shapes.push_back(sh);
+	//重複登録のチェック
+	for(int i = 0; i < shapes.size(); i++)
+		if(shapes[i].shape == sh)
+			return;
+	shapes.push_back(CDShapeRefWithPose());
+	shapes.back().shape = sh;
 	CalcBBox();
 	//接触エンジンをinvalidate
 	PHScene* scene = OCAST(PHScene,GetScene());
@@ -231,6 +235,19 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	}
 }
 
+Posed	PHSolid::GetShapePose(CDShapeIf* shape){
+	for(int i = 0; i < shapes.size(); i++)
+		if(shapes[i].shape == shape)
+			return shapes[i].pose;
+	return Posed();
+}
+
+void	PHSolid::SetShapePose(CDShapeIf* shape, const Posed& pose){
+	for(int i = 0; i < shapes.size(); i++)
+		if(shapes[i].shape == shape)
+			shapes[i].pose = pose;
+}
+
 void PHSolid::SetGravity(bool bOn){
 	PHScene* ps = OCAST(PHScene,GetScene());
 	PHGravityEngine* ge;
@@ -247,8 +264,8 @@ void PHSolid::SetGravity(bool bOn){
 int PHSolid::NShape(){
 	return shapes.size();
 }
-CDShapeIf** PHSolid::GetShapes(){
-	return (CDShapeIf**)(void*)&shapes.front();
+CDShapeIf* PHSolid::GetShape(int i){
+	return shapes[i].shape;
 }
 
 //----------------------------------------------------------------------------

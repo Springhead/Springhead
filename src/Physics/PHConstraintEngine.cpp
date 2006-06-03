@@ -21,8 +21,8 @@ void PHSolidPair::Init(PHSolidAux* s0, PHSolidAux* s1){
 	shapePairs.resize(ns0, ns1);
 	for(int i = 0; i < ns0; i++)for(int j = 0; j < ns1; j++){
 		PHShapePair& sp = shapePairs.item(i, j);
-		sp.shape[0] = solid[0]->solid->shapes[i];
-		sp.shape[1] = solid[1]->solid->shapes[j];
+		sp.shape[0] = &solid[0]->solid->shapes[i];
+		sp.shape[1] = &solid[1]->solid->shapes[j];
 	}
 	bEnabled = true;
 }
@@ -50,7 +50,10 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	//	この処理は凸形状が持っていて良い．
 	//	＃交線の表現形式として，2次曲線も許す．その場合，直線は返さない
 	//	＃2次曲線はMullar＆Preparataには入れないで別にしておく．
-	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
+	CDConvex* conv[2] = {
+		(CDConvex*)(shape[0]->shape),
+		(CDConvex*)(shape[1]->shape)
+	};
 
 
 	//2Dへの変換がいる．どうする？
@@ -76,8 +79,8 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 	// 凸多面同士の場合は、面と面が触れる場合があるので、接触が凸多角形になることがある。
 	// 球と凸形状の接触は必ず１点になる。
 	CDSphere* sp[2];
-	sp[0] = DCAST(CDSphere, shape[0]);	// CDSphereへダイナミックキャスト
-	sp[1] = DCAST(CDSphere, shape[1]);
+	sp[0] = DCAST(CDSphere, shape[0]->shape);	// CDSphereへダイナミックキャスト
+	sp[1] = DCAST(CDSphere, shape[1]->shape);
 	// 接触解析を行う２つの物体の片方or両方が球の場合
 	if (sp[0] || sp[1]) {		
 		// 接触点の配列(engine->points)に、球の最進入点と相手の最進入点の中点centerを追加する
@@ -117,8 +120,11 @@ void PHShapePair::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidAux
 
 #ifndef USE_VOLUME
 bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
-	UpdateShapePose(solid0->solid->GetPose() * shape[0]->GetPose(), solid1->solid->GetPose() * shape[1]->GetPose());
-	CDConvex* conv[2] = { (CDConvex*)shape[0], (CDConvex*)shape[1], };
+	//UpdateShapePose(solid0->solid->GetPose() * shape[0]->GetPose(), solid1->solid->GetPose() * shape[1]->GetPose());
+	CDConvex* conv[2] = {
+		(CDConvex*)(shape[0]->shape),
+		(CDConvex*)(shape[1]->shape)
+	};
 	Vec3d sep;
 	bool r = FindCommonPoint(conv[0], conv[1], shapePoseW[0], shapePoseW[1], sep, closestPoint[0], closestPoint[1]);
 	const double depthEpsilon = 0.01;
@@ -197,6 +203,7 @@ bool PHSolidPair::Detect(PHConstraintEngine* engine){
 	for(int i = 0; i < (int)(s0->shapes.size()); i++){
 		for(int j = 0; j < (int)(s1->shapes.size()); j++){
 			PHShapePair& sp = shapePairs.item(i, j);
+			sp.UpdateShapePose(solid[0]->solid->GetPose(), solid[1]->solid->GetPose());
 			//このshape pairの交差判定/法線と接触の位置を求める．
 			if(sp.Detect(ct, solid[0], solid[1])){
 				found = true;
@@ -223,7 +230,7 @@ bool PHSolidPair::Detect(PHConstraintEngine* engine){
 
 	// 全てのshape pairについて交差を調べる
 	bool found = false;
-	for(int i = 0; i < (int)(solid[0]->solid->shapes.size()); i++)for(int j = 0; j < (int)(solid[1]->solid->shapes.size()); j++){
+	for(int i = 0; i < (int)(solid[0]->solid->NShape()); i++)for(int j = 0; j < (int)(solid[1]->solid->NShape()); j++){
 		PHShapePair& sp = shapePairs.item(i, j);
 		sp.UpdateShapePose(solid[0]->solid->GetPose(), solid[1]->solid->GetPose());
 
@@ -403,8 +410,8 @@ void PHConstraintEngine::UpdateShapePairs(PHSolid* solid){
 		PHSolid* slhs = sp.solid[0]->solid;
 		sp.shapePairs.resize(sp.shapePairs.height(), solid->NShape());
 		for(j = 0; j < slhs->NShape(); j++){
-			sp.shapePairs.item(j, solid->NShape()-1).shape[0] = slhs->shapes[j];
-			sp.shapePairs.item(j, solid->NShape()-1).shape[1] = solid->shapes.back();
+			sp.shapePairs.item(j, solid->NShape()-1).shape[0] = &slhs->shapes[j];
+			sp.shapePairs.item(j, solid->NShape()-1).shape[1] = &solid->shapes.back();
 		}
 	}
 	for(i = isolid+1; i < (int)solids.size(); i++){
@@ -412,8 +419,8 @@ void PHConstraintEngine::UpdateShapePairs(PHSolid* solid){
 		PHSolid* srhs = sp.solid[1]->solid;
 		sp.shapePairs.resize(solid->NShape(), sp.shapePairs.width());
 		for(j = 0; j < srhs->NShape(); j++){
-			sp.shapePairs.item(solid->NShape()-1, j).shape[0] = solid->shapes.back();
-			sp.shapePairs.item(solid->NShape()-1, j).shape[1] = srhs->shapes[j];
+			sp.shapePairs.item(solid->NShape()-1, j).shape[0] = &solid->shapes.back();
+			sp.shapePairs.item(solid->NShape()-1, j).shape[1] = &srhs->shapes[j];
 		}
 	}
 }

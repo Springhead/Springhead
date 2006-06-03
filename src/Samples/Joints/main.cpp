@@ -154,7 +154,7 @@ void BuildScene1(){
 	scene->EnableContact(soBox[0], soBox[1], false);
 	scene->EnableContact(soBox[0], soBox[2], false);
 	scene->EnableContact(soBox[1], soBox[2], false);
-	scene->SetGravity(Vec3f(0, -9.8, 0));
+	scene->SetGravity(Vec3f(0, 0.0, 0));
 }
 
 void BuildScene2(){
@@ -195,19 +195,23 @@ void BuildScene4(){
 	PHPathDesc desc;
 	PHPathIf* path = scene->CreatePath(desc);
 	double s;
-	double radius = 1.0;
-	double pitch = 1.0;
+	double radius = 5.0;
+	double pitch = 4.0;
 	Posed pose;
-	for(s = 0.0; s < 4 * (2 * M_PI); s += 0.01){
-		pose.Pos() = Vec3d(radius * cos(s), pitch * s / (2 * M_PI), radius * sin(s));
+	for(s = 0.0; s < 4 * (2 * M_PI); s += Rad(1.0)){
+		double stmp = s;
+		while(stmp > M_PI) stmp -= 2 * M_PI;
+		pose.Pos() = Vec3d(radius * cos(stmp), 5.0 + pitch * s / (2 * M_PI), radius * sin(stmp));
+		pose.Ori().FromMatrix(Matrix3d::Rot(-3*stmp, 'y'));
 		path->AddPoint(s, pose);
 	}
 	PHPathJointDesc descJoint;
 	jntLink.push_back(scene->CreateJoint(soFloor, soBox[0], descJoint));
 	PHPathJointIf* joint = ICAST(PHPathJointIf, jntLink[0]);
 	joint->AddChildObject(path);
+	joint->SetPosition(2 * 2 * M_PI);
 	
-	scene->SetGravity(Vec3f(0, -9.8, 0));		
+	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
 void BuildScene(){
@@ -229,21 +233,34 @@ void OnKey0(char key){
 		PHHingeJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d( 1.1,  1.1,  0);
 		jdesc.pose[1].Pos() = Vec3d(-1.1, -1.1,  0);
+		jdesc.lower = Rad(-30.0);
+		jdesc.upper = Rad( 30.0);
+
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
 	}
 }
+void display();
 void OnKey1(char key){
 	const double K = 30.0;
 	const double B = 10.0;
 	PHHingeJointIf* hinge = ICAST(PHHingeJointIf, jntLink[0]);
+	PHPathJointIf* path = (jntLink.size() == 5 ? ICAST(PHPathJointIf, jntLink[4]) : NULL); 
 	switch(key){
 	case 'a': hinge->SetMotorTorque(1.0);	break;
 	case 's': hinge->SetMotorTorque(0.0);	break;
 	case 'd': hinge->SetMotorTorque(-1.0);	break;
-	case 'f': hinge->SetDesiredVelocity(Rad(90.0));	break;
-	case 'g': hinge->SetDesiredVelocity(Rad(0.0));	break;
+	case 'f':
+		hinge->SetDesiredVelocity(Rad(180));
+		if(path)
+			path->SetDesiredVelocity(Rad(90.0));
+		break;
+	case 'g':
+		hinge->SetDesiredVelocity(Rad(0.0));
+		if(path)
+			path->SetDesiredVelocity(Rad(0.0));
+		break;
 	case 'h': hinge->SetDesiredVelocity(Rad(-90.0));	break;
 	case 'j':
 		hinge->SetSpring(K);
@@ -261,17 +278,42 @@ void OnKey1(char key){
 		hinge->SetDamper(B);
 		break;
 	case 'c':{
-		/*PHPathJointDesc desc;
-		PHPathIf* trajectory = scene->CreatePath();
+		//チェビシェフリンク一周分の軌跡を記憶させてパスジョイントを作成
+		PHPathDesc descPath;
+		descPath.bLoop = true;
+		PHPathIf* trajectory = scene->CreatePath(descPath);
 
 		hinge->SetSpring(K);
 		hinge->SetDamper(B);
-		for(double theta = -180.0; theta < 180.0; theta += 1.0){
-			hinge->SetSpringOrigin(Rad(theta));
+		double theta = -Rad(180.0);
+		hinge->SetSpringOrigin(theta);
+		for(int i = 0; i < 50; i++)
+			scene->Step();
+		for(; theta < Rad(180.0); theta += Rad(1.0)){
+			hinge->SetSpringOrigin(theta);
 			for(int i = 0; i < 5; i++)
 				scene->Step();
-			
-		}*/
+			Posed pose = soFloor->GetPose().Inv() * soBox[2]->GetPose();
+			//pose.Ori() = Quaterniond();
+			trajectory->AddPoint(theta, pose);
+			display();
+		}
+	
+		CDConvexMeshDesc md;
+		InitBoxMesh(md, 0.5, 5.0, 0.5);
+		soBox.resize(4);
+		soBox[3] = scene->CreateSolid(descBox);
+		soBox[3]->AddShape(sdk->CreateShape(md));
+		soBox[3]->SetFramePosition(Vec3f(10.0, 20.0, 0.0));
+
+		PHPathJointDesc descJoint;
+		descJoint.pose[0].Pos().x = 15.0;
+		jntLink.resize(5);
+		jntLink[4] = scene->CreateJoint(soFloor, soBox[3], descJoint);
+		PHPathJointIf* joint = ICAST(PHPathJointIf, jntLink[4]);
+		joint->AddChildObject(trajectory);
+		joint->SetPosition(0);
+	
 		}break;
 	}
 }
@@ -316,7 +358,10 @@ void OnKey3(char key){
 }
 
 void OnKey4(char key){
-
+	switch(key){
+	case 'a': scene->SetGravity(Vec3f(0.0, -9.8, 0.0)); break;
+	case 'd': scene->SetGravity(Vec3f(0.0,  9.8, 0.0)); break;
+	}
 }
 
 void OnKey(char key){
@@ -366,8 +411,7 @@ void display(){
 
 	Vec3f normal;
 	for(int i=0; i<soFloor->NShape(); ++i){
-		CDShapeIf** shapes = soFloor->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, soFloor->GetShape(i));
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -391,8 +435,7 @@ void display(){
 		ad = Affined(pose);
 		glMultMatrixd(ad);
 			for(int i=0; i<soBox[boxCnt]->NShape(); ++i){
-				CDShapeIf** shapes = soBox[boxCnt]->GetShapes();
-				CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+				CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, soBox[boxCnt]->GetShape(i));
 				Vec3f* base = mesh->GetVertices();
 				for(size_t f=0; f<mesh->NFace();++f){
 					CDFaceIf* face = mesh->GetFace(f);
@@ -499,8 +542,8 @@ void keyboard(unsigned char key, int x, int y){
 			InitBoxMesh(md, 1.0, 1.0, 1.0);
 			soBox.push_back(scene->CreateSolid(descBox));
 			soBox.back()->AddShape(sdk->CreateShape(md));
-			soBox.back()->SetFramePosition(Vec3f(-10.0, 15.0, 0.0));
-			soBox.back()->SetVelocity(Vec3d(20.0, 0.0, 0.0));
+			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-20.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
 		default:

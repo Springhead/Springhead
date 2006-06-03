@@ -21,7 +21,19 @@ PHPath::PHPath(const PHPathDesc& desc){
 	bReady = false;
 }
 
+void PHPath::Rollover(double& s){
+	double lower = front().s;
+	double upper = back().s;
+	assert(lower < upper);
+	double range = upper - lower;
+	while(s >= upper)s -= range;
+	while(s <  lower)s += range;
+}
+
 PHPath::iterator PHPath::Find(double s){
+	if(size() <= 1)return begin();
+	if(bLoop)
+		Rollover(s);
 	iterator it;
 	for(it = begin(); it != end(); it++){
 		if(it->s > s)
@@ -34,15 +46,18 @@ void PHPath::AddPoint(double s, const Posed& pose){
 	PHPathPointWithJacobian p;
 	p.s = s;
 	p.pose = pose;
-	insert(Find(s), p);
+	if(empty() || s < front().s)
+		insert(begin(), p);
+	else if(s >= back().s)
+		insert(end(), p);
+	else
+		insert(Find(s), p);
 	bReady = false;
 }
 
 //6x6行列Jの一番下の行ベクトルは与えられているとして，
 //gram-schmidtの直交化で残る5本の行ベクトルを設定する
 void Orthogonalize(Matrix6d& J){
-	double n5 = J.row(5).norm();
-	J.row(5) *= (1.0 / n5);
 	int i, j, k;
 	for(i = 4; i >= 0; i--){
 		for(k = 0; k < 6; k++){
@@ -58,7 +73,6 @@ void Orthogonalize(Matrix6d& J){
 			break;
 		}
 	}
-	J.row(5) *= n5;
 }
 
 void PHPath::CompJacobian(){
@@ -72,12 +86,16 @@ void PHPath::CompJacobian(){
 		GetPose(it->s - delta, p0);
 		GetPose(it->s + delta, p1);
 		pd = (p1 - p0) * div;
+		//一般化速度qdに1を与えたときの相対速度と角速度
 		v = pd.Pos();
 		qd = pd.Ori();
 		w = (it->pose.Ori()).AngularVelocity(qd);		//1/2 * w * q = qd		=> 2 * qd * q~ = w
 		it->J.row(5).SUBVEC(0, 3) =  v;
 		it->J.row(5).SUBVEC(3, 3) =  w;
+		double ninv = 1.0 / it->J.row(5).norm();
+		it->J.row(5) *= ninv;
 		Orthogonalize(it->J);
+		it->J.row(5) *= ninv;
 	}
 	bReady = true;
 }
@@ -85,10 +103,12 @@ void PHPath::CompJacobian(){
 void PHPath::GetPose(double s, Posed& pose){
 	iterator it = Find(s);
 	if(it == begin()){
+		assert(!bLoop);
 		pose = front().pose;
 		return;
 	}
 	if(it == end()){
+		assert(!bLoop);
 		pose = back().pose;
 		return;
 	}
@@ -108,15 +128,21 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 	if(!bReady)CompJacobian();
 	iterator it = Find(s);
 	if(it == begin()){
+		assert(!bLoop);
 		J = front().J;
 		return;
 	}
 	if(it == end()){
+		assert(!bLoop);
 		J = back().J;
 		return;
 	}
 	PHPathPointWithJacobian &rhs = *it, &lhs = *--it;
 	double tmp = 1.0 / (rhs.s - lhs.s);
+	if(lhs.s <= s && s <= rhs.s);
+	else{
+		int hoge = 0;
+	}
 	J = ((rhs.s - s) * tmp) * lhs.J + ((s - lhs.s) * tmp) * rhs.J;
 }
 
@@ -189,6 +215,9 @@ void PHPathJoint::CompConstraintJacobian(){
 }
 
 void PHPathJoint::CompBias(double dt){
+	if(mode == MODE_VELOCITY){
+		b[5] -= vel_d;
+	}
 
 }
 
@@ -201,15 +230,33 @@ void PHPathJoint::CompError(double dt){
 		v[i] = solid[i]->v + solid[i]->dv0 + solid[i]->dv;
 		w[i] = solid[i]->w + solid[i]->dw0 + solid[i]->dw;
 	}
-	double qd = Jdv[0].row(5) * v[0] + Jdw[0].row(5) * w[0] +
-				Jdv[1].row(5) * v[1] + Jdw[1].row(5) * w[1];
+	//Matrix6d J;
+	//path->GetJacobian(q, J);
+	//Vec6d Vrel;
+	//Vrel.SUBVEC(0, 3) = Jvv[0] * v[0] + Jvw[0] * w[0] + Jvv[1] * v[1] + Jvw[1] * w[1];
+	//Vrel.SUBVEC(3, 3) = Jwv[0] * v[0] + Jww[0] * w[0] + Jwv[1] * v[1] + Jww[1] * w[1];
+	//double qd = Vrel.norm() / J.row(5).norm();
+	//if(Vrel[0] * J.row(5)[0] < 0.0)
+	//	qd = -qd;
+	double qd = Ad[5] * (Jdv[0].row(5) * v[0] + Jdw[0].row(5) * w[0] +
+				Jdv[1].row(5) * v[1] + Jdw[1].row(5) * w[1]);
+	qd = 1.0;
 	q += qd * dt;
+	//q = 0.0;
+	path->Rollover(q);
 	Posed pnew;
 	path->GetPose(q, pnew);
 	B.SUBVEC(0, 3) = rjrel - pnew.Pos();
-	if(qjrel.V() * pnew.Ori().V() < 0.0)
+	DSTR << rjrel << pnew.Pos() << qjrel << pnew.Ori() << endl;
+	if(qjrel.V() * pnew.Ori().V() < 0.0){
 		 B.SUBVEC(3, 3) = qjrel.V() + pnew.Ori().V();
-	else B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
+		// DSTR << "p";
+	}
+	else{
+		B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
+		//DSTR << "n";
+	}
+	//DSTR << B << endl;
 	//B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
 	//B = -B;
 }
@@ -217,7 +264,6 @@ void PHPathJoint::CompError(double dt){
 void PHPathJoint::ProjectionDynamics(double& f, int k){
 	if(k == 5){
 		if(on_lower){
-			DSTR << "f " << f << endl;
 			f = max(0.0, f);
 		}
 		if(on_upper)

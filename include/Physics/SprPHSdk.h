@@ -31,7 +31,8 @@ struct PHSdkIf : public NameManagerIf{
 	///	Shape‚Ì”
 	virtual int NShape()=0;
 	///	Shape‚Ìæ“¾
-	virtual CDShapeIf** GetShapes()=0;
+	virtual CDShapeIf* GetShape(int i)=0;
+	//virtual CDShapeIf** GetShapes()=0;
 };
 PHSdkIf* SPR_CDECL CreatePHSdk();
 

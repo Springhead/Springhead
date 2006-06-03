@@ -247,29 +247,36 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 
 全ての1自由度関節はPHJoint1DIfを親クラスに持ち，共通のインタフェースで状態の取得や操作が可能です．
 
+関節変位を取得するには\link Spr::PHJoint1DIf::GetPosition() PHJoint1DIf::GetPosition\endlinkを呼びます．
+関節変位の定義は関節の種類に依ります．例えばヒンジの場合はソケットとプラグの成す角度，スライダの場合は
+ソケットに対するプラグの平行移動量になります．
+関節速度（関節変位の時間変化率）を取得するには\link Spr::PHJoint1DIf::GetVelocity() PHJoint1DIf::GetVelocity\endlinkを呼びます．
 
-＊関節変位
-＊関節速度
-＊可動範囲
+関節力を設定するには\link Spr::PHJoint1DIf::SetTorque() PHJoint1DIf::SetTorque\endlinkを呼びます．
+関節力とは，1自由度関節の運動方向に沿って加えられる力です．関節に取り付けられたモータが出す力と考えれば分かりやすいでしょう．
+剛体に加わる力（\link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce\endlinkで設定される）と異なり，
+関節力は\link Spr::PHSceneIf::Step() PHSceneIf::Step\endlinkを実行してもクリアされません．
+現在設定されている関節力を取得するには\link Spr::PHJoint1DIf::GetTorque() PHJoint1DIf::GetTorque\endlinkを呼びます．
+
+\link Spr::PHJointIf::SetRange PHJointIf::SetRange\endlinkを呼ぶことで可動範囲を制限できます．
+
 ＊バネ、ダンパ
-＊モータ力
 
-□ヒンジ
+\subsection joint_hinge ヒンジ
 
 ＜ヒンジの図＞
 
 ヒンジは1本の軸周りの回転運動を実現する関節です．
 ソケットとプラグの原点を一致させ，かつZ軸同士を同じ向きに拘束します．
 
-□スライダ
+\subsection joint_slider スライダ
 
 ＜スライダの図＞
 
 スライダは1方向の平行移動を実現する関節です．
 ソケットとプラグの傾きを一致させ，かつプラグの原点をソケットのZ軸上に拘束します．
 
-
-□パスジョイント
+\subsection joint_path パスジョイント
 
 □バネ・ダンパ
 

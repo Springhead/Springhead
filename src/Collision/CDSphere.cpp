@@ -23,7 +23,11 @@ CDSphere::CDSphere(const CDSphereDesc& desc) {
 
 // サポートポイントを求める
 Vec3f CDSphere::Support(const Vec3f& p) const {	
-	Vec3f center = GetPose().Pos();		// 球体の中心座標を取得
+	float n = p.norm();
+	if(n < 1.0e-10f)
+		return Vec3f();
+	else return (radius / n) * p;
+	/*Vec3f center = GetPose().Pos();		// 球体の中心座標を取得
 	Vec3f p_ = p;
 	p_ -= center;						// pからcenterへのベクトルを求める
 	float s = p_.norm();				// pからcenterへのベクトルの長さ
@@ -32,7 +36,7 @@ Vec3f CDSphere::Support(const Vec3f& p) const {
 		return r*p_ + center;			// 衝突検出に必要な球の最近傍点
 	}else{
 		return center;
-	}	
+	}*/
 }
 
 // 切り口を求める. 接触解析を行う.

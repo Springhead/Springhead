@@ -39,6 +39,7 @@ public:
 	void CompJacobian();
 	void GetPose(double s, Posed& pose);
 	void GetJacobian(double s, Matrix6d& J);
+	void Rollover(double& s);
 	PHPath(const PHPathDesc& desc);
 };
 

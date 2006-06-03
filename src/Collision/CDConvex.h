@@ -15,7 +15,7 @@ public:
 	///	切り口を求める．接触解析に使う．
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
 	///	バウンディングボックスを求める．
-	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax);
+	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
 };
 
 }	//	namespace Spr

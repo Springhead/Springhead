@@ -21,7 +21,7 @@ class PHShapePair: public CDShapePair{
 public:
 	///	
 	PHShapePair(){}
-	PHShapePair(CDShape* s0, CDShape* s1):CDShapePair(s0, s1){}
+	PHShapePair(CDShapeRefWithPose* s0, CDShapeRefWithPose* s1):CDShapePair(s0, s1){}
 	///	接触判定．接触の中心(center 最侵入点の中点)と法線ベクトルまで求める
 	bool Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1);
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．

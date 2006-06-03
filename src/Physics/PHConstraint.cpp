@@ -195,10 +195,10 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 		w[i] = solid[i]->w + solid[i]->dw0 + solid[i]->dw;
 	}
 	// velocity update‚É‚æ‚é‰e‹¿‚ð‰ÁŽZ
-	for(j = 0; j < dim_c; j++){
+	/*for(j = 0; j < dim_c; j++){
 		B[j] += (Jcv[0].row(j) * v[0] + Jcw[0].row(j) * w[0] +
 				 Jcv[1].row(j) * v[1] + Jcw[1].row(j) * w[1]) * dt;
-	}
+	}*/
 	//ˆê“x‚ÉŒë·‚ð0‚É‚µ‚æ‚¤‚Æ‚·‚é‚ÆU“®“I‚É‚È‚é‚Ì‚Å“K“–‚ÉŒë·‚ð¬‚³‚­Œ©‚¹‚é
 	//Œë·‚Ímax_error‚Å–O˜a‚³‚¹‚é
 	B *= 0.1;	
@@ -208,7 +208,7 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 			tmp = B[j];
 	if(tmp > max_error)
 		B *= (max_error / tmp);
-
+	//double tmp;
 	for(j = 0; j < dim_c; j++){
 		tmp = 1.0 / Ac[j];
 		B[j] *= tmp;

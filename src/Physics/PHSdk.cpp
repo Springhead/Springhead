@@ -91,8 +91,8 @@ CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 int PHSdk::NShape(){
 	return shapes.size();
 }
-CDShapeIf** PHSdk::GetShapes(){
-	return (CDShapeIf**)&*shapes.begin();
+CDShapeIf* PHSdk::GetShape(int i){
+	return shapes[i];
 }
 ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
 	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){

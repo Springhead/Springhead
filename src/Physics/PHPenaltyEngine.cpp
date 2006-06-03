@@ -83,23 +83,23 @@ bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 	Contacts contacts;
 	for(int i=0; i<shapePairs.height(); ++i){
 		for(int j=0; j<shapePairs.width(); ++j){
-			PHShapePair* shapePair = shapePairs.item(i,j);
-			shapePair->UpdateShapePose(solid[0].solid->GetPose(), solid[1].solid->GetPose());
-			if ( shapePair->Detect(ct) ){
+			PHShapePair* sp = shapePairs.item(i,j);
+			//shapePair->UpdateShapePose(solid[0].solid->GetPose(), solid[1].solid->GetPose());
+			if ( sp->Detect(ct) ){
 				rv = true;
 
-				contacts.push_back(shapePair);
+				contacts.push_back(sp);
 				static CDContactAnalysis analyzer;
-				analyzer.FindIntersection(shapePair);	//	接触形状の解析
-				analyzer.CalcNormal(shapePair);			//	法線ベクトルの計算
+				analyzer.FindIntersection(sp);	//	接触形状の解析
+				analyzer.CalcNormal(sp);			//	法線ベクトルの計算
 
 				//	接触力計算の準備
 				float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
 				for(int i=0; i<2; ++i){
 					rs[i] = fs[i] = SPRING;
 					rd[i] = fd[i] = DAMPER;
-					sf[i] = shapePair->shape[i]->material.mu0;
-					df[i] = shapePair->shape[i]->material.mu;
+					sf[i] = sp->shape[i]->shape->material.mu0;
+					df[i] = sp->shape[i]->shape->material.mu;
 				}
 				reflexSpring = Ave(rs[0], rs[1]) * convertedMass / (float)(2*dt*dt);
 				reflexDamper = Ave(rd[0], rd[1]) * convertedMass / (float)(dt);
@@ -109,8 +109,8 @@ bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 				dynamicFriction = (df[0]+df[1])/2;
 				
 				//	接触力計算	衝突の面積，抗力を求める
-				CalcReflexForce(shapePair, &analyzer);
-				area += shapePair->area;
+				CalcReflexForce(sp, &analyzer);
+				area += sp->area;
 			}
 		}
 	}
@@ -457,7 +457,7 @@ void PHPenaltyEngine::PHSolidPair::Init(){
 	shapePairs.resize(solid[0].solid->shapes.size(), solid[1].solid->shapes.size());
 	for(unsigned i=0; i<solid[0].solid->shapes.size(); ++i){
 		for(unsigned j=0; j<solid[1].solid->shapes.size(); ++j){
-			shapePairs.item(i, j) = DBG_NEW PHShapePair(solid[0].solid->shapes[i], solid[1].solid->shapes[j]);
+			shapePairs.item(i, j) = DBG_NEW PHShapePair(&solid[0].solid->shapes[i], &solid[1].solid->shapes[j]);
 		}
 	}
 }

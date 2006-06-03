@@ -39,7 +39,7 @@ class PHPenaltyEngine: public PHEngine{
 		FrictionState frictionState;		///<	–€ŽC‚Ìó‘Ô
 		//@}
 
-		PHShapePair(CDShape* s1, CDShape* s2):CDShapePair(s1, s2){
+		PHShapePair(CDShapeRefWithPose* s1, CDShapeRefWithPose* s2):CDShapePair(s1, s2){
 		}
 		void Clear();
 

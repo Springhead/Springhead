@@ -112,7 +112,7 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	return rv;
 }
 
-void CalcBBox(Vec3f& bbmin, Vec3f& bbmax){
+void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, Posed& pose){
 	
 }
 

@@ -73,15 +73,23 @@ struct PHSolidIf : public SceneObjectIf{
 	///	形状の追加
 	virtual void		AddShape(CDShapeIf* shape)=0;
 
+	/// 形状の位置の取得
+	virtual Posed		GetShapePose(CDShapeIf* shape)=0;
+
+	/// 形状の位置の設定
+	virtual void		SetShapePose(CDShapeIf* shape, const Posed& pose)=0;
+
 	///	重力を有効/無効化する	ここでよいか疑問
 	virtual void		SetGravity(bool bOn)=0;
 	/// 動力学法則に従うかどうかを有効/無効化する
 	virtual void		SetDynamical(bool bOn)=0;
 	virtual bool		IsDynamical()=0;
 
+	/// 登録されている形状の個数を取得
 	virtual int			NShape()=0;
+
 	///	形状を取得
-	virtual CDShapeIf**	GetShapes()=0;
+	virtual CDShapeIf*	GetShape(int i)=0;
 
 };
 

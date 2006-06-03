@@ -69,6 +69,7 @@ enum PHIntegrationMode{
 		PHINT_RUNGEKUTTA4		///	４次ルンゲクッタ法
 };
 
+
 ///	剛体
 class PHSolid : public InheritSceneObject<PHSolidIf, SceneObject>, public PHSolidDesc{
 protected:
@@ -88,8 +89,7 @@ protected:
 			(t[2] - (I[1][1] - I[0][0]) * w.X() * w.Y()) / I[2][2]);
 	}
 public:
-	typedef std::vector<CDShape*> CDShapes;
-	CDShapes shapes;
+	std::vector<CDShapeRefWithPose> shapes;
 	PHBBox bbox;
 
 	OBJECTDEF(PHSolid);
@@ -102,7 +102,7 @@ public:
 		return shapes.size();
 	}
 	ObjectIf* GetChildObject(size_t pos) {
-		return (CDShapeIf*)shapes[pos];
+		return (CDShapeIf*)(shapes[pos].shape);
 	}
 
 	void CalcBBox();
@@ -188,13 +188,15 @@ public:
 	}
 
 	void		AddShape(CDShapeIf* shape);
+	Posed		GetShapePose(CDShapeIf* shape);
+	void		SetShapePose(CDShapeIf* shape, const Posed& pose);
 
 	void		SetGravity(bool bOn);
 	void		SetDynamical(bool bOn){bDynamical = bOn;}
 	bool		IsDynamical(){return bDynamical;}
 
 	int			NShape();
-	CDShapeIf**	GetShapes();
+	CDShapeIf*	GetShape(int i);
 protected:
 	DEF_DESC_STATE(PHSolid);
 };
