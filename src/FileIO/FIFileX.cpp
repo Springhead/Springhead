@@ -4,7 +4,6 @@
 #endif
 
 #include "FIFileX.h"
-#include "FITypeDesc.h"
 #include "FINodeHandler.h"
 #include <fstream>
 #include <sstream>
@@ -42,7 +41,7 @@ static void NodeStart(const char* b, const char* e){
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
 
 	//	Œ^î•ñ‚ÌŽæ“¾
-	FITypeDesc* type = fileX->GetDb()->Find(tn);
+	UTTypeDesc* type = fileX->GetDb()->Find(tn);
 	if (!type) type = fileX->GetDb()->Find(tn + "Desc");
 	
 	if (type){
@@ -145,7 +144,7 @@ static void SetVal(const char* b, const char* e){
 		fileContext->WriteString(strValue);
 	}
 	if (ch == ';'){
-		curField.arrayPos=FITypeDesc::BIGVALUE;
+		curField.arrayPos=UTTypeDesc::BIGVALUE;
 	}
 }
 
@@ -156,24 +155,24 @@ static void RefSet(const char* b, const char* e){
 	fileContext->AddLink(ref, b);
 }
 
-static FITypeDesc* tdesc;
+static UTTypeDesc* tdesc;
 //	XFile‚Ìtemplate‚Ì“Ç‚Ýo‚µ‚ÌŠÖ”
 static void TempStart(const char* b, const char* e){
-	tdesc = DBG_NEW FITypeDesc(std::string(b,e));
+	tdesc = DBG_NEW UTTypeDesc(std::string(b,e));
 }
 static void DefType(const char* b, const char* e){
-	tdesc->GetComposit().push_back(FITypeDesc::Field());
+	tdesc->GetComposit().push_back(UTTypeDesc::Field());
 	tdesc->GetComposit().back().typeName.assign(b, e);
 }
 static void DefId(const char* b, const char* e){
 	tdesc->GetComposit().back().name.assign(b, e);
 }
 static void ArrayId(const char* b, const char* e){
-	tdesc->GetComposit().back().varType = FITypeDesc::Field::VECTOR;
+	tdesc->GetComposit().back().varType = UTTypeDesc::Field::VECTOR;
 	tdesc->GetComposit().back().lengthFieldName.assign(b, e);
 }
 static void ArrayNum(int n){
-	tdesc->GetComposit().back().varType = FITypeDesc::Field::ARRAY;
+	tdesc->GetComposit().back().varType = UTTypeDesc::Field::ARRAY;
 	tdesc->GetComposit().back().length = n;
 }
 static void TempEnd(char c){
@@ -210,8 +209,11 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 FIFileX::FIFileX(){
 	Init();
 }
-void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
-	if (!FITypeDescDb::theTypeDescDb) RegisterTypes();
+void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
+	if (!UTTypeDescDb::theTypeDescDb){
+		assert(0);
+		//	TODO RegisterTypedescs() ‚ð‚¾‚ê‚ª‚Ç‚±‚ÅŒÄ‚Ô‚Ì‚©
+	}
 	if (!FINodeHandlers::theNodeHandlers) RegisterNodeHandlers();
 	if (h){
 		handlers = *h;
@@ -221,8 +223,8 @@ void FIFileX::Init(FITypeDescDb* db, FINodeHandlers* h){
 	if (db){
 		typeDb = *db;
 	}else{
-		typeDb = *FITypeDescDb::theTypeDescDb;
-		extern UTRef<FITypeDescDb> typeDescDb;
+		typeDb = *UTTypeDescDb::theTypeDescDb;
+		extern UTRef<UTTypeDescDb> typeDescDb;
 	}
 	typeDb.RegisterAlias("Vec3f", "Vector");
 	typeDb.RegisterAlias("Vec2f", "Coords2d");

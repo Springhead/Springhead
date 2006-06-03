@@ -3,8 +3,7 @@
 
 #ifndef SPR_GRFrame_H
 #define SPR_GRFrame_H
-
-#include <Springhead.h>
+#include <Graphics/SprGRRender.h>
 
 namespace Spr{;
 

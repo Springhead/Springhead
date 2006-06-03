@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 namespace Spr{;
+void PHRegisterTypeDescs();
+void CDRegisterTypeDescs();
 
 struct Sdks{
 	typedef std::vector< PHSdkIf* > Cont;
@@ -41,6 +43,11 @@ PHSdkIf* SPR_CDECL CreatePHSdk(){
 //	PHSdk
 OBJECTIMP(PHSdk, NameManager);
 IF_IMP(PHSdk, NameManager);
+
+PHSdk::PHSdk(){
+	PHRegisterTypeDescs();
+	CDRegisterTypeDescs();
+}
 PHSdk::~PHSdk(){
 	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
 		if (*it == this){

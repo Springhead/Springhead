@@ -2,7 +2,7 @@
 #define FILoadContext_H
 
 #include <Foundation/Object.h>
-#include <FileIO/FITypeDesc.h>
+#include <Foundation/UTTypeDesc.h>
 #include <string>
 #ifdef _WIN32
 #include <WinBasis/WinBasis.h>
@@ -88,7 +88,7 @@ public:
 	///	ロードとリンクが終わってから処理するタスク
 	Tasks postTasks;
 	///	型DB
-	FITypeDescDb* typeDb;
+	UTTypeDescDb* typeDb;
 	///	ノードハンドラ
 	FINodeHandlers* handlers;
 
@@ -115,7 +115,7 @@ public:
 	///	ロードできる状態ならtrue
 	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)
-	void PushType(FITypeDesc* type);
+	void PushType(UTTypeDesc* type);
 	////
 	void PopType();
 	///

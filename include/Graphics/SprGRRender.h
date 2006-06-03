@@ -3,6 +3,8 @@
 
 #include <float.h>
 #include <Physics/SprPHSolid.h>
+#include <Physics/SprPHScene.h>
+#include <Collision/SprCDShape.h>
 
 namespace Spr{;
 

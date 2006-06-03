@@ -2,7 +2,7 @@
 #define FIFILE_H
 
 #include <SprFileIO.h>
-#include <FileIO/FITypeDesc.h>
+#include <Foundation/UTTypeDesc.h>
 #include "FINodeHandler.h"
 
 namespace Spr{;
@@ -10,8 +10,8 @@ class FILoadContext;
 class FISaveContext;
 class FIFile:public InheritObject<FIFileIf, Object>{
 protected:
-	///	ファイルにセーブ・ファイルからロードする型の情報(FITypeDesc)
-	FITypeDescDb typeDb;
+	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
+	UTTypeDescDb typeDb;
 	///	ロード時に自動ロードとは別の処理が必要なノードのハンドラ
 	FINodeHandlers handlers;
 public:

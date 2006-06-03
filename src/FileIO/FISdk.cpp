@@ -5,6 +5,8 @@
 #include <stdlib.h>
 
 namespace Spr{;
+void FIRegisterTypeDescs();
+
 
 struct Sdks{
 	typedef std::vector< FISdkIf* > Cont;
@@ -52,6 +54,12 @@ ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc){
 //	FISdk
 OBJECTIMP(FISdk, Object);
 IF_IMP(FISdk, NameManager);
+
+
+FISdk::FISdk(){
+	FIRegisterTypeDescs();
+}
+
 FISdk::~FISdk(){
 	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
 		if (*it == this){

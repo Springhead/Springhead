@@ -119,7 +119,7 @@ template <class T> T* SprDcastImp(const Object* p){
 
 
 template <class intf, class base>
-struct InheritObject:public intf, base{
+struct InheritObject:public intf, public base{
 	virtual int AddRef(){return base::AddRef();}
 	virtual int DelRef(){return base::DelRef();}
 	virtual int RefCount(){return base::RefCount();}				

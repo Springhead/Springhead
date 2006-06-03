@@ -4,6 +4,7 @@
 #ifndef SPR_GRMesh_H
 #define SPR_GRMesh_H
 
+#include <Graphics/SprGRFrame.h>
 #include <Springhead.h>
 
 namespace Spr{;
@@ -14,6 +15,7 @@ struct GRMeshDesc{
 	std::vector<Vec3f> normals;			///<	頂点の法線
 	std::vector<int> faces;				///<	面を構成する頂点の番号．
 };
+
 
 /**	@brief	グラフィックスで使う表示用のMesh */
 struct GRMeshIf: public GRVisualIf{

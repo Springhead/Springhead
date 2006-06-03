@@ -9,6 +9,7 @@ class FIFile;
 class SPR_DLL FISdk:public InheritObject<FISdkIf, Object>{
 public:
 	OBJECTDEF(FISdk);
+	FISdk();
 	~FISdk();
 	FIFileXIf* CreateFileX();
 	void Clear();

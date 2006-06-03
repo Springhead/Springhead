@@ -59,7 +59,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 
 	UTString tn = sc->GetNodeTypeName();
 	tn.append("Desc");
-	FITypeDesc* type = typeDb.Find(tn);
+	UTTypeDesc* type = typeDb.Find(tn);
 	if(type){
 		//	セーブ位置を設定
 		sc->fieldIts.Push(FIFieldIt(type));
@@ -115,13 +115,13 @@ void FIFile::SaveBlock(FISaveContext* sc){
 	OnSaveBlockStart(sc);
 	void* base = sc->datas.Top()->data;
 	while(sc->fieldIts.back().NextField()){
-		//FITypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
-		FITypeDesc::Field* field = sc->fieldIts.back().field;
+		//UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
+		UTTypeDesc::Field* field = sc->fieldIts.back().field;
 		//	要素数の取得
 		int nElements = 1;
-		if (field->varType == FITypeDesc::Field::VECTOR){
+		if (field->varType == UTTypeDesc::Field::VECTOR){
 			nElements = field->VectorSize(base);
-		}else if (field->varType == FITypeDesc::Field::ARRAY){
+		}else if (field->varType == UTTypeDesc::Field::ARRAY){
 			nElements = field->length;
 		}
 		OnSaveFieldStart(sc, nElements);

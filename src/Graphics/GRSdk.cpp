@@ -5,6 +5,7 @@
 #include "GRScene.h"
 
 namespace Spr{;
+void GRRegisterTypeDescs();
 
 struct GRSdks{
 	typedef std::vector< GRSdkIf* > Cont;
@@ -16,6 +17,7 @@ struct GRSdks{
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif		
 		cont = DBG_NEW Cont;
+		GRRegisterTypeDescs();
 	}
 	~GRSdks(){
 		while(cont->size()){

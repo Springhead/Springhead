@@ -2,7 +2,7 @@
 #define FINODEHANDLER_H
 
 #include <Foundation/Object.h>
-#include <FileIO/FITypeDesc.h>
+#include <Foundation/UTTypeDesc.h>
 #include <string>
 
 namespace Spr{;

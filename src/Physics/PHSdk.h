@@ -16,6 +16,7 @@ protected:
 
 public:
 	OBJECTDEF(PHSdk);
+	PHSdk();
 	~PHSdk();
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);

@@ -2,7 +2,7 @@
 #define FISAVECONTEXT_H
 
 #include <Foundation/Object.h>
-#include <FileIO/FITypeDesc.h>
+#include <Foundation/UTTypeDesc.h>
 #include <fstream>
 
 namespace Spr{;
@@ -19,8 +19,8 @@ public:
 	///	ノードハンドラ
 	FINodeHandlers* handlers;
 	///	型DB
-	FITypeDescDb* typeDb;
-	///	FITypeDescのフィールドへのイタレータのスタック
+	UTTypeDescDb* typeDb;
+	///	UTTypeDescのフィールドへのイタレータのスタック
 	FIFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<FINodeData> > datas;

@@ -1,5 +1,5 @@
-#ifndef FITYPEDESC_H
-#define FITYPEDESC_H
+#ifndef UTTYPEDESC_H
+#define UTTYPEDESC_H
 
 #include <Base/BaseUtility.h>
 #include <Base/BaseTypeInfo.h>
@@ -13,15 +13,15 @@
 	ポインタはあけておいて，後でリンクする．
 	あるオブジェクトのどこにポインタを足す/上書きするのか指示する仕組みが必要．
 
+
 	配列は，可変長データ．メモリ上はvectorなどなので，ちょっと違うけど．
 	vector のままだと，強引なキャストが必要になる．どうする？
-	メソッドをソースから自動生成？TypeDescが仕事すればそれで済む．
+	⇒vectorアクセスメソッドをソースから自動生成．
 
 	文字列を数値に変換するところまではパーサの仕事．
-	double を 数値型に変換するのはTYpeDescの仕事．
-
+	double を 数値型に変換するのはTypeDescの仕事．
 	パーサが扱う型は，数値，文字列，ポインタ，組み立て
-	Typedescが扱うのは，数値→char int float double
+	typedescが扱うのは，数値→char int float double
 	
 	typedesc->CreateInstance();
 	typedesc->SetData("メンバ名", データ);
@@ -38,11 +38,11 @@
 
 
 namespace Spr{;
-/**	@page FITypeDesc ドキュメントオブジェクトと型記述
+/**	@page UTTypeDesc ドキュメントオブジェクトと型記述
 	C++の構造体からデータを書き出す場合など，構造体やデータには，
 	変数名や変数の型と言った情報はない．
-	そこで，型記述型オブジェクト(FITypeDesc)を使って記述する．
-	FITypeDescのオブジェクトを作るためのソースはヘッダファイルを typedesc.exe が
+	そこで，型記述型オブジェクト(UTTypeDesc)を使って記述する．
+	UTTypeDescのオブジェクトを作るためのソースはヘッダファイルを typedesc.exe が
 	パースして自動生成する．*/
 
 ///	対象の型にアクセスするためのクラス
@@ -86,9 +86,9 @@ class FIAccess:public FIAccessBase{
 	}
 };
 
-class FITypeDescDb;
+class UTTypeDescDb;
 ///	型を表す
-class SPR_DLL FITypeDesc:public UTRefCount{
+class SPR_DLL UTTypeDesc:public UTRefCount{
 public:
 	enum { BIGVALUE= 0x40000000 };
 	///	レコードのフィールドを表す
@@ -101,7 +101,7 @@ public:
 		///	型名
 		std::string typeName;
 		///	型
-		UTRef<FITypeDesc> type;
+		UTRef<UTTypeDesc> type;
 		///	オフセット
 		int offset;
 		///	配列の要素数．
@@ -125,12 +125,12 @@ public:
 		void AddEnumConst(std::string name, int val);
 		void AddEnumConst(std::string name);
 		///	フィールドのアドレスを計算
-		const void* FITypeDesc::Field::GetAddress(const void* base, int pos);
-		void* FITypeDesc::Field::GetAddress(void* base, int pos){
+		const void* UTTypeDesc::Field::GetAddress(const void* base, int pos);
+		void* UTTypeDesc::Field::GetAddress(void* base, int pos){
 			return (void*)GetAddress((const void*)base, pos); 
 		}
 		///	フィールドのアドレスを計算．vectorを拡張する．
-		void* FITypeDesc::Field::GetAddressEx(void* base, int pos);
+		void* UTTypeDesc::Field::GetAddressEx(void* base, int pos);
 		///	フィールドがstd::vectorの場合，vector::size() を呼び出す．
 		size_t VectorSize(const void * base){ 
 			return type->access->VectorSize(((char*)base)+offset); 
@@ -168,11 +168,11 @@ public:
 		///	データのサイズを返す
 		int Size(std::string id);
 		///
-		void Link(FITypeDescDb* db);
+		void Link(UTTypeDescDb* db);
 		///
 		void Print(std::ostream& os) const;
 	};
-protected:
+
 	///	型名
 	std::string typeName;
 	///	データの長さ
@@ -184,16 +184,15 @@ protected:
 	///
 	UTRef<FIAccessBase> access;
 
-	friend class FITypeDescDb;
-	friend void RegisterTypes();
+	friend class UTTypeDescDb;
 public:
 	///	コンストラクタ
-	FITypeDesc():size(0), ifInfo(NULL){}
+	UTTypeDesc():size(0), ifInfo(NULL){}
 	///	コンストラクタ
-	FITypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), 
+	UTTypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), 
 		ifInfo(NULL){}
 	///	
-	virtual ~FITypeDesc(){}
+	virtual ~UTTypeDesc(){}
 	///
 	void Print(std::ostream& os) const;
 	///	型名
@@ -212,7 +211,7 @@ public:
 	///	組み立て型の要素
 	Composit& GetComposit(){ return composit; }
 	///	フィールドの型情報のリンク
-	void Link(FITypeDescDb* db);
+	void Link(UTTypeDescDb* db);
 	///
 	const IfInfo* GetIfInfo(){ return ifInfo; }
 
@@ -248,17 +247,17 @@ public:
 	///
 	size_t SizeOfVector(){ return access->SizeOfVector(); }
 };
-inline bool operator < (const FITypeDesc& d1, const FITypeDesc& d2){
+inline bool operator < (const UTTypeDesc& d1, const UTTypeDesc& d2){
 	return d1.GetTypeName().compare(d2.GetTypeName()) < 0;
 }
 
 template <class N>
-class SPR_DLL FITypeDescNumber:public FITypeDesc{
+class SPR_DLL UTTypeDescNumber:public UTTypeDesc{
 public:
-	FITypeDescNumber(){
+	UTTypeDescNumber(){
 		access = DBG_NEW FIAccess<N>;
 	}
-	FITypeDescNumber(std::string tn): FITypeDesc(tn, sizeof(N)){
+	UTTypeDescNumber(std::string tn): UTTypeDesc(tn, sizeof(N)){
 		access = DBG_NEW FIAccess<N>;
 	}
 protected:
@@ -273,12 +272,12 @@ protected:
 };
 
 template <class N>
-class SPR_DLL FITypeDescBool:public FITypeDesc{
+class SPR_DLL UTTypeDescBool:public UTTypeDesc{
 public:
-	FITypeDescBool(){
+	UTTypeDescBool(){
 		access = DBG_NEW FIAccess<N>;
 	}
-	FITypeDescBool(std::string tn): FITypeDesc(tn, sizeof(N)){
+	UTTypeDescBool(std::string tn): UTTypeDesc(tn, sizeof(N)){
 		access = DBG_NEW FIAccess<N>;
 	}
 protected:
@@ -292,12 +291,12 @@ protected:
 	}
 };
 
-class SPR_DLL FITypeDescString:public FITypeDesc{
+class SPR_DLL UTTypeDescString:public UTTypeDesc{
 public:
-	FITypeDescString(){
+	UTTypeDescString(){
 		access = DBG_NEW FIAccess<std::string>;
 	}
-	FITypeDescString(std::string tn): FITypeDesc(tn, sizeof(std::string)){
+	UTTypeDescString(std::string tn): UTTypeDesc(tn, sizeof(std::string)){
 		access = DBG_NEW FIAccess<std::string>;
 	}
 protected:
@@ -312,27 +311,27 @@ protected:
 };
 
 ///	型のデータベース
-class SPR_DLL FITypeDescDb: public UTRefCount{
+class SPR_DLL UTTypeDescDb: public UTRefCount{
 public:
 	///
-	static UTRef<FITypeDescDb> theTypeDescDb;
+	static UTRef<UTTypeDescDb> theTypeDescDb;
 	///	コンテナの型
-	typedef std::set< UTRef<FITypeDesc>, UTContentsLess< UTRef<FITypeDesc> > > Db;
+	typedef std::set< UTRef<UTTypeDesc>, UTContentsLess< UTRef<UTTypeDesc> > > Db;
 	struct ProtoDesc{
 		std::string fileType;
-		UTRef<FITypeDesc> desc;
+		UTRef<UTTypeDesc> desc;
 	};
 	typedef std::vector<ProtoDesc> ProtoDescs;
 protected:
 	std::string prefix;			///<	名前のうちプレフィックスの部分
-	Db db;						///<	FITypeDesc を入れておくコンテナ
+	Db db;						///<	UTTypeDesc を入れておくコンテナ
 	static ProtoDescs protoDescs;
 public:
 	///	
-	~FITypeDescDb();
+	~UTTypeDescDb();
 	static const ProtoDescs& GetProtoDescs(){ return protoDescs; }
 	/**	型情報をデータベースに登録．	*/
-	void RegisterDesc(FITypeDesc* n){
+	void RegisterDesc(UTTypeDesc* n){
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
 			n->typeName = n->typeName.substr(prefix.length());
 		}
@@ -340,20 +339,20 @@ public:
 	}
 	/**	型名のAliasを登録	*/
 	void RegisterAlias(const char* src, const char* dest){
-		FITypeDesc* srcDesc = Find(src);
+		UTTypeDesc* srcDesc = Find(src);
 		assert(srcDesc);
-		FITypeDesc* destDesc =DBG_NEW FITypeDesc(*srcDesc);
+		UTTypeDesc* destDesc =DBG_NEW UTTypeDesc(*srcDesc);
 		destDesc->typeName = dest;
 		RegisterDesc(destDesc);
 	}
 	/**	型情報をプロトタイプリストに登録	*/
-	void RegisterProto(FITypeDesc* n);
+	void RegisterProto(UTTypeDesc* n);
 	/**	型名のPrefix を設定．
 		型名をFindで検索する際に，検索キーにPrefixをつけたキーでも型名を検索する．	*/
 	void SetPrefix(std::string p);
 	/**	型情報を名前から検索する．
 		@param tn	型名．prefix は省略してよい．	*/
-	FITypeDesc* Find(std::string tn);
+	UTTypeDesc* Find(std::string tn);
 	///	DB内の型情報をリンク．
 	void Link();
 	///	DB内の型情報の表示
@@ -366,41 +365,41 @@ public:
 	メモリの管理も行う．	*/
 class FINodeData: public UTRefCount{
 public:
-	FITypeDesc* type;	///<	データの型 
+	UTTypeDesc* type;	///<	データの型 
 	UTString name;		///<	名前
 	void* data;			///<	ロードしたデータ
 	bool haveData;		///<	dataをdeleteすべきかどうか．
-	FINodeData(FITypeDesc* t=NULL, void* d=NULL);
+	FINodeData(UTTypeDesc* t=NULL, void* d=NULL);
 	~FINodeData();
 };
 /**	TypeDescのフィールドのイタレータ
 	バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，
-	読み出し中のデータがFITypeDescのツリーのどこに対応するかを保持しておく必要がある．
+	読み出し中のデータがUTTypeDescのツリーのどこに対応するかを保持しておく必要がある．
 */
 class FIFieldIt{
 public:
 	/**	フィールドの種類を示すフラグ．
 		ほとんどのファイルフォーマットで，整数，実数，文字列で，異なるパーサが必要になる．
 		そこで，それらで分類．
-		組み立て型は，FITypeDescを参照して読み出すので，F_BLOCKを用意した．
+		組み立て型は，UTTypeDescを参照して読み出すので，F_BLOCKを用意した．
 	*/
 	enum FieldType{
 		F_NONE, F_BOOL, F_INT, F_REAL, F_STR, F_BLOCK
 	};
-	FITypeDesc* type;						///<	読み出し中のFITypeDesc
-//	FITypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
-	FITypeDesc::Field* field;	///<	組み立て型の場合，その中のどのフィールドか
+	UTTypeDesc* type;						///<	読み出し中のUTTypeDesc
+//	UTTypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
+	UTTypeDesc::Field* field;	///<	組み立て型の場合，その中のどのフィールドか
 	int arrayPos;							///<	配列の場合，読み出し中の添え字
 	int arrayLength;						///<	固定長の場合の配列の長さ
 	FieldType fieldType;					///<	読み出すフィールドの型
 
-	FIFieldIt(FITypeDesc* d);					///<	コンストラクタ
+	FIFieldIt(UTTypeDesc* d);					///<	コンストラクタ
 	bool NextField();						///<	次のフィールドに進む
 };
 class FIFieldIts:public UTStack<FIFieldIt>{
 public:
 	///
-	void PushType(FITypeDesc* t){
+	void PushType(UTTypeDesc* t){
 		Push(FIFieldIt(t));
 	}
 	///	次のフィールドに進む
@@ -438,9 +437,10 @@ public:
 	}
 };
 
+void UTRegisterTypeDescs();
 
 ///	単純型を登録する．
-#define REG_FIELD(type)	RegisterDesc( DBG_NEW FITypeDesc(#type, sizeof(type)) )
+#define REG_FIELD(type)	RegisterDesc( DBG_NEW UTTypeDesc(#type, sizeof(type)) )
 /**	ドキュメントからロード可能なクラスの定義．
 	クラスが基本クラスを持つ場合	*/
 #define DEF_RECORDBASE(Type, Base, Def)					\

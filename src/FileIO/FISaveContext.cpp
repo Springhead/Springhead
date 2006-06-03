@@ -5,7 +5,6 @@
 
 #include "FISaveContext.h"
 #include "FINodeHandler.h"
-#include "FITypeDesc.h"
 #include <fstream>
 #include <sstream>
 

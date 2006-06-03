@@ -35,6 +35,10 @@ namespace Spr{
 //	CDShapeIf** shape;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
+	void PHRegisterTypeDescs();
+	void CDRegisterTypeDescs();
+	void GRRegisterTypeDescs();
+	void FIRegisterTypeDescs();
 }
 using namespace Spr;
 
@@ -237,6 +241,10 @@ void idle(){
  return		0 (³íI—¹)
  */
 int main(int argc, char* argv[]){
+	PHRegisterTypeDescs();
+	CDRegisterTypeDescs();
+	GRRegisterTypeDescs();
+
 	FISdkIf* fiSdk = CreateFISdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;

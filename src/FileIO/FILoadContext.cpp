@@ -5,7 +5,6 @@
 
 #include "FILoadContext.h"
 #include "FINodeHandler.h"
-#include "FITypeDesc.h"
 #include <fstream>
 #include <sstream>
 #ifdef _WIN32
@@ -20,7 +19,7 @@
 namespace Spr{;
 //---------------------------------------------------------------------------
 //	FINodeData
-FINodeData::FINodeData(FITypeDesc* t, void* d):type(t), data(d){
+FINodeData::FINodeData(UTTypeDesc* t, void* d):type(t), data(d){
 	if (!data && type){
 		data = type->Create();
 		haveData = true;
@@ -161,7 +160,7 @@ void FILoadContext::WriteString(std::string v){
 	FIFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
-void FILoadContext::PushType(FITypeDesc* type){
+void FILoadContext::PushType(UTTypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	読み出したデータを構造体の用意

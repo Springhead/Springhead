@@ -17,8 +17,8 @@ protected:
 
 public:
 	FIFileX();
-	FITypeDescDb* GetDb(){return &typeDb;}
-	void Init(FITypeDescDb* db=NULL, FINodeHandlers* h=NULL);
+	UTTypeDescDb* GetDb(){return &typeDb;}
+	void Init(UTTypeDescDb* db=NULL, FINodeHandlers* h=NULL);
 protected:
 	void LoadImp(FILoadContext* fc);
 

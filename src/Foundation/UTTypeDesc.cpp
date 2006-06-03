@@ -1,4 +1,4 @@
-#include "FileIO.h"
+#include "UTTypeDesc.h"
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -8,16 +8,16 @@
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-//	FITypeDesc::Field
-FITypeDesc::Field::~Field(){
+//	UTTypeDesc::Field
+UTTypeDesc::Field::~Field(){
 	if (type){
-		UTRef<FITypeDesc> t = type;
+		UTRef<UTTypeDesc> t = type;
 		type = NULL;
 	}
 }
 
 
-size_t FITypeDesc::Field::GetSize(){
+size_t UTTypeDesc::Field::GetSize(){
 	if (varType==VECTOR){
 		return type->SizeOfVector();
 	}else{
@@ -36,16 +36,16 @@ size_t FITypeDesc::Field::GetSize(){
 	assert(0);
 	return 0;
 }
-void FITypeDesc::Field::AddEnumConst(std::string name, int val){
+void UTTypeDesc::Field::AddEnumConst(std::string name, int val){
 	enums.push_back(std::make_pair(name, val));
 }
 ///
-void FITypeDesc::Field::AddEnumConst(std::string name){
+void UTTypeDesc::Field::AddEnumConst(std::string name){
 	int val = 0;
 	if (enums.size()) val = enums.back().second+1;
 	enums.push_back(std::make_pair(name, val));
 }
-const void* FITypeDesc::Field::GetAddress(const void* base, int pos){
+const void* UTTypeDesc::Field::GetAddress(const void* base, int pos){
 	const void* ptr = (const char*)base + offset;
 	if (varType == VECTOR){
 		ptr = type->VectorAt(ptr, pos);
@@ -54,7 +54,7 @@ const void* FITypeDesc::Field::GetAddress(const void* base, int pos){
 	}
 	return ptr;
 }
-void* FITypeDesc::Field::GetAddressEx(void* base, int pos){
+void* UTTypeDesc::Field::GetAddressEx(void* base, int pos){
 	void* ptr = (char*)base + offset;
 	if (varType == VECTOR){
 		while((int)type->VectorSize(ptr)<=pos) type->VectorPush(ptr);
@@ -65,7 +65,7 @@ void* FITypeDesc::Field::GetAddressEx(void* base, int pos){
 	return ptr;
 }
 
-void FITypeDesc::Field::Print(std::ostream& os) const{
+void UTTypeDesc::Field::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w) << name.c_str() << "(+" << offset << ") = ";
@@ -83,7 +83,7 @@ void FITypeDesc::Field::Print(std::ostream& os) const{
 	}else if (isReference){
 		os << "UTRef<" << type->GetTypeName().c_str() << ">";
 		if (length>1) os << " [" << length << "]";
-		os << " " << sizeof(UTRef<FITypeDesc::Field>) * length;
+		os << " " << sizeof(UTRef<UTTypeDesc::Field>) * length;
 	}else{
 		os.width(w);
 		if (type) type->Print(os);
@@ -95,8 +95,8 @@ void FITypeDesc::Field::Print(std::ostream& os) const{
 }
 
 //----------------------------------------------------------------------------
-//	FITypeDesc::Composit
-int FITypeDesc::Composit::Size(UTString id){
+//	UTTypeDesc::Composit
+int UTTypeDesc::Composit::Size(UTString id){
 	int rv = 0;
 	for(iterator it = begin(); it != end(); ++it){
 		if (id.length()==0 || id.compare(it->name)){
@@ -105,7 +105,7 @@ int FITypeDesc::Composit::Size(UTString id){
 	}
 	return rv;
 }
-void FITypeDesc::Composit::Print(std::ostream& os) const{
+void UTTypeDesc::Composit::Print(std::ostream& os) const{
 	for(const_iterator it = begin(); it != end(); ++it){
 		it->Print(os);
 	}
@@ -113,20 +113,20 @@ void FITypeDesc::Composit::Print(std::ostream& os) const{
 		if (!back().type || !back().type->IsComposit()) DSTR << std::endl;
 	}
 }
-void FITypeDesc::Composit::Link(FITypeDescDb* db) {
+void UTTypeDesc::Composit::Link(UTTypeDescDb* db) {
 	for(iterator it = begin(); it != end(); ++it){
 		it->type = db->Find(it->typeName);
 	}
 }
 
 //----------------------------------------------------------------------------
-//	FITypeDesc
-FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn, 
+//	UTTypeDesc
+UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, 
 	std::string n, std::string suf){
 	composit.push_back(Field());
 	if (pre.compare("vector") == 0){
-		composit.back().varType = FITypeDesc::Field::VECTOR;
-		composit.back().length = FITypeDesc::BIGVALUE;
+		composit.back().varType = UTTypeDesc::Field::VECTOR;
+		composit.back().length = UTTypeDesc::BIGVALUE;
 	}
 	if (pre.compare("UTRef") == 0) composit.back().isReference = true;
 	if (pre.compare("pointer") == 0) composit.back().isReference = true;
@@ -136,8 +136,8 @@ FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn,
 		if (!is.good()){
 			composit.back().lengthFieldName = suf;
 		}
-		if (composit.back().varType == FITypeDesc::Field::SINGLE){
-			composit.back().varType = FITypeDesc::Field::ARRAY;
+		if (composit.back().varType == UTTypeDesc::Field::SINGLE){
+			composit.back().varType = UTTypeDesc::Field::ARRAY;
 		}
 	}
 
@@ -147,7 +147,7 @@ FITypeDesc::Field* FITypeDesc::AddField(std::string pre, std::string tn,
 	return &composit.back();
 };
 
-FITypeDesc::Field* FITypeDesc::AddBase(std::string tn){
+UTTypeDesc::Field* UTTypeDesc::AddBase(std::string tn){
 	Composit::iterator it;
 	if (composit.size()){
 		for(it = composit.begin(); it!=composit.end(); ++it){
@@ -162,10 +162,10 @@ FITypeDesc::Field* FITypeDesc::AddBase(std::string tn){
 	it->typeName = tn;
 	return &*it;
 }
-void FITypeDesc::Link(FITypeDescDb* db) {
+void UTTypeDesc::Link(UTTypeDescDb* db) {
 	composit.Link(db);
 }
-void FITypeDesc::Print(std::ostream& os) const{
+void UTTypeDesc::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
 	os << typeName << " " << (int)size;
@@ -180,16 +180,16 @@ void FITypeDesc::Print(std::ostream& os) const{
 }
 
 //----------------------------------------------------------------------------
-//	FITypeDescDb
-UTRef<FITypeDescDb> FITypeDescDb::theTypeDescDb;
-FITypeDescDb::ProtoDescs FITypeDescDb::protoDescs;
+//	UTTypeDescDb
+UTRef<UTTypeDescDb> UTTypeDescDb::theTypeDescDb;
+UTTypeDescDb::ProtoDescs UTTypeDescDb::protoDescs;
 
-FITypeDescDb::~FITypeDescDb(){
+UTTypeDescDb::~UTTypeDescDb(){
 	db.clear();
 	protoDescs.clear();
 }
-FITypeDesc* FITypeDescDb::Find(UTString tn){
-	UTRef<FITypeDesc> key = new FITypeDesc;
+UTTypeDesc* UTTypeDescDb::Find(UTString tn){
+	UTRef<UTTypeDesc> key = new UTTypeDesc;
 	if (prefix.length() && tn.compare(0, prefix.length(), prefix)==0){
 		tn = tn.substr(prefix.length());
 	}
@@ -198,9 +198,9 @@ FITypeDesc* FITypeDescDb::Find(UTString tn){
 	if (it != db.end()) return *it;
 	return NULL;
 }
-void FITypeDescDb::SetPrefix(UTString p){
+void UTTypeDescDb::SetPrefix(UTString p){
 	prefix = p;
-	typedef std::vector< UTRef< FITypeDesc > > Descs;
+	typedef std::vector< UTRef< UTTypeDesc > > Descs;
 	Descs descs;
 	for(Db::iterator it = db.begin(); it != db.end(); ++it){
 		descs.push_back(*it);
@@ -213,18 +213,18 @@ void FITypeDescDb::SetPrefix(UTString p){
 	}
 	db.insert(descs.begin(), descs.end());
 }
-void FITypeDescDb::Link() {
+void UTTypeDescDb::Link() {
 	for(Db::iterator it=db.begin(); it!=db.end(); ++it){
 		(*it)->Link(this);
 	}
 }
-void FITypeDescDb::Print(std::ostream& os) const{
+void UTTypeDescDb::Print(std::ostream& os) const{
 	for(Db::const_iterator it = db.begin(); it != db.end(); ++it){
 		(*it)->Print(os);
 		os << std::endl;
 	}
 }
-void FITypeDescDb::RegisterProto(FITypeDesc* n){
+void UTTypeDescDb::RegisterProto(UTTypeDesc* n){
 	protoDescs.push_back(ProtoDesc());
 	protoDescs.back().fileType = prefix;
 	protoDescs.back().desc = n;
@@ -234,7 +234,7 @@ void FITypeDescDb::RegisterProto(FITypeDesc* n){
 //---------------------------------------------------------------------------
 //	FIFieldIt
 
-FIFieldIt::FIFieldIt(FITypeDesc* d){
+FIFieldIt::FIFieldIt(UTTypeDesc* d){
 	type = d;
 	if (type){
 		field = &*type->GetComposit().end();
@@ -258,11 +258,11 @@ bool FIFieldIt::NextField(){
 		}
 	}
 	//	フィールドの配列要素数を設定
-	if (field->varType==FITypeDesc::Field::SINGLE){
+	if (field->varType==UTTypeDesc::Field::SINGLE){
 		arrayLength = 1;
-	}else if(field->varType==FITypeDesc::Field::VECTOR){
+	}else if(field->varType==UTTypeDesc::Field::VECTOR){
 		arrayLength = field->length;
-	}else if(field->varType==FITypeDesc::Field::ARRAY){
+	}else if(field->varType==UTTypeDesc::Field::ARRAY){
 		arrayLength = field->length;
 	}
 	//	配列カウントを初期化

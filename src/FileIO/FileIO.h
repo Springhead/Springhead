@@ -1,9 +1,8 @@
 #include <Springhead.h>
-#include <Foundation/Object.h>
+#include <Foundation/Foundation.h>
 #include "FISdk.h"
 #include "FIFileX.h"
 #include "FISpirit.h"
-#include "FITypeDesc.h"
 #include "FILoadContext.h"
 #include "FISaveContext.h"
 #include "FINodeHandler.h"
