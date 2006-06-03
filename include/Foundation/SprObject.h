@@ -45,12 +45,20 @@ public:													\
 	static const IfInfo* GetIfInfoStatic(){				\
 		return &ifInfo;									\
 	}													\
+	static cls##If* GetSelfFromObject(void* o) {		\
+		return (cls##If*)GetIfInfoStatic()->GetIf(o);	\
+	}													\
+
+
+#undef DCAST
+#define DCAST(T,p) SprDcastImp<T>(p)
+#define ICAST	DCAST
+
 
 ///	インタフェースクラスのキャスト
-#define ICAST(T, p)	UTIcastImp<T>(p)
-template <class T, class P> T* UTIcastImp(P p){
+template <class T> T* SprDcastImp(const ObjectIf* p){
 	void* obj = p ? p->GetIfInfo()->GetSprObject((ObjectIf*)p) : NULL;
-	return (T*)T::GetIfInfoStatic()->GetIf(obj);
+	return (T*)T::GetSelfFromObject(obj);
 }
 
 ///	すべてのインタフェースクラスの基本クラス

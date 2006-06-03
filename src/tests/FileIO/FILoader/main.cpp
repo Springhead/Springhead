@@ -32,7 +32,7 @@ namespace Spr{
 	PHSdkIf* phSdk;
 	GRSdkIf* grSdk;
 	PHSceneIf** scene;
-	CDShapeIf** shape;
+//	CDShapeIf** shape;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
 }
@@ -92,10 +92,12 @@ void display(){
 		render->PushModelMatrix();
 		render->MultModelMatrix(af);
 		
-		CDShapeIf** shapes = solids[num]->GetShapes();
-		for(int s=0; s<solids[num]->NShape(); ++s){
+		int nShape = solids[num]->NShape();
+		for(int s=0; s<nShape; ++s){
+			CDShapeIf* shape = solids[num]->GetShape(s);
 			Affinef af;
-			shapes[s]->GetPose().ToAffine(af);
+			solids[num]->
+			shape->GetPose().ToAffine(af);
 			render->PushModelMatrix();
 			render->MultModelMatrix(af);
 			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[s]);
@@ -267,7 +269,7 @@ int main(int argc, char* argv[]){
 	phSdk->Print(DSTR);
 
 	scene = phSdk->GetScenes();		// Scene�̎擾
-	shape = phSdk->GetShapes();		// Shape�̎擾
+//	shape = phSdk->GetShapes();		// Shape�̎擾
 	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
 
 	glutInit(&argc, argv);

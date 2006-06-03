@@ -1,6 +1,7 @@
 #include "../../include/Collision/SprCDShape.h" 
 #include "../../include/Foundation/SprObject.h" 
 #include "../../include/Foundation/SprScene.h" 
+#include "../../include/Foundation/ÉRÉsÅ[ Å` SprObject.h" 
 #include "../../include/Graphics/SprGRFrame.h" 
 #include "../../include/Graphics/SprGRMesh.h" 
 #include "../../include/Graphics/SprGRRender.h" 

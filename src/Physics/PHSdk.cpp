@@ -68,25 +68,21 @@ PHSceneIf** PHSdk::GetScenes(){
 }
 
 CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
+	CDShape* s = NULL;
 	if (desc.type == CDShapeDesc::CONVEXMESH){
-		CDShape* s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
-		s->SetNameManager(this);
-		shapes.push_back(s);
-		return s;
+		s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
 	}else if (desc.type == CDShapeDesc::SPHERE){
-		CDShape* s = DBG_NEW CDSphere((const CDSphereDesc&)desc);
-		s->SetNameManager(this);
-		shapes.push_back(s);
-		return s;
+		s = DBG_NEW CDSphere((const CDSphereDesc&)desc);
 	}else if (desc.type == CDShapeDesc::BOX){
-		CDShape*s = DBG_NEW CDBox((const CDBoxDesc&)desc);
+		s = DBG_NEW CDBox((const CDBoxDesc&)desc);
+	}
+	if (s){
 		s->SetNameManager(this);
 		shapes.push_back(s);
-		return s;
 	}else{
 		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
-		return NULL;
 	}
+	return s;
 }
 int PHSdk::NShape(){
 	return shapes.size();

@@ -187,6 +187,11 @@ void FILoadContext::LoadNode(){
 				}else{
 					UTString err("Can not give name to an object of '");
 					err.append(obj->GetIfInfo()->ClassName());
+					const IfInfo* i = obj->GetIfInfo();
+					const IfInfo* b = NamedObjectIf::GetIfInfoStatic();
+					if (i->Inherit(b)){
+						DSTR << "i Inherits b.\n";
+					}
 					err.append("'.");
 					ErrorMessage(NULL, err.c_str());
 				}

@@ -212,7 +212,7 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = OCAST(CDShape, shape);
 	//重複登録のチェック
-	for(int i = 0; i < shapes.size(); i++)
+	for(unsigned i = 0; i < shapes.size(); i++)
 		if(shapes[i].shape == sh)
 			return;
 	shapes.push_back(CDShapeRefWithPose());
@@ -236,14 +236,14 @@ void PHSolid::AddShape(CDShapeIf* shape){
 }
 
 Posed	PHSolid::GetShapePose(CDShapeIf* shape){
-	for(int i = 0; i < shapes.size(); i++)
+	for(unsigned i = 0; i < shapes.size(); i++)
 		if(shapes[i].shape == shape)
 			return shapes[i].pose;
 	return Posed();
 }
 
 void	PHSolid::SetShapePose(CDShapeIf* shape, const Posed& pose){
-	for(int i = 0; i < shapes.size(); i++)
+	for(unsigned i = 0; i < shapes.size(); i++)
 		if(shapes[i].shape == shape)
 			shapes[i].pose = pose;
 }

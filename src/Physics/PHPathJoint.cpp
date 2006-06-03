@@ -10,6 +10,7 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHPath
 IF_IMP(PHPath, SceneObject)
+OBJECTIMPABST(PHPath, SceneObject)
 
 PHPath::PHPath(const PHPathDesc& desc){
 	resize(desc.points.size());

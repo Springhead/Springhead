@@ -33,6 +33,7 @@ class PHPath : public std::vector<PHPathPointWithJacobian>, public InheritSceneO
 	bool bLoop;	//[-pi, pi]ÇÃñ≥å¿âÒì]ä÷êﬂ
 	iterator Find(double s);
 public:
+	OBJECTDEFABST(PHPath);
 	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
 	virtual bool IsLoop(){return bLoop;}
 	void AddPoint(double s, const Posed& pose);

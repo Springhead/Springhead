@@ -187,16 +187,21 @@ public:
 		return velocity + (angVelocity^(posW - pose*center));
 	}
 
+	///	‚±‚Ì„‘Ì‚ª‚Â Spr::CDShape ‚Ì”
+	int			NShape();
+	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ìæ“¾
+	CDShapeIf*	GetShape(int i);
+	///	shape ‚ğ ‚±‚Ì„‘Ì‚ª‚ÂSpr::CDShape‚ÌƒŠƒXƒg ‚ÌÅŒã‚É’Ç‰Á‚·‚éD
 	void		AddShape(CDShapeIf* shape);
-	Posed		GetShapePose(CDShapeIf* shape);
-	void		SetShapePose(CDShapeIf* shape, const Posed& pose);
+	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğæ“¾
+	Posed		GetShapePose(int i);
+	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğİ’è
+	void		SetShapePose(int i, const Posed& pose);
 
 	void		SetGravity(bool bOn);
 	void		SetDynamical(bool bOn){bDynamical = bOn;}
 	bool		IsDynamical(){return bDynamical;}
 
-	int			NShape();
-	CDShapeIf*	GetShape(int i);
 protected:
 	DEF_DESC_STATE(PHSolid);
 };

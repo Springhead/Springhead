@@ -9,7 +9,7 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 //	PHScene
 OBJECTIMP(PHScene, Scene);
-IF_IMP(PHScene, Object);
+IF_IMP(PHScene, Scene);
 
 PHScene::PHScene(PHSdkIf* s, const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();

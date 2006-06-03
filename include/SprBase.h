@@ -14,5 +14,6 @@
 #include "Base/TinyMat.h"
 #include "Base/TQuaternion.h"
 #include "Base/Affine.h"
+#include "Base/BaseTypeInfo.h"
 
 #endif

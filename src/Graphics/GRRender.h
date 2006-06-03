@@ -12,6 +12,7 @@ namespace Spr{;
 /**	@brief	グラフィックスの材質 */
 class GRMaterial:public InheritSceneObject<GRMaterialIf, SceneObject>, public GRMaterialDesc{
 public:
+	OBJECTDEF(GRMaterial);
 	GRMaterial(){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
 		ambient = a;

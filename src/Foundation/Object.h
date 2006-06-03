@@ -28,9 +28,15 @@ namespace Spr{;
 	IF_IMP_COMMON(cls)
 
 ///	Object派生クラスの実行時型情報
+#define OBJECTDEFABST(cls)				DEF_UTTYPEINFOABSTDEF(cls)	\
+	static cls* GetSelfFromObject(void* o) {						\
+		return (cls*)(Object*)o;									\
+	}																\
 
-#define OBJECTDEFABST(cls)				DEF_UTTYPEINFOABSTDEF(cls)
-#define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)
+#define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)		\
+	static cls* GetSelfFromObject(void* o) {						\
+		return (cls*)(Object*)o;									\
+	}																\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．
 #define OBJECTIMPBASEABST(cls)			DEF_UTTYPEINFOABST(cls)
@@ -60,14 +66,8 @@ namespace Spr{;
 
 #define DEF_DESC_STATE(cls) DEF_STATE(cls) DEF_DESC(cls)
 
-class Object;
-///	インタフェース->オブジェクトへのキャスト
-#define OCAST(T, i)	OcastImp<T>(i)
-template <class T, class I> T* OcastImp(const I* i){
-	ObjectIf* oi = (ObjectIf*)i;
-	void* obj = i ? i->GetIfInfo()->GetSprObject(oi) : NULL;
-	return (T*)(Object*)obj;
-}
+///	インタフェース->オブジェクトへのキャスト DCASTでOK．
+#define OCAST	DCAST
 
 /**	全Objectの基本型	*/
 class Object:public ObjectIf, public UTTypeInfoObjectBase, public UTRefCount{
@@ -111,6 +111,13 @@ public:
 	///	状態型をメモリブロックに戻す
 	virtual void DestructState(void* m) const {}
 };
+
+template <class T> T* SprDcastImp(const Object* p){
+	if (p && p->GetTypeInfo()->Inherit(T::GetTypeInfoStatic())) return (T*)&*(p);
+	return NULL;
+}
+
+
 template <class intf, class base>
 struct InheritObject:public intf, base{
 	virtual int AddRef(){return base::AddRef();}
