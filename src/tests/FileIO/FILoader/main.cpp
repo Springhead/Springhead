@@ -96,11 +96,10 @@ void display(){
 		for(int s=0; s<nShape; ++s){
 			CDShapeIf* shape = solids[num]->GetShape(s);
 			Affinef af;
-			solids[num]->
-			shape->GetPose().ToAffine(af);
+			solids[num]->GetShapePose(s).ToAffine(af);
 			render->PushModelMatrix();
 			render->MultModelMatrix(af);
-			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[s]);
+			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shape);
 			if (mesh){
 				Vec3f* base = mesh->GetVertices();
 				for (size_t f=0; f<mesh->NFace(); ++f) {	
@@ -108,14 +107,14 @@ void display(){
 					render->DrawFace(face, base);
 				}
 			}
-			CDSphereIf* sphere = ICAST(CDSphereIf, shapes[s]);
+			CDSphereIf* sphere = ICAST(CDSphereIf, shape);
 			if (sphere){
 				float r = sphere->GetRadius();
 				GLUquadricObj* quad = gluNewQuadric();
 				gluSphere(quad, r, 16, 8);
 				gluDeleteQuadric(quad);
 			}
-			CDBoxIf* box = ICAST(CDBoxIf, shapes[s]);
+			CDBoxIf* box = ICAST(CDBoxIf, shape);
 			if (box){
 #if 0			// glut‚É‚æ‚é’¼•û‘Ì‚Ì•`‰æ”Å			
 				Vec3f boxsize = box->GetBoxSize();
