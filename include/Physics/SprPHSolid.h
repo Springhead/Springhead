@@ -74,10 +74,10 @@ struct PHSolidIf : public SceneObjectIf{
 	virtual void		AddShape(CDShapeIf* shape)=0;
 
 	/// 形状の位置の取得
-	virtual Posed		GetShapePose(CDShapeIf* shape)=0;
+	virtual Posed		GetShapePose(int pos)=0;
 
 	/// 形状の位置の設定
-	virtual void		SetShapePose(CDShapeIf* shape, const Posed& pose)=0;
+	virtual void		SetShapePose(int pos, const Posed& pose)=0;
 
 	///	重力を有効/無効化する	ここでよいか疑問
 	virtual void		SetGravity(bool bOn)=0;
