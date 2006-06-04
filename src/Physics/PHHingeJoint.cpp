@@ -9,8 +9,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHingeJoint
-//OBJECTIMP(PHHingeJoint, PHJoint1D)
-IF_IMP(PHHingeJoint, PHJoint1D)
+IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
 
 double PHHingeJoint::GetPosition(){
 	//²•ûŒü‚ÌS‘©‚Í‡’v‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‰¼’è‚µ‚ÄŠp“x‚ğŒ©‚é

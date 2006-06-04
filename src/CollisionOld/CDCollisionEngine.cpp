@@ -6,7 +6,7 @@
 
 namespace Spr{;
 	
-SGOBJECTIMP(CDCollisionEngine, SGBehaviorEngine);
+SGIF_OBJECT_IMP(CDCollisionEngine, SGBehaviorEngine);
 CDCollisionEngine::CDCollisionEngine():nFrameRecords(0), nFramePairRecords(0), nConvexPairRecords(0){
 }
 
@@ -322,7 +322,7 @@ void CDCollisionEngine::RayCheck(Vec3f from, Vec3f dir){
 
 class CDCollisionEngineState:public SGBehaviorState{
 public:
-	SGOBJECTDEF(CDCollisionEngineState);
+	SGOBJECT_DEF(CDCollisionEngineState);
 	struct TConvexPairState{
 		CDConvexPair::State state;		///<	ÚGó‘Ô
 		Vec3d normal;					///<	Õ“Ë‚Ì–@ü(0‚©‚ç1‚Ö) (Global)
@@ -338,7 +338,7 @@ public:
 	typedef std::vector<TFramePairState> TFramePairStates;
 	TFramePairStates framePairs;
 };
-SGOBJECTIMP(CDCollisionEngineState, SGBehaviorState);
+SGIF_OBJECT_IMP(CDCollisionEngineState, SGBehaviorState);
 
 void CDCollisionEngine::LoadState(const SGBehaviorStates& states){
 	CDCollisionEngineState* state = DCAST(CDCollisionEngineState, states.GetNext());

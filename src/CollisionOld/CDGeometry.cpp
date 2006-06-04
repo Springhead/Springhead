@@ -5,7 +5,7 @@
 
 namespace Spr {;
 
-SGOBJECTIMPABST(CDGeometry, SGObject);
+SGIF_OBJECT_IMPABST(CDGeometry, SGObject);
 bool CDGeometry::AddChildObject(SGObject* o, SGScene* s){
 	CDPhysicalMaterial* pmat = DCAST(CDPhysicalMaterial, o);
 	if (pmat) pmaterial = pmat;

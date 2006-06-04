@@ -10,7 +10,7 @@ namespace Spr{
 
 ///////////////////////////////////////////////////////////////////
 //	CRSimple
-OBJECTIMP(CRSimple, SceneObject);
+IF_OBJECT_IMP(CRSimple, SceneObject);
 IF_IMP(CRSimple, SceneObject);
 
 void CRSimple::Hoge(){

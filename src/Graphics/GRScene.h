@@ -14,7 +14,7 @@ namespace Spr {;
 	‚ğ‚Á‚Ä‚¢‚é‚µCD3D‚È‚ç‚Î ID3DXMesh‚ğ‚Á‚Ä‚¢‚éD
 */
 class SPR_DLL GRScene:public InheritScene<GRSceneIf, Scene>, public GRSceneDesc{
-	OBJECTDEF(GRScene);
+	OBJECT_DEF(GRScene);
 protected:
 	///	Œ³‚ÌSDK
 	GRSdkIf* sdk;

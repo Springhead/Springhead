@@ -8,7 +8,7 @@ namespace Spr{;
 
 class PHHingeJoint : public InheritJoint1D<PHHingeJointIf, PHJoint1D>{
 public:
-	//OBJECTDEF(PHHingeJoint);
+	OBJECT_DEF(PHHingeJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
 	virtual double GetPosition();
 	virtual double GetVelocity();

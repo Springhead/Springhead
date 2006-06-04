@@ -120,11 +120,11 @@ int main(int argc, char* argv[]){
 	CDSphereIf* sphere=NULL;
 	{
 		CDSphereDesc sd;
-		sphere = ICAST(CDSphereIf, phSdk->CreateShape(sd));
+		sphere = DCAST(CDSphereIf, phSdk->CreateShape(sd));
 
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f (30.0, 1.0, 30.0);
-		floor = ICAST(CDBoxIf, phSdk->CreateShape(bd));
+		floor = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 	}	
 
 	soFloor->AddShape(floor);

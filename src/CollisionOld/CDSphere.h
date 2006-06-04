@@ -13,7 +13,7 @@ public:
 	///	”¼Œa
 	float radius;
 
-	SGOBJECTDEF(CDSphere);
+	SGOBJECT_DEF(CDSphere);
 	///
 	CDSphere(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
 	///	GeomtryID

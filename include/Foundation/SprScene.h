@@ -14,7 +14,7 @@ struct NameManagerIf: public NamedObjectIf{
 	}
 	template <class T> void FindObject(T*& t, UTString name, UTString ns=""){
 		NamedObjectIf* p = FindObject(name,T::GetIfInfoStatic()->className, ns);
-		t = ICAST(T, p);
+		t = DCAST(T, p);
 	}
 	virtual NamedObjectIf* FindObject(UTString name, const char* cls, UTString ns)=0;
 };

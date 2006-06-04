@@ -42,7 +42,7 @@ enum PHBehaviorPriority{
 class PHScene;
 ///	動作エンジンの基本クラス．
 class PHEngine:public InheritSceneObject<PHEngineIf, SceneObject>{
-	OBJECTDEF(PHEngine);
+	OBJECT_DEF(PHEngine);
 public:
 
 	///	シーンをクリアするときの処理

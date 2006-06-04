@@ -12,7 +12,7 @@ namespace Spr{;
 /**	@class	GRDebugRender
     @brief	デバッグ情報レンダラーの実装　 */
 class GRDebugRender:public InheritGRRender<GRDebugRenderIf, GRRender>{
-	OBJECTDEF(GRDebugRender);
+	OBJECT_DEF(GRDebugRender);
 protected:
 	int matSampleCount;
 	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)

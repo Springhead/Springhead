@@ -5,7 +5,7 @@
 
 namespace Spr {;
 //------------------------------------------------------------------------
-SGOBJECTIMP(CDSphere, CDConvex);
+SGIF_OBJECT_IMP(CDSphere, CDConvex);
 ///	サポートポイントを求める．
 Vec3f CDSphere::Support(const Vec3f& p_) const{
 	Vec3f p = p_;

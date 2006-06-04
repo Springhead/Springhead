@@ -8,7 +8,7 @@ namespace Spr{;
 struct ObjectIf;
 class UTTypeDesc;
 
-/**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，ICAST()などが利用する．
+/**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．
 1つのインタフェースクラスに付き1個のインスタンスができる．	*/
 class IfInfo{
 public:
@@ -54,8 +54,6 @@ public:													\
 
 #undef DCAST
 #define DCAST(T,p) SprDcastImp<T>(p)
-#define ICAST	DCAST
-
 
 ///	インタフェースクラスのキャスト
 template <class T> T* SprDcastImp(const ObjectIf* p){

@@ -55,7 +55,7 @@ public:
 /**	3角形だけから構成される凸多面体	*/
 class CDPolyhedron:public CDConvex{
 public:
-	SGOBJECTDEF(CDPolyhedron);
+	SGOBJECT_DEF(CDPolyhedron);
 	///	探索開始頂点番号
 	mutable int curPos;
 	///	GeomtryID

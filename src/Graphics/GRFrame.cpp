@@ -2,11 +2,8 @@
 #include "GRFrame.h"
 
 namespace Spr{;
-OBJECTIMPABST(GRVisual, SceneObject);
-IF_IMP(GRVisual, SceneObject);
-
-OBJECTIMP(GRFrame, GRVisual);
-IF_IMP(GRFrame, GRVisual);
+IF_OBJECT_IMP_ABST(GRVisual, SceneObject);
+IF_OBJECT_IMP(GRFrame, GRVisual);
 
 void GRFrame::Render(GRRenderIf* r){
 	r->PushModelMatrix();
@@ -28,20 +25,20 @@ void GRFrame::SetParent(GRFrameIf* fr){
 		parent=NULL;
 	}
 	if (fr){
-		parent = OCAST(GRFrame, fr);
+		parent = DCAST(GRFrame, fr);
 		fr->AddChildObject(fr);
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* v){
 	if (v->GetIfInfo()->Inherit(GRVisualIf::GetIfInfoStatic())){
-		children.push_back(OCAST(GRVisual, v));
+		children.push_back(DCAST(GRVisual, v));
 		return true;
 	}
 	return false;
 }
 bool GRFrame::DelChildObject(ObjectIf* v){
 	for(GRVisuals::iterator it = children.begin(); it != children.end(); ++it){
-		if (*it == OCAST(Object, v)){
+		if (*it == DCAST(Object, v)){
 			children.erase(it);
 			return true;
 		}

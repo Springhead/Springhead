@@ -13,7 +13,7 @@ namespace Spr{;
 /**	@class	GRDeviceGL
     @brief	OpenGLによるグラフィックス描画の実装　 */
 class GRDeviceGL: public InheritGRDevice<GRDeviceGLIf, GRDevice>{
-	OBJECTDEF(GRDeviceGL);
+	OBJECT_DEF(GRDeviceGL);
 protected:
 	int		window;					///< ウィンドウID	
 	/**

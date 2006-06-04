@@ -6,13 +6,11 @@
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRRenderBase
-OBJECTIMPABST(GRRenderBase, Object);
-IF_IMP(GRRenderBase, Object);
+IF_OBJECT_IMP_ABST(GRRenderBase, Object);
 
 //----------------------------------------------------------------------------
 //	GRRender
-OBJECTIMP(GRRender, Object);
-IF_IMP(GRRender, GRRenderBase);
+IF_OBJECT_IMP(GRRender, Object);
 
 void GRRender::Print(std::ostream& os) const{
 	device->Print(os);
@@ -20,8 +18,7 @@ void GRRender::Print(std::ostream& os) const{
 
 //----------------------------------------------------------------------------
 //	GRDevice
-OBJECTIMPABST(GRDevice, GRRenderBase);
-IF_IMP(GRDevice, GRRenderBase);
+IF_OBJECT_IMP_ABST(GRDevice, GRRenderBase);
 
 }	//	Spr
 

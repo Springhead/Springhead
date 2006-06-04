@@ -15,7 +15,7 @@ protected:
 	Shapes shapes;
 
 public:
-	OBJECTDEF(PHSdk);
+	OBJECT_DEF(PHSdk);
 	PHSdk();
 	~PHSdk();
 	virtual PHSceneIf* CreateScene();

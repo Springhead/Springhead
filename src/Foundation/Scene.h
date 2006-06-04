@@ -95,7 +95,7 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 
 class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
 public:
-	OBJECTDEF(NameManager);
+	OBJECT_DEF(NameManager);
 protected:
 	/*	名前とオブジェクトの対応表  */
 
@@ -147,7 +147,7 @@ struct InheritNameManager:public InheritNamedObject<intf, base>{
 	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
 	セーブして，D3D形式でロードしなければならない．	*/
 class SPR_DLL Scene:public InheritNameManager<SceneIf, NameManager>{
-	OBJECTDEF(Scene);
+	OBJECT_DEF(Scene);
 public:
 	///	コンストラクタ
 	Scene();

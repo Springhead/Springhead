@@ -35,8 +35,7 @@ void PHSolidAux::SetupCorrection(){
 
 //----------------------------------------------------------------------------
 // PHConstraint
-//OBJECTIMP(PHConstraint, SceneObject);
-IF_IMP(PHConstraint, SceneObject);
+IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
 PHConstraint::PHConstraint(){
 	f.clear();
 	F.clear();
@@ -44,9 +43,9 @@ PHConstraint::PHConstraint(){
 }
 
 bool PHConstraint::AddChildObject(ObjectIf* o){
-	PHSolid* s = OCAST(PHSolid, o);
+	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
-		PHScene* scene = OCAST(PHScene, GetScene());
+		PHScene* scene = DCAST(PHScene, GetScene());
 		assert(scene);
 		PHConstraintEngine* ce;
 		scene->engines.Find(ce);

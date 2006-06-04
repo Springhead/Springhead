@@ -9,8 +9,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSliderJoint
-//OBJECTIMP(PHSliderJoint, PHJoint1D)
-IF_IMP(PHSliderJoint, PHJoint1D)
+IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
 double PHSliderJoint::GetPosition(){
 	DSTR<<rjrel.z <<endl;

@@ -12,7 +12,7 @@ namespace Spr{;
 /**	@brief	グラフィックスの材質 */
 class GRMaterial:public InheritSceneObject<GRMaterialIf, SceneObject>, public GRMaterialDesc{
 public:
-	OBJECTDEF(GRMaterial);
+	OBJECT_DEF(GRMaterial);
 	GRMaterial(){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
 		ambient = a;
@@ -41,13 +41,13 @@ public:
     @brief	グラフィックスレンダラーの基本クラス（Object派生クラスの実行時型情報を管理） */
 class GRRenderBase: public InheritObject<GRRenderBaseIf, Object>{
 public:
-	OBJECTDEFABST(GRRenderBase);
+	OBJECT_DEF_ABST(GRRenderBase);
 };
 
 /**	@class	GRRender
     @brief	グラフィックスレンダラーの基本クラス（デバイスの切り分け）　 */
 class GRRender: public InheritObject<GRRenderIf, GRRenderBase>{
-	OBJECTDEF(GRRender);
+	OBJECT_DEF(GRRender);
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
 	GRCamera camera;				///<	カメラ
@@ -82,7 +82,7 @@ public:
 		{ ptr DrawFont(pos, str, font); }												\
 	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }		\
 	virtual void SetMaterial(const GRMaterialIf* mat){									\
-		if(mat) ptr SetMaterial((const GRMaterialDesc&)*OCAST(GRMaterial, mat)); }		\
+		if(mat) ptr SetMaterial((const GRMaterialDesc&)*DCAST(GRMaterial, mat)); }		\
 	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }							\
 	virtual void PushLight(const GRLight& light){ptr PushLight(light);}					\
 	virtual void PopLight(){ptr PopLight(); }											\
@@ -116,10 +116,10 @@ struct InheritGRRender:public InheritObject<intf, base>{
     @brief	グラフィックス描画の実装　 */
 class GRDevice: public InheritObject<GRDeviceIf, GRRenderBase>{
 public:
-	OBJECTDEFABST(GRDevice);
+	OBJECT_DEF_ABST(GRDevice);
 	virtual void SetMaterial(const GRMaterialDesc& mat)=0;
 	virtual void SetMaterial(const GRMaterialIf* mat){
-		if(mat) SetMaterial(*OCAST(GRMaterial, mat));
+		if(mat) SetMaterial(*DCAST(GRMaterial, mat));
 	}
 };
 template <class intf, class base>

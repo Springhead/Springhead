@@ -28,51 +28,55 @@ namespace Spr{;
 	IF_IMP_COMMON(cls)
 
 ///	Object派生クラスの実行時型情報
-#define OBJECTDEFABST(cls)				DEF_UTTYPEINFOABSTDEF(cls)	\
+#define OBJECT_DEF_ABST(cls)			DEF_UTTYPEINFOABSTDEF(cls)	\
 	static cls* GetSelfFromObject(void* o) {						\
 		return (cls*)(Object*)o;									\
 	}																\
 
-#define OBJECTDEF(cls)					DEF_UTTYPEINFODEF(cls)		\
+#define OBJECT_DEF(cls)					DEF_UTTYPEINFODEF(cls)		\
 	static cls* GetSelfFromObject(void* o) {						\
 		return (cls*)(Object*)o;									\
 	}																\
 
-///	実行時型情報を持つクラスが持つべきメンバの実装．
-#define OBJECTIMPBASEABST(cls)			DEF_UTTYPEINFOABST(cls)
-#define OBJECTIMPBASE(cls)				DEF_UTTYPEINFO(cls)
-#define OBJECTIMP(cls, base)			DEF_UTTYPEINFO1(cls, base)
-#define OBJECTIMP2(cls, b1, b2)			DEF_UTTYPEINFO2(cls, b1, b2)
-#define OBJECTIMP3(cls, b1, b2, b3)		DEF_UTTYPEINFO3(cls, b1, b2, b3)
-#define OBJECTIMPABST(cls, base)		DEF_UTTYPEINFOABST1(cls, base)
-#define OBJECTIMPABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
-#define OBJECTIMPABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
+///	実行時型情報を持つObjectの派生クラスが持つべきメンバの実装．
+#define OBJECT_IMP_BASEABST(cls)			DEF_UTTYPEINFOABST(cls)
+#define OBJECT_IMP_BASE(cls)				DEF_UTTYPEINFO(cls)
+#define OBJECT_IMP(cls, base)				DEF_UTTYPEINFO1(cls, base)
+#define OBJECT_IMP2(cls, b1, b2)			DEF_UTTYPEINFO2(cls, b1, b2)
+#define OBJECT_IMP3(cls, b1, b2, b3)		DEF_UTTYPEINFO3(cls, b1, b2, b3)
+#define OBJECT_IMP_ABST(cls, base)			DEF_UTTYPEINFOABST1(cls, base)
+#define OBJECT_IMP_ABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
+#define OBJECT_IMP_ABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
 
-#define DEF_STATE_NOINHERIT(cls)													\
+#define IF_OBJECT_IMP(cls, base)		IF_IMP(cls, base) OBJECT_IMP(cls, base)
+#define IF_OBJECT_IMP_ABST(cls, base)	IF_IMP(cls, base) OBJECT_IMP_ABST(cls, base)
+
+///	ステートの作成と破棄の関数定義
+#define ACCESS_STATE_NOINHERIT(cls)													\
 	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
 	virtual void ConstructState(void* m) const { new(m) cls##State;}				\
 	virtual void DestructState(void* m) const { ((cls##State*)m)->~cls##State(); }	\
 
-#define DEF_STATE(cls)																\
-	DEF_STATE_NOINHERIT(cls)														\
+///	ステートの設定・取得を含めたアクセス用関数の定義
+#define ACCESS_STATE(cls)															\
+	ACCESS_STATE_NOINHERIT(cls)														\
 	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
 	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
 
-#define DEF_DESC(cls)																\
+///	デスクリプタの設定・取得などアクセス用関数の定義
+#define ACCESS_DESC(cls)															\
 	virtual const void* GetDescAddress() const { return (cls##Desc*)this; }			\
 	virtual bool GetDesc(void* d) const { *(cls##Desc*)d=*this; return true; }		\
 	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
 
-#define DEF_DESC_STATE(cls) DEF_STATE(cls) DEF_DESC(cls)
-
-///	インタフェース->オブジェクトへのキャスト DCASTでOK．
-#define OCAST	DCAST
+///	ステートとデスクリプタをまとめて定義
+#define ACCESS_DESC_STATE(cls) ACCESS_STATE(cls) ACCESS_DESC(cls)
 
 /**	全Objectの基本型	*/
 class Object:public ObjectIf, public UTTypeInfoObjectBase, public UTRefCount{
 public:
-	OBJECTDEF(Object);		///<	クラス名の取得などの基本機能の実装
+	OBJECT_DEF(Object);		///<	クラス名の取得などの基本機能の実装
 
 	virtual int AddRef(){return UTRefCount::AddRef();}
 	virtual int DelRef(){return UTRefCount::DelRef();}
@@ -150,7 +154,7 @@ class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
 class NamedObject: public InheritObject<NamedObjectIf, Object>{
-	OBJECTDEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
+	OBJECT_DEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
 protected:
 	friend class ObjectNames;
 	UTString name;				///<	名前
@@ -178,7 +182,7 @@ class Scene;
 /**	Sceneが所有するObject型．
 	所属するSceneへのポインタを持つ	*/
 class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{
-	OBJECTDEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
+	OBJECT_DEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
@@ -220,7 +224,7 @@ protected:
 	void LoadState(ObjectIf* o, char*& s);
 
 public:
-	OBJECTDEF(ObjectStates);
+	OBJECT_DEF(ObjectStates);
 	ObjectStates():state(NULL), size(0){}
 	~ObjectStates(){ delete state; }
 	///	oとその子孫をセーブするために必要なメモリを確保する．

@@ -11,8 +11,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDBox
-OBJECTIMP(CDBox, CDConvex);	
-IF_IMP(CDBox, CDConvex);	
+IF_OBJECT_IMP(CDBox, CDConvex);	
 
 CDBox::CDBox() {
 }

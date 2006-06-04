@@ -26,11 +26,11 @@ void FISaveContext::ErrorMessage(const char* msg){
 	*errorStream << "error: " << msg << std::endl;
 }
 UTString FISaveContext::GetNodeTypeName(){
-	UTString rv(OCAST(Object, objects.back())->GetTypeInfo()->ClassName());
+	UTString rv(DCAST(Object, objects.back())->GetTypeInfo()->ClassName());
 	return rv;
 }
 UTString FISaveContext::GetNodeName(){
-	NamedObjectIf* n = ICAST(NamedObjectIf, objects.back());
+	NamedObjectIf* n = DCAST(NamedObjectIf, objects.back());
 	UTString rv;
 	if (n && n->GetName()) rv = n->GetName();
 	return rv;

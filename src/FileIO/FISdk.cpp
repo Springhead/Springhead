@@ -52,8 +52,7 @@ ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc){
 
 //----------------------------------------------------------------------------
 //	FISdk
-OBJECTIMP(FISdk, Object);
-IF_IMP(FISdk, NameManager);
+IF_OBJECT_IMP(FISdk, NameManager);
 
 
 FISdk::FISdk(){

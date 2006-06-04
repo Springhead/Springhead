@@ -54,7 +54,7 @@ bool CDFace::CalcDualVtx(Vec3f* base){
 
 	
 //------------------------------------------------------------------------
-SGOBJECTIMP(CDPolyhedron, CDConvex);
+SGIF_OBJECT_IMP(CDPolyhedron, CDConvex);
 Vec3f CDPolyhedron::Support(const Vec3f& v) const {
 	int lastPos = -1;
 	float h = Vertex(curPos) * v;

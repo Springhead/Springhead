@@ -9,11 +9,11 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHJoint
-IF_IMP(PHJoint, PHConstraint);
+IF_OBJECT_IMP_ABST(PHJoint, PHConstraint);
 
 //----------------------------------------------------------------------------
 // PHJoint1D
-IF_IMP(PHJoint1D, PHJoint);
+IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 
 void PHJoint1D::SetDesc(const PHJointDesc& desc){
 	PHConstraint::SetDesc(desc);

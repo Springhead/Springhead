@@ -56,7 +56,7 @@ public:
 ///
 class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
 public:
-	//OBJECTDEF(PHConstraint);
+	OBJECT_DEF_ABST(PHConstraint);
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,

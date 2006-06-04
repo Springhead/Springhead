@@ -10,7 +10,7 @@ namespace Spr{;
 
 class PHContactPoint : public InheritConstraint<PHContactPointIf, PHConstraint>{
 public:
-	//OBJECTDEF(PHContactPoint);
+	OBJECT_DEF_ABST(PHContactPoint);
 	CDShapePair* shapePair;
 	Vec3d pos;
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}

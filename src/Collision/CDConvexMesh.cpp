@@ -34,8 +34,7 @@ int CDVertexIDs::FindPos(int id) const {
 
 //----------------------------------------------------------------------------
 //	CDConvexMesh
-OBJECTIMP(CDConvexMesh, CDConvex);
-IF_IMP(CDConvexMesh, CDConvex);
+IF_OBJECT_IMP(CDConvexMesh, CDConvex);
 
 CDConvexMesh::CDConvexMesh(){
 }

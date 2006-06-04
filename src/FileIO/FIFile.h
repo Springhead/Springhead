@@ -15,7 +15,7 @@ protected:
 	///	ロード時に自動ロードとは別の処理が必要なノードのハンドラ
 	FINodeHandlers handlers;
 public:
-	OBJECTDEFABST(FIFile);
+	OBJECT_DEF_ABST(FIFile);
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);

@@ -30,7 +30,7 @@ class CDQuadFaces:public std::vector<CDQuadFace>{
 class CDBox: public InheritCDShape<CDBoxIf, CDConvex>{
 public:
 	
-	OBJECTDEF(CDBox);
+	OBJECT_DEF(CDBox);
 	
 	Vec3f boxsize;				/// 直方体のサイズ（各辺の長さ）
 	CDQuadFaces qfaces;			/// 面（四角形:quadrangular face）

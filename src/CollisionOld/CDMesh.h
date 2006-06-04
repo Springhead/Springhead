@@ -6,7 +6,7 @@ namespace Spr {;
 
 /**	ƒƒbƒVƒ…	*/
 class CDMesh:public CDGeometry{
-	SGOBJECTDEF(CDMesh);
+	SGOBJECT_DEF(CDMesh);
 public:
 	///	GeomtryID
 	virtual int GeometryID(){ return MESH; }

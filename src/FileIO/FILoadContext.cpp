@@ -117,7 +117,7 @@ void FILoadContext::Tasks::Execute(FILoadContext* ctx){
 //	FILoadContext::LinkTask
 FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
 	for(int i=objs.size()-1; i>=0; --i){
-		NameManagerIf* nm = ICAST(NameManagerIf, objs[i]);
+		NameManagerIf* nm = DCAST(NameManagerIf, objs[i]);
 		if (nm){
 			nameManagers.push_back(nm);
 		}
@@ -179,7 +179,7 @@ void FILoadContext::LoadNode(){
 		//	ロードしたデータからオブジェクトを作る．
 		ObjectIf* obj = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
 		if (obj){
-			NamedObjectIf* n = ICAST(NamedObjectIf, obj);
+			NamedObjectIf* n = DCAST(NamedObjectIf, obj);
 			if (datas.Top()->name.length()){
 				if (n){
 					n->SetName(datas.Top()->name.c_str());

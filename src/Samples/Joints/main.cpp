@@ -161,7 +161,7 @@ void BuildScene2(){
 	CreateFloor();
 	CDConvexMeshDesc md;
 	InitBoxMesh(md, 1.0, 1.0, 1.0);
-	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(meshBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
@@ -175,7 +175,7 @@ void BuildScene3(){
 	InitBoxMesh(md, 1.0, 1.0, 1.0);
 	descBox.mass=10.0;
 	descBox.inertia = 10 * Matrix3d::Unit();
-	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(meshBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
@@ -187,7 +187,7 @@ void BuildScene4(){
 	CreateFloor();
 	CDConvexMeshDesc md;
 	InitBoxMesh(md, 1.0, 1.0, 1.0);
-	meshBox = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(meshBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
@@ -207,7 +207,7 @@ void BuildScene4(){
 	}
 	PHPathJointDesc descJoint;
 	jntLink.push_back(scene->CreateJoint(soFloor, soBox[0], descJoint));
-	PHPathJointIf* joint = ICAST(PHPathJointIf, jntLink[0]);
+	PHPathJointIf* joint = DCAST(PHPathJointIf, jntLink[0]);
 	joint->AddChildObject(path);
 	joint->SetPosition(2 * 2 * M_PI);
 	
@@ -245,8 +245,8 @@ void display();
 void OnKey1(char key){
 	const double K = 30.0;
 	const double B = 10.0;
-	PHHingeJointIf* hinge = ICAST(PHHingeJointIf, jntLink[0]);
-	PHPathJointIf* path = (jntLink.size() == 5 ? ICAST(PHPathJointIf, jntLink[4]) : NULL); 
+	PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
+	PHPathJointIf* path = (jntLink.size() == 5 ? DCAST(PHPathJointIf, jntLink[4]) : NULL); 
 	switch(key){
 	case 'a': hinge->SetMotorTorque(1.0);	break;
 	case 's': hinge->SetMotorTorque(0.0);	break;
@@ -310,7 +310,7 @@ void OnKey1(char key){
 		descJoint.pose[0].Pos().x = 15.0;
 		jntLink.resize(5);
 		jntLink[4] = scene->CreateJoint(soFloor, soBox[3], descJoint);
-		PHPathJointIf* joint = ICAST(PHPathJointIf, jntLink[4]);
+		PHPathJointIf* joint = DCAST(PHPathJointIf, jntLink[4]);
 		joint->AddChildObject(trajectory);
 		joint->SetPosition(0);
 	
@@ -346,7 +346,7 @@ void OnKey3(char key){
 		jdesc.pose[1].Ori() = Quaterniond::Rot(Rad(90.0), 'y');
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
-		PHSliderJointIf* slider = ICAST(PHSliderJointIf, jntLink.back());
+		PHSliderJointIf* slider = DCAST(PHSliderJointIf, jntLink.back());
 		slider->SetRange(-0.3, 0.3);
 		slider->SetSpring(1000.0);
 		slider->SetDamper(300);
@@ -411,7 +411,7 @@ void display(){
 
 	Vec3f normal;
 	for(int i=0; i<soFloor->NShape(); ++i){
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, soFloor->GetShape(i));
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, soFloor->GetShape(i));
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -435,7 +435,7 @@ void display(){
 		ad = Affined(pose);
 		glMultMatrixd(ad);
 			for(int i=0; i<soBox[boxCnt]->NShape(); ++i){
-				CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, soBox[boxCnt]->GetShape(i));
+				CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, soBox[boxCnt]->GetShape(i));
 				Vec3f* base = mesh->GetVertices();
 				for(size_t f=0; f<mesh->NFace();++f){
 					CDFaceIf* face = mesh->GetFace(f);

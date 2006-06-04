@@ -4,7 +4,7 @@
 #endif
 
 namespace Spr{;
-SGOBJECTIMP(CDPhysicalMaterial, SGObject);
+SGIF_OBJECT_IMP(CDPhysicalMaterial, SGObject);
 
 void CDPhysicalMaterialData::InitData(){
 	reflexSpring = reflexDamper = frictionSpring = frictionDamper = 1.0f;

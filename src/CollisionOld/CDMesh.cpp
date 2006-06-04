@@ -30,7 +30,7 @@ public:
 DEF_REGISTER_LOADER(CDMesh);
 
 //------------------------------------------------------------------------
-SGOBJECTIMP(CDMesh, CDGeometry);
+SGIF_OBJECT_IMP(CDMesh, CDGeometry);
 
 void CDMesh::CalcBBox(Vec3f& bbMin, Vec3f& bbMax){
 	for(std::vector<Vec3f>::iterator it = vertices.begin(); it != vertices.end(); ++it){

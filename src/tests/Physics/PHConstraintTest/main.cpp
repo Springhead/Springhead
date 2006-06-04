@@ -94,7 +94,7 @@ void SPR_CDECL display(){
 	Vec3f normal;
 	for(int i=0; i<soFloor->NShape(); ++i){
 		CDShapeIf** shapes = soFloor->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -120,7 +120,7 @@ void SPR_CDECL display(){
 		glMultMatrixd(ad);
 			for(int i=0; i<soBlock[n]->NShape(); ++i){
 			CDShapeIf** shapes = soBlock[i]->GetShapes();
-			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
 			Vec3f* base = mesh->GetVertices();
 			for(size_t f=0; f<mesh->NFace();++f){
 				CDFaceIf* face = mesh->GetFace(f);
@@ -311,14 +311,14 @@ int SPR_CDECL main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1,-1, 1));
 		md.vertices.push_back(Vec3f( 1, 1,-1));
 		md.vertices.push_back(Vec3f( 1, 1, 1));
-		meshBlock = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+		meshBlock = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 20;		
 			md.vertices[i].z *= 5;
 		}
-		meshFloor = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
 
 	soFloor->AddShape(meshFloor);

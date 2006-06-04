@@ -8,6 +8,7 @@ namespace Spr{;
 
 class PHJoint : public InheritConstraint<PHJointIf, PHConstraint>{
 public:
+	OBJECT_DEF_ABST(PHJoint);
 };
 
 /// PHJoint1Dから派生するクラスのためのルータ
@@ -35,7 +36,7 @@ protected:
 	void	CompDof();
 
 public:
-	//OBJECTDEF(PHJoint1D);
+	OBJECT_DEF_ABST(PHJoint1D);
 	bool on_lower, on_upper;	/// 可動範囲の下限、上限に達している場合にtrue
 	double lower, upper;		/// 可動範囲の下限、上限
 	double pos_d, vel_d;		/// 目標変位、目標速度

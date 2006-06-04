@@ -7,7 +7,7 @@ namespace Spr {;
 
 class CDConvex:public CDGeometry{
 public:
-	SGOBJECTDEFABST(CDConvex);
+	SGOBJECT_DEF_ABST(CDConvex);
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const =0;
 };

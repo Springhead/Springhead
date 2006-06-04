@@ -57,8 +57,8 @@ static float dynamicFriction;
 //	Õ“ËŒŸo‚ÆÚG—Í‚ÌŒvZ
 bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
 	bool rv = false;
-	int ct = OCAST(PHScene,engine->GetScene())->GetCount();
-	double dt = OCAST(PHScene,engine->GetScene())->GetTimeStep();
+	int ct = DCAST(PHScene,engine->GetScene())->GetCount();
+	double dt = DCAST(PHScene,engine->GetScene())->GetTimeStep();
 
 	//	“®—ÍŠwŒvZ‚Ì€”õ
 	Clear();
@@ -464,7 +464,7 @@ void PHPenaltyEngine::PHSolidPair::Init(){
 
 
 //----------------------------------------------------------------------------
-OBJECTIMP(PHPenaltyEngine, PHEngine);
+OBJECT_IMP(PHPenaltyEngine, PHEngine);
 
 void PHPenaltyEngine::Add(PHSolid* s){
 	solids.push_back(s);

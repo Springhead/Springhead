@@ -28,7 +28,7 @@ public:
 /// 物理マテリアル
 class CDPhysicalMaterial:public SGObject{
 public:
-	SGOBJECTDEF(CDPhysicalMaterial);
+	SGOBJECT_DEF(CDPhysicalMaterial);
 	/// 物理マテリアルのデータ
 	CDPhysicalMaterialData pMatData;
 	CDPhysicalMaterial(){

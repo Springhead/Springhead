@@ -11,8 +11,7 @@
 
 namespace Spr{;
 
-IF_IMP(FIFileX, FIFile);
-OBJECTIMP(FIFileX, FIFile);
+IF_OBJECT_IMP(FIFileX, FIFile);
 
 
 //#define TRACE_PARSE
@@ -348,7 +347,7 @@ void FIFileX::OnSaveString(FISaveContext* sc, UTString val){
 	sc->file << '"' << val << '"' << std::endl;
 }
 void FIFileX::OnSaveRef(FISaveContext* sc){
-	NamedObjectIf* n = ICAST(NamedObjectIf, sc->objects.Top());
+	NamedObjectIf* n = DCAST(NamedObjectIf, sc->objects.Top());
 	sc->file << INDENT(-1) << "{" << n->GetName() << "}" << std::endl;
 }
 

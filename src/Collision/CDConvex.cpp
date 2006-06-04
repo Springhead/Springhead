@@ -7,8 +7,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDConvex
-OBJECTIMPABST(CDConvex, CDShape);
-IF_IMP(CDConvex, CDShape);
+IF_OBJECT_IMP_ABST(CDConvex, CDShape);
 
 void CDConvex::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){
 	Matrix3f rot;

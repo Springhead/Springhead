@@ -9,7 +9,7 @@ namespace Spr{;
 class PHBallJoint : public InheritConstraint<PHBallJointIf, PHJoint>{
 	double	max_angle;
 public:
-	//OBJECTDEF(PHBallJoint);
+	OBJECT_DEF(PHBallJoint);
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	virtual void SetMaxAngle(double angle){max_angle = angle;}

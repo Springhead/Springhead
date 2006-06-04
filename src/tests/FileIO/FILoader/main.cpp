@@ -103,7 +103,7 @@ void display(){
 			solids[num]->GetShapePose(s).ToAffine(af);
 			render->PushModelMatrix();
 			render->MultModelMatrix(af);
-			CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shape);
+			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 			if (mesh){
 				Vec3f* base = mesh->GetVertices();
 				for (size_t f=0; f<mesh->NFace(); ++f) {	
@@ -111,14 +111,14 @@ void display(){
 					render->DrawFace(face, base);
 				}
 			}
-			CDSphereIf* sphere = ICAST(CDSphereIf, shape);
+			CDSphereIf* sphere = DCAST(CDSphereIf, shape);
 			if (sphere){
 				float r = sphere->GetRadius();
 				GLUquadricObj* quad = gluNewQuadric();
 				gluSphere(quad, r, 16, 8);
 				gluDeleteQuadric(quad);
 			}
-			CDBoxIf* box = ICAST(CDBoxIf, shape);
+			CDBoxIf* box = DCAST(CDBoxIf, shape);
 			if (box){
 #if 0			// glut‚É‚æ‚é’¼•û‘Ì‚Ì•`‰æ”Å			
 				Vec3f boxsize = box->GetBoxSize();
@@ -260,8 +260,8 @@ int main(int argc, char* argv[]){
 		phSdk = NULL;
 		grSdk = NULL;
 		for(unsigned  i=0; i<objs.size(); ++i){	
-			if(!phSdk) phSdk = ICAST(PHSdkIf, objs[i]);	//	PHSDK‚ðŽó‚¯Žæ‚é•ûŽ®
-			if(!grSdk) grSdk = ICAST(GRSdkIf, objs[i]);	//	GRSdk‚àŽó‚¯Žæ‚é
+			if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDK‚ðŽó‚¯Žæ‚é•ûŽ®
+			if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdk‚àŽó‚¯Žæ‚é
 		}
 	}
 	if (phSdk && phSdk->NScene()){

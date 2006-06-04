@@ -5,8 +5,7 @@
 #include "FIFile.h"
 namespace Spr{;
 
-IF_IMP(FIFile, Object);
-OBJECTIMPABST(FIFile, Object);
+IF_OBJECT_IMP_ABST(FIFile, Object);
 
 //#define PDEBUG_EVAL(x)	x
 #define PDEBUG_EVAL(x)

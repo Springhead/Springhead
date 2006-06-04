@@ -5,7 +5,7 @@
 
 namespace Spr {;
 
-SGOBJECTIMPABST(CDConvex, CDGeometry);
+SGIF_OBJECT_IMPABST(CDConvex, CDGeometry);
 
 }
 

@@ -9,8 +9,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	GRScene
-OBJECTIMP(GRScene, Scene);
-IF_IMP(GRScene, Scene);
+IF_OBJECT_IMP(GRScene, Scene);
 
 GRScene::GRScene(GRSdkIf* s, const GRSceneDesc& desc):GRSceneDesc(desc){
 	Init();

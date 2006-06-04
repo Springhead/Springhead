@@ -22,7 +22,7 @@ class CDPhysicalMaterial;
 */
 class SPR_DLL CDGeometry:public SGObject{
 public:
-	SGOBJECTDEFABST(CDGeometry);
+	SGOBJECT_DEF_ABST(CDGeometry);
 	///
 	virtual int GeometryID()=0;
 	///

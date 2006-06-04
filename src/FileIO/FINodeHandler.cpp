@@ -23,7 +23,7 @@ public:
 	void Get(S*& s, FILoadContext* ctx){
 		s = NULL;
 		for(int i=ctx->objects.size()-1; i>=0 && !s; --i){
-			s = ICAST(S, ctx->objects[i]);
+			s = DCAST(S, ctx->objects[i]);
 		}
 		assert(s);
 	}

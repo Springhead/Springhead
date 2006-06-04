@@ -5,8 +5,7 @@
 #endif
 
 namespace Spr {;
-OBJECTIMP(GRDeviceD3D, GRDevice);
-IF_IMP(GRDeviceD3D, GRDevice);
+IF_OBJECT_IMP(GRDeviceD3D, GRDevice);
 
 //----------------------------------------------------------------------------
 //	GRDeviceD3D

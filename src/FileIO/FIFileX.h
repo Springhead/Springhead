@@ -8,7 +8,7 @@ namespace Spr{;
 
 class FIFileX:public InheritFIFile<FIFileXIf, FIFile>{
 public:
-	OBJECTDEF(FIFileX);
+	OBJECT_DEF(FIFileX);
 protected:
 	FIPhraseParser start, temp, uuid, define, defNormal, defArray, blockSkip, 
 		defOpen, defRestrict, arraySuffix, data, block, exp, ref, id, 

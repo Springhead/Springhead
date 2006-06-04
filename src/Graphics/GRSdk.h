@@ -16,7 +16,7 @@ class SPR_DLL GRSdk:public InheritObject<GRSdkIf, Object>{
 protected:
 	std::vector< UTRef<Object> > objects;
 public:
-	OBJECTDEF(GRSdk);
+	OBJECT_DEF(GRSdk);
 	~GRSdk();
 	void Print(std::ostream& os) const {}
 	GRDebugRenderIf* CreateDebugRender();

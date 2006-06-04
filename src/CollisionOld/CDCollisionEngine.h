@@ -130,7 +130,7 @@ public:
 public:
 	WBPreciseTimer timerGjk, timerQhull, timerNormal;
 	///
-	SGOBJECTDEF(CDCollisionEngine);
+	SGOBJECT_DEF(CDCollisionEngine);
 	///
 	CDCollisionEngine();
 

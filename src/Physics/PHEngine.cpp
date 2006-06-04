@@ -9,8 +9,7 @@
 namespace Spr{;
 //----------------------------------------------------------------------------
 //	PHEngine
-OBJECTIMP(PHEngine, SceneObject);
-IF_IMP(PHEngine, SceneObject);
+IF_OBJECT_IMP(PHEngine, SceneObject);
 
 
 //----------------------------------------------------------------------------

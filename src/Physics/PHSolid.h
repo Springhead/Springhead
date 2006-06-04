@@ -92,7 +92,7 @@ public:
 	std::vector<CDShapeRefWithPose> shapes;
 	PHBBox bbox;
 
-	OBJECTDEF(PHSolid);
+	OBJECT_DEF(PHSolid);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
@@ -203,7 +203,7 @@ public:
 	bool		IsDynamical(){return bDynamical;}
 
 protected:
-	DEF_DESC_STATE(PHSolid);
+	ACCESS_DESC_STATE(PHSolid);
 };
 
 class PHSolids:public std::vector< UTRef<PHSolid> >{
@@ -227,7 +227,7 @@ public:
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHEngine{
-	OBJECTDEF(PHSolidContainer);
+	OBJECT_DEF(PHSolidContainer);
 public:
 	PHSolids solids;
 	bool AddChildObject(Object* o, PHScene* s);
@@ -250,7 +250,7 @@ public:
 
 /** SolidContainerのResetを呼ぶためだけのエンジン */
 class PHSolidInitializer : public PHEngine{
-	OBJECTDEF(PHSolidInitializer);
+	OBJECT_DEF(PHSolidInitializer);
 public:
 	PHSolidContainer* container;
 	

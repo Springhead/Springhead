@@ -15,7 +15,7 @@ public:
 	PHMaterial material;
 	static double epsilon;
 
-	OBJECTDEFABST(CDShape);
+	OBJECT_DEF_ABST(CDShape);
 	//Posef GetPose() const { return pose; }
 	//void SetPose(const Posef& p){ pose = p; }
 	

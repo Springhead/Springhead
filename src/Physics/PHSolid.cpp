@@ -9,8 +9,7 @@ namespace Spr{
 
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
-OBJECTIMP(PHSolid, SceneObject);
-IF_IMP(PHSolid, SceneObject);
+IF_OBJECT_IMP(PHSolid, SceneObject);
 
 PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	SetScene(s);
@@ -20,7 +19,7 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	SetGravity(gravity);
 }
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
-	CDShapeIf* rv = ICAST(PHSceneIf, GetScene())->CreateShape(desc);
+	CDShapeIf* rv = DCAST(PHSceneIf, GetScene())->CreateShape(desc);
 	if (rv){
 		AddShape(rv);
 	}
@@ -33,8 +32,8 @@ ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
 	return NULL;
 }
 bool PHSolid::AddChildObject(ObjectIf* obj){
-	if (ICAST(CDShapeIf, obj)){
-		AddShape(ICAST(CDShapeIf, obj));
+	if (DCAST(CDShapeIf, obj)){
+		AddShape(DCAST(CDShapeIf, obj));
 		return true;
 	}
 	return false;
@@ -70,7 +69,7 @@ void PHSolid::Step(){
 	if(IsUpdated())
 		return;
 
-	PHScene* s = OCAST(PHScene, GetScene());
+	PHScene* s = DCAST(PHScene, GetScene());
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
 #ifdef _DEBUG
@@ -210,7 +209,7 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 
 
 void PHSolid::AddShape(CDShapeIf* shape){
-	CDShape* sh = OCAST(CDShape, shape);
+	CDShape* sh = DCAST(CDShape, shape);
 	//重複登録のチェック
 	for(unsigned i = 0; i < shapes.size(); i++)
 		if(shapes[i].shape == sh)
@@ -219,7 +218,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	shapes.back().shape = sh;
 	CalcBBox();
 	//接触エンジンをinvalidate
-	PHScene* scene = OCAST(PHScene,GetScene());
+	PHScene* scene = DCAST(PHScene,GetScene());
 	assert(scene);
 	switch(scene->contactSolver){
 	case PHScene::SOLVER_PENALTY:{
@@ -247,7 +246,7 @@ void	PHSolid::SetShapePose(int i, const Posed& pose){
 }
 
 void PHSolid::SetGravity(bool bOn){
-	PHScene* ps = OCAST(PHScene,GetScene());
+	PHScene* ps = DCAST(PHScene,GetScene());
 	PHGravityEngine* ge;
 	ps->engines.Find(ge);
 	if (bOn == true){
@@ -269,7 +268,7 @@ CDShapeIf* PHSolid::GetShape(int i){
 //----------------------------------------------------------------------------
 //	PHSolidContainer
 //
-OBJECTIMP(PHSolidContainer, PHEngine);
+OBJECT_IMP(PHSolidContainer, PHEngine);
 
 PHSolidContainer::PHSolidContainer(){
 }
@@ -303,7 +302,7 @@ void PHSolidContainer::Step(){
 //----------------------------------------------------------------------------
 //	PHSolidInitializer
 //
-OBJECTIMP(PHSolidInitializer, PHEngine);
+OBJECT_IMP(PHSolidInitializer, PHEngine);
 void PHSolidInitializer::Step(){
 		container->Reset();	
 }

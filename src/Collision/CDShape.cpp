@@ -7,9 +7,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDShape
-
-IF_IMP(CDShape, NamedObject);
-OBJECTIMPABST(CDShape, NamedObject);
+IF_OBJECT_IMP_ABST(CDShape, NamedObject);
 double CDShape::epsilon = 1e-8;
 
 }

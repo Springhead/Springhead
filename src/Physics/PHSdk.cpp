@@ -41,8 +41,7 @@ PHSdkIf* SPR_CDECL CreatePHSdk(){
 
 //----------------------------------------------------------------------------
 //	PHSdk
-OBJECTIMP(PHSdk, NameManager);
-IF_IMP(PHSdk, NameManager);
+IF_OBJECT_IMP(PHSdk, NameManager);
 
 PHSdk::PHSdk(){
 	PHRegisterTypeDescs();

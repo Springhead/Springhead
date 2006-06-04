@@ -7,8 +7,7 @@
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDebugRender
-OBJECTIMP(GRDebugRender, GRRender);
-IF_IMP(GRDebugRender, GRRender);
+IF_OBJECT_IMP(GRDebugRender, GRRender);
 
 /// コンストラクタ
 GRDebugRender::GRDebugRender(){
@@ -75,7 +74,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		this->PushModelMatrix();
 		this->MultModelMatrix(af);
 		
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shape);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		if (mesh){
 			Vec3f* base = mesh->GetVertices();
 			for (size_t f=0; f<mesh->NFace(); ++f) {	
@@ -83,12 +82,12 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 				this->DrawFace(face, base);
 			}
 		}
-		CDSphereIf* sphere = ICAST(CDSphereIf, shape);
+		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
 		if (sphere){
 			float r = sphere->GetRadius();
 			glutSolidSphere(r, 20, 20);
 		}
-		CDBoxIf* box = ICAST(CDBoxIf, shape);
+		CDBoxIf* box = DCAST(CDBoxIf, shape);
 		if (box){
 			Vec3f boxsize = box->GetBoxSize();
 			glScalef(boxsize.x, boxsize.y, boxsize.z);	

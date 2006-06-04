@@ -81,7 +81,7 @@ class PHConstraintEngine: public PHEngine{
 	friend class PHSolid;
 	friend class PHConstraint;
 
-	OBJECTDEF(PHConstraintEngine);
+	OBJECT_DEF(PHConstraintEngine);
 
 	typedef UTCombination<PHSolidPair> PHSolidPairs;
 

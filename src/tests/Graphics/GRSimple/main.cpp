@@ -226,14 +226,14 @@ int main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1,-1, 1));
 		md.vertices.push_back(Vec3f( 1, 1,-1));
 		md.vertices.push_back(Vec3f( 1, 1, 1));
-		meshBlock = ICAST(CDConvexMeshIf, phSdk->CreateShape(md));
+		meshBlock = DCAST(CDConvexMeshIf, phSdk->CreateShape(md));
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 30;
 			md.vertices[i].z *= 30;
 		}
-		meshFloor = ICAST(CDConvexMeshIf, phSdk->CreateShape(md));
+		meshFloor = DCAST(CDConvexMeshIf, phSdk->CreateShape(md));
 	}
 	
 	soFloor->AddShape(meshFloor);

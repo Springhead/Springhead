@@ -193,7 +193,7 @@ bool PHShapePair::Detect(unsigned ct, PHSolidAux* solid0, PHSolidAux* solid1){
 bool PHSolidPair::Detect(PHConstraintEngine* engine){
 	if(!bEnabled)return false;
 
-	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
+	unsigned ct = DCAST(PHScene, engine->GetScene())->GetCount();
 	// いずれかのSolidに形状が割り当てられていない場合は接触なし
 	PHSolid *s0 = solid[0]->solid, *s1 = solid[1]->solid;
 	if(s0->NShape() == 0 || s1->NShape() == 0) return false;
@@ -222,7 +222,7 @@ bool PHSolidPair::Detect(PHConstraintEngine* engine){
 	if(!bEnabled)return false;
 	static CDContactAnalysis analyzer;
 
-	unsigned ct = OCAST(PHScene, engine->GetScene())->GetCount();
+	unsigned ct = DCAST(PHScene, engine->GetScene())->GetCount();
 	
 	// いずれかのSolidに形状が割り当てられていない場合はエラー
 	if(solid[0]->solid->NShape() == 0 || solid[1]->solid->NShape() == 0)
@@ -312,7 +312,7 @@ PHConstraintEngineState::PHConstraintEngineState(const PHConstraintEngine& ce){
 
 //----------------------------------------------------------------------------
 // PHConstraintEngine
-OBJECTIMP(PHConstraintEngine, PHEngine);
+OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	max_iter_dynamics = 5;
@@ -561,7 +561,7 @@ void PHConstraintEngine::Step(){
 	//QueryPerformanceCounter(&val[1]);
 	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
-	double dt = OCAST(PHScene, GetScene())->GetTimeStep();
+	double dt = DCAST(PHScene, GetScene())->GetTimeStep();
 
 	//QueryPerformanceCounter(&val[0]);
 	SetupDynamics(dt);

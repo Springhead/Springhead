@@ -7,7 +7,7 @@
 using namespace std;
 namespace Spr{
 
-OBJECTIMP(PHGravityEngine, PHEngine);
+OBJECT_IMP(PHGravityEngine, PHEngine);
 
 void PHGravityEngine::Step(){
 	PHSolids::iterator it;

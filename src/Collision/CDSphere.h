@@ -11,7 +11,7 @@ namespace Spr{;
 /// 球体
 class CDSphere: public  InheritCDShape<CDSphereIf, CDConvex>{
 public:
-	OBJECTDEF(CDSphere);
+	OBJECT_DEF(CDSphere);
 	
 	//mutable Vec3f curPos;			/// 探索開始番号
 	//Vec3f center;					///	球体の中心座標

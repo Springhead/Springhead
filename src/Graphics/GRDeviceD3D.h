@@ -12,7 +12,7 @@ namespace Spr{;
 
 /**	Direct3Dによるグラフィックス描画の実装	*/
 class GRDeviceD3D: public GRDevice, public GRDeviceD3DIf{
-	OBJECTDEF(GRDeviceD3D);
+	OBJECT_DEF(GRDeviceD3D);
 	BASEIMP_OBJECT(GRDevice);
 public:
 	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end);

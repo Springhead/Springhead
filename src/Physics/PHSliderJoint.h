@@ -8,7 +8,7 @@ namespace Spr{;
 
 class PHSliderJoint : public InheritJoint1D<PHSliderJointIf, PHJoint1D>{
 public:
-	//OBJECTDEF(PHSliderJoint);
+	OBJECT_DEF(PHSliderJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
 	virtual double GetPosition();
 	virtual double GetVelocity();

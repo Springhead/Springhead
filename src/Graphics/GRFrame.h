@@ -9,7 +9,7 @@ namespace Spr{;
     @brief	 */
 class GRVisual: public InheritSceneObject<GRVisualIf, SceneObject>{
 public:
-	OBJECTDEFABST(GRVisual);
+	OBJECT_DEF_ABST(GRVisual);
 	virtual void Render(GRRenderIf* render)=0;
 	virtual void Rendered(GRRenderIf* render)=0;
 };
@@ -20,7 +20,7 @@ struct InheritGRVisual:public InheritSceneObject<intf, base>{};
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
 class GRFrame: public InheritGRVisual<GRFrameIf, GRVisual>, public GRFrameDesc{
 public:
-	OBJECTDEF(GRFrame);
+	OBJECT_DEF(GRFrame);
 	GRFrame* parent;
 	typedef std::vector<GRVisual*> GRVisuals;
 	GRVisuals children;

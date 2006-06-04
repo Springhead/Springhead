@@ -8,7 +8,7 @@ namespace Spr {;
 class FIFile;
 class SPR_DLL FISdk:public InheritObject<FISdkIf, Object>{
 public:
-	OBJECTDEF(FISdk);
+	OBJECT_DEF(FISdk);
 	FISdk();
 	~FISdk();
 	FIFileXIf* CreateFileX();

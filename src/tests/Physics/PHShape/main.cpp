@@ -56,12 +56,12 @@ int main(int argc, char* argv[]){
 	md.vertices.push_back(Vec3f( 1,-1, 1));
 	md.vertices.push_back(Vec3f( 1, 1,-1));
 	md.vertices.push_back(Vec3f( 1, 1, 1));
-	CDConvexMeshIf* mesh2 = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	CDConvexMeshIf* mesh2 = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 	for(unsigned i=0; i<md.vertices.size(); ++i){
 		md.vertices[i].x *= 10;
 	}
-	CDConvexMeshIf* mesh1 = ICAST(CDConvexMeshIf, sdk->CreateShape(md));
+	CDConvexMeshIf* mesh1 = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 
 	solid1->AddShape(mesh1);
 	solid2->AddShape(mesh2);
@@ -81,7 +81,7 @@ int main(int argc, char* argv[]){
 	DSTR << "***  solid1  ***\n";
 	for(int i=0; i<solid1->NShape();++i){
 		CDShapeIf** shapes = solid1->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -94,7 +94,7 @@ int main(int argc, char* argv[]){
 	DSTR << "***  solid2  ***\n";
 	for(int i=0; i<solid2->NShape();++i){
 		CDShapeIf** shapes = solid2->GetShapes();
-		CDConvexMeshIf* mesh = ICAST(CDConvexMeshIf, shapes[i]);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);

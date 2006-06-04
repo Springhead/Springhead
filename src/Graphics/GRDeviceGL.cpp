@@ -13,8 +13,7 @@
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDeviceGL
-OBJECTIMP(GRDeviceGL, GRDevice);
-IF_IMP(GRDeviceGL, GRDevice);
+IF_OBJECT_IMP(GRDeviceGL, GRDevice);
 /// èâä˙ê›íË
 void GRDeviceGL::Init(){
 	glDrawBuffer(GL_BACK);

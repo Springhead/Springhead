@@ -37,7 +37,7 @@ bool IfInfo::Inherit(const IfInfo* key) const {
 //----------------------------------------------------------------------------
 //	Object
 IF_IMP_BASE(Object);
-OBJECTIMPBASE(Object);
+OBJECT_IMP_BASE(Object);
 
 void Object::Print(std::ostream& os) const {
 	int w = os.width();
@@ -60,8 +60,7 @@ void Object::Print(std::ostream& os) const {
 
 //----------------------------------------------------------------------------
 //	NamedObject
-IF_IMP(NamedObject, Object);
-OBJECTIMP(NamedObject, Object);
+IF_OBJECT_IMP(NamedObject, Object);
 
 void NamedObject::Print(std::ostream& os) const {
 	int w = os.width();
@@ -91,11 +90,10 @@ void NamedObject::SetName(const char* n){
 
 //----------------------------------------------------------------------------
 //	SceneObject
-IF_IMP(SceneObject, NamedObject);
-OBJECTIMP(SceneObject, NamedObject);
+IF_OBJECT_IMP(SceneObject, NamedObject);
 
 void SceneObject::SetScene(SceneIf* s){
-	SetNameManager(OCAST(NameManager, s));
+	SetNameManager(DCAST(NameManager, s));
 	nameManager->GetNameMap();
 }
 SceneIf* SceneObject::GetScene(){
@@ -107,8 +105,7 @@ SceneIf* SceneObject::GetScene(){
 //----------------------------------------------------------------------------
 //	ObjectStates
 
-IF_IMP(ObjectStates, Object);
-OBJECTIMP(ObjectStates, Object);
+IF_OBJECT_IMP(ObjectStates, Object);
 
 size_t ObjectStates::CalcStateSize(ObjectIf* o){
 	size_t sz = o->GetStateSize();

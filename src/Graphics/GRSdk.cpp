@@ -41,8 +41,7 @@ GRSdkIf* SPR_CDECL CreateGRSdk(){
 
 //----------------------------------------------------------------------------
 //	GRSdk
-OBJECTIMP(GRSdk, Object);
-IF_IMP(GRSdk, Object);
+IF_OBJECT_IMP(GRSdk, Object);
 GRSdk::~GRSdk(){
 	for(GRSdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
 		if (*it == this){

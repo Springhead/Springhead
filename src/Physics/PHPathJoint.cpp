@@ -9,8 +9,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHPath
-IF_IMP(PHPath, SceneObject)
-OBJECTIMPABST(PHPath, SceneObject)
+IF_OBJECT_IMP_ABST(PHPath, SceneObject)
 
 PHPath::PHPath(const PHPathDesc& desc){
 	resize(desc.points.size());
@@ -150,14 +149,14 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 //----------------------------------------------------------------------------
 // PHPathJoint
 
-IF_IMP(PHPathJoint, PHJoint1D)
+IF_OBJECT_IMP(PHPathJoint, PHJoint1D)
 
 PHPathJoint::PHPathJoint(){
 	q = qd = 0.0;
 }
 
 bool PHPathJoint::AddChildObject(ObjectIf* o){
-	PHPath* p = OCAST(PHPath, o);
+	PHPath* p = DCAST(PHPath, o);
 	if(p){
 		path = p;
 		//‰Â“®”ÍˆÍ‚ÍƒŠƒZƒbƒg‚³‚ê‚é

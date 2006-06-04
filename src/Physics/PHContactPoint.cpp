@@ -9,8 +9,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHContactPoint
-//OBJECTIMP(PHContactPoint, PHConstraint);
-IF_IMP(PHContactPoint, PHConstraint);
+IF_OBJECT_IMP_ABST(PHContactPoint, PHConstraint);
 
 PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
 	shapePair = sp;
