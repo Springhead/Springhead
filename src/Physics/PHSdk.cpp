@@ -46,6 +46,7 @@ IF_OBJECT_IMP(PHSdk, NameManager);
 PHSdk::PHSdk(){
 	PHRegisterTypeDescs();
 	CDRegisterTypeDescs();
+	SetNameManager(NameManager::GetRoot());
 }
 PHSdk::~PHSdk(){
 	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){

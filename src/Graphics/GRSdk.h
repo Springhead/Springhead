@@ -12,11 +12,12 @@ struct GRSceneIf;
 
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
-class SPR_DLL GRSdk:public InheritObject<GRSdkIf, Object>{
+class SPR_DLL GRSdk:public InheritObject<GRSdkIf, NameManager>{
 protected:
 	std::vector< UTRef<Object> > objects;
 public:
 	OBJECT_DEF(GRSdk);
+	GRSdk();
 	~GRSdk();
 	void Print(std::ostream& os) const {}
 	GRDebugRenderIf* CreateDebugRender();

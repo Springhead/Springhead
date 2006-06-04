@@ -96,28 +96,37 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
 public:
 	OBJECT_DEF(NameManager);
+	NameManager();
 protected:
 	/*	名前とオブジェクトの対応表  */
-
 	ObjectNames names;
+	
+	///@name	名前空間を構成するためのツリー
+	//@{
+	///
+	typedef std::vector<NameManager*> NameManagers;
+	///	子の名前空間
+	NameManagers childManagers;
+	///	ルートNameManager
+	static NameManager theRoot;
+	//@}
 
 public:
-	///	名前からオブジェクトを取得
-	NamedObject* FindObject(UTString name, UTString ns=""){ return names.Find(name, ns); }
+	static NameManager* GetRoot(){ return &theRoot; }
+	virtual void SetNameManager(NameManager* s);
+	void AddChildManager(NameManager* c);
+	void DelChildManager(NameManager* c);
 	///	型と名前からオブジェクトを取得
-	template <class T> void FindObject(UTRef<T>& t, UTString name, UTString ns=""){
+	template <class T> void FindObject(UTRef<T>& t, UTString name){
 		T* p;
-		FindObject(p, name, ns);
+		FindObject(p, name);
 		t = p;
 	}
-	template <class T> void FindObject(T*& t, UTString name, UTString ns=""){
-		NamedObject* p = names.Find(name, GETCLASSNAMES(T));
+	template <class T> void FindObject(T*& t, UTString name){
+		NamedObject* p = FindObject(name, GETCLASSNAMES(T));
 		t = DCAST(T, p);
 	}
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls, UTString ns){
-		NamedObject* p = names.Find(name, cls);
-		return p;
-	}
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls=NULL);
 
 	typedef ObjectNames::iterator SetIt;
 //	typedef std::pair<SetIt, SetIt> SetRange;
@@ -131,11 +140,13 @@ public:
 	///	デバッグ用
 	void Print(std::ostream& os) const;
 	friend class NamedObject;
+protected:
+	NamedObjectIf* FindObjectExact(UTString name, const char* cls=NULL);
 };
 template <class intf, class base>
 struct InheritNameManager:public InheritNamedObject<intf, base>{
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls, UTString ns){
-		return base::FindObject(name, cls, ns);
+	virtual NamedObjectIf* FindObject(UTString name, const char* cls=NULL){
+		return base::FindObject(name, cls);
 	}
 };
 
