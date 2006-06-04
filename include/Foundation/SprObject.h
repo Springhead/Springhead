@@ -6,16 +6,18 @@
 namespace Spr{;
 
 struct ObjectIf;
+class UTTypeDesc;
 
 /**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，ICAST()などが利用する．
 1つのインタフェースクラスに付き1個のインスタンスができる．	*/
 class IfInfo{
 public:
-//	static int maxId;
-//	int id;
+	static int maxId;
+	int id;
+	UTTypeDesc* desc;
 	const char* className;
 	IfInfo** base;
-	IfInfo(const char* cn, IfInfo** b): className(cn), base(b){}
+	IfInfo(const char* cn, IfInfo** b);
 	virtual const char* ClassName() const =0;
 	virtual void* GetSprObject(ObjectIf* intf)const =0;
 	virtual ObjectIf* GetIf(void* obj)const =0;

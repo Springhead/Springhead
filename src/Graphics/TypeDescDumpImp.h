@@ -12,6 +12,7 @@
 	desc = DBG_NEW UTTypeDesc("GRFrameDesc");
 	desc->size = sizeof(GRFrameDesc);
 	desc->ifInfo = GRFrameIf::GetIfInfoStatic();
+	((IfInfo*)GRFrameIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRFrameDesc>;
 	field = desc->AddField("", "Affinef", "transform", "");
 	field->offset = (char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc;
@@ -21,6 +22,7 @@
 	desc = DBG_NEW UTTypeDesc("GRMeshDesc");
 	desc->size = sizeof(GRMeshDesc);
 	desc->ifInfo = GRMeshIf::GetIfInfoStatic();
+	((IfInfo*)GRMeshIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRMeshDesc>;
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
 	field->offset = (char*)&(pGRMeshDesc->vertices) - (char*)pGRMeshDesc;
@@ -64,6 +66,7 @@
 	desc = DBG_NEW UTTypeDesc("GRMaterialDesc");
 	desc->size = sizeof(GRMaterialDesc);
 	desc->ifInfo = GRMaterialIf::GetIfInfoStatic();
+	((IfInfo*)GRMaterialIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRMaterialDesc>;
 	field = desc->AddField("", "Vec4f", "ambient", "");
 	field->offset = (char*)&(pGRMaterialDesc->ambient) - (char*)pGRMaterialDesc;
@@ -97,6 +100,7 @@
 	desc = DBG_NEW UTTypeDesc("GRSceneDesc");
 	desc->size = sizeof(GRSceneDesc);
 	desc->ifInfo = GRSceneIf::GetIfInfoStatic();
+	((IfInfo*)GRSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRSceneDesc>;
 	db->RegisterDesc(desc);
 	
@@ -104,5 +108,6 @@
 	desc = DBG_NEW UTTypeDesc("GRSdkDesc");
 	desc->size = sizeof(GRSdkDesc);
 	desc->ifInfo = GRSdkIf::GetIfInfoStatic();
+	((IfInfo*)GRSdkIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRSdkDesc>;
 	db->RegisterDesc(desc);

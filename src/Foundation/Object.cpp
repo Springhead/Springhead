@@ -7,7 +7,10 @@
 #include <iomanip>
 
 namespace Spr {;
-
+int IfInfo::maxId;
+IfInfo::IfInfo(const char* cn, IfInfo** b): className(cn), base(b){
+	id = ++maxId;
+}
 bool IfInfo::Inherit(const char* key) const {
 	if(strcmp(ClassName(),key)==0) return true;
 	IfInfo** pb = base;

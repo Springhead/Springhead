@@ -16,6 +16,7 @@
 	desc = DBG_NEW UTTypeDesc("CDShapeDesc");
 	desc->size = sizeof(CDShapeDesc);
 	desc->ifInfo = CDShapeIf::GetIfInfoStatic();
+	((IfInfo*)CDShapeIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<CDShapeDesc>;
 	field = desc->AddField("ShapeType", "enum", "type",  "");
 	field->AddEnumConst("CONVEX");
@@ -30,6 +31,7 @@
 	desc = DBG_NEW UTTypeDesc("CDConvexMeshDesc");
 	desc->size = sizeof(CDConvexMeshDesc);
 	desc->ifInfo = CDConvexMeshIf::GetIfInfoStatic();
+	((IfInfo*)CDConvexMeshIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<CDConvexMeshDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDConvexMeshDesc - (char*)pCDConvexMeshDesc;
@@ -43,6 +45,7 @@
 	desc = DBG_NEW UTTypeDesc("CDSphereDesc");
 	desc->size = sizeof(CDSphereDesc);
 	desc->ifInfo = CDSphereIf::GetIfInfoStatic();
+	((IfInfo*)CDSphereIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<CDSphereDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDSphereDesc - (char*)pCDSphereDesc;
@@ -56,6 +59,7 @@
 	desc = DBG_NEW UTTypeDesc("CDBoxDesc");
 	desc->size = sizeof(CDBoxDesc);
 	desc->ifInfo = CDBoxIf::GetIfInfoStatic();
+	((IfInfo*)CDBoxIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<CDBoxDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDBoxDesc - (char*)pCDBoxDesc;
