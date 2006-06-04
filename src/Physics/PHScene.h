@@ -30,7 +30,7 @@ protected:
 public:
 	///	コンストラクタ
 	PHScene();
-	PHScene(PHSdkIf* s, const PHSceneDesc& desc);
+	PHScene(const PHSceneDesc& desc, PHSdkIf* s);
 	void Init();
 	///	デストラクタ
 	~PHScene(){}
@@ -72,6 +72,7 @@ public:
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual bool AddChildObject(ObjectIf* o);
 protected:
 	friend class Object;
 	ACCESS_DESC_STATE(PHScene);

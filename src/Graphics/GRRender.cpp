@@ -20,5 +20,9 @@ void GRRender::Print(std::ostream& os) const{
 //	GRDevice
 IF_OBJECT_IMP_ABST(GRDevice, GRRenderBase);
 
+//----------------------------------------------------------------------------
+//	GRMaterial
+IF_OBJECT_IMP(GRMaterial, SceneObject);
+
 }	//	Spr
 

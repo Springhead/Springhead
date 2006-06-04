@@ -227,11 +227,11 @@ public:
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHEngine{
-	OBJECT_DEF(PHSolidContainer);
+	OBJECT_DEF_NOIF(PHSolidContainer);
 public:
 	PHSolids solids;
-	bool AddChildObject(Object* o, PHScene* s);
-	bool DelChildObject(Object* o, PHScene* s);
+	bool AddChildObject(ObjectIf* o);
+	bool DelChildObject(ObjectIf* o);
 	///
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
 	/// solidのリセット
@@ -250,7 +250,7 @@ public:
 
 /** SolidContainerのResetを呼ぶためだけのエンジン */
 class PHSolidInitializer : public PHEngine{
-	OBJECT_DEF(PHSolidInitializer);
+	OBJECT_DEF_NOIF(PHSolidInitializer);
 public:
 	PHSolidContainer* container;
 	

@@ -48,10 +48,6 @@ bool GRFrame::DelChildObject(ObjectIf* v){
 size_t GRFrame::NChildObject() const {
 	return children.size();
 }
-ObjectIf* GRFrame::CreateObject(const IfInfo* info, const void* desc){
-//TODO	if()
-	return NULL;
-}
 ObjectIf* GRFrame::GetChildObject(size_t pos){
 	return (Object*)children[pos];
 }

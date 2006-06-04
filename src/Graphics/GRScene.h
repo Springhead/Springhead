@@ -37,7 +37,6 @@ public:
 	void Clear();
 	GRFrameIf* CreateFrame(const GRFrameDesc& desc);
 
-	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 protected:

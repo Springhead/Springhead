@@ -72,10 +72,13 @@ void FISdk::Clear(){
 	files.clear();
 }
 ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){
-	if (info->Inherit(FIFileXIf::GetIfInfoStatic())){
-		return CreateFileX();
+	ObjectIf* rv = Object::CreateObject(info, desc);
+	if (!rv){
+		if (info->Inherit(FIFileXIf::GetIfInfoStatic())){
+			rv = CreateFileX();
+		}
 	}
-	return NULL;
+	return rv;
 }
 FIFileXIf* FISdk::CreateFileX(){
 	FIFileX* rv = DBG_NEW FIFileX;

@@ -33,7 +33,6 @@ public:
 
 	virtual void Render(GRRenderIf* r);
 	virtual void Rendered(GRRenderIf* r);
-	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 };

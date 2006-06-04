@@ -12,7 +12,7 @@ namespace Spr{;
 
 
 class PHPenaltyEngine: public PHEngine{
-	OBJECT_DEF(PHPenaltyEngine);
+	OBJECT_DEF_NOIF(PHPenaltyEngine);
 
 	
 	class PHShapePair:public CDShapePair{

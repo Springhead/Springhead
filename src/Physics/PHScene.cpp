@@ -10,7 +10,7 @@ namespace Spr{;
 //	PHScene
 IF_OBJECT_IMP(PHScene, Scene);
 
-PHScene::PHScene(PHSdkIf* s, const PHSceneDesc& desc):PHSceneDesc(desc){
+PHScene::PHScene(const PHSceneDesc& desc, PHSdkIf* s):PHSceneDesc(desc){
 	Init();
 	sdk = s;
 }
@@ -52,24 +52,7 @@ PHSdkIf* PHScene::GetSdk(){
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	UTRef<PHSolid> s = DBG_NEW PHSolid(desc, (PHSceneIf*)this);
-
-	solids->AddChildObject(s, this);
-
-	switch(contactSolver){
-	case SOLVER_PENALTY:{
-		PHPenaltyEngine* pe;
-		engines.Find(pe);
-		assert(pe);
-		pe->Add(s);
-		}break;
-	case SOLVER_CONSTRAINT:{
-		PHConstraintEngine* ce;
-		engines.Find(ce);
-		assert(ce);
-		ce->Add(s);
-		}break;
-	default: assert(false);
-	}
+	AddChildObject(s->GetIf());
 	return s;
 }
 PHSolidIf* PHScene::CreateSolid(){
@@ -157,21 +140,46 @@ Vec3f PHScene::GetGravity(){
 	return ge->accel;
 }
 ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
-	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-		return CreateShape(*(CDShapeDesc*)desc);
-	}else if (info->Inherit(PHJointIf::GetIfInfoStatic())){
-		//この段階でPHSolidへの参照はNULL．AddChildObjectで解決される
-		return CreateJoint(*(PHJointDesc*)desc);
-	}else if(info == PHSolidIf::GetIfInfoStatic()){
-		return CreateSolid(*(const PHSolidDesc*)desc);
+	ObjectIf* rv = Scene::CreateObject(info, desc);
+	if (!rv){
+		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
+			rv = CreateShape(*(CDShapeDesc*)desc);
+		}else if (info->Inherit(PHJointIf::GetIfInfoStatic())){
+			//この段階でPHSolidへの参照はNULL．AddChildObjectで解決される
+			rv = CreateJoint(*(PHJointDesc*)desc);
+		}else if(info == PHSolidIf::GetIfInfoStatic()){
+			rv = CreateSolid(*(const PHSolidDesc*)desc);
+		}
 	}
-	return NULL;
+	return rv;
 }
 size_t PHScene::NChildObject() const{
 	return engines.size();
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
 	return (PHEngineIf*)engines[pos];
+}
+bool PHScene::AddChildObject(ObjectIf* o){
+	bool rv = solids->AddChildObject(o);
+	PHSolid* s = DCAST(PHSolid, o);
+	if (rv){
+		switch(contactSolver){
+		case SOLVER_PENALTY:{
+			PHPenaltyEngine* pe;
+			engines.Find(pe);
+			assert(pe);
+			pe->Add(s);
+			}break;
+		case SOLVER_CONSTRAINT:{
+			PHConstraintEngine* ce;
+			engines.Find(ce);
+			assert(ce);
+			ce->Add(s);
+			}break;
+		default: assert(false);
+		}
+	}
+	return rv;
 }
 
 

@@ -120,6 +120,7 @@ struct GRMaterialDesc{
 };
 /** @brief　　材質の基本クラス　　 */
 struct GRMaterialIf: public SceneObjectIf{
+	IF_DEF(GRMaterial);
 	virtual bool IsOpaque() const = 0;
 };
 

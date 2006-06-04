@@ -9,10 +9,14 @@ class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, NameManager>{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
+	///	シーン
 	Scenes scenes;
 	//	shape
 	typedef std::vector< UTRef<CDShapeIf> > Shapes;
+	///	形状
 	Shapes shapes;
+	///	他のオブジェクトたち
+	Objects objects;
 
 public:
 	OBJECT_DEF(PHSdk);
@@ -29,6 +33,7 @@ public:
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const { return scenes.size()+shapes.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);
+	virtual bool AddChildObject(ObjectIf* o);
 public:
 };
 

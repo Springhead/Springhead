@@ -43,9 +43,17 @@ PHSdkIf* SPR_CDECL CreatePHSdk(){
 //	PHSdk
 IF_OBJECT_IMP(PHSdk, NameManager);
 
+void PHRegisterFactories(){
+	bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene, PHSdk));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid, PHScene));
+}
 PHSdk::PHSdk(){
 	PHRegisterTypeDescs();
 	CDRegisterTypeDescs();
+	PHRegisterFactories();
 	SetNameManager(NameManager::GetRoot());
 }
 PHSdk::~PHSdk(){
@@ -59,10 +67,7 @@ PHSdk::~PHSdk(){
 }
 
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
-	PHScene* rv = DBG_NEW PHScene(this, desc);
-	rv->SetNameManager(this);
-	scenes.push_back(rv);
-	return rv;
+	return DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
 }
 PHSceneIf* PHSdk::CreateScene(){
 	return CreateScene(PHSceneDesc());
@@ -98,15 +103,44 @@ CDShapeIf* PHSdk::GetShape(int i){
 	return shapes[i];
 }
 ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
-	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-		return CreateShape(*(CDShapeDesc*)desc);
-	}else if(info == PHSceneIf::GetIfInfoStatic()){
-		return CreateScene(*(const PHSceneDesc*)desc);
+	ObjectIf* rv = Object::CreateObject(info, desc);
+	if (!rv){
+		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
+			rv = CreateShape(*(CDShapeDesc*)desc);
+		}
 	}
-	return NULL;
+	return rv;
 }
 ObjectIf* PHSdk::GetChildObject(size_t i){		
 	if (i<shapes.size()) return shapes[i];
 	return scenes[i-shapes.size()];
 }
+
+bool PHSdk::AddChildObject(ObjectIf* o){
+	PHScene* s = DCAST(PHScene, o);
+	if (s){
+		if (std::find(scenes.begin(), scenes.end(), s) == scenes.end()){
+			scenes.push_back(s);
+			return true;
+		}
+		return false;
+	}
+
+	CDShape* h = DCAST(CDShape, o);
+	if (h){
+		if (std::find(shapes.begin(), shapes.end(), h) == shapes.end()){
+			shapes.push_back(h);
+			return true;
+		}
+		return false;
+	}
+
+	if (std::find(objects.begin(), objects.end(), DCAST(Object, o)) == objects.end()){
+		objects.push_back(DCAST(Object, o));
+		return true;
+	}
+	return false;
+}
+
+
 }

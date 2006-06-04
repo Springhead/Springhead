@@ -42,12 +42,5 @@ ObjectIf* GRScene::GetChildObject(size_t pos){
 	return (GRFrameIf*)frames[pos];
 }
 
-ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
-	if (info->Inherit(GRFrameIf::GetIfInfoStatic())){
-		return CreateFrame(*(GRFrameDesc*)desc);
-	}
-	return NULL;
-}
-
 
 }

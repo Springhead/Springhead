@@ -33,6 +33,18 @@ bool IfInfo::Inherit(const IfInfo* key) const {
 	}
 	return false;
 }
+void IfInfo::RegisterFactory(FactoryBase* f) const {
+	IfInfo* info = (IfInfo*) this;
+	info->factories.push_back(f);
+}
+FactoryBase* IfInfo::FindFactory(const IfInfo* info) const {
+	for (Factories::const_iterator it = factories.begin(); it != factories.end(); ++it){
+		if(info == (*it)->GetIfInfo()){
+			return (FactoryBase*)*it;
+		}
+	}
+	return NULL;
+}
 
 //----------------------------------------------------------------------------
 //	Object
@@ -56,6 +68,14 @@ void Object::Print(std::ostream& os) const {
 		os << "<" << GetTypeInfo()->ClassName() << "/>" << std::endl;
 	}
 	os.width(w);
+}
+ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
+	const IfInfo* info = GetIf()->GetIfInfo();
+	FactoryBase* factory = info->FindFactory(keyInfo);
+	if (factory){
+		return factory->Create(desc, GetIf());
+	}
+	return NULL;
 }
 
 //----------------------------------------------------------------------------

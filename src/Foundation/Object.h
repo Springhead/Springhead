@@ -27,16 +27,28 @@ namespace Spr{;
 	IfInfo* cls##_BASEIF[] = {&base1##If::ifInfo, NULL};							\
 	IF_IMP_COMMON(cls)
 
+
+#define OBJECT_CAST(cls, p)											\
+	(((Object*)p)->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic())	\
+		? (cls*)(Object*)p :  NULL)									\
+
 ///	Object派生クラスの実行時型情報
-#define OBJECT_DEF_ABST(cls)			DEF_UTTYPEINFOABSTDEF(cls)	\
+#define OBJECT_DEF_ABST_NOIF(cls)		DEF_UTTYPEINFOABSTDEF(cls)	\
 	static cls* GetSelfFromObject(void* o) {						\
-		return (cls*)(Object*)o;									\
+		return OBJECT_CAST(cls, o);									\
 	}																\
 
-#define OBJECT_DEF(cls)					DEF_UTTYPEINFODEF(cls)		\
+#define OBJECT_DEF_NOIF(cls)			DEF_UTTYPEINFODEF(cls)		\
 	static cls* GetSelfFromObject(void* o) {						\
-		return (cls*)(Object*)o;									\
+		return OBJECT_CAST(cls, o);									\
 	}																\
+
+#define	OBJECT_DEF_ABST(cls)			OBJECT_DEF_ABST_NOIF(cls)	\
+	virtual ObjectIf* GetIf() const { return (cls##If*)this; }		\
+
+#define	OBJECT_DEF(cls)					OBJECT_DEF_NOIF(cls)		\
+	virtual ObjectIf* GetIf() const { return (cls##If*)this; }		\
+
 
 ///	実行時型情報を持つObjectの派生クラスが持つべきメンバの実装．
 #define OBJECT_IMP_BASEABST(cls)			DEF_UTTYPEINFOABST(cls)
@@ -74,9 +86,11 @@ namespace Spr{;
 #define ACCESS_DESC_STATE(cls) ACCESS_STATE(cls) ACCESS_DESC(cls)
 
 /**	全Objectの基本型	*/
-class Object:public ObjectIf, public UTTypeInfoObjectBase, public UTRefCount{
+class Object:private ObjectIf, public UTTypeInfoObjectBase, public UTRefCount{
+	void GetIfInfo() { assert(0); }	///	don't call me
 public:
 	OBJECT_DEF(Object);		///<	クラス名の取得などの基本機能の実装
+
 
 	virtual int AddRef(){return UTRefCount::AddRef();}
 	virtual int DelRef(){return UTRefCount::DelRef();}
@@ -85,7 +99,7 @@ public:
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
 	///	オブジェクトの作成
-	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc){ return NULL; }
+	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const { return 0; }
 	///	子オブジェクトの取得
@@ -210,6 +224,29 @@ public:
 	}
 };
 
+///	ファクトリーの実装
+template <class T, class IF, class DESC, class PIF>
+class FactoryImpTemplate: public FactoryBase{
+public:
+	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
+		T* t = DBG_NEW T(*(DESC*)desc, (PIF*) parent);
+		//	名前の設定
+		NamedObject* o = DCAST(NamedObject, t);
+		NameManager* m = DCAST(NameManager, parent);
+		if (m && o){
+			o->SetNameManager(m);
+		}
+		//	親に追加
+		parent->AddChildObject(t->GetIf());
+		return t->GetIf();
+	}
+	virtual const IfInfo* GetIfInfo() const {
+		return IF::GetIfInfoStatic();
+	}
+};
+#define FactoryImp(cls, pcls)	FactoryImpTemplate<cls, cls##If, cls##Desc, pcls##If>
+
+///	シーングラフの状態を保存．再生する仕組み
 class ObjectStates:public InheritObject<ObjectStatesIf, Object>{
 protected:
 	char* state;	///<	状態(XXxxxxState)を並べたもの

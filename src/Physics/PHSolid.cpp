@@ -26,10 +26,13 @@ CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
 	return rv;
 }
 ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
-	if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-		return CreateShape(*(CDShapeDesc*)desc);
+	ObjectIf* rv = SceneObject::CreateObject(info, desc);
+	if (!rv){
+		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
+			rv = CreateShape(*(CDShapeDesc*)desc);
+		}
 	}
-	return NULL;
+	return rv;
 }
 bool PHSolid::AddChildObject(ObjectIf* obj){
 	if (DCAST(CDShapeIf, obj)){
@@ -273,14 +276,15 @@ OBJECT_IMP(PHSolidContainer, PHEngine);
 PHSolidContainer::PHSolidContainer(){
 }
 
-bool PHSolidContainer::AddChildObject(Object* o, PHScene* s){
-	if (DCAST(PHSolid, o)){
-		solids.push_back((PHSolid*)o);
+bool PHSolidContainer::AddChildObject(ObjectIf* o){
+	PHSolid* s = DCAST(PHSolid, o);
+	if (s && std::find(solids.begin(), solids.end(), s) == solids.end()){
+		solids.push_back(s);
 		return true;
 	}
 	return false;
 }
-bool PHSolidContainer::DelChildObject(Object* o, PHScene* s){
+bool PHSolidContainer::DelChildObject(ObjectIf* o){
 	PHSolid* so = DCAST(PHSolid, o);
 	if (so){
 		solids.Erase(so);
