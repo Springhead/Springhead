@@ -86,8 +86,8 @@ void display(){
 
 	Vec3f normal;
 	for(int i=0; i<soFloor->NShape(); ++i){
-		CDShapeIf** shapes = soFloor->GetShapes();
-		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
+		CDShapeIf* shape = soFloor->GetShape(i);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -111,8 +111,8 @@ void display(){
 	ad = Affined(pose);
 	glMultMatrixd(ad);
 		for(int i=0; i<soBlock->NShape(); ++i){
-		CDShapeIf** shapes = soBlock->GetShapes();
-		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
+		CDShapeIf* shape = soBlock->GetShape(i);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -249,8 +249,8 @@ void dstrSolid(const std::string& solidName) {
 	DSTR << "***  " << solidName << "   ***\n";
 
 	for(int i=0; i<solid->NShape(); ++i){
-		CDShapeIf** shapes = solid->GetShapes();
-		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
+		CDShapeIf* shape = solid->GetShape(i);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
