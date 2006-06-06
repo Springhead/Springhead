@@ -93,8 +93,8 @@ void SPR_CDECL display(){
 
 	Vec3f normal;
 	for(int i=0; i<soFloor->NShape(); ++i){
-		CDShapeIf** shapes = soFloor->GetShapes();
-		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
+		CDShapeIf* shape = soFloor->GetShape(i);
+		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		Vec3f* base = mesh->GetVertices();
 		for(size_t f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
@@ -119,8 +119,8 @@ void SPR_CDECL display(){
 		ad = Affined(pose);
 		glMultMatrixd(ad);
 			for(int i=0; i<soBlock[n]->NShape(); ++i){
-			CDShapeIf** shapes = soBlock[i]->GetShapes();
-			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[i]);
+			CDShapeIf* shape = soBlock[i]->GetShape(i);
+			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 			Vec3f* base = mesh->GetVertices();
 			for(size_t f=0; f<mesh->NFace();++f){
 				CDFaceIf* face = mesh->GetFace(f);
