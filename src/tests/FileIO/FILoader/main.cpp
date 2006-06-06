@@ -74,6 +74,11 @@ std::vector<GRMaterialDesc> material;
  return 	なし
  */
 void display(){
+/*	render->ClearBuffer();
+	render->DrawScene(*scene);
+	render->EndScene();
+	return;
+*/
 	//	バッファクリア
 	render->ClearBuffer();
 	//render->SetMaterial(mat_red);	
