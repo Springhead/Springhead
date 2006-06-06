@@ -50,7 +50,7 @@ public:
 };
 
 /**	@brief	光源		*/
-struct GRLight{
+struct GRLightDesc{
     Vec4f ambient;		///<	環境光
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
@@ -74,7 +74,7 @@ struct GRLight{
     float spotFalloff;	///<	スポットライトの円錐内での減衰率(大きいほど急峻) 0..∞
 	float spotInner;	///<	スポットライトの中心部分(内部コーン)（deviceがDirectXの場合のみ利用可能） 0..spotCutoff
 	float spotCutoff;	///<	スポットライトの広がり角度(度)(外部コーン) 0..π(pi)
-	GRLight(){
+	GRLightDesc(){
 		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
 		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
 		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
@@ -88,6 +88,11 @@ struct GRLight{
 		spotInner    = 0.0f;
 		spotCutoff   = 180.0f;
 	}
+};
+
+/** @brief 光源の基本クラス		*/
+struct GRLightIf: public SceneObjectIf{
+	IF_DEF(GRLight);
 };
 
 /**	@brief	材質	*/
@@ -224,7 +229,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w)=0;
 	///	光源スタックをPush
-	virtual void PushLight(const GRLight& light)=0;
+	virtual void PushLight(const GRLightDesc& light)=0;
+	virtual void PushLight(const GRLightIf* light)=0;
 	///	光源スタックをPop
 	virtual void PopLight()=0;
 	///	デプスバッファへの書き込みを許可/禁止する

@@ -154,7 +154,7 @@ void display(){
  return 	‚È‚µ
  */
 void setLight() {
-	GRLight light0;
+	GRLightDesc light0;
 	light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	light0.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -164,7 +164,7 @@ void setLight() {
 	light0.spotFalloff		= 30.0f;
 	render->PushLight(light0);
 
-	GRLight light1;
+	GRLightDesc light1;
 	light1.diffuse			= Vec4f(0.8f, 0.8f, 0.8f, 1.0f);
 	light1.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);

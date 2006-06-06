@@ -80,7 +80,7 @@ public:
 	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w);
 	///	光源スタックをPush
-	virtual void PushLight(const GRLight& light);
+	virtual void PushLight(const GRLightDesc& light);
 	///	光源スタックをPop
 	virtual void PopLight();
 	///	デプスバッファへの書き込みを許可/禁止する

@@ -9,8 +9,28 @@
 
 namespace Spr{;
 
+
+class GRLight :public InheritSceneObject<GRLightIf, SceneObject>, public GRLightDesc{
+public:
+	OBJECT_DEF(GRLight);
+	GRLight(){
+		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
+		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
+		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
+		position = Vec4f(0.0, 0.0, 1.0, 1.0);
+		range = FLT_MAX;
+		attenuation0 = 1.0f;
+		attenuation1 = 0.0f;
+		attenuation2 = 0.0f;
+		spotDirection = Vec3f(0.0, -1.0, 0.0);
+		spotFalloff  = 0.0f;
+		spotInner    = 0.0f;
+		spotCutoff   = 180.0f;
+	}
+};
+
 /**	@brief	グラフィックスの材質 */
-class GRMaterial:public InheritSceneObject<GRMaterialIf, SceneObject>, public GRMaterialDesc{
+class GRMaterial :public InheritSceneObject<GRMaterialIf, SceneObject>, public GRMaterialDesc{
 public:
 	OBJECT_DEF(GRMaterial);
 	GRMaterial(){}
@@ -84,7 +104,9 @@ public:
 	virtual void SetMaterial(const GRMaterialIf* mat){									\
 		if(mat) ptr SetMaterial((const GRMaterialDesc&)*DCAST(GRMaterial, mat)); }		\
 	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }							\
-	virtual void PushLight(const GRLight& light){ptr PushLight(light);}					\
+	virtual void PushLight(const GRLightDesc& light){ptr PushLight(light);}				\
+	virtual void PushLight(const GRLightIf* light){										\
+		if(light) ptr PushLight((const GRLightDesc&)*DCAST(GRLight, light)); }			\
 	virtual void PopLight(){ptr PopLight(); }											\
 	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }							\
 	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }							\
@@ -119,15 +141,16 @@ public:
 	OBJECT_DEF_ABST(GRDevice);
 	virtual void SetMaterial(const GRMaterialDesc& mat)=0;
 	virtual void SetMaterial(const GRMaterialIf* mat){
-		if(mat) SetMaterial(*DCAST(GRMaterial, mat));
-	}
+		if(mat) SetMaterial(*DCAST(GRMaterial, mat)); }
+	virtual void PushLight(const GRLightDesc& light)=0;
+    virtual void PushLight(const GRLightIf* light){
+        if(light) PushLight(*DCAST(GRLight, light)); }
 };
 template <class intf, class base>
 struct InheritGRDevice:public InheritObject<intf, base>{
-	void SetDevice(GRDeviceIf* dev){
-		base::SetDevice(dev);
-	}
+	void SetDevice(GRDeviceIf* dev){ base::SetDevice(dev); }
 	void SetMaterial(const GRMaterialIf* mat){ base::SetMaterial(mat); }
+	void PushLight(const GRLightIf* light){ base::PushLight(light); }
 };
 
 }

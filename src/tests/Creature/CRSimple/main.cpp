@@ -12,7 +12,6 @@ namespace Spr{
 	PHSdkIf* phSdk;
 	GRSdkIf* grSdk;
 	PHSceneIf** scene;
-	CDShapeIf** shape;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
 }
@@ -40,20 +39,21 @@ void display(){
 	}
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
+		PHSolidIf* so = solids[num];
 		render->SetMaterial(mat_green);
 
-		Affinef af;
-		solids[num]->GetPose().ToAffine(af);
+		Affinef soaf;
+		so->GetPose().ToAffine(soaf);
 		render->PushModelMatrix();
-		render->MultModelMatrix(af);
-		
-		CDShapeIf** shapes = solids[num]->GetShapes();
-		for(int s=0; s<solids[num]->NShape(); ++s){
+		render->MultModelMatrix(soaf);
+
+		for(int s=0; s<so->NShape(); ++s){
+			CDShapeIf* shape = so->GetShape(s);
 			Affinef af;
-			shapes[s]->GetPose().ToAffine(af);
+			so->GetShapePose(s).ToAffine(af);
 			render->PushModelMatrix();
 			render->MultModelMatrix(af);
-			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shapes[s]);
+			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 			if (mesh){
 				Vec3f* base = mesh->GetVertices();
 				for (size_t f=0; f<mesh->NFace(); ++f) {	
@@ -61,29 +61,16 @@ void display(){
 					render->DrawFace(face, base);
 				}
 			}
-			CDSphereIf* sphere = DCAST(CDSphereIf, shapes[s]);
+			CDSphereIf* sphere = DCAST(CDSphereIf, shape);
 			if (sphere){
 				float r = sphere->GetRadius();
-				GLUquadricObj* quad = gluNewQuadric();
-				gluSphere(quad, r, 16, 8);
-				gluDeleteQuadric(quad);
+				glutSolidSphere(r, 20, 20);
 			}
-			CDBoxIf* box = DCAST(CDBoxIf, shapes[s]);
+			CDBoxIf* box = DCAST(CDBoxIf, shape);
 			if (box){
-				Vec3f* base =  box->GetVertices();
-				for (size_t f=0; f<6; ++f) {	
-					CDFaceIf* face = box->GetFace(f);
-
-					for (int v=0; v<4; ++v)
-						vtx[v] = base[face->GetIndices()[v]].data;
-					Vec3f normal, edge0, edge1;
-					edge0 = vtx[1] - vtx[0];
-					edge1 = vtx[2] - vtx[0];
-					normal = edge0^edge1;
-					normal.unitize();
-					glNormal3fv(normal);
-					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, vtx+4);
-				}
+				Vec3f boxsize = box->GetBoxSize();
+				glScalef(boxsize.x, boxsize.y, boxsize.z);	
+				glutSolidCube(1.0);	
 			}
 			render->PopModelMatrix();
 		}
@@ -94,7 +81,7 @@ void display(){
 }
 
 void setLight() {
-	GRLight light0;
+	GRLightDesc light0;
 	light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 	light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
 	light0.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -104,7 +91,7 @@ void setLight() {
 	light0.spotFalloff		= 30.0f;
 	render->PushLight(light0);
 
-	GRLight light1;
+	GRLightDesc light1;
 	light1.diffuse			= Vec4f(0.8f, 0.8f, 0.8f, 1.0f);
 	light1.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 	light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);
@@ -146,7 +133,6 @@ int main(int argc, char* argv[]){
 	phSdk->Print(DSTR);
 
 	scene = phSdk->GetScenes();		// Scene�̎擾
-	shape = phSdk->GetShapes();		// Shape�̎擾
 	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
 
 	glutInit(&argc, argv);

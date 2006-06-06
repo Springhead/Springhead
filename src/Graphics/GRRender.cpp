@@ -24,5 +24,9 @@ IF_OBJECT_IMP_ABST(GRDevice, GRRenderBase);
 //	GRMaterial
 IF_OBJECT_IMP(GRMaterial, SceneObject);
 
+//----------------------------------------------------------------------------
+//	GRLight
+IF_OBJECT_IMP(GRLight, SceneObject);
+
 }	//	Spr
 

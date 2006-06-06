@@ -311,7 +311,7 @@ void GRDeviceGL::SetLineWidth(float w){
 	glLineWidth(w);
 }
 /// 光源スタックをPush
-void GRDeviceGL::PushLight(const GRLight& light){
+void GRDeviceGL::PushLight(const GRLightDesc& light){
 	if (nLights < GL_MAX_LIGHTS) {
 		glLightfv(GL_LIGHT0+nLights, GL_AMBIENT, light.ambient);
 		glLightfv(GL_LIGHT0+nLights, GL_DIFFUSE, light.diffuse);

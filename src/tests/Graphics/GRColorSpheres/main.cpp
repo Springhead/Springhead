@@ -18,7 +18,7 @@
 #endif
 using namespace Spr;
 #define ESC				27			// ESC key
-#define EXIT_TIMER		2000		// 実行ステップ数
+#define EXIT_TIMER		7000		// 実行ステップ数
 #define WINSIZE_WIDTH	480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		10			// sphere数
@@ -50,7 +50,7 @@ void display(){
  return 	なし
  */
 void setLight() {
-	GRLight light0, light1;
+	GRLightDesc light0, light1;
 	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
 	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
 	render->PushLight(light0);
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]){
 
 	// 視点を設定する
 	Affinef view;
-	view.Pos() = Vec3f(0.0, 10.0, 10.0);								// eye
+	view.Pos() = Vec3f(0.0, 15.0, 15.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
