@@ -13,40 +13,44 @@ namespace Spr {;
 class CDFace;
 class CDConvex;
 
-class CDShapePair: public UTRefCount{
+/// Shapeの組の状態
+struct CDShapePairState{
+	unsigned lastContactCount;
+	Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
+	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
+	//CDShapePairState(const CDShapePair& s):
+	//	lastContactCount(s.lastContactCount),normal(s.normal), depth(s.depth){}
+};
+class CDShapePair: public CDShapePairState, public UTRefCount{
 public:
-	CDShapeRefWithPose*	shape[2];
-	//CDShape* shape[2];		// 判定対象の形状
-	//Posed	 pose[2];		// 剛体から見た形状のpose
-	Posed shapePoseW[2];	// World系での形状の姿勢のキャッシュ
+	CDConvex* shape[2];			// 判定対象の形状
+	Posed shapePoseW[2];		// World系での形状の姿勢のキャッシュ
 
 	//	接触判定結果
-	Vec3d closestPoint[2]; // ローカル座標系
-	Vec3d commonPoint;     // World座標系
+	Vec3d	closestPoint[2];		///< 最近傍点（ローカル座標系）
+	Vec3d	commonPoint;			///< 交差部分の内点（World座標系）
+	bool	bActive;				///< 現在接触が生じているか
 	unsigned lastContactCount;
 	enum State{
 		NEW,
 		CONTINUE,
 	} state;
-	//	法線計算結果
-	Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
 	Vec3d iNormal;				///<	積分による法線
 	Vec3d center;				///<	2つの最侵入点の中間の点，CDContactAnalysis::CalcNormal が更新する．
-	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
 
-
-	///	
-	CDShapePair(){}
-	CDShapePair(CDShapeRefWithPose* s0, CDShapeRefWithPose* s1){
-		shape[0] = s0;
-		shape[1] = s1;
+public:
+	//virtual void Clear();
+	void SetState(const CDShapePairState& s){
+		(CDShapePairState&)*this = s;
 	}
-	///	形状の姿勢(shapePoseW)の更新．各Shapeの親Solidの姿勢を渡す．
-	void UpdateShapePose(Posed pose0, Posed pose1);
-	///	接触判定
-	bool Detect(unsigned ct);
-};
 
+	///	形状の姿勢(shapePoseW)の更新．各Shapeの親Solidの姿勢を渡す．
+	///void UpdateShapePose(Posed pose0, Posed pose1);
+	
+	///	接触判定
+	bool Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Posed& pose1);
+	
+};
 
 ///	BBox同士の交差判定．交差していれば true．
 bool BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,

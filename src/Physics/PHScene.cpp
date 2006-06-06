@@ -161,20 +161,20 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 }
 bool PHScene::AddChildObject(ObjectIf* o){
 	bool rv = solids->AddChildObject(o);
-	PHSolid* s = DCAST(PHSolid, o);
+	//PHSolid* s = DCAST(PHSolid, o);
 	if (rv){
 		switch(contactSolver){
 		case SOLVER_PENALTY:{
 			PHPenaltyEngine* pe;
 			engines.Find(pe);
 			assert(pe);
-			pe->Add(s);
+			pe->AddChildObject(o);
 			}break;
 		case SOLVER_CONSTRAINT:{
 			PHConstraintEngine* ce;
 			engines.Find(ce);
 			assert(ce);
-			ce->Add(s);
+			ce->AddChildObject(o);
 			}break;
 		default: assert(false);
 		}

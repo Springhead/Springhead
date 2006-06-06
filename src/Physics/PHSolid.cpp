@@ -213,10 +213,6 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
-	//重複登録のチェック
-	for(unsigned i = 0; i < shapes.size(); i++)
-		if(shapes[i].shape == sh)
-			return;
 	shapes.push_back(CDShapeRefWithPose());
 	shapes.back().shape = sh;
 	CalcBBox();
@@ -227,7 +223,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	case PHScene::SOLVER_PENALTY:{
 		PHPenaltyEngine* pe;
 		scene->engines.Find(pe);
-		if(pe) pe->Invalidate();
+		pe->UpdateShapePairs(this);
 	}break;
 	case PHScene::SOLVER_CONSTRAINT:{
 		PHConstraintEngine* ce;
@@ -244,8 +240,10 @@ Posed	PHSolid::GetShapePose(int i){
 }
 
 void	PHSolid::SetShapePose(int i, const Posed& pose){
-	if(0 <= i && i < (int)shapes.size())
+	if(0 <= i && i < (int)shapes.size()){
 		shapes[i].pose = pose;
+		CalcBBox();
+	}
 }
 
 void PHSolid::SetGravity(bool bOn){

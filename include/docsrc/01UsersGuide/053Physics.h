@@ -167,20 +167,31 @@ Springhead 物理シミュレーションSDKは，形状の交差を検知し，
 剛体に割り当てることのできる形状の種類および作成方法については\ref shapeの項を参照してください．
 
 剛体に形状を割り当てるには\link Spr::PHSolidIf::AddShape() PHSolidIf::AddShape\endlinkを使います．
-剛体は，割り当てられた形状への参照を保持するだけですので，1つの形状を複数の剛体に割り当てても問題ありません．
-こうすることによって，多数の同じ形の剛体を作成したい場合にメモリを節約できます．
+剛体は，割り当てられた形状（CDShape型のオブジェクト）への参照を保持するだけですので，1つの形状を複数の異なる剛体に割り当てても問題ありません．
+これによって，多数の同じ形の剛体を作成したい場合にメモリを節約できます．
+また，1つの剛体に同じCDShapeオブジェクトを複数回登録すると，それぞれ別の形状として認識されます．
+
+形状を剛体に取り付ける位置を取得・設定するには，
+\link Spr::PHSolidIf::GetShapePose() PHSolidIf::GetShapePose \endlink，
+\link Spr::PHSolidIf::SetShapePose() PHSolidIf::SetShapePose \endlinkを呼びます．
 
 \section shape	形状
-剛体には1つ以上の形状を割り当てることができます．
-形状には以下のものがあります．
-- 任意の凸メッシュ
-- 球
-- 直方体
+剛体に割り当てることができる形状には以下のものがあります．
+- \ref shape_sphere
+- \ref shape_box
+- \ref shape_mesh
 
 Springhead Physicsが扱うことのできる形状は凸形状のみです．
 凸形状とは，一言でいえば凹みや穴の無い形状のことです．
 凸でない（凹みや穴を持つ）形状を剛体に割り当てるには，あらかじめその形状を
 複数の凸形状に分割して割り当てる必要があります．
+
+\subsection shape_sphere 球
+
+\subsection shape_box 直方体
+
+\subsection shape_mesh メッシュ
+
 
 \section joint 関節
 

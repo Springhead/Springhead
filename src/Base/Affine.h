@@ -202,6 +202,9 @@ template <class T> T min(T a, T b){return a < b ? a : b;}
 /// ‘å‚«‚¢•û‚ğ•Ô‚·
 template <class T> T max(T a, T b){return a > b ? a : b;}
 
+/// •½‹Ï‚ğ‚Æ‚é
+template <class T> T ave(T a, T b){return 0.5 * (a + b);}
+
 ///	“x‚ğƒ‰ƒWƒAƒ“‚É•ÏŠ·
 inline double Rad(double deg){
 	return ((double)deg/360*2*M_PI);

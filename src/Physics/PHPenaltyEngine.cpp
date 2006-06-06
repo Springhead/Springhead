@@ -4,15 +4,23 @@
 #endif
 #include <float.h>
 #include <Collision/CDDetectorImp.h>
-
+#include <Base/Affine.h>
 
 using namespace PTM;
 namespace Spr{;
 const float SPRING = 0.2f;
 const float DAMPER = 0.3f;
 extern bool bUseContactVolume;
+static float reflexSpring;
+static float reflexDamper;
+static float frictionSpring;
+static float frictionDamper;
+static float staticFriction;
+static float dynamicFriction;
 
-void PHPenaltyEngine::PHShapePair::Clear(){
+//----------------------------------------------------------------------------
+// PHShapePairForPenalty
+void PHShapePairForPenalty::Clear(){
 	area = 0;
 	reflexSpringForce.clear();
 	reflexDamperForce.clear();
@@ -23,7 +31,8 @@ void PHPenaltyEngine::PHShapePair::Clear(){
 }
 
 //----------------------------------------------------------------------------
-void PHPenaltyEngine::PHSolidInfo::UpdateCache(int c){
+// PHSolidInfoForPenalty
+void PHSolidInfoForPenalty::UpdateCache(int c){
 	if ((unsigned)c == count) return;
 	assert(solid);
 	count = c;
@@ -36,139 +45,111 @@ void PHPenaltyEngine::PHSolidInfo::UpdateCache(int c){
 	cog = ori * solid->GetCenter() + pos;
 }
 
-inline float Ave(float a, float b){
-//	float c = 1/(1/a + 1/b) ;
-//	return c*2;
-	return (a+b)/2.0f;
-}
+//----------------------------------------------------------------------------
+// PHSolidPairForPenalty
 
-void PHPenaltyEngine::PHSolidPair::Clear(){
+void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
+	//	動力学計算の準備
 	reflexForce = reflexTorque = frictionForce = frictionTorque = Vec3f();
 	area = 0;
-}
 
-static float reflexSpring;
-static float reflexDamper;
-static float frictionSpring;
-static float frictionDamper;
-static float staticFriction;
-static float dynamicFriction;
+	solid[0]->UpdateCache(ct);
+	solid[1]->UpdateCache(ct);
+	cocog = ave(solid[0]->cog, solid[1]->cog);
 
-//	衝突検出と接触力の計算
-bool PHPenaltyEngine::PHSolidPair::Detect(PHPenaltyEngine* engine){
-	bool rv = false;
-	int ct = DCAST(PHScene,engine->GetScene())->GetCount();
-	double dt = DCAST(PHScene,engine->GetScene())->GetTimeStep();
-
-	//	動力学計算の準備
-	Clear();
-	solid[0].UpdateCache(ct);
-	solid[1].UpdateCache(ct);
-	cocog = 0.5f * (solid[0].cog+solid[1].cog);
+	PHSolid* s[2] = {solid[0]->solid, solid[1]->solid};
 
 	//	換算質量の計算
-	float convertedMass=1.0f;
-	if (solid[0].solid->GetMass() < 1e10f && solid[1].solid->GetMass() < 1e10f){
-		float m0 = (float)solid[0].solid->GetMass();
-		float m1 = (float)solid[1].solid->GetMass();
+	convertedMass=1.0f;
+	if (s[0]->GetMass() < 1e10f && s[1]->GetMass() < 1e10f){
+		float m0 = (float)s[0]->GetMass();
+		float m1 = (float)s[1]->GetMass();
 		convertedMass = m0 * m1 / (m0+m1);
-	}else if (solid[0].solid->GetMass() < 1e10f){
-		convertedMass = (float)solid[0].solid->GetMass();
-	}else if (solid[1].solid->GetMass() < 1e10f){
-		convertedMass = (float)solid[1].solid->GetMass();
+	}else if (s[0]->GetMass() < 1e10f){
+		convertedMass = (float)s[0]->GetMass();
+	}else if (s[1]->GetMass() < 1e10f){
+		convertedMass = (float)s[1]->GetMass();
 	}
+}
 
-	//	Shape同士の接触判定
-	typedef std::vector<PHShapePair*> Contacts;
-	Contacts contacts;
-	for(int i=0; i<shapePairs.height(); ++i){
-		for(int j=0; j<shapePairs.width(); ++j){
-			PHShapePair* sp = shapePairs.item(i,j);
-			//shapePair->UpdateShapePose(solid[0].solid->GetPose(), solid[1].solid->GetPose());
-			if ( sp->Detect(ct) ){
-				rv = true;
+void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine* engine, unsigned ct, double dt){
+	//contacts.push_back(sp);
+	static CDContactAnalysis analyzer;
+	analyzer.FindIntersection(sp);	//	接触形状の解析
+	analyzer.CalcNormal(sp);		//	法線ベクトルの計算
 
-				contacts.push_back(sp);
-				static CDContactAnalysis analyzer;
-				analyzer.FindIntersection(sp);	//	接触形状の解析
-				analyzer.CalcNormal(sp);			//	法線ベクトルの計算
-
-				//	接触力計算の準備
-				float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
-				for(int i=0; i<2; ++i){
-					rs[i] = fs[i] = SPRING;
-					rd[i] = fd[i] = DAMPER;
-					sf[i] = sp->shape[i]->shape->material.mu0;
-					df[i] = sp->shape[i]->shape->material.mu;
-				}
-				reflexSpring = Ave(rs[0], rs[1]) * convertedMass / (float)(2*dt*dt);
-				reflexDamper = Ave(rd[0], rd[1]) * convertedMass / (float)(dt);
-				frictionSpring = Ave(fs[0], fs[1]) * convertedMass / (float)(2*dt*dt);
-				frictionDamper = Ave(fd[0], fd[1]) * convertedMass / (float)(dt);
-				staticFriction = (sf[0]+sf[1])/2;
-				dynamicFriction = (df[0]+df[1])/2;
-				
-				//	接触力計算	衝突の面積，抗力を求める
-				CalcReflexForce(sp, &analyzer);
-				area += sp->area;
-			}
-		}
+	//	接触力計算の準備
+	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
+	for(int i=0; i<2; ++i){
+		rs[i] = fs[i] = SPRING;
+		rd[i] = fd[i] = DAMPER;
+		sf[i] = sp->shape[i]->material.mu0;
+		df[i] = sp->shape[i]->material.mu;
 	}
+	reflexSpring    = ave(rs[0], rs[1]) * convertedMass / (float)(2*dt*dt);
+	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)(dt);
+	frictionSpring  = ave(fs[0], fs[1]) * convertedMass / (float)(2*dt*dt);
+	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)(dt);
+	staticFriction  = ave(sf[0], sf[1]);
+	dynamicFriction = ave(df[0], df[1]);
+	
+	//	接触力計算	衝突の面積，抗力を求める
+	CalcReflexForce(sp, &analyzer);
+	area += sp->area;
+}
 
-
-
+void PHSolidPairForPenalty::GenerateForce(){
 	//	接触判定終了後の処理
 	//	抗力とその作用点を求め，摩擦を計算し，抗力と摩擦力を物体に加える．
-	if (rv){
-		for(Contacts::iterator it = contacts.begin(); it != contacts.end(); ++it){
-			PHShapePair* cp = *it;
-			//	積分したペナルティと速度を面積で割る
-			cp->reflexSpringForce /= area;
-			cp->reflexDamperForce /= area;
-			cp->reflexSpringTorque /= area;
-			cp->reflexDamperTorque /= area;
-			cp->dynaFric /= area;
-			cp->dynaFricMom /= area;
-					
-			DEBUG_EVAL(
-				if ( !finite( cp->reflexSpringForce.norm() )
-					|| !finite( cp->frictionForce.norm() )
-					|| !finite( cp->frictionTorque.norm() ) ){
-					DSTR << "Error: forces: " << cp->reflexSpringForce << cp->frictionForce << cp->frictionTorque << std::endl;
-				}
-			)
-			//	摩擦力を計算する
-			CalcFriction(cp);
-			//	力を加える．
-	//		DSTR << "ref:" << cp->reflexSpringForce << cp->reflexDamperForce << std::endl;
-			Vec3f refF = cp->reflexSpringForce + cp->reflexDamperForce;
-			Vec3f refT = cp->reflexSpringTorque + cp->reflexDamperTorque
-				+ ((cp->commonPoint - cocog)^refF);
+	int i, j;
+	PHShapePairForPenalty* cp;
+	for(i = 0; i < shapePairs.height(); i++)for(j = 0; j < shapePairs.width(); j++){
+		cp = shapePairs.item(i, j);
+		if(!cp->bActive)continue;
 
-			reflexForce += refF;
-			reflexTorque += refT;
-			frictionForce += cp->frictionForce;
-			frictionTorque += cp->frictionTorque
-				+ (((cp->reflexForcePoint+cp->commonPoint) - cocog) ^ cp->frictionForce);
-		}
-		//	DSTR << std::endl;
+		//	積分したペナルティと速度を面積で割る
+		cp->reflexSpringForce /= area;
+		cp->reflexDamperForce /= area;
+		cp->reflexSpringTorque /= area;
+		cp->reflexDamperTorque /= area;
+		cp->dynaFric /= area;
+		cp->dynaFricMom /= area;
+				
+		DEBUG_EVAL(
+			if ( !finite( cp->reflexSpringForce.norm() )
+				|| !finite( cp->frictionForce.norm() )
+				|| !finite( cp->frictionTorque.norm() ) ){
+				DSTR << "Error: forces: " << cp->reflexSpringForce << cp->frictionForce << cp->frictionTorque << std::endl;
+			}
+		)
+		//	摩擦力を計算する
+		CalcFriction(cp);
+		//	力を加える．
+		Vec3f refF = cp->reflexSpringForce + cp->reflexDamperForce;
+		Vec3f refT = cp->reflexSpringTorque + cp->reflexDamperTorque
+			+ ((cp->commonPoint - cocog)^refF);
+
+		reflexForce += refF;
+		reflexTorque += refT;
+		frictionForce += cp->frictionForce;
+		frictionTorque += cp->frictionTorque
+			+ (((cp->reflexForcePoint+cp->commonPoint) - cocog) ^ cp->frictionForce);
+
 		//	力を制限する．
 		//	LimitForces();
 		// 力を加える．
-		solid[0].solid->AddForce(reflexForce + frictionForce, cocog);
-		solid[0].solid->AddTorque(reflexTorque + frictionTorque);
-		solid[1].solid->AddForce(-(reflexForce + frictionForce), cocog);
-		solid[1].solid->AddTorque(-(reflexTorque + frictionTorque));
+		solid[0]->solid->AddForce(reflexForce + frictionForce, cocog);
+		solid[0]->solid->AddTorque(reflexTorque + frictionTorque);
+		solid[1]->solid->AddForce(-(reflexForce + frictionForce), cocog);
+		solid[1]->solid->AddTorque(-(reflexTorque + frictionTorque));
 	}
-	return rv;
 }
-
 
 //	凸形状対に発生する反力の計算と最大摩擦力の計算
 //	すべて commonPoint を原点とした座標系で計算する．
-void PHPenaltyEngine::PHSolidPair::CalcReflexForce(PHShapePair* cp, CDContactAnalysis* analyzer){
+void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
 	cp->Clear();
-	Vec3f cog[2] = {solid[0].cog - cp->commonPoint, solid[1].cog - cp->commonPoint};
+	Vec3f cog[2] = {solid[0]->cog - cp->commonPoint, solid[1]->cog - cp->commonPoint};
 	CDConvexMesh* cmesh[2] = {
 		(CDConvexMesh*)cp->shape[0],
 		(CDConvexMesh*)cp->shape[1]
@@ -185,7 +166,7 @@ void PHPenaltyEngine::PHSolidPair::CalcReflexForce(PHShapePair* cp, CDContactAna
 			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
 				p1 = p2;
 				p2 = qhVtx.CommonVtx(i);
-				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID].vel, solid[curID].angVel);
+				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID]->vel, solid[curID]->angVel);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !_finite(cp->reflexSpringForce.norm()) ){
 					DSTR << "CalcTriangleReflexForce returned very large force." << std::endl;
@@ -215,14 +196,14 @@ void PHPenaltyEngine::PHSolidPair::CalcReflexForce(PHShapePair* cp, CDContactAna
 		}
 	}else{	//	bUseContactVolume
 		Vec3d closest[2] = {
-			solid[0].ori * cp->closestPoint[0] + solid[0].pos,
-			solid[1].ori * cp->closestPoint[1] + solid[1].pos};
+			solid[0]->ori * cp->closestPoint[0] + solid[0]->pos,
+			solid[1]->ori * cp->closestPoint[1] + solid[1]->pos};
 		cp->reflexSpringForce = reflexSpring * (closest[1] - closest[0]);
 		Vec3f colPos = (closest[0]+closest[1])/2;
 		cp->reflexSpringTorque = (colPos-cp->commonPoint) ^ cp->reflexSpringForce;
 		Vec3f vel[2];
-		vel[0] = solid[0].vel + (solid[0].angVel ^ (colPos - solid[0].cog));
-		vel[1] = solid[1].vel + (solid[1].angVel ^ (colPos - solid[1].cog));
+		vel[0] = solid[0]->vel + (solid[0]->angVel ^ (colPos - solid[0]->cog));
+		vel[1] = solid[1]->vel + (solid[1]->angVel ^ (colPos - solid[1]->cog));
 		Vec3f rvel = vel[1] - vel[0];
 		cp->reflexDamperForce = reflexDamper * rvel;
 		cp->reflexDamperTorque = (colPos-cp->commonPoint) ^ cp->reflexDamperForce;
@@ -255,7 +236,8 @@ void PHPenaltyEngine::PHSolidPair::CalcReflexForce(PHShapePair* cp, CDContactAna
 	}
 #endif
 }
-void PHPenaltyEngine::PHSolidPair::CalcTriangleReflexForce(PHShapePair* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f cog, Vec3f vel, Vec3f angVel){
+
+void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f cog, Vec3f vel, Vec3f angVel){
 	//---------------------------------------------------------------
 	//	ばねモデルの計算：各頂点の侵入深さの計算
 	float depth0 = p0 * cp->normal;
@@ -350,15 +332,15 @@ void PHPenaltyEngine::PHSolidPair::CalcTriangleReflexForce(PHShapePair* cp, Vec3
 
 //	凸形状対に発生する摩擦力の計算
 //	力の作用点を原点とした座標系で計算する．
-void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
+void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	//	初めての接触の時
 	Vec3f reflexForcePoint = cp->reflexForcePoint + cp->commonPoint;	//	力の作用点(絶対系)
-	if (cp->state == PHShapePair::NEW){
+	if (cp->state == PHShapePairForPenalty::NEW){
 		//	バネモデルの始点を設定する．
-		cp->transFrictionBase[0] = solid[0].ori.Inv() * (reflexForcePoint - solid[0].pos);
-		cp->transFrictionBase[1] = solid[1].ori.Inv() * (reflexForcePoint - solid[1].pos);
+		cp->transFrictionBase[0] = solid[0]->ori.Inv() * (reflexForcePoint - solid[0]->pos);
+		cp->transFrictionBase[1] = solid[1]->ori.Inv() * (reflexForcePoint - solid[1]->pos);
 		cp->rotSpring = 0;
-		cp->frictionState = PHShapePair::STATIC;
+		cp->frictionState = PHShapePairForPenalty::STATIC;
 		cp->frictionForce = Vec3f();
 		cp->frictionTorque = Vec3f();
 		return;
@@ -368,8 +350,8 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	
 	//	並進バネの計算
 	//	グローバル系に変換
-	cp->transFrictionBase[0] = solid[0].ori * cp->transFrictionBase[0] + solid[0].pos;
-	cp->transFrictionBase[1] = solid[1].ori * cp->transFrictionBase[1] + solid[1].pos;
+	cp->transFrictionBase[0] = solid[0]->ori * cp->transFrictionBase[0] + solid[0]->pos;
+	cp->transFrictionBase[1] = solid[1]->ori * cp->transFrictionBase[1] + solid[1]->pos;
 	//	平面上に落とす
 	cp->transFrictionBase[0] -= (cp->transFrictionBase[0]-cp->center) * cp->normal * cp->normal;
 	cp->transFrictionBase[1] -= (cp->transFrictionBase[1]-cp->center) * cp->normal * cp->normal;
@@ -381,13 +363,13 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	if (transSpringNorm>1e-10f) frictionForceDicption = transSpring / transSpringNorm;
 
 	//	回転バネの計算
-	Quaternionf delta[2] = { solid[0].ori*solid[0].lastOri.Inv(), solid[1].ori*solid[1].lastOri.Inv() };
+	Quaternionf delta[2] = { solid[0]->ori*solid[0]->lastOri.Inv(), solid[1]->ori*solid[1]->lastOri.Inv() };
 	cp->rotSpring += delta[1].Rotation()*cp->normal - delta[0].Rotation()*cp->normal;
 	float frictionSpringTorque = frictionSpring*cp->rotSpring;
 
 
 	//	動摩擦の制約を加える
-	float fricCoeff = (cp->frictionState == PHShapePair::STATIC) ? staticFriction : dynamicFriction;
+	float fricCoeff = (cp->frictionState == PHShapePairForPenalty::STATIC) ? staticFriction : dynamicFriction;
 	float maxFric = fricCoeff * cp->dynaFric.norm();
 
 	//hase	摩擦のテスト中
@@ -400,25 +382,25 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	assert(finite(maxFric));
 	DEBUG_EVAL( if(!finite(maxRotFric)){ DSTR << "FricMax:" << maxFric << "  " << maxRotFric << std::endl; } )
 
-	cp->frictionState = PHShapePair::STATIC;
+	cp->frictionState = PHShapePairForPenalty::STATIC;
 	if (frictionSpringForce > maxFric){
 		frictionSpringForce = maxFric;
-		cp->frictionState = PHShapePair::DYNAMIC;
+		cp->frictionState = PHShapePairForPenalty::DYNAMIC;
 	}
 	if (abs(frictionSpringTorque) > maxRotFric){
 		frictionSpringTorque = sign(frictionSpringTorque) * maxRotFric;
-		cp->frictionState = PHShapePair::DYNAMIC;
+		cp->frictionState = PHShapePairForPenalty::DYNAMIC;
 	}
 	cp->frictionForce = frictionSpringForce * frictionForceDicption;
 	cp->frictionTorque = frictionSpringTorque * cp->normal;
 
-	if (cp->frictionState == PHShapePair::STATIC){
+	if (cp->frictionState == PHShapePairForPenalty::STATIC){
 		///	ダンパによる静止摩擦力の計算
-		Vec3f frictionVel = ((solid[1].angVel ^ (reflexForcePoint-solid[1].cog)) + solid[1].vel) - ((solid[0].angVel ^ (reflexForcePoint-solid[0].cog)) + solid[0].vel);
+		Vec3f frictionVel = ((solid[1]->angVel ^ (reflexForcePoint-solid[1]->cog)) + solid[1]->vel) - ((solid[0]->angVel ^ (reflexForcePoint-solid[0]->cog)) + solid[0]->vel);
 		frictionVel -= frictionVel * cp->normal * cp->normal;
 		cp->frictionForce += frictionDamper * frictionVel;
 		
-		Vec3f frictionAngVel = solid[1].angVel - solid[0].angVel;
+		Vec3f frictionAngVel = solid[1]->angVel - solid[0]->angVel;
 		DEBUG_EVAL( if (!finite(frictionAngVel.norm())){ DSTR << "frictionAngVel: " << frictionAngVel << std::endl; } )
 		
 
@@ -447,97 +429,31 @@ void PHPenaltyEngine::PHSolidPair::CalcFriction(PHShapePair* cp){
 	if (frictionSpring < 1e-12f){	//	摩擦のばね係数が0だと、伸びが計算できなくなる。
 		frictionSpring = 1e12f;		//	係数0の場合伸びは無視できるので、伸びを小さな値にしておく。
 	}
-	cp->transFrictionBase[0] = solid[0].ori.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[0].pos);
-	cp->transFrictionBase[1] = solid[1].ori.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[1].pos);
+	cp->transFrictionBase[0] = solid[0]->ori.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[0]->pos);
+	cp->transFrictionBase[1] = solid[1]->ori.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[1]->pos);
 	cp->rotSpring = frictionSpringTorque / frictionSpring;
 }
-
-
-void PHPenaltyEngine::PHSolidPair::Init(){
-	shapePairs.resize(solid[0].solid->shapes.size(), solid[1].solid->shapes.size());
-	for(unsigned i=0; i<solid[0].solid->shapes.size(); ++i){
-		for(unsigned j=0; j<solid[1].solid->shapes.size(); ++j){
-			shapePairs.item(i, j) = DBG_NEW PHShapePair(&solid[0].solid->shapes[i], &solid[1].solid->shapes[j]);
-		}
-	}
-}
-
 
 //----------------------------------------------------------------------------
 OBJECT_IMP(PHPenaltyEngine, PHEngine);
 
-void PHPenaltyEngine::Add(PHSolid* s){
-	solids.push_back(s);
-	Invalidate();
-}
-
-void PHPenaltyEngine::Init(){
-	solidPairs.resize(solids.size(), solids.size());
-	for(unsigned i=0; i<solids.size(); ++i){
-		for(unsigned j=i+1; j<solids.size(); ++j){
-			solidPairs.item(i, j) = DBG_NEW PHSolidPair(solids[i], solids[j]);
-			solidPairs.item(i, j)->Init();
-		}
-	}
-	ready = true;
-}
-
-
-/**	Solidの端の位置をもち，ソートされるもの	*/
-struct PHSolidEdge{
-	float edge;				///<	端の位置(グローバル系)
-	int solid;				///<	元の solidの位置
-	bool bMin;				///<	初端ならtrue
-	bool operator < (const PHSolidEdge& s) const { return edge < s.edge; }
-};
-
 void PHPenaltyEngine::Step(){
-	if(!ready)
-		Init();
+	//if(!ready)
+	//	Init();
 	
-	Vec3f dir(0,0,1);
-	typedef std::vector<PHSolidEdge> Edges;
-	Edges edges;
-	edges.resize(solids.size()*2);
-	Edges::iterator eit = edges.begin();
-	for(unsigned int i = 0; i < solids.size(); ++i){
-		solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-		if (!finite(eit[0].edge) || !finite(eit[1].edge)){
-			DSTR << solids[i]->GetName() << " min:" << eit[0].edge << " max:" << eit[1].edge << std::endl;
-			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-		}
-		eit[0].solid = i; eit[0].bMin = true;
-		eit[1].solid = i; eit[1].bMin = false;
-		eit += 2;
-	}
-	if (edges.size() > 200){
-		DSTR << "strange edges" << std::endl;
-		DSTR << (unsigned)&*edges.begin() << (unsigned)&*edges.end();
-	}
-	std::sort(edges.begin(), edges.end());
-	//	端から見ていって，接触の可能性があるノードの判定をする．
-	typedef std::set<int> SolidSet;
-	SolidSet cur;							//	現在のSolidのセット
-	for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
-		if (it->bMin){						//	初端だったら，リスト内の物体と判定
-//			DSTR << "Col " << it->solid << " - ";
-			for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
-				int f1 = it->solid;
-				int f2 = *itf;
-				if (f1 > f2) std::swap(f1, f2);
-				PHSolidPair* pair =  solidPairs.item(f1, f2);
-				//	SolidとSolidの衝突判定
-				pair->Detect(this);	//	再帰的に衝突判定(GJKを使用)
-//				DSTR << " " << *itf;
-			}
-//			DSTR << std::endl;
-			cur.insert(it->solid);
-		}else{
-			cur.erase(it->solid);			//	終端なので当該フレームを削除．
-		}
-	}
-	
-}
+	PHScene* scene = DCAST(PHScene, GetScene());
+	unsigned int ct = scene->GetCount();
+	double dt = scene->GetTimeStep();
+	int n = solids.size();
+	int i, j;
+	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
+		solidPairs.item(i,j)->Setup(ct, dt);
 
+	Detect(ct, dt);
+
+	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
+		solidPairs.item(i,j)->GenerateForce();
+
+}
 
 }

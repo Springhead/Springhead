@@ -13,8 +13,7 @@ typedef PTM::TMatrixRow<6, 3, double> Matrix63d;
 typedef PTM::TVector<6, double> Vec6d;
 
 /// 剛体の情報
-struct PHSolidAux : public Object{
-	PHSolid*	solid;		/// PHSolidへの参照
+struct PHSolidInfoForLCP : public PHSolidInfo{
 	double		minv;		/// 質量の逆数
 	Matrix3d	Iinv;		/// 慣性行列の逆行列
 	Vec3d		f, t;		/// ローカル座標での外力
@@ -24,25 +23,7 @@ struct PHSolidAux : public Object{
 	Vec3d		dV, dW;		/// Correctionによる移動量，回転量
 	void SetupDynamics(double dt);
 	void SetupCorrection();
-	PHSolidAux::PHSolidAux(PHSolid* s):solid(s){}
-};
-class PHSolidAuxs : public std::vector< UTRef<PHSolidAux> >{
-public:
-	iterator Find(PHSolid* s){
-		iterator is;
-		for(is = begin(); is != end(); is++)
-			if((*is)->solid == s)
-				break;
-		return is;
-	};
-	void SetupDynamics(double dt){
-		for(iterator is = begin(); is != end(); is++)
-			(*is)->SetupDynamics(dt);
-	}
-	void SetupCorrection(){
-		for(iterator is = begin(); is != end(); is++)
-			(*is)->SetupCorrection();
-	}
+	PHSolidInfoForLCP(PHSolid* s):PHSolidInfo(s){}
 };
 
 /// PHConstraint派生クラスのためのルータ
@@ -66,7 +47,7 @@ public:
 	bool		bEnabled;			/// 有効化されている場合にtrue
 	bool		bFeasible;			/// 両方の剛体がundynamicalな場合true
 
-	PHSolidAux* solid[2];
+	PHSolidInfoForLCP* solid[2];
 	Matrix3d	Rj[2];				/// 各剛体に張り付いた関節フレーム
 	Vec3d		rj[2];
 	Matrix3d	Rjrel;				/// 関節フレーム間の位置関係

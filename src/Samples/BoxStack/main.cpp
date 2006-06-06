@@ -120,6 +120,11 @@ void display(){
 		ad = Affined(pose);
 		glMultMatrixd(ad);
 			for(int i=0; i<soBox[boxCnt]->NShape(); ++i){
+				glPushMatrix();
+				pose = soBox[boxCnt]->GetShapePose(i);
+				ad = Affined(pose);
+				glMultMatrixd(ad);
+
 				CDShapeIf* shape = soBox[boxCnt]->GetShape(i);
 				CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 				Vec3f* base = mesh->GetVertices();
@@ -134,6 +139,8 @@ void display(){
 					}
 					glEnd();
 				}
+
+				glPopMatrix();
 			}
 		glPopMatrix();
 		std::cout << "\rBox count : " << static_cast<unsigned int>(soBox.size());
@@ -213,7 +220,23 @@ void keyboard(unsigned char key, int x, int y){
 				std::ostringstream os;
 				os << "box" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
-			} 
+			}break;
+		case 'v':
+			{
+				soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->AddShape(meshBox);
+				Posed pose;
+				pose.PosY() = 1.5;
+				soBox.back()->SetShapePose(0, pose);
+				soBox.back()->AddShape(meshBox);
+				pose.PosY() = -1.5;
+				soBox.back()->SetShapePose(1, pose);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				std::ostringstream os;
+				os << "box" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+			}break;
 		default:
 			break;
 	}
@@ -243,7 +266,8 @@ void timer(int id){
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	//dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
+	dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;
 	dscene.timeStep = 0.01;
 	//dscene.timeStep = 0.033;
 	scene = sdk->CreateScene(dscene);				// シーンの作成

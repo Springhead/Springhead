@@ -9,6 +9,24 @@
 namespace Spr {;
 bool bUseContactVolume=true;
 
+bool CDShapePair::Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Posed& pose1){
+	shape[0] = s0;
+	shape[1] = s1;
+	shapePoseW[0] = pose0;
+	shapePoseW[1] = pose1;
+	
+	Vec3d sep;
+	bActive = FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], sep, closestPoint[0], closestPoint[1]);
+	const double depthEpsilon = 0.01;
+	if (bActive){
+		commonPoint = shapePoseW[0] * closestPoint[0];
+		if (lastContactCount == unsigned(ct-1))
+			 state = CONTINUE;
+		else state = NEW;
+		lastContactCount = ct;
+	}
+	return bActive;
+}
 
 void CDContactAnalysisFace::Print(std::ostream& os) const {
 	os << normal << "*" << dist;
@@ -61,33 +79,6 @@ bool CDContactAnalysisFace::CalcDualVtx(Vec3f* base){
 	return true;
 }
 
-
-void CDShapePair::UpdateShapePose(Posed pose0, Posed pose1){
-	shapePoseW[0] = pose0 * shape[0]->pose;
-	shapePoseW[1] = pose1 * shape[1]->pose;
-}
-
-bool CDShapePair::Detect(unsigned ct){	
-	Vec3d sep;
-	CDConvex* conv[2] = {
-		(CDConvex*)(shape[0]->shape),
-		(CDConvex*)(shape[1]->shape),
-	};
-
-	bool r = FindCommonPoint(conv[0], conv[1], shapePoseW[0], shapePoseW[1],
-		sep, closestPoint[0], closestPoint[1]);
-	if (r){
-		commonPoint = shapePoseW[0] * closestPoint[0];
-		if (lastContactCount == unsigned(ct-1)){
-			state = CONTINUE;
-		}else{
-			state = NEW;
-		}
-		lastContactCount = ct;
-	}
-	return r;
-}
-
 //----------------------------------------------------------------------------
 //	CDContactAnalysis
 //
@@ -100,11 +91,11 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 	vtxBuffer.clear();
 	vtxs.clear();
 	if (bUseContactVolume){
-		if (DCAST(CDConvexMesh, cp->shape[0]->shape) && DCAST(CDConvexMesh, cp->shape[1]->shape)){
+		if (DCAST(CDConvexMesh, cp->shape[0]) && DCAST(CDConvexMesh, cp->shape[1])){
 			isValid = true;
 			CDConvexMesh* poly[2];
-			poly[0] = (CDConvexMesh*) &*cp->shape[0];
-			poly[1] = (CDConvexMesh*) &*cp->shape[1];
+			poly[0] = (CDConvexMesh*) cp->shape[0];
+			poly[1] = (CDConvexMesh*) cp->shape[1];
 			for(int i=0; i<2; ++i){
 				Posed afw = cp->shapePoseW[i];
 				afw.Pos() -= cp->commonPoint;
@@ -206,12 +197,11 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 		}
 	}else{
 		//	ãÖÇ©Ç«Ç§Ç©í≤Ç◊ÇÈÅD
-/**/		CDSphere* sp[2];
+		CDSphere* sp[2];
 		Vec3f center[2];
 		for(int i=0; i<2; ++i){
-			sp[i] = DCAST(CDSphere, cp->shape[i]->shape);
-			//if (sp[i]) center[i] = cp->shapePoseW[i] * sp[i]->center;
-			if (sp[i]) center[i] = cp->shapePoseW[i] * cp->shape[i]->pose.Pos();
+			sp[i] = DCAST(CDSphere, cp->shape[i]);
+			if (sp[i]) center[i] = cp->shapePoseW[i].Pos();
 		}
 		if (sp[0] && sp[1]){	//	óºï˚ãÖÇÃèÍçá
 			cp->iNormal = (center[1] - center[0]).unit();

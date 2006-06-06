@@ -9,7 +9,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSolidAux
-void PHSolidAux::SetupDynamics(double dt){
+void PHSolidInfoForLCP::SetupDynamics(double dt){
 	minv = solid->GetMassInv();
 	Iinv = solid->GetInertiaInv();
 	Quaterniond q = solid->GetOrientation();
@@ -28,7 +28,7 @@ void PHSolidAux::SetupDynamics(double dt){
 	dv.clear();
 	dw.clear();
 }
-void PHSolidAux::SetupCorrection(){
+void PHSolidInfoForLCP::SetupCorrection(){
 	dV.clear();
 	dW.clear();
 }
@@ -50,7 +50,7 @@ bool PHConstraint::AddChildObject(ObjectIf* o){
 		PHConstraintEngine* ce;
 		scene->engines.Find(ce);
 		assert(ce);
-		PHSolidAuxs::iterator it = ce->solids.Find(s);
+		PHSolidInfos<PHSolidInfoForLCP>::iterator it = ce->solids.Find(s);
 		if(it == ce->solids.end())
 			return false;
 		if(!solid[0]){

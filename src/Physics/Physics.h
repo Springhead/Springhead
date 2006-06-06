@@ -5,6 +5,7 @@
 #include "PHSdk.h"
 #include "PHScene.h"
 #include "PHForceField.h"
+#include "PHContactDetector.h"
 #include "PHPenaltyEngine.h"
 #include "PHConstraintEngine.h"
 #include "PHConstraint.h"

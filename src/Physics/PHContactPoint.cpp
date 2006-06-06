@@ -11,7 +11,7 @@ namespace Spr{;
 // PHContactPoint
 IF_OBJECT_IMP_ABST(PHContactPoint, PHConstraint);
 
-PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
+PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP* s0, PHSolidInfoForLCP* s1){
 	shapePair = sp;
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
@@ -27,7 +27,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, CDShapePair* sp, Vec3d p, 
 	}
 }
 
-PHContactPoint::PHContactPoint(CDShapePair* sp, Vec3d p, PHSolidAux* s0, PHSolidAux* s1){
+PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP* s0, PHSolidInfoForLCP* s1){
 	shapePair = sp;
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
@@ -91,7 +91,7 @@ void PHContactPoint::ProjectionDynamics(double& f, int k){
 	static double flim;
 	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
 		f = max(0.0, f);
-		flim = 0.5 * (shapePair->shape[0]->shape->material.mu0 + shapePair->shape[1]->shape->material.mu0) * f;	//Å‘åÃ~–€C
+		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	//Å‘åÃ~–€C
 	}
 	else{
 		//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
