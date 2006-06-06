@@ -18,6 +18,7 @@ void CDRegisterTypeDescs(){
 	UTRegisterTypeDescs();
 
 	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	assert(db);
 	#include "TypeDescDumpImp.h"
 	db->Link();
 }

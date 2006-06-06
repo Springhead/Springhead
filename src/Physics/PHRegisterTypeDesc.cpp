@@ -18,6 +18,7 @@ void PHRegisterTypeDescs(){
 	UTRegisterTypeDescs();
 
 	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	assert(db);
 	#include "TypeDescDumpImp.h"
 	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");
 	db->Link();
