@@ -5,7 +5,6 @@
 #include "TQuaternion.h"
 
 
-
 namespace Spr{;
 
 class TAffineTest: public TAffine<float>{
