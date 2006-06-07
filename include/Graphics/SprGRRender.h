@@ -5,6 +5,7 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHScene.h>
 #include <Collision/SprCDShape.h>
+#include <Graphics/SprGRVertex.h>
 
 namespace Spr{;
 
@@ -215,10 +216,16 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetViewMatrix(const Affinef& afv)=0;
 	///	投影行列を設定
 	virtual void SetProjectionMatrix(const Affinef& afp)=0;
+
+	///	頂点フォーマットの指定
+	virtual void SetVertexFormat(GRVertexElement* e)=0;
+	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
+	virtual void SetVertexShader(void* shader){}
 	///	頂点座標を指定してプリミティブを描画
-	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end)=0;
+	virtual void DrawDirect(TPrimitiveType ty, void* begin, void* end, size_t stride=sizeof(Vec3f))=0;
 	///	頂点座標とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx)=0;
+	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void* vtx, size_t stride=sizeof(Vec3f))=0;
+
 	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
 	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0)=0;
 	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	

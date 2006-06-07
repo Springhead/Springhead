@@ -80,8 +80,18 @@ void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){
 	glLoadMatrixf(projectionMatrix);
 	glMatrixMode(GL_MODELVIEW);
 }
+
 /// 頂点座標を指定してプリミティブを描画
-void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
+void GRDeviceGL::SetVertexFormat(GRVertexElement* e){
+	assert(0);	//	To Be Implemented
+}
+/// 頂点座標を指定してプリミティブを描画
+void GRDeviceGL::SetVertexShader(void* s){
+	assert(0);	//	To Be Implemented
+}
+
+/// 頂点座標を指定してプリミティブを描画
+void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vbegin, void* vend, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;
@@ -93,6 +103,10 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
 		case QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
+	//	これじゃ駄目，VertexFormatを見て，シェーダーを選ぶ．
+	Vec3f* begin = (Vec3f*)vbegin;
+	Vec3f* end = (Vec3f*)vend;	
+	
 	// STLのAPIにあわせ、vtxのbegin, endで引数を指定. 
 	// begin ～ end-1 までのレンダリングを行う.
 	glBegin(mode);
@@ -101,7 +115,7 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end){
 	glEnd();
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
-void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx){
+void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void* vvtx, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;
@@ -113,6 +127,8 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3
 		case QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
+	Vec3f* vtx = (Vec3f*)vvtx;
+
 	// STLのAPIにあわせ、vtxのbegin, endで引数を指定. 
 	// begin ～ end-1 までのレンダリングを行う.
 	// glBegin-glEnd 版

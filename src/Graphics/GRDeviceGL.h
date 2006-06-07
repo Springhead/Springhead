@@ -63,10 +63,15 @@ public:
 	virtual void SetViewMatrix(const Affinef& afv);
 	///	投影行列を設定
 	virtual void SetProjectionMatrix(const Affinef& afp);
+	
+	///	頂点フォーマットの指定
+	virtual void SetVertexFormat(GRVertexElement* e);
+	///	頂点シェーダーの指定
+	virtual void SetVertexShader(void* s);
 	///	頂点座標を指定してプリミティブを描画
-	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end);
+	virtual void DrawDirect(TPrimitiveType ty, void* begin, void* end, size_t stride=sizeof(Vec3f));
 	///	頂点座標とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx);
+	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void* vtx, size_t stride=sizeof(Vec3f));
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）
 	virtual void DrawFont(Vec2f pos, const std::string str);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）

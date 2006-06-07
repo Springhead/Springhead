@@ -113,3 +113,21 @@
 	((IfInfo*)GRSdkIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRSdkDesc>;
 	db->RegisterDesc(desc);
+	
+	GRVertexElement* pGRVertexElement = NULL;
+	desc = DBG_NEW UTTypeDesc("GRVertexElement");
+	desc->size = sizeof(GRVertexElement);
+	desc->access = DBG_NEW FIAccess<GRVertexElement>;
+	field = desc->AddField("", "short", "stream", "");
+	field->offset = (char*)&(pGRVertexElement->stream) - (char*)pGRVertexElement;
+	field = desc->AddField("", "short", "offset", "");
+	field->offset = (char*)&(pGRVertexElement->offset) - (char*)pGRVertexElement;
+	field = desc->AddField("", "char", "type", "");
+	field->offset = (char*)&(pGRVertexElement->type) - (char*)pGRVertexElement;
+	field = desc->AddField("", "char", "method", "");
+	field->offset = (char*)&(pGRVertexElement->method) - (char*)pGRVertexElement;
+	field = desc->AddField("", "char", "usage", "");
+	field->offset = (char*)&(pGRVertexElement->usage) - (char*)pGRVertexElement;
+	field = desc->AddField("", "char", "usageIndex", "");
+	field->offset = (char*)&(pGRVertexElement->usageIndex) - (char*)pGRVertexElement;
+	db->RegisterDesc(desc);

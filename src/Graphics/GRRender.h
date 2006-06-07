@@ -86,12 +86,14 @@ public:
 		{ ptr SetViewMatrix(afv); }								\
 	virtual void SetProjectionMatrix(const Affinef& afp)		\
 		{ ptr SetProjectionMatrix(afp); }						\
+	virtual void SetVertexFormat(GRVertexElement* f)			\
+		{ ptr SetVertexFormat(f); }								\
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty,							\
-												Vec3f* begin, Vec3f* end)				\
+		void* begin, void* end, size_t sz=sizeof(Vec3f))								\
 		{ ptr DrawDirect(ty, begin, end); }												\
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,							\
-												size_t* begin, size_t* end, Vec3f* vtx)	\
-		{ ptr DrawIndexed(ty, begin, end, vtx); }										\
+		size_t* begin, size_t* end, void* vtx, size_t sz=sizeof(Vec3f))					\
+		{ ptr DrawIndexed(ty, begin, end, vtx, sz); }									\
 	virtual void DrawFont(Vec2f pos, const std::string str)								\
 		{ ptr DrawFont(pos, str); }														\
     virtual void DrawFont(Vec3f pos, const std::string str)								\
