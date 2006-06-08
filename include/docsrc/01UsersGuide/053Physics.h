@@ -243,7 +243,7 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 \subsection joint_enable 関節の有効化・無効化
 
 関節を作成する処理は比較的ハイコストです．このため，一時的に関節による拘束を解除し，しばらくして
-元に戻すような処理をするときに，その都度関節の作成・削除を繰り返すのはお勧めしません．
+元に戻すような処理をするときに，その都度関節の作成・削除を繰り返すことはお勧めしません．
 \link Spr::PHConstraintIf::Enable() PHConstraintIf::Enable\endlinkを呼ぶことによって関節を一時的に
 無効化したり，再び有効化することができます．また，ある時点で関節が有効かどうかは
 \link Spr::PHConstraintIf::IsEnabled() PHConstraintIf::IsEnabled\endlink呼ぶことで知ることができます．
@@ -254,7 +254,6 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 以下のものがあります：
 - \ref joint_hinge
 - \ref joint_slider
-- \ref joint_path
 
 全ての1自由度関節はPHJoint1DIfを親クラスに持ち，共通のインタフェースで状態の取得や操作が可能です．
 
@@ -271,7 +270,24 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 
 \link Spr::PHJointIf::SetRange PHJointIf::SetRange\endlinkを呼ぶことで可動範囲を制限できます．
 
-＊バネ、ダンパ
+関節にバネやダンパを取り付けることができます．
+バネ係数を取得・設定するには
+\link Spr::PHJoint1DIf::GetSpring() PHJoint1DIf::GetSpring \endlink, 
+\link Spr::PHJoint1DIf::SetSpring() PHJoint1DIf::SetSpring \endlink
+を呼びます．また，バネの基準変位を取得・設定するには
+\link Spr::PHJoint1DIf::GetSpringOrigin() PHJoint1DIf::GetSpringOrigin \endlink, 
+\link Spr::PHJoint1DIf::SetSpringOrigin() PHJoint1DIf::SetSpringOrigin \endlink
+を呼びます．
+ダンパ係数を取得・設定するには
+\link Spr::PHJoint1DIf::GetDamper() PHJoint1DIf::GetDamper \endlink, 
+\link Spr::PHJoint1DIf::SetDamper() PHJoint1DIf::SetDamper \endlink
+を呼びます．
+バネ係数を\f$K\f$，バネの基準変位を\f$q_0\f$，ダンパ係数を\f$D\f$とすると，生じる関節トルク\f$\tau\f$は
+\f[
+\tau = -K (q - q_0) - D \dot{q}
+\f]
+と表わされます．ここで\f$q\f$は関節変位，\f$\dot{q}\f$は関節速度です．
+
 
 \subsection joint_hinge ヒンジ
 
@@ -287,15 +303,7 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 スライダは1方向の平行移動を実現する関節です．
 ソケットとプラグの傾きを一致させ，かつプラグの原点をソケットのZ軸上に拘束します．
 
-\subsection joint_path パスジョイント
-
-□バネ・ダンパ
-
-□ユニバーサルジョイント
-
-＜ユニバーサルジョイントの図＞
-
-□ボールジョイント
+\section ボールジョイント
 
 ＜ボールジョイントの図＞
 

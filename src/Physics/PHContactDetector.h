@@ -158,7 +158,7 @@ public:
 	}
 
 	///< „‘Ì‚Ìíœ
-	virtual bool RemoveChildObject(ObjectIf* o){
+	virtual bool DelChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
 	 	if(!s)return false;
 		PHSolidInfos<TSolidInfo>::iterator is = solids.Find(s);

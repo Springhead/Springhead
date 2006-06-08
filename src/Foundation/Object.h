@@ -109,6 +109,8 @@ public:
 	}
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o){ return false; }
+	///	子オブジェクトの削除
+	virtual bool DelChildObject(ObjectIf* o){ return false; }
 
 	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const { return false; }
