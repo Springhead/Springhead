@@ -4,6 +4,7 @@
 #endif
 
 namespace Spr {;
+
 //----------------------------------------------------------------------------
 //	GRRenderBase
 IF_OBJECT_IMP_ABST(GRRenderBase, Object);

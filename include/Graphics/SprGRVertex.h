@@ -1,11 +1,6 @@
 #ifndef SPR_GRVERTEX_H
 #define SPR_GRVERTEX_H
 
-#include <float.h>
-#include <Physics/SprPHSolid.h>
-#include <Physics/SprPHScene.h>
-#include <Collision/SprCDShape.h>
-
 namespace Spr{;
 
 enum GRVertexElementType {
@@ -38,20 +33,20 @@ enum GRVertexElementMethod {
     GRVEM_LOOKUPPRESAMPLED = 6
 };
 enum GRVertexElementUssage{
-    GRVEU_USAGE_POSITION = 0,
-    GRVEU_USAGE_BLENDWEIGHT = 1,
-    GRVEU_USAGE_BLENDINDICES = 2,
-    GRVEU_USAGE_NORMAL = 3,
-    GRVEU_USAGE_PSIZE = 4,
-    GRVEU_USAGE_TEXCOORD = 5,
-    GRVEU_USAGE_TANGENT = 6,
-    GRVEU_USAGE_BINORMAL = 7,
-    GRVEU_USAGE_TESSFACTOR = 8,
-    GRVEU_USAGE_POSITIONT = 9,
-    GRVEU_USAGE_COLOR = 10,
-    GRVEU_USAGE_FOG = 11,
-    GRVEU_USAGE_DEPTH = 12,
-    GRVEU_USAGE_SAMPLE = 13
+    GRVEU_POSITION = 0,
+    GRVEU_BLENDWEIGHT = 1,
+    GRVEU_BLENDINDICES = 2,
+    GRVEU_NORMAL = 3,
+    GRVEU_PSIZE = 4,
+    GRVEU_TEXCOORD = 5,
+    GRVEU_TANGENT = 6,
+    GRVEU_BINORMAL = 7,
+    GRVEU_TESSFACTOR = 8,
+    GRVEU_POSITIONT = 9,
+    GRVEU_COLOR = 10,
+    GRVEU_FOG = 11,
+    GRVEU_DEPTH = 12,
+    GRVEU_SAMPLE = 13
 };
 
 /**	頂点フォーマット．DirectX9の D3DVERTEXELEMENT を参照．
@@ -67,6 +62,26 @@ struct GRVertexElement {
     unsigned char method;
     unsigned char usage;
     unsigned char usageIndex;
+
+	GRVertexElement();
+	static GRVertexElement Position3f(size_t o);
+	static GRVertexElement Normal3f(size_t o);
+	static GRVertexElement TexCoords2f(size_t o);
+	static GRVertexElement Color4b(size_t o);
+	static GRVertexElement Color4f(size_t o);
+
+	///	@name 典型的な頂点フォーマット．シェーダーを指定せずレンダリングできる．
+	//@{
+	static const GRVertexElement vfP3f[];				///<
+	static const GRVertexElement vfC4bP3f[];			///<
+	static const GRVertexElement vfN3fP3f[];			///<
+	static const GRVertexElement vfC4fN3fP3f[];			///<
+	static const GRVertexElement vfT2fP3f[];			///<
+	static const GRVertexElement vfT2fC4bP3f[];			///<
+	static const GRVertexElement vfT2fN3fP3f[];			///<
+	static const GRVertexElement vfT2fC4fN3fP3f[];		///<
+	static const GRVertexElement* typicalFormats[];		///<
+	//@}
 };
 
 }

@@ -15,8 +15,8 @@ class GRDeviceD3D: public GRDevice, public GRDeviceD3DIf{
 	OBJECT_DEF(GRDeviceD3D);
 	BASEIMP_OBJECT(GRDevice);
 public:
-	virtual void DrawDirect(TPrimitiveType ty, Vec3f* begin, Vec3f* end);
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, Vec3f* vtx);
+	virtual void DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride);
+	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride);
 	virtual void SetMaterial(const GRMaterial& mat);
 	virtual void Init();
 };

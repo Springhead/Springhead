@@ -294,7 +294,7 @@ void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 		for(unsigned int i=2; i<face.dualPlanes.size(); ++i){
 			vbuf[1] = vbuf[2];
 			vbuf[2] = face.dualPlanes[i]->normal / face.dualPlanes[i]->dist + cp->commonPoint;
-			render->DrawDirect(GRRender::TRIANGLES, vbuf, vbuf+3);
+			render->DrawDirect(GRRender::TRIANGLES, vbuf, 3);
 		}
 	}
 	GRMaterialData mat2(
@@ -306,7 +306,7 @@ void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 	render->SetMaterial(mat2);
 	Vec3f vtx(cp->commonPoint);
 	render->SetLineWidth(3);
-	render->DrawDirect(GRRender::POINTS, &vtx, &vtx+1);
+	render->DrawDirect(GRRender::POINTS, &vtx, 1);
 	render->SetDepthFunc(GRRender::DF_LESS);
 }
 */

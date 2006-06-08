@@ -142,7 +142,7 @@ void display(){
 					normal = edge0^edge1;
 					normal.unitize();
 					glNormal3fv(normal);
-					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, vtx+4);
+					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, 4);
 				}
 #endif 					
 			}
@@ -310,8 +310,6 @@ int main(int argc, char* argv[]){
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
-	glutMainLoop();		// ‚±‚ê’Ç‰Á‚·‚é‚Æ‘å—Ê‚Ìmemory leak‚ª”­¶‚·‚é
-
-	
+	glutMainLoop();
 	return 0;
 }

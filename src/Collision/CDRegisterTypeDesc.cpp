@@ -5,7 +5,6 @@
 
 #include "TypeDescDump.h"
 
-
 namespace Spr{ 
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 

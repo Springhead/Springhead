@@ -148,6 +148,7 @@ struct GRDeviceIf;
 /**	@brief	グラフィックスレンダラーの基本クラス（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
 	IF_DEF(GRRenderBase);
+
 	///	プリミティブの種類
 	enum TPrimitiveType {
 		POINTS,
@@ -197,7 +198,9 @@ struct GRRenderBaseIf: public ObjectIf{
 		BF_BLENDFACTOR,			///<	フレームバッファ合成時に使われる定数色で合成
 		BF_INVBLENDFACTOR		///<	フレームバッファ合成時に使われる定数色を反転した色で合成
 	};
-	/** @} */	
+	/** @} */
+
+
 	///	バッファクリア
 	virtual void ClearBuffer()=0;
 	///	レンダリングの開始前に呼ぶ関数
@@ -218,13 +221,13 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetProjectionMatrix(const Affinef& afp)=0;
 
 	///	頂点フォーマットの指定
-	virtual void SetVertexFormat(GRVertexElement* e)=0;
+	virtual void SetVertexFormat(const GRVertexElement* e)=0;
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
 	virtual void SetVertexShader(void* shader){}
 	///	頂点座標を指定してプリミティブを描画
-	virtual void DrawDirect(TPrimitiveType ty, void* begin, void* end, size_t stride=sizeof(Vec3f))=0;
+	virtual void DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	///	頂点座標とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void* vtx, size_t stride=sizeof(Vec3f))=0;
+	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 
 	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
 	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0)=0;

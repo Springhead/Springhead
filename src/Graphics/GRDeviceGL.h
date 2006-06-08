@@ -15,7 +15,9 @@ namespace Spr{;
 class GRDeviceGL: public InheritGRDevice<GRDeviceGLIf, GRDevice>{
 	OBJECT_DEF(GRDeviceGL);
 protected:
-	int		window;					///< ウィンドウID	
+	int		window;					///<	ウィンドウID
+	int		vertexFormatGl;			///<	glInterleavedArraysで使う，頂点フォーマットID
+	size_t	vertexSize;				///<	頂点のサイズ
 	/**
 	 *	@name	マトリックス変数
 	 *　　 GLではModelを変えずにViewだけを変えるということができない。 \n
@@ -65,13 +67,13 @@ public:
 	virtual void SetProjectionMatrix(const Affinef& afp);
 	
 	///	頂点フォーマットの指定
-	virtual void SetVertexFormat(GRVertexElement* e);
+	virtual void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定
 	virtual void SetVertexShader(void* s);
 	///	頂点座標を指定してプリミティブを描画
-	virtual void DrawDirect(TPrimitiveType ty, void* begin, void* end, size_t stride=sizeof(Vec3f));
+	virtual void DrawDirect(TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	///	頂点座標とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void* vtx, size_t stride=sizeof(Vec3f));
+	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）
 	virtual void DrawFont(Vec2f pos, const std::string str);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）

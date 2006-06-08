@@ -102,30 +102,19 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 /// 面をレンダリングする
 void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 	int numIndices = face->NIndex();			// (=3 :三角形なので3頂点)
-	Vec3f *vtx = new Vec3f[numIndices];
-#if 1
-	// DrawDirect版
-	for (int v=0; v<numIndices; ++v)
-		vtx[v] = base[face->GetIndices()[v]].data;
-	Vec3f normal, edge0, edge1;
-	edge0 = vtx[1] - vtx[0];
-	edge1 = vtx[2] - vtx[0];
-	normal = edge0^edge1;
-	normal.unitize();
-	glNormal3fv(normal);
-	DrawDirect(TRIANGLES, vtx, vtx + numIndices);
-#else
-	// DrawIndexed版
-	size_t *vtxIndex = new size_t[numIndices];
-	for (int v=0; v<numIndices; ++v) {
-		vtx[v] = base[face->GetIndices()[v]].data;
-		vtxIndex[v] = v;
-	}
-	DrawIndexed(TRIANGLES, vtxIndex, vtxIndex + numIndices, vtx);
-	
-	delete[] vtxIndex;
-#endif
-	delete[] vtx;
+	struct Vtx{
+		Vec3f n;
+		Vec3f p;
+	} vtxs[10];
+	assert(numIndices < sizeof(vtxs)/sizeof(vtxs[0]));
+	for (int v=0; v<numIndices; ++v) vtxs[v].p = base[face->GetIndices()[v]].data;
+	Vec3f edge0, edge1;
+	edge0 = vtxs[1].p - vtxs[0].p;
+	edge1 = vtxs[2].p - vtxs[0].p;
+	Vec3f n = (edge0^edge1).unit();
+	for(int v=0; v<numIndices; ++v) vtxs[v].n = n;
+	SetVertexFormat(GRVertexElement::vfN3fP3f);
+	DrawDirect(TRIANGLE_FAN, vtxs, numIndices);
 }
 
 void GRDebugRender::SetMaterialSample(MaterialSample matname){

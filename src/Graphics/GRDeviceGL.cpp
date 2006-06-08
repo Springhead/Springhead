@@ -82,8 +82,36 @@ void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){
 }
 
 /// 頂点座標を指定してプリミティブを描画
-void GRDeviceGL::SetVertexFormat(GRVertexElement* e){
-	assert(0);	//	To Be Implemented
+void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
+	if (e == GRVertexElement::vfP3f) {
+		vertexFormatGl = GL_V3F; 
+		vertexSize = sizeof(float)*3;
+	}else if (e == GRVertexElement::vfC4bP3f){
+		vertexFormatGl = GL_C4UB_V3F;
+		vertexSize = sizeof(float)*3+sizeof(char)*4;
+	}else if (e == GRVertexElement::vfN3fP3f){
+		vertexFormatGl = GL_N3F_V3F;
+		vertexSize = sizeof(float)*6;
+	}else if (e == GRVertexElement::vfC4fN3fP3f){
+		vertexFormatGl = GL_C4F_N3F_V3F;
+		vertexSize = sizeof(float)*10;
+	}else if (e == GRVertexElement::vfT2fP3f){
+		vertexFormatGl = GL_T2F_V3F;
+		vertexSize = sizeof(float)*5;
+	}else if (e == GRVertexElement::vfT2fC4bP3f){
+		vertexFormatGl = GL_T2F_C4UB_V3F;
+		vertexSize = sizeof(float)*5 + sizeof(char)*4;
+	}else if (e == GRVertexElement::vfT2fN3fP3f){
+		vertexFormatGl = GL_T2F_N3F_V3F;
+		vertexSize = sizeof(float)*8;
+	}else if (e == GRVertexElement::vfT2fC4fN3fP3f){
+		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
+		vertexSize = sizeof(float)*12;
+	}else {
+		vertexFormatGl = 0;
+		vertexSize = 0;
+		assert(0);
+	}
 }
 /// 頂点座標を指定してプリミティブを描画
 void GRDeviceGL::SetVertexShader(void* s){
@@ -91,7 +119,7 @@ void GRDeviceGL::SetVertexShader(void* s){
 }
 
 /// 頂点座標を指定してプリミティブを描画
-void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vbegin, void* vend, size_t stride){
+void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;
@@ -103,19 +131,12 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vbegin, void* vend, size_t 
 		case QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
-	//	これじゃ駄目，VertexFormatを見て，シェーダーを選ぶ．
-	Vec3f* begin = (Vec3f*)vbegin;
-	Vec3f* end = (Vec3f*)vend;	
-	
-	// STLのAPIにあわせ、vtxのbegin, endで引数を指定. 
-	// begin ～ end-1 までのレンダリングを行う.
-	glBegin(mode);
-	for(;begin!=end; ++begin)
-		glVertex3fv(*begin);
-	glEnd();
+	if (!stride) stride = vertexSize;
+	glInterleavedArrays(vertexFormatGl, stride, vtx);
+	glDrawArrays(mode, 0, count);
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
-void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void* vvtx, size_t stride){
+void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;
@@ -127,14 +148,9 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* begin, size_t* end, void
 		case QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
-	Vec3f* vtx = (Vec3f*)vvtx;
-
-	// STLのAPIにあわせ、vtxのbegin, endで引数を指定. 
-	// begin ～ end-1 までのレンダリングを行う.
-	// glBegin-glEnd 版
-	glBegin(mode);
-	for(;begin!=end; ++begin) glVertex3fv(vtx[*begin]);
-	glEnd();
+	if (!stride) stride = vertexSize;
+	glInterleavedArrays(vertexFormatGl, stride, vtx);
+	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし） .. Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
