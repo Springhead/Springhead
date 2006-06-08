@@ -16,8 +16,8 @@ namespace Spr {;
 IF_OBJECT_IMP(GRDeviceGL, GRDevice);
 /// èâä˙ê›íË
 void GRDeviceGL::Init(){
-	glDrawBuffer(GL_BACK);
 	nLights = 0;
+	glDrawBuffer(GL_BACK);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);

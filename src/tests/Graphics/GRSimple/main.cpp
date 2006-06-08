@@ -101,8 +101,10 @@ void display(){
 	Vec3f vtx[4] = {Vec3f(0,0,0), Vec3f(10,0,0), Vec3f(0,10,0), Vec3f(0,0,10)};
 	size_t vtxIndex[6] = {0, 1, 0, 2, 0, 3};
 	render->SetLineWidth(2.0);
-	render->DrawIndexed(render->LINES, vtxIndex, vtxIndex + 6, vtx);
-	
+	render->SetVertexFormat(GRVertexElement::vfP3f);
+	render->DrawIndexed(render->LINES, vtxIndex, vtx, 6);
+
+
 	//-----------------------------------
 	//		テキスト描画/フォント
 	//-----------------------------------

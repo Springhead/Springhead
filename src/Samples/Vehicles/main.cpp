@@ -166,7 +166,7 @@ int main(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
-	int window = glutCreateWindow("Joints");
+	int window = glutCreateWindow("Vehicles");
 
 	render = grSdk->CreateDebugRender();
 	device = grSdk->CreateDeviceGL(window);
