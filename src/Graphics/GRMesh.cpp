@@ -33,7 +33,7 @@ void GRMesh::CreateList(GRRenderIf* r){
 		render->SetVertexFormat(GRVertexElement::vfN3fP3f);
 		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
 			&*vtx.begin(), vtx.size());
-	}else if (normals.size()){
+	}else if (texCoords.size()){
 		std::vector<GRVertexElement::VFT2fP3f> vtx;
 		vtx.resize(positions.size());
 		for(unsigned i=0; i<vtx.size(); ++i){
