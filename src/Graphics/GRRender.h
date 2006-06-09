@@ -94,6 +94,16 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,							\
 		size_t* idx, void* vtx, size_t ct, size_t st=0)									\
 		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }										\
+	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx,				\
+		size_t count, size_t stride=0)													\
+		{ return ptr CreateList(ty, vtx, count, stride); }								\
+	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty,					\
+		size_t* idx, void* vtx, size_t count, size_t stride=0)							\
+		{ return ptr CreateIndexedList(ty, idx, vtx, count, stride); }					\
+	virtual void DrawList(int i)														\
+		{ ptr DrawList(i); }															\
+	virtual void ReleaseList(int i)														\
+		{ ptr ReleaseList(i); }															\
 	virtual void DrawFont(Vec2f pos, const std::string str)								\
 		{ ptr DrawFont(pos, str); }														\
     virtual void DrawFont(Vec3f pos, const std::string str)								\

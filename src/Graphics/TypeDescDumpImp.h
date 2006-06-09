@@ -24,11 +24,13 @@
 	desc->ifInfo = GRMeshIf::GetIfInfoStatic();
 	((IfInfo*)GRMeshIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW FIAccess<GRMeshDesc>;
-	field = desc->AddField("vector", "Vec3f", "vertices", "");
-	field->offset = (char*)&(pGRMeshDesc->vertices) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "Vec3f", "positions", "");
+	field->offset = (char*)&(pGRMeshDesc->positions) - (char*)pGRMeshDesc;
 	field = desc->AddField("vector", "Vec3f", "normals", "");
 	field->offset = (char*)&(pGRMeshDesc->normals) - (char*)pGRMeshDesc;
-	field = desc->AddField("vector", "int", "faces", "");
+	field = desc->AddField("vector", "Vec2f", "texCoords", "");
+	field->offset = (char*)&(pGRMeshDesc->texCoords) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "size_t", "faces", "");
 	field->offset = (char*)&(pGRMeshDesc->faces) - (char*)pGRMeshDesc;
 	db->RegisterDesc(desc);
 	

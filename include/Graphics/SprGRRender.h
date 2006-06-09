@@ -228,7 +228,14 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
-
+	///	DiplayListの作成
+	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
+	///	DiplayListの作成
+	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+	///	DisplayListの表示
+	virtual void DrawList(int i)=0;
+	///	DisplayListの解放
+	virtual void ReleaseList(int i)=0;
 	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
 	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0)=0;
 	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	

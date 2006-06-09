@@ -74,6 +74,14 @@ public:
 	virtual void DrawDirect(TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	///	DiplayListの作成
+	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
+	///	DiplayListの作成
+	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	///	DisplayListの表示
+	virtual void DrawList(int i);
+	///	DisplayListの解放
+	virtual void ReleaseList(int i);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）
 	virtual void DrawFont(Vec2f pos, const std::string str);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）

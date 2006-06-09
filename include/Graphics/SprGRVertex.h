@@ -1,5 +1,6 @@
 #ifndef SPR_GRVERTEX_H
 #define SPR_GRVERTEX_H
+#include <Base/Affine.h>
 
 namespace Spr{;
 
@@ -82,6 +83,42 @@ struct GRVertexElement {
 	static const GRVertexElement vfT2fC4fN3fP3f[];		///<
 	static const GRVertexElement* typicalFormats[];		///<
 	//@}
+	struct VFP3f{
+		Vec3f p;
+	};
+	struct VFC4bP3f{
+		unsigned long c;
+		Vec3f p;
+	};
+	struct VFN3fP3f{
+		Vec3f n;
+		Vec3f p;
+	};
+	struct VFC4bN3fP3f{
+		unsigned long c;
+		Vec3f n;
+		Vec3f p;
+	};
+	struct VFT2fP3f{
+		Vec2f t;
+		Vec3f p;
+	};
+	struct VFT2fC4bP3f{
+		Vec2f t;
+		unsigned long c;
+		Vec3f p;
+	};
+	struct VFT2fN3fP3f{
+		Vec2f t;
+		Vec3f n;
+		Vec3f p;
+	};
+	struct VFT2fC4fN3fP3f{
+		Vec2f t;
+		Vec4f c;
+		Vec3f n;
+		Vec3f p;
+	};
 };
 
 }

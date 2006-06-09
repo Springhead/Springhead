@@ -152,6 +152,26 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t c
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
+int GRDeviceGL::CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+	DrawDirect(ty, vtx, count, stride);
+	glEndList();
+	return list;
+}
+int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+	DrawIndexed(ty, idx, vtx, count, stride);
+	glEndList();
+	return list;
+}
+void GRDeviceGL::DrawList(int list){
+	glCallList(list);
+}
+void GRDeviceGL::ReleaseList(int list){
+	glDeleteLists(list, 1);
+}
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし） .. Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 	glDisable(GL_LIGHTING);
@@ -176,7 +196,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 /// VC版のみfontをサポートする。
 #ifdef _MSC_VER	
-	GLuint	base = 0;							// DisplayList開始指標番号
+	GLuint	base = 0;						// DisplayList開始指標番号
 	bool	findFont = false;				// fontListの検索結果
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
 	unsigned long color=font.color;			//	フォントの色
@@ -255,7 +275,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 /// VC版のみfontをサポートする。
 #ifdef _MSC_VER		
-	GLuint	base = 0;							// DisplayList開始指標番号
+	GLuint	base = 0;						// DisplayList開始指標番号
 	bool	findFont = false;				// fontListの検索結果
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
 	unsigned long color=font.color;			//	フォントの色

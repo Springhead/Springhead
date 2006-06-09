@@ -11,9 +11,10 @@ namespace Spr{;
 
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
 struct GRMeshDesc{
-	std::vector<Vec3f> vertices;		///<	頂点の座標
+	std::vector<Vec3f> positions;		///<	頂点の座標
 	std::vector<Vec3f> normals;			///<	頂点の法線
-	std::vector<int> faces;				///<	面を構成する頂点の番号．
+	std::vector<Vec2f> texCoords;		///<	テクスチャUV
+	std::vector<size_t> faces;			///<	面を構成する頂点の番号．
 };
 
 
