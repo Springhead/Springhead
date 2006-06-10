@@ -6,6 +6,7 @@
 #include <Physics/SprPHScene.h>
 #include <Collision/SprCDShape.h>
 #include <Graphics/SprGRVertex.h>
+#include <Graphics/SprGRFrame.h>
 
 namespace Spr{;
 
@@ -125,7 +126,7 @@ struct GRMaterialDesc{
 	}
 };
 /** @brief　　材質の基本クラス　　 */
-struct GRMaterialIf: public SceneObjectIf{
+struct GRMaterialIf: public GRVisualIf{
 	IF_DEF(GRMaterial);
 	virtual bool IsOpaque() const = 0;
 };

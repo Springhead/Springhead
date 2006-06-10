@@ -23,7 +23,10 @@ IF_OBJECT_IMP_ABST(GRDevice, GRRenderBase);
 
 //----------------------------------------------------------------------------
 //	GRMaterial
-IF_OBJECT_IMP(GRMaterial, SceneObject);
+IF_OBJECT_IMP(GRMaterial, GRVisual);
+void GRMaterial::Render(GRRenderIf* render){
+	render->SetMaterial(this);
+}
 
 //----------------------------------------------------------------------------
 //	GRLight

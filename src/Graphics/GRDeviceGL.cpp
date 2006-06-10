@@ -22,7 +22,9 @@ void GRDeviceGL::Init(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_BLEND);
+//	glEnable(GL_CULL_FACE);
 	glDisable(GL_CULL_FACE);
+	glEnable(GL_COLOR_MATERIAL);
 
 	// 視点行列の設定
 	viewMatrix.Pos() = Vec3f(0.0, 0.0, 1.0);	                        // eye
@@ -137,12 +139,6 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t s
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
 void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	glEnableClientState(GL_COLOR_ARRAY);
-	glEnableClientState(GL_INDEX_ARRAY);
-	glEnableClientState(GL_NORMAL_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnableClientState(GL_VERTEX_ARRAY);
-
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;

@@ -69,13 +69,11 @@ std::vector<GRMaterialDesc> material;
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
-	render->SetMaterial(mat_red);
 	scene->Render(render);
 	if (!scene){
 		std::cout << "scene == NULL. File may not found." << std::endl;
 		exit(-1);
 	}
-
 	render->EndScene();
 }
 /**

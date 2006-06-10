@@ -30,10 +30,10 @@ public:
 };
 
 /**	@brief	グラフィックスの材質 */
-class GRMaterial :public InheritSceneObject<GRMaterialIf, SceneObject>, public GRMaterialDesc{
+class GRMaterial :public InheritGRVisual<GRMaterialIf, GRVisual>, public GRMaterialDesc{
 public:
 	OBJECT_DEF(GRMaterial);
-	GRMaterial(){}
+	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
 		ambient = a;
 		diffuse = d;
@@ -54,6 +54,7 @@ public:
 	bool IsOpaque() const {		
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
+	void Render(GRRenderIf* render);
 };
 
 

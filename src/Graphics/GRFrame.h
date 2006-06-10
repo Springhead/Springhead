@@ -10,11 +10,14 @@ namespace Spr{;
 class GRVisual: public InheritNamedObject<GRVisualIf, NamedObject>{
 public:
 	OBJECT_DEF_ABST(GRVisual);
-	virtual void Render(GRRenderIf* render)=0;
-	virtual void Rendered(GRRenderIf* render)=0;
+	virtual void Render(GRRenderIf* render){}
+	virtual void Rendered(GRRenderIf* render){}
 };
 template <class intf, class base>
-struct InheritGRVisual:public InheritNamedObject<intf, base>{};
+struct InheritGRVisual:public InheritNamedObject<intf, base>{
+	virtual void Render(GRRenderIf* render){ base::Render(render); }
+	virtual void Rendered(GRRenderIf* render){ base::Rendered(render); }
+};
 
 /**	@class	GRFrame
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */

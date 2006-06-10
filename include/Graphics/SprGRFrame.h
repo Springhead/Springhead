@@ -3,11 +3,11 @@
 
 #ifndef SPR_GRFrame_H
 #define SPR_GRFrame_H
-#include <Graphics/SprGRRender.h>
+#include <SprFoundation.h>
 
 namespace Spr{;
 
-
+struct GRRenderIf;
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
 struct GRVisualIf: public NamedObjectIf{
 	IF_DEF(GRVisual);
