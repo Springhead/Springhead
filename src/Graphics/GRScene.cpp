@@ -32,6 +32,7 @@ void GRScene::Clear(){
 GRFrameIf* GRScene::CreateFrame(const GRFrameDesc& desc){
 	GRFrame* fr = DBG_NEW GRFrame(desc);
 	frames.push_back(fr);
+	fr->SetNameManager(this);
 	return fr;
 }
 ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
@@ -51,9 +52,13 @@ bool GRScene::AddChildObject(ObjectIf* o){
 	return world->AddChildObject(o);
 }
 size_t GRScene::NChildObject() const{
-	return world->NChildObject();
+	return world->NChildObject() + (camera ? 1 : 0);
 }
 ObjectIf* GRScene::GetChildObject(size_t pos){
+	if (camera){
+		if (pos == 0) return camera->GetIf();
+		return world->GetChildObject(pos-1);
+	}
 	return world->GetChildObject(pos);
 }
 void GRScene::Render(GRRenderIf* r){
@@ -65,6 +70,7 @@ void GRScene::Render(GRRenderIf* r){
 		r->SetCamera(*camera);
 	}
 	world->Render(r);
+	world->Rendered(r);
 }
 
 

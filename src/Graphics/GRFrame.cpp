@@ -19,9 +19,9 @@ void GRFrame::Render(GRRenderIf* r){
 	for(GRVisuals::reverse_iterator it = children.rbegin(); it != children.rend(); ++it){
 		(*it)->Rendered(r);
 	}
+	r->PopModelMatrix();
 }
 void GRFrame::Rendered(GRRenderIf* r){
-	r->PopModelMatrix();
 }
 void GRFrame::SetNameManager(NameManager* m){
 	assert(DCAST(GRScene, m));
@@ -42,11 +42,6 @@ void GRFrame::SetParent(GRFrameIf* fr){
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* o){
-	GRCamera* c = DCAST(GRCamera, o);
-	if (c){
-		c->frame = this;
-		return true;
-	}
 	GRVisual* v = DCAST(GRVisual, o);
 	if (v){
 		children.push_back(v);

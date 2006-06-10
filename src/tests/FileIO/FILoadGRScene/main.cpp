@@ -73,7 +73,7 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
 		exit(0);
 	}
-	if ('0'<= key && key <= '9' && phSdk->NScene()){
+	if ('0'<= key && key <= '9' && phSdk && phSdk->NScene()){
 		int i = key-'0';
 		static UTRef<Spr::ObjectStatesIf> states[10];
 		if (states[i]){

@@ -14,6 +14,9 @@ public:
 	OBJECT_DEF(GRCamera);
 	GRFrame* frame;
 	GRCamera(const GRCameraDesc& desc=GRCameraDesc()):GRCameraDesc(desc), frame(NULL){}
+	virtual size_t NChildObject();
+	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual bool AddChildObject(ObjectIf* o);
 };
 class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{
 public:
@@ -66,6 +69,8 @@ class GRRender: public InheritObject<GRRenderIf, GRRenderBase>{
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
 	GRCameraDesc camera;			///<	カメラ
+	Vec2f viewportPos;				///<	ビューポートの左上
+	Vec2f viewportSize;				///<	ビューポートのサイズ
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)							\
 	virtual void SetViewport(Vec2f p, Vec2f s)					\
@@ -132,7 +137,7 @@ public:
 	///	デバッグ表示
 	virtual void Print(std::ostream& os) const;
 	///	カメラの設定
-	void SetCamera(const GRCameraDesc& c){ camera = c; }
+	void SetCamera(const GRCameraDesc& c);
 	///	スクリーンサイズとプロジェクション行列の設定
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 };

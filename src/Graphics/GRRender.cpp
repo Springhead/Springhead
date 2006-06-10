@@ -17,12 +17,26 @@ void GRRender::Print(std::ostream& os) const{
 	device->Print(os);
 }
 void GRRender::Reshape(Vec2f pos, Vec2f screen){
+	viewportPos = pos;
+	viewportSize = screen;
 	SetViewport(pos, screen);
 	Vec2f sz = camera.size;
-	sz.y = sz.x*(screen.y/screen.x);
+	if (sz.y==0) sz.y = sz.x*(viewportSize.y/viewportSize.x);
+	if (sz.x==0) sz.x = sz.y*(viewportSize.x/viewportSize.y);
 	Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
 		sz, camera.front, camera.back);
 	SetProjectionMatrix(afProj);
+}
+void GRRender::SetCamera(const GRCameraDesc& c){
+	if (memcmp(&camera,&c, sizeof(c)) != 0){
+		camera = c;
+		Vec2f sz = camera.size;
+		if (sz.y==0) sz.y = sz.x*(viewportSize.y/viewportSize.x);
+		if (sz.x==0) sz.x = sz.y*(viewportSize.x/viewportSize.y);
+		Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
+			sz, camera.front, camera.back);
+		SetProjectionMatrix(afProj);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -50,7 +64,22 @@ void GRLight::Rendered(GRRenderIf* render){
 //	GRCamera
 IF_OBJECT_IMP(GRCamera, SceneObject);
 GRCameraDesc::GRCameraDesc():
-	center(Vec2f()), size(Vec2f(0.2f, 0.2f)), front(0.1f), back(500.0f){
+	center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){
+}
+size_t GRCamera::NChildObject(){
+	return frame ? 1 : 0;
+}
+ObjectIf* GRCamera::GetChildObject(size_t pos){
+	if (pos == 0) return frame ? frame->GetIf() : NULL;
+	return NULL;
+}
+bool GRCamera::AddChildObject(ObjectIf* o){
+	GRFrame* f = DCAST(GRFrame, o);
+	if (f){
+		frame = f;
+		return true;
+	}
+	return false;
 }
 
 }	//	Spr
