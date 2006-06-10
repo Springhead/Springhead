@@ -24,7 +24,7 @@ struct PHSdkIf : public NameManagerIf{
 	///	Scene‚Ì”‚ğæ“¾
 	virtual int NScene()=0;
 	///	Scene‚Ìæ“¾
-	virtual PHSceneIf** GetScenes()=0;
+	virtual PHSceneIf* GetScene(size_t i)=0;
 	
 	///	Shapeì¬
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;

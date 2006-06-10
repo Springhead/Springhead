@@ -183,7 +183,7 @@ public:
 	void SetName(const char* n);
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
-	virtual void SetNameManager(NameManager* s){ nameManager = s; }
+	virtual void SetNameManager(NameManager* s);
 	virtual NameManager* GetNameManager(){ return nameManager; }
 	///	デバッグ用の表示
 };
@@ -227,16 +227,29 @@ public:
 };
 
 ///	ファクトリーの実装
-template <class T, class IF, class DESC, class PIF>
+template <class T, class IF, class DESC>
 class FactoryImpTemplate: public FactoryBase{
 public:
 	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
-		T* t = DBG_NEW T(*(DESC*)desc, (PIF*) parent);
-		//	名前の設定
-		NamedObject* o = DCAST(NamedObject, t);
-		NameManager* m = DCAST(NameManager, parent);
-		if (m && o){
-			o->SetNameManager(m);
+		T* t = DBG_NEW T(*(DESC*)desc);
+
+		//	シーンの設定
+		SceneObject* o = DCAST(SceneObject, t);
+		SceneIf* s = DCAST(SceneIf, parent);
+		if (o && !s){		//	親がシーンでは無い場合，親を持つsceneに登録
+			SceneObject* po = DCAST(SceneObject, parent);
+			if (po) s = po->GetScene();
+		}
+		if (o && s){
+			o->SetScene(s);
+		}else{	//	シーンに設定できない場合，名前管理オブジェクトの設定
+			NamedObject* o = DCAST(NamedObject, t);
+			NameManager* m = DCAST(NameManager, parent);
+			if (o && !m){	//	親がNameMangerではない場合，親のNameManagerに登録
+				NamedObject* po = DCAST(NamedObject, parent);
+				if (po) m = po->GetNameManager();
+			}
+			if (o && m) o->SetNameManager(m);
 		}
 		//	親に追加
 		parent->AddChildObject(t->GetIf());
@@ -246,7 +259,7 @@ public:
 		return IF::GetIfInfoStatic();
 	}
 };
-#define FactoryImp(cls, pcls)	FactoryImpTemplate<cls, cls##If, cls##Desc, pcls##If>
+#define FactoryImp(cls)	FactoryImpTemplate<cls, cls##If, cls##Desc>
 
 ///	シーングラフの状態を保存．再生する仕組み
 class ObjectStates:public InheritObject<ObjectStatesIf, Object>{

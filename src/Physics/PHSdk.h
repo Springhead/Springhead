@@ -25,7 +25,7 @@ public:
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int NScene();
-	virtual PHSceneIf** GetScenes();
+	virtual PHSceneIf* GetScene(size_t i);
 
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	virtual int NShape();

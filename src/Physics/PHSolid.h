@@ -95,6 +95,7 @@ public:
 	OBJECT_DEF(PHSolid);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
+	void SetScene(SceneIf* s);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	bool AddChildObject(ObjectIf* obj);

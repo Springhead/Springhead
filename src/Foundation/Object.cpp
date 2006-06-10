@@ -82,6 +82,10 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 //	NamedObject
 IF_OBJECT_IMP(NamedObject, Object);
 
+void NamedObject::SetNameManager(NameManager* s){
+	assert(!nameManager);
+	nameManager = s;
+}
 void NamedObject::Print(std::ostream& os) const {
 	int w = os.width();
 	os.width(0);

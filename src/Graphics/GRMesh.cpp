@@ -2,12 +2,13 @@
 #include "GRMesh.h"
 
 namespace Spr{;
-IF_OBJECT_IMP(GRMesh, SceneObject);
+IF_OBJECT_IMP(GRMesh, GRVisual);
 
 GRMesh::GRMesh(GRMeshDesc& desc):GRMeshDesc(desc){
 	list = 0;
 	render = NULL;
 }
+
 void GRMesh::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);
 	list = 0;
@@ -21,6 +22,17 @@ void GRMesh::CreateList(GRRenderIf* r){
 			vtx[i].t = texCoords[i];
 		}
 		render->SetVertexFormat(GRVertexElement::vfT2fN3fP3f);
+		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
+			&*vtx.begin(), vtx.size());
+	}else if (normals.size() && colors.size()){
+		std::vector<GRVertexElement::VFC4fN3fP3f> vtx;
+		vtx.resize(positions.size());
+		for(unsigned i=0; i<vtx.size(); ++i){
+			vtx[i].p = positions[i];
+			vtx[i].n = normals[i];
+			vtx[i].c = colors[i];
+		}
+		render->SetVertexFormat(GRVertexElement::vfC4fN3fP3f);
 		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
 			&*vtx.begin(), vtx.size());
 	}else if (normals.size()){
@@ -44,9 +56,25 @@ void GRMesh::CreateList(GRRenderIf* r){
 		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
 			&*vtx.begin(), vtx.size());
 	}else{
-		render->SetVertexFormat(GRVertexElement::vfP3f);
-		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
-			&*positions.begin(), positions.size());
+		if (colors.size()){
+			std::vector<GRVertexElement::VFC4bP3f> vtx;
+			vtx.resize(positions.size());
+			for(unsigned i=0; i<vtx.size(); ++i){
+				vtx[i].p = positions[i];
+				vtx[i].c = 
+					((unsigned char)(colors[i].x*255) << 24) |
+					((unsigned char)(colors[i].y*255) << 16) |
+					((unsigned char)(colors[i].z*255) << 8) |
+					((unsigned char)(colors[i].w*255));
+			}
+			render->SetVertexFormat(GRVertexElement::vfC4bP3f);
+			list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
+				&*vtx.begin(), vtx.size());
+		}else{
+			render->SetVertexFormat(GRVertexElement::vfP3f);
+			list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
+				&*positions.begin(), positions.size());
+		}
 	}
 }
 void GRMesh::Render(GRRenderIf* r){

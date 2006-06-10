@@ -10,11 +10,7 @@ namespace Spr{;
 //	PHScene
 IF_OBJECT_IMP(PHScene, Scene);
 
-PHScene::PHScene(const PHSceneDesc& desc, PHSdkIf* s):PHSceneDesc(desc){
-	Init();
-	sdk = s;
-}
-PHScene::PHScene(){
+PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }
 void PHScene::Init(){
@@ -47,7 +43,9 @@ void PHScene::Init(){
 }
 
 PHSdkIf* PHScene::GetSdk(){
-	return sdk;	
+	NameManagerIf* nm = GetNameManager();
+	PHSdkIf* sdk = DCAST(PHSdkIf, nm);
+	return sdk;
 }
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
@@ -60,7 +58,7 @@ PHSolidIf* PHScene::CreateSolid(){
 	return CreateSolid(def);
 }
 CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
-	CDShapeIf* rv = sdk->CreateShape(desc);
+	CDShapeIf* rv = GetSdk()->CreateShape(desc);
 	return rv;
 }
 

@@ -1,8 +1,8 @@
 /**
- Springhead2/src/tests/FileIO/FILoader/main.cpp
+ Springhead2/src/tests/FileIO/FILoadGRScene/main.cpp
 
 【概要】
-  Xファイルをロードし、Physicsエンジンと接続してシミュレーションする。
+  Xファイルをロードし、Graphicsシーンをロード・描画する。
   
 【終了基準】
   ・プログラムが正常終了したら0を返す。  
@@ -10,29 +10,22 @@
 【処理の流れ】
   ・Xファイルをロードする。
   ・ロードした情報を出力する。
-  ・Physicsエンジンと接続し、シミュレーションさせる。
+  ・Graphicsエンジンと接続し、描画する。
 
 【テストパターン】
   ※ 本ファイルの28行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
-　  test1.x  : 凸形状(mesh)のテスト
-    test2.x  : 凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
-    test3.x  : 凸形状(mesh)と球(sphere)のテスト
-	test4.x  : 凸形状(mesh)と球(sphere)と直方体(box)のテスト
-	test5.x  : timeStep=0.001におけるテスト
 	GRTest.x : XファイルからのグラフィックスSDKの入力テスト
-
- */
+*/
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define EXIT_TIMER	12000			// 強制終了させるステップ数
-#define TEST_FILEX	"test1.x"		// ロードするXファイル
+#define TEST_FILEX	"GRTest.x"		// ロードするXファイル
 
 namespace Spr{
 	PHSdkIf* phSdk;
 	GRSdkIf* grSdk;
-	PHSceneIf* scene;
-//	CDShapeIf** shape;
+	GRSceneIf* scene;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
 	void PHRegisterTypeDescs();
@@ -74,80 +67,13 @@ std::vector<GRMaterialDesc> material;
  return 	なし
  */
 void display(){
-/*	render->ClearBuffer();
-	render->DrawScene(*scene);
-	render->EndScene();
-	return;
-*/
 	//	バッファクリア
 	render->ClearBuffer();
-	//render->SetMaterial(mat_red);	
-
-	PHSceneIf* scene = NULL;
-	if (phSdk->NScene()){
-		scene = phSdk->GetScene(0);
-	}
+	render->SetMaterial(mat_red);
+	scene->Render(render);
 	if (!scene){
 		std::cout << "scene == NULL. File may not found." << std::endl;
 		exit(-1);
-	}
-	PHSolidIf **solids = scene->GetSolids();
-	for (int num=0; num < scene->NSolids(); ++num){
-		render->SetMaterial(material[num]);			// 材質設定
-
-		Affinef af;
-		solids[num]->GetPose().ToAffine(af);
-		render->PushModelMatrix();
-		render->MultModelMatrix(af);
-		
-		int nShape = solids[num]->NShape();
-		for(int s=0; s<nShape; ++s){
-			CDShapeIf* shape = solids[num]->GetShape(s);
-			Affinef af;
-			solids[num]->GetShapePose(s).ToAffine(af);
-			render->PushModelMatrix();
-			render->MultModelMatrix(af);
-			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-			if (mesh){
-				Vec3f* base = mesh->GetVertices();
-				for (size_t f=0; f<mesh->NFace(); ++f) {	
-					CDFaceIf* face = mesh->GetFace(f);
-					render->DrawFace(face, base);
-				}
-			}
-			CDSphereIf* sphere = DCAST(CDSphereIf, shape);
-			if (sphere){
-				float r = sphere->GetRadius();
-				GLUquadricObj* quad = gluNewQuadric();
-				gluSphere(quad, r, 16, 8);
-				gluDeleteQuadric(quad);
-			}
-			CDBoxIf* box = DCAST(CDBoxIf, shape);
-			if (box){
-#if 0			// glutによる直方体の描画版			
-				Vec3f boxsize = box->GetBoxSize();
-				glScalef(boxsize.x, boxsize.y, boxsize.z);	
-				glutSolidCube(1.0);		
-#else			// デバッグ版
-				Vec3f* base =  box->GetVertices();
-				for (size_t f=0; f<6; ++f) {	
-					CDFaceIf* face = box->GetFace(f);
-
-					for (int v=0; v<4; ++v)
-						vtx[v] = base[face->GetIndices()[v]].data;
-					Vec3f normal, edge0, edge1;
-					edge0 = vtx[1] - vtx[0];
-					edge1 = vtx[2] - vtx[0];
-					normal = edge0^edge1;
-					normal.unitize();
-					glNormal3fv(normal);
-					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, 4);
-				}
-#endif 					
-			}
-			render->PopModelMatrix();
-		}
-		render->PopModelMatrix();
 	}
 
 	render->EndScene();
@@ -227,7 +153,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void idle(){
-	if(scene) scene->Step();
+//	if(scene && *scene) (*(scene))->Step();
 	glutPostRedisplay();
 	static int count;
 	count ++;
@@ -268,27 +194,22 @@ int main(int argc, char* argv[]){
 			if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
 		}
 	}
-	if (phSdk && phSdk->NScene()){
-		ObjectIfs objs;
-//		objs.Push(phSdk->GetScenes()[0]);
-		objs.Push(phSdk);
-		if(grSdk) objs.Push(grSdk);
-		fileX->Save(objs, "out.x");
-	}
+	if (!grSdk) return -1;
+	objs.clear();
+	objs.Push(grSdk);
+	fileX->Save(objs, "out.x");
+	
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
-	phSdk->Print(DSTR);
-
-	scene = phSdk->GetScene(0);		// Sceneの取得
-//	shape = phSdk->GetShapes();		// Shapeの取得
-	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
+	grSdk->Print(DSTR);
+	scene = grSdk->GetScene(0);		// Sceneの取得
+	DSTR << "Loaded : " << "NScene=" << (int)grSdk->NScene() << std::endl;
+	scene->Print(DSTR);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	int window = glutCreateWindow("FILoad");
 
-	// Graphics Sdk
-	grSdk = CreateGRSdk();
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL(window);
 	grDevice->Init();

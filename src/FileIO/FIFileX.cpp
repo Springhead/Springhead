@@ -62,7 +62,7 @@ static void LoadNode(const char* b, const char* e){
 
 ///	ノード読み出しの後処理
 static void NodeEnd(const char* b, const char* e){
-	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().desc->GetTypeName() << std::endl);
+	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
 	fileContext->EndNode();
 	fileContext->PopType();
 }
@@ -83,7 +83,17 @@ static void BlockEnd(const char* b, const char* e){
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	return fileContext->fieldIts.NextField();
+	bool rv = fileContext->fieldIts.NextField();
+	PDEBUG(
+		if (rv){
+			DSTR << "NextField:";
+			fileContext->fieldIts.Top().field->Print(DSTR);
+			DSTR << std::endl;
+		}else {
+			DSTR << "NextField failed." << std::endl;
+		}
+	)
+	return rv;
 }
 ///	配列のカウント．まだ読み出すべきデータが残っていれば true を返す．
 static bool ArrayCount(){
@@ -117,17 +127,17 @@ static void SetVal(const char* b, const char* e){
 	FIFieldIt& curField = fileContext->fieldIts.back();
 	//	debug 出力
 #ifdef TRACE_PARSE
-	if (curField.fieldType!=F_NONE){
-		if (curField.fieldType==F_BLOCK){
+	if (curField.fieldType!=FIFieldIt::F_NONE){
+		if (curField.fieldType==FIFieldIt::F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
 		}else{
 			if (curField.arrayPos==0){
 				DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 			}
 		}
-		if (curField.fieldType == F_REAL || curField.fieldType == F_INT){
+		if (curField.fieldType == FIFieldIt::F_REAL || curField.fieldType == FIFieldIt::F_INT){
 			DSTR << " " << numValue;
-		}else if (curField.fieldType == F_STR){
+		}else if (curField.fieldType == FIFieldIt::F_STR){
 			DSTR << " " << strValue;
 		}
 		if (ch == ';') DSTR << std::endl;
@@ -145,6 +155,10 @@ static void SetVal(const char* b, const char* e){
 	if (ch == ';'){
 		curField.arrayPos=UTTypeDesc::BIGVALUE;
 	}
+}
+static void StopArray(const char c){
+	FIFieldIt& curField = fileContext->fieldIts.back();
+	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
 
 ///	参照型を書き込む．(未完成)
@@ -258,7 +272,8 @@ void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 	ref			= ch_p('{') >> (id[&RefSet] | ExpP("id")) >> (ch_p('}')|ExpP("'}'"));
 	block		= while_p(&NextField)[
 					while_p(&ArrayCount)[
-						exp >> ((ch_p(',')|ch_p(';'))[&SetVal] | ExpP("',' or ';'"))
+						ch_p(';')[&StopArray] |
+						(exp >> ((ch_p(',')|ch_p(';'))[&SetVal] | ExpP("',' or ';'")))
 					]
 				  ];
 	exp			= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>

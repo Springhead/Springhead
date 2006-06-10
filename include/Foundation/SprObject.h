@@ -116,9 +116,10 @@ struct ObjectIf{
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos) = 0;
 	virtual const ObjectIf* GetChildObject(size_t pos) const = 0;
-	///	子オブジェクトの追加
+	/**	子オブジェクトの追加．複数のオブジェクトの子オブジェクトとして追加してよい．
+		例えば，GRFrameはツリーを作るが，全ノードがGRSceneの子でもある．*/
 	virtual bool AddChildObject(ObjectIf* o)=0;
-	///	オブジェクトの作成
+	///	オブジェクトを作成し，AddChildObject()を呼ぶ．
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
 	//@}
 

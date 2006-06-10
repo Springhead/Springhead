@@ -9,7 +9,7 @@ namespace Spr{;
 
 
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
-struct GRVisualIf: public SceneObjectIf{
+struct GRVisualIf: public NamedObjectIf{
 	IF_DEF(GRVisual);
 	///	レンダリング．子ノード，弟ノードのレンダリングより前に呼ばれる．
 	virtual void Render(GRRenderIf* r)=0;
@@ -29,16 +29,10 @@ struct GRFrameDesc{
 };
 	
 /**	@brief	グラフィックスシーングラフのツリーのノード．座標系を持つ．*/
-struct GRFrameIf: public SceneObjectIf{
+struct GRFrameIf: public GRVisualIf{
 	IF_DEF(GRFrame);
 	virtual GRFrameIf* GetParent()=0;
 	virtual void SetParent(GRFrameIf* fr)=0;
-	virtual bool AddChildObject(ObjectIf* v)=0;
-	virtual bool DelChildObject(ObjectIf* v)=0;
-
-	ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
-	virtual size_t NChildObject() const=0;
-	virtual ObjectIf* GetChildObject(size_t pos)=0;
 };
 
 //@}

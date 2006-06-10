@@ -2,8 +2,13 @@
 #include "GRFrame.h"
 
 namespace Spr{;
-IF_OBJECT_IMP_ABST(GRVisual, SceneObject);
+IF_OBJECT_IMP_ABST(GRVisual, NamedObject);
+
 IF_OBJECT_IMP(GRFrame, GRVisual);
+GRFrame::GRFrame(const GRFrameDesc& desc):GRFrameDesc(desc){
+	parent = NULL;
+
+}
 
 void GRFrame::Render(GRRenderIf* r){
 	r->PushModelMatrix();
@@ -18,20 +23,33 @@ void GRFrame::Render(GRRenderIf* r){
 void GRFrame::Rendered(GRRenderIf* r){
 	r->PopModelMatrix();
 }
+void GRFrame::SetNameManager(NameManager* m){
+	assert(DCAST(GRScene, m));
+	GRVisual::SetNameManager(m);
+}
+GRSceneIf* GRFrame::GetScene(){
+	return DCAST(GRScene, GetNameManager());
+}
 void GRFrame::SetParent(GRFrameIf* fr){
 	if(parent == fr) return;
 	if(parent){
-		parent->DelChildObject((GRFrameIf*)this);
+		parent->DelChildObject(this->GetIf());
 		parent=NULL;
 	}
 	if (fr){
 		parent = DCAST(GRFrame, fr);
-		fr->AddChildObject(fr);
+		fr->AddChildObject(this->GetIf());
 	}
 }
-bool GRFrame::AddChildObject(ObjectIf* v){
-	if (v->GetIfInfo()->Inherit(GRVisualIf::GetIfInfoStatic())){
-		children.push_back(DCAST(GRVisual, v));
+bool GRFrame::AddChildObject(ObjectIf* o){
+	GRVisual* v = DCAST(GRVisual, o);
+	if (v){
+		children.push_back(v);
+		GRFrame* f = DCAST(GRFrame, v);
+		if (f && f->parent != parent){
+			if (f->parent) f->parent->DelChildObject(f->GetIf());
+			f->parent = this;
+		}
 		return true;
 	}
 	return false;

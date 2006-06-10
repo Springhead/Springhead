@@ -274,6 +274,8 @@ bool FIFieldIt::NextField(){
 		||	field->type->GetTypeName().compare("char")==0
 		||	field->type->GetTypeName().compare("short")==0
 		||	field->type->GetTypeName().compare("int")==0
+		||	field->type->GetTypeName().compare("unsigned")==0
+		||	field->type->GetTypeName().compare("size_t")==0
 		||	field->type->GetTypeName().compare("enum")==0){
 		fieldType = F_INT;
 	}else if (field->type->GetTypeName().compare("bool")==0

@@ -28,6 +28,8 @@
 	field->offset = (char*)&(pGRMeshDesc->positions) - (char*)pGRMeshDesc;
 	field = desc->AddField("vector", "Vec3f", "normals", "");
 	field->offset = (char*)&(pGRMeshDesc->normals) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "Vec4f", "colors", "");
+	field->offset = (char*)&(pGRMeshDesc->colors) - (char*)pGRMeshDesc;
 	field = desc->AddField("vector", "Vec2f", "texCoords", "");
 	field->offset = (char*)&(pGRMeshDesc->texCoords) - (char*)pGRMeshDesc;
 	field = desc->AddField("vector", "size_t", "faces", "");

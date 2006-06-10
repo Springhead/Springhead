@@ -47,8 +47,8 @@ void PHRegisterFactories(){
 	bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
-	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene, PHSdk));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid, PHScene));
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
 }
 PHSdk::PHSdk(){
 	PHRegisterTypeDescs();
@@ -75,8 +75,9 @@ PHSceneIf* PHSdk::CreateScene(){
 int PHSdk::NScene(){
 	return scenes.size();
 }
-PHSceneIf** PHSdk::GetScenes(){
-	return (PHSceneIf**)&*scenes.begin();
+PHSceneIf* PHSdk::GetScene(size_t i){
+	if (i < scenes.size()) return scenes[i];
+	return NULL;
 }
 
 CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){

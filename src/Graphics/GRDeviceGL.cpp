@@ -137,6 +137,12 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t s
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
 void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+	glEnableClientState(GL_COLOR_ARRAY);
+	glEnableClientState(GL_INDEX_ARRAY);
+	glEnableClientState(GL_NORMAL_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case POINTS:			mode = GL_POINTS;			break;

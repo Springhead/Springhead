@@ -7,6 +7,7 @@
 
 #include "Graphics/SprGRRender.h"
 #include "Graphics/SprGRSdk.h"
+#include "Graphics/SprGRScene.h"
 #include "Graphics/SprGRFrame.h"
 #include "Graphics/SprGRMesh.h"
 

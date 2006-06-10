@@ -3,6 +3,7 @@
 #pragma hdrstop
 #endif
 #include "GRScene.h"
+#include "GRMesh.h"
 
 namespace Spr{;
 void GRRegisterTypeDescs();
@@ -38,11 +39,19 @@ GRSdkIf* SPR_CDECL CreateGRSdk(){
 	return rv;
 }
 
+void GRRegisterFactories(){
+	bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRScene));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
+}
 //----------------------------------------------------------------------------
 //	GRSdk
 IF_OBJECT_IMP(GRSdk, NameManager);
-GRSdk::GRSdk(){
+GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 	GRRegisterTypeDescs();
+	GRRegisterFactories();
 	SetNameManager(NameManager::GetRoot());
 }
 GRSdk::~GRSdk(){
@@ -65,19 +74,31 @@ GRDeviceGLIf* GRSdk::CreateDeviceGL(int w){
 	return rv;
 }
 GRSceneIf* GRSdk::CreateScene(){
-	GRScene* rv = DBG_NEW GRScene;
-	objects.push_back(rv);
-	return rv;
+	return (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &GRSdkDesc());
 }
-ObjectIf* GRSdk::CreateObject(const IfInfo* info, const void* desc){
-	if (info->Inherit(GRSceneIf::GetIfInfoStatic())){
-		return CreateScene();
-	}
+GRSceneIf* GRSdk::GetScene(size_t i){
+	if (i<scenes.size()) return scenes[i];
 	return NULL;
 }
-
 ObjectIf* GRSdk::GetChildObject(size_t i){
-	return objects[i];	
+	if (i<scenes.size()) return scenes[i]->GetIf();
+	i -= scenes.size();
+	if (i<objects.size()) return objects[i];
+	return NULL;
+}
+bool GRSdk::AddChildObject(ObjectIf* o){
+	GRScene* s = DCAST(GRScene, o);
+	if (s){
+		GRScenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+		if (it == scenes.end()){
+			scenes.push_back(s);
+			return true;
+		}
+	}
+	Object* obj = DCAST(Object, o);
+	assert(obj);
+	objects.push_back(obj);
+	return true;
 }
 
 }

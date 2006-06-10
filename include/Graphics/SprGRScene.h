@@ -5,6 +5,7 @@
 #define SPR_GRScene_H
 
 #include <Springhead.h>
+#include <Graphics/SprGRFrame.h>
 
 namespace Spr{;
 
@@ -16,11 +17,14 @@ struct GRSdkIf;
 /**	@brief	グラフィックスシーングラフ */
 struct GRSceneIf: public SceneIf{
 	IF_DEF(GRScene);
+	///	フレームの作成
+	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc)=0;
+	///	
+	virtual void Render(GRRenderIf* r)=0;
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース
-	 */
+	*/	
 	virtual GRSdkIf* GetSdk()=0;
-	
 };
 
 

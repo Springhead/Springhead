@@ -11,18 +11,17 @@ namespace Spr{;
 //	GRScene
 IF_OBJECT_IMP(GRScene, Scene);
 
-GRScene::GRScene(GRSdkIf* s, const GRSceneDesc& desc):GRSceneDesc(desc){
-	Init();
-	sdk = s;
-}
-GRScene::GRScene(){
+GRScene::GRScene(const GRSceneDesc& desc):GRSceneDesc(desc){
 	Init();
 }
 void GRScene::Init(){
-	Scene::Clear();
+	world = DBG_NEW GRFrame;
+	world->SetNameManager(this);
+	frames.push_back(world);
 }
 
 GRSdkIf* GRScene::GetSdk(){
+	GRSdk* sdk = DCAST(GRSdk, GetNameManager());
 	return sdk;
 }
 
@@ -31,15 +30,34 @@ void GRScene::Clear(){
 	Init();
 }
 GRFrameIf* GRScene::CreateFrame(const GRFrameDesc& desc){
-	GRFrame* fr = DBG_NEW GRFrame;
+	GRFrame* fr = DBG_NEW GRFrame(desc);
 	frames.push_back(fr);
 	return fr;
 }
+ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
+	ObjectIf* rv = Scene::CreateObject(info, desc);
+	if (rv) return rv;
+	if (info == GRFrameIf::GetIfInfoStatic()){
+		rv = CreateFrame(*(GRFrameDesc*)desc);
+	}
+	return rv;
+}
+bool GRScene::AddChildObject(ObjectIf* o){
+	GRFrame* f = DCAST(GRFrame, o);
+	if (f){
+		world->AddChildObject(f->GetIf());
+		return true;
+	}
+	return false;
+}
 size_t GRScene::NChildObject() const{
-	return frames.size();
+	return world->NChildObject();
 }
 ObjectIf* GRScene::GetChildObject(size_t pos){
-	return (GRFrameIf*)frames[pos];
+	return world->GetChildObject(pos);
+}
+void GRScene::Render(GRRenderIf* r){
+	world->Render(r);
 }
 
 

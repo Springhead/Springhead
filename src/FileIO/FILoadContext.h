@@ -98,7 +98,14 @@ public:
 	FILoadContext():errorStream(NULL){
 		errorStream=&DSTR;
 	}
-	///	ノードのロード
+	/**	ノードのロード．
+		ロードしたDescからオブジェクトを作成する．
+		作成者->AddChildObject(新オブジェクト)を呼び出す．
+		オブジェクトの作成は，親オブジェクトのCreateObject()，親の親のCreateObject()と
+		先祖のCreateObject()を順に呼んで，作成できたところで止める．
+		どのオブジェクトも作成できない場合は，CreateSdk()を呼び出す．
+
+		作成者と親が異なる場合，親のAddChildObject()を呼び出す．	*/
 	void LoadNode();
 	///	ノードのロードの終了
 	void EndNode();
@@ -106,8 +113,6 @@ public:
 	void EnterBlock();
 	///	ブロック(組み立て型)から出る
 	void LeaveBlock();
-	///	オブジェクトの生成
-	ObjectIf* Create(const IfInfo* ifInfo, const void* desc);
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
 	void ErrorMessage(const char* pos, const char* msg);
 	///	メッセージの作成．posをファイル名と行番号に変換する．

@@ -177,7 +177,17 @@ bool FILoadContext::IsGood(){
 void FILoadContext::LoadNode(){
 	if (datas.Top()->type->GetIfInfo()){
 		//	ロードしたデータからオブジェクトを作る．
-		ObjectIf* obj = Create(datas.Top()->type->GetIfInfo(), datas.Top()->data);
+		ObjectIf* obj = NULL;
+		ObjectIf* creator = NULL;
+		for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
+			if (*it) obj = (*it)->CreateObject(datas.Top()->type->GetIfInfo(), datas.Top()->data);
+			if (obj){
+				creator = *it;
+				break;
+			}
+		}
+		if (!obj) obj = CreateSdk(datas.Top()->type->GetIfInfo(), datas.Top()->data);
+		//	オブジェクトに名前を設定
 		if (obj){
 			NamedObjectIf* n = DCAST(NamedObjectIf, obj);
 			if (datas.Top()->name.length()){
@@ -201,6 +211,11 @@ void FILoadContext::LoadNode(){
 			err.append("'. Ancestor objects don't know how to make it.");
 			ErrorMessage(NULL, err.c_str());
 		}
+		//	親オブジェクトに追加
+		if (objects.size() && objects.Top()){
+			objects.Top()->AddChildObject(obj);
+		}
+		//	オブジェクトスタックに積む
 		objects.Push(obj);
 		if (obj && objects.size() == 1) rootObjects.push_back(objects.Top());
 	}else{
@@ -234,16 +249,6 @@ void FILoadContext::EndNode(){
 	}else{
 		//	Create以外の終了処理．
 	}
-}
-ObjectIf* FILoadContext::Create(const IfInfo* ifInfo, const void* data){
-	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
-		if (*it){
-			ObjectIf* obj = (*it)->CreateObject(ifInfo, data);
-			if (obj) return obj;
-		}
-	}
-	ObjectIf* obj = CreateSdk(ifInfo, data);
-	return obj;
 }
 void FILoadContext::AddLink(std::string ref, const char* pos){
 	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));

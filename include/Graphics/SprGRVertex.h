@@ -94,8 +94,8 @@ struct GRVertexElement {
 		Vec3f n;
 		Vec3f p;
 	};
-	struct VFC4bN3fP3f{
-		unsigned long c;
+	struct VFC4fN3fP3f{
+		Vec4f c;
 		Vec3f n;
 		Vec3f p;
 	};

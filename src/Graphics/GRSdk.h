@@ -5,6 +5,7 @@
 #ifndef GRSDK_H
 #define GRSDK_H
 #include <SprGraphics.h>
+#include <Graphics/GRScene.h>
 
 
 namespace Spr {;
@@ -12,20 +13,25 @@ struct GRSceneIf;
 
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
-class SPR_DLL GRSdk:public InheritObject<GRSdkIf, NameManager>{
+class SPR_DLL GRSdk:public InheritObject<GRSdkIf, NameManager>, public GRSdkDesc{
 protected:
-	std::vector< UTRef<Object> > objects;
+	typedef std::vector< UTRef<Object> > Objects;
+	typedef std::vector< UTRef<GRScene> > GRScenes;
+	Objects objects;
+	GRScenes scenes;
 public:
 	OBJECT_DEF(GRSdk);
-	GRSdk();
+	GRSdk(const GRSdkDesc& = GRSdkDesc());
 	~GRSdk();
-	void Print(std::ostream& os) const {}
-	GRDebugRenderIf* CreateDebugRender();
-	GRDeviceGLIf* CreateDeviceGL(int window);
-	GRSceneIf* GRSdk::CreateScene();
-	virtual size_t NChildObject() const { return objects.size(); }
+	virtual void Print(std::ostream& os) const {}
+	virtual GRDebugRenderIf* CreateDebugRender();
+	virtual GRDeviceGLIf* CreateDeviceGL(int window);
+	virtual GRSceneIf* GetScene(size_t i);
+	virtual size_t NScene(){ return scenes.size(); }
+	virtual size_t NChildObject() const { return scenes.size() + objects.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);
-	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual GRSceneIf* CreateScene();
 };
 
 }

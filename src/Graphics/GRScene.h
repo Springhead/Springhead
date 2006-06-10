@@ -16,8 +16,6 @@ namespace Spr {;
 class SPR_DLL GRScene:public InheritScene<GRSceneIf, Scene>, public GRSceneDesc{
 	OBJECT_DEF(GRScene);
 protected:
-	///	元のSDK
-	GRSdkIf* sdk;
 	///	ルートノード
 	GRFrame* world;
 	///	すべてのフレーム
@@ -25,8 +23,7 @@ protected:
 	GRFrames frames;
 public:
 	///	コンストラクタ
-	GRScene();
-	GRScene(GRSdkIf* s, const GRSceneDesc& desc);
+	GRScene(const GRSceneDesc& desc=GRSceneDesc());
 	void Init();
 	///	デストラクタ
 	~GRScene(){}
@@ -35,12 +32,17 @@ public:
 
 	///	シーンを空にする．
 	void Clear();
-	GRFrameIf* CreateFrame(const GRFrameDesc& desc);
 
+	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
+	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc);
+	virtual GRFrameIf* GetWorld(){return world;}
+	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual void Render(GRRenderIf* r);
 protected:
 	void* GetDescAddress(){ return (GRSceneDesc*)this; }
+	friend class GRFrame;
 };
 
 }

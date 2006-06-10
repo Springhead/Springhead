@@ -12,10 +12,13 @@ namespace Spr{
 IF_OBJECT_IMP(PHSolid, SceneObject);
 
 PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
-	SetScene(s);
 	bDynamical = true;
 	integrationMode = PHINT_SIMPLETIC;
 	inertia_inv = inertia.inv();
+	if (s){ SetScene(s); }
+}
+void PHSolid::SetScene(SceneIf* s){
+	SceneObject::SetScene(s);
 	SetGravity(gravity);
 }
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){

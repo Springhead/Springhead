@@ -30,6 +30,7 @@ void UTRegisterTypeDescs(){
 	db->RegisterDesc(new UTTypeDescNumber<BYTE>("BYTE"));
 	db->RegisterDesc(new UTTypeDescNumber<WORD>("WORD"));
 	db->RegisterDesc(new UTTypeDescNumber<DWORD>("DWORD"));
+	db->RegisterDesc(new UTTypeDescNumber<DWORD>("size_t"));
 	db->RegisterDesc(new UTTypeDescNumber<unsigned>("unsigned"));
 	db->RegisterDesc(new UTTypeDescNumber<DWORD>("enum"));
 

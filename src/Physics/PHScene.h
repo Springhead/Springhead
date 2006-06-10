@@ -24,13 +24,10 @@ class SPR_DLL PHScene:public InheritScene<PHSceneIf, Scene>, public PHSceneDesc{
 public:
 	PHEngines engines;
 protected:
-	///	元のSDK
-	PHSdkIf* sdk;
 	PHSolidContainer* solids;
 public:
 	///	コンストラクタ
-	PHScene();
-	PHScene(const PHSceneDesc& desc, PHSdkIf* s);
+	PHScene(const PHSceneDesc& desc=PHSceneDesc());
 	void Init();
 	///	デストラクタ
 	~PHScene(){}

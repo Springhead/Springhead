@@ -7,14 +7,14 @@ namespace Spr{;
 
 /**	@class	GRVisual
     @brief	 */
-class GRVisual: public InheritSceneObject<GRVisualIf, SceneObject>{
+class GRVisual: public InheritNamedObject<GRVisualIf, NamedObject>{
 public:
 	OBJECT_DEF_ABST(GRVisual);
 	virtual void Render(GRRenderIf* render)=0;
 	virtual void Rendered(GRRenderIf* render)=0;
 };
 template <class intf, class base>
-struct InheritGRVisual:public InheritSceneObject<intf, base>{};
+struct InheritGRVisual:public InheritNamedObject<intf, base>{};
 
 /**	@class	GRFrame
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
@@ -24,10 +24,13 @@ public:
 	GRFrame* parent;
 	typedef std::vector<GRVisual*> GRVisuals;
 	GRVisuals children;
+	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 
 
 	virtual GRFrameIf* GetParent(){ return parent; }
 	virtual void SetParent(GRFrameIf* fr);
+	virtual void SetNameManager(NameManager* n);
+	virtual GRSceneIf* GetScene();
 	virtual bool AddChildObject(ObjectIf* v);
 	virtual bool DelChildObject(ObjectIf* v);
 
