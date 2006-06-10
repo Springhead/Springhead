@@ -43,6 +43,11 @@ ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
 	return rv;
 }
 bool GRScene::AddChildObject(ObjectIf* o){
+	GRCamera* c = DCAST(GRCamera, o);
+	if (c){
+		camera = c;
+		return true;
+	}
 	return world->AddChildObject(o);
 }
 size_t GRScene::NChildObject() const{
@@ -52,6 +57,13 @@ ObjectIf* GRScene::GetChildObject(size_t pos){
 	return world->GetChildObject(pos);
 }
 void GRScene::Render(GRRenderIf* r){
+	if (camera){
+		if (camera->frame){
+			Affinef af = camera->frame->GetWorldTransform();
+			r->SetViewMatrix(af.inv());
+		}
+		r->SetCamera(*camera);
+	}
 	world->Render(r);
 }
 

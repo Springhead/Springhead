@@ -41,15 +41,6 @@ GRDebugRender::GRDebugRender(){
 	(itr++)->diffuse = Vec4f(0.598, 1.0, 0.398, 1.0);		// emerald green
 }
 
-///	Viewportと射影行列を設定
-void GRDebugRender::Reshape(Vec2f screen){
-	glViewport(0, 0, static_cast<GLsizei>(screen.x), static_cast<GLsizei>(screen.y));
-	Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.size.y/2.0), // 視野角90度
-											Vec2f(camera.size.x, camera.size.x*screen.y/screen.x), 
-											camera.front, camera.back);
-	SetProjectionMatrix(afProj);
-}
-
 /// シーン内の全てのオブジェクトをレンダリングする
 void GRDebugRender::DrawScene(PHSceneIf* scene){
 	PHSolidIf **solids = scene->GetSolids();

@@ -133,15 +133,15 @@ struct GRMaterialIf: public GRVisualIf{
 
 
 /**	@brief	カメラの情報 */
-struct GRCamera{
+struct GRCameraDesc{
 	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
 	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
-	GRCamera(Vec2f initSize=Vec2f(480.0, 360.0), 
-				Vec2f initCenter=Vec2f(0.0, 0.0),
-				float initFront=1.0,
-				float initBack=5000.0) 
-			: size(initSize), center(initCenter), front(initFront), back(initBack) {}
+	GRCameraDesc();
+	GRCameraDesc(Vec2f sz, Vec2f c, float f, float b): size(sz), center(c), front(f), back(b) {}
+};
+struct GRCameraIf: public SceneObjectIf{
+	IF_DEF(GRCamera);
 };
 
 struct GRDeviceIf;
@@ -201,7 +201,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	};
 	/** @} */
 
-
+	///	ビューポートの設定
+	virtual void SetViewport(Vec2f pos, Vec2f sz)=0;
 	///	バッファクリア
 	virtual void ClearBuffer()=0;
 	///	レンダリングの開始前に呼ぶ関数
@@ -266,8 +267,12 @@ struct GRRenderBaseIf: public ObjectIf{
 /**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */
 struct GRRenderIf: public GRRenderBaseIf{
 	IF_DEF(GRRender);
+	///	デバイスの設定
 	virtual void SetDevice(GRDeviceIf* dev)=0;
-	virtual void SetCamera(GRCamera& cam)=0;
+	///	カメラの設定
+	virtual void SetCamera(const GRCameraDesc& cam)=0;
+	///	スクリーン(ウィンドウ)サイズ変更時のViewportと射影行列を設定
+	virtual void Reshape(Vec2f pos, Vec2f screenSize)=0;
 };
 
 /**	@brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */
@@ -322,8 +327,6 @@ struct GRDebugRenderIf:public GRRenderIf{
 		EMERALD_GREEN
 	};
 
-	///	Viewportと射影行列を設定
-	virtual void Reshape(Vec2f screen)=0;
 	/// シーン内の全てのオブジェクトをレンダリングする
 	virtual void DrawScene(PHSceneIf* scene)=0;
 	/// 剛体をレンダリングする

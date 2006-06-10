@@ -42,6 +42,11 @@ void GRFrame::SetParent(GRFrameIf* fr){
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* o){
+	GRCamera* c = DCAST(GRCamera, o);
+	if (c){
+		c->frame = this;
+		return true;
+	}
 	GRVisual* v = DCAST(GRVisual, o);
 	if (v){
 		children.push_back(v);

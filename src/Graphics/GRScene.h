@@ -6,7 +6,7 @@
 
 namespace Spr {;
 
-
+class GRCamera;
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
 	レンダラが違うとシーングラフはそのまま使用できない．
@@ -18,9 +18,11 @@ class SPR_DLL GRScene:public InheritScene<GRSceneIf, Scene>, public GRSceneDesc{
 protected:
 	///	ルートノード
 	GRFrame* world;
-	///	すべてのフレーム
 	typedef std::vector< UTRef<GRFrame> > GRFrames;
+	///	すべてのフレーム
 	GRFrames frames;
+	///	カメラ
+	UTRef<GRCamera> camera;
 public:
 	///	コンストラクタ
 	GRScene(const GRSceneDesc& desc=GRSceneDesc());

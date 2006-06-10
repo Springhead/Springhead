@@ -47,6 +47,8 @@ void GRRegisterFactories(){
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
+
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
 }
 //----------------------------------------------------------------------------
 //	GRSdk

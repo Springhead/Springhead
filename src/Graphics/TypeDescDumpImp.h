@@ -88,18 +88,20 @@
 	field->offset = (char*)&(pGRMaterialDesc->texture) - (char*)pGRMaterialDesc;
 	db->RegisterDesc(desc);
 	
-	GRCamera* pGRCamera = NULL;
-	desc = DBG_NEW UTTypeDesc("GRCamera");
-	desc->size = sizeof(GRCamera);
-	desc->access = DBG_NEW FIAccess<GRCamera>;
+	GRCameraDesc* pGRCameraDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRCameraDesc");
+	desc->size = sizeof(GRCameraDesc);
+	desc->ifInfo = GRCameraIf::GetIfInfoStatic();
+	((IfInfo*)GRCameraIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW FIAccess<GRCameraDesc>;
 	field = desc->AddField("", "Vec2f", "size", "");
-	field->offset = (char*)&(pGRCamera->size) - (char*)pGRCamera;
+	field->offset = (char*)&(pGRCameraDesc->size) - (char*)pGRCameraDesc;
 	field = desc->AddField("", "Vec2f", "center", "");
-	field->offset = (char*)&(pGRCamera->center) - (char*)pGRCamera;
+	field->offset = (char*)&(pGRCameraDesc->center) - (char*)pGRCameraDesc;
 	field = desc->AddField("", "float", "front", "");
-	field->offset = (char*)&(pGRCamera->front) - (char*)pGRCamera;
+	field->offset = (char*)&(pGRCameraDesc->front) - (char*)pGRCameraDesc;
 	field = desc->AddField("", "float", "back", "");
-	field->offset = (char*)&(pGRCamera->back) - (char*)pGRCamera;
+	field->offset = (char*)&(pGRCameraDesc->back) - (char*)pGRCameraDesc;
 	db->RegisterDesc(desc);
 	
 	GRSceneDesc* pGRSceneDesc = NULL;

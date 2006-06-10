@@ -462,6 +462,9 @@ void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
 	glBlendFunc(glfac[0], glfac[1]);
 
 }
+void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
+	glViewport((int)pos.x , (int)pos.y, (int)sz.x, (int)sz.y);
+}
 
 }	//	Spr
 

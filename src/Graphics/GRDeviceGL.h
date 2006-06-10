@@ -49,6 +49,8 @@ public:
 	/// 初期設定
 	virtual void Init();
 
+	///	Viewport設定
+	virtual void SetViewport(Vec2f pos, Vec2f sz);
 	///	バッファクリア
 	virtual void ClearBuffer();
 	///	レンダリングの開始前に呼ぶ関数

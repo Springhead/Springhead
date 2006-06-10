@@ -33,6 +33,7 @@ struct GRFrameIf: public GRVisualIf{
 	IF_DEF(GRFrame);
 	virtual GRFrameIf* GetParent()=0;
 	virtual void SetParent(GRFrameIf* fr)=0;
+	virtual Affinef GetWorldTransform()=0;
 };
 
 //@}

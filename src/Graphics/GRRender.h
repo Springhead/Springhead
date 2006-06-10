@@ -9,7 +9,12 @@
 
 namespace Spr{;
 
-
+class GRCamera:public InheritSceneObject<GRCameraIf, SceneObject>, public GRCameraDesc{
+public:
+	OBJECT_DEF(GRCamera);
+	GRFrame* frame;
+	GRCamera(const GRCameraDesc& desc=GRCameraDesc()):GRCameraDesc(desc), frame(NULL){}
+};
 class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{
 public:
 	OBJECT_DEF(GRLight);
@@ -60,9 +65,11 @@ class GRRender: public InheritObject<GRRenderIf, GRRenderBase>{
 	OBJECT_DEF(GRRender);
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
-	GRCamera camera;				///<	カメラ
+	GRCameraDesc camera;			///<	カメラ
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)							\
+	virtual void SetViewport(Vec2f p, Vec2f s)					\
+		{ ptr SetViewport(p, s); }								\
 	virtual void ClearBuffer(){ ptr ClearBuffer(); }			\
 	virtual void BeginScene(){ ptr BeginScene(); }				\
 	virtual void EndScene(){ ptr EndScene(); }					\
@@ -118,12 +125,16 @@ public:
 							GRRenderBaseIf::TBlendFunc dest)							\
 		{ptr SetAlphaMode(src, dest); }													\
 
-
 	REDIRECTIMP_GRRENDERBASE(device->)
-
+	
+	///	デバイスの設定
 	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
-	virtual void SetCamera(GRCamera& cam){ camera = cam; }
+	///	デバッグ表示
 	virtual void Print(std::ostream& os) const;
+	///	カメラの設定
+	void SetCamera(const GRCameraDesc& c){ camera = c; }
+	///	スクリーンサイズとプロジェクション行列の設定
+	virtual void Reshape(Vec2f pos, Vec2f sz);
 };
 template <class intf, class base>
 struct InheritGRRender:public InheritObject<intf, base>{
@@ -131,8 +142,11 @@ struct InheritGRRender:public InheritObject<intf, base>{
 	void SetDevice(GRDeviceIf* dev){
 		base::SetDevice(dev);
 	}
-	virtual void SetCamera(GRCamera& cam){
+	virtual void SetCamera(const GRCameraDesc& cam){
 		base::SetCamera(cam); 
+	}
+	virtual void Reshape(Vec2f pos, Vec2f sz){
+		base::Reshape(pos, sz);
 	}
 };
 
