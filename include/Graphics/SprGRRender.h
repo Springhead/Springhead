@@ -93,7 +93,7 @@ struct GRLightDesc{
 };
 
 /** @brief ŒõŒ¹‚ÌŠî–{ƒNƒ‰ƒX		*/
-struct GRLightIf: public SceneObjectIf{
+struct GRLightIf: public GRVisualIf{
 	IF_DEF(GRLight);
 };
 

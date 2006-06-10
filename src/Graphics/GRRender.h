@@ -10,23 +10,12 @@
 namespace Spr{;
 
 
-class GRLight :public InheritSceneObject<GRLightIf, SceneObject>, public GRLightDesc{
+class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{
 public:
 	OBJECT_DEF(GRLight);
-	GRLight(){
-		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
-		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
-		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
-		position = Vec4f(0.0, 0.0, 1.0, 1.0);
-		range = FLT_MAX;
-		attenuation0 = 1.0f;
-		attenuation1 = 0.0f;
-		attenuation2 = 0.0f;
-		spotDirection = Vec3f(0.0, -1.0, 0.0);
-		spotFalloff  = 0.0f;
-		spotInner    = 0.0f;
-		spotCutoff   = 180.0f;
-	}
+	GRLight(const GRLightDesc& desc = GRLightDesc()):GRLightDesc(desc){}
+	virtual void Render(GRRenderIf* render);
+	virtual void Rendered(GRRenderIf* render);
 };
 
 /**	@brief	グラフィックスの材質 */

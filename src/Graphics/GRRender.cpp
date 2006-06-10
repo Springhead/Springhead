@@ -30,7 +30,13 @@ void GRMaterial::Render(GRRenderIf* render){
 
 //----------------------------------------------------------------------------
 //	GRLight
-IF_OBJECT_IMP(GRLight, SceneObject);
+IF_OBJECT_IMP(GRLight, GRVisual);
+void GRLight::Render(GRRenderIf* render){
+	render->PushLight(this);
+}
+void GRLight::Rendered(GRRenderIf* render){
+	render->PopLight();
+}
 
 }	//	Spr
 
