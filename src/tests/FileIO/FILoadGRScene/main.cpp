@@ -35,31 +35,6 @@ namespace Spr{
 }
 using namespace Spr;
 
-Vec3f *vtx=NULL;
-
-
-// 材質の設定
-GRMaterialDesc mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
-						Vec4f(0.7, 0.0, 0.0, 1.0),		// diffuse
-						Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
-						Vec4f(0.0, 0.0, 0.0, 1.0),		// emissive
-						100.0);							// power
-GRMaterialDesc mat_green(Vec4f(0.0, 0.0, 0.0, 1.0),		
-						Vec4f(0.0, 0.7, 0.0, 1.0),		
-						Vec4f(1.0, 1.0, 1.0, 1.0),		
-						Vec4f(0.0, 0.0, 0.0, 1.0),		
-						20.0);							
-GRMaterialDesc mat_blue(Vec4f(0.0, 0.0, 1.0, 1.0),		
-						Vec4f(0.0, 0.0, 0.7, 1.0),		
-						Vec4f(1.0, 1.0, 1.0, 1.0),		
-						Vec4f(0.0, 0.0, 0.0, 1.0),		
-						20.0);							
-GRMaterialDesc mat_yellow(Vec4f(0.0, 0.0, 1.0, 1.0),		
-						  Vec4f(1.0, 0.7, 0.0, 1.0),		
-						  Vec4f(1.0, 1.0, 1.0, 1.0),		
-						  Vec4f(0.0, 0.0, 0.0, 1.0),		
-						  20.0);							
-std::vector<GRMaterialDesc> material;
 
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
@@ -75,40 +50,6 @@ void display(){
 		exit(-1);
 	}
 	render->EndScene();
-}
-/**
- brief     	光源の設定
- param	 	なし
- return 	なし
- */
-void setLight() {
-	GRLightDesc light0;
-	light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-	light0.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-	light0.position			= Vec4f(0.0f, 10.0f, 0.0f, 1.0f);
-	light0.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
-	light0.spotCutoff		= 145.0f;
-	light0.spotFalloff		= 30.0f;
-	render->PushLight(light0);
-
-	GRLightDesc light1;
-	light1.diffuse			= Vec4f(0.8f, 0.8f, 0.8f, 1.0f);
-	light1.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-	light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);
-	light1.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
-	render->PushLight(light1);
-}
-/**
- brief     	材質の設定
- param	 	なし
- return 	なし
- */
-void setMaterial() {
-	material.push_back(mat_red);
-	material.push_back(mat_green);
-	material.push_back(mat_blue);
-	material.push_back(mat_yellow);
 }
 
 /**
@@ -130,7 +71,6 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
-		delete[] vtx;
 		exit(0);
 	}
 	if ('0'<= key && key <= '9' && phSdk->NScene()){
@@ -156,7 +96,6 @@ void idle(){
 	static int count;
 	count ++;
 	if (count > EXIT_TIMER){
-		delete[] vtx;
 		std::cout << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
 	}
@@ -220,10 +159,6 @@ int main(int argc, char* argv[]){
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	setLight();			// 光源設定
-	setMaterial();		// 材質設定
-
-	vtx = DBG_NEW Vec3f[4];
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
