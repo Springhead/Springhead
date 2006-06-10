@@ -148,8 +148,8 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 5;
-	max_iter_correction = 3;
+	max_iter_dynamics = 8;
+	max_iter_correction = 4;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
 	max_error = 1.0;
@@ -275,44 +275,41 @@ void PHConstraintEngine::UpdateSolids(double dt){
 	}
 }
 
-//#include <windows.h>
+#include <windows.h>
 
 void PHConstraintEngine::Step(){
-	//LARGE_INTEGER freq, val[2];
-	//QueryPerformanceFrequency(&freq);
+	LARGE_INTEGER freq, val[2];
+	QueryPerformanceFrequency(&freq);
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
 
 	//åç∑Çåüím
-	//QueryPerformanceCounter(&val[0]);
+	QueryPerformanceCounter(&val[0]);
 	points.clear();
 	Detect(ct, dt);
-	//QueryPerformanceCounter(&val[1]);
+	QueryPerformanceCounter(&val[1]);
 	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	
-	//QueryPerformanceCounter(&val[0]);
+	QueryPerformanceCounter(&val[0]);
 	SetupDynamics(dt);
-	//QueryPerformanceCounter(&val[1]);
+	QueryPerformanceCounter(&val[1]);
 	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
-	//QueryPerformanceCounter(&val[0]);
+	QueryPerformanceCounter(&val[0]);
 	IterateDynamics();
-	//DSTR << points.size() << endl;
-	//for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
-	//	DSTR << (*it)->f << endl;
-	//QueryPerformanceCounter(&val[1]);
+	QueryPerformanceCounter(&val[1]);
 	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
-	//QueryPerformanceCounter(&val[0]);
+	QueryPerformanceCounter(&val[0]);
 	SetupCorrection(dt);
-	//QueryPerformanceCounter(&val[1]);
+	QueryPerformanceCounter(&val[1]);
 	//DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
-	//QueryPerformanceCounter(&val[0]);
+	QueryPerformanceCounter(&val[0]);
 	IterateCorrection();
-	//QueryPerformanceCounter(&val[1]);
+	QueryPerformanceCounter(&val[1]);
 	//DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	UpdateSolids(dt);

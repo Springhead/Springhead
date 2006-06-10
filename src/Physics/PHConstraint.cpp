@@ -117,6 +117,8 @@ void PHConstraint::SetupDynamics(double dt){
 	if(!bEnabled || !bFeasible)
 		return;
 
+	int i, j;
+	
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
  	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
@@ -124,8 +126,13 @@ void PHConstraint::SetupDynamics(double dt){
 	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
 	//	拘束の種類ごとに異なる
 	CompConstraintJacobian();
-	
-	int i, j;
+	//特異姿勢でAd, Acの成分が0になるケースがある
+	const double eps = 1.0e-3;
+	for(i = 0; i < dim_d; i++)
+		if(Ad[i] < eps)Ad[i] = eps;
+	for(i = 0; i < dim_c; i++)
+		if(Ac[i] < eps)Ac[i] = eps;
+
 	for(i = 0; i < 2; i++){
 		if(solid[i]->solid->IsDynamical()){
 			solid[i]->dv += Tdv[i].trans() * f;

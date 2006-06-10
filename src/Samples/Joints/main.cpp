@@ -46,8 +46,11 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* sdk;			// SDKインタフェース
+PHSdkIf* phSdk;			// SDKインタフェース
+GRSdkIf* grSdk;
 PHSceneIf* scene;		// Sceneインタフェース
+GRDebugRenderIf* render;
+GRDeviceGLIf* device;
 
 double lookAtY, lookAtZ;
 
@@ -56,40 +59,18 @@ int sceneNo;			// シーン番号
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
 PHSolidDesc descBox;					//箱剛体のディスクリプタ
 //CDConvexMeshIf* meshBox;				//箱形状のインタフェース
-CDShapeIf* meshBox;
+CDShapeIf* shapeBox;
+CDShapeIf* shapeSphere;
+
 PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
 std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
-// 光源の設定 
-static GLfloat light_position[] = { 25.0, 50.0, 20.0, 1.0 };
-static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
-static GLfloat light_diffuse[]  = { 1.0, 1.0, 1.0, 1.0 }; 
-static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-// 材質の設定
-static GLfloat mat_floor[]      = { 1.0, 0.0, 0.0, 1.0 };
-static GLfloat mat_box[]        = { 0.8, 0.8, 1.0, 1.0 };
-static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
-static GLfloat mat_shininess[]  = { 120.0 };
-
-// CDConvexMeshDescを直方体に初期化
-void InitBoxMesh(CDConvexMeshDesc& md, double x, double y, double z){
-	md.vertices.clear();
-	md.vertices.push_back(Vec3f(-x,-y,-z));
-	md.vertices.push_back(Vec3f(-x,-y, z));	
-	md.vertices.push_back(Vec3f(-x, y,-z));	
-	md.vertices.push_back(Vec3f(-x, y, z));
-	md.vertices.push_back(Vec3f( x,-y,-z));	
-	md.vertices.push_back(Vec3f( x,-y, z));
-	md.vertices.push_back(Vec3f( x, y,-z));
-	md.vertices.push_back(Vec3f( x, y, z));
-}
-
 void CreateFloor(){
-	CDConvexMeshDesc md;
-	InitBoxMesh(md, 30.0, 1.0, 20.0);
+	CDBoxDesc desc;
+	desc.boxsize = Vec3f(30.0f, 1.0f, 20.0f);
 	soFloor = scene->CreateSolid(descFloor);
-	soFloor->AddShape(sdk->CreateShape(md));
+	soFloor->AddShape(phSdk->CreateShape(desc));
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
 	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
 }
@@ -98,13 +79,11 @@ void CreateFloor(){
 void BuildScene0(){	
 	CreateFloor();
 	//鎖の根になる箱を作成
-	CDConvexMeshDesc md;
-	InitBoxMesh(md, 1.0, 1.0, 1.0);
-	//CDBoxDesc bd;
-	//bd.boxsize = Vec3f(2.0, 2.0, 2.0);
-	meshBox = sdk->CreateShape(md);
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
 	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(meshBox);
+	soBox.back()->AddShape(shapeBox);
 	//空中に固定する
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
@@ -116,21 +95,21 @@ void BuildScene0(){
 // シーン1 : アクチュエータのデモ
 void BuildScene1(){
 	CreateFloor();
-	CDConvexMeshDesc md;	
+	CDBoxDesc bd;
 	soBox.resize(3);
-	InitBoxMesh(md, 0.5, 1.0, 0.5);
+	bd.boxsize = Vec3f(0.5, 1.0, 0.5);
 	soBox[0] = scene->CreateSolid(descBox);
-	soBox[0]->AddShape(sdk->CreateShape(md));
+	soBox[0]->AddShape(phSdk->CreateShape(bd));
 	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
-	InitBoxMesh(md, 0.5, 2.5, 0.5);
+	bd.boxsize = Vec3f(0.5, 2.5, 0.5);
 	soBox[1] = scene->CreateSolid(descBox);
-	soBox[1]->AddShape(sdk->CreateShape(md));
+	soBox[1]->AddShape(phSdk->CreateShape(bd));
 	soBox[1]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
-	InitBoxMesh(md, 0.5, 5.0, 0.5);
+	bd.boxsize = Vec3f(0.5, 5.0, 0.5);
 	soBox[2] = scene->CreateSolid(descBox);
-	soBox[2]->AddShape(sdk->CreateShape(md));
+	soBox[2]->AddShape(phSdk->CreateShape(bd));
 	soBox[2]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
 	PHHingeJointDesc jd;
@@ -159,11 +138,11 @@ void BuildScene1(){
 
 void BuildScene2(){
 	CreateFloor();
-	CDConvexMeshDesc md;
-	InitBoxMesh(md, 1.0, 1.0, 1.0);
-	meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
+	shapeBox = phSdk->CreateShape(bd);
 	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(meshBox);
+	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetDynamical(false);
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
@@ -171,13 +150,13 @@ void BuildScene2(){
 
 void BuildScene3(){
 	CreateFloor();
-	CDConvexMeshDesc md;
-	InitBoxMesh(md, 1.0, 1.0, 1.0);
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
+	shapeBox = phSdk->CreateShape(bd);
 	descBox.mass=10.0;
 	descBox.inertia = 10 * Matrix3d::Unit();
-	meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(meshBox);
+	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetDynamical(false);
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
@@ -185,11 +164,11 @@ void BuildScene3(){
 
 void BuildScene4(){
 	CreateFloor();
-	CDConvexMeshDesc md;
-	InitBoxMesh(md, 1.0, 1.0, 1.0);
-	meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
+	shapeBox = phSdk->CreateShape(bd);
 	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(meshBox);
+	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
 	PHPathDesc desc;
@@ -228,7 +207,7 @@ void OnKey0(char key){
 	switch(key){
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
-		soBox.back()->AddShape(meshBox);
+		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHHingeJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d( 1.1,  1.1,  0);
@@ -299,11 +278,9 @@ void OnKey1(char key){
 			display();
 		}
 	
-		CDConvexMeshDesc md;
-		InitBoxMesh(md, 0.5, 5.0, 0.5);
 		soBox.resize(4);
 		soBox[3] = scene->CreateSolid(descBox);
-		soBox[3]->AddShape(sdk->CreateShape(md));
+		soBox[3]->AddShape(soBox[2]->GetShape(0));
 		soBox[3]->SetFramePosition(Vec3f(10.0, 20.0, 0.0));
 
 		PHPathJointDesc descJoint;
@@ -322,7 +299,7 @@ void OnKey2(char key){
 	switch(key){
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
-		soBox.back()->AddShape(meshBox);
+		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d(-1.1, -1.1, -1.1);
@@ -337,7 +314,7 @@ void OnKey3(char key){
 	switch(key){
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
-		soBox.back()->AddShape(meshBox);
+		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHSliderJointDesc jdesc;
 		jdesc.pose[0].Pos() = Vec3d(0, -1.1, 0);
@@ -375,85 +352,14 @@ void OnKey(char key){
 }	
 
 /**
- brief     	多面体の面(三角形)の法線を求める
- param	 	<in/out> normal　　 法線
- param     	<in/-->  base　　　 meshの頂点
- param     	<in/-->  face　　　 多面体の面
- return 	なし
- */
-void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
-	Vec3f edge0, edge1;
-	edge0 = base[face->GetIndices()[1]] - base[face->GetIndices()[0]];
-	edge1 = base[face->GetIndices()[2]] - base[face->GetIndices()[0]];
-	normal = edge0^edge1;
-	normal.unitize();	
-}
-
-/**
  brief     	glutDisplayFuncで指定したコールバック関数
  param	 	なし
  return 	なし
  */
 void display(){
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
-	Affined ad;
-	
-	// 下の床(soFloor)
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_floor);
-	glPushMatrix();
-	Posed pose = soFloor->GetPose();
-	pose.ToAffine(ad);
-	glMultMatrixd(ad);	
-
-	Vec3f normal;
-	for(int i=0; i<soFloor->NShape(); ++i){
-		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, soFloor->GetShape(i));
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			
-			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal.data);
-			for(int v=0; v<face->NIndex(); ++v){	
-				glVertex3fv(base[face->GetIndices()[v]].data);
-			}
-			glEnd();
-		}
-	}
-	glPopMatrix();
-	
-	// ボックス(soBox)
-	for (unsigned int boxCnt=0; boxCnt<soBox.size(); ++boxCnt) {	
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_box);
-		glPushMatrix();
-		pose = soBox[boxCnt]->GetPose();
-		ad = Affined(pose);
-		glMultMatrixd(ad);
-			for(int i=0; i<soBox[boxCnt]->NShape(); ++i){
-				CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, soBox[boxCnt]->GetShape(i));
-				Vec3f* base = mesh->GetVertices();
-				for(size_t f=0; f<mesh->NFace();++f){
-					CDFaceIf* face = mesh->GetFace(f);
-				
-					glBegin(GL_POLYGON);
-					genFaceNormal(normal, base, face);
-					glNormal3fv(normal.data);	
-					for(int v=0; v<face->NIndex(); ++v){	
-						glVertex3fv(base[face->GetIndices()[v]].data);
-					}
-					glEnd();
-				}
-			}
-		glPopMatrix();
-		std::cout << "\rBox count : " << static_cast<unsigned int>(soBox.size());
-	}
-
-	glutSwapBuffers();
+	render->ClearBuffer();
+	render->DrawScene(scene);
+	render->EndScene();
 }
 
 /**
@@ -462,12 +368,11 @@ void display(){
  return 	なし
  */
 void setLight() {
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
+	GRLightDesc light0, light1;
+	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
+	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	render->PushLight(light0);
+	render->PushLight(light1);
 }
 
 /**
@@ -499,11 +404,8 @@ void initialize(){
  return		なし
  */
 void reshape(int w, int h){
-	glViewport(0, 0, w, h);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(60.0, (GLfloat)w/(GLfloat)h, 1.0, 500.0);
-	glMatrixMode(GL_MODELVIEW);
+	// Viewportと射影行列を設定
+	render->Reshape(Vec2f(w,h));
 }
 
 /**
@@ -538,10 +440,8 @@ void keyboard(unsigned char key, int x, int y){
 					jntLink[i]->Enable(bEnable);
 			}break;
 		case 'z':{
-			CDConvexMeshDesc md;
-			InitBoxMesh(md, 1.0, 1.0, 1.0);
 			soBox.push_back(scene->CreateSolid(descBox));
-			soBox.back()->AddShape(sdk->CreateShape(md));
+			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
 			soBox.back()->SetVelocity(Vec3d(-20.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
@@ -562,7 +462,7 @@ void timer(int id){
 //	for(int i=0; i<10; ++i) 
 	scene->Step();
 	glutPostRedisplay();
-	glutTimerFunc(20, timer, 0);
+	glutTimerFunc(50, timer, 0);
 }
 
 /**
@@ -573,29 +473,45 @@ void timer(int id){
  */
 int main(int argc, char* argv[]){
 	// SDKの作成　
-	sdk = CreatePHSdk();
+	phSdk = CreatePHSdk();
+	grSdk = CreateGRSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
 	dscene.timeStep = 0.05;
-	scene = sdk->CreateScene(dscene);				// シーンの作成
+	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;
 	BuildScene();
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow("Joints");
-	glutReshapeWindow(640, 480);
-	initialize();
+	glutInitWindowSize(800, 600);
+	int window = glutCreateWindow("Joints");
+
+	render = grSdk->CreateDebugRender();
+	device = grSdk->CreateDeviceGL(window);
+
+	// 初期設定
+	device->Init();
+
+	glutTimerFunc(20, timer, 0);
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutTimerFunc(0, timer, 0);
-
+	//glutIdleFunc(idle);
 	
+	render->SetDevice(device);	// デバイスの設定
+
+	// 視点を設定する
+	Affinef view;
+	view.Pos() = Vec3f(0.0, 15.0, 15.0);								// eye
+	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
+	view = view.inv();	
+	render->SetViewMatrix(view);
+	
+	setLight();
+
 	glutMainLoop();
 
-	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
-	delete sdk;
 }

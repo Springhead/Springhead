@@ -12,7 +12,7 @@ namespace Spr{;
 IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
 double PHSliderJoint::GetPosition(){
-	DSTR<<rjrel.z <<endl;
+	//DSTR<<rjrel.z <<endl;
 	return rjrel.z;
 }
 
@@ -30,7 +30,7 @@ void PHSliderJoint::CompConstraintJacobian(){
 		Jdv[i].row(5) = Jvv[i].row(2);
 		Jdw[i].SUBMAT(0, 0, 2, 3) = Jvw[i].SUBMAT(0, 0, 2, 3);
 		Jdw[i].SUBMAT(2, 0, 3, 3) = Jww[i];
-		Jdw[i].row(5) = Jww[i].row(2);
+		Jdw[i].row(5) = Jvw[i].row(2);
 
 		Jcv[i].SUBMAT(0, 0, 2, 3) = Jvv[i].SUBMAT(0, 0, 2, 3);
 		Jcv[i].SUBMAT(2, 0, 3, 3) = Jqv[i];

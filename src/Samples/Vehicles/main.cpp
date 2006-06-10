@@ -13,6 +13,7 @@
 #include <GL/glut.h>
 //#include <sstream>
 #include "robot1.h"
+#include "robot2.h"
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -28,15 +29,15 @@ GRDeviceGLIf* device;
 
 double lookAtY, lookAtZ;
 
-Robot1 robot;
+Robot2 robot;
 
 void CreateFloor(){
 	CDBoxDesc desc;
-	desc.boxsize = Vec3f(30.0f, 1.0f, 20.0f);
+	desc.boxsize = Vec3f(30.0f, 10.0f, 20.0f);
 	PHSolidDesc sd;
 	PHSolidIf* soFloor = scene->CreateSolid(sd);
 	soFloor->AddShape(phSdk->CreateShape(desc));
-	soFloor->SetFramePosition(Vec3f(0,-1,0));
+	soFloor->SetFramePosition(Vec3f(0,-5, 0));
 	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
 }
 
@@ -46,6 +47,7 @@ void CreateFloor(){
  return 	なし
  */
 void display(){
+	Vec3d pos = robot.soBody->GetFramePosition();
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
@@ -71,15 +73,15 @@ void setLight() {
  */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
+	
+	lookAtY = 1.0;
+	lookAtZ = 5.0;
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	lookAtY = 0.2;
-	lookAtZ = 1.0;
-	gluLookAt(0.0,lookAtY,lookAtZ, 
-		      0.0, 0.0, 0.0,
+	Vec3d pos;
+	gluLookAt(pos.x, pos.y + lookAtY, pos.z + lookAtZ, 
+		      pos.x, pos.y, pos.z,
 		 	  0.0, 1.0, 0.0);
-
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 
@@ -124,6 +126,9 @@ void keyboard(unsigned char key, int x, int y){
 	case 'f':
 		robot.TurnRight();
 		break;
+	case 'j':
+		lookAtY += 0.1;
+		break;
 	default:
 		break;
 	}
@@ -136,7 +141,7 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 1; i++)
 		scene->Step();
 	glutPostRedisplay();
 	glutTimerFunc(50, timer, 0);
@@ -156,12 +161,13 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
-	dscene.timeStep = 0.01;
+	dscene.timeStep = 0.05;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	
 	// シーンの構築
 	CreateFloor();
 	robot.Build(scene, phSdk);
+	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
