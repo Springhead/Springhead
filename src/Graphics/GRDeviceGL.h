@@ -18,6 +18,8 @@ protected:
 	int		window;					///<	ウィンドウID
 	int		vertexFormatGl;			///<	glInterleavedArraysで使う，頂点フォーマットID
 	size_t	vertexSize;				///<	頂点のサイズ
+	bool	vertexColor;			///<	頂点が色を持つかどうか
+	GRMaterialDesc currentMaterial;	///<	現在のマテリアル
 	/**
 	 *	@name	マトリックス変数
 	 *　　 GLではModelを変えずにViewだけを変えるということができない。 \n

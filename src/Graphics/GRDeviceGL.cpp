@@ -24,7 +24,6 @@ void GRDeviceGL::Init(){
 	glEnable(GL_BLEND);
 //	glEnable(GL_CULL_FACE);
 	glDisable(GL_CULL_FACE);
-	glEnable(GL_COLOR_MATERIAL);
 
 	// 視点行列の設定
 	viewMatrix.Pos() = Vec3f(0.0, 0.0, 1.0);	                        // eye
@@ -88,30 +87,39 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 	if (e == GRVertexElement::vfP3f) {
 		vertexFormatGl = GL_V3F; 
 		vertexSize = sizeof(float)*3;
+		vertexColor = false;
 	}else if (e == GRVertexElement::vfC4bP3f){
 		vertexFormatGl = GL_C4UB_V3F;
 		vertexSize = sizeof(float)*3+sizeof(char)*4;
+		vertexColor = true;
 	}else if (e == GRVertexElement::vfN3fP3f){
 		vertexFormatGl = GL_N3F_V3F;
 		vertexSize = sizeof(float)*6;
+		vertexColor = false;
 	}else if (e == GRVertexElement::vfC4fN3fP3f){
 		vertexFormatGl = GL_C4F_N3F_V3F;
 		vertexSize = sizeof(float)*10;
+		vertexColor = true;
 	}else if (e == GRVertexElement::vfT2fP3f){
 		vertexFormatGl = GL_T2F_V3F;
 		vertexSize = sizeof(float)*5;
+		vertexColor = false;
 	}else if (e == GRVertexElement::vfT2fC4bP3f){
 		vertexFormatGl = GL_T2F_C4UB_V3F;
 		vertexSize = sizeof(float)*5 + sizeof(char)*4;
+		vertexColor = true;
 	}else if (e == GRVertexElement::vfT2fN3fP3f){
 		vertexFormatGl = GL_T2F_N3F_V3F;
 		vertexSize = sizeof(float)*8;
+		vertexColor = false;
 	}else if (e == GRVertexElement::vfT2fC4fN3fP3f){
 		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
 		vertexSize = sizeof(float)*12;
+		vertexColor = true;
 	}else {
 		vertexFormatGl = 0;
 		vertexSize = 0;
+		vertexColor = false;
 		assert(0);
 	}
 }
@@ -134,6 +142,9 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t s
 		default:				/* DO NOTHING */			break;
 	}
 	if (!stride) stride = vertexSize;
+	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
+	else glDisable(GL_COLOR_MATERIAL);
+	SetMaterial(currentMaterial);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawArrays(mode, 0, count);
 }
@@ -151,6 +162,9 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t c
 		default:				/* DO NOTHING */			break;
 	}
 	if (!stride) stride = vertexSize;
+	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
+	else glDisable(GL_COLOR_MATERIAL);
+	SetMaterial(currentMaterial);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
@@ -161,7 +175,7 @@ int GRDeviceGL::CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t st
 	glEndList();
 	return list;
 }
-int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){	
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
 	DrawIndexed(ty, idx, vtx, count, stride);
@@ -359,6 +373,7 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  mat.specular);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION,  mat.emissive);
 	glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, mat.power);
+	currentMaterial = mat;
 }
 /// 描画する点・線の太さの設定
 void GRDeviceGL::SetLineWidth(float w){

@@ -43,12 +43,7 @@ ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
 	return rv;
 }
 bool GRScene::AddChildObject(ObjectIf* o){
-	GRFrame* f = DCAST(GRFrame, o);
-	if (f){
-		world->AddChildObject(f->GetIf());
-		return true;
-	}
-	return false;
+	return world->AddChildObject(o);
 }
 size_t GRScene::NChildObject() const{
 	return world->NChildObject();

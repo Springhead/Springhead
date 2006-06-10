@@ -93,11 +93,11 @@ void GRMesh::CreateList(GRRenderIf* r){
 				((unsigned char)(colors[i].z*255) << 8) |
 				((unsigned char)(colors[i].w*255));
 		}
-		render->SetVertexFormat(GRVertexElement::vfC4bP3f);
 		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
 			&*vtx.begin(), vtx.size());
 	}else{
 		render->SetVertexFormat(GRVertexElement::vfP3f);
+		render->SetMaterial(GRMaterialDesc(Vec4f(0,0,1,1)));
 		list = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), 
 			&*positions.begin(), positions.size());
 	}
