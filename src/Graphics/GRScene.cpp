@@ -17,7 +17,6 @@ GRScene::GRScene(const GRSceneDesc& desc):GRSceneDesc(desc){
 void GRScene::Init(){
 	world = DBG_NEW GRFrame;
 	world->SetNameManager(this);
-	frames.push_back(world);
 }
 
 GRSdkIf* GRScene::GetSdk(){
@@ -30,18 +29,8 @@ void GRScene::Clear(){
 	Init();
 }
 GRFrameIf* GRScene::CreateFrame(const GRFrameDesc& desc){
-	GRFrame* fr = DBG_NEW GRFrame(desc);
-	frames.push_back(fr);
-	fr->SetNameManager(this);
-	return fr;
-}
-ObjectIf* GRScene::CreateObject(const IfInfo* info, const void* desc){
-	ObjectIf* rv = Scene::CreateObject(info, desc);
-	if (rv) return rv;
-	if (info == GRFrameIf::GetIfInfoStatic()){
-		rv = CreateFrame(*(GRFrameDesc*)desc);
-	}
-	return rv;
+	ObjectIf* o = CreateObject(GRFrameIf::GetIfInfoStatic(), &desc);
+	return (GRFrameIf*)o;
 }
 bool GRScene::AddChildObject(ObjectIf* o){
 	GRCamera* c = DCAST(GRCamera, o);

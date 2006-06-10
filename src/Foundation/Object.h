@@ -251,8 +251,6 @@ public:
 			}
 			if (o && m) o->SetNameManager(m);
 		}
-		//	e‚É’Ç‰Á
-		parent->AddChildObject(t->GetIf());
 		return t->GetIf();
 	}
 	virtual const IfInfo* GetIfInfo() const {

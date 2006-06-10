@@ -14,6 +14,7 @@ class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{
 	void CreateList(GRRenderIf* r);
 public:
 	OBJECT_DEF(GRMesh);
+	ACCESS_DESC(GRMesh);
 	GRMesh(GRMeshDesc& desc=GRMeshDesc());
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);

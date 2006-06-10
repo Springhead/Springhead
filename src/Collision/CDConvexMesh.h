@@ -68,7 +68,7 @@ public:
 	Vec3f* GetVertices();
 	size_t NVertex();
 
-	virtual bool GetDesc(void *desc);
+	virtual bool GetDesc(void *desc) const ;
 };
 
 }	//	namespace Spr

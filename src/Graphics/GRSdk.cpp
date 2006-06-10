@@ -44,9 +44,14 @@ void GRRegisterFactories(){
 	if (!bFirst) return;
 	bFirst=false;
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRScene));
+
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRFrame));
 
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
 }

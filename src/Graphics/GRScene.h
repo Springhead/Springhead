@@ -17,10 +17,7 @@ class SPR_DLL GRScene:public InheritScene<GRSceneIf, Scene>, public GRSceneDesc{
 	OBJECT_DEF(GRScene);
 protected:
 	///	ルートノード
-	GRFrame* world;
-	typedef std::vector< UTRef<GRFrame> > GRFrames;
-	///	すべてのフレーム
-	GRFrames frames;
+	UTRef<GRFrame> world;
 	///	カメラ
 	UTRef<GRCamera> camera;
 public:
@@ -35,7 +32,6 @@ public:
 	///	シーンを空にする．
 	void Clear();
 
-	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc);
 	virtual GRFrameIf* GetWorld(){return world;}
 	virtual bool AddChildObject(ObjectIf* o);

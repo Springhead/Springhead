@@ -24,8 +24,9 @@ struct InheritGRVisual:public InheritNamedObject<intf, base>{
 class GRFrame: public InheritGRVisual<GRFrameIf, GRVisual>, public GRFrameDesc{
 public:
 	OBJECT_DEF(GRFrame);
+	ACCESS_DESC(GRFrame);
 	GRFrame* parent;
-	typedef std::vector<GRVisual*> GRVisuals;
+	typedef std::vector< UTRef<GRVisual> > GRVisuals;
 	GRVisuals children;
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 

@@ -194,7 +194,7 @@ void setMaterial() {
  return 	‚È‚µ
  */
 void reshape(int w, int h){
-	render->Reshape(Vec2f(w,h));
+	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 /**

@@ -12,15 +12,17 @@ namespace Spr{;
 class GRCamera:public InheritSceneObject<GRCameraIf, SceneObject>, public GRCameraDesc{
 public:
 	OBJECT_DEF(GRCamera);
-	GRFrame* frame;
+	ACCESS_DESC(GRCamera);
+	UTRef<GRFrame> frame;
 	GRCamera(const GRCameraDesc& desc=GRCameraDesc()):GRCameraDesc(desc), frame(NULL){}
-	virtual size_t NChildObject();
+	virtual size_t NChildObject() const ;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool AddChildObject(ObjectIf* o);
 };
 class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{
 public:
 	OBJECT_DEF(GRLight);
+	ACCESS_DESC(GRLight);
 	GRLight(const GRLightDesc& desc = GRLightDesc()):GRLightDesc(desc){}
 	virtual void Render(GRRenderIf* render);
 	virtual void Rendered(GRRenderIf* render);
@@ -30,6 +32,7 @@ public:
 class GRMaterial :public InheritGRVisual<GRMaterialIf, GRVisual>, public GRMaterialDesc{
 public:
 	OBJECT_DEF(GRMaterial);
+	ACCESS_DESC(GRMaterial);
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
 		ambient = a;
