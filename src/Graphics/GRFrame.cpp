@@ -74,8 +74,8 @@ void GRFrame::Print(std::ostream& os) const {
 	Object::PrintHeader(os);
 	os.width(os.width()+2);
 	os << transform;
-	os.width(os.width()-2);
 	Object::PrintChildren(os);
+	os.width(os.width()-2);
 	Object::PrintFooter(os);
 }
 

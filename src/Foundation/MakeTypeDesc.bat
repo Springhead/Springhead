@@ -1,6 +1,5 @@
 @echo off
-rem include/*/*.h から， struct の定義を抜き出して，
-rem FIDesc.cppにTypeDescの定義を作る．．
+rem include/引数/*.h から， struct の定義を抜き出して，TypeDescの定義を作る．
 rem bin/typedesc.exe が抜き出しを行う．
 if "%1"=="LISTSRC" goto ListSrc
 if "%1"=="EXECUTE" goto Execute
