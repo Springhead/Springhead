@@ -1,4 +1,7 @@
 #include "robot2.h"
+#include <vector>
+
+using namespace std;
 
 void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
@@ -115,6 +118,17 @@ void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	leg[1].Build(soBody, poseLeg, scene, sdk);
 	poseLeg.Pos() = Vec3d(1.3, 0.0, -1.0);
 	leg[3].Build(soBody, poseLeg, scene, sdk);
+
+	vector<PHSolidIf*> group;
+	group.push_back(soBody);
+	for(int i = 0; i < 4; i++){
+		group.push_back(leg[i].soCrank);
+		group.push_back(leg[i].soFoot[0]);
+		group.push_back(leg[i].soFoot[1]);
+		group.push_back(leg[i].soGuide[0]);
+		group.push_back(leg[i].soGuide[1]);
+	}
+	scene->EnableContacts(&group[0], group.size(), false);
 
 	soBody->SetDynamical(true);
 }

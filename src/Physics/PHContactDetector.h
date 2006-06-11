@@ -2,6 +2,7 @@
 #define PHCONTACTDETECTOR_H
 
 //#include <SprPhysics.h>
+#include <vector>
 #include <Base/Combination.h>
 #include <Collision/CDDetectorImp.h>
 #include <Physics/PHScene.h>
@@ -114,8 +115,16 @@ struct PHContactDetectorState{
 
 };
 
-template<class TSolidInfo, class TShapePair, class TSolidPair, class TEngine>
+/// 実装（ペナルティ、LCP）に依存しない部分のインタフェース
 class PHContactDetector : public PHEngine{
+public:
+	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable)=0;
+	virtual void EnableContacts(PHSolidIf** group, size_t length, bool bEnable)=0;
+	virtual void EnableAllContacts(bool bEnable)=0;
+};
+
+template<class TSolidInfo, class TShapePair, class TSolidPair, class TEngine>
+class PHContactDetectorImp : public PHContactDetector{
 
 	// AABBでソートするための構造体
 	struct Edge{
@@ -261,14 +270,36 @@ public:
 		}
 	}
 
-	void EnableContact(PHSolid* lhs, PHSolid* rhs, bool bEnable){
-		PHSolidInfos<TSolidInfo>::iterator ilhs = solids.Find(lhs), irhs = solids.Find(rhs);
+	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
+		PHSolidInfos<TSolidInfo>::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
 		if(ilhs == solids.end() || irhs == solids.end())
 			return;
 		int i = ilhs - solids.begin(), j = irhs - solids.begin();
 		if(i > j)std::swap(i, j);
 		assert(i < solidPairs.height() && j < solidPairs.width());
 		solidPairs.item(i, j)->bEnabled = bEnable;
+	}
+
+	virtual void EnableContacts(PHSolidIf** group, size_t length, bool bEnable){
+		std::vector<int> idx;
+		PHSolidInfos<TSolidInfo>::iterator it;
+		for(int i = 0; i < (int)length; i++){
+			it = solids.Find((PHSolid*)group[i]);
+			if(it != solids.end())
+				idx.push_back(it - solids.begin());
+		}
+		sort(idx.begin(), idx.end());
+		for(int i = 0; i < (int)idx.size(); i++){
+			for(int j = i+1; j < (int)idx.size(); j++){
+				solidPairs.item(idx[i], idx[j])->bEnabled = bEnable;
+			}
+		}
+	}
+
+	virtual void EnableAllContacts(bool bEnable){
+		int n = solids.size();
+		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
+			solidPairs.item(i, j)->bEnabled = bEnable;
 	}
 
 	///< 全体の交差の検知

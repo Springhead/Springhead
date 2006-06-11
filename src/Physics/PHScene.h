@@ -9,6 +9,7 @@ namespace Spr {;
 class CDShape;
 struct CDShapeDesc;
 class PHSolidContainer;
+class PHContactDetector;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
@@ -25,6 +26,8 @@ public:
 	PHEngines engines;
 protected:
 	PHSolidContainer* solids;
+	/// 設定に応じてPenaltyEngineかConstraintEngineのいずれかを返す
+	PHContactDetector* GetContactDetector();
 public:
 	///	コンストラクタ
 	PHScene(const PHSceneDesc& desc=PHSceneDesc());
@@ -39,6 +42,8 @@ public:
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	PHPathIf*  CreatePath(const PHPathDesc& desc);
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true);
+	void EnableContacts(PHSolidIf** group ,size_t length, bool bEnable = true);
+	void EnableAllContacts(bool bEnable = true);
 	void SetGravity(const Vec3d& g);
 	PHSdkIf* GetSdk();
 

@@ -33,8 +33,8 @@ public:
 	virtual void OnDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 };
 
-class PHConstraintEngine : public PHContactDetector<PHSolidInfoForLCP, PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
-	typedef PHContactDetector<PHSolidInfoForLCP, PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> base_type;
+class PHConstraintEngine : public PHContactDetectorImp<PHSolidInfoForLCP, PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
+	typedef PHContactDetectorImp<PHSolidInfoForLCP, PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> base_type;
 	/*friend class PHSolidPair;
 	friend class PHSolid;*/
 	friend class PHConstraint;

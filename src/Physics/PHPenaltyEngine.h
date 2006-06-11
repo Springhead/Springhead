@@ -131,7 +131,7 @@ protected:
 	void CalcFriction(PHShapePairForPenalty* cp);
 };
 
-class PHPenaltyEngine : public PHContactDetector<PHSolidInfoForPenalty, PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
+class PHPenaltyEngine : public PHContactDetectorImp<PHSolidInfoForPenalty, PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
 	OBJECT_DEF_NOIF(PHPenaltyEngine);
 //protected:
 	//bool	 ready;

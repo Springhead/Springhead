@@ -97,7 +97,7 @@ void initialize(){
  */
 void reshape(int w, int h){
 	// Viewport‚ÆŽË‰es—ñ‚ðÝ’è
-	render->Reshape(Vec2f(w,h));
+	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 /**

@@ -42,6 +42,26 @@ void PHScene::Init(){
 	count = 0;
 }
 
+PHContactDetector* PHScene::GetContactDetector(){
+	switch(contactSolver){
+	case SOLVER_PENALTY:{
+		PHPenaltyEngine* pe;
+		engines.Find(pe);
+		assert(pe);
+		return pe;
+		}break;
+	case SOLVER_CONSTRAINT:{
+		PHConstraintEngine* ce;
+		engines.Find(ce);
+		assert(ce);
+		return ce;
+		}break;
+	default:
+		assert(false);
+		return NULL;
+	}
+}
+
 PHSdkIf* PHScene::GetSdk(){
 	NameManagerIf* nm = GetNameManager();
 	PHSdkIf* sdk = DCAST(PHSdkIf, nm);
@@ -119,10 +139,15 @@ void PHScene::Integrate(){
 }
 
 void PHScene::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
-	PHConstraintEngine* ce;
-	engines.Find(ce);
-	assert(ce);
-	ce->EnableContact((PHSolid*)lhs, (PHSolid*)rhs, bEnable);
+	GetContactDetector()->EnableContact(lhs, rhs, bEnable);
+}
+
+void PHScene::EnableContacts(PHSolidIf** group, size_t length, bool bEnable){
+	GetContactDetector()->EnableContacts(group, length, bEnable);
+}
+
+void PHScene::EnableAllContacts(bool bEnable){
+	GetContactDetector()->EnableAllContacts(bEnable);
 }
 
 void PHScene::SetGravity(Vec3f accel){
@@ -161,21 +186,7 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	bool rv = solids->AddChildObject(o);
 	//PHSolid* s = DCAST(PHSolid, o);
 	if (rv){
-		switch(contactSolver){
-		case SOLVER_PENALTY:{
-			PHPenaltyEngine* pe;
-			engines.Find(pe);
-			assert(pe);
-			pe->AddChildObject(o);
-			}break;
-		case SOLVER_CONSTRAINT:{
-			PHConstraintEngine* ce;
-			engines.Find(ce);
-			assert(ce);
-			ce->AddChildObject(o);
-			}break;
-		default: assert(false);
-		}
+		GetContactDetector()->AddChildObject(o);
 	}
 	return rv;
 }

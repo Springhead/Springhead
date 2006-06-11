@@ -95,12 +95,29 @@ public:
 	virtual PHSolidIf** GetSolids()=0;
 
 	/** @brief 特定のSolidの組について接触を有効化/無効化する
+		@param lhs 組の片方のSolidへのポインタ
+		@param rhs 組のもう片方のSolidへのポインタ
 		@param bEnable trueならば有効化する．falseならば無効化する．
 
 		Solid lhsとSolid rhsとの接触を有効化/無効化する．
 		無効化された場合，衝突判定や接触力の計算は行われない．
 	  */
 	virtual void EnableContact(PHSolidIf* lhs,	PHSolidIf* rhs, bool bEnable = true)=0;
+
+	/** @brief 指定した集合に含まれる全てのSolidの組について接触を有効化/無効化する
+		@param group Solidへのポインタ配列の先頭アドレス
+		@param size ポインタ配列の長さ
+		@bEnable trueならば有効化する．falseならば無効化する．
+
+		group[0]からgroup[size-1]までの全てのSolidの組の接触を有効化/無効化する．
+		無効化された場合，衝突判定や接触力の計算は行われない．
+	 */
+	virtual void EnableContacts(PHSolidIf** group, size_t length, bool bEnable = true)=0;
+
+	/** @brief シーンが保有する全てのSolid同士の接触を有効化/無効化する．
+		@bEnable trueならば有効化する．falseならば無効化する．
+	 */
+	virtual void EnableAllContacts(bool bEnable = true)=0;
 
 	/** @brief 関節を作成する
 		@param desc 関節のディスクリプタ
