@@ -15,7 +15,7 @@ public:
 	CDConvexMeshIf*	meshWheel;
 
 	void InitCylinder(CDConvexMeshDesc& md, float height, float radius, int ndiv);
-	void Build(PHSceneIf* scene, PHSdkIf* sdk);
+	void Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
 	void Forward();
 	void Backward();
 	void TurnLeft();

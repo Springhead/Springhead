@@ -148,8 +148,8 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 8;
-	max_iter_correction = 4;
+	max_iter_dynamics = 5;
+	max_iter_correction = 2;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
 	max_error = 1.0;
@@ -295,22 +295,22 @@ void PHConstraintEngine::Step(){
 	QueryPerformanceCounter(&val[0]);
 	SetupDynamics(dt);
 	QueryPerformanceCounter(&val[1]);
-	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	QueryPerformanceCounter(&val[0]);
 	IterateDynamics();
 	QueryPerformanceCounter(&val[1]);
-	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	QueryPerformanceCounter(&val[0]);
 	SetupCorrection(dt);
 	QueryPerformanceCounter(&val[1]);
-	//DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	QueryPerformanceCounter(&val[0]);
 	IterateCorrection();
 	QueryPerformanceCounter(&val[1]);
-	//DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	UpdateSolids(dt);
 

@@ -6,7 +6,7 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	boxCrank = DCAST(CDBoxIf, sdk->CreateShape(bd));
 	bd.boxsize = Vec3f(0.1, 1.0, 0.1);
 	boxFoot = DCAST(CDBoxIf, sdk->CreateShape(bd));
-	bd.boxsize = Vec3f(0.1, 1.0, 0.1);
+	bd.boxsize = Vec3f(0.1, 0.8, 0.1);
 	boxGuide = DCAST(CDBoxIf, sdk->CreateShape(bd));
 
 	PHSolidDesc sd;
@@ -30,10 +30,10 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	jntCrank = DCAST(PHHingeJointIf, scene->CreateJoint(body, soCrank, jd));
 	
 	jd.pose[0] = Posed();
-	jd.pose[0].Pos() = Vec3d(0.0, 0.2, 0.06);
+	jd.pose[0].Pos() = Vec3d(0.0, 0.1, 0.06);
 	jd.pose[1].Pos() = Vec3d(0.0, -0.1, -0.06);
 	jntFoot[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[0], jd));
-	jd.pose[0].Pos() = Vec3d(0.0, -0.2, -0.06);
+	jd.pose[0].Pos() = Vec3d(0.0, -0.1, -0.06);
 	jd.pose[1].Pos() = Vec3d(0.0, -0.1, 0.06);
 	jntFoot[1] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[1], jd));
 	
@@ -48,7 +48,7 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	jntFoot[1]->SetSpringOrigin(0.0);
 
 	jd.pose[0].Pos() = Vec3d(0.0, 0.5, 0.0);
-	jd.pose[1].Pos() = Vec3d(0.0, -0.5, 0.0);
+	jd.pose[1].Pos() = Vec3d(0.0, -0.4, 0.0);
 	jntFootGuide[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soFoot[0], soGuide[0], jd));
 	//jd.pose[0].Pos() = Vec3d(0.0, 0.5, 0.0);
 	//jd.pose[1].Pos() = Vec3d(0.0, -0.5, 0.0);
@@ -71,18 +71,18 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	//return ;
 
 	double dt = scene->GetTimeStep();
-	double T = 2.0;
+	double T = 3.0;
 	for(double t = 0.0; t < T; t+=dt)
 		scene->Step();
 
 	Posed pose;
 	pose.Pos() = Vec3d(0.9, 0.4, 0.06);
 	jd.pose[0] = base * pose;
-	jd.pose[1].Pos() = Vec3d(0.0, 0.5, -0.06);
+	jd.pose[1].Pos() = Vec3d(0.0, 0.4, -0.06);
 	jntGuideBody[0] = DCAST(PHHingeJointIf, scene->CreateJoint(body, soGuide[0], jd));
 	pose.Pos() = Vec3d(0.9, 0.4, -0.06);
 	jd.pose[0] = base * pose;
-	jd.pose[1].Pos() = Vec3d(0.0, 0.5, 0.06);
+	jd.pose[1].Pos() = Vec3d(0.0, 0.4, 0.06);
 	jntGuideBody[1] = DCAST(PHHingeJointIf, scene->CreateJoint(body, soGuide[1], jd));
 	
 	jntCrank->SetSpring(0.0); jntCrank->SetDamper(0.0);
@@ -93,28 +93,28 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	
 }
 
-void Robot2::Build(PHSceneIf* scene, PHSdkIf* sdk){
+void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(1.5, 0.7, 1.5);
+	bd.boxsize = Vec3f(1.5, 0.5, 1.5);
 	boxBody = DCAST(CDBoxIf, sdk->CreateShape(bd));
 	
 	PHSolidDesc sd;
 	soBody = scene->CreateSolid(sd);
 	soBody->AddShape(boxBody);
-	soBody->SetFramePosition(Vec3d(0.0, 2.0, 0.0));
+	soBody->SetPose(pose);
 	soBody->SetDynamical(false);
 
-	Posed pose;
-	pose.Pos() = Vec3d(-1.5, 0.0, 1.5);
-	leg[0].Build(soBody, pose, scene, sdk);
-	pose.Pos() = Vec3d(-1.5, 0.0, -1.5);
-	leg[2].Build(soBody, pose, scene, sdk);
+	Posed poseLeg;
+	poseLeg.Pos() = Vec3d(-1.3, 0.0, 1.0);
+	leg[0].Build(soBody, poseLeg, scene, sdk);
+	poseLeg.Pos() = Vec3d(-1.3, 0.0, -1.0);
+	leg[2].Build(soBody, poseLeg, scene, sdk);
 	
-	pose.Ori() = Quaterniond::Rot(Rad(180.0), 'y');
-	pose.Pos() = Vec3d(1.5, 0.0, 1.5);
-	leg[1].Build(soBody, pose, scene, sdk);
-	pose.Pos() = Vec3d(1.5, 0.0, -1.5);
-	leg[3].Build(soBody, pose, scene, sdk);
+	poseLeg.Ori() = Quaterniond::Rot(Rad(180.0), 'y');
+	poseLeg.Pos() = Vec3d(1.3, 0.0, 1.0);
+	leg[1].Build(soBody, poseLeg, scene, sdk);
+	poseLeg.Pos() = Vec3d(1.3, 0.0, -1.0);
+	leg[3].Build(soBody, poseLeg, scene, sdk);
 
 	soBody->SetDynamical(true);
 }

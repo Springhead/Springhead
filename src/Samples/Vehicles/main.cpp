@@ -29,7 +29,8 @@ GRDeviceGLIf* device;
 
 double lookAtY, lookAtZ;
 
-Robot2 robot;
+Robot1 car;
+Robot2 robot[2];
 
 void CreateFloor(){
 	CDBoxDesc desc;
@@ -47,7 +48,7 @@ void CreateFloor(){
  return 	なし
  */
 void display(){
-	Vec3d pos = robot.soBody->GetFramePosition();
+	Vec3d pos = robot[0].soBody->GetFramePosition();
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
@@ -115,16 +116,16 @@ void keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		robot.Forward();
+		robot[0].Forward();
 		break;
 	case 's':
-		robot.Backward();
+		robot[0].Backward();
 		break;
 	case 'd':
-		robot.TurnLeft();
+		robot[0].TurnLeft();
 		break;
 	case 'f':
-		robot.TurnRight();
+		robot[0].TurnRight();
 		break;
 	case 'j':
 		lookAtY += 0.1;
@@ -140,11 +141,11 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
+	glutTimerFunc(50, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	for(int i = 0; i < 1; i++)
 		scene->Step();
 	glutPostRedisplay();
-	glutTimerFunc(50, timer, 0);
 }
 
 /**
@@ -166,7 +167,11 @@ int main(int argc, char* argv[]){
 	
 	// シーンの構築
 	CreateFloor();
-	robot.Build(scene, phSdk);
+	Posed pose;
+	pose.Pos() = Vec3d(3.0, 2.0, 0.0);
+	robot[0].Build(pose, scene, phSdk);
+	pose.Pos() = Vec3d(-3.0, 2.0, 0.0);
+	car.Build(pose, scene, phSdk);
 	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));
 
 	glutInit(&argc, argv);

@@ -13,7 +13,7 @@ void Robot1::InitCylinder(CDConvexMeshDesc& md, float height, float radius, int 
 	}
 }
 
-void Robot1::Build(PHSceneIf* scene, PHSdkIf* sdk){
+void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
 	boxBody = DCAST(CDBoxIf, sdk->CreateShape(bd));
@@ -25,7 +25,7 @@ void Robot1::Build(PHSceneIf* scene, PHSdkIf* sdk){
 	PHSolidDesc sd;
 	soBody = scene->CreateSolid(sd);
 	soBody->AddShape(boxBody);
-	soBody->SetFramePosition(Vec3d(0.0, 3.0, 0.0));
+	soBody->SetPose(pose);
 
 	sd.mass = 0.1;
 	sd.inertia = 0.1 * Matrix3d::Unit();

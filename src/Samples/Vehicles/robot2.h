@@ -20,7 +20,7 @@ public:
 
 	Leg	leg[4];
 
-	void Build(PHSceneIf* scene, PHSdkIf* sdk);
+	void Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
 	void Forward();
 	void Backward();
 	void TurnLeft();
