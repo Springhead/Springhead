@@ -13,7 +13,8 @@ goto end
 
 :ListSrc
 rem makefile‚Ìì¬‚ÆMake‚ÌŽÀs
-set PATH=%SPRINGHEAD2%\bin
+set PATHORG=%PATH%;
+set PATH=%SPRINGHEAD2%\bin;%PATH%
 set SRC=
 for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRC=!SRC! ../../include/%%p/%%f
 echo source files:%SRC%
@@ -21,8 +22,10 @@ echo source files:%SRC%
 echo #	Do not edit. MakeTypeDesc.bat will update this file.> %MAKEFILE%
 echo all: %OUT%>>%MAKEFILE%
 echo %OUT%: %SRC%>>%MAKEFILE%
-echo 	MakeTypeDesc.bat EXECUTE>>%MAKEFILE%
+echo 	..\Foundation\MakeTypeDesc.bat EXECUTE>>%MAKEFILE%
 make -f%MAKEFILE%
+set PATH=%PATHORG%
+set PATHORG=
 goto end
 
 
