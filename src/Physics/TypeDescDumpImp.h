@@ -5,7 +5,7 @@
 	desc->size = sizeof(PHConstraintDesc);
 	desc->ifInfo = PHConstraintIf::GetIfInfoStatic();
 	((IfInfo*)PHConstraintIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHConstraintDesc>;
+	desc->access = DBG_NEW UTAccess<PHConstraintDesc>;
 	field = desc->AddField("ConstraintType", "enum", "type",  "");
 	field->AddEnumConst("CONTACT");
 	field->AddEnumConst("HINGEJOINT");
@@ -25,7 +25,7 @@
 	desc->size = sizeof(PHJoint1DDesc);
 	desc->ifInfo = PHJoint1DIf::GetIfInfoStatic();
 	((IfInfo*)PHJoint1DIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHJoint1DDesc>;
+	desc->access = DBG_NEW UTAccess<PHJoint1DDesc>;
 	field = desc->AddBase("PHJointDesc");
 	field->offset = (char*)(PHJointDesc*)pPHJoint1DDesc - (char*)pPHJoint1DDesc;
 	field = desc->AddField("", "double", "lower", "");
@@ -47,7 +47,7 @@
 	desc->size = sizeof(PHHingeJointDesc);
 	desc->ifInfo = PHHingeJointIf::GetIfInfoStatic();
 	((IfInfo*)PHHingeJointIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHHingeJointDesc>;
+	desc->access = DBG_NEW UTAccess<PHHingeJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
 	field->offset = (char*)(PHJoint1DDesc*)pPHHingeJointDesc - (char*)pPHHingeJointDesc;
 	db->RegisterDesc(desc);
@@ -57,7 +57,7 @@
 	desc->size = sizeof(PHSliderJointDesc);
 	desc->ifInfo = PHSliderJointIf::GetIfInfoStatic();
 	((IfInfo*)PHSliderJointIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHSliderJointDesc>;
+	desc->access = DBG_NEW UTAccess<PHSliderJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
 	field->offset = (char*)(PHJoint1DDesc*)pPHSliderJointDesc - (char*)pPHSliderJointDesc;
 	db->RegisterDesc(desc);
@@ -65,7 +65,7 @@
 	PHPathPoint* pPHPathPoint = NULL;
 	desc = DBG_NEW UTTypeDesc("PHPathPoint");
 	desc->size = sizeof(PHPathPoint);
-	desc->access = DBG_NEW FIAccess<PHPathPoint>;
+	desc->access = DBG_NEW UTAccess<PHPathPoint>;
 	field = desc->AddField("", "double", "s", "");
 	field->offset = (char*)&(pPHPathPoint->s) - (char*)pPHPathPoint;
 	field = desc->AddField("", "Posed", "pose", "");
@@ -77,7 +77,7 @@
 	desc->size = sizeof(PHPathDesc);
 	desc->ifInfo = PHPathIf::GetIfInfoStatic();
 	((IfInfo*)PHPathIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHPathDesc>;
+	desc->access = DBG_NEW UTAccess<PHPathDesc>;
 	field = desc->AddField("vector", "PHPathPoint", "points", "");
 	field->offset = (char*)&(pPHPathDesc->points) - (char*)pPHPathDesc;
 	field = desc->AddField("", "bool", "bLoop", "");
@@ -89,7 +89,7 @@
 	desc->size = sizeof(PHPathJointDesc);
 	desc->ifInfo = PHPathJointIf::GetIfInfoStatic();
 	((IfInfo*)PHPathJointIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHPathJointDesc>;
+	desc->access = DBG_NEW UTAccess<PHPathJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
 	field->offset = (char*)(PHJoint1DDesc*)pPHPathJointDesc - (char*)pPHPathJointDesc;
 	db->RegisterDesc(desc);
@@ -99,7 +99,7 @@
 	desc->size = sizeof(PHBallJointDesc);
 	desc->ifInfo = PHBallJointIf::GetIfInfoStatic();
 	((IfInfo*)PHBallJointIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHBallJointDesc>;
+	desc->access = DBG_NEW UTAccess<PHBallJointDesc>;
 	field = desc->AddBase("PHJointDesc");
 	field->offset = (char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc;
 	field = desc->AddField("", "double", "max_angle", "");
@@ -111,7 +111,7 @@
 	PHSceneState* pPHSceneState = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSceneState");
 	desc->size = sizeof(PHSceneState);
-	desc->access = DBG_NEW FIAccess<PHSceneState>;
+	desc->access = DBG_NEW UTAccess<PHSceneState>;
 	field = desc->AddField("", "double", "timeStep", "");
 	field->offset = (char*)&(pPHSceneState->timeStep) - (char*)pPHSceneState;
 	field = desc->AddField("", "unsigned", "count", "");
@@ -123,7 +123,7 @@
 	desc->size = sizeof(PHSceneDesc);
 	desc->ifInfo = PHSceneIf::GetIfInfoStatic();
 	((IfInfo*)PHSceneIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHSceneDesc>;
+	desc->access = DBG_NEW UTAccess<PHSceneDesc>;
 	field = desc->AddBase("PHSceneState");
 	field->offset = (char*)(PHSceneState*)pPHSceneDesc - (char*)pPHSceneDesc;
 	field = desc->AddField("SolverType", "enum", "contactSolver",  "");
@@ -140,13 +140,13 @@
 	desc->size = sizeof(PHSdkDesc);
 	desc->ifInfo = PHSdkIf::GetIfInfoStatic();
 	((IfInfo*)PHSdkIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHSdkDesc>;
+	desc->access = DBG_NEW UTAccess<PHSdkDesc>;
 	db->RegisterDesc(desc);
 	
 	PHSolidState* pPHSolidState = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSolidState");
 	desc->size = sizeof(PHSolidState);
-	desc->access = DBG_NEW FIAccess<PHSolidState>;
+	desc->access = DBG_NEW UTAccess<PHSolidState>;
 	field = desc->AddField("", "Vec3d", "velocity", "");
 	field->offset = (char*)&(pPHSolidState->velocity) - (char*)pPHSolidState;
 	field = desc->AddField("", "Vec3d", "angVelocity", "");
@@ -170,7 +170,7 @@
 	desc->size = sizeof(PHSolidDesc);
 	desc->ifInfo = PHSolidIf::GetIfInfoStatic();
 	((IfInfo*)PHSolidIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<PHSolidDesc>;
+	desc->access = DBG_NEW UTAccess<PHSolidDesc>;
 	field = desc->AddBase("PHSolidState");
 	field->offset = (char*)(PHSolidState*)pPHSolidDesc - (char*)pPHSolidDesc;
 	field = desc->AddField("", "double", "mass", "");

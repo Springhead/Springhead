@@ -149,15 +149,15 @@ void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
 //---------------------------------------------------------------------------
 //	FILoadContext
 void FILoadContext::WriteBool(bool v){
-	FIFieldIt& curField = fieldIts.back();
+	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
 }
 void FILoadContext::WriteNumber(double v){
-	FIFieldIt& curField = fieldIts.back();
+	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
 }
 void FILoadContext::WriteString(std::string v){
-	FIFieldIt& curField = fieldIts.back();
+	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
 void FILoadContext::PushType(UTTypeDesc* type){
@@ -173,82 +173,6 @@ void FILoadContext::PopType(){
 bool FILoadContext::IsGood(){
 	if (!fileInfo.size()) return false;
 	return fileInfo.back().IsGood();
-}
-void FILoadContext::LoadNode(){
-	if (datas.Top()->type->GetIfInfo()){
-		//	ロードしたデータからオブジェクトを作る．
-		ObjectIf* obj = NULL;
-		ObjectIf* creator = NULL;
-		for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
-			if (*it) obj = (*it)->CreateObject(datas.Top()->type->GetIfInfo(), datas.Top()->data);
-			if (obj){
-				creator = *it;
-				break;
-			}
-		}
-		if (!obj) obj = CreateSdk(datas.Top()->type->GetIfInfo(), datas.Top()->data);
-		//	オブジェクトに名前を設定
-		if (obj){
-			NamedObjectIf* n = DCAST(NamedObjectIf, obj);
-			if (datas.Top()->name.length()){
-				if (n){
-					n->SetName(datas.Top()->name.c_str());
-				}else{
-					UTString err("Can not give name to an object of '");
-					err.append(obj->GetIfInfo()->ClassName());
-					const IfInfo* i = obj->GetIfInfo();
-					const IfInfo* b = NamedObjectIf::GetIfInfoStatic();
-					if (i->Inherit(b)){
-						DSTR << "i Inherits b.\n";
-					}
-					err.append("'.");
-					ErrorMessage(NULL, err.c_str());
-				}
-			}
-		}else{
-			UTString err("Can not create '");
-			err.append(datas.Top()->type->GetIfInfo()->ClassName());
-			err.append("'. Ancestor objects don't know how to make it.");
-			ErrorMessage(NULL, err.c_str());
-		}
-		//	親オブジェクトに追加
-		if (objects.size() && objects.Top()){
-			objects.Top()->AddChildObject(obj);
-		}
-		//	オブジェクトスタックに積む
-		objects.Push(obj);
-		if (obj && objects.size() == 1) rootObjects.push_back(objects.Top());
-	}else{
-		static FINodeHandler key;
-		key.AddRef();
-		key.type = datas.Top()->type->GetTypeName();
-		FINodeHandlers::iterator it = handlers->lower_bound(&key);
-		FINodeHandlers::iterator end = handlers->upper_bound(&key);
-		if (end != handlers->end()) ++end;
-		for(; it != end; ++it){
-			(*it)->Load(this);
-		}
-		key.DelRef();
-		//	Create以外の仕事をする．
-		//	衝突判定の無効ペアの設定や重力の設定など．
-	}
-}
-void FILoadContext::EnterBlock(){
-	char* base = (char*)datas.Top()->data;
-	void* ptr = fieldIts.back().field->GetAddressEx(base, fieldIts.ArrayPos());
-	datas.Push(DBG_NEW FINodeData(NULL, ptr));
-	fieldIts.push_back(FIFieldIt(fieldIts.back().field->type));
-}
-void FILoadContext::LeaveBlock(){
-	fieldIts.Pop();
-	datas.Pop();
-}
-void FILoadContext::EndNode(){
-	if (datas.Top()->type && datas.Top()->type->GetIfInfo()){
-		objects.Pop();
-	}else{
-		//	Create以外の終了処理．
-	}
 }
 void FILoadContext::AddLink(std::string ref, const char* pos){
 	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));
@@ -270,6 +194,7 @@ void FILoadContext::Message(const char* pos, const char* msg){
 	int lines=0;
 	int returns=0;
 	const char* line=ptr;
+	if (!pos) pos = fileInfo.back().parsingPos;
 	if (pos){
 		for(;ptr < pos; ++ptr){
 			if (*ptr == '\n'){
@@ -292,6 +217,45 @@ void FILoadContext::Message(const char* pos, const char* msg){
 	os << fileInfo.back().name << "(" << lines+1 << ") : ";
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
+}
+void FILoadContext::PushCreateNode(const IfInfo* info, const void* data){
+	ObjectIf* obj = NULL;
+	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
+		if (*it) obj = (*it)->CreateObject(info, data);
+		if (obj) break;
+	}
+	if (!obj) obj = CreateSdk(info, data);
+	//	オブジェクトに名前を設定
+	if (obj){
+		NamedObjectIf* n = DCAST(NamedObjectIf, obj);
+		if (datas.Top()->name.length()){
+			if (n){
+				n->SetName(datas.Top()->name.c_str());
+			}else{
+				UTString err("Can not give name to an object of '");
+				err.append(obj->GetIfInfo()->ClassName());
+				const IfInfo* i = obj->GetIfInfo();
+				const IfInfo* b = NamedObjectIf::GetIfInfoStatic();
+				if (i->Inherit(b)){
+					DSTR << "i Inherits b.\n";
+				}
+				err.append("'.");
+				ErrorMessage(NULL, err.c_str());
+			}
+		}
+	}else{
+		UTString err("Can not create '");
+		err.append(datas.Top()->type->GetIfInfo()->ClassName());
+		err.append("'. Ancestor objects don't know how to make it.");
+		ErrorMessage(NULL, err.c_str());
+	}
+	//	親オブジェクトに追加
+	if (objects.size() && objects.Top()){
+		objects.Top()->AddChildObject(obj);
+	}
+	//	オブジェクトスタックに積む
+	objects.Push(obj);
+	if (obj && objects.size() == 1) rootObjects.push_back(objects.Top());
 }
 
 };

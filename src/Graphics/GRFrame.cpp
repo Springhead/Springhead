@@ -46,7 +46,7 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 	if (v){
 		children.push_back(v);
 		GRFrame* f = DCAST(GRFrame, v);
-		if (f && f->parent != parent){
+		if (f && f->parent != this){
 			if (f->parent) f->parent->DelChildObject(f->GetIf());
 			f->parent = this;
 		}
@@ -68,6 +68,15 @@ size_t GRFrame::NChildObject() const {
 }
 ObjectIf* GRFrame::GetChildObject(size_t pos){
 	return (Object*)children[pos];
+}
+
+void GRFrame::Print(std::ostream& os) const {
+	Object::PrintHeader(os);
+	os.width(os.width()+2);
+	os << transform;
+	os.width(os.width()-2);
+	Object::PrintChildren(os);
+	Object::PrintFooter(os);
 }
 
 }

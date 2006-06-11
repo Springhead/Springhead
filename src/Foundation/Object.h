@@ -130,6 +130,10 @@ public:
 	virtual void ConstructState(void* m) const {}
 	///	ó‘ÔŒ^‚ğƒƒ‚ƒŠƒuƒƒbƒN‚É–ß‚·
 	virtual void DestructState(void* m) const {}
+protected:
+	virtual void PrintHeader(std::ostream& os) const;
+	virtual void PrintChildren(std::ostream& os) const;
+	virtual void PrintFooter(std::ostream& os) const;
 };
 
 template <class T> T* SprDcastImp(const Object* p){

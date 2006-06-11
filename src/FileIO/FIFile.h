@@ -8,6 +8,10 @@
 namespace Spr{;
 class FILoadContext;
 class FISaveContext;
+
+
+/**	ファイルローダー・セーバー
+*/
 class FIFile:public InheritObject<FIFileIf, Object>{
 protected:
 	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
@@ -20,12 +24,26 @@ public:
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
 	virtual void Save(const ObjectIfs& objs, FISaveContext* sc);
+	/**	ノードのロード．
+		ロードしたDescからオブジェクトを作成する．
+		オブジェクトの作成は，親オブジェクトのCreateObject()，親の親のCreateObject()と
+		先祖のCreateObject()を順に呼んで，作成できたところで止める．
+		どのオブジェクトも作成できない場合は，CreateSdk()を呼び出す．	*/
+	void LoadNode(FILoadContext* fc);
+	///	ノードのロードの終了
+	void LoadEndNode(FILoadContext* fc);
+	///	ブロック(組み立て型)に入る
+	void LoadEnterBlock(FILoadContext* fc);
+	///	ブロック(組み立て型)から出る
+	void LoadLeaveBlock(FILoadContext* fc);
+
 protected:
 	///	ロードの実装
 	virtual void LoadImp(FILoadContext* fc)=0;
-	///
+	
+	///	ノードのセーブ
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);
-	///
+	///	ブロックのセーブ
 	void SaveBlock(FISaveContext* sc);
 
 	///	保存処理のハンドラー

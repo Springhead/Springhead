@@ -21,10 +21,6 @@ IF_OBJECT_IMP(FIFileX, FIFile);
 # define PDEBUG(x)
 #endif
 
-extern void RegisterTypes();
-extern void RegisterNodeHandlers();
-
-
 namespace FileX{
 static FILoadContext* fileContext;
 static FIFileX* fileX;
@@ -56,27 +52,28 @@ static void NameSet(const char* b, const char* e){
 	fileContext->datas.back()->name = UTString(b,e);
 }
 ///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
-static void LoadNode(const char* b, const char* e){
-	fileContext->LoadNode();
+static void LoadNodeStub(const char* b, const char* e){
+	fileContext->fileInfo.Top().parsingPos = b;
+	fileX->LoadNode(fileContext);
 }
 
 ///	ノード読み出しの後処理
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
-	fileContext->EndNode();
+	fileX->LoadEndNode(fileContext);
 	fileContext->PopType();
 }
 
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	fileContext->EnterBlock();
+	fileX->LoadEnterBlock(fileContext);
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileContext->LeaveBlock();
+	fileX->LoadLeaveBlock(fileContext);
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
@@ -100,11 +97,11 @@ static bool ArrayCount(){
 	return fileContext->fieldIts.IncArrayPos();
 }
 
-static bool IsFieldInt(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_INT; }
-static bool IsFieldReal(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_REAL; }
-static bool IsFieldStr(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_STR; }
-static bool IsFieldBlock(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_BLOCK; }
-static bool IsFieldBool(){ return fileContext->fieldIts.back().fieldType==FIFieldIt::F_BOOL; }
+static bool IsFieldInt(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_INT; }
+static bool IsFieldReal(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_REAL; }
+static bool IsFieldStr(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_STR; }
+static bool IsFieldBlock(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_BLOCK; }
+static bool IsFieldBool(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_BOOL; }
 
 static double numValue;
 static std::string strValue;
@@ -124,20 +121,20 @@ static void StrSet(const char* b, const char* e){
 static void SetVal(const char* b, const char* e){
 	char ch = *b;
 
-	FIFieldIt& curField = fileContext->fieldIts.back();
+	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
 	//	debug 出力
 #ifdef TRACE_PARSE
-	if (curField.fieldType!=FIFieldIt::F_NONE){
-		if (curField.fieldType==FIFieldIt::F_BLOCK){
+	if (curField.fieldType!=UTTypeDescFieldIt::F_NONE){
+		if (curField.fieldType==UTTypeDescFieldIt::F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
 		}else{
 			if (curField.arrayPos==0){
 				DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 			}
 		}
-		if (curField.fieldType == FIFieldIt::F_REAL || curField.fieldType == FIFieldIt::F_INT){
+		if (curField.fieldType == UTTypeDescFieldIt::F_REAL || curField.fieldType == UTTypeDescFieldIt::F_INT){
 			DSTR << " " << numValue;
-		}else if (curField.fieldType == FIFieldIt::F_STR){
+		}else if (curField.fieldType == UTTypeDescFieldIt::F_STR){
 			DSTR << " " << strValue;
 		}
 		if (ch == ';') DSTR << std::endl;
@@ -157,7 +154,7 @@ static void SetVal(const char* b, const char* e){
 	}
 }
 static void StopArray(const char c){
-	FIFieldIt& curField = fileContext->fieldIts.back();
+	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
 	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
 
@@ -225,7 +222,6 @@ FIFileX::FIFileX(){
 void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 	if (!UTTypeDescDb::theTypeDescDb){
 		assert(0);
-		//	TODO RegisterTypedescs() をだれがどこで呼ぶのか
 	}
 	if (!FINodeHandlers::theNodeHandlers) RegisterNodeHandlers();
 	if (h){
@@ -264,7 +260,7 @@ void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
-				  if_p(&TypeAvail)[ block[&LoadNode] >> *(data|ref) ].
+				  if_p(&TypeAvail)[ block[&LoadNodeStub] >> *(data|ref) ].
 //				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
 				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
@@ -339,7 +335,7 @@ void FIFileX::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 	if (!cont) sc->file << INDENT(0);
 	sc->file << ";";
 	cont = true;
-	if (sc->fieldIts.Top().fieldType == FIFieldIt::F_BLOCK){
+	if (sc->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
 		sc->file << std::endl;
 		cont = false;
 	}

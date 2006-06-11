@@ -3,6 +3,8 @@
 #pragma hdrstop
 #endif
 #include "FIFile.h"
+#include "FILoadContext.h"
+
 namespace Spr{;
 
 IF_OBJECT_IMP_ABST(FIFile, Object);
@@ -25,12 +27,59 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 void FIFile::Load(FILoadContext* fc){
 	if (fc->IsGood()){
 		fc->typeDb = &typeDb;
-		fc->handlers = &handlers;
 		LoadImp(fc);
 	}
 	fc->Link();
 	fc->PostTask();
 }
+void FIFile::LoadNode(FILoadContext* fc){
+	if (fc->datas.Top()->type->GetIfInfo()){	
+		//	インタフェースが登録されている場合，
+		//	ロードしたデータからオブジェクトを作る．
+		fc->PushCreateNode(fc->datas.Top()->type->GetIfInfo(), fc->datas.Top()->data);
+	}
+	//	ロード用のハンドラがあれば，呼び出す．
+	//	ハンドラは，衝突判定の無効ペアの設定や重力の設定など，ノードを作る以外の仕事をする．
+	static FINodeHandler key;
+	key.AddRef();
+	key.type = fc->datas.Top()->type->GetTypeName();
+	FINodeHandlers::iterator it = handlers.lower_bound(&key);
+	FINodeHandlers::iterator end = handlers.upper_bound(&key);
+	for(; it != end; ++it){
+		(*it)->Load(fc);
+	}
+	key.DelRef();
+}
+void FIFile::LoadEnterBlock(FILoadContext* fc){
+	char* base = (char*)fc->datas.Top()->data;
+	void* ptr = fc->fieldIts.back().field->GetAddressEx(base, fc->fieldIts.ArrayPos());
+	fc->datas.Push(DBG_NEW FINodeData(NULL, ptr));
+	fc->fieldIts.push_back(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
+}
+void FIFile::LoadLeaveBlock(FILoadContext* fc){
+	fc->fieldIts.Pop();
+	fc->datas.Pop();
+}
+void FIFile::LoadEndNode(FILoadContext* fc){
+	if (fc->datas.Top()->type){
+		//	ハンドラがあれば，FINodeHandlerを呼び出す．
+		static FINodeHandler key;
+		key.AddRef();
+		key.type = fc->datas.Top()->type->GetTypeName();
+		FINodeHandlers::iterator lower = handlers.lower_bound(&key);
+		FINodeHandlers::iterator upper = handlers.upper_bound(&key);
+		while(upper != lower){
+			--upper;
+			(*upper)->Loaded(fc);
+		}
+		key.DelRef();
+		if (fc->datas.Top()->type->GetIfInfo()){
+			//	LoadNodeで作ったのノードをスタックから削除
+			fc->objects.Pop();
+		}
+	}
+}
+
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
 	FISaveContext sc;
@@ -61,7 +110,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 	UTTypeDesc* type = typeDb.Find(tn);
 	if(type){
 		//	セーブ位置を設定
-		sc->fieldIts.Push(FIFieldIt(type));
+		sc->fieldIts.Push(UTTypeDescFieldIt(type));
 		//	オブジェクトからデータを取り出す．
 		void* data = (void*)obj->GetDescAddress();
 		if (data){
@@ -128,31 +177,31 @@ void FIFile::SaveBlock(FISaveContext* sc){
 		for(int pos=0; pos<nElements; ++pos){
 			OnSaveElementStart(sc, pos, (pos==nElements-1));
 			switch(sc->fieldIts.back().fieldType){
-				case FIFieldIt::F_BLOCK:{
+				case UTTypeDescFieldIt::F_BLOCK:{
 					PDEBUG_EVAL( DSTR << "=" << std::endl; )
 					void* blockData = field->GetAddress(base, pos);
 					sc->datas.Push(new FINodeData(field->type, blockData));
-					sc->fieldIts.Push(FIFieldIt(field->type));
+					sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
 					SaveBlock(sc);
 					sc->fieldIts.Pop();
 					sc->datas.Pop();
 					}break;
-				case FIFieldIt::F_BOOL:{
+				case UTTypeDescFieldIt::F_BOOL:{
 					bool val = field->ReadBool(base, pos);
 					PDEBUG_EVAL( DSTR << val ? "true" : "false"; )
 					OnSaveBool(sc, val);
 					}break;
-				case FIFieldIt::F_INT:{
+				case UTTypeDescFieldIt::F_INT:{
 					int val = (int)field->ReadNumber(base, pos);
 					PDEBUG_EVAL( DSTR << val; )
 					OnSaveInt(sc, val);
 					}break;
-				case FIFieldIt::F_REAL:{
+				case UTTypeDescFieldIt::F_REAL:{
 					double val = field->ReadNumber(base, pos);
 					PDEBUG_EVAL( DSTR << val; )
 					OnSaveReal(sc, val);
 					}break;
-				case FIFieldIt::F_STR:{
+				case UTTypeDescFieldIt::F_STR:{
 					UTString val = field->ReadString(base, pos);
 					PDEBUG_EVAL( DSTR << val; )
 					OnSaveString(sc, val);

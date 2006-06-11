@@ -3,7 +3,7 @@
 	Vec2f* pVec2f = NULL;
 	desc = DBG_NEW UTTypeDesc("Vec2f");
 	desc->size = sizeof(Vec2f);
-	desc->access = DBG_NEW FIAccess<Vec2f>;
+	desc->access = DBG_NEW UTAccess<Vec2f>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pVec2f->x) - (char*)pVec2f;
 	field = desc->AddField("", "float", "y", "");
@@ -13,7 +13,7 @@
 	Vec2d* pVec2d = NULL;
 	desc = DBG_NEW UTTypeDesc("Vec2d");
 	desc->size = sizeof(Vec2d);
-	desc->access = DBG_NEW FIAccess<Vec2d>;
+	desc->access = DBG_NEW UTAccess<Vec2d>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pVec2d->x) - (char*)pVec2d;
 	field = desc->AddField("", "double", "y", "");
@@ -23,7 +23,7 @@
 	Vec3f* pVec3f = NULL;
 	desc = DBG_NEW UTTypeDesc("Vec3f");
 	desc->size = sizeof(Vec3f);
-	desc->access = DBG_NEW FIAccess<Vec3f>;
+	desc->access = DBG_NEW UTAccess<Vec3f>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pVec3f->x) - (char*)pVec3f;
 	field = desc->AddField("", "float", "y", "");
@@ -35,7 +35,7 @@
 	Vec3d* pVec3d = NULL;
 	desc = DBG_NEW UTTypeDesc("Vec3d");
 	desc->size = sizeof(Vec3d);
-	desc->access = DBG_NEW FIAccess<Vec3d>;
+	desc->access = DBG_NEW UTAccess<Vec3d>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pVec3d->x) - (char*)pVec3d;
 	field = desc->AddField("", "double", "y", "");
@@ -47,7 +47,7 @@
 	Vec4f* pVec4f = NULL;
 	desc = DBG_NEW UTTypeDesc("Vec4f");
 	desc->size = sizeof(Vec4f);
-	desc->access = DBG_NEW FIAccess<Vec4f>;
+	desc->access = DBG_NEW UTAccess<Vec4f>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pVec4f->x) - (char*)pVec4f;
 	field = desc->AddField("", "float", "y", "");
@@ -61,7 +61,7 @@
 	Vec4d* pVec4d = NULL;
 	desc = DBG_NEW UTTypeDesc("Vec4d");
 	desc->size = sizeof(Vec4d);
-	desc->access = DBG_NEW FIAccess<Vec4d>;
+	desc->access = DBG_NEW UTAccess<Vec4d>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pVec4d->x) - (char*)pVec4d;
 	field = desc->AddField("", "double", "y", "");
@@ -75,7 +75,7 @@
 	Quaternionf* pQuaternionf = NULL;
 	desc = DBG_NEW UTTypeDesc("Quaternionf");
 	desc->size = sizeof(Quaternionf);
-	desc->access = DBG_NEW FIAccess<Quaternionf>;
+	desc->access = DBG_NEW UTAccess<Quaternionf>;
 	field = desc->AddField("", "float", "x", "");
 	field->offset = (char*)&(pQuaternionf->x) - (char*)pQuaternionf;
 	field = desc->AddField("", "float", "y", "");
@@ -89,7 +89,7 @@
 	Quaterniond* pQuaterniond = NULL;
 	desc = DBG_NEW UTTypeDesc("Quaterniond");
 	desc->size = sizeof(Quaterniond);
-	desc->access = DBG_NEW FIAccess<Quaterniond>;
+	desc->access = DBG_NEW UTAccess<Quaterniond>;
 	field = desc->AddField("", "double", "x", "");
 	field->offset = (char*)&(pQuaterniond->x) - (char*)pQuaterniond;
 	field = desc->AddField("", "double", "y", "");
@@ -103,7 +103,7 @@
 	Posef* pPosef = NULL;
 	desc = DBG_NEW UTTypeDesc("Posef");
 	desc->size = sizeof(Posef);
-	desc->access = DBG_NEW FIAccess<Posef>;
+	desc->access = DBG_NEW UTAccess<Posef>;
 	field = desc->AddField("", "float", "w", "");
 	field->offset = (char*)&(pPosef->w) - (char*)pPosef;
 	field = desc->AddField("", "float", "x", "");
@@ -123,7 +123,7 @@
 	Posed* pPosed = NULL;
 	desc = DBG_NEW UTTypeDesc("Posed");
 	desc->size = sizeof(Posed);
-	desc->access = DBG_NEW FIAccess<Posed>;
+	desc->access = DBG_NEW UTAccess<Posed>;
 	field = desc->AddField("", "double", "w", "");
 	field->offset = (char*)&(pPosed->w) - (char*)pPosed;
 	field = desc->AddField("", "double", "x", "");
@@ -143,7 +143,7 @@
 	Matrix3f* pMatrix3f = NULL;
 	desc = DBG_NEW UTTypeDesc("Matrix3f");
 	desc->size = sizeof(Matrix3f);
-	desc->access = DBG_NEW FIAccess<Matrix3f>;
+	desc->access = DBG_NEW UTAccess<Matrix3f>;
 	field = desc->AddField("", "float", "data", "9");
 	field->offset = (char*)&(pMatrix3f->data) - (char*)pMatrix3f;
 	db->RegisterDesc(desc);
@@ -151,7 +151,7 @@
 	Matrix3d* pMatrix3d = NULL;
 	desc = DBG_NEW UTTypeDesc("Matrix3d");
 	desc->size = sizeof(Matrix3d);
-	desc->access = DBG_NEW FIAccess<Matrix3d>;
+	desc->access = DBG_NEW UTAccess<Matrix3d>;
 	field = desc->AddField("", "double", "data", "9");
 	field->offset = (char*)&(pMatrix3d->data) - (char*)pMatrix3d;
 	db->RegisterDesc(desc);
@@ -159,7 +159,7 @@
 	Affinef* pAffinef = NULL;
 	desc = DBG_NEW UTTypeDesc("Affinef");
 	desc->size = sizeof(Affinef);
-	desc->access = DBG_NEW FIAccess<Affinef>;
+	desc->access = DBG_NEW UTAccess<Affinef>;
 	field = desc->AddField("", "float", "data", "16");
 	field->offset = (char*)&(pAffinef->data) - (char*)pAffinef;
 	db->RegisterDesc(desc);
@@ -167,7 +167,7 @@
 	Affined* pAffined = NULL;
 	desc = DBG_NEW UTTypeDesc("Affined");
 	desc->size = sizeof(Affined);
-	desc->access = DBG_NEW FIAccess<Affined>;
+	desc->access = DBG_NEW UTAccess<Affined>;
 	field = desc->AddField("", "double", "data", "16");
 	field->offset = (char*)&(pAffined->data) - (char*)pAffined;
 	db->RegisterDesc(desc);

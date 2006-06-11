@@ -21,7 +21,7 @@ public:
 	///	型DB
 	UTTypeDescDb* typeDb;
 	///	UTTypeDescのフィールドへのイタレータのスタック
-	FIFieldIts fieldIts;
+	UTTypeDescFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<FINodeData> > datas;
 	///

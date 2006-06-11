@@ -51,20 +51,38 @@ FactoryBase* IfInfo::FindFactory(const IfInfo* info) const {
 IF_IMP_BASE(Object);
 OBJECT_IMP_BASE(Object);
 
-void Object::Print(std::ostream& os) const {
+void Object::PrintHeader(std::ostream& os) const {
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w);
+	os << "<" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	os.width(w);
+}
+void Object::PrintChildren(std::ostream& os) const {
+	int w = os.width();
+	os.width(0);
+	os.width(w);
+	os.widen(w+2);
+	for(size_t i=0; i<NChildObject(); ++i){
+		GetChildObject(i)->Print(os);
+	}
+}
+void Object::PrintFooter(std::ostream& os) const {
+	int w = os.width();
+	os.width(0);
+	os << UTPadding(w);
+	os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	os.width(w);
+}
+void Object::Print(std::ostream& os) const {
+	int w = os.width();
 	if (NChildObject()){
-		os << "<" << GetTypeInfo()->ClassName() << ">" << std::endl;
-		os.widen(w+2);
-		for(size_t i=0; i<NChildObject(); ++i){
-			GetChildObject(i)->Print(os);
-		}
+		PrintHeader(os);
+		PrintChildren(os);
+		PrintFooter(os);
+	}else{
 		os.width(0);
 		os << UTPadding(w);
-		os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
-	}else{
 		os << "<" << GetTypeInfo()->ClassName() << "/>" << std::endl;
 	}
 	os.width(w);

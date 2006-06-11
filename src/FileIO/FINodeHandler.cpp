@@ -7,32 +7,8 @@
 #include "FILoadContext.h"
 namespace Spr{;
 
-#define REGISTER(x)	\
-	FINodeHandlers::theNodeHandlers->insert(DBG_NEW x);
-
 UTRef<FINodeHandlers> FINodeHandlers::theNodeHandlers;
 
-template <class T>
-class FINodeHandlerImp: public FINodeHandler{
-public:
-	typedef T DESC;
-	FINodeHandlerImp(const char* t){
-		type = t;
-	}
-	template <class S>
-	void Get(S*& s, FILoadContext* ctx){
-		s = NULL;
-		for(int i=ctx->objects.size()-1; i>=0 && !s; --i){
-			s = DCAST(S, ctx->objects[i]);
-		}
-		assert(s);
-	}
-	void Load(FILoadContext* ctx){
-		T* desc = (T*)ctx->datas.Top()->data;
-		Load(*desc, ctx);
-	}
-	virtual void Load(T& t, FILoadContext* ctx)=0;
-};
 
 class FINodeHandlerFIInactiveSolids: public FINodeHandlerImp<FIInactiveSolids>{
 public:
@@ -53,7 +29,7 @@ public:
 		}
 	};
 
-	FINodeHandlerFIInactiveSolids(): FINodeHandlerImp<DESC>("FIInactiveSolids"){}
+	FINodeHandlerFIInactiveSolids(): FINodeHandlerImp<Desc>("FIInactiveSolids"){}
 	void Load(FIInactiveSolids& desc, FILoadContext* ctx){
 		PHSceneIf* scene;
 		Get(scene, ctx);
@@ -61,10 +37,12 @@ public:
 	}
 };
 
+extern void RegisterOldSpringheadNodeHandlers();
 void RegisterNodeHandlers(){
 	if (!FINodeHandlers::theNodeHandlers)
 		FINodeHandlers::theNodeHandlers = DBG_NEW FINodeHandlers;
-	REGISTER(FINodeHandlerFIInactiveSolids);
+	REGISTER_NODE_HANDLER(FINodeHandlerFIInactiveSolids);
+	RegisterOldSpringheadNodeHandlers();
 }
 
 

@@ -46,9 +46,9 @@ namespace Spr{;
 	パースして自動生成する．*/
 
 ///	対象の型にアクセスするためのクラス
-class FIAccessBase:public UTRefCount{
+class UTAccessBase:public UTRefCount{
 public:
-	virtual ~FIAccessBase(){}
+	virtual ~UTAccessBase(){}
 	///	オブジェクトの構築
 	virtual void* Create()=0;
 	///	オブジェクトの破棄
@@ -65,7 +65,7 @@ public:
 	virtual size_t SizeOfVector()=0;
 };
 template <class T>
-class FIAccess:public FIAccessBase{
+class UTAccess:public UTAccessBase{
 	virtual void* Create(){ return DBG_NEW T; }
 	virtual void Delete(void* ptr){delete (T*)ptr; }
 	virtual void* VectorPush(void* v){
@@ -182,7 +182,7 @@ public:
 	///	IfInfo
 	const IfInfo* ifInfo;
 	///
-	UTRef<FIAccessBase> access;
+	UTRef<UTAccessBase> access;
 
 	friend class UTTypeDescDb;
 public:
@@ -255,10 +255,10 @@ template <class N>
 class SPR_DLL UTTypeDescNumber:public UTTypeDesc{
 public:
 	UTTypeDescNumber(){
-		access = DBG_NEW FIAccess<N>;
+		access = DBG_NEW UTAccess<N>;
 	}
 	UTTypeDescNumber(std::string tn): UTTypeDesc(tn, sizeof(N)){
-		access = DBG_NEW FIAccess<N>;
+		access = DBG_NEW UTAccess<N>;
 	}
 protected:
 	///	数値読み出し
@@ -275,10 +275,10 @@ template <class N>
 class SPR_DLL UTTypeDescBool:public UTTypeDesc{
 public:
 	UTTypeDescBool(){
-		access = DBG_NEW FIAccess<N>;
+		access = DBG_NEW UTAccess<N>;
 	}
 	UTTypeDescBool(std::string tn): UTTypeDesc(tn, sizeof(N)){
-		access = DBG_NEW FIAccess<N>;
+		access = DBG_NEW UTAccess<N>;
 	}
 protected:
 	///	数値読み出し
@@ -294,10 +294,10 @@ protected:
 class SPR_DLL UTTypeDescString:public UTTypeDesc{
 public:
 	UTTypeDescString(){
-		access = DBG_NEW FIAccess<std::string>;
+		access = DBG_NEW UTAccess<std::string>;
 	}
 	UTTypeDescString(std::string tn): UTTypeDesc(tn, sizeof(std::string)){
-		access = DBG_NEW FIAccess<std::string>;
+		access = DBG_NEW UTAccess<std::string>;
 	}
 protected:
 	///	数値読み出し
@@ -359,24 +359,11 @@ public:
 	void Print(std::ostream& os) const ;
 };
 
-
-/**	ファイルからObjectDescを読み出したり，ファイルに書き込んだりするためのデータ．
-	ObjectDesc へのポインタ(data) と 型情報 (type) を持つ．
-	メモリの管理も行う．	*/
-class FINodeData: public UTRefCount{
-public:
-	UTTypeDesc* type;	///<	データの型 
-	UTString name;		///<	名前
-	void* data;			///<	ロードしたデータ
-	bool haveData;		///<	dataをdeleteすべきかどうか．
-	FINodeData(UTTypeDesc* t=NULL, void* d=NULL);
-	~FINodeData();
-};
 /**	TypeDescのフィールドのイタレータ
 	バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，
 	読み出し中のデータがUTTypeDescのツリーのどこに対応するかを保持しておく必要がある．
 */
-class FIFieldIt{
+class UTTypeDescFieldIt{
 public:
 	/**	フィールドの種類を示すフラグ．
 		ほとんどのファイルフォーマットで，整数，実数，文字列で，異なるパーサが必要になる．
@@ -393,14 +380,14 @@ public:
 	int arrayLength;						///<	固定長の場合の配列の長さ
 	FieldType fieldType;					///<	読み出すフィールドの型
 
-	FIFieldIt(UTTypeDesc* d);					///<	コンストラクタ
+	UTTypeDescFieldIt(UTTypeDesc* d);					///<	コンストラクタ
 	bool NextField();						///<	次のフィールドに進む
 };
-class FIFieldIts:public UTStack<FIFieldIt>{
+class UTTypeDescFieldIts:public UTStack<UTTypeDescFieldIt>{
 public:
 	///
 	void PushType(UTTypeDesc* t){
-		Push(FIFieldIt(t));
+		Push(UTTypeDescFieldIt(t));
 	}
 	///	次のフィールドに進む
 	bool NextField(){
@@ -427,13 +414,13 @@ public:
 		return back().arrayPos < back().arrayLength;
 	}
 	bool IsBool(){
-		return back().fieldType==FIFieldIt::F_BOOL;
+		return back().fieldType==UTTypeDescFieldIt::F_BOOL;
 	}
 	bool IsNumber(){
-		return back().fieldType==FIFieldIt::F_INT || back().fieldType==FIFieldIt::F_REAL;
+		return back().fieldType==UTTypeDescFieldIt::F_INT || back().fieldType==UTTypeDescFieldIt::F_REAL;
 	}
 	bool IsString(){
-		return back().fieldType==FIFieldIt::F_STR;
+		return back().fieldType==UTTypeDescFieldIt::F_STR;
 	}
 };
 

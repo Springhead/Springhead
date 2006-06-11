@@ -232,9 +232,9 @@ void UTTypeDescDb::RegisterProto(UTTypeDesc* n){
 
 
 //---------------------------------------------------------------------------
-//	FIFieldIt
+//	UTTypeDescFieldIt
 
-FIFieldIt::FIFieldIt(UTTypeDesc* d){
+UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 	type = d;
 	if (type){
 		field = &*type->GetComposit().end();
@@ -245,7 +245,7 @@ FIFieldIt::FIFieldIt(UTTypeDesc* d){
 	arrayLength = 0;
 	fieldType=F_NONE;
 }
-bool FIFieldIt::NextField(){
+bool UTTypeDescFieldIt::NextField(){
 	if (!type->IsComposit()) return false;
 	//	次のフィールドへ進む
 	if (field == &*type->GetComposit().end()){

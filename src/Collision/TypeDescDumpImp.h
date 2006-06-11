@@ -3,7 +3,7 @@
 	PHMaterial* pPHMaterial = NULL;
 	desc = DBG_NEW UTTypeDesc("PHMaterial");
 	desc->size = sizeof(PHMaterial);
-	desc->access = DBG_NEW FIAccess<PHMaterial>;
+	desc->access = DBG_NEW UTAccess<PHMaterial>;
 	field = desc->AddField("", "float", "mu", "");
 	field->offset = (char*)&(pPHMaterial->mu) - (char*)pPHMaterial;
 	field = desc->AddField("", "float", "mu0", "");
@@ -17,7 +17,7 @@
 	desc->size = sizeof(CDShapeDesc);
 	desc->ifInfo = CDShapeIf::GetIfInfoStatic();
 	((IfInfo*)CDShapeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<CDShapeDesc>;
+	desc->access = DBG_NEW UTAccess<CDShapeDesc>;
 	field = desc->AddField("ShapeType", "enum", "type",  "");
 	field->AddEnumConst("CONVEX");
 	field->AddEnumConst("CONVEXMESH");
@@ -32,7 +32,7 @@
 	desc->size = sizeof(CDConvexMeshDesc);
 	desc->ifInfo = CDConvexMeshIf::GetIfInfoStatic();
 	((IfInfo*)CDConvexMeshIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<CDConvexMeshDesc>;
+	desc->access = DBG_NEW UTAccess<CDConvexMeshDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDConvexMeshDesc - (char*)pCDConvexMeshDesc;
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
@@ -46,7 +46,7 @@
 	desc->size = sizeof(CDSphereDesc);
 	desc->ifInfo = CDSphereIf::GetIfInfoStatic();
 	((IfInfo*)CDSphereIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<CDSphereDesc>;
+	desc->access = DBG_NEW UTAccess<CDSphereDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDSphereDesc - (char*)pCDSphereDesc;
 	field = desc->AddField("", "float", "radius", "");
@@ -60,7 +60,7 @@
 	desc->size = sizeof(CDBoxDesc);
 	desc->ifInfo = CDBoxIf::GetIfInfoStatic();
 	((IfInfo*)CDBoxIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW FIAccess<CDBoxDesc>;
+	desc->access = DBG_NEW UTAccess<CDBoxDesc>;
 	field = desc->AddBase("CDShapeDesc");
 	field->offset = (char*)(CDShapeDesc*)pCDBoxDesc - (char*)pCDBoxDesc;
 	field = desc->AddField("", "Vec3f", "boxsize", "");

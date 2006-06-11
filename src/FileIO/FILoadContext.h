@@ -13,6 +13,19 @@
 
 namespace Spr{;
 
+/**	ファイルからObjectDescを読み出したり，ファイルに書き込んだりするためのデータ．
+	ObjectDesc へのポインタ(data) と 型情報 (type) を持つ．
+	メモリの管理も行う．	*/
+class FINodeData: public UTRefCount{
+public:
+	UTTypeDesc* type;	///<	データの型 
+	UTString name;		///<	名前
+	void* data;			///<	ロードしたデータ
+	bool haveData;		///<	dataをdeleteすべきかどうか．
+	FINodeData(UTTypeDesc* t=NULL, void* d=NULL);
+	~FINodeData();
+};
+
 class FINodeHandlers;
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
@@ -26,9 +39,10 @@ public:
 	///
 	struct FileInfo{
 		~FileInfo();
-		std::string name;	///<	ファイル名
-		const char* start;	///<	メモリマップされたファイルの先頭
-		const char* end;	///<	メモリマップされたファイルの終端
+		std::string name;	///<		ファイル名
+		const char* start;	///<		メモリマップされたファイルの先頭
+		const char* end;	///<		メモリマップされたファイルの終端
+		const char* parsingPos;	///<	現在のパース位置
 #ifdef _WIN32
 		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
 #else 
@@ -80,7 +94,7 @@ public:
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<FINodeData> > datas;
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
-	FIFieldIts fieldIts;
+	UTTypeDescFieldIts fieldIts;
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
 	///	リファレンスを後でリンクするための記録．
@@ -89,8 +103,6 @@ public:
 	Tasks postTasks;
 	///	型DB
 	UTTypeDescDb* typeDb;
-	///	ノードハンドラ
-	FINodeHandlers* handlers;
 
 	//---------------------------------------------------------------------------
 	//	関数
@@ -98,21 +110,6 @@ public:
 	FILoadContext():errorStream(NULL){
 		errorStream=&DSTR;
 	}
-	/**	ノードのロード．
-		ロードしたDescからオブジェクトを作成する．
-		作成者->AddChildObject(新オブジェクト)を呼び出す．
-		オブジェクトの作成は，親オブジェクトのCreateObject()，親の親のCreateObject()と
-		先祖のCreateObject()を順に呼んで，作成できたところで止める．
-		どのオブジェクトも作成できない場合は，CreateSdk()を呼び出す．
-
-		作成者と親が異なる場合，親のAddChildObject()を呼び出す．	*/
-	void LoadNode();
-	///	ノードのロードの終了
-	void EndNode();
-	///	ブロック(組み立て型)に入る
-	void EnterBlock();
-	///	ブロック(組み立て型)から出る
-	void LeaveBlock();
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
 	void ErrorMessage(const char* pos, const char* msg);
 	///	メッセージの作成．posをファイル名と行番号に変換する．
@@ -135,6 +132,8 @@ public:
 	void Link();
 	///
 	void PostTask();
+	///	ノードの作成
+	void PushCreateNode(const IfInfo* info, const void* data);
 };
 
 
