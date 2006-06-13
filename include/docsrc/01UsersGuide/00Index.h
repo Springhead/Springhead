@@ -5,7 +5,10 @@
  - \subpage pageGettingStarted
  - \subpage pageConcept
  - \subpage pageApiBasic
- - \subpage pageApiDetail
+ - \subpage pageFoundation
+ - \subpage pagePhysics
+ - \subpage pageGraphics
+ - \subpage pageFileIO
 
 Ç©ÇÁç\ê¨Ç≥ÇÍÇ‹Ç∑ÅD
 <br><br><br>
