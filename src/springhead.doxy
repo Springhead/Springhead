@@ -306,6 +306,7 @@ WARN_LOGFILE           = doxygen.log
 # with spaces.
 
 INPUT         = ./unistd.h \
+		./docsrc/	\
 		../include Base Foundation Collision Physics Graphics \
 		tests/list.txt Samples/list.txt
 		
@@ -675,12 +676,12 @@ EXPAND_AS_DEFINED      =
 
 # The TAGFILES tag can be used to specify one or more tagfiles.
 
-TAGFILES               = 
+TAGFILES               = ../include/Springhead.doxy.tag=../../include/html
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create 
 # a tag file that is based on the input files it reads.
 
-GENERATE_TAGFILE       = 
+GENERATE_TAGFILE       = Springhead.doxy.tag
 
 # If the ALLEXTERNALS tag is set to YES all external classes will be listed 
 # in the class index. If set to NO only the inherited external classes 
