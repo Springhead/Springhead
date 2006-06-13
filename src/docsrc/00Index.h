@@ -13,6 +13,7 @@
 <br>
 
 Springhead2SDK開発者マニュアルは，
+ - \subpage pageAPIClassImp
  - \subpage pageFoundationImp
  - \subpage pagePhysicsImp
  - \subpage pageGraphicsImp

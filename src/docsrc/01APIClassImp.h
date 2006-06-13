@@ -1,5 +1,5 @@
 /**
-\page howtoCreateAPIClass APIクラスの作り方・実装の仕方
+\page pageAPIClassImp APIクラスの作り方・実装の仕方
 
 \section secCreateAPIClass APIクラスの作り方
 
@@ -25,7 +25,7 @@ APIクラスを宣言するには，
 同じGet関数の const 版と non const 版を作るときなど実装を書きたい場合は，
 ヘッダに書くか， Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など) に書きます．
 
-\subsection secTypeInfoOfAPIClass{APIクラスの型情報}
+\subsection secTypeInfoOfAPIClass APIクラスの型情報
 APIクラスを宣言したら，ライブラリのソースファイル
 Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など)に
 <pre>
@@ -114,52 +114,68 @@ IF_OBJECT_IMP，IF_OBJECT_IMP_ABSTを使うと1回で書けます．
 \section secFileLoadSave ファイルからのロード・ファイルへのセーブ
 FileIO SDK(\ref pageFileIO) でロード・セーブができるようにするためには，APIクラスの定義に
 若干の細工をする必要があります．
+FileIO SDK の詳細は，\ref pageFileIOImp を参照してください
 
-詳細は，\ref pageFileIOImp を参照してください
+自動ロード・セーブ可能なオブジェクトを定義するには，
+<ol>
+ <li>ロードしたいデータを含んだディスクリプタ (例:PHSolidDesc)を作ります．
+ <li>インタフェースクラス (例：PHSolidIf) を作ります．
+ <li>実装クラス (例：PHSolid)を作ります．このとき実装クラスで，
+  <pre>
+  	///	デスクリプタの読み出し(コピー版)
+  	virtual bool GetDesc(void* desc) const { return false; }
+  	///	デスクリプタの読み出し(参照版)
+  	virtual const void* GetDescAddress() const { return NULL; }
+  	///	デスクリプタのサイズ
+  	virtual size_t GetDescSize() const { return 0; };
+  </pre>
+  をオーバーロードしてください．ディスクリプタを継承しているならば，
+  LoadableがLoadableDescを継承しているなら，
+  <pre>
+	ACCESS_DESC(実装クラス名);
+  </pre>
+  マクロを実装クラスの宣言の中に置けば，オーバーライドしてくれます．
+ <li> シーングラフ上で，実装クラス(例：PHSolid)の先祖になるクラスのなかから，
+      実装クラス(例：PHSolid)を生成するクラス(例：PHScene)を決めます．
+ <li> 生成クラス(例：PHScene)のCreateObject()が実装クラス(PHSolid)を作れるように，
+      <pre>
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
+	  </pre>
+      のようにファクトリを登録します．
+      登録は，ファイルのロードより前に行わなければなりません．
+      SDKのコンストラクタで1度だけ呼び出すのが良いでしょう．
+      詳しくは \ref secFactory を参照ください．
+</ol>
 
-自動ロード・セーブ可能なオブジェクト Loadable を定義するには，
+\section secStateLoadSave 状態の保存・再現
+ファイルへのロードセーブでは，何も無い状態からオブジェクトを生成してシーングラフを作りますが，
+シミュレーション中に，10ステップ前の状態に戻したいなどということも良くあるでしょう．
+そんな用途に使うのが状態の保存・再現です．
 
-+ロードしたいデータを含んだLoadableDescを作ります．
-+インタフェースクラス LoadableIf を作ります．
-+実装クラス Loadableを作ります．
-このときクラスに，
- // 自分のDescを((LoadableDesc*)d)にコピーする．
- virtual bool GetDesc(void* d);    
- // sizeof(LoadableDesc)を返す．
- virtual size_t GetDescSize() const;
-を宣言してオーバーロードしてください．~
-LoadableがLoadableDescを継承しているなら，
- DEF_DESC(Lodable);
-とすると，マクロが実装までやってくれます．
-
-+Loadableクラスの親クラスを決めて，親クラスに，
- LoadableIf* CreateLoadable(const LoadableDesc& desc);
-を作ります．
-+親クラスにCreateObjectが無ければ，
- ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-を作ります．
-+親クラスのCreateObjectに，info==LoadableIf::GetStateicInfo() の場合の処理を追記します．
- }else if(info == LoadableIf::GetIfInfoStatic()){
-  return CreateLoadable(*(const LoadableDesc*)desc);
- }else if ...
-
-**状態の保存・再現ができるクラスの作り方
-クラスRegretを定義するには，
-+保存したい状態を保持する構造体RegretStateを作ります．
-+インタフェースクラス RegretIf を作ります．
-+実装クラス Regret を作ります．
-このときクラスに，
- // 自分のStateを((RegretState*)s)にコピーする．
- virtual bool GetState(void* s);
- // (RegretState*)s)の状態に自分の状態をセットする．
- virtual bool SetState(void* s);
- // sizeof(LoadableState)を返す．
- virtual size_t GetStateSize() const;
- virtual void ConstructState(void* m){ new(m) RegretState;}
- virtual void DestructState(void* m){ ((RegretState*)m)->~RegretState();}	
-を宣言してオーバーロードしてください．~
-RegretがRegretStateを継承しているなら，
- DEF_State(Regret);
-とすると，マクロが実装までやってくれます．
- DEF_DESC_STATE(Regert)とすると，DescとState両方を実装までしてくれます．
+状態の保存・再現ができるクラスを作るには，
+<ol>
+ <li> 保存したい状態を保持する構造体(例：PHSolidState)を作ります．
+ <li> 実装クラス (例：PHSolid を作ります．
+	このとき実装クラスで，
+	<pre>
+	///	状態の読み出し(コピー版)
+	virtual bool GetState(void* state) const { return false; }
+	///	状態の読み出し(参照版)
+	virtual const void* GetStateAddress() const { return NULL; }
+	///	状態の設定
+	virtual void SetState(const void* state){}
+	///	状態のサイズ
+	virtual size_t GetStateSize() const { return 0; };
+	///	メモリブロックを状態型に初期化
+	virtual void ConstructState(void* m) const {}
+	///	状態型をメモリブロックに戻す
+	virtual void DestructState(void* m) const {}
+	</pre>
+	をオーバーロードしてください．<br>
+	実装クラス(例：PHSolid)が状態構造体(例：PHSolidState)を継承しているなら，
+	<pre>
+	ACCESS_STATE(実装クラス名);
+	</pre>
+	マクロを実装クラスの宣言の中に置けば，オーバーライドしてくれます．
+	ACCESS_DESC_STATE() マクロを置けば，DescとState両方をオーバーライドしてくれます．
 */
