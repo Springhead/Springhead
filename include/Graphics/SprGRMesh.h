@@ -1,3 +1,8 @@
+/**
+ *	@file SprGRMesh.h
+ *	@brief ƒƒbƒVƒ…
+*/
+
 /**	\addtogroup	gpGraphics	*/
 //@{
 

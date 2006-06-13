@@ -1,3 +1,8 @@
+/**
+ *	@file SprGRFrame.h
+ *	@brief シーングラフのノード
+*/
+
 /**	\addtogroup	gpGraphics	*/
 //@{
 

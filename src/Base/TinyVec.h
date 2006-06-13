@@ -12,6 +12,10 @@ namespace Spr{;
 
 /**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
 //@{
+/**	@file TinyVec.h
+	2,3,4次元のベクトルの定義
+ */
+
 //-----------------------------------------------------------------------------
 //		TVec2
 template <class EXP, class T> class TVecDesc: public PTM::TVectorDesc<1, EXP, EXP, T>{};

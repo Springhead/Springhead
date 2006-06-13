@@ -1,6 +1,6 @@
 /**
  *	@file SprPhysics.h
- *	@brief 物理計算のヘッダファイル群
+ *	@brief 物理シミュレーションのヘッダファイル群
 */
 #ifndef SPR_PHYSICS_H
 #define SPR_PHYSICS_H

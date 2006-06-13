@@ -1,3 +1,8 @@
+/**
+ *	@file SprGRScene.h
+ *	@brief シーングラフ
+*/
+
 /**	\addtogroup	gpGraphics	*/
 //@{
 

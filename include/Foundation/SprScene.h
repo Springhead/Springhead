@@ -1,3 +1,6 @@
+/** @file SprScene.h
+	名前を持つオブジェクト
+ */
 #ifndef SPR_SCENE_H
 #define SPR_SCENE_H
 #include <Foundation/SprObject.h>

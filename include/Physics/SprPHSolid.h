@@ -1,3 +1,7 @@
+/**
+ *	@file SprPHSolid.h
+ *	@brief „‘Ì
+*/
 #ifndef SPR_PHSolidIf_H
 #define SPR_PHSolidIf_H
 #include <Foundation/SprObject.h>

@@ -9,6 +9,9 @@ namespace Spr{;
 
 /**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
 //@{
+/**	@file TQuaternion.h
+	クォータニオンクラスの定義
+ */
 
 /**	Quaternion/4元数．3x3行列の代わりに回転を表すために使える．
 	4変数で済む．補間や微分・積分がやりやすい．<br>

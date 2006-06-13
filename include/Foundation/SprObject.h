@@ -1,3 +1,6 @@
+/** @file SprObject.h
+	実行時型情報を持つクラスの基本クラス
+ */
 #ifndef SPR_OBJECT_H
 #define SPR_OBJECT_H
 #include "../SprBase.h"

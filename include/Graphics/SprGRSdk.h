@@ -1,7 +1,7 @@
 /**	\addtogroup	gpGraphics	*/
 //@{
 
-	/**
+/**
  *	@file SprGRSdk.h
  *	@brief グラフィックスSDKの基本クラス
  */

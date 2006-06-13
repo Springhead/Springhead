@@ -1,6 +1,7 @@
 #ifndef BASETYPEINFO_H
 #define BASETYPEINFO_H
-/**	実行時型情報テンプレートライブラリ
+/**	@file BaseTypeInfo.h
+	実行時型情報テンプレートライブラリ.
 	コンパイラのrttiを使わずマクロとテンプレートで実装してある．
 */
 namespace Spr{;

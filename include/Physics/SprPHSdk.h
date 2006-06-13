@@ -1,3 +1,7 @@
+/**
+ *	@file SprPHSdk.h
+ *	@brief 物理シミュレーションSDK
+*/
 #ifndef SPR_PHSDKIF_H
 #define SPR_PHSDKIF_H
 #include <Collision/SprCDShape.h>
