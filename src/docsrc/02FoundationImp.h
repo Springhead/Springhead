@@ -12,7 +12,7 @@ PHSdkやGRSdkは，ルートのオブジェクトで，親オブジェクトを持ちません．
 これらは，グローバル関数 CreateSdk() CreatePHSdk() CreateGRSdk()などで生成できます．
 
 
-\subsection{Factory}
+\subsection secFactory Factoryクラス
 たとえば，PHSolid を継承し 形状から自動で質量と慣性モーメントを求める PHAutoSolid
 を作ったとして，これをファイルローダーでロードして，PHSceneに追加するためには，
 PHAutoSolidをPHScene::CreateObject()が生成できなければなりません．

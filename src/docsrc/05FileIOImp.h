@@ -1,9 +1,9 @@
 /*
 \page pageFileIOImp ƒtƒ@ƒCƒ‹“üo—Í‚ÌÀ‘•
 
-\section{FileIO‚Ìd‘g‚İ}
+\section secFileIMech FileIO‚Ìd‘g‚İ
 
-\subsection{ƒtƒ@ƒCƒ‹‚Ìƒ[ƒhEƒZ[ƒu}
+\subsection secFileLoadSave ƒtƒ@ƒCƒ‹‚Ìƒ[ƒhEƒZ[ƒu
 ƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒg‚É‡‚Á‚½ƒp[ƒT‚ğ—pˆÓ
 ‚·‚é•K—v‚ª‚ ‚è‚Ü‚·D
 ‚±‚ê‚ÍCFIFileƒNƒ‰ƒX‚Ì”h¶ƒNƒ‰ƒX‚ªs‚Á‚Ä‚¢‚Ü‚·D
@@ -14,7 +14,7 @@ Boost::spirit‚Æ‚¢‚¤¶¬•¶–@‚©‚ç‚Ìƒp[ƒTƒWƒFƒlƒŒ[ƒ^‚ğ—p‚¢‚ÄÀ‘•‚µ‚Ä‚¢‚Ü‚·D
 ƒV[ƒ“ƒOƒ‰ƒt‚ğ„‰ñ‚µ‚È‚ª‚çC–Ú“I‚ÌƒtƒH[ƒ}ƒbƒg‚Ìƒtƒ@ƒCƒ‹‚ªo—Í‚³‚ê‚é‚æ‚¤‚ÉC
 ‰¼‘zŠÖ”‚ğÀ‘•‚µ‚Äs‚«‚Ü‚·D
 
-\subsection{ƒ[ƒh‚Ìè‡}
+\subsection secLoadProc ƒ[ƒh‚Ìè‡
 ‚±‚±‚Å‚ÍCƒtƒ@ƒCƒ‹‚É‘‚©‚ê‚½‚Ğ‚Æ‚Â‚ÌƒIƒuƒWƒFƒNƒg‚Ìƒf[ƒ^‚©‚çC
 ƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚éè‡‚ğà–¾‚µ‚Ü‚·D
 
@@ -50,7 +50,7 @@ CreateObject()‚É‚Â‚¢‚Ä‚ÍC\ref pageFoundationImp ‚Ì \ref secCreateObject ‚ğQÆ‚
 ‚±‚Ì‚æ‚¤‚ÉƒIƒuƒWƒFƒNƒg‚Ì¶¬‚âƒf[ƒ^‚Ìİ’è‚É‚àAPI‚ğ—p‚¢‚Ä‚¨‚èC
 ‘¼‚Ìƒ‚ƒWƒ…[ƒ‹(‚½‚Æ‚¦‚Î src/Physics)‚ÌÀ‘•‚É‚ÍˆË‘¶‚µ‚Ä‚¢‚Ü‚¹‚ñD
 
-\subsection{ƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒhˆÈŠO‚Ìˆ—}
+\subsection secLoadHandler ƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒhˆÈŠO‚Ìˆ—
 ƒm[ƒh‚ğƒ[ƒh‚µ‚½‚Æ‚«C’Pƒ‚ÉƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚é‚¾‚¯‚Å‚È‚­C
 ‰½‚ç‚©‚Ìˆ—‚ğs‚¢‚½‚¢‚±‚Æ‚à‚ ‚è‚Ü‚·D
 
@@ -69,6 +69,6 @@ GRFrame‚ğ¶¬‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñD
       GRFrame ‚ğ¶¬‚µ‚½‚èCe‚Ì GRFrame‚Ì transform ‚ğİ’è‚µ‚½‚è‚Æ‚¢‚Á‚½Cˆ—‚ğs‚¤D
 </ol>
 
-\subsection{ƒZ[ƒu‚Ìè‡}
+\subsection secSaveProc ƒZ[ƒu‚Ìè‡
 
 */

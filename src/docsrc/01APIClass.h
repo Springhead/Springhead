@@ -1,8 +1,8 @@
 \page howtoCreateAPIClass APIクラスの作り方・実装の仕方
 
-\section{APIクラスの作り方}
+\section secCreateAPIClass APIクラスの作り方
 
-\subsection{APIクラスの宣言}
+\subsection secDefAPIClass APIクラスの宣言
 APIクラスのヘッダファイルは，Springhead2/include/SDKNAME に作ります．
 (SDKNAMEはSDKの名前 Graphics，Physicsなど)<br>
 ヘッダファイルの名前は，Sprオブジェクト名.h (SprPHSolid.h など)とします．
@@ -24,7 +24,7 @@ APIクラスを宣言するには，
 同じGet関数の const 版と non const 版を作るときなど実装を書きたい場合は，
 ヘッダに書くか， Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など) に書きます．
 
-\subsection{APIクラスの型情報}
+\subsection secTypeInfoOfAPIClass{APIクラスの型情報}
 APIクラスを宣言したら，ライブラリのソースファイル
 Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など)に
 <pre>
@@ -35,10 +35,10 @@ Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など)に
 キャストのマクロ DCAST はこの情報を使ってキャストします．
 
 
-\section{実装クラスの作り方}
+\section secCreateImplementClass 実装クラスの作り方
 APIクラスを作ったら，それを継承した実装クラスを作ります．
 
-\subsection{実装クラスの宣言}
+\subsection defImplementClass 実装クラスの宣言
 実装クラスは，~
 <pre>
  class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{
@@ -52,7 +52,7 @@ APIクラスを作ったら，それを継承した実装クラスを作ります．
 </pre>
 のように，宣言します．
 
-\subsubsection{OBJECT_DEF}
+\subsubsection secOBJECT_DEF OBJECT_DEFマクロ
 クラスの宣言のなかのOBJECT_DEFは，
 <ul>
  <li> 型情報のためのStatic変数(UTTypeInfo* typeInfo, GetTypeInfo(), GetTypeInfoStatic())
@@ -62,7 +62,7 @@ APIクラスを作ったら，それを継承した実装クラスを作ります．
 抽象クラスの場合は，実体化できないというエラーがでるので，
 代わりにOBJECT_DEF_ABSTを使います．
 
-\subsubsection{先祖APIクラスの仮想関数の自動オーバーライド}
+\subsubsection secAutoOverride 先祖APIクラスの仮想関数の自動オーバーライド
 実装クラスは，
 <pre>
  class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{...}
@@ -89,8 +89,8 @@ APIクラスを作ったら，それを継承した実装クラスを作ります．
 </pre>
 のようにこのクラスを継承します．
 
-\section{実装クラスの定義}
-\subsection{OBJECT_IMP}
+\section secImpImplementationClass 実装クラスの定義
+\subsection secOBJECT_IMP OBJECT_IMPマクロ
 OBJECT_DEFで定義したメソッドや変数の実装は，マクロ OBJECT_IMP で
 <pre>
  OBJECT_IMP(SceneObject, NamedObject);
@@ -100,7 +100,7 @@ OBJECT_DEFで定義したメソッドや変数の実装は，マクロ OBJECT_IMP で
 APIクラスの定義に必要な IF_IMP と OBEJCT_IMPは，両方をあわせたマクロ
 IF_OBJECT_IMP，IF_OBJECT_IMP_ABSTを使うと1回で書けます．
 
-\subsection{宣言したAPIの実装}
+\subsection secImpAPIClass 宣言したAPIの実装
 <pre>
  void SceneObject::SetScene(SceneIf* s){
  	SetNameManager(OCAST(NameManager, s));
@@ -110,7 +110,7 @@ IF_OBJECT_IMP，IF_OBJECT_IMP_ABSTを使うと1回で書けます．
 のように，宣言したAPIを実装します．関数名のほか，型名などが違っても，
 オーバーライドできないので，まったく同じ宣言になるように気をつけてください．
 
-\section{ファイルからのロード・ファイルへのセーブ}
+\section secFileLoadSave ファイルからのロード・ファイルへのセーブ
 FileIO SDK(\ref pageFileIO) でロード・セーブができるようにするためには，APIクラスの定義に
 若干の細工をする必要があります．
 
