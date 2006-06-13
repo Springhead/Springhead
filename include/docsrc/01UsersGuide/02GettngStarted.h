@@ -1,5 +1,5 @@
 /**
-\page pageGettingStarted	‚Æ‚è‚ ‚¦‚¸g‚Á‚Ä‚İ‚æ‚¤
+\page pageGettingStarted	‚Í‚¶‚ß‚Ä‚İ‚æ‚¤
 
 \section contentsGettingStarted	 Contents 
 @@ \ref requirement				<br>

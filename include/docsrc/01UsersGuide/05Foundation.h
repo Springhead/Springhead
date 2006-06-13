@@ -1,4 +1,4 @@
-/** \page pageFoundation 基本SDK
+/** \page pageFoundation 基本SDKのAPI
 
 \section sec_vectorMatrix	ベクトルクラス，行列クラス
 Springhead2には，基本的なベクトル・行列のクラスが用意されています．

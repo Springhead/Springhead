@@ -1,4 +1,4 @@
-/** \page pageGraphics グラフィックスSDK
+/** \page pageGraphics グラフィックスSDKのAPI
 
 - \ref sec_GRSdk
 - \ref sec_GRScene

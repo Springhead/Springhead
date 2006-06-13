@@ -1,4 +1,4 @@
-/** \page pageFileIO ファイル入出力SDK
+/** \page pageFileIO ファイル入出力SDKのAPI
 
 - \ref sec_FISdk
 
