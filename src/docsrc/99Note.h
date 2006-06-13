@@ -1,5 +1,5 @@
 /**
-\page pageSDKNode SDK開発時の注意点
+\page pageSDKNote SDK開発時の注意点
 
 \section secCast キャスト
 APIクラス，実装クラスは，多重継承をすることになるため，

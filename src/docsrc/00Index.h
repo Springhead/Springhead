@@ -18,6 +18,7 @@ Springhead2SDK開発者マニュアルは，
  - \subpage pagePhysicsImp
  - \subpage pageGraphicsImp
  - \subpage pageFileIOImp
+ - \subpage pageSDKNote
 
 から構成されます．
 
