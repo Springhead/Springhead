@@ -226,10 +226,15 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetVertexFormat(const GRVertexElement* e)=0;
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
 	virtual void SetVertexShader(void* shader){}
-	///	頂点座標を指定してプリミティブを描画
+	///	頂点を指定してプリミティブを描画
 	virtual void DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
-	///	頂点座標とインデックスを指定してプリミティブを描画
+	///	頂点とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+ 	///	頂点の成分ごとの配列を指定して，プリミティブを描画
+	virtual void DrawArrays(TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
+ 	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
+	virtual void DrawArrays(TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
+	
 	///	DiplayListの作成
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	///	DiplayListの作成

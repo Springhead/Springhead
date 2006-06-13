@@ -121,5 +121,17 @@ struct GRVertexElement {
 	};
 };
 
+/**	インターリーブされていない頂点バッファの指定
+<pre>
+	Vec3f pos[20]; Vec3f normal[20]; unsigned color[20];
+</pre>
+のようなバッファを指定するときに使う．
+配列ひとつに1つのGRVertexArrayが対応する．
+*/
+struct GRVertexArray {
+	GRVertexElement format;	///<	フォーマット
+	void* buffer;			///<	配列のアドレス
+};
+	
 }
 #endif

@@ -137,3 +137,13 @@
 	field = desc->AddField("", "char", "usageIndex", "");
 	field->offset = (char*)&(pGRVertexElement->usageIndex) - (char*)pGRVertexElement;
 	db->RegisterDesc(desc);
+	
+	GRVertexArray* pGRVertexArray = NULL;
+	desc = DBG_NEW UTTypeDesc("GRVertexArray");
+	desc->size = sizeof(GRVertexArray);
+	desc->access = DBG_NEW UTAccess<GRVertexArray>;
+	field = desc->AddField("", "GRVertexElement", "format", "");
+	field->offset = (char*)&(pGRVertexArray->format) - (char*)pGRVertexArray;
+	field = desc->AddField("pointer", "void", "buffer", "");
+	field->offset = (char*)&(pGRVertexArray->buffer) - (char*)pGRVertexArray;
+	db->RegisterDesc(desc);
