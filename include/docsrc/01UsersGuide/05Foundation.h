@@ -52,6 +52,16 @@ forループにて10回のメモリ確保をnewで行い、deleteでのメモリ開放を行っていませんが
     }
 \endverbatim
 
+\section sec_SceneGraph シーングラフ
+ 一般に，物理シミュレータやバーチャルリアリティのSDKでは，
+ バーチャル世界を構成するオブジェクト達のことをシーングラフと呼びます．
+ シーングラフは，SceneとかWorldとかUniverseとか呼ばれるシーン全体を管理するオブジェクトと，
+ それに所有される，座標系やポリゴンメッシュなどのオブジェクトからなります．
+ 例えば，Springheadの物理シミュレータのシーングラフは，
+ <img src="../../include/docsrc/01UsersGuide/GRSdkScene.png">
+ のようなイメージです．
+ 
+ 
 \section sec_SceneObjectName シーンとオブジェクトと名前
 Springheadの \ref pagePhysics \ref pageGraphics では，ひとつのVR世界をシーン(Scene)と呼び，
 Sceneクラスを継承したPHSceneクラスやGRSceneクラスが対応します．
@@ -60,4 +70,6 @@ Sceneクラスを継承したPHSceneクラスやGRSceneクラスが対応します．
 名前を指定してオブジェクトへのポインタを取得できます．
 また，ファイルに保存するときには，オブジェクトへの参照は名前で保存されます．
 これらは \ref pagePhysics や \ref pageGraphics で共通で \ref pageFoundation にあります．
+
+
 */
