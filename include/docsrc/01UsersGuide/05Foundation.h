@@ -1,7 +1,9 @@
 /** \page pageFoundation 基本SDK
 
-\section sec_BaseType	基本型
-Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています．<br>
+\section sec_vectorMatrix	ベクトルクラス，行列クラス
+Springhead2には，基本的なベクトル・行列のクラスが用意されています．
+これらは，SDK全体で使用しており，ユーザも使用できます．
+<br>
 より詳細な説明は\ref pageAffine を参照して下さい．
 \subsection sec_baseVec2		2次元ベクトル
 2つの単精度float型データを持つベクトル型はVec2f型、2つの倍精度double型データを持つベクトル型をVec2d型となります．
@@ -14,7 +16,7 @@ Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています．<br>
 \endverbatim
 <br>
 
-\subsection sec_baseVec3		3次元ベクトル
+\subsection sec_baseVec3	3次元ベクトル
 3つの単精度float型データを持つベクトル型はVec3f型、3つの倍精度double型データを持つベクトル型をVec3d型となります．
 \verbatim	
     Vec3f vec(a, b, c);                         // a、b、c で初期化
@@ -37,6 +39,10 @@ Springhead2には、ユーザが使用可能な豊富なデータ型一式が備わっています．<br>
     Vec4f vec2= vec + Vec4f(x, y, z);           // 加算
 \endverbatim
 <hr>
+
+\section sec_utilityType	ユーティリティクラス
+Springhead2には，ユーティリティクラスが用意されています．
+これらは，SDK全体で使用しており，ユーザも使用できます．
 
 \subsection sec_baseUTRef		参照カウンタと参照ポインタ
 メモリリーク対策として、参照カウンタを持つ基底クラスとカウンタを管理するスマートポインタのテンプレートを実装しています．<br>
