@@ -12,11 +12,12 @@
  感じた場合，SDKを開発する場合には，こちらをお読みください．
 <br>
 
+Springhead2SDK開発者マニュアルは，
+ - \subpage pageFoundationImp
+ - \subpage pagePhysicsImp
+ - \subpage pageGraphicsImp
+ - \subpage pageFileIOImp
 
-\section sec_typeInfo 型情報について
- Springhead2では，RTTIをサポートしていない処理系でも動くように，自前で型情報を
- 用意しています．
-\subsection sec_typeInfoForObject
- Springheadのオブジェクトのクラスの宣言には，
+から構成されます．
 
 */

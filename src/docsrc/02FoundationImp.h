@@ -1,5 +1,5 @@
-/*
-\page pageFoudationImp Foundationの実装
+/**
+\page pageFoundationImp 基本SDKの実装
 
 
 \section secCreateObject オブジェクトの生成

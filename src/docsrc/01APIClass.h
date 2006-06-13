@@ -1,3 +1,4 @@
+/**
 \page howtoCreateAPIClass APIクラスの作り方・実装の仕方
 
 \section secCreateAPIClass APIクラスの作り方
@@ -161,3 +162,4 @@ RegretがRegretStateを継承しているなら，
  DEF_State(Regret);
 とすると，マクロが実装までやってくれます．
  DEF_DESC_STATE(Regert)とすると，DescとState両方を実装までしてくれます．
+*/

@@ -1,5 +1,5 @@
-/*
-\page pageFileIOImp ファイル入出力の実装
+/**
+\page pageFileIOImp ファイル入出力SDKの実装
 
 \section secFileIMech FileIOの仕組み
 

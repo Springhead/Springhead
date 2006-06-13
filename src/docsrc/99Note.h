@@ -1,3 +1,4 @@
+/**
 \page pageSDKNode SDKŠJ”­‚Ì’ˆÓ“_
 
 \section secCast ƒLƒƒƒXƒg
@@ -12,3 +13,10 @@ dynamic_cast‚ğƒTƒ|[ƒg‚µ‚È‚¢ˆ—Œn‚à‘½‚¢‚Ì‚ÅCŸ‚Ì‚æ‚¤‚Éƒ}ƒNƒ DCAST ‚Å‘ã—p‚µ‚Ü‚
  PHScene* ps = DCAST(PHScene, s);
 </pre>
 
+
+\section sec_TypeInfo Œ^î•ñ‚É‚Â‚¢‚Ä
+ Springhead2‚Å‚ÍCRTTI‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚È‚¢ˆ—Œn‚Å‚à“®‚­‚æ‚¤‚ÉC©‘O‚ÅŒ^î•ñ‚ğ
+ —pˆÓ‚µ‚Ä‚¢‚Ü‚·D
+\subsection sec_typeInfoForObject
+ Springhead‚ÌƒIƒuƒWƒFƒNƒg‚ÌƒNƒ‰ƒX‚ÌéŒ¾‚É‚ÍC
+*/
