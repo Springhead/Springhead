@@ -20,10 +20,20 @@
 では，SDK/APIの設計，物理エンジンなどの構造，動作の概念を説明します．
 
 \ref pageApiBasic
-では，SDKのAPIの基礎(APIの仕組み，共通する使い方など)を説明します．
+では，SDKのAPIの基礎(APIの書式，仕組み，共通する使い方)を説明します．
 
-\ref pageApiDetail
-では，SDKのAPIの詳細を説明します．
+\ref pageFoundation
+では，SDKで共通に使うAPIについて説明します．
+ベクトルや行列のクラス，シーングラフとそのオブジェクトなどがあります．
+
+\ref pagePhysics
+では，物理シミュレーションSDKの説明をします．
+
+\ref pageGraphics
+では，グラフィックスレンダラーとグラフィックスのシーングラフの説明をします．
+
+\ref pageFileIO
+では，シーングラフのロード・セーブについての説明をします．
 
 <br>
 
