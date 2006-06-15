@@ -37,7 +37,7 @@ void HIHapticDevice::ClearRealDeviceDependency(){
 }
 void HIHapticDevice::Update(float dt){
 	updateStep ++;
-	if (updateStep > deviceUpdateStep){
+	if (updateStep > deviceUpdateStep && realDevices.size() > 0){
 		for(std::set<DRRealDevice*>::iterator it = realDevices.begin(); it != realDevices.end(); ++it){
 			(*it)->Update();
 		}
