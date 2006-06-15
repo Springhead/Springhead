@@ -13,4 +13,6 @@
 #include "SprGraphics.h"
 #include "SprFileIO.h"
 
+#include "SprHIS.h"
+#include "SprDevice.h"
 #endif
