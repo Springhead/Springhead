@@ -36,52 +36,114 @@ struct PHSolidDesc: public PHSolidState{
 };
 
 struct CDShapeIf; 
-///	剛体
+///	剛体のインタフェース
 struct PHSolidIf : public SceneObjectIf{
 	IF_DEF(PHSolid);
-	virtual void AddForce(Vec3d f)=0;					///< 力を質量中心に加える
-	virtual void AddTorque(Vec3d t)=0;					///< トルクを加える
-	virtual void AddForce(Vec3d f, Vec3d r)=0;			///< 力を 位置r(World系) に加える
 
-	virtual double		GetMass()=0;					///< 質量
-	virtual double		GetMassInv()=0;					///< 質量の逆数
-	virtual void		SetMass(double m)=0;			///< 質量の設定
-	virtual Matrix3d	GetInertia()=0;					///< 慣性テンソル
+	/** @brief 力を質量中心に加える
+		@param f 力
+	 */
+	virtual void AddForce(Vec3d f)=0;
+	/** @brief トルクを加える
+		@param t トルク
+	 */
+	virtual void AddTorque(Vec3d t)=0;
+	/**	@brief 力を指定した作用点に加える
+		@param f 力
+		@param r シーン座標系で表わした作用点の位置
+	 */
+	virtual void AddForce(Vec3d f, Vec3d r)=0;
+
+	/**	@brief 質量を取得する
+		@return 質量
+	 */
+	virtual double		GetMass()=0;
+	/** @brief 質量の逆数を取得する
+		@return 質量の逆数
+	 */
+	virtual double		GetMassInv()=0;
+	/** @brief 質量を設定する
+		@param m 質量
+	 */
+	virtual void		SetMass(double m)=0;
+	/** @brief 慣性テンソルを取得する
+		@return 慣性テンソル
+	 */
+	virtual Matrix3d	GetInertia()=0;
+	/** @brief 慣性テンソルを設定する
+		@param I 慣性テンソル
+	 */
 	virtual void		SetInertia(const Matrix3d& I)=0;
-
+	/** @brief 剛体の位置を取得する
+		@return シーンに対する剛体フレーム原点の位置
+	 */
 	virtual Vec3d		GetFramePosition() const =0;
+	/** @brief 剛体の位置を設定する
+		@param p シーンに対する剛体フレーム原点の位置
+	 */
 	virtual void		SetFramePosition(const Vec3d& p) =0;
+	/** @brief 剛体の質量中心の位置を取得する
+		@return シーンに対する剛体の質量中心の位置
+	 */
 	virtual Vec3d		GetCenterPosition() const  =0;
+	/** @brief 剛体の位置を設定する
+		@param p シーンに対する剛体の質量中心の位置
+	 */
 	virtual void		SetCenterPosition(const Vec3d& p) =0;
 
-	///	向きの取得
+	/** @brief 剛体の傾きを取得する
+		@return シーンに対する剛体の傾き
+	 */
 	virtual Quaterniond GetOrientation() const =0;
-	///	向きの設定
+	/** @brief 剛体の傾きを設定する
+		@param q シーンに対する剛体の傾き
+	 */
 	virtual void		SetOrientation(const Quaterniond& q) =0;
 
-	/// 姿勢の取得
+	/** @brief 剛体の位置と傾きを取得する
+		@return シーンに対する剛体の位置と傾き
+	 */
 	virtual Posed		GetPose() const = 0;
-	/// 姿勢の設定
+	/** @brief 剛体の位置と傾きを設定する
+		@param p シーンに対する剛体の位置と傾き
+	 */
 	virtual void		SetPose(const Posed& p) = 0;
 
-	///	質量中心の速度の取得
+	/** @brief 剛体の速度を取得する
+		@return シーンに対する剛体の質量中心の速度
+	 */
 	virtual Vec3d		GetVelocity() const  =0;
-	///	質量中心の速度の設定
+	/** @brief 剛体の速度を設定する
+		@param v シーンに対する剛体の質量中心の速度
+	 */
 	virtual void		SetVelocity(const Vec3d& v) =0;
-
-	///	角速度の取得
+	/** @brief 剛体の角速度を取得する
+		@return シーンに対する剛体の角速度
+	 */
 	virtual Vec3d		GetAngularVelocity() const =0;
-	///	角速度の設定
+    /** @brief 剛体の角速度を設定する
+		@param av シーンに対する剛体の角速度
+	 */
 	virtual void		SetAngularVelocity(const Vec3d& av)=0;
 
-	///	形状の追加
+	/** @brief 剛体に形状を登録する
+		@param shape 形状へのポインタ
+	 */
 	virtual void		AddShape(CDShapeIf* shape)=0;
 
-	/// 形状の位置の取得
-	virtual Posed		GetShapePose(int pos)=0;
-
-	/// 形状の位置の設定
-	virtual void		SetShapePose(int pos, const Posed& pose)=0;
+	/** @brief 形状の位置と傾きを取得する
+		@param index 対象とする形状のインデックス
+		@return 剛体に対する形状の位置と傾き
+		最初に登録された形状のインデックスは0，その次に登録された形状のインデックスは1，
+		以下同様．
+	 */
+	virtual Posed		GetShapePose(int index)=0;
+	/** @brief 形状の位置と傾きを設定する
+		@param index 対象とする形状のインデックス
+		@param pose 剛体に対する形状の位置と傾き
+		インデックスについてはGetShapePoseを参照．
+	 */
+	virtual void		SetShapePose(int index, const Posed& pose)=0;
 
 	///	重力を有効/無効化する	ここでよいか疑問
 	virtual void		SetGravity(bool bOn)=0;

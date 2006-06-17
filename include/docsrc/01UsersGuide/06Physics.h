@@ -19,91 +19,112 @@
 
 \section sec_PHSdk 物理シミュレーションSDKの初期化と終了
 
-はじめに，Springhead 物理シミュレーションSDKを使用した最も典型的なコードの例を示します．
+物理シミュレーションSDKは，物理法則にもとづいた複数物体のインタラクションを計算する機能を提供します．
 
+物理シミュレーションSDKの使用は，グローバル関数\link Spr::CreatePHSdk() CreatePHSdk\endlink を呼ぶことから始まります．
 \verbatim
-
-#include <Springhead.h>
-
-using namespace Spr;
-
-int main(int argc, char* argv[]){
-	// Physics SDKの初期化
 	PHSdkIf* sdk = CreatePHSdk();
-	
-	// シーンの作成
-	PHSceneDesc dscene;
-	PHSceneIf* scene = sdk->CreateScene(dscene);
-
-	// 剛体の作成
-	PHSolidDesc dsolid;
-	PHSolidIf* soBall = scene->CreateSolid(dsolid);
-
-	// 剛体に形状を割り当てる
-	CDSphereDesc dsphere;
-	soBall->AddShape(sdk->CreateShape(dsphere));
-	
-	while(true){
-		// シーンの時間を進める
-		scene->Step();
-	}
-}
-
 \endverbatim
+以降，SDKの操作は\link Spr::CreatePHSdk() CreatePHSdk\endlink によって返されたPHSdkIf型のポインタを介して行います．
 
-1つのSDKは，1つ以上のシーン(PHScene)を持つことができ，
-1つのシーンは1つ以上の剛体(PHSolid)と関節(PHJoint)を持つことができます．
+SDKは，1つ以上のシーンを持つことができます．
+また，1つのシーンは1つ以上の剛体(PHSolid)と関節(PHJoint)を持つことができます．
 さらに，剛体は形状(CDConvexMesh, CDSphere, CDBox, ...)を参照して形を持つことができます．
 関節は2つの剛体を結び付けます．
 物理エンジン内のオブジェクトの参照関係の例を図に示します．
 <img src="../../include/docsrc/01UsersGuide/PHSdkScene.png">
 
-\subsection sdk_create SDKの初期化
-
-Springhead 物理シミュレーションSDKの使用は，グローバル関数CreatePHSdkを呼ぶことによりSDKを初期化することから始まります．
-\verbatim
-	PHSdkIf* sdk = CreatePHSdk();
-\endverbatim
-
-\subsection sdk_finalize SDKの終了
-
 SDKの終了処理は内部で自動的に行われます．ユーザから明示的にSDKを解放する必要はありません．
-
 
 \section scene シーン
 
 シーンとは物理シミュレーションの舞台となる空間のことです．
-シーンの操作はPHSceneIfクラスを介して行ないます．
 
 \subsection scene_create シーンの作成
 
 シーンを作成するには\link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene\endlinkを呼びます．
-シーンを複数作成することは可能ですが，異なるシーン同士は互いにインタラクションすることはできません．
+
+\verbatim
+	//デフォルトの設定でシーンを作成
+	PHSceneDesc sceneDesc;
+	PHSceneIf* scene = sdk->CreateScene(sceneDesc);
+\endverbatim
+
+シーンの操作は\link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene\endlinkによって返された
+PHSceneIf型のポインタを介して行ないます．
+
+シーンを複数作成することは可能ですが，異なるシーン同士は互いに影響をおよぼしません．
+
+\subsection scene_step シミュレーションの実行
+
+シーンの時刻を進めるには\link Spr::PHSceneIf::Step() PHSceneIf::Step\endlinkを呼びます．
+
+\verbatim
+	//0.05 * 100 = 5秒間のシミュレーション
+	scene->SetTimeStep(0.05);
+	for(int i = 0; i < 100; i++)
+		scene->Step();
+\endverbatim
+
+\link Spr::PHSceneIf::Step() Step\endlink の流れは大体以下のようになっています．
+-# 剛体同士の衝突判定
+-# 接触力，関節の拘束力の計算
+-# 剛体の速度・位置の更新
+
+一度の\link Spr::PHSceneIf::Step() Step\endlinkの呼び出しで進む時間の幅は
+\link Spr::PHSceneIf::GetTimeStep() PHSceneIf::GetTimeStep\endlinkと
+\link Spr::PHSceneIf::SetTimeStep() PHSceneIf::SetTimeStep\endlink
+で取得・設定できます．<br>
+＊ここで設定する値はそのまま数値積分の積分ステップとなりますので，あまり大きな値(例えば1秒)は
+設定しないでください．
 
 \subsection scene_gravity 重力の設定
 
 シーンに働く重力を設定するには\link Spr::PHSceneIf::SetGravity() PHSceneIf::SetGravity\endlinkを呼びます．
+
+\verbatim
+	scene->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));
+\endverbatim
+
 デフォルトで，シーンの重力加速度はVec3f(0.0f, -9.8f, 0.0f)に設定されています．
-重力を無効化するにはSetGravity(Vec3f(0.0f, 0.0f, 0.0f))とします．
+無重力空間とするには
+
+\verbatim
+	scene->SetGravity(Vec3f(0.0f, 0.0f, 0.0f));
+\endverbatim
+
 また，個々の剛体に対して重力の作用を有効・無効化するには
 \link Spr::PHSolidIf::SetGravity() PHSolidIf::SetGravity\endlinkを使います．
 
-\subsection scene_step シミュレーションの実行
-
-
+\verbatim
+	//solidはsceneに登録されている剛体とする
+	solid->SetGravity(false);
+\endverbatim
 
 \section solid	剛体
 
 剛体とは，物理法則に従ってシーン中を運動する物体です．
-剛体に対する操作は\link Spr::PHSolidIf PHSolidIf\endlinkを介して行います．
 
 \subsection solid_create 剛体の作成
 
 剛体を作成し，シーンに追加するには\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid\endlinkを呼びます．
 
+\verbatim
+	//デフォルトの設定で剛体を作成
+	PHSolidDesc solidDesc;
+	PHSolidIf* solid = scene->CreateSolid(solidDesc);
+\endverbatim
+
+剛体に対する操作は\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid\endlinkによって返された
+PHSolidIf型のポインタを介して行います．
+
 \subsection solid_pose 剛体の位置と速度
+
+<img src="../../include/docsrc/01UsersGuide/scene.png">
+
 1つの剛体には，1つの座標系が貼り付いています．これを剛体座標系と呼びます．
 シーン中の剛体の位置と傾きは，シーン座標系に対する剛体座標系の位置と傾きとして表現されます．
+
 剛体の位置を設定・取得するには
 \link Spr::PHSolidIf::SetFramePosition() PHSolidIf::SetFramePosition\endlinkと
 \link Spr::PHSolidIf::GetFramePosition() PHSolidIf::GetFramePosition\endlink
@@ -112,10 +133,12 @@ SDKの終了処理は内部で自動的に行われます．ユーザから明示的にSDKを解放する必要はあ
 \link Spr::PHSolidIf::SetCenterPosition() PHSolidIf::SetCenterPosition\endlinkと
 \link Spr::PHSolidIf::GetCenterPosition() PHSolidIf::GetCenterPosition\endlink
 を使います．
+
 剛体の傾きを取得するには
 \link Spr::PHSolidIf::SetOrientation() PHSolidIf::SetOrientation\endlinkと
 \link Spr::PHSolidIf::GetOrientation() PHSolidIf::GetOrientation\endlink
 を使います．
+
 剛体の位置と傾きを同時に設定・取得することも出来ます．これには
 \link Spr::PHSolidIf::SetPose() PHSolidIf::SetPose\endlinkと
 \link Spr::PHSolidIf::GetPose() PHSolidIf::GetPose\endlink
@@ -134,13 +157,42 @@ SDKの終了処理は内部で自動的に行われます．ユーザから明示的にSDKを解放する必要はあ
 
 \subsection solid_mass 剛体の質量
 剛体の質量情報は，全質量と，重心に関する慣性行列で表現されます．
+剛体の質量を取得・設定するには
+\link Spr::PHSolidIf::GetMass() PHSolidIf::GetMass \endlinkと
+\link Spr::PHSolidIf::SetMass() PHSolidIf::SetMass \endlink
+を使います．
+同様に，剛体の慣性行列を取得・設定するには
+\link Spr::PHSolidIf::GetInertia() PHSolidIf::GetInertia \endlinkと
+\link Spr::PHSolidIf::SetInertia() PHSolidIf::SetInertia \endlink
+を使います．
+
+\verbatim
+	//質量を0.1，慣性行列を対角成分が0.1の行列に設定
+	solid->SetMass(0.1);
+	solid->SetInertia(0.1 * Matrix3d::Unit());
+\endverbatim
+
 重心位置はデフォルトでは剛体座標系の原点と一致していますが，
 \link Spr::PHSolidIf::GetCenterOfMass() PHSolidIf::GetCenterOfMass \endlink，\link Spr::PHSolidIf::SetCenterOfMass() PHSolidIf::SetCenterOfMass \endlink，
-あるいは\link Spr::PHSolidDesc::center PHSolidDesc::center\endlinkを用いて取得・設定できます．
+
+\verbatim
+	solid->SetCenterOfMass(Vec3d(0.1, 0.0, 0.0));
+\endverbatim
+
+剛体の作成時に，ディスクリプタを用いてこれらの情報を設定することもできます．
+
+\verbatim
+	PHSolidDesc solidDesc;
+	solidDesc.mass = 0.1;
+	solidDesc.inertia = 0.1 * Matrix3d::Unit();
+	solidDesc.center = Vec3d(0.1, 0.0, 0.0);
+	PHSolidIf* solid = scene->CreateSolid(solidDesc);
+\endverbatim
 
 \subsection solid_force 剛体へ力を加える
 剛体へ並進力加えるには\link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce\endlink，
 トルクを加えるには\link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque\endlinkを呼びます．
+
 剛体に加えられている力・トルクは，\link Spr::PHSceneIf::Step() PHSceneIf::Step\endlinkを呼ぶ度に0にクリアされます．
 このため，定常的に力・トルクを加え続けるためには，\link Spr::PHSceneIf::Step() PHSceneIf::Step\endlinkを呼ぶ前に毎回
 AddForce/AddTorqueを呼ぶ必要があります．
@@ -288,6 +340,7 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 \f]
 と表わされます．ここで\f$q\f$は関節変位，\f$\dot{q}\f$は関節速度です．
 
+
 \subsection joint_hinge ヒンジ
 
 ＜ヒンジの図＞
@@ -302,7 +355,7 @@ pose[0]はソケットを取り付ける剛体（CreateJointの第1引数)の座標系に対するソケット
 スライダは1方向の平行移動を実現する関節です．
 ソケットとプラグの傾きを一致させ，かつプラグの原点をソケットのZ軸上に拘束します．
 
-\section secBallJoint ボールジョイント
+\section ボールジョイント
 
 ＜ボールジョイントの図＞
 
