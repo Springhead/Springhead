@@ -88,9 +88,15 @@ Frame{
 </ol>
 
 \section secFileIOLoadSave ファイルのロードとセーブ
-
 ファイルのロードやセーブを行うには，まずFISdkを作成し，FISdkから，
-FIFileXを作成します．
+FIFileXを作成します．次のような手順になります．
+<ol>
+<li> CreateFISdk()で，FISdkのインスタンス fiSdkを作成する．
+<li> FISdk::CreateFileX() でFIFileXのインスタンス fileXを生成する．
+<li> ObjectOfs objs を用意する．ロードしたノードのうち，ルートのノードがここに入る．
+<li> FIFileX::Load()を呼び出して，ロードを行う．
+<li> セーブするならば，セーブしたいオブジェクトだけを加えた objsを用意し，FIFileX::Save()を呼び出す．
+</ol>
 
 以下は，ファイルロードとセーブのコードのサンプルです．
 <pre>
