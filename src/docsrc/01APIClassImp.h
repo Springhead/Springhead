@@ -2,6 +2,8 @@
 \page pageAPIClassImp APIクラスの作り方・実装の仕方
 
 \section secCreateAPIClass APIクラスの作り方
+ここでは，SpringheadのAPIクラスの宣言と実装の手順について説明します．
+APIクラスの概要，使い方については，\ref pageApiBasic をご参照ください．
 
 \subsection secDefAPIClass APIクラスの宣言
 APIクラスのヘッダファイルは，Springhead2/include/SDKNAME に作ります．

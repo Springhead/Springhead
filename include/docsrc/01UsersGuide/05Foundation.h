@@ -1,6 +1,49 @@
-/** \page pageFoundation 基本SDKのAPI
+/** \page pageFoundation 基本SDK
+\ref pageFoundation には，シーンとオブジェクト，行列やベクトル，参照カウンタ
+のような基本的なクラスがあります．
+他のSDK（\ref pagePhysics や \ref pageGraphics など）は，\ref pageFoundation 
+を使って書かれています．
+ - \ref secSceneGraph
+ - \ref secSceneObjectName
+ - \ref secVectorMatrix
+ - \ref secUtilityType
 
-\section sec_vectorMatrix	ベクトルクラス，行列クラス
+\section secSceneGraph シーングラフ
+一般に，物理シミュレータやバーチャルリアリティのSDKでは，
+バーチャル世界を構成するオブジェクト達のことをシーングラフと呼びます．
+シーングラフは，SceneとかWorldとかUniverseとか呼ばれるシーン全体を管理するオブジェクトと，
+それに所有される，座標系やポリゴンメッシュなどのオブジェクトからなります．
+\image html PHSdkScene.png
+上図は，Springhead2の物理シミュレータのシーングラフのオブジェクトと参照関係の一例です．
+
+Springheadの \ref pagePhysics \ref pageGraphics はそれぞれシーングラフを持ちます．
+\ref pageFoudation のSceneクラスを継承したPHSceneクラスとGRSceneクラスが対応します．
+シーンの中には，オブジェクト(SceneObjectの派生クラス)を複数作って追加することができます．
+
+\section secSceneObjectName シーンとオブジェクトと名前
+シーングラフのオブジェクトには名前をつけることができます．
+\ref pageFileIO でロードした場合など，ファイルに書いておいた名前を指定して，オブジェクトへのポインタを取得できて便利です．
+<pre>
+text.x:
+------------------------------------------------
+PHScene{ ...
+	PHSolid soBox1 { ... }
+	PHSolid soBox2 { ... }
+	PHSolid soFloor { ... }
+}
+------------------------------------------------
+source code:
+------------------------------------------------
+	phSdk = CreatePHSdk();
+	objs.push_back(phSdk);
+	fileX->Load(objs, "test.x");
+	PHSolid* solid;
+	phSdk->FindObject(solid, "soBox2");
+------------------------------------------------
+</pre>
+また，ファイルに保存するときには，オブジェクトへの参照は名前で保存されます．
+
+\section secVectorMatrix	ベクトルクラス，行列クラス
 Springhead2には，基本的なベクトル・行列のクラスが用意されています．
 これらは，SDK全体で使用しており，ユーザも使用できます．
 <br>
@@ -38,9 +81,8 @@ Springhead2には，基本的なベクトル・行列のクラスが用意されています．
     vec[2] = c;                                 // vec.z = c;
     Vec4f vec2= vec + Vec4f(x, y, z);           // 加算
 \endverbatim
-<hr>
 
-\section sec_utilityType	ユーティリティクラス
+\section secUtilityType	ユーティリティクラス
 Springhead2には，ユーティリティクラスが用意されています．
 これらは，SDK全体で使用しており，ユーザも使用できます．
 
@@ -57,25 +99,5 @@ forループにて10回のメモリ確保をnewで行い、deleteでのメモリ開放を行っていませんが
         p->Aのメソッド()
     }
 \endverbatim
-
-\section sec_SceneGraph シーングラフ
- 一般に，物理シミュレータやバーチャルリアリティのSDKでは，
- バーチャル世界を構成するオブジェクト達のことをシーングラフと呼びます．
- シーングラフは，SceneとかWorldとかUniverseとか呼ばれるシーン全体を管理するオブジェクトと，
- それに所有される，座標系やポリゴンメッシュなどのオブジェクトからなります．
- 例えば，Springheadの物理シミュレータのシーングラフは，
- <img src="../../include/docsrc/01UsersGuide/GRSdkScene.png">
- のようなイメージです．
- 
- 
-\section sec_SceneObjectName シーンとオブジェクトと名前
-Springheadの \ref pagePhysics \ref pageGraphics では，ひとつのVR世界をシーン(Scene)と呼び，
-Sceneクラスを継承したPHSceneクラスやGRSceneクラスが対応します．
-シーンの中には，オブジェクト(SceneObjectの派生クラス)を多数作ることができます．
-オブジェクトには名前をつけることができ，\ref pageFileIO でロードした場合などは，
-名前を指定してオブジェクトへのポインタを取得できます．
-また，ファイルに保存するときには，オブジェクトへの参照は名前で保存されます．
-これらは \ref pagePhysics や \ref pageGraphics で共通で \ref pageFoundation にあります．
-
 
 */

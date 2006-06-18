@@ -1,4 +1,4 @@
-/** \page pagePhysics 物理シミュレーションSDKのAPI
+/** \page pagePhysics 物理シミュレーションSDK
 
 - \ref sec_PHSdk
  - \ref sdk_create

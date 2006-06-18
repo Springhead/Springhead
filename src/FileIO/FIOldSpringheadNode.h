@@ -4,12 +4,17 @@
 namespace Spr{;
 namespace SprOldSpringehead{;
 
+///	\defgroup gpFIOldSpringheadNode 旧Springhead(Springhead1)のファイルをロードするための互換ノード
+//@{
+///	DirectXのFrame． GRFrameに対応
 struct Frame{
 };
+///	DirectXのFrameTransformMatrix．フレームの変換行列を表す．GRFrame::transformに対応．
 struct FrameTransformMatrix{
 	Affinef matrix;
 };
 
+///	Springehead1の光源．GRLightに対応．
 struct Light8{
 	int type;
     Vec4f diffuse;		///<	拡散光
@@ -28,6 +33,8 @@ struct Light8{
 	float spotInner;	///<	スポットライトの中心部分		0..spotCutoff
 	float spotCutoff;	///<	スポットライトの光が当たる範囲	0..π
 };
+
+///	DirectXのマテリアル．GRMateiralに対応．
 struct Material{
 	Vec4f face;
 	float power;
@@ -36,11 +43,13 @@ struct Material{
 };
 
 
-
+///	DirectXのMeshの面．
 struct MeshFace{
 	int nFaceVertexIndices;
 	std::vector<int> faceVertexIndices;
 };
+
+///	DirectXのMesh．GRMeshに対応．
 struct Mesh{
 	int nVertices;
 	std::vector<Vec3f> vertices;
@@ -48,22 +57,26 @@ struct Mesh{
 	std::vector<MeshFace> faces;
 	
 };
+
+///	DirectXのMeshの法線ベクトル
 struct MeshNormals{
 	int nNormals;
 	std::vector<Vec3f> normals;
 	int nFaceNormals;
 	std::vector<MeshFace> faceNormals;
 };
+///	DirectXのMeshのマテリアルリスト．
 struct MeshMaterialList{
 	int nMaterials;
 	int nFaceIndexes;
 	std::vector<int> faceIndexes;
 };
+///	DirectXのMeshのテクスチャ座標．
 struct MeshTextureCoords{
 	int nTextureCoords;
 	std::vector<Vec2f> textureCoords;
 };
-
+//@}
 
 }}
 #endif

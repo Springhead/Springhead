@@ -2,9 +2,9 @@
 \page pageApiBasic	APIの基礎
 ここでは，Springhead2 SDKのAPIの形式について説明します．
 SDKは，実装を持たないAPIクラスを介して使います．
-<img src="../../include/docsrc/01UsersGuide/APIInherit.png">
+\image html ../../include/docsrc/01UsersGuide/APIInherit.png
 
-\subsection apiClass APIクラス
+\subsection sec_apiClass APIクラス
 APIクラスは，名前の最後にインタフェースを表すIfがつきます．
 まず，SDKクラスのインスタンスを返すグローバル関数を用いて，
 SDKクラスのインスタンスを作成・取得し，
@@ -17,7 +17,7 @@ int main(int argc, char* argv[]){
     :
 \endverbatim
 
-\subsection state ステートとデスクリプタ
+\subsection secStateDesc ステートとデスクリプタ
 APIクラスのインスタンスを作るときには，デスクリプタという構造体を使って
 初期値を渡します．デスクリプタは，APIクラスの名前からIfをとってDescをつけた名前です．
 \verbatim
@@ -36,6 +36,6 @@ int main(int argc, char* argv[]){
 ステートは，そのインスタンスの状態を表す変数でシミュレーションを進めると変化します．
 ステートだけを保存しておけば，そのオブジェクトを保存しておいた時点の状態に戻すことができます．
 図のように，オブジェクトは，ステートとディスクリプタと継承していることが多いです．
-<img src="../../include/docsrc/01UsersGuide/APIInherit.png">
+\image html ../../include/docsrc/01UsersGuide/APIDesc.png
 
 */

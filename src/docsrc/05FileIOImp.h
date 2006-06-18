@@ -4,17 +4,16 @@
 \section secFileIMech FileIO‚ÌŽd‘g‚Ý
 
 \subsection secFileLoadSave ƒtƒ@ƒCƒ‹‚Ìƒ[ƒhEƒZ[ƒu
-ƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒg‚É‡‚Á‚½ƒp[ƒT‚ð—pˆÓ
-‚·‚é•K—v‚ª‚ ‚è‚Ü‚·D
+ƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒg‚É‡‚Á‚½ƒp[ƒT‚ð—pˆÓ‚·‚é•K—v‚ª‚ ‚è‚Ü‚·D
 ‚±‚ê‚ÍCFIFileƒNƒ‰ƒX‚Ì”h¶ƒNƒ‰ƒX‚ªs‚Á‚Ä‚¢‚Ü‚·D
 —á‚¦‚ÎFIFileX‚ÍCXƒtƒ@ƒCƒ‹‚ðƒp[ƒX‚µ‚Ü‚·D
 Boost::spirit‚Æ‚¢‚¤¶¬•¶–@‚©‚ç‚Ìƒp[ƒTƒWƒFƒlƒŒ[ƒ^‚ð—p‚¢‚ÄŽÀ‘•‚µ‚Ä‚¢‚Ü‚·D
 
 ƒtƒ@ƒCƒ‹‚ÌƒZ[ƒu‚àFIFileX‚ªs‚¢‚Ü‚·Dƒp[ƒX‚É”ä‚×‚ÄŠÈ’P‚È‚Ì‚ÅC
-ƒV[ƒ“ƒOƒ‰ƒt‚ð„‰ñ‚µ‚È‚ª‚çC–Ú“I‚ÌƒtƒH[ƒ}ƒbƒg‚Ìƒtƒ@ƒCƒ‹‚ªo—Í‚³‚ê‚é‚æ‚¤‚ÉC
-‰¼‘zŠÖ”‚ðŽÀ‘•‚µ‚Äs‚«‚Ü‚·D
+ƒV[ƒ“ƒOƒ‰ƒt‚ð„‰ñ‚µ‚È‚ª‚çC–Ú“I‚ÌƒtƒH[ƒ}ƒbƒg‚Ìƒtƒ@ƒCƒ‹‚ªo—Í‚³‚ê‚é‚æ‚¤‚ÉC‰¼‘zŠÖ”‚ðŽÀ‘•‚µ‚Äs‚«‚Ü‚·D
 
 \subsection secLoadProc ƒ[ƒh‚ÌŽè‡
+\subsubsection secLoadObject ƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒh
 ‚±‚±‚Å‚ÍCƒtƒ@ƒCƒ‹‚É‘‚©‚ê‚½‚Ð‚Æ‚Â‚ÌƒIƒuƒWƒFƒNƒg‚Ìƒf[ƒ^‚©‚çC
 ƒIƒuƒWƒFƒNƒg‚ð¶¬‚·‚éŽè‡‚ðà–¾‚µ‚Ü‚·D
 
@@ -31,7 +30,7 @@ GRFrameDesc ‚ð—pˆÓ‚µ‚Ü‚·D
 
 <li>ƒf[ƒ^‚ð“Ç‚Ýo‚µC—pˆÓ‚µ‚½ƒfƒBƒXƒNƒŠƒvƒ^‚ÉŠi”[‚·‚éD
 0,0,0,1, 0,1,0,0, 0,0,1,0, 0,1,2,0;;‚ð“Ç‚Ýo‚µ GRFrame::transform ‚ÉŠi”[‚µ‚Äs‚«‚Ü‚·D
-‚±‚ê‚ÍFILoadContext‚ªŒ»Ý“Ç‚Ýo‚µ’†‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚Ìî•ñ‚ðŽ‚Á‚Ä‚¢‚ÄC
+‚±‚ê‚ÍFILoadContext‚ªŒ»Ý“Ç‚Ýo‚µ’†‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚Ì \ref secTypeDesc ‚ðŽ‚Á‚Ä‚¢‚ÄC
 “Ç‚Ýo‚µ‚½”’l‚ðƒfƒBƒXƒNƒŠƒvƒ^‚É‘‚«ž‚ñ‚Ås‚«‚Ü‚·D
 Vec3f‚âMaterial‚Ì‚æ‚¤‚È‘g‚Ý—§‚ÄŒ^‚ÍCÄ‹A“I‚Éˆ—‚³‚êCÅI“I‚É‚ÍC
 ”’l‚ð“Ç‚Ýž‚ß‚ÎCFILoadContext::WriteNumber(), •¶Žš—ñ‚È‚çFILoadContext::WriteString()
@@ -51,12 +50,10 @@ CreateObject()‚É‚Â‚¢‚Ä‚ÍC\ref pageFoundationImp ‚Ì \ref secCreateObject ‚ðŽQÆ‚
 ‘¼‚Ìƒ‚ƒWƒ…[ƒ‹(‚½‚Æ‚¦‚Î src/Physics)‚ÌŽÀ‘•‚É‚ÍˆË‘¶‚µ‚Ä‚¢‚Ü‚¹‚ñD
 
 \subsection secLoadHandler ƒIƒuƒWƒFƒNƒg‚Ìƒ[ƒhˆÈŠO‚Ìˆ—
-ƒm[ƒh‚ðƒ[ƒh‚µ‚½‚Æ‚«C’Pƒ‚ÉƒIƒuƒWƒFƒNƒg‚ð¶¬‚·‚é‚¾‚¯‚Å‚È‚­C
-‰½‚ç‚©‚Ìˆ—‚ðs‚¢‚½‚¢‚±‚Æ‚à‚ ‚è‚Ü‚·D
+ƒm[ƒh‚ðƒ[ƒh‚µ‚½‚Æ‚«C’Pƒ‚ÉƒIƒuƒWƒFƒNƒg‚ð¶¬‚·‚é‚¾‚¯‚Å‚È‚­C‰½‚ç‚©‚Ìˆ—‚ðs‚¢‚½‚¢‚±‚Æ‚à‚ ‚è‚Ü‚·D
 
-‚½‚Æ‚¦‚ÎCDirectX‚ÌXƒtƒ@ƒCƒ‹‚Ì Frame‚ÆFrameTransformMatrix ‚Í GRFrame‚ÆŽ—‚Ä‚¢‚Ü‚·‚ªC
-ŽáŠ±ˆá‚¢‚Ü‚·DXƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCFrame‚ÆFrameTransformMatrix‚©‚çC
-GRFrame‚ð¶¬‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñD
+‚½‚Æ‚¦‚ÎCDirectX‚ÌXƒtƒ@ƒCƒ‹‚Ì Frame‚ÆFrameTransformMatrix ‚Í GRFrame‚ÆŽ—‚Ä‚¢‚Ü‚·‚ªCŽáŠ±ˆá‚¢‚Ü‚·D
+Xƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCFrame‚ÆFrameTransformMatrix‚©‚çCGRFrame‚ð¶¬‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñD
 
 ‚±‚ê‚ÍCŽŸ‚Ì‚æ‚¤‚ÈŽè‡‚Ås‚¢‚Ü‚·D
 <ol>
@@ -71,4 +68,24 @@ GRFrame‚ð¶¬‚µ‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñD
 
 \subsection secSaveProc ƒZ[ƒu‚ÌŽè‡
 
+\subsection secTypeDesc ƒfƒBƒXƒNƒŠƒvƒ^‚ÌŒ^î•ñ
+ƒfƒBƒXƒNƒŠƒvƒ^(PHSolidDesc‚È‚Ç)‚Ì‚Ç‚±‚É‚Ç‚Ì‚æ‚¤‚Èƒf[ƒ^‚ªŠi”[‚³‚ê‚Ä‚¢‚é‚©‚ª•ª‚©‚é‚ÆC
+ƒ[ƒh‚µ‚½ƒtƒ@ƒCƒ‹‚Ìƒf[ƒ^‚ðŽ©“®“I‚ÉƒfƒBƒXƒNƒŠƒvƒ^‚ÉŠi”[‚µ‚½‚èC
+ƒZ[ƒu‚·‚éƒf[ƒ^‚ðŽ©“®“I‚É“Ç‚Ýo‚µ‚½‚è‚Å‚«‚Ü‚·D
+
+‚»‚±‚ÅCƒfƒBƒXƒNƒŠƒvƒ^‚ÌéŒ¾‚ð“Ç‚ñ‚ÅCŒ^‚Ìî•ñ‚ð“o˜^‚·‚éC++‚Ìƒ\[ƒXƒR[ƒh‚ð¶¬‚·‚éƒc[ƒ‹(typedesc.exe)
+‚ðŽg‚Á‚ÄCŒ^î•ñ‚ðŽÀsŽž‚É“o˜^‚µ‚Ä‚¢‚Ü‚·D
+typedesc.exe‚Ìƒ\[ƒX‚ÍC /bin/src/typedesc/ ‚É‚ ‚è‚Ü‚·D
+Foundation, Physics, Graphics ‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ðƒrƒ‹ƒh‚·‚é‚ÆCƒRƒ“ƒpƒCƒ‹‘O‚É
+<pre>
+	/src/Foundation/MakeTypeDesc.bat SDK–¼
+</pre>
+‚ªŽÀs‚³‚ê‚Ä typedesc.exe ‚ðŽg‚Á‚ÄŒ^î•ñ“o˜^ƒ\[ƒXƒR[ƒh 
+TypeDescDumpImp.h TypeDescDump.h ‚ð¶¬‚µ‚Ä‚­‚ê‚Ü‚·D
+XXRegisterTypeDesc.cpp ‚ª‚±‚ê‚ç‚ðƒCƒ“ƒNƒ‹[ƒh‚µ‚ÄCŒ^î•ñ‚ð
+UTTypeDescDb::theTypeDescDb ‚É“o˜^‚µ‚Ü‚·D
+Œ^î•ñ‚ÍCUTTypeDescƒIƒuƒWƒFƒNƒg‚Å•\‚³‚ê‚Ü‚·D
+
+ƒfƒBƒXƒNƒŠƒvƒ^‚ÌéŒ¾‚Ì‹L–@‚ªtypedesc‚Ì‘z’èŠO‚¾‚Æ TypeDescDumpImp.h ‚ÅƒGƒ‰[‚ª‹N‚±‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·D
+‚»‚Ì‚æ‚¤‚Èê‡‚ÍC‘¼‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ðŽQl‚ÉŠÈ’P‚È‹L–@‚É’¼‚µ‚Ä‚­‚¾‚³‚¢D
 */
