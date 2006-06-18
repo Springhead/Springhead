@@ -74,7 +74,7 @@ Frame{
 のようなフレームのノード型がありますが，Sprinhead2には対応するディスクリプタやオブジェクトがありません．
 そこで，これらは，GRFrameに変換されてロードされます．
 このような，対応するオブジェクトがないノードが特殊ノードです．
-特殊ノードの一覧は，\ref pageNodeDefList 参照ください．
+特殊ノードの一覧は，\ref pageNodeDefList を参照ください．
 
 \section secLoadNode ノードのロード
 ディスクリプタに対応するノードは次の手順で生成されます．
@@ -87,16 +87,19 @@ Frame{
  <li> 子ノードをロードする．
 </ol>
 
-\section secFileIOSample サンプルコード
+\section secFileIOLoadSave ファイルのロードとセーブ
 
-以下は，ファイルロードのコードのサンプルです．
+ファイルのロードやセーブを行うには，まずFISdkを作成し，FISdkから，
+FIFileXを作成します．
+
+以下は，ファイルロードとセーブのコードのサンプルです．
 <pre>
 	FISdkIf* fiSdk = CreateFISdk();				//	FISdkの作成
 	FIFileXIf* fileX = fiSdk->CreateFileX();	//	FIFileXの作成
 	/*	オブジェクトの配列．
 		ここにファイルからロードしたオブジェクトが追加される．*/
 	ObjectIfs objs;	
-	if (! fileX->Load(objs, TEST_FILEX) ) {	//	ロード
+	if (! fileX->Load(objs, "test.x") ) {	//	ロード
 		DSTR << "Error: Cannot open load file. " << std::endl;
 		exit(EXIT_FAILURE);
 	}
@@ -105,6 +108,9 @@ Frame{
 		phSdk = DCAST(PHSdkIf, objs[i]);	//	ロードしたPHSdkを取り出す．
 		if(phSdk) break;
 	}
+	objs.clear();
+	objs.push_back(phSdk);
+	fileX->Save(objs, "save.x");
 </pre>
 
 */
