@@ -3,7 +3,8 @@
 【概要】
   グラフィックスレンダラークラスの DrawScene APIを使い、シーンを一括でレンダリングする。
   DrawScene API で設定されているマテリアルマテリアルサンプルを用いて、カラフルなボックスをレンダリングする。　
-  また、SPIDARとつなぎ、力覚インタラクションを行う（開発中）
+  また、SPIDARとつなぎ、力覚インタラクションを行う。
+  現状では地面と赤い球体のみ力覚インタラクションができる。
 
 【終了基準】
   ・5000ステップ後に強制終了。 
@@ -33,7 +34,7 @@ using namespace Spr;
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		2			// sphere数
 
-#define HAPTIC_FREQ		8			// 力覚スレッドの周期(msec)
+#define HAPTIC_FREQ		1			// 力覚スレッドの周期(msec)
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
 #include <Device/DRUsb20Simple.h>
