@@ -53,7 +53,6 @@ protected:
 };
 
 
-
 ///	物理シミュレーションに関係する材質
 struct PHMaterial{
 	PHMaterial(){
@@ -67,11 +66,12 @@ struct PHMaterial{
 ///	形状のディスクリプタ(基本クラス)
 struct CDShapeDesc{
 	enum ShapeType{
-		CONVEX,			// 凸形状
-		CONVEXMESH,		// 凸形状メッシュ
-		SPHERE,			// 球体
-		BOX				// 直方体
+		CONVEX,				///< 凸形状
+		CONVEXMESH,			///< 凸形状メッシュ
+		SPHERE,				///< 球体
+		BOX					///< 直方体
 	} type;
+	PHMaterial material;	///<	材質
 	CDShapeDesc(ShapeType t=CONVEXMESH): type(t){}
 };
 
@@ -80,7 +80,6 @@ struct CDShapeDesc{
 struct CDConvexMeshDesc: public CDShapeDesc{
 	CDConvexMeshDesc():CDShapeDesc(CONVEXMESH){}
 	std::vector<Vec3f> vertices;	///<	頂点の座標
-	PHMaterial material;			///<	材質
 };
 	
 /**	凸形状のメッシュ*/
@@ -98,7 +97,6 @@ struct CDSphereDesc: public CDShapeDesc{
 		radius = 1.0f;
 	}
 	float radius;					// 球体の半径
-	PHMaterial material;			// マテリアル
 };	
 
 /** 球体　*/
@@ -113,7 +111,6 @@ struct CDBoxDesc: public CDShapeDesc{
 		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
 	}
 	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
-	PHMaterial material;
 };	
 	
 /** 直方体 */

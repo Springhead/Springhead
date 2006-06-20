@@ -6,6 +6,8 @@ Springhead‚ÍCˆÀ’è‚Å‚‘¬‚ÈC‘½‚­‚Ì—p“r‚É\•ª‚È‹@”\‚ðŽ‚Â•¨—ƒVƒ~ƒ…ƒŒ[ƒ^‚Å‚·D
 ‚Ü‚½CˆÀ’è‚Å‚‘¬‚ÈƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ª‚Å‚«‚Ü‚·‚Ì‚ÅCƒQ[ƒ€CVRCƒƒfƒBƒAƒA[ƒg‚È‚Ç‚É‰Á‚¦‚ÄC
 •àsƒƒ{ƒbƒg‚ÌƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚È‚Ç‚É‚àŽg‚¦‚é‚ÆŽv‚¢‚Ü‚·D
 
+\section secIntroFunction Springhead‚Ì‹@”\@
+
 \ref pagePhysics ‚Æ‚µ‚Ä‚ÍCŽŸ‚Ì‹@”\‚ªŽg‚¦‚Ü‚·F
 - ‘½”‚Ì„‘Ì‚ÌƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
 - “Ê‘½–Ê‘ÌE’¼•û‘ÌE‹…‚ðˆµ‚¤‚±‚Æ‚ª‚Å‚«‚éÚG”»’è
@@ -14,22 +16,22 @@ Springhead‚ÍCˆÀ’è‚Å‚‘¬‚ÈC‘½‚­‚Ì—p“r‚É\•ª‚È‹@”\‚ðŽ‚Â•¨—ƒVƒ~ƒ…ƒŒ[ƒ^‚Å‚·D
 - ˆÀ’è‚Èƒoƒlƒ_ƒ“ƒpƒ‚ƒfƒ‹
 
 ‚Ü‚½C\ref pagePhysics ‚ðƒTƒ|[ƒg‚·‚éSDK‚Æ‚µ‚ÄŽŸ‚Ì‹@”\‚ª‚ ‚è‚Ü‚·F
-- \ref pageGraphics •¨—ƒGƒ“ƒWƒ“‚Ìó‘Ô‚ðOpenGL‚ð—p‚¢‚Ä•\Ž¦‚·‚éƒfƒoƒbƒOƒŒƒ“ƒ_ƒŠƒ“ƒO
-- \ref pageFileIO „‘ÌCŒ`óCŠÖß‚È‚Ç‚Ìî•ñ‚Ìƒ[ƒhEƒZ[ƒu
+- \ref pageGraphics
+-- •¨—ƒGƒ“ƒWƒ“‚Ìó‘Ô‚ðOpenGL‚ð—p‚¢‚Ä•\Ž¦‚·‚éƒfƒoƒbƒOƒŒƒ“ƒ_ƒŠƒ“ƒOD
+-- ƒ‚ƒfƒ‰‚ªo—Í‚µ‚½ƒtƒ@ƒCƒ‹‚ð“Ç‚Ýo‚µ‚Ä•\Ž¦‚·‚éƒOƒ‰ƒtƒBƒbƒNƒXƒV[ƒ“D
+- \ref pageFileIO ƒV[ƒ“ƒOƒ‰ƒti„‘ÌCŒ`óCŠÖß‚È‚Çj‚Ìî•ñ‚Ìƒ[ƒhEƒZ[ƒu
 
 ‚Ü‚½C2006”NHE“~‚ð‚ß‚Ç‚ÉŽŸ‚Ì‹@”\‚ð•t‚¯‚½‚¢‚ÆŽv‚Á‚Ä‚¢‚Ü‚·D
 - —¬‘ÌƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‹@”\
 - ƒLƒƒƒ‰ƒNƒ^ƒ‚[ƒVƒ‡ƒ“‹@”\
 
-\section sec_history —ðŽj
+\section secHistory —ðŽj
 Springhead‚ÍC’·’Jì»ˆê‚Æ“cè—Eˆê‚ª’†S‚Æ‚È‚Á‚ÄC
 “ŒH‘å¸–§HŠwŒ¤‹†Š²“¡½Œ¤‚ÌŠw¶‚Æ‹¤‚ÉŠJ”­‚µ‚Ä‚«‚Ü‚µ‚½D
-—ÍŠoƒCƒ“ƒ^ƒtƒF[ƒXSPIDAR‚Æ‹¤‚ÉŽg‚¦‚é•¨—ƒVƒ~ƒ…ƒŒ[ƒ^‚Æ‚µ‚Äƒyƒiƒ‹ƒeƒB–@‚ÉŠî‚Ã‚­ƒVƒ~ƒ…ƒŒ[ƒ^Springhead1
-‚ðŠJ”­‚µ‚Ä‚«‚Ü‚µ‚½‚ªC‚±‚Ì‚½‚ÑˆÀ’è«‚Æ‚‘¬«‚ðdŽ‹‚µ‚ÄƒQ[ƒ€‚Ì‚½‚ß‚Ì•¨—ƒGƒ“ƒWƒ“‚â
-ƒo[ƒ`ƒƒƒ‹ƒqƒ…[ƒ}ƒ“‚ÌŒ¤‹†‚ÉŽg‚¦‚éƒVƒ~ƒ…ƒŒ[ƒ^‚Æ‚µ‚ÄSpringhead2(‚±‚Ìƒ}ƒjƒ…ƒAƒ‹‚Åà–¾‚·‚éSpringhead)
-‚ðŠJ”­‚µ‚Ä‚¢‚Ü‚·D
+—ÍŠoƒCƒ“ƒ^ƒtƒF[ƒXSPIDAR‚Æ‹¤‚ÉŽg‚¦‚é•¨—ƒVƒ~ƒ…ƒŒ[ƒ^‚Æ‚µ‚Äƒyƒiƒ‹ƒeƒB–@‚ÉŠî‚Ã‚­ƒVƒ~ƒ…ƒŒ[ƒ^Springhead1‚ðŠJ”­‚µ‚Ä‚«‚Ü‚µ‚½‚ªC‚±‚Ì‚½‚ÑˆÀ’è«‚Æ‚‘¬«‚ðdŽ‹‚µ‚ÄƒQ[ƒ€‚Ì‚½‚ß‚Ì•¨—ƒGƒ“ƒWƒ“‚â
+ƒo[ƒ`ƒƒƒ‹ƒqƒ…[ƒ}ƒ“‚ÌŒ¤‹†‚ÉŽg‚¦‚éƒVƒ~ƒ…ƒŒ[ƒ^‚Æ‚µ‚ÄSpringhead2(‚±‚Ìƒ}ƒjƒ…ƒAƒ‹‚Åà–¾‚·‚éSpringhead)‚ðŠJ”­‚µ‚Ä‚¢‚Ü‚·D
 
-\section sec_characteristic	Springhead‚Ì“Á’¥
+\section secIntroChar	Springhead‚Ì“Á’¥
 Springhead‚ÍCÚGCŠÖßCƒoƒlEƒ_ƒ“ƒp‚È‚Ç‚ª”­¶‚·‚é—Í‚ðS‘©ðŒ‚Æ•ß‚ç‚¦C
 „‘Ì‚Ì‰^“®•û’öŽ®‚ð˜A—§‚³‚¹‚Ä‰ð‚­‰ðÍ–@‚Ìƒ\ƒ‹ƒo[‚ðŽ‚¿‚Ü‚·D
 ‚Ü‚½C“Ê‘½–Ê‘Ìƒ‚ƒfƒ‹‚Ì‘g‚Ý‡‚í‚¹‚Å•\‚³‚ê‚é•¨‘ÌŒ`ó‚É‚Â‚¢‚Ä³Šm‚ÈÚG‰ðÍ‚ðs‚Á‚Ä
@@ -38,7 +40,7 @@ Springhead‚ÍCÚGCŠÖßCƒoƒlEƒ_ƒ“ƒp‚È‚Ç‚ª”­¶‚·‚é—Í‚ðS‘©ðŒ‚Æ•ß‚ç‚¦C
 ŠÖß‚Ì¶¬Eíœ‚ÌƒRƒXƒg‚ª’á‚¢CŽg—p‰Â”\‚ÈƒoƒlEƒ_ƒ“ƒpŒW”‚ª”ñí‚ÉL‚¢C
 ÚG‰ðÍ‚ª‚‘¬‚Å³Šm‚Æ‚¢‚Á‚½“Á’¥‚ðŽ‚¿‚Ü‚·D
 
-\subsection sec_others	‘¼‚ÌƒVƒ~ƒ…ƒŒ[ƒ^
+\subsection secIntroOthers	‘¼‚ÌƒVƒ~ƒ…ƒŒ[ƒ^
 Springhead(Springhead2)ˆÈŠO‚ÌƒVƒ~ƒ…ƒŒ[ƒ^‚ðÐ‰î‚µ‚È‚ª‚çCSpringhead‚Æ”äŠr‚µ‚Ü‚·D
 }‚ÍS‘©—Í‚Ì‹‚ß•û‚Å•¨—ƒVƒ~ƒ…ƒŒ[ƒ^‚ð•ª—Þ‚µ‚½‚à‚Ì‚Å‚·D
 <img src="../../include/docsrc/01UsersGuide/PhysicsEngineTaxonomy.png">
@@ -61,7 +63,7 @@ Springhead(Springhead2)ˆÈŠO‚ÌƒVƒ~ƒ…ƒŒ[ƒ^‚ðÐ‰î‚µ‚È‚ª‚çCSpringhead‚Æ”äŠr‚µ‚Ü‚·
  - ConvexMesh‚âHeightMap‚ðƒTƒ|[ƒg
 
 Springhead‚ÍCS‘©ðŒ‚ðLCP‚Æ‚µ‚Ä’èŽ®‰»‚µ‚ÄƒKƒEƒXƒTƒCƒfƒ‹–@‚ð—p‚¢‚Ä‰ðÍ‰ð‚ð‹ßŽ—“I‚É‹‚ß‚Ä‚¢‚Ü‚·D
-‚±‚±‚Ü‚Å‚ÍC2006”NŒ»Ý‚à‚Á‚Æ‚àˆê”Ê“I‚È•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Žè–@‚¾‚Æ‚¢‚¦‚Ü‚·D
+‚±‚±‚Ü‚Å‚ÍC2006”NŒ»ÝC‚à‚Á‚Æ‚àˆê”Ê“I‚È•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Žè–@‚Å‚·D
 ÚG”»’èE‰ðÍ‚É‚Â‚¢‚Ä‚ÍCŒ`ó‚ð“Ê‘½–Ê‘Ì‚Å•\Œ»‚µCGJK‚É‚æ‚éÕ“Ë”»’è‚Æ–@üŒvŽZ‚µC
 QuickHull–@‚ð—p‚¢‚ÄÚG‰ðÍ‚Å‚‘¬‚ÉÚG—Ìˆæ‚ðŒvŽZ‚µ‚ÄÚG—ÍŒvŽZ‚ðs‚¢‚Ü‚·D
 ‚±‚Ì•”•ª‚ÍC“¯‚¶•û–@‚ðŽg‚Á‚Ä‚¢‚é‚à‚Ì‚Í­‚È‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñD
@@ -70,6 +72,6 @@ Springhead(Springhead2)‚ÍC‘¼‚ÌƒVƒ~ƒ…ƒŒ[ƒ^‚É‚½‚¢‚µ‚ÄC
  - Mesh(“Ê‘½–Ê‘Ì)‚ªˆµ‚¦‚éD
  - ”CˆÓ(‚©‚È‚èL”ÍˆÍ)‚Ìƒoƒlƒ_ƒ“ƒp‚ðˆÀ’è‚ÉƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Å‚«‚éD
  - OpenSource‚Å‚ ‚è‚È‚ª‚çC•ª‚©‚è‚â‚·‚¢API‚ª‚ ‚éD
-‚Æ‚¢‚Á‚½“Á’¥‚ðŽ‚¿‚Ü‚·D
+‚Ì“Á’¥‚ðŽ‚¿‚Ü‚·D
 
 */

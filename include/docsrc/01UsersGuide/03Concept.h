@@ -16,7 +16,7 @@ Springheadで行いたいと考えている人もいるでしょう．このような場合にも，必要最低限
 <br><br><br>
 
 
-\section sec_physics 物理シミュレーションSDK
+\section secPhysics 物理シミュレーションSDK
 \par
 \ref pagePhysics は，物理シミュレータ本体です．接触判定や物体運動のシミュレーションを行います．
 物理シミュレーションのシーン(世界)には，物体の質量や慣性モーメント，関節の定義，摩擦係数や跳ね返り係数，バネダンパなどがあります．
@@ -24,7 +24,7 @@ Springheadで行いたいと考えている人もいるでしょう．このような場合にも，必要最低限
 <br><br><br><br>
 
 
-\section sec_graphics グラフィックスSDK
+\section secGraphics グラフィックスSDK
 \par
 \ref pageGraphics は，グラフィックスレンダラです．
 Physicsにはまったくシーンを描画する機能が無いため，シーンの様子を目で見ることができません．

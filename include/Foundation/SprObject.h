@@ -19,7 +19,7 @@ struct ObjectIf;
 class IfInfo;
 class UTTypeDesc;
 
-/**	Factory(オブジェクトを生成するクラス)の基本クラス
+/**	Factory (オブジェクトを生成するクラス)の基本クラス
 */
 class FactoryBase:public UTRefCount{
 public:

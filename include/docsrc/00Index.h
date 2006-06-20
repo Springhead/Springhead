@@ -1,10 +1,11 @@
 /** 
 \mainpage Springhead2マニュアル
  このマニュアルは，Springhead2 SDKの使い方を示すもので，
- - \subpage pageUsersGuide
- - \subpage pageTutorial
- - \subpage pageReferenceManual
- 
+<ul>
+ <li> \subpage pageUsersGuide
+ <li> \subpage pageTutorial
+ <li> \subpage pageReferenceManual
+</ul>
 から構成されます．
 <br><br><br>
 
