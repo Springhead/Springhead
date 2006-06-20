@@ -1,25 +1,23 @@
 /**
 \page pageGettingStarted	はじめてみよう
-
-\section contentsGettingStarted	◇ Contents ◇
-　　 \ref requirement				<br>
-　　 \ref directory					<br>
-　　 \ref install					<br>
-　　　　　 \ref vc_install			<br>
-　　　　　 \ref cygwin_install		<br>
-　　　　　 \ref linux_install		<br>
-　　　　　 \ref mac_install			<br>
-　　 \ref test 						<br>
-　　　　　 \ref vc_test				<br>
-　　　　　 \ref cygwin_test			<br>
-　　　　　 \ref linux_test			<br>
-　　　　　 \ref mac_install			<br>
-<br><br>
+<hr>
+<br>
+&nbsp; \ref secRequirement<br>
+&nbsp; \ref secDirectory<br>
+&nbsp; \ref secInstall<br>
+&nbsp;&nbsp; \ref secVcInstall<br>
+&nbsp;&nbsp; \ref secCygwinInstall<br>
+&nbsp;&nbsp; \ref secLinuxInstall<br>
+&nbsp;&nbsp; \ref secMacInstall<br>
+&nbsp; \ref secTest<br>
+&nbsp;&nbsp; \ref secVcTest<br>
+&nbsp;&nbsp; \ref secCygwinTest<br>
+&nbsp;&nbsp; \ref secLinuxTest<br>
+&nbsp;&nbsp; \ref secMacTest<br>
+<br>
 <hr>
 
-
-
-\section requirement	1．　動作環境
+\section secRequirement	1. 動作環境
 本プログラムは以下いずれかの環境で動作します．<br>
           <td width="64%"> 
             <table width="100%" border="0" cellspacing="1" cellpadding="2" bgcolor="#305C78">
@@ -29,10 +27,10 @@
                     <tr> 
                       <td> 
                         <p><br> 
-                        	&nbsp;&nbsp;&nbsp; \ref vc_install <br>
-                        	&nbsp;&nbsp;&nbsp; \ref cygwin_install <br>
-                        	&nbsp;&nbsp;&nbsp; \ref linux_install <br>
-                        	&nbsp;&nbsp;&nbsp; \ref mac_install <br><br>
+                        	&nbsp;&nbsp;&nbsp; \ref secVcInstall <br>
+                        	&nbsp;&nbsp;&nbsp; \ref secCygwinInstall <br>
+                        	&nbsp;&nbsp;&nbsp; \ref secLinuxInstall <br>
+                        	&nbsp;&nbsp;&nbsp; \ref secMacInstall <br><br>
                         </p>
                       </td>
                     </tr>
@@ -46,7 +44,7 @@
 
 
 
-\section directory	2．　ディレクトリ構成
+\section secDirectory	2. ディレクトリ構成
 ディレクトリ構成は以下の通りです．
   \image html directory.jpg
 <br><br>
@@ -54,12 +52,12 @@
 
 
 
-\section install	3．　インストールからビルドまで
+\section secInstall	3. インストールからビルドまで
 ソースファイルからコンパイルする場合は、ソースファイルを適当な場所に置いて下さい．<br>
 ここでは仮に \c C:\\Home\\C\\Project\\Springhead2 とします．<br>
 下記にそれぞれの環境での構築方法を記載しています．
   
-\subsection vc_install	(１) Visual C++ .NET 2003 + DirectX SDK 9.0
+\subsection secVcInstall	(1) Visual C++ .NET 2003 + DirectX SDK 9.0
 \htmlonly
 <strong>
 <font color="gray">
@@ -127,7 +125,7 @@
 
 
 
-\subsection cygwin_install	(２) Cygwin
+\subsection secCygwinInstall (2) Cygwin
 \par 　　(2-1) 　 Cygwin でビルド
 ソースファイルのトップディレクトリにて、<tt>make</tt>コマンドを実行します．<br>
 ライブラリの構築、およびテスト用プログラム、サンプルプログラムのコンパイルを自動的に行います．
@@ -138,7 +136,7 @@
 
 
 
-\subsection linux_install	(３) RedHat Linux 9
+\subsection secLinuxInstall	(3) RedHat Linux 9
 \par 　　(3-1) 　 RedHat Linux 9 でビルド
 ソースファイルのトップディレクトリにて、<tt>make</tt>コマンドを実行します．<br>
 ライブラリの構築、およびテスト用プログラム、サンプルプログラムのコンパイルを自動的に行います．
@@ -149,7 +147,7 @@
 
 
 
-\subsection mac_install	(４) Mac OS X（PowerPC、Aquq）
+\subsection  secMacInstall	(4) Mac OS X（PowerPC、Aquq）
 \par 　　(4-1) 　 Mac OS X でビルド
 ソースファイルのトップディレクトリにて、<tt>make</tt>コマンドを実行します．<br>
 ライブラリの構築、およびテスト用プログラム、サンプルプログラムのコンパイルを自動的に行います．
@@ -161,7 +159,7 @@
 
 
 
-\section test	4．　サンプルを動かす
+\section secTest	4. サンプルを動かす
 サンプル・プログラムを動かしてみましょう．<br>
 \c Springhead2 では、動作可能なテスト用プログラム \c tests およびサンプルプログラム
 \c Samples を用意しています（参照 ： \ref directory)．
@@ -169,7 +167,7 @@
 <a href="../../src/html/GRSimple_2main_8cpp-example.html">GRSimple</a>
 を実行する方法を紹介します．<br>
 
-\subsection vc_test	(１) Visual C++ .NET 2003 + DirectX SDK 9.0
+\subsection secVcTest	(1) Visual C++ .NET 2003 + DirectX SDK 9.0
 <ol>
 	<li> \c GRSimpleディレクトリにあるソリューションファイルを開きます．
 	<li> ソリューションエクスプローラで、\c GRSimple がスタートアッププロジェクトに
@@ -178,7 +176,7 @@
 </ol>
 <br>
 
-\subsection cygwin_test	(２) Cygwin
+\subsection secCygwinTest	(2) Cygwin
 <ol>
 	<li> \c GRSimple ディレクトリへ移動し、\c GRSimple.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し、アプリケーションを起動します．<br>
@@ -189,7 +187,7 @@
 </ol>
 <br>
 
-\subsection linux_test	(３) RedHat Linux 9
+\subsection secLinuxTest	(3) RedHat Linux 9
 <ol>
 	<li> \c GRSimple ディレクトリへ移動し、\c GRSimple.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し、アプリケーションを起動します．<br>
@@ -200,7 +198,7 @@
 </ol>
 <br>
 
-\subsection mac_test	(４) Mac OS X（PowerPC、Aquq）
+\subsection secMacTest	(4) Mac OS X（PowerPC、Aquq）
 <ol>
 	<li> \c GRSimple ディレクトリへ移動し、\c GRSimple.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し、アプリケーションを起動します．<br>

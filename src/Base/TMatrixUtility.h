@@ -10,7 +10,7 @@
 #include "TVector.h"
 #include "TMatrix.h"
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\addtogroup gpLinearAlgebra	*/
 //@{
 
 /**	@file TMatrixUtility.h

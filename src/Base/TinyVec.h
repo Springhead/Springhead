@@ -17,7 +17,7 @@ namespace Spr{;
  #pragma pack(push, 4)
 #endif
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\addtogroup gpLinearAlgebra	*/
 //@{
 /**	@file TinyVec.h
 	2,3,4次元のベクトルの定義

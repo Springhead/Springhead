@@ -5,8 +5,6 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/**	\addtogroup	gpGraphics	*/
-//@{
 
 /**
  *	@file SprGRSdk.h
@@ -19,6 +17,8 @@
 
 namespace Spr{;
 
+/**	\defgroup gpGraphics	グラフィックスSDK	*/
+//@{
 struct GRDeviceGLIf;
 struct GRDebugRenderIf;
 struct GRSceneIf;

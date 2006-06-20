@@ -19,7 +19,7 @@ namespace Spr{;
  #pragma pack(push,4)
 #endif
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\addtogroup gpLinearAlgebra	*/
 //@{
 /**	@file TinyMat.h
 	2x2, 3x3行列の定義

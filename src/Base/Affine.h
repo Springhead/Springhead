@@ -8,7 +8,7 @@
 #ifndef AFFINE_H
 #define AFFINE_H
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\addtogroup gpLinearAlgebra	*/
 //@{
 /** \page pageAffine @!JAAffine行列クラスの概要@!ENA Guide for Affine Matrix@!*
 	\section secAffineIntro @!JAはじめに@!ENIntroduction@!*

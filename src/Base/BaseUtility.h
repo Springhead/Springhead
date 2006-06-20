@@ -15,7 +15,7 @@
 
 namespace Spr {
 
-/**	\addtogroup gpBaseUtility ユーティリティクラス	*/
+/**	\defgroup gpBaseUtility ユーティリティクラス	*/
 //@{
 
 /**	@file	BaseUtility.h	その他のユーティリティークラス・関数．*/

@@ -2,7 +2,7 @@
 \page pageApiBasic	APIの基礎
 ここでは，Springhead2 SDKのAPIの形式について説明します．
 SDKは，実装を持たないAPIクラスを介して使います．
-\image html ../../include/docsrc/01UsersGuide/APIInherit.png
+\image html APIInherit.png
 
 \subsection sec_apiClass APIクラス
 APIクラスは，名前の最後にインタフェースを表すIfがつきます．
@@ -36,6 +36,6 @@ int main(int argc, char* argv[]){
 ステートは，そのインスタンスの状態を表す変数でシミュレーションを進めると変化します．
 ステートだけを保存しておけば，そのオブジェクトを保存しておいた時点の状態に戻すことができます．
 図のように，オブジェクトは，ステートとディスクリプタと継承していることが多いです．
-\image html ../../include/docsrc/01UsersGuide/APIDesc.png
+\image html APIDesc.png
 
 */

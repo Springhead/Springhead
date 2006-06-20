@@ -17,7 +17,7 @@
 
 namespace Spr{;
 
-/**	\addtogroup	gpGraphics	グラフィックス	*/
+/**	\addtogroup	gpGraphics	*/
 //@{
 
 /**

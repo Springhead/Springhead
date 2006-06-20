@@ -15,7 +15,9 @@
 
 namespace Spr{;
 
-/** \addtogroup gpJoint 関節クラス	*/
+/** \addtogroup gpPhysics */
+//@{
+/** \defgroup gpJoint ジョイント*/
 //@{
 
 /// 拘束のディスクリプタ
@@ -264,6 +266,7 @@ struct PHBallJointIf : public PHConstraintIf{
 
 };
 
+//@}
 //@}
 
 }

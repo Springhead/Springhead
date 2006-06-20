@@ -1,18 +1,18 @@
 /**
 \page pageNodeDefList ノードの定義一覧
 
+
 \ref pageFileIO がロード・セーブできる通常のノードは，ディスクリプタと1対1対応します．
 また，対応するオブジェクトがない特殊ノードもディスクリプタにあたるC++の構造体だけはあります．
 そこで，ノードの定義の一覧の代わりに，C++の構造体の一覧を示します．
 
 \section secNormalNodeDefList 通常ノードの定義一覧
 通常のノードはシーングラフのオブジェクト（のディスクリプタ）に対応します．
-ですので，ノード一覧＝ディスクリプタの一覧になります．
+各SDKのディスクリプタの説明を参照してください．
 <ul>
- <li> \ref gpPhysicsNode
- <li> \ref gpGraphicsNode
+ <li> \ref gpPhysics
+ <li> \ref gpGraphics
 </ul>
-TBW(Physics Graphicsのシーングラフオブジェクトのグループへのリンク）
 
 \section secSpecialNodeDefList 特殊ノードの定義一覧
 

@@ -120,7 +120,7 @@ inline std::ostream& operator << (std::ostream& os, const CDContactAnalysisFace&
 /**	交差部分の解析をするクラス．(交差部分の形状を求める/初回の法線を積分で求める)	*/
 class CDContactAnalysis{
 public:
-	/// \addtogroup quickHull QuickHullのための頂点と平面
+	/// \defgroup quickHull QuickHullのための頂点と平面
 	//@{
 	
 	typedef std::vector<CDContactAnalysisFace*> Vtxs;	

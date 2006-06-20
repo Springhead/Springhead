@@ -9,7 +9,7 @@
 #define SPR_FIFile_H
 #include <Foundation/SprObject.h>
 
-/**	\addtogroup gpFileIO	*/
+/**	\defgroup gpFileIO	ファイル入出力SDK	*/
 //@{
 namespace Spr{;
 

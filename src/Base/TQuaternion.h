@@ -14,7 +14,7 @@
 
 namespace Spr{;
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\addtogroup gpLinearAlgebra	*/
 //@{
 /**	@file TQuaternion.h
 	クォータニオンクラスの定義

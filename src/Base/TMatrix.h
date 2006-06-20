@@ -8,7 +8,7 @@
 #ifndef PTMATRIX_TMATRIX_H
 #define PTMATRIX_TMATRIX_H
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\addtogroup gpLinearAlgebra	*/
 //@{
 /** 
 	@page PTM ポータブル テンプレート 行列クラスライブラリ

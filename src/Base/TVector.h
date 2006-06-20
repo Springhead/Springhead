@@ -8,7 +8,7 @@
 #ifndef PTMATRIX_TVECTOR_H
 #define PTMATRIX_TVECTOR_H
 
-/**	\addtogroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/**	\defgroup gpLinearAlgebra ベクトル・行列・座標変換	*/
 //@{
 /**	@file TVector.h
 	テンプレートによるN次元ベクトルの定義.

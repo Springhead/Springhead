@@ -11,7 +11,7 @@
 
 namespace Spr{;
 
-/**	\addtogroup	gpShape	形状・接触判定クラス	*/	
+/**	\defgroup	gpShape	形状・接触判定クラス	*/	
 //@{
 /**	@file SprCDShape.h
 	剛体の形状
