@@ -45,7 +45,6 @@ struct PHSceneState{
 		count = 0;
 	}
 };
-/// \ingroup gpPhysicsNode
 /// 物理エンジンのシーンのデスクリプタ
 struct PHSceneDesc: public PHSceneState{
 	///	接触のモード
