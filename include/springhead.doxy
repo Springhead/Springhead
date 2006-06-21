@@ -532,7 +532,7 @@ IMAGE_PATH             = ./docsrc/01UsersGuide \
 # to standard output.  If FILTER_PATTERNS is specified, this tag will be 
 # ignored.
 
-INPUT_FILTER           = "LangFilter JA"
+INPUT_FILTER           = "doxFilter JA"
 
 # The FILTER_PATTERNS tag can be used to specify filters on a per file pattern 
 # basis.  Doxygen will compare the file name with each pattern and apply the 

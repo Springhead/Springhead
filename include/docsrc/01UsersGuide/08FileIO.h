@@ -1,4 +1,4 @@
-/** \page pageFileIO ファイル入出力SDK
+/** \page pageFileIO ファイル入出力SDK 
 
 \ref pageFileIO は，\ref sec_SceneGraph のファイル入出力を行います．
 他のSDKのAPI(\ref pagePhysics \ref pageGraphics)を用いて，
@@ -102,8 +102,8 @@ FIFileXを作成します．次のような手順になります．
 <pre>
 	FISdkIf* fiSdk = CreateFISdk();				//	FISdkの作成
 	FIFileXIf* fileX = fiSdk->CreateFileX();	//	FIFileXの作成
-	/*	オブジェクトの配列．
-		ここにファイルからロードしたオブジェクトが追加される．*/
+	//	オブジェクトの配列．
+	//	ここにファイルからロードしたオブジェクトが追加される．
 	ObjectIfs objs;	
 	if (! fileX->Load(objs, "test.x") ) {	//	ロード
 		DSTR << "Error: Cannot open load file. " << std::endl;

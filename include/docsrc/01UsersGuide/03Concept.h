@@ -1,11 +1,11 @@
 /** \page pageConcept	Springheadの構成
+\contents
 
+\section secStructure Springheadの構成
 Springheadは大きく分けて以下の3つのモジュールから構成されています．
 - 　 \c Springhead \c Physics　 ⇒　 \ref pagePhysics
-- 　 \c Springhead \c Graphics　 ⇒　 \ref pageGraphics  
-- 　 \c Springhead \c File \c I/O　 ⇒　 \ref pageFileIO
-
-<br>
+- 　 \c Springhead \c Graphics　 ⇒　 \ref pageGraphics (未リリース)
+- 　 \c Springhead \c File \c I/O　 ⇒　 \ref pageFileIO (未リリース)
 
 これらのモジュールは，個別に用いることもできるように設計されています．
 例えば，ユーザの中にはレンダリングは手持ちのライブラリを使い，物理シミュレーションのみを
