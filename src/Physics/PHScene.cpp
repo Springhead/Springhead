@@ -34,39 +34,13 @@ void PHScene::Init(){
 	engines.Add(ge);
 	ge->accel = gravity;
 
-	switch(contactSolver){
-	case SOLVER_PENALTY:{
-		PHPenaltyEngine* pe = DBG_NEW PHPenaltyEngine;
-		engines.Add(pe);
-		}break;
-	case SOLVER_CONSTRAINT:{
-		PHConstraintEngine* ce = DBG_NEW PHConstraintEngine;
-		engines.Add(ce);
-		}break;
-	default: assert(false);
-	}
+	penaltyEngine = DBG_NEW PHPenaltyEngine;
+	engines.Add(penaltyEngine);
+	
+	constraintEngine = DBG_NEW PHConstraintEngine;
+	engines.Add(constraintEngine);
 
 	count = 0;
-}
-
-PHContactDetector* PHScene::GetContactDetector(){
-	switch(contactSolver){
-	case SOLVER_PENALTY:{
-		PHPenaltyEngine* pe;
-		engines.Find(pe);
-		assert(pe);
-		return pe;
-		}break;
-	case SOLVER_CONSTRAINT:{
-		PHConstraintEngine* ce;
-		engines.Find(ce);
-		assert(ce);
-		return ce;
-		}break;
-	default:
-		assert(false);
-		return NULL;
-	}
 }
 
 PHSdkIf* PHScene::GetSdk(){
@@ -97,10 +71,7 @@ PHSolidIf** PHScene::GetSolids(){
 }
 
 PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
-	PHConstraintEngine* ce;
-	engines.Find(ce);
-	assert(ce);
-	return ce->AddJoint(desc);
+	return constraintEngine->AddJoint(desc);
 }
 
 PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
@@ -108,10 +79,7 @@ PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
 }
 
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
-	PHConstraintEngine* ce;
-	engines.Find(ce);
-	assert(ce);
-	return ce->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc);	
+	return constraintEngine->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc);	
 }
 
 void PHScene::Clear(){
@@ -145,16 +113,24 @@ void PHScene::Integrate(){
 	count++;
 }
 
-void PHScene::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
-	GetContactDetector()->EnableContact(lhs, rhs, bEnable);
+void PHScene::SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode mode){
+	penaltyEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_PENALTY);
+	constraintEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_LCP);
 }
 
-void PHScene::EnableContacts(PHSolidIf** group, size_t length, bool bEnable){
-	GetContactDetector()->EnableContacts(group, length, bEnable);
+void PHScene::SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode){
+	penaltyEngine->EnableContact(group, length, mode == PHSceneDesc::MODE_PENALTY);
+	constraintEngine->EnableContact(group, length, mode == PHSceneDesc::MODE_LCP);
 }
 
-void PHScene::EnableAllContacts(bool bEnable){
-	GetContactDetector()->EnableAllContacts(bEnable);
+void PHScene::SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode){
+	penaltyEngine->EnableContact(solid, mode == PHSceneDesc::MODE_PENALTY);
+	constraintEngine->EnableContact(solid, mode == PHSceneDesc::MODE_LCP);
+}
+
+void PHScene::SetContactMode(PHSceneDesc::ContactMode mode){
+	penaltyEngine->EnableContact(mode == PHSceneDesc::MODE_PENALTY);
+	constraintEngine->EnableContact(mode == PHSceneDesc::MODE_LCP);
 }
 
 void PHScene::SetGravity(Vec3f accel){
@@ -191,9 +167,11 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 }
 bool PHScene::AddChildObject(ObjectIf* o){
 	bool rv = solids->AddChildObject(o);
-	//PHSolid* s = DCAST(PHSolid, o);
-	if (rv){
-		GetContactDetector()->AddChildObject(o);
+	if(rv){
+		PHSolidIf* s = DCAST(PHSolidIf, o);
+		penaltyEngine->AddChildObject(o);
+		constraintEngine->AddChildObject(o);
+		SetContactMode(s, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
 	}
 	return rv;
 }

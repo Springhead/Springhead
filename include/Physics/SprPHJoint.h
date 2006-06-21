@@ -33,7 +33,7 @@ struct PHConstraintDesc{
 	/// 有効/無効フラグ
 	bool bEnabled;
 	/// 剛体から見た関節の位置と傾き
-	Posed pose[2];
+	Posed posePlug, poseSocket;
 	PHConstraintDesc():bEnabled(true){}
 };
 
@@ -42,11 +42,12 @@ typedef PHConstraintDesc	PHJointDesc;
 
 /// 1軸関節のディスクリプタ
 struct PHJoint1DDesc : public PHJointDesc{
-	double	lower, upper;	/// 可動範囲. lower < upperのときに有効となる
-	double	spring;		/// バネ係数
-	double  origin;		/// バネ原点
-	double  damper;		/// ダンパ係数
-	double	torque;		/// モータトルク
+	double	lower, upper;	///< 可動範囲. lower < upperのときに有効となる
+	double	spring;			///< バネ係数
+	double  origin;			///< バネ原点
+	double  damper;			///< ダンパ係数
+	double	torque;			///< モータトルク
+
 	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), torque(0.0){}
 };
 

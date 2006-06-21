@@ -56,6 +56,7 @@ void PHSolidInfoForPenalty::UpdateCache(int c){
 // PHSolidPairForPenalty
 
 void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
+	if(!bEnabled)return;
 	//	動力学計算の準備
 	reflexForce = reflexTorque = frictionForce = frictionTorque = Vec3f();
 	area = 0;
@@ -106,6 +107,7 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 }
 
 void PHSolidPairForPenalty::GenerateForce(){
+	if(!bEnabled)return;
 	//	接触判定終了後の処理
 	//	抗力とその作用点を求め，摩擦を計算し，抗力と摩擦力を物体に加える．
 	int i, j;

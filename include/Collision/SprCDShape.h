@@ -35,8 +35,6 @@ namespace Spr{;
 ///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	IF_DEF(CDShape);
-	//virtual void SetPose(const Posef& p)=0;
-	//virtual Posef GetPose() const=0;
 };
 
 ///	凸形状の基本クラス

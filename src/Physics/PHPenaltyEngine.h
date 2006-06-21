@@ -8,12 +8,6 @@
 #ifndef PHPENALTYENGINE_H
 #define PHPENALTYENGINE_H
 
-//#include <SprPhysics.h>
-//#include <Foundation/Object.h>
-//#include <Physics/PHScene.h>
-//#include <Physics/PHEngine.h>
-//#include <Base/Combination.h>
-//#include <Collision/CDDetectorImp.h>
 #include <Physics/PHContactDetector.h>
 
 namespace Spr{;
@@ -94,12 +88,10 @@ public:
 	float convertedMass;			///<	剛体の組の換算質量
 	float area;						///<	接触面積
 
-	//virtual void Init(PHSolid* s0, PHSolid* s1);
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< 交差が検知されたときの処理
 
 	void Setup(unsigned int ct, double dt);
 	void GenerateForce();
-	//bool Detect(PHPenaltyEngine* engine);
 
 	///@name	絶対系での読み出し
 	//@{
@@ -140,24 +132,9 @@ protected:
 
 class PHPenaltyEngine : public PHContactDetectorImp<PHSolidInfoForPenalty, PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
 	OBJECT_DEF_NOIF(PHPenaltyEngine);
-//protected:
-	//bool	 ready;
-	//PHSolids solids;
-	//UTCombination<UTRef<PHSolidPair> > solidPairs;
 public:
-	//void Add(PHSolid* s);	/// Solidを登録する
-	//void Invalidate(){ready = false;}		/// readyフラグをリセットする
-	//void Init();			/// 初期化し，readyフラグをセットする
-	///
 	int GetPriority() const {return SGBP_PENALTYENGINE;}
-	///	速度→位置、加速度→速度の積分
-	//virtual PHSolidInfo* CreateSolidInfo(PHSolid* solid){
-	//	return DBG_NEW PHSolidInfoForPenalty(solid);
-	//}
 	virtual void Step();
-	//virtual void Clear(PHScene* s){ solids.clear(); }
-
-	//PHPenaltyEngine():ready(false){}
 };
 
 }	//	namespace Spr

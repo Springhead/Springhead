@@ -168,7 +168,6 @@ int main(int argc, char* argv[]){
 	grSdk = CreateGRSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
 	dscene.timeStep = 0.05;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	

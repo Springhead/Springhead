@@ -297,7 +297,6 @@ void PHConstraintEngine::Step(){
 	Detect(ct, dt);
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-
 	
 	QueryPerformanceCounter(&val[0]);
 	SetupDynamics(dt);

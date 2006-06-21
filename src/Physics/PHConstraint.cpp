@@ -74,10 +74,12 @@ bool PHConstraint::AddChildObject(ObjectIf* o){
 }
 
 void PHConstraint::SetDesc(const PHConstraintDesc& desc){
-	for(int i = 0; i < 2; i++){
-		desc.pose[i].Ori().ToMatrix(Rj[i]);
-		rj[i] = desc.pose[i].Pos();
-	}
+	desc.posePlug.Ori().ToMatrix(Rj[0]);
+	rj[0] = desc.posePlug.Pos();
+	
+	desc.poseSocket.Ori().ToMatrix(Rj[1]);
+	rj[1] = desc.poseSocket.Pos();
+	
 	bEnabled = desc.bEnabled;
 }
 

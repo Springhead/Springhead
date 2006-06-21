@@ -42,19 +42,19 @@ void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	}
 
 	PHHingeJointDesc jd;
-	jd.pose[0].Pos() = Vec3d( 1.5, -1.0,  1.5);
+	jd.posePlug.Pos() = Vec3d( 1.5, -1.0,  1.5);
 	jntWheel[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[0], jd));
-	jd.pose[0].Pos() = Vec3d(-1.5, -1.0,  1.5);
+	jd.posePlug.Pos() = Vec3d(-1.5, -1.0,  1.5);
 	jntWheel[1] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[1], jd));
-	jd.pose[0].Pos() = Vec3d( 1.5, -1.0, -1.5);
+	jd.posePlug.Pos() = Vec3d( 1.5, -1.0, -1.5);
 	jntWheel[2] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[2], jd));
-	jd.pose[0].Pos() = Vec3d(-1.5, -1.0, -1.5);
+	jd.posePlug.Pos() = Vec3d(-1.5, -1.0, -1.5);
 	jntWheel[3] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[3], jd));
 
 	for(int i = 0; i < 4; i++){
-		scene->EnableContact(soBody, soWheel[i], false);
+		scene->SetContactMode(soBody, soWheel[i], PHSceneDesc::MODE_NONE);
 		for(int j = i + 1; j < 4; j++){
-			scene->EnableContact(soWheel[i], soWheel[j], false);
+			scene->SetContactMode(soWheel[i], soWheel[j], PHSceneDesc::MODE_NONE);
 		}
 	}
 }

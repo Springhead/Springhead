@@ -232,12 +232,26 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
-				Posed pose;
-				pose.PosY() = 1.5;
-				soBox.back()->SetShapePose(0, pose);
 				soBox.back()->AddShape(meshBox);
-				pose.PosY() = -1.5;
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				Posed pose;
+				pose.Pos() = Vec3d(3, 0, 0);
 				soBox.back()->SetShapePose(1, pose);
+				pose.Pos() = Vec3d(-3, 0, 0);
+				soBox.back()->SetShapePose(2, pose);
+				pose.Pos() = Vec3d(0, 3, 0);
+				soBox.back()->SetShapePose(3, pose);
+				pose.Pos() = Vec3d(0, -3, 0);
+				soBox.back()->SetShapePose(4, pose);
+				pose.Pos() = Vec3d(0, 0, 3);
+				soBox.back()->SetShapePose(5, pose);
+				pose.Pos() = Vec3d(0, 0, -3);
+				soBox.back()->SetShapePose(6, pose);
+				
 				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
@@ -273,9 +287,7 @@ void timer(int id){
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc dscene;
-	//dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
-	dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;
-	dscene.timeStep = 0.01;
+	dscene.timeStep = 0.05;
 	//dscene.timeStep = 0.033;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 

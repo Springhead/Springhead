@@ -16,7 +16,8 @@ namespace Spr {;
 class CDShape;
 struct CDShapeDesc;
 class PHSolidContainer;
-class PHContactDetector;
+class PHPenaltyEngine;
+class PHConstraintEngine;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
@@ -32,9 +33,9 @@ class SPR_DLL PHScene:public InheritScene<PHSceneIf, Scene>, public PHSceneDesc{
 public:
 	PHEngines engines;
 protected:
-	PHSolidContainer* solids;
-	/// 設定に応じてPenaltyEngineかConstraintEngineのいずれかを返す
-	PHContactDetector* GetContactDetector();
+	PHSolidContainer*	solids;
+	PHPenaltyEngine*	penaltyEngine;
+	PHConstraintEngine* constraintEngine;
 public:
 	///	コンストラクタ
 	PHScene(const PHSceneDesc& desc=PHSceneDesc());
@@ -48,9 +49,10 @@ public:
 	PHJointIf* CreateJoint(const PHJointDesc& desc);	///< ファイルローダ用
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	PHPathIf*  CreatePath(const PHPathDesc& desc);
-	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable = true);
-	void EnableContacts(PHSolidIf** group ,size_t length, bool bEnable = true);
-	void EnableAllContacts(bool bEnable = true);
+	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
+	void SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
+	void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
+	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	void SetGravity(const Vec3d& g);
 	PHSdkIf* GetSdk();
 
@@ -83,6 +85,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool AddChildObject(ObjectIf* o);
 protected:
+	friend class PHSolid;
 	friend class Object;
 	ACCESS_DESC_STATE(PHScene);
 };

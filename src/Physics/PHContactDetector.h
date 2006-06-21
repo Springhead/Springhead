@@ -123,15 +123,15 @@ struct PHContactDetectorState{
 };
 
 /// 実装（ペナルティ、LCP）に依存しない部分のインタフェース
-class PHContactDetector : public PHEngine{
+/*class PHContactDetector : public PHEngine{
 public:
 	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable)=0;
-	virtual void EnableContacts(PHSolidIf** group, size_t length, bool bEnable)=0;
-	virtual void EnableAllContacts(bool bEnable)=0;
-};
+	virtual void EnableContact(PHSolidIf** group, size_t length, bool bEnable)=0;
+	virtual void EnableContact(bool bEnable)=0;
+};*/
 
 template<class TSolidInfo, class TShapePair, class TSolidPair, class TEngine>
-class PHContactDetectorImp : public PHContactDetector{
+class PHContactDetectorImp : public PHEngine/* : public PHContactDetector*/{
 
 	// AABBでソートするための構造体
 	struct Edge{
@@ -287,7 +287,7 @@ public:
 		solidPairs.item(i, j)->bEnabled = bEnable;
 	}
 
-	virtual void EnableContacts(PHSolidIf** group, size_t length, bool bEnable){
+	virtual void EnableContact(PHSolidIf** group, size_t length, bool bEnable){
 		std::vector<int> idx;
 		PHSolidInfos<TSolidInfo>::iterator it;
 		for(int i = 0; i < (int)length; i++){
@@ -303,7 +303,18 @@ public:
 		}
 	}
 
-	virtual void EnableAllContacts(bool bEnable){
+	virtual void EnableContact(PHSolidIf* solid, bool bEnable){
+		PHSolidInfos<TSolidInfo>::iterator it = solids.Find((PHSolid*)solid);
+		if(it == solids.end())
+			return;
+		int idx = it - solids.begin();
+		for(int i = 0; i < idx; i++)
+			solidPairs.item(i, idx)->bEnabled = bEnable;
+		for(int i = idx+1; i < (int)solids.size(); i++)
+			solidPairs.item(idx, i)->bEnabled = bEnable;
+	}
+
+	virtual void EnableContact(bool bEnable){
 		int n = solids.size();
 		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 			solidPairs.item(i, j)->bEnabled = bEnable;

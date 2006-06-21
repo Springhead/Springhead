@@ -20,9 +20,7 @@ namespace Spr{;
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)
 	Vec3d		angVelocity;	///<	角速度			(World系)
-	Vec3d		center;			///<	質量中心の位置	(Local系)
 	Posed		pose;			///<	位置と向き		(World系)
-
 	Vec3d		force;			///<	前の積分でこの剛体に加わった力(World系)
 	Vec3d		torque;			///<	前の積分でこの剛体に加わったトルク(World系)
 	Vec3d		nextForce;		///<	次の積分でこの剛体に加わる力(World系)
@@ -32,6 +30,7 @@ struct PHSolidState{
 struct PHSolidDesc: public PHSolidState{
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
+	Vec3d		center;			///<	質量中心の位置	(Local系)
 	bool		gravity;		///<	重力の影響を受けるか
 
 	PHSolidDesc(){ Init(); }
@@ -137,33 +136,44 @@ struct PHSolidIf : public SceneObjectIf{
 		@param shape 形状へのポインタ
 	 */
 	virtual void		AddShape(CDShapeIf* shape)=0;
-
+	/** @brief 登録されている形状の個数を取得する
+		@return 形状の個数
+	 */
+	virtual int			NShape()=0;
+	/**	@brief 登録されている形状を取得する
+		@param index 形状のインデックス
+		@return 形状へのポインタ
+		最初に登録された形状のインデックスは0，その次に登録された形状のインデックスは1，
+		以下同様．
+	 */
+	virtual CDShapeIf*	GetShape(int index)=0;
 	/** @brief 形状の位置と傾きを取得する
 		@param index 対象とする形状のインデックス
 		@return 剛体に対する形状の位置と傾き
-		最初に登録された形状のインデックスは0，その次に登録された形状のインデックスは1，
-		以下同様．
+		インデックスについてはGetShapeを参照．
 	 */
 	virtual Posed		GetShapePose(int index)=0;
 	/** @brief 形状の位置と傾きを設定する
 		@param index 対象とする形状のインデックス
 		@param pose 剛体に対する形状の位置と傾き
-		インデックスについてはGetShapePoseを参照．
+		インデックスについてはGetShapeを参照．
 	 */
 	virtual void		SetShapePose(int index, const Posed& pose)=0;
-
-	///	重力を有効/無効化する	ここでよいか疑問
+	
+	/** @brief 重力を有効/無効化する
+		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
+	 */
 	virtual void		SetGravity(bool bOn)=0;
-	/// 動力学法則に従うかどうかを有効/無効化する
+	/** @brief 物理法則に従うかどうかを有効/無効化する
+		@param bOn trueならば剛体は物理法則にしたがって運動する．
+		物理法則に従わない剛体も，SetPose，SetVelocityなどの関数による位置や速度の更新は
+		可能です．
+	 */
 	virtual void		SetDynamical(bool bOn)=0;
+	/** @brief 物理法則に従うかどうかを取得する
+		@return trueならば剛体は物理法則にしたがって運動する．
+	 */
 	virtual bool		IsDynamical()=0;
-
-	/// 登録されている形状の個数を取得
-	virtual int			NShape()=0;
-
-	///	形状を取得
-	virtual CDShapeIf*	GetShape(int i)=0;
-
 };
 
 //@}

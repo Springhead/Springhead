@@ -226,21 +226,10 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	shapes.push_back(CDShapeRefWithPose());
 	shapes.back().shape = sh;
 	CalcBBox();
-	//接触エンジンをinvalidate
+	//接触エンジンのshapePairsを更新する
 	PHScene* scene = DCAST(PHScene,GetScene());
-	assert(scene);
-	switch(scene->contactSolver){
-	case PHScene::SOLVER_PENALTY:{
-		PHPenaltyEngine* pe;
-		scene->engines.Find(pe);
-		pe->UpdateShapePairs(this);
-	}break;
-	case PHScene::SOLVER_CONSTRAINT:{
-		PHConstraintEngine* ce;
-		scene->engines.Find(ce);
-		ce->UpdateShapePairs(this);
-	}break;
-	}
+	scene->penaltyEngine->UpdateShapePairs(this);
+	scene->constraintEngine->UpdateShapePairs(this);
 }
 
 Posed	PHSolid::GetShapePose(int i){

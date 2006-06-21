@@ -45,20 +45,21 @@ struct PHSceneState{
 		count = 0;
 	}
 };
-\ingroup gpPhysicsNode
+/// \ingroup gpPhysicsNode
 /// 物理エンジンのシーンのデスクリプタ
 struct PHSceneDesc: public PHSceneState{
-	///	接触・拘束解決エンジンの種類
-	enum SolverType{
-		SOLVER_PENALTY,
-		SOLVER_CONSTRAINT
-	} contactSolver;
+	///	接触のモード
+	enum ContactMode{
+		MODE_NONE,		///< 無視する
+		MODE_PENALTY,	///< ペナルティ法で解く
+		MODE_LCP		///< LCPで解く
+	};
+	
 	/// 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
 	Vec3f gravity;
+
 	PHSceneDesc(){Init();}
 	void Init(){
-		//contactSolver = SOLVER_PENALTY;
-		contactSolver = SOLVER_CONSTRAINT;
 		gravity=Vec3f(0,-9.8f,0);
 	}
 };
@@ -102,30 +103,33 @@ public:
 	 */
 	virtual PHSolidIf** GetSolids()=0;
 
-	/** @brief 特定のSolidの組について接触を有効化/無効化する
-		@param lhs 組の片方のSolidへのポインタ
-		@param rhs 組のもう片方のSolidへのポインタ
-		@param bEnable trueならば有効化する．falseならば無効化する．
+	/** @brief 指定した剛体同士の接触のモードを設定する
+		@param lhs 組の片方の剛体へのポインタ
+		@param rhs 組のもう片方の剛体へのポインタ
+		@param mode 接触のモード
 
-		Solid lhsとSolid rhsとの接触を有効化/無効化する．
-		無効化された場合，衝突判定や接触力の計算は行われない．
+		剛体lhsと剛体rhsとの接触のモードをmodeに設定する．
 	  */
-	virtual void EnableContact(PHSolidIf* lhs,	PHSolidIf* rhs, bool bEnable = true)=0;
+	virtual void SetContactMode(PHSolidIf* lhs,	PHSolidIf* rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
 
-	/** @brief 指定した集合に含まれる全てのSolidの組について接触を有効化/無効化する
-		@param group Solidへのポインタ配列の先頭アドレス
+	/** @brief 指定した集合に含まれる全ての剛体同士の接触のモードを設定する
+		@param group 剛体へのポインタ配列の先頭アドレス
 		@param size ポインタ配列の長さ
-		@bEnable trueならば有効化する．falseならば無効化する．
+		@param mode 接触のモード
 
-		group[0]からgroup[size-1]までの全てのSolidの組の接触を有効化/無効化する．
-		無効化された場合，衝突判定や接触力の計算は行われない．
+		group[0]からgroup[size-1]までの全ての剛体の組の接触のモードをmodeに設定する．
 	 */
-	virtual void EnableContacts(PHSolidIf** group, size_t length, bool bEnable = true)=0;
+	virtual void SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
 
-	/** @brief シーンが保有する全てのSolid同士の接触を有効化/無効化する．
-		@bEnable trueならば有効化する．falseならば無効化する．
+	/** @brief 指定した剛体と他の剛体との全ての接触のモードを設定する
+		@param mode 接触のモード
 	 */
-	virtual void EnableAllContacts(bool bEnable = true)=0;
+	virtual void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
+
+	/** @brief シーンが保有する全ての剛体同士の接触のモードを設定する
+		@param mode 接触のモード
+	 */
+	virtual void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
 
 	/** @brief 関節を作成する
 		@param desc 関節のディスクリプタ
