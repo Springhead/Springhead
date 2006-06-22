@@ -1,8 +1,0 @@
-# Doxyfile 1.4.6-NO
-@INCLUDE = ../common.doxy
-INPUT = ./
-HTML_OUTPUT = ../html/Base
-
-FILTER_SOURCE_FILES = YES
-SOURCE_BROWSER = YES
-GENERATE_TAGFILE       = ../html/Base/Base.tag
