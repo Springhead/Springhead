@@ -1,4 +1,4 @@
-/** \page pageReferenceManual	【リファレンスマニュアル】
+/** \page pageReferenceManual	リファレンスマニュアル
 
 リファレンスマニュアルでは，APIやAPIを呼び出すために使う構造体や定数の詳細を説明します．
 SDKが内部で使用しているクラスや関数の説明は含まれていません．
@@ -18,8 +18,4 @@ SDKを使うための基本的なクラス・構造体です．
 
 \section sec_refGraphics グラフィックス
  - \ref gpGraphics
-
-
-TODO:APIのソースに， @ ingroup を加える．
-
 */

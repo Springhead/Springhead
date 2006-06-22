@@ -1,4 +1,4 @@
-/** \page pageUsersGuide 【ユーザーズガイド】
+/** \page pageUsersGuide ユーザーズガイド
 
 \ref pageUsersGuide は，
  - \subpage pageIntroduction

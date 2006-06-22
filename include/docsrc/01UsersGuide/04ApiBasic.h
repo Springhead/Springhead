@@ -1,5 +1,5 @@
 /**
-\page pageApiBasic	APIの基礎
+\page pageApiBasic	APIのしくみ
 ここでは，Springhead2 SDKのAPIの形式について説明します．
 SDKは，実装を持たないAPIクラスを介して使います．
 \image html APIInherit.png

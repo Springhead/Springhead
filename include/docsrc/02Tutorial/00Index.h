@@ -1,4 +1,4 @@
-/** \page pageTutorial	【チュートリアル】
+/** \page pageTutorial	チュートリアル
 
 \ref pageTutorial は、
  - \subpage pageTutStarting
