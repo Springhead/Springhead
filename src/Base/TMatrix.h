@@ -58,7 +58,7 @@
 
 	からです．
 	
-	@section ptm_usage< 使い方
+	@section ptm_usage 使い方
 	ポータブル テンプレート 行列クラスライブラリは，ヘッダファイルだけからなる
 	クラスライブラリなので, TMatrix.h, TMatrixUtility.h, TVector.h
 	を同じフォルダに入れておき，.cppファイルからヘッダをインクルードするだけで
