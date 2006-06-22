@@ -1,0 +1,20 @@
+# Doxyfile 1.4.6-NO
+
+@INCLUDE = ./common.doxy
+
+INPUT      = ./ ../src/FileIO/FIOldSpringheadNode.h ./docsrc/ \
+							./docsrc/01UsersGuide \
+							./docsrc/02Tutorial \
+							./docsrc/03ReferenceManual
+
+GENERATE_TAGFILE       = ./html/temp.tag
+TAGFILES=
+IMAGE_PATH  = ./docsrc/01UsersGuide \
+							./docsrc/02Tutorial \
+							./docsrc/03ReferenceManual
+RECURSIVE              = NO
+CHM_FILE               = ..\temp.chm
+GENERATE_HTMLHELP      = YES
+
+ALLEXTERNALS = YES
+EXTERNAL_GROUPS = YES
