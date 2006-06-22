@@ -447,8 +447,7 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 OBJECT_IMP(PHPenaltyEngine, PHEngine);
 
 void PHPenaltyEngine::Step(){
-	//if(!ready)
-	//	Init();
+	if(!bContactEnabled)return;
 	
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();

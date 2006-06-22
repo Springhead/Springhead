@@ -34,14 +34,6 @@ public:
 				break;
 		return is;
 	};
-	/*void SetupDynamics(double dt){
-		for(iterator is = begin(); is != end(); is++)
-			(*is)->SetupDynamics(dt);
-	}
-	void SetupCorrection(){
-		for(iterator is = begin(); is != end(); is++)
-			(*is)->SetupCorrection();
-	}*/
 };
 
 
@@ -60,7 +52,6 @@ public:
 	TSolidInfo* solid[2];
 	UTCombination< UTRef<TShapePair> > shapePairs;
 
-	//virtual void Clear();
 	virtual void Init(TSolidInfo* s0, TSolidInfo* s1){
 		solid[0] = s0;
 		solid[1] = s1;
@@ -122,16 +113,8 @@ struct PHContactDetectorState{
 
 };
 
-/// 実装（ペナルティ、LCP）に依存しない部分のインタフェース
-/*class PHContactDetector : public PHEngine{
-public:
-	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable)=0;
-	virtual void EnableContact(PHSolidIf** group, size_t length, bool bEnable)=0;
-	virtual void EnableContact(bool bEnable)=0;
-};*/
-
 template<class TSolidInfo, class TShapePair, class TSolidPair, class TEngine>
-class PHContactDetectorImp : public PHEngine/* : public PHContactDetector*/{
+class PHContactDetector : public PHEngine{
 
 	// AABBでソートするための構造体
 	struct Edge{
@@ -148,6 +131,7 @@ public:
 	typedef TEngine engine_type;
 	typedef UTCombination< UTRef<TSolidPair> > PHSolidPairs;
 
+	bool						bContactEnabled;///< 接触が有効化された剛体の組が1つでも存在すればtrue
 	PHSolidInfos<TSolidInfo>	solids;			///< 剛体の配列
 	PHSolidPairs				solidPairs;		///< 剛体の組の配列
 
@@ -277,6 +261,15 @@ public:
 		}
 	}
 
+	/// bEnabledフラグがtrueなSolidPairが存在するか
+	bool ActiveSolidPairExists(){
+		bool yes = false;
+		int n = solids.size();
+		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
+			yes |= solidPairs.item(i, j)->bEnabled;
+		return yes;
+	}
+
 	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
 		PHSolidInfos<TSolidInfo>::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
 		if(ilhs == solids.end() || irhs == solids.end())
@@ -285,6 +278,7 @@ public:
 		if(i > j)std::swap(i, j);
 		assert(i < solidPairs.height() && j < solidPairs.width());
 		solidPairs.item(i, j)->bEnabled = bEnable;
+		bContactEnabled = ActiveSolidPairExists();
 	}
 
 	virtual void EnableContact(PHSolidIf** group, size_t length, bool bEnable){
@@ -301,6 +295,7 @@ public:
 				solidPairs.item(idx[i], idx[j])->bEnabled = bEnable;
 			}
 		}
+		bContactEnabled = ActiveSolidPairExists();
 	}
 
 	virtual void EnableContact(PHSolidIf* solid, bool bEnable){
@@ -312,12 +307,14 @@ public:
 			solidPairs.item(i, idx)->bEnabled = bEnable;
 		for(int i = idx+1; i < (int)solids.size(); i++)
 			solidPairs.item(idx, i)->bEnabled = bEnable;
+		bContactEnabled = ActiveSolidPairExists();
 	}
 
 	virtual void EnableContact(bool bEnable){
 		int n = solids.size();
 		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 			solidPairs.item(i, j)->bEnabled = bEnable;
+		bContactEnabled = bEnable;
 	}
 
 	///< 全体の交差の検知
@@ -365,7 +362,6 @@ public:
 		return found;
 	}
 
-	void PrintContacts();
 };
 
 }

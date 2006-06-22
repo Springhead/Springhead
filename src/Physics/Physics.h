@@ -22,3 +22,4 @@
 #include "PHSliderJoint.h"
 #include "PHBallJoint.h"
 #include "PHPathJoint.h"
+#include "PHSpring.h"

@@ -187,6 +187,9 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 	case PHConstraintDesc::PATHJOINT:
 		joint = DBG_NEW PHPathJoint();
 		break;
+	case PHConstraintDesc::SPRING:
+		joint = DBG_NEW PHSpring();
+		break;
 	default: assert(false);
 	}
 	joint->SetDesc(desc);
@@ -294,7 +297,8 @@ void PHConstraintEngine::Step(){
 	//Œğ·‚ğŒŸ’m
 	QueryPerformanceCounter(&val[0]);
 	points.clear();
-	Detect(ct, dt);
+	if(bContactEnabled)
+		Detect(ct, dt);
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 	

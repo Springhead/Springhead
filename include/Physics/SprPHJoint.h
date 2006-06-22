@@ -28,7 +28,8 @@ struct PHConstraintDesc{
 		HINGEJOINT,
 		SLIDERJOINT,
 		BALLJOINT,
-		PATHJOINT
+		PATHJOINT,
+		SPRING
 	} type;
 	/// 有効/無効フラグ
 	bool bEnabled;
@@ -94,6 +95,14 @@ struct PHBallJointDesc : public PHJointDesc{
 	}
 };
 
+/// バネダンパのディスクリプタ
+struct PHSpringDesc : public PHConstraintDesc{
+	Vec3d spring;		///< バネ係数
+	Vec3d damper;		///< ダンパ係数
+	PHSpringDesc(){
+		type = SPRING;
+	}
+};
 
 /// 拘束のインタフェース
 struct PHConstraintIf : public SceneObjectIf{
@@ -264,6 +273,31 @@ struct PHBallJointIf : public PHConstraintIf{
 		@return 関節速度
 	 */
 	virtual Vec3d GetVelocity() = 0;
+
+};
+
+/// バネダンパのインタフェース
+struct PHSpringIf : public PHConstraintIf{
+	IF_DEF(PHSpring);
+	/** @brief バネ係数を設定する
+		@param spring バネ係数
+	 */
+	virtual void SetSpring(const Vec3d& spring)=0;
+
+	/** @brief バネ係数を取得する
+		@return バネ係数
+	 */
+	virtual Vec3d GetSpring()=0;
+
+	/** @brief ダンパ係数を設定する
+		@param damper ダンパ係数
+	 */
+	virtual void SetDamper(const Vec3d& damper)=0;
+
+	/** @brief ダンパ係数を取得する
+		@return ダンパ係数
+	 */
+	virtual Vec3d GetDamper()=0;
 
 };
 

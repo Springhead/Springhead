@@ -104,17 +104,17 @@ void BuildScene1(){
 	CreateFloor();
 	CDBoxDesc bd;
 	soBox.resize(3);
-	bd.boxsize = Vec3f(0.5, 1.0, 0.5);
+	bd.boxsize = Vec3f(1.0, 2.0, 1.0);
 	soBox[0] = scene->CreateSolid(descBox);
 	soBox[0]->AddShape(phSdk->CreateShape(bd));
 	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
-	bd.boxsize = Vec3f(0.5, 2.5, 0.5);
+	bd.boxsize = Vec3f(1.0, 5.0, 1.0);
 	soBox[1] = scene->CreateSolid(descBox);
 	soBox[1]->AddShape(phSdk->CreateShape(bd));
 	soBox[1]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
-	bd.boxsize = Vec3f(0.5, 5.0, 0.5);
+	bd.boxsize = Vec3f(1.0, 10.0, 1.0);
 	soBox[2] = scene->CreateSolid(descBox);
 	soBox[2]->AddShape(phSdk->CreateShape(bd));
 	soBox[2]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
@@ -144,7 +144,7 @@ void BuildScene1(){
 void BuildScene2(){
 	CreateFloor();
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
+	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(shapeBox);
@@ -156,7 +156,7 @@ void BuildScene2(){
 void BuildScene3(){
 	CreateFloor();
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
+	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	descBox.mass=10.0;
 	descBox.inertia = 10 * Matrix3d::Unit();
@@ -170,7 +170,7 @@ void BuildScene3(){
 void BuildScene4(){
 	CreateFloor();
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
+	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(shapeBox);
@@ -198,6 +198,19 @@ void BuildScene4(){
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
+void BuildScene5(){
+	CreateFloor();
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(shapeBox);
+	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soBox.back()->SetDynamical(false);
+	scene->SetGravity(Vec3f(0, -9.8, 0));	
+}
+
+
 void BuildScene(){
 	switch(sceneNo){
 	case 0: BuildScene0(); break;
@@ -205,6 +218,7 @@ void BuildScene(){
 	case 2: BuildScene2(); break;
 	case 3: BuildScene3(); break;
 	case 4: BuildScene4(); break;
+	case 5: BuildScene5(); break;
 	}
 }
 
@@ -346,6 +360,23 @@ void OnKey4(char key){
 	}
 }
 
+void OnKey5(char key){
+	switch(key){
+	case ' ':{
+		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.back()->AddShape(shapeBox);
+		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
+		PHSpringDesc jdesc;
+		jdesc.posePlug.Pos() = Vec3d(-1.1, -1.1, -1.1);
+		jdesc.poseSocket.Pos() = Vec3d( 1.1,  1.1,  1.1);
+		jdesc.spring = 10.0 * Vec3d(1, 1, 1);
+		jdesc.damper = 2.0 * Vec3d(1, 1, 1);
+		size_t n = soBox.size();
+		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		}break;
+	}
+}
+
 void OnKey(char key){
 	switch(sceneNo){
 	case 0: OnKey0(key); break;
@@ -353,6 +384,7 @@ void OnKey(char key){
 	case 2: OnKey2(key); break;
 	case 3: OnKey3(key); break;
 	case 4: OnKey4(key); break;
+	case 5: OnKey5(key); break;
 	}
 }	
 
@@ -390,10 +422,10 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	lookAtY = 15.0;
+	lookAtY = 10.0;
 	lookAtZ = 30.0;
-	gluLookAt(0.0,15.0,40.0, 
-		      0.0, 0.0, 0.0,
+	gluLookAt(0.0, lookAtY, lookAtZ, 
+		      0.0, lookAtY, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -429,7 +461,7 @@ void keyboard(unsigned char key, int x, int y){
 			exit(0);
 			break;
 		//ƒV[ƒ“Ø‚è‘Ö‚¦
-		case '0': case '1': case '2': case '3': case '4':
+		case '0': case '1': case '2': case '3': case '4': case '5':
 			scene->Clear();
 			soFloor = NULL;
 			soBox.clear();
@@ -514,7 +546,8 @@ int main(int argc, char* argv[]){
 	view = view.inv();	
 	render->SetViewMatrix(view);
 	
-	setLight();
+	initialize();
+	//setLight();
 
 	glutMainLoop();
 
