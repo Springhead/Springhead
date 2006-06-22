@@ -1,0 +1,4 @@
+@INCLUDE = ../common.doxy
+INPUT = ./
+HTML_OUTPUT = ../html/docsrc
+GENERATE_TAGFILE       = ../html/docsrc.tag
