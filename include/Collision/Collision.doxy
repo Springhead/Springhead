@@ -1,0 +1,4 @@
+@INCLUDE = ../common.doxy
+INPUT = ./
+HTML_OUTPUT = ../html/Collision
+GENERATE_TAGFILE       = ../html/Collision.tag

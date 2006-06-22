@@ -1,4 +1,11 @@
 # Doxyfile 1.4.6-NO
 
 @INCLUDE = common.doxy
-INPUT                  = ./ ../src/FileIO/FIOldSpringheadNode.h
+
+INPUT      = ./ ../src/FileIO/FIOldSpringheadNode.h ./docsrc/ \
+             ./docsrc/01UsersGuide ./docsrc/02Tutorial ./docsrc/03ReferenceManual
+
+RECURSIVE  = NO
+TAGFILES   = Base/Base.tag=Base
+ALLEXTERNALS = YES
+EXTERNAL_GROUPS = YES
