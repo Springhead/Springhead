@@ -8,7 +8,7 @@
 シーンには座標系(Frame)のツリーの中に，メッシュ(GRMesh)，光源(GRLight)，材質(GRMaterial)
 などがあります．
 グラフィックスSDK内のオブジェクトの参照関係の例を図に示します．
-<img src="../../include/docsrc/01UsersGuide/SceneGraph.png">
+\image html SceneGraph.png
 
 \section sec_GRScene グラフィックスのシーン
 
