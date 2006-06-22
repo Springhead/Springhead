@@ -13,8 +13,6 @@ IMAGE_PATH  = ./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual
 RECURSIVE              = NO
-CHM_FILE               = ..\temp.chm
-GENERATE_HTMLHELP      = YES
 
 ALLEXTERNALS = YES
 EXTERNAL_GROUPS = YES
