@@ -1,4 +1,4 @@
-@INCLUDE = ../common.doxy
-INPUT = ./
-HTML_OUTPUT = ../html/Graphics
-GENERATE_TAGFILE       = ../html/Graphics.tag
+@INCLUDE = ./common.doxy
+INPUT = ./Graphics
+HTML_OUTPUT = ./html/Graphics
+GENERATE_TAGFILE       = ./html/Graphics.tag

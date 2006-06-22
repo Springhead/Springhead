@@ -1,4 +1,4 @@
-@INCLUDE = ../common.doxy
-INPUT = ./
-HTML_OUTPUT = ../html/Physics
-GENERATE_TAGFILE       = ../html/Physics.tag
+@INCLUDE = ./common.doxy
+INPUT = ./Physics
+HTML_OUTPUT = ./html/Physics
+GENERATE_TAGFILE       = ./html/Physics.tag

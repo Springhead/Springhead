@@ -1,7 +1,7 @@
-@INCLUDE = ../common.doxy
-INPUT = ./
-HTML_OUTPUT = ../html/docsrc
-GENERATE_TAGFILE       = ../html/docsrc.tag
-IMAGE_PATH  = ./01UsersGuide \
-							./02Tutorial \
-							./03ReferenceManual
+@INCLUDE = ./common.doxy
+INPUT = ./docsrc
+HTML_OUTPUT = ./html/docsrc
+GENERATE_TAGFILE       = ./html/docsrc.tag
+IMAGE_PATH  = ./docsrc/01UsersGuide \
+							./docsrc/02Tutorial \
+							./docsrc/03ReferenceManual

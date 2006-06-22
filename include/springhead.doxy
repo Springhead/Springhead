@@ -1,13 +1,11 @@
 # Doxyfile 1.4.6-NO
 
-@INCLUDE = common.doxy
+@INCLUDE = ./common.doxy
 
-INPUT      = ./ ../src/FileIO/FIOldSpringheadNode.h
+INPUT      = ./ ../src/FileIO/FIOldSpringheadNode.h ./docsrc/
 
-RECURSIVE  = NO
-TAGFILES   = html/docsrc.tag=docsrc  html/Base.tag=Base  html/Foundation.tag=Foundation \
-	html/Collision.tag=Collision  html/Physics.tag=Physics  html/Graphics.tag=Graphics \
-	html/FileIO.tag=FileIO
+GENERATE_TAGFILE       = ./html/springhead.tag
+TAGFILES=
 
 ALLEXTERNALS = YES
 EXTERNAL_GROUPS = YES

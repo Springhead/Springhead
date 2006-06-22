@@ -1003,12 +1003,14 @@ SKIP_FUNCTION_MACROS   = YES
 # If a tag file is not located in the directory in which doxygen 
 # is run, you must also specify the path to the tagfile here.
 
-TAGFILES               = 
+TAGFILES   = html/springhead.tag  html/docsrc.tag=docsrc  html/Base.tag=Base \
+	html/Foundation.tag=Foundation  html/Collision.tag=Collision \
+	html/Physics.tag=Physics  html/Graphics.tag=Graphics  html/FileIO.tag=FileIO 
 
 # When a file name is specified after GENERATE_TAGFILE, doxygen will create 
 # a tag file that is based on the input files it reads.
 
-GENERATE_TAGFILE       = Springhead.doxy.tag
+GENERATE_TAGFILE       = 
 
 # If the ALLEXTERNALS tag is set to YES all external classes will be listed 
 # in the class index. If set to NO only the inherited external classes 
