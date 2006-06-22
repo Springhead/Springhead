@@ -5,8 +5,8 @@
 INPUT      = ./ ../src/FileIO/FIOldSpringheadNode.h
 
 RECURSIVE  = NO
-TAGFILES   = html/docsrc.tag=docsrc  html/Base.tag=Base  html/Foundation.tag=Foundation\
-	html/Collision.tag=Collision  html/Physics.tag=Physics  html/Graphics.tag=Graphics\
+TAGFILES   = html/docsrc.tag=docsrc  html/Base.tag=Base  html/Foundation.tag=Foundation \
+	html/Collision.tag=Collision  html/Physics.tag=Physics  html/Graphics.tag=Graphics \
 	html/FileIO.tag=FileIO
 
 ALLEXTERNALS = YES

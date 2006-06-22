@@ -1,9 +1,0 @@
-# Doxyfile 1.4.6-NO
-
-@INCLUDE = common.doxy
-
-PROJECT_NAME           = Temp
-PROJECT_NUMBER         = 0.6
-INPUT                  = ./docsrc/
-FILE_PATTERNS          = *.h *.dox
-RECURSIVE              = YES

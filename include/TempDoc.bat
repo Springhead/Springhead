@@ -1,9 +1,5 @@
-cd Base
-call CopyBase.bat
-cd ..
 set PATHORG=%PATH%
 set PATH=%SPRINGHEAD2%\BIN;%SPRINGHEAD2%\BIN\Graphviz\bin;%PATH%
-mkdir html
-doxygen temp.doxy
+doxygen springhead.doxy 2> springhead.log
 set PATH=%PATHORG%
 :END
