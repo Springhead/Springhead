@@ -2,6 +2,8 @@
 INPUT = ./docsrc
 HTML_OUTPUT = ./html/docsrc
 GENERATE_TAGFILE       = ./html/docsrc.tag
-IMAGE_PATH  = ./docsrc/01UsersGuide \
+IMAGE_PATH             = ./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual
+GENERATE_HTMLHELP      = YES
+
