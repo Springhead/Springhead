@@ -1,12 +1,11 @@
 /** \page pageFoundation 基本SDK
+
 \ref pageFoundation には，シーンとオブジェクト，行列やベクトル，参照カウンタ
 のような基本的なクラスがあります．
 他のSDK（\ref pagePhysics や \ref pageGraphics など）は，\ref pageFoundation 
 を使って書かれています．
- - \ref secSceneGraph
- - \ref secSceneObjectName
- - \ref secVectorMatrix
- - \ref secUtilityType
+
+\contents
 
 \section secSceneGraph シーングラフ
 一般に，物理シミュレータやバーチャルリアリティのSDKでは，

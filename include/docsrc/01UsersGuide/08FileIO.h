@@ -1,4 +1,5 @@
 /** \page pageFileIO ファイル入出力SDK 
+\contents
 
 \ref pageFileIO は，\ref sec_SceneGraph のファイル入出力を行います．
 他のSDKのAPI(\ref pagePhysics \ref pageGraphics)を用いて，

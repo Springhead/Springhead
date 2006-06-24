@@ -1,10 +1,3 @@
-/*
- *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
- *  All rights reserved.
- *  This software is free software. You can freely use, distribute and modify this 
- *  software. Please deal with this software under one of the following licenses: 
- *  This license itself, Boost Software License, The MIT License, The BSD License.   
- */
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
 	PHConstraintDesc* pPHConstraintDesc = NULL;
@@ -19,12 +12,15 @@
 	field->AddEnumConst("SLIDERJOINT");
 	field->AddEnumConst("BALLJOINT");
 	field->AddEnumConst("PATHJOINT");
-	field->AddEnumConst("PATHJOINT");
+	field->AddEnumConst("SPRING");
+	field->AddEnumConst("SPRING");
 	field->offset = (char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc;
 	field = desc->AddField("", "bool", "bEnabled", "");
 	field->offset = (char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc;
-	field = desc->AddField("", "Posed", "pose", "2");
-	field->offset = (char*)&(pPHConstraintDesc->pose) - (char*)pPHConstraintDesc;
+	field = desc->AddField("", "Posed", "posePlug", "");
+	field->offset = (char*)&(pPHConstraintDesc->posePlug) - (char*)pPHConstraintDesc;
+	field = desc->AddField("", "Posed", "poseSocket", "");
+	field->offset = (char*)&(pPHConstraintDesc->poseSocket) - (char*)pPHConstraintDesc;
 	db->RegisterDesc(desc);
 	
 	PHJoint1DDesc* pPHJoint1DDesc = NULL;
@@ -115,6 +111,20 @@
 	field->offset = (char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc;
 	db->RegisterDesc(desc);
 	
+	PHSpringDesc* pPHSpringDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHSpringDesc");
+	desc->size = sizeof(PHSpringDesc);
+	desc->ifInfo = PHSpringIf::GetIfInfoStatic();
+	((IfInfo*)PHSpringIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHSpringDesc>;
+	field = desc->AddBase("PHConstraintDesc");
+	field->offset = (char*)(PHConstraintDesc*)pPHSpringDesc - (char*)pPHSpringDesc;
+	field = desc->AddField("", "Vec3d", "spring", "");
+	field->offset = (char*)&(pPHSpringDesc->spring) - (char*)pPHSpringDesc;
+	field = desc->AddField("", "Vec3d", "damper", "");
+	field->offset = (char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc;
+	db->RegisterDesc(desc);
+	
 	PHSceneState* pPHSceneState = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSceneState");
 	desc->size = sizeof(PHSceneState);
@@ -133,11 +143,6 @@
 	desc->access = DBG_NEW UTAccess<PHSceneDesc>;
 	field = desc->AddBase("PHSceneState");
 	field->offset = (char*)(PHSceneState*)pPHSceneDesc - (char*)pPHSceneDesc;
-	field = desc->AddField("SolverType", "enum", "contactSolver",  "");
-	field->AddEnumConst("SOLVER_PENALTY");
-	field->AddEnumConst("SOLVER_CONSTRAINT");
-	field->AddEnumConst("SOLVER_CONSTRAINT");
-	field->offset = (char*)(&pPHSceneDesc->contactSolver) - (char*)pPHSceneDesc;
 	field = desc->AddField("", "Vec3f", "gravity", "");
 	field->offset = (char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc;
 	db->RegisterDesc(desc);
@@ -158,8 +163,6 @@
 	field->offset = (char*)&(pPHSolidState->velocity) - (char*)pPHSolidState;
 	field = desc->AddField("", "Vec3d", "angVelocity", "");
 	field->offset = (char*)&(pPHSolidState->angVelocity) - (char*)pPHSolidState;
-	field = desc->AddField("", "Vec3d", "center", "");
-	field->offset = (char*)&(pPHSolidState->center) - (char*)pPHSolidState;
 	field = desc->AddField("", "Posed", "pose", "");
 	field->offset = (char*)&(pPHSolidState->pose) - (char*)pPHSolidState;
 	field = desc->AddField("", "Vec3d", "force", "");
@@ -184,6 +187,8 @@
 	field->offset = (char*)&(pPHSolidDesc->mass) - (char*)pPHSolidDesc;
 	field = desc->AddField("", "Matrix3d", "inertia", "");
 	field->offset = (char*)&(pPHSolidDesc->inertia) - (char*)pPHSolidDesc;
+	field = desc->AddField("", "Vec3d", "center", "");
+	field->offset = (char*)&(pPHSolidDesc->center) - (char*)pPHSolidDesc;
 	field = desc->AddField("", "bool", "gravity", "");
 	field->offset = (char*)&(pPHSolidDesc->gravity) - (char*)pPHSolidDesc;
 	db->RegisterDesc(desc);

@@ -1,10 +1,3 @@
-/*
- *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
- *  All rights reserved.
- *  This software is free software. You can freely use, distribute and modify this 
- *  software. Please deal with this software under one of the following licenses: 
- *  This license itself, Boost Software License, The MIT License, The BSD License.   
- */
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
 	PHMaterial* pPHMaterial = NULL;
@@ -32,6 +25,8 @@
 	field->AddEnumConst("BOX");
 	field->AddEnumConst("BOX");
 	field->offset = (char*)(&pCDShapeDesc->type) - (char*)pCDShapeDesc;
+	field = desc->AddField("", "PHMaterial", "material", "");
+	field->offset = (char*)&(pCDShapeDesc->material) - (char*)pCDShapeDesc;
 	db->RegisterDesc(desc);
 	
 	CDConvexMeshDesc* pCDConvexMeshDesc = NULL;
@@ -44,8 +39,6 @@
 	field->offset = (char*)(CDShapeDesc*)pCDConvexMeshDesc - (char*)pCDConvexMeshDesc;
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
 	field->offset = (char*)&(pCDConvexMeshDesc->vertices) - (char*)pCDConvexMeshDesc;
-	field = desc->AddField("", "PHMaterial", "material", "");
-	field->offset = (char*)&(pCDConvexMeshDesc->material) - (char*)pCDConvexMeshDesc;
 	db->RegisterDesc(desc);
 	
 	CDSphereDesc* pCDSphereDesc = NULL;
@@ -58,8 +51,6 @@
 	field->offset = (char*)(CDShapeDesc*)pCDSphereDesc - (char*)pCDSphereDesc;
 	field = desc->AddField("", "float", "radius", "");
 	field->offset = (char*)&(pCDSphereDesc->radius) - (char*)pCDSphereDesc;
-	field = desc->AddField("", "PHMaterial", "material", "");
-	field->offset = (char*)&(pCDSphereDesc->material) - (char*)pCDSphereDesc;
 	db->RegisterDesc(desc);
 	
 	CDBoxDesc* pCDBoxDesc = NULL;
@@ -72,6 +63,4 @@
 	field->offset = (char*)(CDShapeDesc*)pCDBoxDesc - (char*)pCDBoxDesc;
 	field = desc->AddField("", "Vec3f", "boxsize", "");
 	field->offset = (char*)&(pCDBoxDesc->boxsize) - (char*)pCDBoxDesc;
-	field = desc->AddField("", "PHMaterial", "material", "");
-	field->offset = (char*)&(pCDBoxDesc->material) - (char*)pCDBoxDesc;
 	db->RegisterDesc(desc);

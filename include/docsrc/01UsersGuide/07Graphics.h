@@ -11,7 +11,7 @@
 などがあります．
 グラフィックス SDK 内のオブジェクトの参照関係の例を図に示します．
 <br><br>
-	\image html SceneGraph.png
+	\image html GRSdkScene.png
 <br><br>
 <div align="right">
 <a href="#pageGraphics">top of page</a>

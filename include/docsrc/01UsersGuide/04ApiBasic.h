@@ -1,10 +1,14 @@
 /**
 \page pageApiBasic	APIのしくみ
+\contents
+
+\section sec_ApiFormat APIの形式
+
 ここでは，Springhead2 SDKのAPIの形式について説明します．
-SDKは，実装を持たないAPIクラスを介して使います．
+SDKは，下の図の上側のような，実装を持たないAPIクラスを介して使います．
 \image html APIInherit.png
 
-\subsection sec_apiClass APIクラス
+\section sec_apiClass APIクラス
 APIクラスは，名前の最後にインタフェースを表すIfがつきます．
 まず，SDKクラスのインスタンスを返すグローバル関数を用いて，
 SDKクラスのインスタンスを作成・取得し，
@@ -17,7 +21,7 @@ int main(int argc, char* argv[]){
     :
 \endverbatim
 
-\subsection secStateDesc ステートとデスクリプタ
+\section secStateDesc ステートとデスクリプタ
 APIクラスのインスタンスを作るときには，デスクリプタという構造体を使って
 初期値を渡します．デスクリプタは，APIクラスの名前からIfをとってDescをつけた名前です．
 \verbatim
