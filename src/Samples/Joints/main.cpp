@@ -59,7 +59,7 @@ PHSceneIf* scene;		// Sceneインタフェース
 GRDebugRenderIf* render;
 GRDeviceGLIf* device;
 
-double lookAtY, lookAtZ;
+Vec3d lookAt;
 
 int sceneNo;			// シーン番号
 
@@ -199,14 +199,58 @@ void BuildScene4(){
 }
 
 void BuildScene5(){
+	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
 	CreateFloor();
+	
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
+	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
-	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(shapeBox);
-	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
-	soBox.back()->SetDynamical(false);
+	
+	soBox.resize(4);
+
+	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0]->AddShape(shapeBox);
+
+	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1]->AddShape(shapeBox);
+
+	soBox[2] = scene->CreateSolid(descBox);
+	soBox[2]->AddShape(shapeBox);
+
+	CDSphereDesc descSphere;
+	descSphere.radius = 1.0;
+	soBox[3] = scene->CreateSolid(descBox);
+	soBox[3]->AddShape(scene->CreateShape(descSphere));
+
+	jntLink.resize(4);
+	PHHingeJointDesc descHinge;
+	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], descHinge);
+
+	descHinge.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
+	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+	jntLink[1] = scene->CreateJoint(soBox[0], soBox[1], descHinge);
+	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
+
+	double K = 1.0, D = 1.0;
+	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
+	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
+	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
+	DCAST(PHHingeJointIf, jntLink[1])->SetDamper(D);
+	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K);
+	DCAST(PHHingeJointIf, jntLink[2])->SetDamper(D);
+
+	K = 1.0, D = 1.0;
+	PHSpringDesc descSpring;
+	descSpring.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
+	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
+	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
+	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descSpring);
+
+	soBox[3]->SetFramePosition(Vec3d(10.0, 20.0, 0.0));
+	soBox[3]->SetDynamical(false);
+	
+	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
 
@@ -362,6 +406,9 @@ void OnKey4(char key){
 
 void OnKey5(char key){
 	switch(key){
+	case 'a': soBox[3]->SetFramePosition(Vec3d(-10.0, 20.0, 0.0)); break;
+	case 's': soBox[3]->SetFramePosition(Vec3d(  0.0, 20.0, 0.0)); break;
+	case 'd': soBox[3]->SetFramePosition(Vec3d( 10.0, 20.0, 0.0)); break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -422,10 +469,11 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	lookAtY = 10.0;
-	lookAtZ = 30.0;
-	gluLookAt(0.0, lookAtY, lookAtZ, 
-		      0.0, lookAtY, 0.0,
+	lookAt.x = 3.0;
+	lookAt.y = 10.0;
+	lookAt.z = 30.0;
+	gluLookAt(lookAt.x, lookAt.y, lookAt.z, 
+		      0.0, lookAt.y, 0.0,
 		 	  0.0, 1.0, 0.0);
 
 	glEnable(GL_DEPTH_TEST);

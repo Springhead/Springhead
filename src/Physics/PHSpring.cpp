@@ -42,6 +42,8 @@ void PHSpring::CompConstraintJacobian(){
 				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
 		}
 	}
+
+	DSTR << f << endl;
 }
 
 void PHSpring::CompBias(double dt){
