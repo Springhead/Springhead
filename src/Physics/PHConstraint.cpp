@@ -192,7 +192,7 @@ void PHConstraint::IterateDynamics(){
 }
 
 void PHConstraint::SetupCorrection(double dt, double max_error){
-	if(!bEnabled || !bFeasible)return;
+	if(!bEnabled || !bFeasible || dim_c == 0)return;
 
 	CompError(dt);
 
@@ -235,7 +235,7 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 }
 
 void PHConstraint::IterateCorrection(){
-	if(!bEnabled || !bFeasible)return;
+	if(!bEnabled || !bFeasible || dim_c == 0)return;
 
 	Vec6d Fnew, dF;
 	int i, j;
