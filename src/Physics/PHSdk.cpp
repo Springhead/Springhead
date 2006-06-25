@@ -74,7 +74,9 @@ PHSdk::~PHSdk(){
 }
 
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
-	return DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
+	PHSceneIf* rv = DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
+	AddChildObject(rv); 
+	return rv;
 }
 PHSceneIf* PHSdk::CreateScene(){
 	return CreateScene(PHSceneDesc());

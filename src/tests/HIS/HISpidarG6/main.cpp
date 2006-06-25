@@ -10,9 +10,8 @@
 【概要】
   グラフィックスレンダラークラスの DrawScene APIを使い、シーンを一括でレンダリングする。
   DrawScene API で設定されているマテリアルマテリアルサンプルを用いて、カラフルなボックスをレンダリングする。　
-  また、SPIDARとつなぎ、力覚インタラクションを行う。
-  現状では地面と赤い球体のみ力覚インタラクションができる。
-
+  また、SPIDARとつなぎ、球体及び地面と力覚インタラクションを行う。
+  
 【終了基準】
   ・5000ステップ後に強制終了。 
 
@@ -41,7 +40,8 @@ using namespace Spr;
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		2			// sphere数
 
-#define HAPTIC_FREQ		1			// 力覚スレッドの周期(msec)
+#define HAPTIC_FREQ		1			// 力覚スレッドの周期(1/msec)
+#define POINTER_RADIUS  1.0			// 力覚ポインタの半径
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
 #include <Device/DRUsb20Simple.h>
@@ -49,27 +49,37 @@ using namespace Spr;
 #include <conio.h>
 
 // virtual couplingの係数
-const float K = 10;
-const float B = 10;
+const float K = 60;
+const float B = 30;
 const float dt = HAPTIC_FREQ;
 #endif
 
+// グラフィック用の変数
 GRSdkIf* grSdk;
 GRDebugRenderIf* render;
 GRDeviceGLIf* grDevice;
 
+// 物理計算用の変数
 PHSdkIf* phSdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soSphere; 
 
+// SPIDAR用の変数
+DVDeviceManager devMan;						//	D/Aやカウンタなどのデバイスの管理
 HISpidarG6X3 spidarG6;						//	SPIDARに対応するクラス
+
+// その他の変数
 Vec3f spidar_pos = Vec3f();
-Affinef pos = Affinef();
-Vec3f sp_pos_render = Vec3f();
+Vec3f sphere_pos = Vec3f();
+Affinef pos_affine;
+Affinef view;
 
 bool bforce = false;
-Affinef view;
+int time_counter = 0;
+
+int sec_counter = 0;
+const int one_sec = 1000 / HAPTIC_FREQ;
 
 #define NVTX	4			//	衝突判定する点
 static Vec3f grip[NVTX]={
@@ -78,8 +88,6 @@ static Vec3f grip[NVTX]={
 		Vec3f(-0.02f, 0.0f,-0.02f),
 		Vec3f( 0.02f, 0.0f,-0.02f)
 	};
-
-Vec3f sphere_pos = Vec3f();
 
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
@@ -93,18 +101,10 @@ void display(){
 	// SPIDARの位置を球形で表示する
 	glPushMatrix();
 	glMatrixMode(GL_MODELVIEW);
-	sp_pos_render = -1 * spidar_pos;		
-	sp_pos_render.y *= -1.0f;
-	Posef::Unit(sp_pos_render).ToAffine(pos);
-	glMultMatrixf(pos);
-	glutSolidSphere(1.0, 12, 9);
+	Posef::Unit(spidar_pos).ToAffine(pos_affine);
+	glMultMatrixf(pos_affine);
+	glutSolidSphere(POINTER_RADIUS, 12, 9);
 	glPopMatrix();
-	
-	// SPIDARの位置と球の距離を線で表示する
-	glBegin(GL_LINES);
-	glVertex3f(spidar_pos.x * (-1), spidar_pos.y, spidar_pos.z * (-1));
-	glVertex3f(sphere_pos.x, sphere_pos.y, sphere_pos.z);
-	glEnd();
 
 	render->EndScene();
 
@@ -136,6 +136,7 @@ void reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
+
 MMRESULT FTimerId;
 
 /**
@@ -164,7 +165,12 @@ void keyboard(unsigned char key, int x, int y){
 	}
 }
 
-int time_counter = 0;
+double dist;
+double min_dist = 10000;
+int index = 0;
+double d = 10000;
+Vec3f so_pos;
+
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
@@ -172,12 +178,35 @@ int time_counter = 0;
  */
 void idle(){
 	scene->Step();
-	// sphereの位置の更新
-	sphere_pos = soSphere[0]->GetFramePosition();
-
 	glutPostRedisplay();
 
+	// ポインタの最近傍の物体を探す処理
+	min_dist = 10000;
+	for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
+		so_pos = soSphere[sphereCnt]->GetFramePosition();
+/*
+		dist = sqrt(
+		  pow(spidar_pos.x - so_pos.x, 2) 
+		+ pow(spidar_pos.y - so_pos.y, 2) 
+		+ pow(spidar_pos.z - so_pos.z, 2)
+		);
+*/
+		dist = (spidar_pos - so_pos).norm();
+
+		if(dist < min_dist)
+		{
+			// 最近傍の物体を取得
+			min_dist = dist;
+			sphere_pos = soSphere[sphereCnt]->GetFramePosition();
+			index = sphereCnt;
+		}
+	}
+
+	// 最小の距離を設定
+	d = min_dist;
+
 	time_counter++;
+
 	if (++time_counter > EXIT_TIMER) 
 	{
 		timeKillEvent(FTimerId);
@@ -186,9 +215,6 @@ void idle(){
 		exit(0);
 	}
 }
-
-int sec_counter = 0;
-int one_sec = 1000 / HAPTIC_FREQ;
 
 Vec3f lastPos = Vec3f();
 Vec3f vel = Vec3f();
@@ -204,30 +230,20 @@ Vec3f p = Vec3f();
 void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 {
 	spidarG6.Update(dt);							//	USBの通信を行う．
-	spidar_pos = spidarG6.GetPos() * 50;					// spidarの位置を格納している変数の更新
+	spidar_pos = spidarG6.GetPos() * 60;			// spidarの位置を格納している変数の更新
+	spidar_pos = view.inv().Rot() * spidar_pos;		// SPIDARの座標がワールド座標ではないのでワールド座標にする
 
-	double dist = sqrt(
-		  pow(-spidar_pos.x - sphere_pos.x, 2) 
-		+ pow(spidar_pos.y - sphere_pos.y, 2) 
-		+ pow(-spidar_pos.z - sphere_pos.z, 2)
-		);
-
+#if _DEBUG
 	// 一秒ごとにSPIDARの座標を表示する
 	if(sec_counter % one_sec == 0)
 	{
-//		std::cout << spidar_pos << sp_pos_render << std::endl;
-//		if(spidar_pos.y < WALL)std::cout << "in the wall" << std::endl;
+//		std::cout << "spidar position = " << spidar_pos << std::endl;
+//		std::cout << "force = " << force << "torque = " << torque << std::endl;
+//		std::cout << "distance = " << d << std::endl;
 		sec_counter = 0;	
-
-		// sphere の場所を表示
-//		for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
-//			std::cout << soSphere[sphereCnt]->GetFramePosition() << std::endl;
-//		}
-
-//		std::cout << "force = " << force << "torque = " << torque << "dist = " << dist << std::endl;
-
 	}
 	sec_counter++;									// カウンターの更新
+#endif
 
 	// 速度・姿勢の用意
 	delta = (spidar_pos - lastPos) / dt;
@@ -239,47 +255,37 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	force = Vec3f();
 	torque = Vec3f();
 
+	// 提示力の計算
 	for(int i=0; i<NVTX; ++i){
 		lp = qt*grip[i];
 		p = lp + spidar_pos;
-		
-		if (p.Y() < WALL){
+
+		// 地面との接触を計算
+		if (p.y-POINTER_RADIUS < WALL){
 			// virtual couplingで提示力の計算
-			double temp_force = (WALL-p.y)*K + B*vel.y;
+			double temp_force = (WALL - p.y + POINTER_RADIUS) * K + B * vel.y;
 			force.y += temp_force;
 			torque += lp ^ Vec3f(0, temp_force, 0);
 		}
-	}
 
-	// もし二つの球が干渉していたら
-	if(dist < DCAST(CDSphereIf, soSphere[0]->GetShape(0))->GetRadius() + 1.0)
-	{
-		Vec3f temp_force = (sphere_pos - spidar_pos) * 5 + (vel - soSphere[0]->GetVelocity());
+		// 球体との接触を計算
+		if(d < DCAST(CDSphereIf, soSphere[index]->GetShape(0))->GetRadius() + 1.0)
+		{
+			Vec3f temp_force = (Vec3f(3, 3, 3) + p - sphere_pos) + (vel - soSphere[index]->GetVelocity());
 		
-		// 提示する力を二つの球体の距離に反比例させたいために
-		// 得られた力を単位ベクトルとして、係数を別に求めて掛け算する
-		Vec3f utemp = temp_force.unit();
-		utemp.x = fabs(3 - temp_force.x) * utemp.x;
-		utemp.y = fabs(3 - temp_force.y) * utemp.y;
-		utemp.z = fabs(3 - temp_force.z) * utemp.z;
+//			Vec3f sphere_force = -temp_force;
+//			Vec3f sphere_torque = lp ^ (-temp_force);
 
-		Vec3f sphere_force = utemp;
-		Vec3f sphere_torque = lp ^ utemp;
+			force += -temp_force;
+			torque += lp ^ (-temp_force);
 
-		force += sphere_force;
-		torque += sphere_torque;
-
-		soSphere[0]->AddForce(-sphere_force, -sphere_torque);
+			soSphere[index]->AddForce(-temp_force, lp ^ (-temp_force));
+		}
 	}
-
-	force.x *= -1;
-	force.z *= -1;
 
 	// gripに力を発生させる
 	if(bforce)spidarG6.SetForce(force, torque);
 	else spidarG6.SetForce(Vec3f(), Vec3f());
-
-	spidarG6.Update(dt);
 }
 
 
@@ -292,7 +298,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 int main(int argc, char* argv[]){
 	phSdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc sd;
-	sd.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;
+//	sd.ContactMode = PHSceneDesc::ContactMode::MODE_LCP;
 	sd.timeStep = 0.017;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
@@ -300,8 +306,7 @@ int main(int argc, char* argv[]){
 	desc.inertia *= 2.0;
 
 	// Solidの作成
-	unsigned int sphereCnt;
-	for (sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
+	for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
 		soSphere.push_back(scene->CreateSolid(desc));		// 剛体をdescに基づいて作成
 	}
 
@@ -326,14 +331,11 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(floor);
 	soFloor->SetFramePosition(Vec3f(0,-0.5,0));
 
-	for (sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
+	for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
 		soSphere[sphereCnt]->AddShape(sphere);
 		soSphere[sphereCnt]->SetFramePosition(Vec3f(0, 15+5*sphereCnt, 0));
-		std::cout << soSphere[sphereCnt]->GetFramePosition() << std::endl;
 	}
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
-
-	sphere_pos = Vec3f(0, 15, 0);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -356,15 +358,14 @@ int main(int argc, char* argv[]){
 
 	// 視点を設定する
 	
-	view.Pos() = Vec3f(0.0, 10.0, -20.0);								// eye
+	view.Pos() = Vec3f(0.0, 5.0, -20.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
 	
 	setLight();
 
-	DVDeviceManager devMan;						//	D/Aやカウンタなどのデバイスの管理
-
+	
 	devMan.RPool().Register(new DRUsb20Simple(10));	//	USB2.0版コントローラ 8モータ
 	devMan.RPool().Register(new DRUsb20Sh4(0));		//	Sh4版コントローラ 8モータ
 	devMan.RPool().Register(new DRUsb20Sh4(1));		//	Sh4版コントローラ 8モータ
