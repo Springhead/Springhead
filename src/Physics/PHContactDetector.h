@@ -14,6 +14,7 @@
 #include <Collision/CDDetectorImp.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>
+#include <Physics/PHSolid.h>
 
 namespace Spr{;
 

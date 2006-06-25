@@ -41,11 +41,14 @@
 		・スペースキーでボールジョイント用のboxを生成
 */
 
-#include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
 #include <GL/glut.h>
 #include <sstream>
+
+#include <Springhead.h>		//	Springheadのインタフェース
+#include <Physics/PHConstraintEngine.h>
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -58,6 +61,7 @@ GRSdkIf* grSdk;
 PHSceneIf* scene;		// Sceneインタフェース
 GRDebugRenderIf* render;
 GRDeviceGLIf* device;
+UTRef<PHConstraintEngine> ce;
 
 Vec3d lookAt;
 
@@ -232,7 +236,7 @@ void BuildScene5(){
 	jntLink[1] = scene->CreateJoint(soBox[0], soBox[1], descHinge);
 	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
 
-	double K = 0, D = 0;
+	double K = 4, D = 10;
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
@@ -240,18 +244,22 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[2])->SetDamper(D);
 
-	K = 10.0, D = 1;
+	K = 100, D = 30;
 	PHSpringDesc descSpring;
-	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
-	descSpring.spring = Vec3d(1.0, 0.01, 0.01) * K;
-	descSpring.damper = Vec3d(1.0, 0.01, 0.01) * D;
+	descSpring.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
+	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
 	jntLink[3] = scene->CreateJoint(soBox[3], soBox[2], descSpring);
 
-	soBox[3]->SetFramePosition(Vec3d(10.0, 20.0, 0.0));
+	soBox[3]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
 	soBox[3]->SetDynamical(false);
 	
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
+
+	PHScene* sc = DCAST(PHScene, scene);
+	sc->engines.Find(ce);
+	sc->engines.Del(ce);
 }
 
 
@@ -406,9 +414,9 @@ void OnKey4(char key){
 
 void OnKey5(char key){
 	switch(key){
-	case 'a': soBox[3]->SetFramePosition(Vec3d(-10.0, 20.0, 0.0)); break;
-	case 's': soBox[3]->SetFramePosition(Vec3d(  0.0, 20.0, 0.0)); break;
-	case 'd': soBox[3]->SetFramePosition(Vec3d( 10.0, 20.0, 0.0)); break;
+	case 'a': soBox[3]->SetFramePosition(Vec3d(-10.0, 5.0, 0.0)); break;
+	case 's': soBox[3]->SetFramePosition(Vec3d(  0.0, 5.0, 0.0)); break;
+	case 'd': soBox[3]->SetFramePosition(Vec3d( 10.0, 5.0, 0.0)); break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -544,8 +552,15 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-//	for(int i=0; i<10; ++i) 
-	scene->Step();
+//	for(int i=0; i<10; ++i)
+	scene->ClearForce();
+	scene->GenerateForce();
+	if (ce){
+		ce->Dynamics(scene->GetTimeStep(), scene->GetCount());
+//		ce->Correction(scene->GetTimeStep(), scene->GetCount());
+		ce->UpdateSolids(scene->GetTimeStep());
+	}
+	scene->Integrate();
 	glutPostRedisplay();
 	glutTimerFunc(50, timer, 0);
 }

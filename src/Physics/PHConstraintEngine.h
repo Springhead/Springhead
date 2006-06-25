@@ -47,7 +47,10 @@ public:
 	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	///< ŠÖß‚Ì’Ç‰Á‚·‚é
 	
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
-	virtual void Step();			///< ‘¬“x¨ˆÊ’uA‰Á‘¬“x¨‘¬“x‚ÌÏ•ª
+	virtual void Step();			///< 
+	virtual void Dynamics(double dt, int ct);		///< 
+	virtual void Correction(double dt, int ct);		///< 
+	void UpdateSolids(double dt);	///< Œ‹‰Ê‚ðSolid‚É”½‰f‚·‚é
 	virtual void Clear();
 
 protected:
@@ -63,7 +66,6 @@ protected:
 	void SetupCorrection(double dt);///< Œë·C³LCP‚Ì€”õ
 	void IterateCorrection();		///< Œë·C³LCP‚Ìˆê“x‚Ì”½•œ
 	
-	void UpdateSolids(double dt);	///< Œ‹‰Ê‚ðSolid‚É”½‰f‚·‚é
 	
 	friend class PHShapePairForLCP;
 };

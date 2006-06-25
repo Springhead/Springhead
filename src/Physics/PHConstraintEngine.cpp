@@ -288,11 +288,16 @@ void PHConstraintEngine::UpdateSolids(double dt){
 #include <windows.h>
 
 void PHConstraintEngine::Step(){
-	LARGE_INTEGER freq, val[2];
-	QueryPerformanceFrequency(&freq);
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
+	Dynamics(dt, ct);
+	Correction(dt, ct);
+	UpdateSolids(dt);
+}
+void PHConstraintEngine::Dynamics(double dt, int ct){
+	LARGE_INTEGER freq, val[2];
+	QueryPerformanceFrequency(&freq);
 
 	//åç∑Çåüím
 	QueryPerformanceCounter(&val[0]);
@@ -311,6 +316,11 @@ void PHConstraintEngine::Step(){
 	IterateDynamics();
 	QueryPerformanceCounter(&val[1]);
 	DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+}
+
+void PHConstraintEngine::Correction(double dt, int ct){
+	LARGE_INTEGER freq, val[2];
+	QueryPerformanceFrequency(&freq);
 
 	QueryPerformanceCounter(&val[0]);
 	SetupCorrection(dt);
@@ -321,9 +331,6 @@ void PHConstraintEngine::Step(){
 	IterateCorrection();
 	QueryPerformanceCounter(&val[1]);
 	DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-
-	UpdateSolids(dt);
-
 }
 
 

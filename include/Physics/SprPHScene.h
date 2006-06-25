@@ -166,6 +166,9 @@ public:
 	/** @brief シーンの時刻を進める
 	 */
 	virtual void Step()=0;
+	virtual void ClearForce()=0;
+	virtual void GenerateForce()=0;
+	virtual void Integrate()=0;
 
 	/** @brief シーンを空にする
 	 */
