@@ -6,23 +6,23 @@
 
 <!---------------------------------- •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK‚Ì‰Šú‰»‚ÆI—¹ ------------------------------------------>
 \section sec_PHSdk 		•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK‚Ì‰Šú‰»‚ÆI—¹
-•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK‚ÍC•¨—–@‘¥‚É‚à‚Æ‚Ã‚¢‚½•¡”•¨‘Ì‚ÌƒCƒ“ƒ^ƒ‰ƒNƒVƒ‡ƒ“‚ğŒvZ‚·‚é‹@”\‚ğ’ñ‹Ÿ‚µ‚Ü‚·D<br>
-•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK‚Ìg—p‚ÍCƒOƒ[ƒoƒ‹ŠÖ” \link Spr::CreatePHSdk() CreatePHSdk \endlink ‚ğŒÄ‚Ô‚±‚Æ‚©‚çn‚Ü‚è‚Ü‚·D
+•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“\c SDK ‚ÍC•¨—–@‘¥‚ÉŠî‚Ã‚¢‚½•¡”•¨‘Ì‚ÌƒCƒ“ƒ^ƒ‰ƒNƒVƒ‡ƒ“‚ğŒvZ‚·‚é‹@”\‚ğ’ñ‹Ÿ‚µ‚Ü‚·D<br>
+•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“\c SDK ‚Ìg—p‚ÍCƒOƒ[ƒoƒ‹ŠÖ” \link Spr::CreatePHSdk() CreatePHSdk \endlink ‚ğŒÄ‚Ô‚±‚Æ‚©‚çn‚Ü‚è‚Ü‚·D
 \verbatim
     PHSdkIf* sdk = CreatePHSdk();
 \endverbatim
-ˆÈ~CSDK‚Ì‘€ì‚Í \link Spr::CreatePHSdk() CreatePHSdk\endlink ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½ PHSdkIf Œ^‚Ìƒ|ƒCƒ“ƒ^‚ğ‰î‚µ‚Äs‚¢‚Ü‚·D
+ˆÈ~C\c SDK‚Ì‘€ì‚Í \link Spr::CreatePHSdk() CreatePHSdk\endlink ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½ PHSdkIf Œ^‚Ìƒ|ƒCƒ“ƒ^‚ğ‰î‚µ‚Äs‚¢‚Ü‚·D
 
-SDK‚ÍC1 ‚ÂˆÈã‚ÌƒV[ƒ“‚ğ‚Â‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+\c SDK ‚ÍC1 ‚ÂˆÈã‚ÌƒV[ƒ“‚ğ‚Â‚±‚Æ‚ª‚Å‚«‚Ü‚·D
 ‚Ü‚½C1 ‚Â‚ÌƒV[ƒ“‚Í 1 ‚ÂˆÈã‚Ì„‘ÌiPHSolidj‚ÆŠÖßiPHJointj‚ğ‚Â‚±‚Æ‚ª‚Å‚«‚Ü‚·D
-‚³‚ç‚ÉC„‘Ì‚ÍŒ`óiCDConvexMeshACDSphereACDBoxA...j‚ğQÆ‚µ‚ÄŒ`‚ğ‚Â‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+‚³‚ç‚ÉC„‘Ì‚ÍŒ`óiCDConvexMeshCCDSphereCCDBoxC...j‚ğQÆ‚µ‚ÄŒ`‚ğ‚Â‚±‚Æ‚ª‚Å‚«‚Ü‚·D
 ŠÖß‚Í2‚Â‚Ì„‘Ì‚ğŒ‹‚Ñ•t‚¯‚Ü‚·D
 •¨—ƒGƒ“ƒWƒ““à‚ÌƒIƒuƒWƒFƒNƒg‚ÌQÆŠÖŒW‚Ì—á‚ğ}‚É¦‚µ‚Ü‚·D
 
 
 	\image html PHSdkScene.png
 
-SDK ‚ÌI—¹ˆ—‚Í“à•”‚Å©“®“I‚És‚í‚ê‚Ü‚·Dƒ†[ƒU‚©‚ç–¾¦“I‚É SDK ‚ğ‰ğ•ú‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD
+\c SDK ‚ÌI—¹ˆ—‚Í“à•”‚Å©“®“I‚És‚í‚ê‚Ü‚·Dƒ†[ƒU‚©‚ç–¾¦“I‚É \c SDK ‚ğ‰ğ•ú‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD
 <br><br>
 <div align="right">
 <a href="#pagePhysics">top of page</a>
@@ -35,37 +35,56 @@ SDK ‚ÌI—¹ˆ—‚Í“à•”‚Å©“®“I‚És‚í‚ê‚Ü‚·Dƒ†[ƒU‚©‚ç–¾¦“I‚É SDK ‚ğ‰ğ•ú‚·‚é•K—v‚
 <!---------------------------------- ƒV[ƒ“ ------------------------------------------------------------------------->
 \section scene 		ƒV[ƒ“
 ƒV[ƒ“‚Æ‚Í•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì•‘‘ä‚Æ‚È‚é‹óŠÔ‚Ì‚±‚Æ‚ğŒ¾‚¢‚Ü‚·D
+ƒV[ƒ“‚ğì¬‚·‚é‚±‚Æ‚ÅCƒIƒuƒWƒFƒNƒg‚ğ“Š“ü‚·‚é‚±‚Æ‚ª‰Â”\‚Æ‚È‚è‚Ü‚·D
 
-\subsection scenedesc		ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^
-ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚©‚çAƒV[ƒ“‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
-ˆÈ‰º‚É¦‚·‚æ‚¤‚Èİ’è‚ğ‰Šúİ’è‚Ì‚Ü‚Ü—˜—p‚·‚éê‡‚ÍAƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚ğ—pˆÓ‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD
-ƒfƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚ÍA\ref pageApiBasic ‚àQÆ‰º‚³‚¢D
-‚Ü‚½AƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚ÌƒTƒ“ƒvƒ‹‚Æ‚µ‚Ä‚ÍA
+\subsection sceneDesc		ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^
+ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚©‚çCƒV[ƒ“‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+ˆÈ‰º‚É¦‚·‚æ‚¤‚Èİ’è‚ğ‰Šúİ’è‚Ì‚Ü‚Ü—˜—p‚·‚éê‡‚ÍCƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚ğ—pˆÓ‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD
+ƒfƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚ÍC\ref pageApiBasic ‚àQÆ‰º‚³‚¢D
+‚Ü‚½CƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚ÌƒTƒ“ƒvƒ‹‚Æ‚µ‚Ä‚ÍC
 <a href="../../src/html/BoxStack_2main_8cpp-example.html">BoxStack</a> ‚ğQÆ‰º‚³‚¢D
 
-Springhead2 ‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@‚Å‰ğ‚­è–@‚ğ—pˆÓ‚µ‚Ä‚¢‚Ü‚·D<br>
-ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚Ì‰Šúİ’è‚Å‚ÍA‰ğÍ–@‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·DƒGƒ“ƒWƒ“‚ÌØ‚è‘Ö‚¦‚ÍˆÈ‰º‚Ì‚æ‚¤‚És‚Á‚Ä‚­‚¾‚³‚¢D<br>
+\c Springhead2 ‚Å‚ÍCÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄCƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆC‰ğÍ–@‚Å‰ğ‚­è–@‚ğ—pˆÓ‚µ‚Ä‚¢‚Ü‚·D<br>
+ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚Ì‰Šúİ’è‚Å‚ÍC‰ğÍ–@‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·DƒGƒ“ƒWƒ“‚ÌØ‚è‘Ö‚¦‚ÍˆÈ‰º‚Ì‚æ‚¤‚És‚Á‚Ä‰º‚³‚¢D<br>
 \verbatim
     PHSceneDesc dscene;
     dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;      // ‰ğÍ–@
     dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;         // ƒyƒiƒ‹ƒeƒB–@
 \endverbatim
 
-ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚Ì‰Šúİ’è‚Å‚ÍAƒXƒeƒbƒvÀsŠÔ‚Í <tt>0.005[s]</tt> ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·‚ªAˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
+ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚Ì‰Šúİ’è‚Å‚ÍCƒXƒeƒbƒvÀsŠÔ‚Í <tt>0.005[s]</tt> ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·‚ªCˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
 \verbatim
-	dscene.timeStep = 0.01;
+    dscene.timeStep = 0.01;
 \endverbatim
 <br><br>
 
 
 \subsection scene_create	ƒV[ƒ“‚Ìì¬
 ƒV[ƒ“‚ğì¬‚·‚é‚É‚Í \link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene \endlink ‚ğŒÄ‚Ñ‚Ü‚·D
+ƒfƒtƒHƒ‹ƒg‚Ìİ’è‚ÅƒV[ƒ“‚ğì¬‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
+\verbatim
+    //ƒfƒtƒHƒ‹ƒg‚Ìİ’è‚ÅƒV[ƒ“‚ğì¬
+    PHSceneIf* scene = sdk->CreateScene();
+\endverbatim
+
+‚Ü‚½CƒfƒtƒHƒ‹ƒg‚ÌƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚ğŠ„‚è“–‚Ä‚é‚±‚Æ‚Å‚àCƒfƒtƒHƒ‹ƒgİ’è‚É‚¨‚¯‚éƒV[ƒ“‚Ìì¬‚ªs‚¦‚Ü‚·D
 \verbatim
     //ƒfƒtƒHƒ‹ƒg‚Ìİ’è‚ÅƒV[ƒ“‚ğì¬
     PHSceneDesc sceneDesc;
     PHSceneIf* scene = sdk->CreateScene(sceneDesc);
 \endverbatim
-ƒV[ƒ“‚Ì‘€ì‚Í \link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene \endlink ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½
+
+“¯—l‚ÉC \link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene \endlink ‚É‘Î‚µ‚ÄC
+”CˆÓ‚ÌƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚ğ—^‚¦‚ê‚ÎC‚»‚ÌƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚É‰‚¶‚½ƒV[ƒ“‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+ƒV[ƒ“ƒfƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚ÍC\ref sceneDesc ‚ğQÆ‰º‚³‚¢D
+\verbatim
+    PHSceneDesc sceneDesc;
+    dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;         // ƒyƒiƒ‹ƒeƒB–@
+    dscene.timeStep      = 0.05;                                // ƒXƒeƒbƒv•‚ğ 0.05[s] ‚Éİ’è
+    PHSceneIf* scene     = sdk->CreateScene(sceneDesc);
+\endverbatim
+
+‚È‚¨CƒV[ƒ“‚Ì‘€ì‚Í \link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene \endlink ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½
  PHSceneIf Œ^‚Ìƒ|ƒCƒ“ƒ^‚ğ‰î‚µ‚Äs‚È‚¢‚Ü‚·D<br>
 ƒV[ƒ“‚ğ•¡”ì¬‚·‚é‚±‚Æ‚Í‰Â”\‚Å‚·‚ªCˆÙ‚È‚éƒV[ƒ““¯m‚ÍŒİ‚¢‚É‰e‹¿‚ğ‹y‚Ú‚µ‚Ü‚¹‚ñD
 <br><br><br>
@@ -83,12 +102,13 @@ Springhead2 ‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@
 @@ \c 1D„‘Ì“¯m‚ÌÕ“Ë”»’è  			<br>
 @@ \c 2DÚG—ÍCŠÖß‚ÌS‘©—Í‚ÌŒvZ	<br>
 @@ \c 3D„‘Ì‚Ì‘¬“xEˆÊ’u‚ÌXV		<br>
+
 ˆê“x‚Ì \link Spr::PHSceneIf::Step() Step \endlink ‚ÌŒÄ‚Ño‚µ‚Åi‚ŞŠÔ‚Ì•‚Í
- \link Spr::PHSceneIf::GetTimeStep() PHSceneIf::GetTimeStep \endlink ‚Æ
- \link Spr::PHSceneIf::SetTimeStep() PHSceneIf::SetTimeStep \endlink 
-‚Åæ“¾Eİ’è‚Å‚«‚Ü‚·D<br>
-¦ ‚±‚±‚Åİ’è‚·‚é’l‚Í‚»‚Ì‚Ü‚Ü”’lÏ•ª‚ÌÏ•ªƒXƒeƒbƒv‚Æ‚È‚è‚Ü‚·‚Ì‚ÅC‚ ‚Ü‚è‘å‚«‚È’li—á‚¦‚Î 1 •bj‚Í
-İ’è‚µ‚È‚¢‚Å‚­‚¾‚³‚¢D
+ \link Spr::PHSceneIf::GetTimeStep() PHSceneIf::GetTimeStep \endlink ‚Åæ“¾C
+ \link Spr::PHSceneIf::SetTimeStep() PHSceneIf::SetTimeStep \endlink ‚Åİ’è
+‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·‚ªC‚±‚±‚Åİ’è‚·‚é’l‚Í‚»‚Ì‚Ü‚Ü”’lÏ•ª‚ÌÏ•ªƒXƒeƒbƒv‚Æ‚È‚è‚Ü‚·‚Ì‚ÅC
+\b ‚ ‚Ü‚è‘å‚«‚È’li—á‚¦‚Î‚P•bj‚Íİ’è‚µ‚È‚¢‚Å‰º‚³‚¢D<br>
+‚Ü‚½C\ref paseBasicWord ‚ÌuƒXƒeƒbƒv•v‚àQÆ‰º‚³‚¢D
 <br><br><br>
 
 
@@ -99,7 +119,7 @@ Springhead2 ‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@
 \endverbatim
 
 ƒfƒtƒHƒ‹ƒg‚Å‚ÍCƒV[ƒ“‚Ìd—Í‰Á‘¬“x‚Í <tt>Vec3f(0.0f, -9.8f, 0.0f)</tt> ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·D<br>
-–³d—Í‹óŠÔ‚Æ‚·‚é‚É‚ÍA
+–³d—Í‹óŠÔ‚Æ‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
 \verbatim
     scene->SetGravity(Vec3f(0.0f, 0.0f, 0.0f));
 \endverbatim
@@ -121,86 +141,181 @@ Springhead2 ‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@
 
 <!---------------------------------- „‘Ì --------------------------------------------------------------------------->
 \section solid	„‘Ì
-„‘Ì‚Æ‚ÍC•¨—–@‘¥‚É]‚Á‚ÄƒV[ƒ“’†‚ğ‰^“®‚·‚é•¨‘Ì‚Å‚·D
+„‘Ì‚Æ‚ÍC•¨—–@‘¥‚É]‚Á‚ÄƒV[ƒ“‚Ì’†‚ğ‰^“®‚·‚é•¨‘Ì‚ÅC“Á‚ÉCŠO‚©‚ç—Í‚ğ‰Á‚¦‚½‚Æ‚«‚É•ÏŒ`‚ª–³‹‚Å‚«‚éd‚¢•¨‘Ì‚ğŒ¾‚¢‚Ü‚·D
+„‘Ì‚É‘Î‚µ‚Ä‚ÍCdSCp¨CŒü‚«‚È‚Ç‚ğİ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+
+\subsection solidDesc	„‘ÌƒfƒXƒNƒŠƒvƒ^
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚©‚ç„‘Ì‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D<br>
+ˆÈ‰º‚É¦‚·‚æ‚¤‚Èİ’è‚ğ‰Šú’l‚Ì‚Ü‚Ü—˜—p‚·‚éê‡‚ÍC„‘ÌƒfƒXƒNƒŠƒvƒ^‚ğ—pˆÓ‚·‚é•K—v‚Í‚ ‚è‚Ü‚¹‚ñD
+‚±‚±‚Å‚ÍC¿—ÊCŠµ«ƒeƒ“ƒ\ƒ‹C¿—Ê’†S‚ÌˆÊ’uCd—Í‚Ì‰e‹¿‚Ì—L–³‚ğİ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D<br>
+‚±‚ê‚ç‚Ìİ’è‚ÍC„‘Ìi\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink ‚©‚çì‚ç‚ê‚é
+„‘ÌƒIƒuƒWƒFƒNƒgj‚©‚ç‚Å‚àİ’è‰Â”\‚Å‚·D„‘Ì‚©‚ç‚Ìİ’è‚É‚Â‚¢‚Ä‚ÍC\ref solid_mass ‚ğQÆ‰º‚³‚¢D
+‚Ü‚½CƒfƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚ÍC\ref pageApiBasic ‚ğQÆ‰º‚³‚¢D
+
+¿—Ê‚ÍC‰Šú’l‚Æ‚µ‚Ä 1.0 ‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚·D
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚ÅC„‘Ì‚É‘Î‚·‚é¿—Ê‚ğİ’è‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
+\verbatim
+    PHSolidDesc desc;
+    desc.mass = 2.0;                            // ¿—Ê 2.0 ‚Éİ’è
+\endverbatim
+
+Šµ«ƒeƒ“ƒ\ƒ‹‚ÍC‰Šú’l‚Æ‚µ‚Ä’PˆÊs—ñ‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·D
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚ÅC„‘Ì‚É‘Î‚·‚éŠµ«ƒeƒ“ƒ\ƒ‹‚ğİ’è‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
+\verbatim
+    desc.inertia = 2.0 * Matrix3d::Unit();      // ‘ÎŠp¬•ª‚ª 2.0 ‚Ìs—ñ‚Éİ’è
+\endverbatim
+
+„‘ÌÀ•WŒniƒ[ƒJƒ‹À•WŒnj‚É‚¨‚¯‚é¿—Ê’†S‚ÌˆÊ’u‚ÍC‰Šúİ’è‚Å‚ÍC„‘ÌÀ•WŒn‚ÌŒ´“_‚Æˆê’v‚µ‚Ä‚¢‚Ü‚·D
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚ÅC‚±‚ÌˆÊ’u‚ğİ’è‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
+\verbatim
+    desc.center = Vec3d(0.0, 1.0, 0.0);         // ã‚É 1.0 ‚¸‚ç‚·
+\endverbatim
+
+‰Šúİ’è‚Å‚ÍCŒÂX‚Ì„‘Ì‚É‘Î‚µCd—Í‚Ì‰e‹¿‚ğó‚¯‚é‚æ‚¤‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚·D
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚ÅC„‘Ì‚É‘Î‚·‚éd—Í‚Ì‰e‹¿‚Ì—L–³‚ğİ’è‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
+\verbatim
+    desc.gravity = false;                       // d—Í‚Ì‰e‹¿‚ğó‚¯‚È‚¢‚æ‚¤‚Éİ’è
+\endverbatim
+‚È‚¨C„‘Ì‚©‚ç‚Ìd—Íİ’è‚É‚Â‚¢‚Ä‚ÍC\ref scene_gravity ‚ğQÆ‚µ‚Ä‰º‚³‚¢D
+<br><br>
+
 
 \subsection solid_create 	„‘Ì‚Ìì¬
-„‘Ì‚ğì¬‚µCƒV[ƒ“‚É’Ç‰Á‚·‚é‚É‚Í\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid\endlink‚ğŒÄ‚Ñ‚Ü‚·D
-„‘Ì‚É‘Î‚·‚é‘€ì‚Í \link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½
- PHSolidIf Œ^‚Ìƒ|ƒCƒ“ƒ^‚ğ‰î‚µ‚Äs‚¢‚Ü‚·D
+„‘Ì‚ğì¬‚µCƒV[ƒ“‚É’Ç‰Á‚·‚é‚É‚Í \link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink ‚ğŒÄ‚Ñ‚Ü‚·D
+ƒfƒtƒHƒ‹ƒg‚Ìİ’è‚ÅC„‘Ì‚ğì¬‚·‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚É‚µ‚Ü‚·D
+\verbatim
+    PHSolidIf* solid;
+    solid = scene->CreateSolid();
+\endverbatim
+
+‚Ü‚½CƒfƒtƒHƒ‹ƒg‚Ì„‘ÌƒfƒXƒNƒŠƒvƒ^‚ğŠ„‚è“–‚Ä‚é‚±‚Æ‚Å‚àCƒfƒtƒHƒ‹ƒgİ’è‚É‚¨‚¯‚é„‘Ì‚Ìì¬‚ªs‚¦‚Ü‚·D
 \verbatim
     //ƒfƒtƒHƒ‹ƒg‚Ìİ’è‚Å„‘Ì‚ğì¬
     PHSolidDesc solidDesc;
     PHSolidIf* solid = scene->CreateSolid(solidDesc);
 \endverbatim
-<br><br>
+
+“¯—l‚ÉC\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink ‚É‘Î‚µ‚ÄC
+”CˆÓ‚Ì„‘ÌƒfƒXƒNƒŠƒvƒ^‚ğ—^‚¦‚ê‚ÎC‚»‚Ì„‘ÌƒfƒXƒNƒŠƒvƒ^‚É‰‚¶‚½„‘Ì‚ğì¬‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚É‚Â‚¢‚Ä‚ÍC\ref solidDesc ‚ğQÆ‰º‚³‚¢D
+\verbatim
+    PHSolidDesc solidDesc;
+    solidDesc.mass    = 0.1;                                   // ¿—Ê 0.1 ‚Éİ’è
+    solidDesc.inertia = 0.1 * Matrix3d::Unit();                // ‘ÎŠp¬•ª‚ª 0.1 ‚Ìs—ñ‚Éİ’è
+    solidDesc.center  = Vec3d(0.1, 0.0, 0.0);                  // dS‚ğ‰E‚É 0.1 ‚¸‚ç‚·
+    PHSolidIf* solid  = scene->CreateSolid(solidDesc);
+\endverbatim
+
+‚È‚¨C„‘Ì‚É‘Î‚·‚é‘€ì‚Í \link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink ‚É‚æ‚Á‚Ä•Ô‚³‚ê‚½
+ PHSolidIf Œ^‚Ìƒ|ƒCƒ“ƒ^‚ğ‰î‚µ‚Äs‚¢‚Ü‚·D
+<br><br><br>
 
 
-\subsection solid_pose „‘Ì‚ÌˆÊ’u‚Æ‘¬“x
+\subsection solid_pose „‘Ì‚ÌˆÊ’u
+’ÊíCƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğs‚¤‚É‚ÍC‚»‚Ì•¨‘Ì‚ª‚Ç‚±‚É‚ ‚é‚©‚Æ‚¢‚¤î•ñ‚ª•K—v‚É‚È‚è‚Ü‚·D
+‚»‚Ìî•ñ‚Æ‚¢‚¤‚Ì‚ªCˆÊ’u‚Å‚·DˆÊ’u‚É‚æ‚èC•¨‘Ì‚ª‹óŠÔ‚Ì‚Ç‚ÌˆÊ’u‚É‚¢‚é‚©‚ğ¦‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·D
 1 ‚Â‚Ì„‘Ì‚É‚ÍC1 ‚Â‚ÌÀ•WŒn‚ª“\‚è•t‚¢‚Ä‚¢‚Ü‚·D‚±‚ê‚ğ„‘ÌÀ•WŒn‚ÆŒÄ‚Ñ‚Ü‚·D
 ƒV[ƒ“’†‚Ì„‘Ì‚ÌˆÊ’u‚ÆŒX‚«‚ÍCƒV[ƒ“À•WŒn‚É‘Î‚·‚é„‘ÌÀ•WŒn‚ÌˆÊ’u‚ÆŒX‚«‚Æ‚µ‚Ä•\Œ»‚³‚ê‚Ü‚·D
 
 	\image html scene.png
 
-„‘Ì‚ÌˆÊ’u‚ğİ’èEæ“¾‚·‚é‚É‚Í 
+„‘Ì‚ÌˆÊ’u‚ğİ’èEæ“¾‚·‚é‚É‚ÍC 
 \link Spr::PHSolidIf::SetFramePosition() PHSolidIf::SetFramePosition \endlink ‚Æ 
 \link Spr::PHSolidIf::GetFramePosition() PHSolidIf::GetFramePosition \endlink 
-‚ğŒÄ‚Ñ‚Ü‚·D<br>
-‚Ü‚½CƒV[ƒ“À•WŒn‚É‘Î‚·‚édS‚ÌˆÊ’u‚É‚æ‚Á‚Ä„‘Ì‚ÌˆÊ’u‚ğİ’èEæ“¾‚·‚é‚±‚Æ‚ào—ˆ‚Ü‚·D‚±‚ê‚É‚Í 
-\link Spr::PHSolidIf::SetCenterPosition() PHSolidIf::SetCenterPosition \endlink ‚Æ
-\link Spr::PHSolidIf::GetCenterPosition() PHSolidIf::GetCenterPosition \endlink 
-‚ğg‚¢‚Ü‚·D<br>
-„‘Ì‚ÌŒX‚«‚ğæ“¾‚·‚é‚É‚Í 
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    solid->SetFramePosition(Vec3f(0,-3,0));                     // „‘Ì‚ÌˆÊ’u‚ğ(0,-3,0)‚Éİ’è
+    Vec3d pos = solid->GetFramePosition();                      // „‘Ì‚ÌˆÊ’u‚ğæ“¾    
+\endverbatim
+
+„‘Ì‚Í¿“_‚Æ‚Íˆá‚¢C‘å‚«‚³‚ğ‚Á‚Ä‚¢‚é‚Ì‚ÅC„‘Ì‚ÌŒX‚«‚àl—¶‚µ‚È‚­‚Ä‚Í‚È‚è‚Ü‚¹‚ñD<br>
+„‘Ì‚ÌŒX‚«iŒü‚«j‚ğİ’èEæ“¾‚·‚é‚É‚ÍC
 \link Spr::PHSolidIf::SetOrientation() PHSolidIf::SetOrientation \endlink ‚Æ
 \link Spr::PHSolidIf::GetOrientation() PHSolidIf::GetOrientation \endlink 
-‚ğg‚¢‚Ü‚·D<br>
-„‘Ì‚ÌˆÊ’u‚ÆŒX‚«‚ğ“¯‚Éİ’èEæ“¾‚·‚é‚±‚Æ‚ào—ˆ‚Ü‚·D‚±‚ê‚É‚Í 
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    solid->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));      // z²‰ñ‚è‚É30“x‰ñ“]
+    Quaternion ori = solid->GetOrientation();                   // „‘Ì‚ÌŒX‚«‚ğæ“¾
+\endverbatim
+
+‚Ü‚½C„‘Ì‚ÌˆÊ’uEŒX‚«‚ğC“¯‚Éİ’èEæ“¾‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
+‚±‚ê‚ÍCPosed Œ^‚Å•\‚³‚ê‚Ü‚·DPosed Œ^‚ÍCAffine ‚Æ“¯‚¶‹@”\‚ğ‚Â 7 ŸŒ³ƒxƒNƒgƒ‹‚ÅC
+ˆÊ’u‚ÆŒX‚«‚ğ‡‚í‚¹‚½ƒxƒNƒgƒ‹‚Æ‚È‚Á‚Ä‚¢‚Ü‚·D
+‚±‚ÌˆÊ’u‚ÆŒX‚«‚ğ‡‚í‚¹‚½¬•ª‚ğCİ’èEæ“¾‚·‚é‚É‚ÍC
 \link Spr::PHSolidIf::SetPose() PHSolidIf::SetPose \endlink ‚Æ
 \link Spr::PHSolidIf::GetPose() PHSolidIf::GetPose \endlink 
 ‚ğg‚¢‚Ü‚·D
+\verbatim
+    Posed p = Posed::Rot(Rad(30.0), 'z');       // z²‰ñ‚è‚É30“x‰ñ“]‚³‚¹‚½PosedŒ^p‚ğ—pˆÓ‚·‚é
+    solid->SetPose(p);                          // PosedŒ^p‚ğ„‘Ì‚Ìp¨‚Æ‚µ‚Äİ’è‚·‚é
+    Posed pose = solid->GetPose();              // „‘Ì‚Ìp¨‚ğæ“¾
+\endverbatim
 
-„‘Ì‚Ì‘¬“x‚Í
+ƒV[ƒ“À•WŒn‚É‚¨‚¯‚é„‘Ì‚ÌdS‚ğİ’èEæ“¾‚·‚é‚É‚ÍC
+\link Spr::PHSolidIf::SetCenterPosition() PHSolidIf::SetCenterPosition \endlink ‚Æ
+\link Spr::PHSolidIf::GetCenterPosition() PHSolidIf::GetCenterPosition \endlink 
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    Vec3d center = Vec3d(0.0, 1.0, 0.0);                        // dS‚ğã•ûŒü‚É1mã‚É‚¸‚ç‚·
+    solid->SetCenterPosition(center);                           // dS‚ğİ’è
+    Vec3d center = solid->GetCenterPosition();                  // dS‚ğæ“¾
+\endverbatim
+<br><br>
+
+\subsection solid_velocity 			„‘Ì‚Ì‘¬“x
+„‘Ì‚Ì‘¬“x‚ÍCƒV[ƒ“À•WŒn‚©‚çŠÏ‘ª‚µ‚½C„‘ÌÀ•WŒnŒ´“_‚Ì‘¬“x‚Â‚Ü‚è¿—Ê’†S‚Ì‘¬“x‚Å•\‚í‚³‚ê‚Ü‚·D
+‚È‚¨C‘¬“x‚ÍCVec3d ‚Å•\‚³‚ê‚éƒxƒNƒgƒ‹i‘¬“xƒxƒNƒgƒ‹j‚Æ‚È‚è‚Ü‚·D
+„‘Ì‚Ì‘¬“x‚ğİ’èEæ“¾‚·‚é‚É‚ÍC
 \link Spr::PHSolidIf::SetVelocity() PHSolidIf::SetVelocity \endlink ‚Æ
 \link Spr::PHSolidIf::GetVelocity() PHSolidIf::GetVelocity \endlink 
-‚ğŒÄ‚Ô‚±‚Æ‚Åİ’èEæ“¾‚Å‚«‚Ü‚·D
-‚±‚±‚Å„‘Ì‚Ì‘¬“x‚ÍCƒV[ƒ“À•WŒn‚©‚çŠÏ‘ª‚µ‚½„‘ÌÀ•WŒnŒ´“_‚Ì‘¬“x‚Å•\‚í‚³‚ê‚Ü‚·D
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    solid->SetVelocity(Vec3d(-20.0, 0.0, 0.0));@@             // ‘¬“x‚Ìİ’è
+    vec3d velocity = solid->GetVelocity();                      // ‘¬“x‚Ìæ“¾
+\endverbatim
+
 “¯—l‚É„‘Ì‚ÌŠp‘¬“x‚Í
-\link Spr::PHSolidIf::SetVelocity() PHSolidIf::SetVelocity \endlink ‚Æ
-\link Spr::PHSolidIf::GetVelocity() PHSolidIf::GetVelocity \endlink 
+\link Spr::PHSolidIf::SetAngularVelocity() PHSolidIf::SetAngularVelocity \endlink ‚Æ
+\link Spr::PHSolidIf::GetAngularVelocity() PHSolidIf::GetAngularVelocity \endlink 
 ‚ğŒÄ‚Ô‚±‚Æ‚Åİ’èEæ“¾‚Å‚«‚Ü‚·D
 „‘Ì‚ÌŠp‘¬“x‚ÍCƒV[ƒ“À•WŒn‚©‚çŠÏ‘ª‚µ‚½„‘ÌÀ•WŒn‚ÌŠp‘¬“x‚Å‚·D
-<br><br><br>
+\verbatim	
+    solid->SetAngularVelocity(Vec3d(1.0, 1.0, 1.0));            // ƒV[ƒ“‚É‘Î‚·‚éŠp‘¬“x‚ğİ’è
+    vec3d velocity = solid->GetAngularVelocity();               // Šp‘¬“x‚Ìæ“¾
+\endverbatim
+<br><br>
 
 
-\subsection solid_mass 		„‘Ì‚Ì¿—Ê
-„‘Ì‚Ì¿—Êî•ñ‚ÍC‘S¿—Ê‚ÆCdS‚ÉŠÖ‚·‚éŠµ«s—ñ‚Å•\Œ»‚³‚ê‚Ü‚·D
-„‘Ì‚Ì¿—Ê‚ğæ“¾Eİ’è‚·‚é‚É‚Í 
-\link Spr::PHSolidIf::GetMass() PHSolidIf::GetMass \endlink ‚Æ 
-\link Spr::PHSolidIf::SetMass() PHSolidIf::SetMass \endlink 
-‚ğg‚¢‚Ü‚·D
-“¯—l‚ÉC„‘Ì‚ÌŠµ«s—ñ‚ğæ“¾Eİ’è‚·‚é‚É‚Í 
-\link Spr::PHSolidIf::GetInertia() PHSolidIf::GetInertia \endlink ‚Æ 
-\link Spr::PHSolidIf::SetInertia() PHSolidIf::SetInertia \endlink 
-‚ğg‚¢‚Ü‚·D
-\verbatim
-    //¿—Ê‚ğ0.1CŠµ«s—ñ‚ğ‘ÎŠp¬•ª‚ª0.1‚Ìs—ñ‚Éİ’è
-    solid->SetMass(0.1);
-    solid->SetInertia(0.1 * Matrix3d::Unit());
+\subsection solid_inertia_parameter 		„‘Ì‚ÌŠµ«ƒpƒ‰ƒ[ƒ^
+„‘Ì‚Ì¿—Ê“Á«‚ÍC¿—Ê‚ÆC„‘ÌÀ•WŒn‚É‚¨‚¯‚é„‘Ì‚Ì¿—Ê’†SˆÊ’uC‚Ü‚½Šµ«ƒeƒ“ƒ\ƒ‹‚Å•\Œ»‚³‚ê‚Ü‚·D
+‚±‚ê‚ç‚ÍC„‘Ì‚É‘Î‚µCˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚·‚é‚±‚Æ‚à‰Â”\‚Å‚·‚ªC„‘ÌƒfƒXƒNƒŠƒvƒ^‚©‚ç—^‚¦‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
+„‘ÌƒfƒXƒNƒŠƒvƒ^‚©‚ç‚Ìİ’è•û–@‚É‚Â‚¢‚Ä‚ÍC\ref solidDesc ‚ğQÆ‰º‚³‚¢D
+
+„‘Ì‚Ì¿—Ê‚ğİ’èEæ“¾‚·‚é‚É‚ÍC
+\link Spr::PHSolidIf::SetMass() PHSolidIf::SetMass \endlink ‚Æ 
+\link Spr::PHSolidIf::GetMass() PHSolidIf::GetMass \endlink 
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    solid->SetMass(2.0);                                // ¿—Ê 2.0 ‚Éİ’è
+    double mass = solid->GetMass();                     // Šp‘¬“x‚Ìæ“¾
 \endverbatim
 
-dSˆÊ’u‚ÍƒfƒtƒHƒ‹ƒg‚Å‚Í„‘ÌÀ•WŒn‚ÌŒ´“_‚Æˆê’v‚µ‚Ä‚¢‚Ü‚·‚ªC 
-\link Spr::PHSolidIf::GetCenterOfMass() PHSolidIf::GetCenterOfMass \endlink ‚Åæ“¾‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
-‚Ü‚½A\link Spr::PHSolidIf::SetCenterOfMass() PHSolidIf::SetCenterOfMass \endlink ‚ğg‚¢Aİ’è‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
-\verbatim
-    solid->SetCenterOfMass(Vec3d(0.1, 0.0, 0.0));
+„‘ÌÀ•WŒn‚É‚¨‚¯‚é„‘Ì‚Ì¿—Ê’†SˆÊ’u‚ğİ’èEæ“¾‚·‚é‚É‚ÍC
+\link Spr::PHSolidIf::SetCenter() PHSolidIf::SetCenter \endlink ‚Æ  
+\link Spr::PHSolidIf::GetCenter() PHSolidIf::GetCenter \endlink 
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    solid->SetCenter(Vec3d(0.0, 1.0, 0.0));             // ã•ûŒü‚É 1.0 ‚¸‚ç‚·
+    Vec3d center = solid->GetCenter();                  // ¿—Ê’†SˆÊ’u‚ğæ“¾
 \endverbatim
 
-‚Ü‚½A„‘Ì‚Ìì¬‚ÉCƒfƒBƒXƒNƒŠƒvƒ^‚ğ—p‚¢‚Ä‚±‚ê‚ç‚Ìî•ñ‚ğİ’è‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
-\verbatim
-    PHSolidDesc solidDesc;
-    solidDesc.mass = 0.1;
-    solidDesc.inertia = 0.1 * Matrix3d::Unit();
-    solidDesc.center = Vec3d(0.1, 0.0, 0.0);
-    PHSolidIf* solid = scene->CreateSolid(solidDesc);
+Šµ«ƒeƒ“ƒ\ƒ‹‚ğİ’èEæ“¾‚·‚é‚É‚ÍC
+\link Spr::PHSolidIf::SetInertia() PHSolidIf::SetInertia \endlink ‚Æ 
+\link Spr::PHSolidIf::GetInertia() PHSolidIf::GetInertia \endlink 
+‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim	
+    solid->SetInertia(2.0 * Matrix3d::Unit());          // ‘ÎŠp¬•ª‚ª 2.0 ‚Ìs—ñ‚ğİ’è
+    Matrix3d inertia = solid->GetInertia();             // Šµ«ƒeƒ“ƒ\ƒ‹‚ğæ“¾
 \endverbatim
 <br><br>
 
@@ -208,9 +323,32 @@ Springhead2 ‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@
 \subsection solid_force 		„‘Ì‚Ö—Í‚ğ‰Á‚¦‚é
 „‘Ì‚Ö•Ài—Í‰Á‚¦‚é‚É‚Í \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlinkC
 ƒgƒ‹ƒN‚ğ‰Á‚¦‚é‚É‚Í \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink ‚ğŒÄ‚Ñ‚Ü‚·D
-„‘Ì‚É‰Á‚¦‚ç‚ê‚Ä‚¢‚é—ÍEƒgƒ‹ƒN‚ÍC\link Spr::PHSceneIf::Step() PHSceneIf::Step \endlink ‚ğŒÄ‚Ô“x‚É 0 ‚ÉƒNƒŠƒA‚³‚ê‚Ü‚·D
+
+—á‚¦‚ÎC„‘Ì‚É‘Î‚µ‚ÄC‰º}‚Ì‚æ‚¤‚È—Í‚ğ‰Á‚¦‚½ê‡‚ğl‚¦‚Ü‚·D
+	\image html force.jpg
+„‘Ì‚É—Í‚ªì—p‚·‚éê‡‚ğl‚¦C¿—Ê’†S‚É‰E•ûŒü‚Ö 10N ‚Ì—Í‚ğ‰Á‚¦‚é‚É‚ÍCˆÈ‰º‚Ì‚æ‚¤‚Éİ’è‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+\verbatim	
+    solid->AddForce(Vec3f(10, 0, 0);              @@@// ¿—Ê’†S‚É‰E•ûŒü‚Ö10N‚Ì—Í‚ğ‰Á‚¦‚é
+\endverbatim
+
+¿—Ê’†S‚¾‚¯‚Å‚È‚­CˆÊ’u‚ğw’è‚µ‚ÄC—Í‚ğ‰Á‚¦‚é‚±‚Æ‚à‰Â”\‚Å‚·D
+\verbatim    
+    solid->AddForce(f, r);                                                          // —Í‚ğ ˆÊ’ur(WorldŒn) ‚É‰Á‚¦‚é
+    solid->AddForce(Vec3f(10,0,0), Vec3f(0,2,0)+solid1->GetCenterPosition());       // dS‚Ì2mã‚ğ‰E•ûŒü‚É10N‚Ì—Í‚ğ‰Á‚¦‚é
+\endverbatim
+
+‚Ü‚½C„‘Ì‚É‘Î‚µ‚Äƒgƒ‹ƒN‚ğ‰Á‚¦‚é‚É‚ÍC
+ˆÈ‰º‚Ì‚æ‚¤‚É\link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink ‚ğŒÄ‚Ñ‚Ü‚·D
+\verbatim
+    solid->AddTorque(f);                                // ƒgƒ‹ƒNf‚ğ‰Á‚¦‚é
+    solid->AddTorque(Vec3d(0,0,0));                     // ƒgƒ‹ƒN‚ğ‰Šú‰»
+\endverbatim
+
+‚½‚¾‚µC„‘Ì‚É‰Á‚¦‚ç‚ê‚Ä‚¢‚é—ÍEƒgƒ‹ƒN‚ÍC\link Spr::PHSceneIf::Step() PHSceneIf::Step \endlink ‚ğ
+ŒÄ‚Ô“x‚É 0 ‚ÉƒNƒŠƒA‚³‚ê‚é‚±‚Æ‚É’ˆÓ‚µ‚Ä‰º‚³‚¢D
 ‚±‚Ì‚½‚ßC’èí“I‚É—ÍEƒgƒ‹ƒN‚ğ‰Á‚¦‘±‚¯‚é‚½‚ß‚É‚ÍC\link Spr::PHSceneIf::Step() PHSceneIf::Step \endlink ‚ğŒÄ‚Ô‘O‚É–ˆ‰ñ
- AddForce / AddTorque ‚ğŒÄ‚Ô•K—v‚ª‚ ‚è‚Ü‚·D
+  \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink /
+  \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink ‚ğŒÄ‚Ô•K—v‚ª‚ ‚è‚Ü‚·D
 <br><br><br>
 
 
@@ -232,13 +370,13 @@ Springhead2 ‚Å‚ÍAÚGES‘©‰ğŒˆƒGƒ“ƒWƒ“‚Æ‚µ‚ÄAƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­è–@‚ÆA‰ğÍ–@
 
 \subsection solid_shape „‘Ì‚Ö‚ÌŒ`ó‚ÌŠ„‚è“–‚Ä
 „‘Ì‚É‚Í 1 ‚ÂˆÈã‚ÌŒ`ó‚ğŠ„‚è“–‚Ä‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
-Springhead •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK‚ÍCŒ`ó‚ÌŒğ·‚ğŒŸ’m‚µC
+•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“\c SDK ‚ÍCŒ`ó‚ÌŒğ·‚ğŒŸ’m‚µC
 „‘ÌŠÔ‚É“­‚­ÚG—Í‚ğ©“®“I‚ÉŒvZ‚µ‚Ü‚·D
-„‘Ì‚ÉŠ„‚è“–‚Ä‚é‚±‚Æ‚Ì‚Å‚«‚éŒ`ó‚Ìí—Ş‚¨‚æ‚Ñì¬•û–@‚É‚Â‚¢‚Ä‚Í \ref shape ‚Ì€‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢D
+„‘Ì‚ÉŠ„‚è“–‚Ä‚é‚±‚Æ‚Ì‚Å‚«‚éŒ`ó‚Ìí—Ş‚¨‚æ‚Ñì¬•û–@‚É‚Â‚¢‚Ä‚Í \ref shape ‚ğQÆ‰º‚³‚¢D
 
 „‘Ì‚ÉŒ`ó‚ğŠ„‚è“–‚Ä‚é‚É‚Í \link Spr::PHSolidIf::AddShape() PHSolidIf::AddShape \endlink ‚ğg‚¢‚Ü‚·D
 „‘Ì‚ÍCŠ„‚è“–‚Ä‚ç‚ê‚½Œ`óiCDShape Œ^‚ÌƒIƒuƒWƒFƒNƒgj‚Ö‚ÌQÆ‚ğ•Û‚·‚é‚¾‚¯‚Å‚·‚Ì‚ÅC
-1 ‚Â‚ÌŒ`ó‚ğ•¡”‚ÌˆÙ‚È‚é„‘Ì‚ÉŠ„‚è“–‚Ä‚Ä‚à–â‘è‚ ‚è‚Ü‚¹‚ñD
+\b 1‚Â‚ÌŒ`ó‚ğ•¡”‚ÌˆÙ‚È‚é„‘Ì‚ÉŠ„‚è“–‚Ä‚Ä‚à–â‘è‚ ‚è‚Ü‚¹‚ñD 
 ‚±‚ê‚É‚æ‚Á‚ÄC‘½”‚Ì“¯‚¶Œ`‚Ì„‘Ì‚ğì¬‚µ‚½‚¢ê‡‚Éƒƒ‚ƒŠ‚ğß–ñ‚Å‚«‚Ü‚·D
 ‚Ü‚½C1 ‚Â‚Ì„‘Ì‚É“¯‚¶ CDShape ƒIƒuƒWƒFƒNƒg‚ğ•¡”‰ñ“o˜^‚·‚é‚ÆC‚»‚ê‚¼‚ê•Ê‚ÌŒ`ó‚Æ‚µ‚Ä”F¯‚³‚ê‚Ü‚·D
 
@@ -261,7 +399,7 @@ Springhead •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK‚ÍCŒ`ó‚ÌŒğ·‚ğŒŸ’m‚µC
 - \ref shape_box@
 - \ref shape_mesh
 
-Springhead Physics‚ªˆµ‚¤‚±‚Æ‚Ì‚Å‚«‚éŒ`ó‚Í“ÊŒ`ó‚Ì‚İ‚Å‚·D
+ˆµ‚¤‚±‚Æ‚Ì‚Å‚«‚éŒ`ó‚Í“ÊŒ`ó‚Ì‚İ‚Å‚·D
 “ÊŒ`ó‚Æ‚ÍCˆêŒ¾‚Å‚¢‚¦‚Î‰š‚İ‚âŒŠ‚Ì–³‚¢Œ`ó‚Ì‚±‚Æ‚Å‚·D
 “Ê‚Å‚È‚¢i‰š‚İ‚âŒŠ‚ğ‚ÂjŒ`ó‚ğ„‘Ì‚ÉŠ„‚è“–‚Ä‚é‚É‚ÍC‚ ‚ç‚©‚¶‚ß‚»‚ÌŒ`ó‚ğ
 •¡”‚Ì“ÊŒ`ó‚É•ªŠ„‚µ‚ÄŠ„‚è“–‚Ä‚é•K—v‚ª‚ ‚è‚Ü‚·D
