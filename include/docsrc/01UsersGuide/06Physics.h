@@ -11,12 +11,12 @@
 \verbatim
     PHSdkIf* sdk = CreatePHSdk();
 \endverbatim
-以降，\c SDKの操作は \link Spr::CreatePHSdk() CreatePHSdk\endlink によって返された PHSdkIf 型のポインタを介して行います．
+以降，\c SDK の操作は \link Spr::CreatePHSdk() CreatePHSdk\endlink によって返された \c PHSdkIf 型のポインタを介して行います．
 
 \c SDK は，1 つ以上のシーンを持つことができます．
-また，1 つのシーンは 1 つ以上の剛体（PHSolid）と関節（PHJoint）を持つことができます．
-さらに，剛体は形状（CDConvexMesh，CDSphere，CDBox，...）を参照して形を持つことができます．
-関節は2つの剛体を結び付けます．
+また，1 つのシーンは 1 つ以上の剛体 <tt>(PHSolid)</tt> と関節 <tt>(PHJoint)</tt>を持つことができます．
+さらに，剛体は形状 <tt>(CDConvexMesh，CDSphere，CDBox，...)</tt> を参照して形を持つことができます．
+関節は \c 2 つの剛体を結び付けます．
 物理エンジン内のオブジェクトの参照関係の例を図に示します．
 
 
@@ -85,7 +85,7 @@
 \endverbatim
 
 なお，シーンの操作は \link Spr::PHSdkIf::CreateScene() PHSdkIf::CreateScene \endlink によって返された
- PHSceneIf 型のポインタを介して行ないます．<br>
+ \c PHSceneIf 型のポインタを介して行ないます．<br>
 シーンを複数作成することは可能ですが，異なるシーン同士は互いに影響を及ぼしません．
 <br><br><br>
 
@@ -149,10 +149,10 @@
 以下に示すような設定を初期値のまま利用する場合は，剛体デスクリプタを用意する必要はありません．
 ここでは，質量，慣性テンソル，質量中心の位置，重力の影響の有無を設定することができます．<br>
 これらの設定は，剛体（\link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink から作られる
-剛体オブジェクト）からでも設定可能です．剛体からの設定については，\ref solid_mass を参照下さい．
+剛体オブジェクト）からでも設定可能です．剛体からの設定については，\ref solid_inertia_parameter を参照下さい．
 また，デスクリプタについては，\ref pageApiBasic を参照下さい．
 
-質量は，初期値として 1.0 が設定されています．
+質量は，初期値として \c 1.0 が設定されています．
 剛体デスクリプタで，剛体に対する質量を設定するには，以下のようにします．
 \verbatim
     PHSolidDesc desc;
@@ -177,7 +177,7 @@
     desc.gravity = false;                       // 重力の影響を受けないように設定
 \endverbatim
 なお，剛体からの重力設定については，\ref scene_gravity を参照して下さい．
-<br><br>
+<br><br><br>
 
 
 \subsection solid_create 	剛体の作成
@@ -207,7 +207,7 @@
 \endverbatim
 
 なお，剛体に対する操作は \link Spr::PHSceneIf::CreateSolid() PHSceneIf::CreateSolid \endlink によって返された
- PHSolidIf 型のポインタを介して行います．
+ \c PHSolidIf 型のポインタを介して行います．
 <br><br><br>
 
 
@@ -239,7 +239,7 @@
 \endverbatim
 
 また，剛体の位置・傾きを，同時に設定・取得することもできます．
-これは，Posed 型で表されます．Posed 型は，Affine と同じ機能を持つ 7 次元ベクトルで，
+これは \c Posed 型で表されます． \c Posed 型は， \c Affine と同じ機能を持つ 7 次元ベクトルで，
 位置と傾きを合わせたベクトルとなっています．
 この位置と傾きを合わせた成分を，設定・取得するには，
 \link Spr::PHSolidIf::SetPose() PHSolidIf::SetPose \endlink と
@@ -264,7 +264,7 @@
 
 \subsection solid_velocity 			剛体の速度
 剛体の速度は，シーン座標系から観測した，剛体座標系原点の速度つまり質量中心の速度で表わされます．
-なお，速度は，Vec3d で表されるベクトル（速度ベクトル）となります．
+なお，速度は， \c Vec3d で表されるベクトル（速度ベクトル）となります．
 剛体の速度を設定・取得するには，
 \link Spr::PHSolidIf::SetVelocity() PHSolidIf::SetVelocity \endlink と
 \link Spr::PHSolidIf::GetVelocity() PHSolidIf::GetVelocity \endlink 
@@ -322,11 +322,10 @@
 
 \subsection solid_force 		剛体へ力を加える
 剛体へ並進力加えるには \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink，
-トルクを加えるには \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink を呼びます．
-
+トルクを加えるには \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink を呼びます．<br>
 例えば，剛体に対して，下図のような力を加えた場合を考えます．
 	\image html force.jpg
-剛体に力が作用する場合を考え，質量中心に右方向へ 10N の力を加えるには，以下のように設定することができます．
+剛体に力が作用する場合を考え，質量中心に右方向へ \c 10N の力を加えるには，以下のように設定することができます．
 \verbatim	
     solid->AddForce(Vec3f(10, 0, 0);              　　　// 質量中心に右方向へ10Nの力を加える
 \endverbatim
@@ -347,7 +346,7 @@
 ただし，剛体に加えられている力・トルクは，\link Spr::PHSceneIf::Step() PHSceneIf::Step \endlink を
 呼ぶ度に 0 にクリアされることに注意して下さい．
 このため，定常的に力・トルクを加え続けるためには，\link Spr::PHSceneIf::Step() PHSceneIf::Step \endlink を呼ぶ前に毎回
-  \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink /
+  \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink \c /
   \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink を呼ぶ必要があります．
 <br><br><br>
 
@@ -368,17 +367,17 @@
 <br><br><br>
 
 
-\subsection solid_shape 剛体への形状の割り当て
+\subsection solid_shape 		剛体への形状の割り当て
 剛体には 1 つ以上の形状を割り当てることができます．
 物理シミュレーション\c SDK は，形状の交差を検知し，
 剛体間に働く接触力を自動的に計算します．
 剛体に割り当てることのできる形状の種類および作成方法については \ref shape を参照下さい．
 
 剛体に形状を割り当てるには \link Spr::PHSolidIf::AddShape() PHSolidIf::AddShape \endlink を使います．
-剛体は，割り当てられた形状（CDShape 型のオブジェクト）への参照を保持するだけですので，
+剛体は，割り当てられた形状（\c CDShape 型のオブジェクト）への参照を保持するだけですので，
 \b 1つの形状を複数の異なる剛体に割り当てても問題ありません． 
 これによって，多数の同じ形の剛体を作成したい場合にメモリを節約できます．
-また，1 つの剛体に同じ CDShape オブジェクトを複数回登録すると，それぞれ別の形状として認識されます．
+また，1 つの剛体に同じ \c CDShape オブジェクトを複数回登録すると，それぞれ別の形状として認識されます．
 
 形状を剛体に取り付ける位置を取得・設定するには，
 \link Spr::PHSolidIf::GetShapePose() PHSolidIf::GetShapePose \endlink，
@@ -394,23 +393,77 @@
 
 <!---------------------------------- 形状 --------------------------------------------------------------------------->
 \section shape		形状
+形状を用意しておくと，同じ形状を新たに 作成したり，コピーしたりする必要がなく，
+モデリングを効率的に行うことができます．\ref solid_shape も参照下さい．<br>
 剛体に割り当てることができる形状には以下のものがあります．
+- \ref shape_mesh
 - \ref shape_sphere
 - \ref shape_box　
-- \ref shape_mesh
-
+    	
 扱うことのできる形状は凸形状のみです．
 凸形状とは，一言でいえば凹みや穴の無い形状のことです．
 凸でない（凹みや穴を持つ）形状を剛体に割り当てるには，あらかじめその形状を
 複数の凸形状に分割して割り当てる必要があります．
 
-\subsection shape_sphere 	球 
-<br>
-
-\subsection shape_box	 	直方体 
-<br>
 
 \subsection shape_mesh 		メッシュ 
+各辺の長さが \c 2 の立方体を作成する方法を以下に示します．<br>
+\c 1 つのメッシュ形状を用意し，それに基づき，剛体を \c 2 つ作成しています．
+\verbatim
+    CDConvexMeshDesc md;                                                    // メッシュディスクリプタ(md)
+    md.vertices.push_back(Vec3f(-1,-1,-1));　　                             // 立方体の頂点座標を登録
+    md.vertices.push_back(Vec3f(-1,-1, 1));	
+    md.vertices.push_back(Vec3f(-1, 1,-1));	
+    md.vertices.push_back(Vec3f(-1, 1, 1));
+    md.vertices.push_back(Vec3f( 1,-1,-1));	
+    md.vertices.push_back(Vec3f( 1,-1, 1));
+    md.vertices.push_back(Vec3f( 1, 1,-1));
+    md.vertices.push_back(Vec3f( 1, 1, 1));
+    	
+    // 剛体 solid1
+    CDConvexMeshIf* mesh1 = DCAST(CDConvexMeshIf, sdk->CreateShape(md));　　// md に基づいて，メッシュ形状(mesh1)を作成
+    PHSolidIf* solid1 = scene->CreateSolid();                               // 剛体(solid1)を作成
+    solid1->AddShape(mesh1);                                                // 剛体(solid1)に，メッシュ形状(mesh1)を割り当てる
+    
+    // 剛体 solid2
+    CDConvexMeshIf* mesh2 = DCAST(CDConvexMeshIf, sdk->CreateShape(md));　　// md に基づいて，メッシュ形状(mesh2)を作成
+    PHSolidIf* solid2 = scene->CreateSolid();                               // 剛体(solid2)を作成
+    solid2->AddShape(mesh2);                                                // 剛体(solid2)に，メッシュ形状(mesh2)を割り当てる
+\endverbatim
+<br><br>    	
+    	
+\subsection shape_sphere 	球体
+半径が \c 1 の球体を作成する方法を以下に示します．<br>
+\c 1 つの球体形状を用意し，それに基づき，剛体を \c 2 つ作成しています．
+\verbatim
+    CDSphereDesc sd;                                                         // 球体ディスクリプタ(sd)
+    sd.radius = 1.0;                                                         // 球体の半径
+    
+    CDSphereIf* sphere1 = DCAST(CDSphereIf, sdk->CreateShape(sd));           // sd に基づいて, 球体形状(sphere1)を作成
+    PHSolidIf* solid1 = scene->CreateSolid();                                // 剛体(solid1)を作成
+    solid1->AddShape(sphere1)                                                // 剛体(solid1)に，球体形状(sphere1)を割り当てる
+
+    CDSphereIf* sphere2 = DCAST(CDSphereIf, sdk->CreateShape(sd));           // sd に基づいて, 球体形状(sphere2)を作成
+    PHSolidIf* solid2 = scene->CreateSolid();                                // 剛体(solid2)を作成
+    solid2->AddShape(sphere2)                                                // 剛体(solid2)に，球体形状(sphere2)を割り当てる
+\endverbatim
+<br><br>    	
+
+\subsection shape_box	 	直方体 
+\c X 方向の長さが \c 1，Y 方向の長さ \c 2，\c Z 方向の長さが \c 3 の直方体を作成する方法を以下に示します．<br>
+\c 1 つの直方体形状を用意し，それに基づき，剛体を \c 2 つ作成しています．
+\verbatim    
+    CDBoxDesc bd;                                                            // 直方体ディスクリプタ(bd);
+    bd.boxsize = Vec3f(1,2,3);
+    	
+    CDBoxIf* box1 = DCAST(CDBoxIf, sdk->CreateShape(bd));                    // bd に基づいて，直方体形状(box1)を作成
+    PHSolidIf* solid1 = scene->CreateSolid();                                // 剛体(solid1)を作成
+    solid1->AddShape(box1)                                                   // 剛体(solid1)に，直方体形状(box1)を割り当てる
+    	
+    CDBoxIf* box2 = DCAST(CDBoxIf, sdk->CreateShape(bd));                    // bd に基づいて，直方体形状(box2)を作成
+    PHSolidIf* solid2 = scene->CreateSolid();                                // 剛体(solid2)を作成
+    solid2->AddShape(box2)                                                   // 剛体(solid2)に，直方体形状(box2)を割り当てる
+\endverbatim
 <br><br>
 <div align="right">
 <a href="#pagePhysics">top of page</a>
