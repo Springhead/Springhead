@@ -11,7 +11,7 @@
 namespace Spr{;
 namespace SprOldSpringehead{;
 
-///	\defgroup gpFIOldSpringheadNode 旧Springhead(Springhead1)のファイルをロードするための互換ノード
+///	\defgroup gpFIOldSpringheadNode 旧(Springhead1)ファイルロード用互換ノード
 //@{
 ///	DirectXのFrame． GRFrameに対応
 struct Frame{

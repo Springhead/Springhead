@@ -11,7 +11,7 @@ EXCLUDE		= ../include/docsrc/00Index.h
 GENERATE_TAGFILE       = ./html/springhead.tag
 TAGFILES=
 
-CHM_FILE               = ..\springhead.chm
+CHM_FILE               = ..\springheadImp.chm
 GENERATE_HTMLHELP      = YES
 
 ALLEXTERNALS = YES
