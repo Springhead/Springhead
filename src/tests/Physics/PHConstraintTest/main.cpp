@@ -9,7 +9,7 @@
  Springhead2/src/tests/Physics/PHConstraintTest.cpp
 
 【概要】
-  ・接触エンジンを拘束法（SOLVER_CONSTRAINT）に設定し、シミュレーションする。
+  ・接触モードに LCP法 を選択して、シミュレーションする。
   
 【終了基準】
 　・生成したブロックすべてが、数ステップ間、床の上に静止したら正常終了。　
@@ -288,10 +288,9 @@ void SPR_CDECL timer(int id){
 int SPR_CDECL main(int argc, char* argv[]){
 	sdk = CreatePHSdk();							// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;	// 接触エンジンを選ぶ
-	//dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;
 	dscene.timeStep = dt;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
+	scene->SetContactMode(PHSceneDesc::MODE_LCP);	// 接触モードに LCP法で選択
 
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
@@ -323,7 +322,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 20;		
-			md.vertices[i].z *= 5;
+			md.vertices[i].z *= 10;
 		}
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
