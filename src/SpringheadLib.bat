@@ -7,12 +7,11 @@ if "%1"=="MFCRELEASE" set EXT=M
 if "%1"=="MFCDEBUG" set EXT=MD
 if "%2"=="7" set EXT=7%EXT%
 
-set OUTPUT=Springhead%EXT%.lib
-set INPUT=Base/Base%EXT%.lib Collision/Collision%EXT%.lib Device/Device%EXT%.lib
-set INPUT=%INPUT% FileIO/FileIO%EXT%.lib Graphics/Graphics%EXT%.lib HIS/HIS%EXT%.lib
-set INPUT=%INPUT% ImpD3D/ImpD3D%EXT%.lib Physics/Physics%EXT%.lib SceneGraph/SceneGraph%EXT%.lib
-set INPUT=%INPUT% WinBasis/WinBasis%EXT%.lib WinDX/WinDX%EXT%.lib Framework/Framework%EXT%.lib
-set INPUT=%INPUT% GraphicsGL/GraphicsGL%EXT%.lib
+set OUTPUT=../Lib/win32/Springhead%EXT%.lib
+set INPUT=Base/Base%EXT%.lib Foundation/Foundation%EXT%.lib 
+set INPUT=%INPUT% Collision/Collision%EXT%.lib Physics/Physics%EXT%.lib
+set INPUT=%INPUT% Graphics/Graphics%EXT%.lib FileIO/FileIO%EXT%.lib 
+rem set INPUT=Device/Device%EXT%.lib HIS/HIS%EXT%.lib
 
 if "%INPUT%"=="" echo 環境変数用メモリの空きが不足しています．
 if "%INPUT%"=="" echo 空きを増やしてもう一度実行します．
