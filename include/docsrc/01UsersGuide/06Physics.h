@@ -44,14 +44,6 @@
 また，シーンデスクリプタのサンプルとしては，
 <a href="../../src/html/BoxStack_2main_8cpp-example.html">BoxStack</a> を参照下さい．
 
-\c Springhead2 では，接触・拘束解決エンジンとして，ペナルティ法で解く手法と，解析法で解く手法を用意しています．<br>
-シーンデスクリプタの初期設定では，解析法に設定されています．エンジンの切り替えは以下のように行って下さい．<br>
-\verbatim
-    PHSceneDesc dscene;
-    dscene.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;      // 解析法
-    dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;         // ペナルティ法
-\endverbatim
-
 シーンデスクリプタの初期設定では，ステップ実行時間は <tt>0.005[s]</tt> に設定されていますが，以下のように設定することもできます．
 \verbatim
     dscene.timeStep = 0.01;
@@ -79,7 +71,6 @@
 シーンデスクリプタについては，\ref sceneDesc を参照下さい．
 \verbatim
     PHSceneDesc sceneDesc;
-    dscene.contactSolver = PHSceneDesc::SOLVER_PENALTY;         // ペナルティ法
     dscene.timeStep      = 0.05;                                // ステップ幅を 0.05[s] に設定
     PHSceneIf* scene     = sdk->CreateScene(sceneDesc);
 \endverbatim

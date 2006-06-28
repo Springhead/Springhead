@@ -1,23 +1,11 @@
 /**
 \page pageGettingStarted	はじめてみよう
-<hr>
-<br>
-&nbsp; \ref secRequirement<br>
-&nbsp; \ref secDirectory<br>
-&nbsp; \ref secInstall<br>
-&nbsp;&nbsp; \ref secVcInstall<br>
-&nbsp;&nbsp; \ref secCygwinInstall<br>
-&nbsp;&nbsp; \ref secLinuxInstall<br>
-&nbsp;&nbsp; \ref secMacInstall<br>
-&nbsp; \ref secTest<br>
-&nbsp;&nbsp; \ref secVcTest<br>
-&nbsp;&nbsp; \ref secCygwinTest<br>
-&nbsp;&nbsp; \ref secLinuxTest<br>
-&nbsp;&nbsp; \ref secMacTest<br>
-<br>
-<hr>
 
-\section secRequirement	1. 動作環境
+
+\contents
+
+
+\section secRequirement		動作環境
 本プログラムは以下いずれかの環境で動作します．<br>
           <td width="64%"> 
             <table width="100%" border="0" cellspacing="1" cellpadding="2" bgcolor="#305C78">
@@ -44,7 +32,7 @@
 
 
 
-\section secDirectory	2. ディレクトリ構成
+\section secDirectory		ディレクトリ構成
 ディレクトリ構成は以下の通りです．
   \image html directory.jpg
 <br><br>
@@ -52,12 +40,12 @@
 
 
 
-\section secInstall	3. インストールからビルドまで
+\section secInstall		インストールからビルドまで
 ソースファイルからコンパイルする場合は，ソースファイルを適当な場所に置いて下さい．<br>
 ここでは仮に \c C:\\Home\\C\\Project\\Springhead2 とします．<br>
 下記にそれぞれの環境での構築方法を記載しています．
   
-\subsection secVcInstall	(1) Visual C++ .NET 2003 + DirectX SDK 9.0
+\subsection secVcInstall	Visual C++ .NET 2003 + DirectX SDK 9.0
 \htmlonly
 <strong>
 <font color="gray">
@@ -68,15 +56,15 @@
 \endhtmlonly
 <br>
 
-\par 　　(1-1) 　 Visual C++ .NET 2003 のインストール
+\par 　　(1) 　 Visual C++ .NET 2003 のインストール
 	<tt>Visual C++ .NET 2003</tt> をインストールして下さい．<br><br>
 
-\par 　　(1-2) 　 DirectX SDK 9.0 のインストール
+\par 　　(2) 　 DirectX SDK 9.0 のインストール
 	<tt>DirectX SDK 9.0</tt> をインストールして下さい．
 	<tt>Microsoft</tt> のダウンロードサイトから手に入れることができます．
 	インストール先は \c C:\\DXSDK として下さい．<br><br>
 
-\par 　　(1-3) 　 環境変数の設定
+\par 　　(3) 　 環境変数の設定
 	\c Springhead2 の環境変数を次の手順で設定して下さい．
 	<ol type="i">
  		<li>「マイコンピュータを右クリック → 詳細設定タブ → 環境変数」を選択します．</li>
@@ -84,7 +72,7 @@
   	</ol>
   	\image html setenv.jpg
 
-\par 　　(1-4) 　 Visual C++ 開発環境の設定，OpenGL および DirectX へのパス設定
+\par 　　(4) 　 Visual C++ 開発環境の設定，OpenGL および DirectX へのパス設定
 	<tt>Springhead2</tt> の開発を始める前に，<tt>Visual C++</tt> の環境設定を行う必要があります．
 	この環境設定はプロジェクト毎に保存されるのではなく，<tt>Visual C++</tt> 開発環境の設定として
 	保存されますので，一度行えば，今後行う必要はありません．
@@ -119,14 +107,14 @@
 		\image html vcpath.jpg
 	</ol>
 		
-\par 　　(1-5) 　 VC でビルド
+\par 　　(5) 　 VC でビルド
 	実行したいサンプルプログラムを開き，メニューの <tt>[ビルド]－[ソリューションのビルド]</tt> を指定します．
 <br>
 
 
 
-\subsection secCygwinInstall (2) Cygwin
-\par 　　(2-1) 　 Cygwin でビルド
+\subsection secCygwinInstall		Cygwin
+\par 　　(1) 　 Cygwin でビルド
 ソースファイルのトップディレクトリにて，<tt>make</tt>コマンドを実行します．<br>
 ライブラリの構築，およびテスト用プログラム，サンプルプログラムのコンパイルを自動的に行います．
 \code
@@ -136,8 +124,8 @@
 
 
 
-\subsection secLinuxInstall	(3) RedHat Linux 9
-\par 　　(3-1) 　 RedHat Linux 9 でビルド
+\subsection secLinuxInstall		RedHat Linux 9
+\par 　　(1) 　 RedHat Linux 9 でビルド
 ソースファイルのトップディレクトリにて，<tt>make</tt>コマンドを実行します．<br>
 ライブラリの構築，およびテスト用プログラム，サンプルプログラムのコンパイルを自動的に行います．
 \code
@@ -147,8 +135,8 @@
 
 
 
-\subsection  secMacInstall	(4) Mac OS X（PowerPC，Aquq）
-\par 　　(4-1) 　 Mac OS X でビルド
+\subsection  secMacInstall		Mac OS X（PowerPC，Aquq）
+\par 　　(1) 　 Mac OS X でビルド
 ソースファイルのトップディレクトリにて，<tt>make</tt>コマンドを実行します．<br>
 ライブラリの構築，およびテスト用プログラム，サンプルプログラムのコンパイルを自動的に行います．
 \code
@@ -159,7 +147,7 @@
 
 
 
-\section secTest	4. サンプルを動かす
+\section secTest		サンプルを動かす
 サンプル・プログラムを動かしてみましょう．<br>
 \c Springhead2 では，動作可能なテスト用プログラム \c tests およびサンプルプログラム
 \c Samples を用意しています（参照 ： \ref directory)．
@@ -167,16 +155,16 @@
 <a href="../../src/html/GRSimple_2main_8cpp-example.html">GRSimple</a>
 を実行する方法を紹介します．<br>
 
-\subsection secVcTest	(1) Visual C++ .NET 2003 + DirectX SDK 9.0
+\subsection secVcTest			Visual C++ .NET 2003 + DirectX SDK 9.0
 <ol>
-	<li> \c GRSimpleディレクトリにあるソリューションファイルを開きます．
+	<li> \c GRSimple ディレクトリにあるソリューションファイルを開きます．
 	<li> ソリューションエクスプローラで，\c GRSimple がスタートアッププロジェクトに
 		 設定されていることを確認します．</li>
 	<li> アプリケーションを実行します．</li>
 </ol>
 <br>
 
-\subsection secCygwinTest	(2) Cygwin
+\subsection secCygwinTest		Cygwin
 <ol>
 	<li> \c GRSimple ディレクトリへ移動し，\c GRSimple.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し，アプリケーションを起動します．<br>
@@ -187,7 +175,7 @@
 </ol>
 <br>
 
-\subsection secLinuxTest	(3) RedHat Linux 9
+\subsection secLinuxTest		RedHat Linux 9
 <ol>
 	<li> \c GRSimple ディレクトリへ移動し，\c GRSimple.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し，アプリケーションを起動します．<br>
@@ -198,7 +186,7 @@
 </ol>
 <br>
 
-\subsection secMacTest	(4) Mac OS X（PowerPC，Aquq）
+\subsection secMacTest			Mac OS X（PowerPC，Aquq）
 <ol>
 	<li> \c GRSimple ディレクトリへ移動し，\c GRSimple.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し，アプリケーションを起動します．<br>
