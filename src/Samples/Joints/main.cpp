@@ -47,7 +47,6 @@
 #include <sstream>
 
 #include <Springhead.h>		//	Springheadのインタフェース
-#include <Physics/PHConstraintEngine.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -61,7 +60,6 @@ GRSdkIf* grSdk;
 PHSceneIf* scene;		// Sceneインタフェース
 GRDebugRenderIf* render;
 GRDeviceGLIf* device;
-UTRef<PHConstraintEngine> ce;
 
 Vec3d lookAt;
 
@@ -256,10 +254,6 @@ void BuildScene5(){
 	
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
-
-	PHScene* sc = DCAST(PHScene, scene);
-	sc->engines.Find(ce);
-	sc->engines.Del(ce);
 }
 
 
@@ -414,9 +408,9 @@ void OnKey4(char key){
 
 void OnKey5(char key){
 	switch(key){
-	case 'a': soBox[3]->SetFramePosition(Vec3d(-10.0, 5.0, 0.0)); break;
-	case 's': soBox[3]->SetFramePosition(Vec3d(  0.0, 5.0, 0.0)); break;
-	case 'd': soBox[3]->SetFramePosition(Vec3d( 10.0, 5.0, 0.0)); break;
+	case 'a': soBox[3]->SetFramePosition(Vec3d(-10.0, 15.0, 0.0)); break;
+	case 's': soBox[3]->SetFramePosition(Vec3d(  0.0, 15.0, 0.0)); break;
+	case 'd': soBox[3]->SetFramePosition(Vec3d( 10.0, 15.0, 0.0)); break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -552,14 +546,8 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-//	for(int i=0; i<10; ++i)
 	scene->ClearForce();
 	scene->GenerateForce();
-	if (ce){
-		ce->Dynamics(scene->GetTimeStep(), scene->GetCount());
-//		ce->Correction(scene->GetTimeStep(), scene->GetCount());
-		ce->UpdateSolids(scene->GetTimeStep());
-	}
 	scene->Integrate();
 	glutPostRedisplay();
 	glutTimerFunc(50, timer, 0);
