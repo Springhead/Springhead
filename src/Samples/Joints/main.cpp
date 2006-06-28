@@ -242,7 +242,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[2])->SetDamper(D);
 
-	K = 10, D = 1;
+	K = 1, D = 1;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;

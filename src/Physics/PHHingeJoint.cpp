@@ -60,11 +60,15 @@ double PHHingeJoint::GetVelocity(){
 }*/
 
 void PHHingeJoint::CompBias(double dt, double correction_rate){
+	CompDof();
 	double dtinv = 1.0 / dt;
 	bv += correction_rate * rjrel * dtinv;
-	Vec3d w = (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
-	bw.x += w.x;
-	bw.y += w.y;
+	//Vec3d w = (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
+	Vec3d w = qjrel.AngularVelocity(qjrel * dtinv);
+	w *= correction_rate;
+	//bw.x += w.x;
+	//bw.y += w.y;
+	//bw.z += w.z;
 	if(mode == MODE_VELOCITY){
 		bw.z -= vel_d;
 	}

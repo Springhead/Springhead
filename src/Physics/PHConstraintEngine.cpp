@@ -155,8 +155,8 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 10;
-	correction_rate = 0.05;
+	max_iter_dynamics = 30;
+	correction_rate = 0.1;
 	//max_iter_correction = 0;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
@@ -276,12 +276,12 @@ void PHConstraintEngine::UpdateSolids(double dt){
 		solid->SetVelocity       (solid->GetOrientation() * vnew);
 		solid->SetAngularVelocity(solid->GetOrientation() * wnew);
 		//position update
-		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt + solid->GetOrientation() * info->dV);
+		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt/* + solid->GetOrientation() * info->dV*/);
 		solid->SetOrientation(
-			(solid->GetOrientation() * Quaterniond::Rot(wnew * dt + info->dW)).unit()
+			(solid->GetOrientation() * Quaterniond::Rot(wnew * dt/* + info->dW*/)).unit()
 		);
 		//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
-		solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
+		//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
 		solid->SetUpdated(true);
 	}
 }
