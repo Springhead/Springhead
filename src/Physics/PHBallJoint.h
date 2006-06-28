@@ -21,15 +21,15 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	virtual void SetMaxAngle(double angle){max_angle = angle;}
 	virtual double GetMaxAngle(){return max_angle;}
-	virtual void SetMotorTorque(const Vec3d& t){f.SUBVEC(3, 3) = t;}
-	virtual Vec3d GetMotorTorque(){return f.SUBVEC(3, 3);}
-	virtual Quaterniond GetPosition();
-	virtual Vec3d GetVelocity();
-	virtual void CompConstraintJacobian();
-	virtual void CompBias(double dt);
-	virtual void CompError(double dt);
-	virtual void ProjectionDynamics(double& f, int k);
-	virtual void ProjectionCorrection(double& F, int k);
+	virtual void SetMotorTorque(const Vec3d& t){fw = t;}
+	virtual Vec3d GetMotorTorque(){return fw;}
+	virtual Quaterniond GetPosition(){return qjrel;}
+	virtual Vec3d GetVelocity(){return wjrel;}
+	//virtual void CompConstraintJacobian();
+	virtual void CompBias(double dt, double correction_rate);
+	//virtual void CompError(double dt);
+	virtual void Projection(double& f, int k);
+	//virtual void ProjectionCorrection(double& F, int k);
 	PHBallJoint(){}
 };
 

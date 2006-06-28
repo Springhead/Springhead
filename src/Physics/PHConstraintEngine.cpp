@@ -155,11 +155,12 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 35;
-	max_iter_correction = 12;
+	max_iter_dynamics = 10;
+	correction_rate = 0.05;
+	//max_iter_correction = 0;
 	//step_size = 1.0;
 	//converge_criteria = 0.00000001;
-	max_error = 1.0;
+	//max_error = 1.0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -224,16 +225,16 @@ void PHConstraintEngine::SetupDynamics(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
 	for(it = solids.begin(); it != solids.end(); it++)
 		(*it)->SetupDynamics(dt);
-	points.SetupDynamics(dt);
-	joints.SetupDynamics(dt);
+	points.SetupDynamics(dt, correction_rate);
+	joints.SetupDynamics(dt, correction_rate);
 }
-void PHConstraintEngine::SetupCorrection(double dt){
+/*void PHConstraintEngine::SetupCorrection(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
 	for(it = solids.begin(); it != solids.end(); it++)
 		(*it)->SetupCorrection();
 	points.SetupCorrection(dt, max_error);
 	joints.SetupCorrection(dt, max_error);
-}
+}*/
 void PHConstraintEngine::IterateDynamics(){
 	int count = 0;
 	while(true){
@@ -247,7 +248,7 @@ void PHConstraintEngine::IterateDynamics(){
 		count++;
 	}
 }
-void PHConstraintEngine::IterateCorrection(){
+/*void PHConstraintEngine::IterateCorrection(){
 	int count = 0;
 	while(true){
 		if(count == max_iter_correction){
@@ -259,7 +260,7 @@ void PHConstraintEngine::IterateCorrection(){
 
 		count++;
 	}
-}
+}*/
 
 void PHConstraintEngine::UpdateSolids(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator is;
@@ -292,7 +293,7 @@ void PHConstraintEngine::Step(){
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
 	Dynamics(dt, ct);
-	Correction(dt, ct);
+	//Correction(dt, ct);
 	UpdateSolids(dt);
 }
 void PHConstraintEngine::Dynamics(double dt, int ct){
@@ -310,28 +311,28 @@ void PHConstraintEngine::Dynamics(double dt, int ct){
 	QueryPerformanceCounter(&val[0]);
 	SetupDynamics(dt);
 	QueryPerformanceCounter(&val[1]);
-	DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	QueryPerformanceCounter(&val[0]);
 	IterateDynamics();
 	QueryPerformanceCounter(&val[1]);
-	DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 }
 
-void PHConstraintEngine::Correction(double dt, int ct){
+/*void PHConstraintEngine::Correction(double dt, int ct){
 	LARGE_INTEGER freq, val[2];
 	QueryPerformanceFrequency(&freq);
 
 	QueryPerformanceCounter(&val[0]);
 	SetupCorrection(dt);
 	QueryPerformanceCounter(&val[1]);
-	DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+	//DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	QueryPerformanceCounter(&val[0]);
 	IterateCorrection();
 	QueryPerformanceCounter(&val[1]);
-	DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-}
+	//DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+}*/
 
 
 }

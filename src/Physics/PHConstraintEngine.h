@@ -49,7 +49,7 @@ public:
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 
 	virtual void Dynamics(double dt, int ct);		///< 
-	virtual void Correction(double dt, int ct);		///< 
+	//virtual void Correction(double dt, int ct);		///< 
 	void UpdateSolids(double dt);	///< Œ‹‰Ê‚ðSolid‚É”½‰f‚·‚é
 	virtual void Clear();
 
@@ -57,15 +57,15 @@ protected:
 	PHConstraints	points;			///< ÚG“_‚Ì”z—ñ
 	PHConstraints	joints;			///< ŠÖß‚Ì”z—ñ
 	int max_iter_dynamics;			///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”
-	int max_iter_correction;		///< Œë·C³LCP‚Ì”½•œ‰ñ”
-	double max_error;
+	//int max_iter_correction;		///< Œë·C³LCP‚Ì”½•œ‰ñ”
+	double correction_rate;			///< Œë·C³”ä—¦
+	//double max_error;
 
 	void SetupDynamics(double dt);	///< ‘¬“xXVLCP‚Ì€”õ
 	void IterateDynamics();			///< ‘¬“xXVLCP‚Ìˆê“x‚Ì”½•œ
 	
-	void SetupCorrection(double dt);///< Œë·C³LCP‚Ì€”õ
-	void IterateCorrection();		///< Œë·C³LCP‚Ìˆê“x‚Ì”½•œ
-	
+	//void SetupCorrection(double dt);///< Œë·C³LCP‚Ì€”õ
+	//void IterateCorrection();		///< Œë·C³LCP‚Ìˆê“x‚Ì”½•œ
 	
 	friend class PHShapePairForLCP;
 };

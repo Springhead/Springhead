@@ -22,6 +22,10 @@ IF_OBJECT_IMP_ABST(PHJoint, PHConstraint);
 // PHJoint1D
 IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 
+PHJoint1D::PHJoint1D(){
+	fill(constr, constr + 6, true);
+}	
+
 void PHJoint1D::SetDesc(const PHJointDesc& desc){
 	PHConstraint::SetDesc(desc);
 	const PHJoint1DDesc& desc1D = (const PHJoint1DDesc&)desc;
@@ -41,12 +45,14 @@ void PHJoint1D::CompDof(){
 		on_upper = (theta >= upper);
 	}
 	if(on_lower || on_upper || mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0){
-		dim_d = 6;
-		dim_c = 5;
+		constr[axis_index] = true;
+		//dim_d = 6;
+		//dim_c = 5;
 	}
 	else{
-		dim_d = 5;
-		dim_c = 5;
+		constr[axis_index] = false;
+		//dim_d = 5;
+		//dim_c = 5;
 	}
 }
 	

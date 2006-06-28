@@ -63,11 +63,13 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
 	virtual double GetPosition();
 	virtual double GetVelocity();
-	virtual void CompConstraintJacobian();
-	virtual void CompBias(double dt);
-	virtual void CompError(double dt);
-	virtual void ProjectionDynamics(double& f, int k);
-	virtual void ProjectionCorrection(double& F, int k);
+	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; fw.z = t;}
+	virtual double	GetMotorTorque(){return fw.z;}
+	//virtual void CompConstraintJacobian();
+	virtual void CompBias(double dt, double correction_rate);
+	//virtual void CompError(double dt);
+	virtual void Projection(double& f, int k);
+	//virtual void ProjectionCorrection(double& F, int k);
 	PHPathJoint();
 };
 

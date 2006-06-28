@@ -25,15 +25,7 @@ void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 	SetMotorTorque(descBall.torque);
 }
 
-Quaterniond PHBallJoint::GetPosition(){
-	return qjrel;
-}
-
-Vec3d PHBallJoint::GetVelocity(){
-	return wjrel;
-}
-
-void PHBallJoint::CompConstraintJacobian(){
+/*void PHBallJoint::CompConstraintJacobian(){
 	dim_d = 3;
 	dim_c = 3;
 	Ad.clear();
@@ -55,22 +47,18 @@ void PHBallJoint::CompConstraintJacobian(){
 			Ac.SUBVEC(0, 3) += Ad.SUBVEC(0, 3);
 		}
 	}
-}
+}*/
 
-void PHBallJoint::CompBias(double dt){
+void PHBallJoint::CompBias(double dt, double correction_rate){
 	
 }
 
-void PHBallJoint::CompError(double dt){
+/*void PHBallJoint::CompError(double dt){
 	B.SUBVEC(0, 3) = rjrel;
 	B.SUBVEC(3, 3) = qjrel.V();
-}
+}*/
 
-void PHBallJoint::ProjectionDynamics(double& f, int k){
-	
-}
-
-void PHBallJoint::ProjectionCorrection(double& F, int k){
+void PHBallJoint::Projection(double& f, int k){
 	
 }
 

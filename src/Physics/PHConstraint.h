@@ -71,27 +71,27 @@ public:
 		wjrel	|	Jwv[0]	Jww[0]	Jwv[1]	Jww[1]
 		qjrel	|	Jqv[0]	Jqw[0]	Jqv[1]	Jqw[1]
 	*/
-	Matrix3d	Jvv[2], Jvw[2], Jwv[2], Jww[2], Jqv[2], Jqw[2];
+	Matrix3d	Jvv[2], Jvw[2], Jwv[2], Jww[2];	//, Jqv[2], Jqw[2];
+	Matrix3d	Tvv[2], Tvw[2], Twv[2], Tww[2];
 	
-	int			dim_d, dim_c;	// 拘束の次元
+	//int		dim_d, dim_c;	// 拘束の次元
+	bool		constr[6];	// 拘束する自由度．trueならば拘束する．
 
-	Matrix63d	Jdv[2], Jdw[2];	// Dynamics用の拘束ヤコビ行列
-	Matrix63d	Tdv[2], Tdw[2];
+	//Matrix63d	Jdv[2], Jdw[2];	// Dynamics用の拘束ヤコビ行列
+	//Matrix63d	Tdv[2], Tdw[2];
 	
-	Matrix63d	Jcv[2], Jcw[2];	// Correction用の拘束ヤコビ行列
-	Matrix63d	Tcv[2], Tcw[2];
+	//Matrix63d	Jcv[2], Jcw[2];	// Correction用の拘束ヤコビ行列
+	//Matrix63d	Tcv[2], Tcw[2];
 
-	Vec6d		f, F;
-	//Vec3d		fv, fw;	/// dynamicsにおける関節力
-	//Vec6d		F;
+	Vec3d		fv, fw;	/// dynamicsにおける関節力
 	//Vec3d		Fv, Fq; /// correctionにおける関節力
 
-	Vec6d		b, B;	// bベクトル．dynamics用とcorrection用
-	//Vec3d		bv, bw;	/// dynamicsにおける拘束速度
+	//Vec6d		b, B;	// bベクトル．dynamics用とcorrection用
+	Vec3d		bv, bw;	/// dynamicsにおける拘束速度
 	//Vec3d		bv_bias, bw_bias;	/// 速度制御を実現するためのbv, bwのオフセット量
 	//Vec3d		Bv, Bq; /// correctionにおける拘束誤差
-	Vec6d		Ad, Ac;	// A行列の対角成分．dynamics用とcorrection用
-	//Vec3d		Av, Aw, Aq;
+	//Vec6d		Ad, Ac;	// A行列の対角成分．dynamics用とcorrection用
+	Vec3d		Av, Aw; //, Aq;
 
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual bool AddChildObject(ObjectIf* o);
@@ -99,37 +99,37 @@ public:
 	virtual bool IsEnabled(){return bEnabled;}
 	void Init();
 	void CompJacobian(bool bCompAngular);
-	void SetupDynamics(double dt);
-	void SetupCorrection(double dt, double max_error);
+	void SetupDynamics(double dt, double correction_rate);
 	void IterateDynamics();
-	void IterateCorrection();
+	//void SetupCorrection(double dt, double max_error);
+	//void IterateCorrection();
 	//virtual void CompDof(){}					/// dim_v, dim_w, dim_qを設定する
 	//virtual void CompMotorForce(){}				/// fv, fwにモータによる影響を設定する
-	virtual void CompConstraintJacobian()=0;
-	virtual void CompBias(double dt){}	/// 
-	virtual void CompError(double dt)=0;			/// Bv, Bqを設定する
-	virtual void ProjectionDynamics(double& f, int k){}
-	virtual void ProjectionCorrection(double& F, int k){}
+	//virtual void CompConstraintJacobian()=0;
+	virtual void CompBias(double dt, double correction_rate){}	/// 
+	//virtual void CompError(double dt)=0;			/// Bv, Bqを設定する
+	virtual void Projection(double& f, int k){}
+	//virtual void ProjectionCorrection(double& F, int k){}
 	PHConstraint();
 };
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{
 public:
-	void SetupDynamics(double dt){
+	void SetupDynamics(double dt, double correction_rate){
 		for(iterator it = begin(); it != end(); it++)
-			(*it)->SetupDynamics(dt);
+			(*it)->SetupDynamics(dt, correction_rate);
 	}
-	void SetupCorrection(double dt, double max_error){
+	/*void SetupCorrection(double dt, double max_error){
 		for(iterator it = begin(); it != end(); it++)
 			(*it)->SetupCorrection(dt, max_error);
-	}
+	}*/
 	void IterateDynamics(){
 		for(iterator it = begin(); it != end(); it++)
 			(*it)->IterateDynamics();
 	}
-	void IterateCorrection(){
+	/*void IterateCorrection(){
 		for(iterator it = begin(); it != end(); it++)
 			(*it)->IterateCorrection();
-	}
+	}*/
 };
 
 }

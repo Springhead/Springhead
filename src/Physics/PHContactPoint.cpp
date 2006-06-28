@@ -72,7 +72,7 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP
 	}
 }
 
-void PHContactPoint::CompConstraintJacobian(){
+/*void PHContactPoint::CompConstraintJacobian(){
 	dim_d = 3;
 	dim_c = 1;
 	
@@ -92,9 +92,9 @@ void PHContactPoint::CompConstraintJacobian(){
 		}
 	}
 	Ac[0] = Ad[0];
-}
+}*/
 
-void PHContactPoint::ProjectionDynamics(double& f, int k){
+void PHContactPoint::Projection(double& f, int k){
 	static double flim;
 	if(k == 0){	//垂直抗力 >= 0の制約
 		f = max(0.0, f);
@@ -109,16 +109,16 @@ void PHContactPoint::ProjectionDynamics(double& f, int k){
 	}
 }
 
-void PHContactPoint::CompError(double dt){
+/*void PHContactPoint::CompError(double dt){
 	const double eps = 0.0;
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる
 	B[0] = min(0.0, -shapePair->depth + eps);
-}
+}*/
 
-void PHContactPoint::ProjectionCorrection(double& F, int k){
+/*void PHContactPoint::ProjectionCorrection(double& F, int k){
 	//垂直抗力 >= 0の制約
 	F = Spr::max(0.0, F);
-}
+}*/
 
 }

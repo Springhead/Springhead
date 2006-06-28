@@ -35,17 +35,17 @@ void PHSolidInfoForLCP::SetupDynamics(double dt){
 	dv.clear();
 	dw.clear();
 }
-void PHSolidInfoForLCP::SetupCorrection(){
+/*void PHSolidInfoForLCP::SetupCorrection(){
 	dV.clear();
 	dW.clear();
-}
+}*/
 
 //----------------------------------------------------------------------------
 // PHConstraint
 IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
 PHConstraint::PHConstraint(){
-	f.clear();
-	F.clear();
+	//f.clear();
+	//F.clear();
 	bEnabled = true;
 }
 
@@ -109,7 +109,7 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 		wjrel = Jwv[0] * solid[0]->v + Jww[0] * solid[0]->w + Jwv[1] * solid[1]->v + Jww[1] * solid[1]->w;
 		
 		//角速度の左からかけるとquaternionの時間微分が得られる行列
-		Matrix3d E(
+		/*Matrix3d E(
 			 qjrel.W(),  qjrel.Z(), -qjrel.Y(),
 			-qjrel.Z(),  qjrel.W(),  qjrel.X(),
 			 qjrel.Y(), -qjrel.X(),  qjrel.W());
@@ -117,82 +117,122 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 		Jqv[0].clear();
 		Jqw[0] = E * Jww[0];
 		Jqv[1].clear();
-		Jqw[1] = E * Jww[1];
+		Jqw[1] = E * Jww[1];*/
 	}
+	int i, j;
+	Av.clear();
+	Aw.clear();
+	for(i = 0; i < 2; i++){
+		if(solid[i]->solid->IsDynamical()){
+			Tvv[i] = Jvv[i] * solid[i]->minv;
+			Tvw[i] = Jvw[i] * solid[i]->Iinv;
+			Twv[i] = Jwv[i] * solid[i]->minv;
+			Tww[i] = Jww[i] * solid[i]->Iinv;
+			for(j = 0; j < 3; j++)
+				Av[j] += Jvv[i].row(j) * Tvv[i].row(j) + Jvw[i].row(j) * Tvw[i].row(j);
+			for(j = 0; j < 3; j++)
+				Aw[j] += Jwv[i].row(j) * Twv[i].row(j) + Jww[i].row(j) * Tww[i].row(j);
+		}
+	}
+	//特異姿勢でAd, Acの成分が0になるケースがある
+	const double eps = 1.0e-3;
+	for(j = 0; j < 3; j++)
+		if(Av[j] < eps)Av[j] = eps;
+	for(j = 0; j < 3; j++)
+		if(Aw[j] < eps)Aw[j] = eps;
+
 }
 
-void PHConstraint::SetupDynamics(double dt){
+void PHConstraint::SetupDynamics(double dt, double correction_rate){
 	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
 	if(!bEnabled || !bFeasible)
 		return;
 
-	int i, j;
-	f.clear();
-	F.clear();
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
  	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
 	
 	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
 	//	拘束の種類ごとに異なる
-	CompConstraintJacobian();
-	//特異姿勢でAd, Acの成分が0になるケースがある
-	const double eps = 1.0e-3;
-	for(i = 0; i < dim_d; i++)
-		if(Ad[i] < eps)Ad[i] = eps;
-	for(i = 0; i < dim_c; i++)
-		if(Ac[i] < eps)Ac[i] = eps;
-
+	//CompConstraintJacobian();
+	
+	int i, j;
 	for(i = 0; i < 2; i++){
 		if(solid[i]->solid->IsDynamical()){
-			solid[i]->dv += Tdv[i].trans() * f;
-			solid[i]->dw += Tdw[i].trans() * f;
+			solid[i]->dv += Tvv[i].trans() * fv + Twv[i].trans() * fw;
+			solid[i]->dw += Tvw[i].trans() * fv + Tww[i].trans() * fw;
 		}
 	}
 
-	for(j = 0; j < dim_d; j++){
-		b[j] = 
-			Jdv[0].row(j) * (solid[0]->v + solid[0]->dv0) +
-			Jdw[0].row(j) * (solid[0]->w + solid[0]->dw0) +
-			Jdv[1].row(j) * (solid[1]->v + solid[1]->dv0) +
-			Jdw[1].row(j) * (solid[1]->w + solid[1]->dw0);
-	}
+	bv = Jvv[0] * (solid[0]->v + solid[0]->dv0) +
+		 Jvw[0] * (solid[0]->w + solid[0]->dw0) +
+		 Jvv[1] * (solid[1]->v + solid[1]->dv0) +
+		 Jvw[1] * (solid[1]->w + solid[1]->dw0);
+	bw = Jwv[0] * (solid[0]->v + solid[0]->dv0) +
+		 Jww[0] * (solid[0]->w + solid[0]->dw0) +
+		 Jwv[1] * (solid[1]->v + solid[1]->dv0) +
+		 Jww[1] * (solid[1]->w + solid[1]->dw0);
 	
-	CompBias(dt);
-
+	CompBias(dt, correction_rate);	// 目標速度，バネダンパによる補正項を計算
+	
+	// iterationでの手間を省くためにあらかじめA行列の対角要素でbとJを割っておく
 	double tmp;
-	for(j = 0; j < dim_d; j++){
-		tmp = 1.0 / Ad[j];
-		b[j] *= tmp;
-		Jdv[0].row(j) *= tmp;
-		Jdw[0].row(j) *= tmp;
-		Jdv[1].row(j) *= tmp;
-		Jdw[1].row(j) *= tmp;
+	for(j = 0; j < 3; j++){
+		tmp = 1.0 / Av[j];
+		bv[j] *= tmp;
+		Jvv[0].row(j) *= tmp;
+		Jvw[0].row(j) *= tmp;
+		Jvv[1].row(j) *= tmp;
+		Jvw[1].row(j) *= tmp;
+	}
+	for(j = 0; j < 3; j++){
+		tmp = 1.0 / Aw[j];
+		bw[j] *= tmp;
+		Jwv[0].row(j) *= tmp;
+		Jww[0].row(j) *= tmp;
+		Jwv[1].row(j) *= tmp;
+		Jww[1].row(j) *= tmp;
 	}
 }
 
 void PHConstraint::IterateDynamics(){
 	if(!bEnabled || !bFeasible)return;
 
-	Vec6d fnew, df;
+	Vec3d fvnew, fwnew, dfv, dfw;
 	int i, j;
-	for(j = 0; j < dim_d; j++){
-		fnew[j] = f[j] - (b[j] + 
-			Jdv[0].row(j) * (solid[0]->dv) + Jdw[0].row(j) * (solid[0]->dw) +
-			Jdv[1].row(j) * (solid[1]->dv) + Jdw[1].row(j) * (solid[1]->dw));
-		ProjectionDynamics(fnew[j], j);
-		df[j] = fnew[j] - f[j];
+	for(j = 0; j < 3; j++){
+		if(!constr[j])continue;
+		fvnew[j] = fv[j] - (bv[j] + 
+			Jvv[0].row(j) * (solid[0]->dv) + Jvw[0].row(j) * (solid[0]->dw) +
+			Jvv[1].row(j) * (solid[1]->dv) + Jvw[1].row(j) * (solid[1]->dw));
+		Projection(fvnew[j], j);
+		dfv[j] = fvnew[j] - fv[j];
 		for(i = 0; i < 2; i++){
 			if(solid[i]->solid->IsDynamical()){
-				solid[i]->dv += Tdv[i].row(j) * df[j];
-				solid[i]->dw += Tdw[i].row(j) * df[j];
+				solid[i]->dv += Tvv[i].row(j) * dfv[j];
+				solid[i]->dw += Tvw[i].row(j) * dfv[j];
 			}
 		}
-		f[j] = fnew[j];
+		fv[j] = fvnew[j];
+	}
+	for(j = 0; j < 3; j++){
+		if(!constr[j + 3])continue;
+		fwnew[j] = fw[j] - (bw[j] + 
+			Jwv[0].row(j) * (solid[0]->dv) + Jww[0].row(j) * (solid[0]->dw) +
+			Jwv[1].row(j) * (solid[1]->dv) + Jww[1].row(j) * (solid[1]->dw));
+		Projection(fwnew[j], j + 3);
+		dfw[j] = fwnew[j] - fw[j];
+		for(i = 0; i < 2; i++){
+			if(solid[i]->solid->IsDynamical()){
+				solid[i]->dv += Twv[i].row(j) * dfw[j];
+				solid[i]->dw += Tww[i].row(j) * dfw[j];
+			}
+		}
+		fw[j] = fwnew[j];
 	}
 }
 
-void PHConstraint::SetupCorrection(double dt, double max_error){
+/*void PHConstraint::SetupCorrection(double dt, double max_error){
 	if(!bEnabled || !bFeasible || dim_c == 0)return;
 
 	CompError(dt);
@@ -211,10 +251,10 @@ void PHConstraint::SetupCorrection(double dt, double max_error){
 		w[i] = solid[i]->w + solid[i]->dw0 + solid[i]->dw;
 	}
 	// velocity updateによる影響を加算
-	/*for(j = 0; j < dim_c; j++){
-		B[j] += (Jcv[0].row(j) * v[0] + Jcw[0].row(j) * w[0] +
-				 Jcv[1].row(j) * v[1] + Jcw[1].row(j) * w[1]) * dt;
-	}*/
+	//for(j = 0; j < dim_c; j++){
+	//	B[j] += (Jcv[0].row(j) * v[0] + Jcw[0].row(j) * w[0] +
+	//			 Jcv[1].row(j) * v[1] + Jcw[1].row(j) * w[1]) * dt;
+	//}
 	//一度に誤差を0にしようとすると振動的になるので適当に誤差を小さく見せる
 	//誤差はmax_errorで飽和させる
 	B *= 0.1;	
@@ -254,6 +294,6 @@ void PHConstraint::IterateCorrection(){
 		}
 		F[j] = Fnew[j];
 	}
-}
+}*/
 
 }

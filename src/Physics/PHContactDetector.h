@@ -146,7 +146,7 @@ public:
 		PHSolid* s = DCAST(PHSolid, o);
 		if(s && solids.Find(s) == solids.end()){
 			solids.push_back(DBG_NEW TSolidInfo(s));
-			int N = solids.size();
+			int N = (int)solids.size();
 			assert(solidPairs.height() == N-1 && solidPairs.width() == N-1);
 			solidPairs.resize(N, N);
 			for(int i = 0; i < N-1; i++){
@@ -174,13 +174,13 @@ public:
 	}
 
 	int NSolidPairs() const{
-		int n = solids.size();
+		int n = (int)solids.size();
 		return n * (n - 1) / 2;
 	}
 	int NShapePairs() const{
-		int n = solids.size(), N = 0;
+		int n = (int)solids.size(), N = 0;
 		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
-			N += solidPairs.item(i,j)->shapePairs.size();
+			N += (int)(solidPairs.item(i,j)->shapePairs.size());
 		return N;
 	}
 
@@ -265,7 +265,7 @@ public:
 	/// bEnabledƒtƒ‰ƒO‚ªtrue‚ÈSolidPair‚ª‘¶İ‚·‚é‚©
 	bool ActiveSolidPairExists(){
 		bool yes = false;
-		int n = solids.size();
+		int n = (int)solids.size();
 		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 			yes |= solidPairs.item(i, j)->bEnabled;
 		return yes;
@@ -312,7 +312,7 @@ public:
 	}
 
 	virtual void EnableContact(bool bEnable){
-		int n = solids.size();
+		int n = (int)solids.size();
 		for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 			solidPairs.item(i, j)->bEnabled = bEnable;
 		bContactEnabled = bEnable;

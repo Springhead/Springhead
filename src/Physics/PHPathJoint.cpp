@@ -189,7 +189,7 @@ double PHPathJoint::GetVelocity(){
 	return qd;
 }
 
-void PHPathJoint::CompConstraintJacobian(){
+/*void PHPathJoint::CompConstraintJacobian(){
 	if(!path)return;
 	CompDof();
 	dim_c = 6;
@@ -219,16 +219,16 @@ void PHPathJoint::CompConstraintJacobian(){
 				Ac[j] += Jcv[i].row(j) * Tcv[i].row(j) + Jcw[i].row(j) * Tcw[i].row(j);
 		}
 	}
-}
+}*/
 
-void PHPathJoint::CompBias(double dt){
+void PHPathJoint::CompBias(double dt, double correction_rate){
 	if(mode == MODE_VELOCITY){
-		b[5] -= vel_d;
+		bw.z -= vel_d;
 	}
 
 }
 
-void PHPathJoint::CompError(double dt){
+/*void PHPathJoint::CompError(double dt){
 	if(!path)return;
 	
 	//velocity updateå„ÇÃä÷êﬂë¨ìxÇÃíl
@@ -266,9 +266,9 @@ void PHPathJoint::CompError(double dt){
 	//DSTR << B << endl;
 	//B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
 	//B = -B;
-}
+}*/
 
-void PHPathJoint::ProjectionDynamics(double& f, int k){
+void PHPathJoint::Projection(double& f, int k){
 	if(k == 5){
 		if(on_lower){
 			f = max(0.0, f);
@@ -278,13 +278,13 @@ void PHPathJoint::ProjectionDynamics(double& f, int k){
 	}
 }
 
-void PHPathJoint::ProjectionCorrection(double& F, int k){
+/*void PHPathJoint::ProjectionCorrection(double& F, int k){
 	if(k == 5){
 		if(on_lower)
 			F = max(0.0, F);
 		if(on_upper)
 			F = min(0.0, F);
 	}
-}
+}*/
 
 }

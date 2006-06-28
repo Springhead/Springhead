@@ -25,7 +25,7 @@ void PHSpring::SetDesc(const PHConstraintDesc& desc){
 	damper = descSpring.damper;
 }
 
-void PHSpring::CompConstraintJacobian(){
+/*void PHSpring::CompConstraintJacobian(){
 	dim_d = 3;
 	dim_c = 0;
 	Ad.clear();
@@ -42,17 +42,17 @@ void PHSpring::CompConstraintJacobian(){
 				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
 		}
 	}
+	f.clear();
+	F.clear();
+}*/
 
-	DSTR << f << endl;
-}
-
-void PHSpring::CompBias(double dt){
+void PHSpring::CompBias(double dt, double correction_rate){
 	//rjrel
 	double tmp;
 	for(int i = 0; i < 3; i++){
 		tmp = 1.0 / (damper[i] + spring[i] * dt);
-		Ad[i] += tmp / dt;
-		b[i] += spring[i] * rjrel[i] * tmp;
+		Av[i] += tmp / dt;
+		bv[i] += spring[i] * rjrel[i] * tmp;
 	}
 }
 

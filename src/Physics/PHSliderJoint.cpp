@@ -27,7 +27,7 @@ double PHSliderJoint::GetVelocity(){
 	return vjrel.z;
 }
 
-void PHSliderJoint::CompConstraintJacobian(){
+/*void PHSliderJoint::CompConstraintJacobian(){
 	CompDof();
 	Ad.clear();
 	Ac.clear();
@@ -63,21 +63,26 @@ void PHSliderJoint::CompConstraintJacobian(){
 			Ac[5] += Ad[5];
 		}
 	}
-}
+}*/
 
-void PHSliderJoint::CompBias(double dt){
+void PHSliderJoint::CompBias(double dt, double correction_rate){
+	double dtinv = 1.0 / dt;
+	Vec3d v = correction_rate * rjrel * dtinv;
+	bv.x += v.x;
+	bv.y += v.y;
 	if(mode == MODE_VELOCITY){
-		b[5] -= vel_d;
+		bv.z -= vel_d;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
 		double tmp = 1.0 / (damper + spring * dt);
-		Ad[5] += tmp / dt;
-		b[5] += spring * (diff) * tmp;
+		Av.z += tmp / dt;
+		bv.z += spring * (diff) * tmp;
 	}
+	bw += (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
 }
 
-void PHSliderJoint::CompError(double dt){
+/*void PHSliderJoint::CompError(double dt){
 	B[0] = rjrel.x;
 	B[1] = rjrel.y;
 	B[2] = qjrel.x;
@@ -87,10 +92,10 @@ void PHSliderJoint::CompError(double dt){
 		B[5] = rjrel.z - upper;
 	if(on_lower)
 		B[5] = rjrel.z - lower;
-}
+}*/
 
-void PHSliderJoint::ProjectionDynamics(double& f, int k){
-	if(k == 5){
+void PHSliderJoint::Projection(double& f, int k){
+	if(k == 2){
 		if(on_lower)
 			f = max(0.0, f);
 		if(on_upper)
@@ -98,14 +103,14 @@ void PHSliderJoint::ProjectionDynamics(double& f, int k){
 	}
 }
 
-void PHSliderJoint::ProjectionCorrection(double& F, int k){
+/*void PHSliderJoint::ProjectionCorrection(double& F, int k){
 	if(k == 5){
 		if(on_lower)
 			F = max(0.0, F);
 		if(on_upper)
 			F = min(0.0, F);
 	}
-}
+}*/
 
 }
 
