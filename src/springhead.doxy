@@ -2,9 +2,11 @@
 
 @INCLUDE = ../include/common.doxy
 
-INPUT      = ./ ./example-list.txt
-
-RECURSIVE  = YES
+INPUT      	= . \
+				../include \
+				./example-list.txt
+RECURSIVE  	= YES
+EXCLUDE		= ../include/docsrc/00Index.h
 
 GENERATE_TAGFILE       = ./html/springhead.tag
 TAGFILES=
