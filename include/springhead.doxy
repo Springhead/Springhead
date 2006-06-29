@@ -6,6 +6,9 @@ INPUT      = ./ \
 				../src/FileIO/FIOldSpringheadNode.h \
 				../src/Samples/First/doc.h 
 
+EXCLUDE    = ../src/docsrc/
+
+
 GENERATE_TAGFILE       = ./html/springhead.tag
 TAGFILES=
 IMAGE_PATH  = ./docsrc/01UsersGuide \
