@@ -3,8 +3,8 @@
 @INCLUDE = ./common.doxy
 
 INPUT      = ./ \
-				../src/FileIO/FIOldSpringheadNode.h 
-
+				../src/FileIO/FIOldSpringheadNode.h \
+				../src/Samples/First/doc.h 
 
 GENERATE_TAGFILE       = ./html/springhead.tag
 TAGFILES=

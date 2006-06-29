@@ -1,4 +1,4 @@
-/** \page pageSimpleExample		簡単なプログラム
+/** \page pageSimpleExample	簡単なプログラム
 
 <br>
 

@@ -107,11 +107,15 @@
 		\image html vcpath.jpg
 	</ol>
 		
-\par 　　(5) 　 VC でビルド
+\par 　　(5) 　ライブラリのビルド
+src/Sprignhead.sln を開き，ビルド(B) - バッチ ビルド(T) のダイアログで，
+すべて選択(S) - ビルド(B)を選び，デバッグ版，リリース版のライブラリをビルドしてください．
+うまくいくと，
+lib/win32/SpringheadD.lib と lib/win32/Springhead.lib  ができます．
+
+\par 　　(6) 　サンプルのビルド
 	実行したいサンプルプログラムを開き，メニューの <tt>[ビルド]－[ソリューションのビルド]</tt> を指定します．
 <br>
-
-
 
 \subsection secCygwinInstall		Cygwin
 \par 　　(1) 　 Cygwin でビルド
