@@ -379,8 +379,8 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.posePlug.Pos() = Vec3d(-1.1, -1.1, -1.1);
-		jdesc.poseSocket.Pos() = Vec3d( 1.1,  1.1,  1.1);
+		jdesc.posePlug.Pos() = Vec3d(-1.01, -1.01, -1.01);
+		jdesc.poseSocket.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
@@ -604,7 +604,7 @@ int main(int argc, char* argv[]){
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	glutIdleFunc(idle);
+	//glutIdleFunc(idle);
 	
 	render->SetDevice(device);	// デバイスの設定
 

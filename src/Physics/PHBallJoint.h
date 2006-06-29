@@ -30,7 +30,10 @@ public:
 	//virtual void CompError(double dt);
 	virtual void Projection(double& f, int k);
 	//virtual void ProjectionCorrection(double& F, int k);
-	PHBallJoint(){}
+	PHBallJoint(){
+		constr[0] = constr[1] = constr[2] = true;
+		constr[3] = constr[4] = constr[5] = false;
+	}
 };
 
 }

@@ -66,6 +66,7 @@ double PHSliderJoint::GetVelocity(){
 }*/
 
 void PHSliderJoint::CompBias(double dt, double correction_rate){
+	CompDof();
 	double dtinv = 1.0 / dt;
 	Vec3d v = correction_rate * rjrel * dtinv;
 	bv.x += v.x;

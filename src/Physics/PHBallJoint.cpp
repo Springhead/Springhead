@@ -50,7 +50,8 @@ void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 }*/
 
 void PHBallJoint::CompBias(double dt, double correction_rate){
-	
+	double dtinv = 1.0 / dt;
+	bv += correction_rate * rjrel * dtinv;
 }
 
 /*void PHBallJoint::CompError(double dt){
