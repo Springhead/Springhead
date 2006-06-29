@@ -28,7 +28,7 @@ using namespace Spr;
 #define EXIT_TIMER		7000		// 実行ステップ数
 #define WINSIZE_WIDTH	480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
-#define NUM_SPHERES		10			// sphere数
+#define NUM_SPHERES		100			// sphere数
 
 GRSdkIf* grSdk;
 GRDebugRenderIf* render;
@@ -105,7 +105,7 @@ int main(int argc, char* argv[]){
 	phSdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc sd;
 	sd.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;
-	sd.timeStep = 0.01;
+	sd.timeStep = 0.05;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 2.0;
