@@ -5,9 +5,11 @@
  - \subpage paseBasicWord
  - \subpage pageLibraryList
  - \subpage pageSimpleExample
+ - \subpage pageNewProject
  
 から構成されます．<br>以上の項目から確認したい項目をクリックしていただくか，
-このページの上から順に読み進めていただくことで，Springhead2の操作を一通り理解することができます．
+このページの上から順に読み進めていただくことで，
+Springhead2を使って自分のプログラムを作る方法が分かります．
 <br><br><br>
 
 \ref pageTutStarting
@@ -22,6 +24,8 @@
 \ref pageSimpleExample
 では，簡単なプログラムを紹介しています.
 
+\ref pageNewProject
+では，VisualC++を使って新しく自分のプログラムを作る方法を説明しています．
 <br>
 
 */
