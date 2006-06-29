@@ -208,7 +208,7 @@ void BuildScene5(){
 	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	
-	soBox.resize(4);
+	soBox.resize(6);
 
 	soBox[0] = scene->CreateSolid(descBox);
 	soBox[0]->AddShape(shapeBox);
@@ -219,12 +219,18 @@ void BuildScene5(){
 	soBox[2] = scene->CreateSolid(descBox);
 	soBox[2]->AddShape(shapeBox);
 
+	soBox[3] = scene->CreateSolid(descBox);
+	soBox[3]->AddShape(shapeBox);
+
+	soBox[4] = scene->CreateSolid(descBox);
+	soBox[4]->AddShape(shapeBox);
+
 	CDSphereDesc descSphere;
 	descSphere.radius = 1.0;
-	soBox[3] = scene->CreateSolid(descBox);
-	soBox[3]->AddShape(scene->CreateShape(descSphere));
+	soBox[5] = scene->CreateSolid(descBox);
+	soBox[5]->AddShape(scene->CreateShape(descSphere));
 
-	jntLink.resize(4);
+	jntLink.resize(6);
 	PHHingeJointDesc descHinge;
 	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
 	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], descHinge);
@@ -233,24 +239,30 @@ void BuildScene5(){
 	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
 	jntLink[1] = scene->CreateJoint(soBox[0], soBox[1], descHinge);
 	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
+	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
+	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
-	double K = 10, D = 5;
+	double K = 30, D = 5;
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[1])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[2])->SetDamper(D);
+	DCAST(PHHingeJointIf, jntLink[3])->SetSpring(K);
+	DCAST(PHHingeJointIf, jntLink[3])->SetDamper(D);
+	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
+	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 1, D = 1;
+	K = 2, D = 1;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
 	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
-	jntLink[3] = scene->CreateJoint(soBox[3], soBox[2], descSpring);
+	jntLink[5] = scene->CreateJoint(soBox[5], soBox[4], descSpring);
 
-	soBox[3]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
-	soBox[3]->SetDynamical(false);
+	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
+	soBox[5]->SetDynamical(false);
 	
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
@@ -408,9 +420,9 @@ void OnKey4(char key){
 
 void OnKey5(char key){
 	switch(key){
-	case 'a': soBox[3]->SetFramePosition(Vec3d(-10.0, 15.0, 0.0)); break;
-	case 's': soBox[3]->SetFramePosition(Vec3d(  0.0, 15.0, 0.0)); break;
-	case 'd': soBox[3]->SetFramePosition(Vec3d( 10.0, 15.0, 0.0)); break;
+	case 'a': soBox[5]->SetFramePosition(Vec3d(-10.0, 15.0, 0.0)); break;
+	case 's': soBox[5]->SetFramePosition(Vec3d(  0.0, 15.0, 0.0)); break;
+	case 'd': soBox[5]->SetFramePosition(Vec3d( 10.0, 15.0, 0.0)); break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -550,7 +562,13 @@ void timer(int id){
 	scene->GenerateForce();
 	scene->Integrate();
 	glutPostRedisplay();
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(10, timer, 0);
+}
+void idle(){
+/*	scene->ClearForce();
+	scene->GenerateForce();
+	scene->Integrate();
+*/
 }
 
 /**
@@ -586,7 +604,7 @@ int main(int argc, char* argv[]){
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
-	//glutIdleFunc(idle);
+	glutIdleFunc(idle);
 	
 	render->SetDevice(device);	// デバイスの設定
 
