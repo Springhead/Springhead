@@ -287,7 +287,7 @@ void timer(int id){
 int main(int argc, char* argv[]){
 	sdk = CreatePHSdk();					// SDK‚Ìì¬@
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
+	dscene.timeStep = 0.01;
 	//dscene.timeStep = 0.033;
 	scene = sdk->CreateScene(dscene);				// ƒV[ƒ“‚Ìì¬
 

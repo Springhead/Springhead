@@ -254,7 +254,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 2, D = 1;
+	K = 20, D = 1;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
@@ -420,9 +420,9 @@ void OnKey4(char key){
 
 void OnKey5(char key){
 	switch(key){
-	case 'a': soBox[5]->SetFramePosition(Vec3d(-10.0, 15.0, 0.0)); break;
-	case 's': soBox[5]->SetFramePosition(Vec3d(  0.0, 15.0, 0.0)); break;
-	case 'd': soBox[5]->SetFramePosition(Vec3d( 10.0, 15.0, 0.0)); break;
+	case 'a': soBox[5]->SetFramePosition(Vec3d(-10.0, 20.0, 0.0)); break;
+	case 's': soBox[5]->SetFramePosition(Vec3d(  0.0, 20.0, 0.0)); break;
+	case 'd': soBox[5]->SetFramePosition(Vec3d( 10.0, 20.0, 0.0)); break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);

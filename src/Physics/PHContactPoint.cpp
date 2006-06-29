@@ -97,6 +97,10 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP
 	Ac[0] = Ad[0];
 }*/
 
+void PHContactPoint::CompBias(double dt, double correction_rate){
+	bv.x -= correction_rate * shapePair->depth;
+}
+
 void PHContactPoint::Projection(double& f, int k){
 	static double flim;
 	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ

@@ -23,6 +23,7 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
 	//virtual void CompConstraintJacobian();
 	//virtual void CompError(double dt);
+	virtual void CompBias(double dt, double correction_rate);
 	virtual void Projection(double& f, int k);
 	//virtual void ProjectionCorrection(double& F, int k);
 	PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP* s0, PHSolidInfoForLCP* s1);
