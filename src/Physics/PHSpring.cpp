@@ -54,6 +54,7 @@ void PHSpring::CompBias(double dt, double correction_rate){
 		Av[i] += tmp / dt;
 		bv[i] += spring[i] * rjrel[i] * tmp;
 	}
+	DSTR << "spring" << fv << endl;
 }
 
 }

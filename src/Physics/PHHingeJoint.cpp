@@ -66,8 +66,8 @@ void PHHingeJoint::CompBias(double dt, double correction_rate){
 	//Vec3d w = (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
 	Vec3d w = qjrel.AngularVelocity(qjrel * dtinv);
 	w *= correction_rate;
-	//bw.x += w.x;
-	//bw.y += w.y;
+	bw.x += w.x;
+	bw.y += w.y;
 	//bw.z += w.z;
 	if(mode == MODE_VELOCITY){
 		bw.z -= vel_d;
@@ -80,6 +80,7 @@ void PHHingeJoint::CompBias(double dt, double correction_rate){
 		Aw.z += tmp * dtinv;
 		bw.z += spring * (diff) * tmp;
 	}
+	DSTR << "hinge" << fv << endl;
 }
 
 /*void PHHingeJoint::CompError(double dt){
