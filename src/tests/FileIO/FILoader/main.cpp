@@ -148,6 +148,7 @@ void display(){
 					normal = edge0^edge1;
 					normal.unitize();
 					glNormal3fv(normal);
+					render->SetVertexFormat(GRVertexElement::vfP3f);
 					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, 4);
 				}
 #endif 					
