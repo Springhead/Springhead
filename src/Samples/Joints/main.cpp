@@ -243,6 +243,7 @@ void BuildScene5(){
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
 	double K = 5, D = 5;
+//	double K = 15, D = 15;
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
@@ -255,6 +256,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
 	K = 4, D = 1;
+//	K = 14, D = 3;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
 	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
@@ -557,18 +559,17 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
+	glutTimerFunc(33, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	scene->ClearForce();
 	scene->GenerateForce();
 	scene->Integrate();
 	glutPostRedisplay();
-	glutTimerFunc(10, timer, 0);
 }
 void idle(){
-/*	scene->ClearForce();
+	scene->ClearForce();
 	scene->GenerateForce();
 	scene->Integrate();
-*/
 }
 
 /**

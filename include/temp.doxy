@@ -2,7 +2,7 @@
 
 @INCLUDE = ./common.doxy
 
-INPUT      = ./ ../src/FileIO/FIOldSpringheadNode.h ./docsrc/ \
+INPUT      = ../src/FileIO/FIOldSpringheadNode.h ./docsrc/ \
 							./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual
@@ -16,3 +16,6 @@ RECURSIVE              = NO
 
 ALLEXTERNALS = YES
 EXTERNAL_GROUPS = YES
+
+CHM_FILE               = ..\temp.chm
+GENERATE_HTMLHELP      = YES

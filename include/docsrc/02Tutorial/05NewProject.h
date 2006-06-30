@@ -1,4 +1,5 @@
 /** \page pageNewProject	新規プロジェクト
+
 \contents
 
 ここでは，Visual C++ .NET 2003 を用いて，新しくSpringhead2を用いたプログラムを作成する方法を説明します．
@@ -55,3 +56,4 @@ int _tmain(int argc, _TCHAR* argv[])
 }
 </pre>
 のようになります．
+*/
