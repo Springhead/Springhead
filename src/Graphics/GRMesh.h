@@ -22,7 +22,7 @@ class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{
 public:
 	OBJECT_DEF(GRMesh);
 	ACCESS_DESC(GRMesh);
-	GRMesh(GRMeshDesc& desc=GRMeshDesc());
+	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 };

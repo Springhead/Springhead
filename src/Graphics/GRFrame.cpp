@@ -74,7 +74,7 @@ size_t GRFrame::NChildObject() const {
 	return children.size();
 }
 ObjectIf* GRFrame::GetChildObject(size_t pos){
-	return (Object*)children[pos];
+	return children[pos]->GetIf();
 }
 
 void GRFrame::Print(std::ostream& os) const {

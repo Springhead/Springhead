@@ -31,7 +31,8 @@ void GRDeviceGL::Init(){
 	glEnable(GL_BLEND);
 //	glEnable(GL_CULL_FACE);
 	glDisable(GL_CULL_FACE);
-
+	SetVertexFormat(GRVertexElement::vfP3f);
+	
 	// éãì_çsóÒÇÃê›íË
 	viewMatrix.Pos() = Vec3f(0.0, 0.0, 1.0);	                        // eye
 	viewMatrix.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));	// center, up 

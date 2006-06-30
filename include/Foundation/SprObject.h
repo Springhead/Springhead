@@ -23,6 +23,7 @@ class UTTypeDesc;
 */
 class FactoryBase:public UTRefCount{
 public:
+	virtual ~FactoryBase(){}
 	///	作成するIfInfo
 	virtual const IfInfo* GetIfInfo() const =0;
 	///	iiのオブジェクトを desc から parentの子として生成する．
@@ -91,15 +92,6 @@ public:													\
 		return (cls##If*)GetIfInfoStatic()->GetIf(o);	\
 	}													\
 
-
-#undef DCAST
-#define DCAST(T,p) SprDcastImp<T>(p)
-
-///	インタフェースクラスのキャスト
-template <class T> T* SprDcastImp(const ObjectIf* p){
-	void* obj = p ? p->GetIfInfo()->GetSprObject((ObjectIf*)p) : NULL;
-	return (T*)T::GetSelfFromObject(obj);
-}
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
@@ -199,6 +191,15 @@ struct ObjectStatesIf: public ObjectIf{
 	virtual void LoadState(ObjectIf* o) = 0;
 };
 ObjectStatesIf* CreateObjectStates();
+
+#undef DCAST
+#define DCAST(T,p) SprDcastImp<T>(p)
+
+///	インタフェースクラスのキャスト
+template <class T> T* SprDcastImp(const ObjectIf* p){
+	void* obj = p ? p->GetIfInfo()->GetSprObject((ObjectIf*)p) : NULL;
+	return (T*)T::GetSelfFromObject(obj);
+}
 
 }
 

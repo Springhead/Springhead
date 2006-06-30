@@ -49,7 +49,7 @@ public:
 	virtual void Rendered(GRRenderIf* r);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual Affinef GetWorldTransform(){ return parent ? parent->GetWorldTransform() * transform : transform; }
+	virtual Affinef GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
 	void Print(std::ostream& os) const ;
 };
 }

@@ -28,9 +28,11 @@ public:
 template<class TSolidInfo>
 class PHSolidInfos : public std::vector< UTRef<TSolidInfo> >{
 public:
+	typedef std::vector< UTRef<TSolidInfo> > base;
+	typedef typename base::iterator iterator;
 	iterator Find(PHSolid* s){
 		iterator is;
-		for(is = begin(); is != end(); is++)
+		for(is = base::begin(); is != base::end(); is++)
 			if((*is)->solid == s)
 				break;
 		return is;
@@ -162,7 +164,7 @@ public:
 	virtual bool DelChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
 	 	if(!s)return false;
-		PHSolidInfos<TSolidInfo>::iterator is = solids.Find(s);
+		typename PHSolidInfos<TSolidInfo>::iterator is = solids.Find(s);
 		if(is != solids.end()){
 			int idx = is - solids.begin();
 			solids.erase(is);
@@ -272,7 +274,7 @@ public:
 	}
 
 	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
-		PHSolidInfos<TSolidInfo>::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
+		typename PHSolidInfos<TSolidInfo>::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
 		if(ilhs == solids.end() || irhs == solids.end())
 			return;
 		int i = ilhs - solids.begin(), j = irhs - solids.begin();
@@ -284,7 +286,7 @@ public:
 
 	virtual void EnableContact(PHSolidIf** group, size_t length, bool bEnable){
 		std::vector<int> idx;
-		PHSolidInfos<TSolidInfo>::iterator it;
+		typename PHSolidInfos<TSolidInfo>::iterator it;
 		for(int i = 0; i < (int)length; i++){
 			it = solids.Find((PHSolid*)group[i]);
 			if(it != solids.end())
@@ -300,7 +302,7 @@ public:
 	}
 
 	virtual void EnableContact(PHSolidIf* solid, bool bEnable){
-		PHSolidInfos<TSolidInfo>::iterator it = solids.Find((PHSolid*)solid);
+		typename PHSolidInfos<TSolidInfo>::iterator it = solids.Find((PHSolid*)solid);
 		if(it == solids.end())
 			return;
 		int idx = it - solids.begin();
@@ -334,7 +336,7 @@ public:
 		Vec3f dir(0,0,1);
 		Edges edges;
 		edges.resize(2 * N);
-		Edges::iterator eit = edges.begin();
+		typename Edges::iterator eit = edges.begin();
 		for(int i = 0; i < N; ++i){
 			solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 			eit[0].index = i; eit[0].bMin = true;
@@ -346,7 +348,7 @@ public:
 		typedef std::set<int> SolidSet;
 		SolidSet cur;							//	現在のSolidのセット
 		bool found = false;
-		for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
+		for(typename Edges::iterator it = edges.begin(); it != edges.end(); ++it){
 			if (it->bMin){						//	初端だったら，リスト内の物体と判定
 				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
 					int f1 = it->index;

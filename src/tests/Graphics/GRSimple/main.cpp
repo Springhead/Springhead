@@ -61,7 +61,7 @@ GRMaterialDesc matLine(Vec4f(1.0, 1.0, 1.0, 1.0),
 
 
 // カメラの設定
-GRCamera camera2(Vec2f(WINSIZE_WIDTH, WINSIZE_HEIGHT), Vec2f(0.0, 0.0), 1.0, 5000.0);
+GRCameraDesc camera2(Vec2f(1, 0), Vec2f(0.0, 0.0), 1.0, 5000.0);
 
 
 /**
@@ -88,6 +88,7 @@ void display(){
 
 	render->SetMaterial(matFloor);		// マテリアル設定
 	render->DrawSolid(soFloor);
+
 	//-----------------------------------
 	//		ブロック(soBlock)
 	//-----------------------------------
@@ -171,7 +172,7 @@ void setLight() {
  */
 void reshape(int w, int h){
 	// Viewportと射影行列を設定
-	render->Reshape(Vec2f(w,h));
+	render->Reshape(Vec2f(0,0), Vec2f(w,h));
 }
 /**
  brief 		glutKeyboardFuncで指定したコールバック関数 
@@ -205,7 +206,6 @@ void idle(){
 int main(int argc, char* argv[]){
 	phSdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc sd;
-	sd.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;
 	sd.timeStep = 0.01;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;

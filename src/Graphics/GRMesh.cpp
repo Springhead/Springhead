@@ -11,7 +11,7 @@
 namespace Spr{;
 IF_OBJECT_IMP(GRMesh, GRVisual);
 
-GRMesh::GRMesh(GRMeshDesc& desc):GRMeshDesc(desc){
+GRMesh::GRMesh(const GRMeshDesc& desc):GRMeshDesc(desc){
 	list = 0;
 	render = NULL;
 }

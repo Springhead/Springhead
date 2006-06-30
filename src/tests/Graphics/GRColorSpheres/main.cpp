@@ -71,7 +71,7 @@ void setLight() {
  */
 void reshape(int w, int h){
 	// Viewportと射影行列を設定
-	render->Reshape(Vec2f(w,h));
+	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 /**
  brief 		glutKeyboardFuncで指定したコールバック関数 
@@ -104,7 +104,6 @@ void idle(){
 int main(int argc, char* argv[]){
 	phSdk = CreatePHSdk();					// SDKの作成　
 	PHSceneDesc sd;
-	sd.contactSolver = PHSceneDesc::SOLVER_CONSTRAINT;
 	sd.timeStep = 0.05;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;

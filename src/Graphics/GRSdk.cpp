@@ -99,7 +99,7 @@ GRSceneIf* GRSdk::GetScene(size_t i){
 ObjectIf* GRSdk::GetChildObject(size_t i){
 	if (i<scenes.size()) return scenes[i]->GetIf();
 	i -= scenes.size();
-	if (i<objects.size()) return objects[i];
+	if (i<objects.size()) return objects[i]->GetIf();
 	return NULL;
 }
 bool GRSdk::AddChildObject(ObjectIf* o){
