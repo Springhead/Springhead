@@ -3,7 +3,6 @@
 
 \contents 
 
-
 <!---------------------------------- 物理シミュレーションSDKの初期化と終了 ------------------------------------------>
 \section sec_PHSdk 		物理シミュレーションSDKの初期化と終了
 物理シミュレーション\c SDK は，物理法則に基づいた複数物体のインタラクションを計算する機能を提供します．<br>
@@ -276,7 +275,6 @@
 \endverbatim
 <br><br>
 
-
 \subsection solid_inertia_parameter 		剛体の慣性パラメータ
 剛体の質量特性は，質量と，剛体座標系における剛体の質量中心位置，また慣性テンソルで表現されます．
 これらは，剛体に対し，以下のように設定することも可能ですが，剛体デスクリプタから与えることもできます．
@@ -287,17 +285,18 @@
 \link Spr::PHSolidIf::GetMass() PHSolidIf::GetMass \endlink 
 を呼びます．
 \verbatim	
-    solid->SetMass(2.0);                                // 質量 2.0 に設定
-    double mass = solid->GetMass();                     // 角速度の取得
+    solid->SetMass(2.0);                                // 質量を 2.0 に設定
+    double mass = solid->GetMass();                     // 質量を取得
 \endverbatim
 
-剛体座標系における剛体の質量中心位置を設定・取得するには，
-\link Spr::PHSolidIf::SetCenter() PHSolidIf::SetCenter \endlink と  
-\link Spr::PHSolidIf::GetCenter() PHSolidIf::GetCenter \endlink 
-を呼びます．
-\verbatim	
-    solid->SetCenter(Vec3d(0.0, 1.0, 0.0));             // 上方向に 1.0 ずらす
-    Vec3d center = solid->GetCenter();                  // 質量中心位置を取得
+重心位置はデフォルトでは剛体座標系の原点と一致していますが， 
+\link Spr::PHSolidIf::GetCenterOfMass() PHSolidIf::GetCenterOfMass \endlink で取得することができます．
+また、\link Spr::PHSolidIf::SetCenterOfMass() PHSolidIf::SetCenterOfMass \endlink を使い、設定することもできます．
+\verbatim
+    //質量中心を，剛体座標原点からx方向に0.1ずらす
+	Vec3d center = solid->GetCenterOfMass();
+	center.x += 0.1;
+	solid->SetCenterOfMass(center);
 \endverbatim
 
 慣性テンソルを設定・取得するには，
@@ -310,9 +309,15 @@
 \endverbatim
 <br><br>
 
-
 \subsection solid_force 		剛体へ力を加える
-剛体へ並進力加えるには \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink，
+剛体に作用する力には，
+-# 外力
+-# 接触力
+-# 関節の拘束力
+-# 関節のモータトルク
+があります．
+
+剛体へ並進力を加えるには \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink，
 トルクを加えるには \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink を呼びます．<br>
 例えば，剛体に対して，下図のような力を加えた場合を考えます．
 	\image html force.jpg
@@ -340,7 +345,6 @@
   \link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce \endlink \c /
   \link Spr::PHSolidIf::AddTorque() PHSolidIf::AddTorque \endlink を呼ぶ必要があります．
 <br><br><br>
-
 
 \subsection solid_dynamical 物理法則の影響を受けないようにする
 場合によって，他の剛体との接触や重力からの影響を受けない剛体を作りたくなることがあります．
@@ -568,7 +572,7 @@ pose[0] はソケットを取り付ける剛体（CreateJoint の第1引数)の座標系に対するソケッ
 
 \subsection joint_hinge 	ヒンジ
 
-　　　　　　　　　　　　　　　＜ヒンジの図＞
+\image html hinge.png
 
 ヒンジは1本の軸周りの回転運動を実現する関節です．
 ソケットとプラグの原点を一致させ，かつZ軸同士を同じ向きに拘束します．
@@ -577,7 +581,7 @@ pose[0] はソケットを取り付ける剛体（CreateJoint の第1引数)の座標系に対するソケッ
 
 \subsection joint_slider スライダ
 
-　　　　　　　　　　　　　　＜スライダの図＞
+\image html slider.png
 
 スライダは 1 方向の平行移動を実現する関節です．
 ソケットとプラグの傾きを一致させ，かつプラグの原点をソケットの Z 軸上に拘束します．
@@ -586,7 +590,7 @@ pose[0] はソケットを取り付ける剛体（CreateJoint の第1引数)の座標系に対するソケッ
 
 \subsection joint_boll  ボールジョイント
 
-　　　　　　　　　　　　　＜ボールジョイントの図＞
+\image html balljoint.png
 
 ボールジョイントは  1点を中心とする任意方向の回転を実現する 3 自由度関節です．
 ソケットとプラグの原点が一致するように拘束します．
