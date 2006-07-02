@@ -172,6 +172,10 @@ bool PHScene::AddChildObject(ObjectIf* o){
 		penaltyEngine->AddChildObject(o);
 		constraintEngine->AddChildObject(o);
 		SetContactMode(s, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
+	}else{
+		PHEngine* e = DCAST(PHEngine, o);
+		if (e) engines.push_back(e);
+		rv = true;
 	}
 	return rv;
 }

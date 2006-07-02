@@ -148,7 +148,6 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate){
 	if(!bEnabled || !bFeasible)
 		return;
 
-
 	fv *= 0.7;
 	fw *= 0.7;
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算

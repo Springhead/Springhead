@@ -14,38 +14,46 @@ namespace Spr{;
 double relError = 1e-6;
 double absError = 1e-10;
 
-inline bool approxZero(const Vec3d& v) {
-	return v.square() < 1e-10f;
-}
 
-inline void setMax(double& x, double y) {
-	if (x < y) x = y;
-}
+static Vec3d p[4];			// Aのサポートポイント(ローカル系)
+static Vec3d q[4];			// Bのサポートポイント(ローカル系)
+static Vec3d p_q[4];		// ミンコスキー和上でのサポートポイント(ワールド系)
 
-static Vec3d p[4];			// Support points of object A in local coordinates 
-static Vec3d q[4];			// Support points of object B in local coordinates 
-static Vec3d p_q[4];		// Support points of A - B in world coordinates
+//	過去のSupportPointが張る形状(点・線分・3角形，4面体)．最大4点まで．
+static int usedPoints;		//	下位4ビットが，どの4点で現在の形状が構成されるかを表す．
+static int lastPoint;		//	最後に見つけたSupportPointをしまった場所(0～3)
+static int lastUsed;		//	lastUsed = 1<<lastPoint (ビットで表したもの）
+static int allUsedPoints;	//	lastUsedを加えたもの
+static double det[16][4];	//	係数
+//	det[3][0] * p[0] + det[3][1]*p[1] + det[3][2]*p[2] / sum で最近傍点が求まる
+//	p_qベクトルたちが張る形状の体積(or長さor面積)．4点から作れる16通りについて
 
-static int usedPoints;		// identifies current simplex
-static int lastPoint;		// identifies last found support vector
-static int lastUsed;		// lastUsed = 1<<lastPoint
-static int allUsedPoints;	// allUsedPoints = usedPoints|lastUsed 
-static double det[16][4];	// cached sub-determinants
+/*
+      a   |
+     /    | v = (1-k) a + k b
+    /     | va = (1-k)aa + kba = vb = (1-k)ab + kbb
+   /v     | -kaa + kba + kab - kbb = -aa + ab
+  b       | k = a^2-ab / (a^2+b^2-2ab), 1-k = b^2-ab / (a^2+b^2-2ab)
+----------+ なので， k = a^2-ab を と (k-1) = b^2-abを記録しておく	*/
 
-inline void computeDet() {
-	static double dotp[4][4];
 
-	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<=1) 
-		if (usedPoints & curPoint) dotp[i][lastPoint] = dotp[lastPoint][i] = p_q[i] * p_q[lastPoint];
+inline void CalcDet() {
+	static double dotp[4][4];	//	p_q[i] * p_q[j] 
+
+	//	新しく増えた点(lastPoint)について，内積を計算
+	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<=1){
+		if (usedPoints & curPoint) 
+			dotp[i][lastPoint] = dotp[lastPoint][i] = p_q[i] * p_q[lastPoint];
+	}
 	dotp[lastPoint][lastPoint] = p_q[lastPoint] * p_q[lastPoint];
 
 	det[lastUsed][lastPoint] = 1;
 	for (int j = 0, sj = 1; j < 4; ++j, sj <<= 1) {
-		if (usedPoints & sj) {
-			int s2 = sj|lastUsed;
-			det[s2][j] = dotp[lastPoint][lastPoint] - dotp[lastPoint][j]; 
-			det[s2][lastPoint] = dotp[j][j] - dotp[j][lastPoint];
-			for (int k = 0, sk = 1; k < j; ++k, sk <<= 1) {
+		if (usedPoints & sj) {		
+			int s2 = sj|lastUsed;	//	新しく増えた点について係数の計算
+			det[s2][j] = dotp[lastPoint][lastPoint] - dotp[lastPoint][j];	//	a^2-ab
+			det[s2][lastPoint] = dotp[j][j] - dotp[j][lastPoint];			//	a^2-ab
+			for (int k = 0, sk = 1; k < j; ++k, sk <<= 1) {	//	3点の場合
 				if (usedPoints & sk) {
 					int s3 = sk|s2;
 					det[s3][k] = det[s2][j] * (dotp[j][j] - dotp[j][k]) + 
@@ -58,7 +66,7 @@ inline void computeDet() {
 			}
 		}
 	}
-	if (allUsedPoints == 15) {
+	if (allUsedPoints == 15) {	//	4点の場合
 		det[15][0] =	det[14][1] * (dotp[1][1] - dotp[1][0]) + 
 						det[14][2] * (dotp[2][1] - dotp[2][0]) + 
 						det[14][3] * (dotp[3][1] - dotp[3][0]);
@@ -74,16 +82,18 @@ inline void computeDet() {
 	}	
 }
 
+//	最近傍点が渡したSimplexの中にあるかどうか．なければ false
 inline bool IsVaildPoint(int s) {
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1) {
 		if (allUsedPoints & curPoint) {
 			if (s & curPoint) { if (det[s][i] <= 0) return false; }
-			else if (det[s|curPoint][i] > 0) return false;
+			else if (det[s|curPoint][i] > 0) return false;	//	>eplisionにした方がよいかも
 		}
 	}
 	return true;
 }
 
+//	係数から，最近傍点 v を計算
 inline void CalcVector(int usedPoints, Vec3d& v) {
 	double sum = 0;
 	v = Vec3d(0, 0, 0);
@@ -96,6 +106,7 @@ inline void CalcVector(int usedPoints, Vec3d& v) {
 	v *= 1 / sum;
 }
 
+//	係数から，最近傍点と，元の2つの図形上での，その点の位置を計算
 inline void CalcPoints(int usedPoints, Vec3d& p1, Vec3d& p2) {
 	double sum = 0;
 	p1 = Vec3d(0.0, 0.0, 0.0);
@@ -117,18 +128,19 @@ inline void CalcPoints(int usedPoints, Vec3d& p1, Vec3d& p2) {
 	}
 }
 
-inline bool IsClosest(Vec3d& v) {
-	computeDet();
+//	
+inline bool CalcClosest(Vec3d& v) {
+	CalcDet();
 	for (int s = usedPoints; s; --s) {
-		if ((s & usedPoints) == s) {
-			if (IsVaildPoint(s|lastUsed)) {
+		if ((s & usedPoints) == s) {		//	現在の形状から頂点を減らしていったものについて，
+			if (IsVaildPoint(s|lastUsed)) {	//	中に最近傍点があるSimplexが見つかったら
 				usedPoints = s|lastUsed;
-				CalcVector(usedPoints, v);
+				CalcVector(usedPoints, v);	//	最近傍点を計算して返す．
 				return true;
 			}
 		}
 	}
-	if (IsVaildPoint(lastUsed)) {
+	if (IsVaildPoint(lastUsed)) {			//	最後に見つけた点の真上だったら
 		usedPoints = lastUsed;
 		v = p_q[lastPoint];
 		return true;
@@ -136,9 +148,7 @@ inline bool IsClosest(Vec3d& v) {
 	return false;
 }
 
-// The next function is used for detecting degenerate cases that cause 
-// termination problems due to rounding errors.	
-	 
+//	縮退している場合＝4点のうちいくつかが同じ位置にあるとか
 inline bool IsDegenerate(const Vec3d& w) {
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1){
 //	hase	2003.10.24
@@ -170,8 +180,8 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 		if (IsDegenerate(w)) return false;
 		p_q[lastPoint] = w;
 		allUsedPoints = usedPoints|lastUsed;
-		if (!IsClosest(v)) return false;
-	}while (usedPoints < 15 && !approxZero(v) ) ;
+		if (!CalcClosest(v)) return false;
+	} while ( usedPoints < 15 && !(v.square() < 1e-10f) ) ;
 	CalcPoints(usedPoints, pa, pb);
 	return true;
 }
@@ -179,28 +189,30 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					  const Posed& a2w, const Posed& b2w,
 					  Vec3d& pa, Vec3d& pb) {
-	Vec3d v = a2w * a->Support(Vec3d()) - b2w * b->Support(Vec3d());
-	double len = v.norm();
-	double mu = 0.0f;
-	Vec3d w;
+	Vec3d v; 				//	現在の，AとBのミンコスキー和の形状中の1点
+	v = a2w * a->Support(Vec3d()) - b2w * b->Support(Vec3d());	
+	double dist = v.norm();	//	原点からの距離
+	Vec3d w;				//	サポートポイント
+	double maxSupportDist = 0.0f;
 
 	usedPoints = 0;
 	allUsedPoints = 0;
 
-	while (usedPoints < 15 && len > absError) {
+	while (usedPoints < 15 && dist > absError) {
 		lastPoint = 0;
 		lastUsed = 1;
 		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
 		p[lastPoint] = a->Support(a2w.Ori().Conjugated() * (-v));
 		q[lastPoint] = b->Support(b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
-		setMax(mu, v*w/len);
-		if (len - mu <= len * relError) break;
+		double supportDist = w*v/dist;
+		if (maxSupportDist < supportDist) maxSupportDist= supportDist;
+		if (dist - maxSupportDist <= dist * relError) break;
 		if (IsDegenerate(w)) break;
 		p_q[lastPoint] = w;
 		allUsedPoints = usedPoints|lastUsed;
-		if (!IsClosest(v)) break;
-		len = v.norm();
+		if (!CalcClosest(v)) break;
+		dist = v.norm();
 	}
 	CalcPoints(usedPoints, pa, pb);
 }
