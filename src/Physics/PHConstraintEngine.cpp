@@ -155,7 +155,7 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	max_iter_dynamics = 5;
+	max_iter_dynamics = 15;
 	correction_rate = 0.1;
 	//max_iter_correction = 0;
 	//step_size = 1.0;

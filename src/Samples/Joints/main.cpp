@@ -62,6 +62,7 @@ GRDebugRenderIf* render;
 GRDeviceGLIf* device;
 
 Vec3d lookAt;
+double simulationPeriod=32.0;
 
 int sceneNo;			// シーン番号
 
@@ -422,9 +423,20 @@ void OnKey4(char key){
 
 void OnKey5(char key){
 	switch(key){
-	case 'a': soBox[5]->SetFramePosition(Vec3d(-10.0, 20.0, 0.0)); break;
-	case 's': soBox[5]->SetFramePosition(Vec3d(  0.0, 20.0, 0.0)); break;
-	case 'd': soBox[5]->SetFramePosition(Vec3d( 10.0, 20.0, 0.0)); break;
+	case 'a': soBox[5]->SetFramePosition(Vec3d(-20.0, 30.0, 0.0)); break;
+	case 's': soBox[5]->SetFramePosition(Vec3d(-10.0, 20.0, 0.0)); break;
+	case 'd': soBox[5]->SetFramePosition(Vec3d( -5.0, 10.0, 0.0)); break;
+	case 'f': soBox[5]->SetFramePosition(Vec3d(  0.0, 10.0, 0.0)); break;
+	case 'g': soBox[5]->SetFramePosition(Vec3d(  5.0, 10.0, 0.0)); break;
+	case 'h': soBox[5]->SetFramePosition(Vec3d( 10.0, 20.0, 0.0)); break;
+	case 'j': soBox[5]->SetFramePosition(Vec3d( 20.0, 30.0, 0.0)); break;
+	case '.': 
+		simulationPeriod /= 2.0;
+		if (simulationPeriod < 1) simulationPeriod = 1.0;
+		break;
+	case ',': 
+		simulationPeriod *= 2.0;
+		break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -559,7 +571,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
-	glutTimerFunc(33, timer, 0);
+	glutTimerFunc(simulationPeriod, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	scene->ClearForce();
 	scene->GenerateForce();
