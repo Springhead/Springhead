@@ -38,7 +38,9 @@ void PHScene::Init(){
 	engines.Add(penaltyEngine);
 	
 	constraintEngine = DBG_NEW PHConstraintEngine;
+	constraintEngine->numIteration = numIteration;
 	engines.Add(constraintEngine);
+
 
 	count = 0;
 }

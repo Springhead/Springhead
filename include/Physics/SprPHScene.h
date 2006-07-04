@@ -54,12 +54,13 @@ struct PHSceneDesc: public PHSceneState{
 		MODE_LCP		///< LCPで解く
 	};
 	
-	/// 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
-	Vec3f gravity;
+	Vec3f	gravity;		///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
+	int		numIteration;	///< LCPの反復回数
 
 	PHSceneDesc(){Init();}
 	void Init(){
 		gravity=Vec3f(0,-9.8f,0);
+		numIteration = 15;
 	}
 };
 

@@ -41,6 +41,11 @@ class PHConstraintEngine : public PHContactDetector<PHSolidInfoForLCP, PHShapePa
 	PHJoint* CreateJoint(const PHJointDesc& desc);
 	
 public:
+	int		numIteration;			///< 速度更新LCPの反復回数
+	double	correctionRate;			///< 誤差修正比率
+	//int max_iter_correction;		///< 誤差修正LCPの反復回数
+	//double max_error;
+
 	PHConstraintEngine();
 	~PHConstraintEngine();
 	PHJoint* AddJoint(const PHJointDesc& desc);	///< 関節を追加する（ファイルローダ用）
@@ -56,11 +61,7 @@ public:
 protected:
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
-	int max_iter_dynamics;			///< 速度更新LCPの反復回数
-	//int max_iter_correction;		///< 誤差修正LCPの反復回数
-	double correction_rate;			///< 誤差修正比率
-	//double max_error;
-
+	
 	void SetupDynamics(double dt);	///< 速度更新LCPの準備
 	void IterateDynamics();			///< 速度更新LCPの一度の反復
 	

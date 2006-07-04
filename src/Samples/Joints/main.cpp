@@ -78,7 +78,7 @@ std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
 void CreateFloor(){
 	CDBoxDesc desc;
-	desc.boxsize = Vec3f(30.0f, 1.0f, 20.0f);
+	desc.boxsize = Vec3f(30.0f, 5.0f, 20.0f);
 	soFloor = scene->CreateSolid(descFloor);
 	soFloor->AddShape(phSdk->CreateShape(desc));
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
@@ -243,7 +243,7 @@ void BuildScene5(){
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
-	double K = 5, D = 5;
+	double K = 50, D = 5;
 //	double K = 15, D = 15;
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
@@ -256,7 +256,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 4, D = 1;
+	K = 40, D = 1;
 //	K = 14, D = 3;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
@@ -405,9 +405,9 @@ void OnKey3(char key){
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		PHSliderJointIf* slider = DCAST(PHSliderJointIf, jntLink.back());
 		slider->SetRange(-0.3, 0.3);
-		slider->SetSpring(1000.0);
-		slider->SetDamper(300);
-		slider->SetSpringOrigin(0.0);
+		//slider->SetSpring(1000.0);
+		//slider->SetDamper(300);
+		//slider->SetSpringOrigin(0.0);
 		}break;
 	case 'a': scene->SetGravity(Vec3f(5.0, -5, 0.0)); break;
 	case 'd': scene->SetGravity(Vec3f(-5.0, -5, 0.0)); break;
@@ -597,6 +597,7 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
+	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;
