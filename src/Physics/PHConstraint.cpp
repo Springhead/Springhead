@@ -119,6 +119,17 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 		Jqv[1].clear();
 		Jqw[1] = E * Jww[1];*/
 	}
+
+	if(GetConstraintType() == PHConstraintDesc::CONTACT){
+		double k = 1.0;
+		for(int i = 0; i < 2; i++){
+			Jvv[i] *= k;
+			Jvw[i] *= k;
+			Jwv[i] *= k;
+			Jww[i] *= k;
+		}
+	}
+
 	int i, j;
 	Av.clear();
 	Aw.clear();
@@ -148,8 +159,14 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate){
 	if(!bEnabled || !bFeasible)
 		return;
 
+	/* 前回の値を縮小したものを初期値とする．
+	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
+	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
+	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
+	  */
 	fv *= 0.7;
 	fw *= 0.7;
+
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
  	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);

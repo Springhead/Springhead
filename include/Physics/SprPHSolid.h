@@ -72,6 +72,14 @@ struct PHSolidIf : public SceneObjectIf{
 		@param m 質量
 	 */
 	virtual void		SetMass(double m)=0;
+	/** @brief 質量中心を取得する
+		@return 質量中心の位置
+	 */
+	virtual Vec3d		GetCenterOfMass()=0;
+	/** @brief 質量中心を設定する
+		@param center 質量中心の位置
+	 */
+	virtual void		SetCenterOfMass(const Vec3d& center)=0;
 	/** @brief 慣性テンソルを取得する
 		@return 慣性テンソル
 	 */

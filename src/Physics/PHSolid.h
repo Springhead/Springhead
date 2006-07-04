@@ -131,8 +131,9 @@ public:
 	double		GetMass(){return mass;}					///< 質量
 	double		GetMassInv(){return 1.0 / mass;}		///< 質量の逆数
 	void		SetMass(double m){mass = m;}			///< 質量の設定
-	void		SetMassInv(double minv){mass = 1.0 / minv;}
-														///< 質量の逆数の設定
+	void		SetMassInv(double minv){mass = 1.0 / minv;}	///< 質量の逆数の設定
+	Vec3d		GetCenterOfMass(){return center;}		///< ローカルフレームから見た，剛体の質量中心位置の設定
+	void		SetCenterOfMass(const Vec3d& c){center = c;}	///< ローカルフレームから見た，剛体の質量中心位置の取得
 	Matrix3d	GetInertia(){return inertia;}			///< 慣性テンソル
 	Matrix3d	GetInertiaInv(){return inertia_inv;}	///< 慣性テンソルの逆数
 	void		SetInertia(const Matrix3d& I){			///< 慣性テンソルの設定
@@ -184,11 +185,6 @@ public:
 	Vec3d		GetAngularVelocity() const {return angVelocity;}
 	///	角速度の設定
 	void		SetAngularVelocity(const Vec3d& av){angVelocity = av;}
-
-	///	ローカルフレームから見た，剛体の質量中心位置の設定
-	Vec3d		GetCenter() const {return center;}
-	///	ローカルフレームから見た，剛体の質量中心位置の取得
-	void		SetCenter(const Vec3d& c){center = c;}		
 
 	///	任意の位置での速度の取得
 	Vec3d		GetPointVelocity(Vec3f posW) const {

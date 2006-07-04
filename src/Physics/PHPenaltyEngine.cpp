@@ -49,7 +49,7 @@ void PHSolidInfoForPenalty::UpdateCache(int c){
 	pos = solid->GetFramePosition();
 	lastOri = ori;
 	ori = solid->GetOrientation();
-	cog = ori * solid->GetCenter() + pos;
+	cog = ori * solid->GetCenterOfMass() + pos;
 }
 
 //----------------------------------------------------------------------------
