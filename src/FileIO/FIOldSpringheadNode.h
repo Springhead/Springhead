@@ -43,10 +43,10 @@ struct Light8{
 
 ///	DirectXのマテリアル．GRMateiralに対応．
 struct Material{
-	Vec4f face;
-	float power;
-	Vec3f specular;
-	Vec3f emissive;
+	Vec4f face;				// face color
+	float power;			
+	Vec3f specular;			// specular color
+	Vec3f emissive;			// emissive color
 };
 
 

@@ -8,6 +8,7 @@
 #include <FileIO/FINodeHandler.h>
 #include <FileIO/FIOldSpringheadNode.h>
 #include <Graphics/GRFrame.h>
+#include <Graphics/GRMesh.h>
 namespace Spr{;
 using namespace SprOldSpringehead;
 
@@ -34,8 +35,55 @@ public:
 	}
 };
 
+class FINodeHandlerXMesh: public FINodeHandlerImp<Mesh>{
+public:
+	FINodeHandlerXMesh():FINodeHandlerImp<Desc>("Mesh"){}
+	void Load(Desc& d, FILoadContext* fc){
+		fc->PushCreateNode(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc());	
+		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		if (mesh){
+			mesh->positions = d.vertices;			// 頂点座標
+			for (int f=0; f < d.nFaces; ++f){		// 面を構成する頂点の番号
+				if (d.faces[f].nFaceVertexIndices == 3) {
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
+				} else if (d.faces[f].nFaceVertexIndices == 4) {				// 三角形に分割
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
+					mesh->faces.push_back( d.faces[f].faceVertexIndices[3] );
+				} else {
+					fc->ErrorMessage(NULL, "Mesh::nFaces error. ");
+				}
+			}
+		}else{
+			fc->ErrorMessage(NULL, "Mesh appered outside of Frame.");
+		}
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
+	}
+};
+#if 0
+class FINodeHandlerXMeshMaterialList: public FINodeHandlerImp<MeshMaterialList>{
+public:
+	FINodeHandlerXMeshMaterialList():FINodeHandlerImp<Desc>("MeshMaterialList"){}
+	void Load(Desc& d, FILoadContext* fc){
+		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &GRMaterialDesc());
+		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
+		if (mat) {
+			mat->
+
+#endif
+
+
+
 void RegisterOldSpringheadNodeHandlers(){
 REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
 REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
+REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
 }
 }
