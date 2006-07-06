@@ -41,7 +41,7 @@
 以下に示すような設定を初期設定のまま利用する場合は，シーンデスクリプタを用意する必要はありません．
 デスクリプタについては，\ref pageApiBasic も参照下さい．
 また，シーンデスクリプタのサンプルとしては，
-<a href="../../src/html/BoxStack_2main_8cpp-example.html">BoxStack</a> を参照下さい．
+<a href="../../src/html/_2Samples_2BoxStack_2main_8cpp-example.html">BoxStack</a> を参照下さい．
 
 シーンデスクリプタの初期設定では，ステップ実行時間は <tt>0.005[s]</tt> に設定されていますが，以下のように設定することもできます．
 \verbatim

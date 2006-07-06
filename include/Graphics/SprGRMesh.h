@@ -27,7 +27,7 @@ struct GRMeshDesc{
 	std::vector<Vec3f> normals;			///<	頂点の法線
 	std::vector<Vec4f> colors;			///<	頂点の色
 	std::vector<Vec2f> texCoords;		///<	テクスチャUV
-	std::vector<size_t> faces;		///<	面を構成する頂点の番号．
+	std::vector<size_t> faces;			///<	面を構成する頂点の番号．
 };
 
 

@@ -156,7 +156,7 @@ lib/win32/SpringheadD.lib と lib/win32/Springhead.lib  ができます．
 \c Springhead2 では，動作可能なテスト用プログラム \c tests およびサンプルプログラム
 \c Samples を用意しています（参照 ： \ref directory)．
 ここでは例として，テスト用プログラム \c tests の
-<a href="../../src/html/GRSimple_2main_8cpp-example.html">GRSimple</a>
+<a href="../../src/html/_2tests_2Graphics_2GRSimple_2main_8cpp-example.html">GRSimple</a>
 を実行する方法を紹介します．<br>
 
 \subsection secVcTest			Visual C++ .NET 2003 + DirectX SDK 9.0
