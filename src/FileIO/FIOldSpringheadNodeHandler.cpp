@@ -42,9 +42,9 @@ public:
 		fc->PushCreateNode(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc());	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
-			mesh->positions = d.vertices;			// 頂点座標
-			for (int f=0; f < d.nFaces; ++f){		// 面を構成する頂点の番号
-				if (d.faces[f].nFaceVertexIndices == 3) {
+			mesh->positions = d.vertices;						// 頂点座標
+			for (int f=0; f < d.nFaces; ++f){		
+				if (d.faces[f].nFaceVertexIndices == 3) {		// 面を構成する頂点の番号
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
@@ -79,11 +79,38 @@ public:
 
 #endif
 
-
+class FINodeHandlerXMeshNormals: public FINodeHandlerImp<MeshNormals>{
+public:
+	FINodeHandlerXMeshNormals():FINodeHandlerImp<Desc>("MeshNormals"){}
+	void Load(Desc& d, FILoadContext* fc){
+		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		if (mesh){
+			for (int f=0; f < d.nFaceNormals; ++f){		
+				if (d.faceNormals[f].nFaceVertexIndices == 3) {			
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[0] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[1] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[2] ] );
+				} else if (d.faceNormals[f].nFaceVertexIndices == 4) {		// 三角形に分割
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[0] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[1] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[2] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[0] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[2] ] );
+					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[3] ] );
+				} else {
+					fc->ErrorMessage(NULL, "MeshNormals::nFaceNormals error. ");
+				}
+			}
+		}else{
+			fc->ErrorMessage(NULL, "MeshNormals appered outside of Mesh.");
+		}
+	}
+};
 
 void RegisterOldSpringheadNodeHandlers(){
 REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
 REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
 REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
+REGISTER_NODE_HANDLER(FINodeHandlerXMeshNormals);
 }
 }
