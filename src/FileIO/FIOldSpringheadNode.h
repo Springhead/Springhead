@@ -25,8 +25,8 @@ struct FrameTransformMatrix{
 struct Light8{
 	int type;
     Vec4f diffuse;		///<	ŠgŽUŒõ
-    Vec4f specular;		///<	
-    Vec4f ambient;
+    Vec4f specular;		///<	‹¾–ÊŒõ
+    Vec4f ambient;		///<	ŠÂ‹«Œõ
     Vec4f position;		///<	ŒõŒ¹‚ÌˆÊ’uCw=0‚Æ‚·‚é‚Æ–³ŒÀ‰“(•ûŒüŒõŒ¹)‚É‚È‚éD
     float range;		///<	Œõ‚ª“Í‚­”ÍˆÍ
     ///@name	Œ¸Š—¦DAtten = 1/( att0 + att1 * d + att2 * d^2)

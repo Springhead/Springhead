@@ -170,7 +170,7 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t c
 		default:				/* DO NOTHING */			break;
 	}
 	if (!stride) stride = vertexSize;
-	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
+	if (vertexColor) glEnable(GL_COLOR_MATERIAL);	
 	else glDisable(GL_COLOR_MATERIAL);
 	SetMaterial(currentMaterial);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);

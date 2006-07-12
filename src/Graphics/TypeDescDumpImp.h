@@ -34,6 +34,12 @@
 	field->offset = (char*)&(pGRMeshDesc->texCoords) - (char*)pGRMeshDesc;
 	field = desc->AddField("vector", "size_t", "faces", "");
 	field->offset = (char*)&(pGRMeshDesc->faces) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "GRMaterialDesc", "material", "");
+	field->offset = (char*)&(pGRMeshDesc->material) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "int", "materialList", "");
+	field->offset = (char*)&(pGRMeshDesc->materialList) - (char*)pGRMeshDesc;
+	field = desc->AddField("vector", "size_t", "elementIndex", "");
+	field->offset = (char*)&(pGRMeshDesc->elementIndex) - (char*)pGRMeshDesc;
 	db->RegisterDesc(desc);
 	
 	GRLightDesc* pGRLightDesc = NULL;

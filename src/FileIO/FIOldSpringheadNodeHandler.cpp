@@ -42,19 +42,22 @@ public:
 		fc->PushCreateNode(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc());	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
-			mesh->positions = d.vertices;						// 頂点座標
+			mesh->positions = d.vertices;							// 頂点座標
 			for (int f=0; f < d.nFaces; ++f){		
-				if (d.faces[f].nFaceVertexIndices == 3) {		// 面を構成する頂点の番号
+				if (d.faces[f].nFaceVertexIndices == 3) {			// 面を構成する頂点の番号
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
-				} else if (d.faces[f].nFaceVertexIndices == 4) {				// 三角形に分割
+					mesh->elementIndex.push_back(f);
+				} else if (d.faces[f].nFaceVertexIndices == 4) {	// 三角形に分割
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
+					mesh->elementIndex.push_back(f);				// 三角形分割前後の面同士の関連付け用
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[3] );
+					mesh->elementIndex.push_back(f);
 				} else {
 					fc->ErrorMessage(NULL, "Mesh::nFaces error. ");
 				}
@@ -67,17 +70,37 @@ public:
 		fc->objects.Pop();
 	}
 };
-#if 0
+
 class FINodeHandlerXMeshMaterialList: public FINodeHandlerImp<MeshMaterialList>{
 public:
 	FINodeHandlerXMeshMaterialList():FINodeHandlerImp<Desc>("MeshMaterialList"){}
 	void Load(Desc& d, FILoadContext* fc){
-		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &GRMaterialDesc());
-		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
-		if (mat) {
-			mat->
+		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		if (mesh){
+			mesh->materialList = d.faceIndexes;		// マテリアル番号のリスト
+		}else{
+			fc->ErrorMessage(NULL, "MeshMaterialList appered outside of Mesh.");
+		}
+	}
+};
 
-#endif
+class FINodeHandlerXMaterial: public FINodeHandlerImp<Material>{
+public:
+	FINodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
+	void Load(Desc& d, FILoadContext* fc){
+		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		if (mesh){
+			GRMaterialDesc mat;
+			mat.ambient = mat.diffuse = d.face;
+			mat.specular = Vec4f(mat.specular.x, mat.specular.y, mat.specular.z, 1.0);
+			mat.emissive = Vec4f(mat.emissive.x, mat.emissive.y, mat.emissive.z, 1.0);
+			mat.power = d.power;
+			mesh->material.push_back(mat);
+		}else{
+			fc->ErrorMessage(NULL, "Material appered outside of Mesh. ");
+		}
+	}
+};
 
 class FINodeHandlerXMeshNormals: public FINodeHandlerImp<MeshNormals>{
 public:
@@ -85,20 +108,12 @@ public:
 	void Load(Desc& d, FILoadContext* fc){
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
-			for (int f=0; f < d.nFaceNormals; ++f){		
-				if (d.faceNormals[f].nFaceVertexIndices == 3) {			
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[0] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[1] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[2] ] );
-				} else if (d.faceNormals[f].nFaceVertexIndices == 4) {		// 三角形に分割
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[0] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[1] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[2] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[0] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[2] ] );
-					mesh->normals.push_back( d.normals[ d.faceNormals[f].faceVertexIndices[3] ] );
-				} else {
-					fc->ErrorMessage(NULL, "MeshNormals::nFaceNormals error. ");
+			/** Xファイルから"MeshNormals"による法線インデックスを持ったデータの場合は、
+			    MeshNormalsを、MeshNormalsのインデックスではなく、Meshの頂点座標用のインデックスでアクセスできるように
+			    MeshNormalsの順番を入れ替えて格納する.																	*/
+			for (int f=0; f < d.nFaceNormals; ++f){
+				for (int i=0; i < d.faceNormals[f].nFaceVertexIndices; ++i){
+					mesh->normals.push_back( d.normals[d.faceNormals[f].faceVertexIndices[i]] );
 				}
 			}
 		}else{
@@ -111,6 +126,8 @@ void RegisterOldSpringheadNodeHandlers(){
 REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
 REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
 REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
+REGISTER_NODE_HANDLER(FINodeHandlerXMeshMaterialList);
+REGISTER_NODE_HANDLER(FINodeHandlerXMaterial);
 REGISTER_NODE_HANDLER(FINodeHandlerXMeshNormals);
 }
 }

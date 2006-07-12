@@ -9,7 +9,7 @@
  Springhead2/src/tests/FileIO/FILoadGRScene/main.cpp
 
 【概要】
-  Xファイルをロードし、Graphicsシーンをロード・描画する。
+  ・Xファイルをロードし、Graphicsシーンをロード・描画する。
   
 【終了基準】
   ・プログラムが正常終了したら0を返す。  
@@ -19,9 +19,9 @@
   ・ロードした情報を出力する。
   ・Graphicsエンジンと接続し、描画する。
 
-【テストパターン】
-  ※ 本ファイルの28行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
-	GRTest.x : XファイルからのグラフィックスSDKの入力テスト
+【Note】
+  ・本ファイルの30行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
+  
 */
 #include <Springhead.h>
 #include <GL/glut.h>

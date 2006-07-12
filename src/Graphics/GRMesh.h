@@ -16,9 +16,12 @@ namespace Spr{;
 /**	@class	GRMesh
     @brief	グラフィックスシーングラフでの座標系を表す． */
 class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{
-	int list;
+	std::vector<unsigned int> list;		///< ディスプレイリストの識別子
 	GRRenderIf* render;
+	/// 頂点フォーマットGRVertexElement に合わせ、ディスプレイリストを作成する
 	void CreateList(GRRenderIf* r);
+	/// Xファイルから MeshMaterialList設定された場合、マテリアル毎にsub mesh単位でディスプレイリストを作成する
+	void CreateSubList(void* vtx);
 public:
 	OBJECT_DEF(GRMesh);
 	ACCESS_DESC(GRMesh);
