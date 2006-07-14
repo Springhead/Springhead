@@ -276,7 +276,7 @@ void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 	block		= while_p(&NextField)[
 					while_p(&ArrayCount)[
 						ch_p(';')[&StopArray] |
-						(exp >> ((ch_p(',')|ch_p(';'))[&SetVal] | ExpP("',' or ';'")))
+						(exp >> ((ch_p(',')|!ch_p(';'))[&SetVal] | ExpP("',' or ';'")))
 					]
 				  ];
 	exp			= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
