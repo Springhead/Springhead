@@ -30,7 +30,7 @@ public:
 		if (fr){
 			fr->transform = d.matrix;
 		}else{
-			fc->ErrorMessage(NULL, "FrameTransformMatrix appered outside of Frame.");
+			fc->ErrorMessage(NULL, "FrameTransformMatrix must be inside of Frame node.");
 		}
 	}
 };

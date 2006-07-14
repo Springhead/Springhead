@@ -145,6 +145,8 @@
 	field->offset = (char*)(PHSceneState*)pPHSceneDesc - (char*)pPHSceneDesc;
 	field = desc->AddField("", "Vec3f", "gravity", "");
 	field->offset = (char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc;
+	field = desc->AddField("", "int", "numIteration", "");
+	field->offset = (char*)&(pPHSceneDesc->numIteration) - (char*)pPHSceneDesc;
 	db->RegisterDesc(desc);
 	
 	PHSdkDesc* pPHSdkDesc = NULL;

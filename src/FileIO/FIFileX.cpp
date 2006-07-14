@@ -267,7 +267,7 @@ void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
-				  if_p(&TypeAvail)[ block[&LoadNodeStub] >> *(data|ref) ].
+				  if_p(&TypeAvail)[ block[&LoadNodeStub] >> !ch_p(';') >> *(data|ref) ].
 //				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
 				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
