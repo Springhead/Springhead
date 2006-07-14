@@ -268,7 +268,6 @@ void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
 				  if_p(&TypeAvail)[ block[&LoadNodeStub] >> !ch_p(';') >> *(data|ref) ].
-//				  else_p[ *(blockSkip | ~ch_p('}')) ]		//<	知らない型名の場合スキップ
 				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	blockSkip	= ch_p('{') >> *(blockSkip|~ch_p('}')) >> ch_p('}');
