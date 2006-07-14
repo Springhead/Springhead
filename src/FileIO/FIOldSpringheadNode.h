@@ -49,7 +49,6 @@ struct Material{
 	Vec3f emissive;			// emissive color
 };
 
-
 ///	DirectXのMeshの面．
 struct MeshFace{
 	int nFaceVertexIndices;
@@ -62,7 +61,6 @@ struct Mesh{
 	std::vector<Vec3f> vertices;
 	int nFaces;
 	std::vector<MeshFace> faces;
-	
 };
 
 ///	DirectXのMeshの法線ベクトル
@@ -72,17 +70,26 @@ struct MeshNormals{
 	int nFaceNormals;
 	std::vector<MeshFace> faceNormals;
 };
+
 ///	DirectXのMeshのマテリアルリスト．
 struct MeshMaterialList{
 	int nMaterials;
 	int nFaceIndexes;
 	std::vector<int> faceIndexes;
 };
+
+/// DirectXのテクスチャファイル名（Materialの内部タグ)
+struct TextureFilename{
+	std::string filename;
+};
+
 ///	DirectXのMeshのテクスチャ座標．
 struct MeshTextureCoords{
 	int nTextureCoords;
 	std::vector<Vec2f> textureCoords;
 };
+
+
 //@}
 
 }}

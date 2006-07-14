@@ -24,7 +24,7 @@ void GRMesh::CreateList(GRRenderIf* r){
 		vtx.resize(positions.size());
 		for(unsigned i=0; i<vtx.size(); ++i){
 			vtx[i].p = positions[i];
-			vtx[i].n = normals[i];
+			vtx[originalFaces[i]].n = normals[faceNormals[i]];
 			vtx[i].c = colors[i];
 			vtx[i].t = texCoords[i];
 		}
@@ -37,7 +37,7 @@ void GRMesh::CreateList(GRRenderIf* r){
 		vtx.resize(positions.size());
 		for(unsigned i=0; i<vtx.size(); ++i){
 			vtx[i].p = positions[i];
-			vtx[i].n = normals[i];
+			vtx[originalFaces[i]].n = normals[faceNormals[i]];
 			vtx[i].t = texCoords[i];
 		}
 		render->SetVertexFormat(GRVertexElement::vfT2fN3fP3f);
@@ -65,7 +65,7 @@ void GRMesh::CreateList(GRRenderIf* r){
 		vtx.resize(positions.size());
 		for(unsigned i=0; i<vtx.size(); ++i){
 			vtx[i].p = positions[i];
-			vtx[i].n = normals[i];
+			vtx[originalFaces[i]].n = normals[faceNormals[i]];
 			vtx[i].c = colors[i];
 		}
 		render->SetVertexFormat(GRVertexElement::vfC4fN3fP3f);
@@ -77,8 +77,8 @@ void GRMesh::CreateList(GRRenderIf* r){
 		vtx.resize(positions.size());
 		for(unsigned i=0; i<vtx.size(); ++i){
 			vtx[i].p = positions[i];
-			vtx[i].n = normals[i];
-		}
+			vtx[originalFaces[i]].n = normals[faceNormals[i]];
+		}		
 		render->SetVertexFormat(GRVertexElement::vfN3fP3f);
 		this->CreateSubList(&*vtx.begin());
 	}else if (texCoords.size()){

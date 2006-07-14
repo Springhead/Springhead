@@ -110,6 +110,14 @@
 	field->offset = (char*)&(pMeshMaterialList->faceIndexes) - (char*)pMeshMaterialList;
 	db->RegisterDesc(desc);
 	
+	TextureFilename* pTextureFilename = NULL;
+	desc = DBG_NEW UTTypeDesc("TextureFilename");
+	desc->size = sizeof(TextureFilename);
+	desc->access = DBG_NEW UTAccess<TextureFilename>;
+	field = desc->AddField("", "string", "filename", "");
+	field->offset = (char*)&(pTextureFilename->filename) - (char*)pTextureFilename;
+	db->RegisterDesc(desc);
+	
 	MeshTextureCoords* pMeshTextureCoords = NULL;
 	desc = DBG_NEW UTTypeDesc("MeshTextureCoords");
 	desc->size = sizeof(MeshTextureCoords);

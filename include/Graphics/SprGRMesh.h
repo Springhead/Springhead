@@ -27,7 +27,7 @@ struct GRMeshDesc{
 	std::vector<Vec3f> normals;					///< 頂点の法線
 	std::vector<Vec4f> colors;					///< 頂点の色
 	std::vector<Vec2f> texCoords;				///< テクスチャUV
-	std::vector<size_t> faces;					///< 面を構成する頂点の番号（Xファイルからのロードの場合、四角形は三角形に分割）
+	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
 
 	std::vector<GRMaterialDesc> material;		///< マテリアル
 	std::vector<int> materialList;				///< マテリアルのインデックスリスト（XファイルのMeshMaterialListの番号をそのままロード）
@@ -39,6 +39,10 @@ struct GRMeshDesc{
 		を繰り返す。Xファイルからロードされた面は、すべて三角形分割されるため、
 		どの面がどのマテリアルを適用するのか判断するために、elementIndex が必要。） */
 	std::vector<size_t> elementIndex;	
+
+	std::vector<size_t> originalFaces;			///< 面を構成頂点インデックス（三角形への分割をせず、そのままロード）
+	std::vector<size_t> faceNormals;			///< 法線インデックス
+
 };
 
 

@@ -10,7 +10,7 @@
 
 TOP_DIR 		= ../../..
 
-FILEIO_TEST_DIR	= FILoader
+FILEIO_TEST_DIR	= FILoader FILoadGRScene FILoadMesh
 
 all:
 	@for dir in $(FILEIO_TEST_DIR); \
