@@ -37,6 +37,13 @@ void PHJoint1D::SetDesc(const PHJointDesc& desc){
 	SetMotorTorque(desc1D.torque);
 }
 
+void PHJoint1D::SetMotorTorque(double t){
+	mode = MODE_TORQUE;
+	PHScene* s = DCAST(PHScene, GetScene());
+	assert(s);
+	((double*)&fv)[axis_index] = t * s->GetTimeStep();
+}
+
 void PHJoint1D::CompDof(){
 	on_lower = on_upper = false;
 	if(lower < upper){

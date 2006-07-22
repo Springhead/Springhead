@@ -23,6 +23,7 @@ public:
 
 	void InitCylinder(CDConvexMeshDesc& md, float height, float radius, int ndiv);
 	void Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
+	void Stop();
 	void Forward();
 	void Backward();
 	void TurnLeft();

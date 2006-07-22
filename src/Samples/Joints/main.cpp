@@ -45,6 +45,7 @@
 #include <string>
 #include <GL/glut.h>
 #include <sstream>
+#include <windows.h>
 
 #include <Springhead.h>		//	Springheadのインタフェース
 
@@ -79,19 +80,19 @@ std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 const double dt = 0.1;					//積分幅
 const int niter = 10;					//LCPはんぷくかいすう
 const double springOrigin = Rad(90.0);	//バネの原点
-const double Kexp = 10, Dexp = 10;		//explicitバネダンパの係数
-const double Kimp = 0, Dimp = 0;		//implicitバネダンパの係数
+const double Kexp = 200, Dexp = 10;		//explicitバネダンパの係数
+const double Kimp = 200, Dimp = 10;		//implicitバネダンパの係数
 const double Kimp2 = 0.01, Dimp2 = 0.01;
 double anglePendulum = Rad(60.0);				//振り子の初期角度
 double lengthPendulum = 10.0;							//振り子の長さ
 bool bExplicit = false;					//どっちでバネダンパするか
 /**/
 
-void CreateFloor(){
+void CreateFloor(bool s=true){
 	CDBoxDesc desc;
 	desc.boxsize = Vec3f(30.0f, 5.0f, 20.0f);
 	soFloor = scene->CreateSolid(descFloor);
-	soFloor->AddShape(phSdk->CreateShape(desc));
+	if (s) soFloor->AddShape(phSdk->CreateShape(desc));
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
 	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
 }
@@ -243,7 +244,8 @@ void BuildScene4(){
 
 void BuildScene5(){
 	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
-	CreateFloor();
+	scene->SetNumIteration(30);
+	CreateFloor(false);
 	
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
@@ -283,10 +285,10 @@ void BuildScene5(){
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
-	double K = 50, D = 5;
-//	double K = 15, D = 15;
-	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
-	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
+//	double K = 50, D = 5;
+	double K = 5, D = 3;
+//	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
+//	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[1])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K);
@@ -296,7 +298,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 40, D = 1;
+	K = 5, D = 1;
 //	K = 14, D = 3;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
@@ -617,7 +619,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.push_back(scene->CreateSolid(descBox));
 			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
-			soBox.back()->SetVelocity(Vec3d(-20.0, 0.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
 		default:
@@ -634,10 +636,20 @@ void keyboard(unsigned char key, int x, int y){
 void timer(int id){
 	glutTimerFunc(simulationPeriod, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
-	OnTimer();
-	scene->ClearForce();
-	scene->GenerateForce();
-	scene->Integrate();
+	static DWORD last = timeGetTime();
+	DWORD time = timeGetTime();
+	DWORD period = time - last;
+	last = time;
+	static double realTime;
+	static double simTime;
+	realTime += period;
+	while(realTime > simTime){
+		simTime += simulationPeriod;
+		OnTimer();
+		scene->ClearForce();
+		scene->GenerateForce();
+		scene->Integrate();
+	}
 	glutPostRedisplay();
 }
 void idle(){

@@ -55,7 +55,7 @@ public:
 	//virtual double GetDesiredPosition(){return pos_d;}
 	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; vel_d = v;}
 	virtual double	GetDesiredVelocity(){return vel_d;}
-	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; ((double*)&fv)[axis_index] = t;}
+	virtual void	SetMotorTorque(double t);
 	virtual double	GetMotorTorque(){return ((double*)&fv)[axis_index];}
 	virtual void	SetSpring(double K){spring = K;}
 	virtual double	GetSpring(){return spring;}

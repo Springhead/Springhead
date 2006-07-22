@@ -134,6 +134,12 @@ void PHScene::SetContactMode(PHSceneDesc::ContactMode mode){
 	penaltyEngine->EnableContact(mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(mode == PHSceneDesc::MODE_LCP);
 }
+int PHScene::GetNumIteration(){
+	return constraintEngine->numIteration;
+}
+void PHScene::SetNumIteration(int n){
+	constraintEngine->numIteration = n;
+}
 
 void PHScene::SetGravity(Vec3f accel){
 	PHGravityEngine* ge;

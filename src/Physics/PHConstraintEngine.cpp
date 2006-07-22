@@ -190,6 +190,7 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 		break;
 	default: assert(false);
 	}
+	joint->SetScene(GetScene());
 	joint->SetDesc(desc);
 	return joint;
 }

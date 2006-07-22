@@ -59,30 +59,38 @@ void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	}
 }
 
+const double speed = 4.0;
+void Robot1::Stop(){
+	jntWheel[0]->SetDesiredVelocity(0);
+	jntWheel[1]->SetDesiredVelocity(0);
+	jntWheel[2]->SetDesiredVelocity(0);
+	jntWheel[3]->SetDesiredVelocity(0);
+}
+
 void Robot1::Forward(){
-	jntWheel[0]->SetDesiredVelocity(3.0);
-	jntWheel[1]->SetDesiredVelocity(3.0);
-	jntWheel[2]->SetDesiredVelocity(3.0);
-	jntWheel[3]->SetDesiredVelocity(3.0);
+	jntWheel[0]->SetDesiredVelocity(speed);
+	jntWheel[1]->SetDesiredVelocity(speed);
+	jntWheel[2]->SetDesiredVelocity(speed);
+	jntWheel[3]->SetDesiredVelocity(speed);
 }
 
 void Robot1::Backward(){
-	jntWheel[0]->SetDesiredVelocity(-3.0);
-	jntWheel[1]->SetDesiredVelocity(-3.0);
-	jntWheel[2]->SetDesiredVelocity(-3.0);
-	jntWheel[3]->SetDesiredVelocity(-3.0);
+	jntWheel[0]->SetDesiredVelocity(-speed);
+	jntWheel[1]->SetDesiredVelocity(-speed);
+	jntWheel[2]->SetDesiredVelocity(-speed);
+	jntWheel[3]->SetDesiredVelocity(-speed);
 }
 
 void Robot1::TurnLeft(){
-	jntWheel[0]->SetDesiredVelocity(3.0);
-	jntWheel[1]->SetDesiredVelocity(3.0);
-	jntWheel[2]->SetDesiredVelocity(-3.0);
-	jntWheel[3]->SetDesiredVelocity(-3.0);
+	jntWheel[0]->SetDesiredVelocity(speed);
+	jntWheel[1]->SetDesiredVelocity(speed);
+	jntWheel[2]->SetDesiredVelocity(-speed);
+	jntWheel[3]->SetDesiredVelocity(-speed);
 }
 
 void Robot1::TurnRight(){
-	jntWheel[0]->SetDesiredVelocity(-3.0);
-	jntWheel[1]->SetDesiredVelocity(-3.0);
-	jntWheel[2]->SetDesiredVelocity(3.0);
-	jntWheel[3]->SetDesiredVelocity(3.0);
+	jntWheel[0]->SetDesiredVelocity(-speed);
+	jntWheel[1]->SetDesiredVelocity(-speed);
+	jntWheel[2]->SetDesiredVelocity(speed);
+	jntWheel[3]->SetDesiredVelocity(speed);
 }

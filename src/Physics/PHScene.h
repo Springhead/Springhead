@@ -53,6 +53,8 @@ public:
 	void SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
+	virtual int GetNumIteration();
+	virtual void SetNumIteration(int n);
 	void SetGravity(const Vec3d& g);
 	PHSdkIf* GetSdk();
 

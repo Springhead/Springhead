@@ -56,6 +56,11 @@ void CreateFloor(){
  */
 void display(){
 	Vec3d pos = robot[0].soBody->GetFramePosition();
+	Affinef af;
+	af.Pos() = Vec3f(0, 1.5, 4)*1.2;
+	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
+	render->SetViewMatrix(af.inv());
+	
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
@@ -134,6 +139,9 @@ void keyboard(unsigned char key, int x, int y){
 	case 'f':
 		robot[0].TurnRight();
 		break;
+	case 'g':
+		robot[0].Stop();
+		break;
 	case 'j':
 		lookAtY += 0.1;
 		break;
@@ -148,7 +156,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(25, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	for(int i = 0; i < 1; i++)
 		scene->Step();
@@ -176,9 +184,25 @@ int main(int argc, char* argv[]){
 	Posed pose;
 	pose.Pos() = Vec3d(3.0, 2.0, 0.0);
 	robot[0].Build(pose, scene, phSdk);
-	pose.Pos() = Vec3d(-3.0, 2.0, 0.0);
-	car.Build(pose, scene, phSdk);
+	pose.Pos() = Vec3d(0.0, 1.0, 1.0);
+
+//	car.Build(pose, scene, phSdk);
+	CDBoxDesc box;
+	box.boxsize = Vec3f(1.0, 1.0, 2.0);
+	CDBoxIf* boxBody = DCAST(CDBoxIf, phSdk->CreateShape(box));
+	PHSolidDesc sd;
+	sd.mass *= 0.7;
+	sd.inertia *= 0.7;
+	PHSolidIf* soBox;
+	for(int i=0; i<3;++i){
+		soBox = scene->CreateSolid(sd);
+		soBox->AddShape(boxBody);
+		soBox->SetPose(pose);
+		pose.PosY()+=1.0;
+		pose.PosX()-=0.1;
+	}
 	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));
+	scene->SetNumIteration(60);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -189,8 +213,12 @@ int main(int argc, char* argv[]){
 	device = grSdk->CreateDeviceGL(window);
 	device->Init();
 	render->SetDevice(device);	// デバイスの設定
+	Affinef af;
+	af.Pos() = Vec3f(5, 2, 0);
+	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
+	render->SetViewMatrix(af);
 
-	glutTimerFunc(20, timer, 0);
+	glutTimerFunc(10, timer, 0);
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);

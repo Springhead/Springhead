@@ -83,7 +83,7 @@ public:
 	//Matrix63d	Jcv[2], Jcw[2];	// Correction用の拘束ヤコビ行列
 	//Matrix63d	Tcv[2], Tcw[2];
 
-	Vec3d		fv, fw;	/// dynamicsにおける関節力
+	Vec3d		fv, fw;	/// dynamicsにおける関節力の力積
 	//Vec3d		Fv, Fq; /// correctionにおける関節力
 
 	//Vec6d		b, B;	// bベクトル．dynamics用とcorrection用

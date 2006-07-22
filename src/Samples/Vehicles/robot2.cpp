@@ -14,7 +14,7 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(0.1, 0.4, 0.1);
 	boxCrank = DCAST(CDBoxIf, sdk->CreateShape(bd));
-	bd.boxsize = Vec3f(0.1, 1.0, 0.1);
+	bd.boxsize = Vec3f(0.1, 1.5, 0.1);
 	boxFoot = DCAST(CDBoxIf, sdk->CreateShape(bd));
 	bd.boxsize = Vec3f(0.1, 0.8, 0.1);
 	boxGuide = DCAST(CDBoxIf, sdk->CreateShape(bd));
@@ -41,10 +41,10 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	
 	jd.posePlug = Posed();
 	jd.posePlug.Pos() = Vec3d(0.0, 0.1, 0.06);
-	jd.poseSocket.Pos() = Vec3d(0.0, -0.1, -0.06);
+	jd.poseSocket.Pos() = Vec3d(0.0, -0.1+0.25, -0.06);
 	jntFoot[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[0], jd));
 	jd.posePlug.Pos() = Vec3d(0.0, -0.1, -0.06);
-	jd.poseSocket.Pos() = Vec3d(0.0, -0.1, 0.06);
+	jd.poseSocket.Pos() = Vec3d(0.0, -0.1+0.25, 0.06);
 	jntFoot[1] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[1], jd));
 	
 	jntCrank->SetSpring(K);
@@ -57,7 +57,7 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	jntFoot[1]->SetDamper(D);
 	jntFoot[1]->SetSpringOrigin(0.0);
 
-	jd.posePlug.Pos() = Vec3d(0.0, 0.5, 0.0);
+	jd.posePlug.Pos() = Vec3d(0.0, 0.7, 0.0);
 	jd.poseSocket.Pos() = Vec3d(0.0, -0.4, 0.0);
 	jntFootGuide[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soFoot[0], soGuide[0], jd));
 	//jd.pose[0].Pos() = Vec3d(0.0, 0.5, 0.0);
@@ -105,7 +105,7 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 
 void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(1.5, 0.5, 1.5);
+	bd.boxsize = Vec3f(0.8, 0.6, 1.0);
 	boxBody = DCAST(CDBoxIf, sdk->CreateShape(bd));
 	
 	PHSolidDesc sd;
@@ -115,15 +115,15 @@ void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	soBody->SetDynamical(false);
 
 	Posed poseLeg;
-	poseLeg.Pos() = Vec3d(-1.3, 0.0, 1.0);
+	poseLeg.Pos() = Vec3d(-1.3, -0.3, 1.0);
 	leg[0].Build(soBody, poseLeg, scene, sdk);
-	poseLeg.Pos() = Vec3d(-1.3, 0.0, -1.0);
+	poseLeg.Pos() = Vec3d(-1.3, -0.3, -1.0);
 	leg[2].Build(soBody, poseLeg, scene, sdk);
 	
 	poseLeg.Ori() = Quaterniond::Rot(Rad(180.0), 'y');
-	poseLeg.Pos() = Vec3d(1.3, 0.0, 1.0);
+	poseLeg.Pos() = Vec3d(1.3, -0.3, 1.0);
 	leg[1].Build(soBody, poseLeg, scene, sdk);
-	poseLeg.Pos() = Vec3d(1.3, 0.0, -1.0);
+	poseLeg.Pos() = Vec3d(1.3, -0.3, -1.0);
 	leg[3].Build(soBody, poseLeg, scene, sdk);
 
 	vector<PHSolidIf*> group;
@@ -140,30 +140,39 @@ void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	soBody->SetDynamical(true);
 }
 
+
+const double speed = 3.0;
+void Robot2::Stop(){
+	leg[0].jntCrank->SetDesiredVelocity(0);
+	leg[1].jntCrank->SetDesiredVelocity(0);
+	leg[2].jntCrank->SetDesiredVelocity(0);
+	leg[3].jntCrank->SetDesiredVelocity(0);
+}
+
 void Robot2::Forward(){
-	leg[0].jntCrank->SetDesiredVelocity(3.0);
-	leg[1].jntCrank->SetDesiredVelocity(-3.0);
-	leg[2].jntCrank->SetDesiredVelocity(3.0);
-	leg[3].jntCrank->SetDesiredVelocity(-3.0);
+	leg[0].jntCrank->SetDesiredVelocity(speed);
+	leg[1].jntCrank->SetDesiredVelocity(-speed);
+	leg[2].jntCrank->SetDesiredVelocity(speed);
+	leg[3].jntCrank->SetDesiredVelocity(-speed);
 }
 
 void Robot2::Backward(){
-	leg[0].jntCrank->SetDesiredVelocity(-3.0);
-	leg[1].jntCrank->SetDesiredVelocity(3.0);
-	leg[2].jntCrank->SetDesiredVelocity(-3.0);
-	leg[3].jntCrank->SetDesiredVelocity(3.0);
+	leg[0].jntCrank->SetDesiredVelocity(-speed);
+	leg[1].jntCrank->SetDesiredVelocity(speed);
+	leg[2].jntCrank->SetDesiredVelocity(-speed);
+	leg[3].jntCrank->SetDesiredVelocity(speed);
 }
 
 void Robot2::TurnLeft(){
-	leg[0].jntCrank->SetDesiredVelocity(3.0);
-	leg[1].jntCrank->SetDesiredVelocity(-3.0);
-	leg[2].jntCrank->SetDesiredVelocity(-3.0);
-	leg[3].jntCrank->SetDesiredVelocity(3.0);
+	leg[0].jntCrank->SetDesiredVelocity(speed);
+	leg[1].jntCrank->SetDesiredVelocity(-speed);
+	leg[2].jntCrank->SetDesiredVelocity(-speed);
+	leg[3].jntCrank->SetDesiredVelocity(speed);
 }
 
 void Robot2::TurnRight(){
-	leg[0].jntCrank->SetDesiredVelocity(-3.0);
-	leg[1].jntCrank->SetDesiredVelocity(3.0);
-	leg[2].jntCrank->SetDesiredVelocity(3.0);
-	leg[3].jntCrank->SetDesiredVelocity(-3.0);
+	leg[0].jntCrank->SetDesiredVelocity(-speed);
+	leg[1].jntCrank->SetDesiredVelocity(speed);
+	leg[2].jntCrank->SetDesiredVelocity(speed);
+	leg[3].jntCrank->SetDesiredVelocity(-speed);
 }

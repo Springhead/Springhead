@@ -131,6 +131,11 @@ public:
 	 */
 	virtual void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
 
+	///	@brief LCPソルバの計算回数の取得．MODE_LCPの場合の拘束力の繰り返し近似計算の回数．
+	virtual int GetNumIteration()=0;
+	///	@brief LCPソルバの計算回数の設定．
+	virtual void SetNumIteration(int n)=0;
+	
 	/** @brief 関節を作成する
 		@param desc 関節のディスクリプタ
 		@return 関節のインタフェース
