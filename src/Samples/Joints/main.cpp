@@ -98,8 +98,32 @@ void BuildScene0(){
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
 	soBox.back()->SetDynamical(false);
+
+	bd.boxsize = Vec3d(2.0, 5.0, 2.0);
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(scene->CreateShape(bd));
+
+	PHHingeJointDesc jdesc;
+	jdesc.posePlug.Pos() = Vec3d( 0,  0,  0);
+	jdesc.poseSocket.Pos() = Vec3d(0, 2.5, 0);
+	jntLink.push_back(scene->CreateJoint(soBox[0], soBox[1], jdesc));
+
+	Vec3d org = soBox[0]->GetFramePosition();
+	double theta0 = Rad(30.0);
+	double r = 2.5;
+	soBox[1]->SetFramePosition(org + Vec3d(r * sin(theta0), -r * cos(theta0), 0));
+	soBox[1]->SetOrientation(Quaterniond::Rot(theta0, 'z'));
+
+	double K = 100.0;
+	double D = 1.0;
+	PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
+	hinge->SetSpringOrigin(Rad(90.0));
+	hinge->SetSpring(K);
+	hinge->SetDamper(D);
+
+	scene->SetContactMode(PHSceneDesc::MODE_NONE);
 	// 重力を設定
-	scene->SetGravity(Vec3f(0, -9.8f, 0));
+	scene->SetGravity(Vec3f(0, 0, 0));
 }
 
 // シーン1 : アクチュエータのデモ
