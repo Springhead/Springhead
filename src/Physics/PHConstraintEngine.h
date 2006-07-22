@@ -43,6 +43,7 @@ class PHConstraintEngine : public PHContactDetector<PHSolidInfoForLCP, PHShapePa
 public:
 	int		numIteration;			///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”
 	double	correctionRate;			///< Œë·C³”ä—¦
+	double	shrinkRate;				///< LCP‰Šú’l‚ð‘O‰ñ‚Ì‰ð‚É‘Î‚µ‚Äk¬‚³‚¹‚é”ä—¦
 	//int max_iter_correction;		///< Œë·C³LCP‚Ì”½•œ‰ñ”
 	//double max_error;
 

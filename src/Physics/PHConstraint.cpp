@@ -154,7 +154,7 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 
 }
 
-void PHConstraint::SetupDynamics(double dt, double correction_rate){
+void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrink_rate){
 	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
 	if(!bEnabled || !bFeasible)
 		return;
@@ -164,8 +164,8 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate){
 	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
 	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
 	  */
-	fv *= 0.7;
-	fw *= 0.7;
+	fv *= shrink_rate;
+	fw *= shrink_rate;
 
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない

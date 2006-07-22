@@ -81,7 +81,7 @@ void PHHingeJoint::CompBias(double dt, double correction_rate){
 		Aw.z += tmp * dtinv;
 		bw.z += spring * (diff) * tmp;
 	}
-	//DSTR << "hinge" << fv << endl;
+	DSTR << "hinge" << fv << endl;
 }
 
 /*void PHHingeJoint::CompError(double dt){

@@ -155,8 +155,9 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	numIteration   = 15;
-	correctionRate = 0.3;
+	numIteration	= 15;
+	correctionRate	= 0.3;
+	shrinkRate		= 1.0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -221,8 +222,8 @@ void PHConstraintEngine::SetupDynamics(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
 	for(it = solids.begin(); it != solids.end(); it++)
 		(*it)->SetupDynamics(dt);
-	points.SetupDynamics(dt, correctionRate);
-	joints.SetupDynamics(dt, correctionRate);
+	points.SetupDynamics(dt, correctionRate, shrinkRate);
+	joints.SetupDynamics(dt, correctionRate, shrinkRate);
 }
 /*void PHConstraintEngine::SetupCorrection(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator it;

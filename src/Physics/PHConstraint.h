@@ -99,7 +99,7 @@ public:
 	virtual bool IsEnabled(){return bEnabled;}
 	void Init();
 	void CompJacobian(bool bCompAngular);
-	void SetupDynamics(double dt, double correction_rate);
+	void SetupDynamics(double dt, double correction_rate, double shrink_rate);
 	void IterateDynamics();
 	//void SetupCorrection(double dt, double max_error);
 	//void IterateCorrection();
@@ -114,9 +114,9 @@ public:
 };
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{
 public:
-	void SetupDynamics(double dt, double correction_rate){
+	void SetupDynamics(double dt, double correction_rate, double shrink_rate){
 		for(iterator it = begin(); it != end(); it++)
-			(*it)->SetupDynamics(dt, correction_rate);
+			(*it)->SetupDynamics(dt, correction_rate, shrink_rate);
 	}
 	/*void SetupCorrection(double dt, double max_error){
 		for(iterator it = begin(); it != end(); it++)

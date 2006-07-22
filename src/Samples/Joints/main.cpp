@@ -61,9 +61,8 @@ PHSceneIf* scene;		// Sceneインタフェース
 GRDebugRenderIf* render;
 GRDeviceGLIf* device;
 
+double simulationPeriod = 32.0;
 Vec3d lookAt;
-double simulationPeriod=32.0;
-
 int sceneNo;			// シーン番号
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
@@ -75,6 +74,16 @@ CDShapeIf* shapeSphere;
 PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
 std::vector<PHJointIf*> jntLink;		//関節のインタフェース
+
+/** 実験用変数 **/
+const double dt = 0.1;					//積分幅
+const int niter = 10;					//LCPはんぷくかいすう
+const double springOrigin = Rad(90.0);	//バネの原点
+const double Kexp = 10, Dexp = 10;		//explicitバネダンパの係数
+const double Kimp = 0, Dimp = 0;		//implicitバネダンパの係数
+const double Kimp2 = 100.0, Dimp2 = 10.0;
+bool bExplicit = false;					//どっちでバネダンパするか
+/**/
 
 void CreateFloor(){
 	CDBoxDesc desc;
@@ -114,16 +123,22 @@ void BuildScene0(){
 	soBox[1]->SetFramePosition(org + Vec3d(r * sin(theta0), -r * cos(theta0), 0));
 	soBox[1]->SetOrientation(Quaterniond::Rot(theta0, 'z'));
 
-	double K = 100.0;
-	double D = 1.0;
-	PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
-	hinge->SetSpringOrigin(Rad(90.0));
-	hinge->SetSpring(K);
-	hinge->SetDamper(D);
+	PHSpringDesc sdesc;
+	sdesc.posePlug.Pos() = Vec3d(0,0,0);
+	sdesc.poseSocket.Pos() = Vec3d(0, -2.5, 0);
+	sdesc.spring = Kimp2;
+	sdesc.damper = Dimp2;
+	jntLink.push_back(scene->CreateJoint(soFloor, soBox[1], sdesc));
 
+	if(!bExplicit){
+		PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
+		hinge->SetSpringOrigin(springOrigin);
+		hinge->SetSpring(Kimp);
+		hinge->SetDamper(Dimp);
+	}
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);
 	// 重力を設定
-	scene->SetGravity(Vec3f(0, 0, 0));
+	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
 // シーン1 : アクチュエータのデモ
@@ -485,6 +500,27 @@ void OnKey(char key){
 	case 4: OnKey4(key); break;
 	case 5: OnKey5(key); break;
 	}
+}
+
+void OnTimer0(){
+	//自前でバネダンパのトルクを計算する実験
+	if(bExplicit){
+		PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
+		double pos = hinge->GetPosition();
+		double vel = hinge->GetVelocity();
+		hinge->SetMotorTorque(-Kexp * (pos - springOrigin) - Dexp * vel);
+	}
+}
+
+void OnTimer(){
+	switch(sceneNo){
+	case 0: OnTimer0(); break;
+	/*case 1: OnTimer1(); break;
+	case 2: OnTimer2(); break;
+	case 3: OnTimer3(); break;
+	case 4: OnTimer4(); break;
+	case 5: OnTimer5(); break;*/
+	}
 }	
 
 /**
@@ -597,6 +633,7 @@ void keyboard(unsigned char key, int x, int y){
 void timer(int id){
 	glutTimerFunc(simulationPeriod, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
+	OnTimer();
 	scene->ClearForce();
 	scene->GenerateForce();
 	scene->Integrate();
@@ -620,8 +657,8 @@ int main(int argc, char* argv[]){
 	grSdk = CreateGRSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
-	dscene.numIteration = 10;
+	dscene.timeStep = dt;
+	dscene.numIteration = niter;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;
