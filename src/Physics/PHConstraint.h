@@ -92,7 +92,9 @@ public:
 	//Vec3d		Bv, Bq; /// correctionにおける拘束誤差
 	//Vec6d		Ad, Ac;	// A行列の対角成分．dynamics用とcorrection用
 	Vec3d		Av, Aw; //, Aq;
-
+	Vec3d		dbv, dbw;	//バネダンパ実装時などにおけるbの補正値
+	Vec3d		dAv, dAw;	//同Aの対角成分の補正値
+	
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}

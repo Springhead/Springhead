@@ -62,26 +62,25 @@ double PHHingeJoint::GetVelocity(){
 void PHHingeJoint::CompBias(double dt, double correction_rate){
 	CompDof();
 	double dtinv = 1.0 / dt;
-	bv += correction_rate * rjrel * dtinv;
-	//Vec3d w = (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
+	dbv = correction_rate * rjrel * dtinv;
 	Vec3d w = qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv);
-	//DSTR << qjrel << w << endl;
 	w *= correction_rate;
-	bw.x += w.x;
-	bw.y += w.y;
+	dbw.x = w.x;
+	dbw.y = w.y;
 	//bw.z += w.z;
+	double diff;
 	if(mode == MODE_VELOCITY){
-		bw.z -= vel_d;
+		dbw.z = -vel_d;
 	}
 	else if(spring != 0.0 || damper != 0.0){
-		double diff = GetPosition() - origin;
+		diff = GetPosition() - origin;
 		while(diff >  M_PI) diff -= 2 * M_PI;
 		while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * dt);
-		Aw.z += tmp * dtinv;
-		bw.z += spring * (diff) * tmp;
+		dAw.z = tmp * dtinv;
+		dbw.z = spring * (diff) * tmp;
 	}
-	DSTR << "hinge" << fv << endl;
+	DSTR << "hinge" << fv << fw << diff * spring * dt << endl;
 }
 
 /*void PHHingeJoint::CompError(double dt){
@@ -93,7 +92,7 @@ void PHHingeJoint::Projection(double& f, int k){
 	if(k == 5){
 		if(on_lower)
 			f = max(0.0, f);
-		if(on_upper)
+		else if(on_upper)
 			f = min(0.0, f);
 	}
 }

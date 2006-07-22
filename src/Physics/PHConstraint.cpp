@@ -159,14 +159,6 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrin
 	if(!bEnabled || !bFeasible)
 		return;
 
-	/* 前回の値を縮小したものを初期値とする．
-	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
-	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
-	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
-	  */
-	fv *= shrink_rate;
-	fw *= shrink_rate;
-
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
  	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
@@ -175,14 +167,6 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrin
 	//	拘束の種類ごとに異なる
 	//CompConstraintJacobian();
 	
-	int i, j;
-	for(i = 0; i < 2; i++){
-		if(solid[i]->solid->IsDynamical()){
-			solid[i]->dv += Tvv[i].trans() * fv + Twv[i].trans() * fw;
-			solid[i]->dw += Tvw[i].trans() * fv + Tww[i].trans() * fw;
-		}
-	}
-
 	bv = Jvv[0] * (solid[0]->v + solid[0]->dv0) +
 		 Jvw[0] * (solid[0]->w + solid[0]->dw0) +
 		 Jvv[1] * (solid[1]->v + solid[1]->dv0) +
@@ -193,24 +177,43 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrin
 		 Jww[1] * (solid[1]->w + solid[1]->dw0);
 	
 	CompBias(dt, correction_rate);	// 目標速度，バネダンパによる補正項を計算
-	
+	bv += dbv;
+	bw += dbw;
+
+	/* 前回の値を縮小したものを初期値とする．
+	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
+	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
+	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
+	  */
+	fv *= shrink_rate;
+	fw *= shrink_rate;
+	int i, j;
+	for(i = 0; i < 2; i++){
+		if(solid[i]->solid->IsDynamical()){
+			solid[i]->dv += Tvv[i].trans() * fv + Twv[i].trans() * fw;
+			solid[i]->dw += Tvw[i].trans() * fv + Tww[i].trans() * fw;
+		}
+	}
+
 	// iterationでの手間を省くためにあらかじめA行列の対角要素でbとJを割っておく
 	double tmp;
 	for(j = 0; j < 3; j++){
-		tmp = 1.0 / Av[j];
+		tmp = 1.0 / (Av[j] + dAv[j]);
 		bv[j] *= tmp;
 		Jvv[0].row(j) *= tmp;
 		Jvw[0].row(j) *= tmp;
 		Jvv[1].row(j) *= tmp;
 		Jvw[1].row(j) *= tmp;
+		dAv[j] *= tmp;
 	}
 	for(j = 0; j < 3; j++){
-		tmp = 1.0 / Aw[j];
+		tmp = 1.0 / (Aw[j] + dAw[j]);
 		bw[j] *= tmp;
 		Jwv[0].row(j) *= tmp;
 		Jww[0].row(j) *= tmp;
 		Jwv[1].row(j) *= tmp;
 		Jww[1].row(j) *= tmp;
+		dAw[j] *= tmp;
 	}
 }
 
@@ -221,7 +224,7 @@ void PHConstraint::IterateDynamics(){
 	int i, j;
 	for(j = 0; j < 3; j++){
 		if(!constr[j])continue;
-		fvnew[j] = fv[j] - (bv[j] + 
+		fvnew[j] = (1.0 - dAv[j]) * fv[j] - (bv[j] + 
 			Jvv[0].row(j) * (solid[0]->dv) + Jvw[0].row(j) * (solid[0]->dw) +
 			Jvv[1].row(j) * (solid[1]->dv) + Jvw[1].row(j) * (solid[1]->dw));
 		Projection(fvnew[j], j);
@@ -236,7 +239,7 @@ void PHConstraint::IterateDynamics(){
 	}
 	for(j = 0; j < 3; j++){
 		if(!constr[j + 3])continue;
-		fwnew[j] = fw[j] - (bw[j] + 
+		fwnew[j] = (1.0 - dAw[j]) * fw[j] - (bw[j] + 
 			Jwv[0].row(j) * (solid[0]->dv) + Jww[0].row(j) * (solid[0]->dw) +
 			Jwv[1].row(j) * (solid[1]->dv) + Jww[1].row(j) * (solid[1]->dw));
 		Projection(fwnew[j], j + 3);

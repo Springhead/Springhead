@@ -48,13 +48,18 @@ void PHSpring::SetDesc(const PHConstraintDesc& desc){
 
 void PHSpring::CompBias(double dt, double correction_rate){
 	//rjrel
-	double tmp;
+	double dtinv = 1.0 / dt, tmp;
 	for(int i = 0; i < 3; i++){
+		if(damper[i] == 0.0 && spring[i] == 0.0){
+			constr[i] = false;
+			continue;
+		}
+		constr[i] = true;
 		tmp = 1.0 / (damper[i] + spring[i] * dt);
-		Av[i] += tmp / dt;
-		bv[i] += spring[i] * rjrel[i] * tmp;
+		dAv[i] = tmp * dtinv;
+		dbv[i] = spring[i] * rjrel[i] * tmp;
 	}
-	//DSTR << "spring" << fv << endl;
+	DSTR << "spring" << fv << rjrel.y * spring.y * dt << endl;
 }
 
 }
