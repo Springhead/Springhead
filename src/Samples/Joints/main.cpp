@@ -81,7 +81,9 @@ const int niter = 10;					//LCPはんぷくかいすう
 const double springOrigin = Rad(90.0);	//バネの原点
 const double Kexp = 10, Dexp = 10;		//explicitバネダンパの係数
 const double Kimp = 0, Dimp = 0;		//implicitバネダンパの係数
-const double Kimp2 = 100.0, Dimp2 = 10.0;
+const double Kimp2 = 0.01, Dimp2 = 0.01;
+double anglePendulum = Rad(60.0);				//振り子の初期角度
+double lengthPendulum = 10.0;							//振り子の長さ
 bool bExplicit = false;					//どっちでバネダンパするか
 /**/
 
@@ -104,30 +106,29 @@ void BuildScene0(){
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(shapeBox);
 	//空中に固定する
-	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 0.0));
 	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
 	soBox.back()->SetDynamical(false);
 
-	bd.boxsize = Vec3d(2.0, 5.0, 2.0);
+	bd.boxsize = Vec3d(2.0, lengthPendulum, 2.0);
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(scene->CreateShape(bd));
 
 	PHHingeJointDesc jdesc;
+	double r = lengthPendulum/2;
 	jdesc.posePlug.Pos() = Vec3d( 0,  0,  0);
-	jdesc.poseSocket.Pos() = Vec3d(0, 2.5, 0);
+	jdesc.poseSocket.Pos() = Vec3d(0, r, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[0], soBox[1], jdesc));
 
 	Vec3d org = soBox[0]->GetFramePosition();
-	double theta0 = Rad(30.0);
-	double r = 2.5;
-	soBox[1]->SetFramePosition(org + Vec3d(r * sin(theta0), -r * cos(theta0), 0));
-	soBox[1]->SetOrientation(Quaterniond::Rot(theta0, 'z'));
+	soBox[1]->SetFramePosition(org + Vec3d(r * sin(anglePendulum), -r * cos(anglePendulum), 0));
+	soBox[1]->SetOrientation(Quaterniond::Rot(anglePendulum, 'z'));
 
 	PHSpringDesc sdesc;
-	sdesc.posePlug.Pos() = Vec3d(0,0,0);
-	sdesc.poseSocket.Pos() = Vec3d(0, -2.5, 0);
-	sdesc.spring = Kimp2;
-	sdesc.damper = Dimp2;
+	sdesc.posePlug.Pos() = Vec3d(0, 2.5, 0);
+	sdesc.poseSocket.Pos() = Vec3d(0, -r, 0);
+	sdesc.spring = Kimp2 * Vec3d(1,1,1);
+	sdesc.damper = Dimp2 * Vec3d(1,1,1);
 	jntLink.push_back(scene->CreateJoint(soFloor, soBox[1], sdesc));
 
 	if(!bExplicit){
