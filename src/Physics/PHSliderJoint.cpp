@@ -69,18 +69,18 @@ void PHSliderJoint::CompBias(double dt, double correction_rate){
 	CompDof();
 	double dtinv = 1.0 / dt;
 	Vec3d v = correction_rate * rjrel * dtinv;
-	bv.x += v.x;
-	bv.y += v.y;
+	dbv.x = v.x;
+	dbv.y = v.y;
 	if(mode == MODE_VELOCITY){
-		bv.z -= vel_d;
+		dbv.z = -vel_d;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
 		double tmp = 1.0 / (damper + spring * dt);
-		Av.z += tmp / dt;
-		bv.z += spring * (diff) * tmp;
+		dAv.z = tmp / dt;
+		dbv.z = spring * (diff) * tmp;
 	}
-	bw += (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
+	dbw = (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
 }
 
 /*void PHSliderJoint::CompError(double dt){
