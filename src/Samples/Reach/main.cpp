@@ -211,7 +211,7 @@ void BuildScene0(){
 	//	ƒoƒl
 	PHSpringDesc spd;
 	spd.damper = Vec3f(1,1,1);
-	spd.spring = Vec3f(1,1,1) * 10;
+	spd.spring = Vec3f(1,1,1) * 100;
 	spd.posePlug.Pos() = Vec3d(0, -0.07, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[5], spd));
 
