@@ -20,7 +20,7 @@ IF_OBJECT_IMP(PHSpring, PHConstraint)
 
 void PHSpring::CompJacobian(bool bCompAngular){
 	PHConstraint::CompJacobian(bCompAngular);
-/*	double k = 0.4;
+/*	double k = 0.2;
 	for(int i = 0; i < 2; i++){
 		Jvv[i] *= k;
 		Jvw[i] *= k;

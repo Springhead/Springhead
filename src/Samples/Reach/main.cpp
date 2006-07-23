@@ -77,7 +77,7 @@ std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
 /** 実験用変数 **/
 const double dt = 0.1;					//積分幅
-const int niter = 10;					//LCPはんぷくかいすう
+const int niter = 100;					//LCPはんぷくかいすう
 const double springOrigin = Rad(90.0);	//バネの原点
 const double Kexp = 200, Dexp = 10;		//explicitバネダンパの係数
 const double Kimp = 200, Dimp = 10;		//implicitバネダンパの係数
@@ -211,7 +211,7 @@ void BuildScene0(){
 	//	バネ
 	PHSpringDesc spd;
 	spd.damper = Vec3f(1,1,1) * 30;
-	spd.spring = Vec3f(1,1,1) * 200;
+	spd.spring = Vec3f(1,1,1) * 3000;
 	spd.posePlug.Pos() = Vec3d(0, -0.07, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[5], spd));
 
