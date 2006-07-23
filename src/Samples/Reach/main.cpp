@@ -77,7 +77,7 @@ std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
 /** 実験用変数 **/
 const double dt = 0.1;					//積分幅
-const int niter = 100;					//LCPはんぷくかいすう
+const int niter = 200;					//LCPはんぷくかいすう
 const double springOrigin = Rad(90.0);	//バネの原点
 const double Kexp = 200, Dexp = 10;		//explicitバネダンパの係数
 const double Kimp = 200, Dimp = 10;		//implicitバネダンパの係数
@@ -123,8 +123,8 @@ void BuildScene0(){
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	jd.posePlug.Pos() = Vec3d(0, -0.04, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'x');
-	jd.damper = 6.0;
-	jd.spring = 16.0;
+	jd.damper = 60.0;
+	jd.spring = 160.0;
 	jntLink.push_back(scene->CreateJoint(soBox[1], soBox[0], jd));
 
 	//	胸
@@ -138,7 +138,7 @@ void BuildScene0(){
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Pos() = Vec3d(0, -0.1, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.damper = 3.0;
+	jd.damper = 6.0;
 	jd.spring = 16.0;
 	jntLink.push_back(scene->CreateJoint(soBox[2], soBox[1], jd));
 
@@ -148,8 +148,8 @@ void BuildScene0(){
 	//	肩Z
 	jd.poseSocket.Pos() = Vec3d(0.13, 0.1, 0);
 	jd.posePlug.Pos() = Vec3d(0, 0, 0);
-	jd.damper = 1.0;
-	jd.spring = 1.0;
+	jd.damper = 6.0;
+	jd.spring = 10.0;
 	jd.origin = Rad(-30);
 	jntLink.push_back(scene->CreateJoint(soBox[3], soBox[2], jd));
 
@@ -160,12 +160,12 @@ void BuildScene0(){
 	soBox.back()->AddShape(shape);
 
 	//	肩X
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
 	jd.poseSocket.Pos() = Vec3d(0, 0, 0);
-	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'z');
 	jd.posePlug.Pos() = Vec3d(0, 0.09, 0);
-	jd.damper = 1.0;
-	jd.spring = 1.0;
+	jd.damper = 6.0;
+	jd.spring = 10.0;
 	jd.origin = Rad(-30);
 	jntLink.push_back(scene->CreateJoint(soBox[4], soBox[3], jd));
 
@@ -179,9 +179,9 @@ void BuildScene0(){
 	jd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Pos() = Vec3d(0, 0.07, 0);
-	jd.damper = 1.0;
-	jd.spring = 1.0;
-	jd.origin = Rad(-30);
+	jd.damper = 4.0;
+	jd.spring = 6.0;
+	jd.origin = Rad(-90);
 	jntLink.push_back(scene->CreateJoint(soBox[5], soBox[4], jd));
 
 	//	頭
@@ -195,8 +195,8 @@ void BuildScene0(){
 	jd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Pos() = Vec3d(0, -0.08, 0);
-	jd.damper = 1.0;
-	jd.spring = 1.0;
+	jd.damper = 3.0;
+	jd.spring = 3.0;
 	jd.origin = Rad(0);
 	jntLink.push_back(scene->CreateJoint(soBox[6], soBox[2], jd));
 
@@ -212,12 +212,13 @@ void BuildScene0(){
 	PHSpringDesc spd;
 	spd.damper = Vec3f(1,1,1) * 30;
 	spd.spring = Vec3f(1,1,1) * 3000;
-	spd.posePlug.Pos() = Vec3d(0, -0.07, 0);
+	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[5], spd));
 
 
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
+	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 //	scene->SetContactMode(PHSceneDesc::MODE_NONE);
 }
 
@@ -405,10 +406,15 @@ void BuildScene(){
 
 void OnKey0(char key){
 	switch(key){
+	case 't': soBox.back()->SetFramePosition(Vec3f(0.0, 0.2, 0.0)); break;
+	case 'y': soBox.back()->SetFramePosition(Vec3f(0.1, 0.2, 0.0)); break;
+	case 'u': soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, 0.0)); break;
+	case 'i': soBox.back()->SetFramePosition(Vec3f(0.3, 0.2, 0.0)); break;
 	case 'a': soBox.back()->SetFramePosition(Vec3f(0.0, 0.2, -0.2)); break;
 	case 's': soBox.back()->SetFramePosition(Vec3f(0.1, 0.2, -0.2)); break;
 	case 'd': soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, -0.2)); break;
 	case 'f': soBox.back()->SetFramePosition(Vec3f(0.3, 0.2, -0.2)); break;
+	case 'q': soBox.back()->SetFramePosition(Vec3f(0.0, 0.2, -0.4)); break;
 	case 'w': soBox.back()->SetFramePosition(Vec3f(0.1, 0.2, -0.4)); break;
 	case 'e': soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, -0.4)); break;
 	case 'r': soBox.back()->SetFramePosition(Vec3f(0.3, 0.2, -0.4)); break;
@@ -674,7 +680,6 @@ void keyboard(unsigned char key, int x, int y){
 	switch (key) {
 		//終了
 		case ESC:		
-		case 'q':
 			exit(0);
 			break;
 		//シーン切り替え
