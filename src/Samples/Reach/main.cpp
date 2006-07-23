@@ -75,6 +75,9 @@ PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
 std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
+std::vector<PHSolidIf*> soTarget;		
+
+
 /** 実験用変数 **/
 const double dt = 0.1;					//積分幅
 const int niter = 200;					//LCPはんぷくかいすう
@@ -134,6 +137,7 @@ void BuildScene0(){
 	soBox.back()->AddShape(shape);
 
 	//	ジョイント
+	jd = PHHingeJointDesc();
 	jd.poseSocket.Pos() = Vec3d(0, 0.04, 0);
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Pos() = Vec3d(0, -0.1, 0);
@@ -146,12 +150,24 @@ void BuildScene0(){
 	soBox.push_back(scene->CreateSolid(descBox));
 
 	//	肩Z
+	jd = PHHingeJointDesc();
 	jd.poseSocket.Pos() = Vec3d(0.13, 0.1, 0);
 	jd.posePlug.Pos() = Vec3d(0, 0, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
 	jd.origin = Rad(-30);
 	jntLink.push_back(scene->CreateJoint(soBox[3], soBox[2], jd));
+
+	//	継ぎ
+	soBox.push_back(scene->CreateSolid(descBox));
+
+	//	肩Y
+	jd = PHHingeJointDesc();
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd.damper = 6.0;
+	jd.spring = 150.0;
+	jntLink.push_back(scene->CreateJoint(soBox[4], soBox[3], jd));
 
 	//	右上腕
 	bd.boxsize = Vec3f(0.049, 0.16, 0.048);
@@ -160,14 +176,14 @@ void BuildScene0(){
 	soBox.back()->AddShape(shape);
 
 	//	肩X
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
-	jd.poseSocket.Pos() = Vec3d(0, 0, 0);
-	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd = PHHingeJointDesc();
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Pos() = Vec3d(0, 0.09, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
 	jd.origin = Rad(-30);
-	jntLink.push_back(scene->CreateJoint(soBox[4], soBox[3], jd));
+	jntLink.push_back(scene->CreateJoint(soBox[5], soBox[4], jd));
 
 	//	右前腕
 	bd.boxsize = Vec3f(0.046, 0.12, 0.046);
@@ -175,6 +191,7 @@ void BuildScene0(){
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(shape);
 	//	ひじ
+	jd = PHHingeJointDesc();
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
@@ -182,7 +199,7 @@ void BuildScene0(){
 	jd.damper = 4.0;
 	jd.spring = 6.0;
 	jd.origin = Rad(-90);
-	jntLink.push_back(scene->CreateJoint(soBox[5], soBox[4], jd));
+	jntLink.push_back(scene->CreateJoint(soBox[6], soBox[5], jd));
 
 	//	頭
 	CDSphereDesc sd;
@@ -191,6 +208,7 @@ void BuildScene0(){
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(shape);
 	//	首
+	jd = PHHingeJointDesc();
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
@@ -198,7 +216,7 @@ void BuildScene0(){
 	jd.damper = 3.0;
 	jd.spring = 3.0;
 	jd.origin = Rad(0);
-	jntLink.push_back(scene->CreateJoint(soBox[6], soBox[2], jd));
+	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[2], jd));
 
 	//	目標位置
 	sd.radius = 0.02;
@@ -207,18 +225,93 @@ void BuildScene0(){
 	soBox.back()->AddShape(shape);
 	soBox.back()->SetDynamical(false);
 	soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, -0.2));
+	soTarget.push_back(soBox.back());
 
 	//	バネ
 	PHSpringDesc spd;
-	spd.damper = Vec3f(1,1,1) * 30;
+	spd.damper = Vec3f(1,1,1) * 300;
 	spd.spring = Vec3f(1,1,1) * 3000;
 	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
-	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[5], spd));
+	jntLink.push_back(scene->CreateJoint(soBox[8], soBox[6], spd));
+
+
+	
+	//	左手
+
+	//	継ぎ
+	soBox.push_back(scene->CreateSolid(descBox));
+
+	//	肩Z
+	jd = PHHingeJointDesc();
+	jd.poseSocket.Pos() = Vec3d(-0.13, 0.1, 0);
+	jd.posePlug.Pos() = Vec3d(0, 0, 0);
+	jd.damper = 6.0;
+	jd.spring = 10.0;
+	jd.origin = Rad(30);
+	jntLink.push_back(scene->CreateJoint(soBox[9], soBox[2], jd));
+
+	//	継ぎ
+	soBox.push_back(scene->CreateSolid(descBox));
+
+	//	肩Y
+	jd = PHHingeJointDesc();
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd.damper = 6.0;
+	jd.spring = 150.0;
+	jntLink.push_back(scene->CreateJoint(soBox[10], soBox[9], jd));
+
+	//	右上腕
+	bd.boxsize = Vec3f(0.049, 0.16, 0.048);
+	shape = phSdk->CreateShape(bd);
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(shape);
+
+	//	肩X
+	jd = PHHingeJointDesc();
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.posePlug.Pos() = Vec3d(0, 0.09, 0);
+	jd.damper = 6.0;
+	jd.spring = 10.0;
+	jd.origin = Rad(30);
+	jntLink.push_back(scene->CreateJoint(soBox[11], soBox[10], jd));
+
+	//	右前腕
+	bd.boxsize = Vec3f(0.046, 0.12, 0.046);
+	shape = phSdk->CreateShape(bd);
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(shape);
+	//	ひじ
+	jd = PHHingeJointDesc();
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
+	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.posePlug.Pos() = Vec3d(0, 0.07, 0);
+	jd.damper = 4.0;
+	jd.spring = 6.0;
+	jd.origin = Rad(-90);
+	jntLink.push_back(scene->CreateJoint(soBox[12], soBox[11], jd));
+
+	//	目標位置
+	shape = phSdk->CreateShape(sd);
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(shape);
+	soBox.back()->SetDynamical(false);
+	soBox.back()->SetFramePosition(Vec3f(-0.2, 0.2, -0.2));
+	soTarget.push_back(soBox.back());
+
+	//	バネ
+	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
+	jntLink.push_back(scene->CreateJoint(soBox[13], soBox[12], spd));
+
 
 
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
-	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
+	scene->SetContactMode(&soBox[8], PHSceneDesc::MODE_NONE);
+
+//	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 //	scene->SetContactMode(PHSceneDesc::MODE_NONE);
 }
 
@@ -406,18 +499,31 @@ void BuildScene(){
 
 void OnKey0(char key){
 	switch(key){
-	case 't': soBox.back()->SetFramePosition(Vec3f(0.0, 0.2, 0.0)); break;
-	case 'y': soBox.back()->SetFramePosition(Vec3f(0.1, 0.2, 0.0)); break;
-	case 'u': soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, 0.0)); break;
-	case 'i': soBox.back()->SetFramePosition(Vec3f(0.3, 0.2, 0.0)); break;
-	case 'a': soBox.back()->SetFramePosition(Vec3f(0.0, 0.2, -0.2)); break;
-	case 's': soBox.back()->SetFramePosition(Vec3f(0.1, 0.2, -0.2)); break;
-	case 'd': soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, -0.2)); break;
-	case 'f': soBox.back()->SetFramePosition(Vec3f(0.3, 0.2, -0.2)); break;
-	case 'q': soBox.back()->SetFramePosition(Vec3f(0.0, 0.2, -0.4)); break;
-	case 'w': soBox.back()->SetFramePosition(Vec3f(0.1, 0.2, -0.4)); break;
-	case 'e': soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, -0.4)); break;
-	case 'r': soBox.back()->SetFramePosition(Vec3f(0.3, 0.2, -0.4)); break;
+	case 't': soTarget[0]->SetFramePosition(Vec3f(0.0, 0.2, 0.0)); break;
+	case 'y': soTarget[0]->SetFramePosition(Vec3f(0.1, 0.2, 0.0)); break;
+	case 'u': soTarget[0]->SetFramePosition(Vec3f(0.2, 0.2, 0.0)); break;
+	case 'i': soTarget[0]->SetFramePosition(Vec3f(0.3, 0.2, 0.0)); break;
+	case 'a': soTarget[0]->SetFramePosition(Vec3f(0.0, 0.2, -0.2)); break;
+	case 's': soTarget[0]->SetFramePosition(Vec3f(0.1, 0.2, -0.2)); break;
+	case 'd': soTarget[0]->SetFramePosition(Vec3f(0.2, 0.2, -0.2)); break;
+	case 'f': soTarget[0]->SetFramePosition(Vec3f(0.3, 0.2, -0.2)); break;
+	case 'q': soTarget[0]->SetFramePosition(Vec3f(0.0, 0.2, -0.4)); break;
+	case 'w': soTarget[0]->SetFramePosition(Vec3f(0.1, 0.2, -0.4)); break;
+	case 'e': soTarget[0]->SetFramePosition(Vec3f(0.2, 0.2, -0.4)); break;
+	case 'r': soTarget[0]->SetFramePosition(Vec3f(0.3, 0.2, -0.4)); break;
+
+	case 'T': soTarget[1]->SetFramePosition(Vec3f(-0.0, 0.2, 0.0)); break;
+	case 'Y': soTarget[1]->SetFramePosition(Vec3f(-0.1, 0.2, 0.0)); break;
+	case 'U': soTarget[1]->SetFramePosition(Vec3f(-0.2, 0.2, 0.0)); break;
+	case 'I': soTarget[1]->SetFramePosition(Vec3f(-0.3, 0.2, 0.0)); break;
+	case 'A': soTarget[1]->SetFramePosition(Vec3f(-0.0, 0.2, -0.2)); break;
+	case 'S': soTarget[1]->SetFramePosition(Vec3f(-0.1, 0.2, -0.2)); break;
+	case 'D': soTarget[1]->SetFramePosition(Vec3f(-0.2, 0.2, -0.2)); break;
+	case 'F': soTarget[1]->SetFramePosition(Vec3f(-0.3, 0.2, -0.2)); break;
+	case 'Q': soTarget[1]->SetFramePosition(Vec3f(-0.0, 0.2, -0.4)); break;
+	case 'W': soTarget[1]->SetFramePosition(Vec3f(-0.1, 0.2, -0.4)); break;
+	case 'E': soTarget[1]->SetFramePosition(Vec3f(-0.2, 0.2, -0.4)); break;
+	case 'R': soTarget[1]->SetFramePosition(Vec3f(-0.3, 0.2, -0.4)); break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
