@@ -90,6 +90,43 @@ double lengthPendulum = 10.0;							//振り子の長さ
 bool bExplicit = false;					//どっちでバネダンパするか
 /**/
 
+/**
+ brief  	glutTimerFuncで指定したコールバック関数
+ param	 	<in/--> id　　 タイマーの区別をするための情報
+ return 	なし
+ */
+bool bTimer = true;
+void step();
+void OnTimer();
+void timer(int id){
+	if (!bTimer) return;
+	step();
+}
+void step(){
+	glutTimerFunc(simulationPeriod, timer, 0);
+	/// 時刻のチェックと画面の更新を行う
+/*	static DWORD last = timeGetTime();
+	DWORD time = timeGetTime();
+	DWORD period = time - last;
+	last = time;
+	static double realTime;
+	static double simTime;
+	realTime += period;
+	while(realTime > simTime){
+		simTime += simulationPeriod;
+*/		OnTimer();
+		scene->ClearForce();
+		scene->GenerateForce();
+		scene->Integrate();
+//	}
+	glutPostRedisplay();
+}
+void idle(){
+	scene->ClearForce();
+	scene->GenerateForce();
+	scene->Integrate();
+}
+
 void CreateFloor(bool s=true){
 	CDBoxDesc desc;
 	desc.boxsize = Vec3f(30.0f, 5.0f, 20.0f);
@@ -142,8 +179,8 @@ void BuildScene0(){
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Pos() = Vec3d(0, -0.1, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.damper = 6.0;
-	jd.spring = 16.0;
+	jd.damper = 60.0;
+	jd.spring = 160.0;
 	jntLink.push_back(scene->CreateJoint(soBox[2], soBox[1], jd));
 
 	//	継ぎ
@@ -227,13 +264,6 @@ void BuildScene0(){
 	soBox.back()->SetFramePosition(Vec3f(0.2, 0.2, -0.2));
 	soTarget.push_back(soBox.back());
 
-	//	バネ
-	PHSpringDesc spd;
-	spd.damper = Vec3f(1,1,1) * 300;
-	spd.spring = Vec3f(1,1,1) * 3000;
-	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
-	jntLink.push_back(scene->CreateJoint(soBox[8], soBox[6], spd));
-
 
 	
 	//	左手
@@ -274,7 +304,7 @@ void BuildScene0(){
 	jd.posePlug.Pos() = Vec3d(0, 0.09, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
-	jd.origin = Rad(30);
+	jd.origin = Rad(-30);
 	jntLink.push_back(scene->CreateJoint(soBox[11], soBox[10], jd));
 
 	//	右前腕
@@ -302,6 +332,12 @@ void BuildScene0(){
 	soTarget.push_back(soBox.back());
 
 	//	バネ
+	PHSpringDesc spd;
+	spd.damper = Vec3f(1,1,1) * 1000;
+	spd.spring = Vec3f(1,1,1) * 3000;
+	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
+	jntLink.push_back(scene->CreateJoint(soBox[8], soBox[6], spd));
+	//	バネ
 	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[13], soBox[12], spd));
 
@@ -309,7 +345,8 @@ void BuildScene0(){
 
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
-	scene->SetContactMode(&soBox[8], PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(&soTarget[0], PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(&soTarget[1], PHSceneDesc::MODE_NONE);
 
 //	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 //	scene->SetContactMode(PHSceneDesc::MODE_NONE);
@@ -510,7 +547,7 @@ void OnKey0(char key){
 	case 'q': soTarget[0]->SetFramePosition(Vec3f(0.0, 0.2, -0.4)); break;
 	case 'w': soTarget[0]->SetFramePosition(Vec3f(0.1, 0.2, -0.4)); break;
 	case 'e': soTarget[0]->SetFramePosition(Vec3f(0.2, 0.2, -0.4)); break;
-	case 'r': soTarget[0]->SetFramePosition(Vec3f(0.3, 0.2, -0.4)); break;
+	case 'r': soTarget[0]->SetFramePosition(Vec3f(0.3, 0.3, -0.6)); break;
 
 	case 'T': soTarget[1]->SetFramePosition(Vec3f(-0.0, 0.2, 0.0)); break;
 	case 'Y': soTarget[1]->SetFramePosition(Vec3f(-0.1, 0.2, 0.0)); break;
@@ -524,6 +561,10 @@ void OnKey0(char key){
 	case 'W': soTarget[1]->SetFramePosition(Vec3f(-0.1, 0.2, -0.4)); break;
 	case 'E': soTarget[1]->SetFramePosition(Vec3f(-0.2, 0.2, -0.4)); break;
 	case 'R': soTarget[1]->SetFramePosition(Vec3f(-0.3, 0.2, -0.4)); break;
+	case 'p': 
+		bTimer = false;
+		step();
+		break;
 	case ' ':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -817,35 +858,6 @@ void keyboard(unsigned char key, int x, int y){
 	}
 }	
 
-/**
- brief  	glutTimerFuncで指定したコールバック関数
- param	 	<in/--> id　　 タイマーの区別をするための情報
- return 	なし
- */
-void timer(int id){
-	glutTimerFunc(simulationPeriod, timer, 0);
-	/// 時刻のチェックと画面の更新を行う
-	static DWORD last = timeGetTime();
-	DWORD time = timeGetTime();
-	DWORD period = time - last;
-	last = time;
-	static double realTime;
-	static double simTime;
-	realTime += period;
-	while(realTime > simTime){
-		simTime += simulationPeriod;
-		OnTimer();
-		scene->ClearForce();
-		scene->GenerateForce();
-		scene->Integrate();
-	}
-	glutPostRedisplay();
-}
-void idle(){
-	scene->ClearForce();
-	scene->GenerateForce();
-	scene->Integrate();
-}
 
 /**
  brief		メイン関数
@@ -884,14 +896,18 @@ int main(int argc, char* argv[]){
 	//glutIdleFunc(idle);
 	
 	render->SetDevice(device);	// デバイスの設定
+	GRCameraDesc cam;
+	cam.size = Vec2d(0.05, 0);
+	render->SetCamera(cam);
 
 	
 	initialize();
 
 	// 視点を設定する
 	Affinef view;
-	view.Pos() = Vec3f(0.0, 1.2, 0.1);								// eye
-	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
+	view.Pos() = Vec3f(1.0, 0.8, -2.1);								// eye
+//	view.Pos() = Vec3f(0.0, 3.0,  0.1);								// eye
+	view.LookAtGL(Vec3f(0.0, 0.3, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
