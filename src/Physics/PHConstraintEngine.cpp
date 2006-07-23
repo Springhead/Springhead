@@ -155,8 +155,8 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	numIteration	= 15;
-	correctionRate	= 0.3;
+	numIteration	= 15000;
+	correctionRate	= 0.4;
 	shrinkRate		= 0.7;
 }
 

@@ -286,7 +286,7 @@ void BuildScene5(){
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
 //	double K = 50, D = 5;
-	double K = 5, D = 3;
+	double K = 200, D = 30;
 //	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 //	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
@@ -298,7 +298,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 5, D = 1;
+	K = 200, D = 10;
 //	K = 14, D = 3;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);

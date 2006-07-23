@@ -26,6 +26,7 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SPRING;}
 	//virtual void CompConstraintJacobian();
 	virtual void CompBias(double dt, double correction_rate);
+	virtual void CompJacobian(bool bCompAngular);
 	//virtual void CompError(double dt){}
 	virtual void Projection(double& f, int k){}
 	//virtual void ProjectionCorrection(double& F, int k){}

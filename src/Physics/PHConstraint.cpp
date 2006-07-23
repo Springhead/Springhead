@@ -129,7 +129,6 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 			Jww[i] *= k;
 		}
 	}
-
 	int i, j;
 	Av.clear();
 	Aw.clear();

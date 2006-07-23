@@ -100,7 +100,7 @@ public:
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool IsEnabled(){return bEnabled;}
 	void Init();
-	void CompJacobian(bool bCompAngular);
+	virtual void CompJacobian(bool bCompAngular);
 	void SetupDynamics(double dt, double correction_rate, double shrink_rate);
 	void IterateDynamics();
 	//void SetupCorrection(double dt, double max_error);
