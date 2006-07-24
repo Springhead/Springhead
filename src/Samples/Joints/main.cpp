@@ -244,7 +244,7 @@ void BuildScene4(){
 
 void BuildScene5(){
 	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
-	scene->SetNumIteration(30);
+	scene->SetNumIteration(100);
 	CreateFloor(false);
 	
 	CDBoxDesc bd;
@@ -285,7 +285,7 @@ void BuildScene5(){
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
-	double K = 5, D = 5;
+	double K = 1000, D = 100;	
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
@@ -297,7 +297,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 20, D = 2;
+	K = 200, D = 10;
 //	K = 14, D = 3;
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);

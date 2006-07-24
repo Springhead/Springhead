@@ -38,7 +38,7 @@ Vec3fやMaterialのような組み立て型は，再帰的に処理され，最終的には，
 
 <li>オブジェクトを作成する．
 ディスクリプタからオブジェクトを生成します．
-これは，FILoad::LoadNode()が，親オブジェクトのCreateObject()
+これは，FIFile::LoadNode()が，親オブジェクトのCreateObject()
 を呼び出していくことで実現しています．
 親が作ってくれない場合は，そのまた親のCreateObject()を呼び出し，
 最後まで作られない場合はグローバルのCreateSdk()関数を呼び出します．
