@@ -19,12 +19,8 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
 	virtual double GetPosition();
 	virtual double GetVelocity();
-	//virtual void CompConstraintJacobian();
-	virtual void CompJacobian(bool bCompAngular);
 	virtual void CompBias(double dt, double correction_rate);
-	//virtual void CompError(double dt);
 	virtual void Projection(double& f, int k);
-	//virtual void ProjectionCorrection(double& F, int k);
 	PHHingeJoint(){
 		axis_index = 5;
 	}

@@ -59,16 +59,6 @@ double PHHingeJoint::GetVelocity(){
 	}
 }*/
 
-void PHHingeJoint::CompJacobian(bool bCompAngular){
-	PHJoint1D::CompJacobian(bCompAngular);
-/*	double k = 0.4;
-	for(int i = 0; i < 2; i++){
-		Jvw[i].row(2) *= k;
-		Jww[i].row(2) *= k;
-	}
-*/
-}
-
 void PHHingeJoint::CompBias(double dt, double correction_rate){
 	CompDof();
 	double dtinv = 1.0 / dt;
