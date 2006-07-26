@@ -23,10 +23,9 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
-#define TEST_FILEX	"box.x"				// ロードするXファイル
+#define TEST_FILEX	"box.x"		// ロードするXファイル
 
 namespace Spr{
-	PHSdkIf* phSdk;
 	GRSdkIf* grSdk;
 	GRSceneIf* scene;
 	GRDeviceGLIf* grDevice;
@@ -56,6 +55,41 @@ void display(){
 }
 
 /**
+ brief		光源の設定
+ param	 	なし
+ return 	なし
+ */
+void setLight() {
+	GRLightDesc light0;
+	light0.ambient	= Vec4f(0.2, 0.2, 0.2, 1.0);
+	light0.diffuse	= Vec4f(0.8, 0.8, 0.8, 1.0);
+	light0.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
+	light0.position = Vec4f(-10.81733, 100.99039, -21.19059, 0.0);
+	light0.attenuation0  = 1.0;
+	light0.attenuation1  = 0.0;
+	light0.attenuation2  = 0.0;
+	light0.spotDirection = Vec3f(0.0, -1.0, 0.0);
+	light0.spotFalloff   = 10.0;
+	light0.spotInner	 = 20;
+	light0.spotCutoff	 = 150.0;
+	render->PushLight(light0);
+
+	GRLightDesc light1;
+	light1.ambient	= Vec4f(0.2, 0.2, 0.2, 1.0);
+	light1.diffuse	= Vec4f(0.8, 0.8, 0.8, 1.0);
+	light1.specular	= Vec4f(1.0, 1.0, 1.0, 1.0);
+	light1.position = Vec4f(-1.85930, 100.10970, -49.58080, 0.0);
+	light1.attenuation0  = 1.0;
+	light1.attenuation1  = 0.0;
+	light1.attenuation2  = 0.0;
+	light1.spotDirection = Vec3f(0.0, -1.0, 0.0);
+	light1.spotFalloff   = 0.0;
+	light1.spotInner	 = 10;
+	light1.spotCutoff	 = 150.0;
+	render->PushLight(light1);
+}
+
+/**
  brief  	glutReshapeFuncで指定したコールバック関数
  param	 	<in/--> w　　幅
  param  	<in/--> h　　高さ
@@ -76,16 +110,6 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
 		exit(0);
 	}
-	if ('0'<= key && key <= '9' && phSdk && phSdk->NScene()){
-		int i = key-'0';
-		static UTRef<Spr::ObjectStatesIf> states[10];
-		if (states[i]){
-			states[i]->LoadState(scene);
-		}else{
-			states[i] = CreateObjectStates();
-			states[i]->SaveState(scene);
-		}
-	}
 }
 
 /**
@@ -98,10 +122,10 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count ++;
-	if (count > EXIT_TIMER){
+/*	if (count > EXIT_TIMER){
 		std::cout << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
-	}
+	}*/
 }
 
 /**
@@ -118,22 +142,13 @@ int main(int argc, char* argv[]){
 	FISdkIf* fiSdk = CreateFISdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
-	if (argc>=2){
-		phSdk = CreatePHSdk();					//	PHSDKを用意して，
-		objs.push_back(phSdk);		
-		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
-	}else{
-		if (! fileX->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
-			DSTR << "Error: Cannot open load file. " << std::endl;
-			exit(EXIT_FAILURE);
-		}
-		phSdk = NULL;
-		grSdk = NULL;
-		for(unsigned  i=0; i<objs.size(); ++i){	
-			if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDKを受け取る方式
-			if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
-		}
-	}
+
+	grSdk = CreateGRSdk();	
+	objs.push_back(grSdk);
+	scene = grSdk->CreateScene();
+	objs.push_back(scene);
+	fileX->Load(objs, TEST_FILEX);
+
 	if (!grSdk) return -1;
 	objs.clear();
 	objs.Push(grSdk);
@@ -142,7 +157,10 @@ int main(int argc, char* argv[]){
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
 	grSdk->Print(DSTR);
-	scene = grSdk->GetScene(0);		// Sceneの取得
+	//scene = grSdk->GetScene(0);		// Sceneの取得
+	
+	grSdk->Print(DSTR);
+
 	DSTR << "Loaded : " << "NScene=" << (int)grSdk->NScene() << std::endl;
 	scene->Print(DSTR);
 
@@ -157,10 +175,13 @@ int main(int argc, char* argv[]){
 
 	// 視点設定
 	Affinef view;
-	view.Pos() = Vec3f(0.0, 3.0, 3.0);									// eye
+	view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
 		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
+
+	// 光源の設定
+	setLight();
 
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);

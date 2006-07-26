@@ -13,6 +13,12 @@ namespace SprOldSpringehead{;
 
 ///	\defgroup gpFIOldSpringheadNode 旧(Springhead1)ファイルロード用互換ノード
 //@{
+/// Xファイル形式のバージョン情報
+struct Header{
+	unsigned int major;		
+	unsigned int minor;		
+	unsigned int flags;
+};
 ///	DirectXのFrame． GRFrameに対応
 struct Frame{
 };
@@ -44,7 +50,7 @@ struct Light8{
 ///	DirectXのマテリアル．GRMateiralに対応．
 struct Material{
 	Vec4f face;				// face color
-	float power;			
+	float power;			// shininess power
 	Vec3f specular;			// specular color
 	Vec3f emissive;			// emissive color
 };

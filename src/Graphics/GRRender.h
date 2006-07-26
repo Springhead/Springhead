@@ -26,6 +26,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool AddChildObject(ObjectIf* o);
 };
+
 class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{
 public:
 	OBJECT_DEF(GRLight);
@@ -40,6 +41,7 @@ class GRMaterial :public InheritGRVisual<GRMaterialIf, GRVisual>, public GRMater
 public:
 	OBJECT_DEF(GRMaterial);
 	ACCESS_DESC(GRMaterial);
+	GRTextureDesc texture;			
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
 		ambient = a;
@@ -64,6 +66,17 @@ public:
 	void Render(GRRenderIf* render);
 };
 
+/** @brief テクスチャ		*/
+class GRTexture :public InheritGRVisual<GRTextureIf, GRVisual>, public GRTextureDesc{
+public:
+	OBJECT_DEF(GRTexture);
+	ACCESS_DESC(GRTexture);
+	GRTexture(const GRTextureDesc& desc=GRTextureDesc()):GRTextureDesc(desc){}
+	GRTexture(std::string fn){ 
+		filename = fn; 
+	}
+	void Render(GRRenderIf* render);
+};
 
 /**	@class	GRRenderBase
     @brief	グラフィックスレンダラーの基本クラス（Object派生クラスの実行時型情報を管理） */
@@ -82,64 +95,61 @@ protected:
 	Vec2f viewportPos;				///<	ビューポートの左上
 	Vec2f viewportSize;				///<	ビューポートのサイズ
 public:
-#define REDIRECTIMP_GRRENDERBASE(ptr)							\
-	virtual void SetViewport(Vec2f p, Vec2f s)					\
-		{ ptr SetViewport(p, s); }								\
-	virtual void ClearBuffer(){ ptr ClearBuffer(); }			\
-	virtual void BeginScene(){ ptr BeginScene(); }				\
-	virtual void EndScene(){ ptr EndScene(); }					\
-	virtual void MultModelMatrix(const Affinef& afw)			\
-		{ ptr MultModelMatrix(afw); }							\
-	virtual void PushModelMatrix(){ptr PushModelMatrix(); }		\
-	virtual void PopModelMatrix(){ptr PopModelMatrix(); }		\
-	virtual void SetModelMatrix(const Affinef& afw)				\
-		{ ptr SetModelMatrix(afw); }							\
-	virtual void SetViewMatrix(const Affinef& afv)				\
-		{ ptr SetViewMatrix(afv); }								\
-	virtual void SetProjectionMatrix(const Affinef& afp)		\
-		{ ptr SetProjectionMatrix(afp); }						\
-	virtual void SetVertexFormat(const GRVertexElement* f)		\
-		{ ptr SetVertexFormat(f); }								\
-	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty,							\
-		void* vtx, size_t ct, size_t st=0)												\
-		{ ptr DrawDirect(ty, vtx, ct, st); }											\
-	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,							\
-		size_t* idx, void* vtx, size_t ct, size_t st=0)									\
-		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }										\
-	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx,				\
-		size_t count, size_t stride=0)													\
-		{ return ptr CreateList(ty, vtx, count, stride); }								\
-	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty,					\
-		size_t* idx, void* vtx, size_t count, size_t stride=0)							\
-		{ return ptr CreateIndexedList(ty, idx, vtx, count, stride); }					\
-	virtual void DrawList(int i)														\
-		{ ptr DrawList(i); }															\
-	virtual void ReleaseList(int i)														\
-		{ ptr ReleaseList(i); }															\
-	virtual void DrawFont(Vec2f pos, const std::string str)								\
-		{ ptr DrawFont(pos, str); }														\
-    virtual void DrawFont(Vec3f pos, const std::string str)								\
-		{ ptr DrawFont(pos, str); }														\
-	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font)			\
-		{ ptr DrawFont(pos, str, font); }												\
-	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font)			\
-		{ ptr DrawFont(pos, str, font); }												\
-	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }		\
-	virtual void SetMaterial(const GRMaterialIf* mat){									\
-		if(mat) ptr SetMaterial((const GRMaterialDesc&)*DCAST(GRMaterial, mat)); }		\
-	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }							\
-	virtual void PushLight(const GRLightDesc& light){ptr PushLight(light);}				\
-	virtual void PushLight(const GRLightIf* light){										\
-		if(light) ptr PushLight((const GRLightDesc&)*DCAST(GRLight, light)); }			\
-	virtual void PopLight(){ptr PopLight(); }											\
-	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }							\
-	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }							\
-	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){ ptr SetDepthFunc(f); }		\
-	virtual void SetAlphaTest(bool b){ptr SetAlphaTest(b); }							\
-	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src,							\
-							GRRenderBaseIf::TBlendFunc dest)							\
-		{ptr SetAlphaMode(src, dest); }													\
-
+#define REDIRECTIMP_GRRENDERBASE(ptr)																\
+	virtual void SetViewport(Vec2f p, Vec2f s){ ptr SetViewport(p, s); }							\
+	virtual void ClearBuffer(){ ptr ClearBuffer(); }												\
+	virtual void BeginScene(){ ptr BeginScene(); }													\
+	virtual void EndScene(){ ptr EndScene(); }														\
+	virtual void MultModelMatrix(const Affinef& afw){ ptr MultModelMatrix(afw); }					\
+	virtual void PushModelMatrix(){ptr PushModelMatrix(); }											\
+	virtual void PopModelMatrix(){ptr PopModelMatrix(); }											\
+	virtual void SetModelMatrix(const Affinef& afw){ ptr SetModelMatrix(afw); }						\
+	virtual void SetViewMatrix(const Affinef& afv){ ptr SetViewMatrix(afv); }						\
+	virtual void SetProjectionMatrix(const Affinef& afp){ ptr SetProjectionMatrix(afp); }			\
+	virtual void SetVertexFormat(const GRVertexElement* f){ ptr SetVertexFormat(f); }				\
+	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t ct, size_t st=0)	\
+		{ ptr DrawDirect(ty, vtx, ct, st); }														\
+	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,										\
+		size_t* idx, void* vtx, size_t ct, size_t st=0)												\
+		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }													\
+	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx,							\
+		size_t count, size_t stride=0)																\
+		{ return ptr CreateList(ty, vtx, count, stride); }											\
+	virtual int CreateList(GRMaterialDesc& mat, unsigned int texid,									\
+		GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)				\
+		{ return ptr CreateList(mat, texid, ty, vtx, count, stride); }								\
+	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, 		\
+		size_t count, size_t stride=0)																\
+		{ return ptr CreateIndexedList(ty, idx, vtx, count, stride); }								\
+	virtual int CreateIndexedList(GRMaterialDesc& mat, unsigned int texid,							\
+		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)	\
+		{ return ptr CreateIndexedList(mat, texid, ty, idx, vtx, count, stride); }					\
+	virtual void DrawList(int i){ ptr DrawList(i); }												\
+	virtual void ReleaseList(int i){ ptr ReleaseList(i); }											\
+	virtual void DrawFont(Vec2f pos, const std::string str){ ptr DrawFont(pos, str); }				\
+    virtual void DrawFont(Vec3f pos, const std::string str){ ptr DrawFont(pos, str); }				\
+	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font)						\
+		{ ptr DrawFont(pos, str, font); }															\
+	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font)						\
+		{ ptr DrawFont(pos, str, font); }															\
+	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }					\
+	virtual void SetMaterial(const GRMaterialIf* mat)												\
+		{ if(mat) ptr SetMaterial((const GRMaterialDesc&)*DCAST(GRMaterial, mat)); }				\
+	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }										\
+	virtual void PushLight(const GRLightDesc& light){ptr PushLight(light);}							\
+	virtual void PushLight(const GRLightIf* light)													\
+		{ if(light) ptr PushLight((const GRLightDesc&)*DCAST(GRLight, light)); }					\
+	virtual void PopLight(){ptr PopLight(); }														\
+	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }										\
+	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }										\
+	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){ ptr SetDepthFunc(f); }					\
+	virtual void SetAlphaTest(bool b){ptr SetAlphaTest(b); }										\
+	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)		\
+		{ ptr SetAlphaMode(src, dest); }															\
+	virtual void LoadTexture(GRTextureDesc &tex){ ptr LoadTexture(tex); }							\
+	virtual void LoadTexture(GRTextureIf* tex)														\
+		{ if(tex) ptr LoadTexture((GRTextureDesc&)*DCAST(GRTexture, tex)); }						\
+	
 	REDIRECTIMP_GRRENDERBASE(device->)
 	
 	///	デバイスの設定
@@ -176,12 +186,16 @@ public:
 	virtual void PushLight(const GRLightDesc& light)=0;
     virtual void PushLight(const GRLightIf* light){
         if(light) PushLight(*DCAST(GRLight, light)); }
+	virtual void LoadTexture(GRTextureDesc& tex)=0;
+	virtual void LoadTexture(GRTextureIf* tex){
+		if (tex) LoadTexture(*DCAST(GRTexture, tex)); }
 };
 template <class intf, class base>
 struct InheritGRDevice:public InheritObject<intf, base>{
 	void SetDevice(GRDeviceIf* dev){ base::SetDevice(dev); }
 	void SetMaterial(const GRMaterialIf* mat){ base::SetMaterial(mat); }
 	void PushLight(const GRLightIf* light){ base::PushLight(light); }
+	void LoadTexture(GRTextureIf* tex){ base::LoadTexture(tex); }
 };
 
 }

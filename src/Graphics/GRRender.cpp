@@ -58,6 +58,14 @@ void GRMaterial::Render(GRRenderIf* render){
 }
 
 //----------------------------------------------------------------------------
+//	GRTexture
+IF_OBJECT_IMP(GRTexture, GRVisual);
+void GRTexture::Render(GRRenderIf* render){
+		//enable texture ??
+	DSTR << "------------ texture render ----------------" << std::endl;
+}
+
+//----------------------------------------------------------------------------
 //	GRLight
 IF_OBJECT_IMP(GRLight, GRVisual);
 void GRLight::Render(GRRenderIf* render){

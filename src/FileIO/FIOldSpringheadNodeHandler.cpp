@@ -14,6 +14,12 @@
 namespace Spr{;
 using namespace SprOldSpringehead;
 
+class FINodeHandlerXHeader: public FINodeHandlerImp<Header>{
+public:
+	FINodeHandlerXHeader():FINodeHandlerImp<Desc>("Header"){}
+	void Load(Desc& d, FILoadContext* fc){
+	}
+};
 class FINodeHandlerXFrame: public FINodeHandlerImp<Frame>{
 public:	
 	FINodeHandlerXFrame():FINodeHandlerImp<Desc>("Frame"){}
@@ -36,7 +42,13 @@ public:
 		}
 	}
 };
+class FINodeHandlerXLight8: public FINodeHandlerImp<Light8>{
+public:
+	FINodeHandlerXLight8():FINodeHandlerImp<Desc>("Light8"){}
+	void Load(Desc& d, FILoadContext* fc){
 
+	}
+};
 class FINodeHandlerXMesh: public FINodeHandlerImp<Mesh>{
 public:
 	FINodeHandlerXMesh():FINodeHandlerImp<Desc>("Mesh"){}
@@ -45,6 +57,7 @@ public:
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
 			mesh->positions = d.vertices;	// 頂点座標
+
 			for (int f=0; f < d.nFaces; ++f){		
 				if ((d.faces[f].nFaceVertexIndices == 3) || (d.faces[f].nFaceVertexIndices == 4)) {
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
@@ -93,34 +106,20 @@ public:
 class FINodeHandlerXMaterial: public FINodeHandlerImp<Material>{
 public:
 	FINodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
-#if 0
-	void Load(Desc& d, FILoadContext* fc){
-		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
-		if (mesh){
-			GRMaterialDesc mat;
-			mat.ambient = mat.diffuse = d.face;
-			mat.specular = Vec4f(mat.specular.x, mat.specular.y, mat.specular.z, 1.0);
-			mat.emissive = Vec4f(mat.emissive.x, mat.emissive.y, mat.emissive.z, 1.0);
-			mat.power = d.power;
-			mesh->material.push_back(mat);
-		}else{
-			fc->ErrorMessage(NULL, "Material appered outside of Mesh. ");
-		}
-	}
-#else
 	// TextureFilenameをマテリアルと関連付けるため、Materialもオブジェクトスタックに Push .
 	void Load(Desc& d, FILoadContext* fc){
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
 			fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &GRMaterialDesc());	
-			GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
-			if(mat){
-				GRMaterialDesc md;
-				md.ambient	= md.diffuse = d.face;
-				md.specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
-				md.emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
-				md.power = d.power;
-				mesh->material.push_back(md);
+			GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());		
+			if(mat){											
+				// "MeshTextureCoords"と関連づけるため、一度GRMaterialをスタックに積む。
+				// 実体は GRMeshDesc で持ち、mesh のレンダリングで呼び出す。
+				mat->ambient = mat->diffuse = d.face;		// スタックに積んであるmatへ値を代入
+				mat->specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
+				mat->emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
+				mat->power = d.power;				
+				mesh->material.push_back(*mat);
 			}else{
 				fc->ErrorMessage(NULL, "cannot create Material node.");
 			}
@@ -129,9 +128,11 @@ public:
 		}
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		fc->objects.Pop();
+		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
+		if (mat){
+			fc->objects.Pop();
+		}
 	}
-#endif
 };
 
 class FINodeHandlerXMeshNormals: public FINodeHandlerImp<MeshNormals>{
@@ -158,7 +159,11 @@ public:
 	void Load(Desc& d, FILoadContext* fc){
 		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
 		if (mat){
-			mat->texture = d.filename;
+			fc->objects.Pop();
+			GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+			if (mesh){
+				mesh->material.back().texname = d.filename;
+			}
 		}else{
 			fc->ErrorMessage(NULL, "TextureFilename must be inside of Material node.");
 		}
@@ -171,7 +176,6 @@ public:
 	void Load(Desc& d, FILoadContext* fc){
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
-			fc->ErrorMessage(NULL, "MeshNormals must be inside of Mesh node OKOKOK !!");
 			mesh->texCoords = d.textureCoords;
 		}else{
 			fc->ErrorMessage(NULL, "MeshNormals must be inside of Mesh node NGNG ( _ _)");
@@ -181,8 +185,10 @@ public:
 
 
 void RegisterOldSpringheadNodeHandlers(){
+REGISTER_NODE_HANDLER(FINodeHandlerXHeader);
 REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
 REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
+REGISTER_NODE_HANDLER(FINodeHandlerXLight8);
 REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
 REGISTER_NODE_HANDLER(FINodeHandlerXMeshMaterialList);
 REGISTER_NODE_HANDLER(FINodeHandlerXMaterial);

@@ -40,6 +40,10 @@ void GRDeviceGL::Init(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
 }
+///	Viewport設定
+void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
+	glViewport((int)pos.x , (int)pos.y, (int)sz.x, (int)sz.y);
+}
 /// バッファクリア
 void GRDeviceGL::ClearBuffer(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -183,9 +187,39 @@ int GRDeviceGL::CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t st
 	glEndList();
 	return list;
 }
-int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){	
+int GRDeviceGL::CreateList(GRMaterialDesc& mat, unsigned int texid, 
+						   TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
+	if (texid){
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texid);
+	}else{
+		glDisable(GL_TEXTURE_2D);
+	}
+	SetMaterial(mat);
+	DrawDirect(ty, vtx, count, stride);
+	glEndList();
+	return list;
+}
+int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+	DrawIndexed(ty, idx, vtx, count, stride);
+	glEndList();
+	return list;
+}
+int GRDeviceGL::CreateIndexedList(GRMaterialDesc& mat, unsigned int texid, 
+								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+	if (texid){
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texid);
+	}else{
+		glDisable(GL_TEXTURE_2D);
+	}
+	SetMaterial(mat);
 	DrawIndexed(ty, idx, vtx, count, stride);
 	glEndList();
 	return list;
@@ -470,9 +504,70 @@ void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
 	glBlendFunc(glfac[0], glfac[1]);
 
 }
-void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
-	glViewport((int)pos.x , (int)pos.y, (int)sz.x, (int)sz.y);
-}
+void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
+	FILE *fp;
+	bool iscomment;
+	char type[3];
+	char str[128];
+	char c;
+	int r, g, b;
+	int i, j, t;
+	unsigned char ur, ug, ub;
 
+	fp = fopen(tex.filename.c_str(), "rb");
+	if (!fp){ DSTR << "no such file " << tex.filename.c_str() << std::endl; }
+	else{
+		fscanf(fp, "%s\n", &type);
+		do {
+			iscomment = false;
+			c = fgetc(fp);
+			ungetc(c, fp);
+			if (c == '#'){
+				iscomment = true;
+				fgets(str, 127, fp);
+			}
+		} while(iscomment);
+
+		fscanf(fp, "%i %i\n255\n", &tex.width, &tex.height);
+		try {
+			tex.image = DBG_NEW unsigned char[tex.width * tex.height * 3];	
+			if (tex.image == NULL) throw tex.image;
+		} catch (...){
+			DSTR << "Cannot allocate memory for texture data : " << tex.filename.c_str() << std::endl;
+			assert(0);
+		}
+
+		if (!strcmp(type, "P3")){								// ascii			
+			for (j=0, t=0; j<tex.height; j++){
+				for (i=0; i<tex.width; i++, t+=3){
+					fscanf(fp, "%i %i %i ", &r, &g, &b);
+					tex.image[t]   = (unsigned char)r;
+					tex.image[t+1] = (unsigned char)g;
+					tex.image[t+2] = (unsigned char)b;
+				}
+				fscanf(fp, "\n");
+			}
+		} else if (!strcmp(type, "P6")){						// binary
+			for (j=0, t=0; j<tex.height; j++){
+				for (i=0; i<tex.width; i++, t+=3){
+					fscanf(fp, "%c%c%c", &ur, &ug, &ub);
+					tex.image[t]   = (unsigned char)ur;
+					tex.image[t+1] = (unsigned char)ug;
+					tex.image[t+2] = (unsigned char)ub;
+				}
+			}
+		} else {												// unknown
+			DSTR << "unrecognized ppm file type." << std::endl;
+			assert(0);
+		}
+		fclose(fp);
+				
+		glGenTextures(1, &tex.id);
+		glBindTexture(GL_TEXTURE_2D, tex.id);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, tex.width, tex.height, GL_RGB, GL_UNSIGNED_BYTE, tex.image);
+		delete [] tex.image;
+	}
+}
+			
 }	//	Spr
 

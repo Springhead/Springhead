@@ -34,16 +34,6 @@
 	field->offset = (char*)&(pGRMeshDesc->texCoords) - (char*)pGRMeshDesc;
 	field = desc->AddField("vector", "size_t", "faces", "");
 	field->offset = (char*)&(pGRMeshDesc->faces) - (char*)pGRMeshDesc;
-	field = desc->AddField("vector", "GRMaterialDesc", "material", "");
-	field->offset = (char*)&(pGRMeshDesc->material) - (char*)pGRMeshDesc;
-	field = desc->AddField("vector", "int", "materialList", "");
-	field->offset = (char*)&(pGRMeshDesc->materialList) - (char*)pGRMeshDesc;
-	field = desc->AddField("vector", "size_t", "elementIndex", "");
-	field->offset = (char*)&(pGRMeshDesc->elementIndex) - (char*)pGRMeshDesc;
-	field = desc->AddField("vector", "size_t", "originalFaces", "");
-	field->offset = (char*)&(pGRMeshDesc->originalFaces) - (char*)pGRMeshDesc;
-	field = desc->AddField("vector", "size_t", "faceNormals", "");
-	field->offset = (char*)&(pGRMeshDesc->faceNormals) - (char*)pGRMeshDesc;
 	db->RegisterDesc(desc);
 	
 	GRLightDesc* pGRLightDesc = NULL;
@@ -94,8 +84,26 @@
 	field->offset = (char*)&(pGRMaterialDesc->emissive) - (char*)pGRMaterialDesc;
 	field = desc->AddField("", "float", "power", "");
 	field->offset = (char*)&(pGRMaterialDesc->power) - (char*)pGRMaterialDesc;
-	field = desc->AddField("", "string", "texture", "");
-	field->offset = (char*)&(pGRMaterialDesc->texture) - (char*)pGRMaterialDesc;
+	field = desc->AddField("", "string", "texname", "");
+	field->offset = (char*)&(pGRMaterialDesc->texname) - (char*)pGRMaterialDesc;
+	db->RegisterDesc(desc);
+	
+	GRTextureDesc* pGRTextureDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRTextureDesc");
+	desc->size = sizeof(GRTextureDesc);
+	desc->ifInfo = GRTextureIf::GetIfInfoStatic();
+	((IfInfo*)GRTextureIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRTextureDesc>;
+	field = desc->AddField("", "string", "filename", "");
+	field->offset = (char*)&(pGRTextureDesc->filename) - (char*)pGRTextureDesc;
+	field = desc->AddField("", "int", "width", "");
+	field->offset = (char*)&(pGRTextureDesc->width) - (char*)pGRTextureDesc;
+	field = desc->AddField("", "int", "height", "");
+	field->offset = (char*)&(pGRTextureDesc->height) - (char*)pGRTextureDesc;
+	field = desc->AddField("", "int", "id", "");
+	field->offset = (char*)&(pGRTextureDesc->id) - (char*)pGRTextureDesc;
+	field = desc->AddField("pointer", "char", "image", "");
+	field->offset = (char*)&(pGRTextureDesc->image) - (char*)pGRTextureDesc;
 	db->RegisterDesc(desc);
 	
 	GRCameraDesc* pGRCameraDesc = NULL;

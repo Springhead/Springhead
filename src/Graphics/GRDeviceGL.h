@@ -85,10 +85,16 @@ public:
 	virtual void DrawDirect(TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	///	DiplayListの作成
+	///	ダイレクト形式によるDiplayListの作成
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
-	///	DiplayListの作成
+	///	ダイレクト形式によるDiplayListの作成（マテリアルとテクスチャを指定可能、テクスチャ非適用時には0を指定）
+	virtual int CreateList(GRMaterialDesc& mat, unsigned int texid, 
+						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
+	///	インデックス形式によるDiplayListの作成
 	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	///	インデックス形式によるDiplayListの作成（マテリアルとテクスチャを指定可能、テクスチャ非適用時には0を指定）
+	virtual int CreateIndexedList(GRMaterialDesc& mat, unsigned int texid, 
+								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	DisplayListの表示
 	virtual void DrawList(int i);
 	///	DisplayListの解放
@@ -119,6 +125,8 @@ public:
 	virtual void SetAlphaTest(bool b);
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest);
+	/// テクスチャをロードし、テクスチャオブジェクトを作成する。戻り値:テクスチャ情報
+	virtual void LoadTexture(GRTextureDesc& tex);
 };
 
 }

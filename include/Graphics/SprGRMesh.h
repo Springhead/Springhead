@@ -28,21 +28,6 @@ struct GRMeshDesc{
 	std::vector<Vec4f> colors;					///< 頂点の色
 	std::vector<Vec2f> texCoords;				///< テクスチャUV
 	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
-
-	std::vector<GRMaterialDesc> material;		///< マテリアル
-	std::vector<int> materialList;				///< マテリアルのインデックスリスト（XファイルのMeshMaterialListの番号をそのままロード）
-	/**
-	   facesと、三角形分割する前のXファイルで指定された面との関連付け		\n
-	  （1 mesh をマテリアル毎にさらに mesh 分割し、各 sub mesh に対し、  　	\n
-　　　　　　　 マテリアル設定；												\n
-　　　　　　　 DisplayListでレンダリング；									\n
-		を繰り返す。Xファイルからロードされた面は、すべて三角形分割されるため、
-		どの面がどのマテリアルを適用するのか判断するために、elementIndex が必要。） */
-	std::vector<size_t> elementIndex;	
-
-	std::vector<size_t> originalFaces;			///< 面を構成頂点インデックス（三角形への分割をせず、そのままロード）
-	std::vector<size_t> faceNormals;			///< 法線インデックス
-
 };
 
 

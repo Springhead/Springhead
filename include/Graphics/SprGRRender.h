@@ -57,7 +57,7 @@ public:
 		return *this;
 	}
 };
-
+	
 /**	@brief	光源		*/
 struct GRLightDesc{
     Vec4f ambient;		///<	環境光
@@ -111,7 +111,8 @@ struct GRMaterialDesc{
 	Vec4f specular;					///<	鏡面光に対する反射率
 	Vec4f emissive;					///<	放射輝度
 	float power;					///<	鏡面反射の強度、鏡面係数
-	std::string texture;			///<	テクスチャファイル名
+	std::string	texname;			///<	テクスチャファイル名
+
 	GRMaterialDesc(){
 		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);
 		diffuse = Vec4f(0.8, 0.8, 0.8, 1.0);
@@ -130,16 +131,31 @@ struct GRMaterialDesc{
 		透明なオブジェクトを描くとき、遠くのものから順番に描画しないと、意図に反した結果となる. */
 	bool IsOpaque() const {		
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
-	}
+	}	
 };
-/** @brief　　材質の基本クラス　　 */
+
+/** @brief　材質の基本クラス　　	*/
 struct GRMaterialIf: public GRVisualIf{
 	IF_DEF(GRMaterial);
 	virtual bool IsOpaque() const = 0;
 };
 
+/** @brief テクスチャ				*/
+struct GRTextureDesc{
+	std::string		filename;		///<	テクスチャファイル名
+	int				width;			///<	テクスチャサイズ
+	int				height;			///<	テクスチャサイズ
+	unsigned int	id;				///<	テクスチャID
+	unsigned char*	image;			///<	テクスチャデータ(RGB)
+	GRTextureDesc(): filename(), width(0), height(0), id(0), image(NULL){}
+	GRTextureDesc(std::string fn): filename(fn), width(0), height(0), id(0), image(NULL){}
+};
+/** @brief テクスチャの基本クラス	*/
+struct GRTextureIf: public GRVisualIf{
+	IF_DEF(GRTexture);
+};
 
-/**	@brief	カメラの情報 */
+/**	@brief	カメラの情報			*/
 struct GRCameraDesc{
 	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
@@ -244,8 +260,12 @@ struct GRRenderBaseIf: public ObjectIf{
 	
 	///	DiplayListの作成
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
+	virtual int CreateList(GRMaterialDesc& mat, unsigned int texid, 
+						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	///	DiplayListの作成
 	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+	virtual int CreateIndexedList(GRMaterialDesc& mat, unsigned int texid, 
+								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 	///	DisplayListの表示
 	virtual void DrawList(int i)=0;
 	///	DisplayListの解放
@@ -274,6 +294,9 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetAlphaTest(bool b)=0;
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
+	/// テクスチャをロードし、テクスチャオブジェクトを作成する
+	virtual void LoadTexture(GRTextureDesc& tex)=0;
+	virtual void LoadTexture(GRTextureIf* tex)=0;
 };
 
 /**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */

@@ -1,5 +1,17 @@
 //	Do not edit. MakeTypeDescForHandler.bat will update this file.
 	
+	Header* pHeader = NULL;
+	desc = DBG_NEW UTTypeDesc("Header");
+	desc->size = sizeof(Header);
+	desc->access = DBG_NEW UTAccess<Header>;
+	field = desc->AddField("", "int", "major", "");
+	field->offset = (char*)&(pHeader->major) - (char*)pHeader;
+	field = desc->AddField("", "int", "minor", "");
+	field->offset = (char*)&(pHeader->minor) - (char*)pHeader;
+	field = desc->AddField("", "int", "flags", "");
+	field->offset = (char*)&(pHeader->flags) - (char*)pHeader;
+	db->RegisterDesc(desc);
+	
 	Frame* pFrame = NULL;
 	desc = DBG_NEW UTTypeDesc("Frame");
 	desc->size = sizeof(Frame);
