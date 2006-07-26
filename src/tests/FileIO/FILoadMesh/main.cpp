@@ -122,10 +122,10 @@ void idle(){
 	glutPostRedisplay();
 	static int count;
 	count ++;
-/*	if (count > EXIT_TIMER){
+	if (count > EXIT_TIMER){
 		std::cout << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
-	}*/
+	}
 }
 
 /**
