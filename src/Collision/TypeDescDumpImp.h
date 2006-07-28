@@ -22,6 +22,7 @@
 	field->AddEnumConst("CONVEX");
 	field->AddEnumConst("CONVEXMESH");
 	field->AddEnumConst("SPHERE");
+	field->AddEnumConst("CAPSULE");
 	field->AddEnumConst("BOX");
 	field->AddEnumConst("BOX");
 	field->offset = (char*)(&pCDShapeDesc->type) - (char*)pCDShapeDesc;
@@ -51,6 +52,20 @@
 	field->offset = (char*)(CDShapeDesc*)pCDSphereDesc - (char*)pCDSphereDesc;
 	field = desc->AddField("", "float", "radius", "");
 	field->offset = (char*)&(pCDSphereDesc->radius) - (char*)pCDSphereDesc;
+	db->RegisterDesc(desc);
+	
+	CDCapsuleDesc* pCDCapsuleDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CDCapsuleDesc");
+	desc->size = sizeof(CDCapsuleDesc);
+	desc->ifInfo = CDCapsuleIf::GetIfInfoStatic();
+	((IfInfo*)CDCapsuleIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CDCapsuleDesc>;
+	field = desc->AddBase("CDShapeDesc");
+	field->offset = (char*)(CDShapeDesc*)pCDCapsuleDesc - (char*)pCDCapsuleDesc;
+	field = desc->AddField("", "float", "radius", "");
+	field->offset = (char*)&(pCDCapsuleDesc->radius) - (char*)pCDCapsuleDesc;
+	field = desc->AddField("", "float", "length", "");
+	field->offset = (char*)&(pCDCapsuleDesc->length) - (char*)pCDCapsuleDesc;
 	db->RegisterDesc(desc);
 	
 	CDBoxDesc* pCDBoxDesc = NULL;

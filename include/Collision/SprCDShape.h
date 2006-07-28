@@ -67,6 +67,7 @@ struct CDShapeDesc{
 		CONVEX,				///< 凸形状
 		CONVEXMESH,			///< 凸形状メッシュ
 		SPHERE,				///< 球体
+		CAPSULE,			///< 球体
 		BOX					///< 直方体
 	} type;
 	PHMaterial material;	///<	材質
@@ -100,6 +101,22 @@ struct CDSphereDesc: public CDShapeDesc{
 /** 球体　*/
 struct CDSphereIf: public CDConvexIf{
 	IF_DEF(CDSphere);
+	virtual float GetRadius()=0;
+};	
+
+/** カプセルのディスクリプタ　*/
+struct CDCapsuleDesc: public CDShapeDesc{
+	CDCapsuleDesc():CDShapeDesc(CAPSULE){
+		radius = 1.0f;
+		length = 1.0f;
+	}
+	float radius;					///< カプセルの球の半径
+	float length;					///< カプセルの長さ Z軸向きが長い
+};	
+
+/** カプセル　*/
+struct CDCapsuleIf: public CDConvexIf{
+	IF_DEF(CDCapsule);
 	virtual float GetRadius()=0;
 };	
 

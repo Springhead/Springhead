@@ -11,4 +11,5 @@
 #include "CDConvex.h"
 #include "CDConvexMesh.h"
 #include "CDSphere.h"
+#include "CDCapsule.h"
 #include "CDBox.h"
