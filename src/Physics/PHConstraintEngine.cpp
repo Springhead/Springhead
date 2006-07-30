@@ -81,8 +81,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	//	＃交線の表現形式として，2次曲線も許す．その場合，直線は返さない
 	//	＃2次曲線はMullar＆Preparataには入れないで別にしておく．
 
-	//2Dへの変換がいる．どうする？
-	//	適当に速度？
+	//	相対速度をみて2Dの座標系を決める。
 	Vec3d v0 = solid0->solid->GetPointVelocity(center);
 	Vec3d v1 = solid1->solid->GetPointVelocity(center);
 	Matrix3d local;	//	contact coodinate system 接触の座標系
@@ -101,23 +100,21 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		assert(0);
 	}
 
-	// 凸多面同士の場合は、面と面が触れる場合があるので、接触が凸多角形になることがある。
-	// 球と凸形状の接触は必ず１点になる。
+	// 球と他の形状の接触は必ず１点になる。
 	CDSphere* sp[2];
 	sp[0] = DCAST(CDSphere, shape[0]);	// CDSphereへダイナミックキャスト
 	sp[1] = DCAST(CDSphere, shape[1]);
 	// 接触解析を行う２つの物体の片方or両方が球の場合
-	if (sp[0] || sp[1]) {		
+	if (sp[0] || sp[1]) {
 		// 接触点の配列(engine->points)に、球の最進入点と相手の最進入点の中点centerを追加する
 		engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
-	}
-	// 接触解析を行う２つの物体がどちらとも球ではない場合
-	else {						
-		//	切り口を求める１：切り口を構成する線分の列挙
+	} else {	// 接触解析を行う２つの物体がどちらとも球ではない場合
+		//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
+		//	切り口を求める。まず、それぞれの形状の切り口を列挙
 		CDCutRing cutRing(center, local);
 		if (shape[0]->FindCutRing(cutRing, shapePoseW[0]) && shape[1]->FindCutRing(cutRing, shapePoseW[1])){
-			//	切り口がある場合（数値誤差で切り口が見つからない場合もある）
-			//	切り口を求める２：線分をつないで輪を作る
+			//	両方に切り口がある場合（数値誤差で切り口が見つからない場合もあるのでもう一度確認）
+			//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 			cutRing.MakeRing();
 			//	cutRing.Print(DSTR);
 			//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;

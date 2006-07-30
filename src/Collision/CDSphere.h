@@ -16,14 +16,10 @@ namespace Spr{;
 
 	
 /// 球体
-class CDSphere: public  InheritCDShape<CDSphereIf, CDConvex>{
+class CDSphere: public InheritCDShape<CDSphereIf, CDConvex>, CDSphereDesc{
 public:
 	OBJECT_DEF(CDSphere);
 	
-	//mutable Vec3f curPos;			/// 探索開始番号
-	//Vec3f center;					///	球体の中心座標
-	float radius;					/// 球体の半径
-
 	CDSphere();
 	//CDSphere(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
 	//CDSphere(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
