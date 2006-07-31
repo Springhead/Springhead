@@ -112,13 +112,13 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
 		//	切り口を求める。まず、それぞれの形状の切り口を列挙
 		CDCutRing cutRing(center, local);
+		int nPoint = engine->points.size();
 		if (shape[0]->FindCutRing(cutRing, shapePoseW[0]) && shape[1]->FindCutRing(cutRing, shapePoseW[1])){
 			//	両方に切り口がある場合（数値誤差で切り口が見つからない場合もあるのでもう一度確認）
 			//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 			cutRing.MakeRing();
 			//	cutRing.Print(DSTR);
 			//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
-			int nPoint = engine->points.size();
 			for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 				if (vtx->deleted) continue;
 				assert(finite(vtx->dist));
@@ -131,10 +131,10 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 				engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
 			//	DSTR << "  " << pos << std::endl;
 			}
-			if (nPoint == engine->points.size()){	//	ひとつも追加していない＝ConvexHullが作れなかった．
-				//	きっと1点で接触している．
-				engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
-			}
+		}
+		if (nPoint == engine->points.size()){	//	ひとつも追加していない＝ConvexHullが作れなかった．
+			//	きっと1点で接触している．
+			engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
 		}
 	}
 }
@@ -154,7 +154,7 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	numIteration	= 15;
 	correctionRate	= 0.3;
-	shrinkRate		= 0.9;
+	shrinkRate		= 1.0;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
