@@ -96,9 +96,9 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 	qjrel.FromMatrix(Rjrel);
 	rjrel = Rjabs[0].trans() * ((R[1] * rj[1] + r[1]) - (R[0] * rj[0] + r[0]));
 	Jvv[0] = -Rj[0].trans();
-	Jvw[0] = -Rj[0].trans() * (-Matrix3d::Cross(rj[0]));
-	Jvv[1] =  Rjabs[0].trans() * R[1];
-	Jvw[1] =  Jvv[1] * (-Matrix3d::Cross(rj[1]));
+	Jvw[0] = Jvv[0] * (-Matrix3d::Cross(rj[0]));
+	Jvv[1] = Rjrel * Rj[1].trans();
+	Jvw[1] = Jvv[1] * (-Matrix3d::Cross(rj[1] - Jvv[1].trans() * rjrel));
 	vjrel = Jvv[0] * solid[0]->v + Jvw[0] * solid[0]->w + Jvv[1] * solid[1]->v + Jvw[1] * solid[1]->w;
 	
 	if(bCompAngular){
@@ -120,7 +120,8 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 		Jqw[1] = E * Jww[1];*/
 	}
 
-	if(GetConstraintType() == PHConstraintDesc::CONTACT){
+	// ヤコビアンをスケーリングする実験コード
+	/*if(GetConstraintType() == PHConstraintDesc::CONTACT){
 		double k = 1.0;
 		for(int i = 0; i < 2; i++){
 			Jvv[i] *= k;
@@ -128,7 +129,7 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 			Jwv[i] *= k;
 			Jww[i] *= k;
 		}
-	}
+	}*/
 	int i, j;
 	Av.clear();
 	Aw.clear();
