@@ -118,6 +118,7 @@ struct CDCapsuleDesc: public CDShapeDesc{
 struct CDCapsuleIf: public CDConvexIf{
 	IF_DEF(CDCapsule);
 	virtual float GetRadius()=0;
+	virtual float GetLength()=0;
 };	
 
 /** 直方体のディスクリプタ */

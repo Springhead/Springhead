@@ -78,7 +78,7 @@ std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
 /** 実験用変数 **/
 const double dt = 0.1;					//積分幅
-const int niter = 10;					//LCPはんぷくかいすう
+const int niter = 20;					//LCPはんぷくかいすう
 const double springOrigin = Rad(90.0);	//バネの原点
 const double Kexp = 200, Dexp = 10;		//explicitバネダンパの係数
 const double Kimp = 200, Dimp = 10;		//implicitバネダンパの係数
@@ -617,6 +617,19 @@ void keyboard(unsigned char key, int x, int y){
 		case 'z':{
 			soBox.push_back(scene->CreateSolid(descBox));
 			soBox.back()->AddShape(shapeBox);
+			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+			soBox.back()->SetMass(2.0);
+			}break;	
+		case 'c':{
+			CDCapsuleDesc cd;
+			cd.radius = 1.0;
+			cd.length = 4.0;
+			CDShapeIf* shape = phSdk->CreateShape(cd);
+
+			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.back()->AddShape(shape);
+			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
 			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);

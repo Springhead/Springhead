@@ -95,6 +95,8 @@ CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 		s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
 	}else if (desc.type == CDShapeDesc::SPHERE){
 		s = DBG_NEW CDSphere((const CDSphereDesc&)desc);
+	}else if (desc.type == CDShapeDesc::CAPSULE){
+		s = DBG_NEW CDCapsule((const CDCapsuleDesc&)desc);
 	}else if (desc.type == CDShapeDesc::BOX){
 		s = DBG_NEW CDBox((const CDBoxDesc&)desc);
 	}

@@ -23,8 +23,7 @@ IF_OBJECT_IMP(CDCapsule, CDConvex);
 CDCapsule::CDCapsule() {
 }
 
-CDCapsule::CDCapsule(const CDCapsuleDesc& desc) {
-	radius = desc.radius;
+CDCapsule::CDCapsule(const CDCapsuleDesc& desc):CDCapsuleDesc(desc){
 }
 
 // サポートポイントを求める
@@ -37,9 +36,9 @@ Vec3f CDCapsule::Support(const Vec3f& p) const {
 		off = (radius / n) * p;
 	}
 	if (p.Z() > 0){
-		off.Z() += length;
+		off.Z() += length*0.5f;
 	}else if (p.Z() < 0){
-		off.Z() -= length;
+		off.Z() -= length*0.5f;
 	}
 	return off;
 }
@@ -48,21 +47,32 @@ Vec3f CDCapsule::Support(const Vec3f& p) const {
 bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
-	if (abs(dir.X()) <= 1e-10f){	//	カプセルが法線(1,0,0)と垂直な場合
+	if (dir.X() < 0) dir = -dir;
+	
+	if (dir.X() < 0.3f){	//	カプセルが大体接触面に平行な場合
+		Vec3f center = ring.localInv * toW.Pos();
+		float is = -center.X() / dir.X() * sqrt(1-dir.X()*dir.X());	//	接触面と中心線を半径ずらした線との交点
+		is += radius / dir.X();
+		float start = -0.5f*length;
+		float end = 0.5f*length;
+		if (is < end) end = is;
+		assert(end > start);
+
 		//	ringに線分を追加
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z()), length/2));
-		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), length/2));
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), -dir.Z()), 0));
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), -dir.Z()), 0));
+		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), -start));
+		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z()), end));
+		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y()), 0));
+		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y()), 0));
 		return true;
 	}else{
 		return false;
 	}
 }
-
-// 球体の半径を取得
 float CDCapsule::GetRadius() {
 	return radius;
+}
+float CDCapsule::GetLength() {
+	return length;
 }
 
 }	//	namespace Spr

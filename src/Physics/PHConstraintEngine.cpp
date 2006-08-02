@@ -104,8 +104,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	CDSphere* sp[2];
 	sp[0] = DCAST(CDSphere, shape[0]);	// CDSphereへダイナミックキャスト
 	sp[1] = DCAST(CDSphere, shape[1]);
-	// 接触解析を行う２つの物体の片方or両方が球の場合
-	if (sp[0] || sp[1]) {
+	if (sp[0] || sp[1]) {	// 接触解析を行う２つの物体の片方or両方が球の場合
 		// 接触点の配列(engine->points)に、球の最進入点と相手の最進入点の中点centerを追加する
 		engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
 	} else {	// 接触解析を行う２つの物体がどちらとも球ではない場合
@@ -113,12 +112,12 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		//	切り口を求める。まず、それぞれの形状の切り口を列挙
 		CDCutRing cutRing(center, local);
 		int nPoint = engine->points.size();
+		//	両方に切り口がある場合（数値誤差で切り口が見つからない場合もあるのでもう一度確認）
 		if (shape[0]->FindCutRing(cutRing, shapePoseW[0]) && shape[1]->FindCutRing(cutRing, shapePoseW[1])){
-			//	両方に切り口がある場合（数値誤差で切り口が見つからない場合もあるのでもう一度確認）
 			//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 			cutRing.MakeRing();
-			//	cutRing.Print(DSTR);
-			//	DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
+			//cutRing.Print(DSTR);
+			//DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
 			for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 				if (vtx->deleted) continue;
 				assert(finite(vtx->dist));
@@ -132,7 +131,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			//	DSTR << "  " << pos << std::endl;
 			}
 		}
-		if (nPoint == engine->points.size()){	//	ひとつも追加していない＝ConvexHullが作れなかった．
+		if (nPoint == engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
 			//	きっと1点で接触している．
 			engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
 		}

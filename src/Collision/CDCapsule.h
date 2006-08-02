@@ -19,10 +19,6 @@ namespace Spr{;
 class CDCapsule: public InheritCDShape<CDCapsuleIf, CDConvex>, CDCapsuleDesc{
 public:
 	OBJECT_DEF(CDCapsule);
-	
-	//mutable Vec3f curPos;			/// 探索開始番号
-	//Vec3f center;					///	球体の中心座標
-	float radius;					/// 球体の半径
 
 	CDCapsule();
 	//CDCapsule(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
@@ -38,8 +34,8 @@ public:
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
-	/// 球体の半径を取得
 	float GetRadius();
+	float GetLength();
 };
 
 	

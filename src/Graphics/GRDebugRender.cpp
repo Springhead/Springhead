@@ -89,6 +89,16 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 			float r = sphere->GetRadius();
 			glutSolidSphere(r, 20, 20);
 		}
+		CDCapsuleIf* cap = DCAST(CDCapsuleIf, shape);
+		if (cap){
+			float r = cap->GetRadius();
+			glPushMatrix();
+			glTranslatef(0,0,-cap->GetLength()/2);
+			glutSolidSphere(r, 20, 20);
+			glTranslatef(0,0,cap->GetLength());
+			glutSolidSphere(r, 20, 20);
+			glPopMatrix();
+		}
 		CDBoxIf* box = DCAST(CDBoxIf, shape);
 		if (box){
 			Vec3f boxsize = box->GetBoxSize();
