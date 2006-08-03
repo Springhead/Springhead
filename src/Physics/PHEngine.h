@@ -62,6 +62,13 @@ public:
 inline bool operator < (const PHEngine& e1, const PHEngine& e2){
 	return e1.GetPriority() < e2.GetPriority();
 }
+template<class intf, class base>
+struct InheritPHEngine: public InheritSceneObject<intf,base>{
+	void Clear(){ return base::Clear(); }
+	int  GetPriority(){ return base::GetPriority(); }
+	void Step(){ return base::Step(); }
+};
+
 
 ///	PHEngine‚Ì”z—ñ
 class PHEngines: std::vector< UTRef<PHEngine> >{
