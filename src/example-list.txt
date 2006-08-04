@@ -4,7 +4,7 @@
 /**     @example 	./Samples/Vehicles/main.cpp						*/
 
 /** 	@example 	./tests/Collision/QuickHull2D/main.cpp			*/
-/**   	@example	./tests/Creature/CRSimple/main.cpp				*/
+/**   	@example	./tests/Creature/CRSimpleTest/CRSimpleTest.cpp				*/
 /**		@example	./tests/FileIO/FILoader/main.cpp				*/
 /**		@example	./tests/FileIO/FILoadGRScene/main.cpp			*/
 /**		@example	./tests/Graphics/GRColorSpheres/main.cpp		*/
