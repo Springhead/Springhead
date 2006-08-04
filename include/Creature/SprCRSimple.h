@@ -7,20 +7,18 @@
  */
 #ifndef SPR_CRSimpleIf_H
 #define SPR_CRSimpleIf_H
-#include <Foundation/SprObject.h>
+#include <SprPhysics.h>
+
+namespace Spr{;
 
 //@{
-namespace Spr{;
-struct CRSimpleState{
+
+struct CRSimpleDesc{
+	int test;
 };
 
-struct CRSimpleDesc : CRSimpleState{
-	CRSimpleDesc(){}
-};
-
-struct CRSimpleIf : public SceneObjectIf{
+struct CRSimpleIf : public PHEngineIf{
 	IF_DEF(CRSimple);
-	virtual void Hoge() =0;
 	virtual void Step() =0;
 };
 
