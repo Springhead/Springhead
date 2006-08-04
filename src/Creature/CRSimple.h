@@ -9,15 +9,22 @@
 #define CRSIMPLE_H
 
 #include <SprCreature.h>
-#include <Foundation/Object.h>
+#include <Physics/PHEngine.h>
 
 namespace Spr{;
-class CRSimple : public InheritSceneObject<CRSimpleIf, SceneObject>, public CRSimpleDesc{
+
+class CRSimple : public InheritPHEngine<CRSimpleIf, PHEngine>, public CRSimpleDesc{
+public:
 	OBJECT_DEF(CRSimple);
-	CRSimple(const CRSimpleDesc& desc=CRSimpleDesc(), SceneIf* s=NULL){}
-	void Hoge();
+	ACCESS_DESC(CRSimple);
+
+	CRSimpleDesc desc;
+	CRSimple(const CRSimpleDesc& d=CRSimpleDesc()): desc(d){}
+
+	int GetPriority() const { return SGBP_CREATURE; }
 	void Step();
 };
+
 }	//	namespace Spr
 
 #endif

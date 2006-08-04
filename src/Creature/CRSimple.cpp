@@ -5,9 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
 #include "CRSimple.h"
+#include <Foundation/Scene.h>
 #include <Foundation/Object.h>
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -17,13 +18,23 @@ namespace Spr{
 
 ///////////////////////////////////////////////////////////////////
 //	CRSimple
-IF_OBJECT_IMP(CRSimple, SceneObject);
-//IF_IMP(CRSimple, SceneObject);
+IF_IMP(CRSimple, PHEngine);
+OBJECT_IMP(CRSimple, PHEngine);
 
-void CRSimple::Hoge(){
+void CRRegisterFactories(){
+	bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
+
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(CRSimple));
+	std::cout << "CRSimple Factory Registered." << std::endl;
 }
 
 void CRSimple::Step(){
-	std::cout << "Hoge!Hoge!Hoge!" << std::endl;
+	for (int i=0; i<desc.test; i++){
+		std::cout << "Hoge!";
+	}
+	std::cout << std::endl;
 }
+
 }
