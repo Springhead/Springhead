@@ -153,7 +153,7 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	numIteration	= 15;
 	correctionRate	= 0.3;
-	shrinkRate		= 1.0;
+	shrinkRate		= 0.96;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -213,6 +213,18 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 	//EnableContact(lhs, rhs, false);
 
 	return joint;
+}
+bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
+	PHSolidInfos<PHSolidInfoForLCP>::iterator islhs, isrhs;
+	islhs = solids.Find((PHSolid*)lhs);
+	isrhs = solids.Find((PHSolid*)rhs);
+	if(islhs == solids.end() || isrhs == solids.end()) return false;
+	
+	PHJoint* joint = DCAST(PHJoint, j);
+	joint->solid[0] = *islhs;
+	joint->solid[1] = *isrhs;
+	joints.push_back(joint);
+	return true;
 }
 
 void PHConstraintEngine::SetupDynamics(double dt){

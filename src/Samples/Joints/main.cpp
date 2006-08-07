@@ -244,7 +244,7 @@ void BuildScene4(){
 
 void BuildScene5(){
 	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
-	scene->SetNumIteration(100);
+	scene->SetNumIteration(200);
 	CreateFloor(false);
 	
 	CDBoxDesc bd;
@@ -285,7 +285,7 @@ void BuildScene5(){
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
-	double K = 1000, D = 100;	
+	float K = 2000, D = 100;
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
@@ -312,6 +312,59 @@ void BuildScene5(){
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
 
+double K6 = 100000, D6 = 10000;	
+void BuildScene6(){
+	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
+	scene->SetNumIteration(200);
+	CreateFloor(false);
+	
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
+	
+	soBox.resize(5);
+
+	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0]->AddShape(shapeBox);
+
+	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1]->AddShape(shapeBox);
+
+	soBox[2] = scene->CreateSolid(descBox);
+	soBox[2]->AddShape(shapeBox);
+
+	soBox[3] = scene->CreateSolid(descBox);
+	soBox[3]->AddShape(shapeBox);
+
+	soBox[4] = scene->CreateSolid(descBox);
+	soBox[4]->AddShape(shapeBox);
+
+	jntLink.resize(5);
+	PHHingeJointDesc descHinge;
+	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], descHinge);
+
+	descHinge.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
+	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+	jntLink[1] = scene->CreateJoint(soBox[0], soBox[1], descHinge);
+	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
+	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
+	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
+
+	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K6);
+	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D6);
+	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K6);
+	DCAST(PHHingeJointIf, jntLink[1])->SetDamper(D6);
+	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K6);
+	DCAST(PHHingeJointIf, jntLink[2])->SetDamper(D6);
+	DCAST(PHHingeJointIf, jntLink[3])->SetSpring(K6);
+	DCAST(PHHingeJointIf, jntLink[3])->SetDamper(D6);
+	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K6);
+	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D6);
+
+	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
+	scene->SetGravity(Vec3f(0, -9.8, 0));	
+}
 
 void BuildScene(){
 	switch(sceneNo){
@@ -321,6 +374,7 @@ void BuildScene(){
 	case 3: BuildScene3(); break;
 	case 4: BuildScene4(); break;
 	case 5: BuildScene5(); break;
+	case 6: BuildScene6(); break;
 	}
 }
 
@@ -462,6 +516,7 @@ void OnKey4(char key){
 	}
 }
 
+float origin = 0;
 void OnKey5(char key){
 	switch(key){
 	case 'a': soBox[5]->SetFramePosition(Vec3d(-20.0, 30.0, 0.0)); break;
@@ -478,18 +533,42 @@ void OnKey5(char key){
 	case ',': 
 		simulationPeriod *= 2.0;
 		break;
+	}
+}
+void OnKey6(char key){
+	switch(key){
 	case ' ':{
+
+		//	剛体追加
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
-		PHSpringDesc jdesc;
-		jdesc.posePlug.Pos() = Vec3d(-1.1, -1.1, -1.1);
-		jdesc.poseSocket.Pos() = Vec3d( 1.1,  1.1,  1.1);
-		jdesc.spring = 10.0 * Vec3d(1, 1, 1);
-		jdesc.damper = 2.0 * Vec3d(1, 1, 1);
+
+		//	ジョイント作成
+		PHHingeJointDesc descHinge;
+		descHinge.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
+		descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
 		size_t n = soBox.size();
-		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], descHinge));
+		DCAST(PHHingeJointIf, jntLink.back())->SetSpring(K6);
+		DCAST(PHHingeJointIf, jntLink.back())->SetDamper(D6);
+
+		scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 		}break;
+	case 'n':
+		origin += 0.01;
+		for(unsigned i=0; i<jntLink.size(); ++i){
+			PHHingeJointIf* j = DCAST(PHHingeJointIf, jntLink[i]);
+			if (j) j->SetSpringOrigin(origin);
+		}
+		break;
+	case 'm':
+		origin -= 0.01;
+		for(unsigned i=0; i<jntLink.size(); ++i){
+			PHHingeJointIf* j = DCAST(PHHingeJointIf, jntLink[i]);
+			if (j) j->SetSpringOrigin(origin);
+		}
+		break;
 	}
 }
 
@@ -501,6 +580,7 @@ void OnKey(char key){
 	case 3: OnKey3(key); break;
 	case 4: OnKey4(key); break;
 	case 5: OnKey5(key); break;
+	case 6: OnKey6(key); break;
 	}
 }
 
@@ -543,8 +623,8 @@ void display(){
  */
 void setLight() {
 	GRLightDesc light0, light1;
-	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
-	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	light0.position = Vec4f(10.0, 20.0, 20.0, 0.0);
+	light1.position = Vec4f(-10.0, 10.0, 10.0, 0.0);
 	render->PushLight(light0);
 	render->PushLight(light1);
 }
@@ -559,9 +639,9 @@ void initialize(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	lookAt.x = 3.0;
-	lookAt.y = 10.0;
-	lookAt.z = 30.0;
+	lookAt.x = 30.0;
+	lookAt.y = -20.0;
+	lookAt.z = 100.0;
 	gluLookAt(lookAt.x, lookAt.y, lookAt.z, 
 		      0.0, lookAt.y, 0.0,
 		 	  0.0, 1.0, 0.0);
@@ -599,7 +679,7 @@ void keyboard(unsigned char key, int x, int y){
 			exit(0);
 			break;
 		//シーン切り替え
-		case '0': case '1': case '2': case '3': case '4': case '5':
+		case '0': case '1': case '2': case '3': case '4': case '5': case '6':
 			scene->Clear();
 			soFloor = NULL;
 			soBox.clear();
@@ -647,21 +727,10 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	glutTimerFunc(simulationPeriod, timer, 0);
-	/// 時刻のチェックと画面の更新を行う
-	static DWORD last = timeGetTime();
-	DWORD time = timeGetTime();
-	DWORD period = time - last;
-	last = time;
-	static double realTime;
-	static double simTime;
-	realTime += period;
-	while(realTime > simTime){
-		simTime += simulationPeriod;
-		OnTimer();
-		scene->ClearForce();
-		scene->GenerateForce();
-		scene->Integrate();
-	}
+	OnTimer();
+	scene->ClearForce();
+	scene->GenerateForce();
+	scene->Integrate();
 	glutPostRedisplay();
 }
 void idle(){
@@ -708,13 +777,6 @@ int main(int argc, char* argv[]){
 	
 	render->SetDevice(device);	// デバイスの設定
 
-	// 視点を設定する
-	Affinef view;
-	view.Pos() = Vec3f(0.0, 15.0, 15.0);								// eye
-	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
-	view = view.inv();	
-	render->SetViewMatrix(view);
-	
 	initialize();
 	//setLight();
 

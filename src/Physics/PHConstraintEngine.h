@@ -51,6 +51,7 @@ public:
 	~PHConstraintEngine();
 	PHJoint* AddJoint(const PHJointDesc& desc);	///< 関節を追加する（ファイルローダ用）
 	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	///< 関節の追加する
+	bool AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j);
 	
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 

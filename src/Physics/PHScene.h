@@ -86,6 +86,7 @@ public:
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 protected:
 	friend class PHSolid;
 	friend class Object;
