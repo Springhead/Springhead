@@ -15,8 +15,6 @@
 #endif
 #include <GL/glut.h>
 
-
-
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDeviceGL
@@ -502,7 +500,6 @@ void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
 		}
 	}
 	glBlendFunc(glfac[0], glfac[1]);
-
 }
 void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 	FILE *fp;
@@ -514,8 +511,9 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 	int i, j, t;
 	unsigned char ur, ug, ub;
 
+	// open file
 	fp = fopen(tex.filename.c_str(), "rb");
-	if (!fp){ DSTR << "no such file " << tex.filename.c_str() << std::endl; }
+	if (!fp){ DSTR << "Error : Can not Open File. " << tex.filename.c_str() << std::endl; }
 	else{
 		fscanf(fp, "%s\n", &type);
 		do {
@@ -530,8 +528,8 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 
 		fscanf(fp, "%i %i\n255\n", &tex.width, &tex.height);
 		try {
-			tex.image = DBG_NEW unsigned char[tex.width * tex.height * 3];	
-			if (tex.image == NULL) throw tex.image;
+			tex.data = DBG_NEW unsigned char[tex.width * tex.height * 3];	
+			if (tex.data == NULL) throw tex.data;
 		} catch (...){
 			DSTR << "Cannot allocate memory for texture data : " << tex.filename.c_str() << std::endl;
 			assert(0);
@@ -541,9 +539,9 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 			for (j=0, t=0; j<tex.height; j++){
 				for (i=0; i<tex.width; i++, t+=3){
 					fscanf(fp, "%i %i %i ", &r, &g, &b);
-					tex.image[t]   = (unsigned char)r;
-					tex.image[t+1] = (unsigned char)g;
-					tex.image[t+2] = (unsigned char)b;
+					tex.data[t]   = (unsigned char)r;
+					tex.data[t+1] = (unsigned char)g;
+					tex.data[t+2] = (unsigned char)b;
 				}
 				fscanf(fp, "\n");
 			}
@@ -551,9 +549,9 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 			for (j=0, t=0; j<tex.height; j++){
 				for (i=0; i<tex.width; i++, t+=3){
 					fscanf(fp, "%c%c%c", &ur, &ug, &ub);
-					tex.image[t]   = (unsigned char)ur;
-					tex.image[t+1] = (unsigned char)ug;
-					tex.image[t+2] = (unsigned char)ub;
+					tex.data[t]   = (unsigned char)ur;
+					tex.data[t+1] = (unsigned char)ug;
+					tex.data[t+2] = (unsigned char)ub;
 				}
 			}
 		} else {												// unknown
@@ -561,11 +559,11 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 			assert(0);
 		}
 		fclose(fp);
-				
+
 		glGenTextures(1, &tex.id);
 		glBindTexture(GL_TEXTURE_2D, tex.id);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, tex.width, tex.height, GL_RGB, GL_UNSIGNED_BYTE, tex.image);
-		delete [] tex.image;
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, tex.width, tex.height, GL_RGB, GL_UNSIGNED_BYTE, tex.data);
+		delete [] tex.data;
 	}
 }
 			

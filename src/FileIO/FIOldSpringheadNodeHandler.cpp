@@ -178,7 +178,7 @@ public:
 		if (mesh){
 			mesh->texCoords = d.textureCoords;
 		}else{
-			fc->ErrorMessage(NULL, "MeshNormals must be inside of Mesh node NGNG ( _ _)");
+			fc->ErrorMessage(NULL, "MeshTextureCoords must be inside of Mesh node.");
 		}
 	}
 };

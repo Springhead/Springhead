@@ -102,8 +102,8 @@
 	field->offset = (char*)&(pGRTextureDesc->height) - (char*)pGRTextureDesc;
 	field = desc->AddField("", "int", "id", "");
 	field->offset = (char*)&(pGRTextureDesc->id) - (char*)pGRTextureDesc;
-	field = desc->AddField("pointer", "char", "image", "");
-	field->offset = (char*)&(pGRTextureDesc->image) - (char*)pGRTextureDesc;
+	field = desc->AddField("pointer", "char", "data", "");
+	field->offset = (char*)&(pGRTextureDesc->data) - (char*)pGRTextureDesc;
 	db->RegisterDesc(desc);
 	
 	GRCameraDesc* pGRCameraDesc = NULL;
