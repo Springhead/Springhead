@@ -146,9 +146,9 @@ struct GRTextureDesc{
 	int				width;			///<	テクスチャサイズ
 	int				height;			///<	テクスチャサイズ
 	unsigned int	id;				///<	テクスチャID
-	unsigned char*	image;			///<	テクスチャデータ(RGB)
-	GRTextureDesc(): filename(), width(0), height(0), id(0), image(NULL){}
-	GRTextureDesc(std::string fn): filename(fn), width(0), height(0), id(0), image(NULL){}
+	unsigned char*	data;			///<	テクスチャデータ(RGB)
+	GRTextureDesc(): filename(), width(0), height(0), id(0), data(NULL){}
+	GRTextureDesc(std::string fn): filename(fn), width(0), height(0), id(0), data(NULL){}
 };
 /** @brief テクスチャの基本クラス	*/
 struct GRTextureIf: public GRVisualIf{
