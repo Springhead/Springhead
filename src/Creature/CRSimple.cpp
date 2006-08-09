@@ -22,7 +22,7 @@ IF_IMP(CRSimple, PHEngine);
 OBJECT_IMP(CRSimple, PHEngine);
 
 void CRRegisterFactories(){
-	bool bFirst = true;
+	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
 
@@ -30,11 +30,15 @@ void CRRegisterFactories(){
 	std::cout << "CRSimple Factory Registered." << std::endl;
 }
 
+CRSimple::CRSimple(const CRSimpleDesc& d/*=CRSimpleDesc()*/) : desc(d), solid(NULL) {
+}
+
 void CRSimple::Step(){
-	for (int i=0; i<desc.test; i++){
-		std::cout << "Hoge!";
+	if(!solid) {
+		this->GetScene()->FindObject(solid, desc.solidname);
+		std::cout << "Solid : " << solid->GetName() << std::endl;
 	}
-	std::cout << std::endl;
+	solid->AddTorque(Vec3d(0.0, ((double)desc.torque), 0.0));
 }
 
 }

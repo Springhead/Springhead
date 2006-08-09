@@ -14,7 +14,8 @@ namespace Spr{;
 //@{
 
 struct CRSimpleDesc{
-	int test;
+	std::string solidname;
+	int         torque;
 };
 
 struct CRSimpleIf : public PHEngineIf{

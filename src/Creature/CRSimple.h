@@ -19,7 +19,8 @@ public:
 	ACCESS_DESC(CRSimple);
 
 	CRSimpleDesc desc;
-	CRSimple(const CRSimpleDesc& d=CRSimpleDesc()): desc(d){}
+	PHSolidIf*   solid;
+	CRSimple(const CRSimpleDesc& d=CRSimpleDesc());
 
 	int GetPriority() const { return SGBP_CREATURE; }
 	void Step();

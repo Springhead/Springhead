@@ -22,4 +22,6 @@
 
 #include "SprHIS.h"
 #include "SprDevice.h"
+
+#include "SprFramework.h"
 #endif

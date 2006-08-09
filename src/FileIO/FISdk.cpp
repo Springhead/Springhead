@@ -53,6 +53,9 @@ ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc){
 	if (info == GRSdkIf::GetIfInfoStatic()){
 		return CreateGRSdk();
 	}
+	if (info == FWSceneIf::GetIfInfoStatic()){
+		return CreateFWScene();
+	}
 	return NULL;
 }
 
