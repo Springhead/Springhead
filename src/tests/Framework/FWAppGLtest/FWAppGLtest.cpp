@@ -28,7 +28,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	FWRegisterFactories();
 
 	FWAppGLIf* fwApp = CreateFWAppGL();
-	fwApp->StartApp("test.x");
+	fwApp->StartApp("test.x", 200);
 
 	return 0;
 }

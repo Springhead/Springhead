@@ -32,9 +32,11 @@ namespace Spr{
 		FWSceneIf*        fwScene;
 
 		bool              isLoadComplete;
+		int               cycleCount;
+		int               cycleLimit;
 
 		FWAppGL(const FWAppGLDesc& d=FWAppGLDesc()); // コンストラクタ
-		void StartApp(std::string filename);
+		void StartApp(std::string filename, int lim=0);
 		void LoadFile(std::string filename);
 		void CreateScene();
 		void CreateRender();

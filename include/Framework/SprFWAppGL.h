@@ -10,7 +10,7 @@ namespace Spr{
 
 	struct FWAppGLIf : ObjectIf {
 		IF_DEF(FWAppGL);
-		virtual void StartApp(std::string filename) = 0;
+		virtual void StartApp(std::string filename, int lim=0) = 0;
 		virtual void LoadFile(std::string filename) = 0;
 		virtual void CreateScene() = 0;
 		virtual void Display() = 0;

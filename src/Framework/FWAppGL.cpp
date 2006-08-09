@@ -31,11 +31,12 @@ namespace Spr{
 	}
 
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
-	:phSdk(NULL), grSdk(NULL), fwScene(NULL)
+	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false)
 	{
 	}
 
-	void FWAppGL::StartApp(std::string filename){
+	void FWAppGL::StartApp(std::string filename, int lim/*=-1*/){
+		cycleLimit = lim;
 		LoadFile(filename);
 		CreateScene();
 		CreateRender();		
@@ -120,6 +121,12 @@ namespace Spr{
 
 	void FWAppGL::Step(){
 		if (!isLoadComplete) {return;}
+		if (cycleLimit > 0) {
+			cycleCount++;
+			if (cycleLimit < cycleCount) {
+				exit(0);
+			}
+		}
 		phScene->Step();
 	}
 
