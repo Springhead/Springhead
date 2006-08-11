@@ -47,6 +47,8 @@ struct PHSdkIf : public NameManagerIf{
 };
 PHSdkIf* SPR_CDECL CreatePHSdk();
 
+void PHRegisterSdk();
+
 //@}
 
 }	//	namespace Spr

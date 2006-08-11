@@ -27,6 +27,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	FWRegisterFactories();
 
+	PHRegisterSdk();
+	GRRegisterSdk();
+	FWRegisterSdk();
+
 	FWAppGLIf* fwApp = CreateFWAppGL();
 	fwApp->StartApp("test.x", 200);
 

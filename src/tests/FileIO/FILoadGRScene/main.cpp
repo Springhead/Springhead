@@ -119,6 +119,9 @@ int main(int argc, char* argv[]){
 	CDRegisterTypeDescs();
 	GRRegisterTypeDescs();
 
+	PHRegisterSdk();
+	GRRegisterSdk();
+
 	FISdkIf* fiSdk = CreateFISdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;

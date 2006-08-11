@@ -50,6 +50,10 @@ PHSdkIf* SPR_CDECL CreatePHSdk(){
 //	PHSdk
 IF_OBJECT_IMP(PHSdk, NameManager);
 
+void PHRegisterSdk(){
+	RegisterSdk(new PHSdkFactory());
+}
+
 void PHRegisterFactories(){
 	bool bFirst = true;
 	if (!bFirst) return;

@@ -46,7 +46,13 @@ FISdkIf* SPR_CDECL CreateFISdk(){
 	return rv;
 }
 
+static std::vector<SdkFactoryBase*> sdkFactories;
+void RegisterSdk(SdkFactoryBase* sdkFactory){
+	sdkFactories.push_back(sdkFactory);
+}
+
 ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc){
+	/*
 	if (info == PHSdkIf::GetIfInfoStatic()){
 		return CreatePHSdk();
 	}
@@ -55,6 +61,15 @@ ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc){
 	}
 	if (info == FWSceneIf::GetIfInfoStatic()){
 		return CreateFWScene();
+	}
+	return NULL;
+	*/
+
+	// Factory Version
+	for (size_t i=0; i<sdkFactories.size(); i++) {
+		if (info == sdkFactories[i]->GetIfInfo()) {
+			return sdkFactories[i]->Create(desc);
+		}
 	}
 	return NULL;
 }

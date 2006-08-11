@@ -27,6 +27,8 @@ struct FISdkIf : public ObjectIf{
 FISdkIf* SPR_CDECL CreateFISdk();
 ///	いろいろなSDKの作成
 ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc);
+/// Sdkのファクトリの登録
+void RegisterSdk(SdkFactoryBase* sdkFactory);
 
 //@}
 

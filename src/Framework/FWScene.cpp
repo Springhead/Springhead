@@ -8,6 +8,10 @@ namespace Spr{
 	IF_IMP(FWScene, Scene);
 	OBJECT_IMP(FWScene, Scene);
 
+	void FWRegisterSdk(){
+		RegisterSdk(new FWSceneFactory());
+	}
+
 	FWScene::FWScene(const FWSceneDesc& d/*=FWSceneDesc()*/){
 		SetNameManager(NameManager::GetRoot());
 	}
@@ -36,4 +40,10 @@ namespace Spr{
 		FWSceneIf* rv = DBG_NEW FWScene;
 		return rv;
 	}
+
+	FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
+		FWSceneIf* rv = DBG_NEW FWScene(*(FWSceneDesc*)desc);
+		return rv;
+	}
+
 }

@@ -62,6 +62,11 @@ void GRRegisterFactories(){
 
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
 }
+
+void GRRegisterSdk(){
+	RegisterSdk(new GRSdkFactory());
+}
+
 //----------------------------------------------------------------------------
 //	GRSdk
 IF_OBJECT_IMP(GRSdk, NameManager);

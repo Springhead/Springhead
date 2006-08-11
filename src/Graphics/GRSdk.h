@@ -18,6 +18,19 @@
 namespace Spr {;
 struct GRSceneIf;
 
+
+GRSdkIf* SPR_CDECL CreateGRSdk();
+class GRSdkFactory : public SdkFactoryBase {
+public:
+	const IfInfo* GetIfInfo() const {
+		return GRSdkIf::GetIfInfoStatic();
+	}
+	ObjectIf* Create(const void* desc){
+		return CreateGRSdk();
+	}
+};
+
+
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
 class SPR_DLL GRSdk:public InheritObject<GRSdkIf, NameManager>, public GRSdkDesc{

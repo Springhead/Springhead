@@ -139,6 +139,11 @@ int main(int argc, char* argv[]){
 	CDRegisterTypeDescs();
 	GRRegisterTypeDescs();
 
+	// Sdkをファイルからロードしていないようなので本来不要
+	// だけど、念のため
+	PHRegisterSdk();
+	GRRegisterSdk();
+
 	FISdkIf* fiSdk = CreateFISdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;

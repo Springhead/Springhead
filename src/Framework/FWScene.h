@@ -7,6 +7,16 @@
 
 namespace Spr{
 
+	class FWSceneFactory : public SdkFactoryBase {
+	public:
+		const IfInfo* GetIfInfo() const {
+			return FWSceneIf::GetIfInfoStatic();
+		}
+		ObjectIf* Create(const void* desc){
+			return CreateFWScene();
+		}
+	};
+
 	class FWScene : public InheritScene<FWSceneIf, Scene>, public FWSceneDesc {
     public:
 		OBJECT_DEF(FWScene);

@@ -1,5 +1,6 @@
 #include "CRSimpleTestApp.h"
 #include <GL/glut.h>
+#include <Foundation/Object.h>
 
 using namespace Spr;
 using namespace std;
@@ -23,9 +24,11 @@ void CRSimpleTestApp::Register(){
 	CRRegisterTypeDescs();
 
 	// Factory‚Ì“o˜^
+	PHRegisterSdk();
+	GRRegisterSdk();
 	CRRegisterFactories();
 
-	cout << "Register Complete." << endl;
+	DSTR << "Register Complete." << endl;
 }
 
 
@@ -34,12 +37,12 @@ void CRSimpleTestApp::LoadFile(string filename){
 	fiFileX = fiSdk->CreateFileX();
 
 	if (! fiFileX->Load(objs, filename.data()) ) {
-		cout << "Error: Cannot open load file. " << endl;
+		DSTR << "Error: Cannot open load file. " << endl;
 		exit(EXIT_FAILURE);
 	}
-	cout << "Loaded " << (unsigned)(objs.size()) << "objects." << endl;
+	DSTR << "Loaded " << (unsigned)(objs.size()) << "objects." << endl;
 
-	cout << "LoadFile Complete." << endl;	
+	DSTR << "LoadFile Complete." << endl;	
 }
 
 
@@ -48,17 +51,17 @@ void CRSimpleTestApp::CreateScene(){
 		if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);
 		if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);
 	}
-	if (!phSdk) { cout << "PHSdk not found." << endl; }
-	if (!grSdk) { cout << "GRSdk not found." << endl; }
+	if (!phSdk) { DSTR << "PHSdk not found." << endl; }
+	if (!grSdk) { DSTR << "GRSdk not found." << endl; }
 	if (!phSdk || !grSdk) { exit(EXIT_FAILURE); }
 
 	phScene = phSdk->GetScene(0);
 	grScene = grSdk->GetScene(0);
 
-	phSdk->Print(cout);
-	grSdk->Print(cout);
+	phSdk->Print(DSTR);
+	grSdk->Print(DSTR);
 
-	cout << "CreateScene Complete." << endl;	
+	DSTR << "CreateScene Complete." << endl;	
 }
 
 
@@ -81,7 +84,7 @@ void CRSimpleTestApp::CreateRender(int window){
 	grRender->PushLight(light);
 
 	isLoadComplete = true;
-	cout << "CreateRender Complete." << endl;	
+	DSTR << "CreateRender Complete." << endl;	
 }
 
 

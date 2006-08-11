@@ -270,6 +270,7 @@ public:
 };
 #define FactoryImp(cls)	FactoryImpTemplate<cls, cls##If, cls##Desc>
 
+
 ///	シーングラフの状態を保存．再生する仕組み
 class ObjectStates:public InheritObject<ObjectStatesIf, Object>{
 protected:

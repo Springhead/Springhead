@@ -12,6 +12,17 @@
 
 namespace Spr {;
 
+PHSdkIf* SPR_CDECL CreatePHSdk();
+class PHSdkFactory : public SdkFactoryBase {
+public:
+	const IfInfo* GetIfInfo() const {
+		return PHSdkIf::GetIfInfoStatic();
+	}
+	ObjectIf* Create(const void* desc){
+		return CreatePHSdk();
+	}
+};
+
 class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, NameManager>{
 protected:
 	//	scene
