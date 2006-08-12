@@ -6,13 +6,13 @@
 #include <SprFramework.h>
 
 namespace Spr{
-	void PHRegisterTypeDescs();
-	void CDRegisterTypeDescs();
-	void GRRegisterTypeDescs();
-	void FIRegisterTypeDescs();
-	void FWRegisterTypeDescs();
+	void SPR_CDECL PHRegisterTypeDescs();
+	void SPR_CDECL CDRegisterTypeDescs();
+	void SPR_CDECL GRRegisterTypeDescs();
+	void SPR_CDECL FIRegisterTypeDescs();
 
-	void FWRegisterFactories();
+	void SPR_CDECL FWRegisterTypeDescs();
+	void SPR_CDECL FWRegisterFactories();
 }
 
 using namespace Spr;
@@ -24,7 +24,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	GRRegisterTypeDescs();
 	FIRegisterTypeDescs();
 	FWRegisterTypeDescs();
-
 	FWRegisterFactories();
 
 	PHRegisterSdk();

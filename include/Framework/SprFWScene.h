@@ -20,7 +20,7 @@ namespace Spr{
 
 	FWSceneIf* SPR_CDECL CreateFWScene();
 	FWSceneIf* SPR_CDECL CreateFWScene(const void* desc);
-	void FWRegisterSdk();
+	void SPR_CDECL FWRegisterSdk();
 
 }
 

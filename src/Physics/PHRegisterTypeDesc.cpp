@@ -17,7 +17,7 @@ namespace Spr{
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
 
-void PHRegisterTypeDescs(){
+void SPR_CDECL PHRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;

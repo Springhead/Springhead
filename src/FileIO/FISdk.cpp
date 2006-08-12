@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 namespace Spr{;
-void FIRegisterTypeDescs();
+void SPR_CDECL FIRegisterTypeDescs();
 
 
 struct Sdks{
@@ -47,7 +47,7 @@ FISdkIf* SPR_CDECL CreateFISdk(){
 }
 
 static std::vector<SdkFactoryBase*> sdkFactories;
-void RegisterSdk(SdkFactoryBase* sdkFactory){
+void SPR_CDECL RegisterSdk(SdkFactoryBase* sdkFactory){
 	sdkFactories.push_back(sdkFactory);
 }
 

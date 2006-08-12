@@ -431,7 +431,7 @@ public:
 	}
 };
 
-void UTRegisterTypeDescs();
+void SPR_CDECL UTRegisterTypeDescs();
 
 ///	’PƒŒ^‚ğ“o˜^‚·‚éD
 #define REG_FIELD(type)	RegisterDesc( DBG_NEW UTTypeDesc(#type, sizeof(type)) )

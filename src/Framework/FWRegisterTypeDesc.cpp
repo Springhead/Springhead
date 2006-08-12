@@ -10,7 +10,7 @@ namespace Spr{
     static UTTypeDesc* desc;
     static UTTypeDesc::Field* field;
 
-	void FWRegisterTypeDescs(){
+	void SPR_CDECL FWRegisterTypeDescs(){
 	    static bool bFirst = true;
 		if(!bFirst) return;
 		bFirst=false;
@@ -22,7 +22,7 @@ namespace Spr{
 		db->Link();
     }
 
-	void FWRegisterFactories(){
+	void SPR_CDECL FWRegisterFactories(){
 		static bool bFirst = true;
 		if (!bFirst) return;
 		bFirst=false;

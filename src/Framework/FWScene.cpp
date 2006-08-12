@@ -8,7 +8,7 @@ namespace Spr{
 	IF_IMP(FWScene, Scene);
 	OBJECT_IMP(FWScene, Scene);
 
-	void FWRegisterSdk(){
+	void SPR_CDECL FWRegisterSdk(){
 		RegisterSdk(new FWSceneFactory());
 	}
 

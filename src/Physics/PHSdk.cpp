@@ -12,8 +12,8 @@
 #include <stdlib.h>
 
 namespace Spr{;
-void PHRegisterTypeDescs();
-void CDRegisterTypeDescs();
+void SPR_CDECL PHRegisterTypeDescs();
+void SPR_CDECL CDRegisterTypeDescs();
 
 struct Sdks{
 	typedef std::vector< PHSdkIf* > Cont;
@@ -50,11 +50,11 @@ PHSdkIf* SPR_CDECL CreatePHSdk(){
 //	PHSdk
 IF_OBJECT_IMP(PHSdk, NameManager);
 
-void PHRegisterSdk(){
+void SPR_CDECL PHRegisterSdk(){
 	RegisterSdk(new PHSdkFactory());
 }
 
-void PHRegisterFactories(){
+void SPR_CDECL PHRegisterFactories(){
 	bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;

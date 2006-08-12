@@ -40,7 +40,7 @@ struct GRSdkIf: public ObjectIf{
 };
 ///	グラフィックスSDK
 GRSdkIf* SPR_CDECL CreateGRSdk();
-void GRRegisterSdk();
+void SPR_CDECL GRRegisterSdk();
 //@}
 }
 #endif

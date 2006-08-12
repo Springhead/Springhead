@@ -13,7 +13,7 @@
 #include "GRMesh.h"
 
 namespace Spr{;
-void GRRegisterTypeDescs();
+void SPR_CDECL GRRegisterTypeDescs();
 
 struct GRSdks{
 	typedef std::vector< GRSdkIf* > Cont;
@@ -46,7 +46,7 @@ GRSdkIf* SPR_CDECL CreateGRSdk(){
 	return rv;
 }
 
-void GRRegisterFactories(){
+void SPR_CDECL GRRegisterFactories(){
 	bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
@@ -63,7 +63,7 @@ void GRRegisterFactories(){
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
 }
 
-void GRRegisterSdk(){
+void SPR_CDECL GRRegisterSdk(){
 	RegisterSdk(new GRSdkFactory());
 }
 

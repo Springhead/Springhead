@@ -235,7 +235,9 @@ void keyboard(unsigned char key, int x, int y){
  return 	‚È‚µ
  */
 void idle(){
-	if(scene) scene->Step();
+	if(scene) {
+		scene->Step();
+	}
 	glutPostRedisplay();
 	static int count;
 	count ++;

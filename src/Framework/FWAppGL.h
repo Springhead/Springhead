@@ -34,6 +34,7 @@ namespace Spr{
 		bool              isLoadComplete;
 		int               cycleCount;
 		int               cycleLimit;
+		Vec3f*            vtx;
 
 		FWAppGL(const FWAppGLDesc& d=FWAppGLDesc()); // コンストラクタ
 		void StartApp(std::string filename, int lim=0);

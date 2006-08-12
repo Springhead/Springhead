@@ -33,6 +33,7 @@ namespace Spr{
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
 	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false)
 	{
+		 vtx = DBG_NEW Vec3f[4];
 	}
 
 	void FWAppGL::StartApp(std::string filename, int lim/*=-1*/){
@@ -175,7 +176,7 @@ namespace Spr{
 				// Draw Box
 				CDBoxIf* box = DCAST(CDBoxIf, shape);
 				if (box) {
-					Vec3f* vtx = DBG_NEW Vec3f[4];
+					//Vec3f* vtx = DBG_NEW Vec3f[4];
 					Vec3f* vtx_base = box->GetVertices();
 					for (size_t i_face=0; i_face<6; i_face++) {
 						CDFaceIf* face = box->GetFace(i_face);

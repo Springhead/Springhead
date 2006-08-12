@@ -18,7 +18,7 @@ static UTTypeDesc* desc;
 static UTTypeDesc::Field* field; 
 using namespace SprOldSpringehead;
 
-void FIRegisterTypeDescs(){
+void SPR_CDECL FIRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;
