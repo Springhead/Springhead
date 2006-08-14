@@ -11,10 +11,11 @@ namespace Spr{
 		OBJECT_DEF(FWAppGL);
 		ACCESS_DESC(FWAppGL);
 
-		static FWAppGLIf* instance;
+		static UTRef<FWAppGLIf> instance;
 		static void GlutDisplayFunc();
 		static void GlutReshapeFunc(int w, int h);
 		static void GlutIdleFunc();
+		static void GlutKeyboardFunc(unsigned char key, int x, int y);
 
 		FISdkIf*          fiSdk;
 		FIFileXIf*        fiFileX;
@@ -32,19 +33,25 @@ namespace Spr{
 		FWSceneIf*        fwScene;
 
 		bool              isLoadComplete;
+		bool              isSimulating;
 		int               cycleCount;
 		int               cycleLimit;
 		Vec3f*            vtx;
+		
+		ObjectStatesIf*   firstState;
 
-		FWAppGL(const FWAppGLDesc& d=FWAppGLDesc()); // コンストラクタ
-		void StartApp(std::string filename, int lim=0);
-		void LoadFile(std::string filename);
-		void CreateScene();
-		void CreateRender();
-		void Step();
-		void Display();
-		void Reshape(int w, int h);
-		void Idle();
+		FWAppGL(const FWAppGLDesc& d=FWAppGLDesc());
+		~FWAppGL();
+
+		virtual void StartApp(std::string filename, int lim=0);
+		virtual void LoadFile(std::string filename);
+		virtual void CreateScene();
+		virtual void CreateRender();
+		virtual void Step();
+		virtual void Display();
+		virtual void Reshape(int w, int h);
+		virtual void Idle();
+		virtual void Keyboard(unsigned char key, int x, int y);
     };
 
 }

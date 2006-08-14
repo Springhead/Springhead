@@ -9,7 +9,7 @@ namespace Spr{
 	IF_IMP(FWAppGL, Object);
 	OBJECT_IMP(FWAppGL, Object);
 
-	FWAppGLIf* FWAppGL::instance = NULL;
+	UTRef<FWAppGLIf> FWAppGL::instance = NULL;
 
 	FWAppGLIf* SPR_CDECL CreateFWAppGL(){
 		if (!FWAppGL::instance) {
@@ -30,10 +30,20 @@ namespace Spr{
 		FWAppGL::instance->Idle();
 	}
 
+	void FWAppGL::GlutKeyboardFunc(unsigned char key, int x, int y){
+		FWAppGL::instance->Keyboard(key, x, y);
+	}
+
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
-	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false)
+	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true)
 	{
 		 vtx = DBG_NEW Vec3f[4];
+	}
+
+	FWAppGL::~FWAppGL(){
+		delete firstState;
+		delete vtx;
+		delete fwScene;
 	}
 
 	void FWAppGL::StartApp(std::string filename, int lim/*=-1*/){
@@ -44,7 +54,7 @@ namespace Spr{
 		//
 		glutDisplayFunc(FWAppGL::GlutDisplayFunc);
 		glutReshapeFunc(FWAppGL::GlutReshapeFunc);
-		//glutKeyboardFunc(FWAppGL::GlutKeyboardFunc);
+		glutKeyboardFunc(FWAppGL::GlutKeyboardFunc);
 		glutIdleFunc(FWAppGL::GlutIdleFunc);
 		glutMainLoop();
 	}
@@ -91,6 +101,9 @@ namespace Spr{
 		phScene->Print(DSTR);
 		grScene->Print(DSTR);
 		fwScene->Print(DSTR);
+
+		firstState = CreateObjectStates();
+		firstState->SaveState(phScene);
 
 		DSTR << "CreateScene Complete." << std::endl;	
 	}
@@ -206,8 +219,24 @@ namespace Spr{
 	}
 
 	void FWAppGL::Idle(){
-		Step();
+		if (isSimulating){ Step(); }
 		glutPostRedisplay();
 	}
 
+	void FWAppGL::Keyboard(unsigned char key, int x, int y){
+		if (key == 27) {
+			delete[] vtx;
+			exit(0);
+		}
+		if (key == 'r') {
+			firstState->LoadState(phScene);
+		}
+		if (key == '.') {
+			isSimulating = false;
+			Step();
+		}
+		if (key == ' ') {
+			isSimulating = true;
+		}
+	}
 }

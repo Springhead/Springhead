@@ -24,6 +24,7 @@ namespace Spr{
 		std::vector<ObjectIf*> objs;
 		//
 		FWScene(const FWSceneDesc& d=FWSceneDesc()); // コンストラクタ
+		~FWScene(); // デストラクタ
 		//
 		void Link(PHSceneIf* phScene, GRSceneIf* grScene);
 		//

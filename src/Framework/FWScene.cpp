@@ -16,6 +16,12 @@ namespace Spr{
 		SetNameManager(NameManager::GetRoot());
 	}
 
+	FWScene::~FWScene(){
+		for (size_t i=0; i<NChildObject(); i++) {
+			delete objs[i];
+		}
+	}
+
 	void FWScene::Link(PHSceneIf* phScene, GRSceneIf* grScene){
 		for (size_t i=0; i<NChildObject(); i++) {
 			FWObjectIf* obj = DCAST(FWObjectIf, GetChildObject(i));
