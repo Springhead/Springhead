@@ -16,6 +16,7 @@ namespace Spr{
 		virtual void Display() = 0;
 		virtual void Reshape(int w, int h) = 0;
 		virtual void Idle() = 0;
+		virtual void Keyboard(unsigned char key, int x, int y) = 0;
 	};
 
 	FWAppGLIf* SPR_CDECL CreateFWAppGL();
