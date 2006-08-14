@@ -225,7 +225,6 @@ namespace Spr{
 
 	void FWAppGL::Keyboard(unsigned char key, int x, int y){
 		if (key == 27) {
-			delete[] vtx;
 			exit(0);
 		}
 		if (key == 'r') {
