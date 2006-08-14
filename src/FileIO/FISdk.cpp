@@ -46,7 +46,7 @@ FISdkIf* SPR_CDECL CreateFISdk(){
 	return rv;
 }
 
-static std::vector<SdkFactoryBase*> sdkFactories;
+static std::vector< UTRef<SdkFactoryBase> > sdkFactories;
 void SPR_CDECL RegisterSdk(SdkFactoryBase* sdkFactory){
 	sdkFactories.push_back(sdkFactory);
 }

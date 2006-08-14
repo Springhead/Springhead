@@ -118,7 +118,7 @@ public:
 				mat->ambient = mat->diffuse = d.face;		// スタックに積んであるmatへ値を代入
 				mat->specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
 				mat->emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
-				mat->power = d.power;				
+				mat->power = d.power;
 				mesh->material.push_back(*mat);
 			}else{
 				fc->ErrorMessage(NULL, "cannot create Material node.");
@@ -131,6 +131,7 @@ public:
 		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
 		if (mat){
 			fc->objects.Pop();
+			delete mat;
 		}
 	}
 };

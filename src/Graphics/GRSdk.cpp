@@ -95,7 +95,9 @@ GRDeviceGLIf* GRSdk::CreateDeviceGL(int w){
 	return rv;
 }
 GRSceneIf* GRSdk::CreateScene(){
-	return (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &GRSdkDesc());
+	GRSceneIf* rv = (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &GRSdkDesc());
+	AddChildObject(rv);
+	return rv;
 }
 GRSceneIf* GRSdk::GetScene(size_t i){
 	if (i<scenes.size()) return scenes[i];
