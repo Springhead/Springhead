@@ -28,7 +28,6 @@ namespace Spr{
 		FWScene(const FWSceneDesc& d=FWSceneDesc()); // コンストラクタ
 		~FWScene(); // デストラクタ
 		//
-		void Link(PHSceneIf* phScene, GRSceneIf* grScene);
 		PHSceneIf* GetPHScene(){ return phScene; }
 		GRSceneIf* GetGRScene(){ return grScene; }
 		//

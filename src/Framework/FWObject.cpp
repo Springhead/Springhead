@@ -13,14 +13,6 @@ namespace Spr{
 	{
 	}
 
-	void FWObject::Link(PHSceneIf* phScene, GRSceneIf* grScene){
-		/*
-		phScene->FindObject(phSolid, desc.phSolidName);
-		grScene->FindObject(grFrame, desc.grFrameName);
-		DSTR << phSolid << " <=> " << grFrame << std::endl;
-		*/
-	}
-
 	PHSolidIf* FWObject::GetPHSolid(){
 		return phSolid;
 	}

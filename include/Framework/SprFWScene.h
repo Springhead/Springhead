@@ -13,7 +13,6 @@ namespace Spr{
 
 	struct FWSceneIf : SceneIf {
 		IF_DEF(FWScene);
-		virtual void Link(PHSceneIf* phScene, GRSceneIf* grScene) = 0;
 		virtual PHSceneIf* GetPHScene() = 0;
 		virtual GRSceneIf* GetGRScene() = 0;
 	};

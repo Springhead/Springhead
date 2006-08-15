@@ -24,15 +24,6 @@ namespace Spr{
 		}
 	}
 
-	void FWScene::Link(PHSceneIf* phScene, GRSceneIf* grScene){
-		/*
-		for (size_t i=0; i<NChildObject(); i++) {
-			FWObjectIf* obj = DCAST(FWObjectIf, GetChildObject(i));
-			if (obj) { obj->Link(phScene, grScene); }
-		}
-		*/
-	}
-
 	bool FWScene::AddChildObject(ObjectIf* o){
 		bool rv = false;
 		if (!rv) {

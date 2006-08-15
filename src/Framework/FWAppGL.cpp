@@ -35,7 +35,7 @@ namespace Spr{
 	}
 
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
-	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true), firstState(NULL), vtx(NULL)
+	:fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true), firstState(NULL), vtx(NULL)
 	{
 		 vtx = DBG_NEW Vec3f[4];
 	}
@@ -82,37 +82,22 @@ namespace Spr{
 			exit(EXIT_FAILURE);
 		}
 
+		// Get PH and GR Scene
 		phScene = fwScene->GetPHScene();
 		grScene = fwScene->GetGRScene();
 
+		// Check 
 		if (!phScene || !grScene) {
 			if (!phScene) { DSTR << "PHScene not found." << std::endl; }
 			if (!grScene) { DSTR << "GRScene not found." << std::endl; }
 			exit(EXIT_FAILURE);
 		}
 
-		/*
-		// Search PH and GR Scenes
-		for (unsigned  i=0; i<objs.size(); i++) {
-			if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);
-			if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);
-		}
-		if (!phSdk || !grSdk) {
-			if (!phSdk) { DSTR << "PHSdk not found." << std::endl; }
-			if (!grSdk) { DSTR << "GRSdk not found." << std::endl; }
-			exit(EXIT_FAILURE);
-		}
-
-		phScene = phSdk->GetScene(0);
-		grScene = grSdk->GetScene(0);
-
-		fwScene->Link(phScene, grScene);
-		*/
-
+		fwScene->Print(DSTR);
 		phScene->Print(DSTR);
 		grScene->Print(DSTR);
-		fwScene->Print(DSTR);
 
+		// Save Initial State for Reset
 		firstState = CreateObjectStates();
 		firstState->SaveState(phScene);
 
@@ -160,7 +145,6 @@ namespace Spr{
 
 		grRender->ClearBuffer();
 
-		//PHSolidIf** solids = phScene->GetSolids();
 		for (size_t i_obj=0; i_obj<fwScene->NChildObject(); i_obj++) {
 			FWObjectIf* obj = DCAST(FWObjectIf, fwScene->GetChildObject(i_obj));
 			if (!obj) {continue;}

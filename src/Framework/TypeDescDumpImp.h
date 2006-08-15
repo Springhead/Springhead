@@ -14,10 +14,6 @@
 	desc->ifInfo = FWObjectIf::GetIfInfoStatic();
 	((IfInfo*)FWObjectIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<FWObjectDesc>;
-	field = desc->AddField("", "string", "phSolidName", "");
-	field->offset = (char*)&(pFWObjectDesc->phSolidName) - (char*)pFWObjectDesc;
-	field = desc->AddField("", "string", "grFrameName", "");
-	field->offset = (char*)&(pFWObjectDesc->grFrameName) - (char*)pFWObjectDesc;
 	db->RegisterDesc(desc);
 	
 	FWSceneDesc* pFWSceneDesc = NULL;

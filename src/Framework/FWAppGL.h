@@ -22,10 +22,8 @@ namespace Spr{
 
 		ObjectIfs         objs;
 
-		PHSdkIf*          phSdk;
 		PHSceneIf*        phScene;
 
-		GRSdkIf*          grSdk;
 		GRSceneIf*        grScene;
 		GRDebugRenderIf*  grRender;
 		GRDeviceGLIf*     grDevice;
