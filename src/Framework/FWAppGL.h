@@ -50,6 +50,8 @@ namespace Spr{
 		virtual void Reshape(int w, int h);
 		virtual void Idle();
 		virtual void Keyboard(unsigned char key, int x, int y);
+		virtual FWAppGLDesc::DebugMode GetDebugMode();
+		virtual void SetDebugMode(FWAppGLDesc::DebugMode m);
     };
 
 }

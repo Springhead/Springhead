@@ -151,17 +151,18 @@ namespace Spr{
 	}
 
 	void FWAppGL::Display(){
-		if (!isLoadComplete) {return;}
+		if (!isLoadComplete)return;
+
 		grRender->ClearBuffer();
 		grRender->BeginScene();
-		if (0){
-			grScene->Render(grRender);
-		}else{
+		if (debugMode == DM_DEBUG){
 			GRCameraIf* cam = NULL;
 			if (grScene) cam = grScene->GetCamera();
 			if (cam) cam->Render(grRender);
 			grRender->DrawScene(phScene);
 			if (cam) cam->Rendered(grRender);
+		}else{
+			grScene->Render(grRender);
 		}
 		grRender->EndScene();	
 	}
@@ -189,5 +190,11 @@ namespace Spr{
 		if (key == ' ') {
 			isSimulating = true;
 		}
+	}
+	FWAppGLDesc::DebugMode FWAppGL::GetDebugMode(){
+		return debugMode;
+	}
+	void FWAppGL::SetDebugMode(FWAppGLDesc::DebugMode m){
+		debugMode = m;
 	}
 }
