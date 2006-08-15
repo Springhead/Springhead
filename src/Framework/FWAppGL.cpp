@@ -116,15 +116,27 @@ namespace Spr{
 			view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
 			view = view.inv();	
 		grRender->SetViewMatrix(view);
-
-		GRLightIf* light = NULL;
-		for (unsigned i=0; i<grScene->NChildObject(); i++) {
-			if (!light) light = DCAST(GRLightIf, grScene->GetChildObject(i));
-		}
-		grRender->PushLight(light);
-
 		isLoadComplete = true;
 		DSTR << "CreateRender Complete." << std::endl;	
+
+
+		GRLightDesc light0;
+		light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+		light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
+		light0.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+		light0.position			= Vec4f(0.0f, 10.0f, 0.0f, 1.0f);
+		light0.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
+		light0.spotCutoff		= 145.0f;
+		light0.spotFalloff		= 30.0f;
+		grRender->PushLight(light0);
+
+		GRLightDesc light1;
+		light1.diffuse			= Vec4f(0.8f, 0.8f, 0.8f, 1.0f);
+		light1.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+		light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);
+		light1.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
+		grRender->PushLight(light1);
+
 	}
 
 	void FWAppGL::Step(){
@@ -140,70 +152,17 @@ namespace Spr{
 
 	void FWAppGL::Display(){
 		if (!isLoadComplete) {return;}
-
 		grRender->ClearBuffer();
-
-		for (size_t i_obj=0; i_obj<fwScene->NChildObject(); i_obj++) {
-			FWObjectIf* obj = DCAST(FWObjectIf, fwScene->GetChildObject(i_obj));
-			if (!obj) {continue;}
-			PHSolidIf* solid = obj->GetPHSolid();
-			
-			Affinef af;
-			solid->GetPose().ToAffine(af);
-			grRender->PushModelMatrix();
-			grRender->MultModelMatrix(af);
-
-			for (int i_shp=0; i_shp<solid->NShape(); i_shp++) {
-				CDShapeIf* shape = solid->GetShape(i_shp);
-				Affinef af;
-				solid->GetShapePose(i_shp).ToAffine(af);
-				grRender->PushModelMatrix();
-				grRender->MultModelMatrix(af);
-
-				// Draw Mesh
-				CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-				if (mesh) {
-					Vec3f* vtx_base = mesh->GetVertices();
-					for (size_t i_face=0; i_face<mesh->NFace(); i_face++) {
-						CDFaceIf* face = mesh->GetFace(i_face);
-						grRender->DrawFace(face, vtx_base);
-					}
-				}
-
-				// Draw Sphere
-				CDSphereIf* sphere = DCAST(CDSphereIf, shape);
-				if (sphere) {
-					float r = sphere->GetRadius();
-					GLUquadricObj* quad = gluNewQuadric();
-					gluSphere(quad, r, 16, 8);
-					gluDeleteQuadric(quad);
-				}
-
-				// Draw Box
-				CDBoxIf* box = DCAST(CDBoxIf, shape);
-				if (box) {
-					//Vec3f* vtx = DBG_NEW Vec3f[4];
-					Vec3f* vtx_base = box->GetVertices();
-					for (size_t i_face=0; i_face<6; i_face++) {
-						CDFaceIf* face = box->GetFace(i_face);
-						for (int v=0; v<4; v++) {
-							vtx[v] = vtx_base[face->GetIndices()[v]].data;
-						}
-						Vec3f normal, edge0, edge1;
-						edge0 = vtx[1] - vtx[0];
-						edge1 = vtx[2] - vtx[0];
-						normal = edge0^edge1;
-						normal.unitize();
-						glNormal3fv(normal);
-						grRender->SetVertexFormat(GRVertexElement::vfP3f);
-						grRender->DrawDirect(GRRenderBaseIf::QUADS, vtx, 4);
-					}
-				}
-				grRender->PopModelMatrix();
-			}
-			grRender->PopModelMatrix();
+		grRender->BeginScene();
+		if (0){
+			grScene->Render(grRender);
+		}else{
+			GRCameraIf* cam = NULL;
+			if (grScene) cam = grScene->GetCamera();
+			if (cam) cam->Render(grRender);
+			grRender->DrawScene(phScene);
+			if (cam) cam->Rendered(grRender);
 		}
-
 		grRender->EndScene();	
 	}
 

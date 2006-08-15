@@ -77,7 +77,7 @@ void GRLight::Rendered(GRRenderIf* render){
 
 //----------------------------------------------------------------------------
 //	GRCamera
-IF_OBJECT_IMP(GRCamera, SceneObject);
+IF_OBJECT_IMP(GRCamera, GRVisual);
 GRCameraDesc::GRCameraDesc():
 	center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){
 }
@@ -95,6 +95,13 @@ bool GRCamera::AddChildObject(ObjectIf* o){
 		return true;
 	}
 	return false;
+}
+void GRCamera::Render(GRRenderIf* r){
+	if (frame){
+		Affinef af = frame->GetWorldTransform();
+		r->SetViewMatrix(af.inv());
+	}
+	r->SetCamera(*this);
 }
 
 }	//	Spr

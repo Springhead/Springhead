@@ -10,6 +10,7 @@
 #include <Graphics/SprGRScene.h>
 #include <Foundation/Scene.h>
 #include <Graphics/GRFrame.h>
+#include <Graphics/GRRender.h>
 
 namespace Spr {;
 
@@ -41,6 +42,7 @@ public:
 
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc);
 	virtual GRFrameIf* GetWorld(){return world;}
+	virtual GRCameraIf* GetCamera(){return &*camera;}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);

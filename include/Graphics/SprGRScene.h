@@ -31,8 +31,12 @@ struct GRSceneIf: public SceneIf{
 	IF_DEF(GRScene);
 	///	フレームの作成
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc)=0;
-	///	
+	///	シーンのレンダリング
 	virtual void Render(GRRenderIf* r)=0;
+	///	World
+	virtual GRFrameIf* GetWorld()=0;
+	///	Camera
+	virtual GRCameraIf* GetCamera()=0;
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース
 	*/	

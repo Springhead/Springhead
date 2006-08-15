@@ -58,15 +58,10 @@ ObjectIf* GRScene::GetChildObject(size_t pos){
 	return world->GetChildObject(pos);
 }
 void GRScene::Render(GRRenderIf* r){
-	if (camera){
-		if (camera->frame){
-			Affinef af = camera->frame->GetWorldTransform();
-			r->SetViewMatrix(af.inv());
-		}
-		r->SetCamera(*camera);
-	}
+	if (camera) camera->Render(r);
 	world->Render(r);
 	world->Rendered(r);
+	if (camera) camera->Rendered(r);
 }
 
 

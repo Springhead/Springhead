@@ -16,7 +16,7 @@
 
 namespace Spr{;
 
-class GRCamera:public InheritSceneObject<GRCameraIf, SceneObject>, public GRCameraDesc{
+class GRCamera:public InheritGRVisual<GRCameraIf, GRVisual>, public GRCameraDesc{
 public:
 	OBJECT_DEF(GRCamera);
 	ACCESS_DESC(GRCamera);
@@ -25,6 +25,7 @@ public:
 	virtual size_t NChildObject() const ;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual void Render(GRRenderIf* render);	
 };
 
 class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{

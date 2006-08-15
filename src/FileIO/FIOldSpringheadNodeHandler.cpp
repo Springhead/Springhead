@@ -67,6 +67,10 @@ public:
 		grld.spotFalloff = l8.falloff;
 		grld.spotInner = l8.spotInner;
 		grld.spotCutoff = l8.spotCutoff;
+		//	¶ŽèŒn¨‰EŽèŒn‚Ì•ÏŠ·
+		grld.position.Z() *= -1;
+		grld.spotDirection.Z() *= -1;
+
 		fc->PushCreateNode(GRLightIf::GetIfInfoStatic(), &grld);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
@@ -211,10 +215,10 @@ public:
 
 class FINodeHandlerSolid: public FINodeHandlerImp<Solid>{
 public:
-	class SolidAdaptor: public FILoadContext::Task{
+	class Adaptor: public FILoadContext::Task{
 	public:
 		PHSolid* solid;
-		SolidAdaptor(PHSolid* s):solid(s){}
+		Adaptor(PHSolid* s):solid(s){}
 		virtual bool AddChildObject(ObjectIf* o){
 			GRFrame* fr = DCAST(GRFrame, o);
 			if (fr){	//	frˆÈ‰º‚Ì‘SMesh‚ðSolid‚É’Ç‰Á
@@ -256,11 +260,11 @@ public:
 		solid->angVelocity = d.angularVelocity;
 		solid->inertia = d.inertia;
 		solid->mass = d.mass;
-		SolidAdaptor* task = DBG_NEW SolidAdaptor(solid);
+		Adaptor* task = DBG_NEW Adaptor(solid);
 		fc->objects.Push(task->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		SolidAdaptor* task = DCAST(SolidAdaptor, fc->objects.Top());
+		Adaptor* task = DCAST(Adaptor, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
 
@@ -269,11 +273,55 @@ public:
 	}
 };
 
+class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
+public:	
+	class Adaptor: public FINodeHandlerSolid::Adaptor{
+		PHSceneIf* scene;
+	public:
+		Adaptor(PHScene* s):scene(s), FINodeHandlerSolid::Adaptor(NULL){}
+		virtual bool AddChildObject(ObjectIf* o){
+			GRFrame* fr = DCAST(GRFrame, o);
+			if (fr){	//	Solid‚É•ÏŠ·‚µ‚Ä’Ç‰Á
+				PHSolidDesc sd;
+				solid = DCAST(PHSolid, scene->CreateSolid());
+				solid->SetDynamical(false);
+				AddFrame(fr, Affinef());
+				return true;
+			}
+			return false;
+		}
+	};
+	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
+	void Load(Desc& d, FILoadContext* fc){
+		PHScene* ps = NULL;
+		for(int i=fc->objects.size()-1; i>=0; --i){
+			ps = DCAST(PHScene, fc->objects[i]);
+			if (ps) break;
+			FWScene* fs = DCAST(FWScene, fc->objects[i]);
+			if (fs) ps = DCAST(PHScene, fs->GetPHScene());
+			if (ps) break;
+		}
+		Adaptor* task = DBG_NEW Adaptor(ps);
+		fc->objects.Push(task->GetIf());
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		Adaptor* task = DCAST(Adaptor, fc->objects.Top());
+		fc->links.push_back(task);
+		fc->objects.Pop();	//	task
+	}
+};
+
+
 class FINodeHandlerCamera: public FINodeHandlerImp<Camera>{
 public:	
 	FINodeHandlerCamera():FINodeHandlerImp<Desc>("Camera"){}
 	void Load(Desc& d, FILoadContext* fc){
-		fc->objects.PrintShort(DSTR);
+		d.view.ExZ() *= -1;
+		d.view.EyZ() *= -1;
+		d.view.EzX() *= -1;
+		d.view.EzY() *= -1;
+		d.view.PosZ() *= -1;
+
 		GRCameraDesc cd;
 		cd.back = d.back;
 		cd.front = d.front;
@@ -283,7 +331,7 @@ public:
 		GRCamera* cam = DCAST(GRCamera, fc->objects.Top());
 		GRFrameDesc fd;
 		fd.transform = d.view;
-		GRFrameIf* frame = DCAST(GRFrameIf, cam->GetScene()->CreateObject(GRFrameIf::GetIfInfoStatic(), &fd));
+		GRFrameIf* frame = DCAST(GRFrameIf, cam->GetNameManager()->CreateObject(GRFrameIf::GetIfInfoStatic(), &fd));
 		cam->AddChildObject(frame);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
@@ -308,14 +356,6 @@ public:
 	}
 };
 
-class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
-public:	
-	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
-	void Load(Desc& d, FILoadContext* fc){
-	}
-	void Loaded(Desc& d, FILoadContext* fc){
-	}
-};
 
 class FINodeHandlerScene: public FINodeHandlerImp<Scene>{
 public:	

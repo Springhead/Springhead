@@ -163,7 +163,7 @@ struct GRCameraDesc{
 	GRCameraDesc();
 	GRCameraDesc(Vec2f sz, Vec2f c, float f, float b): size(sz), center(c), front(f), back(b) {}
 };
-struct GRCameraIf: public SceneObjectIf{
+struct GRCameraIf: public GRVisualIf{
 	IF_DEF(GRCamera);
 };
 
