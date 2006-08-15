@@ -266,7 +266,10 @@ public:
 				PHSolidDesc sd;
 				PHSolid* solid = DCAST(PHSolid, phScene->CreateSolid());
 				solid->SetDynamical(false);
-				AddFrameToSolid(solid, fr, Affinef());
+				Posed pose;
+				pose.FromAffine(fr->GetTransform());
+				solid->SetPose(pose);
+				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
 				return true;
 			}
 			return false;
@@ -298,7 +301,7 @@ public:
 		virtual bool AddChildObject(ObjectIf* o){
 			frame = DCAST(GRFrame, o);
 			if (frame){	//	frˆÈ‰º‚Ì‘SMesh‚ğSolid‚É’Ç‰Á
-				AddFrameToSolid(solid, frame, Affinef());
+				AddFrameToSolid(solid, frame, frame->GetTransform().inv());
 				return true;
 			}
 			return false;
