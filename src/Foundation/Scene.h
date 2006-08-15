@@ -54,6 +54,7 @@ public:
 		iterator it = ((ObjectNames*)this)->find(&key);
 		if (it == end()) return NULL;
 		NamedObject* obj = *it;
+		if (!cn.length()) return obj;
 		if (obj->GetTypeInfo()->Inherit(cn.c_str())) return obj;
 		return NULL;
 	}
