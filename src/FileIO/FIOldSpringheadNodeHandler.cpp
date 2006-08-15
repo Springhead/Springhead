@@ -10,9 +10,12 @@
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRMesh.h>
 #include <Graphics/GRRender.h>
+#include <Physics/PHSolid.h>
+#include <Framework/FWScene.h>
+#include <Collision/CDConvexMesh.h>
 
-namespace Spr{;
-using namespace SprOldSpringehead;
+namespace SprOldSpringhead{
+using namespace Spr;
 
 class FINodeHandlerXHeader: public FINodeHandlerImp<Header>{
 public:
@@ -185,16 +188,134 @@ public:
 };
 
 
+class FINodeHandlerSolid: public FINodeHandlerImp<Solid>{
+public:
+	class SolidAdaptor: public FILoadContext::Task{
+	public:
+		PHSolid* solid;
+		SolidAdaptor(PHSolid* s):solid(s){}
+		virtual bool AddChildObject(ObjectIf* o){
+			GRFrame* fr = DCAST(GRFrame, o);
+			if (fr){	//	frˆÈ‰º‚Ì‘SMesh‚ðSolid‚É’Ç‰Á
+				AddFrame(fr, Affinef());
+				return true;
+			}
+			return false;
+		}
+		void AddFrame(GRFrame* fr, Affinef af){
+			af = af * fr->GetTransform();
+			for(unsigned i=0; i<fr->NChildObject(); ++i){
+				GRVisual* v = DCAST(GRVisual, fr->GetChildObject(i));
+				GRFrame* f = DCAST(GRFrame, v);
+				if (f) AddFrame(f, af);
+				GRMesh* m = DCAST(GRMesh, v);
+				if (m){
+					CDConvexMeshDesc desc;
+					for(unsigned i=0; i<m->positions.size(); ++i){
+						desc.vertices.push_back(m->positions[i]);
+					}
+					CDConvexMeshIf* cm = DBG_NEW CDConvexMesh(desc);
+					solid->AddShape(cm);
+					Posed pose;
+					pose.FromAffine(af);
+					solid->SetShapePose(solid->NShape()-1, pose);
+				}
+			}
+		}
+		virtual void Execute(FILoadContext* ctx){
+			//	TODO: Framework‚Ö‚Ì“o˜^
+		}
+	};
+
+	FINodeHandlerSolid():FINodeHandlerImp<Desc>("Solid"){}
+	void Load(Desc& d, FILoadContext* fc){
+		fc->PushCreateNode(PHSolidIf::GetIfInfoStatic(), &PHSolidDesc());
+		PHSolid* solid = DCAST(PHSolid, fc->objects.Top());
+		solid->center = d.center;
+		solid->velocity = d.velocity;
+		solid->angVelocity = d.angularVelocity;
+		solid->inertia = d.inertia;
+		solid->mass = d.mass;
+		SolidAdaptor* task = DBG_NEW SolidAdaptor(solid);
+		fc->objects.Push(task->GetIf());
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		SolidAdaptor* task = DCAST(SolidAdaptor, fc->objects.Top());
+		fc->links.push_back(task);
+		fc->objects.Pop();	//	task
+
+		assert(DCAST(PHSolid, fc->objects.Top()));
+		fc->objects.Pop();	//	solid
+	}
+};
+class FINodeHandlerScene: public FINodeHandlerImp<Scene>{
+public:	
+	FINodeHandlerScene():FINodeHandlerImp<Desc>("Scene"){}
+	void Load(Desc& d, FILoadContext* fc){
+		//	SDK‚ðì‚é
+		PHSdkDesc phsdkd;
+		fc->PushCreateNode(PHSdkIf::GetIfInfoStatic(), &phsdkd);
+		GRSdkDesc grsdkd;
+		fc->PushCreateNode(GRSdkIf::GetIfInfoStatic(), &grsdkd);
+
+		//	Framework‚ðì‚é
+		FWSceneDesc fwsd;
+		fwsd.grSceneName = "grScene";
+		fwsd.phSceneName = "phScene";
+		fc->PushCreateNode(FWSceneIf::GetIfInfoStatic(), &fwsd);
+		FWScene* fws = DCAST(FWScene, fc->objects.Top());
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
+	}
+};
+
+class FINodeHandlerSolidContainer: public FINodeHandlerImp<SolidContainer>{
+public:	
+	FINodeHandlerSolidContainer():FINodeHandlerImp<Desc>("SolidContainer"){}
+	void Load(Desc& d, FILoadContext* fc){
+		PHSceneDesc sd;
+		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &sd);	
+		PHScene* s = DCAST(PHScene, fc->objects.Top());
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
+	}
+};
+
+class FINodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
+public:	
+	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
+	void Load(Desc& d, FILoadContext* fc){
+		PHSceneDesc sd;
+		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &sd);	
+		PHScene* s = DCAST(PHScene, fc->objects.Top());
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
+	}
+};
+
+}
+
+
+
+namespace Spr{
+using namespace SprOldSpringhead;
 void RegisterOldSpringheadNodeHandlers(){
-REGISTER_NODE_HANDLER(FINodeHandlerXHeader);
-REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
-REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
-REGISTER_NODE_HANDLER(FINodeHandlerXLight8);
-REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
-REGISTER_NODE_HANDLER(FINodeHandlerXMeshMaterialList);
-REGISTER_NODE_HANDLER(FINodeHandlerXMaterial);
-REGISTER_NODE_HANDLER(FINodeHandlerXMeshNormals);
-REGISTER_NODE_HANDLER(FINodeHandlerXTextureFilename);
-REGISTER_NODE_HANDLER(FINodeHandlerXMeshTextureCoords);
+	REGISTER_NODE_HANDLER(FINodeHandlerXHeader);
+	REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
+	REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
+	REGISTER_NODE_HANDLER(FINodeHandlerXLight8);
+	REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
+	REGISTER_NODE_HANDLER(FINodeHandlerXMeshMaterialList);
+	REGISTER_NODE_HANDLER(FINodeHandlerXMaterial);
+	REGISTER_NODE_HANDLER(FINodeHandlerXMeshNormals);
+	REGISTER_NODE_HANDLER(FINodeHandlerXTextureFilename);
+	REGISTER_NODE_HANDLER(FINodeHandlerXMeshTextureCoords);
+	REGISTER_NODE_HANDLER(FINodeHandlerSolid);
+	REGISTER_NODE_HANDLER(FINodeHandlerScene);
+	REGISTER_NODE_HANDLER(FINodeHandlerSolidContainer);
+	REGISTER_NODE_HANDLER(FINodeHandlerJointEngine);
 }
 }

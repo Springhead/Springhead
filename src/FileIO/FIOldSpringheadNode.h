@@ -8,8 +8,8 @@
 #ifndef FIOLDSPRINGHEADNODE_H
 #define FIOLDSPRINGHEADNODE_H
 
-namespace Spr{;
-namespace SprOldSpringehead{;
+namespace SprOldSpringhead{;
+using namespace Spr;
 
 ///	\defgroup gpFIOldSpringheadNode 旧(Springhead1)ファイルロード用互換ノード
 //@{
@@ -95,8 +95,26 @@ struct MeshTextureCoords{
 	std::vector<Vec2f> textureCoords;
 };
 
+///	Springhead1のSolid
+struct Solid{
+	float mass;				///<	質量
+	Matrix3f inertia;		///<	慣性モーメント
+	Vec3f velocity;			///<	速度
+	Vec3f angularVelocity;	///<	角速度
+	Vec3f center;			///<	中心位置
+};
+///	Springhead1のScene
+struct Scene{
+};
+///
+struct SolidContainer{
+};
+///
+struct JointEngine{
+};
+
 
 //@}
 
-}}
+}
 #endif

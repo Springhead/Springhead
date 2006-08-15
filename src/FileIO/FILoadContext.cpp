@@ -131,7 +131,7 @@ FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf
 	}
 }
 void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
-	ObjectIf* refObj = NULL;
+	Spr::ObjectIf* refObj = NULL;
 	for(unsigned i=0; i<nameManagers.size(); ++i){
 		nameManagers[i]->FindObject(refObj, ref);
 		if (refObj) break;
@@ -253,7 +253,7 @@ void FILoadContext::PushCreateNode(const IfInfo* info, const void* data){
 		}
 	}else{
 		UTString err("Can not create '");
-		err.append(datas.Top()->type->GetIfInfo()->ClassName());
+		err.append(info->ClassName());
 		err.append("'. Ancestor objects don't know how to make it.");
 		ErrorMessage(NULL, err.c_str());
 	}

@@ -11,13 +11,28 @@
 #endif
 
 #include "TypeDescDump.h"
-#include "TypeDescDumpForHandler.h"
+#include "TypeDescDumpForOldSpringheadHandler.h"
 
-namespace Spr{ 
+
+using namespace Spr;
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
-using namespace SprOldSpringehead;
 
+namespace SprOldSpringhead{
+	void SPR_CDECL RegisterTypeDescs(){
+		static bool bFirst=true;
+		if (!bFirst) return;
+		bFirst = false;
+
+		UTRegisterTypeDescs();
+
+		UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+		#include "TypeDescDumpImpForOldSpringheadHandler.h"
+		db->Link();
+	}
+}
+
+namespace Spr{ 
 void SPR_CDECL FIRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
@@ -27,7 +42,8 @@ void SPR_CDECL FIRegisterTypeDescs(){
 
 	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
 	#include "TypeDescDumpImp.h"
-	#include "TypeDescDumpImpForHandler.h"
 	db->Link();
+	SprOldSpringhead::RegisterTypeDescs();
 }
+
 }

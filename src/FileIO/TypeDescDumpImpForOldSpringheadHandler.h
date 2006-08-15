@@ -1,4 +1,4 @@
-//	Do not edit. MakeTypeDescForHandler.bat will update this file.
+//	Do not edit. MakeTypeDescForOldSpringheadHandler.bat will update this file.
 	
 	Header* pHeader = NULL;
 	desc = DBG_NEW UTTypeDesc("Header");
@@ -138,4 +138,38 @@
 	field->offset = (char*)&(pMeshTextureCoords->nTextureCoords) - (char*)pMeshTextureCoords;
 	field = desc->AddField("vector", "Vec2f", "textureCoords", "");
 	field->offset = (char*)&(pMeshTextureCoords->textureCoords) - (char*)pMeshTextureCoords;
+	db->RegisterDesc(desc);
+	
+	Solid* pSolid = NULL;
+	desc = DBG_NEW UTTypeDesc("Solid");
+	desc->size = sizeof(Solid);
+	desc->access = DBG_NEW UTAccess<Solid>;
+	field = desc->AddField("", "float", "mass", "");
+	field->offset = (char*)&(pSolid->mass) - (char*)pSolid;
+	field = desc->AddField("", "Matrix3f", "inertia", "");
+	field->offset = (char*)&(pSolid->inertia) - (char*)pSolid;
+	field = desc->AddField("", "Vec3f", "velocity", "");
+	field->offset = (char*)&(pSolid->velocity) - (char*)pSolid;
+	field = desc->AddField("", "Vec3f", "angularVelocity", "");
+	field->offset = (char*)&(pSolid->angularVelocity) - (char*)pSolid;
+	field = desc->AddField("", "Vec3f", "center", "");
+	field->offset = (char*)&(pSolid->center) - (char*)pSolid;
+	db->RegisterDesc(desc);
+	
+	Scene* pScene = NULL;
+	desc = DBG_NEW UTTypeDesc("Scene");
+	desc->size = sizeof(Scene);
+	desc->access = DBG_NEW UTAccess<Scene>;
+	db->RegisterDesc(desc);
+	
+	SolidContainer* pSolidContainer = NULL;
+	desc = DBG_NEW UTTypeDesc("SolidContainer");
+	desc->size = sizeof(SolidContainer);
+	desc->access = DBG_NEW UTAccess<SolidContainer>;
+	db->RegisterDesc(desc);
+	
+	JointEngine* pJointEngine = NULL;
+	desc = DBG_NEW UTTypeDesc("JointEngine");
+	desc->size = sizeof(JointEngine);
+	desc->access = DBG_NEW UTAccess<JointEngine>;
 	db->RegisterDesc(desc);

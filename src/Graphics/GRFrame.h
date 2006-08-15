@@ -50,6 +50,7 @@ public:
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual Affinef GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
+	virtual Affinef GetTransform(){ return transform; }
 	void Print(std::ostream& os) const ;
 };
 }

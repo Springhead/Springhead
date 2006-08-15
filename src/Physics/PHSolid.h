@@ -10,6 +10,7 @@
 
 #include <SprPhysics.h>
 #include <Foundation/Object.h>
+#include <Collision/CDShape.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>
 

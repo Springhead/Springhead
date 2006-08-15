@@ -69,7 +69,7 @@ public:
 		bool IsGood();
 	};
 	///	タスククラス．ロード後にまとめて仕事をさせるためのもの．
-	class Task:public UTRefCount{
+	class Task:public Object{
 	public:
 		virtual ~Task(){}
 		virtual void Execute(FILoadContext* ctx)=0;	
