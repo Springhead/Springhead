@@ -26,7 +26,7 @@ struct NameManagerIf: public NamedObjectIf{
 		NamedObjectIf* p = FindObject(name,T::GetIfInfoStatic()->className);
 		t = DCAST(T, p);
 	}
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls=NULL)=0;
+	virtual NamedObjectIf* FindObject(UTString name, UTString cls="")=0;
 };
 
 struct SceneIf: public NameManagerIf{

@@ -136,10 +136,10 @@ NamedObjectIf* NameManager::FindObject(UTString name, UTString cls){
 		//	兄弟を探し、
 		for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
 			if (*it != this){
-				(*it)->FindObjectFromDescendant(name, cls);
+				rv = (*it)->FindObjectFromDescendant(name, cls);
+				if (rv) return rv;
 			}
 		}
-		if (rv) return rv;
 		//	なければ、親の親を探す。
 		nm = nm->nameManager;
 	}
