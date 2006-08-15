@@ -81,6 +81,7 @@ void NameManager::SetNameManager(NameManager* p){
 	if (p) p->AddChildManager(this);
 }
 void NameManager::AddChildManager(NameManager* c){
+	assert(c != this);
 	if (c->nameManager == this) return;
 	c->SetNameManager(NULL);
 	c->nameManager = this;
