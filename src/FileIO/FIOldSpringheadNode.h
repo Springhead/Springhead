@@ -147,9 +147,27 @@ struct JointEngine{
 };
 ///
 struct Joint{
+	int			nType;				///<	関節種類 0:蝶番, 1:スライド
+	Vec3f		prj;				///<	親剛体のフレームから見た関節位置
+	Matrix3f	pRj;				///<	親剛体のフレームから見た関節姿勢
+	Vec3f		crj;				///<	子剛体のフレームから見た関節位置
+	Matrix3f	cRj;				///<	子剛体のフレームから見た関節姿勢
+
+	float		fPosition;			///<	変位
+	float		fVelocity;			///<	速度
+	float		fMaxTorque;			///<	最大トルク
+	float		fMinPosition;		///<	可動範囲(最大値)
+	float		fMaxPosition;		///<	可動範囲(最小値)
+	int			nInputType;			///<	入力の種類 @see PHJointInputType
+	float		fInput;				///<	入力値の初期値
+	float		fPValue;			///<	PID制御のPの値
+	float		fIValue;			///<	PID制御のIの値
+	float		fDValue;			///<	PID制御のDの値
 };
 
-
+struct Import{
+	std::string file;	
+};
 //@}
 
 }

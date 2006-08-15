@@ -366,12 +366,8 @@ class FINodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
 public:	
 	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
-		PHSceneDesc sd;
-		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &sd);	
-		PHScene* s = DCAST(PHScene, fc->objects.Top());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		fc->objects.Pop();
 	}
 };
 
@@ -379,12 +375,17 @@ class FINodeHandlerJoint: public FINodeHandlerImp<Joint>{
 public:	
 	FINodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
 	void Load(Desc& d, FILoadContext* fc){
-		PHSceneDesc sd;
-		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &sd);	
-		PHScene* s = DCAST(PHScene, fc->objects.Top());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		fc->objects.Pop();
+	}
+};
+
+class FINodeHandlerImport: public FINodeHandlerImp<Import>{
+public:	
+	FINodeHandlerImport():FINodeHandlerImp<Desc>("Import"){}
+	void Load(Desc& d, FILoadContext* fc){
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
 	}
 };
 
@@ -413,5 +414,6 @@ void RegisterOldSpringheadNodeHandlers(){
 	REGISTER_NODE_HANDLER(FINodeHandlerContactEngine);
 	REGISTER_NODE_HANDLER(FINodeHandlerJointEngine);
 	REGISTER_NODE_HANDLER(FINodeHandlerJoint);
+	REGISTER_NODE_HANDLER(FINodeHandlerImport);
 }
 }

@@ -31,7 +31,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	FWRegisterSdk();
 
 	FWAppGLIf* fwApp = CreateFWAppGL();
-	fwApp->StartApp("block.x", 200);
+	fwApp->StartApp("vhOld.x", 200);
 
 	return 0;
 }
