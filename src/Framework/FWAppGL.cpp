@@ -35,15 +35,15 @@ namespace Spr{
 	}
 
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
-	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true)
+	:phSdk(NULL), grSdk(NULL), fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true), firstState(NULL), vtx(NULL)
 	{
 		 vtx = DBG_NEW Vec3f[4];
 	}
 
 	FWAppGL::~FWAppGL(){
-		delete firstState;
-		delete vtx;
-		delete fwScene;
+		if (firstState) { delete firstState; }
+		if (fwScene)    { delete fwScene;    }
+		if (vtx)        { delete vtx;        }
 	}
 
 	void FWAppGL::StartApp(std::string filename, int lim/*=-1*/){
@@ -82,6 +82,16 @@ namespace Spr{
 			exit(EXIT_FAILURE);
 		}
 
+		phScene = fwScene->GetPHScene();
+		grScene = fwScene->GetGRScene();
+
+		if (!phSdk || !grSdk) {
+			if (!phSdk) { DSTR << "PHSdk not found." << std::endl; }
+			if (!grSdk) { DSTR << "GRSdk not found." << std::endl; }
+			exit(EXIT_FAILURE);
+		}
+
+		/*
 		// Search PH and GR Scenes
 		for (unsigned  i=0; i<objs.size(); i++) {
 			if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);
@@ -97,6 +107,7 @@ namespace Spr{
 		grScene = grSdk->GetScene(0);
 
 		fwScene->Link(phScene, grScene);
+		*/
 
 		phScene->Print(DSTR);
 		grScene->Print(DSTR);

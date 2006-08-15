@@ -17,6 +17,7 @@ namespace Spr{
 		PHSolidIf* phSolid;
 		GRFrameIf* grFrame;
 		//
+		bool AddChildObject(ObjectIf* o);
 		void Link(PHSceneIf* phScene, GRSceneIf* grScene);
 		PHSolidIf* GetPHSolid();
 		GRFrameIf* GetGRFrame();
