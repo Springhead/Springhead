@@ -94,8 +94,6 @@ namespace Spr{
 		}
 
 		fwScene->Print(DSTR);
-		phScene->Print(DSTR);
-		grScene->Print(DSTR);
 
 		// Save Initial State for Reset
 		firstState = CreateObjectStates();

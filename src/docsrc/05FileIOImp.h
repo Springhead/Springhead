@@ -42,8 +42,14 @@ Vec3f‚âMaterial‚Ì‚æ‚¤‚È‘g‚İ—§‚ÄŒ^‚ÍCÄ‹A“I‚Éˆ—‚³‚êCÅI“I‚É‚ÍC
 ‚ğŒÄ‚Ño‚µ‚Ä‚¢‚­‚±‚Æ‚ÅÀŒ»‚µ‚Ä‚¢‚Ü‚·D
 e‚ªì‚Á‚Ä‚­‚ê‚È‚¢ê‡‚ÍC‚»‚Ì‚Ü‚½e‚ÌCreateObject()‚ğŒÄ‚Ño‚µC
 ÅŒã‚Ü‚Åì‚ç‚ê‚È‚¢ê‡‚ÍƒOƒ[ƒoƒ‹‚ÌCreateSdk()ŠÖ”‚ğŒÄ‚Ño‚µ‚Ü‚·D
-
 CreateObject()‚É‚Â‚¢‚Ä‚ÍC\ref pageFoundationImp ‚Ì \ref secCreateObject ‚ğQÆ‚µ‚Ä‚­‚¾‚³‚¢D
+
+<li>ƒIƒuƒWƒFƒNƒg‚ğ’Ç‰Á‚·‚éB
+ÅŒã‚Éƒ[ƒh‚µ‚½ƒIƒuƒWƒFƒNƒg‚ğeƒIƒuƒWƒFƒNƒg‚É’Ç‰Á‚µ‚Ü‚·B
+‚±‚ê‚É‚æ‚Á‚ÄAƒV[ƒ“ƒOƒ‰ƒt‚ªƒcƒŠ[Œ`®‚É‚È‚é‚í‚¯‚Å‚·B
+
+eƒIƒuƒWƒFƒNƒg‚Ö‚Ì’Ç‰Á‚ÍA eƒIƒuƒWƒFƒNƒg (FILoadContext::objects.Top() ‚É‚Â‚Ü‚ê‚Ä‚¢‚éj
+‚ÌAddChildObject()‚ğŒÄ‚Ño‚·‚±‚Æ‚Ås‚í‚ê‚Ü‚·B
 </ol>
 
 ‚±‚Ì‚æ‚¤‚ÉƒIƒuƒWƒFƒNƒg‚Ì¶¬‚âƒf[ƒ^‚Ìİ’è‚É‚àAPI‚ğ—p‚¢‚Ä‚¨‚èC
@@ -65,6 +71,14 @@ Xƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCFrame‚ÆFrameTransformMatrix‚©‚çCGRFrame‚ğ¶¬‚µ‚
  <li> ƒnƒ“ƒhƒ‰‚Ì’†‚ÅCFrameDesc, FrameTransformMatrixDesc ‚ğó‚¯æ‚Á‚ÄC
       GRFrame ‚ğ¶¬‚µ‚½‚èCe‚Ì GRFrame‚Ì transform ‚ğİ’è‚µ‚½‚è‚Æ‚¢‚Á‚½Cˆ—‚ğs‚¤D
 </ol>
+
+\subsection secLoadLink ƒ[ƒhŒã‚ÌQÆ‚Ì‰ğŒˆ
+‚·‚×‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚ªƒ[ƒh‚µØ‚ê‚Ä‚¢‚È‚¢‚½‚ßAƒ[ƒh’†‚ÉƒIƒuƒWƒFƒNƒg‚Ö‚ÌQÆ‚ğ‰ğŒˆ‚·‚é‚±‚Æ‚Í
+‚Å‚«‚Ü‚¹‚ñB
+‚»‚±‚ÅAƒ[ƒhŒã‚É‚Ü‚Æ‚ß‚ÄƒIƒuƒWƒFƒNƒg‚ÌQÆ‚ğ‰ğŒˆ(Link)‚µ‚Ü‚·B
+ƒ[ƒh’†‚ÉAFILoadContext::AddLink() ‚ğŒÄ‚Ño‚·‚ÆƒŠƒ“ƒN‚ª‹L˜^‚³‚ê‚Ü‚·B
+ƒ[ƒhI—¹‚ÉFIFile‚ªAFIFileContext::LinkTask::Execute()‚ğŒÄ‚Ño‚µ‚ÄƒŠƒ“ƒN‚ğÀs‚µ‚Ü‚·B
+
 
 \subsection secSaveProc ƒZ[ƒu‚Ìè‡
 

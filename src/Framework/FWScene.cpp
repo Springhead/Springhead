@@ -18,12 +18,12 @@ namespace Spr{
 		SetNameManager(NameManager::GetRoot());
 	}
 
-	FWScene::~FWScene(){
-		for (size_t i=0; i<NChildObject(); i++) {
-			delete fwObjects[i];
-		}
+	ObjectIf* FWScene::CreateObject(const IfInfo* info, const void* desc){
+		ObjectIf* rv = baseType::CreateObject(info, desc);
+		if (!rv && phScene) rv = phScene->CreateObject(info, desc);
+		if (!rv && grScene) rv = grScene->CreateObject(info, desc);
+		return rv;
 	}
-
 	bool FWScene::AddChildObject(ObjectIf* o){
 		bool rv = false;
 		if (!rv) {
@@ -47,15 +47,24 @@ namespace Spr{
 				rv = true;
 			}
 		}
+		if (!rv && phScene) {
+			rv = phScene->AddChildObject(o);
+		}
+		if (!rv && grScene) {
+			rv = grScene->AddChildObject(o);
+		}
 		return rv;
 	}
 
 	size_t FWScene::NChildObject() const{
-		return fwObjects.size();
+		return fwObjects.size() + (grScene?1:0) + (phScene?1:0);
 	}
 
 	ObjectIf* FWScene::GetChildObject(size_t pos){
-		return fwObjects[pos];
+		if (pos < fwObjects.size()) return fwObjects[pos];
+		if (pos - fwObjects.size() == 0) return phScene ? (ObjectIf*)phScene : (ObjectIf*)grScene;
+		if (pos - fwObjects.size() == 1) return phScene ? grScene : NULL;
+		return NULL;
 	}
 
 	FWSceneIf* SPR_CDECL CreateFWScene(){

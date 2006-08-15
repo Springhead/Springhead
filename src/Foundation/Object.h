@@ -105,6 +105,7 @@ public:
 
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
+	virtual void PrintShort(std::ostream& os) const;
 	///	オブジェクトの作成
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	///	子オブジェクトの数
@@ -151,6 +152,7 @@ template <class T> T* SprDcastImp(const Object* p){
 
 template <class intf, class base>
 struct InheritObject:public intf, public base{
+	typedef base baseType;
 	virtual int AddRef(){return base::AddRef();}
 	virtual int DelRef(){return base::DelRef();}
 	virtual int RefCount(){return base::RefCount();}				
@@ -158,6 +160,7 @@ struct InheritObject:public intf, public base{
 		return base::CreateObject(i,d);
 	}
 	virtual void Print(std::ostream& os) const{ base::Print(os); }
+	virtual void PrintShort(std::ostream& os) const{ base::PrintShort(os); }
 	virtual size_t NChildObject() const { return base::NChildObject(); }
 	virtual ObjectIf* GetChildObject(size_t pos){ return base::GetChildObject(pos); }
 	virtual const ObjectIf* GetChildObject(size_t pos) const{
@@ -194,6 +197,7 @@ public:
 	void SetName(const char* n);
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
+	virtual void PrintShort(std::ostream& os) const;
 	virtual void SetNameManager(NameManager* s);
 	virtual NameManager* GetNameManager(){ return nameManager; }
 	///	デバッグ用の表示

@@ -182,8 +182,10 @@ bool PHScene::AddChildObject(ObjectIf* o){
 		SetContactMode(s, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
 	}else{
 		PHEngine* e = DCAST(PHEngine, o);
-		if (e) engines.push_back(e);
-		rv = true;
+		if (e){ 
+			engines.push_back(e);
+			rv = true;
+		}
 	}
 	return rv;
 }

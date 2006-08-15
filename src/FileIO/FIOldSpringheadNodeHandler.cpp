@@ -214,8 +214,7 @@ public:
 					for(unsigned i=0; i<m->positions.size(); ++i){
 						desc.vertices.push_back(m->positions[i]);
 					}
-					CDConvexMeshIf* cm = DBG_NEW CDConvexMesh(desc);
-					solid->AddShape(cm);
+					solid->CreateShape(desc);
 					Posed pose;
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);
@@ -253,6 +252,7 @@ class FINodeHandlerCamera: public FINodeHandlerImp<Camera>{
 public:	
 	FINodeHandlerCamera():FINodeHandlerImp<Desc>("Camera"){}
 	void Load(Desc& d, FILoadContext* fc){
+		fc->objects.PrintShort(DSTR);
 		GRCameraDesc cd;
 		cd.back = d.back;
 		cd.front = d.front;
@@ -295,29 +295,34 @@ class FINodeHandlerScene: public FINodeHandlerImp<Scene>{
 public:	
 	FINodeHandlerScene():FINodeHandlerImp<Desc>("Scene"){}
 	void Load(Desc& d, FILoadContext* fc){
-		//	SDKを作る
-		PHSdkDesc phsdkd;
-		fc->PushCreateNode(PHSdkIf::GetIfInfoStatic(), &phsdkd);
-		GRSdkDesc grsdkd;
-		fc->PushCreateNode(GRSdkIf::GetIfInfoStatic(), &grsdkd);
-
 		//	Frameworkを作る
 		FWSceneDesc fwsd;
 		fc->PushCreateNode(FWSceneIf::GetIfInfoStatic(), &fwsd);
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
 		
-		//	GRSceneを作る
-		GRSceneDesc gsd;
-		fc->PushCreateNode(GRSceneIf::GetIfInfoStatic(), &gsd);	
-		
-		//	PHSceneを作る
+		//	PHSDKを作る。スタックからは消す。
+		PHSdkDesc phsdkd;
+		fc->PushCreateNode(PHSdkIf::GetIfInfoStatic(), &phsdkd);
+		PHSdkIf* phSdk = DCAST(PHSdkIf, fc->objects.Top());
+		fc->objects.Pop();
+		//	GRSDKを作る。スタックからは消す。
+		GRSdkDesc grsdkd;
+		fc->PushCreateNode(GRSdkIf::GetIfInfoStatic(), &grsdkd);
+		GRSdkIf* grSdk = DCAST(GRSdkIf, fc->objects.Top());
+		fc->objects.Pop();
+
+		//	GRSceneを作る。
+		GRSceneIf* grScene = grSdk->CreateScene();
+		//	PHSceneを作る。
 		PHSceneDesc psd;
-		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &psd);	
+		PHSceneIf* phScene = phSdk->CreateScene(psd);
+
+
+		//	Frameworkにシーンを登録
+		fws->AddChildObject(phScene);
+		fws->AddChildObject(grScene);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		fc->objects.Pop();
-		fc->objects.Pop();
-		fc->objects.Pop();
 		fc->objects.Pop();
 	}
 };

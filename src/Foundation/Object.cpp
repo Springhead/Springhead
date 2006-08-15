@@ -81,6 +81,13 @@ void Object::PrintFooter(std::ostream& os) const {
 	os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
 	os.width(w);
 }
+void Object::PrintShort(std::ostream& os) const {
+	int w = os.width();
+	os.width(0);
+	os << UTPadding(w);
+	os << "<" << GetTypeInfo()->ClassName() << "/>" << std::endl;
+	os.width(w);
+}
 void Object::Print(std::ostream& os) const {
 	int w = os.width();
 	if (NChildObject()){
@@ -127,6 +134,13 @@ void NamedObject::Print(std::ostream& os) const {
 	}else{
 		os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << "/>" << std::endl;
 	}
+	os.width(w);
+}
+void NamedObject::PrintShort(std::ostream& os) const {
+	int w = os.width();
+	os.width(0);
+	os << UTPadding(w);
+	os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << "/>" << std::endl;
 	os.width(w);
 }
 void NamedObject::SetName(const char* n){

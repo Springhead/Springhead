@@ -21,16 +21,16 @@ namespace Spr{
     public:
 		OBJECT_DEF(FWScene);
 		ACCESS_DESC(FWScene);
-		std::vector<FWObjectIf*> fwObjects;
+		std::vector< UTRef<FWObjectIf> > fwObjects;
 		PHSceneIf* phScene;
 		GRSceneIf* grScene;
 		//
 		FWScene(const FWSceneDesc& d=FWSceneDesc()); // コンストラクタ
-		~FWScene(); // デストラクタ
 		//
 		PHSceneIf* GetPHScene(){ return phScene; }
 		GRSceneIf* GetGRScene(){ return grScene; }
 		//
+		virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 		virtual bool AddChildObject(ObjectIf* o);
 		virtual size_t NChildObject() const;
 		virtual ObjectIf* GetChildObject(size_t pos);
