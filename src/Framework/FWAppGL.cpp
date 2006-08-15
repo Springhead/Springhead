@@ -1,4 +1,5 @@
 #include "FWAppGL.h"
+#include "FWScene.h"
 #include <GL/glut.h>
 
 #ifdef USE_HDRSTOP
@@ -138,7 +139,6 @@ namespace Spr{
 		grRender->PushLight(light1);
 
 	}
-
 	void FWAppGL::Step(){
 		if (!isLoadComplete) {return;}
 		if (cycleLimit > 0) {
@@ -151,7 +151,8 @@ namespace Spr{
 	}
 
 	void FWAppGL::Display(){
-		if (!isLoadComplete)return;
+		if (!isLoadComplete) return;
+		DCAST(FWScene, fwScene)->Sync();
 
 		grRender->ClearBuffer();
 		grRender->BeginScene();

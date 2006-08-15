@@ -20,6 +20,15 @@ namespace Spr{
 		bool AddChildObject(ObjectIf* o);
 		PHSolidIf* GetPHSolid();
 		GRFrameIf* GetGRFrame();
+		ObjectIf* GetChildObject(size_t pos){
+			if (pos==0) return phSolid ? (ObjectIf*)phSolid : (ObjectIf*)grFrame;
+			if (pos==1) return phSolid ? (ObjectIf*)grFrame : NULL;
+		}
+		size_t NChildObject() const {
+			return phSolid ? (grFrame ? 2 : 1) : (grFrame ? 1 : 0);
+		}
+
+		void Sync();
     };
 
 }

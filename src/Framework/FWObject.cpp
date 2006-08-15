@@ -1,4 +1,5 @@
 #include "FWObject.h"
+#include <Graphics/GRFrame.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -20,6 +21,12 @@ namespace Spr{
 	GRFrameIf* FWObject::GetGRFrame(){
 		return grFrame;
 	}
+	void FWObject::Sync(){
+		Affinef af;
+		phSolid->GetPose().ToAffine(af);
+		DCAST(GRFrame, grFrame)->SetTransform(af);
+	}
+
 
 	bool FWObject::AddChildObject(ObjectIf* o){
 		bool rv = false;

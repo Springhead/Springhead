@@ -10,6 +10,7 @@ namespace Spr{
 			DM_NONE,
 			DM_DEBUG,
 		} debugMode;
+		FWAppGLDesc():debugMode(DM_NONE){}
 	};
 
 	struct FWAppGLIf : public ObjectIf, public FWAppGLDesc{

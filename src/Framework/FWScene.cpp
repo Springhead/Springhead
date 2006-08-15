@@ -1,4 +1,5 @@
 #include "FWScene.h"
+#include "FWObject.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -75,6 +76,12 @@ namespace Spr{
 	FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
 		FWSceneIf* rv = DBG_NEW FWScene(*(FWSceneDesc*)desc);
 		return rv;
+	}
+	void FWScene::Sync(){
+		typedef std::vector< UTRef<FWObjectIf> > FWObjects;
+		for(FWObjects::iterator it = fwObjects.begin(); it!=fwObjects.end(); ++it){
+			DCAST(FWObject, *it)->Sync();
+		}
 	}
 
 }

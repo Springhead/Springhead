@@ -51,6 +51,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual Affinef GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
 	virtual Affinef GetTransform(){ return transform; }
+	virtual void SetTransform(Affinef& af){ transform = af; }
 	void Print(std::ostream& os) const ;
 };
 }

@@ -11,11 +11,34 @@
 #include <Graphics/GRMesh.h>
 #include <Graphics/GRRender.h>
 #include <Physics/PHSolid.h>
+#include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Collision/CDConvexMesh.h>
 
 namespace SprOldSpringhead{
 using namespace Spr;
+
+static FWScene* FindFWScene(FILoadContext* fc){
+	FWScene* fs = NULL;
+	for(int i=fc->objects.size()-1; i>=0; --i){
+		fs = DCAST(FWScene, fc->objects[i]);
+		if (fs) break;
+	}
+	return fs;
+}
+
+static PHScene* FindPHScene(FILoadContext* fc){
+	PHScene* ps = NULL;
+	for(int i=fc->objects.size()-1; i>=0; --i){
+		ps = DCAST(PHScene, fc->objects[i]);
+		if (ps) break;
+		FWScene* fs = DCAST(FWScene, fc->objects[i]);
+		if (fs) ps = DCAST(PHScene, fs->GetPHScene());
+		if (ps) break;
+	}
+	return ps;
+}
+
 
 class FINodeHandlerXHeader: public FINodeHandlerImp<Header>{
 public:
@@ -212,27 +235,18 @@ public:
 	}
 };
 
-
-class FINodeHandlerSolid: public FINodeHandlerImp<Solid>{
-public:
+class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
+public:	
 	class Adaptor: public FILoadContext::Task{
 	public:
-		PHSolid* solid;
-		Adaptor(PHSolid* s):solid(s){}
-		virtual bool AddChildObject(ObjectIf* o){
-			GRFrame* fr = DCAST(GRFrame, o);
-			if (fr){	//	frˆÈ‰º‚Ì‘SMesh‚ðSolid‚É’Ç‰Á
-				AddFrame(fr, Affinef());
-				return true;
-			}
-			return false;
-		}
-		void AddFrame(GRFrame* fr, Affinef af){
+		PHSceneIf* phScene;
+		Adaptor():phScene(NULL){}
+		void AddFrameToSolid(PHSolid* solid, GRFrame* fr, Affinef af){
 			af = af * fr->GetTransform();
 			for(unsigned i=0; i<fr->NChildObject(); ++i){
 				GRVisual* v = DCAST(GRVisual, fr->GetChildObject(i));
 				GRFrame* f = DCAST(GRFrame, v);
-				if (f) AddFrame(f, af);
+				if (f) AddFrameToSolid(solid, f, af);
 				GRMesh* m = DCAST(GRMesh, v);
 				if (m){
 					CDConvexMeshDesc desc;
@@ -246,8 +260,57 @@ public:
 				}
 			}
 		}
+		virtual bool AddChildObject(ObjectIf* o){
+			GRFrame* fr = DCAST(GRFrame, o);
+			if (fr){	//	Solid‚É•ÏŠ·‚µ‚Ä’Ç‰Á
+				PHSolidDesc sd;
+				PHSolid* solid = DCAST(PHSolid, phScene->CreateSolid());
+				solid->SetDynamical(false);
+				AddFrameToSolid(solid, fr, Affinef());
+				return true;
+			}
+			return false;
+		}
+		void Execute(FILoadContext* fc){}
+	};
+	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
+	void Load(Desc& d, FILoadContext* fc){
+		PHScene* ps = FindPHScene(fc);
+		Adaptor* task = DBG_NEW Adaptor;
+		task->phScene = ps;
+		fc->objects.Push(task->GetIf());
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		Adaptor* task = DCAST(Adaptor, fc->objects.Top());
+		fc->links.push_back(task);
+		fc->objects.Pop();	//	task
+	}
+};
+
+class FINodeHandlerSolid: public FINodeHandlerImp<Solid>{
+public:
+	class Adaptor: public FINodeHandlerContactEngine::Adaptor{
+	public:
+		PHSolid* solid;
+		GRFrame* frame;
+		FWScene* fwScene;
+		Adaptor():solid(NULL), fwScene(NULL){}
+		virtual bool AddChildObject(ObjectIf* o){
+			frame = DCAST(GRFrame, o);
+			if (frame){	//	frˆÈ‰º‚Ì‘SMesh‚ðSolid‚É’Ç‰Á
+				AddFrameToSolid(solid, frame, Affinef());
+				return true;
+			}
+			return false;
+		}
 		virtual void Execute(FILoadContext* ctx){
-			//	TODO: Framework‚Ö‚Ì“o˜^
+			FWObject* obj = DCAST(FWObject, fwScene->CreateObject(FWObjectIf::GetIfInfoStatic(), NULL));
+			Posed pose;
+			pose.FromAffine(frame->GetTransform());
+			solid->SetPose(pose);
+			obj->AddChildObject(frame->GetIf());
+			obj->AddChildObject(solid->GetIf());
+			fwScene->AddChildObject(obj->GetIf());
 		}
 	};
 
@@ -260,7 +323,9 @@ public:
 		solid->angVelocity = d.angularVelocity;
 		solid->inertia = d.inertia;
 		solid->mass = d.mass;
-		Adaptor* task = DBG_NEW Adaptor(solid);
+		Adaptor* task = DBG_NEW Adaptor;
+		task->solid = solid;
+		task->fwScene = FindFWScene(fc);
 		fc->objects.Push(task->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
@@ -273,43 +338,6 @@ public:
 	}
 };
 
-class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
-public:	
-	class Adaptor: public FINodeHandlerSolid::Adaptor{
-		PHSceneIf* scene;
-	public:
-		Adaptor(PHScene* s):scene(s), FINodeHandlerSolid::Adaptor(NULL){}
-		virtual bool AddChildObject(ObjectIf* o){
-			GRFrame* fr = DCAST(GRFrame, o);
-			if (fr){	//	Solid‚É•ÏŠ·‚µ‚Ä’Ç‰Á
-				PHSolidDesc sd;
-				solid = DCAST(PHSolid, scene->CreateSolid());
-				solid->SetDynamical(false);
-				AddFrame(fr, Affinef());
-				return true;
-			}
-			return false;
-		}
-	};
-	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
-	void Load(Desc& d, FILoadContext* fc){
-		PHScene* ps = NULL;
-		for(int i=fc->objects.size()-1; i>=0; --i){
-			ps = DCAST(PHScene, fc->objects[i]);
-			if (ps) break;
-			FWScene* fs = DCAST(FWScene, fc->objects[i]);
-			if (fs) ps = DCAST(PHScene, fs->GetPHScene());
-			if (ps) break;
-		}
-		Adaptor* task = DBG_NEW Adaptor(ps);
-		fc->objects.Push(task->GetIf());
-	}
-	void Loaded(Desc& d, FILoadContext* fc){
-		Adaptor* task = DCAST(Adaptor, fc->objects.Top());
-		fc->links.push_back(task);
-		fc->objects.Pop();	//	task
-	}
-};
 
 
 class FINodeHandlerCamera: public FINodeHandlerImp<Camera>{
@@ -351,6 +379,8 @@ class FINodeHandlerGravityEngine: public FINodeHandlerImp<GravityEngine>{
 public:	
 	FINodeHandlerGravityEngine():FINodeHandlerImp<Desc>("GravityEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
+		PHScene* s = FindPHScene(fc);
+		if (s) s->SetGravity(d.gravity);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
 	}

@@ -6,6 +6,10 @@
 	desc->ifInfo = FWAppGLIf::GetIfInfoStatic();
 	((IfInfo*)FWAppGLIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<FWAppGLDesc>;
+	field = desc->AddField("DebugMode", "enum", "debugMode",  "");
+	field->AddEnumConst("DM_NONE");
+	field->AddEnumConst("DM_DEBUG");
+	field->offset = (char*)(&pFWAppGLDesc->debugMode) - (char*)pFWAppGLDesc;
 	db->RegisterDesc(desc);
 	
 	FWObjectDesc* pFWObjectDesc = NULL;

@@ -6,7 +6,7 @@
 
 namespace Spr{
 
-	class FWAppGL : public InheritObject<FWAppGLIf, Object>, public FWAppGLDesc {
+	class FWAppGL : public InheritObject<FWAppGLIf, Object>{
     public:
 		OBJECT_DEF(FWAppGL);
 		ACCESS_DESC(FWAppGL);

@@ -29,6 +29,8 @@ namespace Spr{
 		//
 		PHSceneIf* GetPHScene(){ return phScene; }
 		GRSceneIf* GetGRScene(){ return grScene; }
+		///	オブジェクトの位置・姿勢を同期
+		void Sync();
 		//
 		virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 		virtual bool AddChildObject(ObjectIf* o);
