@@ -29,7 +29,11 @@ struct FrameTransformMatrix{
 
 ///	Springehead1‚ÌŒõŒ¹DGRLight‚É‘Î‰D
 struct Light8{
-	int type;
+	enum XLightType{
+		XLIGHT_POINT = 1,
+		XLIGHT_SPOT = 2,
+		XLIGHT_DIRECTIONAL = 3,
+	} type;
     Vec4f diffuse;		///<	ŠgUŒõ
     Vec4f specular;		///<	‹¾–ÊŒõ
     Vec4f ambient;		///<	ŠÂ‹«Œõ

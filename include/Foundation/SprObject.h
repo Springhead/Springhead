@@ -112,8 +112,10 @@ public:													\
 struct ObjectIf{
 	IF_DEF(Object);
 	virtual ~ObjectIf(){}
-	///	デバッグ用の表示
+	///	デバッグ用の表示。子オブジェクトを含む。
 	virtual void Print(std::ostream& os) const =0;	
+	///	デバッグ用の表示。子オブジェクトを含まない。
+	virtual void PrintShort(std::ostream& os) const =0;	
 
 	///	@name 参照カウンタ関係
 	//@{
@@ -169,6 +171,16 @@ struct ObjectIf{
 
 ///	インタフェースクラスへのポインタの配列
 struct ObjectIfs: public UTStack<ObjectIf*>{
+	virtual void PrintShort(std::ostream& os) const{
+		for(const_iterator it = begin(); it!=end(); ++it){
+			(*it)->PrintShort(os);
+		}
+	}
+	virtual void Print(std::ostream& os) const{
+		for(const_iterator it = begin(); it!=end(); ++it){
+			(*it)->Print(os);
+		}
+	}
 };
 
 ///	名前を持つオブジェクトのインタフェース

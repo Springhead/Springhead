@@ -48,8 +48,29 @@ public:
 class FINodeHandlerXLight8: public FINodeHandlerImp<Light8>{
 public:
 	FINodeHandlerXLight8():FINodeHandlerImp<Desc>("Light8"){}
-	void Load(Desc& d, FILoadContext* fc){
-
+	void Load(Desc& l8, FILoadContext* fc){
+		GRLightDesc grld;
+		grld.ambient = l8.ambient;
+		grld.attenuation0 = l8.attenuation0;
+		grld.attenuation1 = l8.attenuation1;
+		grld.attenuation2 = l8.attenuation2;
+		grld.diffuse = l8.diffuse;
+		if (l8.type == Light8::XLIGHT_DIRECTIONAL){
+			grld.position.sub_vector(PTM::TSubVectorDim<0,3>()) = l8.direction;
+			grld.position.W() = 0;
+		}else{
+			grld.position.sub_vector(PTM::TSubVectorDim<0,3>()) = l8.position;
+			grld.position.W() = 1;
+		}
+		grld.range = l8.range;
+		grld.specular = l8.specular;
+		grld.spotFalloff = l8.falloff;
+		grld.spotInner = l8.spotInner;
+		grld.spotCutoff = l8.spotCutoff;
+		fc->PushCreateNode(GRLightIf::GetIfInfoStatic(), &grld);
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
 	}
 };
 class FINodeHandlerXMesh: public FINodeHandlerImp<Mesh>{
@@ -258,7 +279,12 @@ public:
 		cd.front = d.front;
 		cd.center = Vec2f(d.offsetX, d.offsetY);
 		cd.size = Vec2f(d.width, d.height);
-		fc->PushCreateNode(GRCameraIf::GetIfInfoStatic(), &cd);	
+		fc->PushCreateNode(GRCameraIf::GetIfInfoStatic(), &cd);
+		GRCamera* cam = DCAST(GRCamera, fc->objects.Top());
+		GRFrameDesc fd;
+		fd.transform = d.view;
+		GRFrameIf* frame = DCAST(GRFrameIf, cam->GetScene()->CreateObject(GRFrameIf::GetIfInfoStatic(), &fd));
+		cam->AddChildObject(frame);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
 		fc->objects.Pop();
@@ -381,6 +407,7 @@ void RegisterOldSpringheadNodeHandlers(){
 	REGISTER_NODE_HANDLER(FINodeHandlerXMeshTextureCoords);
 	REGISTER_NODE_HANDLER(FINodeHandlerSolid);
 	REGISTER_NODE_HANDLER(FINodeHandlerScene);
+	REGISTER_NODE_HANDLER(FINodeHandlerCamera);
 	REGISTER_NODE_HANDLER(FINodeHandlerSolidContainer);
 	REGISTER_NODE_HANDLER(FINodeHandlerGravityEngine);
 	REGISTER_NODE_HANDLER(FINodeHandlerContactEngine);

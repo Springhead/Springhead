@@ -30,8 +30,11 @@
 	desc = DBG_NEW UTTypeDesc("Light8");
 	desc->size = sizeof(Light8);
 	desc->access = DBG_NEW UTAccess<Light8>;
-	field = desc->AddField("", "int", "type", "");
-	field->offset = (char*)&(pLight8->type) - (char*)pLight8;
+	field = desc->AddField("XLightType", "enum", "type",  "");
+	field->AddEnumConst("XLIGHT_POINT", 1);
+	field->AddEnumConst("XLIGHT_SPOT", 2);
+	field->AddEnumConst("XLIGHT_DIRECTIONAL", 3);
+	field->offset = (char*)(&pLight8->type) - (char*)pLight8;
 	field = desc->AddField("", "Vec4f", "diffuse", "");
 	field->offset = (char*)&(pLight8->diffuse) - (char*)pLight8;
 	field = desc->AddField("", "Vec4f", "specular", "");
