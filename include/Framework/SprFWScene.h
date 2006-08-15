@@ -9,8 +9,6 @@ namespace Spr{
 	struct GRSceneIf;
 
 	struct FWSceneDesc{
-		std::string grSceneName;
-		std::string phSceneName;
 	};
 
 	struct FWSceneIf : SceneIf {
