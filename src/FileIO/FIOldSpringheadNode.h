@@ -33,16 +33,16 @@ struct Light8{
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
     Vec4f ambient;		///<	環境光
-    Vec4f position;		///<	光源の位置，w=0とすると無限遠(方向光源)になる．
+    Vec3f position;		///<	光源の位置
+    Vec3f direction;	///<	光源の位置
     float range;		///<	光が届く範囲
+    float falloff;		///<	減衰の早さ(大きいほど急峻)		0..∞
     ///@name	減衰率．Atten = 1/( att0 + att1 * d + att2 * d^2)
 	//@{
 	float attenuation0;	///<	att0	0..∞
     float attenuation1;	///<	att1	0..∞
     float attenuation2;	///<	att2	0..∞
 	//@}
-	Vec3f spotDirection;///<	スポットライトの場合の向き
-    float spotFalloff;	///<	減衰の早さ(大きいほど急峻)		0..∞
 	float spotInner;	///<	スポットライトの中心部分		0..spotCutoff
 	float spotCutoff;	///<	スポットライトの光が当たる範囲	0..π
 };
@@ -95,6 +95,20 @@ struct MeshTextureCoords{
 	std::vector<Vec2f> textureCoords;
 };
 
+///	Springhead1のScene
+struct Scene{
+};
+///	Springhead1のCamera
+struct Camera{
+	Affinef view;
+	float width;
+	float height;
+	float offsetX;
+	float offsetY;
+	float front;
+	float back;
+};
+
 ///	Springhead1のSolid
 struct Solid{
 	float mass;				///<	質量
@@ -103,14 +117,32 @@ struct Solid{
 	Vec3f angularVelocity;	///<	角速度
 	Vec3f center;			///<	中心位置
 };
-///	Springhead1のScene
-struct Scene{
+struct PhysicalMaterial{
+	float ns;
+	float nd;
+	float fs;
+	float fd;
+	float s;
+	float d;
 };
+
 ///
 struct SolidContainer{
 };
+///	Springhead1のGravityEngine
+struct GravityEngine{
+	Vec3f gravity;
+};
+
+///	Springhead1のGravityEngine
+struct ContactEngine{
+};
+
 ///
 struct JointEngine{
+};
+///
+struct Joint{
 };
 
 

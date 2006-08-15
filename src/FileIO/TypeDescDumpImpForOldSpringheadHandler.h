@@ -38,20 +38,20 @@
 	field->offset = (char*)&(pLight8->specular) - (char*)pLight8;
 	field = desc->AddField("", "Vec4f", "ambient", "");
 	field->offset = (char*)&(pLight8->ambient) - (char*)pLight8;
-	field = desc->AddField("", "Vec4f", "position", "");
+	field = desc->AddField("", "Vec3f", "position", "");
 	field->offset = (char*)&(pLight8->position) - (char*)pLight8;
+	field = desc->AddField("", "Vec3f", "direction", "");
+	field->offset = (char*)&(pLight8->direction) - (char*)pLight8;
 	field = desc->AddField("", "float", "range", "");
 	field->offset = (char*)&(pLight8->range) - (char*)pLight8;
+	field = desc->AddField("", "float", "falloff", "");
+	field->offset = (char*)&(pLight8->falloff) - (char*)pLight8;
 	field = desc->AddField("", "float", "attenuation0", "");
 	field->offset = (char*)&(pLight8->attenuation0) - (char*)pLight8;
 	field = desc->AddField("", "float", "attenuation1", "");
 	field->offset = (char*)&(pLight8->attenuation1) - (char*)pLight8;
 	field = desc->AddField("", "float", "attenuation2", "");
 	field->offset = (char*)&(pLight8->attenuation2) - (char*)pLight8;
-	field = desc->AddField("", "Vec3f", "spotDirection", "");
-	field->offset = (char*)&(pLight8->spotDirection) - (char*)pLight8;
-	field = desc->AddField("", "float", "spotFalloff", "");
-	field->offset = (char*)&(pLight8->spotFalloff) - (char*)pLight8;
 	field = desc->AddField("", "float", "spotInner", "");
 	field->offset = (char*)&(pLight8->spotInner) - (char*)pLight8;
 	field = desc->AddField("", "float", "spotCutoff", "");
@@ -140,6 +140,32 @@
 	field->offset = (char*)&(pMeshTextureCoords->textureCoords) - (char*)pMeshTextureCoords;
 	db->RegisterDesc(desc);
 	
+	Scene* pScene = NULL;
+	desc = DBG_NEW UTTypeDesc("Scene");
+	desc->size = sizeof(Scene);
+	desc->access = DBG_NEW UTAccess<Scene>;
+	db->RegisterDesc(desc);
+	
+	Camera* pCamera = NULL;
+	desc = DBG_NEW UTTypeDesc("Camera");
+	desc->size = sizeof(Camera);
+	desc->access = DBG_NEW UTAccess<Camera>;
+	field = desc->AddField("", "Affinef", "view", "");
+	field->offset = (char*)&(pCamera->view) - (char*)pCamera;
+	field = desc->AddField("", "float", "width", "");
+	field->offset = (char*)&(pCamera->width) - (char*)pCamera;
+	field = desc->AddField("", "float", "height", "");
+	field->offset = (char*)&(pCamera->height) - (char*)pCamera;
+	field = desc->AddField("", "float", "offsetX", "");
+	field->offset = (char*)&(pCamera->offsetX) - (char*)pCamera;
+	field = desc->AddField("", "float", "offsetY", "");
+	field->offset = (char*)&(pCamera->offsetY) - (char*)pCamera;
+	field = desc->AddField("", "float", "front", "");
+	field->offset = (char*)&(pCamera->front) - (char*)pCamera;
+	field = desc->AddField("", "float", "back", "");
+	field->offset = (char*)&(pCamera->back) - (char*)pCamera;
+	db->RegisterDesc(desc);
+	
 	Solid* pSolid = NULL;
 	desc = DBG_NEW UTTypeDesc("Solid");
 	desc->size = sizeof(Solid);
@@ -156,10 +182,22 @@
 	field->offset = (char*)&(pSolid->center) - (char*)pSolid;
 	db->RegisterDesc(desc);
 	
-	Scene* pScene = NULL;
-	desc = DBG_NEW UTTypeDesc("Scene");
-	desc->size = sizeof(Scene);
-	desc->access = DBG_NEW UTAccess<Scene>;
+	PhysicalMaterial* pPhysicalMaterial = NULL;
+	desc = DBG_NEW UTTypeDesc("PhysicalMaterial");
+	desc->size = sizeof(PhysicalMaterial);
+	desc->access = DBG_NEW UTAccess<PhysicalMaterial>;
+	field = desc->AddField("", "float", "ns", "");
+	field->offset = (char*)&(pPhysicalMaterial->ns) - (char*)pPhysicalMaterial;
+	field = desc->AddField("", "float", "nd", "");
+	field->offset = (char*)&(pPhysicalMaterial->nd) - (char*)pPhysicalMaterial;
+	field = desc->AddField("", "float", "fs", "");
+	field->offset = (char*)&(pPhysicalMaterial->fs) - (char*)pPhysicalMaterial;
+	field = desc->AddField("", "float", "fd", "");
+	field->offset = (char*)&(pPhysicalMaterial->fd) - (char*)pPhysicalMaterial;
+	field = desc->AddField("", "float", "s", "");
+	field->offset = (char*)&(pPhysicalMaterial->s) - (char*)pPhysicalMaterial;
+	field = desc->AddField("", "float", "d", "");
+	field->offset = (char*)&(pPhysicalMaterial->d) - (char*)pPhysicalMaterial;
 	db->RegisterDesc(desc);
 	
 	SolidContainer* pSolidContainer = NULL;
@@ -168,8 +206,28 @@
 	desc->access = DBG_NEW UTAccess<SolidContainer>;
 	db->RegisterDesc(desc);
 	
+	GravityEngine* pGravityEngine = NULL;
+	desc = DBG_NEW UTTypeDesc("GravityEngine");
+	desc->size = sizeof(GravityEngine);
+	desc->access = DBG_NEW UTAccess<GravityEngine>;
+	field = desc->AddField("", "Vec3f", "gravity", "");
+	field->offset = (char*)&(pGravityEngine->gravity) - (char*)pGravityEngine;
+	db->RegisterDesc(desc);
+	
+	ContactEngine* pContactEngine = NULL;
+	desc = DBG_NEW UTTypeDesc("ContactEngine");
+	desc->size = sizeof(ContactEngine);
+	desc->access = DBG_NEW UTAccess<ContactEngine>;
+	db->RegisterDesc(desc);
+	
 	JointEngine* pJointEngine = NULL;
 	desc = DBG_NEW UTTypeDesc("JointEngine");
 	desc->size = sizeof(JointEngine);
 	desc->access = DBG_NEW UTAccess<JointEngine>;
+	db->RegisterDesc(desc);
+	
+	Joint* pJoint = NULL;
+	desc = DBG_NEW UTTypeDesc("Joint");
+	desc->size = sizeof(Joint);
+	desc->access = DBG_NEW UTAccess<Joint>;
 	db->RegisterDesc(desc);

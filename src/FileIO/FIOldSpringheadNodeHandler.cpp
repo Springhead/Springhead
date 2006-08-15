@@ -248,6 +248,49 @@ public:
 		fc->objects.Pop();	//	solid
 	}
 };
+
+class FINodeHandlerCamera: public FINodeHandlerImp<Camera>{
+public:	
+	FINodeHandlerCamera():FINodeHandlerImp<Desc>("Camera"){}
+	void Load(Desc& d, FILoadContext* fc){
+		GRCameraDesc cd;
+		cd.back = d.back;
+		cd.front = d.front;
+		cd.center = Vec2f(d.offsetX, d.offsetY);
+		cd.size = Vec2f(d.width, d.height);
+		fc->PushCreateNode(GRCameraIf::GetIfInfoStatic(), &cd);	
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
+	}
+};
+class FINodeHandlerPhysicalMaterial: public FINodeHandlerImp<PhysicalMaterial>{
+public:	
+	FINodeHandlerPhysicalMaterial():FINodeHandlerImp<Desc>("PhysicalMaterial"){}
+	void Load(Desc& d, FILoadContext* fc){
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+	}
+};
+
+class FINodeHandlerGravityEngine: public FINodeHandlerImp<GravityEngine>{
+public:	
+	FINodeHandlerGravityEngine():FINodeHandlerImp<Desc>("GravityEngine"){}
+	void Load(Desc& d, FILoadContext* fc){
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+	}
+};
+
+class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
+public:	
+	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
+	void Load(Desc& d, FILoadContext* fc){
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+	}
+};
+
 class FINodeHandlerScene: public FINodeHandlerImp<Scene>{
 public:	
 	FINodeHandlerScene():FINodeHandlerImp<Desc>("Scene"){}
@@ -262,8 +305,19 @@ public:
 		FWSceneDesc fwsd;
 		fc->PushCreateNode(FWSceneIf::GetIfInfoStatic(), &fwsd);
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
+		
+		//	GRScene‚ðì‚é
+		GRSceneDesc gsd;
+		fc->PushCreateNode(GRSceneIf::GetIfInfoStatic(), &gsd);	
+		
+		//	PHScene‚ðì‚é
+		PHSceneDesc psd;
+		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &psd);	
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
+		fc->objects.Pop();
+		fc->objects.Pop();
 		fc->objects.Pop();
 	}
 };
@@ -271,6 +325,15 @@ public:
 class FINodeHandlerSolidContainer: public FINodeHandlerImp<SolidContainer>{
 public:	
 	FINodeHandlerSolidContainer():FINodeHandlerImp<Desc>("SolidContainer"){}
+	void Load(Desc& d, FILoadContext* fc){
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+	}
+};
+
+class FINodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
+public:	
+	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
 		PHSceneDesc sd;
 		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &sd);	
@@ -281,9 +344,9 @@ public:
 	}
 };
 
-class FINodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
+class FINodeHandlerJoint: public FINodeHandlerImp<Joint>{
 public:	
-	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
+	FINodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
 	void Load(Desc& d, FILoadContext* fc){
 		PHSceneDesc sd;
 		fc->PushCreateNode(PHSceneIf::GetIfInfoStatic(), &sd);	
@@ -314,6 +377,9 @@ void RegisterOldSpringheadNodeHandlers(){
 	REGISTER_NODE_HANDLER(FINodeHandlerSolid);
 	REGISTER_NODE_HANDLER(FINodeHandlerScene);
 	REGISTER_NODE_HANDLER(FINodeHandlerSolidContainer);
+	REGISTER_NODE_HANDLER(FINodeHandlerGravityEngine);
+	REGISTER_NODE_HANDLER(FINodeHandlerContactEngine);
 	REGISTER_NODE_HANDLER(FINodeHandlerJointEngine);
+	REGISTER_NODE_HANDLER(FINodeHandlerJoint);
 }
 }
