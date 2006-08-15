@@ -41,6 +41,10 @@ public:
 	virtual ObjectIf* Create(const void* desc) =0;
 };
 
+/// Sdkのファクトリの登録
+void SPR_CDECL RegisterSdk(SdkFactoryBase* sdkFactory);
+
+
 /**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．
 1つのインタフェースクラスに付き1個のインスタンスができる．	*/
 class IfInfo{
@@ -201,7 +205,7 @@ struct ObjectStatesIf: public ObjectIf{
 	///	状態をロードする．
 	virtual void LoadState(ObjectIf* o) = 0;
 };
-ObjectStatesIf* CreateObjectStates();
+ObjectStatesIf* SPR_CDECL CreateObjectStates();
 
 #undef DCAST
 #define DCAST(T,p) SprDcastImp<T>(p)

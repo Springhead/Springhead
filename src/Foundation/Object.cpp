@@ -231,8 +231,27 @@ void ObjectStates::LoadState(ObjectIf* o, char*& s){
 	}
 }
 
-ObjectStatesIf* CreateObjectStates(){
+ObjectStatesIf* SPR_CDECL CreateObjectStates(){
 	return new ObjectStates;
+}
+
+
+
+//----------------------------------------------------------------------------
+//	Sdk  Ç±Ç±Ç…ì¸ÇÍÇÈÇÃÇ™ê≥ÇµÇ¢Ç∆Ç¢Ç§ãCÇÕÇµÇ»Ç¢ÇÃÇ≈Ç¢Ç∏ÇÍèCê≥ (06.08.15 mitake)
+
+static std::vector< UTRef<SdkFactoryBase> > sdkFactories;
+void SPR_CDECL RegisterSdk(SdkFactoryBase* sdkFactory){
+	sdkFactories.push_back(sdkFactory);
+}
+
+ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc){
+	for (size_t i=0; i<sdkFactories.size(); i++) {
+		if (info == sdkFactories[i]->GetIfInfo()) {
+			return sdkFactories[i]->Create(desc);
+		}
+	}
+	return NULL;
 }
 
 
