@@ -74,6 +74,7 @@ IF_OBJECT_IMP(NameManager, NamedObject);
 NameManager NameManager::theRoot;
 
 NameManager::NameManager(){
+	if (theRoot.name.length() == 0) theRoot.name = "theRoot";
 }
 void NameManager::SetNameManager(NameManager* p){
 	if (nameManager==p) return;
@@ -81,7 +82,12 @@ void NameManager::SetNameManager(NameManager* p){
 	if (p) p->AddChildManager(this);
 }
 void NameManager::AddChildManager(NameManager* c){
-	assert(c != this);
+	assert(c!=&theRoot);
+	NameManager* ans = this;
+	while(ans){
+		assert(ans != c);
+		ans = ans->nameManager;
+	}
 	if (c->nameManager == this) return;
 	c->SetNameManager(NULL);
 	c->nameManager = this;
@@ -135,7 +141,8 @@ NamedObjectIf* NameManager::FindObjectExact(UTString name, const char* cls){
 	}
 	return rv;
 }
-NamedObjectIf* NameManager::FindObject(UTString name, const char* cls){
+NamedObjectIf* NameManager::FindObjectImp(UTString name, const char* cls, NameManager* exclude){
+	DSTR << "NameManager:" << GetName() << std::endl;
 	NamedObjectIf* rv = NULL;
 	int pos = name.find('/');
 	if (pos != UTString::npos){	//	 –¼‘O‹óŠÔ‚ÌŽw’è‚ª‚ ‚éê‡
@@ -156,34 +163,45 @@ NamedObjectIf* NameManager::FindObject(UTString name, const char* cls){
 		//	‚È‚¯‚ê‚Î‘cæ‚É‚Â‚¢‚Ä’T‚·
 		NameManager* nm = nameManager;
 		while(nm){
-			rv = nm->FindObject(name, cls);
+			rv = nm->FindObjectImp(name, cls, this);
 			if (rv) return rv;
 			nm = nm->nameManager;
 		}
 		//	‚»‚ê‚Å‚à‚È‚¢ê‡‚Í–¼‘O‹óŠÔ‚ð’Z‚­‚µ‚Ä’T‚·D
-		rv = FindObject(n, cls);
+		rv = FindObjectImp(n, cls, NULL);
 		if (rv) return rv;
 	}else{	//	 –¼‘O‹óŠÔ‚ÌŽw’è‚ª‚È‚¢ê‡
-		//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ð’T‚·
-		rv = names.Find(name, cls);
+		//	Ž©•ª‚ÆŽq‘·‚ð’T‚·B
+		rv = FindObjectDesendant(name, cls);
 		if (rv) return rv;
-		//	‚È‚¯‚ê‚ÎCŽq‘·‚É‚Â‚¢‚Ä’T‚·
-		for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
-			rv = (*it)->FindObject(name, cls);
-			if (rv) return rv;
-		}
-		//	‚È‚¯‚ê‚Î‘cæ‚É‚Â‚¢‚Ä’T‚·
+		//	‚È‚¯‚ê‚Î‘cæ‚É‚Â‚¢‚ÄAŽ©•ª‚ðœŠO‚µ‚Ä’T‚·B
 		NameManager* nm = nameManager;
 		while(nm){
-			rv = nm->FindObject(name, cls);
+			rv = nm->names.Find(name, cls);
+			if (rv) return rv;
+			for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
+				if (*it != this){
+					(*it)->FindObjectDesendant(name, cls);
+				}
+			}
 			if (rv) return rv;
 			nm = nm->nameManager;
 		}
 	}
 	return rv;
 }
-
-
+//	Ž©•ª‚ÆŽq‘·‚ð’T‚·
+NamedObjectIf* NameManager::FindObjectDesendant(UTString name, const char* cls){
+	//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ð’T‚·
+	NamedObjectIf* rv = names.Find(name, cls);
+	if (rv) return rv;
+	//	‚È‚¯‚ê‚ÎCŽq‘·‚É‚Â‚¢‚Ä’T‚·
+	for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
+		rv = (*it)->FindObjectDesendant(name, cls);
+		if (rv) return rv;
+	}
+	return rv;
+}
 //----------------------------------------------------------------------------
 //	Scene
 IF_OBJECT_IMP(Scene, NameManager);
