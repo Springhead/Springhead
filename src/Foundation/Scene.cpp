@@ -122,6 +122,47 @@ void NameManager::Print(std::ostream& os) const {
 	os.width(w);
 }
 
+//	名前を再帰的に検索。namespace を考慮
+NamedObjectIf* NameManager::FindObject(UTString name, const char* cls){
+	//	自分と子孫を探す。
+	NamedObjectIf* rv = FindObjectFromDescendant(name, cls);
+	if (rv) return rv;
+	//	なければ祖先を探す。
+	NameManager* nm = nameManager;
+	while(nm){
+		rv = nm->names.Find(name, cls);	//	まず親を探し、
+		if (rv) return rv;
+		//	兄弟を探し、
+		for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
+			if (*it != this){
+				(*it)->FindObjectFromDescendant(name, cls);
+			}
+		}
+		if (rv) return rv;
+		//	なければ、親の親を探す。
+		nm = nm->nameManager;
+	}
+	//	それでもないならば、namespaceを削って、もう一度検索
+	int pos = name.find('/');
+	if (pos != UTString::npos){	//	 名前空間の指定がある場合
+		UTString n = name.substr(pos+1);
+		rv = FindObject(n, cls);
+	}
+	return rv;
+}
+//	自分と子孫を探す
+NamedObjectIf* NameManager::FindObjectFromDescendant(UTString name, const char* cls){
+	//	ぴったりのものを探す
+	NamedObjectIf* rv = FindObjectExact(name, cls);
+	if (rv) return rv;
+	//	なければ，子孫について探す
+	for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
+		rv = (*it)->FindObjectFromDescendant(name, cls);
+		if (rv) return rv;
+	}
+	return rv;
+}
+//	ネームスペース込みで名前を検索する。検索場所については再帰なし。
 NamedObjectIf* NameManager::FindObjectExact(UTString name, const char* cls){
 	NamedObjectIf* rv = NULL;
 	int pos = name.find('/');
@@ -135,70 +176,9 @@ NamedObjectIf* NameManager::FindObjectExact(UTString name, const char* cls){
 				if (rv) return rv;
 			}
 		}
-	}else{	//	無い場合
+	}else{	//	名前空間が無い場合
 		//	ぴったりのものを探す
 		rv = names.Find(name, cls);
-	}
-	return rv;
-}
-NamedObjectIf* NameManager::FindObjectImp(UTString name, const char* cls, NameManager* exclude){
-	DSTR << "NameManager:" << GetName() << std::endl;
-	NamedObjectIf* rv = NULL;
-	int pos = name.find('/');
-	if (pos != UTString::npos){	//	 名前空間の指定がある場合
-		UTString n = name.substr(pos+1);
-		UTString ns = name.substr(0, pos);
-		//	ぴったりのものを探す．
-		for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
-			if (ns.compare((*it)->GetName()) == 0){
-				rv = (*it)->FindObjectExact(n, cls);
-				if (rv) return rv;
-			}
-		}
-		//	なければ子孫についてぴったりのものを探す．
-		for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
-			rv = (*it)->FindObjectExact(name, cls);
-			if (rv) return rv;
-		}
-		//	なければ祖先について探す
-		NameManager* nm = nameManager;
-		while(nm){
-			rv = nm->FindObjectImp(name, cls, this);
-			if (rv) return rv;
-			nm = nm->nameManager;
-		}
-		//	それでもない場合は名前空間を短くして探す．
-		rv = FindObjectImp(n, cls, NULL);
-		if (rv) return rv;
-	}else{	//	 名前空間の指定がない場合
-		//	自分と子孫を探す。
-		rv = FindObjectDesendant(name, cls);
-		if (rv) return rv;
-		//	なければ祖先について、自分を除外して探す。
-		NameManager* nm = nameManager;
-		while(nm){
-			rv = nm->names.Find(name, cls);
-			if (rv) return rv;
-			for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
-				if (*it != this){
-					(*it)->FindObjectDesendant(name, cls);
-				}
-			}
-			if (rv) return rv;
-			nm = nm->nameManager;
-		}
-	}
-	return rv;
-}
-//	自分と子孫を探す
-NamedObjectIf* NameManager::FindObjectDesendant(UTString name, const char* cls){
-	//	ぴったりのものを探す
-	NamedObjectIf* rv = names.Find(name, cls);
-	if (rv) return rv;
-	//	なければ，子孫について探す
-	for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
-		rv = (*it)->FindObjectDesendant(name, cls);
-		if (rv) return rv;
 	}
 	return rv;
 }
