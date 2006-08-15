@@ -26,8 +26,4 @@
 	desc->ifInfo = FWSceneIf::GetIfInfoStatic();
 	((IfInfo*)FWSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<FWSceneDesc>;
-	field = desc->AddField("", "string", "grSceneName", "");
-	field->offset = (char*)&(pFWSceneDesc->grSceneName) - (char*)pFWSceneDesc;
-	field = desc->AddField("", "string", "phSceneName", "");
-	field->offset = (char*)&(pFWSceneDesc->phSceneName) - (char*)pFWSceneDesc;
 	db->RegisterDesc(desc);
