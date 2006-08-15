@@ -133,7 +133,7 @@ public:
 		NamedObject* p = FindObject(name, GETCLASSNAMES(T));
 		t = DCAST(T, p);
 	}
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls=NULL);
+	virtual NamedObjectIf* FindObject(UTString name, UTString cls="");
 	typedef ObjectNames::iterator SetIt;
 //	typedef std::pair<SetIt, SetIt> SetRange;
 //	SetRange RangeObject(UTString n){ return names.Range(n); }
@@ -147,13 +147,13 @@ public:
 	void Print(std::ostream& os) const;
 	friend class NamedObject;
 protected:
-	NamedObjectIf* FindObjectExact(UTString name, const char* cls=NULL);
-	NamedObjectIf* FindObjectFromDescendant(UTString name, const char* cls);
+	NamedObjectIf* FindObjectExact(UTString name, UTString cls="");
+	NamedObjectIf* FindObjectFromDescendant(UTString name, UTString cls="");
 };
 
 template <class intf, class base>
 struct InheritNameManager:public InheritNamedObject<intf, base>{
-	virtual NamedObjectIf* FindObject(UTString name, const char* cls=NULL){
+	virtual NamedObjectIf* FindObject(UTString name, UTString cls=""){
 		return base::FindObject(name, cls);
 	}
 };

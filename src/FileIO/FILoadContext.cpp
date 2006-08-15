@@ -133,7 +133,7 @@ FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf
 void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
 	Spr::ObjectIf* refObj = NULL;
 	for(unsigned i=0; i<nameManagers.size(); ++i){
-		nameManagers[i]->FindObject(refObj, ref);
+		refObj = nameManagers[i]->FindObject(ref);
 		if (refObj) break;
 	}
 	if (refObj){
