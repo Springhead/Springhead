@@ -260,8 +260,6 @@ public:
 
 		//	Framework‚ðì‚é
 		FWSceneDesc fwsd;
-		fwsd.grSceneName = "grScene";
-		fwsd.phSceneName = "phScene";
 		fc->PushCreateNode(FWSceneIf::GetIfInfoStatic(), &fwsd);
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
 	}
