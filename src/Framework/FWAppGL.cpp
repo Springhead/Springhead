@@ -85,9 +85,9 @@ namespace Spr{
 		phScene = fwScene->GetPHScene();
 		grScene = fwScene->GetGRScene();
 
-		if (!phSdk || !grSdk) {
-			if (!phSdk) { DSTR << "PHSdk not found." << std::endl; }
-			if (!grSdk) { DSTR << "GRSdk not found." << std::endl; }
+		if (!phScene || !grScene) {
+			if (!phScene) { DSTR << "PHScene not found." << std::endl; }
+			if (!grScene) { DSTR << "GRScene not found." << std::endl; }
 			exit(EXIT_FAILURE);
 		}
 
@@ -123,8 +123,8 @@ namespace Spr{
 		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 		int window = glutCreateWindow("Springhead Application");
 
-		grRender = grSdk->CreateDebugRender();
-		grDevice = grSdk->CreateDeviceGL(window);
+		grRender = grScene->GetSdk()->CreateDebugRender();
+		grDevice = grScene->GetSdk()->CreateDeviceGL(window);
 		grDevice->Init();
 		grRender->SetDevice(grDevice);
 

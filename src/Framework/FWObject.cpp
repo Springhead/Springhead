@@ -33,13 +33,17 @@ namespace Spr{
 		bool rv = false;
 		if (!rv) {
 			PHSolidIf* obj = DCAST(PHSolidIf, o);
-			phSolid = obj;
-			rv = true;
+			if (obj) {
+				phSolid = obj;
+				rv = true;
+			}
 		}
 		if (!rv) {
 			GRFrameIf* obj = DCAST(GRFrameIf, o);
-			grFrame = obj;
-			rv = true;
+			if (obj) {
+				grFrame = obj;
+				rv = true;
+			}
 		}
 		return rv;
 	}

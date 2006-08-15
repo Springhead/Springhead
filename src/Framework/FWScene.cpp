@@ -22,8 +22,6 @@ namespace Spr{
 		for (size_t i=0; i<NChildObject(); i++) {
 			delete fwObjects[i];
 		}
-		if (phScene) { delete phScene; }
-		if (grScene) { delete grScene; }
 	}
 
 	void FWScene::Link(PHSceneIf* phScene, GRSceneIf* grScene){
@@ -39,18 +37,24 @@ namespace Spr{
 		bool rv = false;
 		if (!rv) {
 			FWObjectIf* obj = DCAST(FWObjectIf, o);
-			fwObjects.push_back(obj);
-			rv = true;
+			if (obj) {
+				fwObjects.push_back(obj);
+				rv = true;
+			}
 		}
 		if (!rv) {
 			PHSceneIf* obj = DCAST(PHSceneIf, o);
-			phScene = obj;
-			rv = true;
+			if (obj) {
+				phScene = obj;
+				rv = true;
+			}
 		}
 		if (!rv) {
 			GRSceneIf* obj = DCAST(GRSceneIf, o);
-			grScene = obj;
-			rv = true;
+			if (obj) {
+				grScene = obj;
+				rv = true;
+			}
 		}
 		return rv;
 	}
