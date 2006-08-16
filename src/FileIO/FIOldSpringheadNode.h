@@ -138,7 +138,7 @@ struct GravityEngine{
 	Vec3f gravity;
 };
 
-///	Springhead1‚ÌGravityEngine
+///	Springhead1‚ÌContactEngine
 struct ContactEngine{
 };
 

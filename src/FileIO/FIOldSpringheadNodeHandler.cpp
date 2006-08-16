@@ -216,13 +216,7 @@ public:
 	void Load(Desc& d, FILoadContext* fc){
 		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
 		if (mat){
-			fc->objects.Pop();
-			GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
-			if (mesh){
-				mesh->material.back().texname = d.filename;
-			}else{				
-				mat->texname = d.filename;		// ŽQÆŒ^Materialƒm[ƒh‚ÌƒŠƒ“ƒN
-			}
+			mat->texname = d.filename;
 		}else{
 			fc->ErrorMessage(NULL, "TextureFilename must be inside of Material node.");
 		}
