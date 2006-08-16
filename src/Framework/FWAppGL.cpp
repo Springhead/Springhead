@@ -121,7 +121,7 @@ namespace Spr{
 		isLoadComplete = true;
 		DSTR << "CreateRender Complete." << std::endl;	
 
-
+/*
 		GRLightDesc light0;
 		light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
 		light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
@@ -138,7 +138,7 @@ namespace Spr{
 		light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);
 		light1.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
 		grRender->PushLight(light1);
-
+*/
 	}
 	void FWAppGL::Step(){
 		if (!isLoadComplete) {return;}

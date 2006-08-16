@@ -32,7 +32,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	FWAppGLIf* fwApp = CreateFWAppGL();
 //	fwApp->SetDebugMode(FWAppGLDesc::DM_DEBUG);
-	fwApp->StartApp("vhOld.x", 2000);
+	fwApp->StartApp("block.x", 2000);
 
 	return 0;
 }
