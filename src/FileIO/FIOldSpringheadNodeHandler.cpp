@@ -292,6 +292,9 @@ public:
 	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
+		Disabler* dis = DBG_NEW Disabler;
+		dis->phScene = FindPHScene(fc);
+		fc->links.push_back(dis);
 		Adapter* task = DBG_NEW Adapter;
 		task->phScene = ps;
 		fc->objects.Push(task->GetIf());
@@ -470,8 +473,20 @@ public:
 			return false;
 		}
 		void Execute(FILoadContext* fc){
-			if (parent && solid && parent->solid && phScene){
-				phScene->CreateJoint(parent->solid, solid, desc);
+			if (!solid){
+				PHSolidDesc sd;
+				sd.mass *= 0.01;
+				sd.inertia *= 0.01;
+				solid = DCAST(PHSolid, phScene->CreateSolid(sd));
+			}
+			if (parent && !parent->solid){
+				PHSolidDesc sd;
+				sd.mass *= 0.01;
+				sd.inertia *= 0.01;
+				parent->solid = DCAST(PHSolid, phScene->CreateSolid(sd));
+			}
+			if (parent){
+				phScene->CreateJoint(solid, parent->solid, desc);
 			}
 		}
 	};
@@ -494,8 +509,7 @@ class FINodeHandlerJoint: public FINodeHandlerImp<Joint>{
 public:	
 	typedef FINodeHandlerJointEngine::JointCreator JointCreator;
 	FINodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
-	void Load(Desc& x, FILoadContext* fc){
-		Joint d;
+	void Load(Desc& d, FILoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->desc.type = d.nType ? PHJointDesc::SLIDERJOINT : PHJointDesc::HINGEJOINT;
 		j->desc.posePlug.Pos() = d.crj;

@@ -48,7 +48,8 @@ namespace Spr{
 		if (vtx)        { delete vtx;        }
 	}
 
-	void FWAppGL::StartApp(std::string filename, int lim/*=-1*/){
+	void FWAppGL::StartApp(std::string f, int lim/*=-1*/){
+		filename = f;
 		cycleLimit = lim;
 		LoadFile(filename);
 		CreateScene();
@@ -95,7 +96,7 @@ namespace Spr{
 			exit(EXIT_FAILURE);
 		}
 
-		fwScene->Print(DSTR);
+//		fwScene->Print(DSTR);
 
 		// Save Initial State for Reset
 		firstState = CreateObjectStates();

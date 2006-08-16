@@ -9,6 +9,7 @@
 #define PHCONSTRAINT_H
 
 #include <SprPhysics.h>
+#include "PHContactDetector.h"
 
 #define SUBMAT(r, c, h, w) sub_matrix(PTM::TSubMatrixDim<r, c, h, w>())
 #define SUBVEC(o, l) sub_vector(PTM::TSubVectorDim<o, l>())

@@ -13,6 +13,8 @@
 #define GRRENDER_H
 
 #include <SprGraphics.h>
+#include <Foundation/Scene.h>
+#include "GRFrame.h"
 
 namespace Spr{;
 

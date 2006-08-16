@@ -35,6 +35,7 @@ namespace Spr{
 		int               cycleCount;
 		int               cycleLimit;
 		int				  timeStep;
+		UTString		  filename;
 		Vec3f*            vtx;
 		
 		ObjectStatesIf*   firstState;

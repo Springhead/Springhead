@@ -20,7 +20,7 @@ IF_OBJECT_IMP_ABST(FIFile, Object);
 #define PDEBUG_EVAL(x)
 
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
-	printf("Loading %s ....\n", fn);
+	DSTR << "Loading " << fn << " ...." << std::endl;
 	FILoadContext fc;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
 	fc.fileInfo.Push();

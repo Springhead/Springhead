@@ -15,6 +15,7 @@
 */
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
+#include <Foundation/SprScene.h>
 
 namespace Spr{;
 

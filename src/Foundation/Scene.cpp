@@ -42,8 +42,8 @@ bool ObjectNames::Add(NamedObject* obj){
 		i++;
 	} while(!rv.second);
 	nameMap[base] = obj->name;
-	DSTR << "name change: " << base << " -> " << obj->name;
-	DSTR << std::endl;
+//	DSTR << "name change: " << base << " -> " << obj->name;
+//	DSTR << std::endl;
 	return true;
 }
 void ObjectNames::Print(std::ostream& os) const{
