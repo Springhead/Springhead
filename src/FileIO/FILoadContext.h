@@ -34,6 +34,7 @@ public:
 };
 
 class FINodeHandlers;
+class FIFile;
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
@@ -44,8 +45,9 @@ public:
 	//--------------------------------------------------------------------------
 	//	クラス定義
 	///
-	struct FileInfo{
+	struct FileInfo: public UTRefCount{
 		~FileInfo();
+		FIFile* file;		///<		もとのFIFileへの参照。
 		std::string name;	///<		ファイル名
 		const char* start;	///<		メモリマップされたファイルの先頭
 		const char* end;	///<		メモリマップされたファイルの終端
@@ -93,7 +95,7 @@ public:
 	//--------------------------------------------------------------------------
 	//	変数
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
-	UTStack<FileInfo> fileInfo;	
+	UTStack< UTRef<FileInfo> > fileInfo;	
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
 	ObjectIfs objects;
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．

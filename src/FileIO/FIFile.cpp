@@ -24,7 +24,9 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	FILoadContext fc;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
 	fc.fileInfo.Push();
-	fc.fileInfo.back().Map(fn);
+	fc.fileInfo.Top() = DBG_NEW FILoadContext::FileInfo;
+	fc.fileInfo.Top()->Map(fn);
+	fc.fileInfo.Top()->file = this;
 	Load(&fc);
 	if (fc.rootObjects.size()){
 		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
@@ -34,6 +36,7 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 }
 void FIFile::Load(FILoadContext* fc){
 	if (fc->IsGood()){
+		fc->fileInfo.Top()->file = this;
 		fc->typeDb = &typeDb;
 		LoadImp(fc);
 	}

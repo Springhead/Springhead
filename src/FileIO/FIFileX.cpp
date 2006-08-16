@@ -60,7 +60,7 @@ static void NameSet(const char* b, const char* e){
 }
 ///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
 static void LoadNodeStub(const char* b, const char* e){
-	fileContext->fileInfo.Top().parsingPos = b;
+	fileContext->fileInfo.Top()->parsingPos = b;
 	fileX->LoadNode(fileContext);
 }
 
@@ -301,15 +301,18 @@ void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
 
 
 //------------------------------------------------------------------------------
+void FIFileX::SetLoaderContext(FILoadContext* fc){
+	fileContext = fc;
+	fileX = this;
+}
 void FIFileX::LoadImp(FILoadContext* fc){
 	using namespace std;
 	using namespace boost::spirit;
 	using namespace Spr;
-	fileContext = fc;
-	fileX = this;
+	SetLoaderContext(fc);
 	parse_info<const char*> info = parse(
-		fileContext->fileInfo.back().start, 
-		fileContext->fileInfo.back().end, start, cmt);
+		fileContext->fileInfo.Top()->start, 
+		fileContext->fileInfo.Top()->end, start, cmt);
 }
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)

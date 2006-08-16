@@ -179,7 +179,7 @@ void FILoadContext::PopType(){
 }
 bool FILoadContext::IsGood(){
 	if (!fileInfo.size()) return false;
-	return fileInfo.back().IsGood();
+	return fileInfo.Top()->IsGood();
 }
 void FILoadContext::AddLink(std::string ref, const char* pos){
 	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));
@@ -197,11 +197,11 @@ void FILoadContext::ErrorMessage(const char* pos, const char* msg){
 	Message(pos, m.c_str());
 }
 void FILoadContext::Message(const char* pos, const char* msg){
-	const char* ptr = fileInfo.back().start;
+	const char* ptr = fileInfo.Top()->start;
 	int lines=0;
 	int returns=0;
 	const char* line=ptr;
-	if (!pos) pos = fileInfo.back().parsingPos;
+	if (!pos) pos = fileInfo.Top()->parsingPos;
 	if (pos){
 		for(;ptr < pos; ++ptr){
 			if (*ptr == '\n'){
@@ -213,7 +213,7 @@ void FILoadContext::Message(const char* pos, const char* msg){
 				line = ptr+1;
 			}
 		}
-		for(;ptr < fileInfo.back().end; ++ptr){
+		for(;ptr < fileInfo.Top()->end; ++ptr){
 			if (*ptr == '\n' || *ptr == '\r'){
 				break;
 			}
@@ -221,7 +221,7 @@ void FILoadContext::Message(const char* pos, const char* msg){
 		lines = std::max(lines, returns);
 	}
 	std::ostream& os = *errorStream;
-	os << fileInfo.back().name << "(" << lines+1 << ") : ";
+	os << fileInfo.Top()->name << "(" << lines+1 << ") : ";
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
 }

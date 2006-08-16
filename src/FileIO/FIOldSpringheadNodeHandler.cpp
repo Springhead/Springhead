@@ -5,8 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include <Foundation/WBPath.h>
 #include <FileIO/FINodeHandler.h>
 #include <FileIO/FIOldSpringheadNode.h>
+#include <FileIO/FIFileX.h>
+#include <FileIO/FISdk.h>
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRMesh.h>
 #include <Graphics/GRRender.h>
@@ -532,6 +535,28 @@ class FINodeHandlerImport: public FINodeHandlerImp<Import>{
 public:	
 	FINodeHandlerImport():FINodeHandlerImp<Desc>("Import"){}
 	void Load(Desc& d, FILoadContext* fc){
+		UTString filename = d.file;
+
+		WBPath xFilePath;
+		xFilePath.Path(fc->fileInfo.back()->name);
+		xFilePath.Path(xFilePath.FullPath());
+		WBPath imPath;
+		imPath.Path(filename);
+        UTString oldCwd = imPath.GetCwd();
+		imPath.SetCwd(xFilePath.Drive() + xFilePath.Dir());
+		UTString full = imPath.FullPath();		
+
+
+		FISdk* sdk = fc->fileInfo.back()->file->GetSdk();		
+		fc->fileInfo.Push();
+		fc->fileInfo.Top() = new FILoadContext::FileInfo;
+		fc->fileInfo.back()->Map(full);
+		if (fc->IsGood()){
+			UTRef<FIFileX> fileX = DCAST(FIFileX, sdk->CreateFileX());
+			fileX->LoadImp(fc);
+		}
+		fc->fileInfo.Pop();
+		fc->fileInfo.Top()->file->SetLoaderContext(fc);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
 	}

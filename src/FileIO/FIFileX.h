@@ -26,9 +26,10 @@ public:
 	FIFileX();
 	UTTypeDescDb* GetDb(){return &typeDb;}
 	void Init(UTTypeDescDb* db=NULL, FINodeHandlers* h=NULL);
-protected:
 	void LoadImp(FILoadContext* fc);
+	virtual void SetLoaderContext(FILoadContext* fc);
 
+protected:
 	//	•Û‘¶ˆ—‚Ìƒnƒ“ƒhƒ‰[
 	virtual void OnSaveFileStart(FISaveContext* sc);
 	virtual void OnSaveNodeStart(FISaveContext* sc);

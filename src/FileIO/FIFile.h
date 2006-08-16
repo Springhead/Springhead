@@ -15,7 +15,7 @@
 namespace Spr{;
 class FILoadContext;
 class FISaveContext;
-
+class FISdk;
 
 /**	ファイルローダー・セーバー
 */
@@ -26,11 +26,13 @@ protected:
 	///	ロード時に自動ロードとは別の処理が必要なノードのハンドラ
 	FINodeHandlers handlers;
 public:
+	FISdk* sdk;
 	OBJECT_DEF_ABST(FIFile);
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
 	virtual void Save(const ObjectIfs& objs, FISaveContext* sc);
+	FISdk* GetSdk(){ return sdk; }
 	/**	ノードのロード．
 		ロードしたDescからオブジェクトを作成する．
 		オブジェクトの作成は，親オブジェクトのCreateObject()，親の親のCreateObject()と
@@ -43,10 +45,12 @@ public:
 	void LoadEnterBlock(FILoadContext* fc);
 	///	ブロック(組み立て型)から出る
 	void LoadLeaveBlock(FILoadContext* fc);
-
-protected:
 	///	ロードの実装
 	virtual void LoadImp(FILoadContext* fc)=0;
+
+	virtual void SetLoaderContext(FILoadContext* fc){}
+
+protected:
 	
 	///	ノードのセーブ
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);

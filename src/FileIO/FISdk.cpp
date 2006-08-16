@@ -79,6 +79,7 @@ ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){
 }
 FIFileXIf* FISdk::CreateFileX(){
 	FIFileX* rv = DBG_NEW FIFileX;
+	rv->sdk = this;
 	files.push_back(rv);
 	return rv;
 }
