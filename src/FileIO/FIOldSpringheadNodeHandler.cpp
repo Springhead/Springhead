@@ -463,19 +463,68 @@ public:
 
 class FINodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
 public:	
+	class JointCreator: public FILoadContext::Task{
+	public:
+		PHScene* phScene;
+		JointCreator* parent;
+		PHJoint1DDesc desc;
+		PHSolid* solid;
+		JointCreator(): parent(NULL), solid(NULL), phScene(NULL){}
+		bool AddChildObject(ObjectIf* o){
+			PHSolid* s = DCAST(PHSolid, o);
+			if (s){
+				solid = s;
+				return true;
+			}
+			return false;
+		}
+		void Execute(FILoadContext* fc){
+			if (parent && solid && parent->solid && phScene){
+				phScene->CreateJoint(parent->solid, solid, desc);
+			}
+		}
+	};
+
 	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
+		JointCreator* j = DBG_NEW JointCreator;
+		j->parent = DCAST(JointCreator, fc->objects.Top());
+		j->phScene = FindPHScene(fc);
+		fc->objects.Push(j->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
+		JointCreator* j = DCAST(JointCreator, fc->objects.Top());
+		fc->links.push_back(j);
+		fc->objects.Pop();
 	}
 };
 
 class FINodeHandlerJoint: public FINodeHandlerImp<Joint>{
 public:	
+	typedef FINodeHandlerJointEngine::JointCreator JointCreator;
 	FINodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
-	void Load(Desc& d, FILoadContext* fc){
+	void Load(Desc& x, FILoadContext* fc){
+		Joint d;
+		JointCreator* j = DBG_NEW JointCreator;
+		j->desc.type = d.nType ? PHJointDesc::SLIDERJOINT : PHJointDesc::HINGEJOINT;
+		j->desc.posePlug.Pos() = d.crj;
+		j->desc.posePlug.Ori().FromMatrix(d.cRj);
+		j->desc.poseSocket.Pos() = d.prj;
+		j->desc.poseSocket.Ori().FromMatrix(d.pRj);
+		j->desc.spring = d.fPValue;
+		j->desc.damper = d.fDValue;
+		j->desc.origin = d.fInput;
+		j->desc.lower = d.fMinPosition;
+		j->desc.upper = d.fMaxPosition;
+		
+		j->parent = DCAST(JointCreator, fc->objects.Top());
+		j->phScene = FindPHScene(fc);
+		fc->objects.Push(j->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
+		JointCreator* j = DCAST(JointCreator, fc->objects.Top());
+		fc->links.push_back(j);
+		fc->objects.Pop();
 	}
 };
 
