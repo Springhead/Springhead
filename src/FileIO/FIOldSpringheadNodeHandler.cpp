@@ -70,6 +70,20 @@ public:
 };
 class FINodeHandlerXLight8: public FINodeHandlerImp<Light8>{
 public:
+	class Adapter: public FILoadContext::Task{
+	public:
+		GRLight* light;
+		bool AddChildObject(ObjectIf* o){
+			GRFrame* fr = DCAST(GRFrame, o);
+			if (fr){
+				Affinef af = fr->GetTransform();
+				light->position.sub_vector(PTM::TSubVectorDim<0,3>()) = af.Ez();
+				return true;
+			}
+			return false;
+		}
+		void Execute(FILoadContext* ctx){}
+	};
 	FINodeHandlerXLight8():FINodeHandlerImp<Desc>("Light8"){}
 	void Load(Desc& l8, FILoadContext* fc){
 		GRLightDesc grld;
@@ -93,10 +107,14 @@ public:
 		//	左手系→右手系の変換
 		grld.position.Z() *= -1;
 		grld.spotDirection.Z() *= -1;
-
 		fc->PushCreateNode(GRLightIf::GetIfInfoStatic(), &grld);
+		Adapter* a = new Adapter;
+		a->light = DCAST(GRLight, fc->objects.Top());
+		fc->objects.Push(a->GetIf());
+		fc->links.push_back(a);
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
 		fc->objects.Pop();
 	}
 };
@@ -237,10 +255,10 @@ public:
 
 class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
 public:	
-	class Adaptor: public FILoadContext::Task{
+	class Adapter: public FILoadContext::Task{
 	public:
 		PHSceneIf* phScene;
-		Adaptor():phScene(NULL){}
+		Adapter():phScene(NULL){}
 		void AddFrameToSolid(PHSolid* solid, GRFrame* fr, Affinef af){
 			af = af * fr->GetTransform();
 			for(unsigned i=0; i<fr->NChildObject(); ++i){
@@ -272,6 +290,10 @@ public:
 				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
 				return true;
 			}
+			if (DCAST(PHSolid, o)){	//	solidなら何もしない。デフォルトONなので。
+				//	本来は受け取ったObjectだけを接触ONにすべき
+				return true;
+			}
 			return false;
 		}
 		void Execute(FILoadContext* fc){}
@@ -279,12 +301,12 @@ public:
 	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
-		Adaptor* task = DBG_NEW Adaptor;
+		Adapter* task = DBG_NEW Adapter;
 		task->phScene = ps;
 		fc->objects.Push(task->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		Adaptor* task = DCAST(Adaptor, fc->objects.Top());
+		Adapter* task = DCAST(Adapter, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
 	}
@@ -292,20 +314,16 @@ public:
 
 class FINodeHandlerSolid: public FINodeHandlerImp<Solid>{
 public:
-	class Adaptor: public FINodeHandlerContactEngine::Adaptor{
+	class Adapter: public FINodeHandlerContactEngine::Adapter{
 	public:
 		PHSolid* solid;
 		GRFrame* frame;
 		FWScene* fwScene;
-		Adaptor():solid(NULL), fwScene(NULL){}
+		Adapter():solid(NULL), fwScene(NULL){}
 		virtual bool AddChildObject(ObjectIf* o){
 			frame = DCAST(GRFrame, o);
 			if (frame){	//	fr以下の全MeshをSolidに追加
 				AddFrameToSolid(solid, frame, frame->GetTransform().inv());
-				return true;
-			}
-			if (DCAST(PHSolid, o)){	//	solidなら何もしない。デフォルトONなので。
-				//	本来は受け取ったObjectだけを接触ONにすべき
 				return true;
 			}
 			return false;
@@ -330,13 +348,13 @@ public:
 		solid->angVelocity = d.angularVelocity;
 		solid->inertia = d.inertia;
 		solid->mass = d.mass;
-		Adaptor* task = DBG_NEW Adaptor;
+		Adapter* task = DBG_NEW Adapter;
 		task->solid = solid;
 		task->fwScene = FindFWScene(fc);
 		fc->objects.Push(task->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		Adaptor* task = DCAST(Adaptor, fc->objects.Top());
+		Adapter* task = DCAST(Adapter, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
 
