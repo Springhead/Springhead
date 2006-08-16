@@ -11,10 +11,10 @@ namespace Spr{
 		OBJECT_DEF(FWAppGL);
 		ACCESS_DESC(FWAppGL);
 
-		static UTRef<FWAppGLIf> instance;
+		static UTRef<FWAppGL> instance;
 		static void GlutDisplayFunc();
 		static void GlutReshapeFunc(int w, int h);
-		static void GlutIdleFunc();
+		static void GlutTimerFunc(int id);
 		static void GlutKeyboardFunc(unsigned char key, int x, int y);
 
 		FISdkIf*          fiSdk;
@@ -34,6 +34,7 @@ namespace Spr{
 		bool              isSimulating;
 		int               cycleCount;
 		int               cycleLimit;
+		int				  timeStep;
 		Vec3f*            vtx;
 		
 		ObjectStatesIf*   firstState;
@@ -48,7 +49,7 @@ namespace Spr{
 		virtual void Step();
 		virtual void Display();
 		virtual void Reshape(int w, int h);
-		virtual void Idle();
+		virtual void Timer();
 		virtual void Keyboard(unsigned char key, int x, int y);
 		virtual FWAppGLDesc::DebugMode GetDebugMode();
 		virtual void SetDebugMode(FWAppGLDesc::DebugMode m);

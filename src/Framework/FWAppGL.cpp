@@ -10,7 +10,7 @@ namespace Spr{
 	IF_IMP(FWAppGL, Object);
 	OBJECT_IMP(FWAppGL, Object);
 
-	UTRef<FWAppGLIf> FWAppGL::instance = NULL;
+	UTRef<FWAppGL> FWAppGL::instance = NULL;
 
 	FWAppGLIf* SPR_CDECL CreateFWAppGL(){
 		if (!FWAppGL::instance) {
@@ -27,10 +27,10 @@ namespace Spr{
 		FWAppGL::instance->Reshape(w, h);
 	}
 
-	void FWAppGL::GlutIdleFunc(){
-		FWAppGL::instance->Idle();
+	void FWAppGL::GlutTimerFunc(int id){
+		glutTimerFunc(FWAppGL::instance->timeStep, GlutTimerFunc, 0);
+		FWAppGL::instance->Timer();
 	}
-
 	void FWAppGL::GlutKeyboardFunc(unsigned char key, int x, int y){
 		FWAppGL::instance->Keyboard(key, x, y);
 	}
@@ -38,7 +38,8 @@ namespace Spr{
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
 	:fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true), firstState(NULL), vtx(NULL)
 	{
-		 vtx = DBG_NEW Vec3f[4];
+		timeStep = 20;
+		vtx = DBG_NEW Vec3f[4];
 	}
 
 	FWAppGL::~FWAppGL(){
@@ -56,7 +57,7 @@ namespace Spr{
 		glutDisplayFunc(FWAppGL::GlutDisplayFunc);
 		glutReshapeFunc(FWAppGL::GlutReshapeFunc);
 		glutKeyboardFunc(FWAppGL::GlutKeyboardFunc);
-		glutIdleFunc(FWAppGL::GlutIdleFunc);
+		glutTimerFunc(timeStep, FWAppGL::GlutTimerFunc, 0);
 		glutMainLoop();
 	}
 
@@ -172,7 +173,7 @@ namespace Spr{
 		grRender->Reshape(Vec2f(), Vec2f(w,h));
 	}
 
-	void FWAppGL::Idle(){
+	void FWAppGL::Timer(){
 		if (isSimulating){ Step(); }
 		glutPostRedisplay();
 	}

@@ -304,6 +304,10 @@ public:
 				AddFrameToSolid(solid, frame, frame->GetTransform().inv());
 				return true;
 			}
+			if (DCAST(PHSolid, o)){	//	solidなら何もしない。デフォルトONなので。
+				//	本来は受け取ったObjectだけを接触ONにすべき
+				return true;
+			}
 			return false;
 		}
 		virtual void Execute(FILoadContext* ctx){
@@ -381,11 +385,15 @@ public:
 class FINodeHandlerGravityEngine: public FINodeHandlerImp<GravityEngine>{
 public:	
 	FINodeHandlerGravityEngine():FINodeHandlerImp<Desc>("GravityEngine"){}
+	int linkPos;
 	void Load(Desc& d, FILoadContext* fc){
 		PHScene* s = FindPHScene(fc);
 		if (s) s->SetGravity(d.gravity);
+		linkPos = fc->links.size();
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
+		//	GravityEngineの子オブジェクトはとりあえず無視。本当はGravityのOn/Offに使う。
+		fc->links.resize(linkPos);
 	}
 };
 

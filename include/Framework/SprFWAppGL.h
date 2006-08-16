@@ -20,7 +20,6 @@ namespace Spr{
 		virtual void CreateScene() = 0;
 		virtual void Display() = 0;
 		virtual void Reshape(int w, int h) = 0;
-		virtual void Idle() = 0;
 		virtual void Keyboard(unsigned char key, int x, int y) = 0;
 		virtual FWAppGLDesc::DebugMode GetDebugMode()=0;
 		virtual void SetDebugMode(FWAppGLDesc::DebugMode m)=0;
