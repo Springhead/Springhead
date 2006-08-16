@@ -28,8 +28,8 @@ namespace Spr{
 	}
 
 	void FWAppGL::GlutTimerFunc(int id){
-		glutTimerFunc(FWAppGL::instance->timeStep, GlutTimerFunc, 0);
 		FWAppGL::instance->Timer();
+		glutTimerFunc(FWAppGL::instance->timeStep, GlutTimerFunc, 0);
 	}
 	void FWAppGL::GlutKeyboardFunc(unsigned char key, int x, int y){
 		FWAppGL::instance->Keyboard(key, x, y);
