@@ -211,7 +211,7 @@ bool GRMesh::AddChildObject(ObjectIf* o){
 	GRMaterial* m = DCAST(GRMaterial, o);
 	if (m){
 		material.push_back(*m);
-		return true;
+		return GetNameManager()->AddChildObject(m->GetIf());
 	}
 	return false;
 }
