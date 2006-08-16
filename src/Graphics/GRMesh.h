@@ -42,6 +42,7 @@ public:
 	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
+	virtual bool AddChildObject(ObjectIf* o);
 };
 }
 #endif

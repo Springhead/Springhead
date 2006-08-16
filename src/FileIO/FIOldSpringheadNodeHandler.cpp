@@ -185,8 +185,8 @@ public:
 			fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &GRMaterialDesc());	
 			GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());		
 			if(mat){											
-				// "MeshTextureCoords"と関連づけるため、一度GRMaterialをスタックに積む。
-				// 実体は GRMeshDesc で持ち、mesh のレンダリングで呼び出す。
+				// "MeshTextureCoords"と関連づけるため、一度GRMaterialをスタックに積む．
+				// 実体は mesh所有のmaterialで持ち、meshのレンダリング時に呼び出す．
 				mat->ambient = mat->diffuse = d.face;		// スタックに積んであるmatへ値を代入
 				mat->specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
 				mat->emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
@@ -196,7 +196,17 @@ public:
 				fc->ErrorMessage(NULL, "cannot create Material node.");
 			}
 		}else{
-			fc->ErrorMessage(NULL, "Material must be inside of Mesh node.  ");
+			fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &GRMaterialDesc());
+			GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
+			if (mat){
+				mat->ambient = mat->diffuse = d.face;		// スタックのmaterialに、データを登録
+				mat->specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
+				mat->emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
+				mat->power = d.power;			
+				// meshの参照ノードのリンクを行う時点で、GRMesh::AddChildObject により、meshへのmaterial登録する．
+			}else{
+				fc->ErrorMessage(NULL, "cannot create Material node.");
+			}
 		}
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
@@ -236,6 +246,8 @@ public:
 			GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 			if (mesh){
 				mesh->material.back().texname = d.filename;
+			}else{				
+				mat->texname = d.filename;		// 参照型Materialノードのリンク
 			}
 		}else{
 			fc->ErrorMessage(NULL, "TextureFilename must be inside of Material node.");

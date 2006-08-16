@@ -207,5 +207,13 @@ void GRMesh::Render(GRRenderIf* r){
 }
 void GRMesh::Rendered(GRRenderIf* r){
 }
+bool GRMesh::AddChildObject(ObjectIf* o){
+	GRMaterial* m = DCAST(GRMaterial, o);
+	if (m){
+		material.push_back(*m);
+		return true;
+	}
+	return false;
+}
 
 }
