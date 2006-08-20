@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 #include <Physics/PHSolid.h>
 #include <Physics/PHJoint.h>
+#include <Physics/PHSpring.h>
 #include <Physics/PHHingeJoint.h>
 #include <Physics/PHSliderJoint.h>
 
@@ -18,14 +19,23 @@
 
 class TSpring{
 public:
+	Spr::PHSpring* spring;
+	Spr::PHSolid* anchor;
 	Spr::PHSolid* solid;
 	Spr::Vec3f pos;
 	TSpring():solid(NULL){}
-	TSpring(Spr::PHSolid* s, Spr::Vec3f p):solid(s), pos(p){}
+	TSpring(Spr::PHSolid* s, Spr::Vec3f p);
 	Spr::Vec3f GetPos();
 	Spr::Vec3f GetVel();
 	void AddForce(Spr::Vec3f f){
 		if (solid) solid->AddForce(f, GetPos());
+	}
+	void SetPos(Spr::Vec3f pos){
+		if (anchor){
+			Spr::Posed p;
+			p.Pos() = pos;
+			anchor->SetPose(p);
+		}
 	}
 };
 class TSprings:public std::vector<TSpring>{
@@ -72,7 +82,9 @@ public:
 	virtual ~THuman();
 	bool Connect(Spr::PHScene* scene);
 	void ConnectSolid(Spr::PHSolid*& solid, const char* name, Spr::PHScene* scene);
-	void ConnectJoint(Spr::PHJoint1D*& solid, const char* name, Spr::PHScene* scene);
+	void ConnectJoint(Spr::PHJoint1D*& j, const char* name, Spr::PHScene* scene);
+	void ConnectJoint(Spr::PHHingeJoint*& j, const char* name, Spr::PHScene* scene);
+	void ConnectJoint(Spr::PHSliderJoint*& j, const char* name, Spr::PHScene* scene);
 
 	bool IsLoaded(){ return bLoaded; }
 	void SaveJointAngle();

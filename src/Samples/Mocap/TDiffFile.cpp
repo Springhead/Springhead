@@ -3,6 +3,10 @@
 #include <sstream>
 
 #include <float.h>
+
+
+bool bExplicit = false;
+
 using namespace Spr;
 inline bool IsValid(const Vec3f& v){
 	return v.square() < Square(900);
@@ -83,6 +87,7 @@ bool TDiffFile::Load(std::istream& is){
 		if (rec.type.compare("FRF") == 0) frf.push_back(rec);
 	}
 	bLoaded = true;
+//	for(int i=0; i<g1[0].size(); ++i) g1[0][i].Print(DSTR);
 	return true;
 }
 void TDiffRecord::Print(std::ostream& os){
@@ -156,6 +161,7 @@ Spr::GRMaterialDesc Mat(Vec4f c){
 void TDiffFile::Draw(GRRender* render, THuman& human, float time, bool bDrawLine){
 	if (!IsLoaded()) return;
 	if (!human.IsLoaded()) return;
+	render->SetVertexFormat(GRVertexElement::vfP3f);
 	for(int lr=0; lr<2; ++lr){
 		//	DIFFファイルの表示
 		static Vec3f pos[14];
@@ -305,25 +311,39 @@ bool TDiffFile::AddSpringForce(THuman& human, float time, float dt){
 	bool rv=true;
 	rv &= GetRecord(pos[0], vel[0], true,  time);
 	rv &= GetRecord(pos[1], vel[1], false, time);
-	const float SAFETYRATE = 0.03f;
+	const float SAFETYRATE = 0.06f;
 	const float SPRING = 0.4f * SAFETYRATE;		//	バネ
-	const float DAMPER = 0.9f * SAFETYRATE;		//	ダンパ
+	const float DAMPER = 3.0f * SAFETYRATE;		//	ダンパ
 	for(int lr=0; lr<2; ++lr){
 		for(int i=0+lr; i<human.springs[lr].size() && human.springs[lr][i].solid; ++i){
 			float mass = human.springs[lr][i].solid->GetMass();
+			float dt = 0.002;
 			float spring = SPRING * mass / (2*dt*dt);
 			float damper = DAMPER * mass / (dt);
 
 			Vec3f pos2 = human.springs[lr][i].GetPos();
 			Vec3f vel2 = human.springs[lr][i].GetVel();
 			if (IsValid(pos[lr][i])){
-				Vec3f dPos = pos[lr][i] - pos2;
-				Vec3f dVel = vel[lr][i] - vel2;
-				if (dVel.norm() > 1e5f) dVel = dVel.unit()*1e5f;
-				if (dPos.norm() > 1e2f) dPos = dPos.unit()*1e2f;
-				Vec3f force = spring*dPos + damper*dVel;
-				if (force.norm()/mass > 1e6f) force = force.unit() * mass*1e6f;
-				human.springs[lr][i].AddForce(force);
+				if (bExplicit){
+					Vec3f dPos = pos[lr][i] - pos2;
+					Vec3f dVel = vel[lr][i] - vel2;
+					if (dVel.norm() > 1e5f) dVel = dVel.unit()*1e5f;
+					if (dPos.norm() > 1e2f) dPos = dPos.unit()*1e2f;
+					Vec3f force = spring*dPos + damper*dVel;
+					if (force.norm()/mass > 1e6f) force = force.unit() * mass*1e6f;
+					human.springs[lr][i].AddForce(force);
+				}else{
+					spring *= 10;
+					damper *= 30;
+					human.springs[lr][i].spring->SetSpring(Vec3f(1,1,1)*spring);
+					human.springs[lr][i].spring->SetDamper(Vec3f(1,1,1)*damper);
+					human.springs[lr][i].SetPos(pos[lr][i]);
+				}
+/*				if (dPos.norm() > 0.2){
+					DSTR << lr << " " << i << " " << pos[lr][i] << pos2 << " F:" << force;
+					DSTR << human.springs[lr][i].solid->GetName() << std::endl;
+				}
+*/
 			}
 		}
 	}

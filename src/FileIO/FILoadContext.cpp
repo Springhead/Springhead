@@ -186,9 +186,11 @@ void FILoadContext::AddLink(std::string ref, const char* pos){
 }
 void FILoadContext::Link(){
 	links.Execute(this);
+	links.clear();
 }
 void FILoadContext::PostTask(){
 	postTasks.Execute(this);
+	postTasks.clear();
 }
 
 void FILoadContext::ErrorMessage(const char* pos, const char* msg){

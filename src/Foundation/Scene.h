@@ -122,6 +122,7 @@ protected:
 
 public:
 	static NameManager* GetRoot(){ return &theRoot; }
+	void Clear();
 	virtual void SetNameManager(NameManager* s);
 	void AddChildManager(NameManager* c);
 	void DelChildManager(NameManager* c);

@@ -107,6 +107,11 @@ void NameManager::ClearName(){
 		(*it)->ClearName();
 	}
 }
+void NameManager::Clear(){
+	ClearName();
+	childManagers.clear();
+}
+
 void NameManager::Print(std::ostream& os) const {
 	int w = os.width();
 	os.width(0);

@@ -22,8 +22,8 @@ namespace Spr{
 		OBJECT_DEF(FWScene);
 		ACCESS_DESC(FWScene);
 		std::vector< UTRef<FWObjectIf> > fwObjects;
-		PHSceneIf* phScene;
-		GRSceneIf* grScene;
+		UTRef<PHSceneIf> phScene;
+		UTRef<GRSceneIf> grScene;
 		//
 		FWScene(const FWSceneDesc& d=FWSceneDesc()); // コンストラクタ
 		//

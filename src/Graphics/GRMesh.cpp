@@ -7,6 +7,7 @@
  */
 #include "Graphics.h"
 #include "GRMesh.h"
+#include <gl/glut.h>
 
 
 namespace Spr{;
@@ -15,10 +16,16 @@ IF_OBJECT_IMP(GRMesh, GRVisual);
 GRMesh::GRMesh(const GRMeshDesc& desc):GRMeshDesc(desc){
 	render = NULL;
 }
-void GRMesh::CreateList(GRRenderIf* r){					
+GRMesh::~GRMesh(){
+	for (unsigned int id=0; id<list.size(); ++id){
+		if (list[id]) glDeleteLists(list[id], 1);
+	}
+}
+void GRMesh::CreateList(GRRenderIf* r){
 	for (unsigned int id=0; id<list.size(); ++id){
 		if (list[id])	render->ReleaseList(list[id]);
 	}
+	list.clear();
 	render = r;
 	unsigned int vtxsize = max(max(positions.size(), normals.size()), max(colors.size(), texCoords.size()));
 

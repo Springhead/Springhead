@@ -299,12 +299,13 @@ void BuildScene5(){
 
 	K = 200, D = 10;
 //	K = 14, D = 3;
+/*
 	PHSpringDesc descSpring;
 	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
 	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
 	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
 	jntLink[5] = scene->CreateJoint(soBox[5], soBox[4], descSpring);
-
+*/
 	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
 	soBox[5]->SetDynamical(false);
 	
@@ -593,15 +594,37 @@ void OnTimer0(){
 		hinge->SetMotorTorque(-Kexp * (pos - springOrigin) - Dexp * vel);
 	}
 }
+void OnTimer5(){
+/*
+	PHSpringDesc descSpring;
+	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
+	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
+	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
+	jntLink[5] = scene->CreateJoint(soBox[5], soBox[4], descSpring);
+
+	
+	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
+	soBox[5]->SetDynamical(false);
+*/
+	Vec3f dVel = Vec3f() - soBox[4]->GetVelocity();
+	Vec3f dPos = soBox[5]->GetPose().Pos() - soBox[4]->GetPose().Pos();
+//	float K = 200;
+//	float B = 10;
+	float K = 150;
+	float B = 7;
+	Vec3f force = K*dPos + B*dVel;
+	soBox[4]->AddForce(force, soBox[4]->GetPose()*Vec3f(0,3,0));
+}
 
 void OnTimer(){
 	switch(sceneNo){
 	case 0: OnTimer0(); break;
+	case 5: OnTimer5(); break;
 	/*case 1: OnTimer1(); break;
 	case 2: OnTimer2(); break;
 	case 3: OnTimer3(); break;
 	case 4: OnTimer4(); break;
-	case 5: OnTimer5(); break;*/
+		*/
 	}
 }	
 
@@ -642,6 +665,9 @@ void initialize(){
 	lookAt.x = 30.0;
 	lookAt.y = -20.0;
 	lookAt.z = 100.0;
+	lookAt.x = 3.0;
+	lookAt.y = 10.0;
+	lookAt.z = 30.0;
 	gluLookAt(lookAt.x, lookAt.y, lookAt.z, 
 		      0.0, lookAt.y, 0.0,
 		 	  0.0, 1.0, 0.0);
@@ -755,7 +781,7 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = niter;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 0;
+	sceneNo = 5;
 	BuildScene();
 
 	glutInit(&argc, argv);

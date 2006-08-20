@@ -14,6 +14,7 @@
 #include <Graphics/GRMesh.h>
 #include <Graphics/GRRender.h>
 #include <Physics/PHSolid.h>
+#include <Physics/PHJoint.h>
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Collision/CDConvexMesh.h>
@@ -274,6 +275,9 @@ public:
 			if (fr){	//	Solid‚É•ÏŠ·‚µ‚Ä’Ç‰Á
 				PHSolidDesc sd;
 				PHSolid* solid = DCAST(PHSolid, phScene->CreateSolid());
+				UTString name("so");
+				name.append(fr->GetName());
+				solid->SetName(name.c_str());
 				solid->SetDynamical(false);
 				Posed pose;
 				pose.FromAffine(fr->GetTransform());
@@ -463,6 +467,7 @@ public:
 		JointCreator* parent;
 		PHJoint1DDesc desc;
 		PHSolid* solid;
+		UTString name;
 		JointCreator(): parent(NULL), solid(NULL), phScene(NULL){}
 		bool AddChildObject(ObjectIf* o){
 			PHSolid* s = DCAST(PHSolid, o);
@@ -473,20 +478,22 @@ public:
 			return false;
 		}
 		void Execute(FILoadContext* fc){
+			const float tinyMass = 0.1f;
 			if (!solid){
 				PHSolidDesc sd;
-				sd.mass *= 0.01;
-				sd.inertia *= 0.01;
+				sd.mass *= tinyMass;
+				sd.inertia *= tinyMass;
 				solid = DCAST(PHSolid, phScene->CreateSolid(sd));
 			}
 			if (parent && !parent->solid){
 				PHSolidDesc sd;
-				sd.mass *= 0.01;
-				sd.inertia *= 0.01;
+				sd.mass *= tinyMass;
+				sd.inertia *= tinyMass;
 				parent->solid = DCAST(PHSolid, phScene->CreateSolid(sd));
 			}
 			if (parent){
-				phScene->CreateJoint(solid, parent->solid, desc);
+				PHJointIf* j= phScene->CreateJoint(solid, parent->solid, desc);
+				j->SetName(name.c_str());
 			}
 		}
 	};
@@ -494,7 +501,6 @@ public:
 	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
-		j->parent = DCAST(JointCreator, fc->objects.Top());
 		j->phScene = FindPHScene(fc);
 		fc->objects.Push(j->GetIf());
 	}
@@ -511,6 +517,7 @@ public:
 	FINodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
 	void Load(Desc& d, FILoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
+		j->name = fc->datas.Top()->name;
 		j->desc.type = d.nType ? PHJointDesc::SLIDERJOINT : PHJointDesc::HINGEJOINT;
 		j->desc.posePlug.Pos() = d.crj;
 		j->desc.posePlug.Ori().FromMatrix(d.cRj);

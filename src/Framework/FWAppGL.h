@@ -36,15 +36,13 @@ namespace Spr{
 		int               cycleLimit;
 		int				  timeStep;
 		UTString		  filename;
-		Vec3f*            vtx;
 		
-		ObjectStatesIf*   firstState;
-
 		FWAppGL(const FWAppGLDesc& d=FWAppGLDesc());
 		~FWAppGL();
 
 		virtual void StartApp(std::string filename, int lim=0);
 		virtual void LoadFile(std::string filename);
+		virtual void Load();
 		virtual void CreateScene();
 		virtual void CreateRender();
 		virtual void Step();

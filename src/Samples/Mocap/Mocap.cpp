@@ -6,9 +6,11 @@
 #include <SprFramework.h>
 #include <Foundation/WBPreciseTimer.h>
 #include <Framework/FWAppGL.h>
+#include <Framework/FWScene.h>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+#include <gl/glut.h>
 #include "THuman.h"
 #include "TDiffFile.h"
 
@@ -35,7 +37,7 @@ public:
 	int stepCount;
 	int waitCount;
 	int stepTime;
-	double time;
+	float time;
 	WBPreciseTimer ptimer;
 
 	MyApp(){
@@ -44,7 +46,21 @@ public:
 		waitCount = 0;
 	}
 	void Display(){
-		FWAppGL::Display();
+		DCAST(FWScene, fwScene)->Sync();
+
+		grRender->ClearBuffer();
+		grRender->BeginScene();
+		if (debugMode == DM_DEBUG){
+			GRCameraIf* cam = NULL;
+			if (grScene) cam = grScene->GetCamera();
+			if (cam) cam->Render(grRender);
+			grRender->DrawScene(phScene);
+			if (cam) cam->Rendered(grRender);
+		}else{
+			grScene->Render(grRender);
+		}
+
+		diff.Draw(DCAST(GRRender, grRender), human, time, true);
 
 		if (stepTime==0) stepTime=1000;
 		std::ostringstream os;
@@ -55,61 +71,77 @@ public:
 			os << "    関節角データ再生 ＋ 床反力シミュレーション中";
 		}
 		grRender->DrawFont(Vec2f(0,0), os.str().c_str());
+
+		grRender->EndScene();	
+
 	}
 	void Step(){
 		stepTime = ptimer.CountUS();
+		float dt = phScene->GetTimeStep();
 		//-------- Diffファイル再生＆各関節角度を保存------------//
 		if (appState == MAKE_ANGLE){
-			if (waitCount++ < 300) time = 0;
-			bool rv = diff.AddSpringForce(human, time, (float)phScene->GetTimeStep());
+			if ((waitCount++)*dt < 0) time = 0;
+			bool rv = diff.AddSpringForce(human, time, dt);
 			if (time > 0) human.SaveJointAngle();
-			if (!rv){	//	最後のデータだった場合，もう一度ロードしてappStateを進める．
-				Load();
+			phScene->Step();
+			stepCount ++;
+			time += phScene->GetTimeStep();
+			if (!rv){	//	最後のデータだった場合，appStateを進める．
+				appState = MAKE_FORCE;
 				waitCount = 0;
 			}
 		}
 	//-------- 保存された各関節角度の再生＆腰の補正＆各関節のトルクの保存------------//
 		else if (appState == MAKE_FORCE){
-			if (waitCount++ < 500){
+			if (waitCount++ < 200){
 				time = 0.0f;
 				diff.AddSpringForce(human, time, (float)phScene->GetTimeStep());
 				human.SetSpring((float)phScene->GetTimeStep());
 				human.LoadJointAngle(time, (float)phScene->GetTimeStep());
 			}else if (waitCount++ < 2000){
-				time = 0.0f;
+				PHSolid* sFloor = DCAST(PHSolid, phScene->FindObject("sofrFloor") );
+				PHSolid* sRFoot = DCAST(PHSolid, phScene->FindObject("soRFoot") );
+				PHSolid* sLFoot = DCAST(PHSolid, phScene->FindObject("soLFoot") );
+				phScene->SetContactMode(sFloor, sRFoot);
+				phScene->SetContactMode(sFloor, sLFoot);
 				human.LoadJointAngle(time, (float)phScene->GetTimeStep());
-			}else{
-				//human.SaveTorque(time, scene->GetTimeStep());
-				bool rv = human.LoadJointAngle(time, phScene->GetTimeStep());
-				if (!rv){	//	最後のデータだった場合，もう一度ロードしてappStateを進める．
-					std::ofstream of("force.txt");
-					for(float t=0.001f; t<time; t+= 0.001f){
-						int c = t / phScene->GetTimeStep();
-						TDiffRecord pos, vel;
-						diff.frf.GetRecord(pos, vel, t);
-						if (c < (int)human.angles.size()){
-							of << t << "\t";
-							of << pos.data[1].X() << "\t";
-							of << pos.data[1].Y() << "\t";
-							of << pos.data[1].Z() << "\t";
-							of << human.angles[c].force.X() << "\t";
-							of << human.angles[c].force.Y() << "\t";
-							of << human.angles[c].force.Z() << "\t";
-							for(int i=0; i<human.joints.size(); ++i){
-								of << human.angles[c].jointTorque[i] << "\t";
-							}
-							of << std::endl;
-						}
-					}
-					Load();
-					waitCount = 0;
-				}
+			}
+			phScene->Step();
+			stepCount ++;
+			time += phScene->GetTimeStep();
+			if (time > 3){
+				waitCount = 0;
 			}
 		}
-		FWAppGL::Step();
 	}
 	void Load(){
-		LoadFile(filename);
+		FWAppGL::Load();
+		phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+		phScene->SetTimeStep(0.002);
+		phScene->SetNumIteration(150);
+		human.Connect(DCAST(PHScene, phScene));
+		if (human.IsLoaded()){
+			//	diffのロード
+			if (!diff.IsLoaded()){
+				std::ifstream file("Test.DA");
+				if (file.good()) diff.Load(file);
+			}
+			//	VHの大きさをあわせる．
+			diff.SetHumanScale(human);
+			//	アプリケーションの状態
+			time = 0;
+			appState = MAKE_ANGLE;
+			human.angles.clear();
+			waitCount = 0;
+		}
+	}
+	void Timer(){
+		int n = 0.01/phScene->GetTimeStep();
+		if (n==0) n = 1;
+		for(int i=0; i<n; ++i){
+			Step();
+		}
+		glutPostRedisplay();
 	}
 };
 
@@ -130,7 +162,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	GRRegisterSdk();
 	FWRegisterSdk();
 
-	FWAppGLIf* fwApp = CreateFWAppGL();
+	FWAppGLIf* fwApp = new Spr::MyApp;
 //	fwApp->SetDebugMode(FWAppGLDesc::DM_DEBUG);
 	fwApp->StartApp("vhOld.x");
 

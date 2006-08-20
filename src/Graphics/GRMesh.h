@@ -40,6 +40,7 @@ public:
 	std::vector<int> faceNormals;			///< 法線インデックス
 
 	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
+	~GRMesh();
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 	virtual bool AddChildObject(ObjectIf* o);

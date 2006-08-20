@@ -36,24 +36,29 @@ namespace Spr{
 	}
 
 	FWAppGL::FWAppGL(const FWAppGLDesc& d/*=FWAppGLDesc()*/)
-	:fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true), firstState(NULL), vtx(NULL)
+	:fwScene(NULL), cycleCount(0), isLoadComplete(false), isSimulating(true)
 	{
 		timeStep = 20;
-		vtx = DBG_NEW Vec3f[4];
+		phScene = NULL;
+		grScene = NULL;
+		fiFileX = NULL;
+		grRender = NULL;
+		fiSdk = NULL;
 	}
 
 	FWAppGL::~FWAppGL(){
-		if (firstState) { delete firstState; }
 		if (fwScene)    { delete fwScene;    }
-		if (vtx)        { delete vtx;        }
 	}
-
-	void FWAppGL::StartApp(std::string f, int lim/*=-1*/){
-		filename = f;
-		cycleLimit = lim;
+	void FWAppGL::Load(){
 		LoadFile(filename);
 		CreateScene();
-		CreateRender();		
+		CreateRender();
+	}
+	void FWAppGL::StartApp(std::string f, int lim/*=-1*/){
+		instance = this;
+		filename = f;
+		cycleLimit = lim;
+		Load();
 		//
 		glutDisplayFunc(FWAppGL::GlutDisplayFunc);
 		glutReshapeFunc(FWAppGL::GlutReshapeFunc);
@@ -63,8 +68,17 @@ namespace Spr{
 	}
 
 	void FWAppGL::LoadFile(std::string filename){
+		NameManager::GetRoot()->Clear();
+		objs.clear();
+		delete fiSdk;
 		fiSdk = CreateFISdk();
 		fiFileX = fiSdk->CreateFileX();
+		delete fwScene;
+		fwScene = NULL;
+		if(phScene) delete phScene->GetSdk();
+		phScene = NULL;
+		if(grScene) delete grScene->GetSdk();
+		grScene = NULL;
 
 		if (! fiFileX->Load(objs, filename.data()) ) {
 			DSTR << "Error: Cannot open load file. " << std::endl;
@@ -97,16 +111,12 @@ namespace Spr{
 		}
 
 //		fwScene->Print(DSTR);
-
-		// Save Initial State for Reset
-		firstState = CreateObjectStates();
-		firstState->SaveState(phScene);
-
 		DSTR << "CreateScene Complete." << std::endl;	
 	}
 
 	void FWAppGL::CreateRender(){
 		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+		glutInitWindowSize(1000, 700);
 		int window = glutCreateWindow("Springhead Application");
 
 		grRender = grScene->GetSdk()->CreateDebugRender();
@@ -142,13 +152,6 @@ namespace Spr{
 */
 	}
 	void FWAppGL::Step(){
-		if (!isLoadComplete) {return;}
-		if (cycleLimit > 0) {
-			cycleCount++;
-			if (cycleLimit < cycleCount) {
-				exit(0);
-			}
-		}
 		phScene->Step();
 	}
 
@@ -182,9 +185,6 @@ namespace Spr{
 	void FWAppGL::Keyboard(unsigned char key, int x, int y){
 		if (key == 27) {
 			exit(0);
-		}
-		if (key == 'r') {
-			firstState->LoadState(phScene);
 		}
 		if (key == '.') {
 			isSimulating = false;

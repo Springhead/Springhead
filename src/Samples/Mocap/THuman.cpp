@@ -11,6 +11,17 @@ static char THIS_FILE[]=__FILE__;
 #endif
 
 using namespace Spr;
+extern bool bExplicit;
+TSpring::TSpring(Spr::PHSolid* s, Spr::Vec3f p):solid(s), pos(p){
+	if (!bExplicit){
+		PHScene* scene = DCAST(PHScene, solid->GetScene());
+		anchor = DCAST(PHSolid, scene->CreateSolid(PHSolidDesc()));
+		anchor->SetDynamical(false);
+		PHSpringDesc desc;
+		desc.poseSocket.Pos() = pos;
+		spring = DCAST(PHSpring, scene->CreateJoint(anchor, solid, desc));
+	}
+}
 
 Vec3f TSpring::GetPos(){
 	if (solid) return solid->GetPose() * pos;
@@ -86,8 +97,19 @@ void THuman::ConnectSolid(PHSolid*& solid, const char* name, PHScene* scene){
 	bLoaded &= (solid != NULL);
 	solids.push_back(solid);
 }
+void THuman::ConnectJoint(PHHingeJoint*& joint, const char* name, PHScene* scene){
+	PHJoint1D* j;
+	ConnectJoint(j, name, scene);
+	joint = DCAST(PHHingeJoint, j);
+}
+void THuman::ConnectJoint(PHSliderJoint*& joint, const char* name, PHScene* scene){
+	PHJoint1D* j;
+	ConnectJoint(j, name, scene);
+	joint = DCAST(PHSliderJoint, j);
+}
 void THuman::ConnectJoint(PHJoint1D*& joint, const char* name, PHScene* scene){
-	scene->FindObject(joint, name);
+	ObjectIf* obj = scene->FindObject(name);
+	joint = DCAST(PHJoint1D, obj);
 	bLoaded &= (joint != NULL);
 	joints.push_back(joint);
 
@@ -116,38 +138,38 @@ bool THuman::Connect(PHScene* scene){
 	ConnectSolid(soRFoot, "soRFoot", scene);
 	ConnectSolid(soLFoot, "soLFoot", scene);
 
-	ConnectJoint((PHJoint1D*&)joWaist1, "joWaist1", scene);
-	ConnectJoint((PHJoint1D*&)joWaist2, "joWaist2", scene);
-	ConnectJoint((PHJoint1D*&)joWaist3, "joWaist3", scene);
-	ConnectJoint((PHJoint1D*&)joNeck1, "joNeck1", scene);
-	ConnectJoint((PHJoint1D*&)joNeck2, "joNeck2", scene);
-	ConnectJoint((PHJoint1D*&)joNeck3, "joNeck3", scene);
-	ConnectJoint((PHJoint1D*&)joLShoulder1, "joLShoulder1", scene);
-	ConnectJoint((PHJoint1D*&)joLShoulder2, "joLShoulder2", scene);
-	ConnectJoint((PHJoint1D*&)joLShoulder3, "joLShoulder3", scene);
-	ConnectJoint((PHJoint1D*&)joLElbow1, "joLElbow1", scene);
-	ConnectJoint((PHJoint1D*&)joLWrist1, "joLWrist1", scene);
-	ConnectJoint((PHJoint1D*&)joLWrist2, "joLWrist2", scene);
-	ConnectJoint((PHJoint1D*&)joRShoulder1, "joRShoulder1", scene);
-	ConnectJoint((PHJoint1D*&)joRShoulder2, "joRShoulder2", scene);
-	ConnectJoint((PHJoint1D*&)joRShoulder3, "joRShoulder3", scene);
-	ConnectJoint((PHJoint1D*&)joRElbow1, "joRElbow1", scene);
-	ConnectJoint((PHJoint1D*&)joRWrist1, "joRWrist1", scene);
-	ConnectJoint((PHJoint1D*&)joRWrist2, "joRWrist2", scene);
-	ConnectJoint((PHJoint1D*&)joLHip1, "joLHip1", scene);
-	ConnectJoint((PHJoint1D*&)joLHip2, "joLHip2", scene);
-	ConnectJoint((PHJoint1D*&)joLHip3, "joLHip3", scene);
-	ConnectJoint((PHJoint1D*&)joLKnee1, "joLKnee1", scene);
-	ConnectJoint((PHJoint1D*&)joLAnkle1, "joLAnkle1", scene);
+	ConnectJoint(joWaist1, "joWaist1", scene);
+	ConnectJoint(joWaist2, "joWaist2", scene);
+	ConnectJoint(joWaist3, "joWaist3", scene);
+	ConnectJoint(joNeck1, "joNeck1", scene);
+	ConnectJoint(joNeck2, "joNeck2", scene);
+	ConnectJoint(joNeck3, "joNeck3", scene);
+	ConnectJoint(joLShoulder1, "joLShoulder1", scene);
+	ConnectJoint(joLShoulder2, "joLShoulder2", scene);
+	ConnectJoint(joLShoulder3, "joLShoulder3", scene);
+	ConnectJoint(joLElbow1, "joLElbow1", scene);
+	ConnectJoint(joLWrist1, "joLWrist1", scene);
+	ConnectJoint(joLWrist2, "joLWrist2", scene);
+	ConnectJoint(joRShoulder1, "joRShoulder1", scene);
+	ConnectJoint(joRShoulder2, "joRShoulder2", scene);
+	ConnectJoint(joRShoulder3, "joRShoulder3", scene);
+	ConnectJoint(joRElbow1, "joRElbow1", scene);
+	ConnectJoint(joRWrist1, "joRWrist1", scene);
+	ConnectJoint(joRWrist2, "joRWrist2", scene);
+	ConnectJoint(joLHip1, "joLHip1", scene);
+	ConnectJoint(joLHip2, "joLHip2", scene);
+	ConnectJoint(joLHip3, "joLHip3", scene);
+	ConnectJoint(joLKnee1, "joLKnee1", scene);
+	ConnectJoint(joLAnkle1, "joLAnkle1", scene);
 //	ConnectJoint(joLAnkle2, "joLAnkle2", scene);
-	ConnectJoint((PHJoint1D*&)joRHip1, "joRHip1", scene);
-	ConnectJoint((PHJoint1D*&)joRHip2, "joRHip2", scene);
-	ConnectJoint((PHJoint1D*&)joRHip3, "joRHip3", scene);
-	ConnectJoint((PHJoint1D*&)joRKnee1, "joRKnee1", scene);
-	ConnectJoint((PHJoint1D*&)joRAnkle1, "joRAnkle1", scene);
+	ConnectJoint(joRHip1, "joRHip1", scene);
+	ConnectJoint(joRHip2, "joRHip2", scene);
+	ConnectJoint(joRHip3, "joRHip3", scene);
+	ConnectJoint(joRKnee1, "joRKnee1", scene);
+	ConnectJoint(joRAnkle1, "joRAnkle1", scene);
 //	ConnectJoint(joRAnkle2, "joRAnkle2", scene);
-	ConnectJoint((PHJoint1D*&)joLShin, "joLShin", scene);
-	ConnectJoint((PHJoint1D*&)joRShin, "joRShin", scene);
+	ConnectJoint(joLShin, "joLShin", scene);
+	ConnectJoint(joRShin, "joRShin", scene);
 	return bLoaded;
 }
 
@@ -199,7 +221,7 @@ bool THuman::LoadJointAngle(float time, float dt){
 	for(unsigned i=0; i<joints.size(); ++i){
 		LoadOneAngle(angle, i, joints[i]);
 	}
-	const float SAFETYRATE = 0.1f;			//	安全率 小さいほど安定でやわらかく
+	const float SAFETYRATE = 0.2f;			//	安全率 小さいほど安定でやわらかく
 	const float SPRING = 0.2f*SAFETYRATE;		//	バネ
 	const float DAMPER = 0.6f*SAFETYRATE;		//	ダンパ
 	float mass = (float)soBody->GetMass();
@@ -215,19 +237,16 @@ bool THuman::LoadJointAngle(float time, float dt){
 	return true;
 }
 inline float GetChildMass(PHJoint1D* j){
-	exit(0);
-	/*	TODO JointがTreeでないので困る
 	if (strlen(j->solid[0]->solid->GetName()) != 0){
 		return j->solid[0]->solid->GetMass();
-	}else{
+	}else{	//	名前をもつ子ノードを探す
 		float rv = 0;
-		for(int i=0; i<j->NChildObject(); ++i){
-			PHJoint1D* c = DCAST(PHJoint1D, j->GetChildObject(i));
+		for(int i=0; i<j->children.size(); ++i){
+			PHJoint1D* c = j->children[i];
 			if (c) rv += GetChildMass(c);
 		}
 		return rv;
 	}
-	*/
 }
 void THuman::JointPIDMul(PHJoint1D* jo, float mul){
 	jo->spring *= mul;
@@ -297,47 +316,62 @@ void THuman::SetOneInertia(Spr::PHSolid* solid, float longAxis, float rate){
 	solid->SetInertia(solidInertia);
 }
 
+#define CHILD 0
+#define PARENT 1
 void THuman::SetScale(Spr::Vec2f head, Spr::Vec2f shoulder, Spr::Vec2f body, Spr::Vec2f hip,
 	float armLen, float forearmLen, float handLen, float thighLen, float shinLen,
 	Spr::Vec3f foot, Spr::Vec3f pos6, Spr::Vec3f pos7){
+	
+	Vec3f org[40][2];
+	for(int i=0; i<joints.size(); ++i){
+		org[i][0] = joints[i]->rj[0];
+		org[i][1] = joints[i]->rj[1];
+	}
 
 	springs[0].resize(13);
 	springs[1].resize(13);
+/*
+	solids[0]->SetDynamical(false);
+	Posed p = solids[0]->GetPose();
+	p.Pos().Y() += 2;
+	solids[0]->SetPose(p);
+*/
+
 	float neckOffset = shoulder.Y()*2/3;
-	joNeck3->rj[0].Y() = -shoulder.Y()/2-neckOffset;
-	joNeck3->rj[0].Z() = shoulder.Y()/2;
+	joNeck3->rj[CHILD].Y() = -shoulder.Y()/2-neckOffset;
+	joNeck3->rj[CHILD].Z() = shoulder.Y()/2;
 	springs[0][0] = TSpring(soHead, Vec3f(0, head.Y() -neckOffset, 0));
 	springs[1][0] = TSpring(soHead, Vec3f(0, head.Y() -neckOffset, 0));
 	springs[0][1] = TSpring(soHead, Vec3f(-head.X()/2, -neckOffset, 0));
 	springs[1][1] = TSpring(soHead, Vec3f( head.X()/2, -neckOffset, 0));	
-	joNeck1->rj[1].Y() = body.Y()/2 + shoulder.Y()/2;
-	joRShoulder1->rj[1].Y() = body.Y()/2;
-	joRShoulder1->rj[1].X() = shoulder.X()/2;
-	joLShoulder1->rj[1].Y() = body.Y()/2;
-	joLShoulder1->rj[1].X() = -shoulder.X()/2;
+	joNeck1->rj[PARENT].Y() = body.Y()/2 + shoulder.Y()/2;
+	joRShoulder1->rj[PARENT].Y() = body.Y()/2;
+	joRShoulder1->rj[PARENT].X() = shoulder.X()/2;
+	joLShoulder1->rj[PARENT].Y() = body.Y()/2;
+	joLShoulder1->rj[PARENT].X() = -shoulder.X()/2;
 	springs[0][2] = TSpring(soBody, Vec3f(-shoulder.X()/2, body.Y()/2, 0));
 	springs[1][2] = TSpring(soBody, Vec3f( shoulder.X()/2, body.Y()/2, 0));
-	joWaist3->rj[0].Y() = -body.Y()/2;
+	joWaist3->rj[CHILD].Y() = -body.Y()/2;
 	springs[0][3] = TSpring(soWaist, Vec3f(-body.X()/2, 0, 0));
 	springs[1][3] = TSpring(soWaist, Vec3f( body.X()/2, 0, 0));
-	joLHip1->rj[1].Y() = -hip.Y();
-	joLHip1->rj[1].X() = -hip.X()/3;
-	joRHip1->rj[1].Y() = -hip.Y();
-	joRHip1->rj[1].X() = hip.X()/3;
+	joLHip1->rj[PARENT].Y() = -hip.Y();
+	joLHip1->rj[PARENT].X() = -hip.X()/3;
+	joRHip1->rj[PARENT].Y() = -hip.Y();
+	joRHip1->rj[PARENT].X() = hip.X()/3;
 	springs[0][4] = TSpring(soWaist, Vec3f(-hip.X()/2, -hip.Y(),0));
 	springs[1][4] = TSpring(soWaist, Vec3f(+hip.X()/2, -hip.Y(),0));
 	//	腿の長さ
-	joRHip3->rj[0].Y() = thighLen/2;
-	joLHip3->rj[0].Y() = thighLen/2;
-	joRKnee1->rj[1].Y() = -thighLen/2;
-	joLKnee1->rj[1].Y() = -thighLen/2;
+	joRHip3->rj[CHILD].Y() = thighLen/2;
+	joLHip3->rj[CHILD].Y() = thighLen/2;
+	joRKnee1->rj[PARENT].Y() = -thighLen/2;
+	joLKnee1->rj[PARENT].Y() = -thighLen/2;
 	springs[0][5] = TSpring(soLULeg, Vec3f(-hip.X()/6,-thighLen/2,0));
 	springs[1][5] = TSpring(soRULeg, Vec3f(+hip.X()/6,-thighLen/2,0));
 	//	脛の長さ
-	joRKnee1->rj[0].Y() = shinLen/2;
-	joLKnee1->rj[0].Y() = shinLen/2;
-	joRAnkle1->rj[1].Y() = -shinLen/2;
-	joLAnkle1->rj[1].Y() = -shinLen/2;
+	joRKnee1->rj[CHILD].Y() = shinLen/2;
+	joLKnee1->rj[CHILD].Y() = shinLen/2;
+	joRAnkle1->rj[PARENT].Y() = -shinLen/2;
+	joLAnkle1->rj[PARENT].Y() = -shinLen/2;
 	//	8と9を結ぶ線を足の向きとする．
 	//	8と9の中点を原点，8の向きをZ+，右向きをX+として右足の6と7の位置を求める
 	Affinef af;
@@ -359,8 +393,8 @@ void THuman::SetScale(Spr::Vec2f head, Spr::Vec2f shoulder, Spr::Vec2f body, Spr
 	pos6 += footOffset;
 	pos7 += footOffset;
 	
-	joLAnkle1->rj[0] = Vec3f(-pos6.X()+foot.X()/2, pos6.Y(), pos6.Z());
-	joRAnkle1->rj[0] = Vec3f( pos6.X()-foot.X()/2, pos6.Y(), pos6.Z());
+	joLAnkle1->rj[CHILD] = Vec3f(-pos6.X()+foot.X()/2, pos6.Y(), pos6.Z());
+	joRAnkle1->rj[CHILD] = Vec3f( pos6.X()-foot.X()/2, pos6.Y(), pos6.Z());
 	springs[0][6] = TSpring(soLFoot, Vec3f(-pos6.X(), pos6.Y(), pos6.Z()));
 	springs[1][6] = TSpring(soRFoot, Vec3f( pos6.X(), pos6.Y(), pos6.Z()));
 	springs[0][7] = TSpring(soLFoot, Vec3f(-pos7.X(), pos7.Y(), pos7.Z()));
@@ -371,22 +405,22 @@ void THuman::SetScale(Spr::Vec2f head, Spr::Vec2f shoulder, Spr::Vec2f body, Spr
 	springs[1][9] = TSpring(soRFoot, Vec3f( footOffset.X(), footOffset.Y(),-foot.Z()/2));
 
 	//	上腕
-	joLShoulder3->rj[0].Y() = armLen/2;
-	joRShoulder3->rj[0].Y() = armLen/2;
-	joLElbow1->rj[1].Y() = -armLen/2;
-	joRElbow1->rj[1].Y() = -armLen/2;
+	joLShoulder3->rj[CHILD].Y() = armLen/2;
+	joRShoulder3->rj[CHILD].Y() = armLen/2;
+	joLElbow1->rj[PARENT].Y() = -armLen/2;
+	joRElbow1->rj[PARENT].Y() = -armLen/2;
 	springs[0][10] = TSpring(soLUArm, Vec3f(0,-armLen/2,0));
 	springs[1][10] = TSpring(soRUArm, Vec3f(0,-armLen/2,0));
 	//	前腕
-	joLElbow1->rj[0].Y() = forearmLen/2;
-	joRElbow1->rj[0].Y() = forearmLen/2;
-	joLWrist1->rj[1].Y() = -forearmLen/2;
-	joRWrist1->rj[1].Y() = -forearmLen/2;
+	joLElbow1->rj[CHILD].Y() = forearmLen/2;
+	joRElbow1->rj[CHILD].Y() = forearmLen/2;
+	joLWrist1->rj[PARENT].Y() = -forearmLen/2;
+	joRWrist1->rj[PARENT].Y() = -forearmLen/2;
 	springs[0][11] = TSpring(soLFArm, Vec3f(0,-forearmLen/2,0));
 	springs[1][11] = TSpring(soRFArm, Vec3f(0,-forearmLen/2,0));
 	//	手
-	joLWrist2->rj[0].Y() = handLen/2;
-	joRWrist2->rj[0].Y() = handLen/2;
+	joLWrist2->rj[CHILD].Y() = handLen/2;
+	joRWrist2->rj[CHILD].Y() = handLen/2;
 	springs[0][12] = TSpring(soLHand, Vec3f(0,-handLen/2,0));
 	springs[1][12] = TSpring(soRHand, Vec3f(0,-handLen/2,0));
 
@@ -411,4 +445,13 @@ void THuman::SetScale(Spr::Vec2f head, Spr::Vec2f shoulder, Spr::Vec2f body, Spr
 	SetOneInertia(soRLLeg, shinLen, 1.0f/2.0f);
 	SetOneInertia(soLFoot, foot.Z(), 1.0f/3.0f);
 	SetOneInertia(soRFoot, foot.Z(), 1.0f/3.0f);
+/*
+	for(int i=0; i<joints.size(); ++i){
+		DSTR << joints[i]->GetName() << std::endl;
+		DSTR << i << " " << org[i][0];
+		DSTR << org[i][1] << std::endl;
+		DSTR << i << " " << joints[i]->rj[0];
+		DSTR << joints[i]->rj[1] << std::endl;
+	}
+*/
 }
