@@ -189,7 +189,11 @@ public:
 		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &mat);	
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		fc->objects.Pop();
+		// TextureFilenameŽw’è‚ª‚ ‚Á‚½ê‡Aclass FINodeHandlerXTextureFilename ‚ÅPop‚³‚ê‚Ä‚¢‚éD
+		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
+		if (mat){
+			fc->objects.Pop();
+		}
 	}
 };
 
@@ -218,6 +222,11 @@ public:
 		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
 		if (mat){
 			mat->texname = d.filename;
+			fc->objects.Pop();
+			GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+			if (mesh){
+				mesh->material.back().texname = d.filename;
+			}
 		}else{
 			fc->ErrorMessage(NULL, "TextureFilename must be inside of Material node.");
 		}
