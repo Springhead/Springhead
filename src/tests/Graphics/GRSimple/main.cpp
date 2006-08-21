@@ -124,16 +124,16 @@ void display(){
 	font1.bItalic = true;
 	font1.face   = "ARIAL";
 	std::string str = "X";
-	render->DrawFont(Vec3f(10.0, 1.0, -1.0), str, font1);	
+	render->DrawFont(Vec3f(8.0, 1.0, -1.0), str, font1);	
 	font1.face = "‚l‚r –¾’©";
 	font1.color = 0xFFFF00;
 	str = "Y";
-	render->DrawFont(Vec3f(1.0, 10.0, 0.0), str, font1);		
+	render->DrawFont(Vec3f(1.0, 7.0, 0.0), str, font1);		
 	GRFont font2;
 	font2 = font1;
 	font2.color = 0x00FFFF;
 	str = "Z";
-	render->DrawFont(Vec3f(-2.0, 1.0, 10.0), str, font2);	
+	render->DrawFont(Vec3f(-1.0, 1.0, 9.0), str, font2);	
 
 	render->EndScene();
 }
