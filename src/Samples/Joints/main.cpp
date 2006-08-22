@@ -68,7 +68,6 @@ int sceneNo;			// シーン番号
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
 PHSolidDesc descBox;					//箱剛体のディスクリプタ
-//CDConvexMeshIf* meshBox;				//箱形状のインタフェース
 CDShapeIf* shapeBox;
 CDShapeIf* shapeSphere;
 
@@ -76,17 +75,6 @@ PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
 std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 
-/** 実験用変数 **/
-const double dt = 0.1;					//積分幅
-const int niter = 20;					//LCPはんぷくかいすう
-const double springOrigin = Rad(90.0);	//バネの原点
-const double Kexp = 200, Dexp = 10;		//explicitバネダンパの係数
-const double Kimp = 200, Dimp = 10;		//implicitバネダンパの係数
-const double Kimp2 = 0.01, Dimp2 = 0.01;
-double anglePendulum = Rad(60.0);				//振り子の初期角度
-double lengthPendulum = 10.0;							//振り子の長さ
-bool bExplicit = false;					//どっちでバネダンパするか
-/**/
 
 void CreateFloor(bool s=true){
 	CDBoxDesc desc;
@@ -111,34 +99,6 @@ void BuildScene0(){
 	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
 	soBox.back()->SetDynamical(false);
 
-	bd.boxsize = Vec3d(2.0, lengthPendulum, 2.0);
-	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(scene->CreateShape(bd));
-
-	PHHingeJointDesc jdesc;
-	double r = lengthPendulum/2;
-	jdesc.posePlug.Pos() = Vec3d( 0,  0,  0);
-	jdesc.poseSocket.Pos() = Vec3d(0, r, 0);
-	jntLink.push_back(scene->CreateJoint(soBox[0], soBox[1], jdesc));
-
-	Vec3d org = soBox[0]->GetFramePosition();
-	soBox[1]->SetFramePosition(org + Vec3d(r * sin(anglePendulum), -r * cos(anglePendulum), 0));
-	soBox[1]->SetOrientation(Quaterniond::Rot(anglePendulum, 'z'));
-
-	PHSpringDesc sdesc;
-	sdesc.posePlug.Pos() = Vec3d(0, 2.5, 0);
-	sdesc.poseSocket.Pos() = Vec3d(0, -r, 0);
-	sdesc.spring = Kimp2 * Vec3d(1,1,1);
-	sdesc.damper = Dimp2 * Vec3d(1,1,1);
-	jntLink.push_back(scene->CreateJoint(soFloor, soBox[1], sdesc));
-
-	if(!bExplicit){
-		PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
-		hinge->SetSpringOrigin(springOrigin);
-		hinge->SetSpring(Kimp);
-		hinge->SetDamper(Dimp);
-	}
-	scene->SetContactMode(PHSceneDesc::MODE_NONE);
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
@@ -243,8 +203,6 @@ void BuildScene4(){
 }
 
 void BuildScene5(){
-	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
-	scene->SetNumIteration(200);
 	CreateFloor(false);
 	
 	CDBoxDesc bd;
@@ -285,7 +243,8 @@ void BuildScene5(){
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
-	float K = 2000, D = 100;
+	double K = 2000, D = 100;
+	//double K = 100000, D = 10000;	
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K);
@@ -297,72 +256,9 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	K = 200, D = 10;
-//	K = 14, D = 3;
-/*
-	PHSpringDesc descSpring;
-	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
-	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
-	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
-	jntLink[5] = scene->CreateJoint(soBox[5], soBox[4], descSpring);
-*/
 	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
 	soBox[5]->SetDynamical(false);
 	
-	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
-	scene->SetGravity(Vec3f(0, -9.8, 0));	
-}
-
-double K6 = 100000, D6 = 10000;	
-void BuildScene6(){
-	// バネダンパつき3節リンクと、その先端をバネダンパで引っ張る
-	scene->SetNumIteration(200);
-	CreateFloor(false);
-	
-	CDBoxDesc bd;
-	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
-	shapeBox = phSdk->CreateShape(bd);
-	
-	soBox.resize(5);
-
-	soBox[0] = scene->CreateSolid(descBox);
-	soBox[0]->AddShape(shapeBox);
-
-	soBox[1] = scene->CreateSolid(descBox);
-	soBox[1]->AddShape(shapeBox);
-
-	soBox[2] = scene->CreateSolid(descBox);
-	soBox[2]->AddShape(shapeBox);
-
-	soBox[3] = scene->CreateSolid(descBox);
-	soBox[3]->AddShape(shapeBox);
-
-	soBox[4] = scene->CreateSolid(descBox);
-	soBox[4]->AddShape(shapeBox);
-
-	jntLink.resize(5);
-	PHHingeJointDesc descHinge;
-	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
-	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], descHinge);
-
-	descHinge.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
-	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
-	jntLink[1] = scene->CreateJoint(soBox[0], soBox[1], descHinge);
-	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
-	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
-	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
-
-	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K6);
-	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D6);
-	DCAST(PHHingeJointIf, jntLink[1])->SetSpring(K6);
-	DCAST(PHHingeJointIf, jntLink[1])->SetDamper(D6);
-	DCAST(PHHingeJointIf, jntLink[2])->SetSpring(K6);
-	DCAST(PHHingeJointIf, jntLink[2])->SetDamper(D6);
-	DCAST(PHHingeJointIf, jntLink[3])->SetSpring(K6);
-	DCAST(PHHingeJointIf, jntLink[3])->SetDamper(D6);
-	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K6);
-	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D6);
-
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
@@ -375,7 +271,6 @@ void BuildScene(){
 	case 3: BuildScene3(); break;
 	case 4: BuildScene4(); break;
 	case 5: BuildScene5(); break;
-	case 6: BuildScene6(); break;
 	}
 }
 
@@ -534,12 +429,7 @@ void OnKey5(char key){
 	case ',': 
 		simulationPeriod *= 2.0;
 		break;
-	}
-}
-void OnKey6(char key){
-	switch(key){
-	case ' ':{
-
+	/*case ' ':{
 		//	剛体追加
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
@@ -555,7 +445,7 @@ void OnKey6(char key){
 		DCAST(PHHingeJointIf, jntLink.back())->SetDamper(D6);
 
 		scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
-		}break;
+		}break;*/
 	case 'n':
 		origin += 0.01;
 		for(unsigned i=0; i<jntLink.size(); ++i){
@@ -571,6 +461,7 @@ void OnKey6(char key){
 		}
 		break;
 	}
+
 }
 
 void OnKey(char key){
@@ -581,19 +472,15 @@ void OnKey(char key){
 	case 3: OnKey3(key); break;
 	case 4: OnKey4(key); break;
 	case 5: OnKey5(key); break;
-	case 6: OnKey6(key); break;
 	}
 }
 
-void OnTimer0(){
-	//自前でバネダンパのトルクを計算する実験
-	if(bExplicit){
-		PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
-		double pos = hinge->GetPosition();
-		double vel = hinge->GetVelocity();
-		hinge->SetMotorTorque(-Kexp * (pos - springOrigin) - Dexp * vel);
-	}
-}
+void OnTimer0(){}
+void OnTimer1(){}
+void OnTimer2(){}
+void OnTimer3(){}
+void OnTimer4(){}
+
 void OnTimer5(){
 /*
 	PHSpringDesc descSpring;
@@ -619,12 +506,11 @@ void OnTimer5(){
 void OnTimer(){
 	switch(sceneNo){
 	case 0: OnTimer0(); break;
-	case 5: OnTimer5(); break;
-	/*case 1: OnTimer1(); break;
+	case 1: OnTimer1(); break;
 	case 2: OnTimer2(); break;
 	case 3: OnTimer3(); break;
 	case 4: OnTimer4(); break;
-		*/
+	case 5: OnTimer5(); break;
 	}
 }	
 
@@ -772,16 +658,17 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
+
 	// SDKの作成　
 	phSdk = CreatePHSdk();
 	grSdk = CreateGRSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = dt;
-	dscene.numIteration = niter;
+	dscene.timeStep = 0.1;
+	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 5;
+	sceneNo = 0;
 	BuildScene();
 
 	glutInit(&argc, argv);
@@ -804,7 +691,6 @@ int main(int argc, char* argv[]){
 	render->SetDevice(device);	// デバイスの設定
 
 	initialize();
-	//setLight();
 
 	glutMainLoop();
 
