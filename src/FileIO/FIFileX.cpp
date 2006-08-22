@@ -50,7 +50,7 @@ static void NodeStart(const char* b, const char* e){
 		fileContext->PushType(type);	//	‚±‚ê‚©‚çƒ[ƒh‚·‚éŒ^‚Æ‚µ‚ÄPush
 	}else{
 		tn.append(" not defined.");
-		fileContext->ErrorMessage(b, tn.c_str());
+		fileContext->ErrorMessage(NULL, b, tn.c_str());
 		fileContext->PushType(NULL);	//	Pop‚É”õ‚¦‚ÄCPush‚µ‚Ä‚¨‚­
 	}
 }
@@ -214,7 +214,7 @@ public:
 	int operator()(ScannerT const& scan, result_t& /*result*/) const {
 		if (!scan.at_end()){
 			std::string str = msg + std::string(" is expected");
-			fileContext->ErrorMessage(scan.first, str.c_str());
+			fileContext->ErrorMessage(NULL, scan.first, str.c_str());
 		}
 		return -1;
     }
@@ -226,22 +226,9 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 FIFileX::FIFileX(){
 	Init();
 }
-void FIFileX::Init(UTTypeDescDb* db, FINodeHandlers* h){
-	if (!UTTypeDescDb::theTypeDescDb){
-		assert(0);
-	}
-	if (!FINodeHandlers::theNodeHandlers) RegisterNodeHandlers();
-	if (h){
-		handlers = *h;
-	}else{
-		handlers = *FINodeHandlers::theNodeHandlers;
-	}
-	if (db){
-		typeDb = *db;
-	}else{
-		typeDb = *UTTypeDescDb::theTypeDescDb;
-		extern UTRef<UTTypeDescDb> typeDescDb;
-	}
+void FIFileX::Init(){
+	assert(UTTypeDescDb::theTypeDescDb);
+	typeDb = *UTTypeDescDb::theTypeDescDb;
 	typeDb.RegisterAlias("Vec3f", "Vector");
 	typeDb.RegisterAlias("Vec2f", "Coords2d");
 	typeDb.RegisterAlias("Affinef", "Matrix3x3");

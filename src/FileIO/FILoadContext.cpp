@@ -122,7 +122,7 @@ void FILoadContext::Tasks::Execute(FILoadContext* ctx){
 
 //---------------------------------------------------------------------------
 //	FILoadContext::LinkTask
-FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r):pos(p), object(o), ref(r){
+FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, FILoadContext::FileInfo* fi, const char* p, ObjectIf* o, std::string r):info(fi), pos(p), object(o), ref(r){
 	for(int i=objs.size()-1; i>=0; --i){
 		NameManagerIf* nm = DCAST(NameManagerIf, objs[i]);
 		if (nm){
@@ -143,13 +143,13 @@ void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
 			err.append("' to '");
 			err.append(object->GetIfInfo()->ClassName());
 			err.append("'.");
-			ctx->ErrorMessage(pos, err.c_str());
+			ctx->ErrorMessage(info, pos, err.c_str());
 		}
 	}else{
 		std::string err("Referenced object '");
 		err.append(ref);
 		err.append("' not found.");
-		ctx->ErrorMessage(pos, err.c_str());
+		ctx->ErrorMessage(info, pos, err.c_str());
 	}
 }
 
@@ -182,7 +182,7 @@ bool FILoadContext::IsGood(){
 	return fileInfo.Top()->IsGood();
 }
 void FILoadContext::AddLink(std::string ref, const char* pos){
-	links.push_back(DBG_NEW LinkTask(objects, pos, objects.back(), ref));
+	links.push_back(DBG_NEW LinkTask(objects, fileInfo.Top(), pos, objects.back(), ref));
 }
 void FILoadContext::Link(){
 	links.Execute(this);
@@ -193,17 +193,19 @@ void FILoadContext::PostTask(){
 	postTasks.clear();
 }
 
-void FILoadContext::ErrorMessage(const char* pos, const char* msg){
+void FILoadContext::ErrorMessage(FileInfo* info, const char* pos, const char* msg){
 	std::string m("error: ");
 	m.append(msg);
-	Message(pos, m.c_str());
+	Message(info, pos, m.c_str());
 }
-void FILoadContext::Message(const char* pos, const char* msg){
-	const char* ptr = fileInfo.Top()->start;
+void FILoadContext::Message(FileInfo* info, const char* pos, const char* msg){
 	int lines=0;
 	int returns=0;
+	if (!info) info = fileInfo.Top();
+	const char* ptr = info->start;
 	const char* line=ptr;
-	if (!pos) pos = fileInfo.Top()->parsingPos;
+
+	if (!pos) pos = info->parsingPos;
 	if (pos){
 		for(;ptr < pos; ++ptr){
 			if (*ptr == '\n'){
@@ -215,7 +217,7 @@ void FILoadContext::Message(const char* pos, const char* msg){
 				line = ptr+1;
 			}
 		}
-		for(;ptr < fileInfo.Top()->end; ++ptr){
+		for(;ptr < info->end; ++ptr){
 			if (*ptr == '\n' || *ptr == '\r'){
 				break;
 			}
@@ -223,7 +225,7 @@ void FILoadContext::Message(const char* pos, const char* msg){
 		lines = std::max(lines, returns);
 	}
 	std::ostream& os = *errorStream;
-	os << fileInfo.Top()->name << "(" << lines+1 << ") : ";
+	os << info->name << "(" << lines+1 << ") : ";
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
 }
@@ -250,14 +252,14 @@ void FILoadContext::PushCreateNode(const IfInfo* info, const void* data){
 					DSTR << "i Inherits b.\n";
 				}
 				err.append("'.");
-				ErrorMessage(NULL, err.c_str());
+				ErrorMessage(NULL, NULL, err.c_str());
 			}
 		}
 	}else{
 		UTString err("Can not create '");
 		err.append(info->ClassName());
 		err.append("'. Ancestor objects don't know how to make it.");
-		ErrorMessage(NULL, err.c_str());
+		ErrorMessage(NULL, NULL, err.c_str());
 	}
 	//	親オブジェクトに追加
 	if (objects.size() && objects.Top()){

@@ -7,7 +7,6 @@
  */
 #include <Foundation/WBPath.h>
 #include <FileIO/FINodeHandler.h>
-#include <FileIO/FIOldSpringheadNode.h>
 #include <FileIO/FIFileX.h>
 #include <FileIO/FISdk.h>
 #include <Graphics/GRFrame.h>
@@ -15,16 +14,19 @@
 #include <Graphics/GRRender.h>
 #include <Physics/PHSolid.h>
 #include <Physics/PHJoint.h>
+#include <Framework/FWOldSpringheadNodeHandler.h>
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Collision/CDConvexMesh.h>
+
+#include <Framework/FWOldSpringheadNode.h>
 
 namespace SprOldSpringhead{
 using namespace Spr;
 
 static FWScene* FindFWScene(FILoadContext* fc){
 	FWScene* fs = NULL;
-	for(int i=fc->objects.size()-1; i>=0; --i){
+	for(int i=(int)fc->objects.size()-1; i>=0; --i){
 		fs = DCAST(FWScene, fc->objects[i]);
 		if (fs) break;
 	}
@@ -33,7 +35,7 @@ static FWScene* FindFWScene(FILoadContext* fc){
 
 static PHScene* FindPHScene(FILoadContext* fc){
 	PHScene* ps = NULL;
-	for(int i=fc->objects.size()-1; i>=0; --i){
+	for(int i=(int)fc->objects.size()-1; i>=0; --i){
 		ps = DCAST(PHScene, fc->objects[i]);
 		if (ps) break;
 		FWScene* fs = DCAST(FWScene, fc->objects[i]);
@@ -44,15 +46,15 @@ static PHScene* FindPHScene(FILoadContext* fc){
 }
 
 
-class FINodeHandlerXHeader: public FINodeHandlerImp<Header>{
+class FWNodeHandlerXHeader: public FINodeHandlerImp<Header>{
 public:
-	FINodeHandlerXHeader():FINodeHandlerImp<Desc>("Header"){}
+	FWNodeHandlerXHeader():FINodeHandlerImp<Desc>("Header"){}
 	void Load(Desc& d, FILoadContext* fc){
 	}
 };
-class FINodeHandlerXFrame: public FINodeHandlerImp<Frame>{
+class FWNodeHandlerXFrame: public FINodeHandlerImp<Frame>{
 public:	
-	FINodeHandlerXFrame():FINodeHandlerImp<Desc>("Frame"){}
+	FWNodeHandlerXFrame():FINodeHandlerImp<Desc>("Frame"){}
 	void Load(Desc& d, FILoadContext* fc){
 		fc->PushCreateNode(GRFrameIf::GetIfInfoStatic(), &GRFrameDesc());
 	}
@@ -60,19 +62,19 @@ public:
 		fc->objects.Pop();
 	}
 };
-class FINodeHandlerXFrameTransformMatrix: public FINodeHandlerImp<FrameTransformMatrix>{
+class FWNodeHandlerXFrameTransformMatrix: public FINodeHandlerImp<FrameTransformMatrix>{
 public:	
-	FINodeHandlerXFrameTransformMatrix():FINodeHandlerImp<Desc>("FrameTransformMatrix"){}
+	FWNodeHandlerXFrameTransformMatrix():FINodeHandlerImp<Desc>("FrameTransformMatrix"){}
 	void Load(Desc& d, FILoadContext* fc){
 		GRFrame* fr = DCAST(GRFrame, fc->objects.Top());
 		if (fr){
 			fr->transform = d.matrix;
 		}else{
-			fc->ErrorMessage(NULL, "FrameTransformMatrix must be inside of Frame node.");
+			fc->ErrorMessage(NULL, NULL, "FrameTransformMatrix must be inside of Frame node.");
 		}
 	}
 };
-class FINodeHandlerXLight8: public FINodeHandlerImp<Light8>{
+class FWNodeHandlerXLight8: public FINodeHandlerImp<Light8>{
 public:
 	class Adapter: public FILoadContext::Task{
 	public:
@@ -88,7 +90,7 @@ public:
 		}
 		void Execute(FILoadContext* ctx){}
 	};
-	FINodeHandlerXLight8():FINodeHandlerImp<Desc>("Light8"){}
+	FWNodeHandlerXLight8():FINodeHandlerImp<Desc>("Light8"){}
 	void Load(Desc& l8, FILoadContext* fc){
 		GRLightDesc grld;
 		grld.ambient = l8.ambient;
@@ -122,9 +124,9 @@ public:
 		fc->objects.Pop();
 	}
 };
-class FINodeHandlerXMesh: public FINodeHandlerImp<Mesh>{
+class FWNodeHandlerXMesh: public FINodeHandlerImp<Mesh>{
 public:
-	FINodeHandlerXMesh():FINodeHandlerImp<Desc>("Mesh"){}
+	FWNodeHandlerXMesh():FINodeHandlerImp<Desc>("Mesh"){}
 	void Load(Desc& d, FILoadContext* fc){
 		fc->PushCreateNode(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc());	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
@@ -151,11 +153,11 @@ public:
 						mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[3] );
 					}
 				}else{
-					fc->ErrorMessage(NULL, "Number of faces for mesh = 3 or 4.");
+					fc->ErrorMessage(NULL, NULL, "Number of faces for mesh = 3 or 4.");
 				}
 			}
 		}else{
-			fc->ErrorMessage(NULL, "cannot create Mesh node.");
+			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
@@ -163,22 +165,22 @@ public:
 	}
 };
 
-class FINodeHandlerXMeshMaterialList: public FINodeHandlerImp<MeshMaterialList>{
+class FWNodeHandlerXMeshMaterialList: public FINodeHandlerImp<MeshMaterialList>{
 public:
-	FINodeHandlerXMeshMaterialList():FINodeHandlerImp<Desc>("MeshMaterialList"){}
+	FWNodeHandlerXMeshMaterialList():FINodeHandlerImp<Desc>("MeshMaterialList"){}
 	void Load(Desc& d, FILoadContext* fc){
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
 			mesh->materialList = d.faceIndexes;		// マテリアル番号のリスト
 		}else{
-			fc->ErrorMessage(NULL, "MeshMaterialList must be inside of Mesh node.");
+			fc->ErrorMessage(NULL, NULL, "MeshMaterialList must be inside of Mesh node.");
 		}
 	}
 };
 
-class FINodeHandlerXMaterial: public FINodeHandlerImp<Material>{
+class FWNodeHandlerXMaterial: public FINodeHandlerImp<Material>{
 public:
-	FINodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
+	FWNodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
 	// TextureFilenameをマテリアルと関連付けるため、Materialもオブジェクトスタックに Push .
 	void Load(Desc& d, FILoadContext* fc){
 		GRMaterialDesc mat;
@@ -189,7 +191,7 @@ public:
 		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &mat);	
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		// TextureFilename指定があった場合、class FINodeHandlerXTextureFilename でPopされている．
+		// TextureFilename指定があった場合、class FWNodeHandlerXTextureFilename でPopされている．
 		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
 		if (mat){
 			fc->objects.Pop();
@@ -197,9 +199,9 @@ public:
 	}
 };
 
-class FINodeHandlerXMeshNormals: public FINodeHandlerImp<MeshNormals>{
+class FWNodeHandlerXMeshNormals: public FINodeHandlerImp<MeshNormals>{
 public:
-	FINodeHandlerXMeshNormals():FINodeHandlerImp<Desc>("MeshNormals"){}
+	FWNodeHandlerXMeshNormals():FINodeHandlerImp<Desc>("MeshNormals"){}
 	void Load(Desc& d, FILoadContext* fc){
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
@@ -210,14 +212,14 @@ public:
 				}
 			}
 		}else{
-			fc->ErrorMessage(NULL, "MeshNormals must be inside of Mesh node.");
+			fc->ErrorMessage(NULL, NULL, "MeshNormals must be inside of Mesh node.");
 		}
 	}
 };
 
-class FINodeHandlerXTextureFilename: public FINodeHandlerImp<TextureFilename>{
+class FWNodeHandlerXTextureFilename: public FINodeHandlerImp<TextureFilename>{
 public:
-	FINodeHandlerXTextureFilename():FINodeHandlerImp<Desc>("TextureFilename"){}
+	FWNodeHandlerXTextureFilename():FINodeHandlerImp<Desc>("TextureFilename"){}
 	void Load(Desc& d, FILoadContext* fc){
 		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
 		if (mat){
@@ -228,25 +230,25 @@ public:
 				mesh->material.back().texname = d.filename;
 			}
 		}else{
-			fc->ErrorMessage(NULL, "TextureFilename must be inside of Material node.");
+			fc->ErrorMessage(NULL, NULL, "TextureFilename must be inside of Material node.");
 		}
 	}
 };
 
-class FINodeHandlerXMeshTextureCoords: public FINodeHandlerImp<MeshTextureCoords>{
+class FWNodeHandlerXMeshTextureCoords: public FINodeHandlerImp<MeshTextureCoords>{
 public:
-	FINodeHandlerXMeshTextureCoords():FINodeHandlerImp<Desc>("MeshTextureCoords"){}
+	FWNodeHandlerXMeshTextureCoords():FINodeHandlerImp<Desc>("MeshTextureCoords"){}
 	void Load(Desc& d, FILoadContext* fc){
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
 			mesh->texCoords = d.textureCoords;
 		}else{
-			fc->ErrorMessage(NULL, "MeshTextureCoords must be inside of Mesh node.");
+			fc->ErrorMessage(NULL, NULL, "MeshTextureCoords must be inside of Mesh node.");
 		}
 	}
 };
 
-class FINodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
+class FWNodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
 public:	
 	class Disabler: public FILoadContext::Task{
 	public:
@@ -292,17 +294,19 @@ public:
 				pose.FromAffine(fr->GetTransform());
 				solid->SetPose(pose);
 				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
+				phScene->SetContactMode(solid, PHSceneDesc::MODE_LCP);
 				return true;
 			}
 			if (DCAST(PHSolid, o)){	//	solidなら何もしない。デフォルトONなので。
-				//	本来は受け取ったObjectだけを接触ONにすべき
+				//	受け取ったObjectを接触ONにする。
+				phScene->SetContactMode(DCAST(PHSolid, o), PHSceneDesc::MODE_LCP);
 				return true;
 			}
 			return false;
 		}
 		void Execute(FILoadContext* fc){}
 	};
-	FINodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
+	FWNodeHandlerContactEngine():FINodeHandlerImp<Desc>("ContactEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
 		Disabler* dis = DBG_NEW Disabler;
@@ -319,9 +323,9 @@ public:
 	}
 };
 
-class FINodeHandlerSolid: public FINodeHandlerImp<Solid>{
+class FWNodeHandlerSolid: public FINodeHandlerImp<Solid>{
 public:
-	class Adapter: public FINodeHandlerContactEngine::Adapter{
+	class Adapter: public FWNodeHandlerContactEngine::Adapter{
 	public:
 		PHSolid* solid;
 		GRFrame* frame;
@@ -346,7 +350,7 @@ public:
 		}
 	};
 
-	FINodeHandlerSolid():FINodeHandlerImp<Desc>("Solid"){}
+	FWNodeHandlerSolid():FINodeHandlerImp<Desc>("Solid"){}
 	void Load(Desc& d, FILoadContext* fc){
 		fc->PushCreateNode(PHSolidIf::GetIfInfoStatic(), &PHSolidDesc());
 		PHSolid* solid = DCAST(PHSolid, fc->objects.Top());
@@ -372,9 +376,9 @@ public:
 
 
 
-class FINodeHandlerCamera: public FINodeHandlerImp<Camera>{
+class FWNodeHandlerCamera: public FINodeHandlerImp<Camera>{
 public:	
-	FINodeHandlerCamera():FINodeHandlerImp<Desc>("Camera"){}
+	FWNodeHandlerCamera():FINodeHandlerImp<Desc>("Camera"){}
 	void Load(Desc& d, FILoadContext* fc){
 		d.view.ExZ() *= -1;
 		d.view.EyZ() *= -1;
@@ -407,14 +411,14 @@ public:
 	}
 };
 
-class FINodeHandlerGravityEngine: public FINodeHandlerImp<GravityEngine>{
+class FWNodeHandlerGravityEngine: public FINodeHandlerImp<GravityEngine>{
 public:	
-	FINodeHandlerGravityEngine():FINodeHandlerImp<Desc>("GravityEngine"){}
+	FWNodeHandlerGravityEngine():FINodeHandlerImp<Desc>("GravityEngine"){}
 	int linkPos;
 	void Load(Desc& d, FILoadContext* fc){
 		PHScene* s = FindPHScene(fc);
 		if (s) s->SetGravity(d.gravity);
-		linkPos = fc->links.size();
+		linkPos = (int)fc->links.size();
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
 		//	GravityEngineの子オブジェクトはとりあえず無視。本当はGravityのOn/Offに使う。
@@ -423,9 +427,9 @@ public:
 };
 
 
-class FINodeHandlerScene: public FINodeHandlerImp<Scene>{
+class FWNodeHandlerScene: public FINodeHandlerImp<Scene>{
 public:	
-	FINodeHandlerScene():FINodeHandlerImp<Desc>("Scene"){}
+	FWNodeHandlerScene():FINodeHandlerImp<Desc>("Scene"){}
 	void Load(Desc& d, FILoadContext* fc){
 		//	Frameworkを作る
 		FWSceneDesc fwsd;
@@ -459,16 +463,16 @@ public:
 	}
 };
 
-class FINodeHandlerSolidContainer: public FINodeHandlerImp<SolidContainer>{
+class FWNodeHandlerSolidContainer: public FINodeHandlerImp<SolidContainer>{
 public:	
-	FINodeHandlerSolidContainer():FINodeHandlerImp<Desc>("SolidContainer"){}
+	FWNodeHandlerSolidContainer():FINodeHandlerImp<Desc>("SolidContainer"){}
 	void Load(Desc& d, FILoadContext* fc){
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
 	}
 };
 
-class FINodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
+class FWNodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
 public:	
 	class JointCreator: public FILoadContext::Task{
 	public:
@@ -507,7 +511,7 @@ public:
 		}
 	};
 
-	FINodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
+	FWNodeHandlerJointEngine():FINodeHandlerImp<Desc>("JointEngine"){}
 	void Load(Desc& d, FILoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->phScene = FindPHScene(fc);
@@ -520,10 +524,10 @@ public:
 	}
 };
 
-class FINodeHandlerJoint: public FINodeHandlerImp<Joint>{
+class FWNodeHandlerJoint: public FINodeHandlerImp<Joint>{
 public:	
-	typedef FINodeHandlerJointEngine::JointCreator JointCreator;
-	FINodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
+	typedef FWNodeHandlerJointEngine::JointCreator JointCreator;
+	FWNodeHandlerJoint():FINodeHandlerImp<Desc>("Joint"){}
 	void Load(Desc& d, FILoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->name = fc->datas.Top()->name;
@@ -549,9 +553,9 @@ public:
 	}
 };
 
-class FINodeHandlerImport: public FINodeHandlerImp<Import>{
+class FWNodeHandlerImport: public FINodeHandlerImp<Import>{
 public:	
-	FINodeHandlerImport():FINodeHandlerImp<Desc>("Import"){}
+	FWNodeHandlerImport():FINodeHandlerImp<Desc>("Import"){}
 	void Load(Desc& d, FILoadContext* fc){
 		UTString filename = d.file;
 
@@ -586,25 +590,27 @@ public:
 
 namespace Spr{
 using namespace SprOldSpringhead;
-void RegisterOldSpringheadNodeHandlers(){
-	REGISTER_NODE_HANDLER(FINodeHandlerXHeader);
-	REGISTER_NODE_HANDLER(FINodeHandlerXFrame);
-	REGISTER_NODE_HANDLER(FINodeHandlerXFrameTransformMatrix);
-	REGISTER_NODE_HANDLER(FINodeHandlerXLight8);
-	REGISTER_NODE_HANDLER(FINodeHandlerXMesh);
-	REGISTER_NODE_HANDLER(FINodeHandlerXMeshMaterialList);
-	REGISTER_NODE_HANDLER(FINodeHandlerXMaterial);
-	REGISTER_NODE_HANDLER(FINodeHandlerXMeshNormals);
-	REGISTER_NODE_HANDLER(FINodeHandlerXTextureFilename);
-	REGISTER_NODE_HANDLER(FINodeHandlerXMeshTextureCoords);
-	REGISTER_NODE_HANDLER(FINodeHandlerSolid);
-	REGISTER_NODE_HANDLER(FINodeHandlerScene);
-	REGISTER_NODE_HANDLER(FINodeHandlerCamera);
-	REGISTER_NODE_HANDLER(FINodeHandlerSolidContainer);
-	REGISTER_NODE_HANDLER(FINodeHandlerGravityEngine);
-	REGISTER_NODE_HANDLER(FINodeHandlerContactEngine);
-	REGISTER_NODE_HANDLER(FINodeHandlerJointEngine);
-	REGISTER_NODE_HANDLER(FINodeHandlerJoint);
-	REGISTER_NODE_HANDLER(FINodeHandlerImport);
+void RegisterOldSpringheadNode(FIFileIf* f){
+	FIFile* file = DCAST(FIFile, f);
+	FINodeHandlers* handlers = &file->handlers;
+	handlers->insert(DBG_NEW FWNodeHandlerXHeader);
+	handlers->insert(DBG_NEW FWNodeHandlerXFrame);
+	handlers->insert(DBG_NEW FWNodeHandlerXFrameTransformMatrix);
+	handlers->insert(DBG_NEW FWNodeHandlerXLight8);
+	handlers->insert(DBG_NEW FWNodeHandlerXMesh);
+	handlers->insert(DBG_NEW FWNodeHandlerXMeshMaterialList);
+	handlers->insert(DBG_NEW FWNodeHandlerXMaterial);
+	handlers->insert(DBG_NEW FWNodeHandlerXMeshNormals);
+	handlers->insert(DBG_NEW FWNodeHandlerXTextureFilename);
+	handlers->insert(DBG_NEW FWNodeHandlerXMeshTextureCoords);
+	handlers->insert(DBG_NEW FWNodeHandlerSolid);
+	handlers->insert(DBG_NEW FWNodeHandlerScene);
+	handlers->insert(DBG_NEW FWNodeHandlerCamera);
+	handlers->insert(DBG_NEW FWNodeHandlerSolidContainer);
+	handlers->insert(DBG_NEW FWNodeHandlerGravityEngine);
+	handlers->insert(DBG_NEW FWNodeHandlerContactEngine);
+	handlers->insert(DBG_NEW FWNodeHandlerJointEngine);
+	handlers->insert(DBG_NEW FWNodeHandlerJoint);
+	handlers->insert(DBG_NEW FWNodeHandlerImport);
 }
 }

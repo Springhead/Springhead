@@ -6,7 +6,7 @@ if "%1"=="EXECUTE" goto Execute
 set MAKEFILE=MakeTypeDescForOldSpringheadHandlerMAK.txt
 set OUT=TypeDescDumpImpForOldSpringheadHandler.h
 set HEADER=TypeDescDumpForOldSpringheadHandler.h
-set TARGET=FIOldSpringheadNode.h
+set TARGET=FWOldSpringheadNodeHandler.h
 
 rem makefile‚Ìì¬‚ÆMake‚ÌÀs
 set PATHORG=%PATH%;
@@ -21,9 +21,8 @@ make -f%MAKEFILE%
 set PATH=%PATHORG%
 set PATHORG=
 
-..\Foundation\MakeTypeDesc.bat FileIO
+..\Foundation\MakeTypeDesc.bat Framework
 goto end
-
 
 :Execute
 rem Make‚ªŒÄ‚Ño‚·D

@@ -1,5 +1,6 @@
 #include "FWAppGL.h"
 #include "FWScene.h"
+#include "FWOldSpringheadNode.h"
 #include <GL/glut.h>
 
 #ifdef USE_HDRSTOP
@@ -80,13 +81,17 @@ namespace Spr{
 		if(grScene) delete grScene->GetSdk();
 		grScene = NULL;
 
+		RegisterOldSpringheadNode(fiFileX);
+
 		if (! fiFileX->Load(objs, filename.data()) ) {
 			DSTR << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
 		}
 		DSTR << "Loaded " << (unsigned)(objs.size()) << "objects." << std::endl;
-
-		DSTR << "LoadFile Complete." << std::endl;	
+		DSTR << "LoadFile Complete." << std::endl;
+		for(int i=0; i<objs.size(); ++i){
+			objs[i]->Print(DSTR);
+		}
 	}
 
 	void FWAppGL::CreateScene(){
@@ -165,7 +170,15 @@ namespace Spr{
 			GRCameraIf* cam = NULL;
 			if (grScene) cam = grScene->GetCamera();
 			if (cam) cam->Render(grRender);
+			
+			GRLightDesc ld;
+			ld.diffuse = Vec4f(1,1,1,1) * 0.8;
+			ld.specular = Vec4f(1,1,1,1) * 0.8;
+			ld.ambient = Vec4f(1,1,1,1) * 0.4;
+			ld.position = Vec4f(1,1,1,0);
+			grRender->PushLight(ld);
 			grRender->DrawScene(phScene);
+			grRender->PopLight();
 			if (cam) cam->Rendered(grRender);
 		}else{
 			grScene->Render(grRender);

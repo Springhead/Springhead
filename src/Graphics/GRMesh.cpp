@@ -144,6 +144,7 @@ void GRMesh::ListManage(void *vtx){
 						unsigned int texid=0;
 						if (texture.size())	
 							texid = texture[materialList[elementIndex[first]]].id; 
+
 						int base = render->CreateIndexedList(material[materialList[elementIndex[first]]], texid,					
 																GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 						list.push_back(base);

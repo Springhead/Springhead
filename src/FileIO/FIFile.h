@@ -20,7 +20,7 @@ class FISdk;
 /**	ファイルローダー・セーバー
 */
 class FIFile:public InheritObject<FIFileIf, Object>{
-protected:
+public:
 	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
 	UTTypeDescDb typeDb;
 	///	ロード時に自動ロードとは別の処理が必要なノードのハンドラ

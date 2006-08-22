@@ -87,15 +87,16 @@ public:
 		std::vector<NameManagerIf*> nameManagers;
 		std::string ref;
 		ObjectIf* object;
+		UTRef<FileInfo> info;
 		const char* pos;
-		LinkTask(const ObjectIfs& objs, const char* p, ObjectIf* o, std::string r);
+		LinkTask(const ObjectIfs& objs, FileInfo* info, const char* p, ObjectIf* o, std::string r);
 		void Execute(FILoadContext* ctx);
 	};
 	
 	//--------------------------------------------------------------------------
 	//	変数
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
-	UTStack< UTRef<FileInfo> > fileInfo;	
+	UTStack< UTRef<FileInfo> > fileInfo;
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
 	ObjectIfs objects;
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
@@ -120,9 +121,9 @@ public:
 		errorStream=&DSTR;
 	}
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
-	void ErrorMessage(const char* pos, const char* msg);
+	void ErrorMessage(FileInfo* info, const char* pos, const char* msg);
 	///	メッセージの作成．posをファイル名と行番号に変換する．
-	void Message(const char* pos, const char* msg);
+	void Message(FileInfo* info, const char* pos, const char* msg);
 	///	ロードできる状態ならtrue
 	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)

@@ -5,13 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef FIOLDSPRINGHEADNODE_H
-#define FIOLDSPRINGHEADNODE_H
+#ifndef FWOLDSPRINGHEADNODEHANDLER_H
+#define FWOLDSPRINGHEADNODEHANDLER_H
 
 namespace SprOldSpringhead{;
 using namespace Spr;
 
-///	\defgroup gpFIOldSpringheadNode 旧(Springhead1)ファイルロード用互換ノード
+///	\defgroup gpFWOldSpringheadNode 旧(Springhead1)ファイルロード用互換ノード
 //@{
 /// Xファイル形式のバージョン情報
 struct Header{

@@ -14,10 +14,6 @@
 #include <string>
 
 namespace Spr{;
-
-#define REGISTER_NODE_HANDLER(x)	\
-	FINodeHandlers::theNodeHandlers->insert(DBG_NEW x);
-
 class FILoadContext;
 
 /**	自動ローダ・セーバで対応できないノードのロード・セーブをするクラス．
@@ -67,7 +63,6 @@ public:
 */
 class FINodeHandlers:public std::multiset< UTRef<FINodeHandler>, FINodeHandlerLess >, public UTRefCount{
 public:
-	static UTRef<FINodeHandlers> theNodeHandlers;	
 };
 
 void RegisterNodeHandlers();

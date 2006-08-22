@@ -1,4 +1,0 @@
-#	Do not edit. MakeTypeDesc.bat will update this file.
-all: TypeDescDumpImp.h
-TypeDescDumpImp.h:  ../../include/Framework/SprFWAppGL.h ../../include/Framework/SprFWObject.h ../../include/Framework/SprFWScene.h
-	..\Foundation\MakeTypeDesc.bat EXECUTE

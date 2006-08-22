@@ -14,8 +14,6 @@
 #include "FILoadContext.h"
 namespace Spr{;
 
-UTRef<FINodeHandlers> FINodeHandlers::theNodeHandlers;
-
 
 class FINodeHandlerFIInactiveSolids: public FINodeHandlerImp<FIInactiveSolids>{
 public:
@@ -47,11 +45,8 @@ public:
 };
 
 extern void RegisterOldSpringheadNodeHandlers();
-void RegisterNodeHandlers(){
-	if (!FINodeHandlers::theNodeHandlers)
-		FINodeHandlers::theNodeHandlers = DBG_NEW FINodeHandlers;
-	REGISTER_NODE_HANDLER(FINodeHandlerFIInactiveSolids);
-	RegisterOldSpringheadNodeHandlers();
+void RegisterNodeHandlers(FINodeHandlers* handler){
+	handler->insert(DBG_NEW FINodeHandlerFIInactiveSolids);
 }
 
 

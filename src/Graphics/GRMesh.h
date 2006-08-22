@@ -13,6 +13,7 @@
 
 namespace Spr{;
 
+class GRMaterial;
 /**	@class	GRMesh
     @brief	グラフィックスシーングラフでの座標系を表す． */
 class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{
@@ -28,7 +29,7 @@ public:
 	OBJECT_DEF(GRMesh);
 	ACCESS_DESC(GRMesh);
 
-	std::vector<GRMaterialDesc> material;		///< マテリアル
+	std::vector< GRMaterial > material;	///< マテリアル
 	std::vector<int> materialList;				///< マテリアルのインデックスリスト
 	std::vector<GRTextureDesc>  texture;		///< テクスチャ
 	/**
