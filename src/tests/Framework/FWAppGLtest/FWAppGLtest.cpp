@@ -31,8 +31,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	FWRegisterSdk();
 
 	FWAppGLIf* fwApp = CreateFWAppGL();
-	fwApp->SetDebugMode(FWAppGLDesc::DM_DEBUG);
-	fwApp->StartApp("vhOld.x", 2000);
+//	fwApp->SetDebugMode(FWAppGLDesc::DM_DEBUG);
+	fwApp->StartApp("block.x", 2000);
 
 	return 0;
 }
