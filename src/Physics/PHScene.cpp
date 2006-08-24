@@ -199,4 +199,9 @@ bool PHScene::DelChildObject(ObjectIf* o){
 	return rv;	
 }
 
+PHConstraintEngine* PHScene::GetConstraintEngine()
+{
+	return constraintEngine;
+}
+
 }

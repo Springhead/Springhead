@@ -60,6 +60,8 @@ public:
 	void UpdateSolids(double dt);	///< Œ‹‰Ê‚ðSolid‚É”½‰f‚·‚é
 	virtual void Clear();
 
+	PHConstraints GetContactPoints();
+
 protected:
 	PHConstraints	points;			///< ÚG“_‚Ì”z—ñ
 	PHConstraints	joints;			///< ŠÖß‚Ì”z—ñ

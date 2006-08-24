@@ -31,6 +31,8 @@ struct PHJointIf;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
+class PHConstraintEngine;
+
 struct PHPathIf;
 struct PHPathDesc;
 
@@ -191,6 +193,8 @@ public:
 		@return 重力加速度ベクトル
 	 */
 	virtual Vec3f GetGravity()=0;
+
+	virtual PHConstraintEngine* GetConstraintEngine()=0;
 
 };
 

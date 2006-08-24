@@ -325,6 +325,11 @@ void PHConstraintEngine::Dynamics(double dt, int ct){
 	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 }
 
+PHConstraints PHConstraintEngine::GetContactPoints()
+{
+	return points;
+}
+
 /*void PHConstraintEngine::Correction(double dt, int ct){
 	LARGE_INTEGER freq, val[2];
 	QueryPerformanceFrequency(&freq);

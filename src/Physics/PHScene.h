@@ -43,6 +43,7 @@ public:
 	///	デストラクタ
 	~PHScene(){}
 
+	PHConstraintEngine* GetConstraintEngine();
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
