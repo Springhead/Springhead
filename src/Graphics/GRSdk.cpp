@@ -56,6 +56,8 @@ void SPR_CDECL GRRegisterFactories(){
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRTexture));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRTexture));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRFrame));

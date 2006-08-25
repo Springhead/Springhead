@@ -44,7 +44,6 @@ class GRMaterial :public InheritGRVisual<GRMaterialIf, GRVisual>, public GRMater
 public:
 	OBJECT_DEF(GRMaterial);
 	ACCESS_DESC(GRMaterial);
-	GRTextureDesc texture;			
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
 		ambient = a;
@@ -67,6 +66,7 @@ public:
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
 	void Render(GRRenderIf* render);
+	virtual bool AddChildObject(ObjectIf* o);
 };
 
 /** @brief テクスチャ		*/

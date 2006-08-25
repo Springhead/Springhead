@@ -178,24 +178,57 @@ public:
 	}
 };
 
-class FWNodeHandlerXMaterial: public FINodeHandlerImp<Material>{
+class FINodeHandlerXMaterial: public FINodeHandlerImp<Material>{
 public:
-	FWNodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
-	// TextureFilenameをマテリアルと関連付けるため、Materialもオブジェクトスタックに Push .
-	void Load(Desc& d, FILoadContext* fc){
-		GRMaterialDesc mat;
-		mat.ambient = mat.diffuse = d.face;		// スタックに積んであるmatへ値を代入
-		mat.specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
-		mat.emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
-		mat.power = d.power;
-		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &mat);	
+	class MaterialCreator: public FILoadContext::Task{
+	public:
+		GRMaterialDesc material;
+		MaterialCreator(){}
+		bool AddChildObject(ObjectIf* o){
+			GRTexture* tex = DCAST(GRTexture, o);
+			if (tex){
+				material.texname = tex->filename;
+				return true;
+			}
+			return false;
+		}
+		void Execute(FILoadContext* fc){	
+			// ここでリンクされた TextureFilename も含め、データがそろうので、
+			// ここで本当は、親メッシュ->AddChildObject(material); としたい。
+			DSTR << "  OOOOOOOOOOOO Material::Execute()       "
+				<< material.ambient.x << " " << material.texname.c_str() << std::endl;
+		}
+	};
+
+	FINodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
+	void Load(Desc& d, FILoadContext* fc){		
+		MaterialCreator* mc = DBG_NEW MaterialCreator;
+		mc->material.ambient = d.face;
+		mc->material.diffuse = d.face;
+		mc->material.specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
+		mc->material.emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
+		mc->material.power = d.power;
+		fc->objects.Push(mc->GetIf());	
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		// TextureFilename指定があった場合、class FWNodeHandlerXTextureFilename でPopされている．
-		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
-		if (mat){
-			fc->objects.Pop();
-		}
+		GRMaterialDesc mat;
+		MaterialCreator* mc = DCAST(MaterialCreator, fc->objects.Top());
+		fc->links.push_back(mc);
+		fc->objects.Pop();		// MaterialCreator
+	}
+};
+
+class FINodeHandlerXTextureFilename: public FINodeHandlerImp<TextureFilename>{
+public:
+	typedef FINodeHandlerXMaterial::MaterialCreator MaterialCreator;
+	FINodeHandlerXTextureFilename():FINodeHandlerImp<Desc>("TextureFilename"){}
+	void Load(Desc& d, FILoadContext* fc){	
+		GRTextureDesc tex;
+		tex.filename = d.filename;
+		fc->PushCreateNode(GRTextureIf::GetIfInfoStatic(), &tex);	
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+		fc->objects.Pop();
 	}
 };
 
@@ -213,24 +246,6 @@ public:
 			}
 		}else{
 			fc->ErrorMessage(NULL, NULL, "MeshNormals must be inside of Mesh node.");
-		}
-	}
-};
-
-class FWNodeHandlerXTextureFilename: public FINodeHandlerImp<TextureFilename>{
-public:
-	FWNodeHandlerXTextureFilename():FINodeHandlerImp<Desc>("TextureFilename"){}
-	void Load(Desc& d, FILoadContext* fc){
-		GRMaterial* mat = DCAST(GRMaterial, fc->objects.Top());
-		if (mat){
-			mat->texname = d.filename;
-			fc->objects.Pop();
-			GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
-			if (mesh){
-				mesh->material.back().texname = d.filename;
-			}
-		}else{
-			fc->ErrorMessage(NULL, NULL, "TextureFilename must be inside of Material node.");
 		}
 	}
 };
