@@ -14,15 +14,18 @@ namespace Spr {;
 
 class FIFile;
 class SPR_DLL FISdk:public InheritObject<FISdkIf, Object>{
+protected:
+	static UTRef<UTTypeDescDb> typeDb;
 public:
+	static UTTypeDescDb* GetTypeDb();
+	std::vector< UTRef<FIFile> > files;
+
 	OBJECT_DEF(FISdk);
 	FISdk();
 	~FISdk();
 	FIFileXIf* CreateFileX();
 	void Clear();
-public:
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-	std::vector< UTRef<FIFile> > files;
 };
 
 }

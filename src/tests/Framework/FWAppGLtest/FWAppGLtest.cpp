@@ -4,28 +4,17 @@
 #include <tchar.h>
 #include <Springhead.h>
 #include <SprFramework.h>
+#include <Framework/FWAppGL.h>
 
 namespace Spr{
-	void SPR_CDECL PHRegisterTypeDescs();
-	void SPR_CDECL CDRegisterTypeDescs();
-	void SPR_CDECL GRRegisterTypeDescs();
-	void SPR_CDECL FIRegisterTypeDescs();
-
-	void SPR_CDECL FWRegisterTypeDescs();
-	void SPR_CDECL FWRegisterFactories();
 }
 
 using namespace Spr;
 
+UTRef<FWSdkIf> fwSdk;
 int _tmain(int argc, _TCHAR* argv[])
 {
-	PHRegisterTypeDescs();
-	CDRegisterTypeDescs();
-	GRRegisterTypeDescs();
-	FIRegisterTypeDescs();
-	FWRegisterTypeDescs();
-	FWRegisterFactories();
-
+	fwSdk = CreateFWSdk();
 	PHRegisterSdk();
 	GRRegisterSdk();
 	FWRegisterSdk();

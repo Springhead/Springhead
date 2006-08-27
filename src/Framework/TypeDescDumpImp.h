@@ -9,7 +9,7 @@
 	field = desc->AddField("DebugMode", "enum", "debugMode",  "");
 	field->AddEnumConst("DM_NONE");
 	field->AddEnumConst("DM_DEBUG");
-	field->offset = (char*)(&pFWAppGLDesc->debugMode) - (char*)pFWAppGLDesc;
+	field->offset = int((char*)(&pFWAppGLDesc->debugMode) - (char*)pFWAppGLDesc);
 	db->RegisterDesc(desc);
 	
 	FWObjectDesc* pFWObjectDesc = NULL;
@@ -26,4 +26,12 @@
 	desc->ifInfo = FWSceneIf::GetIfInfoStatic();
 	((IfInfo*)FWSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<FWSceneDesc>;
+	db->RegisterDesc(desc);
+	
+	FWSdkDesc* pFWSdkDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("FWSdkDesc");
+	desc->size = sizeof(FWSdkDesc);
+	desc->ifInfo = FWSdkIf::GetIfInfoStatic();
+	((IfInfo*)FWSdkIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<FWSdkDesc>;
 	db->RegisterDesc(desc);

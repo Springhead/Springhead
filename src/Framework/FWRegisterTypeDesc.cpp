@@ -19,7 +19,7 @@ namespace SprOldSpringhead{
 
 		UTRegisterTypeDescs();
 
-		UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+		UTTypeDescDb* db = FWSdk::GetOldSpringheadTypeDb();
 		#include "TypeDescDumpImpForOldSpringheadHandler.h"
 		db->Link();
 	}
@@ -35,20 +35,10 @@ namespace Spr{
 		bFirst=false;
 		//
 		UTRegisterTypeDescs();
-		UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+		UTTypeDescDb* db = FWSdk::GetTypeDb();
 		assert(db);
 		#include "TypeDescDumpImp.h"
 		db->Link();
 		SprOldSpringhead::RegisterTypeDescs();
     }
-
-	void SPR_CDECL FWRegisterFactories(){
-		static bool bFirst = true;
-		if (!bFirst) return;
-		bFirst=false;
-
-		FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWObject));
-		std::cout << "Framework Factory Registered." << std::endl;
-	}
-
 }

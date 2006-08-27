@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Foundation/Foundation.h>
+#include <Physics/PHSdk.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -23,7 +24,7 @@ void SPR_CDECL CDRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	UTTypeDescDb* db = PHSdk::GetTypeDb();
 	assert(db);
 	#include "TypeDescDumpImp.h"
 	db->Link();

@@ -1,6 +1,12 @@
 #include "FWAppGL.h"
 #include "FWScene.h"
+#include "FWSdk.h"
 #include "FWOldSpringheadNode.h"
+#include <FileIO/FIFileX.h>
+#include <FileIO/FISdk.h>
+#include <Physics/PHSdk.h>
+#include <Graphics/GRSdk.h>
+
 #include <GL/glut.h>
 
 #ifdef USE_HDRSTOP
@@ -81,6 +87,10 @@ namespace Spr{
 		if(grScene) delete grScene->GetSdk();
 		grScene = NULL;
 
+		fiFileX->RegisterType(PHSdk::GetTypeDb());
+		fiFileX->RegisterType(GRSdk::GetTypeDb());
+		fiFileX->RegisterType(FISdk::GetTypeDb());
+		fiFileX->RegisterType(FWSdk::GetTypeDb());
 		RegisterOldSpringheadNode(fiFileX);
 
 		if (! fiFileX->Load(objs, filename.data()) ) {
@@ -89,7 +99,7 @@ namespace Spr{
 		}
 		DSTR << "Loaded " << (unsigned)(objs.size()) << "objects." << std::endl;
 		DSTR << "LoadFile Complete." << std::endl;
-		for(int i=0; i<objs.size(); ++i){
+		for(unsigned i=0; i<objs.size(); ++i){
 			objs[i]->Print(DSTR);
 		}
 	}

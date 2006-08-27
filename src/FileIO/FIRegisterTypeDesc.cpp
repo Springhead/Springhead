@@ -7,6 +7,7 @@
  */
 #include <Foundation/Foundation.h>
 #ifdef USE_HDRSTOP
+#include <FileIO/FISdk.h>
 #pragma hdrstop
 #endif
 
@@ -26,7 +27,7 @@ void SPR_CDECL FIRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	UTTypeDescDb* db = FISdk::GetTypeDb();
 	#include "TypeDescDumpImp.h"
 	db->Link();
 }

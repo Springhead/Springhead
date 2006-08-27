@@ -61,6 +61,8 @@ void SPR_CDECL PHRegisterFactories(){
 	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
 }
+
+UTRef<UTTypeDescDb> PHSdk::typeDb;
 PHSdk::PHSdk(){
 	PHRegisterTypeDescs();
 	CDRegisterTypeDescs();
@@ -76,7 +78,10 @@ PHSdk::~PHSdk(){
 		}
 	}
 }
-
+UTTypeDescDb* PHSdk::GetTypeDb(){
+	if (!typeDb) typeDb = new UTTypeDescDb;
+	return typeDb;
+}
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	PHSceneIf* rv = DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
 	AddChildObject(rv); 

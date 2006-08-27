@@ -1,7 +1,7 @@
 #ifndef SPR_FWSCENEIF_H
 #define SPR_FWSCENEIF_H
 
-#include <Springhead.h>
+#include <Foundation/SprScene.h>
 
 namespace Spr{
 

@@ -320,23 +320,16 @@ protected:
 ///	型のデータベース
 class SPR_DLL UTTypeDescDb: public UTRefCount{
 public:
-	///
-	static UTRef<UTTypeDescDb> theTypeDescDb;
 	///	コンテナの型
 	typedef std::set< UTRef<UTTypeDesc>, UTContentsLess< UTRef<UTTypeDesc> > > Db;
-	struct ProtoDesc{
-		std::string fileType;
-		UTRef<UTTypeDesc> desc;
-	};
-	typedef std::vector<ProtoDesc> ProtoDescs;
 protected:
 	std::string prefix;			///<	名前のうちプレフィックスの部分
 	Db db;						///<	UTTypeDesc を入れておくコンテナ
-	static ProtoDescs protoDescs;
+	static UTRef<UTTypeDescDb> basicTypeDb;
 public:
 	///	
 	~UTTypeDescDb();
-	static const ProtoDescs& GetProtoDescs(){ return protoDescs; }
+	static UTTypeDescDb* GetBasicTypeDb();
 	/**	型情報をデータベースに登録．	*/
 	void RegisterDesc(UTTypeDesc* n){
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
@@ -364,6 +357,10 @@ public:
 	void Link();
 	///	DB内の型情報の表示
 	void Print(std::ostream& os) const ;
+	UTTypeDescDb& operator += (const UTTypeDescDb& b){
+		db.insert(b.db.begin(), b.db.end());
+		return *this;
+	}
 };
 
 /**	TypeDescのフィールドのイタレータ

@@ -191,5 +191,12 @@ template <class intf, class base>
 struct InheritScene:public InheritNameManager<intf, base>{
 };
 
+class SPR_DLL Sdk:public InheritNameManager<SdkIf, NameManager>{
+	OBJECT_DEF(Sdk);
+public:
+	Sdk();
+	virtual ~Sdk(){}
+};
+
 }
 #endif

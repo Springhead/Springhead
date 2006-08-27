@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Foundation/Foundation.h>
+#include <Graphics/GRSdk.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -24,7 +25,7 @@ void SPR_CDECL GRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	UTTypeDescDb* db = GRSdk::GetTypeDb();
 	#include "TypeDescDumpImp.h"
 	db->Link();
 }

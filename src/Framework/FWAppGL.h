@@ -5,6 +5,7 @@
 #include <Foundation/Object.h>
 
 namespace Spr{
+	FWAppGLIf* SPR_CDECL CreateFWAppGL();
 
 	class FWAppGL : public InheritObject<FWAppGLIf, Object>{
     public:

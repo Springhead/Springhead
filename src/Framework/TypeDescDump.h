@@ -2,3 +2,4 @@
 #include "../../include/Framework/SprFWAppGL.h" 
 #include "../../include/Framework/SprFWObject.h" 
 #include "../../include/Framework/SprFWScene.h" 
+#include "../../include/Framework/SprFWSdk.h" 

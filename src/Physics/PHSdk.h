@@ -7,7 +7,7 @@
  */
 #ifndef PHSDK_H
 #define PHSDK_H
-#include <Foundation/Scene.h>
+#include <Foundation/Foundation.h>
 #include <Physics/SprPHSdk.h>
 
 namespace Spr {;
@@ -25,6 +25,8 @@ public:
 
 class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, NameManager>{
 protected:
+	//	型情報DB
+	static UTRef<UTTypeDescDb> typeDb;
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
 	///	シーン
@@ -35,11 +37,12 @@ protected:
 	Shapes shapes;
 	///	他のオブジェクトたち
 	Objects objects;
-
 public:
+
 	OBJECT_DEF(PHSdk);
 	PHSdk();
 	~PHSdk();
+	static UTTypeDescDb* GetTypeDb();
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int NScene();

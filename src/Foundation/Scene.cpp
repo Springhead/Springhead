@@ -200,5 +200,9 @@ Scene::Scene(){
 void Scene::Clear(){
 	ClearName();
 }
+//----------------------------------------------------------------------------
+//	Sdk
+IF_OBJECT_IMP(Sdk, NameManager);
+Sdk::Sdk(){}
 
 }

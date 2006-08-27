@@ -12,11 +12,13 @@
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRMesh.h>
 #include <Graphics/GRRender.h>
+#include <Graphics/GRScene.h>
 #include <Physics/PHSolid.h>
 #include <Physics/PHJoint.h>
 #include <Framework/FWOldSpringheadNodeHandler.h>
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
+#include <Framework/FWSdk.h>
 #include <Collision/CDConvexMesh.h>
 
 #include <Framework/FWOldSpringheadNode.h>
@@ -43,6 +45,17 @@ static PHScene* FindPHScene(FILoadContext* fc){
 		if (ps) break;
 	}
 	return ps;
+}
+static GRScene* FindGRScene(FILoadContext* fc){
+	GRScene* gs = NULL;
+	for(int i=(int)fc->objects.size()-1; i>=0; --i){
+		gs = DCAST(GRScene, fc->objects[i]);
+		if (gs) break;
+		FWScene* fs = DCAST(FWScene, fc->objects[i]);
+		if (fs) gs = DCAST(GRScene, fs->GetGRScene());
+		if (gs) break;
+	}
+	return gs;
 }
 
 
@@ -76,7 +89,7 @@ public:
 };
 class FWNodeHandlerXLight8: public FINodeHandlerImp<Light8>{
 public:
-	class Adapter: public FILoadContext::Task{
+	class Adapter: public FILoadedTask{
 	public:
 		GRLight* light;
 		bool AddChildObject(ObjectIf* o){
@@ -178,59 +191,67 @@ public:
 	}
 };
 
-class FINodeHandlerXMaterial: public FINodeHandlerImp<Material>{
+class FWXTextureTask: public FILoadedTask{
 public:
-	class MaterialCreator: public FILoadContext::Task{
+	OBJECT_DEF_NOIF(FWXTextureTask);
+	UTString filename;
+	void Execute(FILoadContext* fc){}
+};
+OBJECT_IMP(FWXTextureTask, FILoadedTask);
+
+class FWNodeHandlerXTextureFilename: public FINodeHandlerImp<TextureFilename>{
+public:
+	FWNodeHandlerXTextureFilename():FINodeHandlerImp<Desc>("TextureFilename"){}
+	void Load(Desc& d, FILoadContext* fc){
+		UTRef<FWXTextureTask> tex = new FWXTextureTask;
+		tex->filename = d.filename;
+		if (fc->datas.Top()->name.length()){
+			GRScene* gs = FindGRScene(fc);
+			tex->SetNameManager(gs);
+			tex->SetName(fc->datas.Top()->name.c_str());
+		}
+		fc->objects.Top()->AddChildObject(tex->GetIf());
+		fc->links.push_back(tex);
+	}
+	void Loaded(Desc& d, FILoadContext* fc){
+	}
+};
+
+class FWNodeHandlerXMaterial: public FINodeHandlerImp<Material>{
+public:
+	class MaterialAdaptor: public FILoadedTask{
 	public:
-		GRMaterialDesc material;
-		MaterialCreator(){}
+		GRMaterial* material;
+		MaterialAdaptor(){}
 		bool AddChildObject(ObjectIf* o){
-			GRTexture* tex = DCAST(GRTexture, o);
-			if (tex){
-				material.texname = tex->filename;
+			FWXTextureTask* tex = DCAST(FWXTextureTask, o);
+			if (tex){	//	自分が作った materialにLink時にAddされるtexturefilenameを設定する。
+				material->texname = tex->filename;
 				return true;
 			}
 			return false;
 		}
-		void Execute(FILoadContext* fc){	
-			// ここでリンクされた TextureFilename も含め、データがそろうので、
-			// ここで本当は、親メッシュ->AddChildObject(material); としたい。
-			DSTR << "  OOOOOOOOOOOO Material::Execute()       "
-				<< material.ambient.x << " " << material.texname.c_str() << std::endl;
-		}
 	};
-
-	FINodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
-	void Load(Desc& d, FILoadContext* fc){		
-		MaterialCreator* mc = DBG_NEW MaterialCreator;
-		mc->material.ambient = d.face;
-		mc->material.diffuse = d.face;
-		mc->material.specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
-		mc->material.emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
-		mc->material.power = d.power;
-		fc->objects.Push(mc->GetIf());	
+	FWNodeHandlerXMaterial():FINodeHandlerImp<Desc>("Material"){}
+	void Load(Desc& d, FILoadContext* fc){
+		GRMaterialDesc desc;
+		desc.ambient = d.face;
+		desc.diffuse = d.face;
+		desc.specular = Vec4f(d.specular.x, d.specular.y, d.specular.z, 1.0);
+		desc.emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
+		desc.power = d.power;
+		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &desc);
+		MaterialAdaptor* mc = DBG_NEW MaterialAdaptor;
+		mc->material = DCAST(GRMaterial, fc->objects.Top());
+		fc->objects.Push(mc->GetIf());
 	}
 	void Loaded(Desc& d, FILoadContext* fc){
-		GRMaterialDesc mat;
-		MaterialCreator* mc = DCAST(MaterialCreator, fc->objects.Top());
+		MaterialAdaptor* mc = DCAST(MaterialAdaptor, fc->objects.Top());
 		fc->links.push_back(mc);
-		fc->objects.Pop();		// MaterialCreator
+		fc->objects.Pop();		// MaterialAdaptor
 	}
 };
 
-class FINodeHandlerXTextureFilename: public FINodeHandlerImp<TextureFilename>{
-public:
-	typedef FINodeHandlerXMaterial::MaterialCreator MaterialCreator;
-	FINodeHandlerXTextureFilename():FINodeHandlerImp<Desc>("TextureFilename"){}
-	void Load(Desc& d, FILoadContext* fc){	
-		GRTextureDesc tex;
-		tex.filename = d.filename;
-		fc->PushCreateNode(GRTextureIf::GetIfInfoStatic(), &tex);	
-	}
-	void Loaded(Desc& d, FILoadContext* fc){
-		fc->objects.Pop();
-	}
-};
 
 class FWNodeHandlerXMeshNormals: public FINodeHandlerImp<MeshNormals>{
 public:
@@ -265,7 +286,7 @@ public:
 
 class FWNodeHandlerContactEngine: public FINodeHandlerImp<ContactEngine>{
 public:	
-	class Disabler: public FILoadContext::Task{
+	class Disabler: public FILoadedTask{
 	public:
 		PHSceneIf* phScene;
 		Disabler():phScene(NULL){}
@@ -273,7 +294,7 @@ public:
 			phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 		}
 	};
-	class Adapter: public FILoadContext::Task{
+	class Adapter: public FILoadedTask{
 	public:
 		PHSceneIf* phScene;
 		Adapter():phScene(NULL){}
@@ -489,7 +510,7 @@ public:
 
 class FWNodeHandlerJointEngine: public FINodeHandlerImp<JointEngine>{
 public:	
-	class JointCreator: public FILoadContext::Task{
+	class JointCreator: public FILoadedTask{
 	public:
 		PHScene* phScene;
 		JointCreator* parent;
@@ -607,6 +628,8 @@ namespace Spr{
 using namespace SprOldSpringhead;
 void RegisterOldSpringheadNode(FIFileIf* f){
 	FIFile* file = DCAST(FIFile, f);
+	file->RegisterType(FWSdk::GetOldSpringheadTypeDb());
+
 	FINodeHandlers* handlers = &file->handlers;
 	handlers->insert(DBG_NEW FWNodeHandlerXHeader);
 	handlers->insert(DBG_NEW FWNodeHandlerXFrame);

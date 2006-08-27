@@ -23,6 +23,7 @@ namespace Spr{
 		ObjectIf* GetChildObject(size_t pos){
 			if (pos==0) return phSolid ? (ObjectIf*)phSolid : (ObjectIf*)grFrame;
 			if (pos==1) return phSolid ? (ObjectIf*)grFrame : NULL;
+			return NULL;
 		}
 		size_t NChildObject() const {
 			return phSolid ? (grFrame ? 2 : 1) : (grFrame ? 1 : 0);

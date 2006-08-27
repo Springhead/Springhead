@@ -12,6 +12,7 @@
 #ifndef GRSDK_H
 #define GRSDK_H
 #include <SprGraphics.h>
+#include <Foundation/Foundation.h>
 #include <Graphics/GRScene.h>
 
 
@@ -33,16 +34,18 @@ public:
 
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
-class SPR_DLL GRSdk:public InheritObject<GRSdkIf, NameManager>, public GRSdkDesc{
+class SPR_DLL GRSdk:public InheritObject<GRSdkIf, Sdk>, public GRSdkDesc{
 protected:
 	typedef std::vector< UTRef<Object> > Objects;
 	typedef std::vector< UTRef<GRScene> > GRScenes;
 	Objects objects;
 	GRScenes scenes;
+	static UTRef<UTTypeDescDb> typeDb;
 public:
 	OBJECT_DEF(GRSdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
 	~GRSdk();
+	static UTTypeDescDb* GetTypeDb();
 	virtual void Print(std::ostream& os) const {}
 	virtual GRDebugRenderIf* CreateDebugRender();
 	virtual GRDeviceGLIf* CreateDeviceGL(int window);

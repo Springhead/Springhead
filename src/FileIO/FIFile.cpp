@@ -19,6 +19,11 @@ IF_OBJECT_IMP_ABST(FIFile, Object);
 //#define PDEBUG_EVAL(x)	x
 #define PDEBUG_EVAL(x)
 
+void FIFile::RegisterType(UTTypeDescDb* db){
+	typeDb += *db;
+	typeDb.Link();
+}
+
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
 	FILoadContext fc;

@@ -47,8 +47,10 @@ public:
 	void LoadLeaveBlock(FILoadContext* fc);
 	///	ƒ[ƒh‚ÌÀ‘•
 	virtual void LoadImp(FILoadContext* fc)=0;
-
+	///	LoadContext‚Ìİ’è
 	virtual void SetLoaderContext(FILoadContext* fc){}
+	///	ƒm[ƒh‚ÌŒ^î•ñ‚Ì“o˜^
+	virtual void RegisterType(UTTypeDescDb* db);
 
 protected:
 	
@@ -105,6 +107,7 @@ template <class intf, class base>
 struct InheritFIFile:public InheritObject<intf, base>{
 	virtual bool Load(ObjectIfs& objs, const char* fn){ return base::Load(objs, fn); }
 	virtual bool Save(const ObjectIfs& objs, const char* fn){ return base::Save(objs, fn); }
+	virtual void RegisterType(UTTypeDescDb* db){ return base::RegisterType(db); }
 };
 
 

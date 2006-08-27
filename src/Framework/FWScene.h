@@ -2,6 +2,7 @@
 #define FWSCENE_H
 
 #include <Framework/SprFWScene.h>
+#include <Framework/SprFWObject.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
 
@@ -16,7 +17,8 @@ namespace Spr{
 			return CreateFWScene();
 		}
 	};
-
+	
+	
 	class FWScene : public InheritScene<FWSceneIf, Scene>, public FWSceneDesc {
     public:
 		OBJECT_DEF(FWScene);

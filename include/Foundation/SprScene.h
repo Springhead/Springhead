@@ -33,6 +33,10 @@ struct SceneIf: public NameManagerIf{
 	IF_DEF(Scene);
 };
 
+struct SdkIf: public NameManagerIf{
+	IF_DEF(Sdk);
+};
+
 }
 
 #endif

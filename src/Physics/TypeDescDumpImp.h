@@ -14,7 +14,7 @@
 	field->AddEnumConst("PATHJOINT");
 	field->AddEnumConst("SPRING");
 	field->AddEnumConst("SPRING");
-	field->offset = (char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc;
+	field->offset = int((char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "bool", "bEnabled", "");
 	field->offset = (char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc;
 	field = desc->AddField("", "Posed", "posePlug", "");

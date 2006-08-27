@@ -72,6 +72,7 @@ void SPR_CDECL GRRegisterSdk(){
 //----------------------------------------------------------------------------
 //	GRSdk
 IF_OBJECT_IMP(GRSdk, NameManager);
+UTRef<UTTypeDescDb> GRSdk::typeDb;
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 	GRRegisterTypeDescs();
 	GRRegisterFactories();
@@ -85,6 +86,10 @@ GRSdk::~GRSdk(){
 			break;
 		}
 	}
+}
+UTTypeDescDb* GRSdk::GetTypeDb(){
+	if (!typeDb) typeDb = new UTTypeDescDb;
+	return typeDb;
 }
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	GRDebugRender* rv = DBG_NEW GRDebugRender;

@@ -13,6 +13,7 @@
 //@{
 namespace Spr{;
 
+class UTTypeDescDb;
 ///	ファイルローダ・セーバ
 struct FIFileIf: public ObjectIf{
 	IF_DEF(FIFile);
@@ -20,6 +21,8 @@ struct FIFileIf: public ObjectIf{
 	virtual bool Load(ObjectIfs& objs, const char* fn)=0;
 	///	セーブ
 	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
+	///	ノード型の登録
+	virtual void RegisterType(UTTypeDescDb* db)=0;
 };
 
 ///	DirectXファイルのファイルローダとセーバ

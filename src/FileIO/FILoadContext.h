@@ -32,7 +32,14 @@ public:
 	FINodeData(UTTypeDesc* t=NULL, void* d=NULL);
 	~FINodeData();
 };
-
+class FILoadContext;
+///	タスククラス．ロード後にまとめて仕事をさせるためのもの．
+class FILoadedTask:public NamedObject{
+public:
+	OBJECT_DEF_NOIF(FILoadedTask);
+	virtual ~FILoadedTask(){}
+	virtual void Execute(FILoadContext* ctx){};
+};
 class FINodeHandlers;
 class FIFile;
 /**	ファイルロード時に使用するコンテキスト
@@ -70,19 +77,13 @@ public:
 		///	ロードできる状態ならtrue
 		bool IsGood();
 	};
-	///	タスククラス．ロード後にまとめて仕事をさせるためのもの．
-	class Task:public Object{
-	public:
-		virtual ~Task(){}
-		virtual void Execute(FILoadContext* ctx)=0;	
-	};
 	///	タスクリスト
-	class Tasks:public std::vector< UTRef<Task> >{
+	class Tasks:public std::vector< UTRef<FILoadedTask> >{
 	public:
 		void Execute(FILoadContext* ctx);
 	};
 	///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
-	class LinkTask: public Task{
+	class LinkTask: public FILoadedTask{
 	public:
 		std::vector<NameManagerIf*> nameManagers;
 		std::string ref;

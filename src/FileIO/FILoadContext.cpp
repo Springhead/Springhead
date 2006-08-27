@@ -90,6 +90,7 @@ bool FILoadContext::FileInfo::Map(std::string fn){
 #endif
 
 }
+OBJECT_IMP(FILoadedTask, NamedObject);
 // ファイル アンマッピング
 void FILoadContext::FileInfo::Unmap(){
 #ifdef _WIN32

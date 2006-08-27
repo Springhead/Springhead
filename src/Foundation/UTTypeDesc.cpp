@@ -188,12 +188,13 @@ void UTTypeDesc::Print(std::ostream& os) const{
 
 //----------------------------------------------------------------------------
 //	UTTypeDescDb
-UTRef<UTTypeDescDb> UTTypeDescDb::theTypeDescDb;
-UTTypeDescDb::ProtoDescs UTTypeDescDb::protoDescs;
-
+UTRef<UTTypeDescDb> UTTypeDescDb::basicTypeDb;
+UTTypeDescDb* UTTypeDescDb::GetBasicTypeDb(){
+	if (!basicTypeDb) basicTypeDb = DBG_NEW UTTypeDescDb;
+	return basicTypeDb;
+}
 UTTypeDescDb::~UTTypeDescDb(){
 	db.clear();
-	protoDescs.clear();
 }
 UTTypeDesc* UTTypeDescDb::Find(UTString tn){
 	UTRef<UTTypeDesc> key = new UTTypeDesc;
@@ -231,12 +232,6 @@ void UTTypeDescDb::Print(std::ostream& os) const{
 		os << std::endl;
 	}
 }
-void UTTypeDescDb::RegisterProto(UTTypeDesc* n){
-	protoDescs.push_back(ProtoDesc());
-	protoDescs.back().fileType = prefix;
-	protoDescs.back().desc = n;
-}
-
 
 //---------------------------------------------------------------------------
 //	UTTypeDescFieldIt
@@ -275,6 +270,11 @@ bool UTTypeDescFieldIt::NextField(){
 	//	配列カウントを初期化
 	arrayPos = -1;
 	//	フィールドの型を設定
+	if (!field->type){
+		DSTR << type->GetTypeName() << " has NULL field type" << std::endl;
+		type->Print(DSTR);
+		assert(0);
+	}
 	if(		field->type->GetTypeName().compare("BYTE")==0
 		||	field->type->GetTypeName().compare("WORD")==0
 		||	field->type->GetTypeName().compare("DWORD")==0

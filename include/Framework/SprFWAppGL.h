@@ -24,8 +24,6 @@ namespace Spr{
 		virtual FWAppGLDesc::DebugMode GetDebugMode()=0;
 		virtual void SetDebugMode(FWAppGLDesc::DebugMode m)=0;
 	};
-
-	FWAppGLIf* SPR_CDECL CreateFWAppGL();
 }
 
 #endif

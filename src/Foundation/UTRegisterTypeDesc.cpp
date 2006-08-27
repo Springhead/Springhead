@@ -24,8 +24,7 @@ void SPR_CDECL UTRegisterTypeDescs(){
 	if (!bFirst) return;
 	bFirst = false;
 
-	if(!UTTypeDescDb::theTypeDescDb) UTTypeDescDb::theTypeDescDb = new UTTypeDescDb;
-	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	UTTypeDescDb* db = UTTypeDescDb::GetBasicTypeDb();
 	typedef unsigned char BYTE;
 	typedef unsigned short WORD;
 	typedef unsigned int DWORD;

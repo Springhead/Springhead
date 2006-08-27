@@ -51,6 +51,7 @@ FISdkIf* SPR_CDECL CreateFISdk(){
 //	FISdk
 IF_OBJECT_IMP(FISdk, NameManager);
 
+UTRef<UTTypeDescDb> FISdk::typeDb;
 
 FISdk::FISdk(){
 	FIRegisterTypeDescs();
@@ -65,6 +66,11 @@ FISdk::~FISdk(){
 		}
 	}
 }
+UTTypeDescDb* FISdk::GetTypeDb(){
+	if (!typeDb) typeDb = DBG_NEW UTTypeDescDb;
+	return typeDb;
+}
+
 void FISdk::Clear(){
 	files.clear();
 }

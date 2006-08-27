@@ -17,7 +17,7 @@ namespace Spr{;
 
 class FINodeHandlerFIInactiveSolids: public FINodeHandlerImp<FIInactiveSolids>{
 public:
-	struct Task:public FILoadContext::Task{
+	struct Task:public FILoadedTask{
 		FIInactiveSolids desc;
 		PHSceneIf* scene;
 		Task(const FIInactiveSolids& d, PHSceneIf* s):desc(d), scene(s){}
