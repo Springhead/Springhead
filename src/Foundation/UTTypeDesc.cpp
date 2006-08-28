@@ -188,10 +188,13 @@ void UTTypeDesc::Print(std::ostream& os) const{
 
 //----------------------------------------------------------------------------
 //	UTTypeDescDb
-UTRef<UTTypeDescDb> UTTypeDescDb::basicTypeDb;
-UTTypeDescDb* UTTypeDescDb::GetBasicTypeDb(){
-	if (!basicTypeDb) basicTypeDb = DBG_NEW UTTypeDescDb;
-	return basicTypeDb;
+UTTypeDescDb::Dbs UTTypeDescDb::dbs;
+UTTypeDescDb* UTTypeDescDb::GetDb(std::string gp){
+	static UTRef<UTTypeDescDb> key;
+	key = DBG_NEW UTTypeDescDb(gp);
+	Dbs::iterator it = dbs.find(key);
+	if (it == dbs.end()) it = dbs.insert(DBG_NEW UTTypeDescDb(gp)).first;
+	return *it;
 }
 UTTypeDescDb::~UTTypeDescDb(){
 	db.clear();

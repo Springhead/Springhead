@@ -227,7 +227,7 @@ FIFileX::FIFileX(){
 	Init();
 }
 void FIFileX::Init(){
-	typeDb += *UTTypeDescDb::GetBasicTypeDb();
+	typeDb += *UTTypeDescDb::GetDb("Foundation");
 	typeDb.RegisterAlias("Vec3f", "Vector");
 	typeDb.RegisterAlias("Vec2f", "Coords2d");
 	typeDb.RegisterAlias("Affinef", "Matrix3x3");

@@ -323,13 +323,16 @@ public:
 	///	コンテナの型
 	typedef std::set< UTRef<UTTypeDesc>, UTContentsLess< UTRef<UTTypeDesc> > > Db;
 protected:
+	std::string group;			///<	グループ名
 	std::string prefix;			///<	名前のうちプレフィックスの部分
 	Db db;						///<	UTTypeDesc を入れておくコンテナ
-	static UTRef<UTTypeDescDb> basicTypeDb;
+	typedef std::set< UTRef<UTTypeDescDb> > Dbs;
+	static Dbs dbs;
 public:
+	UTTypeDescDb(UTString gp=""):group(gp){}
 	///	
 	~UTTypeDescDb();
-	static UTTypeDescDb* GetBasicTypeDb();
+	static UTTypeDescDb* GetDb(std::string gp);
 	/**	型情報をデータベースに登録．	*/
 	void RegisterDesc(UTTypeDesc* n){
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
@@ -361,7 +364,13 @@ public:
 		db.insert(b.db.begin(), b.db.end());
 		return *this;
 	}
+	UTString GetGroup() const {
+		return group;
+	}
 };
+inline bool operator < (const UTTypeDescDb& d1, const UTTypeDescDb& d2){
+	return d1.GetGroup() < d2.GetGroup();
+}
 
 /**	TypeDescのフィールドのイタレータ
 	バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，
