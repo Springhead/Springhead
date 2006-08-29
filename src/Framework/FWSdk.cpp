@@ -7,6 +7,7 @@
  */
 #include "Framework.h"
 #include "Framework/FWSdk.h"
+#include "Framework/FWOldSpringheadNode.h"
 #include "Physics/PHSdk.h"
 #include "Physics/PHScene.h"
 #include "Graphics/GRSdk.h"
@@ -24,6 +25,7 @@ void SPR_CDECL FWSdkIf::Register(){
 	if (!bFirst) return;
 	bFirst=false;
 	FWRegisterTypeDescs();
+	FWRegisterOldSpringheadNode();
 
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWObject));

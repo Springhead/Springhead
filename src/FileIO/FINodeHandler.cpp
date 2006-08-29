@@ -14,6 +14,12 @@
 #include "FILoadContext.h"
 namespace Spr{;
 
+FINodeHandlers* FINodeHandlerDb::GetHandlers(const char* gp){
+	UTRef<FINodeHandlers> key = DBG_NEW FINodeHandlers;
+	key->group = gp;
+	std::pair<iterator, bool> r = insert(key);
+	return *r.first;
+}
 
 class FINodeHandlerFIInactiveSolids: public FINodeHandlerImp<FIInactiveSolids>{
 public:
@@ -44,7 +50,6 @@ public:
 	}
 };
 
-extern void RegisterOldSpringheadNodeHandlers();
 void RegisterNodeHandlers(FINodeHandlers* handler){
 	handler->insert(DBG_NEW FINodeHandlerFIInactiveSolids);
 }

@@ -332,7 +332,7 @@ public:
 	UTTypeDescDb(UTString gp=""):group(gp){}
 	///	
 	~UTTypeDescDb();
-	static UTTypeDescDb* GetDb(std::string gp);
+	static UTTypeDescDb* SPR_CDECL GetDb(std::string gp);
 	/**	型情報をデータベースに登録．	*/
 	void RegisterDesc(UTTypeDesc* n){
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
@@ -360,7 +360,7 @@ public:
 	void Link();
 	///	DB内の型情報の表示
 	void Print(std::ostream& os) const;
-	static void PrintDbs(std::ostream& os);
+	static void SPR_CDECL PrintDbs(std::ostream& os);
 	UTTypeDescDb& operator += (const UTTypeDescDb& b){
 		db.insert(b.db.begin(), b.db.end());
 		Link();

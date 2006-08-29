@@ -63,6 +63,19 @@ public:
 */
 class FINodeHandlers:public std::multiset< UTRef<FINodeHandler>, FINodeHandlerLess >, public UTRefCount{
 public:
+	UTString group;
+	FINodeHandlers& operator += (const FINodeHandlers& b){
+		insert(b.begin(), b.end());
+		return *this;
+	}
+};
+inline bool operator < (const FINodeHandlers& a, const FINodeHandlers& b){
+	return a.group < b.group;
+}
+
+class FINodeHandlerDb: public std::set< UTRef<FINodeHandlers>, UTContentsLess< UTRef<FINodeHandlers> > >, public UTRefCount{
+public:
+	FINodeHandlers* GetHandlers(const char* gp);
 };
 
 void RegisterNodeHandlers();

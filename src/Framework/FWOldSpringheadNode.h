@@ -9,6 +9,6 @@
 #define FWOLDSPRINGHEADNODE_H
 
 namespace Spr{;
-void RegisterOldSpringheadNode(FIFileIf* fi);
+void SPR_CDECL FWRegisterOldSpringheadNode();
 }
 #endif

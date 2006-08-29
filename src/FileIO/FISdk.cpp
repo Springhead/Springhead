@@ -24,19 +24,19 @@ FISdkIf* SPR_CDECL FISdkIf::CreateSdk(){
 //	FISdk
 IF_OBJECT_IMP(FISdk, NameManager);
 
-UTRef<UTTypeDescDb> FISdk::typeDb;
-
 void SPR_CDECL FIRegisterTypeDescs();
+
+UTRef<FINodeHandlerDb> FISdk::handlerDb;
+FINodeHandlers* SPR_CDECL FISdk::GetHandlers(const char* gp){
+	if (!handlerDb) handlerDb = DBG_NEW FINodeHandlerDb;
+	return handlerDb->GetHandlers(gp);
+}
 
 FISdk::FISdk(){
 	FIRegisterTypeDescs();
 }
 
 FISdk::~FISdk(){
-}
-UTTypeDescDb* FISdk::GetTypeDb(){
-	if (!typeDb) typeDb = DBG_NEW UTTypeDescDb;
-	return typeDb;
 }
 
 void FISdk::Clear(){

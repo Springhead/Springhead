@@ -226,10 +226,9 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 FIFileX::FIFileX(){
 	Init();
 }
-void RegisterOldSpringheadNode(FIFileIf* f);
 void FIFileX::Init(){
 	handlers.clear();
-	RegisterOldSpringheadNode(DCAST(FIFileIf, GetIf()));
+	handlers += *FISdk::GetHandlers("OldSpringhead");
 	typeDb += *UTTypeDescDb::GetDb("Foundation");
 	typeDb += *UTTypeDescDb::GetDb("Physics");
 	typeDb += *UTTypeDescDb::GetDb("Graphics");

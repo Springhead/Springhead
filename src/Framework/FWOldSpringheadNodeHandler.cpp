@@ -627,9 +627,8 @@ public:
 
 namespace Spr{
 using namespace SprOldSpringhead;
-void RegisterOldSpringheadNode(FIFileIf* f){
-	FIFile* file = DCAST(FIFile, f);
-	FINodeHandlers* handlers = &file->handlers;
+void SPR_CDECL FWRegisterOldSpringheadNode(){
+	FINodeHandlers* handlers = FISdk::GetHandlers("OldSpringhead");
 	handlers->insert(DBG_NEW FWNodeHandlerXHeader);
 	handlers->insert(DBG_NEW FWNodeHandlerXFrame);
 	handlers->insert(DBG_NEW FWNodeHandlerXFrameTransformMatrix);

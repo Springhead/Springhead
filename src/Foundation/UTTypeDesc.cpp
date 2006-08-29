@@ -191,7 +191,7 @@ void UTTypeDesc::Print(std::ostream& os) const{
 //----------------------------------------------------------------------------
 //	UTTypeDescDb
 UTTypeDescDb::Dbs UTTypeDescDb::dbs;
-UTTypeDescDb* UTTypeDescDb::GetDb(std::string gp){
+UTTypeDescDb* SPR_CDECL UTTypeDescDb::GetDb(std::string gp){
 	static UTRef<UTTypeDescDb> key;
 	key = DBG_NEW UTTypeDescDb(gp);
 	Dbs::iterator it = dbs.find(key);
@@ -241,7 +241,7 @@ void UTTypeDescDb::Print(std::ostream& os) const{
 		os << std::endl;
 	}
 }
-void UTTypeDescDb::PrintDbs(std::ostream& os){
+void SPR_CDECL UTTypeDescDb::PrintDbs(std::ostream& os){
 	for(Dbs::const_iterator it = dbs.begin(); it != dbs.end(); ++it){
 		(*it)->Print(os);
 		os << std::endl;
