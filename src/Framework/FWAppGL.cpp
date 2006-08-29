@@ -76,7 +76,7 @@ namespace Spr{
 
 	void FWAppGL::LoadFile(std::string filename){
 		objs.clear();
-		delete fiSdk;
+		objs.Push(FWSdkIf::CreateSdk());
 		fiSdk = FISdk::CreateSdk();
 		fiFileX = fiSdk->CreateFileX();
 		delete fwScene;

@@ -86,9 +86,11 @@ void UTTypeDesc::Field::Print(std::ostream& os) const{
 		}
 		os << ">";
 		if (length>1) os << " [" << length << "]";
-		os << " " << (unsigned int)type->GetSize() * length;
+		os << " ";
+		if (type) os << (unsigned int)type->GetSize() * length;
+		else os << "?";
 	}else if (isReference){
-		os << "UTRef<" << type->GetTypeName().c_str() << ">";
+		os << "UTRef<" << (type ? type->GetTypeName().c_str() : "(null)") << ">";
 		if (length>1) os << " [" << length << "]";
 		os << " " << sizeof(UTRef<UTTypeDesc::Field>) * length;
 	}else{
@@ -230,7 +232,17 @@ void UTTypeDescDb::Link() {
 	}
 }
 void UTTypeDescDb::Print(std::ostream& os) const{
+	int w = os.width();
+	os.width(0);
+	DSTR << UTPadding(w) << "Group: " << group << "   Prefix: " << prefix << std::endl;
+	os.width(w);
 	for(Db::const_iterator it = db.begin(); it != db.end(); ++it){
+		(*it)->Print(os);
+		os << std::endl;
+	}
+}
+void UTTypeDescDb::PrintDbs(std::ostream& os){
+	for(Dbs::const_iterator it = dbs.begin(); it != dbs.end(); ++it){
 		(*it)->Print(os);
 		os << std::endl;
 	}

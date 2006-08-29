@@ -18,8 +18,8 @@ namespace Spr{
 		static void GlutTimerFunc(int id);
 		static void GlutKeyboardFunc(unsigned char key, int x, int y);
 
-		FISdkIf*          fiSdk;
-		FIFileXIf*        fiFileX;
+		UTRef<FISdkIf>          fiSdk;
+		UTRef<FIFileXIf>        fiFileX;
 
 		ObjectIfs         objs;
 

@@ -326,7 +326,7 @@ protected:
 	std::string group;			///<	グループ名
 	std::string prefix;			///<	名前のうちプレフィックスの部分
 	Db db;						///<	UTTypeDesc を入れておくコンテナ
-	typedef std::set< UTRef<UTTypeDescDb> > Dbs;
+	typedef std::set< UTRef<UTTypeDescDb>, UTContentsLess< UTRef<UTTypeDescDb> > > Dbs;
 	static Dbs dbs;
 public:
 	UTTypeDescDb(UTString gp=""):group(gp){}
@@ -359,7 +359,8 @@ public:
 	///	DB内の型情報をリンク．
 	void Link();
 	///	DB内の型情報の表示
-	void Print(std::ostream& os) const ;
+	void Print(std::ostream& os) const;
+	static void PrintDbs(std::ostream& os);
 	UTTypeDescDb& operator += (const UTTypeDescDb& b){
 		db.insert(b.db.begin(), b.db.end());
 		return *this;
