@@ -25,7 +25,7 @@ void SPR_CDECL PHRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = PHSdk::GetTypeDb();
+	UTTypeDescDb* db = UTTypeDescDb::GetDb("Physics");
 	assert(db);
 	#include "TypeDescDumpImp.h"
 	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");

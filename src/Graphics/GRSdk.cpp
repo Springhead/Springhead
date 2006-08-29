@@ -13,43 +13,19 @@
 #include "GRMesh.h"
 
 namespace Spr{;
-void SPR_CDECL GRRegisterTypeDescs();
-
-struct GRSdks{
-	typedef std::vector< GRSdkIf* > Cont;
-	Cont* cont;
-
-	GRSdks(){
-#if defined _MSC_VER && _DEBUG
-		// ‚±‚ÌŠÖ”‚ðŒÄ‚ñ‚¾Žž“_‚ÅŠJ•ú‚³‚ê‚Ä‚¢‚È‚¢ƒƒ‚ƒŠ‚Ìî•ñ‚ð•\Ž¦‚·‚é
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif		
-		cont = DBG_NEW Cont;
-	}
-	~GRSdks(){
-		while(cont->size()){
-			GRSdkIf* sdk = cont->back();
-			cont->erase(cont->end()-1);
-			sdk->DelRef();
-			if (sdk->RefCount()==0){
-				delete sdk;
-			}
-		}
-		delete cont;
-	}
-};
-static GRSdks sdks;
-GRSdkIf* SPR_CDECL CreateGRSdk(){
+UTRef<GRSdkIf> SPR_CDECL GRSdkIf::CreateSdk(){
 	GRSdkIf* rv = DBG_NEW GRSdk;
-	sdks.cont->push_back(rv);
-	rv->AddRef();
 	return rv;
 }
 
-void SPR_CDECL GRRegisterFactories(){
-	bool bFirst = true;
+void SPR_CDECL GRRegisterTypeDescs();
+void SPR_CDECL GRSdkIf::Register(){
+	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
+	Sdk::RegisterFactory(new GRSdkFactory());
+	GRRegisterTypeDescs();
+
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRScene));
 
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
@@ -65,31 +41,10 @@ void SPR_CDECL GRRegisterFactories(){
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
 }
 
-void SPR_CDECL GRRegisterSdk(){
-	RegisterSdk(new GRSdkFactory());
-}
-
 //----------------------------------------------------------------------------
 //	GRSdk
 IF_OBJECT_IMP(GRSdk, NameManager);
-UTRef<UTTypeDescDb> GRSdk::typeDb;
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
-	GRRegisterTypeDescs();
-	GRRegisterFactories();
-	SetNameManager(NameManager::GetRoot());
-}
-GRSdk::~GRSdk(){
-	for(GRSdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
-		if (*it == this){
-			sdks.cont->erase(it);
-			DelRef();
-			break;
-		}
-	}
-}
-UTTypeDescDb* GRSdk::GetTypeDb(){
-	if (!typeDb) typeDb = new UTTypeDescDb;
-	return typeDb;
 }
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	GRDebugRender* rv = DBG_NEW GRDebugRender;

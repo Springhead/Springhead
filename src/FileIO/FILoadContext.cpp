@@ -236,7 +236,7 @@ void FILoadContext::PushCreateNode(const IfInfo* info, const void* data){
 		if (*it) obj = (*it)->CreateObject(info, data);
 		if (obj) break;
 	}
-	if (!obj) obj = CreateSdk(info, data);
+	if (!obj) obj = SdkIf::CreateSdk(info, data);
 
 	//	オブジェクトに名前を設定
 	if (obj){

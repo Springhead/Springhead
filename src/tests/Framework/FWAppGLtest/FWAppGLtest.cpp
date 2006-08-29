@@ -14,10 +14,10 @@ using namespace Spr;
 UTRef<FWSdkIf> fwSdk;
 int _tmain(int argc, _TCHAR* argv[])
 {
-	fwSdk = CreateFWSdk();
-	PHRegisterSdk();
-	GRRegisterSdk();
-	FWRegisterSdk();
+	fwSdk = FWSdkIf::CreateSdk();
+	PHSdkIf::Register();
+	GRSdkIf::Register();
+	FWSdkIf::Register();
 
 	FWAppGLIf* fwApp = CreateFWAppGL();
 //	fwApp->SetDebugMode(FWAppGLDesc::DM_DEBUG);

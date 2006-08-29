@@ -12,21 +12,18 @@
 
 namespace Spr {;
 
-PHSdkIf* SPR_CDECL CreatePHSdk();
-class PHSdkFactory : public SdkFactoryBase {
+class PHSdkFactory : public FactoryBase {
 public:
 	const IfInfo* GetIfInfo() const {
 		return PHSdkIf::GetIfInfoStatic();
 	}
-	ObjectIf* Create(const void* desc){
-		return CreatePHSdk();
+	UTRef<ObjectIf> Create(const void* desc, ObjectIf* parent){
+		return PHSdkIf::CreateSdk();
 	}
 };
 
 class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, NameManager>{
 protected:
-	//	å^èÓïÒDB
-	static UTRef<UTTypeDescDb> typeDb;
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
 	///	ÉVÅ[Éì
@@ -40,9 +37,7 @@ protected:
 public:
 
 	OBJECT_DEF(PHSdk);
-	PHSdk();
-	~PHSdk();
-	static UTTypeDescDb* GetTypeDb();
+	PHSdk(const PHSdkDesc& = PHSdkDesc());
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int NScene();

@@ -28,6 +28,7 @@ struct PHSdkDesc{
 ///	物理シミュレーションSDK
 struct PHSdkIf : public NameManagerIf{
 	IF_DEF(PHSdk);
+	//	API
 	///	Sceneの作成
 	virtual PHSceneIf* CreateScene()=0;
 	///	Sceneの作成
@@ -43,11 +44,13 @@ struct PHSdkIf : public NameManagerIf{
 	virtual int NShape()=0;
 	///	Shapeの取得
 	virtual CDShapeIf* GetShape(int i)=0;
-	//virtual CDShapeIf** GetShapes()=0;
-};
-PHSdkIf* SPR_CDECL CreatePHSdk();
 
-void SPR_CDECL PHRegisterSdk();
+	//	SDK生成、登録関数
+	///	PHSdkのインスタンスを作成
+	static UTRef<PHSdkIf> SPR_CDECL CreateSdk();
+	///	PHSdkをファイルローダーなどに登録
+	static void SPR_CDECL Register();
+};
 
 //@}
 

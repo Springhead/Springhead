@@ -12,76 +12,39 @@
 #include <stdlib.h>
 
 namespace Spr{;
+
+UTRef<PHSdkIf> SPR_CDECL PHSdkIf::CreateSdk(){
+	UTRef<PHSdkIf> rv = DBG_NEW PHSdk;
+	return rv;
+}
+
+
+//----------------------------------------------------------------------------
+//	PHSdkIf
+
 void SPR_CDECL PHRegisterTypeDescs();
 void SPR_CDECL CDRegisterTypeDescs();
 
-struct Sdks{
-	typedef std::vector< PHSdkIf* > Cont;
-	Cont* cont;
+///	PHSdkをファイルローダーなどに登録。一度だけ呼べばよい
+void PHSdkIf::Register(){
+	static bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
 
-	Sdks(){
-#if defined _DEBUG && _MSC_VER			
-		// メモリリークチェッカ
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif		
-		cont = DBG_NEW Cont;
-	}
-	~Sdks(){
-		while(cont->size()){
-			PHSdkIf* sdk = cont->back();
-			cont->erase(cont->end()-1);
-			sdk->DelRef();
-			if (sdk->RefCount()==0){
-				delete sdk;
-			}
-		}
-		delete cont;
-	}
-};
-static Sdks sdks;
-PHSdkIf* SPR_CDECL CreatePHSdk(){
-	PHSdkIf* rv = DBG_NEW PHSdk;
-	sdks.cont->push_back(rv);
-	rv->AddRef();
-	return rv;
+	Sdk::RegisterFactory(new PHSdkFactory());
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
+	PHRegisterTypeDescs();
+	CDRegisterTypeDescs();
 }
 
 //----------------------------------------------------------------------------
 //	PHSdk
 IF_OBJECT_IMP(PHSdk, NameManager);
 
-void SPR_CDECL PHRegisterSdk(){
-	RegisterSdk(new PHSdkFactory());
+PHSdk::PHSdk(const PHSdkDesc&){
 }
 
-void SPR_CDECL PHRegisterFactories(){
-	bool bFirst = true;
-	if (!bFirst) return;
-	bFirst=false;
-	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
-}
-
-UTRef<UTTypeDescDb> PHSdk::typeDb;
-PHSdk::PHSdk(){
-	PHRegisterTypeDescs();
-	CDRegisterTypeDescs();
-	PHRegisterFactories();
-	SetNameManager(NameManager::GetRoot());
-}
-PHSdk::~PHSdk(){
-	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
-		if (*it == this){
-			sdks.cont->erase(it);
-			DelRef();
-			break;
-		}
-	}
-}
-UTTypeDescDb* PHSdk::GetTypeDb(){
-	if (!typeDb) typeDb = new UTTypeDescDb;
-	return typeDb;
-}
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	PHSceneIf* rv = DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
 	AddChildObject(rv); 

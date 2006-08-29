@@ -12,13 +12,13 @@
 
 namespace Spr {;
 
-class FWSdkFactory : public SdkFactoryBase {
+class FWSdkFactory : public FactoryBase {
 public:
 	const IfInfo* GetIfInfo() const {
 		return FWSdkIf::GetIfInfoStatic();
 	}
-	ObjectIf* Create(const void* desc){
-		return CreateFWSdk();
+	UTRef<ObjectIf> Create(const void* desc, const ObjectIf*){
+		return FWSdkIf::CreateSdk();
 	}
 };
 
@@ -34,8 +34,6 @@ public:
 	OBJECT_DEF(FWSdk);
 	FWSdk();
 	~FWSdk();
-	static UTTypeDescDb* GetTypeDb();
-	static UTTypeDescDb* GetOldSpringheadTypeDb();
 	virtual FWSceneIf* CreateScene(const FWSceneDesc& desc);
 	virtual int NScene() const;
 	virtual FWSceneIf* GetScene(size_t i);

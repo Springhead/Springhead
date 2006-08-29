@@ -75,10 +75,9 @@ namespace Spr{
 	}
 
 	void FWAppGL::LoadFile(std::string filename){
-		NameManager::GetRoot()->Clear();
 		objs.clear();
 		delete fiSdk;
-		fiSdk = CreateFISdk();
+		fiSdk = FISdk::CreateSdk();
 		fiFileX = fiSdk->CreateFileX();
 		delete fwScene;
 		fwScene = NULL;
@@ -86,11 +85,6 @@ namespace Spr{
 		phScene = NULL;
 		if(grScene) delete grScene->GetSdk();
 		grScene = NULL;
-
-		fiFileX->RegisterType(PHSdk::GetTypeDb());
-		fiFileX->RegisterType(GRSdk::GetTypeDb());
-		fiFileX->RegisterType(FISdk::GetTypeDb());
-		fiFileX->RegisterType(FWSdk::GetTypeDb());
 		RegisterOldSpringheadNode(fiFileX);
 
 		if (! fiFileX->Load(objs, filename.data()) ) {

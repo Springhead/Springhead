@@ -14,8 +14,19 @@
 
 namespace Spr{;
 
-UTRef<FWSdkIf> SPR_CDECL CreateFWSdk(){
-	FWSdkIf* rv = DBG_NEW FWSdk;
+void SPR_CDECL FWRegisterTypeDescs();
+void SPR_CDECL FWSdkIf::Register(){
+	static bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
+	FWRegisterTypeDescs();
+
+	FWSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWScene));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWObject));
+}
+
+UTRef<FWSdkIf> SPR_CDECL FWSdkIf::CreateSdk(){
+	UTRef<FWSdkIf> rv = DBG_NEW FWSdk;
 	return rv;
 }
 
@@ -23,32 +34,9 @@ UTRef<FWSdkIf> SPR_CDECL CreateFWSdk(){
 //	FWSdk
 IF_OBJECT_IMP(FWSdk, Object);
 
-void SPR_CDECL FWRegisterFactories(){
-	bool bFirst = true;
-	if (!bFirst) return;
-	bFirst=false;
-	FWSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWScene));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWObject));
-}
-
-UTRef<UTTypeDescDb> FWSdk::typeDb;
-UTRef<UTTypeDescDb> FWSdk::oldSpringheadTypeDb;
-
-void SPR_CDECL FWRegisterTypeDescs();
-void SPR_CDECL FWRegisterFactories();
 FWSdk::FWSdk(){
-	FWRegisterTypeDescs();
-	FWRegisterFactories();
 }
 FWSdk::~FWSdk(){
-}
-UTTypeDescDb* FWSdk::GetTypeDb(){
-	if (!typeDb) typeDb = new UTTypeDescDb;
-	return typeDb;
-}
-UTTypeDescDb* FWSdk::GetOldSpringheadTypeDb(){
-	if (!oldSpringheadTypeDb) oldSpringheadTypeDb = new UTTypeDescDb;
-	return oldSpringheadTypeDb;
 }
 FWSceneIf* FWSdk::CreateScene(const FWSceneDesc& desc){
 	FWSceneIf* rv = DCAST(FWSceneIf, CreateObject(FWSceneIf::GetIfInfoStatic(), &desc));

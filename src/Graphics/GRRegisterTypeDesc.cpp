@@ -25,7 +25,7 @@ void SPR_CDECL GRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = GRSdk::GetTypeDb();
+	UTTypeDescDb* db = UTTypeDescDb::GetDb("Graphics");
 	#include "TypeDescDumpImp.h"
 	db->Link();
 }

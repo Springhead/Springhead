@@ -37,7 +37,7 @@ public:
 		ロードしたDescからオブジェクトを作成する．
 		オブジェクトの作成は，親オブジェクトのCreateObject()，親の親のCreateObject()と
 		先祖のCreateObject()を順に呼んで，作成できたところで止める．
-		どのオブジェクトも作成できない場合は，CreateSdk()を呼び出す．	*/
+		どのオブジェクトも作成できない場合は，SdkIf::CreateSdk()を呼び出す．	*/
 	void LoadNode(FILoadContext* fc);
 	///	ノードのロードの終了
 	void LoadEndNode(FILoadContext* fc);

@@ -12,40 +12,13 @@
 #include <stdlib.h>
 
 namespace Spr{;
-void SPR_CDECL FIRegisterTypeDescs();
 
-
-struct Sdks{
-	typedef std::vector< FISdkIf* > Cont;
-	Cont* cont;
-
-	Sdks(){
-#if defined _DEBUG && _MSC_VER			
-		// メモリリークチェッカ
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif		
-		cont = DBG_NEW Cont;
-	}
-	~Sdks(){
-		while(cont->size()){
-			FISdkIf* sdk = cont->back();
-			cont->erase(cont->end()-1);
-			sdk->DelRef();
-			if (sdk->RefCount()==0){
-				delete sdk;
-			}
-		}
-		delete cont;
-	}
-};
-static Sdks sdks;
-FISdkIf* SPR_CDECL CreateFISdk(){
-	FISdkIf* rv = DBG_NEW FISdk;
-	sdks.cont->push_back(rv);
-	rv->AddRef();
+//----------------------------------------------------------------------------
+//	FISdkIf
+UTRef<FISdkIf> SPR_CDECL FISdkIf::CreateSdk(){
+	UTRef<FISdkIf> rv = DBG_NEW FISdk;
 	return rv;
 }
-
 
 //----------------------------------------------------------------------------
 //	FISdk
@@ -53,18 +26,13 @@ IF_OBJECT_IMP(FISdk, NameManager);
 
 UTRef<UTTypeDescDb> FISdk::typeDb;
 
+void SPR_CDECL FIRegisterTypeDescs();
+
 FISdk::FISdk(){
 	FIRegisterTypeDescs();
 }
 
 FISdk::~FISdk(){
-	for(Sdks::Cont::iterator it = sdks.cont->begin(); it != sdks.cont->end(); ++it){
-		if (*it == this){
-			sdks.cont->erase(it);
-			DelRef();
-			break;
-		}
-	}
 }
 UTTypeDescDb* FISdk::GetTypeDb(){
 	if (!typeDb) typeDb = DBG_NEW UTTypeDescDb;

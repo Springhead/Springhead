@@ -12,14 +12,14 @@ using namespace Spr;
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
 namespace SprOldSpringhead{
-	void SPR_CDECL RegisterTypeDescs(){
+	void SPR_CDECL OldSprRegisterTypeDescs(){
 		static bool bFirst=true;
 		if (!bFirst) return;
 		bFirst = false;
 
 		UTRegisterTypeDescs();
 
-		UTTypeDescDb* db = FWSdk::GetOldSpringheadTypeDb();
+		UTTypeDescDb* db = UTTypeDescDb::GetDb("OldSpringhead");
 		#include "TypeDescDumpImpForOldSpringheadHandler.h"
 		db->Link();
 	}
@@ -35,10 +35,10 @@ namespace Spr{
 		bFirst=false;
 		//
 		UTRegisterTypeDescs();
-		UTTypeDescDb* db = FWSdk::GetTypeDb();
+		UTTypeDescDb* db = UTTypeDescDb::GetDb("Framework");
 		assert(db);
 		#include "TypeDescDumpImp.h"
 		db->Link();
-		SprOldSpringhead::RegisterTypeDescs();
+		SprOldSpringhead::OldSprRegisterTypeDescs();
     }
 }

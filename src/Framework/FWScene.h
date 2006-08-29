@@ -8,12 +8,12 @@
 
 namespace Spr{
 
-	class FWSceneFactory : public SdkFactoryBase {
+	class FWSceneFactory : public FactoryBase {
 	public:
 		const IfInfo* GetIfInfo() const {
 			return FWSceneIf::GetIfInfoStatic();
 		}
-		ObjectIf* Create(const void* desc){
+		UTRef<ObjectIf> Create(const void* desc, const ObjectIf*){
 			return CreateFWScene();
 		}
 	};

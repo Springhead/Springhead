@@ -27,23 +27,8 @@ public:
 	///	作成するIfInfo
 	virtual const IfInfo* GetIfInfo() const =0;
 	///	iiのオブジェクトを desc から parentの子として生成する．
-	virtual ObjectIf* Create(const void* desc, ObjectIf* parent) =0;
+	virtual UTRef<ObjectIf> Create(const void* desc, ObjectIf* parent) =0;
 };
-
-/** Sdkを生成するFactoryの基本クラス
-*/
-class SdkFactoryBase: public UTRefCount{
-public:
-	virtual ~SdkFactoryBase(){}
-	///	作成するIfInfo
-	virtual const IfInfo* GetIfInfo() const =0;
-	///	iiのオブジェクトを desc から parentの子として生成する．
-	virtual ObjectIf* Create(const void* desc) =0;
-};
-
-/// Sdkのファクトリの登録
-void SPR_CDECL RegisterSdk(SdkFactoryBase* sdkFactory);
-
 
 /**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．
 1つのインタフェースクラスに付き1個のインスタンスができる．	*/

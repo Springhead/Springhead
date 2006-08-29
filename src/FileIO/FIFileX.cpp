@@ -226,8 +226,14 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 FIFileX::FIFileX(){
 	Init();
 }
+void RegisterOldSpringheadNode(FIFileIf* f);
 void FIFileX::Init(){
+	RegisterOldSpringheadNode(DCAST(FIFileIf, GetIf()));
 	typeDb += *UTTypeDescDb::GetDb("Foundation");
+	typeDb += *UTTypeDescDb::GetDb("Physics");
+	typeDb += *UTTypeDescDb::GetDb("Graphics");
+	typeDb += *UTTypeDescDb::GetDb("Framework");
+	typeDb += *UTTypeDescDb::GetDb("OldSpringhead");
 	typeDb.RegisterAlias("Vec3f", "Vector");
 	typeDb.RegisterAlias("Vec2f", "Coords2d");
 	typeDb.RegisterAlias("Affinef", "Matrix3x3");

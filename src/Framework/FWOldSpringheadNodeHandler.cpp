@@ -628,8 +628,6 @@ namespace Spr{
 using namespace SprOldSpringhead;
 void RegisterOldSpringheadNode(FIFileIf* f){
 	FIFile* file = DCAST(FIFile, f);
-	file->RegisterType(FWSdk::GetOldSpringheadTypeDb());
-
 	FINodeHandlers* handlers = &file->handlers;
 	handlers->insert(DBG_NEW FWNodeHandlerXHeader);
 	handlers->insert(DBG_NEW FWNodeHandlerXFrame);

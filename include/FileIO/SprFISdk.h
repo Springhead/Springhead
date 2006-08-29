@@ -22,11 +22,8 @@ struct FISdkIf : public ObjectIf{
 	IF_DEF(FISdk);
 	virtual FIFileXIf* CreateFileX()=0;
 	virtual void Clear()=0;
+	static UTRef<FISdkIf> CreateSdk();
 };
-///	ファイル入出力SDKの作成
-FISdkIf* SPR_CDECL CreateFISdk();
-///	いろいろなSDKの作成
-ObjectIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc);
 
 //@}
 

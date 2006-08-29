@@ -116,12 +116,9 @@ protected:
 	typedef std::vector<NameManager*> NameManagers;
 	///	子の名前空間
 	NameManagers childManagers;
-	///	ルートNameManager
-	static NameManager theRoot;
 	//@}
 
 public:
-	static NameManager* GetRoot(){ return &theRoot; }
 	void Clear();
 	virtual void SetNameManager(NameManager* s);
 	void AddChildManager(NameManager* c);
@@ -192,7 +189,12 @@ struct InheritScene:public InheritNameManager<intf, base>{
 };
 
 class SPR_DLL Sdk:public InheritNameManager<SdkIf, NameManager>{
+protected:
+	friend SdkIf;
+	static std::vector< UTRef<FactoryBase> > sdkFactories;
+public:
 	OBJECT_DEF(Sdk);
+	static void SPR_CDECL RegisterFactory(FactoryBase* sdkFactory);
 public:
 	Sdk();
 	virtual ~Sdk(){}

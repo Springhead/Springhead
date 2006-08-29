@@ -72,10 +72,7 @@ bool ObjectNamesLess::operator () (const NamedObject* o1, const NamedObject* o2)
 //----------------------------------------------------------------------------
 //	NameManager
 IF_OBJECT_IMP(NameManager, NamedObject);
-NameManager NameManager::theRoot;
-
 NameManager::NameManager(){
-	if (theRoot.name.length() == 0) theRoot.name = "theRoot";
 }
 void NameManager::SetNameManager(NameManager* p){
 	if (nameManager==p) return;
@@ -83,7 +80,6 @@ void NameManager::SetNameManager(NameManager* p){
 	if (p) p->AddChildManager(this);
 }
 void NameManager::AddChildManager(NameManager* c){
-	assert(c!=&theRoot);
 	NameManager* ans = this;
 	while(ans){
 		assert(ans != c);
@@ -200,9 +196,26 @@ Scene::Scene(){
 void Scene::Clear(){
 	ClearName();
 }
+
+
+//----------------------------------------------------------------------------
+//	SdkIf
+UTRef<SdkIf> SPR_CDECL SdkIf::CreateSdk(const IfInfo* info, const void* desc){
+	for (size_t i=0; i<Sdk::sdkFactories.size(); i++) {
+		if (info == Sdk::sdkFactories[i]->GetIfInfo()) {
+			return Sdk::sdkFactories[i]->Create(desc, NULL);
+		}
+	}
+	return NULL;
+}
 //----------------------------------------------------------------------------
 //	Sdk
 IF_OBJECT_IMP(Sdk, NameManager);
+std::vector< UTRef<FactoryBase> > Sdk::sdkFactories;
+void SPR_CDECL Sdk::RegisterFactory(FactoryBase* sdkFactory){
+	sdkFactories.push_back(sdkFactory);
+}
+
 Sdk::Sdk(){}
 
 }

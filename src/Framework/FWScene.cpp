@@ -9,14 +9,9 @@ namespace Spr{
 	IF_IMP(FWScene, Scene);
 	OBJECT_IMP(FWScene, Scene);
 
-	void SPR_CDECL FWRegisterSdk(){
-		RegisterSdk(new FWSceneFactory());
-	}
-
 	FWScene::FWScene(const FWSceneDesc& d/*=FWSceneDesc()*/)
 	: phScene(NULL), grScene(NULL)
 	{
-		SetNameManager(NameManager::GetRoot());
 	}
 
 	ObjectIf* FWScene::CreateObject(const IfInfo* info, const void* desc){

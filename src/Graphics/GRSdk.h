@@ -20,14 +20,13 @@ namespace Spr {;
 struct GRSceneIf;
 
 
-GRSdkIf* SPR_CDECL CreateGRSdk();
-class GRSdkFactory : public SdkFactoryBase {
+class GRSdkFactory : public FactoryBase {
 public:
 	const IfInfo* GetIfInfo() const {
 		return GRSdkIf::GetIfInfoStatic();
 	}
-	ObjectIf* Create(const void* desc){
-		return CreateGRSdk();
+	UTRef<ObjectIf> Create(const void* desc, ObjectIf*){
+		return GRSdkIf::CreateSdk();
 	}
 };
 
@@ -40,12 +39,9 @@ protected:
 	typedef std::vector< UTRef<GRScene> > GRScenes;
 	Objects objects;
 	GRScenes scenes;
-	static UTRef<UTTypeDescDb> typeDb;
 public:
 	OBJECT_DEF(GRSdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
-	~GRSdk();
-	static UTTypeDescDb* GetTypeDb();
 	virtual void Print(std::ostream& os) const {}
 	virtual GRDebugRenderIf* CreateDebugRender();
 	virtual GRDeviceGLIf* CreateDeviceGL(int window);
