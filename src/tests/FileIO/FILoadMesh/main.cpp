@@ -135,20 +135,15 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	PHRegisterTypeDescs();
-	CDRegisterTypeDescs();
-	GRRegisterTypeDescs();
+	PHSdkIf::Register();
+	GRSdkIf::Register();
+	FWSdkIf::Register();
 
-	// Sdkをファイルからロードしていないようなので本来不要
-	// だけど、念のため
-	PHRegisterSdk();
-	GRRegisterSdk();
-
-	FISdkIf* fiSdk = CreateFISdk();
+	FISdkIf* fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
 
-	grSdk = CreateGRSdk();	
+	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
 	scene = grSdk->CreateScene();
 	objs.push_back(scene);

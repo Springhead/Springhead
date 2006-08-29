@@ -40,7 +40,7 @@ void PHSdkIf::Register(){
 
 //----------------------------------------------------------------------------
 //	PHSdk
-IF_OBJECT_IMP(PHSdk, NameManager);
+IF_OBJECT_IMP(PHSdk, Sdk);
 
 PHSdk::PHSdk(const PHSdkDesc&){
 }

@@ -43,7 +43,7 @@ void SPR_CDECL GRSdkIf::Register(){
 
 //----------------------------------------------------------------------------
 //	GRSdk
-IF_OBJECT_IMP(GRSdk, NameManager);
+IF_OBJECT_IMP(GRSdk, Sdk);
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 }
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
