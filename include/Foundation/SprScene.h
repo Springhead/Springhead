@@ -35,7 +35,7 @@ struct SceneIf: public NameManagerIf{
 
 struct SdkIf: public NameManagerIf{
 	IF_DEF(Sdk);
-	static UTRef<SdkIf> SPR_CDECL CreateSdk(const IfInfo* info, const void* desc);
+	static SdkIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc);
 };
 
 }

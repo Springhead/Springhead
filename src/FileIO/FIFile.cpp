@@ -37,6 +37,7 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
 		return true;
 	}
+	if (objs.size()) return true;
 	return false;
 }
 void FIFile::Load(FILoadContext* fc){

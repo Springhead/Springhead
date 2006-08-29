@@ -13,7 +13,7 @@
 #include "GRMesh.h"
 
 namespace Spr{;
-UTRef<GRSdkIf> SPR_CDECL GRSdkIf::CreateSdk(){
+GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){
 	GRSdkIf* rv = DBG_NEW GRSdk;
 	return rv;
 }

@@ -54,7 +54,6 @@ namespace Spr{
 	}
 
 	FWAppGL::~FWAppGL(){
-		if (fwScene)    { delete fwScene;    }
 	}
 	void FWAppGL::Load(){
 		LoadFile(filename);
@@ -85,7 +84,6 @@ namespace Spr{
 		phScene = NULL;
 		if(grScene) delete grScene->GetSdk();
 		grScene = NULL;
-		RegisterOldSpringheadNode(fiFileX);
 
 		if (! fiFileX->Load(objs, filename.data()) ) {
 			DSTR << "Error: Cannot open load file. " << std::endl;
@@ -102,6 +100,13 @@ namespace Spr{
 		// Search FWScene
 		for (unsigned  i=0; i<objs.size(); i++) {
 			if(!fwScene) fwScene = DCAST(FWSceneIf, objs[i]);
+		}
+		if (!fwScene) {
+			FWSdkIf* fwSdk=NULL;
+			for (unsigned  i=0; i<objs.size(); i++) {
+				if(!fwSdk) fwSdk = DCAST(FWSdkIf, objs[i]);
+			}
+			if (fwSdk) fwScene = fwSdk->GetScene(0);
 		}
 		if (!fwScene) {
 			DSTR << "FWScene not found." << std::endl;

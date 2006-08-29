@@ -245,8 +245,8 @@ public:
 template <class T, class IF, class DESC>
 class FactoryImpTemplate: public FactoryBase{
 public:
-	virtual UTRef<ObjectIf> Create(const void* desc, ObjectIf* parent){
-		UTRef<T> t = DBG_NEW T(*(DESC*)desc);
+	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
+		T* t = DBG_NEW T(*(DESC*)desc);
 
 		//	ÉVÅ[ÉìÇÃê›íË
 		SceneObject* o = DCAST(SceneObject, t);

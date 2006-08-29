@@ -47,7 +47,7 @@ struct PHSdkIf : public NameManagerIf{
 
 	//	SDK生成、登録関数
 	///	PHSdkのインスタンスを作成
-	static UTRef<PHSdkIf> SPR_CDECL CreateSdk();
+	static PHSdkIf* SPR_CDECL CreateSdk();
 	///	PHSdkをファイルローダーなどに登録
 	static void SPR_CDECL Register();
 };

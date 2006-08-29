@@ -27,7 +27,7 @@ public:
 	///	作成するIfInfo
 	virtual const IfInfo* GetIfInfo() const =0;
 	///	iiのオブジェクトを desc から parentの子として生成する．
-	virtual UTRef<ObjectIf> Create(const void* desc, ObjectIf* parent) =0;
+	virtual ObjectIf* Create(const void* desc, ObjectIf* parent) =0;
 };
 
 /**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．

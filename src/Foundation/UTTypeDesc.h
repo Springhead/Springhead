@@ -363,6 +363,7 @@ public:
 	static void PrintDbs(std::ostream& os);
 	UTTypeDescDb& operator += (const UTTypeDescDb& b){
 		db.insert(b.db.begin(), b.db.end());
+		Link();
 		return *this;
 	}
 	UTString GetGroup() const {

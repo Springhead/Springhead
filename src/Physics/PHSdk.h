@@ -17,7 +17,7 @@ public:
 	const IfInfo* GetIfInfo() const {
 		return PHSdkIf::GetIfInfoStatic();
 	}
-	UTRef<ObjectIf> Create(const void* desc, ObjectIf* parent){
+	ObjectIf* Create(const void* desc, ObjectIf* parent){
 		return PHSdkIf::CreateSdk();
 	}
 };

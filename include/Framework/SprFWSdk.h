@@ -15,7 +15,7 @@ namespace Spr{
 		virtual FWSceneIf* GetScene(size_t i)=0;
 
 		static void SPR_CDECL Register();
-		static UTRef<FWSdkIf> SPR_CDECL FWSdkIf::CreateSdk();
+		static FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk();
 	};
 }
 

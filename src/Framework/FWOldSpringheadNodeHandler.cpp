@@ -377,6 +377,7 @@ public:
 		}
 		virtual void Execute(FILoadContext* ctx){
 			FWObject* obj = DCAST(FWObject, fwScene->CreateObject(FWObjectIf::GetIfInfoStatic(), NULL));
+			assert(frame);
 			Posed pose;
 			pose.FromAffine(frame->GetTransform());
 			solid->SetPose(pose);

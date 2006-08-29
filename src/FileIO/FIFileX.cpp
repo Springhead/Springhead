@@ -228,6 +228,7 @@ FIFileX::FIFileX(){
 }
 void RegisterOldSpringheadNode(FIFileIf* f);
 void FIFileX::Init(){
+	handlers.clear();
 	RegisterOldSpringheadNode(DCAST(FIFileIf, GetIf()));
 	typeDb += *UTTypeDescDb::GetDb("Foundation");
 	typeDb += *UTTypeDescDb::GetDb("Physics");

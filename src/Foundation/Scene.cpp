@@ -200,10 +200,10 @@ void Scene::Clear(){
 
 //----------------------------------------------------------------------------
 //	SdkIf
-UTRef<SdkIf> SPR_CDECL SdkIf::CreateSdk(const IfInfo* info, const void* desc){
+SdkIf* SPR_CDECL SdkIf::CreateSdk(const IfInfo* info, const void* desc){
 	for (size_t i=0; i<Sdk::sdkFactories.size(); i++) {
 		if (info == Sdk::sdkFactories[i]->GetIfInfo()) {
-			return Sdk::sdkFactories[i]->Create(desc, NULL);
+			return DCAST(SdkIf, Sdk::sdkFactories[i]->Create(desc, NULL));
 		}
 	}
 	return NULL;

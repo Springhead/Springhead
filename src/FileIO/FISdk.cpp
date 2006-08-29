@@ -15,8 +15,8 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	FISdkIf
-UTRef<FISdkIf> SPR_CDECL FISdkIf::CreateSdk(){
-	UTRef<FISdkIf> rv = DBG_NEW FISdk;
+FISdkIf* SPR_CDECL FISdkIf::CreateSdk(){
+	FISdkIf* rv = DBG_NEW FISdk;
 	return rv;
 }
 

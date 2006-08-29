@@ -38,7 +38,7 @@ struct GRSdkIf: public ObjectIf{
 	virtual GRSceneIf* GetScene(size_t i)=0;
 	virtual size_t NScene()=0;
 
-	static UTRef<GRSdkIf> SPR_CDECL CreateSdk();
+	static GRSdkIf* SPR_CDECL CreateSdk();
 	static void SPR_CDECL Register();
 };
 //@}

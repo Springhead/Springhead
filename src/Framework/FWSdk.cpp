@@ -7,6 +7,10 @@
  */
 #include "Framework.h"
 #include "Framework/FWSdk.h"
+#include "Physics/PHSdk.h"
+#include "Physics/PHScene.h"
+#include "Graphics/GRSdk.h"
+#include "Graphics/GRScene.h"
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -23,10 +27,14 @@ void SPR_CDECL FWSdkIf::Register(){
 
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWObject));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSdk));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRSdk));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRScene));
 }
 
-UTRef<FWSdkIf> SPR_CDECL FWSdkIf::CreateSdk(){
-	UTRef<FWSdkIf> rv = DBG_NEW FWSdk;
+FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
+	FWSdkIf* rv = DBG_NEW FWSdk;
 	return rv;
 }
 

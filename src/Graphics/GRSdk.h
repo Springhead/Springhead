@@ -25,7 +25,7 @@ public:
 	const IfInfo* GetIfInfo() const {
 		return GRSdkIf::GetIfInfoStatic();
 	}
-	UTRef<ObjectIf> Create(const void* desc, ObjectIf*){
+	ObjectIf* Create(const void* desc, ObjectIf*){
 		return GRSdkIf::CreateSdk();
 	}
 };

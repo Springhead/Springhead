@@ -17,7 +17,7 @@ public:
 	const IfInfo* GetIfInfo() const {
 		return FWSdkIf::GetIfInfoStatic();
 	}
-	UTRef<ObjectIf> Create(const void* desc, const ObjectIf*){
+	ObjectIf* Create(const void* desc, const ObjectIf*){
 		return FWSdkIf::CreateSdk();
 	}
 };

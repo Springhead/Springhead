@@ -22,7 +22,7 @@ struct FISdkIf : public ObjectIf{
 	IF_DEF(FISdk);
 	virtual FIFileXIf* CreateFileX()=0;
 	virtual void Clear()=0;
-	static UTRef<FISdkIf> CreateSdk();
+	static FISdkIf* CreateSdk();
 };
 
 //@}

@@ -13,8 +13,8 @@
 
 namespace Spr{;
 
-UTRef<PHSdkIf> SPR_CDECL PHSdkIf::CreateSdk(){
-	UTRef<PHSdkIf> rv = DBG_NEW PHSdk;
+PHSdkIf* SPR_CDECL PHSdkIf::CreateSdk(){
+	PHSdkIf* rv = DBG_NEW PHSdk;
 	return rv;
 }
 

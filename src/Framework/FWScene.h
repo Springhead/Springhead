@@ -13,7 +13,7 @@ namespace Spr{
 		const IfInfo* GetIfInfo() const {
 			return FWSceneIf::GetIfInfoStatic();
 		}
-		UTRef<ObjectIf> Create(const void* desc, const ObjectIf*){
+		ObjectIf* Create(const void* desc, const ObjectIf*){
 			return CreateFWScene();
 		}
 	};
