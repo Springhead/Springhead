@@ -255,18 +255,14 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	PHRegisterTypeDescs();
-	CDRegisterTypeDescs();
-	GRRegisterTypeDescs();
+	PHSdkIf::Register();
+	GRSdkIf::Register();
 
-	PHRegisterSdk();
-	GRRegisterSdk();
-
-	FISdkIf* fiSdk = CreateFISdk();
+	FISdkIf* fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
 	if (argc>=2){
-		phSdk = CreatePHSdk();					//	PHSDKを用意して，
+		phSdk = PHSdkIf::CreateSdk();					//	PHSDKを用意して，
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
@@ -301,7 +297,7 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("FILoad");
 
 	// Graphics Sdk
-	grSdk = CreateGRSdk();
+	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL(window);
 	grDevice->Init();
