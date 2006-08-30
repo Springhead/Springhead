@@ -97,16 +97,6 @@ void NameManager::DelChildManager(NameManager* c){
 	assert( it!=childManagers.end() );
 	childManagers.erase(it);
 }
-void NameManager::ClearName(){
-	names.clear();
-	for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
-		(*it)->ClearName();
-	}
-}
-void NameManager::Clear(){
-	ClearName();
-	childManagers.clear();
-}
 
 void NameManager::Print(std::ostream& os) const {
 	int w = os.width();
@@ -186,6 +176,11 @@ NamedObjectIf* NameManager::FindObjectExact(UTString name, UTString cls){
 	}
 	return rv;
 }
+bool NameManager::DelChildObject(ObjectIf* o){
+	assert(DCAST(NamedObject, o));
+	return names.Del(DCAST(NamedObject, o));
+}
+
 //----------------------------------------------------------------------------
 //	Scene
 IF_OBJECT_IMP(Scene, NameManager);
@@ -194,7 +189,6 @@ Scene::Scene(){
 	Clear();
 }
 void Scene::Clear(){
-	ClearName();
 }
 
 

@@ -7,6 +7,7 @@
  */
 #include "Collision.h"
 #ifdef USE_HDRSTOP
+#include <Foundation/Scene.h>
 #pragma hdrstop
 #endif
 

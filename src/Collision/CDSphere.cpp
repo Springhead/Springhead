@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Springhead.h>
-#include <Foundation/Object.h>
+#include <Foundation/Scene.h>
 #include "Collision.h"
 #include <set>
 #ifdef USE_HDRSTOP

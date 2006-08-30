@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "UTTypeDesc.h"
+#include "Scene.h"
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

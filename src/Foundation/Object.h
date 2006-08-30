@@ -187,10 +187,11 @@ class NamedObject: public InheritObject<NamedObjectIf, Object>{
 	OBJECT_DEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
 protected:
 	friend class ObjectNames;
-	UTString name;				///<	名前
-	NameManager* nameManager;	///<	名前の検索や重複管理をするもの．SceneやSDKなど．
+	UTString name;					///<	名前
+	UTRef<NameManager> nameManager;	///<	名前の検索や重複管理をするもの．SceneやSDKなど．
 public:
 	NamedObject():nameManager(NULL){}
+	~NamedObject();
 	///	名前の取得
 	const char* GetName() const { return name.c_str(); }
 	///	名前の設定

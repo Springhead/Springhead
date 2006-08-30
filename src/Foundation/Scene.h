@@ -119,10 +119,10 @@ protected:
 	//@}
 
 public:
-	void Clear();
 	virtual void SetNameManager(NameManager* s);
 	void AddChildManager(NameManager* c);
 	void DelChildManager(NameManager* c);
+	virtual bool DelChildObject(ObjectIf* o);
 	///	型と名前からオブジェクトを取得
 	template <class T> void FindObject(UTRef<T>& t, UTString name){
 		T* p;
@@ -139,9 +139,6 @@ public:
 //	SetRange RangeObject(UTString n){ return names.Range(n); }
 	
 	ObjectNames::TNameMap& GetNameMap(){ return names.nameMap; }
-
-	///	名前表から，参照されていないオブジェクトを削除する．
-	void ClearName();
 
 	///	デバッグ用
 	void Print(std::ostream& os) const;
