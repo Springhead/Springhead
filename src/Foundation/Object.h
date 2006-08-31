@@ -31,7 +31,7 @@ namespace Spr{;
 
 ///	インタフェースクラスの実行時型情報
 #define IF_IMP(cls, base1)															\
-	IfInfo* cls##_BASEIF[] = {&base1##If::ifInfo, NULL};							\
+	IfInfo* cls##_BASEIF[] = {(IfInfo*)base1##If::GetIfInfoStatic(), NULL};			\
 	IF_IMP_COMMON(cls)
 
 

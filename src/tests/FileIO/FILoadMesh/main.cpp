@@ -135,9 +135,9 @@ void idle(){
  return		0 (³íI—¹)
  */
 int main(int argc, char* argv[]){
-	PHSdkIf::Register();
-	GRSdkIf::Register();
-	FWSdkIf::Register();
+	PHSdkIf::RegisterSdk();
+	GRSdkIf::RegisterSdk();
+	FWSdkIf::RegisterSdk();
 
 	FISdkIf* fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
