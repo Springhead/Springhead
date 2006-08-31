@@ -22,7 +22,7 @@ public:
 	}
 };
 
-class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, NameManager>{
+class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, Sdk>{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
