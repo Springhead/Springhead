@@ -15,9 +15,9 @@ UTRef<FWSdkIf> fwSdk;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	fwSdk = FWSdkIf::CreateSdk();
-	PHSdkIf::Register();
-	GRSdkIf::Register();
-	FWSdkIf::Register();
+	PHSdkIf::RegisterSdk();
+	GRSdkIf::RegisterSdk();
+	FWSdkIf::RegisterSdk();
 
 	FWAppGLIf* fwApp = CreateFWAppGL();
 //	fwApp->SetDebugMode(FWAppGLDesc::DM_DEBUG);
