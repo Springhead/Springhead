@@ -20,7 +20,7 @@
 namespace Spr{;
 
 void SPR_CDECL FWRegisterTypeDescs();
-void SPR_CDECL FWSdkIf::Register(){
+void SPR_CDECL FWSdkIf::RegisterSdk(){
 	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
