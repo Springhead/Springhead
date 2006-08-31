@@ -43,7 +43,7 @@ float boxpos[][3] = {
 	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
 };
 
-PHSdkIf* sdk;
+UTRef<PHSdkIf> sdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor, *soBlock[NUM_BLOCK];
 static Vec3d prepos[NUM_BLOCK];				// previous position

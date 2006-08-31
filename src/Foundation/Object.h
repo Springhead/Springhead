@@ -37,7 +37,7 @@ public:
 	ObjectIf* IfInfoImp<cls##If>::GetIf(void* obj)const{							\
 		return (ObjectIf*)(cls##If*)DCAST(cls, (Object*)obj);						\
 	}																				\
-	const IfInfo* cls##If::GetIfInfoStatic(){										\
+	const IfInfo* SPR_CDECL cls##If::GetIfInfoStatic(){								\
 		static IfInfoImp<cls##If>* i;												\
 		if (!i){																	\
 			i= DBG_NEW IfInfoImp<cls##If>(#cls, cls##_BASEIF);						\

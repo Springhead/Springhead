@@ -85,7 +85,7 @@ public:													\
 	virtual const IfInfo* GetIfInfo() const {			\
 		return GetIfInfoStatic();						\
 	}													\
-	static const IfInfo* GetIfInfoStatic();				\
+	static const IfInfo* SPR_CDECL GetIfInfoStatic();	\
 	static cls##If* GetSelfFromObject(void* o) {		\
 		return (cls##If*)GetIfInfoStatic()->GetIf(o);	\
 	}													\

@@ -34,7 +34,7 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* sdk;
+UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;
 CDConvexMeshIf* meshFloor=NULL;
