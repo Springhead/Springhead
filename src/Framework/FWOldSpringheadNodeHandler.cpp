@@ -249,6 +249,7 @@ public:
 		MaterialAdaptor* mc = DCAST(MaterialAdaptor, fc->objects.Top());
 		fc->links.push_back(mc);
 		fc->objects.Pop();		// MaterialAdaptor
+		fc->objects.Pop();		// GRMaterialDesc
 	}
 };
 
