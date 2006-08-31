@@ -26,8 +26,9 @@
 #define TEST_FILEX	"box.x"		// ロードするXファイル
 
 namespace Spr{
-	GRSdkIf* grSdk;
-	GRSceneIf* scene;
+	UTRef<GRSdkIf> grSdk;
+	UTRef<GRSceneIf> scene;
+	UTRef<FISdkIf> fiSdk; 
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
 	void PHRegisterTypeDescs();
@@ -139,7 +140,7 @@ int main(int argc, char* argv[]){
 	GRSdkIf::RegisterSdk();
 	FWSdkIf::RegisterSdk();
 
-	FISdkIf* fiSdk = FISdkIf::CreateSdk();
+	fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
 

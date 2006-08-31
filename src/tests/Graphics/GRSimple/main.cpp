@@ -183,8 +183,8 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
-		phSdk=NULL;
-		grSdk = NULL;
+//		phSdk=NULL;
+//		grSdk = NULL;
 		exit(0);
 	}
 }	

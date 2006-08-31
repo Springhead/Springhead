@@ -42,19 +42,7 @@ void PHSdkIf::RegisterSdk(){
 //	PHSdk
 IF_OBJECT_IMP(PHSdk, Sdk);
 
-struct MemCheck{
-	MemCheck(){
-		#if defined _DEBUG && _MSC_VER			
-		// メモリリークチェッカ
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-		#endif
-	}
-	void Start(){}
-};
-static MemCheck memCheck;
-
 PHSdk::PHSdk(const PHSdkDesc&){
-	memCheck.Start();
 	PHSdkIf::RegisterSdk();
 }
 PHSdk::~PHSdk(){

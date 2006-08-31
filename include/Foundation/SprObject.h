@@ -32,7 +32,7 @@ public:
 
 /**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．
 1つのインタフェースクラスに付き1個のインスタンスができる．	*/
-class IfInfo{
+class IfInfo: public UTRefCount{
 public:
 	///	IfInfoのid クラスを示す自然数．
 	int id;
@@ -50,6 +50,8 @@ public:
 	Factories factories;
 	///	コンストラクタ
 	IfInfo(const char* cn, IfInfo** b);
+	///	デストラクタ
+	virtual ~IfInfo() {};
 	///	クラス名
 	virtual const char* ClassName() const =0;
 	///	このインタフェースに対応するオブジェクトのアドレス
@@ -64,8 +66,6 @@ public:
 	void RegisterFactory(FactoryBase* f) const ;
 	///	指定(info)のオブジェクトを作るファクトリを検索
 	FactoryBase* FindFactory(const IfInfo* info) const;
-protected:
-	virtual ~IfInfo() {};
 };
 ///	IfInfoの実装．1クラス1インスタンス
 template <class T>
@@ -83,11 +83,9 @@ public:
 public:													\
 	static IfInfoImp<cls##If> ifInfo;					\
 	virtual const IfInfo* GetIfInfo() const {			\
-		return &ifInfo;									\
+		return GetIfInfoStatic();						\
 	}													\
-	static const IfInfo* GetIfInfoStatic(){				\
-		return &ifInfo;									\
-	}													\
+	static const IfInfo* GetIfInfoStatic();				\
 	static cls##If* GetSelfFromObject(void* o) {		\
 		return (cls##If*)GetIfInfoStatic()->GetIf(o);	\
 	}													\

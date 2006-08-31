@@ -13,6 +13,20 @@
 
 namespace Spr{;
 
+//	型情報 IfInfo と TypeInfoのポインタを保持しておいて、最後に開放するクラス
+class TypeInfoManager:public UTRefCount{
+protected:
+	std::vector< UTRef< IfInfo > > ifs;
+	std::vector< UTRef< UTTypeInfo > > objects;
+	static TypeInfoManager* typeInfoManager;
+public:
+	TypeInfoManager();
+	~TypeInfoManager();
+	static TypeInfoManager* Get();
+	void RegisterIf(IfInfo* i);
+	void RegisterObject(UTTypeInfo* t);
+};
+
 #define IF_IMP_COMMON(cls)															\
 	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
 	template <> \
@@ -22,6 +36,14 @@ namespace Spr{;
 	template <> \
 	ObjectIf* IfInfoImp<cls##If>::GetIf(void* obj)const{							\
 		return (ObjectIf*)(cls##If*)DCAST(cls, (Object*)obj);						\
+	}																				\
+	const IfInfo* cls##If::GetIfInfoStatic(){										\
+		static IfInfoImp<cls##If>* i;												\
+		if (!i){																	\
+			i= DBG_NEW IfInfoImp<cls##If>(#cls, cls##_BASEIF);						\
+			TypeInfoManager::Get()->RegisterIf(i);									\
+		}																			\
+		return i;																	\
 	}																				\
 
 ///	ObjectIf インタフェースクラスの実行時型情報

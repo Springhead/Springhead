@@ -14,6 +14,41 @@
 #include <iomanip>
 
 namespace Spr {;
+
+struct MemCheck{
+	MemCheck(){
+		#if defined _DEBUG && _MSC_VER			
+		// メモリリークチェッカ
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		#endif
+	}
+	void Start(){}
+};
+static MemCheck memCheck;
+
+
+TypeInfoManager* TypeInfoManager::typeInfoManager;
+TypeInfoManager* TypeInfoManager::Get(){
+	static UTRef<TypeInfoManager> tim;
+	if (!typeInfoManager){
+		memCheck.Start();
+		tim = typeInfoManager = DBG_NEW TypeInfoManager;
+	}
+	return typeInfoManager;
+}
+TypeInfoManager::TypeInfoManager(){
+}
+TypeInfoManager::~TypeInfoManager(){
+}
+void TypeInfoManager::RegisterIf(IfInfo* i){
+	ifs.push_back(i); 
+}
+void TypeInfoManager::RegisterObject(UTTypeInfo* t){ 
+	objects.push_back(t); 
+}
+
+
+
 int IfInfo::maxId;
 IfInfo::IfInfo(const char* cn, IfInfo** b): className(cn), base(b){
 	id = ++maxId;

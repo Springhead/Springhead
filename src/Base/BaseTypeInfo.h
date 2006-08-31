@@ -7,6 +7,7 @@
  */
 #ifndef BASETYPEINFO_H
 #define BASETYPEINFO_H
+#include "BaseUtility.h"
 /**	@file BaseTypeInfo.h
 	実行時型情報テンプレートライブラリ.
 	コンパイラのrttiを使わずマクロとテンプレートで実装してある．
@@ -14,7 +15,7 @@
 namespace Spr{;
 
 ///	実行時型情報
-class UTTypeInfo {
+class UTTypeInfo: public UTRefCount{
 public:
 	const char* className;
 	UTTypeInfo** base;
@@ -24,7 +25,6 @@ public:
 	virtual bool Inherit(const char* str) const ;
 	virtual const char* ClassName() const = 0;
 	virtual void* CreateInstance() const = 0;
-protected:
 	virtual ~UTTypeInfo() {};
 };
 

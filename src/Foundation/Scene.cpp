@@ -7,6 +7,7 @@
  */
 #include <Springhead.h>
 #include <Foundation/Object.h>
+#include "Object.h"
 #include "Scene.h"
 #include <sstream>
 #ifdef USE_HDRSTOP
@@ -214,6 +215,8 @@ void SPR_CDECL Sdk::RegisterFactory(FactoryBase* sdkFactory){
 	sdkFactories.push_back(sdkFactory);
 }
 
-Sdk::Sdk(){}
+Sdk::Sdk(){
+	 typeInfoManager = TypeInfoManager::Get();
+}
 
 }
