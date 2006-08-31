@@ -22,14 +22,13 @@ class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{
 	
 	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する
 	void CreateList(GRRenderIf* r);
-	/// ディスプレイリストの管理を行う（1meshに対し、materialを複数持つ場合は、material毎にListを作成する）
 	void ListManage(void* vtx);
 	void LoadTexture();
 public:
 	OBJECT_DEF(GRMesh);
 	ACCESS_DESC(GRMesh);
 
-	std::vector< GRMaterial > material;	///< マテリアル
+	std::vector< UTRef<GRMaterial> > material;	///< マテリアル
 	std::vector<int> materialList;				///< マテリアルのインデックスリスト
 	std::vector<GRTextureDesc>  texture;		///< テクスチャ
 	/**

@@ -118,13 +118,13 @@ public:
 	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx,							\
 		size_t count, size_t stride=0)																\
 		{ return ptr CreateList(ty, vtx, count, stride); }											\
-	virtual int CreateList(GRMaterialDesc& mat, unsigned int texid,									\
+	virtual int CreateList(GRMaterialIf* mat, unsigned int texid,									\
 		GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)				\
 		{ return ptr CreateList(mat, texid, ty, vtx, count, stride); }								\
 	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, 		\
 		size_t count, size_t stride=0)																\
 		{ return ptr CreateIndexedList(ty, idx, vtx, count, stride); }								\
-	virtual int CreateIndexedList(GRMaterialDesc& mat, unsigned int texid,							\
+	virtual int CreateIndexedList(GRMaterialIf* mat, unsigned int texid,							\
 		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)	\
 		{ return ptr CreateIndexedList(mat, texid, ty, idx, vtx, count, stride); }					\
 	virtual void DrawList(int i){ ptr DrawList(i); }												\

@@ -88,12 +88,12 @@ public:
 	///	ダイレクト形式によるDiplayListの作成
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	///	ダイレクト形式によるDiplayListの作成（マテリアルとテクスチャを指定可能、テクスチャ非適用時には0を指定）
-	virtual int CreateList(GRMaterialDesc& mat, unsigned int texid, 
+	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
 						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	///	インデックス形式によるDiplayListの作成
 	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	インデックス形式によるDiplayListの作成（マテリアルとテクスチャを指定可能、テクスチャ非適用時には0を指定）
-	virtual int CreateIndexedList(GRMaterialDesc& mat, unsigned int texid, 
+	virtual int CreateIndexedList(GRMaterialIf* mat, unsigned int texid, 
 								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	DisplayListの表示
 	virtual void DrawList(int i);

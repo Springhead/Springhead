@@ -201,8 +201,8 @@ void GRMesh::LoadTexture(){
 		// materialにテクスチャ名が登録されている場合は、render->LoadTexture()。
 		// LoadTextureが実行されない場合は、texture.id=0で、初期値のまま。
 		for (unsigned int m=0; m<material.size(); ++m){
-			if (material[m].texname.length()){				
-				texture[m].filename = material[m].texname;
+			if (material[m]->texname.length()){				
+				texture[m].filename = material[m]->texname;
 				render->LoadTexture(texture[m]);
 			}
 		}
@@ -215,10 +215,10 @@ void GRMesh::Render(GRRenderIf* r){
 }
 void GRMesh::Rendered(GRRenderIf* r){
 }
-bool GRMesh::AddChildObject(ObjectIf* o){
+bool GRMesh::AddChildObject(ObjectIf* o){			
 	GRMaterial* m = DCAST(GRMaterial, o);
 	if (m){
-		material.push_back(*m);
+		material.push_back(m);
 		return GetNameManager()->AddChildObject(m->GetIf());
 	}
 	return false;

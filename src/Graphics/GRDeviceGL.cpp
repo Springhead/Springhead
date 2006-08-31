@@ -185,7 +185,7 @@ int GRDeviceGL::CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t st
 	glEndList();
 	return list;
 }
-int GRDeviceGL::CreateList(GRMaterialDesc& mat, unsigned int texid, 
+int GRDeviceGL::CreateList(GRMaterialIf* mat, unsigned int texid, 
 						   TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -195,7 +195,7 @@ int GRDeviceGL::CreateList(GRMaterialDesc& mat, unsigned int texid,
 	}else{
 		glDisable(GL_TEXTURE_2D);
 	}
-	SetMaterial(mat);
+	SetMaterial(*DCAST(GRMaterial, mat));
 	DrawDirect(ty, vtx, count, stride);
 	glEndList();
 	return list;
@@ -207,7 +207,7 @@ int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, siz
 	glEndList();
 	return list;
 }
-int GRDeviceGL::CreateIndexedList(GRMaterialDesc& mat, unsigned int texid, 
+int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat, unsigned int texid, 
 								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -217,7 +217,7 @@ int GRDeviceGL::CreateIndexedList(GRMaterialDesc& mat, unsigned int texid,
 	}else{
 		glDisable(GL_TEXTURE_2D);
 	}
-	SetMaterial(mat);
+	SetMaterial(*DCAST(GRMaterial, mat));
 	DrawIndexed(ty, idx, vtx, count, stride);
 	glEndList();
 	return list;
