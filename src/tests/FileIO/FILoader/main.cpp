@@ -33,7 +33,7 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define EXIT_TIMER	12000			// 強制終了させるステップ数
-#define TEST_FILEX	"test1.x"		// ロードするXファイル
+#define TEST_FILEX	"test4.x"		// ロードするXファイル
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
