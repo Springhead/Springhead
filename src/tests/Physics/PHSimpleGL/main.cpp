@@ -36,7 +36,7 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* sdk;
+UTRef<PHSdkIf> sdk;
 PHSceneIf* scene;
 PHSolidIf* redTeapot, *blueTeapot;	// Solidタイプ
 // 光源の設定 
@@ -209,7 +209,7 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	sdk = CreatePHSdk();					//	SDKの作成
+	sdk = PHSdkIf::CreateSdk();					//	SDKの作成
 	scene = sdk->CreateScene();				//	シーンの作成
 	
 	PHSolidDesc desc;						// 左のteapot

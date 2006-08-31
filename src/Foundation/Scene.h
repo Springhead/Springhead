@@ -106,6 +106,7 @@ class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
 public:
 	OBJECT_DEF(NameManager);
 	NameManager();
+	~NameManager();
 protected:
 	/*	名前とオブジェクトの対応表  */
 	ObjectNames names;

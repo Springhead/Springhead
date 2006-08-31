@@ -172,8 +172,8 @@ void timer(int id){
 int main(int argc, char* argv[]){
 
 	// SDKの作成　
-	phSdk = CreatePHSdk();
-	grSdk = CreateGRSdk();
+	phSdk = PHSdkIf::CreateSdk();
+	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;

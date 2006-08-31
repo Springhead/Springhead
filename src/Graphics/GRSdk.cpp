@@ -19,7 +19,7 @@ GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){
 }
 
 void SPR_CDECL GRRegisterTypeDescs();
-void SPR_CDECL GRSdkIf::Register(){
+void SPR_CDECL GRSdkIf::RegisterSdk(){
 	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
@@ -45,6 +45,7 @@ void SPR_CDECL GRSdkIf::Register(){
 //	GRSdk
 IF_OBJECT_IMP(GRSdk, Sdk);
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
+	RegisterSdk();
 }
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	GRDebugRender* rv = DBG_NEW GRDebugRender;

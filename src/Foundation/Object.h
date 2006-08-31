@@ -119,6 +119,8 @@ public:
 	virtual bool AddChildObject(ObjectIf* o){ return false; }
 	///	子オブジェクトの削除
 	virtual bool DelChildObject(ObjectIf* o){ return false; }
+	///	すべての子オブジェクトの削除
+	virtual void ClearChildObjects(){}
 
 	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const { return false; }
@@ -169,6 +171,12 @@ struct InheritObject:public intf, public base{
 	virtual bool AddChildObject(ObjectIf* o){
 		return base::AddChildObject(o);		
 	}
+	virtual bool DelChildObject(ObjectIf* o){
+		return base::DelChildObject(o);		
+	}
+	virtual void ClearChildObjects(){
+		base::ClearChildObjects();		
+	}
 	virtual bool GetDesc(void* desc) const { return base::GetDesc(desc); }
 	virtual const void* GetDescAddress() const { return base::GetDescAddress(); }
 	virtual size_t GetDescSize() const { return base::GetDescSize(); }
@@ -188,7 +196,7 @@ class NamedObject: public InheritObject<NamedObjectIf, Object>{
 protected:
 	friend class ObjectNames;
 	UTString name;					///<	名前
-	UTRef<NameManager> nameManager;	///<	名前の検索や重複管理をするもの．SceneやSDKなど．
+	NameManager* nameManager;	///<	名前の検索や重複管理をするもの．SceneやSDKなど．
 public:
 	NamedObject():nameManager(NULL){}
 	~NamedObject();

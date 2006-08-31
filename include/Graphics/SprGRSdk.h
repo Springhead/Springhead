@@ -39,7 +39,7 @@ struct GRSdkIf: public ObjectIf{
 	virtual size_t NScene()=0;
 
 	static GRSdkIf* SPR_CDECL CreateSdk();
-	static void SPR_CDECL Register();
+	static void SPR_CDECL RegisterSdk();
 };
 //@}
 }

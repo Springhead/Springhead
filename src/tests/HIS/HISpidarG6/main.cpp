@@ -500,7 +500,7 @@ void InitDeviceManager()
  return		0 (³íI—¹)
  */
 int main(int argc, char* argv[]){
-	phSdk = CreatePHSdk();					// SDK‚Ìì¬@
+	phSdk = PHSdkIf::CreateSdk();					// SDK‚Ìì¬@
 	PHSceneDesc sd;
 //	sd.ContactMode = PHSceneDesc::ContactMode::MODE_LCP;
 	sd.timeStep = 0.017;
@@ -545,7 +545,7 @@ int main(int argc, char* argv[]){
 	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
 
 	int window = glutCreateWindow("GRSimple");
-	grSdk = CreateGRSdk();
+	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL(window);
 

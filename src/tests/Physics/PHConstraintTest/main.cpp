@@ -286,7 +286,7 @@ void SPR_CDECL timer(int id){
  return		0 (正常終了)
  */
 int SPR_CDECL main(int argc, char* argv[]){
-	sdk = CreatePHSdk();							// SDKの作成　
+	sdk = PHSdkIf::CreateSdk();							// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.timeStep = dt;
 	scene = sdk->CreateScene(dscene);				// シーンの作成

@@ -33,7 +33,7 @@ void CRSimpleTestApp::Register(){
 
 
 void CRSimpleTestApp::LoadFile(string filename){
-	fiSdk = CreateFISdk();
+	fiSdk = FISdkIf::CreateSdk();
 	fiFileX = fiSdk->CreateFileX();
 
 	if (! fiFileX->Load(objs, filename.data()) ) {

@@ -8,8 +8,10 @@
 例えば GRSdk －生成→ GRScene －生成→ GRFrame と生成できます．
 生成されたオブジェクトは，生成したオブジェクトに所有されることが多いです．
 
-PHSdkやGRSdkは，ルートのオブジェクトで，親オブジェクトを持ちません．
-これらは，グローバル関数 CreateSdk() CreatePHSdk() CreateGRSdk()などで生成できます．
+SDKは、ルートのオブジェクトで，親オブジェクトたないことが多いです。
+FWSdk, FISdk, は親オブジェクトを持ちません。
+PHSdkやGRSdkは，FWSceneが親オブジェクトになることがあります。
+これらは，静的メンバー関数 PHSdkIf::CreateSdk() GRSdkIf::CreateSdk() などで生成できます．
 
 
 \subsection secFactory Factoryクラス

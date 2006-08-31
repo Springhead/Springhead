@@ -74,6 +74,10 @@ bool ObjectNamesLess::operator () (const NamedObject* o1, const NamedObject* o2)
 IF_OBJECT_IMP(NameManager, NamedObject);
 NameManager::NameManager(){
 }
+NameManager::~NameManager(){
+	childManagers.clear();
+	names.clear();
+}
 void NameManager::SetNameManager(NameManager* p){
 	if (nameManager==p) return;
 	if (nameManager) nameManager->DelChildManager(this);

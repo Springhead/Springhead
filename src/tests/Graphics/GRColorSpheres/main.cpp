@@ -30,11 +30,11 @@ using namespace Spr;
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		100			// sphere数
 
-GRSdkIf* grSdk;
+UTRef<GRSdkIf> grSdk;
 GRDebugRenderIf* render;
 GRDeviceGLIf* grDevice;
 
-PHSdkIf* phSdk;
+UTRef<PHSdkIf> phSdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soSphere; 
@@ -102,7 +102,7 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	phSdk = CreatePHSdk();					// SDKの作成　
+	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc sd;
 	sd.timeStep = 0.05;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
@@ -145,7 +145,7 @@ int main(int argc, char* argv[]){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
 	int window = glutCreateWindow("GRSimple");
-	grSdk = CreateGRSdk();
+	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL(window);
 
@@ -170,7 +170,4 @@ int main(int argc, char* argv[]){
 	setLight();
 
 	glutMainLoop();
-
-	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
-	delete phSdk;
 }

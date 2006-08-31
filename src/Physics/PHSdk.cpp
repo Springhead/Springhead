@@ -26,7 +26,7 @@ void SPR_CDECL PHRegisterTypeDescs();
 void SPR_CDECL CDRegisterTypeDescs();
 
 ///	PHSdkをファイルローダーなどに登録。一度だけ呼べばよい
-void PHSdkIf::Register(){
+void PHSdkIf::RegisterSdk(){
 	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
@@ -42,9 +42,29 @@ void PHSdkIf::Register(){
 //	PHSdk
 IF_OBJECT_IMP(PHSdk, Sdk);
 
-PHSdk::PHSdk(const PHSdkDesc&){
-}
+struct MemCheck{
+	MemCheck(){
+		#if defined _DEBUG && _MSC_VER			
+		// メモリリークチェッカ
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		#endif
+	}
+	void Start(){}
+};
+static MemCheck memCheck;
 
+PHSdk::PHSdk(const PHSdkDesc&){
+	memCheck.Start();
+	PHSdkIf::RegisterSdk();
+}
+PHSdk::~PHSdk(){
+	ClearChildObjects();
+}
+void PHSdk::ClearChildObjects(){
+	shapes.clear();
+	objects.clear();
+	scenes.clear();
+}
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	PHSceneIf* rv = DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));
 	AddChildObject(rv); 

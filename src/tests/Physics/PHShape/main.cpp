@@ -30,7 +30,7 @@
 #endif
 using namespace Spr;
 
-PHSdkIf* sdk;
+UTRef<PHSdkIf> sdk;
 PHSceneIf* scene;
 PHSolidIf* solid1, *solid2;
 
@@ -41,7 +41,7 @@ PHSolidIf* solid1, *solid2;
  return	0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	sdk = CreatePHSdk();				//	SDKの作成
+	sdk = PHSdkIf::CreateSdk();				//	SDKの作成
 	scene = sdk->CreateScene();			//	シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 2.0;
@@ -111,9 +111,4 @@ int main(int argc, char* argv[]){
 			DSTR << std::endl;
 		}
 	}
-
-
-	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
-	delete sdk;
-
 }

@@ -41,7 +41,7 @@ using namespace Spr;
 #define TOTAL_IDLE_COUNTER	5000	// 静止しない場合に利用
 
 
-PHSdkIf* sdk;
+UTRef<PHSdkIf> sdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor, *soBlock;
 
@@ -276,7 +276,7 @@ void dstrSolid(const std::string& solidName) {
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	sdk = CreatePHSdk();					// SDKの作成　
+	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	scene = sdk->CreateScene();				// シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 2.0;
@@ -332,7 +332,4 @@ int main(int argc, char* argv[]){
 	glutIdleFunc(idle);
 
 	glutMainLoop();
-
-	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
-	delete sdk;
 }

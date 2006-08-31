@@ -33,11 +33,11 @@ using namespace Spr;
 #define WINSIZE_HEIGHT	360
 #define NUM_BLOCKS		5
 
-GRSdkIf* grSdk;
+UTRef<GRSdkIf> grSdk;
 GRDebugRenderIf* render;
 GRDeviceGLIf* grDevice;
 
-PHSdkIf* phSdk;
+UTRef<PHSdkIf> phSdk;
 PHSceneIf* scene;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBlock;
@@ -182,8 +182,11 @@ void reshape(int w, int h){
  return 	なし
  */
 void keyboard(unsigned char key, int x, int y){
-	if (key == ESC) exit(0);
-
+	if (key == ESC) {
+		phSdk=NULL;
+		grSdk = NULL;
+		exit(0);
+	}
 }	
 /**
  brief  	glutIdleFuncで指定したコールバック関数
@@ -204,7 +207,7 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	phSdk = CreatePHSdk();					// SDKの作成　
+	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc sd;
 	sd.timeStep = 0.01;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
@@ -258,7 +261,7 @@ int main(int argc, char* argv[]){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
 	int window = glutCreateWindow("GRSimple");
-	grSdk = CreateGRSdk();
+	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL(window);
 
@@ -276,7 +279,4 @@ int main(int argc, char* argv[]){
 	setLight();
 
 	glutMainLoop();
-
-	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
-	delete phSdk;
 }

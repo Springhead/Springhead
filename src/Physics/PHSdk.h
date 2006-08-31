@@ -38,6 +38,8 @@ public:
 
 	OBJECT_DEF(PHSdk);
 	PHSdk(const PHSdkDesc& = PHSdkDesc());
+	~PHSdk();
+	virtual void ClearChildObjects();
 	virtual PHSceneIf* CreateScene();
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int NScene();

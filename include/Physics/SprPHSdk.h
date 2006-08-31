@@ -49,7 +49,7 @@ struct PHSdkIf : public NameManagerIf{
 	///	PHSdkのインスタンスを作成
 	static PHSdkIf* SPR_CDECL CreateSdk();
 	///	PHSdkをファイルローダーなどに登録
-	static void SPR_CDECL Register();
+	static void SPR_CDECL RegisterSdk();
 };
 
 //@}

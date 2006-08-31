@@ -119,7 +119,9 @@ void NamedObject::SetNameManager(NameManager* s){
 	nameManager = s;
 }
 NamedObject::~NamedObject(){
-	if (nameManager) nameManager->DelChildObject(GetIf());
+	if (nameManager){
+		nameManager->DelChildObject(GetIf());
+	}
 }
 void NamedObject::Print(std::ostream& os) const {
 	int w = os.width();
