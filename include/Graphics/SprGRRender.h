@@ -260,11 +260,11 @@ struct GRRenderBaseIf: public ObjectIf{
 	
 	///	DiplayList‚Ìì¬
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
-	virtual int CreateList(GRMaterialDesc& mat, unsigned int texid, 
+	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
 						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	///	DiplayList‚Ìì¬
 	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
-	virtual int CreateIndexedList(GRMaterialDesc& mat, unsigned int texid, 
+	virtual int CreateIndexedList(GRMaterialIf* mat, unsigned int texid, 
 								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 	///	DisplayList‚Ì•\¦
 	virtual void DrawList(int i)=0;
