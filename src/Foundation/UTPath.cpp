@@ -1,11 +1,11 @@
 #pragma hdrstop
-#include "WBPath.h"
+#include "UTPath.h"
 #include <windows.h>
 #include <io.h>
 #include <direct.h>
 
 namespace Spr {;
-void WBPath::Path(UTString p){
+void UTPath::Path(UTString p){
 	for(unsigned i=0; i<p.length(); ++i){
 		if (p[i] == '/'){
 			p[i] = '\\';
@@ -13,7 +13,7 @@ void WBPath::Path(UTString p){
 	}
 	path = p;
 }
-bool WBPath::Search(UTString file){
+bool UTPath::Search(UTString file){
 	char* fn=NULL;
 	char buf[1024];
 	if (!SearchPath(NULL, file.c_str(), NULL, sizeof(buf), buf, &fn)){
@@ -25,7 +25,7 @@ bool WBPath::Search(UTString file){
 	path = buf;
 	return true;
 }
-UTString WBPath::File(){
+UTString UTPath::File(){
 	char buf[1024];
 	char buf2[1024];
 	_splitpath(path.c_str(), NULL, NULL, buf, buf2);
@@ -33,18 +33,18 @@ UTString WBPath::File(){
 	file += buf2;
 	return file;
 }
-UTString WBPath::Main(){
+UTString UTPath::Main(){
 	char buf[1024];
 	_splitpath(path.c_str(), NULL, NULL, buf, NULL);
 	UTString m = buf;
 	return m;
 }
-UTString WBPath::Ext(){
+UTString UTPath::Ext(){
 	char buf[1024];
 	_splitpath(path.c_str(), NULL, NULL, NULL, buf);
 	return UTString(buf);
 }
-UTString WBPath::Drive(){
+UTString UTPath::Drive(){
 	if (path.length() >=2 && path[0]=='\\' && path[1]=='\\'){
 		int n = path.find('\\', 2);
 		return path.substr(0, n-1);
@@ -54,7 +54,7 @@ UTString WBPath::Drive(){
 		return UTString(buf);
 	}
 }
-UTString WBPath::Dir(){
+UTString UTPath::Dir(){
 	if ((path.length() >=2 && path[0]=='\\' && path[1]=='\\')
 		|| (path.length() >=2 && path[1]==':')){
 		int b = path.find('\\', 2);
@@ -67,17 +67,17 @@ UTString WBPath::Dir(){
 		return path.substr(0, e+1);
 	}
 }
-UTString WBPath::GetCwd(){
+UTString UTPath::GetCwd(){
 	char buf[1024];
 	GetCurrentDirectory(sizeof(buf), buf);
 	UTString rv(buf);
 	rv += "\\";
 	return rv;
 }
-bool WBPath::SetCwd(UTString cwd){
+bool UTPath::SetCwd(UTString cwd){
 	return SetCurrentDirectory(cwd.c_str())!=0;
 }
-UTString WBPath::FullPath(){
+UTString UTPath::FullPath(){
 	if (path.length() && path[0] == '\\'
 		|| path.length()>=2 && path[1] == ':'){
 		if (path.length()>=2 && path[0]=='\\' && path[1]!='\\'){
@@ -98,7 +98,7 @@ UTString WBPath::FullPath(){
 		return fp;
 	}
 }
-UTString WBPath::RelPath(){
+UTString UTPath::RelPath(){
 	if (path.length() && path[0] == '\\'
 		|| path.length()>=2 && path[1] == ':'){
 		UTString fp = FullPath();
@@ -128,7 +128,7 @@ UTString WBPath::RelPath(){
 		return Path();
 	}
 }
-UTString WBPath::FullDir(){
+UTString UTPath::FullDir(){
 	UTString str = FullPath();
 	size_t pos = str.find_last_of('\\');
 	if (pos == UTString::npos){

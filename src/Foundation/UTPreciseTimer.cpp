@@ -8,14 +8,16 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-#include "WBPreciseTimer.h"
+#include "UTPreciseTimer.h"
+#include <Base/BaseDebug.h>
+#include <Windows.h>
 
 namespace Spr{;
-DWORD WBPreciseTimer::freq;
+unsigned long UTPreciseTimer::freq;
 
 //生成時に1秒休み，周波数をカウントする
-WBPreciseTimer::WBPreciseTimer(): stopWatch(0), startFlag(false){
-	cycles2.QuadPart = 0;
+UTPreciseTimer::UTPreciseTimer(): stopWatch(0), startFlag(false){
+	cycles2.quadPart = 0;
 	if (freq == 0){
 #ifndef __BORLANDC__
 		Init(50);
@@ -27,19 +29,19 @@ WBPreciseTimer::WBPreciseTimer(): stopWatch(0), startFlag(false){
 	}
 }
 
-void WBPreciseTimer::Init(int preiod){
-	LARGE_INTEGER cycles;
-	DWORD time = timeGetTime();
-    DWORD lowPart, highPart;
+void UTPreciseTimer::Init(int preiod){
+	UTLargeInteger cycles;
+	unsigned long time = timeGetTime();
+    unsigned long lowPart, highPart;
 	_asm{
 		CPUID
 		RDTSC								;// クロックカウンタを読む
 		MOV		lowPart,	EAX				;// カウンタを保存
 		MOV		highPart,	EDX				;// カウンタを保存
 	}
-    cycles.LowPart = lowPart;
-    cycles.HighPart = highPart;
-	cycles2.QuadPart = cycles.QuadPart;
+    cycles.lowPart = lowPart;
+    cycles.highPart = highPart;
+	cycles2.quadPart = cycles.quadPart;
 	//	1秒待つ
 	int deltaTime;
 	while(1){;
@@ -52,28 +54,28 @@ void WBPreciseTimer::Init(int preiod){
 		MOV		lowPart,	EAX				;// カウンタを保存
 		MOV		highPart,	EDX				;// カウンタを保存
 	}
-    cycles.LowPart = lowPart;
-    cycles.HighPart = highPart;
-	freq = DWORD(cycles.QuadPart - cycles2.QuadPart);
-	freq = DWORD(freq * (1000.0 / deltaTime));
+    cycles.lowPart = lowPart;
+    cycles.highPart = highPart;
+	freq = unsigned long(cycles.quadPart - cycles2.quadPart);
+	freq = unsigned long(freq * (1000.0 / deltaTime));
 #ifdef _DEBUG
-	DSTR << "WBPreciseTimer CPU freq:" << freq;
+	DSTR << "UTPreciseTimer CPU freq:" << freq;
 #endif
 }
 
-void WBPreciseTimer::WaitUS(int time){
+void UTPreciseTimer::WaitUS(int time){
 #ifndef __BORLANDC__
-    DWORD lowPart, highPart;
-	LARGE_INTEGER cycles;
+    unsigned long lowPart, highPart;
+	UTLargeInteger cycles;
 	_asm{
 		CPUID;
 		RDTSC								;// クロックカウンタを読む
 		MOV     lowPart, EAX                ;// カウンタを保存
 		MOV     highPart, EDX               ;// カウンタを保存
 	}
-	cycles.LowPart = lowPart;
-	cycles.HighPart = highPart;
-	cycles2.QuadPart = cycles.QuadPart + (__int64)time*freq/1000000;
+	cycles.lowPart = lowPart;
+	cycles.highPart = highPart;
+	cycles2.quadPart = cycles.quadPart + (__int64)time*freq/1000000;
 	do{
 		_asm{
 			CPUID;
@@ -81,55 +83,55 @@ void WBPreciseTimer::WaitUS(int time){
 			MOV     lowPart, EAX			;// カウンタを保存
 			MOV     highPart, EDX			;// カウンタを保存
 		}
-        cycles.LowPart = lowPart;
-        cycles.HighPart = highPart;
-	}while(cycles2.QuadPart>cycles.QuadPart);
+        cycles.lowPart = lowPart;
+        cycles.highPart = highPart;
+	}while(cycles2.quadPart>cycles.quadPart);
 #endif
 }
 
 
-int  WBPreciseTimer::CountUS()
+int  UTPreciseTimer::CountUS()
 {
 	int retval=1;
 #ifndef __BORLANDC__
-	LARGE_INTEGER cycles;
-    DWORD lowPart, highPart;
+	UTLargeInteger cycles;
+    unsigned long lowPart, highPart;
 	_asm{
 		CPUID;
 		RDTSC								;// クロックカウンタを読む
 		MOV     lowPart, EAX				;// カウンタを保存
 		MOV     highPart, EDX				;// カウンタを保存
 	}
-	cycles.LowPart = lowPart;
-	cycles.HighPart = highPart;
-	retval =  (int)((cycles.QuadPart-cycles2.QuadPart)*1000000 / freq);
-	cycles2.QuadPart = cycles.QuadPart;
+	cycles.lowPart = lowPart;
+	cycles.highPart = highPart;
+	retval =  (int)((cycles.quadPart-cycles2.quadPart)*1000000 / freq);
+	cycles2.quadPart = cycles.quadPart;
 #endif
 	return retval;
 }
 
 
-void WBPreciseTimer::CountAndWaitUS(int time)
+void UTPreciseTimer::CountAndWaitUS(int time)
 {
 	int elapsedtime;
 	elapsedtime = CountUS();
 	WaitUS(time - elapsedtime);
 }
 
-DWORD WBPreciseTimer::Start(){
+unsigned long UTPreciseTimer::Start(){
 	CountUS();
 	startFlag = true;
 	return stopWatch;
 }
-DWORD WBPreciseTimer::Stop(){
+unsigned long UTPreciseTimer::Stop(){
 	if (startFlag){
 		stopWatch += CountUS();
 		startFlag = false;
 	}
 	return stopWatch;
 }
-DWORD WBPreciseTimer::Clear(){
-	DWORD rv = stopWatch;
+unsigned long UTPreciseTimer::Clear(){
+	unsigned long rv = stopWatch;
 	stopWatch = 0;
 	return rv;
 }

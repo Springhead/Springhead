@@ -36,8 +36,8 @@
 #define TEST_FILEX	"test1.x"		// ロードするXファイル
 
 namespace Spr{
-	PHSdkIf* phSdk;
-	GRSdkIf* grSdk;
+	UTRef<PHSdkIf> phSdk;
+	UTRef<GRSdkIf> grSdk;
 	PHSceneIf* scene;
 //	CDShapeIf** shape;
 	GRDeviceGLIf* grDevice;
@@ -258,7 +258,7 @@ int main(int argc, char* argv[]){
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
 
-	FISdkIf* fiSdk = FISdkIf::CreateSdk();
+	UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
 	if (argc>=2){
@@ -284,7 +284,7 @@ int main(int argc, char* argv[]){
 		if(grSdk) objs.Push(grSdk);
 		fileX->Save(objs, "out.x");
 	}
-	fiSdk->Clear();	//	ファイルローダのメモリを解放．
+	fiSdk = NULL;	//	ファイルローダのメモリを解放．
 	objs.clear();
 	phSdk->Print(DSTR);
 
