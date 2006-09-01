@@ -13,7 +13,6 @@
 #define SPR_FILEIO_H
 
 #include "FileIO/SprFISdk.h"
-#include "FileIO/SprFINodeHandler.h"
 #include "FileIO/SprFIFile.h"
 
 #endif

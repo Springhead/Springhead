@@ -5,15 +5,15 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef SPR_FINODEHANDLER_H
-#define SPR_FINODEHANDLER_H
+#ifndef SPR_PHNODEHANDLERS_H
+#define SPR_PHNODEHANDLERS_H
 #include <Foundation/SprObject.h>
 
 namespace Spr {;
-/** \addtogroup gpFileIO	*/
+/** \addtogroup gpPhyscis	*/
 //@{
 ///	Ç®å›Ç¢Ç…è’ìÀÇµÇ»Ç¢çÑëÃÇê›íË
-struct FIInactiveSolids{
+struct PHInactiveSolids{
 	std::vector<std::string> solids;	//	è’ìÀÇµÇ»Ç¢çÑëÃÇÃÉäÉXÉg
 };
 
@@ -22,4 +22,3 @@ struct FIInactiveSolids{
 }	//	namespace Spr
 
 #endif	
-

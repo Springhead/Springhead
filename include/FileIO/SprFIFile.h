@@ -22,7 +22,7 @@ struct FIFileIf: public ObjectIf{
 	///	セーブ
 	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
 	///	ノード型の登録
-	virtual void RegisterType(UTTypeDescDb* db)=0;
+	virtual void RegisterGroup(const char* gp)=0;
 };
 
 ///	DirectXファイルのファイルローダとセーバ
