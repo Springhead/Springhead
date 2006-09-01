@@ -11,7 +11,7 @@
 #endif
 
 #include "FIFileX.h"
-#include "FINodeHandler.h"
+#include <Foundation/UTLoadHandler.h>
 #include <fstream>
 #include <sstream>
 #include <Springhead.h>
@@ -60,7 +60,7 @@ static void NameSet(const char* b, const char* e){
 }
 ///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
 static void LoadNodeStub(const char* b, const char* e){
-	fileContext->fileInfo.Top()->parsingPos = b;
+	fileContext->fileInfo.Top()->curr = b;
 	fileX->LoadNode(fileContext);
 }
 
@@ -228,12 +228,8 @@ FIFileX::FIFileX(){
 }
 void FIFileX::Init(){
 	handlers.clear();
-	handlers += *FISdk::GetHandlers("OldSpringhead");
-	typeDb += *UTTypeDescDb::GetDb("Foundation");
-	typeDb += *UTTypeDescDb::GetDb("Physics");
-	typeDb += *UTTypeDescDb::GetDb("Graphics");
-	typeDb += *UTTypeDescDb::GetDb("Framework");
-	typeDb += *UTTypeDescDb::GetDb("OldSpringhead");
+	typeDb.Clear();
+	RegisterGroup("Foundation Physics Graphics Framework OldSpringhead");
 	typeDb.RegisterAlias("Vec3f", "Vector");
 	typeDb.RegisterAlias("Vec2f", "Coords2d");
 	typeDb.RegisterAlias("Affinef", "Matrix3x3");

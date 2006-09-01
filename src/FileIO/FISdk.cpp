@@ -26,12 +26,6 @@ IF_OBJECT_IMP(FISdk, NameManager);
 
 void SPR_CDECL FIRegisterTypeDescs();
 
-UTRef<FINodeHandlerDb> FISdk::handlerDb;
-FINodeHandlers* SPR_CDECL FISdk::GetHandlers(const char* gp){
-	if (!handlerDb) handlerDb = DBG_NEW FINodeHandlerDb;
-	return handlerDb->GetHandlers(gp);
-}
-
 FISdk::FISdk(){
 	FIRegisterTypeDescs();
 }

@@ -5,126 +5,99 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef FILoadContext_H
-#define FILoadContext_H
+#ifndef UTLoadContext_H
+#define UTLoadContext_H
 
 #include <Foundation/Object.h>
 #include <Foundation/UTTypeDesc.h>
-#include <string>
-#ifdef _WIN32
-#include <WinBasis/WinBasis.h>
-#else 
-#include <sys/stat.h>
-#endif
 
 
 namespace Spr{;
 
+///	ファイルマップ(今のところファイルのロード専用)
+class UTFileMap: public UTRefCount{
+public:
+	std::string name;	///<		ファイル名
+	const char* start;	///<		メモリマップされたファイルの先頭
+	const char* end;	///<		メモリマップされたファイルの終端
+	const char* curr;	///<		現在の位置
+	/// コンストラクタ
+	UTFileMap():start(NULL), end(NULL), curr(NULL){}
+	///
+	/// ファイル マッピング		
+	virtual bool Map(std::string fn)=0;
+	/// ファイル アンマッピング
+	virtual void Unmap()=0;
+	///	ロードできる状態ならtrue
+	bool IsGood();
+};
+
 /**	ファイルからObjectDescを読み出したり，ファイルに書き込んだりするためのデータ．
 	ObjectDesc へのポインタ(data) と 型情報 (type) を持つ．
 	メモリの管理も行う．	*/
-class FINodeData: public UTRefCount{
+class UTLoadData: public UTRefCount{
 public:
 	UTTypeDesc* type;	///<	データの型 
 	UTString name;		///<	名前
 	void* data;			///<	ロードしたデータ
 	bool haveData;		///<	dataをdeleteすべきかどうか．
-	FINodeData(UTTypeDesc* t=NULL, void* d=NULL);
-	~FINodeData();
+	UTLoadData(UTTypeDesc* t=NULL, void* d=NULL);
+	~UTLoadData();
 };
-class FILoadContext;
-///	タスククラス．ロード後にまとめて仕事をさせるためのもの．
-class FILoadedTask:public NamedObject{
+
+class UTLoadContext;
+///	ロード後に処理をさせるために、ロード時に生成され、ロード後に実行される．
+class UTLoadTask:public NamedObject{
 public:
-	OBJECT_DEF_NOIF(FILoadedTask);
-	virtual ~FILoadedTask(){}
-	virtual void Execute(FILoadContext* ctx){};
+	OBJECT_DEF_NOIF(UTLoadTask);
+	virtual ~UTLoadTask(){}
+	virtual void Execute(UTLoadContext* ctx){};
 };
-class FINodeHandlers;
-class FIFile;
+
+///	ロード後の処理を行うためのタスクリスト
+class UTLoadTasks:public std::vector< UTRef<UTLoadTask> >{
+public:
+	void Execute(UTLoadContext* ctx);
+};
+
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
 	まずロードする．
 	そのあと，オブジェクトを生成する．	*/
-class FILoadContext{
-public:
-	//--------------------------------------------------------------------------
-	//	クラス定義
-	///
-	struct FileInfo: public UTRefCount{
-		~FileInfo();
-		FIFile* file;		///<		もとのFIFileへの参照。
-		std::string name;	///<		ファイル名
-		const char* start;	///<		メモリマップされたファイルの先頭
-		const char* end;	///<		メモリマップされたファイルの終端
-		const char* parsingPos;	///<	現在のパース位置
-#ifdef _WIN32
-		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
-#else 
-		//FILE *hFile;
-		//char *buffer;
-		int fd;					///<	ファイルディスクリプタ
-		struct stat filestat;	///<	ファイルサイズを得るのに使う
-		void *sourceptr;
-#endif
-		/// コンストラクタ
-		FileInfo():start(NULL), end(NULL){}
-		/// ファイル マッピング		
-		bool Map(std::string fn);
-		/// ファイル アンマッピング
-		void Unmap();
-		///	ロードできる状態ならtrue
-		bool IsGood();
-	};
-	///	タスクリスト
-	class Tasks:public std::vector< UTRef<FILoadedTask> >{
-	public:
-		void Execute(FILoadContext* ctx);
-	};
-	///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
-	class LinkTask: public FILoadedTask{
-	public:
-		std::vector<NameManagerIf*> nameManagers;
-		std::string ref;
-		ObjectIf* object;
-		UTRef<FileInfo> info;
-		const char* pos;
-		LinkTask(const ObjectIfs& objs, FileInfo* info, const char* p, ObjectIf* o, std::string r);
-		void Execute(FILoadContext* ctx);
-	};
-	
+class UTLoadContext{
+public:	
 	//--------------------------------------------------------------------------
 	//	変数
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
-	UTStack< UTRef<FileInfo> > fileInfo;
+	UTStack< UTRef<UTFileMap> > fileInfo;
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
 	ObjectIfs objects;
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
 	ObjectIfs rootObjects;
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
-	UTStack< UTRef<FINodeData> > datas;
+	UTStack< UTRef<UTLoadData> > datas;
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
 	UTTypeDescFieldIts fieldIts;
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
 	///	リファレンスを後でリンクするための記録．
-	Tasks links;
+	UTLoadTasks links;
 	///	ロードとリンクが終わってから処理するタスク
-	Tasks postTasks;
+	UTLoadTasks postTasks;
 	///	型DB
 	UTTypeDescDb* typeDb;
 
 	//---------------------------------------------------------------------------
 	//	関数
 	///
-	FILoadContext():errorStream(NULL){
+	UTLoadContext():errorStream(NULL){
 		errorStream=&DSTR;
 	}
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
-	void ErrorMessage(FileInfo* info, const char* pos, const char* msg);
+	void ErrorMessage(UTFileMap* info, const char* pos, const char* msg);
 	///	メッセージの作成．posをファイル名と行番号に変換する．
-	void Message(FileInfo* info, const char* pos, const char* msg);
+	void Message(UTFileMap* info, const char* pos, const char* msg);
 	///	ロードできる状態ならtrue
 	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)
@@ -147,7 +120,6 @@ public:
 	void PushCreateNode(const IfInfo* info, const void* data);
 };
 
-
 }
 
-#endif	// FILoadContext_H
+#endif	// UTLoadContext_H

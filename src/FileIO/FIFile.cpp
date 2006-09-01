@@ -10,28 +10,131 @@
 #pragma hdrstop
 #endif
 #include "FIFile.h"
-#include "FILoadContext.h"
+
+#ifdef _WIN32
+#include <Windows.h>
+#else
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#endif
 
 namespace Spr{;
+
+//---------------------------------------------------------------------------
+//	FIFileMap
+//	ファイル マッピング
+//  既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
+class FIFileMap:public UTFileMap{
+	FIFileMap::~FIFileMap(){
+		if (start) Unmap();
+	}
+#ifdef _WIN32
+		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
+#else 
+		//FILE *hFile;
+		//char *buffer;
+		int fd;					///<	ファイルディスクリプタ
+		struct stat filestat;	///<	ファイルサイズを得るのに使う
+		void *sourceptr;
+#endif
+public:
+	///	ファイルのマップ
+	bool Map(std::string fn){
+		name = fn;
+	#ifdef _WIN32
+		// ファイルオープン
+		hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
+		if (!hFile){
+			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
+			return false;	
+		}		
+		// ファイルサイズの取得
+		DWORD len = GetFileSize(hFile,NULL);	
+		// ファイルマッピングオブジェクト作成
+		hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
+		// ファイルfnを読み属性でマップし、その先頭アドレスを取得
+		start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
+		end = start + len;
+		return true;	
+	#else	
+		/*
+		hFile = fopen(fn.c_str(), "rb");
+		if (!hFile) {
+			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
+			return false;	
+		}		
+		fseek(hFile, 0, SEEK_END);
+		int const len = ftell(hFile);
+		fseek(hFile, 0, SEEK_SET);
+		buffer = DBG_NEW char[len];
+		fread(buffer, 1, len, hFile);
+		start = buffer;
+		end = start + len;*/
+		fd = open(fn.c_str(), O_RDONLY); 
+		if( fd < 0 ) {
+			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
+			return false;	
+		}		
+		if( fstat( fd, &filestat ) == 0 ) {
+			// 読み込み専用でファイルマッピング
+			sourceptr = mmap( NULL, filestat.st_size, PROT_READ, MAP_SHARED, fd, 0 );
+			if( sourceptr != MAP_FAILED ) {
+				start = (char*)sourceptr;
+				end = start + filestat.st_size;
+				return true;
+			} 
+		}
+		return false;
+	#endif
+	}
+	/// ファイル アンマッピング
+	void Unmap(){
+	#ifdef _WIN32
+		UnmapViewOfFile(start);		// マップしたファイルをアンマップ
+		CloseHandle(hFileMap);		// ファイルマッピングオブジェクトをクローズ
+		CloseHandle(hFile);			// ファイルのハンドルをクローズ
+	#else
+		//fclose(hFile);
+		//delete[] buffer;
+		munmap(sourceptr, filestat.st_size);
+	#endif
+		start = end = NULL;
+	}
+};
+
 
 IF_OBJECT_IMP_ABST(FIFile, Object);
 
 //#define PDEBUG_EVAL(x)	x
 #define PDEBUG_EVAL(x)
 
-void FIFile::RegisterType(UTTypeDescDb* db){
-	typeDb += *db;
-	typeDb.Link();
+void FIFile::RegisterGroup(const char* gp){
+	const char* p = gp;
+	while(1){
+		const char* end = strchr(p, ' ');
+		if (!end) end = gp + strlen(gp);
+		if (p < end){
+			UTString group(p, end);
+			p = end+1;
+			handlers += *UTLoadHandlerDb::GetHandlers(group.c_str());
+			typeDb += *UTTypeDescDb::GetDb(group.c_str());
+		}else{
+			break;
+		}
+	}
 }
+
+
 
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
 	FILoadContext fc;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
 	fc.fileInfo.Push();
-	fc.fileInfo.Top() = DBG_NEW FILoadContext::FileInfo;
+	fc.fileInfo.Top() = DBG_NEW FIFileMap;
 	fc.fileInfo.Top()->Map(fn);
-	fc.fileInfo.Top()->file = this;
 	Load(&fc);
 	if (fc.rootObjects.size()){
 		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
@@ -42,7 +145,6 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 }
 void FIFile::Load(FILoadContext* fc){
 	if (fc->IsGood()){
-		fc->fileInfo.Top()->file = this;
 		fc->typeDb = &typeDb;
 		LoadImp(fc);
 	}
@@ -57,11 +159,11 @@ void FIFile::LoadNode(FILoadContext* fc){
 	}
 	//	ロード用のハンドラがあれば，呼び出す．
 	//	ハンドラは，衝突判定の無効ペアの設定や重力の設定など，ノードを作る以外の仕事をする．
-	static FINodeHandler key;
+	static UTLoadHandler key;
 	key.AddRef();
 	key.type = fc->datas.Top()->type->GetTypeName();
-	FINodeHandlers::iterator it = handlers.lower_bound(&key);
-	FINodeHandlers::iterator end = handlers.upper_bound(&key);
+	UTLoadHandlers::iterator it = handlers.lower_bound(&key);
+	UTLoadHandlers::iterator end = handlers.upper_bound(&key);
 	for(; it != end; ++it){
 		(*it)->Load(fc);
 	}
@@ -70,7 +172,7 @@ void FIFile::LoadNode(FILoadContext* fc){
 void FIFile::LoadEnterBlock(FILoadContext* fc){
 	char* base = (char*)fc->datas.Top()->data;
 	void* ptr = fc->fieldIts.back().field->GetAddressEx(base, fc->fieldIts.ArrayPos());
-	fc->datas.Push(DBG_NEW FINodeData(NULL, ptr));
+	fc->datas.Push(DBG_NEW UTLoadData(NULL, ptr));
 	fc->fieldIts.push_back(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
 }
 void FIFile::LoadLeaveBlock(FILoadContext* fc){
@@ -79,12 +181,12 @@ void FIFile::LoadLeaveBlock(FILoadContext* fc){
 }
 void FIFile::LoadEndNode(FILoadContext* fc){
 	if (fc->datas.Top()->type){
-		//	ハンドラがあれば，FINodeHandlerを呼び出す．
-		static FINodeHandler key;
+		//	ハンドラがあれば，UTLoadHandlerを呼び出す．
+		static UTLoadHandler key;
 		key.AddRef();
 		key.type = fc->datas.Top()->type->GetTypeName();
-		FINodeHandlers::iterator lower = handlers.lower_bound(&key);
-		FINodeHandlers::iterator upper = handlers.upper_bound(&key);
+		UTLoadHandlers::iterator lower = handlers.lower_bound(&key);
+		UTLoadHandlers::iterator upper = handlers.upper_bound(&key);
 		while(upper != lower){
 			--upper;
 			(*upper)->Loaded(fc);
@@ -131,9 +233,9 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		//	オブジェクトからデータを取り出す．
 		void* data = (void*)obj->GetDescAddress();
 		if (data){
-			sc->datas.Push(DBG_NEW FINodeData(type, data));
+			sc->datas.Push(DBG_NEW UTLoadData(type, data));
 		}else{
-			sc->datas.Push(DBG_NEW FINodeData(type));
+			sc->datas.Push(DBG_NEW UTLoadData(type));
 			data = sc->datas.back()->data;
 			obj->GetDesc(data);
 		}
@@ -197,7 +299,7 @@ void FIFile::SaveBlock(FISaveContext* sc){
 				case UTTypeDescFieldIt::F_BLOCK:{
 					PDEBUG_EVAL( DSTR << "=" << std::endl; )
 					void* blockData = field->GetAddress(base, pos);
-					sc->datas.Push(new FINodeData(field->type, blockData));
+					sc->datas.Push(new UTLoadData(field->type, blockData));
 					sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
 					SaveBlock(sc);
 					sc->fieldIts.Pop();

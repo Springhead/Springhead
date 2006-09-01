@@ -10,10 +10,14 @@
 
 #include <SprFileIO.h>
 #include <Foundation/UTTypeDesc.h>
-#include "FINodeHandler.h"
+#include <Foundation/UTLoadContext.h>
+#include <Foundation/UTLoadHandler.h>
 
 namespace Spr{;
-class FILoadContext;
+///	FILoadContext
+class FILoadContext: public UTLoadContext{
+};
+
 class FISaveContext;
 class FISdk;
 
@@ -24,7 +28,7 @@ public:
 	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
 	UTTypeDescDb typeDb;
 	///	ロード時に自動ロードとは別の処理が必要なノードのハンドラ
-	FINodeHandlers handlers;
+	UTLoadHandlers handlers;
 public:
 	FISdk* sdk;
 	OBJECT_DEF_ABST(FIFile);
@@ -49,8 +53,10 @@ public:
 	virtual void LoadImp(FILoadContext* fc)=0;
 	///	LoadContextの設定
 	virtual void SetLoaderContext(FILoadContext* fc){}
-	///	ノードの型情報の登録
-	virtual void RegisterType(UTTypeDescDb* db);
+	/**	ロードするノードのグループを登録。グループ名をスペースで区切って指定。
+		例：ResisterGroup("Foundation Physics Graphics Framework OldSpringhead");
+	*/
+	void RegisterGroup(const char* gp);
 
 protected:
 	
@@ -107,7 +113,7 @@ template <class intf, class base>
 struct InheritFIFile:public InheritObject<intf, base>{
 	virtual bool Load(ObjectIfs& objs, const char* fn){ return base::Load(objs, fn); }
 	virtual bool Save(const ObjectIfs& objs, const char* fn){ return base::Save(objs, fn); }
-	virtual void RegisterType(UTTypeDescDb* db){ return base::RegisterType(db); }
+	virtual void RegisterGroup(const char* gp){ return base::RegisterGroup(gp); }
 };
 
 

@@ -369,6 +369,9 @@ public:
 	UTString GetGroup() const {
 		return group;
 	}
+	void Clear(){
+		db.clear();
+	}
 };
 inline bool operator < (const UTTypeDescDb& d1, const UTTypeDescDb& d2){
 	return d1.GetGroup() < d2.GetGroup();

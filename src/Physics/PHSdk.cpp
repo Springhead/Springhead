@@ -23,6 +23,7 @@ PHSdkIf* SPR_CDECL PHSdkIf::CreateSdk(){
 //	PHSdkIf
 
 void SPR_CDECL PHRegisterTypeDescs();
+void SPR_CDECL PHRegisterLoadHandlers();
 void SPR_CDECL CDRegisterTypeDescs();
 
 ///	PHSdkをファイルローダーなどに登録。一度だけ呼べばよい
@@ -35,6 +36,7 @@ void PHSdkIf::RegisterSdk(){
 	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
 	PHRegisterTypeDescs();
+	PHRegisterLoadHandlers();
 	CDRegisterTypeDescs();
 }
 

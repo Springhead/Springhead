@@ -5,29 +5,22 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include "Physics.h"
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+#include <Foundation/UTLoadContext.h>
+#include <Foundation/UTLoadHandler.h>
 
-#include "FINodeHandler.h"
-#include "FILoadContext.h"
 namespace Spr{;
 
-FINodeHandlers* FINodeHandlerDb::GetHandlers(const char* gp){
-	UTRef<FINodeHandlers> key = DBG_NEW FINodeHandlers;
-	key->group = gp;
-	std::pair<iterator, bool> r = insert(key);
-	return *r.first;
-}
-
-class FINodeHandlerFIInactiveSolids: public FINodeHandlerImp<FIInactiveSolids>{
+class PHLoadHandlerPHInactiveSolids: public UTLoadHandlerImp<PHInactiveSolids>{
 public:
-	struct Task:public FILoadedTask{
-		FIInactiveSolids desc;
+	struct Task:public UTLoadTask{
+		PHInactiveSolids desc;
 		PHSceneIf* scene;
-		Task(const FIInactiveSolids& d, PHSceneIf* s):desc(d), scene(s){}
-		void Execute(FILoadContext* ctx){
+		Task(const PHInactiveSolids& d, PHSceneIf* s):desc(d), scene(s){}
+		void Execute(UTLoadContext* ctx){
 			for(unsigned i=0; i<desc.solids.size(); ++i){
 				PHSolidIf* s1;
 				scene->FindObject(s1, desc.solids[i]);
@@ -42,17 +35,15 @@ public:
 		}
 	};
 
-	FINodeHandlerFIInactiveSolids(): FINodeHandlerImp<Desc>("FIInactiveSolids"){}
-	void Load(FIInactiveSolids& desc, FILoadContext* ctx){
+	PHLoadHandlerPHInactiveSolids(): UTLoadHandlerImp<Desc>("PHInactiveSolids"){}
+	void Load(PHInactiveSolids& desc, UTLoadContext* ctx){
 		PHSceneIf* scene;
 		Get(scene, ctx);
 		ctx->postTasks.push_back(new Task(desc, scene));
 	}
 };
-
-void RegisterNodeHandlers(FINodeHandlers* handler){
-	handler->insert(DBG_NEW FINodeHandlerFIInactiveSolids);
+void SPR_CDECL PHRegisterLoadHandlers(){
+	UTLoadHandlerDb::GetHandlers("Physics")->insert( DBG_NEW PHLoadHandlerPHInactiveSolids );
 }
-
 
 }

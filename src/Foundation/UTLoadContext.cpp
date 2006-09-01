@@ -5,17 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
-#include "FILoadContext.h"
-#include "FINodeHandler.h"
+#include "UTLoadContext.h"
+#include "UTLoadHandler.h"
+#include <Base/Affine.h>
 #include <fstream>
 #include <sstream>
 #ifdef _WIN32
-#include <WinBasis/WinBasis.h>
+#include <Windows.h>
 #else
 #include <sys/mman.h>
 #include <sys/types.h>
@@ -25,8 +21,15 @@
 
 namespace Spr{;
 //---------------------------------------------------------------------------
-//	FINodeData
-FINodeData::FINodeData(UTTypeDesc* t, void* d):type(t), data(d){
+//	UTFileMap
+bool UTFileMap::IsGood(){
+	return start && end && (end != (char*)-1);
+}
+
+
+//---------------------------------------------------------------------------
+//	UTLoadData
+UTLoadData::UTLoadData(UTTypeDesc* t, void* d):type(t), data(d){
 	if (!data && type){
 		data = type->Create();
 		haveData = true;
@@ -34,87 +37,15 @@ FINodeData::FINodeData(UTTypeDesc* t, void* d):type(t), data(d){
 		haveData = false;
 	}
 }
-FINodeData::~FINodeData(){
+UTLoadData::~UTLoadData(){
 	if (haveData) type->Delete(data);
 }
-//---------------------------------------------------------------------------
-//	FILoadContext::FileInfo
-// ファイル マッピング
-//   既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
-bool FILoadContext::FileInfo::Map(std::string fn){
-	name = fn;
-#ifdef _WIN32
-	// ファイルオープン
-	hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
-	if (!hFile){
-		DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
-		return false;	
-	}		
-	// ファイルサイズの取得
-	DWORD len = GetFileSize(hFile,NULL);	
-	// ファイルマッピングオブジェクト作成
-	hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-	// ファイルfnを読み属性でマップし、その先頭アドレスを取得
-	start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
-	end = start + len;
-	return true;	
-#else	
-	/*
-	hFile = fopen(fn.c_str(), "rb");
-	if (!hFile) {
-		DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
-		return false;	
-	}		
-	fseek(hFile, 0, SEEK_END);
-	int const len = ftell(hFile);
-	fseek(hFile, 0, SEEK_SET);
-	buffer = DBG_NEW char[len];
-	fread(buffer, 1, len, hFile);
-	start = buffer;
-	end = start + len;*/
-	fd = open(fn.c_str(), O_RDONLY); 
-    if( fd < 0 ) {
-		DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
-		return false;	
-	}		
-	if( fstat( fd, &filestat ) == 0 ) {
-		// 読み込み専用でファイルマッピング
-        sourceptr = mmap( NULL, filestat.st_size, PROT_READ, MAP_SHARED, fd, 0 );
-		if( sourceptr != MAP_FAILED ) {
-			start = (char*)sourceptr;
-			end = start + filestat.st_size;
-			return true;
-		} 
-	}
-	return false;
-#endif
-
-}
-OBJECT_IMP(FILoadedTask, NamedObject);
-// ファイル アンマッピング
-void FILoadContext::FileInfo::Unmap(){
-#ifdef _WIN32
-	UnmapViewOfFile(start);		// マップしたファイルをアンマップ
-	CloseHandle(hFileMap);		// ファイルマッピングオブジェクトをクローズ
-	CloseHandle(hFile);			// ファイルのハンドルをクローズ
-#else
-	//fclose(hFile);
-	//delete[] buffer;
-	munmap(sourceptr, filestat.st_size);
-#endif
-	start = end = NULL;
-}
-FILoadContext::FileInfo::~FileInfo(){
-	if (start) Unmap();
-}
-bool FILoadContext::FileInfo::IsGood(){
-	return start && end && (end != (char*)-1);
-}
-
 
 //---------------------------------------------------------------------------
-//	FILoadContext::Tasks
-void FILoadContext::Tasks::Execute(FILoadContext* ctx){
+//	UTLoadTasks
+OBJECT_IMP(UTLoadTask, NamedObject);
+
+void UTLoadTasks::Execute(UTLoadContext* ctx){
 	for(iterator it = begin(); it!=end(); ++it){
 		(*it)->Execute(ctx);
 	}
@@ -122,8 +53,20 @@ void FILoadContext::Tasks::Execute(FILoadContext* ctx){
 }
 
 //---------------------------------------------------------------------------
-//	FILoadContext::LinkTask
-FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, FILoadContext::FileInfo* fi, const char* p, ObjectIf* o, std::string r):info(fi), pos(p), object(o), ref(r){
+//	UTLinkTask
+///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
+class UTLinkTask: public UTLoadTask{
+public:
+	std::vector<NameManagerIf*> nameManagers;
+	std::string ref;
+	ObjectIf* object;
+	UTRef<UTFileMap> info;
+	const char* pos;
+	UTLinkTask(const ObjectIfs& objs, UTFileMap* info, const char* p, ObjectIf* o, std::string r);
+	void Execute(UTLoadContext* ctx);
+};
+
+UTLinkTask::UTLinkTask(const ObjectIfs& objs, UTFileMap* fi, const char* p, ObjectIf* o, std::string r):info(fi), pos(p), object(o), ref(r){
 	for(int i=objs.size()-1; i>=0; --i){
 		NameManagerIf* nm = DCAST(NameManagerIf, objs[i]);
 		if (nm){
@@ -131,7 +74,8 @@ FILoadContext::LinkTask::LinkTask(const ObjectIfs& objs, FILoadContext::FileInfo
 		}
 	}
 }
-void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
+
+void UTLinkTask::Execute(UTLoadContext* ctx){
 	Spr::ObjectIf* refObj = NULL;
 	for(unsigned i=0; i<nameManagers.size(); ++i){
 		refObj = nameManagers[i]->FindObject(ref);
@@ -155,58 +99,58 @@ void FILoadContext::LinkTask::Execute(FILoadContext* ctx){
 }
 
 //---------------------------------------------------------------------------
-//	FILoadContext
-void FILoadContext::WriteBool(bool v){
+//	UTLoadContext
+void UTLoadContext::WriteBool(bool v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
 }
-void FILoadContext::WriteNumber(double v){
+void UTLoadContext::WriteNumber(double v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
 }
-void FILoadContext::WriteString(std::string v){
+void UTLoadContext::WriteString(std::string v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
-void FILoadContext::PushType(UTTypeDesc* type){
+void UTLoadContext::PushType(UTTypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	読み出したデータを構造体の用意
-	datas.Push(DBG_NEW FINodeData(type));
+	datas.Push(DBG_NEW UTLoadData(type));
 }
-void FILoadContext::PopType(){
+void UTLoadContext::PopType(){
 	datas.Pop();
 	fieldIts.Pop();
 }
-bool FILoadContext::IsGood(){
+bool UTLoadContext::IsGood(){
 	if (!fileInfo.size()) return false;
 	return fileInfo.Top()->IsGood();
 }
-void FILoadContext::AddLink(std::string ref, const char* pos){
-	links.push_back(DBG_NEW LinkTask(objects, fileInfo.Top(), pos, objects.back(), ref));
+void UTLoadContext::AddLink(std::string ref, const char* pos){
+	links.push_back(DBG_NEW UTLinkTask(objects, fileInfo.Top(), pos, objects.back(), ref));
 }
-void FILoadContext::Link(){
+void UTLoadContext::Link(){
 	links.Execute(this);
 	links.clear();
 }
-void FILoadContext::PostTask(){
+void UTLoadContext::PostTask(){
 	postTasks.Execute(this);
 	postTasks.clear();
 }
 
-void FILoadContext::ErrorMessage(FileInfo* info, const char* pos, const char* msg){
+void UTLoadContext::ErrorMessage(UTFileMap* info, const char* pos, const char* msg){
 	std::string m("error: ");
 	m.append(msg);
 	Message(info, pos, m.c_str());
 }
-void FILoadContext::Message(FileInfo* info, const char* pos, const char* msg){
+void UTLoadContext::Message(UTFileMap* info, const char* pos, const char* msg){
 	int lines=0;
 	int returns=0;
 	if (!info) info = fileInfo.Top();
 	const char* ptr = info->start;
 	const char* line=ptr;
 
-	if (!pos) pos = info->parsingPos;
+	if (!pos) pos = info->curr;
 	if (pos){
 		for(;ptr < pos; ++ptr){
 			if (*ptr == '\n'){
@@ -223,14 +167,14 @@ void FILoadContext::Message(FileInfo* info, const char* pos, const char* msg){
 				break;
 			}
 		}
-		lines = std::max(lines, returns);
+		lines = lines > returns ? lines : returns;
 	}
 	std::ostream& os = *errorStream;
 	os << info->name << "(" << lines+1 << ") : ";
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
 }
-void FILoadContext::PushCreateNode(const IfInfo* info, const void* data){
+void UTLoadContext::PushCreateNode(const IfInfo* info, const void* data){
 	ObjectIf* obj = NULL;
 	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
 		if (*it) obj = (*it)->CreateObject(info, data);

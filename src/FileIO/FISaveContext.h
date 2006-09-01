@@ -10,6 +10,7 @@
 
 #include <Foundation/Object.h>
 #include <Foundation/UTTypeDesc.h>
+#include <Foundation/UTLoadContext.h>
 #include <fstream>
 
 namespace Spr{;
@@ -30,7 +31,7 @@ public:
 	///	UTTypeDescのフィールドへのイタレータのスタック
 	UTTypeDescFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
-	UTStack< UTRef<FINodeData> > datas;
+	UTStack< UTRef<UTLoadData> > datas;
 	///
 	std::set<ObjectIf*> savedObjects;
 	

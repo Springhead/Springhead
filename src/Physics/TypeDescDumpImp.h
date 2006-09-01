@@ -125,6 +125,14 @@
 	field->offset = (char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc;
 	db->RegisterDesc(desc);
 	
+	PHInactiveSolids* pPHInactiveSolids = NULL;
+	desc = DBG_NEW UTTypeDesc("PHInactiveSolids");
+	desc->size = sizeof(PHInactiveSolids);
+	desc->access = DBG_NEW UTAccess<PHInactiveSolids>;
+	field = desc->AddField("vector", "string", "solids", "");
+	field->offset = (char*)&(pPHInactiveSolids->solids) - (char*)pPHInactiveSolids;
+	db->RegisterDesc(desc);
+	
 	PHSceneState* pPHSceneState = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSceneState");
 	desc->size = sizeof(PHSceneState);

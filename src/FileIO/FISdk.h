@@ -16,10 +16,7 @@ class FINodeHandlerDb;
 class FINodeHandlers;
 class FIFile;
 class SPR_DLL FISdk:public InheritObject<FISdkIf, Object>{
-protected:
-	static UTRef<FINodeHandlerDb> handlerDb;
 public:
-	static FINodeHandlers* SPR_CDECL GetHandlers(const char* gp);
 
 	std::vector< UTRef<FIFile> > files;
 	OBJECT_DEF(FISdk);
