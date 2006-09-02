@@ -298,9 +298,9 @@ void FIFileX::PushLoaderContext(FILoadContext* fc){
 	fileX = fileXs.Top();
 }
 void FIFileX::PopLoaderContext(){
+	fileContexts.Pop();
+	fileXs.Pop();
 	if (fileContexts.size()){
-		fileContexts.Pop();
-		fileXs.Pop();
 		fileContext = fileContexts.Top();
 		fileX = fileXs.Top();
 	}else{
