@@ -33,6 +33,8 @@ namespace Spr{
 		GRSceneIf* GetGRScene(){ return grScene; }
 		///	オブジェクトの位置・姿勢を同期
 		void Sync();
+		void Step();
+		void Draw(GRRenderIf* grRender, bool debug=false);
 		//
 		virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 		virtual bool AddChildObject(ObjectIf* o);

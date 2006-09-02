@@ -78,5 +78,31 @@ namespace Spr{
 			DCAST(FWObject, *it)->Sync();
 		}
 	}
-
+	void FWScene::Step(){
+		phScene->Step();
+	}
+	void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
+		Sync();
+		if (debug){
+			// GRRenderGLIfを使うか、GRRenderIfにメソッド追加か
+			// あとでなんとかする mitake
+			/*
+			GRCameraIf* cam = NULL;
+			if (grScene) cam = grScene->GetCamera();
+			if (cam) cam->Render(grRender);
+			
+			GRLightDesc ld;
+			ld.diffuse = Vec4f(1,1,1,1) * 0.8;
+			ld.specular = Vec4f(1,1,1,1) * 0.8;
+			ld.ambient = Vec4f(1,1,1,1) * 0.4;
+			ld.position = Vec4f(1,1,1,0);
+			grRender->PushLight(ld);
+			grRender->DrawScene(phScene);
+			grRender->PopLight();
+			if (cam) cam->Rendered(grRender);
+			*/
+		}else{
+			grScene->Render(grRender);
+		}
+	}
 }

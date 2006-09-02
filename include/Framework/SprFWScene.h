@@ -7,6 +7,7 @@ namespace Spr{
 
 	struct PHSceneIf;
 	struct GRSceneIf;
+	struct GRRenderIf;
 
 	struct FWSceneDesc{
 	};
@@ -15,6 +16,9 @@ namespace Spr{
 		IF_DEF(FWScene);
 		virtual PHSceneIf* GetPHScene() = 0;
 		virtual GRSceneIf* GetGRScene() = 0;
+		virtual void Sync() = 0;
+		virtual void Step() = 0;
+		virtual void Draw(GRRenderIf* grRender, bool debug=false) = 0;
 	};
 
 	FWSceneIf* SPR_CDECL CreateFWScene();

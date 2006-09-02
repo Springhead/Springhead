@@ -30,6 +30,12 @@ protected:
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
 	///	ÉVÅ[Éì
 	Scenes scenes;
+	// PHSdk, GRSdk
+	UTRef<PHSdkIf> phSdk;
+	UTRef<GRSdkIf> grSdk;
+	// Graphics
+	UTRef<GRRenderIf> grRender;
+	UTRef<GRDeviceIf> grDevice;
 public:
 	OBJECT_DEF(FWSdk);
 	FWSdk();
@@ -42,6 +48,12 @@ public:
 	virtual ObjectIf* GetChildObject(size_t i){ return GetScene(i); }
 	virtual bool AddChildObject(ObjectIf* o);
 public:
+	virtual void ClearObjects();
+	virtual void Step();
+	virtual void CreateRenderGL();
+	virtual void Draw();
+	virtual void Reshape(int w, int h);
+	virtual void Keyboard(unsigned char key, int x, int y);
 };
 
 }

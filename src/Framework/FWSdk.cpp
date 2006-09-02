@@ -16,6 +16,7 @@
 #pragma hdrstop
 #endif
 #include <stdlib.h>
+#include <GL/glut.h>
 
 namespace Spr{;
 
@@ -68,7 +69,61 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 			return true;
 		}
 	}
+	PHSdkIf* ps = DCAST(PHSdkIf, o);
+	if (ps) {
+		phSdk = ps;
+		return true;
+	}
+	GRSdkIf* gs = DCAST(GRSdkIf, o);
+	if (gs) {
+		grSdk = gs;
+		return true;
+	}
 	return false;
 }
+void FWSdk::ClearObjects(){
+	// 再ロード前など、全オブジェクトのクリアが必要な時に呼ぶ
+	// 未実装
+}
+void FWSdk::Step(){
+	for (unsigned i=0; i<scenes.size(); i++) {
+		scenes[i]->Step();
+	}
+}
+void FWSdk::CreateRenderGL(){
+	// Windowの生成
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInitWindowSize(1000, 700);
+	int window = glutCreateWindow("Springhead Application");
+	// Renderの生成
+	grRender = grSdk->CreateDebugRender();
+	// Deviceの設定
+	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice->Init();
+	grRender->SetDevice(grDevice);
+}
+void FWSdk::Draw(){
+	// 描画。描画プロセスそのものをもっと細分化したメソッドにするかも。
+	// {ClearBuffer,BeginScene},{EndScene}は分けたほうがよかと思う
 
+	// ToDo : isLoadCompleteではなく、必要なインスタンスが確保されているかに
+	// よって実行するかどうか判断するようにせよ。
+
+	grRender->ClearBuffer();
+	grRender->BeginScene();
+
+	for (unsigned i=0; i<scenes.size(); i++) {
+		scenes[i]->Draw(grRender);
+	}
+
+	grRender->EndScene();	
+}
+void FWSdk::Reshape(int w, int h){
+	grRender->Reshape(Vec2f(), Vec2f(w,h));
+}
+void FWSdk::Keyboard(unsigned char key, int x, int y){
+	if (key == 27) {
+		exit(0);
+	}
+}
 }
