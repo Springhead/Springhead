@@ -16,6 +16,8 @@
 namespace Spr{;
 ///	FILoadContext
 class FILoadContext: public UTLoadContext{
+public:
+	void PushFileMap(const UTString fn);
 };
 
 class FISaveContext;
@@ -51,8 +53,6 @@ public:
 	void LoadLeaveBlock(FILoadContext* fc);
 	///	ロードの実装
 	virtual void LoadImp(FILoadContext* fc)=0;
-	///	LoadContextの設定
-	virtual void SetLoaderContext(FILoadContext* fc){}
 	/**	ロードするノードのグループを登録。グループ名をスペースで区切って指定。
 		例：ResisterGroup("Foundation Physics Graphics Framework OldSpringhead");
 	*/

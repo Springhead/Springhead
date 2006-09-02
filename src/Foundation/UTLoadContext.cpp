@@ -123,11 +123,11 @@ void UTLoadContext::PopType(){
 	fieldIts.Pop();
 }
 bool UTLoadContext::IsGood(){
-	if (!fileInfo.size()) return false;
-	return fileInfo.Top()->IsGood();
+	if (!fileMaps.size()) return false;
+	return fileMaps.Top()->IsGood();
 }
 void UTLoadContext::AddLink(std::string ref, const char* pos){
-	links.push_back(DBG_NEW UTLinkTask(objects, fileInfo.Top(), pos, objects.back(), ref));
+	links.push_back(DBG_NEW UTLinkTask(objects, fileMaps.Top(), pos, objects.back(), ref));
 }
 void UTLoadContext::Link(){
 	links.Execute(this);
@@ -146,7 +146,7 @@ void UTLoadContext::ErrorMessage(UTFileMap* info, const char* pos, const char* m
 void UTLoadContext::Message(UTFileMap* info, const char* pos, const char* msg){
 	int lines=0;
 	int returns=0;
-	if (!info) info = fileInfo.Top();
+	if (!info) info = fileMaps.Top();
 	const char* ptr = info->start;
 	const char* line=ptr;
 

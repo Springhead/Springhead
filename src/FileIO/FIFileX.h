@@ -26,7 +26,8 @@ public:
 	FIFileX();
 	UTTypeDescDb* GetDb(){return &typeDb;}
 	void LoadImp(FILoadContext* fc);
-	virtual void SetLoaderContext(FILoadContext* fc);
+	virtual void PushLoaderContext(FILoadContext* fc);
+	virtual void PopLoaderContext();
 
 protected:
 	void Init();

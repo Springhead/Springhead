@@ -25,7 +25,7 @@ public:
 	UTFileMap():start(NULL), end(NULL), curr(NULL){}
 	///
 	/// ファイル マッピング		
-	virtual bool Map(std::string fn)=0;
+	virtual bool Map(const UTString fn)=0;
 	/// ファイル アンマッピング
 	virtual void Unmap()=0;
 	///	ロードできる状態ならtrue
@@ -70,7 +70,7 @@ public:
 	//--------------------------------------------------------------------------
 	//	変数
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
-	UTStack< UTRef<UTFileMap> > fileInfo;
+	UTStack< UTRef<UTFileMap> > fileMaps;
 	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
 	ObjectIfs objects;
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
@@ -118,6 +118,8 @@ public:
 	void PostTask();
 	///	ノードの作成
 	void PushCreateNode(const IfInfo* info, const void* data);
+	///	ファイルマップを作成してスタック(fileMaps)に積む
+	virtual void PushFileMap(const UTString fn)=0;
 };
 
 }

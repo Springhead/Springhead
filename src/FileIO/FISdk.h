@@ -12,8 +12,6 @@
 
 namespace Spr {;
 
-class FINodeHandlerDb;
-class FINodeHandlers;
 class FIFile;
 class SPR_DLL FISdk:public InheritObject<FISdkIf, Object>{
 public:

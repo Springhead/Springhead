@@ -21,7 +21,6 @@
 #endif
 
 namespace Spr{;
-
 //---------------------------------------------------------------------------
 //	FIFileMap
 //	ファイル マッピング
@@ -41,7 +40,7 @@ class FIFileMap:public UTFileMap{
 #endif
 public:
 	///	ファイルのマップ
-	bool Map(std::string fn){
+	bool Map(const UTString fn){
 		name = fn;
 	#ifdef _WIN32
 		// ファイルオープン
@@ -103,6 +102,12 @@ public:
 		start = end = NULL;
 	}
 };
+//---------------------------------------------------------------------------
+//	FILoadContext
+void FILoadContext::PushFileMap(const UTString fn){
+	fileMaps.Push(DBG_NEW FIFileMap);
+	fileMaps.Top()->Map(fn);
+}
 
 
 IF_OBJECT_IMP_ABST(FIFile, Object);
@@ -132,9 +137,7 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
 	FILoadContext fc;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
-	fc.fileInfo.Push();
-	fc.fileInfo.Top() = DBG_NEW FIFileMap;
-	fc.fileInfo.Top()->Map(fn);
+	fc.PushFileMap(fn);
 	Load(&fc);
 	if (fc.rootObjects.size()){
 		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());

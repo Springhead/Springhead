@@ -29,6 +29,8 @@ IF_OBJECT_IMP(FIFileX, FIFile);
 #endif
 
 namespace FileX{
+static UTStack<FILoadContext*> fileContexts;
+static UTStack<FIFileX*> fileXs;
 static FILoadContext* fileContext;
 static FIFileX* fileX;
 
@@ -60,7 +62,7 @@ static void NameSet(const char* b, const char* e){
 }
 ///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
 static void LoadNodeStub(const char* b, const char* e){
-	fileContext->fileInfo.Top()->curr = b;
+	fileContext->fileMaps.Top()->curr = b;
 	fileX->LoadNode(fileContext);
 }
 
@@ -289,18 +291,32 @@ void FIFileX::Init(){
 
 
 //------------------------------------------------------------------------------
-void FIFileX::SetLoaderContext(FILoadContext* fc){
-	fileContext = fc;
-	fileX = this;
+void FIFileX::PushLoaderContext(FILoadContext* fc){
+	fileContexts.Push(fc);
+	fileXs.Push(this);
+	fileContext = fileContexts.Top();
+	fileX = fileXs.Top();
+}
+void FIFileX::PopLoaderContext(){
+	if (fileContexts.size()){
+		fileContexts.Pop();
+		fileXs.Pop();
+		fileContext = fileContexts.Top();
+		fileX = fileXs.Top();
+	}else{
+		fileContext = NULL;
+		fileX = NULL;
+	}
 }
 void FIFileX::LoadImp(FILoadContext* fc){
 	using namespace std;
 	using namespace boost::spirit;
 	using namespace Spr;
-	SetLoaderContext(fc);
+	PushLoaderContext(fc);
 	parse_info<const char*> info = parse(
-		fileContext->fileInfo.Top()->start, 
-		fileContext->fileInfo.Top()->end, start, cmt);
+		fileContext->fileMaps.Top()->start, 
+		fileContext->fileMaps.Top()->end, start, cmt);
+	PopLoaderContext();
 }
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
