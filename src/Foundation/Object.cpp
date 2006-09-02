@@ -28,7 +28,7 @@ static MemCheck memCheck;
 
 
 TypeInfoManager* TypeInfoManager::typeInfoManager;
-TypeInfoManager* TypeInfoManager::Get(){
+TypeInfoManager* SPR_CDECL TypeInfoManager::Get(){
 	static UTRef<TypeInfoManager> tim;
 	if (!typeInfoManager){
 		memCheck.Start();

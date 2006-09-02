@@ -22,7 +22,7 @@ protected:
 public:
 	TypeInfoManager();
 	~TypeInfoManager();
-	static TypeInfoManager* Get();
+	static TypeInfoManager* SPR_CDECL Get();
 	void RegisterIf(IfInfo* i);
 	void RegisterObject(UTTypeInfo* t);
 };

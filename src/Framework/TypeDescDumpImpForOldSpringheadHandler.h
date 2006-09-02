@@ -5,11 +5,11 @@
 	desc->size = sizeof(Header);
 	desc->access = DBG_NEW UTAccess<Header>;
 	field = desc->AddField("", "int", "major", "");
-	field->offset = (char*)&(pHeader->major) - (char*)pHeader;
+	field->offset = int((char*)&(pHeader->major) - (char*)pHeader);
 	field = desc->AddField("", "int", "minor", "");
-	field->offset = (char*)&(pHeader->minor) - (char*)pHeader;
+	field->offset = int((char*)&(pHeader->minor) - (char*)pHeader);
 	field = desc->AddField("", "int", "flags", "");
-	field->offset = (char*)&(pHeader->flags) - (char*)pHeader;
+	field->offset = int((char*)&(pHeader->flags) - (char*)pHeader);
 	db->RegisterDesc(desc);
 	
 	Frame* pFrame = NULL;
@@ -23,7 +23,7 @@
 	desc->size = sizeof(FrameTransformMatrix);
 	desc->access = DBG_NEW UTAccess<FrameTransformMatrix>;
 	field = desc->AddField("", "Affinef", "matrix", "");
-	field->offset = (char*)&(pFrameTransformMatrix->matrix) - (char*)pFrameTransformMatrix;
+	field->offset = int((char*)&(pFrameTransformMatrix->matrix) - (char*)pFrameTransformMatrix);
 	db->RegisterDesc(desc);
 	
 	Light8* pLight8 = NULL;
@@ -34,31 +34,31 @@
 	field->AddEnumConst("XLIGHT_POINT", 1);
 	field->AddEnumConst("XLIGHT_SPOT", 2);
 	field->AddEnumConst("XLIGHT_DIRECTIONAL", 3);
-	field->offset = (char*)(&pLight8->type) - (char*)pLight8;
+	field->offset = int((char*)(&pLight8->type) - (char*)pLight8);
 	field = desc->AddField("", "Vec4f", "diffuse", "");
-	field->offset = (char*)&(pLight8->diffuse) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->diffuse) - (char*)pLight8);
 	field = desc->AddField("", "Vec4f", "specular", "");
-	field->offset = (char*)&(pLight8->specular) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->specular) - (char*)pLight8);
 	field = desc->AddField("", "Vec4f", "ambient", "");
-	field->offset = (char*)&(pLight8->ambient) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->ambient) - (char*)pLight8);
 	field = desc->AddField("", "Vec3f", "position", "");
-	field->offset = (char*)&(pLight8->position) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->position) - (char*)pLight8);
 	field = desc->AddField("", "Vec3f", "direction", "");
-	field->offset = (char*)&(pLight8->direction) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->direction) - (char*)pLight8);
 	field = desc->AddField("", "float", "range", "");
-	field->offset = (char*)&(pLight8->range) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->range) - (char*)pLight8);
 	field = desc->AddField("", "float", "falloff", "");
-	field->offset = (char*)&(pLight8->falloff) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->falloff) - (char*)pLight8);
 	field = desc->AddField("", "float", "attenuation0", "");
-	field->offset = (char*)&(pLight8->attenuation0) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->attenuation0) - (char*)pLight8);
 	field = desc->AddField("", "float", "attenuation1", "");
-	field->offset = (char*)&(pLight8->attenuation1) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->attenuation1) - (char*)pLight8);
 	field = desc->AddField("", "float", "attenuation2", "");
-	field->offset = (char*)&(pLight8->attenuation2) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->attenuation2) - (char*)pLight8);
 	field = desc->AddField("", "float", "spotInner", "");
-	field->offset = (char*)&(pLight8->spotInner) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->spotInner) - (char*)pLight8);
 	field = desc->AddField("", "float", "spotCutoff", "");
-	field->offset = (char*)&(pLight8->spotCutoff) - (char*)pLight8;
+	field->offset = int((char*)&(pLight8->spotCutoff) - (char*)pLight8);
 	db->RegisterDesc(desc);
 	
 	Material* pMaterial = NULL;
@@ -66,13 +66,13 @@
 	desc->size = sizeof(Material);
 	desc->access = DBG_NEW UTAccess<Material>;
 	field = desc->AddField("", "Vec4f", "face", "");
-	field->offset = (char*)&(pMaterial->face) - (char*)pMaterial;
+	field->offset = int((char*)&(pMaterial->face) - (char*)pMaterial);
 	field = desc->AddField("", "float", "power", "");
-	field->offset = (char*)&(pMaterial->power) - (char*)pMaterial;
+	field->offset = int((char*)&(pMaterial->power) - (char*)pMaterial);
 	field = desc->AddField("", "Vec3f", "specular", "");
-	field->offset = (char*)&(pMaterial->specular) - (char*)pMaterial;
+	field->offset = int((char*)&(pMaterial->specular) - (char*)pMaterial);
 	field = desc->AddField("", "Vec3f", "emissive", "");
-	field->offset = (char*)&(pMaterial->emissive) - (char*)pMaterial;
+	field->offset = int((char*)&(pMaterial->emissive) - (char*)pMaterial);
 	db->RegisterDesc(desc);
 	
 	MeshFace* pMeshFace = NULL;
@@ -80,9 +80,9 @@
 	desc->size = sizeof(MeshFace);
 	desc->access = DBG_NEW UTAccess<MeshFace>;
 	field = desc->AddField("", "int", "nFaceVertexIndices", "");
-	field->offset = (char*)&(pMeshFace->nFaceVertexIndices) - (char*)pMeshFace;
+	field->offset = int((char*)&(pMeshFace->nFaceVertexIndices) - (char*)pMeshFace);
 	field = desc->AddField("vector", "int", "faceVertexIndices", "");
-	field->offset = (char*)&(pMeshFace->faceVertexIndices) - (char*)pMeshFace;
+	field->offset = int((char*)&(pMeshFace->faceVertexIndices) - (char*)pMeshFace);
 	db->RegisterDesc(desc);
 	
 	Mesh* pMesh = NULL;
@@ -90,13 +90,13 @@
 	desc->size = sizeof(Mesh);
 	desc->access = DBG_NEW UTAccess<Mesh>;
 	field = desc->AddField("", "int", "nVertices", "");
-	field->offset = (char*)&(pMesh->nVertices) - (char*)pMesh;
+	field->offset = int((char*)&(pMesh->nVertices) - (char*)pMesh);
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
-	field->offset = (char*)&(pMesh->vertices) - (char*)pMesh;
+	field->offset = int((char*)&(pMesh->vertices) - (char*)pMesh);
 	field = desc->AddField("", "int", "nFaces", "");
-	field->offset = (char*)&(pMesh->nFaces) - (char*)pMesh;
+	field->offset = int((char*)&(pMesh->nFaces) - (char*)pMesh);
 	field = desc->AddField("vector", "MeshFace", "faces", "");
-	field->offset = (char*)&(pMesh->faces) - (char*)pMesh;
+	field->offset = int((char*)&(pMesh->faces) - (char*)pMesh);
 	db->RegisterDesc(desc);
 	
 	MeshNormals* pMeshNormals = NULL;
@@ -104,13 +104,13 @@
 	desc->size = sizeof(MeshNormals);
 	desc->access = DBG_NEW UTAccess<MeshNormals>;
 	field = desc->AddField("", "int", "nNormals", "");
-	field->offset = (char*)&(pMeshNormals->nNormals) - (char*)pMeshNormals;
+	field->offset = int((char*)&(pMeshNormals->nNormals) - (char*)pMeshNormals);
 	field = desc->AddField("vector", "Vec3f", "normals", "");
-	field->offset = (char*)&(pMeshNormals->normals) - (char*)pMeshNormals;
+	field->offset = int((char*)&(pMeshNormals->normals) - (char*)pMeshNormals);
 	field = desc->AddField("", "int", "nFaceNormals", "");
-	field->offset = (char*)&(pMeshNormals->nFaceNormals) - (char*)pMeshNormals;
+	field->offset = int((char*)&(pMeshNormals->nFaceNormals) - (char*)pMeshNormals);
 	field = desc->AddField("vector", "MeshFace", "faceNormals", "");
-	field->offset = (char*)&(pMeshNormals->faceNormals) - (char*)pMeshNormals;
+	field->offset = int((char*)&(pMeshNormals->faceNormals) - (char*)pMeshNormals);
 	db->RegisterDesc(desc);
 	
 	MeshMaterialList* pMeshMaterialList = NULL;
@@ -118,11 +118,11 @@
 	desc->size = sizeof(MeshMaterialList);
 	desc->access = DBG_NEW UTAccess<MeshMaterialList>;
 	field = desc->AddField("", "int", "nMaterials", "");
-	field->offset = (char*)&(pMeshMaterialList->nMaterials) - (char*)pMeshMaterialList;
+	field->offset = int((char*)&(pMeshMaterialList->nMaterials) - (char*)pMeshMaterialList);
 	field = desc->AddField("", "int", "nFaceIndexes", "");
-	field->offset = (char*)&(pMeshMaterialList->nFaceIndexes) - (char*)pMeshMaterialList;
+	field->offset = int((char*)&(pMeshMaterialList->nFaceIndexes) - (char*)pMeshMaterialList);
 	field = desc->AddField("vector", "int", "faceIndexes", "");
-	field->offset = (char*)&(pMeshMaterialList->faceIndexes) - (char*)pMeshMaterialList;
+	field->offset = int((char*)&(pMeshMaterialList->faceIndexes) - (char*)pMeshMaterialList);
 	db->RegisterDesc(desc);
 	
 	TextureFilename* pTextureFilename = NULL;
@@ -130,7 +130,7 @@
 	desc->size = sizeof(TextureFilename);
 	desc->access = DBG_NEW UTAccess<TextureFilename>;
 	field = desc->AddField("", "string", "filename", "");
-	field->offset = (char*)&(pTextureFilename->filename) - (char*)pTextureFilename;
+	field->offset = int((char*)&(pTextureFilename->filename) - (char*)pTextureFilename);
 	db->RegisterDesc(desc);
 	
 	MeshTextureCoords* pMeshTextureCoords = NULL;
@@ -138,9 +138,9 @@
 	desc->size = sizeof(MeshTextureCoords);
 	desc->access = DBG_NEW UTAccess<MeshTextureCoords>;
 	field = desc->AddField("", "int", "nTextureCoords", "");
-	field->offset = (char*)&(pMeshTextureCoords->nTextureCoords) - (char*)pMeshTextureCoords;
+	field->offset = int((char*)&(pMeshTextureCoords->nTextureCoords) - (char*)pMeshTextureCoords);
 	field = desc->AddField("vector", "Vec2f", "textureCoords", "");
-	field->offset = (char*)&(pMeshTextureCoords->textureCoords) - (char*)pMeshTextureCoords;
+	field->offset = int((char*)&(pMeshTextureCoords->textureCoords) - (char*)pMeshTextureCoords);
 	db->RegisterDesc(desc);
 	
 	Scene* pScene = NULL;
@@ -154,19 +154,19 @@
 	desc->size = sizeof(Camera);
 	desc->access = DBG_NEW UTAccess<Camera>;
 	field = desc->AddField("", "Affinef", "view", "");
-	field->offset = (char*)&(pCamera->view) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->view) - (char*)pCamera);
 	field = desc->AddField("", "float", "width", "");
-	field->offset = (char*)&(pCamera->width) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->width) - (char*)pCamera);
 	field = desc->AddField("", "float", "height", "");
-	field->offset = (char*)&(pCamera->height) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->height) - (char*)pCamera);
 	field = desc->AddField("", "float", "offsetX", "");
-	field->offset = (char*)&(pCamera->offsetX) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->offsetX) - (char*)pCamera);
 	field = desc->AddField("", "float", "offsetY", "");
-	field->offset = (char*)&(pCamera->offsetY) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->offsetY) - (char*)pCamera);
 	field = desc->AddField("", "float", "front", "");
-	field->offset = (char*)&(pCamera->front) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->front) - (char*)pCamera);
 	field = desc->AddField("", "float", "back", "");
-	field->offset = (char*)&(pCamera->back) - (char*)pCamera;
+	field->offset = int((char*)&(pCamera->back) - (char*)pCamera);
 	db->RegisterDesc(desc);
 	
 	Solid* pSolid = NULL;
@@ -174,15 +174,15 @@
 	desc->size = sizeof(Solid);
 	desc->access = DBG_NEW UTAccess<Solid>;
 	field = desc->AddField("", "float", "mass", "");
-	field->offset = (char*)&(pSolid->mass) - (char*)pSolid;
+	field->offset = int((char*)&(pSolid->mass) - (char*)pSolid);
 	field = desc->AddField("", "Matrix3f", "inertia", "");
-	field->offset = (char*)&(pSolid->inertia) - (char*)pSolid;
+	field->offset = int((char*)&(pSolid->inertia) - (char*)pSolid);
 	field = desc->AddField("", "Vec3f", "velocity", "");
-	field->offset = (char*)&(pSolid->velocity) - (char*)pSolid;
+	field->offset = int((char*)&(pSolid->velocity) - (char*)pSolid);
 	field = desc->AddField("", "Vec3f", "angularVelocity", "");
-	field->offset = (char*)&(pSolid->angularVelocity) - (char*)pSolid;
+	field->offset = int((char*)&(pSolid->angularVelocity) - (char*)pSolid);
 	field = desc->AddField("", "Vec3f", "center", "");
-	field->offset = (char*)&(pSolid->center) - (char*)pSolid;
+	field->offset = int((char*)&(pSolid->center) - (char*)pSolid);
 	db->RegisterDesc(desc);
 	
 	PhysicalMaterial* pPhysicalMaterial = NULL;
@@ -190,17 +190,17 @@
 	desc->size = sizeof(PhysicalMaterial);
 	desc->access = DBG_NEW UTAccess<PhysicalMaterial>;
 	field = desc->AddField("", "float", "ns", "");
-	field->offset = (char*)&(pPhysicalMaterial->ns) - (char*)pPhysicalMaterial;
+	field->offset = int((char*)&(pPhysicalMaterial->ns) - (char*)pPhysicalMaterial);
 	field = desc->AddField("", "float", "nd", "");
-	field->offset = (char*)&(pPhysicalMaterial->nd) - (char*)pPhysicalMaterial;
+	field->offset = int((char*)&(pPhysicalMaterial->nd) - (char*)pPhysicalMaterial);
 	field = desc->AddField("", "float", "fs", "");
-	field->offset = (char*)&(pPhysicalMaterial->fs) - (char*)pPhysicalMaterial;
+	field->offset = int((char*)&(pPhysicalMaterial->fs) - (char*)pPhysicalMaterial);
 	field = desc->AddField("", "float", "fd", "");
-	field->offset = (char*)&(pPhysicalMaterial->fd) - (char*)pPhysicalMaterial;
+	field->offset = int((char*)&(pPhysicalMaterial->fd) - (char*)pPhysicalMaterial);
 	field = desc->AddField("", "float", "s", "");
-	field->offset = (char*)&(pPhysicalMaterial->s) - (char*)pPhysicalMaterial;
+	field->offset = int((char*)&(pPhysicalMaterial->s) - (char*)pPhysicalMaterial);
 	field = desc->AddField("", "float", "d", "");
-	field->offset = (char*)&(pPhysicalMaterial->d) - (char*)pPhysicalMaterial;
+	field->offset = int((char*)&(pPhysicalMaterial->d) - (char*)pPhysicalMaterial);
 	db->RegisterDesc(desc);
 	
 	SolidContainer* pSolidContainer = NULL;
@@ -214,7 +214,7 @@
 	desc->size = sizeof(GravityEngine);
 	desc->access = DBG_NEW UTAccess<GravityEngine>;
 	field = desc->AddField("", "Vec3f", "gravity", "");
-	field->offset = (char*)&(pGravityEngine->gravity) - (char*)pGravityEngine;
+	field->offset = int((char*)&(pGravityEngine->gravity) - (char*)pGravityEngine);
 	db->RegisterDesc(desc);
 	
 	ContactEngine* pContactEngine = NULL;
@@ -234,35 +234,35 @@
 	desc->size = sizeof(Joint);
 	desc->access = DBG_NEW UTAccess<Joint>;
 	field = desc->AddField("", "int", "nType", "");
-	field->offset = (char*)&(pJoint->nType) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->nType) - (char*)pJoint);
 	field = desc->AddField("", "Vec3f", "prj", "");
-	field->offset = (char*)&(pJoint->prj) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->prj) - (char*)pJoint);
 	field = desc->AddField("", "Matrix3f", "pRj", "");
-	field->offset = (char*)&(pJoint->pRj) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->pRj) - (char*)pJoint);
 	field = desc->AddField("", "Vec3f", "crj", "");
-	field->offset = (char*)&(pJoint->crj) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->crj) - (char*)pJoint);
 	field = desc->AddField("", "Matrix3f", "cRj", "");
-	field->offset = (char*)&(pJoint->cRj) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->cRj) - (char*)pJoint);
 	field = desc->AddField("", "float", "fPosition", "");
-	field->offset = (char*)&(pJoint->fPosition) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fPosition) - (char*)pJoint);
 	field = desc->AddField("", "float", "fVelocity", "");
-	field->offset = (char*)&(pJoint->fVelocity) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fVelocity) - (char*)pJoint);
 	field = desc->AddField("", "float", "fMaxTorque", "");
-	field->offset = (char*)&(pJoint->fMaxTorque) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fMaxTorque) - (char*)pJoint);
 	field = desc->AddField("", "float", "fMinPosition", "");
-	field->offset = (char*)&(pJoint->fMinPosition) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fMinPosition) - (char*)pJoint);
 	field = desc->AddField("", "float", "fMaxPosition", "");
-	field->offset = (char*)&(pJoint->fMaxPosition) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fMaxPosition) - (char*)pJoint);
 	field = desc->AddField("", "int", "nInputType", "");
-	field->offset = (char*)&(pJoint->nInputType) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->nInputType) - (char*)pJoint);
 	field = desc->AddField("", "float", "fInput", "");
-	field->offset = (char*)&(pJoint->fInput) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fInput) - (char*)pJoint);
 	field = desc->AddField("", "float", "fPValue", "");
-	field->offset = (char*)&(pJoint->fPValue) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fPValue) - (char*)pJoint);
 	field = desc->AddField("", "float", "fIValue", "");
-	field->offset = (char*)&(pJoint->fIValue) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fIValue) - (char*)pJoint);
 	field = desc->AddField("", "float", "fDValue", "");
-	field->offset = (char*)&(pJoint->fDValue) - (char*)pJoint;
+	field->offset = int((char*)&(pJoint->fDValue) - (char*)pJoint);
 	db->RegisterDesc(desc);
 	
 	Import* pImport = NULL;
@@ -270,5 +270,5 @@
 	desc->size = sizeof(Import);
 	desc->access = DBG_NEW UTAccess<Import>;
 	field = desc->AddField("", "string", "file", "");
-	field->offset = (char*)&(pImport->file) - (char*)pImport;
+	field->offset = int((char*)&(pImport->file) - (char*)pImport);
 	db->RegisterDesc(desc);
