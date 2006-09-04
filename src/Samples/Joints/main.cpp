@@ -664,7 +664,8 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.1;
+	//dscene.timeStep = 0.1;
+	dscene.timeStep = 0.05;
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
