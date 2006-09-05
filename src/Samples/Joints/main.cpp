@@ -613,7 +613,14 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
-		case 'c':{
+		case 'Z':{
+			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.back()->AddShape(shapeBox);
+			soBox.back()->SetFramePosition(Vec3f(5.0, 13.0, 5.0));
+			soBox.back()->SetVelocity(Vec3d(0.0, 0.0, -20.0));
+			soBox.back()->SetMass(2.0);
+			}break;	
+		case 'C':{
 			CDCapsuleDesc cd;
 			cd.radius = 1.0;
 			cd.length = 4.0;
@@ -664,7 +671,6 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	//dscene.timeStep = 0.1;
 	dscene.timeStep = 0.05;
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成

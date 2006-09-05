@@ -65,6 +65,12 @@ void PHHingeJoint::CompBias(double dt, double correction_rate){
 	dbv = correction_rate * rjrel * dtinv;
 	Vec3d w = qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv);
 	w *= correction_rate;
+
+	//	hase	これを入れたほうが、若干安定化する。
+	//	本来速度をその都度修正しているので、PD制御ではないのだけど、
+	//	shrinkRatio が高い場合、拘束力が残るため、Dを入れると安定化する。
+	w += correction_rate * wjrel;
+
 	dbw.x = w.x;
 	dbw.y = w.y;
 	//bw.z += w.z;

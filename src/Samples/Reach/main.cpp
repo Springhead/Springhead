@@ -48,7 +48,7 @@ std::vector<PHSolidIf*> soTarget;
 
 
 /** 実験用変数 **/
-const double dt = 0.1;					//積分幅
+const double dt = 0.05	;					//積分幅
 const int niter = 200;					//LCPはんぷくかいすう
 
 bool bTimer = true;			//	タイマーでシミュレーションを進めるかどうか
