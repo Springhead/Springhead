@@ -112,10 +112,10 @@ public:
 		grld.attenuation1 = l8.attenuation1;
 		grld.attenuation2 = l8.attenuation2;
 		grld.diffuse = l8.diffuse;
-		if (l8.type == Light8::XLIGHT_DIRECTIONAL){
+		if (l8.type == Light8::XLIGHT_DIRECTIONAL){		// 平行光源
 			grld.position.sub_vector(PTM::TSubVectorDim<0,3>()) = l8.direction;
 			grld.position.W() = 0;
-		}else{
+		}else{											// 点光源・スポットライト効果
 			grld.position.sub_vector(PTM::TSubVectorDim<0,3>()) = l8.position;
 			grld.position.W() = 1;
 		}

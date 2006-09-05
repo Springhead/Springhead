@@ -253,7 +253,8 @@ void FIFileX::Init(){
 	defArray	= str_p("array") >> id[&DefType] >> id[&DefId] 
 					>> '[' >> arraySuffix >> ']' >> ';';
 	defOpen		= str_p("[...]");
-	defRestrict	= ch_p('[') >> *(id >> ',') >> id >> ']';
+	//defRestrict	= ch_p('[') >> *(id >> ',') >> id >> ']';
+	defRestrict	= ch_p('[') >> *(id >> ',') >> id >> !uuid >> ']';
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>

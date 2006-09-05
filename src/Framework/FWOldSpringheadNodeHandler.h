@@ -30,15 +30,15 @@ struct FrameTransformMatrix{
 ///	Springehead1の光源．GRLightに対応．
 struct Light8{
 	enum XLightType{
-		XLIGHT_POINT = 1,
-		XLIGHT_SPOT = 2,
-		XLIGHT_DIRECTIONAL = 3,
+		XLIGHT_POINT = 1,			///< 点光源
+		XLIGHT_SPOT = 2,			/// スポットライト
+		XLIGHT_DIRECTIONAL = 3,		///< 平行光源
 	} type;
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
     Vec4f ambient;		///<	環境光
     Vec3f position;		///<	光源の位置
-    Vec3f direction;	///<	光源の位置
+    Vec3f direction;	///<	光源の方向
     float range;		///<	光が届く範囲
     float falloff;		///<	減衰の早さ(大きいほど急峻)		0..∞
     ///@name	減衰率．Atten = 1/( att0 + att1 * d + att2 * d^2)
