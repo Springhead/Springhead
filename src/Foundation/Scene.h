@@ -166,21 +166,11 @@ struct InheritNameManager:public InheritNamedObject<intf, base>{
 	}
 };
 
-/**	シーングラフのトップノード．光源・視点を持つ．
-	レンダラとシーングラフの関係が深いため，
-	レンダラが違うとシーングラフはそのまま使用できない．
-	シーングラフは，たとえばレンダラがOpenGLなら，displayList
-	を持っているし，D3Dならば ID3DXMeshを持っている．
-	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
-	セーブして，D3D形式でロードしなければならない．	*/
+/**	シーンの基本クラス	*/
 class SPR_DLL Scene:public InheritNameManager<SceneIf, NameManager>{
 	OBJECT_DEF(Scene);
 public:
 	///	コンストラクタ
-	Scene();
-	virtual ~Scene(){Clear();}
-	///	シーンを空にする．
-	void Clear();
 };
 template <class intf, class base>
 struct InheritScene:public InheritNameManager<intf, base>{

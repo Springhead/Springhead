@@ -48,9 +48,9 @@ PHSdk::PHSdk(const PHSdkDesc&){
 	PHSdkIf::RegisterSdk();
 }
 PHSdk::~PHSdk(){
-	ClearChildObjects();
+	Clear();
 }
-void PHSdk::ClearChildObjects(){
+void PHSdk::Clear(){
 	shapes.clear();
 	objects.clear();
 	scenes.clear();

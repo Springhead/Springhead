@@ -190,12 +190,6 @@ bool NameManager::DelChildObject(ObjectIf* o){
 //	Scene
 IF_OBJECT_IMP(Scene, NameManager);
 
-Scene::Scene(){
-	Clear();
-}
-void Scene::Clear(){
-}
-
 
 //----------------------------------------------------------------------------
 //	SdkIf

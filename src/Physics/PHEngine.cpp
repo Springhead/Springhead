@@ -46,7 +46,6 @@ PHEngine* PHEngines::FindInherit(const UTTypeInfo& ti, UTString name) const {
 }
 
 PHEngines::PHEngines(){
-	Clear();
 }
 
 void PHEngines::Clear(){

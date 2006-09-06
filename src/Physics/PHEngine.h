@@ -51,9 +51,6 @@ class PHScene;
 class PHEngine:public InheritSceneObject<PHEngineIf, SceneObject>{
 	OBJECT_DEF(PHEngine);
 public:
-
-	///	シーンをクリアするときの処理
-	virtual void Clear(){}
 	///	実行順序を決めるプライオリティ値．小さいほど早い
 	virtual int GetPriority() const { return SGBP_FORCEGENERATOR; }
 	///	時間を dt 進める

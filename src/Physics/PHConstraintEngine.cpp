@@ -162,7 +162,6 @@ PHConstraintEngine::~PHConstraintEngine(){
 }
 
 void PHConstraintEngine::Clear(){
-	base_type::Clear();
 	points.clear();
 	joints.clear();
 }

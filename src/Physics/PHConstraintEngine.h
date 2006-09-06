@@ -58,9 +58,8 @@ public:
 	virtual void Dynamics(double dt, int ct);		///< 
 	//virtual void Correction(double dt, int ct);		///< 
 	void UpdateSolids(double dt);	///< Œ‹‰Ê‚ðSolid‚É”½‰f‚·‚é
-	virtual void Clear();
-
 	PHConstraints GetContactPoints();
+	void Clear();
 
 protected:
 	PHConstraints	points;			///< ÚG“_‚Ì”z—ñ

@@ -141,8 +141,8 @@ public:
 	virtual bool AddChildObject(ObjectIf* o){ return false; }
 	///	子オブジェクトの削除
 	virtual bool DelChildObject(ObjectIf* o){ return false; }
-	///	すべての子オブジェクトの削除
-	virtual void ClearChildObjects(){}
+	///	すべての子オブジェクトの削除とプロパティのクリア
+	virtual void Clear(){}
 
 	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const { return false; }
@@ -180,25 +180,15 @@ struct InheritObject:public intf, public base{
 	virtual int AddRef(){return base::AddRef();}
 	virtual int DelRef(){return base::DelRef();}
 	virtual int RefCount(){return base::RefCount();}				
-	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){
-		return base::CreateObject(i,d);
-	}
+	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){ return base::CreateObject(i,d); }
 	virtual void Print(std::ostream& os) const{ base::Print(os); }
 	virtual void PrintShort(std::ostream& os) const{ base::PrintShort(os); }
 	virtual size_t NChildObject() const { return base::NChildObject(); }
 	virtual ObjectIf* GetChildObject(size_t pos){ return base::GetChildObject(pos); }
-	virtual const ObjectIf* GetChildObject(size_t pos) const{
-		return base::GetChildObject(pos);
-	}
-	virtual bool AddChildObject(ObjectIf* o){
-		return base::AddChildObject(o);		
-	}
-	virtual bool DelChildObject(ObjectIf* o){
-		return base::DelChildObject(o);		
-	}
-	virtual void ClearChildObjects(){
-		base::ClearChildObjects();		
-	}
+	virtual const ObjectIf* GetChildObject(size_t pos) const{ return base::GetChildObject(pos); }
+	virtual bool AddChildObject(ObjectIf* o){ return base::AddChildObject(o); }
+	virtual bool DelChildObject(ObjectIf* o){ return base::DelChildObject(o); }
+	virtual void Clear(){ base::Clear(); }
 	virtual bool GetDesc(void* desc) const { return base::GetDesc(desc); }
 	virtual const void* GetDescAddress() const { return base::GetDescAddress(); }
 	virtual size_t GetDescSize() const { return base::GetDescSize(); }
