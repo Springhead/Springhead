@@ -22,10 +22,11 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
-#include <GL/glut.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+#include <GL/glut.h>
+
 using namespace Spr;
 #define ESC				27
 #define EXIT_TIMER		5000
