@@ -123,8 +123,8 @@ struct ObjectIf{
 	virtual bool AddChildObject(ObjectIf* o)=0;
 	///	子オブジェクトの削除
 	virtual bool DelChildObject(ObjectIf* o)=0;
-	///	すべての子オブジェクトの削除
-	virtual void ClearChildObjects()=0;
+	///	すべての子オブジェクトの削除と、プロパティのクリア
+	virtual void Clear()=0;
 	///	オブジェクトを作成し，AddChildObject()を呼ぶ．
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
 	//@}
