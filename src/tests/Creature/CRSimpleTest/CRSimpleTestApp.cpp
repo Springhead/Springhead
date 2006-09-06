@@ -24,8 +24,8 @@ void CRSimpleTestApp::Register(){
 	CRRegisterTypeDescs();
 
 	// Factory‚Ì“o˜^
-	PHRegisterSdk();
-	GRRegisterSdk();
+	PHSdkIf::RegisterSdk();
+	GRSdkIf::RegisterSdk();
 	CRRegisterFactories();
 
 	DSTR << "Register Complete." << endl;
