@@ -23,7 +23,7 @@ void CRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDb::theTypeDescDb;
+	UTTypeDescDb* db = UTTypeDescDb::GetDb("Physics");
 	assert(db);
 	#include "TypeDescDumpImp.h"
 	db->Link();
