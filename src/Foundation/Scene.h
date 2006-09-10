@@ -39,19 +39,6 @@ public:
 	typedef std::pair<iterator, iterator> range_type;
 	NamedObject* Find(UTString name, UTString cn="") const {
 		key.name = name;
-/*		setなのになぜこんなことをしていたかなぞ．
-		UTString className = cn;
-		key.typeInfo.className = className.c_str();
-		const_iterator lb = lower_bound(&key);
-		if (lb==end()) return NULL;
-		ObjectNamesLess less;
-		if (less(*lb, &key)) return NULL;		//	等しいものがない場合
-		const_iterator it = lb;
-		++it;
-		if (it == end()) return *lb;
-		if(less(&key, *it)) return *lb;		//	等しいものは1つ
-		return NULL;						//	等しいものが複数有る場合
-*/
 		iterator it = ((ObjectNames*)this)->find(&key);
 		if (it == end()) return NULL;
 		NamedObject* obj = *it;
@@ -59,21 +46,6 @@ public:
 		if (obj->GetTypeInfo()->Inherit(cn.c_str())) return obj;
 		return NULL;
 	}
-/*		set で range というのは変．
-	range_type Range(UTString name, UTString cn=""){
-		key.name = name;
-		UTString className = cn;
-		key.typeInfo.className = className.c_str();
-		iterator lb = lower_bound(&key);
-		if (lb==end()) return range_type(end(), end());
-		ObjectNamesLess less;
-		iterator it = lb;
-		while(it != end() && !less(*it, &key)){
-			++it;
-		}
-		return range_type(lb, it);
-	}
-*/
 	/**	オブジェクトの追加，
 		名前のないオブジェクトは追加できない．この場合 false を返す．
 		追加に成功すると true． すでに登録されていた場合は false を返す．
@@ -97,6 +69,8 @@ public:
 		erase(it);
 		return true;
 	}
+	///	すべて削除
+	void Clear();
 };
 inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
@@ -105,8 +79,6 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
 public:
 	OBJECT_DEF(NameManager);
-	NameManager();
-	~NameManager();
 protected:
 	/*	名前とオブジェクトの対応表  */
 	ObjectNames names;
@@ -120,10 +92,11 @@ protected:
 	//@}
 
 public:
+	NameManager();
+	~NameManager();
 	virtual void SetNameManager(NameManager* s);
 	void AddChildManager(NameManager* c);
 	void DelChildManager(NameManager* c);
-	virtual bool DelChildObject(ObjectIf* o);
 	///	型と名前からオブジェクトを取得
 	template <class T> void FindObject(UTRef<T>& t, UTString name){
 		T* p;
@@ -140,6 +113,8 @@ public:
 //	SetRange RangeObject(UTString n){ return names.Range(n); }
 	
 	ObjectNames::TNameMap& GetNameMap(){ return names.nameMap; }
+
+	void Clear();
 
 	///	デバッグ用
 	void Print(std::ostream& os) const;

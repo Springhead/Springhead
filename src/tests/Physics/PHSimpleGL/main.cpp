@@ -63,7 +63,7 @@ namespace {
  param	 	なし
  return 	なし
  */
-void display(){
+void _cdecl display(){
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -136,7 +136,7 @@ void initialize(){
  param  	<in/--> h　　高さ
  return 	なし
  */
-void reshape(int w, int h){
+void _cdecl reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -151,7 +151,7 @@ void reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void keyboard(unsigned char key, int x, int y){
+void _cdecl keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }
 
@@ -160,7 +160,7 @@ void keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void idle(){
+void _cdecl idle(){
 	//	剛体の重心の1m上を右に押す．
 	Vec3d force = Vec3d(1, 0, 0);
 	redTeapot->AddForce( force, Vec3f(0,1,0)+redTeapot->GetCenterPosition());
@@ -208,7 +208,7 @@ void idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int main(int argc, char* argv[]){
+int _cdecl main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					//	SDKの作成
 	scene = sdk->CreateScene();				//	シーンの作成
 	

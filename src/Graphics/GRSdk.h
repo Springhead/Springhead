@@ -33,7 +33,7 @@ public:
 
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
-class SPR_DLL GRSdk:public InheritObject<GRSdkIf, Sdk>, public GRSdkDesc{
+class SPR_DLL GRSdk:public InheritNameManager<GRSdkIf, Sdk>, public GRSdkDesc{
 protected:
 	typedef std::vector< UTRef<Object> > Objects;
 	typedef std::vector< UTRef<GRScene> > GRScenes;

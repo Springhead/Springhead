@@ -16,8 +16,8 @@
 #ifndef SPR_GRScene_H
 #define SPR_GRScene_H
 
-#include <Springhead.h>
 #include <Graphics/SprGRFrame.h>
+#include <Graphics/SprGRRender.h>
 
 namespace Spr{;
 

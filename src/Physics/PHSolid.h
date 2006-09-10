@@ -244,7 +244,7 @@ public:
 	///	速度→位置、加速度→速度の積分
 	virtual void Step();
 	
-	virtual void Clear(PHScene* s){ solids.clear(); }
+	virtual void Clear(){ solids.clear(); }
 	///	所有しているsolidの数
 	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid

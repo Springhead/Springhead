@@ -150,12 +150,18 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 IF_OBJECT_IMP(NamedObject, Object);
 
 void NamedObject::SetNameManager(NameManager* s){
-	assert(!nameManager);
+	if (nameManager){
+		nameManager->names.Del(this);
+	}
 	nameManager = s;
+	if (name.length()){
+		nameManager->names.Add(this);
+	}
 }
 NamedObject::~NamedObject(){
-	if (nameManager){
-		nameManager->DelChildObject(GetIf());
+	if (nameManager && name.length()){
+		nameManager->names.Del(this);
+		nameManager = NULL;
 	}
 }
 void NamedObject::Print(std::ostream& os) const {
@@ -188,6 +194,7 @@ void NamedObject::SetName(const char* n){
 	assert(nameManager);
 	if (name.length()) nameManager->names.Del(this);
 	name = n;
+	assert(nameManager);
 	nameManager->names.Add(this);
 }
 

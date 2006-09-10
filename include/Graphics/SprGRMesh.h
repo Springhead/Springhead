@@ -17,7 +17,6 @@
 #define SPR_GRMesh_H
 
 #include <Graphics/SprGRFrame.h>
-#include <Springhead.h>
 
 namespace Spr{;
 

@@ -5,7 +5,7 @@
 	desc->size = sizeof(GRFrameTransformMatrix);
 	desc->access = DBG_NEW UTAccess<GRFrameTransformMatrix>;
 	field = desc->AddField("", "Affinef", "transform", "");
-	field->offset = (char*)&(pGRFrameTransformMatrix->transform) - (char*)pGRFrameTransformMatrix;
+	field->offset = int((char*)&(pGRFrameTransformMatrix->transform) - (char*)pGRFrameTransformMatrix);
 	db->RegisterDesc(desc);
 	
 	GRFrameDesc* pGRFrameDesc = NULL;
@@ -15,7 +15,7 @@
 	((IfInfo*)GRFrameIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRFrameDesc>;
 	field = desc->AddField("", "Affinef", "transform", "");
-	field->offset = (char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc;
+	field->offset = int((char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc);
 	db->RegisterDesc(desc);
 	
 	GRMeshDesc* pGRMeshDesc = NULL;
@@ -25,15 +25,15 @@
 	((IfInfo*)GRMeshIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRMeshDesc>;
 	field = desc->AddField("vector", "Vec3f", "positions", "");
-	field->offset = (char*)&(pGRMeshDesc->positions) - (char*)pGRMeshDesc;
+	field->offset = int((char*)&(pGRMeshDesc->positions) - (char*)pGRMeshDesc);
 	field = desc->AddField("vector", "Vec3f", "normals", "");
-	field->offset = (char*)&(pGRMeshDesc->normals) - (char*)pGRMeshDesc;
+	field->offset = int((char*)&(pGRMeshDesc->normals) - (char*)pGRMeshDesc);
 	field = desc->AddField("vector", "Vec4f", "colors", "");
-	field->offset = (char*)&(pGRMeshDesc->colors) - (char*)pGRMeshDesc;
+	field->offset = int((char*)&(pGRMeshDesc->colors) - (char*)pGRMeshDesc);
 	field = desc->AddField("vector", "Vec2f", "texCoords", "");
-	field->offset = (char*)&(pGRMeshDesc->texCoords) - (char*)pGRMeshDesc;
+	field->offset = int((char*)&(pGRMeshDesc->texCoords) - (char*)pGRMeshDesc);
 	field = desc->AddField("vector", "size_t", "faces", "");
-	field->offset = (char*)&(pGRMeshDesc->faces) - (char*)pGRMeshDesc;
+	field->offset = int((char*)&(pGRMeshDesc->faces) - (char*)pGRMeshDesc);
 	db->RegisterDesc(desc);
 	
 	GRLightDesc* pGRLightDesc = NULL;
@@ -43,29 +43,29 @@
 	((IfInfo*)GRLightIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRLightDesc>;
 	field = desc->AddField("", "Vec4f", "ambient", "");
-	field->offset = (char*)&(pGRLightDesc->ambient) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->ambient) - (char*)pGRLightDesc);
 	field = desc->AddField("", "Vec4f", "diffuse", "");
-	field->offset = (char*)&(pGRLightDesc->diffuse) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->diffuse) - (char*)pGRLightDesc);
 	field = desc->AddField("", "Vec4f", "specular", "");
-	field->offset = (char*)&(pGRLightDesc->specular) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->specular) - (char*)pGRLightDesc);
 	field = desc->AddField("", "Vec4f", "position", "");
-	field->offset = (char*)&(pGRLightDesc->position) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->position) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "range", "");
-	field->offset = (char*)&(pGRLightDesc->range) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->range) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "attenuation0", "");
-	field->offset = (char*)&(pGRLightDesc->attenuation0) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->attenuation0) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "attenuation1", "");
-	field->offset = (char*)&(pGRLightDesc->attenuation1) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->attenuation1) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "attenuation2", "");
-	field->offset = (char*)&(pGRLightDesc->attenuation2) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->attenuation2) - (char*)pGRLightDesc);
 	field = desc->AddField("", "Vec3f", "spotDirection", "");
-	field->offset = (char*)&(pGRLightDesc->spotDirection) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->spotDirection) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "spotFalloff", "");
-	field->offset = (char*)&(pGRLightDesc->spotFalloff) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->spotFalloff) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "spotInner", "");
-	field->offset = (char*)&(pGRLightDesc->spotInner) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->spotInner) - (char*)pGRLightDesc);
 	field = desc->AddField("", "float", "spotCutoff", "");
-	field->offset = (char*)&(pGRLightDesc->spotCutoff) - (char*)pGRLightDesc;
+	field->offset = int((char*)&(pGRLightDesc->spotCutoff) - (char*)pGRLightDesc);
 	db->RegisterDesc(desc);
 	
 	GRMaterialDesc* pGRMaterialDesc = NULL;
@@ -75,17 +75,17 @@
 	((IfInfo*)GRMaterialIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRMaterialDesc>;
 	field = desc->AddField("", "Vec4f", "ambient", "");
-	field->offset = (char*)&(pGRMaterialDesc->ambient) - (char*)pGRMaterialDesc;
+	field->offset = int((char*)&(pGRMaterialDesc->ambient) - (char*)pGRMaterialDesc);
 	field = desc->AddField("", "Vec4f", "diffuse", "");
-	field->offset = (char*)&(pGRMaterialDesc->diffuse) - (char*)pGRMaterialDesc;
+	field->offset = int((char*)&(pGRMaterialDesc->diffuse) - (char*)pGRMaterialDesc);
 	field = desc->AddField("", "Vec4f", "specular", "");
-	field->offset = (char*)&(pGRMaterialDesc->specular) - (char*)pGRMaterialDesc;
+	field->offset = int((char*)&(pGRMaterialDesc->specular) - (char*)pGRMaterialDesc);
 	field = desc->AddField("", "Vec4f", "emissive", "");
-	field->offset = (char*)&(pGRMaterialDesc->emissive) - (char*)pGRMaterialDesc;
+	field->offset = int((char*)&(pGRMaterialDesc->emissive) - (char*)pGRMaterialDesc);
 	field = desc->AddField("", "float", "power", "");
-	field->offset = (char*)&(pGRMaterialDesc->power) - (char*)pGRMaterialDesc;
+	field->offset = int((char*)&(pGRMaterialDesc->power) - (char*)pGRMaterialDesc);
 	field = desc->AddField("", "string", "texname", "");
-	field->offset = (char*)&(pGRMaterialDesc->texname) - (char*)pGRMaterialDesc;
+	field->offset = int((char*)&(pGRMaterialDesc->texname) - (char*)pGRMaterialDesc);
 	db->RegisterDesc(desc);
 	
 	GRTextureDesc* pGRTextureDesc = NULL;
@@ -95,15 +95,15 @@
 	((IfInfo*)GRTextureIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRTextureDesc>;
 	field = desc->AddField("", "string", "filename", "");
-	field->offset = (char*)&(pGRTextureDesc->filename) - (char*)pGRTextureDesc;
+	field->offset = int((char*)&(pGRTextureDesc->filename) - (char*)pGRTextureDesc);
 	field = desc->AddField("", "int", "width", "");
-	field->offset = (char*)&(pGRTextureDesc->width) - (char*)pGRTextureDesc;
+	field->offset = int((char*)&(pGRTextureDesc->width) - (char*)pGRTextureDesc);
 	field = desc->AddField("", "int", "height", "");
-	field->offset = (char*)&(pGRTextureDesc->height) - (char*)pGRTextureDesc;
+	field->offset = int((char*)&(pGRTextureDesc->height) - (char*)pGRTextureDesc);
 	field = desc->AddField("", "int", "id", "");
-	field->offset = (char*)&(pGRTextureDesc->id) - (char*)pGRTextureDesc;
+	field->offset = int((char*)&(pGRTextureDesc->id) - (char*)pGRTextureDesc);
 	field = desc->AddField("pointer", "char", "data", "");
-	field->offset = (char*)&(pGRTextureDesc->data) - (char*)pGRTextureDesc;
+	field->offset = int((char*)&(pGRTextureDesc->data) - (char*)pGRTextureDesc);
 	db->RegisterDesc(desc);
 	
 	GRCameraDesc* pGRCameraDesc = NULL;
@@ -113,13 +113,13 @@
 	((IfInfo*)GRCameraIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRCameraDesc>;
 	field = desc->AddField("", "Vec2f", "size", "");
-	field->offset = (char*)&(pGRCameraDesc->size) - (char*)pGRCameraDesc;
+	field->offset = int((char*)&(pGRCameraDesc->size) - (char*)pGRCameraDesc);
 	field = desc->AddField("", "Vec2f", "center", "");
-	field->offset = (char*)&(pGRCameraDesc->center) - (char*)pGRCameraDesc;
+	field->offset = int((char*)&(pGRCameraDesc->center) - (char*)pGRCameraDesc);
 	field = desc->AddField("", "float", "front", "");
-	field->offset = (char*)&(pGRCameraDesc->front) - (char*)pGRCameraDesc;
+	field->offset = int((char*)&(pGRCameraDesc->front) - (char*)pGRCameraDesc);
 	field = desc->AddField("", "float", "back", "");
-	field->offset = (char*)&(pGRCameraDesc->back) - (char*)pGRCameraDesc;
+	field->offset = int((char*)&(pGRCameraDesc->back) - (char*)pGRCameraDesc);
 	db->RegisterDesc(desc);
 	
 	GRSceneDesc* pGRSceneDesc = NULL;
@@ -143,17 +143,17 @@
 	desc->size = sizeof(GRVertexElement);
 	desc->access = DBG_NEW UTAccess<GRVertexElement>;
 	field = desc->AddField("", "short", "stream", "");
-	field->offset = (char*)&(pGRVertexElement->stream) - (char*)pGRVertexElement;
+	field->offset = int((char*)&(pGRVertexElement->stream) - (char*)pGRVertexElement);
 	field = desc->AddField("", "short", "offset", "");
-	field->offset = (char*)&(pGRVertexElement->offset) - (char*)pGRVertexElement;
+	field->offset = int((char*)&(pGRVertexElement->offset) - (char*)pGRVertexElement);
 	field = desc->AddField("", "char", "type", "");
-	field->offset = (char*)&(pGRVertexElement->type) - (char*)pGRVertexElement;
+	field->offset = int((char*)&(pGRVertexElement->type) - (char*)pGRVertexElement);
 	field = desc->AddField("", "char", "method", "");
-	field->offset = (char*)&(pGRVertexElement->method) - (char*)pGRVertexElement;
+	field->offset = int((char*)&(pGRVertexElement->method) - (char*)pGRVertexElement);
 	field = desc->AddField("", "char", "usage", "");
-	field->offset = (char*)&(pGRVertexElement->usage) - (char*)pGRVertexElement;
+	field->offset = int((char*)&(pGRVertexElement->usage) - (char*)pGRVertexElement);
 	field = desc->AddField("", "char", "usageIndex", "");
-	field->offset = (char*)&(pGRVertexElement->usageIndex) - (char*)pGRVertexElement;
+	field->offset = int((char*)&(pGRVertexElement->usageIndex) - (char*)pGRVertexElement);
 	db->RegisterDesc(desc);
 	
 	GRVertexArray* pGRVertexArray = NULL;
@@ -161,7 +161,7 @@
 	desc->size = sizeof(GRVertexArray);
 	desc->access = DBG_NEW UTAccess<GRVertexArray>;
 	field = desc->AddField("", "GRVertexElement", "format", "");
-	field->offset = (char*)&(pGRVertexArray->format) - (char*)pGRVertexArray;
+	field->offset = int((char*)&(pGRVertexArray->format) - (char*)pGRVertexArray);
 	field = desc->AddField("pointer", "void", "buffer", "");
-	field->offset = (char*)&(pGRVertexArray->buffer) - (char*)pGRVertexArray;
+	field->offset = int((char*)&(pGRVertexArray->buffer) - (char*)pGRVertexArray);
 	db->RegisterDesc(desc);

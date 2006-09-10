@@ -10,6 +10,7 @@
 #include "Object.h"
 #include "Scene.h"
 #include <sstream>
+#include <iomanip>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -47,6 +48,15 @@ bool ObjectNames::Add(NamedObject* obj){
 //	DSTR << std::endl;
 	return true;
 }
+void ObjectNames::Clear(){
+	for(iterator it = begin(); it!=end(); ++it){
+		(*it)->name.clear();
+		(*it)->nameManager = NULL;
+	}
+	nameMap.clear();
+	clear();
+}
+
 void ObjectNames::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
@@ -70,14 +80,18 @@ bool ObjectNamesLess::operator () (const NamedObject* o1, const NamedObject* o2)
 */
 	return false;
 }
+
 //----------------------------------------------------------------------------
 //	NameManager
 IF_OBJECT_IMP(NameManager, NamedObject);
 NameManager::NameManager(){
 }
 NameManager::~NameManager(){
+	Clear();
+}
+void NameManager::Clear(){
 	childManagers.clear();
-	names.clear();
+	names.Clear();
 }
 void NameManager::SetNameManager(NameManager* p){
 	if (nameManager==p) return;
@@ -180,10 +194,6 @@ NamedObjectIf* NameManager::FindObjectExact(UTString name, UTString cls){
 		rv = names.Find(name, cls);
 	}
 	return rv;
-}
-bool NameManager::DelChildObject(ObjectIf* o){
-	assert(DCAST(NamedObject, o));
-	return names.Del(DCAST(NamedObject, o));
 }
 
 //----------------------------------------------------------------------------

@@ -3,9 +3,8 @@
 #include <Springhead.h>
 #include <Foundation/Object.h>
 
-#include "FWAppGL.h"
-#include "FWScene.h"
-#include "FWObject.h"
-#include "FWSdk.h"
+#include "Framework/FWScene.h"
+#include "Framework/FWObject.h"
+#include "Framework/FWSdk.h"
 
 #endif

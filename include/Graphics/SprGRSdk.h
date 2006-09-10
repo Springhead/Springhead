@@ -13,8 +13,6 @@
 #ifndef SPR_GRSDK_H
 #define SPR_GRSDK_H
 
-#include <Springhead.h>
-
 namespace Spr{;
 
 /**	\defgroup gpGraphics	グラフィックスSDK	*/
@@ -28,7 +26,7 @@ struct GRSdkDesc{
 };
 
 /**	@brief	グラフィックスSDKの基本クラス　 */
-struct GRSdkIf: public ObjectIf{
+struct GRSdkIf: public SdkIf{
 	IF_DEF(GRSdk);
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
 	virtual GRDeviceGLIf* CreateDeviceGL(int window)=0;

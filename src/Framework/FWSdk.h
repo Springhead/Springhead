@@ -9,6 +9,7 @@
 #define FWSDK_H
 #include <Foundation/Foundation.h>
 #include <Framework/SprFWSdk.h>
+#include <Graphics/SprGRRender.h>
 
 namespace Spr {;
 
@@ -30,12 +31,14 @@ protected:
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
 	///	ÉVÅ[Éì
 	Scenes scenes;
-	// PHSdk, GRSdk
+	// SDKs
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
+	UTRef<FISdkIf> fiSdk;
 	// Graphics
 	UTRef<GRRenderIf> grRender;
 	UTRef<GRDeviceIf> grDevice;
+
 public:
 	OBJECT_DEF(FWSdk);
 	FWSdk();
@@ -47,6 +50,10 @@ public:
 	virtual size_t NChildObject() const { return NScene(); }
 	virtual ObjectIf* GetChildObject(size_t i){ return GetScene(i); }
 	virtual bool AddChildObject(ObjectIf* o);
+	PHSdkIf* GetPHSdk(){ return phSdk; }
+	GRSdkIf* GetGRSdk(){ return grSdk; }
+	FISdkIf* GetFISdk(){ return fiSdk; }
+	
 public:
 	virtual void ClearObjects();
 	virtual void Step();
@@ -54,6 +61,9 @@ public:
 	virtual void Draw();
 	virtual void Reshape(int w, int h);
 	virtual void Keyboard(unsigned char key, int x, int y);
+
+protected:
+	void CreateSdks();
 };
 
 }

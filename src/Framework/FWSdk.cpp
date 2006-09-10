@@ -38,6 +38,9 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 
 FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 	FWSdkIf* rv = DBG_NEW FWSdk;
+	FWSdkIf::RegisterSdk();
+	PHSdkIf::RegisterSdk();
+	GRSdkIf::RegisterSdk();
 	return rv;
 }
 
@@ -46,7 +49,19 @@ FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 IF_OBJECT_IMP(FWSdk, Sdk);
 
 FWSdk::FWSdk(){
+	name="fwSdk";
+	CreateSdks();
 }
+void FWSdk::CreateSdks(){
+	phSdk = PHSdkIf::CreateSdk();
+	DCAST(PHSdk, phSdk)->SetNameManager(this);
+	phSdk->SetName("phSdk");
+	grSdk = GRSdkIf::CreateSdk();
+	DCAST(GRSdk, grSdk)->SetNameManager(this);
+	grSdk->SetName("grSdk");
+	fiSdk = FISdkIf::CreateSdk();
+}
+
 FWSdk::~FWSdk(){
 }
 FWSceneIf* FWSdk::CreateScene(const FWSceneDesc& desc){

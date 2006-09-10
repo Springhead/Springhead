@@ -2,12 +2,11 @@
 #define SPR_FWSCENEIF_H
 
 #include <Foundation/SprScene.h>
+#include <Physics/SprPHScene.h>
+#include <Graphics/SprGRScene.h>
+#include <Graphics/SprGRRender.h>
 
 namespace Spr{
-
-	struct PHSceneIf;
-	struct GRSceneIf;
-	struct GRRenderIf;
 
 	struct FWSceneDesc{
 	};

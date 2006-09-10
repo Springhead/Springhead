@@ -1,7 +1,9 @@
 #ifndef SPR_FWOBJECTIF_H
 #define SPR_FWOBJECTIF_H
 
-#include <Springhead.h>
+#include <Foundation/SprScene.h>
+#include <Physics/SprPHSolid.h>
+#include <Graphics/SprGRFrame.h>
 
 namespace Spr{
 
