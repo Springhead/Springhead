@@ -6,6 +6,16 @@
 
 namespace Spr{;
 
+class FWWindowDesc{	//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
+public:
+	int width;
+	int height;
+	int left;
+	int top;
+	bool fullscreen;
+	FWWindowDesc(int w=640, int h=480, int l=-1, int t=-1, bool f=false):width(w), height(h), left(l), top(t), fullscreen(f){}
+};
+
 class FWApp{
 protected:
 	UTRef<FWSdkIf> fwSdk;
@@ -29,8 +39,7 @@ public:
 	virtual void MouseButton(int button, int state, int x, int y);
 	virtual void MouseMove(int x, int y);
 	virtual void Step();
-
-	virtual int CreateWindow(int arg=0)=0;
+	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc())=0;
 	virtual DebugMode GetDebugMode(){ return debugMode; }
 	virtual void SetDebugMode(DebugMode m){ debugMode = m; }
 

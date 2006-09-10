@@ -15,8 +15,8 @@ public:
 
 	void Start();
 	void OnTimer();
-	void ProcessArguments(int argc, char* argv[]);
-	virtual int CreateWindow(int arg=0);
+	virtual void Init(int argc, char* argv[]);
+	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc());
 };
 
 

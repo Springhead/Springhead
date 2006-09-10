@@ -30,7 +30,7 @@ Springhead2のnamespaceも利用宣言しておきます．
     scene = sdk->CreateScene();         //  シーンの作成
     PHSolidDesc desc;                   //  剛体のディスクリプタ
     desc.mass = 2.0;                    //  質量を2に設定
-    desc.inertia *= 2.0;                //  慣性テンソルの体格成分を2倍する（inertiaの初期値は単位行列）
+    desc.inertia *= 2.0;                //  慣性テンソルの対角成分を2倍する（inertiaの初期値は単位行列）
     solid1 = scene->CreateSolid(desc);  //  剛体１をdescに基づいて作成
     desc.center = Vec3f(1,0,0);         //  剛体の重心を(1,0,0)に設定
     solid2 = scene->CreateSolid(desc);  //  剛体２をdescに基づいて作成 	

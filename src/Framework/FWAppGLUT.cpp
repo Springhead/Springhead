@@ -39,11 +39,13 @@ void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->Keyboard(key, x, y);
 }
 //-----------------------------------------------------------------------
-
-void FWAppGLUT::ProcessArguments(int argc, char* argv[]){
+void FWAppGLUT::Init(int argc, char* argv[]){
+	FWAppGL::Init(argc, argv);
 	glutInit(&argc, argv);
-	FWApp::ProcessArguments(argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	ProcessArguments(argc, argv);
 }
+
 void FWAppGLUT::Start(){
 	FWAppGL::Start();
 	instance = this;
@@ -60,9 +62,9 @@ void FWAppGLUT::OnTimer(){
 	glutPostRedisplay();
 }
 
-int FWAppGLUT::CreateWindow(int arg){
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(1000, 700);
+int FWAppGLUT::CreateWindow(const FWWindowDesc d){
+	glutInitWindowSize(d.width, d.height);
+	glutInitWindowPosition(d.top, d.left);
 	int window = glutCreateWindow("Springhead Application");
 	return window;
 }
