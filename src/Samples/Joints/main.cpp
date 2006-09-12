@@ -256,7 +256,7 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 
-	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
+	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 1.0));
 	soBox[5]->SetDynamical(false);
 	
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
@@ -675,7 +675,7 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 0;
+	sceneNo = 5;
 	BuildScene();
 
 	glutInit(&argc, argv);

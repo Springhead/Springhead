@@ -287,8 +287,7 @@ void timer(int id){
 int main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.01;
-	//dscene.timeStep = 0.033;
+	dscene.timeStep = 0.05;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc
