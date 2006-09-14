@@ -128,7 +128,7 @@ public:
 		grld.position.Z() *= -1;
 		grld.spotDirection.Z() *= -1;
 		fc->PushCreateNode(GRLightIf::GetIfInfoStatic(), &grld);
-		Adapter* a = new Adapter;
+		Adapter* a = DBG_NEW Adapter;
 		a->light = DCAST(GRLight, fc->objects.Top());
 		fc->objects.Push(a->GetIf());
 		fc->links.push_back(a);
@@ -138,15 +138,57 @@ public:
 		fc->objects.Pop();
 	}
 };
+
+class FWPHMaterialTask: public UTLoadTask{
+public:
+	OBJECT_DEF_NOIF(FWPHMaterialTask);
+	float mu;		///<	“®–€C–€CŒW”
+	float mu0;		///<	Ã~–€CŒW”
+	float e;		///<	’µ‚Ë•Ô‚èŒW”	
+	void Execute(UTLoadContext* fc){}
+};
+OBJECT_IMP(FWPHMaterialTask, UTLoadTask);
+
+class UTLoadHandlerPhysicalMaterial: public UTLoadHandlerImp<PhysicalMaterial>{
+public:	
+	UTLoadHandlerPhysicalMaterial():UTLoadHandlerImp<Desc>("PhysicalMaterial"){}
+	void Load(Desc& d, UTLoadContext* fc){
+		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
+		phmtask->mu = d.d;
+		phmtask->mu0 = d.s;
+		fc->objects.Top()->AddChildObject(phmtask->GetIf());				// Mesh->AddChildObject()‚ªŒÄ‚Î‚ê‚é
+		fc->links.push_back(phmtask);
+	}
+	void Loaded(Desc& d, UTLoadContext* fc){		
+	}
+};
+
 class FWNodeHandlerXMesh: public UTLoadHandlerImp<Mesh>{
 public:
+	class Adapter: public UTLoadTask{
+	public:
+		Adapter(){}
+		bool AddChildObject(ObjectIf* o){
+			FWPHMaterialTask* phmtask = DCAST(FWPHMaterialTask, o);
+			if (phmtask){
+				// map‚ğŒŸõ‚µA‚»‚Ì¡“Ç‚ñ‚Å‚¢‚émesh‚É‘Î‚·‚éCDShape‚Ö’l‚ğ‘‚«‚ŞB
+				// map‚ÍAContactEngine‚Åì¬‚³‚ê‚éACDConvexMesh‚É‘Î‚µ‚Ä‚ ‚Æ‚ÅAphmaterial‚ğ“o˜^‚·‚é.
+				return true;
+			}
+			return false;
+		}
+	};
+
+
+
+
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
 	void Load(Desc& d, UTLoadContext* fc){
 		fc->PushCreateNode(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc());	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		// ‚±‚±‚Åmap<GRMesh, CDShape>ì¬B
 		if (mesh){
 			mesh->positions = d.vertices;	// ’¸“_À•W
-
 			for (int f=0; f < d.nFaces; ++f){		
 				if ((d.faces[f].nFaceVertexIndices == 3) || (d.faces[f].nFaceVertexIndices == 4)) {
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
@@ -170,6 +212,7 @@ public:
 					fc->ErrorMessage(NULL, NULL, "Number of faces for mesh = 3 or 4.");
 				}
 			}
+			// ƒXƒ^ƒbƒN‚É Mesh::Adapter‚ğ‚Â‚Ş
 		}else{
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}
@@ -204,7 +247,7 @@ class FWNodeHandlerXTextureFilename: public UTLoadHandlerImp<TextureFilename>{
 public:
 	FWNodeHandlerXTextureFilename():UTLoadHandlerImp<Desc>("TextureFilename"){}
 	void Load(Desc& d, UTLoadContext* fc){
-		UTRef<FWXTextureTask> tex = new FWXTextureTask;
+		UTRef<FWXTextureTask> tex = DBG_NEW FWXTextureTask;
 		tex->filename = d.filename;
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
@@ -312,6 +355,7 @@ public:
 					for(unsigned i=0; i<m->positions.size(); ++i){
 						desc.vertices.push_back(m->positions[i]);
 					}
+					//desc.material.mu0 = 0.2f;-----------------------------------------------------------------------
 					solid->CreateShape(desc);
 					Posed pose;
 					pose.FromAffine(af);
@@ -441,14 +485,6 @@ public:
 		fc->objects.Pop();
 	}
 };
-class UTLoadHandlerPhysicalMaterial: public UTLoadHandlerImp<PhysicalMaterial>{
-public:	
-	UTLoadHandlerPhysicalMaterial():UTLoadHandlerImp<Desc>("PhysicalMaterial"){}
-	void Load(Desc& d, UTLoadContext* fc){
-	}
-	void Loaded(Desc& d, UTLoadContext* fc){
-	}
-};
 
 class FWNodeHandlerGravityEngine: public UTLoadHandlerImp<GravityEngine>{
 public:	
@@ -464,7 +500,6 @@ public:
 		fc->links.resize(linkPos);
 	}
 };
-
 
 class FWNodeHandlerScene: public UTLoadHandlerImp<Scene>{
 public:	
