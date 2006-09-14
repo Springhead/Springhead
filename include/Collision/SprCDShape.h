@@ -67,7 +67,7 @@ struct CDShapeDesc{
 		CONVEX,				///< 凸形状
 		CONVEXMESH,			///< 凸形状メッシュ
 		SPHERE,				///< 球体
-		CAPSULE,			///< 球体
+		CAPSULE,			///< カプセル
 		BOX					///< 直方体
 	} type;
 	PHMaterial material;	///<	材質
