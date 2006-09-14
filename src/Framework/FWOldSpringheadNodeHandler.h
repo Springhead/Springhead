@@ -121,13 +121,13 @@ struct Solid{
 	Vec3f angularVelocity;	///<	Šp‘¬“x
 	Vec3f center;			///<	’†SˆÊ’u
 };
-struct PhysicalMaterial{
-	float ns;
-	float nd;
-	float fs;
-	float fd;
-	float s;
-	float d;
+struct PhysicalMaterial{				
+	float ns;				///< R—Í‚Ì‚Î‚ËŒW”
+	float nd;				///< R—Í‚Ìƒ_ƒ“ƒpŒW”
+	float fs;				///< –€ŽC—Í‚Ì‚Î‚ËŒW”
+	float fd;				///< –€ŽC—Í‚Ìƒ_ƒ“ƒpŒW”
+	float s;				///< Å‘åÃŽ~–€ŽCŒW”
+	float d;				///< “®–€ŽCŒW”
 };
 
 ///
