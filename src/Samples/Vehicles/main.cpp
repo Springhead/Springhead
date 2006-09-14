@@ -34,8 +34,6 @@ PHSceneIf* scene;		// Sceneインタフェース
 GRDebugRenderIf* render;
 GRDeviceGLIf* device;
 
-double lookAtY, lookAtZ;
-
 Robot1 car;
 Robot2 robot[2];
 
@@ -57,7 +55,7 @@ void CreateFloor(){
 void display(){
 	Vec3d pos = robot[0].soBody->GetFramePosition();
 	Affinef af;
-	af.Pos() = Vec3f(0, 1.5, 4)*1.2;
+	af.Pos() = Vec3f(0, 3, 4)*1.2;
 	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
 	render->SetViewMatrix(af.inv());
 	
@@ -86,18 +84,6 @@ void setLight() {
  */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
-	
-	lookAtY = 1.0;
-	lookAtZ = 5.0;
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	Vec3d pos;
-	gluLookAt(pos.x, pos.y + lookAtY, pos.z + lookAtZ, 
-		      pos.x, pos.y, pos.z,
-		 	  0.0, 1.0, 0.0);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-
 	setLight();
 }
 
@@ -141,9 +127,6 @@ void keyboard(unsigned char key, int x, int y){
 		break;
 	case 'g':
 		robot[0].Stop();
-		break;
-	case 'j':
-		lookAtY += 0.1;
 		break;
 	default:
 		break;
@@ -213,10 +196,6 @@ int main(int argc, char* argv[]){
 	device = grSdk->CreateDeviceGL(window);
 	device->Init();
 	render->SetDevice(device);	// デバイスの設定
-	Affinef af;
-	af.Pos() = Vec3f(5, 2, 0);
-	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
-	render->SetViewMatrix(af);
 
 	glutTimerFunc(10, timer, 0);
 	glutDisplayFunc(display);
