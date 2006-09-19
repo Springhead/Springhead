@@ -118,6 +118,25 @@ static bool boolValue;
 static void NumSet(double v){
 	numValue = v;
 }
+static void EnumSet(const char* b, const char* e){
+	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
+	for(unsigned i=0; i< curField.field->enums.size(); ++i){
+		if (curField.field->enums[i].first.compare(UTString(b, e)) == 0){
+			numValue = curField.field->enums[i].second;
+			return;
+		}
+	}
+	UTString str = "enum (";
+	for(unsigned i=0; i< curField.field->enums.size(); ++i){
+		str += curField.field->enums[i].first;
+		str += " ";
+	}
+	str += ") expected.";
+	fileContext->ErrorMessage(NULL, b, str.c_str());
+	numValue = -1;
+}
+
+
 static void BoolSet(const char* b, const char* e){
 	UTString v(b,e);
 	boolValue = (v.compare("true")==0) || (v.compare("TRUE")==0) || (v.compare("1")==0);
@@ -276,7 +295,7 @@ void FIFileX::Init(){
 				  if_p(&IsFieldBlock)[ eps_p[&BlockStart] >> block[&BlockEnd] ];
 	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
 	boolVal		= (str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
-	iNum		= int_p[&NumSet];
+	iNum		= id[&EnumSet] | int_p[&NumSet];
 	rNum		= real_p[&NumSet];
 	str			= lexeme_d[ 
 					ch_p('"') >> *( (ch_p('\\')>>anychar_p) | 
