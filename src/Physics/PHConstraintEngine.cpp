@@ -106,7 +106,11 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	sp[1] = DCAST(CDSphere, shape[1]);
 	if (sp[0] || sp[1]) {	// 接触解析を行う２つの物体の片方or両方が球の場合
 		// 接触点の配列(engine->points)に、球の最進入点と相手の最進入点の中点centerを追加する
-		engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
+		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+
+		// 新しく追加する接触点が解析法にしたがわない剛体を含む場合、interactiveフラグをfalseにする
+		if(engine->isInteractiveSolid(solid0->solid) || engine->isInteractiveSolid(solid1->solid))point->SetInteractive(false);
+		engine->points.push_back(point);
 	} else {	// 接触解析を行う２つの物体がどちらとも球ではない場合
 		//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
 		//	切り口を求める。まず、それぞれの形状の切り口を列挙
@@ -127,13 +131,22 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 				pos = cutRing.local * pos;
 				Matrix3d local;
 				cutRing.local.Ori().ToMatrix(local);
-				engine->points.push_back(DBG_NEW PHContactPoint(local, this, pos, solid0, solid1));
+
+				PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
+
+				if(engine->isInteractiveSolid(solid0->solid) || engine->isInteractiveSolid(solid1->solid))point->SetInteractive(false);
+				engine->points.push_back(point);
 			//	DSTR << "  " << pos << std::endl;
 			}
 		}
 		if (nPoint == engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
 			//	きっと1点で接触している．
-			engine->points.push_back(DBG_NEW PHContactPoint(local, this, center, solid0, solid1));
+
+			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+
+			if(engine->isInteractiveSolid(solid0->solid) || engine->isInteractiveSolid(solid1->solid))point->SetInteractive(false);
+
+			engine->points.push_back(point);
 		}
 	}
 }
@@ -278,8 +291,17 @@ void PHConstraintEngine::UpdateSolids(double dt){
 		//velocity update
 		vnew = info->v + info->dv0 + info->dv;
 		wnew = info->w + info->dw0 + info->dw;
+		Vec3d oldVel = solid->GetVelocity();
+		Vec3d oldAngVel = solid->GetAngularVelocity();
+
 		solid->SetVelocity       (solid->GetOrientation() * vnew);
 		solid->SetAngularVelocity(solid->GetOrientation() * wnew);
+		
+		// accels update
+		// these values don't make effect to physics simulation result
+		solid->SetAcceleration((solid->GetVelocity() - oldVel)/dt);
+//		solid->SetAngularAcceleration(/* */);
+
 		//position update
 		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt/* + solid->GetOrientation() * info->dV*/);
 		solid->SetOrientation(

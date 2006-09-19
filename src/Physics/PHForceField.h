@@ -26,6 +26,7 @@ public:
 	void Step();
 	void Clear(){solids.clear();}
 	bool AddChildObject(Object* o);
+	void RemoveSolid(PHSolid*);
 };
 
 }

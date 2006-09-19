@@ -10,6 +10,7 @@
 #include <Physics/SprPHScene.h>
 #include <Foundation/Scene.h>
 #include <Physics/PHEngine.h>
+#include <Physics/PHSolid.h>
 
 namespace Spr {;
 
@@ -18,6 +19,7 @@ struct CDShapeDesc;
 class PHSolidContainer;
 class PHPenaltyEngine;
 class PHConstraintEngine;
+class PHSolid;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
@@ -44,6 +46,7 @@ public:
 	~PHScene(){}
 
 	PHConstraintEngine* GetConstraintEngine();
+	void RemoveGravity(PHSolidIf*);
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);

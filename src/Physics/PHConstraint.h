@@ -54,6 +54,7 @@ public:
 	
 	bool		bEnabled;			/// 有効化されている場合にtrue
 	bool		bFeasible;			/// 両方の剛体がundynamicalな場合true
+	bool		bInteractive;		/// 両方の剛体が解析法に従う場合true
 
 	PHSolidInfoForLCP* solid[2];
 	Matrix3d	Rj[2];				/// 各剛体に張り付いた関節フレーム
@@ -100,6 +101,8 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool IsEnabled(){return bEnabled;}
+	virtual void SetInteractive(bool Interaction = true){bInteractive = Interaction;}
+	virtual bool IsInteractive(){return bInteractive;}
 	void Init();
 	virtual void CompJacobian(bool bCompAngular);
 	void SetupDynamics(double dt, double correction_rate, double shrink_rate);
