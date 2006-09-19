@@ -675,7 +675,7 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 5;
+	sceneNo = 0;
 	BuildScene();
 
 	glutInit(&argc, argv);
