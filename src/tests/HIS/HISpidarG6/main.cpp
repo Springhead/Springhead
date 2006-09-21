@@ -38,8 +38,8 @@ using namespace Spr;
 
 #define ESC				27			// ESC key
 #define EXIT_TIMER		10000		// 実行ステップ数
-#define WINSIZE_WIDTH	480			// ウィンドウサイズ(width)
-#define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
+#define WINSIZE_WIDTH	800//480			// ウィンドウサイズ(width)
+#define WINSIZE_HEIGHT	600//360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		1			// sphere数
 
 // 力覚スレッドの周期Hz(1000/HAPTIC_FREQ)
@@ -48,12 +48,12 @@ using namespace Spr;
 #elif _OPT
 #define HAPTIC_FREQ		2
 #elif _WINDOWS
-#define HAPTIC_FREQ		3
+#define HAPTIC_FREQ		4
 #endif
 
 // 提示力のバネダンパ係数
-#define K_force			100
-#define B_force			0.5
+#define K_force			7
+#define B_force			5
 
 // SPIDAR更新幅
 const float dt = 0.001f * HAPTIC_FREQ;
@@ -71,8 +71,8 @@ const int one_sec = 1000 / HAPTIC_FREQ;
 		const float K = 2000;
 		const float B = 120;
 	#elif _OPT
-		const float K = 5;
-		const float B = 5;
+		const float K = 10;
+		const float B = 10;
 	#elif _WINDOWS
 		const float K = 20;
 		const float B = 25;
@@ -114,8 +114,10 @@ int num_process = 0;
 // ポインタと接触したソリッド
 PHSolid* nearest_solids[NUM_SPHERES+1];
 int num_collisions = 0;
+//PHConstraint* nearest_constraints[NUM_SPHERES+1];
+Vec3d col_pos[NUM_SPHERES+1];
 
-PHConstraint* nearest_constraints[NUM_SPHERES+1];
+bool semaphore = false;
 
 /**
  brief     	calculate_surround_effectから呼ばれ、接触力を再帰的に計算する関数
@@ -222,11 +224,12 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 			また、PHSolid* solids[]にポインタが接している剛体のリストが入る
  return 	pointerに接している物体の個数を返す
 */
-int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constant, PHSolid* solids[NUM_SPHERES+1]) 
+int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constant, PHSolid* solids[NUM_SPHERES+1], Vec3d col_pos[NUM_SPHERES+1]) 
 {
 	std::vector<Vec3d> forces;
 	std::vector<Vec3d> vec_r;
 
+	Vec3d pos[NUM_SPHERES+1];
 	Vec3d vec_r_pointer[NUM_SPHERES+1];
 	int num_solids = 0;
 
@@ -252,10 +255,11 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 			{
 				// その剛体を保存
 				solids[num_solids] = (*it)->solid[1]->solid;
-				nearest_constraints[num_solids] = *it;
+//				cons[num_solids] = *it;
 
 				// その剛体の中心から力の作用点までのベクトルを保存
 				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
+				pos[num_solids] = contact->pos;
 				vec_r_pointer[num_solids++] = contact->pos - (*it)->solid[1]->solid->GetCenterPosition();
 
 				// 処理済マップに登録
@@ -267,10 +271,11 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 			{
 				// その剛体を保存
 				solids[num_solids] = (*it)->solid[0]->solid;
-				nearest_constraints[num_solids] = *it;
+//				cons[num_solids] = *it;
 
 				// その剛体の中心から力の作用点までのベクトルを保存
 				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
+				pos[num_solids] = contact->pos;
 				vec_r_pointer[num_solids++] = contact->pos - (*it)->solid[0]->solid->GetCenterPosition();
 
 				// 処理済マップに登録
@@ -285,6 +290,9 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 		{
 			return 0;
 		}
+
+		Vec3d A[NUM_SPHERES+1];
+		Matrix3d M[NUM_SPHERES+1];
 
 		// pointerに接している剛体が接している剛体を検索し、
 		// それぞれ処理していく
@@ -379,19 +387,35 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 			// まとめられる部分はまとめる
 			// 定数項
 			// A = -w^2 * sum(r) + (I^(-1) * sum(r x f)) x sum(r) + sum(f) / m
-			Vec3d A = (((PHSolid *)soPointer)->GetInertiaInv() * sum_r_out_f) ^ sum_r - ((PHSolid *)soPointer)->GetTorque() * ((PHSolid *)soPointer)->GetTorque() * sum_r + ((PHSolid *)soPointer)->GetMassInv() * sum_force;
+			A[j] = Vec3d((((PHSolid *)soPointer)->GetInertiaInv() * sum_r_out_f) ^ sum_r - ((PHSolid *)soPointer)->GetTorque() * ((PHSolid *)soPointer)->GetTorque() * sum_r + ((PHSolid *)soPointer)->GetMassInv() * sum_force);
 
 			// T = I^(-1) * (r x f)のrを外積から行列にして外積を排除したもの
 			Matrix3d T = ((PHSolid *)soPointer)->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
 			
 			// 求める行列
 			// M = 1/m * E + (T1 x sum(r) T2 x sum(r) T3 x sum(r))
-			Matrix3d M = ((PHSolid *)soPointer)->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ sum_r, T.Ey() ^ sum_r, T.Ez() ^ sum_r);
-
-			// 結果の格納
-			Effect[j] = M;
-			Constant[j] = A;
+			M[j] = Matrix3d(((PHSolid *)soPointer)->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ sum_r, T.Ey() ^ sum_r, T.Ez() ^ sum_r));
 		}
+		
+		if(semaphore == true)
+		{
+			while(1)
+			{
+				Sleep(1);
+				if(semaphore == false)break;
+			}
+		}
+
+		semaphore = true;
+
+		for(int i = 0; i < num_solids; i++)
+		{
+			// 結果の格納
+			Effect[i] = M[i];
+			Constant[i] = A[i];
+			col_pos[i] = pos[i];
+		}
+
 		return num_solids;
 	}
 	// 衝突がなかったので０を返してリターン
@@ -475,7 +499,6 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	// pointerの位置の更新
 	static Vec3d old_pos = Vec3d();
 	static Vec3d last_force = Vec3d();
-	static Vec3d last_last_force = Vec3d();
 
 	spidarG6.Update(dt);//	USBの通信を行う．
 	spidar_pos = view_rot * spidarG6.GetPos();		// SPIDAR座標からワールド座標にする
@@ -493,41 +516,59 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	// --- 複数衝突の場合はここから変更する ---
 	// 加える力を計算 ---> 見直しが必要
 	
-	Vec3d force = Vec3d();
+	Vec3d pointer_force = Vec3d();
 	Vec3d pointer_torque = Vec3d();
+
+	if(semaphore == true)
+	{
+		while(1)
+		{
+			Sleep(1);
+			if(semaphore == false)break;
+		}
+	}
+
+	semaphore = true;
 
 	for(int i = 0; i < num_collisions; i++)
 	{
-		PHConstraint *constraint = nearest_constraints[i];
-		if(constraint == NULL)break;
-		PHContactPoint* cp = DCAST(PHContactPoint, constraint);
-		
-		Vec3d local_force = (cp->pos - spidar_pos);
-		Vec3d local_torque = (cp->pos - nearest_solids[i]->GetCenterPosition()) ^ local_force;
+		if(col_pos[i] == NULL || nearest_solids[i] == NULL)
+		{
+			num_collisions = 0;
+			break;
+		}
+
+		Vec3d normal = col_pos[i] - nearest_solids[i]->GetCenterPosition();
+		Vec3d temp = col_pos[i] - spidar_pos;
+
+		// local_forceを変える。何かおかしいはず。
+		// ここで内積をとらなければならない
+		Vec3d local_force = K_force * dot(temp, normal) * normal.unit() / temp.norm();
+		Vec3d local_torque = normal ^ local_force;
 		nearest_solids[i]->AddForce(local_force, local_torque);
 
-		force = force + local_force;
-		pointer_torque = pointer_torque + (cp->pos - soPointer->GetCenterPosition()) ^ (-local_force);
+		pointer_force = pointer_force + local_force;
+		pointer_torque = pointer_torque + (col_pos[i] - soPointer->GetCenterPosition()) ^ (-local_force);
 	}
 
 	// spidarに力を加える
 	if(num_collisions > 0)
 	{
-		// 前二つの提示力と平均を取ってつぶを取る
-		if(bforce)spidarG6.SetForce(-(0.6 * force + 0.25 * last_force + 0.15 * last_last_force), pointer_torque);
+		// 前の提示力を参照してつぶを取る
+		if(bforce)spidarG6.SetForce(-(0.95 * pointer_force + 0.05 * last_force), pointer_torque);
 		else spidarG6.SetForce(Vec3d(), Vec3d());
 
 		// 提示力を保存
-		last_last_force = last_force;
-		last_force = force;
+		last_force = pointer_force;
 	}
 	else
 	{
 		// 衝突がないので提示力をリセットする
 		spidarG6.SetForce(Vec3d());
-		last_last_force = last_force;
 		last_force = Vec3d();
 	}
+
+	semaphore = false;
 
 #if 0
 //#if _DEBUG | _WINDOWS
@@ -537,7 +578,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	{
 //		std::cout << "spidar position = " << spidar_pos << std::endl;
 //		std::cout << "spidar velocity = " << PointerVel << std::endl;
-		std::cout << "force = " << force << "torque = " << pointer_torque << std::endl;
+		std::cout << "force = " << -(0.95 * force + 0.05 * last_force) << "torque = " << pointer_torque << std::endl;
 		sec_counter = 0;	
 	}
 	sec_counter++;									// カウンターの更新
@@ -579,7 +620,9 @@ void idle(){
 //	show_collision_info(cs);
 
 	// 衝突点から周囲の影響を計算
-	num_collisions = calculate_surround_effect(cs, effect, constant, nearest_solids);
+	num_collisions = calculate_surround_effect(cs, effect, constant, nearest_solids, col_pos);
+
+	semaphore = false;
 
 	// 再描画
 	glutPostRedisplay();
@@ -798,7 +841,7 @@ void InitScene()
 	// 力覚で処理するようにする
 	AddInteractiveSolid(soPointer);
 
-	for(int i = 0; i < NUM_SPHERES+1; i++) nearest_constraints[i] = NULL;
+	for(int i = 0; i < NUM_SPHERES+1; i++) col_pos[i] = Vec3d();
 }
 
 /**
@@ -836,7 +879,7 @@ void InitRendering(int *argc, char *argv[])
 	setLight();
 
 	/// SPIDAR座標をビュー座標に直す変数
-	view_rot = view.inv().Rot() * 60;
+	view_rot = view.inv().Rot() * 65;
 	
 }
 
