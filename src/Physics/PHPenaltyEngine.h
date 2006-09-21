@@ -24,7 +24,7 @@ public:
 	Vec3f reflexForcePoint;				///<	R—Í‚Ìì—p“_(commonPointŒn)
 	//@}
 
-	///@name–€ŽC‚ÌŒvŽZ
+	///@name	–€ŽC‚ÌŒvŽZ
 	//@{
 	Vec3f transFrictionBase[2];			///<	•ÀiÃŽ~–€ŽC—pƒoƒl‚Ì’[“_(ƒ[ƒJƒ‹ƒtƒŒ[ƒ€Œn)
 	float rotSpring;					///<	‰ñ“]‚Î‚Ë‚ÌL‚Ñ(ƒ‰ƒWƒAƒ“)

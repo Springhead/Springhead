@@ -60,6 +60,9 @@ public:
 	void Execute(UTLoadContext* ctx);
 };
 
+typedef std::pair<UTRef<ObjectIf>, UTRef<ObjectIf> > UTPairObject;
+typedef std::map<UTRef<ObjectIf>, UTRef<ObjectIf> >  UTMapObject;
+
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
@@ -87,6 +90,8 @@ public:
 	UTLoadTasks postTasks;
 	///	型DB
 	UTTypeDescDb* typeDb;
+	// GRMeshのマップ
+	UTMapObject meshMap;	
 
 	//---------------------------------------------------------------------------
 	//	関数

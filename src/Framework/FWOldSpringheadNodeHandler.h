@@ -19,9 +19,11 @@ struct Header{
 	unsigned int minor;		
 	unsigned int flags;
 };
+	
 ///	DirectXのFrame． GRFrameに対応
 struct Frame{
 };
+	
 ///	DirectXのFrameTransformMatrix．フレームの変換行列を表す．GRFrame::transformに対応．
 struct FrameTransformMatrix{
 	Affinef matrix;
@@ -102,6 +104,7 @@ struct MeshTextureCoords{
 ///	Springhead1のScene
 struct Scene{
 };
+	
 ///	Springhead1のCamera
 struct Camera{
 	Affinef view;
@@ -121,6 +124,8 @@ struct Solid{
 	Vec3f angularVelocity;	///<	角速度
 	Vec3f center;			///<	中心位置
 };
+
+/// Springhead1の物理マテリアル
 struct PhysicalMaterial{				
 	float ns;				///< 抗力のばね係数
 	float nd;				///< 抗力のダンパ係数
@@ -130,9 +135,10 @@ struct PhysicalMaterial{
 	float d;				///< 動摩擦係数
 };
 
-///
+/// Springhead1のSolidContainer
 struct SolidContainer{
 };
+	
 ///	Springhead1のGravityEngine
 struct GravityEngine{
 	Vec3f gravity;
@@ -142,10 +148,11 @@ struct GravityEngine{
 struct ContactEngine{
 };
 
-///
+/// Springhead1のJointEngine
 struct JointEngine{
 };
-///
+	
+/// Springhead1のJoint
 struct Joint{
 	int			nType;				///<	関節種類 0:蝶番, 1:スライド
 	Vec3f		prj;				///<	親剛体のフレームから見た関節位置
@@ -165,6 +172,7 @@ struct Joint{
 	float		fDValue;			///<	PID制御のDの値
 };
 
+/// Springhead1のImport	
 struct Import{
 	std::string file;	
 };
