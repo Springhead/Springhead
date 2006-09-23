@@ -149,6 +149,14 @@ struct PHSolidIf : public SceneObjectIf{
 		@param av シーンに対する剛体の角速度
 	 */
 	virtual void		SetAngularVelocity(const Vec3d& av)=0;
+    /** @brief 最後のステップで剛体に加わった力を取得する。
+		@return 剛体に加えられた力(World系)
+	*/
+	virtual Vec3d GetForce() const=0;
+    /** @brief 最後のステップで剛体に加わったトルクを取得する。
+		@return 剛体に加えられたトルク(World系、剛体の重心周り)
+	*/
+	virtual Vec3d GetTorque() const=0;
 	/**	@brief 剛体の角加速度を取得する
 		@return 剛体の角速度から求まる角加速度
 	*/
