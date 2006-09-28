@@ -41,6 +41,10 @@ using namespace Spr;
 #define WINSIZE_WIDTH	800//480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	600//360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		3			// sphere数
+#define SIM_FREQ		60          // シミュレーションの更新周期Hz
+
+// SPIDARのVE内での動作スケール
+#define SPIDAR_SCALE	70
 
 // 力覚スレッドの周期Hz(1000/HAPTIC_FREQ)
 #ifdef _DEBUG
@@ -52,14 +56,8 @@ using namespace Spr;
 #endif
 
 // 提示力のバネダンパ係数
-#define K_force			7
-#define B_force			5
-
-// SPIDAR更新幅
-const float dt = 0.001f * HAPTIC_FREQ;
-
-// 一秒で処理する回数
-const int one_sec = 1000 / HAPTIC_FREQ;
+#define K_force			6
+#define B_force			1
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
 	#include <Device/DRUsb20Simple.h>
@@ -74,10 +72,16 @@ const int one_sec = 1000 / HAPTIC_FREQ;
 		const float K = 10;
 		const float B = 10;
 	#elif _WINDOWS
-		const float K = 10;//20;
-		const float B = 10;//25;
+		const float K = 10;
+		const float B = 8.5;
 	#endif
 #endif
+
+// SPIDAR更新幅
+const float dt = 0.001f * HAPTIC_FREQ;
+
+// 一秒で処理する回数
+const int one_sec = 1000 / HAPTIC_FREQ;
 
 // グラフィック用の変数
 GRSdkIf* grSdk;
@@ -97,41 +101,40 @@ HISpidarG6X3 spidarG6;						//	SPIDARに対応するクラス
 
 // その他の変数
 Vec3f spidar_pos = Vec3f();
-Affinef view;
 Matrix3f view_rot;
 bool bforce = false;
 MMRESULT FTimerId;
 
-// 周囲の影響の計算に使う変数
+// 周囲の影響の結果を格納する変数
 Matrix3d effect[NUM_SPHERES+1];
 Vec3d constant[NUM_SPHERES+1];
 
 // 再帰計算をした情報を格納するテーブル
-//std::map<PHConstraint*, int> process_map;
 PHConstraint* process_map[NUM_SPHERES+1];
 int num_process = 0;
 
-// ポインタと接触したソリッド
-// １と２を用意するのはスレッドで必要な排他アクセスを避け、
+// 力覚計算に必要なデータを集めた構造体
+typedef struct {
+	// collision data
+	PHSolid* nearest_solids[NUM_SPHERES+1];
+	Vec3d col_positions[NUM_SPHERES+1];
+	Vec3d col_normals[NUM_SPHERES+1];
+	int num_collisions;
+
+	// pointer data
+	Vec3d pointer_pos;
+	Vec3d pointer_vel;
+	Vec3d pointer_center;
+} Penalty_info;
+
+// １と２を用意するのはスレッドで必要な排他アクセスを避け（待ちが発生するため）、
 // 各プロセスの更新速度を保つため
-PHSolid* nearest_solids1[NUM_SPHERES+1];
-PHSolid* nearest_solids2[NUM_SPHERES+1];
+Penalty_info info1;
+Penalty_info info2;
 
-int num_collisions1 = 0;
-int num_collisions2 = 0;
-
-Vec3d col_pos1[NUM_SPHERES+1];
-Vec3d col_pos2[NUM_SPHERES+1];
-
-bool current_valid_data = true; // trueのときは配列１を参照;falseのときは配列２を参照
-
-Vec3d soPointer1_pos;
-Vec3d soPointer1_vel;
-Vec3d soPointer1_center;
-
-Vec3d soPointer2_pos;
-Vec3d soPointer2_vel;
-Vec3d soPointer2_center;
+// trueのときは配列１を参照
+// falseのときは配列２を参照
+bool current_valid_data = true; 
 
 /**
  brief     	calculate_surround_effectから呼ばれ、接触力を再帰的に計算する関数
@@ -153,43 +156,35 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 		{
 			if(process_map[i] == *it)process = true;
 		}
-//		std::map<PHConstraint*, int>::iterator t = process_map.find(*it);
 
 		// まだ処理されていない
 		if(process == false)
 		{
-			// この接触の片方がうけとった剛体である場合再帰的にこの関数を呼び処理を行う
+			PHSolid* nearest = NULL;
+
+			// この剛体を含む衝突をチェック
 			if((*it)->solid[0]->solid == solid)
 			{
-				//　すでに処理した接触をマップに登録する
-//				process_map.insert(std::pair<PHConstraint*, int>(*it, depth));
-				process_map[num_process++] = *it;
-
-				// 剛体の中心から力の作用点までのベクトルを計算する
-				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
-				Vec3d f = Vec3d();
-				Vec3d r = contact->pos - (*it)->solid[1]->solid->GetCenterPosition();
-
-				// 再帰的に次の処理に渡す
-				calculate_counteractive_object_force(cs, depth+1, (*it)->solid[1]->solid, r, &f);
-
-				// 得られた情報の保存
-				forces.push_back(f);
-				vec_r.push_back(r);
+				nearest = (*it)->solid[1]->solid;
 			}
 			else if((*it)->solid[1]->solid == solid)
 			{
-				//　すでに処理した接触をマップに登録する
-//				process_map.insert(std::pair<PHConstraint*, int>(*it, depth));
+				nearest = (*it)->solid[0]->solid;
+			}
+
+			// この剛体を含む接触があった
+			if(nearest != NULL)
+			{
+				// 処理済マップに登録する
 				process_map[num_process++] = *it;
 
 				// 剛体の中心から力の作用点までのベクトルを計算する
 				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
 				Vec3d f = Vec3d();
-				Vec3d r = contact->pos - (*it)->solid[0]->solid->GetCenterPosition();
+				Vec3d r = contact->pos - nearest->GetCenterPosition();
 
 				// 再帰的に次の処理に渡す
-				calculate_counteractive_object_force(cs, depth+1, (*it)->solid[0]->solid, r, &f);
+				calculate_counteractive_object_force(cs, depth+1, nearest, r, &f);
 
 				// 得られた情報の保存
 				forces.push_back(f);
@@ -233,17 +228,16 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 
 /**
  brief     	接触点の情報から周囲の情報による影響を計算する関数
- param		その時点での衝突情報PHConstraintsと結果格納用のMatrix3dとVec3dをとる。
+ param		その時点での衝突情報PHConstraintsと衝突情報を格納する構造体Penalty_info型の変数を取る
 			周囲の影響をEffectに、定数項をConstantに格納する
 			また、PHSolid* solids[]にポインタが接している剛体のリストが入る
- return 	pointerに接している物体の個数を返す
+ return 	なし
 */
-int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constant, PHSolid* solids[NUM_SPHERES+1], Vec3d col_pos[NUM_SPHERES+1]) 
+void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constant, Penalty_info *info)
 {
 	std::vector<Vec3d> forces;
 	std::vector<Vec3d> vec_r;
 
-	Vec3d pos[NUM_SPHERES+1];
 	Vec3d vec_r_pointer[NUM_SPHERES+1];
 	int num_solids = 0;
 
@@ -263,33 +257,36 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 		// pointerに接している剛体を検索し、取得する
 		for(PHConstraints::iterator it = cs.begin(); it != cs.end(); it++)
 		{
-			// 接触の片方の剛体がポインタ
+			PHSolid* nearest = NULL;
+			int sign = 1;
+
+			//　ポインタを含む衝突の場合剛体を保存
 			if((*it)->solid[0]->solid == soPointer)
 			{
-				// その剛体を保存
-				solids[num_solids] = (*it)->solid[1]->solid;
-
-				// その剛体の中心から力の作用点までのベクトルを保存
-				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
-				pos[num_solids] = contact->pos;
-				vec_r_pointer[num_solids++] = contact->pos - (*it)->solid[1]->solid->GetCenterPosition();
-
-				// 処理済マップに登録
-				process_map[num_process++] = *it;
+				nearest = (*it)->solid[1]->solid;
+				sign *= -1;
 			}
-			// 接触の片方の剛体がポインタ
 			else if((*it)->solid[1]->solid == soPointer)
 			{
-				// その剛体を保存
-				solids[num_solids] = (*it)->solid[0]->solid;
+				nearest = (*it)->solid[0]->solid;
+			}
+
+			// ポインタを含む剛体があったので処理
+			if(nearest != NULL)
+			{
+				// 近傍剛体を保存
+				info->nearest_solids[num_solids] = nearest;
 
 				// その剛体の中心から力の作用点までのベクトルを保存
 				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
-				pos[num_solids] = contact->pos;
-				vec_r_pointer[num_solids++] = contact->pos - (*it)->solid[0]->solid->GetCenterPosition();
+				info->col_positions[num_solids] = contact->pos;
+				vec_r_pointer[num_solids] = contact->pos - nearest->GetCenterPosition();
+
+				// ポインタから剛体への接触面の法線を保存
+				info->col_normals[num_solids] = sign * contact->shapePair->normal;
 
 				// 処理済マップに登録
-				process_map[num_process++] = *it;
+				process_map[num_solids++] = *it;
 			}
 		}
 
@@ -297,9 +294,12 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 		// 力覚に影響がないのでリターンする
 		if(num_solids == 0)
 		{
-			return 0;
+			info->num_collisions = 0;
+			return;
 		}
 
+		// 処理に必要な変数
+		num_process = num_solids;
 		Vec3d A[NUM_SPHERES+1];
 		Matrix3d M[NUM_SPHERES+1];
 
@@ -308,7 +308,8 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 		for(int j = 0; j < num_solids; j++)
 		{
 			// 先ほど登録した剛体(=ポインタに接している剛体)を取得
-			PHSolidIf* solid = (PHSolidIf*)solids[j];
+			// PHSolidIf* solid = (PHSolidIf*)solids[j];
+			PHSolidIf* solid = (PHSolidIf*)info->nearest_solids[j];
 
 			// すべての衝突を調査
 			for(PHConstraints::iterator it = cs.begin(); it != cs.end(); it++)
@@ -323,39 +324,27 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 				// 処理済みマップからは見つからなかった(=未処理=目的の剛体の可能性あり）
 				if(process == false)
 				{
-					// この剛体が含まれた接触
+					PHSolid* nearest = NULL;
+
 					if((*it)->solid[0]->solid == solid)
 					{
-						// この接触点を処理済マップに登録する
-						process_map[num_process++] = *it;
-
-						// 剛体の中心から力の作用点までのベクトルを計算する
-						PHContactPoint* contact = DCAST(PHContactPoint, (*it));
-						Vec3d f = Vec3d();
-						Vec3d r = contact->pos - (*it)->solid[1]->solid->GetCenterPosition();
-
-						// 再帰的に次の処理に渡す	
-						calculate_counteractive_object_force(cs, depth+1, (*it)->solid[1]->solid, r, &f);
-
-						// 得られた値の保存
-						forces.push_back(f);
-						vec_r.push_back(r);
+						nearest = (*it)->solid[1]->solid;
 					}
-					// この剛体が含まれた接触
 					else if((*it)->solid[1]->solid == solid)
 					{
-						//　この接触点を処理済マップに登録する
+						nearest = (*it)->solid[0]->solid;
+					}
+
+					if(nearest != NULL)
+					{
 						process_map[num_process++] = *it;
 
-						// 剛体の中心から力の作用点までのベクトルを計算する
 						PHContactPoint* contact = DCAST(PHContactPoint, (*it));
 						Vec3d f = Vec3d();
-						Vec3d r = contact->pos - (*it)->solid[0]->solid->GetCenterPosition();
+						Vec3d r = contact->pos - nearest->GetCenterPosition();
 
-						// 再帰的に次の処理に渡す
-						calculate_counteractive_object_force(cs, depth+1, (*it)->solid[0]->solid, r, &f);
+						calculate_counteractive_object_force(cs, depth+1, nearest, r, &f);
 
-						// 得られた値の保存
 						forces.push_back(f);
 						vec_r.push_back(r);
 					}
@@ -407,15 +396,19 @@ int calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constan
 			// 結果の格納
 			Effect[i] = M[i];
 			Constant[i] = A[i];
-			col_pos[i] = pos[i];
 		}
 
-		return num_solids;
+		// ポインタに接触する剛体の数を登録
+		// 力覚計算で使用
+		info->num_collisions = num_solids;
+
+		return;
 	}
 	// 衝突がなかったので０を返してリターン
 	else
 	{
-		return 0;
+		info->num_collisions = 0;
+		return;
 	}
 }
 
@@ -457,19 +450,19 @@ void show_collision_info(PHConstraints cp)
 
 			if(current_valid_data == true)
 			{
-				for(int i = 0; i < num_collisions1; i++)
+				for(int i = 0; i < info1.num_collisions; i++)
 				{
 					// 最近傍物体のアドレスを取得
-					PHSolidIf* nearest_address = &(*nearest_solids1[i]);
+					PHSolidIf* nearest_address = &(*info1.nearest_solids[i]);
 					if(nearest_address == ((*it)->solid[0]->solid))DSTR << " --this solid is nearest object!!" << std::endl;
 				}
 			}
 			else 
 			{
-				for(int i = 0; i < num_collisions2; i++)
+				for(int i = 0; i < info2.num_collisions; i++)
 				{
 					// 最近傍物体のアドレスを取得
-					PHSolidIf* nearest_address = &(*nearest_solids2[i]);
+					PHSolidIf* nearest_address = &(*info2.nearest_solids[i]);
 					if(nearest_address == ((*it)->solid[0]->solid))DSTR << " --this solid is nearest object!!" << std::endl;
 				}
 
@@ -486,19 +479,19 @@ void show_collision_info(PHConstraints cp)
 
 			if(current_valid_data == true)
 			{
-				for(int i = 0; i < num_collisions1; i++)
+				for(int i = 0; i < info1.num_collisions; i++)
 				{
 					// 最近傍物体のアドレスを取得
-					PHSolid* nearest_address = &(*nearest_solids1[i]);
+					PHSolid* nearest_address = &(*info1.nearest_solids[i]);
 					if(nearest_address == ((*it)->solid[1]->solid))DSTR << " --this solid is nearest object!!" << std::endl;
 				}
 			}
 			else
 			{
-				for(int i = 0; i < num_collisions2; i++)
+				for(int i = 0; i < info2.num_collisions; i++)
 				{
 					// 最近傍物体のアドレスを取得
-					PHSolid* nearest_address = &(*nearest_solids2[i]);
+					PHSolid* nearest_address = &(*info2.nearest_solids[i]);
 					if(nearest_address == ((*it)->solid[1]->solid))DSTR << " --this solid is nearest object!!" << std::endl;
 				}
 			}
@@ -513,25 +506,21 @@ void show_collision_info(PHConstraints cp)
  return 	なし
 */
 void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
-{	
-	static Vec3d soPointer_pos = Vec3d();
-	static Vec3d soPointer_vel = Vec3d();
-	static Vec3d soPointer_center = Vec3d();
-
+{
+	// SPIDARの情報を格納する変数
 	static Vec3d old_pos = Vec3d();
 	static Vec3d last_force = Vec3d();
 
-	if(current_valid_data == true)
+	Penalty_info* info = NULL;
+
+	// 状態によって参照先を切り替える
+	if(current_valid_data)
 	{
-		soPointer_pos = soPointer1_pos;
-		soPointer_vel = soPointer1_vel;
-		soPointer_center = soPointer1_center;
+		info = &info1;
 	}
 	else
 	{
-		soPointer_pos = soPointer2_pos;
-		soPointer_vel = soPointer2_vel;
-		soPointer_center = soPointer2_center;
+		info = &info2;
 	}
 
 	// pointerの位置の更新
@@ -543,98 +532,49 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	old_pos = spidar_pos;
 
 	// spidar座標までのベクトルを作成
-	Vec3d goal = spidar_pos - soPointer_pos;
+	Vec3d goal = spidar_pos - info->pointer_pos;
 
 	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
-	Vec3d VCforce = K * goal + B * (PointerVel - soPointer_vel);
+	Vec3d VCforce = K * goal + B * (PointerVel - info->pointer_vel);
 	soPointer->AddForce(VCforce, Vec3f());
 
-	// --- 複数衝突の場合はここから変更する ---
-	// 加える力を計算 ---> 見直しが必要
-	
+	// ポインタに加える力・トルクを格納する変数
 	Vec3d pointer_force = Vec3d();
 	Vec3d pointer_torque = Vec3d();
 
-	if(current_valid_data)
+	// ポインタに生じたすべての接触について計算
+	for(int i = 0; i < info->num_collisions; i++)
 	{
-		/*
-		for(int i = 0; i < num_collisions1; i++)
-		{
-			// なぜかこちら側をコメントアウトして、current_valid_dataがfalseの時のみ実行するとうまくいく。要調査。
-			
-			//　接触面の法線を計算
-			Vec3d normal = col_pos1[i] - nearest_solids1[i]->GetCenterPosition();
-			Vec3d temp = col_pos1[i] - spidar_pos;
+		Vec3d penetration_vector = info->col_positions[i] - spidar_pos;
 
-			// local_forceを変える。何かおかしいはず。
-			// ここで内積をとらなければならない
-			Vec3d local_force = K_force * dot(temp, normal) * normal.unit() / temp.norm();
-			Vec3d local_torque = normal ^ local_force;
+		// ペナルティ法で提示力を計算
+		// 現在バネのみ
+		Vec3d local_force = (K_force * dot(penetration_vector, info->col_normals[i]))* info->col_normals[i].unit() / penetration_vector.norm();
+		Vec3d local_torque = (info->col_positions[i] - info->nearest_solids[i]->GetCenterPosition()) ^ local_force;
 
-			// 剛体に力を加えて動かす
-			nearest_solids1[i]->AddForce(local_force, local_torque);
+		// 剛体に力を加えて動かす
+		info->nearest_solids[i]->AddForce(local_force, local_torque);
 
-			// ポインタに加える力とトルクを計算
-			pointer_force = pointer_force + local_force;
-			pointer_torque = pointer_torque + (col_pos1[i] - soPointer_center) ^ (-local_force);
-			
-		}
+		// ポインタに加える力とトルクを計算
+		pointer_force = pointer_force + local_force;
+		pointer_torque = pointer_torque + (info->col_positions[i] - info->pointer_center) ^ (-local_force);
+	}
 
-		// spidarに力を加える
-		if(num_collisions1 > 0)
-		{
-			// 前の提示力を参照してつぶを取る
-			if(bforce)spidarG6.SetForce(-(0.95 * pointer_force + 0.05 * last_force), pointer_torque);
-			else spidarG6.SetForce(Vec3d(), Vec3d());
+	// spidarに力を加える
+	if(info->num_collisions > 0)
+	{
+		// 前の提示力を参照してつぶを取る
+		if(bforce)spidarG6.SetForce(-(0.95 * pointer_force + 0.05 * last_force), pointer_torque);
+		else spidarG6.SetForce(Vec3d(), Vec3d());
 
-			// 提示力を保存
-			last_force = pointer_force;
-		}
-		else
-		{
-			// 衝突がないので提示力をリセットする
-			spidarG6.SetForce(Vec3d());
-			last_force = Vec3d();
-		}
-		*/
+		// 提示力を保存
+		last_force = pointer_force;
 	}
 	else
 	{
-		for(int i = 0; i < num_collisions2; i++)
-		{
-			//　接触面の法線を計算
-			Vec3d normal = col_pos2[i] - nearest_solids2[i]->GetCenterPosition();
-			Vec3d temp = col_pos2[i] - spidar_pos;
-
-			// local_forceを変える。何かおかしいはず。
-			// ここで内積をとらなければならない
-			Vec3d local_force = K_force * dot(temp, normal) * normal.unit() / temp.norm();
-			Vec3d local_torque = normal ^ local_force;
-
-			// 剛体に力を加えて動かす
-			nearest_solids2[i]->AddForce(local_force, local_torque);
-
-			// ポインタに加える力とトルクを計算
-			pointer_force = pointer_force + local_force;
-			pointer_torque = pointer_torque + (col_pos2[i] - soPointer_center) ^ (-local_force);
-		}
-
-		// spidarに力を加える
-		if(num_collisions2 > 0)
-		{
-			// 前の提示力を参照してつぶを取る
-			if(bforce)spidarG6.SetForce(-(0.95 * pointer_force + 0.05 * last_force), pointer_torque);
-			else spidarG6.SetForce(Vec3d(), Vec3d());
-
-			// 提示力を保存
-			last_force = pointer_force;
-		}
-		else
-		{
-			// 衝突がないので提示力をリセットする
-			spidarG6.SetForce(Vec3d());
-			last_force = Vec3d();
-		}	
+		// 衝突がないので提示力をリセットする
+		spidarG6.SetForce(Vec3d());
+		last_force = Vec3d();
 	}
 
 #if 0
@@ -646,7 +586,6 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 //		std::cout << "spidar position = " << spidar_pos << std::endl;
 //		std::cout << "spidar velocity = " << PointerVel << std::endl;
 //		std::cout << "force = " << -(0.95 * force + 0.05 * last_force) << "torque = " << pointer_torque << std::endl;
-
 		sec_counter = 0;	
 	}
 	sec_counter++;									// カウンターの更新
@@ -692,24 +631,21 @@ void idle(){
 	// １を参照中。２を更新
 	if(current_valid_data == true)
 	{
-		num_collisions2 = calculate_surround_effect(cs, effect, constant, nearest_solids2, col_pos2);
-//		*soPointer2 = *soPointer;
-		soPointer2_pos = soPointer->GetFramePosition();
-		soPointer2_vel = soPointer->GetVelocity();
-		soPointer2_center = soPointer->GetCenterPosition();
+		calculate_surround_effect(cs, effect, constant, &info2);
+		info2.pointer_pos = soPointer->GetFramePosition();
+		info2.pointer_vel = soPointer->GetVelocity();
+		info2.pointer_center = soPointer->GetCenterPosition();
 	}
 	// ２を参照中。１を更新
 	else
 	{
-		num_collisions1 = calculate_surround_effect(cs, effect, constant, nearest_solids1, col_pos1);
-//		*soPointer1 = *soPointer;
-		soPointer1_pos = soPointer->GetFramePosition();
-		soPointer1_vel = soPointer->GetVelocity();
-		soPointer1_center = soPointer->GetCenterPosition();
+		calculate_surround_effect(cs, effect, constant, &info1);
+		info1.pointer_pos = soPointer->GetFramePosition();
+		info1.pointer_vel = soPointer->GetVelocity();
+		info1.pointer_center = soPointer->GetCenterPosition();
 	}
 
-	// 参照先を変更
-//	current_valid_data = !current_valid_data;
+	// 力覚スレッドのシミュレーションの変数の参照先を変更
 	current_valid_data = current_valid_data?false:true;
 
 	// 再描画
@@ -734,9 +670,9 @@ void idle(){
  param		登録する剛体
  return		なし
 */
-void AddInteractiveSolid(PHSolidIf* soPointer)
+void AddInactiveSolid(PHSolidIf* soPointer)
 {
-	scene->GetConstraintEngine()->AddInteractiveSolid(soPointer);
+	scene->GetConstraintEngine()->AddInactiveSolid(soPointer);
 }
 
 /**
@@ -769,7 +705,7 @@ void display(){
 	render->EndScene();
 
 	// ビデオレートにあわせるために60Hzにする
-	Sleep(16.66);
+	Sleep((double)1000.0/SIM_FREQ);
 }
 
 /**
@@ -826,6 +762,17 @@ void keyboard(unsigned char key, int x, int y){
 		soPointer->SetFramePosition(Vec3d(0, 0, 0));
 		spidarG6.Calib();
 	}
+	// sphereの場所をリセット
+	else if(key == 'r')
+	{
+		for(int i = 0; i < NUM_SPHERES; i++)
+		{
+			soSphere[i]->SetPose(Posed());
+			soSphere[i]->SetFramePosition(Vec3f(0, 15+5*(i+1), 0));
+			soSphere[i]->SetAngularVelocity(Vec3d());
+			soSphere[i]->SetVelocity(Vec3d());
+		}
+	}
 }
 
 void InitScene();
@@ -879,7 +826,7 @@ void InitScene()
 	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc sd;
 //	sd.ContactMode = PHSceneDesc::ContactMode::MODE_LCP;
-	sd.timeStep = 0.017;
+	sd.timeStep = (double)1.0 / SIM_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 2.0;
@@ -927,10 +874,7 @@ void InitScene()
 
 	// pointerと接触する剛体との解析法による計算をやめ、
 	// 力覚で処理するようにする
-	AddInteractiveSolid(soPointer);
-
-	for(int i = 0; i < NUM_SPHERES+1; i++) col_pos1[i] = Vec3d();
-	for(int i = 0; i < NUM_SPHERES+1; i++) col_pos2[i] = Vec3d();
+	AddInactiveSolid(soPointer);
 }
 
 /**
@@ -960,6 +904,7 @@ void InitRendering(int *argc, char *argv[])
 	render->SetDevice(grDevice);	// デバイスの設定
 
 	// 視点を設定する
+	Affinef view;
 	view.Pos() = Vec3f(0.0, 5.0, -20.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
@@ -968,7 +913,7 @@ void InitRendering(int *argc, char *argv[])
 	setLight();
 
 	/// SPIDAR座標をビュー座標に直す変数
-	view_rot = view.inv().Rot() * 65;
+	view_rot = view.inv().Rot() * SPIDAR_SCALE;
 }
 
 /**

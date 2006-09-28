@@ -47,6 +47,7 @@ PHConstraint::PHConstraint(){
 	//f.clear();
 	//F.clear();
 	bEnabled = true;
+	bInactive = true;
 }
 
 bool PHConstraint::AddChildObject(ObjectIf* o){
@@ -156,7 +157,7 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 
 void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrink_rate){
 	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
-	if(!bEnabled || !bFeasible || !bInteractive)
+	if(!bEnabled || !bFeasible || !bInactive)
 		return;
 
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算

@@ -109,7 +109,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
 
 		// V‚µ‚­’Ç‰Á‚·‚éÚG“_‚ª‰ðÍ–@‚É‚µ‚½‚ª‚í‚È‚¢„‘Ì‚ðŠÜ‚Þê‡Ainteractiveƒtƒ‰ƒO‚ðfalse‚É‚·‚é
-		if(engine->isInteractiveSolid(solid0->solid) || engine->isInteractiveSolid(solid1->solid))point->SetInteractive(false);
+		if(engine->IsInactiveSolid(solid0->solid) || engine->IsInactiveSolid(solid1->solid))point->SetInactive(false);
 		engine->points.push_back(point);
 	} else {	// ÚG‰ðÍ‚ðs‚¤‚Q‚Â‚Ì•¨‘Ì‚ª‚Ç‚¿‚ç‚Æ‚à‹…‚Å‚Í‚È‚¢ê‡
 		//	–Ê‚Æ–Ê‚ªG‚ê‚éê‡‚ª‚ ‚é‚Ì‚ÅAÚG‚ª“Ê‘½ŠpŒ`‚â“ÊŒ`ó‚É‚È‚é‚±‚Æ‚ª‚ ‚éB
@@ -134,7 +134,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 
 				PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
 
-				if(engine->isInteractiveSolid(solid0->solid) || engine->isInteractiveSolid(solid1->solid))point->SetInteractive(false);
+				if(engine->IsInactiveSolid(solid0->solid) || engine->IsInactiveSolid(solid1->solid))point->SetInactive(false);
 				engine->points.push_back(point);
 			//	DSTR << "  " << pos << std::endl;
 			}
@@ -144,8 +144,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 
 			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
 
-			if(engine->isInteractiveSolid(solid0->solid) || engine->isInteractiveSolid(solid1->solid))point->SetInteractive(false);
-
+			if(engine->IsInactiveSolid(solid0->solid) || engine->IsInactiveSolid(solid1->solid))point->SetInactive(false);
 			engine->points.push_back(point);
 		}
 	}

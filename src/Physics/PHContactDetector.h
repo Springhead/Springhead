@@ -137,7 +137,7 @@ public:
 	bool						bContactEnabled;///< 接触が有効化された剛体の組が1つでも存在すればtrue
 	PHSolidInfos<TSolidInfo>	solids;			///< 剛体の配列
 	PHSolidPairs				solidPairs;		///< 剛体の組の配列
-	std::vector<PHSolidIf*>		interactiveSolids; ///< 解析法を適用しない剛体の集合
+	std::vector<PHSolidIf*>		inactiveSolids; ///< 解析法を適用しない剛体の集合
 
 	virtual void Clear(){
 		solidPairs.clear();
@@ -145,15 +145,15 @@ public:
 	}
 	
 	///< 解析法を適用しない剛体の追加
-	virtual void AddInteractiveSolid(PHSolidIf* solid)
+	virtual void AddInactiveSolid(PHSolidIf* solid)
 	{
-		interactiveSolids.push_back(solid);
+		inactiveSolids.push_back(solid);
 	}
 
 	///< 解析法を適用しない剛体の検索
-	virtual bool isInteractiveSolid(PHSolidIf* solid)
+	virtual bool IsInactiveSolid(PHSolidIf* solid)
 	{
-		for(std::vector<PHSolidIf*>::iterator it = interactiveSolids.begin(); it != interactiveSolids.end(); it++)
+		for(std::vector<PHSolidIf*>::iterator it = inactiveSolids.begin(); it != inactiveSolids.end(); it++)
 		{
 			if((*it) == solid)return true;
 		}
