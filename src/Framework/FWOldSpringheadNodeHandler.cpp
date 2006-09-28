@@ -27,7 +27,7 @@
 namespace SprOldSpringhead{
 using namespace Spr;
 
-// FWSceneの検索
+// FWSceneの検索．
 static FWScene* FindFWScene(UTLoadContext* fc){
 	FWScene* fs = NULL;
 	for(int i=(int)fc->objects.size()-1; i>=0; --i){
@@ -37,7 +37,7 @@ static FWScene* FindFWScene(UTLoadContext* fc){
 	return fs;
 }
 
-// PHSceneの検索
+// PHSceneの検索．
 static PHScene* FindPHScene(UTLoadContext* fc){
 	PHScene* ps = NULL;
 	for(int i=(int)fc->objects.size()-1; i>=0; --i){
@@ -50,7 +50,7 @@ static PHScene* FindPHScene(UTLoadContext* fc){
 	return ps;
 }
 
-// GRSceneの検索
+// GRSceneの検索．
 static GRScene* FindGRScene(UTLoadContext* fc){
 	GRScene* gs = NULL;
 	for(int i=(int)fc->objects.size()-1; i>=0; --i){
@@ -63,13 +63,15 @@ static GRScene* FindGRScene(UTLoadContext* fc){
 	return gs;
 }
 
-// Xファイル形式のバージョン情報
+// Xファイル形式のバージョン情報．
 class FWNodeHandlerXHeader: public UTLoadHandlerImp<Header>{
 public:
 	FWNodeHandlerXHeader():UTLoadHandlerImp<Desc>("Header"){}
 	void Load(Desc& d, UTLoadContext* fc){
 	}
 };
+
+// Springhead1のフレーム．
 class FWNodeHandlerXFrame: public UTLoadHandlerImp<Frame>{
 public:	
 	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}
@@ -78,6 +80,34 @@ public:
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		fc->objects.Pop();
+	}
+};
+
+// Springhead1のSimulatorタスク．
+class FWSimulatorTask: public UTLoadTask{
+public:
+	OBJECT_DEF_NOIF(FWSimulatorTask);
+	double timeStep;	// 積分ステップ
+	double decay;		// 剛体の速度の減衰率
+	void Execute(UTLoadContext* fc){}
+};
+OBJECT_IMP(FWSimulatorTask, UTLoadTask);
+
+// Springhead1のSimulator．
+class FWNodeHandlerSimulator: public UTLoadHandlerImp<Simulator>{
+public:	
+	FWNodeHandlerSimulator():UTLoadHandlerImp<Desc>("Simulator"){}
+	void Load(Desc& d, UTLoadContext* fc){		
+		UTRef<FWSimulatorTask> simtask = DBG_NEW FWSimulatorTask;
+		simtask->timeStep = d.timeStep;
+		simtask->decay    = d.decay;		
+		PHScene* phScene = FindPHScene(fc);		
+		if (phScene){		// phSceneを検索できた場合は、timeStepを設定. 
+			fc->mapObj.insert(UTPairObject(simtask->GetIf(), phScene->GetIf()));
+			phScene->SetTimeStep(d.timeStep);
+		}else{				// Sceneロード時に、mapを検索し、timeStepを設定 			
+			fc->mapObj.insert(UTPairObject(simtask->GetIf(), NULL));
+		}
 	}
 };
 
@@ -147,7 +177,7 @@ public:
 	}
 };
 
-// DirectXのテクスチャファイル名（Materialの内部タグ)
+// DirectXのテクスチャファイル名タスク．
 class FWXTextureTask: public UTLoadTask{
 public:
 	OBJECT_DEF_NOIF(FWXTextureTask);
@@ -156,6 +186,7 @@ public:
 };
 OBJECT_IMP(FWXTextureTask, UTLoadTask);
 
+// DirectXのテクスチャファイル名（Materialの内部タグ)．
 class FWNodeHandlerXTextureFilename: public UTLoadHandlerImp<TextureFilename>{
 public:
 	FWNodeHandlerXTextureFilename():UTLoadHandlerImp<Desc>("TextureFilename"){}
@@ -211,7 +242,7 @@ public:
 	}
 };	
 	
-// DirectXのマテリアル．GRMateiralに対応．
+// DirectXのマテリアルタスク．
 class FWPHMaterialTask: public UTLoadTask{
 public:
 	OBJECT_DEF_NOIF(FWPHMaterialTask);
@@ -223,7 +254,7 @@ public:
 };
 OBJECT_IMP(FWPHMaterialTask, UTLoadTask);
 
-// ContactEngineノードで定義されたオブジェクトに対してのみPhysicalMaterialは適用される.
+// DirectXのマテリアル．GRMateiralに対応．
 class FWNodeHandlerPhysicalMaterial: public UTLoadHandlerImp<PhysicalMaterial>{
 public:	
 	FWNodeHandlerPhysicalMaterial():UTLoadHandlerImp<Desc>("PhysicalMaterial"){}
@@ -238,7 +269,7 @@ public:
 	}
 };
 
-// DirectXのMeshのマテリアルリスト．
+// DirectXのMeshのマテリアルリストタスク．
 class FWMeshMaterialListTask: public UTLoadTask{
 public:
 	OBJECT_DEF_NOIF(FWMeshMaterialListTask);
@@ -247,6 +278,7 @@ public:
 };
 OBJECT_IMP(FWMeshMaterialListTask, UTLoadTask);
 
+// DirectXのMeshのマテリアルリスト．
 class FWNodeHandlerXMeshMaterialList: public UTLoadHandlerImp<MeshMaterialList>{
 public:
 	FWNodeHandlerXMeshMaterialList():UTLoadHandlerImp<Desc>("MeshMaterialList"){}
@@ -258,7 +290,7 @@ public:
 	}
 };
 
-// DirectXのMeshの法線ベクトル
+// DirectXのMeshの法線ベクトルタスク．
 class FWMeshNormalsTask: public UTLoadTask{
 public:
 	OBJECT_DEF_NOIF(FWMeshNormalsTask);
@@ -268,6 +300,7 @@ public:
 };
 OBJECT_IMP(FWMeshNormalsTask, UTLoadTask);
 
+// DirectXのMeshの法線ベクトル．
 class FWNodeHandlerXMeshNormals: public UTLoadHandlerImp<MeshNormals>{
 public:
 	FWNodeHandlerXMeshNormals():UTLoadHandlerImp<Desc>("MeshNormals"){}
@@ -284,7 +317,7 @@ public:
 	}
 };
 
-// DirectXのMeshのテクスチャ座標．
+// DirectXのMeshのテクスチャ座標タスク．
 class FWMeshTextureCoordsTask: public UTLoadTask{
 public:
 	OBJECT_DEF_NOIF(FWMeshTextureCoordsTask);
@@ -293,6 +326,7 @@ public:
 };
 OBJECT_IMP(FWMeshTextureCoordsTask, UTLoadTask);
 
+// DirectXのMeshのテクスチャ座標．
 class FWNodeHandlerXMeshTextureCoords: public UTLoadHandlerImp<MeshTextureCoords>{
 public:
 	FWNodeHandlerXMeshTextureCoords():UTLoadHandlerImp<Desc>("MeshTextureCoords"){}
@@ -318,10 +352,10 @@ public:
 			FWPHMaterialTask* phmtask = DCAST(FWPHMaterialTask, o);
 			if (phmtask){
 				// mapを検索し、PhysicalMaterialを登録．
-				UTMapObject::iterator itr = fc->meshMap.find(mesh->GetIf());
-				if (itr != fc->meshMap.end()){
-					GRMesh* mapmesh = DCAST(GRMesh, itr->first);
-					if (mapmesh){
+				UTMapObject::iterator itr = fc->mapObj.find(mesh->GetIf());
+				if (itr != fc->mapObj.end()){
+					GRMesh* meshmap = DCAST(GRMesh, itr->first);
+					if (meshmap){
 						FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);
 						maptask->mu  = phmtask->mu;
 						maptask->mu0 = phmtask->mu0; 					
@@ -363,9 +397,9 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		fc->PushCreateNode(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc());	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
-		// マップ map<mesh, phmtask> を作成.
+		// map<mesh, phmtask> を作成.
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
-		fc->meshMap.insert(UTPairObject(mesh->GetIf(), phmtask->GetIf()));
+		fc->mapObj.insert(UTPairObject(mesh->GetIf(), phmtask->GetIf()));
 
 		if (mesh){
 			mesh->positions = d.vertices;	// 頂点座標
@@ -410,7 +444,7 @@ public:
 	}
 };
 
-// Springhead1のContactEngine
+// Springhead1のContactEngine．
 class FWNodeHandlerContactEngine: public UTLoadHandlerImp<ContactEngine>{
 public:	
 	class Disabler: public UTLoadTask{
@@ -440,8 +474,8 @@ public:
 					}
 
 					// 動摩擦摩擦係数mu、静止摩擦係数mu0 
-					UTMapObject::iterator itr = fc->meshMap.find(m->GetIf());
-					if (itr != fc->meshMap.end()){
+					UTMapObject::iterator itr = fc->mapObj.find(m->GetIf());
+					if (itr != fc->mapObj.end()){
 							FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);	
 							desc.material.mu = maptask->mu;
 							desc.material.mu0 = maptask->mu0;
@@ -475,6 +509,7 @@ public:
 				phScene->SetContactMode(DCAST(PHSolid, o), PHSceneDesc::MODE_LCP);
 				return true;
 			}
+
 			return false;
 		}
 		void Execute(UTLoadContext* fc){}
@@ -497,7 +532,7 @@ public:
 	}
 };
 
-// Springhead1のSolid
+// Springhead1のSolid．
 class FWNodeHandlerSolid: public UTLoadHandlerImp<Solid>{
 public:
 	class Adapter: public FWNodeHandlerContactEngine::Adapter{
@@ -551,7 +586,7 @@ public:
 	}
 };
 
-// Springhead1のCamera
+// Springhead1のCamera．
 class FWNodeHandlerCamera: public UTLoadHandlerImp<Camera>{
 public:	
 	FWNodeHandlerCamera():UTLoadHandlerImp<Desc>("Camera"){}
@@ -579,6 +614,7 @@ public:
 	}
 };
 
+// Springhead1のGravityEngine．
 class FWNodeHandlerGravityEngine: public UTLoadHandlerImp<GravityEngine>{
 public:	
 	FWNodeHandlerGravityEngine():UTLoadHandlerImp<Desc>("GravityEngine"){}
@@ -594,44 +630,53 @@ public:
 	}
 };
 
-// Springhead1のGravityEngine
+// Springhead1のScene．
 class FWNodeHandlerScene: public UTLoadHandlerImp<Scene>{
 public:	
 	FWNodeHandlerScene():UTLoadHandlerImp<Desc>("Scene"){}
 	void Load(Desc& d, UTLoadContext* fc){
-		//	Frameworkを作る
+		//	Frameworkを作る．
 		FWSceneDesc fwsd;
 		fc->PushCreateNode(FWSceneIf::GetIfInfoStatic(), &fwsd);
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
 		
-		//	PHSDKを作る。スタックからは消す。
+		//	PHSDKを作る．スタックからは消す．
 		PHSdkDesc phsdkd;
 		fc->PushCreateNode(PHSdkIf::GetIfInfoStatic(), &phsdkd);
 		PHSdkIf* phSdk = DCAST(PHSdkIf, fc->objects.Top());
 		fc->objects.Pop();
-		//	GRSDKを作る。スタックからは消す。
+		//	GRSDKを作る．スタックからは消す．
 		GRSdkDesc grsdkd;
 		fc->PushCreateNode(GRSdkIf::GetIfInfoStatic(), &grsdkd);
 		GRSdkIf* grSdk = DCAST(GRSdkIf, fc->objects.Top());
 		fc->objects.Pop();
 
-		//	GRSceneを作る。
+		//	GRSceneを作る．
 		GRSceneIf* grScene = grSdk->CreateScene();
-		//	PHSceneを作る。
+		//	PHSceneを作る．
 		PHSceneDesc psd;
 		PHSceneIf* phScene = phSdk->CreateScene(psd);
 
-
-		//	Frameworkにシーンを登録
+		//	Frameworkにシーンを登録．
 		fws->AddChildObject(phScene);
 		fws->AddChildObject(grScene);
+
+		// timeStepを設定．
+		UTMapObject::iterator itr;
+		for (itr=fc->mapObj.begin(); itr!=fc->mapObj.end(); ++itr){
+			FWSimulatorTask* simtask = DCAST(FWSimulatorTask, itr->first);
+			if (simtask){
+				phScene->SetTimeStep(simtask->timeStep);
+				itr->second = phScene;
+			}
+		}				
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		fc->objects.Pop();
 	}
 };
 
-// Springhead1のSolidContainer
+// Springhead1のSolidContainer．
 class FWNodeHandlerSolidContainer: public UTLoadHandlerImp<SolidContainer>{
 public:	
 	FWNodeHandlerSolidContainer():UTLoadHandlerImp<Desc>("SolidContainer"){}
@@ -641,7 +686,7 @@ public:
 	}
 };
 
-// Springhead1のJointEngine
+// Springhead1のJointEngine．
 class FWNodeHandlerJointEngine: public UTLoadHandlerImp<JointEngine>{
 public:	
 	class JointCreator: public UTLoadTask{
@@ -694,7 +739,7 @@ public:
 	}
 };
 
-// Springhead1のJoint
+// Springhead1のJoint．
 class FWNodeHandlerJoint: public UTLoadHandlerImp<Joint>{
 public:	
 	typedef FWNodeHandlerJointEngine::JointCreator JointCreator;
@@ -724,7 +769,7 @@ public:
 	}
 };
 
-// Springhead1のImport
+// Springhead1のImport．
 class FWNodeHandlerImport: public UTLoadHandlerImp<Import>{
 public:	
 	FWNodeHandlerImport():UTLoadHandlerImp<Desc>("Import"){}
@@ -756,7 +801,7 @@ public:
 }
 
 
-
+// ハンドラ定義
 namespace Spr{
 using namespace SprOldSpringhead;
 void SPR_CDECL FWRegisterOldSpringheadNode(){
@@ -774,6 +819,7 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerXMesh);
 	handlers->insert(DBG_NEW FWNodeHandlerSolid);
 	handlers->insert(DBG_NEW FWNodeHandlerScene);
+	handlers->insert(DBG_NEW FWNodeHandlerSimulator);
 	handlers->insert(DBG_NEW FWNodeHandlerCamera);
 	handlers->insert(DBG_NEW FWNodeHandlerSolidContainer);
 	handlers->insert(DBG_NEW FWNodeHandlerGravityEngine);

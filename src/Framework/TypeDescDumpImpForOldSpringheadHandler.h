@@ -149,6 +149,16 @@
 	desc->access = DBG_NEW UTAccess<Scene>;
 	db->RegisterDesc(desc);
 	
+	Simulator* pSimulator = NULL;
+	desc = DBG_NEW UTTypeDesc("Simulator");
+	desc->size = sizeof(Simulator);
+	desc->access = DBG_NEW UTAccess<Simulator>;
+	field = desc->AddField("", "double", "timeStep", "");
+	field->offset = int((char*)&(pSimulator->timeStep) - (char*)pSimulator);
+	field = desc->AddField("", "double", "decay", "");
+	field->offset = int((char*)&(pSimulator->decay) - (char*)pSimulator);
+	db->RegisterDesc(desc);
+	
 	Camera* pCamera = NULL;
 	desc = DBG_NEW UTTypeDesc("Camera");
 	desc->size = sizeof(Camera);

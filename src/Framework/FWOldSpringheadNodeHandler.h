@@ -104,6 +104,12 @@ struct MeshTextureCoords{
 ///	Springhead1のScene
 struct Scene{
 };
+
+///	Springhead1のSimulator
+struct Simulator{
+	double timeStep;	///< 積分ステップ
+	double decay;		///< 剛体の速度の減衰率	
+};
 	
 ///	Springhead1のCamera
 struct Camera{

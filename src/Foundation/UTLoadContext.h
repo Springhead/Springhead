@@ -90,8 +90,8 @@ public:
 	UTLoadTasks postTasks;
 	///	型DB
 	UTTypeDescDb* typeDb;
-	// GRMeshのマップ
-	UTMapObject meshMap;	
+	// マップオブジェクト．ノード間で関係性を持たせたい場合に使用．
+	UTMapObject mapObj;	
 
 	//---------------------------------------------------------------------------
 	//	関数
