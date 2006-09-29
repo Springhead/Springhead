@@ -40,7 +40,7 @@ using namespace Spr;
 #define EXIT_TIMER		10000		// 実行ステップ数
 #define WINSIZE_WIDTH	800//480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	600//360			// ウィンドウサイズ(height)
-#define NUM_SPHERES		10			// sphere数
+#define NUM_SPHERES		3			// sphere数
 #define SIM_FREQ		60          // シミュレーションの更新周期Hz
 
 // SPIDARのVE内での動作スケール
@@ -105,15 +105,22 @@ int num_process = 0;
 
 // 力覚計算に必要なデータを集めた構造体
 typedef struct {
-	// collision data
+	// collision solid data
 	PHSolid* nearest_solids[NUM_SPHERES+1];
+	Vec3d solid_velocity[NUM_SPHERES+1];
+	Vec3d solid_angular_velocity[NUM_SPHERES+1];
+
+	// collision data
 	Vec3d col_positions[NUM_SPHERES+1];
 	Vec3d col_normals[NUM_SPHERES+1];
 	int num_collisions;
 	
 	// 周囲の影響の結果を格納する変数
-	Matrix3d effect[NUM_SPHERES+1];
-	Vec3d constant[NUM_SPHERES+1];
+	Matrix3d vel_effect[NUM_SPHERES+1];
+	Vec3d vel_constant[NUM_SPHERES+1];
+
+	Matrix3d ang_effect[NUM_SPHERES+1];
+	Vec3d ang_constant[NUM_SPHERES+1];
 
 	// pointer data
 	Vec3d pointer_pos;
@@ -279,6 +286,11 @@ void calculate_surround_effect(PHConstraints cs, Penalty_info *info)
 				// 近傍剛体を保存
 				info->nearest_solids[num_solids] = nearest;
 
+				// 近傍剛体の現時点の速度と角速度を保存。
+				// 別な変数を用意するのは、書き換えしやすいようにするため
+				info->solid_velocity[num_solids] = nearest->GetVelocity();
+				info->solid_angular_velocity[num_solids] = nearest->GetAngularVelocity();
+
 				// その剛体の中心から力の作用点までのベクトルを保存
 				PHContactPoint* contact = DCAST(PHContactPoint, (*it));
 				info->col_positions[num_solids] = contact->pos;
@@ -304,6 +316,8 @@ void calculate_surround_effect(PHConstraints cs, Penalty_info *info)
 		num_process = num_solids;
 		Vec3d C[NUM_SPHERES+1];
 		Matrix3d M[NUM_SPHERES+1];
+		Vec3d D[NUM_SPHERES+1];
+		Matrix3d N[NUM_SPHERES+1];
 
 		// pointerに接している剛体が接している剛体を検索し、
 		// それぞれ処理していく
@@ -384,22 +398,25 @@ void calculate_surround_effect(PHConstraints cs, Penalty_info *info)
 			// まとめられる部分はまとめる
 			// 定数項
 			// C = sum(Fi)/m + w x (w x r) + (I^{-1} sum(ri x Fi)) x r
-			C[j] = Vec3d(sum_force / solid->GetMassInv() + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
+			D[j] = solid->GetInertiaInv() * sum_r_out_f;
+			C[j] = Vec3d(sum_force / solid->GetMassInv() + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + D[j] ^ original_r);
 
 			// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
 			// T(ri) = I^{-1} X(ri) 
-			Matrix3d T = solid->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
+			N[j] = solid->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
 			
 			// 求める行列
 			// M = 1/m * E + (T1 x r T2 x r T3 x r)
-			M[j] = Matrix3d(solid->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ original_r, T.Ey() ^ original_r, T.Ez() ^ original_r));
+			M[j] = Matrix3d(solid->GetMassInv() * Matrix3d().Unit() + Matrix3d(N[j].Ex() ^ original_r, N[j].Ey() ^ original_r, N[j].Ez() ^ original_r));
 		}
 		
 		// 結果の格納
 		for(int i = 0; i < num_solids; i++)
 		{
-			info->effect[i] = M[i];
-			info->constant[i] = C[i];
+			info->vel_effect[i] = M[i];
+			info->vel_constant[i] = C[i];
+			info->ang_effect[i] = N[i];
+			info->ang_constant[i] = D[i];
 		}
 
 		// ポインタに接触する剛体の数を登録
@@ -568,6 +585,25 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 		// 衝突対象に接触力・トルクを追加
 		info->nearest_solids[i]->AddForce(-feedback_force, solid_torque_vector);
 
+		
+		// 周囲の影響を考慮
+		if(bSurroundEffect && info->nearest_solids[i]->IsDynamical())
+		{
+			// 加速度を計算
+			Vec3d accel = info->vel_effect[i] * (-feedback_force) + info->vel_constant[i];
+
+			// 速度を計算し、衝突点を更新する
+			info->solid_velocity[i] = info->solid_velocity[i] + accel / HAPTIC_FREQ;
+			info->col_positions[i] = info->col_positions[i] + info->solid_velocity[i] / HAPTIC_FREQ;
+
+			// 角加速度を計算
+			Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
+
+			// 角速度を計算し、法線の向きを更新する
+			info->solid_angular_velocity[i] = info->solid_angular_velocity[i] + ang_accel / HAPTIC_FREQ;
+//			info->col_normals[i] = info->col_normals[i] * info->solid_angular_velocity[i];
+		}
+
 		// 提示力を前の値に追加
 		pointer_force = pointer_force + feedback_force;
 		pointer_torque = pointer_torque + feedback_torque;
@@ -583,11 +619,6 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 		// 提示力を保存
 		last_force = pointer_force;
 		last_torque = pointer_torque;
-
-		// 周囲の影響を考慮
-		if(bSurroundEffect)
-		{
-		}
 	}
 	else
 	{
@@ -724,7 +755,7 @@ void display(){
 
 	render->EndScene();
 
-	// ビデオレートにあわせるために60Hzにする
+	// simulationと同じ周波数にする
 	Sleep((double)1000.0/SIM_FREQ);
 }
 
@@ -776,6 +807,12 @@ void keyboard(unsigned char key, int x, int y){
 	else if(key == ' ')
 	{
 		bforce = !bforce;
+
+		// メッセージを出力
+		std::cout << "force ";
+		if(bforce) std::cout << "on";
+		else std::cout << "off";
+		std::cout << std::endl;
 	}
 	else if(key == 'i')
 	{
@@ -797,6 +834,14 @@ void keyboard(unsigned char key, int x, int y){
 	else if(key == 's')
 	{
 		bSurroundEffect = !bSurroundEffect;
+
+		// メッセージを出力
+		std::cout << "surrounding effect ";
+
+		if(bSurroundEffect)std::cout << "on";
+		else std::cout << "off";
+
+		std::cout << std::endl;
 	}
 }
 
@@ -855,7 +900,7 @@ void InitScene()
 	sd.timeStep = (double)1.0 / SIM_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
-	desc.mass = 2.0;
+	desc.mass = 1.0;
 	desc.inertia *= 2.0;
 
 	// Solidの作成
@@ -866,6 +911,7 @@ void InitScene()
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetDynamical(false);
 
+	desc.mass = 2.0;
 	soPointer = scene->CreateSolid(desc);
 
 	//	形状の作成
