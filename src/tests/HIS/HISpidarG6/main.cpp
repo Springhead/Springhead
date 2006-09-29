@@ -40,23 +40,23 @@ using namespace Spr;
 #define EXIT_TIMER		10000		// 実行ステップ数
 #define WINSIZE_WIDTH	800//480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	600//360			// ウィンドウサイズ(height)
-#define NUM_SPHERES		3			// sphere数
+#define NUM_SPHERES		10			// sphere数
 #define SIM_FREQ		60          // シミュレーションの更新周期Hz
 
 // SPIDARのVE内での動作スケール
 #define SPIDAR_SCALE	70
 
-// 力覚スレッドの周期Hz(1000/HAPTIC_FREQ)
+// 力覚スレッドの周期Hz
 #ifdef _DEBUG
-#define HAPTIC_FREQ		10
+#define HAPTIC_FREQ		500
 #elif _OPT
-#define HAPTIC_FREQ		2
+#define HAPTIC_FREQ		500
 #elif _WINDOWS
-#define HAPTIC_FREQ		1
+#define HAPTIC_FREQ		1000
 #endif
 
 // 提示力のバネダンパ係数
-#define K_force			6
+#define K_force			9
 #define B_force			1
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
@@ -66,8 +66,8 @@ using namespace Spr;
 
 	// virtual couplingの係数
 	#ifdef _DEBUG
-		const float K = 20;
-		const float B = 35;
+		const float K = 10;
+		const float B = 10;
 	#elif _OPT
 		const float K = 10;
 		const float B = 10;
@@ -76,12 +76,6 @@ using namespace Spr;
 		const float B = 8.5;
 	#endif
 #endif
-
-// SPIDAR更新幅
-const float dt = 0.001f * HAPTIC_FREQ;
-
-// 一秒で処理する回数
-const int one_sec = 1000 / HAPTIC_FREQ;
 
 // グラフィック用の変数
 GRSdkIf* grSdk;
@@ -105,10 +99,6 @@ Matrix3f view_rot;
 bool bforce = false;
 MMRESULT FTimerId;
 
-// 周囲の影響の結果を格納する変数
-Matrix3d effect[NUM_SPHERES+1];
-Vec3d constant[NUM_SPHERES+1];
-
 // 再帰計算をした情報を格納するテーブル
 PHConstraint* process_map[NUM_SPHERES+1];
 int num_process = 0;
@@ -120,6 +110,10 @@ typedef struct {
 	Vec3d col_positions[NUM_SPHERES+1];
 	Vec3d col_normals[NUM_SPHERES+1];
 	int num_collisions;
+	
+	// 周囲の影響の結果を格納する変数
+	Matrix3d effect[NUM_SPHERES+1];
+	Vec3d constant[NUM_SPHERES+1];
 
 	// pointer data
 	Vec3d pointer_pos;
@@ -135,6 +129,9 @@ Penalty_info info2;
 // trueのときは配列１を参照
 // falseのときは配列２を参照
 bool current_valid_data = true; 
+
+// 周囲の影響を有効にするかどうかを決めるフラグ
+bool bSurroundEffect = false;
 
 /**
  brief     	calculate_surround_effectから呼ばれ、接触力を再帰的に計算する関数
@@ -154,7 +151,11 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 		// 現在の値がすでに処理されたかチェック
 		for(int i = 0; i < num_process; i++)
 		{
-			if(process_map[i] == *it)process = true;
+			if(process_map[i] == *it)
+			{
+				process = true;
+				break;
+			}
 		}
 
 		// まだ処理されていない
@@ -194,7 +195,6 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 	}
 
 	// 変数の用意
-	Vec3d sum_r = Vec3d();
 	Vec3d sum_force = Vec3d();
 	Vec3d sum_r_out_f = Vec3d();
 
@@ -206,24 +206,25 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 		// 得られた値の合計値を計算
 		// 物体に加わる力を正とし、
 		// 前の剛体から得られた力は作用させる力なので負にする
-		sum_r = sum_r + r;
 		sum_force = sum_force + (- f) ;
 
 		//　力と発生源からの外積を計算、それらの合計値を計算する
 		sum_r_out_f = sum_r_out_f + r ^ (- f);
 	}
 
-	// sum_rだけは返す力に対応するｒを加える
-	sum_r = sum_r + original_r;
-
 	// まとめられる部分はまとめる
-	Vec3d A = solid->GetAcceleration() - (solid->GetInertiaInv() * sum_r_out_f) ^ sum_r + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) - solid->GetMassInv() * sum_force;
+	// C = vp' - (sum(Fi) / m + w x (w x r) + I^{-1} sum(ri x Fi) x r
+	Vec3d C = (solid->GetAcceleration() + ((solid->GetAngularVelocity() - solid->GetOldAngularVelocity()) ^ original_r) / scene->GetTimeStep()) - ((sum_force  / solid->GetMassInv()) + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
 
+	// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
+	// T(ri) = I^{-1} X(ri) 	
 	Matrix3d T = solid->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
-	Matrix3d M = solid->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ sum_r, T.Ey() ^ sum_r, T.Ez() ^ sum_r);
+
+	// M = 1/m * E + (T1 x r T2 x r T3 x r)
+	Matrix3d M = solid->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ original_r, T.Ey() ^ original_r, T.Ez() ^ original_r);
 
 	// 導かれる力を返す
-	*output_force = M.inv() * A;
+	*output_force = M.inv() * C;
 }
 
 /**
@@ -233,7 +234,7 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 			また、PHSolid* solids[]にポインタが接している剛体のリストが入る
  return 	なし
 */
-void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Constant, Penalty_info *info)
+void calculate_surround_effect(PHConstraints cs, Penalty_info *info)
 {
 	std::vector<Vec3d> forces;
 	std::vector<Vec3d> vec_r;
@@ -264,14 +265,15 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 			if((*it)->solid[0]->solid == soPointer)
 			{
 				nearest = (*it)->solid[1]->solid;
-				sign *= -1;
 			}
 			else if((*it)->solid[1]->solid == soPointer)
 			{
 				nearest = (*it)->solid[0]->solid;
+				sign *= -1;
 			}
 
 			// ポインタを含む剛体があったので処理
+			// 力覚計算に必要な情報も取得する
 			if(nearest != NULL)
 			{
 				// 近傍剛体を保存
@@ -300,7 +302,7 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 
 		// 処理に必要な変数
 		num_process = num_solids;
-		Vec3d A[NUM_SPHERES+1];
+		Vec3d C[NUM_SPHERES+1];
 		Matrix3d M[NUM_SPHERES+1];
 
 		// pointerに接している剛体が接している剛体を検索し、
@@ -318,7 +320,11 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 				bool process = false;
 				for(int i = 0; i < num_process; i++)
 				{
-					if(process_map[i] == *it)process = true;
+					if(process_map[i] == *it)
+					{
+						process = true;
+						break;
+					}
 				}
 
 				// 処理済みマップからは見つからなかった(=未処理=目的の剛体の可能性あり）
@@ -337,12 +343,15 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 
 					if(nearest != NULL)
 					{
+						// 処理済マップに登録
 						process_map[num_process++] = *it;
 
+						// 剛体の中心から力の作用点までのベクトルを求める
 						PHContactPoint* contact = DCAST(PHContactPoint, (*it));
 						Vec3d f = Vec3d();
 						Vec3d r = contact->pos - nearest->GetCenterPosition();
 
+						// 再帰的に次の処理に渡す
 						calculate_counteractive_object_force(cs, depth+1, nearest, r, &f);
 
 						forces.push_back(f);
@@ -352,7 +361,6 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 			}
 
 			// 変数の用意
-//			Vec3d sum_r = Vec3d();
 			Vec3d sum_force = Vec3d();
 			Vec3d sum_r_out_f = Vec3d();
 
@@ -364,7 +372,6 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 				// 得られた値の合計値を計算 
 				// 物体に加わる力を正とし、
 				// 前の剛体から得られた力は作用させる力なので負にする
-//				sum_r = sum_r + r;
 				sum_force = sum_force + (- f);
 
 				//　力と発生源からの外積を計算、それらの合計値を計算する
@@ -374,28 +381,25 @@ void calculate_surround_effect(PHConstraints cs, Matrix3d *Effect, Vec3d *Consta
 			// 力覚ポインタと最近傍物体との接触点
 			Vec3d original_r = vec_r_pointer[j];
 
-			// sum_rだけは返す力に対応するｒを加える
-//			sum_r = sum_r + original_r;
-
 			// まとめられる部分はまとめる
 			// 定数項
-			// A = -w x (w x r) + (I^(-1) * sum(r x f)) x r + sum(f) / m
-			A[j] = Vec3d((((PHSolid *)soPointer)->GetInertiaInv() * sum_r_out_f) ^ original_r - ((PHSolid *)soPointer)->GetAngularVelocity() ^ (((PHSolid *)soPointer)->GetAngularVelocity() ^ original_r) + ((PHSolid *)soPointer)->GetMassInv() * sum_force);
+			// C = sum(Fi)/m + w x (w x r) + (I^{-1} sum(ri x Fi)) x r
+			C[j] = Vec3d(sum_force / solid->GetMassInv() + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
 
-			// T = I^(-1) * (r x f)のrを外積から行列にして外積を排除したもの
-			Matrix3d T = ((PHSolid *)soPointer)->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
+			// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
+			// T(ri) = I^{-1} X(ri) 
+			Matrix3d T = solid->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
 			
 			// 求める行列
 			// M = 1/m * E + (T1 x r T2 x r T3 x r)
-			M[j] = Matrix3d(((PHSolid *)soPointer)->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ original_r, T.Ey() ^ original_r, T.Ez() ^ original_r));
+			M[j] = Matrix3d(solid->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ original_r, T.Ey() ^ original_r, T.Ez() ^ original_r));
 		}
 		
-
+		// 結果の格納
 		for(int i = 0; i < num_solids; i++)
 		{
-			// 結果の格納
-			Effect[i] = M[i];
-			Constant[i] = A[i];
+			info->effect[i] = M[i];
+			info->constant[i] = C[i];
 		}
 
 		// ポインタに接触する剛体の数を登録
@@ -510,6 +514,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	// SPIDARの情報を格納する変数
 	static Vec3d old_pos = Vec3d();
 	static Vec3d last_force = Vec3d();
+	static Vec3d last_torque = Vec3d();
 
 	Penalty_info* info = NULL;
 
@@ -523,15 +528,18 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 		info = &info2;
 	}
 
-	// pointerの位置の更新
+	// SPIDAR更新幅
+	static const float dt = (float)1.0f / HAPTIC_FREQ;
+
+	// SPIDARの位置の更新
 	spidarG6.Update(dt);//	USBの通信を行う．
 	spidar_pos = view_rot * spidarG6.GetPos();		// SPIDAR座標からワールド座標にする
 
-	// pointerの速度を計算
+	// SPIDARの速度を計算
 	Vec3d PointerVel = (spidar_pos - old_pos) / dt;
 	old_pos = spidar_pos;
 
-	// spidar座標までのベクトルを作成
+	// SPIDAR座標までのベクトルを作成
 	Vec3d goal = spidar_pos - info->pointer_pos;
 
 	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
@@ -545,43 +553,55 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	// ポインタに生じたすべての接触について計算
 	for(int i = 0; i < info->num_collisions; i++)
 	{
+		// 侵入を表すベクトルを作成
 		Vec3d penetration_vector = info->col_positions[i] - spidar_pos;
 
-		// ペナルティ法で提示力を計算
-		// 現在バネのみ
-		Vec3d local_force = (K_force * dot(penetration_vector, info->col_normals[i]))* info->col_normals[i].unit() / penetration_vector.norm();
-		Vec3d local_torque = (info->col_positions[i] - info->nearest_solids[i]->GetCenterPosition()) ^ local_force;
+		// 提示力を計算
+		Vec3d feedback_force = - (K_force * dot(penetration_vector, info->col_normals[i])) * info->col_normals[i].unit() / penetration_vector.norm();
 
-		// 剛体に力を加えて動かす
-		info->nearest_solids[i]->AddForce(local_force, local_torque);
+		// 提示力によるトルクを計算
+		Vec3d feedback_torque = (info->col_positions[i] - info->pointer_center) ^ feedback_force;
 
-		// ポインタに加える力とトルクを計算
-		pointer_force = pointer_force + local_force;
-		pointer_torque = pointer_torque + (info->col_positions[i] - info->pointer_center) ^ (-local_force);
+		// 衝突対象のトルクを計算
+		Vec3d solid_torque_vector = (info->col_positions[i] - info->nearest_solids[i]->GetCenterPosition()) ^ (-feedback_force);
+
+		// 衝突対象に接触力・トルクを追加
+		info->nearest_solids[i]->AddForce(-feedback_force, solid_torque_vector);
+
+		// 提示力を前の値に追加
+		pointer_force = pointer_force + feedback_force;
+		pointer_torque = pointer_torque + feedback_torque;
 	}
 
 	// spidarに力を加える
 	if(info->num_collisions > 0)
 	{
-		// 前の提示力を参照してつぶを取る
-		if(bforce)spidarG6.SetForce(-(0.95 * pointer_force + 0.05 * last_force), pointer_torque);
+		// 前の提示力とトルクを参照してつぶを取る
+		if(bforce)spidarG6.SetForce(0.95 * pointer_force + 0.005 * last_force, 0.95 * pointer_torque + 0.05 * last_torque);
 		else spidarG6.SetForce(Vec3d(), Vec3d());
 
 		// 提示力を保存
 		last_force = pointer_force;
+		last_torque = pointer_torque;
+
+		// 周囲の影響を考慮
+		if(bSurroundEffect)
+		{
+		}
 	}
 	else
 	{
 		// 衝突がないので提示力をリセットする
 		spidarG6.SetForce(Vec3d());
 		last_force = Vec3d();
+		last_torque = Vec3d();
 	}
 
 #if 0
 //#if _DEBUG | _WINDOWS
 	static int sec_counter = 0;
 	// 一秒ごとにSPIDARの座標を表示する
-	if(sec_counter % one_sec == 0)
+	if(sec_counter % HAPTIC_FREQ == 0)
 	{
 //		std::cout << "spidar position = " << spidar_pos << std::endl;
 //		std::cout << "spidar velocity = " << PointerVel << std::endl;
@@ -631,7 +651,7 @@ void idle(){
 	// １を参照中。２を更新
 	if(current_valid_data == true)
 	{
-		calculate_surround_effect(cs, effect, constant, &info2);
+		calculate_surround_effect(cs, &info2);
 		info2.pointer_pos = soPointer->GetFramePosition();
 		info2.pointer_vel = soPointer->GetVelocity();
 		info2.pointer_center = soPointer->GetCenterPosition();
@@ -639,7 +659,7 @@ void idle(){
 	// ２を参照中。１を更新
 	else
 	{
-		calculate_surround_effect(cs, effect, constant, &info1);
+		calculate_surround_effect(cs, &info1);
 		info1.pointer_pos = soPointer->GetFramePosition();
 		info1.pointer_vel = soPointer->GetVelocity();
 		info1.pointer_center = soPointer->GetCenterPosition();
@@ -773,6 +793,11 @@ void keyboard(unsigned char key, int x, int y){
 			soSphere[i]->SetVelocity(Vec3d());
 		}
 	}
+	// 周囲の影響を有効にするかどうか
+	else if(key == 's')
+	{
+		bSurroundEffect = !bSurroundEffect;
+	}
 }
 
 void InitScene();
@@ -801,8 +826,9 @@ int main(int argc, char* argv[]){
 
 	timeBeginPeriod(1);							//分解能の最小値
 
+
 	// hapticスレッドの生成・開始
-	FTimerId = timeSetEvent(HAPTIC_FREQ,    // タイマー間隔[ms]
+	FTimerId = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
 	                        1,   // 時間分解能
 		                    TimerProc,//コールバック関数
 		                    (DWORD)&time,//ユーザー定義の値

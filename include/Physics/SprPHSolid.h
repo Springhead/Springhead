@@ -19,7 +19,9 @@ namespace Spr{;
 ///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)
+	Vec3d		oldVel;		///<	１ステップ前の速度
 	Vec3d		angVelocity;	///<	角速度			(World系)
+	Vec3d		oldAngVel;		///<	１ステップ前の角速度
 	Vec3d		acceleration;	///<	加速度			(World系)
 	Vec3d		angAcceleration;///<	角加速度		(World系)
 	Posed		pose;			///<	位置と向き		(World系)
@@ -86,6 +88,10 @@ struct PHSolidIf : public SceneObjectIf{
 		@return 慣性テンソル
 	 */
 	virtual Matrix3d	GetInertia()=0;
+	/** @brief 慣性テンソルの逆数を取得する
+		@return 慣性テンソルの逆数
+	 */
+	virtual Matrix3d	GetInertiaInv()=0;
 	/** @brief 慣性テンソルを設定する
 		@param I 慣性テンソル
 	 */
@@ -129,6 +135,11 @@ struct PHSolidIf : public SceneObjectIf{
 		@return シーンに対する剛体の質量中心の速度
 	 */
 	virtual Vec3d		GetVelocity() const  =0;
+
+	/** @brief 剛体の１ステップ前の速度を取得する
+		@return シーンに対する剛体の１ステップ前の速度
+	 */
+	virtual Vec3d		GetOldVelocity() const = 0;
 	/** @brief 剛体の速度を設定する
 		@param v シーンに対する剛体の質量中心の速度
 	 */
@@ -145,6 +156,12 @@ struct PHSolidIf : public SceneObjectIf{
 		@return シーンに対する剛体の角速度
 	 */
 	virtual Vec3d		GetAngularVelocity() const =0;
+	
+	/** @brief 剛体の１ステップ前の角速度を取得する
+		@return シーンに対する剛体の１ステップ前の角速度
+	 */
+	virtual Vec3d		GetOldAngularVelocity() const = 0;
+
     /** @brief 剛体の角速度を設定する
 		@param av シーンに対する剛体の角速度
 	 */

@@ -171,8 +171,12 @@
 	desc->access = DBG_NEW UTAccess<PHSolidState>;
 	field = desc->AddField("", "Vec3d", "velocity", "");
 	field->offset = int((char*)&(pPHSolidState->velocity) - (char*)pPHSolidState);
+	field = desc->AddField("", "Vec3d", "oldVel", "");
+	field->offset = int((char*)&(pPHSolidState->oldVel) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "angVelocity", "");
 	field->offset = int((char*)&(pPHSolidState->angVelocity) - (char*)pPHSolidState);
+	field = desc->AddField("", "Vec3d", "oldAngVel", "");
+	field->offset = int((char*)&(pPHSolidState->oldAngVel) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "acceleration", "");
 	field->offset = int((char*)&(pPHSolidState->acceleration) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "angAcceleration", "");

@@ -290,15 +290,15 @@ void PHConstraintEngine::UpdateSolids(double dt){
 		//velocity update
 		vnew = info->v + info->dv0 + info->dv;
 		wnew = info->w + info->dw0 + info->dw;
-		Vec3d oldVel = solid->GetVelocity();
-		Vec3d oldAngVel = solid->GetAngularVelocity();
+		solid->oldVel = solid->GetVelocity();
+		solid->oldAngVel = solid->GetAngularVelocity();
 
 		solid->SetVelocity       (solid->GetOrientation() * vnew);
 		solid->SetAngularVelocity(solid->GetOrientation() * wnew);
 		
 		// accels update
 		// these values don't make effect to physics simulation result
-		solid->SetAcceleration((solid->GetVelocity() - oldVel)/dt);
+		solid->SetAcceleration((solid->GetVelocity() - solid->oldVel)/dt);
 //		solid->SetAngularAcceleration(/* */);
 
 		//position update

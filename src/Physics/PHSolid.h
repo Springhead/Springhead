@@ -182,10 +182,14 @@ public:
 	///	質量中心の速度の設定
 	void		SetVelocity(const Vec3d& v){velocity = v;}
 
+	Vec3d		GetOldVelocity() const {return oldVel;}
+
 	///	角速度の取得
 	Vec3d		GetAngularVelocity() const {return angVelocity;}
 	///	角速度の設定
 	void		SetAngularVelocity(const Vec3d& av){angVelocity = av;}
+
+	Vec3d		GetOldAngularVelocity() const {return oldAngVel;}
 
 	///	任意の位置での速度の取得
 	Vec3d		GetPointVelocity(Vec3f posW) const {
