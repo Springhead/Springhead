@@ -54,8 +54,7 @@ bool HISpidarG6X3::Init(DVDeviceManager& dev, bool bLeft=false){
 	for( int i=0; i<8; i++ ) motorPos[i][0] -= Vec3f( 0,-0.0675,0.095 );
 */
 
-//	if( HISpidarG6::Init(dev, 8, motorPos[bLeft?1:0], 4.0f/35.1f, (float)1.705029838e-5, 1.0f, 20.0f) == false ){
-	if( HISpidarG6::Init(dev, 8, motorPos[bLeft?1:0], 4.0f/35.1f, (float)3.14e-5, 1.0f, 20.0f) == false ){
+	if( HISpidarG6::Init(dev, 8, motorPos[bLeft?1:0], 4.0f/35.1f, (float)1.66555e-5, 1.0f, 20.0f) == false ){
 		return false;
 	}
 	if (bLeft){
