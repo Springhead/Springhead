@@ -74,7 +74,7 @@ public:
 // Springhead1のフレーム．
 class FWNodeHandlerXFrame: public UTLoadHandlerImp<Frame>{
 public:	
-	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}
+	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}	
 	void Load(Desc& d, UTLoadContext* fc){
 		fc->PushCreateNode(GRFrameIf::GetIfInfoStatic(), &GRFrameDesc());
 	}
@@ -586,6 +586,20 @@ public:
 	}
 };
 
+// Spirnghead1のSphere
+class FWNodeHandlerSphere: public UTLoadHandlerImp<Sphere>{
+public:
+	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
+	void Load(Desc& d, UTLoadContext* fc){
+		CDSphereDesc desc;
+		desc.radius = d.radius;
+		fc->PushCreateNode(CDSphereIf::GetIfInfoStatic(), &desc);		
+	}
+	void Loaded(Desc& d, UTLoadContext* fc){
+		fc->objects.Pop();		
+	}
+};					
+
 // Springhead1のCamera．
 class FWNodeHandlerCamera: public UTLoadHandlerImp<Camera>{
 public:	
@@ -818,6 +832,7 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerXMeshTextureCoords);	
 	handlers->insert(DBG_NEW FWNodeHandlerXMesh);
 	handlers->insert(DBG_NEW FWNodeHandlerSolid);
+	handlers->insert(DBG_NEW FWNodeHandlerSphere);
 	handlers->insert(DBG_NEW FWNodeHandlerScene);
 	handlers->insert(DBG_NEW FWNodeHandlerSimulator);
 	handlers->insert(DBG_NEW FWNodeHandlerCamera);

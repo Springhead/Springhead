@@ -4,4 +4,5 @@
 #include "../../include/Graphics/SprGRRender.h" 
 #include "../../include/Graphics/SprGRScene.h" 
 #include "../../include/Graphics/SprGRSdk.h" 
+#include "../../include/Graphics/SprGRSphere.h" 
 #include "../../include/Graphics/SprGRVertex.h" 

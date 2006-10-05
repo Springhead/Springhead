@@ -17,5 +17,7 @@
 #include "Graphics/SprGRScene.h"
 #include "Graphics/SprGRFrame.h"
 #include "Graphics/SprGRMesh.h"
+#include "Graphics/SprGRSphere.h"
+#include "Graphics/SprGRScene.h"
 
 #endif

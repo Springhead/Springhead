@@ -195,6 +195,18 @@
 	field->offset = int((char*)&(pSolid->center) - (char*)pSolid);
 	db->RegisterDesc(desc);
 	
+	Sphere* pSphere = NULL;
+	desc = DBG_NEW UTTypeDesc("Sphere");
+	desc->size = sizeof(Sphere);
+	desc->access = DBG_NEW UTAccess<Sphere>;
+	field = desc->AddField("", "float", "radius", "");
+	field->offset = int((char*)&(pSphere->radius) - (char*)pSphere);
+	field = desc->AddField("", "int", "slices", "");
+	field->offset = int((char*)&(pSphere->slices) - (char*)pSphere);
+	field = desc->AddField("", "int", "stacks", "");
+	field->offset = int((char*)&(pSphere->stacks) - (char*)pSphere);
+	db->RegisterDesc(desc);
+	
 	PhysicalMaterial* pPhysicalMaterial = NULL;
 	desc = DBG_NEW UTTypeDesc("PhysicalMaterial");
 	desc->size = sizeof(PhysicalMaterial);

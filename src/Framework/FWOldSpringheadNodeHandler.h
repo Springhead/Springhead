@@ -124,13 +124,20 @@ struct Camera{
 
 ///	Springhead1のSolid
 struct Solid{
-	float mass;				///<	質量
-	Matrix3f inertia;		///<	慣性モーメント
-	Vec3f velocity;			///<	速度
-	Vec3f angularVelocity;	///<	角速度
-	Vec3f center;			///<	中心位置
+	float mass;				///< 質量
+	Matrix3f inertia;		///< 慣性モーメント
+	Vec3f velocity;			///< 速度
+	Vec3f angularVelocity;	///< 角速度
+	Vec3f center;			///< 中心位置
 };
 
+/// Springhead1のSphere	
+struct Sphere{
+	float radius;			///< 半径
+	int slices;				///< 経線方向の分割数
+	int stacks;				///< 緯線方向の分割数
+};	
+	
 /// Springhead1の物理マテリアル
 struct PhysicalMaterial{				
 	float ns;				///< 抗力のばね係数

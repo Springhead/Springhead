@@ -138,6 +138,20 @@
 	desc->access = DBG_NEW UTAccess<GRSdkDesc>;
 	db->RegisterDesc(desc);
 	
+	GRSphereDesc* pGRSphereDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRSphereDesc");
+	desc->size = sizeof(GRSphereDesc);
+	desc->ifInfo = GRSphereIf::GetIfInfoStatic();
+	((IfInfo*)GRSphereIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRSphereDesc>;
+	field = desc->AddField("", "float", "radius", "");
+	field->offset = int((char*)&(pGRSphereDesc->radius) - (char*)pGRSphereDesc);
+	field = desc->AddField("", "int", "slices", "");
+	field->offset = int((char*)&(pGRSphereDesc->slices) - (char*)pGRSphereDesc);
+	field = desc->AddField("", "int", "stacks", "");
+	field->offset = int((char*)&(pGRSphereDesc->stacks) - (char*)pGRSphereDesc);
+	db->RegisterDesc(desc);
+	
 	GRVertexElement* pGRVertexElement = NULL;
 	desc = DBG_NEW UTTypeDesc("GRVertexElement");
 	desc->size = sizeof(GRVertexElement);
