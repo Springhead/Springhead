@@ -255,6 +255,13 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[3])->SetDamper(D);
 	DCAST(PHHingeJointIf, jntLink[4])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
+#ifndef USE_EXPLICIT
+	PHSpringDesc descSpring;
+	descSpring.spring = 600 * 1e20 *Vec3f(1,1,1);
+	descSpring.damper = 15 * 1e20 *Vec3f(1,1,1);
+	jntLink[5] = scene->CreateJoint(soBox[4], soBox[5], descSpring);
+	
+#endif
 
 	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 1.0));
 	soBox[5]->SetDynamical(false);
@@ -493,14 +500,14 @@ void OnTimer5(){
 	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
 	soBox[5]->SetDynamical(false);
 */
+#ifdef USE_EXPLICIT
 	Vec3f dVel = Vec3f() - soBox[4]->GetVelocity();
 	Vec3f dPos = soBox[5]->GetPose().Pos() - soBox[4]->GetPose().Pos();
-//	float K = 200;
-//	float B = 10;
-	float K = 150;
-	float B = 7;
+	static float K = 500;
+	static float B = 15;
 	Vec3f force = K*dPos + B*dVel;
 	soBox[4]->AddForce(force, soBox[4]->GetPose()*Vec3f(0,3,0));
+#endif
 }
 
 void OnTimer(){
