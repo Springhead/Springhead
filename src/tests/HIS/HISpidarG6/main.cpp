@@ -40,7 +40,7 @@ using namespace Spr;
 #define EXIT_TIMER		10000		// 実行ステップ数
 #define WINSIZE_WIDTH	1260//480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	1024//360			// ウィンドウサイズ(height)
-#define NUM_SPHERES		20			// sphere数
+#define NUM_SPHERES		2			// sphere数
 #define SIM_FREQ		60          // シミュレーションの更新周期Hz
 
 // SPIDARのVE内での動作スケール
@@ -56,7 +56,7 @@ using namespace Spr;
 #endif
 
 // 提示力のバネダンパ係数
-#define K_force			8
+#define K_force			60
 #define B_force			1
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
@@ -72,10 +72,13 @@ using namespace Spr;
 		const float K = 10;
 		const float B = 10;
 	#elif _WINDOWS
-		const float K = 60;
-		const float B = 5;
+		const float K = 90;
+		const float B = 9;
 	#endif
 #endif
+
+// 提示力が深さ基準ではないときの深さを表す値
+#define FORCE_CONSTANT_DEPTH	0.18
 
 // グラフィック用の変数
 GRSdkIf* grSdk;
@@ -99,6 +102,8 @@ Matrix3f view_rot;
 bool bforce = false;
 MMRESULT FTimerId;
 
+bool bDepthProposional = true;
+
 // 再帰計算をした情報を格納するテーブル
 PHConstraint* process_map[NUM_SPHERES+1];
 int num_process = 0;
@@ -121,6 +126,9 @@ typedef struct {
 	
 	Vec3d original_col_positions[NUM_SPHERES+1];
 	Vec3d original_col_normals[NUM_SPHERES+1];
+
+	Vec3d penetration[NUM_SPHERES+1];
+	double half_depth[NUM_SPHERES+1];
 
 	// 周囲の影響の結果を格納する変数
 	Matrix3d vel_effect[NUM_SPHERES+1];
@@ -179,12 +187,12 @@ PHSolid* getAdjacentSolid(PHConstraint* constraint, PHSolid* solid, int* sign = 
 {
 	if(constraint->solid[0]->solid == solid)
 	{
-		if(sign != NULL) *sign = 1;
+		if(sign != NULL) *sign = -1;
 		return constraint->solid[1]->solid;
 	}
 	else if(constraint->solid[1]->solid == solid)
 	{
-		if(sign != NULL) *sign = -1;
+		if(sign != NULL) *sign = 1;
 		return constraint->solid[0]->solid;
 	}
 	else return NULL;
@@ -215,7 +223,7 @@ void calculate_pointer_effect(std::vector<Vec3d> *forces, std::vector<Vec3d> *ve
 	// 定数項
 	// C = sum(Fi)/m + w x (w x r) + (I^{-1} sum(ri x Fi)) x r
 	*D = solid->GetInertiaInv() * sum_r_out_f;
-	*C = Vec3d(sum_force / solid->GetMassInv() + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + *D ^ original_r);
+	*C = Vec3d(sum_force * solid->GetMassInv() + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + *D ^ original_r);
 
 	// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
 	// T(ri) = I^{-1} X(ri) 
@@ -246,24 +254,26 @@ void calculate_solid_effect(std::vector<Vec3d> *forces, std::vector<Vec3d> *vec_
 		//　力と発生源からの外積を計算、それらの合計値を計算する
 		sum_r_out_f = sum_r_out_f + r ^ (- f);
 	}
-
+/*
 	double massinv;
 	if(solid->IsDynamical() == false)
 	{
 		massinv = 0;
+
 	}
 	else massinv = solid->GetMassInv();
-
+*/
 	// まとめられる部分はまとめる
-	// C = vp' - (sum(Fi) / m + w x (w x r) + I^{-1} sum(ri x Fi) x r
-	Vec3d C = (solid->GetAcceleration() + ((solid->GetAngularVelocity() - solid->GetOldAngularVelocity()) ^ original_r) / scene->GetTimeStep()) - ((sum_force  / solid->GetMassInv()) + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
+	// C = vp'' - (sum(Fi) / m + w x (w x r) + I^{-1} sum(ri x Fi) x r
+	Vec3d point_accel = solid->GetAcceleration() + ((solid->GetAngularVelocity() - solid->GetOldAngularVelocity()) ^ original_r) / scene->GetTimeStep();
+	Vec3d C = point_accel - ((sum_force * solid->GetMassInv()) + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
 
 	// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
 	// T(ri) = I^{-1} X(ri) 	
 	Matrix3d T = solid->GetInertiaInv() * Matrix3d(0, - original_r.z, original_r.y, original_r.z, 0, - original_r.x, -original_r.y, original_r.x, 0);
 
 	// M = 1/m * E + (T1 x r T2 x r T3 x r)
-	Matrix3d M = massinv * Matrix3d().Unit() + Matrix3d(T.Ex() ^ original_r, T.Ey() ^ original_r, T.Ez() ^ original_r);
+	Matrix3d M = solid->GetMassInv() * Matrix3d().Unit() + Matrix3d(T.Ex() ^ original_r, T.Ey() ^ original_r, T.Ez() ^ original_r);
 
 	// 導かれる力を返す
 	*output_force = M.inv() * C;
@@ -293,19 +303,30 @@ void gotoNextSolid(PHConstraints cs, PHConstraint* constraint, int depth, PHSoli
 // 提示力の計算および提案手法に必要な情報を集めて構造体を作成する
 void makeInfo(PHSolid* nearest, PHConstraint* constraint, Penalty_info* info, int sign, Vec3d C, Vec3d D, Matrix3d M, Matrix3d N)
 {	
-	// 近傍剛体の現時点の速度と角速度を保存。
-	// 別な変数を用意するのは、書き換えしやすいようにするため
-	info->solid_velocity[info->num_collisions] = nearest->GetVelocity();
-	info->solid_angular_velocity[info->num_collisions] = nearest->GetAngularVelocity();
-
 	// その剛体の中心から力の作用点までのベクトルを保存
 	PHContactPoint* contact = DCAST(PHContactPoint, constraint);
 	info->col_positions[info->num_collisions] = contact->pos;
 	info->original_col_positions[info->num_collisions] = contact->pos;
 
-	// ポインタから剛体への接触面の法線を保存
+	// 剛体からポインタへの接触面の法線を保存
 	info->col_normals[info->num_collisions] = sign * contact->shapePair->normal;
 	info->original_col_normals[info->num_collisions] = sign * contact->shapePair->normal;
+	
+	// 近傍剛体の現時点の速度と角速度を保存。
+	// 別な変数を用意するのは、書き換えしやすいようにするため
+	info->solid_velocity[info->num_collisions] = nearest->GetVelocity() + (info->col_positions[info->num_collisions] - nearest->GetCenterPosition()) ^ nearest->GetAngularVelocity();
+	info->solid_angular_velocity[info->num_collisions] = nearest->GetAngularVelocity();
+
+	// 侵入量を考慮にいれるかどうか
+	// 入れると深く侵入するほど力が強くなるが、物体がやわらかく感じてしまう。
+	// 入れないと物体が硬く感じるが、物体に侵入してしまう
+	// そこで両方の組み合わせを使う
+	// FORCE_CONSTANT_DEPTHを最低値として、それより小さい場合はFORCE_CONSTANT_DEPTHに、大きい場合はdepthを採用する
+	if(bDepthProposional) info->half_depth[info->num_collisions] = (1.0 * contact->shapePair->depth) > FORCE_CONSTANT_DEPTH?(1.0 * contact->shapePair->depth): FORCE_CONSTANT_DEPTH;
+	else info->half_depth[info->num_collisions] = FORCE_CONSTANT_DEPTH;
+
+	// 剛体の重心から最侵入点までのベクトルを作成
+	info->penetration[info->num_collisions] = info->half_depth[info->num_collisions] * info->col_normals[info->num_collisions] + contact->pos;
 
 	// 計算で得られた周囲の影響を表す変数をコピーする
 	info->vel_constant[info->num_collisions] = C;
@@ -382,6 +403,7 @@ void calculate_surround_effect(PHConstraints cs, Penalty_info *info)
 			// 法線の向きを修正する符号
 			int sign = 1;
 
+			// ポインタに接する剛体を取得
 			PHSolid* nearest = getAdjacentSolid(*it, (PHSolid*)soPointer, &sign);
 
 			// ポインタを含む剛体があったので処理
@@ -433,7 +455,7 @@ void calculate_surround_effect(PHConstraints cs, Penalty_info *info)
 					PHSolid* nearest = getAdjacentSolid(*it, (PHSolid*)solid);
 
 					// ポインタに接する剛体に接する剛体があればそちらに進む
-					if(nearest != NULL)
+					if(nearest != NULL && nearest != soPointer)
 					{						
 						// 深さの初期化
 						int depth = 1;
@@ -588,7 +610,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 
 	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
 	Vec3d VCforce = K * goal + B * (PointerVel - info->pointer_vel);
-	soPointer->AddForce(VCforce, Vec3f());
+	soPointer->AddForce(VCforce);
 
 	// ポインタに加える力・トルクを格納する変数
 	Vec3d pointer_force = Vec3d();
@@ -597,11 +619,15 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	// ポインタに生じたすべての接触について計算
 	for(int i = 0; i < info->num_collisions; i++)
 	{
-		// 侵入を表すベクトルを作成 考える必要あり。
-		Vec3d penetration_vector = info->col_positions[i] - spidar_pos;
+		// 侵入量を表すベクトル
+		// はじめの項は剛体の重心から衝突点を通って最侵入点までのベクトル
+		// もうひとつの項は衝突点の座標 毎回更新される
+		Vec3d penetration_vector = info->penetration[i] - info->col_positions[i];
 
-		// 提示力を計算
-		Vec3d feedback_force = - (K_force * dot(penetration_vector, info->col_normals[i])) * info->col_normals[i].unit() / penetration_vector.norm();
+		// 衝突点での内積をとって提示力を計算する
+		// 侵入量（深さ）を混ぜる
+		// 衝突点の法線ベクトルも毎回更新される
+		Vec3d feedback_force = (K_force * info->half_depth[i] * dot(penetration_vector, info->col_normals[i])) * info->col_normals[i] / penetration_vector.norm();
 
 		// 提示力によるトルクを計算
 		Vec3d feedback_torque = (info->col_positions[i] - info->pointer_center) ^ feedback_force;
@@ -639,7 +665,18 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	if(info->num_collisions > 0)
 	{
 		// 前の提示力とトルクを参照してつぶを取る
-		if(bforce)spidarG6.SetForce(0.95 * pointer_force + 0.005 * last_force, 0.95 * pointer_torque + 0.05 * last_torque);
+		if(bforce)
+		{
+			// なぜかSPIDARの位置の座標のx軸とz軸の符号が逆なのでとりあえず-1をかけて補正
+			// 原因を調べる必要あり
+			Vec3d f = 0.5 * pointer_force + 0.5 * last_force;
+			f.x = f.x * -1;
+			f.z = f.z * -1;
+			Vec3d t = 0.5 * pointer_torque + 0.5 * last_torque;
+			t.x = t.x * -1;
+			t.z = t.z * -1;
+			spidarG6.SetForce(f, t);	
+		}
 		else spidarG6.SetForce(Vec3d(), Vec3d());
 
 		// 提示力を保存
@@ -654,7 +691,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 		last_torque = Vec3d();
 	}
 
-#if 0
+#if 1
 //#if _DEBUG | _WINDOWS
 	static int sec_counter = 0;
 	// 一秒ごとにSPIDARの座標を表示する
@@ -662,7 +699,17 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	{
 //		std::cout << "spidar position = " << spidar_pos << std::endl;
 //		std::cout << "spidar velocity = " << PointerVel << std::endl;
-//		std::cout << "force = " << -(0.95 * force + 0.05 * last_force) << "torque = " << pointer_torque << std::endl;
+//		std::cout << "force = " << 0.5 * pointer_force + 0.5 * last_force << "torque = " << 0.5 * pointer_torque + 0.5 * last_torque << std::endl;
+//		std::cout << "num collisions = " << info->num_collisions << std::endl;
+
+		std::cout << "orientation = " << soPointer->GetOrientation() << std::endl;
+
+/*
+		for(int i = 0; i < info->num_collisions; i++)
+		{
+			std::cout << "depth[" << i << "] = " << info->depth[i] << std::endl;
+		}
+*/
 		sec_counter = 0;	
 	}
 	sec_counter++;									// カウンターの更新
@@ -759,6 +806,8 @@ void ErrorCorrection()
 	}
 }
 
+void keyboard(unsigned char, int, int);
+
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
@@ -778,6 +827,9 @@ void idle(){
 	}
 
 	scene->Step();
+
+	// soPointerの角速度を０にする
+	keyboard('p', 0, 0);
 
 	// 衝突点を取得
 	PHConstraints cs = GetContactPoints();
@@ -976,6 +1028,19 @@ void keyboard(unsigned char key, int x, int y){
 		if(bSurroundEffect)std::cout << "on";
 		else std::cout << "off";
 		std::cout << std::endl;
+	}
+	// 力覚計算を侵入量基準で行うかどうか
+	else if(key == 'd')
+	{
+		bDepthProposional = !bDepthProposional;
+
+		std::cout << "force is ";
+		if(!bDepthProposional)std::cout << "not ";
+		std::cout << "based on penetration depth" << std::endl;
+	}
+	else if(key == 'p')
+	{
+		soPointer->SetAngularVelocity(Vec3d());
 	}
 }
 
