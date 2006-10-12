@@ -87,7 +87,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
 		if (sphere){
 			float r = sphere->GetRadius();
-			glutSolidSphere(r, 20, 20);
+			glutSolidSphere(r, 16, 16);
 		}
 		CDCapsuleIf* cap = DCAST(CDCapsuleIf, shape);
 		if (cap){

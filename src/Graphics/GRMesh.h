@@ -20,24 +20,23 @@ class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
 	GRRenderIf* render;
 	
-	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する
+	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
-	void ListManage(void* vtx);
-	void LoadTexture();
+	/// MaterialListのインデックスに合わせ、ディスプレイリストを細分化．
+	void CreateListElement(void* vtx);
 public:
 	OBJECT_DEF(GRMesh);
 	ACCESS_DESC(GRMesh);
 
-	std::vector< UTRef<GRMaterial> > material;	///< マテリアル
-	std::vector<int> materialList;				///< マテリアルのインデックスリスト
-	std::vector<GRTextureDesc>  texture;		///< テクスチャ
+	std::vector< UTRef<GRMaterial> > material;				///< マテリアル
+	std::vector<int>                 materialList;			///< マテリアルのインデックスリスト
 	/**
 	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
 	  （Xファイルからロードされた面は、すべて三角形分割されているため、
 	   どの面がどのマテリアルを適用するのか判断するためのもの）			*/
-	std::vector<unsigned int> elementIndex;
-	std::vector<int> originalFaces;			///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
-	std::vector<int> faceNormals;			///< 法線インデックス
+	std::vector<int> originalFaces;				///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
+	std::vector<unsigned int> elementIndex;		///< 面を構成するための頂点インデックス（三角形分割後の面に対するインデックス）
+	std::vector<int> faceNormals;				///< 法線インデックス
 
 	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
 	~GRMesh();

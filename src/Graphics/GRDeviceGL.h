@@ -85,15 +85,19 @@ public:
 	virtual void DrawDirect(TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	///	ダイレクト形式によるDiplayListの作成
+	///	ダイレクト形式による DiplayList の作成
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
-	///	ダイレクト形式によるDiplayListの作成（マテリアルとテクスチャを指定可能、テクスチャ非適用時には0を指定）
+	///	ダイレクト形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
 	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
 						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
+	/// 球オブジェクトの DisplayList の作成
+	virtual int CreateList(float radius, int slices, int stacks);
+	/// 球オブジェクトの DisplayList の作成（マテリアル、テクスチャの設定も行う）
+	virtual int CreateList(GRMaterialIf* mat,  float radius, int slices, int stacks);
 	///	インデックス形式によるDiplayListの作成
 	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	///	インデックス形式によるDiplayListの作成（マテリアルとテクスチャを指定可能、テクスチャ非適用時には0を指定）
-	virtual int CreateIndexedList(GRMaterialIf* mat, unsigned int texid, 
+	///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
+	virtual int CreateIndexedList(GRMaterialIf* mat, 
 								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	DisplayListの表示
 	virtual void DrawList(int i);
@@ -125,8 +129,8 @@ public:
 	virtual void SetAlphaTest(bool b);
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest);
-	/// テクスチャをロードし、テクスチャオブジェクトを作成する。戻り値:テクスチャ情報
-	virtual void LoadTexture(GRTextureDesc& tex);
+	/// テクスチャのロード（戻り値：テクスチャID）
+	virtual unsigned int LoadTexture(const std::string filename);
 };
 
 }

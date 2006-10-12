@@ -25,6 +25,11 @@ struct GRSphereDesc{
 	float radius;			///< ”¼Œa
 	int   slices;			///< Œoü•ûŒü‚Ì•ªŠ„”
 	int   stacks;			///< ˆÜü•ûŒü‚Ì•ªŠ„”	
+	GRSphereDesc(){
+		radius = 1.0;
+		slices = 16;
+		stacks = 16;
+	}
 };
 
 

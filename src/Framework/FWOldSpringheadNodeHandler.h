@@ -13,14 +13,14 @@ using namespace Spr;
 
 ///	\defgroup gpFWOldSpringheadNode 旧(Springhead1)ファイルロード用互換ノード
 //@{
-/// Xファイル形式のバージョン情報
+/// Xファイル形式のバージョン情報．
 struct Header{
 	unsigned int major;		
 	unsigned int minor;		
 	unsigned int flags;
 };
 	
-///	DirectXのFrame． GRFrameに対応
+///	DirectXのFrame． GRFrameに対応．
 struct Frame{
 };
 	
@@ -75,7 +75,7 @@ struct Mesh{
 	std::vector<MeshFace> faces;
 };
 
-///	DirectXのMeshの法線ベクトル
+///	DirectXのMeshの法線ベクトル．
 struct MeshNormals{
 	int nNormals;
 	std::vector<Vec3f> normals;
@@ -90,7 +90,7 @@ struct MeshMaterialList{
 	std::vector<int> faceIndexes;
 };
 
-/// DirectXのテクスチャファイル名（Materialの内部タグ)
+/// DirectXのテクスチャファイル名（Materialの内部タグ)．
 struct TextureFilename{
 	std::string filename;
 };
@@ -101,17 +101,17 @@ struct MeshTextureCoords{
 	std::vector<Vec2f> textureCoords;
 };
 
-///	Springhead1のScene
+///	Springhead1のScene．
 struct Scene{
 };
 
-///	Springhead1のSimulator
+///	Springhead1のSimulator．
 struct Simulator{
 	double timeStep;	///< 積分ステップ
 	double decay;		///< 剛体の速度の減衰率	
 };
 	
-///	Springhead1のCamera
+///	Springhead1のCamera．
 struct Camera{
 	Affinef view;
 	float width;
@@ -122,7 +122,7 @@ struct Camera{
 	float back;
 };
 
-///	Springhead1のSolid
+///	Springhead1のSolid．
 struct Solid{
 	float mass;				///< 質量
 	Matrix3f inertia;		///< 慣性モーメント
@@ -131,7 +131,7 @@ struct Solid{
 	Vec3f center;			///< 中心位置
 };
 
-/// Springhead1のSphere	
+/// Springhead1のSphere．GRSphereに対応．
 struct Sphere{
 	float radius;			///< 半径
 	int slices;				///< 経線方向の分割数
@@ -148,24 +148,24 @@ struct PhysicalMaterial{
 	float d;				///< 動摩擦係数
 };
 
-/// Springhead1のSolidContainer
+/// Springhead1のSolidContainer．
 struct SolidContainer{
 };
 	
-///	Springhead1のGravityEngine
+///	Springhead1のGravityEngine．
 struct GravityEngine{
 	Vec3f gravity;
 };
 
-///	Springhead1のContactEngine
+///	Springhead1のContactEngine．
 struct ContactEngine{
 };
 
-/// Springhead1のJointEngine
+/// Springhead1のJointEngine．
 struct JointEngine{
 };
 	
-/// Springhead1のJoint
+/// Springhead1のJoint．
 struct Joint{
 	int			nType;				///<	関節種類 0:蝶番, 1:スライド
 	Vec3f		prj;				///<	親剛体のフレームから見た関節位置
@@ -185,7 +185,7 @@ struct Joint{
 	float		fDValue;			///<	PID制御のDの値
 };
 
-/// Springhead1のImport	
+/// Springhead1のImport．	
 struct Import{
 	std::string file;	
 };

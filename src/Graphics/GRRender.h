@@ -66,19 +66,7 @@ public:
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
 	void Render(GRRenderIf* render);
-	virtual bool AddChildObject(ObjectIf* o);
-};
-
-/** @brief テクスチャ		*/
-class GRTexture :public InheritGRVisual<GRTextureIf, GRVisual>, public GRTextureDesc{
-public:
-	OBJECT_DEF(GRTexture);
-	ACCESS_DESC(GRTexture);
-	GRTexture(const GRTextureDesc& desc=GRTextureDesc()):GRTextureDesc(desc){}
-	GRTexture(std::string fn){ 
-		filename = fn; 
-	}
-	void Render(GRRenderIf* render);
+	//virtual bool AddChildObject(ObjectIf* o);
 };
 
 /**	@class	GRRenderBase
@@ -121,12 +109,16 @@ public:
 	virtual int CreateList(GRMaterialIf* mat, unsigned int texid,									\
 		GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)				\
 		{ return ptr CreateList(mat, texid, ty, vtx, count, stride); }								\
+	virtual int CreateList(float radius, int slices, int stacks)									\
+		{ return ptr CreateList(radius, slices, stacks); }											\
+	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks)					\
+		{ return ptr CreateList(mat, radius, slices, stacks); }										\
 	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, 		\
 		size_t count, size_t stride=0)																\
 		{ return ptr CreateIndexedList(ty, idx, vtx, count, stride); }								\
-	virtual int CreateIndexedList(GRMaterialIf* mat, unsigned int texid,							\
+	virtual int CreateIndexedList(GRMaterialIf* mat,												\
 		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)	\
-		{ return ptr CreateIndexedList(mat, texid, ty, idx, vtx, count, stride); }					\
+		{ return ptr CreateIndexedList(mat, ty, idx, vtx, count, stride); }							\
 	virtual void DrawList(int i){ ptr DrawList(i); }												\
 	virtual void ReleaseList(int i){ ptr ReleaseList(i); }											\
 	virtual void DrawFont(Vec2f pos, const std::string str){ ptr DrawFont(pos, str); }				\
@@ -149,9 +141,8 @@ public:
 	virtual void SetAlphaTest(bool b){ptr SetAlphaTest(b); }										\
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)		\
 		{ ptr SetAlphaMode(src, dest); }															\
-	virtual void LoadTexture(GRTextureDesc &tex){ ptr LoadTexture(tex); }							\
-	virtual void LoadTexture(GRTextureIf* tex)														\
-		{ if(tex) ptr LoadTexture((GRTextureDesc&)*DCAST(GRTexture, tex)); }						\
+	virtual unsigned int LoadTexture(const std::string filename)									\
+		{ return ptr LoadTexture(filename); }														\
 	
 	REDIRECTIMP_GRRENDERBASE(device->)
 	
@@ -189,16 +180,12 @@ public:
 	virtual void PushLight(const GRLightDesc& light)=0;
     virtual void PushLight(const GRLightIf* light){
         if(light) PushLight(*DCAST(GRLight, light)); }
-	virtual void LoadTexture(GRTextureDesc& tex)=0;
-	virtual void LoadTexture(GRTextureIf* tex){
-		if (tex) LoadTexture(*DCAST(GRTexture, tex)); }
 };
 template <class intf, class base>
 struct InheritGRDevice:public InheritObject<intf, base>{
 	void SetDevice(GRDeviceIf* dev){ base::SetDevice(dev); }
 	void SetMaterial(const GRMaterialIf* mat){ base::SetMaterial(mat); }
 	void PushLight(const GRLightIf* light){ base::PushLight(light); }
-	void LoadTexture(GRTextureIf* tex){ base::LoadTexture(tex); }
 };
 
 }

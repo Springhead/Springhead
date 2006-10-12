@@ -88,24 +88,6 @@
 	field->offset = int((char*)&(pGRMaterialDesc->texname) - (char*)pGRMaterialDesc);
 	db->RegisterDesc(desc);
 	
-	GRTextureDesc* pGRTextureDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("GRTextureDesc");
-	desc->size = sizeof(GRTextureDesc);
-	desc->ifInfo = GRTextureIf::GetIfInfoStatic();
-	((IfInfo*)GRTextureIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<GRTextureDesc>;
-	field = desc->AddField("", "string", "filename", "");
-	field->offset = int((char*)&(pGRTextureDesc->filename) - (char*)pGRTextureDesc);
-	field = desc->AddField("", "int", "width", "");
-	field->offset = int((char*)&(pGRTextureDesc->width) - (char*)pGRTextureDesc);
-	field = desc->AddField("", "int", "height", "");
-	field->offset = int((char*)&(pGRTextureDesc->height) - (char*)pGRTextureDesc);
-	field = desc->AddField("", "int", "id", "");
-	field->offset = int((char*)&(pGRTextureDesc->id) - (char*)pGRTextureDesc);
-	field = desc->AddField("pointer", "char", "data", "");
-	field->offset = int((char*)&(pGRTextureDesc->data) - (char*)pGRTextureDesc);
-	db->RegisterDesc(desc);
-	
 	GRCameraDesc* pGRCameraDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("GRCameraDesc");
 	desc->size = sizeof(GRCameraDesc);

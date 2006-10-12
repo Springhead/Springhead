@@ -12,6 +12,7 @@
 #include <FileIO/FIFileX.h>
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRMesh.h>
+#include <Graphics/GRSphere.h>
 #include <Graphics/GRRender.h>
 #include <Graphics/GRScene.h>
 #include <Physics/PHSolid.h>
@@ -208,10 +209,10 @@ public:
 // DirectXÇÃÉ}ÉeÉäÉAÉãÅDGRMateiralÇ…ëŒâûÅD
 class FWNodeHandlerXMaterial: public UTLoadHandlerImp<Material>{
 public:
-	class MaterialAdaptor: public UTLoadTask{
+	class Adapter: public UTLoadTask{
 	public:
 		GRMaterial* material;
-		MaterialAdaptor(){}
+		Adapter(){}
 		bool AddChildObject(ObjectIf* o){
 			FWXTextureTask* tex = DCAST(FWXTextureTask, o);
 			if (tex){	//	é©ï™Ç™çÏÇ¡ÇΩ materialÇ…LinkéûÇ…AddÇ≥ÇÍÇÈtexturefilenameÇê›íËÇ∑ÇÈÅB
@@ -230,14 +231,14 @@ public:
 		desc.emissive = Vec4f(d.emissive.x, d.emissive.y, d.emissive.z, 1.0);
 		desc.power = d.power;
 		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &desc);
-		MaterialAdaptor* mc = DBG_NEW MaterialAdaptor;
+		Adapter* mc = DBG_NEW Adapter;
 		mc->material = DCAST(GRMaterial, fc->objects.Top());
 		fc->objects.Push(mc->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		MaterialAdaptor* mc = DCAST(MaterialAdaptor, fc->objects.Top());
+		Adapter* mc = DCAST(Adapter, fc->objects.Top());
 		fc->links.push_back(mc);
-		fc->objects.Pop();		// MaterialAdaptor
+		fc->objects.Pop();		// Adapter
 		fc->objects.Pop();		// GRMaterialDesc
 	}
 };	
@@ -260,8 +261,8 @@ public:
 	FWNodeHandlerPhysicalMaterial():UTLoadHandlerImp<Desc>("PhysicalMaterial"){}
 	void Load(Desc& d, UTLoadContext* fc){
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
-		phmtask->mu = d.d;
-		phmtask->mu0 = d.s;
+		phmtask->mu = d.d;		// ç≈ëÂê√é~ñÄéCåWêî
+		phmtask->mu0 = d.s;		// ìÆñÄéCåWêî
 		fc->objects.Top()->AddChildObject(phmtask->GetIf());		// Mesh->AddChildObject();
 		fc->links.push_back(phmtask);
 	}
@@ -354,14 +355,14 @@ public:
 				// mapÇåüçıÇµÅAPhysicalMaterialÇìoò^ÅD
 				UTMapObject::iterator itr = fc->mapObj.find(mesh->GetIf());
 				if (itr != fc->mapObj.end()){
-					GRMesh* meshmap = DCAST(GRMesh, itr->first);
-					if (meshmap){
+					GRMesh* m = DCAST(GRMesh, itr->first);
+					if (m){
 						FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);
 						maptask->mu  = phmtask->mu;
 						maptask->mu0 = phmtask->mu0; 					
 					}
 				}else{
-					fc->ErrorMessage(NULL, NULL, "Key(mesh) is not found within map<mesh, phmtask>. ");
+					fc->ErrorMessage(NULL, NULL, "Key(mesh) is not found within map object.");
 				}
 				return true;
 			}
@@ -444,6 +445,68 @@ public:
 	}
 };
 
+// Spirnghead1ÇÃSphere
+class FWNodeHandlerSphere: public UTLoadHandlerImp<Sphere>{
+public:
+	class Adapter: public UTLoadTask{
+	public:
+		GRSphere* sphere;
+		UTLoadContext* fc;
+		
+		Adapter():sphere(NULL){}
+		bool AddChildObject(ObjectIf* o){
+			// PHysical Material
+			FWPHMaterialTask* phmtask = DCAST(FWPHMaterialTask, o);
+			if (phmtask){
+				// mapÇåüçıÇµÅAPhysicalMaterialÇìoò^ÅD
+				UTMapObject::iterator itr = fc->mapObj.find(sphere->GetIf());
+				if (itr != fc->mapObj.end()){
+					GRSphere* s = DCAST(GRSphere, itr->first);
+					if (s){
+						FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);
+						maptask->mu  = phmtask->mu;
+						maptask->mu0 = phmtask->mu0;
+					}
+				}else{
+					fc->ErrorMessage(NULL, NULL, "Key(sphere) is not found within map object.");
+				}
+				return true;
+			}
+			// Material
+			GRMaterial* mat = DCAST(GRMaterial, o);
+			if (mat){
+				sphere->material = mat;
+				return sphere->GetNameManager()->AddChildObject(mat->GetIf());
+			}
+			return false;
+		}
+	};
+	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
+	void Load(Desc& d, UTLoadContext* fc){
+		fc->PushCreateNode(GRSphereIf::GetIfInfoStatic(), &GRSphereDesc());
+		GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
+		sphere->radius = d.radius;
+		sphere->slices = d.slices;
+		sphere->stacks = d.stacks;
+		// map<sphere, phmtask> ÇçÏê¨ÅD
+		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
+		fc->mapObj.insert(UTPairObject(sphere->GetIf(), phmtask->GetIf()));
+		// ÉXÉ^ÉbÉNÇ…Sphere::AdapterÇêœÇﬁÅD
+		Adapter* ad = DBG_NEW Adapter;
+		ad->sphere = DCAST(GRSphere, fc->objects.Top());
+		ad->fc = fc;
+		fc->objects.Push(ad->GetIf());
+	}
+	void Loaded(Desc& d, UTLoadContext* fc){
+		Adapter* ad = DCAST(Adapter, fc->objects.Top());
+		fc->links.push_back(ad);
+		fc->objects.Pop();		
+		assert(DCAST(GRSphere, fc->objects.Top()));
+		fc->objects.Pop();
+	}
+
+};	
+
 // Springhead1ÇÃContactEngineÅD
 class FWNodeHandlerContactEngine: public UTLoadHandlerImp<ContactEngine>{
 public:	
@@ -468,24 +531,42 @@ public:
 				if (f) AddFrameToSolid(solid, f, af);
 				GRMesh* m = DCAST(GRMesh, v);
 				if (m){
-					CDConvexMeshDesc desc;
+					CDConvexMeshDesc mdesc;
 					for(unsigned i=0; i<m->positions.size(); ++i){
-						desc.vertices.push_back(m->positions[i]);
+						mdesc.vertices.push_back(m->positions[i]);
 					}
 
 					// ìÆñÄéCñÄéCåWêîmuÅAê√é~ñÄéCåWêîmu0 
 					UTMapObject::iterator itr = fc->mapObj.find(m->GetIf());
 					if (itr != fc->mapObj.end()){
 							FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);	
-							desc.material.mu = maptask->mu;
-							desc.material.mu0 = maptask->mu0;
+							mdesc.material.mu = maptask->mu;
+							mdesc.material.mu0 = maptask->mu0;
 					}
-
-					solid->CreateShape(desc);
+					solid->CreateShape(mdesc);
 					Posed pose;
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);
 				}
+
+				GRSphere* s = DCAST(GRSphere, v);
+				if (s){
+					CDSphereDesc sdesc;
+					sdesc.radius = s->radius;
+
+					// ìÆñÄéCñÄéCåWêîmuÅAê√é~ñÄéCåWêîmu0 
+					UTMapObject::iterator itr = fc->mapObj.find(s->GetIf());
+					if (itr != fc->mapObj.end()){
+							FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);	
+							sdesc.material.mu = maptask->mu;
+							sdesc.material.mu0 = maptask->mu0;
+					}
+					solid->CreateShape(sdesc);
+					Posed pose;
+					pose.FromAffine(af);
+					solid->SetShapePose(solid->NShape()-1, pose);
+				}
+
 			}
 		}
 		virtual bool AddChildObject(ObjectIf* o){
@@ -585,20 +666,6 @@ public:
 		fc->objects.Pop();	//	solid
 	}
 };
-
-// Spirnghead1ÇÃSphere
-class FWNodeHandlerSphere: public UTLoadHandlerImp<Sphere>{
-public:
-	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
-	void Load(Desc& d, UTLoadContext* fc){
-		CDSphereDesc desc;
-		desc.radius = d.radius;
-		fc->PushCreateNode(CDSphereIf::GetIfInfoStatic(), &desc);		
-	}
-	void Loaded(Desc& d, UTLoadContext* fc){
-		fc->objects.Pop();		
-	}
-};					
 
 // Springhead1ÇÃCameraÅD
 class FWNodeHandlerCamera: public UTLoadHandlerImp<Camera>{
@@ -831,8 +898,8 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerXMeshNormals);
 	handlers->insert(DBG_NEW FWNodeHandlerXMeshTextureCoords);	
 	handlers->insert(DBG_NEW FWNodeHandlerXMesh);
-	handlers->insert(DBG_NEW FWNodeHandlerSolid);
 	handlers->insert(DBG_NEW FWNodeHandlerSphere);
+	handlers->insert(DBG_NEW FWNodeHandlerSolid);
 	handlers->insert(DBG_NEW FWNodeHandlerScene);
 	handlers->insert(DBG_NEW FWNodeHandlerSimulator);
 	handlers->insert(DBG_NEW FWNodeHandlerCamera);

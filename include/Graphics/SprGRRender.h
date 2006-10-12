@@ -140,21 +140,6 @@ struct GRMaterialIf: public GRVisualIf{
 	virtual bool IsOpaque() const = 0;
 };
 
-/** @brief テクスチャ				*/
-struct GRTextureDesc{
-	std::string		filename;		///<	テクスチャファイル名
-	int				width;			///<	テクスチャサイズ
-	int				height;			///<	テクスチャサイズ
-	unsigned int	id;				///<	テクスチャID
-	unsigned char*	data;			///<	テクスチャデータ(RGB)
-	GRTextureDesc(): filename(), width(0), height(0), id(0), data(NULL){}
-	GRTextureDesc(std::string fn): filename(fn), width(0), height(0), id(0), data(NULL){}
-};
-/** @brief テクスチャの基本クラス	*/
-struct GRTextureIf: public GRVisualIf{
-	IF_DEF(GRTexture);
-};
-
 /**	@brief	カメラの情報			*/
 struct GRCameraDesc{
 	Vec2f size;				///<	スクリーンのサイズ
@@ -258,13 +243,16 @@ struct GRRenderBaseIf: public ObjectIf{
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
 	
-	///	DiplayListの作成
+	///	ダイレクト形式による DiplayList の作成
 	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
 						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
-	///	DiplayListの作成
+	/// 球オブジェクトの DisplayList の作成
+	virtual int CreateList(float radius, int slices, int stacks)=0;
+	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks)=0;
+	///	インデックス形式による DiplayList の作成
 	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
-	virtual int CreateIndexedList(GRMaterialIf* mat, unsigned int texid, 
+	virtual int CreateIndexedList(GRMaterialIf* mat, 
 								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 	///	DisplayListの表示
 	virtual void DrawList(int i)=0;
@@ -294,9 +282,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetAlphaTest(bool b)=0;
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
-	/// テクスチャをロードし、テクスチャオブジェクトを作成する
-	virtual void LoadTexture(GRTextureDesc& tex)=0;
-	virtual void LoadTexture(GRTextureIf* tex)=0;
+	/// テクスチャのロード（戻り値：テクスチャID）
+	virtual unsigned int LoadTexture(const std::string filename)=0;
 };
 
 /**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */

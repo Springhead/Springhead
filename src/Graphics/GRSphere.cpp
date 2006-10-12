@@ -16,16 +16,20 @@ IF_OBJECT_IMP(GRSphere, GRVisual);
 GRSphere::GRSphere(const GRSphereDesc& desc):GRSphereDesc(desc){
 	list = 0;
 	render = NULL;
+	material = NULL;
 }
 GRSphere::~GRSphere(){
 	if (list) render->ReleaseList(list);		// ディスプレイリストの破棄
 }
 void GRSphere::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);
-	list = 0;
-	render = r;
+	render = r;	
+	if (material){
+		list = render->CreateList(material, radius, slices, stacks);
+	}else{
+		list = render->CreateList(radius, slices, stacks);
+	}
 }
-
 void GRSphere::Render(GRRenderIf* r){
 	if (r!=render || !list) CreateList(r);
 	render->DrawList(list);
@@ -35,7 +39,7 @@ void GRSphere::Rendered(GRRenderIf* r){
 bool GRSphere::AddChildObject(ObjectIf* o){			
 	GRMaterial* m = DCAST(GRMaterial, o);
 	if (m){
-		material.push_back(m);
+		material = m;
 		return GetNameManager()->AddChildObject(m->GetIf());
 	}
 	return false;

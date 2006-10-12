@@ -36,18 +36,16 @@ void GRMesh::CreateList(GRRenderIf* r){
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		for (unsigned i=0; i<colors.size(); ++i){ vtx[i].c = colors[i];	}
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		this->LoadTexture();
 		render->SetVertexFormat(GRVertexElement::vfT2fC4fN3fP3f);
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else if (texCoords.size() && normals.size()){
 		std::vector<GRVertexElement::VFT2fN3fP3f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		this->LoadTexture();
 		render->SetVertexFormat(GRVertexElement::vfT2fN3fP3f);
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else if (texCoords.size() && colors.size()){
 		std::vector<GRVertexElement::VFT2fC4bP3f> vtx;
 		vtx.resize(vtxsize);
@@ -59,9 +57,8 @@ void GRMesh::CreateList(GRRenderIf* r){
 					   ((unsigned char)(colors[i].w*255));
 		}
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		this->LoadTexture();
 		render->SetVertexFormat(GRVertexElement::vfT2fC4bP3f);
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else if (normals.size() && colors.size()){
 		std::vector<GRVertexElement::VFC4fN3fP3f> vtx;
 		vtx.resize(vtxsize);
@@ -69,22 +66,21 @@ void GRMesh::CreateList(GRRenderIf* r){
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		for (unsigned i=0; i<colors.size(); ++i){ vtx[i].c = colors[i];	}
 		render->SetVertexFormat(GRVertexElement::vfC4fN3fP3f);
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else if (normals.size()){
 		std::vector<GRVertexElement::VFN3fP3f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		render->SetVertexFormat(GRVertexElement::vfN3fP3f);
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else if (texCoords.size()){
 		std::vector<GRVertexElement::VFT2fP3f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		this->LoadTexture();
 		render->SetVertexFormat(GRVertexElement::vfT2fP3f);
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else if (colors.size()){
 		std::vector<GRVertexElement::VFC4bP3f> vtx;
 		vtx.resize(vtxsize);
@@ -95,17 +91,20 @@ void GRMesh::CreateList(GRRenderIf* r){
 					   ((unsigned char)(colors[i].z*255) << 8) |
 					   ((unsigned char)(colors[i].w*255));
 		}
-		this->ListManage(&*vtx.begin());
+		this->CreateListElement(&*vtx.begin());
 	}else{
 		render->SetVertexFormat(GRVertexElement::vfP3f);
-		this->ListManage(&*positions.begin());
+		this->CreateListElement(&*positions.begin());
 	}
 }
 
-void GRMesh::ListManage(void *vtx){
+/// 同じマテリアルインデックスが続く場合は、それ毎に１つのディスプレイリストとして、登録する．
+void GRMesh::CreateListElement(void *vtx){
+	int base = 0;		// ディスプレイリストの識別子
 	// Xファイルからの materialList 指定がない場合
-	if (!materialList.size()){		
-		int base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), vtx, faces.size());
+	//if (!materialList.size()){		
+	if (materialList.empty()){
+		base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), vtx, faces.size());
 		list.push_back(base);		
 	}
 	// Xファイルからの materialList 指定がある場合、material単位で Display List 分割する
@@ -120,54 +119,39 @@ void GRMesh::ListManage(void *vtx){
 				// マテリアルインデックスが同じかどうか比較
 				if (materialList[elementIndex[first]] == materialList[elementIndex[end]]){
 					end++;							// 1個ずらして、またfirstと比較
-					if (end >= elementIndex.size()){		// elementIndex配列の一番最後の要素かどうかのチェック
-					
+					if (end >= elementIndex.size()){		// elementIndex配列の一番最後の要素かどうかのチェック					
 						// 適用するマテリアルIDが、materialとして用意されているか？
-						if (materialList[elementIndex[first]] < (int)material.size()) {	
-
-							unsigned int texid=0;
-							if (texture.size())	
-								texid = texture[materialList[elementIndex[first]]].id; 
-							int base = render->CreateIndexedList(material[materialList[elementIndex[first]]], texid,	
+						if (materialList[elementIndex[first]] < (int)material.size()){
+							base = render->CreateIndexedList(material[materialList[elementIndex[first]]], 	
 																GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-							list.push_back(base);							
 						}else{
-							int base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-							list.push_back(base);
+							base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);							
 						}
+						list.push_back(base);
 						break;
 					}
 				}else{
-					
 					// 適用するマテリアルIDが、materialとして用意されているか？
 					if (materialList[elementIndex[first]] < (int)material.size()) {		
-						unsigned int texid=0;
-						if (texture.size())	
-							texid = texture[materialList[elementIndex[first]]].id; 
-
-						int base = render->CreateIndexedList(material[materialList[elementIndex[first]]], texid,					
+						base = render->CreateIndexedList(material[materialList[elementIndex[first]]], 					
 																GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-						list.push_back(base);
 					}else{
-						int base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-						list.push_back(base);
+						base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 					}
+					list.push_back(base);
+					
 					first = end;
 					end = end+1;
 						
 					if (end >= elementIndex.size()){			// elementIndex配列の一番最後の要素かどうかのチェック
 						// 適用するマテリアルIDが、materialとして用意されているか？
 						if (materialList[elementIndex[first]] < (int)material.size()) {		
-							unsigned int texid=0;
-							if (texture.size())	
-								texid = texture[materialList[elementIndex[first]]].id; 
-							int base = render->CreateIndexedList(material[materialList[elementIndex[first]]], texid, 
-																GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-							list.push_back(base);
+							base = render->CreateIndexedList(material[materialList[elementIndex[first]]],  
+																	GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 						}else{
-							int base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3); 
-							list.push_back(base);
-						}					
+							base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3); 
+						}	
+						list.push_back(base);
 						break;
 					}
 				}
@@ -179,33 +163,17 @@ void GRMesh::ListManage(void *vtx){
 					最後にマテリアル設定された面と同じマテリアルが、マテリアル設定されていない面に対して適用される。*/
 				// 適用するマテリアルIDが、materialとして用意されているか？
 				if (materialList[elementIndex[first]] < (int)material.size()) {	
-					unsigned int texid=0;
-					if (texture.size())	
-						texid = texture[materialList[elementIndex[first]]].id; 
-					int base = render->CreateIndexedList(material[materialList[elementIndex[first]]], texid, 
+					base = render->CreateIndexedList(material[materialList[elementIndex[first]]], 
 														GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);
-					list.push_back(base);
 				}else{
-					int base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);
-					list.push_back(base);
+					base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);				
 				}
+				list.push_back(base);
 				break;
 					
 			}
 		}	
 	}
-}
-void GRMesh::LoadTexture(){
-		// texture 配列と material 配列のサイズは合わせる。テクスチャの有無は texture.id で判別
-		texture.resize(material.size());
-		// materialにテクスチャ名が登録されている場合は、render->LoadTexture()。
-		// LoadTextureが実行されない場合は、texture.id=0で、初期値のまま。
-		for (unsigned int m=0; m<material.size(); ++m){
-			if (material[m]->texname.length()){				
-				texture[m].filename = material[m]->texname;
-				render->LoadTexture(texture[m]);
-			}
-		}
 }
 void GRMesh::Render(GRRenderIf* r){
 	if (r!=render || !list.size()) CreateList(r);

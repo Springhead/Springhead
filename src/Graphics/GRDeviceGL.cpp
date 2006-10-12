@@ -189,17 +189,44 @@ int GRDeviceGL::CreateList(GRMaterialIf* mat, unsigned int texid,
 						   TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
+	SetMaterial(*DCAST(GRMaterial, mat));
 	if (texid){
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texid);
 	}else{
 		glDisable(GL_TEXTURE_2D);
 	}
-	SetMaterial(*DCAST(GRMaterial, mat));
 	DrawDirect(ty, vtx, count, stride);
 	glEndList();
 	return list;
 }
+int GRDeviceGL::CreateList(float radius, int slices, int stacks){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+	glutSolidSphere(radius, slices, stacks);
+	glEndList();
+	return list;
+}
+int GRDeviceGL::CreateList(GRMaterialIf* mat, float radius, int slices, int stacks){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+	GRMaterialDesc* desc = DCAST(GRMaterial, mat);
+	SetMaterial(*desc);
+	unsigned int texid = LoadTexture(desc->texname);
+	if (texid){
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texid);
+		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
+		glEnable(GL_TEXTURE_GEN_S);
+		glEnable(GL_TEXTURE_GEN_T);
+	}else{
+		glDisable(GL_TEXTURE_2D);
+	}		
+	glutSolidSphere(radius, slices, stacks);
+	glEndList();
+	return list;	
+}		
 int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -207,17 +234,19 @@ int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, siz
 	glEndList();
 	return list;
 }
-int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat, unsigned int texid, 
+int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat,  
 								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	int list = glGenLists(1);
+	int list = glGenLists(1);						  
 	glNewList(list, GL_COMPILE);
+	GRMaterialDesc* desc = DCAST(GRMaterial, mat);
+	SetMaterial(*desc);								  	
+	unsigned int texid = LoadTexture(desc->texname);
 	if (texid){
 		glEnable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, texid);
 	}else{
 		glDisable(GL_TEXTURE_2D);
 	}
-	SetMaterial(*DCAST(GRMaterial, mat));
 	DrawIndexed(ty, idx, vtx, count, stride);
 	glEndList();
 	return list;
@@ -501,7 +530,7 @@ void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
 	}
 	glBlendFunc(glfac[0], glfac[1]);
 }
-void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
+unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	FILE *fp;
 	bool iscomment;
 	char type[3];
@@ -510,10 +539,19 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 	int r, g, b;
 	int i, j, t;
 	unsigned char ur, ug, ub;
+	int				width  = 0;			///< テクスチャサイズ
+	int				height = 0;			///< テクスチャサイズ
+	unsigned int	id     = 0;			///< テクスチャID
+	unsigned char*	data   = NULL;		///< テクスチャデータ(RGB)
+	
+	// ファイル名が空なら return 0;
+	if (filename.empty()){
+		return 0;
+	}
 
 	// open file
-	fp = fopen(tex.filename.c_str(), "rb");
-	if (!fp){ DSTR << "Error : Can not Open File. " << tex.filename.c_str() << std::endl; }
+	fp = fopen(filename.c_str(), "rb");
+	if (!fp){ DSTR << "Error : Can not Open File. " << filename.c_str() << std::endl; }
 	else{
 		fscanf(fp, "%s\n", &type);
 		do {
@@ -526,32 +564,32 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 			}
 		} while(iscomment);
 
-		fscanf(fp, "%i %i\n255\n", &tex.width, &tex.height);
+		fscanf(fp, "%i %i\n255\n", &width, &height);
 		try {
-			tex.data = DBG_NEW unsigned char[tex.width * tex.height * 3];	
-			if (tex.data == NULL) throw tex.data;
+			data = DBG_NEW unsigned char[width * height * 3];	
+			if (data == NULL) throw data;
 		} catch (...){
-			DSTR << "Cannot allocate memory for texture data : " << tex.filename.c_str() << std::endl;
+			DSTR << "Cannot allocate memory for texture data : " << filename.c_str() << std::endl;
 			assert(0);
 		}
 
 		if (!strcmp(type, "P3")){								// ascii			
-			for (j=0, t=0; j<tex.height; j++){
-				for (i=0; i<tex.width; i++, t+=3){
+			for (j=0, t=0; j<height; j++){
+				for (i=0; i<width; i++, t+=3){
 					fscanf(fp, "%i %i %i ", &r, &g, &b);
-					tex.data[t]   = (unsigned char)r;
-					tex.data[t+1] = (unsigned char)g;
-					tex.data[t+2] = (unsigned char)b;
+					data[t]   = (unsigned char)r;
+					data[t+1] = (unsigned char)g;
+					data[t+2] = (unsigned char)b;
 				}
 				fscanf(fp, "\n");
 			}
 		} else if (!strcmp(type, "P6")){						// binary
-			for (j=0, t=0; j<tex.height; j++){
-				for (i=0; i<tex.width; i++, t+=3){
+			for (j=0, t=0; j<height; j++){
+				for (i=0; i<width; i++, t+=3){
 					fscanf(fp, "%c%c%c", &ur, &ug, &ub);
-					tex.data[t]   = (unsigned char)ur;
-					tex.data[t+1] = (unsigned char)ug;
-					tex.data[t+2] = (unsigned char)ub;
+					data[t]   = (unsigned char)ur;
+					data[t+1] = (unsigned char)ug;
+					data[t+2] = (unsigned char)ub;
 				}
 			}
 		} else {												// unknown
@@ -560,11 +598,12 @@ void GRDeviceGL::LoadTexture(GRTextureDesc& tex){
 		}
 		fclose(fp);
 
-		glGenTextures(1, &tex.id);
-		glBindTexture(GL_TEXTURE_2D, tex.id);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, tex.width, tex.height, GL_RGB, GL_UNSIGNED_BYTE, tex.data);
-		delete [] tex.data;
+		glGenTextures(1, &id);
+		glBindTexture(GL_TEXTURE_2D, id);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
+		delete [] data;
 	}
+	return id;
 }
 			
 }	//	Spr

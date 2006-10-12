@@ -15,28 +15,19 @@ namespace Spr{;
 
 class GRMaterial;
 /**	@class	GRSphere
-    @brief	グラフィックスシーングラフでの座標系を表す． */
+    @brief	グラフィックスシーングラフでの球オブジェクトを表す． */
 class GRSphere: public InheritGRVisual<GRSphereIf, GRVisual>, public GRSphereDesc{
 	unsigned int list;				///< ディスプレイリストの識別子
 	GRRenderIf* render;
 	
-	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する
+	/// ディスプレイリストを作成．
 	void CreateList(GRRenderIf* r);
 public:
 	OBJECT_DEF(GRSphere);
 	ACCESS_DESC(GRSphere);
-
-	std::vector< UTRef<GRMaterial> > material;	///< マテリアル
-	std::vector<int> materialList;				///< マテリアルのインデックスリスト
-	std::vector<GRTextureDesc>  texture;		///< テクスチャ
-	/**
-	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
-	  （Xファイルからロードされた面は、すべて三角形分割されているため、
-	   どの面がどのマテリアルを適用するのか判断するためのもの）			*/
-	std::vector<unsigned int> elementIndex;
-	std::vector<int> originalFaces;			///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
-	std::vector<int> faceNormals;			///< 法線インデックス
-
+	
+	UTRef<GRMaterial> material;		///< マテリアル
+	
 	GRSphere(const GRSphereDesc& desc=GRSphereDesc());
 	~GRSphere();
 	void Render(GRRenderIf* r);

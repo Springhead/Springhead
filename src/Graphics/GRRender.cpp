@@ -56,20 +56,6 @@ IF_OBJECT_IMP(GRMaterial, GRVisual);
 void GRMaterial::Render(GRRenderIf* render){
 	render->SetMaterial(this);
 }
-bool GRMaterial::AddChildObject(ObjectIf* o){
-	GRTexture* tex = DCAST(GRTexture, o);
-	if (tex){
-		this->texname = tex->filename;
-		return GetNameManager()->AddChildObject(tex->GetIf());	
-	}
-	return false;
-}
-	
-//----------------------------------------------------------------------------
-//	GRTexture
-IF_OBJECT_IMP(GRTexture, GRVisual);
-void GRTexture::Render(GRRenderIf* render){
-}
 
 //----------------------------------------------------------------------------
 //	GRLight
