@@ -507,6 +507,29 @@ public:
 
 };	
 
+// Springhead1のContactInactiveのタスク．
+class FWContactInactiveTask: public UTLoadTask{
+public:
+	OBJECT_DEF_NOIF(FWContactInactiveTask);
+	int nSolids;
+	std::vector<int> solidIndexes;
+	void Execute(UTLoadContext* fc){}
+};
+OBJECT_IMP(FWContactInactiveTask, UTLoadTask);
+
+// Springhead1のContactInactive.
+class FWNodeHandlerContactInactive: public UTLoadHandlerImp<ContactInactive>{
+public:
+	FWNodeHandlerContactInactive():UTLoadHandlerImp<Desc>("ContactInactive"){}
+	void Load(Desc& d, UTLoadContext* fc){
+		UTRef<FWContactInactiveTask> task = DBG_NEW FWContactInactiveTask;
+		task->nSolids = d.nSolids;
+		task->solidIndexes = d.solidIndexes;
+		fc->objects.Top()->AddChildObject(task->GetIf());
+		fc->links.push_back(task);
+	}
+};
+
 // Springhead1のContactEngine．
 class FWNodeHandlerContactEngine: public UTLoadHandlerImp<ContactEngine>{
 public:	
@@ -521,6 +544,9 @@ public:
 	class Adapter: public UTLoadTask{
 	public:
 		PHSceneIf* phScene;
+		std::vector< UTRef<PHSolidIf> > solids;						// ContactEngineノードに追加されていく順でsolidsに登録．
+																	// ContactInactiveノードのロードで利用．
+		std::vector< UTRef<FWContactInactiveTask> > inactiveTask;	// ContactEngineタスク
 		UTLoadContext* fc;
 		Adapter():phScene(NULL){}
 		void AddFrameToSolid(PHSolid* solid, GRFrame* fr, Affinef af){
@@ -566,7 +592,6 @@ public:
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);
 				}
-
 			}
 		}
 		virtual bool AddChildObject(ObjectIf* o){
@@ -583,17 +608,35 @@ public:
 				solid->SetPose(pose);
 				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
 				phScene->SetContactMode(solid, PHSceneDesc::MODE_LCP);
+				solids.push_back(solid);
 				return true;
 			}
-			if (DCAST(PHSolid, o)){	//	solidなら何もしない。デフォルトONなので。
+			PHSolid* so = DCAST(PHSolid, o);
+			if (so){	//	solidなら何もしない。デフォルトONなので。
 				//	受け取ったObjectを接触ONにする。
 				phScene->SetContactMode(DCAST(PHSolid, o), PHSceneDesc::MODE_LCP);
+				solids.push_back(so);
 				return true;
 			}
-
+			FWContactInactiveTask* task = DCAST(FWContactInactiveTask, o);
+			if (task){
+				inactiveTask.push_back(task);
+			}
 			return false;
 		}
-		void Execute(UTLoadContext* fc){}
+		void Execute(UTLoadContext* fc){
+			// ContactInactiveノード
+			int iindex=0, jindex=0;
+			for (unsigned int t=0; t<inactiveTask.size(); ++t){		
+				for (unsigned int i=0; i<inactiveTask[t]->solidIndexes.size(); ++i){
+					for (unsigned int j=i+1; j<inactiveTask[t]->solidIndexes.size(); ++j){
+						iindex = inactiveTask[t]->solidIndexes[i];
+						jindex = inactiveTask[t]->solidIndexes[j];
+						phScene->SetContactMode(solids[iindex], solids[jindex], PHSceneDesc::MODE_NONE);
+					}
+				}
+			}
+		}
 	};
 	FWNodeHandlerContactEngine():UTLoadHandlerImp<Desc>("ContactEngine"){}
 	void Load(Desc& d, UTLoadContext* fc){
@@ -905,6 +948,7 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerCamera);
 	handlers->insert(DBG_NEW FWNodeHandlerSolidContainer);
 	handlers->insert(DBG_NEW FWNodeHandlerGravityEngine);
+	handlers->insert(DBG_NEW FWNodeHandlerContactInactive);
 	handlers->insert(DBG_NEW FWNodeHandlerContactEngine);
 	handlers->insert(DBG_NEW FWNodeHandlerJointEngine);
 	handlers->insert(DBG_NEW FWNodeHandlerJoint);

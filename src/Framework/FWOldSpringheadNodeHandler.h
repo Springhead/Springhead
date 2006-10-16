@@ -157,10 +157,16 @@ struct GravityEngine{
 	Vec3f gravity;
 };
 
+/// Springhead1‚ÌContactInactiveD
+struct ContactInactive{
+	int nSolids;
+	std::vector<int> solidIndexes;
+};
+
 ///	Springhead1‚ÌContactEngineD
 struct ContactEngine{
 };
-
+	
 /// Springhead1‚ÌJointEngineD
 struct JointEngine{
 };

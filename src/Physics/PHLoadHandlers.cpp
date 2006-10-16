@@ -27,9 +27,7 @@ public:
 				for(unsigned j=i+1; j<desc.solids.size(); ++j){
 					PHSolidIf* s2;
 					scene->FindObject(s2, desc.solids[j]);
-					//scene->EnableContact(s1, s2, false);
 					scene->SetContactMode(s1, s2, PHSceneDesc::MODE_NONE);
-
 				}
 			}
 		}

@@ -239,6 +239,16 @@
 	field->offset = int((char*)&(pGravityEngine->gravity) - (char*)pGravityEngine);
 	db->RegisterDesc(desc);
 	
+	ContactInactive* pContactInactive = NULL;
+	desc = DBG_NEW UTTypeDesc("ContactInactive");
+	desc->size = sizeof(ContactInactive);
+	desc->access = DBG_NEW UTAccess<ContactInactive>;
+	field = desc->AddField("", "int", "nSolids", "");
+	field->offset = int((char*)&(pContactInactive->nSolids) - (char*)pContactInactive);
+	field = desc->AddField("vector", "int", "solidIndexes", "");
+	field->offset = int((char*)&(pContactInactive->solidIndexes) - (char*)pContactInactive);
+	db->RegisterDesc(desc);
+	
 	ContactEngine* pContactEngine = NULL;
 	desc = DBG_NEW UTTypeDesc("ContactEngine");
 	desc->size = sizeof(ContactEngine);
