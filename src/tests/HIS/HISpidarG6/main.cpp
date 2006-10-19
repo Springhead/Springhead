@@ -1294,3 +1294,4 @@ void InitDeviceManager()
 
 	devMan.Init();								//	デバイスの初期化
 	std::cout << devMan;						//	初期化の結果を表示	
+}
