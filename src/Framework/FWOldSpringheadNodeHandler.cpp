@@ -262,11 +262,19 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
 		phmtask->mu = d.d;		// Å‘åÃŽ~–€ŽCŒW”
-		phmtask->mu0 = d.s;		// “®–€ŽCŒW”
-		fc->objects.Top()->AddChildObject(phmtask->GetIf());		// Mesh->AddChildObject();
+		phmtask->mu0 = d.s;		// “®–€ŽCŒW”		
+		if (fc->datas.Top()->name.length()){
+			GRScene* gs = FindGRScene(fc);
+			phmtask->SetNameManager(gs);
+			phmtask->SetName(fc->datas.Top()->name.c_str());
+		}		
+		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		if (mesh){
+			mesh->AddChildObject(phmtask->GetIf());		
+		}
 		fc->links.push_back(phmtask);
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){		
+	void Loaded(Desc& d, UTLoadContext* fc){	
 	}
 };
 

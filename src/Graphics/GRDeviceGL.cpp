@@ -14,6 +14,7 @@
 # include <windows.h>
 #endif
 #include <GL/glut.h>
+#include "GRLoadBmp.h"
 
 namespace Spr {;
 //----------------------------------------------------------------------------
@@ -530,81 +531,41 @@ void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
 	}
 	glBlendFunc(glfac[0], glfac[1]);
 }
+static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
-	FILE *fp;
-	bool iscomment;
-	char type[3];
-	char str[128];
-	char c;
-	int r, g, b;
-	int i, j, t;
-	unsigned char ur, ug, ub;
-	int				width  = 0;			///< テクスチャサイズ
-	int				height = 0;			///< テクスチャサイズ
-	unsigned int	id     = 0;			///< テクスチャID
-	unsigned char*	data   = NULL;		///< テクスチャデータ(RGB)
-	
+	char *texbuf = NULL;
+	int tx=0, ty=0, nc=0;
+	unsigned int texId=0;
+
 	// ファイル名が空なら return 0;
-	if (filename.empty()){
-		return 0;
+	if (filename.empty()) return 0;
+
+	// paintLib でファイルをロード．
+	int h = LoadBmpCreate(filename.c_str());
+	tx = LoadBmpGetWidth(h);
+	ty = LoadBmpGetHeight(h);
+	nc = LoadBmpGetBytePerPixel(h);
+	texbuf = new char[tx*ty*nc];
+	LoadBmpGetBmp(h, texbuf);
+	LoadBmpRelease(h);
+
+	// テクスチャの生成．
+	glGenTextures(1, &texId);
+	glBindTexture(GL_TEXTURE_2D, texId);
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+
+	int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
+	if (rv){
+		DSTR << gluErrorString(rv) << std::endl;
 	}
+	delete texbuf;
 
-	// open file
-	fp = fopen(filename.c_str(), "rb");
-	if (!fp){ DSTR << "Error : Can not Open File. " << filename.c_str() << std::endl; }
-	else{
-		fscanf(fp, "%s\n", &type);
-		do {
-			iscomment = false;
-			c = fgetc(fp);
-			ungetc(c, fp);
-			if (c == '#'){
-				iscomment = true;
-				fgets(str, 127, fp);
-			}
-		} while(iscomment);
-
-		fscanf(fp, "%i %i\n255\n", &width, &height);
-		try {
-			data = DBG_NEW unsigned char[width * height * 3];	
-			if (data == NULL) throw data;
-		} catch (...){
-			DSTR << "Cannot allocate memory for texture data : " << filename.c_str() << std::endl;
-			assert(0);
-		}
-
-		if (!strcmp(type, "P3")){								// ascii			
-			for (j=0, t=0; j<height; j++){
-				for (i=0; i<width; i++, t+=3){
-					fscanf(fp, "%i %i %i ", &r, &g, &b);
-					data[t]   = (unsigned char)r;
-					data[t+1] = (unsigned char)g;
-					data[t+2] = (unsigned char)b;
-				}
-				fscanf(fp, "\n");
-			}
-		} else if (!strcmp(type, "P6")){						// binary
-			for (j=0, t=0; j<height; j++){
-				for (i=0; i<width; i++, t+=3){
-					fscanf(fp, "%c%c%c", &ur, &ug, &ub);
-					data[t]   = (unsigned char)ur;
-					data[t+1] = (unsigned char)ug;
-					data[t+2] = (unsigned char)ub;
-				}
-			}
-		} else {												// unknown
-			DSTR << "unrecognized ppm file type." << std::endl;
-			assert(0);
-		}
-		fclose(fp);
-
-		glGenTextures(1, &id);
-		glBindTexture(GL_TEXTURE_2D, id);
-		gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
-		delete [] data;
-	}
-	return id;
+	return texId;
 }
-			
+
 }	//	Spr
 
