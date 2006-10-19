@@ -22,8 +22,6 @@ struct PHSolidState{
 	Vec3d		oldVel;		///<	‚PƒXƒeƒbƒv‘O‚Ì‘¬“x
 	Vec3d		angVelocity;	///<	Šp‘¬“x			(WorldŒn)
 	Vec3d		oldAngVel;		///<	‚PƒXƒeƒbƒv‘O‚ÌŠp‘¬“x
-	Vec3d		acceleration;	///<	‰Á‘¬“x			(WorldŒn)
-	Vec3d		angAcceleration;///<	Šp‰Á‘¬“x		(WorldŒn)
 	Posed		pose;			///<	ˆÊ’u‚ÆŒü‚«		(WorldŒn)
 	Vec3d		force;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½—Í(WorldŒn)
 	Vec3d		torque;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½ƒgƒ‹ƒN(WorldŒn)
@@ -147,11 +145,7 @@ struct PHSolidIf : public SceneObjectIf{
 	/**	@brief „‘Ì‚Ì‰Á‘¬“x‚ðŽæ“¾‚·‚é
 		@return „‘Ì‚Ì‘¬“x‚©‚ç‹‚Ü‚é‰Á‘¬“x
 	*/
-	virtual Vec3d		GetAcceleration() const = 0;
-	/**	@brief „‘Ì‚Ì‰Á‘¬“x‚ðÝ’è‚·‚é
-		@param accel ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚Ì‰Á‘¬“x
-	*/
-	virtual void		SetAcceleration(const Vec3d& accel) = 0;
+	virtual Vec3d		GetAcceleration() = 0;
 	/** @brief „‘Ì‚ÌŠp‘¬“x‚ðŽæ“¾‚·‚é
 		@return ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌŠp‘¬“x
 	 */
@@ -177,11 +171,7 @@ struct PHSolidIf : public SceneObjectIf{
 	/**	@brief „‘Ì‚ÌŠp‰Á‘¬“x‚ðŽæ“¾‚·‚é
 		@return „‘Ì‚ÌŠp‘¬“x‚©‚ç‹‚Ü‚éŠp‰Á‘¬“x
 	*/
-	virtual Vec3d		GetAngularAcceleration() const = 0;
-	/**	@brief „‘Ì‚ÌŠp‰Á‘¬“x‚ðÝ’è‚·‚é
-		@param angAccel ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌŠp‰Á‘¬“x
-	*/
-	virtual void		SetAngularAcceleration(const Vec3d& angAccel) = 0;
+	virtual Vec3d		GetAngularAcceleration() = 0;
 	/** @brief „‘Ì‚ÉŒ`ó‚ð“o˜^‚·‚é
 		@param shape Œ`ó‚Ö‚Ìƒ|ƒCƒ“ƒ^
 	 */

@@ -197,12 +197,9 @@ public:
 	}
 
 	/// 質量中心の加速度の取得
-	Vec3d		GetAcceleration() const {return acceleration;}
+	Vec3d		GetAcceleration();
 	/// 質量中心の角加速度の取得
-	Vec3d		GetAngularAcceleration() const {return angAcceleration;}
-
-	void		SetAcceleration(const Vec3d& accel){acceleration = accel;}
-	void		SetAngularAcceleration(const Vec3d& angAccel){angAcceleration = angAccel;}
+	Vec3d		GetAngularAcceleration();
 
 	///	この剛体が持つ Spr::CDShape の数
 	int			NShape();

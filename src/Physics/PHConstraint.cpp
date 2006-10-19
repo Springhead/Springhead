@@ -47,7 +47,8 @@ PHConstraint::PHConstraint(){
 	//f.clear();
 	//F.clear();
 	bEnabled = true;
-	bInactive = true;
+	bInactive[0] = true;
+	bInactive[1] = true;
 }
 
 bool PHConstraint::AddChildObject(ObjectIf* o){
@@ -157,8 +158,10 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 
 void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrink_rate){
 	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
-	if(!bEnabled || !bFeasible || !bInactive)
+
+	if(!bEnabled || !bFeasible)
 		return;
+
 
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
@@ -190,7 +193,7 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrin
 	fw *= shrink_rate;
 	int i, j;
 	for(i = 0; i < 2; i++){
-		if(solid[i]->solid->IsDynamical()){
+	if(solid[i]->solid->IsDynamical() && IsInactive(i)){
 			solid[i]->dv += Tvv[i].trans() * fv + Twv[i].trans() * fw;
 			solid[i]->dw += Tvw[i].trans() * fv + Tww[i].trans() * fw;
 		}
@@ -231,7 +234,7 @@ void PHConstraint::IterateDynamics(){
 		Projection(fvnew[j], j);
 		dfv[j] = fvnew[j] - fv[j];
 		for(i = 0; i < 2; i++){
-			if(solid[i]->solid->IsDynamical()){
+		if(solid[i]->solid->IsDynamical() && IsInactive(i)){
 				solid[i]->dv += Tvv[i].row(j) * dfv[j];
 				solid[i]->dw += Tvw[i].row(j) * dfv[j];
 			}
@@ -246,7 +249,7 @@ void PHConstraint::IterateDynamics(){
 		Projection(fwnew[j], j + 3);
 		dfw[j] = fwnew[j] - fw[j];
 		for(i = 0; i < 2; i++){
-			if(solid[i]->solid->IsDynamical()){
+		if(solid[i]->solid->IsDynamical() && IsInactive(i)){
 				solid[i]->dv += Twv[i].row(j) * dfw[j];
 				solid[i]->dw += Tww[i].row(j) * dfw[j];
 			}
@@ -255,8 +258,7 @@ void PHConstraint::IterateDynamics(){
 	}
 }
 
-/*void PHConstraint::SetupCorrection(double dt, double max_error){
-	if(!bEnabled || !bFeasible || dim_c == 0)return;
+/*void PHConstraint::SetupCof(!bEnabled || !bFeasible || dim_c == 0)return;
 
 	CompError(dt);
 
