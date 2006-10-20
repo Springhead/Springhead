@@ -21,6 +21,9 @@ public:
 	virtual double GetVelocity();
 	virtual void CompBias(double dt, double correction_rate);
 	virtual void Projection(double& f, int k);
+	// virtual void CompConstraintJacobian();
+	// virtual void CompError(double dt);
+	// virtual void ProjectionCorrection(double& F, int k);
 	PHHingeJoint(){
 		axis_index = 5;
 	}

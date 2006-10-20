@@ -54,7 +54,7 @@ public:
 	
 	bool		bEnabled;			/// 有効化されている場合にtrue
 	bool		bFeasible;			/// 両方の剛体がundynamicalな場合true
-	bool		bInactive[2];			/// 両方の剛体が解析法に従う場合true
+	bool		bInactive[2];		/// 剛体が解析法に従う場合true
 
 	PHSolidInfoForLCP* solid[2];
 	Matrix3d	Rj[2];				/// 各剛体に張り付いた関節フレーム

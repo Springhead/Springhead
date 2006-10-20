@@ -56,7 +56,7 @@ using namespace Spr;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
-double FORCE_COEFF=		0.2;
+double FORCE_COEFF=		0.1;
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
 	#include <Device/DRUsb20Simple.h>
@@ -71,8 +71,8 @@ double FORCE_COEFF=		0.2;
 		float K = 10;
 		float B = 10;
 	#elif _WINDOWS
-		float K = 1100;
-		float B = 15;
+		float K = 2700;
+		float B = 60;
 	#endif
 #endif
 
@@ -95,6 +95,8 @@ HISpidarG6X3 spidarG6;						//	SPIDARに対応するクラス
 // その他の変数
 Vec3f spidar_pos = Vec3f();
 Matrix3f view_rot;
+Matrix3f view_haptic;
+
 bool bforce = false;
 MMRESULT FTimerId;
 
@@ -112,6 +114,7 @@ typedef struct {
 	PHSolid* nearest_solids[NUM_SPHERES+1];
 	Vec3d solid_velocity[NUM_SPHERES+1];
 	Vec3d solid_angular_velocity[NUM_SPHERES+1];
+	Matrix3d solid_inertiainv[NUM_SPHERES+1];
 
 	// collision data
 	Vec3d col_positions[NUM_SPHERES+1];
@@ -125,7 +128,7 @@ typedef struct {
 	Matrix3d vel_effect[NUM_SPHERES+1];
 	Vec3d vel_constant[NUM_SPHERES+1];
 
-	Matrix3d ang_effect[NUM_SPHERES+1];
+//	Matrix3d ang_effect[NUM_SPHERES+1];
 	Vec3d ang_constant[NUM_SPHERES+1];
 
 	// pointer data
@@ -250,8 +253,9 @@ void calculate_solid_effect(std::vector<Vec3d> *forces, std::vector<Vec3d> *vec_
 	}
 
 	// まとめられる部分はまとめる
-	// C = vp'' - (sum(Fi) / m + w x (w x r) + I^{-1} sum(ri x Fi) x r
-	Vec3d point_accel = solid->GetAcceleration() + ((solid->GetAngularVelocity() - solid->GetOldAngularVelocity()) ^ original_r) / scene->GetTimeStep();
+	// C = (v_p)' - (sum(Fi) / m + w x (w x r) + I^{-1} sum(ri x Fi) x r
+	// point_accelの計算がこれでよいのか確認する必要がある
+	Vec3d point_accel = solid->GetAcceleration() + ((solid->GetAngularVelocity() - solid->GetOldAngularVelocity()) / scene->GetTimeStep()) ^ original_r;
 	Vec3d C = point_accel - ((sum_force * solid->GetMassInv()) + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
 
 	// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
@@ -302,12 +306,13 @@ void makeInfo(PHSolid* nearest, PHConstraint* constraint, Haptic_info* info, int
 	// 別な変数を用意するのは、書き換えしやすいようにするため
 	info->solid_velocity[info->num_collisions] = nearest->GetVelocity() +  nearest->GetAngularVelocity() ^ (info->col_positions[info->num_collisions] - nearest->GetCenterPosition());
 	info->solid_angular_velocity[info->num_collisions] = nearest->GetAngularVelocity();
+	info->solid_inertiainv[info->num_collisions] = nearest->GetInertiaInv();
 
 	// 計算で得られた周囲の影響を表す変数をコピーする
 	info->vel_constant[info->num_collisions] = C;
 	info->ang_constant[info->num_collisions] = D;
 	info->vel_effect[info->num_collisions] = M;
-	info->ang_effect[info->num_collisions] = N;
+//	info->ang_effect[info->num_collisions] = N;
 
 	// 接している剛体自身を登録
 	info->nearest_solids[info->num_collisions] = nearest;
@@ -354,8 +359,6 @@ void calculate_counteractive_object_force(PHConstraints cs, int depth, PHSolid* 
 /**
  brief     	接触点の情報から周囲の情報による影響を計算する関数
  param		その時点での衝突情報PHConstraintsと衝突情報を格納する構造体Haptic_info型の変数を取る
-			周囲の影響をEffectに、定数項をConstantに格納する
-			また、PHSolid* solids[]にポインタが接している剛体のリストが入る
  return 	なし
 */
 void calculate_surround_effect(PHConstraints cs, Haptic_info *info)
@@ -591,7 +594,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 
 	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
 	Vec3d VCforce = K * goal + B * (PointerVel - info->pointer_vel);
-	soPointer->AddForce(VCforce);
+//	soPointer->AddForce(VCforce);
 
 	// soPointerの速度を更新
 	info->pointer_vel = info->pointer_vel + info->pointer_massinv * VCforce * dt;
@@ -634,15 +637,14 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 			info->pointer_pos = info->pointer_pos + dx;
 
 			// 角加速度を計算
-			Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
+//			Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
+			Vec3d ang_accel = info->solid_inertiainv[i] * (solid_torque_vector) + info->ang_constant[i];
 
 			// 角速度を計算し、法線の向きを更新する
 			info->solid_angular_velocity[i] = info->solid_angular_velocity[i] + ang_accel * dt;
 
 			Vec3d dth = info->solid_angular_velocity[i] * dt;
-
 			info->col_normals[i] = info->col_normals[i] + dth;
-
 			info->col_normals[i] = info->col_normals[i].unit();
 
 			if(fabs(feedback_force.x) > 100 || fabs(feedback_force.y) > 100 || fabs(feedback_force.z) > 100)
@@ -672,17 +674,16 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	// spidarに力を加える
 	if(info->num_collisions > 0)
 	{
+		std::cout << "***" << std::endl;
+		std::cout << "num collision = " << info->num_collisions << std::endl;
+		std::cout << "***" << std::endl;
 		// 前の提示力とトルクを参照してつぶを取る
 		if(bforce)
 		{
-			// SPIDARの位置の座標のx軸とz軸の符号が逆なので-1をかけて補正
-			// 座標軸の違いによって発生している
-			Vec3d f = 1.0 * pointer_force;//+ 0.5 * last_force;
-			f.x = f.x * -1;
-			f.z = f.z * -1;
+			// SPIDARの空間と見ている空間が違うので行列を掛けて射影する
+			Vec3d f = view_haptic * pointer_force;//+ 0.5 * last_force;
 //			Vec3d t = 1.0 * pointer_torque;// + 0.5 * last_torque;
-//			t.x = t.x * -1;
-//			t.z = t.z * -1;
+
 			if(fabs(f.x) > 100 || fabs(f.y) > 100 || fabs(f.z) > 100)
 			{
 //				std::cout << "force is " << f << std::endl;
@@ -711,18 +712,12 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	{
 //		std::cout << "spidar position = " << spidar_pos << std::endl;
 //		std::cout << "spidar velocity = " << PointerVel << std::endl;
-		std::cout << " force = " << pointer_force << std::endl;
+//		std::cout << " force = " << pointer_force << std::endl;
 //		std::cout << "num collisions = " << info->num_collisions << std::endl;
 //		std::cout << "pointer = " << soPointer->GetFramePosition() << std::endl;
 //		std::cout << std::endl;
 //		std::cout << "orientation = " << soPointer->GetOrientation() << std::endl;
-
-/*
-		for(int i = 0; i < info->num_collisions; i++)
-		{
-			std::cout << "depth[" << i << "] = " << spidar_pos - info->col_positions[i] << std::endl;
-		}
-*/		
+	
 		sec_counter = 0;	
 	}
 	sec_counter++;									// カウンターの更新
@@ -748,6 +743,16 @@ PHConstraints GetContactPoints()
 void RemoveGravity(PHSolidIf* solid)
 {
 	scene->RemoveGravity(solid);
+}
+
+void clearCorrectMap()
+{
+	for(int i = 0; i < num_correction; i++)
+	{
+		correction_map[i] = NULL;
+	}
+
+	num_correction = 0;
 }
 
 void recursiveErrorCorrection(PHSolid* solid)
@@ -777,13 +782,8 @@ void ErrorCorrection()
 	{
 		info = &info2;
 	}
-
-	for(int i = 0; i < num_correction; i++)
-	{
-		correction_map[i] = NULL;
-	}
-
-	num_correction = 0;
+	
+	clearCorrectMap();
 
 	// ポインタが接しているすべての剛体について処理
 	for(int i = 0; i < info->num_collisions; i++)
@@ -794,7 +794,7 @@ void ErrorCorrection()
 
 		if(info->nearest_solids[i]->IsDynamical())
 		{
-			// 誤差の分平行移動する　回転も考慮する必要あり
+			// 誤差の分平行移動する
 			info->nearest_solids[i]->SetFramePosition(info->nearest_solids[i]->GetFramePosition() + pos_error);
 			info->nearest_solids[i]->SetOrientation(info->nearest_solids[i]->GetOrientation() * Quaterniond::Rot(ori_error));
 
@@ -832,7 +832,7 @@ void keyboard(unsigned char, int, int);
 
 /**
  brief		VR内のプロキシの位置を更新する関数。
-			この関数と力覚レンダリングを組み合わせることでポインタの更新を完全にHAPTIC_FREQの周波数で更新できる。
+			この関数と力覚レンダリングを組み合わせることでポインタの更新をHAPTIC_FREQの周波数で更新できる。
  param		なし
  return		なし
  */
@@ -871,10 +871,7 @@ void idle(){
 
 	// もし力覚レンダリングで周囲の影響を考慮していたら
 	// それによって生じた誤差を修正する
-	if(bSurroundEffect)
-	{
-		ErrorCorrection();
-	}
+	if(bSurroundEffect)	ErrorCorrection();
 
 	// シミュレーションを１ステップ進める
 	scene->Step();
@@ -937,13 +934,13 @@ void idle(){
 }
 
 /**
- brief		解析法の影響を受けない剛体を登録する。この剛体が生む接触はすべて処理されない
+ brief		解析法の影響を受けない剛体を登録する。この剛体が生む接触は相手に接触力を与えない
  param		登録する剛体
  return		なし
 */
-void AddInactiveSolid(PHSolidIf* soPointer)
+void AddInactiveSolid(PHSolidIf* soSolid)
 {
-	scene->GetConstraintEngine()->AddInactiveSolid(soPointer);
+	scene->GetConstraintEngine()->AddInactiveSolid(soSolid);
 }
 
 /**
@@ -1100,22 +1097,22 @@ void keyboard(unsigned char key, int x, int y){
 	}
 	else if(key == 'k')
 	{
-		K += 0.1;
+		K += 1;
 		keyboard('l', 0, 0);
 	}
 	else if(key == 'b')
 	{
-		B += 0.1;
+		B += 1;
 		keyboard('l', 0, 0);
 	}
 	else if(key == 'j')
 	{
-		K -= 0.1;
+		K -= 1;
 		keyboard('l', 0, 0);
 	}
 	else if(key == 'v')
 	{
-		B -= 0.1;
+		B -= 1;
 		keyboard('l', 0, 0);
 	}
 	else if(key == 'm')
@@ -1188,7 +1185,6 @@ void InitScene()
 {
 	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc sd;
-//	sd.ContactMode = PHSceneDesc::ContactMode::MODE_LCP;
 	sd.timeStep = (double)1.0 / SIM_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
@@ -1278,6 +1274,7 @@ void InitRendering(int *argc, char *argv[])
 
 	/// SPIDAR座標をビュー座標に直す変数
 	view_rot = view.inv().Rot() * SPIDAR_SCALE;
+	view_haptic = view.Rot();
 }
 
 /**

@@ -258,7 +258,8 @@ void PHConstraint::IterateDynamics(){
 	}
 }
 
-/*void PHConstraint::SetupCof(!bEnabled || !bFeasible || dim_c == 0)return;
+/*void PHConstraint::SetupCorrection(double dt, double max_error){
+	if(!bEnabled || !bFeasible || dim_c == 0)return;
 
 	CompError(dt);
 
