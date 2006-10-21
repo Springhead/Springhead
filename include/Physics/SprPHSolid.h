@@ -19,7 +19,7 @@ namespace Spr{;
 ///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)
-	Vec3d		oldVel;		///<	１ステップ前の速度
+	Vec3d		oldVel;			///<	１ステップ前の速度
 	Vec3d		angVelocity;	///<	角速度			(World系)
 	Vec3d		oldAngVel;		///<	１ステップ前の角速度
 	Posed		pose;			///<	位置と向き		(World系)

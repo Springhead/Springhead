@@ -72,6 +72,15 @@ void FWApp::Display(){
 		ld.position = Vec4f(1,1,1,0);
 		grRender->PushLight(ld);
 		grRender->DrawScene(fwScene->GetPHScene());
+/*
+//		grRender->SetVertexFormat(GRVertexElement::vfP3f);
+		Vec3f v[6];
+		v[3] = Vec3f(0,5,0);
+		v[5] = Vec3f(5,0,0);
+		grRender->SetMaterial(GRMaterialDesc(Vec4f(1,0,0,1))); 
+		grRender->DrawDirect(GRRenderBaseIf::TRIANGLES, v, 3);
+*/
+
 		grRender->PopLight();
 		if (cam) cam->Rendered(grRender);
 	}else{
