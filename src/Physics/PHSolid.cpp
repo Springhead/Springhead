@@ -52,6 +52,10 @@ bool PHSolid::AddChildObject(ObjectIf* obj){
 	return false;
 }
 
+Vec3d PHSolid::GetDeltaPosition() const {
+	PHScene* s = DCAST(PHScene, nameManager);
+	return velocity * s->GetTimeStep();
+}
 void PHSolid::CalcBBox(){
 	Vec3f bboxMin = Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
 	Vec3f bboxMax = Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);

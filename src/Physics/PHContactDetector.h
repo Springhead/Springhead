@@ -91,6 +91,35 @@ public:
 		return found;
 	}
 
+	bool ContDetect(TEngine* engine, unsigned int ct, double dt){
+		if(!bEnabled)return false;
+
+		// いずれかのSolidに形状が割り当てられていない場合は接触なし
+		PHSolid *s0 = solid[0]->solid, *s1 = solid[1]->solid;
+		if(s0->NShape() == 0 || s1->NShape() == 0) return false;
+		Vec3d d0 = s0->GetDeltaPosition();
+		Vec3d d1 = s1->GetDeltaPosition();
+		Posed p0 = s0->GetPose(); p0.Pos() -= d0;
+		Posed p1 = s1->GetPose(); p1.Pos() -= d1;
+
+		// 全てのshape pairについて交差を調べる
+		bool found = false;
+		TShapePair* sp;
+		for(int i = 0; i < s0->NShape(); i++)for(int j = 0; j < s1->NShape(); j++){
+			sp = shapePairs.item(i, j);
+			//このshape pairの交差判定/法線と接触の位置を求める．
+			if(sp->ContDetect(
+				ct,
+				DCAST(CDConvex, s0->GetShape(i)), DCAST(CDConvex, s1->GetShape(j)),
+				p0 * s0->GetShapePose(i), d0, p1 * s1->GetShapePose(j), d1))
+			{
+				found = true;
+				OnDetect(sp, engine, ct, dt);
+			}
+		}
+		return found;
+	}
+
 	void SetState(const PHSolidPairState& s){
 		*((PHSolidPairState*)this) = s;
 	}
@@ -373,6 +402,58 @@ public:
 					if (f1 > f2) std::swap(f1, f2);
 					//2. SolidとSolidの衝突判定
 					found |= solidPairs.item(f1, f2)->Detect((TEngine*)this, ct, dt);
+				}
+				cur.insert(it->index);
+			}else{
+				cur.erase(it->index);			//	終端なので削除．
+			}
+		}
+		return found;
+	}
+
+	///< 全体の交差の検知，連続接触検知(Continuous Collision Detect)版
+	bool ContDetect(unsigned int ct, double dt){
+		/* 以下の流れで交差を求める
+			1. SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外
+			2. 各Solidの組について
+				2a. ShapeのBBoxレベルでの交差判定 (未実装)
+				2b. 各Shapeの組についてGJKで交差形状を得る
+				2c. 交差形状から法線を求め、法線に関して形状を射影し，その頂点を接触点とする
+				2d. 得られた接触点情報をPHContactPointsに詰めていく
+		*/		
+		int N = solids.size();
+
+		//1. BBoxレベルの衝突判定
+		Vec3f dir(0,0,1);
+		Edges edges;
+		edges.resize(2 * N);
+		typename Edges::iterator eit = edges.begin();
+		for(int i = 0; i < N; ++i){
+			solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+			Vec3d dPos = solids[i]->solid->DeltaPosition();
+			double dLen = dPos * dir;
+			if (dLen < 0){
+				eit[0].edge += dLen;
+			}else{
+				eit[1].edge += dLen;
+			}
+			eit[0].index = i; eit[0].bMin = true;
+			eit[1].index = i; eit[1].bMin = false;
+			eit += 2;
+		}
+		std::sort(edges.begin(), edges.end());
+		//端から見ていって，接触の可能性があるノードの判定をする．
+		typedef std::set<int> SolidSet;
+		SolidSet cur;							//	現在のSolidのセット
+		bool found = false;
+		for(typename Edges::iterator it = edges.begin(); it != edges.end(); ++it){
+			if (it->bMin){						//	初端だったら，リスト内の物体と判定
+				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
+					int f1 = it->index;
+					int f2 = *itf;
+					if (f1 > f2) std::swap(f1, f2);
+					//2. SolidとSolidの衝突判定
+					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt);
 				}
 				cur.insert(it->index);
 			}else{

@@ -124,8 +124,6 @@ public:
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
 	void		AddTorque(Vec3d t);						///< トルクを加える
 	void		AddForce(Vec3d f, Vec3d r);				///< 力を 位置r(World系) に加える
-	//混乱するしGravityEngineしか使ってなかったので廃棄候補
-	//void		AddForceLocal(Vec3d f, Vec3d r);		///< 力を 位置r(Local系) に加える
 	Vec3d		GetForce() const {return force;}		///< 加えられた力
 	Vec3d		GetTorque() const {return torque;}		///< 加えられたトルク
 
@@ -143,7 +141,7 @@ public:
 	}
 	void		SetInertiaInv(const Matrix3d& Iinv){	///< 慣性テンソルを逆数で設定
 		inertia_inv = Iinv;
-		//inertia = Iinv.inv();
+		inertia = Iinv.inv();
 	}
 
 	///	積分方式の取得
@@ -155,6 +153,8 @@ public:
 	void		SetPose(const Posed& p) { pose = p;}
 	Vec3d		GetFramePosition() const {return pose.Pos();}
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
+	Vec3d		GetDeltaPosition() const ;
+	Vec3d		GetPrevFramePosition() const { pose.Pos()-GetDeltaPosition(); }
 	Vec3d		GetCenterPosition() const {return pose*center;}
 														///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){		///< 重心位置の設定

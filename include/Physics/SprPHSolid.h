@@ -110,7 +110,10 @@ struct PHSolidIf : public SceneObjectIf{
 		@param p シーンに対する剛体の質量中心の位置
 	 */
 	virtual void		SetCenterPosition(const Vec3d& p) =0;
-
+	/** @brief 剛体の前のステップからの併進移動量を返す
+		@return 前のステップからの併進移動量
+	 */
+	Vec3d GetDeltaPosition() const;
 	/** @brief 剛体の傾きを取得する
 		@return シーンに対する剛体の傾き
 	 */
