@@ -68,7 +68,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
 ///	GJKで共有点を見つける．連続版
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, const Vec3d& r, Vec3d& normal, Vec3d& pa, Vec3d& pb);
+	const Posed& a2w, const Posed& b2w, const Vec3d& r, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
 /// GJKで最近傍点対を見つける
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,

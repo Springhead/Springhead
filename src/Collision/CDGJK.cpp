@@ -189,7 +189,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 
 
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, const Vec3d& r, Vec3d& normal, Vec3d& pa, Vec3d& pb){
+	const Posed& a2w, const Posed& b2w, const Vec3d& r, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	#define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 	const double epsilon = 1e-6;
 	const double epsilon2 = epsilon*epsilon;
@@ -202,7 +202,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		Matrix3d matW2z = Matrix3d::Rot(u, Vec3f(0,0,1), 'z');
 		w2z.FromMatrix(matW2z);
 		w2z = w2z.Inv();
-		DSTR << "VelLocal:" << w2z * u << std::endl;
+//		DSTR << "VelLocal:" << w2z * u << std::endl;
 	}
 	Posed a2z;
 	a2z.Ori() = w2z * a2w.Ori();
@@ -237,6 +237,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	if (v[id].XY().square() < epsilon2){	//	w0 = �Փ˓_
 		normal = u;
 		pa = p[0]; pb = q[0];
+		dist = w[0].Z();
 		return 1;
 	}
 	CalcSupport(v[id], p[id], q[id], w[id]);
@@ -370,6 +371,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				kb /= l;
 				pa = ka*p[seg[0]] + kb*p[seg[1]];
 				pb = ka*q[seg[0]] + kb*q[seg[1]];
+				dist = ka*w[seg[0]].Z() + ka*w[seg[1]].Z();
 				normal = w2z.Conjugated() * v[seg[2]].unit();
 				return 2;
 			}
@@ -378,20 +380,19 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			Vec3d pNew, qNew, wNew;
 			CalcSupport(vNew, pNew, qNew, wNew);
 			for(int i=0; i<3;++i){
-				if ( (wNew.XY()-w[i].XY()).square() < epsilon2){
+				if ( (wNew-w[i]).square() < epsilon2 ){
 					normal = vNew.unit();
-					Vec3d goal;
-					goal.Z() = w[0]*normal / normal.Z();
+					dist = w[0]*normal / normal.Z();
 					Matrix3d m;
 					m.Ex() = w[0];
 					m.Ey() = w[1];
 					m.Ez() = w[2];
-					Vec3d k = m.inv() * goal;
+					Vec3d k = m.inv() * Vec3d(0,0,dist);
 					pa = k.x*p[0] + k.y*p[1] + k.z*p[2];
 					pb = k.x*q[0] + k.y*q[1] + k.z*q[2];
 					normal = w2z.Conjugated() * normal;
-					DSTR << "ql:" << q[0] << q[1] << q[2] << std::endl;
-					DSTR << "k:" << k.x+k.y+k.z << k << std::endl;
+//					DSTR << "ql:" << q[0] << q[1] << q[2] << std::endl;
+//					DSTR << "k:" << k.x+k.y+k.z << k << std::endl;
 					return 3;
 				}
 			}				

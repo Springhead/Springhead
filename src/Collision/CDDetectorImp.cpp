@@ -41,7 +41,8 @@ bool CDShapePair::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Pose
 	shapePoseW[1] = pose1;
 	
 	Vec3d sep;
-	bActive = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], delta1-delta0, sep, closestPoint[0], closestPoint[1]);
+	double dist;
+	bActive = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], delta1-delta0, sep, closestPoint[0], closestPoint[1], dist);
 	const double depthEpsilon = 0.01;
 	if (bActive){
 		commonPoint = shapePoseW[0] * closestPoint[0] + toi*delta0;

@@ -39,7 +39,7 @@ using namespace Spr;
 #define ESC					27		// ESC key
 //#define STAY_COUNTER		50		// 静止判定カウント
 #define STAY_COUNTER		300		// 静止判定カウント
-#define TOTAL_IDLE_COUNTER	5		// 静止しない場合に利用
+#define TOTAL_IDLE_COUNTER	100		// 静止しない場合に利用
 
 
 UTRef<PHSdkIf> sdk;
@@ -88,9 +88,12 @@ void display(){
 		}
 		Vec3d normal;
 		Vec3d pos[2];
-		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], Vec3f(0,-1,0), normal, pos[0], pos[1]);
-		DSTR << "res:"  << res << " normal:" << normal;
+		double dist=0;
+		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], Vec3f(0,-1,0), normal, pos[0], pos[1], dist);
+		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		DSTR << " p:" << pose[0]*pos[0] << " q:" << pose[1]*pos[1] << std::endl;
+		pose[1].Ori() = Quaterniond::Rot('z', Rad(5)) * pose[1].Ori();
+		solid[1]->SetPose(pose[1]);
 	}
 
 	glEnable(GL_ALPHA);
@@ -341,8 +344,8 @@ int main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-//			md.vertices[i].x *= 3;
-//			md.vertices[i].z *= 3;
+			md.vertices[i].x *= sqrt(2.0);
+			md.vertices[i].z *= sqrt(2.0);
 		}
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
@@ -350,9 +353,9 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soFloor->SetOrientation(
-		Quaternionf::Rot(Rad(30), 'x')
-	);
+//	soFloor->SetOrientation(
+//		Quaternionf::Rot(Rad(30), 'x')
+//	);
 	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
 	soBlock->SetOrientation(
 		Quaternionf::Rot(Rad(30), 'z')
