@@ -194,20 +194,22 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const double epsilon = 1e-6;
 	const double epsilon2 = epsilon*epsilon;
 
-
+	//	返り値の座標系の修正ができてない
 		
 	Quaterniond w2z;
-	Vec3d u = r.unit();
+	Vec3d u = -r.unit();	//	u: 物体ではなく原点の速度の向きなので - がつく．
 	if (u.Z() < 1-1e-6){
 		Matrix3d matW2z = Matrix3d::Rot(u, Vec3f(0,0,1), 'z');
 		w2z.FromMatrix(matW2z);
+		w2z = w2z.Inv();
+		DSTR << "VelLocal:" << w2z * u << std::endl;
 	}
 	Posed a2z;
-	a2z.Ori() = a2w.Ori() * w2z;
-	a2z.Pos() = a2w.Pos();
+	a2z.Ori() = w2z * a2w.Ori();
+	a2z.Pos() = w2z * a2w.Pos();
 	Posed b2z;
-	b2z.Ori() = b2w.Ori() * w2z;
-	b2z.Pos() = b2w.Pos();
+	b2z.Ori() = w2z * b2w.Ori();
+	b2z.Pos() = w2z * b2w.Pos();
 
 	Vec3d w[3], v[3], p[3], q[3];
 
@@ -215,10 +217,19 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	w0を求める
 	int id = 0;
 	v[id] = Vec3d(0,0,1);
-	p[id] = a->Support(a2z.Ori().Conjugated() * -v[id]);
-	q[id] = b->Support(b2z.Ori().Conjugated() * v[id]);
-	w[id] = a2z * p[id] - b2z * q[id];
-	
+
+#define CalcSupport(v, p, q, w)										\
+/*	DSTR << "v on a: " << a2z.Ori().Conjugated() * -v << std::endl;	\
+	DSTR << "v in b: " << b2z.Ori().Conjugated() * v << std::endl;	\
+*/	p = a->Support(a2z.Ori().Conjugated() * (v));					\
+	q = b->Support(b2z.Ori().Conjugated() * -(v));					\
+	w = b2z * (q) - a2z * (p);										\
+	DSTR << "v:" << v << " w:" << w;								\
+	DSTR << " p:" << a2z*(p) << " q:" << b2z*(q) << std::endl;		\
+
+
+	CalcSupport(v[id], p[id], q[id], w[id]);
+
 	//	w1を求める
 	id = 1;
 	v[id] = Vec3d(w[0].X(), w[0].Y(), 0);
@@ -227,9 +238,7 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		pa = p[0]; pb = q[0];
 		return true;
 	}
-	p[id] = a->Support(a2w.Ori().Conjugated() * -v[id]);
-	q[id] = b->Support(b2w.Ori().Conjugated() * v[id]);
-	w[id] = a2z * p[id] - b2z * q[id];
+	CalcSupport(v[id], p[id], q[id], w[id]);
 	if (w[id].XY() * v[id].XY() > 0){	//	w[id]の外側にOがあるので触ってない
 		return false;
 	}
@@ -241,24 +250,23 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	Vec2d l = vb - va;
 	assert(l.square() >= epsilon2);	//	w0=w1ならば，すでに抜けているはず．
 	double ll_inv = 1/l.square();
-	v[id] = vb*l*ll_inv * va  -  va*l*ll_inv * vb;
+	v[id].XY() = vb*l*ll_inv * va  -  va*l*ll_inv * vb;
+	v[id].Z() = 0;
 	if (v[id].square() < epsilon2){
 		v[id] = 0.5 * (v[0] + v[1]);
 	}
 	//	サポートを求める．
-	p[id] = a->Support(a2z.Ori().Conjugated() * -v[id]);
-	q[id] = b->Support(b2z.Ori().Conjugated() * v[id]);
-	w[id] = a2z * p[id] - b2z * q[id];
+	CalcSupport(v[id], p[id], q[id], w[id]);
 
 	//	繰り返し
 	//	はみ出しチェック
 	Vec2d seg[2];
-	seg[0] = w[2].XY()-w[0].XY();
-	seg[1] = w[2].XY()-w[1].XY();
+	seg[0] = w[0].XY()-w[2].XY();
+	seg[1] = w[1].XY()-w[2].XY();
 	int segIds[2] = {0,1};
 	if (seg[0] % seg[1]<0){
 		segIds[0] = 1;
-		segIds[0] = 0;
+		segIds[1] = 0;
 	}
 
 	while(1){
@@ -268,9 +276,9 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			idUse = segIds[0];
 			w[segIds[1]] = w[2];
 			v[segIds[1]] = v[2];
-			Vec2d va = w[segIds[0]].XY();
-			Vec2d vb = w[2].XY();
-			Vec2d l = vb-va;
+			Vec3d va = w[segIds[0]];
+			Vec3d vb = w[2];
+			Vec3d l = vb-va;
 			double ll_inv = 1/l.square();
 			v[2] = vb*l*ll_inv * va  -  va*l*ll_inv * vb;
 			bInside = false;
@@ -288,9 +296,8 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			bInside = false;
 		}
 		if (!bInside){	//	はみ出していたら三角形を更新
-			p[2] = a->Support(a2z.Ori().Conjugated() * -v[2]);
-			q[2] = b->Support(b2z.Ori().Conjugated() * v[2]);
-			Vec3d wNew = a2z * p[2] - b2z * q[2];
+			Vec3d wNew;
+			CalcSupport(v[2], p[2], q[2], wNew);
 			if (wNew.XY() * v[2].XY() > 0){	//	w[2]の外側にOがあるので触ってない
 				return false;
 			}
@@ -307,7 +314,7 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	while(1){
 		//	頂点の並び順をそろえる．
 		Vec3d sTri = (w[2]-w[0]) % (w[1]-w[0]);
-		double sDir = sTri * r;
+		double sDir = sTri.Z();
 		if (sDir < 0){		//	逆向き
 			std::swap(w[1], w[2]);
 			std::swap(p[1], p[2]);
@@ -346,32 +353,34 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 					seg[2] = 1;
 				}
 			}
-			Vec2d va = w[seg[0]].XY();
-			Vec2d vb = w[seg[1]].XY();
-			Vec2d l = vb-va;
+			Vec3d va = w[seg[0]];
+			Vec3d vb = w[seg[1]];
+			Vec3d l = vb-va;
 			double ll_inv = 1/l.square();
 			double ka = vb*l*ll_inv;
 			double kb = -va*l*ll_inv;
 			v[seg[2]] = ka * va  +  kb * vb;
-			p[seg[2]] = a->Support(a2z.Ori().Conjugated() * -v[seg[2]]);
-			q[seg[2]] = b->Support(b2z.Ori().Conjugated() * v[seg[2]]);
-			w[seg[2]] = a2z * p[seg[2]] - b2z * q[seg[2]];
+			CalcSupport(v[seg[2]], p[seg[2]], q[seg[2]], w[seg[2]]);
 			if ((w[seg[2]]-w[seg[0]]).square() < epsilon2 || (w[seg[2]]-w[seg[1]]).square() < epsilon2){
-				//	線分	ここ，まちがってない？　原点からの最近傍点ではないよ．
-				normal = v[seg[2]].unit();
+				ka = w[seg[1]].XY().norm();
+				kb = w[seg[2]].XY().norm();
+				double l = ka+kb;
+				ka /= l;
+				kb /= l;
 				pa = ka*p[seg[0]] + kb*p[seg[1]];
 				pb = ka*q[seg[0]] + kb*q[seg[1]];
+				normal = w2z.Conjugated() * v[seg[2]].unit();
 				return true;
 			}
 		}else{	//	まっとうな三角形
 			Vec3d vNew = sTri;
-			Vec3d pNew = a->Support(a2z.Ori().Conjugated() * -vNew);
-			Vec3d qNew = b->Support(b2z.Ori().Conjugated() * vNew);
-			Vec3d wNew = a2z * pNew - b2z * qNew;
+			Vec3d pNew, qNew, wNew;
+			CalcSupport(vNew, pNew, qNew, wNew);
 			for(int i=0; i<3;++i){
 				if ( (wNew.XY()-w[i].XY()).square() < epsilon2){
 					normal = vNew.unit();
-					Vec3d goal = u*w[0] * u;
+					Vec3d goal;
+					goal.Z() = w[0]*normal / normal.Z();
 					Matrix3d m;
 					m.Ex() = w[0];
 					m.Ey() = w[1];
@@ -379,6 +388,7 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 					Vec3d k = m.inv() * goal;
 					pa = k.x*p[0] + k.y*p[1] + k.z*p[2];
 					pb = k.x*q[0] + k.y*q[1] + k.z*p[2];
+					normal = w2z.Conjugated() * normal;
 					return true;
 				}
 			}				
@@ -410,7 +420,6 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			q[replace] = qNew;
 		}
 	}
-	return true;
 }
 
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,
