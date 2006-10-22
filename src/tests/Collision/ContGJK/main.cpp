@@ -88,7 +88,7 @@ void display(){
 		}
 		Vec3d normal;
 		Vec3d pos[2];
-		bool res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], Vec3f(0,-1,0), normal, pos[0], pos[1]);
+		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], Vec3f(0,-1,0), normal, pos[0], pos[1]);
 		DSTR << "res:"  << res << " normal:" << normal;
 		DSTR << " p:" << pose[0]*pos[0] << " q:" << pose[1]*pos[1] << std::endl;
 	}
@@ -341,8 +341,8 @@ int main(int argc, char* argv[]){
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 3;
-			md.vertices[i].z *= 3;
+//			md.vertices[i].x *= 3;
+//			md.vertices[i].z *= 3;
 		}
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
@@ -350,9 +350,12 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(meshFloor);
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
+	soFloor->SetOrientation(
+		Quaternionf::Rot(Rad(30), 'x')
+	);
 	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
 	soBlock->SetOrientation(
-		Quaternionf::Rot(Rad(30), 'z')* Quaternionf::Rot(Rad(30), 'x')
+		Quaternionf::Rot(Rad(30), 'z')
 	);
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定

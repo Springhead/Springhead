@@ -188,7 +188,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 }
 
 
-bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
+int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& r, Vec3d& normal, Vec3d& pa, Vec3d& pb){
 	#define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 	const double epsilon = 1e-6;
@@ -224,8 +224,9 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 */	p = a->Support(a2z.Ori().Conjugated() * (v));					\
 	q = b->Support(b2z.Ori().Conjugated() * -(v));					\
 	w = b2z * (q) - a2z * (p);										\
-	DSTR << "v:" << v << " w:" << w;								\
+/*	DSTR << "v:" << v << " w:" << w;								\
 	DSTR << " p:" << a2z*(p) << " q:" << b2z*(q) << std::endl;		\
+*/
 
 
 	CalcSupport(v[id], p[id], q[id], w[id]);
@@ -236,7 +237,7 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	if (v[id].XY().square() < epsilon2){	//	w0 = 衝突点
 		normal = u;
 		pa = p[0]; pb = q[0];
-		return true;
+		return 1;
 	}
 	CalcSupport(v[id], p[id], q[id], w[id]);
 	if (w[id].XY() * v[id].XY() > 0){	//	w[id]の外側にOがあるので触ってない
@@ -370,7 +371,7 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				pa = ka*p[seg[0]] + kb*p[seg[1]];
 				pb = ka*q[seg[0]] + kb*q[seg[1]];
 				normal = w2z.Conjugated() * v[seg[2]].unit();
-				return true;
+				return 2;
 			}
 		}else{	//	まっとうな三角形
 			Vec3d vNew = sTri;
@@ -387,9 +388,11 @@ bool ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 					m.Ez() = w[2];
 					Vec3d k = m.inv() * goal;
 					pa = k.x*p[0] + k.y*p[1] + k.z*p[2];
-					pb = k.x*q[0] + k.y*q[1] + k.z*p[2];
+					pb = k.x*q[0] + k.y*q[1] + k.z*q[2];
 					normal = w2z.Conjugated() * normal;
-					return true;
+					DSTR << "ql:" << q[0] << q[1] << q[2] << std::endl;
+					DSTR << "k:" << k.x+k.y+k.z << k << std::endl;
+					return 3;
 				}
 			}				
 			
