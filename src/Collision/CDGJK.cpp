@@ -229,7 +229,7 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	id = 1;
 	v[id] = Vec3d(w[0].X(), w[0].Y(), 0);
 	if (v[id].XY().square() < epsilon2){	//	w0 = �Փ˓_
-		normal = u;
+		normal = u.unit();
 		pa = p[0]; pb = q[0];
 		dist = w[0].Z();
 		return 1;

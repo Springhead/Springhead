@@ -72,10 +72,10 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	shape[0] = s0;
 	shape[1] = s1;
+	shapePoseW[0] = pose0;
+	shapePoseW[1] = pose1;
 	
-	if (lastContactCount == unsigned(ct-1)){	//	２回目以降の接触の場合
-		shapePoseW[0] = pose0;
-		shapePoseW[1] = pose1;
+	if (lastContactCount == unsigned(ct-1) ){	//	２回目以降の接触の場合
 		shapePoseW[0].Pos() += delta0;
 		shapePoseW[1].Pos() += delta1;	//	最初から現在の位置に移動させる
 
@@ -89,39 +89,44 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 //		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 //		DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
 
-		depth = dist * dir * normal;
+		depth = dist * dir * normal-2e-8;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 	}else{
-		shapePoseW[0] = pose0;
-		shapePoseW[1] = pose1;
-		double dist;
+		//	初めての接触の場合
 		Vec3d delta = delta1-delta0;
-		if (delta.square() < 1e-20){
-			if (lastContactCount == unsigned(ct-1) && normal.square() >1e-20){ 
-				delta = normal * 1e-10;
+		double toi;
+		if (delta.square() > 1e-8){	//	 速度がある程度大きかったら
+			double dist;
+			Vec3d dir = delta;
+			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
+			//	res==-1:	range内では接触していないが将来接触する可能性がある．	
+			//	res==-2:	range内では接触していないが過去していた可能性がある．
+			if (res <= 0) return false;
+
+			double rangeLen = delta * dir;
+			toi = dist / rangeLen;
+			if (toi > 1) return false;	//	接触時刻がこのステップより未来．
+			if (toi > 0){	//	今回の移動で接触していれば
+		//		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
+		//		DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
+				shapePoseW[0].Pos() += toi*delta0;	//確実に交差部分を作るため 1e-8余分に動かす
+				shapePoseW[1].Pos() += toi*delta1;
+				center = commonPoint = shapePoseW[0] * closestPoint[0];
+				shapePoseW[0].Pos() -= dir*1e-8;
+				shapePoseW[1].Pos() += dir*1e-8;
+				depth = -(1-toi) * delta * normal;
+			}
+		}else{
+			toi = -1;
+		}
+		if (toi < 1e-3){	//	最初から接触していた or 速度が小さすぎる
+			if (FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], normal, closestPoint[0], closestPoint[1])){
+				commonPoint = shapePoseW[0] * closestPoint[0];
+				normal = Vec3f();	//	法線は不明
 			}else{
-				delta = (shapePoseW[1].Pos()-shapePoseW[0].Pos()).unit()*1e-10;
+				return false;
 			}
 		}
-		Vec3d dir = delta;
-		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
-		//	res==-1:	range内では接触していないが将来接触する可能性がある．	
-		//	res==-2:	range内では接触していないが過去していた可能性がある．
-		if (res <= 0) return false;
-
-		double rangeLen = delta * dir;
-		double toi = dist / rangeLen;
-		if (toi > 1) return false;	//	接触時刻がこのステップより未来．
-		
-//		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-//		DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
-		
-		shapePoseW[0].Pos() += toi*delta0;	//確実に交差部分を作るため 1e-8余分に動かす
-		shapePoseW[1].Pos() += toi*delta1;
-		center = commonPoint = shapePoseW[0] * closestPoint[0];
-		shapePoseW[0].Pos() -= dir*1e-8;
-		shapePoseW[1].Pos() += dir*1e-8;
-		depth = -(1-toi) * delta * normal;
 	}
 	if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
 	else state = NEW;
@@ -129,6 +134,9 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 	return true;
 }
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
+	if (sp->normal == Vec3f()){
+		sp->CalcNormal(solid[0]->solid, solid[1]->solid);	//	法線が求まっていない場合は求める
+	}
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
 }			
@@ -160,6 +168,9 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	local.Ez() =  local.Ex() ^ local.Ey();
 	if (local.det() < 0.99) {
 		DSTR << "Error: local coordinate error." << std::endl;
+		DSTR << local;
+		DSTR << "normal:" << normal << std::endl;
+		DSTR << "v1-v0:" << v1-v0 << std::endl;
 		assert(0);
 	}
 
