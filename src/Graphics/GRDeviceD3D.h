@@ -18,9 +18,8 @@
 namespace Spr{;
 
 /**	Direct3Dによるグラフィックス描画の実装	*/
-class GRDeviceD3D: public GRDevice, public GRDeviceD3DIf{
+class GRDeviceD3D: public InheritGRDevice<GRDeviceD3DIf, GRDevice>
 	OBJECT_DEF(GRDeviceD3D);
-	BASEIMP_OBJECT(GRDevice);
 public:
 	virtual void DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride);
 	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride);

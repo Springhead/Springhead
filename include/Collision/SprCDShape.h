@@ -56,9 +56,9 @@ struct PHMaterial{
 	PHMaterial(){
 		mu = mu0 = e = 0.2f;
 	}
-	float mu;		///<	“®–€ŽC–€ŽCŒW”
-	float mu0;		///<	ÃŽ~–€ŽCŒW”
-	float e;		///<	’µ‚Ë•Ô‚èŒW”
+	float mu;				///< “®–€ŽC–€ŽCŒW”
+	float mu0;				///< ÃŽ~–€ŽCŒW”
+	float e;				///< ’µ‚Ë•Ô‚èŒW”
 };
 
 ///	Œ`ó‚ÌƒfƒBƒXƒNƒŠƒvƒ^(Šî–{ƒNƒ‰ƒX)

@@ -154,7 +154,7 @@ struct InheritScene:public InheritNameManager<intf, base>{
 class SPR_DLL Sdk:public InheritNameManager<SdkIf, NameManager>{
 	UTRef<TypeInfoManager> typeInfoManager;	//	typeInfo/IfInfo‚ªsdk‚ªÁ‚¦‚é‘O‚ÉÁ‚¦‚é‚±‚Æ‚ğ”ğ‚¯‚éB
 protected:
-	friend SdkIf;
+	friend struct SdkIf;
 	static std::vector< UTRef<FactoryBase> > sdkFactories;
 public:
 	OBJECT_DEF(Sdk);
