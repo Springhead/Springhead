@@ -64,6 +64,7 @@ public:
 	}
 
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< Œð·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
+	virtual void OnContDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< Œð·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
 	
 	bool Detect(TEngine* engine, unsigned int ct, double dt){
 		if(!bEnabled)return false;
@@ -114,7 +115,7 @@ public:
 				p0 * s0->GetShapePose(i), d0, p1 * s1->GetShapePose(j), d1))
 			{
 				found = true;
-				OnDetect(sp, engine, ct, dt);
+				OnContDetect(sp, engine, ct, dt);
 			}
 		}
 		return found;
@@ -430,7 +431,7 @@ public:
 		typename Edges::iterator eit = edges.begin();
 		for(int i = 0; i < N; ++i){
 			solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-			Vec3d dPos = solids[i]->solid->DeltaPosition();
+			Vec3d dPos = solids[i]->solid->GetDeltaPosition();
 			double dLen = dPos * dir;
 			if (dLen < 0){
 				eit[0].edge += dLen;

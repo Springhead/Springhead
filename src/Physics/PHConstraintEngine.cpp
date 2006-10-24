@@ -69,6 +69,69 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 #endif
 }
 
+bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
+	shape[0] = s0;
+	shape[1] = s1;
+	
+	if (lastContactCount == unsigned(ct-1)){	//	２回目以降の接触の場合
+		shapePoseW[0] = pose0;
+		shapePoseW[1] = pose1;
+		shapePoseW[0].Pos() += delta0;
+		shapePoseW[1].Pos() += delta1;	//	最初から現在の位置に移動させる
+
+		double dist;
+		const double small = 1e-4;
+		Vec3d dir = -normal * small;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
+		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) return false;
+		if (dist > -1e-8) return false;	//	法線方向に進めないと接触しない場合．
+		
+//		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
+//		DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
+
+		depth = dist * dir * normal;
+		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
+	}else{
+		shapePoseW[0] = pose0;
+		shapePoseW[1] = pose1;
+		double dist;
+		Vec3d delta = delta1-delta0;
+		if (delta.square() < 1e-20){
+			if (lastContactCount == unsigned(ct-1) && normal.square() >1e-20){ 
+				delta = normal * 1e-10;
+			}else{
+				delta = (shapePoseW[1].Pos()-shapePoseW[0].Pos()).unit()*1e-10;
+			}
+		}
+		Vec3d dir = delta;
+		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
+		//	res==-1:	range内では接触していないが将来接触する可能性がある．	
+		//	res==-2:	range内では接触していないが過去していた可能性がある．
+		if (res <= 0) return false;
+
+		double rangeLen = delta * dir;
+		double toi = dist / rangeLen;
+		if (toi > 1) return false;	//	接触時刻がこのステップより未来．
+		
+//		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
+//		DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
+		
+		shapePoseW[0].Pos() += toi*delta0;	//確実に交差部分を作るため 1e-8余分に動かす
+		shapePoseW[1].Pos() += toi*delta1;
+		center = commonPoint = shapePoseW[0] * closestPoint[0];
+		shapePoseW[0].Pos() -= dir*1e-8;
+		shapePoseW[1].Pos() += dir*1e-8;
+		depth = -(1-toi) * delta * normal;
+	}
+	if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
+	else state = NEW;
+	lastContactCount = ct;
+	return true;
+}
+void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
+	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
+	sp->EnumVertex(engine, ct, solid[0], solid[1]);
+}			
 // 接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．	
 void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidInfoForLCP* solid0, PHSolidInfoForLCP* solid1){
 	//	center と normalが作る面と交差する面を求めないといけない．
@@ -100,59 +163,44 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		assert(0);
 	}
 
-	// 球と他の形状の接触は必ず１点になる。
-	CDSphere* sp[2];
-	sp[0] = DCAST(CDSphere, shape[0]);	// CDSphereへダイナミックキャスト
-	sp[1] = DCAST(CDSphere, shape[1]);
-	if (sp[0] || sp[1]) {	// 接触解析を行う２つの物体の片方or両方が球の場合
-		// 接触点の配列(engine->points)に、球の最進入点と相手の最進入点の中点centerを追加する
-		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
+	//	切り口を求める。まず、それぞれの形状の切り口を列挙
+	CDCutRing cutRing(center, local);
+	int nPoint = engine->points.size();
+	//	両方に切り口がある場合．(球などないものもある)
+	if (shape[0]->FindCutRing(cutRing, shapePoseW[0]) && shape[1]->FindCutRing(cutRing, shapePoseW[1])){
+		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
+		cutRing.MakeRing();
+//		cutRing.Print(DSTR);
+//		DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
+		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
+			if (vtx->deleted) continue;
+			assert(finite(vtx->dist));
 
-		// 新しく追加する接触点が解析法にしたがわない剛体を含む場合、interactiveフラグをfalseにする
-		if(engine->IsInactiveSolid(solid0->solid)) point->SetInactive(1, false);
-		else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
+			Vec3d pos;
+			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+			pos = cutRing.local * pos;
+			Matrix3d local;
+			cutRing.local.Ori().ToMatrix(local);
 
-		engine->points.push_back(point);
-	} else {	// 接触解析を行う２つの物体がどちらとも球ではない場合
-		//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
-		//	切り口を求める。まず、それぞれの形状の切り口を列挙
-		CDCutRing cutRing(center, local);
-		int nPoint = engine->points.size();
-		//	両方に切り口がある場合（数値誤差で切り口が見つからない場合もあるのでもう一度確認）
-		if (shape[0]->FindCutRing(cutRing, shapePoseW[0]) && shape[1]->FindCutRing(cutRing, shapePoseW[1])){
-			//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
-			cutRing.MakeRing();
-			//cutRing.Print(DSTR);
-			//DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
-			for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
-				if (vtx->deleted) continue;
-				assert(finite(vtx->dist));
-
-				Vec3d pos;
-				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
-				pos = cutRing.local * pos;
-				Matrix3d local;
-				cutRing.local.Ori().ToMatrix(local);
-
-				PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
-
-				if(engine->IsInactiveSolid(solid0->solid)) point->SetInactive(1, false);
-				else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
-
-				engine->points.push_back(point);
-			//	DSTR << "  " << pos << std::endl;
-			}
-		}
-		if (nPoint == engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
-			//	きっと1点で接触している．
-
-			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
 
 			if(engine->IsInactiveSolid(solid0->solid)) point->SetInactive(1, false);
 			else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
 
 			engine->points.push_back(point);
+//			DSTR << "  " << pos << std::endl;
 		}
+	}
+	if (nPoint == engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
+		//	きっと1点で接触している．
+
+		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+
+		if(engine->IsInactiveSolid(solid0->solid)) point->SetInactive(1, false);
+		else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
+
+		engine->points.push_back(point);
 	}
 }
 
@@ -331,7 +379,8 @@ void PHConstraintEngine::Dynamics(double dt, int ct){
 	QueryPerformanceCounter(&val[0]);
 	points.clear();
 	if(bContactEnabled)
-		Detect(ct, dt);
+//		Detect(ct, dt);
+		ContDetect(ct, dt);
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 	

@@ -24,28 +24,8 @@ bool CDShapePair::Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& p
 	
 	Vec3d sep;
 	bActive = FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], sep, closestPoint[0], closestPoint[1]);
-	const double depthEpsilon = 0.01;
 	if (bActive){
 		commonPoint = shapePoseW[0] * closestPoint[0];
-		if (lastContactCount == unsigned(ct-1))
-			 state = CONTINUE;
-		else state = NEW;
-		lastContactCount = ct;
-	}
-	return bActive;
-}
-bool CDShapePair::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
-	shape[0] = s0;
-	shape[1] = s1;
-	shapePoseW[0] = pose0;
-	shapePoseW[1] = pose1;
-	
-	Vec3d sep;
-	double dist;
-	bActive = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], delta1-delta0, sep, closestPoint[0], closestPoint[1], dist);
-	const double depthEpsilon = 0.01;
-	if (bActive){
-		commonPoint = shapePoseW[0] * closestPoint[0] + toi*delta0;
 		if (lastContactCount == unsigned(ct-1))
 			 state = CONTINUE;
 		else state = NEW;

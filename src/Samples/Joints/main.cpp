@@ -56,11 +56,11 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* phSdk;			// SDKインタフェース
-GRSdkIf* grSdk;
-PHSceneIf* scene;		// Sceneインタフェース
-GRDebugRenderIf* render;
-GRDeviceGLIf* device;
+UTRef<PHSdkIf> phSdk;			// SDKインタフェース
+UTRef<GRSdkIf> grSdk;
+UTRef<PHSceneIf> scene;		// Sceneインタフェース
+UTRef<GRDebugRenderIf> render;
+UTRef<GRDeviceGLIf> device;
 
 double simulationPeriod = 32.0;
 Vec3d lookAt;
@@ -632,6 +632,18 @@ void keyboard(unsigned char key, int x, int y){
 			cd.radius = 1.0;
 			cd.length = 4.0;
 			CDShapeIf* shape = phSdk->CreateShape(cd);
+
+			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.back()->AddShape(shape);
+			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
+			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+			soBox.back()->SetMass(2.0);
+			}break;	
+		case 'S':{
+			CDSphereDesc sd;
+			sd.radius = 1.0;
+			CDShapeIf* shape = phSdk->CreateShape(sd);
 
 			soBox.push_back(scene->CreateSolid(descBox));
 			soBox.back()->AddShape(shape);

@@ -44,18 +44,15 @@ public:
 	} state;
 	Vec3d iNormal;				///<	積分による法線
 	Vec3d center;				///<	2つの最侵入点の中間の点，CDContactAnalysis::CalcNormal が更新する．
-	double toi;					///<	接触時刻/dt [0..1]
 
 public:
-	CDShapePair(): toi(0){
+	CDShapePair(){
 	}
 	void SetState(const CDShapePairState& s){
 		(CDShapePairState&)*this = s;
 	}	
 	///	接触判定
 	bool Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Posed& pose1);
-	///	連続接触判定
-	bool ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
 };
 
 ///	BBox同士の交差判定．交差していれば true．
@@ -66,9 +63,9 @@ bool BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
 bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
-///	GJKで共有点を見つける．連続版
+///	GJKで共有点を見つける．連続版, rangeは正規化される
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, const Vec3d& r, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
 /// GJKで最近傍点対を見つける
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,

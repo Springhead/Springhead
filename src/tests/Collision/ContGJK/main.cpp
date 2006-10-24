@@ -80,16 +80,17 @@ void display(){
 	glDisable(GL_BLEND);
 	{
 		PHSolidIf* solid[2] = {soFloor, soBlock};
-		CDConvexMesh* mesh[2];
+		CDConvex* mesh[2];
 		Posed pose[2];
 		for(int i=0; i<2; ++i){
-			mesh[i] = DCAST(CDConvexMesh, solid[i]->GetShape(0));
+			mesh[i] = DCAST(CDConvex, solid[i]->GetShape(0));
 			pose[i] = solid[i]->GetPose();
 		}
 		Vec3d normal;
 		Vec3d pos[2];
 		double dist=0;
-		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], Vec3f(0,-1,0), normal, pos[0], pos[1], dist);
+		Vec3d range(0,-5,0);
+		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], range, normal, pos[0], pos[1], dist);
 		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		DSTR << " p:" << pose[0]*pos[0] << " q:" << pose[1]*pos[1] << std::endl;
 		pose[1].Ori() = Quaterniond::Rot('z', Rad(5)) * pose[1].Ori();
@@ -148,17 +149,21 @@ void display(){
 		for(int i=0; i<soBlock->NShape(); ++i){
 		CDShapeIf* shape = soBlock->GetShape(i);
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			
-			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal.data);	
-			for(int v=0; v<face->NIndex(); ++v){	
-				glVertex3fv(base[face->GetIndices()[v]].data);
+		if (mesh){
+			Vec3f* base = mesh->GetVertices();
+			for(size_t f=0; f<mesh->NFace();++f){
+				CDFaceIf* face = mesh->GetFace(f);
+				
+				glBegin(GL_POLYGON);
+				genFaceNormal(normal, base, face);
+				glNormal3fv(normal.data);	
+				for(int v=0; v<face->NIndex(); ++v){	
+					glVertex3fv(base[face->GetIndices()[v]].data);
+				}
+				glEnd();
 			}
-			glEnd();
+		}else{
+			glutSolidSphere(1, 8, 8);
 		}
 	}
 	glPopMatrix();
@@ -294,13 +299,15 @@ void dstrSolid(const std::string& solidName) {
 	for(int i=0; i<solid->NShape(); ++i){
 		CDShapeIf* shape = solid->GetShape(i);
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			for(int v=0; v<face->NIndex(); ++v){
-				DSTR << base[face->GetIndices()[v]];
+		if (mesh){
+			Vec3f* base = mesh->GetVertices();
+			for(size_t f=0; f<mesh->NFace();++f){
+				CDFaceIf* face = mesh->GetFace(f);
+				for(int v=0; v<face->NIndex(); ++v){
+					DSTR << base[face->GetIndices()[v]];
+				}
+				DSTR << std::endl;
 			}
-			DSTR << std::endl;
 		}
 	}
 }
@@ -351,15 +358,18 @@ int main(int argc, char* argv[]){
 	}
 
 	soFloor->AddShape(meshFloor);
-	soBlock->AddShape(meshBlock);
+	CDSphereDesc sd;
+	sd.radius = 1.0;
+	CDSphereIf* sphere = DCAST(CDSphereIf, sdk->CreateShape(sd));
+
+//	soBlock->AddShape(meshBlock);
+	soBlock->AddShape(sphere);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
 //	soFloor->SetOrientation(
 //		Quaternionf::Rot(Rad(30), 'x')
 //	);
 	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
-	soBlock->SetOrientation(
-		Quaternionf::Rot(Rad(30), 'z')
-	);
+//	soBlock->SetOrientation( Quaternionf::Rot(Rad(30), 'z') );
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// èdóÕÇê›íË
 
