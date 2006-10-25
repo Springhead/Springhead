@@ -22,7 +22,7 @@
 【テストパターン】
   ※ 本ファイルの28行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
 　  test1.x  : 凸形状(mesh)のテスト
-    test2.x  : 凸形状(mesh)のテスト（お互い衝突させない剛体として、"soBlock2"と"soFloor"を設定）
+    test2.x  : 凸形状(mesh)のテスト（青いBoxと床を、互いに衝突させない剛体として登録）
     test3.x  : 凸形状(mesh)と球(sphere)のテスト
 	test4.x  : 凸形状(mesh)と球(sphere)と直方体(box)のテスト
 	test5.x  : timeStep=0.001におけるテスト（直方体１つを自由落下）
