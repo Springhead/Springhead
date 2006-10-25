@@ -39,7 +39,6 @@ namespace Spr{
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
 	PHSceneIf* scene;
-//	CDShapeIf** shape;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
 	void PHRegisterTypeDescs();
