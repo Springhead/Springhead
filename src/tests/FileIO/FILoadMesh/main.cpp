@@ -16,14 +16,29 @@
   ・プログラムが正常終了したら0を返す。  
 
 【Note】
-  本ファイルの26行目" #define TEST_FILEX " にて、入力ファイル名を指定する。
+  本ファイルの26行目" #define TEST_CASE " で、ロードするXファイルの入力切り替えが可能。
 
 */
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
+
+#define TEST_CASE		0				// テストケース
+
+#if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
-#define TEST_FILEX	"box.x"		// ロードするXファイル
+#define TEST_FILEX	"box.x"				// ロードするXファイル
+
+#elif defined(TEST_CASE) && (TEST_CASE == 1)
+#define EXIT_TIMER	20000				
+#define TEST_FILEX	"funiture.x"			
+
+#elif defined(TEST_CASE) && (TEST_CASE == 2)
+#define EXIT_TIMER	200				
+#define TEST_FILEX	"tire.x"			
+
+#endif
+
 
 namespace Spr{
 	UTRef<GRSdkIf> grSdk;
@@ -49,7 +64,7 @@ void display(){
 	render->ClearBuffer();
 	scene->Render(render);
 	if (!scene){
-		std::cout << "scene == NULL. File may not found." << std::endl;
+		DSTR << "scene == NULL. File may not found." << std::endl;
 		exit(-1);
 	}
 	render->EndScene();
@@ -121,10 +136,10 @@ void keyboard(unsigned char key, int x, int y){
 void idle(){
 //	if(scene && *scene) (*(scene))->Step();
 	glutPostRedisplay();
-	static int count;
-	count ++;
+	static int count=0;
+	count++;
 	if (count > EXIT_TIMER){
-		std::cout << EXIT_TIMER << " count passed." << std::endl;
+		DSTR << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
 	}
 }
