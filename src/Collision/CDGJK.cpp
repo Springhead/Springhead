@@ -11,10 +11,6 @@
 #pragma hdrstop
 #endif
 
-#ifndef _DEBUG
-#define _DEBUG
-#endif
-
 namespace Spr{;
 double relError = 1e-6;
 double absError = 1e-10;
@@ -192,12 +188,79 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 }
 
 
+
+void PrintHist(
+	std::vector<Vec3d> wHist,
+	std::vector<Vec3d> nHist,
+	std::vector<int> rHist,
+	std::vector<double> distHist,
+	std::vector<double> appHist){
+//#define _DEBUG
+#ifdef _DEBUG
+	DSTR << "GJK Hist" << std::endl;
+	for(unsigned i=0; i<wHist.size(); ++i){
+		if (i%4!=3){
+			DSTR << wHist[i].X() << "\t" << wHist[i].Y() << std::endl;;
+		}else{
+			DSTR << "\t\t" << wHist[i].X() << "\t" << wHist[i].Y() << "\t" << rHist[i/4] << std::endl;
+			DSTR << "normal:\t" << nHist[i/4].x << "\t" << nHist[i/4].y << "\t" << nHist[i/4].z << std::endl;
+			DSTR << "app:\t" << appHist[i/4];
+			DSTR << "\tdist:\t" << distHist[i/4] << std::endl;
+		}
+	}
+#endif
+}
+
+const double epsilon = 1e-6;
+const double epsilon2 = epsilon*epsilon;	
+#define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
+inline void  FindLineVtx(int& id2, int& idNotUse, double& dist, double& k1, double& k2, 
+	const Vec3d& wNew, const Vec3d* w, int id2Cand1, int id2Cand2){
+	id2 = -1;
+
+	double ip1 = wNew.XY() * w[id2Cand1].XY();
+	double ip2 = wNew.XY() * w[id2Cand2].XY();
+	if (ip1 < epsilon && ip2 < epsilon){
+		id2 = id2Cand1;
+		idNotUse = id2Cand2;
+		k1 = wNew.XY().norm();	k2 = w[id2Cand1].XY().norm();
+		double l = k1+k2;	k1/=l; k2/=l;
+		dist = k1*wNew.Z() + k2*w[id2].Z();
+
+		double ka = wNew.XY().norm(), kb = w[id2Cand2].XY().norm();
+		l = ka+kb;	ka/=l; kb/=l;
+		double d = ka*wNew.Z() + kb*w[id2Cand2].Z();
+		if (d < dist){
+			id2 = id2Cand2; k1=ka; k2=kb;
+			idNotUse = id2Cand1;
+			dist = d;
+		}
+	}else if (ip1 < ip2){
+		id2 = id2Cand1;
+		idNotUse = id2Cand2;
+		k1 = wNew.XY().norm();	k2 = w[id2Cand1].XY().norm();
+		double l = k1+k2;	k1/=l; k2/=l;
+		dist = k1*wNew.Z() + k2*w[id2].Z();	
+	}else{
+		id2 = id2Cand2;
+		idNotUse = id2Cand1;
+		k1 = wNew.XY().norm();	k2 = w[id2Cand1].XY().norm();
+		double l = k1+k2;	k1/=l; k2/=l;
+		dist = k1*wNew.Z() + k2*w[id2].Z();	
+	}
+	if (id2<0){
+		DSTR << "FindLineVtx" << std::endl;
+		DSTR << wNew.X() << "\t" << wNew.Y() << "\t" << wNew.Z() << std::endl;
+		for(int i=0; i<3; ++i){
+			DSTR << w[i].X() << "\t" << w[i].Y()  << "\t" << w[i].Z() << std::endl;
+		}
+		DSTR << "Error" << std::endl;
+	}
+}
+	
 inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	const Posed& a2z, const Posed& b2z, const Quaterniond& w2z, const Vec3d& u, const double& endLength, 
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
-	#define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
-	const double epsilon = 1e-6;
-	const double epsilon2 = epsilon*epsilon;
 
 	Vec3d w[3], v[3], p[3], q[3];
 
@@ -216,6 +279,13 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	DSTR << " p:" << a2z*(p) << " q:" << b2z*(q) << std::endl;		\
 	DSTR << " pl:" << (p) << " ql:" << (q) << std::endl;		\
 */
+
+#define SwapAll(id1, id2)										\
+		std::swap(w[id1],w[id2]);									\
+		std::swap(p[id1],p[id2]);									\
+		std::swap(q[id1],q[id2]);									\
+		std::swap(v[id1],v[id2]);									\
+	
 
 	CalcSupport(v[id], p[id], q[id], w[id]);
 	if (w[id].Z() > endLength) return -1;	//	range内では接触しないが，将来接触するかもしれない．
@@ -256,9 +326,25 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	}
 	//	サポートを求める．
 	CalcSupport(v[id], p[id], q[id], w[id]);
+	dist = -DBL_MAX;
 
+	std::vector<Vec3d> wHist;
+	std::vector<Vec3d> nHist;
+	std::vector<int> rHist;
+	std::vector<double> distHist;
+	std::vector<double> appHist;
 	//	繰り返し
 	while(1){
+
+#ifdef _DEBUG
+		for(int i=0; i<3;++i) wHist.push_back(w[i]);
+		wHist.push_back(Vec3d());
+		rHist.push_back(2);
+		distHist.push_back(0);
+		appHist.push_back(0);
+		nHist.push_back(v[2]);
+#endif
+
 		//	はみ出しチェック
 		Vec2d seg[2];
 		seg[0] = w[0].XY()-w[2].XY();
@@ -307,51 +393,153 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 		}
 		w[2] = wNew;
 	}
-	//	原点は△の内部
-	int replace = 2;
-	while(1){
-		//	頂点の並び順をそろえる．
-		Vec3d sTri = (w[1]-w[0]) % (w[2]-w[0]);
-		double sDir = sTri.Z();
-		if (sDir < 0){		//	逆向き
-			std::swap(w[1], w[2]); std::swap(p[1], p[2]); std::swap(q[1], q[2]);
-			sTri *= -1;
-			sDir *= -1;
-		}
+
+	Vec3d sTri;		//	三角形の有向面積
+	sTri = (w[1]-w[0]) % (w[2]-w[0]);
+	//	頂点の並び順をそろえる．
+	if (sTri.Z() < 0){		//	逆向き
+		SwapAll(1,2);
+		sTri *= -1;
+	}
+	normal = sTri.unit();
+
+	int replace = 2;	//	最後に見つけたw．
+	int lineVtx = -1;	//	simplexが線分になったとき，w[replace] と w[lineVtx]が次の線分
+	int lineNotUse = -1;
+	double lineKRep=0, lineKVtx=0;	//	simplexが線分になったとき，原点は lineKRep*w[replace]+lineKVtx*w[lineVtx]
+
+	if (sTri.Z() < epsilon){	//	線分になる場合，どの2点が線分を作るか調べておく
+		//	FindLineVtx(必ず使う頂点座標, どちらかを使う頂点のid, id);
+		//	lineVtx, newDist, lineKVtx, lineKRep を設定する．
+		double newDist;
+		FindLineVtx(lineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[2], w, 0, 1);
+	}
+	for(int count = 0; count < 10000; ++ count){
 		//	面積0=線分の場合
-		if (sDir <= epsilon){
-			//	replace ともう1点が原点Oを含むようなもう1点を求め，残った１点を新たなreplaceにする．
-			if (w[replace].XY() * w[(replace+1)%3].XY() > 0){	//	wr-wr+1間に原点がない
-				replace = (replace+1)%3;	//	wr+1が使わない頂点
-			}else{
-				replace = (replace+2)%3;	//	wr+2が使わない頂点
+		if (sTri.Z() < epsilon){
+			if (lineVtx <0 || lineNotUse < 0){
+				PrintHist(wHist, nHist, rHist, distHist, appHist);				
 			}
-			int use1 = (replace+1)%3;
-			int use2 = (replace+2)%3;
-			Vec3d l = w[use2]-w[use1];
-			v[replace] = Vec3d(0,0,1) - l.Z() / l.square() * l;
-			CalcSupport(v[replace], p[replace], q[replace], w[replace]);
-			normal = v[replace].unit();
-			if ( (w[replace] - w[use1]) * normal > -epsilon ){	//	より手前のwが見つからなければ終了
-				double ka = w[use1].XY().norm();
-				double kb = w[use2].XY().norm();
-				double l = ka+kb;
-				ka /= l;
-				kb /= l;
-				pa = ka*p[use1] + kb*p[use2];
-				pb = ka*q[use1] + kb*q[use2];
-				dist = ka*w[use1].Z() + ka*w[use2].Z();
+			//	replace と lineVtxが現在の線分．そこからnewNormalを求め，次の点を求める
+			Vec3d l = w[replace]-w[lineVtx];
+			Vec3d normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
+			CalcSupport(normalNew, p[lineNotUse], q[lineNotUse], w[lineNotUse]);
+			normalNew = normalNew.unit();
+
+			//	線分になるか三角形になるか
+			int r1 = (lineNotUse+1)%3;
+			int r2 = (lineNotUse+2)%3;
+			sTri = (w[r1]-w[lineNotUse]) % (w[r2]-w[lineNotUse]);
+			if (sTri.Z() < 0){
+				SwapAll(r1, r2);
+				std::swap(lineVtx, replace);
+				sTri*=-1;
+			}
+			double approach, newDist;
+			int newLineVtx = -1;
+			if (sTri.Z() < epsilon){			//	線分の場合
+				approach = (w[lineNotUse] - w[lineVtx])*normalNew;
+				FindLineVtx(newLineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[lineNotUse], w, r1, r2);
+				Vec3d l = w[replace]-w[lineVtx];
+				normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
+				normalNew.unitize();
+			}else{	//	三角形の場合
+				approach = (w[lineNotUse]-w[lineVtx])*normal;
+				normalNew = sTri.unit();
+				newDist = w[lineNotUse]*normalNew / normalNew.Z();
+			}
+			if (approach > -1e-8 || newDist <= dist){	//	distが改善していない場合は終了
+				double ka = w[lineVtx].XY().norm(), kb = w[replace].XY().norm();
+				pa = ka*p[lineVtx] + kb*p[replace];
+				pb = ka*q[lineVtx] + kb*q[replace];
 				normal = w2z.Conjugated() * normal;
+				dist = ka/(ka+kb)*w[lineVtx].Z() + kb/(ka+kb)*w[replace].Z();
+//				PrintHist(wHist, nHist, rHist, distHist, appHist);
 				return 2;
 			}
+			replace = lineNotUse;
+			lineVtx = newLineVtx;
+			normal = normalNew;
+			dist = newDist;
+
+#ifdef _DEBUG
+			for(int i=0; i<3; ++i) wHist.push_back(w[i]);
+			wHist.push_back(Vec3d());
+			rHist.push_back(-2);
+			distHist.push_back(dist);
+			appHist.push_back(approach);
+			nHist.push_back(normal);
+#endif
 		}else{	//	まっとうな三角形
-			Vec3d vNew = sTri;
 			Vec3d pNew, qNew, wNew;
-			CalcSupport(vNew, pNew, qNew, wNew);
-//			DSTR << "WNew:" << wNew << std::endl;
-			normal = vNew.unit();
-			if ( (wNew - w[0]) * normal > -epsilon ){
-				dist = w[0]*normal / normal.Z();
+			CalcSupport(normal, pNew, qNew, wNew);
+			//	新しい点 wNewと元の△の2点w[?]で原点を囲む△を作る
+			//	(w[i]-wNew)^(O-wNew) が + から - に変化するところを探す．
+			bool bPlus = false;
+			bool bMinus = false;
+			double ow[3];
+			int i;
+			for(i=0; i<3;++i){
+				Vec2d wn = w[i].XY()-wNew.XY();
+				ow[i] = wn % (-wNew.XY());
+				if (ow[i] < 0){
+					bMinus = true;
+					if (bPlus) break;
+				}else{
+					bPlus= true;
+				}
+			}
+			if(!bPlus && bMinus){	//	ひとつも＋がなかった場合，一番大きいものを＋と考える
+				double min = 100;
+				for(int j=0; j<3;++j){
+					if (min > ow[j]){
+						min = ow[j];
+						i = j;
+					}
+				}
+				i++;
+			}else if(bPlus && !bMinus){
+				double max = -100;
+				for(int j=0; j<3;++j){
+					if (max < ow[j]){
+						max = ow[j];
+						i = j;
+					}
+				}
+			}else if(!bPlus && !bMinus){
+				DSTR << "Error: ZERO" << std::endl;
+				for(int i=0; i<3; ++i){
+					DSTR << w[i].X() << "\t" << w[i].Y() << std::endl;;
+				}
+				DSTR << wNew.X() << "\t" << wNew.Y() << std::endl;
+				assert(0);
+			}
+			//	replaceが不要になる頂点
+			replace = (i+1)%3;
+			int use0=(replace+1)%3, use1=(replace+2)%3;
+
+			//	新しい面がOとの交点を改善するかどうかチェック
+			sTri = (w[use0]-wNew) % (w[use1]-wNew);
+			if (sTri.Z() < 0){
+				SwapAll(use0, use1);
+				sTri*=-1;
+			}
+			//	打ち切り条件の確認
+			double newDist;		//	次の3点とOの交点
+			double approach;	//	今回どれだけ近づいたか
+			Vec3d normalNew = sTri.unit();
+			if (sTri.Z() < epsilon){	//	次の3点は線分になってしまう
+				//	new-use0 new-use1 のどちらか．原点が含まれていればよい
+				approach = (wNew-w[0])*normal;
+				FindLineVtx(lineVtx, lineNotUse, newDist, lineKRep, lineKVtx, wNew, w, use0, use1);
+				Vec3d l = w[replace]-w[lineVtx];
+				normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
+				normalNew.unitize();
+			}else{	//	三角形になる場合
+				approach = (wNew-w[0])*normal;
+				newDist = wNew*normalNew / normalNew.Z();
+			}
+			if (approach > -1e-8 || (approach > -1e-4 && newDist <= dist)){	//	distが改善していない．前回の3点で終了
 				Matrix3d m;
 				m.Ex() = w[0];
 				m.Ey() = w[1];
@@ -364,70 +552,37 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 //				DSTR << "k:" << k.x+k.y+k.z << k << std::endl;
 				return 3;
 			}
-			bool bPlus = false;
-			int i;
-			for(i=0; i<3;++i){
-				Vec2d wn = w[i].XY()-wNew.XY();
-				double ow = wn % (-wNew.XY());
-				if (ow <= 0){
-					if (bPlus) break;
-				}else{
-					bPlus= true;
-				}
-			}
-			replace = (i+1)%3;
+
 			Vec3d oldW[3];
 			for(int i=0; i<3; ++i) oldW[i] = w[i];
-			v[replace] = vNew;
+
+			v[replace] = normal;
 			w[replace] = wNew;
 			p[replace] = pNew;
 			q[replace] = qNew;
-/*
-			double sSubTri[3];
-			double ow[3];
-			int selection=-1;
-			double cross=0;
-			for(int i=0; i<3;++i){
-				sSubTri[i] = (w[i].XY() - wNew.XY()) % (w[(i+1)%3].XY() - wNew.XY());
-				ow[i] =	w[i].XY() % (-wNew.XY());
-			}
-			double sNewTri=0;
-			for(int i=0; i<3;++i){
-				int iinc = (i+1)%3;
-				if (sSubTri[i] > epsilon){
-					double s = min(ow[i], -ow[iinc]);
-					if (s > sNewTri){
-						s = sNewTri;
-						selection = i;
-					}
-				}
-			}
-			assert(selection>=0);
-			int replace = (selection+2)%3;
-			Vec3d oldW[3];
-			for(int i=0; i<3; ++i) oldW[i] = w[i];
-			v[replace] = vNew;
-			w[replace] = wNew;
-			p[replace] = pNew;
-			q[replace] = qNew;
-*/
+			normal = normalNew;
+			dist = newDist;
+
 #ifdef _DEBUG
-			//	原点が△の内部にあることを確認
+			for(int i=0; i<3; ++i) wHist.push_back(oldW[i]);
+			wHist.push_back(wNew);
+			rHist.push_back(replace);
+			distHist.push_back(dist);
+			appHist.push_back(approach);
+			nHist.push_back(normal);
+#endif			
 			for(int i=0; i<3; ++i){
-				double d = (w[(i+1)%3].XY() - w[i].XY()) % (- w[i].XY());
-				if (d < -epsilon){
-					DSTR << "Outside of triangle edge:" << i << " dist:" << d <<  std::endl;
-					for(int i=0; i<3; ++i){
-						DSTR << "w" << i << oldW[i] << " ";
-					}
-					DSTR << "Wn:" << wNew << " r:" << replace << std::endl;
-					//ContFindCommonPointZ(a, b, a2z, b2z, w2z, u, endLength, normal, pa, pb, dist);
+				double s = (w[(i+1)%3].XY()-w[i].XY()) % (-w[i].XY());
+				if (s < -epsilon){
+					PrintHist(wHist, nHist, rHist, distHist, appHist);
 					assert(0);
 				}
 			}
-#endif
 		}
 	}
+	PrintHist(wHist, nHist, rHist, distHist, appHist);
+	assert(0);
+	return 0;
 }
 
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,

@@ -93,12 +93,12 @@ void BuildScene0(){
 	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	shapeBox->SetName("shapeBox");
-//	soBox.push_back(scene->CreateSolid(descBox));
-//	soBox.back()->AddShape(shapeBox);
+	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.back()->AddShape(shapeBox);
 	//‹ó’†‚ÉŒÅ’è‚·‚é
-//	soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 0.0));
-//	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
-//	soBox.back()->SetDynamical(false);
+	soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 0.0));
+	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
+	soBox.back()->SetDynamical(false);
 
 	// d—Í‚ðÝ’è
 	scene->SetGravity(Vec3f(0, -9.8, 0));

@@ -103,9 +103,9 @@ void display(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// çﬁéøÇÃê›íË
-	static GLfloat mat_floor[]      = { 1.0, 0.7, 0.7, 0.4 };
-	static GLfloat mat_block[]      = { 0.7, 0.7, 1.0, 0.4 };
-	static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 0.4 };
+	static GLfloat mat_floor[]      = { 1.0, 0.7, 0.7, 0.8 };
+	static GLfloat mat_block[]      = { 0.7, 0.7, 1.0, 0.8 };
+	static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 0.8 };
 	static GLfloat mat_shininess[]  = { 120.0 };
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -124,17 +124,23 @@ void display(){
 	for(int i=0; i<soFloor->NShape(); ++i){
 		CDShapeIf* shape = soFloor->GetShape(i);
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			
-			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal.data);
-			for(int v=0; v<face->NIndex(); ++v){	
-				glVertex3fv(base[face->GetIndices()[v]].data);
+		if (mesh){
+			Vec3f* base = mesh->GetVertices();
+			for(size_t f=0; f<mesh->NFace();++f){
+				CDFaceIf* face = mesh->GetFace(f);
+				
+				glBegin(GL_POLYGON);
+				genFaceNormal(normal, base, face);
+				glNormal3fv(normal.data);
+				for(int v=0; v<face->NIndex(); ++v){	
+					glVertex3fv(base[face->GetIndices()[v]].data);
+				}
+				glEnd();
 			}
-			glEnd();
+		}
+		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
+		if (sphere){
+			glutSolidSphere(sphere->GetRadius(), 8, 8);
 		}
 	}
 	glPopMatrix();
@@ -162,8 +168,10 @@ void display(){
 				}
 				glEnd();
 			}
-		}else{
-			glutSolidSphere(1, 8, 8);
+		}
+		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
+		if (sphere){
+			glutSolidSphere(sphere->GetRadius(), 8, 8);
 		}
 	}
 	glPopMatrix();
@@ -326,7 +334,7 @@ int main(int argc, char* argv[]){
 	desc.inertia *= 2.0;
 	soBlock = scene->CreateSolid(desc);		// çÑëÃÇdescÇ…äÓÇ√Ç¢ÇƒçÏê¨
 
-	Posed p = Posed::Rot(Rad(0.0), 'z');
+	Posed p = Posed::Rot(Rad(0.1), 'z');
 	soBlock->SetPose(p);
 
 	desc.mass = 1e20f;
@@ -335,6 +343,7 @@ int main(int argc, char* argv[]){
 	soFloor->SetGravity(false);
 	
 	//	å`èÛÇÃçÏê¨
+#if 0
 	CDConvexMeshIf* meshBlock;
 	CDConvexMeshIf* meshFloor;
 	{	
@@ -356,20 +365,20 @@ int main(int argc, char* argv[]){
 		}
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
-
-	soFloor->AddShape(meshFloor);
+	soBlock->AddShape(meshBlock);
+	soFloor->SetFramePosition(Vec3f(0,-1,0));
+	soFloor->SetOrientation( Quaternionf::Rot(Rad(30), 'x') );
+	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
+#else
 	CDSphereDesc sd;
 	sd.radius = 1.0;
 	CDSphereIf* sphere = DCAST(CDSphereIf, sdk->CreateShape(sd));
 
-//	soBlock->AddShape(meshBlock);
+	soFloor->AddShape(sphere);
 	soBlock->AddShape(sphere);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-//	soFloor->SetOrientation(
-//		Quaternionf::Rot(Rad(30), 'x')
-//	);
-	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
-//	soBlock->SetOrientation( Quaternionf::Rot(Rad(30), 'z') );
+	soBlock->SetFramePosition(Vec3f(0, 1,0));
+#endif
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// èdóÕÇê›íË
 
