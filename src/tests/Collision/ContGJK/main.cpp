@@ -6,23 +6,13 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- Springhead2/src/tests/Physics/PHShapeGL/main.cpp
+ Springhead2/src/tests/Collision/ContGJK/main.cpp 
 
 【概要】
-  剛体Solidに形状を持たせたテストプログラム（位置を出力、面の頂点座標を出力、GL表示）
-　・ペナルティ法による凸多面体同士の接触判定と接触力を確認する。
-  ・剛体を自然落下させ、床の上に2個のブロックを積み上げる。
-  ・頂点座標をデバッグ出力させ、OpenGLでシミュレーションを行う。
+  CCDGJKのテストプログラム。
   
 【終了基準】
-  ・自由落下させた剛体が床の上で一定時間静止したら正常終了(success)とする。
-  ・自由落下させた剛体が床の上で静止しない場合は、異常終了(failure)とする。
- 
-【処理の流れ】
-  ・シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
-  　剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。  
-  ・与えられた条件により⊿t秒後の位置の変化を積分し、OpenGLでシミュレーションする。
-　・デバッグ出力として、多面体の面(三角形)の頂点座標を出力する。   
+  強制終了。 
  
  */
 
@@ -36,10 +26,9 @@
 #endif
 using namespace Spr;
 
-#define ESC					27		// ESC key
-//#define STAY_COUNTER		50		// 静止判定カウント
-#define STAY_COUNTER		300		// 静止判定カウント
-#define TOTAL_IDLE_COUNTER	100		// 静止しない場合に利用
+#define ESC					27			// ESC key
+#define STAY_COUNTER		300			// 静止判定カウント
+#define TOTAL_IDLE_COUNTER	1000		// 静止しない場合に利用
 
 
 UTRef<PHSdkIf> sdk;
@@ -238,17 +227,6 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == 'q') exit(0);
 }	
 
-bool approx_1e3(const double x, const double y){
-	const double eps = 1e-3;		// 1e-6 精度だと静止しないので、1e-4 で一旦回避
-	return ((x==y)
-			|| (fabs(x-y) < eps)
-			|| (fabs(x/y - 1.0) < eps));
-}
-
-bool approxVec_1e3(const Vec3d v1, const Vec3d v2){
-	return (approx_1e3(v1.x, v2.x) && approx_1e3(v1.y, v2.y) && approx_1e3(v1.z, v2.z));
-}
-
 /**
  brief  	glutIdleFuncで指定したコールバック関数
  param	 	なし
@@ -258,7 +236,8 @@ void idle(){
 	static total;
 	total ++;
 	if (total > TOTAL_IDLE_COUNTER){
-		exit(EXIT_FAILURE);
+		//exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 #if 0
 	Vec3d prepos, curpos;	// position
@@ -275,8 +254,7 @@ void idle(){
 		DSTR << "\nPHShapeGL failure." << std::endl;
 		exit(EXIT_FAILURE);
 	} else {
-		//if (approx(prepos, curpos)){
-		if (approxVec_1e3(prepos, curpos)){
+		if (approx(prepos, curpos)){
 			stay++;
 			if (stay > STAY_COUNTER){				// 静止判定カウント	
 			DSTR << "\nPHShapeGL success." << std::endl;
@@ -286,9 +264,6 @@ void idle(){
 			stay = 0;
 		}
 	}
-	//std::cout << prepos << " " << curpos << std::endl;	
-	//DSTR << prepos << " " << curpos << std::endl;
-
 #endif
 	glutPostRedisplay();
 }
