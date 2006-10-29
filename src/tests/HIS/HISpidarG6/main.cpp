@@ -41,18 +41,20 @@ using namespace Spr;
 #define WINSIZE_WIDTH	480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		2			// sphere数
-#define SIM_FREQ		150          // シミュレーションの更新周期Hz
+#define SPIDAR_SCALE	70			// SPIDARのVE内での動作スケール
 
-// SPIDARのVE内での動作スケール
-#define SPIDAR_SCALE	70
 
-// 力覚スレッドの周期Hz
 #ifdef _DEBUG
-#define HAPTIC_FREQ		1000
-#elif _OPT
-#define HAPTIC_FREQ		500
+	#define SIMULATION_FREQ	100         // シミュレーションの更新周期Hz
+	#define HAPTIC_FREQ		500			// 力覚スレッドの周期Hz
+	float K = 1500;						// virtual couplingの係数
+	float B = 150;
+
 #elif _WINDOWS
-#define HAPTIC_FREQ		1000
+	#define SIMULATION_FREQ	150         // シミュレーションの更新周期Hz
+	#define HAPTIC_FREQ		1000		// 力覚スレッドの周期Hz
+	float K = 1450;						// virtual couplingの係数
+	float B = 200;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
@@ -62,18 +64,6 @@ double FORCE_COEFF=		0.1;
 	#include <Device/DRUsb20Simple.h>
 	#include <Device/DRUsb20Sh4.h>
 	#include <conio.h>
-
-	// virtual couplingの係数
-	#ifdef _DEBUG
-		float K = 1000;
-		float B = 15;
-	#elif _OPT
-		float K = 10;
-		float B = 10;
-	#elif _WINDOWS
-		float K = 2700;
-		float B = 60;
-	#endif
 #endif
 
 // グラフィック用の変数
@@ -98,15 +88,12 @@ Matrix3f view_rot;
 Matrix3f view_haptic;
 
 bool bforce = false;
-MMRESULT FTimerId;
+MMRESULT FTimerId1;
+MMRESULT FTimerId2;
 
 // 再帰計算をした情報を格納するテーブル
 PHConstraint* process_map[NUM_SPHERES+1];
 int num_process = 0;
-
-// 修正処理をした情報を格納するテーブル
-PHSolid* correction_map[NUM_SPHERES+1];
-int num_correction;
 
 // 力覚計算に必要なデータを集めた構造体
 typedef struct {
@@ -208,12 +195,10 @@ void calculate_pointer_effect(std::vector<Vec3d> *forces, std::vector<Vec3d> *ve
 		Vec3d f = (Vec3d)forces->at(i);
 
 		// 得られた値の合計値を計算 
-		// 物体に加わる力を正とし、
-		// 前の剛体から得られた力は作用させる力なので負にする
-		sum_force = sum_force + (- f);
+		sum_force = sum_force + f;
 
 		//　力と発生源からの外積を計算、それらの合計値を計算する
-		sum_r_out_f = sum_r_out_f + r ^ (- f);
+		sum_r_out_f = sum_r_out_f + r ^ f;
 	}
 
 	// まとめられる部分はまとめる
@@ -244,19 +229,17 @@ void calculate_solid_effect(std::vector<Vec3d> *forces, std::vector<Vec3d> *vec_
 		Vec3d f = (Vec3d)forces->at(i);
 
 		// 得られた値の合計値を計算
-		// 物体に加わる力を正とし、
-		// 前の剛体から得られた力は作用させる力なので負にする
-		sum_force = sum_force + (- f) ;
+		sum_force = sum_force + f;
 
 		//　力と発生源からの外積を計算、それらの合計値を計算する
-		sum_r_out_f = sum_r_out_f + r ^ (- f);
+		sum_r_out_f = sum_r_out_f + r ^ f;
 	}
 
 	// まとめられる部分はまとめる
 	// C = (v_p)' - (sum(Fi) / m + w x (w x r) + I^{-1} sum(ri x Fi) x r
 	// point_accelの計算がこれでよいのか確認する必要がある
 	Vec3d point_accel = solid->GetAcceleration() + ((solid->GetAngularVelocity() - solid->GetOldAngularVelocity()) / scene->GetTimeStep()) ^ original_r;
-	Vec3d C = point_accel - ((sum_force * solid->GetMassInv()) + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
+	Vec3d C = point_accel - ((sum_force * solid->GetMassInv()) + scene->GetGravity() + solid->GetAngularVelocity() ^ (solid->GetAngularVelocity() ^ original_r) + (solid->GetInertiaInv() * sum_r_out_f) ^ original_r);
 
 	// T = I^(-1) * (r x F)のrを外積から行列にして外積を排除したもの。Fは含まない
 	// T(ri) = I^{-1} X(ri) 	
@@ -428,7 +411,7 @@ void calculate_surround_effect(PHConstraints cs, Haptic_info *info)
 			{
 				bool process = checkProcessed(*it);
 
-				// 処理済みマップからは見つからなかった(=未処理=目的の剛体の可能性あり）
+				// 処理済みマップからは見つからなかった(= 未処理 = 目的の剛体の可能性あり）
 				if(process == false)
 				{
 					PHSolid* nearest = getAdjacentSolid(*it, (PHSolid*)solid);
@@ -555,12 +538,12 @@ void show_collision_info(PHConstraints cp)
  param	 	なし
  return 	なし
 */
-void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
+void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 {
 	// SPIDARの情報を格納する変数
 	static Vec3d old_pos = Vec3d();
-	static Vec3d last_force = Vec3d();
-	static Vec3d last_torque = Vec3d();
+//	static Vec3d last_force = Vec3d();
+//	static Vec3d last_torque = Vec3d();
 
 	// SPIDAR更新幅
 	static const float dt = (float)1.0f / HAPTIC_FREQ;
@@ -586,42 +569,50 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 	Vec3d PointerVel = (spidar_pos - old_pos) * dt;
 	old_pos = spidar_pos;
 
-	// soPointerの位置を更新
-	info->pointer_pos = info->pointer_pos + info->pointer_vel * dt;
-
 	// SPIDAR座標までのベクトルを作成
 	Vec3d goal = spidar_pos - info->pointer_pos;
 
 	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
 	Vec3d VCforce = K * goal + B * (PointerVel - info->pointer_vel);
-//	soPointer->AddForce(VCforce);
 
 	// soPointerの速度を更新
 	info->pointer_vel = info->pointer_vel + info->pointer_massinv * VCforce * dt;
 
 	// ポインタに加える力・トルクを格納する変数
 	Vec3d pointer_force = Vec3d();
-	Vec3d pointer_torque = Vec3d();
 
-	// virtual couplingによる計算
-	// ポインタに生じたすべての接触について計算
-	for(int i = 0; i < info->num_collisions; i++)
+	if(info->num_collisions > 0)
 	{
-		Vec3d feedback_force = - FORCE_COEFF * dot(VCforce, info->col_normals[i]) * info->col_normals[i];
-
-//		Vec3d feedback_torque = Vec3d();
-
-		// 衝突対象のトルクを計算
-		Vec3d solid_torque_vector = (info->col_positions[i] - info->nearest_solids[i]->GetCenterPosition()) ^ (-feedback_force);
-
-		// 衝突対象に接触力・トルクを追加
-		if(bSurroundEffect == false || info->nearest_solids[i]->IsDynamical() == false)info->nearest_solids[i]->AddForce(-feedback_force, solid_torque_vector);
-
-		// 周囲の影響を考慮
-		else //if(bSurroundEffect && info->nearest_solids[i]->IsDynamical())
+		// ポインタに生じたすべての接触について計算
+		for(int i = 0; i < info->num_collisions; i++)
 		{
-			// 加速度を計算
-			Vec3d accel = info->vel_effect[i] * (-feedback_force) + info->vel_constant[i];
+			Vec3d feedback_force = - FORCE_COEFF * dot(VCforce, info->col_normals[i]) * info->col_normals[i];
+
+			// 衝突対象のトルクを計算
+			Vec3d solid_torque_vector = (info->col_positions[i] - info->nearest_solids[i]->GetCenterPosition()) ^ (-feedback_force);
+
+			Vec3d accel;
+			Vec3d ang_accel;
+
+			if(bSurroundEffect == false || info->nearest_solids[i]->IsDynamical() == false)
+			{
+//				info->nearest_solids[i]->AddForce(-feedback_force, solid_torque_vector);
+				accel = info->nearest_solids[i]->GetMassInv() * (-feedback_force);
+
+				ang_accel = info->solid_inertiainv[i] * (solid_torque_vector);
+			}
+
+			// 周囲の影響を考慮
+			else
+			{
+				// 加速度を計算
+				accel = info->vel_effect[i] * (-feedback_force) + info->vel_constant[i];
+
+				// 角加速度を計算 ang_effectを使うよりもsolid_torque_vectorより与えるトルクがわかっているのでそれを使ったほうがより正確なはず
+	//			Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
+				ang_accel = info->solid_inertiainv[i] * (solid_torque_vector) + info->ang_constant[i];
+
+			}
 
 			// 速度を計算し、衝突点を更新する
 			info->solid_velocity[i] = info->solid_velocity[i] + accel * dt;
@@ -636,10 +627,6 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 			// これはベクトルなので、すべての衝突点について足されると最終的に目的のベクトルが得られる
 			info->pointer_pos = info->pointer_pos + dx;
 
-			// 角加速度を計算
-//			Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
-			Vec3d ang_accel = info->solid_inertiainv[i] * (solid_torque_vector) + info->ang_constant[i];
-
 			// 角速度を計算し、法線の向きを更新する
 			info->solid_angular_velocity[i] = info->solid_angular_velocity[i] + ang_accel * dt;
 
@@ -647,7 +634,7 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 			info->col_normals[i] = info->col_normals[i] + dth;
 			info->col_normals[i] = info->col_normals[i].unit();
 
-			if(fabs(feedback_force.x) > 100 || fabs(feedback_force.y) > 100 || fabs(feedback_force.z) > 100)
+			if(fabs(feedback_force.x) > 300 || fabs(feedback_force.y) > 300 || fabs(feedback_force.z) > 300)
 			{
 				std::cout << "********" << std::endl;
 				std::cout << i << ":force is " << feedback_force << std::endl;
@@ -662,50 +649,40 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 				std::cout << "normal = " << info->col_normals[i] << std::endl;
 				std::cout << "dth = " << dth << std::endl;
 				std::cout << "ang accel = " << ang_accel << std::endl;
+				std::cout << std::endl;
 				pointer_force = Vec3d();
 			}
+
+			
+			// 提示力を前の値に追加
+			pointer_force = pointer_force + feedback_force;
 		}
 
-		// 提示力を前の値に追加
-		pointer_force = pointer_force + feedback_force;
-//		pointer_torque = pointer_torque + feedback_torque;
-	}
-
-	// spidarに力を加える
-	if(info->num_collisions > 0)
-	{
-		std::cout << "***" << std::endl;
-		std::cout << "num collision = " << info->num_collisions << std::endl;
-		std::cout << "***" << std::endl;
-		// 前の提示力とトルクを参照してつぶを取る
+		// spidarに力を加える
 		if(bforce)
 		{
 			// SPIDARの空間と見ている空間が違うので行列を掛けて射影する
-			Vec3d f = view_haptic * pointer_force;//+ 0.5 * last_force;
-//			Vec3d t = 1.0 * pointer_torque;// + 0.5 * last_torque;
+			Vec3d f = view_haptic * pointer_force;
 
-			if(fabs(f.x) > 100 || fabs(f.y) > 100 || fabs(f.z) > 100)
+			if(fabs(f.x) > 300 || fabs(f.y) > 300 || fabs(f.z) > 300)
 			{
-//				std::cout << "force is " << f << std::endl;
+				std::cout << "force is " << f << std::endl;
 				f = Vec3d();
 			}
-			spidarG6.SetForce(f, Vec3d());	
+				spidarG6.SetForce(f, Vec3d());	
 		}
 		else spidarG6.SetForce(Vec3d(), Vec3d());
-
-		// 提示力を保存
-		last_force = pointer_force;
-//		last_torque = pointer_torque;
 	}
 	else
 	{
 		// 衝突がないので提示力をリセットする
 		spidarG6.SetForce(Vec3d());
-		last_force = Vec3d();
-//		last_torque = Vec3d();
+
+		// soPointerの位置を更新
+		info->pointer_pos = info->pointer_pos + info->pointer_vel * dt;
 	}
 
-#if 1
+#if 0
 	static int sec_counter = 0;
 	// 一秒ごとにSPIDARの座標を表示する
 	if(sec_counter % HAPTIC_FREQ == 0)
@@ -717,12 +694,16 @@ void CALLBACK TimerProc(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
 //		std::cout << "pointer = " << soPointer->GetFramePosition() << std::endl;
 //		std::cout << std::endl;
 //		std::cout << "orientation = " << soPointer->GetOrientation() << std::endl;
-	
+
+		for(int i = 0; i < info->num_collisions; i++)
+		{
+			std::cout << "col pos = " << info->col_positions[i] << std::endl;
+		}
+
 		sec_counter = 0;	
 	}
 	sec_counter++;									// カウンターの更新
 #endif
-	
 }
 
 /**
@@ -745,29 +726,6 @@ void RemoveGravity(PHSolidIf* solid)
 	scene->RemoveGravity(solid);
 }
 
-void clearCorrectMap()
-{
-	for(int i = 0; i < num_correction; i++)
-	{
-		correction_map[i] = NULL;
-	}
-
-	num_correction = 0;
-}
-
-void recursiveErrorCorrection(PHSolid* solid)
-{
-	// 処理を書く
-
-	// 再帰的に処理
-	PHConstraints cs = GetContactPoints();
-	for(PHConstraints::iterator it = cs.begin(); it != cs.end(); it++)
-	{
-		PHSolid* nearest = getAdjacentSolid(*it, solid);
-		if(nearest != NULL)recursiveErrorCorrection(nearest);
-	}
-}
-
 // 提案手法によって生じた剛体の位置の誤差を修正する関数
 void ErrorCorrection()
 {
@@ -782,9 +740,6 @@ void ErrorCorrection()
 	{
 		info = &info2;
 	}
-	
-	clearCorrectMap();
-
 	// ポインタが接しているすべての剛体について処理
 	for(int i = 0; i < info->num_collisions; i++)
 	{
@@ -804,28 +759,8 @@ void ErrorCorrection()
 			// 衝突点情報の上書き
 			info->original_col_positions[i] = info->col_positions[i];
 			info->original_col_normals[i] = info->col_normals[i];
-
-			// 修正が終わったので修正済みマップに登録
-			correction_map[num_correction++] = info->nearest_solids[i];
 		}
 	}
-/*
-	// 接触のリストを取得
-	PHConstraints cs = GetContactPoints();
-
-	// 再帰的に変更を反映させていく
-	for(int i = 0; i < info->num_collisions; i++)
-	{
-		for(PHConstraints::iterator it = cs.begin(); it != cs.end(); it++)
-		{
-			if(info->nearest_solids[i]->IsDynamical())
-			{
-				PHSolid* nearest = getAdjacentSolid(*it, info->nearest_solids[i]);
-				if(nearest != NULL)recursiveErrorCorrection(nearest);
-			}
-		}
-	}
-	*/
 }
 
 void keyboard(unsigned char, int, int);
@@ -854,24 +789,13 @@ void UpdatePointer()
 	soPointer->SetVelocity(info->pointer_vel);
 }
 
-
-/**
- brief  	glutIdleFuncで指定したコールバック関数
- param	 	なし
- return 	なし
- */
-void idle(){
-	static DWORD old_time, new_time;
-
-	// 時間を計測
-	old_time = timeGetTime();
-
+void CALLBACK StepSimulation(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
+{
 	// ポインタの位置を更新
 	UpdatePointer();
 
-	// もし力覚レンダリングで周囲の影響を考慮していたら
-	// それによって生じた誤差を修正する
-	if(bSurroundEffect)	ErrorCorrection();
+	// 局所的動力学計算によって生じた誤差を修正する
+	ErrorCorrection();
 
 	// シミュレーションを１ステップ進める
 	scene->Step();
@@ -905,32 +829,16 @@ void idle(){
 
 	// 力覚スレッドのシミュレーションの変数の参照先を変更
 	current_valid_data = current_valid_data?false:true;
+}
 
+/**
+ brief  	glutIdleFuncで指定したコールバック関数
+ param	 	なし
+ return 	なし
+ */
+void idle(){
 	// 再描画
 	glutPostRedisplay();
-
-	// 時間を計測
-	new_time = timeGetTime();
-	
-	// sleepする時間を決める。
-	// シミュレーションの周波数にあわせて、
-	// シミュレーションの周波数 - ここまでの処理でかかった時間
-	double sleep_time = 1000.0 / SIM_FREQ - (new_time - old_time);
-	if(sleep_time < 0)sleep_time = 0;
-	Sleep(sleep_time);
-
-/*
-	// 経過時間をチェック
-	static int time_counter = 0;
-	time_counter++;
-	if (time_counter > EXIT_TIMER) 
-	{
-		timeKillEvent(FTimerId);
-		timeEndPeriod(1);
-		std::cout << "exit by count" << std::endl;
-		exit(0);
-	}
-*/
 }
 
 /**
@@ -943,6 +851,52 @@ void AddInactiveSolid(PHSolidIf* soSolid)
 	scene->GetConstraintEngine()->AddInactiveSolid(soSolid);
 }
 
+// SPIDARの位置と原点をあらわす点を描画する関数
+void displayPointer()
+{
+	GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
+	GLfloat red[] = {1.0, 0.0, 0.0, 1.0};
+	GLfloat orange[] = {1.0, 0.2, 0.0, 1.0};
+	GLfloat blue[] = {0.0, 0.0, 1.0, 1.0};
+
+	GLfloat *color;
+
+	// 状態によってSPIDARの球の色を変える
+	if(bforce)
+	{
+		if(bSurroundEffect)color = orange;
+		else color = red;
+	}
+	else
+	{
+		if(bSurroundEffect)color = blue;
+		else color = white;
+	}
+
+	glPushMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		static Affinef pos_affine;
+		Posef::Unit(spidar_pos).ToAffine(pos_affine);
+		glMultMatrixf(pos_affine);
+	
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, color);
+
+		glutSolidSphere(1.0, 12, 9);
+	glPopMatrix();
+
+	glPushMatrix();
+		glMatrixMode(GL_MODELVIEW);
+		Vec3f te = Vec3f();
+		Affinef af = Affinef();
+		Posef::Unit(te).ToAffine(af);
+		glMultMatrixf(af);
+		glutSolidSphere(1.0, 12, 9);
+	glPopMatrix();
+}
+
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
  param		なし
@@ -953,51 +907,7 @@ void display(){
 	render->DrawScene(scene);
 
 	// フラグがONのときSPIDARの軌跡をデバッグ出力
-	if(bDisplayPointer)
-	{
-		glPushMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		static Affinef pos_affine;
-		Posef::Unit(spidar_pos).ToAffine(pos_affine);
-		glMultMatrixf(pos_affine);
-		
-		GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
-		GLfloat red[] = {1.0, 0.0, 0.0, 1.0};
-		GLfloat orange[] = {1.0, 0.2, 0.0, 1.0};
-		GLfloat blue[] = {0.0, 0.0, 1.0, 1.0};
-
-		GLfloat *color;
-
-		// 状態によってSPIDARの球の色を変える
-		if(bforce)
-		{
-			if(bSurroundEffect)color = orange;
-			else color = red;
-		}
-		else
-		{
-			if(bSurroundEffect)color = blue;
-			else color = white;
-		}
-
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, color);
-
-		glutSolidSphere(1.0, 12, 9);
-		glPopMatrix();
-
-		glPushMatrix();
-		glMatrixMode(GL_MODELVIEW);
-		Vec3f te = Vec3f();
-		Affinef af = Affinef();
-		Posef::Unit(te).ToAffine(af);
-		glMultMatrixf(af);
-		glutSolidSphere(1.0, 12, 9);
-		
-		glPopMatrix();
-	}
+	if(bDisplayPointer) displayPointer();
 
 	render->EndScene();
 }
@@ -1036,7 +946,8 @@ void reshape(int w, int h){
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) 
 	{
-		timeKillEvent(FTimerId);
+		timeKillEvent(FTimerId1);
+		timeKillEvent(FTimerId1);
 		timeEndPeriod(1);
 		std::cout << "exit operation from key input" << std::endl;
 		exit(0);
@@ -1091,40 +1002,48 @@ void keyboard(unsigned char key, int x, int y){
 	{
 		soPointer->SetAngularVelocity(Vec3d());
 	}
+	// 現在のバーチャルカップリングのKとBの値を表示する
 	else if(key == 'l')
 	{
 		std::cout << "k = " << K << " b = " << B << std::endl;
 	}
+	// バーチャルカップリングの係数のKを1増加して現在の状態を表示する
 	else if(key == 'k')
 	{
 		K += 1;
 		keyboard('l', 0, 0);
 	}
+	// バーチャルカップリングの係数のBを1増加して現在の状態を表示する
 	else if(key == 'b')
 	{
 		B += 1;
 		keyboard('l', 0, 0);
 	}
+	// バーチャルカップリングの係数のKを1減少して現在の状態を表示する
 	else if(key == 'j')
 	{
 		K -= 1;
 		keyboard('l', 0, 0);
 	}
+	// バーチャルカップリングの係数のBを1減少して現在の状態を表示する
 	else if(key == 'v')
 	{
 		B -= 1;
 		keyboard('l', 0, 0);
 	}
+	// 提示力を調節する値を0.1増加する
 	else if(key == 'm')
 	{
 		FORCE_COEFF += 0.1;
 		std::cout << "coeff = " << FORCE_COEFF << std::endl;
 	}
+	// 提示力を調節する値を0.1減少する
 	else if(key == 'n')
 	{
 		FORCE_COEFF -= 0.1;
 		std::cout << "coeff = " << FORCE_COEFF << std::endl;
 	}
+	// SPIDARの位置と原点をあらわす球の表示をON/OFFする
 	else if(key == 'd')
 	{
 		bDisplayPointer = !bDisplayPointer;
@@ -1162,9 +1081,17 @@ int main(int argc, char* argv[]){
 
 
 	// hapticスレッドの生成・開始
-	FTimerId = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
+	FTimerId1 = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
 	                        1,   // 時間分解能
-		                    TimerProc,//コールバック関数
+		                    HapticRendering,//コールバック関数
+		                    (DWORD)&time,//ユーザー定義の値
+		                    TIME_PERIODIC //単発(TIME_ONESHOT) or 繰り返し(TIME_PERIODIC)
+		                    );
+
+	// simulationスレッドの生成・開始
+	FTimerId2 = timeSetEvent(1000 / SIMULATION_FREQ,    // タイマー間隔[ms]
+	                        1,   // 時間分解能
+		                    StepSimulation,//コールバック関数
 		                    (DWORD)&time,//ユーザー定義の値
 		                    TIME_PERIODIC //単発(TIME_ONESHOT) or 繰り返し(TIME_PERIODIC)
 		                    );
@@ -1185,7 +1112,7 @@ void InitScene()
 {
 	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc sd;
-	sd.timeStep = (double)1.0 / SIM_FREQ;
+	sd.timeStep = (double)1.0 / SIMULATION_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
 	desc.mass = 0.5;
