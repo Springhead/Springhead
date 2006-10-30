@@ -99,7 +99,6 @@ bool FpCheckFinite(const V& v, const char* exp, const char* file, int line){
 	if (IsFinite(v)) return true;
 	FpCheckPrint("FpCheckFinite", exp, file, line);
 	DSTR << v << std::endl;
-	while(1);
 	return false;
 }
 template <class V>
@@ -107,7 +106,6 @@ bool FpCheckNotZero(const V& v, const char* exp, const char* file, int line){
 	if (IsNotZero(v)) return true;
 	FpCheckPrint("FpCheckNotZero", exp, file, line);
 	DSTR << v << std::endl;
-	while(1);
 	return false;
 }
 template <class V>
@@ -115,7 +113,6 @@ bool FpCheckPositive(const V& v, const char* exp, const char* file, int line){
 	if (IsPositive(v)) return true;
 	FpCheckPrint("FpCheckPositive", exp, file, line);
 	DSTR << v << std::endl;
-	while(1);
 	return false;
 }
 template <class V>
@@ -123,7 +120,6 @@ bool FpCheckUnit(const V& v, const char* exp, const char* file, int line){
 	if (IsUnit(v)) return true;
 	FpCheckPrint("FpCheckPositive", exp, file, line);
 	DSTR << v << std::endl;
-	while(1);
 	return false;
 }
 
