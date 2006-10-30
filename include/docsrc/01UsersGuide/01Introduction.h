@@ -75,6 +75,7 @@ Springhead‚ÍCS‘©ðŒ‚ðLCP‚Æ‚µ‚Ä’èŽ®‰»‚µ‚ÄƒKƒEƒXƒTƒCƒfƒ‹–@‚ð—p‚¢‚Ä‰ðÍ‰ð‚ð‹ßŽ—“
 QuickHull–@‚ð—p‚¢‚ÄÚG‰ðÍ‚Å‚‘¬‚ÉÚG—Ìˆæ‚ðŒvŽZ‚µ‚ÄÚG—ÍŒvŽZ‚ðs‚¢‚Ü‚·D
 ‚±‚Ì•”•ª‚ÍC“¯‚¶•û–@‚ðŽg‚Á‚Ä‚¢‚é‚à‚Ì‚Í­‚È‚¢‚©‚à‚µ‚ê‚Ü‚¹‚ñD
 
+
 Springhead(Springhead2)‚ÍC‘¼‚ÌƒVƒ~ƒ…ƒŒ[ƒ^‚É‚½‚¢‚µ‚ÄC
  - Mesh(“Ê‘½–Ê‘Ì)‚ªˆµ‚¦‚éD
  - ”CˆÓ(‚©‚È‚èL”ÍˆÍ)‚Ìƒoƒlƒ_ƒ“ƒp‚ðˆÀ’è‚ÉƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Å‚«‚éD

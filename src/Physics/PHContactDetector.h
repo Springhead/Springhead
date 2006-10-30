@@ -102,6 +102,12 @@ public:
 		Vec3d d1 = s1->GetDeltaPosition();
 		Posed p0 = s0->GetPose(); p0.Pos() -= d0;
 		Posed p1 = s1->GetPose(); p1.Pos() -= d1;
+		if (!p0.is_finite()  || !p1.is_finite() || !d0.is_finite() || !d1.is_finite()){
+			DSTR << p0 << p1 << d0 << d1 <<std::endl;
+			DSTR << s0->GetVelocity() << s1->GetVelocity() << std::endl;
+			DSTR << s0->GetAngularVelocity() << s1->GetAngularVelocity() << std::endl;
+			while(1);
+		}
 
 		// ‘S‚Ä‚Ìshape pair‚É‚Â‚¢‚ÄŒð·‚ð’²‚×‚é
 		bool found = false;
@@ -432,7 +438,7 @@ public:
 		for(int i = 0; i < N; ++i){
 			solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 			Vec3d dPos = solids[i]->solid->GetDeltaPosition();
-			double dLen = dPos * dir;
+			float dLen = (float) (dPos * dir);
 			if (dLen < 0){
 				eit[0].edge += dLen;
 			}else{

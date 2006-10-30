@@ -14,6 +14,7 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
+
 //----------------------------------------------------------------------------
 // PHSolidAux
 void PHSolidInfoForLCP::SetupDynamics(double dt){
@@ -157,6 +158,8 @@ void PHConstraint::CompJacobian(bool bCompAngular){
 }
 
 void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrink_rate){
+	FPCK_FINITE(fv);
+
 	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
 
 	if(!bEnabled || !bFeasible)
@@ -219,10 +222,12 @@ void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrin
 		Jww[1].row(j) *= tmp;
 		dAw[j] *= tmp;
 	}
+	FPCK_FINITE(tmp);
 }
 
 void PHConstraint::IterateDynamics(){
 	if(!bEnabled || !bFeasible)return;
+	FPCK_FINITE(fv);
 
 	Vec3d fvnew, fwnew, dfv, dfw;
 	int i, j;
@@ -231,7 +236,20 @@ void PHConstraint::IterateDynamics(){
 		fvnew[j] = (1.0 - dAv[j]) * fv[j] - (bv[j] + 
 			Jvv[0].row(j) * (solid[0]->dv) + Jvw[0].row(j) * (solid[0]->dw) +
 			Jvv[1].row(j) * (solid[1]->dv) + Jvw[1].row(j) * (solid[1]->dw));
+		FPCK_FINITE(Jvv[0].row(j));
+		FPCK_FINITE(Jvv[1].row(j));
+		if (!FPCK_FINITE(fvnew)){
+			FPCK_FINITE(bv);
+			DSTR << Jvv[0] << Jvv[1];
+			DSTR << Jvw[0] << Jvw[1];
+			DSTR << dAv[j];
+			DSTR << std::endl;
+			DSTR << "fv:" << fv << "bv:" << bv << std::endl;
+			DSTR << "s0:" << (solid[0]->dv) << (solid[0]->dw) << std::endl;
+			DSTR << "s1:" << (solid[1]->dv) << (solid[1]->dw) << std::endl;
+		}
 		Projection(fvnew[j], j);
+		FPCK_FINITE(fvnew);
 		dfv[j] = fvnew[j] - fv[j];
 		for(i = 0; i < 2; i++){
 		if(solid[i]->solid->IsDynamical() && IsInactive(i)){
@@ -256,6 +274,11 @@ void PHConstraint::IterateDynamics(){
 		}
 		fw[j] = fwnew[j];
 	}
+	FPCK_FINITE(fvnew);
+	FPCK_FINITE(fwnew);
+	FPCK_FINITE(dfv);
+	FPCK_FINITE(dfw);
+
 }
 
 /*void PHConstraint::SetupCorrection(double dt, double max_error){

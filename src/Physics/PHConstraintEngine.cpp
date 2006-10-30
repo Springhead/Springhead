@@ -46,6 +46,12 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 		normal.unitize();
 		depth = depthEpsilon;
 	}
+	if (normal.square() < 0.0001 || depth < 1e-30 || 
+		!_finite(normal.X()) ||  !_finite(normal.Y()) || !_finite(normal.Z()) ||
+		!_finite(depth))
+	{
+		DSTR << "Error in CalcNormal" << normal << depth << std::endl;
+	}
 	//	前回の法線の向きに動かして，最近傍点を求める
 	if (depth < depthEpsilon) depth = depthEpsilon;
 	Posed trans;
@@ -134,6 +140,9 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 	return true;
 }
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
+	if (!sp->normal.is_finite()){
+		DSTR << "Nomral Error:" << sp->normal << std::endl;
+	}
 	if (sp->normal == Vec3f()){
 		sp->CalcNormal(solid[0]->solid, solid[1]->solid);	//	法線が求まっていない場合は求める
 	}
@@ -355,6 +364,13 @@ void PHConstraintEngine::UpdateSolids(double dt){
 		//velocity update
 		vnew = info->v + info->dv0 + info->dv;
 		wnew = info->w + info->dw0 + info->dw;
+
+		if (!vnew.is_finite() || !wnew.is_finite()){
+
+			DSTR << "Velocty Error in UpdateSolids"  << vnew << wnew << std::endl;
+			DSTR << info->v << info->dv0 << info->dv << std::endl;
+			DSTR << info->w << info->dw0 << info->dw << std::endl;
+		}
 		solid->oldVel = solid->GetVelocity();
 		solid->oldAngVel = solid->GetAngularVelocity();
 

@@ -78,12 +78,12 @@ void display(){
 		Vec3d normal;
 		Vec3d pos[2];
 		double dist=0;
-		Vec3d range(0,-5,0);
+		Vec3d range(1,-1,1);
 		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], range, normal, pos[0], pos[1], dist);
 		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		DSTR << " p:" << pose[0]*pos[0] << " q:" << pose[1]*pos[1] << std::endl;
-		pose[1].Ori() = Quaterniond::Rot('z', Rad(5)) * pose[1].Ori();
-		solid[1]->SetPose(pose[1]);
+//		pose[1].Ori() = Quaterniond::Rot('z', Rad(5)) * pose[1].Ori();
+//		solid[1]->SetPose(pose[1]);
 	}
 
 	glEnable(GL_ALPHA);
@@ -352,7 +352,7 @@ int main(int argc, char* argv[]){
 	soFloor->AddShape(sphere);
 	soBlock->AddShape(sphere);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
-	soBlock->SetFramePosition(Vec3f(0, 1,0));
+	soBlock->SetFramePosition(Vec3f(0, 0.6,0));
 #endif
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// èdóÕÇê›íË

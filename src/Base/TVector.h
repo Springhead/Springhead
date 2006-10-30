@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <iostream>
 #include <math.h>
+#include <float.h>
 #include <assert.h>
 #include <stddef.h>
 #include <vector>
@@ -456,6 +457,12 @@ public:
 	ret_type operator- () const { ret_type r(*this); r*=element_type(-1); return r; }
 	///	単位ベクトルを返す．
 	ret_type unit() const { ret_type r(*this); r.unitize(); return r; }
+	///	成分が有限の数値であることを確認
+	bool is_finite() const {
+		for(unsigned i=0; i<size(); ++i)
+			if (!_finite(item(i))) return false;
+		return true;
+	}
 	//@}
 protected:
 	///	バッファの初期化．何もしない．

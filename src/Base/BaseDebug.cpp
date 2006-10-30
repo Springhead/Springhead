@@ -7,6 +7,8 @@
  */
 #include "Base.h"
 #include "StrBufBase.h"
+#include "TVector.h"
+#include "TMatrix.h"
 
 #include <stdio.h>
 #include <iostream>
@@ -123,4 +125,8 @@ std::ostream& DebugPrintf::Stream(){
 	return DebugPrintf_dpfStr;
 }
 #endif
+
+
+
+
 }	//	namespace Spr

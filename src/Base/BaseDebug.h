@@ -67,6 +67,8 @@ public:
 #else
  #define DEBUG_EVAL(x)
 #endif
+
+
 }	//	namespace Spr
 
 #endif
