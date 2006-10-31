@@ -200,6 +200,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 			if (vtx->deleted) continue;
 			assert(finite(vtx->dist));
+			if (vtx->dist < 1e-20) continue;
 
 			Vec3d pos;
 			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;

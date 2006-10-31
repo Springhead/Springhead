@@ -627,7 +627,9 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	double endLength = range.norm();
 	range /= endLength;
 	Vec3d u = -range;	//	u: •¨‘Ì‚Å‚Í‚È‚­Œ´“_‚Ì‘¬“x‚ÌŒü‚«‚È‚Ì‚Å - ‚ª‚Â‚­D
-	if (u.Z() < 1-1e-6){
+	if (u.Z() < -1+1e-6){
+		w2z = Quaterniond::Rot(Rad(180), 'x');
+	}else if (u.Z() < 1-1e-6){
 		Matrix3d matW2z = Matrix3d::Rot(u, Vec3f(0,0,1), 'z');
 		w2z.FromMatrix(matW2z);
 		w2z = w2z.Inv();
