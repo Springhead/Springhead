@@ -366,7 +366,7 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	}
 	//	サポートを求める．
 	CalcSupport(v, p[2], q[2], w[2]);
-	dist = -1.0e100;
+	dist = -DBL_MAX*2;
 
 
 	//	三角形から原点がはみ出している間繰り返し
@@ -575,13 +575,13 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 			}
 			if (approach > -1e-8 || (approach > -1e-4 && newDist <= dist)){	//	distが改善していない．前回の3点で終了
 				if (dist < newDist) dist = newDist;
-				Matrix3d m;
-				m.Ex() = w[0];
-				m.Ey() = w[1];
-				m.Ez() = w[2];
-				Vec3d k = m.inv() * Vec3d(0,0,dist);
-				pa = k.x*p[0] + k.y*p[1] + k.z*p[2];
-				pb = k.x*q[0] + k.y*q[1] + k.z*q[2];
+				Matrix2d m;
+				m.Ex() = w[2]-w[0];
+				m.Ey() = w[2]-w[1];
+				Vec2d k = m.inv() * w[2];
+				double kz = 1-k.x-k.y;
+				pa = k.x*p[0] + k.y*p[1] + kz*p[2];
+				pb = k.x*q[0] + k.y*q[1] + kz*q[2];
 				normal = w2z.Conjugated() * normal;
 				CHECK(normal);
 //				DUMPHIST
