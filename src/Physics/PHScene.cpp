@@ -103,15 +103,16 @@ void PHScene::ClearForce(){
 }
 #define FP_ERROR_MASK	(_EM_INEXACT|_EM_UNDERFLOW)
 void PHScene::GenerateForce(){
-//	_controlfp(FP_ERROR_MASK, _MCW_EM);	//	コメントをはずすと例外が起きる．要調査
+	_clearfp();
+	_controlfp(FP_ERROR_MASK, _MCW_EM);
 	engines.GenerateForce();
-//	_controlfp(_MCW_EM, _MCW_EM);
+	_controlfp(_MCW_EM, _MCW_EM);
 }
 void PHScene::Integrate(){
-//	_controlfp(FP_ERROR_MASK, _MCW_EM);
+	_clearfp();
+	_controlfp(FP_ERROR_MASK, _MCW_EM);
 	engines.Integrate();
-//	_controlfp(_MCW_EM, _MCW_EM);
-//	time += timeStep;
+	_controlfp(_MCW_EM, _MCW_EM);
 	count++;
 }
 
