@@ -21,8 +21,9 @@
 #endif
 
 namespace Spr{;
-double relError = 1e-6;
-double absError = 1e-10;
+const double sqEpsilon = 1e-4;
+const double epsilon = 1e-8;
+const double epsilon2 = epsilon*epsilon;
 
 
 static Vec3d p[4];			// Aのサポートポイント(ローカル系)
@@ -161,10 +162,8 @@ inline bool CalcClosest(Vec3d& v) {
 //	縮退している場合＝4点のうちいくつかが同じ位置にあるとか
 inline bool IsDegenerate(const Vec3d& w) {
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1){
-//	hase	2003.10.24
-//		if ((allUsedPoints & curPoint) && p_q[i] == w) return true;
-		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < 1e-6){
-//			DSTR << "T:" << (p_q[i]-w).norm() << p_q[i] << w << std::endl;
+//		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < 1e-6){
+		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < epsilon2){
 			return true;
 		}
 	}
@@ -191,7 +190,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 		p_q[lastPoint] = w;
 		allUsedPoints = usedPoints|lastUsed;
 		if (!CalcClosest(v)) return false;
-	} while ( usedPoints < 15 && !(v.square() < 1e-10f) ) ;
+	} while ( usedPoints < 15 && !(v.square() < epsilon2) ) ;
 	CalcPoints(usedPoints, pa, pb);
 	return true;
 }
@@ -235,20 +234,11 @@ void PrintHist(){
 	DSTR << endLength << std::endl;	\
 	PrintHist();	\
 
-#define CHECK(x)	\
-	if (!x.is_finite()){						\
-		DSTR << "CHECK" << x << std::endl;		\
-		DUMPHIST								\
-	}											\
-
 #else
-#define	CHECK(x)
 #define DUMPHIST
 #endif
 
 
-const double epsilon = 1e-6;
-const double epsilon2 = epsilon*epsilon;	
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 inline void  FindLineVtx(int& id2, int& idNotUse, double& dist, double& k1, double& k2, 
 	const Vec3d& wNew, const Vec3d* w, int id2Cand1, int id2Cand2){
@@ -452,7 +442,6 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 			//	replace と lineVtxが現在の線分．そこからnewNormalを求め，次の点を求める
 			Vec3d l = w[replace]-w[lineVtx];
 			Vec3d normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
-			CHECK(normalNew);
 			CalcSupport(normalNew, p[lineNotUse], q[lineNotUse], w[lineNotUse]);
 			normalNew = normalNew.unit();
 
@@ -464,28 +453,29 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 			int newLineVtx = -1;
 			if (-epsilon < sTri.Z() && sTri.Z() < epsilon){			//	線分の場合
 				approach = (w[lineNotUse] - w[lineVtx])*normalNew;
-				FindLineVtx(newLineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[lineNotUse], w, r1, r2);
-				Vec3d l = w[replace]-w[lineVtx];
-				normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
-				normalNew.unitize();
-				CHECK(normalNew);
+				if (!(approach > -epsilon)){
+					FindLineVtx(newLineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[lineNotUse], w, r1, r2);
+					Vec3d l = w[replace]-w[lineVtx];
+					normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
+					normalNew.unitize();
+				}
 			}else{	//	三角形の場合
 				approach = (w[lineNotUse]-w[lineVtx])*normal;
-				normalNew = sTri.unit();
-				if (normalNew.Z() < 0) normalNew *= -1;
-				newDist = w[lineNotUse]*normalNew / normalNew.Z();
-				if (sTri.Z() < 0){
-					SwapAll(r1, r2);
-					sTri*=-1;
+				if (!(approach > -epsilon)){
+					normalNew = sTri.unit();
+					if (normalNew.Z() < 0) normalNew *= -1;
+					newDist = w[lineNotUse]*normalNew / normalNew.Z();
+					if (sTri.Z() < 0){
+						SwapAll(r1, r2);
+						sTri*=-1;
+					}
 				}
-				CHECK(normalNew);
 			}
-			if (approach > -1e-8 || newDist <= dist){	//	distが改善していない場合は終了
+			if (approach > -epsilon || newDist <= dist){	//	distが改善していない場合は終了
 				double ka = w[lineVtx].XY().norm(), kb = w[replace].XY().norm();
 				pa = ka*p[lineVtx] + kb*p[replace];
 				pb = ka*q[lineVtx] + kb*q[replace];
 				normal = w2z.Conjugated() * normal;
-				CHECK(normal);
 				dist = ka/(ka+kb)*w[lineVtx].Z() + kb/(ka+kb)*w[replace].Z();
 
 
@@ -560,7 +550,6 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 			double newDist;		//	次の3点とOの交点
 			double approach;	//	今回どれだけ近づいたか
 			Vec3d normalNew = sTri.unit();
-			CHECK(normalNew);
 			if (sTri.Z() < epsilon){	//	次の3点は線分になってしまう
 				//	new-use0 new-use1 のどちらか．原点が含まれていればよい
 				approach = (wNew-w[0])*normal;
@@ -568,12 +557,11 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 				Vec3d l = w[replace]-w[lineVtx];
 				normalNew = Vec3d(0,0,1) - l.Z() / l.square() * l;
 				normalNew.unitize();
-				CHECK(normalNew);
 			}else{	//	三角形になる場合
 				approach = (wNew-w[0])*normal;
 				newDist = wNew*normalNew / normalNew.Z();
 			}
-			if (approach > -1e-8 || (approach > -1e-4 && newDist <= dist)){	//	distが改善していない．前回の3点で終了
+			if (approach > -epsilon || (approach > -sqEpsilon && newDist <= dist)){	//	distが改善していない．前回の3点で終了
 				if (dist < newDist) dist = newDist;
 				Matrix2d m;
 				m.Ex() = w[2]-w[0];
@@ -583,10 +571,6 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 				pa = k.x*p[0] + k.y*p[1] + kz*p[2];
 				pb = k.x*q[0] + k.y*q[1] + kz*q[2];
 				normal = w2z.Conjugated() * normal;
-				CHECK(normal);
-//				DUMPHIST
-//				DSTR << "ql:" << q[0] << q[1] << q[2] << std::endl;
-//				DSTR << "k:" << k.x+k.y+k.z << k << std::endl;
 				return 3;
 			}
 
@@ -627,9 +611,9 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	double endLength = range.norm();
 	range /= endLength;
 	Vec3d u = -range;	//	u: 物体ではなく原点の速度の向きなので - がつく．
-	if (u.Z() < -1+1e-6){
+	if (u.Z() < -1+epsilon){
 		w2z = Quaterniond::Rot(Rad(180), 'x');
-	}else if (u.Z() < 1-1e-6){
+	}else if (u.Z() < 1-epsilon){
 		Matrix3d matW2z = Matrix3d::Rot(u, Vec3f(0,0,1), 'z');
 		w2z.FromMatrix(matW2z);
 		w2z = w2z.Inv();
@@ -641,13 +625,6 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	Posed b2z;
 	b2z.Ori() = w2z * b2w.Ori();
 	b2z.Pos() = w2z * b2w.Pos();
-
-	if (!a2z.is_finite() || !b2z.is_finite() || !w2z.is_finite()){
-		DSTR << a2z << std::endl;
-		DSTR << b2z << std::endl;
-		DSTR << w2z << std::endl;
-		while(1);
-	}
 	
 	int rv = ContFindCommonPointZ(a, b, a2z, b2z, w2z, u, endLength, normal, pa, pb, dist);
 	return rv;
@@ -916,7 +893,7 @@ void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 	usedPoints = 0;
 	allUsedPoints = 0;
 
-	while (usedPoints < 15 && dist > absError) {
+	while (usedPoints < 15 && dist > epsilon) {
 		lastPoint = 0;
 		lastUsed = 1;
 		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
@@ -925,7 +902,7 @@ void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
 		double supportDist = w*v/dist;
 		if (maxSupportDist < supportDist) maxSupportDist= supportDist;
-		if (dist - maxSupportDist <= dist * relError) break;
+		if (dist - maxSupportDist <= dist * epsilon) break;
 		if (IsDegenerate(w)) break;
 		p_q[lastPoint] = w;
 		allUsedPoints = usedPoints|lastUsed;

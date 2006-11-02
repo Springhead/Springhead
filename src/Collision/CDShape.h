@@ -20,7 +20,6 @@ protected:
 	//Posef pose;
 public:
 	PHMaterial material;
-	static double epsilon;
 
 	OBJECT_DEF_ABST(CDShape);
 	//Posef GetPose() const { return pose; }

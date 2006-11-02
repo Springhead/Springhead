@@ -16,7 +16,7 @@ namespace Spr{;
 
 ///	接触解析に使うクラス．接触部分の切り口の線分を表す．
 class CDCutLine{
-protected:
+public:
 	Vec2d normal;
 	double dist;
 	double distInv;

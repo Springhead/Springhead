@@ -16,6 +16,8 @@
 
 #define CD_EPSILON	HULL_EPSILON
 #define CD_INFINITE	HULL_INFINITE
+const double epsilon = 1e-8;
+const double epsilon2 = epsilon*epsilon;
 
 
 namespace Spr{;
@@ -64,18 +66,20 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	//	頂点がどっち側にあるか調べる．
 	Vec3d planePosL = toL * ring.local.Pos();
 	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(1,0,0);
-	std::vector<bool> inside;
-	inside.resize(base.size());
+	std::vector<int> sign;
+	sign.resize(base.size());
 	double d = planeNormalL * planePosL;
 	for(unsigned i=0; i<base.size(); ++i){
 		double vtxDist = planeNormalL * base[i];
-		inside[i] = vtxDist >= d;
+		if (vtxDist > d + epsilon) sign[i] = 1;
+		else if (vtxDist < d - epsilon) sign[i] = -1;
+		else sign[i] = 0;
 	}
 	bool rv = false;
 	//	またがっている面の場合，交線を求める
 	for(unsigned i=0; i<faces.size(); ++i){
-		if (inside[faces[i].vtxs[0]] == inside[faces[i].vtxs[1]] && //	全部同じ側のときは，
-			inside[faces[i].vtxs[0]] == inside[faces[i].vtxs[2]]) continue;	//	パス
+		if (sign[faces[i].vtxs[0]] == sign[faces[i].vtxs[1]] && //	全部同じ側のときは，
+			sign[faces[i].vtxs[0]] == sign[faces[i].vtxs[2]]) continue;	//	パス
 		//	接触面(plane,面1)と多面体の面(face,面2)の交線を求める
 		/*	直線をとおる1点を見つけるのは
 						|面2
@@ -96,7 +100,7 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		double faceDist = faceNormal * (base[faces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ faceNormal).unit();
 		double ip = planeNormalL * faceNormal;
-		if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){	//	平行な面は無視
+		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	平行な面は無視
 			double a = -faceDist*ip / (1.0-(ip*ip));
 			double b = faceDist / (1.0-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*faceNormal;

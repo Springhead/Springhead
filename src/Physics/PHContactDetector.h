@@ -102,12 +102,6 @@ public:
 		Vec3d d1 = s1->GetDeltaPosition();
 		Posed p0 = s0->GetPose(); p0.Pos() -= d0;
 		Posed p1 = s1->GetPose(); p1.Pos() -= d1;
-		if (!p0.is_finite()  || !p1.is_finite() || !d0.is_finite() || !d1.is_finite()){
-			DSTR << p0 << p1 << d0 << d1 <<std::endl;
-			DSTR << s0->GetVelocity() << s1->GetVelocity() << std::endl;
-			DSTR << s0->GetAngularVelocity() << s1->GetAngularVelocity() << std::endl;
-			while(1);
-		}
 
 		// ‘S‚Ä‚Ìshape pair‚É‚Â‚¢‚ÄŒð·‚ð’²‚×‚é
 		bool found = false;

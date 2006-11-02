@@ -144,9 +144,6 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 	return true;
 }
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
-	if (!sp->normal.is_finite()){
-		DSTR << "Nomral Error:" << sp->normal << std::endl;
-	}
 	if (sp->normal == Vec3f()){
 		sp->CalcNormal(solid[0]->solid, solid[1]->solid);	//	法線が求まっていない場合は求める
 	}
@@ -192,7 +189,11 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	CDCutRing cutRing(center, local);
 	int nPoint = engine->points.size();
 	//	両方に切り口がある場合．(球などないものもある)
-	if (shape[0]->FindCutRing(cutRing, shapePoseW[0]) && shape[1]->FindCutRing(cutRing, shapePoseW[1])){
+	bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+	int nLine0 = cutRing.lines.size();
+	if(found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+	int nLine1 = cutRing.lines.size() - nLine0;
+	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 		cutRing.MakeRing();
 //		cutRing.Print(DSTR);
@@ -200,7 +201,32 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
 			if (vtx->deleted) continue;
 			assert(finite(vtx->dist));
-			if (vtx->dist < 1e-20) continue;
+			if (vtx->dist < 1e-200){
+				DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
+				DSTR << vtx->dist << vtx->normal << std::endl;
+				DSTR << cutRing.local << std::endl;
+				
+				DSTR << "Lines:(" << nLine0 << "+" << nLine1 << ")" << std::endl;
+				for(unsigned i=0; i<cutRing.lines.size(); ++i){
+					DSTR << cutRing.lines[i].dist << "\t" << cutRing.lines[i].normal << "\t";
+					Vec3d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
+					DSTR << pos.X() << "\t" << pos.Y() << std::endl;
+				}
+
+				DSTR << "Vertices in dual space:" << std::endl;
+				for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
+					if (vtx->deleted) continue;
+					DSTR << vtx->dist << "\t" << vtx->normal << "\t";
+					double d = vtx->dist;
+					if (d==0) d=1e-100;
+					Vec2d pos = vtx->normal * d;
+					DSTR << pos.X() << "\t" << pos.Y() << std::endl;
+				}
+				cutRing.lines.clear();
+				shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+				shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+				continue;
+			}
 
 			Vec3d pos;
 			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
@@ -214,7 +240,6 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
 
 			engine->points.push_back(point);
-//			DSTR << "  " << pos << std::endl;
 		}
 	}
 	if (nPoint == engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
@@ -370,12 +395,6 @@ void PHConstraintEngine::UpdateSolids(double dt){
 		vnew = info->v + info->dv0 + info->dv;
 		wnew = info->w + info->dw0 + info->dw;
 
-		if (!vnew.is_finite() || !wnew.is_finite()){
-
-			DSTR << "Velocty Error in UpdateSolids"  << vnew << wnew << std::endl;
-			DSTR << info->v << info->dv0 << info->dv << std::endl;
-			DSTR << info->w << info->dw0 << info->dw << std::endl;
-		}
 		solid->oldVel = solid->GetVelocity();
 		solid->oldAngVel = solid->GetAngularVelocity();
 

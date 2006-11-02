@@ -15,6 +15,8 @@
 #include "CDQuickHull3DImp.h"
 
 namespace Spr{;
+const double epsilon = 1e-8;
+const double epsilon2 = epsilon*epsilon;
 
 //----------------------------------------------------------------------------
 //	CDBox
@@ -89,27 +91,28 @@ Vec3f CDBox::Support(const Vec3f& p) const {
 
 // 切り口を求める. 接触解析を行う.
 bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
-	int base_size		= 8;	// base.size()=8頂点
-	int qfaces_size	= 6;	// qfaces.size()=6面 
-	
+	const int qfaces_size = 6;	// qfaces.size()=6面 
+	const int base_size = 8;
+
 	Posed toL	  = toW.Inv();
 	// 頂点がどっち側にあるか調べる
 	Vec3d planePosL = toL * ring.local.Pos();
 	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(1, 0, 0);
-	std::vector<bool> inside;
-	inside.resize(base_size);
+	int sign[base_size];
 	double d = planeNormalL * planePosL;
 	for (int i=0; i<base_size; ++i){
 		double vtxDist = planeNormalL * base[i];
-		inside[i] = vtxDist >= d;
+		if (vtxDist > d + epsilon) sign[i] = 1;
+		else if (vtxDist < d - epsilon) sign[i] = -1;
+		else sign[i] = 0;
 	}
 	bool rv = false;
 	//	またがっている面の場合，交線を求める
 	for(int i=0; i<qfaces_size; ++i){		// face.size()=6面
 		//　全頂点がplaneに対して同じ方向にある場合はパス
-		if (inside[qfaces[i].vtxs[0]] == inside[qfaces[i].vtxs[1]] &&
-			inside[qfaces[i].vtxs[0]] == inside[qfaces[i].vtxs[2]] &&
-			inside[qfaces[i].vtxs[0]] == inside[qfaces[i].vtxs[3]]) continue;
+		if (sign[qfaces[i].vtxs[0]] == sign[qfaces[i].vtxs[1]] &&
+			sign[qfaces[i].vtxs[0]] == sign[qfaces[i].vtxs[2]] &&
+			sign[qfaces[i].vtxs[0]] == sign[qfaces[i].vtxs[3]]) continue;
 		
 		//	接触面(plane,面1)とboxの面(qface,面2)の交線を求める
 		/*	直線をとおる1点を見つけるのは
@@ -131,7 +134,7 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		double qfaceDist = qfaceNormal * (base[qfaces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ qfaceNormal).unit();
 		double ip = planeNormalL * qfaceNormal;
-		if ((ip < 1.0-epsilon) && (ip > -1.0+epsilon)){	//	平行な面は無視
+		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	平行な面は無視
 			double a = -qfaceDist*ip / (1-(ip*ip));
 			double b = qfaceDist / (1-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*qfaceNormal;

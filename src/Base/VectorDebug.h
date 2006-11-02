@@ -41,11 +41,16 @@ inline void FpCheckAssert(const char* exp, const char* file, int line){
 }
 
 template <class D>
-bool IsFinite(const PTM::VectorImp<D>& v){ return v.exp().is_finite(); }
+bool IsFinite(const PTM::VectorImp<D>& v){
+	for(unsigned i=0; i<v.exp().size(); ++i){
+		if (!_finite(v.exp()[i])) return false;
+	}
+	return true;
+}
 template <class D>
 bool IsFinite(const PTM::MatrixImp<D>& v){
 	for(unsigned i=0; i<v.exp().height(); ++i){
-		if ( !v.exp().row(i).is_finite() ) return false;
+		if ( IsFinite(v.exp().row(i)) ) return false;
 	}
 	return true;
 }
