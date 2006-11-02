@@ -407,8 +407,20 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 		SwapAll(1,2);
 		sTri *= -1;
 	}
-	normal = sTri.unit();
-
+	double sTri2 = sTri.square();
+	if (sTri2 > epsilon2){
+		normal = sTri/sqrt(sTri2);
+	}else{
+		Vec3d line = w[2] - w[0];
+		if (line.square() < epsilon2){
+			line = w[2] - w[1];
+			if (line.square() < epsilon2){
+				DSTR << "Error: Not a line." << std::endl;
+			}
+		}
+		normal = Vec3d(0,0,1) - line.Z() / line.square() * line;
+		normal.unitize();
+	}
 	int replace = 2;	//	ÅŒã‚ÉŒ©‚Â‚¯‚½wD
 	int lineVtx = -1;	//	simplex‚ªü•ª‚É‚È‚Á‚½‚Æ‚«Cw[replace] ‚Æ w[lineVtx]‚ªŽŸ‚Ìü•ª
 	int lineNotUse = -1;

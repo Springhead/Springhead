@@ -33,11 +33,11 @@ using namespace Spr;
 #define NUM_BLOCK			4//6	// 生成するボックス数
 
 float boxpos[][3] = {
-	{0,2,0},
-	{0,4,0},
-	{0,6,0},
-	{0,8,0},
-	{0,10,0},
+	{0,2.1,0},
+	{0,4.2,0},
+	{0,6.3,0},
+	{0,8.4,0},
+	{0,10.5,0},
 
 	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
 	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
@@ -285,6 +285,7 @@ void SPR_CDECL timer(int id){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
+
 int SPR_CDECL main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();							// SDKの作成　
 	PHSceneDesc dscene;
