@@ -618,6 +618,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.push_back(scene->CreateSolid(descBox));
 			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
+			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(40), 'z'));
 			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	

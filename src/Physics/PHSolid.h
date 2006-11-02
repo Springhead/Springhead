@@ -192,7 +192,7 @@ public:
 	Vec3d		GetOldAngularVelocity() const {return oldAngVel;}
 
 	///	”CˆÓ‚ÌˆÊ’u‚Å‚Ì‘¬“x‚ÌŽæ“¾
-	Vec3d		GetPointVelocity(Vec3f posW) const {
+	Vec3d		GetPointVelocity(Vec3d posW) const {
 		return velocity + (angVelocity^(posW - pose*center));
 	}
 

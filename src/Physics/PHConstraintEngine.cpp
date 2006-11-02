@@ -30,7 +30,7 @@ public:
 };
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
-
+# if 0
 void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	const double depthEpsilon = 0.01;
 	if (state == NEW){
@@ -74,6 +74,43 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	}
 #endif
 }
+#else
+void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
+	if (state == NEW){
+		normal = solid0->GetPointVelocity(commonPoint) - solid1->GetPointVelocity(commonPoint);
+		double norm = normal.norm();
+		if (norm<1e-10){
+			normal = solid1->GetCenterPosition() - solid0->GetCenterPosition();
+			double norm = normal.norm();
+			if (norm<1e-10){
+				normal = Vec3d(1,0,0);
+			}
+		}
+		normal.unitize();
+		depth = 1;
+	}
+	if (normal.square() < 0.0001 || depth < 1e-30) {
+		DSTR << "Error in CalcNormal" << normal << depth << std::endl;
+	}
+	//	前回の法線の向きに動かして，最近傍点を求める
+	Vec3d dir = -normal;
+	int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
+	if (res <= 0){
+		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << dir << std::endl;
+	}
+	depth *= -1;
+	center = shapePoseW[0] * closestPoint[0];
+	center -= 0.5f*depth*normal;
+//	DSTR << "CalcNormal(): res:" << res << "d n:" << depth << normal << std::endl;
+//	DSTR << "center:" << center << std::endl;
+#ifdef _DEBUG
+	if (!finite(normal.norm())){
+	int rv = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
+		normal, normal, closestPoint[0], closestPoint[1], depth);
+	}
+#endif
+}
+#endif
 
 bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	shape[0] = s0;

@@ -567,9 +567,9 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 			if (approach > -epsilon || (approach > -sqEpsilon && newDist <= dist)){	//	distが改善していない．前回の3点で終了
 				if (dist < newDist) dist = newDist;
 				Matrix2d m;
-				m.Ex() = w[2]-w[0];
-				m.Ey() = w[2]-w[1];
-				Vec2d k = m.inv() * w[2];
+				m.Ex() = w[2].XY()-w[0].XY();
+				m.Ey() = w[2].XY()-w[1].XY();
+				Vec2d k = m.inv() * w[2].XY();
 				double kz = 1-k.x-k.y;
 				pa = k.x*p[0] + k.y*p[1] + kz*p[2];
 				pb = k.x*q[0] + k.y*q[1] + kz*q[2];
