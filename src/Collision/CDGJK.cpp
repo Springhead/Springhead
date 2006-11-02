@@ -407,20 +407,6 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 		SwapAll(1,2);
 		sTri *= -1;
 	}
-	double sTri2 = sTri.square();
-	if (sTri2 > epsilon2){
-		normal = sTri/sqrt(sTri2);
-	}else{
-		Vec3d line = w[2] - w[0];
-		if (line.square() < epsilon2){
-			line = w[2] - w[1];
-			if (line.square() < epsilon2){
-				DSTR << "Error: Not a line." << std::endl;
-			}
-		}
-		normal = Vec3d(0,0,1) - line.Z() / line.square() * line;
-		normal.unitize();
-	}
 	int replace = 2;	//	最後に見つけたw．
 	int lineVtx = -1;	//	simplexが線分になったとき，w[replace] と w[lineVtx]が次の線分
 	int lineNotUse = -1;
@@ -430,7 +416,12 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 		//	FindLineVtx(必ず使う頂点座標, どちらかを使う頂点のid, id);
 		//	lineVtx, newDist, lineKVtx, lineKRep を設定する．
 		double newDist;
-		FindLineVtx(lineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[2], w, 0, 1);
+		FindLineVtx(lineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[replace], w, 0, 1);
+		Vec3d l = w[replace]-w[lineVtx];
+		normal = Vec3d(0,0,1) - l.Z() / l.square() * l;
+		normal.unitize();
+	}else{
+		normal = sTri.unit();
 	}
 	for(int count = 0; count < 10000; ++ count){
 #ifdef RECORD
@@ -464,7 +455,7 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 			double approach, newDist;
 			int newLineVtx = -1;
 			if (-epsilon < sTri.Z() && sTri.Z() < epsilon){			//	線分の場合
-				approach = (w[lineNotUse] - w[lineVtx])*normalNew;
+				approach = (w[lineNotUse] - w[lineVtx])*normal;
 				if (!(approach > -epsilon)){
 					FindLineVtx(newLineVtx, lineNotUse, newDist, lineKRep, lineKVtx, w[lineNotUse], w, r1, r2);
 					Vec3d l = w[replace]-w[lineVtx];
