@@ -25,7 +25,6 @@ const double sqEpsilon = 1e-4;
 const double epsilon = 1e-8;
 const double epsilon2 = epsilon*epsilon;
 
-
 static Vec3d p[4];			// Aのサポートポイント(ローカル系)
 static Vec3d q[4];			// Bのサポートポイント(ローカル系)
 static Vec3d p_q[4];		// ミンコスキー和上でのサポートポイント(ワールド系)
@@ -47,7 +46,7 @@ static double det[16][4];	//	係数
   b       | k = a^2-ab / (a^2+b^2-2ab), 1-k = b^2-ab / (a^2+b^2-2ab)
 ----------+ なので， k = a^2-ab を と (k-1) = b^2-abを記録しておく	*/
 
-
+///	det(長さ・面積・体積)の計算．垂線の足が頂点を何:何に内分するかも計算
 inline void CalcDet() {
 	static double dotp[4][4];	//	p_q[i] * p_q[j] 
 
@@ -162,17 +161,13 @@ inline bool CalcClosest(Vec3d& v) {
 //	縮退している場合＝4点のうちいくつかが同じ位置にあるとか
 inline bool IsDegenerate(const Vec3d& w) {
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1){
-//		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < 1e-6){
-		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < epsilon2){
-			return true;
-		}
+		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < epsilon2) return true;
 	}
 	return false;
 }
 
 bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
-					 const Posed& a2w, const Posed& b2w,
-					 Vec3d& v, Vec3d& pa, Vec3d& pb) {
+	const Posed& a2w, const Posed& b2w, Vec3d& v, Vec3d& pa, Vec3d& pb) {
 	Vec3d w;
 
 	usedPoints = 0;
@@ -347,57 +342,61 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	//	w0-w1上の点で，oからの最近傍点を求める．
 	CastOrigin(v.XY(), w[0].XY(), w[1].XY());
 	v.Z() = 0;
+
+#pragma warning (disable :4056)
+	dist = -2*DBL_MAX;
+#pragma warning (default: 4056)
+
 	if (v.square() < epsilon2){
 		//	w0_w1上原点Oがある．
 		Vec3d va = w[0];
 		Vec3d vb = w[1];
 		Vec3d l = vb-va;
 		v = Vec3d(0,0,1) - l.Z() / l.square() * l;
-	}
-	//	サポートを求める．
-	CalcSupport(v, p[2], q[2], w[2]);
-	dist = -DBL_MAX*2;
+		CalcSupport(v, p[2], q[2], w[2]);
+	}else{
+		//	サポートを求める．
+		CalcSupport(v, p[2], q[2], w[2]);
+		//	三角形から原点がはみ出している間繰り返し
+		while(1){
+			//	はみ出しチェック
+			Vec2d seg[2];
+			seg[0] = w[0].XY()-w[2].XY();
+			seg[1] = w[1].XY()-w[2].XY();
+			int segIds[2] = {0,1};
+			if (seg[0] % seg[1]<0){
+				segIds[0] = 1;
+				segIds[1] = 0;
+			}
+			int idUse=-1;
+			bool bInside = true;
+			if (seg[segIds[0]] % -w[2].XY() < 0){	//	はみ出しチェック
+				idUse = segIds[0];
+				w[segIds[1]] = w[2];
+				CastOrigin(v.XY(), w[segIds[0]].XY(), w[2].XY());
+				v.Z() = 0;
+				bInside = false;
+			}else if(seg[segIds[1]] % -w[2].XY() > 0){	//	はみ出しチェック
+				idUse = segIds[1];
+				w[segIds[0]] = w[2];
+				CastOrigin(v.XY(), w[segIds[1]].XY(), w[2].XY());
+				v.Z() = 0;
+				bInside = false;
+			}
+			if (bInside) break;//	中に入っていれば次に進む
 
-
-	//	三角形から原点がはみ出している間繰り返し
-	while(1){
-		//	はみ出しチェック
-		Vec2d seg[2];
-		seg[0] = w[0].XY()-w[2].XY();
-		seg[1] = w[1].XY()-w[2].XY();
-		int segIds[2] = {0,1};
-		if (seg[0] % seg[1]<0){
-			segIds[0] = 1;
-			segIds[1] = 0;
+			//	はみ出していたら三角形を更新
+			Vec3d wNew;
+			CalcSupport(v, p[2], q[2], wNew);
+			if (wNew.XY() * v.XY() > -epsilon){	//	w[2]の外側にOがあるので触ってない
+				return 0;
+			}
+			if( (wNew.XY()-w[idUse].XY()).square() < epsilon2 || (wNew.XY()-w[2].XY()).square() < epsilon2){
+				//	同じw: 辺の更新なし＝Oは辺の外側
+				return 0;
+			}
+			w[2] = wNew;
 		}
-		int idUse=-1;
-		bool bInside = true;
-		if (seg[segIds[0]] % -w[2].XY() < 0){	//	はみ出しチェック
-			idUse = segIds[0];
-			w[segIds[1]] = w[2];
-			CastOrigin(v.XY(), w[segIds[0]].XY(), w[2].XY());
-			v.Z() = 0;
-			bInside = false;
-		}else if(seg[segIds[1]] % -w[2].XY() > 0){	//	はみ出しチェック
-			idUse = segIds[1];
-			w[segIds[0]] = w[2];
-			CastOrigin(v.XY(), w[segIds[1]].XY(), w[2].XY());
-			v.Z() = 0;
-			bInside = false;
-		}
-		if (bInside) break;//	中に入っていれば次に進む
-
-		//	はみ出していたら三角形を更新
-		Vec3d wNew;
-		CalcSupport(v, p[2], q[2], wNew);
-		if (wNew.XY() * v.XY() > -epsilon){	//	w[2]の外側にOがあるので触ってない
-			return 0;
-		}
-		if( (wNew.XY()-w[idUse].XY()).square() < epsilon2 || (wNew.XY()-w[2].XY()).square() < epsilon2){
-			//	同じw: 辺の更新なし＝Oは辺の外側
-			return 0;
-		}
-		w[2] = wNew;
 	}
 
 	Vec3d sTri;		//	三角形の有向面積
@@ -633,257 +632,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	return rv;
 }
 
-
-/*	コードのメモ．そのうち消します(長谷川)
-
-if (rv>0 && dist<0){
-		//	すでに接触していた場合
-		w2z = w2z*Quaterniond(Rad(180), 'x');
-		a2z.Ori() = w2z * a2w.Ori();
-		a2z.Pos() = w2z * a2w.Pos();
-		Posed b2z;
-		b2z.Ori() = w2z * b2w.Ori();
-		b2z.Pos() = w2z * b2w.Pos();
-
-		int rv2 = ContFindCommonPointZ(a, b, a2z, b2z, w2z, u, endLength, normal, pa, pb, dist);
-	}
-
-int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
-	#define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
-	const double epsilon = 1e-6;
-	const double epsilon2 = epsilon*epsilon;
-
-	//	返り値の座標系の修正ができてない
-		
-	Quaterniond w2z;
-	double endLength = range.norm();
-	range /= endLength;
-	Vec3d u = -range;	//	u: 物体ではなく原点の速度の向きなので - がつく．
-	if (u.Z() < 1-1e-6){
-		Matrix3d matW2z = Matrix3d::Rot(u, Vec3f(0,0,1), 'z');
-		w2z.FromMatrix(matW2z);
-		w2z = w2z.Inv();
-//		DSTR << "VelLocal:" << w2z * u << std::endl;
-	}
-	Posed a2z;
-	a2z.Ori() = w2z * a2w.Ori();
-	a2z.Pos() = w2z * a2w.Pos();
-	Posed b2z;
-	b2z.Ori() = w2z * b2w.Ori();
-	b2z.Pos() = w2z * b2w.Pos();
-
-	Vec3d w[3], v[3], p[3], q[3];
-
-	//	スタートアップ
-	//	w0を求める
-	int id = 0;
-	v[id] = Vec3d(0,0,1);
-
-	CalcSupport(v[id], p[id], q[id], w[id]);
-	if (w[id].Z() > endLength) return -1;	//	range内では接触しないが，将来接触するかもしれない．
-	if (w[id].Z() < 0){	//	反対側のsupportを求めてみて，範囲外か確認
-		Vec3d vOpp = -v[id]; Vec3d pOpp,qOpp,wOpp;
-		CalcSupport(vOpp, pOpp, qOpp, wOpp);
-		if (wOpp.Z() <0) return -2;	//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
-	}
-
-	//	w1を求める
-	id = 1;
-	v[id] = Vec3d(w[0].X(), w[0].Y(), 0);
-	if (v[id].XY().square() < epsilon2){	//	w0 = 衝突点
-		normal = u;
-		pa = p[0]; pb = q[0];
-		dist = w[0].Z();
-		return 1;
-	}
-	CalcSupport(v[id], p[id], q[id], w[id]);
-	if (w[id].XY() * v[id].XY() > 0){	//	w[id]の外側にOがあるので触ってない
-		return false;
-	}
-	
-	//	w0-w1上の点で，oからの最近傍点を求める．
-	id = 2;
-	Vec2d va = w[0].XY();
-	Vec2d vb = w[1].XY();
-	Vec2d l = vb - va;
-	assert(l.square() >= epsilon2);	//	w0=w1ならば，すでに抜けているはず．
-	double ll_inv = 1/l.square();
-	v[id].XY() = vb*l*ll_inv * va  -  va*l*ll_inv * vb;
-	v[id].Z() = 0;
-	if (v[id].square() < epsilon2){
-		v[id] = 0.5 * (v[0] + v[1]);
-	}
-	//	サポートを求める．
-	CalcSupport(v[id], p[id], q[id], w[id]);
-
-	//	繰り返し
-	//	はみ出しチェック
-	Vec2d seg[2];
-	seg[0] = w[0].XY()-w[2].XY();
-	seg[1] = w[1].XY()-w[2].XY();
-	int segIds[2] = {0,1};
-	if (seg[0] % seg[1]<0){
-		segIds[0] = 1;
-		segIds[1] = 0;
-	}
-
-	while(1){
-		int idUse=-1;
-		bool bInside = true;
-		if (seg[segIds[0]] % -w[2].XY() < 0){	//	はみ出しチェック
-			idUse = segIds[0];
-			w[segIds[1]] = w[2];
-			v[segIds[1]] = v[2];
-			Vec3d va = w[segIds[0]];
-			Vec3d vb = w[2];
-			Vec3d l = vb-va;
-			double ll_inv = 1/l.square();
-			v[2] = vb*l*ll_inv * va  -  va*l*ll_inv * vb;
-			bInside = false;
-		}
-		if(seg[segIds[1]] % -w[2].XY() > 0){	//	はみ出しチェック
-			assert(bInside);
-			idUse = segIds[1];
-			w[segIds[0]] = w[2];
-			v[segIds[0]] = v[2];
-			Vec2d va = w[segIds[1]].XY();
-			Vec2d vb = w[2].XY();
-			Vec2d l = vb-va;
-			double ll_inv = 1/l.square();
-			v[2] = vb*l*ll_inv * va  -  va*l*ll_inv * vb;
-			bInside = false;
-		}
-		if (!bInside){	//	はみ出していたら三角形を更新
-			Vec3d wNew;
-			CalcSupport(v[2], p[2], q[2], wNew);
-			if (wNew.XY() * v[2].XY() > 0){	//	w[2]の外側にOがあるので触ってない
-				return false;
-			}
-			if( (wNew.XY()-w[idUse].XY()).square() < epsilon2 || (wNew.XY()-w[2].XY()).square() < epsilon2){
-				//	同じw: 辺の更新なし＝Oは辺の外側
-				return false;
-			}
-			w[2] = wNew;
-		}else{	//	中に入っていれば次に進む
-			break;
-		}
-	}
-	//	原点は△の内部
-	while(1){
-		//	頂点の並び順をそろえる．
-		Vec3d sTri = (w[2]-w[0]) % (w[1]-w[0]);
-		double sDir = sTri.Z();
-		if (sDir < 0){		//	逆向き
-			std::swap(w[1], w[2]);
-			std::swap(p[1], p[2]);
-			std::swap(q[1], q[2]);
-			sTri *= -1;
-			sDir *= -1;
-		}
-		//	面積0=線分の場合
-		if (sDir <= epsilon){
-			int seg[3];	//	2は使わない頂点
-			if (w[0].XY() * w[1].XY() > 0){
-				seg[0] = 2;
-				if (w[0].square() < w[1].square()){
-					seg[1] = 0;
-					seg[2] = 1;
-				}else{
-					seg[1] = 1;
-					seg[2] = 0;
-				}
-			}else if (w[0].XY() * w[2].XY() > 0){
-				seg[0] = 1;
-				if (w[0].square() < w[2].square()){
-					seg[1] = 0;
-					seg[2] = 2;
-				}else{
-					seg[1] = 2;
-					seg[2] = 0;
-				}
-			}else{
-				seg[0] = 0;
-				if (w[1].square() < w[2].square()){
-					seg[1] = 1;
-					seg[2] = 2;
-				}else{
-					seg[1] = 2;
-					seg[2] = 1;
-				}
-			}
-			Vec3d va = w[seg[0]];
-			Vec3d vb = w[seg[1]];
-			Vec3d l = vb-va;
-			double ll_inv = 1/l.square();
-			double ka = vb*l*ll_inv;
-			double kb = -va*l*ll_inv;
-			v[seg[2]] = ka * va  +  kb * vb;
-			CalcSupport(v[seg[2]], p[seg[2]], q[seg[2]], w[seg[2]]);
-			if ((w[seg[2]]-w[seg[0]]).square() < epsilon2 || (w[seg[2]]-w[seg[1]]).square() < epsilon2){
-				ka = w[seg[1]].XY().norm();
-				kb = w[seg[2]].XY().norm();
-				double l = ka+kb;
-				ka /= l;
-				kb /= l;
-				pa = ka*p[seg[0]] + kb*p[seg[1]];
-				pb = ka*q[seg[0]] + kb*q[seg[1]];
-				dist = ka*w[seg[0]].Z() + ka*w[seg[1]].Z();
-				normal = w2z.Conjugated() * v[seg[2]].unit();
-				return 2;
-			}
-		}else{	//	まっとうな三角形
-			Vec3d vNew = sTri;
-			Vec3d pNew, qNew, wNew;
-			CalcSupport(vNew, pNew, qNew, wNew);
-			for(int i=0; i<3;++i){
-				if ( (wNew-w[i]).square() < epsilon2 ){
-					normal = vNew.unit();
-					dist = w[0]*normal / normal.Z();
-					Matrix3d m;
-					m.Ex() = w[0];
-					m.Ey() = w[1];
-					m.Ez() = w[2];
-					Vec3d k = m.inv() * Vec3d(0,0,dist);
-					pa = k.x*p[0] + k.y*p[1] + k.z*p[2];
-					pb = k.x*q[0] + k.y*q[1] + k.z*q[2];
-					normal = w2z.Conjugated() * normal;
-//					DSTR << "ql:" << q[0] << q[1] << q[2] << std::endl;
-//					DSTR << "k:" << k.x+k.y+k.z << k << std::endl;
-					return 3;
-				}
-			}				
-			
-			double sSubTri[3];
-			double ow[3];
-			int selection=-1;
-			double cross=0;
-			for(int i=0; i<3;++i){
-				sSubTri[i] = (w[(i+1)%3].XY() - wNew.XY()) % (w[i].XY() - wNew.XY());
-				ow[i] =	-wNew.XY() % w[i].XY();
-			}
-			double sNewTri=0;
-			for(int i=0; i<3;++i){
-				int iinc = (i+1)%3;
-				if (sSubTri[i] > epsilon){
-					double s = min(ow[i], -ow[iinc]);
-					if (s > sNewTri){
-						s = sNewTri;
-						selection = i;
-					}
-				}
-			}
-			assert(selection>=0);
-			int replace = (selection+2)%3;
-			v[replace] = vNew;
-			w[replace] = wNew;
-			p[replace] = pNew;
-			q[replace] = qNew;
-		}
-	}
-}
-*/
-
+#if 0
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					  const Posed& a2w, const Posed& b2w,
 					  Vec3d& pa, Vec3d& pb) {
@@ -914,5 +663,5 @@ void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 	}
 	CalcPoints(usedPoints, pa, pb);
 }
-
+#endif
 }

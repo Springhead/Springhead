@@ -67,10 +67,12 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
+#if 0
 /// GJKÇ≈ç≈ãﬂñTì_ëŒÇå©Ç¬ÇØÇÈ
 void FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					   const Posed& a2w, const Posed& b2w,
 					   Vec3d& pa, Vec3d& pb);
+#endif
 
 class CDFace;
 

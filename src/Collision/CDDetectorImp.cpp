@@ -243,6 +243,8 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 	}
 #endif
 }
+
+
 void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 	if (cp->state == cp->NEW) {
 		//	新たな接触の場合は，法線を積分して初期値を求める
@@ -251,32 +253,22 @@ void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 		cp->depth = 1e-2;
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
-	Vec3d n;			//	求める法線
-//	Vec3d closest[2];	//	最近傍点(ローカル系)
-	Posed trans;
-
-	if (cp->depth < 1e-2) cp->depth = 1e-2;
-	while(1) {
-		cp->depth *= 2;						//	余裕を見て，深さの2倍動かす
-		trans = cp->shapePoseW[1];			//	動かす行列
-		trans.Pos() += cp->depth * cp->normal;
-		FindClosestPoints((CDConvex*)cp->shape[0], (CDConvex*)cp->shape[1], cp->shapePoseW[0], trans, cp->closestPoint[0], cp->closestPoint[1]);
-		cp->center = cp->shapePoseW[0] * cp->closestPoint[0];
-		n = trans * cp->closestPoint[1] - cp->center;
-		if (n.square() > 1e-10) break;
+	Vec3d dir = -cp->normal;
+	int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], dir, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
+	if (res <= 0){
+		DSTR << "Error in CDContactAnalysis::CalcNormal(): res:" << res << "dist:" << cp->depth << dir << std::endl;
+		Vec3d v;
+		FindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], v, cp->closestPoint[0], cp->closestPoint[1]);
+		DSTR << "v:" << v << std::endl;
+		DSTR << "cp:" << cp->shapePoseW[0]*cp->closestPoint[0] << cp->shapePoseW[1]*cp->closestPoint[1] << std::endl; 
+		int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], dir, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	}
-	cp->depth = cp->depth - n.norm();			//	動かした距離 - 2点の距離
-	cp->normal = n.unit();
-	cp->center += 0.5f*cp->depth*cp->normal;
-#ifdef _DEBUG
-	if (cp->normal * cp->iNormal < 0 || !finite(cp->normal.norm())){
-		DSTR << "Error: Wrong normal:" << cp->normal << cp->iNormal << std::endl;
-		DSTR << trans;
-		DSTR << cp->closestPoint[0] << cp->closestPoint[1] << std::endl;
-		FindClosestPoints((CDConvex*)cp->shape[0], (CDConvex*)cp->shape[1], cp->shapePoseW[0], trans, cp->closestPoint[0], cp->closestPoint[1]);
-	}
-#endif
+	cp->depth *= -1;
+	cp->center = cp->shapePoseW[0] * cp->closestPoint[0];
+	cp->center -= 0.5f*cp->depth*cp->normal;
 }
+
+	
 /*
 void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 	GRRender* render;

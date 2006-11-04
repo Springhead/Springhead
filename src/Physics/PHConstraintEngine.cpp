@@ -30,51 +30,8 @@ public:
 };
 Vec3d ContactVertex::ex;
 Vec3d ContactVertex::ey;
-# if 0
-void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
-	const double depthEpsilon = 0.01;
-	if (state == NEW){
-		normal = solid0->GetPointVelocity(commonPoint) - solid1->GetPointVelocity(commonPoint);
-		double norm = normal.norm();
-		if (norm<1e-10){
-			normal = solid1->GetCenterPosition() - solid0->GetCenterPosition();
-			double norm = normal.norm();
-			if (norm<1e-10){
-				normal = Vec3d(1,0,0);
-			}
-		}
-		normal.unitize();
-		depth = depthEpsilon;
-	}
-	if (normal.square() < 0.0001 || depth < 1e-30 || 
-		!_finite(normal.X()) ||  !_finite(normal.Y()) || !_finite(normal.Z()) ||
-		!_finite(depth))
-	{
-		DSTR << "Error in CalcNormal" << normal << depth << std::endl;
-	}
-	//	前回の法線の向きに動かして，最近傍点を求める
-	if (depth < depthEpsilon) depth = depthEpsilon;
-	Posed trans;
-	Vec3f n;
-	while(1) {
-		depth *= 2;							//	余裕を見て，深さの2倍動かす
-		trans = shapePoseW[1];				//	動かす行列
-		trans.Pos() += depth * normal;
-		FindClosestPoints(shape[0], shape[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
-		center = shapePoseW[0] * closestPoint[0];
-		n = trans * closestPoint[1] - center;
-		if (n.square() > 1e-5) break;
-	}
-	depth = depth - n.norm();		//	動かした距離 - 2点の距離
-	normal = n.unit();
-	center -= 0.5f*depth*normal;
-#ifdef _DEBUG
-	if (!finite(normal.norm())){
-		FindClosestPoints(shape[0], shape[1], shapePoseW[0], trans, closestPoint[0], closestPoint[1]);
-	}
-#endif
-}
-#else
+
+
 void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	if (state == NEW){
 		normal = solid0->GetPointVelocity(commonPoint) - solid1->GetPointVelocity(commonPoint);
@@ -97,12 +54,15 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
 	if (res <= 0){
 		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << dir << std::endl;
+		Vec3d v;
+		FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], v, closestPoint[0], closestPoint[1]);
+		DSTR << "v:" << v << std::endl;
+		DSTR << "cp:" << shapePoseW[0]*closestPoint[0] << shapePoseW[1]*closestPoint[1] << std::endl; 
+		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
 	}
 	depth *= -1;
 	center = shapePoseW[0] * closestPoint[0];
 	center -= 0.5f*depth*normal;
-//	DSTR << "CalcNormal(): res:" << res << "d n:" << depth << normal << std::endl;
-//	DSTR << "center:" << center << std::endl;
 #ifdef _DEBUG
 	if (!finite(normal.norm())){
 	int rv = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
@@ -110,7 +70,6 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	}
 #endif
 }
-#endif
 
 bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	shape[0] = s0;
@@ -200,6 +159,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	//	＃2次曲線はMullar＆Preparataには入れないで別にしておく．
 
 	//	相対速度をみて2Dの座標系を決める。
+	FPCK_FINITE(solid0->solid->pose);
+	FPCK_FINITE(solid1->solid->pose);
 	Vec3d v0 = solid0->solid->GetPointVelocity(center);
 	Vec3d v1 = solid1->solid->GetPointVelocity(center);
 	Matrix3d local;	//	contact coodinate system 接触の座標系
