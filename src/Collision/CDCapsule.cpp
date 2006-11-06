@@ -15,7 +15,8 @@
 #include "CDQuickHull3DImp.h"
 
 namespace Spr{;
-	
+const double epsilon = 1e-8;
+
 //----------------------------------------------------------------------------
 //	CDCapsule
 IF_OBJECT_IMP(CDCapsule, CDConvex);	
@@ -49,14 +50,16 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	if (dir.X() < 0) dir = -dir;
 	
-	if (dir.X() < 0.3f){	//	カプセルが大体接触面に平行な場合
-		Vec3f center = ring.localInv * toW.Pos();
-		float is = -center.X() / dir.X() * sqrt(1-dir.X()*dir.X());	//	接触面と中心線を半径ずらした線との交点
-		is += radius / dir.X();
-		float start = -0.5f*length;
-		float end = 0.5f*length;
-		if (is < end) end = is;
-		assert(end > start);
+	if (dir.X() < 0.3f){		//	カプセルが接触面に大体平行な場合
+		float shrink = sqrt(1-dir.X()*dir.X());	//	傾いているために距離が縮む割合
+		float start = -0.5f*length*shrink;
+		float end = 0.5f*length*shrink;
+		if (dir.X() > epsilon){	//	完全に平行でない場合
+			Vec3f center = ring.localInv * toW.Pos();
+			float is = -(center.X()-radius) / dir.X() * shrink;	//	接触面と中心線を半径ずらした線との交点
+			if (is < end) end = is;
+			assert(end > start);
+		}
 
 		//	ringに線分を追加
 		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), -start));

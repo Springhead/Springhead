@@ -16,8 +16,6 @@ namespace Spr{;
 /// 形状
 /// 形状自体は位置情報を持たない．位置情報は形状を参照する各剛体が持つ．
 class CDShape : public InheritNamedObject<CDShapeIf, NamedObject>{
-protected:
-	//Posef pose;
 public:
 	PHMaterial material;
 
