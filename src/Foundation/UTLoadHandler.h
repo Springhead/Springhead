@@ -10,6 +10,7 @@
 
 #include <Foundation/Object.h>
 #include <Foundation/UTTypeDesc.h>
+#include <Foundation/UTLoadContext.h>
 #include <string>
 
 namespace Spr{;

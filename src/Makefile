@@ -15,7 +15,8 @@ LIBS_DIR		= Base \
 				FileIO \
 				Graphics \
 				Physics \
-				Foundation
+				Foundation \
+				Creature
 TESTS_DIR		= tests 
 SAMPLES_DIR		= Samples
 

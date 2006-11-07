@@ -34,9 +34,10 @@ protected:
 	 *　　 （Direct3Dの場合は、Modelを書き換えずにViewだけ書き換え、視点を動かすことができる）
 	 *	@{ 
 	 */
-	Affinef	viewMatrix;				///<	視点行列
-	Affinef	modelMatrix;			///<	モデル行列 
-	Affinef	projectionMatrix;		///<	射影行列 
+	Affinef								viewMatrix;				///< 視点行列
+	Affinef								modelMatrix;			///< モデル行列 
+	std::vector< std::vector<Affinef> > modelMatrixs;			///< モデル行列（VertexBlending用）
+	Affinef								projectionMatrix;		///< 射影行列 
 	/** @} */
 	/**
 	 *	@name	フォント変数

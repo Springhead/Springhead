@@ -4,8 +4,8 @@
 /**     @example 	./Samples/Vehicles/main.cpp							*/
 /**     @example 	./Samples/First/first.cpp							*/
 /**     @example 	./Samples/Reach/main.cpp							*/
-/**     @example 	./Samples/Vehicles/main.cpp							*/
 
+/** 	@example 	./tests/Collision/ContGJK/main.cpp					*/
 /** 	@example 	./tests/Collision/QuickHull2D/main.cpp				*/
 /**   	@example	./tests/Creature/CRSimpleTest/CRSimpleTest.cpp		*/
 /**		@example	./tests/FileIO/FILoader/main.cpp					*/

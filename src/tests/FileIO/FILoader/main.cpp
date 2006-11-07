@@ -20,7 +20,7 @@
   ・Physicsエンジンと接続し、シミュレーションさせる。
 
 【テストパターン】
-  ※ 本ファイルの28行目 " #define TEST_FILEX " にて、入力ファイル名を指定する。
+  ※ 本ファイルの " #define TEST_FILEX " にて、入力ファイル名を指定する。
 　  test1.x  : 凸形状(mesh)のテスト
     test2.x  : 凸形状(mesh)のテスト（青い箱(mesh)と床を、互いに衝突させない剛体として登録）
     test3.x  : 凸形状(mesh)と球(sphere)のテスト
@@ -32,8 +32,8 @@
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-#define EXIT_TIMER	12000			// 強制終了させるステップ数
-#define TEST_FILEX	"test1.x"		// ロードするXファイル
+#define EXIT_TIMER		12000			// 強制終了させるステップ数
+#define TEST_FILEX		"test1.x"		// ロードするXファイル
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;

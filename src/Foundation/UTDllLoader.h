@@ -29,6 +29,7 @@ public:
 	}
 	~UTDllLoader(){ Cleanup(); }
 	bool Load(const char* dllName=NULL, const char* addPath=NULL);
+	/// DLLが持つ、指定された関数のアドレスを取得する．
 	void* GetProc(const char* name);
 protected:
 	void Init();
