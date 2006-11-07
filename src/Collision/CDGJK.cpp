@@ -301,12 +301,218 @@ void CastOrigin(PTM::TVectorBase<DIMENC(N), RD>& rv, const PTM::TVectorBase<DIME
 	q = b->Support(b2z.Ori().Conjugated() * -(v));					\
 	w = b2z * (q) - a2z * (p);										\
 
+#define CalcSupport2(v, n)	CalcSupport((v), p[n], q[n], w[n])
+
+
 #define SwapAll(id1, id2)											\
 		std::swap(w[id1],w[id2]);									\
 		std::swap(p[id1],p[id2]);									\
 		std::swap(q[id1],q[id2]);									\
 ;
+;
+#if 1
+struct CDGJKIds{
+	char i[3];		//	頂点のID
+	char nVtx;		//	使用する頂点の数
+	double dist;
+	Vec3d normal;
+	double k[4];
+	CDGJKIds(){
+		i[0] = i[1] = i[2] = -1;
+		nVtx = -1;
+		dist = -1;
+	}
+};
 
+const char vacants[] = {
+	0, 1, 0, 2, 0, 1, 0, 3,
+	0, 1, 0, 2, 0, 1, 0, 4,
+};
+inline char VacantId(char a, char b){
+	char bits = (1<<a) | (1<<b);
+	return vacants[bits];
+}
+inline char VacantId(char a, char b, char c){
+	char bits = (1<<a) | (1<<b) | (1<<c);
+	return vacants[bits];
+}
+
+inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
+	const Posed& a2z, const Posed& b2z, const Quaterniond& w2z, const Vec3d& u, const double& endLength, 
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
+	CDGJKIds ids[2];
+	CDGJKIds* cur = ids;
+	CDGJKIds* last = ids+1;
+	static int newPoint;
+	static Vec3d w[4], p[4], q[4];
+
+	//	w0を求める
+	CalcSupport2(Vec3d(0,0,1), 0);
+	if (w[0].Z() > endLength) return -1;	//	range内では接触しないが，将来接触するかもしれない．
+	if (w[0].Z() < 0){						//	反対側のsupportを求めてみて，範囲外か確認
+		CalcSupport2(Vec3d(0,0,-1), 3);
+		if (w[3].Z() <0) return -2;			//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
+	}
+	//	w1を求める
+	Vec3d v(w[0].X(), w[0].Y(), 0);
+	if (v.XY().square() < epsilon2){	//	w0=衝突点の場合
+		normal = u.unit();
+		pa = p[0]; pb = q[0];
+		dist = w[0].Z();
+		return 1;
+	}
+	CalcSupport2(v, 1);
+	if (w[1].XY() * v.XY() > 0) return 0;	//	w[1]の外側にOがあるので触ってない
+	
+	
+	//	w[0]-w[1]-w[0] を三角形と考えてスタートして，oが三角形の内部に入るまで繰り返し
+	cur->i[0] = 1;	//	新しい頂点
+	cur->i[1] = 0;	//	もとの線分
+	cur->i[2] = 0;	//	もとの線分
+	while(1){
+		double s = w[cur->i[0]].XY() ^ w[cur->i[1]].XY();
+		if (s > epsilon){		//	1-0からはみ出している
+			CastOrigin(v.XY(), w[cur->i[0]].XY(), w[cur->i[1]].XY());
+			v.Z() = 0;
+			cur->i[2] = cur->i[0];
+			cur->i[0] = VacantId(cur->i[1], cur->i[2]);
+		}else{
+			s = w[cur->i[2]].XY() ^ w[cur->i[0]].XY();
+			if (s > epsilon){	//	0-2からはみ出している
+				CastOrigin(v.XY(), w[cur->i[2]].XY(), w[cur->i[0]].XY());
+				v.Z() = 0;
+				cur->i[1] = cur->i[0];
+				cur->i[0] = VacantId(cur->i[1], cur->i[2]);
+			}else{				//	内側
+				break;
+			}
+		}
+		CalcSupport2(v, cur->i[0]);
+		if (w[cur->i[0]].XY() * v.XY() > -epsilon2){	//	0の外側にoがあるので触ってない
+			return 0;
+		}
+		if(	(w[cur->i[0]].XY()-w[cur->i[1]].XY()).square() < epsilon2 || 
+			(w[cur->i[2]].XY()-w[cur->i[1]].XY()).square() < epsilon2){
+			return 0;								//	同じw: 辺の更新なし＝Oは辺の外側
+		}
+	}
+	last->nVtx = 0;
+	//	三角形 cur 0-1-2 の中にoがある．	cur 0が最後に更新した頂点w
+	while(1){
+		static Vec3d s;		//	三角形の有向面積
+		s = (w[cur->i[1]]-w[cur->i[0]]) % (w[cur->i[2]]-w[cur->i[0]]);
+		//	頂点の並び順をそろえる．
+		if (s.Z() < 0){		//	逆向き
+			std::swap(cur->i[1], cur->i[2]);
+			s *= -1;
+		}
+		if (s.Z() < epsilon){	//	線分になる場合
+			cur->nVtx = 2;		//	使うのは2点，どちらの2点を使うか判定する．
+			double ip1 = w[cur->i[0]].XY() * w[cur->i[1]].XY();
+			double ip2 = w[cur->i[0]].XY() * w[cur->i[2]].XY();
+			if (ip1 < epsilon && ip2 < epsilon){	//	0-1も0-2もoを含む
+				cur->k[cur->i[0]] = w[cur->i[0]].XY().norm();
+				cur->k[cur->i[1]] = w[cur->i[1]].XY().norm();
+				cur->dist = cur->k[cur->i[0]]*w[cur->i[0]].Z() + cur->k[cur->i[1]]*w[cur->i[1]].Z();
+				double l1 = cur->k[cur->i[0]] + cur->k[cur->i[1]];
+				cur->dist /= l1;
+				
+				cur->k[cur->i[2]] = w[cur->i[1]].XY().norm();
+				double d2 = cur->k[cur->i[0]]*w[cur->i[0]].Z() + cur->k[cur->i[2]]*w[cur->i[2]].Z();
+				double l2 = cur->k[cur->i[0]] + cur->k[cur->i[2]];
+				d2 /= l2;
+				if (d2 < cur->dist){
+					std::swap(cur->i[1], cur->i[2]);
+					cur->dist = d2;
+				}
+			}else{
+				if (ip2 < ip1) std::swap(cur->i[1], cur->i[2]);
+				cur->k[cur->i[0]] = w[cur->i[0]].XY().norm();
+				cur->k[cur->i[1]] = w[cur->i[1]].XY().norm();
+				cur->dist = cur->k[cur->i[0]]*w[cur->i[0]].Z() + cur->k[cur->i[1]]*w[cur->i[1]].Z();
+				double l1 = cur->k[cur->i[0]] + cur->k[cur->i[1]];
+				cur->dist /= l1;
+			}
+			if (last->nVtx){
+				double approach = last->normal * (w[cur->i[0]] - w[last->i[0]]);
+				if (approach > -epsilon || cur->dist <= last->dist) break;	//	return last
+			}
+			Vec3d l = w[cur->i[0]] - w[cur->i[1]];
+			cur->normal = Vec3d(0,0,1) - l.Z() / l.square() * l;
+			cur->normal.unitize();
+			std::swap(cur, last);
+			cur->i[1] = last->i[0];
+			cur->i[2] = last->i[1];
+			cur->i[0] = VacantId(cur->i[1], cur->i[2]);
+			CalcSupport2(last->normal, 0);
+		}else{	//	三角形になる場合
+			cur->nVtx = 3;		//	使うのは3点．
+			cur->normal = s.unit();
+			cur->dist = w[cur->i[0]] * cur->normal / cur->normal.Z();
+			if (last->nVtx){
+				double approach = last->normal * (w[cur->i[0]] - w[last->i[0]]);
+				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist <= last->dist)) break;	//	return last;
+			}
+
+			int newVtx = VacantId(cur->i[0], cur->i[1], cur->i[2]);
+			CalcSupport2(cur->normal, newVtx);
+			
+			//	新しい点 newVtxと元の△の2点wで原点を囲む△を作る
+			//	(w[cur->i]-w[newVtx])^(o-w[newVtx]) が + から - に変化するところを探す．
+			bool bPlus = false;
+			bool bMinus = false;
+			double ow[3];
+			int i;
+			for(i=0; i<3;++i){
+				Vec2d wn = w[cur->i[i]].XY()-w[newVtx].XY();
+				ow[i] = wn % (-w[newVtx].XY());
+				if (ow[i] < 0){
+					bMinus = true;
+					if (bPlus) break;
+				}else if(ow[i] > 0) {
+					bPlus= true;
+				}
+			}
+			int replace = -100;
+			if (bPlus && bMinus){
+				//	+-が出揃った場合：+から-に移った次の頂点が置き換える頂点
+				replace = (i+1)%3;
+			}else{
+				//	+-が出揃わない場合，全部0の場合：w[newVtx]に近いw[i]を置き換え
+				double minDist = DBL_MAX;
+				for(int i=0; i<3; ++i){
+					double d = (w[cur->i[i]].XY() - w[newVtx].XY()).square();
+					if (d<minDist){
+						minDist = d; replace = i;
+					}
+				}
+			}
+			std::swap(cur, last);
+			cur->i[0] = newVtx;
+			cur->i[1] = last->i[(replace+1)%3];
+			cur->i[2] = last->i[(replace+2)%3];
+		}
+	}
+	if (last->nVtx == 2){	//	線分の場合，計算済みのkを使ってpa,pbを計算
+		double sumInv = 1 / (last->k[0]+last->k[1]);
+		last->k[0] *= sumInv; last->k[1] *= sumInv;
+		pa = last->k[0] * p[last->i[0]] + last->k[1] * p[last->i[1]];
+		pb = last->k[0] * q[last->i[0]] + last->k[1] * q[last->i[1]];
+	}else{					//	三角形の場合，kの計算をしていないのでここで計算
+		Matrix2d m;
+		m.Ex() = w[last->i[0]].XY()-w[last->i[1]].XY();
+		m.Ey() = w[last->i[0]].XY()-w[last->i[2]].XY();
+		Vec2d k = m.inv() * w[last->i[0]].XY();
+		double kz = 1-k.x-k.y;
+		pa = k.x*p[last->i[1]] + k.y*p[last->i[2]] + kz*p[last->i[0]];
+		pb = k.x*q[last->i[1]] + k.y*q[last->i[2]] + kz*q[last->i[0]];
+	}
+	dist = last->dist;
+	normal = w2z.Conjugated() * last->normal;
+	return last->nVtx;
+}
+
+#else
 
 inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	const Posed& a2z, const Posed& b2z, const Quaterniond& w2z, const Vec3d& u, const double& endLength, 
@@ -606,6 +812,7 @@ inline int ContFindCommonPointZ(const CDConvex* a, const CDConvex* b,
 	assert(0);
 	return 0;
 }
+#endif
 
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){

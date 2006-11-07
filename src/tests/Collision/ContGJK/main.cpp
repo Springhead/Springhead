@@ -78,7 +78,7 @@ void display(){
 		Vec3d normal;
 		Vec3d pos[2];
 		double dist=0;
-		Vec3d range(1,-1,1);
+		Vec3d range(0,-1,1);
 		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], range, normal, pos[0], pos[1], dist);
 		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		DSTR << " p:" << pose[0]*pos[0] << " q:" << pose[1]*pos[1] << std::endl;
@@ -308,9 +308,6 @@ int main(int argc, char* argv[]){
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
 	soBlock = scene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
-
-	Posed p = Posed::Rot(Rad(0.1), 'z');
-	soBlock->SetPose(p);
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;

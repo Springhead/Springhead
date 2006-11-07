@@ -87,16 +87,11 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;
 		if (dist > -1e-8) return false;	//	–@ü•ûŒü‚Éi‚ß‚È‚¢‚ÆÚG‚µ‚È‚¢ê‡D
-		
-//		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-//		DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
+		//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
+		//DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
 
 		depth = dist * dir * normal-2e-8;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
-		if (center.square() > 1e100){
-			DSTR << center << std::endl;
-			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
-		}
 	}else{
 		//	‰‚ß‚Ä‚ÌÚG‚Ìê‡
 		Vec3d delta = delta1-delta0;

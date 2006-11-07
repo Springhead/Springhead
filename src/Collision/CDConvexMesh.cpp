@@ -16,11 +16,10 @@
 
 #define CD_EPSILON	HULL_EPSILON
 #define CD_INFINITE	HULL_INFINITE
-const double epsilon = 1e-8;
-const double epsilon2 = epsilon*epsilon;
-
 
 namespace Spr{;
+const double epsilon = 1e-8;
+const double epsilon2 = epsilon*epsilon;
 
 
 int CDVertexIDs::FindPos(int id) const {
