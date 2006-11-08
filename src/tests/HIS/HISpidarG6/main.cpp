@@ -45,7 +45,7 @@ using namespace Spr;
 
 
 #ifdef _DEBUG
-	#define SIMULATION_FREQ	100         // シミュレーションの更新周期Hz
+	#define SIMULATION_FREQ	60         // シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		500			// 力覚スレッドの周期Hz
 	float K = 1500;						// virtual couplingの係数
 	float B = 150;
@@ -53,7 +53,7 @@ using namespace Spr;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	150         // シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000		// 力覚スレッドの周期Hz
-	float K = 1450;						// virtual couplingの係数
+	float K = 1000;						// virtual couplingの係数
 	float B = 200;
 #endif
 
@@ -542,8 +542,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 {
 	// SPIDARの情報を格納する変数
 	static Vec3d old_pos = Vec3d();
-//	static Vec3d last_force = Vec3d();
-//	static Vec3d last_torque = Vec3d();
 
 	// SPIDAR更新幅
 	static const float dt = (float)1.0f / HAPTIC_FREQ;
@@ -578,15 +576,20 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	// soPointerの速度を更新
 	info->pointer_vel = info->pointer_vel + info->pointer_massinv * VCforce * dt;
 
-	// ポインタに加える力・トルクを格納する変数
-	Vec3d pointer_force = Vec3d();
-
 	if(info->num_collisions > 0)
 	{
+		// ポインタに加える力・トルクを格納する変数
+		Vec3d pointer_force = Vec3d();
+
+		// 力を加えることによる仮想壁の移動量の総和を格納する変数
+		Vec3d pointer_dx = Vec3d();
+
 		// ポインタに生じたすべての接触について計算
 		for(int i = 0; i < info->num_collisions; i++)
 		{
-			Vec3d feedback_force = - FORCE_COEFF * dot(VCforce, info->col_normals[i]) * info->col_normals[i];
+			// 提示力の計算
+			// 衝突点での法線の逆方向にカップリング力を射影
+			Vec3d feedback_force = - FORCE_COEFF * dot(VCforce, info->col_normals[i]) * info->col_normals[i] / info->col_normals[i].norm();
 
 			// 衝突対象のトルクを計算
 			Vec3d solid_torque_vector = (info->col_positions[i] - info->nearest_solids[i]->GetCenterPosition()) ^ (-feedback_force);
@@ -598,7 +601,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			{
 //				info->nearest_solids[i]->AddForce(-feedback_force, solid_torque_vector);
 				accel = info->nearest_solids[i]->GetMassInv() * (-feedback_force);
-
 				ang_accel = info->solid_inertiainv[i] * (solid_torque_vector);
 			}
 
@@ -609,9 +611,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				accel = info->vel_effect[i] * (-feedback_force) + info->vel_constant[i];
 
 				// 角加速度を計算 ang_effectを使うよりもsolid_torque_vectorより与えるトルクがわかっているのでそれを使ったほうがより正確なはず
-	//			Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
+//				Vec3d ang_accel = info->ang_effect[i] * (-feedback_force) + info->ang_constant[i];
 				ang_accel = info->solid_inertiainv[i] * (solid_torque_vector) + info->ang_constant[i];
-
 			}
 
 			// 速度を計算し、衝突点を更新する
@@ -623,9 +624,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			// 衝突点を更新
 			info->col_positions[i] = info->col_positions[i] + dx;
 
-			// ポインタもそちらに動いたとして、位置を更新する
-			// これはベクトルなので、すべての衝突点について足されると最終的に目的のベクトルが得られる
-			info->pointer_pos = info->pointer_pos + dx;
+			// ポインタの移動のために仮想壁の移動量を保存しておく
+			pointer_dx += dx;
 
 			// 角速度を計算し、法線の向きを更新する
 			info->solid_angular_velocity[i] = info->solid_angular_velocity[i] + ang_accel * dt;
@@ -634,6 +634,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			info->col_normals[i] = info->col_normals[i] + dth;
 			info->col_normals[i] = info->col_normals[i].unit();
 
+#if 0
 			if(fabs(feedback_force.x) > 300 || fabs(feedback_force.y) > 300 || fabs(feedback_force.z) > 300)
 			{
 				std::cout << "********" << std::endl;
@@ -652,7 +653,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				std::cout << std::endl;
 				pointer_force = Vec3d();
 			}
-
+#endif
 			
 			// 提示力を前の値に追加
 			pointer_force = pointer_force + feedback_force;
@@ -672,6 +673,22 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				spidarG6.SetForce(f, Vec3d());	
 		}
 		else spidarG6.SetForce(Vec3d(), Vec3d());
+
+		// 仮想壁の移動に沿ってポインタもそちらに動いたとして、位置を更新する
+		// 本来速度によって進むベクトルの方向に射影し
+		// その射影したベクトルと速度から得られるベクトルのノルムの小さいほうをとる
+		Vec3d temp = info->pointer_vel * dt;
+		pointer_dx = dot(pointer_dx, temp) * temp / temp.norm();
+
+		if(pointer_dx.norm() > temp.norm())
+		{
+			info->pointer_pos += temp;
+		}
+		else
+		{
+			info->pointer_pos += pointer_dx;
+//			info->pointer_vel = pointer_dx / dt;
+		}
 	}
 	else
 	{
@@ -944,6 +961,9 @@ void reshape(int w, int h){
  return 	なし
  */
 void keyboard(unsigned char key, int x, int y){
+	static int local_k = K;
+	static int local_b = B;
+
 	if (key == ESC) 
 	{
 		timeKillEvent(FTimerId1);
@@ -1050,6 +1070,21 @@ void keyboard(unsigned char key, int x, int y){
 		std::cout << "pointer is ";
 		if(!bDisplayPointer)std::cout << "not ";
 		std::cout << "displayed" << std::endl;
+	}
+	// KとBのためにバッファを二つ用意し、切り替えて比較できるようにする機能
+	// ｔを押した瞬間のKとBの値が保持される
+	else if(key == 't')
+	{
+		int temp_k = K;
+		int temp_b = B;
+
+		K = local_k;
+		B = local_b;
+
+		local_k = temp_k;
+		local_b = temp_b;
+
+		keyboard('l', 0, 0);
 	}
 }
 
