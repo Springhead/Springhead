@@ -8,10 +8,11 @@
 /*	このファイルのライセンスについての注意
 	このソースは，一部 SOLID (Software Library for Interference Detection) 2.0
 	http://www.win.tue.nl/~gino/solid の src/Convex.cpp を参考に書いています．
+	論文とソースを公開されている Bergen さんに感謝します．
 
-	作者は，このソースがSolid2.0の一部の派生物ではないと信じています．
+	長谷川は，このソースがSolid2.0の一部の派生物ではないと信じています．
 	しかし，似ている箇所があります．もし派生物だと認定された場合，
-	ライセンスがGPLとなります．ご注意ください．
+	ライセンスがLGPLとなります．ご注意ください．
 */
 
 #include "Collision.h"
@@ -92,23 +93,13 @@ inline void CalcDet() {
 	}	
 }
 
-//	最近傍点が渡したSimplexの中にあるかどうか．なければ false
-inline bool IsVaildPoint(int s) {
-	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1) {
-		if (allUsedPoints & curPoint) {
-			if (s & curPoint) { if (det[s][i] <= 0) return false; }
-			else if (det[s|curPoint][i] > 0) return false;	//	>eplisionにした方がよいかも
-		}
-	}
-	return true;
-}
 
 //	係数から，最近傍点 v を計算
 inline void CalcVector(int usedPoints, Vec3d& v) {
 	double sum = 0;
 	v = Vec3d(0, 0, 0);
-	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1) {
-		if (usedPoints & curPoint) {
+	for (int i = 0; i < 4; ++i) {
+		if (usedPoints & (1<<i)) {
 			sum += det[usedPoints][i];
 			v += p_q[i] * det[usedPoints][i];
 		}
@@ -141,29 +132,63 @@ inline void CalcPoints(int usedPoints, Vec3d& p1, Vec3d& p2) {
 //	
 inline bool CalcClosest(Vec3d& v) {
 	CalcDet();
-	for (int s = usedPoints; s; --s) {
-		if ((s & usedPoints) == s) {		//	現在の形状から頂点を減らしていったものについて，
-			if (IsVaildPoint(s|lastUsed)) {	//	中に最近傍点があるSimplexが見つかったら
-				usedPoints = s|lastUsed;
-				CalcVector(usedPoints, v);	//	最近傍点を計算して返す．
-				return true;
-			}
-		}
-	}
-	if (IsVaildPoint(lastUsed)) {			//	最後に見つけた点の真上だったら
+	if (!usedPoints){
 		usedPoints = lastUsed;
 		v = p_q[lastPoint];
 		return true;
 	}
+	int simplex[5][4];
+	int nSimplex[5];
+	const char numVertices[] = {
+		0, 1, 1, 2, 1, 2, 2, 3,
+		1, 2, 2, 3, 2, 3, 3, 4
+	};
+	int nVtx = numVertices[allUsedPoints];
+	simplex[nVtx][0] = allUsedPoints;
+	nSimplex[nVtx] = 1;
+	
+	for(; nVtx>1; --nVtx){
+		for(int sid=0; sid<nSimplex[nVtx]; ++sid){
+			int s = simplex[nVtx][sid];
+			nSimplex[nVtx-1]=0;
+			for(int i = 0; i!=4; ++i){
+				int bit = 1<<i;
+				if ((s&bit) && det[s][i] <= 0){
+					simplex[nVtx-1][nSimplex[nVtx-1]] = s & ~bit;
+					++ nSimplex[nVtx-1];
+				}
+			}
+			if (nSimplex[nVtx-1] == 0){
+				usedPoints = s;
+				CalcVector(usedPoints, v);	//	最近傍点を計算して返す．			
+				return true;
+			}
+		}
+	}
 	return false;
 }
 
-//	縮退している場合＝4点のうちいくつかが同じ位置にあるとか
-inline bool IsDegenerate(const Vec3d& w) {
-	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1){
-		if ((allUsedPoints & curPoint) && (p_q[i]-w).square() < epsilon2) return true;
+//	新しい点wが，今までの点と等しい場合
+inline bool HasSame(const Vec3d& w) {
+	for (int i = 0; i < 4; ++i){
+		if ((allUsedPoints & (1<<i)) && (p_q[i]-w).square() < epsilon2) return true;
 	}
 	return false;
+}
+const char vacants[] = {
+	0, 1, 0, 2, 0, 1, 0, 3,
+	0, 1, 0, 2, 0, 1, 0, 4,
+};
+inline char VacantIdFromId(char a, char b){
+	char bits = (1<<a) | (1<<b);
+	return vacants[bits];
+}
+inline char VacantIdFromId(char a, char b, char c){
+	char bits = (1<<a) | (1<<b) | (1<<c);
+	return vacants[bits];
+}
+inline char VacantIdFromBits(char bits){
+	return vacants[bits];
 }
 
 bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
@@ -172,24 +197,65 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 
 	usedPoints = 0;
 	allUsedPoints = 0;
-
+	int count = 0;
 	do {
-		lastPoint = 0;
-		lastUsed = 1;
-		while (usedPoints & lastUsed) { ++lastPoint; lastUsed <<= 1; }
+		lastPoint = VacantIdFromBits(usedPoints);
+		lastUsed = 1 << lastPoint;
+
 		p[lastPoint] = a->Support(a2w.Ori().Conjugated() * (-v));
 		q[lastPoint] = b->Support(b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
-		if (v*w > 0) return false;
-		if (IsDegenerate(w)) return false;
-		p_q[lastPoint] = w;
-		allUsedPoints = usedPoints|lastUsed;
+		if (v*w > 0) return false;			//	原点がsupport面の外側
+		if (HasSame(w)) return false;		//	supportが1点に集中＝原点は外にある．
+		p_q[lastPoint] = w;					//	新しい点を代入
+		allUsedPoints = usedPoints|lastUsed;//	使用中頂点リストに追加
 		if (!CalcClosest(v)) return false;
+
+		count ++;
+		if (count > 100){
+			Vec3d vtxs[3];
+			Vec3d notUsed[3];
+			int nUsed=0, nNotUsed=0;
+			for(int i=0, j=0; i<4; ++i){
+				if (usedPoints & (1<<i)){
+					vtxs[nUsed] = p_q[i];
+					nUsed++;
+				}else{
+					notUsed[nNotUsed] = p_q[i];
+					nNotUsed++;
+				}
+			}
+			if (nUsed == 3 && allUsedPoints == 15){
+				Vec3d n = (vtxs[2]-vtxs[0]) ^ (vtxs[1]-vtxs[0]);
+				n.unitize();
+				if (n * (notUsed[0] - vtxs[0]) > 0){
+					n *= -1;
+				}
+				double dist = n * (-vtxs[0]);
+				DSTR << "n:\t" << nUsed << "Dist:\t" << dist << std::endl;
+				DSTR << "v:\t" << v.x << "\t" << v.y << "\t" << v.z << std::endl; 
+//				DSTR << "Normal:\t" << n.x << "\t" << n.y << "\t" << n.z << std::endl;
+				for(int i=0; i<nUsed; ++i){
+					DSTR << "Use:\t" << vtxs[i].x << "\t" << vtxs[i].y << "\t" << vtxs[i].z << std::endl;
+				}
+				for(int i=0; i<nNotUsed; ++i){
+					DSTR << "Not:\t" << notUsed[i].x << "\t" << notUsed[i].y << "\t" << notUsed[i].z << std::endl;
+				}
+			}else{
+				DSTR << "n:\t" << nUsed << std::endl;
+				DSTR << "v:\t" << v.x << "\t" << v.y << "\t" << v.z << std::endl;
+				for(int i=0; i<nUsed; ++i){
+					DSTR << "Use:\t" << vtxs[i].x << "\t" << vtxs[i].y << "\t" << vtxs[i].z << std::endl;
+				}
+				for(int i=0; i<nNotUsed; ++i){
+					DSTR << "Not:\t" << notUsed[i].x << "\t" << notUsed[i].y << "\t" << notUsed[i].z << std::endl;
+				}
+			}
+		}
 	} while ( usedPoints < 15 && !(v.square() < epsilon2) ) ;
 	CalcPoints(usedPoints, pa, pb);
 	return true;
 }
-
 
 struct CDGJKIds{
 	char i[3];		//	頂点のID
@@ -203,18 +269,6 @@ struct CDGJKIds{
 		dist = -1;
 	}
 };
-const char vacants[] = {
-	0, 1, 0, 2, 0, 1, 0, 3,
-	0, 1, 0, 2, 0, 1, 0, 4,
-};
-inline char VacantId(char a, char b){
-	char bits = (1<<a) | (1<<b);
-	return vacants[bits];
-}
-inline char VacantId(char a, char b, char c){
-	char bits = (1<<a) | (1<<b) | (1<<c);
-	return vacants[bits];
-}
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 #define CalcSupport(v, n)										\
 	p[n] = a->Support(a2z.Ori().Conjugated() * (v));			\
@@ -282,7 +336,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			v.XY() = (w[cur->i[1]].XY()*l*ll_inv) * w[cur->i[0]].XY() - (w[cur->i[0]].XY()*l*ll_inv) * w[cur->i[1]].XY();
 			v.Z() = 0;
 			cur->i[2] = cur->i[0];
-			cur->i[0] = VacantId(cur->i[1], cur->i[2]);
+			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
 		}else{
 			s = w[cur->i[2]].XY() ^ w[cur->i[0]].XY();
 			if (s > epsilon){	//	0-2からはみ出している
@@ -292,7 +346,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				v.XY() = (w[cur->i[2]].XY()*l*ll_inv) * w[cur->i[0]].XY() - (w[cur->i[0]].XY()*l*ll_inv) * w[cur->i[2]].XY();
 				v.Z() = 0;
 				cur->i[1] = cur->i[0];
-				cur->i[0] = VacantId(cur->i[1], cur->i[2]);
+				cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
 			}else{				//	内側
 				break;
 			}
@@ -353,7 +407,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			std::swap(cur, last);
 			cur->i[1] = last->i[0];
 			cur->i[2] = last->i[1];
-			cur->i[0] = VacantId(cur->i[1], cur->i[2]);
+			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
 			CalcSupport(last->normal, 0);
 		}else{	//	三角形になる場合
 			cur->nVtx = 3;		//	使うのは3点．
@@ -364,7 +418,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist <= last->dist)) break;	//	return last;
 			}
 
-			int newVtx = VacantId(cur->i[0], cur->i[1], cur->i[2]);
+			int newVtx = VacantIdFromId(cur->i[0], cur->i[1], cur->i[2]);
 			CalcSupport(cur->normal, newVtx);
 			
 			//	新しい点 newVtxと元の△の2点wで原点を囲む△を作る

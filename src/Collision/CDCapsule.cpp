@@ -36,9 +36,9 @@ Vec3f CDCapsule::Support(const Vec3f& p) const {
 	}else{
 		off = (radius / n) * p;
 	}
-	if (p.Z() > 0){
+	if (p.Z() >= 0){
 		off.Z() += length*0.5f;
-	}else if (p.Z() < 0){
+	}else{
 		off.Z() -= length*0.5f;
 	}
 	return off;
