@@ -46,7 +46,6 @@ public:
 	~PHScene(){}
 
 	PHConstraintEngine* GetConstraintEngine();
-	void RemoveGravity(PHSolidIf*);
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);

@@ -194,10 +194,6 @@ public:
 	 */
 	virtual Vec3f GetGravity()=0;
 
-	/** @brief 特定のソリッドの重力を消す
-		@param	重力を消す対象のソリッド
-	*/
-	virtual void RemoveGravity(PHSolidIf* solid) = 0;
 	virtual PHConstraintEngine* GetConstraintEngine()=0;
 
 };

@@ -32,18 +32,4 @@ bool PHGravityEngine::AddChildObject(Object* o){
 	}
 	return false;
 }
-
-void PHGravityEngine::RemoveSolid(PHSolid* solid)
-{
-	PHSolids::iterator it;
-
-	for(it = solids.begin(); it != solids.end(); it++)
-	{
-		if((*it) == solid)
-		{
-			solids.erase((it));
-			return;
-		}
-	}
-}
 }
