@@ -19,9 +19,7 @@ namespace Spr{;
 ///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)
-	Vec3d		oldVel;			///<	１ステップ前の速度
 	Vec3d		angVelocity;	///<	角速度			(World系)
-	Vec3d		oldAngVel;		///<	１ステップ前の角速度
 	Posed		pose;			///<	位置と向き		(World系)
 	Vec3d		force;			///<	前の積分でこの剛体に加わった力(World系)
 	Vec3d		torque;			///<	前の積分でこの剛体に加わったトルク(World系)
@@ -137,28 +135,15 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	virtual Vec3d		GetVelocity() const  =0;
 
-	/** @brief 剛体の１ステップ前の速度を取得する
-		@return シーンに対する剛体の１ステップ前の速度
-	 */
-	virtual Vec3d		GetOldVelocity() const = 0;
 	/** @brief 剛体の速度を設定する
 		@param v シーンに対する剛体の質量中心の速度
 	 */
 	virtual void		SetVelocity(const Vec3d& v) =0;
-	/**	@brief 剛体の加速度を取得する
-		@return 剛体の速度から求まる加速度
-	*/
-	virtual Vec3d		GetAcceleration() = 0;
 	/** @brief 剛体の角速度を取得する
 		@return シーンに対する剛体の角速度
 	 */
 	virtual Vec3d		GetAngularVelocity() const =0;
 	
-	/** @brief 剛体の１ステップ前の角速度を取得する
-		@return シーンに対する剛体の１ステップ前の角速度
-	 */
-	virtual Vec3d		GetOldAngularVelocity() const = 0;
-
     /** @brief 剛体の角速度を設定する
 		@param av シーンに対する剛体の角速度
 	 */
@@ -171,10 +156,6 @@ struct PHSolidIf : public SceneObjectIf{
 		@return 剛体に加えられたトルク(World系、剛体の重心周り)
 	*/
 	virtual Vec3d GetTorque() const=0;
-	/**	@brief 剛体の角加速度を取得する
-		@return 剛体の角速度から求まる角加速度
-	*/
-	virtual Vec3d		GetAngularAcceleration() = 0;
 	/** @brief 剛体に形状を登録する
 		@param shape 形状へのポインタ
 	 */

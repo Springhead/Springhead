@@ -388,9 +388,6 @@ void PHConstraintEngine::UpdateSolids(double dt){
 		vnew = info->v + info->dv0 + info->dv;
 		wnew = info->w + info->dw0 + info->dw;
 
-		solid->oldVel = solid->GetVelocity();
-		solid->oldAngVel = solid->GetAngularVelocity();
-
 		solid->SetVelocity       (solid->GetOrientation() * vnew);
 		solid->SetAngularVelocity(solid->GetOrientation() * wnew);
 		

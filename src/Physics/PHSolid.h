@@ -181,25 +181,16 @@ public:
 	Vec3d		GetVelocity() const {return velocity;}
 	///	質量中心の速度の設定
 	void		SetVelocity(const Vec3d& v){velocity = v;}
-	/// 質量中心の１ステップ前の速度の取得
-	Vec3d		GetOldVelocity() const {return oldVel;}
 
 	///	角速度の取得
 	Vec3d		GetAngularVelocity() const {return angVelocity;}
 	///	角速度の設定
 	void		SetAngularVelocity(const Vec3d& av){angVelocity = av;}
-	/// １ステップ前の角速度の取得
-	Vec3d		GetOldAngularVelocity() const {return oldAngVel;}
 
 	///	任意の位置での速度の取得
 	Vec3d		GetPointVelocity(Vec3d posW) const {
 		return velocity + (angVelocity^(posW - pose*center));
 	}
-
-	/// 質量中心の加速度の取得
-	Vec3d		GetAcceleration();
-	/// 質量中心の角加速度の取得
-	Vec3d		GetAngularAcceleration();
 
 	///	この剛体が持つ Spr::CDShape の数
 	int			NShape();

@@ -269,17 +269,6 @@ CDShapeIf* PHSolid::GetShape(int i){
 	return shapes[i].shape;
 }
 
-Vec3d PHSolid::GetAcceleration()
-{
-	PHScene* s = DCAST(PHScene, GetScene());
-	double dt = s->GetTimeStep();
-	return (velocity - oldVel) / dt;
-}
-
-Vec3d PHSolid::GetAngularAcceleration()
-{
-	return Vec3d();
-}
 
 //----------------------------------------------------------------------------
 //	PHSolidContainer
