@@ -77,19 +77,35 @@ struct GRVertexElement {
 	static GRVertexElement TexCoords2f(size_t o);
 	static GRVertexElement Color4b(size_t o);
 	static GRVertexElement Color4f(size_t o);
+	static GRVertexElement Blend1f(size_t o);
 
 	///	@name 典型的な頂点フォーマット．シェーダーを指定せずレンダリングできる．
 	//@{
-	static const GRVertexElement vfP3f[];				///<
-	static const GRVertexElement vfC4bP3f[];			///<
-	static const GRVertexElement vfN3fP3f[];			///<
-	static const GRVertexElement vfC4fN3fP3f[];			///<
-	static const GRVertexElement vfT2fP3f[];			///<
-	static const GRVertexElement vfT2fC4bP3f[];			///<
-	static const GRVertexElement vfT2fN3fP3f[];			///<
-	static const GRVertexElement vfT2fC4fN3fP3f[];		///<
-	static const GRVertexElement* typicalFormats[];		///<
+	static const GRVertexElement vfP3f[];				
+	static const GRVertexElement vfC4bP3f[];			
+	static const GRVertexElement vfN3fP3f[];			
+	static const GRVertexElement vfC4fN3fP3f[];			
+	static const GRVertexElement vfT2fP3f[];			
+	static const GRVertexElement vfT2fC4bP3f[];			
+	static const GRVertexElement vfT2fN3fP3f[];			
+	static const GRVertexElement vfT2fC4fN3fP3f[];		
+	static const GRVertexElement* typicalFormats[];		
 	//@}
+	
+	/// @name 典型的な頂点フォーマット・VertexBlendingシェーダー対応．
+	//@{	
+	static const GRVertexElement vfP3fB1f[];				
+	static const GRVertexElement vfC4bP3fB1f[];			
+	static const GRVertexElement vfN3fP3fB1f[];			
+	static const GRVertexElement vfC4fN3fP3fB1f[];			
+	static const GRVertexElement vfT2fP3fB1f[];			
+	static const GRVertexElement vfT2fC4bP3fB1f[];			
+	static const GRVertexElement vfT2fN3fP3fB1f[];			
+	static const GRVertexElement vfT2fC4fN3fP3fB1f[];			
+	//@}
+	
+	/// @name 典型的な頂点フォーマットに対するデータ構造
+	//@{
 	struct VFP3f{
 		Vec3f p;
 	};
@@ -125,7 +141,53 @@ struct GRVertexElement {
 		Vec4f c;
 		Vec3f n;
 		Vec3f p;
+	};	
+	struct VFP3fB1f{
+		Vec3f p;
+		float b;
 	};
+	struct VFC4bP3fB1f{
+		unsigned long c;
+		Vec3f p;
+		float b;
+	};
+	struct VFN3fP3fB1f{
+		Vec3f n;
+		Vec3f p;
+		float b;
+	};
+	struct VFC4fN3fP3fB1f{
+		Vec4f c;
+		Vec3f n;
+		Vec3f p;
+		float b;
+	};
+	struct VFT2fP3fB1f{
+		Vec2f t;
+		Vec3f p;
+		float b;
+	};
+	struct VFT2fC4bP3fB1f{
+		Vec2f t;
+		unsigned long c;
+		Vec3f p;
+		float b;
+	};
+	struct VFT2fN3fP3fB1f{
+		Vec2f t;
+		Vec3f n;
+		Vec3f p;
+		float b;
+	};
+	struct VFT2fC4fN3fP3fB1f{
+		Vec2f t;
+		Vec4f c;
+		Vec3f n;
+		Vec3f p;
+		float b;
+	};	
+	//@}		
+	
 };
 
 /**	インターリーブされていない頂点バッファの指定

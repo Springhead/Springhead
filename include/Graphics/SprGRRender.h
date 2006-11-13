@@ -217,19 +217,26 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void BeginScene()=0;
 	///	レンダリングの終了後に呼ぶ関数
 	virtual void EndScene()=0;
-	///	モデル行列をかける
-	virtual void MultModelMatrix(const Affinef& afw)=0;
-	///	モデル行列の行列スタックをPush
-	virtual void PushModelMatrix()=0;
-	///	モデル行列の行列スタックをPop
-	virtual void PopModelMatrix()=0;
-	///	モデル行列を設定
-	virtual void SetModelMatrix(const Affinef& afw)=0;
-	///	視点行列を設定
+	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv)=0;
-	///	投影行列を設定
+	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp)=0;
-
+	///	カレントのモデル行列をafwで置き換える
+	virtual void SetModelMatrix(const Affinef& afw)=0;
+	///	カレントのモデル行列に対してafwを掛ける
+	virtual void MultModelMatrix(const Affinef& afw)=0;
+	///	カレントのモデル行列をモデル行列スタックへ保存する
+	virtual void PushModelMatrix()=0;
+	///	モデル行列スタックから取り出し、カレントのモデル行列とする
+	virtual void PopModelMatrix()=0;
+	/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
+	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId)=0;
+	/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
+	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId)=0;
+	/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
+	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId)=0;
+	/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
+	virtual bool PopModelMatrices(unsigned int matrixId)=0;
 	///	頂点フォーマットの指定
 	virtual void SetVertexFormat(const GRVertexElement* e)=0;
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase

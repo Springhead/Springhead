@@ -14,6 +14,7 @@
 namespace Spr{;
 
 class GRMaterial;
+
 /**	@class	GRMesh
     @brief	グラフィックスシーングラフでの座標系を表す． */
 class GRMesh: public InheritGRVisual<GRMeshIf, GRVisual>, public GRMeshDesc{

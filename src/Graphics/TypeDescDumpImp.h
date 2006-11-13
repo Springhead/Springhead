@@ -1,5 +1,25 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
+	GRBlendMeshDesc* pGRBlendMeshDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRBlendMeshDesc");
+	desc->size = sizeof(GRBlendMeshDesc);
+	desc->ifInfo = GRBlendMeshIf::GetIfInfoStatic();
+	((IfInfo*)GRBlendMeshIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRBlendMeshDesc>;
+	field = desc->AddField("vector", "Vec3f", "positions", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->positions) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "Vec3f", "normals", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->normals) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "Vec4f", "colors", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->colors) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "Vec2f", "texCoords", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->texCoords) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "size_t", "faces", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->faces) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "float", "blend", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->blend) - (char*)pGRBlendMeshDesc);
+	db->RegisterDesc(desc);
+	
 	GRFrameTransformMatrix* pGRFrameTransformMatrix = NULL;
 	desc = DBG_NEW UTTypeDesc("GRFrameTransformMatrix");
 	desc->size = sizeof(GRFrameTransformMatrix);

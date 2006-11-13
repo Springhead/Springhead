@@ -13,6 +13,7 @@
 # include <WinBasis/WinBasis.h>
 # include <windows.h>
 #endif
+#include <stack>
 #include <GL/glut.h>
 #include "GRLoadBmp.h"
 
@@ -58,41 +59,84 @@ void GRDeviceGL::EndScene(){
   /// ダブルバッファモード時、カレントウィンドウのバッファ交換を行う
 	glutSwapBuffers();
 }
-/// モデル行列をかける
-void GRDeviceGL::MultModelMatrix(const Affinef& afw){	
-	glMatrixMode(GL_MODELVIEW);
-	glMultMatrixf(afw);
-}
-/// モデル行列の行列スタックをPush
-void GRDeviceGL::PushModelMatrix(){
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-}
-/// モデル行列の行列スタックをPop
-void GRDeviceGL::PopModelMatrix(){
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-}
-/// モデル行列を設定
-void GRDeviceGL::SetModelMatrix(const Affinef& afw){
-	modelMatrix = afw;		// モデル行列の保存
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(viewMatrix * modelMatrix);
-}
-///	視点行列を設定
+///	カレントの視点行列をafvで置き換える
 void GRDeviceGL::SetViewMatrix(const Affinef& afv){   
 	viewMatrix  = afv;		// 視点行列の保存
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
 }
-/// 投影行列を設定
+/// カレントの投影行列をafpで置き換える
 void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){  
 	projectionMatrix = afp;
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(projectionMatrix);
 	glMatrixMode(GL_MODELVIEW);
 }
-
+/// カレントのモデル行列をafwで置き換える
+void GRDeviceGL::SetModelMatrix(const Affinef& afw){
+	modelMatrix = afw;		// モデル行列の保存
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(viewMatrix * modelMatrix);
+}
+/// カレントのモデル行列に対してafwを掛ける
+void GRDeviceGL::MultModelMatrix(const Affinef& afw){	
+	modelMatrix = modelMatrix * afw;		
+	glMatrixMode(GL_MODELVIEW);
+	glMultMatrixf(afw);
+}
+/// カレントのモデル行列をモデル行列スタックへ保存する
+void GRDeviceGL::PushModelMatrix(){
+	modelMatrixStack.push(modelMatrix);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+}
+/// モデル行列スタックから取り出し、カレントのモデル行列とする
+void GRDeviceGL::PopModelMatrix(){
+	modelMatrix = modelMatrixStack.top();
+	modelMatrixStack.pop();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+}
+/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
+bool GRDeviceGL::SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId){
+	if (matrixId < modelMatrices.size()){
+		if (elementId < modelMatrices[matrixId].size()){
+			modelMatrices[matrixId][elementId] = afw;
+			return true;
+		}
+	}
+	return false;
+}
+/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
+bool GRDeviceGL::MultModelMatrices(const Affinef& afw, unsigned int matrixId){
+	if (matrixId < modelMatrices.size()){
+		modelMatrices[matrixId][0] = modelMatrices[matrixId][0] * afw;
+		return true;
+	}
+	return false;
+}	
+/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
+bool GRDeviceGL::PushModelMatrices(const Affinef& afw, unsigned int matrixId){
+	if (matrixId < modelMatrices.size()){
+		modelMatrices[matrixId].push_back(afw);
+	} else if( matrixId == modelMatrices.size()){
+		std::vector<Affinef> tmpafw;
+		tmpafw.push_back(afw);
+		modelMatrices.push_back(tmpafw);
+	} else{
+		return false;
+	}
+	return true;
+}	
+/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
+bool GRDeviceGL::PopModelMatrices(unsigned int matrixId){
+	if (matrixId < modelMatrices.size()){
+		modelMatrices[matrixId].pop_back();
+		return true;
+	} else{
+		return false;
+	}
+}
 /// 頂点座標を指定してプリミティブを描画
 void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 	if (e == GRVertexElement::vfP3f) {

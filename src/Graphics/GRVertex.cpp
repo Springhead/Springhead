@@ -53,7 +53,17 @@ GRVertexElement GRVertexElement::Color4f(size_t o){
 	rv.usage = GRVEU_COLOR;
 	return rv;
 }
-
+GRVertexElement GRVertexElement::Blend1f(size_t o){
+	GRVertexElement rv;
+	rv.offset = o;
+	rv.type = GRVET_FLOAT1;
+	rv.usage = GRVEU_BLENDWEIGHT;
+	return rv;
+}
+/*
+ *  初期化処理
+ *	オフセット値を引数で与え、頂点バッファの各メンバに対するオフセット値、データ型などを設定する
+ */
 const GRVertexElement GRVertexElement::vfP3f[] = {
 	GRVertexElement::Position3f(0),
 	GRVertexElement(),
@@ -92,11 +102,18 @@ const GRVertexElement GRVertexElement::vfT2fN3fP3f[] = {
 	GRVertexElement(),	
 };
 const GRVertexElement GRVertexElement::vfT2fC4fN3fP3f[] = {
+/*	
 	GRVertexElement::TexCoords2f(sizeof(float)*6+4),
 	GRVertexElement::Color4b(sizeof(float)*6),
 	GRVertexElement::Normal3f(sizeof(float)*3),
 	GRVertexElement::Position3f(0),
 	GRVertexElement(),	
+*/
+	GRVertexElement::TexCoords2f(0),
+	GRVertexElement::Color4f(sizeof(float)*2),
+	GRVertexElement::Normal3f(sizeof(float)*6),
+	GRVertexElement::Position3f(sizeof(float)*9),
+	GRVertexElement(),			
 };
 
 const GRVertexElement* GRVertexElement::typicalFormats[] = {
@@ -106,5 +123,57 @@ const GRVertexElement* GRVertexElement::typicalFormats[] = {
 	GRVertexElement::vfT2fN3fP3f,	GRVertexElement::vfT2fC4fN3fP3f, 
 };
 
+const GRVertexElement GRVertexElement::vfP3fB1f[] = {
+	GRVertexElement::Position3f(0),
+	GRVertexElement::Blend1f(sizeof(float)*3),
+	GRVertexElement(),
+};
+const GRVertexElement GRVertexElement::vfC4bP3fB1f[] = {
+	GRVertexElement::Color4b(0),
+	GRVertexElement::Position3f(sizeof(char)*4),
+	GRVertexElement::Blend1f(sizeof(char)*4+sizeof(float)*3),
+	GRVertexElement(),
+};	
+const GRVertexElement GRVertexElement::vfN3fP3fB1f[] = {
+	GRVertexElement::Normal3f(0),
+	GRVertexElement::Position3f(sizeof(float)*3),
+	GRVertexElement::Blend1f(sizeof(float)*6),	
+	GRVertexElement(),	
+};
+const GRVertexElement GRVertexElement::vfC4fN3fP3fB1f[] = {
+	GRVertexElement::Color4f(sizeof(float)*0),
+	GRVertexElement::Normal3f(sizeof(float)*4),
+	GRVertexElement::Position3f(sizeof(float)*7),
+	GRVertexElement::Blend1f(sizeof(float)*10),		
+	GRVertexElement(),	
+};	
+const GRVertexElement GRVertexElement::vfT2fP3fB1f[] = {
+	GRVertexElement::TexCoords2f(0),
+	GRVertexElement::Position3f(sizeof(float)*2),
+	GRVertexElement::Blend1f(sizeof(float)*5),
+	GRVertexElement(),
+};	
+const GRVertexElement GRVertexElement::vfT2fC4bP3fB1f[] = {
+	GRVertexElement::TexCoords2f(0),
+	GRVertexElement::Color4b(sizeof(float)*2),
+	GRVertexElement::Position3f(sizeof(float)*2+sizeof(char)*4),
+	GRVertexElement::Blend1f(sizeof(float)*5+sizeof(char)*4),	
+	GRVertexElement(),
+};	
+const GRVertexElement GRVertexElement::vfT2fN3fP3fB1f[] = {
+	GRVertexElement::TexCoords2f(0),
+	GRVertexElement::Normal3f(sizeof(float)*2),
+	GRVertexElement::Position3f(sizeof(float)*5),
+	GRVertexElement::Blend1f(sizeof(float)*8),
+	GRVertexElement(),	
+};	
+const GRVertexElement GRVertexElement::vfT2fC4fN3fP3fB1f[] = {
+	GRVertexElement::TexCoords2f(0),
+	GRVertexElement::Color4f(sizeof(float)*2),
+	GRVertexElement::Normal3f(sizeof(float)*6),
+	GRVertexElement::Position3f(sizeof(float)*9),
+	GRVertexElement::Blend1f(sizeof(float)*12),	
+	GRVertexElement(),		
+};	
 
 }

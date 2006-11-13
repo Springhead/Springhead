@@ -13,6 +13,7 @@
 #define GRDEVICEGL_H
 
 #include <map>
+#include <stack>
 #include <SprGraphics.h>
 
 namespace Spr{;
@@ -34,10 +35,11 @@ protected:
 	 *　　 （Direct3Dの場合は、Modelを書き換えずにViewだけ書き換え、視点を動かすことができる）
 	 *	@{ 
 	 */
-	Affinef								viewMatrix;				///< 視点行列
-	Affinef								modelMatrix;			///< モデル行列 
-	std::vector< std::vector<Affinef> > modelMatrixs;			///< モデル行列（VertexBlending用）
-	Affinef								projectionMatrix;		///< 射影行列 
+	Affinef								viewMatrix;				///< カレント視点行列
+	Affinef								projectionMatrix;		///< カレント射影行列 
+	Affinef								modelMatrix;			///< カレントモデル行列 
+	std::stack<Affinef>                	modelMatrixStack;		///< モデル行列スタック
+	std::vector< std::vector<Affinef> > modelMatrices;			///< 複数モデル行列（使用用途：modelMatrices[N][0]はモデル行列、modelMatrices[N][1..]はブレンド行列）
 	/** @} */
 	/**
 	 *	@name	フォント変数
@@ -65,19 +67,26 @@ public:
 	virtual void BeginScene();
 	///	レンダリングの終了後に呼ぶ関数
 	virtual void EndScene();
-	///	モデル行列をかける
-	virtual void MultModelMatrix(const Affinef& afw);
-	///	モデル行列の行列スタックをPush
-	virtual void PushModelMatrix();
-	///	モデル行列の行列スタックをPop
-	virtual void PopModelMatrix();
-	///	モデル行列を設定
-	virtual void SetModelMatrix(const Affinef& afw);
-	///	視点行列を設定
+	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv);
-	///	投影行列を設定
+	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp);
-	
+	///	カレントのモデル行列をafwで置き換える
+	virtual void SetModelMatrix(const Affinef& afw);
+	///	カレントのモデル行列に対してafwを掛ける
+	virtual void MultModelMatrix(const Affinef& afw);
+	///	カレントのモデル行列をモデル行列スタックへ保存する
+	virtual void PushModelMatrix();
+	///	モデル行列スタックから取り出し、カレントのモデル行列とする
+	virtual void PopModelMatrix();
+	/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
+	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId);
+	/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
+	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId);
+	/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
+	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId);
+	/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
+	virtual bool PopModelMatrices(unsigned int matrixId);	
 	///	頂点フォーマットの指定
 	virtual void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定

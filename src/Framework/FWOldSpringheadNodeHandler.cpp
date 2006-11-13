@@ -437,9 +437,9 @@ public:
 			}
 			// スタックに Mesh::Adapterを積む
 			Adapter* ad = DBG_NEW Adapter;
-			ad->mesh = DCAST(GRMesh, fc->objects.Top());
-			ad->fc = fc;
-			fc->objects.Push(ad->GetIf());
+			ad->mesh = DCAST(GRMesh, fc->objects.Top());	// Mesh::Adapterにmeshポインタを登録．
+			ad->fc = fc;									// Mesh::Adapterにfcポインタを登録．
+			fc->objects.Push(ad->GetIf());			
 		}else{
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}
