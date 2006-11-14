@@ -84,7 +84,7 @@ UTRef<PHSceneIf> scene;		// Sceneインタフェース
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
 
-double simulationPeriod = 50.0;
+double simulationPeriod = 10.0;
 Vec3d lookAt;
 int sceneNo;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
@@ -268,7 +268,13 @@ void BuildScene5(){
 	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
-
+	PHTreeNodeIf* node = scene->CreateRootNode(soFloor);
+	node = scene->CreateTreeNode(node, soBox[0]);
+	node = scene->CreateTreeNode(node, soBox[1]);
+	node = scene->CreateTreeNode(node, soBox[2]);
+	node = scene->CreateTreeNode(node, soBox[3]);
+	node = scene->CreateTreeNode(node, soBox[4]);
+	
 	double K = 2000, D = 100;
 	//double K = 100000, D = 10000;	
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
@@ -283,8 +289,8 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 #ifndef USE_EXPLICIT
 	PHSpringDesc descSpring;
-	descSpring.spring = 600 * 1 *Vec3f(1,1,1);
-	descSpring.damper = 15 * 1 *Vec3f(1,1,1);
+	descSpring.spring = 600 * 0.1 *Vec3f(1,1,1);
+	descSpring.damper = 50 * 0.1 *Vec3f(1,1,1);
 	jntLink[5] = scene->CreateJoint(soBox[4], soBox[5], descSpring);
 	
 #endif
@@ -747,7 +753,7 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
+	dscene.timeStep = 0.01;
 	dscene.numIteration = 30;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
