@@ -102,8 +102,8 @@ void PHSolid::SetupDynamics(double dt){
 }*/
 void PHSolid::UpdateVelocity(double dt){
 	v += dv;
-	oldVel = GetVelocity();
-	oldAngVel = GetAngularVelocity();
+	//oldVel = GetVelocity();
+	//oldAngVel = GetAngularVelocity();
 	SetVelocity       (GetOrientation() * v.v);
 	SetAngularVelocity(GetOrientation() * v.w);
 }

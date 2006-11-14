@@ -147,8 +147,8 @@ void PHTreeNode::UpdateVelocity(double dt){
 	UpdateJointVelocity(dt);
 	CompRelativeVelocity();
 	s->v = Xcp * sp->v + Xcj * joint->vjrel;
-	s->oldVel	 = s->GetVelocity();
-	s->oldAngVel = s->GetAngularVelocity();
+	//s->oldVel	 = s->GetVelocity();
+	//s->oldAngVel = s->GetAngularVelocity();
 	s->SetVelocity       (s->GetOrientation() * s->v.v);
 	s->SetAngularVelocity(s->GetOrientation() * s->v.w);
 	

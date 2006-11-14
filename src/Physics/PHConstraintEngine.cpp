@@ -439,7 +439,6 @@ void PHConstraintEngine::UpdateSolids(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	double dt = scene->GetTimeStep();
 
-<<<<<<< .mine
 	// ツリーに属さない剛体の更新
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
 		if(!(*is)->treeNode){
@@ -449,8 +448,6 @@ void PHConstraintEngine::UpdateSolids(){
 		}
 	}
 
-=======
->>>>>>> .r2206
 	// ツリーに属する剛体の更新
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 		(*it)->UpdateVelocity(dt);

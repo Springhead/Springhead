@@ -215,18 +215,4 @@ PHConstraintEngine* PHScene::GetConstraintEngine(){
 	return constraintEngine;
 }
 
-<<<<<<< .mine
-void PHScene::RemoveGravity(PHSolidIf* solid){
-	PHGravityEngine* ge;
-	engines.Find(ge);
-	assert(ge);
-	
-	ge->RemoveSolid((PHSolid*)solid);
-=======
->>>>>>> .r2206
 }
-<<<<<<< .mine
-
-}
-=======
->>>>>>> .r2206

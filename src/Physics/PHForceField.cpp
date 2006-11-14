@@ -34,22 +34,5 @@ bool PHGravityEngine::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
-<<<<<<< .mine
-
-void PHGravityEngine::RemoveSolid(PHSolid* solid){
-	PHSolids::iterator it;
-
-	for(it = solids.begin(); it != solids.end(); it++){
-		if((*it) == solid){
-			solids.erase((it));
-			return;
-		}
-	}
-=======
->>>>>>> .r2206
-}
-<<<<<<< .mine
 
 }
-=======
->>>>>>> .r2206
