@@ -32,12 +32,14 @@ struct PHSolidDesc: public PHSolidState{
 	Matrix3d	inertia;		///<	Šµ«ƒeƒ“ƒ\ƒ‹	(LocalŒn)
 	Vec3d		center;			///<	Ž¿—Ê’†S‚ÌˆÊ’u	(LocalŒn)
 	bool		gravity;		///<	d—Í‚Ì‰e‹¿‚ðŽó‚¯‚é‚©
+	bool		dynamical;		///<	•¨—–@‘¥‚É]‚¤‚©
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
 		mass = 1.0f;
-		inertia=Matrix3d::Unit();
-		gravity=true;
+		inertia = Matrix3d::Unit();
+		gravity = true;
+		dynamical = true;
 	}
 };
 

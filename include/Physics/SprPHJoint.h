@@ -28,6 +28,7 @@ struct PHConstraintDesc{
 		HINGEJOINT,
 		SLIDERJOINT,
 		BALLJOINT,
+		UNIVERSALJOINT,
 		PATHJOINT,
 		SPRING
 	} type;
@@ -92,6 +93,14 @@ struct PHBallJointDesc : public PHJointDesc{
 	PHBallJointDesc(){
 		type = BALLJOINT;
 		max_angle = 0.0;
+	}
+};
+
+/// ユニバーサルジョイントのディスクリプタ
+struct PHUniversalJointDesc : public PHJointDesc{
+	Vec2d	torque;			///< モータトルク
+	PHUniversalJointDesc(){
+		type = UNIVERSALJOINT;
 	}
 };
 
@@ -276,6 +285,21 @@ struct PHBallJointIf : public PHConstraintIf{
 
 };
 
+/// ユニバーサルジョイントのインタフェース
+struct PHUniversalJointIf : public PHConstraintIf{
+	IF_DEF(PHUniversalJoint);
+
+	/** @brief モータトルクを設定する
+		@param torque モータトルク
+	 */
+	virtual void SetMotorTorque(const Vec2d& torque)=0;
+
+	/** @brief モータトルクを取得する
+		@return モータトルク
+	 */
+	virtual Vec2d GetMotorTorque()=0;
+};
+
 /// バネダンパのインタフェース
 struct PHSpringIf : public PHConstraintIf{
 	IF_DEF(PHSpring);
@@ -301,6 +325,16 @@ struct PHSpringIf : public PHConstraintIf{
 
 };
 
+///
+struct PHTreeNodeIf : public SceneObjectIf{
+	IF_DEF(PHTreeNode);
+};
+
+///
+struct PHRootNodeIf : public PHTreeNodeIf{
+	IF_DEF(PHRootNode);
+};
+	
 //@}
 //@}
 

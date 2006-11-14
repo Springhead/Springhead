@@ -31,6 +31,8 @@ struct PHJointIf;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
+struct PHTreeNodeIf;
+
 class PHConstraintEngine;
 
 struct PHPathIf;
@@ -146,10 +148,19 @@ public:
 	 */
 	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
+	/** 
+	 */
+	virtual PHTreeNodeIf* CreateRootNode(PHSolidIf* root)=0;
+
+	/** 
+	 */
+	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child)=0;
+
 	/** @brief パスを作成する
 		@param desc パスのディスクリプタ
+		＊未実装
 	 */
-	virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
+	//virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ

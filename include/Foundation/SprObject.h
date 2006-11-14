@@ -207,7 +207,7 @@ struct ObjectStatesIf: public ObjectIf{
 ObjectStatesIf* SPR_CDECL CreateObjectStates();
 
 #undef DCAST
-#define DCAST(T,p) SprDcastImp<T>(p)
+#define DCAST(T,p) SprDcastImp< T >(p)
 
 ///	インタフェースクラスのキャスト
 template <class T> T* SprDcastImp(const ObjectIf* p){
