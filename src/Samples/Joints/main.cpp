@@ -84,9 +84,9 @@ UTRef<PHSceneIf> scene;		// Sceneインタフェース
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
 
-double simulationPeriod = 32.0;
+double simulationPeriod = 50.0;
 Vec3d lookAt;
-int sceneNo;			// シーン番号
+int sceneNo;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
@@ -97,6 +97,7 @@ CDShapeIf* shapeSphere;
 PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
 std::vector<PHJointIf*> jntLink;		//関節のインタフェース
+std::vector<PHTreeNodeIf*> nodeTree;
 
 
 void CreateFloor(bool s=true){
@@ -120,8 +121,9 @@ void BuildScene0(){
 	soBox.back()->AddShape(shapeBox);
 	//空中に固定する
 	soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 0.0));
-	soBox.back()->SetOrientation(Quaterniond::Rot(-1.57, Vec3d(0.0, 0.0, 1.0)));
 	soBox.back()->SetDynamical(false);
+
+	nodeTree.push_back(scene->CreateRootNode(soBox.back()));
 
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
@@ -149,20 +151,20 @@ void BuildScene1(){
 
 	PHHingeJointDesc jd;
 	jntLink.resize(4);
-	jd.posePlug.Pos() = Vec3d(0.0, 10.0, 0.0);
-	jd.poseSocket.Pos() = Vec3d(0.0, -1.0, 0.0);
+	jd.poseSocket.Pos() = Vec3d(0.0, 10.0, 0.0);
+	jd.posePlug.Pos() = Vec3d(0.0, -1.0, 0.0);
 	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], jd);
 
-	jd.posePlug.Pos() = Vec3d(4.0, 10.0, 0.0);
-	jd.poseSocket.Pos() = Vec3d(0.0, -2.5, 0.0);
+	jd.poseSocket.Pos() = Vec3d(4.0, 10.0, 0.0);
+	jd.posePlug.Pos() = Vec3d(0.0, -2.5, 0.0);
 	jntLink[1] = scene->CreateJoint(soFloor, soBox[1], jd);
 
-	jd.posePlug.Pos() = Vec3d(0.0, 1.0, 0.0);
-	jd.poseSocket.Pos() = Vec3d(0.0, -5.0, 0.0);
+	jd.poseSocket.Pos() = Vec3d(0.0, 1.0, 0.0);
+	jd.posePlug.Pos() = Vec3d(0.0, -5.0, 0.0);
 	jntLink[2] = scene->CreateJoint(soBox[0], soBox[2], jd);
 
-	jd.posePlug.Pos() = Vec3d(0.0, 2.5, 0.0);
-	jd.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jd.poseSocket.Pos() = Vec3d(0.0, 2.5, 0.0);
+	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jntLink[3] = scene->CreateJoint(soBox[1], soBox[2], jd);
 
 	scene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
@@ -204,7 +206,7 @@ void BuildScene4(){
 	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
-	PHPathDesc desc;
+/*	PHPathDesc desc;
 	PHPathIf* path = scene->CreatePath(desc);
 	double s;
 	double radius = 5.0;
@@ -222,7 +224,7 @@ void BuildScene4(){
 	PHPathJointIf* joint = DCAST(PHPathJointIf, jntLink[0]);
 	joint->AddChildObject(path);
 	joint->SetPosition(2 * 2 * M_PI);
-	
+*/	
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
@@ -257,11 +259,11 @@ void BuildScene5(){
 
 	jntLink.resize(6);
 	PHHingeJointDesc descHinge;
-	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+	descHinge.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
 	jntLink[0] = scene->CreateJoint(soFloor, soBox[0], descHinge);
 
-	descHinge.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
-	descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+	descHinge.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
+	descHinge.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
 	jntLink[1] = scene->CreateJoint(soBox[0], soBox[1], descHinge);
 	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
@@ -308,17 +310,37 @@ void BuildScene(){
 void OnKey0(char key){
 	switch(key){
 	case ' ':{
-		soBox.push_back(scene->CreateSolid(descBox));
-		soBox.back()->AddShape(shapeBox);
-		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
-		PHHingeJointDesc jdesc;
-		jdesc.posePlug.Pos() = Vec3d( 1.1,  1.1,  0);
-		jdesc.poseSocket.Pos() = Vec3d(-1.1, -1.1,  0);
-		jdesc.lower = Rad(-30.0);
-		jdesc.upper = Rad( 30.0);
+		int n = soBox.size();
+		for(int i = 0; i < 1; i++){
+			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.back()->AddShape(shapeBox);
+			soBox.back()->SetFramePosition(Vec3f(2*(n+i), 15 - 2*(n+i), 0));
+			PHHingeJointDesc jdesc;
+			jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
+			jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
+			//jdesc.lower = Rad(-30.0);
+			//jdesc.upper = Rad( 30.0);
 
-		size_t n = soBox.size();
-		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+			jntLink.push_back(scene->CreateJoint(soBox[n+i-1], soBox[n+i], jdesc));
+			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n+i]));
+		}
+		//scene->SetContactMode(PHSceneDesc::MODE_NONE);
+		}break;
+	case 'b':{
+		int n = soBox.size();
+		for(int i = 0; i < 1; i++){
+			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.back()->AddShape(shapeBox);
+			soBox.back()->SetFramePosition(Vec3f(2*(n+i), 15 - 2*(n+i), 0));
+			PHHingeJointDesc jdesc;
+			jdesc.poseSocket.Pos() = Vec3d( 1,  -1,  0);
+			jdesc.posePlug.Pos() = Vec3d(-1, 1,  0);
+			//jdesc.lower = Rad(-30.0);
+			//jdesc.upper = Rad( 30.0);
+
+			jntLink.push_back(scene->CreateJoint(soBox[n+i-1], soBox[n+i], jdesc));
+		}
+		//scene->SetContactMode(PHSceneDesc::MODE_NONE);
 		}break;
 	}
 }
@@ -327,20 +349,20 @@ void OnKey1(char key){
 	const double K = 30.0;
 	const double B = 10.0;
 	PHHingeJointIf* hinge = DCAST(PHHingeJointIf, jntLink[0]);
-	PHPathJointIf* path = (jntLink.size() == 5 ? DCAST(PHPathJointIf, jntLink[4]) : NULL); 
+	//PHPathJointIf* path = (jntLink.size() == 5 ? DCAST(PHPathJointIf, jntLink[4]) : NULL); 
 	switch(key){
 	case 'a': hinge->SetMotorTorque(1.0);	break;
 	case 's': hinge->SetMotorTorque(0.0);	break;
 	case 'd': hinge->SetMotorTorque(-1.0);	break;
 	case 'f':
 		hinge->SetDesiredVelocity(Rad(180));
-		if(path)
-			path->SetDesiredVelocity(Rad(90.0));
+		//if(path)
+		//	path->SetDesiredVelocity(Rad(90.0));
 		break;
 	case 'g':
 		hinge->SetDesiredVelocity(Rad(0.0));
-		if(path)
-			path->SetDesiredVelocity(Rad(0.0));
+		//if(path)
+		//	path->SetDesiredVelocity(Rad(0.0));
 		break;
 	case 'h': hinge->SetDesiredVelocity(Rad(-90.0));	break;
 	case 'j':
@@ -358,7 +380,7 @@ void OnKey1(char key){
 		hinge->SetSpringOrigin(-1.0);
 		hinge->SetDamper(B);
 		break;
-	case 'c':{
+	/*case 'c':{
 		//チェビシェフリンク一周分の軌跡を記憶させてパスジョイントを作成
 		PHPathDesc descPath;
 		descPath.bLoop = true;
@@ -393,7 +415,7 @@ void OnKey1(char key){
 		joint->AddChildObject(trajectory);
 		joint->SetPosition(0);
 	
-		}break;
+		}break;*/
 	}
 }
 
@@ -404,8 +426,8 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.posePlug.Pos() = Vec3d(-1.01, -1.01, -1.01);
-		jdesc.poseSocket.Pos() = Vec3d(1.01, 1.01, 1.01);
+		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
+		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		}break;
@@ -419,10 +441,10 @@ void OnKey3(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHSliderJointDesc jdesc;
-		jdesc.posePlug.Pos() = Vec3d(0, -1.1, 0);
-		jdesc.posePlug.Ori() = Quaterniond::Rot(Rad(90.0), 'y');
-		jdesc.poseSocket.Pos() = Vec3d(0,  1.1, 0);
+		jdesc.poseSocket.Pos() = Vec3d(0, -1.1, 0);
 		jdesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90.0), 'y');
+		jdesc.posePlug.Pos() = Vec3d(0,  1.1, 0);
+		jdesc.posePlug.Ori() = Quaterniond::Rot(Rad(90.0), 'y');
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		PHSliderJointIf* slider = DCAST(PHSliderJointIf, jntLink.back());
@@ -468,8 +490,8 @@ void OnKey5(char key){
 
 		//	ジョイント作成
 		PHHingeJointDesc descHinge;
-		descHinge.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
-		descHinge.poseSocket.Pos() = Vec3d(0.0, -3.0, 0.0);
+		descHinge.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
+		descHinge.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], descHinge));
 		DCAST(PHHingeJointIf, jntLink.back())->SetSpring(K6);
@@ -726,7 +748,7 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
-	dscene.numIteration = 20;
+	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;
