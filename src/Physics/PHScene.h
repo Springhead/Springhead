@@ -19,7 +19,6 @@ struct CDShapeDesc;
 class PHSolidContainer;
 class PHPenaltyEngine;
 class PHConstraintEngine;
-class PHSolid;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
@@ -30,8 +29,9 @@ typedef PHConstraintDesc PHJointDesc;
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
 	セーブして，D3D形式でロードしなければならない．	*/
-class SPR_DLL PHScene:public InheritScene<PHSceneIf, Scene>, public PHSceneDesc{
+class SPR_DLL PHScene : public InheritScene<PHSceneIf, Scene>, public PHSceneDesc{
 	OBJECT_DEF(PHScene);
+	friend class PHConstraint;
 public:
 	PHEngines engines;
 protected:
@@ -51,6 +51,8 @@ public:
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	PHJointIf* CreateJoint(const PHJointDesc& desc);	///< ファイルローダ用
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
+	PHRootNodeIf* CreateRootNode(PHSolidIf* root);
+	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child);
 	PHPathIf*  CreatePath(const PHPathDesc& desc);
 	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
@@ -59,6 +61,7 @@ public:
 	virtual int GetNumIteration();
 	virtual void SetNumIteration(int n);
 	void SetGravity(const Vec3d& g);
+	void RemoveGravity(PHSolidIf*);
 	PHSdkIf* GetSdk();
 
 	/// 積分ステップを返す

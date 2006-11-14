@@ -16,52 +16,20 @@ namespace Spr{;
 
 
 //----------------------------------------------------------------------------
-// PHSolidAux
-void PHSolidInfoForLCP::SetupDynamics(double dt){
-	minv = solid->GetMassInv();
-	Iinv = solid->GetInertiaInv();
-	Quaterniond q = solid->GetOrientation();
-	v = q.Conjugated() * solid->GetVelocity();
-	w = q.Conjugated() * solid->GetAngularVelocity();
-	if(solid->IsDynamical()){
-		f = q.Conjugated() * solid->nextForce;
-		t = q.Conjugated() * solid->nextTorque;
-		dv0 = minv * f * dt;
-		dw0 = Iinv * (t - w % (solid->GetInertia() * w)) * dt;
-	}
-	else{
-		dv0.clear();
-		dw0.clear();
-	}
-	dv.clear();
-	dw.clear();
-}
-/*void PHSolidInfoForLCP::SetupCorrection(){
-	dV.clear();
-	dW.clear();
-}*/
-
-//----------------------------------------------------------------------------
 // PHConstraint
 IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
 PHConstraint::PHConstraint(){
-	//f.clear();
-	//F.clear();
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
+	bArticulated = false;
 }
 
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
-		PHScene* scene = DCAST(PHScene, GetScene());
-		assert(scene);
-		PHConstraintEngine* ce;
-		scene->engines.Find(ce);
-		assert(ce);
-		PHSolidInfos<PHSolidInfoForLCP>::iterator it = ce->solids.Find(s);
-		if(it == ce->solids.end())
+		PHSolids::iterator it = scene->constraintEngine->solids.Find(s);
+		if(it == scene->constraintEngine->solids.end())
 			return false;
 		if(!solid[0]){
 			solid[0] = *it;
@@ -73,211 +41,249 @@ bool PHConstraint::AddChildObject(ObjectIf* o){
 		}
 	}
 	return false;
-
 }
 
 void PHConstraint::SetDesc(const PHConstraintDesc& desc){
-	desc.posePlug.Ori().ToMatrix(Rj[0]);
-	rj[0] = desc.posePlug.Pos();
-	
-	desc.poseSocket.Ori().ToMatrix(Rj[1]);
-	rj[1] = desc.poseSocket.Pos();
-	
+	desc.poseSocket.Ori().ToMatrix(Xj[0].R);
+	Xj[0].r = desc.poseSocket.Pos();
+	desc.posePlug.Ori().ToMatrix(Xj[1].R);
+	Xj[1].r = desc.posePlug.Pos();
 	bEnabled = desc.bEnabled;
 }
 
-void PHConstraint::CompJacobian(bool bCompAngular){
-	Matrix3d	R[2], Rjabs[2];
-	Vec3d		r[2];
-	R[0] = solid[0]->solid->GetRotation();
-	R[1] = solid[1]->solid->GetRotation();
-	r[0] = solid[0]->solid->GetCenterPosition();
-	r[1] = solid[1]->solid->GetCenterPosition();
-	Rjabs[0] = R[0] * Rj[0];
-	Rjabs[1] = R[1] * Rj[1];
-	Rjrel = Rjabs[0].trans() * Rjabs[1];
-	qjrel.FromMatrix(Rjrel);
-	rjrel = Rjabs[0].trans() * ((R[1] * rj[1] + r[1]) - (R[0] * rj[0] + r[0]));
-	Jvv[0] = -Rj[0].trans();
-	Jvw[0] = Jvv[0] * (-Matrix3d::Cross(rj[0]));
-	Jvv[1] = Rjrel * Rj[1].trans();
-	Jvw[1] = Jvv[1] * (-Matrix3d::Cross(rj[1] - Jvv[1].trans() * rjrel));
-	vjrel = Jvv[0] * solid[0]->v + Jvw[0] * solid[0]->w + Jvv[1] * solid[1]->v + Jvw[1] * solid[1]->w;
-	
-	if(bCompAngular){
-		Jwv[0].clear();
-		Jww[0] = Jvv[0];
-		Jwv[1].clear();
-		Jww[1] = Jvv[1];
-		wjrel = Jwv[0] * solid[0]->v + Jww[0] * solid[0]->w + Jwv[1] * solid[1]->v + Jww[1] * solid[1]->w;
-		
-		//角速度の左からかけるとquaternionの時間微分が得られる行列
-		/*Matrix3d E(
-			 qjrel.W(),  qjrel.Z(), -qjrel.Y(),
-			-qjrel.Z(),  qjrel.W(),  qjrel.X(),
-			 qjrel.Y(), -qjrel.X(),  qjrel.W());
-		E *= 0.5;
-		Jqv[0].clear();
-		Jqw[0] = E * Jww[0];
-		Jqv[1].clear();
-		Jqw[1] = E * Jww[1];*/
+void PHConstraint::UpdateState(){
+	// ツリーを構成していない拘束の場合，剛体の相対位置からヤコビアン，関節速度・位置を逆算する
+	if(!bArticulated){
+		CompJacobian();
+		UpdateJointState();
 	}
+}
 
-	// ヤコビアンをスケーリングする実験コード
-	/*if(GetConstraintType() == PHConstraintDesc::CONTACT){
-		double k = 1.0;
-		for(int i = 0; i < 2; i++){
-			Jvv[i] *= k;
-			Jvw[i] *= k;
-			Jwv[i] *= k;
-			Jww[i] *= k;
-		}
-	}*/
+void PHConstraint::CompJacobian(){
+	SpatialTransform X[2];
+	Matrix3d	Rjabs[2];
+	X[0].R = solid[0]->GetRotation();
+	X[0].r = solid[0]->GetCenterPosition();
+	X[1].R = solid[1]->GetRotation();
+	X[1].r = solid[1]->GetCenterPosition();
+	Xjrel = Xj[1] * X[1] * X[0].inv() * Xj[0].inv();
+	qjrel.FromMatrix(Xjrel.R);
+	
+	Js[0] = Xj[0];
+	Js[1] = Xjrel.inv() * Xj[1];
+	J[0] = Js[0];
+	J[0] *= -1.0;	//反作用
+	J[1] = Js[1];
+	vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
+	
+	/*
+	//角速度の左からかけるとquaternionの時間微分が得られる行列
+	Matrix3d E(
+			qjrel.W(),  qjrel.Z(), -qjrel.Y(),
+		-qjrel.Z(),  qjrel.W(),  qjrel.X(),
+			qjrel.Y(), -qjrel.X(),  qjrel.W());
+	E *= 0.5;
+	Jqv[0].clear();
+	Jqw[0] = E * Jww[0];
+	Jqv[1].clear();
+	Jqw[1] = E * Jww[1];
+	*/
+}
+
+void PHConstraint::CompResponseMatrix(){
+	/*	Aの対角成分を計算する．A = J * M^-1 * J^T
+		A行列は拘束力から速度変化への影響の強さを表す行列なので，
+		その対角成分はある拘束力成分から自分自身の拘束速度成分への影響を表す
+	 */
 	int i, j;
-	Av.clear();
-	Aw.clear();
+	A.v.clear();
+	A.w.clear();
+	PHRootNode* root[2];
+	if(solid[0]->treeNode)
+		root[0] = solid[0]->treeNode->GetRootNode();
+	if(solid[1]->treeNode)
+		root[1] = solid[1]->treeNode->GetRootNode();
+
+	SpatialVector df;
 	for(i = 0; i < 2; i++){
-		if(solid[i]->solid->IsDynamical()){
-			Tvv[i] = Jvv[i] * solid[i]->minv;
-			Tvw[i] = Jvw[i] * solid[i]->Iinv;
-			Twv[i] = Jwv[i] * solid[i]->minv;
-			Tww[i] = Jww[i] * solid[i]->Iinv;
-			for(j = 0; j < 3; j++)
-				Av[j] += Jvv[i].row(j) * Tvv[i].row(j) + Jvw[i].row(j) * Tvw[i].row(j);
-			for(j = 0; j < 3; j++)
-				Aw[j] += Jwv[i].row(j) * Twv[i].row(j) + Jww[i].row(j) * Tww[i].row(j);
+		if(solid[i]->IsDynamical()){
+			if(solid[i]->treeNode){
+				for(j = 0; j < 3; j++){
+					df.v = J[i].vv.row(j);
+					df.w = J[i].vw.row(j);
+					solid[i]->treeNode->CompResponse(df, false);
+					A.v[j] += J[i].vv.row(j) * solid[i]->treeNode->da.v
+							+ J[i].vw.row(j) * solid[i]->treeNode->da.w;
+					int ic = !i;
+					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
+					if(solid[ic]->treeNode && root[i] == root[ic])
+						A.v[j] += J[ic].vv.row(j) * solid[ic]->treeNode->da.v
+								+ J[ic].vw.row(j) * solid[ic]->treeNode->da.w;
+				}
+				for(j = 0; j < 3; j++){
+					df.v = J[i].wv.row(j);
+					df.w = J[i].ww.row(j);
+					solid[i]->treeNode->CompResponse(df, false);
+					A.w[j] += J[i].wv.row(j) * solid[i]->treeNode->da.v
+							+ J[i].ww.row(j) * solid[i]->treeNode->da.w;
+					int ic = !i;
+					if(solid[ic]->treeNode && root[i] == root[ic])
+						A.w[j] += J[ic].wv.row(j) * solid[ic]->treeNode->da.v
+								+ J[ic].ww.row(j) * solid[ic]->treeNode->da.w;
+				}
+			}
+			else{
+				T[i].vv = J[i].vv * solid[i]->minv;
+				T[i].vw = J[i].vw * solid[i]->Iinv;
+				T[i].wv = J[i].wv * solid[i]->minv;
+				T[i].ww = J[i].ww * solid[i]->Iinv;
+				for(j = 0; j < 3; j++)
+					A.v[j] += J[i].vv.row(j) * T[i].vv.row(j) + J[i].vw.row(j) * T[i].vw.row(j);
+				for(j = 0; j < 3; j++)
+					A.w[j] += J[i].wv.row(j) * T[i].wv.row(j) + J[i].ww.row(j) * T[i].ww.row(j);
+			}
 		}
 	}
 	//特異姿勢でAd, Acの成分が0になるケースがある
 	const double eps = 1.0e-3;
 	for(j = 0; j < 3; j++)
-		if(Av[j] < eps)Av[j] = eps;
+		if(A.v[j] < eps)A.v[j] = eps;
 	for(j = 0; j < 3; j++)
-		if(Aw[j] < eps)Aw[j] = eps;
-
+		if(A.w[j] < eps)A.w[j] = eps;
 }
 
-void PHConstraint::SetupDynamics(double dt, double correction_rate, double shrink_rate){
-	FPCK_FINITE(fv);
+void PHConstraint::SetupDynamics(){
+	FPCK_FINITE(f.v);
 
-	bFeasible = solid[0]->solid->IsDynamical() || solid[1]->solid->IsDynamical();
-
-	if(!bEnabled || !bFeasible)
+	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
+	if(!bEnabled || !bFeasible || bArticulated)
 		return;
-
 
 	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
 	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
- 	CompJacobian(GetConstraintType() != PHConstraintDesc::CONTACT);
-	
+ 	CompResponseMatrix();
+
 	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
 	//	拘束の種類ごとに異なる
 	//CompConstraintJacobian();
+	b = vjrel;
+	CompBias();	// 目標速，バネダンパによる補正項を計算
+	b += db;
 	
-	bv = Jvv[0] * (solid[0]->v + solid[0]->dv0) +
-		 Jvw[0] * (solid[0]->w + solid[0]->dw0) +
-		 Jvv[1] * (solid[1]->v + solid[1]->dv0) +
-		 Jvw[1] * (solid[1]->w + solid[1]->dw0);
-	bw = Jwv[0] * (solid[0]->v + solid[0]->dv0) +
-		 Jww[0] * (solid[0]->w + solid[0]->dw0) +
-		 Jwv[1] * (solid[1]->v + solid[1]->dv0) +
-		 Jww[1] * (solid[1]->w + solid[1]->dw0);
-	
-	CompBias(dt, correction_rate);	// 目標速度，バネダンパによる補正項を計算
-	bv += dbv;
-	bw += dbw;
-
 	/* 前回の値を縮小したものを初期値とする．
 	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
 	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
 	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
 	  */
-	fv *= shrink_rate;
-	fw *= shrink_rate;
+	f *= engine->shrinkRate;
+	if(mode == MODE_TORQUE)
+		AddMotorTorque();
+
 	int i, j;
+	SpatialVector fs;
 	for(i = 0; i < 2; i++){
-	if(solid[i]->solid->IsDynamical() && IsInactive(i)){
-			solid[i]->dv += Tvv[i].trans() * fv + Twv[i].trans() * fw;
-			solid[i]->dw += Tvw[i].trans() * fv + Tww[i].trans() * fw;
+		if(solid[i]->IsDynamical() && IsInactive(i)){
+			if(solid[i]->treeNode){
+				fs = (i == 0 ? -1.0 : 1.0) * (Js[i].trans() * f);
+				solid[i]->treeNode->CompResponse(fs);
+			}
+			else{
+				solid[i]->dv.v += T[i].vv.trans() * f.v + T[i].wv.trans() * f.w;
+				solid[i]->dv.w += T[i].vw.trans() * f.v + T[i].ww.trans() * f.w;
+			}
 		}
 	}
-
+	
 	// iterationでの手間を省くためにあらかじめA行列の対角要素でbとJを割っておく
-	double tmp;
 	for(j = 0; j < 3; j++){
-		tmp = 1.0 / (Av[j] + dAv[j]);
-		bv[j] *= tmp;
-		Jvv[0].row(j) *= tmp;
-		Jvw[0].row(j) *= tmp;
-		Jvv[1].row(j) *= tmp;
-		Jvw[1].row(j) *= tmp;
-		dAv[j] *= tmp;
+		Ainv.v[j] = 1.0 / (A.v[j] + dA.v[j]);
+		dA.v[j] *= Ainv.v[j];
+		b.v[j] *= Ainv.v[j];
+		AinvJ[0].vv.row(j) = Ainv.v[j] * J[0].vv.row(j);
+		AinvJ[0].vw.row(j) = Ainv.v[j] * J[0].vw.row(j);
+		AinvJ[1].vv.row(j) = Ainv.v[j] * J[1].vv.row(j);
+		AinvJ[1].vw.row(j) = Ainv.v[j] * J[1].vw.row(j);
 	}
 	for(j = 0; j < 3; j++){
-		tmp = 1.0 / (Aw[j] + dAw[j]);
-		bw[j] *= tmp;
-		Jwv[0].row(j) *= tmp;
-		Jww[0].row(j) *= tmp;
-		Jwv[1].row(j) *= tmp;
-		Jww[1].row(j) *= tmp;
-		dAw[j] *= tmp;
+		Ainv.w[j] = 1.0 / (A.w[j] + dA.w[j]);
+		dA.w[j] *= Ainv.w[j];
+		b.w[j] *= Ainv.w[j];
+		AinvJ[0].wv.row(j) = Ainv.w[j] * J[0].wv.row(j);
+		AinvJ[0].ww.row(j) = Ainv.w[j] * J[0].ww.row(j);
+		AinvJ[1].wv.row(j) = Ainv.w[j] * J[1].wv.row(j);
+		AinvJ[1].ww.row(j) = Ainv.w[j] * J[1].ww.row(j);
 	}
-	FPCK_FINITE(tmp);
 }
 
 void PHConstraint::IterateDynamics(){
-	if(!bEnabled || !bFeasible)return;
-	FPCK_FINITE(fv);
+	if(!bEnabled || !bFeasible || bArticulated)return;
+	FPCK_FINITE(f.v);
 
-	Vec3d fvnew, fwnew, dfv, dfw;
+	SpatialVector fnew, df;
 	int i, j;
 	for(j = 0; j < 3; j++){
 		if(!constr[j])continue;
-		fvnew[j] = (1.0 - dAv[j]) * fv[j] - (bv[j] + 
-			Jvv[0].row(j) * (solid[0]->dv) + Jvw[0].row(j) * (solid[0]->dw) +
-			Jvv[1].row(j) * (solid[1]->dv) + Jvw[1].row(j) * (solid[1]->dw));
-		FPCK_FINITE(Jvv[0].row(j));
-		FPCK_FINITE(Jvv[1].row(j));
-		if (!FPCK_FINITE(fvnew)){
-			FPCK_FINITE(bv);
-			DSTR << Jvv[0] << Jvv[1];
-			DSTR << Jvw[0] << Jvw[1];
-			DSTR << dAv[j];
+		fnew.v[j] = (1.0 - dA.v[j]) * f.v[j] - (b.v[j] + 
+			AinvJ[0].vv.row(j) * (solid[0]->dv.v) + AinvJ[0].vw.row(j) * (solid[0]->dv.w) +
+			AinvJ[1].vv.row(j) * (solid[1]->dv.v) + AinvJ[1].vw.row(j) * (solid[1]->dv.w));
+		FPCK_FINITE(AinvJ[0].vv.row(j));
+		FPCK_FINITE(AinvJ[1].vv.row(j));
+		if (!FPCK_FINITE(fnew.v)){
+			FPCK_FINITE(b.v);
+			DSTR << AinvJ[0].vv << AinvJ[1].vv;
+			DSTR << AinvJ[0].vw << AinvJ[1].vw;
+			DSTR << dA.v[j];
 			DSTR << std::endl;
-			DSTR << "fv:" << fv << "bv:" << bv << std::endl;
-			DSTR << "s0:" << (solid[0]->dv) << (solid[0]->dw) << std::endl;
-			DSTR << "s1:" << (solid[1]->dv) << (solid[1]->dw) << std::endl;
+			DSTR << "f.v:" << f.v << "b.v:" << b.v << std::endl;
+			DSTR << "s0:" << (solid[0]->dv.v) << (solid[0]->dv.w) << std::endl;
+			DSTR << "s1:" << (solid[1]->dv.v) << (solid[1]->dv.w) << std::endl;
 		}
-		Projection(fvnew[j], j);
-		FPCK_FINITE(fvnew);
-		dfv[j] = fvnew[j] - fv[j];
+		Projection(fnew.v[j], j);
+		FPCK_FINITE(fnew.v);
+		df.v[j] = fnew.v[j] - f.v[j];
 		for(i = 0; i < 2; i++){
-		if(solid[i]->solid->IsDynamical() && IsInactive(i)){
-				solid[i]->dv += Tvv[i].row(j) * dfv[j];
-				solid[i]->dw += Tvw[i].row(j) * dfv[j];
+			if(solid[i]->IsDynamical() && IsInactive(i)){
+				if(solid[i]->treeNode){
+					SpatialVector dfs;
+					dfs.v = df[j] * J[i].vv.row(j);
+					dfs.w = df[j] * J[i].vw.row(j);
+					solid[i]->treeNode->CompResponse(dfs);
+				}
+				else{
+					solid[i]->dv.v += T[i].vv.row(j) * df.v[j];
+					solid[i]->dv.w += T[i].vw.row(j) * df.v[j];
+				}
 			}
 		}
-		fv[j] = fvnew[j];
+		f.v[j] = fnew.v[j];
 	}
 	for(j = 0; j < 3; j++){
 		if(!constr[j + 3])continue;
-		fwnew[j] = (1.0 - dAw[j]) * fw[j] - (bw[j] + 
-			Jwv[0].row(j) * (solid[0]->dv) + Jww[0].row(j) * (solid[0]->dw) +
-			Jwv[1].row(j) * (solid[1]->dv) + Jww[1].row(j) * (solid[1]->dw));
-		Projection(fwnew[j], j + 3);
-		dfw[j] = fwnew[j] - fw[j];
+		fnew.w[j] = (1.0 - dA.w[j]) * f.w[j] - (b.w[j] + 
+			AinvJ[0].wv.row(j) * (solid[0]->dv.v) + AinvJ[0].ww.row(j) * (solid[0]->dv.w) +
+			AinvJ[1].wv.row(j) * (solid[1]->dv.v) + AinvJ[1].ww.row(j) * (solid[1]->dv.w));
+		Projection(fnew.w[j], j + 3);
+		df.w[j] = fnew.w[j] - f.w[j];
 		for(i = 0; i < 2; i++){
-		if(solid[i]->solid->IsDynamical() && IsInactive(i)){
-				solid[i]->dv += Twv[i].row(j) * dfw[j];
-				solid[i]->dw += Tww[i].row(j) * dfw[j];
+			if(solid[i]->IsDynamical() && IsInactive(i)){
+				if(solid[i]->treeNode){
+					SpatialVector dfs;
+					dfs.v = df[j] * J[i].wv.row(j);
+					dfs.w = df[j] * J[i].ww.row(j);
+					solid[i]->treeNode->CompResponse(dfs);
+				}
+				else{
+					solid[i]->dv.v += T[i].wv.row(j) * df.w[j];
+					solid[i]->dv.w += T[i].ww.row(j) * df.w[j];
+				}
 			}
 		}
-		fw[j] = fwnew[j];
+		f.w[j] = fnew.w[j];
 	}
-	FPCK_FINITE(fvnew);
-	FPCK_FINITE(fwnew);
-	FPCK_FINITE(dfv);
-	FPCK_FINITE(dfw);
+	FPCK_FINITE(fnew.v);
+	FPCK_FINITE(fnew.w);
+	FPCK_FINITE(df.v);
+	FPCK_FINITE(df.w);
 
 }
 

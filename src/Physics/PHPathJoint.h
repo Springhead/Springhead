@@ -9,7 +9,8 @@
 #define PHPATHJOINT_H
 
 #include <SprPhysics.h>
-#include "PHConstraint.h"
+#include <Physics/PHSpatial.h>
+#include <Physics/PHConstraint.h>
 
 namespace Spr{;
 
@@ -61,10 +62,6 @@ public:
 	virtual void SetPosition(double _q){q = _q;}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
-	virtual double GetPosition();
-	virtual double GetVelocity();
-	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; fw.z = t;}
-	virtual double	GetMotorTorque(){return fw.z;}
 	//virtual void CompConstraintJacobian();
 	virtual void CompBias(double dt, double correction_rate);
 	//virtual void CompError(double dt);

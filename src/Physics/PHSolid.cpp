@@ -19,9 +19,9 @@ namespace Spr{
 IF_OBJECT_IMP(PHSolid, SceneObject);
 
 PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
-	bDynamical = true;
 	integrationMode = PHINT_SIMPLETIC;
 	inertia_inv = inertia.inv();
+	treeNode = NULL;
 	if (s){ SetScene(s); }
 }
 void PHSolid::SetScene(SceneIf* s){
@@ -74,6 +74,56 @@ void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
 		float c = Vec3f(GetFramePosition()) * dir;
 		minS += c;
 		maxS += c;
+}
+
+void PHSolid::SetupDynamics(double dt){
+	minv = GetMassInv();
+	Iinv = GetInertiaInv();
+	Quaterniond qc = GetOrientation().Conjugated();
+	f.v = qc * nextForce;
+	f.w = qc * nextTorque;
+	v.v = qc * GetVelocity();
+	v.w = qc * GetAngularVelocity();
+	
+	// ƒcƒŠ[‚É‘®‚·‚éê‡‚ÍPHRootNode::SetupDynamics‚Ådv‚ªŒvŽZ‚³‚ê‚é
+	if(treeNode)return;
+	
+	if(IsDynamical()){
+		dv.v = minv * f.v * dt;
+		dv.w = Iinv * (f.w - v.w % (GetInertia() * v.w)) * dt;
+	}
+	else{
+		dv.clear();
+	}
+}
+/*void PHSolid::SetupCorrection(){
+	dV.clear();
+	dW.clear();
+}*/
+void PHSolid::UpdateVelocity(double dt){
+	v += dv;
+	oldVel = GetVelocity();
+	oldAngVel = GetAngularVelocity();
+	SetVelocity       (GetOrientation() * v.v);
+	SetAngularVelocity(GetOrientation() * v.w);
+}
+void PHSolid::UpdatePosition(double dt){
+	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt/* + solid->GetOrientation() * info->dV*/);
+	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w * dt/* + info->dW*/)).unit());
+	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
+	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
+}
+
+void PHSolid::UpdateCache(int c){
+	if ((unsigned)c == count) return;
+	count = c;
+	vel = GetVelocity();
+	angVel = GetAngularVelocity();
+	lastPos = pos;
+	pos = GetFramePosition();
+	lastOri = ori;
+	ori = GetOrientation();
+	cog = ori * GetCenterOfMass() + pos;
 }
 
 void PHSolid::Step(){
@@ -247,20 +297,6 @@ void	PHSolid::SetShapePose(int i, const Posed& pose){
 		shapes[i].pose = pose;
 		CalcBBox();
 	}
-}
-
-void PHSolid::SetGravity(bool bOn){
-	PHScene* ps = DCAST(PHScene,GetScene());
-	PHGravityEngine* ge;
-	ps->engines.Find(ge);
-	if (bOn == true){
-		if (!ge->solids.Find(this)){
-			ge->solids.push_back(this);
-		}
-	}else{
-		ge->solids.Erase(this);
-	}
-	gravity = bOn;
 }
 int PHSolid::NShape(){
 	return shapes.size();

@@ -9,18 +9,33 @@
 #define PHHINGEJOINT_H
 
 #include <SprPhysics.h>
-#include <Foundation/Object.h>
+#include <Physics/PHConstraint.h>
+#include <Physics/PHTreeNode.h>
 
 namespace Spr{;
 
+///	ヒンジ関節のツリーノード
+class PHHingeJointNode : public PHTreeNode1D{
+public:
+	virtual void CompJointJacobian();
+	virtual void CompJointCoriolisAccel();
+	virtual void CompRelativePosition();
+	virtual void CompRelativeVelocity();
+	//PHHingeJointNode();
+	//PHHingeJointNode(PHHingeJoint* j);
+};
+
+///	ヒンジ関節
 class PHHingeJoint : public InheritJoint1D<PHHingeJointIf, PHJoint1D>{
 public:
 	OBJECT_DEF(PHHingeJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
-	virtual double GetPosition();
-	virtual double GetVelocity();
-	virtual void CompBias(double dt, double correction_rate);
+	virtual void CompBias();
 	virtual void Projection(double& f, int k);
+	virtual void UpdateJointState();
+	virtual PHTreeNode* CreateTreeNode(){
+		return DBG_NEW PHHingeJointNode();
+	}
 	// virtual void CompConstraintJacobian();
 	// virtual void CompError(double dt);
 	// virtual void ProjectionCorrection(double& F, int k);

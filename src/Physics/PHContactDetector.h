@@ -18,47 +18,25 @@
 
 namespace Spr{;
 
-///剛体に関する付加情報
-class PHSolidInfo : public Object{
-public:
-	PHSolid*	solid;		///< PHSolidへの参照
-	PHSolidInfo(PHSolid* s):solid(s){}
-};
-
-template<class TSolidInfo>
-class PHSolidInfos : public std::vector< UTRef<TSolidInfo> >{
-public:
-	typedef std::vector< UTRef<TSolidInfo> > base;
-	typedef typename base::iterator iterator;
-	iterator Find(PHSolid* s){
-		iterator is;
-		for(is = base::begin(); is != base::end(); is++)
-			if((*is)->solid == s)
-				break;
-		return is;
-	};
-};
-
-
 /// 剛体の組の状態
 struct PHSolidPairState{
 	bool bEnabled;
 };
 
 /// 剛体の組
-template<class TSolidInfo, class TShapePair, class TEngine>
+template<class TShapePair, class TEngine>
 class PHSolidPair : public PHSolidPairState, public UTRefCount{
 public:
 	typedef TShapePair shapepair_type;
 	typedef TEngine engine_type;
 
-	TSolidInfo* solid[2];
+	PHSolid* solid[2];
 	UTCombination< UTRef<TShapePair> > shapePairs;
 
-	virtual void Init(TSolidInfo* s0, TSolidInfo* s1){
+	virtual void Init(PHSolid* s0, PHSolid* s1){
 		solid[0] = s0;
 		solid[1] = s1;
-		int ns0 = s0->solid->NShape(), ns1 = s1->solid->NShape();
+		int ns0 = s0->NShape(), ns1 = s1->NShape();
 		shapePairs.resize(ns0, ns1);
 		bEnabled = true;
 	}
@@ -70,20 +48,19 @@ public:
 		if(!bEnabled)return false;
 
 		// いずれかのSolidに形状が割り当てられていない場合は接触なし
-		PHSolid *s0 = solid[0]->solid, *s1 = solid[1]->solid;
-		if(s0->NShape() == 0 || s1->NShape() == 0) return false;
+		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
 
 		// 全てのshape pairについて交差を調べる
 		bool found = false;
 		TShapePair* sp;
-		for(int i = 0; i < s0->NShape(); i++)for(int j = 0; j < s1->NShape(); j++){
+		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 			sp = shapePairs.item(i, j);
 			//sp.UpdateShapePose(solid[0]->solid->GetPose(), solid[1]->solid->GetPose());
 			//このshape pairの交差判定/法線と接触の位置を求める．
 			if(sp->Detect(
 				ct,
-				DCAST(CDConvex, s0->GetShape(i)), DCAST(CDConvex, s1->GetShape(j)),
-				s0->GetPose() * s0->GetShapePose(i), s1->GetPose() * s1->GetShapePose(j)))
+				DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),
+				solid[0]->GetPose() * solid[0]->GetShapePose(i), solid[1]->GetPose() * solid[1]->GetShapePose(j)))
 			{
 				found = true;
 				OnDetect(sp, engine, ct, dt);
@@ -96,23 +73,22 @@ public:
 		if(!bEnabled)return false;
 
 		// いずれかのSolidに形状が割り当てられていない場合は接触なし
-		PHSolid *s0 = solid[0]->solid, *s1 = solid[1]->solid;
-		if(s0->NShape() == 0 || s1->NShape() == 0) return false;
-		Vec3d d0 = s0->GetDeltaPosition();
-		Vec3d d1 = s1->GetDeltaPosition();
-		Posed p0 = s0->GetPose(); p0.Pos() -= d0;
-		Posed p1 = s1->GetPose(); p1.Pos() -= d1;
+		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+		Vec3d d0 = solid[0]->GetDeltaPosition();
+		Vec3d d1 = solid[1]->GetDeltaPosition();
+		Posed p0 = solid[0]->GetPose(); p0.Pos() -= d0;
+		Posed p1 = solid[1]->GetPose(); p1.Pos() -= d1;
 
 		// 全てのshape pairについて交差を調べる
 		bool found = false;
 		TShapePair* sp;
-		for(int i = 0; i < s0->NShape(); i++)for(int j = 0; j < s1->NShape(); j++){
+		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 			sp = shapePairs.item(i, j);
 			//このshape pairの交差判定/法線と接触の位置を求める．
 			if(sp->ContDetect(
 				ct,
-				DCAST(CDConvex, s0->GetShape(i)), DCAST(CDConvex, s1->GetShape(j)),
-				p0 * s0->GetShapePose(i), d0, p1 * s1->GetShapePose(j), d1))
+				DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),
+				p0 * solid[0]->GetShapePose(i), d0, p1 * solid[1]->GetShapePose(j), d1))
 			{
 				found = true;
 				OnContDetect(sp, engine, ct, dt);
@@ -146,7 +122,7 @@ struct PHContactDetectorState{
 
 };
 
-template<class TSolidInfo, class TShapePair, class TSolidPair, class TEngine>
+template<class TShapePair, class TSolidPair, class TEngine>
 class PHContactDetector : public PHEngine{
 
 	// AABBでソートするための構造体
@@ -165,7 +141,7 @@ public:
 	typedef UTCombination< UTRef<TSolidPair> > PHSolidPairs;
 
 	bool						bContactEnabled;///< 接触が有効化された剛体の組が1つでも存在すればtrue
-	PHSolidInfos<TSolidInfo>	solids;			///< 剛体の配列
+	PHSolids					solids;			///< 剛体の配列
 	PHSolidPairs				solidPairs;		///< 剛体の組の配列
 	std::vector<PHSolidIf*>		inactiveSolids; ///< 解析法を適用しない剛体の集合
 
@@ -175,16 +151,13 @@ public:
 	}
 	
 	///< 解析法を適用しない剛体の追加
-	virtual void AddInactiveSolid(PHSolidIf* solid)
-	{
+	virtual void AddInactiveSolid(PHSolidIf* solid){
 		inactiveSolids.push_back(solid);
 	}
 
 	///< 解析法を適用しない剛体の検索
-	virtual bool IsInactiveSolid(PHSolidIf* solid)
-	{
-		for(std::vector<PHSolidIf*>::iterator it = inactiveSolids.begin(); it != inactiveSolids.end(); it++)
-		{
+	virtual bool IsInactiveSolid(PHSolidIf* solid){
+		for(std::vector<PHSolidIf*>::iterator it = inactiveSolids.begin(); it != inactiveSolids.end(); it++){
 			if((*it) == solid)return true;
 		}
 		return false;
@@ -193,8 +166,8 @@ public:
 	///< 剛体の追加
 	virtual bool AddChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
-		if(s && solids.Find(s) == solids.end()){
-			solids.push_back(DBG_NEW TSolidInfo(s));
+		if(s && !solids.Find(s)){
+			solids.push_back(s);
 			int N = (int)solids.size();
 			assert(solidPairs.height() == N-1 && solidPairs.width() == N-1);
 			solidPairs.resize(N, N);
@@ -211,7 +184,7 @@ public:
 	virtual bool DelChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
 	 	if(!s)return false;
-		typename PHSolidInfos<TSolidInfo>::iterator is = solids.Find(s);
+		typename PHSolids::iterator is = solids.Find(s);
 		if(is != solids.end()){
 			int idx = is - solids.begin();
 			solids.erase(is);
@@ -291,20 +264,20 @@ public:
 
 	///< SolidにShapeが追加されたときにSolidから呼ばれる
 	void UpdateShapePairs(PHSolid* solid){
-		int isolid = (solids.Find(solid) - solids.begin());
+		int isolid = (solids.Find(solid) - &solids[0]);
 		int i, j;
 		TSolidPair* sp;
 		PHSolid *slhs, *srhs;
 		for(i = 0; i < isolid; i++){
 			sp = solidPairs.item(i, isolid);
-			slhs = sp->solid[0]->solid;
+			slhs = sp->solid[0];
 			sp->shapePairs.resize(slhs->NShape(), solid->NShape());
 			for(j = 0; j < slhs->NShape(); j++)
 				sp->shapePairs.item(j, solid->NShape()-1) = DBG_NEW TShapePair();
 		}
 		for(i = isolid+1; i < (int)solids.size(); i++){
 			sp = solidPairs.item(isolid, i);
-			srhs = sp->solid[1]->solid;
+			srhs = sp->solid[1];
 			sp->shapePairs.resize(solid->NShape(), srhs->NShape());
 			for(j = 0; j < srhs->NShape(); j++)
 				sp->shapePairs.item(solid->NShape()-1, j) = DBG_NEW TShapePair();
@@ -321,7 +294,7 @@ public:
 	}
 
 	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
-		typename PHSolidInfos<TSolidInfo>::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
+		typename PHSolids::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
 		if(ilhs == solids.end() || irhs == solids.end())
 			return;
 		int i = ilhs - solids.begin(), j = irhs - solids.begin();
@@ -333,7 +306,7 @@ public:
 
 	virtual void EnableContact(PHSolidIf** group, size_t length, bool bEnable){
 		std::vector<int> idx;
-		typename PHSolidInfos<TSolidInfo>::iterator it;
+		typename PHSolids::iterator it;
 		for(int i = 0; i < (int)length; i++){
 			it = solids.Find((PHSolid*)group[i]);
 			if(it != solids.end())
@@ -349,7 +322,7 @@ public:
 	}
 
 	virtual void EnableContact(PHSolidIf* solid, bool bEnable){
-		typename PHSolidInfos<TSolidInfo>::iterator it = solids.Find((PHSolid*)solid);
+		typename PHSolids::iterator it = solids.Find((PHSolid*)solid);
 		if(it == solids.end())
 			return;
 		int idx = it - solids.begin();
@@ -385,7 +358,7 @@ public:
 		edges.resize(2 * N);
 		typename Edges::iterator eit = edges.begin();
 		for(int i = 0; i < N; ++i){
-			solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 			eit[0].index = i; eit[0].bMin = true;
 			eit[1].index = i; eit[1].bMin = false;
 			eit += 2;
@@ -430,8 +403,8 @@ public:
 		edges.resize(2 * N);
 		typename Edges::iterator eit = edges.begin();
 		for(int i = 0; i < N; ++i){
-			solids[i]->solid->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-			Vec3d dPos = solids[i]->solid->GetDeltaPosition();
+			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+			Vec3d dPos = solids[i]->GetDeltaPosition();
 			float dLen = (float) (dPos * dir);
 			if (dLen < 0){
 				eit[0].edge += dLen;

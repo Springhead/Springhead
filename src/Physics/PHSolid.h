@@ -13,6 +13,7 @@
 #include <Collision/CDShape.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>
+#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 
@@ -77,12 +78,12 @@ enum PHIntegrationMode{
 		PHINT_RUNGEKUTTA4		///	４次ルンゲクッタ法
 };
 
+class PHTreeNode;
 
 ///	剛体
 class PHSolid : public InheritSceneObject<PHSolidIf, SceneObject>, public PHSolidDesc{
 protected:
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
-	bool		bDynamical;		///<	動力学的かどうかのフラグ
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
 	///	積分方式
@@ -96,6 +97,36 @@ protected:
 			(t[1] - (I[0][0] - I[2][2]) * w.Z() * w.X()) / I[1][1],
 			(t[2] - (I[1][1] - I[0][0]) * w.X() * w.Y()) / I[2][2]);
 	}
+public:
+	///@name LCP関連補助変数
+	//@{
+	PHTreeNode*	treeNode;	/// 関節系を構成している場合の対応するノード
+	double		minv;		///< 質量の逆数
+	Matrix3d	Iinv;		///< 慣性行列の逆行列
+	SpatialVector f;		///< ローカル座標での外力
+	SpatialVector v;		/// ローカル座標での現在の速度
+	//Vec3d		dv0, dw0;	/// 拘束力以外の外力による速度変化量
+	SpatialVector dv;		/// 拘束力による速度変化量
+	//Vec3d		dV, dW;		/// Correctionによる移動量，回転量
+	void SetupDynamics(double dt);
+	void SetupCorrection();
+	void UpdateVelocity(double dt);
+	void UpdatePosition(double dt);
+	//@}
+	
+	///@name Penalty法関連補助変数
+	//@{
+	/**	最後に接触した時刻 = キャッシュパラメータを最後に更新した時刻．
+		接触時に，キャッシュを更新するので，count が現在の時刻と等しければ
+		衝突が起きたことを意味する．	*/
+	unsigned count;
+	//	フレーム(剛体)単位のパラメータ
+	Vec3f cog, vel, angVel;			///<	重心，速度，角速度
+	Vec3f pos, lastPos;				///<	位置，最後の位置
+	Quaternionf ori, lastOri;		///<	向き，前回の向き
+	//@}
+	void UpdateCache(int c);		///<	キャッシュ変数を剛体などから取ってくる．
+	
 public:
 	std::vector<CDShapeRefWithPose> shapes;
 	PHBBox bbox;
@@ -202,16 +233,15 @@ public:
 	Posed		GetShapePose(int i);
 	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を設定
 	void		SetShapePose(int i, const Posed& pose);
-
-	void		SetGravity(bool bOn);
-	void		SetDynamical(bool bOn){bDynamical = bOn;}
-	bool		IsDynamical(){return bDynamical;}
+	void		SetGravity(bool bOn){gravity = bOn;}
+	void		SetDynamical(bool bOn){dynamical = bOn;}
+	bool		IsDynamical(){return dynamical;}
 
 protected:
 	ACCESS_DESC_STATE(PHSolid);
 };
 
-class PHSolids:public std::vector< UTRef<PHSolid> >{
+class PHSolids : public std::vector< UTRef<PHSolid> >{
 public:
 	UTRef<PHSolid> Erase(const PHSolid* s){
 		iterator it = std::find(begin(), end(), s);

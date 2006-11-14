@@ -25,7 +25,7 @@ public:
 	int GetPriority() const {return SGBP_GRAVITYENGINE;}
 	void Step();
 	void Clear(){solids.clear();}
-	bool AddChildObject(Object* o);
+	virtual bool AddChildObject(ObjectIf* o);
 };
 
 }

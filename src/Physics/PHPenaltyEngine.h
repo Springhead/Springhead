@@ -56,27 +56,10 @@ public:
 	//@}
 };
 
-class PHSolidInfoForPenalty : public PHSolidInfo{
-public:
-	///@name	UpdateChacheで更新する変数
-	//@{
-	/**	最後に接触した時刻 = キャッシュパラメータを最後に更新した時刻．
-		接触時に，キャッシュを更新するので，count が現在の時刻と等しければ
-		衝突が起きたことを意味する．	*/
-	unsigned count;
-	//	フレーム(剛体)単位のパラメータ
-	Vec3f cog, vel, angVel;			///<	重心，速度，角速度
-	Vec3f pos, lastPos;				///<	位置，最後の位置
-	Quaternionf ori, lastOri;		///<	向き，前回の向き
-	//@}
-	void UpdateCache(int c);		///<	キャッシュ変数を剛体などから取ってくる．
-	PHSolidInfoForPenalty(PHSolid* solid):PHSolidInfo(solid){}
-};
-
 class PHPenaltyEngine;
-class PHSolidPairForPenalty : public PHSolidPair<PHSolidInfoForPenalty, PHShapePairForPenalty, PHPenaltyEngine>{
+class PHSolidPairForPenalty : public PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine>{
 public:
-	typedef PHSolidPair<PHSolidInfoForPenalty, PHShapePairForPenalty, PHPenaltyEngine> base_type;
+	typedef PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine> base_type;
 	typedef base_type::shapepair_type shapepair_type;
 	typedef base_type::engine_type engine_type;
 
@@ -130,7 +113,7 @@ protected:
 	void CalcFriction(PHShapePairForPenalty* cp);
 };
 
-class PHPenaltyEngine : public PHContactDetector<PHSolidInfoForPenalty, PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
+class PHPenaltyEngine : public PHContactDetector<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
 	OBJECT_DEF_NOIF(PHPenaltyEngine);
 public:
 	int GetPriority() const {return SGBP_PENALTYENGINE;}

@@ -18,69 +18,27 @@ namespace Spr{;
 // PHSliderJoint
 IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
-double PHSliderJoint::GetPosition(){
-	//DSTR<<rjrel.z <<endl;
-	return rjrel.z;
+void PHSliderJoint::UpdateJointState(){
+	position = Xjrel.r.z;
+	velocity = vjrel.v.z;
 }
 
-double PHSliderJoint::GetVelocity(){
-	return vjrel.z;
-}
-
-/*void PHSliderJoint::CompConstraintJacobian(){
+void PHSliderJoint::CompBias(){
 	CompDof();
-	Ad.clear();
-	Ac.clear();
-	for(int i = 0; i < 2; i++){
-		Jdv[i].SUBMAT(0, 0, 2, 3) = Jvv[i].SUBMAT(0, 0, 2, 3);
-		Jdv[i].SUBMAT(2, 0, 3, 3) = Jwv[i];
-		Jdv[i].row(5) = Jvv[i].row(2);
-		Jdw[i].SUBMAT(0, 0, 2, 3) = Jvw[i].SUBMAT(0, 0, 2, 3);
-		Jdw[i].SUBMAT(2, 0, 3, 3) = Jww[i];
-		Jdw[i].row(5) = Jvw[i].row(2);
-
-		Jcv[i].SUBMAT(0, 0, 2, 3) = Jvv[i].SUBMAT(0, 0, 2, 3);
-		Jcv[i].SUBMAT(2, 0, 3, 3) = Jqv[i];
-		Jcv[i].row(5) = Jvv[i].row(2);
-		Jcw[i].SUBMAT(0, 0, 2, 3) = Jvw[i].SUBMAT(0, 0, 2, 3);
-		Jcw[i].SUBMAT(2, 0, 3, 3) = Jqw[i];
-		Jcw[i].row(5) = Jvw[i].row(2);
-
-		if(solid[i]->solid->IsDynamical()){
-			Tdv[i] = Jdv[i] * solid[i]->minv;
-			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			Tcv[i].SUBMAT(0, 0, 2, 3) = Tdv[i].SUBMAT(0, 0, 2, 3);
-			Tcv[i].SUBMAT(2, 0, 3, 3) = Jqv[i] * solid[i]->minv;
-			Tcv[i].row(5) = Tdv[i].row(5);
-			Tcw[i].SUBMAT(0, 0, 2, 3) = Tdw[i].SUBMAT(0, 0, 2, 3);
-			Tcw[i].SUBMAT(2, 0, 3, 3) = Jqw[i] * solid[i]->Iinv;
-			Tcw[i].row(5) = Tdw[i].row(5);
-			for(int j = 0; j < 6; j++)
-				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
-			Ac.SUBVEC(0, 2) += Ad.SUBVEC(0, 2);
-			for(int j = 2; j < 5; j++)
-				Ac[j] += Jcv[i].row(j) * Tcv[i].row(j) + Jcw[i].row(j) * Tcw[i].row(j);
-			Ac[5] += Ad[5];
-		}
-	}
-}*/
-
-void PHSliderJoint::CompBias(double dt, double correction_rate){
-	CompDof();
-	double dtinv = 1.0 / dt;
-	Vec3d v = correction_rate * rjrel * dtinv;
-	dbv.x = v.x;
-	dbv.y = v.y;
+	double dtinv = 1.0 / scene->GetTimeStep();
+	db.v = Xjrel.r * dtinv + vjrel.v;
+	db.v.z = 0.0;
+	db.w = qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv) + vjrel.w;
+	db *= engine->correctionRate;
 	if(mode == MODE_VELOCITY){
-		dbv.z = -vel_d;
+		db.v.z = -vel_d;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
-		double tmp = 1.0 / (damper + spring * dt);
-		dAv.z = tmp / dt;
-		dbv.z = spring * (diff) * tmp;
+		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		dA.v.z = tmp / scene->GetTimeStep();
+		db.v.z = spring * (diff) * tmp;
 	}
-	dbw = (correction_rate * qjrel.Theta() * dtinv) * qjrel.Axis();
 }
 
 /*void PHSliderJoint::CompError(double dt){
@@ -112,6 +70,28 @@ void PHSliderJoint::Projection(double& f, int k){
 			F = min(0.0, F);
 	}
 }*/
+
+//-----------------------------------------------------------------------------
+//OBJECT_IMP(PHSliderJointNode, PHTreeNode1D);
+
+void PHSliderJointNode::CompJointJacobian(){
+	J.v = Vec3d(0.0, 0.0, 1.0);
+	J.w.clear();
+	PHTreeNode1D::CompJointJacobian();
+}
+void PHSliderJointNode::CompJointCoriolisAccel(){
+	cj.clear();
+}
+void PHSliderJointNode::CompRelativeVelocity(){
+	PHJoint1D* j = GetJoint();
+	j->vjrel.v = Vec3d(0.0, 0.0, j->velocity);
+	j->vjrel.w.clear();
+}
+void PHSliderJointNode::CompRelativePosition(){
+	PHJoint1D* j = GetJoint();
+	j->Xjrel.R = Matrix3d::Unit();
+	j->Xjrel.r = Vec3d(0.0, 0.0, j->position);
+}
 
 }
 

@@ -23,6 +23,7 @@ IF_OBJECT_IMP_ABST(PHJoint, PHConstraint);
 IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 
 PHJoint1D::PHJoint1D(){
+	position = velocity = torque = 0.0;
 	fill(constr, constr + 6, true);
 }	
 
@@ -35,13 +36,6 @@ void PHJoint1D::SetDesc(const PHJointDesc& desc){
 	origin = desc1D.origin;
 	damper = desc1D.damper;
 	SetMotorTorque(desc1D.torque);
-}
-
-void PHJoint1D::SetMotorTorque(double t){
-	mode = MODE_TORQUE;
-	PHScene* s = DCAST(PHScene, GetScene());
-	assert(s);
-	((double*)&fv)[axis_index] = t * s->GetTimeStep();
 }
 
 void PHJoint1D::CompDof(){

@@ -16,9 +16,9 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHContactPoint
-IF_OBJECT_IMP_ABST(PHContactPoint, PHConstraint);
+IF_OBJECT_IMP(PHContactPoint, PHConstraint);
 
-PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP* s0, PHSolidInfoForLCP* s1){
+PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
 	constr[0] = constr[1] = constr[2] = true;
 	constr[3] = constr[4] = constr[5] = false;
 	
@@ -28,24 +28,24 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		rjabs[i] = pos - solid[i]->GetCenterPosition();	//剛体の中心から接触点までのベクトル
 	}
 	// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
 	for(int i = 0; i < 2; i++){
-		Rj[i] = solid[i]->solid->GetRotation().trans() * local;
-		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];
+		Xj[i].R = solid[i]->GetRotation().trans() * local;
+		Xj[i].r = solid[i]->GetRotation().trans() * rjabs[i];
 	}
 }
 
-PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP* s0, PHSolidInfoForLCP* s1){
+PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
 	shapePair = sp;
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
 
 	Vec3d rjabs[2], vjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->solid->GetCenterPosition();	//剛体の中心から接触点までのベクトル
-		vjabs[i] = solid[i]->solid->GetVelocity() + solid[i]->solid->GetAngularVelocity() % rjabs[i];	//接触点での速度
+		rjabs[i] = pos - solid[i]->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		vjabs[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % rjabs[i];	//接触点での速度
 	}
 	//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
 	Vec3d n, t[2], vjrel, vjrelproj;
@@ -70,8 +70,8 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP
 	Rjabs.col(2) = t[1];
 	
 	for(int i = 0; i < 2; i++){
-		Rj[i] = solid[i]->solid->GetRotation().trans() * Rjabs;
-		rj[i] = solid[i]->solid->GetRotation().trans() * rjabs[i];
+		Xj[i].R = solid[i]->GetRotation().trans() * Rjabs;
+		Xj[i].r = solid[i]->GetRotation().trans() * rjabs[i];
 	}
 }
 
@@ -97,8 +97,8 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolidInfoForLCP
 	Ac[0] = Ad[0];
 }*/
 
-void PHContactPoint::CompBias(double dt, double correction_rate){
-	dbv.x = -correction_rate * shapePair->depth;
+void PHContactPoint::CompBias(){
+	db.v.x = -engine->correctionRate * shapePair->depth;
 }
 
 void PHContactPoint::Projection(double& f, int k){

@@ -38,21 +38,6 @@ void PHShapePairForPenalty::Clear(){
 }
 
 //----------------------------------------------------------------------------
-// PHSolidInfoForPenalty
-void PHSolidInfoForPenalty::UpdateCache(int c){
-	if ((unsigned)c == count) return;
-	assert(solid);
-	count = c;
-	vel = solid->GetVelocity();
-	angVel = solid->GetAngularVelocity();
-	lastPos = pos;
-	pos = solid->GetFramePosition();
-	lastOri = ori;
-	ori = solid->GetOrientation();
-	cog = ori * solid->GetCenterOfMass() + pos;
-}
-
-//----------------------------------------------------------------------------
 // PHSolidPairForPenalty
 
 void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
@@ -65,18 +50,16 @@ void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
 	solid[1]->UpdateCache(ct);
 	cocog = ave(solid[0]->cog, solid[1]->cog);
 
-	PHSolid* s[2] = {solid[0]->solid, solid[1]->solid};
-
 	//	Š·ŽZŽ¿—Ê‚ÌŒvŽZ
 	convertedMass=1.0f;
-	if (s[0]->GetMass() < 1e10f && s[1]->GetMass() < 1e10f){
-		float m0 = (float)s[0]->GetMass();
-		float m1 = (float)s[1]->GetMass();
+	if (solid[0]->GetMass() < 1e10f && solid[1]->GetMass() < 1e10f){
+		float m0 = (float)solid[0]->GetMass();
+		float m1 = (float)solid[1]->GetMass();
 		convertedMass = m0 * m1 / (m0+m1);
-	}else if (s[0]->GetMass() < 1e10f){
-		convertedMass = (float)s[0]->GetMass();
-	}else if (s[1]->GetMass() < 1e10f){
-		convertedMass = (float)s[1]->GetMass();
+	}else if (solid[0]->GetMass() < 1e10f){
+		convertedMass = (float)solid[0]->GetMass();
+	}else if (solid[1]->GetMass() < 1e10f){
+		convertedMass = (float)solid[1]->GetMass();
 	}
 }
 
@@ -147,10 +130,10 @@ void PHSolidPairForPenalty::GenerateForce(){
 		//	—Í‚ð§ŒÀ‚·‚éD
 		//	LimitForces();
 		// —Í‚ð‰Á‚¦‚éD
-		solid[0]->solid->AddForce(reflexForce + frictionForce, cocog);
-		solid[0]->solid->AddTorque(reflexTorque + frictionTorque);
-		solid[1]->solid->AddForce(-(reflexForce + frictionForce), cocog);
-		solid[1]->solid->AddTorque(-(reflexTorque + frictionTorque));
+		solid[0]->AddForce(reflexForce + frictionForce, cocog);
+		solid[0]->AddTorque(reflexTorque + frictionTorque);
+		solid[1]->AddForce(-(reflexForce + frictionForce), cocog);
+		solid[1]->AddTorque(-(reflexTorque + frictionTorque));
 	}
 }
 

@@ -84,6 +84,14 @@ PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDes
 	return constraintEngine->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc);	
 }
 
+PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root){
+	return constraintEngine->AddRootNode((PHSolid*)root);
+}
+
+PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child){
+	return constraintEngine->AddNode(DCAST(PHTreeNode, parent), (PHSolid*) child);
+}
+
 void PHScene::Clear(){
 	engines.Clear();
 	Init();
@@ -178,6 +186,9 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	bool rv = solids->AddChildObject(o);
 	if(rv){
 		PHSolidIf* s = DCAST(PHSolidIf, o);
+		PHGravityEngine* ge;
+		engines.Find(ge);
+		if(ge)ge->AddChildObject(o);
 		penaltyEngine->AddChildObject(o);
 		constraintEngine->AddChildObject(o);
 		SetContactMode(s, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
@@ -200,9 +211,22 @@ bool PHScene::DelChildObject(ObjectIf* o){
 	return rv;	
 }
 
-PHConstraintEngine* PHScene::GetConstraintEngine()
-{
+PHConstraintEngine* PHScene::GetConstraintEngine(){
 	return constraintEngine;
 }
 
+<<<<<<< .mine
+void PHScene::RemoveGravity(PHSolidIf* solid){
+	PHGravityEngine* ge;
+	engines.Find(ge);
+	assert(ge);
+	
+	ge->RemoveSolid((PHSolid*)solid);
+=======
+>>>>>>> .r2206
 }
+<<<<<<< .mine
+
+}
+=======
+>>>>>>> .r2206

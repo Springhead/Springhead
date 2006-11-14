@@ -181,14 +181,6 @@ bool PHPathJoint::AddChildObject(ObjectIf* o){
 	return PHConstraint::AddChildObject(o);
 }
 
-double PHPathJoint::GetPosition(){
-	return q;
-}
-
-double PHPathJoint::GetVelocity(){
-	return qd;
-}
-
 /*void PHPathJoint::CompConstraintJacobian(){
 	if(!path)return;
 	CompDof();
@@ -223,7 +215,7 @@ double PHPathJoint::GetVelocity(){
 
 void PHPathJoint::CompBias(double dt, double correction_rate){
 	if(mode == MODE_VELOCITY){
-		bw.z -= vel_d;
+		b.w.z -= vel_d;
 	}
 
 }

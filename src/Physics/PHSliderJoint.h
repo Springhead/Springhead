@@ -9,21 +9,35 @@
 #define PHSLIDERJOINT_H
 
 #include <SprPhysics.h>
-#include "PHConstraint.h"
+#include <Physics/PHConstraint.h>
+#include <Physics/PHTreeNode.h>
 
 namespace Spr{;
 
+///	スライダ関節に対応するツリーノード
+class PHSliderJointNode:public PHTreeNode1D{
+public:
+	virtual void CompJointJacobian();
+	virtual void CompJointCoriolisAccel();
+	virtual void CompRelativePosition();
+	virtual void CompRelativeVelocity();
+	//PHSliderJointNode();
+};
+
+///	スライダ関節
 class PHSliderJoint : public InheritJoint1D<PHSliderJointIf, PHJoint1D>{
 public:
 	OBJECT_DEF(PHSliderJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
-	virtual double GetPosition();
-	virtual double GetVelocity();
 	//virtual void CompConstraintJacobian();
-	virtual void CompBias(double dt, double correction_rate);
-	//virtual void CompError(double dt);
+	virtual void CompBias();
 	virtual void Projection(double& f, int k);
+	//virtual void CompError(double dt);
 	//virtual void ProjectionCorrection(double& F, int k);
+	virtual void UpdateJointState();
+	virtual PHTreeNode* CreateTreeNode(){
+		return DBG_NEW PHSliderJointNode();
+	}
 	PHSliderJoint(){
 		axis_index = 2;
 	}

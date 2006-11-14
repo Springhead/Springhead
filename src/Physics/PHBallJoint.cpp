@@ -16,7 +16,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHBallJoint
-IF_OBJECT_IMP(PHBallJoint, PHJoint1D)
+IF_OBJECT_IMP(PHBallJoint, PHJoint)
 
 void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 	PHConstraint::SetDesc(desc);
@@ -25,33 +25,10 @@ void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 	SetMotorTorque(descBall.torque);
 }
 
-/*void PHBallJoint::CompConstraintJacobian(){
-	dim_d = 3;
-	dim_c = 3;
-	Ad.clear();
-	Ac.clear();
-	for(int i = 0; i < 2; i++){
-		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
-		Jdv[i].SUBMAT(3, 0, 3, 3) = Jwv[i];
-		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
-		Jdw[i].SUBMAT(3, 0, 3, 3) = Jww[i];
-		Jcv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
-		Jcw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
-		if(solid[i]->solid->IsDynamical()){
-			Tdv[i] = Jdv[i] * solid[i]->minv;
-			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			Tcv[i].SUBMAT(0, 0, 3, 3) = Tdv[i].SUBMAT(0, 0, 3, 3);
-			Tcw[i].SUBMAT(0, 0, 3, 3) = Tdw[i].SUBMAT(0, 0, 3, 3);
-			for(int j = 0; j < 6; j++)
-				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
-			Ac.SUBVEC(0, 3) += Ad.SUBVEC(0, 3);
-		}
-	}
-}*/
-
-void PHBallJoint::CompBias(double dt, double correction_rate){
-	double dtinv = 1.0 / dt;
-	bv += correction_rate * rjrel * dtinv;
+void PHBallJoint::CompBias(){
+	double dtinv = 1.0 / scene->GetTimeStep();
+	db.v = engine->correctionRate * Xjrel.r * dtinv;
+	db.w.clear();
 }
 
 /*void PHBallJoint::CompError(double dt){
@@ -63,4 +40,17 @@ void PHBallJoint::Projection(double& f, int k){
 	
 }
 
+void PHBallJointNode::CompJointJacobian(){
+
+}
+void PHBallJointNode::CompJointCoriolisAccel(){
+
+}
+void PHBallJointNode::CompRelativePosition(){
+
+}
+void PHBallJointNode::CompRelativeVelocity(){
+
+}
+	
 }

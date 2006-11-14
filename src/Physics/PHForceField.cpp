@@ -21,15 +21,35 @@ void PHGravityEngine::Step(){
 	PHSolid* solid;
 	for(it = solids.begin(); it != solids.end(); it++){
 		solid = *it;
-		solid->AddForce((float)solid->GetMass() * accel);
+		if(solid->gravity)
+			solid->AddForce((float)solid->GetMass() * accel);
 	}
 }
 
-bool PHGravityEngine::AddChildObject(Object* o){
-	if (DCAST(PHSolid, o)){
-		solids.push_back((PHSolid*)o);
+bool PHGravityEngine::AddChildObject(ObjectIf* o){
+	PHSolid* s = DCAST(PHSolid, o);
+	if(s){
+		solids.push_back(s);
 		return true;
 	}
 	return false;
 }
+<<<<<<< .mine
+
+void PHGravityEngine::RemoveSolid(PHSolid* solid){
+	PHSolids::iterator it;
+
+	for(it = solids.begin(); it != solids.end(); it++){
+		if((*it) == solid){
+			solids.erase((it));
+			return;
+		}
+	}
+=======
+>>>>>>> .r2206
 }
+<<<<<<< .mine
+
+}
+=======
+>>>>>>> .r2206

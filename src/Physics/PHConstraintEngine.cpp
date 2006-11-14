@@ -136,13 +136,13 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 }
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
 	if (sp->normal == Vec3f()){
-		sp->CalcNormal(solid[0]->solid, solid[1]->solid);	//	法線が求まっていない場合は求める
+		sp->CalcNormal(solid[0], solid[1]);	//	法線が求まっていない場合は求める
 	}
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
 }			
 // 接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．	
-void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolidInfoForLCP* solid0, PHSolidInfoForLCP* solid1){
+void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1){
 	//	center と normalが作る面と交差する面を求めないといけない．
 	//	面の頂点が別の側にある面だけが対象．
 	//	quick hull は n log r だから，線形時間で出来ることはやっておくべき．
@@ -154,10 +154,10 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	//	＃2次曲線はMullar＆Preparataには入れないで別にしておく．
 
 	//	相対速度をみて2Dの座標系を決める。
-	FPCK_FINITE(solid0->solid->pose);
-	FPCK_FINITE(solid1->solid->pose);
-	Vec3d v0 = solid0->solid->GetPointVelocity(center);
-	Vec3d v1 = solid1->solid->GetPointVelocity(center);
+	FPCK_FINITE(solid0->pose);
+	FPCK_FINITE(solid1->pose);
+	Vec3d v0 = solid0->GetPointVelocity(center);
+	Vec3d v1 = solid1->GetPointVelocity(center);
 	Matrix3d local;	//	contact coodinate system 接触の座標系
 	local.Ex() = normal;
 	local.Ey() = v1-v0;
@@ -228,9 +228,11 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			cutRing.local.Ori().ToMatrix(local);
 
 			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
+			point->SetScene(engine->GetScene());
+			point->SetEngine(engine);
 
-			if(engine->IsInactiveSolid(solid0->solid)) point->SetInactive(1, false);
-			else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
+			if(engine->IsInactiveSolid(solid0)) point->SetInactive(1, false);
+			else if(engine->IsInactiveSolid(solid1)) point->SetInactive(0, false);
 
 			engine->points.push_back(point);
 		}
@@ -239,9 +241,11 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		//	きっと1点で接触している．
 
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
+		point->SetScene(engine->GetScene());
+		point->SetEngine(engine);
 
-		if(engine->IsInactiveSolid(solid0->solid)) point->SetInactive(1, false);
-		else if(engine->IsInactiveSolid(solid1->solid)) point->SetInactive(0, false);
+		if(engine->IsInactiveSolid(solid0)) point->SetInactive(1, false);
+		else if(engine->IsInactiveSolid(solid1)) point->SetInactive(0, false);
 
 		engine->points.push_back(point);
 	}
@@ -249,7 +253,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 
 void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
 	//	法線を求める
-	sp->CalcNormal(solid[0]->solid, solid[1]->solid);
+	sp->CalcNormal(solid[0], solid[1]);
 
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
@@ -260,8 +264,8 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	numIteration	= 15;
-	correctionRate	= 0.3;
+	numIteration	= 10;
+	correctionRate	= 0.29;
 	shrinkRate		= 0.8;
 }
 
@@ -286,15 +290,16 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 	case PHConstraintDesc::BALLJOINT:
 		joint = DBG_NEW PHBallJoint();
 		break;
-	case PHConstraintDesc::PATHJOINT:
+/*	case PHConstraintDesc::PATHJOINT:
 		joint = DBG_NEW PHPathJoint();
-		break;
+		break;*/
 	case PHConstraintDesc::SPRING:
 		joint = DBG_NEW PHSpring();
 		break;
 	default: assert(false);
 	}
 	joint->SetScene(GetScene());
+	joint->SetEngine(this);
 	joint->SetDesc(desc);
 	return joint;
 }
@@ -306,7 +311,7 @@ PHJoint* PHConstraintEngine::AddJoint(const PHJointDesc& desc){
 }
 
 PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
-	PHSolidInfos<PHSolidInfoForLCP>::iterator islhs, isrhs;
+	PHSolids::iterator islhs, isrhs;
 	islhs = solids.Find(lhs);
 	isrhs = solids.Find(rhs);
 	if(islhs == solids.end() || isrhs == solids.end())
@@ -323,7 +328,7 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 	return joint;
 }
 bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
-	PHSolidInfos<PHSolidInfoForLCP>::iterator islhs, isrhs;
+	PHSolids::iterator islhs, isrhs;
 	islhs = solids.Find((PHSolid*)lhs);
 	isrhs = solids.Find((PHSolid*)rhs);
 	if(islhs == solids.end() || isrhs == solids.end()) return false;
@@ -335,12 +340,66 @@ bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
 	return true;
 }
 
-void PHConstraintEngine::SetupDynamics(double dt){
-	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
-	for(it = solids.begin(); it != solids.end(); it++)
+PHRootNode* PHConstraintEngine::AddRootNode(PHSolid* solid){
+	//既存のツリーに含まれていないかチェック
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		if((*it)->FindBySolid(solid))
+			return NULL;
+	//新しいルートノードを作成
+	PHSolids::iterator it = solids.Find(solid);
+	if(it == solids.end())
+		return NULL;
+	PHRootNode* root = DBG_NEW PHRootNode();
+	root->solid = *it;
+	root->SetScene(GetScene());
+	(*it)->treeNode = root;
+	trees.push_back(root);
+	return root;
+}
+PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
+	//既存のツリーに含まれていないかチェック
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		if((*it)->FindBySolid(solid))
+			return NULL;
+	//parentが既存のツリーのノードかチェック（念のため）
+	bool found = false;
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
+		if((*it)->Includes(parent)){
+			found = true;
+			break;
+		}
+	}
+	if(!found)return NULL;
+	//parentに対応する剛体とsolidで指定された剛体とをつなぐ拘束を取得
+	PHJoint* joint = DCAST(PHJoint, joints.FindBySolidPair(parent->GetSolid(), solid));
+	if(!joint)return NULL;
+	//ノードを作成
+	PHTreeNode* node = joint->CreateTreeNode();
+	node->joint = joint;
+	node->SetScene(GetScene());
+	joint->bArticulated = true;
+	joint->solid[1]->treeNode = node;
+	parent->AddChild(node);
+	return node;
+}
+
+void PHConstraintEngine::SetupDynamics(){
+	PHScene* scene = DCAST(PHScene, GetScene());
+	double dt = scene->GetTimeStep();
+
+	//各剛体の前処理
+	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
 		(*it)->SetupDynamics(dt);
-	points.SetupDynamics(dt, correctionRate, shrinkRate);
-	joints.SetupDynamics(dt, correctionRate, shrinkRate);
+
+	//ツリー構造の前処理
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		(*it)->SetupDynamics();
+
+	//接触拘束の前処理
+	points.SetupDynamics();
+	
+	//関節拘束の前処理
+	joints.SetupDynamics();
 }
 /*void PHConstraintEngine::SetupCorrection(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
@@ -376,29 +435,26 @@ void PHConstraintEngine::IterateDynamics(){
 	}
 }*/
 
-void PHConstraintEngine::UpdateSolids(double dt){
-	PHSolidInfos<PHSolidInfoForLCP>::iterator is;
-	PHSolidInfoForLCP* info;
-	PHSolid* solid;
-	Vec3d vnew, wnew;
-	for(is = solids.begin(); is != solids.end(); is++){
-		info = *is;
-		solid = info->solid;
-		//velocity update
-		vnew = info->v + info->dv0 + info->dv;
-		wnew = info->w + info->dw0 + info->dw;
+void PHConstraintEngine::UpdateSolids(){
+	PHScene* scene = DCAST(PHScene, GetScene());
+	double dt = scene->GetTimeStep();
 
-		solid->SetVelocity       (solid->GetOrientation() * vnew);
-		solid->SetAngularVelocity(solid->GetOrientation() * wnew);
-		
-		//position update
-		solid->SetCenterPosition(solid->GetCenterPosition() + solid->GetVelocity() * dt/* + solid->GetOrientation() * info->dV*/);
-		solid->SetOrientation(
-			(solid->GetOrientation() * Quaterniond::Rot(wnew * dt/* + info->dW*/)).unit()
-		);
-		//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
-		//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
-		solid->SetUpdated(true);
+<<<<<<< .mine
+	// ツリーに属さない剛体の更新
+	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
+		if(!(*is)->treeNode){
+			(*is)->UpdateVelocity(dt);
+			(*is)->UpdatePosition(dt);
+			(*is)->SetUpdated(true);
+		}
+	}
+
+=======
+>>>>>>> .r2206
+	// ツリーに属する剛体の更新
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
+		(*it)->UpdateVelocity(dt);
+		(*it)->UpdatePosition(dt);
 	}
 }
 
@@ -408,11 +464,6 @@ void PHConstraintEngine::Step(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
-	Dynamics(dt, ct);
-	//Correction(dt, ct);
-	UpdateSolids(dt);
-}
-void PHConstraintEngine::Dynamics(double dt, int ct){
 	LARGE_INTEGER freq, val[2];
 	QueryPerformanceFrequency(&freq);
 
@@ -420,13 +471,18 @@ void PHConstraintEngine::Dynamics(double dt, int ct){
 	QueryPerformanceCounter(&val[0]);
 	points.clear();
 	if(bContactEnabled)
-//		Detect(ct, dt);
+		//Detect(ct, dt);
 		ContDetect(ct, dt);
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-	
+
+	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
+	//ヤコビアン等の再計算
+	points.UpdateState();
+	joints.UpdateState();
+
 	QueryPerformanceCounter(&val[0]);
-	SetupDynamics(dt);
+	SetupDynamics();
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
@@ -434,10 +490,17 @@ void PHConstraintEngine::Dynamics(double dt, int ct){
 	IterateDynamics();
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
+
+	//Correction(dt, ct);
+
+	//位置・速度の更新
+	UpdateSolids();
+	//points.UpdateState();
+	//joints.UpdateState();
+	
 }
 
-PHConstraints PHConstraintEngine::GetContactPoints()
-{
+PHConstraints PHConstraintEngine::GetContactPoints(){
 	return points;
 }
 
