@@ -88,10 +88,10 @@ void BuildScene(){
 
 	//	ジョイント
 	PHHingeJointDesc jd;
-	jd.poseSocket.Pos() = Vec3d(0,0.04, 0);
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
-	jd.posePlug.Pos() = Vec3d(0, -0.04, 0);
+	jd.posePlug.Pos() = Vec3d(0,0.04, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'x');
+	jd.poseSocket.Pos() = Vec3d(0, -0.04, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	jd.damper = 60.0;
 	jd.spring = 160.0;
 	jntLink.push_back(scene->CreateJoint(soBox[1], soBox[0], jd));
@@ -104,10 +104,10 @@ void BuildScene(){
 
 	//	ジョイント
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Pos() = Vec3d(0, 0.04, 0);
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.posePlug.Pos() = Vec3d(0, -0.1, 0);
+	jd.posePlug.Pos() = Vec3d(0, 0.04, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, -0.1, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.damper = 60.0;
 	jd.spring = 160.0;
 	jntLink.push_back(scene->CreateJoint(soBox[2], soBox[1], jd));
@@ -117,8 +117,8 @@ void BuildScene(){
 
 	//	肩Z
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Pos() = Vec3d(0.13, 0.1, 0);
-	jd.posePlug.Pos() = Vec3d(0, 0, 0);
+	jd.posePlug.Pos() = Vec3d(0.13, 0.1, 0);
+	jd.poseSocket.Pos() = Vec3d(0, 0, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
 	jd.origin = Rad(-30);
@@ -129,8 +129,8 @@ void BuildScene(){
 
 	//	肩Y
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
 	jd.damper = 6.0;
 	jd.spring = 150.0;
 	jntLink.push_back(scene->CreateJoint(soBox[4], soBox[3], jd));
@@ -143,9 +143,9 @@ void BuildScene(){
 
 	//	肩X
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.posePlug.Pos() = Vec3d(0, 0.09, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, 0.09, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
 	jd.origin = Rad(-30);
@@ -158,10 +158,10 @@ void BuildScene(){
 	soBox.back()->AddShape(shape);
 	//	ひじ
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.posePlug.Pos() = Vec3d(0, 0.07, 0);
+	jd.posePlug.Pos() = Vec3d(0, -0.09, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 	jd.damper = 4.0;
 	jd.spring = 6.0;
 	jd.origin = Rad(-90);
@@ -175,10 +175,10 @@ void BuildScene(){
 	soBox.back()->AddShape(shape);
 	//	首
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.posePlug.Pos() = Vec3d(0, -0.08, 0);
+	jd.posePlug.Pos() = Vec3d(0, 0.1, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, -0.08, 0);
 	jd.damper = 3.0;
 	jd.spring = 3.0;
 	jd.origin = Rad(0);
@@ -202,8 +202,8 @@ void BuildScene(){
 
 	//	肩Z
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Pos() = Vec3d(-0.13, 0.1, 0);
-	jd.posePlug.Pos() = Vec3d(0, 0, 0);
+	jd.posePlug.Pos() = Vec3d(-0.13, 0.1, 0);
+	jd.poseSocket.Pos() = Vec3d(0, 0, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
 	jd.origin = Rad(30);
@@ -214,8 +214,8 @@ void BuildScene(){
 
 	//	肩Y
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
 	jd.damper = 6.0;
 	jd.spring = 150.0;
 	jntLink.push_back(scene->CreateJoint(soBox[10], soBox[9], jd));
@@ -228,9 +228,9 @@ void BuildScene(){
 
 	//	肩X
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.posePlug.Pos() = Vec3d(0, 0.09, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, 0.09, 0);
 	jd.damper = 6.0;
 	jd.spring = 10.0;
 	jd.origin = Rad(-30);
@@ -243,10 +243,10 @@ void BuildScene(){
 	soBox.back()->AddShape(shape);
 	//	ひじ
 	jd = PHHingeJointDesc();
-	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
 	jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	jd.posePlug.Pos() = Vec3d(0, 0.07, 0);
+	jd.posePlug.Pos() = Vec3d(0, -0.09, 0);
+	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 	jd.damper = 4.0;
 	jd.spring = 6.0;
 	jd.origin = Rad(-90);
@@ -264,10 +264,10 @@ void BuildScene(){
 	PHSpringDesc spd;
 	spd.damper = Vec3f(1,1,1) * 1000;
 	spd.spring = Vec3f(1,1,1) * 3000;
-	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
+	spd.posePlug.Pos() = Vec3d(0, -0.09, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[8], soBox[6], spd));
 	//	バネ
-	spd.poseSocket.Pos() = Vec3d(0, -0.09, 0);
+	spd.posePlug.Pos() = Vec3d(0, -0.09, 0);
 	jntLink.push_back(scene->CreateJoint(soBox[13], soBox[12], spd));
 
 

@@ -34,7 +34,7 @@ void PHHingeJoint::CompBias(){
 	//	shrinkRatio が高い場合、拘束力が残るため、Dを入れると安定化する。
 	//	tazz 追記．要するに現在の誤差ではなく次時刻の予測誤差を0にするようにする
 	db.v = (Xjrel.r * dtinv + vjrel.v);
-	db.w = (qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv) + vjrel.w);
+	db.w = (qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv)/* + vjrel.w*/);
 	db.w.z = 0.0;
 	db *= engine->correctionRate;
 

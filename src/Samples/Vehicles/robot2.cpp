@@ -35,16 +35,16 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 
 	const double K = 100.0, D = 100.0;
 	PHHingeJointDesc jd;
-	jd.posePlug = base;
-	jd.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jd.poseSocket = base;
+	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jntCrank = DCAST(PHHingeJointIf, scene->CreateJoint(body, soCrank, jd));
 	
-	jd.posePlug = Posed();
-	jd.posePlug.Pos() = Vec3d(0.0, 0.1, 0.06);
-	jd.poseSocket.Pos() = Vec3d(0.0, -0.1+0.25, -0.06);
+	jd.poseSocket = Posed();
+	jd.poseSocket.Pos() = Vec3d(0.0, 0.1, 0.06);
+	jd.posePlug.Pos() = Vec3d(0.0, -0.1+0.25, -0.06);
 	jntFoot[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[0], jd));
-	jd.posePlug.Pos() = Vec3d(0.0, -0.1, -0.06);
-	jd.poseSocket.Pos() = Vec3d(0.0, -0.1+0.25, 0.06);
+	jd.poseSocket.Pos() = Vec3d(0.0, -0.1, -0.06);
+	jd.posePlug.Pos() = Vec3d(0.0, -0.1+0.25, 0.06);
 	jntFoot[1] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[1], jd));
 	
 	jntCrank->SetSpring(K);
@@ -57,8 +57,8 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 	jntFoot[1]->SetDamper(D);
 	jntFoot[1]->SetSpringOrigin(0.0);
 
-	jd.posePlug.Pos() = Vec3d(0.0, 0.7, 0.0);
-	jd.poseSocket.Pos() = Vec3d(0.0, -0.4, 0.0);
+	jd.poseSocket.Pos() = Vec3d(0.0, 0.7, 0.0);
+	jd.posePlug.Pos() = Vec3d(0.0, -0.4, 0.0);
 	jntFootGuide[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soFoot[0], soGuide[0], jd));
 	//jd.pose[0].Pos() = Vec3d(0.0, 0.5, 0.0);
 	//jd.pose[1].Pos() = Vec3d(0.0, -0.5, 0.0);
@@ -87,12 +87,12 @@ void Robot2::Leg::Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PH
 
 	Posed pose;
 	pose.Pos() = Vec3d(0.9, 0.4, 0.06);
-	jd.posePlug = base * pose;
-	jd.poseSocket.Pos() = Vec3d(0.0, 0.4, -0.06);
+	jd.poseSocket = base * pose;
+	jd.posePlug.Pos() = Vec3d(0.0, 0.4, -0.06);
 	jntGuideBody[0] = DCAST(PHHingeJointIf, scene->CreateJoint(body, soGuide[0], jd));
 	pose.Pos() = Vec3d(0.9, 0.4, -0.06);
-	jd.posePlug = base * pose;
-	jd.poseSocket.Pos() = Vec3d(0.0, 0.4, 0.06);
+	jd.poseSocket = base * pose;
+	jd.posePlug.Pos() = Vec3d(0.0, 0.4, 0.06);
 	jntGuideBody[1] = DCAST(PHHingeJointIf, scene->CreateJoint(body, soGuide[1], jd));
 	
 	jntCrank->SetSpring(0.0); jntCrank->SetDamper(0.0);

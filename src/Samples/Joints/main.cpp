@@ -283,8 +283,8 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 #ifndef USE_EXPLICIT
 	PHSpringDesc descSpring;
-	descSpring.spring = 600 * 1e20 *Vec3f(1,1,1);
-	descSpring.damper = 15 * 1e20 *Vec3f(1,1,1);
+	descSpring.spring = 600 * 1 *Vec3f(1,1,1);
+	descSpring.damper = 15 * 1 *Vec3f(1,1,1);
 	jntLink[5] = scene->CreateJoint(soBox[4], soBox[5], descSpring);
 	
 #endif
@@ -748,7 +748,7 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
-	dscene.numIteration = 10;
+	dscene.numIteration = 30;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;

@@ -42,13 +42,13 @@ void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	}
 
 	PHHingeJointDesc jd;
-	jd.posePlug.Pos() = Vec3d( 1.5, -1.0,  1.5);
+	jd.poseSocket.Pos() = Vec3d( 1.5, -1.0,  1.5);
 	jntWheel[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[0], jd));
-	jd.posePlug.Pos() = Vec3d(-1.5, -1.0,  1.5);
+	jd.poseSocket.Pos() = Vec3d(-1.5, -1.0,  1.5);
 	jntWheel[1] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[1], jd));
-	jd.posePlug.Pos() = Vec3d( 1.5, -1.0, -1.5);
+	jd.poseSocket.Pos() = Vec3d( 1.5, -1.0, -1.5);
 	jntWheel[2] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[2], jd));
-	jd.posePlug.Pos() = Vec3d(-1.5, -1.0, -1.5);
+	jd.poseSocket.Pos() = Vec3d(-1.5, -1.0, -1.5);
 	jntWheel[3] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[3], jd));
 
 	for(int i = 0; i < 4; i++){

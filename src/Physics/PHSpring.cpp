@@ -25,27 +25,6 @@ void PHSpring::SetDesc(const PHConstraintDesc& desc){
 	damper = descSpring.damper;
 }
 
-/*void PHSpring::CompConstraintJacobian(){
-	dim_d = 3;
-	dim_c = 0;
-	Ad.clear();
-	Ac.clear();
-	for(int i = 0; i < 2; i++){
-		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
-		//Jdv[i].SUBMAT(3, 0, 3, 3) = Jwv[i];
-		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
-		//Jdw[i].SUBMAT(3, 0, 3, 3) = Jww[i];
-		if(solid[i]->solid->IsDynamical()){
-			Tdv[i] = Jdv[i] * solid[i]->minv;
-			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			for(int j = 0; j < dim_d; j++)
-				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
-		}
-	}
-	f.clear();
-	F.clear();
-}*/
-
 void PHSpring::CompBias(){
 	//rjrel
 	double dtinv = 1.0 / scene->GetTimeStep(), tmp;

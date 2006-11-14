@@ -265,8 +265,8 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	numIteration	= 10;
-	correctionRate	= 0.29;
-	shrinkRate		= 0.8;
+	correctionRate	= 0.2;
+	shrinkRate		= 0.9;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
