@@ -87,6 +87,7 @@ UTRef<GRDeviceGLIf> device;
 double simulationPeriod = 32.0;
 Vec3d lookAt;
 int sceneNo;			// シーン番号
+bool bAutoStep = true;	//	自動ステップ
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
 PHSolidDesc descBox;					//箱剛体のディスクリプタ
@@ -662,6 +663,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
 			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+			soBox.back()->SetAngularVelocity(Vec3d(0.0, 0.0, 2.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
 		case 'S':{
@@ -676,6 +678,14 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
+		case 'P':
+			bAutoStep = false;
+			OnTimer();
+			scene->ClearForce();
+			scene->GenerateForce();
+			scene->Integrate();
+			glutPostRedisplay();
+			break;
 		default:
 			OnKey(key);
 			break;
@@ -689,6 +699,7 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	glutTimerFunc(simulationPeriod, timer, 0);
+	if (!bAutoStep) return;
 	OnTimer();
 	scene->ClearForce();
 	scene->GenerateForce();
