@@ -25,7 +25,8 @@
 		・'z'で、左方向からボックスを飛ばし、衝突させる		
 　　シーン0：
 		・'0'で、ヒンジシーンの設定を行う（シーン切換え）
-		・スペースキーでヒンジ用のboxを生成
+		・' 'あるいは'b'でヒンジ用のboxを生成
+		　' 'の場合は内部アルゴリズムはABAとなる
 	シーン1：
 		・'1'で、チェビシェフリンクを生成する（シーン切換え）
 		・'a'で、モータートルクを1.0に設定する
@@ -268,12 +269,16 @@ void BuildScene5(){
 	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
+	//以下を有効化すると鎖がABAで計算されて関節のドリフトが防がれる．
+	//現状ではABAでの関節バネは未実装
+	/*
 	PHTreeNodeIf* node = scene->CreateRootNode(soFloor);
 	node = scene->CreateTreeNode(node, soBox[0]);
 	node = scene->CreateTreeNode(node, soBox[1]);
 	node = scene->CreateTreeNode(node, soBox[2]);
 	node = scene->CreateTreeNode(node, soBox[3]);
 	node = scene->CreateTreeNode(node, soBox[4]);
+	*/
 	
 	double K = 2000, D = 100;
 	//double K = 100000, D = 10000;	
@@ -315,38 +320,22 @@ void BuildScene(){
 
 void OnKey0(char key){
 	switch(key){
-	case ' ':{
+	case ' ':
+	case 'b':
+		{
+		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.back()->AddShape(shapeBox);
+		soBox.back()->SetFramePosition(Vec3f(0, 10, 0));
+		PHHingeJointDesc jdesc;
+		jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
+		jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
+		//jdesc.lower = Rad(-30.0);
+		//jdesc.upper = Rad( 30.0);
 		int n = soBox.size();
-		for(int i = 0; i < 1; i++){
-			soBox.push_back(scene->CreateSolid(descBox));
-			soBox.back()->AddShape(shapeBox);
-			soBox.back()->SetFramePosition(Vec3f(2*(n+i), 15 - 2*(n+i), 0));
-			PHHingeJointDesc jdesc;
-			jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
-			jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
-			//jdesc.lower = Rad(-30.0);
-			//jdesc.upper = Rad( 30.0);
-
-			jntLink.push_back(scene->CreateJoint(soBox[n+i-1], soBox[n+i], jdesc));
-			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n+i]));
-		}
-		//scene->SetContactMode(PHSceneDesc::MODE_NONE);
-		}break;
-	case 'b':{
-		int n = soBox.size();
-		for(int i = 0; i < 1; i++){
-			soBox.push_back(scene->CreateSolid(descBox));
-			soBox.back()->AddShape(shapeBox);
-			soBox.back()->SetFramePosition(Vec3f(2*(n+i), 15 - 2*(n+i), 0));
-			PHHingeJointDesc jdesc;
-			jdesc.poseSocket.Pos() = Vec3d( 1,  -1,  0);
-			jdesc.posePlug.Pos() = Vec3d(-1, 1,  0);
-			//jdesc.lower = Rad(-30.0);
-			//jdesc.upper = Rad( 30.0);
-
-			jntLink.push_back(scene->CreateJoint(soBox[n+i-1], soBox[n+i], jdesc));
-		}
-		//scene->SetContactMode(PHSceneDesc::MODE_NONE);
+		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		// ツリーノードを作成し，ABAで計算するように指定
+		if(key == ' ')
+			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
 		}break;
 	}
 }
@@ -754,7 +743,7 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.01;
-	dscene.numIteration = 30;
+	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;
