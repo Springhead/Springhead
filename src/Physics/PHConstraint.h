@@ -60,6 +60,7 @@ public:
 	
 	void	Init();
 	void	SetupDynamics();
+	void	SetupDynamicsForPrediction();
 	void	IterateDynamics();
 	void	SetScene(SceneIf* s){scene = DCAST(PHScene, s);}
 	void	SetEngine(PHConstraintEngine* e){engine = e;}
@@ -100,7 +101,7 @@ public:
 	}
 	void SetupDynamics(){
 		for(iterator it = begin(); it != end(); it++)
-			(*it)->SetupDynamics();
+ 			(*it)->SetupDynamics();
 	}
 	void IterateDynamics(){
 		for(iterator it = begin(); it != end(); it++)
