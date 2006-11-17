@@ -1,0 +1,155 @@
+#include "Foundation.h"
+#pragma hdrstop
+#include "UTMMTimer.h"
+#include <windows.h>
+#include <mmsystem.h>
+
+namespace Spr {
+
+int UTMMTimer::count;
+unsigned UTMMTimer::resolution=1;
+UTMMTimer::UTMMTimer()
+	{
+	func = NULL;
+	arg = NULL;
+	timerID = 0;
+	interval = resolution;
+	if (interval==0) interval = 1;
+    bRun = false;
+	bCreated = false;
+	bThread = false;
+	hThread = NULL;
+	heavy = 0;
+	}
+UTMMTimer::~UTMMTimer()
+	{
+	Release();
+	}
+bool UTMMTimer::Create()
+	{
+	heavy = 0;
+	tick = timeGetTime();
+	if (bCreated) return true;
+	if (bThread) Release();
+	if (count == 0) BeginPeriod();
+	count ++;
+	timerID = timeSetEvent(interval, resolution, TimerCallback, (unsigned long)this, TIME_PERIODIC);
+	bCreated = (timerID != 0);
+	return bCreated;
+	}
+bool UTMMTimer::Thread()
+	{
+	heavy = 0;
+	if (bThread) return true;
+	if (bCreated) Release();
+	unsigned long id=0;
+	bThread = true;
+	hThread = CreateThread(NULL, 0x1000, ThreadCallback, this, 0, &id);
+	if (hThread){
+		bRun = true;
+		SetThreadPriority(hThread, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
+	}
+	else bThread = false;
+	return bThread;
+	}
+void UTMMTimer::Release()
+	{
+	if (bThread)
+		{
+		bThread = false;
+		for(int t=0; t<100 && bRun; t++) Sleep(20);
+		CloseHandle(hThread);
+		hThread = NULL;
+		}
+	if (bCreated)
+		{
+		timeKillEvent(timerID);
+		for(int i=0; i<100; i++)
+			{
+			if (!bRun) break;
+			Sleep(10); 
+			}
+		count --;
+		if (count == 0)	EndPeriod();
+		bCreated = false;
+		}
+	}
+void UTMMTimer::BeginPeriod()
+	{
+	TIMECAPS tc;
+	if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR) 
+		{
+		OutputDebugString("UTMMTimer::Resolution()  Fail to get resolution.\n");
+		assert(0);
+		}
+	resolution = min(max(tc.wPeriodMin, resolution), tc.wPeriodMax);
+	timeBeginPeriod(resolution);
+	}
+void UTMMTimer::EndPeriod()
+	{
+	timeEndPeriod(resolution);
+	}
+void __stdcall UTMMTimer::TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long)
+	{
+	UTMMTimer& mmtimer = *(UTMMTimer*)dwUser;
+#if 0
+    int tick = timeGetTime();
+	int delta = tick - mmtimer.tick;
+	if (delta > mmtimer.interval+1) mmtimer.heavy ++;
+	mmtimer.tick = tick;
+#endif
+	mmtimer.bRun = true;
+	mmtimer.func(mmtimer.arg);
+    mmtimer.bRun = false;
+	}
+unsigned long __stdcall UTMMTimer::ThreadCallback(void* arg){
+	UTMMTimer& mmtimer = *(UTMMTimer*)arg;
+
+	unsigned long lastCall = timeGetTime();
+	while(mmtimer.bThread){
+		unsigned long now = timeGetTime();
+		unsigned long nextCall = lastCall + mmtimer.interval;
+		if (int(nextCall - now) > 0){
+			Sleep(nextCall - now);
+		}
+ 		lastCall = now;
+		
+		mmtimer.func(mmtimer.arg);
+	}
+	mmtimer.bRun = false;
+	return 0;
+}
+unsigned UTMMTimer::Resolution()
+	{
+	return resolution;
+	}
+void UTMMTimer::Resolution(unsigned res)
+	{
+	if (resolution == res) return;
+	if (count)
+		{
+		EndPeriod();
+		BeginPeriod();
+		}
+	}
+unsigned UTMMTimer::Interval()
+	{
+	return interval;
+	}
+void UTMMTimer::Interval(unsigned i)
+	{
+	if (i == interval) return;
+	interval = i;
+	if (bCreated)
+		{
+		Release();
+		Create();
+		}
+	}
+void UTMMTimer::Set(MMTimerFunc* f, void* a)
+	{
+	func = f;
+	arg = a;
+	}
+
+}	//	namespace Spr

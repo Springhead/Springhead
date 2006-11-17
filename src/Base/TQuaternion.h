@@ -238,9 +238,9 @@ public:
 	}
 	///
 	template <class VET> void FromEular(const TVec3<VET>& v){
-		VET& heading = v[0];
-		VET& attitude = v[1];
-		VET& bank = v[2];
+		VET& heading = v[0];	//	yaw		mech z  ->  CG y
+		VET& attitude = v[1];	//	pitch	mech y  ->  CG x
+		VET& bank = v[2];		//	roll	mech x  ->  CG z
 
 		ET c1 = cos(heading / 2);
 		ET c2 = cos(attitude / 2);

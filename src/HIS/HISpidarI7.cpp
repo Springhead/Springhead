@@ -23,7 +23,7 @@ bool HISpidarI7::Init(DVDeviceManager& dev){
   };
 
 	//HISpidarG6::Init(DVDeviceManager& dev, int nMotor, const Vec3f(* motorPos)[2], float vpn, float lpp, float minF, float maxF)
-	if( HISpidarG6::Init(dev, 7, motorPos, 0.2279f, 0.008f*M_PI/500.0f/4.0f, 0.4f, 3.0f) == false ){
+	if( HISpidarG6::Init(dev, 7, motorPos, 0.2279f, (float)(0.008*M_PI/500.0/4.0), 0.4f, 3.0f) == false ){
 		return false;
 	}
 	Calib();

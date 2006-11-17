@@ -24,8 +24,8 @@ bool HISpidarG6X3::Init(DVDeviceManager& dev, bool bLeft=false){
 	//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
 	const float GX = 0.045f/2;		//	x方向の辺の長さ/2
 	const float GY = 0.045f/2;		//	y方向の辺の長さ/2
-	Matrix3f rotR = Matrix3f::Rot(Rad(-45), 'y');
-	Matrix3f rotL = Matrix3f::Rot(Rad(-45), 'y');
+	Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
+	Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
 
 	Vec3f motorPos[2][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 		{
