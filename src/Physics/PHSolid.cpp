@@ -56,6 +56,12 @@ Vec3d PHSolid::GetDeltaPosition() const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	return velocity * s->GetTimeStep();
 }
+Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
+	PHScene* s = DCAST(PHScene, nameManager);
+	double dt = s->GetTimeStep();
+	Quaterniond rot = Quaterniond::Rot(angVelocity*dt);
+	return velocity*dt + rot*(p-center);
+}
 void PHSolid::CalcBBox(){
 	Vec3f bboxMin = Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
 	Vec3f bboxMax = Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);

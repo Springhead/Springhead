@@ -23,6 +23,8 @@ public:
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
 	///	バウンディングボックスを求める．
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
+	///	中心（大体真ん中）の位置を返す
+	virtual Vec3f GetCenter(){ return Vec3f(); }
 };
 
 }	//	namespace Spr

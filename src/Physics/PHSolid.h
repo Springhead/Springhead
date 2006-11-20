@@ -185,6 +185,7 @@ public:
 	Vec3d		GetFramePosition() const {return pose.Pos();}
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetDeltaPosition() const ;
+	Vec3d		GetDeltaPosition(const Vec3d& pos) const ;
 	Vec3d		GetPrevFramePosition() const { pose.Pos()-GetDeltaPosition(); }
 	Vec3d		GetCenterPosition() const {return pose*center;}
 														///< dSˆÊ’u‚ÌŽæ“¾

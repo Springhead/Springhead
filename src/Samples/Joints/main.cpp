@@ -658,7 +658,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(1), 'z'));
-			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-5.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
 		case 'Z':{
@@ -678,7 +678,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->AddShape(shape);
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
-			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-3.0, 0.0, 0.0));
 			soBox.back()->SetAngularVelocity(Vec3d(0.0, 0.0, 2.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
@@ -691,7 +691,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->AddShape(shape);
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
-			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
+			soBox.back()->SetVelocity(Vec3d(-3.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
 		case 'P':
@@ -714,13 +714,14 @@ void keyboard(unsigned char key, int x, int y){
  return 	‚È‚µ
  */
 void timer(int id){
+	if (bAutoStep){
+		OnTimer();
+		scene->ClearForce();
+		scene->GenerateForce();
+		scene->Integrate();
+		glutPostRedisplay();
+	}
 	glutTimerFunc(simulationPeriod, timer, 0);
-	if (!bAutoStep) return;
-	OnTimer();
-	scene->ClearForce();
-	scene->GenerateForce();
-	scene->Integrate();
-	glutPostRedisplay();
 }
 void idle(){
 	scene->ClearForce();

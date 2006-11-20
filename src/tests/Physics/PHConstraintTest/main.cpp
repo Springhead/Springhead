@@ -30,18 +30,18 @@ using namespace Spr;
 #define ESC					27		// ESC key
 #define STAY_COUNTER		10		// 静止判定カウント
 #define TOTAL_IDLE_COUNTER	1000	// 静止しない場合に利用	
-#define NUM_BLOCK			4//6	// 生成するボックス数
+#define NUM_BLOCK			6//6	// 生成するボックス数
 
 const float boxStride = 2+0.1;
 float boxpos[][3] = {
-	{0,boxStride*1,0},
+/*	{0,boxStride*1,0},
 	{0,boxStride*2,0},
 	{0,boxStride*3,0},
 	{0,boxStride*4,0},
 	{0,boxStride*5,0},
-
-	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
-	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
+*/
+	{-2.4, 1.1, 0}, {0, 1.1, 0}, {2.4, 1.1, 0}, {-1.2, 4.2, 0}, {1.2, 4.2, 0},
+	{0, 7.4, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
 };
 
 UTRef<PHSdkIf> sdk;

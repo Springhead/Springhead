@@ -118,7 +118,7 @@ void PHContactPoint::CompBias(){
 		そうすると，侵入量が大きく判断され，大きな力が発生して，物体が飛んでいく．
 		現状は，これが起こらないようにCorrection率をさらに0.1倍して回避している．
 	*/
-	err *= 0.1;	
+//	err *= 0.1;	
 	if (err < 0) err = 0;
 	if (err){
 //		HASE_REPORT

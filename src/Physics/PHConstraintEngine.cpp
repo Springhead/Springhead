@@ -18,6 +18,8 @@
 using namespace PTM;
 using namespace std;
 namespace Spr{;
+const double epsilon = 1e-8;
+const double epsilon2 = epsilon*epsilon;
 
 class ContactVertex: public Vec3d{
 public:
@@ -34,15 +36,25 @@ Vec3d ContactVertex::ey;
 
 void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	if (state == NEW){
+		/*	共通点での速度＝法線としてみたが，大きな面で接触して，回転している場合，
+			逆向きや直交を含む誤った法線が出ることがある．
 		normal = solid0->GetPointVelocity(commonPoint) - solid1->GetPointVelocity(commonPoint);
 		double norm = normal.norm();
+		*/
+		
+		//	物体の重心を離す向きに動かす．うまく動く気がする
+		normal = solid1->GetCenterPosition() - solid0->GetCenterPosition();
+		double norm = normal.norm();
 		if (norm<1e-10){
-			normal = solid1->GetCenterPosition() - solid0->GetCenterPosition();
-			double norm = normal.norm();
-			if (norm<1e-10){
-				normal = Vec3d(1,0,0);
-			}
+			normal = Vec3d(0,1,0);
 		}
+//		*/	
+		/*	3次元接触形状解析をすれば，正しい法線が求まる．
+		static CDContactAnalysis ca;
+		ca.FindIntersection(this);
+		ca.IntegrateNormal(this);
+		normal = iNormal;
+//		*/
 		normal.unitize();
 		depth = 1;
 	}
@@ -70,7 +82,6 @@ void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
 	}
 #endif
 }
-
 bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	shape[0] = s0;
 	shape[1] = s1;
@@ -96,7 +107,7 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 		//	初めての接触の場合
 		Vec3d delta = delta1-delta0;
 		double toi;
-		if (delta.square() > 0.01){	//	 速度がある程度大きかったら(hase 本来はBBoxから最低速度を決めた方が良い)
+		if (delta.square() > epsilon2){	//	 速度がある場合
 			double dist;
 			Vec3d dir = delta;
 			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
@@ -120,7 +131,7 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 			}
 		}else{
 			toi = -1;
-		}
+		}		
 		if (toi < 0){	//	最初から接触していた or 速度が小さすぎる
 			if (FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], normal, closestPoint[0], closestPoint[1])){
 				commonPoint = shapePoseW[0] * closestPoint[0];
