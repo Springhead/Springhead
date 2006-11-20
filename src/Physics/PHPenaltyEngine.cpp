@@ -97,7 +97,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 	PHShapePairForPenalty* cp;
 	for(i = 0; i < shapePairs.height(); i++)for(j = 0; j < shapePairs.width(); j++){
 		cp = shapePairs.item(i, j);
-		if(!cp->bActive)continue;
+		if(cp->state == CDShapePair::NONE) continue;
 
 		//	積分したペナルティと速度を面積で割る
 		cp->reflexSpringForce /= area;

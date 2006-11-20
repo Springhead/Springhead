@@ -21,11 +21,8 @@ class PHConstraintEngine;
 ///	形状の組
 class PHShapePairForLCP : public CDShapePair{
 public:
-	void CalcNormal(PHSolid* solid0, PHSolid* solid1);
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
-	///	連続接触判定
-	bool ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
 };
 
 /// Solidの組

@@ -18,138 +18,8 @@
 using namespace PTM;
 using namespace std;
 namespace Spr{;
-const double epsilon = 1e-8;
-const double epsilon2 = epsilon*epsilon;
 
-class ContactVertex: public Vec3d{
-public:
-	static Vec3d ex, ey;
-	ContactVertex(){}
-	ContactVertex(const Vec3d& v):Vec3d(v){}
-	Vec2d GetPos(){
-		return Vec2d( (*(Vec3d*)this)*ex, (*(Vec3d*)this)*ey );
-	}
-};
-Vec3d ContactVertex::ex;
-Vec3d ContactVertex::ey;
-
-
-void PHShapePairForLCP::CalcNormal(PHSolid* solid0, PHSolid* solid1){
-	if (state == NEW){
-		/*	共通点での速度＝法線としてみたが，大きな面で接触して，回転している場合，
-			逆向きや直交を含む誤った法線が出ることがある．
-		normal = solid0->GetPointVelocity(commonPoint) - solid1->GetPointVelocity(commonPoint);
-		double norm = normal.norm();
-		*/
-		
-		//	物体の重心を離す向きに動かす．うまく動く気がする
-		normal = solid1->GetCenterPosition() - solid0->GetCenterPosition();
-		double norm = normal.norm();
-		if (norm<1e-10){
-			normal = Vec3d(0,1,0);
-		}
-//		*/	
-		/*	3次元接触形状解析をすれば，正しい法線が求まる．
-		static CDContactAnalysis ca;
-		ca.FindIntersection(this);
-		ca.IntegrateNormal(this);
-		normal = iNormal;
-//		*/
-		normal.unitize();
-		depth = 1;
-	}
-	if (normal.square() < 0.0001 || depth < 1e-30) {
-		DSTR << "Error in CalcNormal" << normal << depth << std::endl;
-	}
-	//	前回の法線の向きに動かして，最近傍点を求める
-	Vec3d dir = -normal;
-	int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
-	if (res <= 0){
-		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << dir << std::endl;
-		Vec3d v;
-		FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], v, closestPoint[0], closestPoint[1]);
-		DSTR << "v:" << v << std::endl;
-		DSTR << "cp:" << shapePoseW[0]*closestPoint[0] << shapePoseW[1]*closestPoint[1] << std::endl; 
-		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
-	}
-	depth *= -1;
-	center = shapePoseW[0] * closestPoint[0];
-	center -= 0.5f*depth*normal;
-#ifdef _DEBUG
-	if (!finite(normal.norm())){
-	int rv = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
-		normal, normal, closestPoint[0], closestPoint[1], depth);
-	}
-#endif
-}
-bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
-	shape[0] = s0;
-	shape[1] = s1;
-	shapePoseW[0] = pose0;
-	shapePoseW[1] = pose1;
-	
-	if (lastContactCount == unsigned(ct-1) ){	
-		//	２回目以降の接触の場合
-		shapePoseW[0].Pos() += delta0;
-		shapePoseW[1].Pos() += delta1;	//	最初から現在の位置に移動させる
-
-		double dist;
-		Vec3d dir = -normal * 1e-8;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
-		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
-		if (res <= 0) return false;
-		if (dist > 0) return false;	//	法線方向に進めないと接触しない場合．
-		//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-		//DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
-
-		depth = dist * dir * normal;
-		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
-	}else{
-		//	初めての接触の場合
-		Vec3d delta = delta1-delta0;
-		double toi;
-		if (delta.square() > epsilon2){	//	 速度がある場合
-			double dist;
-			Vec3d dir = delta;
-			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
-			//	res==-1:	range内では接触していないが将来接触する可能性がある．	
-			//	res==-2:	range内では接触していないが過去していた可能性がある．
-			if (res <= 0) return false;
-
-			double rangeLen = delta * dir;
-			toi = dist / rangeLen;
-			if (toi > 1) return false;	//	接触時刻がこのステップより未来．
-			if (toi >= 0){	//	今回の移動で接触していれば
-				//	DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-				//	DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
-				shapePoseW[0].Pos() += toi*delta0;
-				shapePoseW[1].Pos() += toi*delta1;
-				center = commonPoint = shapePoseW[0] * closestPoint[0];
-				shapePoseW[0].Pos() -= dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
-				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
-				//	交差部の形状の計算は，衝突時点の位置で行うが，depth は現時点のdepth
-				depth = -(1-toi) * delta * normal + 2e-8;
-			}
-		}else{
-			toi = -1;
-		}		
-		if (toi < 0){	//	最初から接触していた or 速度が小さすぎる
-			if (FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], normal, closestPoint[0], closestPoint[1])){
-				commonPoint = shapePoseW[0] * closestPoint[0];
-				normal = Vec3f();	//	法線は不明
-			}else{
-				return false;
-			}
-		}
-	}
-	if (lastContactCount == unsigned(ct-1)) state = CONTINUE;
-	else state = NEW;
-	lastContactCount = ct;
-	return true;
-}
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
-	if (sp->normal == Vec3f()){
-		sp->CalcNormal(solid[0], solid[1]);	//	法線が求まっていない場合は求める
-	}
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 	int start = engine->points.size();
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
@@ -168,9 +38,9 @@ void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* 
 	}
 	DSTR << sp->center;
 	DSTR << std::endl;
-*/	
-	
-}			
+*/		
+}
+
 // 接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．	
 void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1){
 	//	center と normalが作る面と交差する面を求めないといけない．
@@ -281,8 +151,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 
 void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
 	//	法線を求める
-	sp->CalcNormal(solid[0], solid[1]);
-
+	sp->CalcNormal();
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
 }			

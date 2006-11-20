@@ -134,7 +134,7 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		double qfaceDist = qfaceNormal * (base[qfaces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ qfaceNormal).unit();
 		double ip = planeNormalL * qfaceNormal;
-		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	ïΩçsÇ»ñ ÇÕñ≥éã
+//		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	ïΩçsÇ»ñ ÇÕñ≥éã
 			double a = -qfaceDist*ip / (1-(ip*ip));
 			double b = qfaceDist / (1-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
@@ -148,7 +148,7 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 				ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
 				rv = true;
 			} 
-		}else{
+/*		}else{
 			DSTR << "parallel plane" << std::endl;
 			DSTR << "ip:" << ip << std::endl;
 			DSTR << "pn:" << planeNormalL<<std::endl;
@@ -162,7 +162,7 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 			DSTR << std::endl;
 			exit(0);
 		}
-	}
+*/	}
 	//bool è’ìÀÇÃóLñ≥
 	return rv;
 }

@@ -102,8 +102,15 @@ std::vector<PHTreeNodeIf*> nodeTree;
 
 
 void CreateFloor(bool s=true){
-	CDBoxDesc desc;
-	desc.boxsize = Vec3f(30.0f, 5.0f, 20.0f);
+	CDConvexMeshDesc desc;
+	desc.vertices.push_back(Vec3f( 15, 2, 10));
+	desc.vertices.push_back(Vec3f(-15, 2, 10));
+	desc.vertices.push_back(Vec3f( 15,-2, 10));
+	desc.vertices.push_back(Vec3f( 15, 2,-10));
+	desc.vertices.push_back(Vec3f( 15,-2,-10));
+	desc.vertices.push_back(Vec3f(-15, 2,-10));
+	desc.vertices.push_back(Vec3f(-15,-2, 10));
+	desc.vertices.push_back(Vec3f(-15,-2,-10));
 	soFloor = scene->CreateSolid(descFloor);
 	if (s) soFloor->AddShape(phSdk->CreateShape(desc));
 	soFloor->SetFramePosition(Vec3f(0,-2,0));
@@ -114,8 +121,15 @@ void CreateFloor(bool s=true){
 void BuildScene0(){	
 	CreateFloor();
 	//鎖の根になる箱を作成
-	CDBoxDesc bd;
-	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
+	CDConvexMeshDesc bd;
+	bd.vertices.push_back(Vec3f(-1.0, -1.0, -1.0));
+	bd.vertices.push_back(Vec3f( 1.0, -1.0, -1.0));
+	bd.vertices.push_back(Vec3f(-1.0,  1.0, -1.0));
+	bd.vertices.push_back(Vec3f(-1.0, -1.0,  1.0));
+	bd.vertices.push_back(Vec3f(-1.0,  1.0,  1.0));
+	bd.vertices.push_back(Vec3f( 1.0, -1.0,  1.0));
+	bd.vertices.push_back(Vec3f( 1.0,  1.0, -1.0));
+	bd.vertices.push_back(Vec3f( 1.0,  1.0,  1.0));
 	shapeBox = phSdk->CreateShape(bd);
 	shapeBox->SetName("shapeBox");
 	soBox.push_back(scene->CreateSolid(descBox));
@@ -330,7 +344,7 @@ void OnKey0(char key){
 		jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
 		//jdesc.lower = Rad(-30.0);
 		//jdesc.upper = Rad( 30.0);
-		int n = soBox.size();
+		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		// ツリーノードを作成し，ABAで計算するように指定
 		if(key == ' ')
@@ -660,6 +674,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(1), 'z'));
 			soBox.back()->SetVelocity(Vec3d(-5.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
+//			scene->SetContactMode(PHSceneDesc::MODE_PENALTY);
 			}break;	
 		case 'Z':{
 			soBox.push_back(scene->CreateSolid(descBox));
@@ -714,6 +729,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
+	glutTimerFunc(simulationPeriod, timer, 0);
 	if (bAutoStep){
 		OnTimer();
 		scene->ClearForce();
@@ -721,7 +737,6 @@ void timer(int id){
 		scene->Integrate();
 		glutPostRedisplay();
 	}
-	glutTimerFunc(simulationPeriod, timer, 0);
 }
 void idle(){
 	scene->ClearForce();

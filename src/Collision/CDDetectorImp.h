@@ -22,11 +22,9 @@ class CDConvex;
 
 /// Shapeの組の状態
 struct CDShapePairState{
-	unsigned lastContactCount;
 	Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
 	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
-	//CDShapePairState(const CDShapePair& s):
-	//	lastContactCount(s.lastContactCount),normal(s.normal), depth(s.depth){}
+	unsigned lastContactCount;	///<	最後に接触した時刻
 };
 class CDShapePair: public CDShapePairState, public UTRefCount{
 public:
@@ -36,14 +34,13 @@ public:
 	//	接触判定結果
 	Vec3d	closestPoint[2];		///< 最近傍点（ローカル座標系）
 	Vec3d	commonPoint;			///< 交差部分の内点（World座標系）
-	bool	bActive;				///< 現在接触が生じているか
-	unsigned lastContactCount;
+	Vec3d	center;					///< 2つの最侵入点の中間の点
 	enum State{
-		NEW,
-		CONTINUE,
+		NONE,		//	接触なし
+		NEW,		//	前回接触なしで今回接触
+		CONTINUE,	//	前回も接触
 	} state;
 	Vec3d iNormal;				///<	積分による法線
-	Vec3d center;				///<	2つの最侵入点の中間の点，CDContactAnalysis::CalcNormal が更新する．
 
 public:
 	CDShapePair(){
@@ -53,6 +50,10 @@ public:
 	}	
 	///	接触判定
 	bool Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Posed& pose1);
+	///	連続接触判定．同時に法線/中心なども計算してしまう．
+	bool DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
+	///	法線の計算
+	void CalcNormal();
 };
 
 ///	BBox同士の交差判定．交差していれば true．

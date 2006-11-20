@@ -71,24 +71,36 @@ public:
 
 	bool ContDetect(TEngine* engine, unsigned int ct, double dt){
 		if(!bEnabled)return false;
-
 		// いずれかのSolidに形状が割り当てられていない場合は接触なし
 		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
-		Vec3d d0 = solid[0]->GetDeltaPosition();
-		Vec3d d1 = solid[1]->GetDeltaPosition();
-		Posed p0 = solid[0]->GetPose(); p0.Pos() -= d0;
-		Posed p1 = solid[1]->GetPose(); p1.Pos() -= d1;
-
+		
+		std::vector<Vec3d> deltaPos[2];
+		std::vector<Posed> shapePose[2];
+		for(int i = 0; i < 2; i++){
+			deltaPos[i].resize(solid[i]->NShape());
+			shapePose[i].resize(solid[i]->NShape());
+			for(int j = 0; j < solid[i]->NShape(); j++){
+				CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
+				Posed lp = solid[i]->GetShapePose(j);
+				Vec3d c = lp * convex->GetCenter();
+				deltaPos[i][j] = solid[i]->GetDeltaPosition(c);
+				shapePose[i][j] = solid[i]->GetPose() * lp;
+				shapePose[i][j].Pos() -= deltaPos[i][j];
+			}
+		}
 		// 全てのshape pairについて交差を調べる
 		bool found = false;
 		TShapePair* sp;
 		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
+			Vec3d d0 = deltaPos[0][i];
+			Vec3d d1 = deltaPos[1][j];
 			sp = shapePairs.item(i, j);
+
 			//このshape pairの交差判定/法線と接触の位置を求める．
-			if(sp->ContDetect(
+			if(sp->DetectContinuously(
 				ct,
 				DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),
-				p0 * solid[0]->GetShapePose(i), d0, p1 * solid[1]->GetShapePose(j), d1))
+				shapePose[0][i], deltaPos[0][i], shapePose[1][j], deltaPos[1][j]))
 			{
 				found = true;
 				OnContDetect(sp, engine, ct, dt);
