@@ -77,26 +77,26 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;
 	
-	if (lastContactCount == unsigned(ct-1) ){	//	２回目以降の接触の場合
+	if (lastContactCount == unsigned(ct-1) ){	
+		//	２回目以降の接触の場合
 		shapePoseW[0].Pos() += delta0;
 		shapePoseW[1].Pos() += delta1;	//	最初から現在の位置に移動させる
 
 		double dist;
-		const double small = 1e-4;
-		Vec3d dir = -normal * small;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
+		Vec3d dir = -normal * 1e-8;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;
-		if (dist > -1e-8) return false;	//	法線方向に進めないと接触しない場合．
+		if (dist > 0) return false;	//	法線方向に進めないと接触しない場合．
 		//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		//DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
 
-		depth = dist * dir * normal-2e-8;
+		depth = dist * dir * normal;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 	}else{
 		//	初めての接触の場合
 		Vec3d delta = delta1-delta0;
 		double toi;
-		if (delta.square() > 1e-8){	//	 速度がある程度大きかったら
+		if (delta.square() > 0.01){	//	 速度がある程度大きかったら(hase 本来はBBoxから最低速度を決めた方が良い)
 			double dist;
 			Vec3d dir = delta;
 			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
@@ -107,20 +107,21 @@ bool PHShapePairForLCP::ContDetect(unsigned ct, CDConvex* s0, CDConvex* s1, cons
 			double rangeLen = delta * dir;
 			toi = dist / rangeLen;
 			if (toi > 1) return false;	//	接触時刻がこのステップより未来．
-			if (toi > 0){	//	今回の移動で接触していれば
-		//		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-		//		DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
-				shapePoseW[0].Pos() += toi*delta0;	//確実に交差部分を作るため 1e-8余分に動かす
+			if (toi >= 0){	//	今回の移動で接触していれば
+				//	DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
+				//	DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
+				shapePoseW[0].Pos() += toi*delta0;
 				shapePoseW[1].Pos() += toi*delta1;
 				center = commonPoint = shapePoseW[0] * closestPoint[0];
-				shapePoseW[0].Pos() -= dir*1e-8;
-				shapePoseW[1].Pos() += dir*1e-8;
-				depth = -(1-toi) * delta * normal;
+				shapePoseW[0].Pos() -= dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
+				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
+				//	交差部の形状の計算は，衝突時点の位置で行うが，depth は現時点のdepth
+				depth = -(1-toi) * delta * normal + 2e-8;
 			}
 		}else{
 			toi = -1;
 		}
-		if (toi < 1e-3){	//	最初から接触していた or 速度が小さすぎる
+		if (toi < 0){	//	最初から接触していた or 速度が小さすぎる
 			if (FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], normal, closestPoint[0], closestPoint[1])){
 				commonPoint = shapePoseW[0] * closestPoint[0];
 				normal = Vec3f();	//	法線は不明
@@ -139,7 +140,25 @@ void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* 
 		sp->CalcNormal(solid[0], solid[1]);	//	法線が求まっていない場合は求める
 	}
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
+	int start = engine->points.size();
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
+	int end = engine->points.size();
+
+	//	HASE_REPORT
+/*	DSTR << "st:" << sp->state << " depth:" << sp->depth;
+	DSTR << " n:" << sp->normal;
+	DSTR << " p:" << sp->center;
+	DSTR << " r:" << end-start;
+	DSTR << std::endl;
+	DSTR << "  ring " << end-start << ":";
+	for(start; start!=end; ++start){
+		PHContactPoint* p = ((PHContactPoint*)&*engine->points[start]);
+		DSTR << p->pos << " ";
+	}
+	DSTR << sp->center;
+	DSTR << std::endl;
+*/	
+	
 }			
 // 接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．	
 void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1){
@@ -224,8 +243,6 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			Vec3d pos;
 			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
 			pos = cutRing.local * pos;
-			Matrix3d local;
-			cutRing.local.Ori().ToMatrix(local);
 
 			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
 			point->SetScene(engine->GetScene());

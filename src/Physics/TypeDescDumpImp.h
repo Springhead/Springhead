@@ -17,11 +17,11 @@
 	field->AddEnumConst("SPRING");
 	field->offset = int((char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "bool", "bEnabled", "");
-	field->offset = (char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc;
+	field->offset = int((char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "Posed", "posePlug", "");
-	field->offset = (char*)&(pPHConstraintDesc->posePlug) - (char*)pPHConstraintDesc;
+	field->offset = int((char*)&(pPHConstraintDesc->posePlug) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "Posed", "poseSocket", "");
-	field->offset = (char*)&(pPHConstraintDesc->poseSocket) - (char*)pPHConstraintDesc;
+	field->offset = int((char*)&(pPHConstraintDesc->poseSocket) - (char*)pPHConstraintDesc);
 	db->RegisterDesc(desc);
 	
 	PHJoint1DDesc* pPHJoint1DDesc = NULL;
@@ -31,19 +31,19 @@
 	((IfInfo*)PHJoint1DIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHJoint1DDesc>;
 	field = desc->AddBase("PHJointDesc");
-	field->offset = (char*)(PHJointDesc*)pPHJoint1DDesc - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)(PHJointDesc*)pPHJoint1DDesc - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "lower", "");
-	field->offset = (char*)&(pPHJoint1DDesc->lower) - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)&(pPHJoint1DDesc->lower) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "upper", "");
-	field->offset = (char*)&(pPHJoint1DDesc->upper) - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)&(pPHJoint1DDesc->upper) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "spring", "");
-	field->offset = (char*)&(pPHJoint1DDesc->spring) - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)&(pPHJoint1DDesc->spring) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "origin", "");
-	field->offset = (char*)&(pPHJoint1DDesc->origin) - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)&(pPHJoint1DDesc->origin) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "damper", "");
-	field->offset = (char*)&(pPHJoint1DDesc->damper) - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)&(pPHJoint1DDesc->damper) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "torque", "");
-	field->offset = (char*)&(pPHJoint1DDesc->torque) - (char*)pPHJoint1DDesc;
+	field->offset = int((char*)&(pPHJoint1DDesc->torque) - (char*)pPHJoint1DDesc);
 	db->RegisterDesc(desc);
 	
 	PHHingeJointDesc* pPHHingeJointDesc = NULL;
@@ -53,7 +53,7 @@
 	((IfInfo*)PHHingeJointIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHHingeJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
-	field->offset = (char*)(PHJoint1DDesc*)pPHHingeJointDesc - (char*)pPHHingeJointDesc;
+	field->offset = int((char*)(PHJoint1DDesc*)pPHHingeJointDesc - (char*)pPHHingeJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHSliderJointDesc* pPHSliderJointDesc = NULL;
@@ -63,7 +63,7 @@
 	((IfInfo*)PHSliderJointIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHSliderJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
-	field->offset = (char*)(PHJoint1DDesc*)pPHSliderJointDesc - (char*)pPHSliderJointDesc;
+	field->offset = int((char*)(PHJoint1DDesc*)pPHSliderJointDesc - (char*)pPHSliderJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHPathPoint* pPHPathPoint = NULL;
@@ -71,9 +71,9 @@
 	desc->size = sizeof(PHPathPoint);
 	desc->access = DBG_NEW UTAccess<PHPathPoint>;
 	field = desc->AddField("", "double", "s", "");
-	field->offset = (char*)&(pPHPathPoint->s) - (char*)pPHPathPoint;
+	field->offset = int((char*)&(pPHPathPoint->s) - (char*)pPHPathPoint);
 	field = desc->AddField("", "Posed", "pose", "");
-	field->offset = (char*)&(pPHPathPoint->pose) - (char*)pPHPathPoint;
+	field->offset = int((char*)&(pPHPathPoint->pose) - (char*)pPHPathPoint);
 	db->RegisterDesc(desc);
 	
 	PHPathDesc* pPHPathDesc = NULL;
@@ -83,9 +83,9 @@
 	((IfInfo*)PHPathIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHPathDesc>;
 	field = desc->AddField("vector", "PHPathPoint", "points", "");
-	field->offset = (char*)&(pPHPathDesc->points) - (char*)pPHPathDesc;
+	field->offset = int((char*)&(pPHPathDesc->points) - (char*)pPHPathDesc);
 	field = desc->AddField("", "bool", "bLoop", "");
-	field->offset = (char*)&(pPHPathDesc->bLoop) - (char*)pPHPathDesc;
+	field->offset = int((char*)&(pPHPathDesc->bLoop) - (char*)pPHPathDesc);
 	db->RegisterDesc(desc);
 	
 	PHPathJointDesc* pPHPathJointDesc = NULL;
@@ -95,7 +95,7 @@
 	((IfInfo*)PHPathJointIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHPathJointDesc>;
 	field = desc->AddBase("PHJoint1DDesc");
-	field->offset = (char*)(PHJoint1DDesc*)pPHPathJointDesc - (char*)pPHPathJointDesc;
+	field->offset = int((char*)(PHJoint1DDesc*)pPHPathJointDesc - (char*)pPHPathJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHBallJointDesc* pPHBallJointDesc = NULL;
@@ -105,11 +105,11 @@
 	((IfInfo*)PHBallJointIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHBallJointDesc>;
 	field = desc->AddBase("PHJointDesc");
-	field->offset = (char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc;
+	field->offset = int((char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "double", "max_angle", "");
-	field->offset = (char*)&(pPHBallJointDesc->max_angle) - (char*)pPHBallJointDesc;
+	field->offset = int((char*)&(pPHBallJointDesc->max_angle) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
-	field->offset = (char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc;
+	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHUniversalJointDesc* pPHUniversalJointDesc = NULL;
@@ -119,9 +119,9 @@
 	((IfInfo*)PHUniversalJointIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHUniversalJointDesc>;
 	field = desc->AddBase("PHJointDesc");
-	field->offset = (char*)(PHJointDesc*)pPHUniversalJointDesc - (char*)pPHUniversalJointDesc;
+	field->offset = int((char*)(PHJointDesc*)pPHUniversalJointDesc - (char*)pPHUniversalJointDesc);
 	field = desc->AddField("", "Vec2d", "torque", "");
-	field->offset = (char*)&(pPHUniversalJointDesc->torque) - (char*)pPHUniversalJointDesc;
+	field->offset = int((char*)&(pPHUniversalJointDesc->torque) - (char*)pPHUniversalJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHSpringDesc* pPHSpringDesc = NULL;
@@ -131,11 +131,11 @@
 	((IfInfo*)PHSpringIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHSpringDesc>;
 	field = desc->AddBase("PHConstraintDesc");
-	field->offset = (char*)(PHConstraintDesc*)pPHSpringDesc - (char*)pPHSpringDesc;
+	field->offset = int((char*)(PHConstraintDesc*)pPHSpringDesc - (char*)pPHSpringDesc);
 	field = desc->AddField("", "Vec3d", "spring", "");
-	field->offset = (char*)&(pPHSpringDesc->spring) - (char*)pPHSpringDesc;
+	field->offset = int((char*)&(pPHSpringDesc->spring) - (char*)pPHSpringDesc);
 	field = desc->AddField("", "Vec3d", "damper", "");
-	field->offset = (char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc;
+	field->offset = int((char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc);
 	db->RegisterDesc(desc);
 	
 	PHInactiveSolids* pPHInactiveSolids = NULL;
@@ -143,7 +143,7 @@
 	desc->size = sizeof(PHInactiveSolids);
 	desc->access = DBG_NEW UTAccess<PHInactiveSolids>;
 	field = desc->AddField("vector", "string", "solids", "");
-	field->offset = (char*)&(pPHInactiveSolids->solids) - (char*)pPHInactiveSolids;
+	field->offset = int((char*)&(pPHInactiveSolids->solids) - (char*)pPHInactiveSolids);
 	db->RegisterDesc(desc);
 	
 	PHSceneState* pPHSceneState = NULL;
@@ -151,9 +151,9 @@
 	desc->size = sizeof(PHSceneState);
 	desc->access = DBG_NEW UTAccess<PHSceneState>;
 	field = desc->AddField("", "double", "timeStep", "");
-	field->offset = (char*)&(pPHSceneState->timeStep) - (char*)pPHSceneState;
+	field->offset = int((char*)&(pPHSceneState->timeStep) - (char*)pPHSceneState);
 	field = desc->AddField("", "unsigned", "count", "");
-	field->offset = (char*)&(pPHSceneState->count) - (char*)pPHSceneState;
+	field->offset = int((char*)&(pPHSceneState->count) - (char*)pPHSceneState);
 	db->RegisterDesc(desc);
 	
 	PHSceneDesc* pPHSceneDesc = NULL;
@@ -163,11 +163,11 @@
 	((IfInfo*)PHSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHSceneDesc>;
 	field = desc->AddBase("PHSceneState");
-	field->offset = (char*)(PHSceneState*)pPHSceneDesc - (char*)pPHSceneDesc;
+	field->offset = int((char*)(PHSceneState*)pPHSceneDesc - (char*)pPHSceneDesc);
 	field = desc->AddField("", "Vec3f", "gravity", "");
-	field->offset = (char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc;
+	field->offset = int((char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc);
 	field = desc->AddField("", "int", "numIteration", "");
-	field->offset = (char*)&(pPHSceneDesc->numIteration) - (char*)pPHSceneDesc;
+	field->offset = int((char*)&(pPHSceneDesc->numIteration) - (char*)pPHSceneDesc);
 	db->RegisterDesc(desc);
 	
 	PHSdkDesc* pPHSdkDesc = NULL;
@@ -183,19 +183,19 @@
 	desc->size = sizeof(PHSolidState);
 	desc->access = DBG_NEW UTAccess<PHSolidState>;
 	field = desc->AddField("", "Vec3d", "velocity", "");
-	field->offset = (char*)&(pPHSolidState->velocity) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->velocity) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "angVelocity", "");
-	field->offset = (char*)&(pPHSolidState->angVelocity) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->angVelocity) - (char*)pPHSolidState);
 	field = desc->AddField("", "Posed", "pose", "");
-	field->offset = (char*)&(pPHSolidState->pose) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->pose) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "force", "");
-	field->offset = (char*)&(pPHSolidState->force) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->force) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "torque", "");
-	field->offset = (char*)&(pPHSolidState->torque) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->torque) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "nextForce", "");
-	field->offset = (char*)&(pPHSolidState->nextForce) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->nextForce) - (char*)pPHSolidState);
 	field = desc->AddField("", "Vec3d", "nextTorque", "");
-	field->offset = (char*)&(pPHSolidState->nextTorque) - (char*)pPHSolidState;
+	field->offset = int((char*)&(pPHSolidState->nextTorque) - (char*)pPHSolidState);
 	db->RegisterDesc(desc);
 	
 	PHSolidDesc* pPHSolidDesc = NULL;
@@ -205,15 +205,15 @@
 	((IfInfo*)PHSolidIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHSolidDesc>;
 	field = desc->AddBase("PHSolidState");
-	field->offset = (char*)(PHSolidState*)pPHSolidDesc - (char*)pPHSolidDesc;
+	field->offset = int((char*)(PHSolidState*)pPHSolidDesc - (char*)pPHSolidDesc);
 	field = desc->AddField("", "double", "mass", "");
-	field->offset = (char*)&(pPHSolidDesc->mass) - (char*)pPHSolidDesc;
+	field->offset = int((char*)&(pPHSolidDesc->mass) - (char*)pPHSolidDesc);
 	field = desc->AddField("", "Matrix3d", "inertia", "");
-	field->offset = (char*)&(pPHSolidDesc->inertia) - (char*)pPHSolidDesc;
+	field->offset = int((char*)&(pPHSolidDesc->inertia) - (char*)pPHSolidDesc);
 	field = desc->AddField("", "Vec3d", "center", "");
-	field->offset = (char*)&(pPHSolidDesc->center) - (char*)pPHSolidDesc;
+	field->offset = int((char*)&(pPHSolidDesc->center) - (char*)pPHSolidDesc);
 	field = desc->AddField("", "bool", "gravity", "");
-	field->offset = (char*)&(pPHSolidDesc->gravity) - (char*)pPHSolidDesc;
+	field->offset = int((char*)&(pPHSolidDesc->gravity) - (char*)pPHSolidDesc);
 	field = desc->AddField("", "bool", "dynamical", "");
-	field->offset = (char*)&(pPHSolidDesc->dynamical) - (char*)pPHSolidDesc;
+	field->offset = int((char*)&(pPHSolidDesc->dynamical) - (char*)pPHSolidDesc);
 	db->RegisterDesc(desc);

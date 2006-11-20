@@ -123,7 +123,6 @@ void BuildScene0(){
 	//空中に固定する
 	soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 0.0));
 	soBox.back()->SetDynamical(false);
-
 	nodeTree.push_back(scene->CreateRootNode(soBox.back()));
 
 	// 重力を設定
@@ -658,7 +657,7 @@ void keyboard(unsigned char key, int x, int y){
 			soBox.push_back(scene->CreateSolid(descBox));
 			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
-			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(40), 'z'));
+			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(1), 'z'));
 			soBox.back()->SetVelocity(Vec3d(-10.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 			}break;	
@@ -742,7 +741,7 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.01;
+	dscene.timeStep = 0.05;
 	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築

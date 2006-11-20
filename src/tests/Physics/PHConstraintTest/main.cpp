@@ -32,12 +32,13 @@ using namespace Spr;
 #define TOTAL_IDLE_COUNTER	1000	// 静止しない場合に利用	
 #define NUM_BLOCK			4//6	// 生成するボックス数
 
+const float boxStride = 2+0.1;
 float boxpos[][3] = {
-	{0,2.1,0},
-	{0,4.2,0},
-	{0,6.3,0},
-	{0,8.4,0},
-	{0,10.5,0},
+	{0,boxStride*1,0},
+	{0,boxStride*2,0},
+	{0,boxStride*3,0},
+	{0,boxStride*4,0},
+	{0,boxStride*5,0},
 
 	{-3, 1, 0}, {0, 1, 0}, {3, 1, 0}, {-1.5, 4, 0}, {1.5, 4, 0},
 	{0, 7, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
@@ -210,7 +211,7 @@ void SPR_CDECL keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void SPR_CDECL idle(){
-#if 0	
+#if 1
 	static int stepCnt = 0;						// 静止したステップカウント
 	static int totalStep = 0;					// 全実行ステップ数（終了判定で使用）
 	
@@ -289,6 +290,7 @@ void SPR_CDECL timer(int id){
 int SPR_CDECL main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();							// SDKの作成　
 	PHSceneDesc dscene;
+	dscene.numIteration = 100;
 	dscene.timeStep = dt;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 	scene->SetContactMode(PHSceneDesc::MODE_LCP);	// 接触モードに LCP法で選択

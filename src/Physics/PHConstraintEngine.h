@@ -69,7 +69,7 @@ public:
 	PHConstraints GetContactPoints();
 	void Clear();
 
-protected:
+//protected:
 	PHConstraints	points;			///< ÚG“_‚Ì”z—ñ
 	PHConstraints	joints;			///< ŠÖß‚Ì”z—ñ
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;

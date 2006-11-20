@@ -31,10 +31,10 @@ static Vec3d q[4];			// Bのサポートポイント(ローカル系)
 static Vec3d p_q[4];		// ミンコスキー和上でのサポートポイント(ワールド系)
 
 //	過去のSupportPointが張る形状(点・線分・3角形，4面体)．最大4点まで．
-static int usedPoints;		//	下位4ビットが，どの4点で現在の形状が構成されるかを表す．
-static int lastPoint;		//	最後に見つけたSupportPointをしまった場所(0～3)
-static int lastUsed;		//	lastUsed = 1<<lastPoint (ビットで表したもの）
-static int allUsedPoints;	//	lastUsedを加えたもの
+static int usedBits;		//	下位4ビットが，どの4点で現在の形状が構成されるかを表す．
+static int lastId;			//	最後に見つけたSupportPointをしまった場所(0～3)
+static int lastBit;			//	lastBit = 1<<lastId (ビットで表したもの）
+static int allUsedBits;		//	usedBitsにlastBitを加えたもの
 static double det[16][4];	//	係数
 //	det[3][0] * p[0] + det[3][1]*p[1] + det[3][2]*p[2] / sum で最近傍点が求まる
 //	p_qベクトルたちが張る形状の体積(or長さor面積)．4点から作れる16通りについて
@@ -51,33 +51,33 @@ static double det[16][4];	//	係数
 inline void CalcDet() {
 	static double dotp[4][4];	//	p_q[i] * p_q[j] 
 
-	//	新しく増えた点(lastPoint)について，内積を計算
+	//	新しく増えた点(lastId)について，内積を計算
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<=1){
-		if (usedPoints & curPoint) 
-			dotp[i][lastPoint] = dotp[lastPoint][i] = p_q[i] * p_q[lastPoint];
+		if (usedBits & curPoint) 
+			dotp[i][lastId] = dotp[lastId][i] = p_q[i] * p_q[lastId];
 	}
-	dotp[lastPoint][lastPoint] = p_q[lastPoint] * p_q[lastPoint];
+	dotp[lastId][lastId] = p_q[lastId] * p_q[lastId];
 
-	det[lastUsed][lastPoint] = 1;
+	det[lastBit][lastId] = 1;
 	for (int j = 0, sj = 1; j < 4; ++j, sj <<= 1) {
-		if (usedPoints & sj) {		
-			int s2 = sj|lastUsed;	//	新しく増えた点について係数の計算
-			det[s2][j] = dotp[lastPoint][lastPoint] - dotp[lastPoint][j];	//	a^2-ab
-			det[s2][lastPoint] = dotp[j][j] - dotp[j][lastPoint];			//	b^2-ab
+		if (usedBits & sj) {		
+			int s2 = sj|lastBit;	//	新しく増えた点について係数の計算
+			det[s2][j] = dotp[lastId][lastId] - dotp[lastId][j];	//	a^2-ab
+			det[s2][lastId] = dotp[j][j] - dotp[j][lastId];			//	b^2-ab
 			for (int k = 0, sk = 1; k < j; ++k, sk <<= 1) {	//	3点の場合
-				if (usedPoints & sk) {
+				if (usedBits & sk) {
 					int s3 = sk|s2;
 					det[s3][k] = det[s2][j] * (dotp[j][j] - dotp[j][k]) + 
-						det[s2][lastPoint] * (dotp[lastPoint][j] - dotp[lastPoint][k]);
-					det[s3][j] = det[sk|lastUsed][k] * (dotp[k][k] - dotp[k][j]) + 
-						det[sk|lastUsed][lastPoint] * (dotp[lastPoint][k] - dotp[lastPoint][j]);
-					det[s3][lastPoint] = det[sk|sj][k] * (dotp[k][k] - dotp[k][lastPoint]) + 
-						det[sk|sj][j] * (dotp[j][k] - dotp[j][lastPoint]);
+						det[s2][lastId] * (dotp[lastId][j] - dotp[lastId][k]);
+					det[s3][j] = det[sk|lastBit][k] * (dotp[k][k] - dotp[k][j]) + 
+						det[sk|lastBit][lastId] * (dotp[lastId][k] - dotp[lastId][j]);
+					det[s3][lastId] = det[sk|sj][k] * (dotp[k][k] - dotp[k][lastId]) + 
+						det[sk|sj][j] * (dotp[j][k] - dotp[j][lastId]);
 				}
 			}
 		}
 	}
-	if (allUsedPoints == 15) {	//	4点の場合
+	if (allUsedBits == 15) {	//	4点の場合
 		det[15][0] =	det[14][1] * (dotp[1][1] - dotp[1][0]) + 
 						det[14][2] * (dotp[2][1] - dotp[2][0]) + 
 						det[14][3] * (dotp[3][1] - dotp[3][0]);
@@ -95,28 +95,28 @@ inline void CalcDet() {
 
 
 //	係数から，最近傍点 v を計算
-inline void CalcVector(int usedPoints, Vec3d& v) {
+inline void CalcVector(int usedBits, Vec3d& v) {
 	double sum = 0;
-	v = Vec3d(0, 0, 0);
+	v.clear();
 	for (int i = 0; i < 4; ++i) {
-		if (usedPoints & (1<<i)) {
-			sum += det[usedPoints][i];
-			v += p_q[i] * det[usedPoints][i];
+		if (usedBits & (1<<i)) {
+			sum += det[usedBits][i];
+			v += p_q[i] * det[usedBits][i];
 		}
 	}
 	v *= 1 / sum;
 }
 
 //	係数から，最近傍点と，元の2つの図形上での，その点の位置を計算
-inline void CalcPoints(int usedPoints, Vec3d& p1, Vec3d& p2) {
+inline void CalcPoints(int usedBits, Vec3d& p1, Vec3d& p2) {
 	double sum = 0;
-	p1 = Vec3d(0.0, 0.0, 0.0);
-	p2 = Vec3d(0.0, 0.0, 0.0);
+	p1.clear();
+	p2.clear();
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1) {
-		if (usedPoints & curPoint) {
-			sum += det[usedPoints][i];
-			p1 += p[i] * det[usedPoints][i];
-			p2 += q[i] * det[usedPoints][i];
+		if (usedBits & curPoint) {
+			sum += det[usedBits][i];
+			p1 += p[i] * det[usedBits][i];
+			p2 += q[i] * det[usedBits][i];
 		}
 	}
 	if (sum){
@@ -129,12 +129,12 @@ inline void CalcPoints(int usedPoints, Vec3d& p1, Vec3d& p2) {
 	}
 }
 
-//	
+//	最近傍点を返す．
 inline bool CalcClosest(Vec3d& v) {
 	CalcDet();
-	if (!usedPoints){
-		usedPoints = lastUsed;
-		v = p_q[lastPoint];
+	if (!usedBits){
+		usedBits = lastBit;
+		v = p_q[lastId];
 		return true;
 	}
 	int simplex[5][4];
@@ -143,8 +143,8 @@ inline bool CalcClosest(Vec3d& v) {
 		0, 1, 1, 2, 1, 2, 2, 3,
 		1, 2, 2, 3, 2, 3, 3, 4
 	};
-	int nVtx = numVertices[allUsedPoints];
-	simplex[nVtx][0] = allUsedPoints;
+	int nVtx = numVertices[allUsedBits];
+	simplex[nVtx][0] = allUsedBits;
 	nSimplex[nVtx] = 1;
 	
 	for(; nVtx>1; --nVtx){
@@ -159,8 +159,8 @@ inline bool CalcClosest(Vec3d& v) {
 				}
 			}
 			if (nSimplex[nVtx-1] == 0){
-				usedPoints = s;
-				CalcVector(usedPoints, v);	//	最近傍点を計算して返す．			
+				usedBits = s;
+				CalcVector(usedBits, v);	//	最近傍点を計算して返す．			
 				return true;
 			}
 		}
@@ -171,7 +171,7 @@ inline bool CalcClosest(Vec3d& v) {
 //	新しい点wが，今までの点と等しい場合
 inline bool HasSame(const Vec3d& w) {
 	for (int i = 0; i < 4; ++i){
-		if ((allUsedPoints & (1<<i)) && (p_q[i]-w).square() < epsilon2) return true;
+		if ((allUsedBits & (1<<i)) && (p_q[i]-w).square() < epsilon2) return true;
 	}
 	return false;
 }
@@ -195,20 +195,20 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& v, Vec3d& pa, Vec3d& pb) {
 	Vec3d w;
 
-	usedPoints = 0;
-	allUsedPoints = 0;
+	usedBits = 0;
+	allUsedBits = 0;
 	int count = 0;
 	do {
-		lastPoint = VacantIdFromBits(usedPoints);
-		lastUsed = 1 << lastPoint;
+		lastId = VacantIdFromBits(usedBits);
+		lastBit = 1 << lastId;
 
-		p[lastPoint] = a->Support(a2w.Ori().Conjugated() * (-v));
-		q[lastPoint] = b->Support(b2w.Ori().Conjugated() * v);
-		w = a2w * p[lastPoint]  -  b2w * q[lastPoint];
+		p[lastId] = a->Support(a2w.Ori().Conjugated() * (-v));
+		q[lastId] = b->Support(b2w.Ori().Conjugated() * v);
+		w = a2w * p[lastId]  -  b2w * q[lastId];
 		if (v*w > 0) return false;			//	原点がsupport面の外側
 		if (HasSame(w)) return false;		//	supportが1点に集中＝原点は外にある．
-		p_q[lastPoint] = w;					//	新しい点を代入
-		allUsedPoints = usedPoints|lastUsed;//	使用中頂点リストに追加
+		p_q[lastId] = w;					//	新しい点を代入
+		allUsedBits = usedBits|lastBit;//	使用中頂点リストに追加
 		if (!CalcClosest(v)) return false;
 
 		count ++;
@@ -217,7 +217,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 			Vec3d notUsed[3];
 			int nUsed=0, nNotUsed=0;
 			for(int i=0, j=0; i<4; ++i){
-				if (usedPoints & (1<<i)){
+				if (usedBits & (1<<i)){
 					vtxs[nUsed] = p_q[i];
 					nUsed++;
 				}else{
@@ -225,7 +225,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					nNotUsed++;
 				}
 			}
-			if (nUsed == 3 && allUsedPoints == 15){
+			if (nUsed == 3 && allUsedBits == 15){
 				Vec3d n = (vtxs[2]-vtxs[0]) ^ (vtxs[1]-vtxs[0]);
 				n.unitize();
 				if (n * (notUsed[0] - vtxs[0]) > 0){
@@ -252,8 +252,8 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 				}
 			}
 		}
-	} while ( usedPoints < 15 && !(v.square() < epsilon2) ) ;
-	CalcPoints(usedPoints, pa, pb);
+	} while ( usedBits < 15 && !(v.square() < epsilon2) ) ;
+	CalcPoints(usedBits, pa, pb);
 	return true;
 }
 
@@ -399,7 +399,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			}
 			if (last->nVtx){
 				double approach = last->normal * (w[cur->i[0]] - w[last->i[0]]);
-				if (approach > -epsilon || cur->dist <= last->dist) break;	//	return last
+				if (approach > -epsilon || cur->dist >= last->dist) break;	//	return last
 			}
 			Vec3d l = w[cur->i[0]] - w[cur->i[1]];
 			cur->normal = Vec3d(0,0,1) - l.Z() / l.square() * l;
@@ -415,7 +415,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			cur->dist = w[cur->i[0]] * cur->normal / cur->normal.Z();
 			if (last->nVtx){
 				double approach = last->normal * (w[cur->i[0]] - w[last->i[0]]);
-				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist <= last->dist)) break;	//	return last;
+				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist >= last->dist)) break;	//	return last;
 			}
 
 			int newVtx = VacantIdFromId(cur->i[0], cur->i[1], cur->i[2]);
@@ -473,6 +473,16 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	}
 	dist = last->dist;
 	normal = w2z.Conjugated() * last->normal;
+//	HASE_REPORT
+/*	DSTR << "nVtx:" << (int)last->nVtx;
+	DSTR << "  dist:" << dist << "  cur:" << cur->dist;
+	CDBox* box = DCAST(CDBox, b);
+	if (box){
+		DSTR << "  v:" << box->curPos;
+	}
+	DSTR << "  ori:" << b2w.Ori() * Vec3f(0,1,0);
+	DSTR << std::endl;
+*/	
 	return last->nVtx;
 }
 

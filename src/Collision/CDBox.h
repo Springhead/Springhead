@@ -36,7 +36,7 @@ class CDQuadFaces:public std::vector<CDQuadFace>{
 /// 直方体
 class CDBox: public InheritCDShape<CDBoxIf, CDConvex>{
 public:
-	
+	mutable int curPos;
 	OBJECT_DEF(CDBox);
 	
 	Vec3f boxsize;				/// 直方体のサイズ（各辺の長さ）

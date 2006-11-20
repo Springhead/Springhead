@@ -15,6 +15,7 @@
 #include "CDQuickHull3DImp.h"
 
 namespace Spr{;
+const double sqEpsilon = 1e-4;
 const double epsilon = 1e-8;
 const double epsilon2 = epsilon*epsilon;
 
@@ -78,15 +79,14 @@ CDBox::CDBox(const CDBoxDesc& desc) {
 Vec3f CDBox::Support(const Vec3f& p) const {
 	// 与えられた方向pに一番遠い点（内積最大の点をサポートポイントとする）
 	float d1=0.0, d2=0.0;
-	unsigned int pos = 0;
-	for (unsigned int curPos=0; curPos<8; ++curPos){		// 8頂点
-		d1 = base[curPos] * p;
+	for (unsigned int i=0; i<8; ++i){		// 8頂点
+		d1 = base[i] * p;
 		if (d1 > d2) { 
 			d2 = d1;
-			pos = curPos;
+			curPos = i;
 		}
 	}
-	return base[pos];
+	return base[curPos];
 }
 
 // 切り口を求める. 接触解析を行う.
@@ -102,8 +102,8 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	double d = planeNormalL * planePosL;
 	for (int i=0; i<base_size; ++i){
 		double vtxDist = planeNormalL * base[i];
-		if (vtxDist > d + epsilon) sign[i] = 1;
-		else if (vtxDist < d - epsilon) sign[i] = -1;
+		if (vtxDist > d + sqEpsilon) sign[i] = 1;
+		else if (vtxDist < d - sqEpsilon) sign[i] = -1;
 		else sign[i] = 0;
 	}
 	bool rv = false;
@@ -148,6 +148,19 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 				ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
 				rv = true;
 			} 
+		}else{
+			DSTR << "parallel plane" << std::endl;
+			DSTR << "ip:" << ip << std::endl;
+			DSTR << "pn:" << planeNormalL<<std::endl;
+			DSTR << "fn:" << qfaceNormal<<std::endl;
+			DSTR << "vtx:";
+			for(int j=0; j<4; ++j){
+				int id = qfaces[i].vtxs[j];
+				double vtxDist = planeNormalL * base[id];
+				DSTR << sign[id] << " " << vtxDist-d << " " << base[id];
+			}
+			DSTR << std::endl;
+			exit(0);
 		}
 	}
 	//bool 衝突の有無

@@ -98,7 +98,35 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 }*/
 
 void PHContactPoint::CompBias(){
-	db.v.x = -engine->correctionRate * shapePair->depth;
+	double dtinv = 1.0 / scene->GetTimeStep();
+//	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
+	/*	hase	本当は 1e-3は引きすぎ
+		depth 分だけCorrectionを入れると接触が不連続になるので，depth-epsilonで良いが，
+		epsilonが大きすぎる．
+
+		これは，接触面が四角形で接触点が4点ある場合など，
+		4点間の力の分散がまれに不均一になり回転が始まり，
+		接触面が右よりの状態と左よりの状態の間で細かく発振することがあるため．
+		現状は，その場合にも接触面の形が変わらないようにすることで，安定化している．
+
+		2剛体間の接触をひとつの制約としてあらわせるようになれば解決すると思う．	
+	*/
+	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v.x;
+	/*	hase	本当は0.1倍してはいけない．
+
+		接触法線の計算がまれに間違えることがある（原因調査中）
+		そうすると，侵入量が大きく判断され，大きな力が発生して，物体が飛んでいく．
+		現状は，これが起こらないようにCorrection率をさらに0.1倍して回避している．
+	*/
+	err *= 0.1;	
+	if (err < 0) err = 0;
+	if (err){
+//		HASE_REPORT
+//		DSTR << shapePair->state;
+//		DSTR << shapePair->shapePoseW[1].Pos();
+//		DSTR << "err: " << err << std::edl;
+		db.v.x = -err * engine->correctionRate;
+	}
 }
 
 void PHContactPoint::Projection(double& f, int k){
