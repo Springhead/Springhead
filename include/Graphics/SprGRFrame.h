@@ -45,7 +45,10 @@ struct GRFrameIf: public GRVisualIf{
 	IF_DEF(GRFrame);
 	virtual GRFrameIf* GetParent()=0;
 	virtual void SetParent(GRFrameIf* fr)=0;
+	virtual Affinef GetTransform()=0;
 	virtual Affinef GetWorldTransform()=0;
+	virtual void SetTransform(Affinef& af)=0;
+	virtual void Print(std::ostream& os) const =0;
 };
 
 //@}

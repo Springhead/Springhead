@@ -149,11 +149,14 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 //	NamedObject
 IF_OBJECT_IMP(NamedObject, Object);
 
-void NamedObject::SetNameManager(NameManager* s){
+NameManagerIf* NamedObject::GetNameManager(){
+	return nameManager;
+}
+void NamedObject::SetNameManager(NameManagerIf* s){
 	if (nameManager){
 		nameManager->names.Del(this);
 	}
-	nameManager = s;
+	nameManager = DCAST(NameManager, s);
 	if (name.length()){
 		nameManager->names.Add(this);
 	}
@@ -207,7 +210,7 @@ void SceneObject::SetScene(SceneIf* s){
 	nameManager->GetNameMap();
 }
 SceneIf* SceneObject::GetScene(){
-	NameManager* nm = GetNameManager();
+	NameManagerIf* nm = GetNameManager();
 	return DCAST(Scene, nm);
 }
 

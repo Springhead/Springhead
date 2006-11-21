@@ -135,14 +135,29 @@ void NameManager::Print(std::ostream& os) const {
 
 //	名前を再帰的に検索。namespace を考慮
 NamedObjectIf* NameManager::FindObject(UTString name, UTString cls){
-//	DSTR << "NameManager(" << GetName() << ")::FindObject search " << name << std::endl;
+	//	DSTR << "NameManager(" << GetName() << ")::FindObject search " << name << std::endl;
+	
 	//	自分と子孫を探す。
 	NamedObjectIf* rv = FindObjectFromDescendant(name, cls);
 	if (rv) return rv;
+	//	先祖を探す．
+	rv = FindObjectFromAncestor(name, cls);
+	if (rv) return rv;
+
+	//	それでもないならば、namespaceを削って、もう一度検索
+	int pos = name.find('/');
+	if (pos != UTString::npos){	//	 名前空間の指定がある場合
+		UTString n = name.substr(pos+1);
+		rv = FindObject(n, cls);
+	}
+	return rv;
+}
+//	先祖を探す
+NamedObjectIf* NameManager::FindObjectFromAncestor(UTString name, UTString cls){
 	//	なければ祖先を探す。
 	NameManager* nm = nameManager;
 	while(nm){
-		rv = nm->names.Find(name, cls);	//	まず親を探し、
+		NamedObjectIf* rv = nm->names.Find(name, cls);	//	まず親を探し、
 		if (rv) return rv;
 		//	兄弟を探し、
 		for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
@@ -154,14 +169,9 @@ NamedObjectIf* NameManager::FindObject(UTString name, UTString cls){
 		//	なければ、親の親を探す。
 		nm = nm->nameManager;
 	}
-	//	それでもないならば、namespaceを削って、もう一度検索
-	int pos = name.find('/');
-	if (pos != UTString::npos){	//	 名前空間の指定がある場合
-		UTString n = name.substr(pos+1);
-		rv = FindObject(n, cls);
-	}
-	return rv;
+	return NULL;
 }
+
 //	自分と子孫を探す
 NamedObjectIf* NameManager::FindObjectFromDescendant(UTString name, UTString cls){
 //	DSTR << "NameManager(" << GetName() << ")::FindDescendant search " << name << std::endl;

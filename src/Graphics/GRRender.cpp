@@ -77,7 +77,7 @@ size_t GRCamera::NChildObject() const {
 	return frame ? 1 : 0;
 }
 ObjectIf* GRCamera::GetChildObject(size_t pos){
-	if (pos == 0) return frame ? frame->GetIf() : NULL;
+	if (pos == 0) return frame ? frame : NULL;
 	return NULL;
 }
 bool GRCamera::AddChildObject(ObjectIf* o){

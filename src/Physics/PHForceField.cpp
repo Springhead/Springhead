@@ -21,14 +21,13 @@ void PHGravityEngine::Step(){
 	PHSolid* solid;
 	for(it = solids.begin(); it != solids.end(); it++){
 		solid = *it;
-		if(solid->gravity)
-			solid->AddForce((float)solid->GetMass() * accel);
+		solid->AddForce((float)solid->GetMass() * accel);
 	}
 }
 
 bool PHGravityEngine::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
-	if(s){
+	if(s && !solids.Find(s)){
 		solids.push_back(s);
 		return true;
 	}

@@ -218,16 +218,19 @@ public:
 	void SetName(const char* n);
 	///	デバッグ用の表示
 	virtual void Print(std::ostream& os) const;
-	virtual void PrintShort(std::ostream& os) const;
-	virtual void SetNameManager(NameManager* s);
-	virtual NameManager* GetNameManager(){ return nameManager; }
 	///	デバッグ用の表示
+	virtual void PrintShort(std::ostream& os) const;
+	///	NameManagerを設定
+	void SetNameManager(NameManagerIf* s);
+	///	NameManagerの取得
+	virtual NameManagerIf* GetNameManager();
 };
 
 template <class intf, class base>
 struct InheritNamedObject:public InheritObject<intf, base>{
 	const char* GetName() const { return base::GetName(); }
 	void SetName(const char* n) { base::SetName(n); }
+	NameManagerIf* GetNameManager(){ return base::GetNameManager(); }
 };
 
 class Scene;
@@ -280,7 +283,7 @@ public:
 			o->SetScene(s);
 		}else{	//	シーンに設定できない場合，名前管理オブジェクトの設定
 			NamedObject* o = DCAST(NamedObject, t);
-			NameManager* m = DCAST(NameManager, parent);
+			NameManagerIf* m = DCAST(NameManagerIf, parent);
 			if (o && !m){	//	親がNameMangerではない場合，親のNameManagerに登録
 				NamedObject* po = DCAST(NamedObject, parent);
 				if (po) m = po->GetNameManager();

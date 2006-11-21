@@ -24,10 +24,16 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	treeNode = NULL;
 	if (s){ SetScene(s); }
 }
-void PHSolid::SetScene(SceneIf* s){
-	SceneObject::SetScene(s);
-	SetGravity(gravity);
+void PHSolid::SetGravity(bool bOn){
+	if (bOn){
+		PHScene* s = DCAST(PHScene, GetScene());
+		PHGravityEngine* ge;
+		s->engines.Find(ge);
+		if (bOn) ge->AddChildObject((PHSolidIf*)s);
+		else ge->solids.Erase(this);
+	}
 }
+
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
 	CDShapeIf* rv = DCAST(PHSceneIf, GetScene())->CreateShape(desc);
 	if (rv){

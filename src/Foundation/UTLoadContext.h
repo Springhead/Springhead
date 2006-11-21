@@ -23,7 +23,8 @@ public:
 	const char* curr;	///<		現在の位置
 	/// コンストラクタ
 	UTFileMap():start(NULL), end(NULL), curr(NULL){}
-	///
+	///	デストラクタ
+	virtual ~UTFileMap(){}
 	/// ファイル マッピング		
 	virtual bool Map(const UTString fn)=0;
 	/// ファイル アンマッピング

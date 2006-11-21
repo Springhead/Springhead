@@ -119,9 +119,11 @@ public:
 	///	デバッグ用
 	void Print(std::ostream& os) const;
 	friend class NamedObject;
-protected:
+
+	//	普通は呼び出さない，名前検索の内部関数．
 	NamedObjectIf* FindObjectExact(UTString name, UTString cls="");
 	NamedObjectIf* FindObjectFromDescendant(UTString name, UTString cls="");
+	NamedObjectIf* FindObjectFromAncestor(UTString name, UTString cls="");	
 };
 
 template <class intf, class base>

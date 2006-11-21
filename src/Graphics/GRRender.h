@@ -22,10 +22,12 @@ class GRCamera:public InheritGRVisual<GRCameraIf, GRVisual>, public GRCameraDesc
 public:
 	OBJECT_DEF(GRCamera);
 	ACCESS_DESC(GRCamera);
-	UTRef<GRFrame> frame;
+	UTRef<GRFrameIf> frame;
 	GRCamera(const GRCameraDesc& desc=GRCameraDesc()):GRCameraDesc(desc), frame(NULL){}
 	virtual size_t NChildObject() const ;
 	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual GRFrameIf* GetFrame(){ return frame; }
+	virtual void SetFrame(GRFrameIf* fr){ frame = fr; }
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Render(GRRenderIf* render);	
 };

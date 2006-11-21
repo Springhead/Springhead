@@ -212,8 +212,6 @@
 	field->offset = int((char*)&(pPHSolidDesc->inertia) - (char*)pPHSolidDesc);
 	field = desc->AddField("", "Vec3d", "center", "");
 	field->offset = int((char*)&(pPHSolidDesc->center) - (char*)pPHSolidDesc);
-	field = desc->AddField("", "bool", "gravity", "");
-	field->offset = int((char*)&(pPHSolidDesc->gravity) - (char*)pPHSolidDesc);
 	field = desc->AddField("", "bool", "dynamical", "");
 	field->offset = int((char*)&(pPHSolidDesc->dynamical) - (char*)pPHSolidDesc);
 	db->RegisterDesc(desc);

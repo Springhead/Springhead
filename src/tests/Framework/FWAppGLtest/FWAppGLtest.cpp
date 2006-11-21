@@ -11,7 +11,9 @@ FWAppGLUT app;
 
 int SPR_CDECL main(int argc, char* argv[]){
 	app.Init(argc, argv);
+#ifdef _DEBUG
 	app.SetDebugMode(FWApp::DM_DEBUG);
+#endif
 	app.LoadScene("test.x");
 	app.Start();
 	return 0;

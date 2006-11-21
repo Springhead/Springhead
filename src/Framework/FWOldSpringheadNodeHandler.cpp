@@ -196,7 +196,7 @@ public:
 		tex->filename = d.filename;
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
-			tex->SetNameManager(gs);
+			tex->SetNameManager((GRSceneIf*)gs);
 			tex->SetName(fc->datas.Top()->name.c_str());
 		}
 		fc->objects.Top()->AddChildObject(tex->GetIf());
@@ -265,7 +265,7 @@ public:
 		phmtask->mu0 = d.s;		// “®–€ŽCŒW”		
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
-			phmtask->SetNameManager(gs);
+			phmtask->SetNameManager((GRSceneIf*)gs);
 			phmtask->SetName(fc->datas.Top()->name.c_str());
 		}		
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());

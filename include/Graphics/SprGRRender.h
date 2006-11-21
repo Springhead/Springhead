@@ -150,6 +150,8 @@ struct GRCameraDesc{
 };
 struct GRCameraIf: public GRVisualIf{
 	IF_DEF(GRCamera);
+	virtual GRFrameIf* GetFrame()=0;
+	virtual void SetFrame(GRFrameIf* fr)=0;
 };
 
 struct GRDeviceIf;

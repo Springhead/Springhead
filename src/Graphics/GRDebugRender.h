@@ -12,7 +12,7 @@
 #ifndef GRDEBUGRENDER_H
 #define GRDEBUGRENDER_H
 
-#include <SprGraphics.h>
+#include "GRRender.h"
 
 namespace Spr{;
 

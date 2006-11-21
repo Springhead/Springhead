@@ -309,7 +309,9 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	if (w[0].Z() > endLength) return -1;	//	range内では接触しないが，将来接触するかもしれない．
 	if (w[0].Z() < 0){						//	反対側のsupportを求めてみて，範囲外か確認
 		CalcSupport(Vec3d(0,0,-1), 3);
-		if (w[3].Z() <0) return -2;			//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
+		if (w[3].Z() <0){
+			return -2;			//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
+		}
 	}
 	//	w1を求める
 	Vec3d v(w[0].X(), w[0].Y(), 0);

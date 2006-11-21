@@ -170,6 +170,8 @@ struct ObjectIfs: public UTStack<ObjectIf*>{
 	}
 };
 
+struct NameManagerIf;
+
 ///	名前を持つオブジェクトのインタフェース
 struct NamedObjectIf: public ObjectIf{
 	IF_DEF(NamedObject);
@@ -177,6 +179,8 @@ struct NamedObjectIf: public ObjectIf{
 	virtual const char* GetName() const =0;
 	///	名前の設定
 	virtual void SetName(const char* n) =0;
+	///	名前管理オブジェクトの取得
+	virtual NameManagerIf* GetNameManager() =0;
 };
 
 struct SceneIf;

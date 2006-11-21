@@ -134,7 +134,6 @@ public:
 	OBJECT_DEF(PHSolid);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
-	void SetScene(SceneIf* s);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	bool AddChildObject(ObjectIf* obj);
@@ -234,7 +233,7 @@ public:
 	Posed		GetShapePose(int i);
 	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğİ’è
 	void		SetShapePose(int i, const Posed& pose);
-	void		SetGravity(bool bOn){gravity = bOn;}
+	void		SetGravity(bool bOn);
 	void		SetDynamical(bool bOn){dynamical = bOn;}
 	bool		IsDynamical(){return dynamical;}
 
