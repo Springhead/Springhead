@@ -54,7 +54,8 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
-	NamedObjectIf* FindObject(UTString name, UTString cls);
+	virtual NamedObjectIf* FindObject(UTString name, UTString cls);
+	virtual void AddHumanInterface(HIForceDevice6D* d);
 };
 
 

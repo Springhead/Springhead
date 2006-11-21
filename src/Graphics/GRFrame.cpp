@@ -78,12 +78,12 @@ ObjectIf* GRFrame::GetChildObject(size_t pos){
 }
 
 void GRFrame::Print(std::ostream& os) const {
-	Object::PrintHeader(os);
+	GRVisual::PrintHeader(os, false);
 	os.width(os.width()+2);
 	os << transform;
-	Object::PrintChildren(os);
 	os.width(os.width()-2);
-	Object::PrintFooter(os);
+	GRVisual::PrintChildren(os);
+	GRVisual::PrintFooter(os);
 }
 
 }

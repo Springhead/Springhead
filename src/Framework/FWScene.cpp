@@ -157,4 +157,8 @@ void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
 	}
 }
 
+void FWScene::AddHumanInterface(HIForceDevice6D* d){
+	humanInterfaces.push_back(d);
+}
+
 }

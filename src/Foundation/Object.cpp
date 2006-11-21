@@ -93,21 +93,25 @@ FactoryBase* IfInfo::FindFactory(const IfInfo* info) const {
 IF_IMP_BASE(Object);
 OBJECT_IMP_BASE(Object);
 
-void Object::PrintHeader(std::ostream& os) const {
+void Object::PrintHeader(std::ostream& os, bool bClose) const {
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w);
-	os << "<" << GetTypeInfo()->ClassName() << ">" << std::endl;
+	os << "<" << GetTypeInfo()->ClassName();
+	if (bClose){
+		os << "/>" << std::endl;
+	}else{
+		os << ">" << std::endl;
+	}
 	os.width(w);
 }
 void Object::PrintChildren(std::ostream& os) const {
 	int w = os.width();
-	os.width(0);
-	os.width(w);
-	os.widen(w+2);
+	os.width(w+2);
 	for(size_t i=0; i<NChildObject(); ++i){
 		GetChildObject(i)->Print(os);
 	}
+	os.width(w);
 }
 void Object::PrintFooter(std::ostream& os) const {
 	int w = os.width();
@@ -117,24 +121,16 @@ void Object::PrintFooter(std::ostream& os) const {
 	os.width(w);
 }
 void Object::PrintShort(std::ostream& os) const {
-	int w = os.width();
-	os.width(0);
-	os << UTPadding(w);
-	os << "<" << GetTypeInfo()->ClassName() << "/>" << std::endl;
-	os.width(w);
+	PrintHeader(os, true);
 }
 void Object::Print(std::ostream& os) const {
-	int w = os.width();
 	if (NChildObject()){
-		PrintHeader(os);
+		PrintHeader(os, false);
 		PrintChildren(os);
 		PrintFooter(os);
 	}else{
-		os.width(0);
-		os << UTPadding(w);
-		os << "<" << GetTypeInfo()->ClassName() << "/>" << std::endl;
+		PrintHeader(os, true);
 	}
-	os.width(w);
 }
 ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	const IfInfo* info = GetIf()->GetIfInfo();
@@ -167,29 +163,13 @@ NamedObject::~NamedObject(){
 		nameManager = NULL;
 	}
 }
-void NamedObject::Print(std::ostream& os) const {
+
+void NamedObject::PrintHeader(std::ostream& os, bool bClose) const {
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w);
-	if (NChildObject()){
-		os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << ">" << std::endl;
-		os.width(w+2);
-		for(size_t i=0; i<NChildObject(); ++i){
-			GetChildObject(i)->Print(os);
-		}
-		os.width(0);
-		os << UTPadding(w);
-		os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
-	}else{
-		os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << "/>" << std::endl;
-	}
-	os.width(w);
-}
-void NamedObject::PrintShort(std::ostream& os) const {
-	int w = os.width();
-	os.width(0);
-	os << UTPadding(w);
-	os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << "/>" << std::endl;
+	os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << 
+		(bClose ? "/>" : ">") << std::endl;
 	os.width(w);
 }
 void NamedObject::SetName(const char* n){

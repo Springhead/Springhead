@@ -163,7 +163,7 @@ public:
 	///	状態型をメモリブロックに戻す
 	virtual void DestructState(void* m) const {}
 protected:
-	virtual void PrintHeader(std::ostream& os) const;
+	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 	virtual void PrintChildren(std::ostream& os) const;
 	virtual void PrintFooter(std::ostream& os) const;
 };
@@ -216,14 +216,12 @@ public:
 	const char* GetName() const { return name.c_str(); }
 	///	名前の設定
 	void SetName(const char* n);
-	///	デバッグ用の表示
-	virtual void Print(std::ostream& os) const;
-	///	デバッグ用の表示
-	virtual void PrintShort(std::ostream& os) const;
 	///	NameManagerを設定
 	void SetNameManager(NameManagerIf* s);
 	///	NameManagerの取得
 	virtual NameManagerIf* GetNameManager();
+protected:
+	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 };
 
 template <class intf, class base>

@@ -11,6 +11,8 @@ namespace Spr{
 	struct FWSceneDesc{
 	};
 
+	class HIForceDevice6D;
+
 	struct FWSceneIf : SceneIf {
 		IF_DEF(FWScene);
 		virtual PHSceneIf* GetPHScene() = 0;
@@ -18,6 +20,7 @@ namespace Spr{
 		virtual void Sync() = 0;
 		virtual void Step() = 0;
 		virtual void Draw(GRRenderIf* grRender, bool debug=false) = 0;
+		virtual void AddHumanInterface(HIForceDevice6D* d)=0;
 	};
 
 	FWSceneIf* SPR_CDECL CreateFWScene();
