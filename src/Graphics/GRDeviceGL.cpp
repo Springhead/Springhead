@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Graphics.h"
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -170,6 +171,38 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 	}else if (e == GRVertexElement::vfT2fC4fN3fP3f){
 		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
 		vertexSize = sizeof(float)*12;
+		vertexColor = true;
+	}else if (e == GRVertexElement::vfP3fB1f) {
+		vertexFormatGl = GL_V3F; 
+		vertexSize = sizeof(float)*4;
+		vertexColor = false;
+	}else if (e == GRVertexElement::vfC4bP3fB1f){
+		vertexFormatGl = GL_C4UB_V3F;
+		vertexSize = sizeof(float)*4+sizeof(char)*4;
+		vertexColor = true;
+	}else if (e == GRVertexElement::vfN3fP3fB1f){
+		vertexFormatGl = GL_N3F_V3F;
+		vertexSize = sizeof(float)*7;
+		vertexColor = false;
+	}else if (e == GRVertexElement::vfC4fN3fP3fB1f){
+		vertexFormatGl = GL_C4F_N3F_V3F;
+		vertexSize = sizeof(float)*11;
+		vertexColor = true;
+	}else if (e == GRVertexElement::vfT2fP3fB1f){
+		vertexFormatGl = GL_T2F_V3F;
+		vertexSize = sizeof(float)*6;
+		vertexColor = false;
+	}else if (e == GRVertexElement::vfT2fC4bP3fB1f){
+		vertexFormatGl = GL_T2F_C4UB_V3F;
+		vertexSize = sizeof(float)*6 + sizeof(char)*4;
+		vertexColor = true;
+	}else if (e == GRVertexElement::vfT2fN3fP3fB1f){
+		vertexFormatGl = GL_T2F_N3F_V3F;
+		vertexSize = sizeof(float)*9;
+		vertexColor = false;
+	}else if (e == GRVertexElement::vfT2fC4fN3fP3fB1f){
+		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
+		vertexSize = sizeof(float)*13;
 		vertexColor = true;
 	}else {
 		vertexFormatGl = 0;
@@ -575,6 +608,7 @@ void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
 	}
 	glBlendFunc(glfac[0], glfac[1]);
 }
+/// テクスチャのロード（戻り値：テクスチャID）	
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	char *texbuf = NULL;
@@ -610,6 +644,120 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 
 	return texId;
 }
+/// シェーダの初期化	
+void GRDeviceGL::InitShader(){
+#if defined(USE_GREW)
+    glewInit();
+    if (GLEW_ARB_vertex_program && GLEW_ARB_fragment_program)
+		DSTR << "Ready for GLSL" << std::endl;
+    else {
+		DSTR << "No GLSL support." << std::endl;
+		assert(0);
+    }
+#elif defined(GL_VERSION_2_0)    
+	if(glslInit())	assert(0);
+ 	DSTR << "Ready for OpenGL 2.0" << std::endl;
+#else
+	DSTR << "No GLSL support." << std::endl;
+	assert(0);
+#endif	
+}	
+/// シェーダオブジェクトの作成	
+bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram){
+	GRHandler vertexShader;
+	GRHandler fragmentShader;
+#if defined(USE_GREW)
+    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
+    fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
+	if (ReadShaderSource(fragmentShader, fShaderFile)==false) return false;
+    glCompileShaderARB(vertexShader);
+    glCompileShaderARB(fragmentShader);
+    shaderProgram = glCreateProgramObjectARB();
+    glAttachObjectARB(shaderProgram, vertexShader);
+    glAttachObjectARB(shaderProgram, fragmentShader);
+	glDeleteObjectARB(vertexShader);
+	glDeleteObjectARB(fragmentShader);	
+    glLinkProgramARB(shaderProgram);
+	glUseProgramObjectARB(shaderProgram);
+#elif defined(GL_VERSION_2_0)    
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);	
+    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
+    if (ReadShaderSource(fragmentShader, fShaderFile)==false) return false;
+    glCompileShader(vertexShader);
+    glCompileShader(fragmentShader);    
+    shaderProgram = glCreateProgram();    
+    glAttachObject(shaderProgram, vertexShader);
+    glAttachObject(shaderProgram, fragmentShader);	
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);	
+	glLinkProgram(shaderProgram);	
+	glUseProgram(shaderProgram);	    
+#endif
+	return true;
+}	
+/// シェーダオブジェクトの作成	
+bool GRDeviceGL::CreateShader(std::string vShaderFile, GRHandler& shaderProgram){
+	GRHandler vertexShader;
+#if defined(USE_GREW)
+    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
+    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
+    glCompileShaderARB(vertexShader);
+    shaderProgram = glCreateProgramObjectARB();
+    glAttachObjectARB(shaderProgram, vertexShader);
+	glDeleteObjectARB(vertexShader);
+    glLinkProgramARB(shaderProgram);
+	glUseProgramObjectARB(shaderProgram);
+#elif defined(GL_VERSION_2_0)    
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
+    glCompileShader(vertexShader);
+    shaderProgram = glCreateProgram();    
+    glAttachObject(shaderProgram, vertexShader);
+	glDeleteShader(vertexShader);
+	glLinkProgram(shaderProgram);	
+	glUseProgram(shaderProgram);	    
+#endif
+	return true;
+}		
+/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける	
+bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
+	FILE *fp;
+	char *source = NULL;
+	int length=0;
 
+	if (file.empty()) 	
+		return false;
+
+	fp = fopen(file.c_str(),"rb");
+	if (fp != NULL) {      
+      	fseek(fp, 0, SEEK_END);
+      	length = ftell(fp);
+      	rewind(fp);					
+		if (length > 0) {
+			source = (char *)malloc(sizeof(char) * (length+1));
+			if (source == NULL) {
+				DSTR << "Could not allocate read buffer." << std::endl;
+				return false;
+			}
+			length = fread((void *)source,sizeof(char),length,fp);
+			source[length] = '\0';
+		}
+		fclose(fp);
+	}	
+	const char* sourceStrings =  (char*)source;
+#if defined(USE_GREW)	
+	glShaderSourceARB(shader, 1, &sourceStrings, &length);
+	//glShaderSourceARB(shader, 1, &source, NULL);		
+#elif defined(GL_VERSION_2_0) 
+	glShaderSource(shader, 1, &sourceStrings, &length);
+#else
+	return false;
+#endif;														
+	free((void*)source);
+	return true;
+}		
+	
 }	//	Spr
 

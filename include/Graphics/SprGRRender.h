@@ -12,6 +12,7 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHScene.h>
 #include <Collision/SprCDShape.h>
+#include <Graphics/SprGRDef.h>
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRFrame.h>
 
@@ -293,6 +294,13 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename)=0;
+	/// シェーダの初期化
+	virtual void InitShader()=0;
+	/// シェーダオブジェクトの作成
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram)=0;
+	virtual bool CreateShader(std::string vShaderFile,  GRHandler& shaderProgram)=0;
+	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
+	virtual bool ReadShaderSource(GRHandler shader, std::string file)=0;	
 };
 
 /**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */

@@ -21,6 +21,16 @@ class GRBlendMesh: public InheritGRVisual<GRBlendMeshIf, GRVisual>, public GRBle
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
 	GRRenderIf* render;
 	
+	GRHandler 	shaderProgram;					///< シェーダプログラム
+	GLuint		locationMatrices0;
+	GLuint		locationMatrices1;
+	//GLuint		locationEyePosition;
+	//GLuint		locationLightVector;		// シェーダからgl_LightSource[] でアクセス可
+	GLuint		locationWeights;
+	//GLuint		locationMatrixIndices;		// 固定で、m0、m1 としちゃえば、いらない。
+	//GLuint		locationNumBones;			// 固定で、m0、m1 としちゃえば、いらない。
+	GLuint		locationInverseModelView;		// 法線、マテリアル計算で必要			
+	
 	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
 	/// MaterialListのインデックスに合わせ、ディスプレイリストを細分化．
@@ -38,6 +48,10 @@ public:
 	std::vector<int> originalFaces;				///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
 	std::vector<unsigned int> elementIndex;		///< 面を構成するための頂点インデックス（三角形分割後の面に対するインデックス）
 	std::vector<int> faceNormals;				///< 法線インデックス
+
+	std::string vShaderFile;					///< VertexShader ファイル名
+	std::string fShaderFile;					///< FragmentShader ファイル名
+	
 
 	GRBlendMesh(const GRBlendMeshDesc& desc=GRBlendMeshDesc());
 	~GRBlendMesh();

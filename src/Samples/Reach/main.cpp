@@ -13,10 +13,8 @@
 
 #include <ctime>
 #include <string>
-#include <GL/glut.h>
 #include <sstream>
 #include <windows.h>
-
 #include <Springhead.h>		//	Springheadのインタフェース
 
 #ifdef USE_HDRSTOP

@@ -26,27 +26,29 @@ void GRBlendMesh::CreateList(GRRenderIf* r){
 	}
 	list.clear();
 	render = r;
-	unsigned int vtxsize = max(max(positions.size(), normals.size()), max(colors.size(), texCoords.size()));
-
+	unsigned int vtxsize = max(max(max(positions.size(), normals.size()), max(colors.size(), texCoords.size())), blend.size());
+	
 	if (texCoords.size() && normals.size() && colors.size()){
-		std::vector<GRVertexElement::VFT2fC4fN3fP3f> vtx;
+		std::vector<GRVertexElement::VFT2fC4fN3fP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		for (unsigned i=0; i<colors.size(); ++i){ vtx[i].c = colors[i];	}
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fC4fN3fP3f);
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfT2fC4fN3fP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else if (texCoords.size() && normals.size()){
-		std::vector<GRVertexElement::VFT2fN3fP3f> vtx;
+		std::vector<GRVertexElement::VFT2fN3fP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fN3fP3f);
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfT2fN3fP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else if (texCoords.size() && colors.size()){
-		std::vector<GRVertexElement::VFT2fC4bP3f> vtx;
+		std::vector<GRVertexElement::VFT2fC4bP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<colors.size(); ++i){ 
@@ -56,32 +58,36 @@ void GRBlendMesh::CreateList(GRRenderIf* r){
 					   ((unsigned char)(colors[i].w*255));
 		}
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fC4bP3f);
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfT2fC4bP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else if (normals.size() && colors.size()){
-		std::vector<GRVertexElement::VFC4fN3fP3f> vtx;
+		std::vector<GRVertexElement::VFC4fN3fP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
 		for (unsigned i=0; i<colors.size(); ++i){ vtx[i].c = colors[i];	}
-		render->SetVertexFormat(GRVertexElement::vfC4fN3fP3f);
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfC4fN3fP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else if (normals.size()){
-		std::vector<GRVertexElement::VFN3fP3f> vtx;
+		std::vector<GRVertexElement::VFN3fP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
-		render->SetVertexFormat(GRVertexElement::vfN3fP3f);
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfN3fP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else if (texCoords.size()){
-		std::vector<GRVertexElement::VFT2fP3f> vtx;
+		std::vector<GRVertexElement::VFT2fP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fP3f);
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfT2fP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else if (colors.size()){
-		std::vector<GRVertexElement::VFC4bP3f> vtx;
+		std::vector<GRVertexElement::VFC4bP3fB1f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<colors.size(); ++i){ 
@@ -90,10 +96,15 @@ void GRBlendMesh::CreateList(GRRenderIf* r){
 					   ((unsigned char)(colors[i].z*255) << 8) |
 					   ((unsigned char)(colors[i].w*255));
 		}
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfC4bP3fB1f);
 		this->CreateListElement(&*vtx.begin());
 	}else{
-		render->SetVertexFormat(GRVertexElement::vfP3f);
-		this->CreateListElement(&*positions.begin());
+		std::vector<GRVertexElement::VFP3fB1f> vtx;
+		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
+		for (unsigned i=0; i<blend.size(); ++i){ vtx[i].b = blend[i]; }
+		render->SetVertexFormat(GRVertexElement::vfP3fB1f);
+		this->CreateListElement(&*vtx.begin());
 	}
 }
 
@@ -175,7 +186,11 @@ void GRBlendMesh::CreateListElement(void *vtx){
 	}
 }
 void GRBlendMesh::Render(GRRenderIf* r){
-	if (r!=render || !list.size()) CreateList(r);
+	if (r!=render || !list.size()) {
+		CreateList(r);
+		render->InitShader();
+		render->CreateShader(vShaderFile, fShaderFile, shaderProgram);
+	}
 	for (unsigned int id=0; id<list.size(); ++id){
 		render->DrawList(list[id]);
 	}

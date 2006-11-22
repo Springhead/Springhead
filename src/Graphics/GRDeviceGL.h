@@ -141,6 +141,15 @@ public:
 	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest);
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename);
+	/// シェーダの初期化
+	virtual void InitShader();
+	/// シェーダオブジェクトの作成
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram);
+	/// シェーダオブジェクトの作成
+	virtual bool CreateShader(std::string vShaderFile, GRHandler& shaderProgram);
+	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
+	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
+	
 };
 
 }
