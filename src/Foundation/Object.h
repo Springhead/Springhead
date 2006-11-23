@@ -11,6 +11,105 @@
 #include <SprFoundation.h>
 #include <Base/Base.h>
 
+/*	hase memo
+	Object が ObjectIfを継承しない方式の提案．大体良い感じだと思います．
+	概要：
+	- Ifクラスは今までどおり．ObjectはIfを継承しない．
+	  IfImpがObjectの関数を呼び出す（これを書くのが面倒なので要自動化）
+		- ObjectがIfBuf(Ifのvtableを持っておくためのメモリ)を継承
+		- IntfInit<Type>が，TypeIfStubにIfBufを初期化
+			class Object:IfBuf{}
+			class PHSolid:PHObject, IfInit<PHSolid, PHSolidIf>{}
+		- TypeIfStubは，TypeIfを継承，(this-4)->Type::Func()を呼び出す．
+	
+	良い点：
+		- Objectの継承関係がすっきりする．InheritObject<>が不要に．デバッグしやすい．
+		- vtable_ptrが2つで済む．Ifのvtable_ptrが複数入らない．メモリ節約になる．
+		- 呼び出し時に参照するVirtualはIfの分１回のみ．
+		- Ifのポインタオフセットが固定なので，Static_Castで If<-->Object の変換ができる．
+		- Debuggerでも，強制キャストすれば見られる:(Obj*)((char*)intf-4)
+	悪い点：
+		- Stubを書くのが面倒→要自動生成．従来と違って末端の派生クラスまでStubが必要．
+		- IfBufの書き換えがトリッキー．
+		- Ifは絶対に変数を持てない．
+
+
+以下テストコード
+---------------------------------------------------------------------
+struct IntfBuf{
+	void* vftable;
+	IntfBuf(){ vftable=(void*)0x12341234;}
+};
+struct Intf1{
+	virtual int Api()=0;
+};
+struct Intf2: public Intf1{
+	virtual int Api2()=0;
+};
+
+template <class I, class O>
+struct IntfInit{
+	//	アドレス取得
+	IntfInit(){
+		const int toBuf = (const int)((char*)(IntfBuf*)(O*)0x100 - (char*)0x100);
+		const int fromThis = (const int)((char*)0x100 - (char*)(IntfInit<I,O>*)(O*)0x100);
+		IntfBuf* buf = (IntfBuf*)(((char*)(void*)this) + fromThis + toBuf);
+
+		std::cout << "IntfInit:" << (unsigned)(void*)this;
+		std::cout << "IntfBuf: " << (unsigned)(void*)buf << std::endl;
+		new (buf) I;
+	}
+};
+
+struct Intf1Imp: public Intf1{
+	virtual int Api();
+};
+struct Intf2Imp: public Intf2{
+	virtual int Api();
+	virtual int Api2();
+};
+
+struct Object: IntfBuf, IntfInit<Intf1Imp, Object>{
+	Object(){
+	}
+	virtual int Api(){
+		std::cout << "Api() called." << std::endl;
+		return 0;
+	}
+};
+struct Object2:public Object, IntfInit<Intf2Imp, Object2>{
+	virtual int Api2(){
+		std::cout << "Api2() called." << std::endl;
+		return 0;
+	}
+};
+
+int Intf1Imp::Api(){
+	Object* o = (Object*) ((char*)this - 4);
+	return o->Api();
+}
+int Intf2Imp::Api(){
+	Object2* o = (Object2*)((char*)this - 4);
+	return o->Api();
+}
+int Intf2Imp::Api2(){
+	Object2* o = (Object2*)((char*)this - 4);
+	return o->Api2();
+}
+
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	Object obj;
+	Object2 obj2;
+	IntfBuf* buf = (IntfBuf*)&obj2;
+	((Intf2*)buf)->Api2();	
+	return 0;
+}
+
+*/
+
+
 namespace Spr{;
 
 //	型情報 IfInfo と TypeInfoのポインタを保持しておいて、最後に開放するクラス
