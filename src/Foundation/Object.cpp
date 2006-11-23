@@ -47,8 +47,6 @@ void TypeInfoManager::RegisterObject(UTTypeInfo* t){
 	objects.push_back(t); 
 }
 
-
-
 int IfInfo::maxId;
 IfInfo::IfInfo(const char* cn, IfInfo** b): className(cn), base(b){
 	id = ++maxId;

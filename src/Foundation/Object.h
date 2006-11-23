@@ -213,12 +213,34 @@ public:
 ///	ステートとデスクリプタをまとめて定義
 #define ACCESS_DESC_STATE(cls) ACCESS_STATE(cls) ACCESS_DESC(cls)
 
+
+///	ObjectIfとその派生クラスのオブジェクトのためのバッファ
+class ObjectIfBuf{
+	void* pvtable;
+};
+///	ObjectIfBufを派生クラスのインタフェースに書き換える
+template <class I, class O>
+struct IfInitTemplate{
+	IfInitTemplate(){
+		const int toBuf = int((char*)(ObjectIfBuf*)(O*)0x1000 - (char*)0x1000);
+		const int fromThis = int((char*)0x1000 - (char*)(IfInitTemplate<I,O>*)(O*)0x1000);
+		ObjectIfBuf* buf = (ObjectIfBuf*)(((char*)this) + fromThis + toBuf);
+		new (buf) I;
+	}
+};
+
+}	//	namespace Spr;
+
+
+#include "IfStubDumpFoundation.h"
+
+namespace Spr{;
+
 /**	全Objectの基本型	*/
-class Object:private ObjectIf, public UTTypeInfoObjectBase, public UTRefCount{
+class Object:public ObjectIfBuf, ObjectIf, ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
 	void GetIfInfo() { assert(0); }	///	don't call me
 public:
 	OBJECT_DEF(Object);		///<	クラス名の取得などの基本機能の実装
-
 
 	virtual int AddRef(){return UTRefCount::AddRef();}
 	virtual int DelRef(){return UTRefCount::DelRef();}

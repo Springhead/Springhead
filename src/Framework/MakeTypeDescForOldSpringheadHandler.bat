@@ -30,5 +30,5 @@ rem Make‚ªŒÄ‚Ño‚·D
 echo //	Do not edit. MakeTypeDescForOldSpringheadHandler.bat will update this file.> %HEADER%
 echo //	Do not edit. MakeTypeDescForOldSpringheadHandler.bat will update this file.> %OUT%
 for %%f in (%TARGET%) do echo #include "%%f" >> %HEADER%
-for %%f in (%TARGET%) do typedesc %%f >> %OUT%
+for %%f in (%TARGET%) do typedesc %%f %OUT%
 :end

@@ -5,7 +5,7 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-#include "TypeDescDump.h"
+#include "TypeDescDumpFramework.h"
 
 
 using namespace Spr;
@@ -37,7 +37,7 @@ namespace Spr{
 		UTRegisterTypeDescs();
 		UTTypeDescDb* db = UTTypeDescDb::GetDb("Framework");
 		assert(db);
-		#include "TypeDescDumpImp.h"
+		#include "TypeDescDumpImpFramework.h"
 		db->Link();
 		SprOldSpringhead::OldSprRegisterTypeDescs();
     }

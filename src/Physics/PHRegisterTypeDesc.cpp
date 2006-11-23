@@ -11,7 +11,7 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDump.h"
+#include "TypeDescDumpPhysics.h"
 
 
 namespace Spr{ 
@@ -27,7 +27,7 @@ void SPR_CDECL PHRegisterTypeDescs(){
 
 	UTTypeDescDb* db = UTTypeDescDb::GetDb("Physics");
 	assert(db);
-	#include "TypeDescDumpImp.h"
+	#include "TypeDescDumpImpPhysics.h"
 	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");
 	db->Link();
 }

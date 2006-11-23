@@ -12,7 +12,7 @@
 
 #include <Base/TQuaternion.h>
 #include <sstream>
-#include "TypeDescDump.h"
+#include "TypeDescDumpFoundation.h"
 
 
 namespace Spr{ 
@@ -48,7 +48,7 @@ void SPR_CDECL UTRegisterTypeDescs(){
 	db->RegisterDesc(new UTTypeDescNumber<double>("DOUBLE"));
 
 	db->RegisterDesc(new UTTypeDescString("string"));
-	#include "TypeDescDumpImp.h"
+	#include "TypeDescDumpImpFoundation.h"
 	db->Link();
 }
 }

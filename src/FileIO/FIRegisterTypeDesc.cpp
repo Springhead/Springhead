@@ -11,7 +11,7 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDump.h"
+#include "TypeDescDumpFileIO.h"
 
 
 using namespace Spr;
@@ -28,7 +28,7 @@ void SPR_CDECL FIRegisterTypeDescs(){
 	UTRegisterTypeDescs();
 
 	UTTypeDescDb* db = UTTypeDescDb::GetDb("FileIO");
-	#include "TypeDescDumpImp.h"
+	#include "TypeDescDumpImpFileIO.h"
 	db->Link();
 }
 

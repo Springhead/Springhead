@@ -11,7 +11,7 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDump.h"
+#include "TypeDescDumpCollision.h"
 
 namespace Spr{ 
 static UTTypeDesc* desc; 
@@ -26,7 +26,7 @@ void SPR_CDECL CDRegisterTypeDescs(){
 
 	UTTypeDescDb* db = UTTypeDescDb::GetDb("Physics");
 	assert(db);
-	#include "TypeDescDumpImp.h"
+	#include "TypeDescDumpImpCollision.h"
 	db->Link();
 }
 }
