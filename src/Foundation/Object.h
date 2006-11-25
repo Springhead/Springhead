@@ -94,15 +94,10 @@ public:
 #define	OBJECT_DEF(cls)			OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls)
 
 ///	実行時型情報を持つObjectの派生クラスが持つべきメンバの実装．
-#define OBJECT_IMP_BASEABST(cls)			DEF_UTTYPEINFOABST(cls)
-#define OBJECT_IMP_BASE(cls)				DEF_UTTYPEINFO(cls)
-#define OBJECT_IMP(cls, base)				DEF_UTTYPEINFO1(cls, base)
-#define OBJECT_IMP2(cls, b1, b2)			DEF_UTTYPEINFO2(cls, b1, b2)
-#define OBJECT_IMP3(cls, b1, b2, b3)		DEF_UTTYPEINFO3(cls, b1, b2, b3)
-#define OBJECT_IMP_ABST(cls, base)			DEF_UTTYPEINFOABST1(cls, base)
-#define OBJECT_IMP_ABST2(cls, b1, b2)		DEF_UTTYPEINFOABST2(cls, b1,b2)
-#define OBJECT_IMP_ABST3(cls, b1, b2, b3)	DEF_UTTYPEINFOABST3(cls, b1,b2,b3)
-
+#define OBJECT_IMP_BASEABST(cls)		DEF_UTTYPEINFOABST(cls)
+#define OBJECT_IMP_BASE(cls)			DEF_UTTYPEINFO(cls)
+#define OBJECT_IMP(cls, base)			DEF_UTTYPEINFO1(cls, base)
+#define OBJECT_IMP_ABST(cls, base)		DEF_UTTYPEINFOABST1(cls, base)
 #define IF_OBJECT_IMP(cls, base)		IF_IMP(cls, base) OBJECT_IMP(cls, base)
 #define IF_OBJECT_IMP_ABST(cls, base)	IF_IMP(cls, base) OBJECT_IMP_ABST(cls, base)
 

@@ -112,13 +112,6 @@ void PHContactPoint::CompBias(){
 		2剛体間の接触をひとつの制約としてあらわせるようになれば解決すると思う．	
 	*/
 	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v.x;
-	/*	hase	本当は0.1倍してはいけない．
-
-		接触法線の計算がまれに間違えることがある（原因調査中）
-		そうすると，侵入量が大きく判断され，大きな力が発生して，物体が飛んでいく．
-		現状は，これが起こらないようにCorrection率をさらに0.1倍して回避している．
-	*/
-//	err *= 0.1;	
 	if (err < 0) err = 0;
 	if (err){
 //		HASE_REPORT

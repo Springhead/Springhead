@@ -24,8 +24,6 @@ APIクラスを宣言するには，
  <li> API関数を純粋仮想関数として宣言する．
 </ol>
 をします．
-同じGet関数の const 版と non const 版を作るときなど実装を書きたい場合は，
-ヘッダに書くか， Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など) に書きます．
 
 \subsection secTypeInfoOfAPIClass APIクラスの型情報
 APIクラスを宣言したら，ライブラリのソースファイル
@@ -39,7 +37,7 @@ Springhead2/src/SDKNAME/オブジェクト名.cpp (PHSolid.cpp など)に
 
 
 \section secCreateImplementClass 実装クラスの作り方
-APIクラスを作ったら，それを継承した実装クラスを作ります．
+APIクラスを作ったら，それを実装するクラスを作ります．
 
 \subsection defImplementClass 実装クラスの宣言
 実装クラスは，~
@@ -62,38 +60,36 @@ APIクラスを作ったら，それを継承した実装クラスを作ります．
  <li> APIクラスを取得するメソッド GetIf()
 </ul>
 を宣言します．
-抽象クラスの場合は，実体化できないというエラーがでるので，
-代わりにOBJECT_DEF_ABSTを使います．
+抽象クラスの場合は，実体化できないというエラーがでるので，代わりにOBJECT_DEF_ABSTを使います．
 
 \subsubsection secGetAPI APIの取得
 Objectは，APIクラスの領域(ObjectIfBuf部)を持っています．
-
 （APIクラスは，仮想関数テーブルへのポインタ(vftableポインタ)だけを持ちます．
-VCの場合，Objectの先頭から４バイト目からの４バイトになります．）
+MSVC++7.1の場合，Objectの先頭から４バイト目からの４バイトになります．）
 
 Object::GetIf() は this+4バイトをObjectIf*にキャストして返します．
 Objectの中にあるAPIクラスのアドレスを返すわけです．
 逆にObjectIf::GetObj()は，this-4バイトを返します．
-APIクラスは必ず実装クラスの中になければなりません．
+ですので，APIクラスは必ず実装クラスの中になければなりません．
 
-派生クラス，たとえばPHSolid::GetIf() でも同様ですが，PHSolidIf*にキャストして返します．
+派生クラス，たとえばPHSolid::GetIf() も同様ですが，PHSolidIf*にキャストして返します．
 
 \subsubsection secInitAPI APIと初期化
 実装クラスは，
 <pre>
  class SceneObject:public NamedObject, SceneObjectIfInit{...}
 </pre>
-のように，基本実装クラスを継承しますが，APIクラス(ここでは，SceneObjectIf)
-は継承しません．代わりに，インタフェース初期化クラス(ここでは，SceneObjectIfInit)を
+のように，基本実装クラスを継承しますが，APIクラス(SceneObjectIf等)
+は継承しません．代わりに，インタフェース初期化クラス(SceneObjectIfInit等)を
 継承します．
 SceneObjectIfInitは，コンストラクタでObjectのObjectIfBuf部を，正しいAPIクラスに初期化します．
 
 \subsubsection secConnectAPI APIと実装の接続．
 SceneObjectIfInitは，ObjectIfBuf部を初期化する際に，APIクラス(SceneObjectIf)に
-初期化するのではなく，APIスタブクラス(SceneObjectIfStub)に初期化します．
+初期化するのではなく，スタブクラス(SceneObjectIfStub)に初期化します．
 初期化クラスとスタブクラスは，src/ライブラリ名/IfStubDumpライブラリ名.h にあります．
 スタブクラスは，各API関数の呼び出しを実装関数の呼び出しにつなげています．
-スタブクラス，初期化クラスのソースコードは，APIクラスのソースコードから自動生成されます．
+スタブクラスと初期化クラスのソースコードは，APIクラスのソースコードから自動生成されます．
 
 \section secImpImplementationClass 実装クラスの定義
 \subsection secOBJECT_IMP OBJECT_IMPマクロ
@@ -109,7 +105,7 @@ IF_OBJECT_IMP，IF_OBJECT_IMP_ABSTを使うと1回で書けます．
 \subsection secImpAPIClass 宣言したAPIの実装
 <pre>
  void SceneObject::SetScene(SceneIf* s){
- 	SetNameManager(OCAST(NameManager, s));
+ 	SetNameManager(s->GetObj<NameManager>());
  	nameManager->GetNameMap();
  }
 </pre>
