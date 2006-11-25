@@ -9,11 +9,12 @@
 #define FISdk_H
 #include <Foundation/Scene.h>
 #include <FileIO/SprFISdk.h>
+#include "IfStubFileIO.h"
 
 namespace Spr {;
 
 class FIFile;
-class SPR_DLL FISdk:public InheritObject<FISdkIf, Object>{
+class SPR_DLL FISdk:public Object, FISdkIfInit{
 public:
 
 	std::vector< UTRef<FIFile> > files;

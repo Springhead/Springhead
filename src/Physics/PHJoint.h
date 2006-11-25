@@ -13,36 +13,14 @@
 
 namespace Spr{;
 
-class PHJoint : public InheritConstraint<PHJointIf, PHConstraint>{
+class PHJoint : public PHConstraint, PHJointIfInit{
 public:
 	OBJECT_DEF_ABST(PHJoint);
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
 };
 
-/// PHJoint1Dから派生するクラスのためのルータ
-template<class inf, class base>
-class InheritJoint1D : public InheritConstraint<inf, base>{
-public:
-	double	GetPosition(){return base::GetPosition();}
-	double	GetVelocity(){return base::GetVelocity();}
-	void	SetRange(double lower, double upper){base::SetRange(lower, upper);}
-	void	GetRange(double& lower, double& upper){base::GetRange(lower, upper);}
-	void	SetMotorTorque(double t){base::SetMotorTorque(t);}
-	double	GetMotorTorque(){return base::GetMotorTorque();}
-	// void	SetDesiredPosition(double p, double t) = 0;	/// 目標変位を設定する
-	// double	GetDesiredPosition() = 0;				/// 目標変位を取得する
-	void	SetDesiredVelocity(double v){base::SetDesiredVelocity(v);}
-	double	GetDesiredVelocity(){return base::GetDesiredVelocity();}
-	void	SetSpring(double K){base::SetSpring(K);}
-	double	GetSpring(){return base::GetSpring();}
-	void	SetSpringOrigin(double org){base::SetSpringOrigin(org);}
-	double	GetSpringOrigin(){return base::GetSpringOrigin();}
-	void	SetDamper(double D){base::SetDamper(D);}
-	double	GetDamper(){return base::GetDamper();}
-};
-
-class PHJoint1D : public InheritConstraint<PHJoint1DIf, PHJoint>{
+class PHJoint1D : public PHJoint, PHJoint1DIfInit{
 protected:
 	int		axis_index;					///< 関節軸のインデックス．派生クラスが設定する
 	void	CompDof();

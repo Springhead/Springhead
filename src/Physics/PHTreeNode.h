@@ -15,7 +15,7 @@ namespace Spr{;
 
 ///	ツリーノードの基本クラス
 class PHRootNode;
-class PHTreeNode : public InheritSceneObject<PHTreeNodeIf, SceneObject>, public UTTreeNode<PHTreeNode>{
+class PHTreeNode : public SceneObject, PHTreeNodeIfInit, public UTTreeNode<PHTreeNode>{
 public:
 	OBJECT_DEF_ABST(PHTreeNode);
 	
@@ -72,7 +72,7 @@ protected:
 	PHScene*	scene;
 };
 
-class PHRootNode : public InheritSceneObject<PHRootNodeIf, PHTreeNode>{
+class PHRootNode : public PHTreeNode, PHRootNodeIfInit{
 public:
 	OBJECT_DEF(PHRootNode);
 
@@ -139,7 +139,7 @@ protected:
 	PTM::TMatrixCol<NDOF, NDOF, double> JIJ, JIJinv;
 	PTM::TVector<NDOF, double>	J_ZplusIc;
 	PTM::TVector<NDOF, double>	accel, daccel;		///< 関節速度の変化量
-	PHJointND<NDOF>* GetJoint(){return DCAST(PHJointND<NDOF> , joint);}
+	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
 };
 
 }

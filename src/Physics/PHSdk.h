@@ -9,6 +9,7 @@
 #define PHSDK_H
 #include <Foundation/Foundation.h>
 #include <Physics/SprPHSdk.h>
+#include "IfStubPhysics.h"
 
 namespace Spr {;
 
@@ -22,7 +23,7 @@ public:
 	}
 };
 
-class SPR_DLL PHSdk:public InheritNameManager<PHSdkIf, Sdk>{
+class SPR_DLL PHSdk:public Sdk, PHSdkIfInit{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;

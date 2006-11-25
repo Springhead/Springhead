@@ -23,7 +23,7 @@ IF_OBJECT_IMP(PHEngine, SceneObject);
 //	PHEngines
 
 void PHEngines::Add(PHEngine* e){
-	e->SetScene((PHSceneIf*)scene);
+	e->SetScene(scene->GetIf());
 	push_back(e);
 	Sort();
 }

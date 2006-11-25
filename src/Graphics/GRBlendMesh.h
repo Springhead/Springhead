@@ -17,19 +17,19 @@ class GRMaterial;
 
 /** @class GRBlendMesh
 	@brief グラフィックスシーングラフでの座標系を表す．	*/
-class GRBlendMesh: public InheritGRVisual<GRBlendMeshIf, GRVisual>, public GRBlendMeshDesc{
+class GRBlendMesh: public GRVisual,GRBlendMeshIfInit, public GRBlendMeshDesc{
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
 	GRRenderIf* render;
 	
 	GRHandler 	shaderProgram;					///< シェーダプログラム
-	GLuint		locationMatrices0;
-	GLuint		locationMatrices1;
-	//GLuint		locationEyePosition;
-	//GLuint		locationLightVector;		// シェーダからgl_LightSource[] でアクセス可
-	GLuint		locationWeights;
-	//GLuint		locationMatrixIndices;		// 固定で、m0、m1 としちゃえば、いらない。
-	//GLuint		locationNumBones;			// 固定で、m0、m1 としちゃえば、いらない。
-	GLuint		locationInverseModelView;		// 法線、マテリアル計算で必要			
+	unsigned		locationMatrices0;
+	unsigned		locationMatrices1;
+	//unsigned		locationEyePosition;
+	//unsigned		locationLightVector;		// シェーダからgl_LightSource[] でアクセス可
+	unsigned		locationWeights;
+	//unsigned		locationMatrixIndices;		// 固定で、m0、m1 としちゃえば、いらない。
+	//unsigned		locationNumBones;			// 固定で、m0、m1 としちゃえば、いらない。
+	unsigned		locationInverseModelView;		// 法線、マテリアル計算で必要			
 	
 	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);

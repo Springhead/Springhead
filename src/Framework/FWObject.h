@@ -4,10 +4,11 @@
 #include <Framework/SprFWObject.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
+#include "IfStubFramework.h"
 
 namespace Spr{
 
-	class FWObject : public InheritNamedObject<FWObjectIf, NamedObject>, public FWObjectDesc {
+	class FWObject : public NamedObject, FWObjectIfInit, public FWObjectDesc {
     public:
 		OBJECT_DEF(FWObject);
 		ACCESS_DESC(FWObject);
@@ -21,8 +22,8 @@ namespace Spr{
 		PHSolidIf* GetPHSolid();
 		GRFrameIf* GetGRFrame();
 		ObjectIf* GetChildObject(size_t pos){
-			if (pos==0) return phSolid ? (ObjectIf*)phSolid : (ObjectIf*)grFrame;
-			if (pos==1) return phSolid ? (ObjectIf*)grFrame : NULL;
+			if (pos==0) if (phSolid) return phSolid; else return grFrame;
+			if (pos==1) if (phSolid) return grFrame; else return NULL;
 			return NULL;
 		}
 		size_t NChildObject() const {

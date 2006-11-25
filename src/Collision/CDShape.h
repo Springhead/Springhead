@@ -10,12 +10,13 @@
 
 #include <SprCollision.h>
 #include <Foundation/Object.h>
+#include "IfStubCollision.h"
 
 namespace Spr{;
 
 /// 形状
 /// 形状自体は位置情報を持たない．位置情報は形状を参照する各剛体が持つ．
-class CDShape : public InheritNamedObject<CDShapeIf, NamedObject>{
+class CDShape : public NamedObject, CDShapeIfInit{
 public:
 	PHMaterial material;
 
@@ -30,12 +31,6 @@ public:
 struct CDShapeRefWithPose{
 	CDShape* shape;
 	Posed pose;
-};
-
-template <class intf, class base>
-struct InheritCDShape:public InheritNamedObject<intf, base>{
-	//void SetPose(const Posef& p){ base::SetPose(p); }
-	//Posef GetPose() const { return base::GetPose(); }
 };
 
 }	//	namespace Spr

@@ -104,7 +104,7 @@ void GRMesh::CreateListElement(void *vtx){
 	// Xファイルからの materialList 指定がない場合
 	//if (!materialList.size()){		
 	if (materialList.empty()){
-		base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin(), vtx, faces.size());
+		base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin(), vtx, faces.size());
 		list.push_back(base);		
 	}
 	// Xファイルからの materialList 指定がある場合、material単位で Display List 分割する
@@ -122,10 +122,10 @@ void GRMesh::CreateListElement(void *vtx){
 					if (end >= elementIndex.size()){		// elementIndex配列の一番最後の要素かどうかのチェック					
 						// 適用するマテリアルIDが、materialとして用意されているか？
 						if (materialList[elementIndex[first]] < (int)material.size()){
-							base = render->CreateIndexedList(material[materialList[elementIndex[first]]], 	
-																GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
+							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(), 	
+																GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 						}else{
-							base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);							
+							base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);							
 						}
 						list.push_back(base);
 						break;
@@ -133,10 +133,10 @@ void GRMesh::CreateListElement(void *vtx){
 				}else{
 					// 適用するマテリアルIDが、materialとして用意されているか？
 					if (materialList[elementIndex[first]] < (int)material.size()) {		
-						base = render->CreateIndexedList(material[materialList[elementIndex[first]]], 					
-																GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
+						base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(), 					
+																GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 					}else{
-						base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
+						base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 					}
 					list.push_back(base);
 					
@@ -146,10 +146,10 @@ void GRMesh::CreateListElement(void *vtx){
 					if (end >= elementIndex.size()){			// elementIndex配列の一番最後の要素かどうかのチェック
 						// 適用するマテリアルIDが、materialとして用意されているか？
 						if (materialList[elementIndex[first]] < (int)material.size()) {		
-							base = render->CreateIndexedList(material[materialList[elementIndex[first]]],  
-																	GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
+							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(),  
+																	GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 						}else{
-							base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3); 
+							base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3); 
 						}	
 						list.push_back(base);
 						break;
@@ -163,10 +163,10 @@ void GRMesh::CreateListElement(void *vtx){
 					最後にマテリアル設定された面と同じマテリアルが、マテリアル設定されていない面に対して適用される。*/
 				// 適用するマテリアルIDが、materialとして用意されているか？
 				if (materialList[elementIndex[first]] < (int)material.size()) {	
-					base = render->CreateIndexedList(material[materialList[elementIndex[first]]], 
-														GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);
+					base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(), 
+														GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);
 				}else{
-					base = render->CreateIndexedList(GRRender::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);				
+					base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);				
 				}
 				list.push_back(base);
 				break;

@@ -16,7 +16,7 @@ namespace Spr{;
 class GRMaterial;
 /**	@class	GRSphere
     @brief	グラフィックスシーングラフでの球オブジェクトを表す． */
-class GRSphere: public InheritGRVisual<GRSphereIf, GRVisual>, public GRSphereDesc{
+class GRSphere: public GRVisual, GRSphereIfInit, public GRSphereDesc{
 	unsigned int list;				///< ディスプレイリストの識別子
 	GRRenderIf* render;
 	

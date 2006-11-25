@@ -28,7 +28,7 @@ void GRScene::Init(){
 
 GRSdkIf* GRScene::GetSdk(){
 	GRSdk* sdk = DCAST(GRSdk, GetNameManager());
-	return sdk;
+	return sdk->GetIf();
 }
 
 void GRScene::Clear(){

@@ -16,7 +16,7 @@ namespace Spr{;
 
 	
 /// ‹…‘Ì
-class CDSphere: public InheritCDShape<CDSphereIf, CDConvex>, CDSphereDesc{
+class CDSphere: public CDConvex, CDSphereIfInit, public CDSphereDesc{
 public:
 	OBJECT_DEF(CDSphere);
 	

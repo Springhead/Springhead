@@ -36,7 +36,7 @@ class CDFaces:public std::vector<CDFace>{
 };
 
 ///	“Ê‘½–Ê‘Ì
-class CDConvexMesh : public InheritCDShape<CDConvexMeshIf, CDConvex>{
+class CDConvexMesh : public CDConvex, CDConvexMeshIfInit{
 public:
 	OBJECT_DEF(CDConvexMesh);
 

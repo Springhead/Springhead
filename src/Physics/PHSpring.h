@@ -13,7 +13,7 @@
 
 namespace Spr{;
 
-class PHSpring : public InheritConstraint<PHSpringIf, PHJoint>{
+class PHSpring : public PHJoint, PHSpringIfInit{
 	Vec3d spring, damper;
 public:
 	OBJECT_DEF(PHSpring);

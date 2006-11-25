@@ -26,7 +26,7 @@ public:
 };
 
 ///	ÉqÉìÉWä÷êﬂ
-class PHHingeJoint : public InheritJoint1D<PHHingeJointIf, PHJoint1D>{
+class PHHingeJoint : public PHJoint1D, PHHingeJointIfInit{
 public:
 	OBJECT_DEF(PHHingeJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}

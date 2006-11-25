@@ -54,10 +54,6 @@ public:
 	virtual ~IfInfo() {};
 	///	クラス名
 	virtual const char* ClassName() const =0;
-	///	このインタフェースに対応するオブジェクトのアドレス
-	virtual void* GetSprObject(ObjectIf* intf)const =0;
-	///	オブジェクトのアドレス obj 似対応するインタフェースを取得
-	virtual ObjectIf* GetIf(void* obj)const =0;
 	///	key を継承しているかどうかチェック
 	bool Inherit(const char* key) const;
 	///	key を継承しているかどうかチェック
@@ -74,27 +70,37 @@ public:
 	IfInfoImp(const char* cn, IfInfo** b): IfInfo(cn, b){}
 	virtual const char* ClassName() const { return className; }
 	virtual void* CreateInstance() const{ return 0;}
-	virtual void* GetSprObject(ObjectIf* intf)const;
-	virtual ObjectIf* GetIf(void* obj)const;
 };
 
-///	実行時型情報を持つクラスが持つべきメンバの宣言部．
-#define IF_DEF(cls)										\
-public:													\
-	static IfInfoImp<cls##If> ifInfo;					\
-	virtual const IfInfo* GetIfInfo() const {			\
-		return GetIfInfoStatic();						\
-	}													\
-	static const IfInfo* SPR_CDECL GetIfInfoStatic();	\
-	static cls##If* GetSelfFromObject(void* o) {		\
-		return (cls##If*)GetIfInfoStatic()->GetIf(o);	\
-	}													\
+///	インタフェースが持つべきメンバの宣言部．
+#define IF_DEF(cls)														\
+public:																	\
+	static IfInfoImp<cls##If> ifInfo;									\
+	virtual const IfInfo* GetIfInfo() const {							\
+		return GetIfInfoStatic();										\
+	}																	\
+	static const IfInfo* SPR_CDECL GetIfInfoStatic();					\
+	static cls##If* GetSelfFromIf(const ObjectIf* i){					\
+		if (i->GetIfInfo()->Inherit(cls##If::GetIfInfoStatic()))		\
+			return (cls##If*)i;											\
+		return NULL;													\
+	}																	\
+	static void* operator new(size_t) {									\
+        assert(0);	/*	Don't allocate interfaces	*/					\
+        return NULL;													\
+    }																	\
+	static void operator delete(void* pv) {}							\
 
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	IF_DEF(Object);
-	virtual ~ObjectIf(){}
+	~ObjectIf();
+	template <class T> T* GetObj() const { 
+		assert(sizeof(T));
+		const int offset = (int)((char*)(ObjectIfBuf*)(T*)0x1000 - (char*)(T*)0x1000);
+		return (T*)(void*)((char*)this-offset);
+	}
 	///	デバッグ用の表示。子オブジェクトを含む。
 	virtual void Print(std::ostream& os) const =0;	
 	///	デバッグ用の表示。子オブジェクトを含まない。
@@ -215,8 +221,8 @@ ObjectStatesIf* SPR_CDECL CreateObjectStates();
 
 ///	インタフェースクラスのキャスト
 template <class T> T* SprDcastImp(const ObjectIf* p){
-	void* obj = p ? p->GetIfInfo()->GetSprObject((ObjectIf*)p) : NULL;
-	return (T*)T::GetSelfFromObject(obj);
+	if (!p) return NULL;
+	return T::GetSelfFromIf(p);
 }
 
 }

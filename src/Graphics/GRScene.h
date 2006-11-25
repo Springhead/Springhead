@@ -21,7 +21,7 @@ class GRCamera;
 	シーングラフは，たとえばレンダラがOpenGLなら，displayList
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 */
-class SPR_DLL GRScene:public InheritScene<GRSceneIf, Scene>, public GRSceneDesc{
+class SPR_DLL GRScene:public Scene, GRSceneIfInit, public GRSceneDesc{
 	OBJECT_DEF(GRScene);
 protected:
 	///	ルートノード
@@ -41,13 +41,13 @@ public:
 	void Clear();
 
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc);
-	virtual GRFrameIf* GetWorld(){return world;}
-	virtual GRCameraIf* GetCamera(){return &*camera;}
+	virtual GRFrameIf* GetWorld(){return world->GetIf();}
+	virtual GRCameraIf* GetCamera(){return camera->GetIf();}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual void Render(GRRenderIf* r);
-protected:
+
 	void* GetDescAddress(){ return (GRSceneDesc*)this; }
 	friend class GRFrame;
 };

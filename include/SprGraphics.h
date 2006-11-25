@@ -12,7 +12,6 @@
 #ifndef SPR_GRAPHICS_H
 #define SPR_GRAPHICS_H
 
-#include "Graphics/SprGRDef.h"
 #include "Graphics/SprGRRender.h"
 #include "Graphics/SprGRSdk.h"
 #include "Graphics/SprGRScene.h"

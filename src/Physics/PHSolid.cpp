@@ -29,7 +29,7 @@ void PHSolid::SetGravity(bool bOn){
 		PHScene* s = DCAST(PHScene, GetScene());
 		PHGravityEngine* ge;
 		s->engines.Find(ge);
-		if (bOn) ge->AddChildObject((PHSolidIf*)s);
+		if (bOn) ge->AddChildObject(s->GetIf());
 		else ge->solids.Erase(this);
 	}
 }
@@ -314,7 +314,7 @@ int PHSolid::NShape(){
 	return shapes.size();
 }
 CDShapeIf* PHSolid::GetShape(int i){
-	return shapes[i].shape;
+	return shapes[i].shape->GetIf();
 }
 
 
@@ -327,7 +327,7 @@ PHSolidContainer::PHSolidContainer(){
 }
 
 bool PHSolidContainer::AddChildObject(ObjectIf* o){
-	PHSolid* s = DCAST(PHSolid, o);
+	PHSolidIf* s = DCAST(PHSolidIf, o);
 	if (s && std::find(solids.begin(), solids.end(), s) == solids.end()){
 		solids.push_back(s);
 		return true;
@@ -335,7 +335,7 @@ bool PHSolidContainer::AddChildObject(ObjectIf* o){
 	return false;
 }
 bool PHSolidContainer::DelChildObject(ObjectIf* o){
-	PHSolid* so = DCAST(PHSolid, o);
+	PHSolidIf* so = DCAST(PHSolidIf, o);
 	if (so){
 		solids.Erase(so);
 		return true;
@@ -344,13 +344,13 @@ bool PHSolidContainer::DelChildObject(ObjectIf* o){
 }
 
 void PHSolidContainer::Reset(){
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it)
-		(*it)->SetUpdated(false);
+	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it)
+		(*it)->GetObj<PHSolid>()->SetUpdated(false);
 }
 
 void PHSolidContainer::Step(){
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it)
-		(*it)->Step();
+	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it)
+		(*it)->GetObj<PHSolid>()->Step();
 }
 
 //----------------------------------------------------------------------------

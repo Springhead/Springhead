@@ -25,7 +25,7 @@ public:
 };
 
 ///	ÉXÉâÉCÉ_ä÷êﬂ
-class PHSliderJoint : public InheritJoint1D<PHSliderJointIf, PHJoint1D>{
+class PHSliderJoint : public PHJoint1D, PHSliderJointIfInit{
 public:
 	OBJECT_DEF(PHSliderJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}

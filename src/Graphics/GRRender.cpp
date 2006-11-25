@@ -13,12 +13,9 @@
 namespace Spr {;
 
 //----------------------------------------------------------------------------
-//	GRRenderBase
-IF_OBJECT_IMP_ABST(GRRenderBase, Object);
-
-//----------------------------------------------------------------------------
 //	GRRender
-IF_OBJECT_IMP(GRRender, Object);
+IF_OBJECT_IMP_ABST(GRRenderBase, Object);
+IF_OBJECT_IMP(GRRender, GRRenderBase);
 
 void GRRender::Print(std::ostream& os) const{
 	device->Print(os);
@@ -54,14 +51,14 @@ IF_OBJECT_IMP_ABST(GRDevice, GRRenderBase);
 //	GRMaterial
 IF_OBJECT_IMP(GRMaterial, GRVisual);
 void GRMaterial::Render(GRRenderIf* render){
-	render->SetMaterial(this);
+	render->SetMaterial(*this);
 }
 
 //----------------------------------------------------------------------------
 //	GRLight
 IF_OBJECT_IMP(GRLight, GRVisual);
 void GRLight::Render(GRRenderIf* render){
-	render->PushLight(this);
+	render->PushLight(*this);
 }
 void GRLight::Rendered(GRRenderIf* render){
 	render->PopLight();
@@ -83,7 +80,7 @@ ObjectIf* GRCamera::GetChildObject(size_t pos){
 bool GRCamera::AddChildObject(ObjectIf* o){
 	GRFrame* f = DCAST(GRFrame, o);
 	if (f){
-		frame = f;
+		frame = f->GetIf();
 		return true;
 	}
 	return false;

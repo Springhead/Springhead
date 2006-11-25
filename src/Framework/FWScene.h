@@ -6,6 +6,7 @@
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
 #include <His/HIHapticDevice.h>
+#include "IfStubFramework.h"
 
 namespace Spr{;
 
@@ -22,7 +23,7 @@ public:
 };
 
 ///	GraphicsとPhysicsのSceneをまとめたシーングラフ全体
-class FWScene : public InheritScene<FWSceneIf, Scene>, public FWSceneDesc {
+class FWScene : public Scene, FWSceneIfInit, public FWSceneDesc {
 public:
 	OBJECT_DEF(FWScene);
 	ACCESS_DESC(FWScene);

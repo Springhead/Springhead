@@ -2,7 +2,7 @@
 namespace Spr{; 
 
 template <class IF, class OBJ>
-struct ObjectIfStubTemplate{
+struct ObjectIfStubTemplate: public IF {
 	virtual void Print(std::ostream &  os) const {
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::Print(os);
@@ -92,6 +92,7 @@ struct ObjectIf;	class Object;
 typedef ObjectIfStubTemplate<ObjectIf, Object>	ObjectIfStub;
 typedef IfInitTemplate<ObjectIfStub, Object>	ObjectIfInit;
 
+template <class IF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class OBJ>
 struct NamedObjectIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
 	virtual const char *  GetName() const {
@@ -111,6 +112,7 @@ struct NamedObjectIf;	class NamedObject;
 typedef NamedObjectIfStubTemplate<NamedObjectIf, NamedObject>	NamedObjectIfStub;
 typedef IfInitTemplate<NamedObjectIfStub, NamedObject>	NamedObjectIfInit;
 
+template <class IF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class OBJ>
 struct SceneObjectIfStubTemplate: public NamedObjectIfStubTemplate<IF, OBJ> {
 	virtual SceneIf *  GetScene(){
@@ -122,6 +124,7 @@ struct SceneObjectIf;	class SceneObject;
 typedef SceneObjectIfStubTemplate<SceneObjectIf, SceneObject>	SceneObjectIfStub;
 typedef IfInitTemplate<SceneObjectIfStub, SceneObject>	SceneObjectIfInit;
 
+template <class IF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class OBJ>
 struct ObjectStatesIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
 	virtual void AllocateState(ObjectIf *  o){
@@ -149,6 +152,7 @@ struct ObjectStatesIf;	class ObjectStates;
 typedef ObjectStatesIfStubTemplate<ObjectStatesIf, ObjectStates>	ObjectStatesIfStub;
 typedef IfInitTemplate<ObjectStatesIfStub, ObjectStates>	ObjectStatesIfInit;
 
+template <class IF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class OBJ>
 struct NameManagerIfStubTemplate: public NamedObjectIfStubTemplate<IF, OBJ> {
 	virtual NamedObjectIf *  FindObject(UTString name, UTString cls = ""){
@@ -160,6 +164,7 @@ struct NameManagerIf;	class NameManager;
 typedef NameManagerIfStubTemplate<NameManagerIf, NameManager>	NameManagerIfStub;
 typedef IfInitTemplate<NameManagerIfStub, NameManager>	NameManagerIfInit;
 
+template <class IF, class OBJ> struct NameManagerIfStubTemplate;
 template <class IF, class OBJ>
 struct SceneIfStubTemplate: public NameManagerIfStubTemplate<IF, OBJ> {
 };
@@ -167,6 +172,7 @@ struct SceneIf;	class Scene;
 typedef SceneIfStubTemplate<SceneIf, Scene>	SceneIfStub;
 typedef IfInitTemplate<SceneIfStub, Scene>	SceneIfInit;
 
+template <class IF, class OBJ> struct NameManagerIfStubTemplate;
 template <class IF, class OBJ>
 struct SdkIfStubTemplate: public NameManagerIfStubTemplate<IF, OBJ> {
 };

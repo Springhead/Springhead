@@ -9,26 +9,22 @@
 #define GRFrame_H
 
 #include <SprGraphics.h>
+#include "IfStubGraphics.h"
 
 namespace Spr{;
 
 /**	@class	GRVisual
     @brief	 */
-class GRVisual: public InheritNamedObject<GRVisualIf, NamedObject>{
+class GRVisual: public NamedObject, GRVisualIfInit{
 public:
 	OBJECT_DEF_ABST(GRVisual);
 	virtual void Render(GRRenderIf* render){}
 	virtual void Rendered(GRRenderIf* render){}
 };
-template <class intf, class base>
-struct InheritGRVisual:public InheritNamedObject<intf, base>{
-	virtual void Render(GRRenderIf* render){ base::Render(render); }
-	virtual void Rendered(GRRenderIf* render){ base::Rendered(render); }
-};
 
 /**	@class	GRFrame
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
-class GRFrame: public InheritGRVisual<GRFrameIf, GRVisual>, public GRFrameDesc{
+class GRFrame: public GRVisual, GRFrameIfInit, public GRFrameDesc{
 public:
 	OBJECT_DEF(GRFrame);
 	ACCESS_DESC(GRFrame);
@@ -38,7 +34,7 @@ public:
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 
 
-	virtual GRFrameIf* GetParent(){ return parent; }
+	virtual GRFrameIf* GetParent(){ return parent->GetIf(); }
 	virtual void SetParent(GRFrameIf* fr);
 	virtual void SetNameManager(NameManager* n);
 	virtual GRSceneIf* GetScene();

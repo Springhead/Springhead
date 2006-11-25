@@ -44,7 +44,7 @@ APIクラスを作ったら，それを継承した実装クラスを作ります．
 \subsection defImplementClass 実装クラスの宣言
 実装クラスは，~
 <pre>
- class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{
+ class SceneObject:public NamedObject, SceneObjectIfInit{
  	OBJECT_DEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
  public:
  	virtual void SetScene(SceneIf* s);
@@ -65,32 +65,35 @@ APIクラスを作ったら，それを継承した実装クラスを作ります．
 抽象クラスの場合は，実体化できないというエラーがでるので，
 代わりにOBJECT_DEF_ABSTを使います．
 
-\subsubsection secAutoOverride 先祖APIクラスの仮想関数の自動オーバーライド
+\subsubsection secGetAPI APIの取得
+Objectは，APIクラスの領域(ObjectIfBuf部)を持っています．
+
+（APIクラスは，仮想関数テーブルへのポインタ(vftableポインタ)だけを持ちます．
+VCの場合，Objectの先頭から４バイト目からの４バイトになります．）
+
+Object::GetIf() は this+4バイトをObjectIf*にキャストして返します．
+Objectの中にあるAPIクラスのアドレスを返すわけです．
+逆にObjectIf::GetObj()は，this-4バイトを返します．
+APIクラスは必ず実装クラスの中になければなりません．
+
+派生クラス，たとえばPHSolid::GetIf() でも同様ですが，PHSolidIf*にキャストして返します．
+
+\subsubsection secInitAPI APIと初期化
 実装クラスは，
 <pre>
- class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{...}
+ class SceneObject:public NamedObject, SceneObjectIfInit{...}
 </pre>
-のように，APIクラス以外のクラス(この場合NamedObjectクラス)を継承している．
-<pre>
- class NamedObject:public NamedObjectIf, public Object{...}
-</pre>
-のように，そのクラス(NamedObject)クラスが別のAPIクラス(NamedObjectIf)を
-継承している場合，別のAPIクラス(NamedObjectIf)の仮想関数(API)を
-オーバーライドしておかないと，コンパイルエラーになる．
-継承するたびに，すべての関数の実装を書くのは面倒なので，
-よく継承されそうなクラスを宣言したときは，
-<pre>
- tempalte<class intf, class base>
- struct InheritNamedObject: public InheritObject<intf,base>{
- 	const char* GetName() const { return base::GetName(); }
- 	void SetName(const char* n) { base::SetName(n); }
- };
-</pre>
-のように，継承して実装するテンプレートを用意しておき，派生クラスは，
-<pre>
- class SceneObject: public InheritNamedObject<SceneIf, NamedObject>{...};
-</pre>
-のようにこのクラスを継承します．
+のように，基本実装クラスを継承しますが，APIクラス(ここでは，SceneObjectIf)
+は継承しません．代わりに，インタフェース初期化クラス(ここでは，SceneObjectIfInit)を
+継承します．
+SceneObjectIfInitは，コンストラクタでObjectのObjectIfBuf部を，正しいAPIクラスに初期化します．
+
+\subsubsection secConnectAPI APIと実装の接続．
+SceneObjectIfInitは，ObjectIfBuf部を初期化する際に，APIクラス(SceneObjectIf)に
+初期化するのではなく，APIスタブクラス(SceneObjectIfStub)に初期化します．
+初期化クラスとスタブクラスは，src/ライブラリ名/IfStubDumpライブラリ名.h にあります．
+スタブクラスは，各API関数の呼び出しを実装関数の呼び出しにつなげています．
+スタブクラス，初期化クラスのソースコードは，APIクラスのソースコードから自動生成されます．
 
 \section secImpImplementationClass 実装クラスの定義
 \subsection secOBJECT_IMP OBJECT_IMPマクロ

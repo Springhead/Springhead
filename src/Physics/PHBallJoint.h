@@ -24,7 +24,7 @@ public:
 	//PHBallJointNode(PHBallJoint* j):PHTreeNodeND<3>(j){}
 };
 
-class PHBallJoint : public InheritConstraint<PHBallJointIf, PHJointND<3> >{
+class PHBallJoint : public PHJointND<3>, PHBallJointIfInit{
 protected:
 	double	max_angle;
 	Vec3d	torque;

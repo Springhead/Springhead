@@ -37,11 +37,11 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 }
 
 FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
-	FWSdkIf* rv = DBG_NEW FWSdk;
+	FWSdk* rv = DBG_NEW FWSdk;
 	FWSdkIf::RegisterSdk();
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
-	return rv;
+	return rv->GetIf();
 }
 
 //----------------------------------------------------------------------------
@@ -77,7 +77,7 @@ FWSceneIf* FWSdk::GetScene(size_t i){
 	return NULL;
 }
 bool FWSdk::AddChildObject(ObjectIf* o){
-	FWScene* s = DCAST(FWScene, o);
+	FWSceneIf* s = DCAST(FWSceneIf, o);
 	if (s){
 		if (std::find(scenes.begin(), scenes.end(), s) == scenes.end()){
 			scenes.push_back(s);

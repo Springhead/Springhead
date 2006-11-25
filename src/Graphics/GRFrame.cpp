@@ -32,13 +32,13 @@ void GRFrame::Rendered(GRRenderIf* r){
 }
 void GRFrame::SetNameManager(NameManager* m){
 	assert(DCAST(GRScene, m));
-	GRVisual::SetNameManager(m);
+	GRVisual::SetNameManager(m->GetIf());
 }
 GRSceneIf* GRFrame::GetScene(){
-	return DCAST(GRScene, GetNameManager());
+	return DCAST(GRSceneIf, GetNameManager());
 }
 void GRFrame::SetParent(GRFrameIf* fr){
-	if(parent == fr) return;
+	if(parent->GetIf() == fr) return;
 	if(parent){
 		parent->DelChildObject(this->GetIf());
 		parent=NULL;

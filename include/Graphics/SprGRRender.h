@@ -12,7 +12,6 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHScene.h>
 #include <Collision/SprCDShape.h>
-#include <Graphics/SprGRDef.h>
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRFrame.h>
 
@@ -156,6 +155,7 @@ struct GRCameraIf: public GRVisualIf{
 };
 
 struct GRDeviceIf;
+typedef unsigned GRHandler;
 
 /**	@brief	グラフィックスレンダラーの基本クラス（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
@@ -245,25 +245,25 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
 	virtual void SetVertexShader(void* shader){}
 	///	頂点を指定してプリミティブを描画
-	virtual void DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
+	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	///	頂点とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
+	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
+	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
 	
 	///	ダイレクト形式による DiplayList の作成
-	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
+	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
+						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	/// 球オブジェクトの DisplayList の作成
 	virtual int CreateList(float radius, int slices, int stacks)=0;
 	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks)=0;
 	///	インデックス形式による DiplayList の作成
-	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 	virtual int CreateIndexedList(GRMaterialIf* mat, 
-								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 	///	DisplayListの表示
 	virtual void DrawList(int i)=0;
 	///	DisplayListの解放
@@ -287,11 +287,11 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	デプステストを有効/無効にする
 	virtual void SetDepthTest(bool b)=0;
 	///	デプスバッファ法に用いる判定条件を指定する
-	virtual void SetDepthFunc(TDepthFunc f)=0;
+	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f)=0;
 	/// アルファブレンディングを有効/無効にする
 	virtual void SetAlphaTest(bool b)=0;
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
-	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest)=0;
+	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)=0;
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename)=0;
 	/// シェーダの初期化
@@ -339,7 +339,7 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
 	///	レンダラーで用意してある材質(24種類)
-	enum MaterialSample {
+	enum TMaterialSample {
 		RED,
 		GREEN,
 		BLUE,
@@ -373,7 +373,7 @@ struct GRDebugRenderIf:public GRRenderIf{
 	/// 面をレンダリングする
 	virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
 	/// 指定した材質(マテリアルサンプル)を割り当てる
-	virtual void SetMaterialSample(MaterialSample matname)=0;
+	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname)=0;
 };
 
 //@}

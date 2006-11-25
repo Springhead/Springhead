@@ -24,6 +24,7 @@ namespace Spr{;
 struct PHConstraintDesc{
 	/// çSë©ÇÃéÌóﬁ
 	enum ConstraintType{
+		INVALID_CONSTRAINT,
 		CONTACT,
 		HINGEJOINT,
 		SLIDERJOINT,

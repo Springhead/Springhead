@@ -157,7 +157,7 @@ NamedObjectIf* NameManager::FindObjectFromAncestor(UTString name, UTString cls){
 	//	‚È‚¯‚ê‚Î‘cæ‚ğ’T‚·B
 	NameManager* nm = nameManager;
 	while(nm){
-		NamedObjectIf* rv = nm->names.Find(name, cls);	//	‚Ü‚¸e‚ğ’T‚µA
+		NamedObjectIf* rv = nm->names.Find(name, cls)->GetIf();	//	‚Ü‚¸e‚ğ’T‚µA
 		if (rv) return rv;
 		//	ŒZ’í‚ğ’T‚µA
 		for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
@@ -201,7 +201,7 @@ NamedObjectIf* NameManager::FindObjectExact(UTString name, UTString cls){
 		}
 	}else{	//	–¼‘O‹óŠÔ‚ª–³‚¢ê‡
 		//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·
-		rv = names.Find(name, cls);
+		rv = names.Find(name, cls)->GetIf();
 	}
 	return rv;
 }

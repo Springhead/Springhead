@@ -34,7 +34,7 @@ class CDQuadFaces:public std::vector<CDQuadFace>{
 };
 
 /// ’¼•û‘Ì
-class CDBox: public InheritCDShape<CDBoxIf, CDConvex>{
+class CDBox: public CDConvex, CDBoxIfInit{
 public:
 	mutable int curPos;
 	OBJECT_DEF(CDBox);

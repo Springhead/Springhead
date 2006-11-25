@@ -5,18 +5,29 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#define USE_GREW
+#define GLEWMX
+
+#if defined(USE_GREW)
+# include <GL/glew.h>
+#endif
+
 #include "Graphics.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 #ifdef _MSC_VER
-# include <WinBasis/WinBasis.h>
 # include <windows.h>
 #endif
 #include <stack>
+
+
 #include <GL/glut.h>
 #include "GRLoadBmp.h"
+
+
+
 
 namespace Spr {;
 //----------------------------------------------------------------------------
@@ -217,16 +228,16 @@ void GRDeviceGL::SetVertexShader(void* s){
 }
 
 /// 頂点座標を指定してプリミティブを描画
-void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t stride){
+void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
-		case POINTS:			mode = GL_POINTS;			break;
-		case LINES:				mode = GL_LINES;			break;
-		case LINE_STRIP:		mode = GL_LINE_STRIP;		break;
-		case TRIANGLES:			mode = GL_TRIANGLES;		break;
-		case TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
-		case TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
-		case QUADS:				mode = GL_QUADS;			break;
+		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
+		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
+		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
+		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
+		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
+		case GRRenderBaseIf::QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
 	if (!stride) stride = vertexSize;
@@ -237,16 +248,16 @@ void GRDeviceGL::DrawDirect(TPrimitiveType ty, void* vtx, size_t count, size_t s
 	glDrawArrays(mode, 0, count);
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
-void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
-		case POINTS:			mode = GL_POINTS;			break;
-		case LINES:				mode = GL_LINES;			break;
-		case LINE_STRIP:		mode = GL_LINE_STRIP;		break;
-		case TRIANGLES:			mode = GL_TRIANGLES;		break;
-		case TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
-		case TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
-		case QUADS:				mode = GL_QUADS;			break;
+		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
+		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
+		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
+		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
+		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
+		case GRRenderBaseIf::QUADS:				mode = GL_QUADS;			break;
 		default:				/* DO NOTHING */			break;
 	}
 	if (!stride) stride = vertexSize;
@@ -256,7 +267,7 @@ void GRDeviceGL::DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t c
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
-int GRDeviceGL::CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride){
+int GRDeviceGL::CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
 	DrawDirect(ty, vtx, count, stride);
@@ -264,7 +275,7 @@ int GRDeviceGL::CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t st
 	return list;
 }
 int GRDeviceGL::CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   TPrimitiveType ty, void* vtx, size_t count, size_t stride){
+						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
 	SetMaterial(*DCAST(GRMaterial, mat));
@@ -305,7 +316,7 @@ int GRDeviceGL::CreateList(GRMaterialIf* mat, float radius, int slices, int stac
 	glEndList();
 	return list;	
 }		
-int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+int GRDeviceGL::CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
 	DrawIndexed(ty, idx, vtx, count, stride);
@@ -313,7 +324,7 @@ int GRDeviceGL::CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, siz
 	return list;
 }
 int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat,  
-								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);						  
 	glNewList(list, GL_COMPILE);
 	GRMaterialDesc* desc = DCAST(GRMaterial, mat);
@@ -561,17 +572,17 @@ if (b) glEnable(GL_DEPTH_TEST);
 	else glDisable(GL_DEPTH_TEST);
 }
 /// デプスバッファ法に用いる判定条件を指定する
-void GRDeviceGL::SetDepthFunc(TDepthFunc f){
+void GRDeviceGL::SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
 	GLenum dfunc = GL_LESS;
 	switch(f){
-		case DF_NEVER:		dfunc = GL_NEVER;		break;
-		case DF_LESS:		dfunc = GL_LESS;		break;
-		case DF_EQUAL:		dfunc = GL_EQUAL;		break;
-		case DF_LEQUAL:		dfunc = GL_LEQUAL;		break;
-		case DF_GREATER:	dfunc = GL_GREATER;		break;
-		case DF_NOTEQUAL:	dfunc = GL_NOTEQUAL;	break;
-		case DF_GEQUAL:		dfunc = GL_GEQUAL;		break;
-		case DF_ALWAYS:		dfunc = GL_ALWAYS;		break;
+		case GRRenderBaseIf::DF_NEVER:		dfunc = GL_NEVER;		break;
+		case GRRenderBaseIf::DF_LESS:		dfunc = GL_LESS;		break;
+		case GRRenderBaseIf::DF_EQUAL:		dfunc = GL_EQUAL;		break;
+		case GRRenderBaseIf::DF_LEQUAL:		dfunc = GL_LEQUAL;		break;
+		case GRRenderBaseIf::DF_GREATER:	dfunc = GL_GREATER;		break;
+		case GRRenderBaseIf::DF_NOTEQUAL:	dfunc = GL_NOTEQUAL;	break;
+		case GRRenderBaseIf::DF_GEQUAL:		dfunc = GL_GEQUAL;		break;
+		case GRRenderBaseIf::DF_ALWAYS:		dfunc = GL_ALWAYS;		break;
 		default:			/* DO NOTHING */		break;
 
 	}
@@ -583,26 +594,26 @@ if (b) glEnable(GL_BLEND);
 	else glDisable(GL_BLEND);
 }
 /// アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
-void GRDeviceGL::SetAlphaMode(TBlendFunc src, TBlendFunc dest){
-	TBlendFunc  bffac[2] = { src, dest };
+void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
+	GRRenderBaseIf::TBlendFunc  bffac[2] = { src, dest };
 	GLenum glfac[2];
 
 	for (int iCnt=0; iCnt<2; ++iCnt){
 		switch(bffac[iCnt]) {
-			case BF_ZERO:				glfac[iCnt] = GL_ZERO;					break;
-			case BF_ONE:				glfac[iCnt] = GL_ONE;					break;
-			case BF_SRCCOLOR:			glfac[iCnt] = GL_SRC_COLOR;				break;
-			case BF_INVSRCCOLOR:		glfac[iCnt] = GL_ONE_MINUS_SRC_COLOR;	break;
-			case BF_SRCALPHA:			glfac[iCnt] = GL_SRC_ALPHA;				break;
-			case BF_INVSRCALPHA:		glfac[iCnt] = GL_ONE_MINUS_SRC_ALPHA;	break;
-			case BF_DESTALPHA:			glfac[iCnt] = GL_DST_ALPHA;				break;
-			case BF_INVDESTALPHA:		glfac[iCnt] = GL_ONE_MINUS_DST_ALPHA;	break;
-			case BF_DESTCOLOR:			glfac[iCnt] = GL_DST_COLOR;				break;
-			case BF_INVDESTCOLOR:		glfac[iCnt] = GL_ONE_MINUS_DST_COLOR;	break;
-			case BF_SRCALPHASAT:		glfac[iCnt] = GL_SRC_ALPHA_SATURATE;	break;
-			case BF_BOTHINVSRCALPHA:	glfac[iCnt] = 0;						break;
-			case BF_BLENDFACTOR:		glfac[iCnt] = 0;						break;
-			case BF_INVBLENDFACTOR:		glfac[iCnt] = 0;						break;
+			case GRRenderBaseIf::BF_ZERO:				glfac[iCnt] = GL_ZERO;					break;
+			case GRRenderBaseIf::BF_ONE:				glfac[iCnt] = GL_ONE;					break;
+			case GRRenderBaseIf::BF_SRCCOLOR:			glfac[iCnt] = GL_SRC_COLOR;				break;
+			case GRRenderBaseIf::BF_INVSRCCOLOR:		glfac[iCnt] = GL_ONE_MINUS_SRC_COLOR;	break;
+			case GRRenderBaseIf::BF_SRCALPHA:			glfac[iCnt] = GL_SRC_ALPHA;				break;
+			case GRRenderBaseIf::BF_INVSRCALPHA:		glfac[iCnt] = GL_ONE_MINUS_SRC_ALPHA;	break;
+			case GRRenderBaseIf::BF_DESTALPHA:			glfac[iCnt] = GL_DST_ALPHA;				break;
+			case GRRenderBaseIf::BF_INVDESTALPHA:		glfac[iCnt] = GL_ONE_MINUS_DST_ALPHA;	break;
+			case GRRenderBaseIf::BF_DESTCOLOR:			glfac[iCnt] = GL_DST_COLOR;				break;
+			case GRRenderBaseIf::BF_INVDESTCOLOR:		glfac[iCnt] = GL_ONE_MINUS_DST_COLOR;	break;
+			case GRRenderBaseIf::BF_SRCALPHASAT:		glfac[iCnt] = GL_SRC_ALPHA_SATURATE;	break;
+			case GRRenderBaseIf::BF_BOTHINVSRCALPHA:	glfac[iCnt] = 0;						break;
+			case GRRenderBaseIf::BF_BLENDFACTOR:		glfac[iCnt] = 0;						break;
+			case GRRenderBaseIf::BF_INVBLENDFACTOR:		glfac[iCnt] = 0;						break;
 			default:					/* DO NOTHING */						break;
 		}
 	}

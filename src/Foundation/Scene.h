@@ -76,7 +76,7 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
 }
 
-class SPR_DLL NameManager:public InheritNamedObject<NameManagerIf, NamedObject>{
+class SPR_DLL NameManager:public NamedObject, NameManagerIfInit{
 public:
 	OBJECT_DEF(NameManager);
 protected:
@@ -126,34 +126,14 @@ public:
 	NamedObjectIf* FindObjectFromAncestor(UTString name, UTString cls="");	
 };
 
-template <class intf, class base>
-struct InheritNameManager:public InheritNamedObject<intf, base>{
-	///	型と名前からオブジェクトを取得
-	template <class T> void FindObject(UTRef<T>& t, UTString name){
-		T* p;
-		FindObject(p, name);
-		t = p;
-	}
-	template <class T> void FindObject(T*& t, UTString name){
-		NamedObjectIf* p = FindObject(name, GETCLASSNAMES(T));
-		t = DCAST(T, p);
-	}
-	virtual NamedObjectIf* FindObject(UTString name, UTString cls=""){
-		return base::FindObject(name, cls);
-	}
-};
-
 /**	シーンの基本クラス	*/
-class SPR_DLL Scene:public InheritNameManager<SceneIf, NameManager>{
+class SPR_DLL Scene:public NameManager, SceneIfInit{
 	OBJECT_DEF(Scene);
 public:
 	///	コンストラクタ
 };
-template <class intf, class base>
-struct InheritScene:public InheritNameManager<intf, base>{
-};
 
-class SPR_DLL Sdk:public InheritNameManager<SdkIf, NameManager>{
+class SPR_DLL Sdk:public NameManager, SdkIfInit{
 	UTRef<TypeInfoManager> typeInfoManager;	//	typeInfo/IfInfoがsdkが消える前に消えることを避ける。
 protected:
 	friend struct SdkIf;

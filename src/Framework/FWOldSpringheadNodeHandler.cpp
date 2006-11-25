@@ -196,7 +196,7 @@ public:
 		tex->filename = d.filename;
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
-			tex->SetNameManager((GRSceneIf*)gs);
+			tex->SetNameManager(gs->GetIf());
 			tex->SetName(fc->datas.Top()->name.c_str());
 		}
 		fc->objects.Top()->AddChildObject(tex->GetIf());
@@ -236,7 +236,7 @@ public:
 		fc->objects.Push(mc->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		Adapter* mc = DCAST(Adapter, fc->objects.Top());
+		Adapter* mc = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(mc);
 		fc->objects.Pop();		// Adapter
 		fc->objects.Pop();		// GRMaterialDesc
@@ -265,7 +265,7 @@ public:
 		phmtask->mu0 = d.s;		// 動摩擦係数		
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
-			phmtask->SetNameManager((GRSceneIf*)gs);
+			phmtask->SetNameManager(gs->GetIf());
 			phmtask->SetName(fc->datas.Top()->name.c_str());
 		}		
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
@@ -445,7 +445,7 @@ public:
 		}
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		Adapter* ad = DCAST(Adapter, fc->objects.Top());
+		Adapter* ad = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(ad);
 		fc->objects.Pop();
 		assert(DCAST(GRMesh, fc->objects.Top()));
@@ -506,7 +506,7 @@ public:
 		fc->objects.Push(ad->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		Adapter* ad = DCAST(Adapter, fc->objects.Top());
+		Adapter* ad = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(ad);
 		fc->objects.Pop();		
 		assert(DCAST(GRSphere, fc->objects.Top()));
@@ -615,15 +615,15 @@ public:
 				pose.FromAffine(fr->GetTransform());
 				solid->SetPose(pose);
 				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
-				phScene->SetContactMode(solid, PHSceneDesc::MODE_LCP);
-				solids.push_back(solid);
+				phScene->SetContactMode(solid->GetIf(), PHSceneDesc::MODE_LCP);
+				solids.push_back(solid->GetIf());
 				return true;
 			}
 			PHSolid* so = DCAST(PHSolid, o);
 			if (so){	//	solidなら何もしない。デフォルトONなので。
 				//	受け取ったObjectを接触ONにする。
-				phScene->SetContactMode(DCAST(PHSolid, o), PHSceneDesc::MODE_LCP);
-				solids.push_back(so);
+				phScene->SetContactMode(DCAST(PHSolid, o)->GetIf(), PHSceneDesc::MODE_LCP);
+				solids.push_back(so->GetIf());
 				return true;
 			}
 			FWContactInactiveTask* task = DCAST(FWContactInactiveTask, o);
@@ -650,15 +650,15 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
 		Disabler* dis = DBG_NEW Disabler;
-		dis->phScene = FindPHScene(fc);
+		dis->phScene = FindPHScene(fc)->GetIf();
 		fc->links.push_back(dis);
 		Adapter* task = DBG_NEW Adapter;
-		task->phScene = ps;
+		task->phScene = ps->GetIf();
 		task->fc = fc;
 		fc->objects.Push(task->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		Adapter* task = DCAST(Adapter, fc->objects.Top());
+		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
 	}
@@ -709,7 +709,7 @@ public:
 		fc->objects.Push(task->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		Adapter* task = DCAST(Adapter, fc->objects.Top());
+		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
 
@@ -852,7 +852,7 @@ public:
 				parent->solid = DCAST(PHSolid, phScene->CreateSolid(sd));
 			}
 			if (parent){
-				PHJointIf* j= phScene->CreateJoint(solid, parent->solid, desc);
+				PHJointIf* j= phScene->CreateJoint(solid->GetIf(), parent->solid->GetIf(), desc);
 				j->SetName(name.c_str());
 			}
 		}
@@ -865,7 +865,7 @@ public:
 		fc->objects.Push(j->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		JointCreator* j = DCAST(JointCreator, fc->objects.Top());
+		JointCreator* j = (JointCreator*) DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(j);
 		fc->objects.Pop();
 	}
@@ -890,12 +890,12 @@ public:
 		j->desc.lower = d.fMinPosition;
 		j->desc.upper = d.fMaxPosition;
 		
-		j->parent = DCAST(JointCreator, fc->objects.Top());
+		j->parent = (JointCreator*)DCAST(UTLoadTask, fc->objects.Top());
 		j->phScene = FindPHScene(fc);
 		fc->objects.Push(j->GetIf());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
-		JointCreator* j = DCAST(JointCreator, fc->objects.Top());
+		JointCreator* j = (JointCreator*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(j);
 		fc->objects.Pop();
 	}
@@ -918,7 +918,7 @@ public:
 		UTString full = imPath.FullPath();		
 
 
-		UTRef<FISdkIf> sdk = FISdk::CreateSdk();
+		UTRef<FISdkIf> sdk = FISdkIf::CreateSdk();
 		fc->PushFileMap(full);
 		if (fc->IsGood()){
 			UTRef<FIFileX> fileX = DCAST(FIFileX, sdk->CreateFileX());

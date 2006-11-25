@@ -56,7 +56,7 @@ GRDebugRender::GRDebugRender(){
 void GRDebugRender::DrawScene(PHSceneIf* scene){
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
-		this->SetMaterialSample((MaterialSample)num);
+		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)num);
 		this->DrawSolid(solids[num]);
 	}	
 }
@@ -126,12 +126,12 @@ void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 	Vec3f n = (edge0^edge1).unit();
 	for(int v=0; v<numIndices; ++v) vtxs[v].n = n;
 	SetVertexFormat(GRVertexElement::vfN3fP3f);
-	DrawDirect(TRIANGLE_FAN, vtxs, numIndices);
+	DrawDirect(GRRenderBaseIf::TRIANGLE_FAN, vtxs, numIndices);
 }
 
-void GRDebugRender::SetMaterialSample(MaterialSample matname){
+void GRDebugRender::SetMaterialSample(GRDebugRenderIf::TMaterialSample matname){
 	int matID = 0;
-	if (matname > EMERALD_GREEN) {
+	if (matname > GRDebugRenderIf::EMERALD_GREEN) {
 		matID = (int)matname;
 		matID = matID % matSampleCount;
 	} else {

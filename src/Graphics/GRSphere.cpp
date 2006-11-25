@@ -25,7 +25,7 @@ void GRSphere::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);
 	render = r;	
 	if (material){
-		list = render->CreateList(material, radius, slices, stacks);
+		list = render->CreateList(material->GetIf(), radius, slices, stacks);
 	}else{
 		list = render->CreateList(radius, slices, stacks);
 	}

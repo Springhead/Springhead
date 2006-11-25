@@ -32,81 +32,6 @@
 		- Stubを書くのが面倒→要自動生成．従来と違って末端の派生クラスまでStubが必要．
 		- IfBufの書き換えがトリッキー．
 		- Ifは絶対に変数を持てない．
-
-
-以下テストコード
----------------------------------------------------------------------
-struct IntfBuf{
-	void* vftable;
-	IntfBuf(){ vftable=(void*)0x12341234;}
-};
-struct Intf1{
-	virtual int Api()=0;
-};
-struct Intf2: public Intf1{
-	virtual int Api2()=0;
-};
-
-template <class I, class O>
-struct IntfInit{
-	//	アドレス取得
-	IntfInit(){
-		const int toBuf = (const int)((char*)(IntfBuf*)(O*)0x100 - (char*)0x100);
-		const int fromThis = (const int)((char*)0x100 - (char*)(IntfInit<I,O>*)(O*)0x100);
-		IntfBuf* buf = (IntfBuf*)(((char*)(void*)this) + fromThis + toBuf);
-
-		std::cout << "IntfInit:" << (unsigned)(void*)this;
-		std::cout << "IntfBuf: " << (unsigned)(void*)buf << std::endl;
-		new (buf) I;
-	}
-};
-
-struct Intf1Imp: public Intf1{
-	virtual int Api();
-};
-struct Intf2Imp: public Intf2{
-	virtual int Api();
-	virtual int Api2();
-};
-
-struct Object: IntfBuf, IntfInit<Intf1Imp, Object>{
-	Object(){
-	}
-	virtual int Api(){
-		std::cout << "Api() called." << std::endl;
-		return 0;
-	}
-};
-struct Object2:public Object, IntfInit<Intf2Imp, Object2>{
-	virtual int Api2(){
-		std::cout << "Api2() called." << std::endl;
-		return 0;
-	}
-};
-
-int Intf1Imp::Api(){
-	Object* o = (Object*) ((char*)this - 4);
-	return o->Api();
-}
-int Intf2Imp::Api(){
-	Object2* o = (Object2*)((char*)this - 4);
-	return o->Api();
-}
-int Intf2Imp::Api2(){
-	Object2* o = (Object2*)((char*)this - 4);
-	return o->Api2();
-}
-
-
-int _tmain(int argc, _TCHAR* argv[])
-{
-	Object obj;
-	Object2 obj2;
-	IntfBuf* buf = (IntfBuf*)&obj2;
-	((Intf2*)buf)->Api2();	
-	return 0;
-}
-
 */
 
 
@@ -128,14 +53,6 @@ public:
 
 #define IF_IMP_COMMON(cls)															\
 	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
-	template <> \
-	void* IfInfoImp<cls##If>::GetSprObject(ObjectIf* i)const{						\
-		return (Object*)(cls*)(cls##If*)i;											\
-	}																				\
-	template <> \
-	ObjectIf* IfInfoImp<cls##If>::GetIf(void* obj)const{							\
-		return (ObjectIf*)(cls##If*)DCAST(cls, (Object*)obj);						\
-	}																				\
 	const IfInfo* SPR_CDECL cls##If::GetIfInfoStatic(){								\
 		static IfInfoImp<cls##If>* i;												\
 		if (!i){																	\
@@ -156,27 +73,25 @@ public:
 	IF_IMP_COMMON(cls)
 
 
-#define OBJECT_CAST(cls, p)											\
-	(((Object*)p)->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic())	\
-		? (cls*)(Object*)p :  NULL)									\
-
 ///	Object派生クラスの実行時型情報
-#define OBJECT_DEF_ABST_NOIF(cls)		DEF_UTTYPEINFOABSTDEF(cls)	\
-	static cls* GetSelfFromObject(void* o) {						\
-		return OBJECT_CAST(cls, o);									\
-	}																\
+#define OBJECT_GETSELFDEF(cls)											\
+	static cls* GetSelfFromIf(const ObjectIf* p){						\
+		if (!p) return NULL;											\
+		Object* o = p->GetObj<Object>();								\
+		if (o->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))		\
+			return (cls*)o;												\
+		return NULL;													\
+	}																	\
 
-#define OBJECT_DEF_NOIF(cls)			DEF_UTTYPEINFODEF(cls)		\
-	static cls* GetSelfFromObject(void* o) {						\
-		return OBJECT_CAST(cls, o);									\
-	}																\
+#define	OBJECT_DEF_ABST_NOIF(cls)		DEF_UTTYPEINFOABSTDEF(cls) OBJECT_GETSELFDEF(cls)
+#define	OBJECT_DEF_NOIF(cls)			DEF_UTTYPEINFODEF(cls) OBJECT_GETSELFDEF(cls)
 
-#define	OBJECT_DEF_ABST(cls)			OBJECT_DEF_ABST_NOIF(cls)	\
-	virtual ObjectIf* GetIf() const { return (cls##If*)this; }		\
+#define OBJECT_IF_UTILITY(cls)	\
+	cls##If* GetIf(){ return (cls##If*)(ObjectIfBuf*) this; }	\
+	const cls##If* GetIf() const { return (const cls##If*)(ObjectIfBuf*) this; }
 
-#define	OBJECT_DEF(cls)					OBJECT_DEF_NOIF(cls)		\
-	virtual ObjectIf* GetIf() const { return (cls##If*)this; }		\
-
+#define	OBJECT_DEF_ABST(cls)	OBJECT_DEF_ABST_NOIF(cls) OBJECT_IF_UTILITY(cls)
+#define	OBJECT_DEF(cls)			OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls)
 
 ///	実行時型情報を持つObjectの派生クラスが持つべきメンバの実装．
 #define OBJECT_IMP_BASEABST(cls)			DEF_UTTYPEINFOABST(cls)
@@ -216,7 +131,7 @@ public:
 
 ///	ObjectIfとその派生クラスのオブジェクトのためのバッファ
 class ObjectIfBuf{
-	void* pvtable;
+	void* vtable;
 };
 ///	ObjectIfBufを派生クラスのインタフェースに書き換える
 template <class I, class O>
@@ -225,7 +140,7 @@ struct IfInitTemplate{
 		const int toBuf = int((char*)(ObjectIfBuf*)(O*)0x1000 - (char*)0x1000);
 		const int fromThis = int((char*)0x1000 - (char*)(IfInitTemplate<I,O>*)(O*)0x1000);
 		ObjectIfBuf* buf = (ObjectIfBuf*)(((char*)this) + fromThis + toBuf);
-		new (buf) I;
+		::new (buf) I;
 	}
 };
 
@@ -237,7 +152,7 @@ struct IfInitTemplate{
 namespace Spr{;
 
 /**	全Objectの基本型	*/
-class Object:public ObjectIfBuf, ObjectIf, ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
+class Object:public ObjectIfBuf, ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
 	void GetIfInfo() { assert(0); }	///	don't call me
 public:
 	OBJECT_DEF(Object);		///<	クラス名の取得などの基本機能の実装
@@ -287,44 +202,20 @@ protected:
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 	virtual void PrintChildren(std::ostream& os) const;
 	virtual void PrintFooter(std::ostream& os) const;
+	///	sをoのStateとして初期化する．
+	static void ConstructState(ObjectIf* o, char*& s);
+	///	sをoのStateからメモリブロックに戻す．
+	static void DestructState(ObjectIf* o, char*& s);
 };
-
-template <class T> T* SprDcastImp(const Object* p){
-	if (p && p->GetTypeInfo()->Inherit(T::GetTypeInfoStatic())) return (T*)&*(p);
-	return NULL;
+template <class T> T* SprDcastImp(const Object* o){
+	if (!o) return NULL;
+	return T::GetSelfFromIf(o->GetIf());
 }
-
-
-template <class intf, class base>
-struct InheritObject:public intf, public base{
-	typedef base baseType;
-	virtual int AddRef(){return base::AddRef();}
-	virtual int DelRef(){return base::DelRef();}
-	virtual int RefCount(){return base::RefCount();}				
-	virtual ObjectIf* CreateObject(const IfInfo* i, const void* d){ return base::CreateObject(i,d); }
-	virtual void Print(std::ostream& os) const{ base::Print(os); }
-	virtual void PrintShort(std::ostream& os) const{ base::PrintShort(os); }
-	virtual size_t NChildObject() const { return base::NChildObject(); }
-	virtual ObjectIf* GetChildObject(size_t pos){ return base::GetChildObject(pos); }
-	virtual const ObjectIf* GetChildObject(size_t pos) const{ return base::GetChildObject(pos); }
-	virtual bool AddChildObject(ObjectIf* o){ return base::AddChildObject(o); }
-	virtual bool DelChildObject(ObjectIf* o){ return base::DelChildObject(o); }
-	virtual void Clear(){ base::Clear(); }
-	virtual bool GetDesc(void* desc) const { return base::GetDesc(desc); }
-	virtual const void* GetDescAddress() const { return base::GetDescAddress(); }
-	virtual size_t GetDescSize() const { return base::GetDescSize(); }
-	virtual bool GetState(void* state) const { return base::GetState(state); }
-	virtual const void* GetStateAddress() const { return base::GetStateAddress(); }
-	virtual size_t GetStateSize() const { return base::GetStateSize(); }
-	virtual void SetState(const void* s){ return base::SetState(s); }
-	virtual void ConstructState(void* m) const { base::ConstructState(m); }
-	virtual void DestructState(void* m) const { base::DestructState(m); }
-};
 
 class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
-class NamedObject: public InheritObject<NamedObjectIf, Object>{
+class NamedObject: public Object, NamedObjectIfInit{
 	OBJECT_DEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
 protected:
 	friend class ObjectNames;
@@ -345,26 +236,14 @@ protected:
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 };
 
-template <class intf, class base>
-struct InheritNamedObject:public InheritObject<intf, base>{
-	const char* GetName() const { return base::GetName(); }
-	void SetName(const char* n) { base::SetName(n); }
-	NameManagerIf* GetNameManager(){ return base::GetNameManager(); }
-};
-
 class Scene;
 /**	Sceneが所有するObject型．
 	所属するSceneへのポインタを持つ	*/
-class SceneObject:public InheritNamedObject<SceneObjectIf, NamedObject>{
+class SceneObject:public NamedObject, SceneObjectIfInit{
 	OBJECT_DEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
-};
-template <class intf, class base>
-struct InheritSceneObject:public InheritNamedObject<intf, base>{
-	SceneIf* GetScene() { return base::GetScene(); }
-	void SetScene(SceneIf* s) { base::SetScene(s); }
 };
 
 ///	Objectのポインタの配列
@@ -417,16 +296,11 @@ public:
 };
 #define FactoryImp(cls)	FactoryImpTemplate<cls, cls##If, cls##Desc>
 
-
 ///	シーングラフの状態を保存．再生する仕組み
-class ObjectStates:public InheritObject<ObjectStatesIf, Object>{
+class ObjectStates:public Object, ObjectStatesIfInit{
 protected:
 	char* state;	///<	状態(XXxxxxState)を並べたもの
 	size_t size;	///<	状態の長さ
-	///	sをoのStateとして初期化する．
-	void ConstructState(ObjectIf* o, char*& s);
-	///	sをoのStateからメモリブロックに戻す．
-	void DestructState(ObjectIf* o, char*& s);
 	///	状態セーブの再起部分
 	void SaveState(ObjectIf* o, char*& s);
 	///	状態ロードの再起部分

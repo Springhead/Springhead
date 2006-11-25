@@ -16,16 +16,8 @@ namespace Spr{;
 
 class PHTreeNode;
 
-/// PHConstraint派生クラスのためのルータ
-template<class inf, class base>
-class InheritConstraint : public InheritSceneObject<inf, base>{
-public:
-	void Enable(bool bEnable = true){base::Enable(bEnable);}
-	bool IsEnabled(){return base::IsEnabled();}
-};
-
 ///
-class PHConstraint : public InheritSceneObject<PHConstraintIf, SceneObject>{
+class PHConstraint : public SceneObject, PHConstraintIfInit{
 public:
 	OBJECT_DEF_ABST(PHConstraint);
 	enum PHControlMode{
@@ -71,6 +63,7 @@ public:
 	//void IterateCorrection();
 	
 	/// インタフェースの実装
+	virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool IsEnabled(){return bEnabled;}

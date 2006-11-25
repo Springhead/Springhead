@@ -18,7 +18,7 @@ namespace Spr{;
 
 /**	@class	GRDebugRender
     @brief	デバッグ情報レンダラーの実装　 */
-class GRDebugRender:public InheritGRRender<GRDebugRenderIf, GRRender>{
+class GRDebugRender:public GRRender, GRDebugRenderIfInit{
 	OBJECT_DEF(GRDebugRender);
 protected:
 	int matSampleCount;
@@ -38,7 +38,7 @@ public:
 	void DrawFace(CDFaceIf* face, Vec3f * base);
 	/**  指定したマテリアルを割り当てる
 	     @param mat			マテリアルサンプル  */
-	void SetMaterialSample(MaterialSample matname);
+	void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
 };
 
 }

@@ -334,7 +334,7 @@ public:
 	}
 
 	virtual void EnableContact(PHSolidIf* solid, bool bEnable){
-		typename PHSolids::iterator it = solids.Find((PHSolid*)solid);
+		typename PHSolids::iterator it = solids.Find(solid->GetObj<PHSolid>());
 		if(it == solids.end())
 			return;
 		int idx = it - solids.begin();

@@ -16,7 +16,7 @@ namespace Spr{;
 
 	
 /// ‹…‘Ì
-class CDCapsule: public InheritCDShape<CDCapsuleIf, CDConvex>, CDCapsuleDesc{
+class CDCapsule: public CDConvex, CDCapsuleIfInit, CDCapsuleDesc{
 public:
 	OBJECT_DEF(CDCapsule);
 

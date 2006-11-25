@@ -16,8 +16,8 @@
 
 namespace Spr{;
 GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){
-	GRSdkIf* rv = DBG_NEW GRSdk;
-	return rv;
+	GRSdk* rv = DBG_NEW GRSdk;
+	return rv->GetIf();
 }
 
 void SPR_CDECL GRRegisterTypeDescs();
@@ -49,17 +49,17 @@ void SPR_CDECL GRSdkIf::RegisterSdk(){
 //	GRSdk
 IF_OBJECT_IMP(GRSdk, Sdk);
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
-	RegisterSdk();
+	GRSdkIf::RegisterSdk();
 }
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	GRDebugRender* rv = DBG_NEW GRDebugRender;
 	objects.push_back(rv);
-	return rv;
+	return rv->GetIf();
 }
 GRDeviceGLIf* GRSdk::CreateDeviceGL(int w){
 	GRDeviceGL* rv = DBG_NEW GRDeviceGL(w);
 	objects.push_back(rv);
-	return rv;
+	return rv->GetIf();
 }
 GRSceneIf* GRSdk::CreateScene(){
 	GRSceneIf* rv = (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &GRSdkDesc());
@@ -67,7 +67,7 @@ GRSceneIf* GRSdk::CreateScene(){
 	return rv;
 }
 GRSceneIf* GRSdk::GetScene(size_t i){
-	if (i<scenes.size()) return scenes[i];
+	if (i<scenes.size()) return scenes[i]->GetIf();
 	return NULL;
 }
 ObjectIf* GRSdk::GetChildObject(size_t i){

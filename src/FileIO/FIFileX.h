@@ -13,7 +13,7 @@
 
 namespace Spr{;
 
-class FIFileX:public InheritFIFile<FIFileXIf, FIFile>{
+class FIFileX:public FIFile, FIFileXIfInit{
 public:
 	OBJECT_DEF(FIFileX);
 protected:

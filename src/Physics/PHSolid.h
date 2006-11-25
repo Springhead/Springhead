@@ -81,7 +81,7 @@ enum PHIntegrationMode{
 class PHTreeNode;
 
 ///	剛体
-class PHSolid : public InheritSceneObject<PHSolidIf, SceneObject>, public PHSolidDesc{
+class PHSolid : public SceneObject, PHSolidIfInit, public PHSolidDesc{
 protected:
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
@@ -141,7 +141,7 @@ public:
 		return shapes.size();
 	}
 	ObjectIf* GetChildObject(size_t pos) {
-		return (CDShapeIf*)(shapes[pos].shape);
+		return shapes[pos].shape->GetIf();
 	}
 
 	void CalcBBox();
@@ -237,10 +237,27 @@ public:
 	void		SetDynamical(bool bOn){dynamical = bOn;}
 	bool		IsDynamical(){return dynamical;}
 
-protected:
 	ACCESS_DESC_STATE(PHSolid);
 };
 
+class PHSolidIfs : public std::vector< UTRef<PHSolidIf> >{
+public:
+	UTRef<PHSolidIf> Erase(const PHSolidIf* s){
+		iterator it = std::find(begin(), end(), s);
+		if (it == end()) return NULL;
+		UTRef<PHSolid> rv = *it;
+		erase(it);
+		return *it;
+	}
+	UTRef<PHSolidIf>* Find(const PHSolidIf* s){
+		iterator it = std::find(begin(), end(), s);
+		if (it == end()) return NULL;
+		else return &*it;
+	}
+	UTRef<PHSolidIf>* Find(const PHSolidIf* s) const {
+		return ((PHSolidIfs*)this)->Find(s);
+	}
+};
 class PHSolids : public std::vector< UTRef<PHSolid> >{
 public:
 	UTRef<PHSolid> Erase(const PHSolid* s){
@@ -264,7 +281,7 @@ public:
 class PHSolidContainer:public PHEngine{
 	OBJECT_DEF_NOIF(PHSolidContainer);
 public:
-	PHSolids solids;
+	PHSolidIfs solids;
 	bool AddChildObject(ObjectIf* o);
 	bool DelChildObject(ObjectIf* o);
 	///
@@ -278,7 +295,7 @@ public:
 	///	所有しているsolidの数
 	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid
-	virtual ObjectIf* GetChildObject(size_t i){ return (PHSolidIf*)solids[i]; }
+	virtual ObjectIf* GetChildObject(size_t i){ return solids[i]; }
 
 	PHSolidContainer();
 };

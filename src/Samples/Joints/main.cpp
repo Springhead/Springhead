@@ -75,6 +75,7 @@
 #include <sstream>
 #include <windows.h>
 #include <Springhead.h>		//	Springheadのインタフェース
+#include <GL/GLUT.h>		
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop

@@ -20,7 +20,7 @@ namespace Spr{;
 
 /**	@class	GRDeviceGL
     @brief	OpenGLによるグラフィックス描画の実装　 */
-class GRDeviceGL: public InheritGRDevice<GRDeviceGLIf, GRDevice>{
+class GRDeviceGL: public GRDevice, GRDeviceGLIfInit{
 	OBJECT_DEF(GRDeviceGL);
 protected:
 	int		window;					///<	ウィンドウID
@@ -92,23 +92,23 @@ public:
 	///	頂点シェーダーの指定
 	virtual void SetVertexShader(void* s);
 	///	頂点座標を指定してプリミティブを描画
-	virtual void DrawDirect(TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
+	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	///	頂点座標とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	ダイレクト形式による DiplayList の作成
-	virtual int CreateList(TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
+	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	///	ダイレクト形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
 	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
+						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	/// 球オブジェクトの DisplayList の作成
 	virtual int CreateList(float radius, int slices, int stacks);
 	/// 球オブジェクトの DisplayList の作成（マテリアル、テクスチャの設定も行う）
 	virtual int CreateList(GRMaterialIf* mat,  float radius, int slices, int stacks);
 	///	インデックス形式によるDiplayListの作成
-	virtual int CreateIndexedList(TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
 	virtual int CreateIndexedList(GRMaterialIf* mat, 
-								  TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	DisplayListの表示
 	virtual void DrawList(int i);
 	///	DisplayListの解放
@@ -123,10 +123,12 @@ public:
 	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font);
 	///	描画の材質の設定
 	virtual void SetMaterial(const GRMaterialDesc& mat);
+	virtual void SetMaterial(const GRMaterialIf*& mat){ GRDevice::SetMaterial(mat); }
 	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w);
 	///	光源スタックをPush
 	virtual void PushLight(const GRLightDesc& light);
+	virtual void PushLight(const GRLightIf* light){ GRDevice::PushLight(light); }
 	///	光源スタックをPop
 	virtual void PopLight();
 	///	デプスバッファへの書き込みを許可/禁止する
@@ -134,11 +136,11 @@ public:
 	///	デプステストを有効/無効にする
 	virtual void SetDepthTest(bool b);
 	///	デプスバッファ法に用いる判定条件を指定する
-	virtual void SetDepthFunc(TDepthFunc f);
+	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f);
 	/// アルファブレンディングを有効/無効にする
 	virtual void SetAlphaTest(bool b);
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
-	virtual void SetAlphaMode(TBlendFunc src, TBlendFunc dest);
+	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename);
 	/// シェーダの初期化

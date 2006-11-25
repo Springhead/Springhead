@@ -7,6 +7,7 @@
 	((IfInfo*)PHConstraintIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHConstraintDesc>;
 	field = desc->AddField("ConstraintType", "enum", "type",  "");
+	field->AddEnumConst("INVALID_CONSTRAINT");
 	field->AddEnumConst("CONTACT");
 	field->AddEnumConst("HINGEJOINT");
 	field->AddEnumConst("SLIDERJOINT");

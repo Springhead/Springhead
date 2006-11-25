@@ -12,6 +12,7 @@
 #include <Foundation/UTTypeDesc.h>
 #include <Foundation/UTLoadContext.h>
 #include <Foundation/UTLoadHandler.h>
+#include "IfStubFileIO.h"
 
 namespace Spr{;
 ///	FILoadContext
@@ -25,7 +26,7 @@ class FISdk;
 
 /**	ファイルローダー・セーバー
 */
-class FIFile:public InheritObject<FIFileIf, Object>{
+class FIFile:public Object, FIFileIfInit{
 public:
 	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
 	UTTypeDescDb typeDb;
@@ -107,13 +108,6 @@ protected:
 	virtual void OnSaveRef(FISaveContext* sc){}
 	//@}
 
-};
-
-template <class intf, class base>
-struct InheritFIFile:public InheritObject<intf, base>{
-	virtual bool Load(ObjectIfs& objs, const char* fn){ return base::Load(objs, fn); }
-	virtual bool Save(const ObjectIfs& objs, const char* fn){ return base::Save(objs, fn); }
-	virtual void RegisterGroup(const char* gp){ return base::RegisterGroup(gp); }
 };
 
 

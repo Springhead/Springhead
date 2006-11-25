@@ -43,7 +43,7 @@ NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
 }
 
 ObjectIf* FWScene::CreateObject(const IfInfo* info, const void* desc){
-	ObjectIf* rv = baseType::CreateObject(info, desc);
+	ObjectIf* rv = Scene::CreateObject(info, desc);
 	if (!rv && phScene) rv = phScene->CreateObject(info, desc);
 	if (!rv && grScene) rv = grScene->CreateObject(info, desc);
 	return rv;
@@ -60,14 +60,14 @@ bool FWScene::AddChildObject(ObjectIf* o){
 	if (!rv) {
 		PHScene* obj = DCAST(PHScene, o);
 		if (obj) {
-			phScene = obj;
+			phScene = obj->GetIf();
 			rv = true;
 		}
 	}
 	if (!rv) {
 		GRScene* obj = DCAST(GRScene, o);
 		if (obj) {
-			grScene = obj;
+			grScene = obj->GetIf();
 			rv = true;
 		}
 	}
@@ -91,19 +91,19 @@ size_t FWScene::NChildObject() const{
 
 ObjectIf* FWScene::GetChildObject(size_t pos){
 	if (pos < fwObjects.size()) return fwObjects[pos];
-	if (pos - fwObjects.size() == 0) return phScene ? (ObjectIf*)phScene : (ObjectIf*)grScene;
+	if (pos - fwObjects.size() == 0) return phScene ? phScene : grScene;
 	if (pos - fwObjects.size() == 1) return phScene ? grScene : NULL;
 	return NULL;
 }
 
 FWSceneIf* SPR_CDECL CreateFWScene(){
-	FWSceneIf* rv = DBG_NEW FWScene;
-	return rv;
+	FWScene* rv = DBG_NEW FWScene;
+	return rv->GetIf();
 }
 
 FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
-	FWSceneIf* rv = DBG_NEW FWScene(*(FWSceneDesc*)desc);
-	return rv;
+	FWScene* rv = DBG_NEW FWScene(*(FWSceneDesc*)desc);
+	return rv->GetIf();
 }
 void FWScene::Sync(){
 	//	オブジェクト位置・姿勢の同期

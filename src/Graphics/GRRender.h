@@ -15,10 +15,11 @@
 #include <SprGraphics.h>
 #include <Foundation/Scene.h>
 #include "GRFrame.h"
+#include "IfStubGraphics.h"
 
 namespace Spr{;
 
-class GRCamera:public InheritGRVisual<GRCameraIf, GRVisual>, public GRCameraDesc{
+class GRCamera:public GRVisual, GRCameraIfInit, public GRCameraDesc{
 public:
 	OBJECT_DEF(GRCamera);
 	ACCESS_DESC(GRCamera);
@@ -32,7 +33,7 @@ public:
 	virtual void Render(GRRenderIf* render);	
 };
 
-class GRLight :public InheritGRVisual<GRLightIf, GRVisual>, public GRLightDesc{
+class GRLight :public GRVisual, GRLightIfInit, public GRLightDesc{
 public:
 	OBJECT_DEF(GRLight);
 	ACCESS_DESC(GRLight);
@@ -42,7 +43,7 @@ public:
 };
 
 /**	@brief	グラフィックスの材質 */
-class GRMaterial :public InheritGRVisual<GRMaterialIf, GRVisual>, public GRMaterialDesc{
+class GRMaterial :public GRVisual, GRMaterialIfInit, public GRMaterialDesc{
 public:
 	OBJECT_DEF(GRMaterial);
 	ACCESS_DESC(GRMaterial);
@@ -72,15 +73,104 @@ public:
 };
 
 /**	@class	GRRenderBase
-    @brief	グラフィックスレンダラーの基本クラス（Object派生クラスの実行時型情報を管理） */
-class GRRenderBase: public InheritObject<GRRenderBaseIf, Object>{
+    @brief	グラフィックスレンダラー/デバイスの基本クラス　 */
+class GRRenderBase: public Object, GRRenderBaseIfInit{
 public:
 	OBJECT_DEF_ABST(GRRenderBase);
+	///	ビューポートの設定
+	virtual void SetViewport(Vec2f pos, Vec2f sz){}
+	///	バッファクリア
+	virtual void ClearBuffer(){}
+	///	レンダリングの開始前に呼ぶ関数
+	virtual void BeginScene(){}
+	///	レンダリングの終了後に呼ぶ関数
+	virtual void EndScene(){}
+	///	カレントの視点行列をafvで置き換える
+	virtual void SetViewMatrix(const Affinef& afv){}
+	///	カレントの投影行列をafpで置き換える
+	virtual void SetProjectionMatrix(const Affinef& afp){}
+	///	カレントのモデル行列をafwで置き換える
+	virtual void SetModelMatrix(const Affinef& afw){}
+	///	カレントのモデル行列に対してafwを掛ける
+	virtual void MultModelMatrix(const Affinef& afw){}
+	///	カレントのモデル行列をモデル行列スタックへ保存する
+	virtual void PushModelMatrix(){}
+	///	モデル行列スタックから取り出し、カレントのモデル行列とする
+	virtual void PopModelMatrix(){}
+	/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
+	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId){return 0;}
+	/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
+	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId){return 0;}
+	/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
+	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId){return 0;}
+	/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
+	virtual bool PopModelMatrices(unsigned int matrixId){return 0;}
+	///	頂点フォーマットの指定
+	virtual void SetVertexFormat(const GRVertexElement* e){}
+	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
+	virtual void SetVertexShader(void* shader){}
+	///	頂点を指定してプリミティブを描画
+	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){}
+	///	頂点とインデックスを指定してプリミティブを描画
+	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){}
+ 	///	頂点の成分ごとの配列を指定して，プリミティブを描画
+	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
+ 	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
+	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
+	
+	///	ダイレクト形式による DiplayList の作成
+	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){return 0;}
+	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
+						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){return 0;}
+	/// 球オブジェクトの DisplayList の作成
+	virtual int CreateList(float radius, int slices, int stacks){return 0;}
+	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks){return 0;}
+	///	インデックス形式による DiplayList の作成
+	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}
+	virtual int CreateIndexedList(GRMaterialIf* mat, 
+								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}
+	///	DisplayListの表示
+	virtual void DrawList(int i){}
+	///	DisplayListの解放
+	virtual void ReleaseList(int i){}
+	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
+	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0){}
+	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
+	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0){}
+	///	描画の材質の設定
+	virtual void SetMaterial(const GRMaterialDesc& mat){}
+	virtual void SetMaterial(const GRMaterialIf* mat){}
+	///	描画する点・線の太さの設定
+	virtual void SetLineWidth(float w){}
+	///	光源スタックをPush
+	virtual void PushLight(const GRLightDesc& light){}
+	virtual void PushLight(const GRLightIf* light){}
+	///	光源スタックをPop
+	virtual void PopLight(){}
+	///	デプスバッファへの書き込みを許可/禁止する
+	virtual void SetDepthWrite(bool b){}
+	///	デプステストを有効/無効にする
+	virtual void SetDepthTest(bool b){}
+	///	デプスバッファ法に用いる判定条件を指定する
+	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){}
+	/// アルファブレンディングを有効/無効にする
+	virtual void SetAlphaTest(bool b){}
+	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
+	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){}
+	/// テクスチャのロード（戻り値：テクスチャID）
+	virtual unsigned int LoadTexture(const std::string filename){return 0;}
+	/// シェーダの初期化
+	virtual void InitShader(){}
+	/// シェーダオブジェクトの作成
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram){return 0;}
+	virtual bool CreateShader(std::string vShaderFile,  GRHandler& shaderProgram){return 0;}
+	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
+	virtual bool ReadShaderSource(GRHandler shader, std::string file){return 0;}	
 };
 
 /**	@class	GRRender
     @brief	グラフィックスレンダラーの基本クラス（デバイスの切り分け）　 */
-class GRRender: public InheritObject<GRRenderIf, GRRenderBase>{
+class GRRender: public GRRenderBase, GRRenderIfInit{
 	OBJECT_DEF(GRRender);
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
@@ -169,38 +259,19 @@ public:
 	///	スクリーンサイズとプロジェクション行列の設定
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 };
-template <class intf, class base>
-struct InheritGRRender:public InheritObject<intf, base>{
-	REDIRECTIMP_GRRENDERBASE(base::device->)
-	void SetDevice(GRDeviceIf* dev){
-		base::SetDevice(dev);
-	}
-	virtual void SetCamera(const GRCameraDesc& cam){
-		base::SetCamera(cam); 
-	}
-	virtual void Reshape(Vec2f pos, Vec2f sz){
-		base::Reshape(pos, sz);
-	}
-};
 
 /**	@class	GRDevice
     @brief	グラフィックス描画の実装　 */
-class GRDevice: public InheritObject<GRDeviceIf, GRRenderBase>{
+class GRDevice: public GRRenderBase, GRDeviceIfInit{
 public:
 	OBJECT_DEF_ABST(GRDevice);
-	virtual void SetMaterial(const GRMaterialDesc& mat)=0;
+	virtual void Init(){}
+	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){
 		if(mat) SetMaterial(*DCAST(GRMaterial, mat)); }
-	virtual void PushLight(const GRLightDesc& light)=0;
+	virtual void PushLight(const GRLightDesc& light){}
     virtual void PushLight(const GRLightIf* light){
         if(light) PushLight(*DCAST(GRLight, light)); }
 };
-template <class intf, class base>
-struct InheritGRDevice:public InheritObject<intf, base>{
-	void SetDevice(GRDeviceIf* dev){ base::SetDevice(dev); }
-	void SetMaterial(const GRMaterialIf* mat){ base::SetMaterial(mat); }
-	void PushLight(const GRLightIf* light){ base::PushLight(light); }
-};
-
 }
 #endif

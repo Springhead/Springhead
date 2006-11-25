@@ -91,6 +91,10 @@ FactoryBase* IfInfo::FindFactory(const IfInfo* info) const {
 IF_IMP_BASE(Object);
 OBJECT_IMP_BASE(Object);
 
+ObjectIf::~ObjectIf(){
+	delete GetObj<Object>();
+}
+
 void Object::PrintHeader(std::ostream& os, bool bClose) const {
 	int w = os.width();
 	os.width(0);
@@ -144,9 +148,10 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 IF_OBJECT_IMP(NamedObject, Object);
 
 NameManagerIf* NamedObject::GetNameManager(){
-	return nameManager;
+	return nameManager->GetIf();
 }
 void NamedObject::SetNameManager(NameManagerIf* s){
+	assert(!s || s->RefCount() >= 0);
 	if (nameManager){
 		nameManager->names.Del(this);
 	}
@@ -184,12 +189,11 @@ void NamedObject::SetName(const char* n){
 IF_OBJECT_IMP(SceneObject, NamedObject);
 
 void SceneObject::SetScene(SceneIf* s){
-	SetNameManager(DCAST(NameManager, s));
+	SetNameManager(s);
 	nameManager->GetNameMap();
 }
 SceneIf* SceneObject::GetScene(){
-	NameManagerIf* nm = GetNameManager();
-	return DCAST(Scene, nm);
+	return (SceneIf*)GetNameManager();
 }
 
 
@@ -213,7 +217,7 @@ void ObjectStates::ReleaseState(ObjectIf* o){
 	state = NULL;
 	size=0;
 }
-void ObjectStates::DestructState(ObjectIf* o, char*& s){
+void Object::DestructState(ObjectIf* o, char*& s){
 	o->DestructState(s);
 	s += o->GetStateSize();
 	size_t n = o->NChildObject();
@@ -221,13 +225,13 @@ void ObjectStates::DestructState(ObjectIf* o, char*& s){
 		DestructState(o->GetChildObject(i), s);
 	}
 }
-void ObjectStates::ConstructState(ObjectIf* o, char*& s){
+void Object::ConstructState(ObjectIf* o, char*& s){
 	o->ConstructState(s);
 	s += o->GetStateSize();
 	size_t n = o->NChildObject();
 	for(size_t i=0; i<n; ++i){
 		ConstructState(o->GetChildObject(i), s);
-	}	
+	}
 }
 void ObjectStates::AllocateState(ObjectIf* o){
 	if (state) ReleaseState(o);
@@ -274,7 +278,8 @@ void ObjectStates::LoadState(ObjectIf* o, char*& s){
 }
 
 ObjectStatesIf* SPR_CDECL CreateObjectStates(){
-	return new ObjectStates;
+	ObjectStates* o = new ObjectStates;
+	return o->GetIf();
 }
 
 

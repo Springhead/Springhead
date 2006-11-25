@@ -23,7 +23,7 @@ public:
 	}
 };
 
-class SPR_DLL FWSdk:public InheritObject<FWSdkIf, Sdk>{
+class SPR_DLL FWSdk:public Sdk, FWSdkIfInit{
 protected:
 	//	å^èÓïÒDB
 	static UTRef<UTTypeDescDb> typeDb, oldSpringheadTypeDb;
