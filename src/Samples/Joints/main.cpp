@@ -90,7 +90,7 @@ UTRef<PHSceneIf> scene;		// Sceneインタフェース
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
 
-double simulationPeriod = 10.0;
+double simulationPeriod = 50.0;
 Vec3d lookAt;
 int sceneNo;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
@@ -140,7 +140,7 @@ void BuildScene0(){
 	soBox.push_back(scene->CreateSolid(descBox));
 	soBox.back()->AddShape(shapeBox);
 	//空中に固定する
-	soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 0.0));
+	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetDynamical(false);
 	nodeTree.push_back(scene->CreateRootNode(soBox.back()));
 
@@ -343,7 +343,7 @@ void OnKey0(char key){
 		{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
-		soBox.back()->SetFramePosition(Vec3f(0, 10, 0));
+		soBox.back()->SetFramePosition(Vec3f(10, 10, 0));
 		PHHingeJointDesc jdesc;
 		jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
 		jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
@@ -439,6 +439,9 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
+		jdesc.swingUpper = 0.5;		// 最大スイング角
+		jdesc.twistLower = -0.5;	// ツイスト角範囲
+		jdesc.twistUpper = 0.5;
 		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
@@ -762,7 +765,7 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
+	dscene.timeStep = 0.1;
 	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
