@@ -82,7 +82,7 @@ PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
 }
 
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
-	return constraintEngine->AddJoint((PHSolid*)lhs, (PHSolid*)rhs, desc)->GetIf();	
+	return constraintEngine->AddJoint(lhs->GetObj<PHSolid>(), rhs->GetObj<PHSolid>(), desc)->GetIf();	
 }
 
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root){

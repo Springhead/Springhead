@@ -19,10 +19,10 @@
 	field->offset = int((char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "bool", "bEnabled", "");
 	field->offset = int((char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc);
-	field = desc->AddField("", "Posed", "posePlug", "");
-	field->offset = int((char*)&(pPHConstraintDesc->posePlug) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "Posed", "poseSocket", "");
 	field->offset = int((char*)&(pPHConstraintDesc->poseSocket) - (char*)pPHConstraintDesc);
+	field = desc->AddField("", "Posed", "posePlug", "");
+	field->offset = int((char*)&(pPHConstraintDesc->posePlug) - (char*)pPHConstraintDesc);
 	db->RegisterDesc(desc);
 	
 	PHJoint1DDesc* pPHJoint1DDesc = NULL;
@@ -107,8 +107,20 @@
 	desc->access = DBG_NEW UTAccess<PHBallJointDesc>;
 	field = desc->AddBase("PHJointDesc");
 	field->offset = int((char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "max_angle", "");
-	field->offset = int((char*)&(pPHBallJointDesc->max_angle) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "swingUpper", "");
+	field->offset = int((char*)&(pPHBallJointDesc->swingUpper) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "twistLower", "");
+	field->offset = int((char*)&(pPHBallJointDesc->twistLower) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "twistUpper", "");
+	field->offset = int((char*)&(pPHBallJointDesc->twistUpper) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "swingSpring", "");
+	field->offset = int((char*)&(pPHBallJointDesc->swingSpring) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "swingDamper", "");
+	field->offset = int((char*)&(pPHBallJointDesc->swingDamper) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "twistSpring", "");
+	field->offset = int((char*)&(pPHBallJointDesc->twistSpring) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "twistDamper", "");
+	field->offset = int((char*)&(pPHBallJointDesc->twistDamper) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
 	db->RegisterDesc(desc);

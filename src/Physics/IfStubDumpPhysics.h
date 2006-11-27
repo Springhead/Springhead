@@ -24,6 +24,18 @@ struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, OBJ> {
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::GetConstraintType();
 	}
+	virtual void GetRelativePose(Posed &  p){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::GetRelativePose(p);
+	}
+	virtual void GetRelativeVelocity(Vec3d &  v, Vec3d &  w){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::GetRelativeVelocity(v, w);
+	}
+	virtual void GetConstraintForce(Vec3d &  f, Vec3d &  t){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::GetConstraintForce(f, t);
+	}
 };
 struct PHConstraintIf;	class PHConstraint;
 typedef PHConstraintIfStubTemplate<PHConstraintIf, PHConstraint>	PHConstraintIfStub;
@@ -160,13 +172,21 @@ typedef IfInitTemplate<PHPathJointIfStub, PHPathJoint>	PHPathJointIfInit;
 template <class IF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class OBJ>
 struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, OBJ> {
-	virtual void SetMaxAngle(double angle){
+	virtual void SetSwingRange(double upper){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::SetMaxAngle(angle);
+		return ((OBJ*)((char*)this-offset))->OBJ::SetSwingRange(upper);
 	}
-	virtual double GetMaxAngle(){
+	virtual double GetSwingRange(){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetMaxAngle();
+		return ((OBJ*)((char*)this-offset))->OBJ::GetSwingRange();
+	}
+	virtual void SetTwistRange(double lower, double upper){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::SetTwistRange(lower, upper);
+	}
+	virtual void GetTwistRange(double &  lower, double &  upper){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::GetTwistRange(lower, upper);
 	}
 	virtual void SetMotorTorque(const Vec3d &  torque){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
@@ -176,9 +196,9 @@ struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, OBJ> {
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::GetMotorTorque();
 	}
-	virtual Quaterniond GetPosition(){
+	virtual Vec3d GetAngle(){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetPosition();
+		return ((OBJ*)((char*)this-offset))->OBJ::GetAngle();
 	}
 	virtual Vec3d GetVelocity(){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);

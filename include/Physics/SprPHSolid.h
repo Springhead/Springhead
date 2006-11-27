@@ -117,21 +117,21 @@ struct PHSolidIf : public SceneObjectIf{
 		@return 前のステップからの並進移動量
 	*/
 	Vec3d GetDeltaPosition() const;
-	/** @brief 剛体の傾きを取得する
-		@return シーンに対する剛体の傾き
+	/** @brief 剛体の向きを取得する
+		@return シーンに対する剛体の向き
 	 */
 	virtual Quaterniond GetOrientation() const =0;
-	/** @brief 剛体の傾きを設定する
-		@param q シーンに対する剛体の傾き
+	/** @brief 剛体の向きを設定する
+		@param q シーンに対する剛体の向き
 	 */
 	virtual void		SetOrientation(const Quaterniond& q) =0;
 
-	/** @brief 剛体の位置と傾きを取得する
-		@return シーンに対する剛体の位置と傾き
+	/** @brief 剛体の位置と向きを取得する
+		@return シーンに対する剛体の位置と向き
 	 */
 	virtual Posed		GetPose() const = 0;
-	/** @brief 剛体の位置と傾きを設定する
-		@param p シーンに対する剛体の位置と傾き
+	/** @brief 剛体の位置と向きを設定する
+		@param p シーンに対する剛体の位置と向き
 	 */
 	virtual void		SetPose(const Posed& p) = 0;
 
@@ -176,15 +176,15 @@ struct PHSolidIf : public SceneObjectIf{
 		以下同様．
 	 */
 	virtual CDShapeIf*	GetShape(int index)=0;
-	/** @brief 形状の位置と傾きを取得する
+	/** @brief 形状の位置と向きを取得する
 		@param index 対象とする形状のインデックス
-		@return 剛体に対する形状の位置と傾き
+		@return 剛体に対する形状の位置と向き
 		インデックスについてはGetShapeを参照．
 	 */
 	virtual Posed		GetShapePose(int index)=0;
-	/** @brief 形状の位置と傾きを設定する
+	/** @brief 形状の位置と向きを設定する
 		@param index 対象とする形状のインデックス
-		@param pose 剛体に対する形状の位置と傾き
+		@param pose 剛体に対する形状の位置と向き
 		インデックスについてはGetShapeを参照．
 	 */
 	virtual void		SetShapePose(int index, const Posed& pose)=0;

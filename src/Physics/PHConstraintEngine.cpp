@@ -208,15 +208,15 @@ PHJoint* PHConstraintEngine::AddJoint(const PHJointDesc& desc){
 }
 
 PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
-	PHSolids::iterator islhs, isrhs;
-	islhs = solids.Find(lhs);
-	isrhs = solids.Find(rhs);
-	if(islhs == solids.end() || isrhs == solids.end())
+	UTRef<PHSolid> *plhs, *prhs;
+	plhs = solids.Find(lhs);
+	prhs = solids.Find(rhs);
+	if(!plhs || !prhs)
 		return NULL;
 	
 	PHJoint* joint = CreateJoint(desc);
-	joint->solid[0] = *islhs;
-	joint->solid[1] = *isrhs;
+	joint->solid[0] = *plhs;
+	joint->solid[1] = *prhs;
 	joints.push_back(joint);
 
 	//ŠÖß‚Å‚Â‚È‚°‚ç‚ê‚½„‘ÌŠÔ‚ÌÚG‚Í–³Œø‰»

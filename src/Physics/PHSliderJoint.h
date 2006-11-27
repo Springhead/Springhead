@@ -15,7 +15,7 @@
 namespace Spr{;
 
 ///	スライダ関節に対応するツリーノード
-class PHSliderJointNode:public PHTreeNode1D{
+class PHSliderJointNode : public PHTreeNode1D{
 public:
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();

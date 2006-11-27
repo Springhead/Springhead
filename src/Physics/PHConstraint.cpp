@@ -55,10 +55,12 @@ void PHConstraint::UpdateState(){
 	// ツリーを構成していない拘束の場合，剛体の相対位置からヤコビアン，関節速度・位置を逆算する
 	if(!bArticulated){
 		CompJacobian();
+		vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
 		UpdateJointState();
 	}
 }
 
+// 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
 void PHConstraint::CompJacobian(){
 	SpatialTransform X[2];
 	Matrix3d	Rjabs[2];
@@ -74,7 +76,6 @@ void PHConstraint::CompJacobian(){
 	J[0] = Js[0];
 	J[0] *= -1.0;	//反作用
 	J[1] = Js[1];
-	vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
 	
 	/*
 	//角速度の左からかけるとquaternionの時間微分が得られる行列
@@ -90,11 +91,11 @@ void PHConstraint::CompJacobian(){
 	*/
 }
 
+/*	Aの対角成分を計算する．A = J * M^-1 * J^T
+	A行列は拘束力から速度変化への影響の強さを表す行列なので，
+	その対角成分はある拘束力成分から自分自身の拘束速度成分への影響の強さを表す
+ */
 void PHConstraint::CompResponseMatrix(){
-	/*	Aの対角成分を計算する．A = J * M^-1 * J^T
-		A行列は拘束力から速度変化への影響の強さを表す行列なので，
-		その対角成分はある拘束力成分から自分自身の拘束速度成分への影響を表す
-	 */
 	int i, j;
 	A.v.clear();
 	A.w.clear();
@@ -160,17 +161,6 @@ void PHConstraint::SetupDynamics(){
 	if(!bEnabled || !bFeasible || bArticulated)
 		return;
 
-	//各剛体の速度，角速度から相対速度，相対角速度へのヤコビ行列を計算
-	//　接触拘束の場合は相対角速度へのヤコビ行列は必要ない
- 	CompResponseMatrix();
-
-	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
-	//	拘束の種類ごとに異なる
-	//CompConstraintJacobian();
-	b = vjrel;
-	CompBias();	// 目標速，バネダンパによる補正項を計算
-	b += db;
-	
 	/* 前回の値を縮小したものを初期値とする．
 	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
 	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
@@ -180,6 +170,22 @@ void PHConstraint::SetupDynamics(){
 	if(mode == MODE_TORQUE)
 		AddMotorTorque();
 
+	// 制約する自由度の決定
+	CompDof();
+
+	// LCPの座標の取り方が特殊な関節はヤコビアンに座標変換をかける
+	ModifyJacobian();
+
+	// LCPのbベクトル
+	//b = vjrel;
+	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
+	CompBias();	// 目標速，バネダンパによる補正項を計算
+	b += db;
+	
+	// LCPのA行列の対角成分を計算
+	CompResponseMatrix();
+
+	// 拘束力初期値による速度変化量を計算
 	int i, j;
 	SpatialVector fs;
 	for(i = 0; i < 2; i++){
@@ -194,8 +200,8 @@ void PHConstraint::SetupDynamics(){
 			}
 		}
 	}
-	
-	// iterationでの手間を省くためにあらかじめA行列の対角要素でbとJを割っておく
+
+	// 反復での手間を省くためにあらかじめA行列の対角成分でbとJを割っておく
 	for(j = 0; j < 3; j++){
 		Ainv.v[j] = 1.0 / (A.v[j] + dA.v[j]);
 		dA.v[j] *= Ainv.v[j];

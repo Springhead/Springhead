@@ -21,17 +21,17 @@ public:
 };
 
 class PHJoint1D : public PHJoint, PHJoint1DIfInit{
-protected:
-	int		axis_index;					///< 関節軸のインデックス．派生クラスが設定する
-	void	CompDof();
 public:
 	OBJECT_DEF_ABST(PHJoint1D);
+	
+	int		axis_index;					///< 関節軸のインデックス．派生クラスが設定する
 	double	position, velocity, torque;	///< 変位，速度，トルク
 	bool	on_lower, on_upper;			///< 可動範囲の下限、上限に達している場合にtrue
 	double	lower, upper;				///< 可動範囲の下限、上限
 	double	pos_d, vel_d;				///< 目標変位、目標速度
 	double	spring, origin, damper;		///< バネ係数、バネ原点、ダンパ係数
-	
+
+	/// インタフェースの実装
 	virtual double	GetPosition(){return position;}
 	virtual double	GetVelocity(){return velocity;}
 	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}
@@ -48,8 +48,11 @@ public:
 	virtual double	GetSpringOrigin(){return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper(){return damper;}
+
+	/// オーバライド
 	virtual void	SetDesc(const PHJointDesc& desc);
 	virtual void	AddMotorTorque(){f[axis_index] = torque * scene->GetTimeStep();}
+	virtual void	CompDof();
 	PHJoint1D();
 };
 

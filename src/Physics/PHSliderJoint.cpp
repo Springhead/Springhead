@@ -24,7 +24,6 @@ void PHSliderJoint::UpdateJointState(){
 }
 
 void PHSliderJoint::CompBias(){
-	CompDof();
 	double dtinv = 1.0 / scene->GetTimeStep();
 	db.v = Xjrel.r * dtinv + vjrel.v;
 	db.v.z = 0.0;

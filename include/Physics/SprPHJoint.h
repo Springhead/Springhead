@@ -36,7 +36,8 @@ struct PHConstraintDesc{
 	/// 有効/無効フラグ
 	bool bEnabled;
 	/// 剛体から見た関節の位置と傾き
-	Posed posePlug, poseSocket;
+	Posed poseSocket;
+	Posed posePlug;
 	PHConstraintDesc():bEnabled(true){}
 };
 
@@ -89,11 +90,21 @@ struct PHPathJointDesc : public PHJoint1DDesc{
 
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
-	double	max_angle;		///< 円錐状の可動範囲
+	double	swingUpper;
+	double  twistLower;
+	double  twistUpper;		///< 円錐状の可動範囲
+	double	swingSpring;
+	double  swingDamper;
+	double	twistSpring;
+	double  twistDamper;
 	Vec3d	torque;			///< モータトルク
 	PHBallJointDesc(){
 		type = BALLJOINT;
-		max_angle = 0.0;
+		swingUpper = -1.0;
+		swingSpring = swingDamper = 0.0;
+		twistLower =  1.0;
+		twistUpper = -1.0;
+		twistSpring = twistDamper = 0.0;
 	}
 };
 
@@ -132,6 +143,23 @@ struct PHConstraintIf : public SceneObjectIf{
 		@return 拘束の種類
 	 */
 	virtual PHConstraintDesc::ConstraintType GetConstraintType() = 0;
+
+	/** @brief 拘束する剛体間の相対位置・姿勢を取得
+		@param p ソケットに対するプラグの位置と向き
+	 */
+	virtual void GetRelativePose(Posed& p) = 0;
+
+	/** @brief 拘束する剛体間の相対速度
+		@param v ソケットに対するプラグの速度
+		@param w ソケットに対するプラグの角速度
+	 */
+	virtual void GetRelativeVelocity(Vec3d& v, Vec3d& w) = 0;
+
+	/** @brief 拘束力を取得
+		@param f 並進力
+		@param t モーメント
+	 */
+	virtual void GetConstraintForce(Vec3d& f, Vec3d& t) = 0;
 };
 
 /// 接触点拘束のインタフェース
@@ -254,15 +282,29 @@ struct PHPathJointIf : public PHJoint1DIf{
 struct PHBallJointIf : public PHConstraintIf{
 	IF_DEF(PHBallJoint);
 
-	/** @brief 最大角度を設定する
-		@param angle 最大角度
+	/** @brief スイング角の可動範囲を設定する
+		@param upper 最大スイング角度
+		可動範囲制限を無効化するにはupperに負の値を設定する
 	 */
-	virtual void SetMaxAngle(double angle) = 0;
+	virtual void SetSwingRange(double upper) = 0;
 
-	/** @brief 最大角度を取得する
-		@return 最大角度
+	/** @brief スイング角の可動範囲を取得する
+		@return 最大スイング角度
 	 */
-	virtual double GetMaxAngle() = 0;
+	virtual double GetSwingRange() = 0;
+
+	/** @brief ツイスト角の可動範囲を設定する
+		@param lower 最小ツイスト角度
+		@param upper 最大ツイスト角度
+		可動範囲制限を無効化するにはlower > upperな値を設定する
+	 */
+	virtual void SetTwistRange(double lower, double upper) = 0;
+
+	/** @brief ツイスト角の可動範囲を取得する
+		@param lower 最小ツイスト角度
+		@param upper 最大ツイスト角度
+	 */
+	virtual void GetTwistRange(double& lower, double& upper) = 0;
 
 	/** @brief モータトルクを設定する
 		@param torque モータトルク
@@ -275,12 +317,12 @@ struct PHBallJointIf : public PHConstraintIf{
 	virtual Vec3d GetMotorTorque()=0;
 
 	/** @brief 関節変位を取得する
-		@return 関節変位
+		@return スイング方位角，スイング角，ツイスト角からなるベクトル
 	 */
-	virtual Quaterniond	GetPosition() = 0;
+	virtual Vec3d GetAngle() = 0;
 
 	/** @brief 関節速度を取得する
-		@return 関節速度
+		@return スイング方位角，スイング角，ツイスト角の時間変化率からなるベクトル
 	 */
 	virtual Vec3d GetVelocity() = 0;
 

@@ -18,13 +18,18 @@ class PHTreeNode;
 
 ///
 class PHConstraint : public SceneObject, PHConstraintIfInit{
-public:
-	OBJECT_DEF_ABST(PHConstraint);
+protected:
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,
 		MODE_VELOCITY
 	} mode;
+	
+	PHScene*			scene;
+	PHConstraintEngine* engine;
+
+public:
+	OBJECT_DEF_ABST(PHConstraint);
 	
 	bool		bEnabled;			///< 有効化されている場合にtrue
 	bool		bFeasible;			///< 両方の剛体がundynamicalな場合true
@@ -37,10 +42,10 @@ public:
 	Quaterniond	qjrel; 
 	SpatialVector		vjrel;		///< ソケットに対するプラグの相対速度
 	
-	SpatialTransform		Js[2];		///< 拘束ヤコビアン SpatialTranform形式
-	SpatialMatrix			J[2];		///< 拘束ヤコビアン 行列形式
-	SpatialMatrix			AinvJ[2];
-	SpatialMatrix			T[2];
+	SpatialTransform	Js[2];		///< 拘束ヤコビアン SpatialTranform形式
+	SpatialMatrix		J[2];		///< 拘束ヤコビアン 行列形式
+	SpatialMatrix		AinvJ[2];
+	SpatialMatrix		T[2];
 	
 	bool		constr[6];			///< 拘束する自由度．trueならば拘束する．
 
@@ -51,16 +56,27 @@ public:
 	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
 	
 	void	Init();
+	void	CompJacobian();
 	void	SetupDynamics();
 	void	SetupDynamicsForPrediction();
 	void	IterateDynamics();
 	void	SetScene(SceneIf* s){scene = DCAST(PHScene, s);}
 	void	SetEngine(PHConstraintEngine* e){engine = e;}
 	void	UpdateState();
-	void	CompJacobian();
 	void	CompResponseMatrix();
 	//void SetupCorrection(double dt, double max_error);
 	//void IterateCorrection();
+	
+	/// 派生クラスの機能
+	virtual void SetDesc(const PHConstraintDesc& desc);		///< ディスクリプタの読み込み
+	virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
+	virtual void CompDof(){}								///< どの自由度を拘束するかを設定
+	virtual void ModifyJacobian(){}							///< 独自座標系を使う場合のヤコビアンの修正
+	virtual void CompBias(){}								///< 
+	virtual void Projection(double& f, int k){}				///< 拘束力の射影
+	virtual void UpdateJointState(){}						///< 関節座標の位置・速度を更新する
+	//virtual void CompError(double dt)=0;					///< Bv, Bqを設定する
+	//virtual void ProjectionCorrection(double& F, int k){}	///< 
 	
 	/// インタフェースの実装
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
@@ -69,19 +85,11 @@ public:
 	virtual bool IsEnabled(){return bEnabled;}
 	virtual void SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}
 	virtual bool IsInactive(int index = 0){return bInactive[index];}
+	virtual void GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = qjrel;}
+	virtual void GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v; w = vjrel.w;}
+	virtual void GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v; _t = f.w;}
 
-	/// 派生クラスの機能
-	virtual void SetDesc(const PHConstraintDesc& desc);
-	virtual void AddMotorTorque(){}
-	virtual void CompBias(){}
-	virtual void Projection(double& f, int k){}
-	virtual void UpdateJointState(){}			///< 関節座標の位置・速度を更新する
-	//virtual void CompError(double dt)=0;			/// Bv, Bqを設定する
-	//virtual void ProjectionCorrection(double& F, int k){}
 	PHConstraint();
-protected:
-	PHScene* scene;
-	PHConstraintEngine* engine;
 };
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{
 public:

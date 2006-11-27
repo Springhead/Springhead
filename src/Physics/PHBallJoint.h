@@ -14,6 +14,16 @@
 
 namespace Spr{;
 
+/** 回転のスイング・ツイスト角表現 */
+struct SwingTwist : public Vec3d{
+	double SwingDir(){return item(0);}
+	double Swing(){return item(1);}
+	double Twist(){return item(2);}
+	void ToQuaternion(Quaterniond& q);
+	void FromQuaternion(const Quaterniond& q);
+	void Jacobian(Matrix3d& J, const Quaterniond& q);
+};
+
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
@@ -26,34 +36,41 @@ public:
 
 class PHBallJoint : public PHJointND<3>, PHBallJointIfInit{
 protected:
-	double	max_angle;
-	Vec3d	torque;
+	bool		swingOnUpper, twistOnLower, twistOnUpper;
+	double		swingUpper, swingDamper, swingSpring;
+	double		twistLower, twistUpper, twistDamper, twistSpring;
+	SwingTwist	angle, velocity;	///< スイング・ツイスト角表現の角度と角速度
+	Vec3d		torque;
+	Matrix3d	Jst;
 public:
 	OBJECT_DEF(PHBallJoint);
-	virtual void SetDesc(const PHConstraintDesc& desc);
+	
+	/// インタフェースの実装
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
-	virtual void SetMaxAngle(double angle){max_angle = angle;}
-	virtual double GetMaxAngle(){return max_angle;}
-	virtual void SetMotorTorque(const Vec3d& t){torque = t;}
-	virtual Vec3d GetMotorTorque(){return torque;}
-	virtual Quaterniond GetPosition(){return qjrel;}
-	virtual Vec3d GetVelocity(){return vjrel.w;}
-	//virtual void CompConstraintJacobian();
+	virtual void	SetSwingRange(double u){swingUpper = u;}
+	virtual double	GetSwingRange(){return swingUpper;}
+	virtual void	SetTwistRange(double l, double u){twistLower = l; twistUpper = u;}
+	virtual void	GetTwistRange(double& l, double& u){l = twistLower; u = twistUpper;}
+	virtual void	SetMotorTorque(const Vec3d& t){torque = t;}
+	virtual Vec3d	GetMotorTorque(){return torque;}
+	virtual Vec3d	GetAngle(){return angle;}
+	virtual Vec3d	GetVelocity(){return velocity;}
+	
+	/// 仮想関数のオーバライド
+	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual void AddMotorTorque(){f.w = torque * scene->GetTimeStep();}
+	virtual void CompDof();
+	virtual void ModifyJacobian();
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
+	virtual void UpdateJointState();
 	//virtual void CompError(double dt);
 	//virtual void ProjectionCorrection(double& F, int k);
-	virtual void CompRelativePosition(){}
-	virtual void CompRelativeVelocity(){}
-
+	
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHBallJointNode();
 	}
-	PHBallJoint(){
-		constr[0] = constr[1] = constr[2] = true;
-		constr[3] = constr[4] = constr[5] = false;
-	}
+	PHBallJoint(){}
 };
 
 }

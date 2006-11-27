@@ -27,14 +27,13 @@ void PHHingeJoint::UpdateJointState(){
 }
 
 void PHHingeJoint::CompBias(){
-	CompDof();
 	double dtinv = 1.0 / scene->GetTimeStep();
 	//	hase	これを入れたほうが、若干安定化する。
 	//	本来速度をその都度修正しているので、PD制御ではないのだけど、
 	//	shrinkRatio が高い場合、拘束力が残るため、Dを入れると安定化する。
 	//	tazz 追記．要するに現在の誤差ではなく次時刻の予測誤差を0にするようにする
 	db.v = (Xjrel.r * dtinv + vjrel.v);
-	db.w = (qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv)/* + vjrel.w*/);
+	db.w = (qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv) + vjrel.w);
 	db.w.z = 0.0;
 	db *= engine->correctionRate;
 
