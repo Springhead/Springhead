@@ -306,7 +306,7 @@ public:
 	}
 
 	virtual void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
-		typename PHSolids::iterator ilhs = solids.Find((PHSolid*)lhs), irhs = solids.Find((PHSolid*)rhs);
+		typename PHSolids::iterator ilhs = solids.Find(lhs->GetObj<PHSolid>()), irhs = solids.Find(rhs->GetObj<PHSolid>());
 		if(ilhs == solids.end() || irhs == solids.end())
 			return;
 		int i = ilhs - solids.begin(), j = irhs - solids.begin();
@@ -320,7 +320,7 @@ public:
 		std::vector<int> idx;
 		typename PHSolids::iterator it;
 		for(int i = 0; i < (int)length; i++){
-			it = solids.Find((PHSolid*)group[i]);
+			it = solids.Find(group[i]->GetObj<PHSolid>());
 			if(it != solids.end())
 				idx.push_back(it - solids.begin());
 		}

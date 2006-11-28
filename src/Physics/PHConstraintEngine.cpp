@@ -226,8 +226,8 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 }
 bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
 	PHSolids::iterator islhs, isrhs;
-	islhs = solids.Find((PHSolid*)lhs);
-	isrhs = solids.Find((PHSolid*)rhs);
+	islhs = solids.Find(lhs->GetObj<PHSolid>());
+	isrhs = solids.Find(rhs->GetObj<PHSolid>());
 	if(islhs == solids.end() || isrhs == solids.end()) return false;
 	
 	PHJoint* joint = DCAST(PHJoint, j);
