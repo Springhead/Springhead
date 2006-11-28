@@ -758,6 +758,7 @@ void idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
+
 int main(int argc, char* argv[]){
 
 	// SDKの作成　

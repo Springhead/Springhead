@@ -82,16 +82,25 @@ public:
 			return (cls*)o;												\
 		return NULL;													\
 	}																	\
+	XCastPtr<cls>& Cast() const{										\
+		return *(XCastPtr<cls>*)(void*)this; }							\
 
 #define	OBJECT_DEF_ABST_NOIF(cls)		DEF_UTTYPEINFOABSTDEF(cls) OBJECT_GETSELFDEF(cls)
 #define	OBJECT_DEF_NOIF(cls)			DEF_UTTYPEINFODEF(cls) OBJECT_GETSELFDEF(cls)
+
+#define OBJECT_GETSELFDEF_IF(cls)										\
+	static cls* GetSelfFromIf(const cls##If* p){						\
+		if (!p) return NULL;											\
+		return p->GetObj<cls>();										\
+	}																	\
 
 #define OBJECT_IF_UTILITY(cls)	\
 	cls##If* GetIf(){ return (cls##If*)(ObjectIfBuf*) this; }	\
 	const cls##If* GetIf() const { return (const cls##If*)(ObjectIfBuf*) this; }
 
-#define	OBJECT_DEF_ABST(cls)	OBJECT_DEF_ABST_NOIF(cls) OBJECT_IF_UTILITY(cls)
-#define	OBJECT_DEF(cls)			OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls)
+#define	OBJECT_DEF_ABST(cls)	OBJECT_DEF_ABST_NOIF(cls) OBJECT_IF_UTILITY(cls) OBJECT_GETSELFDEF_IF(cls)
+#define	OBJECT_DEF(cls)			OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls) OBJECT_GETSELFDEF_IF(cls)
+#define	OBJECT_DEF_FOR_OBJ(cls)	OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls)
 
 ///	実行時型情報を持つObjectの派生クラスが持つべきメンバの実装．
 #define OBJECT_IMP_BASEABST(cls)		DEF_UTTYPEINFOABST(cls)
@@ -148,9 +157,9 @@ namespace Spr{;
 
 /**	全Objectの基本型	*/
 class Object:public ObjectIfBuf, ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
-	void GetIfInfo() { assert(0); }	///	don't call me
+	void GetIfInfo() { assert(0); }	//	don't call me
 public:
-	OBJECT_DEF(Object);		///<	クラス名の取得などの基本機能の実装
+	OBJECT_DEF_FOR_OBJ(Object);		///<	クラス名の取得などの基本機能の実装
 
 	virtual int AddRef(){return UTRefCount::AddRef();}
 	virtual int DelRef(){return UTRefCount::DelRef();}
@@ -202,7 +211,7 @@ protected:
 	///	sをoのStateからメモリブロックに戻す．
 	static void DestructState(ObjectIf* o, char*& s);
 };
-template <class T> T* SprDcastImp(const Object* o){
+template <class T> T* DCastImp(const Object* o){
 	if (!o) return NULL;
 	return T::GetSelfFromIf(o->GetIf());
 }

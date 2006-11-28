@@ -15,6 +15,39 @@
 
 namespace Spr{;
 
+#undef DCAST
+#define DCAST(T,p) DCastImp< T >(p)
+struct ObjectIf;
+///	インタフェースクラスのキャスト
+template <class T> T* DCastImp(const ObjectIf* p){
+	if (!p) return NULL;
+	return T::GetSelfFromIf(p);
+}
+
+#undef XCAST
+#define XCAST(p) CastToXCastPtr(p)
+///	インタフェースクラスのキャスト
+template <class T>
+class XCastPtr{
+public:
+	template <class X> operator X*() const {
+		T* t = (T*) this;
+		return DCAST(X, t);
+	}
+	template <class X> operator UTRef<X>() const {
+		T* t = (T*) this;
+		return DCAST(X, t);
+	}
+};
+
+template <class T> XCastPtr<T>& CastToXCastPtr(const T* ptr){
+	return *(XCastPtr<T>*)(void*)ptr;
+}
+template <class T> XCastPtr<T>& CastToXCastPtr(const UTRef<T> ptr){
+	return *(XCastPtr<T>*)(void*)&*ptr;
+}
+
+
 struct ObjectIf;
 class IfInfo;
 class UTTypeDesc;
@@ -73,28 +106,34 @@ public:
 };
 
 ///	インタフェースが持つべきメンバの宣言部．
-#define IF_DEF(cls)														\
+#define IF_DEF_FOR_OBJECTIF(cls)										\
 public:																	\
 	static IfInfoImp<cls##If> ifInfo;									\
 	virtual const IfInfo* GetIfInfo() const {							\
 		return GetIfInfoStatic();										\
 	}																	\
 	static const IfInfo* SPR_CDECL GetIfInfoStatic();					\
-	static cls##If* GetSelfFromIf(const ObjectIf* i){					\
-		if (i->GetIfInfo()->Inherit(cls##If::GetIfInfoStatic()))		\
-			return (cls##If*)i;											\
-		return NULL;													\
-	}																	\
 	static void* operator new(size_t) {									\
         assert(0);	/*	Don't allocate interfaces	*/					\
         return NULL;													\
     }																	\
 	static void operator delete(void* pv) {}							\
+	static cls##If* GetSelfFromIf(const cls##If* i){					\
+		return (cls##If*)i;												\
+	}																	\
+	XCastPtr<cls##If>& Cast() const{									\
+		return *(XCastPtr<cls##If>*)(void*)this; }						\
 
+#define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls)							\
+	static cls##If* GetSelfFromIf(const ObjectIf* i){					\
+		if (i->GetIfInfo()->Inherit(cls##If::GetIfInfoStatic()))		\
+			return (cls##If*)i;											\
+		return NULL;													\
+	}																	\
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
-	IF_DEF(Object);
+	IF_DEF_FOR_OBJECTIF(Object);
 	~ObjectIf();
 	template <class T> T* GetObj() const { 
 		assert(sizeof(T));
@@ -215,15 +254,6 @@ struct ObjectStatesIf: public ObjectIf{
 	virtual void LoadState(ObjectIf* o) = 0;
 };
 ObjectStatesIf* SPR_CDECL CreateObjectStates();
-
-#undef DCAST
-#define DCAST(T,p) SprDcastImp< T >(p)
-
-///	インタフェースクラスのキャスト
-template <class T> T* SprDcastImp(const ObjectIf* p){
-	if (!p) return NULL;
-	return T::GetSelfFromIf(p);
-}
 
 }
 

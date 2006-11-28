@@ -344,13 +344,17 @@ bool PHSolidContainer::DelChildObject(ObjectIf* o){
 }
 
 void PHSolidContainer::Reset(){
-	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it)
-		(*it)->GetObj<PHSolid>()->SetUpdated(false);
+	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it){
+		PHSolid* s = XCAST(*it);
+		s->SetUpdated(false);
+	}
 }
 
 void PHSolidContainer::Step(){
-	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it)
-		(*it)->GetObj<PHSolid>()->Step();
+	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it){
+		PHSolid* s = XCAST(*it);
+		s->Step();
+	}
 }
 
 //----------------------------------------------------------------------------

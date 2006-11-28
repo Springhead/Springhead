@@ -86,11 +86,11 @@ PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDes
 }
 
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root){
-	return constraintEngine->AddRootNode(root->GetObj<PHSolid>())->GetIf();
+	return XCAST( constraintEngine->AddRootNode(XCAST(root)) );
 }
 
 PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child){
-	return constraintEngine->AddNode(parent->GetObj<PHTreeNode>(), child->GetObj<PHSolid>())->GetIf();
+	return constraintEngine->AddNode(XCAST(parent), XCAST(child))->GetIf();
 }
 
 void PHScene::Clear(){
