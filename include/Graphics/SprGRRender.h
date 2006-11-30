@@ -14,7 +14,7 @@
 #include <Collision/SprCDShape.h>
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRFrame.h>
-
+#include <Graphics/SprGRShader.h>
 namespace Spr{;
 
 /**	\addtogroup	gpGraphics	*/
@@ -224,6 +224,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetViewMatrix(const Affinef& afv)=0;
 	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp)=0;
+	///	カレントの投影行列を取得する
+	virtual void GetProjectionMatrix(const Affinef& afp)=0;
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw)=0;
 	///	カレントのモデル行列に対してafwを掛ける
@@ -232,14 +234,10 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void PushModelMatrix()=0;
 	///	モデル行列スタックから取り出し、カレントのモデル行列とする
 	virtual void PopModelMatrix()=0;
-	/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
-	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId)=0;
-	/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
-	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId)=0;
-	/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
-	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId)=0;
-	/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
-	virtual bool PopModelMatrices(unsigned int matrixId)=0;
+	/// ブレンド変換行列の全要素を削除する
+	virtual void ClearBlendMatrix()=0;
+	/// ブレンド変換行列を設定する
+	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id=0)=0;
 	///	頂点フォーマットの指定
 	virtual void SetVertexFormat(const GRVertexElement* e)=0;
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
@@ -251,8 +249,7 @@ struct GRRenderBaseIf: public ObjectIf{
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
-	
+	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}	
 	///	ダイレクト形式による DiplayList の作成
 	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
 	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
@@ -264,6 +261,9 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
 	virtual int CreateIndexedList(GRMaterialIf* mat, 
 								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+	///	インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
+	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 
+									GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;	
 	///	DisplayListの表示
 	virtual void DrawList(int i)=0;
 	///	DisplayListの解放
@@ -296,11 +296,16 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual unsigned int LoadTexture(const std::string filename)=0;
 	/// シェーダの初期化
 	virtual void InitShader()=0;
+	/// シェーダフォーマットの設定
+	virtual void SetShaderFormat(GRShaderFormat::ShaderType type)=0;
 	/// シェーダオブジェクトの作成
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram)=0;
-	virtual bool CreateShader(std::string vShaderFile,  GRHandler& shaderProgram)=0;
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader)=0;
+	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
+	virtual GRHandler CreateShader()=0;
 	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
 	virtual bool ReadShaderSource(GRHandler shader, std::string file)=0;	
+	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
+	virtual void GetShaderLocation(GRHandler shader, void* location)=0;	
 };
 
 /**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */

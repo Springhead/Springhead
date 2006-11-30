@@ -18,23 +18,11 @@ class GRMaterial;
 /** @class GRBlendMesh
 	@brief グラフィックスシーングラフでの座標系を表す．	*/
 class GRBlendMesh: public GRVisual,GRBlendMeshIfInit, public GRBlendMeshDesc{
+	GRRenderIf* render;							///< レンダラー				
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
-	GRRenderIf* render;
-	
-	GRHandler 	shaderProgram;					///< シェーダプログラム
-	unsigned		locationMatrices0;
-	unsigned		locationMatrices1;
-	//unsigned		locationEyePosition;
-	//unsigned		locationLightVector;		// シェーダからgl_LightSource[] でアクセス可
-	unsigned		locationWeights;
-	//unsigned		locationMatrixIndices;		// 固定で、m0、m1 としちゃえば、いらない。
-	//unsigned		locationNumBones;			// 固定で、m0、m1 としちゃえば、いらない。
-	unsigned		locationInverseModelView;		// 法線、マテリアル計算で必要			
-	
-	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する．
+			
+	/// 頂点フォーマット、シェーダフォーマット に合わせ、ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
-	/// MaterialListのインデックスに合わせ、ディスプレイリストを細分化．
-	void CreateListElement(void* vtx);
 public:
 	OBJECT_DEF(GRBlendMesh);
 	ACCESS_DESC(GRBlendMesh);
@@ -48,11 +36,10 @@ public:
 	std::vector<int> originalFaces;				///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
 	std::vector<unsigned int> elementIndex;		///< 面を構成するための頂点インデックス（三角形分割後の面に対するインデックス）
 	std::vector<int> faceNormals;				///< 法線インデックス
-
-	std::string vShaderFile;					///< VertexShader ファイル名
-	std::string fShaderFile;					///< FragmentShader ファイル名
 	
+	std::vector<Affinef>				blendMatrix;			///< ブレンド変換行列
 
+	
 	GRBlendMesh(const GRBlendMeshDesc& desc=GRBlendMeshDesc());
 	~GRBlendMesh();
 	void Render(GRRenderIf* r);

@@ -41,7 +41,6 @@ void GRDeviceGL::Init(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_BLEND);
-//	glEnable(GL_CULL_FACE);
 	glDisable(GL_CULL_FACE);
 	SetVertexFormat(GRVertexElement::vfP3f);
 	
@@ -76,14 +75,18 @@ void GRDeviceGL::SetViewMatrix(const Affinef& afv){
 	viewMatrix  = afv;		// 視点行列の保存
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
+	//glLoadMatrixf(viewMatrix * modelMatrix);
 }
 /// カレントの投影行列をafpで置き換える
 void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){  
-	projectionMatrix = afp;
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(projectionMatrix);
+	glLoadMatrixf(afp);
 	glMatrixMode(GL_MODELVIEW);
 }
+/// カレントの投影行列を取得する
+void GRDeviceGL::GetProjectionMatrix(const Affinef& afp){  
+	glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat *)&afp);
+}	
 /// カレントのモデル行列をafwで置き換える
 void GRDeviceGL::SetModelMatrix(const Affinef& afw){
 	modelMatrix = afw;		// モデル行列の保存
@@ -109,48 +112,29 @@ void GRDeviceGL::PopModelMatrix(){
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
-/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
-bool GRDeviceGL::SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId){
-	if (matrixId < modelMatrices.size()){
-		if (elementId < modelMatrices[matrixId].size()){
-			modelMatrices[matrixId][elementId] = afw;
-			return true;
-		}
-	}
-	return false;
-}
-/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
-bool GRDeviceGL::MultModelMatrices(const Affinef& afw, unsigned int matrixId){
-	if (matrixId < modelMatrices.size()){
-		modelMatrices[matrixId][0] = modelMatrices[matrixId][0] * afw;
-		return true;
-	}
-	return false;
+/// ブレンド変換行列の全要素を削除する
+void GRDeviceGL::ClearBlendMatrix(){
+	blendMatrix.clear();
 }	
-/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
-bool GRDeviceGL::PushModelMatrices(const Affinef& afw, unsigned int matrixId){
-	if (matrixId < modelMatrices.size()){
-		modelMatrices[matrixId].push_back(afw);
-	} else if( matrixId == modelMatrices.size()){
-		std::vector<Affinef> tmpafw;
-		tmpafw.push_back(afw);
-		modelMatrices.push_back(tmpafw);
-	} else{
-		return false;
-	}
+/// ブレンド変換行列を設定する
+bool GRDeviceGL::SetBlendMatrix(const Affinef& afb){
+	blendMatrix.push_back(afb);
 	return true;
-}	
-/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
-bool GRDeviceGL::PopModelMatrices(unsigned int matrixId){
-	if (matrixId < modelMatrices.size()){
-		modelMatrices[matrixId].pop_back();
-		return true;
-	} else{
-		return false;
-	}
 }
-/// 頂点座標を指定してプリミティブを描画
-void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
+/// ブレンド変換行列を設定する
+bool GRDeviceGL::SetBlendMatrix(const Affinef& afb, unsigned int id){
+	if (id == 0){
+		SetBlendMatrix(afb);
+		return true;
+	}
+	if (blendMatrix.size() > id) {
+		blendMatrix[id] = afb;
+		return true;
+	}
+	return false;
+}		
+/// 頂点フォーマットの指定
+void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){	
 	if (e == GRVertexElement::vfP3f) {
 		vertexFormatGl = GL_V3F; 
 		vertexSize = sizeof(float)*3;
@@ -173,7 +157,7 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		vertexColor = false;
 	}else if (e == GRVertexElement::vfT2fC4bP3f){
 		vertexFormatGl = GL_T2F_C4UB_V3F;
-		vertexSize = sizeof(float)*5 + sizeof(char)*4;
+		vertexSize = sizeof(float)*5+sizeof(char)*4;
 		vertexColor = true;
 	}else if (e == GRVertexElement::vfT2fN3fP3f){
 		vertexFormatGl = GL_T2F_N3F_V3F;
@@ -183,37 +167,42 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
 		vertexSize = sizeof(float)*12;
 		vertexColor = true;
-	}else if (e == GRVertexElement::vfP3fB1f) {
+
+	}else if (e == GRVertexElement::vfP3fB4f) {
 		vertexFormatGl = GL_V3F; 
-		vertexSize = sizeof(float)*4;
+		vertexSize = sizeof(float)*15;
 		vertexColor = false;
-	}else if (e == GRVertexElement::vfC4bP3fB1f){
+	}else if (e == GRVertexElement::vfC4bP3fB4f){
 		vertexFormatGl = GL_C4UB_V3F;
-		vertexSize = sizeof(float)*4+sizeof(char)*4;
+		vertexSize = sizeof(float)*15+sizeof(char)*4;
 		vertexColor = true;
-	}else if (e == GRVertexElement::vfN3fP3fB1f){
+	}else if (e == GRVertexElement::vfC3fP3fB4f){
+		vertexFormatGl = GL_C3F_V3F;
+		vertexSize = sizeof(float)*18;
+		vertexColor = true;
+	}else if (e == GRVertexElement::vfN3fP3fB4f){
 		vertexFormatGl = GL_N3F_V3F;
-		vertexSize = sizeof(float)*7;
+		vertexSize = sizeof(float)*18;
 		vertexColor = false;
-	}else if (e == GRVertexElement::vfC4fN3fP3fB1f){
+	}else if (e == GRVertexElement::vfC4fN3fP3fB4f){
 		vertexFormatGl = GL_C4F_N3F_V3F;
-		vertexSize = sizeof(float)*11;
+		vertexSize = sizeof(float)*22;
 		vertexColor = true;
-	}else if (e == GRVertexElement::vfT2fP3fB1f){
+	}else if (e == GRVertexElement::vfT2fP3fB4f){
 		vertexFormatGl = GL_T2F_V3F;
-		vertexSize = sizeof(float)*6;
+		vertexSize = sizeof(float)*17;
 		vertexColor = false;
-	}else if (e == GRVertexElement::vfT2fC4bP3fB1f){
+	}else if (e == GRVertexElement::vfT2fC4bP3fB4f){
 		vertexFormatGl = GL_T2F_C4UB_V3F;
-		vertexSize = sizeof(float)*6 + sizeof(char)*4;
+		vertexSize = sizeof(float)*17+sizeof(char)*4;
 		vertexColor = true;
-	}else if (e == GRVertexElement::vfT2fN3fP3fB1f){
+	}else if (e == GRVertexElement::vfT2fN3fP3fB4f){
 		vertexFormatGl = GL_T2F_N3F_V3F;
-		vertexSize = sizeof(float)*9;
+		vertexSize = sizeof(float)*20;
 		vertexColor = false;
-	}else if (e == GRVertexElement::vfT2fC4fN3fP3fB1f){
+	}else if (e == GRVertexElement::vfT2fC4fN3fP3fB4f){
 		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
-		vertexSize = sizeof(float)*13;
+		vertexSize = sizeof(float)*24;
 		vertexColor = true;
 	}else {
 		vertexFormatGl = 0;
@@ -226,7 +215,6 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 void GRDeviceGL::SetVertexShader(void* s){
 	assert(0);	//	To Be Implemented
 }
-
 /// 頂点座標を指定してプリミティブを描画
 void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
@@ -267,6 +255,7 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
+///	ダイレクト形式による DiplayList の作成
 int GRDeviceGL::CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -274,6 +263,7 @@ int GRDeviceGL::CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t 
 	glEndList();
 	return list;
 }
+///	ダイレクト形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）	
 int GRDeviceGL::CreateList(GRMaterialIf* mat, unsigned int texid, 
 						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
@@ -289,6 +279,7 @@ int GRDeviceGL::CreateList(GRMaterialIf* mat, unsigned int texid,
 	glEndList();
 	return list;
 }
+/// 球オブジェクトの DisplayList の作成	
 int GRDeviceGL::CreateList(float radius, int slices, int stacks){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -296,6 +287,7 @@ int GRDeviceGL::CreateList(float radius, int slices, int stacks){
 	glEndList();
 	return list;
 }
+/// 球オブジェクトの DisplayList の作成（マテリアル、テクスチャの設定も行う）	
 int GRDeviceGL::CreateList(GRMaterialIf* mat, float radius, int slices, int stacks){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -315,7 +307,8 @@ int GRDeviceGL::CreateList(GRMaterialIf* mat, float radius, int slices, int stac
 	glutSolidSphere(radius, slices, stacks);
 	glEndList();
 	return list;	
-}		
+}	
+///	インデックス形式によるDiplayListの作成	
 int GRDeviceGL::CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -323,6 +316,7 @@ int GRDeviceGL::CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx
 	glEndList();
 	return list;
 }
+///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）	
 int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat,  
 								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);						  
@@ -340,9 +334,84 @@ int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat,
 	glEndList();
 	return list;
 }
+/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
+int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location, 
+										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+
+	if (!stride) stride = vertexSize;	
+	GLenum mode = GL_TRIANGLES;
+	switch(ty) {
+		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
+		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
+		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
+		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
+		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
+		case GRRenderBaseIf::QUADS:				mode = GL_QUADS;			break;
+		default:				/* DO NOTHING */			break;
+	}											
+	
+	if ((shaderType == GRShaderFormat::shP3fB4f)		// 他のGRShaderFormatは未対応	
+			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
+			|| (shaderType == GRShaderFormat::shC3fP3fB4f))			
+	{
+		glUseProgram(shader);
+
+		// ロケーション型へのキャスト
+		GRShaderFormat::SFBlendLocation *loc = (GRShaderFormat::SFBlendLocation *)location;
+		if (loc) {
+			glUniformMatrix4fv(loc->uBlendMatrix, 4, false, (GLfloat *)&*blendMatrix.begin());
+			
+			glEnableVertexAttribArray(loc->aWeight); 
+			glEnableVertexAttribArray(loc->aMatrixIndices); 
+			glEnableVertexAttribArray(loc->aNumMatrix); 
+			
+			// vtxを頂点フォーマット型へキャスト
+			if (shaderType == GRShaderFormat::shP3fB4f) {
+				GRVertexElement::VFP3fB4f* basePointer = (GRVertexElement::VFP3fB4f *)vtx;
+				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
+				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
+				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
+			} else if(shaderType == GRShaderFormat::shC4bP3fB4f){
+				GRVertexElement::VFC4bP3fB4f* basePointer = (GRVertexElement::VFC4bP3fB4f *)vtx;
+				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
+				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
+				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
+			} else if(shaderType == GRShaderFormat::shC3fP3fB4f){
+				GRVertexElement::VFC3fP3fB4f* basePointer = (GRVertexElement::VFC3fP3fB4f *)vtx;
+				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
+				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
+				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
+			}
+
+			glInterleavedArrays(vertexFormatGl, stride, vtx);
+			glDrawElements(mode, count, GL_UNSIGNED_INT, idx);	
+	
+			glDisableVertexAttribArray(loc->aWeight);
+			glDisableVertexAttribArray(loc->aMatrixIndices);
+			glDisableVertexAttribArray(loc->aNumMatrix);
+
+		} else {
+			DSTR << "To Be Implemented. " << std::endl;		
+			assert(0);
+		}
+	} else {
+		DSTR << "To Be Implemented. " << std::endl;
+		assert(0);
+	}									
+										
+	glEndList();
+
+
+	return list;
+}	
+///	DisplayListの表示	
 void GRDeviceGL::DrawList(int list){
 	glCallList(list);
 }
+///	DisplayListの解放	
 void GRDeviceGL::ReleaseList(int list){
 	glDeleteLists(list, 1);
 }
@@ -673,65 +742,96 @@ void GRDeviceGL::InitShader(){
 	assert(0);
 #endif	
 }	
+/// シェーダフォーマットの設定
+void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
+	shaderType = type;
+	 if (type == GRShaderFormat::shP3fB4f) {
+		vertexShaderFile = "shP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shC4bP3fB4f){
+		vertexShaderFile = "shC4bP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shC3fP3fB4f){
+		vertexShaderFile = "shC3fP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shN3fP3fB4f){
+		vertexShaderFile = "shN3fP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shC4fN3fP3fB4f){
+		vertexShaderFile = "shC4fN3fP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shT2fP3fB4f){
+		vertexShaderFile = "shT2fP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shT2fC4bP3fB4f){
+		vertexShaderFile = "shT2fC4bP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shT2fN3fP3fB4f){
+		vertexShaderFile = "shT2fN3fP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else if (type == GRShaderFormat::shT2fC4fN3fP3fB4f){
+		vertexShaderFile = "shT2fC4fN3fP3fB4f.vert";
+		fragmentShaderFile = "PassThrough.frag";
+	}else {
+		vertexShaderFile = "";
+		fragmentShaderFile = "";
+		assert(0);
+	}
+}	
 /// シェーダオブジェクトの作成	
-bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram){
+bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
-#if defined(USE_GREW)
-    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
-    fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
+    vertexShader = glCreateShader(GL_VERTEX_SHADER); 
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
 	if (ReadShaderSource(fragmentShader, fShaderFile)==false) return false;
-    glCompileShaderARB(vertexShader);
-    glCompileShaderARB(fragmentShader);
-    shaderProgram = glCreateProgramObjectARB();
+    glCompileShader(vertexShader);
+    glCompileShader(fragmentShader);
+    shader = glCreateProgram();
+#if defined(USE_GREW)	
+    glAttachObjectARB(shader, vertexShader);
+    glAttachObjectARB(shader, fragmentShader);
+	glDeleteObjectARB(vertexShader);
+	glDeleteObjectARB(fragmentShader);	
+#elif defined(GL_VERSION_2_0)    
+    glAttachShader(shader, vertexShader);
+    glAttachShader(shader, fragmentShader);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);		
+#endif	
+    glLinkProgram(shader);
+	glUseProgram(shader);   
+	return true;
+}		
+/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
+GRHandler GRDeviceGL::CreateShader(){
+	GRHandler vertexShader;
+	GRHandler fragmentShader;
+	GRHandler shaderProgram;
+    vertexShader = glCreateShader(GL_VERTEX_SHADER); 
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    if (ReadShaderSource(vertexShader, vertexShaderFile)==false)   return 0;
+	if (ReadShaderSource(fragmentShader, fragmentShaderFile)==false) return 0;
+    glCompileShader(vertexShader);
+    glCompileShader(fragmentShader);
+    shaderProgram = glCreateProgram();
+#if defined(USE_GREW)	
     glAttachObjectARB(shaderProgram, vertexShader);
     glAttachObjectARB(shaderProgram, fragmentShader);
 	glDeleteObjectARB(vertexShader);
 	glDeleteObjectARB(fragmentShader);	
-    glLinkProgramARB(shaderProgram);
-	glUseProgramObjectARB(shaderProgram);
 #elif defined(GL_VERSION_2_0)    
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);	
-    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
-    if (ReadShaderSource(fragmentShader, fShaderFile)==false) return false;
-    glCompileShader(vertexShader);
-    glCompileShader(fragmentShader);    
-    shaderProgram = glCreateProgram();    
-    glAttachObject(shaderProgram, vertexShader);
-    glAttachObject(shaderProgram, fragmentShader);	
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);	
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);	
-	glLinkProgram(shaderProgram);	
-	glUseProgram(shaderProgram);	    
-#endif
-	return true;
+	glDeleteShader(fragmentShader);		
+#endif	
+    glLinkProgram(shaderProgram);
+	glUseProgram(shaderProgram);
+	
+	return shaderProgram;
 }	
-/// シェーダオブジェクトの作成	
-bool GRDeviceGL::CreateShader(std::string vShaderFile, GRHandler& shaderProgram){
-	GRHandler vertexShader;
-#if defined(USE_GREW)
-    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
-    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
-    glCompileShaderARB(vertexShader);
-    shaderProgram = glCreateProgramObjectARB();
-    glAttachObjectARB(shaderProgram, vertexShader);
-	glDeleteObjectARB(vertexShader);
-    glLinkProgramARB(shaderProgram);
-	glUseProgramObjectARB(shaderProgram);
-#elif defined(GL_VERSION_2_0)    
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
-    glCompileShader(vertexShader);
-    shaderProgram = glCreateProgram();    
-    glAttachObject(shaderProgram, vertexShader);
-	glDeleteShader(vertexShader);
-	glLinkProgram(shaderProgram);	
-	glUseProgram(shaderProgram);	    
-#endif
-	return true;
-}		
 /// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける	
 bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
 	FILE *fp;
@@ -758,17 +858,35 @@ bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
 		fclose(fp);
 	}	
 	const char* sourceStrings =  (char*)source;
-#if defined(USE_GREW)	
-	glShaderSourceARB(shader, 1, &sourceStrings, &length);
-	//glShaderSourceARB(shader, 1, &source, NULL);		
-#elif defined(GL_VERSION_2_0) 
 	glShaderSource(shader, 1, &sourceStrings, &length);
-#else
-	return false;
-#endif;														
+
 	free((void*)source);
 	return true;
-}		
+}			
+/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
+void GRDeviceGL::GetShaderLocation(GRHandler shader, void* location){
+	if ((shaderType == GRShaderFormat::shP3fB4f)
+			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
+			|| (shaderType == GRShaderFormat::shC3fP3fB4f))
+	{
+		// shaderType が、shP3fB4f または shC4bP3fB4f または shC3fP3fB4f で、
+		// ロケーション情報 に SFBlendLocation の型が指定された場合
+		GRShaderFormat::SFBlendLocation *loc = (GRShaderFormat::SFBlendLocation *)location;
+		if (loc) {
+			loc->uBlendMatrix	= glGetUniformLocationARB(shader, "blendMatrix" );
+			loc->aWeight		= glGetAttribLocationARB(shader, "weights");;
+			loc->aMatrixIndices	= glGetAttribLocationARB(shader, "matrixIndices");
+			loc->aNumMatrix		= glGetAttribLocationARB(shader, "numMatrix");
+		} else {
+			DSTR << "To Be Implemented. " << std::endl;
+			assert(0);
+		}
+	} else {
+		DSTR << "To Be Implemented. " << std::endl;
+		assert(0);
+	}
+}	
+	
 	
 }	//	Spr
 

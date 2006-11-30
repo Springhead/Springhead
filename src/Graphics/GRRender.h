@@ -89,6 +89,8 @@ public:
 	virtual void SetViewMatrix(const Affinef& afv){}
 	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp){}
+	///	カレントの投影行列を取得する
+	virtual void GetProjectionMatrix(const Affinef& afp){}
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw){}
 	///	カレントのモデル行列に対してafwを掛ける
@@ -97,14 +99,10 @@ public:
 	virtual void PushModelMatrix(){}
 	///	モデル行列スタックから取り出し、カレントのモデル行列とする
 	virtual void PopModelMatrix(){}
-	/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
-	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId){return 0;}
-	/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
-	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId){return 0;}
-	/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
-	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId){return 0;}
-	/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
-	virtual bool PopModelMatrices(unsigned int matrixId){return 0;}
+	/// ブレンド変換行列の全要素を削除する
+	virtual void ClearBlendMatrix(){}
+	/// ブレンド変換行列を設定する
+	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id=0){return 0;}	
 	///	頂点フォーマットの指定
 	virtual void SetVertexFormat(const GRVertexElement* e){}
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
@@ -129,6 +127,9 @@ public:
 	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}
 	virtual int CreateIndexedList(GRMaterialIf* mat, 
 								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}
+	/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
+	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 
+									GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}	
 	///	DisplayListの表示
 	virtual void DrawList(int i){}
 	///	DisplayListの解放
@@ -161,11 +162,16 @@ public:
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
 	/// シェーダの初期化
 	virtual void InitShader(){}
+	/// シェーダフォーマットの設定
+	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){}	
 	/// シェーダオブジェクトの作成
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram){return 0;}
-	virtual bool CreateShader(std::string vShaderFile,  GRHandler& shaderProgram){return 0;}
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){return 0;}
+	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
+	virtual GRHandler CreateShader(){return 0;}
 	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
 	virtual bool ReadShaderSource(GRHandler shader, std::string file){return 0;}	
+	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
+	virtual void GetShaderLocation(GRHandler shader, void* location){}
 };
 
 /**	@class	GRRender
@@ -185,17 +191,14 @@ public:
 	virtual void EndScene(){ ptr EndScene(); }																\
 	virtual void SetViewMatrix(const Affinef& afv){ ptr SetViewMatrix(afv); }								\
 	virtual void SetProjectionMatrix(const Affinef& afp){ ptr SetProjectionMatrix(afp); }					\
+	virtual void GetProjectionMatrix(const Affinef& afp){ ptr GetProjectionMatrix(afp); }					\
 	virtual void SetModelMatrix(const Affinef& afw){ ptr SetModelMatrix(afw); }								\
 	virtual void MultModelMatrix(const Affinef& afw){ ptr MultModelMatrix(afw); }							\
 	virtual void PushModelMatrix(){ ptr PushModelMatrix(); }												\
 	virtual void PopModelMatrix(){ ptr PopModelMatrix(); }													\
-	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId)		\
-		{ return ptr SetModelMatrices(afw, matrixId, elementId); }											\
-	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId)								\
-		{ return ptr MultModelMatrices(afw, matrixId); }													\
-	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId)								\
-		{ return ptr PushModelMatrices(afw, matrixId); }													\
-	virtual bool PopModelMatrices(unsigned int matrixId){ return ptr PopModelMatrices(matrixId); }			\
+	virtual bool SetBlendMatrix(const Affinef& afb){ return ptr SetBlendMatrix(afb); }						\
+	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id){ return ptr SetBlendMatrix(afb, id); }	\
+	virtual void ClearBlendMatrix(){ ptr ClearBlendMatrix(); }												\
 	virtual void SetVertexFormat(const GRVertexElement* f){ ptr SetVertexFormat(f); }						\
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t ct, size_t st=0)			\
 		{ ptr DrawDirect(ty, vtx, ct, st); }																\
@@ -217,6 +220,9 @@ public:
 	virtual int CreateIndexedList(GRMaterialIf* mat,														\
 		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)			\
 		{ return ptr CreateIndexedList(mat, ty, idx, vtx, count, stride); }									\
+	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 									\
+		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)			\
+		{ return ptr CreateShaderIndexedList(shader, location, ty, idx, vtx, count, stride); }				\
 	virtual void DrawList(int i){ ptr DrawList(i); }														\
 	virtual void ReleaseList(int i){ ptr ReleaseList(i); }													\
 	virtual void DrawFont(Vec2f pos, const std::string str){ ptr DrawFont(pos, str); }						\
@@ -241,12 +247,14 @@ public:
 		{ ptr SetAlphaMode(src, dest); }																	\
 	virtual unsigned int LoadTexture(const std::string filename){ return ptr LoadTexture(filename); }		\
 	virtual void InitShader(){ ptr InitShader(); }															\
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram)	\
-		{ return ptr CreateShader(vShaderFile, fShaderFile, shaderProgram); }								\
-	virtual bool CreateShader(std::string vShaderFile, GRHandler& shaderProgram)							\
-		{ return ptr CreateShader(vShaderFile, shaderProgram); }											\
+	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){ ptr SetShaderFormat(type); }				\
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader)			\
+		{ return ptr CreateShader(vShaderFile, fShaderFile, shader); }										\
+	virtual GRHandler CreateShader(){ return ptr CreateShader(); }											\
 	virtual bool ReadShaderSource(GRHandler shader, std::string file)										\
 		{ return ptr ReadShaderSource(shader, file); }														\
+	virtual void GetShaderLocation(GRHandler shader, void* location)										\
+		{ ptr GetShaderLocation(shader, location); }														\
 	
 	REDIRECTIMP_GRRENDERBASE(device->)
 	

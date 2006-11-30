@@ -10,7 +10,10 @@
 
 TOP_DIR 		= ../../..
 
-GRAPHICS_TEST_DIR	= GRSimple GRColorSpheres
+GRAPHICS_TEST_DIR	= \
+						GRSimple \
+						GRColorSpheres \
+						GRVertrexBlending
 
 all:
 	@for dir in $(GRAPHICS_TEST_DIR); \

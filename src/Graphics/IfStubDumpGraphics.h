@@ -128,6 +128,10 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::SetProjectionMatrix(afp);
 	}
+	virtual void GetProjectionMatrix(const Affinef &  afp){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::GetProjectionMatrix(afp);
+	}
 	virtual void SetModelMatrix(const Affinef &  afw){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::SetModelMatrix(afw);
@@ -144,21 +148,13 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::PopModelMatrix();
 	}
-	virtual bool SetModelMatrices(const Affinef &  afw, unsigned int matrixId, unsigned int elementId){
+	virtual void ClearBlendMatrix(){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::SetModelMatrices(afw, matrixId, elementId);
+		return ((OBJ*)((char*)this-offset))->OBJ::ClearBlendMatrix();
 	}
-	virtual bool MultModelMatrices(const Affinef &  afw, unsigned int matrixId){
+	virtual bool SetBlendMatrix(const Affinef &  afb, unsigned int id = 0){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::MultModelMatrices(afw, matrixId);
-	}
-	virtual bool PushModelMatrices(const Affinef &  afw, unsigned int matrixId){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::PushModelMatrices(afw, matrixId);
-	}
-	virtual bool PopModelMatrices(unsigned int matrixId){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::PopModelMatrices(matrixId);
+		return ((OBJ*)((char*)this-offset))->OBJ::SetBlendMatrix(afb, id);
 	}
 	virtual void SetVertexFormat(const GRVertexElement *  e){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
@@ -207,6 +203,10 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
 	virtual int CreateIndexedList(GRMaterialIf *  mat, GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, void *  vtx, size_t count, size_t stride = 0){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::CreateIndexedList(mat, ty, idx, vtx, count, stride);
+	}
+	virtual int CreateShaderIndexedList(GRHandler shader, void *  location, GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, void *  vtx, size_t count, size_t stride = 0){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::CreateShaderIndexedList(shader, location, ty, idx, vtx, count, stride);
 	}
 	virtual void DrawList(int i){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
@@ -276,17 +276,25 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::InitShader();
 	}
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler &  shaderProgram){
+	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::CreateShader(vShaderFile, fShaderFile, shaderProgram);
+		return ((OBJ*)((char*)this-offset))->OBJ::SetShaderFormat(type);
 	}
-	virtual bool CreateShader(std::string vShaderFile, GRHandler &  shaderProgram){
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler &  shader){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::CreateShader(vShaderFile, shaderProgram);
+		return ((OBJ*)((char*)this-offset))->OBJ::CreateShader(vShaderFile, fShaderFile, shader);
+	}
+	virtual GRHandler CreateShader(){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::CreateShader();
 	}
 	virtual bool ReadShaderSource(GRHandler shader, std::string file){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
 		return ((OBJ*)((char*)this-offset))->OBJ::ReadShaderSource(shader, file);
+	}
+	virtual void GetShaderLocation(GRHandler shader, void *  location){
+		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
+		return ((OBJ*)((char*)this-offset))->OBJ::GetShaderLocation(shader, location);
 	}
 };
 struct GRRenderBaseIf;	class GRRenderBase;

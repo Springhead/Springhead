@@ -51,10 +51,10 @@ void GRMesh::CreateList(GRRenderIf* r){
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<colors.size(); ++i){ 
-			vtx[i].c = ((unsigned char)(colors[i].x*255) << 24) |
-			 		   ((unsigned char)(colors[i].y*255) << 16) |
-					   ((unsigned char)(colors[i].z*255) << 8) |
-					   ((unsigned char)(colors[i].w*255));
+			vtx[i].c = ((unsigned char)(colors[i].x*255)) |
+			 		   ((unsigned char)(colors[i].y*255) << 8) |
+					   ((unsigned char)(colors[i].z*255) << 16) |
+					   ((unsigned char)(colors[i].w*255) << 24);
 		}
 		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
 		render->SetVertexFormat(GRVertexElement::vfT2fC4bP3f);
@@ -86,10 +86,10 @@ void GRMesh::CreateList(GRRenderIf* r){
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
 		for (unsigned i=0; i<colors.size(); ++i){ 
-			vtx[i].c = ((unsigned char)(colors[i].x*255) << 24) |
-			 		   ((unsigned char)(colors[i].y*255) << 16) |
-					   ((unsigned char)(colors[i].z*255) << 8) |
-					   ((unsigned char)(colors[i].w*255));
+			vtx[i].c = ((unsigned char)(colors[i].x*255)) |
+			 		   ((unsigned char)(colors[i].y*255) << 8) |
+					   ((unsigned char)(colors[i].z*255) << 16) |
+					   ((unsigned char)(colors[i].w*255) << 24);
 		}
 		this->CreateListElement(&*vtx.begin());
 	}else{

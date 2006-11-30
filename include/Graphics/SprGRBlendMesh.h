@@ -20,14 +20,23 @@
 
 namespace Spr{;
 
-///	@brief 表示用のBlendMesh(GRBlendMesh)のデスクリプタ．
-struct GRBlendMeshDesc{
-	std::vector<Vec3f> 	positions;				///< 頂点の座標
-	std::vector<Vec3f> 	normals;				///< 頂点の法線
-	std::vector<Vec4f> 	colors;					///< 頂点の色
-	std::vector<Vec2f> 	texCoords;				///< テクスチャUV
-	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
-	std::vector<float> 	blend;					///< 各頂点の重み
+/**	
+	@brief 表示用のBlendMesh(GRBlendMesh)のデスクリプタ．
+	
+　　 １頂点に適用できるブレンド変換行列は、4個まで．
+　　 そのため、blends、matrixIndices は、Vec4f型としてある．
+　　 ただし、インデックス付きブレンド変換行列であるため、あらかじめ登録できるブレンド変換行列に制限はなし．
+	
+ */
+struct GRBlendMeshDesc{	
+	std::vector<Vec3f> 	positions;			///< 頂点の座標
+	std::vector<Vec3f> 	normals;			///< 頂点の法線
+	std::vector<Vec4f> 	colors;				///< 頂点の色
+	std::vector<Vec2f> 	texCoords;			///< テクスチャUV
+	std::vector<size_t> faces;				///< 面を構成する頂点インデックス（四角形は三角形に分割）
+	std::vector<Vec4f>  blends;				///< 各頂点の重み（1：N = 頂点：blend）
+    std::vector<Vec4f>  matrixIndices;		///< 変換行列インデックス（1:N = 頂点：matrix）
+	std::vector<Vec4f>  numMatrix;			///< 各頂点に対するブレンド変換行列の数
 };
 
 

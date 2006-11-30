@@ -16,8 +16,12 @@
 	field->offset = int((char*)&(pGRBlendMeshDesc->texCoords) - (char*)pGRBlendMeshDesc);
 	field = desc->AddField("vector", "size_t", "faces", "");
 	field->offset = int((char*)&(pGRBlendMeshDesc->faces) - (char*)pGRBlendMeshDesc);
-	field = desc->AddField("vector", "float", "blend", "");
-	field->offset = int((char*)&(pGRBlendMeshDesc->blend) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "Vec4f", "blends", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->blends) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "Vec4f", "matrixIndices", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->matrixIndices) - (char*)pGRBlendMeshDesc);
+	field = desc->AddField("vector", "Vec4f", "numMatrix", "");
+	field->offset = int((char*)&(pGRBlendMeshDesc->numMatrix) - (char*)pGRBlendMeshDesc);
 	db->RegisterDesc(desc);
 	
 	GRFrameTransformMatrix* pGRFrameTransformMatrix = NULL;
@@ -138,6 +142,12 @@
 	desc->ifInfo = GRSdkIf::GetIfInfoStatic();
 	((IfInfo*)GRSdkIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRSdkDesc>;
+	db->RegisterDesc(desc);
+	
+	GRShaderFormat* pGRShaderFormat = NULL;
+	desc = DBG_NEW UTTypeDesc("GRShaderFormat");
+	desc->size = sizeof(GRShaderFormat);
+	desc->access = DBG_NEW UTAccess<GRShaderFormat>;
 	db->RegisterDesc(desc);
 	
 	GRSphereDesc* pGRSphereDesc = NULL;

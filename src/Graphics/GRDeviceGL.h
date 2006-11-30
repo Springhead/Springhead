@@ -23,11 +23,12 @@ namespace Spr{;
 class GRDeviceGL: public GRDevice, GRDeviceGLIfInit{
 	OBJECT_DEF(GRDeviceGL);
 protected:
-	int		window;					///<	ウィンドウID
-	int		vertexFormatGl;			///<	glInterleavedArraysで使う，頂点フォーマットID
-	size_t	vertexSize;				///<	頂点のサイズ
-	bool	vertexColor;			///<	頂点が色を持つかどうか
-	GRMaterialDesc currentMaterial;	///<	現在のマテリアル
+	int		window;						///< ウィンドウID
+	int		nLights;					///< 光源の数
+	int		vertexFormatGl;				///< glInterleavedArraysで使う，GLの頂点フォーマットID
+	size_t	vertexSize;					///< 頂点のサイズ
+	bool	vertexColor;				///< 頂点が色を持つかどうか
+	GRMaterialDesc currentMaterial;		///< 現在のマテリアル
 	/**
 	 *	@name	マトリックス変数
 	 *　　 GLではModelを変えずにViewだけを変えるということができない。 \n
@@ -36,21 +37,30 @@ protected:
 	 *	@{ 
 	 */
 	Affinef								viewMatrix;				///< カレント視点行列
-	Affinef								projectionMatrix;		///< カレント射影行列 
 	Affinef								modelMatrix;			///< カレントモデル行列 
 	std::stack<Affinef>                	modelMatrixStack;		///< モデル行列スタック
-	std::vector< std::vector<Affinef> > modelMatrices;			///< 複数モデル行列（使用用途：modelMatrices[N][0]はモデル行列、modelMatrices[N][1..]はブレンド行列）
+	std::vector<Affinef>				blendMatrix;			///< ブレンド変換行列
 	/** @} */
+
 	/**
 	 *	@name	フォント変数
 	 *　　 新規に指定されたフォントはfontListに格納される。
 	 *	@{
 	 */
-	std::map<unsigned int, GRFont> fontList;		///<	フォントリスト<DisplayListのindex, font>    
-	unsigned int	fontBase;						///<	ディスプレイリストのindex numberの基底数 
+	std::map<unsigned int, GRFont> fontList;		///< フォントリスト<DisplayListのindex, font>    
+	unsigned int	fontBase;						///< ディスプレイリストのindex numberの基底数 
 	/** @} */	
-	int				nLights;		///<	光源の数
-	
+
+	/**
+	 *	@name	シェーダ変数
+	 *　　 新規に指定されたフォントはfontListに格納される。
+	 *	@{
+	 */
+	std::string vertexShaderFile;						///< VertexShader ファイル名
+	std::string fragmentShaderFile;						///< FragmentShader ファイル名
+	GRShaderFormat::ShaderType shaderType;				///< シェーダのロケーションタイプ
+	/** @} */	
+
 public:
 	///	コンストラクタ
 	GRDeviceGL(int w=0):window(w){}
@@ -69,8 +79,10 @@ public:
 	virtual void EndScene();
 	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv);
-	///	カレントの投影行列をafpで置き換える
+	///	カレントの投影行列を取得する
 	virtual void SetProjectionMatrix(const Affinef& afp);
+	///	カレントの投影行列をafpで置き換える
+	virtual void GetProjectionMatrix(const Affinef& afp);
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列に対してafwを掛ける
@@ -79,14 +91,12 @@ public:
 	virtual void PushModelMatrix();
 	///	モデル行列スタックから取り出し、カレントのモデル行列とする
 	virtual void PopModelMatrix();
-	/// 複数モデル行列の modelMatrices[matrixId][0] をカレントのモデル行列として置き換える
-	virtual bool SetModelMatrices(const Affinef& afw, unsigned int matrixId, unsigned int elementId);
-	/// 複数モデル行列において、モデル行列afwを掛ける（modelMatrices[matrixId][0] *= afw;）
-	virtual bool MultModelMatrices(const Affinef& afw, unsigned int matrixId);
-	/// 複数モデル行列の modelMatrices[matrixId] にafwを追加する
-	virtual bool PushModelMatrices(const Affinef& afw, unsigned int matrixId);
-	/// 複数モデル行列の modelMatrices[matrixId] の最後尾の要素を削除する
-	virtual bool PopModelMatrices(unsigned int matrixId);	
+	/// ブレンド変換行列の全要素を削除する
+	virtual void ClearBlendMatrix();
+	/// ブレンド変換行列を設定する
+	virtual bool SetBlendMatrix(const Affinef& afb);
+	/// ブレンド変換行列を設定する
+	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id);
 	///	頂点フォーマットの指定
 	virtual void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定
@@ -109,6 +119,9 @@ public:
 	///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
 	virtual int CreateIndexedList(GRMaterialIf* mat, 
 								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
+	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 
+										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);	
 	///	DisplayListの表示
 	virtual void DrawList(int i);
 	///	DisplayListの解放
@@ -145,12 +158,16 @@ public:
 	virtual unsigned int LoadTexture(const std::string filename);
 	/// シェーダの初期化
 	virtual void InitShader();
+	/// シェーダフォーマットの設定
+	virtual void SetShaderFormat(GRShaderFormat::ShaderType type);	
 	/// シェーダオブジェクトの作成
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shaderProgram);
-	/// シェーダオブジェクトの作成
-	virtual bool CreateShader(std::string vShaderFile, GRHandler& shaderProgram);
+	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
+	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）
+	virtual GRHandler CreateShader();
 	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
 	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
+	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
+	virtual void GetShaderLocation(GRHandler shader, void* location);		
 	
 };
 
