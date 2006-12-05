@@ -66,7 +66,7 @@ using namespace Spr;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60          // ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌXVŽüŠúHz
 	#define HAPTIC_FREQ		1000		// —ÍŠoƒXƒŒƒbƒh‚ÌŽüŠúHz
-	float Km = 3000;						// virtual coupling‚ÌŒW”
+	float Km = 1000;						// virtual coupling‚ÌŒW”
 	float Bm = 50;						// •Ài
 
 	float Kr = 1000;						// ‰ñ“]
@@ -1088,7 +1088,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			}
 		}
 
-		if(info->nearest_solids[i]->IsDynamical())
+//		if(info->nearest_solids[i]->IsDynamical())
 		{
 			// À•WŒn‚ð’¼‚·‚½‚ß‚ÌŒW”‚ðŒvŽZ‚·‚é
 //			Vec3d qc_w = info->solid_current_orientations[i].Conjugated() * info->solid_angular_velocity[i];

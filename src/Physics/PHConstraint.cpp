@@ -294,65 +294,6 @@ void PHConstraint::IterateDynamics(){
 
 }
 
-void PHConstraint::SetupDynamicsForPrediction(){
-	FPCK_FINITE(f.v);
-
-	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
-	if(!bEnabled || !bFeasible || bArticulated)
-		return;
-
-	//相対速度，相対角速度から拘束速度へのヤコビ行列を計算
-	//	拘束の種類ごとに異なる
-	//CompConstraintJacobian();
-	b = vjrel;
-	CompBias();	// 目標速，バネダンパによる補正項を計算
-	b += db;
-	
-	/* 前回の値を縮小したものを初期値とする．
-	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
-	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
-	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
-	  */
-	f *= engine->shrinkRate;
-	if(mode == MODE_TORQUE)
-		AddMotorTorque();
-
-	int i, j;
-	SpatialVector fs;
-	for(i = 0; i < 2; i++){
-		if(solid[i]->IsDynamical() && IsInactive(i)){
-			if(solid[i]->treeNode){
-				fs = (i == 0 ? -1.0 : 1.0) * (Js[i].trans() * f);
-				solid[i]->treeNode->CompResponse(fs);
-			}
-			else{
-				solid[i]->dv.v += T[i].vv.trans() * f.v + T[i].wv.trans() * f.w;
-				solid[i]->dv.w += T[i].vw.trans() * f.v + T[i].ww.trans() * f.w;
-			}
-		}
-	}
-	
-	// iterationでの手間を省くためにあらかじめA行列の対角要素でbとJを割っておく
-	for(j = 0; j < 3; j++){
-		Ainv.v[j] = 1.0 / (A.v[j] + dA.v[j]);
-		dA.v[j] *= Ainv.v[j];
-		b.v[j] *= Ainv.v[j];
-		AinvJ[0].vv.row(j) = Ainv.v[j] * J[0].vv.row(j);
-		AinvJ[0].vw.row(j) = Ainv.v[j] * J[0].vw.row(j);
-		AinvJ[1].vv.row(j) = Ainv.v[j] * J[1].vv.row(j);
-		AinvJ[1].vw.row(j) = Ainv.v[j] * J[1].vw.row(j);
-	}
-	for(j = 0; j < 3; j++){
-		Ainv.w[j] = 1.0 / (A.w[j] + dA.w[j]);
-		dA.w[j] *= Ainv.w[j];
-		b.w[j] *= Ainv.w[j];
-		AinvJ[0].wv.row(j) = Ainv.w[j] * J[0].wv.row(j);
-		AinvJ[0].ww.row(j) = Ainv.w[j] * J[0].ww.row(j);
-		AinvJ[1].wv.row(j) = Ainv.w[j] * J[1].wv.row(j);
-		AinvJ[1].ww.row(j) = Ainv.w[j] * J[1].ww.row(j);
-	}
-}
-
 /*void PHConstraint::SetupCorrection(double dt, double max_error){
 	if(!bEnabled || !bFeasible || dim_c == 0)return;
 
