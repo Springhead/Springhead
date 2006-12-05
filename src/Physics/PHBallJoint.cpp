@@ -56,6 +56,13 @@ void SwingTwist::Jacobian(Matrix3d& J, const Quaterniond& q){
 // PHBallJoint
 IF_OBJECT_IMP(PHBallJoint, PHJoint)
 
+PHBallJoint::PHBallJoint(){
+	axis[0] = axis[1] = axis[2] = false;
+	axis[3] = axis[4] = axis[5] = true;
+	axisIndex[0] = 3;
+	axisIndex[1] = 4;
+	axisIndex[2] = 5;
+}
 void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = (const PHBallJointDesc&)desc;
@@ -72,11 +79,10 @@ void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 void PHBallJoint::UpdateJointState(){
 	// 相対quaternionからスイング・ツイスト角を計算
 	angle.FromQuaternion(qjrel);
-	DSTR << angle << f.w << endl;
 }
 
-void PHBallJoint::CompDof(){
-	constr[0] = constr[1] = constr[2] = true;
+void PHBallJoint::SetConstrainedIndex(bool* con){
+	con[0] = con[1] = con[2] = con[3] = true;
 	// 可動範囲をチェック
 	angle.FromQuaternion(qjrel);
 	swingOnUpper = (swingUpper > 0 && angle.Swing() >= swingUpper);
@@ -84,14 +90,8 @@ void PHBallJoint::CompDof(){
 	twistOnUpper = (twistLower < twistUpper && angle.Twist() >= twistUpper);
 	// 可動範囲にかかる場合は回転をSwing/Twistに座標変換する(ModifyJacobian)．
 	// 以下3 -> swing方位，4 -> swing角, 5 -> twist角
-	constr[3] = false;
-	if(swingOnUpper){
-		constr[4] = true;
-	}
-	else{
-		constr[4] = false;
-	}
-	constr[5] = twistOnLower || twistOnUpper;
+	con[4] = swingOnUpper;
+	con[5] = twistOnLower || twistOnUpper;
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
@@ -144,6 +144,13 @@ void PHBallJointNode::CompRelativePosition(){
 
 }
 void PHBallJointNode::CompRelativeVelocity(){
+
+}
+void PHBallJointNode::CompBias(){
+	dA.clear();
+	db.clear();
+}
+void PHBallJointNode::Projection(double& f, int i){
 
 }
 	

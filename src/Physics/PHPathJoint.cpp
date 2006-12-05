@@ -260,16 +260,6 @@ void PHPathJoint::CompBias(double dt, double correction_rate){
 	//B = -B;
 }*/
 
-void PHPathJoint::Projection(double& f, int k){
-	if(k == 5){
-		if(on_lower){
-			f = max(0.0, f);
-		}
-		if(on_upper)
-			f = min(0.0, f);
-	}
-}
-
 /*void PHPathJoint::ProjectionCorrection(double& F, int k){
 	if(k == 5){
 		if(on_lower)

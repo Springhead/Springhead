@@ -21,6 +21,7 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
+	virtual void CompBias();
 	//PHSliderJointNode();
 };
 
@@ -31,16 +32,13 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
 	//virtual void CompConstraintJacobian();
 	virtual void CompBias();
-	virtual void Projection(double& f, int k);
 	//virtual void CompError(double dt);
 	//virtual void ProjectionCorrection(double& F, int k);
 	virtual void UpdateJointState();
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHSliderJointNode();
 	}
-	PHSliderJoint(){
-		axis_index = 2;
-	}
+	PHSliderJoint();
 };
 
 }

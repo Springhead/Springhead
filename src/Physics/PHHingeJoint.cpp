@@ -18,6 +18,12 @@ namespace Spr{;
 // PHHingeJoint
 IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
 
+PHHingeJoint::PHHingeJoint(){
+	axisIndex = 5;
+	for(int i = 0; i < 6; i++)
+		axis[i] = (i == axisIndex);
+}
+
 void PHHingeJoint::UpdateJointState(){
 	//Ž²•ûŒü‚ÌS‘©‚Í‡’v‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‰¼’è‚µ‚ÄŠp“x‚ðŒ©‚é
 	position = qjrel.Theta();
@@ -56,15 +62,6 @@ void PHHingeJoint::CompBias(){
 	B.SUBVEC(3, 3) = qjrel.V();
 }*/
 
-void PHHingeJoint::Projection(double& f, int k){
-	if(k == 5){
-		if(on_lower)
-			f = max(0.0, f);
-		else if(on_upper)
-			f = min(0.0, f);
-	}
-}
-
 /*void PHHingeJoint::ProjectionCorrection(double& F, int k){
 	if(k == 5){
 		if(on_lower)
@@ -94,6 +91,23 @@ void PHHingeJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.R = Matrix3d::Rot(j->position, 'z');
 	j->Xjrel.r.clear();
+}
+void PHHingeJointNode::CompBias(){
+	PHJoint1D* j = GetJoint();
+	double diff;
+	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
+	if(j->mode == PHJoint::MODE_VELOCITY){
+		db = -j->vel_d;
+	}
+	else if(j->spring != 0.0 || j->damper != 0.0){
+		diff = j->GetPosition() - j->origin;
+		while(diff >  M_PI) diff -= 2 * M_PI;
+		while(diff < -M_PI) diff += 2 * M_PI;
+		double tmp = 1.0 / (j->damper + j->spring * dt);
+		dA = tmp * dtinv;
+		db = j->spring * (diff) * tmp;
+	}
+	else dA = db = 0.0;
 }
 
 }

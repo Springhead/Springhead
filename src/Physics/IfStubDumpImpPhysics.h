@@ -9,7 +9,6 @@ IF_IMP(PHSliderJoint, PHJoint1D);
 IF_IMP(PHPath, SceneObject);
 IF_IMP(PHPathJoint, PHJoint1D);
 IF_IMP(PHBallJoint, PHConstraint);
-IF_IMP(PHUniversalJoint, PHConstraint);
 IF_IMP(PHSpring, PHConstraint);
 IF_IMP(PHTreeNode, SceneObject);
 IF_IMP(PHRootNode, PHTreeNode);

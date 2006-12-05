@@ -37,14 +37,31 @@ void PHJoint1D::SetDesc(const PHJointDesc& desc){
 	SetMotorTorque(desc1D.torque);
 }
 
-void PHJoint1D::CompDof(){
-	on_lower = on_upper = false;
+void PHJoint1D::SetConstrainedIndex(bool* con){
+	//可動範囲
+	onLower = onUpper = false;
 	if(lower < upper){
 		double theta = GetPosition();
-		on_lower = (theta <= lower);
-		on_upper = (theta >= upper);
+		onLower = (theta <= lower);
+		onUpper = (theta >= upper);
 	}
-	constr[axis_index] = (on_lower || on_upper || mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0);
+	// 各自由度を拘束するかどうか
+	//  関節軸に対応する自由度は可動範囲にかかっている場合，バネ・ダンパが設定されている場合にtrue
+	//  それ以外の自由度はABA関節ではない場合にtrue	
+	for(int i = 0; i < 6; i++){
+		if(i == axisIndex)
+			 con[i] = (onLower || onUpper || mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0);
+		else con[i] = true;
+	}
+}
+
+void PHJoint1D::Projection(double& f, int k){
+	if(k == axisIndex){
+		if(onLower)
+			f = max(0.0, f);
+		if(onUpper)
+			f = min(0.0, f);
+	}
 }
 	
 }

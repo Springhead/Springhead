@@ -97,6 +97,9 @@ struct SpatialVector{
 	double& operator[](int i){
 		return ((double*)this)[i];
 	}
+	double operator[](int i)const{
+		return ((const double*)this)[i];
+	}
 	SpatialVector& operator+=(const SpatialVector& V){
 		v += V.v;
 		w += V.w;

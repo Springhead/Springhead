@@ -141,6 +141,15 @@ void PHTreeNode::CompResponse(const SpatialVector& dF, bool bUpdate){
 	CompBiasForceDiff(bUpdate);
 }
 
+void PHTreeNode::SetupLCP(){
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->SetupLCP();
+}
+void PHTreeNode::IterateLCP(){
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->IterateLCP();
+}
+
 void PHTreeNode::UpdateVelocity(double dt){
 	PHSolid* sp = GetParent()->GetSolid();
 	PHSolid* s  = GetSolid();
@@ -170,60 +179,15 @@ void PHTreeNode::UpdatePosition(double dt){
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdatePosition(dt);
 }
+
 //-----------------------------------------------------------------------------
 IF_OBJECT_IMP(PHRootNode, PHTreeNode);
 
-void PHRootNode::SetupDynamics(){
-	//nNodes = GetNumOfNodes();
-	//nodeTable.resize(nNodes);
-	//inertiaInverse.resize(nNodes, nNodes);
-	//offsetAccel.resize(nNodes);
-
-	//AssignID(0, nodeTable);
-	//CompEquationOfMotion();
-	//CompDefaultVelocity(dt);
+void PHRootNode::SetupABA(){
 	CompArticulatedInertia();
 	CompArticulatedBiasForce();
 	CompAccel();
 }
-
-/*
-void PHRootNode::CompDefaultVelocity(double dt){
-	
-}
-
-void PHRootNode::CompEquationOfMotion(){
-	//単位ベクトル法で運動方程式の係数を取得
-	CompArticulatedInertia();
-
-	torque.resize(N);
-	accel.resize(N);
-	offsetForce.resize(N);
-	inertiaInverse.resize(N, N);
-	
-	// 全トルクが0の場合の加速度を計算
-	for(int i = 0; i < nNodes; i++)
-		nodeTable[i]->torque.clear();
-	CompArticulatedOffsetForce();
-	CompAccelRecursive();
-	for(int i = 0; i < nNodes; i++)
-		 nodeTable[i]->GetJointAccel(offsetAccel[i]);
-
-	// 各関節の各成分に個別にトルクを加えて加速度を得ることにより慣性行列の逆行列を得る
-	PHTreeNode* node;
-	for(int i1 = 0; i1 < nNodes; i1++){
-		node = nodeTable[i1];
-		for(int j = 0; j < node->GetDof(); j++){
-			node->torque[j] = 1.0;
-			CompArticulatedOffsetForce();
-			CompAccelRecursive();
-			for(int i2 = 0; i2 <= i1; i2++)
-                nodeTable[i2]->GetJointAccel((Vec6d&)(inertiaInverse.item(i2, i1).col(j)));
-			node->torque[j] = 0.0;
-		}
-	}
-}
-*/
 
 void PHRootNode::CompArticulatedInertia(){
 	CompIsolatedInertia();
@@ -283,6 +247,10 @@ void PHRootNode::UpdatePosition(double dt){
 //-----------------------------------------------------------------------------
 //IF_OBJECT_IMP(PHTreeNode1D, PHTreeNode);
 
+PHTreeNode1D::PHTreeNode1D(){
+	f = 0.0;
+}
+
 void PHTreeNode1D::AccumulateInertia(){
 	IJ             = I * J;
 	JIJ            = J * IJ;
@@ -330,7 +298,9 @@ void PHTreeNode1D::CompBiasForceDiff(bool bUpdate){
 
 void PHTreeNode1D::CompAccelDiff(bool bUpdate){
 	SpatialVector dap = Xcp * GetParent()->da;
-	daccel = -1.0 * (IJ_JIJinv * dap + J_JIJinv * dZ);
+	daccel = JIJinv * dtau - IJ_JIJinv * dap - J_JIJinv * dZ;
+	dZ.clear(); // 次回の呼び出しのためにここでクリア
+	dtau = 0.0;
 	da = dap + J * daccel;
 	if(bUpdate){
 		accel += daccel;
@@ -347,10 +317,69 @@ void PHTreeNode1D::UpdateJointPosition(double dt){
 	GetJoint()->position += GetJoint()->velocity * dt;
 }
 
+void PHTreeNode1D::CompResponseMatrix(){
+	const double eps = 1.0e-3;
+	CompResponse(1.0, false);
+	A = max(eps, daccel);
+}
+
+void PHTreeNode1D::CompResponse(double _dtau, bool bUpdate){
+	dtau = _dtau;
+	GetParent()->dZ = Xcp.trans() * (IJ_JIJinv * dtau);
+	GetParent()->CompBiasForceDiff(bUpdate);
+}
+
+void PHTreeNode1D::SetupLCP(){
+	PHJoint1D* j = GetJoint();
+	bool con = j->constr[j->axisIndex];
+	if(con && constr)				// 継続して拘束される場合
+		 f *= engine->shrinkRate;
+	else f = 0.0;					// 新規に拘束される or 拘束されない
+	constr = con;
+
+	if(constr){
+		// LCPのbベクトル
+		b = GetJoint()->velocity;
+		CompBias();	// 目標速，バネダンパによる補正項を計算
+		b += db;
+		// LCPのA行列の対角成分を計算
+		CompResponseMatrix();
+		Ainv = 1.0 / (A + dA);
+		// 拘束力初期値による速度変化量を計算
+		CompResponse(f);
+	}
+	PHTreeNode::SetupLCP();
+}
+
+void PHTreeNode1D::IterateLCP(){
+	if(constr){
+		double fnew, df;
+		fnew = f - Ainv * (dA * f + b + accel);
+		Projection(fnew);
+		df = fnew - f;
+		CompResponse(df);
+		f = fnew;
+	}
+	PHTreeNode::IterateLCP();
+}
+
+void PHTreeNode1D::Projection(double& _f){
+	PHJoint1D* j = GetJoint();
+	if(j->onLower)
+		_f = max(0.0, _f);
+	if(j->onUpper)
+		_f = min(0.0, _f);
+}
+
 //-----------------------------------------------------------------------------
 // explicit instantiation
 template class PHTreeNodeND<3>;
 template class PHTreeNodeND<2>;
+
+template<int NDOF>
+PHTreeNodeND<NDOF>::PHTreeNodeND(){
+	f.clear();
+}
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::CompJointJacobian(){
@@ -393,7 +422,7 @@ void PHTreeNodeND<NDOF>::AccumulateInertia(){
 }
 
 template<int NDOF>
-void PHTreeNodeND<NDOF>::AccumulateOffsetForce(){
+void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 	for(int i = 0; i < NDOF; i++)
 		J_ZplusIc[i] = J[i] * ZplusIc;
 
@@ -434,8 +463,11 @@ void PHTreeNodeND<NDOF>::CompBiasForceDiff(bool bUpdate){
 template<int NDOF>
 void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate){
 	SpatialVector dap = Xcp * GetParent()->da;
+	daccel = JIJinv * dtau;
 	for(int i = 0; i < NDOF; i++)
-		daccel[i] = -1.0 * (IJ_JIJinv[i] * dap + J_JIJinv[i] * dZ);
+		daccel[i] -= IJ_JIJinv[i] * dap + J_JIJinv[i] * dZ;
+	dZ.clear(); // 次回の呼び出しのためにここでクリア
+	dtau.clear();
     da = dap;
 	for(int i = 0; i < NDOF; i++)
 		da += J[i] * daccel[i];
@@ -454,6 +486,65 @@ void PHTreeNodeND<NDOF>::UpdateJointVelocity(double dt){
 template<int NDOF>
 void PHTreeNodeND<NDOF>::UpdateJointPosition(double dt){
 	GetJoint()->position += GetJoint()->velocity * dt;
+}
+
+template<int NDOF>
+void PHTreeNodeND<NDOF>::CompResponse(const TVector<NDOF, double>& _dtau, bool bUpdate){
+	SpatialVector tmp;
+	PHJointND<NDOF>* j = GetJoint();
+	for(int i = 0; i < NDOF; i++)
+		tmp += IJ_JIJinv[i] * dtau[i];
+	dtau = _dtau;
+	GetParent()->dZ = Xcp.trans() * tmp;
+	GetParent()->CompBiasForceDiff(bUpdate);
+}
+
+template<int NDOF>
+void PHTreeNodeND<NDOF>::CompResponseMatrix(){
+	const double eps = 1.0e-3;
+	TVector<NDOF, double> tau;
+	for(int i = 0; i < NDOF; i++){
+		tau[i] = 1.0;
+		CompResponse(tau, false);
+		A[i] = max(eps, daccel[i]);
+		tau[i] = 0.0;
+	}
+}
+
+template<int NDOF>
+void PHTreeNodeND<NDOF>::SetupLCP(){
+	f *= engine->shrinkRate;
+	
+	// LCPのbベクトル
+	b = GetJoint()->velocity;
+	CompBias();	// 目標速，バネダンパによる補正項を計算
+	b += db;
+	
+	// LCPのA行列の対角成分を計算
+	CompResponseMatrix();
+	for(int i = 0; i < NDOF; i++)
+		Ainv[i] = 1.0 / (A[i] + dA[i]);
+
+	// 拘束力初期値による速度変化量を計算
+	CompResponse(f);
+	
+	PHTreeNode::SetupLCP();
+}
+
+template<int NDOF>
+void PHTreeNodeND<NDOF>::IterateLCP(){
+	TVector<NDOF, double> fnew, df, dfs;
+	for(int i = 0; i < NDOF; i++){
+		fnew[i] = f[i] - Ainv[i] * (dA[i] * f[i] + b[i] + accel[i]);
+		Projection(fnew[i], i);
+		df[i] = fnew[i] - f[i];
+		dfs.clear();
+		dfs[i] = df[i];
+		CompResponse(dfs);
+		f[i] = fnew[i];
+	}
+
+	PHTreeNode::IterateLCP();
 }
 
 }

@@ -126,8 +126,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			pos = cutRing.local * pos;
 
 			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
-			point->SetScene(engine->GetScene());
-			point->SetEngine(engine);
+			point->scene = DCAST(PHScene, engine->GetScene());
+			point->engine = engine;
 
 			if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
 			else if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
@@ -139,8 +139,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		//	きっと1点で接触している．
 
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
-		point->SetScene(engine->GetScene());
-		point->SetEngine(engine);
+		point->scene = DCAST(PHScene, engine->GetScene());
+		point->engine = engine;
 
 		if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
 		else if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
@@ -195,8 +195,8 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 		break;
 	default: assert(false);
 	}
-	joint->SetScene(GetScene());
-	joint->SetEngine(this);
+	joint->scene = DCAST(PHScene, GetScene());
+	joint->engine = this;
 	joint->SetDesc(desc);
 	return joint;
 }
@@ -273,30 +273,38 @@ PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
 	//ノードを作成
 	PHTreeNode* node = joint->CreateTreeNode();
 	node->joint = joint;
-	node->SetScene(GetScene());
+	node->scene = DCAST(PHScene, GetScene());
+	node->engine = this;
+
 	joint->bArticulated = true;
 	joint->solid[1]->treeNode = node;
 	parent->AddChild(node);
 	return node;
 }
 
-void PHConstraintEngine::SetupDynamics(){
+void PHConstraintEngine::SetupLCP(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	double dt = scene->GetTimeStep();
 
+	/* 相互に依存関係があるので呼び出し順番には注意する */
 	//各剛体の前処理
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
-		(*it)->SetupDynamics(dt);
-
-	//ツリー構造の前処理
+		(*it)->UpdateCacheLCP(dt);
+	
+	//ツリー構造の前処理(ABA関係)
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->SetupDynamics();
+		(*it)->SetupABA();
 
 	//接触拘束の前処理
-	points.SetupDynamics();
-	
+	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+		(*it)->SetupLCP();
 	//関節拘束の前処理
-	joints.SetupDynamics();
+	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+		(*it)->SetupLCP();
+	//ツリー構造の前処理
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		(*it)->SetupLCP();
+
 }
 /*void PHConstraintEngine::SetupCorrection(double dt){
 	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
@@ -305,16 +313,17 @@ void PHConstraintEngine::SetupDynamics(){
 	points.SetupCorrection(dt, max_error);
 	joints.SetupCorrection(dt, max_error);
 }*/
-void PHConstraintEngine::IterateDynamics(){
+void PHConstraintEngine::IterateLCP(){
 	int count = 0;
 	while(true){
-		if(count == numIteration){
-			//DSTR << "max count." << " iteration count: " << count << " dfsum: " << dfsum << endl;
+		if(count == numIteration)
 			break;
-		}
-		points.IterateDynamics();
-		joints.IterateDynamics();
-
+		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+			(*it)->IterateLCP();
+		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+			(*it)->IterateLCP();
+		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+			(*it)->IterateLCP();
 		count++;
 	}
 }
@@ -372,26 +381,25 @@ void PHConstraintEngine::Step(){
 
 	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
 	//ヤコビアン等の再計算
-	points.UpdateState();
-	joints.UpdateState();
-
+	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+		(*it)->UpdateState();
+	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+		(*it)->UpdateState();
+	
 	QueryPerformanceCounter(&val[0]);
-	SetupDynamics();
+	SetupLCP();
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	QueryPerformanceCounter(&val[0]);
-	IterateDynamics();
+	IterateLCP();
 	QueryPerformanceCounter(&val[1]);
 	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	//Correction(dt, ct);
 
 	//位置・速度の更新
-	UpdateSolids();
-	//points.UpdateState();
-	//joints.UpdateState();
-	
+	UpdateSolids();	
 }
 
 PHConstraints PHConstraintEngine::GetContactPoints(){

@@ -88,7 +88,7 @@ void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
 		maxS += c;
 }
 
-void PHSolid::SetupDynamics(double dt){
+void PHSolid::UpdateCacheLCP(double dt){
 	minv = GetMassInv();
 	Iinv = GetInertiaInv();
 	Quaterniond qc = GetOrientation().Conjugated();
@@ -112,6 +112,18 @@ void PHSolid::SetupDynamics(double dt){
 	dV.clear();
 	dW.clear();
 }*/
+void PHSolid::UpdateCachePenalty(int c){
+	if ((unsigned)c == count) return;
+	count = c;
+	vel = GetVelocity();
+	angVel = GetAngularVelocity();
+	lastPos = pos;
+	pos = GetFramePosition();
+	lastOri = ori;
+	ori = GetOrientation();
+	cog = ori * GetCenterOfMass() + pos;
+}
+
 void PHSolid::UpdateVelocity(double dt){
 	v += dv;
 	//oldVel = GetVelocity();
@@ -124,18 +136,6 @@ void PHSolid::UpdatePosition(double dt){
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w * dt/* + info->dW*/)).unit());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
 	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
-}
-
-void PHSolid::UpdateCache(int c){
-	if ((unsigned)c == count) return;
-	count = c;
-	vel = GetVelocity();
-	angVel = GetAngularVelocity();
-	lastPos = pos;
-	pos = GetFramePosition();
-	lastOri = ori;
-	ori = GetOrientation();
-	cog = ori * GetCenterOfMass() + pos;
 }
 
 void PHSolid::Step(){

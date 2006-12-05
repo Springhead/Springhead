@@ -24,9 +24,9 @@ class PHJoint1D : public PHJoint, PHJoint1DIfInit{
 public:
 	OBJECT_DEF_ABST(PHJoint1D);
 	
-	int		axis_index;					///< 関節軸のインデックス．派生クラスが設定する
+	int		axisIndex;					///< 関節軸のインデックス．派生クラスが設定する
 	double	position, velocity, torque;	///< 変位，速度，トルク
-	bool	on_lower, on_upper;			///< 可動範囲の下限、上限に達している場合にtrue
+	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
 	double	lower, upper;				///< 可動範囲の下限、上限
 	double	pos_d, vel_d;				///< 目標変位、目標速度
 	double	spring, origin, damper;		///< バネ係数、バネ原点、ダンパ係数
@@ -51,8 +51,9 @@ public:
 
 	/// オーバライド
 	virtual void	SetDesc(const PHJointDesc& desc);
-	virtual void	AddMotorTorque(){f[axis_index] = torque * scene->GetTimeStep();}
-	virtual void	CompDof();
+	virtual void	AddMotorTorque(){f[axisIndex] = torque * scene->GetTimeStep();}
+	virtual void	SetConstrainedIndex(bool* con);
+	virtual void	Projection(double& f, int k);
 	PHJoint1D();
 };
 
@@ -60,6 +61,8 @@ template<int NDOF>
 class PHJointND : public PHJoint{
 public:
 	typedef	PTM::TVector<NDOF, double> coord_t;
+
+	int		axisIndex[NDOF];
 	coord_t position, velocity, torque;
 	
 	//virtual void	SetMotorTorque(coord_t t){torque = t;}

@@ -72,8 +72,8 @@ public:
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	
-	void SetupDynamics();	///< 速度更新LCPの準備
-	void IterateDynamics();			///< 速度更新LCPの一度の反復
+	void SetupLCP();	///< 速度更新LCPの準備
+	void IterateLCP();			///< 速度更新LCPの一度の反復
 	
 	//void SetupCorrection(double dt);///< 誤差修正LCPの準備
 	//void IterateCorrection();		///< 誤差修正LCPの一度の反復

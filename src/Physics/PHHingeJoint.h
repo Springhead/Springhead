@@ -21,6 +21,7 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
+	virtual void CompBias();
 	//PHHingeJointNode();
 	//PHHingeJointNode(PHHingeJoint* j);
 };
@@ -31,7 +32,6 @@ public:
 	OBJECT_DEF(PHHingeJoint);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
 	virtual void CompBias();
-	virtual void Projection(double& f, int k);
 	virtual void UpdateJointState();
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHHingeJointNode();
@@ -39,9 +39,7 @@ public:
 	// virtual void CompConstraintJacobian();
 	// virtual void CompError(double dt);
 	// virtual void ProjectionCorrection(double& F, int k);
-	PHHingeJoint(){
-		axis_index = 5;
-	}
+	PHHingeJoint();
 };
 
 }

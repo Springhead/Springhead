@@ -12,7 +12,6 @@
 	field->AddEnumConst("HINGEJOINT");
 	field->AddEnumConst("SLIDERJOINT");
 	field->AddEnumConst("BALLJOINT");
-	field->AddEnumConst("UNIVERSALJOINT");
 	field->AddEnumConst("PATHJOINT");
 	field->AddEnumConst("SPRING");
 	field->AddEnumConst("SPRING");
@@ -123,18 +122,6 @@
 	field->offset = int((char*)&(pPHBallJointDesc->twistDamper) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
-	db->RegisterDesc(desc);
-	
-	PHUniversalJointDesc* pPHUniversalJointDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHUniversalJointDesc");
-	desc->size = sizeof(PHUniversalJointDesc);
-	desc->ifInfo = PHUniversalJointIf::GetIfInfoStatic();
-	((IfInfo*)PHUniversalJointIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHUniversalJointDesc>;
-	field = desc->AddBase("PHJointDesc");
-	field->offset = int((char*)(PHJointDesc*)pPHUniversalJointDesc - (char*)pPHUniversalJointDesc);
-	field = desc->AddField("", "Vec2d", "torque", "");
-	field->offset = int((char*)&(pPHUniversalJointDesc->torque) - (char*)pPHUniversalJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHSpringDesc* pPHSpringDesc = NULL;

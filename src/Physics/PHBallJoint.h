@@ -31,6 +31,8 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
+	virtual void CompBias();
+	virtual void Projection(double& f, int i);
 	//PHBallJointNode(PHBallJoint* j):PHTreeNodeND<3>(j){}
 };
 
@@ -59,7 +61,7 @@ public:
 	/// 仮想関数のオーバライド
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual void AddMotorTorque(){f.w = torque * scene->GetTimeStep();}
-	virtual void CompDof();
+	virtual void SetConstrainedIndex(bool* con);
 	virtual void ModifyJacobian();
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
@@ -70,7 +72,7 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHBallJointNode();
 	}
-	PHBallJoint(){}
+	PHBallJoint();
 };
 
 }

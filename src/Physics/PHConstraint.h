@@ -18,19 +18,17 @@ class PHTreeNode;
 
 ///
 class PHConstraint : public SceneObject, PHConstraintIfInit{
-protected:
+public:
+	OBJECT_DEF_ABST(PHConstraint);
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,
 		MODE_VELOCITY
 	} mode;
-	
+
 	PHScene*			scene;
 	PHConstraintEngine* engine;
 
-public:
-	OBJECT_DEF_ABST(PHConstraint);
-	
 	bool		bEnabled;			///< 有効化されている場合にtrue
 	bool		bFeasible;			///< 両方の剛体がundynamicalな場合true
 	bool		bInactive[2];		///< 剛体が解析法に従う場合true
@@ -47,7 +45,9 @@ public:
 	SpatialMatrix		AinvJ[2];
 	SpatialMatrix		T[2];
 	
-	bool		constr[6];			///< 拘束する自由度．trueならば拘束する．
+	bool		axis[6];			///< 関節軸となる自由度．
+	bool		constr[6];			///< 拘束する自由度．
+									///< axis[i] == trueでも可動範囲，バネ・ダンパが有効な場合はtrueとなる
 
 	SpatialVector f;				///< 拘束力の力積
 	//Vec3d		Fv, Fq;				/// correctionにおける関節力
@@ -57,20 +57,19 @@ public:
 	
 	void	Init();
 	void	CompJacobian();
-	void	SetupDynamics();
-	void	SetupDynamicsForPrediction();
-	void	IterateDynamics();
-	void	SetScene(SceneIf* s){scene = DCAST(PHScene, s);}
-	void	SetEngine(PHConstraintEngine* e){engine = e;}
+	void	SetupLCP();
+	void	SetupLCPForPrediction();
+	void	IterateLCP();
 	void	UpdateState();
 	void	CompResponseMatrix();
+	void	CompResponseMatrixABA();
 	//void SetupCorrection(double dt, double max_error);
 	//void IterateCorrection();
 	
 	/// 派生クラスの機能
 	virtual void SetDesc(const PHConstraintDesc& desc);		///< ディスクリプタの読み込み
 	virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
-	virtual void CompDof(){}								///< どの自由度を拘束するかを設定
+	virtual void SetConstrainedIndex(bool* con){}			///< どの自由度を拘束するかを設定
 	virtual void ModifyJacobian(){}							///< 独自座標系を使う場合のヤコビアンの修正
 	virtual void CompBias(){}								///< 
 	virtual void Projection(double& f, int k){}				///< 拘束力の射影
@@ -99,26 +98,6 @@ public:
 			if((*it)->solid[0] == lhs && (*it)->solid[1] == rhs)
 				return *it;
 		return NULL;
-	}
-	void SetupDynamics(){
-		for(iterator it = begin(); it != end(); it++)
- 			(*it)->SetupDynamics();
-	}
-	void IterateDynamics(){
-		for(iterator it = begin(); it != end(); it++)
-			(*it)->IterateDynamics();
-	}
-	/*void SetupCorrection(double dt, double max_error){
-		for(iterator it = begin(); it != end(); it++)
-			(*it)->SetupCorrection(dt, max_error);
-	}*/
-	/*void IterateCorrection(){
-		for(iterator it = begin(); it != end(); it++)
-			(*it)->IterateCorrection();
-	}*/
-	void UpdateState(){
-		for(iterator it = begin(); it != end(); it++)
-			(*it)->UpdateState();
 	}
 };
 

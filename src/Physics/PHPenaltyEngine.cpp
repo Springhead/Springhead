@@ -46,8 +46,8 @@ void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
 	reflexForce = reflexTorque = frictionForce = frictionTorque = Vec3f();
 	area = 0;
 
-	solid[0]->UpdateCache(ct);
-	solid[1]->UpdateCache(ct);
+	solid[0]->UpdateCachePenalty(ct);
+	solid[1]->UpdateCachePenalty(ct);
 	cocog = ave(solid[0]->cog, solid[1]->cog);
 
 	//	Š·ŽZŽ¿—Ê‚ÌŒvŽZ

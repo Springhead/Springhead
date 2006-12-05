@@ -108,8 +108,8 @@ public:
 	//Vec3d		dv0, dw0;	/// 拘束力以外の外力による速度変化量
 	SpatialVector dv;		/// 拘束力による速度変化量
 	//Vec3d		dV, dW;		/// Correctionによる移動量，回転量
-	void SetupDynamics(double dt);
-	void SetupCorrection();
+	void UpdateCacheLCP(double dt);
+	//void SetupCorrection();
 	void UpdateVelocity(double dt);
 	void UpdatePosition(double dt);
 	//@}
@@ -124,8 +124,8 @@ public:
 	Vec3f cog, vel, angVel;			///<	重心，速度，角速度
 	Vec3f pos, lastPos;				///<	位置，最後の位置
 	Quaternionf ori, lastOri;		///<	向き，前回の向き
+	void UpdateCachePenalty(int c);		///<	キャッシュ変数を剛体などから取ってくる．
 	//@}
-	void UpdateCache(int c);		///<	キャッシュ変数を剛体などから取ってくる．
 	
 public:
 	std::vector<CDShapeRefWithPose> shapes;

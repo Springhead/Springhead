@@ -18,6 +18,12 @@ namespace Spr{;
 // PHSliderJoint
 IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
+PHSliderJoint::PHSliderJoint(){
+	axisIndex = 2;
+	for(int i = 0; i < 6; i++)
+		axis[i] = (i == axisIndex);
+}
+
 void PHSliderJoint::UpdateJointState(){
 	position = Xjrel.r.z;
 	velocity = vjrel.v.z;
@@ -52,15 +58,6 @@ void PHSliderJoint::CompBias(){
 		B[5] = rjrel.z - lower;
 }*/
 
-void PHSliderJoint::Projection(double& f, int k){
-	if(k == 2){
-		if(on_lower)
-			f = max(0.0, f);
-		if(on_upper)
-			f = min(0.0, f);
-	}
-}
-
 /*void PHSliderJoint::ProjectionCorrection(double& F, int k){
 	if(k == 5){
 		if(on_lower)
@@ -90,6 +87,21 @@ void PHSliderJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.R = Matrix3d::Unit();
 	j->Xjrel.r = Vec3d(0.0, 0.0, j->position);
+}
+void PHSliderJointNode::CompBias(){
+	PHJoint1D* j = GetJoint();
+	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
+	double diff;
+	if(j->mode == PHJoint::MODE_VELOCITY){
+		db = -j->vel_d;
+	}
+	else if(j->spring != 0.0 || j->damper != 0.0){
+		diff = j->GetPosition() - j->origin;
+		double tmp = 1.0 / (j->damper + j->spring * dt);
+		dA = tmp * dtinv;
+		db = j->spring * (diff) * tmp;
+	}
+	else dA = db = 0.0;
 }
 
 }

@@ -97,8 +97,7 @@ void PHConstraint::CompJacobian(){
  */
 void PHConstraint::CompResponseMatrix(){
 	int i, j;
-	A.v.clear();
-	A.w.clear();
+	A.clear();
 	PHRootNode* root[2];
 	if(solid[0]->treeNode)
 		root[0] = solid[0]->treeNode->GetRootNode();
@@ -110,6 +109,7 @@ void PHConstraint::CompResponseMatrix(){
 		if(solid[i]->IsDynamical()){
 			if(solid[i]->treeNode){
 				for(j = 0; j < 3; j++){
+					if(!constr[j])continue;
 					df.v = J[i].vv.row(j);
 					df.w = J[i].vw.row(j);
 					solid[i]->treeNode->CompResponse(df, false);
@@ -122,6 +122,7 @@ void PHConstraint::CompResponseMatrix(){
 								+ J[ic].vw.row(j) * solid[ic]->treeNode->da.w;
 				}
 				for(j = 0; j < 3; j++){
+					if(!constr[j+3])continue;
 					df.v = J[i].wv.row(j);
 					df.w = J[i].ww.row(j);
 					solid[i]->treeNode->CompResponse(df, false);
@@ -145,7 +146,7 @@ void PHConstraint::CompResponseMatrix(){
 			}
 		}
 	}
-	//特異姿勢でAd, Acの成分が0になるケースがある
+	//特異姿勢で0になるケースがある
 	const double eps = 1.0e-3;
 	for(j = 0; j < 3; j++)
 		if(A.v[j] < eps)A.v[j] = eps;
@@ -153,31 +154,39 @@ void PHConstraint::CompResponseMatrix(){
 		if(A.w[j] < eps)A.w[j] = eps;
 }
 
-
-void PHConstraint::SetupDynamics(){
+void PHConstraint::SetupLCP(){
 	FPCK_FINITE(f.v);
 
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
-	if(!bEnabled || !bFeasible || bArticulated)
+	if(!bEnabled || !bFeasible)
 		return;
-
+	
 	/* 前回の値を縮小したものを初期値とする．
 	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
 	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
 	   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
 	  */
-	f *= engine->shrinkRate;
+	
+	// 拘束する自由度の決定
+	bool con[6];
+	SetConstrainedIndex(con);
+	for(int i = 0; i < 6; i++){
+		if(con[i] && constr[i])				// 継続して拘束される場合
+			 f[i] *= engine->shrinkRate;
+		else f[i] = 0.0;					// 新規に拘束される or 拘束されない
+		constr[i] = con[i];
+	}
+
+	// ABAの場合はここまで
+	if(bArticulated)return;
+
 	if(mode == MODE_TORQUE)
 		AddMotorTorque();
-
-	// 制約する自由度の決定
-	CompDof();
 
 	// LCPの座標の取り方が特殊な関節はヤコビアンに座標変換をかける
 	ModifyJacobian();
 
 	// LCPのbベクトル
-	//b = vjrel;
 	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
 	CompBias();	// 目標速，バネダンパによる補正項を計算
 	b += db;
@@ -186,23 +195,22 @@ void PHConstraint::SetupDynamics(){
 	CompResponseMatrix();
 
 	// 拘束力初期値による速度変化量を計算
-	int i, j;
 	SpatialVector fs;
-	for(i = 0; i < 2; i++){
-		if(solid[i]->IsDynamical() && IsInactive(i)){
-			if(solid[i]->treeNode){
-				fs = (i == 0 ? -1.0 : 1.0) * (Js[i].trans() * f);
-				solid[i]->treeNode->CompResponse(fs);
-			}
-			else{
-				solid[i]->dv.v += T[i].vv.trans() * f.v + T[i].wv.trans() * f.w;
-				solid[i]->dv.w += T[i].vw.trans() * f.v + T[i].ww.trans() * f.w;
-			}
+	for(int i = 0; i < 2; i++){
+		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+		if(solid[i]->treeNode){
+			fs = (i == 0 ? -1.0 : 1.0) * (Js[i].trans() * f);
+			solid[i]->treeNode->CompResponse(fs);
+		}
+		else{
+			solid[i]->dv.v += T[i].vv.trans() * f.v + T[i].wv.trans() * f.w;
+			solid[i]->dv.w += T[i].vw.trans() * f.v + T[i].ww.trans() * f.w;
 		}
 	}
 
 	// 反復での手間を省くためにあらかじめA行列の対角成分でbとJを割っておく
-	for(j = 0; j < 3; j++){
+	for(int j = 0; j < 3; j++){
+		if(!constr[j])continue;
 		Ainv.v[j] = 1.0 / (A.v[j] + dA.v[j]);
 		dA.v[j] *= Ainv.v[j];
 		b.v[j] *= Ainv.v[j];
@@ -211,7 +219,8 @@ void PHConstraint::SetupDynamics(){
 		AinvJ[1].vv.row(j) = Ainv.v[j] * J[1].vv.row(j);
 		AinvJ[1].vw.row(j) = Ainv.v[j] * J[1].vw.row(j);
 	}
-	for(j = 0; j < 3; j++){
+	for(int j = 0; j < 3; j++){
+		if(!constr[j+3])continue;
 		Ainv.w[j] = 1.0 / (A.w[j] + dA.w[j]);
 		dA.w[j] *= Ainv.w[j];
 		b.w[j] *= Ainv.w[j];
@@ -222,11 +231,12 @@ void PHConstraint::SetupDynamics(){
 	}
 }
 
-void PHConstraint::IterateDynamics(){
-	if(!bEnabled || !bFeasible || bArticulated)return;
+void PHConstraint::IterateLCP(){
+	if(!bEnabled || !bFeasible || bArticulated)
+		return;
 	FPCK_FINITE(f.v);
 
-	SpatialVector fnew, df;
+	SpatialVector fnew, df, dfs;
 	int i, j;
 	for(j = 0; j < 3; j++){
 		if(!constr[j])continue;
@@ -249,17 +259,15 @@ void PHConstraint::IterateDynamics(){
 		FPCK_FINITE(fnew.v);
 		df.v[j] = fnew.v[j] - f.v[j];
 		for(i = 0; i < 2; i++){
-			if(solid[i]->IsDynamical() && IsInactive(i)){
-				if(solid[i]->treeNode){
-					SpatialVector dfs;
-					dfs.v = df[j] * J[i].vv.row(j);
-					dfs.w = df[j] * J[i].vw.row(j);
-					solid[i]->treeNode->CompResponse(dfs);
-				}
-				else{
-					solid[i]->dv.v += T[i].vv.row(j) * df.v[j];
-					solid[i]->dv.w += T[i].vw.row(j) * df.v[j];
-				}
+			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+			if(solid[i]->treeNode){
+				dfs.v = df.v[j] * J[i].vv.row(j);
+				dfs.w = df.v[j] * J[i].vw.row(j);
+				solid[i]->treeNode->CompResponse(dfs);
+			}
+			else{
+				solid[i]->dv.v += T[i].vv.row(j) * df.v[j];
+				solid[i]->dv.w += T[i].vw.row(j) * df.v[j];
 			}
 		}
 		f.v[j] = fnew.v[j];
@@ -272,17 +280,16 @@ void PHConstraint::IterateDynamics(){
 		Projection(fnew.w[j], j + 3);
 		df.w[j] = fnew.w[j] - f.w[j];
 		for(i = 0; i < 2; i++){
-			if(solid[i]->IsDynamical() && IsInactive(i)){
-				if(solid[i]->treeNode){
-					SpatialVector dfs;
-					dfs.v = df[j] * J[i].wv.row(j);
-					dfs.w = df[j] * J[i].ww.row(j);
-					solid[i]->treeNode->CompResponse(dfs);
-				}
-				else{
-					solid[i]->dv.v += T[i].wv.row(j) * df.w[j];
-					solid[i]->dv.w += T[i].ww.row(j) * df.w[j];
-				}
+			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+			if(solid[i]->treeNode){
+				SpatialVector dfs;
+				dfs.v = df.w[j] * J[i].wv.row(j);
+				dfs.w = df.w[j] * J[i].ww.row(j);
+				solid[i]->treeNode->CompResponse(dfs);
+			}
+			else{
+				solid[i]->dv.v += T[i].wv.row(j) * df.w[j];
+				solid[i]->dv.w += T[i].ww.row(j) * df.w[j];
 			}
 		}
 		f.w[j] = fnew.w[j];

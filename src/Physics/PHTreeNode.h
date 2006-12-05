@@ -19,7 +19,6 @@ class PHTreeNode : public SceneObject, PHTreeNodeIfInit, public UTTreeNode<PHTre
 public:
 	OBJECT_DEF_ABST(PHTreeNode);
 	
-	void		SetScene(SceneIf* s){scene = DCAST(PHScene, s);}
 	bool		Includes(PHTreeNode* node);		///< 自分以下にノードnodeがあるか
 	PHTreeNode*	FindBySolid(PHSolid* solid);	///< 自分以下のツリーでsolidを参照しているノードを探す
 	//int GetNumOfNodes();
@@ -40,6 +39,8 @@ public:
 	/// このノードに加わる拘束力の変化量から他のノードの速度変化量への影響を計算．LCPで使用
 	virtual void CompResponse(const SpatialVector& dF, bool bUpdate = true);
 	virtual void CompBiasForceDiff(bool bUpdate){}
+	virtual void SetupLCP();
+	virtual void IterateLCP();
 	virtual void CompArticulatedInertia();			///< Articulated Inertiaの計算
 	virtual void CompArticulatedBiasForce();		///< Articulated Bias Forceの計算
 	virtual void CompJointJacobian(){}				///< 関節ヤコビアンを計算
@@ -58,7 +59,7 @@ public:
 	//bool		opposite;					///< ツリーノードの親子関係と拘束の親子関係（ソケットがついてるのが親）が逆ならtrue
 
 	SpatialMatrix			I;				///< Articulated Inertia
-	SpatialVector			Z;				///< Articulated Offset Force
+	SpatialVector			Z;				///< Articulated Bias Force
 	SpatialVector			dZ;				///< 拘束力の変化によるZの変化量
 	SpatialVector			c;				///< コリオリ加速度
 	SpatialVector			cj;				///< 関節速度によるコリオリ加速度
@@ -68,24 +69,22 @@ public:
 	SpatialVector			a;				///< 加速度
 	SpatialVector			da;				///< 拘束力の変化によるaの変化量
 	SpatialVector			ap, Ic, ZplusIc;
-protected:
+
 	PHScene*	scene;
+	PHConstraintEngine* engine;
 };
 
 class PHRootNode : public PHTreeNode, PHRootNodeIfInit{
 public:
 	OBJECT_DEF(PHRootNode);
 
-	void SetupDynamics();
-	//void CompDefaultVelocity(double dt);
-	//void CompEquationOfMotion();
-
+	void SetupABA();
+	
 	virtual PHSolid* GetSolid(){return solid;}
 	virtual PHRootNode* GetRootNode(){return this;}
 	virtual int	 GetDof(){ return 6; }
 	virtual void CompArticulatedInertia();
 	virtual void CompArticulatedBiasForce();
-	//virtual void GetJointAccel();
 	virtual void CompAccel();
 	virtual void CompBiasForceDiff(bool Update);
 	virtual void UpdateVelocity(double dt);
@@ -93,11 +92,6 @@ public:
 	
 	PHSolid*	solid;		///< ルートノードの剛体
 protected:
-	//int		nNodes;								///< 総ノード数	
-	//std::vecotr<PHTreeNode*>	nodeTable;		///< 各ノードへのダイレクトアクセス用テーブル
-	//UTCombination< std::vector<Matrix6d> >	inverseInertia;	///< 慣性行列の逆行列
-	//std::vector<Vec6d>			offsetAccel;	///< 全関節トルクが0の場合の関節加速度
-
 	SpatialMatrix		Iinv;
 };
 
@@ -112,12 +106,23 @@ public:
 	virtual void CompBiasForceDiff(bool bUpdate);
 	virtual void UpdateJointVelocity(double dt);
 	virtual void UpdateJointPosition(double dt);
+	virtual void SetupLCP();
+	virtual void IterateLCP();
+
+	virtual void CompBias()=0;
+	virtual void Projection(double& f);
+
+	PHTreeNode1D();
 protected:
+	bool			constr;						///< ABAとして関節軸自由度を拘束するか
 	SpatialVector	J;							///< 関節ヤコビアン．1軸なのでベクトル
 	SpatialVector	IJ, J_JIJinv, IJ_JIJinv;
 	double			JIJ, JIJinv, J_ZplusIc;
-	double			accel, daccel;				///< 関節加速度
-	PHJoint1D* GetJoint(){return DCAST(PHJoint1D, joint);}
+	double			accel, daccel, dtau;
+	double			A, Ainv, dA, b, db, f;
+	void			CompResponse(double, bool bUpdate = true);
+	void			CompResponseMatrix();
+	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
 
 };
 
@@ -126,19 +131,30 @@ template<int NDOF>
 class PHTreeNodeND : public PHTreeNode{
 public:
 	virtual void AccumulateInertia();
-	virtual void AccumulateOffsetForce();
+	virtual void AccumulateBiasForce();
 	virtual void CompJointJacobian();
 	virtual void CompAccel();
 	virtual void CompAccelDiff(bool bUpdate);
 	virtual void CompBiasForceDiff(bool bUpdate);
 	virtual void UpdateJointVelocity(double dt);
-	virtual void UpdateJointPosition(double dt);	
+	virtual void UpdateJointPosition(double dt);
+	virtual void SetupLCP();
+	virtual void IterateLCP();
+
+	virtual void CompBias()=0;
+	virtual void Projection(double& f, int i)=0;
+
+	PHTreeNodeND();
 protected:
+	bool			constr[NDOF];		///< ABAとして各自由度を拘束するか
 	SpatialVector	J[NDOF];
 	SpatialVector	IJ[NDOF], IJ_JIJinv[NDOF], J_JIJinv[NDOF];
 	PTM::TMatrixCol<NDOF, NDOF, double> JIJ, JIJinv;
 	PTM::TVector<NDOF, double>	J_ZplusIc;
-	PTM::TVector<NDOF, double>	accel, daccel;		///< 関節速度の変化量
+	PTM::TVector<NDOF, double>	accel, daccel, dtau;
+	PTM::TVector<NDOF, double> A, Ainv, dA, b, db, f;
+	void		CompResponse(const PTM::TVector<NDOF, double>& tau, bool bUpdate = true);
+	void		CompResponseMatrix();
 	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
 };
 

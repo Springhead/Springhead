@@ -65,7 +65,6 @@ public:
 	//virtual void CompConstraintJacobian();
 	virtual void CompBias(double dt, double correction_rate);
 	//virtual void CompError(double dt);
-	virtual void Projection(double& f, int k);
 	//virtual void ProjectionCorrection(double& F, int k);
 	PHPathJoint();
 };

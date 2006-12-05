@@ -347,8 +347,8 @@ void OnKey0(char key){
 		PHHingeJointDesc jdesc;
 		jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
 		jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
-		//jdesc.lower = Rad(-30.0);
-		//jdesc.upper = Rad( 30.0);
+		jdesc.lower = Rad(-30.0);
+		jdesc.upper = Rad( 30.0);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		// ツリーノードを作成し，ABAで計算するように指定
@@ -439,9 +439,9 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.swingUpper = 0.5;		// 最大スイング角
-		jdesc.twistLower = -0.5;	// ツイスト角範囲
-		jdesc.twistUpper = 0.5;
+		jdesc.swingUpper = 0.2;		// 最大スイング角
+		jdesc.twistLower = -0.2;	// ツイスト角範囲
+		jdesc.twistUpper = 0.2;
 		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();

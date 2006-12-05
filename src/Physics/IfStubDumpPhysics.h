@@ -211,22 +211,6 @@ typedef IfInitTemplate<PHBallJointIfStub, PHBallJoint>	PHBallJointIfInit;
 
 template <class IF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class OBJ>
-struct PHUniversalJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, OBJ> {
-	virtual void SetMotorTorque(const Vec2d &  torque){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::SetMotorTorque(torque);
-	}
-	virtual Vec2d GetMotorTorque(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetMotorTorque();
-	}
-};
-struct PHUniversalJointIf;	class PHUniversalJoint;
-typedef PHUniversalJointIfStubTemplate<PHUniversalJointIf, PHUniversalJoint>	PHUniversalJointIfStub;
-typedef IfInitTemplate<PHUniversalJointIfStub, PHUniversalJoint>	PHUniversalJointIfInit;
-
-template <class IF, class OBJ> struct PHConstraintIfStubTemplate;
-template <class IF, class OBJ>
 struct PHSpringIfStubTemplate: public PHConstraintIfStubTemplate<IF, OBJ> {
 	virtual void SetSpring(const Vec3d &  spring){
 		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
