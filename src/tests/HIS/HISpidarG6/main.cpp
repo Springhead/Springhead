@@ -24,6 +24,7 @@
 
 // debug出力用
 #include <fstream>
+#include "Foundation/UTPreciseTimer.h"
 
 #include "HIS/HIS.h"
 #include "Physics/PHConstraintEngine.h"
@@ -67,10 +68,10 @@ using namespace Spr;
 	#define SIMULATION_FREQ	60          // シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000		// 力覚スレッドの周期Hz
 	float Km = 1000;						// virtual couplingの係数
-	float Bm = 50;						// 並進
+	float Bm = 60;						// 並進
 
 	float Kr = 1000;						// 回転
-	float Br = 100;
+	float Br = 150;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
@@ -107,8 +108,7 @@ Matrix3f view_haptic;
 
 bool bforce = false;
 
-MMRESULT FTimerId1;
-MMRESULT FTimerId2;
+MMRESULT FTimerId1;;
 
 
 // めり込み補正のフラグ
@@ -124,6 +124,7 @@ bool bLocalDynamics = true;
 ofstream ofs;
 bool bOutput = false;
 
+bool bSimulation = true;
 
 // 力覚計算に必要なデータを集めた構造体
 // 力覚計算を高速で行えるように
@@ -173,7 +174,7 @@ typedef struct {
 	// 座標変換用の変数
 	// あらかじめシミュレーションで計算しておくことで
 	// 力覚レンダリングでの計算量を軽減させる
-	Vec3d coeff_ang_effect[NUM_COL_SOLIDS];
+//	Vec3d coeff_ang_effect[NUM_COL_SOLIDS];
 
 	// pointer data
 	Vec3d pointer_pos;
@@ -209,6 +210,8 @@ bool bDisplayPointer = true;
 // trueの場合並進
 // falseの場合回転
 bool bMode = true;
+
+UTPreciseTimer timer;
 
 // 与えられた接触で、引数のsolidに接している剛体をしらべ、あれば返す
 PHSolid* getAdjacentSolid(PHConstraint* constraint, PHSolid* solid, int* sign = NULL)
@@ -315,7 +318,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info, vector<pair<PHConst
 				}
 				else
 				{
-					info->coeff_ang_effect[counter] = Vec3d();
+//					info->coeff_ang_effect[counter] = Vec3d();
 					info->vel_constant[counter] = Vec3d();
 					info->ang_constant[counter] = Vec3d();
 				}
@@ -819,21 +822,18 @@ void show_collision_info()
 
 
 // 処理にかかる時間を計測。一時的なもの
-static int temp_counter = 0;
-static DWORD start, end;
+static int start, end;
 
 void t_start()
 {
-	start = timeGetTime();
+	start = timer.CountUS();
 }
 
 void t_end()
 {
 	// 一周にかかる時間をチェック
-	end = timeGetTime();
-
-	double time = (double)(end - start);
-	if(time > 0)printf("%d: time =  %f\n", temp_counter++, time);
+	end = timer.CountUS();
+	if(time > 0 && bOutput)ofs << "time = " << end - start << endl;
 }
 /**
  brief  	提示力の計算とHaptic Device	へ反映. multimedia timerによって呼び出される
@@ -850,6 +850,26 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 	// シミュレーションと力覚レンダリングの更新周期の比率をあらわす変数
 	static const double ratio = (double)SIMULATION_FREQ / HAPTIC_FREQ;
+
+	// シミュレーションを管理するカウンターを作成
+	static int step_counter = 0;
+	if(step_counter == (int)ratio)
+	{
+		// シミュレーションが終わっていたら新しいデータに切り替える処理をする
+		// 終わっていなかったら仕方がないので前回のデータをそのまま使う
+		// カウンターが更新されないので次でもう一度ここにくる
+		if(!bSimulation)
+		{
+			bSimulation = true;
+			step_counter = 0;
+			current_valid_data = !current_valid_data;
+		}
+		else
+		{
+//			if(bOutput)ofs << "error : simulation could not be finished in time" << endl;
+		}
+	}
+	else step_counter++;
 
 	// SPIDAR更新幅
 	static const double dt = (double)1.0 / HAPTIC_FREQ;
@@ -1034,7 +1054,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		spidarG6.SetForce(FORCE_COEFF * f, FORCE_COEFF * t);
 
 		// debug出力処理
-		if(bOutput)	ofs << FORCE_COEFF * f << " " << FORCE_COEFF * t << endl;
+//		if(bOutput)	ofs << FORCE_COEFF * f << " " << FORCE_COEFF * t << endl;
 	}
 	else spidarG6.SetForce(Vec3d(), Vec3d());
 
@@ -1042,6 +1062,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	if(bLocalDynamics)
 	{
 		Vec3d correct_vector = Vec3d();
+		Vec3d correct_torque = Vec3d();
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		// 局所的シミュレーションによる接触する剛体の位置・姿勢を更新
@@ -1071,18 +1092,17 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				if(info->solid_future_center_positions[i] != Vec3d())
 				{
 					// futureに近づけていく
-					Vec3d bias_center_mov_vec = fabs(dot(dx_local, info->solid_future_center_positions[i])) * info->solid_future_center_positions[i].unit() - dx_local;
-					Vec3d bias_vec = ratio * bias_center_mov_vec;
+					Vec3d bias_center_mov_vec = ratio * (fabs(dot(dx_local, info->solid_future_center_positions[i])) * info->solid_future_center_positions[i].unit() - dx_local);
 					
-					info->solid_current_center_positions[i] += bias_vec;
-					dx_local += bias_vec;
+					info->solid_current_center_positions[i] += bias_center_mov_vec;
+					dx_local += bias_center_mov_vec;
 				}
 				// 回転
 				if(info->solid_future_orientations[i] != Quaterniond())
 				{
 					// futureの姿勢に近づけていく
 					Vec3d bias_center_ori_vec = ratio * (info->solid_future_orientations[i].Axis() - info->solid_current_orientations[i].Axis());
-					double theta = ratio * (info->solid_future_orientations[i].Theta() - info->solid_current_orientations[i].Theta());// + info->solid_current_orientations[i].Theta();
+					double theta = ratio * (info->solid_future_orientations[i].Theta() - info->solid_current_orientations[i].Theta());
 
 					info->solid_current_orientations[i] = Quaterniond::Rot(theta + info->solid_current_orientations[i].Theta(), (bias_center_ori_vec + info->solid_current_orientations[i].Axis()).unit());
  					if(bias_center_ori_vec != Vec3d())dth_local += Quaterniond::Rot(theta, bias_center_ori_vec).Rotation();
@@ -1120,6 +1140,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 					Vec3d col_vector = info->current_col_positions[col_index] - info->pointer_current_col_positions[col_index];
 					Vec3d col_normal = dot(col_vector, info->current_col_normals[col_index]) * info->current_col_normals[col_index].unit();
 					correct_vector += col_normal;
+
+//					correct_torque += (info->pointer_current_col_positions[col_index] - info->pointer_pos) ^ col_normal;
 				}
 			}
 		}
@@ -1130,9 +1152,13 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			// ポインタ自身の位置を移動
 			info->pointer_pos += 0.2 * correct_vector;
 
+//			Quaterniond correct_q = 0.2 * Quaterniond::Rot(correct_torque);
+//			info->pointer_ori = info->pointer_ori * correct_q;
+
 			// すべての接触もその方向に移動
 			for(int i = 0; i < info->num_collisions; i++)
 			{
+//				info->pointer_current_col_positions[i] += correct_torque ^ (info->current_col_positions[i] - info->pointer_current_col_positions[i]);
 				info->pointer_current_col_positions[i] += 0.2 * correct_vector;
 			}
 		}
@@ -1196,7 +1222,7 @@ void UpdatePointer()
 	soPointer->SetAngularVelocity(info->pointer_angvel);
 }
 
-void CALLBACK StepSimulation(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2)
+void StepSimulation()
 {
 	// ポインタの位置を更新
 	UpdatePointer();
@@ -1218,7 +1244,8 @@ void CALLBACK StepSimulation(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD
 	else calculate_surround_effect(&info1, &info2);
 
 	// 力覚スレッドのシミュレーションの変数の参照先を変更
-	current_valid_data = current_valid_data?false:true;
+//	current_valid_data = !current_valid_data;
+	bSimulation = false;
 }
 
 /**
@@ -1229,6 +1256,8 @@ void CALLBACK StepSimulation(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD
 void idle(){
 	// 再描画
 	glutPostRedisplay();
+
+	if(bSimulation)StepSimulation();
 }
 
 /**
@@ -1339,8 +1368,8 @@ void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) 
 	{
 		timeKillEvent(FTimerId1);
-		timeKillEvent(FTimerId1);
 		timeEndPeriod(1);
+
 		cout << "EXIT from Key Input" << endl;
 		exit(0);
 	}
@@ -1460,7 +1489,7 @@ void keyboard(unsigned char key, int x, int y){
 		else cout << "ON " << endl;
 	}
 	// パラメータ編集対象の切り替え処理
-	else if(key == 'e')
+	else if(key == 't')
 	{
 		bMode = !bMode;
 		if(bMode)cout << "MOVEMENT ";
@@ -1631,18 +1660,12 @@ int main(int argc, char* argv[]){
 
 	DWORD time = 0;
 
+	timer.CountUS();
+
 	// hapticスレッドの生成・開始
 	FTimerId1 = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
 	                        1,   // 時間分解能
 		                    HapticRendering,//コールバック関数
-		                    (DWORD)&time,//ユーザー定義の値
-		                    TIME_PERIODIC //単発(TIME_ONESHOT) or 繰り返し(TIME_PERIODIC)
-		                    );
-
-	// simulationスレッドの生成・開始
-	FTimerId2 = timeSetEvent(1000 / SIMULATION_FREQ,    // タイマー間隔[ms]
-	                        1,   // 時間分解能
-		                    StepSimulation,//コールバック関数
 		                    (DWORD)&time,//ユーザー定義の値
 		                    TIME_PERIODIC //単発(TIME_ONESHOT) or 繰り返し(TIME_PERIODIC)
 		                    );
@@ -1666,12 +1689,12 @@ void InitScene()
 	sd.timeStep = (double)1.0 / SIMULATION_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
-	desc.mass = 0.5;
+	desc.mass = 0.3;
 
 	// inertiaの計算式
 	// 直方体の場合 I = mass * (r1^2 + r2^2) / 12
 	// 球の場合 I = mass * r~2 * 2/5
-	desc.inertia = Matrix3d(0.75,0,0,0,0.75,0,0,0,0.75);
+	desc.inertia = Matrix3d(0.45,0,0,0,0.45,0,0,0,0.45);
 
 	// Solidの作成
 	for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
