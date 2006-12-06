@@ -186,6 +186,13 @@ void BuildScene1(){
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jntLink[3] = scene->CreateJoint(soBox[1], soBox[2], jd);
 
+	// 以下を有効化するとABAが機能し、閉リンクを構成するための1関節のみLCPで解かれる
+	nodeTree.push_back(scene->CreateRootNode(soFloor));
+	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[0]));
+	nodeTree.push_back(scene->CreateTreeNode(nodeTree[1], soBox[2]));
+	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[1]));
+	//
+
 	scene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
 	scene->SetGravity(Vec3f(0, 0.0, 0));
 }
@@ -196,9 +203,10 @@ void BuildScene2(){
 	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	soBox.push_back(scene->CreateSolid(descBox));
-	soBox.back()->AddShape(shapeBox);
-	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
-	soBox.back()->SetDynamical(false);
+	soBox[0]->AddShape(shapeBox);
+	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
+	soBox[0]->SetDynamical(false);
+	nodeTree.push_back(scene->CreateRootNode(soBox[0]));
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
 
@@ -434,7 +442,8 @@ void OnKey1(char key){
 
 void OnKey2(char key){
 	switch(key){
-	case ' ':{
+	case ' ':
+	case 'b':{
 		soBox.push_back(scene->CreateSolid(descBox));
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
@@ -446,6 +455,8 @@ void OnKey2(char key){
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		if(key == ' ')
+			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
 		}break;
 	}
 }
@@ -665,6 +676,7 @@ void keyboard(unsigned char key, int x, int y){
 			soFloor = NULL;
 			soBox.clear();
 			jntLink.clear();
+			nodeTree.clear();
 			sceneNo = key - '0';
 			BuildScene();
 			break;
