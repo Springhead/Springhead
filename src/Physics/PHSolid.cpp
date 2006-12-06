@@ -25,13 +25,11 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	if (s){ SetScene(s); }
 }
 void PHSolid::SetGravity(bool bOn){
-	if (bOn){
-		PHScene* s = DCAST(PHScene, GetScene());
-		PHGravityEngine* ge;
-		s->engines.Find(ge);
-		if (bOn) ge->AddChildObject(s->GetIf());
-		else ge->solids.Erase(this);
-	}
+	PHScene* s = DCAST(PHScene, GetScene());
+	PHGravityEngine* ge;
+	s->engines.Find(ge);
+	if (bOn) ge->AddChildObject(s->GetIf());
+	else ge->solids.Erase(this);
 }
 
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
