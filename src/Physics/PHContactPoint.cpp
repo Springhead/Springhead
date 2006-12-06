@@ -97,6 +97,10 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	Ac[0] = Ad[0];
 }*/
 
+void PHContactPoint::SetConstrainedIndex(bool* con){
+	con[0] = con[1] = con[2] = true;
+	con[3] = con[4] = con[5] = false;
+}
 void PHContactPoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);

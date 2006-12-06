@@ -23,6 +23,7 @@ public:
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
 	//virtual void CompConstraintJacobian();
 	//virtual void CompError(double dt);
+	virtual void SetConstrainedIndex(bool* con);
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
 	//virtual void ProjectionCorrection(double& F, int k);
