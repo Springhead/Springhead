@@ -95,37 +95,6 @@ protected:
 	SpatialMatrix		Iinv;
 };
 
-///	1自由度の関節
-class PHTreeNode1D : public PHTreeNode{
-public:
-	virtual void AccumulateInertia();
-	virtual void AccumulateBiasForce();
-	virtual void CompJointJacobian();
-	virtual void CompAccel();
-	virtual void CompAccelDiff(bool bUpdate);
-	virtual void CompBiasForceDiff(bool bUpdate);
-	virtual void UpdateJointVelocity(double dt);
-	virtual void UpdateJointPosition(double dt);
-	virtual void SetupLCP();
-	virtual void IterateLCP();
-
-	virtual void CompBias()=0;
-	virtual void Projection(double& f);
-
-	PHTreeNode1D();
-protected:
-	bool			constr;						///< ABAとして関節軸自由度を拘束するか
-	SpatialVector	J;							///< 関節ヤコビアン．1軸なのでベクトル
-	SpatialVector	IJ, J_JIJinv, IJ_JIJinv;
-	double			JIJ, JIJinv, J_ZplusIc;
-	double			accel, daccel, dtau;
-	double			A, Ainv, dA, b, db, f;
-	void			CompResponse(double, bool bUpdate = true);
-	void			CompResponseMatrix();
-	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
-
-};
-
 ///	他自由度の関節の基本クラス
 template<int NDOF>
 class PHTreeNodeND : public PHTreeNode{
@@ -142,7 +111,7 @@ public:
 	virtual void IterateLCP();
 
 	virtual void CompBias()=0;
-	virtual void Projection(double& f, int i)=0;
+	virtual void Projection(double& f, int k)=0;
 
 	PHTreeNodeND();
 protected:
@@ -156,6 +125,37 @@ protected:
 	void		CompResponse(const PTM::TVector<NDOF, double>& tau, bool bUpdate = true);
 	void		CompResponseMatrix();
 	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
+};
+
+///	1自由度の関節
+class PHTreeNode1D : public PHTreeNodeND<1>{
+public:
+	//virtual void AccumulateInertia();
+	//virtual void AccumulateBiasForce();
+	//virtual void CompJointJacobian();
+	//virtual void CompAccel();
+	//virtual void CompAccelDiff(bool bUpdate);
+	//virtual void CompBiasForceDiff(bool bUpdate);
+	//virtual void UpdateJointVelocity(double dt);
+	//virtual void UpdateJointPosition(double dt);
+	//virtual void SetupLCP();
+	//virtual void IterateLCP();
+
+	//virtual void CompBias()=0;
+	virtual void Projection(double& f, int k);
+
+/*	PHTreeNode1D();
+protected:
+	bool			constr;						///< ABAとして関節軸自由度を拘束するか
+	SpatialVector	J;							///< 関節ヤコビアン．1軸なのでベクトル
+	SpatialVector	IJ, J_JIJinv, IJ_JIJinv;
+	double			JIJ, JIJinv, J_ZplusIc;
+	double			accel, daccel, dtau;
+	double			A, Ainv, dA, b, db, f;
+	void			CompResponse(double, bool bUpdate = true);
+	void			CompResponseMatrix();*/
+	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
+
 };
 
 }

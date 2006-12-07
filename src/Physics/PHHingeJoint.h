@@ -22,6 +22,7 @@ public:
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
 	virtual void CompBias();
+	//virtual void Projection(double&, int){}
 	//PHHingeJointNode();
 	//PHHingeJointNode(PHHingeJoint* j);
 };
@@ -36,6 +37,7 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHHingeJointNode();
 	}
+
 	// virtual void CompConstraintJacobian();
 	// virtual void CompError(double dt);
 	// virtual void ProjectionCorrection(double& F, int k);

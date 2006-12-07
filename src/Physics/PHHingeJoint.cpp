@@ -19,17 +19,17 @@ namespace Spr{;
 IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
 
 PHHingeJoint::PHHingeJoint(){
-	axisIndex = 5;
+	axisIndex[0] = 5;
 	for(int i = 0; i < 6; i++)
-		axis[i] = (i == axisIndex);
+		axis[i] = (i == axisIndex[0]);
 }
 
 void PHHingeJoint::UpdateJointState(){
 	//Ž²•ûŒü‚ÌS‘©‚Í‡’v‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‰¼’è‚µ‚ÄŠp“x‚ðŒ©‚é
-	position = qjrel.Theta();
+	position[0] = qjrel.Theta();
 	if(qjrel.Axis().Z() < 0.0)
 		position = -position;
-	velocity = vjrel.w.z;
+	velocity[0] = vjrel.w.z;
 }
 
 void PHHingeJoint::CompBias(){
@@ -75,8 +75,8 @@ void PHHingeJoint::CompBias(){
 //OBJECT_IMP(PHHingeJointNode, PHTreeNode1D);
 
 void PHHingeJointNode::CompJointJacobian(){
-	J.v.clear();
-	J.w = Vec3d(0.0, 0.0, 1.0);
+	J[0].v.clear();
+	J[0].w = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHHingeJointNode::CompJointCoriolisAccel(){
@@ -85,11 +85,11 @@ void PHHingeJointNode::CompJointCoriolisAccel(){
 void PHHingeJointNode::CompRelativeVelocity(){
 	PHJoint1D* j = GetJoint();
 	j->vjrel.v.clear();
-	j->vjrel.w = Vec3d(0.0, 0.0, j->velocity);
+	j->vjrel.w = Vec3d(0.0, 0.0, j->velocity[0]);
 }
 void PHHingeJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
-	j->Xjrel.R = Matrix3d::Rot(j->position, 'z');
+	j->Xjrel.R = Matrix3d::Rot(j->position[0], 'z');
 	j->Xjrel.r.clear();
 }
 void PHHingeJointNode::CompBias(){
@@ -97,17 +97,17 @@ void PHHingeJointNode::CompBias(){
 	double diff;
 	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
 	if(j->mode == PHJoint::MODE_VELOCITY){
-		db = -j->vel_d;
+		db[0] = -j->vel_d;
 	}
 	else if(j->spring != 0.0 || j->damper != 0.0){
 		diff = j->GetPosition() - j->origin;
 		while(diff >  M_PI) diff -= 2 * M_PI;
 		while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (j->damper + j->spring * dt);
-		dA = tmp * dtinv;
-		db = j->spring * (diff) * tmp;
+		dA[0] = tmp * dtinv;
+		db[0] = j->spring * (diff) * tmp;
 	}
-	else dA = db = 0.0;
+	else dA[0] = db[0] = 0.0;
 }
 
 }

@@ -21,12 +21,18 @@ struct SwingTwist : public Vec3d{
 	double Twist(){return item(2);}
 	void ToQuaternion(Quaterniond& q);
 	void FromQuaternion(const Quaterniond& q);
-	void Jacobian(Matrix3d& J, const Quaterniond& q);
+	void Jacobian(Matrix3d& J);
+	void JacobianInverse(Matrix3d& J, const Quaterniond& q);
+	void Coriolis(Vec3d& c, const Vec3d& sd);
 };
 
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
+	/// スイング・ツイスト角の時間変化率から角速度へのヤコビアン
+	Matrix3d	Jst;
+
+	PHBallJoint* GetJoint(){return DCAST(PHBallJoint, PHTreeNodeND<3>::GetJoint());}
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
@@ -37,16 +43,17 @@ public:
 };
 
 class PHBallJoint : public PHJointND<3>, PHBallJointIfInit{
-protected:
-	bool		swingOnUpper, twistOnLower, twistOnUpper;
-	double		swingUpper, swingDamper, swingSpring;
-	double		twistLower, twistUpper, twistDamper, twistSpring;
-	SwingTwist	angle, velocity;	///< スイング・ツイスト角表現の角度と角速度
-	Vec3d		torque;
-	Matrix3d	Jst;
 public:
 	OBJECT_DEF(PHBallJoint);
 	
+	bool		swingOnUpper, twistOnLower, twistOnUpper;
+	double		swingUpper, swingDamper, swingSpring;
+	double		twistLower, twistUpper, twistDamper, twistSpring;
+	//SwingTwist	angle, velocity;	///< スイング・ツイスト角表現の角度と角速度
+	//Vec3d		torque;
+	/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン
+	Matrix3d	Jstinv;
+
 	/// インタフェースの実装
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	virtual void	SetSwingRange(double u){swingUpper = u;}
@@ -55,7 +62,7 @@ public:
 	virtual void	GetTwistRange(double& l, double& u){l = twistLower; u = twistUpper;}
 	virtual void	SetMotorTorque(const Vec3d& t){torque = t;}
 	virtual Vec3d	GetMotorTorque(){return torque;}
-	virtual Vec3d	GetAngle(){return angle;}
+	virtual Vec3d	GetAngle(){return position;}
 	virtual Vec3d	GetVelocity(){return velocity;}
 	
 	/// 仮想関数のオーバライド

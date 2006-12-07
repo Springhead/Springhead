@@ -19,14 +19,14 @@ namespace Spr{;
 IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
 PHSliderJoint::PHSliderJoint(){
-	axisIndex = 2;
+	axisIndex[0] = 2;
 	for(int i = 0; i < 6; i++)
-		axis[i] = (i == axisIndex);
+		axis[i] = (i == axisIndex[0]);
 }
 
 void PHSliderJoint::UpdateJointState(){
-	position = Xjrel.r.z;
-	velocity = vjrel.v.z;
+	position[0] = Xjrel.r.z;
+	velocity[0] = vjrel.v.z;
 }
 
 void PHSliderJoint::CompBias(){
@@ -71,8 +71,8 @@ void PHSliderJoint::CompBias(){
 //OBJECT_IMP(PHSliderJointNode, PHTreeNode1D);
 
 void PHSliderJointNode::CompJointJacobian(){
-	J.v = Vec3d(0.0, 0.0, 1.0);
-	J.w.clear();
+	J[0].v = Vec3d(0.0, 0.0, 1.0);
+	J[0].w.clear();
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHSliderJointNode::CompJointCoriolisAccel(){
@@ -80,28 +80,28 @@ void PHSliderJointNode::CompJointCoriolisAccel(){
 }
 void PHSliderJointNode::CompRelativeVelocity(){
 	PHJoint1D* j = GetJoint();
-	j->vjrel.v = Vec3d(0.0, 0.0, j->velocity);
+	j->vjrel.v = Vec3d(0.0, 0.0, j->velocity[0]);
 	j->vjrel.w.clear();
 }
 void PHSliderJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.R = Matrix3d::Unit();
-	j->Xjrel.r = Vec3d(0.0, 0.0, j->position);
+	j->Xjrel.r = Vec3d(0.0, 0.0, j->position[0]);
 }
 void PHSliderJointNode::CompBias(){
 	PHJoint1D* j = GetJoint();
 	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
 	double diff;
 	if(j->mode == PHJoint::MODE_VELOCITY){
-		db = -j->vel_d;
+		db[0] = -j->vel_d;
 	}
 	else if(j->spring != 0.0 || j->damper != 0.0){
 		diff = j->GetPosition() - j->origin;
 		double tmp = 1.0 / (j->damper + j->spring * dt);
-		dA = tmp * dtinv;
-		db = j->spring * (diff) * tmp;
+		dA[0] = tmp * dtinv;
+		db[0] = j->spring * (diff) * tmp;
 	}
-	else dA = db = 0.0;
+	else dA[0] = db[0] = 0.0;
 }
 
 }

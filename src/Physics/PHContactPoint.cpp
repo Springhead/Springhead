@@ -19,9 +19,6 @@ namespace Spr{;
 IF_OBJECT_IMP(PHContactPoint, PHConstraint);
 
 PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
-	constr[0] = constr[1] = constr[2] = true;
-	constr[3] = constr[4] = constr[5] = false;
-	
 	shapePair = sp;
 	pos = p;
 	solid[0] = s0, solid[1] = s1;

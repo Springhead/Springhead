@@ -20,22 +20,34 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
 };
 
-class PHJoint1D : public PHJoint, PHJoint1DIfInit{
+template<int NDOF>
+class PHJointND : public PHJoint{
+public:
+	typedef	PTM::TVector<NDOF, double> coord_t;
+
+	int		axisIndex[NDOF];
+	coord_t position, velocity, torque;
+	
+	//virtual void	SetMotorTorque(coord_t t){torque = t;}
+	//virtual coord_t GetMotorTorque(){return torque;}
+};
+
+class PHJoint1D : public PHJointND<1>, PHJoint1DIfInit{
 public:
 	OBJECT_DEF_ABST(PHJoint1D);
 	
-	int		axisIndex;					///< 関節軸のインデックス．派生クラスが設定する
-	double	position, velocity, torque;	///< 変位，速度，トルク
+	//int		axisIndex;					///< 関節軸のインデックス．派生クラスが設定する
+	//double	position, velocity, torque;	///< 変位，速度，トルク
 	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
 	double	lower, upper;				///< 可動範囲の下限、上限
 	double	pos_d, vel_d;				///< 目標変位、目標速度
 	double	spring, origin, damper;		///< バネ係数、バネ原点、ダンパ係数
 
 	/// インタフェースの実装
-	virtual double	GetPosition(){return position;}
-	virtual double	GetVelocity(){return velocity;}
-	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}
-	virtual double	GetMotorTorque(){return torque;}
+	virtual double	GetPosition(){return position[0];}
+	virtual double	GetVelocity(){return velocity[0];}
+	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque[0] = t;}
+	virtual double	GetMotorTorque(){return torque[0];}
 	virtual void	SetRange(double l, double u){lower = l, upper = u;}
 	virtual void	GetRange(double& l, double& u){l = lower, u = upper;}
 	//virtual void SetDesiredPosition(double p){mode = MODE_POSITION; pos_d = p;}
@@ -51,23 +63,10 @@ public:
 
 	/// オーバライド
 	virtual void	SetDesc(const PHJointDesc& desc);
-	virtual void	AddMotorTorque(){f[axisIndex] = torque * scene->GetTimeStep();}
+	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque[0] * scene->GetTimeStep();}
 	virtual void	SetConstrainedIndex(bool* con);
 	virtual void	Projection(double& f, int k);
 	PHJoint1D();
-};
-
-template<int NDOF>
-class PHJointND : public PHJoint{
-public:
-	typedef	PTM::TVector<NDOF, double> coord_t;
-
-	int		axisIndex[NDOF];
-	coord_t position, velocity, torque;
-	
-	//virtual void	SetMotorTorque(coord_t t){torque = t;}
-	//virtual coord_t GetMotorTorque(){return torque;}
-
 };
 
 }

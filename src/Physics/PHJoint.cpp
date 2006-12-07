@@ -23,7 +23,6 @@ IF_OBJECT_IMP_ABST(PHJoint, PHConstraint);
 IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 
 PHJoint1D::PHJoint1D(){
-	position = velocity = torque = 0.0;
 }	
 
 void PHJoint1D::SetDesc(const PHJointDesc& desc){
@@ -49,14 +48,14 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 	//  関節軸に対応する自由度は可動範囲にかかっている場合，バネ・ダンパが設定されている場合にtrue
 	//  それ以外の自由度はABA関節ではない場合にtrue	
 	for(int i = 0; i < 6; i++){
-		if(i == axisIndex)
+		if(i == axisIndex[0])
 			 con[i] = (onLower || onUpper || mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0);
 		else con[i] = true;
 	}
 }
 
 void PHJoint1D::Projection(double& f, int k){
-	if(k == axisIndex){
+	if(k == axisIndex[0]){
 		if(onLower)
 			f = max(0.0, f);
 		if(onUpper)
