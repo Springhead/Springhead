@@ -2,6 +2,6 @@
 #define IFSTUBFOUNDATION_H
 
 #include <SprFoundation.h>
-#include <Foundation/IfStubFoundation.h>
+#include <Foundation/IfStubDumpFoundation.h>
 
 #endif
