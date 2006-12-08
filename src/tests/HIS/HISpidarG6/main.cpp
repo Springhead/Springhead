@@ -59,10 +59,10 @@ using namespace Spr;
 	#define SIMULATION_FREQ	60         // シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		500			// 力覚スレッドの周期Hz
 	float Km = 550;						// virtual couplingの係数
-	float Bm = 30;						// 並進
+	float Bm = 40;						// 並進
 
-	float Kr = 150;						// 回転
-	float Br = 13;
+	float Kr = 550;						// 回転
+	float Br = 116;
 
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60          // シミュレーションの更新周期Hz
@@ -1120,11 +1120,17 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 					// めり込み解消処理
 					// 並進：すべての接触のめり込みを加え、ポインタの位置に反映させる
 					Vec3d col_vector = info->current_col_positions[col_index] - info->pointer_current_col_positions[col_index];
-					Vec3d col_normal = dot(col_vector, info->current_col_normals[col_index]) * info->current_col_normals[col_index].unit();
-					correct_vector += col_normal;
+					double vector_coeff = dot(col_vector, info->current_col_normals[col_index]);
 
-					// 回転：侵入量を力と見て、トルクを計算するようにして補正量を求める
-					correct_torque += (info->pointer_current_col_positions[col_index] - info->pointer_pos) ^ col_normal;
+					// めり込んでいたら補正用のデータを更新
+					if(vector_coeff > 0)
+					{
+						Vec3d col_normal = vector_coeff * info->current_col_normals[col_index].unit();
+						correct_vector += col_normal;
+
+						// 回転：侵入量を力と見て、トルクを計算するようにして補正量を求める
+						correct_torque += (info->pointer_current_col_positions[col_index] - info->pointer_pos) ^ col_normal;
+					}
 				}
 			}
 		}
@@ -1666,6 +1672,9 @@ void InitDeviceManager();
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
+
+	info1.num_solids = 0;
+	info2.num_solids = 0;
 
 	ofs.open("log.txt");
 
