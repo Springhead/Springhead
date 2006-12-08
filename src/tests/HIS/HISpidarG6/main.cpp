@@ -115,6 +115,7 @@ bool bforce = false;
 
 // めり込み補正のフラグ
 bool bCorrectPenetration = true;
+#define P_CORRECTION_COEFF 0.05
 
 // 逐次反映処理のフラグ
 bool bGradualReflection = true;
@@ -191,10 +192,6 @@ typedef struct {
 	Quaterniond pointer_ori;
 	Vec3d pointer_angvel;
 	Matrix3d pointer_inertiainv;
-
-	// flag for gradual reflection
-	bool bLocalReflection1[NUM_COL_SOLIDS];
-	bool bLocalReflection2[NUM_COL_SOLIDS];
 } HapticInfo;
 
 // １と２を用意するのはスレッドで必要な排他アクセスを避け（待ちが発生するため）、
@@ -356,10 +353,6 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info, vector<pair<PHConst
 					info->solid_future_orientations[counter] = Quaterniond();
 				}
 
-				// シミュレーションの結果を力覚レンダリングのプロセスで徐々に反映させる処理を現すフラグを初期化
-				info->bLocalReflection1[counter] = true;
-				info->bLocalReflection2[counter] = true;
-
 				break;
 			}
 			// もし剛体がすでに追加済みの場合は追加しない
@@ -422,6 +415,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info, vector<pair<PHConst
 
 	info->num_collisions = consts_size + static_consts_size;
 
+
 	// 剛体ポインタの情報を格納
 	info->pointer_pos = soPointer->GetFramePosition();
 	info->pointer_vel = soPointer->GetVelocity();
@@ -442,9 +436,9 @@ PHConstraints GetContactPoints(PHSceneIf* scene1)
 }
 
 // 再帰的に接している剛体を取得する関数
-void RecursiveSolidRetrieval(map<PHConstraint *, bool>* csm, PHSolid* solid, set<PHConstraint *>* relative_consts, set<PHSolid *>* relative_solids, int depth)
+void RecursiveSolidRetrieval(vector<pair<PHConstraint *, bool> >* csm, PHSolid* solid, set<PHConstraint *>* relative_consts, set<PHSolid *>* relative_solids, int depth)
 {
-	for(map<PHConstraint *, bool>::iterator it = csm->begin(); it != csm->end(); it++)
+	for(vector<pair<PHConstraint *, bool> >::iterator it = csm->begin(); it != csm->end(); it++)
 	{
 		// 処理済の場合は次にすすむ
 		if(it->second) continue;
@@ -480,18 +474,18 @@ void GetSolidsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts, se
 {
 	// 衝突点を取得
 	PHConstraints cs = GetContactPoints(scene);
-	map<PHConstraint *, bool> csm;
+	vector<pair<PHConstraint *, bool> > csm;
 
-	// 計算時間を短縮するためにマップに処理済フラグをつけて保存する
+	// 計算時間を短縮するために接触に処理済フラグをつけて保存する
 	// 接触数が少ない場合は無駄が多いが、
 	// 接触数が多くなったときの伸びはこちらのほうが断然少ないはず
 	for(PHConstraints::iterator it = cs.begin(); it != cs.end(); it++)
 	{
-		csm.insert(pair<PHConstraint *, bool>(*it, false));
+		csm.push_back(pair<PHConstraint *, bool>(*it, false));
 	}
 
 	// すべての衝突点について調査
-	for(map<PHConstraint *, bool>::iterator it = csm.begin(); it != csm.end(); it++)
+	for(vector<pair<PHConstraint *, bool> >::iterator it = csm.begin(); it != csm.end(); it++)
 	{
 		// 処理済の場合は次にすすむ
 		if(it->second) continue;
@@ -537,7 +531,7 @@ void GetSolidsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts, se
 	}
 }
 
-map<PHConstraint *, SpatialVector> lambda;
+vector<SpatialVector> lambda;
 
 // ラムダの値を保存しておく関数
 void SaveLambda(set<PHConstraint *> relative_consts)
@@ -547,13 +541,13 @@ void SaveLambda(set<PHConstraint *> relative_consts)
 
 	for(set<PHConstraint *>::iterator it = relative_consts.begin(); it != relative_consts.end(); it++)
 	{
-		// ラムダの値(fv, fw)を接触とペアで保存しておく
-		lambda.insert(pair<PHConstraint *, SpatialVector>(*it, (*it)->f));
+		// ラムダの値(fv, fw)を保存しておく
+		lambda.push_back((*it)->f);
 	}
 }
 
 // 先送りシミュレーションをする関数
-map<PHSolid *, SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > pointer_consts, set<PHSolid *> pointer_relative_solids, set<PHConstraint *> relative_consts, set<PHSolid *> relative_solids, Vec3d force_vec, map<PHSolid *, Vec3d> coeff, int index = -1)
+vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > pointer_consts, set<PHSolid *> pointer_relative_solids, set<PHConstraint *> relative_consts, set<PHSolid *> relative_solids, Vec3d force_vec, map<PHSolid *, Vec3d> coeff, int index = -1)
 {
 	SpatialVector dv_save;
 	PHSolid* si;
@@ -595,22 +589,25 @@ map<PHSolid *, SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int>
 		}
 	}
 
-	map<PHSolid *, SpatialVector> effects;
+	vector<SpatialVector> effects;
 
 	// 影響を観測
 	// 剛体の速度変化を取得
 	for(set<PHSolid *>::iterator it = pointer_relative_solids.begin(); it != pointer_relative_solids.end(); it++)
 	{
-		effects.insert(pair<PHSolid *, SpatialVector>(*it, (*it)->dv));
+		effects.push_back((*it)->dv);
 	}
 
 	// dvの値を元に戻す
 	if(index != -1)si->dv = dv_save;
 
+	int local_counter = 0;
 	// fvとfwの値を元にもどす
+	// lambdaの保存の過程でrelative_constsのiteratorでvectorに格納しているはずなので
+	// このiteratorでループをまわせば接触がわからなくても検索せずに参照できるはず
 	for(set<PHConstraint *>::iterator it = relative_consts.begin(); it != relative_consts.end(); it++)
 	{
-		(*it)->f = lambda.find(*it)->second;
+		(*it)->f = lambda[local_counter++];
 	}
 
 	// 影響をreturn
@@ -659,39 +656,49 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, set<P
 	SetupPredictSimulation(relative_consts, relative_solids, pointer_relative_solids, &coeff);
 
 	// 加える力を０ベクトルとして定数項を取得
-	map<PHSolid*, SpatialVector> b = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(), coeff);
+	vector<SpatialVector> b = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(), coeff);
+
+	map<PHSolid*, SpatialVector> c;
+	int local_counter = 0;
 
 	// 適切にデータを格納するmap-vectorの準備
 	// 剛体数だけ空のvectorを宣言してmapに追加する
 	map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > > mm_map;
-	for(map<PHSolid*, SpatialVector>::iterator it = b.begin(); it != b.end(); it++)
+	for(set<PHSolid*>::iterator it = pointer_relative_solids.begin(); it != pointer_relative_solids.end(); it++)
 	{
-		mm_map.insert(pair<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >((*it).first, vector<pair<Matrix3d, Matrix3d> >()));
+		mm_map.insert(pair<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >((*it), vector<pair<Matrix3d, Matrix3d> >()));
+
+		// ついでにvectorからmapへの変更処理も行う
+		c.insert(pair<PHSolid*, SpatialVector>((*it), b[local_counter++]));
 	}
 
 	// 接触数＝列数だけ繰り返す
 	for(int i = 0; i < (int)pointer_consts.size(); i++)
 	{
 		// ある単位ベクトルを加えてその結果をあらわすベクトルを取得
-		map<PHSolid *, SpatialVector> vec_x = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(1, 0, 0), coeff, i);
-		map<PHSolid *, SpatialVector> vec_y = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(1, 1, 0), coeff, i);
-		map<PHSolid *, SpatialVector> vec_z = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(1, 0, 1), coeff, i);
+		vector<SpatialVector> vec_x = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(1, 0, 0), coeff, i);
+		vector<SpatialVector> vec_y = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(1, 1, 0), coeff, i);
+		vector<SpatialVector> vec_z = PredictSimulation(pointer_consts, pointer_relative_solids, relative_consts, relative_solids, Vec3d(1, 0, 1), coeff, i);
 
 		// このループで剛体soの接触pointer_consts[i]に関する行列を計算し格納
 		// この接触のすべての剛体に対する影響をこのループで処理する
-		for(map<PHSolid *, SpatialVector>::iterator it = b.begin(); it != b.end(); it++)
+		// PredictSimulation内でベクトルへの要素の追加はpointer_relative_solidsのiteratorでやっているので、
+		// 今回もそのループでまわせば対応するPHSolidがわからなくても検索を避けて追加できる
+		local_counter = 0;
+		for(set<PHSolid *>::iterator it = pointer_relative_solids.begin(); it != pointer_relative_solids.end(); it++)
 		{
-			PHSolid *so = it->first;
-			SpatialVector sv = it->second;
-			SpatialVector sv_x = vec_x.find(so)->second;
-			SpatialVector sv_y = vec_y.find(so)->second;
-			SpatialVector sv_z = vec_z.find(so)->second;
+			PHSolid *so = *it;
+			SpatialVector sv = b[local_counter];
+			SpatialVector sv_x = vec_x[local_counter];
+			SpatialVector sv_y = vec_y[local_counter];
+			SpatialVector sv_z = vec_z[local_counter];
+			local_counter++;
 
 			// 先ほど加えた単位力から、影響を求めて行列を作成する
 			// なおトルクについては半径と力の外積が分解されて
 			// 半径の外積が行列化されてすでに反映されているはずである
-			Matrix3d v = Matrix3d(sv_x.v - sv.v, sv_y.v - sv_x.v - sv.v, sv_z.v - sv_x.v - sv.v);
-			Matrix3d w = Matrix3d(sv_x.w - sv.w, sv_y.w - sv_x.w - sv.w, sv_z.w - sv_x.w - sv.w);
+			Matrix3d v = Matrix3d((sv_x.v - sv.v), (sv_y.v - sv_x.v - sv.v), (sv_z.v - sv_x.v - sv.v));
+			Matrix3d w = Matrix3d((sv_x.w - sv.w), (sv_y.w - sv_x.w - sv.w), (sv_z.w - sv_x.w - sv.w));
 
 			// データの格納。			
 			pair<Matrix3d, Matrix3d> p = pair<Matrix3d, Matrix3d>(v, w);
@@ -704,7 +711,7 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, set<P
 	}
 
 	*mat = mm_map;
-	*vec = b;
+	*vec = c;
 }
 
 
@@ -854,6 +861,13 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	// シミュレーションと力覚レンダリングの更新周期の比率をあらわす変数
 	static const double ratio = (double)SIMULATION_FREQ / HAPTIC_FREQ;
 
+	// HAPTICREDERINGの更新幅
+	static const double dt = (double)1.0 / HAPTIC_FREQ;
+
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	// シミュレーションの管理と実行
+
 	// シミュレーションを管理するカウンターを作成
 	static int step_counter = 0;
 	if(step_counter == (int)ratio)
@@ -868,12 +882,13 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			step_counter = 0;
 			current_valid_data = !current_valid_data;
 		}
-		else if(bOutput)ofs << "error : simulation could not be finished in time" << endl;
+//		else if(bOutput)ofs << "error : simulation could not be finished in time" << endl;
 	}
 	else step_counter++;
 
-	// SPIDAR更新幅
-	static const double dt = (double)1.0 / HAPTIC_FREQ;
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	// 物理情報の取得
 
 	// シミュレーションから得られる情報を格納する変数
 	HapticInfo* info = NULL;
@@ -945,15 +960,17 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	info->pointer_ori = info->pointer_ori.unit();
 
 
-	////////////////////////////////////////////////////////////////////////////////////////
-	// 力覚計算
-	// ユーザへのフォースフィードバックと接触剛体の加速度更新
-
 	// 登録された接触があっても、現在本当に接触しているかはわからないのでフラグを用意
 	bool feedback = false;
 
+	// 局所的な動力学計算を行う場合
 	if(bLocalDynamics)
 	{
+		
+		////////////////////////////////////////////////////////////////////////////////////////
+		// 局所的な動力学計算
+		// 接触剛体の接触力による速度・角速度更新
+
 		for(int i = 0; i < info->num_collisions; i++)
 		{
 			// 面の法線と、ポインタ上の点から剛体上の点までを結んだベクトルの内積を計算
@@ -979,8 +996,9 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 						// 局所的な動力学計算のみ
 						if(!bSurroundEffect)
 						{
+							// 運動方程式に従って加速度を計算する
 							accel = info->solid_massinvs[sol_index] * FORCE_COEFF * VCForce;
-							ang_accel = info->solid_inertiainvs[sol_index] * ((info->current_col_positions[i] - info->solid_current_center_positions[sol_index]) ^ (VCForce));
+							ang_accel = info->solid_inertiainvs[sol_index] * ((info->current_col_positions[i] - info->solid_current_center_positions[sol_index]) ^ (FORCE_COEFF * VCForce));
 
 							// 得られた加速度で速度を更新
 							// 座標は後で更新する
@@ -992,14 +1010,25 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 						// 局所的な動力学計算＋周囲の影響を考慮
 						else
 						{
-							// 剛体に加える力を行列にかけて、加速度を計算する
-							Vec3d q_f = info->solid_massinvs[sol_index] * dt * VCForce;
+							// 剛体に加える力を計算する
+							// ratioをかけるのは、
+							// 行列自体がすでにSIMULATION_FREQのdtがかけられており
+							// それをHAPTIC_FREQのdtに直すため
+							// また、この行列にはすでにmassinv, inertiainvもかけられているので
+							// 力をかければすべて計算される
+							// 回転に関しては、
+							// （解釈の仕方として）トルクの計算式r x Fのうちの
+							// 外積が行列とベクトルの積としてあらわされ、
+							// その行列がすでに係数行列内に展開されているので、
+							// 力のみをかければよいことになる
+							Vec3d q_f = FORCE_COEFF * VCForce * ratio;
 
 							// この力が及ぼす影響をすべての剛体について計算する
 							for(int j = 0; j < info->num_solids; j++)
 							{
-								// 外力で動かない剛体は飛ばす
-								if(!info->nearest_solids[j]->IsDynamical())continue;
+								// 外力で動かない剛体がひとつでも出たら
+								// その先はすべて外力で動かない剛体なのでbreakする
+								if(!info->nearest_solids[j]->IsDynamical()) break;//continue;
 
 								// 行列を用いて加速度を計算して速度を更新
 								info->solid_velocity[j] += info->vel_effect[j][i] * q_f;
@@ -1009,56 +1038,19 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 					}
 				}
 			}
-			else
-			{
-				// もう接していないので、シミュレーションから得られた目標地点も意味がなくなる
-				info->bLocalReflection1[i] = false;
-				info->bLocalReflection2[i] = false;
-			}
 		}
-	}
-	// 純粋なバーチャルカップリング
-	else
-	{
-		// 接触があれば接触している剛体に提示力の逆を加える
-		// 剛体の挙動は物理シミュレーションに任せる
-		if(info->num_collisions)
-		{
-			// 力覚フィードバックON
-			feedback = true;
-			for(int i = 0; i < info->num_collisions; i++)
-			{
-				int sol_index = info->ColToSol[i];
-				info->nearest_solids[sol_index]->AddForce(FORCE_COEFF * VCForce, info->current_col_positions[i]);
-			}
-		}
-	}
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	// ユーザへの力の提示
-	if(feedback && bforce)
-	{
-		// SPIDARの空間と見ている空間が違うので行列を掛けて射影する
-		Vec3d f = - view_haptic * VCForce;
-		Vec3d t = - view_haptic * VCTorque;
-
-		spidarG6.SetForce(FORCE_COEFF * f, FORCE_COEFF * t);
-
-		// debug出力処理
-//		if(bOutput)	ofs << FORCE_COEFF * f << " " << FORCE_COEFF * t << endl;
-	}
-	else spidarG6.SetForce(Vec3d(), Vec3d());
-
-
-	if(bLocalDynamics)
-	{
+		///////////////////////////////////////////////////////////////////////////////////////////////////////
+		// 局所的動力学計算による剛体の位置・姿勢を更新
 		Vec3d correct_vector = Vec3d();
 		Vec3d correct_torque = Vec3d();
 
-		///////////////////////////////////////////////////////////////////////////////////////////////////////
-		// 局所的シミュレーションによる接触する剛体の位置・姿勢を更新
 		for(int i = 0; i < info->num_solids; i++)
 		{
+			// 局所的な動力学計算では重力が考慮されていないので
+			// 重力の分加速度を更新する
+			// しかしこのままだとシミュレーションで２重に重力が計算されてしまうので
+			// なんとかしたいところ。
 			if(!bSurroundEffect)
 			{
 				if(info->nearest_solids[i]->IsDynamical()) info->solid_velocity[i] += scene->GetGravity() * dt;
@@ -1077,6 +1069,13 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			Vec3d dth_local = info->solid_angular_velocity[i] * dt;
 			info->solid_current_orientations[i] = Quaterniond::Rot(dth_local) * info->solid_current_orientations[i];
 
+			//////////////////////////////////////////////////////////////////////////////////////////
+			// 逐次反映処理
+			// シミュレーションから得られた各剛体の理想の位置に
+			// 徐々に動かしていく処理を行う
+			// ただし今回の接触力によって動くベクトルの
+			// 理想の位置まで動かすベクトルに水平な成分は加えない
+			// 回転は徐々に回転軸を動かし、また角度も徐々に近づけていく
 			if(bGradualReflection)
 			{
 				// 並進
@@ -1115,36 +1114,80 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				info->pointer_current_col_positions[col_index] += pointer_dx;
 				info->pointer_current_col_positions[col_index] += pointer_dth ^ (info->pointer_current_col_positions[col_index] - info->pointer_pos);
 
+				// 次に行うめり込み解消処理の準備
 				if(bCorrectPenetration)
 				{
 					// めり込み解消処理
-					// すべての接触のめり込みを加え、ポインタの位置に反映させる
+					// 並進：すべての接触のめり込みを加え、ポインタの位置に反映させる
 					Vec3d col_vector = info->current_col_positions[col_index] - info->pointer_current_col_positions[col_index];
 					Vec3d col_normal = dot(col_vector, info->current_col_normals[col_index]) * info->current_col_normals[col_index].unit();
 					correct_vector += col_normal;
 
-//					correct_torque += (info->pointer_current_col_positions[col_index] - info->pointer_pos) ^ col_normal;
+					// 回転：侵入量を力と見て、トルクを計算するようにして補正量を求める
+					correct_torque += (info->pointer_current_col_positions[col_index] - info->pointer_pos) ^ col_normal;
 				}
 			}
 		}
 
-		// ポインタの位置補正。めり込みを解消
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		// ６自由度のめり込み解消処理
+
+		// ポインタのめり込み量の総和（ベクトル）を係数倍して
+		// ポインタの位置に加え、徐々にめり込みを補正していく
+		// 回転もめり込み量を力と考えてトルクを計算するようにして
+		// ポインタ自身を回転させてめり込みを解消させるようにする
 		if(bCorrectPenetration)
 		{
 			// ポインタ自身の位置を移動
-			info->pointer_pos += 0.2 * correct_vector;
+			info->pointer_pos += P_CORRECTION_COEFF * correct_vector;
 
-//			Quaterniond correct_q = 0.2 * Quaterniond::Rot(correct_torque);
-//			info->pointer_ori = info->pointer_ori * correct_q;
+			// ポインタ自身の姿勢を補正
+			Quaterniond correct_q = Quaterniond::Rot(P_CORRECTION_COEFF * correct_torque);
+			info->pointer_ori = info->pointer_ori * correct_q;
 
-			// すべての接触もその方向に移動
+			// すべての接触もその方向に移動・回転
 			for(int i = 0; i < info->num_collisions; i++)
 			{
-//				info->pointer_current_col_positions[i] += correct_torque ^ (info->current_col_positions[i] - info->pointer_current_col_positions[i]);
-				info->pointer_current_col_positions[i] += 0.2 * correct_vector;
+				info->pointer_current_col_positions[i] += correct_torque ^ (info->current_col_positions[i] - info->pointer_current_col_positions[i]);
+				info->pointer_current_col_positions[i] += P_CORRECTION_COEFF * correct_vector;
 			}
 		}
 	}
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// 純粋なバーチャルカップリング
+	// 剛体に接触力を加える
+	else
+	{
+		// 接触があれば接触している剛体に提示力の逆方向のベクトルを加える
+		// 剛体の挙動は物理シミュレーションに任せる
+		for(int i = 0; i < info->num_collisions; i++)
+		{
+			// 力覚フィードバックON
+			feedback = true;
+
+			int sol_index = info->ColToSol[i];
+			// ratioをかける理由は、
+			// シミュレーションが加えた力の総量をシミュレーションの周期で力積にするため
+			info->nearest_solids[sol_index]->AddForce(FORCE_COEFF * VCForce * ratio, info->current_col_positions[i]);
+		}
+	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	// ユーザへの提示力の計算と設定
+	if(feedback && bforce)
+	{
+		// SPIDARの空間と見ている空間が違うので行列を掛けて射影する
+		Vec3d f = - view_haptic * VCForce;
+		Vec3d t = - view_haptic * VCTorque;
+
+		spidarG6.SetForce(FORCE_COEFF * f, FORCE_COEFF * t);
+
+		// debug出力処理
+		if(bOutput)	ofs << FORCE_COEFF * f << " " << FORCE_COEFF * t << endl;
+	}
+	else spidarG6.SetForce(Vec3d(), Vec3d());
+
 //	t_end();
 }
 
@@ -1710,10 +1753,10 @@ void InitScene()
 		sphere = DCAST(CDSphereIf,phSdk->CreateShape(sd));
 
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f (30.0, 1.0, 30.0);
+		bd.boxsize = Vec3f (30.0, 5.0, 30.0);
 		floor = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 		soFloor->AddShape(floor);
-		soFloor->SetFramePosition(Vec3f(0,-2.5,0));
+		soFloor->SetFramePosition(Vec3f(0,-4.5,0));
 
 		// 四角のポインタ
 		bd.boxsize = Vec3f(2, 2, 2);
