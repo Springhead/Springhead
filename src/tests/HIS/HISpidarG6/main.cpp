@@ -67,15 +67,15 @@ using namespace Spr;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60          // シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000		// 力覚スレッドの周期Hz
-	float Km = 1000;						// virtual couplingの係数
-	float Bm = 60;						// 並進
+	float Km = 1800;						// virtual couplingの係数
+	float Bm = 90;						// 並進
 
-	float Kr = 1000;						// 回転
+	float Kr = 1800;						// 回転
 	float Br = 150;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
-double FORCE_COEFF =		0.5;
+double FORCE_COEFF =		0.28;
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
 	#include <Device/DRUsb20Simple.h>
@@ -668,7 +668,7 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, set<P
 	{
 		mm_map.insert(pair<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >((*it), vector<pair<Matrix3d, Matrix3d> >()));
 
-		// ついでにvectorからmapへの変更処理も行う
+		// ついでにvectorからmapへの変換処理も行う
 		c.insert(pair<PHSolid*, SpatialVector>((*it), b[local_counter++]));
 	}
 
@@ -1335,7 +1335,7 @@ void displayPointer()
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, color);
 
-		glutSolidSphere(1.0, 12, 9);
+		glutSolidSphere(0.5, 12, 9);
 	glPopMatrix();
 
 	// 原点を描画
@@ -1345,7 +1345,7 @@ void displayPointer()
 		Affinef af = Affinef();
 		Posef::Unit(te).ToAffine(af);
 		glMultMatrixf(af);
-		glutSolidSphere(1.0, 12, 9);
+		glutSolidSphere(0.5, 12, 9);
 	glPopMatrix();
 }
 
@@ -1723,20 +1723,20 @@ void InitScene()
 	sd.timeStep = (double)1.0 / SIMULATION_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
-	desc.mass = 0.3;
+	desc.mass = 0.3f;
 
 	// inertiaの計算式
 	// 直方体の場合 I = mass * (r1^2 + r2^2) / 12
 	// 球の場合 I = mass * r~2 * 2/5
-	desc.inertia = Matrix3d(0.45,0,0,0,0.45,0,0,0,0.45);
+	desc.inertia = Matrix3d(0.2,0,0,0,0.2,0,0,0,0.2);
 
 	// Solidの作成
 	for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
 		soSphere.push_back(scene->CreateSolid(desc));		// 剛体をdescに基づいて作成
 	}
 
-	desc.mass = 0.1;
-	desc.inertia = Matrix3d(0.66, 0, 0, 0, 0.66, 0, 0, 0, 0.66);
+	desc.mass = 0.1f;
+	desc.inertia = Matrix3d(0.16, 0, 0, 0, 0.16, 0, 0, 0, 0.16);
 
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetDynamical(false);
@@ -1749,7 +1749,7 @@ void InitScene()
 
 	{
 		CDSphereDesc sd;
-		sd.radius = 1.25;
+		sd.radius = 1.25f;
 		sphere = DCAST(CDSphereIf, phSdk->CreateShape(sd));
 
 		// 球形のポインタ
@@ -1762,24 +1762,24 @@ void InitScene()
 		sphere = DCAST(CDSphereIf,phSdk->CreateShape(sd));
 
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f (30.0, 5.0, 30.0);
+		bd.boxsize = Vec3f (30.0f, 5.0f, 30.0f);
 		floor = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 		soFloor->AddShape(floor);
-		soFloor->SetFramePosition(Vec3f(0,-4.5,0));
+		soFloor->SetFramePosition(Vec3f(0,-4.0f,0));
 
 		// 四角のポインタ
-		bd.boxsize = Vec3f(2, 2, 2);
+		bd.boxsize = Vec3f(1.0f, 1.0f, 1.0f);
 		floor = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 		soPointer->AddShape(floor);
 		soPointer->SetFramePosition(Vec3f(0, 0, 0));
 
-		bd.boxsize = Vec3f(3, 3, 3);
+		bd.boxsize = Vec3f(1.5f, 1.5f, 1.5f);
 		floor = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 	}	
 
 	for (unsigned int sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
 		soSphere[sphereCnt]->AddShape(floor);
-		soSphere[sphereCnt]->SetFramePosition(Vec3f(0, 5*(sphereCnt+1), 0));
+		soSphere[sphereCnt]->SetFramePosition(Vec3f(0, 5.0f*(sphereCnt+1), 0));
 	}
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
@@ -1819,7 +1819,7 @@ void InitRendering(int *argc, char *argv[])
 
 	// 視点を設定する
 	Affinef view;
-	view.Pos() = Vec3f(0.0, 5.0, -20.0);								// eye
+	view.Pos() = Vec3f(0.0, 2.0, -8.0);
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
