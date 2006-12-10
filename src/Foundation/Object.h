@@ -51,6 +51,8 @@ public:
 	void RegisterObject(UTTypeInfo* t);
 };
 
+///	以下インタフェースの型情報の実装
+//@{
 #define IF_IMP_COMMON(cls)															\
 	IfInfoImp<cls##If> cls##If::ifInfo = IfInfoImp<cls##If>(#cls, cls##_BASEIF);	\
 	const IfInfo* SPR_CDECL cls##If::GetIfInfoStatic(){								\
@@ -62,53 +64,89 @@ public:
 		return i;																	\
 	}																				\
 
-///	ObjectIf インタフェースクラスの実行時型情報
 #define IF_IMP_BASE(cls)															\
 	IfInfo* cls##_BASEIF[] = {NULL};												\
-	IF_IMP_COMMON(cls)
+	IF_IMP_COMMON(cls)																\
 
-///	インタフェースクラスの実行時型情報
 #define IF_IMP(cls, base1)															\
 	IfInfo* cls##_BASEIF[] = {(IfInfo*)base1##If::GetIfInfoStatic(), NULL};			\
 	IF_IMP_COMMON(cls)
 
+//@}
 
 ///	Object派生クラスの実行時型情報
-#define OBJECT_GETSELFDEF(cls)											\
-	static cls* GetSelfFromIf(const ObjectIf* p){						\
-		if (!p) return NULL;											\
-		Object* o = p->GetObj<Object>();								\
-		if (o->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))		\
-			return (cls*)o;												\
-		return NULL;													\
-	}																	\
+//@{
+//	共通部分
+#define OBJECTDEF_COMMON_OBJECT(cls)									\
 	XCastPtr<cls>& Cast() const{										\
-		return *(XCastPtr<cls>*)(void*)this; }							\
-
-#define	OBJECT_DEF_ABST_NOIF(cls)		DEF_UTTYPEINFOABSTDEF(cls) OBJECT_GETSELFDEF(cls)
-#define	OBJECT_DEF_NOIF(cls)			DEF_UTTYPEINFODEF(cls) OBJECT_GETSELFDEF(cls)
-
-#define OBJECT_GETSELFDEF_IF(cls)										\
-	static cls* GetSelfFromIf(const cls##If* p){						\
-		if (!p) return NULL;											\
-		return p->GetObj<cls>();										\
+		return *(XCastPtr<cls>*)(void*)this;							\
+	}																	\
+	/*	異型のIfからObjectへの動的変換	*/								\
+	static cls* GetSelf(const ObjectIf* p) {							\
+		return (cls*)p->GetObj(cls::GetTypeInfoStatic());			\
+	}																	\
+	/*	異型のObjectからObjectへの動的変換	*/							\
+	static cls* GetSelf(const Object* p) {								\
+		if (p->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))		\
+			return (cls*)p;												\
+		else return NULL;												\
 	}																	\
 
-#define OBJECT_IF_UTILITY(cls)	\
-	cls##If* GetIf(){ return (cls##If*)(ObjectIfBuf*) this; }	\
-	const cls##If* GetIf() const { return (const cls##If*)(ObjectIfBuf*) this; }
+#define OBJECTDEF_COMMON(cls, base)	OBJECTDEF_COMMON_OBJECT(cls)		\
+	/*	基本クラスのGetIfを導入	*/										\
+	using base::GetIf;													\
+	typedef base base_type;												\
 
-#define	OBJECT_DEF_ABST(cls)	OBJECT_DEF_ABST_NOIF(cls) OBJECT_IF_UTILITY(cls) OBJECT_GETSELFDEF_IF(cls)
-#define	OBJECT_DEF(cls)			OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls) OBJECT_GETSELFDEF_IF(cls)
-#define	OBJECT_DEF_FOR_OBJ(cls)	OBJECT_DEF_NOIF(cls) OBJECT_IF_UTILITY(cls)
+#define	OBJECTDEF_ABST_NOIF(cls, base)	\
+	DEF_UTTYPEINFOABSTDEF(cls) OBJECTDEF_COMMON(cls, base)
+#define	OBJECTDEF_NOIF(cls, base)		\
+	DEF_UTTYPEINFODEF(cls) OBJECTDEF_COMMON(cls, base)
+
+//	Object用
+#define OBJECTDEFUTIL_OBJECT(cls)										\
+	typedef cls##If	if_type;											\
+
+//	Ifを持つオブジェクト用
+#define OBJECTDEFUTIL_IF(cls)	OBJECTDEFUTIL_OBJECT(cls)				\
+	/*	同型のIfを取得	*/												\
+	cls##If* GetIf(cls##If*) const {									\
+		return (cls##If*)(ObjectIfBuf*)(Object*)this;					\
+	}																	\
+	/*	同型のIfからObjectへの静的変換	*/								\
+	static cls* GetSelf(const cls##If* p) {								\
+		return (cls*)(void*)(Object*)(ObjectIfBuf*)p;					\
+	}																	\
+	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const {			\
+		if (info == cls##If::GetIfInfoStatic())							\
+			return (cls##If*)(ObjectIfBuf*)this;						\
+		else return base_type::GetIfDynamic(info);						\
+	}																	\
+
+//	非継承Ifをもつオブジェクト用
+#define OBJECTDEF_IF2(cls, intf)										\
+	/*	非継承Ifを取得	*/												\
+	intf* GetIf(intf*) const {											\
+		return (intf*)(intf##For##cls*)this;							\
+	}																	\
+
+
+#define	OBJECTDEF_ABST(cls,base)	\
+	OBJECTDEF_ABST_NOIF(cls, base) OBJECTDEFUTIL_IF(cls)
+#define	OBJECTDEF(cls,base)	OBJECTDEF_NOIF(cls,base) OBJECTDEFUTIL_IF(cls)
+#define	OBJECTDEF_FOR_OBJ(cls)	\
+	DEF_UTTYPEINFODEF(cls) OBJECTDEF_COMMON_OBJECT(cls) OBJECTDEFUTIL_OBJECT(cls)
+
+//@}
 
 ///	実行時型情報を持つObjectの派生クラスが持つべきメンバの実装．
+//@{
 #define OBJECT_IMP_BASEABST(cls)		DEF_UTTYPEINFOABST(cls)
 #define OBJECT_IMP_BASE(cls)			DEF_UTTYPEINFO(cls)
 #define OBJECT_IMP(cls, base)			DEF_UTTYPEINFO1(cls, base)
 #define OBJECT_IMP_ABST(cls, base)		DEF_UTTYPEINFOABST1(cls, base)
 #define IF_OBJECT_IMP(cls, base)		IF_IMP(cls, base) OBJECT_IMP(cls, base)
 #define IF_OBJECT_IMP_ABST(cls, base)	IF_IMP(cls, base) OBJECT_IMP_ABST(cls, base)
+//@}
 
 ///	ステートの作成と破棄の関数定義
 #define ACCESS_STATE_NOINHERIT(cls)													\
@@ -137,13 +175,18 @@ public:
 class ObjectIfBuf{
 	void* vtable;
 };
+///	ObjectIfとその派生クラスのオブジェクトのためのバッファ初期化付き
+template <class T>
+class ObjectIfBufWithInit{
+	void* vtable;
+public:
+	ObjectIfBufWithInit(){ ::new (this) T; }
+};
 ///	ObjectIfBufを派生クラスのインタフェースに書き換える
 template <class I, class O>
 struct IfInitTemplate{
 	IfInitTemplate(){
-		const int toBuf = int((char*)(ObjectIfBuf*)(O*)0x1000 - (char*)0x1000);
-		const int fromThis = int((char*)0x1000 - (char*)(IfInitTemplate<I,O>*)(O*)0x1000);
-		ObjectIfBuf* buf = (ObjectIfBuf*)(((char*)this) + fromThis + toBuf);
+		ObjectIfBuf* buf = static_cast<ObjectIfBuf*>(static_cast<O*>(this));
 		::new (buf) I;
 	}
 };
@@ -151,7 +194,7 @@ struct IfInitTemplate{
 }	//	namespace Spr;
 
 
-#include "IfStubDumpFoundation.h"
+#include "IfStubFoundation.h"
 
 namespace Spr{;
 
@@ -159,7 +202,20 @@ namespace Spr{;
 class Object:public ObjectIfBuf, ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
 	void GetIfInfo() { assert(0); }	//	don't call me
 public:
-	OBJECT_DEF_FOR_OBJ(Object);		///<	クラス名の取得などの基本機能の実装
+	OBJECTDEF_FOR_OBJ(Object);		///<	クラス名の取得などの基本機能の実装
+	Object* GetObj(const UTTypeInfo* info) const {
+		if (GetTypeInfo()->Inherit(info)) return const_cast<Object*>(this);
+		else return NULL;
+	}
+	template <class I> I* GetIf(I*) const {
+//		DSTR << "Object::GetIf(I*) I=" << I::GetIfInfoStatic()->ClassName() << " is called." << std::endl;
+		return (I*) GetIfDynamic(I::GetIfInfoStatic());
+	}
+	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const {
+		if (info == ObjectIf::GetIfInfoStatic())
+			return (ObjectIf*)(ObjectIfBuf*)this;
+		return NULL;
+	}
 
 	virtual int AddRef(){return UTRefCount::AddRef();}
 	virtual int DelRef(){return UTRefCount::DelRef();}
@@ -211,16 +267,12 @@ protected:
 	///	sをoのStateからメモリブロックに戻す．
 	static void DestructState(ObjectIf* o, char*& s);
 };
-template <class T> T* DCastImp(const Object* o){
-	if (!o) return NULL;
-	return T::GetSelfFromIf(o->GetIf());
-}
 
 class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
 class NamedObject: public Object, NamedObjectIfInit{
-	OBJECT_DEF(NamedObject);		///<	クラス名の取得などの基本機能の実装
+	OBJECTDEF(NamedObject, Object);		///<	クラス名の取得などの基本機能の実装
 protected:
 	friend class ObjectNames;
 	UTString name;					///<	名前
@@ -244,7 +296,7 @@ class Scene;
 /**	Sceneが所有するObject型．
 	所属するSceneへのポインタを持つ	*/
 class SceneObject:public NamedObject, SceneObjectIfInit{
-	OBJECT_DEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
+	OBJECTDEF(SceneObject, NamedObject);	///<	クラス名の取得などの基本機能の実装
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
@@ -292,7 +344,7 @@ public:
 			}
 			if (o && m) o->SetNameManager(m);
 		}
-		return t->GetIf();
+		return t->Cast();
 	}
 	virtual const IfInfo* GetIfInfo() const {
 		return IF::GetIfInfoStatic();
@@ -311,7 +363,7 @@ protected:
 	void LoadState(ObjectIf* o, char*& s);
 
 public:
-	OBJECT_DEF(ObjectStates);
+	OBJECTDEF(ObjectStates, Object);
 	ObjectStates():state(NULL), size(0){}
 	~ObjectStates(){ delete state; }
 	///	oとその子孫をセーブするために必要なメモリを確保する．

@@ -40,7 +40,7 @@ protected:
 	Objects objects;
 	GRScenes scenes;
 public:
-	OBJECT_DEF(GRSdk);
+	OBJECTDEF(GRSdk, Sdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
 	virtual void Print(std::ostream& os) const {}
 	virtual GRDebugRenderIf* CreateDebugRender();

@@ -131,7 +131,7 @@ public:
 	std::vector<CDShapeRefWithPose> shapes;
 	PHBBox bbox;
 
-	OBJECT_DEF(PHSolid);
+	OBJECTDEF(PHSolid, SceneObject);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
@@ -141,7 +141,7 @@ public:
 		return shapes.size();
 	}
 	ObjectIf* GetChildObject(size_t pos) {
-		return shapes[pos].shape->GetIf();
+		return shapes[pos].shape->Cast();
 	}
 
 	void CalcBBox();
@@ -279,7 +279,7 @@ public:
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHEngine{
-	OBJECT_DEF_NOIF(PHSolidContainer);
+	OBJECTDEF_NOIF(PHSolidContainer, PHEngine);
 public:
 	PHSolidIfs solids;
 	bool AddChildObject(ObjectIf* o);
@@ -302,7 +302,7 @@ public:
 
 /** SolidContainerのResetを呼ぶためだけのエンジン */
 class PHSolidInitializer : public PHEngine{
-	OBJECT_DEF_NOIF(PHSolidInitializer);
+	OBJECTDEF_NOIF(PHSolidInitializer, PHEngine);
 public:
 	PHSolidContainer* container;
 	

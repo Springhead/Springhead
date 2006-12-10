@@ -40,7 +40,7 @@ protected:
 	UTRef<GRDeviceIf> grDevice;
 
 public:
-	OBJECT_DEF(FWSdk);
+	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
 	virtual FWSceneIf* CreateScene(const FWSceneDesc& desc);

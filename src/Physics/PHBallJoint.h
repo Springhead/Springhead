@@ -44,16 +44,16 @@ public:
 
 class PHBallJoint : public PHJointND<3>, PHBallJointIfInit{
 public:
-	OBJECT_DEF(PHBallJoint);
+	OBJECTDEF(PHBallJoint, PHJointND<3>);
 	
 	bool		swingOnUpper, twistOnLower, twistOnUpper;
 	double		swingUpper, swingDamper, swingSpring;
 	double		twistLower, twistUpper, twistDamper, twistSpring;
+	
 	//SwingTwist	angle, velocity;	///< スイング・ツイスト角表現の角度と角速度
 	//Vec3d		torque;
 	/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン
 	Matrix3d	Jstinv;
-
 	/// インタフェースの実装
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	virtual void	SetSwingRange(double u){swingUpper = u;}

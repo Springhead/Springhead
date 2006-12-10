@@ -52,9 +52,9 @@ PHSdkIf* PHScene::GetSdk(){
 }
 
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
-	UTRef<PHSolid> s = DBG_NEW PHSolid(desc, GetIf());
-	AddChildObject(s->GetIf());
-	return s->GetIf();
+	UTRef<PHSolid> s = DBG_NEW PHSolid(desc, Cast());
+	AddChildObject(s->Cast());
+	return s->Cast();
 }
 PHSolidIf* PHScene::CreateSolid(){
 	PHSolidDesc def;
@@ -73,16 +73,16 @@ PHSolidIf** PHScene::GetSolids(){
 }
 
 PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
-	return constraintEngine->AddJoint(desc)->GetIf();
+	return constraintEngine->AddJoint(desc)->Cast();
 }
 
 PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
 	PHPath* rv = DBG_NEW PHPath(desc);
-	return rv->GetIf();
+	return rv->Cast();
 }
 
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
-	return constraintEngine->AddJoint(lhs->GetObj<PHSolid>(), rhs->GetObj<PHSolid>(), desc)->GetIf();	
+	return constraintEngine->AddJoint(lhs->Cast(), rhs->Cast(), desc)->Cast();	
 }
 
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root){
@@ -90,7 +90,7 @@ PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root){
 }
 
 PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child){
-	return constraintEngine->AddNode(XCAST(parent), XCAST(child))->GetIf();
+	return constraintEngine->AddNode(XCAST(parent), XCAST(child))->Cast();
 }
 
 void PHScene::Clear(){
@@ -181,7 +181,7 @@ size_t PHScene::NChildObject() const{
 	return engines.size();
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
-	return engines[pos]->GetIf();
+	return engines[pos]->Cast();
 }
 bool PHScene::AddChildObject(ObjectIf* o){
 	bool rv = solids->AddChildObject(o);

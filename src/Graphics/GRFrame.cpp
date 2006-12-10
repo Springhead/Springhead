@@ -32,20 +32,20 @@ void GRFrame::Rendered(GRRenderIf* r){
 }
 void GRFrame::SetNameManager(NameManager* m){
 	assert(DCAST(GRScene, m));
-	GRVisual::SetNameManager(m->GetIf());
+	GRVisual::SetNameManager(m->Cast());
 }
 GRSceneIf* GRFrame::GetScene(){
 	return DCAST(GRSceneIf, GetNameManager());
 }
 void GRFrame::SetParent(GRFrameIf* fr){
-	if(parent->GetIf() == fr) return;
+	if(parent->Cast() == fr) return;
 	if(parent){
-		parent->DelChildObject(this->GetIf());
+		parent->DelChildObject(this->Cast());
 		parent=NULL;
 	}
 	if (fr){
 		parent = DCAST(GRFrame, fr);
-		fr->AddChildObject(this->GetIf());
+		fr->AddChildObject(this->Cast());
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* o){
@@ -54,7 +54,7 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 		children.push_back(v);
 		GRFrame* f = DCAST(GRFrame, v);
 		if (f && f->parent != this){
-			if (f->parent) f->parent->DelChildObject(f->GetIf());
+			if (f->parent) f->parent->DelChildObject(f->Cast());
 			f->parent = this;
 		}
 		return true;
@@ -74,7 +74,7 @@ size_t GRFrame::NChildObject() const {
 	return children.size();
 }
 ObjectIf* GRFrame::GetChildObject(size_t pos){
-	return children[pos]->GetIf();
+	return children[pos]->Cast();
 }
 
 void GRFrame::Print(std::ostream& os) const {

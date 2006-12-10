@@ -84,13 +84,13 @@ double FORCE_COEFF =		0.28;
 #endif
 
 // グラフィック用の変数
-GRSdkIf* grSdk;
+UTRef<GRSdkIf> grSdk;
 GRDebugRenderIf* render;
 GRDeviceGLIf* grDevice;
 
 // 物理計算用の変数
-PHSdkIf* phSdk;
-PHSceneIf* scene;
+UTRef<PHSdkIf> phSdk;
+UTRef<PHSceneIf> scene;
 
 // 仮想世界で扱う剛体
 PHSolidIf* soFloor;
@@ -1706,9 +1706,6 @@ int main(int argc, char* argv[]){
 
 	// openGL main loop
 	glutMainLoop();
-
-	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
-	delete phSdk;
 }
 
 /**

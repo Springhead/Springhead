@@ -17,7 +17,7 @@ namespace Spr{;
 
 class PHContactPoint : public PHConstraint, PHContactPointIfInit{
 public:
-	OBJECT_DEF(PHContactPoint);
+	OBJECTDEF(PHContactPoint, PHConstraint);
 	PHShapePairForLCP* shapePair;
 	Vec3d pos;
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}

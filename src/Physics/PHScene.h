@@ -30,7 +30,7 @@ typedef PHConstraintDesc PHJointDesc;
 	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
 	セーブして，D3D形式でロードしなければならない．	*/
 class SPR_DLL PHScene : public Scene, PHSceneIfInit, public PHSceneDesc{
-	OBJECT_DEF(PHScene);
+	OBJECTDEF(PHScene, Scene);
 	friend class PHConstraint;
 public:
 	PHEngines engines;

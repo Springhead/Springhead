@@ -87,7 +87,7 @@ public:
 // Springhead1のSimulatorタスク．
 class FWSimulatorTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWSimulatorTask);
+	OBJECTDEF_NOIF(FWSimulatorTask, UTLoadTask);
 	double timeStep;	// 積分ステップ
 	double decay;		// 剛体の速度の減衰率
 	void Execute(UTLoadContext* fc){}
@@ -104,10 +104,10 @@ public:
 		simtask->decay    = d.decay;		
 		PHScene* phScene = FindPHScene(fc);		
 		if (phScene){		// phSceneを検索できた場合は、timeStepを設定. 
-			fc->mapObj.insert(UTPairObject(simtask->GetIf(), phScene->GetIf()));
+			fc->mapObj.insert(UTPairObject(simtask->Cast(), phScene->Cast()));
 			phScene->SetTimeStep(d.timeStep);
 		}else{				// Sceneロード時に、mapを検索し、timeStepを設定 			
-			fc->mapObj.insert(UTPairObject(simtask->GetIf(), NULL));
+			fc->mapObj.insert(UTPairObject(simtask->Cast(), NULL));
 		}
 	}
 };
@@ -169,7 +169,7 @@ public:
 		fc->PushCreateNode(GRLightIf::GetIfInfoStatic(), &grld);
 		Adapter* a = DBG_NEW Adapter;
 		a->light = DCAST(GRLight, fc->objects.Top());
-		fc->objects.Push(a->GetIf());
+		fc->objects.Push(a->Cast());
 		fc->links.push_back(a);
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
@@ -181,7 +181,7 @@ public:
 // DirectXのテクスチャファイル名タスク．
 class FWXTextureTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWXTextureTask);
+	OBJECTDEF_NOIF(FWXTextureTask, UTLoadTask);
 	UTString filename;					// テクスチャファイル名
 	void Execute(UTLoadContext* fc){}
 };
@@ -196,10 +196,10 @@ public:
 		tex->filename = d.filename;
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
-			tex->SetNameManager(gs->GetIf());
+			tex->SetNameManager(gs->Cast());
 			tex->SetName(fc->datas.Top()->name.c_str());
 		}
-		fc->objects.Top()->AddChildObject(tex->GetIf());
+		fc->objects.Top()->AddChildObject(tex->Cast());
 		fc->links.push_back(tex);
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
@@ -233,7 +233,7 @@ public:
 		fc->PushCreateNode(GRMaterialIf::GetIfInfoStatic(), &desc);
 		Adapter* mc = DBG_NEW Adapter;
 		mc->material = DCAST(GRMaterial, fc->objects.Top());
-		fc->objects.Push(mc->GetIf());
+		fc->objects.Push(mc->Cast());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		Adapter* mc = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
@@ -246,7 +246,7 @@ public:
 // DirectXのマテリアルタスク．
 class FWPHMaterialTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWPHMaterialTask);
+	OBJECTDEF_NOIF(FWPHMaterialTask, UTLoadTask);
 	FWPHMaterialTask(): mu(0.2f), mu0(0.2f), e(0.2f){}
 	float mu;		///<	動摩擦摩擦係数
 	float mu0;		///<	静止摩擦係数
@@ -265,12 +265,12 @@ public:
 		phmtask->mu0 = d.s;		// 動摩擦係数		
 		if (fc->datas.Top()->name.length()){
 			GRScene* gs = FindGRScene(fc);
-			phmtask->SetNameManager(gs->GetIf());
+			phmtask->SetNameManager(gs->Cast());
 			phmtask->SetName(fc->datas.Top()->name.c_str());
 		}		
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
-			mesh->AddChildObject(phmtask->GetIf());		
+			mesh->AddChildObject(phmtask->Cast());		
 		}
 		fc->links.push_back(phmtask);
 	}
@@ -281,7 +281,7 @@ public:
 // DirectXのMeshのマテリアルリストタスク．
 class FWMeshMaterialListTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWMeshMaterialListTask);
+	OBJECTDEF_NOIF(FWMeshMaterialListTask, UTLoadTask);
 	std::vector<int> materialList;
 	void Execute(UTLoadContext* fc){}
 };
@@ -294,7 +294,7 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		UTRef<FWMeshMaterialListTask> mmltask = DBG_NEW FWMeshMaterialListTask;
 		mmltask->materialList = d.faceIndexes;
-		fc->objects.Top()->AddChildObject(mmltask->GetIf());
+		fc->objects.Top()->AddChildObject(mmltask->Cast());
 		fc->links.push_back(mmltask);
 	}
 };
@@ -302,7 +302,7 @@ public:
 // DirectXのMeshの法線ベクトルタスク．
 class FWMeshNormalsTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWMeshNormalsTask);
+	OBJECTDEF_NOIF(FWMeshNormalsTask, UTLoadTask);
 	std::vector<Vec3f> normals;		// 法線
 	std::vector<int> faceNormals;	// 法線インデックス
 	void Execute(UTLoadContext* fc){}
@@ -321,7 +321,7 @@ public:
 				normtask->faceNormals.push_back( d.faceNormals[f].faceVertexIndices[i] );	// 法線インデックス
 			}
 		}
-		fc->objects.Top()->AddChildObject(normtask->GetIf());
+		fc->objects.Top()->AddChildObject(normtask->Cast());
 		fc->links.push_back(normtask);
 	}
 };
@@ -329,7 +329,7 @@ public:
 // DirectXのMeshのテクスチャ座標タスク．
 class FWMeshTextureCoordsTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWMeshTextureCoordsTask);
+	OBJECTDEF_NOIF(FWMeshTextureCoordsTask, UTLoadTask);
 	std::vector<Vec2f> texCoords;	// テクスチャUV
 	void Execute(UTLoadContext* fc){}
 };
@@ -342,7 +342,7 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		UTRef<FWMeshTextureCoordsTask> textask = DBG_NEW FWMeshTextureCoordsTask;
 		textask->texCoords = d.textureCoords;
-		fc->objects.Top()->AddChildObject(textask->GetIf());
+		fc->objects.Top()->AddChildObject(textask->Cast());
 		fc->links.push_back(textask);
 	}
 };
@@ -361,7 +361,7 @@ public:
 			FWPHMaterialTask* phmtask = DCAST(FWPHMaterialTask, o);
 			if (phmtask){
 				// mapを検索し、PhysicalMaterialを登録．
-				UTMapObject::iterator itr = fc->mapObj.find(mesh->GetIf());
+				UTMapObject::iterator itr = fc->mapObj.find(mesh->Cast());
 				if (itr != fc->mapObj.end()){
 					GRMesh* m = DCAST(GRMesh, itr->first);
 					if (m){
@@ -378,7 +378,7 @@ public:
 			GRMaterial* mat = DCAST(GRMaterial, o);
 			if (mat){
 				mesh->material.push_back(mat);
-				return mesh->GetNameManager()->AddChildObject(mat->GetIf());
+				return mesh->GetNameManager()->AddChildObject(mat->Cast());
 			}
 			// Material List
 			FWMeshMaterialListTask* mmltask = DCAST(FWMeshMaterialListTask, o);
@@ -408,7 +408,7 @@ public:
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		// map<mesh, phmtask> を作成.
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
-		fc->mapObj.insert(UTPairObject(mesh->GetIf(), phmtask->GetIf()));
+		fc->mapObj.insert(UTPairObject(mesh->Cast(), phmtask->Cast()));
 
 		if (mesh){
 			mesh->positions = d.vertices;	// 頂点座標
@@ -439,7 +439,7 @@ public:
 			Adapter* ad = DBG_NEW Adapter;
 			ad->mesh = DCAST(GRMesh, fc->objects.Top());	// Mesh::Adapterにmeshポインタを登録．
 			ad->fc = fc;									// Mesh::Adapterにfcポインタを登録．
-			fc->objects.Push(ad->GetIf());			
+			fc->objects.Push(ad->Cast());			
 		}else{
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}
@@ -467,7 +467,7 @@ public:
 			FWPHMaterialTask* phmtask = DCAST(FWPHMaterialTask, o);
 			if (phmtask){
 				// mapを検索し、PhysicalMaterialを登録．
-				UTMapObject::iterator itr = fc->mapObj.find(sphere->GetIf());
+				UTMapObject::iterator itr = fc->mapObj.find(sphere->Cast());
 				if (itr != fc->mapObj.end()){
 					GRSphere* s = DCAST(GRSphere, itr->first);
 					if (s){
@@ -484,7 +484,7 @@ public:
 			GRMaterial* mat = DCAST(GRMaterial, o);
 			if (mat){
 				sphere->material = mat;
-				return sphere->GetNameManager()->AddChildObject(mat->GetIf());
+				return sphere->GetNameManager()->AddChildObject(mat->Cast());
 			}
 			return false;
 		}
@@ -498,12 +498,12 @@ public:
 		sphere->stacks = d.stacks;
 		// map<sphere, phmtask> を作成．
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
-		fc->mapObj.insert(UTPairObject(sphere->GetIf(), phmtask->GetIf()));
+		fc->mapObj.insert(UTPairObject(sphere->Cast(), phmtask->Cast()));
 		// スタックにSphere::Adapterを積む．
 		Adapter* ad = DBG_NEW Adapter;
 		ad->sphere = DCAST(GRSphere, fc->objects.Top());
 		ad->fc = fc;
-		fc->objects.Push(ad->GetIf());
+		fc->objects.Push(ad->Cast());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		Adapter* ad = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
@@ -518,7 +518,7 @@ public:
 // Springhead1のContactInactiveのタスク．
 class FWContactInactiveTask: public UTLoadTask{
 public:
-	OBJECT_DEF_NOIF(FWContactInactiveTask);
+	OBJECTDEF_NOIF(FWContactInactiveTask, UTLoadTask);
 	int nSolids;
 	std::vector<int> solidIndexes;
 	void Execute(UTLoadContext* fc){}
@@ -533,7 +533,7 @@ public:
 		UTRef<FWContactInactiveTask> task = DBG_NEW FWContactInactiveTask;
 		task->nSolids = d.nSolids;
 		task->solidIndexes = d.solidIndexes;
-		fc->objects.Top()->AddChildObject(task->GetIf());
+		fc->objects.Top()->AddChildObject(task->Cast());
 		fc->links.push_back(task);
 	}
 };
@@ -571,7 +571,7 @@ public:
 					}
 
 					// 動摩擦摩擦係数mu、静止摩擦係数mu0 
-					UTMapObject::iterator itr = fc->mapObj.find(m->GetIf());
+					UTMapObject::iterator itr = fc->mapObj.find(m->Cast());
 					if (itr != fc->mapObj.end()){
 							FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);	
 							mdesc.material.mu = maptask->mu;
@@ -589,7 +589,7 @@ public:
 					sdesc.radius = s->radius;
 
 					// 動摩擦摩擦係数mu、静止摩擦係数mu0 
-					UTMapObject::iterator itr = fc->mapObj.find(s->GetIf());
+					UTMapObject::iterator itr = fc->mapObj.find(s->Cast());
 					if (itr != fc->mapObj.end()){
 							FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);	
 							sdesc.material.mu = maptask->mu;
@@ -615,15 +615,15 @@ public:
 				pose.FromAffine(fr->GetTransform());
 				solid->SetPose(pose);
 				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
-				phScene->SetContactMode(solid->GetIf(), PHSceneDesc::MODE_LCP);
-				solids.push_back(solid->GetIf());
+				phScene->SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);
+				solids.push_back(solid->Cast());
 				return true;
 			}
 			PHSolid* so = DCAST(PHSolid, o);
 			if (so){	//	solidなら何もしない。デフォルトONなので。
 				//	受け取ったObjectを接触ONにする。
-				phScene->SetContactMode(DCAST(PHSolid, o)->GetIf(), PHSceneDesc::MODE_LCP);
-				solids.push_back(so->GetIf());
+				phScene->SetContactMode(DCAST(PHSolid, o)->Cast(), PHSceneDesc::MODE_LCP);
+				solids.push_back(so->Cast());
 				return true;
 			}
 			FWContactInactiveTask* task = DCAST(FWContactInactiveTask, o);
@@ -650,12 +650,12 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
 		Disabler* dis = DBG_NEW Disabler;
-		dis->phScene = FindPHScene(fc)->GetIf();
+		dis->phScene = FindPHScene(fc)->Cast();
 		fc->links.push_back(dis);
 		Adapter* task = DBG_NEW Adapter;
-		task->phScene = ps->GetIf();
+		task->phScene = ps->Cast();
 		task->fc = fc;
-		fc->objects.Push(task->GetIf());
+		fc->objects.Push(task->Cast());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
@@ -687,9 +687,9 @@ public:
 			Posed pose;
 			pose.FromAffine(frame->GetTransform());
 			solid->SetPose(pose);
-			obj->AddChildObject(frame->GetIf());
-			obj->AddChildObject(solid->GetIf());
-			fwScene->AddChildObject(obj->GetIf());
+			obj->AddChildObject(frame->Cast());
+			obj->AddChildObject(solid->Cast());
+			fwScene->AddChildObject(obj->Cast());
 		}
 	};
 
@@ -706,7 +706,7 @@ public:
 		task->solid = solid;
 		task->fwScene = FindFWScene(fc);
 		task->fc = fc;
-		fc->objects.Push(task->GetIf());
+		fc->objects.Push(task->Cast());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
@@ -852,7 +852,7 @@ public:
 				parent->solid = DCAST(PHSolid, phScene->CreateSolid(sd));
 			}
 			if (parent){
-				PHJointIf* j= phScene->CreateJoint(solid->GetIf(), parent->solid->GetIf(), desc);
+				PHJointIf* j= phScene->CreateJoint(solid->Cast(), parent->solid->Cast(), desc);
 				j->SetName(name.c_str());
 			}
 		}
@@ -862,7 +862,7 @@ public:
 	void Load(Desc& d, UTLoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->phScene = FindPHScene(fc);
-		fc->objects.Push(j->GetIf());
+		fc->objects.Push(j->Cast());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		JointCreator* j = (JointCreator*) DCAST(UTLoadTask, fc->objects.Top());
@@ -892,7 +892,7 @@ public:
 		
 		j->parent = (JointCreator*)DCAST(UTLoadTask, fc->objects.Top());
 		j->phScene = FindPHScene(fc);
-		fc->objects.Push(j->GetIf());
+		fc->objects.Push(j->Cast());
 	}
 	void Loaded(Desc& d, UTLoadContext* fc){
 		JointCreator* j = (JointCreator*)DCAST(UTLoadTask, fc->objects.Top());

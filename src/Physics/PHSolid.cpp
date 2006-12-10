@@ -28,7 +28,7 @@ void PHSolid::SetGravity(bool bOn){
 	PHScene* s = DCAST(PHScene, GetScene());
 	PHGravityEngine* ge;
 	s->engines.Find(ge);
-	if (bOn) ge->AddChildObject(s->GetIf());
+	if (bOn) ge->AddChildObject(s->Cast());
 	else ge->solids.Erase(this);
 }
 
@@ -312,7 +312,7 @@ int PHSolid::NShape(){
 	return shapes.size();
 }
 CDShapeIf* PHSolid::GetShape(int i){
-	return shapes[i].shape->GetIf();
+	return shapes[i].shape->Cast();
 }
 
 

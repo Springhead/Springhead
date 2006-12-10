@@ -91,8 +91,9 @@ FactoryBase* IfInfo::FindFactory(const IfInfo* info) const {
 IF_IMP_BASE(Object);
 OBJECT_IMP_BASE(Object);
 
+
 ObjectIf::~ObjectIf(){
-	delete GetObj<Object>();
+	delete (Object*)(ObjectIfBuf*)this;
 }
 
 void Object::PrintHeader(std::ostream& os, bool bClose) const {
@@ -135,10 +136,11 @@ void Object::Print(std::ostream& os) const {
 	}
 }
 ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
-	const IfInfo* info = GetIf()->GetIfInfo();
+	ObjectIf* selfIf = Cast();
+	const IfInfo* info = selfIf->GetIfInfo();
 	FactoryBase* factory = info->FindFactory(keyInfo);
 	if (factory){
-		return factory->Create(desc, GetIf());
+		return factory->Create(desc, selfIf);
 	}
 	return NULL;
 }
@@ -148,7 +150,7 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 IF_OBJECT_IMP(NamedObject, Object);
 
 NameManagerIf* NamedObject::GetNameManager(){
-	return nameManager->GetIf();
+	return nameManager->Cast();
 }
 void NamedObject::SetNameManager(NameManagerIf* s){
 	assert(!s || s->RefCount() >= 0);
@@ -279,7 +281,7 @@ void ObjectStates::LoadState(ObjectIf* o, char*& s){
 
 ObjectStatesIf* SPR_CDECL CreateObjectStates(){
 	ObjectStates* o = new ObjectStates;
-	return o->GetIf();
+	return o->Cast();
 }
 
 

@@ -17,7 +17,7 @@ namespace Spr{;
     @brief	 */
 class GRVisual: public NamedObject, GRVisualIfInit{
 public:
-	OBJECT_DEF_ABST(GRVisual);
+	OBJECTDEF_ABST(GRVisual, NamedObject);
 	virtual void Render(GRRenderIf* render){}
 	virtual void Rendered(GRRenderIf* render){}
 };
@@ -26,7 +26,7 @@ public:
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
 class GRFrame: public GRVisual, GRFrameIfInit, public GRFrameDesc{
 public:
-	OBJECT_DEF(GRFrame);
+	OBJECTDEF(GRFrame, GRVisual);
 	ACCESS_DESC(GRFrame);
 	GRFrame* parent;
 	typedef std::vector< UTRef<GRVisual> > GRVisuals;
@@ -34,7 +34,7 @@ public:
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 
 
-	virtual GRFrameIf* GetParent(){ return parent->GetIf(); }
+	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
 	virtual void SetParent(GRFrameIf* fr);
 	virtual void SetNameManager(NameManager* n);
 	virtual GRSceneIf* GetScene();

@@ -15,13 +15,18 @@
 
 namespace Spr{;
 
+class Object;
+
 #undef DCAST
-#define DCAST(T,p) DCastImp< T >(p)
-struct ObjectIf;
-///	インタフェースクラスのキャスト
-template <class T> T* DCastImp(const ObjectIf* p){
-	if (!p) return NULL;
-	return T::GetSelfFromIf(p);
+#define DCAST(T,p) DCastImp((T*)0, p)
+
+///	同じ型へのキャスト
+///	静的変換が可能な場合の If->Obj のキャスト
+template <class TO, class FROM> TO* DCastImp(TO* dmmy, FROM* p){
+	return TO::GetSelf(p);
+}
+template <class TO, class FROM> TO* DCastImp(TO* dmmy, UTRef<FROM> p){
+	return TO::GetSelf(&*p);
 }
 
 #undef XCAST
@@ -32,11 +37,11 @@ class XCastPtr{
 public:
 	template <class X> operator X*() const {
 		T* t = (T*) this;
-		return DCAST(X, t);
+		return DCastImp((X*)0, t);
 	}
 	template <class X> operator UTRef<X>() const {
 		T* t = (T*) this;
-		return DCAST(X, t);
+		return DCastImp((X*)0, t);
 	}
 };
 
@@ -108,7 +113,7 @@ public:
 ///	インタフェースが持つべきメンバの宣言部．
 #define IF_DEF_FOR_OBJECTIF(cls)										\
 public:																	\
-	static IfInfoImp<cls##If> ifInfo;									\
+	static IfInfoImp<cls##If> ifInfo;	/*	Ifの型情報	*/				\
 	virtual const IfInfo* GetIfInfo() const {							\
 		return GetIfInfoStatic();										\
 	}																	\
@@ -117,29 +122,34 @@ public:																	\
         assert(0);	/*	Don't allocate interfaces	*/					\
         return NULL;													\
     }																	\
-	static void operator delete(void* pv) {}							\
-	static cls##If* GetSelfFromIf(const cls##If* i){					\
-		return (cls##If*)i;												\
+	static void operator delete(void* pv) { /*	nothing	to do */ }		\
+	/*	? -> If	*/														\
+	template <class O>													\
+	static cls##If* GetSelf(const O * p){								\
+		return p->GetIf((cls##If*)0);									\
 	}																	\
+	/*	同型のIf -> If	*/												\
+	cls##If* GetIf(cls##If* i) const { return (cls##If*)this; }			\
+	/*	相互キャスト	*/												\
 	XCastPtr<cls##If>& Cast() const{									\
 		return *(XCastPtr<cls##If>*)(void*)this; }						\
+	/*	異型のIf -> Ifへの型変換 */										\
+	template <class I> I* GetIf(I*) const {									\
+		if (GetIfInfo()->Inherit(I::GetIfInfoStatic())) return (I*)this;	\
+		return (I*)GetIfDynamic(I::GetIfInfoStatic());						\
+	}																		\
 
-#define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls)							\
-	static cls##If* GetSelfFromIf(const ObjectIf* i){					\
-		if (i->GetIfInfo()->Inherit(cls##If::GetIfInfoStatic()))		\
-			return (cls##If*)i;											\
-		return NULL;													\
-	}																	\
+
+#define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls)
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	IF_DEF_FOR_OBJECTIF(Object);
 	~ObjectIf();
-	template <class T> T* GetObj() const { 
-		assert(sizeof(T));
-		const int offset = (int)((char*)(ObjectIfBuf*)(T*)0x1000 - (char*)(T*)0x1000);
-		return (T*)(void*)((char*)this-offset);
-	}
+	///	オブジェクト取得
+	virtual Object* GetObj(const UTTypeInfo* info) const =0;
+	///	動的なインタフェースの取得
+	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const = 0;
 	///	デバッグ用の表示。子オブジェクトを含む。
 	virtual void Print(std::ostream& os) const =0;	
 	///	デバッグ用の表示。子オブジェクトを含まない。

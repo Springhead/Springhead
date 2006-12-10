@@ -20,7 +20,7 @@
 #include "SprGraphics.h"
 #include "SprFileIO.h"
 
-#include "SprHIS.h"
+#include "SprHumanInterface.h"
 #include "SprDevice.h"
 
 #include "SprFramework.h"

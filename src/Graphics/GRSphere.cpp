@@ -25,7 +25,7 @@ void GRSphere::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);
 	render = r;	
 	if (material){
-		list = render->CreateList(material->GetIf(), radius, slices, stacks);
+		list = render->CreateList(material->Cast(), radius, slices, stacks);
 	}else{
 		list = render->CreateList(radius, slices, stacks);
 	}
@@ -40,7 +40,7 @@ bool GRSphere::AddChildObject(ObjectIf* o){
 	GRMaterial* m = DCAST(GRMaterial, o);
 	if (m){
 		material = m;
-		return GetNameManager()->AddChildObject(m->GetIf());
+		return GetNameManager()->AddChildObject(m->Cast());
 	}
 	return false;
 }

@@ -110,7 +110,7 @@ public:
 		if (Obj()) Obj()->AddRef();
 	}
 	~UTRef(){ if (Obj() && Obj()->DelRef() == 0) delete Obj(); }
-	UTRef& operator =(T* t){
+/*	UTRef& operator =(T* t){
 		if (Obj() != t){
 			if (Obj() && Obj()->DelRef() == 0) delete Obj();
 			Obj() = t;
@@ -118,7 +118,7 @@ public:
 		}
 		return *this;
 	}
-	template <class E>
+*/	template <class E>
 	UTRef& operator =(const UTRef<E>& r){
 		if (Obj() != r){
 			if (Obj() && Obj()->DelRef() == 0) delete Obj();

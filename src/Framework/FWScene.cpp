@@ -60,14 +60,14 @@ bool FWScene::AddChildObject(ObjectIf* o){
 	if (!rv) {
 		PHScene* obj = DCAST(PHScene, o);
 		if (obj) {
-			phScene = obj->GetIf();
+			phScene = obj->Cast();
 			rv = true;
 		}
 	}
 	if (!rv) {
 		GRScene* obj = DCAST(GRScene, o);
 		if (obj) {
-			grScene = obj->GetIf();
+			grScene = obj->Cast();
 			rv = true;
 		}
 	}
@@ -81,8 +81,9 @@ bool FWScene::AddChildObject(ObjectIf* o){
 }
 
 HIForceDevice6D* FWScene::GetHumanInterface(size_t pos){
+/*	hase:	TBW
 	if (pos < humanInterfaces.size()) return humanInterfaces[pos];
-	return NULL;
+*/	return NULL;
 }
 
 size_t FWScene::NChildObject() const{
@@ -98,12 +99,12 @@ ObjectIf* FWScene::GetChildObject(size_t pos){
 
 FWSceneIf* SPR_CDECL CreateFWScene(){
 	FWScene* rv = DBG_NEW FWScene;
-	return rv->GetIf();
+	return rv->Cast();
 }
 
 FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
 	FWScene* rv = DBG_NEW FWScene(*(FWSceneDesc*)desc);
-	return rv->GetIf();
+	return rv->Cast();
 }
 void FWScene::Sync(){
 	//	オブジェクト位置・姿勢の同期
@@ -116,9 +117,10 @@ void FWScene::Sync(){
 	GRCameraIf* camera = grScene->GetCamera();
 	if (grScene && camera && device){
 		Posed pose;
-		pose.Pos() = device->GetPos();
+/*		hase:	TBW	
+		pose.Pos() = device->GetPos();	
 		pose.Ori() = device->GetOri();
-		if (!camera->GetFrame()){
+*/		if (!camera->GetFrame()){
 			GRSceneIf* scene = DCAST(GRSceneIf, camera->GetNameManager());
 			if (scene) camera->SetFrame(scene->CreateFrame(GRFrameDesc()));
 		}
@@ -158,7 +160,8 @@ void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
 }
 
 void FWScene::AddHumanInterface(HIForceDevice6D* d){
-	humanInterfaces.push_back(d);
+//	hase	TBW
+	//	humanInterfaces.push_back(d);
 }
 
 }

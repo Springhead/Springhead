@@ -18,7 +18,7 @@ class SPR_DLL FISdk:public Object, FISdkIfInit{
 public:
 
 	std::vector< UTRef<FIFile> > files;
-	OBJECT_DEF(FISdk);
+	OBJECTDEF(FISdk, Object);
 	FISdk();
 	~FISdk();
 	FIFileXIf* CreateFileX();

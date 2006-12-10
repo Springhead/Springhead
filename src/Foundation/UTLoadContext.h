@@ -50,7 +50,7 @@ class UTLoadContext;
 ///	ロード後に処理をさせるために、ロード時に生成され、ロード後に実行される．
 class UTLoadTask:public NamedObject{
 public:
-	OBJECT_DEF_NOIF(UTLoadTask);
+	OBJECTDEF_NOIF(UTLoadTask, NamedObject);
 	virtual ~UTLoadTask(){}
 	virtual void Execute(UTLoadContext* ctx){};
 };

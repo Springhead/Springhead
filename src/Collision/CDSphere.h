@@ -18,7 +18,7 @@ namespace Spr{;
 /// ‹…‘Ì
 class CDSphere: public CDConvex, CDSphereIfInit, public CDSphereDesc{
 public:
-	OBJECT_DEF(CDSphere);
+	OBJECTDEF(CDSphere, CDConvex);
 	
 	CDSphere();
 	//CDSphere(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}

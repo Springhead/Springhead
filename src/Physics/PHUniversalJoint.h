@@ -28,7 +28,7 @@ class PHUniversalJoint : public PHJointND<2>, PHUniversalJointIfInit{
 protected:
 	Vec2d	torque;
 public:
-	OBJECT_DEF(PHUniversalJoint);
+	OBJECTDEF(PHUniversalJoint, PHJointND<2>);
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::UNIVERSALJOINT;}
 	virtual void SetMotorTorque(const Vec2d& t){torque = t;}

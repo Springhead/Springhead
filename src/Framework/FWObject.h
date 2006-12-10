@@ -10,7 +10,7 @@ namespace Spr{
 
 	class FWObject : public NamedObject, FWObjectIfInit, public FWObjectDesc {
     public:
-		OBJECT_DEF(FWObject);
+		OBJECTDEF(FWObject, NamedObject);
 		ACCESS_DESC(FWObject);
 		FWObjectDesc desc;
 		FWObject(const FWObjectDesc& d=FWObjectDesc()); // コンストラクタ

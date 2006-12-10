@@ -17,7 +17,7 @@ namespace Spr{;
 //	FISdkIf
 FISdkIf* SPR_CDECL FISdkIf::CreateSdk(){
 	FISdk* rv = DBG_NEW FISdk;
-	return rv->GetIf();
+	return rv->Cast();
 }
 
 //----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ FIFileXIf* FISdk::CreateFileX(){
 	FIFileX* rv = DBG_NEW FIFileX;
 	rv->sdk = this;
 	files.push_back(rv);
-	return rv->GetIf();
+	return rv->Cast();
 }
 
 }

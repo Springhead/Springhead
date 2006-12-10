@@ -38,7 +38,7 @@ class CDFaces:public std::vector<CDFace>{
 ///	ì ëΩñ ëÃ
 class CDConvexMesh : public CDConvex, CDConvexMeshIfInit{
 public:
-	OBJECT_DEF(CDConvexMesh);
+	OBJECTDEF(CDConvexMesh, CDConvex);
 
 	///	íTçıäJéní∏ì_î‘çÜ
 	mutable int curPos;

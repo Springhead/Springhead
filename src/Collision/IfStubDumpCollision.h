@@ -1,106 +1,94 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 namespace Spr{; 
 
-template <class IF, class OBJ> struct NamedObjectIfStubTemplate;
-template <class IF, class OBJ>
-struct CDShapeIfStubTemplate: public NamedObjectIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CDShapeIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 };
 struct CDShapeIf;	class CDShape;
-typedef CDShapeIfStubTemplate<CDShapeIf, CDShape>	CDShapeIfStub;
+typedef CDShapeIfStubTemplate<CDShapeIf, ObjectIfBuf, CDShape>	CDShapeIfStub;
 typedef IfInitTemplate<CDShapeIfStub, CDShape>	CDShapeIfInit;
 
-template <class IF, class OBJ> struct CDShapeIfStubTemplate;
-template <class IF, class OBJ>
-struct CDConvexIfStubTemplate: public CDShapeIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct CDShapeIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CDConvexIfStubTemplate: public CDShapeIfStubTemplate<IF, MIF, OBJ> {
 };
 struct CDConvexIf;	class CDConvex;
-typedef CDConvexIfStubTemplate<CDConvexIf, CDConvex>	CDConvexIfStub;
+typedef CDConvexIfStubTemplate<CDConvexIf, ObjectIfBuf, CDConvex>	CDConvexIfStub;
 typedef IfInitTemplate<CDConvexIfStub, CDConvex>	CDConvexIfInit;
 
-template <class IF, class OBJ>
+template <class IF, class MIF, class OBJ>
 struct CDFaceIfStubTemplate: public IF {
 	virtual int NIndex(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::NIndex();
+		return ((OBJ*)(MIF*)this)->OBJ::NIndex();
 	}
 	virtual int *  GetIndices(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetIndices();
+		return ((OBJ*)(MIF*)this)->OBJ::GetIndices();
 	}
 };
 struct CDFaceIf;	class CDFace;
-typedef CDFaceIfStubTemplate<CDFaceIf, CDFace>	CDFaceIfStub;
+typedef CDFaceIfStubTemplate<CDFaceIf, ObjectIfBuf, CDFace>	CDFaceIfStub;
 typedef IfInitTemplate<CDFaceIfStub, CDFace>	CDFaceIfInit;
 
-template <class IF, class OBJ> struct CDConvexIfStubTemplate;
-template <class IF, class OBJ>
-struct CDConvexMeshIfStubTemplate: public CDConvexIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CDConvexMeshIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual CDFaceIf *  GetFace(size_t i){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetFace(i);
+		return ((OBJ*)(MIF*)this)->OBJ::GetFace(i);
 	}
 	virtual size_t NFace(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::NFace();
+		return ((OBJ*)(MIF*)this)->OBJ::NFace();
 	}
 	virtual Vec3f *  GetVertices(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetVertices();
+		return ((OBJ*)(MIF*)this)->OBJ::GetVertices();
 	}
 	virtual size_t NVertex(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::NVertex();
+		return ((OBJ*)(MIF*)this)->OBJ::NVertex();
 	}
 };
 struct CDConvexMeshIf;	class CDConvexMesh;
-typedef CDConvexMeshIfStubTemplate<CDConvexMeshIf, CDConvexMesh>	CDConvexMeshIfStub;
+typedef CDConvexMeshIfStubTemplate<CDConvexMeshIf, ObjectIfBuf, CDConvexMesh>	CDConvexMeshIfStub;
 typedef IfInitTemplate<CDConvexMeshIfStub, CDConvexMesh>	CDConvexMeshIfInit;
 
-template <class IF, class OBJ> struct CDConvexIfStubTemplate;
-template <class IF, class OBJ>
-struct CDSphereIfStubTemplate: public CDConvexIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CDSphereIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual float GetRadius(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetRadius();
+		return ((OBJ*)(MIF*)this)->OBJ::GetRadius();
 	}
 };
 struct CDSphereIf;	class CDSphere;
-typedef CDSphereIfStubTemplate<CDSphereIf, CDSphere>	CDSphereIfStub;
+typedef CDSphereIfStubTemplate<CDSphereIf, ObjectIfBuf, CDSphere>	CDSphereIfStub;
 typedef IfInitTemplate<CDSphereIfStub, CDSphere>	CDSphereIfInit;
 
-template <class IF, class OBJ> struct CDConvexIfStubTemplate;
-template <class IF, class OBJ>
-struct CDCapsuleIfStubTemplate: public CDConvexIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CDCapsuleIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual float GetRadius(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetRadius();
+		return ((OBJ*)(MIF*)this)->OBJ::GetRadius();
 	}
 	virtual float GetLength(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetLength();
+		return ((OBJ*)(MIF*)this)->OBJ::GetLength();
 	}
 };
 struct CDCapsuleIf;	class CDCapsule;
-typedef CDCapsuleIfStubTemplate<CDCapsuleIf, CDCapsule>	CDCapsuleIfStub;
+typedef CDCapsuleIfStubTemplate<CDCapsuleIf, ObjectIfBuf, CDCapsule>	CDCapsuleIfStub;
 typedef IfInitTemplate<CDCapsuleIfStub, CDCapsule>	CDCapsuleIfInit;
 
-template <class IF, class OBJ> struct CDConvexIfStubTemplate;
-template <class IF, class OBJ>
-struct CDBoxIfStubTemplate: public CDConvexIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CDBoxIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3f GetBoxSize(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetBoxSize();
+		return ((OBJ*)(MIF*)this)->OBJ::GetBoxSize();
 	}
 	virtual Vec3f *  GetVertices(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetVertices();
+		return ((OBJ*)(MIF*)this)->OBJ::GetVertices();
 	}
 	virtual CDFaceIf *  GetFace(size_t i){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetFace(i);
+		return ((OBJ*)(MIF*)this)->OBJ::GetFace(i);
 	}
 };
 struct CDBoxIf;	class CDBox;
-typedef CDBoxIfStubTemplate<CDBoxIf, CDBox>	CDBoxIfStub;
+typedef CDBoxIfStubTemplate<CDBoxIf, ObjectIfBuf, CDBox>	CDBoxIfStub;
 typedef IfInitTemplate<CDBoxIfStub, CDBox>	CDBoxIfInit;
 }	//	namespace Spr; 

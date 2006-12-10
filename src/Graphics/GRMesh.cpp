@@ -122,7 +122,7 @@ void GRMesh::CreateListElement(void *vtx){
 					if (end >= elementIndex.size()){		// elementIndex配列の一番最後の要素かどうかのチェック					
 						// 適用するマテリアルIDが、materialとして用意されているか？
 						if (materialList[elementIndex[first]] < (int)material.size()){
-							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(), 	
+							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(), 	
 																GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 						}else{
 							base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);							
@@ -133,7 +133,7 @@ void GRMesh::CreateListElement(void *vtx){
 				}else{
 					// 適用するマテリアルIDが、materialとして用意されているか？
 					if (materialList[elementIndex[first]] < (int)material.size()) {		
-						base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(), 					
+						base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(), 					
 																GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 					}else{
 						base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
@@ -146,7 +146,7 @@ void GRMesh::CreateListElement(void *vtx){
 					if (end >= elementIndex.size()){			// elementIndex配列の一番最後の要素かどうかのチェック
 						// 適用するマテリアルIDが、materialとして用意されているか？
 						if (materialList[elementIndex[first]] < (int)material.size()) {		
-							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(),  
+							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(),  
 																	GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
 						}else{
 							base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3); 
@@ -163,7 +163,7 @@ void GRMesh::CreateListElement(void *vtx){
 					最後にマテリアル設定された面と同じマテリアルが、マテリアル設定されていない面に対して適用される。*/
 				// 適用するマテリアルIDが、materialとして用意されているか？
 				if (materialList[elementIndex[first]] < (int)material.size()) {	
-					base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->GetIf(), 
+					base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(), 
 														GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);
 				}else{
 					base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);				
@@ -187,7 +187,7 @@ bool GRMesh::AddChildObject(ObjectIf* o){
 	GRMaterial* m = DCAST(GRMaterial, o);
 	if (m){
 		material.push_back(m);
-		return GetNameManager()->AddChildObject(m->GetIf());
+		return GetNameManager()->AddChildObject(m->Cast());
 	}
 	return false;
 }

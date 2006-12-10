@@ -15,7 +15,7 @@ namespace Spr{;
 
 class PHJoint : public PHConstraint, PHJointIfInit{
 public:
-	OBJECT_DEF_ABST(PHJoint);
+	OBJECTDEF_ABST(PHJoint, PHConstraint);
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
 };
@@ -34,7 +34,7 @@ public:
 
 class PHJoint1D : public PHJointND<1>, PHJoint1DIfInit{
 public:
-	OBJECT_DEF_ABST(PHJoint1D);
+	OBJECTDEF_ABST(PHJoint1D, PHJoint);
 	
 	//int		axisIndex;					///< 関節軸のインデックス．派生クラスが設定する
 	//double	position, velocity, torque;	///< 変位，速度，トルク

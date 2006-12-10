@@ -26,7 +26,7 @@ class GRMesh: public GRVisual, GRMeshIfInit, public GRMeshDesc{
 	/// MaterialListのインデックスに合わせ、ディスプレイリストを細分化．
 	void CreateListElement(void* vtx);
 public:
-	OBJECT_DEF(GRMesh);
+	OBJECTDEF(GRMesh, GRVisual);
 	ACCESS_DESC(GRMesh);
 
 	std::vector< UTRef<GRMaterial> > material;				///< マテリアル

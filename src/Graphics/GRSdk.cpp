@@ -17,7 +17,7 @@
 namespace Spr{;
 GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){
 	GRSdk* rv = DBG_NEW GRSdk;
-	return rv->GetIf();
+	return rv->Cast();
 }
 
 void SPR_CDECL GRRegisterTypeDescs();
@@ -54,12 +54,12 @@ GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	GRDebugRender* rv = DBG_NEW GRDebugRender;
 	objects.push_back(rv);
-	return rv->GetIf();
+	return rv->Cast();
 }
 GRDeviceGLIf* GRSdk::CreateDeviceGL(int w){
 	GRDeviceGL* rv = DBG_NEW GRDeviceGL(w);
 	objects.push_back(rv);
-	return rv->GetIf();
+	return rv->Cast();
 }
 GRSceneIf* GRSdk::CreateScene(){
 	GRSceneIf* rv = (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &GRSdkDesc());
@@ -67,13 +67,13 @@ GRSceneIf* GRSdk::CreateScene(){
 	return rv;
 }
 GRSceneIf* GRSdk::GetScene(size_t i){
-	if (i<scenes.size()) return scenes[i]->GetIf();
+	if (i<scenes.size()) return scenes[i]->Cast();
 	return NULL;
 }
 ObjectIf* GRSdk::GetChildObject(size_t i){
-	if (i<scenes.size()) return scenes[i]->GetIf();
+	if (i<scenes.size()) return scenes[i]->Cast();
 	i -= scenes.size();
-	if (i<objects.size()) return objects[i]->GetIf();
+	if (i<objects.size()) return objects[i]->Cast();
 	return NULL;
 }
 bool GRSdk::AddChildObject(ObjectIf* o){

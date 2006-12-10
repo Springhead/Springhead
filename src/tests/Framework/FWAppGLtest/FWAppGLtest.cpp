@@ -4,7 +4,7 @@
 #include <Springhead.h>
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
-//#include <HIS/HIMouse.h>
+#include <HumanInterface/HIBase.h>
 
 using namespace Spr;
 
@@ -24,6 +24,9 @@ int SPR_CDECL main(int argc, char* argv[]){
 #endif
 	app.LoadScene("test.x");
 //	app.GetFWScene()->AddHumanInterface(new HIMouse);
+	HIPose* poseObj = new HIPose;
+	HIOrientationIf* oriIf = poseObj->Cast();
+
 	app.Start();
 	return 0;
 }

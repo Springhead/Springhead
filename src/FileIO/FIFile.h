@@ -34,7 +34,7 @@ public:
 	UTLoadHandlers handlers;
 public:
 	FISdk* sdk;
-	OBJECT_DEF_ABST(FIFile);
+	OBJECTDEF_ABST(FIFile, Object);
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);

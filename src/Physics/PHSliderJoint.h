@@ -28,7 +28,7 @@ public:
 ///	ÉXÉâÉCÉ_ä÷êﬂ
 class PHSliderJoint : public PHJoint1D, PHSliderJointIfInit{
 public:
-	OBJECT_DEF(PHSliderJoint);
+	OBJECTDEF(PHSliderJoint, PHJoint1D);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
 	//virtual void CompConstraintJacobian();
 	virtual void CompBias();

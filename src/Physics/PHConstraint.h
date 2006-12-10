@@ -19,7 +19,7 @@ class PHTreeNode;
 ///
 class PHConstraint : public SceneObject, PHConstraintIfInit{
 public:
-	OBJECT_DEF_ABST(PHConstraint);
+	OBJECTDEF_ABST(PHConstraint, SceneObject);
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,

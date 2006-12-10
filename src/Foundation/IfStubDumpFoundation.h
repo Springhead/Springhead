@@ -1,182 +1,157 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 namespace Spr{; 
 
-template <class IF, class OBJ>
+template <class IF, class MIF, class OBJ>
 struct ObjectIfStubTemplate: public IF {
+	virtual Object *  GetObj(const UTTypeInfo *  info) const {
+		return ((OBJ*)(MIF*)this)->OBJ::GetObj(info);
+	}
+	virtual ObjectIf *  GetIfDynamic(const IfInfo *  info) const {
+		return ((OBJ*)(MIF*)this)->OBJ::GetIfDynamic(info);
+	}
 	virtual void Print(std::ostream &  os) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::Print(os);
+		return ((OBJ*)(MIF*)this)->OBJ::Print(os);
 	}
 	virtual void PrintShort(std::ostream &  os) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::PrintShort(os);
+		return ((OBJ*)(MIF*)this)->OBJ::PrintShort(os);
 	}
 	virtual int AddRef(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::AddRef();
+		return ((OBJ*)(MIF*)this)->OBJ::AddRef();
 	}
 	virtual int DelRef(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::DelRef();
+		return ((OBJ*)(MIF*)this)->OBJ::DelRef();
 	}
 	virtual int RefCount(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::RefCount();
+		return ((OBJ*)(MIF*)this)->OBJ::RefCount();
 	}
 	virtual size_t NChildObject() const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::NChildObject();
+		return ((OBJ*)(MIF*)this)->OBJ::NChildObject();
 	}
 	virtual ObjectIf *  GetChildObject(size_t pos){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetChildObject(pos);
+		return ((OBJ*)(MIF*)this)->OBJ::GetChildObject(pos);
 	}
 	virtual const ObjectIf *  GetChildObject(size_t pos) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetChildObject(pos);
+		return ((OBJ*)(MIF*)this)->OBJ::GetChildObject(pos);
 	}
 	virtual bool AddChildObject(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::AddChildObject(o);
+		return ((OBJ*)(MIF*)this)->OBJ::AddChildObject(o);
 	}
 	virtual bool DelChildObject(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::DelChildObject(o);
+		return ((OBJ*)(MIF*)this)->OBJ::DelChildObject(o);
 	}
 	virtual void Clear(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::Clear();
+		return ((OBJ*)(MIF*)this)->OBJ::Clear();
 	}
 	virtual ObjectIf *  CreateObject(const IfInfo *  info, const void *  desc){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::CreateObject(info, desc);
+		return ((OBJ*)(MIF*)this)->OBJ::CreateObject(info, desc);
 	}
 	virtual const void *  GetDescAddress() const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetDescAddress();
+		return ((OBJ*)(MIF*)this)->OBJ::GetDescAddress();
 	}
 	virtual bool GetDesc(void *  desc) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetDesc(desc);
+		return ((OBJ*)(MIF*)this)->OBJ::GetDesc(desc);
 	}
 	virtual size_t GetDescSize() const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetDescSize();
+		return ((OBJ*)(MIF*)this)->OBJ::GetDescSize();
 	}
 	virtual const void *  GetStateAddress() const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetStateAddress();
+		return ((OBJ*)(MIF*)this)->OBJ::GetStateAddress();
 	}
 	virtual bool GetState(void *  state) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetState(state);
+		return ((OBJ*)(MIF*)this)->OBJ::GetState(state);
 	}
 	virtual void SetState(const void *  state){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::SetState(state);
+		return ((OBJ*)(MIF*)this)->OBJ::SetState(state);
 	}
 	virtual size_t GetStateSize() const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetStateSize();
+		return ((OBJ*)(MIF*)this)->OBJ::GetStateSize();
 	}
 	virtual void ConstructState(void *  m) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::ConstructState(m);
+		return ((OBJ*)(MIF*)this)->OBJ::ConstructState(m);
 	}
 	virtual void DestructState(void *  m) const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::DestructState(m);
+		return ((OBJ*)(MIF*)this)->OBJ::DestructState(m);
 	}
 };
 struct ObjectIf;	class Object;
-typedef ObjectIfStubTemplate<ObjectIf, Object>	ObjectIfStub;
+typedef ObjectIfStubTemplate<ObjectIf, ObjectIfBuf, Object>	ObjectIfStub;
 typedef IfInitTemplate<ObjectIfStub, Object>	ObjectIfInit;
 
-template <class IF, class OBJ> struct ObjectIfStubTemplate;
-template <class IF, class OBJ>
-struct NamedObjectIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct NamedObjectIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual const char *  GetName() const {
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetName();
+		return ((OBJ*)(MIF*)this)->OBJ::GetName();
 	}
 	virtual void SetName(const char *  n){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::SetName(n);
+		return ((OBJ*)(MIF*)this)->OBJ::SetName(n);
 	}
 	virtual NameManagerIf *  GetNameManager(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetNameManager();
+		return ((OBJ*)(MIF*)this)->OBJ::GetNameManager();
 	}
 };
 struct NamedObjectIf;	class NamedObject;
-typedef NamedObjectIfStubTemplate<NamedObjectIf, NamedObject>	NamedObjectIfStub;
+typedef NamedObjectIfStubTemplate<NamedObjectIf, ObjectIfBuf, NamedObject>	NamedObjectIfStub;
 typedef IfInitTemplate<NamedObjectIfStub, NamedObject>	NamedObjectIfInit;
 
-template <class IF, class OBJ> struct NamedObjectIfStubTemplate;
-template <class IF, class OBJ>
-struct SceneObjectIfStubTemplate: public NamedObjectIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct SceneObjectIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual SceneIf *  GetScene(){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::GetScene();
+		return ((OBJ*)(MIF*)this)->OBJ::GetScene();
 	}
 };
 struct SceneObjectIf;	class SceneObject;
-typedef SceneObjectIfStubTemplate<SceneObjectIf, SceneObject>	SceneObjectIfStub;
+typedef SceneObjectIfStubTemplate<SceneObjectIf, ObjectIfBuf, SceneObject>	SceneObjectIfStub;
 typedef IfInitTemplate<SceneObjectIfStub, SceneObject>	SceneObjectIfInit;
 
-template <class IF, class OBJ> struct ObjectIfStubTemplate;
-template <class IF, class OBJ>
-struct ObjectStatesIfStubTemplate: public ObjectIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct ObjectStatesIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void AllocateState(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::AllocateState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::AllocateState(o);
 	}
 	virtual void ReleaseState(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::ReleaseState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::ReleaseState(o);
 	}
 	virtual size_t CalcStateSize(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::CalcStateSize(o);
+		return ((OBJ*)(MIF*)this)->OBJ::CalcStateSize(o);
 	}
 	virtual void SaveState(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::SaveState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::SaveState(o);
 	}
 	virtual void LoadState(ObjectIf *  o){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::LoadState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::LoadState(o);
 	}
 };
 struct ObjectStatesIf;	class ObjectStates;
-typedef ObjectStatesIfStubTemplate<ObjectStatesIf, ObjectStates>	ObjectStatesIfStub;
+typedef ObjectStatesIfStubTemplate<ObjectStatesIf, ObjectIfBuf, ObjectStates>	ObjectStatesIfStub;
 typedef IfInitTemplate<ObjectStatesIfStub, ObjectStates>	ObjectStatesIfInit;
 
-template <class IF, class OBJ> struct NamedObjectIfStubTemplate;
-template <class IF, class OBJ>
-struct NameManagerIfStubTemplate: public NamedObjectIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct NameManagerIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual NamedObjectIf *  FindObject(UTString name, UTString cls = ""){
-		const int offset = (int)((char*)(ObjectIfBuf*)(Object*)0x1000 - (char*)0x1000);
-		return ((OBJ*)((char*)this-offset))->OBJ::FindObject(name, cls);
+		return ((OBJ*)(MIF*)this)->OBJ::FindObject(name, cls);
 	}
 };
 struct NameManagerIf;	class NameManager;
-typedef NameManagerIfStubTemplate<NameManagerIf, NameManager>	NameManagerIfStub;
+typedef NameManagerIfStubTemplate<NameManagerIf, ObjectIfBuf, NameManager>	NameManagerIfStub;
 typedef IfInitTemplate<NameManagerIfStub, NameManager>	NameManagerIfInit;
 
-template <class IF, class OBJ> struct NameManagerIfStubTemplate;
-template <class IF, class OBJ>
-struct SceneIfStubTemplate: public NameManagerIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct NameManagerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct SceneIfStubTemplate: public NameManagerIfStubTemplate<IF, MIF, OBJ> {
 };
 struct SceneIf;	class Scene;
-typedef SceneIfStubTemplate<SceneIf, Scene>	SceneIfStub;
+typedef SceneIfStubTemplate<SceneIf, ObjectIfBuf, Scene>	SceneIfStub;
 typedef IfInitTemplate<SceneIfStub, Scene>	SceneIfInit;
 
-template <class IF, class OBJ> struct NameManagerIfStubTemplate;
-template <class IF, class OBJ>
-struct SdkIfStubTemplate: public NameManagerIfStubTemplate<IF, OBJ> {
+template <class IF, class MIF, class OBJ> struct NameManagerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct SdkIfStubTemplate: public NameManagerIfStubTemplate<IF, MIF, OBJ> {
 };
 struct SdkIf;	class Sdk;
-typedef SdkIfStubTemplate<SdkIf, Sdk>	SdkIfStub;
+typedef SdkIfStubTemplate<SdkIf, ObjectIfBuf, Sdk>	SdkIfStub;
 typedef IfInitTemplate<SdkIfStub, Sdk>	SdkIfInit;
 }	//	namespace Spr; 

@@ -80,7 +80,7 @@ ObjectIf* GRCamera::GetChildObject(size_t pos){
 bool GRCamera::AddChildObject(ObjectIf* o){
 	GRFrame* f = DCAST(GRFrame, o);
 	if (f){
-		frame = f->GetIf();
+		frame = f->Cast();
 		return true;
 	}
 	return false;

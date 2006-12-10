@@ -34,10 +34,8 @@ public:
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
-	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> base_type;
 	friend class PHConstraint;
-
-	OBJECT_DEF_NOIF(PHConstraintEngine);
+	OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
 
 	PHJoint* CreateJoint(const PHJointDesc& desc);
 	

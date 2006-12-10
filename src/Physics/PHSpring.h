@@ -16,7 +16,7 @@ namespace Spr{;
 class PHSpring : public PHJoint, PHSpringIfInit{
 	Vec3d spring, damper;
 public:
-	OBJECT_DEF(PHSpring);
+	OBJECTDEF(PHSpring, PHJoint);
 	virtual void SetSpring(const Vec3d& s){spring = s;}
 	virtual Vec3d GetSpring(){return spring;}
 	virtual void SetDamper(const Vec3d& d){damper = d;}

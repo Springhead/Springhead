@@ -16,7 +16,7 @@
 namespace Spr{;
 class CDConvex : public CDShape{
 public:
-	OBJECT_DEF_ABST(CDConvex);
+	OBJECTDEF_ABST(CDConvex, CDShape);
 	///	サポートポイント(方向ベクトルpとの内積が最大の頂点)を求める．
 	virtual Vec3f Support(const Vec3f& p) const =0;
 	///	切り口を求める．接触解析に使う．

@@ -48,7 +48,9 @@ void FWApp::ProcessArguments(int argc, char* argv[]){
 }
 
 void FWApp::Step(){
-	if (fwScene) fwScene->GetPHScene()->Step();
+	if (fwScene){
+		fwScene->GetPHScene()->Step();
+	}
 }
 void FWApp::Init(int argc, char* argv[]){
 	fwSdk = FWSdkIf::CreateSdk();

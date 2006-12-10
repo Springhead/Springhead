@@ -17,7 +17,7 @@
 namespace Spr{;
 
 class PHGravityEngine : public PHEngine{
-	OBJECT_DEF_NOIF(PHGravityEngine);
+	OBJECTDEF_NOIF(PHGravityEngine, PHEngine);
 public:
 	PHSolids solids;
 	Vec3f	accel;

@@ -5,7 +5,6 @@
 #include <Framework/SprFWObject.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
-#include <His/HIHapticDevice.h>
 #include "IfStubFramework.h"
 
 namespace Spr{;
@@ -25,14 +24,15 @@ public:
 ///	GraphicsとPhysicsのSceneをまとめたシーングラフ全体
 class FWScene : public Scene, FWSceneIfInit, public FWSceneDesc {
 public:
-	OBJECT_DEF(FWScene);
+	OBJECTDEF(FWScene, Scene);
 	ACCESS_DESC(FWScene);
 	typedef std::vector< UTRef<FWObjectIf> > FWObjects;
 	FWObjects fwObjects;						///<	物理とグラフィックスのオブジェクトのリンク
 	UTRef<PHSceneIf> phScene;					///<	物理シミュレーション用のシーン
 	UTRef<GRSceneIf> grScene;					///<	グラフィックス用のシーン
 	typedef std::vector< UTRef<HIForceDevice6D> > FWHumanInterfaces;
-	FWHumanInterfaces humanInterfaces;			///<	ユーザインタフェース．[0]がカメラ．HIForceDevice6Dのクラス名は変更する予定．
+	//	hase TBW
+	//	FWHumanInterfaces humanInterfaces;			///<	ユーザインタフェース．[0]がカメラ．HIForceDevice6Dのクラス名は変更する予定．
 	enum HumanInterfacePurposeId{
 		HI_CAMERACONTROLLER,
 		HI_OBJECTMANIPULATOR0,

@@ -41,7 +41,7 @@ class PHPath : public SceneObject, PHPathIfInit, public std::vector<PHPathPointW
 	bool bLoop;	//[-pi, pi]ÇÃñ≥å¿âÒì]ä÷êﬂ
 	iterator Find(double s);
 public:
-	OBJECT_DEF_ABST(PHPath);
+	OBJECTDEF_ABST(PHPath, SceneObject);
 	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
 	virtual bool IsLoop(){return bLoop;}
 	void AddPoint(double s, const Posed& pose);
@@ -53,7 +53,7 @@ public:
 };
 
 class PHPathJoint : public PHJoint1D, PHPathJointIfInit{
-	OBJECT_DEF(PHPathJoint);
+	OBJECTDEF(PHPathJoint, PHJoint1D);
 	UTRef<PHPath> path;
 public:
 	double	q, qd;				// ä÷êﬂïœà Ç∆ä÷êﬂäpìx

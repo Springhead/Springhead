@@ -28,7 +28,7 @@ void GRScene::Init(){
 
 GRSdkIf* GRScene::GetSdk(){
 	GRSdk* sdk = DCAST(GRSdk, GetNameManager());
-	return sdk->GetIf();
+	return sdk->Cast();
 }
 
 void GRScene::Clear(){
@@ -52,7 +52,7 @@ size_t GRScene::NChildObject() const{
 }
 ObjectIf* GRScene::GetChildObject(size_t pos){
 	if (camera){
-		if (pos == 0) return camera->GetIf();
+		if (pos == 0) return camera->Cast();
 		return world->GetChildObject(pos-1);
 	}
 	return world->GetChildObject(pos);

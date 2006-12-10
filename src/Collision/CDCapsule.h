@@ -18,7 +18,7 @@ namespace Spr{;
 /// ‹…‘Ì
 class CDCapsule: public CDConvex, CDCapsuleIfInit, CDCapsuleDesc{
 public:
-	OBJECT_DEF(CDCapsule);
+	OBJECTDEF(CDCapsule, CDConvex);
 
 	CDCapsule();
 	//CDCapsule(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}

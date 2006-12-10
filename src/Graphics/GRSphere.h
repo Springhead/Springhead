@@ -23,7 +23,7 @@ class GRSphere: public GRVisual, GRSphereIfInit, public GRSphereDesc{
 	/// ディスプレイリストを作成．
 	void CreateList(GRRenderIf* r);
 public:
-	OBJECT_DEF(GRSphere);
+	OBJECTDEF(GRSphere, GRVisual);
 	ACCESS_DESC(GRSphere);
 	
 	UTRef<GRMaterial> material;		///< マテリアル

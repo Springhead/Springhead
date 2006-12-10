@@ -30,7 +30,7 @@ public:
 ///	ÉqÉìÉWä÷êﬂ
 class PHHingeJoint : public PHJoint1D, PHHingeJointIfInit{
 public:
-	OBJECT_DEF(PHHingeJoint);
+	OBJECTDEF(PHHingeJoint, PHJoint1D);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
 	virtual void CompBias();
 	virtual void UpdateJointState();

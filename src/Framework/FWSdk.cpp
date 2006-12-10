@@ -41,7 +41,7 @@ FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 	FWSdkIf::RegisterSdk();
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
-	return rv->GetIf();
+	return rv->Cast();
 }
 
 //----------------------------------------------------------------------------

@@ -37,7 +37,7 @@ class CDQuadFaces:public std::vector<CDQuadFace>{
 class CDBox: public CDConvex, CDBoxIfInit{
 public:
 	mutable int curPos;
-	OBJECT_DEF(CDBox);
+	OBJECTDEF(CDBox, CDConvex);
 	
 	Vec3f boxsize;				/// 直方体のサイズ（各辺の長さ）
 	CDQuadFaces qfaces;			/// 面（四角形:quadrangular face）

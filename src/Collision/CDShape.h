@@ -20,7 +20,7 @@ class CDShape : public NamedObject, CDShapeIfInit{
 public:
 	PHMaterial material;
 
-	OBJECT_DEF_ABST(CDShape);
+	OBJECTDEF_ABST(CDShape, NamedObject);
 	//Posef GetPose() const { return pose; }
 	//void SetPose(const Posef& p){ pose = p; }
 	

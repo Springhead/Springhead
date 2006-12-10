@@ -24,7 +24,7 @@ class GRBlendMesh: public GRVisual,GRBlendMeshIfInit, public GRBlendMeshDesc{
 	/// 頂点フォーマット、シェーダフォーマット に合わせ、ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
 public:
-	OBJECT_DEF(GRBlendMesh);
+	OBJECTDEF(GRBlendMesh, GRVisual);
 	ACCESS_DESC(GRBlendMesh);
 
 	std::vector< UTRef<GRMaterial> > material;				///< マテリアル

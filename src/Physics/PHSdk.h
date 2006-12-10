@@ -37,7 +37,7 @@ protected:
 	Objects objects;
 public:
 
-	OBJECT_DEF(PHSdk);
+	OBJECTDEF(PHSdk, Sdk);
 	PHSdk(const PHSdkDesc& = PHSdkDesc());
 	~PHSdk();
 	virtual void Clear();

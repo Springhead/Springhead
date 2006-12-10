@@ -15,7 +15,7 @@ namespace Spr{;
 
 class FIFileX:public FIFile, FIFileXIfInit{
 public:
-	OBJECT_DEF(FIFileX);
+	OBJECTDEF(FIFileX, FIFile);
 protected:
 	FIPhraseParser start, temp, uuid, define, defNormal, defArray, blockSkip, 
 		defOpen, defRestrict, arraySuffix, data, block, exp, ref, id, 

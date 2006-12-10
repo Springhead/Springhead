@@ -22,7 +22,7 @@ class GRCamera;
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 */
 class SPR_DLL GRScene:public Scene, GRSceneIfInit, public GRSceneDesc{
-	OBJECT_DEF(GRScene);
+	OBJECTDEF(GRScene, Scene);
 protected:
 	///	ルートノード
 	UTRef<GRFrame> world;
@@ -41,8 +41,8 @@ public:
 	void Clear();
 
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc);
-	virtual GRFrameIf* GetWorld(){return world->GetIf();}
-	virtual GRCameraIf* GetCamera(){return camera->GetIf();}
+	virtual GRFrameIf* GetWorld(){return world->Cast();}
+	virtual GRCameraIf* GetCamera(){return camera->Cast();}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);

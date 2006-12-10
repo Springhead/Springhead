@@ -78,7 +78,7 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 
 class SPR_DLL NameManager:public NamedObject, NameManagerIfInit{
 public:
-	OBJECT_DEF(NameManager);
+	OBJECTDEF(NameManager, NamedObject);
 protected:
 	/*	名前とオブジェクトの対応表  */
 	ObjectNames names;
@@ -128,7 +128,7 @@ public:
 
 /**	シーンの基本クラス	*/
 class SPR_DLL Scene:public NameManager, SceneIfInit{
-	OBJECT_DEF(Scene);
+	OBJECTDEF(Scene, NameManager);
 public:
 	///	コンストラクタ
 };
@@ -139,7 +139,7 @@ protected:
 	friend struct SdkIf;
 	static std::vector< UTRef<FactoryBase> > sdkFactories;
 public:
-	OBJECT_DEF(Sdk);
+	OBJECTDEF(Sdk, NameManager);
 	static void SPR_CDECL RegisterFactory(FactoryBase* sdkFactory);
 public:
 	Sdk();

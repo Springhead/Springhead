@@ -17,7 +17,7 @@ namespace Spr{;
 class PHRootNode;
 class PHTreeNode : public SceneObject, PHTreeNodeIfInit, public UTTreeNode<PHTreeNode>{
 public:
-	OBJECT_DEF_ABST(PHTreeNode);
+	OBJECTDEF_ABST(PHTreeNode, SceneObject);
 	
 	bool		Includes(PHTreeNode* node);		///< 自分以下にノードnodeがあるか
 	PHTreeNode*	FindBySolid(PHSolid* solid);	///< 自分以下のツリーでsolidを参照しているノードを探す
@@ -76,7 +76,7 @@ public:
 
 class PHRootNode : public PHTreeNode, PHRootNodeIfInit{
 public:
-	OBJECT_DEF(PHRootNode);
+	OBJECTDEF(PHRootNode, PHTreeNode);
 
 	void SetupABA();
 	

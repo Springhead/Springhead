@@ -21,7 +21,7 @@ namespace Spr{;
 /**	@class	GRDeviceGL
     @brief	OpenGLによるグラフィックス描画の実装　 */
 class GRDeviceGL: public GRDevice, GRDeviceGLIfInit{
-	OBJECT_DEF(GRDeviceGL);
+	OBJECTDEF(GRDeviceGL, GRDevice);
 protected:
 	int		window;						///< ウィンドウID
 	int		nLights;					///< 光源の数

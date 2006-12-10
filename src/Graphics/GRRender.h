@@ -21,7 +21,7 @@ namespace Spr{;
 
 class GRCamera:public GRVisual, GRCameraIfInit, public GRCameraDesc{
 public:
-	OBJECT_DEF(GRCamera);
+	OBJECTDEF(GRCamera, GRVisual);
 	ACCESS_DESC(GRCamera);
 	UTRef<GRFrameIf> frame;
 	GRCamera(const GRCameraDesc& desc=GRCameraDesc()):GRCameraDesc(desc), frame(NULL){}
@@ -35,7 +35,7 @@ public:
 
 class GRLight :public GRVisual, GRLightIfInit, public GRLightDesc{
 public:
-	OBJECT_DEF(GRLight);
+	OBJECTDEF(GRLight, GRVisual);
 	ACCESS_DESC(GRLight);
 	GRLight(const GRLightDesc& desc = GRLightDesc()):GRLightDesc(desc){}
 	virtual void Render(GRRenderIf* render);
@@ -45,7 +45,7 @@ public:
 /**	@brief	グラフィックスの材質 */
 class GRMaterial :public GRVisual, GRMaterialIfInit, public GRMaterialDesc{
 public:
-	OBJECT_DEF(GRMaterial);
+	OBJECTDEF(GRMaterial, GRVisual);
 	ACCESS_DESC(GRMaterial);
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
@@ -76,7 +76,7 @@ public:
     @brief	グラフィックスレンダラー/デバイスの基本クラス　 */
 class GRRenderBase: public Object, GRRenderBaseIfInit{
 public:
-	OBJECT_DEF_ABST(GRRenderBase);
+	OBJECTDEF_ABST(GRRenderBase, Object);
 	///	ビューポートの設定
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	///	バッファクリア
@@ -177,7 +177,7 @@ public:
 /**	@class	GRRender
     @brief	グラフィックスレンダラーの基本クラス（デバイスの切り分け）　 */
 class GRRender: public GRRenderBase, GRRenderIfInit{
-	OBJECT_DEF(GRRender);
+	OBJECTDEF(GRRender, GRRenderBase);
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
 	GRCameraDesc camera;			///<	カメラ
@@ -272,7 +272,7 @@ public:
     @brief	グラフィックス描画の実装　 */
 class GRDevice: public GRRenderBase, GRDeviceIfInit{
 public:
-	OBJECT_DEF_ABST(GRDevice);
+	OBJECTDEF_ABST(GRDevice, GRRenderBase);
 	virtual void Init(){}
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){
