@@ -130,7 +130,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			point->engine = engine;
 
 			if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
-			else if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
+			if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 
 			engine->points.push_back(point);
 		}
@@ -143,7 +143,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		point->engine = engine;
 
 		if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
-		else if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
+		if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 
 		engine->points.push_back(point);
 	}
