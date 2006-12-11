@@ -55,8 +55,7 @@ DEF_IF_FOR_OBJ(HIOrientationIf, HIPose);
 
 class HIPose:public HIPosition, HIPoseIfInit, HIOrientationIfForHIPose{
 public:
-	OBJECTDEF(HIPose, HIPosition);
-	OBJECTDEF_IF2(HIPose, HIOrientationIf);
+	OBJECTDEF2(HIPose, HIPosition, HIOrientationIf);
 	virtual Quaternionf GetOrientation();
 	virtual Posef GetPose();
 };

@@ -76,14 +76,15 @@ public:
 
 ///	Object派生クラスの実行時型情報
 //@{
-//	共通部分
-#define OBJECTDEF_COMMON_OBJECT(cls)									\
+//	すべてのクラスに共通
+#define OBJECTDEF_COMMON(cls)											\
+	/*	If Object どちらにもなる 自動型変換型 XCastPtrを返す．*/		\
 	XCastPtr<cls>& Cast() const{										\
 		return *(XCastPtr<cls>*)(void*)this;							\
 	}																	\
 	/*	異型のIfからObjectへの動的変換	*/								\
 	static cls* GetSelf(const ObjectIf* p) {							\
-		return (cls*)p->GetObj(cls::GetTypeInfoStatic());			\
+		return (cls*)p->GetObj(cls::GetTypeInfoStatic());				\
 	}																	\
 	/*	異型のObjectからObjectへの動的変換	*/							\
 	static cls* GetSelf(const Object* p) {								\
@@ -92,22 +93,23 @@ public:
 		else return NULL;												\
 	}																	\
 
-#define OBJECTDEF_COMMON(cls, base)	OBJECTDEF_COMMON_OBJECT(cls)		\
+//	派生クラス用
+#define OBJECTDEF_INHERIT(cls, base)	OBJECTDEF_COMMON(cls)			\
 	/*	基本クラスのGetIfを導入	*/										\
 	using base::GetIf;													\
 	typedef base base_type;												\
 
-#define	OBJECTDEF_ABST_NOIF(cls, base)	\
-	DEF_UTTYPEINFOABSTDEF(cls) OBJECTDEF_COMMON(cls, base)
-#define	OBJECTDEF_NOIF(cls, base)		\
-	DEF_UTTYPEINFODEF(cls) OBJECTDEF_COMMON(cls, base)
+//	抽象クラス = UT+派生
+#define	OBJECTDEF_ABST_NOIF(cls, base)		DEF_UTTYPEINFOABSTDEF(cls) OBJECTDEF_INHERIT(cls, base)
+//	実現クラス = UT+派生
+#define	OBJECTDEF_NOIF(cls, base)			DEF_UTTYPEINFODEF(cls) OBJECTDEF_INHERIT(cls, base)
 
-//	Object用
-#define OBJECTDEFUTIL_OBJECT(cls)										\
+//	Ifを持つクラス共用
+#define OBJECTDEF_IFUTIL_COMMON(cls)									\
 	typedef cls##If	if_type;											\
 
-//	Ifを持つオブジェクト用
-#define OBJECTDEFUTIL_IF(cls)	OBJECTDEFUTIL_OBJECT(cls)				\
+//	Ifを持つ派生クラス用
+#define OBJECTDEF_IFUTIL_INHERIT(cls)	OBJECTDEF_IFUTIL_COMMON(cls)	\
 	/*	同型のIfを取得	*/												\
 	cls##If* GetIf(cls##If*) const {									\
 		return (cls##If*)(ObjectIfBuf*)(Object*)this;					\
@@ -116,6 +118,9 @@ public:
 	static cls* GetSelf(const cls##If* p) {								\
 		return (cls*)(void*)(Object*)(ObjectIfBuf*)p;					\
 	}																	\
+
+//	非継承Ifをもつオブジェクト用
+#define OBJECTDEF_IFUTIL_INHERIT1(cls)	OBJECTDEF_IFUTIL_INHERIT(cls)	\
 	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const {			\
 		if (info == cls##If::GetIfInfoStatic())							\
 			return (cls##If*)(ObjectIfBuf*)this;						\
@@ -123,18 +128,43 @@ public:
 	}																	\
 
 //	非継承Ifをもつオブジェクト用
-#define OBJECTDEF_IF2(cls, intf)										\
-	/*	非継承Ifを取得	*/												\
-	intf* GetIf(intf*) const {											\
-		return (intf*)(intf##For##cls*)this;							\
-	}																	\
+#define OBJECTDEF_IFUTIL_INHERIT2(cls, if2)	OBJECTDEF_IFUTIL_INHERIT(cls)	\
+	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const {				\
+		if (info == cls##If::GetIfInfoStatic()) return GetIf((cls##If*)0);	\
+		else if (info == if2::GetIfInfoStatic()) return GetIf((if2*)0);		\
+		else return base_type::GetIfDynamic(info);							\
+	}																		\
+	/*	非継承Ifの取得	*/													\
+	if2* GetIf(if2*) const {												\
+		return (if2*)(if2##For##cls*)this;									\
+	}																		\
 
+//	非継承Ifを2つもつオブジェクト用
+#define OBJECTDEF_IFUTIL_INHERIT3(cls, if2, if3)	OBJECTDEF_IFUTIL_INHERIT(cls)	\
+	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const {				\
+		if (info == cls##If::GetIfInfoStatic()) return GetIf((cls##If*)0);	\
+		else if (info == if2::GetIfInfoStatic()) return GetIf((if2*)0);		\
+		else if (info == if3::GetIfInfoStatic()) return GetIf((if3*)0);		\
+		else return base_type::GetIfDynamic(info);							\
+	}																		\
+	/*	非継承Ifの取得	*/													\
+	if* GetIf(if2*) const {													\
+		return (if2*)(if2##For##cls*)this;									\
+	}																		\
+	if* GetIf(if3*) const {													\
+		return (if3*)(if3##For##cls*)this;									\
+	}																		\
 
-#define	OBJECTDEF_ABST(cls,base)	\
-	OBJECTDEF_ABST_NOIF(cls, base) OBJECTDEFUTIL_IF(cls)
-#define	OBJECTDEF(cls,base)	OBJECTDEF_NOIF(cls,base) OBJECTDEFUTIL_IF(cls)
-#define	OBJECTDEF_FOR_OBJ(cls)	\
-	DEF_UTTYPEINFODEF(cls) OBJECTDEF_COMMON_OBJECT(cls) OBJECTDEFUTIL_OBJECT(cls)
+#define	OBJECTDEF_FOR_OBJ(cls)		DEF_UTTYPEINFODEF(cls) OBJECTDEF_COMMON(cls) OBJECTDEF_IFUTIL_COMMON(cls)
+
+#define	OBJECTDEF_ABST(cls,base)	OBJECTDEF_ABST_NOIF(cls, base) OBJECTDEF_IFUTIL_INHERIT1(cls)
+#define	OBJECTDEF(cls,base)			OBJECTDEF_NOIF(cls,base) OBJECTDEF_IFUTIL_INHERIT1(cls)
+
+#define	OBJECTDEF_ABST2(cls,base,if2)		OBJECTDEF_ABST_NOIF(cls, base) OBJECTDEF_IFUTIL_INHERIT2(cls, if2)
+#define	OBJECTDEF2(cls,base,if2)			OBJECTDEF_NOIF(cls,base) OBJECTDEF_IFUTIL_INHERIT2(cls, if2)
+
+#define	OBJECTDEF_ABST3(cls,base,if2, if3)	OBJECTDEF_ABST_NOIF(cls, base) OBJECTDEF_IFUTIL_INHERIT3(cls, if2, if3)
+#define	OBJECTDEF3(cls,base,if2, if3)		OBJECTDEF_NOIF(cls,base) OBJECTDEF_IFUTIL_INHERIT3(cls, if2, if3)
 
 //@}
 
