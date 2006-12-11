@@ -28,9 +28,11 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		rjabs[i] = pos - solid[i]->GetCenterPosition();	//剛体の中心から接触点までのベクトル
 	}
 	// local: 接触点の関節フレーム は，x軸を法線, y,z軸を接線とする
+	Quaterniond qlocal;
+	qlocal.FromMatrix(local);
 	for(int i = 0; i < 2; i++){
-		Xj[i].R = solid[i]->GetRotation().trans() * local;
-		Xj[i].r = solid[i]->GetRotation().trans() * rjabs[i];
+		Xj[i].q = solid[i]->GetOrientation().Conjugated() * qlocal;
+		Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
 }
 
@@ -65,34 +67,13 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	Rjabs.col(0) = n;
 	Rjabs.col(1) = t[0];
 	Rjabs.col(2) = t[1];
-	
+	Quaterniond qjabs;
+	qjabs.FromMatrix(Rjabs);
 	for(int i = 0; i < 2; i++){
-		Xj[i].R = solid[i]->GetRotation().trans() * Rjabs;
-		Xj[i].r = solid[i]->GetRotation().trans() * rjabs[i];
+		Xj[i].q = solid[i]->GetOrientation().Conjugated() * qjabs;
+		Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
 }
-
-/*void PHContactPoint::CompConstraintJacobian(){
-	dim_d = 3;
-	dim_c = 1;
-	
-	Ad.clear();
-	for(int i = 0; i < 2; i++){
-		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
-		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
-		Jcv[i].row(0) = Jdv[i].row(0);
-		Jcw[i].row(0) = Jdw[i].row(0);
-		if(solid[i]->solid->IsDynamical()){
-			Tdv[i].SUBMAT(0, 0, 3, 3) = Jdv[i].SUBMAT(0, 0, 3, 3) * solid[i]->minv;
-			Tdw[i].SUBMAT(0, 0, 3, 3) = Jdw[i].SUBMAT(0, 0, 3, 3) * solid[i]->Iinv;
-			Tcv[i].row(0) = Tdv[i].row(0);
-			Tcw[i].row(0) = Tdw[i].row(0);
-			for(int j = 0; j < 3; j++)
-				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
-		}
-	}
-	Ac[0] = Ad[0];
-}*/
 
 void PHContactPoint::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;
@@ -112,14 +93,14 @@ void PHContactPoint::CompBias(){
 
 		2剛体間の接触をひとつの制約としてあらわせるようになれば解決すると思う．	
 	*/
-	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v.x;
+	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v().x;
 	if (err < 0) err = 0;
 	if (err){
 //		HASE_REPORT
 //		DSTR << shapePair->state;
 //		DSTR << shapePair->shapePoseW[1].Pos();
 //		DSTR << "err: " << err << std::edl;
-		db.v.x = -err * engine->correctionRate;
+		db.v().x = -err * engine->correctionRate;
 	}
 }
 

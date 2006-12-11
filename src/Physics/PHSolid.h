@@ -204,8 +204,8 @@ public:
 	///	Œü‚«‚Ìİ’è
 	void		SetOrientation(const Quaterniond& q){
 		pose.Ori() = q;
-		Matrix3f m;
-		pose.Ori().ToMatrix(m);
+		//Matrix3f m;
+		//pose.Ori().ToMatrix(m);
 	}
 
 	///	¿—Ê’†S‚Ì‘¬“x‚Ìæ“¾

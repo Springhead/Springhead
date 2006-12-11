@@ -55,41 +55,41 @@ PHTreeNode*	PHTreeNode::FindBySolid(PHSolid* solid){
 
 void PHTreeNode::CompSpatialTransform(){
 	Xcp = joint->Xj[1].inv() * joint->Xjrel * joint->Xj[0];
-	Xcj = joint->Xj[1].inv() * SpatialTransform(joint->Xjrel.R, Vec3d());
+	Xcj = joint->Xj[1].inv() * SpatialTransform(Vec3d(), joint->Xjrel.q);
 }
 
 void PHTreeNode::CompCoriolisAccel(){
 	PHSolid*	sp = GetParent()->GetSolid();
 	PHSolid*	s = GetSolid();
-	const SpatialVector		&vp = sp->v, &v = s->v, &vjrel = joint->vjrel;
-	const SpatialTransform	&Xj0 = joint->Xj[0], &Xj1 = joint->Xj[1], &Xjrel = joint->Xjrel;
+	SpatialVector		&vp = sp->v, &v = s->v, &vjrel = joint->vjrel;
+	SpatialTransform	&Xj0 = joint->Xj[0], &Xj1 = joint->Xj[1], &Xjrel = joint->Xjrel;
 	SpatialVector	vj = joint->Xj[0] * vp;
 
 	SpatialVector cpj, cjj, ccj;
-	cpj.v = (vp.w * Xj0.r) * vp.w - vp.w.square() * Xj0.r;
-	cpj.w.clear();
+	cpj.v() = (vp.w() * Xj0.r) * vp.w() - vp.w().square() * Xj0.r;
+	cpj.w().clear();
 
-	cjj.v = (vj.w * Xjrel.r) * vj.w - vj.w.square() * Xjrel.r + 2 * vj.w % vjrel.v;
-	cjj.w = vj.w % vjrel.w;
+	cjj.v() = (vj.w() * Xjrel.r) * vj.w() - vj.w().square() * Xjrel.r + 2 * vj.w() % vjrel.v();
+	cjj.w() = vj.w() % vjrel.w();
 
-	ccj.v = (v.w * Xj1.r) * v.w - v.w.square() * Xj1.r;
-	ccj.w.clear();
+	ccj.v() = (v.w() * Xj1.r) * v.w() - v.w().square() * Xj1.r;
+	ccj.w().clear();
 
 	CompJointCoriolisAccel();
 	c = Xj1.inv() * (
-		  Xjrel * SpatialTransform(Xj0.R, Vec3d()) * cpj
-		+ SpatialTransform(Xjrel.R, Vec3d()) * cjj
-		- SpatialTransform(Xj1.R, Vec3d()) * ccj)
-		+ Xcj * cj;
+		  Xjrel * SpatialTransform(Vec3d(), Xj0.q) * cpj
+		+ SpatialTransform(Vec3d(), Xjrel.q) * cjj
+		- SpatialTransform(Vec3d(), Xj1.q) * ccj);
+	c += Xcj * cj;
 	c *= scene->GetTimeStep();
 }
 
 void PHTreeNode::CompIsolatedInertia(){
 	double m = GetSolid()->GetMass();
-	I.vv = Matrix3d::Diag(m, m, m);
-	I.vw.clear();
-	I.wv.clear();
-	I.ww = GetSolid()->GetInertia();
+	I.vv() = Matrix3d::Diag(m, m, m);
+	I.vw().clear();
+	I.wv().clear();
+	I.ww() = GetSolid()->GetInertia();
 }
 
 void PHTreeNode::CompArticulatedInertia(){
@@ -114,8 +114,8 @@ void PHTreeNode::CompIsolatedBiasForce(){
 	// PHSolidInfoÇÃdvÇ™éóÇΩÇÊÇ§Ç»éÆÇ»ÇÃÇ≈ã§óLâªÇµÇΩÇŸÇ§Ç™Ç¢Ç¢
 	PHSolid* s = GetSolid();
 	if(s->IsDynamical()){
-		Z.v = -1.0 * s->f.v;
-		Z.w = -1.0 * s->f.w + s->v.w % (s->GetInertia() * s->v.w);
+		Z.v() = -1.0 * s->f.v();
+		Z.w() = -1.0 * s->f.w() + s->v.w() % (s->GetInertia() * s->v.w());
 		Z *= scene->GetTimeStep();
 	}
 	else Z.clear();
@@ -155,11 +155,11 @@ void PHTreeNode::UpdateVelocity(double dt){
 	PHSolid* s  = GetSolid();
 	UpdateJointVelocity(dt);
 	CompRelativeVelocity();
-	s->v = Xcp * sp->v + Xcj * joint->vjrel;
+	(Vec6d&)(s->v) = Xcp * sp->v + Xcj * joint->vjrel;
 	//s->oldVel	 = s->GetVelocity();
 	//s->oldAngVel = s->GetAngularVelocity();
-	s->SetVelocity       (s->GetOrientation() * s->v.v);
-	s->SetAngularVelocity(s->GetOrientation() * s->v.w);
+	s->SetVelocity       (s->GetOrientation() * s->v.v());
+	s->SetAngularVelocity(s->GetOrientation() * s->v.w());
 	
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->UpdateVelocity(dt);
@@ -170,10 +170,11 @@ void PHTreeNode::UpdatePosition(double dt){
 	UpdateJointPosition(dt);
 	CompRelativePosition();
 	CompSpatialTransform();
-	SpatialTransform Xp(sp->GetRotation(), sp->GetCenterPosition());
+	SpatialTransform Xp(sp->GetCenterPosition(), sp->GetOrientation());
 	SpatialTransform Xc = Xcp * Xp;
+	Xc.q.unitize();
 	s->SetCenterPosition(Xc.r);
-	s->SetRotation(Xc.R);
+	s->SetOrientation(Xc.q);
 	s->SetUpdated(true);
 	
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
@@ -198,7 +199,7 @@ void PHRootNode::CompArticulatedInertia(){
 		(*it)->CompArticulatedInertia();
 
 	//ãtçsóÒÇåvéZ
-	Iinv = I.inv();
+	(Matrix6d&)Iinv = I.inv();
 }
 
 void PHRootNode::CompArticulatedBiasForce(){
@@ -286,7 +287,9 @@ void PHTreeNodeND<NDOF>::AccumulateInertia(){
 	for(int i = 0; i < NDOF; i++)
 		IJ_JIJinv_JtrI += VVtr(IJ_JIJinv[i], IJ[i]);
 
-	GetParent()->I += Xtr_Mat_X(Xcp, I - IJ_JIJinv_JtrI);
+	SpatialMatrix tmp;
+	Xtr_Mat_X(tmp, Xcp, I - IJ_JIJinv_JtrI);
+	GetParent()->I += tmp;
 }
 
 template<int NDOF>

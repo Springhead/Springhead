@@ -213,6 +213,14 @@ struct PHRootNodeIf;	class PHRootNode;
 typedef PHRootNodeIfStubTemplate<PHRootNodeIf, ObjectIfBuf, PHRootNode>	PHRootNodeIfStub;
 typedef IfInitTemplate<PHRootNodeIfStub, PHRootNode>	PHRootNodeIfInit;
 
+template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHGearIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHGearIf;	class PHGear;
+typedef PHGearIfStubTemplate<PHGearIf, ObjectIfBuf, PHGear>	PHGearIfStub;
+typedef IfInitTemplate<PHGearIfStub, PHGear>	PHGearIfInit;
+
 template <class IF, class MIF, class OBJ> struct SceneIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
@@ -260,6 +268,9 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child){
 		return ((OBJ*)(MIF*)this)->OBJ::CreateTreeNode(parent, child);
+	}
+	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::CreateGear(lhs, rhs, desc);
 	}
 	virtual double GetTimeStep() const {
 		return ((OBJ*)(MIF*)this)->OBJ::GetTimeStep();

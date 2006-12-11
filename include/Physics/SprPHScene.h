@@ -28,10 +28,14 @@ struct CDShapeIf;
 struct CDShapeDesc;
 
 struct PHJointIf;
+struct PHJoint1DIf;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
 struct PHTreeNodeIf;
+
+struct PHGearIf;
+struct PHGearDesc;
 
 class PHConstraintEngine;
 
@@ -155,6 +159,10 @@ public:
 	/** 
 	 */
 	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child)=0;
+
+	/**
+	 */
+	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc)=0;
 
 	/** @brief パスを作成する
 		@param desc パスのディスクリプタ

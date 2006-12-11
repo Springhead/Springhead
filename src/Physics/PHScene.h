@@ -53,6 +53,7 @@ public:
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	PHRootNodeIf* CreateRootNode(PHSolidIf* root);
 	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child);
+	PHGearIf*	CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc);
 	PHPathIf*  CreatePath(const PHPathDesc& desc);
 	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);

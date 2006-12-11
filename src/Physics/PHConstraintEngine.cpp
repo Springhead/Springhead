@@ -282,14 +282,22 @@ PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
 	return node;
 }
 
+PHGear* PHConstraintEngine::AddGear(PHJoint1D* lhs, PHJoint1D* rhs, const PHGearDesc& desc){
+	PHGear* gear = DBG_NEW PHGear();
+	gear->joint[0] = lhs;
+	gear->joint[1] = rhs;
+	gear->SetDesc(desc);
+	gear->scene = DCAST(PHScene, GetScene());
+	gear->engine = this;
+	gears.push_back(gear);
+	return gear;
+}
+
 void PHConstraintEngine::SetupLCP(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	double dt = scene->GetTimeStep();
 
 	/* 相互に依存関係があるので呼び出し順番には注意する */
-	//各剛体の前処理
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
-		(*it)->UpdateCacheLCP(dt);
 	
 	//ツリー構造の前処理(ABA関係)
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
@@ -300,6 +308,9 @@ void PHConstraintEngine::SetupLCP(){
 		(*it)->SetupLCP();
 	//関節拘束の前処理
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+		(*it)->SetupLCP();
+	//ギア拘束の前処理
+	for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 		(*it)->SetupLCP();
 	//ツリー構造の前処理
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
@@ -321,6 +332,8 @@ void PHConstraintEngine::IterateLCP(){
 		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
 			(*it)->IterateLCP();
 		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+			(*it)->IterateLCP();
+		for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 			(*it)->IterateLCP();
 		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 			(*it)->IterateLCP();
@@ -381,6 +394,9 @@ void PHConstraintEngine::Step(){
 
 	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
 	//ヤコビアン等の再計算
+	//各剛体の前処理
+	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
+		(*it)->UpdateCacheLCP(dt);
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
 		(*it)->UpdateState();
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)

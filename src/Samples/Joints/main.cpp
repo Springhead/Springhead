@@ -191,7 +191,6 @@ void BuildScene1(){
 	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[0]));
 	nodeTree.push_back(scene->CreateTreeNode(nodeTree[1], soBox[2]));
 	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[1]));
-	//
 
 	scene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
 	scene->SetGravity(Vec3f(0, 0.0, 0));
@@ -359,6 +358,13 @@ void OnKey0(char key){
 		jdesc.upper = Rad( 30.0);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
+		// 以下はギアの作成コード
+		/*if(jntLink.size() >= 2){
+			size_t m = jntLink.size();
+			PHGearDesc gdesc;
+			gdesc.ratio = 0.5;
+			scene->CreateGear(DCAST(PHJoint1DIf, jntLink[m-2]), DCAST(PHJoint1DIf, jntLink[m-1]), gdesc);
+		}*/
 		// ツリーノードを作成し，ABAで計算するように指定
 		if(key == ' ')
 			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
@@ -448,9 +454,9 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.swingUpper = 0.2;		// 最大スイング角
-		jdesc.twistLower = -0.2;	// ツイスト角範囲
-		jdesc.twistUpper = 0.2;
+		//jdesc.swingUpper = 0.2;		// 最大スイング角
+		//jdesc.twistLower = -0.2;	// ツイスト角範囲
+		//jdesc.twistUpper = 0.2;
 		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();

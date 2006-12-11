@@ -30,6 +30,11 @@ public:
 	
 	//virtual void	SetMotorTorque(coord_t t){torque = t;}
 	//virtual coord_t GetMotorTorque(){return torque;}
+	PHJointND(){
+		position.clear();
+		velocity.clear();
+		torque.clear();
+	}
 };
 
 class PHJoint1D : public PHJointND<1>, PHJoint1DIfInit{

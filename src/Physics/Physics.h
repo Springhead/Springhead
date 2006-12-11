@@ -25,4 +25,5 @@
 #include "PHPathJoint.h"
 #include "PHSpring.h"
 #include "PHTreeNode.h"
+#include "PHGear.h"
 

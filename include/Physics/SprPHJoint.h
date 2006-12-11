@@ -116,6 +116,14 @@ struct PHSpringDesc : public PHConstraintDesc{
 	}
 };
 
+/// ギアのディスクリプタ
+struct PHGearDesc{
+	double ratio;		///< ギア比
+	PHGearDesc(){
+		ratio = 1.0;
+	}
+};
+
 /// 拘束のインタフェース
 struct PHConstraintIf : public SceneObjectIf{
 	IF_DEF(PHConstraint);
@@ -344,14 +352,19 @@ struct PHSpringIf : public PHConstraintIf{
 
 };
 
-///
+/// ツリーノードのインタフェース
 struct PHTreeNodeIf : public SceneObjectIf{
 	IF_DEF(PHTreeNode);
 };
 
-///
+/// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
 	IF_DEF(PHRootNode);
+};
+
+/// ギアのインタフェース
+struct PHGearIf : public SceneObjectIf{
+	IF_DEF(PHGear);
 };
 	
 //@}

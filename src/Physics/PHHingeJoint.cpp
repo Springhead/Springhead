@@ -26,10 +26,10 @@ PHHingeJoint::PHHingeJoint(){
 
 void PHHingeJoint::UpdateJointState(){
 	//軸方向の拘束は合致しているものと仮定して角度を見る
-	position[0] = qjrel.Theta();
-	if(qjrel.Axis().Z() < 0.0)
+	position[0] = Xjrel.q.Theta();
+	if(Xjrel.q.Axis().Z() < 0.0)
 		position = -position;
-	velocity[0] = vjrel.w.z;
+	velocity[0] = vjrel.w().z;
 }
 
 void PHHingeJoint::CompBias(){
@@ -38,22 +38,22 @@ void PHHingeJoint::CompBias(){
 	//	本来速度をその都度修正しているので、PD制御ではないのだけど、
 	//	shrinkRatio が高い場合、拘束力が残るため、Dを入れると安定化する。
 	//	tazz 追記．要するに現在の誤差ではなく次時刻の予測誤差を0にするようにする
-	db.v = (Xjrel.r * dtinv + vjrel.v);
-	db.w = (qjrel.AngularVelocity((qjrel - Quaterniond()) * dtinv) + vjrel.w);
-	db.w.z = 0.0;
+	db.v() = (Xjrel.r * dtinv + vjrel.v());
+	db.w() = (Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w());
+	db.w().z = 0.0;
 	db *= engine->correctionRate;
 
 	double diff;
 	if(mode == MODE_VELOCITY){
-		db.w.z = -vel_d;
+		db.w().z = -vel_d;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		diff = GetPosition() - origin;
 		while(diff >  M_PI) diff -= 2 * M_PI;
 		while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
-		dA.w.z = tmp * dtinv;
-		db.w.z = spring * (diff) * tmp;
+		dA.w().z = tmp * dtinv;
+		db.w().z = spring * (diff) * tmp;
 	}
 }
 
@@ -75,8 +75,8 @@ void PHHingeJoint::CompBias(){
 //OBJECT_IMP(PHHingeJointNode, PHTreeNode1D);
 
 void PHHingeJointNode::CompJointJacobian(){
-	J[0].v.clear();
-	J[0].w = Vec3d(0.0, 0.0, 1.0);
+	J[0].v().clear();
+	J[0].w() = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHHingeJointNode::CompJointCoriolisAccel(){
@@ -84,12 +84,12 @@ void PHHingeJointNode::CompJointCoriolisAccel(){
 }
 void PHHingeJointNode::CompRelativeVelocity(){
 	PHJoint1D* j = GetJoint();
-	j->vjrel.v.clear();
-	j->vjrel.w = Vec3d(0.0, 0.0, j->velocity[0]);
+	j->vjrel.v().clear();
+	j->vjrel.w() = Vec3d(0.0, 0.0, j->velocity[0]);
 }
 void PHHingeJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
-	j->Xjrel.R = Matrix3d::Rot(j->position[0], 'z');
+	j->Xjrel.q = Quaterniond::Rot(j->position[0], 'z');
 	j->Xjrel.r.clear();
 }
 void PHHingeJointNode::CompBias(){

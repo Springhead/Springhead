@@ -24,7 +24,6 @@ PHConstraint::PHConstraint(){
 	bInactive[1] = true;
 	bArticulated = false;
 }
-
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
@@ -44,10 +43,10 @@ bool PHConstraint::AddChildObject(ObjectIf* o){
 }
 
 void PHConstraint::SetDesc(const PHConstraintDesc& desc){
-	desc.poseSocket.Ori().ToMatrix(Xj[0].R);
 	Xj[0].r = desc.poseSocket.Pos();
-	desc.posePlug.Ori().ToMatrix(Xj[1].R);
+	Xj[0].q = desc.poseSocket.Ori();
 	Xj[1].r = desc.posePlug.Pos();
+	Xj[1].q = desc.posePlug.Ori();
 	bEnabled = desc.bEnabled;
 }
 
@@ -64,12 +63,11 @@ void PHConstraint::UpdateState(){
 void PHConstraint::CompJacobian(){
 	SpatialTransform X[2];
 	Matrix3d	Rjabs[2];
-	X[0].R = solid[0]->GetRotation();
 	X[0].r = solid[0]->GetCenterPosition();
-	X[1].R = solid[1]->GetRotation();
+	X[0].q = solid[0]->GetOrientation();
 	X[1].r = solid[1]->GetCenterPosition();
+	X[1].q = solid[1]->GetOrientation();
 	Xjrel = Xj[1] * X[1] * X[0].inv() * Xj[0].inv();
-	qjrel.FromMatrix(Xjrel.R);
 	
 	Js[0] = Xj[0];
 	Js[1] = Xjrel.inv() * Xj[1];
@@ -108,54 +106,39 @@ void PHConstraint::CompResponseMatrix(){
 	for(i = 0; i < 2; i++){
 		if(solid[i]->IsDynamical()){
 			if(solid[i]->treeNode){
-				for(j = 0; j < 3; j++){
+				for(j = 0; j < 6; j++){
 					if(!constr[j])continue;
-					df.v = J[i].vv.row(j);
-					df.w = J[i].vw.row(j);
+					(Vec6d&)df = J[i].row(j);
 					solid[i]->treeNode->CompResponse(df, false);
-					A.v[j] += J[i].vv.row(j) * solid[i]->treeNode->da.v
-							+ J[i].vw.row(j) * solid[i]->treeNode->da.w;
+					A[j] += J[i].row(j) * solid[i]->treeNode->da;
 					int ic = !i;
 					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
 					if(solid[ic]->treeNode && root[i] == root[ic])
-						A.v[j] += J[ic].vv.row(j) * solid[ic]->treeNode->da.v
-								+ J[ic].vw.row(j) * solid[ic]->treeNode->da.w;
-				}
-				for(j = 0; j < 3; j++){
-					if(!constr[j+3])continue;
-					df.v = J[i].wv.row(j);
-					df.w = J[i].ww.row(j);
-					solid[i]->treeNode->CompResponse(df, false);
-					A.w[j] += J[i].wv.row(j) * solid[i]->treeNode->da.v
-							+ J[i].ww.row(j) * solid[i]->treeNode->da.w;
-					int ic = !i;
-					if(solid[ic]->treeNode && root[i] == root[ic])
-						A.w[j] += J[ic].wv.row(j) * solid[ic]->treeNode->da.v
-								+ J[ic].ww.row(j) * solid[ic]->treeNode->da.w;
+						A[j] += J[ic].row(j) * solid[ic]->treeNode->da;
 				}
 			}
 			else{
-				T[i].vv = J[i].vv * solid[i]->minv;
-				T[i].vw = J[i].vw * solid[i]->Iinv;
-				T[i].wv = J[i].wv * solid[i]->minv;
-				T[i].ww = J[i].ww * solid[i]->Iinv;
-				for(j = 0; j < 3; j++)
-					A.v[j] += J[i].vv.row(j) * T[i].vv.row(j) + J[i].vw.row(j) * T[i].vw.row(j);
-				for(j = 0; j < 3; j++)
-					A.w[j] += J[i].wv.row(j) * T[i].wv.row(j) + J[i].ww.row(j) * T[i].ww.row(j);
+				T[i].vv() = J[i].vv() * solid[i]->minv;
+				T[i].vw() = J[i].vw() * solid[i]->Iinv;
+				T[i].wv() = J[i].wv() * solid[i]->minv;
+				T[i].ww() = J[i].ww() * solid[i]->Iinv;
+				for(j = 0; j < 6; j++)
+					A[j] += J[i].row(j) * T[i].row(j);
 			}
 		}
 	}
 	//特異姿勢で0になるケースがある
 	const double eps = 1.0e-3;
-	for(j = 0; j < 3; j++)
-		if(A.v[j] < eps)A.v[j] = eps;
-	for(j = 0; j < 3; j++)
-		if(A.w[j] < eps)A.w[j] = eps;
+	for(j = 0; j < 6; j++)
+		if(A[j] < eps)A[j] = eps;
+
+	for(int j = 0; j < 6; j++)
+		if(constr[j])
+			Ainv[j] = 1.0 / (A[j] + dA[j]);
 }
 
 void PHConstraint::SetupLCP(){
-	FPCK_FINITE(f.v);
+	FPCK_FINITE(f.v());
 
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
 	if(!bEnabled || !bFeasible)
@@ -188,8 +171,9 @@ void PHConstraint::SetupLCP(){
 
 	// LCPのbベクトル
 	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
-	CompBias();	// 目標速，バネダンパによる補正項を計算
-	b += db;
+	dA.clear();
+	db.clear();
+	CompBias();	// 目標速，バネダンパによる補正項dA, dbを計算
 	
 	// LCPのA行列の対角成分を計算
 	CompResponseMatrix();
@@ -203,47 +187,23 @@ void PHConstraint::SetupLCP(){
 			solid[i]->treeNode->CompResponse(fs);
 		}
 		else{
-			solid[i]->dv.v += T[i].vv.trans() * f.v + T[i].wv.trans() * f.w;
-			solid[i]->dv.w += T[i].vw.trans() * f.v + T[i].ww.trans() * f.w;
+			solid[i]->dv += T[i].trans() * f;
 		}
 	}
 
-	// 反復での手間を省くためにあらかじめA行列の対角成分でbとJを割っておく
-	for(int j = 0; j < 3; j++){
-		if(!constr[j])continue;
-		Ainv.v[j] = 1.0 / (A.v[j] + dA.v[j]);
-		dA.v[j] *= Ainv.v[j];
-		b.v[j] *= Ainv.v[j];
-		AinvJ[0].vv.row(j) = Ainv.v[j] * J[0].vv.row(j);
-		AinvJ[0].vw.row(j) = Ainv.v[j] * J[0].vw.row(j);
-		AinvJ[1].vv.row(j) = Ainv.v[j] * J[1].vv.row(j);
-		AinvJ[1].vw.row(j) = Ainv.v[j] * J[1].vw.row(j);
-	}
-	for(int j = 0; j < 3; j++){
-		if(!constr[j+3])continue;
-		Ainv.w[j] = 1.0 / (A.w[j] + dA.w[j]);
-		dA.w[j] *= Ainv.w[j];
-		b.w[j] *= Ainv.w[j];
-		AinvJ[0].wv.row(j) = Ainv.w[j] * J[0].wv.row(j);
-		AinvJ[0].ww.row(j) = Ainv.w[j] * J[0].ww.row(j);
-		AinvJ[1].wv.row(j) = Ainv.w[j] * J[1].wv.row(j);
-		AinvJ[1].ww.row(j) = Ainv.w[j] * J[1].ww.row(j);
-	}
 }
 
 void PHConstraint::IterateLCP(){
 	if(!bEnabled || !bFeasible || bArticulated)
 		return;
-	FPCK_FINITE(f.v);
+	FPCK_FINITE(f.v());
 
 	SpatialVector fnew, df, dfs;
 	int i, j;
-	for(j = 0; j < 3; j++){
+	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
-		fnew.v[j] = (1.0 - dA.v[j]) * f.v[j] - (b.v[j] + 
-			AinvJ[0].vv.row(j) * (solid[0]->dv.v) + AinvJ[0].vw.row(j) * (solid[0]->dv.w) +
-			AinvJ[1].vv.row(j) * (solid[1]->dv.v) + AinvJ[1].vw.row(j) * (solid[1]->dv.w));
-		FPCK_FINITE(AinvJ[0].vv.row(j));
+		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+		/*FPCK_FINITE(AinvJ[0].vv.row(j));
 		FPCK_FINITE(AinvJ[1].vv.row(j));
 		if (!FPCK_FINITE(fnew.v)){
 			FPCK_FINITE(b.v);
@@ -254,51 +214,21 @@ void PHConstraint::IterateLCP(){
 			DSTR << "f.v:" << f.v << "b.v:" << b.v << std::endl;
 			DSTR << "s0:" << (solid[0]->dv.v) << (solid[0]->dv.w) << std::endl;
 			DSTR << "s1:" << (solid[1]->dv.v) << (solid[1]->dv.w) << std::endl;
-		}
-		Projection(fnew.v[j], j);
-		FPCK_FINITE(fnew.v);
-		df.v[j] = fnew.v[j] - f.v[j];
+		}*/
+		Projection(fnew[j], j);
+		df[j] = fnew[j] - f[j];
 		for(i = 0; i < 2; i++){
 			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
 			if(solid[i]->treeNode){
-				dfs.v = df.v[j] * J[i].vv.row(j);
-				dfs.w = df.v[j] * J[i].vw.row(j);
+				(Vec6d&)dfs = J[i].row(j) * df[j];
 				solid[i]->treeNode->CompResponse(dfs);
 			}
 			else{
-				solid[i]->dv.v += T[i].vv.row(j) * df.v[j];
-				solid[i]->dv.w += T[i].vw.row(j) * df.v[j];
+				solid[i]->dv += T[i].row(j) * df[j];
 			}
 		}
-		f.v[j] = fnew.v[j];
+		f[j] = fnew[j];
 	}
-	for(j = 0; j < 3; j++){
-		if(!constr[j + 3])continue;
-		fnew.w[j] = (1.0 - dA.w[j]) * f.w[j] - (b.w[j] + 
-			AinvJ[0].wv.row(j) * (solid[0]->dv.v) + AinvJ[0].ww.row(j) * (solid[0]->dv.w) +
-			AinvJ[1].wv.row(j) * (solid[1]->dv.v) + AinvJ[1].ww.row(j) * (solid[1]->dv.w));
-		Projection(fnew.w[j], j + 3);
-		df.w[j] = fnew.w[j] - f.w[j];
-		for(i = 0; i < 2; i++){
-			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-			if(solid[i]->treeNode){
-				SpatialVector dfs;
-				dfs.v = df.w[j] * J[i].wv.row(j);
-				dfs.w = df.w[j] * J[i].ww.row(j);
-				solid[i]->treeNode->CompResponse(dfs);
-			}
-			else{
-				solid[i]->dv.v += T[i].wv.row(j) * df.w[j];
-				solid[i]->dv.w += T[i].ww.row(j) * df.w[j];
-			}
-		}
-		f.w[j] = fnew.w[j];
-	}
-	FPCK_FINITE(fnew.v);
-	FPCK_FINITE(fnew.w);
-	FPCK_FINITE(df.v);
-	FPCK_FINITE(df.w);
-
 }
 
 /*void PHConstraint::SetupCorrection(double dt, double max_error){

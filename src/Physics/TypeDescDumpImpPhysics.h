@@ -138,6 +138,16 @@
 	field->offset = int((char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc);
 	db->RegisterDesc(desc);
 	
+	PHGearDesc* pPHGearDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHGearDesc");
+	desc->size = sizeof(PHGearDesc);
+	desc->ifInfo = PHGearIf::GetIfInfoStatic();
+	((IfInfo*)PHGearIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHGearDesc>;
+	field = desc->AddField("", "double", "ratio", "");
+	field->offset = int((char*)&(pPHGearDesc->ratio) - (char*)pPHGearDesc);
+	db->RegisterDesc(desc);
+	
 	PHInactiveSolids* pPHInactiveSolids = NULL;
 	desc = DBG_NEW UTTypeDesc("PHInactiveSolids");
 	desc->size = sizeof(PHInactiveSolids);

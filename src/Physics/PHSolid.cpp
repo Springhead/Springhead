@@ -90,17 +90,17 @@ void PHSolid::UpdateCacheLCP(double dt){
 	minv = GetMassInv();
 	Iinv = GetInertiaInv();
 	Quaterniond qc = GetOrientation().Conjugated();
-	f.v = qc * nextForce;
-	f.w = qc * nextTorque;
-	v.v = qc * GetVelocity();
-	v.w = qc * GetAngularVelocity();
+	f.v() = qc * nextForce;
+	f.w() = qc * nextTorque;
+	v.v() = qc * GetVelocity();
+	v.w() = qc * GetAngularVelocity();
 	
 	// ƒcƒŠ[‚É‘®‚·‚éê‡‚ÍPHRootNode::SetupDynamics‚Ådv‚ªŒvŽZ‚³‚ê‚é
 	if(treeNode)return;
 	
 	if(IsDynamical()){
-		dv.v = minv * f.v * dt;
-		dv.w = Iinv * (f.w - v.w % (GetInertia() * v.w)) * dt;
+		dv.v() = minv * f.v() * dt;
+		dv.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
 	}
 	else{
 		dv.clear();
@@ -126,12 +126,12 @@ void PHSolid::UpdateVelocity(double dt){
 	v += dv;
 	//oldVel = GetVelocity();
 	//oldAngVel = GetAngularVelocity();
-	SetVelocity       (GetOrientation() * v.v);
-	SetAngularVelocity(GetOrientation() * v.w);
+	SetVelocity       (GetOrientation() * v.v());
+	SetAngularVelocity(GetOrientation() * v.w());
 }
 void PHSolid::UpdatePosition(double dt){
 	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt/* + solid->GetOrientation() * info->dV*/);
-	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w * dt/* + info->dW*/)).unit());
+	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt/* + info->dW*/)).unit());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
 	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
 }

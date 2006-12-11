@@ -67,7 +67,7 @@ public:
 	
 	/// 仮想関数のオーバライド
 	virtual void SetDesc(const PHConstraintDesc& desc);
-	virtual void AddMotorTorque(){f.w = torque * scene->GetTimeStep();}
+	virtual void AddMotorTorque(){f.w() = torque * scene->GetTimeStep();}
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void ModifyJacobian();
 	virtual void CompBias();

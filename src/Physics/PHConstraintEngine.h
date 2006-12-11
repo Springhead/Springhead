@@ -16,6 +16,7 @@ namespace Spr{;
 class PHSolid;
 class PHJoint;
 class PHRootNode;
+class PHGear;
 class PHConstraintEngine;
 
 ///	形状の組
@@ -55,6 +56,7 @@ public:
 	
 	PHRootNode* AddRootNode(PHSolid* solid);	///< ツリー構造のルートノードを作成
 	PHTreeNode* AddNode(PHTreeNode* parent, PHSolid* solid);	///< ツリー構造の中間ノードを作成
+	PHGear*		AddGear(PHJoint1D* lhs, PHJoint1D* rhs, const PHGearDesc& desc);	///< ギアを作成
 
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 
@@ -69,6 +71,8 @@ public:
 	PHConstraints	joints;			///< 関節の配列
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
+	typedef std::vector< UTRef<PHGear> > PHGears;
+	PHGears			gears;
 	
 	void SetupLCP();	///< 速度更新LCPの準備
 	void IterateLCP();			///< 速度更新LCPの一度の反復

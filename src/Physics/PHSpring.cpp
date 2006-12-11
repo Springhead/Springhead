@@ -35,8 +35,8 @@ void PHSpring::CompBias(){
 		}
 		constr[i] = true;
 		tmp = 1.0 / (damper[i] + spring[i] * scene->GetTimeStep());
-		dA.v[i] = tmp * dtinv;
-		db.v[i] = spring[i] * Xjrel.r[i] * tmp;
+		dA[i] = tmp * dtinv;
+		db[i] = spring[i] * Xjrel.r[i] * tmp;
 	}
 	//DSTR << "spring" << fv << rjrel.y * spring.y * dt << endl;
 }

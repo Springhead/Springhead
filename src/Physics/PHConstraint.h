@@ -16,7 +16,6 @@ namespace Spr{;
 
 class PHTreeNode;
 
-///
 class PHConstraint : public SceneObject, PHConstraintIfInit{
 public:
 	OBJECTDEF_ABST(PHConstraint, SceneObject);
@@ -31,13 +30,11 @@ public:
 
 	bool		bEnabled;			///< 有効化されている場合にtrue
 	bool		bFeasible;			///< 両方の剛体がundynamicalな場合true
-	bool		bInactive[2];		///< 剛体が解析法に従う場合true
 	bool		bArticulated;		///< 関節系を構成している場合true
-	
+	bool		bInactive[2];		///< 剛体が解析法に従う場合true	
 	PHSolid*			solid[2];	///< 拘束する剛体
 	SpatialTransform	Xj[2];		///< 剛体に対するソケット，プラグの位置と向き
 	SpatialTransform	Xjrel;		///< ソケットに対するプラグの位置と向き
-	Quaterniond	qjrel; 
 	SpatialVector		vjrel;		///< ソケットに対するプラグの相対速度
 	
 	SpatialTransform	Js[2];		///< 拘束ヤコビアン SpatialTranform形式
@@ -45,26 +42,15 @@ public:
 	SpatialMatrix		AinvJ[2];
 	SpatialMatrix		T[2];
 	
-	bool		axis[6];			///< 関節軸となる自由度．
-	bool		constr[6];			///< 拘束する自由度．
-									///< axis[i] == trueでも可動範囲，バネ・ダンパが有効な場合はtrueとなる
-
 	SpatialVector f;				///< 拘束力の力積
 	//Vec3d		Fv, Fq;				/// correctionにおける関節力
 
 	SpatialVector b, db;			///< LCPのbベクトルとその補正量
 	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
-	
-	void	Init();
-	void	CompJacobian();
-	void	SetupLCP();
-	void	SetupLCPForPrediction();
-	void	IterateLCP();
-	void	UpdateState();
-	void	CompResponseMatrix();
-	void	CompResponseMatrixABA();
-	//void SetupCorrection(double dt, double max_error);
-	//void IterateCorrection();
+
+	bool		axis[6];			///< 関節軸となる自由度．
+	bool		constr[6];			///< 拘束する自由度．
+									///< axis[i] == trueでも可動範囲，バネ・ダンパが有効な場合はtrueとなる
 	
 	/// 派生クラスの機能
 	virtual void SetDesc(const PHConstraintDesc& desc);		///< ディスクリプタの読み込み
@@ -84,12 +70,22 @@ public:
 	virtual bool IsEnabled(){return bEnabled;}
 	virtual void SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}
 	virtual bool IsInactive(int index = 0){return bInactive[index];}
-	virtual void GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = qjrel;}
-	virtual void GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v; w = vjrel.w;}
-	virtual void GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v; _t = f.w;}
+	virtual void GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = Xjrel.q;}
+	virtual void GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
+	virtual void GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v(); _t = f.w();}
 
+	void	CompJacobian();
+	void	SetupLCP();
+	void	IterateLCP();
+	void	UpdateState();
+	void	CompResponseMatrix();
+	void	CompResponseMatrixABA();
+	//void SetupCorrection(double dt, double max_error);
+	//void IterateCorrection();
+	
 	PHConstraint();
 };
+
 class PHConstraints : public std::vector< UTRef<PHConstraint> >{
 public:
 	/// 指定された剛体の組に作用している拘束を返す

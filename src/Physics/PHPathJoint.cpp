@@ -215,7 +215,7 @@ bool PHPathJoint::AddChildObject(ObjectIf* o){
 
 void PHPathJoint::CompBias(double dt, double correction_rate){
 	if(mode == MODE_VELOCITY){
-		b.w.z -= vel_d;
+		b.w().z -= vel_d;
 	}
 
 }

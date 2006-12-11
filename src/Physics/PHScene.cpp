@@ -93,6 +93,10 @@ PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child){
 	return constraintEngine->AddNode(XCAST(parent), XCAST(child))->Cast();
 }
 
+PHGearIf* PHScene::CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc){
+	return constraintEngine->AddGear(XCAST(lhs), XCAST(rhs), desc)->Cast();
+}
+
 void PHScene::Clear(){
 	engines.Clear();
 	Init();

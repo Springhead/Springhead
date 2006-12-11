@@ -104,9 +104,9 @@ void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
 void PHBallJoint::UpdateJointState(){
 	// 相対quaternionからスイング・ツイスト角を計算
 	SwingTwist& angle = (SwingTwist&)position;
-	angle.FromQuaternion(qjrel);
-	angle.JacobianInverse(Jstinv, qjrel);
-	velocity = Jstinv * vjrel.w;
+	angle.FromQuaternion(Xjrel.q);
+	angle.JacobianInverse(Jstinv, Xjrel.q);
+	velocity = Jstinv * vjrel.w();
 }
 
 void PHBallJoint::SetConstrainedIndex(bool* con){
@@ -126,20 +126,20 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
 void PHBallJoint::ModifyJacobian(){
 	if(swingOnUpper || twistOnLower || twistOnUpper){
-		J[0].wv = Jstinv * J[0].wv;
-		J[0].ww = Jstinv * J[0].ww;
-		J[1].wv = Jstinv * J[1].wv;
-		J[1].ww = Jstinv * J[1].ww;
+		J[0].wv() = Jstinv * J[0].wv();
+		J[0].ww() = Jstinv * J[0].ww();
+		J[1].wv() = Jstinv * J[1].wv();
+		J[1].ww() = Jstinv * J[1].ww();
 	}
 }
 
 void PHBallJoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();
 	SwingTwist& angle = (SwingTwist&)position;
-	db.v = Xjrel.r * dtinv;
-	db.w[0] = 0.0;
-	db.w[1] = (swingOnUpper ? (angle.Swing() - swingUpper) * dtinv : 0.0);
-	db.w[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
+	db.v() = Xjrel.r * dtinv;
+	db.w()[0] = 0.0;
+	db.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) * dtinv : 0.0);
+	db.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
 			   twistOnUpper ? (angle.Twist() - twistUpper) * dtinv : 0.0);
 	db *= engine->correctionRate;
 }
@@ -169,28 +169,26 @@ void PHBallJointNode::CompJointJacobian(){
 	angle.Jacobian(Jst);
 	//Matrix3d test = Jst * Jstinv;
 	for(int i = 0; i < 3; i++){
-		J[i].v.clear();
-		J[i].w = Jst.col(i);
+		J[i].v().clear();
+		J[i].w() = Jst.col(i);
 	}
 	PHTreeNodeND<3>::CompJointJacobian();
 }
 void PHBallJointNode::CompJointCoriolisAccel(){
 	PHBallJoint* j = GetJoint();
-	cj.v.clear();
-	((SwingTwist&)(j->position)).Coriolis(cj.w, j->velocity);
+	cj.v().clear();
+	((SwingTwist&)(j->position)).Coriolis(cj.w(), j->velocity);
 	//cj.w.clear();
 }
 void PHBallJointNode::CompRelativePosition(){
 	PHBallJoint* j = GetJoint();
 	j->Xjrel.r.clear();
-	Quaterniond q;
-	((SwingTwist&)(j->position)).ToQuaternion(q);
-	q.ToMatrix(j->Xjrel.R);
+	((SwingTwist&)(j->position)).ToQuaternion(j->Xjrel.q);
 }
 void PHBallJointNode::CompRelativeVelocity(){
 	PHBallJoint* j = GetJoint();
-	j->vjrel.v.clear();
-	j->vjrel.w = Jst * j->velocity;
+	j->vjrel.v().clear();
+	j->vjrel.w() = Jst * j->velocity;
 }
 void PHBallJointNode::CompBias(){
 	dA.clear();
