@@ -376,7 +376,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 
 				bool current_exists = false;
 				
-				if(bLocalDynamics)
+				if(bLocalDynamics && so->IsDynamical())
 				{
 					// 前回もこの剛体とポインタの接触が存在したかチェックし、
 					// 存在した場合は徐々に戻すようにデータを格納する
@@ -385,7 +385,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 						// 現時点で接触しているかチェックして高速化を図る
 						if(!prev_info->bCollide[j]) continue;
 
-						if(prev_info->nearest_solids[j] == so && so->IsDynamical())
+						if(prev_info->nearest_solids[j] == so)
 						{
 							info->solid_current_center_positions[counter] = prev_info->solid_current_center_positions[j];
 							info->solid_future_center_positions[counter] = so->GetCenterPosition() - info->solid_current_center_positions[counter];
