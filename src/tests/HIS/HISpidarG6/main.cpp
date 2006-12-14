@@ -69,11 +69,11 @@ using namespace Spr;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 1800;				// virtual couplingの係数
+	float Km = 5000;				// virtual couplingの係数
 	float Bm = 100;					// 並進
 
-	float Kr = 1800;				// 回転
-	float Br = 150;
+	float Kr = 5000;				// 回転
+	float Br = 100;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
@@ -119,7 +119,7 @@ bool bforce = false;
 
 // めり込み補正のフラグ
 bool bCorrectPenetration = true;
-#define P_CORRECTION_COEFF 0.05
+double P_CORRECTION_COEFF = 0.1;
 
 // 逐次反映処理のフラグ
 bool bGradualReflection = true;
@@ -198,20 +198,21 @@ typedef struct {
 	Matrix3d ang_effect[NUM_COL_SOLIDS][NUM_COLLISIONS];
 	Vec3d ang_constant[NUM_COLLISIONS];
 
-	// pointer data
-	Vec3d pointer_pos;
-
-	Vec3d pointer_vel;
-	double pointer_massinv;
-
-	Quaterniond pointer_ori;
-	Vec3d pointer_angvel;
-	Matrix3d pointer_inertiainv;
-
 	// 実際に接触しているかあらわすフラグ
 	// MakeHapticInfoで前回接触していた場合、の判断に使う
 	bool bCollide[NUM_COLLISIONS];
 } HapticInfo;
+
+
+// pointer data
+Vec3d pointer_pos;
+
+Vec3d pointer_vel;
+double pointer_massinv;
+
+Quaterniond pointer_ori;
+Vec3d pointer_angvel;
+Matrix3d pointer_inertiainv;
 
 
 // １と２を用意するのはスレッドで必要な排他アクセスを避け（待ちが発生するため）、
@@ -262,6 +263,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 	
 	int col_candidate_consts_size = (int)col_candidate_consts.size();
 	int col_candidate_static_consts_size = (int)col_candidate_static_consts.size();
+
 
 	// 力覚レンダリングに必要なデータの作成
 	for(int i = 0; i < pointer_consts_size + pointer_static_consts_size + col_candidate_consts_size + col_candidate_static_consts_size; i++)
@@ -433,7 +435,8 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 
 		bool current_exists = false;
 
-		if(bCollide && bLocalDynamics)
+//		if(bCollide && bLocalDynamics)
+		if(0)
 		{
 			// 同じ接触が前回存在したかチェック
 			for(int j = 0; j < prev_info->num_collisions; j++)
@@ -517,12 +520,14 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 
 
 	// 剛体ポインタの情報を格納
-	info->pointer_pos = soPointer->GetFramePosition();
-	info->pointer_vel = soPointer->GetVelocity();
-	info->pointer_massinv = soPointer->GetMassInv();
-	info->pointer_angvel = soPointer->GetAngularVelocity();
-	info->pointer_inertiainv = soPointer->GetInertiaInv();
-	info->pointer_ori = soPointer->GetOrientation();
+	/*
+	pointer_pos = soPointer->GetFramePosition();
+	pointer_vel = soPointer->GetVelocity();
+	pointer_massinv = soPointer->GetMassInv();
+	pointer_angvel = soPointer->GetAngularVelocity();
+	pointer_inertiainv = soPointer->GetInertiaInv();
+	pointer_ori = soPointer->GetOrientation();
+	*/
 }
 
 /**
@@ -1104,10 +1109,10 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	old_pos = spidar_pos;
 
 	// SPIDARの位置までのベクトルを作成
-	Vec3d goal = spidar_pos - info->pointer_pos;
+	Vec3d goal = spidar_pos - pointer_pos;
 
 	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
-	Vec3d VCForce = Km * goal + Bm * (SPIDARVel - info->pointer_vel);
+	Vec3d VCForce = Km * goal + Bm * (SPIDARVel - pointer_vel);
 
 
 	/////////////////////////////////////////////////////////////////////////////////////////
@@ -1128,22 +1133,22 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	old_ori = spidar_ori;
 
 	// 現在のポインタの姿勢からSPIDARの姿勢までの回転を表す４元数を計算
-	Quaterniond ang_goal = spidar_ori * info->pointer_ori.Inv();
+	Quaterniond ang_goal = spidar_ori * pointer_ori.Inv();
 
 	// 回転についてのバーチャルカップリング
-	Vec3d VCTorque = Kr * ang_goal.Rotation() + Br * (SPIDARAngVel.Rotation() - info->pointer_angvel);
+	Vec3d VCTorque = Kr * ang_goal.Rotation() + Br * (SPIDARAngVel.Rotation() - pointer_angvel);
 
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// バーチャルカップリングに従ってポインタの位置・姿勢更新
-	info->pointer_vel += info->pointer_massinv * VCForce * dt;
-	Vec3d pointer_dx = info->pointer_vel * dt;
-	info->pointer_pos += pointer_dx;
+	pointer_vel += pointer_massinv * VCForce * dt;
+	Vec3d pointer_dx = pointer_vel * dt;
+	pointer_pos += pointer_dx;
 
-	info->pointer_angvel += info->pointer_inertiainv * VCTorque * dt;
-	Vec3d pointer_dth = info->pointer_angvel * dt;
-	info->pointer_ori = Quaterniond::Rot(pointer_dth) * info->pointer_ori;
-	info->pointer_ori = info->pointer_ori.unit();
+	pointer_angvel += pointer_inertiainv * VCTorque * dt;
+	Vec3d pointer_dth = pointer_angvel * dt;
+	pointer_ori = Quaterniond::Rot(pointer_dth) * pointer_ori;
+	pointer_ori = pointer_ori.unit();
 
 
 	// 登録された接触があっても、現在本当に接触しているかはわからないのでフラグを用意
@@ -1234,6 +1239,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		// 局所的動力学計算による剛体の位置・姿勢を更新
 		Vec3d correct_vector = Vec3d();
 		Vec3d correct_torque = Vec3d();
+		int num_cols = 0;
 
 		for(int i = 0; i < info->num_solids; i++)
 		{
@@ -1305,7 +1311,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				// ポインタの移動量に従って平行移動
 				// この情報はポインタが持つのではなく接触がそれぞれ持っている
 				info->pointer_current_col_positions[col_index] += pointer_dx;
-				info->pointer_current_col_positions[col_index] += pointer_dth ^ (info->pointer_current_col_positions[col_index] - info->pointer_pos);
+				info->pointer_current_col_positions[col_index] += pointer_dth ^ (info->pointer_current_col_positions[col_index] - pointer_pos);
 
 				// 次に行うめり込み解消処理の準備
 				if(bCorrectPenetration)
@@ -1318,11 +1324,14 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 					// めり込んでいたら補正用のデータを更新
 					if(vector_coeff > 0)
 					{
+						// めり込んでた接触の個数
+						num_cols++;
+
 						Vec3d col_normal = vector_coeff * info->current_col_normals[col_index].unit();
 						correct_vector += col_normal;
 
 						// 回転：侵入量を力と見て、トルクを計算するようにして補正量を求める
-						correct_torque += (info->pointer_current_col_positions[col_index] - info->pointer_pos) ^ col_normal;
+						correct_torque += (info->pointer_current_col_positions[col_index] - pointer_pos) ^ (col_vector - col_normal);
 					}
 				}
 			}
@@ -1336,14 +1345,22 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		// ポインタの位置に加え、徐々にめり込みを補正していく
 		// 回転もめり込み量を力と考えてトルクを計算するようにして
 		// ポインタ自身を回転させてめり込みを解消させるようにする
-		if(bCorrectPenetration)
+		if(bCorrectPenetration && num_cols)
 		{
+			// 平均を取って急激に変化しないようにする
+			correct_vector /= (double)num_cols;
+			correct_torque /= (double)num_cols;
+
+			// 速度を変化させる
+			pointer_vel += P_CORRECTION_COEFF * correct_vector / dt;
+			pointer_angvel += P_CORRECTION_COEFF * correct_torque / dt;
+
 			// ポインタ自身の位置を移動
-			info->pointer_pos += P_CORRECTION_COEFF * correct_vector;
+			pointer_pos += P_CORRECTION_COEFF * correct_vector;
 
 			// ポインタ自身の姿勢を補正
 			Quaterniond correct_q = Quaterniond::Rot(P_CORRECTION_COEFF * correct_torque);
-			info->pointer_ori = info->pointer_ori * correct_q;
+			pointer_ori = pointer_ori * correct_q;
 
 			// すべての接触もその方向に移動・回転
 			for(int i = 0; i < info->num_collisions; i++)
@@ -1457,11 +1474,11 @@ void UpdatePointer()
 	if(current_valid_data) info = &info1;
 	else info = &info2;
 
-	soPointer->SetFramePosition(info->pointer_pos);
-	soPointer->SetVelocity(info->pointer_vel);
+	soPointer->SetFramePosition(pointer_pos);
+	soPointer->SetVelocity(pointer_vel);
 
-	soPointer->SetOrientation(info->pointer_ori);
-	soPointer->SetAngularVelocity(info->pointer_angvel);
+	soPointer->SetOrientation(pointer_ori);
+	soPointer->SetAngularVelocity(pointer_angvel);
 }
 
 void SetupCollisionPrediction()
@@ -1897,6 +1914,16 @@ void keyboard(unsigned char key, int x, int y){
 		cout << "PRESET 5: Virtual Coupling" << endl;
 		keyboard('f', 0, 0);
 	}
+	else if(key == 'q')
+	{
+		P_CORRECTION_COEFF -= 0.01;
+		cout << "P_CORRECTION_COEFF = " << P_CORRECTION_COEFF << endl;
+	}
+	else if(key == 'w')
+	{
+		P_CORRECTION_COEFF += 0.01;
+		cout << "P_CORRECTION_COEFF = " << P_CORRECTION_COEFF << endl;
+	}
 }
 
 void InitScene();
@@ -2016,7 +2043,7 @@ void InitScene()
 			{
 			case 0:
 				bd.boxsize = Vec3f(30.0f, 5.0f, 30.0f);
-				position = Vec3f(0, -5.0f, 0);
+				position = Vec3f(0, -4.0f, 0);
 				break;
 			case 1:
 				bd.boxsize = Vec3f(1.0f, 1.0f, 1.0f);
@@ -2058,7 +2085,7 @@ void InitScene()
 
 	for (unsigned int sphereCnt=0; sphereCnt<NUM_OBJECTS; ++sphereCnt){
 		soObject[sphereCnt]->AddShape(floor);
-		soObject[sphereCnt]->SetFramePosition(Vec3f(0, 5.0f*(sphereCnt+1), 0));
+		soObject[sphereCnt]->SetFramePosition(Vec3f(0, 5.0f*(sphereCnt+1), 2));
 	}
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
@@ -2073,6 +2100,14 @@ void InitScene()
 	// soPointerCopyもinactiveにする
 	// こうするとsoPointerにめりこむようになるはず
 	AddInactiveSolid(scene, soPointerCopy);
+
+	pointer_pos = soPointer->GetFramePosition();
+	pointer_vel = soPointer->GetVelocity();
+	pointer_massinv = soPointer->GetMassInv();
+	pointer_angvel = soPointer->GetAngularVelocity();
+	pointer_inertiainv = soPointer->GetInertiaInv();
+	pointer_ori = soPointer->GetOrientation();
+
 }
 
 /**
