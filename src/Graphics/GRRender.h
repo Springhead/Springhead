@@ -19,7 +19,7 @@
 
 namespace Spr{;
 
-class GRCamera:public GRVisual, GRCameraIfInit, public GRCameraDesc{
+class GRCamera:public GRVisual, public GRCameraIfInit, public GRCameraDesc{
 public:
 	OBJECTDEF(GRCamera, GRVisual);
 	ACCESS_DESC(GRCamera);
@@ -33,7 +33,7 @@ public:
 	virtual void Render(GRRenderIf* render);	
 };
 
-class GRLight :public GRVisual, GRLightIfInit, public GRLightDesc{
+class GRLight :public GRVisual, public GRLightIfInit, public GRLightDesc{
 public:
 	OBJECTDEF(GRLight, GRVisual);
 	ACCESS_DESC(GRLight);
@@ -43,7 +43,7 @@ public:
 };
 
 /**	@brief	グラフィックスの材質 */
-class GRMaterial :public GRVisual, GRMaterialIfInit, public GRMaterialDesc{
+class GRMaterial :public GRVisual, public GRMaterialIfInit, public GRMaterialDesc{
 public:
 	OBJECTDEF(GRMaterial, GRVisual);
 	ACCESS_DESC(GRMaterial);
@@ -74,7 +74,7 @@ public:
 
 /**	@class	GRRenderBase
     @brief	グラフィックスレンダラー/デバイスの基本クラス　 */
-class GRRenderBase: public Object, GRRenderBaseIfInit{
+class GRRenderBase: public Object, public GRRenderBaseIfInit{
 public:
 	OBJECTDEF_ABST(GRRenderBase, Object);
 	///	ビューポートの設定
@@ -176,7 +176,7 @@ public:
 
 /**	@class	GRRender
     @brief	グラフィックスレンダラーの基本クラス（デバイスの切り分け）　 */
-class GRRender: public GRRenderBase, GRRenderIfInit{
+class GRRender: public GRRenderBase, public GRRenderIfInit{
 	OBJECTDEF(GRRender, GRRenderBase);
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
@@ -270,7 +270,7 @@ public:
 
 /**	@class	GRDevice
     @brief	グラフィックス描画の実装　 */
-class GRDevice: public GRRenderBase, GRDeviceIfInit{
+class GRDevice: public GRRenderBase, public GRDeviceIfInit{
 public:
 	OBJECTDEF_ABST(GRDevice, GRRenderBase);
 	virtual void Init(){}

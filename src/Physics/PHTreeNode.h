@@ -15,7 +15,7 @@ namespace Spr{;
 
 ///	ツリーノードの基本クラス
 class PHRootNode;
-class PHTreeNode : public SceneObject, PHTreeNodeIfInit, public UTTreeNode<PHTreeNode>{
+class PHTreeNode : public SceneObject, public PHTreeNodeIfInit, public UTTreeNode<PHTreeNode>{
 public:
 	OBJECTDEF_ABST(PHTreeNode, SceneObject);
 	
@@ -74,7 +74,7 @@ public:
 	PHConstraintEngine* engine;
 };
 
-class PHRootNode : public PHTreeNode, PHRootNodeIfInit{
+class PHRootNode : public PHTreeNode, public PHRootNodeIfInit{
 public:
 	OBJECTDEF(PHRootNode, PHTreeNode);
 

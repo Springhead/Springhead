@@ -21,7 +21,7 @@ class GRCamera;
 	シーングラフは，たとえばレンダラがOpenGLなら，displayList
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 */
-class SPR_DLL GRScene:public Scene, GRSceneIfInit, public GRSceneDesc{
+class SPR_DLL GRScene:public Scene, public GRSceneIfInit, public GRSceneDesc{
 	OBJECTDEF(GRScene, Scene);
 protected:
 	///	ルートノード

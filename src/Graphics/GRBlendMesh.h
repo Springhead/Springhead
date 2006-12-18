@@ -17,7 +17,7 @@ class GRMaterial;
 
 /** @class GRBlendMesh
 	@brief グラフィックスシーングラフでの座標系を表す．	*/
-class GRBlendMesh: public GRVisual,GRBlendMeshIfInit, public GRBlendMeshDesc{
+class GRBlendMesh: public GRVisual, public GRBlendMeshIfInit, public GRBlendMeshDesc{
 	GRRenderIf* render;							///< レンダラー				
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
 			

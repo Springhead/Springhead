@@ -38,7 +38,7 @@ GRSceneIf* GRFrame::GetScene(){
 	return DCAST(GRSceneIf, GetNameManager());
 }
 void GRFrame::SetParent(GRFrameIf* fr){
-	if(parent->Cast() == fr) return;
+	if((GRFrameIf*)(parent->Cast()) == fr) return;
 	if(parent){
 		parent->DelChildObject(this->Cast());
 		parent=NULL;

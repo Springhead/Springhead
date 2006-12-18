@@ -15,7 +15,7 @@ class PHShapePairForLCP;
 
 namespace Spr{;
 
-class PHContactPoint : public PHConstraint, PHContactPointIfInit{
+class PHContactPoint : public PHConstraint, public PHContactPointIfInit{
 public:
 	OBJECTDEF(PHContactPoint, PHConstraint);
 	PHShapePairForLCP* shapePair;

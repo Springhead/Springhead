@@ -16,7 +16,7 @@ namespace Spr{;
 
 	
 /// ‹…‘Ì
-class CDSphere: public CDConvex, CDSphereIfInit, public CDSphereDesc{
+class CDSphere: public CDConvex, public CDSphereIfInit, public CDSphereDesc{
 public:
 	OBJECTDEF(CDSphere, CDConvex);
 	

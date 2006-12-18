@@ -13,7 +13,7 @@
 
 namespace Spr{;
 
-class PHJoint : public PHConstraint, PHJointIfInit{
+class PHJoint : public PHConstraint, public PHJointIfInit{
 public:
 	OBJECTDEF_ABST(PHJoint, PHConstraint);
 	/// ABA‚Å‘Î‰‚·‚éPHTreeNode‚Ì”h¶ƒNƒ‰ƒX‚ğ¶¬‚µ‚Ä•Ô‚·
@@ -37,7 +37,7 @@ public:
 	}
 };
 
-class PHJoint1D : public PHJointND<1>, PHJoint1DIfInit{
+class PHJoint1D : public PHJointND<1>, public PHJoint1DIfInit{
 public:
 	OBJECTDEF_ABST(PHJoint1D, PHJoint);
 	

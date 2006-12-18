@@ -17,7 +17,7 @@ class GRMaterial;
 
 /**	@class	GRMesh
     @brief	グラフィックスシーングラフでの座標系を表す． */
-class GRMesh: public GRVisual, GRMeshIfInit, public GRMeshDesc{
+class GRMesh: public GRVisual, public GRMeshIfInit, public GRMeshDesc{
 	GRRenderIf* render;							///< レンダラー
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
 

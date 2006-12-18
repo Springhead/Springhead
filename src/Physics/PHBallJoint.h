@@ -42,7 +42,7 @@ public:
 	//PHBallJointNode(PHBallJoint* j):PHTreeNodeND<3>(j){}
 };
 
-class PHBallJoint : public PHJointND<3>, PHBallJointIfInit{
+class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 public:
 	OBJECTDEF(PHBallJoint, PHJointND<3>);
 	

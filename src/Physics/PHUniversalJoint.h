@@ -24,7 +24,7 @@ public:
 	//PHBallJointNode(PHBallJoint* j):PHTreeNodeND<3>(j){}
 };
 
-class PHUniversalJoint : public PHJointND<2>, PHUniversalJointIfInit{
+class PHUniversalJoint : public PHJointND<2>, public PHUniversalJointIfInit{
 protected:
 	Vec2d	torque;
 public:

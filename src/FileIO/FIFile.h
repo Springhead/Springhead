@@ -26,7 +26,7 @@ class FISdk;
 
 /**	ファイルローダー・セーバー
 */
-class FIFile:public Object, FIFileIfInit{
+class FIFile:public Object, public FIFileIfInit{
 public:
 	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
 	UTTypeDescDb typeDb;

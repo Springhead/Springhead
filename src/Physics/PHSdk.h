@@ -23,7 +23,7 @@ public:
 	}
 };
 
-class SPR_DLL PHSdk:public Sdk, PHSdkIfInit{
+class SPR_DLL PHSdk:public Sdk, public PHSdkIfInit{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;

@@ -26,7 +26,7 @@ public:
 };
 
 ///	ÉXÉâÉCÉ_ä÷êﬂ
-class PHSliderJoint : public PHJoint1D, PHSliderJointIfInit{
+class PHSliderJoint : public PHJoint1D, public PHSliderJointIfInit{
 public:
 	OBJECTDEF(PHSliderJoint, PHJoint1D);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}

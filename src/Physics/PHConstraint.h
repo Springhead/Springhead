@@ -16,7 +16,7 @@ namespace Spr{;
 
 class PHTreeNode;
 
-class PHConstraint : public SceneObject, PHConstraintIfInit{
+class PHConstraint : public SceneObject, public PHConstraintIfInit{
 public:
 	OBJECTDEF_ABST(PHConstraint, SceneObject);
 	enum PHControlMode{

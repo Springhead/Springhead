@@ -36,7 +36,7 @@ struct PHPathPointWithJacobian : public PHPathPoint{
 	Matrix6d	J;
 };
 
-class PHPath : public SceneObject, PHPathIfInit, public std::vector<PHPathPointWithJacobian>{
+class PHPath : public SceneObject, public PHPathIfInit, public std::vector<PHPathPointWithJacobian>{
 	bool bReady;
 	bool bLoop;	//[-pi, pi]ÇÃñ≥å¿âÒì]ä÷êﬂ
 	iterator Find(double s);
@@ -52,7 +52,7 @@ public:
 	PHPath(const PHPathDesc& desc);
 };
 
-class PHPathJoint : public PHJoint1D, PHPathJointIfInit{
+class PHPathJoint : public PHJoint1D, public PHPathJointIfInit{
 	OBJECTDEF(PHPathJoint, PHJoint1D);
 	UTRef<PHPath> path;
 public:

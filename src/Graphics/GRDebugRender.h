@@ -18,7 +18,7 @@ namespace Spr{;
 
 /**	@class	GRDebugRender
     @brief	デバッグ情報レンダラーの実装　 */
-class GRDebugRender:public GRRender, GRDebugRenderIfInit{
+class GRDebugRender:public GRRender, public GRDebugRenderIfInit{
 	OBJECTDEF(GRDebugRender, GRRender);
 protected:
 	int matSampleCount;

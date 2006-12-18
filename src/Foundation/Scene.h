@@ -76,7 +76,7 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
 }
 
-class SPR_DLL NameManager:public NamedObject, NameManagerIfInit{
+class SPR_DLL NameManager:public NamedObject, public NameManagerIfInit{
 public:
 	OBJECTDEF(NameManager, NamedObject);
 protected:
@@ -127,13 +127,13 @@ public:
 };
 
 /**	シーンの基本クラス	*/
-class SPR_DLL Scene:public NameManager, SceneIfInit{
+class SPR_DLL Scene:public NameManager, public SceneIfInit{
 	OBJECTDEF(Scene, NameManager);
 public:
 	///	コンストラクタ
 };
 
-class SPR_DLL Sdk:public NameManager, SdkIfInit{
+class SPR_DLL Sdk:public NameManager, public SdkIfInit{
 	UTRef<TypeInfoManager> typeInfoManager;	//	typeInfo/IfInfoがsdkが消える前に消えることを避ける。
 protected:
 	friend struct SdkIf;

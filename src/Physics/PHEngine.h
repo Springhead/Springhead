@@ -49,7 +49,7 @@ enum PHBehaviorPriority{
 
 class PHScene;
 ///	動作エンジンの基本クラス．
-class PHEngine:public SceneObject, PHEngineIfInit{
+class PHEngine:public SceneObject, public PHEngineIfInit{
 	OBJECTDEF(PHEngine, SceneObject);
 public:
 	///	実行順序を決めるプライオリティ値．小さいほど早い

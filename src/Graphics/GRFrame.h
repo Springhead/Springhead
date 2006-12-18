@@ -15,7 +15,7 @@ namespace Spr{;
 
 /**	@class	GRVisual
     @brief	 */
-class GRVisual: public NamedObject, GRVisualIfInit{
+class GRVisual: public NamedObject, public GRVisualIfInit{
 public:
 	OBJECTDEF_ABST(GRVisual, NamedObject);
 	virtual void Render(GRRenderIf* render){}
@@ -24,7 +24,7 @@ public:
 
 /**	@class	GRFrame
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
-class GRFrame: public GRVisual, GRFrameIfInit, public GRFrameDesc{
+class GRFrame: public GRVisual, public GRFrameIfInit, public GRFrameDesc{
 public:
 	OBJECTDEF(GRFrame, GRVisual);
 	ACCESS_DESC(GRFrame);

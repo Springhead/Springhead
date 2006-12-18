@@ -229,7 +229,7 @@ struct IfInitTemplate{
 namespace Spr{;
 
 /**	全Objectの基本型	*/
-class Object:public ObjectIfBuf, ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
+class Object:public ObjectIfBuf, public ObjectIfInit, public UTTypeInfoObjectBase, public UTRefCount{
 	void GetIfInfo() { assert(0); }	//	don't call me
 public:
 	OBJECTDEF_FOR_OBJ(Object);		///<	クラス名の取得などの基本機能の実装
@@ -301,7 +301,7 @@ protected:
 class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
-class NamedObject: public Object, NamedObjectIfInit{
+class NamedObject: public Object, public NamedObjectIfInit{
 	OBJECTDEF(NamedObject, Object);		///<	クラス名の取得などの基本機能の実装
 protected:
 	friend class ObjectNames;
@@ -325,7 +325,7 @@ protected:
 class Scene;
 /**	Sceneが所有するObject型．
 	所属するSceneへのポインタを持つ	*/
-class SceneObject:public NamedObject, SceneObjectIfInit{
+class SceneObject:public NamedObject, public SceneObjectIfInit{
 	OBJECTDEF(SceneObject, NamedObject);	///<	クラス名の取得などの基本機能の実装
 public:
 	virtual void SetScene(SceneIf* s);
@@ -383,7 +383,7 @@ public:
 #define FactoryImp(cls)	FactoryImpTemplate<cls, cls##If, cls##Desc>
 
 ///	シーングラフの状態を保存．再生する仕組み
-class ObjectStates:public Object, ObjectStatesIfInit{
+class ObjectStates:public Object, public ObjectStatesIfInit{
 protected:
 	char* state;	///<	状態(XXxxxxState)を並べたもの
 	size_t size;	///<	状態の長さ

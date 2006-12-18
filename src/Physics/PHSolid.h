@@ -81,7 +81,7 @@ enum PHIntegrationMode{
 class PHTreeNode;
 
 ///	剛体
-class PHSolid : public SceneObject, PHSolidIfInit, public PHSolidDesc{
+class PHSolid : public SceneObject, public PHSolidIfInit, public PHSolidDesc{
 protected:
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
