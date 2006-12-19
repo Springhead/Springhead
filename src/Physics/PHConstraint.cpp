@@ -138,8 +138,6 @@ void PHConstraint::CompResponseMatrix(){
 }
 
 void PHConstraint::SetupLCP(){
-	FPCK_FINITE(f.v());
-
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
 	if(!bEnabled || !bFeasible)
 		return;
@@ -159,6 +157,7 @@ void PHConstraint::SetupLCP(){
 		else f[i] = 0.0;					// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
 		constr[i] = con[i];
 	}
+	FPCK_FINITE(f.v());
 
 	// ABA‚Ìê‡‚Í‚±‚±‚Ü‚Å
 	if(bArticulated)return;

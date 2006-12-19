@@ -21,14 +21,12 @@ public:
 	
 	bool		Includes(PHTreeNode* node);		///< 自分以下にノードnodeがあるか
 	PHTreeNode*	FindBySolid(PHSolid* solid);	///< 自分以下のツリーでsolidを参照しているノードを探す
+	PHTreeNode* FindByJoint(PHJoint* joint);	///< 自分以下のツリーでjointを参照しているノードを探す
+	void		RemoveGearNode();
 	//int GetNumOfNodes();
 	//int GetTotalDof();							///< 子ノードを含めた自由度の合計
 	//int AssignID(int id, std::vector<PHTreeNode*>& table);		///< 再帰的にIDを割り振る
 
-	void CompIsolatedInertia();
-	void CompIsolatedBiasForce();
-	void CompSpatialTransform();					///< ノード間の座標変換の計算
-	void CompCoriolisAccel();
 	PHTreeNode();
 
 	virtual PHSolid*	GetSolid(){return joint->solid[1];}
@@ -41,8 +39,12 @@ public:
 	virtual void CompBiasForceDiff(bool bUpdate){}
 	virtual void SetupLCP();
 	virtual void IterateLCP();
+	virtual void InitArticulatedInertia();
+			void InitArticulatedBiasForce();
 	virtual void CompArticulatedInertia();			///< Articulated Inertiaの計算
 	virtual void CompArticulatedBiasForce();		///< Articulated Bias Forceの計算
+	virtual	void CompSpatialTransform();			///< ノード間の座標変換の計算
+	virtual void CompCoriolisAccel();
 	virtual void CompJointJacobian(){}				///< 関節ヤコビアンを計算
 	virtual void CompJointCoriolisAccel(){}			///< コリオリの加速度を計算	
 	virtual void AccumulateInertia(){}				///< Iaを親ノードのIaに積み上げる
@@ -65,10 +67,10 @@ public:
 	SpatialVector			cj;				///< 関節速度によるコリオリ加速度
 
 	SpatialTransform		Xcp, Xcj;
-	SpatialMatrix			IJ_JIJinv_Jtr, IJ_JIJinv_JtrI;
+	SpatialMatrix			XIX, XtrIJ_JIJinv_Jtr, XtrIJ_JIJinv_JtrIX;
 	SpatialVector			a;				///< 加速度
 	SpatialVector			da;				///< 拘束力の変化によるaの変化量
-	SpatialVector			ap, Ic, ZplusIc;
+	SpatialVector			ap, Ic, ZplusIc, XtrZplusIc;
 
 	PHScene*	scene;
 	PHConstraintEngine* engine;
@@ -95,7 +97,7 @@ protected:
 	SpatialMatrix		Iinv;
 };
 
-///	他自由度の関節の基本クラス
+///	N自由度の関節の基本クラス
 template<int NDOF>
 class PHTreeNodeND : public PHTreeNode{
 public:
@@ -116,10 +118,9 @@ public:
 	PHTreeNodeND();
 protected:
 	bool			constr[NDOF];		///< ABAとして各自由度を拘束するか
-	SpatialVector	J[NDOF];
-	SpatialVector	IJ[NDOF], IJ_JIJinv[NDOF], J_JIJinv[NDOF];
+	SpatialVector	J[NDOF], IJ[NDOF], XtrIJ[NDOF], J_JIJinv[NDOF], IJ_JIJinv[NDOF], XtrIJ_JIJinv[NDOF];
 	PTM::TMatrixCol<NDOF, NDOF, double> JIJ, JIJinv;
-	PTM::TVector<NDOF, double>	J_ZplusIc;
+	PTM::TVector<NDOF, double>	JtrZplusIc;
 	PTM::TVector<NDOF, double>	accel, daccel, dtau;
 	PTM::TVector<NDOF, double> A, Ainv, dA, b, db, f;
 	void		CompResponse(const PTM::TVector<NDOF, double>& tau, bool bUpdate = true);
@@ -128,34 +129,38 @@ protected:
 };
 
 ///	1自由度の関節
+class PHTreeNode1D;
 class PHTreeNode1D : public PHTreeNodeND<1>{
 public:
-	//virtual void AccumulateInertia();
-	//virtual void AccumulateBiasForce();
-	//virtual void CompJointJacobian();
-	//virtual void CompAccel();
-	//virtual void CompAccelDiff(bool bUpdate);
-	//virtual void CompBiasForceDiff(bool bUpdate);
-	//virtual void UpdateJointVelocity(double dt);
-	//virtual void UpdateJointPosition(double dt);
-	//virtual void SetupLCP();
-	//virtual void IterateLCP();
-
-	//virtual void CompBias()=0;
-	virtual void Projection(double& f, int k);
-
-/*	PHTreeNode1D();
-protected:
-	bool			constr;						///< ABAとして関節軸自由度を拘束するか
-	SpatialVector	J;							///< 関節ヤコビアン．1軸なのでベクトル
-	SpatialVector	IJ, J_JIJinv, IJ_JIJinv;
-	double			JIJ, JIJinv, J_ZplusIc;
-	double			accel, daccel, dtau;
-	double			A, Ainv, dA, b, db, f;
-	void			CompResponse(double, bool bUpdate = true);
-	void			CompResponseMatrix();*/
+	OBJECTDEF_ABST_NOIF(PHTreeNode1D, PHTreeNode);
+	PHGear*			gear;				///< ギアへの参照．このギアを介してgearedParentノードと連動する
+	/// ギアノードへの参照．NULL->連動なし, this->ギアトレイン最上段
+	PHTreeNode1D*	gearNode;
+	PHTreeNode1D*	parent1D;
+	SpatialTransform	Xcg;			///< ギアトレインの親ノードとの間の座標変換
+	SpatialMatrix	sumXIX;
+	SpatialVector	sumXtrIJ, sumXtrIJ_sumJIJinv;
+	SpatialVector	sumXtrZplusIc, sumXtrdZ;
+	double			sumJIJ, sumJIJinv;
+	double			sumJtrZplusIc, sumJtrdZ;
+	double			sumtorque;
+	
+	void			AddGear(PHGear* gear, PHTreeNode1D* child);
 	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
-
+	virtual void	CompSpatialTransform();
+	virtual void	CompJointJacobian();
+	virtual void	CompCoriolisAccel();
+	virtual void	InitArticulatedInertia();
+	virtual void	AccumulateInertia();
+	virtual void	AccumulateBiasForce();
+	virtual void	CompBiasForceDiff(bool bUpdate);
+	virtual void	CompAccel();
+	virtual void	CompAccelDiff(bool bUpdate);
+	virtual void	Projection(double& f, int k);
+	virtual void	UpdateJointVelocity(double dt);
+	virtual void	UpdateJointPosition(double dt);
+	
+	PHTreeNode1D();
 };
 
 }

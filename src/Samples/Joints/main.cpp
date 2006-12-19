@@ -296,14 +296,14 @@ void BuildScene5(){
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 	//以下を有効化すると鎖がABAで計算されて関節のドリフトが防がれる．
 	//現状ではABAでの関節バネは未実装
-	/*
+	
 	PHTreeNodeIf* node = scene->CreateRootNode(soFloor);
 	node = scene->CreateTreeNode(node, soBox[0]);
 	node = scene->CreateTreeNode(node, soBox[1]);
 	node = scene->CreateTreeNode(node, soBox[2]);
 	node = scene->CreateTreeNode(node, soBox[3]);
 	node = scene->CreateTreeNode(node, soBox[4]);
-	*/
+	
 	
 	double K = 2000, D = 100;
 	//double K = 100000, D = 10000;	
@@ -319,10 +319,9 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 #ifndef USE_EXPLICIT
 	PHSpringDesc descSpring;
-	descSpring.spring = 600 * 0.1 *Vec3f(1,1,1);
-	descSpring.damper = 50 * 0.1 *Vec3f(1,1,1);
+	descSpring.spring = 2000 * 0.1 *Vec3f(1,1,1);
+	descSpring.damper = 100 * 0.1 *Vec3f(1,1,1);
 	jntLink[5] = scene->CreateJoint(soBox[4], soBox[5], descSpring);
-	
 #endif
 
 	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 1.0));
@@ -354,20 +353,21 @@ void OnKey0(char key){
 		PHHingeJointDesc jdesc;
 		jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
 		jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
-		jdesc.lower = Rad(-30.0);
-		jdesc.upper = Rad( 30.0);
+		//jdesc.lower = Rad(-30.0);
+		//jdesc.upper = Rad( 30.0);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
-		// 以下はギアの作成コード
-		/*if(jntLink.size() >= 2){
-			size_t m = jntLink.size();
-			PHGearDesc gdesc;
-			gdesc.ratio = 0.5;
-			scene->CreateGear(DCAST(PHJoint1DIf, jntLink[m-2]), DCAST(PHJoint1DIf, jntLink[m-1]), gdesc);
-		}*/
 		// ツリーノードを作成し，ABAで計算するように指定
 		if(key == ' ')
 			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
+		// 以下はギアの作成コード
+		if(jntLink.size() >= 2){
+			size_t m = jntLink.size();
+			PHGearDesc gdesc;
+			gdesc.ratio = 1.0;
+			scene->CreateGear(DCAST(PHJoint1DIf, jntLink[m-2]), DCAST(PHJoint1DIf, jntLink[m-1]), gdesc);
+		}
+		scene->SetContactMode(PHSceneDesc::MODE_NONE);
 		}break;
 	}
 }

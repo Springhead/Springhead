@@ -10,13 +10,13 @@
 
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHConstraint.h>
+#include <Physics/PHGear.h>
 
 namespace Spr{;
 
 class PHSolid;
 class PHJoint;
 class PHRootNode;
-class PHGear;
 class PHConstraintEngine;
 
 ///	形状の組
@@ -71,7 +71,6 @@ public:
 	PHConstraints	joints;			///< 関節の配列
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
-	typedef std::vector< UTRef<PHGear> > PHGears;
 	PHGears			gears;
 	
 	void SetupLCP();	///< 速度更新LCPの準備

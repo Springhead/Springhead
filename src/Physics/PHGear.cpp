@@ -19,7 +19,8 @@ namespace Spr{;
 IF_OBJECT_IMP(PHGear, SceneObject);
 
 PHGear::PHGear(){
-	f = 0.0;
+	f = A = Ainv = b = 0.0;
+	bArticulated = false;
 }
 
 void PHGear::SetDesc(const PHGearDesc& desc){
@@ -45,6 +46,7 @@ void PHGear::CompResponse(double f){
 }
 
 void PHGear::SetupLCP(){
+	if(bArticulated)return;
 	f *= engine->shrinkRate;
 	
 	// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
@@ -56,6 +58,7 @@ void PHGear::SetupLCP(){
 }
 
 void PHGear::IterateLCP(){
+	if(bArticulated)return;
 	double fnew;
 	double b[2];
 	for(int i = 0; i < 2; i++){

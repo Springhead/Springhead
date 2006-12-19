@@ -26,6 +26,7 @@ public:
 	PHScene*			scene;
 	PHConstraintEngine* engine;
 	PHJoint1D*	joint[2];
+	bool		bArticulated;
 	double		ratio;
 	double		A, Ainv, b;
 	double		f;
@@ -35,6 +36,16 @@ public:
 	void	SetupLCP();
 	void	IterateLCP();
 	PHGear();
+};
+
+class PHGears : public std::vector< UTRef<PHGear> >{
+public:
+	PHGear* FindByJointPair(PHJoint1D* lhs, PHJoint1D* rhs){
+		for(iterator it = begin(); it != end(); it++)
+			if((*it)->joint[0] == lhs && (*it)->joint[1] == rhs)
+				return *it;
+		return NULL;
+	}
 };
 
 }

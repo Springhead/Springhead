@@ -101,6 +101,7 @@ void PHHingeJointNode::CompBias(){
 	}
 	else if(j->spring != 0.0 || j->damper != 0.0){
 		diff = j->GetPosition() - j->origin;
+		// diffが非常に大きな値をとると浮動小数点精度の限界から以下が無限ループになる場合がある模様
 		while(diff >  M_PI) diff -= 2 * M_PI;
 		while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (j->damper + j->spring * dt);

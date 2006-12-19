@@ -272,13 +272,16 @@ PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
 	if(!joint)return NULL;
 	//ノードを作成
 	PHTreeNode* node = joint->CreateTreeNode();
+	//オブジェクト間のリンク
 	node->joint = joint;
 	node->scene = DCAST(PHScene, GetScene());
 	node->engine = this;
-
+	parent->AddChild(node);
 	joint->bArticulated = true;
 	joint->solid[1]->treeNode = node;
-	parent->AddChild(node);
+
+	//ギアノードの更新
+
 	return node;
 }
 
@@ -290,6 +293,17 @@ PHGear* PHConstraintEngine::AddGear(PHJoint1D* lhs, PHJoint1D* rhs, const PHGear
 	gear->scene = DCAST(PHScene, GetScene());
 	gear->engine = this;
 	gears.push_back(gear);
+	//lhsとrhsが同一のABAツリーで親子関係にある場合、ギアノードを更新する
+	PHTreeNode1D *nodeL, *nodeR;
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
+		nodeL = DCAST(PHTreeNode1D, (*it)->FindByJoint(lhs));
+		nodeR = DCAST(PHTreeNode1D, (*it)->FindByJoint(rhs));
+		if(!nodeL || !nodeR)continue;
+		if(nodeL->GetParent() == nodeR)
+			nodeR->AddGear(gear, nodeL);
+		else if(nodeR->GetParent() == nodeL)
+			nodeL->AddGear(gear, nodeR);
+	}
 	return gear;
 }
 

@@ -38,6 +38,16 @@ PHTreeNode*	PHTreeNode::FindBySolid(PHSolid* solid){
 	return NULL;
 }
 
+PHTreeNode*	PHTreeNode::FindByJoint(PHJoint* j){
+	if(joint == j)return this;
+	PHTreeNode* node;
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++){
+		node = (*it)->FindByJoint(j);
+		if(node)return node;
+	}
+	return NULL;
+}
+
 /*int PHTreeNode::GetTotalDof(){
 	int dof = GetDof();
 	for(int i = 0; i < Children().size(); i++)
@@ -84,7 +94,7 @@ void PHTreeNode::CompCoriolisAccel(){
 	c *= scene->GetTimeStep();
 }
 
-void PHTreeNode::CompIsolatedInertia(){
+void PHTreeNode::InitArticulatedInertia(){
 	double m = GetSolid()->GetMass();
 	I.vv() = Matrix3d::Diag(m, m, m);
 	I.vw().clear();
@@ -93,7 +103,7 @@ void PHTreeNode::CompIsolatedInertia(){
 }
 
 void PHTreeNode::CompArticulatedInertia(){
-	CompIsolatedInertia();
+	InitArticulatedInertia();
 	CompSpatialTransform();
 	CompJointJacobian();
 
@@ -110,7 +120,7 @@ void PHTreeNode::CompArticulatedInertia(){
 	AccumulateInertia();
 }
 
-void PHTreeNode::CompIsolatedBiasForce(){
+void PHTreeNode::InitArticulatedBiasForce(){
 	// PHSolidInfoのdvが似たような式なので共有化したほうがいい
 	PHSolid* s = GetSolid();
 	if(s->IsDynamical()){
@@ -122,7 +132,7 @@ void PHTreeNode::CompIsolatedBiasForce(){
 }
 
 void PHTreeNode::CompArticulatedBiasForce(){
-	CompIsolatedBiasForce();
+	InitArticulatedBiasForce();
 
 	//子ノードにZaを計算させる．
 	//子ノード達は親ノード（つまりこのノード）に自分のZaを積み上げる
@@ -191,7 +201,7 @@ void PHRootNode::SetupABA(){
 }
 
 void PHRootNode::CompArticulatedInertia(){
-	CompIsolatedInertia();
+	InitArticulatedInertia();
 
 	//子ノードにIaを計算させる．
 	//子ノード達は親ノード（つまりこのノード）に自分のIaを積み上げる
@@ -203,7 +213,7 @@ void PHRootNode::CompArticulatedInertia(){
 }
 
 void PHRootNode::CompArticulatedBiasForce(){
-	CompIsolatedBiasForce();
+	InitArticulatedBiasForce();
 
 	//子ノードにZaを計算させる．
 	//子ノード達は親ノード（つまりこのノード）に自分のZaを積み上げる
@@ -258,8 +268,12 @@ PHTreeNodeND<NDOF>::PHTreeNodeND(){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::AccumulateInertia(){
+	Xtr_Mat_X(XIX, Xcp, I);
+
 	for(int i = 0; i < NDOF; i++)
 		IJ[i] = I * J[i];
+	for(int i = 0; i < NDOF; i++)
+		XtrIJ[i] = Xcp.trans() * IJ[i];
 	for(int i = 0; i < NDOF; i++)for(int j = 0; j < NDOF; j++)
         JIJ[i][j] = J[i] * IJ[j];
 	JIJinv = JIJ.inv();
@@ -278,26 +292,31 @@ void PHTreeNodeND<NDOF>::AccumulateInertia(){
 			IJ_JIJinv[i] += IJ[j] * JIJinv[j][i];
 		}
 	}
-	// IJ_JIJinv_Jtr
-	IJ_JIJinv_Jtr.clear();
+	// XtrIJ_JIJinv
+	for(int i = 0; i < NDOF; i++){
+		XtrIJ_JIJinv[i].clear();
+		for(int j = 0; j < NDOF; j++){
+			XtrIJ_JIJinv[i] += XtrIJ[j] * JIJinv[j][i];
+		}
+	}
+	// XtrIJ_JIJinv_Jtr
+	XtrIJ_JIJinv_Jtr.clear();
 	for(int i = 0; i < NDOF; i++)
-		IJ_JIJinv_Jtr += VVtr(IJ_JIJinv[i], J[i]);
-	// IJ_JIJinv_JtrI
-	IJ_JIJinv_JtrI.clear();
+		XtrIJ_JIJinv_Jtr += VVtr(XtrIJ_JIJinv[i], J[i]);
+	// XtrIJ_JIJinv_JtrIX
+	XtrIJ_JIJinv_JtrIX.clear();
 	for(int i = 0; i < NDOF; i++)
-		IJ_JIJinv_JtrI += VVtr(IJ_JIJinv[i], IJ[i]);
-
-	SpatialMatrix tmp;
-	Xtr_Mat_X(tmp, Xcp, I - IJ_JIJinv_JtrI);
-	GetParent()->I += tmp;
+		XtrIJ_JIJinv_JtrIX += VVtr(XtrIJ_JIJinv[i], XtrIJ[i]);
+	
+	GetParent()->I += (XIX - XtrIJ_JIJinv_JtrIX);
 }
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 	for(int i = 0; i < NDOF; i++)
-		J_ZplusIc[i] = J[i] * ZplusIc;
+		JtrZplusIc[i] = J[i] * ZplusIc;
 
-	TVector<NDOF, double> tmp = GetJoint()->torque * scene->GetTimeStep() - J_ZplusIc;
+	TVector<NDOF, double> tmp = GetJoint()->torque * scene->GetTimeStep() - JtrZplusIc;
 	SpatialVector tmp2;
 	for(int i = 0; i < NDOF; i++)
 		tmp2 += IJ_JIJinv[i] * tmp[i];
@@ -318,7 +337,7 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 	TVector<NDOF, double> IJ_ap;
 	for(int i = 0; i < NDOF; i++)
 		IJ_ap[i] = IJ[i] * ap;
-	accel = JIJinv * (GetJoint()->torque * scene->GetTimeStep() - IJ_ap - J_ZplusIc);
+	accel = JIJinv * (GetJoint()->torque * scene->GetTimeStep() - IJ_ap - JtrZplusIc);
 
 	//重心周りの加速度(子ノードの積分で使用する)
 	SpatialVector J_accel;
@@ -335,7 +354,7 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompBiasForceDiff(bool bUpdate){
 	if(bUpdate)
 		Z += dZ;
-	GetParent()->dZ = Xcp.trans() * (dZ - IJ_JIJinv_Jtr * dZ);
+	GetParent()->dZ = Xcp.trans() * dZ - XtrIJ_JIJinv_Jtr * dZ;
 	GetParent()->CompBiasForceDiff(bUpdate);
 }
 
@@ -436,41 +455,126 @@ void PHTreeNodeND<NDOF>::IterateLCP(){
 }
 
 //-----------------------------------------------------------------------------
-//IF_OBJECT_IMP(PHTreeNode1D, PHTreeNode);
+OBJECT_IMP_ABST(PHTreeNode1D, PHTreeNode);
 
-/*PHTreeNode1D::PHTreeNode1D(){
-	f = 0.0;
+PHTreeNode1D::PHTreeNode1D(){
+	gear = NULL;
+	gearNode = NULL;
+	parent1D = NULL;
+	sumJIJ = sumJIJinv = 0.0;
+	sumJtrZplusIc = sumJtrdZ = 0.0;
+	sumtorque = 0.0;
+}
+
+void PHTreeNode1D::AddGear(PHGear* gear, PHTreeNode1D* child){
+	//このノードが更に上のノードと連動していない場合はこのノードがトップになる
+	if(!gearNode)
+		gearNode = this;
+	child->gearNode = gearNode;
+	child->gear = gear;
+	child->parent1D = this;
+	gear->bArticulated = true;
+}
+
+void PHTreeNode1D::InitArticulatedInertia(){
+	PHTreeNode::InitArticulatedInertia();
+	if(gearNode == this){
+		sumXIX.clear();
+		sumXtrIJ.clear();
+		sumXtrIJ_sumJIJinv.clear();
+		sumXtrZplusIc.clear();
+		sumJIJ = sumJIJinv = 0.0;
+		sumJtrZplusIc = 0.0;
+		sumtorque = 0.0;
+	}
+}
+
+void PHTreeNode1D::CompCoriolisAccel(){
+	PHTreeNode::CompCoriolisAccel();
+	//ギア連動している場合は上段のコリオリ項を足す
+	if(gearNode && gearNode != this)
+		c += Xcp * GetParent()->c;
 }
 
 void PHTreeNode1D::AccumulateInertia(){
-	IJ             = I * J;
-	JIJ            = J * IJ;
-	JIJinv         = 1.0 / JIJ;
-	J_JIJinv       = J * JIJinv;
-	IJ_JIJinv      = IJ * JIJinv;
-	IJ_JIJinv_Jtr  = VVtr(IJ_JIJinv, J);
-	IJ_JIJinv_JtrI = VVtr(IJ_JIJinv, IJ);
-	GetParent()->I += Xtr_Mat_X(Xcp, I - IJ_JIJinv_JtrI);
+	Xtr_Mat_X(XIX, Xcg, I);
+	IJ[0]				= I * J[0];
+	XtrIJ[0]			= Xcg.trans() * IJ[0];
+	JIJ[0][0]			= J[0] * IJ[0];
+	JIJinv[0][0]		= 1.0 / JIJ[0][0];
+	J_JIJinv[0]			= J[0] * JIJinv[0][0];
+	IJ_JIJinv[0]		= IJ[0] * JIJinv[0][0];
+	XtrIJ_JIJinv[0]		= XtrIJ[0] * JIJinv[0][0];
+	XtrIJ_JIJinv_Jtr	= VVtr(XtrIJ_JIJinv[0], J[0]);
+	XtrIJ_JIJinv_JtrIX	= VVtr(XtrIJ_JIJinv[0], XtrIJ[0]);
+	
+	if(gearNode){
+		gearNode->sumXIX   += XIX;
+		gearNode->sumXtrIJ += XtrIJ[0];
+		gearNode->sumJIJ   += JIJ[0][0];
+	}
+	if(gearNode == this){
+		sumJIJinv = 1.0 / sumJIJ;
+		sumXtrIJ_sumJIJinv = sumXtrIJ * sumJIJinv;
+		GetParent()->I += (sumXIX - VVtr(sumXtrIJ, sumXtrIJ_sumJIJinv));
+	}
+	if(!gearNode)
+		GetParent()->I += (XIX - XtrIJ_JIJinv_JtrIX);
 }
 
 void PHTreeNode1D::AccumulateBiasForce(){
-  	J_ZplusIc = J * ZplusIc;
-	GetParent()->Z +=
-		Xcp.trans() * (ZplusIc + IJ_JIJinv * (GetJoint()->torque * scene->GetTimeStep() - J_ZplusIc));
+	JtrZplusIc[0] = J[0] * ZplusIc;
+	XtrZplusIc    = Xcp.trans() * ZplusIc;
+	
+  	if(gearNode){
+		gearNode->sumXtrZplusIc += XtrZplusIc;
+		gearNode->sumtorque     += GetJoint()->torque[0];
+		gearNode->sumJtrZplusIc += JtrZplusIc[0];
+	}
+
+	if(gearNode == this)
+		GetParent()->Z +=
+			sumXtrZplusIc + sumXtrIJ_sumJIJinv * (sumtorque * scene->GetTimeStep() - sumJtrZplusIc);
+	if(!gearNode)
+		GetParent()->Z +=
+			XtrZplusIc + XtrIJ_JIJinv[0] * (GetJoint()->torque[0] * scene->GetTimeStep() - JtrZplusIc[0]);
+}
+
+void PHTreeNode1D::CompSpatialTransform(){
+	PHTreeNode::CompSpatialTransform();
+	if(gearNode && gearNode != this)
+		 Xcg = Xcp * GetParent()->Xcp;
+	else Xcg = Xcp;
 }
 
 void PHTreeNode1D::CompJointJacobian(){
-	// 各派生クラスが設定したヤコビアンに座標変換をかける
-	J = Xcj * J;
+	PHTreeNodeND<1>::CompJointJacobian();
+	// ギア連動している場合は(上段ノードのヤコビアン＋ギア比*自分のヤコビアン)
+	if(gearNode && gearNode != this)
+		J[0] = Xcp * parent1D->J[0] + gear->ratio * J[0];
 }
 
 void PHTreeNode1D::CompAccel(){
-	ap = Xcp * GetParent()->a;
-	//加速度を計算
-	accel = JIJinv * (GetJoint()->torque * scene->GetTimeStep() - IJ * ap - J_ZplusIc);
+	//関節加速度
+	if(gearNode){
+		if(gearNode == this){
+			accel[0] = sumJIJinv * (GetJoint()->torque[0] * scene->GetTimeStep() - sumXtrIJ * GetParent()->a - sumJtrZplusIc);
+			a = ap + c + J[0] * accel[0];
+		}
+		else{
+			ap = Xcg * gearNode->GetParent()->a;
+			accel[0] = gear->ratio * DCAST(PHTreeNode1D, GetParent())->accel[0];
+			a = ap + c + J[0] * gearNode->accel[0];
+		}
+	}
+	else{
+		ap = Xcp * GetParent()->a;
+		accel[0] = JIJinv[0][0] * (GetJoint()->torque[0] * scene->GetTimeStep() - IJ[0] * ap - JtrZplusIc[0]);
+		a = ap + c + J[0] * accel[0];
+	}
+	//DSTR << accel[0] << endl;
+	//DSTR << GetJoint()->velocity[0] << endl;
 	
-	//重心周りの加速度(子ノードの積分で使用する)
-	a = ap + c + J * accel;
 	GetSolid()->dv = a;
 	
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
@@ -480,75 +584,53 @@ void PHTreeNode1D::CompAccel(){
 void PHTreeNode1D::CompBiasForceDiff(bool bUpdate){
 	if(bUpdate)
 		Z += dZ;
-	GetParent()->dZ = Xcp.trans() * (dZ - IJ_JIJinv_Jtr * dZ);
+	if(gearNode){
+		gearNode->sumXtrdZ += Xcg.trans() * dZ;
+		gearNode->sumJtrdZ += J[0] * dZ;
+	}	
+	if(gearNode == this){
+		GetParent()->dZ = sumXtrdZ - sumXtrIJ_sumJIJinv * sumJtrdZ;
+		sumXtrdZ.clear();
+		sumJtrdZ = 0.0;
+	}
+	if(!gearNode)
+        GetParent()->dZ = Xcp.trans() * dZ - XtrIJ_JIJinv_Jtr * dZ;
 	GetParent()->CompBiasForceDiff(bUpdate);
 }
 
 void PHTreeNode1D::CompAccelDiff(bool bUpdate){
-	SpatialVector dap = Xcp * GetParent()->da;
-	daccel = JIJinv * dtau - IJ_JIJinv * dap - J_JIJinv * dZ;
+	SpatialVector dap;
+	if(gearNode){
+		if(gearNode == this){
+			daccel[0] = sumJIJinv * (dtau[0] - sumXtrIJ * GetParent()->da - sumJtrdZ);
+			da = dap + J[0] * daccel[0];
+		}
+		else{
+			dap = Xcg * gearNode->GetParent()->da;
+			daccel[0] = gear->ratio * parent1D->daccel[0];
+			da = dap + J[0] * gearNode->daccel[0];
+		}
+	}
+	else{
+		dap = Xcp * GetParent()->da;
+		daccel[0] = JIJinv[0][0] * dtau[0] - IJ_JIJinv[0] * dap - J_JIJinv[0] * dZ;
+		da = dap + J[0] * daccel[0];
+	}
 	dZ.clear(); // 次回の呼び出しのためにここでクリア
-	dtau = 0.0;
-	da = dap + J * daccel;
+	dtau.clear();
 	if(bUpdate){
-		accel += daccel;
+		accel[0] += daccel[0];
 		a += da;
 		GetSolid()->dv = a;
 	}
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->CompAccelDiff(bUpdate);
 }
-void PHTreeNode1D::UpdateJointVelocity(double dt){
-	GetJoint()->velocity += accel;
-}
-void PHTreeNode1D::UpdateJointPosition(double dt){
-	GetJoint()->position += GetJoint()->velocity * dt;
-}
 
-void PHTreeNode1D::CompResponse(double _dtau, bool bUpdate){
+/*void PHTreeNode1D::CompResponse(double _dtau, bool bUpdate){
 	dtau = _dtau;
 	GetParent()->dZ = Xcp.trans() * (IJ_JIJinv * dtau);
 	GetParent()->CompBiasForceDiff(bUpdate);
-}
-
-void PHTreeNode1D::CompResponseMatrix(){
-	const double eps = 1.0e-3;
-	CompResponse(1.0, false);
-	A = max(eps, daccel);
-}
-
-void PHTreeNode1D::SetupLCP(){
-	PHJoint1D* j = GetJoint();
-	bool con = j->constr[j->axisIndex[0]];
-	if(con && constr)				// 継続して拘束される場合
-		 f *= engine->shrinkRate;
-	else f = 0.0;					// 新規に拘束される or 拘束されない
-	constr = con;
-
-	if(constr){
-		// LCPのbベクトル
-		b = GetJoint()->velocity;
-		CompBias();	// 目標速，バネダンパによる補正項を計算
-		b += db;
-		// LCPのA行列の対角成分を計算
-		CompResponseMatrix();
-		Ainv = 1.0 / (A + dA);
-		// 拘束力初期値による速度変化量を計算
-		CompResponse(f);
-	}
-	PHTreeNode::SetupLCP();
-}
-
-void PHTreeNode1D::IterateLCP(){
-	if(constr){
-		double fnew, df;
-		fnew = f - Ainv * (dA * f + b + accel);
-		Projection(fnew);
-		df = fnew - f;
-		CompResponse(df);
-		f = fnew;
-	}
-	PHTreeNode::IterateLCP();
 }*/
 
 void PHTreeNode1D::Projection(double& _f, int k){
@@ -557,6 +639,18 @@ void PHTreeNode1D::Projection(double& _f, int k){
 		_f = max(0.0, _f);
 	if(j->onUpper)
 		_f = min(0.0, _f);
+}
+
+void PHTreeNode1D::UpdateJointVelocity(double dt){
+	if(gearNode && gearNode != this)
+		 GetJoint()->velocity = gear->ratio * parent1D->GetJoint()->velocity;
+	else PHTreeNodeND<1>::UpdateJointVelocity(dt);
+}
+
+void PHTreeNode1D::UpdateJointPosition(double dt){
+	if(gearNode && gearNode != this)
+		 GetJoint()->position = gear->ratio * parent1D->GetJoint()->position;
+	else PHTreeNodeND<1>::UpdateJointPosition(dt);
 }
 
 }
