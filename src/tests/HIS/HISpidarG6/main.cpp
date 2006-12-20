@@ -358,8 +358,8 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 				{
 					map<PHSolid *, SpatialVector>::iterator it1 = vecs.find(so);
 					SpatialVector sv = (*it1).second;
-					info->vel_constant[counter] = sv.v;
-					info->ang_constant[counter] = sv.w;
+					info->vel_constant[counter] = sv.v();
+					info->ang_constant[counter] = sv.w();
 
 					map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >::iterator it2 = matrices.find(so);
 					vector<pair<Matrix3d, Matrix3d> > mm_vector = (*it2).second;
@@ -734,8 +734,8 @@ vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > point
 		dv_save = si->dv;
 
 		// 引数で与えられた単位力を加える
-		si->dv.v += si->GetMassInv() * force_vec * dt;
-		si->dv.w += si->GetInertiaInv() * (((contact->pos - si->GetCenterPosition()) ^ force_vec) - cef->second) * dt;
+		si->dv.v() += si->GetMassInv() * force_vec * dt;
+		si->dv.w() += si->GetInertiaInv() * (((contact->pos - si->GetCenterPosition()) ^ force_vec) - cef->second) * dt;
 	}
 
 	// シミュレーションに必要な情報をセットアップ
@@ -876,8 +876,8 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 			// 先ほど加えた単位力から、影響を求めて行列を作成する
 			// なおトルクについては半径と力の外積が分解されて
 			// 半径の外積が行列化されてすでに反映されているはずである
-			Matrix3d v = Matrix3d(sv_x.v / 10.0 - sv.v, (sv_y.v - sv_x.v) / 10.0 - sv.v, (sv_z.v - sv_x.v) / 10.0 - sv.v);
-			Matrix3d w = Matrix3d(sv_x.w / 10.0 - sv.w, (sv_y.w - sv_x.w) / 10.0 - sv.w, (sv_z.w - sv_x.w) / 10.0 - sv.w);
+			Matrix3d v = Matrix3d(sv_x.v() / 10.0 - sv.v(), (sv_y.v() - sv_x.v()) / 10.0 - sv.v(), (sv_z.v() - sv_x.v()) / 10.0 - sv.v());
+			Matrix3d w = Matrix3d(sv_x.w() / 10.0 - sv.w(), (sv_y.w() - sv_x.w()) / 10.0 - sv.w(), (sv_z.w() - sv_x.w()) / 10.0 - sv.w());
 
 			// データの格納。			
 			pair<Matrix3d, Matrix3d> p = pair<Matrix3d, Matrix3d>(v, w);
@@ -1241,6 +1241,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		Vec3d correct_torque = Vec3d();
 		int num_cols = 0;
 
+		double DATA[NUM_COLLISIONS][3];
+
 		for(int i = 0; i < info->num_solids; i++)
 		{
 			// 局所的な動力学計算では重力が考慮されていないので
@@ -1324,14 +1326,39 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 					// めり込んでいたら補正用のデータを更新
 					if(vector_coeff > 0)
 					{
-						// めり込んでた接触の個数
-						num_cols++;
-
+						/*
 						Vec3d col_normal = vector_coeff * info->current_col_normals[col_index].unit();
 						correct_vector += col_normal;
 
 						// 回転：侵入量を力と見て、トルクを計算するようにして補正量を求める
 						correct_torque += (info->pointer_current_col_positions[col_index] - pointer_pos) ^ (col_vector - col_normal);
+						*/
+
+						
+						Vec3d temp = col_vector - pointer_pos;
+
+						Const[num_cols][0] = temp.x;
+						Const[num_cols][1] = temp.y;
+						Const[num_cols][2] = temp.z;
+
+						g[0] = g[1] = g[2] = 1;
+
+						Vec3d r = info->pointer_current_col_positions[col_index] - pointer_pos;
+
+						w_x[num_cols][0] = 0;
+						w_y[num_cols][0] = r.z;
+						w_z[num_cols][0] = - r.y;
+
+						w_x[num_cols][1] = - r.z;
+						w_y[num_cols][1] = 0;
+						w_z[num_cols][1] = r.x;
+
+						w_x[num_cols][2] = r.y;
+						w_y[num_cols][2] = - r.x;
+						w_z[num_cols][2] = 0;
+
+						// めり込んでた接触の個数
+						num_cols++;
 					}
 				}
 			}
@@ -1347,6 +1374,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		// ポインタ自身を回転させてめり込みを解消させるようにする
 		if(bCorrectPenetration && num_cols)
 		{
+
+			/*
 			// 平均を取って急激に変化しないようにする
 			correct_vector /= (double)num_cols;
 			correct_torque /= (double)num_cols;
@@ -1368,6 +1397,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				info->pointer_current_col_positions[i] += correct_torque ^ (info->current_col_positions[i] - info->pointer_current_col_positions[i]);
 				info->pointer_current_col_positions[i] += P_CORRECTION_COEFF * correct_vector;
 			}
+			*/
 		}
 	}
 
