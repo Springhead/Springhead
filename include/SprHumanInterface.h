@@ -11,5 +11,8 @@
 */
 #ifndef SPR_HUMANINTERFACE_H
 #define SPR_HUMANINTERFACE_H
+#include <HumanInterface/SprHISdk.h>
 #include <HumanInterface/SprHIBase.h>
+#include <HumanInterface/SprHIDevice.h>
+#include <HumanInterface/SprHIDeviceManager.h>
 #endif

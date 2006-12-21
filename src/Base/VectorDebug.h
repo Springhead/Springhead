@@ -8,6 +8,7 @@
 #ifndef VECTOR_DEBUG_H
 #define VECTOR_DEBUG_H
 #include "TMatrix.h"
+#include "math.h"
 
 namespace Spr{;
 

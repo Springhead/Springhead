@@ -297,6 +297,11 @@ protected:
 	///	sをoのStateからメモリブロックに戻す．
 	static void DestructState(ObjectIf* o, char*& s);
 };
+///	coutなどのストリームにObjectを出力する演算子．ObjectのPrintを呼び出す．
+inline std::ostream& operator << (std::ostream& os, const Object& o){
+	o.Print(os);
+	return os;
+}
 
 class NameManager;
 /**	名前を持つObject型．

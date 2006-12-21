@@ -120,13 +120,13 @@ public:																	\
 	static const IfInfo* SPR_CDECL GetIfInfoStatic();					\
 	static void* operator new(size_t) {									\
         assert(0);	/*	Don't allocate interfaces	*/					\
-        return NULL;													\
+        return (void*)1;												\
     }																	\
 	static void operator delete(void* pv) { /*	nothing	to do */ }		\
 	/*	? -> If	*/														\
 	template <class O>													\
 	static cls##If* GetSelf(const O * p){								\
-		return p->GetIf((cls##If*)0);									\
+		return p ? p->GetIf((cls##If*)0) : NULL;						\
 	}																	\
 	/*	同型のIf -> If	*/												\
 	cls##If* GetIf(cls##If* i) const { return (cls##If*)this; }			\
@@ -145,7 +145,7 @@ public:																	\
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	IF_DEF_FOR_OBJECTIF(Object);
-	~ObjectIf();
+	virtual ~ObjectIf();
 	///	オブジェクト取得
 	virtual Object* GetObj(const UTTypeInfo* info) const =0;
 	///	動的なインタフェースの取得
@@ -213,12 +213,12 @@ struct ObjectIf{
 
 ///	インタフェースクラスへのポインタの配列
 struct ObjectIfs: public UTStack<ObjectIf*>{
-	virtual void PrintShort(std::ostream& os) const{
+	void PrintShort(std::ostream& os) const{
 		for(const_iterator it = begin(); it!=end(); ++it){
 			(*it)->PrintShort(os);
 		}
 	}
-	virtual void Print(std::ostream& os) const{
+	void Print(std::ostream& os) const{
 		for(const_iterator it = begin(); it!=end(); ++it){
 			(*it)->Print(os);
 		}

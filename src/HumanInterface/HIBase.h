@@ -1,8 +1,8 @@
 #ifndef HIBASE_H
 #define HIBASE_H
 
-#include <SprHumanInterface.h>
 #include <Foundation/Object.h>
+#include <SprHumanInterface.h>
 #include <HumanInterface/IfStubDumpHumanInterface.h>
 #include <set>
 
@@ -33,7 +33,7 @@ public:
 	virtual void Update(float dt);
 	/**	Add an real device to the dependency list of real devices. 
 		Update() will call real device's Update() function.	*/
-	void AddDeviceDependency(DRRealDeviceIf* rd);
+	void AddDeviceDependency(HIRealDeviceIf* rd);
 	///	Clear the dependency list.
 	static void ClearDeviceDependency();
 };

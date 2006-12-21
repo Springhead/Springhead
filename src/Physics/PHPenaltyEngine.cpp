@@ -160,7 +160,7 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 				p2 = qhVtx.CommonVtx(i);
 				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID]->vel, solid[curID]->angVel);
 #if 0				//	hase
-				if (cp->reflexSpringForce.norm() > 10000 || !_finite(cp->reflexSpringForce.norm()) ){
+				if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){
 					DSTR << "CalcTriangleReflexForce returned very large force." << std::endl;
 					CalcTriangleReflexForce(cp, cp, p0, p1, p2, cog[curID], fr[curID]->vel, fr[curID]->angVel);
 				}
@@ -202,7 +202,7 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 		cp->area = 10.0f;
 	}
 #if 0	//	hase
-	if (!_finite(cp->reflexForcePoint.norm()) || !_finite(cp->reflexSpringForce.norm()) || cp->reflexForcePoint.norm() > 100){
+	if (!finite(cp->reflexForcePoint.norm()) || !_finite(cp->reflexSpringForce.norm()) || cp->reflexForcePoint.norm() > 100){
 		DSTR << "reflexForcePoint:" << cp->reflexForcePoint << std::endl;
 		DSTR << "reflexSpringForce:"  << cp->reflexSpringForce << std::endl;
 		DSTR << "reflexTorque:"  << cp->reflexSpringTorque << std::endl;
@@ -211,7 +211,7 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 	if (cp->area<=0){
 		DSTR << "Area:" << cp->area << std::endl;
 	}
-	if (cp->reflexSpringForce.norm() > 10000 || !_finite(cp->reflexSpringForce.norm()) ){
+	if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){
 		int i=0;
 		DSTR << "Error: Too large reflexForce: " << cp->reflexSpringForce << std::endl;
 		DSTR << "solidName:" << solid[0].solid->GetName() << " - " << solid[1].solid->GetName() << "  ";

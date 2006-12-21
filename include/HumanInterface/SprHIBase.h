@@ -13,7 +13,7 @@
 
 #ifndef SPR_HIBase_H
 #define SPR_HIBase_H
-#include <SprFoundation.h>
+#include <HumanInterface/SprHIDevice.h>
 
 namespace Spr{;
 
@@ -32,7 +32,7 @@ struct HIBaseIf: public NamedObjectIf{
 	///	キャリブレーションのあとに行う処理
 	virtual bool AfterCalibration()=0;
 	///	デバイスの依存関係を追加する
-	virtual void AddDeviceDependency(DRRealDeviceIf* rd)=0;
+	virtual void AddDeviceDependency(HIRealDeviceIf* rd)=0;
 	///	デバイスの依存関係をクリアする
 	virtual void ClearDeviceDependency()=0;
 	///	デバイスの状態を更新する．

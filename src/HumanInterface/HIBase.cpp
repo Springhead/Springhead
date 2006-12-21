@@ -1,4 +1,6 @@
 #include "HumanInterface.h"
+#include <HumanInterface/SprHIBase.h>
+#include <HumanInterface/SprHIDevice.h>
 #include <Device/DRRealDevice.h>
 #ifdef _WIN32
  #pragma hdrstop
@@ -15,8 +17,10 @@ IF_OBJECT_IMP_ABST(HIBase, NamedObject);
 std::set<DRRealDevice*> HIBase::realDevices;
 int HIBase::deviceUpdateStep;
 
-void HIBase::AddDeviceDependency(DRRealDeviceIf* rd){
-//	realDevices.insert(rd);
+void HIBase::AddDeviceDependency(HIRealDeviceIf* rd){
+	assert(0);
+	//	hase TODO ‚Ü‚¾ŽÀ‘•‚µ‚Ä‚È‚¢
+	//	realDevices.insert(rd);
 }
 void HIBase::ClearDeviceDependency(){
 	realDevices.clear();

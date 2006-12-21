@@ -65,7 +65,7 @@
 /** 数値演算範囲エラーのチェック
     VCが提供する関数では一部関数名が異なる。
  */
-#if defined _MSC_VER
+#ifdef _MSC_VER
 # include <float.h>
 # define isnan  _isnan
 # define finite _finite
