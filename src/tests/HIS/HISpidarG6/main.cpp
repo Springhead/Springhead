@@ -48,7 +48,7 @@ using namespace Spr;
 #define SPIDAR_SCALE	70			// SPIDARのVE内での動作スケール
 
 #define POINTER_RADIUS 0.5f			// ポインタの半径
-#define EPSILON 0.1					// ポインタに接触しそうな剛体を予測するためにポインタを膨らませて接触判定をするときの膨らませる量
+#define EPSILON 0.3					// ポインタに接触しそうな剛体を予測するためにポインタを膨らませて接触判定をするときの膨らませる量
 
 #define LIMIT_DEPTH 100				// 予測シミュレーションを行う剛体取得の深さ上限
 #define NUM_PREDICT_ITERATE 15		// 予測シミュレーションのイテレート回数
@@ -69,15 +69,15 @@ using namespace Spr;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 5000;				// virtual couplingの係数
-	float Bm = 100;					// 並進
+	float Km = 4000;				// virtual couplingの係数
+	float Bm = 130;					// 並進
 
-	float Kr = 5000;				// 回転
-	float Br = 100;
+	float Kr = 3000;				// 回転
+	float Br = 160;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
-double FORCE_COEFF =		0.28;
+double FORCE_COEFF =		1.0;
 
 #ifdef _WIN32		//	Win32版(普通はこっち)
 	#include <Device/DRUsb20Simple.h>
@@ -119,10 +119,10 @@ bool bforce = false;
 
 // めり込み補正のフラグ
 bool bCorrectPenetration = true;
-double P_CORRECTION_COEFF = 0.1;
+double P_CORRECTION_COEFF = 1.0;
 
 // 逐次反映処理のフラグ
-bool bGradualReflection = true;
+bool bGradualReflection = false;
 
 // 局所的動力学計算
 bool bLocalDynamics = true;
@@ -206,10 +206,8 @@ typedef struct {
 
 // pointer data
 Vec3d pointer_pos;
-
 Vec3d pointer_vel;
 double pointer_massinv;
-
 Quaterniond pointer_ori;
 Vec3d pointer_angvel;
 Matrix3d pointer_inertiainv;
@@ -1222,7 +1220,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 							{
 								// 外力で動かない剛体がひとつでも出たら
 								// その先はすべて外力で動かない剛体なのでbreakする
-								if(!info->nearest_solids[j]->IsDynamical()) break;//continue;
+								if(!info->nearest_solids[j]->IsDynamical()) break;
 
 								// 行列を用いて加速度を計算して速度を更新
 								info->solid_velocity[j] += info->vel_effect[j][i] * q_f;
@@ -1241,7 +1239,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		Vec3d correct_torque = Vec3d();
 		int num_cols = 0;
 
-		double DATA[NUM_COLLISIONS][3];
+		vector<Vec3d> r_vectors;
+		vector<Vec3d> c_vectors;
 
 		for(int i = 0; i < info->num_solids; i++)
 		{
@@ -1323,39 +1322,11 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 					Vec3d col_vector = info->current_col_positions[col_index] - info->pointer_current_col_positions[col_index];
 					double vector_coeff = dot(col_vector, info->current_col_normals[col_index]);
 
-					// めり込んでいたら補正用のデータを更新
+					// めり込んでいたら補正用のデータを追加
 					if(vector_coeff > 0)
 					{
-						/*
-						Vec3d col_normal = vector_coeff * info->current_col_normals[col_index].unit();
-						correct_vector += col_normal;
-
-						// 回転：侵入量を力と見て、トルクを計算するようにして補正量を求める
-						correct_torque += (info->pointer_current_col_positions[col_index] - pointer_pos) ^ (col_vector - col_normal);
-						*/
-
-						
-						Vec3d temp = col_vector - pointer_pos;
-
-						Const[num_cols][0] = temp.x;
-						Const[num_cols][1] = temp.y;
-						Const[num_cols][2] = temp.z;
-
-						g[0] = g[1] = g[2] = 1;
-
-						Vec3d r = info->pointer_current_col_positions[col_index] - pointer_pos;
-
-						w_x[num_cols][0] = 0;
-						w_y[num_cols][0] = r.z;
-						w_z[num_cols][0] = - r.y;
-
-						w_x[num_cols][1] = - r.z;
-						w_y[num_cols][1] = 0;
-						w_z[num_cols][1] = r.x;
-
-						w_x[num_cols][2] = r.y;
-						w_y[num_cols][2] = - r.x;
-						w_z[num_cols][2] = 0;
+						r_vectors.push_back(Vec3d(info->pointer_current_col_positions[col_index] - pointer_pos));
+						c_vectors.push_back(Vec3d(vector_coeff * info->current_col_normals[col_index].unit()));
 
 						// めり込んでた接触の個数
 						num_cols++;
@@ -1368,36 +1339,183 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		// ６自由度のめり込み解消処理
 
-		// ポインタのめり込み量の総和（ベクトル）を係数倍して
-		// ポインタの位置に加え、徐々にめり込みを補正していく
-		// 回転もめり込み量を力と考えてトルクを計算するようにして
-		// ポインタ自身を回転させてめり込みを解消させるようにする
+		// 計算に使う変数の型を定義
+		typedef PTM::TMatrixCol<9, 6, double> Matrix96d;
+		typedef PTM::TMatrixCol<6, 9, double> Matrix69d;
+		typedef PTM::TVector<9, double> Vec9d;
+
+		// ポインタのめり込みに対して擬似逆行列を計算し、
+		// 適切な補正量を求めることで、めり込みを補正していく
+		// ポインタ自身を並進・回転させてめり込みを解消させるようにする
 		if(bCorrectPenetration && num_cols)
 		{
+			Vec3d M_vec = Vec3d();
+			Vec3d R_vec = Vec3d();
+
+			// 接触点一点の場合は並進のみ
+			if(num_cols == 1)
+			{
+				M_vec = c_vectors.front();
+			}
+			// 接触点２点以上の場合は並進と回転の両方
+			else if(num_cols > 1)
+			{
+				// ここでは擬似逆行列を使って
+				// めり込みを適切に補正する並進と回転のベクトルを計算する
+
+				map<double, int, greater<double> > norm_map;
+				// すべてのめり込みのノルムを計算し、大きい順番に３つ選ぶ
+				int local_counter = 0;
+				for(vector<Vec3d>::iterator it = c_vectors.begin(); it != c_vectors.end(); it++)
+				{
+					// ノルムが大きい順に添え字変換用マップを作成
+					norm_map.insert(pair<double, int>((*it).norm(), local_counter++));
+				}
+
+				local_counter = 0;
+				
+				Matrix96d M;
+				Vec9d C;
+
+				// 接触が２個しかなかった場合は３つ目の部分を０で埋める
+				if(norm_map.size() == 2)
+				{
+					for(int i = 6; i < 9; i++)
+					{
+						C[i] = 0;
+
+						for(int j = 0; j < 6; j++)
+						{
+							M[i][j] = 0;
+						}
+					}
+				}
+
+				// ノルムが大きい順に３つの接触を取り出し、
+				// それらの情報から擬似逆行列の計算に必要な
+				// 行列とベクトルを作っていく
+				for(map<double, int, greater<double> >::iterator it = norm_map.begin(); it != norm_map.end(); it++)
+				{
+					// 9行追加し終わったらループを抜ける
+					if(local_counter == 9) break;
+
+					int local_index = (*it).second;
+					Vec3d c = c_vectors[local_index];
+					Vec3d r = r_vectors[local_index];
+
+					// ３x６行列の作成と大きさ３のベクトルの作成を３回行う
+					for(int i = 0; i < 3; i++)
+					{						
+						switch(local_counter % 3)
+						{
+						// 1, 4, 7行目
+						case 0:
+							C[local_counter] = c[0];
+							for(int j = 0; j < 6; j++)
+							{
+								switch(j)
+								{
+								case 0:
+								case 4:
+								case 5:
+									M[local_counter][j] = 0;
+									break;
+								case 1:
+									M[local_counter][j] = r[2];
+									break;
+								case 2:
+									M[local_counter][j] = - r[1];
+									break;
+								case 3:
+									M[local_counter][j] = 1;
+									break;
+								}
+							}
+							break;
+						// 2, 5, 8行目
+						case 1:
+							C[local_counter] = c[1];
+							for(int j = 0; j < 6; j++)
+							{
+								switch(j)
+								{
+								case 1:
+								case 3:
+								case 5:
+									M[local_counter][j] = 0;
+									break;
+								case 0:
+									M[local_counter][j] = - r[2];
+									break;
+								case 2:
+									M[local_counter][j] = r[0];
+									break;
+								case 4:
+									M[local_counter][j] = 1;
+									break;
+								}
+							}
+							break;
+						// 3, 6, 9行目
+						case 2:
+							C[local_counter] = c[2];
+							for(int j = 0; j < 6; j++)
+							{
+								switch(j)
+								{
+								case 2:
+								case 3:
+								case 4:
+									M[local_counter][j] = 0;
+									break;
+								case 0:
+									M[local_counter][j] = r[1];
+									break;
+								case 1:
+									M[local_counter][j] = - r[0];
+									break;
+								case 5:
+									M[local_counter][j] = 1;
+									break;
+								}
+							}
+							break;
+						}
+						// 次の行にすすむ
+						local_counter++;
+					}
+				}
+
+				Matrix69d Mt = M.trans();
+				// 擬似逆行列
+				Matrix69d Pinv = (Mt * M).inv() * Mt;
+
+				// 並進と回転のベクトル
+				// 第一～三要素が回転ベクトルのxyz
+				// 第四～六要素が並進ベクトルのxyz
+				Vec6d Ans = Pinv * C;
+				M_vec = Ans.sub_vector(TSubVectorDim<3,3>());
+				R_vec = Ans.sub_vector(TSubVectorDim<0,3>());
+			}
 
 			/*
-			// 平均を取って急激に変化しないようにする
-			correct_vector /= (double)num_cols;
-			correct_torque /= (double)num_cols;
-
-			// 速度を変化させる
-			pointer_vel += P_CORRECTION_COEFF * correct_vector / dt;
-			pointer_angvel += P_CORRECTION_COEFF * correct_torque / dt;
+			pointer_vel += P_CORRECTION_COEFF * M_vec / dt;
+			pointer_angvel += P_CORRECTION_COEFF * R_vec / dt;
+			*/
 
 			// ポインタ自身の位置を移動
-			pointer_pos += P_CORRECTION_COEFF * correct_vector;
+			pointer_pos += P_CORRECTION_COEFF * M_vec;
 
 			// ポインタ自身の姿勢を補正
-			Quaterniond correct_q = Quaterniond::Rot(P_CORRECTION_COEFF * correct_torque);
+			Quaterniond correct_q = Quaterniond::Rot(P_CORRECTION_COEFF * R_vec);
 			pointer_ori = pointer_ori * correct_q;
 
 			// すべての接触もその方向に移動・回転
 			for(int i = 0; i < info->num_collisions; i++)
 			{
-				info->pointer_current_col_positions[i] += correct_torque ^ (info->current_col_positions[i] - info->pointer_current_col_positions[i]);
-				info->pointer_current_col_positions[i] += P_CORRECTION_COEFF * correct_vector;
+				info->pointer_current_col_positions[i] += P_CORRECTION_COEFF * M_vec;
+				info->pointer_current_col_positions[i] += P_CORRECTION_COEFF * R_vec ^ (info->pointer_current_col_positions[i] - pointer_pos);
 			}
-			*/
 		}
 	}
 
@@ -1517,14 +1635,15 @@ void SetupCollisionPrediction()
 	// この二つはinactive同士なのでめりこみ、
 	// soPointerCopyはsoPointerより一回り大きいので、
 	// この接触点をみればsoPointerの接触しそうな点がわかる
-	soPointerCopy->SetFramePosition(soPointer->GetFramePosition());
-	soPointerCopy->SetVelocity(Vec3d());
-	soPointerCopy->SetOrientation(soPointer->GetOrientation());
-	soPointerCopy->SetAngularVelocity(Vec3d());
+	soPointerCopy->SetFramePosition(pointer_pos);
+	soPointerCopy->SetVelocity(pointer_vel);
+	soPointerCopy->SetOrientation(pointer_ori);
+	soPointerCopy->SetAngularVelocity(pointer_angvel);
 }
 
 void StepSimulation()
 {
+//	t_end();
 //	t_start();
 
 	// ポインタの位置を更新
@@ -2072,8 +2191,8 @@ void InitScene()
 			switch(i)
 			{
 			case 0:
-				bd.boxsize = Vec3f(30.0f, 5.0f, 30.0f);
-				position = Vec3f(0, -4.0f, 0);
+				bd.boxsize = Vec3f(30.0f, 10.0f, 30.0f);
+				position = Vec3f(0, -6.0f, 0);
 				break;
 			case 1:
 				bd.boxsize = Vec3f(1.0f, 1.0f, 1.0f);
