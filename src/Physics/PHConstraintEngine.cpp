@@ -226,8 +226,8 @@ PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointD
 }
 bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
 	PHSolids::iterator islhs, isrhs;
-	islhs = solids.Find(lhs->Cast());
-	isrhs = solids.Find(rhs->Cast());
+	islhs = (PHSolids::iterator) solids.Find(lhs->Cast());
+	isrhs = (PHSolids::iterator) solids.Find(rhs->Cast());
 	if(islhs == solids.end() || isrhs == solids.end()) return false;
 	
 	PHJoint* joint = DCAST(PHJoint, j);
@@ -243,7 +243,7 @@ PHRootNode* PHConstraintEngine::AddRootNode(PHSolid* solid){
 		if((*it)->FindBySolid(solid))
 			return NULL;
 	//新しいルートノードを作成
-	PHSolids::iterator it = solids.Find(solid);
+	PHSolids::iterator it = (PHSolids::iterator) solids.Find(solid);
 	if(it == solids.end())
 		return NULL;
 	PHRootNode* root = DBG_NEW PHRootNode();

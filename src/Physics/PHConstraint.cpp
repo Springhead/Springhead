@@ -11,7 +11,7 @@
 #endif
 
 using namespace PTM;
-using namespace std;
+//using namespace std;
 namespace Spr{;
 
 
@@ -27,7 +27,9 @@ PHConstraint::PHConstraint(){
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
-		PHSolids::iterator it = scene->constraintEngine->solids.Find(s);
+		PHSolids::iterator it = (PHSolids::iterator) scene->constraintEngine->solids.Find(s);
+		(void*)(*it);
+
 		if(it == scene->constraintEngine->solids.end())
 			return false;
 		if(!solid[0]){

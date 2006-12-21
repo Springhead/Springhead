@@ -113,7 +113,9 @@ ObjectIf* PHSdk::GetChildObject(size_t i){
 bool PHSdk::AddChildObject(ObjectIf* o){
 	PHScene* s = DCAST(PHScene, o);
 	if (s){
-		if (std::find(scenes.begin(), scenes.end(), s->Cast()) == scenes.end()){
+		UTRef<PHSceneIf> sceneif = s->Cast();
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), sceneif);
+		if (it == scenes.end()){
 			scenes.push_back(s->Cast());
 			return true;
 		}
@@ -122,7 +124,9 @@ bool PHSdk::AddChildObject(ObjectIf* o){
 
 	CDShape* h = DCAST(CDShape, o);
 	if (h){
-		if (std::find(shapes.begin(), shapes.end(), h->Cast()) == shapes.end()){
+		UTRef<CDShapeIf> shapeif = h->Cast();
+		Shapes::iterator it = std::find(shapes.begin(), shapes.end(), shapeif);
+		if (it == shapes.end()) {
 			shapes.push_back(h->Cast());
 			return true;
 		}

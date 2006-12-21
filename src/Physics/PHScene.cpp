@@ -114,6 +114,8 @@ void PHScene::Step(){
 void PHScene::ClearForce(){
 	engines.ClearForce();
 }
+	
+#if defined _MSC_VER	
 #define FP_ERROR_MASK	(_EM_INEXACT|_EM_UNDERFLOW)
 void PHScene::GenerateForce(){
 	_clearfp();
@@ -128,7 +130,16 @@ void PHScene::Integrate(){
 	_controlfp(_MCW_EM, _MCW_EM);
 	count++;
 }
-
+#else
+void PHScene::GenerateForce(){
+	engines.GenerateForce();
+}
+void PHScene::Integrate(){
+	engines.Integrate();
+	count++;
+}	
+#endif
+	
 void PHScene::SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode mode){
 	penaltyEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_LCP);
