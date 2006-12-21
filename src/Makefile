@@ -16,8 +16,12 @@ LIBS_DIR		= Base \
 				Graphics \
 				Physics \
 				Foundation \
-				Creature \
-				Framework
+
+#				Framework
+#				Creature 
+
+
+
 TESTS_DIR		= tests 
 SAMPLES_DIR		= Samples
 
