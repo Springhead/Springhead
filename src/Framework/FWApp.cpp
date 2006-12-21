@@ -15,7 +15,7 @@
 
 namespace Spr{;
 FWApp::FWApp(){
-	debugMode = DebugMode::DM_NONE;
+	debugMode = FWApp::DM_NONE;
 	isRunning = true;
 }
 void FWApp::LoadScene(UTString filename){
@@ -62,7 +62,7 @@ void FWApp::Display(){
 	fwScene->Sync();
 	grRender->ClearBuffer();
 	grRender->BeginScene();
-	if (debugMode == DebugMode::DM_DEBUG){
+	if (debugMode == FWApp::DM_DEBUG){
 		GRCameraIf* cam = NULL;
 		if (fwScene->GetGRScene()) cam = fwScene->GetGRScene()->GetCamera();
 		if (cam) cam->Render(grRender);
