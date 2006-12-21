@@ -10,13 +10,12 @@
 
 【概要】関節機能のデモ
 */
-
+#include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>
 #include <sstream>
 //#include <windows.h>
 #include <GL/glut.h>
-#include <Springhead.h>		//	Springheadのインタフェース
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop

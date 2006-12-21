@@ -73,7 +73,7 @@
 #include <ctime>
 #include <string>
 #include <sstream>
-#include <windows.h>
+//#include <windows.h>
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <GL/GLUT.h>		
 

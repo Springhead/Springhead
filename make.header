@@ -24,8 +24,8 @@ RM				= rm -rf
 #	Cygwin
 # ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
-LDFLAGS.EXTRA 	=	
-LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lm
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/
+LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lglew32 -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
 ARFLAGS			= r					
@@ -35,8 +35,8 @@ endif
 # 	Linux
 # ----------------------------------------------------------
 ifeq ($(findstring Linux, $(shell env uname)), Linux)
-LDFLAGS.EXTRA 	=	-L/usr/X11R6/lib	
-LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm
+LDFLAGS.EXTRA 	=	-L/usr/X11R6/lib -L$(TOP_DIR)/lib/linux/	
+LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm -lGLEW
 INCLUDES 		= -I/usr/X11R6/include/
 ARFLAGS			= r	
 endif				
@@ -45,16 +45,17 @@ endif
 # 	Mac OS X(PowerPC, Aqua)
 # ----------------------------------------------------------
 ifeq ($(findstring Darwin, $(shell env uname)), Darwin)
-LDFLAGS.EXTRA 	=	-L/usr/local/lib	
-LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation 
+LDFLAGS.EXTRA 	= -L/usr/local/lib -L$(TOP_DIR)/lib/darwin/
+LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation GLEW
 INCLUDES 		= -I/usr/local/include/
 ARFLAGS			= rcu
 endif		
 
 # ----------------------------------------------------------
 # 	common rules
-# ----------------------------------------------------------					
-CXXFLAGS 		= -Wall -O2 $(DEBUG_FLAG)
+# ----------------------------------------------------------	
+WARNING_FLAGS	= -Wall				
+CXXFLAGS 		= -O2 $(WARNING_FLAGS) $(DEBUG_FLAG)
 LDFLAGS 		= $(LDFLAGS.EXTRA) \
 					$(LDFLAGS.GL) \
 					-L$(TOP_DIR)/src/Base/ \
@@ -66,7 +67,8 @@ LDFLAGS 		= $(LDFLAGS.EXTRA) \
 					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
 					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO \
 					$(LDFLAGS.EXTRA) \
-					$(LDFLAGS.GL)
+					$(LDFLAGS.GL) \
+					
 					
 INCLUDES		+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 
