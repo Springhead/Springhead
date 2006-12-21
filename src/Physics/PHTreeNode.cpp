@@ -260,6 +260,7 @@ void PHRootNode::UpdatePosition(double dt){
 template class PHTreeNodeND<1>;
 template class PHTreeNodeND<2>;
 template class PHTreeNodeND<3>;
+template class PHTreeNodeND<4>;
 
 template<int NDOF>
 PHTreeNodeND<NDOF>::PHTreeNodeND(){
@@ -399,13 +400,16 @@ void PHTreeNodeND<NDOF>::CompResponse(const TVector<NDOF, double>& _dtau, bool b
 template<int NDOF>
 void PHTreeNodeND<NDOF>::CompResponseMatrix(){
 	const double eps = 1.0e-6;
-	TVector<NDOF, double> tau;
 	for(int i = 0; i < NDOF; i++){
-		tau[i] = 1.0;
-		CompResponse(tau, false);
-		A[i] = max(eps, daccel[i]);
-		tau[i] = 0.0;
+		CompResponse(Jq.row(i), false);
+		A[i] = max(eps, Jq.row(i) * daccel);
 	}
+}
+
+template<int NDOF>
+void PHTreeNodeND<NDOF>::ModifyJacobian(){
+	//関節速度の成分毎に拘束する場合は単位行列
+	init_unitize(Jq);
 }
 
 template<int NDOF>
@@ -420,9 +424,10 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 		constr[i] = con;
 		constrAtAll |= con;
 	}
+	ModifyJacobian();
 	if(constrAtAll){
 		// LCPのbベクトル
-		b = GetJoint()->velocity;
+		b = Jq * GetJoint()->velocity;
 		CompBias();	// 目標速，バネダンパによる補正項を計算
 		b += db;
 		
@@ -439,16 +444,14 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::IterateLCP(){
-	TVector<NDOF, double> fnew, dfs;
+	TVector<NDOF, double> fnew;
 	double df;
 	for(int i = 0; i < NDOF; i++){
 		if(!constr[i])continue;
-		fnew[i] = f[i] - Ainv[i] * (dA[i] * f[i] + b[i] + accel[i]);
+		fnew[i] = f[i] - Ainv[i] * (dA[i] * f[i] + b[i] + Jq.row(i) * accel);
 		Projection(fnew[i], i);
 		df = fnew[i] - f[i];
-		dfs.clear();
-		dfs[i] = df;
-		CompResponse(dfs);
+		CompResponse(Jq.row(i) * df);
 		f[i] = fnew[i];
 	}
 	PHTreeNode::IterateLCP();

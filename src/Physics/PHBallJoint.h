@@ -35,8 +35,10 @@ public:
 	PHBallJoint* GetJoint(){return DCAST(PHBallJoint, PHTreeNodeND<3>::GetJoint());}
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
+	virtual void UpdateJointPosition(double dt);
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
+	virtual void ModifyJacobian();
 	virtual void CompBias();
 	virtual void Projection(double& f, int i);
 	//PHBallJointNode(PHBallJoint* j):PHTreeNodeND<3>(j){}
@@ -44,13 +46,13 @@ public:
 
 class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 public:
-	OBJECTDEF(PHBallJoint, PHJointND<3>);
+	OBJECTDEF(PHBallJoint, PHJoint);
 	
 	bool		swingOnUpper, twistOnLower, twistOnUpper;
 	double		swingUpper, swingDamper, swingSpring;
 	double		twistLower, twistUpper, twistDamper, twistSpring;
 	
-	//SwingTwist	angle, velocity;	///< スイング・ツイスト角表現の角度と角速度
+	SwingTwist	angle; //, velocity;	///< スイング・ツイスト角表現の角度と角速度
 	//Vec3d		torque;
 	/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン
 	Matrix3d	Jstinv;

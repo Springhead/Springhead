@@ -25,7 +25,7 @@ IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 PHJoint1D::PHJoint1D(){
 }	
 
-void PHJoint1D::SetDesc(const PHJointDesc& desc){
+void PHJoint1D::SetDesc(const PHConstraintDesc& desc){
 	PHConstraint::SetDesc(desc);
 	const PHJoint1DDesc& desc1D = (const PHJoint1DDesc&)desc;
 	lower = desc1D.lower;

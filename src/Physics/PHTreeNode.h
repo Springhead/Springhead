@@ -101,6 +101,9 @@ protected:
 template<int NDOF>
 class PHTreeNodeND : public PHTreeNode{
 public:
+	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
+
+	/// ABA関係の関数
 	virtual void AccumulateInertia();
 	virtual void AccumulateBiasForce();
 	virtual void CompJointJacobian();
@@ -109,6 +112,11 @@ public:
 	virtual void CompBiasForceDiff(bool bUpdate);
 	virtual void UpdateJointVelocity(double dt);
 	virtual void UpdateJointPosition(double dt);
+
+	/// LCP関係の関数
+			void CompResponse(const PTM::TVector<NDOF, double>& tau, bool bUpdate = true);
+			void CompResponseMatrix();
+	virtual void ModifyJacobian();
 	virtual void SetupLCP();
 	virtual void IterateLCP();
 
@@ -117,15 +125,15 @@ public:
 
 	PHTreeNodeND();
 protected:
-	bool			constr[NDOF];		///< ABAとして各自由度を拘束するか
-	SpatialVector	J[NDOF], IJ[NDOF], XtrIJ[NDOF], J_JIJinv[NDOF], IJ_JIJinv[NDOF], XtrIJ_JIJinv[NDOF];
+	bool			constr[NDOF];			///< ABAとして各自由度を拘束するか
+	SpatialVector	J[NDOF];				///< 関節座標から相対速度へのヤコビアン
+	SpatialVector	IJ[NDOF], XtrIJ[NDOF], J_JIJinv[NDOF], IJ_JIJinv[NDOF], XtrIJ_JIJinv[NDOF];
 	PTM::TMatrixCol<NDOF, NDOF, double> JIJ, JIJinv;
 	PTM::TVector<NDOF, double>	JtrZplusIc;
 	PTM::TVector<NDOF, double>	accel, daccel, dtau;
-	PTM::TVector<NDOF, double> A, Ainv, dA, b, db, f;
-	void		CompResponse(const PTM::TVector<NDOF, double>& tau, bool bUpdate = true);
-	void		CompResponseMatrix();
-	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
+
+	PTM::TVector<NDOF, double> A, Ainv, dA, b, db, f;	///< 関節座標LCPのための変数
+	PTM::TMatrixCol<NDOF, NDOF, double> Jq;	///< 関節座標LCPにおける関節速度から拘束変数へのヤコビアン
 };
 
 ///	1自由度の関節

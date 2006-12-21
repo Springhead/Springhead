@@ -268,7 +268,9 @@ PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
 	}
 	if(!found)return NULL;
 	//parent‚É‘Î‰ž‚·‚é„‘Ì‚Æsolid‚ÅŽw’è‚³‚ê‚½„‘Ì‚Æ‚ð‚Â‚È‚®S‘©‚ðŽæ“¾
-	PHJoint* joint = DCAST(PHJoint, joints.FindBySolidPair(parent->GetSolid(), solid));
+	PHConstraint* con = joints.FindBySolidPair(parent->GetSolid(), solid);
+	if(!con)return NULL;
+	PHJoint* joint = DCAST(PHJoint, con);
 	if(!joint)return NULL;
 	//ƒm[ƒh‚ðì¬
 	PHTreeNode* node = joint->CreateTreeNode();
