@@ -14,7 +14,8 @@
 #include <ctime>
 #include <string>
 #include <sstream>
-#include <windows.h>
+//#include <windows.h>
+#include <GL/glut.h>
 #include <Springhead.h>		//	Springheadのインタフェース
 
 #ifdef USE_HDRSTOP
