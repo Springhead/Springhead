@@ -233,7 +233,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	‚È‚µ
  */
 void idle(){
-	static total;
+	static int total;
 	total ++;
 	if (total > TOTAL_IDLE_COUNTER){
 		//exit(EXIT_FAILURE);
