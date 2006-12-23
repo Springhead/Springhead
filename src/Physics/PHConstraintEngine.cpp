@@ -187,9 +187,9 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 	case PHConstraintDesc::BALLJOINT:
 		joint = DBG_NEW PHBallJoint();
 		break;
-/*	case PHConstraintDesc::PATHJOINT:
+	case PHConstraintDesc::PATHJOINT:
 		joint = DBG_NEW PHPathJoint();
-		break;*/
+		break;
 	case PHConstraintDesc::SPRING:
 		joint = DBG_NEW PHSpring();
 		break;
@@ -268,9 +268,7 @@ PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
 	}
 	if(!found)return NULL;
 	//parent‚É‘Î‰ž‚·‚é„‘Ì‚Æsolid‚ÅŽw’è‚³‚ê‚½„‘Ì‚Æ‚ð‚Â‚È‚®S‘©‚ðŽæ“¾
-	PHConstraint* con = joints.FindBySolidPair(parent->GetSolid(), solid);
-	if(!con)return NULL;
-	PHJoint* joint = DCAST(PHJoint, con);
+	PHJoint* joint = DCAST(PHJoint, joints.FindBySolidPair(parent->GetSolid(), solid));
 	if(!joint)return NULL;
 	//ƒm[ƒh‚ðì¬
 	PHTreeNode* node = joint->CreateTreeNode();

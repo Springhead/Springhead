@@ -168,7 +168,7 @@ public:
 		@param desc パスのディスクリプタ
 		＊未実装
 	 */
-	//virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
+	virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ

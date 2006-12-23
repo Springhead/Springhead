@@ -99,10 +99,10 @@ void PHPath::CompJacobian(){
 		w = (it->pose.Ori()).AngularVelocity(qd);		//1/2 * w * q = qd		=> 2 * qd * q~ = w
 		it->J.row(5).SUBVEC(0, 3) =  v;
 		it->J.row(5).SUBVEC(3, 3) =  w;
-		double ninv = 1.0 / it->J.row(5).norm();
-		it->J.row(5) *= ninv;
+		//double ninv = 1.0 / it->J.row(5).norm();
+		it->J.row(5).unitize();// *= ninv;
 		Orthogonalize(it->J);
-		it->J.row(5) *= ninv;
+		//it->J.row(5) *= ninv;
 	}
 	bReady = true;
 }
@@ -159,7 +159,9 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 IF_OBJECT_IMP(PHPathJoint, PHJoint1D)
 
 PHPathJoint::PHPathJoint(){
-	q = qd = 0.0;
+	axisIndex[0] = 5;
+	for(int i = 0; i < 6; i++)
+		axis[i] = (i == axisIndex[0]);
 }
 
 bool PHPathJoint::AddChildObject(ObjectIf* o){
@@ -181,70 +183,53 @@ bool PHPathJoint::AddChildObject(ObjectIf* o){
 	return PHConstraint::AddChildObject(o);
 }
 
-/*void PHPathJoint::CompConstraintJacobian(){
-	if(!path)return;
-	CompDof();
-	dim_c = 6;
+void PHPathJoint::UpdateJointState(){
 	Matrix6d J;
-	path->GetJacobian(q, J);
-	Ad.clear();
-	Ac.clear();
-	for(int i = 0; i < 2; i++){
-		Jdv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
-		Jdv[i].SUBMAT(3, 0, 3, 3) = Jwv[i];
-		Jdw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
-		Jdw[i].SUBMAT(3, 0, 3, 3) = Jww[i];
-		Jdv[i] = J * Jdv[i];
-		Jdw[i] = J * Jdw[i];
-		Jcv[i].SUBMAT(0, 0, 3, 3) = Jvv[i];
-		Jcv[i].SUBMAT(3, 0, 3, 3) = Jqv[i];
-		Jcw[i].SUBMAT(0, 0, 3, 3) = Jvw[i];
-		Jcw[i].SUBMAT(3, 0, 3, 3) = Jqw[i];
-		if(solid[i]->solid->IsDynamical()){
-			Tdv[i] = Jdv[i] * solid[i]->minv;
-			Tdw[i] = Jdw[i] * solid[i]->Iinv;
-			Tcv[i] = Jcv[i] * solid[i]->minv;
-			Tcw[i] = Jcw[i] * solid[i]->Iinv;
-			for(int j = 0; j < 6; j++)
-				Ad[j] += Jdv[i].row(j) * Tdv[i].row(j) + Jdw[i].row(j) * Tdw[i].row(j);
-			for(int j = 0; j < 6; j++)
-				Ac[j] += Jcv[i].row(j) * Tcv[i].row(j) + Jcw[i].row(j) * Tcw[i].row(j);
-		}
-	}
-}*/
+	path->GetJacobian(position[0], J);
+	velocity[0] = vjrel.norm();
+	if(vjrel * J.row(5) < 0.0)
+		velocity[0] = -velocity[0];
+	position[0] += velocity[0] * scene->GetTimeStep();
+	path->Rollover(position[0]);
+}
 
-void PHPathJoint::CompBias(double dt, double correction_rate){
+void PHPathJoint::ModifyJacobian(){
+	Matrix6d Jq;
+	path->GetJacobian(position[0], Jq);
+	(Matrix6d&)J[0] = Jq * J[0];
+	(Matrix6d&)J[1] = Jq * J[1];
+}
+
+void PHPathJoint::CompBias(){
+	double dtinv = 1.0 / scene->GetTimeStep();
+	Posed p;
+	path->GetPose(position[0], p);
+	db.v() = ((Xjrel.r - p.Pos()) * dtinv/* + vjrel.v()*/);
+	//db.w() = (Xjrel.q.AngularVelocity((Xjrel.q - p.Ori()) * dtinv) + vjrel.w());
+	db.w().clear();
+	Matrix6d Jq;
+	path->GetJacobian(position[0], Jq);
+	(Vec6d&)db = Jq * db;
+	db.w().z = 0.0;
+	db *= engine->correctionRate;
+
+	double diff;
 	if(mode == MODE_VELOCITY){
-		b.w().z -= vel_d;
+		db.w().z = -vel_d;
 	}
-
+	else if(spring != 0.0 || damper != 0.0){
+		diff = GetPosition() - origin;
+		//while(diff >  M_PI) diff -= 2 * M_PI;
+		//while(diff < -M_PI) diff += 2 * M_PI;
+		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		dA.w().z = tmp * dtinv;
+		db.w().z = spring * (diff) * tmp;
+	}
 }
 
 /*void PHPathJoint::CompError(double dt){
 	if(!path)return;
 	
-	//velocity update後の関節速度の値
-	Vec3d v[2], w[2];
-	for(int i = 0; i < 2; i++){
-		v[i] = solid[i]->v + solid[i]->dv0 + solid[i]->dv;
-		w[i] = solid[i]->w + solid[i]->dw0 + solid[i]->dw;
-	}
-	//Matrix6d J;
-	//path->GetJacobian(q, J);
-	//Vec6d Vrel;
-	//Vrel.SUBVEC(0, 3) = Jvv[0] * v[0] + Jvw[0] * w[0] + Jvv[1] * v[1] + Jvw[1] * w[1];
-	//Vrel.SUBVEC(3, 3) = Jwv[0] * v[0] + Jww[0] * w[0] + Jwv[1] * v[1] + Jww[1] * w[1];
-	//double qd = Vrel.norm() / J.row(5).norm();
-	//if(Vrel[0] * J.row(5)[0] < 0.0)
-	//	qd = -qd;
-	double qd = Ad[5] * (Jdv[0].row(5) * v[0] + Jdw[0].row(5) * w[0] +
-				Jdv[1].row(5) * v[1] + Jdw[1].row(5) * w[1]);
-	qd = 1.0;
-	q += qd * dt;
-	//q = 0.0;
-	path->Rollover(q);
-	Posed pnew;
-	path->GetPose(q, pnew);
 	B.SUBVEC(0, 3) = rjrel - pnew.Pos();
 	DSTR << rjrel << pnew.Pos() << qjrel << pnew.Ori() << endl;
 	if(qjrel.V() * pnew.Ori().V() < 0.0){
@@ -268,5 +253,49 @@ void PHPathJoint::CompBias(double dt, double correction_rate){
 			F = min(0.0, F);
 	}
 }*/
+
+//-----------------------------------------------------------------------------
+
+void PHPathJointNode::CompJointJacobian(){
+	PHPathJoint* j = GetJoint();
+	Matrix6d Jq;
+	j->path->GetJacobian(j->position[0], Jq);
+	(Vec6d&)J[0] = Jq.row(5);
+	PHTreeNode1D::CompJointJacobian();
+}
+void PHPathJointNode::CompJointCoriolisAccel(){
+	cj.clear();
+}
+void PHPathJointNode::CompRelativeVelocity(){
+	PHPathJoint* j = GetJoint();
+	Matrix6d Jq;
+	j->path->GetJacobian(j->position[0], Jq);
+	(Vec6d&)j->vjrel = Jq.row(5) * j->velocity[0];
+}
+void PHPathJointNode::CompRelativePosition(){
+	PHPathJoint* j = GetJoint();
+	Posed p;
+	j->path->GetPose(j->position[0], p);
+	j->Xjrel.q = p.Ori();
+	j->Xjrel.r = p.Pos();
+}
+void PHPathJointNode::CompBias(){
+	PHPathJoint* j = GetJoint();
+	double diff;
+	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
+	if(j->mode == PHJoint::MODE_VELOCITY){
+		db[0] = -j->vel_d;
+	}
+	else if(j->spring != 0.0 || j->damper != 0.0){
+		diff = j->GetPosition() - j->origin;
+		// diffが非常に大きな値をとると浮動小数点精度の限界から以下が無限ループになる場合がある模様
+		//while(diff >  M_PI) diff -= 2 * M_PI;
+		//while(diff < -M_PI) diff += 2 * M_PI;
+		double tmp = 1.0 / (j->damper + j->spring * dt);
+		dA[0] = tmp * dtinv;
+		db[0] = j->spring * (diff) * tmp;
+	}
+	else dA[0] = db[0] = 0.0;
+}
 
 }

@@ -272,6 +272,9 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc){
 		return ((OBJ*)(MIF*)this)->OBJ::CreateGear(lhs, rhs, desc);
 	}
+	virtual PHPathIf *  CreatePath(const PHPathDesc &  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::CreatePath(desc);
+	}
 	virtual double GetTimeStep() const {
 		return ((OBJ*)(MIF*)this)->OBJ::GetTimeStep();
 	}

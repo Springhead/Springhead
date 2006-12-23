@@ -232,7 +232,7 @@ void BuildScene4(){
 	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
-/*	PHPathDesc desc;
+	PHPathDesc desc;
 	PHPathIf* path = scene->CreatePath(desc);
 	double s;
 	double radius = 5.0;
@@ -242,7 +242,7 @@ void BuildScene4(){
 		double stmp = s;
 		while(stmp > M_PI) stmp -= 2 * M_PI;
 		pose.Pos() = Vec3d(radius * cos(stmp), 5.0 + pitch * s / (2 * M_PI), radius * sin(stmp));
-		pose.Ori().FromMatrix(Matrix3d::Rot(-3*stmp, 'y'));
+		pose.Ori().FromMatrix(Matrix3d::Rot(-stmp, 'y'));
 		path->AddPoint(s, pose);
 	}
 	PHPathJointDesc descJoint;
@@ -250,7 +250,9 @@ void BuildScene4(){
 	PHPathJointIf* joint = DCAST(PHPathJointIf, jntLink[0]);
 	joint->AddChildObject(path);
 	joint->SetPosition(2 * 2 * M_PI);
-*/	
+	PHTreeNodeIf* node = scene->CreateRootNode(soFloor);
+	scene->CreateTreeNode(node, soBox[0]);
+	
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
@@ -454,9 +456,9 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.swingUpper = 0.2;		// 最大スイング角
+		jdesc.swingUpper =  0.2;	// 最大スイング角
 		jdesc.twistLower = -0.2;	// ツイスト角範囲
-		jdesc.twistUpper = 0.2;
+		jdesc.twistUpper =  0.2;
 		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
@@ -784,7 +786,7 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.1;
+	dscene.timeStep = 0.05;
 	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築

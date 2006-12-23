@@ -23,7 +23,7 @@ namespace Spr{;
 		[v; w] = [I O; O E(q(s))](df/ds)(s)s' =: J(s)s'
 	上の式よりsとs'が決まれば相対速度[v; w]が決まる．
 	これを拘束条件の形に変える．6次元ベクトルJ(s)は相対速度の向きを表わしているので，
-	これに直交する行列をJ~(s)とすると，拘束条件は
+	これに直交するベクトルを行ベクトルに持つ行列をJ~(s)とすると，拘束条件は
 		J~(s)[v; w] = 0
 
 	Correctionは，
@@ -52,18 +52,29 @@ public:
 	PHPath(const PHPathDesc& desc);
 };
 
+class PHPathJointNode : public PHTreeNode1D{
+public:
+	PHPathJoint* GetJoint(){return DCAST(PHPathJoint, PHTreeNode1D::GetJoint());}
+	virtual void CompJointJacobian();
+	virtual void CompJointCoriolisAccel();
+	virtual void CompRelativePosition();
+	virtual void CompRelativeVelocity();
+	virtual void CompBias();
+};
+
 class PHPathJoint : public PHJoint1D, public PHPathJointIfInit{
 	OBJECTDEF(PHPathJoint, PHJoint1D);
 	UTRef<PHPath> path;
 public:
-	double	q, qd;				// 関節変位と関節角度
-	//Matrix53d	Jcvrel, Jcwrel;	// 相対速度から拘束速度，相対角速度から拘束速度へのヤコビ行列
-
-	virtual void SetPosition(double _q){q = _q;}
-	virtual bool AddChildObject(ObjectIf* o);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
-	//virtual void CompConstraintJacobian();
-	virtual void CompBias(double dt, double correction_rate);
+	virtual PHTreeNode* CreateTreeNode(){
+		return DBG_NEW PHPathJointNode();
+	}
+	virtual void SetPosition(double pos){position[0] = pos;}
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual void ModifyJacobian();
+	virtual void CompBias();
+	virtual void UpdateJointState();
 	//virtual void CompError(double dt);
 	//virtual void ProjectionCorrection(double& F, int k);
 	PHPathJoint();

@@ -115,8 +115,8 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	SwingTwist angle;
 	angle.FromQuaternion(Xjrel.q);
 	swingOnUpper = (swingUpper > 0 && angle.Swing() >= swingUpper);
-	twistOnLower = (twistLower < twistUpper && angle.Twist() <= twistLower);
-	twistOnUpper = (twistLower < twistUpper && angle.Twist() >= twistUpper);
+	twistOnLower = (twistLower <= twistUpper && angle.Twist() <= twistLower);
+	twistOnUpper = (twistLower <= twistUpper && angle.Twist() >= twistUpper);
 	// â¬ìÆîÕàÕÇ…Ç©Ç©ÇÈèÍçáÇÕâÒì]ÇSwing/TwistÇ…ç¿ïWïœä∑Ç∑ÇÈ(ModifyJacobian)ÅD
 	// à»â∫3 -> swingï˚à ÅC4 -> swingäp, 5 -> twistäp
 	con[3] = false;
@@ -152,7 +152,7 @@ void PHBallJoint::CompBias(){
 void PHBallJoint::Projection(double& f, int k){
 	if(k == 4 && swingOnUpper)
 		f = min(0.0, f);
-	if(k == 5){
+	if(k == 5 && twistLower < twistUpper){
 		if(twistOnLower)
 			f = max(0.0, f);
 		if(twistOnUpper)
@@ -217,7 +217,7 @@ void PHBallJointNode::Projection(double& f, int k){
 	PHBallJoint* j = GetJoint();
 	if(k == 1 && j->swingOnUpper)
 		f = min(0.0, f);
-	if(k == 2){
+	if(k == 2 && j->twistLower < j->twistUpper){
 		if(j->twistOnLower)
 			f = max(0.0, f);
 		if(j->twistOnUpper)
