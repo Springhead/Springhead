@@ -31,8 +31,13 @@ tests-all:
 samples-all:		
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir samples-all || exit; \
-	done	
-
+	done
+	
+package-ibrary: 	
+	@for dir in $(SUB_DIRS); \
+	do $(MAKE) -C $$dir tests-all || exit; \
+	done
+	
 
 ################################################################
 #	Default rules
