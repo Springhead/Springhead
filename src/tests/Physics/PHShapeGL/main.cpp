@@ -228,8 +228,8 @@ void idle(){
 		DSTR << "\nPHShapeGL failure." << std::endl;
 		exit(EXIT_FAILURE);
 	} else {
-		//if (approx(prepos, curpos)){
-		if (approxVec_1e3(prepos, curpos)){
+		if (approx(prepos, curpos)){
+		//if (approxVec_1e3(prepos, curpos)){
 			stay++;
 			if (stay > STAY_COUNTER){				// ÃŽ~”»’èƒJƒEƒ“ƒg	
 			DSTR << "\nPHShapeGL success." << std::endl;

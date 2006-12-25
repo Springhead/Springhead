@@ -15,10 +15,7 @@
 */
 
 #include <Springhead.h>		//	Springheadのインタフェース
-//#include <ctime>
-//#include <string>
 #include <GL/glut.h>
-//#include <sstream>
 #include "robot1.h"
 #include "robot2.h"
 #ifdef USE_HDRSTOP

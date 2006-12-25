@@ -22,7 +22,7 @@ public:
 };
 
 ///	GraphicsとPhysicsのSceneをまとめたシーングラフ全体
-class FWScene : public Scene, FWSceneIfInit, public FWSceneDesc {
+class FWScene : public Scene, public FWSceneIfInit, public FWSceneDesc {
 public:
 	OBJECTDEF(FWScene, Scene);
 	ACCESS_DESC(FWScene);

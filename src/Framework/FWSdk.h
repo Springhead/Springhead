@@ -23,7 +23,7 @@ public:
 	}
 };
 
-class SPR_DLL FWSdk:public Sdk, FWSdkIfInit{
+class SPR_DLL FWSdk:public Sdk, public FWSdkIfInit{
 protected:
 	//	å^èÓïÒDB
 	static UTRef<UTTypeDescDb> typeDb, oldSpringheadTypeDb;

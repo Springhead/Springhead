@@ -1,6 +1,6 @@
 ################################################################
 #
-# 	Makefile for Foundation
+# 	Makefile for Framework
 #
 ################################################################
 
@@ -13,9 +13,7 @@ TARGET_DIR  := $(shell env pwd)
 TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
-FILTEROUT	= UTPreciseTimer.cpp
 SRCS		= $(wildcard *.cpp)
-SRCS		:= $(filter-out $(FILTEROUT), $(SRCS))
 OBJS 		= ${SRCS:.cpp=.o}
 	
 

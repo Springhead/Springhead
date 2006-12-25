@@ -16,6 +16,7 @@ FWScene::FWScene(const FWSceneDesc& d/*=FWSceneDesc()*/)
 : phScene(NULL), grScene(NULL)
 {
 }
+
 NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
 	//	余分にphScene,grSceneの2つのシーンを検索するので，NameManager::FindObjectとちょっと違う．
 	//	2つのシーンは，Sdkに所有されているので，普通にNameManagerとして，FWSceneを指定することはできない．
@@ -91,9 +92,18 @@ size_t FWScene::NChildObject() const{
 }
 
 ObjectIf* FWScene::GetChildObject(size_t pos){
+	ObjectIf* ret;
 	if (pos < fwObjects.size()) return fwObjects[pos];
-	if (pos - fwObjects.size() == 0) return phScene ? phScene : grScene;
-	if (pos - fwObjects.size() == 1) return phScene ? grScene : NULL;
+	if (pos - fwObjects.size() == 0) {
+		if (phScene==NULL) 	ret = phScene;
+		else				ret = grScene;
+		return ret;
+	}
+	if (pos - fwObjects.size() == 1) {
+		if (phScene)	ret = grScene;
+		else				ret = NULL;
+		return ret;
+	}
 	return NULL;
 }
 

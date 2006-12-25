@@ -14,7 +14,6 @@
 #include <ctime>
 #include <string>
 #include <sstream>
-//#include <windows.h>
 #include <GL/glut.h>
 
 #ifdef USE_HDRSTOP
@@ -47,7 +46,7 @@ std::vector<PHSolidIf*> soTarget;
 
 /** 実験用変数 **/
 const double dt = 0.05	;					//積分幅
-const int niter = 200;					//LCPはんぷくかいすう
+const int niter = 200;						//LCPはんぷくかいすう
 
 bool bTimer = true;			//	タイマーでシミュレーションを進めるかどうか
 

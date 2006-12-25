@@ -1,8 +1,10 @@
 #pragma hdrstop
 #include "UTPath.h"
-#include <windows.h>
-#include <io.h>
-#include <direct.h>
+#ifdef _MSC_VER	
+# include <windows.h>
+# include <io.h>
+# include <direct.h>
+#endif
 
 namespace Spr {;
 void UTPath::Path(UTString p){
@@ -14,6 +16,7 @@ void UTPath::Path(UTString p){
 	path = p;
 }
 bool UTPath::Search(UTString file){
+#ifdef _MSC_VER	
 	char* fn=NULL;
 	char buf[1024];
 	if (!SearchPath(NULL, file.c_str(), NULL, sizeof(buf), buf, &fn)){
@@ -23,25 +26,40 @@ bool UTPath::Search(UTString file){
 		if (!SearchPath(sprPath, file.c_str(), NULL, sizeof(buf), buf, &fn)) return false;
 	}
 	path = buf;
+#else
+	
+#endif
 	return true;
 }
 UTString UTPath::File(){
 	char buf[1024];
 	char buf2[1024];
+#ifdef _MSC_VER		
 	_splitpath(path.c_str(), NULL, NULL, buf, buf2);
+#else
+
+#endif	
 	UTString file = buf;
 	file += buf2;
 	return file;
 }
 UTString UTPath::Main(){
 	char buf[1024];
+#ifdef _MSC_VER			
 	_splitpath(path.c_str(), NULL, NULL, buf, NULL);
+#else
+
+#endif		
 	UTString m = buf;
 	return m;
 }
 UTString UTPath::Ext(){
 	char buf[1024];
+#ifdef _MSC_VER				
 	_splitpath(path.c_str(), NULL, NULL, NULL, buf);
+#else
+
+#endif			
 	return UTString(buf);
 }
 UTString UTPath::Drive(){
@@ -50,7 +68,11 @@ UTString UTPath::Drive(){
 		return path.substr(0, n-1);
 	}else{
 		char buf[1024];
+#ifdef _MSC_VER			
 		_splitpath(path.c_str(), buf, NULL, NULL, NULL);
+#else
+
+#endif			
 		return UTString(buf);
 	}
 }
@@ -69,13 +91,21 @@ UTString UTPath::Dir(){
 }
 UTString UTPath::GetCwd(){
 	char buf[1024];
+#ifdef _MSC_VER		
 	GetCurrentDirectory(sizeof(buf), buf);
+#else	
+	
+#endif	
 	UTString rv(buf);
 	rv += "\\";
 	return rv;
 }
 bool UTPath::SetCwd(UTString cwd){
+#ifdef _MSC_VER		
 	return SetCurrentDirectory(cwd.c_str())!=0;
+#else		
+	return false;
+#endif		
 }
 UTString UTPath::FullPath(){
 	if (path.length() && path[0] == '\\'

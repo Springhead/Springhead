@@ -6,9 +6,9 @@
 #include <Foundation/Scene.h>
 #include "IfStubFramework.h"
 
-namespace Spr{
+namespace Spr{;
 
-	class FWObject : public NamedObject, FWObjectIfInit, public FWObjectDesc {
+	class FWObject : public NamedObject, public FWObjectIfInit, public FWObjectDesc {
     public:
 		OBJECTDEF(FWObject, NamedObject);
 		ACCESS_DESC(FWObject);
