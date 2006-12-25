@@ -33,6 +33,7 @@ public:
 	PHSolid* solid[2];
 	UTCombination< UTRef<TShapePair> > shapePairs;
 
+	virtual ~PHSolidPair(){}
 	virtual void Init(PHSolid* s0, PHSolid* s1){
 		solid[0] = s0;
 		solid[1] = s1;

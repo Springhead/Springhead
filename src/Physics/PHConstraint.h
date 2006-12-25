@@ -49,10 +49,9 @@ public:
 	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
 
 	bool		axis[6];			///< 関節軸となる自由度．
-	bool		constr[6];			///< 拘束する自由度．
-									///< axis[i] == trueでも可動範囲，バネ・ダンパが有効な場合はtrueとなる
-	
-	/// 派生クラスの機能
+	bool		constr[6];			///< 拘束する自由度.	axis[i] == trueでも可動範囲，バネ・ダンパが有効な場合はtrueとなる
+
+	/* 派生クラスの機能	*/
 	virtual void SetDesc(const PHConstraintDesc& desc);		///< ディスクリプタの読み込み
 	//virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
 	void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
