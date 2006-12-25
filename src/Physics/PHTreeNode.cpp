@@ -260,7 +260,7 @@ void PHRootNode::UpdatePosition(double dt){
 template class PHTreeNodeND<1>;
 template class PHTreeNodeND<2>;
 template class PHTreeNodeND<3>;
-template class PHTreeNodeND<4>;
+//template class PHTreeNodeND<4>;
 
 template<int NDOF>
 PHTreeNodeND<NDOF>::PHTreeNodeND(){

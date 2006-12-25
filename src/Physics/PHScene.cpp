@@ -220,7 +220,6 @@ bool PHScene::AddChildObject(ObjectIf* o){
 bool PHScene::DelChildObject(ObjectIf* o){
 	bool rv = solids->DelChildObject(o);
 	if(rv){
-		PHSolidIf* s = DCAST(PHSolidIf, o);
 		penaltyEngine->DelChildObject(o);
 		constraintEngine->DelChildObject(o);
 	}

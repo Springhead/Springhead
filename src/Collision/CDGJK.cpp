@@ -181,14 +181,14 @@ const char vacants[] = {
 };
 inline char VacantIdFromId(char a, char b){
 	char bits = (1<<a) | (1<<b);
-	return vacants[bits];
+	return vacants[(int)bits];
 }
 inline char VacantIdFromId(char a, char b, char c){
 	char bits = (1<<a) | (1<<b) | (1<<c);
-	return vacants[bits];
+	return vacants[(int)bits];
 }
 inline char VacantIdFromBits(char bits){
-	return vacants[bits];
+	return vacants[(int)bits];
 }
 
 bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
@@ -216,7 +216,7 @@ bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
 			Vec3d vtxs[3];
 			Vec3d notUsed[3];
 			int nUsed=0, nNotUsed=0;
-			for(int i=0, j=0; i<4; ++i){
+			for(int i=0; i<4; ++i){
 				if (usedBits & (1<<i)){
 					vtxs[nUsed] = p_q[i];
 					nUsed++;
@@ -330,22 +330,24 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	cur->i[1] = 0;	//	もとの線分
 	cur->i[2] = 0;	//	もとの線分
 	while(1){
-		double s = w[cur->i[0]].XY() ^ w[cur->i[1]].XY();
+		double s = w[(int)cur->i[0]].XY() ^ w[(int)cur->i[1]].XY();
 		if (s > epsilon){		//	1-0からはみ出している
-			Vec2d l = w[cur->i[1]].XY() - w[cur->i[0]].XY();
+			Vec2d l = w[(int)cur->i[1]].XY() - w[(int)cur->i[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
 			double ll_inv = 1/l.square();
-			v.XY() = (w[cur->i[1]].XY()*l*ll_inv) * w[cur->i[0]].XY() - (w[cur->i[0]].XY()*l*ll_inv) * w[cur->i[1]].XY();
+			v.XY() = (w[(int)cur->i[1]].XY()*l*ll_inv) * w[(int)cur->i[0]].XY()
+				   - (w[(int)cur->i[0]].XY()*l*ll_inv) * w[(int)cur->i[1]].XY();
 			v.Z() = 0;
 			cur->i[2] = cur->i[0];
 			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
 		}else{
-			s = w[cur->i[2]].XY() ^ w[cur->i[0]].XY();
+			s = w[(int)cur->i[2]].XY() ^ w[(int)cur->i[0]].XY();
 			if (s > epsilon){	//	0-2からはみ出している
-				Vec2d l = w[cur->i[2]].XY() - w[cur->i[0]].XY();
+				Vec2d l = w[(int)cur->i[2]].XY() - w[(int)cur->i[0]].XY();
 				assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
 				double ll_inv = 1/l.square();
-				v.XY() = (w[cur->i[2]].XY()*l*ll_inv) * w[cur->i[0]].XY() - (w[cur->i[0]].XY()*l*ll_inv) * w[cur->i[2]].XY();
+				v.XY() = (w[(int)cur->i[2]].XY()*l*ll_inv) * w[(int)cur->i[0]].XY()
+					   - (w[(int)cur->i[0]].XY()*l*ll_inv) * w[(int)cur->i[2]].XY();
 				v.Z() = 0;
 				cur->i[1] = cur->i[0];
 				cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
@@ -353,12 +355,12 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				break;
 			}
 		}
-		CalcSupport(v, cur->i[0]);
-		if (w[cur->i[0]].XY() * v.XY() > -epsilon2){	//	0の外側にoがあるので触ってない
+		CalcSupport(v, (int)cur->i[0]);
+		if (w[(int)cur->i[0]].XY() * v.XY() > -epsilon2){	//	0の外側にoがあるので触ってない
 			return 0;
 		}
-		if(	(w[cur->i[0]].XY()-w[cur->i[1]].XY()).square() < epsilon2 || 
-			(w[cur->i[2]].XY()-w[cur->i[1]].XY()).square() < epsilon2){
+		if(	(w[(int)cur->i[0]].XY()-w[(int)cur->i[1]].XY()).square() < epsilon2 || 
+			(w[(int)cur->i[2]].XY()-w[(int)cur->i[1]].XY()).square() < epsilon2){
 			return 0;								//	同じw: 辺の更新なし＝Oは辺の外側
 		}
 	}
@@ -366,7 +368,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	三角形 cur 0-1-2 の中にoがある．	cur 0が最後に更新した頂点w
 	while(1){
 		static Vec3d s;		//	三角形の有向面積
-		s = (w[cur->i[1]]-w[cur->i[0]]) % (w[cur->i[2]]-w[cur->i[0]]);
+		s = (w[(int)cur->i[1]]-w[(int)cur->i[0]]) % (w[(int)cur->i[2]]-w[(int)cur->i[0]]);
 		//	頂点の並び順をそろえる．
 		if (s.Z() < 0){		//	逆向き
 			std::swap(cur->i[1], cur->i[2]);
@@ -374,18 +376,20 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		}
 		if (s.Z() < epsilon){	//	線分になる場合
 			cur->nVtx = 2;		//	使うのは2点，どちらの2点を使うか判定する．
-			double ip1 = w[cur->i[0]].XY() * w[cur->i[1]].XY();
-			double ip2 = w[cur->i[0]].XY() * w[cur->i[2]].XY();
+			double ip1 = w[(int)cur->i[0]].XY() * w[(int)cur->i[1]].XY();
+			double ip2 = w[(int)cur->i[0]].XY() * w[(int)cur->i[2]].XY();
 			if (ip1 < epsilon && ip2 < epsilon){	//	0-1も0-2もoを含む
-				cur->k[cur->i[0]] = w[cur->i[0]].XY().norm();
-				cur->k[cur->i[1]] = w[cur->i[1]].XY().norm();
-				cur->dist = cur->k[cur->i[0]]*w[cur->i[0]].Z() + cur->k[cur->i[1]]*w[cur->i[1]].Z();
-				double l1 = cur->k[cur->i[0]] + cur->k[cur->i[1]];
+				cur->k[(int)cur->i[0]] = w[(int)cur->i[0]].XY().norm();
+				cur->k[(int)cur->i[1]] = w[(int)cur->i[1]].XY().norm();
+				cur->dist = cur->k[(int)cur->i[0]]*w[(int)cur->i[0]].Z()
+					      + cur->k[(int)cur->i[1]]*w[(int)cur->i[1]].Z();
+				double l1 = cur->k[(int)cur->i[0]] + cur->k[(int)cur->i[1]];
 				cur->dist /= l1;
 				
-				cur->k[cur->i[2]] = w[cur->i[1]].XY().norm();
-				double d2 = cur->k[cur->i[0]]*w[cur->i[0]].Z() + cur->k[cur->i[2]]*w[cur->i[2]].Z();
-				double l2 = cur->k[cur->i[0]] + cur->k[cur->i[2]];
+				cur->k[(int)cur->i[2]] = w[(int)cur->i[1]].XY().norm();
+				double d2 = cur->k[(int)cur->i[0]]*w[(int)cur->i[0]].Z()
+					      + cur->k[(int)cur->i[2]]*w[(int)cur->i[2]].Z();
+				double l2 = cur->k[(int)cur->i[0]] + cur->k[(int)cur->i[2]];
 				d2 /= l2;
 				if (d2 < cur->dist){
 					std::swap(cur->i[1], cur->i[2]);
@@ -393,17 +397,18 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				}
 			}else{
 				if (ip2 < ip1) std::swap(cur->i[1], cur->i[2]);
-				cur->k[cur->i[0]] = w[cur->i[0]].XY().norm();
-				cur->k[cur->i[1]] = w[cur->i[1]].XY().norm();
-				cur->dist = cur->k[cur->i[0]]*w[cur->i[0]].Z() + cur->k[cur->i[1]]*w[cur->i[1]].Z();
-				double l1 = cur->k[cur->i[0]] + cur->k[cur->i[1]];
+				cur->k[(int)cur->i[0]] = w[(int)cur->i[0]].XY().norm();
+				cur->k[(int)cur->i[1]] = w[(int)cur->i[1]].XY().norm();
+				cur->dist = cur->k[(int)cur->i[0]]*w[(int)cur->i[0]].Z()
+					      + cur->k[(int)cur->i[1]]*w[(int)cur->i[1]].Z();
+				double l1 = cur->k[(int)cur->i[0]] + cur->k[(int)cur->i[1]];
 				cur->dist /= l1;
 			}
 			if (last->nVtx){
-				double approach = last->normal * (w[cur->i[0]] - w[last->i[0]]);
+				double approach = last->normal * (w[(int)cur->i[0]] - w[(int)last->i[0]]);
 				if (approach > -epsilon || cur->dist >= last->dist) break;	//	return last
 			}
-			Vec3d l = w[cur->i[0]] - w[cur->i[1]];
+			Vec3d l = w[(int)cur->i[0]] - w[(int)cur->i[1]];
 			cur->normal = Vec3d(0,0,1) - l.Z() / l.square() * l;
 			cur->normal.unitize();
 			std::swap(cur, last);
@@ -414,9 +419,9 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		}else{	//	三角形になる場合
 			cur->nVtx = 3;		//	使うのは3点．
 			cur->normal = s.unit();
-			cur->dist = w[cur->i[0]] * cur->normal / cur->normal.Z();
+			cur->dist = w[(int)cur->i[0]] * cur->normal / cur->normal.Z();
 			if (last->nVtx){
-				double approach = last->normal * (w[cur->i[0]] - w[last->i[0]]);
+				double approach = last->normal * (w[(int)cur->i[0]] - w[(int)last->i[0]]);
 				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist >= last->dist)) break;	//	return last;
 			}
 
@@ -430,7 +435,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			double ow[3];
 			int i;
 			for(i=0; i<3;++i){
-				Vec2d wn = w[cur->i[i]].XY()-w[newVtx].XY();
+				Vec2d wn = w[(int)cur->i[i]].XY()-w[newVtx].XY();
 				ow[i] = wn % (-w[newVtx].XY());
 				if (ow[i] < 0){
 					bMinus = true;
@@ -447,7 +452,7 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				//	+-が出揃わない場合，全部0の場合：w[newVtx]に近いw[i]を置き換え
 				double minDist = DBL_MAX;
 				for(int i=0; i<3; ++i){
-					double d = (w[cur->i[i]].XY() - w[newVtx].XY()).square();
+					double d = (w[(int)cur->i[i]].XY() - w[newVtx].XY()).square();
 					if (d<minDist){
 						minDist = d; replace = i;
 					}
@@ -462,16 +467,16 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	if (last->nVtx == 2){	//	線分の場合，計算済みのkを使ってpa,pbを計算
 		double sumInv = 1 / (last->k[0]+last->k[1]);
 		last->k[0] *= sumInv; last->k[1] *= sumInv;
-		pa = last->k[0] * p[last->i[0]] + last->k[1] * p[last->i[1]];
-		pb = last->k[0] * q[last->i[0]] + last->k[1] * q[last->i[1]];
+		pa = last->k[0] * p[(int)last->i[0]] + last->k[1] * p[(int)last->i[1]];
+		pb = last->k[0] * q[(int)last->i[0]] + last->k[1] * q[(int)last->i[1]];
 	}else{					//	三角形の場合，kの計算をしていないのでここで計算
 		Matrix2d m;
-		m.Ex() = w[last->i[0]].XY()-w[last->i[1]].XY();
-		m.Ey() = w[last->i[0]].XY()-w[last->i[2]].XY();
-		Vec2d k = m.inv() * w[last->i[0]].XY();
+		m.Ex() = w[(int)last->i[0]].XY()-w[(int)last->i[1]].XY();
+		m.Ey() = w[(int)last->i[0]].XY()-w[(int)last->i[2]].XY();
+		Vec2d k = m.inv() * w[(int)last->i[0]].XY();
 		double kz = 1-k.x-k.y;
-		pa = k.x*p[last->i[1]] + k.y*p[last->i[2]] + kz*p[last->i[0]];
-		pb = k.x*q[last->i[1]] + k.y*q[last->i[2]] + kz*q[last->i[0]];
+		pa = k.x*p[(int)last->i[1]] + k.y*p[(int)last->i[2]] + kz*p[(int)last->i[0]];
+		pb = k.x*q[(int)last->i[1]] + k.y*q[(int)last->i[2]] + kz*q[(int)last->i[0]];
 	}
 	dist = last->dist;
 	normal = w2z.Conjugated() * last->normal;

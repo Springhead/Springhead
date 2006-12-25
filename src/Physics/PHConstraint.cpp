@@ -64,7 +64,6 @@ void PHConstraint::UpdateState(){
 // 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
 void PHConstraint::CompJacobian(){
 	SpatialTransform X[2];
-	Matrix3d	Rjabs[2];
 	X[0].r = solid[0]->GetCenterPosition();
 	X[0].q = solid[0]->GetOrientation();
 	X[1].r = solid[1]->GetCenterPosition();

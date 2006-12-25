@@ -142,10 +142,10 @@ void PHSolidPairForPenalty::GenerateForce(){
 void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
 	cp->Clear();
 	Vec3f cog[2] = {solid[0]->cog - cp->commonPoint, solid[1]->cog - cp->commonPoint};
-	CDConvexMesh* cmesh[2] = {
+	/*CDConvexMesh* cmesh[2] = {
 		(CDConvexMesh*)cp->shape[0],
 		(CDConvexMesh*)cp->shape[1]
-	};
+	};*/
 	if (bUseContactVolume){	//	’Êí true
 		//for(CDContactAnalysis::Vtxs::iterator it = analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){
 		for (CDContactAnalysisFace** it = &*analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){	// ‚±‚ê‚Å‚¢‚¢‚ÌH

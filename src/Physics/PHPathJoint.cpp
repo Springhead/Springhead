@@ -146,10 +146,6 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 	}
 	PHPathPointWithJacobian &rhs = *it, &lhs = *--it;
 	double tmp = 1.0 / (rhs.s - lhs.s);
-	if(lhs.s <= s && s <= rhs.s);
-	else{
-		int hoge = 0;
-	}
 	J = ((rhs.s - s) * tmp) * lhs.J + ((s - lhs.s) * tmp) * rhs.J;
 }
 

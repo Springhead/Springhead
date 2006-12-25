@@ -138,16 +138,20 @@ void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, const TVectorBase<DIMENC
 ///	2×2行列を単位行列に初期化
 template <class D>
 void init_unitize(TMatrixBase<DIMENC(2),DIMENC(2),D>& m){
- 	TYPENAME D::element_type z = TYPENAME D::zero(0);
- 	TYPENAME D::element_type u = TYPENAME D::unit(1);
+ 	typedef TYPENAME D::zero zero;
+ 	typedef TYPENAME D::unit unit;
+	TYPENAME D::element_type z = zero(0);
+ 	TYPENAME D::element_type u = unit(1);
 	m.item(0,0)=u;	m.item(0,1)=z;
 	m.item(1,0)=z;	m.item(1,1)=u;
 }
 ///	3×3行列を単位行列に初期化
 template <class D>
 void init_unitize(TMatrixBase<DIMENC(3),DIMENC(3),D>& m){
-	TYPENAME D::element_type z = TYPENAME D::zero(0);
-	TYPENAME D::element_type u = TYPENAME D::unit(1);
+	typedef TYPENAME D::zero zero;
+ 	typedef TYPENAME D::unit unit;
+	TYPENAME D::element_type z = zero(0);
+ 	TYPENAME D::element_type u = unit(1);
 	m.item(0,0)=u;	m.item(0,1)=z;	m.item(0,2)=z;
 	m.item(1,0)=z;	m.item(1,1)=u;	m.item(1,2)=z;
 	m.item(2,0)=z;	m.item(2,1)=z;	m.item(2,2)=u;

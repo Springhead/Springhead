@@ -21,9 +21,9 @@ namespace Spr{;
 
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
 	//	交差する2つの凸形状を接触面で切った時の切り口の形を求める
-	int start = engine->points.size();
+	//int start = engine->points.size();
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
-	int end = engine->points.size();
+	//int end = engine->points.size();
 
 	//	HASE_REPORT
 /*	DSTR << "st:" << sp->state << " depth:" << sp->depth;
@@ -135,7 +135,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			engine->points.push_back(point);
 		}
 	}
-	if (nPoint == engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
+	if (nPoint == (int)engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
 		//	きっと1点で接触している．
 
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
@@ -176,7 +176,7 @@ void PHConstraintEngine::Clear(){
 }
 
 PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
-	PHJoint* joint;
+	PHJoint* joint = NULL;
 	switch(desc.type){
 	case PHConstraintDesc::HINGEJOINT:
 		joint = DBG_NEW PHHingeJoint();
@@ -308,9 +308,6 @@ PHGear* PHConstraintEngine::AddGear(PHJoint1D* lhs, PHJoint1D* rhs, const PHGear
 }
 
 void PHConstraintEngine::SetupLCP(){
-	PHScene* scene = DCAST(PHScene, GetScene());
-	double dt = scene->GetTimeStep();
-
 	/* 相互に依存関係があるので呼び出し順番には注意する */
 	
 	//ツリー構造の前処理(ABA関係)

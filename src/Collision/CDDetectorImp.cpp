@@ -132,7 +132,7 @@ void CDShapePair::CalcNormal(){
 		FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], v, closestPoint[0], closestPoint[1]);
 		DSTR << "v:" << v << std::endl;
 		DSTR << "cp:" << shapePoseW[0]*closestPoint[0] << shapePoseW[1]*closestPoint[1] << std::endl; 
-		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
+		res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
 	}
 	depth *= -1;
 	center = shapePoseW[0] * closestPoint[0];
@@ -366,7 +366,7 @@ void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 		FindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], v, cp->closestPoint[0], cp->closestPoint[1]);
 		DSTR << "v:" << v << std::endl;
 		DSTR << "cp:" << cp->shapePoseW[0]*cp->closestPoint[0] << cp->shapePoseW[1]*cp->closestPoint[1] << std::endl; 
-		int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], dir, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
+		res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], dir, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	}
 	cp->depth *= -1;
 	cp->center = cp->shapePoseW[0] * cp->closestPoint[0];

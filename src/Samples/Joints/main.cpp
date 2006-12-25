@@ -369,7 +369,6 @@ void OnKey0(char key){
 			gdesc.ratio = 1.0;
 			scene->CreateGear(DCAST(PHJoint1DIf, jntLink[m-2]), DCAST(PHJoint1DIf, jntLink[m-1]), gdesc);
 		}*/
-		scene->SetContactMode(PHSceneDesc::MODE_NONE);
 		}break;
 	}
 }
@@ -786,7 +785,7 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
+	dscene.timeStep = 0.1;
 	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
