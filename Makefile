@@ -33,7 +33,7 @@ samples-all:
 	do $(MAKE) -C $$dir samples-all || exit; \
 	done
 	
-package-ibrary: 	
+package-library: 	
 	@for dir in $(SUB_DIRS); \
 	do $(MAKE) -C $$dir tests-all || exit; \
 	done
@@ -61,13 +61,14 @@ realclean:
 
 help:
 	@echo "Other targets are"
-	@echo "  help          show this help message"
-	@echo "  all           builds project - DEFAULT"
-	@echo "  library       creates library"
-	@echo "  tests-all     builds tests"
-	@echo "  samples-all   builds Samples"
-	@echo "  clean         removes objects and binary"
-	@echo "  realclean     remove all generated files" 
+	@echo "  help               show this help message"
+	@echo "  all                builds project - DEFAULT"
+	@echo "  library            creates library"
+	@echo "  tests-all          builds tests"
+	@echo "  samples-all        builds Samples"
+	@echo "  package-library    creating the package library"	
+	@echo "  clean              removes objects and binary"
+	@echo "  realclean          remove all generated files" 
 
 
 ################################################################
