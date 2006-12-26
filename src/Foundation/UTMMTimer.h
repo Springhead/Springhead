@@ -24,8 +24,8 @@ protected:
 	volatile bool bThread;		///<	タイマーがスレッドとして擬似動作しているかどうか
     volatile bool bRun;			///<	コールバック関数が実行中かどうか
 	void* hThread;				///<	擬似動作用スレッド
-	static void __stdcall TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long);
-	static unsigned long __stdcall ThreadCallback(void* arg);
+	static void SPR_STDCALL TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long);
+	static unsigned long SPR_STDCALL ThreadCallback(void* arg);
 	void BeginPeriod();
 	void EndPeriod();
 

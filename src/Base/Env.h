@@ -47,10 +47,12 @@
 	Microsoft compiler Ç‹ÇΩÇÕ Borland C++ compiler ÇÃèÍçáÇÕÅA__cdeclÇéwíË
  */
 #if defined _MSC_VER || defined __BORLANDC__
- #define SPR_CDECL	__cdecl
- #define FASTCALL	_fastcall
+ #define SPR_CDECL		__cdecl
+ #define SPR_STDCALL 	__stdcall 
+ #define FASTCALL		_fastcall
 #else
  #define SPR_CDECL
+ #define SPR_STDCALL 
  #define FASTCALL
 #endif
 

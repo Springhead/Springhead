@@ -7,7 +7,7 @@
  */
 #include "Graphics.h"
 #include "GRMesh.h"
-#include <gl/glut.h>
+#include <GL/glut.h>
 
 
 namespace Spr{;

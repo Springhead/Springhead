@@ -14,7 +14,6 @@
 #####################################################################
 #	Macros
 #####################################################################
-
 CXX				= g++
 AR				= ar
 RANLIB			= ranlib
@@ -24,7 +23,7 @@ RM				= rm -rf
 #	Cygwin
 # ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
-LDFLAGS.EXTRA 	= -L./lib/cygwin/ -L/usr/w32api/ -L/usr/lib
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/ 
 LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lglew32 -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
@@ -35,7 +34,7 @@ endif
 # 	Linux
 # ----------------------------------------------------------
 ifeq ($(findstring Linux, $(shell env uname)), Linux)
-LDFLAGS.EXTRA 	= -L./lib/linux/ -L/usr/lib
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/linux/ -L/usr/lib -L/usr/X11R6/lib 
 LDFLAGS.GL		= -lX11 -lXi -lXmu -lglut -lGLU -lGL -lm -lGLEW
 INCLUDES 		= -I/usr/X11R6/include/
 ARFLAGS			= r
@@ -45,7 +44,7 @@ endif
 # 	Mac OS X(PowerPC, Aqua)
 # ----------------------------------------------------------
 ifeq ($(findstring Darwin, $(shell env uname)), Darwin)
-LDFLAGS.EXTRA 	= -L./lib/darwin/ -L/usr/lib
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/darwin/ -L/usr/lib -/usr/local/lib
 LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation GLEW
 INCLUDES 		= -I/usr/local/include/
 ARFLAGS			= rcu
@@ -69,7 +68,6 @@ LDFLAGS 		= $(LDFLAGS.EXTRA) \
 					-lBase -lCollision -lFoundation -lPhysics -lGraphics -lFileIO -lFramework -lFoundation -lFramework \
 					$(LDFLAGS.EXTRA) \
 					$(LDFLAGS.GL) \
-					
 					
 INCLUDES		+= -I$(TOP_DIR)/include -I$(TOP_DIR)/src -I.
 

@@ -1,5 +1,5 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
-#include "../../include/Framework/SprFWapp.h" 
+#include "../../include/Framework/SprFWApp.h" 
 #include "../../include/Framework/SprFWAppGL.h" 
 #include "../../include/Framework/SprFWAppGLUT.h" 
 #include "../../include/Framework/SprFWObject.h" 

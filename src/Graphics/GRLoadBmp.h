@@ -3,13 +3,13 @@
 
 namespace Spr{;
 
-int __cdecl LoadBmpCreate(const char* fn);
-int __cdecl LoadBmpRelease(int hBmp);
-int __cdecl LoadBmpGetBmp(int hBmp, char* bmp);
-int __cdecl LoadBmpGetWidth(int hBmp);
-int __cdecl LoadBmpGetHeight(int hBmp);
-int __cdecl LoadBmpGetBytePerPixel(int hBmp);
-int __cdecl LoadBmpGetSize(int hBmp);
+int SPR_CDECL LoadBmpCreate(const char* fn);
+int SPR_CDECL LoadBmpRelease(int hBmp);
+int SPR_CDECL LoadBmpGetBmp(int hBmp, char* bmp);
+int SPR_CDECL LoadBmpGetWidth(int hBmp);
+int SPR_CDECL LoadBmpGetHeight(int hBmp);
+int SPR_CDECL LoadBmpGetBytePerPixel(int hBmp);
+int SPR_CDECL LoadBmpGetSize(int hBmp);
 
 
 };

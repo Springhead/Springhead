@@ -1,6 +1,6 @@
 #ifndef UTDLLLOADER_H
 #define UTDLLLOADER_H
-#include <base/BaseUtility.h>
+#include <Base/BaseUtility.h>
 
 namespace Spr {;
 /**	DLLをロードするクラス．以下のようにすると，通常のライブラリと同様に

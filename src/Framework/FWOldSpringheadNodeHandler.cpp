@@ -828,7 +828,7 @@ public:
 		PHJoint1DDesc desc;
 		PHSolid* solid;
 		UTString name;
-		JointCreator(): parent(NULL), solid(NULL), phScene(NULL){}
+		JointCreator(): phScene(NULL), parent(NULL), solid(NULL){}
 		bool AddChildObject(ObjectIf* o){
 			PHSolid* s = DCAST(PHSolid, o);
 			if (s){

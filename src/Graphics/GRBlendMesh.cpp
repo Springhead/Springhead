@@ -7,7 +7,7 @@
  */
 #include "Graphics.h"
 #include "GRBlendMesh.h"
-#include <gl/glut.h>
+#include <GL/glut.h>
 
 namespace Spr{;
 IF_OBJECT_IMP(GRBlendMesh, GRVisual);

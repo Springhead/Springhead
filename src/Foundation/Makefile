@@ -13,7 +13,9 @@ TARGET_DIR  := $(shell env pwd)
 TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
-FILTEROUT	= UTPreciseTimer.cpp
+FILTEROUT	= \
+				UTPreciseTimer.cpp \
+				UTMMTimer.cpp
 SRCS		= $(wildcard *.cpp)
 SRCS		:= $(filter-out $(FILTEROUT), $(SRCS))
 OBJS 		= ${SRCS:.cpp=.o}

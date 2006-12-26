@@ -1,5 +1,7 @@
 #include "Foundation.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include "UTMMTimer.h"
 #include <windows.h>
 #include <mmsystem.h>
@@ -89,7 +91,7 @@ void UTMMTimer::EndPeriod()
 	{
 	timeEndPeriod(resolution);
 	}
-void __stdcall UTMMTimer::TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long)
+void SPR_STDCALL UTMMTimer::TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long)
 	{
 	UTMMTimer& mmtimer = *(UTMMTimer*)dwUser;
 #if 0
@@ -102,7 +104,7 @@ void __stdcall UTMMTimer::TimerCallback(unsigned uID, unsigned, unsigned long dw
 	mmtimer.func(mmtimer.arg);
     mmtimer.bRun = false;
 	}
-unsigned long __stdcall UTMMTimer::ThreadCallback(void* arg){
+unsigned long SPR_STDCALL UTMMTimer::ThreadCallback(void* arg){
 	UTMMTimer& mmtimer = *(UTMMTimer*)arg;
 
 	unsigned long lastCall = timeGetTime();

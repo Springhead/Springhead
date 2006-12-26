@@ -384,24 +384,17 @@ void PHConstraintEngine::UpdateSolids(){
 		(*it)->UpdatePosition(dt);
 	}
 }
-
-#include <windows.h>
-
+	
 void PHConstraintEngine::Step(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
-	LARGE_INTEGER freq, val[2];
-	QueryPerformanceFrequency(&freq);
 
 	//交差を検知
-	QueryPerformanceCounter(&val[0]);
 	points.clear();
 	if(bContactEnabled)
 		//Detect(ct, dt);
 		ContDetect(ct, dt);
-	QueryPerformanceCounter(&val[1]);
-	//DSTR << "cd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
 
 	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
 	//ヤコビアン等の再計算
@@ -413,16 +406,8 @@ void PHConstraintEngine::Step(){
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
 		(*it)->UpdateState();
 	
-	QueryPerformanceCounter(&val[0]);
 	SetupLCP();
-	QueryPerformanceCounter(&val[1]);
-	//DSTR << "sd " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-
-	QueryPerformanceCounter(&val[0]);
 	IterateLCP();
-	QueryPerformanceCounter(&val[1]);
-	//DSTR << "id " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-
 	//Correction(dt, ct);
 
 	//位置・速度の更新
