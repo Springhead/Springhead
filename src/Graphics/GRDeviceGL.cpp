@@ -9,6 +9,9 @@
 #define GLEWMX
 
 #if defined(USE_GREW)
+#ifndef _MSC_VER
+#define GLEW_STATIC		// 定義するとAPI宣言にdeclspecキーワードが付かない
+#endif
 # include <GL/glew.h>
 #endif
 
