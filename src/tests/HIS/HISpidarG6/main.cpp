@@ -55,10 +55,12 @@ using namespace Spr;
 #define LIMIT_DEPTH 100				// 予測シミュレーションを行う剛体取得の深さ上限
 #define NUM_PREDICT_ITERATE 15		// 予測シミュレーションのイテレート回数
 
-#define NUM_COLLISIONS 20			// ポインタへの許容接触数
-#define NUM_COL_SOLIDS 20			// ポインタへの許容接触剛体数　
+#define NUM_COLLISIONS 100			// ポインタへの許容接触数
+#define NUM_COL_SOLIDS 100			// ポインタへの許容接触剛体数　
 									// NUM_COLLISIONSと区別するのはプログラムを読みやすくするため。実質的な存在意義はない
 
+#define COLLISION_DENSITY 0.05		// 力覚の計算に使用する接触点の分布量を調節する値
+									// 接触点はこの値より大きい距離で分布する
 
 #ifdef _DEBUG
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
@@ -163,6 +165,22 @@ bool bMode = true;
 typedef struct {
 	// collision data
 	PHConstraint* constraint[NUM_COLLISIONS];
+	
+	// 新たな接触を作るために必要なshapePair
+	Spr::PHShapePairForLCP* shapePair[NUM_COLLISIONS];
+
+	// 前回から引き継がれた接触かどうか判定するフラグを格納する配列
+	bool bPreviousCollide[NUM_COLLISIONS];
+
+	int sign[NUM_COLLISIONS];
+
+	// 自分で作成した接触点の集合を格納する変数
+	multimap<double, PHContactPoint *> points;
+
+	// 自分接触した接触点から、その元になったデータへアクセスするための配列の添え字を格納する変数
+	map<PHConstraint *, int> NewcolToCol;
+
+	PHSolid* solid[NUM_COLLISIONS][2];
 
 	// collision solid data
 	PHSolid* nearest_solids[NUM_COL_SOLIDS];
@@ -245,32 +263,36 @@ PHSolid* getAdjacentSolid(PHConstraint* constraint, PHSolid* solid, int* sign = 
 }
 
 // 提示力の計算および提案手法に必要な情報を集めて構造体を作成する
-void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info, 
+void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info, 
 					vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > pointer_static_consts, 
 					vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > col_candidate_static_consts,
+					vector<pair<PHConstraint *, int> > current_consts, vector<pair<PHConstraint *, int> >current_static_consts, 
+					map<PHConstraint *, int> NewcolToCol,
 					map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid *, SpatialVector> vecs)
 {
 	// 初期化処理
 	// 前々回のデータはもう必要ないので初期化する
 	// これ以外のデータは上書きし、さらに個数でアクセスを制限するので
 	// 初期化の必要はない
-	for(int i = 0; i < info->num_solids; ++i) 
+	for(int i = 0; i < new_info->num_solids; ++i) 
 	{
-		info->nearest_solids[i] = NULL;
-		info->num_col_per_sol[i] = 0;
+		new_info->nearest_solids[i] = NULL;
+		new_info->num_col_per_sol[i] = 0;
 	}
-	info->num_solids = 0;
-	info->num_collisions = 0;
+	new_info->num_solids = 0;
+	new_info->num_collisions = 0;
 
 	int pointer_consts_size = (int)pointer_consts.size();
 	int pointer_static_consts_size = (int)pointer_static_consts.size();
-	
+
 	int col_candidate_consts_size = (int)col_candidate_consts.size();
 	int col_candidate_static_consts_size = (int)col_candidate_static_consts.size();
 
+	int current_consts_size = (int)current_consts.size();
+	int current_static_consts_size = (int)current_static_consts.size();
 
 	// 力覚レンダリングに必要なデータの作成
-	for(int i = 0; i < pointer_consts_size + pointer_static_consts_size + col_candidate_consts_size + col_candidate_static_consts_size; ++i)
+	for(int i = 0; i < pointer_consts_size + pointer_static_consts_size + col_candidate_consts_size + col_candidate_static_consts_size + current_consts_size + current_static_consts_size; ++i)
 	{
 		// 許容数を超える場合は打ち切り
 		if(i > NUM_COLLISIONS) break;
@@ -280,6 +302,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 		PHSolid* so;
 		
 		bool bCollide = true;
+		bool bPreviousCollide = false;
 
 		// 実際に接触し、動く剛体を含む接触
 		if(pointer_consts_size > i)
@@ -290,11 +313,46 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 			if(sign > 0) so = pointer_consts[i].first->solid[0];
 			else so = pointer_consts[i].first->solid[1];
 		}
-		// ポインタには接触していなく、動く剛体を含む接触
-		// ポインタに接触しそうなものたち
-		else if(pointer_consts_size + col_candidate_consts_size > i)
+		// 前ステップで接触していた
+		else if(pointer_consts_size + current_consts_size > i)
 		{
 			int i_local = i - pointer_consts_size;
+
+			constraint = current_consts[i_local].first;
+			sign = current_consts[i_local].second;
+
+			if(sign > 0) so = current_consts[i_local].first->solid[0];
+			else so = current_consts[i_local].first->solid[1];
+
+			bPreviousCollide = true;
+		}
+		// 実際に接触しており、かつ動かない剛体を含む接触
+		else if(pointer_consts_size + pointer_static_consts_size + current_consts_size > i)
+		{
+			int i_local = i - (pointer_consts_size + current_consts_size);
+			constraint = pointer_static_consts[i_local].first;
+			sign = pointer_static_consts[i_local].second;
+
+			if(sign > 0) so = pointer_static_consts[i_local].first->solid[0];
+			else so = pointer_static_consts[i_local].first->solid[1];
+		}
+		// 前ステップで接触しており、かつ動かないもの pointer_static_consts_size + 
+		else if(pointer_consts_size + pointer_static_consts_size + current_consts_size + current_static_consts_size > i)
+		{
+			int i_local = i - (pointer_consts_size + current_consts_size + pointer_static_consts_size);
+			constraint = current_static_consts[i_local].first;
+			sign = current_static_consts[i_local].second;
+
+			if(sign > 0) so = current_static_consts[i_local].first->solid[0];
+			else so = current_static_consts[i_local].first->solid[1];
+
+			bPreviousCollide = true;
+		}
+		// ポインタには接触していなく、動く剛体を含む接触
+		// ポインタに接触しそうなものたち
+		else if(pointer_consts_size + pointer_static_consts_size + current_consts_size + current_static_consts_size + col_candidate_consts_size > i)
+		{
+			int i_local = i - (pointer_consts_size + pointer_static_consts_size + current_consts_size + current_static_consts_size);
 			constraint = col_candidate_consts[i_local].first;
 			sign = col_candidate_consts[i_local].second;
 
@@ -304,21 +362,11 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 			// この接触は実際には接触していないのでfalse
 			bCollide = false;
 		}
-		// 実際に接触しており、かつ動かない剛体を含む接触
-		else if(pointer_consts_size + col_candidate_consts_size + pointer_static_consts_size > i)
-		{
-			int i_local = i - pointer_consts_size - col_candidate_consts_size;
-			constraint = pointer_static_consts[i_local].first;
-			sign = pointer_static_consts[i_local].second;
-
-			if(sign > 0) so = pointer_static_consts[i_local].first->solid[0];
-			else so = pointer_static_consts[i_local].first->solid[1];
-		}
 		// 接触しておらず、かつ動かない剛体を含む接触
 		// ポインタに接触しそうな接触
-		else
+		else 
 		{
-			int i_local = i - pointer_consts_size - col_candidate_consts_size - pointer_static_consts_size;
+			int i_local = i - (pointer_consts_size + col_candidate_consts_size + pointer_static_consts_size + current_consts_size + current_static_consts_size);
 			constraint = col_candidate_static_consts[i_local].first;
 			sign = col_candidate_static_consts[i_local].second;
 
@@ -336,24 +384,24 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 		while(1)
 		{
 			// まだ追加されていない剛体は追加する
-			if(!info->nearest_solids[counter])
+			if(!new_info->nearest_solids[counter])
 			{
-				info->nearest_solids[counter] = so;
+				new_info->nearest_solids[counter] = so;
 				
 				// 剛体から接触へ
 				// また接触から剛体へ時間をかけずに変換できるように
 				// 配列に添え字を格納しておく
-				info->SolToCol[counter][info->num_col_per_sol[counter]] = i;
-				++info->num_col_per_sol[counter];
+				new_info->SolToCol[counter][new_info->num_col_per_sol[counter]] = i;
+				++new_info->num_col_per_sol[counter];
 
-				info->ColToSol[i] = counter;
-				info->num_solids = counter+1;
+				new_info->ColToSol[i] = counter;
+				new_info->num_solids = counter+1;
 
 				// 速度等も剛体ごとに追加
-				info->solid_velocity[counter] = so->GetVelocity();
-				info->solid_angular_velocity[counter] = so->GetAngularVelocity();
-				info->solid_massinvs[counter] = so->GetMassInv();
-				info->solid_inertiainvs[counter] = so->GetInertiaInv();
+				new_info->solid_velocity[counter] = so->GetVelocity();
+				new_info->solid_angular_velocity[counter] = so->GetAngularVelocity();
+				new_info->solid_massinvs[counter] = so->GetMassInv();
+				new_info->solid_inertiainvs[counter] = so->GetInertiaInv();
 
 				// 周囲の影響をあらわす変数をコピーする
 				// この変数は剛体固有の値なので、
@@ -362,67 +410,69 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 				{
 					map<PHSolid *, SpatialVector>::iterator it1 = vecs.find(so);
 					SpatialVector sv = (*it1).second;
-					info->vel_constant[counter] = sv.v();
-					info->ang_constant[counter] = sv.w();
+					new_info->vel_constant[counter] = sv.v();
+					new_info->ang_constant[counter] = sv.w();
 
 					map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >::iterator it2 = matrices.find(so);
 					vector<pair<Matrix3d, Matrix3d> > mm_vector = (*it2).second;
 					for(int j = 0; j < (int)mm_vector.size(); ++j)
 					{
-						info->vel_effect[counter][j] = mm_vector[j].first;
-						info->ang_effect[counter][j] = mm_vector[j].second;
+						new_info->vel_effect[counter][j] = mm_vector[j].first;
+						new_info->ang_effect[counter][j] = mm_vector[j].second;
 					}
 				}
 				else
 				{
-					info->vel_constant[counter] = Vec3d();
-					info->ang_constant[counter] = Vec3d();
+					new_info->vel_constant[counter] = Vec3d();
+					new_info->ang_constant[counter] = Vec3d();
 				}
 
 
 				bool current_exists = false;
 				
+				/*
 				if(bLocalDynamics && so->IsDynamical())
 				{
 					// 前回もこの剛体とポインタの接触が存在したかチェックし、
 					// 存在した場合は徐々に戻すようにデータを格納する
-					for(int j = 0; j < prev_info->num_solids; ++j)
+					for(int j = 0; j < current_info->num_solids; ++j)
 					{
 						// 現時点で接触しているかチェックして高速化を図る
-						if(!prev_info->bCollide[j]) continue;
+						if(!current_info->bCollide[j]) continue;
 
-						if(prev_info->nearest_solids[j] == so)
+						if(current_info->nearest_solids[j] == so)
 						{
-							info->solid_current_center_positions[counter] = prev_info->solid_current_center_positions[j];
-							info->solid_future_center_positions[counter] = so->GetCenterPosition() - info->solid_current_center_positions[counter];
-							info->solid_current_orientations[counter] = prev_info->solid_current_orientations[j];
-							info->solid_future_orientations[counter] = so->GetOrientation();
+							new_info->solid_current_center_positions[counter] = current_info->solid_current_center_positions[j];
+							new_info->solid_future_center_positions[counter] = so->GetCenterPosition() - new_info->solid_current_center_positions[counter];
+							new_info->solid_current_orientations[counter] = current_info->solid_current_orientations[j];
+							new_info->solid_future_orientations[counter] = so->GetOrientation();
 
 							current_exists = true;				
 							break;
 						}
 					}
 				}
+				*/
 
 				// 前回は存在しなかった
 				if(!current_exists)
 				{
-					info->solid_current_center_positions[counter] = so->GetCenterPosition();
-					info->solid_future_center_positions[counter] = Vec3d();
-					info->solid_current_orientations[counter] = so->GetOrientation();
-					info->solid_future_orientations[counter] = Quaterniond();
+					new_info->solid_current_center_positions[counter] = so->GetCenterPosition();
+					new_info->solid_future_center_positions[counter] = Vec3d();
+					new_info->solid_current_orientations[counter] = so->GetOrientation();
+					new_info->solid_future_orientations[counter] = Quaterniond();
 				}
 
 				break;
 			}
 			// もし剛体がすでに追加済みの場合は追加しない
 			// 添え字変換表のみ作成
-			else if(info->nearest_solids[counter] == so)
+			else if(new_info->nearest_solids[counter] == so)
 			{
-				info->SolToCol[counter][info->num_col_per_sol[counter]] = i;
-				++info->num_col_per_sol[counter];
+				new_info->SolToCol[counter][new_info->num_col_per_sol[counter]] = i;
+				++new_info->num_col_per_sol[counter];
 
-				info->ColToSol[i] = counter;
+				new_info->ColToSol[i] = counter;
 
 				break;
 			}
@@ -431,37 +481,36 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 			++counter;
 		}
 
-		info->constraint[i] = constraint;
-		PHContactPoint* contact = DCAST(PHContactPoint, constraint);
+		new_info->constraint[i] = constraint;
+		new_info->sign[i] = sign;
+		new_info->shapePair[i] = DCAST(PHContactPoint, constraint)->shapePair;
+		new_info->bPreviousCollide[i] = bPreviousCollide;
 
 		// 実際に接触しているかどうかを現すフラグ
-		info->bCollide[i] = bCollide;
+		new_info->bCollide[i] = bCollide;
+
+		PHContactPoint* contact = DCAST(PHContactPoint, constraint);
+		new_info->solid[i][0] = contact->solid[0];
+		new_info->solid[i][1] = contact->solid[1];
 
 		bool current_exists = false;
 
-//		if(bCollide && bLocalDynamics)
-		if(0)
+		if(bPreviousCollide)
 		{
-			// 同じ接触が前回存在したかチェック
-			for(int j = 0; j < prev_info->num_collisions; ++j)
-			{
-				// 見つかった場合前回の法線と接触点を保存し
-				// 今回のデータを目標として徐々に更新を行う
-				if(prev_info->constraint[j] == constraint)
-				{
-					info->current_col_positions[i] = prev_info->current_col_positions[j];
-					info->future_col_positions[i] = contact->pos;
+			// この接触から現在のデータへの引数を取得する
+			int index = NewcolToCol.find(constraint)->second;
 
-					info->current_col_normals[i] = prev_info->current_col_normals[j];
-					info->future_col_normals[i] = contact->shapePair->normal * sign;
+			// 現在の値を次も引き継ぐ
+			new_info->current_col_positions[i] = current_info->current_col_positions[index];
+			new_info->future_col_positions[i] = Vec3d();
 
-					info->pointer_current_col_positions[i] = prev_info->pointer_current_col_positions[j];
-					info->pointer_future_col_positions[i] = contact->pos;
+			new_info->current_col_normals[i] = current_info->current_col_normals[index];
+			new_info->future_col_normals[i] = Vec3d();
 
-					current_exists = true;
-					break;
-				}
-			}
+			new_info->pointer_current_col_positions[i] = current_info->pointer_current_col_positions[index];
+			new_info->pointer_future_col_positions[i] = Vec3d();
+
+			current_exists = true;
 		}
 
 		// 前回同じ接触が存在しなかったので
@@ -472,7 +521,7 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 			if(bCollide)
 			{
 				// ポインタの接触候補点は接触点と同じ
-				info->pointer_current_col_positions[i] = contact->pos;
+				new_info->pointer_current_col_positions[i] = contact->pos;
 			}
 			// 実際には接触していない
 			// 接触候補点
@@ -509,29 +558,24 @@ void MakeHapticInfo(HapticInfo *info, HapticInfo *prev_info,
 				}
 
 				// c倍に縮小したベクトルを設定
-				info->pointer_current_col_positions[i] = vec_to_contact * c + soPointer->GetFramePosition();
+				new_info->pointer_current_col_positions[i] = vec_to_contact * c + soPointer->GetFramePosition();
 			}
 
-			info->current_col_positions[i] = contact->pos;
-			info->current_col_normals[i] = contact->shapePair->normal * sign;
-			info->future_col_positions[i] = Vec3d();
-			info->future_col_normals[i] = Vec3d();
-			info->pointer_future_col_positions[i] = Vec3d();
+			new_info->current_col_positions[i] = contact->pos;
+			new_info->current_col_normals[i] = contact->shapePair->normal * sign;
+			new_info->future_col_positions[i] = Vec3d();
+			new_info->future_col_normals[i] = Vec3d();
+			new_info->pointer_future_col_positions[i] = Vec3d();
 		}
 	}
 
-	info->num_collisions = pointer_consts_size + pointer_static_consts_size + col_candidate_consts_size + col_candidate_static_consts_size;
+	new_info->num_collisions = pointer_consts_size + pointer_static_consts_size + col_candidate_consts_size + col_candidate_static_consts_size + current_consts_size + current_static_consts_size;
+	new_info->NewcolToCol = NewcolToCol;
+	
+	// debug info 
+	ofs << "num collision = " << new_info->num_collisions << endl;
 
-
-	// 剛体ポインタの情報を格納
-	/*
-	pointer_pos = soPointer->GetFramePosition();
-	pointer_vel = soPointer->GetVelocity();
-	pointer_massinv = soPointer->GetMassInv();
-	pointer_angvel = soPointer->GetAngularVelocity();
-	pointer_inertiainv = soPointer->GetInertiaInv();
-	pointer_ori = soPointer->GetOrientation();
-	*/
+	if(new_info->num_collisions >= NUM_COLLISIONS) new_info->num_collisions = NUM_COLLISIONS-1;
 }
 
 /**
@@ -587,11 +631,12 @@ void RecursiveSolidRetrieval(vector<pair<PHConstraint *, bool> >* csm, PHSolid* 
 }
 
 // ポインタからスタートして必要な剛体をすべて取得してくる関数
-void GetSolidsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts, vector<pair<PHConstraint *, int> >* pointer_static_consts,  
+void GetCollisionsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts, vector<pair<PHConstraint *, int> >* pointer_static_consts,  
 						  vector<pair<PHConstraint *, int> >* col_candidate_consts, vector<pair<PHConstraint *, int> >* col_candidate_static_consts, 
+						  multimap<double, PHContactPoint*> points,
 						  vector<PHConstraint *>* relative_consts, set<PHSolid *>* relative_solids, set<PHSolid *>* nearest_solids)
 {
-	// 衝突点を取得
+	// 接触点を取得
 	PHConstraints cs = GetContactPoints(scene);
 	vector<pair<PHConstraint *, bool> > csm;
 
@@ -654,11 +699,35 @@ void GetSolidsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts, ve
 				// ポインタとの接触
 				if(i == 0)
 				{
+					PHConstraint* consts = it->first;
+					PHContactPoint* contact = DCAST(PHContactPoint, consts);
+					bool bAdd = true;
+				
+					// 引き継ぐ接触と新しく作る接触の位置が近すぎる場合は
+					// 新しい接触は追加しない
+					// すでに引き継ぐ接触がこの代わりとして考えられるので、
+					// 他の点は考える必要はない
+					for(multimap<double, PHContactPoint*>::iterator it2 = points.lower_bound(contact->pos.z - COLLISION_DENSITY); it2 != points.upper_bound(contact->pos.z + COLLISION_DENSITY); it2++)
+					{
+						double norm = (contact->pos - (*it2).second->pos).norm();
+
+						// 引継ぎの接触点の一つと、追加しようとする一つの接触点の距離（ベクトルのノルム）が
+						// 小さすぎる場合は追加しない
+						if(norm < COLLISION_DENSITY)
+						{
+							bAdd = false;
+							break;
+						}
+					}
+
 					// もし動ける剛体であれば、接触自体を格納
 					// 動けない剛体は別なベクトルに追加
 					// 分ける理由は後で行うシミュレーションで、動かない剛体とポインタの接触を含めるのは意味がないため
-					if(col_solid->IsDynamical())pointer_consts->push_back(pair<PHConstraint *, int>(it->first, sign));
-					else pointer_static_consts->push_back(pair<PHConstraint *, int>(it->first, sign));
+					if(bAdd)
+					{
+						if(col_solid->IsDynamical()) pointer_consts->push_back(pair<PHConstraint *, int>(consts, sign));
+						else pointer_static_consts->push_back(pair<PHConstraint *, int>(consts, sign));
+					}
 				}
 				// 判定用ポインタとの接触
 				else
@@ -698,7 +767,7 @@ void SaveLambda(vector<PHConstraint *> relative_consts)
 }
 
 // 先送りシミュレーションをする関数
-vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, 
+vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
 										set<PHSolid *> nearest_solids,
 										vector<PHConstraint *> relative_consts, set<PHSolid *> relative_solids, 
 										Vec3d force_vec, map<PHSolid *, Vec3d> coeff, int index = -1)
@@ -710,20 +779,26 @@ vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > point
 	if(index != -1)
 	{
 		double dt = scene->GetTimeStep();
-		int size = (int)pointer_consts.size();
+		int size1 = (int)pointer_consts.size();
+		int size2 = (int)col_candidate_consts.size();
 
 		PHConstraint* constraint;
 		int sign;
 
-		if(size > index)
+		if(size1 > index)
 		{
 			constraint = pointer_consts[index].first;
 			sign = pointer_consts[index].second;
 		}
+		else if(size2 + size1 > index)
+		{
+			constraint = col_candidate_consts[index - size1].first;
+			sign = col_candidate_consts[index - size1].second;
+		}
 		else
 		{
-			constraint = col_candidate_consts[index - size].first;
-			sign = col_candidate_consts[index - size].second;
+			constraint = current_consts[index - size1 - size2].first;
+			sign = current_consts[index - size1 - size2].second;
 		}
 
 		PHContactPoint* contact = DCAST(PHContactPoint, constraint);
@@ -819,7 +894,7 @@ void SetupPredictSimulation(vector<PHConstraint *> relative_consts, set<PHSolid 
 
 
 // 提案手法のために先送りシミュレーションを計画的に行ってくれる関数
-void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, 
+void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
 						set<PHSolid *> nearest_solids,
 						vector<PHConstraint *> relative_consts, set<PHSolid *> relative_solids,
 						map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > *mat, map<PHSolid *, SpatialVector> *vec)
@@ -830,7 +905,7 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 	SetupPredictSimulation(relative_consts, relative_solids, nearest_solids, &coeff);
 
 	// 加える力を０ベクトルとして定数項を取得
-	vector<SpatialVector> b = PredictSimulation(pointer_consts, col_candidate_consts, 
+	vector<SpatialVector> b = PredictSimulation(pointer_consts, col_candidate_consts, current_consts,
 												nearest_solids, 
 												relative_consts, relative_solids, 
 												Vec3d(), coeff);
@@ -850,16 +925,16 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 	}
 
 	// 接触数＝列数だけ繰り返す
-	for(int i = 0; i < (int)pointer_consts.size() + (int)col_candidate_consts.size(); ++i)
+	for(int i = 0; i < (int)pointer_consts.size() + (int)col_candidate_consts.size() + (int)current_consts.size(); ++i)
 	{
 		// ある単位ベクトルを加えてその結果をあらわすベクトルを取得
-		vector<SpatialVector> vec_x = PredictSimulation(pointer_consts, col_candidate_consts, nearest_solids,
+		vector<SpatialVector> vec_x = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids,
 														relative_consts, relative_solids, 
 														Vec3d(10, 0, 0), coeff, i);
-		vector<SpatialVector> vec_y = PredictSimulation(pointer_consts, col_candidate_consts, nearest_solids, 
+		vector<SpatialVector> vec_y = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 														relative_consts, relative_solids, 
 														Vec3d(10, 10, 0), coeff, i);
-		vector<SpatialVector> vec_z = PredictSimulation(pointer_consts, col_candidate_consts, nearest_solids, 
+		vector<SpatialVector> vec_z = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 														relative_consts, relative_solids, 
 														Vec3d(10, 0, 10), coeff, i);
 
@@ -897,9 +972,77 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 	*vec = c;
 }
 
+void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHConstraint *, int> > *current_consts, vector<pair<PHConstraint *, int> > *current_static_consts, map<PHConstraint *, int>* NewcolToCol,
+									set<PHSolid *> *relative_solids, vector<PHConstraint *> *relative_consts, set<PHSolid *> *nearest_solids)
+{
+
+	// 2ステップ前に作った接触の削除処理
+	// 次で新しく接触を作成する
+	current_info->points.clear();
+
+	// 現在使用しているデータから
+	// 実際に接触しているもの
+	// 接触していないものを調べ
+	// そのデータを次に使うかどうか判定する
+	for(int i = 0; i < current_info->num_collisions; i++)
+	{
+		// 実際には接触していない接触
+ 		if(!current_info->bCollide[i]) continue;
+
+		// 現在使用しているcontactpoint(=constraint)のほとんどはstepが呼ばれるたびに削除されるので、
+		// 毎回新しいcontactpointを作る必要がある
+		// ここでは現在の位置と向きを持ったcontact pointを新たに作成する
+		// ここで作られたcontactpointはhapticinfo->pointsに格納され、手動で消す（上の方でやってる）
+
+		Matrix3d local;	//	contact coodinate system 接触の座標系
+		Vec3d normal = current_info->current_col_normals[i];
+		Vec3d center_pos = current_info->current_col_positions[i];
+
+		Vec3d v0 = current_info->solid[i][0]->GetPointVelocity(center_pos);
+		Vec3d v1 = current_info->solid[i][1]->GetPointVelocity(center_pos);
+
+		local.Ex() = normal;
+		local.Ey() = v1-v0;
+		local.Ey() -= local.Ey() * normal * normal;
+		if (local.Ey().square() > 1e-6){
+			local.Ey().unitize(); 
+		}else{
+			if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
+			else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
+		}
+		local.Ez() =  local.Ex() ^ local.Ey();
+
+		PHContactPoint *point = DBG_NEW PHContactPoint(local, current_info->shapePair[i], current_info->current_col_positions[i], current_info->solid[i][0], current_info->solid[i][1]);
+		point->scene = DCAST(PHScene, scene);
+		point->engine = scene->GetConstraintEngine();
+
+		// 現在のポインタ側の接触点を格納する
+		NewcolToCol->insert(pair<PHConstraint *, int>(point, i));
+
+		if(scene->GetConstraintEngine()->IsInactiveSolid(current_info->solid[i][0]->Cast())) point->SetInactive(1, false);
+		if(scene->GetConstraintEngine()->IsInactiveSolid(current_info->solid[i][1]->Cast())) point->SetInactive(0, false);
+
+		if(current_info->solid[i][0]->IsDynamical() && current_info->solid[i][1]->IsDynamical()) 
+		{
+			current_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
+		}
+		else
+		{
+			current_static_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
+		}
+
+		// 今作った接触の登録
+		relative_consts->push_back(point);
+		relative_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
+		nearest_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
+
+		// 次の回で削除に使うためにリンクを保存しておく
+		current_info->points.insert(pair<double, PHContactPoint*>(point->pos.z, point));
+	}
+}
 
 // 周囲の影響を計算し、引数の変数に格納する関数
-void calculate_surround_effect(HapticInfo* info, HapticInfo* prev_info)
+void calculate_surround_effect(HapticInfo* new_info, HapticInfo* current_info)
 {
 	// ポインタに関する接触を格納する変数
 	vector<pair<PHConstraint *, int> > pointer_consts;
@@ -909,28 +1052,44 @@ void calculate_surround_effect(HapticInfo* info, HapticInfo* prev_info)
 	vector<pair<PHConstraint *, int> > col_candidate_consts;
 	vector<pair<PHConstraint *, int> > col_candidate_static_consts;
 
+	// 前回の接触を引き継ぐためのデータを格納する変数
+	vector<pair<PHConstraint *, int> > current_consts;
+	vector<pair<PHConstraint *, int> > current_static_consts;
+
+	// 新しく作った接触と現在の接触を関連付けるマップ
+	map<PHConstraint *, int> NewcolToCol;
+
 	set<PHSolid *> relative_solids;
 	vector<PHConstraint *> relative_consts;
 	set<PHSolid *> nearest_solids;
 
-	// ポインタからスタートして必要な剛体をすべて取得してくる関数
-	GetSolidsFromPointer(&pointer_consts, &pointer_static_consts, 
-						&col_candidate_consts, &col_candidate_static_consts, 
+	// 現在使っている力覚情報の接触のうちで、次も使いそうな接触を取り出す関数
+	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, &NewcolToCol,
+									&relative_solids, &relative_consts, &nearest_solids);
+
+	// ポインタからスタートしてポインタに関係する剛体と接触をすべて取得してくる関数
+	GetCollisionsFromPointer(&pointer_consts, &pointer_static_consts, 
+						&col_candidate_consts, &col_candidate_static_consts,
+						current_info->points,
 						&relative_consts, &relative_solids, &nearest_solids);
 
+	// 周囲の影響を格納する変数
 	map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > matrices;
 	map<PHSolid *, SpatialVector> vecs;
 
 	// 力を加えてみて動かし、影響を観測する関数
-	PredictSimulations(pointer_consts, col_candidate_consts, nearest_solids, 
+	PredictSimulations(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 						relative_consts, relative_solids,
 						&matrices, &vecs);
 
 	// 接触の情報を計算する
-	MakeHapticInfo(info, prev_info, 
+	MakeHapticInfo(new_info, current_info, 
 					pointer_consts, pointer_static_consts, 
 					col_candidate_consts, col_candidate_static_consts, 
+					current_consts, current_static_consts, 
+					NewcolToCol,
 					matrices, vecs);
+
 }
 
 /**
@@ -1074,6 +1233,45 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		// カウンターが更新されないので次でもう一度ここにくる
 		if(!bSimulation)
 		{
+
+			// 新しい情報に切り替える前に
+			// 新しい情報で現在の情報を引き継ぐ部分を更新しなおす
+			// これは新しい情報が作られたときにはその情報が古いためで
+			// 力覚に違和感を出さないためにも
+			// 接触点の位置や法線は一致させるようにする
+			HapticInfo* info_next = NULL;
+			HapticInfo* info_cur = NULL;
+
+			if(current_valid_data)
+			{
+				info_cur = &info1;
+				info_next = &info2;
+			}
+			else
+			{
+				info_cur = &info2;
+				info_next = &info2;
+			}
+
+			for(int i = 0; i < info_next->num_collisions; ++i)
+			{
+				if(info_next->bPreviousCollide[i])
+				{
+					// mapを使って新しい接触から古い情報の添え字を検索する
+					int index = info_next->NewcolToCol.find(info_next->constraint[i])->second;
+
+					info_next->current_col_normals[i] = info_cur->current_col_normals[index];
+					info_next->current_col_positions[i] = info_cur->current_col_positions[index];
+					info_next->pointer_current_col_positions[i] = info_cur->pointer_current_col_positions[index];
+				}
+			}
+
+			/*
+			for(int i = 0; i< info_next->num_solids; ++i)
+			{
+			}
+			*/
+
 			bSimulation = true;
 			step_counter = 0;
 			current_valid_data = !current_valid_data;
@@ -1354,9 +1552,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			Vec3d M_vec = Vec3d();
 			Vec3d R_vec = Vec3d();
 
-			// ここでは擬似逆行列を使って
-			// めり込みを適切に補正する並進と回転のベクトルを計算する
-
 			map<double, int, greater<double> > norm_map;
 
 			// すべてのめり込みのノルムを計算し、大きい順番に３つ選ぶ
@@ -1401,7 +1596,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 					// 閾値よりちいさいのでこのベクトルに（ほとんど）似ているベクトルはすでに追加された
 					// よって今回は追加しない
-					if(diff_norm <= 0.00001)
+					if(diff_norm <= 0.05)
 					{
 						valid_data = false;
 						break;
@@ -1594,6 +1789,19 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 				Matrix69d Mt = M.trans();
 				Matrix6d MTM = Mt * M;
+				Matrix6d m = Matrix6d();
+
+				// 対角行列に値を足すテスト
+				for(int i = 0; i < 6; ++i)
+				{
+					for(int j = 0; j < 6; ++j)
+					{
+						if(i == j) m[i][j] = 0.1;
+						else m[i][j] = 0;
+					}
+				}
+				MTM += m;
+
 				Matrix6d MTMinv = MTM.inv();
 
 				for(int i = 0; i < 9; ++i)
@@ -1947,6 +2155,9 @@ void keyboard(unsigned char key, int x, int y){
 		// HapticRenderingスレッドを削除
 		timeKillEvent(FTimerId1);
 		timeEndPeriod(1);
+
+		info1.points.clear();
+		info2.points.clear();
 
 		cout << "EXIT from Key Input" << endl;
 		exit(0);
