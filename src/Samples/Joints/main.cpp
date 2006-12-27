@@ -354,8 +354,9 @@ void OnKey0(char key){
 		PHHingeJointDesc jdesc;
 		jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
 		jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
-		//jdesc.lower = Rad(-30.0);
-		//jdesc.upper = Rad( 30.0);
+		jdesc.lower = Rad(-30.0);
+		jdesc.upper = Rad( 30.0);
+		jdesc.damper = 2.0;
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		// ツリーノードを作成し，ABAで計算するように指定
@@ -454,15 +455,16 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		jdesc.swingUpper =  0.2;	// 最大スイング角
-		jdesc.twistLower = -0.2;	// ツイスト角範囲
-		jdesc.twistUpper =  0.2;
+		//jdesc.swingUpper =  0.2;	// 最大スイング角
+		//jdesc.twistLower = -0.2;	// ツイスト角範囲
+		//jdesc.twistUpper =  0.2;
 		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		if(key == ' ')
 			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
+		//scene->SetContactMode(PHSceneDesc::MODE_NONE);
 		}break;
 	}
 }
@@ -778,14 +780,13 @@ void idle(){
  */
 
 int main(int argc, char* argv[]){
-
 	// SDKの作成　
 	phSdk = PHSdkIf::CreateSdk();
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.1;
-	dscene.numIteration = 10;
+	dscene.timeStep = 0.05;
+	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
 	sceneNo = 0;

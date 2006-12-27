@@ -89,13 +89,13 @@ struct PHPathJointDesc : public PHJoint1DDesc{
 
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
-	double	swingUpper;
-	double  twistLower;
-	double  twistUpper;		///< 円錐状の可動範囲
-	double	swingSpring;
-	double  swingDamper;
-	double	twistSpring;
-	double  twistDamper;
+	double	swingUpper;		///< スイング角度の上限
+	double  twistLower;		///< ツイスト角度の下限
+	double  twistUpper;		///< ツイスト角度の上限
+	double	swingSpring;	///< スイング角のバネ係数
+	double  swingDamper;	///< スイング角のダンパ係数
+	double	twistSpring;	///< ツイスト角のバネ係数
+	double  twistDamper;	///< ツイスト角のダンパ係数
 	Vec3d	torque;			///< モータトルク
 	PHBallJointDesc(){
 		type = BALLJOINT;
@@ -266,8 +266,23 @@ struct PHSliderJointIf : public PHJoint1DIf{
 /// パスのインタフェース
 struct PHPathIf : public SceneObjectIf{
 	IF_DEF(PHPath);
+	/** @brief パスに点を追加する
+		@param s 関節座標
+		@param pose ソケットに対するプラグの姿勢
+		パスに制御点を追加する．
+		すなわち，関節座標がsであるときのソケット-プラグ間の姿勢をposeに設定する．
+	 */
 	virtual void AddPoint(double s, const Posed& pose) = 0;
+
+	/** @brief ループパスかオープンパスかを設定する
+		@param bOnOff trueならばループパス，falseならばオープンパス
+		ループパスの場合，関節座標が最小の制御点と最大の制御点をシームレスにつなぐ．
+		オープンパスの場合，関節座標が最小，最大の制御点がそれぞれ可動範囲の下限，上限となる．
+	 */
 	virtual void SetLoop(bool bOnOff = true) = 0;
+	/** @brief ループパスかオープンパスかを取得する
+		@return trueならばループパス，falseならばオープンパス
+	 */
 	virtual bool IsLoop() = 0;
 };
 

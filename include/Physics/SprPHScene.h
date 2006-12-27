@@ -146,27 +146,50 @@ public:
 	virtual void SetNumIteration(int n)=0;
 	
 	/** @brief 関節を作成する
+		@param lhs 関節を取り付ける剛体
+		@param rhs 関節を取り付ける剛体
 		@param desc 関節のディスクリプタ
 		@return 関節のインタフェース
-		Solid lhsとSolid rhsを連結する関節を作成する．
+		剛体lhsと剛体rhsを連結する関節を作成する．
+		descには作成したい関節の種類に対応するディスクリプタ（PHJointDescから派生する）を渡す．
+		lhsにソケットが，rhsにプラグが取り付けられる．
 	 */
 	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
-	/** 
+	/** @brief ルートノードを作成する
+		@param root ルートノードとなる剛体
+		@return ルートノードのインタフェース
+		関節ツリーの根となるノードを作成する．
 	 */
 	virtual PHTreeNodeIf* CreateRootNode(PHSolidIf* root)=0;
 
-	/** 
+	/** @brief ツリーノードを作成する
+		@param parent 親ノードのインタフェース
+		@param child 子ノードとなる剛体
+		@return ツリーノードのインタフェース
+		剛体childを参照するツリーノードを作成し，既存のノードparentの子ノードとして追加する．
+		parentが指す剛体とchildをつなぐ関節はCreateTreeNodeの呼び出しよりも前に
+		CreateJointによって作成されていなければならない．
+		さらに，parentがソケット側，childがプラグ側である必要がある．
 	 */
 	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child)=0;
 
-	/**
+	/** @brief ギアを作成する
+		@param lhs ギアで連動させる関節
+		@param rhs ギアで連動させる関節
+		@param desc ギアのディスクリプタ
+		@return ギアのインタフェース
+		1自由度関節lhsとrhsを連動させるギアを作成する．
+		連動された関節は，
+		rhs->GetPosition() = desc.ratio * lhs->GetPosition()
+		を満たすように拘束される．
 	 */
 	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc)=0;
 
 	/** @brief パスを作成する
 		@param desc パスのディスクリプタ
-		＊未実装
+		パスを作成する．
+		パスはPHPathJointの軌道を表現するために用いる．
 	 */
 	virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
 

@@ -10,10 +10,9 @@
 #pragma hdrstop
 #endif
 
+using namespace std;
 using namespace PTM;
-//using namespace std;
 namespace Spr{;
-
 
 //----------------------------------------------------------------------------
 // PHConstraint
@@ -128,14 +127,22 @@ void PHConstraint::CompResponseMatrix(){
 			}
 		}
 	}
-	//特異姿勢で0になるケースがある
-	const double eps = 1.0e-3;
+	/** 最大の対角要素との比がepsよりも小さい対角要素がある場合，
+		数値的不安定性の原因となるのでその成分は拘束対象から除外する
+	 */
+	const double eps = 0.1;
+	double Amax = 0.0, Amin;
 	for(j = 0; j < 6; j++)
-		if(A[j] < eps)A[j] = eps;
-
-	for(int j = 0; j < 6; j++)
-		if(constr[j])
+		if(constr[j] && A[j] > Amax)
+			Amax = A[j];
+	Amin = Amax * eps;
+	for(j = 0; j < 6; j++){
+		if(!constr[j])continue;
+		if(A[j] < Amin)
+			constr[j] = false;
+		else
 			Ainv[j] = 1.0 / (A[j] + dA[j]);
+	}
 }
 
 void PHConstraint::SetupLCP(){
@@ -169,8 +176,6 @@ void PHConstraint::SetupLCP(){
 	// LCPの座標の取り方が特殊な関節はヤコビアンに座標変換をかける
 	ModifyJacobian();
 
-	// LCPのbベクトル
-	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
 	dA.clear();
 	db.clear();
 	CompBias();	// 目標速，バネダンパによる補正項dA, dbを計算
@@ -178,17 +183,30 @@ void PHConstraint::SetupLCP(){
 	// LCPのA行列の対角成分を計算
 	CompResponseMatrix();
 
+	// ヤコビアンスケーリング
+	/*for(int j = 0; j < 6; j++){
+		if(!constr[j])continue;
+		scale[j] = sqrt(1.0 / (A[j] + dA[j]));
+		J[0].row(j) *= scale[j];
+		J[1].row(j) *= scale[j];
+		T[0].row(j) *= scale[j];
+		T[1].row(j) *= scale[j];
+		db[j] *= scale[j];
+		dA[j] *= scale[j] * scale[j];
+	}*/
+
+	// LCPのbベクトル
+	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
+	
 	// 拘束力初期値による速度変化量を計算
 	SpatialVector fs;
 	for(int i = 0; i < 2; i++){
 		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
 		if(solid[i]->treeNode){
-			fs = (i == 0 ? -1.0 : 1.0) * (Js[i].trans() * f);
+			(Vec6d&)fs = J[i].trans() * f;
 			solid[i]->treeNode->CompResponse(fs);
 		}
-		else{
-			solid[i]->dv += T[i].trans() * f;
-		}
+		else solid[i]->dv += T[i].trans() * f;
 	}
 
 }
@@ -203,6 +221,7 @@ void PHConstraint::IterateLCP(){
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
 		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+		//fnew[j] = f[j] - (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 		/*FPCK_FINITE(AinvJ[0].vv.row(j));
 		FPCK_FINITE(AinvJ[1].vv.row(j));
 		if (!FPCK_FINITE(fnew.v)){
@@ -223,12 +242,11 @@ void PHConstraint::IterateLCP(){
 				(Vec6d&)dfs = J[i].row(j) * df[j];
 				solid[i]->treeNode->CompResponse(dfs);
 			}
-			else{
-				solid[i]->dv += T[i].row(j) * df[j];
-			}
+			else solid[i]->dv += T[i].row(j) * df[j];
 		}
 		f[j] = fnew[j];
 	}
+//	DSTR << f << endl;
 }
 
 /*void PHConstraint::SetupCorrection(double dt, double max_error){

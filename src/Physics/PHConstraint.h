@@ -47,6 +47,7 @@ public:
 
 	SpatialVector b, db;			///< LCPのbベクトルとその補正量
 	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
+	SpatialVector scale;
 
 	bool		axis[6];			///< 関節軸となる自由度．
 	bool		constr[6];			///< 拘束する自由度.	axis[i] == trueでも可動範囲，バネ・ダンパが有効な場合はtrueとなる

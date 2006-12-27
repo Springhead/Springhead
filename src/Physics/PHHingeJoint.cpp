@@ -47,6 +47,8 @@ void PHHingeJoint::CompBias(){
 	if(mode == MODE_VELOCITY){
 		db.w().z = -vel_d;
 	}
+	else if(onLower || onUpper){
+	}
 	else if(spring != 0.0 || damper != 0.0){
 		diff = GetPosition() - origin;
 		while(diff >  M_PI) diff -= 2 * M_PI;
@@ -99,16 +101,16 @@ void PHHingeJointNode::CompBias(){
 	if(j->mode == PHJoint::MODE_VELOCITY){
 		db[0] = -j->vel_d;
 	}
+	else if(j->onLower || j->onUpper){
+	}
 	else if(j->spring != 0.0 || j->damper != 0.0){
 		diff = j->GetPosition() - j->origin;
-		// diffが非常に大きな値をとると浮動小数点精度の限界から以下が無限ループになる場合がある模様
 		while(diff >  M_PI) diff -= 2 * M_PI;
 		while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (j->damper + j->spring * dt);
 		dA[0] = tmp * dtinv;
 		db[0] = j->spring * (diff) * tmp;
 	}
-	else dA[0] = db[0] = 0.0;
 }
 
 }

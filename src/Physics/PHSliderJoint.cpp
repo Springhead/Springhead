@@ -95,13 +95,14 @@ void PHSliderJointNode::CompBias(){
 	if(j->mode == PHJoint::MODE_VELOCITY){
 		db[0] = -j->vel_d;
 	}
+	else if(j->onLower || j->onUpper){
+	}
 	else if(j->spring != 0.0 || j->damper != 0.0){
 		diff = j->GetPosition() - j->origin;
 		double tmp = 1.0 / (j->damper + j->spring * dt);
 		dA[0] = tmp * dtinv;
 		db[0] = j->spring * (diff) * tmp;
 	}
-	else dA[0] = db[0] = 0.0;
 }
 
 }

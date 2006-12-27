@@ -18,6 +18,7 @@ namespace Spr{;
 IF_OBJECT_IMP_ABST(PHTreeNode, SceneObject);
 
 PHTreeNode::PHTreeNode():joint(0){
+	dZ.clear();
 }
 
 bool PHTreeNode::Includes(PHTreeNode* node){
@@ -264,6 +265,7 @@ template class PHTreeNodeND<3>;
 
 template<int NDOF>
 PHTreeNodeND<NDOF>::PHTreeNodeND(){
+	dtau.clear();
 	f.clear();
 }
 
@@ -428,6 +430,8 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 	if(constrAtAll){
 		// LCPのbベクトル
 		b = Jq * GetJoint()->velocity;
+		dA.clear();
+		db.clear();
 		CompBias();	// 目標速，バネダンパによる補正項を計算
 		b += db;
 		
