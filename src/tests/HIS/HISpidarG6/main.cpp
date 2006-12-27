@@ -573,7 +573,7 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 	new_info->NewcolToCol = NewcolToCol;
 	
 	// debug info 
-	ofs << "num collision = " << new_info->num_collisions << endl;
+//	ofs << "num collision = " << new_info->num_collisions << endl;
 
 	if(new_info->num_collisions >= NUM_COLLISIONS) new_info->num_collisions = NUM_COLLISIONS-1;
 }
@@ -978,6 +978,11 @@ void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHCon
 
 	// 2ステップ前に作った接触の削除処理
 	// 次で新しく接触を作成する
+	for(multimap<double, PHContactPoint*>::iterator it = current_info->points.begin(); it != current_info->points.end(); ++it)
+	{
+		PHContactPoint* cp = (*it).second;
+		delete cp;
+	}
 	current_info->points.clear();
 
 	// 現在使用しているデータから
