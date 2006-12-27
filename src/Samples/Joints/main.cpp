@@ -73,9 +73,8 @@
 #include <ctime>
 #include <string>
 #include <sstream>
-//#include <windows.h>
 #include <Springhead.h>		//	Springheadのインタフェース
-#include <GL/GLUT.h>		
+#include <GL/glut.h>	
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop

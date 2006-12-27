@@ -23,7 +23,8 @@ RM				= rm -rf
 #	Cygwin
 # ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
-LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/ 
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/  
+#LDFLAGS.EXTRA 	= -L/usr/lib -L/usr/w32api/  
 LDFLAGS.GL 		= -lglut32 -lglu32 -lopengl32 -lglew32 -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
