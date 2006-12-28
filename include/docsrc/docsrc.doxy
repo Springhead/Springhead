@@ -6,4 +6,4 @@ IMAGE_PATH             = ./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual
 GENERATE_HTMLHELP      = YES
-
+CHM_FILE               = ..\..\docsrc\springhead_docsrc.chm

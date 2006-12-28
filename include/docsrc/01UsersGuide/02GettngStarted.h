@@ -87,10 +87,10 @@
 			 \code
 　[実行可能ファイル]に追加　　　　　：$(SPRINGHEAD2)\bin\win32
 		 	 \endcode
-			 また，それ以外には，\htmlonly <tt>$(SPRINGHEAD2)\bin\win32\glut32.dll</tt> \endhtmlonly を
-			 \c C:\\Windows など，PATH の通ったフォルダにコピーするか，
-			 \htmlonly <tt>$(SPRINGHEAD2)\bin\win32 </tt> \endhtmlonly を
-			 環境変数 PATH に追加する方法もあります．
+		 	 また，それ以外には，<tt> \$(SPRINGHEAD2)\\bin\\win32\\glut32.dll </tt> と \c glew32.dll を
+			 \c C:\\Windows など，パスの通ったフォルダにコピーするか，
+			 <tt> \$(SPRINGHEAD2)\\bin\\win32 </tt>を
+			 環境変数 \c PATH に追加する方法もあります．
 		</li>
 		<li> 同様に， <tt>[ディレクトリを表示するプロジェクト]</tt> から <tt>[インクルードファイル]</tt>
 			 を選択し，<tt>DirectX SDK</tt> のインクルードファイルへパスを通します．
@@ -105,13 +105,13 @@
 			 \endcode	   
 		</li>
 		\image html vcpath.jpg
+		
 	</ol>
 		
 \par 　　(5) 　ライブラリのビルド
-src/Sprignhead.sln を開き，ビルド(B) - バッチ ビルド(T) のダイアログで，
+<tt>\$(SPRINGHEAD2)\\src\\Sprignhead.sln</tt> を開き，ビルド(B) - バッチ ビルド(T) のダイアログで，
 すべて選択(S) - ビルド(B)を選び，デバッグ版，リリース版のライブラリをビルドしてください．
-うまくいくと，
-lib/win32/SpringheadD.lib と lib/win32/Springhead.lib  ができます．
+<tt>\$(SPRINGHEAD2)\\lib\\win32\\SpringheadD.lib</tt> と <tt>\$(SPRINGHEAD2)\\lib\\win32\\Springhead.lib</tt> が生成されます．
 
 \par 　　(6) 　サンプルのビルド
 	実行したいサンプルプログラムを開き，メニューの <tt>[ビルド]－[ソリューションのビルド]</tt> を指定します．
