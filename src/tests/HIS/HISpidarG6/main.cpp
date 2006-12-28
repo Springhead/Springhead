@@ -73,18 +73,18 @@ using namespace Spr;
 
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
-	#define HAPTIC_FREQ		500	// 力覚スレッドの周期Hz
-//	float Km = 4500;				// virtual couplingの係数
-//	float Bm = 150;					// 並進
+	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
+	float Km = 4500;				// virtual couplingの係数
+	float Bm = 150;					// 並進
 
-//	float Kr = 4500;				// 回転
-//	float Br = 160;
+	float Kr = 4500;				// 回転
+	float Br = 160;
 
-	float Km = 1500;
-	float Bm = 80;
+//	float Km = 1500;
+//	float Bm = 80;
 
-	float Kr = 1500;
-	float Br = 100;
+//	float Kr = 1500;
+//	float Br = 100;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
@@ -177,8 +177,9 @@ typedef struct {
 	// 自分で作成した接触点の集合を格納する変数
 	multimap<double, PHContactPoint *> points;
 
-	// 自分接触した接触点から、その元になったデータへアクセスするための配列の添え字を格納する変数
-	map<PHConstraint *, int> NewcolToCol;
+	// 接触点から、その元になったデータへアクセスするための配列の添え字を格納する変数
+	int NewcolToCol[NUM_COLLISIONS];
+	int NewsolToSol[NUM_COL_SOLIDS];
 
 	PHSolid* solid[NUM_COLLISIONS][2];
 
@@ -267,7 +268,7 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 					vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > pointer_static_consts, 
 					vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > col_candidate_static_consts,
 					vector<pair<PHConstraint *, int> > current_consts, vector<pair<PHConstraint *, int> >current_static_consts, 
-					map<PHConstraint *, int> NewcolToCol,
+					map<PHConstraint *, int> NewcolToCol, map<PHSolid *, int> NewsolToSol,
 					map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid *, SpatialVector> vecs)
 {
 	// 初期化処理
@@ -395,6 +396,17 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 				++new_info->num_col_per_sol[counter];
 
 				new_info->ColToSol[i] = counter;
+
+
+				// 今回と前回の接触で共通の剛体があるか調べる
+				map<PHSolid *, int>::iterator it = NewsolToSol.find(so);
+
+				// 無い可能性もあるので一応
+				// あれば添え字を追加する。なければ-1で初期化
+				if(it != NewsolToSol.end()) new_info->NewsolToSol[counter] = (*it).second;
+				else new_info->NewsolToSol[counter] = -1;
+
+
 				new_info->num_solids = counter+1;
 
 				// 速度等も剛体ごとに追加
@@ -510,6 +522,9 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 			new_info->pointer_current_col_positions[i] = current_info->pointer_current_col_positions[index];
 			new_info->pointer_future_col_positions[i] = Vec3d();
 
+			// 添え字の変換表を作成
+			new_info->NewcolToCol[i] = index;
+
 			current_exists = true;
 		}
 
@@ -566,12 +581,14 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 			new_info->future_col_positions[i] = Vec3d();
 			new_info->future_col_normals[i] = Vec3d();
 			new_info->pointer_future_col_positions[i] = Vec3d();
+
+			// 一応-1で初期化する
+			new_info->NewcolToCol[i] = -1;
 		}
 	}
 
 	new_info->num_collisions = pointer_consts_size + pointer_static_consts_size + col_candidate_consts_size + col_candidate_static_consts_size + current_consts_size + current_static_consts_size;
-	new_info->NewcolToCol = NewcolToCol;
-	
+
 	// debug info 
 //	ofs << "num collision = " << new_info->num_collisions << endl;
 
@@ -715,7 +732,7 @@ void GetCollisionsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts
 						// 小さすぎる場合は追加しない
 						if(norm < COLLISION_DENSITY)
 						{
-							bAdd = false;
+//							bAdd = false;
 							break;
 						}
 					}
@@ -972,7 +989,7 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 	*vec = c;
 }
 
-void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHConstraint *, int> > *current_consts, vector<pair<PHConstraint *, int> > *current_static_consts, map<PHConstraint *, int>* NewcolToCol,
+void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHConstraint *, int> > *current_consts, vector<pair<PHConstraint *, int> > *current_static_consts, map<PHConstraint *, int>* NewcolToCol, map<PHSolid *, int>* NewsolToSol,
 									set<PHSolid *> *relative_solids, vector<PHConstraint *> *relative_consts, set<PHSolid *> *nearest_solids)
 {
 
@@ -1022,27 +1039,30 @@ void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHCon
 		point->engine = scene->GetConstraintEngine();
 
 		// 現在のポインタ側の接触点を格納する
-		NewcolToCol->insert(pair<PHConstraint *, int>(point, i));
+//		NewcolToCol->insert(pair<PHConstraint *, int>(point, i));
+
+		PHSolid* so = getAdjacentSolid(point, DCAST(PHSolid, soPointer));
+//		NewsolToSol->insert(pair<PHSolid *, int>(so, current_info->ColToSol[i]));
 
 		if(scene->GetConstraintEngine()->IsInactiveSolid(current_info->solid[i][0]->Cast())) point->SetInactive(1, false);
 		if(scene->GetConstraintEngine()->IsInactiveSolid(current_info->solid[i][1]->Cast())) point->SetInactive(0, false);
 
 		if(current_info->solid[i][0]->IsDynamical() && current_info->solid[i][1]->IsDynamical()) 
 		{
-			current_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
+//			current_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
 		}
 		else
 		{
-			current_static_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
+//			current_static_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
 		}
 
 		// 今作った接触の登録
-		relative_consts->push_back(point);
-		relative_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
-		nearest_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
+//		relative_consts->push_back(point);
+//		relative_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
+//		nearest_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
 
 		// 次の回で削除に使うためにリンクを保存しておく
-		current_info->points.insert(pair<double, PHContactPoint*>(point->pos.z, point));
+//		current_info->points.insert(pair<double, PHContactPoint*>(point->pos.z, point));
 	}
 }
 
@@ -1063,14 +1083,15 @@ void calculate_surround_effect(HapticInfo* new_info, HapticInfo* current_info)
 
 	// 新しく作った接触と現在の接触を関連付けるマップ
 	map<PHConstraint *, int> NewcolToCol;
+	map<PHSolid *, int> NewsolToSol;
 
 	set<PHSolid *> relative_solids;
 	vector<PHConstraint *> relative_consts;
 	set<PHSolid *> nearest_solids;
 
 	// 現在使っている力覚情報の接触のうちで、次も使いそうな接触を取り出す関数
-	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, &NewcolToCol,
-									&relative_solids, &relative_consts, &nearest_solids);
+//	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, &NewcolToCol,&NewsolToSol,
+//									&relative_solids, &relative_consts, &nearest_solids);
 
 	// ポインタからスタートしてポインタに関係する剛体と接触をすべて取得してくる関数
 	GetCollisionsFromPointer(&pointer_consts, &pointer_static_consts, 
@@ -1092,7 +1113,7 @@ void calculate_surround_effect(HapticInfo* new_info, HapticInfo* current_info)
 					pointer_consts, pointer_static_consts, 
 					col_candidate_consts, col_candidate_static_consts, 
 					current_consts, current_static_consts, 
-					NewcolToCol,
+					NewcolToCol, NewsolToSol,
 					matrices, vecs);
 
 }
@@ -1202,7 +1223,7 @@ void t_end()
 {
 	// 一周にかかる時間をチェック
 	end = timer.CountUS();
-//	if(end - start > 0 && bOutput)ofs << "time = " << end - start << endl;
+	if(end - start > 0 && bOutput)ofs << "time = " << end - start << endl;
 }
 
 /**
@@ -1258,25 +1279,44 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				info_next = &info2;
 			}
 
-			for(int i = 0; i < info_next->num_collisions; ++i)
-			{
-				if(info_next->bPreviousCollide[i])
-				{
-					// mapを使って新しい接触から古い情報の添え字を検索する
-					int index = info_next->NewcolToCol.find(info_next->constraint[i])->second;
-
-					info_next->current_col_normals[i] = info_cur->current_col_normals[index];
-					info_next->current_col_positions[i] = info_cur->current_col_positions[index];
-					info_next->pointer_current_col_positions[i] = info_cur->pointer_current_col_positions[index];
-				}
-			}
-
-			/*
 			for(int i = 0; i< info_next->num_solids; ++i)
 			{
-			}
-			*/
+				// 次回の剛体から今回の剛体の添え字を検索
+				int prev_sol_index = info_next->NewsolToSol[i];
 
+				// 見つからなければ次にすすむ
+				// 今回新しく剛体が加わった場合はありえる
+				if(prev_sol_index == -1)continue;
+
+				// 今回と次回のデータの間での剛体の誤差を計算する
+				Vec3d pos_error = info_next->solid_current_center_positions[i] - info_cur->solid_current_center_positions[prev_sol_index];
+				Quaterniond ori_error = info_next->solid_current_orientations[i] * info_cur->solid_current_orientations[prev_sol_index].Inv();
+
+				// 今回のデータのうちで、この誤差によって影響を受ける引き継いだ接触を調べる
+				for(int j = 0; j < info_next->num_col_per_sol[i]; j++)
+				{
+					if(info_next->bPreviousCollide[j])
+					{
+						// mapを使って新しい接触から古い情報の添え字を検索する
+						int prev_col_index = info_next->NewcolToCol[info_next->SolToCol[i][j]];
+
+						// 無いはずは無いが一応
+						if(prev_col_index == -1) continue;
+
+						// 接触点の情報をコピーする処理と剛体の誤差を反映させる処理
+						info_next->current_col_normals[j] = info_cur->current_col_normals[prev_col_index];
+						info_next->current_col_normals[j] += ori_error * info_next->current_col_normals[j];
+						info_next->current_col_normals[j] = info_next->current_col_normals[j].unit();
+
+						info_next->current_col_positions[j] = info_cur->current_col_positions[prev_col_index];
+						info_next->current_col_positions[j] += pos_error;
+						info_next->current_col_positions[j] += ori_error * (info_next->current_col_positions[j] - info_next->solid_current_center_positions[j]);
+
+						info_next->pointer_current_col_positions[j] = info_cur->pointer_current_col_positions[prev_col_index];						
+					}
+				}
+			}
+			
 			bSimulation = true;
 			step_counter = 0;
 			current_valid_data = !current_valid_data;
@@ -1528,6 +1568,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				Vec3d col_vector = info->current_col_positions[col_index] - info->pointer_current_col_positions[col_index];
 				double vector_coeff = dot(col_vector, info->current_col_normals[col_index]);
 
+//				ofs << "all vectors " << vector_coeff << endl;
+
 				// めり込んでいたら補正用のデータを追加
 				if(vector_coeff > 0)
 				{
@@ -1540,14 +1582,13 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			}
 		}
 
-
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		// ６自由度のめり込み解消処理
 
 		// 計算に使う変数の型を定義
-		typedef PTM::TMatrixCol<9, 6, double> Matrix96d;
-		typedef PTM::TMatrixCol<6, 9, double> Matrix69d;
-		typedef PTM::TVector<9, double> Vec9d;
+		typedef PTM::TMatrixCol<99, 6, double> MatrixN6d;
+		typedef PTM::TMatrixCol<6, 99, double> Matrix6Nd;
+		typedef PTM::TVector<99, double> VecNd;
 
 		// ポインタのめり込みに対して擬似逆行列を計算し、
 		// 適切な補正量を求めることで、めり込みを補正していく
@@ -1557,73 +1598,31 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			Vec3d M_vec = Vec3d();
 			Vec3d R_vec = Vec3d();
 
-			map<double, int, greater<double> > norm_map;
-
-			// すべてのめり込みのノルムを計算し、大きい順番に３つ選ぶ
-			int local_counter = 0;
-			for(vector<Vec3d>::iterator it = c_vectors.begin(); it != c_vectors.end(); ++it)
-			{
-				// ノルムが大きい順に添え字変換用マップを作成
-				norm_map.insert(pair<double, int>((*it).norm(), local_counter++));
-			}
-
-			local_counter = 0;
-			
-			Matrix96d M;
-			Vec9d C;
+			if(num_cols > 33) num_cols = 33;
 
 			// データとして使用したベクトルを格納する変数
 			vector<Vec3d> used_r_vecs;
 			vector<Vec3d> used_c_vecs;
 
+			MatrixN6d M;
+			VecNd C;
+
 			// ノルムが大きい順に３つの接触を取り出し、
 			// それらの情報から擬似逆行列の計算に必要な
 			// 行列とベクトルを作っていく
-			for(map<double, int, greater<double> >::iterator it = norm_map.begin(); it != norm_map.end(); ++it)
-			{
-				// 9行追加し終わったらループを抜ける
-				if(local_counter == 9) break;
-				
-				int local_index = (*it).second;
-				Vec3d c = c_vectors[local_index];
-				Vec3d r = r_vectors[local_index];
-
-				// このデータを使用するかどうかを表すフラグ
-				bool valid_data = true;
-
-				// すでに追加されたベクトルと、今回のループのベクトルを比較して
-				// このベクトルが追加してよいものかを判断する
-				// 比較は二つのベクトルの差を表すベクトルのノルムを計算して
-				// それが閾値より大きいか小さいかで判断する
-				for(vector<Vec3d>::iterator it2 = used_r_vecs.begin(); it2 != used_r_vecs.end(); ++it2)
-				{
-					double diff_norm = ((*it2) - r).norm();
-
-					// 閾値よりちいさいのでこのベクトルに（ほとんど）似ているベクトルはすでに追加された
-					// よって今回は追加しない
-					if(diff_norm <= 0.05)
-					{
-						valid_data = false;
-						break;
-					}
-				}
-
-				// 追加しないで次のめり込みデータに進む
-				if(!valid_data)	continue;
-				
-				// このベクトルは使用するので
-				// 使用済みベクトルに追加する
-				used_r_vecs.push_back(r);
-				used_c_vecs.push_back(c);
+			for(int k = 0; k < num_cols; ++k)
+			{				
+				Vec3d c = c_vectors[k];
+				Vec3d r = r_vectors[k];
 
 				// ３x６行列の作成と大きさ３のベクトルの作成を３回行う
 				for(int i = 0; i < 3; ++i)
 				{						
-					switch(local_counter % 3)
+					switch(i)
 					{
 					// 1, 4, 7行目
 					case 0:
-						C[local_counter] = c[0];
+						C[k * 3 + i] = c[0];
 
 						for(int j = 0; j < 6; ++j)
 						{
@@ -1632,23 +1631,23 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 							case 0:
 							case 4:
 							case 5:
-								M[local_counter][j] = 0;
+								M[k * 3 + i][j] = 0;
 								break;
 							case 1:
-								M[local_counter][j] = r[2];
+								M[k * 3 + i][j] = r[2];
 								break;
 							case 2:
-								M[local_counter][j] = - r[1];
+								M[k * 3 + i][j] = - r[1];
 								break;
 							case 3:
-								M[local_counter][j] = 1;
+								M[k * 3 + i][j] = 1;
 								break;
 							}
 						}
 						break;
 					// 2, 5, 8行目
 					case 1:
-						C[local_counter] = c[1];
+						C[k * 3 + i] = c[1];
 						for(int j = 0; j < 6; ++j)
 						{
 							switch(j)
@@ -1656,23 +1655,23 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 							case 1:
 							case 3:
 							case 5:
-								M[local_counter][j] = 0;
+								M[k * 3 + i][j] = 0;
 								break;
 							case 0:
-								M[local_counter][j] = - r[2];
+								M[k * 3 + i][j] = - r[2];
 								break;
 							case 2:
-								M[local_counter][j] = r[0];
+								M[k * 3 + i][j] = r[0];
 								break;
 							case 4:
-								M[local_counter][j] = 1;
+								M[k * 3 + i][j] = 1;
 								break;
 							}
 						}
 						break;
 					// 3, 6, 9行目
 					case 2:
-						C[local_counter] = c[2];
+						C[k * 3 + i] = c[2];
 						for(int j = 0; j < 6; ++j)
 						{
 							switch(j)
@@ -1680,178 +1679,68 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 							case 2:
 							case 3:
 							case 4:
-								M[local_counter][j] = 0;
+								M[k * 3 + i][j] = 0;
 								break;
 							case 0:
-								M[local_counter][j] = r[1];
+								M[k * 3 + i][j] = r[1];
 								break;
 							case 1:
-								M[local_counter][j] = - r[0];
+								M[k * 3 + i][j] = - r[0];
 								break;
 							case 5:
-								M[local_counter][j] = 1;
+								M[k * 3 + i][j] = 1;
 								break;
 							}
 						}
 						break;
 					}
-					// 次の行にすすむ
-					++local_counter;
 				}
 			}
 
-			// 有効な接触がひとつしかなかったので
-			// 並進のみ
-			if(local_counter == 3)
+			Matrix6Nd Mt = M.trans();
+			Matrix6d MTM = Mt * M;
+			Matrix6d m = Matrix6d();
+
+			// 対角要素に値を足すテスト
+			for(int i = 0; i < 6; ++i)
 			{
-				M_vec = c_vectors.front();
+				for(int j = 0; j < 6; ++j)
+				{
+					if(i == j) m[i][j] = 0.00001;
+					else m[i][j] = 0;
+				}
 			}
-			// 有効な接触が二つ以上
-			else
+			MTM += m;
+
+			Matrix6d MTMinv = MTM.inv();
+
+			for(int i = 0; i < 9; ++i)
 			{
-				// ちょうど二つあった
-				// 二つだと安定な値を得るのに不十分なため、
-				// 二つのベクトルの平均を取って
-				// それを三つ目のベクトルとし計算する
-				// データは正確には出ないが、
-				// 前後の計算から外れた値は出ないようなので、
-				// 安定性の面から言えばこの方がよいのかもしれない
-				if(local_counter == 6)
+				for(int j = 0; j < 6; ++j)
 				{
-					Vec3d ave_c_vector = (used_c_vecs[0] + used_c_vecs[1]) / 2;
-					Vec3d ave_r_vector = (used_r_vecs[0] + used_r_vecs[1]) / 2;
+					// QNaNをチェックする
+					// ある変数x = QNaNのとき
+					// x == xは失敗するらしい
 
-					for(int i = 6; i < 9; ++i)
+					// QNaNが発生する原因は
+					// ２点の接触のときにdeterminantのオーダが低く(10e-300とか）なり
+					// invの計算で発散に近づいてしまうため
+					if(MTMinv[i][j] != MTMinv[i][j]) 
 					{
-						for(int j = 0; j < 6; ++j)
-						{
-							switch(i)
-							{
-							case 6:
-								switch(j)
-								{
-								case 0:
-								case 4:
-								case 5:
-									M[i][j] = 0;
-									break;
-								case 1:
-									M[i][j] = ave_r_vector.z;
-									break;
-								case 2:
-									M[i][j] = - ave_r_vector.y;
-									break;
-								case 3:
-									M[i][j] = 1;
-									break;
-								}
-								break;
-							case 7:
-								switch(j)
-								{
-								case 1:
-								case 3:
-								case 5:
-									M[i][j] = 0;
-									break;
-								case 0:
-									M[i][j] = - ave_r_vector.z;
-									break;
-								case 2:
-									M[i][j] = ave_r_vector.x;
-									break;
-								case 4:
-									M[i][j] = 1;
-									break;
-								}
-								break;
-							case 8:
-								switch(j)
-								{
-								case 2:
-								case 3:
-								case 4:
-									M[i][j] = 0;
-									break;
-								case 0:
-									M[i][j] = ave_r_vector.y;
-									break;
-								case 1:
-									M[i][j] = - ave_r_vector.x;
-									break;
-								case 5:
-									M[i][j] = 1;
-									break;
-								}
-								break;
-							}
-						}
+						MTMinv[i][j] = 1e-300;
 					}
-					C[6] = ave_c_vector.x;
-					C[7] = ave_c_vector.y;
-					C[8] = ave_c_vector.z;
-				}
-
-				Matrix69d Mt = M.trans();
-				Matrix6d MTM = Mt * M;
-				Matrix6d m = Matrix6d();
-
-				// 対角行列に値を足すテスト
-				for(int i = 0; i < 6; ++i)
-				{
-					for(int j = 0; j < 6; ++j)
-					{
-						if(i == j) m[i][j] = 0.1;
-						else m[i][j] = 0;
-					}
-				}
-				MTM += m;
-
-				Matrix6d MTMinv = MTM.inv();
-
-				for(int i = 0; i < 9; ++i)
-				{
-					for(int j = 0; j < 6; ++j)
-					{
-						// QNaNをチェックする
-						// ある変数x = QNaNのとき
-						// x == xは失敗するらしい
-
-						// QNaNが発生する原因は
-						// ２点の接触のときにdeterminantのオーダが低く(10e-300とか）なり
-						// invの計算で発散に近づいてしまうため
-						if(MTMinv[i][j] != MTMinv[i][j]) 
-						{
-							MTMinv[i][j] = 1e-300;
-						}
-					}
-				}
-
-				// 擬似逆行列
-				Matrix69d Pinv = MTMinv * Mt;
-
-				// 並進と回転のベクトル
-				// 第一～三要素が回転ベクトルのxyz
-				// 第四～六要素が並進ベクトルのxyz
-				Vec6d Ans = Pinv * C;
-				M_vec = Ans.sub_vector(TSubVectorDim<3,3>());
-				R_vec = Ans.sub_vector(TSubVectorDim<0,3>());
-
-				if(M_vec.norm() > 100 || R_vec.norm() > 100)
-				{
-					ofs << "debug information!!! -----------------------" << endl;
-					ofs << "M = " << endl << M << endl;
-					ofs << "C = " << C << endl;
-					ofs << "MTM = " << endl << MTM << endl;
-					ofs << "MTMinv = " << endl << MTMinv << endl;
-					ofs << "Pinv = " << endl << Pinv << endl;
-					ofs << "Pinv * M = " << endl << Pinv * M << endl;
-					ofs << "M_vec = " << M_vec << " R_vec = " << R_vec << endl;
-
-					M_vec = Vec3d(0, 0, 0);
-					R_vec = Vec3d(0, 0, 0);
 				}
 			}
+
+			// 擬似逆行列
+			Matrix6Nd Pinv = MTMinv * Mt;
+
+			// 並進と回転のベクトル
+			// 第一～三要素が回転ベクトルのxyz
+			// 第四～六要素が並進ベクトルのxyz
+			Vec6d Ans = Pinv * C;
+			R_vec = Ans.sub_vector(TSubVectorDim<0,3>());
+			M_vec = Ans.sub_vector(TSubVectorDim<3,3>());
 
 			/*
 			pointer_vel += P_CORRECTION_COEFF * M_vec / dt;
@@ -1865,11 +1754,42 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			Quaterniond correct_q = Quaterniond::Rot(R_vec);
 			pointer_ori = pointer_ori * correct_q;
 
+			bool bDebugOutput = false;
+			vector<double> norm_array;
+			vector<double> col_pos_y_array;
+			vector<double> pcol_pos_array;
+
 			// すべての接触もその方向に移動・回転
 			for(int i = 0; i < info->num_collisions; ++i)
 			{
 				info->pointer_current_col_positions[i] += M_vec;
 				info->pointer_current_col_positions[i] += R_vec ^ (info->pointer_current_col_positions[i] - pointer_pos);
+
+				double norm_val = dot(info->current_col_positions[i] - info->pointer_current_col_positions[i], info->current_col_normals[i]);
+				if(norm_val > 0.00001)
+				{
+					bDebugOutput = true;
+					norm_array.push_back(norm_val);
+					col_pos_y_array.push_back(info->current_col_positions[i].y);
+					pcol_pos_array.push_back(info->pointer_current_col_positions[i].y);
+				}
+			}
+
+			if(bDebugOutput)
+			{
+				ofs << "debug information!!! -----------------------" << endl;
+				for(int i = 0; i < (int)norm_array.size(); i++)
+				{
+//					ofs << "norm val = " << norm_array[i] << " y coord = " << col_pos_y_array[i] << " pointer y coord = " << pcol_pos_array[i] << endl;
+				}
+				ofs << "num_cols = " << num_cols << endl;
+//				ofs << "M = " << endl << M << endl;
+//				ofs << "C = " << C << endl;
+//				ofs << "MTM = " << endl << MTM << endl;
+//				ofs << "MTMinv = " << endl << MTMinv << endl;
+//				ofs << "Pinv = " << endl << Pinv << endl;
+				ofs << "Pinv * M = " << endl << Pinv * M << endl;
+				ofs << "M_vec = " << M_vec << " R_vec = " << R_vec << endl;
 			}
 		}
 	}
@@ -2030,7 +1950,7 @@ void StepSimulation()
 	// ２を参照中。１を更新
 	else calculate_surround_effect(&info1, &info2);
 
-	if(bOutput) ofs << "finish simulation " << endl;
+//	if(bOutput) ofs << "finish simulation " << endl;
 
 	// シミュレーションが終わったのでフラグを下げる
 	bSimulation = false;
@@ -2108,6 +2028,79 @@ void displayPointer()
 	glPopMatrix();
 }
 
+// 接触点を描画する関数
+void displayCollisions()
+{
+	HapticInfo* info;
+
+	if(current_valid_data)
+	{
+		info = &info1;
+	}
+	else
+	{
+		info = &info2;
+	}
+
+	GLfloat purple[] = {1.0, 0.0, 1.0, 1.0};
+	GLfloat color2[] = {0.0, 1.0, 1.0, 1.0};
+	GLfloat blue[] = {0.0, 0.0, 1.0, 1.0};
+	GLfloat red[] = {1.0, 0.0, 0.0, 1.0};
+
+	for(int i = 0; i < info->num_collisions; ++i)
+	{
+		glPushMatrix();
+			glMatrixMode(GL_MODELVIEW);
+			Affinef col_affine;
+			Posed::Unit(info->current_col_positions[i]).ToAffine(col_affine);
+			glMultMatrixf(col_affine);
+			
+			if(!info->bPreviousCollide[i])
+			{
+				glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, purple);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, purple);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, purple);
+			}
+			else
+			{
+				glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, red);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, red);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, red);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, red);
+			}
+			glutSolidSphere(0.1, 12, 9);
+		glPopMatrix();
+	}
+
+	for(int i = 0; i < info->num_collisions; ++i)
+	{
+		glPushMatrix();
+			glMatrixMode(GL_MODELVIEW);
+			Affinef col_affine;
+			Posed::Unit(info->pointer_current_col_positions[i]).ToAffine(col_affine);
+			glMultMatrixf(col_affine);
+	
+			if(!info->bPreviousCollide[i])
+			{
+				glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, color2);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, color2);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, color2);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, color2);
+			}
+			else
+			{
+				glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blue);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blue);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blue);
+				glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blue);
+			}
+			glutSolidSphere(0.1, 12, 9);
+		glPopMatrix();
+	}
+
+}
+
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
  param		なし
@@ -2119,6 +2112,8 @@ void display(){
 
 	// フラグがONのときSPIDARの軌跡をデバッグ出力
 	if(bDisplayPointer) displayPointer();
+
+	displayCollisions();
 
 	render->EndScene();
 }
