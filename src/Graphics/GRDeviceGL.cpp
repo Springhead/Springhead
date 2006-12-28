@@ -785,26 +785,35 @@ void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
 bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER); 
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+#if defined(USE_GREW)
+    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
+    fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
     if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
 	if (ReadShaderSource(fragmentShader, fShaderFile)==false) return false;
-    glCompileShader(vertexShader);
-    glCompileShader(fragmentShader);
-    shader = glCreateProgram();
-#if defined(USE_GREW)	
+    glCompileShaderARB(vertexShader);
+    glCompileShaderARB(fragmentShader);
+    shader = glCreateProgramObjectARB();
     glAttachObjectARB(shader, vertexShader);
     glAttachObjectARB(shader, fragmentShader);
 	glDeleteObjectARB(vertexShader);
 	glDeleteObjectARB(fragmentShader);	
+    glLinkProgramARB(shader);
+	glUseProgramObjectARB(shader);
 #elif defined(GL_VERSION_2_0)    
-    glAttachShader(shader, vertexShader);
-    glAttachShader(shader, fragmentShader);
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);	
+    if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
+    if (ReadShaderSource(fragmentShader, fShaderFile)==false) return false;
+    glCompileShader(vertexShader);
+    glCompileShader(fragmentShader);    
+    shader = glCreateProgram();    
+    glAttachObject(shader, vertexShader);
+    glAttachObject(shader, fragmentShader);	
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);		
-#endif	
-    glLinkProgram(shader);
-	glUseProgram(shader);   
+	glDeleteShader(fragmentShader);	
+	glLinkProgram(shader);	
+	glUseProgram(shader);	    
+#endif
 	return true;
 }		
 /// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
@@ -812,27 +821,35 @@ GRHandler GRDeviceGL::CreateShader(){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
 	GRHandler shaderProgram;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER); 
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+#if defined(USE_GREW)
+    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
+    fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
     if (ReadShaderSource(vertexShader, vertexShaderFile)==false)   return 0;
 	if (ReadShaderSource(fragmentShader, fragmentShaderFile)==false) return 0;
-    glCompileShader(vertexShader);
-    glCompileShader(fragmentShader);
-    shaderProgram = glCreateProgram();
-#if defined(USE_GREW)	
+    glCompileShaderARB(vertexShader);
+    glCompileShaderARB(fragmentShader);
+    shaderProgram = glCreateProgramObjectARB();
     glAttachObjectARB(shaderProgram, vertexShader);
     glAttachObjectARB(shaderProgram, fragmentShader);
 	glDeleteObjectARB(vertexShader);
 	glDeleteObjectARB(fragmentShader);	
+    glLinkProgramARB(shaderProgram);
+	glUseProgramObjectARB(shaderProgram);
 #elif defined(GL_VERSION_2_0)    
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);	
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);	
+    if (ReadShaderSource(vertexShader, vertexShaderFile)==false)   return 0;
+    if (ReadShaderSource(fragmentShader, fragmentShaderFile)==false) return 0;
+    glCompileShader(vertexShader);
+    glCompileShader(fragmentShader);    
+    shaderProgram = glCreateProgram();    
+    glAttachObject(shaderProgram, vertexShader);
+    glAttachObject(shaderProgram, fragmentShader);	
 	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);		
-#endif	
-    glLinkProgram(shaderProgram);
-	glUseProgram(shaderProgram);
-	
+	glDeleteShader(fragmentShader);	
+	glLinkProgram(shaderProgram);	
+	glUseProgram(shaderProgram);	    
+#endif
 	return shaderProgram;
 }	
 /// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける	
