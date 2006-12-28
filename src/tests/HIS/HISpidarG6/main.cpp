@@ -1039,30 +1039,30 @@ void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHCon
 		point->engine = scene->GetConstraintEngine();
 
 		// 現在のポインタ側の接触点を格納する
-//		NewcolToCol->insert(pair<PHConstraint *, int>(point, i));
+		NewcolToCol->insert(pair<PHConstraint *, int>(point, i));
 
 		PHSolid* so = getAdjacentSolid(point, DCAST(PHSolid, soPointer));
-//		NewsolToSol->insert(pair<PHSolid *, int>(so, current_info->ColToSol[i]));
+		NewsolToSol->insert(pair<PHSolid *, int>(so, current_info->ColToSol[i]));
 
 		if(scene->GetConstraintEngine()->IsInactiveSolid(current_info->solid[i][0]->Cast())) point->SetInactive(1, false);
 		if(scene->GetConstraintEngine()->IsInactiveSolid(current_info->solid[i][1]->Cast())) point->SetInactive(0, false);
 
 		if(current_info->solid[i][0]->IsDynamical() && current_info->solid[i][1]->IsDynamical()) 
 		{
-//			current_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
+			current_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
 		}
 		else
 		{
-//			current_static_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
+			current_static_consts->push_back(pair<PHConstraint *, int>(point, current_info->sign[i]));
 		}
 
 		// 今作った接触の登録
-//		relative_consts->push_back(point);
-//		relative_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
-//		nearest_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
+		relative_consts->push_back(point);
+		relative_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
+		nearest_solids->insert(current_info->nearest_solids[current_info->ColToSol[i]]);
 
 		// 次の回で削除に使うためにリンクを保存しておく
-//		current_info->points.insert(pair<double, PHContactPoint*>(point->pos.z, point));
+		current_info->points.insert(pair<double, PHContactPoint*>(point->pos.z, point));
 	}
 }
 
@@ -1240,10 +1240,12 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 //	t_start();
 
 	// シミュレーションと力覚レンダリングの更新周期の比率をあらわす変数
-	static const double ratio = (double)SIMULATION_FREQ / HAPTIC_FREQ;
+	// defineでやると変な値を返すみたい
+	static const double ratio = 60.0 / 1000.0;
+	static const double ratioinv = 1000.0 / 60.0;
 
-	// HAPTICREDERINGの更新幅
-	static const double dt = (double)1.0 / HAPTIC_FREQ;
+	// HAPTIC REDERINGの更新幅
+	static const double dt = (double)1.0 / 1000.0;
 
 
 	///////////////////////////////////////////////////////////////////////////////////////
@@ -1251,7 +1253,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 	// シミュレーションを管理するカウンターを作成
 	static int step_counter = 0;
-	if(step_counter == (int)ratio)
+	if(step_counter == (int)ratioinv)
 	{
 		// シミュレーションが終わっていたら新しいデータに切り替える処理をする
 		// 終わっていなかったら仕方がないので前回のデータをそのまま使う
@@ -1321,10 +1323,11 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			step_counter = 0;
 			current_valid_data = !current_valid_data;
 		}
-//		else if(bOutput)ofs << "error : simulation could not be finished in time" << endl;
 	}
-	else ++step_counter;
-
+	else
+	{
+		++step_counter;
+	}
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	// 物理情報の取得
@@ -1567,8 +1570,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				// 次に行うめり込み解消処理の準備
 				Vec3d col_vector = info->current_col_positions[col_index] - info->pointer_current_col_positions[col_index];
 				double vector_coeff = dot(col_vector, info->current_col_normals[col_index]);
-
-//				ofs << "all vectors " << vector_coeff << endl;
 
 				// めり込んでいたら補正用のデータを追加
 				if(vector_coeff > 0)
