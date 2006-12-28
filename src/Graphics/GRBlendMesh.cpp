@@ -7,7 +7,6 @@
  */
 #include "Graphics.h"
 #include "GRBlendMesh.h"
-#include <GL/glut.h>
 
 namespace Spr{;
 IF_OBJECT_IMP(GRBlendMesh, GRVisual);
@@ -17,7 +16,7 @@ GRBlendMesh::GRBlendMesh(const GRBlendMeshDesc& desc):GRBlendMeshDesc(desc){
 }
 GRBlendMesh::~GRBlendMesh(){
 	for (unsigned int id=0; id<list.size(); ++id){
-		if (list[id]) glDeleteLists(list[id], 1);
+		if (list[id]) render->ReleaseList(list[id]);
 	}
 }
 void GRBlendMesh::CreateList(GRRenderIf* r){

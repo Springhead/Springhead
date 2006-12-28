@@ -7,7 +7,6 @@
  */
 #include "Graphics.h"
 #include "GRMesh.h"
-#include <GL/glut.h>
 
 
 namespace Spr{;
@@ -18,7 +17,7 @@ GRMesh::GRMesh(const GRMeshDesc& desc):GRMeshDesc(desc){
 }
 GRMesh::~GRMesh(){
 	for (unsigned int id=0; id<list.size(); ++id){
-		if (list[id]) glDeleteLists(list[id], 1);
+		if (list[id]) render->ReleaseList(list[id]);
 	}
 }
 void GRMesh::CreateList(GRRenderIf* r){
