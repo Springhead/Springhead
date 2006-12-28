@@ -711,7 +711,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	LoadBmpRelease(h);
 
 	// テクスチャの生成．
-	glGenTextures(1, &texId);
+	glGenTextures(1, (GLuint *)&texId);
 	glBindTexture(GL_TEXTURE_2D, texId);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -861,7 +861,7 @@ bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
 		fclose(fp);
 	}	
 	const char* sourceStrings =  (char*)source;
-	glShaderSource(shader, 1, &sourceStrings, &length);
+	glShaderSource(shader, 1, &sourceStrings, (const GLint *)&length);
 
 	free((void*)source);
 	return true;

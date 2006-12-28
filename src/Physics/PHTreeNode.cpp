@@ -256,13 +256,6 @@ void PHRootNode::UpdatePosition(double dt){
 		(*it)->UpdatePosition(dt);
 }
 
-//-----------------------------------------------------------------------------
-// explicit instantiation
-template class PHTreeNodeND<1>;
-template class PHTreeNodeND<2>;
-template class PHTreeNodeND<3>;
-//template class PHTreeNodeND<4>;
-
 template<int NDOF>
 PHTreeNodeND<NDOF>::PHTreeNodeND(){
 	dtau.clear();
@@ -660,4 +653,11 @@ void PHTreeNode1D::UpdateJointPosition(double dt){
 	else PHTreeNodeND<1>::UpdateJointPosition(dt);
 }
 
+//-----------------------------------------------------------------------------
+// explicit instantiation
+template class PHTreeNodeND<1>;
+template class PHTreeNodeND<2>;
+template class PHTreeNodeND<3>;
+//template class PHTreeNodeND<4>;
+	
 }

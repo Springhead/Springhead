@@ -45,9 +45,9 @@ endif
 # ----------------------------------------------------------
 ifeq ($(findstring Darwin, $(shell env uname)), Darwin)
 LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/darwin/ -L/usr/lib -/usr/local/lib
-LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation GLEW
+LDFLAGS.GL		= -framework GLUT -framework OpenGL -framework Foundation -lGLEW
 INCLUDES 		= -I/usr/local/include/
-ARFLAGS			= rcu
+#ARFLAGS		= rcu
 endif		
 
 # ----------------------------------------------------------
