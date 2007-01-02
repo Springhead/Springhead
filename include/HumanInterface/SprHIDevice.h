@@ -15,10 +15,11 @@
 #include <SprFoundation.h>
 
 namespace Spr{;
-struct HIDeviceManagerIf;
+struct HISdkIf;
 
 /**	\addtogroup	gpHumanInterface	*/
 //@{
+
 
 ///	実デバイス．インタフェースカードとか，USBデバイスとか，
 struct HIRealDeviceIf:  public ObjectIf{
@@ -28,7 +29,7 @@ struct HIRealDeviceIf:  public ObjectIf{
 	///	初期化
 	virtual bool Init()=0;
 	///	仮想デバイスの登録
-	virtual void Register(HIDeviceManagerIf* devMan)=0;
+	virtual void Register(HISdkIf* sdk)=0;
 	///	状態の更新
 	virtual void Update()=0;
 };

@@ -26,7 +26,9 @@ struct MemCheck{
 };
 static MemCheck memCheck;
 
-
+//-------------------------------------------------------------------------
+//	TypeInfoManager
+//
 TypeInfoManager* TypeInfoManager::typeInfoManager;
 TypeInfoManager* SPR_CDECL TypeInfoManager::Get(){
 	static UTRef<TypeInfoManager> tim;
@@ -46,8 +48,39 @@ void TypeInfoManager::RegisterIf(IfInfo* i){
 void TypeInfoManager::RegisterObject(UTTypeInfo* t){ 
 	objects.push_back(t); 
 }
+IfInfo* TypeInfoManager::FindIfInfo(const char* cn){
+	for(unsigned i=0; i != ifs.size(); ++i){
+		if (strcmp(ifs[i]->ClassName(), cn) == 0){
+			return ifs[i];
+		}
+	}
+	UTString cn2(cn);
+	cn2.append("If");
+	for(unsigned i=0; i != ifs.size(); ++i){
+		if (strcmp(ifs[i]->ClassName(), cn2.c_str()) == 0){
+			return ifs[i];
+		}
+	}
+	return NULL;
+}
+UTTypeInfo* TypeInfoManager::FindTypeInfo(const char* cn){
+	for(int i=0; objects.size(); ++i){
+		if (strcmp(objects[i]->ClassName(), cn) == 0){
+			return objects[i];
+		}
+	}
+	return NULL;
+}
+//-------------------------------------------------------------------------
+//	IfInfo
+//
 
 int IfInfo::maxId;
+IfInfo* IfInfo::Find(const char* cname){
+	TypeInfoManager* tim = TypeInfoManager::Get();
+	return tim->FindIfInfo(cname);
+}
+
 IfInfo::IfInfo(const char* cn, IfInfo** b): className(cn), base(b){
 	id = ++maxId;
 }

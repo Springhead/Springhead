@@ -3,16 +3,17 @@
 
 #include <Foundation/Object.h>
 #include <SprHumanInterface.h>
-#include <HumanInterface/IfStubDumpHumanInterface.h>
+#include <HumanInterface/IfStubHumanInterface.h>
 #include <set>
 
+
 namespace Spr{;
-class DRRealDevice;
+class HIRealDevice;
 
 ///	The base class of human interface classes.
 class SPR_DLL HIBase: public NamedObject, HIBaseIfInit{
 protected:
-	static std::set<DRRealDevice*> realDevices;
+	static std::set<HIRealDevice*> realDevices;
 	static int deviceUpdateStep;
 	int updateStep;
 	bool isGood;
@@ -36,6 +37,8 @@ public:
 	void AddDeviceDependency(HIRealDeviceIf* rd);
 	///	Clear the dependency list.
 	static void ClearDeviceDependency();
+	///	Init human interface
+	virtual bool Init(HISdkIf* sdk, const void* desc){ return false; }
 };
 class HIPosition:public HIBase{
 public:

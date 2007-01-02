@@ -5,17 +5,14 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/**
- *	@file SprHIS.h
- *	@brief 力覚インターフェースのヘッダファイル群
-*/
-#ifndef SPR_HUMANINTERFACE_H
-#define SPR_HUMANINTERFACE_H
-#include <HumanInterface/SprHISdk.h>
-#include <HumanInterface/SprHIBase.h>
-#include <HumanInterface/SprHIMouse6D.h>
+#include "HumanInterface.h"
+#include "DVCounterBase.h"
+#include "DVDaBase.h"
+
+namespace Spr{;
+
+DVCounterBase::DVCounterBase(){}
+DVDaBase::DVDaBase(){}
 
 
-#include <HumanInterface/SprHIDevice.h>
-#include <HumanInterface/SprHIDRUsb.h>
-#endif
+}

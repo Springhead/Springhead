@@ -49,6 +49,8 @@ public:
 	static TypeInfoManager* SPR_CDECL Get();
 	void RegisterIf(IfInfo* i);
 	void RegisterObject(UTTypeInfo* t);
+	IfInfo* FindIfInfo(const char* cn);
+	UTTypeInfo* FindTypeInfo(const char* cn);
 };
 
 ///	以下インタフェースの型情報の実装

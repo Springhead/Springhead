@@ -6,6 +6,8 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "HISdk.h"
+#include "HIRealDevicePool.h"
+#include "HIVirtualDevicePool.h"
 
 namespace Spr {;
 
@@ -16,6 +18,8 @@ HISdkIf* SPR_CDECL HISdkIf::CreateSdk(){
 
 IF_OBJECT_IMP(HISdk, Sdk);
 HISdk::HISdk(const HISdkDesc& desc){
+	vpool = new HIVirtualDevicePool;
+	rpool = new HIRealDevicePool;
 }
 ObjectIf* HISdk::CreateObject(const IfInfo* info, const void* desc){
 	return NULL;
@@ -29,10 +33,66 @@ ObjectIf* HISdk::GetChildObject(size_t i){
 bool HISdk::AddChildObject(ObjectIf* o){
 	return false;
 }
-HIBaseIf* HISdk::CreateHumanInterface(const char* name){
+HIBaseIf* HISdk::CreateHumanInterface(const IfInfo* keyInfo, const void* desc){
+	UTRef<ObjectIf> obj = CreateObject(keyInfo, desc);
+	HIBaseIf* hi = obj->Cast();
+	if (hi->Init(Cast(), desc)) return hi;
 	return NULL;
 }
-void HISdk::RegisterDevice(const char* name){
+HIBaseIf* HISdk::CreateHumanInterface(const char* name, const char* desc){
+	IfInfo* info = IfInfo::Find(name);
+	//	hase TODO descのパーサを用意して，Desc構造体を作る
+	if (info) return CreateHumanInterface(info, NULL);
+	return NULL;
+}
+void HISdk::Init(){
+	rpool->Init(Cast());
+}
+
+void HISdk::Clear(){
+	vpool->Clear();
+	rpool->Clear();
+}
+
+HIVirtualDeviceIf* HISdk::RentVirtualDevice(const char* type, const char* name){
+	return vpool->Rent(type, name)->Cast();
+}
+bool HISdk::ReturnVirtualDevice(HIVirtualDeviceIf* dev){
+	return vpool->Return(dev->Cast());
+}
+bool HISdk::AddRealDevice(const IfInfo* keyInfo, const void* desc){
+	UTRef<ObjectIf> obj = CreateObject(keyInfo, desc);
+	HIRealDeviceIf* dev = obj->Cast();
+	if (dev){
+		RegisterRealDevice(dev);
+		return true;
+	}
+	return false;
+}
+HIRealDeviceIf* HISdk::FindRealDevice(const char* name){
+	for(unsigned i=0; i<rpool->size(); ++i){
+		if (strcmp(rpool->at(i)->Name(), name)){
+			return rpool->at(i)->Cast();
+		}
+	}
+	return NULL;
+}
+
+void HISdk::RegisterRealDevice(HIRealDeviceIf* dev){
+	rpool->Register(dev->Cast());
+}
+void HISdk::RegisterVirtualDevice(HIVirtualDeviceIf* dev){
+	vpool->Register(dev->Cast());
+}
+void HISdk::Print(std::ostream& o) const{
+	int w = o.width();
+	o.width(0);
+	o << UTPadding(w) << "<HISdk>" << std::endl;
+	o.width(w+2);
+	o << vpool;
+	o << rpool;
+	o << UTPadding(w) << "</HISdk>" << std::endl;
+	o.width(w);
 }
 
 

@@ -28,11 +28,25 @@ struct HISdkDesc{
 ///	物理シミュレーションSDK
 struct HISdkIf : public NameManagerIf{
 	IF_DEF(HISdk);
-	//	API
+
+	///	SDKの初期化
+	virtual void Init()=0;
+	///	作成・登録したRealDevice/VirtualDevice/HumanInterfaceをすべて削除
+	virtual void Clear()=0;
+	///	Rent virtual device.
+	virtual HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL)=0;
+	///	Return virutal device.
+	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf* dev)=0;
+	
+	///	Create and register real device.
+	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc)=0;
+
+	///	Get real device.
+	virtual HIRealDeviceIf* FindRealDevice(const char* name=NULL)=0;
 	///	ヒューマンインタフェースの作成
-	virtual HIBaseIf* CreateHumanInterface(const char* name)=0;
-	///	実デバイス(ボードやUSBインタフェースなどのRawデバイス)の作成&登録
-	virtual void RegisterDevice(const char* name)=0;
+	virtual HIBaseIf* CreateHumanInterface(const IfInfo* info, const void* desc)=0;
+	///	ヒューマンインタフェースの作成
+	virtual HIBaseIf* CreateHumanInterface(const char* name, const char* desc)=0;
 
 	//	SDK生成、登録関数
 	///	HISdkのインスタンスを作成

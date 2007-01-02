@@ -100,6 +100,8 @@ public:
 	void RegisterFactory(FactoryBase* f) const ;
 	///	指定(info)のオブジェクトを作るファクトリを検索
 	FactoryBase* FindFactory(const IfInfo* info) const;
+	///
+	static IfInfo* Find(const char* cname);
 };
 ///	IfInfoの実装．1クラス1インスタンス
 template <class T>

@@ -6,16 +6,31 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- *	@file SprHIS.h
- *	@brief 力覚インターフェースのヘッダファイル群
+ *	@file SprHISdk.h
+ *	@brief ヒューマンインタフェースSDK
 */
-#ifndef SPR_HUMANINTERFACE_H
-#define SPR_HUMANINTERFACE_H
-#include <HumanInterface/SprHISdk.h>
+#ifndef SPR_HIDRUsbIF_H
+#define SPR_HIDRUsbIF_H
 #include <HumanInterface/SprHIBase.h>
-#include <HumanInterface/SprHIMouse6D.h>
+
+namespace Spr{;
+
+/** \addtogroup gpPhysics */
+//@{
 
 
-#include <HumanInterface/SprHIDevice.h>
-#include <HumanInterface/SprHIDRUsb.h>
+//	デスクリプタ
+struct DRUsb20SimpleDesc{
+	int number;
+	DRUsb20SimpleDesc(): number(0){}
+};
+
+///	物理シミュレーションSDK
+struct DRUsb20SimpleIf : public HIRealDeviceIf{
+	IF_DEF(DRUsb20Simple);
+};
+
+//@}
+
+}	//	namespace Spr
 #endif

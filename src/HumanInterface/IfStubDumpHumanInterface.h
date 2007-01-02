@@ -25,6 +25,9 @@ struct HIBaseIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual bool IsGood(){
 		return ((OBJ*)(MIF*)this)->OBJ::IsGood();
 	}
+	virtual bool Init(HISdkIf *  sdk, const void *  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::Init(sdk, desc);
+	}
 };
 struct HIBaseIf;	class HIBase;
 typedef HIBaseIfStubTemplate<HIBaseIf, ObjectIfBuf, HIBase>	HIBaseIfStub;
@@ -75,8 +78,8 @@ struct HIRealDeviceIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual bool Init(){
 		return ((OBJ*)(MIF*)this)->OBJ::Init();
 	}
-	virtual void Register(HIDeviceManagerIf *  devMan){
-		return ((OBJ*)(MIF*)this)->OBJ::Register(devMan);
+	virtual void Register(HISdkIf *  sdk){
+		return ((OBJ*)(MIF*)this)->OBJ::Register(sdk);
 	}
 	virtual void Update(){
 		return ((OBJ*)(MIF*)this)->OBJ::Update();
@@ -109,40 +112,48 @@ struct HIVirtualDeviceIf;	class HIVirtualDevice;
 typedef HIVirtualDeviceIfStubTemplate<HIVirtualDeviceIf, ObjectIfBuf, HIVirtualDevice>	HIVirtualDeviceIfStub;
 typedef IfInitTemplate<HIVirtualDeviceIfStub, HIVirtualDevice>	HIVirtualDeviceIfInit;
 
-template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ> struct HIRealDeviceIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct HIDeviceManagerIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
+struct DRUsb20SimpleIfStubTemplate: public HIRealDeviceIfStubTemplate<IF, MIF, OBJ> {
+};
+struct DRUsb20SimpleIf;	class DRUsb20Simple;
+typedef DRUsb20SimpleIfStubTemplate<DRUsb20SimpleIf, ObjectIfBuf, DRUsb20Simple>	DRUsb20SimpleIfStub;
+typedef IfInitTemplate<DRUsb20SimpleIfStub, DRUsb20Simple>	DRUsb20SimpleIfInit;
+
+template <class IF, class MIF, class OBJ> struct HIPoseIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct HIMouse6DIfStubTemplate: public HIPoseIfStubTemplate<IF, MIF, OBJ> {
+};
+struct HIMouse6DIf;	class HIMouse6D;
+typedef HIMouse6DIfStubTemplate<HIMouse6DIf, ObjectIfBuf, HIMouse6D>	HIMouse6DIfStub;
+typedef IfInitTemplate<HIMouse6DIfStub, HIMouse6D>	HIMouse6DIfInit;
+
+template <class IF, class MIF, class OBJ> struct NameManagerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct HISdkIfStubTemplate: public NameManagerIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Init(){
 		return ((OBJ*)(MIF*)this)->OBJ::Init();
 	}
 	virtual void Clear(){
 		return ((OBJ*)(MIF*)this)->OBJ::Clear();
 	}
-	virtual HIVirtualDeviceIf *  Rent(const char *  type, const char *  name = NULL){
-		return ((OBJ*)(MIF*)this)->OBJ::Rent(type, name);
+	virtual HIVirtualDeviceIf *  RentVirtualDevice(const char *  type, const char *  name = NULL){
+		return ((OBJ*)(MIF*)this)->OBJ::RentVirtualDevice(type, name);
 	}
-	virtual bool Return(HIVirtualDeviceIf *  dev){
-		return ((OBJ*)(MIF*)this)->OBJ::Return(dev);
+	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf *  dev){
+		return ((OBJ*)(MIF*)this)->OBJ::ReturnVirtualDevice(dev);
 	}
-	virtual void RegisterRealDevice(HIRealDeviceIf *  dev){
-		return ((OBJ*)(MIF*)this)->OBJ::RegisterRealDevice(dev);
+	virtual bool AddRealDevice(const IfInfo *  keyInfo, const void *  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::AddRealDevice(keyInfo, desc);
 	}
 	virtual HIRealDeviceIf *  FindRealDevice(const char *  name = NULL){
 		return ((OBJ*)(MIF*)this)->OBJ::FindRealDevice(name);
 	}
-};
-struct HIDeviceManagerIf;	class HIDeviceManager;
-typedef HIDeviceManagerIfStubTemplate<HIDeviceManagerIf, ObjectIfBuf, HIDeviceManager>	HIDeviceManagerIfStub;
-typedef IfInitTemplate<HIDeviceManagerIfStub, HIDeviceManager>	HIDeviceManagerIfInit;
-
-template <class IF, class MIF, class OBJ> struct NameManagerIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct HISdkIfStubTemplate: public NameManagerIfStubTemplate<IF, MIF, OBJ> {
-	virtual HIBaseIf *  CreateHumanInterface(const char *  name){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateHumanInterface(name);
+	virtual HIBaseIf *  CreateHumanInterface(const IfInfo *  info, const void *  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::CreateHumanInterface(info, desc);
 	}
-	virtual void RegisterDevice(const char *  name){
-		return ((OBJ*)(MIF*)this)->OBJ::RegisterDevice(name);
+	virtual HIBaseIf *  CreateHumanInterface(const char *  name, const char *  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::CreateHumanInterface(name, desc);
 	}
 };
 struct HISdkIf;	class HISdk;

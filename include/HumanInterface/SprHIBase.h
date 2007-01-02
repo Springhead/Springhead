@@ -31,14 +31,17 @@ struct HIBaseIf: public NamedObjectIf{
 	virtual bool Calibration()=0;
 	///	キャリブレーションのあとに行う処理
 	virtual bool AfterCalibration()=0;
-	///	デバイスの依存関係を追加する
+	///	ヒューマンインタフェースの依存関係を追加する
 	virtual void AddDeviceDependency(HIRealDeviceIf* rd)=0;
-	///	デバイスの依存関係をクリアする
+	///	ヒューマンインタフェースの依存関係をクリアする
 	virtual void ClearDeviceDependency()=0;
-	///	デバイスの状態を更新する．
+	///	ヒューマンインタフェースの状態を更新する．
 	virtual void Update(float dt)=0;
-	///	デバイスが使用可能ならば true．
+	///	ヒューマンインタフェースが使用可能ならば true．
 	virtual bool IsGood()=0;
+	/**	ヒューマンインタフェースの初期化．
+		必要なデバイスをsdkから借りてきて，ヒューマンインタフェースを構成する	*/
+	virtual bool Init(HISdkIf* sdk, const void* desc)=0;
 };
 
 /**	@brief	位置入力インタフェース	*/

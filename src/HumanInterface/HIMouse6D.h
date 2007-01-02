@@ -1,12 +1,14 @@
 #ifndef HIMouse6D6D_H
 #define HIMouse6D6D_H
 
-#include <Device/DVDeviceManager.h>
+#include <HumanInterface/HIBase.h>
 
 namespace Spr {;
 
-class SPR_DLL HIMouse6D: public HIForceDevice6D{
+class SPR_DLL HIMouse6D: public HIPose, public HIMouse6DIfInit{
 public:
+	OBJECTDEF(HIMouse6D, HIPose);
+
 	/// 押されているボタンの状態を示すフラグ
 	enum ButtonState{
 		NONE,
@@ -26,12 +28,11 @@ public:
 	HIMouse6D(){ bGood = false; }
 	virtual ~HIMouse6D(){}
 	///	デバイスのタイプ
-	OBJECT_DEF(HIMouse6D);
 
 	bool IsGood(){return bGood;}
 
 	/// マウスの初期化
-	bool Init();
+	virtual bool Init(HISdkIf* sdk, const void* desc);
 
 	///	押されているボタンに応じてpos,oriを更新する。Shiftが押されているときはaxisを更新する。
 	void Update(float dt);

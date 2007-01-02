@@ -3,10 +3,9 @@
 #include "HIMouse6D.h"
 
 namespace Spr {;
+IF_OBJECT_IMP(HIMouse6D, HIPose);
 
-HIOBJECTIMP(HIMouse6D, HIForceDevice6D);
-
-bool HIMouse6D::Init(){
+bool HIMouse6D::Init(HISdkIf* sdk, const void* desc){
 	oldX = oldY = newX = newY = 0;
 	btnState = NONE;
 
@@ -207,8 +206,15 @@ void HIMouse6D::Update(float dt){
 
 		//DSTR << "(x, y, z) = (" << pos.x << ", " << pos.y << ", " << pos.z << ")" << std::endl;
 	}
-	HIForceDevice6D::Update(dt);
+	HIPose::Update(dt);
 }
+#ifdef _WIN32
+}	//	namespace Spr;
+#define WIN32_LEAN_AND_MEAN        // Windows ヘッダーから使用されていない部分を除外します。
+#define WINVER 0x0500            //    バージョン定義 Windows2000以上
+#define _WIN32_WINNT WINVER
+#include <Windows.h>
+namespace Spr{;
 
 bool HIMouse6D::PreviewMessage(void* m){
 	MSG* msg = (MSG*)m;
@@ -288,6 +294,8 @@ bool HIMouse6D::OnKeyDown(unsigned nChar){
 	SetAxis(afBody.inv());
 	return true;
 }
+#endif
+
 void HIMouse6D::OnButtonDown(int x, int y){
 	oldX = newX = x;
 	oldY = newY = y;
