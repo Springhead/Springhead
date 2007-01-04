@@ -40,23 +40,28 @@
 
 using namespace Spr;
 
+typedef PTM::TMatrixCol<60, 6, double> MatrixN6d;
+typedef PTM::TMatrixCol<6, 60, double> Matrix6Nd;
+typedef PTM::TVector<60, double> VecNd;
+
 #define ESC				27			// ESC key
 //#define EXIT_TIMER		10000		// 実行ステップ数
 #define WINSIZE_WIDTH	480			// ウィンドウサイズ(width)
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
-#define NUM_OBJECTS		3			// object数
+#define NUM_OBJECTS		2			// object数
 #define SPIDAR_SCALE	70			// SPIDARのVE内での動作スケール
 
 #define POINTER_RADIUS 0.5f			// ポインタの半径
-#define EPSILON 0.15				// ポインタに接触しそうな剛体を予測するためにポインタを膨らませて接触判定をするときの膨らませる量
+#define EPSILON 0.5					// ポインタに接触しそうな剛体を予測するためにポインタを膨らませて接触判定をするときの膨らませる量
 									// 大きくするほどたくさんの接触を予想できるが、その分の判定処理も増えるので
 									// 膨らませすぎるのもよくない
+									// 0にすると予測なし
 
 #define LIMIT_DEPTH 100				// 予測シミュレーションを行う剛体取得の深さ上限
 #define NUM_PREDICT_ITERATE 15		// 予測シミュレーションのイテレート回数
 
-#define NUM_COLLISIONS 100			// ポインタへの許容接触数
-#define NUM_COL_SOLIDS 100			// ポインタへの許容接触剛体数　
+#define NUM_COLLISIONS 20			// ポインタへの許容接触数
+#define NUM_COL_SOLIDS 20			// ポインタへの許容接触剛体数　
 									// NUM_COLLISIONSと区別するのはプログラムを読みやすくするため。実質的な存在意義はない
 
 #define COLLISION_DENSITY 0.05		// 力覚の計算に使用する接触点の分布量を調節する値
@@ -74,10 +79,16 @@ using namespace Spr;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 4500;				// virtual couplingの係数
-	float Bm = 150;					// 並進
+//	float Km = 4500;				// virtual couplingの係数
+//	float Bm = 150;					// 並進
 
-	float Kr = 4500;				// 回転
+//	float Kr = 4500;				// 回転
+//	float Br = 160;
+
+	float Km = 10000;
+	float Bm = 190;
+
+	float Kr = 5000;
 	float Br = 160;
 
 //	float Km = 1500;
@@ -1360,13 +1371,20 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	// 局所的な動力学計算を行う場合
 	if(bLocalDynamics)
 	{
-		
+
 		////////////////////////////////////////////////////////////////////////////////////////
 		// 局所的な動力学計算
 		// 接触剛体の接触力による速度・角速度更新
 
 		for(int i = 0; i < info->num_collisions; ++i)
 		{
+
+			// ポインタの接触点更新
+			// ポインタの移動量に従って平行移動
+			// この情報はポインタが持つのではなく接触がそれぞれ持っている
+			info->pointer_col_positions[i] += pointer_dx;
+			info->pointer_col_positions[i] += pointer_dth ^ (info->pointer_col_positions[i] - pointer_pos);
+
 			// 面の法線と、ポインタ上の点から剛体上の点までを結んだベクトルの内積を計算
 			// これが０以上なら（ゼロベクトルも含む。ちょうど接している）接触がある
 			if(dot(info->col_positions[i] - info->pointer_col_positions[i], info->col_normals[i]) >= 0)
@@ -1440,8 +1458,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		// 局所的動力学計算による剛体の位置・姿勢を更新
-		Vec3d correct_vector = Vec3d();
-		Vec3d correct_torque = Vec3d();
 		int num_cols = 0;
 
 		vector<Vec3d> r_vectors;
@@ -1482,12 +1498,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				info->col_normals[col_index] += dx_rotation;
 				info->col_normals[col_index] = info->col_normals[col_index].unit();
 
-				// ポインタの接触点更新
-				// ポインタの移動量に従って平行移動
-				// この情報はポインタが持つのではなく接触がそれぞれ持っている
-				info->pointer_col_positions[col_index] += pointer_dx;
-				info->pointer_col_positions[col_index] += pointer_dth ^ (info->pointer_col_positions[col_index] - pointer_pos);
-
 
 				// 次に行うめり込み解消処理の準備
 				Vec3d col_vector = info->col_positions[col_index] - info->pointer_col_positions[col_index];
@@ -1508,11 +1518,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		////////////////////////////////////////////////////////////////////////////////////////////////
 		// ６自由度のめり込み解消処理
 
-		// 計算に使う変数の型を定義
-		typedef PTM::TMatrixCol<99, 6, double> MatrixN6d;
-		typedef PTM::TMatrixCol<6, 99, double> Matrix6Nd;
-		typedef PTM::TVector<99, double> VecNd;
-
 		// ポインタのめり込みに対して擬似逆行列を計算し、
 		// 適切な補正量を求めることで、めり込みを補正していく
 		// ポインタ自身を並進・回転させてめり込みを解消させるようにする
@@ -1521,101 +1526,112 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			Vec3d M_vec = Vec3d();
 			Vec3d R_vec = Vec3d();
 
-			if(num_cols > 33) num_cols = 33;
+			if(num_cols > NUM_COLLISIONS) num_cols = NUM_COLLISIONS;
 
-			// データとして使用したベクトルを格納する変数
-			vector<Vec3d> used_r_vecs;
-			vector<Vec3d> used_c_vecs;
+			MatrixN6d M = MatrixN6d();
+			VecNd C = VecNd();
 
-			MatrixN6d M;
-			VecNd C;
-
-			// ノルムが大きい順に３つの接触を取り出し、
-			// それらの情報から擬似逆行列の計算に必要な
+			// 擬似逆行列の計算に必要な
 			// 行列とベクトルを作っていく
-			for(int k = 0; k < num_cols; ++k)
+			for(int k = 0; k < NUM_COLLISIONS; ++k)
 			{				
-				Vec3d c = c_vectors[k];
-				Vec3d r = r_vectors[k];
+				if(k < num_cols)
+				{
+					Vec3d c = c_vectors[k];
+					Vec3d r = r_vectors[k];
 
-				// ３x６行列の作成と大きさ３のベクトルの作成を３回行う
-				for(int i = 0; i < 3; ++i)
-				{						
-					switch(i)
+					// ３x６行列の作成と大きさ３のベクトルの作成を行う
+					for(int i = 0; i < 3; ++i)
+					{						
+						switch(i)
+						{
+						// 1, 4, 7行目
+						case 0:
+							C[k * 3 + i] = c[0];
+
+							for(int j = 0; j < 6; ++j)
+							{
+								switch(j)
+								{
+								case 0:
+								case 4:
+								case 5:
+									M[k * 3 + i][j] = 0;
+									break;
+								case 1:
+									M[k * 3 + i][j] = r[2];
+									break;
+								case 2:
+									M[k * 3 + i][j] = - r[1];
+									break;
+								case 3:
+									M[k * 3 + i][j] = 1;
+									break;
+								}
+							}
+							break;
+						// 2, 5, 8行目
+						case 1:
+							C[k * 3 + i] = c[1];
+							for(int j = 0; j < 6; ++j)
+							{
+								switch(j)
+								{
+								case 1:
+								case 3:
+								case 5:
+									M[k * 3 + i][j] = 0;
+									break;
+								case 0:
+									M[k * 3 + i][j] = - r[2];
+									break;
+								case 2:
+									M[k * 3 + i][j] = r[0];
+									break;
+								case 4:
+									M[k * 3 + i][j] = 1;
+									break;
+								}
+							}
+							break;
+						// 3, 6, 9行目
+						case 2:
+							C[k * 3 + i] = c[2];
+							for(int j = 0; j < 6; ++j)
+							{
+								switch(j)
+								{
+								case 2:
+								case 3:
+								case 4:
+									M[k * 3 + i][j] = 0;
+									break;
+								case 0:
+									M[k * 3 + i][j] = r[1];
+									break;
+								case 1:
+									M[k * 3 + i][j] = - r[0];
+									break;
+								case 5:
+									M[k * 3 + i][j] = 1;
+									break;
+								}
+							}
+							break;
+						}
+					}
+				}
+				else
+				{
+					// データがない部分の初期化
+					for(int i = 0; i < 3; ++i)
 					{
-					// 1, 4, 7行目
-					case 0:
-						C[k * 3 + i] = c[0];
+						C[k * 3 + i] = 0;
 
 						for(int j = 0; j < 6; ++j)
 						{
-							switch(j)
-							{
-							case 0:
-							case 4:
-							case 5:
-								M[k * 3 + i][j] = 0;
-								break;
-							case 1:
-								M[k * 3 + i][j] = r[2];
-								break;
-							case 2:
-								M[k * 3 + i][j] = - r[1];
-								break;
-							case 3:
-								M[k * 3 + i][j] = 1;
-								break;
-							}
+							M[k * 3 + i][j] = 0;
 						}
-						break;
-					// 2, 5, 8行目
-					case 1:
-						C[k * 3 + i] = c[1];
-						for(int j = 0; j < 6; ++j)
-						{
-							switch(j)
-							{
-							case 1:
-							case 3:
-							case 5:
-								M[k * 3 + i][j] = 0;
-								break;
-							case 0:
-								M[k * 3 + i][j] = - r[2];
-								break;
-							case 2:
-								M[k * 3 + i][j] = r[0];
-								break;
-							case 4:
-								M[k * 3 + i][j] = 1;
-								break;
-							}
-						}
-						break;
-					// 3, 6, 9行目
-					case 2:
-						C[k * 3 + i] = c[2];
-						for(int j = 0; j < 6; ++j)
-						{
-							switch(j)
-							{
-							case 2:
-							case 3:
-							case 4:
-								M[k * 3 + i][j] = 0;
-								break;
-							case 0:
-								M[k * 3 + i][j] = r[1];
-								break;
-							case 1:
-								M[k * 3 + i][j] = - r[0];
-								break;
-							case 5:
-								M[k * 3 + i][j] = 1;
-								break;
-							}
-						}
-						break;
 					}
 				}
 			}
@@ -1629,6 +1645,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			{
 				for(int j = 0; j < 6; ++j)
 				{
+					// 値は適当
 					if(i == j) m[i][j] = 0.00001;
 					else m[i][j] = 0;
 				}
@@ -1637,7 +1654,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 			Matrix6d MTMinv = MTM.inv();
 
-			for(int i = 0; i < 9; ++i)
+			for(int i = 0; i < 6; ++i)
 			{
 				for(int j = 0; j < 6; ++j)
 				{
@@ -1662,13 +1679,18 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			// 第一～三要素が回転ベクトルのxyz
 			// 第四～六要素が並進ベクトルのxyz
 			Vec6d Ans = Pinv * C;
+			
 			R_vec = Ans.sub_vector(TSubVectorDim<0,3>());
 			M_vec = Ans.sub_vector(TSubVectorDim<3,3>());
+			
+			
+			// 速度と力を変化
+			pointer_vel += M_vec;
+			pointer_angvel += R_vec;
 
-			/*
-			pointer_vel += P_CORRECTION_COEFF * M_vec / dt;
-			pointer_angvel += P_CORRECTION_COEFF * R_vec / dt;
-			*/
+			VCForce += M_vec / (dt * pointer_massinv);
+			VCTorque += pointer_inertiainv.inv() * R_vec / dt;
+
 
 			// ポインタ自身の位置を移動
 			pointer_pos += M_vec;
@@ -1703,10 +1725,10 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				ofs << "debug information!!! -----------------------" << endl;
 				for(int i = 0; i < (int)norm_array.size(); i++)
 				{
-//					ofs << "norm val = " << norm_array[i] << " y coord = " << col_pos_y_array[i] << " pointer y coord = " << pcol_pos_array[i] << endl;
+					ofs << "norm val = " << norm_array[i] << " y coord = " << col_pos_y_array[i] << " pointer y coord = " << pcol_pos_array[i] << endl;
 				}
 				ofs << "num_cols = " << num_cols << endl;
-//				ofs << "M = " << endl << M << endl;
+				ofs << "M = " << endl << M << endl;
 //				ofs << "C = " << C << endl;
 //				ofs << "MTM = " << endl << MTM << endl;
 //				ofs << "MTMinv = " << endl << MTMinv << endl;
@@ -2251,6 +2273,29 @@ void keyboard(unsigned char key, int x, int y){
 		else cout << "OFF" << endl;
 
 		cout << "----------------------" << endl;
+	}
+	// ファイルにdebug情報を書き出す
+	else if(key == 'a')
+	{
+		HapticInfo* info = NULL;
+
+		if(current_valid_data)info = &info1;
+		else info = &info2;
+
+		ofs << "!!! debug output !!!" << endl;
+		ofs << "pointer pos = " << pointer_pos << endl;
+		ofs << "pointer ori = " << pointer_ori << endl;
+		ofs << "pointer vel = " << pointer_vel << endl;
+		ofs << "pointer angvel = " << pointer_angvel << endl;
+		
+		ofs << endl;
+
+		for(int i = 0; i < info->num_collisions; ++i)
+		{
+			ofs << "col position = " << info->col_positions[i] << endl;
+			ofs << "pointer col position = " << info->pointer_col_positions[i] << endl;
+		}
+		ofs << "--------------------" << endl;
 	}
 	// 設定のプレセット
 	else if(key == '1')
