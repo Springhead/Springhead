@@ -52,13 +52,13 @@ typedef PTM::TVector<60, double> VecNd;
 #define SPIDAR_SCALE	70			// SPIDARのVE内での動作スケール
 
 #define POINTER_RADIUS 0.5f			// ポインタの半径
-#define EPSILON 0.5					// ポインタに接触しそうな剛体を予測するためにポインタを膨らませて接触判定をするときの膨らませる量
+#define EPSILON 0.0					// ポインタに接触しそうな剛体を予測するためにポインタを膨らませて接触判定をするときの膨らませる量
 									// 大きくするほどたくさんの接触を予想できるが、その分の判定処理も増えるので
 									// 膨らませすぎるのもよくない
 									// 0にすると予測なし
 
 #define LIMIT_DEPTH 100				// 予測シミュレーションを行う剛体取得の深さ上限
-#define NUM_PREDICT_ITERATE 15		// 予測シミュレーションのイテレート回数
+#define NUM_PREDICT_ITERATE 30		// 予測シミュレーションのイテレート回数
 
 #define NUM_COLLISIONS 20			// ポインタへの許容接触数
 #define NUM_COL_SOLIDS 20			// ポインタへの許容接触剛体数　
@@ -79,23 +79,18 @@ typedef PTM::TVector<60, double> VecNd;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-//	float Km = 4500;				// virtual couplingの係数
-//	float Bm = 150;					// 並進
+//	float Km = 10000;				// virtual couplingの係数
+//	float Bm = 190;					// 並進
 
-//	float Kr = 4500;				// 回転
+//	float Kr = 5000;				// 回転
 //	float Br = 160;
 
-	float Km = 10000;
-	float Bm = 190;
+	float Km = 60;
+	float Bm = 0;
 
-	float Kr = 5000;
-	float Br = 160;
+	float Kr = 13;
+	float Br = 0;
 
-//	float Km = 1500;
-//	float Bm = 80;
-
-//	float Kr = 1500;
-//	float Br = 100;
 #endif
 
 // 提示力と剛体に提示する力を直接変化させる定数
@@ -231,11 +226,10 @@ typedef struct {
 
 // pointer data
 Vec3d pointer_pos;
-Vec3d pointer_vel;
-double pointer_massinv;
 Quaterniond pointer_ori;
-Vec3d pointer_angvel;
-Matrix3d pointer_inertiainv;
+
+Vec3d VCForce_sum = Vec3d();
+Vec3d TestForce = Vec3d(1, 1, 1);
 
 
 // １と２を用意するのはスレッドで必要な排他アクセスを避け（待ちが発生するため）、
@@ -710,8 +704,8 @@ void GetCollisionsFromPointer(vector<pair<PHConstraint *, int> >* pointer_consts
 				// 判定用ポインタとの接触
 				else
 				{
-					if(col_solid->IsDynamical())col_candidate_consts->push_back(pair<PHConstraint *, int>(it->first, sign));
-					else col_candidate_static_consts->push_back(pair<PHConstraint *, int>(it->first, sign));
+//					if(col_solid->IsDynamical())col_candidate_consts->push_back(pair<PHConstraint *, int>(it->first, sign));
+//					else col_candidate_static_consts->push_back(pair<PHConstraint *, int>(it->first, sign));
 				}
 
 // 周囲の影響を計算するためのデータ作成処理
@@ -784,15 +778,19 @@ vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > point
 		if(sign > 0) si = DCAST(PHSolid, constraint->solid[0]);
 		else si = DCAST(PHSolid, constraint->solid[1]);
 
+
 		// 事前に計算しておいた値を参照
 		map<PHSolid *, Vec3d>::iterator cef = coeff.find(si);
 
 		// 単位力を加える前のdvを保存しておく
 		dv_save = si->dv;
 
+		Vec3d m_accel = si->GetMassInv() * si->GetOrientation().Conjugated() * force_vec * dt;
+		Vec3d r_accel = si->GetInertiaInv() * (si->GetOrientation().Conjugated() * ((contact->pos - si->GetCenterPosition()) ^ force_vec) - cef->second) * dt;
+		
 		// 引数で与えられた単位力を加える
-		si->dv.v() += si->GetMassInv() * force_vec * dt;
-		si->dv.w() += si->GetInertiaInv() * (((contact->pos - si->GetCenterPosition()) ^ force_vec) - cef->second) * dt;
+		si->dv.v() += m_accel;
+		si->dv.w() += r_accel;
 	}
 
 	// シミュレーションに必要な情報をセットアップ
@@ -908,13 +906,13 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 		// ある単位ベクトルを加えてその結果をあらわすベクトルを取得
 		vector<SpatialVector> vec_x = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids,
 														relative_consts, relative_solids, 
-														Vec3d(1, 0, 0), coeff, i);
+														Vec3d(TestForce.x, 0, 0), coeff, i);
 		vector<SpatialVector> vec_y = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 														relative_consts, relative_solids, 
-														Vec3d(1, 1, 0), coeff, i);
+														Vec3d(TestForce.x, TestForce.y, 0), coeff, i);
 		vector<SpatialVector> vec_z = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 														relative_consts, relative_solids, 
-														Vec3d(1, 0, 1), coeff, i);
+														Vec3d(TestForce.x, 0, TestForce.z), coeff, i);
 
 		// このループで剛体soの接触pointer_consts[i](もしくはcol_candidate_consts[i])に関する行列を計算し格納
 		// この接触のすべての剛体に対する影響をこのループで処理する
@@ -933,8 +931,8 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 			// 先ほど加えた単位力から、影響を求めて行列を作成する
 			// なおトルクについては半径と力の外積が分解されて
 			// 半径の外積が行列化されてすでに反映されているはずである
-			Matrix3d v = Matrix3d(sv_x.v() - sv.v(), (sv_y.v() - sv_x.v()) - sv.v(), (sv_z.v() - sv_x.v()) - sv.v());
-			Matrix3d w = Matrix3d(sv_x.w() - sv.w(), (sv_y.w() - sv_x.w()) - sv.w(), (sv_z.w() - sv_x.w()) - sv.w());
+			Matrix3d v = Matrix3d(so->GetOrientation() * (sv_x.v() / TestForce.x - sv.v()), so->GetOrientation() * ((sv_y.v() - sv_x.v()) / TestForce.y - sv.v()), so->GetOrientation() * ((sv_z.v() - sv_x.v()) / TestForce.z - sv.v()));
+			Matrix3d w = Matrix3d(so->GetOrientation() * (sv_x.w() / TestForce.x - sv.w()), so->GetOrientation() * ((sv_y.w() - sv_x.w()) / TestForce.y - sv.w()), so->GetOrientation() * ((sv_z.w() - sv_x.w()) / TestForce.z - sv.w()));
 
 			// データの格納。			
 			pair<Matrix3d, Matrix3d> p = pair<Matrix3d, Matrix3d>(v, w);
@@ -953,7 +951,6 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHConstraint *, int> > *current_consts, vector<pair<PHConstraint *, int> > *current_static_consts, map<PHConstraint *, int>* NewcolToCol, map<PHSolid *, int>* NewsolToSol,
 									set<PHSolid *> *relative_solids, vector<PHConstraint *> *relative_consts, set<PHSolid *> *nearest_solids)
 {
-
 	// 2ステップ前に作った接触の削除処理
 	// 次で新しく接触を作成する
 	for(multimap<double, PHContactPoint*>::iterator it = current_info->points.begin(); it != current_info->points.end(); ++it)
@@ -1186,8 +1183,12 @@ void t_end()
 {
 	// 一周にかかる時間をチェック
 	end = timer.CountUS();
-	if(end - start > 0 && bOutput)ofs << "time = " << end - start << endl;
+//	if(end - start > 0 && bOutput)ofs << "time = " << end - start << endl;
 }
+
+int pos_mode = 0;
+
+Vec3d pos_array[] = {Vec3d(0, 0.0, 0.0), Vec3d(0.0, -0.01, 0.0), Vec3d(0.0, -0.035, 0.0)};
 
 /**
  brief  	提示力の計算とHaptic Device	へ反映. multimedia timerによって呼び出される
@@ -1215,7 +1216,9 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 	// シミュレーションを管理するカウンターを作成
 	static int step_counter = 0;
-	if(step_counter == (int)ratioinv)
+	
+	// カウンターの値が条件を満たすかチェック
+	if(step_counter >= (int)ratioinv)
 	{
 		// シミュレーションが終わっていたら新しいデータに切り替える処理をする
 		// 終わっていなかったら仕方がないので前回のデータをそのまま使う
@@ -1280,10 +1283,19 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				}
 			}
 			
+			// 予測シミュレーションに使う単位力のベクトルの用意
+			if(VCForce_sum != Vec3d())TestForce = VCForce_sum / (double)step_counter;
+			else TestForce = Vec3d(1, 1, 1);
+			VCForce_sum = Vec3d();
+
 			// 使用するデータを変更し、シミュレーションを行う
 			bSimulation = true;
 			step_counter = 0;
 			current_valid_data = !current_valid_data;
+		}
+		else
+		{
+			++step_counter;
 		}
 	}
 	else
@@ -1302,7 +1314,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	if(current_valid_data) info = &info1;
 	else info = &info2;
 
-
 	spidarG6.Update(dt);//	USBの通信を行う．
 
 
@@ -1312,6 +1323,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	// SPIDARの位置の更新
 	spidar_pos = view_rot * spidarG6.GetPos();		// SPIDAR座標からワールド座標にする
 
+//	spidar_pos = view_rot * pos_array[pos_mode];
+		
 	// SPIDARの情報を格納する変数
 	static Vec3d old_pos = spidar_pos;
 
@@ -1322,12 +1335,6 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	Vec3d SPIDARVel = spidar_pos - old_pos;
 	old_pos = spidar_pos;
 
-	// SPIDARの位置までのベクトルを作成
-	Vec3d goal = spidar_pos - pointer_pos;
-
-	// VR空間のポインタとSPIDARをvirtual couplingでつなげる
-	Vec3d VCForce = Km * goal + Bm * (SPIDARVel - pointer_vel);
-
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// Virtual Coupling
@@ -1337,8 +1344,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	qv.FromMatrix(view_rot);
 
 	static Quaterniond spidar_ori;
-	spidar_ori = qv * spidarG6.GetOri();
-
+	spidar_ori = qv * spidarG6.GetOri();	
+	
 	static Quaterniond old_ori = spidar_ori;
 
 	// SPIDARの回転速度を計算
@@ -1346,45 +1353,271 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	Quaterniond SPIDARAngVel = spidar_ori * old_ori.Inv();
 	old_ori = spidar_ori;
 
-	// 現在のポインタの姿勢からSPIDARの姿勢までの回転を表す４元数を計算
-	Quaterniond ang_goal = spidar_ori * pointer_ori.Inv();
-
-	// 回転についてのバーチャルカップリング
-	Vec3d VCTorque = Kr * ang_goal.Rotation() + Br * (SPIDARAngVel.Rotation() - pointer_angvel);
-
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-	// バーチャルカップリングに従ってポインタの位置・姿勢更新
-	pointer_vel += pointer_massinv * VCForce * dt;
-	Vec3d pointer_dx = pointer_vel * dt;
-	pointer_pos += pointer_dx;
-
-	pointer_angvel += pointer_inertiainv * VCTorque * dt;
-	Vec3d pointer_dth = pointer_angvel * dt;
-	pointer_ori = Quaterniond::Rot(pointer_dth) * pointer_ori;
-	pointer_ori = pointer_ori.unit();
-
-
 	// 登録された接触があっても、現在本当に接触しているかはわからないのでフラグを用意
 	bool feedback = false;
+
+	Vec3d VCForce = Vec3d();
+	Vec3d VCTorque = Vec3d();
 
 	// 局所的な動力学計算を行う場合
 	if(bLocalDynamics)
 	{
+		int num_cols = 0;
+		vector<Vec3d> r_vectors;
+		vector<Vec3d> c_vectors;
+
+		for(int i = 0; i < info->num_collisions; ++i)
+		{
+			// めり込み解消処理の準備
+			Vec3d col_vector = info->col_positions[i] - info->pointer_col_positions[i];
+			double vector_coeff = dot(col_vector, info->col_normals[i]);
+
+			// めり込んでいたら補正用のデータを追加
+			if(vector_coeff > 0)
+			{
+				r_vectors.push_back(Vec3d(info->pointer_col_positions[i] - pointer_pos));
+				c_vectors.push_back(Vec3d(vector_coeff * info->col_normals[i].unit()));
+
+				// めり込んでた接触の個数
+				++num_cols;
+			}
+		}
+
+
+		////////////////////////////////////////////////////////////////////////////////////////////////
+		// ６自由度のめり込み解消処理
+
+		Vec3d M_vec = Vec3d();
+		Vec3d R_vec = Vec3d();
+
+		// ポインタのめり込みに対して擬似逆行列を計算し、
+		// 適切な補正量を求めることで、めり込みを補正していく
+		// ポインタ自身を並進・回転させてめり込みを解消させるようにする
+
+		// めり込みの数の最大値を接触許容数-2にする
+		if(num_cols > NUM_COLLISIONS - 2) num_cols = NUM_COLLISIONS - 2;
+
+		MatrixN6d M = MatrixN6d();
+		VecNd C = VecNd();
+
+#define COEFF 0.001
+
+		// 擬似逆行列で座標計算も兼ねる
+		Vec3d t = spidar_pos - pointer_pos;
+		Vec3d th = (spidar_ori * pointer_ori.Inv()).Rotation();
+		for(int i = 0; i < 6; i++)
+		{
+			switch(i)
+			{
+			case 0:
+				C[i] = COEFF * th.x;
+				break;
+			case 1:
+				C[i] = COEFF * th.y;
+				break;
+			case 2:
+				C[i] = COEFF * th.z;
+				break;
+			case 3:
+				C[i] = COEFF * t.x;
+				break;
+			case 4:
+				C[i] = COEFF * t.y;
+				break;
+			case 5:
+				C[i] = COEFF * t.z;
+				break;
+			}
+
+			// 基本的にtとthで決まるようにする
+			// 接触がある場合はこの行列にさらに情報を追加し、
+			// 擬似逆行列を解くことによってめり込みも考慮した
+			// プロキシの位置を決める
+			for(int j = 0; j < 6; j++)
+			{
+				if(i == j)M[i][j] = COEFF * 1;
+				else M[i][j] = 0;
+			}
+		}
+
+#define COEFF2 1.0
+
+		// 擬似逆行列の計算に必要な
+		// 行列とベクトルを作っていく
+		for(int k = 2; k < NUM_COLLISIONS; ++k)
+		{				
+			if(k < num_cols + 2)
+			{
+				Vec3d c = COEFF2 * c_vectors[k-2];
+				Vec3d r = COEFF2 * r_vectors[k-2];
+
+				// ３x６行列の作成と大きさ３のベクトルの作成を行う
+				for(int i = 0; i < 3; ++i)
+				{						
+					switch(i)
+					{
+					// 1行目
+					case 0:
+						C[k * 3 + i] = c[0];
+
+						for(int j = 0; j < 6; ++j)
+						{
+							switch(j)
+							{
+							case 0:
+							case 4:
+							case 5:
+								M[k * 3 + i][j] = 0;
+								break;
+							case 1:
+								M[k * 3 + i][j] = r[2];
+								break;
+							case 2:
+								M[k * 3 + i][j] = - r[1];
+								break;
+							case 3:
+								M[k * 3 + i][j] = 1;
+								break;
+							}
+						}
+						break;
+					// 2行目
+					case 1:
+						C[k * 3 + i] = c[1];
+						for(int j = 0; j < 6; ++j)
+						{
+							switch(j)
+							{
+							case 1:
+							case 3:
+							case 5:
+								M[k * 3 + i][j] = 0;
+								break;
+							case 0:
+								M[k * 3 + i][j] = - r[2];
+								break;
+							case 2:
+								M[k * 3 + i][j] = r[0];
+								break;
+							case 4:
+								M[k * 3 + i][j] = 1;
+								break;
+							}
+						}
+						break;
+					// 3行目
+					case 2:
+						C[k * 3 + i] = c[2];
+						for(int j = 0; j < 6; ++j)
+						{
+							switch(j)
+							{
+							case 2:
+							case 3:
+							case 4:
+								M[k * 3 + i][j] = 0;
+								break;
+							case 0:
+								M[k * 3 + i][j] = r[1];
+								break;
+							case 1:
+								M[k * 3 + i][j] = - r[0];
+								break;
+							case 5:
+								M[k * 3 + i][j] = 1;
+								break;
+							}
+						}
+						break;
+					}
+				}
+			}
+			else
+			{
+				// データがない部分の初期化
+				for(int i = 0; i < 3; ++i)
+				{
+					C[k * 3 + i] = 0;
+
+					for(int j = 0; j < 6; ++j)
+					{
+						M[k * 3 + i][j] = 0;
+					}
+				}
+			}
+		}
+
+		Matrix6Nd Mt = M.trans();
+		Matrix6d MTM = Mt * M;
+		Matrix6d m = Matrix6d();
+
+		// 対角要素に値を足すテスト
+		for(int i = 0; i < 6; ++i)
+		{
+			for(int j = 0; j < 6; ++j)
+			{
+				// 値は適当
+				if(i == j) m[i][j] = 0.0001;
+				else m[i][j] = 0;
+			}
+		}
+		MTM += m;
+
+		Matrix6d MTMinv = MTM.inv();
+
+		/*
+		for(int i = 0; i < 6; ++i)
+		{
+			for(int j = 0; j < 6; ++j)
+			{
+				// QNaNをチェックする
+				// ある変数x = QNaNのとき
+				// x == xは失敗するらしい
+
+				// QNaNが発生する原因は
+				// ２点の接触のときにdeterminantのオーダが低く(10e-300とか）なり
+				// invの計算で発散に近づいてしまうため
+				if(MTMinv[i][j] != MTMinv[i][j]) 
+				{
+					MTMinv[i][j] = 1e-300;
+				}
+			}
+		}
+		*/
+
+		// 擬似逆行列
+		Matrix6Nd Pinv = MTMinv * Mt;
+
+		// 並進と回転のベクトル
+		// 第一～三要素が回転ベクトルのxyz
+		// 第四～六要素が並進ベクトルのxyz
+		Vec6d Ans = Pinv * C;
+		R_vec = Ans.sub_vector(TSubVectorDim<0,3>());
+		M_vec = Ans.sub_vector(TSubVectorDim<3,3>());
+		
+		// ポインタ自身の位置を移動
+		pointer_pos += M_vec;
+
+		// ポインタ自身の姿勢を補正
+		Quaterniond correct_q = Quaterniond::Rot(R_vec);
+		pointer_ori= correct_q * pointer_ori;
+
+		// すべての接触もその方向に移動・回転
+		for(int i = 0; i < info->num_collisions; ++i)
+		{
+			info->pointer_col_positions[i] += M_vec;
+			info->pointer_col_positions[i] += R_vec ^ (info->pointer_col_positions[i] - pointer_pos);
+		}
 
 		////////////////////////////////////////////////////////////////////////////////////////
 		// 局所的な動力学計算
 		// 接触剛体の接触力による速度・角速度更新
 
-		for(int i = 0; i < info->num_collisions; ++i)
+		VCForce = Km * (spidar_pos - pointer_pos) + Bm * (SPIDARVel - M_vec/dt);
+		VCTorque = (Kr * spidar_ori * pointer_ori.Inv()).Rotation() + Br * (SPIDARAngVel.Rotation() - R_vec/dt);
+
+		for(int i = 0; i < info->num_collisions; i++)
 		{
-
-			// ポインタの接触点更新
-			// ポインタの移動量に従って平行移動
-			// この情報はポインタが持つのではなく接触がそれぞれ持っている
-			info->pointer_col_positions[i] += pointer_dx;
-			info->pointer_col_positions[i] += pointer_dth ^ (info->pointer_col_positions[i] - pointer_pos);
-
 			// 面の法線と、ポインタ上の点から剛体上の点までを結んだベクトルの内積を計算
 			// これが０以上なら（ゼロベクトルも含む。ちょうど接している）接触がある
 			if(dot(info->col_positions[i] - info->pointer_col_positions[i], info->col_normals[i]) >= 0)
@@ -1396,6 +1629,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				// 力の向きと剛体の接する側のチェック
 				if(dot(info->col_normals[i], -VCForce) >= 0)
 				{
+					VCForce_sum += VCForce;
+
 					// ユーザに力覚を提示
 					feedback = true;
 
@@ -1418,7 +1653,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 							// 得られた加速度で速度を更新
 							// 座標は後で更新する
 							info->solid_velocity[sol_index] += accel * dt;
-										
+
 							// 角速度を更新
 							info->solid_angular_velocity[sol_index] += ang_accel * dt;
 						}
@@ -1458,16 +1693,11 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		// 局所的動力学計算による剛体の位置・姿勢を更新
-		int num_cols = 0;
-
-		vector<Vec3d> r_vectors;
-		vector<Vec3d> c_vectors;
-
 		for(int i = 0; i < info->num_solids; ++i)
 		{
 			// 局所的な動力学計算では重力が考慮されていないので
 			// 重力の分加速度を更新する
-			if(info->nearest_solids[i]->IsDynamical()) info->solid_velocity[i] += scene->GetGravity() * dt;
+			if(info->nearest_solids[i]->IsDynamical() && !bSurroundEffect) info->solid_velocity[i] += scene->GetGravity() * dt;
 
 			if(bSurroundEffect)
 			{
@@ -1495,246 +1725,8 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 				info->col_positions[col_index] += dx_local;
 				Vec3d dx_rotation = dth_local ^ (info->col_positions[col_index] - info->solid_center_positions[i]);
 				info->col_positions[col_index] += dx_rotation;
-				info->col_normals[col_index] += dx_rotation;
+				info->col_normals[col_index] += dth_local ^ info->col_normals[col_index];
 				info->col_normals[col_index] = info->col_normals[col_index].unit();
-
-
-				// 次に行うめり込み解消処理の準備
-				Vec3d col_vector = info->col_positions[col_index] - info->pointer_col_positions[col_index];
-				double vector_coeff = dot(col_vector, info->col_normals[col_index]);
-
-				// めり込んでいたら補正用のデータを追加
-				if(vector_coeff > 0)
-				{
-					r_vectors.push_back(Vec3d(info->pointer_col_positions[col_index] - pointer_pos));
-					c_vectors.push_back(Vec3d(vector_coeff * info->col_normals[col_index].unit()));
-
-					// めり込んでた接触の個数
-					++num_cols;
-				}
-			}
-		}
-
-		////////////////////////////////////////////////////////////////////////////////////////////////
-		// ６自由度のめり込み解消処理
-
-		// ポインタのめり込みに対して擬似逆行列を計算し、
-		// 適切な補正量を求めることで、めり込みを補正していく
-		// ポインタ自身を並進・回転させてめり込みを解消させるようにする
-		if(num_cols)
-		{
-			Vec3d M_vec = Vec3d();
-			Vec3d R_vec = Vec3d();
-
-			if(num_cols > NUM_COLLISIONS) num_cols = NUM_COLLISIONS;
-
-			MatrixN6d M = MatrixN6d();
-			VecNd C = VecNd();
-
-			// 擬似逆行列の計算に必要な
-			// 行列とベクトルを作っていく
-			for(int k = 0; k < NUM_COLLISIONS; ++k)
-			{				
-				if(k < num_cols)
-				{
-					Vec3d c = c_vectors[k];
-					Vec3d r = r_vectors[k];
-
-					// ３x６行列の作成と大きさ３のベクトルの作成を行う
-					for(int i = 0; i < 3; ++i)
-					{						
-						switch(i)
-						{
-						// 1, 4, 7行目
-						case 0:
-							C[k * 3 + i] = c[0];
-
-							for(int j = 0; j < 6; ++j)
-							{
-								switch(j)
-								{
-								case 0:
-								case 4:
-								case 5:
-									M[k * 3 + i][j] = 0;
-									break;
-								case 1:
-									M[k * 3 + i][j] = r[2];
-									break;
-								case 2:
-									M[k * 3 + i][j] = - r[1];
-									break;
-								case 3:
-									M[k * 3 + i][j] = 1;
-									break;
-								}
-							}
-							break;
-						// 2, 5, 8行目
-						case 1:
-							C[k * 3 + i] = c[1];
-							for(int j = 0; j < 6; ++j)
-							{
-								switch(j)
-								{
-								case 1:
-								case 3:
-								case 5:
-									M[k * 3 + i][j] = 0;
-									break;
-								case 0:
-									M[k * 3 + i][j] = - r[2];
-									break;
-								case 2:
-									M[k * 3 + i][j] = r[0];
-									break;
-								case 4:
-									M[k * 3 + i][j] = 1;
-									break;
-								}
-							}
-							break;
-						// 3, 6, 9行目
-						case 2:
-							C[k * 3 + i] = c[2];
-							for(int j = 0; j < 6; ++j)
-							{
-								switch(j)
-								{
-								case 2:
-								case 3:
-								case 4:
-									M[k * 3 + i][j] = 0;
-									break;
-								case 0:
-									M[k * 3 + i][j] = r[1];
-									break;
-								case 1:
-									M[k * 3 + i][j] = - r[0];
-									break;
-								case 5:
-									M[k * 3 + i][j] = 1;
-									break;
-								}
-							}
-							break;
-						}
-					}
-				}
-				else
-				{
-					// データがない部分の初期化
-					for(int i = 0; i < 3; ++i)
-					{
-						C[k * 3 + i] = 0;
-
-						for(int j = 0; j < 6; ++j)
-						{
-							M[k * 3 + i][j] = 0;
-						}
-					}
-				}
-			}
-
-			Matrix6Nd Mt = M.trans();
-			Matrix6d MTM = Mt * M;
-			Matrix6d m = Matrix6d();
-
-			// 対角要素に値を足すテスト
-			for(int i = 0; i < 6; ++i)
-			{
-				for(int j = 0; j < 6; ++j)
-				{
-					// 値は適当
-					if(i == j) m[i][j] = 0.00001;
-					else m[i][j] = 0;
-				}
-			}
-			MTM += m;
-
-			Matrix6d MTMinv = MTM.inv();
-
-			for(int i = 0; i < 6; ++i)
-			{
-				for(int j = 0; j < 6; ++j)
-				{
-					// QNaNをチェックする
-					// ある変数x = QNaNのとき
-					// x == xは失敗するらしい
-
-					// QNaNが発生する原因は
-					// ２点の接触のときにdeterminantのオーダが低く(10e-300とか）なり
-					// invの計算で発散に近づいてしまうため
-					if(MTMinv[i][j] != MTMinv[i][j]) 
-					{
-						MTMinv[i][j] = 1e-300;
-					}
-				}
-			}
-
-			// 擬似逆行列
-			Matrix6Nd Pinv = MTMinv * Mt;
-
-			// 並進と回転のベクトル
-			// 第一～三要素が回転ベクトルのxyz
-			// 第四～六要素が並進ベクトルのxyz
-			Vec6d Ans = Pinv * C;
-			
-			R_vec = Ans.sub_vector(TSubVectorDim<0,3>());
-			M_vec = Ans.sub_vector(TSubVectorDim<3,3>());
-			
-			
-			// 速度と力を変化
-			pointer_vel += M_vec;
-			pointer_angvel += R_vec;
-
-			VCForce += M_vec / (dt * pointer_massinv);
-			VCTorque += pointer_inertiainv.inv() * R_vec / dt;
-
-
-			// ポインタ自身の位置を移動
-			pointer_pos += M_vec;
-
-			// ポインタ自身の姿勢を補正
-			Quaterniond correct_q = Quaterniond::Rot(R_vec);
-			pointer_ori = pointer_ori * correct_q;
-
-			bool bDebugOutput = false;
-			vector<double> norm_array;
-			vector<double> col_pos_y_array;
-			vector<double> pcol_pos_array;
-
-			// すべての接触もその方向に移動・回転
-			for(int i = 0; i < info->num_collisions; ++i)
-			{
-				info->pointer_col_positions[i] += M_vec;
-				info->pointer_col_positions[i] += R_vec ^ (info->pointer_col_positions[i] - pointer_pos);
-
-				double norm_val = dot(info->col_positions[i] - info->pointer_col_positions[i], info->col_normals[i]);
-				if(norm_val > 0.00001)
-				{
-					bDebugOutput = true;
-					norm_array.push_back(norm_val);
-					col_pos_y_array.push_back(info->col_positions[i].y);
-					pcol_pos_array.push_back(info->pointer_col_positions[i].y);
-				}
-			}
-
-			if(bDebugOutput)
-			{
-				ofs << "debug information!!! -----------------------" << endl;
-				for(int i = 0; i < (int)norm_array.size(); i++)
-				{
-					ofs << "norm val = " << norm_array[i] << " y coord = " << col_pos_y_array[i] << " pointer y coord = " << pcol_pos_array[i] << endl;
-				}
-				ofs << "num_cols = " << num_cols << endl;
-				ofs << "M = " << endl << M << endl;
-//				ofs << "C = " << C << endl;
-//				ofs << "MTM = " << endl << MTM << endl;
-//				ofs << "MTMinv = " << endl << MTMinv << endl;
-//				ofs << "Pinv = " << endl << Pinv << endl;
-				ofs << "Pinv * M = " << endl << Pinv * M << endl;
-				ofs << "M_vec = " << M_vec << " R_vec = " << R_vec << endl;
 			}
 		}
 	}
@@ -1743,6 +1735,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 純粋なバーチャルカップリング
 	// 剛体に接触力を加える
+/*
 	else
 	{
 		// 接触があれば接触している剛体に提示力の逆方向のベクトルを加える
@@ -1759,20 +1752,18 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 			info->nearest_solids[sol_index]->AddForce(FORCE_COEFF * VCForce * ratio, info->col_positions[i]);
 		}
 	}
-
+*/
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// ユーザへの提示力の計算と設定
 	if(feedback && bforce)
 	{
 		// SPIDARの空間と見ている空間が違うので行列を掛けて射影する
+		// virtual couplingの逆向きの力・トルクを発生
 		Vec3d f = - view_haptic * VCForce;
 		Vec3d t = - view_haptic * VCTorque;
 
 		spidarG6.SetForce(FORCE_COEFF * f, FORCE_COEFF * t);
-
-		// debug出力処理
-//		if(bOutput)	ofs << FORCE_COEFF * f << " " << FORCE_COEFF * t << endl;
 	}
 	else spidarG6.SetForce(Vec3d(), Vec3d());
 
@@ -1846,10 +1837,9 @@ void UpdatePointer()
 	else info = &info2;
 
 	soPointer->SetFramePosition(pointer_pos);
-	soPointer->SetVelocity(pointer_vel);
-
+	soPointer->SetVelocity(Vec3d());
 	soPointer->SetOrientation(pointer_ori);
-	soPointer->SetAngularVelocity(pointer_angvel);
+	soPointer->SetAngularVelocity(Vec3d());
 }
 
 void SetupCollisionPrediction()
@@ -1859,17 +1849,15 @@ void SetupCollisionPrediction()
 	// soPointerCopyはsoPointerより一回り大きいので、
 	// この接触点をみればsoPointerの接触しそうな点がわかる
 	soPointerCopy->SetFramePosition(pointer_pos);
-	soPointerCopy->SetVelocity(pointer_vel);
+	soPointerCopy->SetVelocity(Vec3d());
 	soPointerCopy->SetOrientation(pointer_ori);
-	soPointerCopy->SetAngularVelocity(pointer_angvel);
+	soPointerCopy->SetAngularVelocity(Vec3d());
 }
 
 void StepSimulation()
 {
 //	t_end();
 //	t_start();
-
-//	if(bOutput) ofs << "start simulation" << endl;
 
 	scene->ClearForce();
 
@@ -2106,6 +2094,14 @@ void keyboard(unsigned char key, int x, int y){
 		cout << "EXIT from Key Input" << endl;
 		exit(0);
 	}
+	else if(key == 'u')
+	{
+		pos_mode++;
+		if(pos_mode == 3)pos_mode = 0;
+
+		cout << "pos = " << pos_array[pos_mode] << endl;
+	}
+
 	// デバッグ出力の許可・不可の切り替え
 	else if(key == 'o')
 	{
@@ -2284,10 +2280,7 @@ void keyboard(unsigned char key, int x, int y){
 
 		ofs << "!!! debug output !!!" << endl;
 		ofs << "pointer pos = " << pointer_pos << endl;
-		ofs << "pointer ori = " << pointer_ori << endl;
-		ofs << "pointer vel = " << pointer_vel << endl;
-		ofs << "pointer angvel = " << pointer_angvel << endl;
-		
+		ofs << "pointer ori = " << pointer_ori << endl;		
 		ofs << endl;
 
 		for(int i = 0; i < info->num_collisions; ++i)
@@ -2406,17 +2399,19 @@ void InitScene()
 	// 直方体の場合 I = mass * (r1^2 + r2^2) / 12
 	// 球の場合 I = mass * r~2 * 2/5
 	desc.inertia = Matrix3d(0.2,0,0,0,0.2,0,0,0,0.2);
-/*
+
+	/*
 	soObject.push_back(scene->CreateSolid(desc));
 
 	desc.mass = 1.0f;
 	desc.inertia = Matrix3d(0.375, 0.0, 0.0, 0.0, 0.375, 0.0, 0.0, 0.0, 0.375);
 	soObject.push_back(scene->CreateSolid(desc));
-*/
+	*/
 
 	// Solidの作成
 	for (unsigned int objectCnt=0; objectCnt<NUM_OBJECTS; ++objectCnt){
 		soObject.push_back(scene->CreateSolid(desc));		// 剛体をdescに基づいて作成
+		ofs << "solid" << objectCnt << " = " << DCAST(PHSolid, soObject[objectCnt]) << endl;
 	}
 
 
@@ -2428,8 +2423,6 @@ void InitScene()
 		PHSolidIf *soWall = scene->CreateSolid(desc);
 		soWall->SetDynamical(false);
 		soWalls.push_back(soWall);
-//		soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-//		soFloor->SetDynamical(false);
 	}
 	soPointer = scene->CreateSolid(desc);
 	soPointerCopy = scene->CreateSolid(desc);
@@ -2520,12 +2513,7 @@ void InitScene()
 	AddInactiveSolid(scene, soPointerCopy);
 
 	pointer_pos = soPointer->GetFramePosition();
-	pointer_vel = soPointer->GetVelocity();
-	pointer_massinv = soPointer->GetMassInv();
-	pointer_angvel = soPointer->GetAngularVelocity();
-	pointer_inertiainv = soPointer->GetInertiaInv();
 	pointer_ori = soPointer->GetOrientation();
-
 }
 
 /**
