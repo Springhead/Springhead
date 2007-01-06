@@ -26,7 +26,7 @@ struct PHSdkDesc{
 };
 
 ///	物理シミュレーションSDK
-struct PHSdkIf : public NameManagerIf{
+struct PHSdkIf : public SdkIf{
 	IF_DEF(PHSdk);
 	//	API
 	///	Sceneの作成

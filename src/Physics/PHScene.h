@@ -61,8 +61,6 @@ public:
 	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	virtual int GetNumIteration();
 	virtual void SetNumIteration(int n);
-	void SetGravity(const Vec3d& g);
-	void RemoveGravity(PHSolidIf*);
 	PHSdkIf* GetSdk();
 
 	/// 積分ステップを返す
@@ -84,7 +82,7 @@ public:
 	///	シーンを空にする．
 	void Clear();
 
-	virtual void SetGravity(Vec3f accel);
+	virtual void SetGravity(const Vec3d& accel);
 	virtual Vec3f GetGravity();
 
 	virtual int NSolids();

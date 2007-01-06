@@ -302,10 +302,10 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Clear(){
 		return ((OBJ*)(MIF*)this)->OBJ::Clear();
 	}
-	virtual void SetGravity(Vec3f accel){
+	virtual void SetGravity(const Vec3d &  accel){
 		return ((OBJ*)(MIF*)this)->OBJ::SetGravity(accel);
 	}
-	virtual Vec3f GetGravity(){
+	virtual Vec3d GetGravity(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetGravity();
 	}
 	virtual PHConstraintEngine *  GetConstraintEngine(){
@@ -316,9 +316,9 @@ struct PHSceneIf;	class PHScene;
 typedef PHSceneIfStubTemplate<PHSceneIf, ObjectIfBuf, PHScene>	PHSceneIfStub;
 typedef IfInitTemplate<PHSceneIfStub, PHScene>	PHSceneIfInit;
 
-template <class IF, class MIF, class OBJ> struct NameManagerIfStubTemplate;
+template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct PHSdkIfStubTemplate: public NameManagerIfStubTemplate<IF, MIF, OBJ> {
+struct PHSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSceneIf *  CreateScene(){
 		return ((OBJ*)(MIF*)this)->OBJ::CreateScene();
 	}
@@ -392,6 +392,12 @@ struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual void SetCenterPosition(const Vec3d &  p){
 		return ((OBJ*)(MIF*)this)->OBJ::SetCenterPosition(p);
+	}
+	virtual Vec3d GetDeltaPosition(const Vec3d &  p) const {
+		return ((OBJ*)(MIF*)this)->OBJ::GetDeltaPosition(p);
+	}
+	virtual Vec3d GetDeltaPosition() const {
+		return ((OBJ*)(MIF*)this)->OBJ::GetDeltaPosition();
 	}
 	virtual Quaterniond GetOrientation() const {
 		return ((OBJ*)(MIF*)this)->OBJ::GetOrientation();

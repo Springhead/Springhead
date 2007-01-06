@@ -229,12 +229,12 @@ public:
 		@param accel 重力加速度ベクトル
 	 */
 	//ここに持たせるべきか要検討だが，Novodexはここ 
-	virtual void SetGravity(Vec3f accel)=0;
+	virtual void SetGravity(const Vec3d& accel)=0;
 	
 	/** @brief 重力を取得する
 		@return 重力加速度ベクトル
 	 */
-	virtual Vec3f GetGravity()=0;
+	virtual Vec3d GetGravity()=0;
 
 	virtual PHConstraintEngine* GetConstraintEngine()=0;
 

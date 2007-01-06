@@ -166,7 +166,7 @@ void PHScene::SetNumIteration(int n){
 	constraintEngine->numIteration = n;
 }
 
-void PHScene::SetGravity(Vec3f accel){
+void PHScene::SetGravity(const Vec3d& accel){
 	PHGravityEngine* ge;
 	engines.Find(ge);
 	assert(ge);

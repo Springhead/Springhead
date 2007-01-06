@@ -111,12 +111,12 @@ struct PHSolidIf : public SceneObjectIf{
 	/** @brief 剛体の前のステップからの並進移動量を返す
 		@return 前のステップからの並進移動量
 	 */
-	Vec3d GetDeltaPosition(const Vec3d& p) const;
+	virtual Vec3d GetDeltaPosition(const Vec3d& p) const = 0;
 	/** @brief 剛体の前のステップからの並進移動量を返す．
 		@param pos 重心からの相対位置．この位置の並進移動量を返す．
 		@return 前のステップからの並進移動量
 	*/
-	Vec3d GetDeltaPosition() const;
+	virtual Vec3d GetDeltaPosition() const = 0;
 	/** @brief 剛体の向きを取得する
 		@return シーンに対する剛体の向き
 	 */

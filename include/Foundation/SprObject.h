@@ -17,6 +17,8 @@ namespace Spr{;
 
 class Object;
 
+#if !defined SWIG
+
 #undef DCAST
 #define DCAST(T,p) DCastImp((T*)0, p)
 
@@ -144,6 +146,8 @@ public:																	\
 
 #define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls)
 
+#endif // !SWIG
+
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	IF_DEF_FOR_OBJECTIF(Object);
@@ -214,8 +218,12 @@ struct ObjectIf{
 };
 
 ///	インタフェースクラスへのポインタの配列
-struct ObjectIfs: public UTStack<ObjectIf*>{
-	void PrintShort(std::ostream& os) const{
+struct ObjectIfs
+#if !defined SWIG	
+	: public UTStack<ObjectIf*>
+#endif
+{
+	/*void PrintShort(std::ostream& os) const{
 		for(const_iterator it = begin(); it!=end(); ++it){
 			(*it)->PrintShort(os);
 		}
@@ -224,7 +232,11 @@ struct ObjectIfs: public UTStack<ObjectIf*>{
 		for(const_iterator it = begin(); it!=end(); ++it){
 			(*it)->Print(os);
 		}
-	}
+	}*/
+	typedef UTStack<ObjectIf*> container_t;
+	void Push(ObjectIf* obj){container_t::Push(obj);}
+	void Pop(){container_t::Pop();}
+	ObjectIf* Top(){return container_t::Top();}
 };
 
 struct NameManagerIf;
