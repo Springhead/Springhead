@@ -493,4 +493,45 @@ int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	return last->nVtx;
 }
 
+static int lastUsed;
+
+inline bool IsDegenerate(const Vec3d& w) {
+	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1){
+//		if ((allUsedBits & curPoint) && (p_q[i]-w).square() < 1e-6){
+		if ((allUsedBits & curPoint) && (p_q[i]-w).square() < epsilon2){
+			return true;
+		}
+	}
+	return false;
+}
+void FindClosestPoints(const CDConvex* a, const CDConvex* b,
+					  const Posed& a2w, const Posed& b2w,
+					  Vec3d& pa, Vec3d& pb) {
+	Vec3d v; 				
+	v = a2w * a->Support(Vec3d()) - b2w * b->Support(Vec3d());	
+	double dist = v.norm();	
+	Vec3d w;				
+	double maxSupportDist = 0.0f;
+
+	usedBits = 0;
+	allUsedBits = 0;
+
+	while (usedBits < 15 && dist > epsilon) {
+		lastId = 0;
+		lastUsed = 1;
+		while (usedBits & lastUsed) { ++lastId; lastUsed <<= 1; }
+		p[lastId] = a->Support(a2w.Ori().Conjugated() * (-v));
+		q[lastId] = b->Support(b2w.Ori().Conjugated() * v);
+		w = a2w * p[lastId]  -  b2w * q[lastId];
+		double supportDist = w*v/dist;
+		if (maxSupportDist < supportDist) maxSupportDist= supportDist;
+		if (dist - maxSupportDist <= dist * epsilon) break;
+		if (IsDegenerate(w)) break;
+		p_q[lastId] = w;
+		allUsedBits = usedBits|lastUsed;
+		if (!CalcClosest(v)) break;
+		dist = v.norm();
+	}
+	CalcPoints(usedBits, pa, pb);
+}
 }
