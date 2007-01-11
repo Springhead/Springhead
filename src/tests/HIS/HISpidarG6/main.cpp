@@ -66,7 +66,7 @@ typedef PTM::TVector<60, double> VecNd;
 #define NUM_COL_SOLIDS 20			// ポインタへの許容接触剛体数　
 									// NUM_COLLISIONSと区別するのはプログラムを読みやすくするため。実質的な存在意義はない
 
-#define COLLISION_DENSITY 0.05		// 力覚の計算に使用する接触点の分布量を調節する値
+#define COLLISION_DENSITY 0.03		// 力覚の計算に使用する接触点の分布量を調節する値
 									// 接触を前回から引き継いだ場合接触点はこの値より大きい距離で分布する
 
 #ifdef _DEBUG
@@ -264,12 +264,14 @@ bool current_valid_data = true;
 // 物理情報を作成する処理
 void CalcSurroundEffect(HapticInfo*, HapticInfo*);
 
+// 影響のある剛体の集合を取得してくる処理
 void GetSolidsCollisionsOnPointer(vector<pair<PHConstraint *, int> >*, vector<pair<PHConstraint *, int> >*,  
 						  multimap<double, PHContactPoint*> ,
 						  vector<PHConstraint *>*, set<PHSolid *>*, set<PHSolid *>*);
 void GetAllRelativeSolidsCollisions(vector<PHConstraint*>* relative_consts, set<PHSolid*>*, set<PHSolid*>);
 void RecursiveSolidsCollisionsRetrieval(vector<pair<PHConstraint *, bool> >*, PHSolid*, vector<PHConstraint *>*, set<PHSolid *>*, int);
 
+// 接触候補点を作成する処理
 void CreateCandidateContactPoints(vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >,
 								  vector<pair<PHConstraint*, int> >*, vector<pair<PHConstraint*, int> >*,
 								  vector<PHConstraint *>*, set<PHSolid*>*, set<PHSolid*>*,
@@ -278,6 +280,7 @@ void GetCandidateSolidsByBBox(set<int> *, int *);
 void GetWillCollidePoints(int, int, vector<CandidateInfo>*);
 void CreateShapePairMMap(vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >, multimap<PHSolid*, Spr::PHShapePairForLCP*>*);
 
+// 予測シミュレーションをする処理
 void PredictSimulations(vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >,
 						set<PHSolid*>,
 						vector<PHConstraint*>, set<PHSolid*>,
@@ -289,9 +292,11 @@ vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint*, int> >, vecto
 										vector<PHConstraint *>, set<PHSolid*>,
 										Vec3d, map<PHSolid*, Vec3d>, int index = -1);
 
+// 接触点を引き継ぐ処理
 void CreateConstraintFromCurrentInfo(HapticInfo*, vector<pair<PHConstraint *, int> >*, vector<pair<PHConstraint *, int> >*, map<PHConstraint*, int>*,
 									 set<PHSolid*>*, vector<PHConstraint *>*, set<PHSolid *>*nearest_solids);
 
+// 得られた物理情報をすべてまとめる処理
 void MakeHapticInfo(HapticInfo*, HapticInfo*, vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >,
 					vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >, map<PHContactPoint*, Vec3d>,
 					vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >,
@@ -309,15 +314,24 @@ void RegisterNewCollision(HapticInfo*, int i, HapticInfo*, PHConstraint*, int, b
 ////////////////////////////////////////////////////////////////////////////////////
 // 力覚計算での処理
 void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWORD dw2);
+
+// データを切り替える時に行う処理
 void UpdateNewInfoFromCurrent();
+
+// めり込みとSPIDARの位置からポインタの位置を計算する処理
 void CheckPenetrations(HapticInfo*, int*, vector<Vec3d>*, vector<Vec3d>*);
 void CalcTTheta(HapticInfo*, Vec3d*, Vec3d*);
 void CorrectPenetration(HapticInfo*);
+void GetParametersFromCollision(vector<Vec3d>, double*, double*, double*, double*, double*, double*);
+void MakePointerPosMatrix(int, vector<Vec3d>t, vector<Vec3d>, MatrixN6d*, VecNd*);
+
+// 局所的な動力学計算を行う処理
 void UpdateVelocityByCollision(HapticInfo*, Vec3d, bool*);
 void UpdateSolidByCollision(HapticInfo *, Vec3d, bool*);
 void UpdateSolids(HapticInfo*);
+
+// 純粋なバーチャルカップリング（未実装）
 void VirtualCoupling(HapticInfo*, Vec3d, bool*);
-void MakePointerPosMatrix(int, vector<Vec3d>t, vector<Vec3d>, MatrixN6d*, VecNd*);
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -336,14 +350,13 @@ void reshape(int w, int h);
 void keyboard(unsigned char key, int x, int y);
 void InitScene();
 void InitRendering(int*, char**);
-void InitDeviceManager();
 void InitPointer(PHSolidIf*);
 void SaveCollisionF(vector<PHConstraint *>);
 void SaveSolidDv(set<PHSolid*>);
 void SaveSolidV(set<PHSolid*>);
 void SaveSolidF(set<PHSolid*>);
 void RestoreParameters(vector<PHConstraint*>*, set<PHSolid*>*);
-void AddInactiveSolid(PHSolidIf*);
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ユーティリティ
@@ -357,6 +370,8 @@ void DisplayCollisions();
 PHSolid* GetAdjacentSolid(PHConstraint*, PHSolid*, int* sign = NULL);
 PHContactPoint* CreateContactPoint(Vec3d, Vec3d, PHSolid*, PHSolid*, Spr::PHShapePairForLCP*);
 void ResetOriginalContactPoints(multimap<double, PHContactPoint*>*);
+void AddInactiveSolid(PHSolidIf*);
+void InitDeviceManager();
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -400,9 +415,9 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	ResetOriginalContactPoints(&(current_info->points));
 
 	// 現在使っている力覚情報の接触のうちで、次も使いそうな接触を取り出す関数
-//	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, 
-//									&NewcolToCol,
-//									&relative_solids, &relative_consts, &nearest_solids);
+	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, 
+									&NewcolToCol,
+									&relative_solids, &relative_consts, &nearest_solids);
 	
 	// ポインタに接触している接触と剛体を取得してくる関数
 	GetSolidsCollisionsOnPointer(&pointer_consts, &pointer_static_consts, 
@@ -471,7 +486,7 @@ void GetSolidsCollisionsOnPointer(vector<pair<PHConstraint *, int> >* pointer_co
 				// 小さすぎる場合は追加しない
 				if(norm < COLLISION_DENSITY)
 				{
-//					bAdd = false;
+					bAdd = false;
 					break;
 				}
 			}
@@ -1041,7 +1056,7 @@ void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHCon
 		// 現在使用しているContact Point(=constraint)のほとんどはstepが呼ばれるたびに削除されるので、
 		// 毎回新しいContact Pointを作る必要がある
 		// ここでは現在の位置と向きを持ったContact Pointを新たに作成する
-		// ここで作られたContact Pointは hapticinfo->points に格納され、手動で消す（上の方でやってる）
+		// ここで作られたContact Pointは hapticinfo->points に格納され、手動で消す
 		PHContactPoint* point = CreateContactPoint(current_info->col_normals[i], current_info->col_positions[i], current_info->solid[i][0], current_info->solid[i][1], current_info->shapePair[i]);
 
 		// 現在のポインタ側の接触点を格納する
@@ -1223,6 +1238,8 @@ PHConstraint* GetSpecificDataFromCollisions(int i,
 	}
 	return constraint;
 }
+
+// 剛体の登録と接触と剛体の関連付け
 void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHSolid* so, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid*, SpatialVector> vecs)
 {
 	int counter = 0;
@@ -1311,6 +1328,8 @@ void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHS
 	}
 }
 
+// 物理情報の作成
+// 接触の登録を行う
 void RegisterNewCollision(HapticInfo* new_info, int i, HapticInfo* current_info, PHConstraint* constraint, int sign, bool bPreviousCollide, bool bCollide, map<PHConstraint*, int> NewcolToCol, Vec3d pointer_col_position)
 {
 	new_info->constraint[i] = constraint;
@@ -1450,7 +1469,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	{
 		// 接触を引き継ぐ場合は,次に使用するデータのうちで、
 		// 引き継ぐ接触の情報を現在のもので上書きする
-//		UpdateNewInfoFromCurrent();
+		UpdateNewInfoFromCurrent();
 
 		// 周囲の影響を計算するときにつかう単位力の計算
 		// 加えた力の平均を求める
@@ -1514,40 +1533,44 @@ void CheckPenetrations(HapticInfo* info, int* num_cols, vector<Vec3d>* r_vectors
 // めり込みを補正するのに必要な２つのベクトルを作成する
 void CalcTTheta(HapticInfo* info, Vec3d* T, Vec3d* Theta)
 {
-		int num_cols = 0;
-		vector<Vec3d> r_vectors;
-		vector<Vec3d> c_vectors;
+	int num_cols = 0;
+	vector<Vec3d> r_vectors;
+	vector<Vec3d> c_vectors;
 
-		// めり込みをチェックして行列の作成に必要なデータを作成する
-		CheckPenetrations(info, &num_cols, &r_vectors, &c_vectors);
+	// めり込みをチェックして行列の作成に必要なデータを作成する
+	CheckPenetrations(info, &num_cols, &r_vectors, &c_vectors);
 
-		// めり込みの数の最大値を接触許容数-2にする
-		if(num_cols > NUM_COLLISIONS - 2) num_cols = NUM_COLLISIONS - 2;
+	// めり込みの数の最大値を接触許容数-2にする
+	if(num_cols > NUM_COLLISIONS - 2) num_cols = NUM_COLLISIONS - 2;
 
-		MatrixN6d M = MatrixN6d();
-		VecNd C = VecNd();
+	MatrixN6d M = MatrixN6d();
+	VecNd C = VecNd();
 
-		MakePointerPosMatrix(num_cols, r_vectors, c_vectors, &M, &C);
+	MakePointerPosMatrix(num_cols, r_vectors, c_vectors, &M, &C);
 
-		// 擬似逆行列を計算
-		Matrix6Nd Pinv;
-		CalcPinv(M, &Pinv);
+	// 擬似逆行列を計算
+	Matrix6Nd Pinv;
+	CalcPinv(M, &Pinv);
 
-		// 並進と回転のベクトル
-		// 第一～三要素が回転ベクトルのxyz
-		// 第四～六要素が並進ベクトルのxyz
-		Vec6d Ans = Pinv * C;
-		*Theta = Ans.sub_vector(TSubVectorDim<0,3>());
-		*T = Ans.sub_vector(TSubVectorDim<3,3>());
+	// 並進と回転のベクトル
+	// 第一～三要素が回転ベクトルのxyz
+	// 第四～六要素が並進ベクトルのxyz
+	Vec6d Ans = Pinv * C;
+	*Theta = Ans.sub_vector(TSubVectorDim<0,3>());
+	*T = Ans.sub_vector(TSubVectorDim<3,3>());
 }
 
 void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c_vectors, MatrixN6d* M, VecNd* C)
 {
-//#define COEFF 0.001
-	double COEFF = 0.001;
+	// めり込みにかける重み
+	double P = 1.0;
 
-	// 接触予測ができたら試してみる
-//		if(!info->num_collisions)COEFF = 0.0011;
+	// SPIDARの位置の方にかける重み
+	double MX, MY, MZ;
+	double RX, RY, RZ;
+
+	// 接触の状況からパラメータを決める
+	GetParametersFromCollision(c_vectors, &MX, &MY, &MZ, &RX, &RY, &RZ);
 
 	// 擬似逆行列で座標計算も兼ねる
 	Vec3d t = spidar_pos - pointer_pos;
@@ -1557,22 +1580,22 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 		switch(i)
 		{
 		case 0:
-			C->item(i) = COEFF * th.x;
+			C->item(i) = RX * th.x;
 			break;
 		case 1:
-			C->item(i) = COEFF * th.y;
+			C->item(i) = RY * th.y;
 			break;
 		case 2:
-			C->item(i) = COEFF * th.z;
+			C->item(i) = RZ * th.z;
 			break;
 		case 3:
-			C->item(i) = COEFF * t.x;
+			C->item(i) = MX * t.x;
 			break;
 		case 4:
-			C->item(i) = COEFF * t.y;
+			C->item(i) = MY * t.y;
 			break;
 		case 5:
-			C->item(i) = COEFF * t.z;
+			C->item(i) = MZ * t.z;
 			break;
 		}
 
@@ -1582,12 +1605,33 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 		// プロキシの位置を決める
 		for(int j = 0; j < 6; j++)
 		{
-			if(i == j)M->item(i, j) = COEFF * 1;
+			if(i == j)
+			{
+				switch(i)
+				{
+				case 0:
+					M->item(i, j) = RX * 1;
+					break;
+				case 1:
+					M->item(i, j) = RY * 1;
+					break;
+				case 2:
+					M->item(i, j) = RZ * 1;
+					break;
+				case 3:
+					M->item(i, j) = MX * 1;
+					break;
+				case 4:
+					M->item(i, j) = MY * 1;
+					break;
+				case 5:
+					M->item(i, j) = MZ * 1;
+					break;
+				}
+			}
 			else M->item(i, j) = 0;
 		}
 	}
-
-#define COEFF2 1.0
 
 	// 擬似逆行列の計算に必要な
 	// 行列とベクトルを作っていく
@@ -1595,8 +1639,8 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 	{				
 		if(k < num_cols + 2)
 		{
-			Vec3d c = COEFF2 * c_vectors[k-2];
-			Vec3d r = COEFF2 * r_vectors[k-2];
+			Vec3d c = P * c_vectors[k-2];
+			Vec3d r = P * r_vectors[k-2];
 
 			// ３x６行列の作成と大きさ３のベクトルの作成を行う
 			for(int i = 0; i < 3; ++i)
@@ -1693,6 +1737,49 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 			}
 		}
 	}
+}
+
+void GetParametersFromCollision(vector<Vec3d> c_vectors, double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ)
+{
+	Vec3d sum_penetration = Vec3d();
+
+	// めりこみがあった場合
+	if((int)c_vectors.size())
+	{
+		// めり込みの総和を計算
+		for(int i = 0; i < (int)c_vectors.size(); ++i)
+		{
+			sum_penetration += c_vectors[i];
+		}
+
+		// めり込みの軸を得るために
+		// 値の絶対値を取る
+		sum_penetration.x = fabs(sum_penetration.x);
+		sum_penetration.y = fabs(sum_penetration.y);
+		sum_penetration.z = fabs(sum_penetration.z);
+
+		// 軸ごとの比率がほしいので正規化
+		sum_penetration.unitize();
+
+		// パラメータの設定
+		// 面の摩擦を調節したいときはここを変える
+		// 値を大きくすると摩擦が小さくなり、
+		// 小さくすると摩擦が大きくなる
+		// また、摩擦と面の硬さは比例関係にある
+		*MX = 0.01 * (1.1 - sum_penetration.x);
+		*MY = 0.01 * (1.1 - sum_penetration.y);
+		*MZ = 0.01 * (1.1 - sum_penetration.z);
+	}
+	// めり込みが無い場合
+	else
+	{
+		*MX = *MY = *MZ = 0.01;
+	}
+
+	// 回転は基本的にSPIDARに従う
+	// ここを変えるとポインタが回転しやすくなる
+	// とりあえずこの値で安定
+	*RX = *RY = *RZ = 0.01;
 }
 
 void CorrectPenetration(HapticInfo* info)
@@ -1831,7 +1918,7 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 							// 行列を用いて加速度を計算して速度を更新
 							info->solid_velocity[j] += info->vel_effect[j][i] * q_f;
 							info->solid_angular_velocity[j] += info->ang_effect[j][i] * q_f;
-							// ofs << "-- collide --" << endl;
+							//ofs << "-- collide --" << endl;
 						}
 					}
 				}
@@ -1893,7 +1980,7 @@ void UpdateNewInfoFromCurrent()
 		info_next->solid_velocity[i] = info_cur->solid_velocity[prev_sol_index];
 		info_next->solid_angular_velocity[i] = info_cur->solid_angular_velocity[prev_sol_index];
 
-		// 今回のデータのうちで、この誤差によって影響を受ける、前回から引き継いだ接触を調べる
+		// 剛体の誤差から接触の誤差を修正する
 		for(int j = 0; j < info_next->num_col_per_sol[i]; j++)
 		{
 			int index = info_next->SolToCol[i][j];
@@ -1957,7 +2044,7 @@ void ErrorCorrection()
 	HapticInfo* info = NULL;
 
 	// 状態によって参照先を切り替える
-	if(current_valid_data) info = &info1;
+	if(!current_valid_data) info = &info1;
 	else info = &info2;
 
 	Vec3d gravity = scene->GetGravity() * scene->GetTimeStep();
@@ -2052,8 +2139,6 @@ int main(int argc, char* argv[]){
 	info1.num_collisions = 0;
 	info2.num_collisions = 0;
 
-//	timer.CountUS();
-
 	// hapticスレッドの生成・開始
 	FTimerId1 = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
 	                        1,   // 時間分解能
@@ -2102,6 +2187,7 @@ void keyboard(unsigned char key, int x, int y){
 		cout << "EXIT from Key Input" << endl;
 		exit(0);
 	}
+	/*
 	else if(key == 'u')
 	{
 		pos_mode++;
@@ -2109,7 +2195,7 @@ void keyboard(unsigned char key, int x, int y){
 
 		cout << "pos = " << pos_array[pos_mode] << endl;
 	}
-
+	*/
 	// デバッグ出力の許可・不可の切り替え
 	else if(key == 'o')
 	{
@@ -2278,6 +2364,91 @@ void keyboard(unsigned char key, int x, int y){
 
 		cout << "----------------------" << endl;
 	}
+	/*
+	else if(key == 'x')
+	{
+		if(bMode)
+		{
+			COEFFMX += 0.001;
+		}
+		else
+		{
+			COEFFRX += 0.001;
+		}
+		keyboard('g', 0, 0);
+	}
+	else if(key == 'z')
+	{
+		if(bMode)
+		{
+			COEFFMX -= 0.001;
+		}
+		else
+		{
+			COEFFRX -= 0.001;
+		}
+		keyboard('g', 0, 0);
+	}
+	else if(key == 'y')
+	{
+		if(bMode)
+		{
+			COEFFMY += 0.001;
+		}
+		else
+		{
+			COEFFRY += 0.001;
+		}
+		keyboard('g', 0, 0);
+	}
+	else if(key == 'u')
+	{
+		if(bMode)
+		{
+			COEFFMY -= 0.001;
+		}
+		else 
+		{
+			COEFFRY -= 0.001;
+		}
+		keyboard('g', 0, 0);
+	}
+	else if(key == 'w')
+	{
+		if(bMode)
+		{
+			COEFFMZ += 0.001;
+		}
+		else
+		{
+			COEFFRZ += 0.001;
+		}
+		keyboard('g', 0, 0);
+	}
+	else if(key == 'q')
+	{
+		if(bMode)
+		{
+			COEFFMZ -= 0.001;
+		}
+		else
+		{
+			COEFFRZ -= 0.001;
+		}
+		keyboard('g', 0, 0);
+	}
+	else if(key == 'g')
+	{
+		cout << "COEFFMX = " << COEFFMX << endl;
+		cout << "COEFFMY = " << COEFFMY << endl;
+		cout << "COEFFMZ = " << COEFFMZ << endl;
+
+		cout << "COEFFRX = " << COEFFRX << endl;
+		cout << "COEFFRY = " << COEFFRY << endl;
+		cout << "COEFFRZ = " << COEFFRZ << endl;
+		cout << endl;
+	}
+	*/
 	// ファイルにdebug情報を書き出す
 	else if(key == 'a')
 	{
@@ -2501,12 +2672,12 @@ void InitScene()
 	sd.timeStep = (double)1.0 / SIMULATION_FREQ;
 	scene = phSdk->CreateScene(sd);				// シーンの作成
 	PHSolidDesc desc;
-	desc.mass = 0.3f;
+	desc.mass = 0.5f;
 
 	// inertiaの計算式
 	// 直方体の場合 I = mass * (r1^2 + r2^2) / 12
 	// 球の場合 I = mass * r~2 * 2/5
-	desc.inertia = Matrix3d(0.2,0,0,0,0.2,0,0,0,0.2);
+	desc.inertia = Matrix3d(0.3,0,0,0,0.3,0,0,0,0.3);
 
 	/*
 	soObject.push_back(scene->CreateSolid(desc));
@@ -2892,7 +3063,6 @@ void UpdateSpidarData(Vec3d* SPIDARVel, Quaterniond* SPIDARAngVel)
 	Quaterniond qv;
 	qv.FromMatrix(view_rot);
 
-//	static Quaterniond spidar_ori;
 	spidar_ori = qv * spidarG6.GetOri();	
 	
 	static Quaterniond old_ori = spidar_ori;
