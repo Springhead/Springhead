@@ -43,9 +43,9 @@
 
 using namespace Spr;
 
-typedef PTM::TMatrixCol<90, 6, double> MatrixN6d;
-typedef PTM::TMatrixCol<6, 90, double> Matrix6Nd;
-typedef PTM::TVector<90, double> VecNd;
+typedef PTM::TMatrixCol<50, 6, double> MatrixN6d;
+typedef PTM::TMatrixCol<6, 50, double> Matrix6Nd;
+typedef PTM::TVector<50, double> VecNd;
 
 #define ESC				27			// ESC key
 //#define EXIT_TIMER		10000		// 実行ステップ数
@@ -62,17 +62,17 @@ typedef PTM::TVector<90, double> VecNd;
 #define LIMIT_DEPTH 100				// 予測シミュレーションを行う剛体取得の深さ上限
 #define NUM_PREDICT_ITERATE 15		// 予測シミュレーションのイテレート回数
 
-#define NUM_COLLISIONS 30			// ポインタへの許容接触数
-#define NUM_COL_SOLIDS 30			// ポインタへの許容接触剛体数　
+#define NUM_COLLISIONS 50			// ポインタへの許容接触数
+#define NUM_COL_SOLIDS 50			// ポインタへの許容接触剛体数　
 									// NUM_COLLISIONSと区別するのはプログラムを読みやすくするため。実質的な存在意義はない
 
-#define COLLISION_DENSITY 0.03		// 力覚の計算に使用する接触点の分布量を調節する値
+#define COLLISION_DENSITY 0.5		// 力覚の計算に使用する接触点の分布量を調節する値
 									// 接触を前回から引き継いだ場合接触点はこの値より大きい距離で分布する
 
 #ifdef _DEBUG
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		500		// 力覚スレッドの周期Hz
-	float Km = 30;					// virtual couplingの係数
+	float Km = 13;					// virtual couplingの係数
 	float Bm = 0;					// 並進
 
 	float Kr = 13;					// 回転
@@ -81,10 +81,10 @@ typedef PTM::TVector<90, double> VecNd;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 30;					// virtual couplingの係数
+	float Km = 60;					// virtual couplingの係数
 	float Bm = 0;					// 並進
 
-	float Kr = 13;					// 回転
+	float Kr = 20;					// 回転
 	float Br = 0;
 
 #endif
@@ -322,11 +322,11 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 void UpdateNewInfoFromCurrent();
 
 // めり込みとSPIDARの位置からポインタの位置を計算する処理
-void CheckPenetrations(HapticInfo*, int*, vector<Vec3d>*, vector<Vec3d>*);
+void CheckPenetrations(HapticInfo*, int*, vector<Vec3d>*, vector<double>*, vector<Vec3d>*);
 void CalcTTheta(HapticInfo*, Vec3d*, Vec3d*);
 void CorrectPenetration(HapticInfo*);
-void GetParametersFromCollision(vector<Vec3d>, double*, double*, double*, double*, double*, double*);
-void MakePointerPosMatrix(int, vector<Vec3d>t, vector<Vec3d>, MatrixN6d*, VecNd*);
+void GetParametersFromCollision(double*, double*, double*, double*, double*, double*);
+void MakePointerPosMatrix(int, vector<Vec3d>t, vector<double>, vector<Vec3d>, MatrixN6d*, VecNd*);
 
 // 局所的な動力学計算を行う処理
 void UpdateVelocityByCollision(HapticInfo*, Vec3d, bool*);
@@ -375,6 +375,7 @@ PHContactPoint* CreateContactPoint(Vec3d, Vec3d, PHSolid*, PHSolid*, Spr::PHShap
 void ResetOriginalContactPoints(multimap<double, PHContactPoint*>*);
 void AddInactiveSolid(PHSolidIf*);
 void InitDeviceManager();
+void DisplaySolidCenter();
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -428,10 +429,10 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 						&relative_consts, &relative_solids, &nearest_solids);
 
 	// 接触候補点を探して作成する処理
-//	CreateCandidateContactPoints(pointer_consts, pointer_static_consts, 
-//								&col_candidate_consts, &col_candidate_static_consts,
-//								&relative_consts, &relative_solids, &nearest_solids, 
-//								&col_candidate_pointer_pos, current_info);
+	CreateCandidateContactPoints(pointer_consts, pointer_static_consts, 
+								&col_candidate_consts, &col_candidate_static_consts,
+								&relative_consts, &relative_solids, &nearest_solids, 
+								&col_candidate_pointer_pos, current_info);
 
 	// 周囲の影響を計算するためのデータ作成処理
 	// 関係のある剛体と接触を再帰的にすべてとってくる
@@ -439,10 +440,58 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	GetAllRelativeSolidsCollisions(&relative_consts, &relative_solids, nearest_solids);
 #endif
 
+	vector<SpatialVector> sm_vec1;
+	vector<SpatialVector> sm_vec2;
+
+	ofs << "dv = " << DCAST(PHSolid, soPointer)->dv << endl;
+
+	for(int i = 0; i < (int)relative_consts.size(); ++i)
+	{
+		if(GetAdjacentSolid(relative_consts[i], DCAST(PHSolid, soPointer)) == DCAST(PHSolid, soObject[0]))
+		{
+//			sm_vec1.push_back(relative_consts[i]->f);
+//			sm_vec2.push_back(relative_consts[i]->T[1]);
+//			ofs << "f = " << relative_consts[i]->f << endl;
+//			sm_vec1.push_back(relative_consts[i]->solid[0]->dv);
+//			sm_vec2.push_back(relative_consts[i]->solid[1]->dv);
+		}
+	}
+
 	// 力を加えてみて動かし、影響を観測する関数
 	PredictSimulations(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 						relative_consts, relative_solids,
 						&matrices, &vecs);
+
+	int counter = 0;
+//	ofs << "sopointer = " << DCAST(PHSolid, soPointer) << endl;
+	ofs << "dv2 = " << DCAST(PHSolid, soPointer)->dv << endl;
+
+	for(int i = 0; i < (int)relative_consts.size(); ++i)
+	{
+		if(GetAdjacentSolid(relative_consts[i], DCAST(PHSolid, soPointer)) == DCAST(PHSolid, soObject[0]))
+		{
+			/*
+			SpatialMatrix newsm1 = relative_consts[i]->T[0];
+			SpatialMatrix newsm2 = relative_consts[i]->T[1];
+
+			ofs << "vv = " << endl;
+			ofs << newsm1.vv() - sm_vec1[i].vv() << endl;
+			ofs << "vw = " << endl;
+			ofs << newsm1.vw() - sm_vec1[i].vw() << endl;
+			ofs << "wv = " << endl;
+			ofs << newsm1.wv() - sm_vec1[i].wv() << endl;
+			*/
+//			ofs << "diff = " << relative_consts[i]->f - sm_vec1[i] <<endl;
+//			ofs << "f = " << relative_consts[i]->f << endl;
+//			ofs << "solid0 = " << relative_consts[i]->solid[0] << endl;
+//			ofs << "diff1 = " << relative_consts[i]->solid[0]->dv.v() - sm_vec1[counter].v() << endl;
+//			ofs << "diff1 = " << relative_consts[i]->solid[0]->dv.w() - sm_vec1[counter].w() << endl;
+//			ofs << "solid1 = " << relative_consts[i]->solid[1] << endl;
+//			ofs << "diff2 = " << relative_consts[i]->solid[1]->dv.v() - sm_vec2[counter].v() << endl;
+//			ofs << "diff2 = " << relative_consts[i]->solid[1]->dv.w() - sm_vec2[counter].w() << endl;
+//			counter++;
+		}
+	}
 
 	// 接触の情報を作成する
 	MakeHapticInfo(new_info, current_info, 
@@ -451,7 +500,6 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 					current_consts, current_static_consts, 
 					NewcolToCol,matrices, vecs);
 }
-
 
 // ポインタからスタートしてポインタを含む接触とその剛体をすべて取得してくる関数
 void GetSolidsCollisionsOnPointer(vector<pair<PHConstraint *, int> >* pointer_consts, vector<pair<PHConstraint *, int> >* pointer_static_consts,  
@@ -616,6 +664,8 @@ void CreateCandidateContactPoints(vector<pair<PHConstraint *, int> > pointer_con
 				// 接触の作成
 				PHContactPoint* point = CreateContactPoint(cinfo.normal, cinfo.closestPoint[1 - cinfo.pointer_index], cinfo.solid[0], cinfo.solid[1], cinfo.shapePair);
 				
+//				ofs << "create point = " << DCAST(PHConstraint, point) << endl;
+
 				// 関係のある接触
 				relative_consts->push_back(point);
 				// 関係のある剛体
@@ -805,7 +855,8 @@ void GetWillCollidePoints(int so_index, int pointer_index, vector<CandidateInfo>
 						// pointer
 						cinfo.closestPoint[1] = shapePose[1][j] * closestPoint[1];
 						cinfo.shapePair = scene->GetConstraintEngine()->solidPairs.item(so_index, pointer_index)->shapePairs.item(i, j);
-						cinfo.normal = normal;
+						// 法線の計算
+						cinfo.normal = cinfo.closestPoint[1] - cinfo.closestPoint[0]; // normal;
 						cinfo.solid[0] = solid[0];
 						cinfo.solid[1] = DCAST(PHSolid, soPointer);
 						cinfo.pointer_index = 1;
@@ -1150,6 +1201,7 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 		new_info->num_collisions = NUM_COLLISIONS-1;
 	}
 }
+
 // すべての接触からi番目のデータを取ってくる関数
 PHConstraint* GetSpecificDataFromCollisions(int i, 
 					 vector<pair<PHConstraint*, int> > pointer_consts, vector<pair<PHConstraint*, int> > pointer_static_consts, 
@@ -1352,9 +1404,6 @@ void RegisterNewCollision(HapticInfo* new_info, int i, HapticInfo* current_info,
 	new_info->solid[i][0] = contact->solid[0];
 	new_info->solid[i][1] = contact->solid[1];
 		
-	new_info->pointer_pos[i] = pointer_pos;
-	new_info->pointer_ori[i] = pointer_ori;
-
 	bool current_exists = false;
 
 	if(bPreviousCollide)
@@ -1367,6 +1416,9 @@ void RegisterNewCollision(HapticInfo* new_info, int i, HapticInfo* current_info,
 		new_info->col_normals[i] = current_info->col_normals[index];
 		new_info->pointer_col_positions[i] = current_info->pointer_col_positions[index];
 
+		new_info->pointer_pos[i] = pointer_pos;
+		new_info->pointer_ori[i] = pointer_ori;
+		
 		// 添え字の変換表を作成
 		new_info->NewcolToCol[i] = index;
 
@@ -1392,6 +1444,8 @@ void RegisterNewCollision(HapticInfo* new_info, int i, HapticInfo* current_info,
 
 		new_info->col_positions[i] = contact->pos;
 		new_info->col_normals[i] = contact->shapePair->normal * sign;
+		new_info->pointer_pos[i] = pointer_pos;
+		new_info->pointer_ori[i] = pointer_ori;
 
 		// 一応-1で初期化する
 		new_info->NewcolToCol[i] = -1;
@@ -1523,7 +1577,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 	feedbackForce(feedback, VCForce, VCTorque);
 }
 
-void CheckPenetrations(HapticInfo* info, int* num_cols, vector<Vec3d>* r_vectors, vector<Vec3d>* c_vectors)
+void CheckPenetrations(HapticInfo* info, int* num_cols, vector<Vec3d>* r_vectors, vector<double>* c_vectors, vector<Vec3d>* n_vectors)
 {
 	for(int i = 0; i < info->num_collisions; ++i)
 	{
@@ -1535,7 +1589,8 @@ void CheckPenetrations(HapticInfo* info, int* num_cols, vector<Vec3d>* r_vectors
 		if(vector_coeff > 0)
 		{
 			r_vectors->push_back(Vec3d(info->pointer_col_positions[i] - pointer_pos));
-			c_vectors->push_back(Vec3d(vector_coeff * info->col_normals[i].unit()));
+			c_vectors->push_back(vector_coeff);
+			n_vectors->push_back(info->col_normals[i].unit());
 
 			// めり込んでた接触の個数
 			++(*num_cols);
@@ -1548,18 +1603,19 @@ void CalcTTheta(HapticInfo* info, Vec3d* T, Vec3d* Theta)
 {
 	int num_cols = 0;
 	vector<Vec3d> r_vectors;
-	vector<Vec3d> c_vectors;
+	vector<double> c_vectors;
+	vector<Vec3d> n_vectors;
 
 	// めり込みをチェックして行列の作成に必要なデータを作成する
-	CheckPenetrations(info, &num_cols, &r_vectors, &c_vectors);
+	CheckPenetrations(info, &num_cols, &r_vectors, &c_vectors, &n_vectors);
 
 	// めり込みの数の最大値を接触許容数-2にする
-	if(num_cols > NUM_COLLISIONS - 2) num_cols = NUM_COLLISIONS - 2;
+	if(num_cols > NUM_COLLISIONS - 6) num_cols = NUM_COLLISIONS - 6;
 
 	MatrixN6d M = MatrixN6d();
 	VecNd C = VecNd();
 
-	MakePointerPosMatrix(num_cols, r_vectors, c_vectors, &M, &C);
+	MakePointerPosMatrix(num_cols, r_vectors, c_vectors, n_vectors, &M, &C);
 
 	// 擬似逆行列を計算
 	Matrix6Nd Pinv;
@@ -1573,7 +1629,14 @@ void CalcTTheta(HapticInfo* info, Vec3d* T, Vec3d* Theta)
 	*T = Ans.sub_vector(TSubVectorDim<3,3>());
 }
 
-void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c_vectors, MatrixN6d* M, VecNd* C)
+double COEFFMX = 0.0015;
+double COEFFMY = 0.0015;
+double COEFFMZ = 0.0015;
+double COEFFRX = 0.002;
+double COEFFRY = 0.002;
+double COEFFRZ = 0.002;
+
+void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<double> c_vectors, vector<Vec3d> n_vectors, MatrixN6d* M, VecNd* C)
 {
 	// めり込みにかける重み
 	double P = 1.0;
@@ -1583,7 +1646,16 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 	double RX, RY, RZ;
 
 	// 接触の状況からパラメータを決める
-	GetParametersFromCollision(c_vectors, &MX, &MY, &MZ, &RX, &RY, &RZ);
+//	GetParametersFromCollision(&MX, &MY, &MZ, &RX, &RY, &RZ);
+/*
+	MX = COEFFMX;
+	MY = COEFFMY;
+	MZ = COEFFMZ;
+	RX = COEFFRX;
+	RY = COEFFRY;
+	RZ = COEFFRZ;
+*/
+	MX = MY = MZ = RX = RY = RZ = 1.0;
 
 	// 擬似逆行列で座標計算も兼ねる
 	Vec3d t = spidar_pos - pointer_pos;
@@ -1623,22 +1695,22 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 				switch(i)
 				{
 				case 0:
-					M->item(i, j) = RX * 1;
+					M->item(i, j) = RX;
 					break;
 				case 1:
-					M->item(i, j) = RY * 1;
+					M->item(i, j) = RY;
 					break;
 				case 2:
-					M->item(i, j) = RZ * 1;
+					M->item(i, j) = RZ;
 					break;
 				case 3:
-					M->item(i, j) = MX * 1;
+					M->item(i, j) = MX;
 					break;
 				case 4:
-					M->item(i, j) = MY * 1;
+					M->item(i, j) = MY;
 					break;
 				case 5:
-					M->item(i, j) = MZ * 1;
+					M->item(i, j) = MZ;
 					break;
 				}
 			}
@@ -1648,148 +1720,57 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<Vec3d> c
 
 	// 擬似逆行列の計算に必要な
 	// 行列とベクトルを作っていく
-	for(int k = 2; k < NUM_COLLISIONS; ++k)
+	for(int k = 6; k < NUM_COLLISIONS; ++k)
 	{				
-		if(k < num_cols + 2)
+		if(k < num_cols + 6)
 		{
-			Vec3d c = P * c_vectors[k-2];
-			Vec3d r = P * r_vectors[k-2];
+			Vec3d n = P * n_vectors[k-6];
+			double c = P * c_vectors[k-6];
+			Vec3d r = P * r_vectors[k-6];
 
-			// ３x６行列の作成と大きさ３のベクトルの作成を行う
-			for(int i = 0; i < 3; ++i)
-			{						
-				switch(i)
+			C->item(k) = c;
+
+			for(int j = 0; j < 6; ++j)
+			{
+				switch(j)
 				{
-				// 1行目
 				case 0:
-					C->item(k * 3 + i) = c[0];
-
-					for(int j = 0; j < 6; ++j)
-					{
-						switch(j)
-						{
-						case 0:
-						case 4:
-						case 5:
-							M->item(k * 3 + i,j) = 0;
-							break;
-						case 1:
-							M->item(k * 3 + i,j) = r[2];
-							break;
-						case 2:
-							M->item(k * 3 + i,j) = - r[1];
-							break;
-						case 3:
-							M->item(k * 3 + i,j) = 1;
-							break;
-						}
-					}
+					M->item(k, j) = r.y * n.z - r.z * n.y;
 					break;
-				// 2行目
 				case 1:
-					C->item(k * 3 + i) = c[1];
-					for(int j = 0; j < 6; ++j)
-					{
-						switch(j)
-						{
-						case 1:
-						case 3:
-						case 5:
-							M->item(k * 3 + i,j) = 0;
-							break;
-						case 0:
-							M->item(k * 3 + i,j) = - r[2];
-							break;
-						case 2:
-							M->item(k * 3 + i,j) = r[0];
-							break;
-						case 4:
-							M->item(k * 3 + i,j) = 1;
-							break;
-						}
-					}
+					M->item(k, j) = r.z * n.x - r.x * n.z;
 					break;
-				// 3行目
 				case 2:
-					C->item(k * 3 + i) = c[2];
-					for(int j = 0; j < 6; ++j)
-					{
-						switch(j)
-						{
-						case 2:
-						case 3:
-						case 4:
-							M->item(k * 3 + i,j) = 0;
-							break;
-						case 0:
-							M->item(k * 3 + i,j) = r[1];
-							break;
-						case 1:
-							M->item(k * 3 + i,j) = - r[0];
-							break;
-						case 5:
-							M->item(k * 3 + i,j) = 1;
-							break;
-						}
-					}
+					M->item(k, j) = r.z * n.y - r.y * n.x;
+					break;
+				case 3:
+					M->item(k, j) = n.x;
+					break;
+				case 4:
+					M->item(k, j) = n.y;
+					break;
+				case 5:
+					M->item(k, j) = n.z;
 					break;
 				}
-			}
+			}			
 		}
 		else
 		{
 			// データがない部分の初期化
-			for(int i = 0; i < 3; ++i)
-			{
-				C->item(k * 3 + i) = 0;
+			C->item(k) = 0;
 
-				for(int j = 0; j < 6; ++j)
-				{
-					M->item(k * 3 + i,j) = 0;
-				}
+			for(int j = 0; j < 6; ++j)
+			{
+				M->item(k, j) = 0;
 			}
 		}
 	}
 }
 
-void GetParametersFromCollision(vector<Vec3d> c_vectors, double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ)
+void GetParametersFromCollision(double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ)
 {
-	Vec3d sum_penetration = Vec3d();
-
-	// めりこみがあった場合
-	if((int)c_vectors.size())
-	{
-		// めり込みの総和を計算
-		for(int i = 0; i < (int)c_vectors.size(); ++i)
-		{
-			sum_penetration += c_vectors[i];
-		}
-
-		// めり込みの軸を得るために
-		// 値の絶対値を取る
-		sum_penetration.x = fabs(sum_penetration.x);
-		sum_penetration.y = fabs(sum_penetration.y);
-		sum_penetration.z = fabs(sum_penetration.z);
-
-		// 軸ごとの比率がほしいので正規化
-		sum_penetration.unitize();
-
-		// パラメータの設定
-		// 面の摩擦を調節したいときはここを変える
-		// 値を大きくすると摩擦が小さくなり、
-		// 小さくすると摩擦が大きくなる
-		// また、摩擦と面の硬さは比例関係にある
-		*MX = 0.01 * (1.1 - sum_penetration.x);
-		*MY = 0.01 * (1.1 - sum_penetration.y);
-		*MZ = 0.01 * (1.1 - sum_penetration.z);
-//		*MX = *MY = *MZ = 0.001;
-	}
-	// めり込みが無い場合
-	else
-	{
-		*MX = *MY = *MZ = 0.01;
-	}
-
+	*MX = *MY = *MZ = 0.0015;
 	// 回転は基本的にSPIDARに従う
 	// ここを変えるとポインタが回転しやすくなる
 	// とりあえずこの値で安定
@@ -1932,7 +1913,7 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 							// 行列を用いて加速度を計算して速度を更新
 							info->solid_velocity[j] += info->vel_effect[j][i] * q_f;
 							info->solid_angular_velocity[j] += info->ang_effect[j][i] * q_f;
-							if(bOutput)ofs << "-- collide --" << endl << endl;
+							if(bOutput) ofs << "-- collide --" << endl << endl;
 						}
 					}
 				}
@@ -1976,7 +1957,7 @@ void UpdateNewInfoFromCurrent()
 		info_next = &info1;
 	}
 
-	// 剛体側の接触の更新
+	// 剛体の更新
 	for(int i = 0; i< info_next->num_solids; ++i)
 	{
 		// 次回の剛体から今回の剛体の添え字を検索
@@ -1995,20 +1976,21 @@ void UpdateNewInfoFromCurrent()
 		info_next->solid_velocity[i] = info_cur->solid_velocity[prev_sol_index];
 		info_next->solid_angular_velocity[i] = info_cur->solid_angular_velocity[prev_sol_index];
 
-		// 剛体の誤差から接触の誤差を修正する
-		for(int j = 0; j < info_next->num_col_per_sol[i]; j++)
+		/*
+		for(int j = 0; j < info_next->num_col_per_sol[i]; ++j)
 		{
 			int index = info_next->SolToCol[i][j];
-			
-			info_next->col_positions[index] += pos_error;
-			info_next->col_positions[index] += ori_error.Rotation() ^ (info_next->col_positions[index] - info_next->solid_center_positions[i]);
 
-			info_next->col_normals[index] += ori_error.Rotation() ^ info_next->col_normals[index];
-			info_next->col_normals[index] = info_next->col_normals[index].unit();
+			info_next->col_positions[i] += pos_error;
+			info_next->col_positions[i] += ori_error.Rotation() ^ (info_next->col_positions[i] - info_next->solid_center_positions[i]);
+
+			info_next->col_normals[i] += ori_error.Rotation() ^ info_next->col_normals[i];
+			info_next->col_normals[i] = info_next->col_normals[i].unit();
 		}
+		*/
 	}
 
-	// ポインタ側の接触の更新
+	// 接触の更新
 	for(int i = 0; i < info_next->num_collisions; ++i)
 	{
 		int index = info_next->NewcolToCol[i];
@@ -2017,16 +1999,18 @@ void UpdateNewInfoFromCurrent()
 		{
 			info_next->pointer_col_positions[i] = info_cur->pointer_col_positions[index];
 
-			if(!info_cur->bCollide[index]) info_next->bCollide[i] = false;
-			else info_next->bCollide[i] = true;
+			info_next->col_positions[i] = info_cur->col_positions[index];
+			info_next->col_normals[i] = info_cur->col_normals[index];
+
+			info_next->bCollide[i] = info_cur->bCollide[index];
 		}
 		else
 		{
 			Vec3d spidar_pos_error = pointer_pos - info_next->pointer_pos[i];
 			Quaterniond spidar_ori_error = pointer_ori * info_next->pointer_ori[i].Inv();
 
-			info_next->pointer_col_positions[i] += spidar_ori_error.Rotation() ^ (info_next->pointer_col_positions[i] - spidar_pos);
 			info_next->pointer_col_positions[i] += spidar_pos_error;
+			info_next->pointer_col_positions[i] += spidar_ori_error.Rotation() ^ (info_next->pointer_col_positions[i] - spidar_pos);
 		}
 	}
 }
@@ -2158,6 +2142,8 @@ int main(int argc, char* argv[]){
 
 	info1.num_collisions = 0;
 	info2.num_collisions = 0;
+
+	cout << "pointer is " << scene->GetConstraintEngine()->IsInactiveSolid(soPointer) << endl;
 
 	// hapticスレッドの生成・開始
 	FTimerId1 = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
@@ -2384,7 +2370,7 @@ void keyboard(unsigned char key, int x, int y){
 
 		cout << "----------------------" << endl;
 	}
-	/*
+
 	else if(key == 'x')
 	{
 		if(bMode)
@@ -2468,7 +2454,7 @@ void keyboard(unsigned char key, int x, int y){
 		cout << "COEFFRZ = " << COEFFRZ << endl;
 		cout << endl;
 	}
-	*/
+
 	// ファイルにdebug情報を書き出す
 	else if(key == 'a')
 	{
@@ -2633,6 +2619,9 @@ void display(){
 
 	// 接触点を描画
 	DisplayCollisions();
+
+	// 剛体の位置を描画
+//	DisplaySolidCenter();
 
 	render->EndScene();
 }
@@ -3149,6 +3138,38 @@ void DisplayPointer()
 		glMultMatrixf(af);
 		glutSolidSphere(0.5, 12, 9);
 	glPopMatrix();
+}
+void DisplaySolidCenter()
+{
+	HapticInfo* info;
+
+	if(current_valid_data)
+	{
+		info = &info1;
+	}
+	else 
+	{
+		info = &info2;
+	}
+
+	GLfloat white[] = {1.0, 1.0, 1.0, 1.0};
+
+	for(int i = 0; i < info->num_solids; ++i)
+	{
+		glPushMatrix();
+			glMatrixMode(GL_MODELVIEW);
+			Affinef sol_affine;
+			Posed::Unit(info->solid_center_positions[i]).ToAffine(sol_affine);
+			glMultMatrixf(sol_affine);
+
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, white);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, white);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, white);
+
+			glutSolidSphere(1.0, 12, 9);
+		glPopMatrix();
+	}
 }
 
 // 接触点を描画する関数
