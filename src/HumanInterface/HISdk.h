@@ -33,7 +33,6 @@ protected:
 public:
 	OBJECTDEF(HISdk, Sdk);
 	HISdk(const HISdkDesc& = HISdkDesc());
-	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
@@ -54,10 +53,10 @@ public:
 	///	Register virutal device.
 	virtual void RegisterVirtualDevice(HIVirtualDeviceIf* dev);
 	///	ヒューマンインタフェースの作成
-	HIBaseIf* CreateHumanInterface(const IfInfo* keyInfo, const void* desc);
-	virtual HIBaseIf* CreateHumanInterface(const char* name, const char* desc);
+	virtual UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* keyInfo, const void* desc);
+	virtual UTRef<HIBaseIf> CreateHumanInterface(const char* name, const char* desc);
 	///	Create and register real device.
-	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc);
+	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
 
 	//	SDK生成、登録関数
 	///	HISdkのインスタンスを作成

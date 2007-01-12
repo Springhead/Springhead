@@ -104,7 +104,6 @@
 //#include "DRContecIsaCounter.h"
 //#include "DRContecIsaDa.h"
 #include "DREzUSB.h"
-#include "DRIHCSh4.h"
 //#include "DRNittaForce.h"
 #include <HumanInterface/HIRealDevice.h>
 #include <HumanInterface/HIRealDevicePool.h>

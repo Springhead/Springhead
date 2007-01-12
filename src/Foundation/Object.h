@@ -86,11 +86,11 @@ public:
 	}																	\
 	/*	異型のIfからObjectへの動的変換	*/								\
 	static cls* GetSelf(const ObjectIf* p) {							\
-		return (cls*)p->GetObj(cls::GetTypeInfoStatic());				\
+		return p ? (cls*)p->GetObj(cls::GetTypeInfoStatic()) : NULL;	\
 	}																	\
 	/*	異型のObjectからObjectへの動的変換	*/							\
 	static cls* GetSelf(const Object* p) {								\
-		if (p->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))		\
+		if (p && p->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))	\
 			return (cls*)p;												\
 		else return NULL;												\
 	}																	\
@@ -387,7 +387,40 @@ public:
 		return IF::GetIfInfoStatic();
 	}
 };
+///	ファクトリーの実装
+template <class T, class IF>
+class FactoryImpTemplateNoDesc: public FactoryBase{
+public:
+	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
+		T* t = DBG_NEW T;
+
+		//	シーンの設定
+		SceneObject* o = DCAST(SceneObject, t);
+		SceneIf* s = DCAST(SceneIf, parent);
+		if (o && !s){		//	親がシーンでは無い場合，親を持つsceneに登録
+			SceneObject* po = DCAST(SceneObject, parent);
+			if (po) s = po->GetScene();
+		}
+		if (o && s){
+			o->SetScene(s);
+		}else{	//	シーンに設定できない場合，名前管理オブジェクトの設定
+			NamedObject* o = DCAST(NamedObject, t);
+			NameManagerIf* m = DCAST(NameManagerIf, parent);
+			if (o && !m){	//	親がNameMangerではない場合，親のNameManagerに登録
+				NamedObject* po = DCAST(NamedObject, parent);
+				if (po) m = po->GetNameManager();
+			}
+			if (o && m) o->SetNameManager(m);
+		}
+		return t->Cast();
+	}
+	virtual const IfInfo* GetIfInfo() const {
+		return IF::GetIfInfoStatic();
+	}
+};
+
 #define FactoryImp(cls)	FactoryImpTemplate<cls, cls##If, cls##Desc>
+#define FactoryImpNoDesc(cls)	FactoryImpTemplateNoDesc<cls, cls##If>
 
 ///	シーングラフの状態を保存．再生する仕組み
 class ObjectStates:public Object, public ObjectStatesIfInit{

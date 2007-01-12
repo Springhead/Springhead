@@ -61,6 +61,11 @@ IfInfo* TypeInfoManager::FindIfInfo(const char* cn){
 			return ifs[i];
 		}
 	}
+
+	for(unsigned i=0; i != ifs.size(); ++i){
+		DSTR << ifs[i]->ClassName() << std::endl;
+	}
+
 	return NULL;
 }
 UTTypeInfo* TypeInfoManager::FindTypeInfo(const char* cn){

@@ -6,7 +6,12 @@ namespace Spr {;
 IF_OBJECT_IMP(HIMouse6D, HIPose);
 
 bool HIMouse6D::Init(HISdkIf* sdk, const void* desc){
-	oldX = oldY = newX = newY = 0;
+	HIVirtualDeviceIf* vd = sdk->RentVirtualDevice("KeyMouse");
+	keyMouse = DCAST(DVKeyMouse, vd);
+	if (!keyMouse) return false;
+	keyMouse->SetHandler(this);
+
+/*	oldX = oldY = newX = newY = 0;
 	btnState = NONE;
 
 	// デフォルトの設定
@@ -23,7 +28,7 @@ bool HIMouse6D::Init(HISdkIf* sdk, const void* desc){
 	axisInit = axis;
 	// マウスがアクティブかどうかの検出方法がよくわからないのでとりあえずtrueにしてある
 	bGood = true;	
-
+*/
 //-> 関口による変更 (2005/1/05)
 	SetViewSize(640, 480);
 //<-
@@ -109,7 +114,7 @@ void HIMouse6D::Update(float dt){
 		// ドラッグ操作によって動かす方向の基準
 		Affinef afAxis = axis.inv();		
 
-		if (btnState == (MK_SHIFT + MK_LBUTTON) ){
+		if (btnState == (DVKeyMouseHandler::SHIFT+ DVKeyMouseHandler::LBUTTON) ){
 
 //-> 関口による変更 (2005/1/05)
 
@@ -144,31 +149,31 @@ void HIMouse6D::Update(float dt){
 			//<- ここまで　（オリジナル）
 //<-
 		}
-		else if (btnState == (MK_SHIFT + MK_MBUTTON) ){
+		else if (btnState == (DVKeyMouseHandler::SHIFT + DVKeyMouseHandler::MBUTTON) ){
 			// Shift + 中ドラッグのときは基準座標軸をx-z平面で平行移動
 			afAxis.Pos() += (-afAxis.Ex() * dx - afAxis.Ez() * dy) * scaleTransAxis;	
 			axis = afAxis.inv();
 		}
-		else if (btnState == (MK_SHIFT + MK_LBUTTON + MK_RBUTTON) ) {
+		else if (btnState == (DVKeyMouseHandler::SHIFT + DVKeyMouseHandler::LBUTTON + DVKeyMouseHandler::RBUTTON) ) {
 			// Shift + 左右ドラッグのときは基準座標軸のx-z平面で平行移動
 			afAxis.Pos() += (-afAxis.Ex() * dx - afAxis.Ez() * dy) * scaleTransAxis;
 			axis = afAxis.inv();
 		}
-		else if (btnState == (MK_SHIFT + MK_RBUTTON + MK_MBUTTON) ) {
+		else if (btnState == (DVKeyMouseHandler::SHIFT + DVKeyMouseHandler::RBUTTON + DVKeyMouseHandler::MBUTTON) ) {
 			// Shift + 右中ドラッグのときは基準座標軸のy-z平面で平行移動
 			afAxis.Pos() += (-afAxis.Ey() * dx - afAxis.Ez() * dy) * scaleTransAxis;
 			axis = afAxis.inv();
 		}
-		else if (btnState == (MK_SHIFT + MK_RBUTTON) ){
+		else if (btnState == (DVKeyMouseHandler::SHIFT + DVKeyMouseHandler::RBUTTON) ){
 			// Shift + 右ドラッグのときは基準座標軸をx-y平面で平行移動
 			afAxis.Pos() += (-afAxis.Ex() * dx + afAxis.Ey() * dy) * scaleTransAxis;	
 			axis = afAxis.inv();
 		}
-		else if (btnState == MK_LBUTTON) {
+		else if (btnState == DVKeyMouseHandler::LBUTTON) {
 			// 左ドラッグのときは基準座標軸のx軸,y軸を中心にポインタを回転
 			ori = Quaternionf::Rot(dx*scaleRotPointer, -afAxis.Ey()) * Quaternionf::Rot(dy*scaleRotPointer, -afAxis.Ex()) * ori;
 		}
-		else if (btnState == MK_MBUTTON) {
+		else if (btnState == DVKeyMouseHandler::MBUTTON) {
 			// 中ドラッグのときは基準座標軸のx-z平面でポインタを平行移動
 			Vec3f up(0,1,0);
 			Vec3f ex = afAxis.Ex();
@@ -177,7 +182,7 @@ void HIMouse6D::Update(float dt){
 			ez = (ez - (ez*up)*ez).unit();
 			pos += (ex * dx + ez * dy) * scaleTransPointer;
 		}
-		else if (btnState == MK_LBUTTON + MK_RBUTTON) {
+		else if (btnState == DVKeyMouseHandler::LBUTTON + DVKeyMouseHandler::RBUTTON) {
 			// 左右ドラッグのときは基準座標軸のx-z平面でポインタを平行移動
 			Vec3f up(0,1,0);
 			Vec3f ex = afAxis.Ex();
@@ -186,14 +191,14 @@ void HIMouse6D::Update(float dt){
 			ez = (ez - (ez*up)*ez).unit();
 			pos += (ex * dx + ez * dy) * scaleTransPointer;
 		}
-		else if (btnState == MK_RBUTTON + MK_MBUTTON) {
+		else if (btnState == DVKeyMouseHandler::RBUTTON + DVKeyMouseHandler::MBUTTON) {
 			// 右中ドラッグのときは基準座標軸のy-z平面でポインタを平行移動
 			Vec3f up(0,1,0);
 			Vec3f ez = afAxis.Ez();
 			ez = (ez - (ez*up)*ez).unit();
 			pos += (up * dx + ez * dy) * scaleTransPointer;
 		}
-		else if (btnState == MK_RBUTTON) {
+		else if (btnState == DVKeyMouseHandler::RBUTTON) {
 			Vec3f up(0,1,0);
 			Vec3f ex = afAxis.Ex();
 			ex = (ex - (ex*up)*ex).unit();
@@ -316,8 +321,8 @@ void HIMouse6D::OnButtonMove(UINT state, int x, int y){
 }
 
 void HIMouse6D::OnDblClick(unsigned fwKeys, int x, int y){
-	if (fwKeys & MK_LBUTTON) OnLButtonDClick();
-	if (fwKeys & MK_RBUTTON) OnRButtonDClick();
+	if (fwKeys & DVKeyMouseHandler::LBUTTON) OnLButtonDClick();
+	if (fwKeys & DVKeyMouseHandler::RBUTTON) OnRButtonDClick();
 }
 
 /// ポインタの姿勢を初期化
@@ -340,7 +345,7 @@ void HIMouse6D::OnWheel(UINT state, short dz){
 	btnState = (ButtonState)state;	
 
 	Affinef afAxis = axis.inv();		
-	if (btnState == MK_SHIFT){
+	if (btnState == DVKeyMouseHandler::SHIFT){
 		afAxis.Pos() += afAxis.Ez() * dz * scaleTransAxis;	
 		axis = afAxis.inv();
 	} else if (btnState == NONE){

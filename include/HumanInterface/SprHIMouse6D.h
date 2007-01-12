@@ -18,9 +18,11 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
+struct DVKeyMouseIf;
 ///	実デバイス．インタフェースカードとか，USBデバイスとか，
 struct HIMouse6DIf: public HIPoseIf{
 	IF_DEF(HIMouse6D);
+	virtual DVKeyMouseIf* GetKeyMouse()=0;
 };
 
 

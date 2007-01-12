@@ -8,6 +8,8 @@
 #include "HISdk.h"
 #include "HIRealDevicePool.h"
 #include "HIVirtualDevicePool.h"
+#include "DRKeyMouseWin32.h"
+#include "HIMouse6D.h"
 
 namespace Spr {;
 
@@ -20,9 +22,13 @@ IF_OBJECT_IMP(HISdk, Sdk);
 HISdk::HISdk(const HISdkDesc& desc){
 	vpool = new HIVirtualDevicePool;
 	rpool = new HIRealDevicePool;
-}
-ObjectIf* HISdk::CreateObject(const IfInfo* info, const void* desc){
-	return NULL;
+
+
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(DRKeyMouseWin32));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HIMouse6D));
+
+	HIMouse6DIf::GetIfInfoStatic();
+
 }
 size_t HISdk::NChildObject() const { 
 	return 0; 
@@ -33,13 +39,13 @@ ObjectIf* HISdk::GetChildObject(size_t i){
 bool HISdk::AddChildObject(ObjectIf* o){
 	return false;
 }
-HIBaseIf* HISdk::CreateHumanInterface(const IfInfo* keyInfo, const void* desc){
+UTRef<HIBaseIf> HISdk::CreateHumanInterface(const IfInfo* keyInfo, const void* desc){
 	UTRef<ObjectIf> obj = CreateObject(keyInfo, desc);
 	HIBaseIf* hi = obj->Cast();
 	if (hi->Init(Cast(), desc)) return hi;
 	return NULL;
 }
-HIBaseIf* HISdk::CreateHumanInterface(const char* name, const char* desc){
+UTRef<HIBaseIf> HISdk::CreateHumanInterface(const char* name, const char* desc){
 	IfInfo* info = IfInfo::Find(name);
 	//	hase TODO descのパーサを用意して，Desc構造体を作る
 	if (info) return CreateHumanInterface(info, NULL);
@@ -71,7 +77,7 @@ bool HISdk::AddRealDevice(const IfInfo* keyInfo, const void* desc){
 }
 HIRealDeviceIf* HISdk::FindRealDevice(const char* name){
 	for(unsigned i=0; i<rpool->size(); ++i){
-		if (strcmp(rpool->at(i)->Name(), name)){
+		if (strcmp(rpool->at(i)->Name(), name) == 0){
 			return rpool->at(i)->Cast();
 		}
 	}
@@ -89,8 +95,8 @@ void HISdk::Print(std::ostream& o) const{
 	o.width(0);
 	o << UTPadding(w) << "<HISdk>" << std::endl;
 	o.width(w+2);
-	o << vpool;
-	o << rpool;
+	o << *vpool;
+	o << *rpool;
 	o << UTPadding(w) << "</HISdk>" << std::endl;
 	o.width(w);
 }

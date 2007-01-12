@@ -2,27 +2,18 @@
 #define HIMouse6D6D_H
 
 #include <HumanInterface/HIBase.h>
+#include <HumanInterface/DVKeyMouse.h>
 
 namespace Spr {;
 
-class SPR_DLL HIMouse6D: public HIPose, public HIMouse6DIfInit{
+class SPR_DLL HIMouse6D: public HIPose, public HIMouse6DIfInit, public DVKeyMouseHandler{
 public:
 	OBJECTDEF(HIMouse6D, HIPose);
 
-	/// 押されているボタンの状態を示すフラグ
-	enum ButtonState{
-		NONE,
-		 #define MK_LBUTTON          0x0001
-		LBUTTON = MK_LBUTTON,
-		 #define MK_RBUTTON          0x0002
-		RBUTTON = MK_RBUTTON,
-		 #define MK_SHIFT            0x0004
-		SHIFT   = MK_SHIFT,
-		 #define MK_CONTROL          0x0008
-		CONTROL = MK_CONTROL,
-		 #define MK_MBUTTON          0x0010
-		MBUTTON = MK_MBUTTON,
-	} btnState;	
+	UTRef<DVKeyMouse> keyMouse;
+	DVKeyMouseHandler::ButtonState btnState;
+
+	virtual DVKeyMouseIf* GetKeyMouse(){ return keyMouse->Cast(); }
 
 	/// 
 	HIMouse6D(){ bGood = false; }

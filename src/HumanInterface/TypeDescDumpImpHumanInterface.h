@@ -10,6 +10,12 @@
 	field->offset = int((char*)&(pDRUsb20SimpleDesc->number) - (char*)pDRUsb20SimpleDesc);
 	db->RegisterDesc(desc);
 	
+	DVKeyMouseHandler* pDVKeyMouseHandler = NULL;
+	desc = DBG_NEW UTTypeDesc("DVKeyMouseHandler");
+	desc->size = sizeof(DVKeyMouseHandler);
+	desc->access = DBG_NEW UTAccess<DVKeyMouseHandler>;
+	db->RegisterDesc(desc);
+	
 	HISdkDesc* pHISdkDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("HISdkDesc");
 	desc->size = sizeof(HISdkDesc);

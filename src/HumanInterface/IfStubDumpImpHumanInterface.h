@@ -6,5 +6,7 @@ IF_IMP(HIPose, HIPosition);
 IF_IMP(HIRealDevice, Object);
 IF_IMP(HIVirtualDevice, Object);
 IF_IMP(DRUsb20Simple, HIRealDevice);
+IF_IMP(DVKeyMouse, HIVirtualDevice);
+IF_IMP(DRKeyMouseWin32, HIRealDevice);
 IF_IMP(HIMouse6D, HIPose);
 IF_IMP(HISdk, NameManager);

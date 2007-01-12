@@ -39,14 +39,14 @@ struct HISdkIf : public NameManagerIf{
 	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf* dev)=0;
 	
 	///	Create and register real device.
-	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc)=0;
+	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL)=0;
 
 	///	Get real device.
 	virtual HIRealDeviceIf* FindRealDevice(const char* name=NULL)=0;
 	///	ヒューマンインタフェースの作成
-	virtual HIBaseIf* CreateHumanInterface(const IfInfo* info, const void* desc)=0;
+	virtual UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* info, const void* desc)=0;
 	///	ヒューマンインタフェースの作成
-	virtual HIBaseIf* CreateHumanInterface(const char* name, const char* desc)=0;
+	virtual UTRef<HIBaseIf> CreateHumanInterface(const char* name, const char* desc)=0;
 
 	//	SDK生成、登録関数
 	///	HISdkのインスタンスを作成

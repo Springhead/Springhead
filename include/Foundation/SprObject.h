@@ -27,7 +27,7 @@ class Object;
 template <class TO, class FROM> TO* DCastImp(TO* dmmy, FROM* p){
 	return TO::GetSelf(p);
 }
-template <class TO, class FROM> TO* DCastImp(TO* dmmy, UTRef<FROM> p){
+template <class TO, class FROM> UTRef<TO> DCastImp(TO* dmmy, UTRef<FROM> p){
 	return TO::GetSelf(&*p);
 }
 

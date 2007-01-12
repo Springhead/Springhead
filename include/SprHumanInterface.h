@@ -17,5 +17,6 @@
 
 
 #include <HumanInterface/SprHIDevice.h>
+#include <HumanInterface/SprHIKeyMouse.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #endif
