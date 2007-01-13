@@ -18,11 +18,11 @@ namespace Spr{;
 FWAppGLUT* FWAppGLUT::instance;
 	
 void FWAppGLUT::GlutDisplayFunc(){
-	FWAppGLUT::instance->Display();
+	FWAppGLUT::instance->CallDisplay();
 }
 
 void FWAppGLUT::GlutReshapeFunc(int w, int h){
-	FWAppGLUT::instance->Reshape(w, h);
+	FWAppGLUT::instance->CallReshape(w, h);
 }
 
 void FWAppGLUT::GlutTimerFunc(int id){
@@ -36,14 +36,14 @@ void FWAppGLUT::GlutTimerFunc(int id){
 	glutTimerFunc(timeStep, GlutTimerFunc, 0);
 }
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
-	FWAppGLUT::instance->Keyboard(key, x, y);
+	FWAppGLUT::instance->CallKeyboard(key, x, y);
 }
 //-----------------------------------------------------------------------
+
 void FWAppGLUT::Init(int argc, char* argv[]){
-	FWAppGL::Init(argc, argv);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	ProcessArguments(argc, argv);
+	FWAppGL::Init(argc, argv);
 }
 
 void FWAppGLUT::Start(){
@@ -58,7 +58,7 @@ void FWAppGLUT::Start(){
 	glutMainLoop();
 }
 void FWAppGLUT::OnTimer(){
-	Step();
+	CallStep();
 	glutPostRedisplay();
 }
 

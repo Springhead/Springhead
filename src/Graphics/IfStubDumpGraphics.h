@@ -327,6 +327,9 @@ struct GRSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual GRCameraIf *  GetCamera(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetCamera();
 	}
+	virtual void SetCamera(const GRCameraDesc &  desc){
+		return ((OBJ*)(MIF*)this)->OBJ::SetCamera(desc);
+	}
 	virtual GRSdkIf *  GetSdk(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetSdk();
 	}

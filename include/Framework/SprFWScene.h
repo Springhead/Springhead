@@ -15,8 +15,10 @@ namespace Spr{
 
 	struct FWSceneIf : SceneIf {
 		IF_DEF(FWScene);
-		virtual PHSceneIf* GetPHScene() = 0;
-		virtual GRSceneIf* GetGRScene() = 0;
+		virtual PHSceneIf*	GetPHScene() = 0;
+		virtual void		SetPHScene(PHSceneIf* s) = 0;
+		virtual GRSceneIf*	GetGRScene() = 0;
+		virtual void		SetGRScene(GRSceneIf* s) = 0;
 		virtual void Sync() = 0;
 		virtual void Step() = 0;
 		virtual void Draw(GRRenderIf* grRender, bool debug=false) = 0;

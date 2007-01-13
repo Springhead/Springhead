@@ -43,8 +43,11 @@ public:
 	//
 	FWScene(const FWSceneDesc& d=FWSceneDesc()); // コンストラクタ
 	//
-	PHSceneIf* GetPHScene(){ return phScene; }
-	GRSceneIf* GetGRScene(){ return grScene; }
+	PHSceneIf*	GetPHScene(){ return phScene; }
+	void		SetPHScene(PHSceneIf* s){ phScene = s; }
+	GRSceneIf*	GetGRScene(){ return grScene; }
+	void		SetGRScene(GRSceneIf* s){ grScene = s; }
+
 	///	オブジェクトの位置・姿勢を同期
 	void Sync();
 	void Step();

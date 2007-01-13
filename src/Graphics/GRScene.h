@@ -42,6 +42,7 @@ public:
 
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc);
 	virtual GRFrameIf* GetWorld(){return world->Cast();}
+	virtual void		SetCamera(const GRCameraDesc& desc){camera = DBG_NEW GRCamera(desc);}
 	virtual GRCameraIf* GetCamera(){return camera->Cast();}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;

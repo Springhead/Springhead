@@ -123,21 +123,23 @@ void FWScene::Sync(){
 	}
 	
 	//	ƒJƒƒ‰‚Ì“¯Šú
-	HIForceDevice6D* device = GetHumanInterface(HI_CAMERACONTROLLER);
-	GRCameraIf* camera = grScene->GetCamera();
-	if (grScene && camera && device){
-		Posed pose;
-/*		hase:	TBW	
-		pose.Pos() = device->GetPos();	
-		pose.Ori() = device->GetOri();
-*/		if (!camera->GetFrame()){
-			GRSceneIf* scene = DCAST(GRSceneIf, camera->GetNameManager());
-			if (scene) camera->SetFrame(scene->CreateFrame(GRFrameDesc()));
-		}
-		if (camera->GetFrame()){
-			Affinef af;
-			pose.ToAffine(af);
-			camera->GetFrame()->SetTransform(af);
+	if (grScene){
+		HIForceDevice6D* device = GetHumanInterface(HI_CAMERACONTROLLER);
+		GRCameraIf* camera = grScene->GetCamera();
+		if(camera && device){
+			Posed pose;
+	/*		hase:	TBW	
+			pose.Pos() = device->GetPos();	
+			pose.Ori() = device->GetOri();
+	*/		if (!camera->GetFrame()){
+				GRSceneIf* scene = DCAST(GRSceneIf, camera->GetNameManager());
+				if (scene) camera->SetFrame(scene->CreateFrame(GRFrameDesc()));
+			}
+			if (camera->GetFrame()){
+				Affinef af;
+				pose.ToAffine(af);
+				camera->GetFrame()->SetTransform(af);
+			}
 		}
 	}
 }

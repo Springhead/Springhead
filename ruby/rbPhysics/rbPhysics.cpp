@@ -1608,10 +1608,10 @@ static swig_module_info swig_module = {swig_types, 60, 0, 0, 0, 0};
 
 /* -------- TYPES TABLE (END) -------- */
 
-#define SWIG_init    Init_rbPhysics
-#define SWIG_name    "RbPhysics"
+#define SWIG_init    Init_RBPhysics
+#define SWIG_name    "RBPhysics"
 
-static VALUE mRbPhysics;
+static VALUE mRBPhysics;
 
 #define SWIGVERSION 0x010331 
 #define SWIG_VERSION SWIGVERSION
@@ -1624,9 +1624,16 @@ static VALUE mRbPhysics;
 #include <stdexcept>
 
 
-// win32/win32.hにwriteとreadがマクロ定義されていて，これがstdと衝突する
-#undef write
-#undef read
+#undef write			// std
+#undef read				// std
+#undef CreateWindow		// FWAppGLUT
+
+
+#ifdef _MSC_VER
+# pragma warning(disable: 4311 4312)
+#endif	
+
+
 #include <SprPhysics.h>
 using namespace Spr;
 
@@ -10678,11 +10685,11 @@ SWIG_PropagateClientData(void) {
 #ifdef __cplusplus
 extern "C"
 #endif
-SWIGEXPORT void Init_rbPhysics(void) {
+SWIGEXPORT void Init_RBPhysics(void) {
   size_t i;
   
   SWIG_InitRuntime();
-  mRbPhysics = rb_define_module("RbPhysics");
+  mRBPhysics = rb_define_module("RBPhysics");
   
   SWIG_InitializeModule(0);
   for (i = 0; i < swig_module.size; i++) {
@@ -10691,7 +10698,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   
   SWIG_RubyInitializeTrackings();
   
-  cObjectIf.klass = rb_define_class_under(mRbPhysics, "ObjectIf", rb_cObject);
+  cObjectIf.klass = rb_define_class_under(mRBPhysics, "ObjectIf", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectIf, (void *) &cObjectIf);
   rb_undef_alloc_func(cObjectIf.klass);
   rb_define_method(cObjectIf.klass, "GetObj", VALUEFUNC(_wrap_ObjectIf_GetObj), -1);
@@ -10720,7 +10727,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cObjectIf.destroy = (void (*)(void *)) free_Spr_ObjectIf;
   cObjectIf.trackObjects = 0;
   
-  cObjectIfs.klass = rb_define_class_under(mRbPhysics, "ObjectIfs", rb_cObject);
+  cObjectIfs.klass = rb_define_class_under(mRBPhysics, "ObjectIfs", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectIfs, (void *) &cObjectIfs);
   rb_define_alloc_func(cObjectIfs.klass, _wrap_ObjectIfs_allocate);
   rb_define_method(cObjectIfs.klass, "initialize", VALUEFUNC(_wrap_new_ObjectIfs), -1);
@@ -10731,7 +10738,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cObjectIfs.destroy = (void (*)(void *)) free_Spr_ObjectIfs;
   cObjectIfs.trackObjects = 0;
   
-  cNamedObjectIf.klass = rb_define_class_under(mRbPhysics, "NamedObjectIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
+  cNamedObjectIf.klass = rb_define_class_under(mRBPhysics, "NamedObjectIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__NamedObjectIf, (void *) &cNamedObjectIf);
   rb_undef_alloc_func(cNamedObjectIf.klass);
   rb_define_method(cNamedObjectIf.klass, "GetName", VALUEFUNC(_wrap_NamedObjectIf_GetName), -1);
@@ -10741,7 +10748,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cNamedObjectIf.destroy = (void (*)(void *)) free_Spr_NamedObjectIf;
   cNamedObjectIf.trackObjects = 0;
   
-  cSceneObjectIf.klass = rb_define_class_under(mRbPhysics, "SceneObjectIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
+  cSceneObjectIf.klass = rb_define_class_under(mRBPhysics, "SceneObjectIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__SceneObjectIf, (void *) &cSceneObjectIf);
   rb_undef_alloc_func(cSceneObjectIf.klass);
   rb_define_method(cSceneObjectIf.klass, "GetScene", VALUEFUNC(_wrap_SceneObjectIf_GetScene), -1);
@@ -10749,7 +10756,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cSceneObjectIf.destroy = (void (*)(void *)) free_Spr_SceneObjectIf;
   cSceneObjectIf.trackObjects = 0;
   
-  cObjectStatesIf.klass = rb_define_class_under(mRbPhysics, "ObjectStatesIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
+  cObjectStatesIf.klass = rb_define_class_under(mRBPhysics, "ObjectStatesIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectStatesIf, (void *) &cObjectStatesIf);
   rb_undef_alloc_func(cObjectStatesIf.klass);
   rb_define_method(cObjectStatesIf.klass, "AllocateState", VALUEFUNC(_wrap_ObjectStatesIf_AllocateState), -1);
@@ -10760,9 +10767,9 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cObjectStatesIf.mark = 0;
   cObjectStatesIf.destroy = (void (*)(void *)) free_Spr_ObjectStatesIf;
   cObjectStatesIf.trackObjects = 0;
-  rb_define_module_function(mRbPhysics, "CreateObjectStates", VALUEFUNC(_wrap_CreateObjectStates), -1);
+  rb_define_module_function(mRBPhysics, "CreateObjectStates", VALUEFUNC(_wrap_CreateObjectStates), -1);
   
-  cNameManagerIf.klass = rb_define_class_under(mRbPhysics, "NameManagerIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
+  cNameManagerIf.klass = rb_define_class_under(mRBPhysics, "NameManagerIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__NameManagerIf, (void *) &cNameManagerIf);
   rb_undef_alloc_func(cNameManagerIf.klass);
   rb_define_method(cNameManagerIf.klass, "FindObject", VALUEFUNC(_wrap_NameManagerIf_FindObject), -1);
@@ -10770,14 +10777,14 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cNameManagerIf.destroy = (void (*)(void *)) free_Spr_NameManagerIf;
   cNameManagerIf.trackObjects = 0;
   
-  cSceneIf.klass = rb_define_class_under(mRbPhysics, "SceneIf", ((swig_class *) SWIGTYPE_p_Spr__NameManagerIf->clientdata)->klass);
+  cSceneIf.klass = rb_define_class_under(mRBPhysics, "SceneIf", ((swig_class *) SWIGTYPE_p_Spr__NameManagerIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__SceneIf, (void *) &cSceneIf);
   rb_undef_alloc_func(cSceneIf.klass);
   cSceneIf.mark = 0;
   cSceneIf.destroy = (void (*)(void *)) free_Spr_SceneIf;
   cSceneIf.trackObjects = 0;
   
-  cSdkIf.klass = rb_define_class_under(mRbPhysics, "SdkIf", ((swig_class *) SWIGTYPE_p_Spr__NameManagerIf->clientdata)->klass);
+  cSdkIf.klass = rb_define_class_under(mRBPhysics, "SdkIf", ((swig_class *) SWIGTYPE_p_Spr__NameManagerIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__SdkIf, (void *) &cSdkIf);
   rb_undef_alloc_func(cSdkIf.klass);
   rb_define_singleton_method(cSdkIf.klass, "CreateSdk", VALUEFUNC(_wrap_SdkIf_CreateSdk), -1);
@@ -10785,7 +10792,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cSdkIf.destroy = (void (*)(void *)) free_Spr_SdkIf;
   cSdkIf.trackObjects = 0;
   
-  cPHSdkDesc.klass = rb_define_class_under(mRbPhysics, "PHSdkDesc", rb_cObject);
+  cPHSdkDesc.klass = rb_define_class_under(mRBPhysics, "PHSdkDesc", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSdkDesc, (void *) &cPHSdkDesc);
   rb_define_alloc_func(cPHSdkDesc.klass, _wrap_PHSdkDesc_allocate);
   rb_define_method(cPHSdkDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHSdkDesc), -1);
@@ -10793,7 +10800,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSdkDesc.destroy = (void (*)(void *)) free_Spr_PHSdkDesc;
   cPHSdkDesc.trackObjects = 0;
   
-  cPHSdkIf.klass = rb_define_class_under(mRbPhysics, "PHSdkIf", ((swig_class *) SWIGTYPE_p_Spr__SdkIf->clientdata)->klass);
+  cPHSdkIf.klass = rb_define_class_under(mRBPhysics, "PHSdkIf", ((swig_class *) SWIGTYPE_p_Spr__SdkIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSdkIf, (void *) &cPHSdkIf);
   rb_undef_alloc_func(cPHSdkIf.klass);
   rb_define_method(cPHSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_PHSdkIf_CreateScene), -1);
@@ -10808,7 +10815,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSdkIf.destroy = (void (*)(void *)) free_Spr_PHSdkIf;
   cPHSdkIf.trackObjects = 0;
   
-  cPHSceneState.klass = rb_define_class_under(mRbPhysics, "PHSceneState", rb_cObject);
+  cPHSceneState.klass = rb_define_class_under(mRBPhysics, "PHSceneState", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSceneState, (void *) &cPHSceneState);
   rb_define_alloc_func(cPHSceneState.klass, _wrap_PHSceneState_allocate);
   rb_define_method(cPHSceneState.klass, "initialize", VALUEFUNC(_wrap_new_PHSceneState), -1);
@@ -10821,7 +10828,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSceneState.destroy = (void (*)(void *)) free_Spr_PHSceneState;
   cPHSceneState.trackObjects = 0;
   
-  cPHSceneDesc.klass = rb_define_class_under(mRbPhysics, "PHSceneDesc", ((swig_class *) SWIGTYPE_p_Spr__PHSceneState->clientdata)->klass);
+  cPHSceneDesc.klass = rb_define_class_under(mRBPhysics, "PHSceneDesc", ((swig_class *) SWIGTYPE_p_Spr__PHSceneState->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSceneDesc, (void *) &cPHSceneDesc);
   rb_define_alloc_func(cPHSceneDesc.klass, _wrap_PHSceneDesc_allocate);
   rb_define_method(cPHSceneDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHSceneDesc), -1);
@@ -10837,7 +10844,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSceneDesc.destroy = (void (*)(void *)) free_Spr_PHSceneDesc;
   cPHSceneDesc.trackObjects = 0;
   
-  cPHSceneIf.klass = rb_define_class_under(mRbPhysics, "PHSceneIf", ((swig_class *) SWIGTYPE_p_Spr__SceneIf->clientdata)->klass);
+  cPHSceneIf.klass = rb_define_class_under(mRBPhysics, "PHSceneIf", ((swig_class *) SWIGTYPE_p_Spr__SceneIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSceneIf, (void *) &cPHSceneIf);
   rb_undef_alloc_func(cPHSceneIf.klass);
   rb_define_method(cPHSceneIf.klass, "GetSdk", VALUEFUNC(_wrap_PHSceneIf_GetSdk), -1);
@@ -10869,7 +10876,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSceneIf.destroy = (void (*)(void *)) free_Spr_PHSceneIf;
   cPHSceneIf.trackObjects = 0;
   
-  cPHSolidState.klass = rb_define_class_under(mRbPhysics, "PHSolidState", rb_cObject);
+  cPHSolidState.klass = rb_define_class_under(mRBPhysics, "PHSolidState", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSolidState, (void *) &cPHSolidState);
   rb_define_alloc_func(cPHSolidState.klass, _wrap_PHSolidState_allocate);
   rb_define_method(cPHSolidState.klass, "initialize", VALUEFUNC(_wrap_new_PHSolidState), -1);
@@ -10891,7 +10898,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSolidState.destroy = (void (*)(void *)) free_Spr_PHSolidState;
   cPHSolidState.trackObjects = 0;
   
-  cPHSolidDesc.klass = rb_define_class_under(mRbPhysics, "PHSolidDesc", ((swig_class *) SWIGTYPE_p_Spr__PHSolidState->clientdata)->klass);
+  cPHSolidDesc.klass = rb_define_class_under(mRBPhysics, "PHSolidDesc", ((swig_class *) SWIGTYPE_p_Spr__PHSolidState->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSolidDesc, (void *) &cPHSolidDesc);
   rb_define_alloc_func(cPHSolidDesc.klass, _wrap_PHSolidDesc_allocate);
   rb_define_method(cPHSolidDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHSolidDesc), -1);
@@ -10908,7 +10915,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSolidDesc.destroy = (void (*)(void *)) free_Spr_PHSolidDesc;
   cPHSolidDesc.trackObjects = 0;
   
-  cPHSolidIf.klass = rb_define_class_under(mRbPhysics, "PHSolidIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
+  cPHSolidIf.klass = rb_define_class_under(mRBPhysics, "PHSolidIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSolidIf, (void *) &cPHSolidIf);
   rb_undef_alloc_func(cPHSolidIf.klass);
   rb_define_method(cPHSolidIf.klass, "AddTorque", VALUEFUNC(_wrap_PHSolidIf_AddTorque), -1);
@@ -10948,7 +10955,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSolidIf.destroy = (void (*)(void *)) free_Spr_PHSolidIf;
   cPHSolidIf.trackObjects = 0;
   
-  cPHConstraintDesc.klass = rb_define_class_under(mRbPhysics, "PHConstraintDesc", rb_cObject);
+  cPHConstraintDesc.klass = rb_define_class_under(mRBPhysics, "PHConstraintDesc", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHConstraintDesc, (void *) &cPHConstraintDesc);
   rb_define_alloc_func(cPHConstraintDesc.klass, _wrap_PHConstraintDesc_allocate);
   rb_define_method(cPHConstraintDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHConstraintDesc), -1);
@@ -10971,7 +10978,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHConstraintDesc.destroy = (void (*)(void *)) free_Spr_PHConstraintDesc;
   cPHConstraintDesc.trackObjects = 0;
   
-  cPHJoint1DDesc.klass = rb_define_class_under(mRbPhysics, "PHJoint1DDesc", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintDesc->clientdata)->klass);
+  cPHJoint1DDesc.klass = rb_define_class_under(mRBPhysics, "PHJoint1DDesc", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHJoint1DDesc, (void *) &cPHJoint1DDesc);
   rb_define_alloc_func(cPHJoint1DDesc.klass, _wrap_PHJoint1DDesc_allocate);
   rb_define_method(cPHJoint1DDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHJoint1DDesc), -1);
@@ -10991,7 +10998,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHJoint1DDesc.destroy = (void (*)(void *)) free_Spr_PHJoint1DDesc;
   cPHJoint1DDesc.trackObjects = 0;
   
-  cPHHingeJointDesc.klass = rb_define_class_under(mRbPhysics, "PHHingeJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DDesc->clientdata)->klass);
+  cPHHingeJointDesc.klass = rb_define_class_under(mRBPhysics, "PHHingeJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHHingeJointDesc, (void *) &cPHHingeJointDesc);
   rb_define_alloc_func(cPHHingeJointDesc.klass, _wrap_PHHingeJointDesc_allocate);
   rb_define_method(cPHHingeJointDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHHingeJointDesc), -1);
@@ -10999,7 +11006,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHHingeJointDesc.destroy = (void (*)(void *)) free_Spr_PHHingeJointDesc;
   cPHHingeJointDesc.trackObjects = 0;
   
-  cPHSliderJointDesc.klass = rb_define_class_under(mRbPhysics, "PHSliderJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DDesc->clientdata)->klass);
+  cPHSliderJointDesc.klass = rb_define_class_under(mRBPhysics, "PHSliderJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSliderJointDesc, (void *) &cPHSliderJointDesc);
   rb_define_alloc_func(cPHSliderJointDesc.klass, _wrap_PHSliderJointDesc_allocate);
   rb_define_method(cPHSliderJointDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHSliderJointDesc), -1);
@@ -11007,7 +11014,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSliderJointDesc.destroy = (void (*)(void *)) free_Spr_PHSliderJointDesc;
   cPHSliderJointDesc.trackObjects = 0;
   
-  cPHPathPoint.klass = rb_define_class_under(mRbPhysics, "PHPathPoint", rb_cObject);
+  cPHPathPoint.klass = rb_define_class_under(mRBPhysics, "PHPathPoint", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathPoint, (void *) &cPHPathPoint);
   rb_define_alloc_func(cPHPathPoint.klass, _wrap_PHPathPoint_allocate);
   rb_define_method(cPHPathPoint.klass, "initialize", VALUEFUNC(_wrap_new_PHPathPoint), -1);
@@ -11019,7 +11026,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHPathPoint.destroy = (void (*)(void *)) free_Spr_PHPathPoint;
   cPHPathPoint.trackObjects = 0;
   
-  cPHPathDesc.klass = rb_define_class_under(mRbPhysics, "PHPathDesc", rb_cObject);
+  cPHPathDesc.klass = rb_define_class_under(mRBPhysics, "PHPathDesc", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathDesc, (void *) &cPHPathDesc);
   rb_define_alloc_func(cPHPathDesc.klass, _wrap_PHPathDesc_allocate);
   rb_define_method(cPHPathDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHPathDesc), -1);
@@ -11031,7 +11038,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHPathDesc.destroy = (void (*)(void *)) free_Spr_PHPathDesc;
   cPHPathDesc.trackObjects = 0;
   
-  cPHPathJointDesc.klass = rb_define_class_under(mRbPhysics, "PHPathJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DDesc->clientdata)->klass);
+  cPHPathJointDesc.klass = rb_define_class_under(mRBPhysics, "PHPathJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathJointDesc, (void *) &cPHPathJointDesc);
   rb_define_alloc_func(cPHPathJointDesc.klass, _wrap_PHPathJointDesc_allocate);
   rb_define_method(cPHPathJointDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHPathJointDesc), -1);
@@ -11039,7 +11046,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHPathJointDesc.destroy = (void (*)(void *)) free_Spr_PHPathJointDesc;
   cPHPathJointDesc.trackObjects = 0;
   
-  cPHBallJointDesc.klass = rb_define_class_under(mRbPhysics, "PHBallJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintDesc->clientdata)->klass);
+  cPHBallJointDesc.klass = rb_define_class_under(mRBPhysics, "PHBallJointDesc", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHBallJointDesc, (void *) &cPHBallJointDesc);
   rb_define_alloc_func(cPHBallJointDesc.klass, _wrap_PHBallJointDesc_allocate);
   rb_define_method(cPHBallJointDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHBallJointDesc), -1);
@@ -11063,7 +11070,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHBallJointDesc.destroy = (void (*)(void *)) free_Spr_PHBallJointDesc;
   cPHBallJointDesc.trackObjects = 0;
   
-  cPHSpringDesc.klass = rb_define_class_under(mRbPhysics, "PHSpringDesc", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintDesc->clientdata)->klass);
+  cPHSpringDesc.klass = rb_define_class_under(mRBPhysics, "PHSpringDesc", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSpringDesc, (void *) &cPHSpringDesc);
   rb_define_alloc_func(cPHSpringDesc.klass, _wrap_PHSpringDesc_allocate);
   rb_define_method(cPHSpringDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHSpringDesc), -1);
@@ -11075,7 +11082,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSpringDesc.destroy = (void (*)(void *)) free_Spr_PHSpringDesc;
   cPHSpringDesc.trackObjects = 0;
   
-  cPHGearDesc.klass = rb_define_class_under(mRbPhysics, "PHGearDesc", rb_cObject);
+  cPHGearDesc.klass = rb_define_class_under(mRBPhysics, "PHGearDesc", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHGearDesc, (void *) &cPHGearDesc);
   rb_define_alloc_func(cPHGearDesc.klass, _wrap_PHGearDesc_allocate);
   rb_define_method(cPHGearDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHGearDesc), -1);
@@ -11085,7 +11092,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHGearDesc.destroy = (void (*)(void *)) free_Spr_PHGearDesc;
   cPHGearDesc.trackObjects = 0;
   
-  cPHConstraintIf.klass = rb_define_class_under(mRbPhysics, "PHConstraintIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
+  cPHConstraintIf.klass = rb_define_class_under(mRBPhysics, "PHConstraintIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHConstraintIf, (void *) &cPHConstraintIf);
   rb_undef_alloc_func(cPHConstraintIf.klass);
   rb_define_method(cPHConstraintIf.klass, "Enable", VALUEFUNC(_wrap_PHConstraintIf_Enable), -1);
@@ -11098,21 +11105,21 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHConstraintIf.destroy = (void (*)(void *)) free_Spr_PHConstraintIf;
   cPHConstraintIf.trackObjects = 0;
   
-  cPHContactPointIf.klass = rb_define_class_under(mRbPhysics, "PHContactPointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
+  cPHContactPointIf.klass = rb_define_class_under(mRBPhysics, "PHContactPointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHContactPointIf, (void *) &cPHContactPointIf);
   rb_undef_alloc_func(cPHContactPointIf.klass);
   cPHContactPointIf.mark = 0;
   cPHContactPointIf.destroy = (void (*)(void *)) free_Spr_PHContactPointIf;
   cPHContactPointIf.trackObjects = 0;
   
-  cPHJointIf.klass = rb_define_class_under(mRbPhysics, "PHJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
+  cPHJointIf.klass = rb_define_class_under(mRBPhysics, "PHJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHJointIf, (void *) &cPHJointIf);
   rb_undef_alloc_func(cPHJointIf.klass);
   cPHJointIf.mark = 0;
   cPHJointIf.destroy = (void (*)(void *)) free_Spr_PHJointIf;
   cPHJointIf.trackObjects = 0;
   
-  cPHJoint1DIf.klass = rb_define_class_under(mRbPhysics, "PHJoint1DIf", ((swig_class *) SWIGTYPE_p_Spr__PHJointIf->clientdata)->klass);
+  cPHJoint1DIf.klass = rb_define_class_under(mRBPhysics, "PHJoint1DIf", ((swig_class *) SWIGTYPE_p_Spr__PHJointIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHJoint1DIf, (void *) &cPHJoint1DIf);
   rb_undef_alloc_func(cPHJoint1DIf.klass);
   rb_define_method(cPHJoint1DIf.klass, "SetRange", VALUEFUNC(_wrap_PHJoint1DIf_SetRange), -1);
@@ -11133,21 +11140,21 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHJoint1DIf.destroy = (void (*)(void *)) free_Spr_PHJoint1DIf;
   cPHJoint1DIf.trackObjects = 0;
   
-  cPHHingeJointIf.klass = rb_define_class_under(mRbPhysics, "PHHingeJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
+  cPHHingeJointIf.klass = rb_define_class_under(mRBPhysics, "PHHingeJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHHingeJointIf, (void *) &cPHHingeJointIf);
   rb_undef_alloc_func(cPHHingeJointIf.klass);
   cPHHingeJointIf.mark = 0;
   cPHHingeJointIf.destroy = (void (*)(void *)) free_Spr_PHHingeJointIf;
   cPHHingeJointIf.trackObjects = 0;
   
-  cPHSliderJointIf.klass = rb_define_class_under(mRbPhysics, "PHSliderJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
+  cPHSliderJointIf.klass = rb_define_class_under(mRBPhysics, "PHSliderJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSliderJointIf, (void *) &cPHSliderJointIf);
   rb_undef_alloc_func(cPHSliderJointIf.klass);
   cPHSliderJointIf.mark = 0;
   cPHSliderJointIf.destroy = (void (*)(void *)) free_Spr_PHSliderJointIf;
   cPHSliderJointIf.trackObjects = 0;
   
-  cPHPathIf.klass = rb_define_class_under(mRbPhysics, "PHPathIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
+  cPHPathIf.klass = rb_define_class_under(mRBPhysics, "PHPathIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathIf, (void *) &cPHPathIf);
   rb_undef_alloc_func(cPHPathIf.klass);
   rb_define_method(cPHPathIf.klass, "AddPoint", VALUEFUNC(_wrap_PHPathIf_AddPoint), -1);
@@ -11157,7 +11164,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHPathIf.destroy = (void (*)(void *)) free_Spr_PHPathIf;
   cPHPathIf.trackObjects = 0;
   
-  cPHPathJointIf.klass = rb_define_class_under(mRbPhysics, "PHPathJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
+  cPHPathJointIf.klass = rb_define_class_under(mRBPhysics, "PHPathJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathJointIf, (void *) &cPHPathJointIf);
   rb_undef_alloc_func(cPHPathJointIf.klass);
   rb_define_method(cPHPathJointIf.klass, "SetPosition", VALUEFUNC(_wrap_PHPathJointIf_SetPosition), -1);
@@ -11165,7 +11172,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHPathJointIf.destroy = (void (*)(void *)) free_Spr_PHPathJointIf;
   cPHPathJointIf.trackObjects = 0;
   
-  cPHBallJointIf.klass = rb_define_class_under(mRbPhysics, "PHBallJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
+  cPHBallJointIf.klass = rb_define_class_under(mRBPhysics, "PHBallJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHBallJointIf, (void *) &cPHBallJointIf);
   rb_undef_alloc_func(cPHBallJointIf.klass);
   rb_define_method(cPHBallJointIf.klass, "SetSwingRange", VALUEFUNC(_wrap_PHBallJointIf_SetSwingRange), -1);
@@ -11180,7 +11187,7 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHBallJointIf.destroy = (void (*)(void *)) free_Spr_PHBallJointIf;
   cPHBallJointIf.trackObjects = 0;
   
-  cPHSpringIf.klass = rb_define_class_under(mRbPhysics, "PHSpringIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
+  cPHSpringIf.klass = rb_define_class_under(mRBPhysics, "PHSpringIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSpringIf, (void *) &cPHSpringIf);
   rb_undef_alloc_func(cPHSpringIf.klass);
   rb_define_method(cPHSpringIf.klass, "SetSpring", VALUEFUNC(_wrap_PHSpringIf_SetSpring), -1);
@@ -11191,28 +11198,28 @@ SWIGEXPORT void Init_rbPhysics(void) {
   cPHSpringIf.destroy = (void (*)(void *)) free_Spr_PHSpringIf;
   cPHSpringIf.trackObjects = 0;
   
-  cPHTreeNodeIf.klass = rb_define_class_under(mRbPhysics, "PHTreeNodeIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
+  cPHTreeNodeIf.klass = rb_define_class_under(mRBPhysics, "PHTreeNodeIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHTreeNodeIf, (void *) &cPHTreeNodeIf);
   rb_undef_alloc_func(cPHTreeNodeIf.klass);
   cPHTreeNodeIf.mark = 0;
   cPHTreeNodeIf.destroy = (void (*)(void *)) free_Spr_PHTreeNodeIf;
   cPHTreeNodeIf.trackObjects = 0;
   
-  cPHRootNodeIf.klass = rb_define_class_under(mRbPhysics, "PHRootNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
+  cPHRootNodeIf.klass = rb_define_class_under(mRBPhysics, "PHRootNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHRootNodeIf, (void *) &cPHRootNodeIf);
   rb_undef_alloc_func(cPHRootNodeIf.klass);
   cPHRootNodeIf.mark = 0;
   cPHRootNodeIf.destroy = (void (*)(void *)) free_Spr_PHRootNodeIf;
   cPHRootNodeIf.trackObjects = 0;
   
-  cPHGearIf.klass = rb_define_class_under(mRbPhysics, "PHGearIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
+  cPHGearIf.klass = rb_define_class_under(mRBPhysics, "PHGearIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHGearIf, (void *) &cPHGearIf);
   rb_undef_alloc_func(cPHGearIf.klass);
   cPHGearIf.mark = 0;
   cPHGearIf.destroy = (void (*)(void *)) free_Spr_PHGearIf;
   cPHGearIf.trackObjects = 0;
   
-  cPHEngineIf.klass = rb_define_class_under(mRbPhysics, "PHEngineIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
+  cPHEngineIf.klass = rb_define_class_under(mRBPhysics, "PHEngineIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHEngineIf, (void *) &cPHEngineIf);
   rb_undef_alloc_func(cPHEngineIf.klass);
   cPHEngineIf.mark = 0;

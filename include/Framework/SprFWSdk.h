@@ -21,7 +21,7 @@ namespace Spr{
 		virtual FISdkIf* GetFISdk()=0;
 
 		static void SPR_CDECL RegisterSdk();
-		static FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk();
+		static FWSdkIf* SPR_CDECL CreateSdk();
 	};
 }
 

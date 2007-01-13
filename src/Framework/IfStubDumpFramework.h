@@ -18,11 +18,17 @@ typedef IfInitTemplate<FWObjectIfStub, FWObject>	FWObjectIfInit;
 template <class IF, class MIF, class OBJ> struct SceneIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FWSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
-	virtual PHSceneIf *  GetPHScene(){
+	virtual PHSceneIf *	 GetPHScene(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetPHScene();
 	}
-	virtual GRSceneIf *  GetGRScene(){
+	virtual void SetPHScene(PHSceneIf *  s){
+		return ((OBJ*)(MIF*)this)->OBJ::SetPHScene(s);
+	}
+	virtual GRSceneIf *	 GetGRScene(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetGRScene();
+	}
+	virtual void SetGRScene(GRSceneIf *  s){
+		return ((OBJ*)(MIF*)this)->OBJ::SetGRScene(s);
 	}
 	virtual void Sync(){
 		return ((OBJ*)(MIF*)this)->OBJ::Sync();

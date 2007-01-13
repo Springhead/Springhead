@@ -29,14 +29,22 @@ struct GRSdkIf;
 /**	@brief	グラフィックスシーングラフ */
 struct GRSceneIf: public SceneIf{
 	IF_DEF(GRScene);
+
 	///	フレームの作成
 	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc)=0;
+
 	///	シーンのレンダリング
 	virtual void Render(GRRenderIf* r)=0;
-	///	World
+
+	///	ワールドフレームの取得
 	virtual GRFrameIf* GetWorld()=0;
-	///	Camera
+
+	///	カメラの取得
 	virtual GRCameraIf* GetCamera()=0;
+
+	/// カメラの作成・設定
+	virtual void SetCamera(const GRCameraDesc& desc)=0;
+
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース
 	*/	

@@ -53,6 +53,7 @@ void FWApp::Step(){
 	}
 }
 void FWApp::Init(int argc, char* argv[]){
+	ProcessArguments(argc, argv);
 	fwSdk = FWSdkIf::CreateSdk();
 }
 

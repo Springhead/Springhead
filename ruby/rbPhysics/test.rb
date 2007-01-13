@@ -1,13 +1,21 @@
-require "rbPhysics"
-include RbPhysics
+require "RBPhysics"
+require "../rbGraphics/RBGraphics"
 
-sdk = PHSdkIf.CreateSdk()
+include RBPhysics
+include RBGraphics
+
+phsdk = PHSdkIf.CreateSdk()
+grsdk = GRSdkIf.CreateSdk()
+
 sceneDesc = PHSceneDesc.new
-scene = sdk.CreateScene(sceneDesc)
+scene = phsdk.CreateScene(sceneDesc)
 
 solidDesc = PHSolidDesc.new
 solid = scene.CreateSolid(solidDesc)
 scene.SetGravity([0.0, 0.0, -9.8])
+
+
+
 for i in 1..10
 	scene.Step()
 	pos = solid.GetPose()
