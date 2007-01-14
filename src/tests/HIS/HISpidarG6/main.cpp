@@ -82,7 +82,7 @@ typedef PTM::TVector<50, double> VecNd;
 #elif _WINDOWS
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 30;					// virtual couplingの係数
+	float Km = 100;					// virtual couplingの係数
 	float Bm = 0;					// 並進
 
 	float Kr = 20;					// 回転
@@ -939,9 +939,6 @@ void SetupPredictSimulation(vector<PHConstraint *> relative_consts, set<PHSolid 
 {
 	double dt = scene->GetTimeStep();
 
-	// シミュレーションで上書きしてしまう変数を今のうちに保存する
-	SaveParameters(relative_consts, relative_solids);
-
 	PHSolids gravitySolids = scene->GetGravityEngine()->solids;
 
 	// すべての剛体をセットアップ
@@ -979,6 +976,14 @@ void SetupPredictSimulation(vector<PHConstraint *> relative_consts, set<PHSolid 
 	{
 		(*it)->CompJacobian();
 	}
+
+	// Setupが終わった時点でのパラメータを保存しておく
+	// 次に行われるPredictSimulationでは
+	// RestoreParametersを呼ぶことで
+	// この時点のパラメータにセットしなおして
+	// 繰り返し計算できるようにする
+	SaveParameters(relative_consts, relative_solids);
+
 }
 
 // 先送りシミュレーションをする関数
@@ -1439,6 +1444,8 @@ inline void calcTestForce(int step_counter)
 	if(fabs(TestForce.x) < 0.1)TestForce.x = 0.1 * (TestForce.x / fabs(TestForce.x));
 	if(fabs(TestForce.y) < 0.1)TestForce.y = 0.1 * (TestForce.y / fabs(TestForce.y));
 	if(fabs(TestForce.z) < 0.1)TestForce.z = 0.1 * (TestForce.z / fabs(TestForce.z));
+
+//	TestForce = Vec3d(-1, -1, -1);
 }
 
 inline void feedbackForce(bool feedback, Vec3d VCForce, Vec3d VCTorque)
@@ -1938,7 +1945,7 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 							info->solid_angular_velocity[j] += info->ang_effect[j][i] * q_f;
 							if(bOutput) ofs << "-- collide --" << endl;
 
-							if(info->solid_velocity[j].norm() > 100) 
+							if(info->solid_velocity[j].norm() > 50) 
 							{
 								ofs << "i = " << i << " j = " << j << endl;
 								ofs << "accel = " << info->vel_effect[j][i] * q_f << endl;
@@ -2045,7 +2052,7 @@ void UpdateNewInfoFromCurrent()
 			// そのめり込みをチェックして
 			// もし存在する場合は接触点の位置をずらして
 			// 接触をなくす
-			// 正しいかわからない
+			// 正しいかわからないけど現状ではやっておく
 			double ddot = dot(info_next->pointer_col_positions[i] - info_next->col_positions[i], - info_next->col_normals[i]);
 
 			if(ddot >= 0)
