@@ -56,7 +56,7 @@ typedef PTM::TVector<50, double> VecNd;
 #define SPIDAR_SCALE	70			// SPIDARのVE内での動作スケール
 
 #define POINTER_RADIUS 0.5f			// ポインタの半径
-#define EPSILON 1.1					// ポインタに接触しそうな剛体を予測するためにポインタのBBoxを膨らませて接触判定をするときの膨らませる倍率
+#define EPSILON 2.0					// ポインタに接触しそうな剛体を予測するためにポインタのBBoxを膨らませて接触判定をするときの膨らませる倍率
 									// 大きくするほどたくさんの接触を予想できるが、その分量も増えるので計算が重くなる
 									// 1にすると予測なし
 
@@ -484,7 +484,7 @@ void GetSolidsCollisionsOnPointer(vector<pair<PHConstraint *, int> >* pointer_co
 			{
 				double norm = (contact->pos - (*it2).second->pos).norm();
 
-				// 引継ぎの接触点の一つと、追加しようとする一つの接触点の距離（ベクトルのノルム）が
+				// おなじshapePairをもつ引継ぎの接触点の一つと、追加しようとする一つの接触点の距離（ベクトルのノルム）が
 				// 小さすぎる場合は追加しない
 				if(norm < COLLISION_DENSITY && contact->shapePair == (*it2).second->shapePair)
 				{
@@ -775,7 +775,7 @@ void GetWillCollidePoints(int so_index, int pointer_index, vector<CandidateInfo>
 			{
 				// 距離を調べる
 				double toi = distance / (delta * delta);
-				if(toi >= 0 && toi < 1.0)
+				if(toi >= 0 && toi < POINTER_RADIUS * (EPSILON - 1))
 				{
 					// 最近傍の点を調べる
 					FindClosestPoints(DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),shapePose[0][i], shapePose[1][j], closestPoint[0], closestPoint[1]);
@@ -918,11 +918,12 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 			// データの格納。			
 			pair<Matrix3d, Matrix3d> p = pair<Matrix3d, Matrix3d>(v, w);
 
-			if(v != Matrix3d())
+			if(w != Matrix3d())
 			{
 				ofs << "Surround Effect with " << TestForce << endl;
-				ofs << v << endl;
+				ofs << w << endl;
 			}
+
 			// 剛体ごとに接触と係数行列のマップを作成する
 			// 接触の順番はわかるが剛体の順番はわからないため。
 			// 剛体ごとに接触の順番に行列が格納されていく
@@ -1029,6 +1030,7 @@ vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > point
 	return effects;
 }
 
+// 特定の接触に含まれる剛体に力を加える関数
 void AddForceToConstraint(int index, vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, map<PHSolid *, Vec3d> coeff, Vec3d force_vec)
 {
 	PHSolid* si;
@@ -1088,7 +1090,6 @@ void CreateConstraintFromCurrentInfo(HapticInfo* current_info, vector<pair<PHCon
 		// 毎回新しいContact Pointを作る必要がある
 		// ここでは現在の位置と向きを持ったContact Pointを新たに作成する
 		// ここで作られたContact Pointは hapticinfo->points に格納され、手動で消す
-
 		PHContactPoint* point = CreateContactPoint(current_info->col_normals[i], (current_info->col_positions[i] + current_info->pointer_col_positions[i]) / 2, current_info->solid[i][0], current_info->solid[i][1], current_info->shapePair[i]);
 
 		// 現在のポインタ側の接触点を格納する
@@ -1441,11 +1442,9 @@ inline void calcTestForce(int step_counter)
 	// これより小さくなると各係数が大きくなりすぎて
 	// その次のステップで力が大きくなると不安定になってしまうので
 	// 最低値をこのくらいに設定
-	if(fabs(TestForce.x) < 0.1)TestForce.x = 0.1 * (TestForce.x / fabs(TestForce.x));
-	if(fabs(TestForce.y) < 0.1)TestForce.y = 0.1 * (TestForce.y / fabs(TestForce.y));
-	if(fabs(TestForce.z) < 0.1)TestForce.z = 0.1 * (TestForce.z / fabs(TestForce.z));
-
-//	TestForce = Vec3d(-1, -1, -1);
+//	if(fabs(TestForce.x) < 0.1)TestForce.x = 0.1 * (TestForce.x / fabs(TestForce.x));
+//	if(fabs(TestForce.y) < 0.1)TestForce.y = 0.1 * (TestForce.y / fabs(TestForce.y));
+//	if(fabs(TestForce.z) < 0.1)TestForce.z = 0.1 * (TestForce.z / fabs(TestForce.z));
 }
 
 inline void feedbackForce(bool feedback, Vec3d VCForce, Vec3d VCTorque)
@@ -1530,7 +1529,7 @@ void CALLBACK HapticRendering(UINT uID, UINT uMsg, DWORD dwUser, DWORD dw1, DWOR
 		current_valid_data = !current_valid_data;
 		bSimulation = true;
 
-		ofs << "use new data" << endl;
+//		ofs << "use new data" << endl;
 	}
 	else ++step_counter;
 
@@ -1612,10 +1611,10 @@ void CalcTTheta(HapticInfo* info, Vec3d* T, Vec3d* Theta)
 	*Theta = Ans.sub_vector(TSubVectorDim<0,3>());
 	*T = Ans.sub_vector(TSubVectorDim<3,3>());
 	
-	if((*T).norm() > 10) 
+	if((*Theta).norm() > 10) 
 	{
 		ofs << "------------------" << endl;
-		ofs << "T = " << *T << endl;
+		ofs << "Theta = " << *Theta << endl;
 		ofs << "num_cols = " << num_cols << endl;
 		ofs << "pointer pos = " << pointer_pos << endl;
 
@@ -1629,7 +1628,7 @@ void CalcTTheta(HapticInfo* info, Vec3d* T, Vec3d* Theta)
 			if(info->nearest_solids[i]->IsDynamical())
 			{
 				ofs << "solid center position = " << info->solid_center_positions[i] << endl;
-				ofs << "solid velocity = " << info->solid_velocity[i] << endl;
+				ofs << "solid ang velocity = " << info->solid_angular_velocity[i] << endl;
 			}
 		}
 
@@ -1835,7 +1834,8 @@ void UpdateSolids(HapticInfo* info)
 			}
 		}
 
-		if(bSurroundEffect && bCollide)
+//		if(bSurroundEffect && bCollide)
+		if(bSurroundEffect)
 		{
 			// 周囲の影響のうちで、定数項を徐々に加えていく
 			// IsDynamical == falseの場合はそれぞれVec3d()で初期化してあるので条件分岐は必要ない
@@ -1945,13 +1945,13 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 							info->solid_angular_velocity[j] += info->ang_effect[j][i] * q_f;
 							if(bOutput) ofs << "-- collide --" << endl;
 
-							if(info->solid_velocity[j].norm() > 50) 
+							if(info->solid_angular_velocity[j].norm() > 50) 
 							{
 								ofs << "i = " << i << " j = " << j << endl;
-								ofs << "accel = " << info->vel_effect[j][i] * q_f << endl;
-								ofs << "velocity = " << info->solid_velocity[j] << endl;
+								ofs << "ang accel = " << info->ang_effect[j][i] * q_f << endl;
+								ofs << "ang velocity = " << info->solid_angular_velocity[j] << endl;
 								ofs << "VCForce = " << VCForce << endl;
-								ofs << "coeff = " << info->vel_effect[j][i] << endl;
+								ofs << "ang coeff = " << info->ang_effect[j][i] << endl;
 							}
 						}
 					}
@@ -2058,9 +2058,9 @@ void UpdateNewInfoFromCurrent()
 			if(ddot >= 0)
 			{
 //				ofs << "dot2 = " << ddot << endl;
-				Vec3d ave = (info_next->pointer_col_positions[i] + info_next->col_positions[i]) / 2;
-				info_next->pointer_col_positions[i] = ave + 0.001 * info_next->col_normals[i];
-				info_next->col_positions[i] = ave - 0.001 * info_next->col_normals[i]; 
+//				Vec3d ave = (info_next->pointer_col_positions[i] + info_next->col_positions[i]) / 2;
+//				info_next->pointer_col_positions[i] = ave + 0.001 * info_next->col_normals[i];
+//				info_next->col_positions[i] = ave - 0.001 * info_next->col_normals[i]; 
 			}
 		}
 	}
