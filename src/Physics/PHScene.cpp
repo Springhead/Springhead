@@ -30,9 +30,9 @@ void PHScene::Init(){
 	si->container = solids;
 	engines.Add(si);
 	
-	PHGravityEngine* ge = DBG_NEW PHGravityEngine;
-	engines.Add(ge);
-	ge->accel = gravity;
+	gravityEngine = DBG_NEW PHGravityEngine;
+	engines.Add(gravityEngine);
+	gravityEngine->accel = gravity;
 
 	penaltyEngine = DBG_NEW PHPenaltyEngine;
 	engines.Add(penaltyEngine);
@@ -230,4 +230,7 @@ PHConstraintEngine* PHScene::GetConstraintEngine(){
 	return constraintEngine;
 }
 
+PHGravityEngine* PHScene::GetGravityEngine(){
+	return gravityEngine;
+}
 }

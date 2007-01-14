@@ -311,6 +311,9 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHConstraintEngine *  GetConstraintEngine(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetConstraintEngine();
 	}
+	virtual PHGravityEngine *	 GetGravityEngine(){
+		return ((OBJ*)(MIF*)this)->OBJ::GetGravityEngine();
+	}
 };
 struct PHSceneIf;	class PHScene;
 typedef PHSceneIfStubTemplate<PHSceneIf, ObjectIfBuf, PHScene>	PHSceneIfStub;

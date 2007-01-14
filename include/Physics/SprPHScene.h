@@ -38,6 +38,7 @@ struct PHGearIf;
 struct PHGearDesc;
 
 class PHConstraintEngine;
+class PHGravityEngine;
 
 struct PHPathIf;
 struct PHPathDesc;
@@ -237,7 +238,7 @@ public:
 	virtual Vec3d GetGravity()=0;
 
 	virtual PHConstraintEngine* GetConstraintEngine()=0;
-
+	virtual PHGravityEngine*	GetGravityEngine()=0;
 };
 
 //@}

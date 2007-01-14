@@ -19,6 +19,7 @@ struct CDShapeDesc;
 class PHSolidContainer;
 class PHPenaltyEngine;
 class PHConstraintEngine;
+class PHGravityEngine;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
@@ -38,6 +39,7 @@ protected:
 	PHSolidContainer*	solids;
 	PHPenaltyEngine*	penaltyEngine;
 	PHConstraintEngine* constraintEngine;
+	PHGravityEngine*	gravityEngine;
 public:
 	///	コンストラクタ
 	PHScene(const PHSceneDesc& desc=PHSceneDesc());
@@ -46,6 +48,7 @@ public:
 	~PHScene(){}
 
 	PHConstraintEngine* GetConstraintEngine();
+	PHGravityEngine*	GetGravityEngine();
 	PHSolidIf* CreateSolid();
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
