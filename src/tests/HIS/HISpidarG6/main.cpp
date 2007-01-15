@@ -56,7 +56,8 @@ typedef PTM::TVector<50, double> VecNd;
 #define SPIDAR_SCALE	70			// SPIDARのVE内での動作スケール
 
 #define POINTER_RADIUS 0.5f			// ポインタの半径
-#define EPSILON 2.0					// ポインタに接触しそうな剛体を予測するためにポインタのBBoxを膨らませて接触判定をするときの膨らませる倍率
+#define EPSILON 3.0					// ポインタに接触しそうな剛体を予測するためにポインタのBBoxを膨らませて接触判定をするときの膨らませる倍率
+									// 式としてはd = (EPSILON - 1) x POINTER_RADIUSだけ先の剛体を検索して接触候補点を作る
 									// 大きくするほどたくさんの接触を予想できるが、その分量も増えるので計算が重くなる
 									// 1にすると予測なし
 
@@ -215,6 +216,8 @@ typedef struct {
 	Matrix3d ang_effect[NUM_COL_SOLIDS][NUM_COLLISIONS];
 	Vec3d ang_constant[NUM_COLLISIONS];
 
+	Vec3d gravity_effect[NUM_COL_SOLIDS];
+
 	// 実際に接触しているかあらわすフラグ
 	// MakeHapticInfoで前回接触していた場合、の判断に使う
 	bool bCollide[NUM_COLLISIONS];
@@ -288,13 +291,18 @@ void CreateShapePairMMap(vector<pair<PHConstraint *, int> >, vector<pair<PHConst
 void PredictSimulations(vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >,
 						set<PHSolid*>,
 						vector<PHConstraint*>, set<PHSolid*>,
-						map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >*, map<PHSolid*, SpatialVector>*);
+						map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >*, map<PHSolid*, SpatialVector>*, map<PHSolid*, Vec3d>*);
 void SetupPredictSimulation(vector<PHConstraint*>, set<PHSolid*>, set<PHSolid*>, map<PHSolid*, Vec3d>*);
 void AddForceToConstraint(int, vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >, map<PHSolid *, Vec3d>, Vec3d);
 vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >,
 										set<PHSolid*>,
-										vector<PHConstraint *>, set<PHSolid*>,
-										Vec3d, map<PHSolid*, Vec3d>, int index = -1);
+										vector<PHConstraint *>, set<PHSolid*>);
+vector<SpatialVector> PredictSimulationToCollision(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
+										set<PHSolid *> nearest_solids,
+										vector<PHConstraint *> relative_consts, set<PHSolid *> relative_solids, 
+										Vec3d force_vec, map<PHSolid *, Vec3d> coeff, int index = -1);
+Vec3d PredictSimulationForGravity(vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >, vector<pair<PHConstraint *, int> >, 
+								  set<PHSolid*>, vector<PHConstraint*>, set<PHSolid*>, PHSolid*, Vec3d, int);
 
 // 接触点を引き継ぐ処理
 void CreateConstraintFromCurrentInfo(HapticInfo*, vector<pair<PHConstraint *, int> >*, vector<pair<PHConstraint *, int> >*, map<PHConstraint*, int>*,
@@ -304,14 +312,14 @@ void CreateConstraintFromCurrentInfo(HapticInfo*, vector<pair<PHConstraint *, in
 void MakeHapticInfo(HapticInfo*, HapticInfo*, vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >,
 					vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >, map<PHContactPoint*, Vec3d>,
 					vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >,
-					map<PHConstraint*, int>, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >, map<PHSolid*, SpatialVector>);
+					map<PHConstraint*, int>, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >, map<PHSolid*, SpatialVector>, map<PHSolid*, Vec3d>);
 PHConstraint* GetSpecificDataFromCollisions(int i, 
 					 vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >, 
 					 vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >, 
 					 map<PHContactPoint*, Vec3d>,
 					 vector<pair<PHConstraint*, int> >, vector<pair<PHConstraint*, int> >, 
 					 int*, PHSolid**, Vec3d*, bool*, bool*);
-void RegisterNewSolid(HapticInfo*, int, HapticInfo*, PHSolid*, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >, map<PHSolid*, SpatialVector>);
+void RegisterNewSolid(HapticInfo*, int, HapticInfo*, PHSolid*, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >, map<PHSolid*, SpatialVector>, map<PHSolid*, Vec3d>);
 void RegisterNewCollision(HapticInfo*, int i, HapticInfo*, PHConstraint*, int, bool, bool, map<PHConstraint*, int>, Vec3d);
 
 
@@ -326,7 +334,7 @@ void UpdateNewInfoFromCurrent();
 void CheckPenetrations(HapticInfo*, int*, vector<Vec3d>*, vector<double>*, vector<Vec3d>*);
 void CalcTTheta(HapticInfo*, Vec3d*, Vec3d*);
 void CorrectPenetration(HapticInfo*);
-void GetParametersFromCollision(double*, double*, double*, double*, double*, double*);
+void GetParametersFromCollision(double*, double*, double*, double*, double*, double*, double*);
 void MakePointerPosMatrix(int, vector<Vec3d>t, vector<double>, vector<Vec3d>, MatrixN6d*, VecNd*);
 
 // 局所的な動力学計算を行う処理
@@ -415,6 +423,7 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	// 周囲の影響を格納する変数
 	map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > matrices;
 	map<PHSolid *, SpatialVector> vecs;
+	map<PHSolid *, Vec3d> g_map;
 
 	// 自作の接触を削除する
 	ResetOriginalContactPoints(&(current_info->points));
@@ -443,13 +452,14 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	// 力を加えてみて動かし、影響を観測する関数
 	PredictSimulations(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 						relative_consts, relative_solids,
-						&matrices, &vecs);
+						&matrices, &vecs, &g_map);
+
 	// 接触の情報を作成する
 	MakeHapticInfo(new_info, current_info, 
 					pointer_consts, pointer_static_consts, 
 					col_candidate_consts, col_candidate_static_consts, col_candidate_pointer_pos,
 					current_consts, current_static_consts, 
-					NewcolToCol,matrices, vecs);
+					NewcolToCol,matrices, vecs, g_map);
 }
 
 // ポインタからスタートしてポインタを含む接触とその剛体をすべて取得してくる関数
@@ -775,7 +785,7 @@ void GetWillCollidePoints(int so_index, int pointer_index, vector<CandidateInfo>
 			{
 				// 距離を調べる
 				double toi = distance / (delta * delta);
-				if(toi >= 0 && toi < POINTER_RADIUS * (EPSILON - 1))
+				if(toi >= 0 && toi <= POINTER_RADIUS * (EPSILON - 1))
 				{
 					// 最近傍の点を調べる
 					FindClosestPoints(DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),shapePose[0][i], shapePose[1][j], closestPoint[0], closestPoint[1]);
@@ -844,25 +854,24 @@ void CreateShapePairMMap(vector<pair<PHConstraint *, int> > pointer_consts, vect
 	}
 }
 
-
 // 提案手法のために先送りシミュレーションを計画的に行ってくれる関数
 void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
 						set<PHSolid *> nearest_solids,
 						vector<PHConstraint *> relative_consts, set<PHSolid *> relative_solids,
-						map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > *mat, map<PHSolid *, SpatialVector> *vec)
+						map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > *mat, map<PHSolid *, SpatialVector> *vec, map<PHSolid*, Vec3d> *gvec)
 {
 	map<PHSolid *, Vec3d> coeff;
 	
 	// 必要な情報の準備
 	SetupPredictSimulation(relative_consts, relative_solids, nearest_solids, &coeff);
 
-
 	// 加える力を０ベクトルとして定数項を取得
-	vector<SpatialVector> b = PredictSimulation(pointer_consts, col_candidate_consts, current_consts,
+	vector<SpatialVector> b = PredictSimulationToCollision(pointer_consts, col_candidate_consts, current_consts,
 												nearest_solids, 
 												relative_consts, relative_solids, 
 												Vec3d(), coeff);
 
+	map<PHSolid*, Vec3d> gravity_map;
 	map<PHSolid*, SpatialVector> c;
 	int local_counter = 0;
 
@@ -874,7 +883,15 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 		mm_map.insert(pair<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >((*it), vector<pair<Matrix3d, Matrix3d> >()));
 
 		// ついでにvectorからmapへの変換処理も行う
-		c.insert(pair<PHSolid*, SpatialVector>((*it), b[local_counter++]));
+		c.insert(pair<PHSolid*, SpatialVector>((*it), SpatialVector((*it)->GetOrientation() * b[local_counter].v() , (*it)->GetOrientation() * b[local_counter].w())));
+
+		// 重力の影響を計算
+		Vec3d gravity_effect = PredictSimulationForGravity(pointer_consts, col_candidate_consts, current_consts, 
+																					nearest_solids, relative_consts, relative_solids,
+																					*it, b[local_counter].v(), local_counter);
+		gravity_map.insert(pair<PHSolid*, Vec3d>((*it), gravity_effect));
+
+		local_counter++;
 	}
 
 	int total_size = (int)pointer_consts.size() + (int)col_candidate_consts.size() + (int)current_consts.size();
@@ -885,13 +902,13 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 		// ある単位ベクトルを加えてその結果をあらわすベクトルを取得
 		// 以下の３つの関数で
 		// ある接触に力を加えたときの,すべての剛体の反応がわかる
-		vector<SpatialVector> vec_x = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids,
+		vector<SpatialVector> vec_x = PredictSimulationToCollision(pointer_consts, col_candidate_consts, current_consts, nearest_solids,
 														relative_consts, relative_solids, 
 														Vec3d(TestForce.x, 0, 0), coeff, i);
-		vector<SpatialVector> vec_y = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
+		vector<SpatialVector> vec_y = PredictSimulationToCollision(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 														relative_consts, relative_solids, 
 														Vec3d(TestForce.x, TestForce.y, 0), coeff, i);
-		vector<SpatialVector> vec_z = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
+		vector<SpatialVector> vec_z = PredictSimulationToCollision(pointer_consts, col_candidate_consts, current_consts, nearest_solids, 
 														relative_consts, relative_solids, 
 														Vec3d(TestForce.x, 0, TestForce.z), coeff, i);
 
@@ -918,10 +935,10 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 			// データの格納。			
 			pair<Matrix3d, Matrix3d> p = pair<Matrix3d, Matrix3d>(v, w);
 
-			if(w != Matrix3d())
+//			if(w != Matrix3d())
 			{
-				ofs << "Surround Effect with " << TestForce << endl;
-				ofs << w << endl;
+//				ofs << "Surround Effect with " << TestForce << endl;
+//				ofs << w << endl;
 			}
 
 			// 剛体ごとに接触と係数行列のマップを作成する
@@ -933,6 +950,7 @@ void PredictSimulations(vector<pair<PHConstraint *, int> > pointer_consts, vecto
 
 	*mat = mm_map;
 	*vec = c;
+	*gvec = gravity_map;
 }
 
 // 予測シミュレーションをセットアップする
@@ -940,21 +958,9 @@ void SetupPredictSimulation(vector<PHConstraint *> relative_consts, set<PHSolid 
 {
 	double dt = scene->GetTimeStep();
 
-	PHSolids gravitySolids = scene->GetGravityEngine()->solids;
-
 	// すべての剛体をセットアップ
 	for(set<PHSolid *>::iterator it = relative_solids.begin(); it != relative_solids.end(); ++it)
 	{
-		for(int i = 0; i < (int)gravitySolids.size(); ++i)
-		{
-			// もし重力が登録されていたら重力分追加する
-			if(gravitySolids[i] == *it)
-			{
-				(*it)->dv.v() += (*it)->GetMass() * scene->GetGravity() * dt;
-				break;
-			}
-		}
-
 		(*it)->UpdateCacheLCP(dt);
 	}
 
@@ -987,8 +993,7 @@ void SetupPredictSimulation(vector<PHConstraint *> relative_consts, set<PHSolid 
 
 }
 
-// 先送りシミュレーションをする関数
-vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
+vector<SpatialVector> PredictSimulationToCollision(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
 										set<PHSolid *> nearest_solids,
 										vector<PHConstraint *> relative_consts, set<PHSolid *> relative_solids, 
 										Vec3d force_vec, map<PHSolid *, Vec3d> coeff, int index)
@@ -998,7 +1003,56 @@ vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > point
 	{
 		AddForceToConstraint(index, pointer_consts, col_candidate_consts, current_consts, coeff, force_vec);
 	}
+	return PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, relative_consts, relative_solids);
+}
 
+Vec3d PredictSimulationForGravity(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
+								  set<PHSolid*> nearest_solids, vector<PHConstraint*> relative_consts, set<PHSolid*> relative_solids, PHSolid* solid, Vec3d b, int index)
+{
+	PHSolids gravitySolids = scene->GetGravityEngine()->solids;
+
+	// 重力が登録されているか調べる
+	bool bGravity = false;
+	for(int i = 0; i < (int)gravitySolids.size(); ++i)
+	{
+		if(gravitySolids[i] == solid)
+		{
+			bGravity = true;
+			break;
+		}
+	}
+
+	// 登録されていれば重力の影響を計算
+	if(bGravity)
+	{
+		// 重力に関する予測シミュレーション
+		solid->dv.v() += solid->GetOrientation().Conjugated() * scene->GetGravity() * solid->GetMass() * scene->GetTimeStep();
+		vector<SpatialVector> g = PredictSimulation(pointer_consts, col_candidate_consts, current_consts, nearest_solids, relative_consts, relative_solids);
+		int local_counter2 = 0;
+		// このループはset<PHSolid*>::iteratorの順番にまわる
+		for(vector<SpatialVector>::iterator it2 = g.begin(); it2 != g.end(); ++it2)
+		{
+			// (*it)の結果が得られたら値を格納する
+			if(index == local_counter2)
+			{
+				return solid->GetOrientation() * ((*it2).v() - b);
+			}
+			local_counter2++;
+		}
+		return Vec3d();
+	}
+	// されていなければ空のベクトルを追加
+	else 
+	{
+		return Vec3d();
+	}
+}
+
+// 先送りシミュレーションをする関数
+vector<SpatialVector> PredictSimulation(vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > current_consts, 
+										set<PHSolid *> nearest_solids,
+										vector<PHConstraint *> relative_consts, set<PHSolid *> relative_solids)
+{
 	// シミュレーションに必要な情報をセットアップ
 	for(vector<PHConstraint *>::iterator it = relative_consts.begin(); it != relative_consts.end(); ++it)
 	{
@@ -1115,7 +1169,7 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 					vector<pair<PHConstraint *, int> > pointer_consts, vector<pair<PHConstraint *, int> > pointer_static_consts, 
 					vector<pair<PHConstraint *, int> > col_candidate_consts, vector<pair<PHConstraint *, int> > col_candidate_static_consts, map<PHContactPoint*, Vec3d> col_candidate_pointer_pos,
 					vector<pair<PHConstraint *, int> > current_consts, vector<pair<PHConstraint *, int> >current_static_consts, 
-					map<PHConstraint *, int> NewcolToCol, map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid *, SpatialVector> vecs)
+					map<PHConstraint *, int> NewcolToCol, map<PHSolid *, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid *, SpatialVector> vecs, map<PHSolid *, Vec3d> g_map)
 {
 	// 初期化処理
 	// 前々回のデータはもう必要ないので初期化する
@@ -1156,7 +1210,7 @@ void MakeHapticInfo(HapticInfo *new_info, HapticInfo *current_info,
 									&sign, &so, &pointer_col_position, &bCollide, &bPreviousCollide);
 
 		// 剛体の登録と,その剛体の周囲からの影響の登録の処理
-		RegisterNewSolid(new_info, i, current_info, so, matrices, vecs);
+		RegisterNewSolid(new_info, i, current_info, so, matrices, vecs, g_map);
 		
 		// 接触の登録と,その他フラグの登録
 		RegisterNewCollision(new_info, i, current_info, constraint, sign, bPreviousCollide, bCollide, NewcolToCol, pointer_col_position);
@@ -1271,7 +1325,7 @@ PHConstraint* GetSpecificDataFromCollisions(int i,
 }
 
 // 剛体の登録と接触と剛体の関連付け
-void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHSolid* so, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid*, SpatialVector> vecs)
+void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHSolid* so, map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > > matrices, map<PHSolid*, SpatialVector> vecs, map<PHSolid *, Vec3d> g_map)
 {
 	int counter = 0;
 	// 配列にPHSolidを追加
@@ -1327,6 +1381,10 @@ void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHS
 				new_info->vel_constant[counter] = sv.v();
 				new_info->ang_constant[counter] = sv.w();
 
+				// 重力の影響
+				map<PHSolid *, Vec3d>::iterator it3 = g_map.find(so);
+				new_info->gravity_effect[counter] = (*it3).second;
+
 				map<PHSolid*, vector<pair<Matrix3d, Matrix3d> > >::iterator it2 = matrices.find(so);
 				vector<pair<Matrix3d, Matrix3d> > mm_vector = (*it2).second;
 				for(int j = 0; j < (int)mm_vector.size(); ++j)
@@ -1339,6 +1397,7 @@ void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHS
 			{
 				new_info->vel_constant[counter] = Vec3d();
 				new_info->ang_constant[counter] = Vec3d();
+				new_info->gravity_effect[counter] = Vec3d();
 			}
 
 			break;
@@ -1647,23 +1706,14 @@ double COEFFRZ = 0.002;
 void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<double> c_vectors, vector<Vec3d> n_vectors, MatrixN6d* M, VecNd* C)
 {
 	// めり込みにかける重み
-	double P = 1.0;
+	double P;
 
 	// SPIDARの位置の方にかける重み
 	double MX, MY, MZ;
 	double RX, RY, RZ;
 
 	// 接触の状況からパラメータを決める
-//	GetParametersFromCollision(&MX, &MY, &MZ, &RX, &RY, &RZ);
-/*
-	MX = COEFFMX;
-	MY = COEFFMY;
-	MZ = COEFFMZ;
-	RX = COEFFRX;
-	RY = COEFFRY;
-	RZ = COEFFRZ;
-*/
-	MX = MY = MZ = RX = RY = RZ = 1.0;
+	GetParametersFromCollision(&MX, &MY, &MZ, &RX, &RY, &RZ, &P);
 
 	// 擬似逆行列で座標計算も兼ねる
 	Vec3d t = spidar_pos - pointer_pos;
@@ -1777,13 +1827,10 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<double> 
 	}
 }
 
-void GetParametersFromCollision(double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ)
+void GetParametersFromCollision(double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ, double *P)
 {
-	*MX = *MY = *MZ = 0.0015;
-	// 回転は基本的にSPIDARに従う
-	// ここを変えるとポインタが回転しやすくなる
 	// とりあえずこの値で安定
-	*RX = *RY = *RZ = 0.02;
+	*MX = *MY = *MZ = *RX = *RY = *RZ = *P = 1.0;
 }
 
 void CorrectPenetration(HapticInfo* info)
@@ -1798,7 +1845,7 @@ void CorrectPenetration(HapticInfo* info)
 	// ポインタ自身の位置を移動
 	pointer_pos += M_vec;
 
-//	ofs << "M_vec = " << M_vec << endl;
+	if(R_vec != Vec3d()) ofs << "R_vec = " << R_vec << endl;
 	MoveVector += M_vec;
 
 	// ポインタ自身の姿勢を補正
@@ -1841,6 +1888,9 @@ void UpdateSolids(HapticInfo* info)
 			// IsDynamical == falseの場合はそれぞれVec3d()で初期化してあるので条件分岐は必要ない
 			info->solid_velocity[i] += info->vel_constant[i] * ratio;
 			info->solid_angular_velocity[i] += info->ang_constant[i] * ratio;
+
+			// 重力の影響を加える
+			info->solid_velocity[i] += info->gravity_effect[i] * ratio;
 		}
 
 		// 剛体の速度による移動・回転
@@ -1945,7 +1995,7 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 							info->solid_angular_velocity[j] += info->ang_effect[j][i] * q_f;
 							if(bOutput) ofs << "-- collide --" << endl;
 
-							if(info->solid_angular_velocity[j].norm() > 50) 
+							if(info->solid_angular_velocity[j].norm() > 10) 
 							{
 								ofs << "i = " << i << " j = " << j << endl;
 								ofs << "ang accel = " << info->ang_effect[j][i] * q_f << endl;
@@ -3045,7 +3095,7 @@ inline void t_end()
 {
 	// 一周にかかる時間をチェック
 	end = timer.CountUS();
-	if(end - start > 0 && bOutput)ofs << "time = " << end - start << endl;
+	if(end - start > 0 && bOutput) ofs << "time = " << end - start << endl;
 }
 // 与えられた行列の擬似逆行列を計算する
 void CalcPinv(MatrixN6d M, Matrix6Nd* Pinv)
