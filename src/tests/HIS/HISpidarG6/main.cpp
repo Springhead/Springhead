@@ -429,9 +429,9 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	ResetOriginalContactPoints(&(current_info->points));
 
 	// Œ»İg‚Á‚Ä‚¢‚é—ÍŠoî•ñ‚ÌÚG‚Ì‚¤‚¿‚ÅAŸ‚àg‚¢‚»‚¤‚ÈÚG‚ğæ‚èo‚·ŠÖ”
-	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, 
-									&NewcolToCol,
-									&relative_solids, &relative_consts, &nearest_solids);
+//	CreateConstraintFromCurrentInfo(current_info, &current_consts, &current_static_consts, 
+//									&NewcolToCol,
+//									&relative_solids, &relative_consts, &nearest_solids);
 	
 	// ƒ|ƒCƒ“ƒ^‚ÉÚG‚µ‚Ä‚¢‚éÚG‚Æ„‘Ì‚ğæ“¾‚µ‚Ä‚­‚éŠÖ”
 	GetSolidsCollisionsOnPointer(&pointer_consts, &pointer_static_consts, 
@@ -439,10 +439,10 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 						&relative_consts, &relative_solids, &nearest_solids);
 
 	// ÚGŒó•â“_‚ğ’T‚µ‚Äì¬‚·‚éˆ—
-	CreateCandidateContactPoints(pointer_consts, pointer_static_consts, 
-								&col_candidate_consts, &col_candidate_static_consts,
-								&relative_consts, &relative_solids, &nearest_solids, 
-								&col_candidate_pointer_pos, current_info);
+//	CreateCandidateContactPoints(pointer_consts, pointer_static_consts, 
+//								&col_candidate_consts, &col_candidate_static_consts,
+//								&relative_consts, &relative_solids, &nearest_solids, 
+//								&col_candidate_pointer_pos, current_info);
 
 	// üˆÍ‚Ì‰e‹¿‚ğŒvZ‚·‚é‚½‚ß‚Ìƒf[ƒ^ì¬ˆ—
 	// ŠÖŒW‚Ì‚ ‚é„‘Ì‚ÆÚG‚ğÄ‹A“I‚É‚·‚×‚Ä‚Æ‚Á‚Ä‚­‚é
@@ -519,7 +519,7 @@ void GetSolidsCollisionsOnPointer(vector<pair<PHConstraint *, int> >* pointer_co
 void GetAllRelativeSolidsCollisions(vector<PHConstraint*> *relative_consts, set<PHSolid*>* relative_solids, set<PHSolid*> nearest_solids)
 {
 	// ÚG“_‚ğæ“¾
-	PHConstraints cs = scene->GetConstraintEngine()->GetContactPoints();//GetContactPoints(scene);
+	PHConstraints cs = scene->GetConstraintEngine()->GetContactPoints();
 	vector<pair<PHConstraint *, bool> > csm;
 
 	// ŒvZŠÔ‚ğ’Zk‚·‚é‚½‚ß‚ÉÚG‚Éˆ—Ïƒtƒ‰ƒO‚ğ‚Â‚¯‚Ä•Û‘¶‚·‚é
@@ -2020,7 +2020,7 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 							info->solid_velocity[j] += info->vel_effect[j][i] * q_f;
 							info->solid_angular_velocity[j] += info->ang_effect[j][i] * q_f;
 //							if(bOutput) ofs << "-- collide --" << endl;
-/*
+
 							if(info->solid_angular_velocity[j].norm() > 10) 
 							{
 								ofs << "i = " << i << " j = " << j << endl;
@@ -2029,7 +2029,6 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 								ofs << "VCForce = " << VCForce << endl;
 								ofs << "ang coeff = " << info->ang_effect[j][i] << endl;
 							}
-							*/
 						}
 					}
 				}
@@ -2187,7 +2186,7 @@ void ErrorCorrection()
 //		if(bOutput && info->nearest_solids[i]->IsDynamical()) ofs << "pos error " << pos_error << " ori error " << ori_error << endl;
 
 		info->nearest_solids[i]->SetFramePosition(info->nearest_solids[i]->GetFramePosition() + pos_error);
-		info->nearest_solids[i]->SetOrientation(info->nearest_solids[i]->GetOrientation() * ori_error);
+		info->nearest_solids[i]->SetOrientation(ori_error * info->nearest_solids[i]->GetOrientation());
 		info->nearest_solids[i]->SetCenterPosition(info->solid_center_positions[i]);
 		info->nearest_solids[i]->SetVelocity(info->solid_velocity[i]);
 
