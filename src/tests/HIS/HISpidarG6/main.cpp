@@ -71,6 +71,7 @@ typedef PTM::TVector<50, double> VecNd;
 #define COLLISION_DENSITY 0.5		// 力覚の計算に使用する接触点の分布量を調節する値
 									// 接触を前回から引き継いだ場合接触点はこの値より大きい距離で分布する
 
+#define DISTANCE_LIMIT    1.0		// 接触点が離れたときに接触を解除するかを決定する距離
 #ifdef _DEBUG
 	#define SIMULATION_FREQ	60		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		500		// 力覚スレッドの周期Hz
@@ -157,6 +158,9 @@ bool bDisplayPointer = true;
 // 接触点を描画するかどうか
 bool bDisplayCollision = true;
 
+// 接触予想点を使うかどうか
+bool bPredictCollision = true;
+
 // KとBの値どちらの変更を有効にするか
 // trueの場合並進
 // falseの場合回転
@@ -220,6 +224,9 @@ typedef struct {
 	Vec3d ang_constant[NUM_COLLISIONS];
 
 	SpatialVector gravity_effect[NUM_COL_SOLIDS];
+
+	// 重力が適応されているかどうか
+	bool bGravity[NUM_COL_SOLIDS];
 
 	// 実際に接触しているかあらわすフラグ
 	// MakeHapticInfoで前回接触していた場合、の判断に使う
@@ -392,6 +399,7 @@ void ResetOriginalContactPoints(multimap<double, PHContactPoint*>*);
 void AddInactiveSolid(PHSolidIf*);
 void InitDeviceManager();
 void DisplaySolidCenter();
+inline double calcDistance(Vec3d, Vec3d);
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -436,6 +444,7 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	// この時点でのフラグの値を保存しておいて
 	// この関数内ではそれを信じることにする
 	bool bLocalDynamics_local = bLocalDynamics;
+	bool bPredictCollision_local = bPredictCollision;
 
 	// 自作の接触を削除する
 	ResetOriginalContactPoints(&(current_info->points));
@@ -453,10 +462,10 @@ void CalcSurroundEffect(HapticInfo* new_info, HapticInfo* current_info)
 	if(bLocalDynamics_local)
 	{
 		// 接触候補点を探して作成する処理
-//		CreateCandidateContactPoints(pointer_consts, pointer_static_consts, 
-//									&col_candidate_consts, &col_candidate_static_consts,
-//									&relative_consts, &relative_solids, &nearest_solids, 
-//									&col_candidate_pointer_pos, current_info);
+		if(bPredictCollision_local) CreateCandidateContactPoints(pointer_consts, pointer_static_consts, 
+																&col_candidate_consts, &col_candidate_static_consts,
+																&relative_consts, &relative_solids, &nearest_solids, 
+																&col_candidate_pointer_pos, current_info);
 
 		// 周囲の影響を計算するためのデータ作成処理
 		// 関係のある剛体と接触を再帰的にすべてとってくる
@@ -1469,6 +1478,18 @@ void RegisterNewSolid(HapticInfo* new_info, int i, HapticInfo* current_info, PHS
 				new_info->gravity_effect[counter] = SpatialVector();
 			}
 
+			// この物体に重力が適応されているか調べる
+			new_info->bGravity[counter] = false;
+			PHSolids solids = scene->GetGravityEngine()->solids;
+			for(PHSolids::iterator it = solids.begin(); it != solids.end(); ++it)
+			{
+				if((*it) == so)
+				{
+					new_info->bGravity[counter] = true;
+					break;
+				}
+			}
+
 			break;
 		}
 		// もし剛体がすでに追加済みの場合は追加しない
@@ -2004,21 +2025,10 @@ void UpdateSolids(HapticInfo* info)
 
 	for(int i = 0; i < info->num_solids; ++i)
 	{
-		if(info->nearest_solids[i]->IsDynamical() && !bSurroundEffect) info->solid_velocity[i] += scene->GetGravity() * dt;
-/*
-		bool bCollide = false;
+		// 局所的な動力学計算＋周囲の影響なしの場合
+		// 重力が適応されている物体には重力を加える
+		if(info->nearest_solids[i]->IsDynamical() && !bSurroundEffect && info->bGravity[i]) info->solid_velocity[i] += scene->GetGravity() * dt / info->solid_massinvs[i];
 
-		for(int j = 0; j < info->num_col_per_sol[i]; ++j)
-		{
-			int index = info->SolToCol[i][j];
-			if(info->bCollide[index])
-			{
-				bCollide = true;
-				break;
-			}
-		}
-*/
-//		if(bSurroundEffect && bCollide)
 		if(bSurroundEffect)
 		{
 			// 周囲の影響のうちで、定数項を徐々に加えていく
@@ -2063,12 +2073,15 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 
 	for(int i = 0; i < info->num_collisions; i++)
 	{
+		// ２接触点の距離を調べる
+		double distance = calcDistance(info->col_positions[i], info->pointer_col_positions[i]);
+
 		// 面の法線と、ポインタ上の点から剛体上の点までを結んだベクトルの内積を計算
 		// これが０以上なら（ゼロベクトルも含む。ちょうど接している）接触がある
 		// また、このままだと剛体が裏を向いたときも力を発生させてしまうので、
 		// 剛体の重心から接触点まで、とポインタの重心から接触点までのベクトルの向きの関係もチェックする
 		// 二つのベクトルが互いに向き合っていたら力を出す
-		if(dot(info->col_positions[i] - info->pointer_col_positions[i], info->col_normals[i]) >= 0 && 
+		if(dot(info->col_positions[i] - info->pointer_col_positions[i], info->col_normals[i]) >= 0 && distance < DISTANCE_LIMIT && 
 			((info->nearest_solids[info->ColToSol[i]]->IsDynamical() 
 			&& dot(info->col_positions[i] - info->solid_center_positions[i], info->pointer_col_positions[i] - pointer_pos) <= 0)
 			|| !info->nearest_solids[info->ColToSol[i]]->IsDynamical()))
@@ -2360,7 +2373,7 @@ void ErrorCorrection()
 		// その加える分を先に引いて相殺させる
 		// 直接重力をON/OFFさせてもよいが、その操作だけでコストがかかってしまうので
 		// とりあえずこのようにした
-		if(info->nearest_solids[i]->IsDynamical() && !bSurroundEffect)
+		if(info->nearest_solids[i]->IsDynamical() && !bSurroundEffect && info->bCollide[i])
 		{
 			info->nearest_solids[i]->SetVelocity(info->nearest_solids[i]->GetVelocity() 
 				- gravity * info->nearest_solids[i]->GetMass());
@@ -2636,10 +2649,20 @@ void keyboard(unsigned char key, int x, int y){
 			cout << "OFF " << endl;
 
 			bSurroundEffect = false;
-
-			cout << "Correct Penetration OFF" << endl;
 			cout << "Surround Effect OFF " << endl;
+
+			bPredictCollision = false;
+			cout << "Predict Collision" << endl;
 		}
+	}
+	// 接触予想のフラグ変更
+	else if(key == 'h')
+	{
+		bPredictCollision = !bPredictCollision;
+	
+		cout << "Predict Collision ";
+		if(bPredictCollision) cout << "ON" << endl;
+		else cout << "OFF" << endl;
 	}
 	// すべてのフラグのデバッグ表示
 	else if(key == 'f')
@@ -2658,6 +2681,10 @@ void keyboard(unsigned char key, int x, int y){
 
 		cout << "Surrounding Effect ";
 		if(bSurroundEffect)cout << "ON" << endl;
+		else cout << "OFF" << endl;
+
+		cout << "Predict Collision ";
+		if(bPredictCollision) cout << "ON" << endl;
 		else cout << "OFF" << endl;
 
 		cout << "Pointer Display ";
@@ -3537,4 +3564,14 @@ void InitDeviceManager()
 
 	devMan.Init();								//	デバイスの初期化
 	cout << devMan;						//	初期化の結果を表示	
+}
+
+// 二点の距離を計算する関数
+inline double calcDistance(Vec3d a, Vec3d b)
+{
+	double x_sq = (a.x - b.x) * (a.x - b.x);
+	double y_sq = (a.y - b.y) * (a.y - b.y);
+	double z_sq = (a.z - b.z) * (a.z - b.z);
+
+	return sqrt(x_sq + y_sq + z_sq);
 }
