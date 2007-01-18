@@ -58,5 +58,70 @@ void DRKeyMouseWin32::Register(HISdkIf* intf){
 	HISdk* sdk = intf->Cast();
 	sdk->RegisterVirtualDevice((new DRKeyMouseWin32::KeyMouse(this))->Cast());
 }
+inline int ConvertKeyState(unsigned fwKeys){
+	int keyState=0;
+	if (fwKeys & MK_LBUTTON) keyState |= DVKeyMouseHandler::LBUTTON;
+	if (fwKeys & MK_RBUTTON) keyState |= DVKeyMouseHandler::RBUTTON;
+	if (fwKeys & MK_SHIFT) keyState |= DVKeyMouseHandler::SHIFT;
+	if (fwKeys & MK_CONTROL) keyState |= DVKeyMouseHandler::CONTROL;
+	if (fwKeys & MK_MBUTTON) keyState |= DVKeyMouseHandler::MBUTTON;
+	return keyState;
+}
+bool DRKeyMouseWin32::PreviewMessage(void* m){
+	if (!handler) return false;
+	MSG* msg = (MSG*)m;
+	bool bKeyDown = false;
+	switch (msg->message){
+	case WM_LBUTTONDOWN:
+	case WM_MBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+		bKeyDown = true;
+	case WM_LBUTTONUP:
+	case WM_MBUTTONUP:
+	case WM_RBUTTONUP:{
+		if (!bKeyDown) ReleaseCapture();
+		int keyState = ConvertKeyState(msg->wParam);  // key flags		
+		int x = (short)LOWORD(msg->lParam);  // horizontal position of cursor 
+		int y = (short)HIWORD(msg->lParam);  // vertical position of cursor 
+		if (bKeyDown) SetCapture(msg->hwnd);
+		return handler->OnKey(bKeyDown, VK_LBUTTON, keyState, x, y);
+		}break;
+	case WM_MOUSEMOVE:{
+		unsigned fwKeys = msg->wParam;  // key flags 
+		int keyState = ConvertKeyState(msg->wParam);  // key flags		
+		int x = (short)LOWORD(msg->lParam);	// horizontal position of cursor 
+		int y = (short)HIWORD(msg->lParam);	// vertical position of cursor 
+		return handler->OnMouseMove(keyState, x, y, 0);
+		}break;
+	case WM_MOUSEWHEEL:{
+		unsigned fwKeys = LOWORD(msg->wParam);		
+		int keyState = ConvertKeyState(fwKeys);		// key flags		
+		int zDelta = (short) HIWORD(msg->wParam);   // wheel rotation
+		int x = (short) LOWORD(msg->lParam);		// horizontal position of pointer
+		int y = (short) HIWORD(msg->lParam);		// vertical position of pointer
+		return handler->OnMouseMove(keyState, x, y, zDelta);
+		}break;
+	case WM_LBUTTONDBLCLK:
+	case WM_MBUTTONDBLCLK:
+	case WM_RBUTTONDBLCLK:{
+		int keyState = ConvertKeyState(msg->wParam);        // key flags 
+		int x = (short)LOWORD(msg->lParam);  // horizontal position of cursor 
+		int y = (short)HIWORD(msg->lParam);  // vertical position of cursor 
+		return handler->OnDoubleClick(x, y, keyState);
+		}break;
+	case WM_KEYDOWN:{
+		int nVirtKey = (int) msg->wParam;
+/*		int keyState = ReadKeyState();
+		TODO hase x y ‚ğæ‚é
+		int x = ;
+		GetMouseMovePointsEx()
+		return handler->OnKey(true, nVirtKey, keyState, x, y);
+		*/
+		}break;
+	default:
+		return false;
+	}
+	return true;
+}
 
 }	//	namespace Spr

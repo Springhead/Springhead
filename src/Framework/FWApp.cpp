@@ -18,6 +18,10 @@ FWApp::FWApp(){
 	debugMode = FWApp::DM_NONE;
 	isRunning = true;
 }
+FWApp::~FWApp(){
+	fwScene->Clear();
+	fwSdk->Clear();
+}
 void FWApp::LoadScene(UTString filename){
 	//	デフォルトの先祖オブジェクトをを設定
 	//	これらのCreateObjectが呼ばれてシーングラフが作られる。

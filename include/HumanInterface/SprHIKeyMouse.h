@@ -12,13 +12,17 @@ struct DVKeyMouseHandler{
 		RBUTTON = 0x02,
 		SHIFT   = 0x04,
 		CONTROL = 0x08,
-		MBUTTON = 0x10,		
+		MBUTTON = 0x10,
 	};
 	/** マウスが動いたときの処理
 		@param keyState 押されているキー，ボタンの状態
 	*/
-	virtual void OnMouseMove(int keyState, int x, int y){}
-	///	キー，マウスボタン処理
+	virtual bool OnMouseMove(int keyState, int x, int y, int zdelta){ return false; }
+	///
+	virtual bool OnClick(int keyState, int x, int y){ return false; }
+	///
+	virtual bool OnDoubleClick(int keyState, int x, int y){ return false; }
+	///	キー処理
 	virtual bool OnKey(bool isDown, int vkey, int keyState, int x, int y){
 		return false;
 	}

@@ -13,22 +13,22 @@ template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Enable(bool bEnable = true){
-		return ((OBJ*)(MIF*)this)->OBJ::Enable(bEnable);
+		return ((OBJ*)(MIF*)this)->Enable(bEnable);
 	}
 	virtual bool IsEnabled(){
-		return ((OBJ*)(MIF*)this)->OBJ::IsEnabled();
+		return ((OBJ*)(MIF*)this)->IsEnabled();
 	}
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetConstraintType();
+		return ((OBJ*)(MIF*)this)->GetConstraintType();
 	}
 	virtual void GetRelativePose(Posed &  p){
-		return ((OBJ*)(MIF*)this)->OBJ::GetRelativePose(p);
+		return ((OBJ*)(MIF*)this)->GetRelativePose(p);
 	}
 	virtual void GetRelativeVelocity(Vec3d &  v, Vec3d &  w){
-		return ((OBJ*)(MIF*)this)->OBJ::GetRelativeVelocity(v, w);
+		return ((OBJ*)(MIF*)this)->GetRelativeVelocity(v, w);
 	}
 	virtual void GetConstraintForce(Vec3d &  f, Vec3d &  t){
-		return ((OBJ*)(MIF*)this)->OBJ::GetConstraintForce(f, t);
+		return ((OBJ*)(MIF*)this)->GetConstraintForce(f, t);
 	}
 };
 struct PHConstraintIf;	class PHConstraint;
@@ -55,46 +55,46 @@ template <class IF, class MIF, class OBJ> struct PHJointIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHJoint1DIfStubTemplate: public PHJointIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetRange(double lower, double upper){
-		return ((OBJ*)(MIF*)this)->OBJ::SetRange(lower, upper);
+		return ((OBJ*)(MIF*)this)->SetRange(lower, upper);
 	}
 	virtual void GetRange(double &  lower, double &  upper){
-		return ((OBJ*)(MIF*)this)->OBJ::GetRange(lower, upper);
+		return ((OBJ*)(MIF*)this)->GetRange(lower, upper);
 	}
 	virtual void SetMotorTorque(double t){
-		return ((OBJ*)(MIF*)this)->OBJ::SetMotorTorque(t);
+		return ((OBJ*)(MIF*)this)->SetMotorTorque(t);
 	}
 	virtual double GetMotorTorque(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetMotorTorque();
+		return ((OBJ*)(MIF*)this)->GetMotorTorque();
 	}
 	virtual void SetDesiredVelocity(double v){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDesiredVelocity(v);
+		return ((OBJ*)(MIF*)this)->SetDesiredVelocity(v);
 	}
 	virtual double GetDesiredVelocity(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetDesiredVelocity();
+		return ((OBJ*)(MIF*)this)->GetDesiredVelocity();
 	}
 	virtual void SetSpring(double spring){
-		return ((OBJ*)(MIF*)this)->OBJ::SetSpring(spring);
+		return ((OBJ*)(MIF*)this)->SetSpring(spring);
 	}
 	virtual double GetSpring(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSpring();
+		return ((OBJ*)(MIF*)this)->GetSpring();
 	}
 	virtual void SetSpringOrigin(double origin){
-		return ((OBJ*)(MIF*)this)->OBJ::SetSpringOrigin(origin);
+		return ((OBJ*)(MIF*)this)->SetSpringOrigin(origin);
 	}
 	virtual double GetSpringOrigin(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSpringOrigin();
+		return ((OBJ*)(MIF*)this)->GetSpringOrigin();
 	}
 	virtual void SetDamper(double damper){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDamper(damper);
+		return ((OBJ*)(MIF*)this)->SetDamper(damper);
 	}
 	virtual double GetDamper(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetDamper();
+		return ((OBJ*)(MIF*)this)->GetDamper();
 	}
 	virtual double GetPosition(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetPosition();
+		return ((OBJ*)(MIF*)this)->GetPosition();
 	}
 	virtual double GetVelocity(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetVelocity();
+		return ((OBJ*)(MIF*)this)->GetVelocity();
 	}
 };
 struct PHJoint1DIf;	class PHJoint1D;
@@ -121,13 +121,13 @@ template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHPathIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void AddPoint(double s, const Posed &  pose){
-		return ((OBJ*)(MIF*)this)->OBJ::AddPoint(s, pose);
+		return ((OBJ*)(MIF*)this)->AddPoint(s, pose);
 	}
 	virtual void SetLoop(bool bOnOff = true){
-		return ((OBJ*)(MIF*)this)->OBJ::SetLoop(bOnOff);
+		return ((OBJ*)(MIF*)this)->SetLoop(bOnOff);
 	}
 	virtual bool IsLoop(){
-		return ((OBJ*)(MIF*)this)->OBJ::IsLoop();
+		return ((OBJ*)(MIF*)this)->IsLoop();
 	}
 };
 struct PHPathIf;	class PHPath;
@@ -138,7 +138,7 @@ template <class IF, class MIF, class OBJ> struct PHJoint1DIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHPathJointIfStubTemplate: public PHJoint1DIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetPosition(double q){
-		return ((OBJ*)(MIF*)this)->OBJ::SetPosition(q);
+		return ((OBJ*)(MIF*)this)->SetPosition(q);
 	}
 };
 struct PHPathJointIf;	class PHPathJoint;
@@ -149,28 +149,28 @@ template <class IF, class MIF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetSwingRange(double upper){
-		return ((OBJ*)(MIF*)this)->OBJ::SetSwingRange(upper);
+		return ((OBJ*)(MIF*)this)->SetSwingRange(upper);
 	}
 	virtual double GetSwingRange(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSwingRange();
+		return ((OBJ*)(MIF*)this)->GetSwingRange();
 	}
 	virtual void SetTwistRange(double lower, double upper){
-		return ((OBJ*)(MIF*)this)->OBJ::SetTwistRange(lower, upper);
+		return ((OBJ*)(MIF*)this)->SetTwistRange(lower, upper);
 	}
 	virtual void GetTwistRange(double &  lower, double &  upper){
-		return ((OBJ*)(MIF*)this)->OBJ::GetTwistRange(lower, upper);
+		return ((OBJ*)(MIF*)this)->GetTwistRange(lower, upper);
 	}
 	virtual void SetMotorTorque(const Vec3d &  torque){
-		return ((OBJ*)(MIF*)this)->OBJ::SetMotorTorque(torque);
+		return ((OBJ*)(MIF*)this)->SetMotorTorque(torque);
 	}
 	virtual Vec3d GetMotorTorque(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetMotorTorque();
+		return ((OBJ*)(MIF*)this)->GetMotorTorque();
 	}
 	virtual Vec3d GetAngle(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetAngle();
+		return ((OBJ*)(MIF*)this)->GetAngle();
 	}
 	virtual Vec3d GetVelocity(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetVelocity();
+		return ((OBJ*)(MIF*)this)->GetVelocity();
 	}
 };
 struct PHBallJointIf;	class PHBallJoint;
@@ -181,16 +181,16 @@ template <class IF, class MIF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSpringIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetSpring(const Vec3d &  spring){
-		return ((OBJ*)(MIF*)this)->OBJ::SetSpring(spring);
+		return ((OBJ*)(MIF*)this)->SetSpring(spring);
 	}
 	virtual Vec3d GetSpring(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSpring();
+		return ((OBJ*)(MIF*)this)->GetSpring();
 	}
 	virtual void SetDamper(const Vec3d &  damper){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDamper(damper);
+		return ((OBJ*)(MIF*)this)->SetDamper(damper);
 	}
 	virtual Vec3d GetDamper(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetDamper();
+		return ((OBJ*)(MIF*)this)->GetDamper();
 	}
 };
 struct PHSpringIf;	class PHSpring;
@@ -225,94 +225,94 @@ template <class IF, class MIF, class OBJ> struct SceneIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSdkIf *  GetSdk(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSdk();
+		return ((OBJ*)(MIF*)this)->GetSdk();
 	}
 	virtual CDShapeIf *  CreateShape(const CDShapeDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateShape(desc);
+		return ((OBJ*)(MIF*)this)->CreateShape(desc);
 	}
 	virtual PHSolidIf *  CreateSolid(){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateSolid();
+		return ((OBJ*)(MIF*)this)->CreateSolid();
 	}
 	virtual PHSolidIf *  CreateSolid(const PHSolidDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateSolid(desc);
+		return ((OBJ*)(MIF*)this)->CreateSolid(desc);
 	}
 	virtual int NSolids(){
-		return ((OBJ*)(MIF*)this)->OBJ::NSolids();
+		return ((OBJ*)(MIF*)this)->NSolids();
 	}
 	virtual PHSolidIf * *  GetSolids(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSolids();
+		return ((OBJ*)(MIF*)this)->GetSolids();
 	}
 	virtual void SetContactMode(PHSolidIf *  lhs, PHSolidIf *  rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
-		return ((OBJ*)(MIF*)this)->OBJ::SetContactMode(lhs, rhs, mode);
+		return ((OBJ*)(MIF*)this)->SetContactMode(lhs, rhs, mode);
 	}
 	virtual void SetContactMode(PHSolidIf * *  group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
-		return ((OBJ*)(MIF*)this)->OBJ::SetContactMode(group, length, mode);
+		return ((OBJ*)(MIF*)this)->SetContactMode(group, length, mode);
 	}
 	virtual void SetContactMode(PHSolidIf *  solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
-		return ((OBJ*)(MIF*)this)->OBJ::SetContactMode(solid, mode);
+		return ((OBJ*)(MIF*)this)->SetContactMode(solid, mode);
 	}
 	virtual void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
-		return ((OBJ*)(MIF*)this)->OBJ::SetContactMode(mode);
+		return ((OBJ*)(MIF*)this)->SetContactMode(mode);
 	}
 	virtual int GetNumIteration(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetNumIteration();
+		return ((OBJ*)(MIF*)this)->GetNumIteration();
 	}
 	virtual void SetNumIteration(int n){
-		return ((OBJ*)(MIF*)this)->OBJ::SetNumIteration(n);
+		return ((OBJ*)(MIF*)this)->SetNumIteration(n);
 	}
 	virtual PHJointIf *  CreateJoint(PHSolidIf *  lhs, PHSolidIf *  rhs, const PHJointDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateJoint(lhs, rhs, desc);
+		return ((OBJ*)(MIF*)this)->CreateJoint(lhs, rhs, desc);
 	}
 	virtual PHTreeNodeIf *  CreateRootNode(PHSolidIf *  root){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateRootNode(root);
+		return ((OBJ*)(MIF*)this)->CreateRootNode(root);
 	}
 	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateTreeNode(parent, child);
+		return ((OBJ*)(MIF*)this)->CreateTreeNode(parent, child);
 	}
 	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateGear(lhs, rhs, desc);
+		return ((OBJ*)(MIF*)this)->CreateGear(lhs, rhs, desc);
 	}
 	virtual PHPathIf *  CreatePath(const PHPathDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreatePath(desc);
+		return ((OBJ*)(MIF*)this)->CreatePath(desc);
 	}
 	virtual double GetTimeStep() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetTimeStep();
+		return ((OBJ*)(MIF*)this)->GetTimeStep();
 	}
 	virtual void SetTimeStep(double dt){
-		return ((OBJ*)(MIF*)this)->OBJ::SetTimeStep(dt);
+		return ((OBJ*)(MIF*)this)->SetTimeStep(dt);
 	}
 	virtual unsigned GetCount() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetCount();
+		return ((OBJ*)(MIF*)this)->GetCount();
 	}
 	virtual void SetCount(unsigned count){
-		return ((OBJ*)(MIF*)this)->OBJ::SetCount(count);
+		return ((OBJ*)(MIF*)this)->SetCount(count);
 	}
 	virtual void Step(){
-		return ((OBJ*)(MIF*)this)->OBJ::Step();
+		return ((OBJ*)(MIF*)this)->Step();
 	}
 	virtual void ClearForce(){
-		return ((OBJ*)(MIF*)this)->OBJ::ClearForce();
+		return ((OBJ*)(MIF*)this)->ClearForce();
 	}
 	virtual void GenerateForce(){
-		return ((OBJ*)(MIF*)this)->OBJ::GenerateForce();
+		return ((OBJ*)(MIF*)this)->GenerateForce();
 	}
 	virtual void Integrate(){
-		return ((OBJ*)(MIF*)this)->OBJ::Integrate();
+		return ((OBJ*)(MIF*)this)->Integrate();
 	}
 	virtual void Clear(){
-		return ((OBJ*)(MIF*)this)->OBJ::Clear();
+		return ((OBJ*)(MIF*)this)->Clear();
 	}
 	virtual void SetGravity(const Vec3d &  accel){
-		return ((OBJ*)(MIF*)this)->OBJ::SetGravity(accel);
+		return ((OBJ*)(MIF*)this)->SetGravity(accel);
 	}
 	virtual Vec3d GetGravity(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetGravity();
+		return ((OBJ*)(MIF*)this)->GetGravity();
 	}
 	virtual PHConstraintEngine *  GetConstraintEngine(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetConstraintEngine();
+		return ((OBJ*)(MIF*)this)->GetConstraintEngine();
 	}
 	virtual PHGravityEngine *	 GetGravityEngine(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetGravityEngine();
+		return ((OBJ*)(MIF*)this)->GetGravityEngine();
 	}
 };
 struct PHSceneIf;	class PHScene;
@@ -323,25 +323,25 @@ template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSceneIf *  CreateScene(){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateScene();
+		return ((OBJ*)(MIF*)this)->CreateScene();
 	}
 	virtual PHSceneIf *  CreateScene(const PHSceneDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateScene(desc);
+		return ((OBJ*)(MIF*)this)->CreateScene(desc);
 	}
 	virtual int NScene(){
-		return ((OBJ*)(MIF*)this)->OBJ::NScene();
+		return ((OBJ*)(MIF*)this)->NScene();
 	}
 	virtual PHSceneIf *  GetScene(size_t i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetScene(i);
+		return ((OBJ*)(MIF*)this)->GetScene(i);
 	}
 	virtual CDShapeIf *  CreateShape(const CDShapeDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateShape(desc);
+		return ((OBJ*)(MIF*)this)->CreateShape(desc);
 	}
 	virtual int NShape(){
-		return ((OBJ*)(MIF*)this)->OBJ::NShape();
+		return ((OBJ*)(MIF*)this)->NShape();
 	}
 	virtual CDShapeIf *  GetShape(int i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetShape(i);
+		return ((OBJ*)(MIF*)this)->GetShape(i);
 	}
 };
 struct PHSdkIf;	class PHSdk;
@@ -352,109 +352,109 @@ template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void AddForce(Vec3d f){
-		return ((OBJ*)(MIF*)this)->OBJ::AddForce(f);
+		return ((OBJ*)(MIF*)this)->AddForce(f);
 	}
 	virtual void AddTorque(Vec3d t){
-		return ((OBJ*)(MIF*)this)->OBJ::AddTorque(t);
+		return ((OBJ*)(MIF*)this)->AddTorque(t);
 	}
 	virtual void AddForce(Vec3d f, Vec3d r){
-		return ((OBJ*)(MIF*)this)->OBJ::AddForce(f, r);
+		return ((OBJ*)(MIF*)this)->AddForce(f, r);
 	}
 	virtual double GetMass(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetMass();
+		return ((OBJ*)(MIF*)this)->GetMass();
 	}
 	virtual double GetMassInv(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetMassInv();
+		return ((OBJ*)(MIF*)this)->GetMassInv();
 	}
 	virtual void SetMass(double m){
-		return ((OBJ*)(MIF*)this)->OBJ::SetMass(m);
+		return ((OBJ*)(MIF*)this)->SetMass(m);
 	}
 	virtual Vec3d GetCenterOfMass(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetCenterOfMass();
+		return ((OBJ*)(MIF*)this)->GetCenterOfMass();
 	}
 	virtual void SetCenterOfMass(const Vec3d &  center){
-		return ((OBJ*)(MIF*)this)->OBJ::SetCenterOfMass(center);
+		return ((OBJ*)(MIF*)this)->SetCenterOfMass(center);
 	}
 	virtual Matrix3d GetInertia(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetInertia();
+		return ((OBJ*)(MIF*)this)->GetInertia();
 	}
 	virtual Matrix3d GetInertiaInv(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetInertiaInv();
+		return ((OBJ*)(MIF*)this)->GetInertiaInv();
 	}
 	virtual void SetInertia(const Matrix3d &  I){
-		return ((OBJ*)(MIF*)this)->OBJ::SetInertia(I);
+		return ((OBJ*)(MIF*)this)->SetInertia(I);
 	}
 	virtual Vec3d GetFramePosition() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetFramePosition();
+		return ((OBJ*)(MIF*)this)->GetFramePosition();
 	}
 	virtual void SetFramePosition(const Vec3d &  p){
-		return ((OBJ*)(MIF*)this)->OBJ::SetFramePosition(p);
+		return ((OBJ*)(MIF*)this)->SetFramePosition(p);
 	}
 	virtual Vec3d GetCenterPosition() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetCenterPosition();
+		return ((OBJ*)(MIF*)this)->GetCenterPosition();
 	}
 	virtual void SetCenterPosition(const Vec3d &  p){
-		return ((OBJ*)(MIF*)this)->OBJ::SetCenterPosition(p);
+		return ((OBJ*)(MIF*)this)->SetCenterPosition(p);
 	}
 	virtual Vec3d GetDeltaPosition(const Vec3d &  p) const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetDeltaPosition(p);
+		return ((OBJ*)(MIF*)this)->GetDeltaPosition(p);
 	}
 	virtual Vec3d GetDeltaPosition() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetDeltaPosition();
+		return ((OBJ*)(MIF*)this)->GetDeltaPosition();
 	}
 	virtual Quaterniond GetOrientation() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetOrientation();
+		return ((OBJ*)(MIF*)this)->GetOrientation();
 	}
 	virtual void SetOrientation(const Quaterniond &  q){
-		return ((OBJ*)(MIF*)this)->OBJ::SetOrientation(q);
+		return ((OBJ*)(MIF*)this)->SetOrientation(q);
 	}
 	virtual Posed GetPose() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetPose();
+		return ((OBJ*)(MIF*)this)->GetPose();
 	}
 	virtual void SetPose(const Posed &  p){
-		return ((OBJ*)(MIF*)this)->OBJ::SetPose(p);
+		return ((OBJ*)(MIF*)this)->SetPose(p);
 	}
 	virtual Vec3d GetVelocity() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetVelocity();
+		return ((OBJ*)(MIF*)this)->GetVelocity();
 	}
 	virtual void SetVelocity(const Vec3d &  v){
-		return ((OBJ*)(MIF*)this)->OBJ::SetVelocity(v);
+		return ((OBJ*)(MIF*)this)->SetVelocity(v);
 	}
 	virtual Vec3d GetAngularVelocity() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetAngularVelocity();
+		return ((OBJ*)(MIF*)this)->GetAngularVelocity();
 	}
 	virtual void SetAngularVelocity(const Vec3d &  av){
-		return ((OBJ*)(MIF*)this)->OBJ::SetAngularVelocity(av);
+		return ((OBJ*)(MIF*)this)->SetAngularVelocity(av);
 	}
 	virtual Vec3d GetForce() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetForce();
+		return ((OBJ*)(MIF*)this)->GetForce();
 	}
 	virtual Vec3d GetTorque() const {
-		return ((OBJ*)(MIF*)this)->OBJ::GetTorque();
+		return ((OBJ*)(MIF*)this)->GetTorque();
 	}
 	virtual void AddShape(CDShapeIf *  shape){
-		return ((OBJ*)(MIF*)this)->OBJ::AddShape(shape);
+		return ((OBJ*)(MIF*)this)->AddShape(shape);
 	}
 	virtual int NShape(){
-		return ((OBJ*)(MIF*)this)->OBJ::NShape();
+		return ((OBJ*)(MIF*)this)->NShape();
 	}
 	virtual CDShapeIf *	 GetShape(int index){
-		return ((OBJ*)(MIF*)this)->OBJ::GetShape(index);
+		return ((OBJ*)(MIF*)this)->GetShape(index);
 	}
 	virtual Posed GetShapePose(int index){
-		return ((OBJ*)(MIF*)this)->OBJ::GetShapePose(index);
+		return ((OBJ*)(MIF*)this)->GetShapePose(index);
 	}
 	virtual void SetShapePose(int index, const Posed &  pose){
-		return ((OBJ*)(MIF*)this)->OBJ::SetShapePose(index, pose);
+		return ((OBJ*)(MIF*)this)->SetShapePose(index, pose);
 	}
 	virtual void SetGravity(bool bOn){
-		return ((OBJ*)(MIF*)this)->OBJ::SetGravity(bOn);
+		return ((OBJ*)(MIF*)this)->SetGravity(bOn);
 	}
 	virtual void SetDynamical(bool bOn){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDynamical(bOn);
+		return ((OBJ*)(MIF*)this)->SetDynamical(bOn);
 	}
 	virtual bool IsDynamical(){
-		return ((OBJ*)(MIF*)this)->OBJ::IsDynamical();
+		return ((OBJ*)(MIF*)this)->IsDynamical();
 	}
 };
 struct PHSolidIf;	class PHSolid;

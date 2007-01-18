@@ -47,6 +47,8 @@ public:
 	virtual void SetHandler(DVKeyMouseHandler* h){
 		handler = h;
 	}
+	///	Win32メッセージを見て，マウスボタンのイベント処理をする．
+	bool PreviewMessage(void* m);
 };
 
 }	//	namespace Spr

@@ -80,6 +80,7 @@ public:
 		DM_DEBUG,
 	} debugMode;
 	FWApp();
+	virtual ~FWApp();
 	virtual void Init(int argc, char* argv[]);
 	virtual void ProcessArguments(int argc, char* argv[]);
 	virtual void LoadScene(UTString filename);
