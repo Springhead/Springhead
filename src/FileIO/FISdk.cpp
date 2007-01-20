@@ -52,4 +52,11 @@ FIFileXIf* FISdk::CreateFileX(){
 	return rv->Cast();
 }
 
+FIFileCOLLADAIf* FISdk::CreateFileCOLLADA(){
+	FIFileCOLLADA* rv = DBG_NEW FIFileCOLLADA;
+	rv->sdk = this;
+	files.push_back(rv);
+	return rv->Cast();
+}
+
 }

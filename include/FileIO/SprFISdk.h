@@ -16,11 +16,13 @@ namespace Spr{;
 //@{
 
 struct FIFileXIf;
+struct FIFileCOLLADAIf;
 
 ///	ファイル入出力SDK
 struct FISdkIf : public ObjectIf{
 	IF_DEF(FISdk);
 	virtual FIFileXIf* CreateFileX()=0;
+	virtual FIFileCOLLADAIf* CreateFileCOLLADA()=0;
 	virtual void Clear()=0;
 	static  FISdkIf* SPR_CDECL CreateSdk();
 };

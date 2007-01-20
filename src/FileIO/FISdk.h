@@ -22,6 +22,7 @@ public:
 	FISdk();
 	~FISdk();
 	FIFileXIf* CreateFileX();
+	FIFileCOLLADAIf* CreateFileCOLLADA();
 	void Clear();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 };

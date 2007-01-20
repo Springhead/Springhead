@@ -34,6 +34,14 @@ struct FIFileXIf: public FIFileIf{
 	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
 };
 
+///	COLLADAファイルのファイルローダとセーバ
+struct FIFileCOLLADAIf: public FIFileIf{
+	IF_DEF(FIFileCOLLADA);
+	///	ロード
+	virtual bool Load(ObjectIfs& objs, const char* fn)=0;
+	///	セーブ
+	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
+};
 
 }
 

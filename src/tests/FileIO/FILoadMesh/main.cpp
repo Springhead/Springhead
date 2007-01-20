@@ -23,7 +23,7 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 
-#define TEST_CASE		0				// テストケース
+#define TEST_CASE		3				// テストケース
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
@@ -36,6 +36,10 @@
 #elif defined(TEST_CASE) && (TEST_CASE == 2)
 #define EXIT_TIMER	200				
 #define TEST_FILEX	"tire.x"			
+
+#elif defined(TEST_CASE) && (TEST_CASE == 3)
+#define EXIT_TIMER	20000
+#define TEST_FILECOLLADA	"test1.dae"
 
 #endif
 
@@ -156,19 +160,32 @@ int main(int argc, char* argv[]){
 	FWSdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();
+#ifdef TEST_FILEX
 	FIFileXIf* fileX = fiSdk->CreateFileX();
+#elif defined(TEST_FILECOLLADA)
+	FIFileCOLLADAIf* fileCOLLADA = fiSdk->CreateFileCOLLADA();
+#endif
 	ObjectIfs objs;
 
 	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
 	scene = grSdk->CreateScene();
 	objs.push_back(scene);
+#ifdef TEST_FILEX
 	fileX->Load(objs, TEST_FILEX);
+#elif defined(TEST_FILECOLLADA)
+	fileCOLLADA->Load(objs, TEST_FILECOLLADA);
+#endif
+ 
 
 	if (!grSdk) return -1;
 	objs.clear();
 	objs.Push(grSdk);
+#ifdef TEST_FILEX
 	fileX->Save(objs, "out.x");
+#elif defined(TEST_FILECOLLADA)
+	fileCOLLADA->Save(objs, "out.dae");
+#endif
 	
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
