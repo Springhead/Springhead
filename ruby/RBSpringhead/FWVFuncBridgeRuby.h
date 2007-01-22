@@ -72,6 +72,9 @@ public:
 		}
 		return false;
 	}
+	virtual void AtExit(){
+		rb_eval_string("exit");
+	}
 };
 
 }

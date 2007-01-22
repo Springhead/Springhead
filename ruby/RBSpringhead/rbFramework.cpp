@@ -1542,18 +1542,19 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_FWSceneIf swig_types[0]
-#define SWIGTYPE_p_Spr__FWApp swig_types[1]
-#define SWIGTYPE_p_Spr__FWAppGL swig_types[2]
-#define SWIGTYPE_p_Spr__FWAppGLUT swig_types[3]
-#define SWIGTYPE_p_Spr__FWVFuncBridge swig_types[4]
-#define SWIGTYPE_p_Spr__FWWindowDesc swig_types[5]
-#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[6]
-#define SWIGTYPE_p_UTString swig_types[7]
-#define SWIGTYPE_p_char swig_types[8]
-#define SWIGTYPE_p_int swig_types[9]
-#define SWIGTYPE_p_p_char swig_types[10]
-static swig_type_info *swig_types[12];
-static swig_module_info swig_module = {swig_types, 11, 0, 0, 0, 0};
+#define SWIGTYPE_p_GRRenderIf swig_types[1]
+#define SWIGTYPE_p_Spr__FWApp swig_types[2]
+#define SWIGTYPE_p_Spr__FWAppGL swig_types[3]
+#define SWIGTYPE_p_Spr__FWAppGLUT swig_types[4]
+#define SWIGTYPE_p_Spr__FWVFuncBridge swig_types[5]
+#define SWIGTYPE_p_Spr__FWWindowDesc swig_types[6]
+#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[7]
+#define SWIGTYPE_p_UTString swig_types[8]
+#define SWIGTYPE_p_char swig_types[9]
+#define SWIGTYPE_p_int swig_types[10]
+#define SWIGTYPE_p_p_char swig_types[11]
+static swig_type_info *swig_types[13];
+static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1593,6 +1594,13 @@ static VALUE mRBFramework;
 #include <iostream>
 using namespace std;
 using namespace Spr;
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_bool  (bool value)
+{
+  return value ? Qtrue : Qfalse;
+}
 
 
 #include <limits.h>
@@ -1659,43 +1667,6 @@ SWIG_AsVal_int (VALUE obj, int *val)
 }
 
 
-  #define SWIG_From_long   LONG2NUM 
-
-
-SWIGINTERNINLINE VALUE
-SWIG_From_int  (int value)
-{    
-  return SWIG_From_long  (value);
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_bool (VALUE obj, bool *val)
-{
-  if (obj == Qtrue) {
-    if (val) *val = true;
-    return SWIG_OK;
-  } else if (obj == Qfalse) {
-    if (val) *val = false;
-    return SWIG_OK;
-  } else {
-    int res = 0;
-    if (SWIG_AsVal_int (obj, &res) == SWIG_OK) {    
-      if (val) *val = res ? true : false;
-      return SWIG_OK;
-    }
-  }  
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERNINLINE VALUE
-SWIG_From_bool  (bool value)
-{
-  return value ? Qtrue : Qfalse;
-}
-
-
 /*@SWIG:%ruby_aux_method@*/
 SWIGINTERN VALUE SWIG_AUX_NUM2ULONG(VALUE *args)
 {
@@ -1740,7 +1711,1021 @@ SWIG_AsVal_unsigned_SS_char (VALUE obj, unsigned char *val)
   return res;
 }
 
+
+  #define SWIG_From_long   LONG2NUM 
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_int  (int value)
+{    
+  return SWIG_From_long  (value);
+}
+
 SWIGINTERN void Spr_FWApp_Link(Spr::FWApp *self,int *dummy_for_vfuncbridge){}
+
+SWIGINTERN int
+SWIG_AsVal_bool (VALUE obj, bool *val)
+{
+  if (obj == Qtrue) {
+    if (val) *val = true;
+    return SWIG_OK;
+  } else if (obj == Qfalse) {
+    if (val) *val = false;
+    return SWIG_OK;
+  } else {
+    int res = 0;
+    if (SWIG_AsVal_int (obj, &res) == SWIG_OK) {    
+      if (val) *val = res ? true : false;
+      return SWIG_OK;
+    }
+  }  
+  return SWIG_TypeError;
+}
+
+swig_class cFWVFuncBridge;
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_Link(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  void *arg2 = (void *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int res2 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Link" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg2), 0, 0);
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Link" "', argument " "2"" of type '" "void *""'"); 
+  }
+  (arg1)->Link(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_Display(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Display" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  result = (bool)(arg1)->Display();
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_Reshape(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Reshape" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Reshape" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Reshape" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  result = (bool)(arg1)->Reshape(arg2,arg3);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_Keyboard(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  unsigned char arg2 ;
+  int arg3 ;
+  int arg4 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned char val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyboard" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_char(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyboard" "', argument " "2"" of type '" "unsigned char""'");
+  } 
+  arg2 = static_cast< unsigned char >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyboard" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyboard" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  result = (bool)(arg1)->Keyboard(arg2,arg3,arg4);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_MouseButton(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  int arg4 ;
+  int arg5 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseButton" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseButton" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseButton" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "MouseButton" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(argv[3], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "MouseButton" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
+  result = (bool)(arg1)->MouseButton(arg2,arg3,arg4,arg5);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_MouseMove(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseMove" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseMove" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseMove" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  result = (bool)(arg1)->MouseMove(arg2,arg3);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_Step(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  result = (bool)(arg1)->Step();
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWVFuncBridge_AtExit(int argc, VALUE *argv, VALUE self) {
+  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "AtExit" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
+  (arg1)->AtExit();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_FWVFuncBridge(Spr::FWVFuncBridge *arg1) {
+    delete arg1;
+}
+
+swig_class cFWApp;
+
+SWIGINTERN VALUE
+_wrap_FWApp_vfBridge_set(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  UTRef<Spr::FWVFuncBridge > *arg2 = (UTRef<Spr::FWVFuncBridge > *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "vfBridge" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "vfBridge" "', argument " "2"" of type '" "UTRef<Spr::FWVFuncBridge > *""'"); 
+  }
+  arg2 = reinterpret_cast< UTRef<Spr::FWVFuncBridge > * >(argp2);
+  if (arg1) (arg1)->vfBridge = *arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_vfBridge_get(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  UTRef<Spr::FWVFuncBridge > *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "vfBridge" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  result = (UTRef<Spr::FWVFuncBridge > *)& ((arg1)->vfBridge);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_debugMode_set(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  enum Spr::FWApp::DebugMode arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "debugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "debugMode" "', argument " "2"" of type '" "enum Spr::FWApp::DebugMode""'");
+  } 
+  arg2 = static_cast< enum Spr::FWApp::DebugMode >(val2);
+  if (arg1) (arg1)->debugMode = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_debugMode_get(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  enum Spr::FWApp::DebugMode result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "debugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  result = (enum Spr::FWApp::DebugMode) ((arg1)->debugMode);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_FWApp_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_FWApp_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__FWApp);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_FWApp(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::FWApp *)new Spr::FWApp();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_GetRender(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  GRRenderIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetRender" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  result = (GRRenderIf *)(arg1)->GetRender();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_GRRenderIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_GetScene(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  FWSceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  result = (FWSceneIf *)(arg1)->GetScene();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_FWApp(Spr::FWApp *arg1) {
+    delete arg1;
+}
+
+SWIGINTERN VALUE
+_wrap_FWApp_Init(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  int arg2 ;
+  char **arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  std::vector<char * > temp3 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Init" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Init" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  
+  cout << RARRAY_LEN(argv[1]);
+  temp3.resize(RARRAY_LEN(argv[1]));
+  for(int i = 0; i < RARRAY_LEN(argv[1]); i++)
+  temp3[i] = STR2CSTR(rb_ary_entry(argv[1], i));
+  arg3 = &temp3[0];
+  
+  (arg1)->Init(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_ProcessArguments(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  int arg2 ;
+  char **arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  std::vector<char * > temp3 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ProcessArguments" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ProcessArguments" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  
+  cout << RARRAY_LEN(argv[1]);
+  temp3.resize(RARRAY_LEN(argv[1]));
+  for(int i = 0; i < RARRAY_LEN(argv[1]); i++)
+  temp3[i] = STR2CSTR(rb_ary_entry(argv[1], i));
+  arg3 = &temp3[0];
+  
+  (arg1)->ProcessArguments(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_LoadScene(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  UTString arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LoadScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  
+  arg2 = UTString(STR2CSTR(argv[0]));
+  
+  (arg1)->LoadScene(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_Start(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Start" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  (arg1)->Start();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_Display(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Display" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  (arg1)->Display();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_Reshape(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Reshape" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Reshape" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Reshape" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  (arg1)->Reshape(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_Keyboard(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  unsigned char arg2 ;
+  int arg3 ;
+  int arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  unsigned char val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyboard" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_unsigned_SS_char(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyboard" "', argument " "2"" of type '" "unsigned char""'");
+  } 
+  arg2 = static_cast< unsigned char >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyboard" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyboard" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  (arg1)->Keyboard(arg2,arg3,arg4);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_MouseButton(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  int arg4 ;
+  int arg5 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  int val4 ;
+  int ecode4 = 0 ;
+  int val5 ;
+  int ecode5 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseButton" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseButton" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseButton" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  ecode4 = SWIG_AsVal_int(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "MouseButton" "', argument " "4"" of type '" "int""'");
+  } 
+  arg4 = static_cast< int >(val4);
+  ecode5 = SWIG_AsVal_int(argv[3], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "MouseButton" "', argument " "5"" of type '" "int""'");
+  } 
+  arg5 = static_cast< int >(val5);
+  (arg1)->MouseButton(arg2,arg3,arg4,arg5);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_MouseMove(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseMove" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseMove" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseMove" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  (arg1)->MouseMove(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_Step(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  (arg1)->Step();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_GetDebugMode(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  Spr::FWApp::DebugMode result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetDebugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  result = (Spr::FWApp::DebugMode)(arg1)->GetDebugMode();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_SetDebugMode(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  Spr::FWApp::DebugMode arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetDebugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetDebugMode" "', argument " "2"" of type '" "Spr::FWApp::DebugMode""'");
+  } 
+  arg2 = static_cast< Spr::FWApp::DebugMode >(val2);
+  (arg1)->SetDebugMode(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_GetFWScene(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  FWSceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetFWScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  result = (FWSceneIf *)(arg1)->GetFWScene();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWApp_Link(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
+  int *arg2 = (int *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Link" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
+  Spr_FWApp_Link(arg1,arg2);
+  
+  arg1->vfBridge = DBG_NEW FWVFuncBridgeRuby();
+  arg1->vfBridge->Link((void*)self);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+swig_class cFWAppGL;
+
+SWIGINTERN VALUE
+_wrap_FWAppGL_CreateRender(int argc, VALUE *argv, VALUE self) {
+  Spr::FWAppGL *arg1 = (Spr::FWAppGL *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWAppGL, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateRender" "', argument " "1"" of type '" "Spr::FWAppGL *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWAppGL * >(argp1);
+  (arg1)->CreateRender();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_FWAppGL_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_FWAppGL_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__FWAppGL);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_FWAppGL(int argc, VALUE *argv, VALUE self) {
+  Spr::FWAppGL *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::FWAppGL *)new Spr::FWAppGL();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_FWAppGL(Spr::FWAppGL *arg1) {
+    delete arg1;
+}
+
 swig_class cFWWindowDesc;
 
 SWIGINTERN VALUE
@@ -2375,968 +3360,6 @@ free_Spr_FWWindowDesc(Spr::FWWindowDesc *arg1) {
     delete arg1;
 }
 
-swig_class cFWVFuncBridge;
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_Link(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  void *arg2 = (void *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int res2 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Link" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0],SWIG_as_voidptrptr(&arg2), 0, 0);
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Link" "', argument " "2"" of type '" "void *""'"); 
-  }
-  (arg1)->Link(arg2);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_Display(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  bool result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Display" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  result = (bool)(arg1)->Display();
-  vresult = SWIG_From_bool(static_cast< bool >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_Reshape(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  bool result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Reshape" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Reshape" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Reshape" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  result = (bool)(arg1)->Reshape(arg2,arg3);
-  vresult = SWIG_From_bool(static_cast< bool >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_Keyboard(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  unsigned char arg2 ;
-  int arg3 ;
-  int arg4 ;
-  bool result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  unsigned char val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 3) || (argc > 3)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyboard" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_char(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyboard" "', argument " "2"" of type '" "unsigned char""'");
-  } 
-  arg2 = static_cast< unsigned char >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyboard" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  ecode4 = SWIG_AsVal_int(argv[2], &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyboard" "', argument " "4"" of type '" "int""'");
-  } 
-  arg4 = static_cast< int >(val4);
-  result = (bool)(arg1)->Keyboard(arg2,arg3,arg4);
-  vresult = SWIG_From_bool(static_cast< bool >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_MouseButton(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  int arg4 ;
-  int arg5 ;
-  bool result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
-  int val5 ;
-  int ecode5 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 4) || (argc > 4)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseButton" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseButton" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseButton" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  ecode4 = SWIG_AsVal_int(argv[2], &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "MouseButton" "', argument " "4"" of type '" "int""'");
-  } 
-  arg4 = static_cast< int >(val4);
-  ecode5 = SWIG_AsVal_int(argv[3], &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "MouseButton" "', argument " "5"" of type '" "int""'");
-  } 
-  arg5 = static_cast< int >(val5);
-  result = (bool)(arg1)->MouseButton(arg2,arg3,arg4,arg5);
-  vresult = SWIG_From_bool(static_cast< bool >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_MouseMove(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  bool result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseMove" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseMove" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseMove" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  result = (bool)(arg1)->MouseMove(arg2,arg3);
-  vresult = SWIG_From_bool(static_cast< bool >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWVFuncBridge_Step(int argc, VALUE *argv, VALUE self) {
-  Spr::FWVFuncBridge *arg1 = (Spr::FWVFuncBridge *) 0 ;
-  bool result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWVFuncBridge, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWVFuncBridge *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWVFuncBridge * >(argp1);
-  result = (bool)(arg1)->Step();
-  vresult = SWIG_From_bool(static_cast< bool >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN void
-free_Spr_FWVFuncBridge(Spr::FWVFuncBridge *arg1) {
-    delete arg1;
-}
-
-swig_class cFWApp;
-
-SWIGINTERN VALUE
-_wrap_FWApp_vfBridge_set(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  UTRef<Spr::FWVFuncBridge > *arg2 = (UTRef<Spr::FWVFuncBridge > *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "vfBridge" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "vfBridge" "', argument " "2"" of type '" "UTRef<Spr::FWVFuncBridge > *""'"); 
-  }
-  arg2 = reinterpret_cast< UTRef<Spr::FWVFuncBridge > * >(argp2);
-  if (arg1) (arg1)->vfBridge = *arg2;
-  
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_vfBridge_get(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  UTRef<Spr::FWVFuncBridge > *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "vfBridge" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (UTRef<Spr::FWVFuncBridge > *)& ((arg1)->vfBridge);
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_debugMode_set(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  enum Spr::FWApp::DebugMode arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "debugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "debugMode" "', argument " "2"" of type '" "enum Spr::FWApp::DebugMode""'");
-  } 
-  arg2 = static_cast< enum Spr::FWApp::DebugMode >(val2);
-  if (arg1) (arg1)->debugMode = arg2;
-  
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_debugMode_get(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  enum Spr::FWApp::DebugMode result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "debugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (enum Spr::FWApp::DebugMode) ((arg1)->debugMode);
-  vresult = SWIG_From_int(static_cast< int >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Init(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int arg2 ;
-  char **arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  std::vector<char * > temp3 ;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Init" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Init" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  
-  cout << RARRAY_LEN(argv[1]);
-  temp3.resize(RARRAY_LEN(argv[1]));
-  for(int i = 0; i < RARRAY_LEN(argv[1]); i++)
-  temp3[i] = STR2CSTR(rb_ary_entry(argv[1], i));
-  arg3 = &temp3[0];
-  
-  (arg1)->Init(arg2,arg3);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_ProcessArguments(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int arg2 ;
-  char **arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  std::vector<char * > temp3 ;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ProcessArguments" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "ProcessArguments" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  
-  cout << RARRAY_LEN(argv[1]);
-  temp3.resize(RARRAY_LEN(argv[1]));
-  for(int i = 0; i < RARRAY_LEN(argv[1]); i++)
-  temp3[i] = STR2CSTR(rb_ary_entry(argv[1], i));
-  arg3 = &temp3[0];
-  
-  (arg1)->ProcessArguments(arg2,arg3);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_LoadScene(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  UTString arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LoadScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  
-  arg2 = UTString(STR2CSTR(argv[0]));
-  
-  (arg1)->LoadScene(arg2);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Start(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Start" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  (arg1)->Start();
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Display(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Display" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  (arg1)->Display();
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Reshape(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Reshape" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Reshape" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Reshape" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  (arg1)->Reshape(arg2,arg3);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Keyboard(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  unsigned char arg2 ;
-  int arg3 ;
-  int arg4 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  unsigned char val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
-  
-  if ((argc < 3) || (argc > 3)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Keyboard" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_unsigned_SS_char(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Keyboard" "', argument " "2"" of type '" "unsigned char""'");
-  } 
-  arg2 = static_cast< unsigned char >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Keyboard" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  ecode4 = SWIG_AsVal_int(argv[2], &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Keyboard" "', argument " "4"" of type '" "int""'");
-  } 
-  arg4 = static_cast< int >(val4);
-  (arg1)->Keyboard(arg2,arg3,arg4);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_MouseButton(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  int arg4 ;
-  int arg5 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  int val4 ;
-  int ecode4 = 0 ;
-  int val5 ;
-  int ecode5 = 0 ;
-  
-  if ((argc < 4) || (argc > 4)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseButton" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseButton" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseButton" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  ecode4 = SWIG_AsVal_int(argv[2], &val4);
-  if (!SWIG_IsOK(ecode4)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "MouseButton" "', argument " "4"" of type '" "int""'");
-  } 
-  arg4 = static_cast< int >(val4);
-  ecode5 = SWIG_AsVal_int(argv[3], &val5);
-  if (!SWIG_IsOK(ecode5)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "MouseButton" "', argument " "5"" of type '" "int""'");
-  } 
-  arg5 = static_cast< int >(val5);
-  (arg1)->MouseButton(arg2,arg3,arg4,arg5);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_MouseMove(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int arg2 ;
-  int arg3 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  int val3 ;
-  int ecode3 = 0 ;
-  
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MouseMove" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "MouseMove" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  ecode3 = SWIG_AsVal_int(argv[1], &val3);
-  if (!SWIG_IsOK(ecode3)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "MouseMove" "', argument " "3"" of type '" "int""'");
-  } 
-  arg3 = static_cast< int >(val3);
-  (arg1)->MouseMove(arg2,arg3);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Step(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  (arg1)->Step();
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_CreateWindow__SWIG_0(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWWindowDesc arg2 ;
-  int result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateWindow" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__FWWindowDesc,  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateWindow" "', argument " "2"" of type '" "Spr::FWWindowDesc const""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateWindow" "', argument " "2"" of type '" "Spr::FWWindowDesc const""'");
-    } else {
-      arg2 = *(reinterpret_cast< Spr::FWWindowDesc * >(argp2));
-    }
-  }
-  result = (int)(arg1)->CreateWindow(arg2);
-  vresult = SWIG_From_int(static_cast< int >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_CreateWindow__SWIG_1(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateWindow" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (int)(arg1)->CreateWindow();
-  vresult = SWIG_From_int(static_cast< int >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE _wrap_FWApp_CreateWindow(int nargs, VALUE *args, VALUE self) {
-  int argc;
-  VALUE argv[3];
-  int ii;
-  
-  argc = nargs + 1;
-  argv[0] = self;
-  if (argc > 3) SWIG_fail;
-  for (ii = 1; (ii < argc); ii++) {
-    argv[ii] = args[ii-1];
-  }
-  if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__FWApp, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_FWApp_CreateWindow__SWIG_1(nargs, args, self);
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__FWApp, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Spr__FWWindowDesc, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_FWApp_CreateWindow__SWIG_0(nargs, args, self);
-      }
-    }
-  }
-  
-fail:
-  rb_raise(rb_eArgError, "No matching function for overloaded 'FWApp_CreateWindow'");
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_GetDebugMode(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWApp::DebugMode result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetDebugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (Spr::FWApp::DebugMode)(arg1)->GetDebugMode();
-  vresult = SWIG_From_int(static_cast< int >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_SetDebugMode(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWApp::DebugMode arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetDebugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetDebugMode" "', argument " "2"" of type '" "Spr::FWApp::DebugMode""'");
-  } 
-  arg2 = static_cast< Spr::FWApp::DebugMode >(val2);
-  (arg1)->SetDebugMode(arg2);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_GetFWScene(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  FWSceneIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetFWScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (FWSceneIf *)(arg1)->GetFWScene();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSceneIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_Link(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  int *arg2 = (int *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int temp2 ;
-  VALUE vresult = Qnil;
-  
-  arg2 = &temp2;
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Link" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  Spr_FWApp_Link(arg1,arg2);
-  
-  arg1->vfBridge = DBG_NEW FWVFuncBridgeRuby();
-  arg1->vfBridge->Link((void*)self);
-  
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN void
-free_Spr_FWApp(Spr::FWApp *arg1) {
-    delete arg1;
-}
-
-swig_class cFWAppGL;
-
-SWIGINTERN VALUE
-_wrap_FWAppGL_CreateRender(int argc, VALUE *argv, VALUE self) {
-  Spr::FWAppGL *arg1 = (Spr::FWAppGL *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWAppGL, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateRender" "', argument " "1"" of type '" "Spr::FWAppGL *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWAppGL * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "CreateRender" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  (arg1)->CreateRender(arg2);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN void
-free_Spr_FWAppGL(Spr::FWAppGL *arg1) {
-    delete arg1;
-}
-
 swig_class cFWAppGLUT;
 
 SWIGINTERN VALUE
@@ -3572,6 +3595,7 @@ static void *_p_Spr__FWAppGLTo_p_Spr__FWApp(void *x) {
     return (void *)((Spr::FWApp *)  ((Spr::FWAppGL *) x));
 }
 static swig_type_info _swigt__p_FWSceneIf = {"_p_FWSceneIf", "FWSceneIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GRRenderIf = {"_p_GRRenderIf", "GRRenderIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__FWApp = {"_p_Spr__FWApp", "Spr::FWApp *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__FWAppGL = {"_p_Spr__FWAppGL", "Spr::FWAppGL *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__FWAppGLUT = {"_p_Spr__FWAppGLUT", "Spr::FWAppGLUT *", 0, 0, (void*)0, 0};
@@ -3585,6 +3609,7 @@ static swig_type_info _swigt__p_p_char = {"_p_p_char", "char **", 0, 0, (void*)0
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FWSceneIf,
+  &_swigt__p_GRRenderIf,
   &_swigt__p_Spr__FWApp,
   &_swigt__p_Spr__FWAppGL,
   &_swigt__p_Spr__FWAppGLUT,
@@ -3598,6 +3623,7 @@ static swig_type_info *swig_type_initial[] = {
 };
 
 static swig_cast_info _swigc__p_FWSceneIf[] = {  {&_swigt__p_FWSceneIf, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GRRenderIf[] = {  {&_swigt__p_GRRenderIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__FWApp[] = {  {&_swigt__p_Spr__FWAppGLUT, _p_Spr__FWAppGLUTTo_p_Spr__FWApp, 0, 0},  {&_swigt__p_Spr__FWAppGL, _p_Spr__FWAppGLTo_p_Spr__FWApp, 0, 0},  {&_swigt__p_Spr__FWApp, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__FWAppGL[] = {  {&_swigt__p_Spr__FWAppGLUT, _p_Spr__FWAppGLUTTo_p_Spr__FWAppGL, 0, 0},  {&_swigt__p_Spr__FWAppGL, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__FWAppGLUT[] = {  {&_swigt__p_Spr__FWAppGLUT, 0, 0, 0},{0, 0, 0, 0}};
@@ -3611,6 +3637,7 @@ static swig_cast_info _swigc__p_p_char[] = {  {&_swigt__p_p_char, 0, 0, 0},{0, 0
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FWSceneIf,
+  _swigc__p_GRRenderIf,
   _swigc__p_Spr__FWApp,
   _swigc__p_Spr__FWAppGL,
   _swigc__p_Spr__FWAppGLUT,
@@ -3871,6 +3898,60 @@ SWIGEXPORT void Init_RBFramework(void) {
   
   SWIG_RubyInitializeTrackings();
   
+  cFWVFuncBridge.klass = rb_define_class_under(mRBFramework, "FWVFuncBridge", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__FWVFuncBridge, (void *) &cFWVFuncBridge);
+  rb_undef_alloc_func(cFWVFuncBridge.klass);
+  rb_define_method(cFWVFuncBridge.klass, "Link", VALUEFUNC(_wrap_FWVFuncBridge_Link), -1);
+  rb_define_method(cFWVFuncBridge.klass, "Display", VALUEFUNC(_wrap_FWVFuncBridge_Display), -1);
+  rb_define_method(cFWVFuncBridge.klass, "Reshape", VALUEFUNC(_wrap_FWVFuncBridge_Reshape), -1);
+  rb_define_method(cFWVFuncBridge.klass, "Keyboard", VALUEFUNC(_wrap_FWVFuncBridge_Keyboard), -1);
+  rb_define_method(cFWVFuncBridge.klass, "MouseButton", VALUEFUNC(_wrap_FWVFuncBridge_MouseButton), -1);
+  rb_define_method(cFWVFuncBridge.klass, "MouseMove", VALUEFUNC(_wrap_FWVFuncBridge_MouseMove), -1);
+  rb_define_method(cFWVFuncBridge.klass, "Step", VALUEFUNC(_wrap_FWVFuncBridge_Step), -1);
+  rb_define_method(cFWVFuncBridge.klass, "AtExit", VALUEFUNC(_wrap_FWVFuncBridge_AtExit), -1);
+  cFWVFuncBridge.mark = 0;
+  cFWVFuncBridge.destroy = (void (*)(void *)) free_Spr_FWVFuncBridge;
+  cFWVFuncBridge.trackObjects = 0;
+  
+  cFWApp.klass = rb_define_class_under(mRBFramework, "FWApp", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__FWApp, (void *) &cFWApp);
+  rb_define_alloc_func(cFWApp.klass, _wrap_FWApp_allocate);
+  rb_define_method(cFWApp.klass, "initialize", VALUEFUNC(_wrap_new_FWApp), -1);
+  rb_define_method(cFWApp.klass, "vfBridge=", VALUEFUNC(_wrap_FWApp_vfBridge_set), -1);
+  rb_define_method(cFWApp.klass, "vfBridge", VALUEFUNC(_wrap_FWApp_vfBridge_get), -1);
+  rb_define_const(cFWApp.klass, "DM_NONE", SWIG_From_int(static_cast< int >(Spr::FWApp::DM_NONE)));
+  rb_define_const(cFWApp.klass, "DM_DEBUG", SWIG_From_int(static_cast< int >(Spr::FWApp::DM_DEBUG)));
+  rb_define_method(cFWApp.klass, "debugMode=", VALUEFUNC(_wrap_FWApp_debugMode_set), -1);
+  rb_define_method(cFWApp.klass, "debugMode", VALUEFUNC(_wrap_FWApp_debugMode_get), -1);
+  rb_define_method(cFWApp.klass, "GetRender", VALUEFUNC(_wrap_FWApp_GetRender), -1);
+  rb_define_method(cFWApp.klass, "GetScene", VALUEFUNC(_wrap_FWApp_GetScene), -1);
+  rb_define_method(cFWApp.klass, "Init", VALUEFUNC(_wrap_FWApp_Init), -1);
+  rb_define_method(cFWApp.klass, "ProcessArguments", VALUEFUNC(_wrap_FWApp_ProcessArguments), -1);
+  rb_define_method(cFWApp.klass, "LoadScene", VALUEFUNC(_wrap_FWApp_LoadScene), -1);
+  rb_define_method(cFWApp.klass, "Start", VALUEFUNC(_wrap_FWApp_Start), -1);
+  rb_define_method(cFWApp.klass, "Display", VALUEFUNC(_wrap_FWApp_Display), -1);
+  rb_define_method(cFWApp.klass, "Reshape", VALUEFUNC(_wrap_FWApp_Reshape), -1);
+  rb_define_method(cFWApp.klass, "Keyboard", VALUEFUNC(_wrap_FWApp_Keyboard), -1);
+  rb_define_method(cFWApp.klass, "MouseButton", VALUEFUNC(_wrap_FWApp_MouseButton), -1);
+  rb_define_method(cFWApp.klass, "MouseMove", VALUEFUNC(_wrap_FWApp_MouseMove), -1);
+  rb_define_method(cFWApp.klass, "Step", VALUEFUNC(_wrap_FWApp_Step), -1);
+  rb_define_method(cFWApp.klass, "GetDebugMode", VALUEFUNC(_wrap_FWApp_GetDebugMode), -1);
+  rb_define_method(cFWApp.klass, "SetDebugMode", VALUEFUNC(_wrap_FWApp_SetDebugMode), -1);
+  rb_define_method(cFWApp.klass, "GetFWScene", VALUEFUNC(_wrap_FWApp_GetFWScene), -1);
+  rb_define_method(cFWApp.klass, "Link", VALUEFUNC(_wrap_FWApp_Link), -1);
+  cFWApp.mark = 0;
+  cFWApp.destroy = (void (*)(void *)) free_Spr_FWApp;
+  cFWApp.trackObjects = 0;
+  
+  cFWAppGL.klass = rb_define_class_under(mRBFramework, "FWAppGL", ((swig_class *) SWIGTYPE_p_Spr__FWApp->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__FWAppGL, (void *) &cFWAppGL);
+  rb_define_alloc_func(cFWAppGL.klass, _wrap_FWAppGL_allocate);
+  rb_define_method(cFWAppGL.klass, "initialize", VALUEFUNC(_wrap_new_FWAppGL), -1);
+  rb_define_method(cFWAppGL.klass, "CreateRender", VALUEFUNC(_wrap_FWAppGL_CreateRender), -1);
+  cFWAppGL.mark = 0;
+  cFWAppGL.destroy = (void (*)(void *)) free_Spr_FWAppGL;
+  cFWAppGL.trackObjects = 0;
+  
   cFWWindowDesc.klass = rb_define_class_under(mRBFramework, "FWWindowDesc", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWWindowDesc, (void *) &cFWWindowDesc);
   rb_define_alloc_func(cFWWindowDesc.klass, _wrap_FWWindowDesc_allocate);
@@ -3888,56 +3969,6 @@ SWIGEXPORT void Init_RBFramework(void) {
   cFWWindowDesc.mark = 0;
   cFWWindowDesc.destroy = (void (*)(void *)) free_Spr_FWWindowDesc;
   cFWWindowDesc.trackObjects = 0;
-  
-  cFWVFuncBridge.klass = rb_define_class_under(mRBFramework, "FWVFuncBridge", rb_cObject);
-  SWIG_TypeClientData(SWIGTYPE_p_Spr__FWVFuncBridge, (void *) &cFWVFuncBridge);
-  rb_undef_alloc_func(cFWVFuncBridge.klass);
-  rb_define_method(cFWVFuncBridge.klass, "Link", VALUEFUNC(_wrap_FWVFuncBridge_Link), -1);
-  rb_define_method(cFWVFuncBridge.klass, "Display", VALUEFUNC(_wrap_FWVFuncBridge_Display), -1);
-  rb_define_method(cFWVFuncBridge.klass, "Reshape", VALUEFUNC(_wrap_FWVFuncBridge_Reshape), -1);
-  rb_define_method(cFWVFuncBridge.klass, "Keyboard", VALUEFUNC(_wrap_FWVFuncBridge_Keyboard), -1);
-  rb_define_method(cFWVFuncBridge.klass, "MouseButton", VALUEFUNC(_wrap_FWVFuncBridge_MouseButton), -1);
-  rb_define_method(cFWVFuncBridge.klass, "MouseMove", VALUEFUNC(_wrap_FWVFuncBridge_MouseMove), -1);
-  rb_define_method(cFWVFuncBridge.klass, "Step", VALUEFUNC(_wrap_FWVFuncBridge_Step), -1);
-  cFWVFuncBridge.mark = 0;
-  cFWVFuncBridge.destroy = (void (*)(void *)) free_Spr_FWVFuncBridge;
-  cFWVFuncBridge.trackObjects = 0;
-  
-  cFWApp.klass = rb_define_class_under(mRBFramework, "FWApp", rb_cObject);
-  SWIG_TypeClientData(SWIGTYPE_p_Spr__FWApp, (void *) &cFWApp);
-  rb_undef_alloc_func(cFWApp.klass);
-  rb_define_method(cFWApp.klass, "vfBridge=", VALUEFUNC(_wrap_FWApp_vfBridge_set), -1);
-  rb_define_method(cFWApp.klass, "vfBridge", VALUEFUNC(_wrap_FWApp_vfBridge_get), -1);
-  rb_define_const(cFWApp.klass, "DM_NONE", SWIG_From_int(static_cast< int >(Spr::FWApp::DM_NONE)));
-  rb_define_const(cFWApp.klass, "DM_DEBUG", SWIG_From_int(static_cast< int >(Spr::FWApp::DM_DEBUG)));
-  rb_define_method(cFWApp.klass, "debugMode=", VALUEFUNC(_wrap_FWApp_debugMode_set), -1);
-  rb_define_method(cFWApp.klass, "debugMode", VALUEFUNC(_wrap_FWApp_debugMode_get), -1);
-  rb_define_method(cFWApp.klass, "Init", VALUEFUNC(_wrap_FWApp_Init), -1);
-  rb_define_method(cFWApp.klass, "ProcessArguments", VALUEFUNC(_wrap_FWApp_ProcessArguments), -1);
-  rb_define_method(cFWApp.klass, "LoadScene", VALUEFUNC(_wrap_FWApp_LoadScene), -1);
-  rb_define_method(cFWApp.klass, "Start", VALUEFUNC(_wrap_FWApp_Start), -1);
-  rb_define_method(cFWApp.klass, "Display", VALUEFUNC(_wrap_FWApp_Display), -1);
-  rb_define_method(cFWApp.klass, "Reshape", VALUEFUNC(_wrap_FWApp_Reshape), -1);
-  rb_define_method(cFWApp.klass, "Keyboard", VALUEFUNC(_wrap_FWApp_Keyboard), -1);
-  rb_define_method(cFWApp.klass, "MouseButton", VALUEFUNC(_wrap_FWApp_MouseButton), -1);
-  rb_define_method(cFWApp.klass, "MouseMove", VALUEFUNC(_wrap_FWApp_MouseMove), -1);
-  rb_define_method(cFWApp.klass, "Step", VALUEFUNC(_wrap_FWApp_Step), -1);
-  rb_define_method(cFWApp.klass, "CreateWindow", VALUEFUNC(_wrap_FWApp_CreateWindow), -1);
-  rb_define_method(cFWApp.klass, "GetDebugMode", VALUEFUNC(_wrap_FWApp_GetDebugMode), -1);
-  rb_define_method(cFWApp.klass, "SetDebugMode", VALUEFUNC(_wrap_FWApp_SetDebugMode), -1);
-  rb_define_method(cFWApp.klass, "GetFWScene", VALUEFUNC(_wrap_FWApp_GetFWScene), -1);
-  rb_define_method(cFWApp.klass, "Link", VALUEFUNC(_wrap_FWApp_Link), -1);
-  cFWApp.mark = 0;
-  cFWApp.destroy = (void (*)(void *)) free_Spr_FWApp;
-  cFWApp.trackObjects = 0;
-  
-  cFWAppGL.klass = rb_define_class_under(mRBFramework, "FWAppGL", ((swig_class *) SWIGTYPE_p_Spr__FWApp->clientdata)->klass);
-  SWIG_TypeClientData(SWIGTYPE_p_Spr__FWAppGL, (void *) &cFWAppGL);
-  rb_undef_alloc_func(cFWAppGL.klass);
-  rb_define_method(cFWAppGL.klass, "CreateRender", VALUEFUNC(_wrap_FWAppGL_CreateRender), -1);
-  cFWAppGL.mark = 0;
-  cFWAppGL.destroy = (void (*)(void *)) free_Spr_FWAppGL;
-  cFWAppGL.trackObjects = 0;
   
   cFWAppGLUT.klass = rb_define_class_under(mRBFramework, "FWAppGLUT", ((swig_class *) SWIGTYPE_p_Spr__FWAppGL->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWAppGLUT, (void *) &cFWAppGLUT);
