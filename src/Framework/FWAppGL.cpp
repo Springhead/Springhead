@@ -16,9 +16,9 @@
 
 namespace Spr{
 
-void FWAppGL::CreateRender(int window){
+void FWAppGL::CreateRender(){
 	grRender = fwSdk->GetGRSdk()->CreateDebugRender();
-	grDevice = fwSdk->GetGRSdk()->CreateDeviceGL(window);
+	grDevice = fwSdk->GetGRSdk()->CreateDeviceGL();
 	grDevice->Init();
 	grRender->SetDevice(grDevice);
 

@@ -38,25 +38,38 @@ void FWAppGLUT::GlutTimerFunc(int id){
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->CallKeyboard(key, x, y);
 }
+
+void FWAppGLUT::AtExit(){
+	if(FWAppGLUT::instance->vfBridge)
+		FWAppGLUT::instance->vfBridge->AtExit();
+}
+
 //-----------------------------------------------------------------------
 
 void FWAppGLUT::Init(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	FWAppGL::Init(argc, argv);
+	atexit(FWAppGLUT::AtExit);
 }
 
 void FWAppGLUT::Start(){
-	FWAppGL::Start();
 	instance = this;
-	int w = CreateWindow();
-	CreateRender(w);
+	windowID = CreateWindow();
+	CreateRender();
 	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
 	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
 	glutMainLoop();
 }
+
+void FWAppGLUT::Display(){
+	FWAppGL::Display();
+	/// ダブルバッファモード時、カレントウィンドウのバッファ交換を行う
+	glutSwapBuffers();
+}
+
 void FWAppGLUT::OnTimer(){
 	CallStep();
 	glutPostRedisplay();

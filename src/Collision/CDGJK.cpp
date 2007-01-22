@@ -59,7 +59,7 @@ struct CDGJKIds{
 #define CalcSupport(v, n)										\
 	p[n] = a->Support(a2z.Ori().Conjugated() * (v));			\
 	q[n] = b->Support(b2z.Ori().Conjugated() * -(v));			\
-	w[n] = b2z * (q[n]) - a2z * (p[n]);							\
+	w[n] = b2z * (q[n]) - a2z * (p[n]);
 
 int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){

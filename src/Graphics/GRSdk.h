@@ -44,7 +44,7 @@ public:
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
 	virtual void Print(std::ostream& os) const {}
 	virtual GRDebugRenderIf* CreateDebugRender();
-	virtual GRDeviceGLIf* CreateDeviceGL(int window);
+	virtual GRDeviceGLIf* CreateDeviceGL();
 	virtual GRSceneIf* GetScene(size_t i);
 	virtual size_t NScene(){ return scenes.size(); }
 	virtual size_t NChildObject() const { return scenes.size() + objects.size(); }

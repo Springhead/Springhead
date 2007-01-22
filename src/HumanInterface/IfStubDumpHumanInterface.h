@@ -5,28 +5,28 @@ template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIBaseIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual bool BeforeCalibration(){
-		return ((OBJ*)(MIF*)this)->BeforeCalibration();
+		return ((OBJ*)(MIF*)this)->OBJ::BeforeCalibration();
 	}
 	virtual bool Calibration(){
-		return ((OBJ*)(MIF*)this)->Calibration();
+		return ((OBJ*)(MIF*)this)->OBJ::Calibration();
 	}
 	virtual bool AfterCalibration(){
-		return ((OBJ*)(MIF*)this)->AfterCalibration();
+		return ((OBJ*)(MIF*)this)->OBJ::AfterCalibration();
 	}
 	virtual void AddDeviceDependency(HIRealDeviceIf *  rd){
-		return ((OBJ*)(MIF*)this)->AddDeviceDependency(rd);
+		return ((OBJ*)(MIF*)this)->OBJ::AddDeviceDependency(rd);
 	}
 	virtual void ClearDeviceDependency(){
-		return ((OBJ*)(MIF*)this)->ClearDeviceDependency();
+		return ((OBJ*)(MIF*)this)->OBJ::ClearDeviceDependency();
 	}
 	virtual void Update(float dt){
-		return ((OBJ*)(MIF*)this)->Update(dt);
+		return ((OBJ*)(MIF*)this)->OBJ::Update(dt);
 	}
 	virtual bool IsGood(){
-		return ((OBJ*)(MIF*)this)->IsGood();
+		return ((OBJ*)(MIF*)this)->OBJ::IsGood();
 	}
 	virtual bool Init(HISdkIf *  sdk, const void *  desc){
-		return ((OBJ*)(MIF*)this)->Init(sdk, desc);
+		return ((OBJ*)(MIF*)this)->OBJ::Init(sdk, desc);
 	}
 };
 struct HIBaseIf;	class HIBase;
@@ -37,7 +37,7 @@ template <class IF, class MIF, class OBJ> struct HIBaseIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIPositionIfStubTemplate: public HIBaseIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3f GetPosition(){
-		return ((OBJ*)(MIF*)this)->GetPosition();
+		return ((OBJ*)(MIF*)this)->OBJ::GetPosition();
 	}
 };
 struct HIPositionIf;	class HIPosition;
@@ -48,7 +48,7 @@ template <class IF, class MIF, class OBJ> struct HIBaseIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIOrientationIfStubTemplate: public HIBaseIfStubTemplate<IF, MIF, OBJ> {
 	virtual Quaternionf GetOrientation(){
-		return ((OBJ*)(MIF*)this)->GetOrientation();
+		return ((OBJ*)(MIF*)this)->OBJ::GetOrientation();
 	}
 };
 struct HIOrientationIf;	class HIOrientation;
@@ -59,10 +59,10 @@ template <class IF, class MIF, class OBJ> struct HIPositionIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIPoseIfStubTemplate: public HIPositionIfStubTemplate<IF, MIF, OBJ> {
 	virtual Quaternionf GetOrientation(){
-		return ((OBJ*)(MIF*)this)->GetOrientation();
+		return ((OBJ*)(MIF*)this)->OBJ::GetOrientation();
 	}
 	virtual Posef GetPose(){
-		return ((OBJ*)(MIF*)this)->GetPose();
+		return ((OBJ*)(MIF*)this)->OBJ::GetPose();
 	}
 };
 struct HIPoseIf;	class HIPose;
@@ -73,16 +73,16 @@ template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIRealDeviceIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual const char *  Name(){
-		return ((OBJ*)(MIF*)this)->Name();
+		return ((OBJ*)(MIF*)this)->OBJ::Name();
 	}
 	virtual bool Init(){
-		return ((OBJ*)(MIF*)this)->Init();
+		return ((OBJ*)(MIF*)this)->OBJ::Init();
 	}
 	virtual void Register(HISdkIf *  sdk){
-		return ((OBJ*)(MIF*)this)->Register(sdk);
+		return ((OBJ*)(MIF*)this)->OBJ::Register(sdk);
 	}
 	virtual void Update(){
-		return ((OBJ*)(MIF*)this)->Update();
+		return ((OBJ*)(MIF*)this)->OBJ::Update();
 	}
 };
 struct HIRealDeviceIf;	class HIRealDevice;
@@ -93,19 +93,19 @@ template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIVirtualDeviceIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual const char *  Name() const {
-		return ((OBJ*)(MIF*)this)->Name();
+		return ((OBJ*)(MIF*)this)->OBJ::Name();
 	}
 	virtual const char *  Type() const {
-		return ((OBJ*)(MIF*)this)->Type();
+		return ((OBJ*)(MIF*)this)->OBJ::Type();
 	}
 	virtual HIRealDeviceIf *  RealDevice(){
-		return ((OBJ*)(MIF*)this)->RealDevice();
+		return ((OBJ*)(MIF*)this)->OBJ::RealDevice();
 	}
 	virtual void Print(std::ostream &  o) const {
-		return ((OBJ*)(MIF*)this)->Print(o);
+		return ((OBJ*)(MIF*)this)->OBJ::Print(o);
 	}
 	virtual void Update(){
-		return ((OBJ*)(MIF*)this)->Update();
+		return ((OBJ*)(MIF*)this)->OBJ::Update();
 	}
 };
 struct HIVirtualDeviceIf;	class HIVirtualDevice;
@@ -124,16 +124,16 @@ template <class IF, class MIF, class OBJ> struct HIVirtualDeviceIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct DVKeyMouseIfStubTemplate: public HIVirtualDeviceIfStubTemplate<IF, MIF, OBJ> {
 	virtual const char *  Name() const {
-		return ((OBJ*)(MIF*)this)->Name();
+		return ((OBJ*)(MIF*)this)->OBJ::Name();
 	}
 	virtual void SetHandler(DVKeyMouseHandler *  h){
-		return ((OBJ*)(MIF*)this)->SetHandler(h);
+		return ((OBJ*)(MIF*)this)->OBJ::SetHandler(h);
 	}
 	virtual int GetKeyState(int key){
-		return ((OBJ*)(MIF*)this)->GetKeyState(key);
+		return ((OBJ*)(MIF*)this)->OBJ::GetKeyState(key);
 	}
 	virtual DVKeyMouseIf::DVMousePosition GetMousePosition(int count = 0){
-		return ((OBJ*)(MIF*)this)->GetMousePosition(count);
+		return ((OBJ*)(MIF*)this)->OBJ::GetMousePosition(count);
 	}
 };
 struct DVKeyMouseIf;	class DVKeyMouse;
@@ -152,7 +152,7 @@ template <class IF, class MIF, class OBJ> struct HIPoseIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HIMouse6DIfStubTemplate: public HIPoseIfStubTemplate<IF, MIF, OBJ> {
 	virtual DVKeyMouseIf *  GetKeyMouse(){
-		return ((OBJ*)(MIF*)this)->GetKeyMouse();
+		return ((OBJ*)(MIF*)this)->OBJ::GetKeyMouse();
 	}
 };
 struct HIMouse6DIf;	class HIMouse6D;
@@ -163,28 +163,28 @@ template <class IF, class MIF, class OBJ> struct NameManagerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct HISdkIfStubTemplate: public NameManagerIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Init(){
-		return ((OBJ*)(MIF*)this)->Init();
+		return ((OBJ*)(MIF*)this)->OBJ::Init();
 	}
 	virtual void Clear(){
-		return ((OBJ*)(MIF*)this)->Clear();
+		return ((OBJ*)(MIF*)this)->OBJ::Clear();
 	}
 	virtual HIVirtualDeviceIf *  RentVirtualDevice(const char *  type, const char *  name = NULL){
-		return ((OBJ*)(MIF*)this)->RentVirtualDevice(type, name);
+		return ((OBJ*)(MIF*)this)->OBJ::RentVirtualDevice(type, name);
 	}
 	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf *  dev){
-		return ((OBJ*)(MIF*)this)->ReturnVirtualDevice(dev);
+		return ((OBJ*)(MIF*)this)->OBJ::ReturnVirtualDevice(dev);
 	}
 	virtual bool AddRealDevice(const IfInfo *  keyInfo, const void *  desc = NULL){
-		return ((OBJ*)(MIF*)this)->AddRealDevice(keyInfo, desc);
+		return ((OBJ*)(MIF*)this)->OBJ::AddRealDevice(keyInfo, desc);
 	}
 	virtual HIRealDeviceIf *  FindRealDevice(const char *  name = NULL){
-		return ((OBJ*)(MIF*)this)->FindRealDevice(name);
+		return ((OBJ*)(MIF*)this)->OBJ::FindRealDevice(name);
 	}
 	virtual UTRef <HIBaseIf>  CreateHumanInterface(const IfInfo *  info, const void *  desc){
-		return ((OBJ*)(MIF*)this)->CreateHumanInterface(info, desc);
+		return ((OBJ*)(MIF*)this)->OBJ::CreateHumanInterface(info, desc);
 	}
 	virtual UTRef <HIBaseIf>  CreateHumanInterface(const char *  name, const char *  desc){
-		return ((OBJ*)(MIF*)this)->CreateHumanInterface(name, desc);
+		return ((OBJ*)(MIF*)this)->OBJ::CreateHumanInterface(name, desc);
 	}
 };
 struct HISdkIf;	class HISdk;

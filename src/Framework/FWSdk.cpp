@@ -105,18 +105,6 @@ void FWSdk::Step(){
 		scenes[i]->Step();
 	}
 }
-void FWSdk::CreateRenderGL(){
-	// Windowの生成
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutInitWindowSize(1000, 700);
-	int window = glutCreateWindow("Springhead Application");
-	// Renderの生成
-	grRender = grSdk->CreateDebugRender();
-	// Deviceの設定
-	grDevice = grSdk->CreateDeviceGL(window);
-	grDevice->Init();
-	grRender->SetDevice(grDevice);
-}
 void FWSdk::Draw(){
 	// 描画。描画プロセスそのものをもっと細分化したメソッドにするかも。
 	// {ClearBuffer,BeginScene},{EndScene}は分けたほうがよかと思う

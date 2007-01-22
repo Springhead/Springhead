@@ -6,7 +6,7 @@ namespace Spr{;
 
 class FWAppGL : public FWApp{
 public:
-	void CreateRender(int window);
+	void CreateRender();
 };
 
 

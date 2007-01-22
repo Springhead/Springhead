@@ -331,8 +331,6 @@ struct GRDeviceIf: public GRRenderBaseIf{
 /**	@brief	OpenGLのレンダラー基本クラス */
 struct GRDeviceGLIf: public GRDeviceIf{
 	IF_DEF(GRDeviceGL);
-	/// ウィンドウIDを設定する
-	virtual void SetWindow(int w)=0;
 };
 
 /**	@brief	DirectXのレンダラー基本クラス */

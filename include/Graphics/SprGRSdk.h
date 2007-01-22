@@ -29,7 +29,7 @@ struct GRSdkDesc{
 struct GRSdkIf: public SdkIf{
 	IF_DEF(GRSdk);
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
-	virtual GRDeviceGLIf* CreateDeviceGL(int window)=0;
+	virtual GRDeviceGLIf* CreateDeviceGL()=0;
 	virtual GRSceneIf* CreateScene()=0;
 	virtual size_t NChildObject() const = 0;
 	virtual ObjectIf* GetChildObject(size_t i) = 0;

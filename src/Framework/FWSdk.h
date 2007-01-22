@@ -57,7 +57,6 @@ public:
 public:
 	virtual void ClearObjects();
 	virtual void Step();
-	virtual void CreateRenderGL();
 	virtual void Draw();
 	virtual void Reshape(int w, int h);
 	virtual void Keyboard(unsigned char key, int x, int y);

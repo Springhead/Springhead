@@ -70,8 +70,7 @@ void GRDeviceGL::BeginScene(){
 }
 /// レンダリングの終了後に呼ぶ関数
 void GRDeviceGL::EndScene(){
-  /// ダブルバッファモード時、カレントウィンドウのバッファ交換を行う
-	glutSwapBuffers();
+
 }
 ///	カレントの視点行列をafvで置き換える
 void GRDeviceGL::SetViewMatrix(const Affinef& afv){   

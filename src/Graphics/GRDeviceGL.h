@@ -23,7 +23,6 @@ namespace Spr{;
 class GRDeviceGL: public GRDevice, public GRDeviceGLIfInit{
 	OBJECTDEF(GRDeviceGL, GRDevice);
 protected:
-	int		window;						///< ウィンドウID
 	int		nLights;					///< 光源の数
 	int		vertexFormatGl;				///< glInterleavedArraysで使う，GLの頂点フォーマットID
 	size_t	vertexSize;					///< 頂点のサイズ
@@ -63,9 +62,7 @@ protected:
 
 public:
 	///	コンストラクタ
-	GRDeviceGL(int w=0):window(w){}
-	///	ウィンドウIDの設定
-	virtual void SetWindow(int w){window=w;}
+	GRDeviceGL(){}
 	/// 初期設定
 	virtual void Init();
 

@@ -14,6 +14,7 @@
 
 
 namespace Spr{;
+
 FWApp::FWApp(){
 	debugMode = FWApp::DM_NONE;
 	isRunning = true;
