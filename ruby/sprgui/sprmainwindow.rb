@@ -2,7 +2,7 @@ require 'rubygems'
 require 'fox16'
 require 'fox16/responder'
 require 'fox16/undolist'
-#require 'sprscenelist'
+require 'sprscenetree'
 #require 'sprcameraview'
 
 include Fox
@@ -88,18 +88,20 @@ class SprMainWindow < FXMainWindow
     	FXMenuTitle.new(menubar, "&Help", nil, helpmenu, LAYOUT_RIGHT)
   
 		# File Menu entries
-    	FXMenuCommand.new(filemenu, "&Open...        \tCtl-O\tOpen document file.", @openicon)
-    	FXMenuCommand.new(filemenu, "Open Selected...   \tCtl-E\tOpen highlighted document file.", nil)
-    	FXMenuCommand.new(filemenu, "&Reopen...\t\tReopen file.", nil)
-    	FXMenuCommand.new(filemenu, "&New...\tCtl-N\tCreate new document.", @newicon)
-    	FXMenuCommand.new(filemenu, "&Save\tCtl-S\tSave changes to file.", @saveicon)
-    	FXMenuCommand.new(filemenu, "Save &As...\t\tSave document to another file.", @saveasicon)
+    	filenew = FXMenuCommand.new(filemenu, "&New...\tCtl-N\tCreate new document.", @newicon)
+		filenew.connect(SEL_COMMAND, method(:onFileNew))
+    	fileopen = FXMenuCommand.new(filemenu, "&Open...        \tCtl-O\tOpen document file.", @openicon)
+		fileopen.connect(SEL_COMMAND, method(:onFileOpen))
+    	filereload = FXMenuCommand.new(filemenu, "&Reload...\t\tReload file.", nil)
+		filereload.connect(SEL_COMMAND, method(:onFileReload))
+    	filesave = FXMenuCommand.new(filemenu, "&Save\tCtl-S\tSave changes to file.", @saveicon)
+		filesave.connect(SEL_COMMAND, method(:onFileSave))
+    	filesaveas = FXMenuCommand.new(filemenu, "Save &As...\t\tSave document to another file.", @saveasicon)
+		filesaveas.connect(SEL_COMMAND, method(:onFileSaveAs))
     	FXMenuSeparator.new(filemenu)
-    	FXMenuCommand.new(filemenu, "Insert from file...\t\tInsert text from file.", nil)
+    	fileinsert = FXMenuCommand.new(filemenu, "Insert from file...\t\tInsert text from file.", nil)
+		fileinsert.connect(SEL_COMMAND, method(:onFileInsert))
 
-    	#iconifyCmd = FXMenuCommand.new(filemenu, "&Iconify...\t\tIconify editor.")
-    	#iconifyCmd.connect(SEL_COMMAND) { self.minimize }
-  
     	# Recent file menu; this automatically hides if there are no files
     	#sep1 = FXMenuSeparator.new(filemenu)
     	#sep1.setTarget(@mrufiles)
@@ -152,8 +154,8 @@ class SprMainWindow < FXMainWindow
   
     	# Make tree
     	treeframe = FXHorizontalFrame.new(@treebox, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
-    	#@scenelist = SprSceneList.new(treeframe, self, ID_TREELIST, (DIRLIST_SHOWFILES|TREELIST_BROWSESELECT|TREELIST_SHOWS_LINES| TREELIST_SHOWS_BOXES|LAYOUT_FILL_X|LAYOUT_FILL_Y))
-  
+	    @scenetree = SprSceneTree.new(treeframe)
+
 	    # Sunken border for text widget
     	cameraframe = FXHorizontalFrame.new(splitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
   
@@ -187,6 +189,12 @@ class SprMainWindow < FXMainWindow
     	@undolist.mark
 	end
 
+	def onTimeout(sender, sel, ptr)
+		$sprapp.Step()
+		@timer = getApp().addTimeout(100, method(:onTimeout))
+		drawScene()
+	end
+
 	def	drawScene()
 
 		puts 'drawscene'
@@ -194,7 +202,7 @@ class SprMainWindow < FXMainWindow
 	    # Make context current
     	@glcanvas.makeCurrent()
 
-       	$sprapp.GetRender().SetViewport([0, 0], [@glcanvas.width, @glcanvas.height])
+		$sprapp.GetRender().Reshape([0,0], [@glcanvas.width, @glcanvas.height])
 		$sprapp.Display()
 		
 		# Swap if it is double-buffered
@@ -207,21 +215,25 @@ class SprMainWindow < FXMainWindow
 	end
 
   	# Load file
-  	def loadFile(file)
+  	def loadFile(filename)
     	begin
       		getApp().beginWaitCursor()
-      		#text = File.open(file, "r").read
+      	
+			$sprapp.LoadScene(filename)
+
     	ensure
       		getApp().endWaitCursor()
     	end
 
     	# Set stuff
-    	@mrufiles.appendFile(file)
-    	@filetime = File.mtime(file)
-    	@filename = file
+    	@mrufiles.appendFile(filename)
+    	@filetime = File.mtime(filename)
+    	@filename = filename
     	@filenameset = true
     	@undolist.clear
     	@undolist.mark
+
+		@scenetree.update
   	end
 
 	# Insert file
@@ -262,6 +274,9 @@ class SprMainWindow < FXMainWindow
   	def writeRegistry
     
   	end
+
+	#--------------------------------------------------------------------------------
+	# message handlers
 
   	# About box
   	def onCmdAbout(sender, sel, ptr)
@@ -483,7 +498,8 @@ class SprMainWindow < FXMainWindow
     	@urilistType = getApp().registerDragType(FXWindow.urilistTypeName) unless @urilistType
     	readRegistry
     	super
-    	show
+	    @scenetree.parent.setWidth(@scenetree.font.getTextWidth('MMMMMMMMMMMMMMMM'))
+  		show(PLACEMENT_SCREEN)
   	end
 
 end
