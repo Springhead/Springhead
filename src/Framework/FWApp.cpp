@@ -63,10 +63,10 @@ void FWApp::Init(int argc, char* argv[]){
 }
 
 void FWApp::Display(){
-	if (!fwScene) return;
-
-	fwScene->Sync();
+	// シーンがロードされていなくてもクリアは行う
 	grRender->ClearBuffer();
+	if (!fwScene) return;
+	fwScene->Sync();
 	grRender->BeginScene();
 	if (debugMode == FWApp::DM_DEBUG){
 		GRCameraIf* cam = NULL;

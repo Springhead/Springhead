@@ -94,7 +94,12 @@ RETURN_VECTOR_TYPEMAP(Posed, 7);
 	$1 = &temp[0];
 %}
 
-// 未対応のもの：
-//GetSolidsの戻り値でPHSolid**
+// GetSolidsの戻り値でPHSolid**
+%typemap(out) Spr::PHSolidIf ** %{
+	$result = rb_ary_new2(arg1->NSolids());
+	for(int i = 0; i < arg1->NSolids(); i++)
+		rb_ary_store($result, i, SWIG_NewPointerObj(SWIG_as_voidptr($1[i]), SWIGTYPE_p_Spr__PHSolidIf, 0 |  0 ));
+%}
+
 //setcontactmodeの引数でPHSolid**
 //Vec3dなどのメンバ変数のget/set

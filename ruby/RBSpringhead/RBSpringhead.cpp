@@ -13840,7 +13840,11 @@ _wrap_PHSceneIf_GetSolids(int argc, VALUE *argv, VALUE self) {
   }
   arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
   result = (Spr::PHSolidIf **)(arg1)->GetSolids();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_Spr__PHSolidIf, 0 |  0 );
+  
+  vresult = rb_ary_new2(arg1->NSolids());
+  for(int i = 0; i < arg1->NSolids(); i++)
+  rb_ary_store(vresult, i, SWIG_NewPointerObj(SWIG_as_voidptr(result[i]), SWIGTYPE_p_Spr__PHSolidIf, 0 |  0 ));
+  
   return vresult;
 fail:
   return Qnil;

@@ -23,6 +23,7 @@ class SprMainWindow < FXMainWindow
 	  	end
 	end
 
+	# constructor
 	def initialize(app)
   		# Call base class initialize first
   		super(app, "Springhead GUI", nil, nil, DECOR_ALL, 50, 50, 850, 600, 0, 0)
@@ -64,9 +65,6 @@ class SprMainWindow < FXMainWindow
     	# Status bar
     	statusbar = FXStatusBar.new(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
   
-    	# Info about the editor
-    	#FXButton.new(statusbar, "\tThe FOX Text Editor\tAbout the FOX Text Editor.", @smallicon, self, ID_ABOUT, LAYOUT_FILL_Y|LAYOUT_RIGHT)
-  
     	# File menu
 		filemenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&File", nil, filemenu)
@@ -89,18 +87,21 @@ class SprMainWindow < FXMainWindow
   
 		# File Menu entries
     	filenew = FXMenuCommand.new(filemenu, "&New...\tCtl-N\tCreate new document.", @newicon)
-		filenew.connect(SEL_COMMAND, method(:onFileNew))
+		filenew.connect(SEL_COMMAND, method(:onCmdNew))
     	fileopen = FXMenuCommand.new(filemenu, "&Open...        \tCtl-O\tOpen document file.", @openicon)
-		fileopen.connect(SEL_COMMAND, method(:onFileOpen))
+		fileopen.connect(SEL_COMMAND, method(:onCmdOpen))
     	filereload = FXMenuCommand.new(filemenu, "&Reload...\t\tReload file.", nil)
-		filereload.connect(SEL_COMMAND, method(:onFileReload))
+		filereload.connect(SEL_COMMAND, method(:onCmdReload))
+		filereload.connect(SEL_UPDATE, method(:onUpdReload))
     	filesave = FXMenuCommand.new(filemenu, "&Save\tCtl-S\tSave changes to file.", @saveicon)
-		filesave.connect(SEL_COMMAND, method(:onFileSave))
+		filesave.connect(SEL_COMMAND, method(:onCmdSave))
+		filesave.connect(SEL_UPDATE, method(:onUpdSave))
     	filesaveas = FXMenuCommand.new(filemenu, "Save &As...\t\tSave document to another file.", @saveasicon)
-		filesaveas.connect(SEL_COMMAND, method(:onFileSaveAs))
+		filesaveas.connect(SEL_COMMAND, method(:onCmdSaveAs))
     	FXMenuSeparator.new(filemenu)
     	fileinsert = FXMenuCommand.new(filemenu, "Insert from file...\t\tInsert text from file.", nil)
-		fileinsert.connect(SEL_COMMAND, method(:onFileInsert))
+		fileinsert.connect(SEL_COMMAND, method(:onCmdInsert))
+		fileinsert.connect(SEL_UPDATE, method(:onUpdInsert))
 
     	# Recent file menu; this automatically hides if there are no files
     	#sep1 = FXMenuSeparator.new(filemenu)
@@ -154,12 +155,12 @@ class SprMainWindow < FXMainWindow
   
     	# Make tree
     	treeframe = FXHorizontalFrame.new(@treebox, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
-	    @scenetree = SprSceneTree.new(treeframe)
+	    @scenetree = SprSceneTree.new(treeframe, nil, 0,
+    	  (TREELIST_BROWSESELECT|TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|TREELIST_ROOT_BOXES|LAYOUT_FILL_X|LAYOUT_FILL_Y))
 
 	    # Sunken border for text widget
     	cameraframe = FXHorizontalFrame.new(splitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
   
-    	# Make editor window
 	    # A visual to draw OpenGL
 	    @glvisual = FXGLVisual.new(getApp(), VISUAL_DOUBLEBUFFER)
 	  
@@ -189,12 +190,7 @@ class SprMainWindow < FXMainWindow
     	@undolist.mark
 	end
 
-	def onTimeout(sender, sel, ptr)
-		$sprapp.Step()
-		@timer = getApp().addTimeout(100, method(:onTimeout))
-		drawScene()
-	end
-
+	# draw scene
 	def	drawScene()
 
 		puts 'drawscene'
@@ -275,46 +271,6 @@ class SprMainWindow < FXMainWindow
     
   	end
 
-	#--------------------------------------------------------------------------------
-	# message handlers
-
-  	# About box
-  	def onCmdAbout(sender, sel, ptr)
-    	about = FXMessageBox.new(self, "FOX Text Editor",
-      	"The FOX Text Editor\n\nUsing FOX Library Version #{fxversion[0]}.#{fxversion[1]}.#{fxversion[2]}\n\nCopyright (C) 2000,2001 Jeroen van der Zijp (jvz@cfdrc.com)", @bigicon, MBOX_OK|DECOR_TITLE|DECOR_BORDER)
-    	about.execute
-    	return 1
-  	end
-
-  	# Save settings
-  	def onCmdSaveSettings(sender, sel, ptr)
-    	writeRegistry();
-    	getApp().reg().write
-    	return 1
-  	end
-
-  	# Reopen file
-  	def onCmdReopen(sender, sel, ptr)
-    	if !@undolist.marked?
-      		if FXMessageBox.question(self, MBOX_YES_NO, "Document was changed",
-        		"Discard changes to this document?") == MBOX_CLICKED_NO
-           		return 1
-      		end
-    	end
-    	loadFile(@filename)
-    	return 1
-  	end
-
-  	# Update reopen file
-  	def onUpdReopen(sender, sel, ptr)
-    	if @filenameset
-      		sender.handle(self, MKUINT(ID_ENABLE, SEL_COMMAND), nil)
-    	else
-      		sender.handle(self, MKUINT(ID_DISABLE, SEL_COMMAND), nil)
-    	end
-    	return 1
-  	end
-
   	# Save changes, prompt for new filename
   	def saveChanges
     	if !@undolist.marked?
@@ -346,23 +302,67 @@ class SprMainWindow < FXMainWindow
     	true
   	end
 
+	#--------------------------------------------------------------------------------
+	# message handlers
+
+  	# New
+  	def onCmdNew(sender, sel, ptr)
+    	return 1 if !saveChanges()
+
+		$sprapp.Clear()
+
+    	@filename = "untitled"
+    	@filetime = nil
+    	@filenameset = false
+    	@editor.text = nil
+    	@editor.modified = false
+    	@editor.editable = true
+    	@undolist.clear
+    	@undolist.mark
+    	return 1
+  	end
+
+
   	# Open
   	def onCmdOpen(sender, sel, ptr)
     	return 1 if !saveChanges()
+
     	opendialog = FXFileDialog.new(self, "Open Document")
     	opendialog.selectMode = SELECTFILE_EXISTING
-    	opendialog.patternList = getPatterns()
-    	opendialog.currentPattern = getCurrentPattern()
+    	#opendialog.patternList = getPatterns()
+    	#opendialog.currentPattern = getCurrentPattern()
     	opendialog.filename = @filename
     	if opendialog.execute != 0
-      		setCurrentPattern(opendialog.currentPattern)
+      		#setCurrentPattern(opendialog.currentPattern)
       		loadFile(opendialog.filename)
     	end
     	return 1
   	end
 
+  	# Reload file
+  	def onCmdReload(sender, sel, ptr)
+    	if !@undolist.marked?
+      		if FXMessageBox.question(self, MBOX_YES_NO, "Document was changed",
+        		"Discard changes to this document?") == MBOX_CLICKED_NO
+           		return 1
+      		end
+    	end
+    	loadFile(@filename)
+    	return 1
+  	end
+
+  	# Update reload file
+  	def onUpdReload(sender, sel, ptr)
+    	if @filenameset
+      		sender.handle(self, MKUINT(ID_ENABLE, SEL_COMMAND), nil)
+    	else
+      		sender.handle(self, MKUINT(ID_DISABLE, SEL_COMMAND), nil)
+    	end
+    	return 1
+  	end
+
   	# Insert file into buffer
-  	def onCmdInsertFile(sender, sel, ptr)
+  	def onCmdInsert(sender, sel, ptr)
     	opendialog = FXFileDialog.new(self, "Open Document")
     	opendialog.selectMode = SELECTFILE_EXISTING
     	opendialog.patternList = getPatterns()
@@ -375,12 +375,12 @@ class SprMainWindow < FXMainWindow
   	end
 
   	# Update insert file
-  	def onUpdInsertFile(sender, sel, ptr)
-    	if @editor.editable?
-      		sender.handle(self, MKUINT(ID_ENABLE, SEL_COMMAND), nil)
-    	else
-      		sender.handle(self, MKUINT(ID_DISABLE, SEL_COMMAND), nil)
-    	end
+  	def onUpdInsert(sender, sel, ptr)
+    	#if @editor.editable?
+      	#	sender.handle(self, MKUINT(ID_ENABLE, SEL_COMMAND), nil)
+    	#else
+      	#	sender.handle(self, MKUINT(ID_DISABLE, SEL_COMMAND), nil)
+    	#end
     	return 1
   	end
 
@@ -422,17 +422,10 @@ class SprMainWindow < FXMainWindow
     	return 1
   	end
 
-  	# New
-  	def onCmdNew(sender, sel, ptr)
-    	return 1 if !saveChanges()
-    	@filename = "untitled"
-    	@filetime = nil
-    	@filenameset = false
-    	@editor.text = nil
-    	@editor.modified = false
-    	@editor.editable = true
-    	@undolist.clear
-    	@undolist.mark
+  	# Save settings
+  	def onCmdSaveSettings(sender, sel, ptr)
+    	writeRegistry();
+    	getApp().reg().write
     	return 1
   	end
 
@@ -452,6 +445,13 @@ class SprMainWindow < FXMainWindow
     	return 1
   	end
 
+	# time handler
+	def onTimeout(sender, sel, ptr)
+		$sprapp.Step()
+		@timer = getApp().addTimeout(100, method(:onTimeout))
+		drawScene()
+	end
+
  	# Released right button
   	def onTextRightMouse(sender, sel, event)
     	if !event.moved
@@ -470,12 +470,6 @@ class SprMainWindow < FXMainWindow
     	return 1
   	end
 
-  	# Show help window
-  	def onCmdShowHelp(sender, sel, ptr)
-    	@helpwindow.show(PLACEMENT_CURSOR)
-    	return 1
-  	end
-
  	# Show preferences dialog
   	def onCmdPreferences(sender, sel, ptr)
     	preferences = PrefDialog.new(self)
@@ -485,6 +479,24 @@ class SprMainWindow < FXMainWindow
     	end
     	return 1
   	end
+
+  	# Show help window
+  	def onCmdShowHelp(sender, sel, ptr)
+    	@helpwindow.show(PLACEMENT_CURSOR)
+    	return 1
+  	end
+
+  	# About box
+  	def onCmdAbout(sender, sel, ptr)
+    	about = FXMessageBox.new(self, "Springhead GUI",
+      	"Springhead GUI", @bigicon, MBOX_OK|DECOR_TITLE|DECOR_BORDER)
+    	about.execute
+    	return 1
+  	end
+
+
+	#--------------------------------------------------------------------------------
+	# message handlers
 
 	# Start the ball rolling
 	def start(args)
