@@ -4,73 +4,73 @@ namespace Spr{;
 template <class IF, class MIF, class OBJ>
 struct ObjectIfStubTemplate: public IF {
 	virtual Object *  GetObj(const UTTypeInfo *  info) const {
-		return ((OBJ*)(MIF*)this)->GetObj(info);
+		return ((OBJ*)(MIF*)this)->OBJ::GetObj(info);
 	}
 	virtual ObjectIf *  GetIfDynamic(const IfInfo *  info) const {
-		return ((OBJ*)(MIF*)this)->GetIfDynamic(info);
+		return ((OBJ*)(MIF*)this)->OBJ::GetIfDynamic(info);
 	}
 	virtual void Print(std::ostream &  os) const {
-		return ((OBJ*)(MIF*)this)->Print(os);
+		return ((OBJ*)(MIF*)this)->OBJ::Print(os);
 	}
 	virtual void PrintShort(std::ostream &  os) const {
-		return ((OBJ*)(MIF*)this)->PrintShort(os);
+		return ((OBJ*)(MIF*)this)->OBJ::PrintShort(os);
 	}
 	virtual int AddRef(){
-		return ((OBJ*)(MIF*)this)->AddRef();
+		return ((OBJ*)(MIF*)this)->OBJ::AddRef();
 	}
 	virtual int DelRef(){
-		return ((OBJ*)(MIF*)this)->DelRef();
+		return ((OBJ*)(MIF*)this)->OBJ::DelRef();
 	}
 	virtual int RefCount(){
-		return ((OBJ*)(MIF*)this)->RefCount();
+		return ((OBJ*)(MIF*)this)->OBJ::RefCount();
 	}
 	virtual size_t NChildObject() const {
-		return ((OBJ*)(MIF*)this)->NChildObject();
+		return ((OBJ*)(MIF*)this)->OBJ::NChildObject();
 	}
 	virtual ObjectIf *  GetChildObject(size_t pos){
-		return ((OBJ*)(MIF*)this)->GetChildObject(pos);
+		return ((OBJ*)(MIF*)this)->OBJ::GetChildObject(pos);
 	}
 	virtual const ObjectIf *  GetChildObject(size_t pos) const {
-		return ((OBJ*)(MIF*)this)->GetChildObject(pos);
+		return ((OBJ*)(MIF*)this)->OBJ::GetChildObject(pos);
 	}
 	virtual bool AddChildObject(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->AddChildObject(o);
+		return ((OBJ*)(MIF*)this)->OBJ::AddChildObject(o);
 	}
 	virtual bool DelChildObject(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->DelChildObject(o);
+		return ((OBJ*)(MIF*)this)->OBJ::DelChildObject(o);
 	}
 	virtual void Clear(){
-		return ((OBJ*)(MIF*)this)->Clear();
+		return ((OBJ*)(MIF*)this)->OBJ::Clear();
 	}
 	virtual ObjectIf *  CreateObject(const IfInfo *  info, const void *  desc){
-		return ((OBJ*)(MIF*)this)->CreateObject(info, desc);
+		return ((OBJ*)(MIF*)this)->OBJ::CreateObject(info, desc);
 	}
 	virtual const void *  GetDescAddress() const {
-		return ((OBJ*)(MIF*)this)->GetDescAddress();
+		return ((OBJ*)(MIF*)this)->OBJ::GetDescAddress();
 	}
 	virtual bool GetDesc(void *  desc) const {
-		return ((OBJ*)(MIF*)this)->GetDesc(desc);
+		return ((OBJ*)(MIF*)this)->OBJ::GetDesc(desc);
 	}
 	virtual size_t GetDescSize() const {
-		return ((OBJ*)(MIF*)this)->GetDescSize();
+		return ((OBJ*)(MIF*)this)->OBJ::GetDescSize();
 	}
 	virtual const void *  GetStateAddress() const {
-		return ((OBJ*)(MIF*)this)->GetStateAddress();
+		return ((OBJ*)(MIF*)this)->OBJ::GetStateAddress();
 	}
 	virtual bool GetState(void *  state) const {
-		return ((OBJ*)(MIF*)this)->GetState(state);
+		return ((OBJ*)(MIF*)this)->OBJ::GetState(state);
 	}
 	virtual void SetState(const void *  state){
-		return ((OBJ*)(MIF*)this)->SetState(state);
+		return ((OBJ*)(MIF*)this)->OBJ::SetState(state);
 	}
 	virtual size_t GetStateSize() const {
-		return ((OBJ*)(MIF*)this)->GetStateSize();
+		return ((OBJ*)(MIF*)this)->OBJ::GetStateSize();
 	}
 	virtual void ConstructState(void *  m) const {
-		return ((OBJ*)(MIF*)this)->ConstructState(m);
+		return ((OBJ*)(MIF*)this)->OBJ::ConstructState(m);
 	}
 	virtual void DestructState(void *  m) const {
-		return ((OBJ*)(MIF*)this)->DestructState(m);
+		return ((OBJ*)(MIF*)this)->OBJ::DestructState(m);
 	}
 };
 struct ObjectIf;	class Object;
@@ -81,13 +81,13 @@ template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct NamedObjectIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual const char *  GetName() const {
-		return ((OBJ*)(MIF*)this)->GetName();
+		return ((OBJ*)(MIF*)this)->OBJ::GetName();
 	}
 	virtual void SetName(const char *  n){
-		return ((OBJ*)(MIF*)this)->SetName(n);
+		return ((OBJ*)(MIF*)this)->OBJ::SetName(n);
 	}
 	virtual NameManagerIf *  GetNameManager(){
-		return ((OBJ*)(MIF*)this)->GetNameManager();
+		return ((OBJ*)(MIF*)this)->OBJ::GetNameManager();
 	}
 };
 struct NamedObjectIf;	class NamedObject;
@@ -98,7 +98,7 @@ template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct SceneObjectIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual SceneIf *  GetScene(){
-		return ((OBJ*)(MIF*)this)->GetScene();
+		return ((OBJ*)(MIF*)this)->OBJ::GetScene();
 	}
 };
 struct SceneObjectIf;	class SceneObject;
@@ -109,19 +109,19 @@ template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct ObjectStatesIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void AllocateState(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->AllocateState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::AllocateState(o);
 	}
 	virtual void ReleaseState(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->ReleaseState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::ReleaseState(o);
 	}
 	virtual size_t CalcStateSize(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->CalcStateSize(o);
+		return ((OBJ*)(MIF*)this)->OBJ::CalcStateSize(o);
 	}
 	virtual void SaveState(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->SaveState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::SaveState(o);
 	}
 	virtual void LoadState(ObjectIf *  o){
-		return ((OBJ*)(MIF*)this)->LoadState(o);
+		return ((OBJ*)(MIF*)this)->OBJ::LoadState(o);
 	}
 };
 struct ObjectStatesIf;	class ObjectStates;
@@ -132,7 +132,7 @@ template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct NameManagerIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual NamedObjectIf *  FindObject(UTString name, UTString cls = ""){
-		return ((OBJ*)(MIF*)this)->FindObject(name, cls);
+		return ((OBJ*)(MIF*)this)->OBJ::FindObject(name, cls);
 	}
 };
 struct NameManagerIf;	class NameManager;

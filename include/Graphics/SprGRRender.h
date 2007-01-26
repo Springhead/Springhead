@@ -334,9 +334,11 @@ struct GRDeviceGLIf: public GRDeviceIf{
 };
 
 /**	@brief	DirectXのレンダラー基本クラス */
+/*
 struct GRDeviceD3DIf: public GRDeviceIf{
 	IF_DEF(GRDeviceD3D);
 };
+*/
 
 /**	@brief	デバッグ情報レンダラーの基本クラス */
 struct GRDebugRenderIf:public GRRenderIf{

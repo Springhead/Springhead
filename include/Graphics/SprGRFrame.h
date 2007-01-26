@@ -43,11 +43,28 @@ struct GRFrameDesc{
 /**	@brief	グラフィックスシーングラフのツリーのノード．座標系を持つ．*/
 struct GRFrameIf: public GRVisualIf{
 	IF_DEF(GRFrame);
+
+	/** @brief 親フレームを取得する */
 	virtual GRFrameIf* GetParent()=0;
+
+	/** @brief 親フレームを設定する */
 	virtual void SetParent(GRFrameIf* fr)=0;
+
+	/** @brief 子ノードの数を取得 */
+	virtual int NChildren() = 0;
+
+	/** @brief 子ノードの配列を取得 */
+	virtual GRVisualIf** GetChildren() = 0;
+
+	/** @brief 親ノードとの相対変換を取得 */
 	virtual Affinef GetTransform()=0;
+
+	/** @brief ワールドフレームとの相対変換を取得 */
 	virtual Affinef GetWorldTransform()=0;
+
+	/** @brief 親ノードとの相対変換を設定 */
 	virtual void SetTransform(Affinef& af)=0;
+
 	virtual void Print(std::ostream& os) const =0;
 };
 

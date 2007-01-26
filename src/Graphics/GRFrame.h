@@ -29,13 +29,14 @@ public:
 	OBJECTDEF(GRFrame, GRVisual);
 	ACCESS_DESC(GRFrame);
 	GRFrame* parent;
-	typedef std::vector< UTRef<GRVisual> > GRVisuals;
-	GRVisuals children;
+	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
+	GRVisualIfs children;
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
-
 
 	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
 	virtual void SetParent(GRFrameIf* fr);
+	virtual int NChildren(){ return children.size(); }
+	virtual GRVisualIf** GetChildren(){ return (GRVisualIf**)&*children.begin(); }
 	virtual void SetNameManager(NameManager* n);
 	virtual GRSceneIf* GetScene();
 	virtual bool AddChildObject(ObjectIf* v);

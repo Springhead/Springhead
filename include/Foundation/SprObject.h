@@ -143,10 +143,16 @@ public:																	\
 		return (I*)GetIfDynamic(I::GetIfInfoStatic());						\
 	}																		\
 
-
-#define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls)
-
 #endif // !SWIG
+
+// Rubyなどのポートで使用されるキャスト
+#define IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}
+
+#ifdef SWIG
+#define IF_DEF(cls)	IF_HLANG_CAST(cls)
+#else
+#define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls) IF_HLANG_CAST(cls)
+#endif
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{

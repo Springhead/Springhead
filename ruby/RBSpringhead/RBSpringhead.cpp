@@ -1583,100 +1583,99 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 #define SWIGTYPE_p_Spr__GRCameraDesc swig_types[39]
 #define SWIGTYPE_p_Spr__GRCameraIf swig_types[40]
 #define SWIGTYPE_p_Spr__GRDebugRenderIf swig_types[41]
-#define SWIGTYPE_p_Spr__GRDeviceD3DIf swig_types[42]
-#define SWIGTYPE_p_Spr__GRDeviceGLIf swig_types[43]
-#define SWIGTYPE_p_Spr__GRDeviceIf swig_types[44]
-#define SWIGTYPE_p_Spr__GRFont swig_types[45]
-#define SWIGTYPE_p_Spr__GRFrameDesc swig_types[46]
-#define SWIGTYPE_p_Spr__GRFrameIf swig_types[47]
-#define SWIGTYPE_p_Spr__GRFrameTransformMatrix swig_types[48]
-#define SWIGTYPE_p_Spr__GRLightDesc swig_types[49]
-#define SWIGTYPE_p_Spr__GRLightIf swig_types[50]
-#define SWIGTYPE_p_Spr__GRMaterialDesc swig_types[51]
-#define SWIGTYPE_p_Spr__GRMaterialIf swig_types[52]
-#define SWIGTYPE_p_Spr__GRMeshDesc swig_types[53]
-#define SWIGTYPE_p_Spr__GRMeshIf swig_types[54]
-#define SWIGTYPE_p_Spr__GRRenderBaseIf swig_types[55]
-#define SWIGTYPE_p_Spr__GRRenderIf swig_types[56]
-#define SWIGTYPE_p_Spr__GRSceneDesc swig_types[57]
-#define SWIGTYPE_p_Spr__GRSceneIf swig_types[58]
-#define SWIGTYPE_p_Spr__GRSdkDesc swig_types[59]
-#define SWIGTYPE_p_Spr__GRSdkIf swig_types[60]
-#define SWIGTYPE_p_Spr__GRSphereDesc swig_types[61]
-#define SWIGTYPE_p_Spr__GRSphereIf swig_types[62]
-#define SWIGTYPE_p_Spr__GRVisualIf swig_types[63]
-#define SWIGTYPE_p_Spr__HIForceDevice6D swig_types[64]
-#define SWIGTYPE_p_Spr__NameManagerIf swig_types[65]
-#define SWIGTYPE_p_Spr__NamedObjectIf swig_types[66]
-#define SWIGTYPE_p_Spr__Object swig_types[67]
-#define SWIGTYPE_p_Spr__ObjectIf swig_types[68]
-#define SWIGTYPE_p_Spr__ObjectIfs swig_types[69]
-#define SWIGTYPE_p_Spr__ObjectStatesIf swig_types[70]
-#define SWIGTYPE_p_Spr__PHBallJointDesc swig_types[71]
-#define SWIGTYPE_p_Spr__PHBallJointIf swig_types[72]
-#define SWIGTYPE_p_Spr__PHConstraintDesc swig_types[73]
-#define SWIGTYPE_p_Spr__PHConstraintEngine swig_types[74]
-#define SWIGTYPE_p_Spr__PHConstraintIf swig_types[75]
-#define SWIGTYPE_p_Spr__PHContactPointIf swig_types[76]
-#define SWIGTYPE_p_Spr__PHEngineIf swig_types[77]
-#define SWIGTYPE_p_Spr__PHGearDesc swig_types[78]
-#define SWIGTYPE_p_Spr__PHGearIf swig_types[79]
-#define SWIGTYPE_p_Spr__PHGravityEngine swig_types[80]
-#define SWIGTYPE_p_Spr__PHHingeJointDesc swig_types[81]
-#define SWIGTYPE_p_Spr__PHHingeJointIf swig_types[82]
-#define SWIGTYPE_p_Spr__PHInactiveSolids swig_types[83]
-#define SWIGTYPE_p_Spr__PHJoint1DDesc swig_types[84]
-#define SWIGTYPE_p_Spr__PHJoint1DIf swig_types[85]
-#define SWIGTYPE_p_Spr__PHJointIf swig_types[86]
-#define SWIGTYPE_p_Spr__PHMaterial swig_types[87]
-#define SWIGTYPE_p_Spr__PHPathDesc swig_types[88]
-#define SWIGTYPE_p_Spr__PHPathIf swig_types[89]
-#define SWIGTYPE_p_Spr__PHPathJointDesc swig_types[90]
-#define SWIGTYPE_p_Spr__PHPathJointIf swig_types[91]
-#define SWIGTYPE_p_Spr__PHPathPoint swig_types[92]
-#define SWIGTYPE_p_Spr__PHRootNodeIf swig_types[93]
-#define SWIGTYPE_p_Spr__PHSceneDesc swig_types[94]
-#define SWIGTYPE_p_Spr__PHSceneIf swig_types[95]
-#define SWIGTYPE_p_Spr__PHSceneState swig_types[96]
-#define SWIGTYPE_p_Spr__PHSdkDesc swig_types[97]
-#define SWIGTYPE_p_Spr__PHSdkIf swig_types[98]
-#define SWIGTYPE_p_Spr__PHSliderJointDesc swig_types[99]
-#define SWIGTYPE_p_Spr__PHSliderJointIf swig_types[100]
-#define SWIGTYPE_p_Spr__PHSolidDesc swig_types[101]
-#define SWIGTYPE_p_Spr__PHSolidIf swig_types[102]
-#define SWIGTYPE_p_Spr__PHSolidState swig_types[103]
-#define SWIGTYPE_p_Spr__PHSpringDesc swig_types[104]
-#define SWIGTYPE_p_Spr__PHSpringIf swig_types[105]
-#define SWIGTYPE_p_Spr__PHTreeNodeIf swig_types[106]
-#define SWIGTYPE_p_Spr__SceneIf swig_types[107]
-#define SWIGTYPE_p_Spr__SceneObjectIf swig_types[108]
-#define SWIGTYPE_p_Spr__SdkIf swig_types[109]
-#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[110]
-#define SWIGTYPE_p_UTString swig_types[111]
-#define SWIGTYPE_p_UTTypeInfo swig_types[112]
-#define SWIGTYPE_p_Vec2f swig_types[113]
-#define SWIGTYPE_p_Vec3d swig_types[114]
-#define SWIGTYPE_p_Vec3f swig_types[115]
-#define SWIGTYPE_p_Vec4f swig_types[116]
-#define SWIGTYPE_p_char swig_types[117]
-#define SWIGTYPE_p_container_t swig_types[118]
-#define SWIGTYPE_p_double swig_types[119]
-#define SWIGTYPE_p_int swig_types[120]
-#define SWIGTYPE_p_p_Spr__PHSolidIf swig_types[121]
-#define SWIGTYPE_p_p_char swig_types[122]
-#define SWIGTYPE_p_size_t swig_types[123]
-#define SWIGTYPE_p_std__ostream swig_types[124]
-#define SWIGTYPE_p_std__string swig_types[125]
-#define SWIGTYPE_p_std__vectorTSpr__PHPathPoint_t swig_types[126]
-#define SWIGTYPE_p_std__vectorTVec2f_t swig_types[127]
-#define SWIGTYPE_p_std__vectorTVec3f_t swig_types[128]
-#define SWIGTYPE_p_std__vectorTVec4f_t swig_types[129]
-#define SWIGTYPE_p_std__vectorTsize_t_t swig_types[130]
-#define SWIGTYPE_p_std__vectorTstd__string_t swig_types[131]
-#define SWIGTYPE_p_unsigned_int swig_types[132]
-#define SWIGTYPE_p_void swig_types[133]
-static swig_type_info *swig_types[135];
-static swig_module_info swig_module = {swig_types, 134, 0, 0, 0, 0};
+#define SWIGTYPE_p_Spr__GRDeviceGLIf swig_types[42]
+#define SWIGTYPE_p_Spr__GRDeviceIf swig_types[43]
+#define SWIGTYPE_p_Spr__GRFont swig_types[44]
+#define SWIGTYPE_p_Spr__GRFrameDesc swig_types[45]
+#define SWIGTYPE_p_Spr__GRFrameIf swig_types[46]
+#define SWIGTYPE_p_Spr__GRFrameTransformMatrix swig_types[47]
+#define SWIGTYPE_p_Spr__GRLightDesc swig_types[48]
+#define SWIGTYPE_p_Spr__GRLightIf swig_types[49]
+#define SWIGTYPE_p_Spr__GRMaterialDesc swig_types[50]
+#define SWIGTYPE_p_Spr__GRMaterialIf swig_types[51]
+#define SWIGTYPE_p_Spr__GRMeshDesc swig_types[52]
+#define SWIGTYPE_p_Spr__GRMeshIf swig_types[53]
+#define SWIGTYPE_p_Spr__GRRenderBaseIf swig_types[54]
+#define SWIGTYPE_p_Spr__GRRenderIf swig_types[55]
+#define SWIGTYPE_p_Spr__GRSceneDesc swig_types[56]
+#define SWIGTYPE_p_Spr__GRSceneIf swig_types[57]
+#define SWIGTYPE_p_Spr__GRSdkDesc swig_types[58]
+#define SWIGTYPE_p_Spr__GRSdkIf swig_types[59]
+#define SWIGTYPE_p_Spr__GRSphereDesc swig_types[60]
+#define SWIGTYPE_p_Spr__GRSphereIf swig_types[61]
+#define SWIGTYPE_p_Spr__GRVisualIf swig_types[62]
+#define SWIGTYPE_p_Spr__HIForceDevice6D swig_types[63]
+#define SWIGTYPE_p_Spr__NameManagerIf swig_types[64]
+#define SWIGTYPE_p_Spr__NamedObjectIf swig_types[65]
+#define SWIGTYPE_p_Spr__Object swig_types[66]
+#define SWIGTYPE_p_Spr__ObjectIf swig_types[67]
+#define SWIGTYPE_p_Spr__ObjectIfs swig_types[68]
+#define SWIGTYPE_p_Spr__ObjectStatesIf swig_types[69]
+#define SWIGTYPE_p_Spr__PHBallJointDesc swig_types[70]
+#define SWIGTYPE_p_Spr__PHBallJointIf swig_types[71]
+#define SWIGTYPE_p_Spr__PHConstraintDesc swig_types[72]
+#define SWIGTYPE_p_Spr__PHConstraintEngine swig_types[73]
+#define SWIGTYPE_p_Spr__PHConstraintIf swig_types[74]
+#define SWIGTYPE_p_Spr__PHContactPointIf swig_types[75]
+#define SWIGTYPE_p_Spr__PHEngineIf swig_types[76]
+#define SWIGTYPE_p_Spr__PHGearDesc swig_types[77]
+#define SWIGTYPE_p_Spr__PHGearIf swig_types[78]
+#define SWIGTYPE_p_Spr__PHGravityEngine swig_types[79]
+#define SWIGTYPE_p_Spr__PHHingeJointDesc swig_types[80]
+#define SWIGTYPE_p_Spr__PHHingeJointIf swig_types[81]
+#define SWIGTYPE_p_Spr__PHInactiveSolids swig_types[82]
+#define SWIGTYPE_p_Spr__PHJoint1DDesc swig_types[83]
+#define SWIGTYPE_p_Spr__PHJoint1DIf swig_types[84]
+#define SWIGTYPE_p_Spr__PHJointIf swig_types[85]
+#define SWIGTYPE_p_Spr__PHMaterial swig_types[86]
+#define SWIGTYPE_p_Spr__PHPathDesc swig_types[87]
+#define SWIGTYPE_p_Spr__PHPathIf swig_types[88]
+#define SWIGTYPE_p_Spr__PHPathJointDesc swig_types[89]
+#define SWIGTYPE_p_Spr__PHPathJointIf swig_types[90]
+#define SWIGTYPE_p_Spr__PHPathPoint swig_types[91]
+#define SWIGTYPE_p_Spr__PHRootNodeIf swig_types[92]
+#define SWIGTYPE_p_Spr__PHSceneDesc swig_types[93]
+#define SWIGTYPE_p_Spr__PHSceneIf swig_types[94]
+#define SWIGTYPE_p_Spr__PHSceneState swig_types[95]
+#define SWIGTYPE_p_Spr__PHSdkDesc swig_types[96]
+#define SWIGTYPE_p_Spr__PHSdkIf swig_types[97]
+#define SWIGTYPE_p_Spr__PHSliderJointDesc swig_types[98]
+#define SWIGTYPE_p_Spr__PHSliderJointIf swig_types[99]
+#define SWIGTYPE_p_Spr__PHSolidDesc swig_types[100]
+#define SWIGTYPE_p_Spr__PHSolidIf swig_types[101]
+#define SWIGTYPE_p_Spr__PHSolidState swig_types[102]
+#define SWIGTYPE_p_Spr__PHSpringDesc swig_types[103]
+#define SWIGTYPE_p_Spr__PHSpringIf swig_types[104]
+#define SWIGTYPE_p_Spr__PHTreeNodeIf swig_types[105]
+#define SWIGTYPE_p_Spr__SceneIf swig_types[106]
+#define SWIGTYPE_p_Spr__SceneObjectIf swig_types[107]
+#define SWIGTYPE_p_Spr__SdkIf swig_types[108]
+#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[109]
+#define SWIGTYPE_p_UTString swig_types[110]
+#define SWIGTYPE_p_UTTypeInfo swig_types[111]
+#define SWIGTYPE_p_Vec2f swig_types[112]
+#define SWIGTYPE_p_Vec3d swig_types[113]
+#define SWIGTYPE_p_Vec3f swig_types[114]
+#define SWIGTYPE_p_Vec4f swig_types[115]
+#define SWIGTYPE_p_char swig_types[116]
+#define SWIGTYPE_p_container_t swig_types[117]
+#define SWIGTYPE_p_double swig_types[118]
+#define SWIGTYPE_p_int swig_types[119]
+#define SWIGTYPE_p_p_Spr__PHSolidIf swig_types[120]
+#define SWIGTYPE_p_p_char swig_types[121]
+#define SWIGTYPE_p_size_t swig_types[122]
+#define SWIGTYPE_p_std__ostream swig_types[123]
+#define SWIGTYPE_p_std__string swig_types[124]
+#define SWIGTYPE_p_std__vectorTSpr__PHPathPoint_t swig_types[125]
+#define SWIGTYPE_p_std__vectorTVec2f_t swig_types[126]
+#define SWIGTYPE_p_std__vectorTVec3f_t swig_types[127]
+#define SWIGTYPE_p_std__vectorTVec4f_t swig_types[128]
+#define SWIGTYPE_p_std__vectorTsize_t_t swig_types[129]
+#define SWIGTYPE_p_std__vectorTstd__string_t swig_types[130]
+#define SWIGTYPE_p_unsigned_int swig_types[131]
+#define SWIGTYPE_p_void swig_types[132]
+static swig_type_info *swig_types[134];
+static swig_module_info swig_module = {swig_types, 133, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2871,6 +2870,30 @@ free_Spr_ObjectIfs(Spr::ObjectIfs *arg1) {
 swig_class cNamedObjectIf;
 
 SWIGINTERN VALUE
+_wrap_NamedObjectIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::NamedObjectIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::NamedObjectIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::NamedObjectIf *)Spr::NamedObjectIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__NamedObjectIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_NamedObjectIf_GetName(int argc, VALUE *argv, VALUE self) {
   Spr::NamedObjectIf *arg1 = (Spr::NamedObjectIf *) 0 ;
   char *result = 0 ;
@@ -2958,6 +2981,30 @@ free_Spr_NamedObjectIf(Spr::NamedObjectIf *arg1) {
 swig_class cSceneObjectIf;
 
 SWIGINTERN VALUE
+_wrap_SceneObjectIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::SceneObjectIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::SceneObjectIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::SceneObjectIf *)Spr::SceneObjectIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__SceneObjectIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_SceneObjectIf_GetScene(int argc, VALUE *argv, VALUE self) {
   Spr::SceneObjectIf *arg1 = (Spr::SceneObjectIf *) 0 ;
   Spr::SceneIf *result = 0 ;
@@ -2987,6 +3034,30 @@ free_Spr_SceneObjectIf(Spr::SceneObjectIf *arg1) {
 }
 
 swig_class cObjectStatesIf;
+
+SWIGINTERN VALUE
+_wrap_ObjectStatesIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::ObjectStatesIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::ObjectStatesIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::ObjectStatesIf *)Spr::ObjectStatesIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__ObjectStatesIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_ObjectStatesIf_AllocateState(int argc, VALUE *argv, VALUE self) {
@@ -3160,6 +3231,30 @@ fail:
 swig_class cNameManagerIf;
 
 SWIGINTERN VALUE
+_wrap_NameManagerIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::NameManagerIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::NameManagerIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::NameManagerIf *)Spr::NameManagerIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__NameManagerIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_NameManagerIf_FindObject__SWIG_2(int argc, VALUE *argv, VALUE self) {
   Spr::NameManagerIf *arg1 = (Spr::NameManagerIf *) 0 ;
   UTString arg2 ;
@@ -3277,12 +3372,60 @@ free_Spr_NameManagerIf(Spr::NameManagerIf *arg1) {
 
 swig_class cSceneIf;
 
+SWIGINTERN VALUE
+_wrap_SceneIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::SceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::SceneIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::SceneIf *)Spr::SceneIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__SceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_SceneIf(Spr::SceneIf *arg1) {
     delete arg1;
 }
 
 swig_class cSdkIf;
+
+SWIGINTERN VALUE
+_wrap_SdkIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::SdkIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::SdkIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::SdkIf *)Spr::SdkIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__SdkIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_SdkIf_CreateSdk(int argc, VALUE *argv, VALUE self) {
@@ -3321,12 +3464,60 @@ free_Spr_SdkIf(Spr::SdkIf *arg1) {
 
 swig_class cCDShapeIf;
 
+SWIGINTERN VALUE
+_wrap_CDShapeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::CDShapeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::CDShapeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::CDShapeIf *)Spr::CDShapeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDShapeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_CDShapeIf(Spr::CDShapeIf *arg1) {
     delete arg1;
 }
 
 swig_class cCDConvexIf;
+
+SWIGINTERN VALUE
+_wrap_CDConvexIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::CDConvexIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::CDConvexIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::CDConvexIf *)Spr::CDConvexIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDConvexIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN void
 free_Spr_CDConvexIf(Spr::CDConvexIf *arg1) {
@@ -3886,6 +4077,30 @@ free_Spr_CDConvexMeshDesc(Spr::CDConvexMeshDesc *arg1) {
 swig_class cCDConvexMeshIf;
 
 SWIGINTERN VALUE
+_wrap_CDConvexMeshIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::CDConvexMeshIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::CDConvexMeshIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::CDConvexMeshIf *)Spr::CDConvexMeshIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDConvexMeshIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_CDConvexMeshIf_GetFace(int argc, VALUE *argv, VALUE self) {
   Spr::CDConvexMeshIf *arg1 = (Spr::CDConvexMeshIf *) 0 ;
   size_t arg2 ;
@@ -4090,6 +4305,30 @@ free_Spr_CDSphereDesc(Spr::CDSphereDesc *arg1) {
 swig_class cCDSphereIf;
 
 SWIGINTERN VALUE
+_wrap_CDSphereIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::CDSphereIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::CDSphereIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::CDSphereIf *)Spr::CDSphereIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDSphereIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_CDSphereIf_GetRadius(int argc, VALUE *argv, VALUE self) {
   Spr::CDSphereIf *arg1 = (Spr::CDSphereIf *) 0 ;
   float result;
@@ -4268,6 +4507,30 @@ free_Spr_CDCapsuleDesc(Spr::CDCapsuleDesc *arg1) {
 swig_class cCDCapsuleIf;
 
 SWIGINTERN VALUE
+_wrap_CDCapsuleIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::CDCapsuleIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::CDCapsuleIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::CDCapsuleIf *)Spr::CDCapsuleIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDCapsuleIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_CDCapsuleIf_GetRadius(int argc, VALUE *argv, VALUE self) {
   Spr::CDCapsuleIf *arg1 = (Spr::CDCapsuleIf *) 0 ;
   float result;
@@ -4417,6 +4680,30 @@ free_Spr_CDBoxDesc(Spr::CDBoxDesc *arg1) {
 swig_class cCDBoxIf;
 
 SWIGINTERN VALUE
+_wrap_CDBoxIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::CDBoxIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::CDBoxIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::CDBoxIf *)Spr::CDBoxIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDBoxIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_CDBoxIf_GetBoxSize(int argc, VALUE *argv, VALUE self) {
   Spr::CDBoxIf *arg1 = (Spr::CDBoxIf *) 0 ;
   Vec3f result;
@@ -4506,6 +4793,30 @@ free_Spr_CDBoxIf(Spr::CDBoxIf *arg1) {
 }
 
 swig_class cFISdkIf;
+
+SWIGINTERN VALUE
+_wrap_FISdkIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FISdkIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FISdkIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FISdkIf *)Spr::FISdkIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FISdkIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_FISdkIf_CreateFileX(int argc, VALUE *argv, VALUE self) {
@@ -4598,6 +4909,30 @@ free_Spr_FISdkIf(Spr::FISdkIf *arg1) {
 }
 
 swig_class cFIFileIf;
+
+SWIGINTERN VALUE
+_wrap_FIFileIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FIFileIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FIFileIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FIFileIf *)Spr::FIFileIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FIFileIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_FIFileIf_Load(int argc, VALUE *argv, VALUE self) {
@@ -4731,6 +5066,30 @@ free_Spr_FIFileIf(Spr::FIFileIf *arg1) {
 swig_class cFIFileXIf;
 
 SWIGINTERN VALUE
+_wrap_FIFileXIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FIFileXIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FIFileXIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FIFileXIf *)Spr::FIFileXIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FIFileXIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_FIFileXIf_Load(int argc, VALUE *argv, VALUE self) {
   Spr::FIFileXIf *arg1 = (Spr::FIFileXIf *) 0 ;
   Spr::ObjectIfs *arg2 = 0 ;
@@ -4830,6 +5189,30 @@ free_Spr_FIFileXIf(Spr::FIFileXIf *arg1) {
 swig_class cFIFileCOLLADAIf;
 
 SWIGINTERN VALUE
+_wrap_FIFileCOLLADAIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FIFileCOLLADAIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FIFileCOLLADAIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FIFileCOLLADAIf *)Spr::FIFileCOLLADAIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FIFileCOLLADAIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_FIFileCOLLADAIf_Load(int argc, VALUE *argv, VALUE self) {
   Spr::FIFileCOLLADAIf *arg1 = (Spr::FIFileCOLLADAIf *) 0 ;
   Spr::ObjectIfs *arg2 = 0 ;
@@ -4927,6 +5310,30 @@ free_Spr_FIFileCOLLADAIf(Spr::FIFileCOLLADAIf *arg1) {
 }
 
 swig_class cGRVisualIf;
+
+SWIGINTERN VALUE
+_wrap_GRVisualIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRVisualIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRVisualIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRVisualIf *)Spr::GRVisualIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRVisualIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_GRVisualIf_Render(int argc, VALUE *argv, VALUE self) {
@@ -5192,6 +5599,30 @@ free_Spr_GRFrameDesc(Spr::GRFrameDesc *arg1) {
 swig_class cGRFrameIf;
 
 SWIGINTERN VALUE
+_wrap_GRFrameIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRFrameIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRFrameIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRFrameIf *)Spr::GRFrameIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_GRFrameIf_GetParent(int argc, VALUE *argv, VALUE self) {
   Spr::GRFrameIf *arg1 = (Spr::GRFrameIf *) 0 ;
   Spr::GRFrameIf *result = 0 ;
@@ -5239,6 +5670,58 @@ _wrap_GRFrameIf_SetParent(int argc, VALUE *argv, VALUE self) {
   arg2 = reinterpret_cast< Spr::GRFrameIf * >(argp2);
   (arg1)->SetParent(arg2);
   return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_GRFrameIf_NChildren(int argc, VALUE *argv, VALUE self) {
+  Spr::GRFrameIf *arg1 = (Spr::GRFrameIf *) 0 ;
+  int result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NChildren" "', argument " "1"" of type '" "Spr::GRFrameIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRFrameIf * >(argp1);
+  result = (int)(arg1)->NChildren();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_GRFrameIf_GetChildren(int argc, VALUE *argv, VALUE self) {
+  Spr::GRFrameIf *arg1 = (Spr::GRFrameIf *) 0 ;
+  Spr::GRVisualIf **result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetChildren" "', argument " "1"" of type '" "Spr::GRFrameIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRFrameIf * >(argp1);
+  result = (Spr::GRVisualIf **)(arg1)->GetChildren();
+  
+  vresult = rb_ary_new2(arg1->NChildren());
+  for(int i = 0; i < arg1->NChildren(); i++)
+  rb_ary_store(vresult, i, SWIG_NewPointerObj(SWIG_as_voidptr(result[i]), SWIGTYPE_p_Spr__GRVisualIf, 0 |  0 ));
+  
+  return vresult;
 fail:
   return Qnil;
 }
@@ -6609,6 +7092,30 @@ free_Spr_GRLightDesc(Spr::GRLightDesc *arg1) {
 
 swig_class cGRLightIf;
 
+SWIGINTERN VALUE
+_wrap_GRLightIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRLightIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRLightIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRLightIf *)Spr::GRLightIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRLightIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_GRLightIf(Spr::GRLightIf *arg1) {
     delete arg1;
@@ -7253,6 +7760,30 @@ free_Spr_GRMaterialDesc(Spr::GRMaterialDesc *arg1) {
 swig_class cGRMaterialIf;
 
 SWIGINTERN VALUE
+_wrap_GRMaterialIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRMaterialIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRMaterialIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRMaterialIf *)Spr::GRMaterialIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRMaterialIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_GRMaterialIf_IsOpaque(int argc, VALUE *argv, VALUE self) {
   Spr::GRMaterialIf *arg1 = (Spr::GRMaterialIf *) 0 ;
   bool result;
@@ -7621,6 +8152,30 @@ free_Spr_GRCameraDesc(Spr::GRCameraDesc *arg1) {
 swig_class cGRCameraIf;
 
 SWIGINTERN VALUE
+_wrap_GRCameraIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRCameraIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRCameraIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRCameraIf *)Spr::GRCameraIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRCameraIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_GRCameraIf_GetFrame(int argc, VALUE *argv, VALUE self) {
   Spr::GRCameraIf *arg1 = (Spr::GRCameraIf *) 0 ;
   Spr::GRFrameIf *result = 0 ;
@@ -7679,6 +8234,30 @@ free_Spr_GRCameraIf(Spr::GRCameraIf *arg1) {
 }
 
 swig_class cGRRenderBaseIf;
+
+SWIGINTERN VALUE
+_wrap_GRRenderBaseIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRRenderBaseIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRRenderBaseIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRRenderBaseIf *)Spr::GRRenderBaseIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRRenderBaseIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_GRRenderBaseIf_SetViewport(int argc, VALUE *argv, VALUE self) {
@@ -11019,6 +11598,30 @@ free_Spr_GRRenderBaseIf(Spr::GRRenderBaseIf *arg1) {
 swig_class cGRRenderIf;
 
 SWIGINTERN VALUE
+_wrap_GRRenderIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRRenderIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRRenderIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRRenderIf *)Spr::GRRenderIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRRenderIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_GRRenderIf_SetDevice(int argc, VALUE *argv, VALUE self) {
   Spr::GRRenderIf *arg1 = (Spr::GRRenderIf *) 0 ;
   Spr::GRDeviceIf *arg2 = (Spr::GRDeviceIf *) 0 ;
@@ -11118,6 +11721,30 @@ free_Spr_GRRenderIf(Spr::GRRenderIf *arg1) {
 swig_class cGRDeviceIf;
 
 SWIGINTERN VALUE
+_wrap_GRDeviceIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRDeviceIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRDeviceIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRDeviceIf *)Spr::GRDeviceIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRDeviceIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_GRDeviceIf_Init(int argc, VALUE *argv, VALUE self) {
   Spr::GRDeviceIf *arg1 = (Spr::GRDeviceIf *) 0 ;
   void *argp1 = 0 ;
@@ -11177,19 +11804,60 @@ free_Spr_GRDeviceIf(Spr::GRDeviceIf *arg1) {
 
 swig_class cGRDeviceGLIf;
 
+SWIGINTERN VALUE
+_wrap_GRDeviceGLIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRDeviceGLIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRDeviceGLIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRDeviceGLIf *)Spr::GRDeviceGLIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRDeviceGLIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_GRDeviceGLIf(Spr::GRDeviceGLIf *arg1) {
     delete arg1;
 }
 
-swig_class cGRDeviceD3DIf;
+swig_class cGRDebugRenderIf;
 
-SWIGINTERN void
-free_Spr_GRDeviceD3DIf(Spr::GRDeviceD3DIf *arg1) {
-    delete arg1;
+SWIGINTERN VALUE
+_wrap_GRDebugRenderIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRDebugRenderIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRDebugRenderIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRDebugRenderIf *)Spr::GRDebugRenderIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRDebugRenderIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
 }
 
-swig_class cGRDebugRenderIf;
 
 SWIGINTERN VALUE
 _wrap_GRDebugRenderIf_DrawScene(int argc, VALUE *argv, VALUE self) {
@@ -11362,6 +12030,30 @@ free_Spr_GRSdkDesc(Spr::GRSdkDesc *arg1) {
 }
 
 swig_class cGRSdkIf;
+
+SWIGINTERN VALUE
+_wrap_GRSdkIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRSdkIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRSdkIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRSdkIf *)Spr::GRSdkIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRSdkIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_GRSdkIf_CreateDebugRender(int argc, VALUE *argv, VALUE self) {
@@ -11620,6 +12312,30 @@ free_Spr_GRSceneDesc(Spr::GRSceneDesc *arg1) {
 }
 
 swig_class cGRSceneIf;
+
+SWIGINTERN VALUE
+_wrap_GRSceneIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRSceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRSceneIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRSceneIf *)Spr::GRSceneIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_GRSceneIf_CreateFrame(int argc, VALUE *argv, VALUE self) {
@@ -12134,6 +12850,30 @@ free_Spr_GRMeshDesc(Spr::GRMeshDesc *arg1) {
 }
 
 swig_class cGRMeshIf;
+
+SWIGINTERN VALUE
+_wrap_GRMeshIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRMeshIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRMeshIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRMeshIf *)Spr::GRMeshIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRMeshIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN void
 free_Spr_GRMeshIf(Spr::GRMeshIf *arg1) {
@@ -12661,6 +13401,30 @@ free_Spr_GRBlendMeshDesc(Spr::GRBlendMeshDesc *arg1) {
 
 swig_class cGRBlendMeshIf;
 
+SWIGINTERN VALUE
+_wrap_GRBlendMeshIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRBlendMeshIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRBlendMeshIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRBlendMeshIf *)Spr::GRBlendMeshIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRBlendMeshIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_GRBlendMeshIf(Spr::GRBlendMeshIf *arg1) {
     delete arg1;
@@ -12869,6 +13633,30 @@ free_Spr_GRSphereDesc(Spr::GRSphereDesc *arg1) {
 
 swig_class cGRSphereIf;
 
+SWIGINTERN VALUE
+_wrap_GRSphereIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::GRSphereIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::GRSphereIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::GRSphereIf *)Spr::GRSphereIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRSphereIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_GRSphereIf(Spr::GRSphereIf *arg1) {
     delete arg1;
@@ -13020,6 +13808,30 @@ free_Spr_PHSdkDesc(Spr::PHSdkDesc *arg1) {
 }
 
 swig_class cPHSdkIf;
+
+SWIGINTERN VALUE
+_wrap_PHSdkIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHSdkIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHSdkIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHSdkIf *)Spr::PHSdkIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSdkIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_PHSdkIf_CreateScene__SWIG_0(int argc, VALUE *argv, VALUE self) {
@@ -13639,6 +14451,30 @@ free_Spr_PHSceneDesc(Spr::PHSceneDesc *arg1) {
 }
 
 swig_class cPHSceneIf;
+
+SWIGINTERN VALUE
+_wrap_PHSceneIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHSceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHSceneIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHSceneIf *)Spr::PHSceneIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_PHSceneIf_GetSdk(int argc, VALUE *argv, VALUE self) {
@@ -15589,6 +16425,30 @@ free_Spr_PHSolidDesc(Spr::PHSolidDesc *arg1) {
 }
 
 swig_class cPHSolidIf;
+
+SWIGINTERN VALUE
+_wrap_PHSolidIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHSolidIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHSolidIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHSolidIf *)Spr::PHSolidIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSolidIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_PHSolidIf_AddForce__SWIG_0(int argc, VALUE *argv, VALUE self) {
@@ -18443,6 +19303,30 @@ free_Spr_PHGearDesc(Spr::PHGearDesc *arg1) {
 swig_class cPHConstraintIf;
 
 SWIGINTERN VALUE
+_wrap_PHConstraintIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHConstraintIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHConstraintIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHConstraintIf *)Spr::PHConstraintIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHConstraintIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_PHConstraintIf_Enable__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Spr::PHConstraintIf *arg1 = (Spr::PHConstraintIf *) 0 ;
   bool arg2 ;
@@ -18700,6 +19584,30 @@ free_Spr_PHConstraintIf(Spr::PHConstraintIf *arg1) {
 
 swig_class cPHContactPointIf;
 
+SWIGINTERN VALUE
+_wrap_PHContactPointIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHContactPointIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHContactPointIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHContactPointIf *)Spr::PHContactPointIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHContactPointIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_PHContactPointIf(Spr::PHContactPointIf *arg1) {
     delete arg1;
@@ -18707,12 +19615,60 @@ free_Spr_PHContactPointIf(Spr::PHContactPointIf *arg1) {
 
 swig_class cPHJointIf;
 
+SWIGINTERN VALUE
+_wrap_PHJointIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHJointIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHJointIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHJointIf *)Spr::PHJointIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHJointIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_PHJointIf(Spr::PHJointIf *arg1) {
     delete arg1;
 }
 
 swig_class cPHJoint1DIf;
+
+SWIGINTERN VALUE
+_wrap_PHJoint1DIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHJoint1DIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHJoint1DIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHJoint1DIf *)Spr::PHJoint1DIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHJoint1DIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_PHJoint1DIf_SetRange(int argc, VALUE *argv, VALUE self) {
@@ -19105,6 +20061,30 @@ free_Spr_PHJoint1DIf(Spr::PHJoint1DIf *arg1) {
 
 swig_class cPHHingeJointIf;
 
+SWIGINTERN VALUE
+_wrap_PHHingeJointIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHHingeJointIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHHingeJointIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHHingeJointIf *)Spr::PHHingeJointIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHHingeJointIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_PHHingeJointIf(Spr::PHHingeJointIf *arg1) {
     delete arg1;
@@ -19112,12 +20092,60 @@ free_Spr_PHHingeJointIf(Spr::PHHingeJointIf *arg1) {
 
 swig_class cPHSliderJointIf;
 
+SWIGINTERN VALUE
+_wrap_PHSliderJointIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHSliderJointIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHSliderJointIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHSliderJointIf *)Spr::PHSliderJointIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSliderJointIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_PHSliderJointIf(Spr::PHSliderJointIf *arg1) {
     delete arg1;
 }
 
 swig_class cPHPathIf;
+
+SWIGINTERN VALUE
+_wrap_PHPathIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHPathIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHPathIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHPathIf *)Spr::PHPathIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHPathIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_PHPathIf_AddPoint(int argc, VALUE *argv, VALUE self) {
@@ -19281,6 +20309,30 @@ free_Spr_PHPathIf(Spr::PHPathIf *arg1) {
 swig_class cPHPathJointIf;
 
 SWIGINTERN VALUE
+_wrap_PHPathJointIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHPathJointIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHPathJointIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHPathJointIf *)Spr::PHPathJointIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHPathJointIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_PHPathJointIf_SetPosition(int argc, VALUE *argv, VALUE self) {
   Spr::PHPathJointIf *arg1 = (Spr::PHPathJointIf *) 0 ;
   double arg2 ;
@@ -19315,6 +20367,30 @@ free_Spr_PHPathJointIf(Spr::PHPathJointIf *arg1) {
 }
 
 swig_class cPHBallJointIf;
+
+SWIGINTERN VALUE
+_wrap_PHBallJointIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHBallJointIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHBallJointIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHBallJointIf *)Spr::PHBallJointIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHBallJointIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_PHBallJointIf_SetSwingRange(int argc, VALUE *argv, VALUE self) {
@@ -19562,6 +20638,30 @@ free_Spr_PHBallJointIf(Spr::PHBallJointIf *arg1) {
 swig_class cPHSpringIf;
 
 SWIGINTERN VALUE
+_wrap_PHSpringIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHSpringIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHSpringIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHSpringIf *)Spr::PHSpringIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSpringIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_PHSpringIf_SetSpring(int argc, VALUE *argv, VALUE self) {
   Spr::PHSpringIf *arg1 = (Spr::PHSpringIf *) 0 ;
   Vec3d *arg2 = 0 ;
@@ -19684,12 +20784,60 @@ free_Spr_PHSpringIf(Spr::PHSpringIf *arg1) {
 
 swig_class cPHTreeNodeIf;
 
+SWIGINTERN VALUE
+_wrap_PHTreeNodeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHTreeNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHTreeNodeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHTreeNodeIf *)Spr::PHTreeNodeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHTreeNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_PHTreeNodeIf(Spr::PHTreeNodeIf *arg1) {
     delete arg1;
 }
 
 swig_class cPHRootNodeIf;
+
+SWIGINTERN VALUE
+_wrap_PHRootNodeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHRootNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHRootNodeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHRootNodeIf *)Spr::PHRootNodeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHRootNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN void
 free_Spr_PHRootNodeIf(Spr::PHRootNodeIf *arg1) {
@@ -19698,12 +20846,60 @@ free_Spr_PHRootNodeIf(Spr::PHRootNodeIf *arg1) {
 
 swig_class cPHGearIf;
 
+SWIGINTERN VALUE
+_wrap_PHGearIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHGearIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHGearIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHGearIf *)Spr::PHGearIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHGearIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Spr_PHGearIf(Spr::PHGearIf *arg1) {
     delete arg1;
 }
 
 swig_class cPHEngineIf;
+
+SWIGINTERN VALUE
+_wrap_PHEngineIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHEngineIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHEngineIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHEngineIf *)Spr::PHEngineIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHEngineIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN void
 free_Spr_PHEngineIf(Spr::PHEngineIf *arg1) {
@@ -19851,6 +21047,30 @@ free_Spr_FWObjectDesc(Spr::FWObjectDesc *arg1) {
 swig_class cFWObjectIf;
 
 SWIGINTERN VALUE
+_wrap_FWObjectIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FWObjectIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FWObjectIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FWObjectIf *)Spr::FWObjectIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWObjectIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_FWObjectIf_GetPHSolid(int argc, VALUE *argv, VALUE self) {
   Spr::FWObjectIf *arg1 = (Spr::FWObjectIf *) 0 ;
   Spr::PHSolidIf *result = 0 ;
@@ -19943,6 +21163,30 @@ free_Spr_FWSceneDesc(Spr::FWSceneDesc *arg1) {
 }
 
 swig_class cFWSceneIf;
+
+SWIGINTERN VALUE
+_wrap_FWSceneIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FWSceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FWSceneIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FWSceneIf *)Spr::FWSceneIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_FWSceneIf_GetPHScene(int argc, VALUE *argv, VALUE self) {
@@ -20351,6 +21595,30 @@ free_Spr_FWSdkDesc(Spr::FWSdkDesc *arg1) {
 }
 
 swig_class cFWSdkIf;
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::FWSdkIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::FWSdkIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::FWSdkIf *)Spr::FWSdkIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 SWIGINTERN VALUE
 _wrap_FWSdkIf_CreateScene(int argc, VALUE *argv, VALUE self) {
@@ -22526,9 +23794,6 @@ static void *_p_Spr__PHPathJointDescTo_p_Spr__PHConstraintDesc(void *x) {
 static void *_p_Spr__PHBallJointDescTo_p_Spr__PHConstraintDesc(void *x) {
     return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHBallJointDesc *) x));
 }
-static void *_p_Spr__GRDeviceD3DIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRDeviceIf *) ((Spr::GRDeviceD3DIf *) x));
-}
 static void *_p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
     return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRRenderIf *) x));
 }
@@ -22823,9 +24088,6 @@ static void *_p_Spr__FWSdkIfTo_p_Spr__ObjectIf(void *x) {
 static void *_p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
 }
-static void *_p_Spr__GRDeviceD3DIfTo_p_Spr__ObjectIf(void *x) {
-    return (void *)((Spr::ObjectIf *) (Spr::GRRenderBaseIf *)(Spr::GRDeviceIf *) ((Spr::GRDeviceD3DIf *) x));
-}
 static void *_p_Spr__GRLightIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
 }
@@ -22907,9 +24169,6 @@ static void *_p_Spr__PHSdkIfTo_p_Spr__NameManagerIf(void *x) {
 static void *_p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
     return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHRootNodeIf *) x));
 }
-static void *_p_Spr__GRDeviceD3DIfTo_p_Spr__GRDeviceIf(void *x) {
-    return (void *)((Spr::GRDeviceIf *)  ((Spr::GRDeviceD3DIf *) x));
-}
 static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf(void *x) {
     return (void *)((Spr::GRDeviceIf *)  ((Spr::GRDeviceGLIf *) x));
 }
@@ -22967,7 +24226,6 @@ static swig_type_info _swigt__p_Spr__GRBlendMeshIf = {"_p_Spr__GRBlendMeshIf", "
 static swig_type_info _swigt__p_Spr__GRCameraDesc = {"_p_Spr__GRCameraDesc", "Spr::GRCameraDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRCameraIf = {"_p_Spr__GRCameraIf", "Spr::GRCameraIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRDebugRenderIf = {"_p_Spr__GRDebugRenderIf", "Spr::GRDebugRenderIf *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_Spr__GRDeviceD3DIf = {"_p_Spr__GRDeviceD3DIf", "Spr::GRDeviceD3DIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRDeviceGLIf = {"_p_Spr__GRDeviceGLIf", "Spr::GRDeviceGLIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRDeviceIf = {"_p_Spr__GRDeviceIf", "Spr::GRDeviceIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRFont = {"_p_Spr__GRFont", "Spr::GRFont *", 0, 0, (void*)0, 0};
@@ -23103,7 +24361,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Spr__GRCameraDesc,
   &_swigt__p_Spr__GRCameraIf,
   &_swigt__p_Spr__GRDebugRenderIf,
-  &_swigt__p_Spr__GRDeviceD3DIf,
   &_swigt__p_Spr__GRDeviceGLIf,
   &_swigt__p_Spr__GRDeviceIf,
   &_swigt__p_Spr__GRFont,
@@ -23239,9 +24496,8 @@ static swig_cast_info _swigc__p_Spr__GRBlendMeshIf[] = {  {&_swigt__p_Spr__GRBle
 static swig_cast_info _swigc__p_Spr__GRCameraDesc[] = {  {&_swigt__p_Spr__GRCameraDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRCameraIf[] = {  {&_swigt__p_Spr__GRCameraIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRDebugRenderIf[] = {  {&_swigt__p_Spr__GRDebugRenderIf, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__GRDeviceD3DIf[] = {  {&_swigt__p_Spr__GRDeviceD3DIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRDeviceGLIf[] = {  {&_swigt__p_Spr__GRDeviceGLIf, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__GRDeviceIf[] = {  {&_swigt__p_Spr__GRDeviceD3DIf, _p_Spr__GRDeviceD3DIfTo_p_Spr__GRDeviceIf, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, 0, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__GRDeviceIf[] = {  {&_swigt__p_Spr__GRDeviceIf, 0, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRFont[] = {  {&_swigt__p_Spr__GRFont, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRFrameDesc[] = {  {&_swigt__p_Spr__GRFrameDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRFrameIf[] = {  {&_swigt__p_Spr__GRFrameIf, 0, 0, 0},{0, 0, 0, 0}};
@@ -23252,7 +24508,7 @@ static swig_cast_info _swigc__p_Spr__GRMaterialDesc[] = {  {&_swigt__p_Spr__GRMa
 static swig_cast_info _swigc__p_Spr__GRMaterialIf[] = {  {&_swigt__p_Spr__GRMaterialIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRMeshDesc[] = {  {&_swigt__p_Spr__GRMeshDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRMeshIf[] = {  {&_swigt__p_Spr__GRMeshIf, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__GRRenderBaseIf[] = {  {&_swigt__p_Spr__GRDeviceD3DIf, _p_Spr__GRDeviceD3DIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, 0, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__GRRenderBaseIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__GRRenderBaseIf[] = {  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, 0, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__GRRenderBaseIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__GRRenderBaseIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRRenderIf[] = {  {&_swigt__p_Spr__GRRenderIf, 0, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRSceneDesc[] = {  {&_swigt__p_Spr__GRSceneDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRSceneIf[] = {  {&_swigt__p_Spr__GRSceneIf, 0, 0, 0},{0, 0, 0, 0}};
@@ -23265,7 +24521,7 @@ static swig_cast_info _swigc__p_Spr__HIForceDevice6D[] = {  {&_swigt__p_Spr__HIF
 static swig_cast_info _swigc__p_Spr__NameManagerIf[] = {  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NameManagerIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__NamedObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, 0, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__NamedObjectIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__Object[] = {  {&_swigt__p_Spr__Object, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__ObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, _p_Spr__GRRenderBaseIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileIf, _p_Spr__FIFileIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileCOLLADAIf, _p_Spr__FIFileCOLLADAIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectIf, 0, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, _p_Spr__NamedObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileXIf, _p_Spr__FIFileXIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectStatesIf, _p_Spr__ObjectStatesIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSdkIf, _p_Spr__FWSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceD3DIf, _p_Spr__GRDeviceD3DIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__ObjectIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__ObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, _p_Spr__GRRenderBaseIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileIf, _p_Spr__FIFileIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileCOLLADAIf, _p_Spr__FIFileCOLLADAIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectIf, 0, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, _p_Spr__NamedObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileXIf, _p_Spr__FIFileXIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectStatesIf, _p_Spr__ObjectStatesIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSdkIf, _p_Spr__FWSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__ObjectIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectIfs[] = {  {&_swigt__p_Spr__ObjectIfs, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectStatesIf[] = {  {&_swigt__p_Spr__ObjectStatesIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHBallJointDesc[] = {  {&_swigt__p_Spr__PHBallJointDesc, 0, 0, 0},{0, 0, 0, 0}};
@@ -23375,7 +24631,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Spr__GRCameraDesc,
   _swigc__p_Spr__GRCameraIf,
   _swigc__p_Spr__GRDebugRenderIf,
-  _swigc__p_Spr__GRDeviceD3DIf,
   _swigc__p_Spr__GRDeviceGLIf,
   _swigc__p_Spr__GRDeviceIf,
   _swigc__p_Spr__GRFont,
@@ -23760,6 +25015,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cNamedObjectIf.klass = rb_define_class_under(mSpringhead, "NamedObjectIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__NamedObjectIf, (void *) &cNamedObjectIf);
   rb_undef_alloc_func(cNamedObjectIf.klass);
+  rb_define_singleton_method(cNamedObjectIf.klass, "Cast", VALUEFUNC(_wrap_NamedObjectIf_Cast), -1);
   rb_define_method(cNamedObjectIf.klass, "GetName", VALUEFUNC(_wrap_NamedObjectIf_GetName), -1);
   rb_define_method(cNamedObjectIf.klass, "SetName", VALUEFUNC(_wrap_NamedObjectIf_SetName), -1);
   rb_define_method(cNamedObjectIf.klass, "GetNameManager", VALUEFUNC(_wrap_NamedObjectIf_GetNameManager), -1);
@@ -23770,6 +25026,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cSceneObjectIf.klass = rb_define_class_under(mSpringhead, "SceneObjectIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__SceneObjectIf, (void *) &cSceneObjectIf);
   rb_undef_alloc_func(cSceneObjectIf.klass);
+  rb_define_singleton_method(cSceneObjectIf.klass, "Cast", VALUEFUNC(_wrap_SceneObjectIf_Cast), -1);
   rb_define_method(cSceneObjectIf.klass, "GetScene", VALUEFUNC(_wrap_SceneObjectIf_GetScene), -1);
   cSceneObjectIf.mark = 0;
   cSceneObjectIf.destroy = (void (*)(void *)) free_Spr_SceneObjectIf;
@@ -23778,6 +25035,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cObjectStatesIf.klass = rb_define_class_under(mSpringhead, "ObjectStatesIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectStatesIf, (void *) &cObjectStatesIf);
   rb_undef_alloc_func(cObjectStatesIf.klass);
+  rb_define_singleton_method(cObjectStatesIf.klass, "Cast", VALUEFUNC(_wrap_ObjectStatesIf_Cast), -1);
   rb_define_method(cObjectStatesIf.klass, "AllocateState", VALUEFUNC(_wrap_ObjectStatesIf_AllocateState), -1);
   rb_define_method(cObjectStatesIf.klass, "ReleaseState", VALUEFUNC(_wrap_ObjectStatesIf_ReleaseState), -1);
   rb_define_method(cObjectStatesIf.klass, "CalcStateSize", VALUEFUNC(_wrap_ObjectStatesIf_CalcStateSize), -1);
@@ -23791,6 +25049,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cNameManagerIf.klass = rb_define_class_under(mSpringhead, "NameManagerIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__NameManagerIf, (void *) &cNameManagerIf);
   rb_undef_alloc_func(cNameManagerIf.klass);
+  rb_define_singleton_method(cNameManagerIf.klass, "Cast", VALUEFUNC(_wrap_NameManagerIf_Cast), -1);
   rb_define_method(cNameManagerIf.klass, "FindObject", VALUEFUNC(_wrap_NameManagerIf_FindObject), -1);
   cNameManagerIf.mark = 0;
   cNameManagerIf.destroy = (void (*)(void *)) free_Spr_NameManagerIf;
@@ -23799,6 +25058,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cSceneIf.klass = rb_define_class_under(mSpringhead, "SceneIf", ((swig_class *) SWIGTYPE_p_Spr__NameManagerIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__SceneIf, (void *) &cSceneIf);
   rb_undef_alloc_func(cSceneIf.klass);
+  rb_define_singleton_method(cSceneIf.klass, "Cast", VALUEFUNC(_wrap_SceneIf_Cast), -1);
   cSceneIf.mark = 0;
   cSceneIf.destroy = (void (*)(void *)) free_Spr_SceneIf;
   cSceneIf.trackObjects = 0;
@@ -23806,6 +25066,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cSdkIf.klass = rb_define_class_under(mSpringhead, "SdkIf", ((swig_class *) SWIGTYPE_p_Spr__NameManagerIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__SdkIf, (void *) &cSdkIf);
   rb_undef_alloc_func(cSdkIf.klass);
+  rb_define_singleton_method(cSdkIf.klass, "Cast", VALUEFUNC(_wrap_SdkIf_Cast), -1);
   rb_define_singleton_method(cSdkIf.klass, "CreateSdk", VALUEFUNC(_wrap_SdkIf_CreateSdk), -1);
   cSdkIf.mark = 0;
   cSdkIf.destroy = (void (*)(void *)) free_Spr_SdkIf;
@@ -23814,6 +25075,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDShapeIf.klass = rb_define_class_under(mSpringhead, "CDShapeIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__CDShapeIf, (void *) &cCDShapeIf);
   rb_undef_alloc_func(cCDShapeIf.klass);
+  rb_define_singleton_method(cCDShapeIf.klass, "Cast", VALUEFUNC(_wrap_CDShapeIf_Cast), -1);
   cCDShapeIf.mark = 0;
   cCDShapeIf.destroy = (void (*)(void *)) free_Spr_CDShapeIf;
   cCDShapeIf.trackObjects = 0;
@@ -23821,6 +25083,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDConvexIf.klass = rb_define_class_under(mSpringhead, "CDConvexIf", ((swig_class *) SWIGTYPE_p_Spr__CDShapeIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__CDConvexIf, (void *) &cCDConvexIf);
   rb_undef_alloc_func(cCDConvexIf.klass);
+  rb_define_singleton_method(cCDConvexIf.klass, "Cast", VALUEFUNC(_wrap_CDConvexIf_Cast), -1);
   cCDConvexIf.mark = 0;
   cCDConvexIf.destroy = (void (*)(void *)) free_Spr_CDConvexIf;
   cCDConvexIf.trackObjects = 0;
@@ -23877,6 +25140,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDConvexMeshIf.klass = rb_define_class_under(mSpringhead, "CDConvexMeshIf", ((swig_class *) SWIGTYPE_p_Spr__CDConvexIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__CDConvexMeshIf, (void *) &cCDConvexMeshIf);
   rb_undef_alloc_func(cCDConvexMeshIf.klass);
+  rb_define_singleton_method(cCDConvexMeshIf.klass, "Cast", VALUEFUNC(_wrap_CDConvexMeshIf_Cast), -1);
   rb_define_method(cCDConvexMeshIf.klass, "GetFace", VALUEFUNC(_wrap_CDConvexMeshIf_GetFace), -1);
   rb_define_method(cCDConvexMeshIf.klass, "NFace", VALUEFUNC(_wrap_CDConvexMeshIf_NFace), -1);
   rb_define_method(cCDConvexMeshIf.klass, "GetVertices", VALUEFUNC(_wrap_CDConvexMeshIf_GetVertices), -1);
@@ -23898,6 +25162,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDSphereIf.klass = rb_define_class_under(mSpringhead, "CDSphereIf", ((swig_class *) SWIGTYPE_p_Spr__CDConvexIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__CDSphereIf, (void *) &cCDSphereIf);
   rb_undef_alloc_func(cCDSphereIf.klass);
+  rb_define_singleton_method(cCDSphereIf.klass, "Cast", VALUEFUNC(_wrap_CDSphereIf_Cast), -1);
   rb_define_method(cCDSphereIf.klass, "GetRadius", VALUEFUNC(_wrap_CDSphereIf_GetRadius), -1);
   cCDSphereIf.mark = 0;
   cCDSphereIf.destroy = (void (*)(void *)) free_Spr_CDSphereIf;
@@ -23918,6 +25183,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDCapsuleIf.klass = rb_define_class_under(mSpringhead, "CDCapsuleIf", ((swig_class *) SWIGTYPE_p_Spr__CDConvexIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__CDCapsuleIf, (void *) &cCDCapsuleIf);
   rb_undef_alloc_func(cCDCapsuleIf.klass);
+  rb_define_singleton_method(cCDCapsuleIf.klass, "Cast", VALUEFUNC(_wrap_CDCapsuleIf_Cast), -1);
   rb_define_method(cCDCapsuleIf.klass, "GetRadius", VALUEFUNC(_wrap_CDCapsuleIf_GetRadius), -1);
   rb_define_method(cCDCapsuleIf.klass, "GetLength", VALUEFUNC(_wrap_CDCapsuleIf_GetLength), -1);
   cCDCapsuleIf.mark = 0;
@@ -23937,6 +25203,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDBoxIf.klass = rb_define_class_under(mSpringhead, "CDBoxIf", ((swig_class *) SWIGTYPE_p_Spr__CDConvexIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__CDBoxIf, (void *) &cCDBoxIf);
   rb_undef_alloc_func(cCDBoxIf.klass);
+  rb_define_singleton_method(cCDBoxIf.klass, "Cast", VALUEFUNC(_wrap_CDBoxIf_Cast), -1);
   rb_define_method(cCDBoxIf.klass, "GetBoxSize", VALUEFUNC(_wrap_CDBoxIf_GetBoxSize), -1);
   rb_define_method(cCDBoxIf.klass, "GetVertices", VALUEFUNC(_wrap_CDBoxIf_GetVertices), -1);
   rb_define_method(cCDBoxIf.klass, "GetFace", VALUEFUNC(_wrap_CDBoxIf_GetFace), -1);
@@ -23947,6 +25214,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFISdkIf.klass = rb_define_class_under(mSpringhead, "FISdkIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FISdkIf, (void *) &cFISdkIf);
   rb_undef_alloc_func(cFISdkIf.klass);
+  rb_define_singleton_method(cFISdkIf.klass, "Cast", VALUEFUNC(_wrap_FISdkIf_Cast), -1);
   rb_define_method(cFISdkIf.klass, "CreateFileX", VALUEFUNC(_wrap_FISdkIf_CreateFileX), -1);
   rb_define_method(cFISdkIf.klass, "CreateFileCOLLADA", VALUEFUNC(_wrap_FISdkIf_CreateFileCOLLADA), -1);
   rb_define_method(cFISdkIf.klass, "Clear", VALUEFUNC(_wrap_FISdkIf_Clear), -1);
@@ -23958,6 +25226,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFIFileIf.klass = rb_define_class_under(mSpringhead, "FIFileIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FIFileIf, (void *) &cFIFileIf);
   rb_undef_alloc_func(cFIFileIf.klass);
+  rb_define_singleton_method(cFIFileIf.klass, "Cast", VALUEFUNC(_wrap_FIFileIf_Cast), -1);
   rb_define_method(cFIFileIf.klass, "Load", VALUEFUNC(_wrap_FIFileIf_Load), -1);
   rb_define_method(cFIFileIf.klass, "Save", VALUEFUNC(_wrap_FIFileIf_Save), -1);
   rb_define_method(cFIFileIf.klass, "RegisterGroup", VALUEFUNC(_wrap_FIFileIf_RegisterGroup), -1);
@@ -23968,6 +25237,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFIFileXIf.klass = rb_define_class_under(mSpringhead, "FIFileXIf", ((swig_class *) SWIGTYPE_p_Spr__FIFileIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FIFileXIf, (void *) &cFIFileXIf);
   rb_undef_alloc_func(cFIFileXIf.klass);
+  rb_define_singleton_method(cFIFileXIf.klass, "Cast", VALUEFUNC(_wrap_FIFileXIf_Cast), -1);
   rb_define_method(cFIFileXIf.klass, "Load", VALUEFUNC(_wrap_FIFileXIf_Load), -1);
   rb_define_method(cFIFileXIf.klass, "Save", VALUEFUNC(_wrap_FIFileXIf_Save), -1);
   cFIFileXIf.mark = 0;
@@ -23977,6 +25247,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFIFileCOLLADAIf.klass = rb_define_class_under(mSpringhead, "FIFileCOLLADAIf", ((swig_class *) SWIGTYPE_p_Spr__FIFileIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FIFileCOLLADAIf, (void *) &cFIFileCOLLADAIf);
   rb_undef_alloc_func(cFIFileCOLLADAIf.klass);
+  rb_define_singleton_method(cFIFileCOLLADAIf.klass, "Cast", VALUEFUNC(_wrap_FIFileCOLLADAIf_Cast), -1);
   rb_define_method(cFIFileCOLLADAIf.klass, "Load", VALUEFUNC(_wrap_FIFileCOLLADAIf_Load), -1);
   rb_define_method(cFIFileCOLLADAIf.klass, "Save", VALUEFUNC(_wrap_FIFileCOLLADAIf_Save), -1);
   cFIFileCOLLADAIf.mark = 0;
@@ -23986,6 +25257,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRVisualIf.klass = rb_define_class_under(mSpringhead, "GRVisualIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRVisualIf, (void *) &cGRVisualIf);
   rb_undef_alloc_func(cGRVisualIf.klass);
+  rb_define_singleton_method(cGRVisualIf.klass, "Cast", VALUEFUNC(_wrap_GRVisualIf_Cast), -1);
   rb_define_method(cGRVisualIf.klass, "Render", VALUEFUNC(_wrap_GRVisualIf_Render), -1);
   rb_define_method(cGRVisualIf.klass, "Rendered", VALUEFUNC(_wrap_GRVisualIf_Rendered), -1);
   cGRVisualIf.mark = 0;
@@ -24015,8 +25287,11 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRFrameIf.klass = rb_define_class_under(mSpringhead, "GRFrameIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRFrameIf, (void *) &cGRFrameIf);
   rb_undef_alloc_func(cGRFrameIf.klass);
+  rb_define_singleton_method(cGRFrameIf.klass, "Cast", VALUEFUNC(_wrap_GRFrameIf_Cast), -1);
   rb_define_method(cGRFrameIf.klass, "GetParent", VALUEFUNC(_wrap_GRFrameIf_GetParent), -1);
   rb_define_method(cGRFrameIf.klass, "SetParent", VALUEFUNC(_wrap_GRFrameIf_SetParent), -1);
+  rb_define_method(cGRFrameIf.klass, "NChildren", VALUEFUNC(_wrap_GRFrameIf_NChildren), -1);
+  rb_define_method(cGRFrameIf.klass, "GetChildren", VALUEFUNC(_wrap_GRFrameIf_GetChildren), -1);
   rb_define_method(cGRFrameIf.klass, "GetTransform", VALUEFUNC(_wrap_GRFrameIf_GetTransform), -1);
   rb_define_method(cGRFrameIf.klass, "GetWorldTransform", VALUEFUNC(_wrap_GRFrameIf_GetWorldTransform), -1);
   rb_define_method(cGRFrameIf.klass, "SetTransform", VALUEFUNC(_wrap_GRFrameIf_SetTransform), -1);
@@ -24082,6 +25357,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRLightIf.klass = rb_define_class_under(mSpringhead, "GRLightIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRLightIf, (void *) &cGRLightIf);
   rb_undef_alloc_func(cGRLightIf.klass);
+  rb_define_singleton_method(cGRLightIf.klass, "Cast", VALUEFUNC(_wrap_GRLightIf_Cast), -1);
   cGRLightIf.mark = 0;
   cGRLightIf.destroy = (void (*)(void *)) free_Spr_GRLightIf;
   cGRLightIf.trackObjects = 0;
@@ -24110,6 +25386,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRMaterialIf.klass = rb_define_class_under(mSpringhead, "GRMaterialIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRMaterialIf, (void *) &cGRMaterialIf);
   rb_undef_alloc_func(cGRMaterialIf.klass);
+  rb_define_singleton_method(cGRMaterialIf.klass, "Cast", VALUEFUNC(_wrap_GRMaterialIf_Cast), -1);
   rb_define_method(cGRMaterialIf.klass, "IsOpaque", VALUEFUNC(_wrap_GRMaterialIf_IsOpaque), -1);
   cGRMaterialIf.mark = 0;
   cGRMaterialIf.destroy = (void (*)(void *)) free_Spr_GRMaterialIf;
@@ -24134,6 +25411,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRCameraIf.klass = rb_define_class_under(mSpringhead, "GRCameraIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRCameraIf, (void *) &cGRCameraIf);
   rb_undef_alloc_func(cGRCameraIf.klass);
+  rb_define_singleton_method(cGRCameraIf.klass, "Cast", VALUEFUNC(_wrap_GRCameraIf_Cast), -1);
   rb_define_method(cGRCameraIf.klass, "GetFrame", VALUEFUNC(_wrap_GRCameraIf_GetFrame), -1);
   rb_define_method(cGRCameraIf.klass, "SetFrame", VALUEFUNC(_wrap_GRCameraIf_SetFrame), -1);
   cGRCameraIf.mark = 0;
@@ -24143,6 +25421,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRRenderBaseIf.klass = rb_define_class_under(mSpringhead, "GRRenderBaseIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRRenderBaseIf, (void *) &cGRRenderBaseIf);
   rb_undef_alloc_func(cGRRenderBaseIf.klass);
+  rb_define_singleton_method(cGRRenderBaseIf.klass, "Cast", VALUEFUNC(_wrap_GRRenderBaseIf_Cast), -1);
   rb_define_const(cGRRenderBaseIf.klass, "POINTS", SWIG_From_int(static_cast< int >(Spr::GRRenderBaseIf::POINTS)));
   rb_define_const(cGRRenderBaseIf.klass, "LINES", SWIG_From_int(static_cast< int >(Spr::GRRenderBaseIf::LINES)));
   rb_define_const(cGRRenderBaseIf.klass, "LINE_STRIP", SWIG_From_int(static_cast< int >(Spr::GRRenderBaseIf::LINE_STRIP)));
@@ -24218,6 +25497,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRRenderIf.klass = rb_define_class_under(mSpringhead, "GRRenderIf", ((swig_class *) SWIGTYPE_p_Spr__GRRenderBaseIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRRenderIf, (void *) &cGRRenderIf);
   rb_undef_alloc_func(cGRRenderIf.klass);
+  rb_define_singleton_method(cGRRenderIf.klass, "Cast", VALUEFUNC(_wrap_GRRenderIf_Cast), -1);
   rb_define_method(cGRRenderIf.klass, "SetDevice", VALUEFUNC(_wrap_GRRenderIf_SetDevice), -1);
   rb_define_method(cGRRenderIf.klass, "SetCamera", VALUEFUNC(_wrap_GRRenderIf_SetCamera), -1);
   rb_define_method(cGRRenderIf.klass, "Reshape", VALUEFUNC(_wrap_GRRenderIf_Reshape), -1);
@@ -24228,6 +25508,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRDeviceIf.klass = rb_define_class_under(mSpringhead, "GRDeviceIf", ((swig_class *) SWIGTYPE_p_Spr__GRRenderBaseIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRDeviceIf, (void *) &cGRDeviceIf);
   rb_undef_alloc_func(cGRDeviceIf.klass);
+  rb_define_singleton_method(cGRDeviceIf.klass, "Cast", VALUEFUNC(_wrap_GRDeviceIf_Cast), -1);
   rb_define_method(cGRDeviceIf.klass, "Init", VALUEFUNC(_wrap_GRDeviceIf_Init), -1);
   rb_define_method(cGRDeviceIf.klass, "Print", VALUEFUNC(_wrap_GRDeviceIf_Print), -1);
   cGRDeviceIf.mark = 0;
@@ -24237,20 +25518,15 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRDeviceGLIf.klass = rb_define_class_under(mSpringhead, "GRDeviceGLIf", ((swig_class *) SWIGTYPE_p_Spr__GRDeviceIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRDeviceGLIf, (void *) &cGRDeviceGLIf);
   rb_undef_alloc_func(cGRDeviceGLIf.klass);
+  rb_define_singleton_method(cGRDeviceGLIf.klass, "Cast", VALUEFUNC(_wrap_GRDeviceGLIf_Cast), -1);
   cGRDeviceGLIf.mark = 0;
   cGRDeviceGLIf.destroy = (void (*)(void *)) free_Spr_GRDeviceGLIf;
   cGRDeviceGLIf.trackObjects = 0;
   
-  cGRDeviceD3DIf.klass = rb_define_class_under(mSpringhead, "GRDeviceD3DIf", ((swig_class *) SWIGTYPE_p_Spr__GRDeviceIf->clientdata)->klass);
-  SWIG_TypeClientData(SWIGTYPE_p_Spr__GRDeviceD3DIf, (void *) &cGRDeviceD3DIf);
-  rb_undef_alloc_func(cGRDeviceD3DIf.klass);
-  cGRDeviceD3DIf.mark = 0;
-  cGRDeviceD3DIf.destroy = (void (*)(void *)) free_Spr_GRDeviceD3DIf;
-  cGRDeviceD3DIf.trackObjects = 0;
-  
   cGRDebugRenderIf.klass = rb_define_class_under(mSpringhead, "GRDebugRenderIf", ((swig_class *) SWIGTYPE_p_Spr__GRRenderIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRDebugRenderIf, (void *) &cGRDebugRenderIf);
   rb_undef_alloc_func(cGRDebugRenderIf.klass);
+  rb_define_singleton_method(cGRDebugRenderIf.klass, "Cast", VALUEFUNC(_wrap_GRDebugRenderIf_Cast), -1);
   rb_define_const(cGRDebugRenderIf.klass, "RED", SWIG_From_int(static_cast< int >(Spr::GRDebugRenderIf::RED)));
   rb_define_const(cGRDebugRenderIf.klass, "GREEN", SWIG_From_int(static_cast< int >(Spr::GRDebugRenderIf::GREEN)));
   rb_define_const(cGRDebugRenderIf.klass, "BLUE", SWIG_From_int(static_cast< int >(Spr::GRDebugRenderIf::BLUE)));
@@ -24294,6 +25570,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRSdkIf.klass = rb_define_class_under(mSpringhead, "GRSdkIf", ((swig_class *) SWIGTYPE_p_Spr__SdkIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRSdkIf, (void *) &cGRSdkIf);
   rb_undef_alloc_func(cGRSdkIf.klass);
+  rb_define_singleton_method(cGRSdkIf.klass, "Cast", VALUEFUNC(_wrap_GRSdkIf_Cast), -1);
   rb_define_method(cGRSdkIf.klass, "CreateDebugRender", VALUEFUNC(_wrap_GRSdkIf_CreateDebugRender), -1);
   rb_define_method(cGRSdkIf.klass, "CreateDeviceGL", VALUEFUNC(_wrap_GRSdkIf_CreateDeviceGL), -1);
   rb_define_method(cGRSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_GRSdkIf_CreateScene), -1);
@@ -24318,6 +25595,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRSceneIf.klass = rb_define_class_under(mSpringhead, "GRSceneIf", ((swig_class *) SWIGTYPE_p_Spr__SceneIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRSceneIf, (void *) &cGRSceneIf);
   rb_undef_alloc_func(cGRSceneIf.klass);
+  rb_define_singleton_method(cGRSceneIf.klass, "Cast", VALUEFUNC(_wrap_GRSceneIf_Cast), -1);
   rb_define_method(cGRSceneIf.klass, "CreateFrame", VALUEFUNC(_wrap_GRSceneIf_CreateFrame), -1);
   rb_define_method(cGRSceneIf.klass, "Render", VALUEFUNC(_wrap_GRSceneIf_Render), -1);
   rb_define_method(cGRSceneIf.klass, "GetWorld", VALUEFUNC(_wrap_GRSceneIf_GetWorld), -1);
@@ -24349,6 +25627,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRMeshIf.klass = rb_define_class_under(mSpringhead, "GRMeshIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRMeshIf, (void *) &cGRMeshIf);
   rb_undef_alloc_func(cGRMeshIf.klass);
+  rb_define_singleton_method(cGRMeshIf.klass, "Cast", VALUEFUNC(_wrap_GRMeshIf_Cast), -1);
   cGRMeshIf.mark = 0;
   cGRMeshIf.destroy = (void (*)(void *)) free_Spr_GRMeshIf;
   cGRMeshIf.trackObjects = 0;
@@ -24380,6 +25659,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRBlendMeshIf.klass = rb_define_class_under(mSpringhead, "GRBlendMeshIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRBlendMeshIf, (void *) &cGRBlendMeshIf);
   rb_undef_alloc_func(cGRBlendMeshIf.klass);
+  rb_define_singleton_method(cGRBlendMeshIf.klass, "Cast", VALUEFUNC(_wrap_GRBlendMeshIf_Cast), -1);
   cGRBlendMeshIf.mark = 0;
   cGRBlendMeshIf.destroy = (void (*)(void *)) free_Spr_GRBlendMeshIf;
   cGRBlendMeshIf.trackObjects = 0;
@@ -24401,6 +25681,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRSphereIf.klass = rb_define_class_under(mSpringhead, "GRSphereIf", ((swig_class *) SWIGTYPE_p_Spr__GRVisualIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRSphereIf, (void *) &cGRSphereIf);
   rb_undef_alloc_func(cGRSphereIf.klass);
+  rb_define_singleton_method(cGRSphereIf.klass, "Cast", VALUEFUNC(_wrap_GRSphereIf_Cast), -1);
   cGRSphereIf.mark = 0;
   cGRSphereIf.destroy = (void (*)(void *)) free_Spr_GRSphereIf;
   cGRSphereIf.trackObjects = 0;
@@ -24417,6 +25698,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHSdkIf.klass = rb_define_class_under(mSpringhead, "PHSdkIf", ((swig_class *) SWIGTYPE_p_Spr__SdkIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSdkIf, (void *) &cPHSdkIf);
   rb_undef_alloc_func(cPHSdkIf.klass);
+  rb_define_singleton_method(cPHSdkIf.klass, "Cast", VALUEFUNC(_wrap_PHSdkIf_Cast), -1);
   rb_define_method(cPHSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_PHSdkIf_CreateScene), -1);
   rb_define_method(cPHSdkIf.klass, "NScene", VALUEFUNC(_wrap_PHSdkIf_NScene), -1);
   rb_define_method(cPHSdkIf.klass, "GetScene", VALUEFUNC(_wrap_PHSdkIf_GetScene), -1);
@@ -24461,6 +25743,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHSceneIf.klass = rb_define_class_under(mSpringhead, "PHSceneIf", ((swig_class *) SWIGTYPE_p_Spr__SceneIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSceneIf, (void *) &cPHSceneIf);
   rb_undef_alloc_func(cPHSceneIf.klass);
+  rb_define_singleton_method(cPHSceneIf.klass, "Cast", VALUEFUNC(_wrap_PHSceneIf_Cast), -1);
   rb_define_method(cPHSceneIf.klass, "GetSdk", VALUEFUNC(_wrap_PHSceneIf_GetSdk), -1);
   rb_define_method(cPHSceneIf.klass, "CreateShape", VALUEFUNC(_wrap_PHSceneIf_CreateShape), -1);
   rb_define_method(cPHSceneIf.klass, "CreateSolid", VALUEFUNC(_wrap_PHSceneIf_CreateSolid), -1);
@@ -24533,6 +25816,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHSolidIf.klass = rb_define_class_under(mSpringhead, "PHSolidIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSolidIf, (void *) &cPHSolidIf);
   rb_undef_alloc_func(cPHSolidIf.klass);
+  rb_define_singleton_method(cPHSolidIf.klass, "Cast", VALUEFUNC(_wrap_PHSolidIf_Cast), -1);
   rb_define_method(cPHSolidIf.klass, "AddTorque", VALUEFUNC(_wrap_PHSolidIf_AddTorque), -1);
   rb_define_method(cPHSolidIf.klass, "AddForce", VALUEFUNC(_wrap_PHSolidIf_AddForce), -1);
   rb_define_method(cPHSolidIf.klass, "GetMass", VALUEFUNC(_wrap_PHSolidIf_GetMass), -1);
@@ -24710,6 +25994,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHConstraintIf.klass = rb_define_class_under(mSpringhead, "PHConstraintIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHConstraintIf, (void *) &cPHConstraintIf);
   rb_undef_alloc_func(cPHConstraintIf.klass);
+  rb_define_singleton_method(cPHConstraintIf.klass, "Cast", VALUEFUNC(_wrap_PHConstraintIf_Cast), -1);
   rb_define_method(cPHConstraintIf.klass, "Enable", VALUEFUNC(_wrap_PHConstraintIf_Enable), -1);
   rb_define_method(cPHConstraintIf.klass, "IsEnabled", VALUEFUNC(_wrap_PHConstraintIf_IsEnabled), -1);
   rb_define_method(cPHConstraintIf.klass, "GetConstraintType", VALUEFUNC(_wrap_PHConstraintIf_GetConstraintType), -1);
@@ -24723,6 +26008,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHContactPointIf.klass = rb_define_class_under(mSpringhead, "PHContactPointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHContactPointIf, (void *) &cPHContactPointIf);
   rb_undef_alloc_func(cPHContactPointIf.klass);
+  rb_define_singleton_method(cPHContactPointIf.klass, "Cast", VALUEFUNC(_wrap_PHContactPointIf_Cast), -1);
   cPHContactPointIf.mark = 0;
   cPHContactPointIf.destroy = (void (*)(void *)) free_Spr_PHContactPointIf;
   cPHContactPointIf.trackObjects = 0;
@@ -24730,6 +26016,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHJointIf.klass = rb_define_class_under(mSpringhead, "PHJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHJointIf, (void *) &cPHJointIf);
   rb_undef_alloc_func(cPHJointIf.klass);
+  rb_define_singleton_method(cPHJointIf.klass, "Cast", VALUEFUNC(_wrap_PHJointIf_Cast), -1);
   cPHJointIf.mark = 0;
   cPHJointIf.destroy = (void (*)(void *)) free_Spr_PHJointIf;
   cPHJointIf.trackObjects = 0;
@@ -24737,6 +26024,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHJoint1DIf.klass = rb_define_class_under(mSpringhead, "PHJoint1DIf", ((swig_class *) SWIGTYPE_p_Spr__PHJointIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHJoint1DIf, (void *) &cPHJoint1DIf);
   rb_undef_alloc_func(cPHJoint1DIf.klass);
+  rb_define_singleton_method(cPHJoint1DIf.klass, "Cast", VALUEFUNC(_wrap_PHJoint1DIf_Cast), -1);
   rb_define_method(cPHJoint1DIf.klass, "SetRange", VALUEFUNC(_wrap_PHJoint1DIf_SetRange), -1);
   rb_define_method(cPHJoint1DIf.klass, "GetRange", VALUEFUNC(_wrap_PHJoint1DIf_GetRange), -1);
   rb_define_method(cPHJoint1DIf.klass, "SetMotorTorque", VALUEFUNC(_wrap_PHJoint1DIf_SetMotorTorque), -1);
@@ -24758,6 +26046,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHHingeJointIf.klass = rb_define_class_under(mSpringhead, "PHHingeJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHHingeJointIf, (void *) &cPHHingeJointIf);
   rb_undef_alloc_func(cPHHingeJointIf.klass);
+  rb_define_singleton_method(cPHHingeJointIf.klass, "Cast", VALUEFUNC(_wrap_PHHingeJointIf_Cast), -1);
   cPHHingeJointIf.mark = 0;
   cPHHingeJointIf.destroy = (void (*)(void *)) free_Spr_PHHingeJointIf;
   cPHHingeJointIf.trackObjects = 0;
@@ -24765,6 +26054,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHSliderJointIf.klass = rb_define_class_under(mSpringhead, "PHSliderJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSliderJointIf, (void *) &cPHSliderJointIf);
   rb_undef_alloc_func(cPHSliderJointIf.klass);
+  rb_define_singleton_method(cPHSliderJointIf.klass, "Cast", VALUEFUNC(_wrap_PHSliderJointIf_Cast), -1);
   cPHSliderJointIf.mark = 0;
   cPHSliderJointIf.destroy = (void (*)(void *)) free_Spr_PHSliderJointIf;
   cPHSliderJointIf.trackObjects = 0;
@@ -24772,6 +26062,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHPathIf.klass = rb_define_class_under(mSpringhead, "PHPathIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathIf, (void *) &cPHPathIf);
   rb_undef_alloc_func(cPHPathIf.klass);
+  rb_define_singleton_method(cPHPathIf.klass, "Cast", VALUEFUNC(_wrap_PHPathIf_Cast), -1);
   rb_define_method(cPHPathIf.klass, "AddPoint", VALUEFUNC(_wrap_PHPathIf_AddPoint), -1);
   rb_define_method(cPHPathIf.klass, "SetLoop", VALUEFUNC(_wrap_PHPathIf_SetLoop), -1);
   rb_define_method(cPHPathIf.klass, "IsLoop", VALUEFUNC(_wrap_PHPathIf_IsLoop), -1);
@@ -24782,6 +26073,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHPathJointIf.klass = rb_define_class_under(mSpringhead, "PHPathJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHJoint1DIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathJointIf, (void *) &cPHPathJointIf);
   rb_undef_alloc_func(cPHPathJointIf.klass);
+  rb_define_singleton_method(cPHPathJointIf.klass, "Cast", VALUEFUNC(_wrap_PHPathJointIf_Cast), -1);
   rb_define_method(cPHPathJointIf.klass, "SetPosition", VALUEFUNC(_wrap_PHPathJointIf_SetPosition), -1);
   cPHPathJointIf.mark = 0;
   cPHPathJointIf.destroy = (void (*)(void *)) free_Spr_PHPathJointIf;
@@ -24790,6 +26082,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHBallJointIf.klass = rb_define_class_under(mSpringhead, "PHBallJointIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHBallJointIf, (void *) &cPHBallJointIf);
   rb_undef_alloc_func(cPHBallJointIf.klass);
+  rb_define_singleton_method(cPHBallJointIf.klass, "Cast", VALUEFUNC(_wrap_PHBallJointIf_Cast), -1);
   rb_define_method(cPHBallJointIf.klass, "SetSwingRange", VALUEFUNC(_wrap_PHBallJointIf_SetSwingRange), -1);
   rb_define_method(cPHBallJointIf.klass, "GetSwingRange", VALUEFUNC(_wrap_PHBallJointIf_GetSwingRange), -1);
   rb_define_method(cPHBallJointIf.klass, "SetTwistRange", VALUEFUNC(_wrap_PHBallJointIf_SetTwistRange), -1);
@@ -24805,6 +26098,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHSpringIf.klass = rb_define_class_under(mSpringhead, "PHSpringIf", ((swig_class *) SWIGTYPE_p_Spr__PHConstraintIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSpringIf, (void *) &cPHSpringIf);
   rb_undef_alloc_func(cPHSpringIf.klass);
+  rb_define_singleton_method(cPHSpringIf.klass, "Cast", VALUEFUNC(_wrap_PHSpringIf_Cast), -1);
   rb_define_method(cPHSpringIf.klass, "SetSpring", VALUEFUNC(_wrap_PHSpringIf_SetSpring), -1);
   rb_define_method(cPHSpringIf.klass, "GetSpring", VALUEFUNC(_wrap_PHSpringIf_GetSpring), -1);
   rb_define_method(cPHSpringIf.klass, "SetDamper", VALUEFUNC(_wrap_PHSpringIf_SetDamper), -1);
@@ -24816,6 +26110,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHTreeNodeIf.klass = rb_define_class_under(mSpringhead, "PHTreeNodeIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHTreeNodeIf, (void *) &cPHTreeNodeIf);
   rb_undef_alloc_func(cPHTreeNodeIf.klass);
+  rb_define_singleton_method(cPHTreeNodeIf.klass, "Cast", VALUEFUNC(_wrap_PHTreeNodeIf_Cast), -1);
   cPHTreeNodeIf.mark = 0;
   cPHTreeNodeIf.destroy = (void (*)(void *)) free_Spr_PHTreeNodeIf;
   cPHTreeNodeIf.trackObjects = 0;
@@ -24823,6 +26118,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHRootNodeIf.klass = rb_define_class_under(mSpringhead, "PHRootNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHRootNodeIf, (void *) &cPHRootNodeIf);
   rb_undef_alloc_func(cPHRootNodeIf.klass);
+  rb_define_singleton_method(cPHRootNodeIf.klass, "Cast", VALUEFUNC(_wrap_PHRootNodeIf_Cast), -1);
   cPHRootNodeIf.mark = 0;
   cPHRootNodeIf.destroy = (void (*)(void *)) free_Spr_PHRootNodeIf;
   cPHRootNodeIf.trackObjects = 0;
@@ -24830,6 +26126,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHGearIf.klass = rb_define_class_under(mSpringhead, "PHGearIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHGearIf, (void *) &cPHGearIf);
   rb_undef_alloc_func(cPHGearIf.klass);
+  rb_define_singleton_method(cPHGearIf.klass, "Cast", VALUEFUNC(_wrap_PHGearIf_Cast), -1);
   cPHGearIf.mark = 0;
   cPHGearIf.destroy = (void (*)(void *)) free_Spr_PHGearIf;
   cPHGearIf.trackObjects = 0;
@@ -24837,6 +26134,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHEngineIf.klass = rb_define_class_under(mSpringhead, "PHEngineIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHEngineIf, (void *) &cPHEngineIf);
   rb_undef_alloc_func(cPHEngineIf.klass);
+  rb_define_singleton_method(cPHEngineIf.klass, "Cast", VALUEFUNC(_wrap_PHEngineIf_Cast), -1);
   cPHEngineIf.mark = 0;
   cPHEngineIf.destroy = (void (*)(void *)) free_Spr_PHEngineIf;
   cPHEngineIf.trackObjects = 0;
@@ -24862,6 +26160,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFWObjectIf.klass = rb_define_class_under(mSpringhead, "FWObjectIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWObjectIf, (void *) &cFWObjectIf);
   rb_undef_alloc_func(cFWObjectIf.klass);
+  rb_define_singleton_method(cFWObjectIf.klass, "Cast", VALUEFUNC(_wrap_FWObjectIf_Cast), -1);
   rb_define_method(cFWObjectIf.klass, "GetPHSolid", VALUEFUNC(_wrap_FWObjectIf_GetPHSolid), -1);
   rb_define_method(cFWObjectIf.klass, "GetGRFrame", VALUEFUNC(_wrap_FWObjectIf_GetGRFrame), -1);
   cFWObjectIf.mark = 0;
@@ -24879,6 +26178,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFWSceneIf.klass = rb_define_class_under(mSpringhead, "FWSceneIf", ((swig_class *) SWIGTYPE_p_Spr__SceneIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWSceneIf, (void *) &cFWSceneIf);
   rb_undef_alloc_func(cFWSceneIf.klass);
+  rb_define_singleton_method(cFWSceneIf.klass, "Cast", VALUEFUNC(_wrap_FWSceneIf_Cast), -1);
   rb_define_method(cFWSceneIf.klass, "GetPHScene", VALUEFUNC(_wrap_FWSceneIf_GetPHScene), -1);
   rb_define_method(cFWSceneIf.klass, "SetPHScene", VALUEFUNC(_wrap_FWSceneIf_SetPHScene), -1);
   rb_define_method(cFWSceneIf.klass, "GetGRScene", VALUEFUNC(_wrap_FWSceneIf_GetGRScene), -1);
@@ -24903,6 +26203,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cFWSdkIf.klass = rb_define_class_under(mSpringhead, "FWSdkIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWSdkIf, (void *) &cFWSdkIf);
   rb_undef_alloc_func(cFWSdkIf.klass);
+  rb_define_singleton_method(cFWSdkIf.klass, "Cast", VALUEFUNC(_wrap_FWSdkIf_Cast), -1);
   rb_define_method(cFWSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_FWSdkIf_CreateScene), -1);
   rb_define_method(cFWSdkIf.klass, "NScene", VALUEFUNC(_wrap_FWSdkIf_NScene), -1);
   rb_define_method(cFWSdkIf.klass, "GetScene", VALUEFUNC(_wrap_FWSdkIf_GetScene), -1);

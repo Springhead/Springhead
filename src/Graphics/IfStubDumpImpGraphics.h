@@ -10,7 +10,6 @@ IF_IMP(GRRenderBase, Object);
 IF_IMP(GRRender, GRRenderBase);
 IF_IMP(GRDevice, GRRenderBase);
 IF_IMP(GRDeviceGL, GRDevice);
-IF_IMP(GRDeviceD3D, GRDevice);
 IF_IMP(GRDebugRender, GRRender);
 IF_IMP(GRScene, Scene);
 IF_IMP(GRSdk, Sdk);

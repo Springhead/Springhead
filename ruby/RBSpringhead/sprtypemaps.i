@@ -94,11 +94,18 @@ RETURN_VECTOR_TYPEMAP(Posed, 7);
 	$1 = &temp[0];
 %}
 
-// GetSolids‚Ì–ß‚è’l‚ÅPHSolid**
+// PHSceneIf::GetSolids‚Ì–ß‚è’l‚ÅPHSolid**
 %typemap(out) Spr::PHSolidIf ** %{
 	$result = rb_ary_new2(arg1->NSolids());
 	for(int i = 0; i < arg1->NSolids(); i++)
 		rb_ary_store($result, i, SWIG_NewPointerObj(SWIG_as_voidptr($1[i]), SWIGTYPE_p_Spr__PHSolidIf, 0 |  0 ));
+%}
+
+// GRFrameIf::GetChildren‚Ì–ß‚è’l‚ÅGRVisualIf**
+%typemap(out) Spr::GRVisualIf ** %{
+	$result = rb_ary_new2(arg1->NChildren());
+	for(int i = 0; i < arg1->NChildren(); i++)
+		rb_ary_store($result, i, SWIG_NewPointerObj(SWIG_as_voidptr($1[i]), SWIGTYPE_p_Spr__GRVisualIf, 0 |  0 ));
 %}
 
 //setcontactmode‚Ìˆø”‚ÅPHSolid**

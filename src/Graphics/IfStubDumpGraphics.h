@@ -32,6 +32,12 @@ struct GRFrameIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetParent(GRFrameIf *  fr){
 		return ((OBJ*)(MIF*)this)->OBJ::SetParent(fr);
 	}
+	virtual int NChildren(){
+		return ((OBJ*)(MIF*)this)->OBJ::NChildren();
+	}
+	virtual GRVisualIf * *  GetChildren(){
+		return ((OBJ*)(MIF*)this)->OBJ::GetChildren();
+	}
 	virtual Affinef GetTransform(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetTransform();
 	}
@@ -280,14 +286,6 @@ struct GRDeviceGLIfStubTemplate: public GRDeviceIfStubTemplate<IF, MIF, OBJ> {
 struct GRDeviceGLIf;	class GRDeviceGL;
 typedef GRDeviceGLIfStubTemplate<GRDeviceGLIf, ObjectIfBuf, GRDeviceGL>	GRDeviceGLIfStub;
 typedef IfInitTemplate<GRDeviceGLIfStub, GRDeviceGL>	GRDeviceGLIfInit;
-
-template <class IF, class MIF, class OBJ> struct GRDeviceIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct GRDeviceD3DIfStubTemplate: public GRDeviceIfStubTemplate<IF, MIF, OBJ> {
-};
-struct GRDeviceD3DIf;	class GRDeviceD3D;
-typedef GRDeviceD3DIfStubTemplate<GRDeviceD3DIf, ObjectIfBuf, GRDeviceD3D>	GRDeviceD3DIfStub;
-typedef IfInitTemplate<GRDeviceD3DIfStub, GRDeviceD3D>	GRDeviceD3DIfInit;
 
 template <class IF, class MIF, class OBJ> struct GRRenderIfStubTemplate;
 template <class IF, class MIF, class OBJ>

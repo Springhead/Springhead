@@ -20,10 +20,10 @@ GRFrame::GRFrame(const GRFrameDesc& desc):GRFrameDesc(desc){
 void GRFrame::Render(GRRenderIf* r){
 	r->PushModelMatrix();
 	r->MultModelMatrix(transform);
-	for(GRVisuals::iterator it = children.begin(); it != children.end(); ++it){
+	for(GRVisualIfs::iterator it = children.begin(); it != children.end(); ++it){
 		(*it)->Render(r);
 	}
-	for(GRVisuals::reverse_iterator it = children.rbegin(); it != children.rend(); ++it){
+	for(GRVisualIfs::reverse_iterator it = children.rbegin(); it != children.rend(); ++it){
 		(*it)->Rendered(r);
 	}
 	r->PopModelMatrix();
@@ -49,7 +49,7 @@ void GRFrame::SetParent(GRFrameIf* fr){
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* o){
-	GRVisual* v = DCAST(GRVisual, o);
+	GRVisualIf* v = DCAST(GRVisualIf, o);
 	if (v){
 		children.push_back(v);
 		GRFrame* f = DCAST(GRFrame, v);
@@ -62,8 +62,8 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 	return false;
 }
 bool GRFrame::DelChildObject(ObjectIf* v){
-	for(GRVisuals::iterator it = children.begin(); it != children.end(); ++it){
-		if (*it == DCAST(Object, v)){
+	for(GRVisualIfs::iterator it = children.begin(); it != children.end(); ++it){
+		if (*it == v){
 			children.erase(it);
 			return true;
 		}
