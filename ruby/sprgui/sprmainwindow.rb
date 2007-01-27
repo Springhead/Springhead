@@ -56,15 +56,7 @@ class SprMainWindow < FXMainWindow
     	dragshell1 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
     	menubar = FXMenuBar.new(self, dragshell1, LAYOUT_SIDE_TOP|LAYOUT_FILL_X)
     	FXToolBarGrip.new(menubar, menubar, FXMenuBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
-  
-    	# Tool bar
-    	dragshell2 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
-    	toolbar = FXToolBar.new(self, dragshell2, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
-    	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
-  
-    	# Status bar
-    	statusbar = FXStatusBar.new(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
-  
+    
     	# File menu
 		filemenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&File", nil, filemenu)
@@ -141,6 +133,40 @@ class SprMainWindow < FXMainWindow
     	FXMenuSeparator.new(helpmenu)
     	FXMenuCommand.new(helpmenu, "&About TextEdit...\t\tDisplay about panel.", @smallicon)
   
+    	# Tool bar
+    	dragshell2 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
+    	toolbar = FXToolBar.new(self, dragshell2, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
+    	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
+  
+		# Toobar buttons: File manipulation
+		FXButton.new(toolbar, "New\tNew\tCreate new document.", @newicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Open\tOpen\tOpen document file.", @openicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Save\tSave\tSave document.", @saveicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Save as\tSave As\tSave document to another file.", @saveasicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+
+		# Toobar buttons: Editing
+		FXFrame.new(toolbar, LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FIX_WIDTH|LAYOUT_FIX_HEIGHT, 0, 0, 5, 5)
+		FXButton.new(toolbar, "Cut\tCut\tCut selection to clipboard.", @cuticon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Copy\tCopy\tCopy selection to clipboard.", @copyicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Paste\tPaste\tPaste clipboard.", @pasteicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Undo\tUndo\tUndo last change.", @undoicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		FXButton.new(toolbar, "Redo\tRedo\tRedo last undo.", @redoicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+
+		FXButton.new(toolbar, "Help\tHelp on editor\tDisplay help information.", @helpicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_RIGHT))
+
+    	# Time control tool bar
+    	dragshell3 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
+    	toolbar = FXToolBar.new(self, dragshell3, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
+    	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
+		# Toobar buttons: File manipulation
+		FXButton.new(toolbar, "Start\tStart\tStart simulation.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
+		FXButton.new(toolbar, "Stop\tStop\tStop simulation.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
+		FXButton.new(toolbar, "Forward\tForward\tStep forward.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimForward))
+		FXButton.new(toolbar, "Backward\tBackward\tStep backward.", nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+
+    	# Status bar
+    	statusbar = FXStatusBar.new(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
+
     	# Make a tool tip
     	FXToolTip.new(getApp(), 0)
   
@@ -445,10 +471,29 @@ class SprMainWindow < FXMainWindow
     	return 1
   	end
 
+	# start simulation
+	def	onSimStart(sender, sel, ptr)
+		@simRunning = true
+		@timer = getApp().addTimeout(100, method(:onTimeout))
+	end
+
+	# stop simulation
+	def onSimStop(sender, sel, ptr)
+		@simRunning = false
+	end
+
+	# step forward
+	def onSimForward(sender, sel, ptr)
+		$sprapp.Step()
+		drawScene()
+	end
+
 	# time handler
 	def onTimeout(sender, sel, ptr)
 		$sprapp.Step()
-		@timer = getApp().addTimeout(100, method(:onTimeout))
+		if @simRunning
+			@timer = getApp().addTimeout(100, method(:onTimeout))
+		end
 		drawScene()
 	end
 
