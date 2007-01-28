@@ -22,7 +22,7 @@ protected:
 	static void SPR_CDECL GlutReshapeFunc(int w, int h);
 	static void SPR_CDECL GlutTimerFunc(int id);
 	static void SPR_CDECL GlutKeyboardFunc(unsigned char key, int x, int y);
-	static void AtExit();
+	static void SPR_CDECL AtExit();
 	int windowID;
 public:
 	void Start();

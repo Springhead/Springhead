@@ -20,8 +20,10 @@ FWApp::FWApp(){
 	isRunning = true;
 }
 FWApp::~FWApp(){
-	fwScene->Clear();
-	fwSdk->Clear();
+	if(fwScene)
+		fwScene->Clear();
+	if(fwSdk)
+		fwSdk->Clear();
 }
 void FWApp::LoadScene(UTString filename){
 	//	デフォルトの先祖オブジェクトをを設定
@@ -29,7 +31,7 @@ void FWApp::LoadScene(UTString filename){
 	ObjectIfs objs;
 	objs.Push(fwSdk->GetGRSdk());	//	GRSdk
 	objs.Push(fwSdk->GetPHSdk());	//	PHSdk
-	//	FWSdk	FWSceen は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
+	//	FWSdk	FWScene は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
 	objs.Push(fwSdk);
 	int first = fwSdk->NScene();	//	ロードされるFWSceneの位置を覚えておく
 
@@ -57,6 +59,7 @@ void FWApp::Step(){
 		fwScene->GetPHScene()->Step();
 	}
 }
+
 void FWApp::Init(int argc, char* argv[]){
 	ProcessArguments(argc, argv);
 	fwSdk = FWSdkIf::CreateSdk();
