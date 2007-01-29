@@ -12,7 +12,7 @@ class MyApp: public FWAppGLUT{
 public:
 	void Step(){
 		FWAppGLUT::Step();
-		PHSolidIf* s = DCAST(PHSolidIf,  fwScene->FindObject("soBlock1"));
+		PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
 	}
 } app;
 
@@ -22,7 +22,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 #ifdef _DEBUG
 //	app.SetDebugMode(FWApp::DM_DEBUG);
 #endif
-	app.LoadScene("test.x");
+	app.GetSdk()->LoadScene("test.x");
 //	app.GetFWScene()->AddHumanInterface(new HIMouse);
 
 	app.Start();

@@ -31,6 +31,8 @@ protected:
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
 	///	シーン
 	Scenes scenes;
+	/// アクティブシーン
+	FWSceneIf* fwScene;
 	// SDKs
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
@@ -39,27 +41,35 @@ protected:
 	UTRef<GRRenderIf> grRender;
 	UTRef<GRDeviceIf> grDevice;
 
+	bool debugMode;
+
 public:
 	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
 	virtual FWSceneIf* CreateScene(const FWSceneDesc& desc);
+	virtual void LoadScene(UTString filename);
 	virtual int NScene() const;
-	virtual FWSceneIf* GetScene(size_t i);
+	virtual void SwitchScene(FWSceneIf* scene){ fwScene = scene; }
+	virtual FWSceneIf* GetScene(int i = -1);
+	virtual bool GetDebugMode(){return debugMode;}
+	virtual void SetDebugMode(bool debug = true){debugMode = debug;}
 
 	virtual size_t NChildObject() const { return NScene(); }
 	virtual ObjectIf* GetChildObject(size_t i){ return GetScene(i); }
 	virtual bool AddChildObject(ObjectIf* o);
-	PHSdkIf* GetPHSdk(){ return phSdk; }
-	GRSdkIf* GetGRSdk(){ return grSdk; }
-	FISdkIf* GetFISdk(){ return fiSdk; }
-	
-public:
+	virtual PHSdkIf* GetPHSdk(){ return phSdk; }
+	virtual GRSdkIf* GetGRSdk(){ return grSdk; }
+	virtual FISdkIf* GetFISdk(){ return fiSdk; }
+	virtual GRRenderIf* GetRender(){return grRender;}
+	virtual void SetRender(GRRenderIf* render){grRender = render;}
+	virtual GRDeviceIf* GetDevice(){return grDevice;}
+	virtual void SetDevice(GRDeviceIf* device){grDevice = device;}
+
 	virtual void ClearObjects();
 	virtual void Step();
 	virtual void Draw();
 	virtual void Reshape(int w, int h);
-	virtual void Keyboard(unsigned char key, int x, int y);
 
 protected:
 	void CreateSdks();

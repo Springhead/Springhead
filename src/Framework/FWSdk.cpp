@@ -51,6 +51,8 @@ IF_OBJECT_IMP(FWSdk, Sdk);
 FWSdk::FWSdk(){
 	name="fwSdk";
 	CreateSdks();
+	fwScene = NULL;
+	debugMode = false;
 }
 void FWSdk::CreateSdks(){
 	phSdk = PHSdkIf::CreateSdk();
@@ -69,11 +71,38 @@ FWSceneIf* FWSdk::CreateScene(const FWSceneDesc& desc){
 	AddChildObject(rv); 
 	return rv;
 }
+void FWSdk::LoadScene(UTString filename){
+	//	デフォルトの先祖オブジェクトをを設定
+	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
+	ObjectIfs objs;
+	objs.Push(GetGRSdk());	//	GRSdk
+	objs.Push(GetPHSdk());	//	PHSdk
+	//	FWSdk	FWScene は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
+	objs.Push(Cast());
+	int first = NScene();	//	ロードされるFWSceneの位置を覚えておく
+
+	//	ファイルローダーの作成
+	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
+	//	ファイルのロード
+	if (! fiFileX->Load(objs, filename.data()) ) {
+		DSTR << "Error: Cannot open load file. " << std::endl;
+		exit(EXIT_FAILURE);
+	}
+	//	ロードしたシーンを取得
+	DSTR << "Loaded " << NScene() - first << " scenes." << std::endl;
+	DSTR << "LoadFile Complete." << std::endl;
+	for(int i=first; i<NScene(); ++i){
+		fwScene = GetScene(i);
+		fwScene->Print(DSTR);
+	}
+}
 int FWSdk::NScene() const{
 	return (int)scenes.size();
 }
-FWSceneIf* FWSdk::GetScene(size_t i){
-	if (i < scenes.size()) return scenes[i];
+FWSceneIf* FWSdk::GetScene(int i){
+	if(i == -1)return fwScene;
+    if(0 <= i && i < (int)scenes.size())
+		return scenes[i];
 	return NULL;
 }
 bool FWSdk::AddChildObject(ObjectIf* o){
@@ -101,32 +130,21 @@ void FWSdk::ClearObjects(){
 	// 未実装
 }
 void FWSdk::Step(){
-	for (unsigned i=0; i<scenes.size(); i++) {
-		scenes[i]->Step();
-	}
+	if (fwScene)
+		fwScene->Step();
 }
+
 void FWSdk::Draw(){
-	// 描画。描画プロセスそのものをもっと細分化したメソッドにするかも。
-	// {ClearBuffer,BeginScene},{EndScene}は分けたほうがよかと思う
-
-	// ToDo : isLoadCompleteではなく、必要なインスタンスが確保されているかに
-	// よって実行するかどうか判断するようにせよ。
-
 	grRender->ClearBuffer();
 	grRender->BeginScene();
 
-	for (unsigned i=0; i<scenes.size(); i++) {
-		scenes[i]->Draw(grRender);
-	}
+	if(fwScene)
+		fwScene->Draw(grRender, debugMode);
 
 	grRender->EndScene();	
 }
 void FWSdk::Reshape(int w, int h){
 	grRender->Reshape(Vec2f(), Vec2f(w,h));
 }
-void FWSdk::Keyboard(unsigned char key, int x, int y){
-	if (key == 27) {
-		exit(0);
-	}
-}
+
 }

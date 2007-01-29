@@ -35,7 +35,7 @@ public:
 
 	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
 	virtual void SetParent(GRFrameIf* fr);
-	virtual int NChildren(){ return children.size(); }
+	virtual int NChildren(){ return (int)children.size(); }
 	virtual GRVisualIf** GetChildren(){ return (GRVisualIf**)&*children.begin(); }
 	virtual void SetNameManager(NameManager* n);
 	virtual GRSceneIf* GetScene();

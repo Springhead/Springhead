@@ -17,16 +17,17 @@
 namespace Spr{
 
 void FWAppGL::CreateRender(){
-	grRender = fwSdk->GetGRSdk()->CreateDebugRender();
-	grDevice = fwSdk->GetGRSdk()->CreateDeviceGL();
-	grDevice->Init();
-	grRender->SetDevice(grDevice);
+	fwSdk->SetRender(fwSdk->GetGRSdk()->CreateDebugRender());
+	fwSdk->SetDevice(fwSdk->GetGRSdk()->CreateDeviceGL());
+	fwSdk->GetDevice()->Init();
+	fwSdk->GetRender()->SetDevice(fwSdk->GetDevice());
 
 	Affinef view;
 		view.Pos() = Vec3f(0.0, 3.0, 3.0);
 		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
 		view = view.inv();	
-	grRender->SetViewMatrix(view);
+	
+	fwSdk->GetRender()->SetViewMatrix(view);
 
 /*
 	GRLightDesc light0;

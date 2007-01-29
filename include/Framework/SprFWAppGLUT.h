@@ -15,6 +15,8 @@ public:
 	FWWindowDesc(int w=640, int h=480, int l=-1, int t=-1, bool f=false):width(w), height(h), left(l), top(t), fullscreen(f){}
 };
 
+/** @brief GLUTを用いるアプリケーションクラス
+ */
 class FWAppGLUT : public FWAppGL{
 protected:
 	static FWAppGLUT* instance;
@@ -25,11 +27,10 @@ protected:
 	static void SPR_CDECL AtExit();
 	int windowID;
 public:
-	void Start();
-	void OnTimer();
 	virtual void Init(int argc, char* argv[]);
 	virtual void Display();
 	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc());
+	void Start();
 };
 
 }

@@ -53,11 +53,17 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual FWSceneIf *  CreateScene(const FWSceneDesc &  desc){
 		return ((OBJ*)(MIF*)this)->OBJ::CreateScene(desc);
 	}
+	virtual void LoadScene(UTString filename){
+		return ((OBJ*)(MIF*)this)->OBJ::LoadScene(filename);
+	}
 	virtual int NScene() const {
 		return ((OBJ*)(MIF*)this)->OBJ::NScene();
 	}
-	virtual FWSceneIf *  GetScene(size_t i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetScene(i);
+	virtual void SwitchScene(FWSceneIf *  scene){
+		return ((OBJ*)(MIF*)this)->OBJ::SwitchScene(scene);
+	}
+	virtual FWSceneIf *  GetScene(int index = -1){
+		return ((OBJ*)(MIF*)this)->OBJ::GetScene(index);
 	}
 	virtual PHSdkIf *  GetPHSdk(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetPHSdk();
@@ -67,6 +73,33 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual FISdkIf *  GetFISdk(){
 		return ((OBJ*)(MIF*)this)->OBJ::GetFISdk();
+	}
+	virtual GRRenderIf *  GetRender(){
+		return ((OBJ*)(MIF*)this)->OBJ::GetRender();
+	}
+	virtual void SetRender(GRRenderIf *  render){
+		return ((OBJ*)(MIF*)this)->OBJ::SetRender(render);
+	}
+	virtual GRDeviceIf *  GetDevice(){
+		return ((OBJ*)(MIF*)this)->OBJ::GetDevice();
+	}
+	virtual void SetDevice(GRDeviceIf *  device){
+		return ((OBJ*)(MIF*)this)->OBJ::SetDevice(device);
+	}
+	virtual bool GetDebugMode(){
+		return ((OBJ*)(MIF*)this)->OBJ::GetDebugMode();
+	}
+	virtual void SetDebugMode(bool debug = true){
+		return ((OBJ*)(MIF*)this)->OBJ::SetDebugMode(debug);
+	}
+	virtual void Step(){
+		return ((OBJ*)(MIF*)this)->OBJ::Step();
+	}
+	virtual void Draw(){
+		return ((OBJ*)(MIF*)this)->OBJ::Draw();
+	}
+	virtual void Reshape(int w, int h){
+		return ((OBJ*)(MIF*)this)->OBJ::Reshape(w, h);
 	}
 };
 struct FWSdkIf;	class FWSdk;

@@ -6,6 +6,9 @@
 
 namespace Spr{;
 
+/** Rubyのプログラム上でFWAppを継承していくつかの関数をオーバライドする際に，
+　　フレームワークがうまくオーバライドされた関数を認識し実行するためのメカニズム
+ */
 class FWVFuncBridge : public UTRefCount{
 public:
 	virtual void Link(void* pObj) = 0;
@@ -18,14 +21,18 @@ public:
 	virtual void AtExit() = 0;
 };
 
+/** @brief アプリケーションクラス
+	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
+	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
+	仮想関数をオーバライドすることによって独自機能を実装する．
+
+	FWAppクラスはグラフィックスの初期化機能を持たないので，
+	通常は派生クラスであるFWAppGLやFWAppGLUTを使用する．
+ */
 class FWApp{
 protected:
 	UTRef<FWSdkIf> fwSdk;
-	UTRef<FWSceneIf> fwScene;
-	UTRef<GRDebugRenderIf> grRender;
-	UTRef<GRDeviceIf> grDevice;
-	bool isRunning;
-
+	
 	void CallDisplay(){
 		if(!vfBridge || !vfBridge->Display())
 			Display();
@@ -51,21 +58,11 @@ protected:
 			Step();
 	}
 public:
-
 	UTRef<FWVFuncBridge>	vfBridge;
 
-	enum DebugMode{
-		DM_NONE,
-		DM_DEBUG,
-	} debugMode;
-	FWApp();
-
-	/// レンダラを取得
-	GRRenderIf* GetRender(){return grRender;}
-	/// シーンを取得
-	FWSceneIf* GetScene(){return fwScene;}
-
-	virtual ~FWApp();
+	/** @brief SDKを取得する
+	 */
+	FWSdkIf*	GetSdk(){ return fwSdk; }
 
 	/** @brief 初期化
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
@@ -75,58 +72,41 @@ public:
 	/** @brief コマンドライン引数の処理
 		アプリケーションに渡されたコマンドライン引数を処理したい場合にオーバライドする
 	 */
-	virtual void ProcessArguments(int argc, char* argv[]);
+	virtual void ProcessArguments(int argc, char* argv[]){}
 
-	/** @brief シーンをファイルからロードする
-		@param filename ファイル名
-		指定されたファイルからシーンをロードする
+	/** @brief シミュレーションの実行
+		デフォルトではFWSdk::Stepが呼ばれる．
 	 */
-	virtual void LoadScene(UTString filename);
+	virtual void Step();
 
-	/** @brief シーンを描画する
+	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
 		描画処理をカスタマイズしたい場合にオーバライドする．
+		デフォルトではFWSdk::Drawが呼ばれる．
 	 */
 	virtual void Display();
 
-	/** @brief 描画領域変更時の処理
+	/** @brief 描画領域のサイズ変更
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
 		ユーザによってウィンドウサイズが変更されたときなどに呼ばれる．
+		デフォルトではFWSdk::Reshapeが呼ばれる．
 	 */
 	virtual void Reshape(int w, int h);
 
 	/** @brief キーボードイベントのハンドラ
-
 	 */
-	virtual void Keyboard(unsigned char key, int x, int y);
+	virtual void Keyboard(unsigned char key, int x, int y){}
 
 	/** @brief マウスイベントのハンドラ
-
 	 */
-	virtual void MouseButton(int button, int state, int x, int y);
+	virtual void MouseButton(int button, int state, int x, int y){}
 
 	/** @brief マウスイベントのハンドラ
-
 	 */
-	virtual void MouseMove(int x, int y);
+	virtual void MouseMove(int x, int y){}
 
-	/** @brief シミュレーションの実行
-
-	 */
-	virtual void Step();
-
-	/** @brief デバッグモードの取得
-
-	 */
-	DebugMode GetDebugMode(){ return debugMode; }
-
-	/** @brief デバッグモードの設定
-
-	 */
-	void SetDebugMode(DebugMode m){ debugMode = m; }
-
-	FWSceneIf* GetFWScene(){ return fwScene; }
+	virtual ~FWApp();
 };
 
 }

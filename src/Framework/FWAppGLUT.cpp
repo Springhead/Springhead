@@ -26,12 +26,15 @@ void FWAppGLUT::GlutReshapeFunc(int w, int h){
 }
 
 void FWAppGLUT::GlutTimerFunc(int id){
-	FWAppGLUT::instance->OnTimer();
-	FWSceneIf* fs = FWAppGLUT::instance->GetFWScene();
-	PHSceneIf* ps = NULL;
-	if (fs) ps = fs->GetPHScene();
-	int timeStep = 1000;
-	if (ps) timeStep = ps->GetTimeStep() * 1000.0;
+	FWAppGLUT::instance->CallStep();
+	glutPostRedisplay();
+	FWSceneIf* fs = FWAppGLUT::instance->GetSdk()->GetScene();
+	if(!fs)return;
+
+	PHSceneIf* ps = fs->GetPHScene();
+	if(!ps)return;
+
+	int timeStep = ps->GetTimeStep() * 1000.0;
 	if (timeStep<1) timeStep = 1;
 	glutTimerFunc(timeStep, GlutTimerFunc, 0);
 }
@@ -68,11 +71,6 @@ void FWAppGLUT::Display(){
 	FWAppGL::Display();
 	/// ダブルバッファモード時、カレントウィンドウのバッファ交換を行う
 	glutSwapBuffers();
-}
-
-void FWAppGLUT::OnTimer(){
-	CallStep();
-	glutPostRedisplay();
 }
 
 int FWAppGLUT::CreateWindow(const FWWindowDesc d){
