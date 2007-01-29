@@ -62,7 +62,8 @@ GRDeviceGLIf* GRSdk::CreateDeviceGL(){
 	return rv->Cast();
 }
 GRSceneIf* GRSdk::CreateScene(){
-	GRSceneIf* rv = (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &GRSdkDesc());
+	GRSdkDesc desc;
+	GRSceneIf* rv = (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &desc);
 	AddChildObject(rv);
 	return rv;
 }

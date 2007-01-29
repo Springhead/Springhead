@@ -50,7 +50,6 @@ void CreateFloor(){
  return 	なし
  */
 void display(){
-	Vec3d pos = robot[0].soBody->GetFramePosition();
 	Affinef af;
 	af.Pos() = Vec3f(0, 3, 4)*1.2;
 	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
@@ -59,6 +58,7 @@ void display(){
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
+	glutSwapBuffers();
 }
 
 /**
@@ -190,7 +190,7 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("Vehicles");
 
 	render = grSdk->CreateDebugRender();
-	device = grSdk->CreateDeviceGL(window);
+	device = grSdk->CreateDeviceGL();
 	device->Init();
 	render->SetDevice(device);	// デバイスの設定
 
