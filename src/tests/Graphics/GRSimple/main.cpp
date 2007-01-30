@@ -137,6 +137,7 @@ void display(){
 	render->DrawFont(Vec3f(-1.0, 1.0, 9.0), str, font2);	
 
 	render->EndScene();
+	glutSwapBuffers();
 }
 
 /**
@@ -264,7 +265,7 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("GRSimple");
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice = grSdk->CreateDeviceGL();
 
 	// ‰ŠúÝ’è
 	grDevice->Init();

@@ -2945,6 +2945,7 @@ void display(){
 //	DisplaySolidCenter();
 
 	render->EndScene();
+	glutSwapBuffers();
 }
 
 /**
@@ -3124,7 +3125,7 @@ void InitRendering(int *argc, char *argv[])
 	int window = glutCreateWindow("HapticTest");
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice = grSdk->CreateDeviceGL();
 
 	// ‰ŠúÝ’è
 	grDevice->Init();

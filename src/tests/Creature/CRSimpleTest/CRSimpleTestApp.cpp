@@ -161,6 +161,7 @@ void CRSimpleTestApp::Display(){
 	}
 
 	grRender->EndScene();	
+	glutSwapBuffers();
 }
 
 

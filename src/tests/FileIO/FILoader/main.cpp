@@ -158,6 +158,7 @@ void display(){
 	}
 
 	render->EndScene();
+	glutSwapBuffers();
 }
 /**
  brief     	ŒõŒ¹‚ÌÝ’è
@@ -298,7 +299,7 @@ int main(int argc, char* argv[]){
 	// Graphics Sdk
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	render->SetDevice(grDevice);
 

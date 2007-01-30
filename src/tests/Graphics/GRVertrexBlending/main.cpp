@@ -142,6 +142,7 @@ void display(void) {
 	glPopMatrix();
 
 	render->EndScene();
+	glutSwapBuffers();
 }
 /**
  brief 		glutKeyboardFuncで指定したコールバック関数 
@@ -277,7 +278,7 @@ int main(int argc, char **argv) {
 
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice = grSdk->CreateDeviceGL();
 	render->SetDevice(grDevice);
 	grDevice->Init();
 

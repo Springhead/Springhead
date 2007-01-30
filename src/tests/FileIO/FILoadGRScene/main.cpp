@@ -57,6 +57,7 @@ void display(){
 		exit(-1);
 	}
 	render->EndScene();
+	glutSwapBuffers();
 }
 
 /**
@@ -117,7 +118,6 @@ void idle(){
 int main(int argc, char* argv[]){
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
-	FWSdkIf::RegisterSdk();
 
 	UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("FILoadGRScene");
 
 	render = grSdk->CreateDebugRender();
-	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	render->SetDevice(grDevice);
 
