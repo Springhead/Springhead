@@ -418,7 +418,7 @@ void CDContactAnalysis::Draw(CDShapePair& cp, Posed afw, SGScene* s){
 //	接触判定関数，center, extent はローカル(フレームの)座標系で指定
 //
 #define ABS(x) ((x)>0 ? (x) : -(x))
-bool BBoxIntersection(Posed poseA, Vec3f centerA, Vec3f extentA,
+bool FASTCALL BBoxIntersection(Posed poseA, Vec3f centerA, Vec3f extentA,
 					  Posed poseB, Vec3f centerB, Vec3f extentB){ 
 	Matrix3f postureA, postureB;
 	poseA.Ori().ToMatrix(postureA);

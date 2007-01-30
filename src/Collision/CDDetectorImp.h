@@ -57,20 +57,20 @@ public:
 };
 
 ///	BBox同士の交差判定．交差していれば true．
-bool BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
+bool FASTCALL BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
 					  Posed postureB, Vec3f centerB, Vec3f extentB);
 
 ///	GJKで共有点を見つける
-bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
+bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
 ///	GJKで共有点を見つける．連続版, rangeは正規化される
-int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
+int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
 #if 1
 /// GJKで最近傍点対を見つける
-void FindClosestPoints(const CDConvex* a, const CDConvex* b,
+void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					   const Posed& a2w, const Posed& b2w,
 					   Vec3d& pa, Vec3d& pb);
 #endif

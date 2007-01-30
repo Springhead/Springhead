@@ -61,7 +61,7 @@ struct CDGJKIds{
 	q[n] = b->Support(b2z.Ori().Conjugated() * -(v));			\
 	w[n] = b2z * (q[n]) - a2z * (p[n]);
 
-int ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
+int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	//	range Ç™+ZÇ…Ç»ÇÈÇÊÇ§Ç»ç¿ïWånÇãÅÇﬂÇÈÅD
 	Quaterniond w2z;
@@ -440,7 +440,7 @@ inline char VacantIdFromBits(char bits){
 	return vacants[(int)bits];
 }
 
-bool FindCommonPoint(const CDConvex* a, const CDConvex* b,
+bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, Vec3d& v, Vec3d& pa, Vec3d& pb) {
 	Vec3d w;
 
@@ -519,7 +519,7 @@ inline bool IsDegenerate(const Vec3d& w) {
 	}
 	return false;
 }
-void FindClosestPoints(const CDConvex* a, const CDConvex* b,
+void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					  const Posed& a2w, const Posed& b2w,
 					  Vec3d& pa, Vec3d& pb) {
 	Vec3d v; 				
