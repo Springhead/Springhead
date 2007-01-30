@@ -611,6 +611,7 @@ void display(){
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
+	glutSwapBuffers();
 }
 
 /**
@@ -798,7 +799,7 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("Joints");
 
 	render = grSdk->CreateDebugRender();
-	device = grSdk->CreateDeviceGL(window);
+	device = grSdk->CreateDeviceGL();
 
 	// ‰ŠúÝ’è
 	device->Init();
