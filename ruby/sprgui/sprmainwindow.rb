@@ -3,6 +3,7 @@ require 'fox16'
 require 'fox16/responder'
 require 'fox16/undolist'
 require 'sprscenetree'
+require 'sprpropertymanager'
 #require 'sprcameraview'
 
 include Fox
@@ -158,11 +159,11 @@ class SprMainWindow < FXMainWindow
     	dragshell3 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
     	toolbar = FXToolBar.new(self, dragshell3, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
     	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
-		# Toobar buttons: File manipulation
 		FXButton.new(toolbar, "Start\tStart\tStart simulation.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
 		FXButton.new(toolbar, "Stop\tStop\tStop simulation.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
 		FXButton.new(toolbar, "Forward\tForward\tStep forward.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimForward))
 		FXButton.new(toolbar, "Backward\tBackward\tStep backward.", nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
+		
 
     	# Status bar
     	statusbar = FXStatusBar.new(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
@@ -173,31 +174,28 @@ class SprMainWindow < FXMainWindow
     	# Recent files
     	@mrufiles = FXRecentFiles.new  
 
-    	# Splitter
-    	splitter = FXSplitter.new(self, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_TRACKING)
+    	# シーングラフツリー＆プロパティ（左）とディスプレイ（右）のSplitter
+    	@hsplitter = FXSplitter.new(self, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_TRACKING)
   
-    	# Sunken border for tree
-    	@treebox = FXVerticalFrame.new(splitter, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
+    	# シーングラフツリー（上）とプロパティ（下）のSplitter
+    	@vsplitter = FXSplitter.new(@hsplitter, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_VERTICAL|SPLITTER_TRACKING)
   
-    	# Make tree
-    	treeframe = FXHorizontalFrame.new(@treebox, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
-	    @scenetree = SprSceneTree.new(treeframe, nil, 0,
-    	  (TREELIST_BROWSESELECT|TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|TREELIST_ROOT_BOXES|LAYOUT_FILL_X|LAYOUT_FILL_Y))
+		# シーングラフツリー
+    	treeframe = FXHorizontalFrame.new(@vsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
+	    $scenetree = SprSceneTree.new(treeframe)
 
-	    # Sunken border for text widget
-    	cameraframe = FXHorizontalFrame.new(splitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
-  
-	    # A visual to draw OpenGL
+		# プロパティ
+		propertyframe = FXHorizontalFrame.new(@vsplitter)
+	    $propertymanager = SprPropertyManager.new(propertyframe)
+
+	    # ディスプレイ
+    	cameraframe = FXHorizontalFrame.new(@hsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
 	    @glvisual = FXGLVisual.new(getApp(), VISUAL_DOUBLEBUFFER)
-	  
-	    # Drawing glcanvas
 	    @glcanvas = FXGLCanvas.new(cameraframe, @glvisual, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT)
-	    @glcanvas.connect(SEL_PAINT) {drawScene}
+	    @glcanvas.connect(SEL_PAINT, method(:drawScene))
 	    @glcanvas.connect(SEL_CONFIGURE) {
-			puts 'configure'
-
 	    	if @glcanvas.makeCurrent
-	        	$sprapp.GetRender().SetViewport([0, 0], [@glcanvas.width, @glcanvas.height])
+	        	$sprapp.GetSdk().GetRender().SetViewport([0, 0], [@glcanvas.width, @glcanvas.height])
 	        	@glcanvas.makeNonCurrent
 	      	end
 	    }
@@ -217,14 +215,12 @@ class SprMainWindow < FXMainWindow
 	end
 
 	# draw scene
-	def	drawScene()
-
-		puts 'drawscene'
+	def	drawScene(sender, sel, ptr)
 
 	    # Make context current
     	@glcanvas.makeCurrent()
 
-		$sprapp.GetRender().Reshape([0,0], [@glcanvas.width, @glcanvas.height])
+		$sprapp.GetSdk().GetRender().Reshape([0,0], [@glcanvas.width, @glcanvas.height])
 		$sprapp.Display()
 		
 		# Swap if it is double-buffered
@@ -241,7 +237,7 @@ class SprMainWindow < FXMainWindow
     	begin
       		getApp().beginWaitCursor()
       	
-			$sprapp.LoadScene(filename)
+			$sprapp.GetSdk().LoadScene(filename)
 
     	ensure
       		getApp().endWaitCursor()
@@ -255,7 +251,7 @@ class SprMainWindow < FXMainWindow
     	@undolist.clear
     	@undolist.mark
 
-		@scenetree.update
+		$scenetree.update
   	end
 
 	# Insert file
@@ -555,7 +551,11 @@ class SprMainWindow < FXMainWindow
     	@urilistType = getApp().registerDragType(FXWindow.urilistTypeName) unless @urilistType
     	readRegistry
     	super
-	    @scenetree.parent.setWidth(@scenetree.font.getTextWidth('MMMMMMMMMMMMMMMM'))
+		# 左ペインの幅
+		@hsplitter.setSplit(0, $scenetree.font.getTextWidth('MMMMMMMMMMMMMMMM'))
+		# 左ペインの上下分割比
+		@vsplitter.setSplit(0, @vsplitter.getHeight() * 0.7);
+
   		show(PLACEMENT_SCREEN)
   	end
 
