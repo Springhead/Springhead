@@ -22,22 +22,8 @@
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-
-#define TEST_CASE		0				// テストケース
-
-#if defined(TEST_CASE) && (TEST_CASE == 0)
-#define EXIT_TIMER	20000				// 強制終了させるステップ数
-#define TEST_FILEX	"box.x"				// ロードするXファイル
-
-#elif defined(TEST_CASE) && (TEST_CASE == 1)
-#define EXIT_TIMER	20000				
-#define TEST_FILEX	"funiture.x"			
-
-#elif defined(TEST_CASE) && (TEST_CASE == 2)
-#define EXIT_TIMER	200				
-#define TEST_FILEX	"tire.x"			
-
-#endif
+#define EXIT_TIMER	20000
+#define TEST_FILECOLLADA	"test1.dae"
 
 
 namespace Spr{
@@ -46,8 +32,10 @@ namespace Spr{
 	UTRef<FISdkIf> fiSdk; 
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
-	void FWRegisterTypeDescs();
-	void FWRegisterOldSpringheadNode();
+	void PHRegisterTypeDescs();
+	void CDRegisterTypeDescs();
+	void GRRegisterTypeDescs();
+	void FIRegisterTypeDescs();
 }
 using namespace Spr;
 
@@ -150,25 +138,23 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	//	すべてのSDKとDirectXのローダの登録
-	//	全ライブラリをリンクしなければならなくなる．
-	FWSdkIf::RegisterSdk();
+	PHSdkIf::RegisterSdk();
+	GRSdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();
-	FIFileXIf* fileX = fiSdk->CreateFileX();
+	FIFileCOLLADAIf* fileCOLLADA = fiSdk->CreateFileCOLLADA();
 	ObjectIfs objs;
 
 	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
 	scene = grSdk->CreateScene();
 	objs.push_back(scene);
-	fileX->Load(objs, TEST_FILEX);
- 
+	fileCOLLADA->Load(objs, TEST_FILECOLLADA);
 
 	if (!grSdk) return -1;
 	objs.clear();
 	objs.Push(grSdk);
-	fileX->Save(objs, "out.x");
+	fileCOLLADA->Save(objs, "out.dae");
 	
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();

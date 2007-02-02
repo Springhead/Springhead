@@ -13,10 +13,10 @@ template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRVisualIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Render(GRRenderIf *  r){
-		return ((OBJ*)(MIF*)this)->OBJ::Render(r);
+		return ((OBJ*)(MIF*)this)->Render(r);
 	}
 	virtual void Rendered(GRRenderIf *  r){
-		return ((OBJ*)(MIF*)this)->OBJ::Rendered(r);
+		return ((OBJ*)(MIF*)this)->Rendered(r);
 	}
 };
 struct GRVisualIf;	class GRVisual;
@@ -27,28 +27,28 @@ template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRFrameIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual GRFrameIf *  GetParent(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetParent();
+		return ((OBJ*)(MIF*)this)->GetParent();
 	}
 	virtual void SetParent(GRFrameIf *  fr){
-		return ((OBJ*)(MIF*)this)->OBJ::SetParent(fr);
+		return ((OBJ*)(MIF*)this)->SetParent(fr);
 	}
 	virtual int NChildren(){
-		return ((OBJ*)(MIF*)this)->OBJ::NChildren();
+		return ((OBJ*)(MIF*)this)->NChildren();
 	}
 	virtual GRVisualIf * *  GetChildren(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetChildren();
+		return ((OBJ*)(MIF*)this)->GetChildren();
 	}
 	virtual Affinef GetTransform(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetTransform();
+		return ((OBJ*)(MIF*)this)->GetTransform();
 	}
 	virtual Affinef GetWorldTransform(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetWorldTransform();
+		return ((OBJ*)(MIF*)this)->GetWorldTransform();
 	}
 	virtual void SetTransform(Affinef &  af){
-		return ((OBJ*)(MIF*)this)->OBJ::SetTransform(af);
+		return ((OBJ*)(MIF*)this)->SetTransform(af);
 	}
 	virtual void Print(std::ostream &  os) const {
-		return ((OBJ*)(MIF*)this)->OBJ::Print(os);
+		return ((OBJ*)(MIF*)this)->Print(os);
 	}
 };
 struct GRFrameIf;	class GRFrame;
@@ -75,7 +75,7 @@ template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRMaterialIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual bool IsOpaque() const {
-		return ((OBJ*)(MIF*)this)->OBJ::IsOpaque();
+		return ((OBJ*)(MIF*)this)->IsOpaque();
 	}
 };
 struct GRMaterialIf;	class GRMaterial;
@@ -86,10 +86,10 @@ template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRCameraIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual GRFrameIf *  GetFrame(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetFrame();
+		return ((OBJ*)(MIF*)this)->GetFrame();
 	}
 	virtual void SetFrame(GRFrameIf *  fr){
-		return ((OBJ*)(MIF*)this)->OBJ::SetFrame(fr);
+		return ((OBJ*)(MIF*)this)->SetFrame(fr);
 	}
 };
 struct GRCameraIf;	class GRCamera;
@@ -100,148 +100,148 @@ template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetViewport(Vec2f pos, Vec2f sz){
-		return ((OBJ*)(MIF*)this)->OBJ::SetViewport(pos, sz);
+		return ((OBJ*)(MIF*)this)->SetViewport(pos, sz);
 	}
 	virtual void ClearBuffer(){
-		return ((OBJ*)(MIF*)this)->OBJ::ClearBuffer();
+		return ((OBJ*)(MIF*)this)->ClearBuffer();
 	}
 	virtual void BeginScene(){
-		return ((OBJ*)(MIF*)this)->OBJ::BeginScene();
+		return ((OBJ*)(MIF*)this)->BeginScene();
 	}
 	virtual void EndScene(){
-		return ((OBJ*)(MIF*)this)->OBJ::EndScene();
+		return ((OBJ*)(MIF*)this)->EndScene();
 	}
 	virtual void SetViewMatrix(const Affinef &  afv){
-		return ((OBJ*)(MIF*)this)->OBJ::SetViewMatrix(afv);
+		return ((OBJ*)(MIF*)this)->SetViewMatrix(afv);
 	}
 	virtual void SetProjectionMatrix(const Affinef &  afp){
-		return ((OBJ*)(MIF*)this)->OBJ::SetProjectionMatrix(afp);
+		return ((OBJ*)(MIF*)this)->SetProjectionMatrix(afp);
 	}
 	virtual void GetProjectionMatrix(const Affinef &  afp){
-		return ((OBJ*)(MIF*)this)->OBJ::GetProjectionMatrix(afp);
+		return ((OBJ*)(MIF*)this)->GetProjectionMatrix(afp);
 	}
 	virtual void SetModelMatrix(const Affinef &  afw){
-		return ((OBJ*)(MIF*)this)->OBJ::SetModelMatrix(afw);
+		return ((OBJ*)(MIF*)this)->SetModelMatrix(afw);
 	}
 	virtual void MultModelMatrix(const Affinef &  afw){
-		return ((OBJ*)(MIF*)this)->OBJ::MultModelMatrix(afw);
+		return ((OBJ*)(MIF*)this)->MultModelMatrix(afw);
 	}
 	virtual void PushModelMatrix(){
-		return ((OBJ*)(MIF*)this)->OBJ::PushModelMatrix();
+		return ((OBJ*)(MIF*)this)->PushModelMatrix();
 	}
 	virtual void PopModelMatrix(){
-		return ((OBJ*)(MIF*)this)->OBJ::PopModelMatrix();
+		return ((OBJ*)(MIF*)this)->PopModelMatrix();
 	}
 	virtual void ClearBlendMatrix(){
-		return ((OBJ*)(MIF*)this)->OBJ::ClearBlendMatrix();
+		return ((OBJ*)(MIF*)this)->ClearBlendMatrix();
 	}
 	virtual bool SetBlendMatrix(const Affinef &  afb, unsigned int id = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::SetBlendMatrix(afb, id);
+		return ((OBJ*)(MIF*)this)->SetBlendMatrix(afb, id);
 	}
 	virtual void SetVertexFormat(const GRVertexElement *  e){
-		return ((OBJ*)(MIF*)this)->OBJ::SetVertexFormat(e);
+		return ((OBJ*)(MIF*)this)->SetVertexFormat(e);
 	}
 	virtual void SetVertexShader(void *  shader){
-		return ((OBJ*)(MIF*)this)->OBJ::SetVertexShader(shader);
+		return ((OBJ*)(MIF*)this)->SetVertexShader(shader);
 	}
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawDirect(ty, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->DrawDirect(ty, vtx, count, stride);
 	}
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawIndexed(ty, idx, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->DrawIndexed(ty, idx, vtx, count, stride);
 	}
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray *  arrays, size_t count){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawArrays(ty, arrays, count);
+		return ((OBJ*)(MIF*)this)->DrawArrays(ty, arrays, count);
 	}
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, GRVertexArray *  arrays, size_t count){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawArrays(ty, idx, arrays, count);
+		return ((OBJ*)(MIF*)this)->DrawArrays(ty, idx, arrays, count);
 	}
 	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateList(ty, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->CreateList(ty, vtx, count, stride);
 	}
 	virtual int CreateList(GRMaterialIf *  mat, unsigned int texid, GRRenderBaseIf::TPrimitiveType ty, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateList(mat, texid, ty, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->CreateList(mat, texid, ty, vtx, count, stride);
 	}
 	virtual int CreateList(float radius, int slices, int stacks){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateList(radius, slices, stacks);
+		return ((OBJ*)(MIF*)this)->CreateList(radius, slices, stacks);
 	}
 	virtual int CreateList(GRMaterialIf *  mat, float radius, int slices, int stacks){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateList(mat, radius, slices, stacks);
+		return ((OBJ*)(MIF*)this)->CreateList(mat, radius, slices, stacks);
 	}
 	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateIndexedList(ty, idx, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->CreateIndexedList(ty, idx, vtx, count, stride);
 	}
 	virtual int CreateIndexedList(GRMaterialIf *  mat, GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateIndexedList(mat, ty, idx, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->CreateIndexedList(mat, ty, idx, vtx, count, stride);
 	}
 	virtual int CreateShaderIndexedList(GRHandler shader, void *  location, GRRenderBaseIf::TPrimitiveType ty, size_t *  idx, void *  vtx, size_t count, size_t stride = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateShaderIndexedList(shader, location, ty, idx, vtx, count, stride);
+		return ((OBJ*)(MIF*)this)->CreateShaderIndexedList(shader, location, ty, idx, vtx, count, stride);
 	}
 	virtual void DrawList(int i){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawList(i);
+		return ((OBJ*)(MIF*)this)->DrawList(i);
 	}
 	virtual void ReleaseList(int i){
-		return ((OBJ*)(MIF*)this)->OBJ::ReleaseList(i);
+		return ((OBJ*)(MIF*)this)->ReleaseList(i);
 	}
 	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont &  font = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawFont(pos, str, font);
+		return ((OBJ*)(MIF*)this)->DrawFont(pos, str, font);
 	}
 	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont &  font = 0){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawFont(pos, str, font);
+		return ((OBJ*)(MIF*)this)->DrawFont(pos, str, font);
 	}
 	virtual void SetMaterial(const GRMaterialDesc &  mat){
-		return ((OBJ*)(MIF*)this)->OBJ::SetMaterial(mat);
+		return ((OBJ*)(MIF*)this)->SetMaterial(mat);
 	}
 	virtual void SetMaterial(const GRMaterialIf *  mat){
-		return ((OBJ*)(MIF*)this)->OBJ::SetMaterial(mat);
+		return ((OBJ*)(MIF*)this)->SetMaterial(mat);
 	}
 	virtual void SetLineWidth(float w){
-		return ((OBJ*)(MIF*)this)->OBJ::SetLineWidth(w);
+		return ((OBJ*)(MIF*)this)->SetLineWidth(w);
 	}
 	virtual void PushLight(const GRLightDesc &  light){
-		return ((OBJ*)(MIF*)this)->OBJ::PushLight(light);
+		return ((OBJ*)(MIF*)this)->PushLight(light);
 	}
 	virtual void PushLight(const GRLightIf *  light){
-		return ((OBJ*)(MIF*)this)->OBJ::PushLight(light);
+		return ((OBJ*)(MIF*)this)->PushLight(light);
 	}
 	virtual void PopLight(){
-		return ((OBJ*)(MIF*)this)->OBJ::PopLight();
+		return ((OBJ*)(MIF*)this)->PopLight();
 	}
 	virtual void SetDepthWrite(bool b){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDepthWrite(b);
+		return ((OBJ*)(MIF*)this)->SetDepthWrite(b);
 	}
 	virtual void SetDepthTest(bool b){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDepthTest(b);
+		return ((OBJ*)(MIF*)this)->SetDepthTest(b);
 	}
 	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDepthFunc(f);
+		return ((OBJ*)(MIF*)this)->SetDepthFunc(f);
 	}
 	virtual void SetAlphaTest(bool b){
-		return ((OBJ*)(MIF*)this)->OBJ::SetAlphaTest(b);
+		return ((OBJ*)(MIF*)this)->SetAlphaTest(b);
 	}
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
-		return ((OBJ*)(MIF*)this)->OBJ::SetAlphaMode(src, dest);
+		return ((OBJ*)(MIF*)this)->SetAlphaMode(src, dest);
 	}
 	virtual unsigned int LoadTexture(const std::string filename){
-		return ((OBJ*)(MIF*)this)->OBJ::LoadTexture(filename);
+		return ((OBJ*)(MIF*)this)->LoadTexture(filename);
 	}
 	virtual void InitShader(){
-		return ((OBJ*)(MIF*)this)->OBJ::InitShader();
+		return ((OBJ*)(MIF*)this)->InitShader();
 	}
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){
-		return ((OBJ*)(MIF*)this)->OBJ::SetShaderFormat(type);
+		return ((OBJ*)(MIF*)this)->SetShaderFormat(type);
 	}
 	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler &  shader){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateShader(vShaderFile, fShaderFile, shader);
+		return ((OBJ*)(MIF*)this)->CreateShader(vShaderFile, fShaderFile, shader);
 	}
 	virtual GRHandler CreateShader(){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateShader();
+		return ((OBJ*)(MIF*)this)->CreateShader();
 	}
 	virtual bool ReadShaderSource(GRHandler shader, std::string file){
-		return ((OBJ*)(MIF*)this)->OBJ::ReadShaderSource(shader, file);
+		return ((OBJ*)(MIF*)this)->ReadShaderSource(shader, file);
 	}
 	virtual void GetShaderLocation(GRHandler shader, void *  location){
-		return ((OBJ*)(MIF*)this)->OBJ::GetShaderLocation(shader, location);
+		return ((OBJ*)(MIF*)this)->GetShaderLocation(shader, location);
 	}
 };
 struct GRRenderBaseIf;	class GRRenderBase;
@@ -252,13 +252,13 @@ template <class IF, class MIF, class OBJ> struct GRRenderBaseIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRRenderIfStubTemplate: public GRRenderBaseIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetDevice(GRDeviceIf *  dev){
-		return ((OBJ*)(MIF*)this)->OBJ::SetDevice(dev);
+		return ((OBJ*)(MIF*)this)->SetDevice(dev);
 	}
 	virtual void SetCamera(const GRCameraDesc &  cam){
-		return ((OBJ*)(MIF*)this)->OBJ::SetCamera(cam);
+		return ((OBJ*)(MIF*)this)->SetCamera(cam);
 	}
 	virtual void Reshape(Vec2f pos, Vec2f screenSize){
-		return ((OBJ*)(MIF*)this)->OBJ::Reshape(pos, screenSize);
+		return ((OBJ*)(MIF*)this)->Reshape(pos, screenSize);
 	}
 };
 struct GRRenderIf;	class GRRender;
@@ -269,10 +269,10 @@ template <class IF, class MIF, class OBJ> struct GRRenderBaseIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRDeviceIfStubTemplate: public GRRenderBaseIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Init(){
-		return ((OBJ*)(MIF*)this)->OBJ::Init();
+		return ((OBJ*)(MIF*)this)->Init();
 	}
 	virtual void Print(std::ostream &  os) const {
-		return ((OBJ*)(MIF*)this)->OBJ::Print(os);
+		return ((OBJ*)(MIF*)this)->Print(os);
 	}
 };
 struct GRDeviceIf;	class GRDevice;
@@ -291,16 +291,16 @@ template <class IF, class MIF, class OBJ> struct GRRenderIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRDebugRenderIfStubTemplate: public GRRenderIfStubTemplate<IF, MIF, OBJ> {
 	virtual void DrawScene(PHSceneIf *  scene){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawScene(scene);
+		return ((OBJ*)(MIF*)this)->DrawScene(scene);
 	}
 	virtual void DrawSolid(PHSolidIf *  so){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawSolid(so);
+		return ((OBJ*)(MIF*)this)->DrawSolid(so);
 	}
 	virtual void DrawFace(CDFaceIf *  face, Vec3f *  base){
-		return ((OBJ*)(MIF*)this)->OBJ::DrawFace(face, base);
+		return ((OBJ*)(MIF*)this)->DrawFace(face, base);
 	}
 	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname){
-		return ((OBJ*)(MIF*)this)->OBJ::SetMaterialSample(matname);
+		return ((OBJ*)(MIF*)this)->SetMaterialSample(matname);
 	}
 };
 struct GRDebugRenderIf;	class GRDebugRender;
@@ -311,22 +311,22 @@ template <class IF, class MIF, class OBJ> struct SceneIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual GRFrameIf *  CreateFrame(const GRFrameDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateFrame(desc);
+		return ((OBJ*)(MIF*)this)->CreateFrame(desc);
 	}
 	virtual void Render(GRRenderIf *  r){
-		return ((OBJ*)(MIF*)this)->OBJ::Render(r);
+		return ((OBJ*)(MIF*)this)->Render(r);
 	}
 	virtual GRFrameIf *  GetWorld(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetWorld();
+		return ((OBJ*)(MIF*)this)->GetWorld();
 	}
 	virtual GRCameraIf *  GetCamera(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetCamera();
+		return ((OBJ*)(MIF*)this)->GetCamera();
 	}
 	virtual void SetCamera(const GRCameraDesc &  desc){
-		return ((OBJ*)(MIF*)this)->OBJ::SetCamera(desc);
+		return ((OBJ*)(MIF*)this)->SetCamera(desc);
 	}
 	virtual GRSdkIf *  GetSdk(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetSdk();
+		return ((OBJ*)(MIF*)this)->GetSdk();
 	}
 };
 struct GRSceneIf;	class GRScene;
@@ -337,25 +337,25 @@ template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	virtual GRDebugRenderIf *  CreateDebugRender(){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateDebugRender();
+		return ((OBJ*)(MIF*)this)->CreateDebugRender();
 	}
 	virtual GRDeviceGLIf *  CreateDeviceGL(){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateDeviceGL();
+		return ((OBJ*)(MIF*)this)->CreateDeviceGL();
 	}
 	virtual GRSceneIf *  CreateScene(){
-		return ((OBJ*)(MIF*)this)->OBJ::CreateScene();
+		return ((OBJ*)(MIF*)this)->CreateScene();
 	}
 	virtual size_t NChildObject() const {
-		return ((OBJ*)(MIF*)this)->OBJ::NChildObject();
+		return ((OBJ*)(MIF*)this)->NChildObject();
 	}
 	virtual ObjectIf *  GetChildObject(size_t i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetChildObject(i);
+		return ((OBJ*)(MIF*)this)->GetChildObject(i);
 	}
 	virtual GRSceneIf *  GetScene(size_t i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetScene(i);
+		return ((OBJ*)(MIF*)this)->GetScene(i);
 	}
 	virtual size_t NScene(){
-		return ((OBJ*)(MIF*)this)->OBJ::NScene();
+		return ((OBJ*)(MIF*)this)->NScene();
 	}
 };
 struct GRSdkIf;	class GRSdk;

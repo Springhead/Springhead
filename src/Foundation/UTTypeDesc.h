@@ -148,7 +148,7 @@ public:
 		}
 		///	typeがboolの単純型の場合に，boolを書き込む関数
 		void WriteBool(void* base, bool val, int pos = 0){
-			type->WriteBool(val, GetAddressEx(base, pos));
+			if (base) type->WriteBool(val, GetAddressEx(base, pos));
 		}
 		///	typeが数値の単純型の場合に，数値を読み出す関数
 		double ReadNumber(const void* base, int pos=0){
@@ -156,7 +156,7 @@ public:
 		}
 		///	typeが数値の単純型の場合に，数値を書き込む関数
 		void WriteNumber(void* base, double val, int pos = 0){
-			type->WriteNumber(val, GetAddressEx(base, pos));
+			if (base) type->WriteNumber(val, GetAddressEx(base, pos));
 		}
 		///	文字列読み出し
 		std::string ReadString(const void* base, int pos=0){
@@ -164,7 +164,7 @@ public:
 		}
 		///	文字列書き込み
 		void WriteString(void* base, const char* val, int pos=0){
-			type->WriteString(val, GetAddressEx(base, pos));
+			if (base) type->WriteString(val, GetAddressEx(base, pos));
 		}
 	};
 	///	組み立て型をあらわす場合に使う
@@ -238,10 +238,15 @@ public:
 
 	///	オブジェクトの構築
 	void* Create(){
-		return access->Create();
+		return access ? access->Create() : NULL;
 	}
 	///	オブジェクトの後始末
-	void Delete(void* ptr){ access->Delete(ptr); }
+	void Delete(void* ptr){ 
+		if (ptr){
+			assert(access);
+			access->Delete(ptr);
+		}
+	}
 	///	vector::push_back() return &vector::back();
 	void* VectorPush(void* v){ return access->VectorPush(v); }
 	///	vector::pop_back();

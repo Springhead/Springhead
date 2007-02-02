@@ -86,8 +86,6 @@ struct FWSdkIf : ObjectIf {
 	 */
 	virtual void Reshape(int w, int h)=0;
 
-
-private:
 	static void SPR_CDECL RegisterSdk();
 };
 
