@@ -132,6 +132,8 @@ void FIFile::RegisterGroup(const char* gp){
 }
 
 
+//---------------------------------------------------------------------------
+//	FIFile
 
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
@@ -149,58 +151,48 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 void FIFile::Load(FILoadContext* fc){
 	if (fc->IsGood()){
 		fc->typeDb = &typeDb;
+		//	ファイルからデータをロード
 		LoadImp(fc);
 	}
-	fc->Link();
+	fc->LinkData();
+	fc->loadedDatas.Print(DSTR);
+
+	//	データからノードを作成
+	fc->CreateNodes();
+	//	ノードをリンク
+	fc->LinkNode();
+	//	リンク後の処理
 	fc->PostTask();
 }
-void FIFile::LoadNode(FILoadContext* fc){
-	if (fc->datas.Top()->type->GetIfInfo()){	
-		//	インタフェースが登録されている場合，
-		//	ロードしたデータからオブジェクトを作る．
-		fc->PushCreateNode(fc->datas.Top()->type->GetIfInfo(), fc->datas.Top()->data);
+void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
+	UTTypeDesc* type = GetTypeDb()->Find(tn);
+	if (!type) type = GetTypeDb()->Find(tn + "Desc");	
+	if (type){
+		fc->PushType(type);	//	これからロードする型としてPush
+	}else{
+		tn.append(" not defined.");
+		fc->ErrorMessage(NULL, NULL, tn.c_str());
+		fc->PushType(NULL);	//	Popに備えて，Pushしておく
 	}
-	//	ロード用のハンドラがあれば，呼び出す．
-	//	ハンドラは，衝突判定の無効ペアの設定や重力の設定など，ノードを作る以外の仕事をする．
-	static UTLoadHandler key;
-	key.AddRef();
-	key.type = fc->datas.Top()->type->GetTypeName();
-	UTLoadHandlers::iterator it = handlers.lower_bound(&key);
-	UTLoadHandlers::iterator end = handlers.upper_bound(&key);
-	for(; it != end; ++it){
-		(*it)->Load(fc);
-	}
-	key.DelRef();
 }
-void FIFile::LoadEnterBlock(FILoadContext* fc){
+void FIFile::LNodeEnd(FILoadContext* fc){
+	fc->PopType();
+}
+void FIFile::LSetNodeName(FILoadContext* fc, UTString n){
+	fc->datas.back()->SetName(n);
+}
+
+void FIFile::LBlockStart(FILoadContext* fc){
 	char* base = (char*)fc->datas.Top()->data;
 	void* ptr = fc->fieldIts.back().field->GetAddressEx(base, fc->fieldIts.ArrayPos());
-	fc->datas.Push(DBG_NEW UTLoadData(NULL, ptr));
+	fc->datas.Push(DBG_NEW UTLoadedData(fc, NULL, ptr));
 	fc->fieldIts.push_back(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
 }
-void FIFile::LoadLeaveBlock(FILoadContext* fc){
+void FIFile::LBlockEnd(FILoadContext* fc){
 	fc->fieldIts.Pop();
 	fc->datas.Pop();
 }
-void FIFile::LoadEndNode(FILoadContext* fc){
-	if (fc->datas.Top()->type){
-		//	ハンドラがあれば，UTLoadHandlerを呼び出す．
-		static UTLoadHandler key;
-		key.AddRef();
-		key.type = fc->datas.Top()->type->GetTypeName();
-		UTLoadHandlers::iterator lower = handlers.lower_bound(&key);
-		UTLoadHandlers::iterator upper = handlers.upper_bound(&key);
-		while(upper != lower){
-			--upper;
-			(*upper)->Loaded(fc);
-		}
-		key.DelRef();
-		if (fc->datas.Top()->type->GetIfInfo()){
-			//	LoadNodeで作ったのノードをスタックから削除
-			fc->objects.Pop();
-		}
-	}
-}
+
 
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
@@ -236,9 +228,9 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		//	オブジェクトからデータを取り出す．
 		void* data = (void*)obj->GetDescAddress();
 		if (data){
-			sc->datas.Push(DBG_NEW UTLoadData(type, data));
+			sc->datas.Push(DBG_NEW UTLoadedData(NULL, type, data));
 		}else{
-			sc->datas.Push(DBG_NEW UTLoadData(type));
+			sc->datas.Push(DBG_NEW UTLoadedData(NULL, type));
 			data = sc->datas.back()->data;
 			obj->GetDesc(data);
 		}
@@ -302,7 +294,7 @@ void FIFile::SaveBlock(FISaveContext* sc){
 				case UTTypeDescFieldIt::F_BLOCK:{
 					PDEBUG_EVAL( DSTR << "=" << std::endl; )
 					void* blockData = field->GetAddress(base, pos);
-					sc->datas.Push(new UTLoadData(field->type, blockData));
+					sc->datas.Push(new UTLoadedData(NULL, field->type, blockData));
 					sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
 					SaveBlock(sc);
 					sc->fieldIts.Pop();

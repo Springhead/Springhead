@@ -32,10 +32,6 @@ namespace Spr{
 	UTRef<FISdkIf> fiSdk; 
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
-	void PHRegisterTypeDescs();
-	void CDRegisterTypeDescs();
-	void GRRegisterTypeDescs();
-	void FIRegisterTypeDescs();
 }
 using namespace Spr;
 
@@ -138,8 +134,7 @@ void idle(){
  return		0 (³íI—¹)
  */
 int main(int argc, char* argv[]){
-	PHSdkIf::RegisterSdk();
-	GRSdkIf::RegisterSdk();
+	FWSdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();
 	FIFileCOLLADAIf* fileCOLLADA = fiSdk->CreateFileCOLLADA();
