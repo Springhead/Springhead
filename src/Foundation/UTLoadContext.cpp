@@ -88,14 +88,17 @@ void UTLoadedData::AddChild(UTLoadedData* c){
 void UTLoadContext::LoadedDatas::Print(std::ostream& os){
 	int w = os.width();
 	os.width(0);
-	os << UTPadding(w) << "Loaded data (desc) tree:" << std::endl;
+	os << UTPadding(w) << "--- Loaded data (desc) tree ------------------------" << std::endl;
 	for(iterator it = begin(); it!=end(); ++it) (*it)->Print(os);
+	os << "----------------------------------------------------" << std::endl;
+	os.width(w);
 }
 void UTLoadedData::Print(std::ostream& os){
 	int w = os.width();
 	os.width(0);
-	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)")
-		<< " " << name << (haveData ? "node" : "") << ">" << std::endl;
+	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)");
+	if (name.length()) os << " name=" << name;
+	os << (haveData ? " haveData" : "") << ">" << std::endl;
 	if (linkTo.size()){
 		os << UTPadding(w+2) << "linkTo = ";
 		for(unsigned i=0; i<linkTo.size(); ++i) os << " " << linkTo[i]->GetName();
@@ -111,7 +114,7 @@ void UTLoadedData::Print(std::ostream& os){
 		children[i]->Print(os);
 		os.width(0);
 	}
-	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)")
+	os << UTPadding(w) << "</" << (type ? type->GetTypeName().c_str() : "(null)")
 		<< ">" << std::endl;
 	os.width(w);
 }
