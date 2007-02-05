@@ -158,9 +158,7 @@ public:
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<UTLoadedData> > datas;
 	struct LoadedDatas:public std::vector< UTRef<UTLoadedData> >{
-		void Print(std::ostream& os){
-			for(iterator it = begin(); it!=end(); ++it) (*it)->Print(os);
-		}
+		void Print(std::ostream& os);
 	};
 	///	ロードしたディスクリプタの記録．
 	LoadedDatas loadedDatas;
@@ -174,17 +172,16 @@ public:
 	UTLoadTasks links;
 	///	ロードとリンクが終わってから処理するタスク
 	UTLoadTasks postTasks;
-	///	型DB
-	UTTypeDescDb* typeDb;
 	// マップオブジェクト．ノード間で関係性を持たせたい場合に使用．
 	UTMapObject mapObj;	
 
 	//---------------------------------------------------------------------------
-	//	関数
-	///
+	///	コンストラクタ
 	UTLoadContext():errorStream(NULL){
 		errorStream=&DSTR;
 	}
+	//@name ローダ，ハンドラを書くためのユーティリティ
+	//@{
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
 	void ErrorMessage(UTFileMap* info, const char* pos, const char* msg);
 	///	メッセージの作成．posをファイル名と行番号に変換する．
@@ -203,15 +200,15 @@ public:
 	void WriteBool(bool b);
 	///
 	void AddDataLink(std::string ref, const char* pos);
-	///
+	///	データからオブジェクトを作成
+	UTRef<ObjectIf> CreateObject(const IfInfo* info,  const void* data, UTString name="");
+	//@}
+
 	void LinkData();
 	///
 	void LinkNode();
 	///
 	void PostTask();
-	///	ノードの作成
-	void CreateNodes();
-	void CreateNode(UTLoadedData* ld);
 	///	ファイルマップを作成してスタック(fileMaps)に積む
 	virtual void PushFileMap(const UTString fn)=0;
 protected:

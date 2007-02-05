@@ -20,9 +20,9 @@ class UTLoadContext;
 class UTLoadHandler:public UTRefCount{
 public:
 	UTString type;
-	virtual void Load(UTLoadContext* ctx){};
-	virtual void Loaded(UTLoadContext* ctx){};
-	virtual void Save(UTLoadContext* ctx){};
+	virtual void Load(UTLoadedData* d, UTLoadContext* fc){};
+	virtual void Loaded(UTLoadedData* d, UTLoadContext* fc){};
+	virtual void Save(UTLoadContext* fc){};
 	struct Less{
 		bool operator()(const UTLoadHandler* h1, const UTLoadHandler* h2) const{
 			return h1->type.compare(h2->type) < 0;
@@ -45,12 +45,12 @@ public:
 		}
 		assert(s);
 	}
-	void Load(UTLoadContext* ctx){
-		T* desc = (T*)ctx->datas.Top()->data;
+	void Load(UTLoadedData* ld, UTLoadContext* ctx){
+		T* desc = (T*)ld->data;
 		Load(*desc, ctx);
 	}
-	void Loaded(UTLoadContext* ctx){
-		T* desc = (T*)ctx->datas.Top()->data;
+	void Loaded(UTLoadedData* ld, UTLoadContext* ctx){
+		T* desc = (T*)ld->data;
 		Loaded(*desc, ctx);
 	}
 	virtual void Load(T& t, UTLoadContext* ctx)=0;

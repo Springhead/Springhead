@@ -85,18 +85,24 @@ void UTLoadedData::AddChild(UTLoadedData* c){
 	children.push_back(c);
 	c->parent = this;
 }
+void UTLoadContext::LoadedDatas::Print(std::ostream& os){
+	int w = os.width();
+	os.width(0);
+	os << UTPadding(w) << "Loaded data (desc) tree:" << std::endl;
+	for(iterator it = begin(); it!=end(); ++it) (*it)->Print(os);
+}
 void UTLoadedData::Print(std::ostream& os){
 	int w = os.width();
 	os.width(0);
-	os << UTPadding(w) << (type ? type->GetTypeName().c_str() : "(null)")
-		<< " " << name << (haveData ? " D" : "") << "{" << std::endl;
+	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)")
+		<< " " << name << (haveData ? "node" : "") << ">" << std::endl;
 	if (linkTo.size()){
-		os << UTPadding(w+2) << "linkTo: ";
+		os << UTPadding(w+2) << "linkTo = ";
 		for(unsigned i=0; i<linkTo.size(); ++i) os << " " << linkTo[i]->GetName();
 		os << std::endl;
 	}
 	if (linkFrom.size()){
-		os << UTPadding(w+2) << "linkFrom: ";
+		os << UTPadding(w+2) << "linkFrom = ";
 		for(unsigned i=0; i<linkTo.size(); ++i) os << " " << linkTo[i]->GetName();
 		os << std::endl;
 	}
@@ -105,7 +111,8 @@ void UTLoadedData::Print(std::ostream& os){
 		children[i]->Print(os);
 		os.width(0);
 	}
-	os << UTPadding(w) << "}" << std::endl;
+	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)")
+		<< ">" << std::endl;
 	os.width(w);
 }
 
@@ -376,63 +383,45 @@ void UTLoadContext::Message(UTFileMap* info, const char* pos, const char* msg){
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
 }
-void UTLoadContext::CreateNodes(){
-	for(UTLoadedDataRefs::iterator it = loadedDatas.begin(); it!=loadedDatas.end(); ++it){
-		CreateNode(*it);
+UTRef<ObjectIf> UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTString name){
+	UTRef<ObjectIf> obj;
+	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); 
+		it != objects.rend(); ++it){
+		if (*it) obj = (*it)->CreateObject(info, data);
+		if (obj) break;
 	}
-}
-void UTLoadContext::CreateNode(UTLoadedData* ld){
-	ObjectIf* obj = NULL;
-	//	先祖オブジェクトに作ってもらう
-	const IfInfo* info = ld->type->GetIfInfo();
-	if (info){
-		for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
-			if (*it) obj = (*it)->CreateObject(info, ld->data);
-			if (obj) break;
-		}
-		//	先祖が作れない場合，Sdkの作成をしてみる．
-		if (!obj) obj = SdkIf::CreateSdk(info, ld->data);
+	//	先祖が作れない場合，Sdkの作成をしてみる．
+	if (!obj) obj = SdkIf::CreateSdk(info, data);
 
-		if (obj){
-			ld->loadedObjects.push_back(obj->Cast());
-			//	オブジェクトに名前を設定
-			NamedObjectIf* n = DCAST(NamedObjectIf, obj);
-			if (ld->GetName().length()){
-				if (n){
-					n->SetName(ld->GetName().c_str());
-				}else{
-					UTString err("Can not give name to an object of '");
-					err.append(obj->GetIfInfo()->ClassName());
-					const IfInfo* i = obj->GetIfInfo();
-					const IfInfo* b = NamedObjectIf::GetIfInfoStatic();
-					if (i->Inherit(b)){
-						DSTR << "i Inherits b.\n";
-					}
-					err.append("'.");
-					ErrorMessage(NULL, NULL, err.c_str());
+	if (obj){
+		//	オブジェクトに名前を設定
+		NamedObjectIf* n = DCAST(NamedObjectIf, obj);
+		if (name.length()){
+			if (n){
+				n->SetName(name.c_str());
+			}else{
+				UTString err("Can not give name to an object of '");
+				err.append(obj->GetIfInfo()->ClassName());
+				const IfInfo* i = obj->GetIfInfo();
+				const IfInfo* b = NamedObjectIf::GetIfInfoStatic();
+				if (i->Inherit(b)){
+					DSTR << "i Inherits b.\n";
 				}
+				err.append("'.");
+				ErrorMessage(NULL, NULL, err.c_str());
 			}
-		}else{
-			UTString err("Can not create '");
-			err.append(info->ClassName());
-			err.append("'. Ancestor objects don't know how to make it.");
-			ErrorMessage(NULL, NULL, err.c_str());
 		}
-		//	親オブジェクトに追加
-		if (objects.size() && objects.Top()){
-			objects.Top()->AddChildObject(obj);
-		}
-		objects.Push(obj);							//	スタックに積む
-		if (obj && objects.size() == 1){ 
-			rootObjects.push_back(objects.Top());	//	ルートオブジェクトとして記録
-		}
-		for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
-			CreateNode(*it);	//	子孫データに対応するオブジェクトの作成
-		}
-		objects.Pop();								//	スタックをPop
+	}else{
+		UTString err("Can not create '");
+		err.append(info->ClassName());
+		err.append("'. Ancestor objects don't know how to make it.");
+		ErrorMessage(NULL, NULL, err.c_str());
 	}
-	//	ハンドラーの処理	TODO
-
+	//	親オブジェクトに追加
+	if (objects.size() && objects.Top()){
+		objects.Top()->AddChildObject(obj);
+	}
+	return obj;
 }
 
 };
