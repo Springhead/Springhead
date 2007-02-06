@@ -200,13 +200,15 @@ void FIFile::CreateScene(UTLoadContext* fc){
 	}
 }
 void FIFile::CreateObjectRecursive(UTLoadContext* fc){
-	UTRef<ObjectIf> obj = NULL;
+	ObjectIf* obj = NULL;
 	UTLoadedData* ld = fc->datas.Top();
 
 	//	先祖オブジェクトに作ってもらう
-	const IfInfo* info = ld->type->GetIfInfo();
+	const IfInfo* info = NULL;
+	if (ld->type) info = ld->type->GetIfInfo();
 	if (info){
 		obj = fc->CreateObject(info, ld->data, ld->GetName());	//	作成して，
+		ld->loadedObjects.Push(obj);
 		fc->objects.Push(obj);									//	スタックに積む
 		if (obj && fc->objects.size() == 1){ 
 			fc->rootObjects.push_back(fc->objects.Top());	//	ルートオブジェクトとして記録

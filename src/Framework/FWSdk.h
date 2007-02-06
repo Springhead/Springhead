@@ -56,7 +56,7 @@ public:
 	virtual void SetDebugMode(bool debug = true){debugMode = debug;}
 
 	virtual size_t NChildObject() const { return NScene(); }
-	virtual ObjectIf* GetChildObject(size_t i){ return GetScene(i); }
+	virtual ObjectIf* GetChildObject(size_t i){ return GetScene((int)i); }
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual PHSdkIf* GetPHSdk(){ return phSdk; }
 	virtual GRSdkIf* GetGRSdk(){ return grSdk; }

@@ -63,7 +63,7 @@ public:
 	UTLoadedData* man;				///<	このデータの名前を管理するNameMangerを持つデータ
 	
 	///	このデータから作られたオブジェクトたち
-	std::vector<Object*> loadedObjects;
+	ObjectIfs loadedObjects;
 
 	UTLoadedData(UTLoadContext* fc, UTTypeDesc* t, void* data=NULL);
 	~UTLoadedData();
@@ -208,7 +208,7 @@ public:
 	//@name データからオブジェクトを作るときのユーティリティ
 	//@{
 	///	データからオブジェクトを作成
-	UTRef<ObjectIf> CreateObject(const IfInfo* info,  const void* data, UTString name="");
+	ObjectIf* CreateObject(const IfInfo* info,  const void* data, UTString name="");
 	///	
 	UTLoadedData* FindAncestor(UTString tn);
 	///	

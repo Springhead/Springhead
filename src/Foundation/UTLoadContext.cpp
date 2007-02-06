@@ -355,9 +355,9 @@ void UTLoadContext::LinkData(){
 	dataLinks.clear();
 }
 void UTLoadContext::LinkNode(UTLoadedData* ld){
-	for (std::vector<Object*>::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
+	for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
 		for(UTLoadedDatas::iterator ld2 = ld->linkTo.begin(); ld2 != ld->linkTo.end(); ++ld2){
-			for (std::vector<Object*>::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
+			for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
 				if (  !(*o1)->AddChildObject( (*o2)->Cast() )  ){
 					std::string err("Can not add referenced object '");
 					err.append((*ld2)->GetName());
@@ -421,8 +421,8 @@ void UTLoadContext::Message(UTFileMap* info, const char* pos, const char* msg){
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
 }
-UTRef<ObjectIf> UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTString name){
-	UTRef<ObjectIf> obj;
+ObjectIf* UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTString name){
+	ObjectIf* obj=NULL;
 	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); 
 		it != objects.rend(); ++it){
 		if (*it) obj = (*it)->CreateObject(info, data);

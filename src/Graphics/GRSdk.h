@@ -35,9 +35,8 @@ public:
     @brief	グラフィックスSDK　 */
 class SPR_DLL GRSdk:public Sdk, public GRSdkIfInit, public GRSdkDesc{
 protected:
-	typedef std::vector< UTRef<Object> > Objects;
 	typedef std::vector< UTRef<GRScene> > GRScenes;
-	Objects objects;
+	ObjectRefs objects;
 	GRScenes scenes;
 public:
 	OBJECTDEF(GRSdk, Sdk);

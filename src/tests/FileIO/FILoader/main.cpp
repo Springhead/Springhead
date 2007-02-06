@@ -33,7 +33,7 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define EXIT_TIMER		12000			// 強制終了させるステップ数
-#define TEST_FILEX		"test1.x"		// ロードするXファイル
+#define TEST_FILEX		"test6.x"		// ロードするXファイル
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
@@ -274,6 +274,7 @@ int main(int argc, char* argv[]){
 		phSdk = NULL;
 		grSdk = NULL;
 		for(unsigned  i=0; i<objs.size(); ++i){	
+			objs[i]->Print(DSTR);
 			if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDKを受け取る方式
 			if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
 		}

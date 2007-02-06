@@ -339,8 +339,8 @@ public:
 	virtual SceneIf* GetScene();
 };
 
-///	Objectのポインタの配列
-class Objects:public UTStack< UTRef<Object> >{
+///	Objectへの参照の配列
+class ObjectRefs:public UTStack< UTRef<Object> >{
 public:
 	///	Tの派生クラスをスタックのTop側から探す．
 	template <class T> bool Find(T*& t){
