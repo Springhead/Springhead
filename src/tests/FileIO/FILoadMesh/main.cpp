@@ -173,9 +173,6 @@ int main(int argc, char* argv[]){
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
 	grSdk->Print(DSTR);
-	//scene = grSdk->GetScene(0);		// Sceneの取得
-	
-	grSdk->Print(DSTR);
 
 	DSTR << "Loaded : " << "NScene=" << (int)grSdk->NScene() << std::endl;
 	scene->Print(DSTR);

@@ -28,6 +28,7 @@ public:
 			return h1->type.compare(h2->type) < 0;
 		}
 	};
+	virtual bool Match(UTLoadedData* d){ return true; }
 };
 ///	UTLoadHandlerの実装テンプレート
 template <class T>
