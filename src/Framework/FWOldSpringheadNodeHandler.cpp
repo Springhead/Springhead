@@ -453,6 +453,30 @@ public:
 	}
 };
 
+
+
+// DirectXのMesh．PHSolidの子孫の場合，CDConvexMeshをロード．
+class FWNodeHandlerXMesh_Solid: public UTLoadHandlerImp<Mesh>{
+public:
+	FWNodeHandlerXMesh_Solid():UTLoadHandlerImp<Desc>("Mesh"){}
+	void Load(Desc& d, UTLoadContext* fc){
+		UTLoadedData* ld = fc->datas.Top();
+		UTLoadedData* owner = ld->FindAncestor("PHSolidDesc");
+		if (!owner) owner = ld->FindLinkAncestor("PHSolidDesc");
+		if (!owner) return;
+
+		CDConvexMeshDesc md;
+		for(unsigned i=0; i< d.vertices.size(); ++i){
+			md.vertices.push_back(d.vertices[i]);
+		}
+		UTLoadedData* ldMat = fc->datas.Top()->FindDescendant("PHMaterial");
+		if (ldMat){	//	TODO:物理マテリアルのロード
+		}
+		ld->loadedObjects.push_back(
+			fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &md)->Cast() );
+	}
+};
+
 // Spirnghead1のSphere
 class FWNodeHandlerSphere: public UTLoadHandlerImp<Sphere>{
 public:
@@ -944,6 +968,7 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerXMeshNormals);
 	handlers->insert(DBG_NEW FWNodeHandlerXMeshTextureCoords);	
 	handlers->insert(DBG_NEW FWNodeHandlerXMesh);
+	handlers->insert(DBG_NEW FWNodeHandlerXMesh_Solid);
 	handlers->insert(DBG_NEW FWNodeHandlerSphere);
 	handlers->insert(DBG_NEW FWNodeHandlerSolid);
 	handlers->insert(DBG_NEW FWNodeHandlerScene);

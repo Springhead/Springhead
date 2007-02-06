@@ -77,6 +77,10 @@ public:
 	bool operator < (const UTLoadedData& d2) const {
 		return name < d2.name;
 	}
+	UTLoadedData* FindAncestor(UTString tn);
+	UTLoadedData* FindDescendant(UTString tn);
+	UTLoadedData* FindLinkAncestor(UTString tn);
+	UTLoadedData* FindLinkDescendant(UTString tn);
 	void Print(std::ostream& os);
 };
 
@@ -199,11 +203,22 @@ public:
 	///
 	void WriteBool(bool b);
 	///
-	void AddDataLink(std::string ref, const char* pos);
+	void AddDataLink(std::string ref, const char* pos);	
+	//@}
+	//@name データからオブジェクトを作るときのユーティリティ
+	//@{
 	///	データからオブジェクトを作成
 	UTRef<ObjectIf> CreateObject(const IfInfo* info,  const void* data, UTString name="");
-	//@}
+	///	
+	UTLoadedData* FindAncestor(UTString tn);
+	///	
+	UTLoadedData* FindDescendant(UTString tn);
+	///
+	UTLoadedData* FindLinkAncestor(UTString tn);
+	///
+	UTLoadedData* FindLinkDescendant(UTString tn);
 
+	//@}
 	void LinkData();
 	///
 	void LinkNode();

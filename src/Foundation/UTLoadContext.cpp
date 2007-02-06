@@ -119,6 +119,41 @@ void UTLoadedData::Print(std::ostream& os){
 	os.width(w);
 }
 
+UTLoadedData* UTLoadedData::FindAncestor(UTString tn){
+	UTLoadedData* rv = parent;
+	while(rv && rv->type->GetTypeName().compare(tn)!=0) rv = rv->parent;
+	return rv;
+}
+UTLoadedData* UTLoadedData::FindDescendant(UTString tn){
+	for(unsigned i=0; i<children.size(); ++i){
+		if (children[i]->type->GetTypeName().compare(tn) == 0) return children[i];
+	}
+	for(unsigned i=0; i<children.size(); ++i){
+		UTLoadedData* rv = children[i]->FindDescendant(tn);
+		if (rv) return rv;
+	}
+	return NULL;
+}
+UTLoadedData* UTLoadedData::FindLinkAncestor(UTString tn){
+	for(unsigned i=0; i<linkFrom.size(); ++i){
+		if (linkFrom[i]->type->GetTypeName().compare(tn) == 0) return linkFrom[i];
+	}
+	for(unsigned i=0; i<linkFrom.size(); ++i){
+		UTLoadedData* rv = linkFrom[i]->FindLinkAncestor(tn);
+		if (rv) return rv;
+	}
+	return NULL;
+}
+UTLoadedData* UTLoadedData::FindLinkDescendant(UTString tn){
+	for(unsigned i=0; i<linkTo.size(); ++i){
+		if (linkTo[i]->type->GetTypeName().compare(tn) == 0) return linkTo[i];
+	}
+	for(unsigned i=0; i<linkTo.size(); ++i){
+		UTLoadedData* rv = linkTo[i]->FindLinkDescendant(tn);
+		if (rv) return rv;
+	}
+	return NULL;
+}
 
 
 //---------------------------------------------------------------------------
