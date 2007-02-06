@@ -218,7 +218,7 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 	key->type = ld->type->GetTypeName();
 	std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
 		= handlers.equal_range(key);
-	typedef std::vector<UTLoadHandler> Handlers;
+	typedef std::vector<UTLoadHandler*> Handlers;
 	Handlers handlers;
 	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
 		if ((*it)->Match(ld)) handlers.push_back(*it);
