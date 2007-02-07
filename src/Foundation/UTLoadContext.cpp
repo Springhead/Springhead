@@ -106,7 +106,7 @@ void UTLoadedData::Print(std::ostream& os){
 	}
 	if (linkFrom.size()){
 		os << UTPadding(w+2) << "linkFrom = ";
-		for(unsigned i=0; i<linkTo.size(); ++i) os << " " << linkTo[i]->GetName();
+		for(unsigned i=0; i<linkFrom.size(); ++i) os << " " << linkFrom[i]->GetName();
 		os << std::endl;
 	}
 	for(unsigned i=0; i<children.size(); ++i){

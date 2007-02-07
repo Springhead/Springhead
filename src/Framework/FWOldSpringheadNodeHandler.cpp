@@ -68,19 +68,19 @@ static GRScene* FindGRScene(UTLoadContext* fc){
 class FWNodeHandlerXHeader: public UTLoadHandlerImp<Header>{
 public:
 	FWNodeHandlerXHeader():UTLoadHandlerImp<Desc>("Header"){}
-	void Load(Desc& d, UTLoadContext* fc){
-	}
 };
 
 // Springhead1のフレーム．
 class FWNodeHandlerXFrame: public UTLoadHandlerImp<Frame>{
 public:	
 	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}	
-	void Load(Desc& d, UTLoadContext* fc){
-		fc->objects.Push(fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &GRFrameDesc()));
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		ObjectIf* o = fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &GRFrameDesc());
+		fc->objects.Push(o);
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
-		fc->objects.Pop();
+	void AfterCreateChildren(Desc& d,  UTLoadedData* ld, UTLoadContext* fc){
+		if (fc->objects.Top()->GetIfInfo()->Inherit(GRFrameIf::GetIfInfoStatic()))
+			fc->objects.Pop();
 	}
 };
 
@@ -98,7 +98,7 @@ OBJECT_IMP(FWSimulatorTask, UTLoadTask);
 class FWNodeHandlerSimulator: public UTLoadHandlerImp<Simulator>{
 public:	
 	FWNodeHandlerSimulator():UTLoadHandlerImp<Desc>("Simulator"){}
-	void Load(Desc& d, UTLoadContext* fc){		
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){		
 		UTRef<FWSimulatorTask> simtask = DBG_NEW FWSimulatorTask;
 		simtask->timeStep = d.timeStep;
 		simtask->decay    = d.decay;		
@@ -116,7 +116,7 @@ public:
 class FWNodeHandlerXFrameTransformMatrix: public UTLoadHandlerImp<FrameTransformMatrix>{
 public:	
 	FWNodeHandlerXFrameTransformMatrix():UTLoadHandlerImp<Desc>("FrameTransformMatrix"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRFrame* fr = DCAST(GRFrame, fc->objects.Top());
 		if (fr){
 			fr->transform = d.matrix;
@@ -144,7 +144,7 @@ public:
 		void Execute(UTLoadContext* ctx){}
 	};
 	FWNodeHandlerXLight8():UTLoadHandlerImp<Desc>("Light8"){}
-	void Load(Desc& l8, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& l8, UTLoadedData* ld, UTLoadContext* fc){
 		GRLightDesc grld;
 		grld.ambient = l8.ambient;
 		grld.attenuation0 = l8.attenuation0;
@@ -172,7 +172,7 @@ public:
 		fc->objects.Push(a->Cast());
 		fc->links.push_back(a);
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Pop();
 		fc->objects.Pop();
 	}
@@ -191,7 +191,7 @@ OBJECT_IMP(FWXTextureTask, UTLoadTask);
 class FWNodeHandlerXTextureFilename: public UTLoadHandlerImp<TextureFilename>{
 public:
 	FWNodeHandlerXTextureFilename():UTLoadHandlerImp<Desc>("TextureFilename"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWXTextureTask> tex = DBG_NEW FWXTextureTask;
 		tex->filename = d.filename;
 		if (fc->datas.Top()->GetName().length()){
@@ -202,7 +202,7 @@ public:
 		fc->objects.Top()->AddChildObject(tex->Cast());
 		fc->links.push_back(tex);
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 	}
 };
 
@@ -223,7 +223,7 @@ public:
 		}
 	};
 	FWNodeHandlerXMaterial():UTLoadHandlerImp<Desc>("Material"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void AfterCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMaterialDesc desc;
 		desc.ambient = d.face;
 		desc.diffuse = d.face;
@@ -235,7 +235,7 @@ public:
 		mc->material = DCAST(GRMaterial, fc->objects.Top());
 		fc->objects.Push(mc->Cast());
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* mc = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(mc);
 		fc->objects.Pop();		// Adapter
@@ -259,7 +259,7 @@ OBJECT_IMP(FWPHMaterialTask, UTLoadTask);
 class FWNodeHandlerPhysicalMaterial: public UTLoadHandlerImp<PhysicalMaterial>{
 public:	
 	FWNodeHandlerPhysicalMaterial():UTLoadHandlerImp<Desc>("PhysicalMaterial"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
 		phmtask->mu = d.d;		// 最大静止摩擦係数
 		phmtask->mu0 = d.s;		// 動摩擦係数		
@@ -274,7 +274,7 @@ public:
 		}
 		fc->links.push_back(phmtask);
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){	
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){	
 	}
 };
 
@@ -291,7 +291,7 @@ OBJECT_IMP(FWMeshMaterialListTask, UTLoadTask);
 class FWNodeHandlerXMeshMaterialList: public UTLoadHandlerImp<MeshMaterialList>{
 public:
 	FWNodeHandlerXMeshMaterialList():UTLoadHandlerImp<Desc>("MeshMaterialList"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWMeshMaterialListTask> mmltask = DBG_NEW FWMeshMaterialListTask;
 		mmltask->materialList = d.faceIndexes;
 		fc->objects.Top()->AddChildObject(mmltask->Cast());
@@ -313,7 +313,7 @@ OBJECT_IMP(FWMeshNormalsTask, UTLoadTask);
 class FWNodeHandlerXMeshNormals: public UTLoadHandlerImp<MeshNormals>{
 public:
 	FWNodeHandlerXMeshNormals():UTLoadHandlerImp<Desc>("MeshNormals"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWMeshNormalsTask> normtask = DBG_NEW FWMeshNormalsTask;
 		normtask->normals = d.normals;
 		for (int f=0; f < d.nFaceNormals; ++f){
@@ -339,7 +339,7 @@ OBJECT_IMP(FWMeshTextureCoordsTask, UTLoadTask);
 class FWNodeHandlerXMeshTextureCoords: public UTLoadHandlerImp<MeshTextureCoords>{
 public:
 	FWNodeHandlerXMeshTextureCoords():UTLoadHandlerImp<Desc>("MeshTextureCoords"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWMeshTextureCoordsTask> textask = DBG_NEW FWMeshTextureCoordsTask;
 		textask->texCoords = d.textureCoords;
 		fc->objects.Top()->AddChildObject(textask->Cast());
@@ -403,7 +403,7 @@ public:
 		}
 	};
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc()));	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		// map<mesh, phmtask> を作成.
@@ -444,7 +444,7 @@ public:
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* ad = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(ad);
 		fc->objects.Pop();
@@ -459,8 +459,7 @@ public:
 class FWNodeHandlerXMesh_Solid: public UTLoadHandlerImp<Mesh>{
 public:
 	FWNodeHandlerXMesh_Solid():UTLoadHandlerImp<Desc>("Mesh"){}
-	void Load(Desc& d, UTLoadContext* fc){
-		UTLoadedData* ld = fc->datas.Top();
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTLoadedData* owner = ld->FindAncestor("PHSolidDesc");
 		if (!owner) owner = ld->FindLinkAncestor("PHSolidDesc");
 		if (!owner) return;
@@ -473,7 +472,7 @@ public:
 		if (ldMat){	//	TODO:物理マテリアルのロード
 		}
 		ld->loadedObjects.push_back(
-			fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &md)->Cast() );
+			fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &md, ld->GetName())->Cast() );
 	}
 };
 
@@ -514,7 +513,7 @@ public:
 		}
 	};
 	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &GRSphereDesc()));
 		GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
 		sphere->radius = d.radius;
@@ -529,7 +528,7 @@ public:
 		ad->fc = fc;
 		fc->objects.Push(ad->Cast());
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* ad = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(ad);
 		fc->objects.Pop();		
@@ -553,7 +552,7 @@ OBJECT_IMP(FWContactInactiveTask, UTLoadTask);
 class FWNodeHandlerContactInactive: public UTLoadHandlerImp<ContactInactive>{
 public:
 	FWNodeHandlerContactInactive():UTLoadHandlerImp<Desc>("ContactInactive"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWContactInactiveTask> task = DBG_NEW FWContactInactiveTask;
 		task->nSolids = d.nSolids;
 		task->solidIndexes = d.solidIndexes;
@@ -671,7 +670,7 @@ public:
 		}
 	};
 	FWNodeHandlerContactEngine():UTLoadHandlerImp<Desc>("ContactEngine"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
 		Disabler* dis = DBG_NEW Disabler;
 		dis->phScene = FindPHScene(fc)->Cast();
@@ -681,7 +680,7 @@ public:
 		task->fc = fc;
 		fc->objects.Push(task->Cast());
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
@@ -718,7 +717,7 @@ public:
 	};
 
 	FWNodeHandlerSolid():UTLoadHandlerImp<Desc>("Solid"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Push(fc->CreateObject(PHSolidIf::GetIfInfoStatic(), &PHSolidDesc()));
 		PHSolid* solid = DCAST(PHSolid, fc->objects.Top());
 		solid->center = d.center;
@@ -732,7 +731,7 @@ public:
 		task->fc = fc;
 		fc->objects.Push(task->Cast());
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(task);
 		fc->objects.Pop();	//	task
@@ -746,7 +745,7 @@ public:
 class FWNodeHandlerCamera: public UTLoadHandlerImp<Camera>{
 public:	
 	FWNodeHandlerCamera():UTLoadHandlerImp<Desc>("Camera"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		d.view.ExZ() *= -1;
 		d.view.EyZ() *= -1;
 		d.view.EzX() *= -1;
@@ -765,7 +764,7 @@ public:
 		GRFrameIf* frame = DCAST(GRFrameIf, cam->GetNameManager()->CreateObject(GRFrameIf::GetIfInfoStatic(), &fd));
 		cam->AddChildObject(frame);
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Pop();
 	}
 };
@@ -775,12 +774,12 @@ class FWNodeHandlerGravityEngine: public UTLoadHandlerImp<GravityEngine>{
 public:	
 	FWNodeHandlerGravityEngine():UTLoadHandlerImp<Desc>("GravityEngine"){}
 	int linkPos;
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		PHScene* s = FindPHScene(fc);
 		if (s) s->SetGravity(d.gravity);
 		linkPos = (int)fc->links.size();
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		//	GravityEngineの子オブジェクトはとりあえず無視。本当はGravityのOn/Offに使う。
 		fc->links.resize(linkPos);
 	}
@@ -790,7 +789,7 @@ public:
 class FWNodeHandlerScene: public UTLoadHandlerImp<Scene>{
 public:	
 	FWNodeHandlerScene():UTLoadHandlerImp<Desc>("Scene"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		//	Frameworkを作る．
 		FWSceneDesc fwsd;
 		fc->objects.Push(fc->CreateObject(FWSceneIf::GetIfInfoStatic(), &fwsd));
@@ -822,7 +821,7 @@ public:
 			}
 		}				
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Pop();
 	}
 };
@@ -831,9 +830,9 @@ public:
 class FWNodeHandlerSolidContainer: public UTLoadHandlerImp<SolidContainer>{
 public:	
 	FWNodeHandlerSolidContainer():UTLoadHandlerImp<Desc>("SolidContainer"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 	}
 };
 
@@ -878,12 +877,12 @@ public:
 	};
 
 	FWNodeHandlerJointEngine():UTLoadHandlerImp<Desc>("JointEngine"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->phScene = FindPHScene(fc);
 		fc->objects.Push(j->Cast());
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		JointCreator* j = (JointCreator*) DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(j);
 		fc->objects.Pop();
@@ -895,7 +894,7 @@ class FWNodeHandlerJoint: public UTLoadHandlerImp<Joint>{
 public:	
 	typedef FWNodeHandlerJointEngine::JointCreator JointCreator;
 	FWNodeHandlerJoint():UTLoadHandlerImp<Desc>("Joint"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->name = fc->datas.Top()->GetName();
 		j->desc.type = d.nType ? PHJointDesc::SLIDERJOINT : PHJointDesc::HINGEJOINT;
@@ -913,7 +912,7 @@ public:
 		j->phScene = FindPHScene(fc);
 		fc->objects.Push(j->Cast());
 	}
-	void Loaded(Desc& d, UTLoadContext* fc){
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		JointCreator* j = (JointCreator*)DCAST(UTLoadTask, fc->objects.Top());
 		fc->links.push_back(j);
 		fc->objects.Pop();
@@ -924,7 +923,7 @@ public:
 class FWNodeHandlerImport: public UTLoadHandlerImp<Import>{
 public:	
 	FWNodeHandlerImport():UTLoadHandlerImp<Desc>("Import"){}
-	void Load(Desc& d, UTLoadContext* fc){
+	void AfterLoadData(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTString filename = d.file;
 
 		UTPath xFilePath;
@@ -936,7 +935,6 @@ public:
 		imPath.SetCwd(xFilePath.Drive() + xFilePath.Dir());
 		UTString full = imPath.FullPath();		
 
-
 		UTRef<FISdkIf> sdk = FISdkIf::CreateSdk();
 		fc->PushFileMap(full);
 		if (fc->IsGood()){
@@ -944,8 +942,6 @@ public:
 			fileX->LoadImp((FILoadContext*)fc);
 		}
 		fc->fileMaps.Pop();
-	}
-	void Loaded(Desc& d, UTLoadContext* fc){
 	}
 };
 

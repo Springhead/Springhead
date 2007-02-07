@@ -20,15 +20,18 @@ class UTLoadContext;
 class UTLoadHandler:public UTRefCount{
 public:
 	UTString type;
-	virtual void Load(UTLoadedData* d, UTLoadContext* fc){};
-	virtual void Loaded(UTLoadedData* d, UTLoadContext* fc){};
+	virtual void BeforeCreateObject(UTLoadedData* d, UTLoadContext* fc){}
+	virtual void AfterCreateObject(UTLoadedData* d, UTLoadContext* fc){}
+	virtual void AfterCreateChildren(UTLoadedData* d, UTLoadContext* fc){}
+	virtual void BeforeLoadData(UTLoadedData* d, UTLoadContext* fc){}
+	virtual void AfterLoadData(UTLoadedData* d, UTLoadContext* fc){}
+
 	virtual void Save(UTLoadContext* fc){};
 	struct Less{
 		bool operator()(const UTLoadHandler* h1, const UTLoadHandler* h2) const{
 			return h1->type.compare(h2->type) < 0;
 		}
 	};
-	virtual bool Match(UTLoadedData* d){ return true; }
 };
 ///	UTLoadHandlerの実装テンプレート
 template <class T>
@@ -46,16 +49,31 @@ public:
 		}
 		assert(s);
 	}
-	void Load(UTLoadedData* ld, UTLoadContext* ctx){
+	void BeforeCreateObject(UTLoadedData* ld, UTLoadContext* ctx){
 		T* desc = (T*)ld->data;
-		Load(*desc, ctx);
+		BeforeCreateObject(*desc, ld, ctx);
 	}
-	void Loaded(UTLoadedData* ld, UTLoadContext* ctx){
+	void AfterCreateObject(UTLoadedData* ld, UTLoadContext* ctx){
 		T* desc = (T*)ld->data;
-		Loaded(*desc, ctx);
+		AfterCreateObject(*desc, ld, ctx);
 	}
-	virtual void Load(T& t, UTLoadContext* ctx)=0;
-	virtual void Loaded(T& t, UTLoadContext* ctx){}
+	void AfterCreateChildren(UTLoadedData* ld, UTLoadContext* ctx){
+		T* desc = (T*)ld->data;
+		AfterCreateChildren(*desc, ld, ctx);
+	}
+	void BeforeLoadData(UTLoadedData* ld, UTLoadContext* ctx){
+		T* desc = (T*)ld->data;
+		BeforeLoadData(*desc, ld, ctx);
+	}
+	void AfterLoadData(UTLoadedData* ld, UTLoadContext* ctx){
+		T* desc = (T*)ld->data;
+		AfterLoadData(*desc, ld, ctx);
+	}
+	virtual void BeforeCreateObject(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
+	virtual void AfterCreateObject(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
+	virtual void AfterCreateChildren(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
+	virtual void BeforeLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
+	virtual void AfterLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
 };
 
 /**	

@@ -164,6 +164,7 @@ void FIFile::Load(FILoadContext* fc){
 	fc->PostTask();
 }
 void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
+	//	データを作ってスタックに積む
 	UTTypeDesc* type = GetTypeDb()->Find(tn);
 	if (!type) type = GetTypeDb()->Find(tn + "Desc");	
 	if (type){
@@ -173,8 +174,32 @@ void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
 		fc->ErrorMessage(NULL, NULL, tn.c_str());
 		fc->PushType(NULL);	//	Popに備えて，Pushしておく
 	}
+
+	//	データロード前ハンドラの呼び出し
+	if (type){
+		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+		key->type = type->GetTypeName();
+		std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
+			= handlers.equal_range(key);
+		for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+			(*it)->BeforeLoadData(fc->datas.Top(), fc);
+		}
+	}
 }
 void FIFile::LNodeEnd(FILoadContext* fc){
+	//	データロード後ハンドラの呼び出し
+	UTTypeDesc* type = fc->fieldIts.Top().type;
+	if (type){
+		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+		key->type = type->GetTypeName();
+		std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
+			= handlers.equal_range(key);
+		for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+			(*it)->AfterLoadData(fc->datas.Top(), fc);
+		}
+	}
+
+	//	スタックの片付け
 	fc->PopType();
 }
 void FIFile::LSetNodeName(FILoadContext* fc, UTString n){
@@ -200,20 +225,7 @@ void FIFile::CreateScene(UTLoadContext* fc){
 	}
 }
 void FIFile::CreateObjectRecursive(UTLoadContext* fc){
-	ObjectIf* obj = NULL;
 	UTLoadedData* ld = fc->datas.Top();
-
-	//	先祖オブジェクトに作ってもらう
-	const IfInfo* info = NULL;
-	if (ld->type) info = ld->type->GetIfInfo();
-	if (info){
-		obj = fc->CreateObject(info, ld->data, ld->GetName());	//	作成して，
-		ld->loadedObjects.Push(obj);
-		fc->objects.Push(obj);									//	スタックに積む
-		if (obj && fc->objects.size() == 1){ 
-			fc->rootObjects.push_back(fc->objects.Top());	//	ルートオブジェクトとして記録
-		}
-	}
 
 	//	ハンドラーの処理
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
@@ -221,13 +233,28 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 	std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
 		= handlers.equal_range(key);
 	typedef std::vector<UTLoadHandler*> Handlers;
-	Handlers handlers;
 	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
-		if ((*it)->Match(ld)) handlers.push_back(*it);
+		(*it)->BeforeCreateObject(ld, fc);
 	}
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); ++it){
-		(*it)->Load(ld, fc);
+
+	//	先祖オブジェクトに作ってもらう
+	ObjectIf* obj = NULL;
+	const IfInfo* info = NULL;
+	if (ld->type) info = ld->type->GetIfInfo();
+	if (info){
+		obj = fc->CreateObject(info, ld->data, ld->GetName());	//	作成して，
+		if (obj){
+			ld->loadedObjects.Push(obj);
+			fc->objects.Push(obj);									//	スタックに積む
+			if (fc->objects.size() == 1){ 
+				fc->rootObjects.push_back(fc->objects.Top());	//	ルートオブジェクトとして記録
+			}
+		}
 	}
+	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterCreateObject(ld, fc);
+	}
+
 	//	子ノードの作成
 	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
 		fc->datas.Push(*it);
@@ -235,12 +262,12 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 		fc->datas.Pop();
 	}
 	//	ハンドラーの処理
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); ++it){
-		(*it)->Loaded(ld, fc);
+	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterCreateChildren(ld, fc);
 	}
 	
 	//	終了処理
-	if(info){
+	if(obj){
 		fc->objects.Pop();								//	スタックをPop
 	}
 }

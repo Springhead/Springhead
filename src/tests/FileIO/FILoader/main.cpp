@@ -257,7 +257,7 @@ void idle(){
 int main(int argc, char* argv[]){
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
-//	FWSdkIf::RegisterSdk();
+	FWSdkIf::RegisterSdk();
 
 	UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
