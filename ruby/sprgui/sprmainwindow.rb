@@ -192,7 +192,7 @@ class SprMainWindow < FXMainWindow
     	cameraframe = FXHorizontalFrame.new(@hsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
 	    @glvisual = FXGLVisual.new(getApp(), VISUAL_DOUBLEBUFFER)
 	    @glcanvas = FXGLCanvas.new(cameraframe, @glvisual, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT)
-	    @glcanvas.connect(SEL_PAINT, method(:drawScene))
+	    @glcanvas.connect(SEL_PAINT){drawScene}
 	    @glcanvas.connect(SEL_CONFIGURE) {
 	    	if @glcanvas.makeCurrent
 	        	$sprapp.GetSdk().GetRender().SetViewport([0, 0], [@glcanvas.width, @glcanvas.height])
@@ -215,7 +215,7 @@ class SprMainWindow < FXMainWindow
 	end
 
 	# draw scene
-	def	drawScene(sender, sel, ptr)
+	def	drawScene()
 
 	    # Make context current
     	@glcanvas.makeCurrent()

@@ -1,32 +1,75 @@
+require 'sprfloatproperty'
+require 'sprboolproperty'
+require 'sprvectorproperty'
+require 'sprmatrixproperty'
+require 'sprquatproperty'
+require 'sprobjectproperty'
+require 'sprobjectproperty'
+
 include Fox
 
-class SprSolidProperty < FXVerticalFrame
+class SprSolidProperty < FXScrollArea
 	def initialize(owner)
 		super(owner, FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
 
+		@object = SprObjectProperty.new(self)
+
+		FXHorizontalSeparator.new(self)
+
 		matrix = FXMatrix.new(self, 2, (MATRIX_BY_COLUMNS|LAYOUT_FILL_X|LAYOUT_FILL_Y))
+		# velocity
+		FXLabel.new(matrix, 'velocity')
+		@velocity = SprVectorProperty.new(matrix, 3)
+
+		# angular velocity
+		FXLabel.new(matrix, 'ang-velocity')
+		@angvel = SprVectorProperty.new(matrix, 3)
+
+		# position
+		FXLabel.new(matrix, 'position')
+		@pose = SprVectorProperty.new(matrix, 3)
+
+		# orientation
+		FXLabel.new(matrix, 'orientation')
+		@orientation = SprQuatProperty.new(matrix)
+
+		# force
+		FXLabel.new(matrix, 'force')
+		@force = SprVectorProperty.new(matrix, 3)
+
+		# torque
+		FXLabel.new(matrix, 'torque')
+		@torque = SprVectorProperty.new(matrix, 3)
 
 		# mass
 		FXLabel.new(matrix, 'mass')
-		@mass = FXTextField.new(matrix, 10, nil, 0, (TEXTFIELD_REAL|JUSTIFY_RIGHT|FRAME_SUNKEN|FRAME_THICK|LAYOUT_CENTER_Y|LAYOUT_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW))
+		@mass = SprFloatProperty.new(matrix)
 		
 		# inertia
 		FXLabel.new(matrix, 'inertia')
-		inertiamatrix = FXMatrix.new(matrix, 3, (MATRIX_BY_ROWS|LAYOUT_FILL_X|LAYOUT_FILL_Y))
-		@inertia = [[nil, nil, nil], [nil, nil, nil], [nil, nil, nil]]
-		for r in 0..2
-			for c in 0..2
-				@inertia[r][c] = FXTextField.new(inertiamatrix, 10, nil, 0, (TEXTFIELD_REAL|JUSTIFY_RIGHT|FRAME_SUNKEN|FRAME_THICK|LAYOUT_CENTER_Y|LAYOUT_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW))
-			end
-		end
+		@inertia = SprMatrixProperty.new(matrix, 3, 3)
+
+		# center
+		FXLabel.new(matrix, 'center of mass')
+		@center = SprVectorProperty.new(matrix, 3)
+
+		# dynamical?
+		FXLabel.new(matrix, 'dynamical')
+		@dynamical = SprBoolProperty.new(matrix)
 	end
 
-	def update(solid)
-		@mass.text = solid.GetMass().to_s
-		for r in 0..2
-			for c in 0..2
-				@inertia[r][c].text = solid.GetInertia()[r][c].to_s
-			end
+	def update(solid, upload)
+		@object.update(solid, upload)
+		if upload
+			@mass.update(solid.GetMass(), true)
+			@inertia.update(solid.GetInertia(), upload)
+		else
+			m = 0
+			i = [[0,0,0],[0,0,0],[0,0,0]]
+			@mass.update(m, false)
+			@inertia.update(i, false)
+			solid.SetMass(m)
+			solid.SetInertia(i)
 		end
 	end
 end
