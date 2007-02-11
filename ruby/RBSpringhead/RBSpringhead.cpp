@@ -1972,6 +1972,60 @@ SWIG_From_bool  (bool value)
   return value ? Qtrue : Qfalse;
 }
 
+SWIGINTERN void Affine2d_setTrn(Affine2d *self,Vec2d const &v){
+		self->Trn() = v;
+	}
+SWIGINTERN Vec2d Affine2d_getTrn(Affine2d *self){
+		return self->Trn();
+	}
+SWIGINTERN void Affine2d_setPos(Affine2d *self,Vec2d const &v){
+		self->Pos() = v;
+	}
+SWIGINTERN Vec2d Affine2d_getPos(Affine2d *self){
+		return self->Pos();
+	}
+SWIGINTERN void Affine2d_setRot(Affine2d *self,Matrix2d const &m){
+		self->Rot() = m;
+	}
+SWIGINTERN Matrix2d Affine2d_getRot(Affine2d *self){
+		return self->Rot();
+	}
+SWIGINTERN void Affined_setTrn(Affined *self,Vec3d const &v){
+		self->Trn() = v;
+	}
+SWIGINTERN Vec3d Affined_getTrn(Affined *self){
+		return self->Trn();
+	}
+SWIGINTERN void Affined_setPos(Affined *self,Vec3d const &v){
+		self->Pos() = v;
+	}
+SWIGINTERN Vec3d Affined_getPos(Affined *self){
+		return self->Pos();
+	}
+SWIGINTERN void Affined_setRot(Affined *self,Matrix3d const &m){
+		self->Rot() = m;
+	}
+SWIGINTERN Matrix3d Affined_getRot(Affined *self){
+		return self->Rot();
+	}
+SWIGINTERN void Quaterniond_setV(Quaterniond *self,Vec3d const &v){
+		self->V() = v;
+	}
+SWIGINTERN Vec3d Quaterniond_getV(Quaterniond *self){
+		return self->V();
+	}
+SWIGINTERN void Posed_setPos(Posed *self,Vec3d const &v){
+		self->Pos() = v;
+	}
+SWIGINTERN Vec3d Posed_getPos(Posed *self){
+		return self->Pos();
+	}
+SWIGINTERN void Posed_setOri(Posed *self,Quaterniond const &q){
+		self->Ori() = q;
+	}
+SWIGINTERN Quaterniond Posed_getOri(Posed *self){
+		return self->Ori();
+	}
 
   #define SWIG_From_long   LONG2NUM 
 
@@ -5891,6 +5945,174 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Affine2d_trne___(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  Vec2d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setTrn" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setTrn" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setTrn" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  Affine2d_setTrn(arg1,(Vec2d const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_trn(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  Vec2d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getTrn" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = Affine2d_getTrn(arg1);
+  vresult = SWIG_NewPointerObj((new Vec2d(static_cast< const Vec2d& >(result))), SWIGTYPE_p_Vec2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_pose___(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  Vec2d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setPos" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setPos" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setPos" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  Affine2d_setPos(arg1,(Vec2d const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_pos(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  Vec2d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getPos" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = Affine2d_getPos(arg1);
+  vresult = SWIG_NewPointerObj((new Vec2d(static_cast< const Vec2d& >(result))), SWIGTYPE_p_Vec2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_rote___(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  Matrix2d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setRot" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setRot" "', argument " "2"" of type '" "Matrix2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setRot" "', argument " "2"" of type '" "Matrix2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Matrix2d * >(argp2);
+  Affine2d_setRot(arg1,(Matrix2d const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_rot(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  Matrix2d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getRot" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = Affine2d_getRot(arg1);
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Affine2d(Affine2d *arg1) {
     delete arg1;
@@ -7652,8 +7874,2453 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Affined_trne___(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setTrn" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  Affined_setTrn(arg1,(Vec3d const &)*arg2);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_trn(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getTrn" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = Affined_getTrn(arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_pose___(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setPos" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  Affined_setPos(arg1,(Vec3d const &)*arg2);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_pos(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getPos" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = Affined_getPos(arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_rote___(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Matrix3d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Matrix3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setRot" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_entry(argv[0], i);
+    for(int j = 0; j < 3; j++){
+      temp2[j][i] = NUM2DBL(rb_ary_entry(col, j));
+    }
+  }
+  arg2 = &temp2;
+  
+  Affined_setRot(arg1,(Matrix3d const &)*arg2);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_rot(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Matrix3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getRot" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = Affined_getRot(arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Affined(Affined *arg1) {
+    delete arg1;
+}
+
+swig_class cQuaterniond;
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_w_set(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double arg2 ;
+  Quaterniond temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "w" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->w = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_w_get(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->w);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_x_set(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double arg2 ;
+  Quaterniond temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_x_get(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->x);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_y_set(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double arg2 ;
+  Quaterniond temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_y_get(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->y);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_z_set(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double arg2 ;
+  Quaterniond temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "z" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_z_get(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->z);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_RotationHalf(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (arg1)->RotationHalf();
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Rotation(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (arg1)->Rotation();
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Axis(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (arg1)->Axis();
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Theta(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double)(arg1)->Theta();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Quaterniond__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Quaterniond *)new Quaterniond();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Quaterniond_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Quaterniond_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Quaterniond);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Quaterniond__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  Quaterniond *result = 0 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Quaterniond" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Quaterniond" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Quaterniond" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Quaterniond" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  result = (Quaterniond *)new Quaterniond(arg1,arg2,arg3,arg4);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Quaterniond(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Quaterniond__SWIG_0(nargs, args, self);
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_new_Quaterniond__SWIG_1(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Quaterniond'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Vec3d *arg2 = 0 ;
+  Quaterniond result;
+  double val1 ;
+  int ecode1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Quaterniond::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  result = Quaterniond::Rot(arg1,(Vec3d const &)*arg2);
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  char arg2 ;
+  Quaterniond result;
+  double val1 ;
+  int ecode1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Quaterniond::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Quaterniond::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Quaterniond::Rot(arg1,arg2);
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Rot__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Quaterniond result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  result = Quaterniond::Rot((Vec3d const &)*arg1);
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Quaterniond_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Quaterniond_Rot__SWIG_2(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Quaterniond_Rot__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Quaterniond_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Quaterniond_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Conjugate(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  (arg1)->Conjugate();
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Conjugated(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Quaterniond result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg1 = &temp1;
+  
+  result = ((Quaterniond const *)arg1)->Conjugated();
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Inv(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Quaterniond result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg1 = &temp1;
+  
+  result = ((Quaterniond const *)arg1)->Inv();
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_FromMatrix(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Matrix3d *arg2 = 0 ;
+  Quaterniond temp1 ;
+  Matrix3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_entry(self, i);
+    for(int j = 0; j < 3; j++){
+      temp2[j][i] = NUM2DBL(rb_ary_entry(col, j));
+    }
+  }
+  arg2 = &temp2;
+  
+  (arg1)->FromMatrix((Matrix3d const &)*arg2);
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_ToMatrix(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Matrix3d *arg2 = 0 ;
+  Quaterniond temp1 ;
+  Matrix3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg1 = &temp1;
+  
+  ((Quaterniond const *)arg1)->ToMatrix(*arg2);
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg2)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_ToEular(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Quaterniond temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  arg2 = &temp2;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  (arg1)->ToEular(*arg2);
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_FromEular(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Quaterniond temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  (arg1)->FromEular((Vec3d const &)*arg2);
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_RotationArc(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Vec3d *arg3 = 0 ;
+  Quaterniond temp1 ;
+  Vec3d temp2 ;
+  Vec3d temp3 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp3[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg3 = &temp3;
+  
+  (arg1)->RotationArc((Vec3d const &)*arg2,(Vec3d const &)*arg3);
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Euler(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  Quaterniond temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Euler" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[0], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Euler" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[1], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Euler" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  (arg1)->Euler(arg2,arg3,arg4);
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_Derivative(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Quaterniond result;
+  Quaterniond temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  result = (arg1)->Derivative((Vec3d const &)*arg2);
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_AngularVelocity(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Quaterniond *arg2 = 0 ;
+  Vec3d result;
+  Quaterniond temp1 ;
+  Quaterniond temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  result = (arg1)->AngularVelocity((Quaterniond const &)*arg2);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_ve___(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Quaterniond temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  Quaterniond_setV(arg1,(Vec3d const &)*arg2);
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Quaterniond_v(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = (Quaterniond *) 0 ;
+  Vec3d result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = Quaterniond_getV(arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(4);
+    for(int i = 0; i < 4; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Quaterniond(Quaterniond *arg1) {
+    delete arg1;
+}
+
+SWIGINTERN VALUE
+_wrap_dot(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = 0 ;
+  Quaterniond *arg2 = 0 ;
+  double result;
+  Quaterniond temp1 ;
+  Quaterniond temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  
+  for(int i = 0; i < 4; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  result = (double)dot((Quaterniond const &)*arg1,(Quaterniond const &)*arg2);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_interpolate(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Quaterniond *arg2 = 0 ;
+  Quaterniond *arg3 = 0 ;
+  Quaterniond result;
+  double val1 ;
+  int ecode1 = 0 ;
+  Quaterniond temp2 ;
+  Quaterniond temp3 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "interpolate" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  
+  for(int i = 0; i < 4; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  
+  for(int i = 0; i < 4; i++)
+  temp3[i] = NUM2DBL(rb_ary_entry(argv[2], i));
+  arg3 = &temp3;
+  
+  result = interpolate(arg1,(Quaterniond const &)*arg2,(Quaterniond const &)*arg3);
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+swig_class cPosed;
+
+SWIGINTERN VALUE
+_wrap_Posed_w_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "w" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->w = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_w_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->w);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_x_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_x_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->x);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_y_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_y_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->y);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_z_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "z" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_z_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->z);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_px_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "px" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->px = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_px_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->px);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_py_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "py" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->py = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_py_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->py);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_pz_set(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double arg2 ;
+  Posed temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->pz = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_pz_get(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->pz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Inv(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Posed result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 7; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg1 = &temp1;
+  
+  result = ((Posed const *)arg1)->Inv();
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Unit__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Posed result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Posed::Unit();
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Unit__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Posed result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  result = Posed::Unit((Vec3d const &)*arg1);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Unit__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = 0 ;
+  Posed result;
+  Quaterniond temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  result = Posed::Unit((Quaterniond const &)*arg1);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Posed_Unit(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[1];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 1) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_Posed_Unit__SWIG_0(nargs, args, self);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Posed_Unit__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Quaterniond, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Posed_Unit__SWIG_2(nargs, args, self);
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Posed_Unit'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Trn__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  Posed result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Posed::Trn" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Posed::Trn" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Posed::Trn" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = Posed::Trn(arg1,arg2,arg3);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Trn__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Posed result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  result = Posed::Trn((Vec3d const &)*arg1);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Posed_Trn(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 3) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Posed_Trn__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Posed_Trn__SWIG_0(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Posed_Trn'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  Posed result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Posed::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Posed::Rot" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Posed::Rot" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Posed::Rot" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  result = Posed::Rot(arg1,arg2,arg3,arg4);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Vec3d *arg2 = 0 ;
+  Posed result;
+  double val1 ;
+  int ecode1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Posed::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  result = Posed::Rot(arg1,(Vec3d const &)*arg2);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Rot__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  char arg2 ;
+  Posed result;
+  double val1 ;
+  int ecode1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Posed::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Posed::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Posed::Rot(arg1,arg2);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_Rot__SWIG_3(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Posed result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  result = Posed::Rot((Vec3d const &)*arg1);
+  
+  vresult = rb_ary_new2(7);
+  for(int i = 0; i < 7; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Posed_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Posed_Rot__SWIG_3(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Posed_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Posed_Rot__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_Posed_Rot__SWIG_0(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Posed_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_FromAffine(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Affined *arg2 = 0 ;
+  Posed temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res2 = SWIG_ConvertPtr(self, &argp2, SWIGTYPE_p_Affined,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "FromAffine" "', argument " "2"" of type '" "Affined const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "FromAffine" "', argument " "2"" of type '" "Affined const &""'"); 
+  }
+  arg2 = reinterpret_cast< Affined * >(argp2);
+  (arg1)->FromAffine((Affined const &)*arg2);
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_ToAffine(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Affined *arg2 = 0 ;
+  Posed temp1 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 7; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affined,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "ToAffine" "', argument " "2"" of type '" "Affined &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ToAffine" "', argument " "2"" of type '" "Affined &""'"); 
+  }
+  arg2 = reinterpret_cast< Affined * >(argp2);
+  ((Posed const *)arg1)->ToAffine(*arg2);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Posed_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Posed_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Posed);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Posed(int argc, VALUE *argv, VALUE self) {
+  Posed *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Posed *)new Posed();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_pose___(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Posed temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  Posed_setPos(arg1,(Vec3d const &)*arg2);
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_pos(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Vec3d result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = Posed_getPos(arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_orie___(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Quaterniond *arg2 = 0 ;
+  Posed temp1 ;
+  Quaterniond temp2 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg2 = &temp2;
+  
+  Posed_setOri(arg1,(Quaterniond const &)*arg2);
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_ori(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Quaterniond result;
+  Posed temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = Posed_getOri(arg1);
+  
+  vresult = rb_ary_new2(4);
+  for(int i = 0; i < 4; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Posed(Posed *arg1) {
     delete arg1;
 }
 
@@ -21871,25 +24538,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_pose_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Posed arg2 ;
+  Posed *arg2 = (Posed *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Posed temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pose" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->pose = *arg2;
   
-  for(int i = 0; i < 7; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->pose = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -21898,7 +24570,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_pose_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Posed result;
+  Posed *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -21911,12 +24583,8 @@ _wrap_PHSolidState_pose_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pose" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->pose);
-  
-  vresult = rb_ary_new2(7);
-  for(int i = 0; i < 7; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Posed *)& ((arg1)->pose);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Posed, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -23729,25 +26397,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHConstraintDesc_poseSocket_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHConstraintDesc *arg1 = (Spr::PHConstraintDesc *) 0 ;
-  Posed arg2 ;
+  Posed *arg2 = (Posed *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Posed temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHConstraintDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "poseSocket" "', argument " "1"" of type '" "Spr::PHConstraintDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHConstraintDesc * >(argp1);
+  if (arg1) (arg1)->poseSocket = *arg2;
   
-  for(int i = 0; i < 7; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->poseSocket = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -23756,7 +26429,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHConstraintDesc_poseSocket_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHConstraintDesc *arg1 = (Spr::PHConstraintDesc *) 0 ;
-  Posed result;
+  Posed *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -23769,12 +26442,8 @@ _wrap_PHConstraintDesc_poseSocket_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "poseSocket" "', argument " "1"" of type '" "Spr::PHConstraintDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHConstraintDesc * >(argp1);
-  result =  ((arg1)->poseSocket);
-  
-  vresult = rb_ary_new2(7);
-  for(int i = 0; i < 7; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Posed *)& ((arg1)->poseSocket);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Posed, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -23784,25 +26453,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHConstraintDesc_posePlug_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHConstraintDesc *arg1 = (Spr::PHConstraintDesc *) 0 ;
-  Posed arg2 ;
+  Posed *arg2 = (Posed *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Posed temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHConstraintDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "posePlug" "', argument " "1"" of type '" "Spr::PHConstraintDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHConstraintDesc * >(argp1);
+  if (arg1) (arg1)->posePlug = *arg2;
   
-  for(int i = 0; i < 7; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->posePlug = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -23811,7 +26485,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHConstraintDesc_posePlug_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHConstraintDesc *arg1 = (Spr::PHConstraintDesc *) 0 ;
-  Posed result;
+  Posed *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -23824,12 +26498,8 @@ _wrap_PHConstraintDesc_posePlug_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "posePlug" "', argument " "1"" of type '" "Spr::PHConstraintDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHConstraintDesc * >(argp1);
-  result =  ((arg1)->posePlug);
-  
-  vresult = rb_ary_new2(7);
-  for(int i = 0; i < 7; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Posed *)& ((arg1)->posePlug);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Posed, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -24373,25 +27043,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHPathPoint_pose_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHPathPoint *arg1 = (Spr::PHPathPoint *) 0 ;
-  Posed arg2 ;
+  Posed *arg2 = (Posed *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Posed temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHPathPoint, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pose" "', argument " "1"" of type '" "Spr::PHPathPoint *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHPathPoint * >(argp1);
+  if (arg1) (arg1)->pose = *arg2;
   
-  for(int i = 0; i < 7; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->pose = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(7);
+    for(int i = 0; i < 7; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -24400,7 +27075,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHPathPoint_pose_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHPathPoint *arg1 = (Spr::PHPathPoint *) 0 ;
-  Posed result;
+  Posed *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -24413,12 +27088,8 @@ _wrap_PHPathPoint_pose_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pose" "', argument " "1"" of type '" "Spr::PHPathPoint *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHPathPoint * >(argp1);
-  result =  ((arg1)->pose);
-  
-  vresult = rb_ary_new2(7);
-  for(int i = 0; i < 7; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Posed *)& ((arg1)->pose);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Posed, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -31557,6 +34228,12 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_singleton_method(cAffine2d.klass, "Trn", VALUEFUNC(_wrap_Affine2d_Trn), -1);
   rb_define_singleton_method(cAffine2d.klass, "Rot", VALUEFUNC(_wrap_Affine2d_Rot), -1);
   rb_define_singleton_method(cAffine2d.klass, "Scale", VALUEFUNC(_wrap_Affine2d_Scale), -1);
+  rb_define_method(cAffine2d.klass, "trn=", VALUEFUNC(_wrap_Affine2d_trne___), -1);
+  rb_define_method(cAffine2d.klass, "trn", VALUEFUNC(_wrap_Affine2d_trn), -1);
+  rb_define_method(cAffine2d.klass, "pos=", VALUEFUNC(_wrap_Affine2d_pose___), -1);
+  rb_define_method(cAffine2d.klass, "pos", VALUEFUNC(_wrap_Affine2d_pos), -1);
+  rb_define_method(cAffine2d.klass, "rot=", VALUEFUNC(_wrap_Affine2d_rote___), -1);
+  rb_define_method(cAffine2d.klass, "rot", VALUEFUNC(_wrap_Affine2d_rot), -1);
   cAffine2d.mark = 0;
   cAffine2d.destroy = (void (*)(void *)) free_Affine2d;
   cAffine2d.trackObjects = 0;
@@ -31605,9 +34282,83 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_singleton_method(cAffined.klass, "ProjectionD3D", VALUEFUNC(_wrap_Affined_ProjectionD3D), -1);
   rb_define_method(cAffined.klass, "LookAt", VALUEFUNC(_wrap_Affined_LookAt), -1);
   rb_define_method(cAffined.klass, "LookAtGL", VALUEFUNC(_wrap_Affined_LookAtGL), -1);
+  rb_define_method(cAffined.klass, "trn=", VALUEFUNC(_wrap_Affined_trne___), -1);
+  rb_define_method(cAffined.klass, "trn", VALUEFUNC(_wrap_Affined_trn), -1);
+  rb_define_method(cAffined.klass, "pos=", VALUEFUNC(_wrap_Affined_pose___), -1);
+  rb_define_method(cAffined.klass, "pos", VALUEFUNC(_wrap_Affined_pos), -1);
+  rb_define_method(cAffined.klass, "rot=", VALUEFUNC(_wrap_Affined_rote___), -1);
+  rb_define_method(cAffined.klass, "rot", VALUEFUNC(_wrap_Affined_rot), -1);
   cAffined.mark = 0;
   cAffined.destroy = (void (*)(void *)) free_Affined;
   cAffined.trackObjects = 0;
+  
+  cQuaterniond.klass = rb_define_class_under(mSpringhead, "Quaterniond", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Quaterniond, (void *) &cQuaterniond);
+  rb_define_alloc_func(cQuaterniond.klass, _wrap_Quaterniond_allocate);
+  rb_define_method(cQuaterniond.klass, "initialize", VALUEFUNC(_wrap_new_Quaterniond), -1);
+  rb_define_method(cQuaterniond.klass, "w=", VALUEFUNC(_wrap_Quaterniond_w_set), -1);
+  rb_define_method(cQuaterniond.klass, "w", VALUEFUNC(_wrap_Quaterniond_w_get), -1);
+  rb_define_method(cQuaterniond.klass, "x=", VALUEFUNC(_wrap_Quaterniond_x_set), -1);
+  rb_define_method(cQuaterniond.klass, "x", VALUEFUNC(_wrap_Quaterniond_x_get), -1);
+  rb_define_method(cQuaterniond.klass, "y=", VALUEFUNC(_wrap_Quaterniond_y_set), -1);
+  rb_define_method(cQuaterniond.klass, "y", VALUEFUNC(_wrap_Quaterniond_y_get), -1);
+  rb_define_method(cQuaterniond.klass, "z=", VALUEFUNC(_wrap_Quaterniond_z_set), -1);
+  rb_define_method(cQuaterniond.klass, "z", VALUEFUNC(_wrap_Quaterniond_z_get), -1);
+  rb_define_method(cQuaterniond.klass, "RotationHalf", VALUEFUNC(_wrap_Quaterniond_RotationHalf), -1);
+  rb_define_method(cQuaterniond.klass, "Rotation", VALUEFUNC(_wrap_Quaterniond_Rotation), -1);
+  rb_define_method(cQuaterniond.klass, "Axis", VALUEFUNC(_wrap_Quaterniond_Axis), -1);
+  rb_define_method(cQuaterniond.klass, "Theta", VALUEFUNC(_wrap_Quaterniond_Theta), -1);
+  rb_define_singleton_method(cQuaterniond.klass, "Rot", VALUEFUNC(_wrap_Quaterniond_Rot), -1);
+  rb_define_method(cQuaterniond.klass, "Conjugate", VALUEFUNC(_wrap_Quaterniond_Conjugate), -1);
+  rb_define_method(cQuaterniond.klass, "Conjugated", VALUEFUNC(_wrap_Quaterniond_Conjugated), -1);
+  rb_define_method(cQuaterniond.klass, "Inv", VALUEFUNC(_wrap_Quaterniond_Inv), -1);
+  rb_define_method(cQuaterniond.klass, "FromMatrix", VALUEFUNC(_wrap_Quaterniond_FromMatrix), -1);
+  rb_define_method(cQuaterniond.klass, "ToMatrix", VALUEFUNC(_wrap_Quaterniond_ToMatrix), -1);
+  rb_define_method(cQuaterniond.klass, "ToEular", VALUEFUNC(_wrap_Quaterniond_ToEular), -1);
+  rb_define_method(cQuaterniond.klass, "FromEular", VALUEFUNC(_wrap_Quaterniond_FromEular), -1);
+  rb_define_method(cQuaterniond.klass, "RotationArc", VALUEFUNC(_wrap_Quaterniond_RotationArc), -1);
+  rb_define_method(cQuaterniond.klass, "Euler", VALUEFUNC(_wrap_Quaterniond_Euler), -1);
+  rb_define_method(cQuaterniond.klass, "Derivative", VALUEFUNC(_wrap_Quaterniond_Derivative), -1);
+  rb_define_method(cQuaterniond.klass, "AngularVelocity", VALUEFUNC(_wrap_Quaterniond_AngularVelocity), -1);
+  rb_define_method(cQuaterniond.klass, "v=", VALUEFUNC(_wrap_Quaterniond_ve___), -1);
+  rb_define_method(cQuaterniond.klass, "v", VALUEFUNC(_wrap_Quaterniond_v), -1);
+  cQuaterniond.mark = 0;
+  cQuaterniond.destroy = (void (*)(void *)) free_Quaterniond;
+  cQuaterniond.trackObjects = 0;
+  rb_define_module_function(mSpringhead, "dot", VALUEFUNC(_wrap_dot), -1);
+  rb_define_module_function(mSpringhead, "interpolate", VALUEFUNC(_wrap_interpolate), -1);
+  
+  cPosed.klass = rb_define_class_under(mSpringhead, "Posed", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Posed, (void *) &cPosed);
+  rb_define_alloc_func(cPosed.klass, _wrap_Posed_allocate);
+  rb_define_method(cPosed.klass, "initialize", VALUEFUNC(_wrap_new_Posed), -1);
+  rb_define_method(cPosed.klass, "w=", VALUEFUNC(_wrap_Posed_w_set), -1);
+  rb_define_method(cPosed.klass, "w", VALUEFUNC(_wrap_Posed_w_get), -1);
+  rb_define_method(cPosed.klass, "x=", VALUEFUNC(_wrap_Posed_x_set), -1);
+  rb_define_method(cPosed.klass, "x", VALUEFUNC(_wrap_Posed_x_get), -1);
+  rb_define_method(cPosed.klass, "y=", VALUEFUNC(_wrap_Posed_y_set), -1);
+  rb_define_method(cPosed.klass, "y", VALUEFUNC(_wrap_Posed_y_get), -1);
+  rb_define_method(cPosed.klass, "z=", VALUEFUNC(_wrap_Posed_z_set), -1);
+  rb_define_method(cPosed.klass, "z", VALUEFUNC(_wrap_Posed_z_get), -1);
+  rb_define_method(cPosed.klass, "px=", VALUEFUNC(_wrap_Posed_px_set), -1);
+  rb_define_method(cPosed.klass, "px", VALUEFUNC(_wrap_Posed_px_get), -1);
+  rb_define_method(cPosed.klass, "py=", VALUEFUNC(_wrap_Posed_py_set), -1);
+  rb_define_method(cPosed.klass, "py", VALUEFUNC(_wrap_Posed_py_get), -1);
+  rb_define_method(cPosed.klass, "pz=", VALUEFUNC(_wrap_Posed_pz_set), -1);
+  rb_define_method(cPosed.klass, "pz", VALUEFUNC(_wrap_Posed_pz_get), -1);
+  rb_define_method(cPosed.klass, "Inv", VALUEFUNC(_wrap_Posed_Inv), -1);
+  rb_define_singleton_method(cPosed.klass, "Unit", VALUEFUNC(_wrap_Posed_Unit), -1);
+  rb_define_singleton_method(cPosed.klass, "Trn", VALUEFUNC(_wrap_Posed_Trn), -1);
+  rb_define_singleton_method(cPosed.klass, "Rot", VALUEFUNC(_wrap_Posed_Rot), -1);
+  rb_define_method(cPosed.klass, "FromAffine", VALUEFUNC(_wrap_Posed_FromAffine), -1);
+  rb_define_method(cPosed.klass, "ToAffine", VALUEFUNC(_wrap_Posed_ToAffine), -1);
+  rb_define_method(cPosed.klass, "pos=", VALUEFUNC(_wrap_Posed_pose___), -1);
+  rb_define_method(cPosed.klass, "pos", VALUEFUNC(_wrap_Posed_pos), -1);
+  rb_define_method(cPosed.klass, "ori=", VALUEFUNC(_wrap_Posed_orie___), -1);
+  rb_define_method(cPosed.klass, "ori", VALUEFUNC(_wrap_Posed_ori), -1);
+  cPosed.mark = 0;
+  cPosed.destroy = (void (*)(void *)) free_Posed;
+  cPosed.trackObjects = 0;
   
   cObjectIf.klass = rb_define_class_under(mSpringhead, "ObjectIf", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectIf, (void *) &cObjectIf);
