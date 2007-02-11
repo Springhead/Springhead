@@ -28,6 +28,8 @@ namespace Spr{
 }
 }
 
+%include "ptmport.i"
+
 %import	 <Base/Env.h>			// SPR_CDECL
 
 %include <Foundation/SprObject.h>

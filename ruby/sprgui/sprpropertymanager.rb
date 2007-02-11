@@ -1,13 +1,16 @@
-require 'noproperty'
+require 'sprnoproperty'
+require 'sprphsceneproperty'
 require 'sprsolidproperty'
 
 include Fox
 
-class SprPropertyManager < FXVerticalFrame
+class SprPropertyManager < FXSwitcher
 	def initialize(owner)
-		super(owner, FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
-#		@noproperty = SprNoProperty.new(self)
-		@solidproperty = SprSolidProperty.new(self)
+		super(owner)
+		idx = 0
+		@noproperty = SprNoProperty.new(self, idx); idx+=1
+		@phsceneproperty = SprPHSceneProperty.new(self, idx); idx+=1
+		@solidproperty = SprSolidProperty.new(self, idx); idx+=1
 	end
 
 	def create()
@@ -16,19 +19,20 @@ class SprPropertyManager < FXVerticalFrame
 	end
 
 	def update(obj)
-		return
 		if obj.nil?
-			@noproperty.show()
-			@solidproperty.hide()
-			layout()
+			setCurrent(@noproperty.index)
+			return
+		end
+		if obj.kind_of?(PHSceneIf)
+			@phsceneproperty.update(obj, true)
+			setCurrent(@phsceneproperty.index)
 			return
 		end
 		if obj.kind_of?(PHSolidIf)
 			@solidproperty.update(obj, true)
-			@noproperty.hide()
-			@solidproperty.show()
-			layout()
+			setCurrent(@solidproperty.index)
 			return
 		end
+
 	end
 end

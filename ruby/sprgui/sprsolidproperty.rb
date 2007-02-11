@@ -8,9 +8,14 @@ require 'sprobjectproperty'
 
 include Fox
 
-class SprSolidProperty < FXScrollArea
-	def initialize(owner)
+class SprSolidProperty < FXVerticalFrame
+
+	attr :index
+
+	def initialize(owner, index)
 		super(owner, FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
+
+		@index = index
 
 		@object = SprObjectProperty.new(self)
 

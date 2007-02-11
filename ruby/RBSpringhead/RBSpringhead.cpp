@@ -1541,141 +1541,148 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_Affinef swig_types[0]
-#define SWIGTYPE_p_GRShaderFormat__ShaderType swig_types[1]
-#define SWIGTYPE_p_GRVertexArray swig_types[2]
-#define SWIGTYPE_p_GRVertexElement swig_types[3]
-#define SWIGTYPE_p_IfInfo swig_types[4]
-#define SWIGTYPE_p_Matrix3d swig_types[5]
-#define SWIGTYPE_p_PHSceneIf swig_types[6]
-#define SWIGTYPE_p_PHSolidIf swig_types[7]
-#define SWIGTYPE_p_Posed swig_types[8]
-#define SWIGTYPE_p_Quaterniond swig_types[9]
-#define SWIGTYPE_p_Spr__CDBoxDesc swig_types[10]
-#define SWIGTYPE_p_Spr__CDBoxIf swig_types[11]
-#define SWIGTYPE_p_Spr__CDCapsuleDesc swig_types[12]
-#define SWIGTYPE_p_Spr__CDCapsuleIf swig_types[13]
-#define SWIGTYPE_p_Spr__CDConvexIf swig_types[14]
-#define SWIGTYPE_p_Spr__CDConvexMeshDesc swig_types[15]
-#define SWIGTYPE_p_Spr__CDConvexMeshIf swig_types[16]
-#define SWIGTYPE_p_Spr__CDFaceIf swig_types[17]
-#define SWIGTYPE_p_Spr__CDShapeDesc swig_types[18]
-#define SWIGTYPE_p_Spr__CDShapeIf swig_types[19]
-#define SWIGTYPE_p_Spr__CDSphereDesc swig_types[20]
-#define SWIGTYPE_p_Spr__CDSphereIf swig_types[21]
-#define SWIGTYPE_p_Spr__FIFileCOLLADAIf swig_types[22]
-#define SWIGTYPE_p_Spr__FIFileIf swig_types[23]
-#define SWIGTYPE_p_Spr__FIFileXIf swig_types[24]
-#define SWIGTYPE_p_Spr__FISdkIf swig_types[25]
-#define SWIGTYPE_p_Spr__FWApp swig_types[26]
-#define SWIGTYPE_p_Spr__FWAppGL swig_types[27]
-#define SWIGTYPE_p_Spr__FWAppGLUT swig_types[28]
-#define SWIGTYPE_p_Spr__FWObjectDesc swig_types[29]
-#define SWIGTYPE_p_Spr__FWObjectIf swig_types[30]
-#define SWIGTYPE_p_Spr__FWSceneDesc swig_types[31]
-#define SWIGTYPE_p_Spr__FWSceneIf swig_types[32]
-#define SWIGTYPE_p_Spr__FWSdkDesc swig_types[33]
-#define SWIGTYPE_p_Spr__FWSdkIf swig_types[34]
-#define SWIGTYPE_p_Spr__FWVFuncBridge swig_types[35]
-#define SWIGTYPE_p_Spr__FWWindowDesc swig_types[36]
-#define SWIGTYPE_p_Spr__GRBlendMeshDesc swig_types[37]
-#define SWIGTYPE_p_Spr__GRBlendMeshIf swig_types[38]
-#define SWIGTYPE_p_Spr__GRCameraDesc swig_types[39]
-#define SWIGTYPE_p_Spr__GRCameraIf swig_types[40]
-#define SWIGTYPE_p_Spr__GRDebugRenderIf swig_types[41]
-#define SWIGTYPE_p_Spr__GRDeviceGLIf swig_types[42]
-#define SWIGTYPE_p_Spr__GRDeviceIf swig_types[43]
-#define SWIGTYPE_p_Spr__GRFont swig_types[44]
-#define SWIGTYPE_p_Spr__GRFrameDesc swig_types[45]
-#define SWIGTYPE_p_Spr__GRFrameIf swig_types[46]
-#define SWIGTYPE_p_Spr__GRFrameTransformMatrix swig_types[47]
-#define SWIGTYPE_p_Spr__GRLightDesc swig_types[48]
-#define SWIGTYPE_p_Spr__GRLightIf swig_types[49]
-#define SWIGTYPE_p_Spr__GRMaterialDesc swig_types[50]
-#define SWIGTYPE_p_Spr__GRMaterialIf swig_types[51]
-#define SWIGTYPE_p_Spr__GRMeshDesc swig_types[52]
-#define SWIGTYPE_p_Spr__GRMeshIf swig_types[53]
-#define SWIGTYPE_p_Spr__GRRenderBaseIf swig_types[54]
-#define SWIGTYPE_p_Spr__GRRenderIf swig_types[55]
-#define SWIGTYPE_p_Spr__GRSceneDesc swig_types[56]
-#define SWIGTYPE_p_Spr__GRSceneIf swig_types[57]
-#define SWIGTYPE_p_Spr__GRSdkDesc swig_types[58]
-#define SWIGTYPE_p_Spr__GRSdkIf swig_types[59]
-#define SWIGTYPE_p_Spr__GRSphereDesc swig_types[60]
-#define SWIGTYPE_p_Spr__GRSphereIf swig_types[61]
-#define SWIGTYPE_p_Spr__GRVisualIf swig_types[62]
-#define SWIGTYPE_p_Spr__HIForceDevice6D swig_types[63]
-#define SWIGTYPE_p_Spr__NameManagerIf swig_types[64]
-#define SWIGTYPE_p_Spr__NamedObjectIf swig_types[65]
-#define SWIGTYPE_p_Spr__Object swig_types[66]
-#define SWIGTYPE_p_Spr__ObjectIf swig_types[67]
-#define SWIGTYPE_p_Spr__ObjectIfs swig_types[68]
-#define SWIGTYPE_p_Spr__ObjectStatesIf swig_types[69]
-#define SWIGTYPE_p_Spr__PHBallJointDesc swig_types[70]
-#define SWIGTYPE_p_Spr__PHBallJointIf swig_types[71]
-#define SWIGTYPE_p_Spr__PHConstraintDesc swig_types[72]
-#define SWIGTYPE_p_Spr__PHConstraintEngine swig_types[73]
-#define SWIGTYPE_p_Spr__PHConstraintIf swig_types[74]
-#define SWIGTYPE_p_Spr__PHContactPointIf swig_types[75]
-#define SWIGTYPE_p_Spr__PHEngineIf swig_types[76]
-#define SWIGTYPE_p_Spr__PHGearDesc swig_types[77]
-#define SWIGTYPE_p_Spr__PHGearIf swig_types[78]
-#define SWIGTYPE_p_Spr__PHGravityEngine swig_types[79]
-#define SWIGTYPE_p_Spr__PHHingeJointDesc swig_types[80]
-#define SWIGTYPE_p_Spr__PHHingeJointIf swig_types[81]
-#define SWIGTYPE_p_Spr__PHInactiveSolids swig_types[82]
-#define SWIGTYPE_p_Spr__PHJoint1DDesc swig_types[83]
-#define SWIGTYPE_p_Spr__PHJoint1DIf swig_types[84]
-#define SWIGTYPE_p_Spr__PHJointIf swig_types[85]
-#define SWIGTYPE_p_Spr__PHMaterial swig_types[86]
-#define SWIGTYPE_p_Spr__PHPathDesc swig_types[87]
-#define SWIGTYPE_p_Spr__PHPathIf swig_types[88]
-#define SWIGTYPE_p_Spr__PHPathJointDesc swig_types[89]
-#define SWIGTYPE_p_Spr__PHPathJointIf swig_types[90]
-#define SWIGTYPE_p_Spr__PHPathPoint swig_types[91]
-#define SWIGTYPE_p_Spr__PHRootNodeIf swig_types[92]
-#define SWIGTYPE_p_Spr__PHSceneDesc swig_types[93]
-#define SWIGTYPE_p_Spr__PHSceneIf swig_types[94]
-#define SWIGTYPE_p_Spr__PHSceneState swig_types[95]
-#define SWIGTYPE_p_Spr__PHSdkDesc swig_types[96]
-#define SWIGTYPE_p_Spr__PHSdkIf swig_types[97]
-#define SWIGTYPE_p_Spr__PHSliderJointDesc swig_types[98]
-#define SWIGTYPE_p_Spr__PHSliderJointIf swig_types[99]
-#define SWIGTYPE_p_Spr__PHSolidDesc swig_types[100]
-#define SWIGTYPE_p_Spr__PHSolidIf swig_types[101]
-#define SWIGTYPE_p_Spr__PHSolidState swig_types[102]
-#define SWIGTYPE_p_Spr__PHSpringDesc swig_types[103]
-#define SWIGTYPE_p_Spr__PHSpringIf swig_types[104]
-#define SWIGTYPE_p_Spr__PHTreeNodeIf swig_types[105]
-#define SWIGTYPE_p_Spr__SceneIf swig_types[106]
-#define SWIGTYPE_p_Spr__SceneObjectIf swig_types[107]
-#define SWIGTYPE_p_Spr__SdkIf swig_types[108]
-#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[109]
-#define SWIGTYPE_p_UTString swig_types[110]
-#define SWIGTYPE_p_UTTypeInfo swig_types[111]
-#define SWIGTYPE_p_Vec2f swig_types[112]
-#define SWIGTYPE_p_Vec3d swig_types[113]
-#define SWIGTYPE_p_Vec3f swig_types[114]
-#define SWIGTYPE_p_Vec4f swig_types[115]
-#define SWIGTYPE_p_char swig_types[116]
-#define SWIGTYPE_p_container_t swig_types[117]
-#define SWIGTYPE_p_double swig_types[118]
-#define SWIGTYPE_p_int swig_types[119]
-#define SWIGTYPE_p_p_Spr__PHSolidIf swig_types[120]
-#define SWIGTYPE_p_p_char swig_types[121]
-#define SWIGTYPE_p_size_t swig_types[122]
-#define SWIGTYPE_p_std__ostream swig_types[123]
-#define SWIGTYPE_p_std__string swig_types[124]
-#define SWIGTYPE_p_std__vectorTSpr__PHPathPoint_t swig_types[125]
-#define SWIGTYPE_p_std__vectorTVec2f_t swig_types[126]
-#define SWIGTYPE_p_std__vectorTVec3f_t swig_types[127]
-#define SWIGTYPE_p_std__vectorTVec4f_t swig_types[128]
-#define SWIGTYPE_p_std__vectorTsize_t_t swig_types[129]
-#define SWIGTYPE_p_std__vectorTstd__string_t swig_types[130]
-#define SWIGTYPE_p_unsigned_int swig_types[131]
-#define SWIGTYPE_p_void swig_types[132]
-static swig_type_info *swig_types[134];
-static swig_module_info swig_module = {swig_types, 133, 0, 0, 0, 0};
+#define SWIGTYPE_p_Affine2d swig_types[0]
+#define SWIGTYPE_p_Affined swig_types[1]
+#define SWIGTYPE_p_Affinef swig_types[2]
+#define SWIGTYPE_p_GRShaderFormat__ShaderType swig_types[3]
+#define SWIGTYPE_p_GRVertexArray swig_types[4]
+#define SWIGTYPE_p_GRVertexElement swig_types[5]
+#define SWIGTYPE_p_IfInfo swig_types[6]
+#define SWIGTYPE_p_Matrix2d swig_types[7]
+#define SWIGTYPE_p_Matrix3d swig_types[8]
+#define SWIGTYPE_p_PHSceneIf swig_types[9]
+#define SWIGTYPE_p_PHSolidIf swig_types[10]
+#define SWIGTYPE_p_Posed swig_types[11]
+#define SWIGTYPE_p_Quaterniond swig_types[12]
+#define SWIGTYPE_p_Spr__CDBoxDesc swig_types[13]
+#define SWIGTYPE_p_Spr__CDBoxIf swig_types[14]
+#define SWIGTYPE_p_Spr__CDCapsuleDesc swig_types[15]
+#define SWIGTYPE_p_Spr__CDCapsuleIf swig_types[16]
+#define SWIGTYPE_p_Spr__CDConvexIf swig_types[17]
+#define SWIGTYPE_p_Spr__CDConvexMeshDesc swig_types[18]
+#define SWIGTYPE_p_Spr__CDConvexMeshIf swig_types[19]
+#define SWIGTYPE_p_Spr__CDFaceIf swig_types[20]
+#define SWIGTYPE_p_Spr__CDShapeDesc swig_types[21]
+#define SWIGTYPE_p_Spr__CDShapeIf swig_types[22]
+#define SWIGTYPE_p_Spr__CDSphereDesc swig_types[23]
+#define SWIGTYPE_p_Spr__CDSphereIf swig_types[24]
+#define SWIGTYPE_p_Spr__FIFileCOLLADAIf swig_types[25]
+#define SWIGTYPE_p_Spr__FIFileIf swig_types[26]
+#define SWIGTYPE_p_Spr__FIFileXIf swig_types[27]
+#define SWIGTYPE_p_Spr__FISdkIf swig_types[28]
+#define SWIGTYPE_p_Spr__FWApp swig_types[29]
+#define SWIGTYPE_p_Spr__FWAppGL swig_types[30]
+#define SWIGTYPE_p_Spr__FWAppGLUT swig_types[31]
+#define SWIGTYPE_p_Spr__FWObjectDesc swig_types[32]
+#define SWIGTYPE_p_Spr__FWObjectIf swig_types[33]
+#define SWIGTYPE_p_Spr__FWSceneDesc swig_types[34]
+#define SWIGTYPE_p_Spr__FWSceneIf swig_types[35]
+#define SWIGTYPE_p_Spr__FWSdkDesc swig_types[36]
+#define SWIGTYPE_p_Spr__FWSdkIf swig_types[37]
+#define SWIGTYPE_p_Spr__FWVFuncBridge swig_types[38]
+#define SWIGTYPE_p_Spr__FWWindowDesc swig_types[39]
+#define SWIGTYPE_p_Spr__GRBlendMeshDesc swig_types[40]
+#define SWIGTYPE_p_Spr__GRBlendMeshIf swig_types[41]
+#define SWIGTYPE_p_Spr__GRCameraDesc swig_types[42]
+#define SWIGTYPE_p_Spr__GRCameraIf swig_types[43]
+#define SWIGTYPE_p_Spr__GRDebugRenderIf swig_types[44]
+#define SWIGTYPE_p_Spr__GRDeviceGLIf swig_types[45]
+#define SWIGTYPE_p_Spr__GRDeviceIf swig_types[46]
+#define SWIGTYPE_p_Spr__GRFont swig_types[47]
+#define SWIGTYPE_p_Spr__GRFrameDesc swig_types[48]
+#define SWIGTYPE_p_Spr__GRFrameIf swig_types[49]
+#define SWIGTYPE_p_Spr__GRFrameTransformMatrix swig_types[50]
+#define SWIGTYPE_p_Spr__GRLightDesc swig_types[51]
+#define SWIGTYPE_p_Spr__GRLightIf swig_types[52]
+#define SWIGTYPE_p_Spr__GRMaterialDesc swig_types[53]
+#define SWIGTYPE_p_Spr__GRMaterialIf swig_types[54]
+#define SWIGTYPE_p_Spr__GRMeshDesc swig_types[55]
+#define SWIGTYPE_p_Spr__GRMeshIf swig_types[56]
+#define SWIGTYPE_p_Spr__GRRenderBaseIf swig_types[57]
+#define SWIGTYPE_p_Spr__GRRenderIf swig_types[58]
+#define SWIGTYPE_p_Spr__GRSceneDesc swig_types[59]
+#define SWIGTYPE_p_Spr__GRSceneIf swig_types[60]
+#define SWIGTYPE_p_Spr__GRSdkDesc swig_types[61]
+#define SWIGTYPE_p_Spr__GRSdkIf swig_types[62]
+#define SWIGTYPE_p_Spr__GRSphereDesc swig_types[63]
+#define SWIGTYPE_p_Spr__GRSphereIf swig_types[64]
+#define SWIGTYPE_p_Spr__GRVisualDesc swig_types[65]
+#define SWIGTYPE_p_Spr__GRVisualIf swig_types[66]
+#define SWIGTYPE_p_Spr__HIForceDevice6D swig_types[67]
+#define SWIGTYPE_p_Spr__NameManagerIf swig_types[68]
+#define SWIGTYPE_p_Spr__NamedObjectIf swig_types[69]
+#define SWIGTYPE_p_Spr__Object swig_types[70]
+#define SWIGTYPE_p_Spr__ObjectIf swig_types[71]
+#define SWIGTYPE_p_Spr__ObjectIfRefs swig_types[72]
+#define SWIGTYPE_p_Spr__ObjectIfs swig_types[73]
+#define SWIGTYPE_p_Spr__ObjectStatesIf swig_types[74]
+#define SWIGTYPE_p_Spr__PHBallJointDesc swig_types[75]
+#define SWIGTYPE_p_Spr__PHBallJointIf swig_types[76]
+#define SWIGTYPE_p_Spr__PHConstraintDesc swig_types[77]
+#define SWIGTYPE_p_Spr__PHConstraintEngine swig_types[78]
+#define SWIGTYPE_p_Spr__PHConstraintIf swig_types[79]
+#define SWIGTYPE_p_Spr__PHContactPointIf swig_types[80]
+#define SWIGTYPE_p_Spr__PHEngineIf swig_types[81]
+#define SWIGTYPE_p_Spr__PHGearDesc swig_types[82]
+#define SWIGTYPE_p_Spr__PHGearIf swig_types[83]
+#define SWIGTYPE_p_Spr__PHGravityEngine swig_types[84]
+#define SWIGTYPE_p_Spr__PHHingeJointDesc swig_types[85]
+#define SWIGTYPE_p_Spr__PHHingeJointIf swig_types[86]
+#define SWIGTYPE_p_Spr__PHInactiveSolids swig_types[87]
+#define SWIGTYPE_p_Spr__PHJoint1DDesc swig_types[88]
+#define SWIGTYPE_p_Spr__PHJoint1DIf swig_types[89]
+#define SWIGTYPE_p_Spr__PHJointIf swig_types[90]
+#define SWIGTYPE_p_Spr__PHMaterial swig_types[91]
+#define SWIGTYPE_p_Spr__PHPathDesc swig_types[92]
+#define SWIGTYPE_p_Spr__PHPathIf swig_types[93]
+#define SWIGTYPE_p_Spr__PHPathJointDesc swig_types[94]
+#define SWIGTYPE_p_Spr__PHPathJointIf swig_types[95]
+#define SWIGTYPE_p_Spr__PHPathPoint swig_types[96]
+#define SWIGTYPE_p_Spr__PHRootNodeIf swig_types[97]
+#define SWIGTYPE_p_Spr__PHSceneDesc swig_types[98]
+#define SWIGTYPE_p_Spr__PHSceneIf swig_types[99]
+#define SWIGTYPE_p_Spr__PHSceneState swig_types[100]
+#define SWIGTYPE_p_Spr__PHSdkDesc swig_types[101]
+#define SWIGTYPE_p_Spr__PHSdkIf swig_types[102]
+#define SWIGTYPE_p_Spr__PHSliderJointDesc swig_types[103]
+#define SWIGTYPE_p_Spr__PHSliderJointIf swig_types[104]
+#define SWIGTYPE_p_Spr__PHSolidDesc swig_types[105]
+#define SWIGTYPE_p_Spr__PHSolidIf swig_types[106]
+#define SWIGTYPE_p_Spr__PHSolidState swig_types[107]
+#define SWIGTYPE_p_Spr__PHSpringDesc swig_types[108]
+#define SWIGTYPE_p_Spr__PHSpringIf swig_types[109]
+#define SWIGTYPE_p_Spr__PHTreeNodeIf swig_types[110]
+#define SWIGTYPE_p_Spr__SceneIf swig_types[111]
+#define SWIGTYPE_p_Spr__SceneObjectIf swig_types[112]
+#define SWIGTYPE_p_Spr__SdkIf swig_types[113]
+#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[114]
+#define SWIGTYPE_p_UTString swig_types[115]
+#define SWIGTYPE_p_UTTypeInfo swig_types[116]
+#define SWIGTYPE_p_Vec2d swig_types[117]
+#define SWIGTYPE_p_Vec2f swig_types[118]
+#define SWIGTYPE_p_Vec3d swig_types[119]
+#define SWIGTYPE_p_Vec3f swig_types[120]
+#define SWIGTYPE_p_Vec4d swig_types[121]
+#define SWIGTYPE_p_Vec4f swig_types[122]
+#define SWIGTYPE_p_char swig_types[123]
+#define SWIGTYPE_p_container_t swig_types[124]
+#define SWIGTYPE_p_double swig_types[125]
+#define SWIGTYPE_p_int swig_types[126]
+#define SWIGTYPE_p_p_Spr__PHSolidIf swig_types[127]
+#define SWIGTYPE_p_p_char swig_types[128]
+#define SWIGTYPE_p_size_t swig_types[129]
+#define SWIGTYPE_p_std__ostream swig_types[130]
+#define SWIGTYPE_p_std__string swig_types[131]
+#define SWIGTYPE_p_std__vectorTSpr__PHPathPoint_t swig_types[132]
+#define SWIGTYPE_p_std__vectorTVec2f_t swig_types[133]
+#define SWIGTYPE_p_std__vectorTVec3f_t swig_types[134]
+#define SWIGTYPE_p_std__vectorTVec4f_t swig_types[135]
+#define SWIGTYPE_p_std__vectorTsize_t_t swig_types[136]
+#define SWIGTYPE_p_std__vectorTstd__string_t swig_types[137]
+#define SWIGTYPE_p_unsigned_int swig_types[138]
+#define SWIGTYPE_p_void swig_types[139]
+static swig_type_info *swig_types[141];
+static swig_module_info swig_module = {swig_types, 140, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1722,47 +1729,43 @@ using namespace std;
 using namespace Spr;
 
 
-#include <limits.h>
-#ifndef LLONG_MIN
-# define LLONG_MIN	LONG_LONG_MIN
-#endif
-#ifndef LLONG_MAX
-# define LLONG_MAX	LONG_LONG_MAX
-#endif
-#ifndef ULLONG_MAX
-# define ULLONG_MAX	ULONG_LONG_MAX
-#endif
-
-
-  #define SWIG_From_long   LONG2NUM 
-
-
-SWIGINTERNINLINE VALUE
-SWIG_From_int  (int value)
-{    
-  return SWIG_From_long  (value);
-}
-
-
-SWIGINTERNINLINE VALUE
-SWIG_From_unsigned_SS_long  (unsigned long value)
-{
-  return ULONG2NUM(value); 
-}
-
-
-SWIGINTERNINLINE VALUE
-SWIG_From_size_t  (size_t value)
-{    
-  return SWIG_From_unsigned_SS_long  (static_cast< unsigned long >(value));
-}
-
-
 SWIGINTERN VALUE
 SWIG_ruby_failed(void)
 {
   return Qnil;
 } 
+
+
+/*@SWIG:%ruby_aux_method@*/
+SWIGINTERN VALUE SWIG_AUX_NUM2DBL(VALUE *args)
+{
+  VALUE obj = args[0];
+  VALUE type = TYPE(obj);
+  double *res = (double *)(args[1]);
+  *res = (type == T_FLOAT ? NUM2DBL(obj) : (type == T_FIXNUM ? (double) FIX2INT(obj) : rb_big2dbl(obj)));
+  return obj;
+}
+/*@SWIG@*/
+
+SWIGINTERN int
+SWIG_AsVal_double (VALUE obj, double *val)
+{
+  VALUE type = TYPE(obj);
+  if ((type == T_FLOAT) || (type == T_FIXNUM) || (type == T_BIGNUM)) {
+    double v;
+    VALUE a[2];
+    a[0] = obj;
+    a[1] = (VALUE)(&v);
+    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2DBL), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
+      if (val) *val = v;
+      return SWIG_OK;
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+  #define SWIG_From_double   rb_float_new 
 
 
 /*@SWIG:%ruby_aux_method@*/
@@ -1803,13 +1806,18 @@ SWIG_AsVal_size_t (VALUE obj, size_t *val)
   return res;
 }
 
-
-SWIGINTERNINLINE VALUE
-SWIG_From_bool  (bool value)
-{
-  return value ? Qtrue : Qfalse;
-}
-
+SWIGINTERN double Vec2d___getitem__(Vec2d *self,size_t index){
+		return self->operator[](index);
+	}
+SWIGINTERN void Vec2d___setitem__(Vec2d *self,size_t index,double val){
+		self->operator[](index) = val;
+	}
+SWIGINTERN double Vec4d___getitem__(Vec4d *self,size_t index){
+		return self->operator[](index);
+	}
+SWIGINTERN void Vec4d___setitem__(Vec4d *self,size_t index,double val){
+		self->operator[](index) = val;
+	}
 
 SWIGINTERN swig_type_info*
 SWIG_pchar_descriptor(void)
@@ -1821,30 +1829,6 @@ SWIG_pchar_descriptor(void)
     init = 1;
   }
   return info;
-}
-
-
-SWIGINTERNINLINE VALUE 
-SWIG_FromCharPtrAndSize(const char* carray, size_t size)
-{
-  if (carray) {
-    if (size > LONG_MAX) {
-      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-      return pchar_descriptor ? 
-	SWIG_NewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : Qnil;
-    } else {
-      return rb_str_new(carray, static_cast< long >(size));
-    }
-  } else {
-    return Qnil;
-  }
-}
-
-
-SWIGINTERNINLINE VALUE 
-SWIG_FromCharPtr(const char *cptr)
-{ 
-  return SWIG_FromCharPtrAndSize(cptr, (cptr ? strlen(cptr) : 0));
 }
 
 
@@ -1886,65 +1870,40 @@ SWIG_AsCharPtrAndSize(VALUE obj, char** cptr, size_t* psize, int *alloc)
 }
 
 
-
-
-
-#include <float.h>
-
-
-/*@SWIG:%ruby_aux_method@*/
-SWIGINTERN VALUE SWIG_AUX_NUM2DBL(VALUE *args)
-{
-  VALUE obj = args[0];
-  VALUE type = TYPE(obj);
-  double *res = (double *)(args[1]);
-  *res = (type == T_FLOAT ? NUM2DBL(obj) : (type == T_FIXNUM ? (double) FIX2INT(obj) : rb_big2dbl(obj)));
-  return obj;
-}
-/*@SWIG@*/
-
 SWIGINTERN int
-SWIG_AsVal_double (VALUE obj, double *val)
-{
-  VALUE type = TYPE(obj);
-  if ((type == T_FLOAT) || (type == T_FIXNUM) || (type == T_BIGNUM)) {
-    double v;
-    VALUE a[2];
-    a[0] = obj;
-    a[1] = (VALUE)(&v);
-    if (rb_rescue(RUBY_METHOD_FUNC(SWIG_AUX_NUM2DBL), (VALUE)a, RUBY_METHOD_FUNC(SWIG_ruby_failed), 0) != Qnil) {
-      if (val) *val = v;
-      return SWIG_OK;
+SWIG_AsCharArray(VALUE obj, char *val, size_t size)
+{ 
+  char* cptr = 0; size_t csize = 0; int alloc = SWIG_OLDOBJ;
+  int res = SWIG_AsCharPtrAndSize(obj, &cptr, &csize, &alloc);
+  if (SWIG_IsOK(res)) {
+    if ((csize == size + 1) && cptr && !(cptr[csize-1])) --csize;
+    if (csize <= size) {
+      if (val) {
+	if (csize) memcpy(val, cptr, csize*sizeof(char));
+	if (csize < size) memset(val + csize, 0, (size - csize)*sizeof(char));
+      }
+      if (alloc == SWIG_NEWOBJ) {
+	delete[] cptr;
+	res = SWIG_DelNewMask(res);
+      }      
+      return res;
     }
+    if (alloc == SWIG_NEWOBJ) delete[] cptr;
   }
   return SWIG_TypeError;
 }
 
 
-SWIGINTERN int
-SWIG_AsVal_float (VALUE obj, float *val)
-{
-  double v;
-  int res = SWIG_AsVal_double (obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < -FLT_MAX || v > FLT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = static_cast< float >(v);
-    }
-  }  
-  return res;
-}
-
-
-  #define SWIG_From_double   rb_float_new 
-
-
-SWIGINTERNINLINE VALUE
-SWIG_From_float  (float value)
-{    
-  return SWIG_From_double  (value);
-}
+#include <limits.h>
+#ifndef LLONG_MIN
+# define LLONG_MIN	LONG_LONG_MIN
+#endif
+#ifndef LLONG_MAX
+# define LLONG_MAX	LONG_LONG_MAX
+#endif
+#ifndef ULLONG_MAX
+# define ULLONG_MAX	ULONG_LONG_MAX
+#endif
 
 
 /*@SWIG:%ruby_aux_method@*/
@@ -1973,6 +1932,121 @@ SWIG_AsVal_long (VALUE obj, long* val)
     }
   }
   return SWIG_TypeError;
+}
+
+
+SWIGINTERN int
+SWIG_AsVal_char (VALUE obj, char *val)
+{    
+  int res = SWIG_AsCharArray(obj, val, 1);
+  if (!SWIG_IsOK(res)) {
+    long v;
+    res = SWIG_AddCast(SWIG_AsVal_long (obj, &v));
+    if (SWIG_IsOK(res)) {
+      if ((CHAR_MIN <= v) && (v <= CHAR_MAX)) {
+	if (val) *val = static_cast< char >(v);
+      } else {
+	res = SWIG_OverflowError;
+      }
+    }
+  }
+  return res;
+}
+
+SWIGINTERN double Matrix2d___getitem__(Matrix2d *self,size_t r,size_t c){
+		return (*self)[r][c];
+	}
+SWIGINTERN void Matrix2d___setitem__(Matrix2d *self,size_t r,size_t c,double val){
+		(*self)[r][c] = val;
+	}
+SWIGINTERN double Matrix3d___getitem__(Matrix3d *self,size_t r,size_t c){
+		return (*self)[r][c];
+	}
+SWIGINTERN void Matrix3d___setitem__(Matrix3d *self,size_t r,size_t c,double val){
+		(*self)[r][c] = val;
+	}
+
+SWIGINTERNINLINE VALUE
+SWIG_From_bool  (bool value)
+{
+  return value ? Qtrue : Qfalse;
+}
+
+
+  #define SWIG_From_long   LONG2NUM 
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_int  (int value)
+{    
+  return SWIG_From_long  (value);
+}
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_unsigned_SS_long  (unsigned long value)
+{
+  return ULONG2NUM(value); 
+}
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_size_t  (size_t value)
+{    
+  return SWIG_From_unsigned_SS_long  (static_cast< unsigned long >(value));
+}
+
+
+SWIGINTERNINLINE VALUE 
+SWIG_FromCharPtrAndSize(const char* carray, size_t size)
+{
+  if (carray) {
+    if (size > LONG_MAX) {
+      swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+      return pchar_descriptor ? 
+	SWIG_NewPointerObj(const_cast< char * >(carray), pchar_descriptor, 0) : Qnil;
+    } else {
+      return rb_str_new(carray, static_cast< long >(size));
+    }
+  } else {
+    return Qnil;
+  }
+}
+
+
+SWIGINTERNINLINE VALUE 
+SWIG_FromCharPtr(const char *cptr)
+{ 
+  return SWIG_FromCharPtrAndSize(cptr, (cptr ? strlen(cptr) : 0));
+}
+
+
+
+
+
+#include <float.h>
+
+
+SWIGINTERN int
+SWIG_AsVal_float (VALUE obj, float *val)
+{
+  double v;
+  int res = SWIG_AsVal_double (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < -FLT_MAX || v > FLT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< float >(v);
+    }
+  }  
+  return res;
+}
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_float  (float value)
+{    
+  return SWIG_From_double  (value);
 }
 
 
@@ -2051,6 +2125,5538 @@ SWIG_AsVal_unsigned_SS_char (VALUE obj, unsigned char *val)
 }
 
 SWIGINTERN void Spr_FWApp_Link(Spr::FWApp *self,int *dummy_for_vfuncbridge){}
+swig_class cVec2d;
+
+SWIGINTERN VALUE
+_wrap_Vec2d_x_set(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d_x_get(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  result = (double) ((arg1)->x);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d_y_set(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d_y_get(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  result = (double) ((arg1)->y);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d_Zero(int argc, VALUE *argv, VALUE self) {
+  Vec2d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Vec2d::Zero();
+  vresult = SWIG_NewPointerObj((new Vec2d(static_cast< const Vec2d& >(result))), SWIGTYPE_p_Vec2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec2d__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec2d *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Vec2d *)new Vec2d();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Vec2d_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Vec2d_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Vec2d);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Vec2d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  Vec2d *result = 0 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vec2d" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vec2d" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = (Vec2d *)new Vec2d(arg1,arg2);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Vec2d(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Vec2d__SWIG_0(nargs, args, self);
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_new_Vec2d__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Vec2d'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d___getitem__(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  size_t arg2 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (double)Vec2d___getitem__(arg1,arg2);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d___setitem__(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  size_t arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_double(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  Vec2d___setitem__(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Vec2d(Vec2d *arg1) {
+    delete arg1;
+}
+
+swig_class cVec3d;
+
+SWIGINTERN VALUE
+_wrap_Vec3d_x_set(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double arg2 ;
+  Vec3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_x_get(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->x);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_y_set(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double arg2 ;
+  Vec3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_y_get(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->y);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_z_set(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double arg2 ;
+  Vec3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "z" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z = arg2;
+  
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_z_get(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->z);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg1)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_Zero(int argc, VALUE *argv, VALUE self) {
+  Vec3d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Vec3d::Zero();
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++)
+  rb_ary_store(vresult, i, rb_float_new(result[i]));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec3d__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3d *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Vec3d *)new Vec3d();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Vec3d_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Vec3d_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Vec3d);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Vec3d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  Vec3d *result = 0 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vec3d" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vec3d" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vec3d" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = (Vec3d *)new Vec3d(arg1,arg2,arg3);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Vec3d(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 3) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Vec3d__SWIG_0(nargs, args, self);
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_new_Vec3d__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Vec3d'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d_dot(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  Vec3d *arg2 = 0 ;
+  double result;
+  Vec3d temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(self, i));
+  arg1 = &temp1;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  result = (double)((Vec3d const *)arg1)->dot((Vec3d const &)*arg2);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Vec3d(Vec3d *arg1) {
+    delete arg1;
+}
+
+swig_class cVec4d;
+
+SWIGINTERN VALUE
+_wrap_Vec4d_x_set(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_x_get(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  result = (double) ((arg1)->x);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_y_set(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_y_get(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  result = (double) ((arg1)->y);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_z_set(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "z" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "z" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->z = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_z_get(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "z" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  result = (double) ((arg1)->z);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_w_set(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "w" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "w" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->w = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_w_get(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "w" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  result = (double) ((arg1)->w);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d_Zero(int argc, VALUE *argv, VALUE self) {
+  Vec4d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Vec4d::Zero();
+  vresult = SWIG_NewPointerObj((new Vec4d(static_cast< const Vec4d& >(result))), SWIGTYPE_p_Vec4d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec4d__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec4d *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Vec4d *)new Vec4d();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Vec4d_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Vec4d_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Vec4d);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Vec4d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  Vec4d *result = 0 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vec4d" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vec4d" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vec4d" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Vec4d" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  result = (Vec4d *)new Vec4d(arg1,arg2,arg3,arg4);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Vec4d(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Vec4d__SWIG_0(nargs, args, self);
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_new_Vec4d__SWIG_1(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Vec4d'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d___getitem__(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  size_t arg2 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (double)Vec4d___getitem__(arg1,arg2);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d___setitem__(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  size_t arg2 ;
+  double arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_double(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  Vec4d___setitem__(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Vec4d(Vec4d *arg1) {
+    delete arg1;
+}
+
+swig_class cMatrix2d;
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_xx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_xx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  result = (double) ((arg1)->xx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_xy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_xy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  result = (double) ((arg1)->xy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_yx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_yx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  result = (double) ((arg1)->yx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_yy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_yy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  result = (double) ((arg1)->yy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix2d__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Matrix2d *)new Matrix2d();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix2d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  Matrix2d *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix2d" "', argument " "1"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix2d" "', argument " "1"" of type '" "Vec2d const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Matrix2d" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix2d" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  result = (Matrix2d *)new Matrix2d((Vec2d const &)*arg1,(Vec2d const &)*arg2);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Matrix2d_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Matrix2d_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Matrix2d);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Matrix2d__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  Matrix2d *result = 0 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix2d" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix2d" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix2d" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Matrix2d" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  result = (Matrix2d *)new Matrix2d(arg1,arg2,arg3,arg4);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Matrix2d(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Matrix2d__SWIG_0(nargs, args, self);
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_new_Matrix2d__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_new_Matrix2d__SWIG_2(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Matrix2d'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_Zero(int argc, VALUE *argv, VALUE self) {
+  Matrix2d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix2d::Zero();
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_Unit(int argc, VALUE *argv, VALUE self) {
+  Matrix2d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix2d::Unit();
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_Diag(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  Matrix2d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix2d::Diag" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix2d::Diag" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Matrix2d::Diag(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Matrix2d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix2d::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  result = Matrix2d::Rot(arg1);
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = 0 ;
+  char arg2 ;
+  Matrix2d result;
+  void *argp1 ;
+  int res1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix2d::Rot" "', argument " "1"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix2d::Rot" "', argument " "1"" of type '" "Vec2d const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix2d::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Matrix2d::Rot((Vec2d const &)*arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Matrix2d_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_Matrix2d_Rot__SWIG_0(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix2d_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix2d_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d_angle(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "angle" "', argument " "1"" of type '" "Matrix2d const *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  result = (double)((Matrix2d const *)arg1)->angle();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d___getitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__getitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  result = (double)Matrix2d___getitem__(arg1,arg2,arg3);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2d___setitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  double arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_double(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "__setitem__" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  Matrix2d___setitem__(arg1,arg2,arg3,arg4);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Matrix2d(Matrix2d *arg1) {
+    delete arg1;
+}
+
+swig_class cMatrix3d;
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_xx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_xx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->xx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_xy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_xy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->xy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_xz_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xz = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_xz_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->xz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_yx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_yx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->yx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_yy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_yy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->yy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_yz_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yz = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_yz_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->yz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_zx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zx = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_zx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->zx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_zy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zy = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_zy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->zy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_zz_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d temp1 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_double(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zz = arg2;
+  
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_zz_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double result;
+  Matrix3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < -1) || (argc > -1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for -1)",argc); SWIG_fail;
+  }
+  result = (double) ((arg1)->zz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix3d__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Matrix3d *)new Matrix3d();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix3d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec3d *arg2 = 0 ;
+  Vec3d *arg3 = 0 ;
+  Matrix3d *result = 0 ;
+  Vec3d temp1 ;
+  Vec3d temp2 ;
+  Vec3d temp3 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp3[i] = NUM2DBL(rb_ary_entry(argv[2], i));
+  arg3 = &temp3;
+  
+  result = (Matrix3d *)new Matrix3d((Vec3d const &)*arg1,(Vec3d const &)*arg2,(Vec3d const &)*arg3);DATA_PTR(self) = result;
+  
+  
+  
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Matrix3d_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Matrix3d_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Matrix3d);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Matrix3d__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  double arg4 ;
+  double arg5 ;
+  double arg6 ;
+  double arg7 ;
+  double arg8 ;
+  double arg9 ;
+  Matrix3d *result = 0 ;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  double val5 ;
+  int ecode5 = 0 ;
+  double val6 ;
+  int ecode6 = 0 ;
+  double val7 ;
+  int ecode7 = 0 ;
+  double val8 ;
+  int ecode8 = 0 ;
+  double val9 ;
+  int ecode9 = 0 ;
+  
+  if ((argc < 9) || (argc > 9)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 9)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3d" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix3d" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix3d" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Matrix3d" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  ecode5 = SWIG_AsVal_double(argv[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Matrix3d" "', argument " "5"" of type '" "double""'");
+  } 
+  arg5 = static_cast< double >(val5);
+  ecode6 = SWIG_AsVal_double(argv[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Matrix3d" "', argument " "6"" of type '" "double""'");
+  } 
+  arg6 = static_cast< double >(val6);
+  ecode7 = SWIG_AsVal_double(argv[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "Matrix3d" "', argument " "7"" of type '" "double""'");
+  } 
+  arg7 = static_cast< double >(val7);
+  ecode8 = SWIG_AsVal_double(argv[7], &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "Matrix3d" "', argument " "8"" of type '" "double""'");
+  } 
+  arg8 = static_cast< double >(val8);
+  ecode9 = SWIG_AsVal_double(argv[8], &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "Matrix3d" "', argument " "9"" of type '" "double""'");
+  } 
+  arg9 = static_cast< double >(val9);
+  result = (Matrix3d *)new Matrix3d(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Matrix3d(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[9];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 9) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Matrix3d__SWIG_0(nargs, args, self);
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Vec3d, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_new_Matrix3d__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  if (argc == 9) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_double(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_double(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_double(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_double(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_double(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      return _wrap_new_Matrix3d__SWIG_2(nargs, args, self);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Matrix3d'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Zero(int argc, VALUE *argv, VALUE self) {
+  Matrix3d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix3d::Zero();
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Unit(int argc, VALUE *argv, VALUE self) {
+  Matrix3d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix3d::Unit();
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Diag(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  Matrix3d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3d::Diag" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix3d::Diag" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix3d::Diag" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = Matrix3d::Diag(arg1,arg2,arg3);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec3d *arg2 = 0 ;
+  char arg3 ;
+  Matrix3d result;
+  Vec3d temp1 ;
+  Vec3d temp2 ;
+  char val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  ecode3 = SWIG_AsVal_char(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix3d::Rot" "', argument " "3"" of type '" "char""'");
+  } 
+  arg3 = static_cast< char >(val3);
+  result = Matrix3d::Rot((Vec3d const &)*arg1,(Vec3d const &)*arg2,arg3);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec3d *arg2 = 0 ;
+  Matrix3d result;
+  Vec3d temp1 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  result = Matrix3d::Rot((Vec3d const &)*arg1,(Vec3d const &)*arg2);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Rot__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  char arg2 ;
+  Matrix3d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3d::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix3d::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Matrix3d::Rot(arg1,arg2);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Rot__SWIG_3(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Vec3d *arg2 = 0 ;
+  Matrix3d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3d::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  result = Matrix3d::Rot(arg1,(Vec3d const &)*arg2);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Rot__SWIG_4(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = 0 ;
+  Matrix3d result;
+  void *argp1 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec4d,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix3d::Rot" "', argument " "1"" of type '" "Vec4d const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3d::Rot" "', argument " "1"" of type '" "Vec4d const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  result = Matrix3d::Rot((Vec4d const &)*arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Matrix3d_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 3) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Matrix3d_Rot__SWIG_4(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix3d_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix3d_Rot__SWIG_3(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix3d_Rot__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_char(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Matrix3d_Rot__SWIG_0(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix3d_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d_Cross(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Matrix3d result;
+  Vec3d temp1 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  result = Matrix3d::Cross((Vec3d const &)*arg1);
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d___getitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  double result;
+  Matrix3d temp1 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_size_t(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[0], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__getitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  result = (double)Matrix3d___getitem__(arg1,arg2,arg3);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3d___setitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  double arg4 ;
+  Matrix3d temp1 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  arg1 = &temp1;
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode2 = SWIG_AsVal_size_t(self, &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[0], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_double(argv[1], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "__setitem__" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  Matrix3d___setitem__(arg1,arg2,arg3,arg4);
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg1)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Matrix3d(Matrix3d *arg1) {
+    delete arg1;
+}
+
+SWIGINTERN VALUE
+_wrap_IsUnitary(int argc, VALUE *argv, VALUE self) {
+  Matrix3d arg1 ;
+  bool result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_entry(argv[0], i);
+    for(int j = 0; j < 3; j++){
+      arg1[j][i] = NUM2DBL(rb_ary_entry(col, j));
+    }
+  }
+  
+  result = (bool)IsUnitary(arg1);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+swig_class cAffine2d;
+
+SWIGINTERN VALUE
+_wrap_Affine2d_xx_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_xx_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->xx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_xy_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_xy_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->xy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_xz_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_xz_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->xz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_yx_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_yx_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->yx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_yy_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_yy_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->yy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_yz_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_yz_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->yz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_px_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "px" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->px = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_px_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->px);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_py_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "py" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->py = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_py_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->py);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_pz_set(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->pz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_pz_get(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  result = (double) ((arg1)->pz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_Unit(int argc, VALUE *argv, VALUE self) {
+  Affine2d result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Affine2d::Unit();
+  vresult = SWIG_NewPointerObj((new Affine2d(static_cast< const Affine2d& >(result))), SWIGTYPE_p_Affine2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_Trn(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  Affine2d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affine2d::Trn" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affine2d::Trn" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Affine2d::Trn(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2d(static_cast< const Affine2d& >(result))), SWIGTYPE_p_Affine2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_Rot(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Affine2d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affine2d::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  result = Affine2d::Rot(arg1);
+  vresult = SWIG_NewPointerObj((new Affine2d(static_cast< const Affine2d& >(result))), SWIGTYPE_p_Affine2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2d_Scale(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  Affine2d result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affine2d::Scale" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affine2d::Scale" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Affine2d::Scale(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2d(static_cast< const Affine2d& >(result))), SWIGTYPE_p_Affine2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Affine2d_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Affine2d_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Affine2d);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Affine2d(int argc, VALUE *argv, VALUE self) {
+  Affine2d *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Affine2d *)new Affine2d();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Affine2d(Affine2d *arg1) {
+    delete arg1;
+}
+
+swig_class cAffined;
+
+SWIGINTERN VALUE
+_wrap_Affined_xx_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xx_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->xx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xy_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xy_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->xy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xz_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xz_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->xz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xw_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xw" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->xw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_xw_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->xw);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yx_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yx_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->yx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yy_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yy_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->yy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yz_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yz_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->yz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yw_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yw" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->yw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_yw_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->yw);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zx_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zx" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zx" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zx_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zx" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->zx);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zy_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zy" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zy" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zy_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zy" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->zy);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zz_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zz_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->zz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zw_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zw" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->zw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_zw_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->zw);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_px_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "px" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->px = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_px_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->px);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_py_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "py" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->py = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_py_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->py);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_pz_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pz" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->pz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_pz_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->pz);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_pw_set(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pw" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  if (arg1) (arg1)->pw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_pw_get(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pw" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  result = (double) ((arg1)->pw);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_Unit(int argc, VALUE *argv, VALUE self) {
+  Affined result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Affined::Unit();
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_Trn(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  Affined result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affined::Trn" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affined::Trn" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affined::Trn" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = Affined::Trn(arg1,arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  char arg2 ;
+  Affined result;
+  double val1 ;
+  int ecode1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affined::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affined::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Affined::Rot(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  Vec3d *arg2 = 0 ;
+  Affined result;
+  double val1 ;
+  int ecode1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affined::Rot" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg2 = &temp2;
+  
+  result = Affined::Rot(arg1,(Vec3d const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affined_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affined_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_double(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Affined_Rot__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affined_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_Scale(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double arg2 ;
+  double arg3 ;
+  Affined result;
+  double val1 ;
+  int ecode1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affined::Scale" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  ecode2 = SWIG_AsVal_double(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affined::Scale" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affined::Scale" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = Affined::Scale(arg1,arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_ProjectionGL__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  double arg3 ;
+  double arg4 ;
+  Affined result;
+  Vec3d temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affined::ProjectionGL" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affined::ProjectionGL" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affined::ProjectionGL" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Affined::ProjectionGL" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  result = Affined::ProjectionGL((Vec3d const &)*arg1,(Vec2d const &)*arg2,arg3,arg4);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_ProjectionGL__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  double arg3 ;
+  Affined result;
+  Vec3d temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affined::ProjectionGL" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affined::ProjectionGL" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affined::ProjectionGL" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = Affined::ProjectionGL((Vec3d const &)*arg1,(Vec2d const &)*arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_ProjectionGL__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  Affined result;
+  Vec3d temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affined::ProjectionGL" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affined::ProjectionGL" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  result = Affined::ProjectionGL((Vec3d const &)*arg1,(Vec2d const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affined_ProjectionGL(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affined_ProjectionGL__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Affined_ProjectionGL__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_Affined_ProjectionGL__SWIG_0(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affined_ProjectionGL'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_ProjectionD3D__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  double arg3 ;
+  double arg4 ;
+  Affined result;
+  Vec3d temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  double val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affined::ProjectionD3D" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affined::ProjectionD3D" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affined::ProjectionD3D" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  ecode4 = SWIG_AsVal_double(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Affined::ProjectionD3D" "', argument " "4"" of type '" "double""'");
+  } 
+  arg4 = static_cast< double >(val4);
+  result = Affined::ProjectionD3D((Vec3d const &)*arg1,(Vec2d const &)*arg2,arg3,arg4);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_ProjectionD3D__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  double arg3 ;
+  Affined result;
+  Vec3d temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  double val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affined::ProjectionD3D" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affined::ProjectionD3D" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  ecode3 = SWIG_AsVal_double(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affined::ProjectionD3D" "', argument " "3"" of type '" "double""'");
+  } 
+  arg3 = static_cast< double >(val3);
+  result = Affined::ProjectionD3D((Vec3d const &)*arg1,(Vec2d const &)*arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_ProjectionD3D__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec2d *arg2 = 0 ;
+  Affined result;
+  Vec3d temp1 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg1 = &temp1;
+  
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affined::ProjectionD3D" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affined::ProjectionD3D" "', argument " "2"" of type '" "Vec2d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2d * >(argp2);
+  result = Affined::ProjectionD3D((Vec3d const &)*arg1,(Vec2d const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affined_ProjectionD3D(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affined_ProjectionD3D__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Affined_ProjectionD3D__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_double(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_double(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_Affined_ProjectionD3D__SWIG_0(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affined_ProjectionD3D'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_LookAt__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAt" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  (arg1)->LookAt((Vec3d const &)*arg2);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_LookAt__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Vec3d *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Vec3d temp2 ;
+  Vec3d temp3 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAt" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp3[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg3 = &temp3;
+  
+  (arg1)->LookAt((Vec3d const &)*arg2,(Vec3d const &)*arg3);
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affined_LookAt(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 4) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affined, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affined_LookAt__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affined, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Vec3d, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_Affined_LookAt__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affined_LookAt'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_LookAtGL__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAtGL" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  (arg1)->LookAtGL((Vec3d const &)*arg2);
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affined_LookAtGL__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  Vec3d *arg2 = 0 ;
+  Vec3d *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  Vec3d temp2 ;
+  Vec3d temp3 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAtGL" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  
+  for(int i = 0; i < 3; i++)
+  temp2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  arg2 = &temp2;
+  
+  
+  for(int i = 0; i < 3; i++)
+  temp3[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  arg3 = &temp3;
+  
+  (arg1)->LookAtGL((Vec3d const &)*arg2,(Vec3d const &)*arg3);
+  
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affined_LookAtGL(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 4) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affined, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affined_LookAtGL__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affined, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Vec3d, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_Affined_LookAtGL__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affined_LookAtGL'");
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Affined_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Affined_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Affined);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Affined(int argc, VALUE *argv, VALUE self) {
+  Affined *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Affined *)new Affined();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Affined(Affined *arg1) {
+    delete arg1;
+}
+
 swig_class cObjectIf;
 
 SWIGINTERN void
@@ -2864,6 +8470,119 @@ fail:
 
 SWIGINTERN void
 free_Spr_ObjectIfs(Spr::ObjectIfs *arg1) {
+    delete arg1;
+}
+
+swig_class cObjectIfRefs;
+
+SWIGINTERN VALUE
+_wrap_ObjectIfRefs_Push(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIfRefs *arg1 = (Spr::ObjectIfRefs *) 0 ;
+  Spr::ObjectIf *arg2 = (Spr::ObjectIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__ObjectIfRefs, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Push" "', argument " "1"" of type '" "Spr::ObjectIfRefs *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIfRefs * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Push" "', argument " "2"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::ObjectIf * >(argp2);
+  (arg1)->Push(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_ObjectIfRefs_Pop(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIfRefs *arg1 = (Spr::ObjectIfRefs *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__ObjectIfRefs, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Pop" "', argument " "1"" of type '" "Spr::ObjectIfRefs *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIfRefs * >(argp1);
+  (arg1)->Pop();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_ObjectIfRefs_Top(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIfRefs *arg1 = (Spr::ObjectIfRefs *) 0 ;
+  Spr::ObjectIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__ObjectIfRefs, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Top" "', argument " "1"" of type '" "Spr::ObjectIfRefs *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIfRefs * >(argp1);
+  result = (Spr::ObjectIf *)(arg1)->Top();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_ObjectIfRefs_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_ObjectIfRefs_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__ObjectIfRefs);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_ObjectIfRefs(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIfRefs *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::ObjectIfRefs *)new Spr::ObjectIfRefs();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_ObjectIfRefs(Spr::ObjectIfRefs *arg1) {
     delete arg1;
 }
 
@@ -4867,27 +10586,6 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_FISdkIf_Clear(int argc, VALUE *argv, VALUE self) {
-  Spr::FISdkIf *arg1 = (Spr::FISdkIf *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FISdkIf, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Clear" "', argument " "1"" of type '" "Spr::FISdkIf *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FISdkIf * >(argp1);
-  (arg1)->Clear();
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
 _wrap_FISdkIf_CreateSdk(int argc, VALUE *argv, VALUE self) {
   Spr::FISdkIf *result = 0 ;
   VALUE vresult = Qnil;
@@ -5306,6 +11004,99 @@ fail:
 
 SWIGINTERN void
 free_Spr_FIFileCOLLADAIf(Spr::FIFileCOLLADAIf *arg1) {
+    delete arg1;
+}
+
+swig_class cGRVisualDesc;
+
+SWIGINTERN VALUE
+_wrap_GRVisualDesc_type_set(int argc, VALUE *argv, VALUE self) {
+  Spr::GRVisualDesc *arg1 = (Spr::GRVisualDesc *) 0 ;
+  enum Spr::GRVisualDesc::VisualType arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRVisualDesc, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "type" "', argument " "1"" of type '" "Spr::GRVisualDesc *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRVisualDesc * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "type" "', argument " "2"" of type '" "enum Spr::GRVisualDesc::VisualType""'");
+  } 
+  arg2 = static_cast< enum Spr::GRVisualDesc::VisualType >(val2);
+  if (arg1) (arg1)->type = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_GRVisualDesc_type_get(int argc, VALUE *argv, VALUE self) {
+  Spr::GRVisualDesc *arg1 = (Spr::GRVisualDesc *) 0 ;
+  enum Spr::GRVisualDesc::VisualType result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRVisualDesc, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "type" "', argument " "1"" of type '" "Spr::GRVisualDesc *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRVisualDesc * >(argp1);
+  result = (enum Spr::GRVisualDesc::VisualType) ((arg1)->type);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_GRVisualDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_GRVisualDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__GRVisualDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_GRVisualDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::GRVisualDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::GRVisualDesc *)new Spr::GRVisualDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_GRVisualDesc(Spr::GRVisualDesc *arg1) {
     delete arg1;
 }
 
@@ -8026,38 +13817,6 @@ fail:
 
 SWIGINTERN VALUE
 _wrap_new_GRCameraDesc__SWIG_0(int argc, VALUE *argv, VALUE self) {
-  Spr::GRCameraDesc *result = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  result = (Spr::GRCameraDesc *)new Spr::GRCameraDesc();DATA_PTR(self) = result;
-  
-  return self;
-fail:
-  return Qnil;
-}
-
-
-#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
-SWIGINTERN VALUE
-_wrap_GRCameraDesc_allocate(VALUE self) {
-#else
-  SWIGINTERN VALUE
-  _wrap_GRCameraDesc_allocate(int argc, VALUE *argv, VALUE self) {
-#endif
-    
-    
-    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__GRCameraDesc);
-#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
-    rb_obj_call_init(vresult, argc, argv);
-#endif
-    return vresult;
-  }
-  
-
-SWIGINTERN VALUE
-_wrap_new_GRCameraDesc__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Vec2f arg1 ;
   Vec2f arg2 ;
   float arg3 ;
@@ -8097,6 +13856,116 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_GRCameraDesc__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2f arg1 ;
+  Vec2f arg2 ;
+  float arg3 ;
+  Spr::GRCameraDesc *result = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 2; i++)
+  arg1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  
+  
+  for(int i = 0; i < 2; i++)
+  arg2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Spr::GRCameraDesc" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = (Spr::GRCameraDesc *)new Spr::GRCameraDesc(arg1,arg2,arg3);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_GRCameraDesc__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Vec2f arg1 ;
+  Vec2f arg2 ;
+  Spr::GRCameraDesc *result = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 2; i++)
+  arg1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  
+  
+  for(int i = 0; i < 2; i++)
+  arg2[i] = NUM2DBL(rb_ary_entry(argv[1], i));
+  
+  result = (Spr::GRCameraDesc *)new Spr::GRCameraDesc(arg1,arg2);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_GRCameraDesc__SWIG_3(int argc, VALUE *argv, VALUE self) {
+  Vec2f arg1 ;
+  Spr::GRCameraDesc *result = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 2; i++)
+  arg1[i] = NUM2DBL(rb_ary_entry(argv[0], i));
+  
+  result = (Spr::GRCameraDesc *)new Spr::GRCameraDesc(arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_GRCameraDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_GRCameraDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__GRCameraDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_GRCameraDesc__SWIG_4(int argc, VALUE *argv, VALUE self) {
+  Spr::GRCameraDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::GRCameraDesc *)new Spr::GRCameraDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN VALUE _wrap_new_GRCameraDesc(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[4];
@@ -8108,7 +13977,53 @@ SWIGINTERN VALUE _wrap_new_GRCameraDesc(int nargs, VALUE *args, VALUE self) {
     argv[ii] = args[ii];
   }
   if (argc == 0) {
-    return _wrap_new_GRCameraDesc__SWIG_0(nargs, args, self);
+    return _wrap_new_GRCameraDesc__SWIG_4(nargs, args, self);
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 2 ? 1 : 0;
+    
+    if (_v) {
+      return _wrap_new_GRCameraDesc__SWIG_3(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 2 ? 1 : 0;
+    
+    if (_v) {
+      Check_Type(argv[1], T_ARRAY);
+      _v = RARRAY(argv[1])->len == 2 ? 1 : 0;
+      
+      if (_v) {
+        return _wrap_new_GRCameraDesc__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 2 ? 1 : 0;
+    
+    if (_v) {
+      Check_Type(argv[1], T_ARRAY);
+      _v = RARRAY(argv[1])->len == 2 ? 1 : 0;
+      
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_new_GRCameraDesc__SWIG_1(nargs, args, self);
+        }
+      }
+    }
   }
   if (argc == 4) {
     int _v;
@@ -8131,7 +14046,7 @@ SWIGINTERN VALUE _wrap_new_GRCameraDesc(int nargs, VALUE *args, VALUE self) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_new_GRCameraDesc__SWIG_1(nargs, args, self);
+            return _wrap_new_GRCameraDesc__SWIG_0(nargs, args, self);
           }
         }
       }
@@ -12106,20 +18021,31 @@ fail:
 SWIGINTERN VALUE
 _wrap_GRSdkIf_CreateScene(int argc, VALUE *argv, VALUE self) {
   Spr::GRSdkIf *arg1 = (Spr::GRSdkIf *) 0 ;
+  Spr::GRSceneDesc *arg2 = 0 ;
   Spr::GRSceneIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
   VALUE vresult = Qnil;
   
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSdkIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateScene" "', argument " "1"" of type '" "Spr::GRSdkIf *""'"); 
   }
   arg1 = reinterpret_cast< Spr::GRSdkIf * >(argp1);
-  result = (Spr::GRSceneIf *)(arg1)->CreateScene();
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__GRSceneDesc,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateScene" "', argument " "2"" of type '" "Spr::GRSceneDesc const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateScene" "', argument " "2"" of type '" "Spr::GRSceneDesc const &""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRSceneDesc * >(argp2);
+  result = (Spr::GRSceneIf *)(arg1)->CreateScene((Spr::GRSceneDesc const &)*arg2);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
   return vresult;
 fail:
@@ -12338,41 +18264,6 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_GRSceneIf_CreateFrame(int argc, VALUE *argv, VALUE self) {
-  Spr::GRSceneIf *arg1 = (Spr::GRSceneIf *) 0 ;
-  Spr::GRFrameDesc *arg2 = 0 ;
-  Spr::GRFrameIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateFrame" "', argument " "1"" of type '" "Spr::GRSceneIf *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::GRSceneIf * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__GRFrameDesc,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateFrame" "', argument " "2"" of type '" "Spr::GRFrameDesc const &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateFrame" "', argument " "2"" of type '" "Spr::GRFrameDesc const &""'"); 
-  }
-  arg2 = reinterpret_cast< Spr::GRFrameDesc * >(argp2);
-  result = (Spr::GRFrameIf *)(arg1)->CreateFrame((Spr::GRFrameDesc const &)*arg2);
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
 _wrap_GRSceneIf_Render(int argc, VALUE *argv, VALUE self) {
   Spr::GRSceneIf *arg1 = (Spr::GRSceneIf *) 0 ;
   Spr::GRRenderIf *arg2 = (Spr::GRRenderIf *) 0 ;
@@ -12477,6 +18368,135 @@ _wrap_GRSceneIf_SetCamera(int argc, VALUE *argv, VALUE self) {
   (arg1)->SetCamera((Spr::GRCameraDesc const &)*arg2);
   return Qnil;
 fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_GRSceneIf_CreateVisual__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Spr::GRSceneIf *arg1 = (Spr::GRSceneIf *) 0 ;
+  Spr::GRVisualDesc *arg2 = 0 ;
+  Spr::GRFrameIf *arg3 = (Spr::GRFrameIf *) 0 ;
+  Spr::GRVisualIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateVisual" "', argument " "1"" of type '" "Spr::GRSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRSceneIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__GRVisualDesc,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateVisual" "', argument " "2"" of type '" "Spr::GRVisualDesc const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateVisual" "', argument " "2"" of type '" "Spr::GRVisualDesc const &""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRVisualDesc * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CreateVisual" "', argument " "3"" of type '" "Spr::GRFrameIf *""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::GRFrameIf * >(argp3);
+  result = (Spr::GRVisualIf *)(arg1)->CreateVisual((Spr::GRVisualDesc const &)*arg2,arg3);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRVisualIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_GRSceneIf_CreateVisual__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Spr::GRSceneIf *arg1 = (Spr::GRSceneIf *) 0 ;
+  Spr::GRVisualDesc *arg2 = 0 ;
+  Spr::GRVisualIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateVisual" "', argument " "1"" of type '" "Spr::GRSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRSceneIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__GRVisualDesc,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateVisual" "', argument " "2"" of type '" "Spr::GRVisualDesc const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateVisual" "', argument " "2"" of type '" "Spr::GRVisualDesc const &""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRVisualDesc * >(argp2);
+  result = (Spr::GRVisualIf *)(arg1)->CreateVisual((Spr::GRVisualDesc const &)*arg2);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRVisualIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_GRSceneIf_CreateVisual(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 4) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__GRSceneIf, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Spr__GRVisualDesc, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_GRSceneIf_CreateVisual__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__GRSceneIf, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Spr__GRVisualDesc, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Spr__GRFrameIf, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_GRSceneIf_CreateVisual__SWIG_0(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'GRSceneIf_CreateVisual'");
   return Qnil;
 }
 
@@ -14501,41 +20521,6 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PHSceneIf_CreateShape(int argc, VALUE *argv, VALUE self) {
-  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
-  Spr::CDShapeDesc *arg2 = 0 ;
-  Spr::CDShapeIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateShape" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__CDShapeDesc,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateShape" "', argument " "2"" of type '" "Spr::CDShapeDesc const &""'"); 
-  }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateShape" "', argument " "2"" of type '" "Spr::CDShapeDesc const &""'"); 
-  }
-  arg2 = reinterpret_cast< Spr::CDShapeDesc * >(argp2);
-  result = (Spr::CDShapeIf *)(arg1)->CreateShape((Spr::CDShapeDesc const &)*arg2);
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__CDShapeIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
 _wrap_PHSceneIf_CreateSolid__SWIG_0(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
   Spr::PHSolidIf *result = 0 ;
@@ -15238,6 +21223,58 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_PHSceneIf_NJoints(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
+  int result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NJoints" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
+  result = (int)(arg1)->NJoints();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_PHSceneIf_GetJoints(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
+  Spr::PHJointIf **result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetJoints" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
+  result = (Spr::PHJointIf **)(arg1)->GetJoints();
+  
+  vresult = rb_ary_new2(arg1->NJoints());
+  for(int i = 0; i < arg1->NJoints(); i++)
+  rb_ary_store(vresult, i, SWIG_NewPointerObj(SWIG_as_voidptr(result[i]), SWIGTYPE_p_Spr__PHJointIf, 0 |  0 ));
+  
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_PHSceneIf_CreateRootNode(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
   Spr::PHSolidIf *arg2 = (Spr::PHSolidIf *) 0 ;
@@ -15722,25 +21759,30 @@ swig_class cPHSolidState;
 SWIGINTERN VALUE
 _wrap_PHSolidState_velocity_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "velocity" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->velocity = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->velocity = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -15749,7 +21791,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_velocity_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -15762,12 +21804,8 @@ _wrap_PHSolidState_velocity_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "velocity" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->velocity);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->velocity);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -15777,25 +21815,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_angVelocity_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "angVelocity" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->angVelocity = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->angVelocity = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -15804,7 +21847,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_angVelocity_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -15817,12 +21860,8 @@ _wrap_PHSolidState_angVelocity_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "angVelocity" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->angVelocity);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->angVelocity);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -15887,25 +21926,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_force_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "force" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->force = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->force = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -15914,7 +21958,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_force_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -15927,12 +21971,8 @@ _wrap_PHSolidState_force_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "force" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->force);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->force);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -15942,25 +21982,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_torque_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "torque" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->torque = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->torque = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -15969,7 +22014,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_torque_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -15982,12 +22027,8 @@ _wrap_PHSolidState_torque_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "torque" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->torque);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->torque);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -15997,25 +22038,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_nextForce_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "nextForce" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->nextForce = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->nextForce = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -16024,7 +22070,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_nextForce_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -16037,12 +22083,8 @@ _wrap_PHSolidState_nextForce_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "nextForce" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->nextForce);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->nextForce);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -16052,25 +22094,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_nextTorque_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidState, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "nextTorque" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
+  if (arg1) (arg1)->nextTorque = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->nextTorque = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -16079,7 +22126,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidState_nextTorque_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidState *arg1 = (Spr::PHSolidState *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -16092,12 +22139,8 @@ _wrap_PHSolidState_nextTorque_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "nextTorque" "', argument " "1"" of type '" "Spr::PHSolidState *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidState * >(argp1);
-  result =  ((arg1)->nextTorque);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->nextTorque);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -16200,34 +22243,34 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidDesc_inertia_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidDesc *arg1 = (Spr::PHSolidDesc *) 0 ;
-  Matrix3d arg2 ;
+  Matrix3d *arg2 = (Matrix3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
+  Matrix3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "inertia" "', argument " "1"" of type '" "Spr::PHSolidDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidDesc * >(argp1);
-  {
-    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix3d,  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "inertia" "', argument " "2"" of type '" "Matrix3d""'"); 
-    }  
-    if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "inertia" "', argument " "2"" of type '" "Matrix3d""'");
-    } else {
-      arg2 = *(reinterpret_cast< Matrix3d * >(argp2));
-    }
-  }
-  if (arg1) (arg1)->inertia = arg2;
+  if (arg1) (arg1)->inertia = *arg2;
   
-  return Qnil;
+  {
+    VALUE m = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++){
+      VALUE col = rb_ary_new2(3);
+      for(int j = 0; j < 3; j++)
+      rb_ary_store(col, j, rb_float_new((*arg2)[j][i]));
+      rb_ary_store(m, i, col);
+    }
+    rb_ary_push(vresult, m);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -16236,7 +22279,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidDesc_inertia_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidDesc *arg1 = (Spr::PHSolidDesc *) 0 ;
-  Matrix3d result;
+  Matrix3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -16249,8 +22292,8 @@ _wrap_PHSolidDesc_inertia_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "inertia" "', argument " "1"" of type '" "Spr::PHSolidDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidDesc * >(argp1);
-  result =  ((arg1)->inertia);
-  vresult = SWIG_NewPointerObj((new Matrix3d(static_cast< const Matrix3d& >(result))), SWIGTYPE_p_Matrix3d, SWIG_POINTER_OWN |  0 );
+  result = (Matrix3d *)& ((arg1)->inertia);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Matrix3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -16260,25 +22303,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidDesc_center_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidDesc *arg1 = (Spr::PHSolidDesc *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSolidDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "center" "', argument " "1"" of type '" "Spr::PHSolidDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidDesc * >(argp1);
+  if (arg1) (arg1)->center = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->center = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -16287,7 +22335,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSolidDesc_center_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSolidDesc *arg1 = (Spr::PHSolidDesc *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -16300,12 +22348,8 @@ _wrap_PHSolidDesc_center_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "center" "', argument " "1"" of type '" "Spr::PHSolidDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidDesc * >(argp1);
-  result =  ((arg1)->center);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->center);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -16736,7 +22780,15 @@ _wrap_PHSolidIf_GetInertia(int argc, VALUE *argv, VALUE self) {
   }
   arg1 = reinterpret_cast< Spr::PHSolidIf * >(argp1);
   result = (arg1)->GetInertia();
-  vresult = SWIG_NewPointerObj((new Matrix3d(static_cast< const Matrix3d& >(result))), SWIGTYPE_p_Matrix3d, SWIG_POINTER_OWN |  0 );
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
   return vresult;
 fail:
   return Qnil;
@@ -16760,7 +22812,15 @@ _wrap_PHSolidIf_GetInertiaInv(int argc, VALUE *argv, VALUE self) {
   }
   arg1 = reinterpret_cast< Spr::PHSolidIf * >(argp1);
   result = (arg1)->GetInertiaInv();
-  vresult = SWIG_NewPointerObj((new Matrix3d(static_cast< const Matrix3d& >(result))), SWIGTYPE_p_Matrix3d, SWIG_POINTER_OWN |  0 );
+  
+  vresult = rb_ary_new2(3);
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_new2(3);
+    for(int j = 0; j < 3; j++)
+    rb_ary_store(col, j, rb_float_new((result)[j][i]));
+    rb_ary_store(vresult, i, col);
+  }
+  
   return vresult;
 fail:
   return Qnil;
@@ -16773,8 +22833,8 @@ _wrap_PHSolidIf_SetInertia(int argc, VALUE *argv, VALUE self) {
   Matrix3d *arg2 = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  void *argp2 ;
-  int res2 = 0 ;
+  Matrix3d temp2 ;
+  VALUE vresult = Qnil;
   
   if ((argc < 1) || (argc > 1)) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
@@ -16784,16 +22844,18 @@ _wrap_PHSolidIf_SetInertia(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetInertia" "', argument " "1"" of type '" "Spr::PHSolidIf *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSolidIf * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix3d,  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SetInertia" "', argument " "2"" of type '" "Matrix3d const &""'"); 
+  
+  for(int i = 0; i < 3; i++){
+    VALUE col = rb_ary_entry(argv[0], i);
+    for(int j = 0; j < 3; j++){
+      temp2[j][i] = NUM2DBL(rb_ary_entry(col, j));
+    }
   }
-  if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "SetInertia" "', argument " "2"" of type '" "Matrix3d const &""'"); 
-  }
-  arg2 = reinterpret_cast< Matrix3d * >(argp2);
+  arg2 = &temp2;
+  
   (arg1)->SetInertia((Matrix3d const &)*arg2);
-  return Qnil;
+  
+  return vresult;
 fail:
   return Qnil;
 }
@@ -18969,25 +25031,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHBallJointDesc_torque_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHBallJointDesc *arg1 = (Spr::PHBallJointDesc *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHBallJointDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "torque" "', argument " "1"" of type '" "Spr::PHBallJointDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHBallJointDesc * >(argp1);
+  if (arg1) (arg1)->torque = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->torque = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -18996,7 +25063,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHBallJointDesc_torque_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHBallJointDesc *arg1 = (Spr::PHBallJointDesc *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -19009,12 +25076,8 @@ _wrap_PHBallJointDesc_torque_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "torque" "', argument " "1"" of type '" "Spr::PHBallJointDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHBallJointDesc * >(argp1);
-  result =  ((arg1)->torque);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->torque);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -19063,25 +25126,30 @@ swig_class cPHSpringDesc;
 SWIGINTERN VALUE
 _wrap_PHSpringDesc_spring_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSpringDesc *arg1 = (Spr::PHSpringDesc *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSpringDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "spring" "', argument " "1"" of type '" "Spr::PHSpringDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSpringDesc * >(argp1);
+  if (arg1) (arg1)->spring = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->spring = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -19090,7 +25158,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSpringDesc_spring_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSpringDesc *arg1 = (Spr::PHSpringDesc *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -19103,12 +25171,8 @@ _wrap_PHSpringDesc_spring_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "spring" "', argument " "1"" of type '" "Spr::PHSpringDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSpringDesc * >(argp1);
-  result =  ((arg1)->spring);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->spring);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -19118,25 +25182,30 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSpringDesc_damper_set(int argc, VALUE *argv, VALUE self) {
   Spr::PHSpringDesc *arg1 = (Spr::PHSpringDesc *) 0 ;
-  Vec3d arg2 ;
+  Vec3d *arg2 = (Vec3d *) 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  Vec3d temp2 ;
+  VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  arg2 = &temp2;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSpringDesc, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "damper" "', argument " "1"" of type '" "Spr::PHSpringDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSpringDesc * >(argp1);
+  if (arg1) (arg1)->damper = *arg2;
   
-  for(int i = 0; i < 3; i++)
-  arg2[i] = NUM2DBL(rb_ary_entry(argv[0], i));
-  
-  if (arg1) (arg1)->damper = arg2;
-  
-  return Qnil;
+  {
+    VALUE v = rb_ary_new2(3);
+    for(int i = 0; i < 3; i++)
+    rb_ary_store(v, i, rb_float_new((*arg2)[i]));
+    rb_ary_push(vresult, v);
+  }
+  return vresult;
 fail:
   return Qnil;
 }
@@ -19145,7 +25214,7 @@ fail:
 SWIGINTERN VALUE
 _wrap_PHSpringDesc_damper_get(int argc, VALUE *argv, VALUE self) {
   Spr::PHSpringDesc *arg1 = (Spr::PHSpringDesc *) 0 ;
-  Vec3d result;
+  Vec3d *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -19158,12 +25227,8 @@ _wrap_PHSpringDesc_damper_get(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "damper" "', argument " "1"" of type '" "Spr::PHSpringDesc *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSpringDesc * >(argp1);
-  result =  ((arg1)->damper);
-  
-  vresult = rb_ary_new2(3);
-  for(int i = 0; i < 3; i++)
-  rb_ary_store(vresult, i, rb_float_new(result[i]));
-  
+  result = (Vec3d *)& ((arg1)->damper);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Vec3d, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -21095,6 +27160,35 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_FWObjectIf_SetPHSolid(int argc, VALUE *argv, VALUE self) {
+  Spr::FWObjectIf *arg1 = (Spr::FWObjectIf *) 0 ;
+  Spr::PHSolidIf *arg2 = (Spr::PHSolidIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetPHSolid" "', argument " "1"" of type '" "Spr::FWObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWObjectIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__PHSolidIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SetPHSolid" "', argument " "2"" of type '" "Spr::PHSolidIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::PHSolidIf * >(argp2);
+  (arg1)->SetPHSolid(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_FWObjectIf_GetGRFrame(int argc, VALUE *argv, VALUE self) {
   Spr::FWObjectIf *arg1 = (Spr::FWObjectIf *) 0 ;
   Spr::GRFrameIf *result = 0 ;
@@ -21113,6 +27207,35 @@ _wrap_FWObjectIf_GetGRFrame(int argc, VALUE *argv, VALUE self) {
   result = (Spr::GRFrameIf *)(arg1)->GetGRFrame();
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
   return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWObjectIf_SetGRFrame(int argc, VALUE *argv, VALUE self) {
+  Spr::FWObjectIf *arg1 = (Spr::FWObjectIf *) 0 ;
+  Spr::GRFrameIf *arg2 = (Spr::GRFrameIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetGRFrame" "', argument " "1"" of type '" "Spr::FWObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWObjectIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__GRFrameIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SetGRFrame" "', argument " "2"" of type '" "Spr::GRFrameIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRFrameIf * >(argp2);
+  (arg1)->SetGRFrame(arg2);
+  return Qnil;
 fail:
   return Qnil;
 }
@@ -21289,6 +27412,52 @@ _wrap_FWSceneIf_SetGRScene(int argc, VALUE *argv, VALUE self) {
   arg2 = reinterpret_cast< Spr::GRSceneIf * >(argp2);
   (arg1)->SetGRScene(arg2);
   return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSceneIf_CreateObject(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSceneIf *arg1 = (Spr::FWSceneIf *) 0 ;
+  Spr::PHSolidDesc *arg2 = 0 ;
+  Spr::GRFrameDesc *arg3 = 0 ;
+  Spr::FWObjectIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateObject" "', argument " "1"" of type '" "Spr::FWSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSceneIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__PHSolidDesc,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateObject" "', argument " "2"" of type '" "Spr::PHSolidDesc const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateObject" "', argument " "2"" of type '" "Spr::PHSolidDesc const &""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::PHSolidDesc * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Spr__GRFrameDesc,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CreateObject" "', argument " "3"" of type '" "Spr::GRFrameDesc const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateObject" "', argument " "3"" of type '" "Spr::GRFrameDesc const &""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::GRFrameDesc * >(argp3);
+  result = (Spr::FWObjectIf *)(arg1)->CreateObject((Spr::PHSolidDesc const &)*arg2,(Spr::GRFrameDesc const &)*arg3);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWObjectIf, 0 |  0 );
+  return vresult;
 fail:
   return Qnil;
 }
@@ -21621,35 +27790,87 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_FWSdkIf_CreateSdk(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *result = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::FWSdkIf *)Spr::FWSdkIf::CreateSdk();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_FWSdkIf_CreateScene(int argc, VALUE *argv, VALUE self) {
   Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
-  Spr::FWSceneDesc *arg2 = 0 ;
+  Spr::PHSceneDesc *arg2 = 0 ;
+  Spr::GRSceneDesc *arg3 = 0 ;
   Spr::FWSceneIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 ;
   int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
   VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateScene" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
   }
   arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
-  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__FWSceneDesc,  0 );
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Spr__PHSceneDesc,  0 );
   if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateScene" "', argument " "2"" of type '" "Spr::FWSceneDesc const &""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateScene" "', argument " "2"" of type '" "Spr::PHSceneDesc const &""'"); 
   }
   if (!argp2) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateScene" "', argument " "2"" of type '" "Spr::FWSceneDesc const &""'"); 
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateScene" "', argument " "2"" of type '" "Spr::PHSceneDesc const &""'"); 
   }
-  arg2 = reinterpret_cast< Spr::FWSceneDesc * >(argp2);
-  result = (Spr::FWSceneIf *)(arg1)->CreateScene((Spr::FWSceneDesc const &)*arg2);
+  arg2 = reinterpret_cast< Spr::PHSceneDesc * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Spr__GRSceneDesc,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CreateScene" "', argument " "3"" of type '" "Spr::GRSceneDesc const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateScene" "', argument " "3"" of type '" "Spr::GRSceneDesc const &""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::GRSceneDesc * >(argp3);
+  result = (Spr::FWSceneIf *)(arg1)->CreateScene((Spr::PHSceneDesc const &)*arg2,(Spr::GRSceneDesc const &)*arg3);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
   return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_LoadScene(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  UTString arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LoadScene" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  
+  arg2 = UTString(STR2CSTR(argv[0]));
+  
+  (arg1)->LoadScene(arg2);
+  return Qnil;
 fail:
   return Qnil;
 }
@@ -21680,13 +27901,42 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_FWSdkIf_GetScene(int argc, VALUE *argv, VALUE self) {
+_wrap_FWSdkIf_SwitchScene(int argc, VALUE *argv, VALUE self) {
   Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
-  size_t arg2 ;
+  Spr::FWSceneIf *arg2 = (Spr::FWSceneIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SwitchScene" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SwitchScene" "', argument " "2"" of type '" "Spr::FWSceneIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::FWSceneIf * >(argp2);
+  (arg1)->SwitchScene(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_GetScene__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  int arg2 ;
   Spr::FWSceneIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
-  size_t val2 ;
+  int val2 ;
   int ecode2 = 0 ;
   VALUE vresult = Qnil;
   
@@ -21698,15 +27948,81 @@ _wrap_FWSdkIf_GetScene(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetScene" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
   }
   arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
-  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
   if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GetScene" "', argument " "2"" of type '" "size_t""'");
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GetScene" "', argument " "2"" of type '" "int""'");
   } 
-  arg2 = static_cast< size_t >(val2);
+  arg2 = static_cast< int >(val2);
   result = (Spr::FWSceneIf *)(arg1)->GetScene(arg2);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
   return vresult;
 fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_GetScene__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  Spr::FWSceneIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetScene" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  result = (Spr::FWSceneIf *)(arg1)->GetScene();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_FWSdkIf_GetScene(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__FWSdkIf, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_FWSdkIf_GetScene__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__FWSdkIf, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_int(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_FWSdkIf_GetScene__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'FWSdkIf_GetScene'");
   return Qnil;
 }
 
@@ -21784,11 +28100,52 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_FWSdkIf_RegisterSdk(int argc, VALUE *argv, VALUE self) {
+_wrap_FWSdkIf_GetRender(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  Spr::GRRenderIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
   if ((argc < 0) || (argc > 0)) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
-  Spr::FWSdkIf::RegisterSdk();
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetRender" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  result = (Spr::GRRenderIf *)(arg1)->GetRender();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRRenderIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_SetRender(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  Spr::GRRenderIf *arg2 = (Spr::GRRenderIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetRender" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__GRRenderIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SetRender" "', argument " "2"" of type '" "Spr::GRRenderIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRRenderIf * >(argp2);
+  (arg1)->SetRender(arg2);
   return Qnil;
 fail:
   return Qnil;
@@ -21796,16 +28153,260 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_FWSdkIf_CreateSdk(int argc, VALUE *argv, VALUE self) {
-  Spr::FWSdkIf *result = 0 ;
+_wrap_FWSdkIf_GetDevice(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  Spr::GRDeviceIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
   VALUE vresult = Qnil;
   
   if ((argc < 0) || (argc > 0)) {
     rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
-  result = (Spr::FWSdkIf *)Spr::FWSdkIf::CreateSdk();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetDevice" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  result = (Spr::GRDeviceIf *)(arg1)->GetDevice();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRDeviceIf, 0 |  0 );
   return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_SetDevice(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  Spr::GRDeviceIf *arg2 = (Spr::GRDeviceIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetDevice" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__GRDeviceIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "SetDevice" "', argument " "2"" of type '" "Spr::GRDeviceIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRDeviceIf * >(argp2);
+  (arg1)->SetDevice(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_GetDebugMode(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  bool result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetDebugMode" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  result = (bool)(arg1)->GetDebugMode();
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_SetDebugMode__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  bool arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  bool val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetDebugMode" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  ecode2 = SWIG_AsVal_bool(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetDebugMode" "', argument " "2"" of type '" "bool""'");
+  } 
+  arg2 = static_cast< bool >(val2);
+  (arg1)->SetDebugMode(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_SetDebugMode__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetDebugMode" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  (arg1)->SetDebugMode();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_FWSdkIf_SetDebugMode(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__FWSdkIf, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_FWSdkIf_SetDebugMode__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__FWSdkIf, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_bool(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_FWSdkIf_SetDebugMode__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'FWSdkIf_SetDebugMode'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_Step(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  (arg1)->Step();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_Draw(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Draw" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  (arg1)->Draw();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_Reshape(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  int arg2 ;
+  int arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  int val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Reshape" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Reshape" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  ecode3 = SWIG_AsVal_int(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Reshape" "', argument " "3"" of type '" "int""'");
+  } 
+  arg3 = static_cast< int >(val3);
+  (arg1)->Reshape(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_RegisterSdk(int argc, VALUE *argv, VALUE self) {
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  Spr::FWSdkIf::RegisterSdk();
+  return Qnil;
 fail:
   return Qnil;
 }
@@ -22160,39 +28761,9 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_FWApp_debugMode_set(int argc, VALUE *argv, VALUE self) {
+_wrap_FWApp_GetSdk(int argc, VALUE *argv, VALUE self) {
   Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  enum Spr::FWApp::DebugMode arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "debugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "debugMode" "', argument " "2"" of type '" "enum Spr::FWApp::DebugMode""'");
-  } 
-  arg2 = static_cast< enum Spr::FWApp::DebugMode >(val2);
-  if (arg1) (arg1)->debugMode = arg2;
-  
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_debugMode_get(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  enum Spr::FWApp::DebugMode result;
+  Spr::FWSdkIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   VALUE vresult = Qnil;
@@ -22202,101 +28773,16 @@ _wrap_FWApp_debugMode_get(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "debugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetSdk" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
   }
   arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (enum Spr::FWApp::DebugMode) ((arg1)->debugMode);
-  vresult = SWIG_From_int(static_cast< int >(result));
+  result = (Spr::FWSdkIf *)(arg1)->GetSdk();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
 }
 
-
-#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
-SWIGINTERN VALUE
-_wrap_FWApp_allocate(VALUE self) {
-#else
-  SWIGINTERN VALUE
-  _wrap_FWApp_allocate(int argc, VALUE *argv, VALUE self) {
-#endif
-    
-    
-    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__FWApp);
-#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
-    rb_obj_call_init(vresult, argc, argv);
-#endif
-    return vresult;
-  }
-  
-
-SWIGINTERN VALUE
-_wrap_new_FWApp(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *result = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  result = (Spr::FWApp *)new Spr::FWApp();DATA_PTR(self) = result;
-  
-  return self;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_GetRender(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::GRRenderIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetRender" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (Spr::GRRenderIf *)(arg1)->GetRender();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__GRRenderIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_GetScene(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWSceneIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (Spr::FWSceneIf *)(arg1)->GetScene();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN void
-free_Spr_FWApp(Spr::FWApp *arg1) {
-    delete arg1;
-}
 
 SWIGINTERN VALUE
 _wrap_FWApp_Init(int argc, VALUE *argv, VALUE self) {
@@ -22375,24 +28861,20 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_FWApp_LoadScene(int argc, VALUE *argv, VALUE self) {
+_wrap_FWApp_Step(int argc, VALUE *argv, VALUE self) {
   Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  UTString arg2 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LoadScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
   }
   arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  
-  arg2 = UTString(STR2CSTR(argv[0]));
-  
-  (arg1)->LoadScene(arg2);
+  (arg1)->Step();
   return Qnil;
 fail:
   return Qnil;
@@ -22592,103 +29074,10 @@ fail:
 }
 
 
-SWIGINTERN VALUE
-_wrap_FWApp_Step(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Step" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  (arg1)->Step();
-  return Qnil;
-fail:
-  return Qnil;
+SWIGINTERN void
+free_Spr_FWApp(Spr::FWApp *arg1) {
+    delete arg1;
 }
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_GetDebugMode(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWApp::DebugMode result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetDebugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (Spr::FWApp::DebugMode)(arg1)->GetDebugMode();
-  vresult = SWIG_From_int(static_cast< int >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_SetDebugMode(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWApp::DebugMode arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "SetDebugMode" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  ecode2 = SWIG_AsVal_int(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "SetDebugMode" "', argument " "2"" of type '" "Spr::FWApp::DebugMode""'");
-  } 
-  arg2 = static_cast< Spr::FWApp::DebugMode >(val2);
-  (arg1)->SetDebugMode(arg2);
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWApp_GetFWScene(int argc, VALUE *argv, VALUE self) {
-  Spr::FWApp *arg1 = (Spr::FWApp *) 0 ;
-  Spr::FWSceneIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWApp, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetFWScene" "', argument " "1"" of type '" "Spr::FWApp *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWApp * >(argp1);
-  result = (Spr::FWSceneIf *)(arg1)->GetFWScene();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
 
 SWIGINTERN VALUE
 _wrap_FWApp_Link(int argc, VALUE *argv, VALUE self) {
@@ -22714,6 +29103,38 @@ _wrap_FWApp_Link(int argc, VALUE *argv, VALUE self) {
   arg1->vfBridge->Link((void*)self);
   
   return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_FWApp_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_FWApp_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__FWApp);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_FWApp(int argc, VALUE *argv, VALUE self) {
+  Spr::FWApp *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::FWApp *)new Spr::FWApp();DATA_PTR(self) = result;
+  
+  return self;
 fail:
   return Qnil;
 }
@@ -23416,48 +29837,6 @@ free_Spr_FWWindowDesc(Spr::FWWindowDesc *arg1) {
 swig_class cFWAppGLUT;
 
 SWIGINTERN VALUE
-_wrap_FWAppGLUT_Start(int argc, VALUE *argv, VALUE self) {
-  Spr::FWAppGLUT *arg1 = (Spr::FWAppGLUT *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWAppGLUT, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Start" "', argument " "1"" of type '" "Spr::FWAppGLUT *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWAppGLUT * >(argp1);
-  (arg1)->Start();
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_FWAppGLUT_OnTimer(int argc, VALUE *argv, VALUE self) {
-  Spr::FWAppGLUT *arg1 = (Spr::FWAppGLUT *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWAppGLUT, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "OnTimer" "', argument " "1"" of type '" "Spr::FWAppGLUT *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::FWAppGLUT * >(argp1);
-  (arg1)->OnTimer();
-  return Qnil;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
 _wrap_FWAppGLUT_Init(int argc, VALUE *argv, VALUE self) {
   Spr::FWAppGLUT *arg1 = (Spr::FWAppGLUT *) 0 ;
   int arg2 ;
@@ -23619,6 +29998,27 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_FWAppGLUT_Start(int argc, VALUE *argv, VALUE self) {
+  Spr::FWAppGLUT *arg1 = (Spr::FWAppGLUT *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWAppGLUT, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Start" "', argument " "1"" of type '" "Spr::FWAppGLUT *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWAppGLUT * >(argp1);
+  (arg1)->Start();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_FWAppGLUT_allocate(VALUE self) {
@@ -23659,101 +30059,20 @@ free_Spr_FWAppGLUT(Spr::FWAppGLUT *arg1) {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_Spr__FWAppGLUTTo_p_Spr__FWApp(void *x) {
-    return (void *)((Spr::FWApp *) (Spr::FWAppGL *) ((Spr::FWAppGLUT *) x));
+static void *_p_Spr__PHSceneDescTo_p_Spr__PHSceneState(void *x) {
+    return (void *)((Spr::PHSceneState *)  ((Spr::PHSceneDesc *) x));
 }
-static void *_p_Spr__FWAppGLTo_p_Spr__FWApp(void *x) {
-    return (void *)((Spr::FWApp *)  ((Spr::FWAppGL *) x));
+static void *_p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRRenderIf *) x));
 }
-static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDCapsuleIf *) x));
+static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRRenderIf *) ((Spr::GRDebugRenderIf *) x));
 }
-static void *_p_Spr__CDBoxIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDBoxIf *) x));
+static void *_p_Spr__GRDeviceIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRDeviceIf *) x));
 }
-static void *_p_Spr__CDSphereIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDSphereIf *) x));
-}
-static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDConvexMeshIf *) x));
-}
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
-}
-static void *_p_Spr__PHContactPointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHContactPointIf *) x));
-}
-static void *_p_Spr__PHJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHJointIf *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
-}
-static void *_p_Spr__PHBallJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHBallJointIf *) x));
-}
-static void *_p_Spr__PHSpringIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHSpringIf *) x));
-}
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *)  ((Spr::PHJoint1DIf *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
-}
-static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
-}
-static void *_p_Spr__CDConvexIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *)  ((Spr::CDConvexIf *) x));
-}
-static void *_p_Spr__CDBoxIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
-}
-static void *_p_Spr__CDSphereIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
-}
-static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
-}
-static void *_p_Spr__GRSdkIfTo_p_Spr__SdkIf(void *x) {
-    return (void *)((Spr::SdkIf *)  ((Spr::GRSdkIf *) x));
-}
-static void *_p_Spr__PHSdkIfTo_p_Spr__SdkIf(void *x) {
-    return (void *)((Spr::SdkIf *)  ((Spr::PHSdkIf *) x));
-}
-static void *_p_Spr__CDConvexMeshDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDConvexMeshDesc *) x));
-}
-static void *_p_Spr__CDSphereDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDSphereDesc *) x));
-}
-static void *_p_Spr__CDBoxDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDBoxDesc *) x));
-}
-static void *_p_Spr__CDCapsuleDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDCapsuleDesc *) x));
-}
-static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderIf(void *x) {
-    return (void *)((Spr::GRRenderIf *)  ((Spr::GRDebugRenderIf *) x));
-}
-static void *_p_Spr__FIFileCOLLADAIfTo_p_Spr__FIFileIf(void *x) {
-    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileCOLLADAIf *) x));
-}
-static void *_p_Spr__FIFileXIfTo_p_Spr__FIFileIf(void *x) {
-    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileXIf *) x));
+static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRDeviceIf *) ((Spr::GRDeviceGLIf *) x));
 }
 static void *_p_Spr__GRMaterialIfTo_p_Spr__GRVisualIf(void *x) {
     return (void *)((Spr::GRVisualIf *)  ((Spr::GRMaterialIf *) x));
@@ -23776,167 +30095,50 @@ static void *_p_Spr__GRMeshIfTo_p_Spr__GRVisualIf(void *x) {
 static void *_p_Spr__GRBlendMeshIfTo_p_Spr__GRVisualIf(void *x) {
     return (void *)((Spr::GRVisualIf *)  ((Spr::GRBlendMeshIf *) x));
 }
-static void *_p_Spr__PHJoint1DDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHJoint1DDesc *) x));
+static void *_p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHTreeNodeIf *) x));
 }
-static void *_p_Spr__PHSpringDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHSpringDesc *) x));
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
 }
-static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHHingeJointDesc *) x));
+static void *_p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
 }
-static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHSliderJointDesc *) x));
+static void *_p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
 }
-static void *_p_Spr__PHPathJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHPathJointDesc *) x));
+static void *_p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
 }
-static void *_p_Spr__PHBallJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHBallJointDesc *) x));
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
 }
-static void *_p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRRenderIf *) x));
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
 }
-static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRRenderIf *) ((Spr::GRDebugRenderIf *) x));
+static void *_p_Spr__PHJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
 }
-static void *_p_Spr__GRDeviceIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRDeviceIf *) x));
+static void *_p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
 }
-static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRDeviceIf *) ((Spr::GRDeviceGLIf *) x));
+static void *_p_Spr__PHPathIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHPathIf *) x));
 }
-static void *_p_Spr__FWAppGLUTTo_p_Spr__FWAppGL(void *x) {
-    return (void *)((Spr::FWAppGL *)  ((Spr::FWAppGLUT *) x));
+static void *_p_Spr__PHGearIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHGearIf *) x));
 }
-static void *_p_Spr__PHSolidDescTo_p_Spr__PHSolidState(void *x) {
-    return (void *)((Spr::PHSolidState *)  ((Spr::PHSolidDesc *) x));
+static void *_p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
 }
-static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
-    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHHingeJointDesc *) x));
+static void *_p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHConstraintIf *) x));
 }
-static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
-    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHSliderJointDesc *) x));
+static void *_p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHEngineIf *) x));
 }
-static void *_p_Spr__PHPathJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
-    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHPathJointDesc *) x));
-}
-static void *_p_Spr__PHGearIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHGearIf *) x));
-}
-static void *_p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHConstraintIf *) x));
-}
-static void *_p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHSolidIf *) x));
-}
-static void *_p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHTreeNodeIf *) x));
-}
-static void *_p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
-}
-static void *_p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::PHSceneIf *) x));
-}
-static void *_p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::GRSceneIf *) x));
-}
-static void *_p_Spr__SceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SceneIf *) x));
-}
-static void *_p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::FWSceneIf *) x));
-}
-static void *_p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHEngineIf *) x));
-}
-static void *_p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
-}
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
-}
-static void *_p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::GRSdkIf *) x));
-}
-static void *_p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::NameManagerIf *) x));
-}
-static void *_p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRCameraIf *) x));
-}
-static void *_p_Spr__PHPathIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHPathIf *) x));
-}
-static void *_p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRFrameIf *) x));
-}
-static void *_p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
-}
-static void *_p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMaterialIf *) x));
-}
-static void *_p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *) ((Spr::CDConvexIf *) x));
-}
-static void *_p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::CDShapeIf *) x));
-}
-static void *_p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::SceneObjectIf *) x));
-}
-static void *_p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::FWObjectIf *) x));
-}
-static void *_p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::PHSdkIf *) x));
-}
-static void *_p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
-}
-static void *_p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
-}
-static void *_p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRSphereIf *) x));
-}
-static void *_p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
-}
-static void *_p_Spr__SdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SdkIf *) x));
-}
-static void *_p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRBlendMeshIf *) x));
-}
-static void *_p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMeshIf *) x));
-}
-static void *_p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
-}
-static void *_p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::GRVisualIf *) x));
-}
-static void *_p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
-}
-static void *_p_Spr__GRLightIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
+static void *_p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHSolidIf *) x));
 }
 static void *_p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::GRRenderBaseIf *)(Spr::GRDeviceIf *) ((Spr::GRDeviceGLIf *) x));
@@ -23975,7 +30177,7 @@ static void *_p_Spr__FWSceneIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::FWSceneIf *) x));
 }
 static void *_p_Spr__FISdkIfTo_p_Spr__ObjectIf(void *x) {
-    return (void *)((Spr::ObjectIf *)  ((Spr::FISdkIf *) x));
+    return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::FISdkIf *) x));
 }
 static void *_p_Spr__PHEngineIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *) ((Spr::PHEngineIf *) x));
@@ -24091,50 +30293,143 @@ static void *_p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf(void *x) {
 static void *_p_Spr__GRLightIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
 }
-static void *_p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHTreeNodeIf *) x));
+static void *_p_Spr__PHGearIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHGearIf *) x));
 }
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
+static void *_p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHConstraintIf *) x));
 }
-static void *_p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
+static void *_p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHSolidIf *) x));
 }
-static void *_p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
+static void *_p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHTreeNodeIf *) x));
 }
-static void *_p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+static void *_p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
 }
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+static void *_p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::PHSceneIf *) x));
 }
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+static void *_p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::GRSceneIf *) x));
 }
-static void *_p_Spr__PHJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
+static void *_p_Spr__SceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SceneIf *) x));
 }
-static void *_p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
+static void *_p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::FWSceneIf *) x));
 }
-static void *_p_Spr__PHPathIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHPathIf *) x));
+static void *_p_Spr__FISdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::FISdkIf *) x));
 }
-static void *_p_Spr__PHGearIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHGearIf *) x));
+static void *_p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHEngineIf *) x));
 }
-static void *_p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
+static void *_p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
 }
-static void *_p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHConstraintIf *) x));
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
 }
-static void *_p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHEngineIf *) x));
+static void *_p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::GRSdkIf *) x));
 }
-static void *_p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHSolidIf *) x));
+static void *_p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::NameManagerIf *) x));
+}
+static void *_p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRCameraIf *) x));
+}
+static void *_p_Spr__PHPathIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHPathIf *) x));
+}
+static void *_p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRFrameIf *) x));
+}
+static void *_p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
+}
+static void *_p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMaterialIf *) x));
+}
+static void *_p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *) ((Spr::CDConvexIf *) x));
+}
+static void *_p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::CDShapeIf *) x));
+}
+static void *_p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::SceneObjectIf *) x));
+}
+static void *_p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::FWObjectIf *) x));
+}
+static void *_p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::PHSdkIf *) x));
+}
+static void *_p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
+}
+static void *_p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
+}
+static void *_p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRSphereIf *) x));
+}
+static void *_p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
+}
+static void *_p_Spr__SdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SdkIf *) x));
+}
+static void *_p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRBlendMeshIf *) x));
+}
+static void *_p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMeshIf *) x));
+}
+static void *_p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
+}
+static void *_p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::GRVisualIf *) x));
+}
+static void *_p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
+}
+static void *_p_Spr__GRLightIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
+}
+static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderIf(void *x) {
+    return (void *)((Spr::GRRenderIf *)  ((Spr::GRDebugRenderIf *) x));
+}
+static void *_p_Spr__GRLightDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRLightDesc *) x));
+}
+static void *_p_Spr__GRCameraDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRCameraDesc *) x));
+}
+static void *_p_Spr__GRMeshDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRMeshDesc *) x));
+}
+static void *_p_Spr__GRMaterialDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRMaterialDesc *) x));
+}
+static void *_p_Spr__GRFrameDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRFrameDesc *) x));
 }
 static void *_p_Spr__GRSceneIfTo_p_Spr__SceneIf(void *x) {
     return (void *)((Spr::SceneIf *)  ((Spr::GRSceneIf *) x));
@@ -24145,8 +30440,155 @@ static void *_p_Spr__PHSceneIfTo_p_Spr__SceneIf(void *x) {
 static void *_p_Spr__FWSceneIfTo_p_Spr__SceneIf(void *x) {
     return (void *)((Spr::SceneIf *)  ((Spr::FWSceneIf *) x));
 }
+static void *_p_Spr__FWAppGLUTTo_p_Spr__FWApp(void *x) {
+    return (void *)((Spr::FWApp *) (Spr::FWAppGL *) ((Spr::FWAppGLUT *) x));
+}
+static void *_p_Spr__FWAppGLTo_p_Spr__FWApp(void *x) {
+    return (void *)((Spr::FWApp *)  ((Spr::FWAppGL *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJoint1DIf(void *x) {
+    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJoint1DIf(void *x) {
+    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJoint1DIf(void *x) {
+    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
+    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHRootNodeIf *) x));
+}
+static void *_p_Spr__PHJoint1DDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHJoint1DDesc *) x));
+}
+static void *_p_Spr__PHSpringDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHSpringDesc *) x));
+}
+static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHHingeJointDesc *) x));
+}
+static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHSliderJointDesc *) x));
+}
+static void *_p_Spr__PHPathJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHPathJointDesc *) x));
+}
+static void *_p_Spr__PHBallJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHBallJointDesc *) x));
+}
+static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
+}
+static void *_p_Spr__CDConvexIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *)  ((Spr::CDConvexIf *) x));
+}
+static void *_p_Spr__CDBoxIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
+}
+static void *_p_Spr__CDSphereIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
+}
+static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
+}
+static void *_p_Spr__PHSolidDescTo_p_Spr__PHSolidState(void *x) {
+    return (void *)((Spr::PHSolidState *)  ((Spr::PHSolidDesc *) x));
+}
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *)  ((Spr::PHJoint1DIf *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__FIFileCOLLADAIfTo_p_Spr__FIFileIf(void *x) {
+    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileCOLLADAIf *) x));
+}
+static void *_p_Spr__FIFileXIfTo_p_Spr__FIFileIf(void *x) {
+    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileXIf *) x));
+}
+static void *_p_Spr__CDConvexMeshDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDConvexMeshDesc *) x));
+}
+static void *_p_Spr__CDSphereDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDSphereDesc *) x));
+}
+static void *_p_Spr__CDBoxDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDBoxDesc *) x));
+}
+static void *_p_Spr__CDCapsuleDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDCapsuleDesc *) x));
+}
+static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDCapsuleIf *) x));
+}
+static void *_p_Spr__CDBoxIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDBoxIf *) x));
+}
+static void *_p_Spr__CDSphereIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDSphereIf *) x));
+}
+static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDConvexMeshIf *) x));
+}
+static void *_p_Spr__FISdkIfTo_p_Spr__SdkIf(void *x) {
+    return (void *)((Spr::SdkIf *)  ((Spr::FISdkIf *) x));
+}
+static void *_p_Spr__GRSdkIfTo_p_Spr__SdkIf(void *x) {
+    return (void *)((Spr::SdkIf *)  ((Spr::GRSdkIf *) x));
+}
+static void *_p_Spr__PHSdkIfTo_p_Spr__SdkIf(void *x) {
+    return (void *)((Spr::SdkIf *)  ((Spr::PHSdkIf *) x));
+}
+static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf(void *x) {
+    return (void *)((Spr::GRDeviceIf *)  ((Spr::GRDeviceGLIf *) x));
+}
+static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
+    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHHingeJointDesc *) x));
+}
+static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
+    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHSliderJointDesc *) x));
+}
+static void *_p_Spr__PHPathJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
+    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHPathJointDesc *) x));
+}
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
+}
+static void *_p_Spr__PHContactPointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHContactPointIf *) x));
+}
+static void *_p_Spr__PHJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHJointIf *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__PHBallJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHBallJointIf *) x));
+}
+static void *_p_Spr__PHSpringIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHSpringIf *) x));
+}
+static void *_p_Spr__FWAppGLUTTo_p_Spr__FWAppGL(void *x) {
+    return (void *)((Spr::FWAppGL *)  ((Spr::FWAppGLUT *) x));
+}
 static void *_p_Spr__SdkIfTo_p_Spr__NameManagerIf(void *x) {
     return (void *)((Spr::NameManagerIf *)  ((Spr::SdkIf *) x));
+}
+static void *_p_Spr__FISdkIfTo_p_Spr__NameManagerIf(void *x) {
+    return (void *)((Spr::NameManagerIf *) (Spr::SdkIf *) ((Spr::FISdkIf *) x));
 }
 static void *_p_Spr__SceneIfTo_p_Spr__NameManagerIf(void *x) {
     return (void *)((Spr::NameManagerIf *)  ((Spr::SceneIf *) x));
@@ -24166,29 +30608,14 @@ static void *_p_Spr__GRSdkIfTo_p_Spr__NameManagerIf(void *x) {
 static void *_p_Spr__PHSdkIfTo_p_Spr__NameManagerIf(void *x) {
     return (void *)((Spr::NameManagerIf *) (Spr::SdkIf *) ((Spr::PHSdkIf *) x));
 }
-static void *_p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
-    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHRootNodeIf *) x));
-}
-static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf(void *x) {
-    return (void *)((Spr::GRDeviceIf *)  ((Spr::GRDeviceGLIf *) x));
-}
-static void *_p_Spr__PHSceneDescTo_p_Spr__PHSceneState(void *x) {
-    return (void *)((Spr::PHSceneState *)  ((Spr::PHSceneDesc *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJoint1DIf(void *x) {
-    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJoint1DIf(void *x) {
-    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJoint1DIf(void *x) {
-    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHPathJointIf *) x));
-}
+static swig_type_info _swigt__p_Affine2d = {"_p_Affine2d", "Affine2d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Affined = {"_p_Affined", "Affined *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Affinef = {"_p_Affinef", "Affinef *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GRShaderFormat__ShaderType = {"_p_GRShaderFormat__ShaderType", "GRShaderFormat::ShaderType *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GRVertexArray = {"_p_GRVertexArray", "GRVertexArray *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GRVertexElement = {"_p_GRVertexElement", "GRVertexElement *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_IfInfo = {"_p_IfInfo", "IfInfo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Matrix2d = {"_p_Matrix2d", "Matrix2d *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Matrix3d = {"_p_Matrix3d", "Matrix3d *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_PHSceneIf = {"_p_PHSceneIf", "PHSceneIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_PHSolidIf = {"_p_PHSolidIf", "PHSolidIf *", 0, 0, (void*)0, 0};
@@ -24246,12 +30673,14 @@ static swig_type_info _swigt__p_Spr__GRSdkDesc = {"_p_Spr__GRSdkDesc", "Spr::GRS
 static swig_type_info _swigt__p_Spr__GRSdkIf = {"_p_Spr__GRSdkIf", "Spr::GRSdkIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRSphereDesc = {"_p_Spr__GRSphereDesc", "Spr::GRSphereDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRSphereIf = {"_p_Spr__GRSphereIf", "Spr::GRSphereIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__GRVisualDesc = {"_p_Spr__GRVisualDesc", "Spr::GRVisualDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__GRVisualIf = {"_p_Spr__GRVisualIf", "Spr::GRVisualIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__HIForceDevice6D = {"_p_Spr__HIForceDevice6D", "Spr::HIForceDevice6D *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__NameManagerIf = {"_p_Spr__NameManagerIf", "Spr::NameManagerIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__NamedObjectIf = {"_p_Spr__NamedObjectIf", "Spr::NamedObjectIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__Object = {"_p_Spr__Object", "Spr::Object *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__ObjectIf = {"_p_Spr__ObjectIf", "Spr::ObjectIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__ObjectIfRefs = {"_p_Spr__ObjectIfRefs", "Spr::ObjectIfRefs *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__ObjectIfs = {"_p_Spr__ObjectIfs", "Spr::ObjectIfs *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__ObjectStatesIf = {"_p_Spr__ObjectStatesIf", "Spr::ObjectStatesIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHBallJointDesc = {"_p_Spr__PHBallJointDesc", "Spr::PHBallJointDesc *", 0, 0, (void*)0, 0};
@@ -24296,9 +30725,11 @@ static swig_type_info _swigt__p_Spr__SdkIf = {"_p_Spr__SdkIf", "Spr::SdkIf *", 0
 static swig_type_info _swigt__p_UTRefTSpr__FWVFuncBridge_t = {"_p_UTRefTSpr__FWVFuncBridge_t", "UTRef<Spr::FWVFuncBridge > *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_UTString = {"_p_UTString", "UTString *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_UTTypeInfo = {"_p_UTTypeInfo", "UTTypeInfo *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Vec2d = {"_p_Vec2d", "Vec2d *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec2f = {"_p_Vec2f", "Vec2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec3d = {"_p_Vec3d", "Vec3d *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec3f = {"_p_Vec3f", "Vec3f *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Vec4d = {"_p_Vec4d", "Vec4d *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec4f = {"_p_Vec4f", "Vec4f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_container_t = {"_p_container_t", "container_t *", 0, 0, (void*)0, 0};
@@ -24319,11 +30750,14 @@ static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__p_Affine2d,
+  &_swigt__p_Affined,
   &_swigt__p_Affinef,
   &_swigt__p_GRShaderFormat__ShaderType,
   &_swigt__p_GRVertexArray,
   &_swigt__p_GRVertexElement,
   &_swigt__p_IfInfo,
+  &_swigt__p_Matrix2d,
   &_swigt__p_Matrix3d,
   &_swigt__p_PHSceneIf,
   &_swigt__p_PHSolidIf,
@@ -24381,12 +30815,14 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Spr__GRSdkIf,
   &_swigt__p_Spr__GRSphereDesc,
   &_swigt__p_Spr__GRSphereIf,
+  &_swigt__p_Spr__GRVisualDesc,
   &_swigt__p_Spr__GRVisualIf,
   &_swigt__p_Spr__HIForceDevice6D,
   &_swigt__p_Spr__NameManagerIf,
   &_swigt__p_Spr__NamedObjectIf,
   &_swigt__p_Spr__Object,
   &_swigt__p_Spr__ObjectIf,
+  &_swigt__p_Spr__ObjectIfRefs,
   &_swigt__p_Spr__ObjectIfs,
   &_swigt__p_Spr__ObjectStatesIf,
   &_swigt__p_Spr__PHBallJointDesc,
@@ -24431,9 +30867,11 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_UTRefTSpr__FWVFuncBridge_t,
   &_swigt__p_UTString,
   &_swigt__p_UTTypeInfo,
+  &_swigt__p_Vec2d,
   &_swigt__p_Vec2f,
   &_swigt__p_Vec3d,
   &_swigt__p_Vec3f,
+  &_swigt__p_Vec4d,
   &_swigt__p_Vec4f,
   &_swigt__p_char,
   &_swigt__p_container_t,
@@ -24454,11 +30892,14 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_void,
 };
 
+static swig_cast_info _swigc__p_Affine2d[] = {  {&_swigt__p_Affine2d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Affined[] = {  {&_swigt__p_Affined, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Affinef[] = {  {&_swigt__p_Affinef, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GRShaderFormat__ShaderType[] = {  {&_swigt__p_GRShaderFormat__ShaderType, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GRVertexArray[] = {  {&_swigt__p_GRVertexArray, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GRVertexElement[] = {  {&_swigt__p_GRVertexElement, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_IfInfo[] = {  {&_swigt__p_IfInfo, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Matrix2d[] = {  {&_swigt__p_Matrix2d, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Matrix3d[] = {  {&_swigt__p_Matrix3d, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PHSceneIf[] = {  {&_swigt__p_PHSceneIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_PHSolidIf[] = {  {&_swigt__p_PHSolidIf, 0, 0, 0},{0, 0, 0, 0}};
@@ -24516,12 +30957,14 @@ static swig_cast_info _swigc__p_Spr__GRSdkDesc[] = {  {&_swigt__p_Spr__GRSdkDesc
 static swig_cast_info _swigc__p_Spr__GRSdkIf[] = {  {&_swigt__p_Spr__GRSdkIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRSphereDesc[] = {  {&_swigt__p_Spr__GRSphereDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRSphereIf[] = {  {&_swigt__p_Spr__GRSphereIf, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__GRVisualDesc[] = {  {&_swigt__p_Spr__GRLightDesc, _p_Spr__GRLightDescTo_p_Spr__GRVisualDesc, 0, 0},  {&_swigt__p_Spr__GRCameraDesc, _p_Spr__GRCameraDescTo_p_Spr__GRVisualDesc, 0, 0},  {&_swigt__p_Spr__GRMeshDesc, _p_Spr__GRMeshDescTo_p_Spr__GRVisualDesc, 0, 0},  {&_swigt__p_Spr__GRVisualDesc, 0, 0, 0},  {&_swigt__p_Spr__GRMaterialDesc, _p_Spr__GRMaterialDescTo_p_Spr__GRVisualDesc, 0, 0},  {&_swigt__p_Spr__GRFrameDesc, _p_Spr__GRFrameDescTo_p_Spr__GRVisualDesc, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__GRVisualIf[] = {  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, 0, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__GRVisualIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__HIForceDevice6D[] = {  {&_swigt__p_Spr__HIForceDevice6D, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__NameManagerIf[] = {  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NameManagerIf, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__NamedObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, 0, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__NamedObjectIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__NameManagerIf[] = {  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NameManagerIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__NamedObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, 0, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__NamedObjectIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__Object[] = {  {&_swigt__p_Spr__Object, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, _p_Spr__GRRenderBaseIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileIf, _p_Spr__FIFileIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileCOLLADAIf, _p_Spr__FIFileCOLLADAIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectIf, 0, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, _p_Spr__NamedObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileXIf, _p_Spr__FIFileXIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectStatesIf, _p_Spr__ObjectStatesIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSdkIf, _p_Spr__FWSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__ObjectIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__ObjectIfRefs[] = {  {&_swigt__p_Spr__ObjectIfRefs, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectIfs[] = {  {&_swigt__p_Spr__ObjectIfs, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectStatesIf[] = {  {&_swigt__p_Spr__ObjectStatesIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHBallJointDesc[] = {  {&_swigt__p_Spr__PHBallJointDesc, 0, 0, 0},{0, 0, 0, 0}};
@@ -24562,13 +31005,15 @@ static swig_cast_info _swigc__p_Spr__PHSpringIf[] = {  {&_swigt__p_Spr__PHSpring
 static swig_cast_info _swigc__p_Spr__PHTreeNodeIf[] = {  {&_swigt__p_Spr__PHTreeNodeIf, 0, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__SceneIf[] = {  {&_swigt__p_Spr__SceneIf, 0, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__SceneIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__SceneIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__SceneIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__SceneObjectIf[] = {  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, 0, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__SdkIf[] = {  {&_swigt__p_Spr__SdkIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__SdkIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__SdkIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__SdkIf[] = {  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__SdkIf, 0, 0},  {&_swigt__p_Spr__SdkIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__SdkIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__SdkIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_UTRefTSpr__FWVFuncBridge_t[] = {  {&_swigt__p_UTRefTSpr__FWVFuncBridge_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_UTString[] = {  {&_swigt__p_UTString, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_UTTypeInfo[] = {  {&_swigt__p_UTTypeInfo, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Vec2d[] = {  {&_swigt__p_Vec2d, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec2f[] = {  {&_swigt__p_Vec2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec3d[] = {  {&_swigt__p_Vec3d, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec3f[] = {  {&_swigt__p_Vec3f, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Vec4d[] = {  {&_swigt__p_Vec4d, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec4f[] = {  {&_swigt__p_Vec4f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_container_t[] = {  {&_swigt__p_container_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -24589,11 +31034,14 @@ static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0,
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__p_Affine2d,
+  _swigc__p_Affined,
   _swigc__p_Affinef,
   _swigc__p_GRShaderFormat__ShaderType,
   _swigc__p_GRVertexArray,
   _swigc__p_GRVertexElement,
   _swigc__p_IfInfo,
+  _swigc__p_Matrix2d,
   _swigc__p_Matrix3d,
   _swigc__p_PHSceneIf,
   _swigc__p_PHSolidIf,
@@ -24651,12 +31099,14 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Spr__GRSdkIf,
   _swigc__p_Spr__GRSphereDesc,
   _swigc__p_Spr__GRSphereIf,
+  _swigc__p_Spr__GRVisualDesc,
   _swigc__p_Spr__GRVisualIf,
   _swigc__p_Spr__HIForceDevice6D,
   _swigc__p_Spr__NameManagerIf,
   _swigc__p_Spr__NamedObjectIf,
   _swigc__p_Spr__Object,
   _swigc__p_Spr__ObjectIf,
+  _swigc__p_Spr__ObjectIfRefs,
   _swigc__p_Spr__ObjectIfs,
   _swigc__p_Spr__ObjectStatesIf,
   _swigc__p_Spr__PHBallJointDesc,
@@ -24701,9 +31151,11 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_UTRefTSpr__FWVFuncBridge_t,
   _swigc__p_UTString,
   _swigc__p_UTTypeInfo,
+  _swigc__p_Vec2d,
   _swigc__p_Vec2f,
   _swigc__p_Vec3d,
   _swigc__p_Vec3f,
+  _swigc__p_Vec4d,
   _swigc__p_Vec4f,
   _swigc__p_char,
   _swigc__p_container_t,
@@ -24972,6 +31424,191 @@ SWIGEXPORT void Init_Springhead(void) {
   
   SWIG_RubyInitializeTrackings();
   
+  cVec2d.klass = rb_define_class_under(mSpringhead, "Vec2d", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Vec2d, (void *) &cVec2d);
+  rb_define_alloc_func(cVec2d.klass, _wrap_Vec2d_allocate);
+  rb_define_method(cVec2d.klass, "initialize", VALUEFUNC(_wrap_new_Vec2d), -1);
+  rb_define_method(cVec2d.klass, "x=", VALUEFUNC(_wrap_Vec2d_x_set), -1);
+  rb_define_method(cVec2d.klass, "x", VALUEFUNC(_wrap_Vec2d_x_get), -1);
+  rb_define_method(cVec2d.klass, "y=", VALUEFUNC(_wrap_Vec2d_y_set), -1);
+  rb_define_method(cVec2d.klass, "y", VALUEFUNC(_wrap_Vec2d_y_get), -1);
+  rb_define_singleton_method(cVec2d.klass, "Zero", VALUEFUNC(_wrap_Vec2d_Zero), -1);
+  rb_define_method(cVec2d.klass, "[]", VALUEFUNC(_wrap_Vec2d___getitem__), -1);
+  rb_define_method(cVec2d.klass, "[]=", VALUEFUNC(_wrap_Vec2d___setitem__), -1);
+  cVec2d.mark = 0;
+  cVec2d.destroy = (void (*)(void *)) free_Vec2d;
+  cVec2d.trackObjects = 0;
+  
+  cVec3d.klass = rb_define_class_under(mSpringhead, "Vec3d", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Vec3d, (void *) &cVec3d);
+  rb_define_alloc_func(cVec3d.klass, _wrap_Vec3d_allocate);
+  rb_define_method(cVec3d.klass, "initialize", VALUEFUNC(_wrap_new_Vec3d), -1);
+  rb_define_method(cVec3d.klass, "x=", VALUEFUNC(_wrap_Vec3d_x_set), -1);
+  rb_define_method(cVec3d.klass, "x", VALUEFUNC(_wrap_Vec3d_x_get), -1);
+  rb_define_method(cVec3d.klass, "y=", VALUEFUNC(_wrap_Vec3d_y_set), -1);
+  rb_define_method(cVec3d.klass, "y", VALUEFUNC(_wrap_Vec3d_y_get), -1);
+  rb_define_method(cVec3d.klass, "z=", VALUEFUNC(_wrap_Vec3d_z_set), -1);
+  rb_define_method(cVec3d.klass, "z", VALUEFUNC(_wrap_Vec3d_z_get), -1);
+  rb_define_singleton_method(cVec3d.klass, "Zero", VALUEFUNC(_wrap_Vec3d_Zero), -1);
+  rb_define_method(cVec3d.klass, "dot", VALUEFUNC(_wrap_Vec3d_dot), -1);
+  cVec3d.mark = 0;
+  cVec3d.destroy = (void (*)(void *)) free_Vec3d;
+  cVec3d.trackObjects = 0;
+  
+  cVec4d.klass = rb_define_class_under(mSpringhead, "Vec4d", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Vec4d, (void *) &cVec4d);
+  rb_define_alloc_func(cVec4d.klass, _wrap_Vec4d_allocate);
+  rb_define_method(cVec4d.klass, "initialize", VALUEFUNC(_wrap_new_Vec4d), -1);
+  rb_define_method(cVec4d.klass, "x=", VALUEFUNC(_wrap_Vec4d_x_set), -1);
+  rb_define_method(cVec4d.klass, "x", VALUEFUNC(_wrap_Vec4d_x_get), -1);
+  rb_define_method(cVec4d.klass, "y=", VALUEFUNC(_wrap_Vec4d_y_set), -1);
+  rb_define_method(cVec4d.klass, "y", VALUEFUNC(_wrap_Vec4d_y_get), -1);
+  rb_define_method(cVec4d.klass, "z=", VALUEFUNC(_wrap_Vec4d_z_set), -1);
+  rb_define_method(cVec4d.klass, "z", VALUEFUNC(_wrap_Vec4d_z_get), -1);
+  rb_define_method(cVec4d.klass, "w=", VALUEFUNC(_wrap_Vec4d_w_set), -1);
+  rb_define_method(cVec4d.klass, "w", VALUEFUNC(_wrap_Vec4d_w_get), -1);
+  rb_define_singleton_method(cVec4d.klass, "Zero", VALUEFUNC(_wrap_Vec4d_Zero), -1);
+  rb_define_method(cVec4d.klass, "[]", VALUEFUNC(_wrap_Vec4d___getitem__), -1);
+  rb_define_method(cVec4d.klass, "[]=", VALUEFUNC(_wrap_Vec4d___setitem__), -1);
+  cVec4d.mark = 0;
+  cVec4d.destroy = (void (*)(void *)) free_Vec4d;
+  cVec4d.trackObjects = 0;
+  
+  cMatrix2d.klass = rb_define_class_under(mSpringhead, "Matrix2d", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Matrix2d, (void *) &cMatrix2d);
+  rb_define_alloc_func(cMatrix2d.klass, _wrap_Matrix2d_allocate);
+  rb_define_method(cMatrix2d.klass, "initialize", VALUEFUNC(_wrap_new_Matrix2d), -1);
+  rb_define_method(cMatrix2d.klass, "xx=", VALUEFUNC(_wrap_Matrix2d_xx_set), -1);
+  rb_define_method(cMatrix2d.klass, "xx", VALUEFUNC(_wrap_Matrix2d_xx_get), -1);
+  rb_define_method(cMatrix2d.klass, "xy=", VALUEFUNC(_wrap_Matrix2d_xy_set), -1);
+  rb_define_method(cMatrix2d.klass, "xy", VALUEFUNC(_wrap_Matrix2d_xy_get), -1);
+  rb_define_method(cMatrix2d.klass, "yx=", VALUEFUNC(_wrap_Matrix2d_yx_set), -1);
+  rb_define_method(cMatrix2d.klass, "yx", VALUEFUNC(_wrap_Matrix2d_yx_get), -1);
+  rb_define_method(cMatrix2d.klass, "yy=", VALUEFUNC(_wrap_Matrix2d_yy_set), -1);
+  rb_define_method(cMatrix2d.klass, "yy", VALUEFUNC(_wrap_Matrix2d_yy_get), -1);
+  rb_define_singleton_method(cMatrix2d.klass, "Zero", VALUEFUNC(_wrap_Matrix2d_Zero), -1);
+  rb_define_singleton_method(cMatrix2d.klass, "Unit", VALUEFUNC(_wrap_Matrix2d_Unit), -1);
+  rb_define_singleton_method(cMatrix2d.klass, "Diag", VALUEFUNC(_wrap_Matrix2d_Diag), -1);
+  rb_define_singleton_method(cMatrix2d.klass, "Rot", VALUEFUNC(_wrap_Matrix2d_Rot), -1);
+  rb_define_method(cMatrix2d.klass, "angle", VALUEFUNC(_wrap_Matrix2d_angle), -1);
+  rb_define_method(cMatrix2d.klass, "[]", VALUEFUNC(_wrap_Matrix2d___getitem__), -1);
+  rb_define_method(cMatrix2d.klass, "[]=", VALUEFUNC(_wrap_Matrix2d___setitem__), -1);
+  cMatrix2d.mark = 0;
+  cMatrix2d.destroy = (void (*)(void *)) free_Matrix2d;
+  cMatrix2d.trackObjects = 0;
+  
+  cMatrix3d.klass = rb_define_class_under(mSpringhead, "Matrix3d", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Matrix3d, (void *) &cMatrix3d);
+  rb_define_alloc_func(cMatrix3d.klass, _wrap_Matrix3d_allocate);
+  rb_define_method(cMatrix3d.klass, "initialize", VALUEFUNC(_wrap_new_Matrix3d), -1);
+  rb_define_method(cMatrix3d.klass, "xx=", VALUEFUNC(_wrap_Matrix3d_xx_set), -1);
+  rb_define_method(cMatrix3d.klass, "xx", VALUEFUNC(_wrap_Matrix3d_xx_get), -1);
+  rb_define_method(cMatrix3d.klass, "xy=", VALUEFUNC(_wrap_Matrix3d_xy_set), -1);
+  rb_define_method(cMatrix3d.klass, "xy", VALUEFUNC(_wrap_Matrix3d_xy_get), -1);
+  rb_define_method(cMatrix3d.klass, "xz=", VALUEFUNC(_wrap_Matrix3d_xz_set), -1);
+  rb_define_method(cMatrix3d.klass, "xz", VALUEFUNC(_wrap_Matrix3d_xz_get), -1);
+  rb_define_method(cMatrix3d.klass, "yx=", VALUEFUNC(_wrap_Matrix3d_yx_set), -1);
+  rb_define_method(cMatrix3d.klass, "yx", VALUEFUNC(_wrap_Matrix3d_yx_get), -1);
+  rb_define_method(cMatrix3d.klass, "yy=", VALUEFUNC(_wrap_Matrix3d_yy_set), -1);
+  rb_define_method(cMatrix3d.klass, "yy", VALUEFUNC(_wrap_Matrix3d_yy_get), -1);
+  rb_define_method(cMatrix3d.klass, "yz=", VALUEFUNC(_wrap_Matrix3d_yz_set), -1);
+  rb_define_method(cMatrix3d.klass, "yz", VALUEFUNC(_wrap_Matrix3d_yz_get), -1);
+  rb_define_method(cMatrix3d.klass, "zx=", VALUEFUNC(_wrap_Matrix3d_zx_set), -1);
+  rb_define_method(cMatrix3d.klass, "zx", VALUEFUNC(_wrap_Matrix3d_zx_get), -1);
+  rb_define_method(cMatrix3d.klass, "zy=", VALUEFUNC(_wrap_Matrix3d_zy_set), -1);
+  rb_define_method(cMatrix3d.klass, "zy", VALUEFUNC(_wrap_Matrix3d_zy_get), -1);
+  rb_define_method(cMatrix3d.klass, "zz=", VALUEFUNC(_wrap_Matrix3d_zz_set), -1);
+  rb_define_method(cMatrix3d.klass, "zz", VALUEFUNC(_wrap_Matrix3d_zz_get), -1);
+  rb_define_singleton_method(cMatrix3d.klass, "Zero", VALUEFUNC(_wrap_Matrix3d_Zero), -1);
+  rb_define_singleton_method(cMatrix3d.klass, "Unit", VALUEFUNC(_wrap_Matrix3d_Unit), -1);
+  rb_define_singleton_method(cMatrix3d.klass, "Diag", VALUEFUNC(_wrap_Matrix3d_Diag), -1);
+  rb_define_singleton_method(cMatrix3d.klass, "Rot", VALUEFUNC(_wrap_Matrix3d_Rot), -1);
+  rb_define_singleton_method(cMatrix3d.klass, "Cross", VALUEFUNC(_wrap_Matrix3d_Cross), -1);
+  rb_define_method(cMatrix3d.klass, "[]", VALUEFUNC(_wrap_Matrix3d___getitem__), -1);
+  rb_define_method(cMatrix3d.klass, "[]=", VALUEFUNC(_wrap_Matrix3d___setitem__), -1);
+  cMatrix3d.mark = 0;
+  cMatrix3d.destroy = (void (*)(void *)) free_Matrix3d;
+  cMatrix3d.trackObjects = 0;
+  rb_define_module_function(mSpringhead, "IsUnitary", VALUEFUNC(_wrap_IsUnitary), -1);
+  
+  cAffine2d.klass = rb_define_class_under(mSpringhead, "Affine2d", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Affine2d, (void *) &cAffine2d);
+  rb_define_alloc_func(cAffine2d.klass, _wrap_Affine2d_allocate);
+  rb_define_method(cAffine2d.klass, "initialize", VALUEFUNC(_wrap_new_Affine2d), -1);
+  rb_define_method(cAffine2d.klass, "xx=", VALUEFUNC(_wrap_Affine2d_xx_set), -1);
+  rb_define_method(cAffine2d.klass, "xx", VALUEFUNC(_wrap_Affine2d_xx_get), -1);
+  rb_define_method(cAffine2d.klass, "xy=", VALUEFUNC(_wrap_Affine2d_xy_set), -1);
+  rb_define_method(cAffine2d.klass, "xy", VALUEFUNC(_wrap_Affine2d_xy_get), -1);
+  rb_define_method(cAffine2d.klass, "xz=", VALUEFUNC(_wrap_Affine2d_xz_set), -1);
+  rb_define_method(cAffine2d.klass, "xz", VALUEFUNC(_wrap_Affine2d_xz_get), -1);
+  rb_define_method(cAffine2d.klass, "yx=", VALUEFUNC(_wrap_Affine2d_yx_set), -1);
+  rb_define_method(cAffine2d.klass, "yx", VALUEFUNC(_wrap_Affine2d_yx_get), -1);
+  rb_define_method(cAffine2d.klass, "yy=", VALUEFUNC(_wrap_Affine2d_yy_set), -1);
+  rb_define_method(cAffine2d.klass, "yy", VALUEFUNC(_wrap_Affine2d_yy_get), -1);
+  rb_define_method(cAffine2d.klass, "yz=", VALUEFUNC(_wrap_Affine2d_yz_set), -1);
+  rb_define_method(cAffine2d.klass, "yz", VALUEFUNC(_wrap_Affine2d_yz_get), -1);
+  rb_define_method(cAffine2d.klass, "px=", VALUEFUNC(_wrap_Affine2d_px_set), -1);
+  rb_define_method(cAffine2d.klass, "px", VALUEFUNC(_wrap_Affine2d_px_get), -1);
+  rb_define_method(cAffine2d.klass, "py=", VALUEFUNC(_wrap_Affine2d_py_set), -1);
+  rb_define_method(cAffine2d.klass, "py", VALUEFUNC(_wrap_Affine2d_py_get), -1);
+  rb_define_method(cAffine2d.klass, "pz=", VALUEFUNC(_wrap_Affine2d_pz_set), -1);
+  rb_define_method(cAffine2d.klass, "pz", VALUEFUNC(_wrap_Affine2d_pz_get), -1);
+  rb_define_singleton_method(cAffine2d.klass, "Unit", VALUEFUNC(_wrap_Affine2d_Unit), -1);
+  rb_define_singleton_method(cAffine2d.klass, "Trn", VALUEFUNC(_wrap_Affine2d_Trn), -1);
+  rb_define_singleton_method(cAffine2d.klass, "Rot", VALUEFUNC(_wrap_Affine2d_Rot), -1);
+  rb_define_singleton_method(cAffine2d.klass, "Scale", VALUEFUNC(_wrap_Affine2d_Scale), -1);
+  cAffine2d.mark = 0;
+  cAffine2d.destroy = (void (*)(void *)) free_Affine2d;
+  cAffine2d.trackObjects = 0;
+  
+  cAffined.klass = rb_define_class_under(mSpringhead, "Affined", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Affined, (void *) &cAffined);
+  rb_define_alloc_func(cAffined.klass, _wrap_Affined_allocate);
+  rb_define_method(cAffined.klass, "initialize", VALUEFUNC(_wrap_new_Affined), -1);
+  rb_define_method(cAffined.klass, "xx=", VALUEFUNC(_wrap_Affined_xx_set), -1);
+  rb_define_method(cAffined.klass, "xx", VALUEFUNC(_wrap_Affined_xx_get), -1);
+  rb_define_method(cAffined.klass, "xy=", VALUEFUNC(_wrap_Affined_xy_set), -1);
+  rb_define_method(cAffined.klass, "xy", VALUEFUNC(_wrap_Affined_xy_get), -1);
+  rb_define_method(cAffined.klass, "xz=", VALUEFUNC(_wrap_Affined_xz_set), -1);
+  rb_define_method(cAffined.klass, "xz", VALUEFUNC(_wrap_Affined_xz_get), -1);
+  rb_define_method(cAffined.klass, "xw=", VALUEFUNC(_wrap_Affined_xw_set), -1);
+  rb_define_method(cAffined.klass, "xw", VALUEFUNC(_wrap_Affined_xw_get), -1);
+  rb_define_method(cAffined.klass, "yx=", VALUEFUNC(_wrap_Affined_yx_set), -1);
+  rb_define_method(cAffined.klass, "yx", VALUEFUNC(_wrap_Affined_yx_get), -1);
+  rb_define_method(cAffined.klass, "yy=", VALUEFUNC(_wrap_Affined_yy_set), -1);
+  rb_define_method(cAffined.klass, "yy", VALUEFUNC(_wrap_Affined_yy_get), -1);
+  rb_define_method(cAffined.klass, "yz=", VALUEFUNC(_wrap_Affined_yz_set), -1);
+  rb_define_method(cAffined.klass, "yz", VALUEFUNC(_wrap_Affined_yz_get), -1);
+  rb_define_method(cAffined.klass, "yw=", VALUEFUNC(_wrap_Affined_yw_set), -1);
+  rb_define_method(cAffined.klass, "yw", VALUEFUNC(_wrap_Affined_yw_get), -1);
+  rb_define_method(cAffined.klass, "zx=", VALUEFUNC(_wrap_Affined_zx_set), -1);
+  rb_define_method(cAffined.klass, "zx", VALUEFUNC(_wrap_Affined_zx_get), -1);
+  rb_define_method(cAffined.klass, "zy=", VALUEFUNC(_wrap_Affined_zy_set), -1);
+  rb_define_method(cAffined.klass, "zy", VALUEFUNC(_wrap_Affined_zy_get), -1);
+  rb_define_method(cAffined.klass, "zz=", VALUEFUNC(_wrap_Affined_zz_set), -1);
+  rb_define_method(cAffined.klass, "zz", VALUEFUNC(_wrap_Affined_zz_get), -1);
+  rb_define_method(cAffined.klass, "zw=", VALUEFUNC(_wrap_Affined_zw_set), -1);
+  rb_define_method(cAffined.klass, "zw", VALUEFUNC(_wrap_Affined_zw_get), -1);
+  rb_define_method(cAffined.klass, "px=", VALUEFUNC(_wrap_Affined_px_set), -1);
+  rb_define_method(cAffined.klass, "px", VALUEFUNC(_wrap_Affined_px_get), -1);
+  rb_define_method(cAffined.klass, "py=", VALUEFUNC(_wrap_Affined_py_set), -1);
+  rb_define_method(cAffined.klass, "py", VALUEFUNC(_wrap_Affined_py_get), -1);
+  rb_define_method(cAffined.klass, "pz=", VALUEFUNC(_wrap_Affined_pz_set), -1);
+  rb_define_method(cAffined.klass, "pz", VALUEFUNC(_wrap_Affined_pz_get), -1);
+  rb_define_method(cAffined.klass, "pw=", VALUEFUNC(_wrap_Affined_pw_set), -1);
+  rb_define_method(cAffined.klass, "pw", VALUEFUNC(_wrap_Affined_pw_get), -1);
+  rb_define_singleton_method(cAffined.klass, "Unit", VALUEFUNC(_wrap_Affined_Unit), -1);
+  rb_define_singleton_method(cAffined.klass, "Trn", VALUEFUNC(_wrap_Affined_Trn), -1);
+  rb_define_singleton_method(cAffined.klass, "Rot", VALUEFUNC(_wrap_Affined_Rot), -1);
+  rb_define_singleton_method(cAffined.klass, "Scale", VALUEFUNC(_wrap_Affined_Scale), -1);
+  rb_define_singleton_method(cAffined.klass, "ProjectionGL", VALUEFUNC(_wrap_Affined_ProjectionGL), -1);
+  rb_define_singleton_method(cAffined.klass, "ProjectionD3D", VALUEFUNC(_wrap_Affined_ProjectionD3D), -1);
+  rb_define_method(cAffined.klass, "LookAt", VALUEFUNC(_wrap_Affined_LookAt), -1);
+  rb_define_method(cAffined.klass, "LookAtGL", VALUEFUNC(_wrap_Affined_LookAtGL), -1);
+  cAffined.mark = 0;
+  cAffined.destroy = (void (*)(void *)) free_Affined;
+  cAffined.trackObjects = 0;
+  
   cObjectIf.klass = rb_define_class_under(mSpringhead, "ObjectIf", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectIf, (void *) &cObjectIf);
   rb_undef_alloc_func(cObjectIf.klass);
@@ -25011,6 +31648,17 @@ SWIGEXPORT void Init_Springhead(void) {
   cObjectIfs.mark = 0;
   cObjectIfs.destroy = (void (*)(void *)) free_Spr_ObjectIfs;
   cObjectIfs.trackObjects = 0;
+  
+  cObjectIfRefs.klass = rb_define_class_under(mSpringhead, "ObjectIfRefs", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__ObjectIfRefs, (void *) &cObjectIfRefs);
+  rb_define_alloc_func(cObjectIfRefs.klass, _wrap_ObjectIfRefs_allocate);
+  rb_define_method(cObjectIfRefs.klass, "initialize", VALUEFUNC(_wrap_new_ObjectIfRefs), -1);
+  rb_define_method(cObjectIfRefs.klass, "Push", VALUEFUNC(_wrap_ObjectIfRefs_Push), -1);
+  rb_define_method(cObjectIfRefs.klass, "Pop", VALUEFUNC(_wrap_ObjectIfRefs_Pop), -1);
+  rb_define_method(cObjectIfRefs.klass, "Top", VALUEFUNC(_wrap_ObjectIfRefs_Top), -1);
+  cObjectIfRefs.mark = 0;
+  cObjectIfRefs.destroy = (void (*)(void *)) free_Spr_ObjectIfRefs;
+  cObjectIfRefs.trackObjects = 0;
   
   cNamedObjectIf.klass = rb_define_class_under(mSpringhead, "NamedObjectIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__NamedObjectIf, (void *) &cNamedObjectIf);
@@ -25211,13 +31859,12 @@ SWIGEXPORT void Init_Springhead(void) {
   cCDBoxIf.destroy = (void (*)(void *)) free_Spr_CDBoxIf;
   cCDBoxIf.trackObjects = 0;
   
-  cFISdkIf.klass = rb_define_class_under(mSpringhead, "FISdkIf", ((swig_class *) SWIGTYPE_p_Spr__ObjectIf->clientdata)->klass);
+  cFISdkIf.klass = rb_define_class_under(mSpringhead, "FISdkIf", ((swig_class *) SWIGTYPE_p_Spr__SdkIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FISdkIf, (void *) &cFISdkIf);
   rb_undef_alloc_func(cFISdkIf.klass);
   rb_define_singleton_method(cFISdkIf.klass, "Cast", VALUEFUNC(_wrap_FISdkIf_Cast), -1);
   rb_define_method(cFISdkIf.klass, "CreateFileX", VALUEFUNC(_wrap_FISdkIf_CreateFileX), -1);
   rb_define_method(cFISdkIf.klass, "CreateFileCOLLADA", VALUEFUNC(_wrap_FISdkIf_CreateFileCOLLADA), -1);
-  rb_define_method(cFISdkIf.klass, "Clear", VALUEFUNC(_wrap_FISdkIf_Clear), -1);
   rb_define_singleton_method(cFISdkIf.klass, "CreateSdk", VALUEFUNC(_wrap_FISdkIf_CreateSdk), -1);
   cFISdkIf.mark = 0;
   cFISdkIf.destroy = (void (*)(void *)) free_Spr_FISdkIf;
@@ -25254,6 +31901,21 @@ SWIGEXPORT void Init_Springhead(void) {
   cFIFileCOLLADAIf.destroy = (void (*)(void *)) free_Spr_FIFileCOLLADAIf;
   cFIFileCOLLADAIf.trackObjects = 0;
   
+  cGRVisualDesc.klass = rb_define_class_under(mSpringhead, "GRVisualDesc", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__GRVisualDesc, (void *) &cGRVisualDesc);
+  rb_define_alloc_func(cGRVisualDesc.klass, _wrap_GRVisualDesc_allocate);
+  rb_define_method(cGRVisualDesc.klass, "initialize", VALUEFUNC(_wrap_new_GRVisualDesc), -1);
+  rb_define_const(cGRVisualDesc.klass, "FRAME", SWIG_From_int(static_cast< int >(Spr::GRVisualDesc::FRAME)));
+  rb_define_const(cGRVisualDesc.klass, "MESH", SWIG_From_int(static_cast< int >(Spr::GRVisualDesc::MESH)));
+  rb_define_const(cGRVisualDesc.klass, "MATERIAL", SWIG_From_int(static_cast< int >(Spr::GRVisualDesc::MATERIAL)));
+  rb_define_const(cGRVisualDesc.klass, "CAMERA", SWIG_From_int(static_cast< int >(Spr::GRVisualDesc::CAMERA)));
+  rb_define_const(cGRVisualDesc.klass, "LIGHT", SWIG_From_int(static_cast< int >(Spr::GRVisualDesc::LIGHT)));
+  rb_define_method(cGRVisualDesc.klass, "type=", VALUEFUNC(_wrap_GRVisualDesc_type_set), -1);
+  rb_define_method(cGRVisualDesc.klass, "type", VALUEFUNC(_wrap_GRVisualDesc_type_get), -1);
+  cGRVisualDesc.mark = 0;
+  cGRVisualDesc.destroy = (void (*)(void *)) free_Spr_GRVisualDesc;
+  cGRVisualDesc.trackObjects = 0;
+  
   cGRVisualIf.klass = rb_define_class_under(mSpringhead, "GRVisualIf", ((swig_class *) SWIGTYPE_p_Spr__NamedObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRVisualIf, (void *) &cGRVisualIf);
   rb_undef_alloc_func(cGRVisualIf.klass);
@@ -25274,7 +31936,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRFrameTransformMatrix.destroy = (void (*)(void *)) free_Spr_GRFrameTransformMatrix;
   cGRFrameTransformMatrix.trackObjects = 0;
   
-  cGRFrameDesc.klass = rb_define_class_under(mSpringhead, "GRFrameDesc", rb_cObject);
+  cGRFrameDesc.klass = rb_define_class_under(mSpringhead, "GRFrameDesc", ((swig_class *) SWIGTYPE_p_Spr__GRVisualDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRFrameDesc, (void *) &cGRFrameDesc);
   rb_define_alloc_func(cGRFrameDesc.klass, _wrap_GRFrameDesc_allocate);
   rb_define_method(cGRFrameDesc.klass, "initialize", VALUEFUNC(_wrap_new_GRFrameDesc), -1);
@@ -25322,7 +31984,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRFont.destroy = (void (*)(void *)) free_Spr_GRFont;
   cGRFont.trackObjects = 0;
   
-  cGRLightDesc.klass = rb_define_class_under(mSpringhead, "GRLightDesc", rb_cObject);
+  cGRLightDesc.klass = rb_define_class_under(mSpringhead, "GRLightDesc", ((swig_class *) SWIGTYPE_p_Spr__GRVisualDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRLightDesc, (void *) &cGRLightDesc);
   rb_define_alloc_func(cGRLightDesc.klass, _wrap_GRLightDesc_allocate);
   rb_define_method(cGRLightDesc.klass, "initialize", VALUEFUNC(_wrap_new_GRLightDesc), -1);
@@ -25362,7 +32024,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRLightIf.destroy = (void (*)(void *)) free_Spr_GRLightIf;
   cGRLightIf.trackObjects = 0;
   
-  cGRMaterialDesc.klass = rb_define_class_under(mSpringhead, "GRMaterialDesc", rb_cObject);
+  cGRMaterialDesc.klass = rb_define_class_under(mSpringhead, "GRMaterialDesc", ((swig_class *) SWIGTYPE_p_Spr__GRVisualDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRMaterialDesc, (void *) &cGRMaterialDesc);
   rb_define_alloc_func(cGRMaterialDesc.klass, _wrap_GRMaterialDesc_allocate);
   rb_define_method(cGRMaterialDesc.klass, "initialize", VALUEFUNC(_wrap_new_GRMaterialDesc), -1);
@@ -25392,7 +32054,7 @@ SWIGEXPORT void Init_Springhead(void) {
   cGRMaterialIf.destroy = (void (*)(void *)) free_Spr_GRMaterialIf;
   cGRMaterialIf.trackObjects = 0;
   
-  cGRCameraDesc.klass = rb_define_class_under(mSpringhead, "GRCameraDesc", rb_cObject);
+  cGRCameraDesc.klass = rb_define_class_under(mSpringhead, "GRCameraDesc", ((swig_class *) SWIGTYPE_p_Spr__GRVisualDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRCameraDesc, (void *) &cGRCameraDesc);
   rb_define_alloc_func(cGRCameraDesc.klass, _wrap_GRCameraDesc_allocate);
   rb_define_method(cGRCameraDesc.klass, "initialize", VALUEFUNC(_wrap_new_GRCameraDesc), -1);
@@ -25596,17 +32258,17 @@ SWIGEXPORT void Init_Springhead(void) {
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRSceneIf, (void *) &cGRSceneIf);
   rb_undef_alloc_func(cGRSceneIf.klass);
   rb_define_singleton_method(cGRSceneIf.klass, "Cast", VALUEFUNC(_wrap_GRSceneIf_Cast), -1);
-  rb_define_method(cGRSceneIf.klass, "CreateFrame", VALUEFUNC(_wrap_GRSceneIf_CreateFrame), -1);
   rb_define_method(cGRSceneIf.klass, "Render", VALUEFUNC(_wrap_GRSceneIf_Render), -1);
   rb_define_method(cGRSceneIf.klass, "GetWorld", VALUEFUNC(_wrap_GRSceneIf_GetWorld), -1);
   rb_define_method(cGRSceneIf.klass, "GetCamera", VALUEFUNC(_wrap_GRSceneIf_GetCamera), -1);
   rb_define_method(cGRSceneIf.klass, "SetCamera", VALUEFUNC(_wrap_GRSceneIf_SetCamera), -1);
+  rb_define_method(cGRSceneIf.klass, "CreateVisual", VALUEFUNC(_wrap_GRSceneIf_CreateVisual), -1);
   rb_define_method(cGRSceneIf.klass, "GetSdk", VALUEFUNC(_wrap_GRSceneIf_GetSdk), -1);
   cGRSceneIf.mark = 0;
   cGRSceneIf.destroy = (void (*)(void *)) free_Spr_GRSceneIf;
   cGRSceneIf.trackObjects = 0;
   
-  cGRMeshDesc.klass = rb_define_class_under(mSpringhead, "GRMeshDesc", rb_cObject);
+  cGRMeshDesc.klass = rb_define_class_under(mSpringhead, "GRMeshDesc", ((swig_class *) SWIGTYPE_p_Spr__GRVisualDesc->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__GRMeshDesc, (void *) &cGRMeshDesc);
   rb_define_alloc_func(cGRMeshDesc.klass, _wrap_GRMeshDesc_allocate);
   rb_define_method(cGRMeshDesc.klass, "initialize", VALUEFUNC(_wrap_new_GRMeshDesc), -1);
@@ -25745,7 +32407,6 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_undef_alloc_func(cPHSceneIf.klass);
   rb_define_singleton_method(cPHSceneIf.klass, "Cast", VALUEFUNC(_wrap_PHSceneIf_Cast), -1);
   rb_define_method(cPHSceneIf.klass, "GetSdk", VALUEFUNC(_wrap_PHSceneIf_GetSdk), -1);
-  rb_define_method(cPHSceneIf.klass, "CreateShape", VALUEFUNC(_wrap_PHSceneIf_CreateShape), -1);
   rb_define_method(cPHSceneIf.klass, "CreateSolid", VALUEFUNC(_wrap_PHSceneIf_CreateSolid), -1);
   rb_define_method(cPHSceneIf.klass, "NSolids", VALUEFUNC(_wrap_PHSceneIf_NSolids), -1);
   rb_define_method(cPHSceneIf.klass, "GetSolids", VALUEFUNC(_wrap_PHSceneIf_GetSolids), -1);
@@ -25753,6 +32414,8 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cPHSceneIf.klass, "GetNumIteration", VALUEFUNC(_wrap_PHSceneIf_GetNumIteration), -1);
   rb_define_method(cPHSceneIf.klass, "SetNumIteration", VALUEFUNC(_wrap_PHSceneIf_SetNumIteration), -1);
   rb_define_method(cPHSceneIf.klass, "CreateJoint", VALUEFUNC(_wrap_PHSceneIf_CreateJoint), -1);
+  rb_define_method(cPHSceneIf.klass, "NJoints", VALUEFUNC(_wrap_PHSceneIf_NJoints), -1);
+  rb_define_method(cPHSceneIf.klass, "GetJoints", VALUEFUNC(_wrap_PHSceneIf_GetJoints), -1);
   rb_define_method(cPHSceneIf.klass, "CreateRootNode", VALUEFUNC(_wrap_PHSceneIf_CreateRootNode), -1);
   rb_define_method(cPHSceneIf.klass, "CreateTreeNode", VALUEFUNC(_wrap_PHSceneIf_CreateTreeNode), -1);
   rb_define_method(cPHSceneIf.klass, "CreateGear", VALUEFUNC(_wrap_PHSceneIf_CreateGear), -1);
@@ -26162,7 +32825,9 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_undef_alloc_func(cFWObjectIf.klass);
   rb_define_singleton_method(cFWObjectIf.klass, "Cast", VALUEFUNC(_wrap_FWObjectIf_Cast), -1);
   rb_define_method(cFWObjectIf.klass, "GetPHSolid", VALUEFUNC(_wrap_FWObjectIf_GetPHSolid), -1);
+  rb_define_method(cFWObjectIf.klass, "SetPHSolid", VALUEFUNC(_wrap_FWObjectIf_SetPHSolid), -1);
   rb_define_method(cFWObjectIf.klass, "GetGRFrame", VALUEFUNC(_wrap_FWObjectIf_GetGRFrame), -1);
+  rb_define_method(cFWObjectIf.klass, "SetGRFrame", VALUEFUNC(_wrap_FWObjectIf_SetGRFrame), -1);
   cFWObjectIf.mark = 0;
   cFWObjectIf.destroy = (void (*)(void *)) free_Spr_FWObjectIf;
   cFWObjectIf.trackObjects = 0;
@@ -26183,6 +32848,7 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cFWSceneIf.klass, "SetPHScene", VALUEFUNC(_wrap_FWSceneIf_SetPHScene), -1);
   rb_define_method(cFWSceneIf.klass, "GetGRScene", VALUEFUNC(_wrap_FWSceneIf_GetGRScene), -1);
   rb_define_method(cFWSceneIf.klass, "SetGRScene", VALUEFUNC(_wrap_FWSceneIf_SetGRScene), -1);
+  rb_define_method(cFWSceneIf.klass, "CreateObject", VALUEFUNC(_wrap_FWSceneIf_CreateObject), -1);
   rb_define_method(cFWSceneIf.klass, "Sync", VALUEFUNC(_wrap_FWSceneIf_Sync), -1);
   rb_define_method(cFWSceneIf.klass, "Step", VALUEFUNC(_wrap_FWSceneIf_Step), -1);
   rb_define_method(cFWSceneIf.klass, "Draw", VALUEFUNC(_wrap_FWSceneIf_Draw), -1);
@@ -26204,14 +32870,25 @@ SWIGEXPORT void Init_Springhead(void) {
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWSdkIf, (void *) &cFWSdkIf);
   rb_undef_alloc_func(cFWSdkIf.klass);
   rb_define_singleton_method(cFWSdkIf.klass, "Cast", VALUEFUNC(_wrap_FWSdkIf_Cast), -1);
+  rb_define_singleton_method(cFWSdkIf.klass, "CreateSdk", VALUEFUNC(_wrap_FWSdkIf_CreateSdk), -1);
   rb_define_method(cFWSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_FWSdkIf_CreateScene), -1);
+  rb_define_method(cFWSdkIf.klass, "LoadScene", VALUEFUNC(_wrap_FWSdkIf_LoadScene), -1);
   rb_define_method(cFWSdkIf.klass, "NScene", VALUEFUNC(_wrap_FWSdkIf_NScene), -1);
+  rb_define_method(cFWSdkIf.klass, "SwitchScene", VALUEFUNC(_wrap_FWSdkIf_SwitchScene), -1);
   rb_define_method(cFWSdkIf.klass, "GetScene", VALUEFUNC(_wrap_FWSdkIf_GetScene), -1);
   rb_define_method(cFWSdkIf.klass, "GetPHSdk", VALUEFUNC(_wrap_FWSdkIf_GetPHSdk), -1);
   rb_define_method(cFWSdkIf.klass, "GetGRSdk", VALUEFUNC(_wrap_FWSdkIf_GetGRSdk), -1);
   rb_define_method(cFWSdkIf.klass, "GetFISdk", VALUEFUNC(_wrap_FWSdkIf_GetFISdk), -1);
+  rb_define_method(cFWSdkIf.klass, "GetRender", VALUEFUNC(_wrap_FWSdkIf_GetRender), -1);
+  rb_define_method(cFWSdkIf.klass, "SetRender", VALUEFUNC(_wrap_FWSdkIf_SetRender), -1);
+  rb_define_method(cFWSdkIf.klass, "GetDevice", VALUEFUNC(_wrap_FWSdkIf_GetDevice), -1);
+  rb_define_method(cFWSdkIf.klass, "SetDevice", VALUEFUNC(_wrap_FWSdkIf_SetDevice), -1);
+  rb_define_method(cFWSdkIf.klass, "GetDebugMode", VALUEFUNC(_wrap_FWSdkIf_GetDebugMode), -1);
+  rb_define_method(cFWSdkIf.klass, "SetDebugMode", VALUEFUNC(_wrap_FWSdkIf_SetDebugMode), -1);
+  rb_define_method(cFWSdkIf.klass, "Step", VALUEFUNC(_wrap_FWSdkIf_Step), -1);
+  rb_define_method(cFWSdkIf.klass, "Draw", VALUEFUNC(_wrap_FWSdkIf_Draw), -1);
+  rb_define_method(cFWSdkIf.klass, "Reshape", VALUEFUNC(_wrap_FWSdkIf_Reshape), -1);
   rb_define_singleton_method(cFWSdkIf.klass, "RegisterSdk", VALUEFUNC(_wrap_FWSdkIf_RegisterSdk), -1);
-  rb_define_singleton_method(cFWSdkIf.klass, "CreateSdk", VALUEFUNC(_wrap_FWSdkIf_CreateSdk), -1);
   cFWSdkIf.mark = 0;
   cFWSdkIf.destroy = (void (*)(void *)) free_Spr_FWSdkIf;
   cFWSdkIf.trackObjects = 0;
@@ -26237,24 +32914,15 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cFWApp.klass, "initialize", VALUEFUNC(_wrap_new_FWApp), -1);
   rb_define_method(cFWApp.klass, "vfBridge=", VALUEFUNC(_wrap_FWApp_vfBridge_set), -1);
   rb_define_method(cFWApp.klass, "vfBridge", VALUEFUNC(_wrap_FWApp_vfBridge_get), -1);
-  rb_define_const(cFWApp.klass, "DM_NONE", SWIG_From_int(static_cast< int >(Spr::FWApp::DM_NONE)));
-  rb_define_const(cFWApp.klass, "DM_DEBUG", SWIG_From_int(static_cast< int >(Spr::FWApp::DM_DEBUG)));
-  rb_define_method(cFWApp.klass, "debugMode=", VALUEFUNC(_wrap_FWApp_debugMode_set), -1);
-  rb_define_method(cFWApp.klass, "debugMode", VALUEFUNC(_wrap_FWApp_debugMode_get), -1);
-  rb_define_method(cFWApp.klass, "GetRender", VALUEFUNC(_wrap_FWApp_GetRender), -1);
-  rb_define_method(cFWApp.klass, "GetScene", VALUEFUNC(_wrap_FWApp_GetScene), -1);
+  rb_define_method(cFWApp.klass, "GetSdk", VALUEFUNC(_wrap_FWApp_GetSdk), -1);
   rb_define_method(cFWApp.klass, "Init", VALUEFUNC(_wrap_FWApp_Init), -1);
   rb_define_method(cFWApp.klass, "ProcessArguments", VALUEFUNC(_wrap_FWApp_ProcessArguments), -1);
-  rb_define_method(cFWApp.klass, "LoadScene", VALUEFUNC(_wrap_FWApp_LoadScene), -1);
+  rb_define_method(cFWApp.klass, "Step", VALUEFUNC(_wrap_FWApp_Step), -1);
   rb_define_method(cFWApp.klass, "Display", VALUEFUNC(_wrap_FWApp_Display), -1);
   rb_define_method(cFWApp.klass, "Reshape", VALUEFUNC(_wrap_FWApp_Reshape), -1);
   rb_define_method(cFWApp.klass, "Keyboard", VALUEFUNC(_wrap_FWApp_Keyboard), -1);
   rb_define_method(cFWApp.klass, "MouseButton", VALUEFUNC(_wrap_FWApp_MouseButton), -1);
   rb_define_method(cFWApp.klass, "MouseMove", VALUEFUNC(_wrap_FWApp_MouseMove), -1);
-  rb_define_method(cFWApp.klass, "Step", VALUEFUNC(_wrap_FWApp_Step), -1);
-  rb_define_method(cFWApp.klass, "GetDebugMode", VALUEFUNC(_wrap_FWApp_GetDebugMode), -1);
-  rb_define_method(cFWApp.klass, "SetDebugMode", VALUEFUNC(_wrap_FWApp_SetDebugMode), -1);
-  rb_define_method(cFWApp.klass, "GetFWScene", VALUEFUNC(_wrap_FWApp_GetFWScene), -1);
   rb_define_method(cFWApp.klass, "Link", VALUEFUNC(_wrap_FWApp_Link), -1);
   cFWApp.mark = 0;
   cFWApp.destroy = (void (*)(void *)) free_Spr_FWApp;
@@ -26291,11 +32959,10 @@ SWIGEXPORT void Init_Springhead(void) {
   SWIG_TypeClientData(SWIGTYPE_p_Spr__FWAppGLUT, (void *) &cFWAppGLUT);
   rb_define_alloc_func(cFWAppGLUT.klass, _wrap_FWAppGLUT_allocate);
   rb_define_method(cFWAppGLUT.klass, "initialize", VALUEFUNC(_wrap_new_FWAppGLUT), -1);
-  rb_define_method(cFWAppGLUT.klass, "Start", VALUEFUNC(_wrap_FWAppGLUT_Start), -1);
-  rb_define_method(cFWAppGLUT.klass, "OnTimer", VALUEFUNC(_wrap_FWAppGLUT_OnTimer), -1);
   rb_define_method(cFWAppGLUT.klass, "Init", VALUEFUNC(_wrap_FWAppGLUT_Init), -1);
   rb_define_method(cFWAppGLUT.klass, "Display", VALUEFUNC(_wrap_FWAppGLUT_Display), -1);
   rb_define_method(cFWAppGLUT.klass, "CreateWindow", VALUEFUNC(_wrap_FWAppGLUT_CreateWindow), -1);
+  rb_define_method(cFWAppGLUT.klass, "Start", VALUEFUNC(_wrap_FWAppGLUT_Start), -1);
   cFWAppGLUT.mark = 0;
   cFWAppGLUT.destroy = (void (*)(void *)) free_Spr_FWAppGLUT;
   cFWAppGLUT.trackObjects = 0;

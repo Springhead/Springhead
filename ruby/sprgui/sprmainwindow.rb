@@ -2,7 +2,7 @@ require 'rubygems'
 require 'fox16'
 require 'fox16/responder'
 require 'fox16/undolist'
-require 'sprscenetree'
+require 'sprsceneview'
 require 'sprpropertymanager'
 #require 'sprcameraview'
 
@@ -153,17 +153,14 @@ class SprMainWindow < FXMainWindow
 		FXButton.new(toolbar, "Undo\tUndo\tUndo last change.", @undoicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 		FXButton.new(toolbar, "Redo\tRedo\tRedo last undo.", @redoicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 
-		FXButton.new(toolbar, "Help\tHelp on editor\tDisplay help information.", @helpicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_RIGHT))
+		FXButton.new(toolbar, "Help\tHelp on editor\tDisplay help information.", @helpicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_RIGHT))		
 
     	# Time control tool bar
     	dragshell3 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
     	toolbar = FXToolBar.new(self, dragshell3, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
     	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
-		FXButton.new(toolbar, "Start\tStart\tStart simulation.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
-		FXButton.new(toolbar, "Stop\tStop\tStop simulation.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
-		FXButton.new(toolbar, "Forward\tForward\tStep forward.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimForward))
-		FXButton.new(toolbar, "Backward\tBackward\tStep backward.", nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
-		
+		FXButton.new(toolbar, "Object\tObject\tCreate object.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
+		FXButton.new(toolbar, "Joint\tJoint\tCreate joint.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
 
     	# Status bar
     	statusbar = FXStatusBar.new(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
@@ -182,16 +179,16 @@ class SprMainWindow < FXMainWindow
   
 		# シーングラフツリー
     	treeframe = FXHorizontalFrame.new(@vsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
-	    $scenetree = SprSceneTree.new(treeframe)
+	    $sceneview = SprSceneView.new(treeframe)
 
 		# プロパティ
 		propertyframe = FXHorizontalFrame.new(@vsplitter)
 	    $propertymanager = SprPropertyManager.new(propertyframe)
 
 	    # ディスプレイ
-    	cameraframe = FXHorizontalFrame.new(@hsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
+    	displayframe = FXVerticalFrame.new(@hsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
 	    @glvisual = FXGLVisual.new(getApp(), VISUAL_DOUBLEBUFFER)
-	    @glcanvas = FXGLCanvas.new(cameraframe, @glvisual, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT)
+	    @glcanvas = FXGLCanvas.new(displayframe, @glvisual, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT)
 	    @glcanvas.connect(SEL_PAINT){drawScene}
 	    @glcanvas.connect(SEL_CONFIGURE) {
 	    	if @glcanvas.makeCurrent
@@ -199,19 +196,26 @@ class SprMainWindow < FXMainWindow
 	        	@glcanvas.makeNonCurrent
 	      	end
 	    }
+
+    	# Time control tool bar
+    	dragshell3 = FXToolBarShell.new(displayframe, FRAME_RAISED|FRAME_THICK)
+    	toolbar = FXToolBar.new(displayframe, dragshell3, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
+    	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
+		FXButton.new(toolbar, "Start\tStart\tStart simulation.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
+		FXButton.new(toolbar, "Stop\tStop\tStop simulation.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
+		FXButton.new(toolbar, "Forward\tForward\tStep forward.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimForward))
+		FXButton.new(toolbar, "Backward\tBackward\tStep backward.", nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
     
     	# Add some alternative accelerators
     	if getAccelTable()
     	  	getAccelTable().addAccel(MKUINT(KEY_Z, CONTROLMASK|SHIFTMASK), @undolist, MKUINT(FXUndoList::ID_REDO, SEL_COMMAND))
     	end
-  
-    	# Initialize file name
-    	@filename = "untitled"
-    	@filetime = nil
-    	@filenameset = false
-  
+    
     	# Initialize other stuff
     	@undolist.mark
+
+    	# Initialize file name
+    	newFile()
 	end
 
 	# draw scene
@@ -230,6 +234,33 @@ class SprMainWindow < FXMainWindow
     
     	# Make context non-current
     	@glcanvas.makeNonCurrent
+	end
+
+	# New file
+	def newFile()
+
+		# デフォルトシーンの構築
+		$sprapp.GetSdk().Clear()
+		scene = $sprapp.GetSdk().CreateScene(PHSceneDesc.new, GRSceneDesc.new)
+		phsdk = $sprapp.GetSdk().GetPHSdk()
+		phscene = scene.GetPHScene()
+		floor = phscene.CreateSolid(PHSolidDesc.new)
+		floor.SetDynamical(false)
+		boxdesc = CDBoxDesc.new
+		boxdesc.boxsize = [0.1, 0.1, 0.1]
+		floor.AddShape(phsdk.CreateShape(boxdesc))
+		floor.SetName('floor')
+		$sprapp.GetSdk().SetDebugMode(true)
+
+		$sceneview.addTab(scene)
+		$propertymanager.update(nil)
+
+    	@filename = "untitled"
+    	@filetime = nil
+    	@filenameset = false
+    	@undolist.clear
+    	@undolist.mark
+
 	end
 
   	# Load file
@@ -251,7 +282,8 @@ class SprMainWindow < FXMainWindow
     	@undolist.clear
     	@undolist.mark
 
-		$scenetree.update
+		$sceneview.update
+		$propertymanager.update(nil)
   	end
 
 	# Insert file
@@ -331,16 +363,7 @@ class SprMainWindow < FXMainWindow
   	def onCmdNew(sender, sel, ptr)
     	return 1 if !saveChanges()
 
-		$sprapp.Clear()
-
-    	@filename = "untitled"
-    	@filetime = nil
-    	@filenameset = false
-    	@editor.text = nil
-    	@editor.modified = false
-    	@editor.editable = true
-    	@undolist.clear
-    	@undolist.mark
+		newFile()
     	return 1
   	end
 
@@ -552,7 +575,7 @@ class SprMainWindow < FXMainWindow
     	readRegistry
     	super
 		# 左ペインの幅
-		@hsplitter.setSplit(0, $scenetree.font.getTextWidth('MMMMMMMMMMMMMMMM'))
+		@hsplitter.setSplit(0, 200) #$sceneview.font.getTextWidth('MMMMMMMMMMMMMMMM'))
 		# 左ペインの上下分割比
 		@vsplitter.setSplit(0, @vsplitter.getHeight() * 0.7);
 
