@@ -1,19 +1,5 @@
 // typemaps
 
-// $(RUBY_INCLUDE)/win32/win32.h, windows.hのマクロ定義との衝突回避
-%{
-#undef write			// std
-#undef read				// std
-#undef CreateWindow		// FWAppGLUT
-%}
-
-// 型キャストのWarningを無効化
-%{
-#ifdef _MSC_VER
-# pragma warning(disable: 4311 4312)
-#endif	
-%}
-
 // スカラー変数のポインタあるいは参照
 %define OUTPUT_SCALER_TYPEMAP(type)
 %typemap(in, numinputs=0) type*($*1_ltype temp), type&($*1_ltype temp) "$1 = &temp;";
@@ -24,7 +10,6 @@
 OUTPUT_SCALER_TYPEMAP(int);
 OUTPUT_SCALER_TYPEMAP(float);
 OUTPUT_SCALER_TYPEMAP(double);
-#undef OUTPUT_SCALER_TYPEMAP
 
 // ベクトル変数の即値，constポインタあるいはconst参照
 %define INPUT_VECTOR_TYPEMAP(type, size)
@@ -48,7 +33,6 @@ INPUT_VECTOR_TYPEMAP(Vec3f, 3);
 INPUT_VECTOR_TYPEMAP(Vec3d, 3);
 INPUT_VECTOR_TYPEMAP(Quaterniond, 4);
 INPUT_VECTOR_TYPEMAP(Posed, 7);
-#undef INPUT_VECTOR_TYPEMAP
 
 // 行列変数の即値，constポインタあるいはconst参照
 // Rubyにおける行列の表現は列ベクトルの配列とする
@@ -90,7 +74,6 @@ INPUT_VECTOR_TYPEMAP(Posed, 7);
 %enddef
 INPUT_MATRIX_TYPEMAP(Matrix3f, 3, 3);
 INPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
-#undef INPUT_MATRIX_TYPEMAP
 
 // ベクトル変数のポインタあるいは参照
 %define OUTPUT_VECTOR_TYPEMAP(type, size)
@@ -106,7 +89,6 @@ OUTPUT_VECTOR_TYPEMAP(Vec3f, 3);
 OUTPUT_VECTOR_TYPEMAP(Vec3d, 3);
 OUTPUT_VECTOR_TYPEMAP(Quaterniond, 4);
 OUTPUT_VECTOR_TYPEMAP(Posed, 7);
-#undef OUTPUT_VECTOR_TYPEMAP
 
 // 行列変数のポインタあるいは参照
 %define OUTPUT_MATRIX_TYPEMAP(type, nrow, ncol)
@@ -124,7 +106,6 @@ OUTPUT_VECTOR_TYPEMAP(Posed, 7);
 %enddef
 OUTPUT_MATRIX_TYPEMAP(Matrix3f, 3, 3);
 OUTPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
-#undef OUTPUT_MATRIX_TYPEMAP
 
 // 戻り値でベクトル型の即値
 %define RETURN_VECTOR_TYPEMAP(type, size)
@@ -138,7 +119,6 @@ RETURN_VECTOR_TYPEMAP(Vec3f, 3);
 RETURN_VECTOR_TYPEMAP(Vec3d, 3);
 RETURN_VECTOR_TYPEMAP(Quaterniond, 4);
 RETURN_VECTOR_TYPEMAP(Posed, 7);
-#undef RETURN_VECTOR_TYPEMAP
 
 // 戻り値で行列型の即値
 %define RETURN_MATRIX_TYPEMAP(type, nrow, ncol)
@@ -154,7 +134,6 @@ RETURN_VECTOR_TYPEMAP(Posed, 7);
 %enddef
 RETURN_MATRIX_TYPEMAP(Matrix3f, 3, 3);
 RETURN_MATRIX_TYPEMAP(Matrix3d, 3, 3);
-#undef RETURN_MATRIX_TYPEMAP
 
 // UTString
 %typemap(in) UTString %{

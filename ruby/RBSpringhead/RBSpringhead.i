@@ -1,5 +1,6 @@
 %module Springhead
 
+%include "workaround.i"
 %include "sprtypemaps.i"
 
 %{
@@ -27,8 +28,6 @@ namespace Spr{
 	void Link(int* dummy_for_vfuncbridge){}
 }
 }
-
-%include "ptmport.i"
 
 %import	 <Base/Env.h>			// SPR_CDECL
 
