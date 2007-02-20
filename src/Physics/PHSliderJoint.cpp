@@ -18,7 +18,8 @@ namespace Spr{;
 // PHSliderJoint
 IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
-PHSliderJoint::PHSliderJoint(){
+PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
+	SetDesc(desc);
 	axisIndex[0] = 2;
 	for(int i = 0; i < 6; i++)
 		axis[i] = (i == axisIndex[0]);
@@ -68,7 +69,7 @@ void PHSliderJoint::CompBias(){
 }*/
 
 //-----------------------------------------------------------------------------
-//OBJECT_IMP(PHSliderJointNode, PHTreeNode1D);
+IF_OBJECT_IMP(PHSliderJointNode, PHTreeNode);
 
 void PHSliderJointNode::CompJointJacobian(){
 	J[0].v() = Vec3d(0.0, 0.0, 1.0);

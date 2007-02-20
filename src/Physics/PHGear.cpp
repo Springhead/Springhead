@@ -18,7 +18,7 @@ namespace Spr{;
 // PHGear
 IF_OBJECT_IMP(PHGear, SceneObject);
 
-PHGear::PHGear(){
+PHGear::PHGear(const PHGearDesc& desc){
 	f = A = Ainv = b = 0.0;
 	bArticulated = false;
 }

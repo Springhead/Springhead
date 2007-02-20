@@ -95,12 +95,22 @@ class SprSceneView < FXTabBook
 	#
 	def initialize(owner)
 		super(owner, nil, 0, TABBOOK_BOTTOMTABS | LAYOUT_FILL_X | LAYOUT_FILL_Y)
+		@tabs = Array(0)
+		@contents = Array(0)
 	end
 
 	#
 	def addTab(scene)
-		FXTabItem.new(self, "  #{scene.GetName()}  ", nil, TAB_BOTTOM)
-		SprFWSceneView.new(self, scene)
+		@tabs.push(FXTabItem.new(self, "  #{scene.GetName()}  ", nil, TAB_BOTTOM))
+		@contents.push(SprFWSceneView.new(self, scene))
+		recalc
+	end
+
+	def clear()
+		children().each { |c| removeChild(c) }
+		@tabs = Array(0)
+		@contents = Array(0)
+		puts children.size
 	end
 
 end

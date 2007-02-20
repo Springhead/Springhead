@@ -19,8 +19,11 @@ namespace Spr{;
 		GRFrameIf* grFrame;
 		//
 		bool AddChildObject(ObjectIf* o);
-		PHSolidIf* GetPHSolid();
-		GRFrameIf* GetGRFrame();
+		PHSolidIf* GetPHSolid(){ return phSolid; }
+		void SetPHSolid(PHSolidIf* s){ phSolid = s; }
+		GRFrameIf* GetGRFrame(){ return grFrame; }
+		void SetGRFrame(GRFrameIf* f){ grFrame = f; }
+
 		ObjectIf* GetChildObject(size_t pos){
 			if (pos==0) if (phSolid) return phSolid; else return grFrame;
 			if (pos==1) if (phSolid) return grFrame; else return NULL;

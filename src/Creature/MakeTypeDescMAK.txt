@@ -1,4 +1,4 @@
 #	Do not edit. MakeTypeDesc.bat will update this file.
-all: TypeDescDumpImp.h
-TypeDescDumpImp.h:  ../../include/Creature/SprCRSimple.h
+all: TypeDescDumpImpCreature.h
+TypeDescDumpImpCreature.h:  ../../include/Creature/SprCRSimple.h
 	..\Foundation\MakeTypeDesc.bat EXECUTE

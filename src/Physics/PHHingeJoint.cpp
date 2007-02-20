@@ -18,7 +18,8 @@ namespace Spr{;
 // PHHingeJoint
 IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
 
-PHHingeJoint::PHHingeJoint(){
+PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
+	SetDesc(desc);
 	axisIndex[0] = 5;
 	for(int i = 0; i < 6; i++)
 		axis[i] = (i == axisIndex[0]);
@@ -74,7 +75,7 @@ void PHHingeJoint::CompBias(){
 }*/
 
 //-----------------------------------------------------------------------------
-//OBJECT_IMP(PHHingeJointNode, PHTreeNode1D);
+IF_OBJECT_IMP(PHHingeJointNode, PHTreeNode);
 
 void PHHingeJointNode::CompJointJacobian(){
 	J[0].v().clear();

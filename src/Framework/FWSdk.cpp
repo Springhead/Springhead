@@ -18,6 +18,8 @@
 #include <stdlib.h>
 #include <GL/glut.h>
 
+using namespace std;
+
 namespace Spr{;
 
 void SPR_CDECL FWRegisterTypeDescs();
@@ -66,10 +68,13 @@ void FWSdk::CreateSdks(){
 
 FWSdk::~FWSdk(){
 }
-FWSceneIf* FWSdk::CreateScene(const FWSceneDesc& desc){
-	FWSceneIf* rv = DCAST(FWSceneIf, CreateObject(FWSceneIf::GetIfInfoStatic(), &desc));
-	AddChildObject(rv); 
-	return rv;
+FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){
+	FWSceneDesc desc;
+	FWSceneIf* scene = DCAST(FWSceneIf, CreateObject(FWSceneIf::GetIfInfoStatic(), &desc));
+	scene->SetPHScene(GetPHSdk()->CreateScene(phdesc));
+	scene->SetGRScene(GetGRSdk()->CreateScene(grdesc));
+	AddChildObject(scene);
+	return scene;
 }
 void FWSdk::LoadScene(UTString filename){
 	//	デフォルトの先祖オブジェクトをを設定
@@ -85,7 +90,7 @@ void FWSdk::LoadScene(UTString filename){
 	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
 	//	ファイルのロード
 	if (! fiFileX->Load(objs, filename.data()) ) {
-		DSTR << "Error: Cannot open load file. " << std::endl;
+		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
 		exit(EXIT_FAILURE);
 	}
 	//	ロードしたシーンを取得
@@ -105,11 +110,47 @@ FWSceneIf* FWSdk::GetScene(int i){
 		return scenes[i];
 	return NULL;
 }
+void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
+	DSTR << "merging " << scene0->GetName() << " and " << scene1->GetName() << endl;
+	
+	Scenes::iterator it0, it1;
+	it0 = find(scenes.begin(), scenes.end(), XCAST(scene0));
+	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
+	if(it0 == scenes.end() || it1 == scenes.end())
+		return;
+	// PHSceneのマージ
+	if(scene0->GetPHScene()){
+		if(scene1->GetPHScene())
+			GetPHSdk()->MergeScene(scene0->GetPHScene(), scene1->GetPHScene());
+	}
+	else if(scene1->GetPHScene())
+		scene0->SetPHScene(scene1->GetPHScene());
+	// GRSceneのマージ
+	if(scene0->GetGRScene()){
+		if(scene1->GetGRScene())
+			GetGRSdk()->MergeScene(scene0->GetGRScene(), scene1->GetGRScene());
+	}
+	else if(scene1->GetGRScene())
+		scene0->SetGRScene(scene1->GetGRScene());
+
+	// FWObjectのマージ
+	FWScene* s0 = scene0->Cast();
+	FWScene* s1 = scene1->Cast();
+	s0->fwObjects.insert(s0->fwObjects.end(), s1->fwObjects.begin(), s1->fwObjects.end());
+
+	if(fwScene == scene1)
+		fwScene = scene0;
+
+	scenes.erase(it1);
+
+}
+
 bool FWSdk::AddChildObject(ObjectIf* o){
 	FWSceneIf* s = DCAST(FWSceneIf, o);
 	if (s){
 		if (std::find(scenes.begin(), scenes.end(), s) == scenes.end()){
 			scenes.push_back(s);
+			fwScene = s;
 			return true;
 		}
 	}
@@ -125,9 +166,15 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
-void FWSdk::ClearObjects(){
-	// 再ロード前など、全オブジェクトのクリアが必要な時に呼ぶ
-	// 未実装
+void FWSdk::Clear(){
+	// 一度全てをクリアしてSDKを作り直す
+	Sdk::Clear();
+	phSdk = NULL;
+	grSdk = NULL;
+	fiSdk = NULL;
+	scenes.clear();
+	fwScene = NULL;
+	CreateSdks();
 }
 void FWSdk::Step(){
 	if (fwScene)

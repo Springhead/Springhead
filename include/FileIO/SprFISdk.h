@@ -7,7 +7,7 @@
  */
 #ifndef SPR_FISDKIF_H
 #define SPR_FISDKIF_H
-#include <Foundation/SprObject.h>
+#include <Foundation/SprScene.h>
 
 namespace Spr{;
 
@@ -19,11 +19,10 @@ struct FIFileXIf;
 struct FIFileCOLLADAIf;
 
 ///	ファイル入出力SDK
-struct FISdkIf : public ObjectIf{
+struct FISdkIf : public SdkIf{
 	IF_DEF(FISdk);
 	virtual FIFileXIf* CreateFileX()=0;
 	virtual FIFileCOLLADAIf* CreateFileCOLLADA()=0;
-	virtual void Clear()=0;
 	static  FISdkIf* SPR_CDECL CreateSdk();
 };
 

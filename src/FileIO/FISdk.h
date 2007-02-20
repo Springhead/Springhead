@@ -14,7 +14,7 @@
 namespace Spr {;
 
 class FIFile;
-class SPR_DLL FISdk:public Object, public FISdkIfInit{
+class SPR_DLL FISdk:public Sdk, public FISdkIfInit{
 public:
 
 	std::vector< UTRef<FIFile> > files;

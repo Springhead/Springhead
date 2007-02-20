@@ -93,6 +93,10 @@ public:
 	virtual void UpdatePosition(double dt);
 	
 	PHSolid*	solid;		///< ルートノードの剛体
+
+	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc()){
+		solid = NULL;
+	}
 protected:
 	SpatialMatrix		Iinv;
 };

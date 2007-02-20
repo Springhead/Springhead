@@ -36,11 +36,10 @@ public:
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
 	friend class PHConstraint;
+	friend class PHShapePairForLCP;
 	OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
-
-	PHJoint* CreateJoint(const PHJointDesc& desc);
-	
 public:
+	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
 	int		numIteration;			///< 速度更新LCPの反復回数
 	double	correctionRate;			///< 誤差修正比率
 	double	shrinkRate;				///< LCP初期値を前回の解に対して縮小させる比率
@@ -50,13 +49,11 @@ public:
 	PHConstraintEngine();
 	~PHConstraintEngine();
 	
-	PHJoint* AddJoint(const PHJointDesc& desc);	///< 関節を追加する（ファイルローダ用）
-	PHJoint* AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc);	///< 関節の追加する
-	bool AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j);
-	
-	PHRootNode* AddRootNode(PHSolid* solid);	///< ツリー構造のルートノードを作成
-	PHTreeNode* AddNode(PHTreeNode* parent, PHSolid* solid);	///< ツリー構造の中間ノードを作成
-	PHGear*		AddGear(PHJoint1D* lhs, PHJoint1D* rhs, const PHGearDesc& desc);	///< ギアを作成
+	PHJoint* CreateJoint(const PHJointDesc& desc, PHSolid* lhs = NULL, PHSolid* rhs = NULL);	///< 関節の追加する
+	//bool AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j);
+	PHRootNode* CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid = NULL);	///< ツリー構造のルートノードを作成
+	PHTreeNode* CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent = NULL, PHSolid* solid = NULL);	///< ツリー構造の中間ノードを作成
+	PHGear*		CreateGear(const PHGearDesc& desc, PHJoint1D* lhs = NULL, PHJoint1D* rhs = NULL);	///< ギアを作成
 
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 
@@ -66,7 +63,6 @@ public:
 	PHConstraints GetContactPoints();
 	void Clear();
 
-//protected:
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
@@ -78,8 +74,8 @@ public:
 	
 	//void SetupCorrection(double dt);///< 誤差修正LCPの準備
 	//void IterateCorrection();		///< 誤差修正LCPの一度の反復
-	
-	friend class PHShapePairForLCP;
+
+	virtual bool AddChildObject(ObjectIf* o);
 };
 
 }	//	namespace Spr

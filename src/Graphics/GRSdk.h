@@ -35,21 +35,24 @@ public:
     @brief	グラフィックスSDK　 */
 class SPR_DLL GRSdk:public Sdk, public GRSdkIfInit, public GRSdkDesc{
 protected:
-	typedef std::vector< UTRef<GRScene> > GRScenes;
-	ObjectRefs objects;
-	GRScenes scenes;
+	typedef std::vector< UTRef<Object> > Objects;
+	typedef std::vector< UTRef<GRScene> > Scenes;
+	Objects objects;
+	Scenes scenes;
 public:
 	OBJECTDEF(GRSdk, Sdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
-	virtual void Print(std::ostream& os) const {}
 	virtual GRDebugRenderIf* CreateDebugRender();
 	virtual GRDeviceGLIf* CreateDeviceGL();
+	virtual GRSceneIf* CreateScene(const GRSceneDesc& desc);
 	virtual GRSceneIf* GetScene(size_t i);
 	virtual size_t NScene(){ return scenes.size(); }
+	virtual void MergeScene(GRSceneIf* scene0, GRSceneIf* scene1);
+
 	virtual size_t NChildObject() const { return scenes.size() + objects.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
-	virtual GRSceneIf* CreateScene();
+	virtual void Clear();
 };
 
 }

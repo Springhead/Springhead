@@ -18,6 +18,7 @@ namespace Spr{;
 // PHConstraint
 IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
 PHConstraint::PHConstraint(){
+	solid[0] = solid[1] = NULL;
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
@@ -26,21 +27,25 @@ PHConstraint::PHConstraint(){
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
-		PHSolids::iterator it = (PHSolids::iterator) scene->constraintEngine->solids.Find(s);
-		(void*)(*it);
-
-		if(it == scene->constraintEngine->solids.end())
-			return false;
+		//PHSolids::iterator it = (PHSolids::iterator) scene->constraintEngine->solids.Find(s);
+		//if(it == scene->constraintEngine->solids.end())
+		//	return false;
 		if(!solid[0]){
-			solid[0] = *it;
+			solid[0] = s;
 			return true;
 		}
 		if(!solid[1]){
-			solid[1] = *it;
+			solid[1] = s;
 			return true;
 		}
 	}
 	return false;
+}
+size_t PHConstraint::NChildObject(){
+	return (solid[0] ? 1 : 0) + (solid[1] ? 1 : 0);
+}
+ObjectIf* PHConstraint::GetChildObject(size_t i){
+	return solid[i]->Cast();
 }
 
 void PHConstraint::SetDesc(const PHConstraintDesc& desc){

@@ -15,16 +15,16 @@
 namespace Spr{;
 
 ///	ヒンジ関節のツリーノード
-class PHHingeJointNode : public PHTreeNode1D{
+class PHHingeJointNode : public PHTreeNode1D, public PHHingeJointNodeIfInit{
 public:
+	OBJECTDEF(PHHingeJointNode, PHTreeNode1D);
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
 	virtual void CompBias();
 	//virtual void Projection(double&, int){}
-	//PHHingeJointNode();
-	//PHHingeJointNode(PHHingeJoint* j);
+	PHHingeJointNode(const PHHingeJointNodeDesc& desc = PHHingeJointNodeDesc()){}
 };
 
 ///	ヒンジ関節
@@ -41,7 +41,7 @@ public:
 	// virtual void CompConstraintJacobian();
 	// virtual void CompError(double dt);
 	// virtual void ProjectionCorrection(double& F, int k);
-	PHHingeJoint();
+	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
 
 }

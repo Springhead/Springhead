@@ -54,7 +54,8 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 		children.push_back(v);
 		GRFrame* f = DCAST(GRFrame, v);
 		if (f && f->parent != this){
-			if (f->parent) f->parent->DelChildObject(f->Cast());
+			//‚±‚±‚ÅŒ³‚Ì‚¿å‚©‚çíœ‚·‚é‚Ì‚Í‚â‚è‚·‚¬‚Å‚ÍH
+			//if (f->parent) f->parent->DelChildObject(f->Cast());
 			f->parent = this;
 		}
 		return true;

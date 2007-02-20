@@ -61,8 +61,7 @@ GRDeviceGLIf* GRSdk::CreateDeviceGL(){
 	objects.push_back(rv);
 	return rv->Cast();
 }
-GRSceneIf* GRSdk::CreateScene(){
-	GRSdkDesc desc;
+GRSceneIf* GRSdk::CreateScene(const GRSceneDesc& desc){
 	GRSceneIf* rv = (GRSceneIf*)CreateObject(GRSceneIf::GetIfInfoStatic(), &desc);
 	AddChildObject(rv);
 	return rv;
@@ -71,6 +70,18 @@ GRSceneIf* GRSdk::GetScene(size_t i){
 	if (i<scenes.size()) return scenes[i]->Cast();
 	return NULL;
 }
+void GRSdk::MergeScene(GRSceneIf* scene0, GRSceneIf* scene1){
+	Scenes::iterator it0, it1;
+	it0 = find(scenes.begin(), scenes.end(), XCAST(scene0));
+	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
+	if(it0 == scenes.end() || it1 == scenes.end())
+		return;
+	for(int i = 0; i < scene1->NChildObject(); i++){
+		scene0->AddChildObject(scene1->GetChildObject(i));
+	}
+	scenes.erase(it1);
+}
+
 ObjectIf* GRSdk::GetChildObject(size_t i){
 	if (i<scenes.size()) return scenes[i]->Cast();
 	i -= scenes.size();
@@ -80,7 +91,7 @@ ObjectIf* GRSdk::GetChildObject(size_t i){
 bool GRSdk::AddChildObject(ObjectIf* o){
 	GRScene* s = DCAST(GRScene, o);
 	if (s){
-		GRScenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if (it == scenes.end()){
 			scenes.push_back(s);
 			return true;
@@ -90,6 +101,11 @@ bool GRSdk::AddChildObject(ObjectIf* o){
 	assert(obj);
 	objects.push_back(obj);
 	return true;
+}
+void GRSdk::Clear(){
+	Sdk::Clear();
+	objects.clear();
+	scenes.clear();
 }
 
 }

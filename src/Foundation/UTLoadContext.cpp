@@ -20,7 +20,6 @@
 #endif
 
 namespace Spr{;
-
 //---------------------------------------------------------------------------
 //	UTFileMap
 bool UTFileMap::IsGood(){
@@ -29,132 +28,18 @@ bool UTFileMap::IsGood(){
 
 
 //---------------------------------------------------------------------------
-//	UTLoadedData
-UTLoadedData::UTLoadedData(UTLoadContext* fc, UTTypeDesc* t, void* d): parent(NULL), 
-	type(t),data(d), haveData(false), man(NULL){
-	if (!data) SetType(t);
-	if (fc){
-		fileInfo = fc->fileMaps.Top();
-		filePos = fc->fileMaps.Top()->curr;
-	}else{
-		fileInfo = NULL;
-		filePos = NULL;
-	}
-}
-UTLoadedData::~UTLoadedData(){
-	if (haveData){
-		type->Delete(data);
-		data = NULL;
-	}
-}
-void UTLoadedData::SetName(UTString n){
-	name = n;
-	UTLoadedData* ld = this;
-	while(ld && !ld->nameMan) ld = ld->parent;
-	if (ld){
-		ld->nameMan->AddData(this);
-		man = ld;
-	}
-}
-void UTLoadedData::SetType(UTTypeDesc* t){
-	if (data && type){
-		type->Delete(data);
-		data = NULL;
-		haveData = false;
-	}
-	type = t;
-	if (type){
+//	UTLoadData
+UTLoadData::UTLoadData(UTTypeDesc* t, void* d):type(t), data(d){
+	if (!data && type){
 		data = type->Create();
 		haveData = true;
+	}else{
+		haveData = false;
 	}
 }
-void UTLoadedData::SetupNameManager(){
-	if (type && type->ifInfo && type->ifInfo->Inherit(NameManagerIf::GetIfInfoStatic())){
-		nameMan = DBG_NEW UTNameManagerForData;
-		nameMan->data = this;
-		UTLoadedData* ld = parent;
-		while(ld && !ld->nameMan) ld = ld->parent;
-		if (ld) nameMan->parent = ld->nameMan;
-	}
+UTLoadData::~UTLoadData(){
+	if (haveData) type->Delete(data);
 }
-void UTLoadedData::AddLink(UTLoadedData* to){
-	linkTo.push_back(to);
-	to->linkFrom.push_back(this);
-}
-void UTLoadedData::AddChild(UTLoadedData* c){
-	children.push_back(c);
-	c->parent = this;
-}
-void UTLoadContext::LoadedDatas::Print(std::ostream& os){
-	int w = os.width();
-	os.width(0);
-	os << UTPadding(w) << "--- Loaded data (desc) tree ------------------------" << std::endl;
-	for(iterator it = begin(); it!=end(); ++it) (*it)->Print(os);
-	os << "----------------------------------------------------" << std::endl;
-	os.width(w);
-}
-void UTLoadedData::Print(std::ostream& os){
-	int w = os.width();
-	os.width(0);
-	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)");
-	if (name.length()) os << " name=" << name;
-	os << (haveData ? " haveData" : "") << ">" << std::endl;
-	if (linkTo.size()){
-		os << UTPadding(w+2) << "linkTo = ";
-		for(unsigned i=0; i<linkTo.size(); ++i) os << " " << linkTo[i]->GetName();
-		os << std::endl;
-	}
-	if (linkFrom.size()){
-		os << UTPadding(w+2) << "linkFrom = ";
-		for(unsigned i=0; i<linkFrom.size(); ++i) os << " " << linkFrom[i]->GetName();
-		os << std::endl;
-	}
-	for(unsigned i=0; i<children.size(); ++i){
-		os.width(w+2);
-		children[i]->Print(os);
-		os.width(0);
-	}
-	os << UTPadding(w) << "</" << (type ? type->GetTypeName().c_str() : "(null)")
-		<< ">" << std::endl;
-	os.width(w);
-}
-
-UTLoadedData* UTLoadedData::FindAncestor(UTString tn){
-	UTLoadedData* rv = parent;
-	while(rv && rv->type->GetTypeName().compare(tn)!=0) rv = rv->parent;
-	return rv;
-}
-UTLoadedData* UTLoadedData::FindDescendant(UTString tn){
-	for(unsigned i=0; i<children.size(); ++i){
-		if (children[i]->type->GetTypeName().compare(tn) == 0) return children[i];
-	}
-	for(unsigned i=0; i<children.size(); ++i){
-		UTLoadedData* rv = children[i]->FindDescendant(tn);
-		if (rv) return rv;
-	}
-	return NULL;
-}
-UTLoadedData* UTLoadedData::FindLinkAncestor(UTString tn){
-	for(unsigned i=0; i<linkFrom.size(); ++i){
-		if (linkFrom[i]->type->GetTypeName().compare(tn) == 0) return linkFrom[i];
-	}
-	for(unsigned i=0; i<linkFrom.size(); ++i){
-		UTLoadedData* rv = linkFrom[i]->FindLinkAncestor(tn);
-		if (rv) return rv;
-	}
-	return NULL;
-}
-UTLoadedData* UTLoadedData::FindLinkDescendant(UTString tn){
-	for(unsigned i=0; i<linkTo.size(); ++i){
-		if (linkTo[i]->type->GetTypeName().compare(tn) == 0) return linkTo[i];
-	}
-	for(unsigned i=0; i<linkTo.size(); ++i){
-		UTLoadedData* rv = linkTo[i]->FindLinkDescendant(tn);
-		if (rv) return rv;
-	}
-	return NULL;
-}
-
 
 //---------------------------------------------------------------------------
 //	UTLoadTasks
@@ -168,147 +53,49 @@ void UTLoadTasks::Execute(UTLoadContext* ctx){
 }
 
 //---------------------------------------------------------------------------
-//	UTDataLinkTask
+//	UTLinkTask
 ///	ノードへの参照を記録しておくクラス．全部ロードできてからリンクする．
-class UTDataLinkTask: public UTLoadTask{
+class UTLinkTask: public UTLoadTask{
 public:
-	//@name	データファイルのどこのデータか
-	//@{
-	UTRef<UTFileMap> info;	///<	ファイル
-	const char* pos;		///<	位置
-	//@}
-
-	UTLoadedData* linkFrom;	///<	リンク元データ
-	std::string linkTo;		///<	リンク先データの名前
-
-	UTDataLinkTask(UTLoadedData* from, std::string to, UTFileMap* info, const char* p);
+	std::vector<NameManagerIf*> nameManagers;
+	std::string ref;
+	ObjectIf* object;
+	UTRef<UTFileMap> info;
+	const char* pos;
+	UTLinkTask(const ObjectIfs& objs, UTFileMap* info, const char* p, ObjectIf* o, std::string r);
 	void Execute(UTLoadContext* ctx);
 };
 
-UTDataLinkTask::UTDataLinkTask(UTLoadedData* from, std::string to, UTFileMap* fm, const char* p):
-	linkFrom(from), linkTo(to), info(fm), pos(p){
+UTLinkTask::UTLinkTask(const ObjectIfs& objs, UTFileMap* fi, const char* p, ObjectIf* o, std::string r):info(fi), pos(p), object(o), ref(r){
+	for(int i=objs.size()-1; i>=0; --i){
+		NameManagerIf* nm = DCAST(NameManagerIf, objs[i]);
+		if (nm){
+			nameManagers.push_back(nm);
+		}
+	}
 }
 
-void UTDataLinkTask::Execute(UTLoadContext* ctx){
-	UTLoadedData* refData = NULL;
-	UTLoadedData* ld = linkFrom;
-	while (ld && !ld->nameMan){
-		ld = ld->parent;
+void UTLinkTask::Execute(UTLoadContext* ctx){
+	Spr::ObjectIf* refObj = NULL;
+	for(unsigned i=0; i<nameManagers.size(); ++i){
+		refObj = nameManagers[i]->FindObject(ref);
+		if (refObj) break;
 	}
-	if (ld) refData = ld->nameMan->FindData(linkTo);
-	if (refData){
-		linkFrom->AddLink(refData);
+	if (refObj){
+		if (!object->AddChildObject(refObj)){
+			std::string err("Can not link referenced object '");
+			err.append(ref);
+			err.append("' to '");
+			err.append(object->GetIfInfo()->ClassName());
+			err.append("'.");
+			ctx->ErrorMessage(info, pos, err.c_str());
+		}
 	}else{
-		std::string err("Referenced data '");
-		err.append(linkTo);
+		std::string err("Referenced object '");
+		err.append(ref);
 		err.append("' not found.");
 		ctx->ErrorMessage(info, pos, err.c_str());
 	}
-}
-
-//---------------------------------------------------------------------------
-//	UTNameMangerForData
-UTNameManagerForData::UTNameManagerForData():parent(NULL), data(NULL){
-}
-
-bool UTNameManagerForData::AddData(UTLoadedData* data){
-	if (!data->name.length()) return false;
-	std::pair<DataSet::iterator, bool> rv = dataSet.insert(data);
-	if (rv.second){
-		return true;
-	}else if (*rv.first == data){
-		return false;
-	}
-	UTString base = data->name;
-	int i=1;
-	do{
-		std::ostringstream ss;
-		ss << "_" << i << '\0';
-		data->name = base + ss.str();
-		rv = dataSet.insert(data);
-		i++;
-	} while(!rv.second);
-	nameMap[base] = data->name;
-	return true;
-}
-UTLoadedData* UTNameManagerForData::FindData(UTString name, UTString cls){
-	//	自分と子孫を探す。
-	UTLoadedData* rv = FindDataFromDescendant(name, cls);
-	if (rv) return rv;
-	//	先祖を探す．
-	rv = FindDataFromAncestor(name, cls);
-	if (rv) return rv;
-
-	//	それでもないならば、namespaceを削って、もう一度検索
-	int pos = name.find('/');
-	if (pos != UTString::npos){	//	 名前空間の指定がある場合
-		UTString n = name.substr(pos+1);
-		rv = FindData(n, cls);
-	}
-	return rv;
-}
-//	先祖を探す
-UTLoadedData* UTNameManagerForData::FindDataFromAncestor(UTString name, UTString cls){
-	//	なければ祖先を探す。
-	UTNameManagerForData* nm = parent;
-	while(nm){
-		UTLoadedData* rv = nm->SearchSet(name, cls);	//	まず親を探し、
-		if (rv) return rv;
-		//	兄弟を探し、
-		for(UTNameManagerForData::NameManagers::iterator it = nm->childManagers.begin(); 
-			it!=nm->childManagers.end(); ++it){
-			if (*it != this){
-				rv = (*it)->FindDataFromDescendant(name, cls);
-				if (rv) return rv;
-			}
-		}
-		//	なければ、親の親を探す。
-		nm = nm->parent;
-	}
-	return NULL;
-}
-
-//	自分と子孫を探す
-UTLoadedData* UTNameManagerForData::FindDataFromDescendant(UTString name, UTString cls){
-//	DSTR << "UTNameManagerForData(" << GetName() << ")::FindDescendant search " << name << std::endl;
-	//	ぴったりのものを探す
-	UTLoadedData* rv = FindDataExact(name, cls);
-	if (rv) return rv;
-	//	なければ，子孫について探す
-	for(UTNameManagerForData::NameManagers::iterator it = childManagers.begin();
-		it != childManagers.end(); ++it){
-		rv = (*it)->FindDataFromDescendant(name, cls);
-		if (rv) return rv;
-	}
-	return rv;
-}
-//	ネームスペース込みで名前を検索する。検索場所については再帰なし。
-UTLoadedData* UTNameManagerForData::FindDataExact(UTString name, UTString cls){
-	UTLoadedData* rv = NULL;
-	int pos = name.find('/');
-	if (pos != UTString::npos){	//	 名前空間の指定がある場合
-		UTString n = name.substr(pos+1);
-		UTString ns = name.substr(0, pos);
-		//	ぴったりのものを探す．
-		for(UTNameManagerForData::NameManagers::iterator it = childManagers.begin();
-			it != childManagers.end(); ++it){
-			if (ns.compare((*it)->data->GetName()) == 0){
-				rv = (*it)->FindDataExact(n, cls);
-				if (rv) return rv;
-			}
-		}
-	}else{	//	名前空間が無い場合
-		//	ぴったりのものを探す
-		rv = SearchSet(name, cls);
-	}
-	return rv;
-}
-UTLoadedData* UTNameManagerForData::SearchSet(UTString name, UTString cls){
-	static UTLoadedData key(NULL, 0, NULL);
-	key.name = name;
-	UTNameManagerForData::DataSet::iterator it = dataSet.find(&key);
-	if (it != dataSet.end()) return *it;
-	return NULL;
 }
 
 //---------------------------------------------------------------------------
@@ -328,16 +115,8 @@ void UTLoadContext::WriteString(std::string v){
 void UTLoadContext::PushType(UTTypeDesc* type){
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
-	//	typeにあったDescのノード(DOMノード)を用意
-	UTLoadedData* data = DBG_NEW UTLoadedData(this, type);
-	if (datas.size()){
-		datas.Top()->AddChild(data);	//	子データとして追加
-	}else{
-		loadedDatas.push_back(data);	//	Topのデータとして記録しておく．
-	}
-	data->SetupNameManager();
-	//	データのスタックに追加
-	datas.Push(data);
+	//	読み出したデータを構造体の用意
+	datas.Push(DBG_NEW UTLoadData(type));
 }
 void UTLoadContext::PopType(){
 	datas.Pop();
@@ -347,36 +126,10 @@ bool UTLoadContext::IsGood(){
 	if (!fileMaps.size()) return false;
 	return fileMaps.Top()->IsGood();
 }
-void UTLoadContext::AddDataLink(std::string ref, const char* pos){
-	dataLinks.push_back(DBG_NEW UTDataLinkTask(datas.Top(), ref, fileMaps.Top(), pos));
+void UTLoadContext::AddLink(std::string ref, const char* pos){
+	links.push_back(DBG_NEW UTLinkTask(objects, fileMaps.Top(), pos, objects.back(), ref));
 }
-void UTLoadContext::LinkData(){
-	dataLinks.Execute(this);
-	dataLinks.clear();
-}
-void UTLoadContext::LinkNode(UTLoadedData* ld){
-	for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
-		for(UTLoadedDatas::iterator ld2 = ld->linkTo.begin(); ld2 != ld->linkTo.end(); ++ld2){
-			for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
-				if (  !(*o1)->AddChildObject( (*o2)->Cast() )  ){
-					std::string err("Can not add referenced object '");
-					err.append((*ld2)->GetName());
-					err.append("' into '");
-					err.append(ld->GetName());
-					err.append("'.");
-					ErrorMessage(ld->fileInfo, ld->filePos, err.c_str());
-				}				
-			}
-		}
-	}
-	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it != ld->children.end(); ++it){
-		LinkNode(*it);
-	}
-}
-void UTLoadContext::LinkNode(){
-	for(UTLoadedDataRefs::iterator it = loadedDatas.begin(); it!=loadedDatas.end(); ++it){
-		LinkNode(*it);
-	}
+void UTLoadContext::Link(){
 	links.Execute(this);
 	links.clear();
 }
@@ -421,22 +174,20 @@ void UTLoadContext::Message(UTFileMap* info, const char* pos, const char* msg){
 	os << msg << std::endl;
 	os << std::string(line, ptr) << std::endl;
 }
-ObjectIf* UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTString name){
-	ObjectIf* obj=NULL;
-	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); 
-		it != objects.rend(); ++it){
+void UTLoadContext::PushCreateNode(const IfInfo* info, const void* data){
+	ObjectIf* obj = NULL;
+	for(UTStack<ObjectIf*>::reverse_iterator it = objects.rbegin(); it != objects.rend(); ++it){
 		if (*it) obj = (*it)->CreateObject(info, data);
 		if (obj) break;
 	}
-	//	先祖が作れない場合，Sdkの作成をしてみる．
 	if (!obj) obj = SdkIf::CreateSdk(info, data);
 
+	//	オブジェクトに名前を設定
 	if (obj){
-		//	オブジェクトに名前を設定
 		NamedObjectIf* n = DCAST(NamedObjectIf, obj);
-		if (name.length()){
+		if (datas.Top()->name.length()){
 			if (n){
-				n->SetName(name.c_str());
+				n->SetName(datas.Top()->name.c_str());
 			}else{
 				UTString err("Can not give name to an object of '");
 				err.append(obj->GetIfInfo()->ClassName());
@@ -449,17 +200,19 @@ ObjectIf* UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTS
 				ErrorMessage(NULL, NULL, err.c_str());
 			}
 		}
+		//	親オブジェクトに追加
+		if (objects.size() && objects.Top()){
+			objects.Top()->AddChildObject(obj);
+		}	
 	}else{
 		UTString err("Can not create '");
 		err.append(info->ClassName());
 		err.append("'. Ancestor objects don't know how to make it.");
 		ErrorMessage(NULL, NULL, err.c_str());
 	}
-	//	親オブジェクトに追加
-	if (objects.size() && objects.Top()){
-		objects.Top()->AddChildObject(obj);
-	}
-	return obj;
+	//	オブジェクトスタックに積む
+	objects.Push(obj);
+	if (obj && objects.size() == 1) rootObjects.push_back(objects.Top());
 }
 
 };

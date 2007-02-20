@@ -213,6 +213,38 @@ struct PHRootNodeIf;	class PHRootNode;
 typedef PHRootNodeIfStubTemplate<PHRootNodeIf, ObjectIfBuf, PHRootNode>	PHRootNodeIfStub;
 typedef IfInitTemplate<PHRootNodeIfStub, PHRootNode>	PHRootNodeIfInit;
 
+template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHHingeJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHHingeJointNodeIf;	class PHHingeJointNode;
+typedef PHHingeJointNodeIfStubTemplate<PHHingeJointNodeIf, ObjectIfBuf, PHHingeJointNode>	PHHingeJointNodeIfStub;
+typedef IfInitTemplate<PHHingeJointNodeIfStub, PHHingeJointNode>	PHHingeJointNodeIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHSliderJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHSliderJointNodeIf;	class PHSliderJointNode;
+typedef PHSliderJointNodeIfStubTemplate<PHSliderJointNodeIf, ObjectIfBuf, PHSliderJointNode>	PHSliderJointNodeIfStub;
+typedef IfInitTemplate<PHSliderJointNodeIfStub, PHSliderJointNode>	PHSliderJointNodeIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHBallJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHBallJointNodeIf;	class PHBallJointNode;
+typedef PHBallJointNodeIfStubTemplate<PHBallJointNodeIf, ObjectIfBuf, PHBallJointNode>	PHBallJointNodeIfStub;
+typedef IfInitTemplate<PHBallJointNodeIfStub, PHBallJointNode>	PHBallJointNodeIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHPathJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHPathJointNodeIf;	class PHPathJointNode;
+typedef PHPathJointNodeIfStubTemplate<PHPathJointNodeIf, ObjectIfBuf, PHPathJointNode>	PHPathJointNodeIfStub;
+typedef IfInitTemplate<PHPathJointNodeIfStub, PHPathJointNode>	PHPathJointNodeIfInit;
+
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHGearIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
@@ -227,16 +259,10 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSdkIf *  GetSdk(){
 		return ((OBJ*)(MIF*)this)->GetSdk();
 	}
-	virtual CDShapeIf *  CreateShape(const CDShapeDesc &  desc){
-		return ((OBJ*)(MIF*)this)->CreateShape(desc);
-	}
-	virtual PHSolidIf *  CreateSolid(){
-		return ((OBJ*)(MIF*)this)->CreateSolid();
-	}
 	virtual PHSolidIf *  CreateSolid(const PHSolidDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreateSolid(desc);
 	}
-	virtual int NSolids(){
+	virtual int NSolids() const {
 		return ((OBJ*)(MIF*)this)->NSolids();
 	}
 	virtual PHSolidIf * *  GetSolids(){
@@ -263,14 +289,32 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHJointIf *  CreateJoint(PHSolidIf *  lhs, PHSolidIf *  rhs, const PHJointDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreateJoint(lhs, rhs, desc);
 	}
-	virtual PHTreeNodeIf *  CreateRootNode(PHSolidIf *  root){
-		return ((OBJ*)(MIF*)this)->CreateRootNode(root);
+	virtual int NJoints() const {
+		return ((OBJ*)(MIF*)this)->NJoints();
 	}
-	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child){
-		return ((OBJ*)(MIF*)this)->CreateTreeNode(parent, child);
+	virtual PHJointIf *  GetJoint(int i){
+		return ((OBJ*)(MIF*)this)->GetJoint(i);
+	}
+	virtual PHTreeNodeIf *  CreateRootNode(PHSolidIf *  root, const PHRootNodeDesc &  desc){
+		return ((OBJ*)(MIF*)this)->CreateRootNode(root, desc);
+	}
+	virtual int NRootNodes() const {
+		return ((OBJ*)(MIF*)this)->NRootNodes();
+	}
+	virtual PHRootNodeIf *  GetRootNode(int i){
+		return ((OBJ*)(MIF*)this)->GetRootNode(i);
+	}
+	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child, const PHTreeNodeDesc &  desc){
+		return ((OBJ*)(MIF*)this)->CreateTreeNode(parent, child, desc);
 	}
 	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreateGear(lhs, rhs, desc);
+	}
+	virtual int NGears() const {
+		return ((OBJ*)(MIF*)this)->NGears();
+	}
+	virtual PHGearIf *  GetGear(int i){
+		return ((OBJ*)(MIF*)this)->GetGear(i);
 	}
 	virtual PHPathIf *  CreatePath(const PHPathDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreatePath(desc);
@@ -333,6 +377,9 @@ struct PHSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual PHSceneIf *  GetScene(size_t i){
 		return ((OBJ*)(MIF*)this)->GetScene(i);
+	}
+	virtual void MergeScene(PHSceneIf *  scene0, PHSceneIf *  scene1){
+		return ((OBJ*)(MIF*)this)->MergeScene(scene0, scene1);
 	}
 	virtual CDShapeIf *  CreateShape(const CDShapeDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreateShape(desc);

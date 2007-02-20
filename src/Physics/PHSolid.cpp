@@ -33,7 +33,7 @@ void PHSolid::SetGravity(bool bOn){
 }
 
 CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
-	CDShapeIf* rv = DCAST(PHSceneIf, GetScene())->CreateShape(desc);
+	CDShapeIf* rv = DCAST(PHScene, GetScene())->CreateShape(desc);
 	if (rv){
 		AddShape(rv);
 	}
@@ -57,11 +57,13 @@ bool PHSolid::AddChildObject(ObjectIf* obj){
 }
 
 Vec3d PHSolid::GetDeltaPosition() const {
-	PHScene* s = DCAST(PHScene, nameManager);
+	//PHScene* s = DCAST(PHScene, nameManager);
+	PHScene* s = DCAST(PHScene, GetScene());
 	return velocity * s->GetTimeStep();
 }
 Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
-	PHScene* s = DCAST(PHScene, nameManager);
+	//PHScene* s = DCAST(PHScene, nameManager);
+	PHScene* s = DCAST(PHScene, GetScene());
 	double dt = s->GetTimeStep();
 	Quaterniond rot = Quaterniond::Rot(angVelocity*dt);
 	return velocity*dt + rot*(p-center);

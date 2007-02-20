@@ -37,11 +37,17 @@ struct PHSdkIf : public SdkIf{
 	virtual int NScene()=0;
 	///	Sceneの取得
 	virtual PHSceneIf* GetScene(size_t i)=0;
-	
-	///	Shape作成
+	/// Sceneのマージ
+	virtual void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1)=0;
+	/** @brief Shapeを作成する
+		@param desc 作成するShapeのディスクリプタ
+		@return Shapeのインタフェース
+	 */
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
+	
 	///	Shapeの数
 	virtual int NShape()=0;
+
 	///	Shapeの取得
 	virtual CDShapeIf* GetShape(int i)=0;
 

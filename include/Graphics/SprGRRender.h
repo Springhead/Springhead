@@ -12,8 +12,8 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHScene.h>
 #include <Collision/SprCDShape.h>
-#include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRFrame.h>
+#include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRShader.h>
 namespace Spr{;
 
@@ -59,7 +59,7 @@ public:
 };
 	
 /**	@brief	光源		*/
-struct GRLightDesc{
+struct GRLightDesc : GRVisualDesc{
     Vec4f ambient;		///<	環境光
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
@@ -84,6 +84,7 @@ struct GRLightDesc{
 	float spotInner;	///<	スポットライトの中心部分(内部コーン)（deviceがDirectXの場合のみ利用可能） 0..spotCutoff
 	float spotCutoff;	///<	スポットライトの広がり角度(度)(外部コーン) 0..π(pi)
 	GRLightDesc(){
+		type = LIGHT;
 		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
 		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
 		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
@@ -105,7 +106,7 @@ struct GRLightIf: public GRVisualIf{
 };
 
 /**	@brief	材質	*/
-struct GRMaterialDesc{
+struct GRMaterialDesc : GRVisualDesc{
 	Vec4f ambient;					///<	環境光に対する反射率
 	Vec4f diffuse;					///<	拡散光に対する反射率
 	Vec4f specular;					///<	鏡面光に対する反射率
@@ -114,6 +115,7 @@ struct GRMaterialDesc{
 	std::string	texname;			///<	テクスチャファイル名
 
 	GRMaterialDesc(){
+		type = MATERIAL;
 		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);
 		diffuse = Vec4f(0.8, 0.8, 0.8, 1.0);
 		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
@@ -141,13 +143,17 @@ struct GRMaterialIf: public GRVisualIf{
 };
 
 /**	@brief	カメラの情報			*/
-struct GRCameraDesc{
+struct GRCameraDesc : GRVisualDesc{
 	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
 	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
-	GRCameraDesc();
-	GRCameraDesc(Vec2f sz, Vec2f c, float f, float b): size(sz), center(c), front(f), back(b) {}
+	//GRCameraDesc():center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){}
+	GRCameraDesc(Vec2f sz = Vec2f(0.2f, 0.0f), Vec2f c = Vec2f(), float f = 0.1f, float b = 500.0f):
+		size(sz), center(c), front(f), back(b) { type = CAMERA;}
 };
+
+struct GRFrameIf;
+
 struct GRCameraIf: public GRVisualIf{
 	IF_DEF(GRCamera);
 	virtual GRFrameIf* GetFrame()=0;

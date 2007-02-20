@@ -175,7 +175,13 @@ void PHConstraintEngine::Clear(){
 	joints.clear();
 }
 
-PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
+PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc, PHSolid* lhs, PHSolid* rhs){
+	UTRef<PHSolid> *plhs, *prhs;
+	plhs = solids.Find(lhs);
+	prhs = solids.Find(rhs);
+	if(!plhs || !prhs)
+		return NULL;
+	
 	PHJoint* joint = NULL;
 	switch(desc.type){
 	case PHConstraintDesc::HINGEJOINT:
@@ -195,36 +201,13 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc){
 		break;
 	default: assert(false);
 	}
-	joint->scene = DCAST(PHScene, GetScene());
-	joint->engine = this;
 	joint->SetDesc(desc);
+	joint->solid[0] = lhs;
+	joint->solid[1] = rhs;
+	AddChildObject(joint->Cast());
 	return joint;
 }
-
-PHJoint* PHConstraintEngine::AddJoint(const PHJointDesc& desc){
-	PHJoint* joint = CreateJoint(desc);
-	joints.push_back(joint);
-	return joint;
-}
-
-PHJoint* PHConstraintEngine::AddJoint(PHSolid* lhs, PHSolid* rhs, const PHJointDesc& desc){
-	UTRef<PHSolid> *plhs, *prhs;
-	plhs = solids.Find(lhs);
-	prhs = solids.Find(rhs);
-	if(!plhs || !prhs)
-		return NULL;
-	
-	PHJoint* joint = CreateJoint(desc);
-	joint->solid[0] = *plhs;
-	joint->solid[1] = *prhs;
-	joints.push_back(joint);
-
-	//関節でつなげられた剛体間の接触は無効化
-	//EnableContact(lhs, rhs, false);
-
-	return joint;
-}
-bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
+/*bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
 	PHSolids::iterator islhs, isrhs;
 	islhs = (PHSolids::iterator) solids.Find(lhs->Cast());
 	isrhs = (PHSolids::iterator) solids.Find(rhs->Cast());
@@ -235,25 +218,25 @@ bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
 	joint->solid[1] = *isrhs;
 	joints.push_back(joint);
 	return true;
-}
+}*/
 
-PHRootNode* PHConstraintEngine::AddRootNode(PHSolid* solid){
-	//既存のツリーに含まれていないかチェック
+PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid){
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		if((*it)->FindBySolid(solid))
 			return NULL;
-	//新しいルートノードを作成
 	PHSolids::iterator it = (PHSolids::iterator) solids.Find(solid);
 	if(it == solids.end())
 		return NULL;
+	
 	PHRootNode* root = DBG_NEW PHRootNode();
-	root->solid = *it;
-	root->SetScene(GetScene());
-	(*it)->treeNode = root;
-	trees.push_back(root);
+	root->solid = solid;
+	solid->treeNode = root;
+	AddChildObject(root->Cast());
 	return root;
 }
-PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
+PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent, PHSolid* solid){
+	PHTreeNode* node;
+	
 	//既存のツリーに含まれていないかチェック
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		if((*it)->FindBySolid(solid))
@@ -267,44 +250,78 @@ PHTreeNode* PHConstraintEngine::AddNode(PHTreeNode* parent, PHSolid* solid){
 		}
 	}
 	if(!found)return NULL;
+
 	//parentに対応する剛体とsolidで指定された剛体とをつなぐ拘束を取得
 	PHJoint* joint = DCAST(PHJoint, joints.FindBySolidPair(parent->GetSolid(), solid));
 	if(!joint)return NULL;
-	//ノードを作成
-	PHTreeNode* node = joint->CreateTreeNode();
+	//拘束の種類に対応するノードを作成
+	node = joint->CreateTreeNode();
 	//オブジェクト間のリンク
 	node->joint = joint;
-	node->scene = DCAST(PHScene, GetScene());
-	node->engine = this;
 	parent->AddChild(node);
 	joint->bArticulated = true;
 	joint->solid[1]->treeNode = node;
+	
+	/* ファイルローダはfactoryを利用するので不要になった
+	// 以下はファイルローダ用の処理．desc.typeから作るべきノードの種類を判断する
+	switch(desc.type){
+	case PHTreeNodeDesc::HINGEJOINT_NODE:	node = DBG_NEW PHHingeJointNode();	break;
+	case PHTreeNodeDesc::SLIDERJOINT_NODE:	node = DBG_NEW PHSliderJointNode(); break;
+	case PHTreeNodeDesc::BALLJOINT_NODE:	node = DBG_NEW PHBallJointNode();	break;
+	case PHTreeNodeDesc::PATHJOINT_NODE:	node = DBG_NEW PHPathJointNode();	break;
+	default: return NULL;
+	}*/
 
-	//ギアノードの更新
-
+	node->scene = DCAST(PHScene, GetScene());
+	node->engine = this;
+	
 	return node;
 }
 
-PHGear* PHConstraintEngine::AddGear(PHJoint1D* lhs, PHJoint1D* rhs, const PHGearDesc& desc){
+PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PHJoint1D* lhs, PHJoint1D* rhs){
 	PHGear* gear = DBG_NEW PHGear();
 	gear->joint[0] = lhs;
 	gear->joint[1] = rhs;
 	gear->SetDesc(desc);
-	gear->scene = DCAST(PHScene, GetScene());
-	gear->engine = this;
-	gears.push_back(gear);
-	//lhsとrhsが同一のABAツリーで親子関係にある場合、ギアノードを更新する
-	PHTreeNode1D *nodeL, *nodeR;
-	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
-		nodeL = DCAST(PHTreeNode1D, (*it)->FindByJoint(lhs));
-		nodeR = DCAST(PHTreeNode1D, (*it)->FindByJoint(rhs));
-		if(!nodeL || !nodeR)continue;
-		if(nodeL->GetParent() == nodeR)
-			nodeR->AddGear(gear, nodeL);
-		else if(nodeR->GetParent() == nodeL)
-			nodeL->AddGear(gear, nodeR);
-	}
+	AddChildObject(gear->Cast());
 	return gear;
+}
+
+bool PHConstraintEngine::AddChildObject(ObjectIf* o){
+	if(Detector::AddChildObject(o))
+		return true;
+	PHJoint* joint = DCAST(PHJoint, o);
+	if(joint){
+		joint->scene = DCAST(PHScene, GetScene());
+		joint->engine = this;
+		joints.push_back(joint);
+		return true;
+	}
+	PHRootNode* root = DCAST(PHRootNode, o);
+	if(root){
+		root->SetScene(GetScene());
+		trees.push_back(root);
+		return true;
+	}
+	PHGear* gear = DCAST(PHGear, o);
+	if(gear){
+		gear->scene = DCAST(PHScene, GetScene());
+		gear->engine = this;
+		gears.push_back(gear);
+		//連動する関節が同一のABAツリーで親子関係にある場合、ギアノードを更新する
+		PHTreeNode1D *nodeL, *nodeR;
+		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
+			nodeL = DCAST(PHTreeNode1D, (*it)->FindByJoint(gear->joint[0]));
+			nodeR = DCAST(PHTreeNode1D, (*it)->FindByJoint(gear->joint[1]));
+			if(!nodeL || !nodeR)continue;
+			if(nodeL->GetParent() == nodeR)
+				nodeR->AddGear(gear, nodeL);
+			else if(nodeR->GetParent() == nodeL)
+				nodeL->AddGear(gear, nodeR);
+		}
+		return true;
+	}
+	return false;
 }
 
 void PHConstraintEngine::SetupLCP(){

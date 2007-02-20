@@ -236,11 +236,21 @@ class SprMainWindow < FXMainWindow
     	@glcanvas.makeNonCurrent
 	end
 
+	# 現在のドキュメントをクリア
+	def clearDocument()
+		$sprapp.GetSdk().Clear()
+		$sceneview.clear
+		$propertymanager.clear
+    	@undolist.clear
+    	@undolist.mark
+
+	end
+
 	# New file
 	def newFile()
+		clearDocument()
 
 		# デフォルトシーンの構築
-		$sprapp.GetSdk().Clear()
 		scene = $sprapp.GetSdk().CreateScene(PHSceneDesc.new, GRSceneDesc.new)
 		phsdk = $sprapp.GetSdk().GetPHSdk()
 		phscene = scene.GetPHScene()
@@ -265,24 +275,23 @@ class SprMainWindow < FXMainWindow
 
   	# Load file
   	def loadFile(filename)
+		clearDocument()
     	begin
       		getApp().beginWaitCursor()
-      	
-			$sprapp.GetSdk().LoadScene(filename)
-
+   			$sprapp.GetSdk().LoadScene(filename)
     	ensure
       		getApp().endWaitCursor()
     	end
 
-    	# Set stuff
     	@mrufiles.appendFile(filename)
     	@filetime = File.mtime(filename)
     	@filename = filename
     	@filenameset = true
-    	@undolist.clear
-    	@undolist.mark
 
-		$sceneview.update
+		for i in 0..($sprapp.GetSdk().NScene()-1)
+			$sceneview.addTab($sprapp.GetSdk().GetScene(i))
+		end
+		$sceneview.create		# createしないとタブが表示されない
 		$propertymanager.update(nil)
   	end
 

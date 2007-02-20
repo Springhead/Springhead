@@ -15,13 +15,6 @@ FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 {
 }
 
-PHSolidIf* FWObject::GetPHSolid(){
-	return phSolid;
-}
-
-GRFrameIf* FWObject::GetGRFrame(){
-	return grFrame;
-}
 void FWObject::Sync(){
 	if (phSolid && grFrame){
 		Affinef af;

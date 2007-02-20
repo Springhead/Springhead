@@ -21,12 +21,13 @@
 namespace Spr{;
 
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
-struct GRMeshDesc{
+struct GRMeshDesc : GRVisualDesc{
 	std::vector<Vec3f> positions;				///< 頂点の座標
 	std::vector<Vec3f> normals;					///< 頂点の法線
 	std::vector<Vec4f> colors;					///< 頂点の色
 	std::vector<Vec2f> texCoords;				///< テクスチャUV
 	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
+	GRMeshDesc(){ type = MESH; }
 };
 
 

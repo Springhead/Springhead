@@ -195,7 +195,6 @@ struct Joint{
 struct Import{
 	std::string file;	
 };
-
 //@}
 
 }

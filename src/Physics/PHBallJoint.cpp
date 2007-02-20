@@ -81,7 +81,8 @@ void SwingTwist::JacobianInverse(Matrix3d& J, const Quaterniond& q){
 // PHBallJoint
 IF_OBJECT_IMP(PHBallJoint, PHJoint)
 
-PHBallJoint::PHBallJoint(){
+PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
+	SetDesc(desc);
 	axis[0] = axis[1] = axis[2] = false;
 	axis[3] = axis[4] = axis[5] = true;
 	axisIndex[0] = 3;
@@ -162,6 +163,7 @@ void PHBallJoint::Projection(double& f, int k){
 
 //----------------------------------------------------------------------------
 // PHBallJointNode
+IF_OBJECT_IMP(PHBallJointNode, PHTreeNode)
 
 void PHBallJointNode::CompJointJacobian(){
 	PHBallJoint* j = GetJoint();

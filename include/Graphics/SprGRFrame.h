@@ -20,6 +20,18 @@
 namespace Spr{;
 
 struct GRRenderIf;
+
+/** @brief ビジュアルのディスクリプタ */
+struct GRVisualDesc{
+	enum VisualType{
+		FRAME,
+		MESH,
+		MATERIAL,
+		CAMERA,
+		LIGHT
+	} type;
+};
+
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
 struct GRVisualIf: public NamedObjectIf{
 	IF_DEF(GRVisual);
@@ -28,16 +40,16 @@ struct GRVisualIf: public NamedObjectIf{
 	///	レンダリング終了処理．子ノード，弟ノードのレンダリングが終わってから呼ばれる．
 	virtual void Rendered(GRRenderIf* r)=0;
 };
-	
-	
+		
 ///	DirectX の Frame の変換を表す FrameTransformMatrix ノードを読むためのDesc
 struct GRFrameTransformMatrix{
 	Affinef transform;
 };
 
 ///	@brief GRFrame のDesc．座標系を指定する
-struct GRFrameDesc{
+struct GRFrameDesc : GRVisualDesc{
 	Affinef transform;
+	GRFrameDesc(){ type = FRAME; }
 };
 	
 /**	@brief	グラフィックスシーングラフのツリーのノード．座標系を持つ．*/

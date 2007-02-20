@@ -134,7 +134,8 @@ public:
 
 	/// ‰ñ“]Šp“x (angle‚ÉŠÖ”–¼‚ğ•ÏX‚·‚é—\’è)
 	ET Theta(){
-		return (ET)( acos(W()) * 2 );
+		/// ”’lŒë·‚ÅW‚ª1.0‚ğã‰ñ‚é‚ÆƒGƒ‰[‚·‚éê‡‚ª‚ ‚é
+		return (ET)( acos(min(1.0, W())) * 2 );
 	}
 	//@}
 
@@ -469,7 +470,7 @@ public:
 	}
 
 	/// —^‚¦‚ç‚ê‚½ˆÊ’u‚Å‚ÌPose‚ğ‰Šú‰»‚µ‚Ä•Ô‚·
-	static TPose<ET> Unit(TVec3<ET> &v){
+	static TPose<ET> Unit(const TVec3<ET> &v){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
 		y.Pos() = v;
@@ -478,7 +479,7 @@ public:
 	}
 
 	/// —^‚¦‚ç‚ê‚½‰ñ“]‚Å‚ÌPose‚ğ‰Šú‰»‚µ‚Ä•Ô‚·
-	static TPose<ET> Unit(TQuaternion<ET> &q){
+	static TPose<ET> Unit(const TQuaternion<ET> &q){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
 		y.Pos() = TVec3<ET>();
@@ -490,7 +491,7 @@ public:
 	static TPose<ET> Trn(element_type px, element_type py, element_type pz){
 		return Trn(TVec3<ET>(px, py, pz));
 	}
-	static TPose<ET> Trn(TVec3<ET> &v){
+	static TPose<ET> Trn(const TVec3<ET> &v){
 		TPose<ET> y;
 		y.Pos() = v;
 		y.Ori() = TQuaternion<ET>();

@@ -29,6 +29,7 @@ struct SwingTwist : public Vec3d{
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
+	OBJECTDEF(PHBallJointNode, PHTreeNode);
 	/// スイング・ツイスト角の時間変化率から角速度へのヤコビアン
 	Matrix3d	Jst;
 
@@ -41,7 +42,7 @@ public:
 	virtual void ModifyJacobian();
 	virtual void CompBias();
 	virtual void Projection(double& f, int i);
-	//PHBallJointNode(PHBallJoint* j):PHTreeNodeND<3>(j){}
+	PHBallJointNode(const PHBallJointNodeDesc& desc = PHBallJointNodeDesc()){}
 };
 
 class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
@@ -81,7 +82,7 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHBallJointNode();
 	}
-	PHBallJoint();
+	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());
 };
 
 }

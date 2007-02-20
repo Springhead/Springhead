@@ -116,6 +116,43 @@ struct PHSpringDesc : public PHConstraintDesc{
 	}
 };
 
+/** @brief ツリーノードのディスクリプタ
+ */
+struct PHTreeNodeDesc{
+	enum NodeType{
+		ROOT_NODE,
+		HINGEJOINT_NODE,
+		SLIDERJOINT_NODE,
+		BALLJOINT_NODE,
+		PATHJOINT_NODE
+	} type;
+};
+struct PHRootNodeDesc : public PHTreeNodeDesc{
+	PHRootNodeDesc(){
+		type = ROOT_NODE;
+	}
+};
+struct PHHingeJointNodeDesc : public PHTreeNodeDesc{
+	PHHingeJointNodeDesc(){
+		type = HINGEJOINT_NODE;
+	}
+};
+struct PHSliderJointNodeDesc : public PHTreeNodeDesc{
+	PHSliderJointNodeDesc(){
+		type = SLIDERJOINT_NODE;
+	}
+};
+struct PHBallJointNodeDesc : public PHTreeNodeDesc{
+	PHBallJointNodeDesc(){
+		type = BALLJOINT_NODE;
+	}
+};
+struct PHPathJointNodeDesc : public PHTreeNodeDesc{
+	PHPathJointNodeDesc(){
+		type = PATHJOINT_NODE;
+	}
+};
+
 /// ギアのディスクリプタ
 struct PHGearDesc{
 	double ratio;		///< ギア比
@@ -371,10 +408,21 @@ struct PHSpringIf : public PHConstraintIf{
 struct PHTreeNodeIf : public SceneObjectIf{
 	IF_DEF(PHTreeNode);
 };
-
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
 	IF_DEF(PHRootNode);
+};
+struct PHHingeJointNodeIf : public PHTreeNodeIf{
+	IF_DEF(PHHingeJointNode);
+};
+struct PHSliderJointNodeIf : public PHTreeNodeIf{
+	IF_DEF(PHSliderJointNode);
+};
+struct PHBallJointNodeIf : public PHTreeNodeIf{
+	IF_DEF(PHBallJointNode);
+};
+struct PHPathJointNodeIf : public PHTreeNodeIf{
+	IF_DEF(PHPathJointNode);
 };
 
 /// ギアのインタフェース

@@ -34,7 +34,7 @@ public:
 	};
 
 	PHLoadHandlerPHInactiveSolids(): UTLoadHandlerImp<Desc>("PHInactiveSolids"){}
-	void BeforeCreateObject(PHInactiveSolids& desc, UTLoadContext* ctx){
+	void Load(PHInactiveSolids& desc, UTLoadContext* ctx){
 		PHSceneIf* scene;
 		Get(scene, ctx);
 		ctx->postTasks.push_back(new Task(desc, scene));

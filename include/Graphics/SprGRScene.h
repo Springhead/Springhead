@@ -30,9 +30,6 @@ struct GRSdkIf;
 struct GRSceneIf: public SceneIf{
 	IF_DEF(GRScene);
 
-	///	フレームの作成
-	virtual GRFrameIf* CreateFrame(const GRFrameDesc& desc)=0;
-
 	///	シーンのレンダリング
 	virtual void Render(GRRenderIf* r)=0;
 
@@ -44,6 +41,11 @@ struct GRSceneIf: public SceneIf{
 
 	/// カメラの作成・設定
 	virtual void SetCamera(const GRCameraDesc& desc)=0;
+
+	/** @brief ビジュアルの作成
+		フレーム、メッシュ、マテリアル、およびライトを作成して親フレームparentの下に追加する。
+	 */
+	virtual GRVisualIf*  CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent = NULL)=0;
 
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース

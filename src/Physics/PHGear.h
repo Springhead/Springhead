@@ -35,7 +35,7 @@ public:
 	void	CompResponse(double f);
 	void	SetupLCP();
 	void	IterateLCP();
-	PHGear();
+	PHGear(const PHGearDesc& desc = PHGearDesc());
 };
 
 class PHGears : public std::vector< UTRef<PHGear> >{

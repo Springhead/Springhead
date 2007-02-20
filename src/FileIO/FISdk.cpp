@@ -34,6 +34,7 @@ FISdk::~FISdk(){
 }
 
 void FISdk::Clear(){
+	Sdk::Clear();
 	files.clear();
 }
 ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){

@@ -188,6 +188,8 @@ public:
 				solidPairs.item(i, N-1) = DBG_NEW TSolidPair();
 				solidPairs.item(i, N-1)->Init(solids[i], solids[N-1]);
 			}
+			if(s->NShape())
+				UpdateShapePairs(s);
 			return true;
 		}
 		return false;

@@ -41,7 +41,6 @@ void PHScene::Init(){
 	constraintEngine->numIteration = numIteration;
 	engines.Add(constraintEngine);
 
-
 	count = 0;
 }
 
@@ -56,24 +55,28 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	AddChildObject(s->Cast());
 	return s->Cast();
 }
-PHSolidIf* PHScene::CreateSolid(){
-	PHSolidDesc def;
-	return CreateSolid(def);
-}
-CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
-	CDShapeIf* rv = GetSdk()->CreateShape(desc);
-	return rv;
-}
-
-int PHScene::NSolids(){
+int PHScene::NSolids()const{
 	return solids->solids.size();
 }
 PHSolidIf** PHScene::GetSolids(){
 	return (PHSolidIf**)&*solids->solids.begin();
 }
 
+CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
+	return GetSdk()->CreateShape(desc);
+}
+
 PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
-	return constraintEngine->AddJoint(desc)->Cast();
+	return constraintEngine->CreateJoint(desc)->Cast();
+}
+PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
+	return constraintEngine->CreateJoint(desc, lhs->Cast(), rhs->Cast())->Cast();	
+}
+int PHScene::NJoints()const{
+	return constraintEngine->joints.size();
+}
+PHJointIf* PHScene::GetJoint(int i){
+	return DCAST(PHJointIf, constraintEngine->joints[i]);
 }
 
 PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
@@ -81,22 +84,36 @@ PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
 	return rv->Cast();
 }
 
-PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
-	return constraintEngine->AddJoint(lhs->Cast(), rhs->Cast(), desc)->Cast();	
+PHRootNodeIf* PHScene::CreateRootNode(const PHRootNodeDesc& desc){
+	return constraintEngine->CreateRootNode(desc)->Cast();
 }
-
-PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root){
-	return XCAST( constraintEngine->AddRootNode(XCAST(root)) );
+PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
+	return constraintEngine->CreateRootNode(desc, root->Cast())->Cast();
 }
-
-PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child){
-	return constraintEngine->AddNode(XCAST(parent), XCAST(child))->Cast();
+int PHScene::NRootNodes()const{
+	return constraintEngine->trees.size();
 }
-
+PHRootNodeIf* PHScene::GetRootNode(int i){
+	return constraintEngine->trees[i]->Cast();
+}
+PHTreeNodeIf* PHScene::CreateTreeNode(const PHTreeNodeDesc& desc){
+	return constraintEngine->CreateTreeNode(desc)->Cast();
+}
+PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc){
+	return constraintEngine->CreateTreeNode(desc, parent->Cast(), child->Cast())->Cast();
+}
+PHGearIf* PHScene::CreateGear(const PHGearDesc& desc){
+	return constraintEngine->CreateGear(desc)->Cast();
+}
 PHGearIf* PHScene::CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc){
-	return constraintEngine->AddGear(XCAST(lhs), XCAST(rhs), desc)->Cast();
+	return constraintEngine->CreateGear(desc, lhs->Cast(), rhs->Cast())->Cast();
 }
-
+int PHScene::NGears()const{
+	return constraintEngine->gears.size();
+}
+PHGearIf* PHScene::GetGear(int i){
+	return constraintEngine->gears[i]->Cast();
+}
 void PHScene::Clear(){
 	engines.Clear();
 	Init();
@@ -182,48 +199,75 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = Scene::CreateObject(info, desc);
 	if (!rv){
 		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-			rv = CreateShape(*(CDShapeDesc*)desc);
-		}else if (info->Inherit(PHJointIf::GetIfInfoStatic())){
-			//この段階でPHSolidへの参照はNULL．AddChildObjectで解決される
-			rv = CreateJoint(*(PHJointDesc*)desc);
-		}else if(info == PHSolidIf::GetIfInfoStatic()){
-			rv = CreateSolid(*(const PHSolidDesc*)desc);
+			rv = CreateShape(*(const CDShapeDesc*)desc);
 		}
 	}
 	return rv;
 }
 size_t PHScene::NChildObject() const{
-	return engines.size();
+	//return engines.size();
+	return NSolids() + NJoints() + NRootNodes() + NGears();
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
-	return engines[pos]->Cast();
+	//return engines[pos]->Cast();
+	if(pos < NSolids()) return GetSolids()[pos];
+	pos -= NSolids();
+	if(pos < NJoints()) return GetJoint(pos);
+	pos -= NJoints();
+	if(pos < NRootNodes()) return GetRootNode(pos);
+	pos -= NRootNodes();
+	if(pos < NGears()) return GetGear(pos);
+	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
-	bool rv = solids->AddChildObject(o);
-	if(rv){
-		PHSolidIf* s = DCAST(PHSolidIf, o);
-		PHGravityEngine* ge;
-		engines.Find(ge);
-		if(ge)ge->AddChildObject(o);
-		penaltyEngine->AddChildObject(o);
-		constraintEngine->AddChildObject(o);
-		SetContactMode(s, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
-	}else{
-		PHEngine* e = DCAST(PHEngine, o);
-		if (e){ 
-			engines.push_back(e);
-			rv = true;
+	bool ok = false;
+	PHSolidIf* solid = DCAST(PHSolidIf, o);
+	if(solid){
+		if(	solids->AddChildObject(o) &&
+			gravityEngine->AddChildObject(o) &&
+			penaltyEngine->AddChildObject(o) &&
+			constraintEngine->AddChildObject(o))
+		{
+            SetContactMode(solid, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
+			ok = true;
 		}
 	}
-	return rv;
+	PHJointIf* con = DCAST(PHJointIf, o);
+	if(con && constraintEngine->AddChildObject(con))
+		ok = true;
+	PHTreeNodeIf* node = DCAST(PHTreeNodeIf, o);
+	if(node && constraintEngine->AddChildObject(o))
+		ok = true;
+	PHGearIf* gear = DCAST(PHGearIf, o);
+	if(gear && constraintEngine->AddChildObject(o))
+		ok = true;
+	// MergeSceneなどで他のSceneから移動してくる場合もあるので所有権を更新する
+	if(ok)
+		DCAST(SceneObject, o)->SetScene(Cast());
+	return ok;
 }
 bool PHScene::DelChildObject(ObjectIf* o){
-	bool rv = solids->DelChildObject(o);
-	if(rv){
+	PHSolidIf* solid = DCAST(PHSolidIf, o);
+	if(solid){
+		solids->DelChildObject(o);
 		penaltyEngine->DelChildObject(o);
 		constraintEngine->DelChildObject(o);
+		gravityEngine->DelChildObject(o);
+		return true;
 	}
-	return rv;	
+	PHJointIf* con = DCAST(PHJointIf, o);
+	if(con)
+		constraintEngine->DelChildObject(con);
+
+	PHTreeNodeIf* node = DCAST(PHTreeNodeIf, o);
+	if(node)
+		constraintEngine->DelChildObject(o);
+
+	PHGearIf* gear = DCAST(PHGearIf, o);
+	if(gear)
+		constraintEngine->DelChildObject(o);
+	
+	return false;
 }
 
 PHConstraintEngine* PHScene::GetConstraintEngine(){

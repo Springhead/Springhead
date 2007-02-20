@@ -67,9 +67,6 @@ void GRLight::Rendered(GRRenderIf* render){
 //----------------------------------------------------------------------------
 //	GRCamera
 IF_OBJECT_IMP(GRCamera, GRVisual);
-GRCameraDesc::GRCameraDesc():
-	center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){
-}
 size_t GRCamera::NChildObject() const {
 	return frame ? 1 : 0;
 }

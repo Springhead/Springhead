@@ -192,6 +192,9 @@ IF_OBJECT_IMP(NamedObject, Object);
 NameManagerIf* NamedObject::GetNameManager(){
 	return nameManager->Cast();
 }
+const NameManagerIf* NamedObject::GetNameManager()const{
+	return nameManager->Cast();
+}
 void NamedObject::SetNameManager(NameManagerIf* s){
 	assert(!s || s->RefCount() >= 0);
 	if (nameManager){
@@ -236,6 +239,9 @@ void SceneObject::SetScene(SceneIf* s){
 }
 SceneIf* SceneObject::GetScene(){
 	return (SceneIf*)GetNameManager();
+}
+const SceneIf* SceneObject::GetScene()const{
+	return (const SceneIf*)GetNameManager();
 }
 
 

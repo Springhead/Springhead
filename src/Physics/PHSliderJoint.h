@@ -15,14 +15,15 @@
 namespace Spr{;
 
 ///	スライダ関節に対応するツリーノード
-class PHSliderJointNode : public PHTreeNode1D{
+class PHSliderJointNode : public PHTreeNode1D, public PHSliderJointNodeIfInit{
 public:
+	OBJECTDEF(PHSliderJointNode, PHTreeNode1D);
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
 	virtual void CompBias();
-	//PHSliderJointNode();
+	PHSliderJointNode(const PHSliderJointNodeDesc& desc = PHSliderJointNodeDesc()){}
 };
 
 ///	スライダ関節
@@ -38,7 +39,7 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHSliderJointNode();
 	}
-	PHSliderJoint();
+	PHSliderJoint(const PHSliderJointDesc& desc = PHSliderJointDesc());
 };
 
 }

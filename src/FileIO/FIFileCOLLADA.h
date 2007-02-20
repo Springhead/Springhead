@@ -22,7 +22,7 @@ protected:
 
 public:
 	FIFileCOLLADA();
-	UTTypeDescDb* GetTypeDb(){return &typeDb;}
+	UTTypeDescDb* GetDb(){return &typeDb;}
 	void LoadImp(FILoadContext* fc);
 	virtual void PushLoaderContext(FILoadContext* fc);
 	virtual void PopLoaderContext();

@@ -33,6 +33,9 @@ class SprPropertyManager < FXSwitcher
 			setCurrent(@solidproperty.index)
 			return
 		end
+	end
 
+	def clear()
+		update(nil)
 	end
 end

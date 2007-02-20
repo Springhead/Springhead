@@ -229,23 +229,21 @@ struct ObjectIfs
 	: public UTStack<ObjectIf*>
 #endif
 {
+	/*void PrintShort(std::ostream& os) const{
+		for(const_iterator it = begin(); it!=end(); ++it){
+			(*it)->PrintShort(os);
+		}
+	}
+	void Print(std::ostream& os) const{
+		for(const_iterator it = begin(); it!=end(); ++it){
+			(*it)->Print(os);
+		}
+	}*/
 	typedef UTStack<ObjectIf*> container_t;
 	void Push(ObjectIf* obj){container_t::Push(obj);}
 	void Pop(){container_t::Pop();}
 	ObjectIf* Top(){return container_t::Top();}
 };
-
-struct ObjectIfRefs
-#if !defined SWIG	
-	: public UTStack< UTRef<ObjectIf> >
-#endif
-{
-	typedef UTStack< UTRef<ObjectIf> > container_t;
-	void Push(ObjectIf* obj){container_t::Push(obj);}
-	void Pop(){container_t::Pop();}
-	ObjectIf* Top(){return container_t::Top();}
-};
-
 
 struct NameManagerIf;
 

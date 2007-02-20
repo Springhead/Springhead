@@ -40,19 +40,20 @@ public:
 		HI_OBJECTMANIPULATOR2,
 		HI_OBJECTMANIPULATOR3,
 	};
-	//
-	FWScene(const FWSceneDesc& d=FWSceneDesc()); // コンストラクタ
-	//
-	PHSceneIf*	GetPHScene(){ return phScene; }
-	void		SetPHScene(PHSceneIf* s){ phScene = s; }
-	GRSceneIf*	GetGRScene(){ return grScene; }
-	void		SetGRScene(GRSceneIf* s){ grScene = s; }
-
-	///	オブジェクトの位置・姿勢を同期
-	void Sync();
-	void Step();
-	void Draw(GRRenderIf* grRender, bool debug=false);
-	HIForceDevice6D* GetHumanInterface(size_t pos);
+	/// コンストラクタ
+	FWScene(const FWSceneDesc& d=FWSceneDesc());
+	
+	virtual PHSceneIf*	GetPHScene(){ return phScene; }
+	virtual void		SetPHScene(PHSceneIf* s){ phScene = s; }
+	virtual GRSceneIf*	GetGRScene(){ return grScene; }
+	virtual void		SetGRScene(GRSceneIf* s){ grScene = s; }
+	virtual FWObjectIf* CreateObject(const PHSolidDesc& soliddesc, const GRFrameDesc& framedesc);
+	virtual int NObject()const{return fwObjects.size();}
+	virtual FWObjectIf** GetObjects(){return (FWObjectIf**)&*fwObjects.begin();}
+	virtual void Sync();
+	virtual void Step();
+	virtual void Draw(GRRenderIf* grRender, bool debug=false);
+	virtual HIForceDevice6D* GetHumanInterface(size_t pos);
 	//
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual bool AddChildObject(ObjectIf* o);

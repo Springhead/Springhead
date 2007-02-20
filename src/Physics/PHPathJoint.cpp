@@ -154,7 +154,8 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 
 IF_OBJECT_IMP(PHPathJoint, PHJoint1D)
 
-PHPathJoint::PHPathJoint(){
+PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
+	SetDesc(desc);
 	axisIndex[0] = 5;
 	for(int i = 0; i < 6; i++)
 		axis[i] = (i == axisIndex[0]);
@@ -251,6 +252,7 @@ void PHPathJoint::CompBias(){
 }*/
 
 //-----------------------------------------------------------------------------
+IF_OBJECT_IMP(PHPathJointNode, PHTreeNode)
 
 void PHPathJointNode::CompJointJacobian(){
 	PHPathJoint* j = GetJoint();

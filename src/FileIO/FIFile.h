@@ -35,59 +35,38 @@ public:
 public:
 	FISdk* sdk;
 	OBJECTDEF_ABST(FIFile, Object);
-	FISdk* GetSdk(){ return sdk; }
-	virtual UTTypeDescDb* GetTypeDb()=0;
-
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
 	virtual void Save(const ObjectIfs& objs, FISaveContext* sc);
+	FISdk* GetSdk(){ return sdk; }
 	/**	ノードのロード．
-		TODO: 新仕様にあわせる
-
 		ロードしたDescからオブジェクトを作成する．
 		オブジェクトの作成は，親オブジェクトのCreateObject()，親の親のCreateObject()と
 		先祖のCreateObject()を順に呼んで，作成できたところで止める．
-		どのオブジェクトも作成できない場合は，SdkIf::CreateSdk()を呼び出す．
-	void LoadNode();
-
+		どのオブジェクトも作成できない場合は，SdkIf::CreateSdk()を呼び出す．	*/
+	void LoadNode(FILoadContext* fc);
 	///	ノードのロードの終了
 	void LoadEndNode(FILoadContext* fc);
-	*/
+	///	ブロック(組み立て型)に入る
+	void LoadEnterBlock(FILoadContext* fc);
+	///	ブロック(組み立て型)から出る
+	void LoadLeaveBlock(FILoadContext* fc);
 	///	ロードの実装
 	virtual void LoadImp(FILoadContext* fc)=0;
-	///	ロードしたデータから，シーングラフを作成．
-	void CreateScene(UTLoadContext* fc);
-	
-	//@name ローダーを書くためのユーティリティ関数
-	//@{	
-	///	ノードに入る
-	virtual void LNodeStart(FILoadContext* fc, UTString type);
-	///	ノードから出る
-	virtual void LNodeEnd(FILoadContext* fc);
-	///	ブロック(組み立て型)に入る
-	virtual void LBlockStart(FILoadContext* fc);
-	///	ブロック(組み立て型)から出る
-	virtual void LBlockEnd(FILoadContext* fc);
-	///	ノードの名前の設定
-	virtual void LSetNodeName(FILoadContext* fc, UTString n);
-	//@}
-
 	/**	ロードするノードのグループを登録。グループ名をスペースで区切って指定。
 		例：ResisterGroup("Foundation Physics Graphics Framework OldSpringhead");
 	*/
 	void RegisterGroup(const char* gp);
 
 protected:
-	///	ノードを再帰的に作成
-	void CreateObjectRecursive(UTLoadContext* fc);
 	
 	///	ノードのセーブ
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);
 	///	ブロックのセーブ
 	void SaveBlock(FISaveContext* sc);
 
-	//@name 保存処理のハンドラー
+	///	保存処理のハンドラー
 	//@{
 	///	ファイル開始時の処理
 	virtual void OnSaveFileStart(FISaveContext* sc){}

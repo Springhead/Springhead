@@ -46,17 +46,14 @@ struct FIFileCOLLADAIf;	class FIFileCOLLADA;
 typedef FIFileCOLLADAIfStubTemplate<FIFileCOLLADAIf, ObjectIfBuf, FIFileCOLLADA>	FIFileCOLLADAIfStub;
 typedef IfInitTemplate<FIFileCOLLADAIfStub, FIFileCOLLADA>	FIFileCOLLADAIfInit;
 
-template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct FISdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
+struct FISdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	virtual FIFileXIf *  CreateFileX(){
 		return ((OBJ*)(MIF*)this)->CreateFileX();
 	}
 	virtual FIFileCOLLADAIf *  CreateFileCOLLADA(){
 		return ((OBJ*)(MIF*)this)->CreateFileCOLLADA();
-	}
-	virtual void Clear(){
-		return ((OBJ*)(MIF*)this)->Clear();
 	}
 };
 struct FISdkIf;	class FISdk;

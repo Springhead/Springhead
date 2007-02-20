@@ -29,7 +29,7 @@ public:
 	virtual void Projection(double& f, int k){}
 	//virtual void CompError(double dt){}
 	//virtual void ProjectionCorrection(double& F, int k){}
-	PHSpring(){
+	PHSpring(const PHSpringDesc& desc = PHSpringDesc()){
 		constr[3] = constr[4] = constr[5] = false;
 	}
 };

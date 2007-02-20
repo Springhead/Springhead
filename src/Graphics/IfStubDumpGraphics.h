@@ -310,9 +310,6 @@ typedef IfInitTemplate<GRDebugRenderIfStub, GRDebugRender>	GRDebugRenderIfInit;
 template <class IF, class MIF, class OBJ> struct SceneIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
-	virtual GRFrameIf *  CreateFrame(const GRFrameDesc &  desc){
-		return ((OBJ*)(MIF*)this)->CreateFrame(desc);
-	}
 	virtual void Render(GRRenderIf *  r){
 		return ((OBJ*)(MIF*)this)->Render(r);
 	}
@@ -324,6 +321,9 @@ struct GRSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual void SetCamera(const GRCameraDesc &  desc){
 		return ((OBJ*)(MIF*)this)->SetCamera(desc);
+	}
+	virtual GRVisualIf *   CreateVisual(const GRVisualDesc &  desc, GRFrameIf *  parent = NULL){
+		return ((OBJ*)(MIF*)this)->CreateVisual(desc, parent);
 	}
 	virtual GRSdkIf *  GetSdk(){
 		return ((OBJ*)(MIF*)this)->GetSdk();
@@ -342,20 +342,17 @@ struct GRSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	virtual GRDeviceGLIf *  CreateDeviceGL(){
 		return ((OBJ*)(MIF*)this)->CreateDeviceGL();
 	}
-	virtual GRSceneIf *  CreateScene(){
-		return ((OBJ*)(MIF*)this)->CreateScene();
-	}
-	virtual size_t NChildObject() const {
-		return ((OBJ*)(MIF*)this)->NChildObject();
-	}
-	virtual ObjectIf *  GetChildObject(size_t i){
-		return ((OBJ*)(MIF*)this)->GetChildObject(i);
+	virtual GRSceneIf *  CreateScene(const GRSceneDesc &  desc){
+		return ((OBJ*)(MIF*)this)->CreateScene(desc);
 	}
 	virtual GRSceneIf *  GetScene(size_t i){
 		return ((OBJ*)(MIF*)this)->GetScene(i);
 	}
 	virtual size_t NScene(){
 		return ((OBJ*)(MIF*)this)->NScene();
+	}
+	virtual void MergeScene(GRSceneIf *  scene0, GRSceneIf *  scene1){
+		return ((OBJ*)(MIF*)this)->MergeScene(scene0, scene1);
 	}
 };
 struct GRSdkIf;	class GRSdk;

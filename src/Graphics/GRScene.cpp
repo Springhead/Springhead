@@ -10,6 +10,7 @@
 #pragma hdrstop
 #endif
 #include "GRScene.h"
+#include "GRMesh.h"
 #include <sstream>
 
 namespace Spr{;
@@ -35,27 +36,42 @@ void GRScene::Clear(){
 	world = NULL;
 	Init();
 }
-GRFrameIf* GRScene::CreateFrame(const GRFrameDesc& desc){
-	ObjectIf* o = CreateObject(GRFrameIf::GetIfInfoStatic(), &desc);
-	return (GRFrameIf*)o;
+GRVisualIf* GRScene::CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent){
+	GRVisual* v = NULL;
+	switch(desc.type){
+	case GRVisualDesc::FRAME:	 v = DBG_NEW GRFrame((const GRFrameDesc&)desc); break;
+	case GRVisualDesc::MATERIAL: v = DBG_NEW GRMaterial((const GRMaterialDesc&)desc); break;
+	case GRVisualDesc::LIGHT:	 v = DBG_NEW GRLight((const GRLightDesc&)desc); break;
+	case GRVisualDesc::MESH:	 v = DBG_NEW GRMesh((const GRMeshDesc&)desc); break;
+	}
+	if(v){
+		if(parent) parent->AddChildObject(v->Cast());
+		else GetWorld()->AddChildObject(v->Cast());
+	}
+	return v->Cast();
 }
 bool GRScene::AddChildObject(ObjectIf* o){
+	bool ok = false;
 	GRCamera* c = DCAST(GRCamera, o);
-	if (c){
+	if(c){
 		camera = c;
-		return true;
+		ok = true;
+	}else{
+        ok = world->AddChildObject(o);
 	}
-	return world->AddChildObject(o);
+	if(ok)
+		DCAST(NamedObject, o)->SetNameManager(Cast());
+	return ok;
 }
 size_t GRScene::NChildObject() const{
+	//return (camera ? 1:0) + (world ? 1:0);
 	return world->NChildObject() + (camera ? 1 : 0);
 }
 ObjectIf* GRScene::GetChildObject(size_t pos){
-	if (camera){
-		if (pos == 0) return camera->Cast();
-		return world->GetChildObject(pos-1);
-	}
-	return world->GetChildObject(pos);
+	//return camera ? (pos == 0 ? (ObjectIf*)camera->Cast() : (ObjectIf*)world->Cast()) : (ObjectIf*)world->Cast();
+	if(pos < world->NChildObject())
+		return world->GetChildObject(pos);
+	return camera->Cast();
 }
 void GRScene::Render(GRRenderIf* r){
 	if (camera) camera->Render(r);

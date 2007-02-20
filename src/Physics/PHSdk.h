@@ -34,7 +34,7 @@ protected:
 	///	形状
 	Shapes shapes;
 	///	他のオブジェクトたち
-	ObjectRefs objects;
+	Objects objects;
 public:
 
 	OBJECTDEF(PHSdk, Sdk);
@@ -45,14 +45,16 @@ public:
 	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	virtual int NScene();
 	virtual PHSceneIf* GetScene(size_t i);
-
+	virtual void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1);
 	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc);
-	virtual int NShape();
-	virtual CDShapeIf* GetShape(int i);
+	virtual int NShape(){ return (int)shapes.size(); }
+	virtual CDShapeIf* GetShape(int i){ return (0 <= i && i < (int)shapes.size()) ? shapes[i] : NULL; }
+	
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-	virtual size_t NChildObject() const { return scenes.size()+shapes.size(); }
+	virtual size_t NChildObject() const { return shapes.size() + scenes.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 public:
 };
 

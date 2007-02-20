@@ -22,7 +22,7 @@ struct FWSdkIf : ObjectIf {
 		空のシーンを作成し、シーンリストに追加する．
 		作成されたシーンはアクティブとなる．
 	 */
-	virtual FWSceneIf* CreateScene(const FWSceneDesc& desc)=0;
+	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc)=0;
 
 	/** @brief シーンをファイルからロードする
 		@param filename ファイル名
@@ -46,6 +46,11 @@ struct FWSdkIf : ObjectIf {
 	 */
 	virtual FWSceneIf* GetScene(int index = -1)=0;
 
+	/** @brief シーンを混ぜる
+		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
+	 */
+	virtual void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1) = 0;
+	
 	/// PHSdkオブジェクトを取得する
 	virtual PHSdkIf* GetPHSdk()=0;
 

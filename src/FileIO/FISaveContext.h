@@ -31,7 +31,7 @@ public:
 	///	UTTypeDescのフィールドへのイタレータのスタック
 	UTTypeDescFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
-	UTStack< UTRef<UTLoadedData> > datas;
+	UTStack< UTRef<UTLoadData> > datas;
 	///
 	std::set<ObjectIf*> savedObjects;
 	

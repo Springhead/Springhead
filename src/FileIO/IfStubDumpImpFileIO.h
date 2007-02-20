@@ -2,4 +2,4 @@
 IF_IMP(FIFile, Object);
 IF_IMP(FIFileX, FIFile);
 IF_IMP(FIFileCOLLADA, FIFile);
-IF_IMP(FISdk, Object);
+IF_IMP(FISdk, Sdk);

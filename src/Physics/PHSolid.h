@@ -282,8 +282,6 @@ class PHSolidContainer:public PHEngine{
 	OBJECTDEF_NOIF(PHSolidContainer, PHEngine);
 public:
 	PHSolidIfs solids;
-	bool AddChildObject(ObjectIf* o);
-	bool DelChildObject(ObjectIf* o);
 	///
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
 	/// solidのリセット
@@ -292,6 +290,8 @@ public:
 	virtual void Step();
 	
 	virtual void Clear(){ solids.clear(); }
+	bool AddChildObject(ObjectIf* o);
+	bool DelChildObject(ObjectIf* o);
 	///	所有しているsolidの数
 	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid

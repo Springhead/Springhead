@@ -20,6 +20,7 @@ namespace Spr{;
 struct GRDeviceGLIf;
 struct GRDebugRenderIf;
 struct GRSceneIf;
+struct GRSceneDesc;
 
 ///	@brief GRSdkDesc GRSDKの設定．DirectXを使うかOpenGLを使うかの選択などがここに入る予定．
 struct GRSdkDesc{
@@ -30,12 +31,10 @@ struct GRSdkIf: public SdkIf{
 	IF_DEF(GRSdk);
 	virtual GRDebugRenderIf* CreateDebugRender()=0;
 	virtual GRDeviceGLIf* CreateDeviceGL()=0;
-	virtual GRSceneIf* CreateScene()=0;
-	virtual size_t NChildObject() const = 0;
-	virtual ObjectIf* GetChildObject(size_t i) = 0;
+	virtual GRSceneIf* CreateScene(const GRSceneDesc& desc)=0;
 	virtual GRSceneIf* GetScene(size_t i)=0;
 	virtual size_t NScene()=0;
-
+	virtual void MergeScene(GRSceneIf* scene0, GRSceneIf* scene1)=0;
 	static GRSdkIf* SPR_CDECL CreateSdk();
 	static void SPR_CDECL RegisterSdk();
 };

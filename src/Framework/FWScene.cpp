@@ -49,7 +49,18 @@ ObjectIf* FWScene::CreateObject(const IfInfo* info, const void* desc){
 	if (!rv && grScene) rv = grScene->CreateObject(info, desc);
 	return rv;
 }
+
+FWObjectIf* FWScene::CreateObject(const PHSolidDesc& soliddesc, const GRFrameDesc& framedesc){
+	FWObjectDesc desc;
+	FWObjectIf* obj = DCAST(FWObjectIf, CreateObject(FWObjectIf::GetIfInfoStatic(), &desc));
+	obj->SetPHSolid(GetPHScene()->CreateSolid(soliddesc));
+	obj->SetGRFrame(DCAST(GRFrameIf, GetGRScene()->CreateVisual(framedesc)));
+	AddChildObject(obj);
+	return obj;
+}
+
 bool FWScene::AddChildObject(ObjectIf* o){
+	FWSdkIf* sdk = DCAST(FWSdkIf, GetNameManager());
 	bool rv = false;
 	if (!rv) {
 		FWObjectIf* obj = DCAST(FWObjectIf, o);
@@ -62,6 +73,7 @@ bool FWScene::AddChildObject(ObjectIf* o){
 		PHScene* obj = DCAST(PHScene, o);
 		if (obj) {
 			phScene = obj->Cast();
+			sdk->GetPHSdk()->AddChildObject(obj->Cast());
 			rv = true;
 		}
 	}
@@ -69,6 +81,7 @@ bool FWScene::AddChildObject(ObjectIf* o){
 		GRScene* obj = DCAST(GRScene, o);
 		if (obj) {
 			grScene = obj->Cast();
+			sdk->GetGRSdk()->AddChildObject(obj->Cast());
 			rv = true;
 		}
 	}
@@ -92,17 +105,12 @@ size_t FWScene::NChildObject() const{
 }
 
 ObjectIf* FWScene::GetChildObject(size_t pos){
-	ObjectIf* ret;
 	if (pos < fwObjects.size()) return fwObjects[pos];
 	if (pos - fwObjects.size() == 0) {
-		if (phScene==NULL) 	ret = phScene;
-		else				ret = grScene;
-		return ret;
+		return phScene ? phScene : grScene;
 	}
 	if (pos - fwObjects.size() == 1) {
-		if (phScene)	ret = grScene;
-		else				ret = NULL;
-		return ret;
+		return phScene ? grScene : NULL;
 	}
 	return NULL;
 }
@@ -133,7 +141,7 @@ void FWScene::Sync(){
 			pose.Ori() = device->GetOri();
 	*/		if (!camera->GetFrame()){
 				GRSceneIf* scene = DCAST(GRSceneIf, camera->GetNameManager());
-				if (scene) camera->SetFrame(scene->CreateFrame(GRFrameDesc()));
+				if (scene) camera->SetFrame(DCAST(GRFrameIf, scene->CreateVisual(GRFrameDesc())));
 			}
 			if (camera->GetFrame()){
 				Affinef af;

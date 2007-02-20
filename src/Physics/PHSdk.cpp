@@ -35,6 +35,17 @@ void PHSdkIf::RegisterSdk(){
 	Sdk::RegisterFactory(new PHSdkFactory());
 	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHRootNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHGear));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHHingeJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHBallJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPathJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSpring));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHHingeJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHBallJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPathJointNode));
 	PHRegisterTypeDescs();
 	PHRegisterLoadHandlers();
 	CDRegisterTypeDescs();
@@ -51,6 +62,7 @@ PHSdk::~PHSdk(){
 	Clear();
 }
 void PHSdk::Clear(){
+	Sdk::Clear();
 	shapes.clear();
 	objects.clear();
 	scenes.clear();
@@ -70,7 +82,18 @@ PHSceneIf* PHSdk::GetScene(size_t i){
 	if (i < scenes.size()) return scenes[i];
 	return NULL;
 }
-
+void PHSdk::MergeScene(PHSceneIf* scene0, PHSceneIf* scene1){
+	Scenes::iterator it0, it1;
+	it0 = find(scenes.begin(), scenes.end(), XCAST(scene0));
+	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
+	if(it0 == scenes.end() || it1 == scenes.end())
+		return;
+	for(int i = 0; i < scene1->NChildObject(); i++){
+		scene0->AddChildObject(scene1->GetChildObject(i));
+	}
+	scenes.erase(it1);
+}
+	
 CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 	CDShape* s = NULL;
 	if (desc.type == CDShapeDesc::CONVEXMESH){
@@ -90,12 +113,6 @@ CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 	}
 	return s->Cast();
 }
-int PHSdk::NShape(){
-	return shapes.size();
-}
-CDShapeIf* PHSdk::GetShape(int i){
-	return shapes[i];
-}
 ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = Object::CreateObject(info, desc);
 	if (!rv){
@@ -106,22 +123,20 @@ ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
 	return rv;
 }
 ObjectIf* PHSdk::GetChildObject(size_t i){		
-	if (i<shapes.size()) return shapes[i];
-	return scenes[i-shapes.size()];
+	if(i < shapes.size()) return shapes[i]->Cast();
+	return GetScene(i - shapes.size());
 }
 
 bool PHSdk::AddChildObject(ObjectIf* o){
-	PHScene* s = DCAST(PHScene, o);
+	PHSceneIf* s = DCAST(PHSceneIf, o);
 	if (s){
-		UTRef<PHSceneIf> sceneif = s->Cast();
-		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), sceneif);
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if (it == scenes.end()){
-			scenes.push_back(s->Cast());
+			scenes.push_back(s);
 			return true;
 		}
 		return false;
 	}
-
 	CDShape* h = DCAST(CDShape, o);
 	if (h){
 		UTRef<CDShapeIf> shapeif = h->Cast();
@@ -132,9 +147,34 @@ bool PHSdk::AddChildObject(ObjectIf* o){
 		}
 		return false;
 	}
-
 	if (std::find(objects.begin(), objects.end(), DCAST(Object, o)) == objects.end()){
 		objects.push_back(DCAST(Object, o));
+		return true;
+	}
+	return false;
+}
+bool PHSdk::DelChildObject(ObjectIf* o){
+	PHSceneIf* s = DCAST(PHSceneIf, o);
+	if(s){
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+		if (it != scenes.end()){
+			scenes.erase(it);
+			return true;
+		}
+		return false;
+	}
+	CDShapeIf* shape = DCAST(CDShapeIf, o);
+	if(shape){
+		Shapes::iterator it = find(shapes.begin(), shapes.end(), shape);
+		if(it != shapes.end()){
+			shapes.erase(it);
+			return true;
+		}
+		return false;
+	}
+	Objects::iterator it = std::find(objects.begin(), objects.end(), DCAST(Object, o));
+	if (it != objects.end()){
+		objects.erase(it);
 		return true;
 	}
 	return false;

@@ -7,8 +7,14 @@ struct FWObjectIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSolidIf *  GetPHSolid(){
 		return ((OBJ*)(MIF*)this)->GetPHSolid();
 	}
+	virtual void SetPHSolid(PHSolidIf *  s){
+		return ((OBJ*)(MIF*)this)->SetPHSolid(s);
+	}
 	virtual GRFrameIf *  GetGRFrame(){
 		return ((OBJ*)(MIF*)this)->GetGRFrame();
+	}
+	virtual void SetGRFrame(GRFrameIf *  f){
+		return ((OBJ*)(MIF*)this)->SetGRFrame(f);
 	}
 };
 struct FWObjectIf;	class FWObject;
@@ -30,6 +36,15 @@ struct FWSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetGRScene(GRSceneIf *  s){
 		return ((OBJ*)(MIF*)this)->SetGRScene(s);
 	}
+	virtual FWObjectIf *	 CreateObject(const PHSolidDesc &  soliddesc, const GRFrameDesc &  framedesc){
+		return ((OBJ*)(MIF*)this)->CreateObject(soliddesc, framedesc);
+	}
+	virtual int NObject() const {
+		return ((OBJ*)(MIF*)this)->NObject();
+	}
+	virtual FWObjectIf * *  GetObjects(){
+		return ((OBJ*)(MIF*)this)->GetObjects();
+	}
 	virtual void Sync(){
 		return ((OBJ*)(MIF*)this)->Sync();
 	}
@@ -50,8 +65,8 @@ typedef IfInitTemplate<FWSceneIfStub, FWScene>	FWSceneIfInit;
 template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual FWSceneIf *  CreateScene(const FWSceneDesc &  desc){
-		return ((OBJ*)(MIF*)this)->CreateScene(desc);
+	virtual FWSceneIf *  CreateScene(const PHSceneDesc &  phdesc, const GRSceneDesc &  grdesc){
+		return ((OBJ*)(MIF*)this)->CreateScene(phdesc, grdesc);
 	}
 	virtual void LoadScene(UTString filename){
 		return ((OBJ*)(MIF*)this)->LoadScene(filename);
@@ -64,6 +79,9 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual FWSceneIf *  GetScene(int index = -1){
 		return ((OBJ*)(MIF*)this)->GetScene(index);
+	}
+	virtual void MergeScene(FWSceneIf *  scene0, FWSceneIf *  scene1){
+		return ((OBJ*)(MIF*)this)->MergeScene(scene0, scene1);
 	}
 	virtual PHSdkIf *  GetPHSdk(){
 		return ((OBJ*)(MIF*)this)->GetPHSdk();

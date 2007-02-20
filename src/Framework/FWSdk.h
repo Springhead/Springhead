@@ -47,11 +47,12 @@ public:
 	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
-	virtual FWSceneIf* CreateScene(const FWSceneDesc& desc);
+	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc);
 	virtual void LoadScene(UTString filename);
 	virtual int NScene() const;
 	virtual void SwitchScene(FWSceneIf* scene){ fwScene = scene; }
 	virtual FWSceneIf* GetScene(int i = -1);
+	virtual void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
 	virtual bool GetDebugMode(){return debugMode;}
 	virtual void SetDebugMode(bool debug = true){debugMode = debug;}
 
@@ -66,7 +67,7 @@ public:
 	virtual GRDeviceIf* GetDevice(){return grDevice;}
 	virtual void SetDevice(GRDeviceIf* device){grDevice = device;}
 
-	virtual void ClearObjects();
+	virtual void Clear();
 	virtual void Step();
 	virtual void Draw();
 	virtual void Reshape(int w, int h);

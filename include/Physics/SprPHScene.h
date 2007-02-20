@@ -33,6 +33,9 @@ struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
 struct PHTreeNodeIf;
+struct PHTreeNodeDesc;
+struct PHRootNodeIf;
+struct PHRootNodeDesc;
 
 struct PHGearIf;
 struct PHGearDesc;
@@ -84,19 +87,6 @@ public:
 	 */
 	virtual PHSdkIf* GetSdk()=0;
 
-	/** @brief Shapeを作成する
-		@param desc 作成するShapeのディスクリプタ
-		@return Shapeのインタフェース
-	 */
-	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
-	
-	/** @brief Solidを作成する
-		@return Solidのインタフェース
-
-		PHSolidDescのデフォルト値を用いてSolidを作成する．
-	 */
-	virtual PHSolidIf* CreateSolid()=0;
-	
 	/** @brief Solidを作成する
 		@param desc 作成するSolidのディスクリプタ
 		@return Solidのインタフェース
@@ -106,7 +96,7 @@ public:
 	/** @brief Solidの数を取得する
 		@return Solidの数
 	 */
-	virtual int NSolids()=0;
+	virtual int NSolids()const =0;
 
 	/** @brief Solidを取得する
 		@return Solidのインタフェースの配列へのポインタ
@@ -157,12 +147,28 @@ public:
 	 */
 	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
 
+	/** @brief 関節の数を取得する
+	 */
+	virtual int NJoints()const=0;
+
+	/** @brief 関節を取得する
+	 */
+	virtual PHJointIf* GetJoint(int i)=0;
+
 	/** @brief ルートノードを作成する
 		@param root ルートノードとなる剛体
 		@return ルートノードのインタフェース
 		関節ツリーの根となるノードを作成する．
 	 */
-	virtual PHTreeNodeIf* CreateRootNode(PHSolidIf* root)=0;
+	virtual PHTreeNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc)=0;
+
+	/** @brief ルートノードの数
+	 */
+	virtual int NRootNodes()const=0;
+
+	/** @brief ルートノードを取得する
+	 */
+	virtual PHRootNodeIf* GetRootNode(int i)=0;
 
 	/** @brief ツリーノードを作成する
 		@param parent 親ノードのインタフェース
@@ -173,7 +179,7 @@ public:
 		CreateJointによって作成されていなければならない．
 		さらに，parentがソケット側，childがプラグ側である必要がある．
 	 */
-	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child)=0;
+	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc)=0;
 
 	/** @brief ギアを作成する
 		@param lhs ギアで連動させる関節
@@ -186,6 +192,14 @@ public:
 		を満たすように拘束される．
 	 */
 	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc)=0;
+
+	/** @brief ギアの数
+	 */
+	virtual int NGears()const=0;
+
+	/** @brief ギアを取得する
+	 */
+	virtual PHGearIf* GetGear(int i)=0;
 
 	/** @brief パスを作成する
 		@param desc パスのディスクリプタ

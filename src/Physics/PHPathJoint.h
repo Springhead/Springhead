@@ -52,14 +52,16 @@ public:
 	PHPath(const PHPathDesc& desc);
 };
 
-class PHPathJointNode : public PHTreeNode1D{
+class PHPathJointNode : public PHTreeNode1D, public PHPathJointNodeIfInit{
 public:
+	OBJECTDEF(PHPathJointNode, PHTreeNode1D);
 	PHPathJoint* GetJoint(){return DCAST(PHPathJoint, PHTreeNode1D::GetJoint());}
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
 	virtual void CompBias();
+	PHPathJointNode(const PHPathJointNodeDesc& desc = PHPathJointNodeDesc()){}
 };
 
 class PHPathJoint : public PHJoint1D, public PHPathJointIfInit{
@@ -77,7 +79,7 @@ public:
 	virtual void UpdateJointState();
 	//virtual void CompError(double dt);
 	//virtual void ProjectionCorrection(double& F, int k);
-	PHPathJoint();
+	PHPathJoint(const PHPathJointDesc& desc = PHPathJointDesc());
 };
 
 }
