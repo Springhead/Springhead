@@ -293,6 +293,7 @@ int main(int argc, char* argv[]){
 	scene = phSdk->GetScene(0);		// Scene�̎擾
 //	shape = phSdk->GetShapes();		// Shape�̎擾
 	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
+	if (scene) scene->SetTimeStep(0.01);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

@@ -34,7 +34,7 @@ protected:
 	///	形状
 	Shapes shapes;
 	///	他のオブジェクトたち
-	Objects objects;
+	ObjectRefs objects;
 public:
 
 	OBJECTDEF(PHSdk, Sdk);

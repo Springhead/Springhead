@@ -88,7 +88,7 @@ void PHSdk::MergeScene(PHSceneIf* scene0, PHSceneIf* scene1){
 	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
 	if(it0 == scenes.end() || it1 == scenes.end())
 		return;
-	for(int i = 0; i < scene1->NChildObject(); i++){
+	for(unsigned i = 0; i < scene1->NChildObject(); i++){
 		scene0->AddChildObject(scene1->GetChildObject(i));
 	}
 	scenes.erase(it1);
@@ -172,7 +172,7 @@ bool PHSdk::DelChildObject(ObjectIf* o){
 		}
 		return false;
 	}
-	Objects::iterator it = std::find(objects.begin(), objects.end(), DCAST(Object, o));
+	ObjectRefs::iterator it = std::find(objects.begin(), objects.end(), DCAST(Object, o));
 	if (it != objects.end()){
 		objects.erase(it);
 		return true;

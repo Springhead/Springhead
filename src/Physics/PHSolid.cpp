@@ -57,13 +57,11 @@ bool PHSolid::AddChildObject(ObjectIf* obj){
 }
 
 Vec3d PHSolid::GetDeltaPosition() const {
-	//PHScene* s = DCAST(PHScene, nameManager);
-	PHScene* s = DCAST(PHScene, GetScene());
+	PHScene* s = DCAST(PHScene, nameManager);
 	return velocity * s->GetTimeStep();
 }
 Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
-	//PHScene* s = DCAST(PHScene, nameManager);
-	PHScene* s = DCAST(PHScene, GetScene());
+	PHScene* s = DCAST(PHScene, nameManager);
 	double dt = s->GetTimeStep();
 	Quaterniond rot = Quaterniond::Rot(angVelocity*dt);
 	return velocity*dt + rot*(p-center);

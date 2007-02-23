@@ -325,7 +325,6 @@ public:
 	void SetNameManager(NameManagerIf* s);
 	///	NameManagerの取得
 	virtual NameManagerIf* GetNameManager();
-	virtual const NameManagerIf* GetNameManager()const;
 protected:
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 };
@@ -338,11 +337,10 @@ class SceneObject:public NamedObject, public SceneObjectIfInit{
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene();
-	virtual const SceneIf* GetScene() const;
 };
 
-///	Objectのポインタの配列
-class Objects:public UTStack< UTRef<Object> >{
+///	Objectへの参照の配列
+class ObjectRefs:public UTStack< UTRef<Object> >{
 public:
 	///	Tの派生クラスをスタックのTop側から探す．
 	template <class T> bool Find(T*& t){

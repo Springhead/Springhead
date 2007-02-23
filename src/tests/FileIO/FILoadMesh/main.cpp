@@ -23,7 +23,7 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 
-#define TEST_CASE		0				// テストケース
+#define TEST_CASE		2				// テストケース
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
@@ -160,7 +160,7 @@ int main(int argc, char* argv[]){
 
 	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
-	scene = grSdk->CreateScene();
+	scene = grSdk->CreateScene(GRSceneDesc());
 	objs.push_back(scene);
 	fileX->Load(objs, TEST_FILEX);
  

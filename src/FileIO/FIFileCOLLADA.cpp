@@ -46,8 +46,8 @@ static void NodeStart(const char* b, const char* e){
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
 
 	//	型情報の取得
-	UTTypeDesc* type = fileCOLLADA->GetDb()->Find(tn);
-	if (!type) type = fileCOLLADA->GetDb()->Find(tn + "Desc");
+	UTTypeDesc* type = fileCOLLADA->GetTypeDb()->Find(tn);
+	if (!type) type = fileCOLLADA->GetTypeDb()->Find(tn + "Desc");
 	
 	if (type){
 		fileContext->PushType(type);	//	これからロードする型としてPush
@@ -59,18 +59,12 @@ static void NodeStart(const char* b, const char* e){
 }
 ///	ノードの名前の設定
 static void NameSet(const char* b, const char* e){
-	fileContext->datas.back()->name = UTString(b,e);
-}
-///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
-static void LoadNodeStub(const char* b, const char* e){
-	fileContext->fileMaps.Top()->curr = b;
-	fileCOLLADA->LoadNode(fileContext);
+	fileContext->datas.back()->SetName(UTString(b,e));
 }
 
 ///	ノード読み出しの後処理
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
-	fileCOLLADA->LoadEndNode(fileContext);
 	fileContext->PopType();
 	std::cout << "これはテストです" << std::endl;
 }
@@ -78,13 +72,13 @@ static void NodeEnd(const char* b, const char* e){
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	fileCOLLADA->LoadEnterBlock(fileContext);
+	fileCOLLADA->LBlockStart(fileContext);
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileCOLLADA->LoadLeaveBlock(fileContext);
+	fileCOLLADA->LBlockEnd(fileContext);
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
@@ -192,12 +186,12 @@ static void StopArray(const char c){
 static void RefSet(const char* b, const char* e){
 	//DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
 	std::string ref(b,e);
-	fileContext->AddLink(ref, b);
+	fileContext->AddDataLink(ref, b);
 }
 
 //--テスト--------------------------------------------------------
+std::ofstream os("test.txt");
 static void test(const std::string& str, const char* start, const char* end) {
-	std::ofstream os("test.txt");
 	std::cout << str << ": ";
 	os << str << ": ";
 	std::string buf(start, end);
@@ -216,14 +210,14 @@ static void elementStart(const char* start, const char* end)
 {
 	std::string tagName(start, end);
 	std::cout << "elementStart :" << tagName << std::endl;
-	//os << "elementStart :" << tagName << std::endl;
+	os << "elementStart :" << tagName << std::endl;
 }
 
 static void elementEnd(const char* start, const char* end)
 {
 	std::string tagName(start, end);
 	std::cout << "elementEnd :" << tagName << std::endl;
-	//os << "elementEnd :" << tagName << std::endl;
+	os << "elementEnd :" << tagName << std::endl;
 }
 
 }

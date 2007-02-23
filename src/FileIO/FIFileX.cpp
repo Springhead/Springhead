@@ -39,50 +39,34 @@ static bool TypeAvail(){
 	return fileContext->fieldIts.size() && fileContext->fieldIts.back().type;
 }
 
-///	ノードデータの読み出し準備
+///	ノードの始まり．型を見つけてセット
 static void NodeStart(const char* b, const char* e){
-	std::string tn(b,e);
+	UTString tn(b,e);
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
-
-	//	型情報の取得
-	UTTypeDesc* type = fileX->GetDb()->Find(tn);
-	if (!type) type = fileX->GetDb()->Find(tn + "Desc");
-	
-	if (type){
-		fileContext->PushType(type);	//	これからロードする型としてPush
-	}else{
-		tn.append(" not defined.");
-		fileContext->ErrorMessage(NULL, b, tn.c_str());
-		fileContext->PushType(NULL);	//	Popに備えて，Pushしておく
-	}
+	fileX->LNodeStart(fileContext, tn);
 }
 ///	ノードの名前の設定
 static void NameSet(const char* b, const char* e){
-	fileContext->datas.back()->name = UTString(b,e);
-}
-///	読み出したデータ(ObjectDesc)から，オブジェクトを作成する．
-static void LoadNodeStub(const char* b, const char* e){
-	fileContext->fileMaps.Top()->curr = b;
-	fileX->LoadNode(fileContext);
+	UTString n(b,e);
+	fileX->LSetNodeName(fileContext, n);
 }
 
-///	ノード読み出しの後処理
+///	ノードの終わり
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
-	fileX->LoadEndNode(fileContext);
-	fileContext->PopType();
+	fileX->LNodeEnd(fileContext);
 }
 
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	fileX->LoadEnterBlock(fileContext);
+	fileX->LBlockStart(fileContext);
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileX->LoadLeaveBlock(fileContext);
+	fileX->LBlockEnd(fileContext);
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
@@ -190,7 +174,7 @@ static void StopArray(const char c){
 static void RefSet(const char* b, const char* e){
 	//DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
 	std::string ref(b,e);
-	fileContext->AddLink(ref, b);
+	fileContext->AddDataLink(ref, b);
 }
 
 static UTTypeDesc* tdesc;
@@ -214,15 +198,16 @@ static void ArrayNum(int n){
 	tdesc->GetComposit().back().length = n;
 }
 static void TempEnd(char c){
-	tdesc->Link(fileX->GetDb());
+	tdesc->Link(fileX->GetTypeDb());
 	PDEBUG(DSTR << "load template:" << std::endl);
 	tdesc->Print(DSTR);
-	fileX->GetDb()->RegisterDesc(tdesc);
+	fileX->GetTypeDb()->RegisterDesc(tdesc);
 }
 }
 using namespace FileX;
 
 
+///	XXX expected. のエラーメッセージを出すパーサ
 class ExpectParser {
 	std::string msg; 
 public:
@@ -240,9 +225,7 @@ public:
 		return -1;
     }
 }; 
-
 typedef boost::spirit::functor_parser<ExpectParser> ExpP;
-
 
 FIFileX::FIFileX(){
 	Init();
@@ -277,7 +260,7 @@ void FIFileX::Init(){
 	arraySuffix	= id[&ArrayId] | int_p[&ArrayNum] | ExpP("id or int value");
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
-				  if_p(&TypeAvail)[ block[&LoadNodeStub] >> !ch_p(';') >> *(data|ref) ].
+				  if_p(&TypeAvail)[ block >> !ch_p(';') >> *(data|ref) ].
 				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	blockSkip	= ch_p('{') >> *(blockSkip|~ch_p('}')) >> ch_p('}');
@@ -338,6 +321,10 @@ void FIFileX::LoadImp(FILoadContext* fc){
 		fileContext->fileMaps.Top()->end, start, cmt);
 	PopLoaderContext();
 }
+
+
+//----------------------------------------------------
+//	セーブ時のハンドラ
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileX::OnSaveFileStart(FISaveContext* sc){

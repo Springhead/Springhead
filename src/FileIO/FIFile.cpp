@@ -132,6 +132,8 @@ void FIFile::RegisterGroup(const char* gp){
 }
 
 
+//---------------------------------------------------------------------------
+//	FIFile
 
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
@@ -148,57 +150,125 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 }
 void FIFile::Load(FILoadContext* fc){
 	if (fc->IsGood()){
-		fc->typeDb = &typeDb;
+		//	ファイルからデータをロード
 		LoadImp(fc);
 	}
-	fc->Link();
+	fc->LinkData();
+	fc->loadedDatas.Print(DSTR);
+
+	//	データからノードを作成
+	CreateScene(fc);
+	//	ノードをリンク
+	fc->LinkNode();
+	//	リンク後の処理
 	fc->PostTask();
 }
-void FIFile::LoadNode(FILoadContext* fc){
-	if (fc->datas.Top()->type->GetIfInfo()){	
-		//	インタフェースが登録されている場合，
-		//	ロードしたデータからオブジェクトを作る．
-		fc->PushCreateNode(fc->datas.Top()->type->GetIfInfo(), fc->datas.Top()->data);
+void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
+	//	データを作ってスタックに積む
+	UTTypeDesc* type = GetTypeDb()->Find(tn);
+	if (!type) type = GetTypeDb()->Find(tn + "Desc");	
+	if (type){
+		fc->PushType(type);	//	これからロードする型としてPush
+	}else{
+		tn.append(" not defined.");
+		fc->ErrorMessage(NULL, NULL, tn.c_str());
+		fc->PushType(NULL);	//	Popに備えて，Pushしておく
 	}
-	//	ロード用のハンドラがあれば，呼び出す．
-	//	ハンドラは，衝突判定の無効ペアの設定や重力の設定など，ノードを作る以外の仕事をする．
-	static UTLoadHandler key;
-	key.AddRef();
-	key.type = fc->datas.Top()->type->GetTypeName();
-	UTLoadHandlers::iterator it = handlers.lower_bound(&key);
-	UTLoadHandlers::iterator end = handlers.upper_bound(&key);
-	for(; it != end; ++it){
-		(*it)->Load(fc);
+
+	//	データロード前ハンドラの呼び出し
+	if (type){
+		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+		key->type = type->GetTypeName();
+		std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
+			= handlers.equal_range(key);
+		for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+			(*it)->BeforeLoadData(fc->datas.Top(), fc);
+		}
 	}
-	key.DelRef();
 }
-void FIFile::LoadEnterBlock(FILoadContext* fc){
+void FIFile::LNodeEnd(FILoadContext* fc){
+	//	データロード後ハンドラの呼び出し
+	UTTypeDesc* type = fc->fieldIts.Top().type;
+	if (type){
+		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+		key->type = type->GetTypeName();
+		std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
+			= handlers.equal_range(key);
+		for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+			(*it)->AfterLoadData(fc->datas.Top(), fc);
+		}
+	}
+
+	//	スタックの片付け
+	fc->PopType();
+}
+void FIFile::LSetNodeName(FILoadContext* fc, UTString n){
+	fc->datas.back()->SetName(n);
+}
+
+void FIFile::LBlockStart(FILoadContext* fc){
 	char* base = (char*)fc->datas.Top()->data;
 	void* ptr = fc->fieldIts.back().field->GetAddressEx(base, fc->fieldIts.ArrayPos());
-	fc->datas.Push(DBG_NEW UTLoadData(NULL, ptr));
+	fc->datas.Push(DBG_NEW UTLoadedData(fc, NULL, ptr));
 	fc->fieldIts.push_back(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
 }
-void FIFile::LoadLeaveBlock(FILoadContext* fc){
+void FIFile::LBlockEnd(FILoadContext* fc){
 	fc->fieldIts.Pop();
 	fc->datas.Pop();
 }
-void FIFile::LoadEndNode(FILoadContext* fc){
-	if (fc->datas.Top()->type){
-		//	ハンドラがあれば，UTLoadHandlerを呼び出す．
-		static UTLoadHandler key;
-		key.AddRef();
-		key.type = fc->datas.Top()->type->GetTypeName();
-		UTLoadHandlers::iterator lower = handlers.lower_bound(&key);
-		UTLoadHandlers::iterator upper = handlers.upper_bound(&key);
-		while(upper != lower){
-			--upper;
-			(*upper)->Loaded(fc);
+
+void FIFile::CreateScene(UTLoadContext* fc){
+	for(UTLoadedDataRefs::iterator it = fc->loadedDatas.begin(); it!=fc->loadedDatas.end(); ++it){
+		fc->datas.Push(*it);
+		CreateObjectRecursive(fc);
+		fc->datas.Pop();
+	}
+}
+void FIFile::CreateObjectRecursive(UTLoadContext* fc){
+	UTLoadedData* ld = fc->datas.Top();
+
+	//	ハンドラーの処理
+	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+	key->type = ld->type->GetTypeName();
+	std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
+		= handlers.equal_range(key);
+	typedef std::vector<UTLoadHandler*> Handlers;
+	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		(*it)->BeforeCreateObject(ld, fc);
+	}
+
+	//	先祖オブジェクトに作ってもらう
+	ObjectIf* obj = NULL;
+	const IfInfo* info = NULL;
+	if (ld->type) info = ld->type->GetIfInfo();
+	if (info){
+		obj = fc->CreateObject(info, ld->data, ld->GetName());	//	作成して，
+		if (obj){
+			ld->loadedObjects.Push(obj);
+			fc->objects.Push(obj);									//	スタックに積む
+			if (fc->objects.size() == 1){ 
+				fc->rootObjects.push_back(fc->objects.Top());	//	ルートオブジェクトとして記録
+			}
 		}
-		key.DelRef();
-		if (fc->datas.Top()->type->GetIfInfo()){
-			//	LoadNodeで作ったのノードをスタックから削除
-			fc->objects.Pop();
-		}
+	}
+	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterCreateObject(ld, fc);
+	}
+
+	//	子ノードの作成
+	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
+		fc->datas.Push(*it);
+		CreateObjectRecursive(fc);	//	子孫データに対応するオブジェクトの作成
+		fc->datas.Pop();
+	}
+	//	ハンドラーの処理
+	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterCreateChildren(ld, fc);
+	}
+	
+	//	終了処理
+	if(obj){
+		fc->objects.Pop();								//	スタックをPop
 	}
 }
 
@@ -236,9 +306,9 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		//	オブジェクトからデータを取り出す．
 		void* data = (void*)obj->GetDescAddress();
 		if (data){
-			sc->datas.Push(DBG_NEW UTLoadData(type, data));
+			sc->datas.Push(DBG_NEW UTLoadedData(NULL, type, data));
 		}else{
-			sc->datas.Push(DBG_NEW UTLoadData(type));
+			sc->datas.Push(DBG_NEW UTLoadedData(NULL, type));
 			data = sc->datas.back()->data;
 			obj->GetDesc(data);
 		}
@@ -302,7 +372,7 @@ void FIFile::SaveBlock(FISaveContext* sc){
 				case UTTypeDescFieldIt::F_BLOCK:{
 					PDEBUG_EVAL( DSTR << "=" << std::endl; )
 					void* blockData = field->GetAddress(base, pos);
-					sc->datas.Push(new UTLoadData(field->type, blockData));
+					sc->datas.Push(new UTLoadedData(NULL, field->type, blockData));
 					sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
 					SaveBlock(sc);
 					sc->fieldIts.Pop();
