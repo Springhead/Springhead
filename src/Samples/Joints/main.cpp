@@ -141,7 +141,7 @@ void BuildScene0(){
 	//空中に固定する
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetDynamical(false);
-	nodeTree.push_back(scene->CreateRootNode(soBox.back()));
+	nodeTree.push_back(scene->CreateRootNode(soBox.back(), PHRootNodeDesc()));
 
 	// 重力を設定
 	scene->SetGravity(Vec3f(0, -9.8, 0));
@@ -186,10 +186,10 @@ void BuildScene1(){
 	jntLink[3] = scene->CreateJoint(soBox[1], soBox[2], jd);
 
 	// 以下を有効化するとABAが機能し、閉リンクを構成するための1関節のみLCPで解かれる
-	nodeTree.push_back(scene->CreateRootNode(soFloor));
-	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[0]));
-	nodeTree.push_back(scene->CreateTreeNode(nodeTree[1], soBox[2]));
-	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[1]));
+	nodeTree.push_back(scene->CreateRootNode(soFloor, PHRootNodeDesc()));
+	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[0], PHTreeNodeDesc()));
+	nodeTree.push_back(scene->CreateTreeNode(nodeTree[1], soBox[2], PHTreeNodeDesc()));
+	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[1], PHTreeNodeDesc()));
 
 	scene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
 	scene->SetGravity(Vec3f(0, 0.0, 0));
@@ -204,7 +204,7 @@ void BuildScene2(){
 	soBox[0]->AddShape(shapeBox);
 	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox[0]->SetDynamical(false);
-	nodeTree.push_back(scene->CreateRootNode(soBox[0]));
+	nodeTree.push_back(scene->CreateRootNode(soBox[0], PHRootNodeDesc()));
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
 
@@ -249,8 +249,8 @@ void BuildScene4(){
 	PHPathJointIf* joint = DCAST(PHPathJointIf, jntLink[0]);
 	joint->AddChildObject(path);
 	joint->SetPosition(2 * 2 * M_PI);
-	PHTreeNodeIf* node = scene->CreateRootNode(soFloor);
-	scene->CreateTreeNode(node, soBox[0]);
+	PHTreeNodeIf* node = scene->CreateRootNode(soFloor, PHRootNodeDesc());
+	scene->CreateTreeNode(node, soBox[0], PHTreeNodeDesc());
 	
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
@@ -298,12 +298,12 @@ void BuildScene5(){
 	//以下を有効化すると鎖がABAで計算されて関節のドリフトが防がれる．
 	//現状ではABAでの関節バネは未実装
 	
-	PHTreeNodeIf* node = scene->CreateRootNode(soFloor);
-	node = scene->CreateTreeNode(node, soBox[0]);
-	node = scene->CreateTreeNode(node, soBox[1]);
-	node = scene->CreateTreeNode(node, soBox[2]);
-	node = scene->CreateTreeNode(node, soBox[3]);
-	node = scene->CreateTreeNode(node, soBox[4]);
+	PHTreeNodeIf* node = scene->CreateRootNode(soFloor, PHRootNodeDesc());
+	node = scene->CreateTreeNode(node, soBox[0], PHTreeNodeDesc());
+	node = scene->CreateTreeNode(node, soBox[1], PHTreeNodeDesc());
+	node = scene->CreateTreeNode(node, soBox[2], PHTreeNodeDesc());
+	node = scene->CreateTreeNode(node, soBox[3], PHTreeNodeDesc());
+	node = scene->CreateTreeNode(node, soBox[4], PHTreeNodeDesc());
 	
 	
 	double K = 2000, D = 100;
@@ -463,7 +463,7 @@ void OnKey2(char key){
 		size_t n = soBox.size();
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		if(key == ' ')
-			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
+			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1], PHTreeNodeDesc()));
 		//scene->SetContactMode(PHSceneDesc::MODE_NONE);
 		}break;
 	}
