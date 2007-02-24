@@ -142,7 +142,7 @@ int main(int argc, char* argv[]){
 
 	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
-	scene = grSdk->CreateScene();
+	scene = grSdk->CreateScene(GRSceneDesc());
 	objs.push_back(scene);
 	fileCOLLADA->Load(objs, TEST_FILECOLLADA);
 
