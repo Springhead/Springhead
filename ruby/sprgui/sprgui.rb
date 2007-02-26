@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
 require '../Springhead'
+require '../PTM'
 require 'sprmainwindow'
 
 include Springhead
+include PTM
 
 $sprapp
 

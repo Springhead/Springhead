@@ -2,7 +2,7 @@ include Fox
 
 class SprVectorProperty < FXHorizontalFrame
 	def initialize(owner, ndim, res=2)
-		super(owner, FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y)
+		super(owner, FRAME_NONE|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 		@ndim = ndim
 		@res = res
 		@vector = Array.new(@ndim)

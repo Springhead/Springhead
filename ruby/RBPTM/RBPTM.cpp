@@ -1990,10 +1990,10 @@ SWIGINTERN Quaterniond Quaterniond___add__(Quaterniond *self,Quaterniond q){
 SWIGINTERN Quaterniond Quaterniond___sub__(Quaterniond *self,Quaterniond q){
 		return *self - q;
 	}
-SWIGINTERN Quaterniond Quaterniond___mul____SWIG_0(Quaterniond *self,Quaterniond q){
+SWIGINTERN Quaterniond Quaterniond___mul__(Quaterniond *self,Quaterniond q){
 		return *self * q;	
 	}
-SWIGINTERN Vec3d Quaterniond___mul____SWIG_1(Quaterniond *self,Vec3d v){
+SWIGINTERN Vec3d Quaterniond_transform(Quaterniond *self,Vec3d v){
 		return *self * v;
 	}
 SWIGINTERN void Quaterniond_setV(Quaterniond *self,Vec3d const &v){
@@ -2001,6 +2001,12 @@ SWIGINTERN void Quaterniond_setV(Quaterniond *self,Vec3d const &v){
 	}
 SWIGINTERN Vec3d Quaterniond_getV(Quaterniond *self){
 		return self->V();
+	}
+SWIGINTERN Vec3d Posed_transform(Posed *self,Vec3d v){
+		return *self * v;
+	}
+SWIGINTERN Posed Posed___mul__(Posed *self,Posed p){
+		return *self * p;
 	}
 SWIGINTERN void Posed_setPos(Posed *self,Vec3d const &v){
 		self->Pos() = v;
@@ -11824,7 +11830,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Quaterniond___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+_wrap_Quaterniond___mul__(int argc, VALUE *argv, VALUE self) {
   Quaterniond *arg1 = (Quaterniond *) 0 ;
   Quaterniond arg2 ;
   Quaterniond result;
@@ -11853,7 +11859,7 @@ _wrap_Quaterniond___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
       arg2 = *(reinterpret_cast< Quaterniond * >(argp2));
     }
   }
-  result = Quaterniond___mul____SWIG_0(arg1,arg2);
+  result = Quaterniond___mul__(arg1,arg2);
   vresult = SWIG_NewPointerObj((new Quaterniond(static_cast< const Quaterniond& >(result))), SWIGTYPE_p_Quaterniond, SWIG_POINTER_OWN |  0 );
   return vresult;
 fail:
@@ -11862,7 +11868,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Quaterniond___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_Quaterniond_transform(int argc, VALUE *argv, VALUE self) {
   Quaterniond *arg1 = (Quaterniond *) 0 ;
   Vec3d arg2 ;
   Vec3d result;
@@ -11877,70 +11883,24 @@ _wrap_Quaterniond___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Quaterniond, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Quaterniond *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "transform" "', argument " "1"" of type '" "Quaterniond *""'"); 
   }
   arg1 = reinterpret_cast< Quaterniond * >(argp1);
   {
     res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3d,  0 );
     if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec3d""'"); 
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "transform" "', argument " "2"" of type '" "Vec3d""'"); 
     }  
     if (!argp2) {
-      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec3d""'");
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "transform" "', argument " "2"" of type '" "Vec3d""'");
     } else {
       arg2 = *(reinterpret_cast< Vec3d * >(argp2));
     }
   }
-  result = Quaterniond___mul____SWIG_1(arg1,arg2);
+  result = Quaterniond_transform(arg1,arg2);
   vresult = SWIG_NewPointerObj((new Vec3d(static_cast< const Vec3d& >(result))), SWIGTYPE_p_Vec3d, SWIG_POINTER_OWN |  0 );
   return vresult;
 fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE _wrap_Quaterniond___mul__(int nargs, VALUE *args, VALUE self) {
-  int argc;
-  VALUE argv[3];
-  int ii;
-  
-  argc = nargs + 1;
-  argv[0] = self;
-  if (argc > 3) SWIG_fail;
-  for (ii = 1; (ii < argc); ii++) {
-    argv[ii] = args[ii-1];
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Quaterniond, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Quaterniond, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_Quaterniond___mul____SWIG_0(nargs, args, self);
-      }
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Quaterniond, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_Quaterniond___mul____SWIG_1(nargs, args, self);
-      }
-    }
-  }
-  
-fail:
-  rb_raise(rb_eArgError, "No matching function for overloaded 'Quaterniond___mul__'");
   return Qnil;
 }
 
@@ -12465,6 +12425,173 @@ _wrap_Posed_pz_get(int argc, VALUE *argv, VALUE self) {
   result = (double) ((arg1)->pz);
   vresult = SWIG_From_double(static_cast< double >(result));
   return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_clear(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_norm(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "norm" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  result = (double)(arg1)->norm();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_square(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "square" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  result = (double)(arg1)->square();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_resize(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  size_t arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  (arg1)->resize(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_size(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "size" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  result = (arg1)->size();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_unit(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Posed result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unit" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  result = (arg1)->unit();
+  vresult = SWIG_NewPointerObj((new Posed(static_cast< const Posed& >(result))), SWIGTYPE_p_Posed, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_unitize(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unitize" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  (arg1)->unitize();
+  return Qnil;
 fail:
   return Qnil;
 }
@@ -13035,6 +13162,82 @@ _wrap_new_Posed(int argc, VALUE *argv, VALUE self) {
   result = (Posed *)new Posed();DATA_PTR(self) = result;
   
   return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed_transform(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Vec3d arg2 ;
+  Vec3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "transform" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3d,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "transform" "', argument " "2"" of type '" "Vec3d""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "transform" "', argument " "2"" of type '" "Vec3d""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec3d * >(argp2));
+    }
+  }
+  result = Posed_transform(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3d(static_cast< const Vec3d& >(result))), SWIGTYPE_p_Vec3d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Posed___mul__(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = (Posed *) 0 ;
+  Posed arg2 ;
+  Posed result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Posed, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Posed *""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Posed,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Posed""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Posed""'");
+    } else {
+      arg2 = *(reinterpret_cast< Posed * >(argp2));
+    }
+  }
+  result = Posed___mul__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Posed(static_cast< const Posed& >(result))), SWIGTYPE_p_Posed, SWIG_POINTER_OWN |  0 );
+  return vresult;
 fail:
   return Qnil;
 }
@@ -13776,6 +13979,7 @@ SWIGEXPORT void Init_PTM(void) {
   rb_define_method(cQuaterniond.klass, "+", VALUEFUNC(_wrap_Quaterniond___add__), -1);
   rb_define_method(cQuaterniond.klass, "-", VALUEFUNC(_wrap_Quaterniond___sub__), -1);
   rb_define_method(cQuaterniond.klass, "*", VALUEFUNC(_wrap_Quaterniond___mul__), -1);
+  rb_define_method(cQuaterniond.klass, "transform", VALUEFUNC(_wrap_Quaterniond_transform), -1);
   rb_define_method(cQuaterniond.klass, "v=", VALUEFUNC(_wrap_Quaterniond_ve___), -1);
   rb_define_method(cQuaterniond.klass, "v", VALUEFUNC(_wrap_Quaterniond_v), -1);
   cQuaterniond.mark = 0;
@@ -13802,12 +14006,21 @@ SWIGEXPORT void Init_PTM(void) {
   rb_define_method(cPosed.klass, "py", VALUEFUNC(_wrap_Posed_py_get), -1);
   rb_define_method(cPosed.klass, "pz=", VALUEFUNC(_wrap_Posed_pz_set), -1);
   rb_define_method(cPosed.klass, "pz", VALUEFUNC(_wrap_Posed_pz_get), -1);
+  rb_define_method(cPosed.klass, "clear", VALUEFUNC(_wrap_Posed_clear), -1);
+  rb_define_method(cPosed.klass, "norm", VALUEFUNC(_wrap_Posed_norm), -1);
+  rb_define_method(cPosed.klass, "square", VALUEFUNC(_wrap_Posed_square), -1);
+  rb_define_method(cPosed.klass, "resize", VALUEFUNC(_wrap_Posed_resize), -1);
+  rb_define_method(cPosed.klass, "size", VALUEFUNC(_wrap_Posed_size), -1);
+  rb_define_method(cPosed.klass, "unit", VALUEFUNC(_wrap_Posed_unit), -1);
+  rb_define_method(cPosed.klass, "unitize", VALUEFUNC(_wrap_Posed_unitize), -1);
   rb_define_method(cPosed.klass, "Inv", VALUEFUNC(_wrap_Posed_Inv), -1);
   rb_define_singleton_method(cPosed.klass, "Unit", VALUEFUNC(_wrap_Posed_Unit), -1);
   rb_define_singleton_method(cPosed.klass, "Trn", VALUEFUNC(_wrap_Posed_Trn), -1);
   rb_define_singleton_method(cPosed.klass, "Rot", VALUEFUNC(_wrap_Posed_Rot), -1);
   rb_define_method(cPosed.klass, "FromAffine", VALUEFUNC(_wrap_Posed_FromAffine), -1);
   rb_define_method(cPosed.klass, "ToAffine", VALUEFUNC(_wrap_Posed_ToAffine), -1);
+  rb_define_method(cPosed.klass, "transform", VALUEFUNC(_wrap_Posed_transform), -1);
+  rb_define_method(cPosed.klass, "*", VALUEFUNC(_wrap_Posed___mul__), -1);
   rb_define_method(cPosed.klass, "pos=", VALUEFUNC(_wrap_Posed_pose___), -1);
   rb_define_method(cPosed.klass, "pos", VALUEFUNC(_wrap_Posed_pos), -1);
   rb_define_method(cPosed.klass, "ori=", VALUEFUNC(_wrap_Posed_orie___), -1);

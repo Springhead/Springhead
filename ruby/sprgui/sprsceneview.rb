@@ -18,8 +18,9 @@ class SprPHSceneView < FXTreeList
 
 		# solids
 		solids = @phscene.GetSolids()
-		itemSolids = appendItem(nil, "solids (#{solids.size})")
-		solids.each do |s|
+		itemSolids = appendItem(nil, "solids (#{@phscene.NSolids()})")
+		for i in 0..@phscene.NSolids()-1
+			s = solids[i]
 			appendItem(itemSolids, s.GetName(), nil, nil, s)
 		end
 
@@ -31,9 +32,9 @@ class SprPHSceneView < FXTreeList
 		end
 
 		# joints
-		joints = @phscene.GetJoints()
-		itemJoints = appendItem(nil, "joints (#{joints.size})")
-		joints.each do |j|
+		itemJoints = appendItem(nil, "joints (#{@phscene.NJoints()})")
+		for i in 0..@phscene.NJoints()-1
+			j = @phscene.GetJoint(i)
 			appendItem(itemJoints, j.GetName(), nil, nil, j)
 		end
 

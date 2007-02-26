@@ -1614,69 +1614,80 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 #define SWIGTYPE_p_Spr__ObjectStatesIf swig_types[70]
 #define SWIGTYPE_p_Spr__PHBallJointDesc swig_types[71]
 #define SWIGTYPE_p_Spr__PHBallJointIf swig_types[72]
-#define SWIGTYPE_p_Spr__PHConstraintDesc swig_types[73]
-#define SWIGTYPE_p_Spr__PHConstraintEngine swig_types[74]
-#define SWIGTYPE_p_Spr__PHConstraintIf swig_types[75]
-#define SWIGTYPE_p_Spr__PHContactPointIf swig_types[76]
-#define SWIGTYPE_p_Spr__PHEngineIf swig_types[77]
-#define SWIGTYPE_p_Spr__PHGearDesc swig_types[78]
-#define SWIGTYPE_p_Spr__PHGearIf swig_types[79]
-#define SWIGTYPE_p_Spr__PHGravityEngine swig_types[80]
-#define SWIGTYPE_p_Spr__PHHingeJointDesc swig_types[81]
-#define SWIGTYPE_p_Spr__PHHingeJointIf swig_types[82]
-#define SWIGTYPE_p_Spr__PHInactiveSolids swig_types[83]
-#define SWIGTYPE_p_Spr__PHJoint1DDesc swig_types[84]
-#define SWIGTYPE_p_Spr__PHJoint1DIf swig_types[85]
-#define SWIGTYPE_p_Spr__PHJointIf swig_types[86]
-#define SWIGTYPE_p_Spr__PHMaterial swig_types[87]
-#define SWIGTYPE_p_Spr__PHPathDesc swig_types[88]
-#define SWIGTYPE_p_Spr__PHPathIf swig_types[89]
-#define SWIGTYPE_p_Spr__PHPathJointDesc swig_types[90]
-#define SWIGTYPE_p_Spr__PHPathJointIf swig_types[91]
-#define SWIGTYPE_p_Spr__PHPathPoint swig_types[92]
-#define SWIGTYPE_p_Spr__PHRootNodeIf swig_types[93]
-#define SWIGTYPE_p_Spr__PHSceneDesc swig_types[94]
-#define SWIGTYPE_p_Spr__PHSceneIf swig_types[95]
-#define SWIGTYPE_p_Spr__PHSceneState swig_types[96]
-#define SWIGTYPE_p_Spr__PHSdkDesc swig_types[97]
-#define SWIGTYPE_p_Spr__PHSdkIf swig_types[98]
-#define SWIGTYPE_p_Spr__PHSliderJointDesc swig_types[99]
-#define SWIGTYPE_p_Spr__PHSliderJointIf swig_types[100]
-#define SWIGTYPE_p_Spr__PHSolidDesc swig_types[101]
-#define SWIGTYPE_p_Spr__PHSolidIf swig_types[102]
-#define SWIGTYPE_p_Spr__PHSolidState swig_types[103]
-#define SWIGTYPE_p_Spr__PHSpringDesc swig_types[104]
-#define SWIGTYPE_p_Spr__PHSpringIf swig_types[105]
-#define SWIGTYPE_p_Spr__PHTreeNodeIf swig_types[106]
-#define SWIGTYPE_p_Spr__SceneIf swig_types[107]
-#define SWIGTYPE_p_Spr__SceneObjectIf swig_types[108]
-#define SWIGTYPE_p_Spr__SdkIf swig_types[109]
-#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[110]
-#define SWIGTYPE_p_UTString swig_types[111]
-#define SWIGTYPE_p_UTTypeInfo swig_types[112]
-#define SWIGTYPE_p_Vec2f swig_types[113]
-#define SWIGTYPE_p_Vec3d swig_types[114]
-#define SWIGTYPE_p_Vec3f swig_types[115]
-#define SWIGTYPE_p_Vec4f swig_types[116]
-#define SWIGTYPE_p_char swig_types[117]
-#define SWIGTYPE_p_container_t swig_types[118]
-#define SWIGTYPE_p_double swig_types[119]
-#define SWIGTYPE_p_int swig_types[120]
-#define SWIGTYPE_p_p_Spr__PHSolidIf swig_types[121]
-#define SWIGTYPE_p_p_char swig_types[122]
-#define SWIGTYPE_p_size_t swig_types[123]
-#define SWIGTYPE_p_std__ostream swig_types[124]
-#define SWIGTYPE_p_std__string swig_types[125]
-#define SWIGTYPE_p_std__vectorTSpr__PHPathPoint_t swig_types[126]
-#define SWIGTYPE_p_std__vectorTVec2f_t swig_types[127]
-#define SWIGTYPE_p_std__vectorTVec3f_t swig_types[128]
-#define SWIGTYPE_p_std__vectorTVec4f_t swig_types[129]
-#define SWIGTYPE_p_std__vectorTsize_t_t swig_types[130]
-#define SWIGTYPE_p_std__vectorTstd__string_t swig_types[131]
-#define SWIGTYPE_p_unsigned_int swig_types[132]
-#define SWIGTYPE_p_void swig_types[133]
-static swig_type_info *swig_types[135];
-static swig_module_info swig_module = {swig_types, 134, 0, 0, 0, 0};
+#define SWIGTYPE_p_Spr__PHBallJointNodeDesc swig_types[73]
+#define SWIGTYPE_p_Spr__PHBallJointNodeIf swig_types[74]
+#define SWIGTYPE_p_Spr__PHConstraintDesc swig_types[75]
+#define SWIGTYPE_p_Spr__PHConstraintEngine swig_types[76]
+#define SWIGTYPE_p_Spr__PHConstraintIf swig_types[77]
+#define SWIGTYPE_p_Spr__PHContactPointIf swig_types[78]
+#define SWIGTYPE_p_Spr__PHEngineIf swig_types[79]
+#define SWIGTYPE_p_Spr__PHGearDesc swig_types[80]
+#define SWIGTYPE_p_Spr__PHGearIf swig_types[81]
+#define SWIGTYPE_p_Spr__PHGravityEngine swig_types[82]
+#define SWIGTYPE_p_Spr__PHHingeJointDesc swig_types[83]
+#define SWIGTYPE_p_Spr__PHHingeJointIf swig_types[84]
+#define SWIGTYPE_p_Spr__PHHingeJointNodeDesc swig_types[85]
+#define SWIGTYPE_p_Spr__PHHingeJointNodeIf swig_types[86]
+#define SWIGTYPE_p_Spr__PHInactiveSolids swig_types[87]
+#define SWIGTYPE_p_Spr__PHJoint1DDesc swig_types[88]
+#define SWIGTYPE_p_Spr__PHJoint1DIf swig_types[89]
+#define SWIGTYPE_p_Spr__PHJointIf swig_types[90]
+#define SWIGTYPE_p_Spr__PHMaterial swig_types[91]
+#define SWIGTYPE_p_Spr__PHPathDesc swig_types[92]
+#define SWIGTYPE_p_Spr__PHPathIf swig_types[93]
+#define SWIGTYPE_p_Spr__PHPathJointDesc swig_types[94]
+#define SWIGTYPE_p_Spr__PHPathJointIf swig_types[95]
+#define SWIGTYPE_p_Spr__PHPathJointNodeDesc swig_types[96]
+#define SWIGTYPE_p_Spr__PHPathJointNodeIf swig_types[97]
+#define SWIGTYPE_p_Spr__PHPathPoint swig_types[98]
+#define SWIGTYPE_p_Spr__PHRootNodeDesc swig_types[99]
+#define SWIGTYPE_p_Spr__PHRootNodeIf swig_types[100]
+#define SWIGTYPE_p_Spr__PHSceneDesc swig_types[101]
+#define SWIGTYPE_p_Spr__PHSceneIf swig_types[102]
+#define SWIGTYPE_p_Spr__PHSceneState swig_types[103]
+#define SWIGTYPE_p_Spr__PHSdkDesc swig_types[104]
+#define SWIGTYPE_p_Spr__PHSdkIf swig_types[105]
+#define SWIGTYPE_p_Spr__PHSliderJointDesc swig_types[106]
+#define SWIGTYPE_p_Spr__PHSliderJointIf swig_types[107]
+#define SWIGTYPE_p_Spr__PHSliderJointNodeDesc swig_types[108]
+#define SWIGTYPE_p_Spr__PHSliderJointNodeIf swig_types[109]
+#define SWIGTYPE_p_Spr__PHSolidDesc swig_types[110]
+#define SWIGTYPE_p_Spr__PHSolidIf swig_types[111]
+#define SWIGTYPE_p_Spr__PHSolidState swig_types[112]
+#define SWIGTYPE_p_Spr__PHSpringDesc swig_types[113]
+#define SWIGTYPE_p_Spr__PHSpringIf swig_types[114]
+#define SWIGTYPE_p_Spr__PHTreeNodeDesc swig_types[115]
+#define SWIGTYPE_p_Spr__PHTreeNodeIf swig_types[116]
+#define SWIGTYPE_p_Spr__SceneIf swig_types[117]
+#define SWIGTYPE_p_Spr__SceneObjectIf swig_types[118]
+#define SWIGTYPE_p_Spr__SdkIf swig_types[119]
+#define SWIGTYPE_p_UTRefTSpr__FWVFuncBridge_t swig_types[120]
+#define SWIGTYPE_p_UTString swig_types[121]
+#define SWIGTYPE_p_UTTypeInfo swig_types[122]
+#define SWIGTYPE_p_Vec2f swig_types[123]
+#define SWIGTYPE_p_Vec3d swig_types[124]
+#define SWIGTYPE_p_Vec3f swig_types[125]
+#define SWIGTYPE_p_Vec4f swig_types[126]
+#define SWIGTYPE_p_char swig_types[127]
+#define SWIGTYPE_p_container_t swig_types[128]
+#define SWIGTYPE_p_double swig_types[129]
+#define SWIGTYPE_p_int swig_types[130]
+#define SWIGTYPE_p_p_Spr__FWObjectIf swig_types[131]
+#define SWIGTYPE_p_p_Spr__PHSolidIf swig_types[132]
+#define SWIGTYPE_p_p_char swig_types[133]
+#define SWIGTYPE_p_size_t swig_types[134]
+#define SWIGTYPE_p_std__ostream swig_types[135]
+#define SWIGTYPE_p_std__string swig_types[136]
+#define SWIGTYPE_p_std__vectorTSpr__PHPathPoint_t swig_types[137]
+#define SWIGTYPE_p_std__vectorTVec2f_t swig_types[138]
+#define SWIGTYPE_p_std__vectorTVec3f_t swig_types[139]
+#define SWIGTYPE_p_std__vectorTVec4f_t swig_types[140]
+#define SWIGTYPE_p_std__vectorTsize_t_t swig_types[141]
+#define SWIGTYPE_p_std__vectorTstd__string_t swig_types[142]
+#define SWIGTYPE_p_unsigned_int swig_types[143]
+#define SWIGTYPE_p_void swig_types[144]
+static swig_type_info *swig_types[146];
+static swig_module_info swig_module = {swig_types, 145, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -12336,62 +12347,6 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_GRSdkIf_NChildObject(int argc, VALUE *argv, VALUE self) {
-  Spr::GRSdkIf *arg1 = (Spr::GRSdkIf *) 0 ;
-  size_t result;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSdkIf, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NChildObject" "', argument " "1"" of type '" "Spr::GRSdkIf const *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::GRSdkIf * >(argp1);
-  result = ((Spr::GRSdkIf const *)arg1)->NChildObject();
-  vresult = SWIG_From_size_t(static_cast< size_t >(result));
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_GRSdkIf_GetChildObject(int argc, VALUE *argv, VALUE self) {
-  Spr::GRSdkIf *arg1 = (Spr::GRSdkIf *) 0 ;
-  size_t arg2 ;
-  Spr::ObjectIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  size_t val2 ;
-  int ecode2 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSdkIf, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetChildObject" "', argument " "1"" of type '" "Spr::GRSdkIf *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::GRSdkIf * >(argp1);
-  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GetChildObject" "', argument " "2"" of type '" "size_t""'");
-  } 
-  arg2 = static_cast< size_t >(val2);
-  result = (Spr::ObjectIf *)(arg1)->GetChildObject(arg2);
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
 _wrap_GRSdkIf_GetScene(int argc, VALUE *argv, VALUE self) {
   Spr::GRSdkIf *arg1 = (Spr::GRSdkIf *) 0 ;
   size_t arg2 ;
@@ -12442,6 +12397,43 @@ _wrap_GRSdkIf_NScene(int argc, VALUE *argv, VALUE self) {
   result = (arg1)->NScene();
   vresult = SWIG_From_size_t(static_cast< size_t >(result));
   return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_GRSdkIf_MergeScene(int argc, VALUE *argv, VALUE self) {
+  Spr::GRSdkIf *arg1 = (Spr::GRSdkIf *) 0 ;
+  Spr::GRSceneIf *arg2 = (Spr::GRSceneIf *) 0 ;
+  Spr::GRSceneIf *arg3 = (Spr::GRSceneIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__GRSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MergeScene" "', argument " "1"" of type '" "Spr::GRSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::GRSdkIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "MergeScene" "', argument " "2"" of type '" "Spr::GRSceneIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::GRSceneIf * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Spr__GRSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "MergeScene" "', argument " "3"" of type '" "Spr::GRSceneIf *""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::GRSceneIf * >(argp3);
+  (arg1)->MergeScene(arg2,arg3);
+  return Qnil;
 fail:
   return Qnil;
 }
@@ -14292,6 +14284,43 @@ fail:
 
 
 SWIGINTERN VALUE
+_wrap_PHSdkIf_MergeScene(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSdkIf *arg1 = (Spr::PHSdkIf *) 0 ;
+  Spr::PHSceneIf *arg2 = (Spr::PHSceneIf *) 0 ;
+  Spr::PHSceneIf *arg3 = (Spr::PHSceneIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MergeScene" "', argument " "1"" of type '" "Spr::PHSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSdkIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "MergeScene" "', argument " "2"" of type '" "Spr::PHSceneIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::PHSceneIf * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "MergeScene" "', argument " "3"" of type '" "Spr::PHSceneIf *""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::PHSceneIf * >(argp3);
+  (arg1)->MergeScene(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
 _wrap_PHSdkIf_CreateShape(int argc, VALUE *argv, VALUE self) {
   Spr::PHSdkIf *arg1 = (Spr::PHSdkIf *) 0 ;
   Spr::CDShapeDesc *arg2 = 0 ;
@@ -14803,31 +14832,7 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PHSceneIf_CreateSolid__SWIG_0(int argc, VALUE *argv, VALUE self) {
-  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
-  Spr::PHSolidIf *result = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  VALUE vresult = Qnil;
-  
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
-  }
-  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "CreateSolid" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
-  }
-  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
-  result = (Spr::PHSolidIf *)(arg1)->CreateSolid();
-  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSolidIf, 0 |  0 );
-  return vresult;
-fail:
-  return Qnil;
-}
-
-
-SWIGINTERN VALUE
-_wrap_PHSceneIf_CreateSolid__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_PHSceneIf_CreateSolid(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
   Spr::PHSolidDesc *arg2 = 0 ;
   Spr::PHSolidIf *result = 0 ;
@@ -14861,47 +14866,6 @@ fail:
 }
 
 
-SWIGINTERN VALUE _wrap_PHSceneIf_CreateSolid(int nargs, VALUE *args, VALUE self) {
-  int argc;
-  VALUE argv[3];
-  int ii;
-  
-  argc = nargs + 1;
-  argv[0] = self;
-  if (argc > 3) SWIG_fail;
-  for (ii = 1; (ii < argc); ii++) {
-    argv[ii] = args[ii-1];
-  }
-  if (argc == 1) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__PHSceneIf, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      return _wrap_PHSceneIf_CreateSolid__SWIG_0(nargs, args, self);
-    }
-  }
-  if (argc == 2) {
-    int _v;
-    void *vptr = 0;
-    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Spr__PHSceneIf, 0);
-    _v = SWIG_CheckState(res);
-    if (_v) {
-      void *vptr = 0;
-      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Spr__PHSolidDesc, 0);
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        return _wrap_PHSceneIf_CreateSolid__SWIG_1(nargs, args, self);
-      }
-    }
-  }
-  
-fail:
-  rb_raise(rb_eArgError, "No matching function for overloaded 'PHSceneIf_CreateSolid'");
-  return Qnil;
-}
-
-
 SWIGINTERN VALUE
 _wrap_PHSceneIf_NSolids(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
@@ -14915,10 +14879,10 @@ _wrap_PHSceneIf_NSolids(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NSolids" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NSolids" "', argument " "1"" of type '" "Spr::PHSceneIf const *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
-  result = (int)(arg1)->NSolids();
+  result = (int)((Spr::PHSceneIf const *)arg1)->NSolids();
   vresult = SWIG_From_int(static_cast< int >(result));
   return vresult;
 fail:
@@ -15517,10 +15481,10 @@ _wrap_PHSceneIf_NJoints(int argc, VALUE *argv, VALUE self) {
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NJoints" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NJoints" "', argument " "1"" of type '" "Spr::PHSceneIf const *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
-  result = (int)(arg1)->NJoints();
+  result = (int)((Spr::PHSceneIf const *)arg1)->NJoints();
   vresult = SWIG_From_int(static_cast< int >(result));
   return vresult;
 fail:
@@ -15529,27 +15493,31 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_PHSceneIf_GetJoints(int argc, VALUE *argv, VALUE self) {
+_wrap_PHSceneIf_GetJoint(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
-  Spr::PHJointIf **result = 0 ;
+  int arg2 ;
+  Spr::PHJointIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
   VALUE vresult = Qnil;
   
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetJoints" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetJoint" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
   }
   arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
-  result = (Spr::PHJointIf **)(arg1)->GetJoints();
-  
-  vresult = rb_ary_new2(arg1->NJoints());
-  for(int i = 0; i < arg1->NJoints(); i++)
-  rb_ary_store(vresult, i, SWIG_NewPointerObj(SWIG_as_voidptr(result[i]), SWIGTYPE_p_Spr__PHJointIf, 0 |  0 ));
-  
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GetJoint" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  result = (Spr::PHJointIf *)(arg1)->GetJoint(arg2);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHJointIf, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -15560,15 +15528,18 @@ SWIGINTERN VALUE
 _wrap_PHSceneIf_CreateRootNode(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
   Spr::PHSolidIf *arg2 = (Spr::PHSolidIf *) 0 ;
+  Spr::PHRootNodeDesc *arg3 = 0 ;
   Spr::PHTreeNodeIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
   void *argp2 = 0 ;
   int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
   VALUE vresult = Qnil;
   
-  if ((argc < 1) || (argc > 1)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
@@ -15580,8 +15551,72 @@ _wrap_PHSceneIf_CreateRootNode(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "CreateRootNode" "', argument " "2"" of type '" "Spr::PHSolidIf *""'"); 
   }
   arg2 = reinterpret_cast< Spr::PHSolidIf * >(argp2);
-  result = (Spr::PHTreeNodeIf *)(arg1)->CreateRootNode(arg2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Spr__PHRootNodeDesc,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CreateRootNode" "', argument " "3"" of type '" "Spr::PHRootNodeDesc const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateRootNode" "', argument " "3"" of type '" "Spr::PHRootNodeDesc const &""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::PHRootNodeDesc * >(argp3);
+  result = (Spr::PHTreeNodeIf *)(arg1)->CreateRootNode(arg2,(Spr::PHRootNodeDesc const &)*arg3);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHTreeNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_PHSceneIf_NRootNodes(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
+  int result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NRootNodes" "', argument " "1"" of type '" "Spr::PHSceneIf const *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
+  result = (int)((Spr::PHSceneIf const *)arg1)->NRootNodes();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_PHSceneIf_GetRootNode(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
+  int arg2 ;
+  Spr::PHRootNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetRootNode" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GetRootNode" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  result = (Spr::PHRootNodeIf *)(arg1)->GetRootNode(arg2);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHRootNodeIf, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -15593,6 +15628,7 @@ _wrap_PHSceneIf_CreateTreeNode(int argc, VALUE *argv, VALUE self) {
   Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
   Spr::PHTreeNodeIf *arg2 = (Spr::PHTreeNodeIf *) 0 ;
   Spr::PHSolidIf *arg3 = (Spr::PHSolidIf *) 0 ;
+  Spr::PHTreeNodeDesc *arg4 = 0 ;
   Spr::PHTreeNodeIf *result = 0 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -15600,10 +15636,12 @@ _wrap_PHSceneIf_CreateTreeNode(int argc, VALUE *argv, VALUE self) {
   int res2 = 0 ;
   void *argp3 = 0 ;
   int res3 = 0 ;
+  void *argp4 ;
+  int res4 = 0 ;
   VALUE vresult = Qnil;
   
-  if ((argc < 2) || (argc > 2)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
   }
   res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
   if (!SWIG_IsOK(res1)) {
@@ -15620,7 +15658,15 @@ _wrap_PHSceneIf_CreateTreeNode(int argc, VALUE *argv, VALUE self) {
     SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "CreateTreeNode" "', argument " "3"" of type '" "Spr::PHSolidIf *""'"); 
   }
   arg3 = reinterpret_cast< Spr::PHSolidIf * >(argp3);
-  result = (Spr::PHTreeNodeIf *)(arg1)->CreateTreeNode(arg2,arg3);
+  res4 = SWIG_ConvertPtr(argv[2], &argp4, SWIGTYPE_p_Spr__PHTreeNodeDesc,  0 );
+  if (!SWIG_IsOK(res4)) {
+    SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "CreateTreeNode" "', argument " "4"" of type '" "Spr::PHTreeNodeDesc const &""'"); 
+  }
+  if (!argp4) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "CreateTreeNode" "', argument " "4"" of type '" "Spr::PHTreeNodeDesc const &""'"); 
+  }
+  arg4 = reinterpret_cast< Spr::PHTreeNodeDesc * >(argp4);
+  result = (Spr::PHTreeNodeIf *)(arg1)->CreateTreeNode(arg2,arg3,(Spr::PHTreeNodeDesc const &)*arg4);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHTreeNodeIf, 0 |  0 );
   return vresult;
 fail:
@@ -15672,6 +15718,62 @@ _wrap_PHSceneIf_CreateGear(int argc, VALUE *argv, VALUE self) {
   }
   arg4 = reinterpret_cast< Spr::PHGearDesc * >(argp4);
   result = (Spr::PHGearIf *)(arg1)->CreateGear(arg2,arg3,(Spr::PHGearDesc const &)*arg4);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHGearIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_PHSceneIf_NGears(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
+  int result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NGears" "', argument " "1"" of type '" "Spr::PHSceneIf const *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
+  result = (int)((Spr::PHSceneIf const *)arg1)->NGears();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_PHSceneIf_GetGear(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSceneIf *arg1 = (Spr::PHSceneIf *) 0 ;
+  int arg2 ;
+  Spr::PHGearIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetGear" "', argument " "1"" of type '" "Spr::PHSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHSceneIf * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "GetGear" "', argument " "2"" of type '" "int""'");
+  } 
+  arg2 = static_cast< int >(val2);
+  result = (Spr::PHGearIf *)(arg1)->GetGear(arg2);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHGearIf, 0 |  0 );
   return vresult;
 fail:
@@ -19547,6 +19649,294 @@ free_Spr_PHSpringDesc(Spr::PHSpringDesc *arg1) {
     delete arg1;
 }
 
+swig_class cPHTreeNodeDesc;
+
+SWIGINTERN VALUE
+_wrap_PHTreeNodeDesc_type_set(int argc, VALUE *argv, VALUE self) {
+  Spr::PHTreeNodeDesc *arg1 = (Spr::PHTreeNodeDesc *) 0 ;
+  enum Spr::PHTreeNodeDesc::NodeType arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHTreeNodeDesc, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "type" "', argument " "1"" of type '" "Spr::PHTreeNodeDesc *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHTreeNodeDesc * >(argp1);
+  ecode2 = SWIG_AsVal_int(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "type" "', argument " "2"" of type '" "enum Spr::PHTreeNodeDesc::NodeType""'");
+  } 
+  arg2 = static_cast< enum Spr::PHTreeNodeDesc::NodeType >(val2);
+  if (arg1) (arg1)->type = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_PHTreeNodeDesc_type_get(int argc, VALUE *argv, VALUE self) {
+  Spr::PHTreeNodeDesc *arg1 = (Spr::PHTreeNodeDesc *) 0 ;
+  enum Spr::PHTreeNodeDesc::NodeType result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__PHTreeNodeDesc, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "type" "', argument " "1"" of type '" "Spr::PHTreeNodeDesc *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::PHTreeNodeDesc * >(argp1);
+  result = (enum Spr::PHTreeNodeDesc::NodeType) ((arg1)->type);
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_PHTreeNodeDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_PHTreeNodeDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__PHTreeNodeDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_PHTreeNodeDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::PHTreeNodeDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::PHTreeNodeDesc *)new Spr::PHTreeNodeDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHTreeNodeDesc(Spr::PHTreeNodeDesc *arg1) {
+    delete arg1;
+}
+
+swig_class cPHRootNodeDesc;
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_PHRootNodeDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_PHRootNodeDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__PHRootNodeDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_PHRootNodeDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::PHRootNodeDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::PHRootNodeDesc *)new Spr::PHRootNodeDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHRootNodeDesc(Spr::PHRootNodeDesc *arg1) {
+    delete arg1;
+}
+
+swig_class cPHHingeJointNodeDesc;
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_PHHingeJointNodeDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_PHHingeJointNodeDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__PHHingeJointNodeDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_PHHingeJointNodeDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::PHHingeJointNodeDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::PHHingeJointNodeDesc *)new Spr::PHHingeJointNodeDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHHingeJointNodeDesc(Spr::PHHingeJointNodeDesc *arg1) {
+    delete arg1;
+}
+
+swig_class cPHSliderJointNodeDesc;
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_PHSliderJointNodeDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_PHSliderJointNodeDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__PHSliderJointNodeDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_PHSliderJointNodeDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::PHSliderJointNodeDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::PHSliderJointNodeDesc *)new Spr::PHSliderJointNodeDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHSliderJointNodeDesc(Spr::PHSliderJointNodeDesc *arg1) {
+    delete arg1;
+}
+
+swig_class cPHBallJointNodeDesc;
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_PHBallJointNodeDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_PHBallJointNodeDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__PHBallJointNodeDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_PHBallJointNodeDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::PHBallJointNodeDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::PHBallJointNodeDesc *)new Spr::PHBallJointNodeDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHBallJointNodeDesc(Spr::PHBallJointNodeDesc *arg1) {
+    delete arg1;
+}
+
+swig_class cPHPathJointNodeDesc;
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_PHPathJointNodeDesc_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_PHPathJointNodeDesc_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Spr__PHPathJointNodeDesc);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_PHPathJointNodeDesc(int argc, VALUE *argv, VALUE self) {
+  Spr::PHPathJointNodeDesc *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Spr::PHPathJointNodeDesc *)new Spr::PHPathJointNodeDesc();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHPathJointNodeDesc(Spr::PHPathJointNodeDesc *arg1) {
+    delete arg1;
+}
+
 swig_class cPHGearDesc;
 
 SWIGINTERN VALUE
@@ -21184,6 +21574,130 @@ free_Spr_PHRootNodeIf(Spr::PHRootNodeIf *arg1) {
     delete arg1;
 }
 
+swig_class cPHHingeJointNodeIf;
+
+SWIGINTERN VALUE
+_wrap_PHHingeJointNodeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHHingeJointNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHHingeJointNodeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHHingeJointNodeIf *)Spr::PHHingeJointNodeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHHingeJointNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHHingeJointNodeIf(Spr::PHHingeJointNodeIf *arg1) {
+    delete arg1;
+}
+
+swig_class cPHSliderJointNodeIf;
+
+SWIGINTERN VALUE
+_wrap_PHSliderJointNodeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHSliderJointNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHSliderJointNodeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHSliderJointNodeIf *)Spr::PHSliderJointNodeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHSliderJointNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHSliderJointNodeIf(Spr::PHSliderJointNodeIf *arg1) {
+    delete arg1;
+}
+
+swig_class cPHBallJointNodeIf;
+
+SWIGINTERN VALUE
+_wrap_PHBallJointNodeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHBallJointNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHBallJointNodeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHBallJointNodeIf *)Spr::PHBallJointNodeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHBallJointNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHBallJointNodeIf(Spr::PHBallJointNodeIf *arg1) {
+    delete arg1;
+}
+
+swig_class cPHPathJointNodeIf;
+
+SWIGINTERN VALUE
+_wrap_PHPathJointNodeIf_Cast(int argc, VALUE *argv, VALUE self) {
+  Spr::ObjectIf *arg1 = (Spr::ObjectIf *) 0 ;
+  Spr::PHPathJointNodeIf *result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1,SWIGTYPE_p_Spr__ObjectIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Spr::PHPathJointNodeIf::Cast" "', argument " "1"" of type '" "Spr::ObjectIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::ObjectIf * >(argp1);
+  result = (Spr::PHPathJointNodeIf *)Spr::PHPathJointNodeIf::Cast(arg1);
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__PHPathJointNodeIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Spr_PHPathJointNodeIf(Spr::PHPathJointNodeIf *arg1) {
+    delete arg1;
+}
+
 swig_class cPHGearIf;
 
 SWIGINTERN VALUE
@@ -21732,6 +22246,54 @@ _wrap_FWSceneIf_CreateObject(int argc, VALUE *argv, VALUE self) {
   arg3 = reinterpret_cast< Spr::GRFrameDesc * >(argp3);
   result = (Spr::FWObjectIf *)(arg1)->CreateObject((Spr::PHSolidDesc const &)*arg2,(Spr::GRFrameDesc const &)*arg3);
   vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_Spr__FWObjectIf, 0 |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSceneIf_NObject(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSceneIf *arg1 = (Spr::FWSceneIf *) 0 ;
+  int result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "NObject" "', argument " "1"" of type '" "Spr::FWSceneIf const *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSceneIf * >(argp1);
+  result = (int)((Spr::FWSceneIf const *)arg1)->NObject();
+  vresult = SWIG_From_int(static_cast< int >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSceneIf_GetObjects(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSceneIf *arg1 = (Spr::FWSceneIf *) 0 ;
+  Spr::FWObjectIf **result = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "GetObjects" "', argument " "1"" of type '" "Spr::FWSceneIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSceneIf * >(argp1);
+  result = (Spr::FWObjectIf **)(arg1)->GetObjects();
+  vresult = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_p_Spr__FWObjectIf, 0 |  0 );
   return vresult;
 fail:
   return Qnil;
@@ -22298,6 +22860,43 @@ SWIGINTERN VALUE _wrap_FWSdkIf_GetScene(int nargs, VALUE *args, VALUE self) {
   
 fail:
   rb_raise(rb_eArgError, "No matching function for overloaded 'FWSdkIf_GetScene'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_FWSdkIf_MergeScene(int argc, VALUE *argv, VALUE self) {
+  Spr::FWSdkIf *arg1 = (Spr::FWSdkIf *) 0 ;
+  Spr::FWSceneIf *arg2 = (Spr::FWSceneIf *) 0 ;
+  Spr::FWSceneIf *arg3 = (Spr::FWSceneIf *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 = 0 ;
+  int res2 = 0 ;
+  void *argp3 = 0 ;
+  int res3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Spr__FWSdkIf, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "MergeScene" "', argument " "1"" of type '" "Spr::FWSdkIf *""'"); 
+  }
+  arg1 = reinterpret_cast< Spr::FWSdkIf * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2,SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "MergeScene" "', argument " "2"" of type '" "Spr::FWSceneIf *""'"); 
+  }
+  arg2 = reinterpret_cast< Spr::FWSceneIf * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3,SWIGTYPE_p_Spr__FWSceneIf, 0 |  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "MergeScene" "', argument " "3"" of type '" "Spr::FWSceneIf *""'"); 
+  }
+  arg3 = reinterpret_cast< Spr::FWSceneIf * >(argp3);
+  (arg1)->MergeScene(arg2,arg3);
+  return Qnil;
+fail:
   return Qnil;
 }
 
@@ -24334,119 +24933,20 @@ free_Spr_FWAppGLUT(Spr::FWAppGLUT *arg1) {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static void *_p_Spr__FWAppGLUTTo_p_Spr__FWApp(void *x) {
-    return (void *)((Spr::FWApp *) (Spr::FWAppGL *) ((Spr::FWAppGLUT *) x));
+static void *_p_Spr__PHSceneDescTo_p_Spr__PHSceneState(void *x) {
+    return (void *)((Spr::PHSceneState *)  ((Spr::PHSceneDesc *) x));
 }
-static void *_p_Spr__FWAppGLTo_p_Spr__FWApp(void *x) {
-    return (void *)((Spr::FWApp *)  ((Spr::FWAppGL *) x));
+static void *_p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRRenderIf *) x));
 }
-static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDCapsuleIf *) x));
+static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRRenderIf *) ((Spr::GRDebugRenderIf *) x));
 }
-static void *_p_Spr__CDBoxIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDBoxIf *) x));
+static void *_p_Spr__GRDeviceIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRDeviceIf *) x));
 }
-static void *_p_Spr__CDSphereIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDSphereIf *) x));
-}
-static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDConvexIf(void *x) {
-    return (void *)((Spr::CDConvexIf *)  ((Spr::CDConvexMeshIf *) x));
-}
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
-}
-static void *_p_Spr__PHContactPointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHContactPointIf *) x));
-}
-static void *_p_Spr__PHJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHJointIf *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
-}
-static void *_p_Spr__PHBallJointIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHBallJointIf *) x));
-}
-static void *_p_Spr__PHSpringIfTo_p_Spr__PHConstraintIf(void *x) {
-    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHSpringIf *) x));
-}
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *)  ((Spr::PHJoint1DIf *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJointIf(void *x) {
-    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
-}
-static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
-}
-static void *_p_Spr__CDConvexIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *)  ((Spr::CDConvexIf *) x));
-}
-static void *_p_Spr__CDBoxIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
-}
-static void *_p_Spr__CDSphereIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
-}
-static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDShapeIf(void *x) {
-    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
-}
-static void *_p_Spr__FISdkIfTo_p_Spr__SdkIf(void *x) {
-    return (void *)((Spr::SdkIf *)  ((Spr::FISdkIf *) x));
-}
-static void *_p_Spr__GRSdkIfTo_p_Spr__SdkIf(void *x) {
-    return (void *)((Spr::SdkIf *)  ((Spr::GRSdkIf *) x));
-}
-static void *_p_Spr__PHSdkIfTo_p_Spr__SdkIf(void *x) {
-    return (void *)((Spr::SdkIf *)  ((Spr::PHSdkIf *) x));
-}
-static void *_p_Spr__CDConvexMeshDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDConvexMeshDesc *) x));
-}
-static void *_p_Spr__CDSphereDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDSphereDesc *) x));
-}
-static void *_p_Spr__CDBoxDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDBoxDesc *) x));
-}
-static void *_p_Spr__CDCapsuleDescTo_p_Spr__CDShapeDesc(void *x) {
-    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDCapsuleDesc *) x));
-}
-static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderIf(void *x) {
-    return (void *)((Spr::GRRenderIf *)  ((Spr::GRDebugRenderIf *) x));
-}
-static void *_p_Spr__FIFileCOLLADAIfTo_p_Spr__FIFileIf(void *x) {
-    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileCOLLADAIf *) x));
-}
-static void *_p_Spr__FIFileXIfTo_p_Spr__FIFileIf(void *x) {
-    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileXIf *) x));
-}
-static void *_p_Spr__GRLightDescTo_p_Spr__GRVisualDesc(void *x) {
-    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRLightDesc *) x));
-}
-static void *_p_Spr__GRCameraDescTo_p_Spr__GRVisualDesc(void *x) {
-    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRCameraDesc *) x));
-}
-static void *_p_Spr__GRMeshDescTo_p_Spr__GRVisualDesc(void *x) {
-    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRMeshDesc *) x));
-}
-static void *_p_Spr__GRMaterialDescTo_p_Spr__GRVisualDesc(void *x) {
-    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRMaterialDesc *) x));
-}
-static void *_p_Spr__GRFrameDescTo_p_Spr__GRVisualDesc(void *x) {
-    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRFrameDesc *) x));
+static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRRenderBaseIf(void *x) {
+    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRDeviceIf *) ((Spr::GRDeviceGLIf *) x));
 }
 static void *_p_Spr__GRMaterialIfTo_p_Spr__GRVisualIf(void *x) {
     return (void *)((Spr::GRVisualIf *)  ((Spr::GRMaterialIf *) x));
@@ -24469,170 +24969,62 @@ static void *_p_Spr__GRMeshIfTo_p_Spr__GRVisualIf(void *x) {
 static void *_p_Spr__GRBlendMeshIfTo_p_Spr__GRVisualIf(void *x) {
     return (void *)((Spr::GRVisualIf *)  ((Spr::GRBlendMeshIf *) x));
 }
-static void *_p_Spr__PHJoint1DDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHJoint1DDesc *) x));
+static void *_p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHTreeNodeIf *) x));
 }
-static void *_p_Spr__PHSpringDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHSpringDesc *) x));
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
 }
-static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHHingeJointDesc *) x));
+static void *_p_Spr__PHHingeJointNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHHingeJointNodeIf *) x));
 }
-static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHSliderJointDesc *) x));
+static void *_p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
 }
-static void *_p_Spr__PHPathJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHPathJointDesc *) x));
+static void *_p_Spr__PHSliderJointNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHSliderJointNodeIf *) x));
 }
-static void *_p_Spr__PHBallJointDescTo_p_Spr__PHConstraintDesc(void *x) {
-    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHBallJointDesc *) x));
+static void *_p_Spr__PHBallJointNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHBallJointNodeIf *) x));
 }
-static void *_p_Spr__GRRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRRenderIf *) x));
+static void *_p_Spr__PHPathJointNodeIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHPathJointNodeIf *) x));
 }
-static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRRenderIf *) ((Spr::GRDebugRenderIf *) x));
+static void *_p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
 }
-static void *_p_Spr__GRDeviceIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *)  ((Spr::GRDeviceIf *) x));
+static void *_p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
 }
-static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRRenderBaseIf(void *x) {
-    return (void *)((Spr::GRRenderBaseIf *) (Spr::GRDeviceIf *) ((Spr::GRDeviceGLIf *) x));
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
 }
-static void *_p_Spr__FWAppGLUTTo_p_Spr__FWAppGL(void *x) {
-    return (void *)((Spr::FWAppGL *)  ((Spr::FWAppGLUT *) x));
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
 }
-static void *_p_Spr__PHSolidDescTo_p_Spr__PHSolidState(void *x) {
-    return (void *)((Spr::PHSolidState *)  ((Spr::PHSolidDesc *) x));
+static void *_p_Spr__PHJointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
 }
-static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
-    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHHingeJointDesc *) x));
+static void *_p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
 }
-static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
-    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHSliderJointDesc *) x));
+static void *_p_Spr__PHPathIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHPathIf *) x));
 }
-static void *_p_Spr__PHPathJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
-    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHPathJointDesc *) x));
+static void *_p_Spr__PHGearIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHGearIf *) x));
 }
-static void *_p_Spr__PHGearIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHGearIf *) x));
+static void *_p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
 }
-static void *_p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHConstraintIf *) x));
+static void *_p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHConstraintIf *) x));
 }
-static void *_p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHSolidIf *) x));
+static void *_p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHEngineIf *) x));
 }
-static void *_p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHTreeNodeIf *) x));
-}
-static void *_p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
-}
-static void *_p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::PHSceneIf *) x));
-}
-static void *_p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::GRSceneIf *) x));
-}
-static void *_p_Spr__SceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SceneIf *) x));
-}
-static void *_p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::FWSceneIf *) x));
-}
-static void *_p_Spr__FISdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::FISdkIf *) x));
-}
-static void *_p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHEngineIf *) x));
-}
-static void *_p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
-}
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
-}
-static void *_p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::GRSdkIf *) x));
-}
-static void *_p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::NameManagerIf *) x));
-}
-static void *_p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRCameraIf *) x));
-}
-static void *_p_Spr__PHPathIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHPathIf *) x));
-}
-static void *_p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRFrameIf *) x));
-}
-static void *_p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
-}
-static void *_p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMaterialIf *) x));
-}
-static void *_p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *) ((Spr::CDConvexIf *) x));
-}
-static void *_p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::CDShapeIf *) x));
-}
-static void *_p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::SceneObjectIf *) x));
-}
-static void *_p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::FWObjectIf *) x));
-}
-static void *_p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::PHSdkIf *) x));
-}
-static void *_p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHJointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
-}
-static void *_p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
-}
-static void *_p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRSphereIf *) x));
-}
-static void *_p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
-}
-static void *_p_Spr__SdkIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SdkIf *) x));
-}
-static void *_p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRBlendMeshIf *) x));
-}
-static void *_p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMeshIf *) x));
-}
-static void *_p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
-}
-static void *_p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *)  ((Spr::GRVisualIf *) x));
-}
-static void *_p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
-}
-static void *_p_Spr__GRLightIfTo_p_Spr__NamedObjectIf(void *x) {
-    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
+static void *_p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf(void *x) {
+    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHSolidIf *) x));
 }
 static void *_p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::GRRenderBaseIf *)(Spr::GRDeviceIf *) ((Spr::GRDeviceGLIf *) x));
@@ -24784,53 +25176,170 @@ static void *_p_Spr__FWSdkIfTo_p_Spr__ObjectIf(void *x) {
 static void *_p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
 }
+static void *_p_Spr__PHHingeJointNodeIfTo_p_Spr__ObjectIf(void *x) {
+    return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHHingeJointNodeIf *) x));
+}
+static void *_p_Spr__PHSliderJointNodeIfTo_p_Spr__ObjectIf(void *x) {
+    return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHSliderJointNodeIf *) x));
+}
+static void *_p_Spr__PHBallJointNodeIfTo_p_Spr__ObjectIf(void *x) {
+    return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHBallJointNodeIf *) x));
+}
+static void *_p_Spr__PHPathJointNodeIfTo_p_Spr__ObjectIf(void *x) {
+    return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHPathJointNodeIf *) x));
+}
 static void *_p_Spr__GRLightIfTo_p_Spr__ObjectIf(void *x) {
     return (void *)((Spr::ObjectIf *) (Spr::NamedObjectIf *)(Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
 }
-static void *_p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHTreeNodeIf *) x));
+static void *_p_Spr__PHGearIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHGearIf *) x));
 }
-static void *_p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
+static void *_p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHConstraintIf *) x));
 }
-static void *_p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
+static void *_p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHSolidIf *) x));
 }
-static void *_p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
+static void *_p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHTreeNodeIf *) x));
 }
-static void *_p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+static void *_p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
 }
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+static void *_p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::PHSceneIf *) x));
 }
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+static void *_p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::GRSceneIf *) x));
 }
-static void *_p_Spr__PHJointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
+static void *_p_Spr__SceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SceneIf *) x));
 }
-static void *_p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
+static void *_p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SceneIf *) ((Spr::FWSceneIf *) x));
 }
-static void *_p_Spr__PHPathIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHPathIf *) x));
+static void *_p_Spr__FISdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::FISdkIf *) x));
 }
-static void *_p_Spr__PHGearIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHGearIf *) x));
+static void *_p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHEngineIf *) x));
 }
-static void *_p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *) (Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
+static void *_p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
 }
-static void *_p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHConstraintIf *) x));
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
 }
-static void *_p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHEngineIf *) x));
+static void *_p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::GRSdkIf *) x));
 }
-static void *_p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf(void *x) {
-    return (void *)((Spr::SceneObjectIf *)  ((Spr::PHSolidIf *) x));
+static void *_p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::NameManagerIf *) x));
+}
+static void *_p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRCameraIf *) x));
+}
+static void *_p_Spr__PHPathIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *) ((Spr::PHPathIf *) x));
+}
+static void *_p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRFrameIf *) x));
+}
+static void *_p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHSpringIf *) x));
+}
+static void *_p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMaterialIf *) x));
+}
+static void *_p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *) ((Spr::CDConvexIf *) x));
+}
+static void *_p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::CDShapeIf *) x));
+}
+static void *_p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::SceneObjectIf *) x));
+}
+static void *_p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::FWObjectIf *) x));
+}
+static void *_p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *)(Spr::SdkIf *) ((Spr::PHSdkIf *) x));
+}
+static void *_p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHBallJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *)(Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHJointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHJointIf *) x));
+}
+static void *_p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHConstraintIf *) ((Spr::PHContactPointIf *) x));
+}
+static void *_p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRSphereIf *) x));
+}
+static void *_p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
+}
+static void *_p_Spr__SdkIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::NameManagerIf *) ((Spr::SdkIf *) x));
+}
+static void *_p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRBlendMeshIf *) x));
+}
+static void *_p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRMeshIf *) x));
+}
+static void *_p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::CDShapeIf *)(Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
+}
+static void *_p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *)  ((Spr::GRVisualIf *) x));
+}
+static void *_p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHRootNodeIf *) x));
+}
+static void *_p_Spr__PHHingeJointNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHHingeJointNodeIf *) x));
+}
+static void *_p_Spr__PHSliderJointNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHSliderJointNodeIf *) x));
+}
+static void *_p_Spr__PHBallJointNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHBallJointNodeIf *) x));
+}
+static void *_p_Spr__PHPathJointNodeIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::SceneObjectIf *)(Spr::PHTreeNodeIf *) ((Spr::PHPathJointNodeIf *) x));
+}
+static void *_p_Spr__GRLightIfTo_p_Spr__NamedObjectIf(void *x) {
+    return (void *)((Spr::NamedObjectIf *) (Spr::GRVisualIf *) ((Spr::GRLightIf *) x));
+}
+static void *_p_Spr__GRDebugRenderIfTo_p_Spr__GRRenderIf(void *x) {
+    return (void *)((Spr::GRRenderIf *)  ((Spr::GRDebugRenderIf *) x));
+}
+static void *_p_Spr__GRLightDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRLightDesc *) x));
+}
+static void *_p_Spr__GRCameraDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRCameraDesc *) x));
+}
+static void *_p_Spr__GRMeshDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRMeshDesc *) x));
+}
+static void *_p_Spr__GRMaterialDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRMaterialDesc *) x));
+}
+static void *_p_Spr__GRFrameDescTo_p_Spr__GRVisualDesc(void *x) {
+    return (void *)((Spr::GRVisualDesc *)  ((Spr::GRFrameDesc *) x));
 }
 static void *_p_Spr__GRSceneIfTo_p_Spr__SceneIf(void *x) {
     return (void *)((Spr::SceneIf *)  ((Spr::GRSceneIf *) x));
@@ -24840,6 +25349,177 @@ static void *_p_Spr__PHSceneIfTo_p_Spr__SceneIf(void *x) {
 }
 static void *_p_Spr__FWSceneIfTo_p_Spr__SceneIf(void *x) {
     return (void *)((Spr::SceneIf *)  ((Spr::FWSceneIf *) x));
+}
+static void *_p_Spr__FWAppGLUTTo_p_Spr__FWApp(void *x) {
+    return (void *)((Spr::FWApp *) (Spr::FWAppGL *) ((Spr::FWAppGLUT *) x));
+}
+static void *_p_Spr__FWAppGLTo_p_Spr__FWApp(void *x) {
+    return (void *)((Spr::FWApp *)  ((Spr::FWAppGL *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJoint1DIf(void *x) {
+    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJoint1DIf(void *x) {
+    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJoint1DIf(void *x) {
+    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
+    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHRootNodeIf *) x));
+}
+static void *_p_Spr__PHHingeJointNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
+    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHHingeJointNodeIf *) x));
+}
+static void *_p_Spr__PHSliderJointNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
+    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHSliderJointNodeIf *) x));
+}
+static void *_p_Spr__PHBallJointNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
+    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHBallJointNodeIf *) x));
+}
+static void *_p_Spr__PHPathJointNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
+    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHPathJointNodeIf *) x));
+}
+static void *_p_Spr__PHJoint1DDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHJoint1DDesc *) x));
+}
+static void *_p_Spr__PHSpringDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHSpringDesc *) x));
+}
+static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHHingeJointDesc *) x));
+}
+static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHSliderJointDesc *) x));
+}
+static void *_p_Spr__PHPathJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *) (Spr::PHJoint1DDesc *) ((Spr::PHPathJointDesc *) x));
+}
+static void *_p_Spr__PHBallJointDescTo_p_Spr__PHConstraintDesc(void *x) {
+    return (void *)((Spr::PHConstraintDesc *)  ((Spr::PHBallJointDesc *) x));
+}
+static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDCapsuleIf *) x));
+}
+static void *_p_Spr__CDConvexIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *)  ((Spr::CDConvexIf *) x));
+}
+static void *_p_Spr__CDBoxIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDBoxIf *) x));
+}
+static void *_p_Spr__CDSphereIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDSphereIf *) x));
+}
+static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDShapeIf(void *x) {
+    return (void *)((Spr::CDShapeIf *) (Spr::CDConvexIf *) ((Spr::CDConvexMeshIf *) x));
+}
+static void *_p_Spr__PHSolidDescTo_p_Spr__PHSolidState(void *x) {
+    return (void *)((Spr::PHSolidState *)  ((Spr::PHSolidDesc *) x));
+}
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *)  ((Spr::PHJoint1DIf *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJointIf(void *x) {
+    return (void *)((Spr::PHJointIf *) (Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__FIFileCOLLADAIfTo_p_Spr__FIFileIf(void *x) {
+    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileCOLLADAIf *) x));
+}
+static void *_p_Spr__FIFileXIfTo_p_Spr__FIFileIf(void *x) {
+    return (void *)((Spr::FIFileIf *)  ((Spr::FIFileXIf *) x));
+}
+static void *_p_Spr__CDConvexMeshDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDConvexMeshDesc *) x));
+}
+static void *_p_Spr__CDSphereDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDSphereDesc *) x));
+}
+static void *_p_Spr__CDBoxDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDBoxDesc *) x));
+}
+static void *_p_Spr__CDCapsuleDescTo_p_Spr__CDShapeDesc(void *x) {
+    return (void *)((Spr::CDShapeDesc *)  ((Spr::CDCapsuleDesc *) x));
+}
+static void *_p_Spr__CDCapsuleIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDCapsuleIf *) x));
+}
+static void *_p_Spr__CDBoxIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDBoxIf *) x));
+}
+static void *_p_Spr__CDSphereIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDSphereIf *) x));
+}
+static void *_p_Spr__CDConvexMeshIfTo_p_Spr__CDConvexIf(void *x) {
+    return (void *)((Spr::CDConvexIf *)  ((Spr::CDConvexMeshIf *) x));
+}
+static void *_p_Spr__FISdkIfTo_p_Spr__SdkIf(void *x) {
+    return (void *)((Spr::SdkIf *)  ((Spr::FISdkIf *) x));
+}
+static void *_p_Spr__GRSdkIfTo_p_Spr__SdkIf(void *x) {
+    return (void *)((Spr::SdkIf *)  ((Spr::GRSdkIf *) x));
+}
+static void *_p_Spr__PHSdkIfTo_p_Spr__SdkIf(void *x) {
+    return (void *)((Spr::SdkIf *)  ((Spr::PHSdkIf *) x));
+}
+static void *_p_Spr__PHRootNodeDescTo_p_Spr__PHTreeNodeDesc(void *x) {
+    return (void *)((Spr::PHTreeNodeDesc *)  ((Spr::PHRootNodeDesc *) x));
+}
+static void *_p_Spr__PHHingeJointNodeDescTo_p_Spr__PHTreeNodeDesc(void *x) {
+    return (void *)((Spr::PHTreeNodeDesc *)  ((Spr::PHHingeJointNodeDesc *) x));
+}
+static void *_p_Spr__PHSliderJointNodeDescTo_p_Spr__PHTreeNodeDesc(void *x) {
+    return (void *)((Spr::PHTreeNodeDesc *)  ((Spr::PHSliderJointNodeDesc *) x));
+}
+static void *_p_Spr__PHBallJointNodeDescTo_p_Spr__PHTreeNodeDesc(void *x) {
+    return (void *)((Spr::PHTreeNodeDesc *)  ((Spr::PHBallJointNodeDesc *) x));
+}
+static void *_p_Spr__PHPathJointNodeDescTo_p_Spr__PHTreeNodeDesc(void *x) {
+    return (void *)((Spr::PHTreeNodeDesc *)  ((Spr::PHPathJointNodeDesc *) x));
+}
+static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf(void *x) {
+    return (void *)((Spr::GRDeviceIf *)  ((Spr::GRDeviceGLIf *) x));
+}
+static void *_p_Spr__PHHingeJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
+    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHHingeJointDesc *) x));
+}
+static void *_p_Spr__PHSliderJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
+    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHSliderJointDesc *) x));
+}
+static void *_p_Spr__PHPathJointDescTo_p_Spr__PHJoint1DDesc(void *x) {
+    return (void *)((Spr::PHJoint1DDesc *)  ((Spr::PHPathJointDesc *) x));
+}
+static void *_p_Spr__PHJoint1DIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *) ((Spr::PHJoint1DIf *) x));
+}
+static void *_p_Spr__PHContactPointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHContactPointIf *) x));
+}
+static void *_p_Spr__PHJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHJointIf *) x));
+}
+static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHHingeJointIf *) x));
+}
+static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHSliderJointIf *) x));
+}
+static void *_p_Spr__PHPathJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *) (Spr::PHJointIf *)(Spr::PHJoint1DIf *) ((Spr::PHPathJointIf *) x));
+}
+static void *_p_Spr__PHBallJointIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHBallJointIf *) x));
+}
+static void *_p_Spr__PHSpringIfTo_p_Spr__PHConstraintIf(void *x) {
+    return (void *)((Spr::PHConstraintIf *)  ((Spr::PHSpringIf *) x));
+}
+static void *_p_Spr__FWAppGLUTTo_p_Spr__FWAppGL(void *x) {
+    return (void *)((Spr::FWAppGL *)  ((Spr::FWAppGLUT *) x));
 }
 static void *_p_Spr__SdkIfTo_p_Spr__NameManagerIf(void *x) {
     return (void *)((Spr::NameManagerIf *)  ((Spr::SdkIf *) x));
@@ -24864,24 +25544,6 @@ static void *_p_Spr__GRSdkIfTo_p_Spr__NameManagerIf(void *x) {
 }
 static void *_p_Spr__PHSdkIfTo_p_Spr__NameManagerIf(void *x) {
     return (void *)((Spr::NameManagerIf *) (Spr::SdkIf *) ((Spr::PHSdkIf *) x));
-}
-static void *_p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf(void *x) {
-    return (void *)((Spr::PHTreeNodeIf *)  ((Spr::PHRootNodeIf *) x));
-}
-static void *_p_Spr__GRDeviceGLIfTo_p_Spr__GRDeviceIf(void *x) {
-    return (void *)((Spr::GRDeviceIf *)  ((Spr::GRDeviceGLIf *) x));
-}
-static void *_p_Spr__PHSceneDescTo_p_Spr__PHSceneState(void *x) {
-    return (void *)((Spr::PHSceneState *)  ((Spr::PHSceneDesc *) x));
-}
-static void *_p_Spr__PHHingeJointIfTo_p_Spr__PHJoint1DIf(void *x) {
-    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHHingeJointIf *) x));
-}
-static void *_p_Spr__PHSliderJointIfTo_p_Spr__PHJoint1DIf(void *x) {
-    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHSliderJointIf *) x));
-}
-static void *_p_Spr__PHPathJointIfTo_p_Spr__PHJoint1DIf(void *x) {
-    return (void *)((Spr::PHJoint1DIf *)  ((Spr::PHPathJointIf *) x));
 }
 static swig_type_info _swigt__p_Affinef = {"_p_Affinef", "Affinef *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GRShaderFormat__ShaderType = {"_p_GRShaderFormat__ShaderType", "GRShaderFormat::ShaderType *", 0, 0, (void*)0, 0};
@@ -24956,6 +25618,8 @@ static swig_type_info _swigt__p_Spr__ObjectIfs = {"_p_Spr__ObjectIfs", "Spr::Obj
 static swig_type_info _swigt__p_Spr__ObjectStatesIf = {"_p_Spr__ObjectStatesIf", "Spr::ObjectStatesIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHBallJointDesc = {"_p_Spr__PHBallJointDesc", "Spr::PHBallJointDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHBallJointIf = {"_p_Spr__PHBallJointIf", "Spr::PHBallJointIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHBallJointNodeDesc = {"_p_Spr__PHBallJointNodeDesc", "Spr::PHBallJointNodeDesc *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHBallJointNodeIf = {"_p_Spr__PHBallJointNodeIf", "Spr::PHBallJointNodeIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHConstraintDesc = {"_p_Spr__PHConstraintDesc", "Spr::PHConstraintDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHConstraintEngine = {"_p_Spr__PHConstraintEngine", "Spr::PHConstraintEngine *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHConstraintIf = {"_p_Spr__PHConstraintIf", "Spr::PHConstraintIf *", 0, 0, (void*)0, 0};
@@ -24966,6 +25630,8 @@ static swig_type_info _swigt__p_Spr__PHGearIf = {"_p_Spr__PHGearIf", "Spr::PHGea
 static swig_type_info _swigt__p_Spr__PHGravityEngine = {"_p_Spr__PHGravityEngine", "Spr::PHGravityEngine *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHHingeJointDesc = {"_p_Spr__PHHingeJointDesc", "Spr::PHHingeJointDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHHingeJointIf = {"_p_Spr__PHHingeJointIf", "Spr::PHHingeJointIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHHingeJointNodeDesc = {"_p_Spr__PHHingeJointNodeDesc", "Spr::PHHingeJointNodeDesc *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHHingeJointNodeIf = {"_p_Spr__PHHingeJointNodeIf", "Spr::PHHingeJointNodeIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHInactiveSolids = {"_p_Spr__PHInactiveSolids", "Spr::PHInactiveSolids *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHJoint1DDesc = {"_p_Spr__PHJoint1DDesc", "Spr::PHJoint1DDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHJoint1DIf = {"_p_Spr__PHJoint1DIf", "Spr::PHJoint1DIf *", 0, 0, (void*)0, 0};
@@ -24975,7 +25641,10 @@ static swig_type_info _swigt__p_Spr__PHPathDesc = {"_p_Spr__PHPathDesc", "Spr::P
 static swig_type_info _swigt__p_Spr__PHPathIf = {"_p_Spr__PHPathIf", "Spr::PHPathIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHPathJointDesc = {"_p_Spr__PHPathJointDesc", "Spr::PHPathJointDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHPathJointIf = {"_p_Spr__PHPathJointIf", "Spr::PHPathJointIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHPathJointNodeDesc = {"_p_Spr__PHPathJointNodeDesc", "Spr::PHPathJointNodeDesc *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHPathJointNodeIf = {"_p_Spr__PHPathJointNodeIf", "Spr::PHPathJointNodeIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHPathPoint = {"_p_Spr__PHPathPoint", "Spr::PHPathPoint *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHRootNodeDesc = {"_p_Spr__PHRootNodeDesc", "Spr::PHRootNodeDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHRootNodeIf = {"_p_Spr__PHRootNodeIf", "Spr::PHRootNodeIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSceneDesc = {"_p_Spr__PHSceneDesc", "Spr::PHSceneDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSceneIf = {"_p_Spr__PHSceneIf", "Spr::PHSceneIf *", 0, 0, (void*)0, 0};
@@ -24984,11 +25653,14 @@ static swig_type_info _swigt__p_Spr__PHSdkDesc = {"_p_Spr__PHSdkDesc", "Spr::PHS
 static swig_type_info _swigt__p_Spr__PHSdkIf = {"_p_Spr__PHSdkIf", "Spr::PHSdkIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSliderJointDesc = {"_p_Spr__PHSliderJointDesc", "Spr::PHSliderJointDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSliderJointIf = {"_p_Spr__PHSliderJointIf", "Spr::PHSliderJointIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHSliderJointNodeDesc = {"_p_Spr__PHSliderJointNodeDesc", "Spr::PHSliderJointNodeDesc *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHSliderJointNodeIf = {"_p_Spr__PHSliderJointNodeIf", "Spr::PHSliderJointNodeIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSolidDesc = {"_p_Spr__PHSolidDesc", "Spr::PHSolidDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSolidIf = {"_p_Spr__PHSolidIf", "Spr::PHSolidIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSolidState = {"_p_Spr__PHSolidState", "Spr::PHSolidState *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSpringDesc = {"_p_Spr__PHSpringDesc", "Spr::PHSpringDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHSpringIf = {"_p_Spr__PHSpringIf", "Spr::PHSpringIf *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Spr__PHTreeNodeDesc = {"_p_Spr__PHTreeNodeDesc", "Spr::PHTreeNodeDesc *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__PHTreeNodeIf = {"_p_Spr__PHTreeNodeIf", "Spr::PHTreeNodeIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__SceneIf = {"_p_Spr__SceneIf", "Spr::SceneIf *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Spr__SceneObjectIf = {"_p_Spr__SceneObjectIf", "Spr::SceneObjectIf *", 0, 0, (void*)0, 0};
@@ -25004,6 +25676,7 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_container_t = {"_p_container_t", "container_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_p_Spr__FWObjectIf = {"_p_p_Spr__FWObjectIf", "Spr::FWObjectIf **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_Spr__PHSolidIf = {"_p_p_Spr__PHSolidIf", "Spr::PHSolidIf **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_char = {"_p_p_char", "char **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
@@ -25092,6 +25765,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Spr__ObjectStatesIf,
   &_swigt__p_Spr__PHBallJointDesc,
   &_swigt__p_Spr__PHBallJointIf,
+  &_swigt__p_Spr__PHBallJointNodeDesc,
+  &_swigt__p_Spr__PHBallJointNodeIf,
   &_swigt__p_Spr__PHConstraintDesc,
   &_swigt__p_Spr__PHConstraintEngine,
   &_swigt__p_Spr__PHConstraintIf,
@@ -25102,6 +25777,8 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Spr__PHGravityEngine,
   &_swigt__p_Spr__PHHingeJointDesc,
   &_swigt__p_Spr__PHHingeJointIf,
+  &_swigt__p_Spr__PHHingeJointNodeDesc,
+  &_swigt__p_Spr__PHHingeJointNodeIf,
   &_swigt__p_Spr__PHInactiveSolids,
   &_swigt__p_Spr__PHJoint1DDesc,
   &_swigt__p_Spr__PHJoint1DIf,
@@ -25111,7 +25788,10 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Spr__PHPathIf,
   &_swigt__p_Spr__PHPathJointDesc,
   &_swigt__p_Spr__PHPathJointIf,
+  &_swigt__p_Spr__PHPathJointNodeDesc,
+  &_swigt__p_Spr__PHPathJointNodeIf,
   &_swigt__p_Spr__PHPathPoint,
+  &_swigt__p_Spr__PHRootNodeDesc,
   &_swigt__p_Spr__PHRootNodeIf,
   &_swigt__p_Spr__PHSceneDesc,
   &_swigt__p_Spr__PHSceneIf,
@@ -25120,11 +25800,14 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Spr__PHSdkIf,
   &_swigt__p_Spr__PHSliderJointDesc,
   &_swigt__p_Spr__PHSliderJointIf,
+  &_swigt__p_Spr__PHSliderJointNodeDesc,
+  &_swigt__p_Spr__PHSliderJointNodeIf,
   &_swigt__p_Spr__PHSolidDesc,
   &_swigt__p_Spr__PHSolidIf,
   &_swigt__p_Spr__PHSolidState,
   &_swigt__p_Spr__PHSpringDesc,
   &_swigt__p_Spr__PHSpringIf,
+  &_swigt__p_Spr__PHTreeNodeDesc,
   &_swigt__p_Spr__PHTreeNodeIf,
   &_swigt__p_Spr__SceneIf,
   &_swigt__p_Spr__SceneObjectIf,
@@ -25140,6 +25823,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_container_t,
   &_swigt__p_double,
   &_swigt__p_int,
+  &_swigt__p_p_Spr__FWObjectIf,
   &_swigt__p_p_Spr__PHSolidIf,
   &_swigt__p_p_char,
   &_swigt__p_size_t,
@@ -25221,13 +25905,15 @@ static swig_cast_info _swigc__p_Spr__GRVisualDesc[] = {  {&_swigt__p_Spr__GRLigh
 static swig_cast_info _swigc__p_Spr__GRVisualIf[] = {  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, 0, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__GRVisualIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__GRVisualIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__HIForceDevice6D[] = {  {&_swigt__p_Spr__HIForceDevice6D, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__NameManagerIf[] = {  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NameManagerIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NameManagerIf, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__NamedObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, 0, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__NamedObjectIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__NamedObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, 0, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointNodeIf, _p_Spr__PHPathJointNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointNodeIf, _p_Spr__PHBallJointNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointNodeIf, _p_Spr__PHSliderJointNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointNodeIf, _p_Spr__PHHingeJointNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__NamedObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__NamedObjectIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__Object[] = {  {&_swigt__p_Spr__Object, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__ObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, _p_Spr__GRRenderBaseIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileIf, _p_Spr__FIFileIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileCOLLADAIf, _p_Spr__FIFileCOLLADAIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectIf, 0, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, _p_Spr__NamedObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileXIf, _p_Spr__FIFileXIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectStatesIf, _p_Spr__ObjectStatesIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSdkIf, _p_Spr__FWSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__ObjectIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__ObjectIf[] = {  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceGLIf, _p_Spr__GRDeviceGLIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDCapsuleIf, _p_Spr__CDCapsuleIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneIf, _p_Spr__SceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderBaseIf, _p_Spr__GRRenderBaseIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDeviceIf, _p_Spr__GRDeviceIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDBoxIf, _p_Spr__CDBoxIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NameManagerIf, _p_Spr__NameManagerIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRCameraIf, _p_Spr__GRCameraIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRFrameIf, _p_Spr__GRFrameIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRDebugRenderIf, _p_Spr__GRDebugRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRRenderIf, _p_Spr__GRRenderIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileIf, _p_Spr__FIFileIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileCOLLADAIf, _p_Spr__FIFileCOLLADAIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMaterialIf, _p_Spr__GRMaterialIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexIf, _p_Spr__CDConvexIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectIf, 0, 0, 0},  {&_swigt__p_Spr__CDShapeIf, _p_Spr__CDShapeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWObjectIf, _p_Spr__FWObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, _p_Spr__SceneObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__NamedObjectIf, _p_Spr__NamedObjectIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FIFileXIf, _p_Spr__FIFileXIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__ObjectStatesIf, _p_Spr__ObjectStatesIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDSphereIf, _p_Spr__CDSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRSphereIf, _p_Spr__GRSphereIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__CDConvexMeshIf, _p_Spr__CDConvexMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRBlendMeshIf, _p_Spr__GRBlendMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRMeshIf, _p_Spr__GRMeshIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRVisualIf, _p_Spr__GRVisualIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__FWSdkIf, _p_Spr__FWSdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__SdkIf, _p_Spr__SdkIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointNodeIf, _p_Spr__PHPathJointNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointNodeIf, _p_Spr__PHBallJointNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointNodeIf, _p_Spr__PHSliderJointNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointNodeIf, _p_Spr__PHHingeJointNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__ObjectIf, 0, 0},  {&_swigt__p_Spr__GRLightIf, _p_Spr__GRLightIfTo_p_Spr__ObjectIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectIfs[] = {  {&_swigt__p_Spr__ObjectIfs, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__ObjectStatesIf[] = {  {&_swigt__p_Spr__ObjectStatesIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHBallJointDesc[] = {  {&_swigt__p_Spr__PHBallJointDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHBallJointIf[] = {  {&_swigt__p_Spr__PHBallJointIf, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHBallJointNodeDesc[] = {  {&_swigt__p_Spr__PHBallJointNodeDesc, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHBallJointNodeIf[] = {  {&_swigt__p_Spr__PHBallJointNodeIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHConstraintDesc[] = {  {&_swigt__p_Spr__PHJoint1DDesc, _p_Spr__PHJoint1DDescTo_p_Spr__PHConstraintDesc, 0, 0},  {&_swigt__p_Spr__PHSpringDesc, _p_Spr__PHSpringDescTo_p_Spr__PHConstraintDesc, 0, 0},  {&_swigt__p_Spr__PHConstraintDesc, 0, 0, 0},  {&_swigt__p_Spr__PHHingeJointDesc, _p_Spr__PHHingeJointDescTo_p_Spr__PHConstraintDesc, 0, 0},  {&_swigt__p_Spr__PHSliderJointDesc, _p_Spr__PHSliderJointDescTo_p_Spr__PHConstraintDesc, 0, 0},  {&_swigt__p_Spr__PHPathJointDesc, _p_Spr__PHPathJointDescTo_p_Spr__PHConstraintDesc, 0, 0},  {&_swigt__p_Spr__PHBallJointDesc, _p_Spr__PHBallJointDescTo_p_Spr__PHConstraintDesc, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHConstraintEngine[] = {  {&_swigt__p_Spr__PHConstraintEngine, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHConstraintIf[] = {  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, 0, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__PHConstraintIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__PHConstraintIf, 0, 0},{0, 0, 0, 0}};
@@ -25238,6 +25924,8 @@ static swig_cast_info _swigc__p_Spr__PHGearIf[] = {  {&_swigt__p_Spr__PHGearIf, 
 static swig_cast_info _swigc__p_Spr__PHGravityEngine[] = {  {&_swigt__p_Spr__PHGravityEngine, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHHingeJointDesc[] = {  {&_swigt__p_Spr__PHHingeJointDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHHingeJointIf[] = {  {&_swigt__p_Spr__PHHingeJointIf, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHHingeJointNodeDesc[] = {  {&_swigt__p_Spr__PHHingeJointNodeDesc, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHHingeJointNodeIf[] = {  {&_swigt__p_Spr__PHHingeJointNodeIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHInactiveSolids[] = {  {&_swigt__p_Spr__PHInactiveSolids, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHJoint1DDesc[] = {  {&_swigt__p_Spr__PHJoint1DDesc, 0, 0, 0},  {&_swigt__p_Spr__PHHingeJointDesc, _p_Spr__PHHingeJointDescTo_p_Spr__PHJoint1DDesc, 0, 0},  {&_swigt__p_Spr__PHSliderJointDesc, _p_Spr__PHSliderJointDescTo_p_Spr__PHJoint1DDesc, 0, 0},  {&_swigt__p_Spr__PHPathJointDesc, _p_Spr__PHPathJointDescTo_p_Spr__PHJoint1DDesc, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHJoint1DIf[] = {  {&_swigt__p_Spr__PHJoint1DIf, 0, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__PHJoint1DIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__PHJoint1DIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__PHJoint1DIf, 0, 0},{0, 0, 0, 0}};
@@ -25247,7 +25935,10 @@ static swig_cast_info _swigc__p_Spr__PHPathDesc[] = {  {&_swigt__p_Spr__PHPathDe
 static swig_cast_info _swigc__p_Spr__PHPathIf[] = {  {&_swigt__p_Spr__PHPathIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHPathJointDesc[] = {  {&_swigt__p_Spr__PHPathJointDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHPathJointIf[] = {  {&_swigt__p_Spr__PHPathJointIf, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHPathJointNodeDesc[] = {  {&_swigt__p_Spr__PHPathJointNodeDesc, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHPathJointNodeIf[] = {  {&_swigt__p_Spr__PHPathJointNodeIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHPathPoint[] = {  {&_swigt__p_Spr__PHPathPoint, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHRootNodeDesc[] = {  {&_swigt__p_Spr__PHRootNodeDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHRootNodeIf[] = {  {&_swigt__p_Spr__PHRootNodeIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSceneDesc[] = {  {&_swigt__p_Spr__PHSceneDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSceneIf[] = {  {&_swigt__p_Spr__PHSceneIf, 0, 0, 0},{0, 0, 0, 0}};
@@ -25256,14 +25947,17 @@ static swig_cast_info _swigc__p_Spr__PHSdkDesc[] = {  {&_swigt__p_Spr__PHSdkDesc
 static swig_cast_info _swigc__p_Spr__PHSdkIf[] = {  {&_swigt__p_Spr__PHSdkIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSliderJointDesc[] = {  {&_swigt__p_Spr__PHSliderJointDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSliderJointIf[] = {  {&_swigt__p_Spr__PHSliderJointIf, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHSliderJointNodeDesc[] = {  {&_swigt__p_Spr__PHSliderJointNodeDesc, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHSliderJointNodeIf[] = {  {&_swigt__p_Spr__PHSliderJointNodeIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSolidDesc[] = {  {&_swigt__p_Spr__PHSolidDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSolidIf[] = {  {&_swigt__p_Spr__PHSolidIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSolidState[] = {  {&_swigt__p_Spr__PHSolidDesc, _p_Spr__PHSolidDescTo_p_Spr__PHSolidState, 0, 0},  {&_swigt__p_Spr__PHSolidState, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSpringDesc[] = {  {&_swigt__p_Spr__PHSpringDesc, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__PHSpringIf[] = {  {&_swigt__p_Spr__PHSpringIf, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__PHTreeNodeIf[] = {  {&_swigt__p_Spr__PHTreeNodeIf, 0, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHTreeNodeDesc[] = {  {&_swigt__p_Spr__PHTreeNodeDesc, 0, 0, 0},  {&_swigt__p_Spr__PHRootNodeDesc, _p_Spr__PHRootNodeDescTo_p_Spr__PHTreeNodeDesc, 0, 0},  {&_swigt__p_Spr__PHHingeJointNodeDesc, _p_Spr__PHHingeJointNodeDescTo_p_Spr__PHTreeNodeDesc, 0, 0},  {&_swigt__p_Spr__PHSliderJointNodeDesc, _p_Spr__PHSliderJointNodeDescTo_p_Spr__PHTreeNodeDesc, 0, 0},  {&_swigt__p_Spr__PHBallJointNodeDesc, _p_Spr__PHBallJointNodeDescTo_p_Spr__PHTreeNodeDesc, 0, 0},  {&_swigt__p_Spr__PHPathJointNodeDesc, _p_Spr__PHPathJointNodeDescTo_p_Spr__PHTreeNodeDesc, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__PHTreeNodeIf[] = {  {&_swigt__p_Spr__PHTreeNodeIf, 0, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointNodeIf, _p_Spr__PHHingeJointNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointNodeIf, _p_Spr__PHSliderJointNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},  {&_swigt__p_Spr__PHBallJointNodeIf, _p_Spr__PHBallJointNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},  {&_swigt__p_Spr__PHPathJointNodeIf, _p_Spr__PHPathJointNodeIfTo_p_Spr__PHTreeNodeIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__SceneIf[] = {  {&_swigt__p_Spr__SceneIf, 0, 0, 0},  {&_swigt__p_Spr__GRSceneIf, _p_Spr__GRSceneIfTo_p_Spr__SceneIf, 0, 0},  {&_swigt__p_Spr__PHSceneIf, _p_Spr__PHSceneIfTo_p_Spr__SceneIf, 0, 0},  {&_swigt__p_Spr__FWSceneIf, _p_Spr__FWSceneIfTo_p_Spr__SceneIf, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_Spr__SceneObjectIf[] = {  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, 0, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Spr__SceneObjectIf[] = {  {&_swigt__p_Spr__PHTreeNodeIf, _p_Spr__PHTreeNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__SceneObjectIf, 0, 0, 0},  {&_swigt__p_Spr__PHJoint1DIf, _p_Spr__PHJoint1DIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointNodeIf, _p_Spr__PHPathJointNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointNodeIf, _p_Spr__PHBallJointNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointNodeIf, _p_Spr__PHSliderJointNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointNodeIf, _p_Spr__PHHingeJointNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHRootNodeIf, _p_Spr__PHRootNodeIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHBallJointIf, _p_Spr__PHBallJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHJointIf, _p_Spr__PHJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHContactPointIf, _p_Spr__PHContactPointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathJointIf, _p_Spr__PHPathJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSliderJointIf, _p_Spr__PHSliderJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHHingeJointIf, _p_Spr__PHHingeJointIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHPathIf, _p_Spr__PHPathIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHGearIf, _p_Spr__PHGearIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSpringIf, _p_Spr__PHSpringIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHConstraintIf, _p_Spr__PHConstraintIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHEngineIf, _p_Spr__PHEngineIfTo_p_Spr__SceneObjectIf, 0, 0},  {&_swigt__p_Spr__PHSolidIf, _p_Spr__PHSolidIfTo_p_Spr__SceneObjectIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Spr__SdkIf[] = {  {&_swigt__p_Spr__FISdkIf, _p_Spr__FISdkIfTo_p_Spr__SdkIf, 0, 0},  {&_swigt__p_Spr__SdkIf, 0, 0, 0},  {&_swigt__p_Spr__GRSdkIf, _p_Spr__GRSdkIfTo_p_Spr__SdkIf, 0, 0},  {&_swigt__p_Spr__PHSdkIf, _p_Spr__PHSdkIfTo_p_Spr__SdkIf, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_UTRefTSpr__FWVFuncBridge_t[] = {  {&_swigt__p_UTRefTSpr__FWVFuncBridge_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_UTString[] = {  {&_swigt__p_UTString, 0, 0, 0},{0, 0, 0, 0}};
@@ -25276,6 +25970,7 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_container_t[] = {  {&_swigt__p_container_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_p_Spr__FWObjectIf[] = {  {&_swigt__p_p_Spr__FWObjectIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_Spr__PHSolidIf[] = {  {&_swigt__p_p_Spr__PHSolidIf, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_char[] = {  {&_swigt__p_p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
@@ -25364,6 +26059,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Spr__ObjectStatesIf,
   _swigc__p_Spr__PHBallJointDesc,
   _swigc__p_Spr__PHBallJointIf,
+  _swigc__p_Spr__PHBallJointNodeDesc,
+  _swigc__p_Spr__PHBallJointNodeIf,
   _swigc__p_Spr__PHConstraintDesc,
   _swigc__p_Spr__PHConstraintEngine,
   _swigc__p_Spr__PHConstraintIf,
@@ -25374,6 +26071,8 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Spr__PHGravityEngine,
   _swigc__p_Spr__PHHingeJointDesc,
   _swigc__p_Spr__PHHingeJointIf,
+  _swigc__p_Spr__PHHingeJointNodeDesc,
+  _swigc__p_Spr__PHHingeJointNodeIf,
   _swigc__p_Spr__PHInactiveSolids,
   _swigc__p_Spr__PHJoint1DDesc,
   _swigc__p_Spr__PHJoint1DIf,
@@ -25383,7 +26082,10 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Spr__PHPathIf,
   _swigc__p_Spr__PHPathJointDesc,
   _swigc__p_Spr__PHPathJointIf,
+  _swigc__p_Spr__PHPathJointNodeDesc,
+  _swigc__p_Spr__PHPathJointNodeIf,
   _swigc__p_Spr__PHPathPoint,
+  _swigc__p_Spr__PHRootNodeDesc,
   _swigc__p_Spr__PHRootNodeIf,
   _swigc__p_Spr__PHSceneDesc,
   _swigc__p_Spr__PHSceneIf,
@@ -25392,11 +26094,14 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Spr__PHSdkIf,
   _swigc__p_Spr__PHSliderJointDesc,
   _swigc__p_Spr__PHSliderJointIf,
+  _swigc__p_Spr__PHSliderJointNodeDesc,
+  _swigc__p_Spr__PHSliderJointNodeIf,
   _swigc__p_Spr__PHSolidDesc,
   _swigc__p_Spr__PHSolidIf,
   _swigc__p_Spr__PHSolidState,
   _swigc__p_Spr__PHSpringDesc,
   _swigc__p_Spr__PHSpringIf,
+  _swigc__p_Spr__PHTreeNodeDesc,
   _swigc__p_Spr__PHTreeNodeIf,
   _swigc__p_Spr__SceneIf,
   _swigc__p_Spr__SceneObjectIf,
@@ -25412,6 +26117,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_container_t,
   _swigc__p_double,
   _swigc__p_int,
+  _swigc__p_p_Spr__FWObjectIf,
   _swigc__p_p_Spr__PHSolidIf,
   _swigc__p_p_char,
   _swigc__p_size_t,
@@ -26291,10 +26997,9 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cGRSdkIf.klass, "CreateDebugRender", VALUEFUNC(_wrap_GRSdkIf_CreateDebugRender), -1);
   rb_define_method(cGRSdkIf.klass, "CreateDeviceGL", VALUEFUNC(_wrap_GRSdkIf_CreateDeviceGL), -1);
   rb_define_method(cGRSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_GRSdkIf_CreateScene), -1);
-  rb_define_method(cGRSdkIf.klass, "NChildObject", VALUEFUNC(_wrap_GRSdkIf_NChildObject), -1);
-  rb_define_method(cGRSdkIf.klass, "GetChildObject", VALUEFUNC(_wrap_GRSdkIf_GetChildObject), -1);
   rb_define_method(cGRSdkIf.klass, "GetScene", VALUEFUNC(_wrap_GRSdkIf_GetScene), -1);
   rb_define_method(cGRSdkIf.klass, "NScene", VALUEFUNC(_wrap_GRSdkIf_NScene), -1);
+  rb_define_method(cGRSdkIf.klass, "MergeScene", VALUEFUNC(_wrap_GRSdkIf_MergeScene), -1);
   rb_define_singleton_method(cGRSdkIf.klass, "CreateSdk", VALUEFUNC(_wrap_GRSdkIf_CreateSdk), -1);
   rb_define_singleton_method(cGRSdkIf.klass, "RegisterSdk", VALUEFUNC(_wrap_GRSdkIf_RegisterSdk), -1);
   cGRSdkIf.mark = 0;
@@ -26419,6 +27124,7 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cPHSdkIf.klass, "CreateScene", VALUEFUNC(_wrap_PHSdkIf_CreateScene), -1);
   rb_define_method(cPHSdkIf.klass, "NScene", VALUEFUNC(_wrap_PHSdkIf_NScene), -1);
   rb_define_method(cPHSdkIf.klass, "GetScene", VALUEFUNC(_wrap_PHSdkIf_GetScene), -1);
+  rb_define_method(cPHSdkIf.klass, "MergeScene", VALUEFUNC(_wrap_PHSdkIf_MergeScene), -1);
   rb_define_method(cPHSdkIf.klass, "CreateShape", VALUEFUNC(_wrap_PHSdkIf_CreateShape), -1);
   rb_define_method(cPHSdkIf.klass, "NShape", VALUEFUNC(_wrap_PHSdkIf_NShape), -1);
   rb_define_method(cPHSdkIf.klass, "GetShape", VALUEFUNC(_wrap_PHSdkIf_GetShape), -1);
@@ -26470,10 +27176,14 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cPHSceneIf.klass, "SetNumIteration", VALUEFUNC(_wrap_PHSceneIf_SetNumIteration), -1);
   rb_define_method(cPHSceneIf.klass, "CreateJoint", VALUEFUNC(_wrap_PHSceneIf_CreateJoint), -1);
   rb_define_method(cPHSceneIf.klass, "NJoints", VALUEFUNC(_wrap_PHSceneIf_NJoints), -1);
-  rb_define_method(cPHSceneIf.klass, "GetJoints", VALUEFUNC(_wrap_PHSceneIf_GetJoints), -1);
+  rb_define_method(cPHSceneIf.klass, "GetJoint", VALUEFUNC(_wrap_PHSceneIf_GetJoint), -1);
   rb_define_method(cPHSceneIf.klass, "CreateRootNode", VALUEFUNC(_wrap_PHSceneIf_CreateRootNode), -1);
+  rb_define_method(cPHSceneIf.klass, "NRootNodes", VALUEFUNC(_wrap_PHSceneIf_NRootNodes), -1);
+  rb_define_method(cPHSceneIf.klass, "GetRootNode", VALUEFUNC(_wrap_PHSceneIf_GetRootNode), -1);
   rb_define_method(cPHSceneIf.klass, "CreateTreeNode", VALUEFUNC(_wrap_PHSceneIf_CreateTreeNode), -1);
   rb_define_method(cPHSceneIf.klass, "CreateGear", VALUEFUNC(_wrap_PHSceneIf_CreateGear), -1);
+  rb_define_method(cPHSceneIf.klass, "NGears", VALUEFUNC(_wrap_PHSceneIf_NGears), -1);
+  rb_define_method(cPHSceneIf.klass, "GetGear", VALUEFUNC(_wrap_PHSceneIf_GetGear), -1);
   rb_define_method(cPHSceneIf.klass, "CreatePath", VALUEFUNC(_wrap_PHSceneIf_CreatePath), -1);
   rb_define_method(cPHSceneIf.klass, "GetTimeStep", VALUEFUNC(_wrap_PHSceneIf_GetTimeStep), -1);
   rb_define_method(cPHSceneIf.klass, "SetTimeStep", VALUEFUNC(_wrap_PHSceneIf_SetTimeStep), -1);
@@ -26699,6 +27409,61 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHSpringDesc.destroy = (void (*)(void *)) free_Spr_PHSpringDesc;
   cPHSpringDesc.trackObjects = 0;
   
+  cPHTreeNodeDesc.klass = rb_define_class_under(mSpringhead, "PHTreeNodeDesc", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHTreeNodeDesc, (void *) &cPHTreeNodeDesc);
+  rb_define_alloc_func(cPHTreeNodeDesc.klass, _wrap_PHTreeNodeDesc_allocate);
+  rb_define_method(cPHTreeNodeDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHTreeNodeDesc), -1);
+  rb_define_const(cPHTreeNodeDesc.klass, "ROOT_NODE", SWIG_From_int(static_cast< int >(Spr::PHTreeNodeDesc::ROOT_NODE)));
+  rb_define_const(cPHTreeNodeDesc.klass, "HINGEJOINT_NODE", SWIG_From_int(static_cast< int >(Spr::PHTreeNodeDesc::HINGEJOINT_NODE)));
+  rb_define_const(cPHTreeNodeDesc.klass, "SLIDERJOINT_NODE", SWIG_From_int(static_cast< int >(Spr::PHTreeNodeDesc::SLIDERJOINT_NODE)));
+  rb_define_const(cPHTreeNodeDesc.klass, "BALLJOINT_NODE", SWIG_From_int(static_cast< int >(Spr::PHTreeNodeDesc::BALLJOINT_NODE)));
+  rb_define_const(cPHTreeNodeDesc.klass, "PATHJOINT_NODE", SWIG_From_int(static_cast< int >(Spr::PHTreeNodeDesc::PATHJOINT_NODE)));
+  rb_define_method(cPHTreeNodeDesc.klass, "type=", VALUEFUNC(_wrap_PHTreeNodeDesc_type_set), -1);
+  rb_define_method(cPHTreeNodeDesc.klass, "type", VALUEFUNC(_wrap_PHTreeNodeDesc_type_get), -1);
+  cPHTreeNodeDesc.mark = 0;
+  cPHTreeNodeDesc.destroy = (void (*)(void *)) free_Spr_PHTreeNodeDesc;
+  cPHTreeNodeDesc.trackObjects = 0;
+  
+  cPHRootNodeDesc.klass = rb_define_class_under(mSpringhead, "PHRootNodeDesc", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeDesc->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHRootNodeDesc, (void *) &cPHRootNodeDesc);
+  rb_define_alloc_func(cPHRootNodeDesc.klass, _wrap_PHRootNodeDesc_allocate);
+  rb_define_method(cPHRootNodeDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHRootNodeDesc), -1);
+  cPHRootNodeDesc.mark = 0;
+  cPHRootNodeDesc.destroy = (void (*)(void *)) free_Spr_PHRootNodeDesc;
+  cPHRootNodeDesc.trackObjects = 0;
+  
+  cPHHingeJointNodeDesc.klass = rb_define_class_under(mSpringhead, "PHHingeJointNodeDesc", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeDesc->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHHingeJointNodeDesc, (void *) &cPHHingeJointNodeDesc);
+  rb_define_alloc_func(cPHHingeJointNodeDesc.klass, _wrap_PHHingeJointNodeDesc_allocate);
+  rb_define_method(cPHHingeJointNodeDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHHingeJointNodeDesc), -1);
+  cPHHingeJointNodeDesc.mark = 0;
+  cPHHingeJointNodeDesc.destroy = (void (*)(void *)) free_Spr_PHHingeJointNodeDesc;
+  cPHHingeJointNodeDesc.trackObjects = 0;
+  
+  cPHSliderJointNodeDesc.klass = rb_define_class_under(mSpringhead, "PHSliderJointNodeDesc", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeDesc->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSliderJointNodeDesc, (void *) &cPHSliderJointNodeDesc);
+  rb_define_alloc_func(cPHSliderJointNodeDesc.klass, _wrap_PHSliderJointNodeDesc_allocate);
+  rb_define_method(cPHSliderJointNodeDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHSliderJointNodeDesc), -1);
+  cPHSliderJointNodeDesc.mark = 0;
+  cPHSliderJointNodeDesc.destroy = (void (*)(void *)) free_Spr_PHSliderJointNodeDesc;
+  cPHSliderJointNodeDesc.trackObjects = 0;
+  
+  cPHBallJointNodeDesc.klass = rb_define_class_under(mSpringhead, "PHBallJointNodeDesc", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeDesc->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHBallJointNodeDesc, (void *) &cPHBallJointNodeDesc);
+  rb_define_alloc_func(cPHBallJointNodeDesc.klass, _wrap_PHBallJointNodeDesc_allocate);
+  rb_define_method(cPHBallJointNodeDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHBallJointNodeDesc), -1);
+  cPHBallJointNodeDesc.mark = 0;
+  cPHBallJointNodeDesc.destroy = (void (*)(void *)) free_Spr_PHBallJointNodeDesc;
+  cPHBallJointNodeDesc.trackObjects = 0;
+  
+  cPHPathJointNodeDesc.klass = rb_define_class_under(mSpringhead, "PHPathJointNodeDesc", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeDesc->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathJointNodeDesc, (void *) &cPHPathJointNodeDesc);
+  rb_define_alloc_func(cPHPathJointNodeDesc.klass, _wrap_PHPathJointNodeDesc_allocate);
+  rb_define_method(cPHPathJointNodeDesc.klass, "initialize", VALUEFUNC(_wrap_new_PHPathJointNodeDesc), -1);
+  cPHPathJointNodeDesc.mark = 0;
+  cPHPathJointNodeDesc.destroy = (void (*)(void *)) free_Spr_PHPathJointNodeDesc;
+  cPHPathJointNodeDesc.trackObjects = 0;
+  
   cPHGearDesc.klass = rb_define_class_under(mSpringhead, "PHGearDesc", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHGearDesc, (void *) &cPHGearDesc);
   rb_define_alloc_func(cPHGearDesc.klass, _wrap_PHGearDesc_allocate);
@@ -26841,6 +27606,38 @@ SWIGEXPORT void Init_Springhead(void) {
   cPHRootNodeIf.destroy = (void (*)(void *)) free_Spr_PHRootNodeIf;
   cPHRootNodeIf.trackObjects = 0;
   
+  cPHHingeJointNodeIf.klass = rb_define_class_under(mSpringhead, "PHHingeJointNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHHingeJointNodeIf, (void *) &cPHHingeJointNodeIf);
+  rb_undef_alloc_func(cPHHingeJointNodeIf.klass);
+  rb_define_singleton_method(cPHHingeJointNodeIf.klass, "Cast", VALUEFUNC(_wrap_PHHingeJointNodeIf_Cast), -1);
+  cPHHingeJointNodeIf.mark = 0;
+  cPHHingeJointNodeIf.destroy = (void (*)(void *)) free_Spr_PHHingeJointNodeIf;
+  cPHHingeJointNodeIf.trackObjects = 0;
+  
+  cPHSliderJointNodeIf.klass = rb_define_class_under(mSpringhead, "PHSliderJointNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHSliderJointNodeIf, (void *) &cPHSliderJointNodeIf);
+  rb_undef_alloc_func(cPHSliderJointNodeIf.klass);
+  rb_define_singleton_method(cPHSliderJointNodeIf.klass, "Cast", VALUEFUNC(_wrap_PHSliderJointNodeIf_Cast), -1);
+  cPHSliderJointNodeIf.mark = 0;
+  cPHSliderJointNodeIf.destroy = (void (*)(void *)) free_Spr_PHSliderJointNodeIf;
+  cPHSliderJointNodeIf.trackObjects = 0;
+  
+  cPHBallJointNodeIf.klass = rb_define_class_under(mSpringhead, "PHBallJointNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHBallJointNodeIf, (void *) &cPHBallJointNodeIf);
+  rb_undef_alloc_func(cPHBallJointNodeIf.klass);
+  rb_define_singleton_method(cPHBallJointNodeIf.klass, "Cast", VALUEFUNC(_wrap_PHBallJointNodeIf_Cast), -1);
+  cPHBallJointNodeIf.mark = 0;
+  cPHBallJointNodeIf.destroy = (void (*)(void *)) free_Spr_PHBallJointNodeIf;
+  cPHBallJointNodeIf.trackObjects = 0;
+  
+  cPHPathJointNodeIf.klass = rb_define_class_under(mSpringhead, "PHPathJointNodeIf", ((swig_class *) SWIGTYPE_p_Spr__PHTreeNodeIf->clientdata)->klass);
+  SWIG_TypeClientData(SWIGTYPE_p_Spr__PHPathJointNodeIf, (void *) &cPHPathJointNodeIf);
+  rb_undef_alloc_func(cPHPathJointNodeIf.klass);
+  rb_define_singleton_method(cPHPathJointNodeIf.klass, "Cast", VALUEFUNC(_wrap_PHPathJointNodeIf_Cast), -1);
+  cPHPathJointNodeIf.mark = 0;
+  cPHPathJointNodeIf.destroy = (void (*)(void *)) free_Spr_PHPathJointNodeIf;
+  cPHPathJointNodeIf.trackObjects = 0;
+  
   cPHGearIf.klass = rb_define_class_under(mSpringhead, "PHGearIf", ((swig_class *) SWIGTYPE_p_Spr__SceneObjectIf->clientdata)->klass);
   SWIG_TypeClientData(SWIGTYPE_p_Spr__PHGearIf, (void *) &cPHGearIf);
   rb_undef_alloc_func(cPHGearIf.klass);
@@ -26904,6 +27701,8 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cFWSceneIf.klass, "GetGRScene", VALUEFUNC(_wrap_FWSceneIf_GetGRScene), -1);
   rb_define_method(cFWSceneIf.klass, "SetGRScene", VALUEFUNC(_wrap_FWSceneIf_SetGRScene), -1);
   rb_define_method(cFWSceneIf.klass, "CreateObject", VALUEFUNC(_wrap_FWSceneIf_CreateObject), -1);
+  rb_define_method(cFWSceneIf.klass, "NObject", VALUEFUNC(_wrap_FWSceneIf_NObject), -1);
+  rb_define_method(cFWSceneIf.klass, "GetObjects", VALUEFUNC(_wrap_FWSceneIf_GetObjects), -1);
   rb_define_method(cFWSceneIf.klass, "Sync", VALUEFUNC(_wrap_FWSceneIf_Sync), -1);
   rb_define_method(cFWSceneIf.klass, "Step", VALUEFUNC(_wrap_FWSceneIf_Step), -1);
   rb_define_method(cFWSceneIf.klass, "Draw", VALUEFUNC(_wrap_FWSceneIf_Draw), -1);
@@ -26931,6 +27730,7 @@ SWIGEXPORT void Init_Springhead(void) {
   rb_define_method(cFWSdkIf.klass, "NScene", VALUEFUNC(_wrap_FWSdkIf_NScene), -1);
   rb_define_method(cFWSdkIf.klass, "SwitchScene", VALUEFUNC(_wrap_FWSdkIf_SwitchScene), -1);
   rb_define_method(cFWSdkIf.klass, "GetScene", VALUEFUNC(_wrap_FWSdkIf_GetScene), -1);
+  rb_define_method(cFWSdkIf.klass, "MergeScene", VALUEFUNC(_wrap_FWSdkIf_MergeScene), -1);
   rb_define_method(cFWSdkIf.klass, "GetPHSdk", VALUEFUNC(_wrap_FWSdkIf_GetPHSdk), -1);
   rb_define_method(cFWSdkIf.klass, "GetGRSdk", VALUEFUNC(_wrap_FWSdkIf_GetGRSdk), -1);
   rb_define_method(cFWSdkIf.klass, "GetFISdk", VALUEFUNC(_wrap_FWSdkIf_GetFISdk), -1);

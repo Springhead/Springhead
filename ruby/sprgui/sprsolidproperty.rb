@@ -21,7 +21,8 @@ class SprSolidProperty < FXVerticalFrame
 
 		FXHorizontalSeparator.new(self)
 
-		matrix = FXMatrix.new(self, 2, (MATRIX_BY_COLUMNS|LAYOUT_FILL_X|LAYOUT_FILL_Y))
+		matrix = FXMatrix.new(self, 2, (MATRIX_BY_COLUMNS|LAYOUT_FILL_X|LAYOUT_FILL_Y), 0, 0, 0, 0, 0, 0, 0, 0, 1, 1)
+
 		# velocity
 		FXLabel.new(matrix, 'velocity')
 		@velocity = SprVectorProperty.new(matrix, 3)
@@ -66,10 +67,10 @@ class SprSolidProperty < FXVerticalFrame
 	def update(solid, upload)
 		@object.update(solid, upload)
 		if upload
-			@mass.update(solid.GetMass(), true)
+			@mass.update([solid.GetMass()], true)
 			@inertia.update(solid.GetInertia(), upload)
 		else
-			m = 0
+			m = [0]
 			i = [[0,0,0],[0,0,0],[0,0,0]]
 			@mass.update(m, false)
 			@inertia.update(i, false)
