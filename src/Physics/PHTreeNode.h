@@ -19,10 +19,15 @@ class PHTreeNode : public SceneObject, public PHTreeNodeIfInit, public UTTreeNod
 public:
 	OBJECTDEF_ABST(PHTreeNode, SceneObject);
 	
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual size_t NChildObject();
+	virtual ObjectIf* GetChildObject(size_t i);
+	
 	bool		Includes(PHTreeNode* node);		///< 自分以下にノードnodeがあるか
 	PHTreeNode*	FindBySolid(PHSolid* solid);	///< 自分以下のツリーでsolidを参照しているノードを探す
 	PHTreeNode* FindByJoint(PHJoint* joint);	///< 自分以下のツリーでjointを参照しているノードを探す
 	void		RemoveGearNode();
+	void		Prepare(PHScene* scene, PHConstraintEngine* engine);	///< 再帰的にsceneとengineをセットする
 	//int GetNumOfNodes();
 	//int GetTotalDof();							///< 子ノードを含めた自由度の合計
 	//int AssignID(int id, std::vector<PHTreeNode*>& table);		///< 再帰的にIDを割り振る
@@ -80,6 +85,10 @@ class PHRootNode : public PHTreeNode, public PHRootNodeIfInit{
 public:
 	OBJECTDEF(PHRootNode, PHTreeNode);
 
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual size_t NChildObject();
+	virtual ObjectIf* GetChildObject(size_t i);
+	
 	void SetupABA();
 	
 	virtual PHSolid* GetSolid(){return solid;}

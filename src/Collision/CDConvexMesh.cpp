@@ -154,7 +154,7 @@ void CDConvexMesh::CalcFace(){
 	int n = base.size();
 //	CDQHPlanes<CDQhullVtx> planes(n*(n-1)*(n-2)/6);
 	CDQHPlanes<CDQhullVtx> planes(n*10);
-	planes.CreateConvexHull(&*pvtxs.begin(), &*pvtxs.end());
+	planes.CreateConvexHull(&*pvtxs.begin(), &*pvtxs.begin() + pvtxs.size());
 	std::set<int> usedVtxs;
 	for(CDQHPlane<CDQhullVtx>* plane =planes.begin; plane != planes.end; ++plane){
 		if (plane->deleted) continue;

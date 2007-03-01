@@ -21,6 +21,35 @@ PHTreeNode::PHTreeNode():joint(0){
 	dZ.clear();
 }
 
+bool PHTreeNode::AddChildObject(ObjectIf* o){
+	PHJointIf* j = DCAST(PHJointIf, o);
+	if(j){
+		joint = j->Cast();
+		joint->bArticulated = true;
+		joint->solid[1]->treeNode = this;
+		return true;
+	}
+	PHTreeNode* n = DCAST(PHTreeNode, o);
+	if(n){
+		AddChild(n);
+		n->scene = scene;
+		n->engine = engine;
+		return true;
+	}
+	return false;
+}
+size_t PHTreeNode::NChildObject(){
+	return (joint ? 1 : 0) + Children().size();
+}
+ObjectIf* PHTreeNode::GetChildObject(size_t i){
+	if(joint){
+		if(i == 0)
+			return joint->Cast();
+		i--;
+	}
+	return Children()[i]->Cast();
+}
+
 bool PHTreeNode::Includes(PHTreeNode* node){
 	if(node == this)return true;
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
@@ -47,6 +76,13 @@ PHTreeNode*	PHTreeNode::FindByJoint(PHJoint* j){
 		if(node)return node;
 	}
 	return NULL;
+}
+
+void PHTreeNode::Prepare(PHScene* s, PHConstraintEngine* e){
+	scene = s;
+	engine = e;
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->Prepare(s, e);
 }
 
 /*int PHTreeNode::GetTotalDof(){
@@ -195,6 +231,27 @@ void PHTreeNode::UpdatePosition(double dt){
 //-----------------------------------------------------------------------------
 IF_OBJECT_IMP(PHRootNode, PHTreeNode);
 
+bool PHRootNode::AddChildObject(ObjectIf* o){
+	if(PHTreeNode::AddChildObject(o))
+		return true;
+	PHSolidIf* s = DCAST(PHSolidIf, o);
+	if(s){
+		solid = s->Cast();
+		return true;
+	}
+	return false;
+}
+size_t PHRootNode::NChildObject(){
+	return (solid ? 1 : 0) + Children().size();
+}
+ObjectIf* PHRootNode::GetChildObject(size_t i){
+	if(solid){
+		if(i == 0)
+			return solid->Cast();
+		i--;
+	}
+	return Children()[i]->Cast();
+}
 void PHRootNode::SetupABA(){
 	CompArticulatedInertia();
 	CompArticulatedBiasForce();

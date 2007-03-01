@@ -2020,6 +2020,54 @@ SWIGINTERN void Posed_setOri(Posed *self,Quaterniond const &q){
 SWIGINTERN Quaterniond Posed_getOri(Posed *self){
 		return self->Ori();
 	}
+SWIGINTERN VALUE
+_wrap_Deg(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double result;
+  double val1 ;
+  int ecode1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Deg" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  result = (double)Deg(arg1);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Rad(int argc, VALUE *argv, VALUE self) {
+  double arg1 ;
+  double result;
+  double val1 ;
+  int ecode1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_double(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Rad" "', argument " "1"" of type '" "double""'");
+  } 
+  arg1 = static_cast< double >(val1);
+  result = (double)Rad(arg1);
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 swig_class cVec2d;
 
 SWIGINTERN VALUE
@@ -13658,6 +13706,8 @@ SWIGEXPORT void Init_PTM(void) {
   }
   
   SWIG_RubyInitializeTrackings();
+  rb_define_module_function(mPTM, "Deg", VALUEFUNC(_wrap_Deg), -1);
+  rb_define_module_function(mPTM, "Rad", VALUEFUNC(_wrap_Rad), -1);
   
   cVec2d.klass = rb_define_class_under(mPTM, "Vec2d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Vec2d, (void *) &cVec2d);

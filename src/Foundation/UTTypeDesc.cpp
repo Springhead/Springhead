@@ -255,22 +255,24 @@ void SPR_CDECL UTTypeDescDb::PrintDbs(std::ostream& os){
 UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 	type = d;
 	if (type){
-		field = &*type->GetComposit().end();
-	}else{
-		field = NULL;
+		//field = &*type->GetComposit().end();
+		field = type->GetComposit().end();
 	}
+	//else{
+	//	field = NULL;
+	//}
 	arrayPos = -1;
 	arrayLength = 0;
 	fieldType=F_NONE;
 }
 bool UTTypeDescFieldIt::NextField(){
-	if (!type->IsComposit()) return false;
+	if (!type || !type->IsComposit()) return false;
 	//	次のフィールドへ進む
-	if (field == &*type->GetComposit().end()){
-		field = &*type->GetComposit().begin();
+	if (field == type->GetComposit().end()){
+		field = type->GetComposit().begin();
 	}else{
 		++field;
-		if (field == &*type->GetComposit().end()){
+		if (field == type->GetComposit().end()){
 			fieldType = F_NONE;
 			return false;
 		}

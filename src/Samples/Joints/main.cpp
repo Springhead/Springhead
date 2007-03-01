@@ -282,7 +282,7 @@ void BuildScene5(){
 	CDSphereDesc descSphere;
 	descSphere.radius = 1.0;
 	soBox[5] = scene->CreateSolid(descBox);
-	soBox[5]->AddShape(scene->CreateShape(descSphere));
+	soBox[5]->AddShape(phSdk->CreateShape(descSphere));
 
 	jntLink.resize(6);
 	PHHingeJointDesc descHinge;
@@ -361,7 +361,7 @@ void OnKey0(char key){
 		jntLink.push_back(scene->CreateJoint(soBox[n-2], soBox[n-1], jdesc));
 		// ツリーノードを作成し，ABAで計算するように指定
 		if(key == ' ')
-			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1]));
+			nodeTree.push_back(scene->CreateTreeNode(nodeTree.back(), soBox[n-1], PHTreeNodeDesc()));
 		// 以下はギアの作成コード
 		/*if(jntLink.size() >= 2){
 			size_t m = jntLink.size();

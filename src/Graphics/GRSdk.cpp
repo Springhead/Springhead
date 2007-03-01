@@ -76,7 +76,7 @@ void GRSdk::MergeScene(GRSceneIf* scene0, GRSceneIf* scene1){
 	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
 	if(it0 == scenes.end() || it1 == scenes.end())
 		return;
-	for(int i = 0; i < scene1->NChildObject(); i++){
+	for(int i = 0; i < (int)scene1->NChildObject(); i++){
 		scene0->AddChildObject(scene1->GetChildObject(i));
 	}
 	scenes.erase(it1);

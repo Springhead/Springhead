@@ -224,7 +224,7 @@ PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSol
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		if((*it)->FindBySolid(solid))
 			return NULL;
-	PHSolids::iterator it = (PHSolids::iterator) solids.Find(solid);
+	PHSolids::iterator it = find(solids.begin(), solids.end(), solid);
 	if(it == solids.end())
 		return NULL;
 	
@@ -256,25 +256,9 @@ PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTre
 	if(!joint)return NULL;
 	//拘束の種類に対応するノードを作成
 	node = joint->CreateTreeNode();
-	//オブジェクト間のリンク
-	node->joint = joint;
-	parent->AddChild(node);
-	joint->bArticulated = true;
-	joint->solid[1]->treeNode = node;
-	
-	/* ファイルローダはfactoryを利用するので不要になった
-	// 以下はファイルローダ用の処理．desc.typeから作るべきノードの種類を判断する
-	switch(desc.type){
-	case PHTreeNodeDesc::HINGEJOINT_NODE:	node = DBG_NEW PHHingeJointNode();	break;
-	case PHTreeNodeDesc::SLIDERJOINT_NODE:	node = DBG_NEW PHSliderJointNode(); break;
-	case PHTreeNodeDesc::BALLJOINT_NODE:	node = DBG_NEW PHBallJointNode();	break;
-	case PHTreeNodeDesc::PATHJOINT_NODE:	node = DBG_NEW PHPathJointNode();	break;
-	default: return NULL;
-	}*/
+	node->AddChildObject(joint->Cast());
+	parent->AddChildObject(node->Cast());
 
-	node->scene = DCAST(PHScene, GetScene());
-	node->engine = this;
-	
 	return node;
 }
 
@@ -299,7 +283,7 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	}
 	PHRootNode* root = DCAST(PHRootNode, o);
 	if(root){
-		root->SetScene(GetScene());
+		root->Prepare(DCAST(PHScene, GetScene()), this);
 		trees.push_back(root);
 		return true;
 	}

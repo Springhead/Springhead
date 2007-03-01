@@ -135,7 +135,7 @@ void PHConstraint::CompResponseMatrix(){
 	/** 最大の対角要素との比がepsよりも小さい対角要素がある場合，
 		数値的不安定性の原因となるのでその成分は拘束対象から除外する
 	 */
-	const double eps = 0.1;
+	const double eps = 0.01;
 	double Amax = 0.0, Amin;
 	for(j = 0; j < 6; j++)
 		if(constr[j] && A[j] > Amax)

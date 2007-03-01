@@ -69,6 +69,9 @@ vec __mul__(vec v){
 }
 %enddef
 
+double Deg(double rad);
+double Rad(double deg);
+
 class Vec2d{
 public:
 	double x, y;

@@ -119,38 +119,16 @@ struct PHSpringDesc : public PHConstraintDesc{
 /** @brief ツリーノードのディスクリプタ
  */
 struct PHTreeNodeDesc{
-	enum NodeType{
-		ROOT_NODE,
-		HINGEJOINT_NODE,
-		SLIDERJOINT_NODE,
-		BALLJOINT_NODE,
-		PATHJOINT_NODE
-	} type;
 };
 struct PHRootNodeDesc : public PHTreeNodeDesc{
-	PHRootNodeDesc(){
-		type = ROOT_NODE;
-	}
 };
 struct PHHingeJointNodeDesc : public PHTreeNodeDesc{
-	PHHingeJointNodeDesc(){
-		type = HINGEJOINT_NODE;
-	}
 };
 struct PHSliderJointNodeDesc : public PHTreeNodeDesc{
-	PHSliderJointNodeDesc(){
-		type = SLIDERJOINT_NODE;
-	}
 };
 struct PHBallJointNodeDesc : public PHTreeNodeDesc{
-	PHBallJointNodeDesc(){
-		type = BALLJOINT_NODE;
-	}
 };
 struct PHPathJointNodeDesc : public PHTreeNodeDesc{
-	PHPathJointNodeDesc(){
-		type = PATHJOINT_NODE;
-	}
 };
 
 /// ギアのディスクリプタ

@@ -144,14 +144,6 @@
 	desc->ifInfo = PHTreeNodeIf::GetIfInfoStatic();
 	((IfInfo*)PHTreeNodeIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHTreeNodeDesc>;
-	field = desc->AddField("NodeType", "enum", "type",  "");
-	field->AddEnumConst("ROOT_NODE");
-	field->AddEnumConst("HINGEJOINT_NODE");
-	field->AddEnumConst("SLIDERJOINT_NODE");
-	field->AddEnumConst("BALLJOINT_NODE");
-	field->AddEnumConst("PATHJOINT_NODE");
-	field->AddEnumConst("PATHJOINT_NODE");
-	field->offset = int((char*)(&pPHTreeNodeDesc->type) - (char*)pPHTreeNodeDesc);
 	db->RegisterDesc(desc);
 	
 	PHRootNodeDesc* pPHRootNodeDesc = NULL;

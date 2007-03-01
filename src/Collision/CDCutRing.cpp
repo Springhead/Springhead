@@ -22,7 +22,7 @@ void CDCutRing::MakeRing(){
 	linePtrs.resize(lines.size());
 	for(unsigned i=0; i<lines.size(); ++i) linePtrs[i] = &lines[i];
 	vtxs.Clear();
-	vtxs.CreateConvexHull(&*linePtrs.begin(), &*linePtrs.end());
+	vtxs.CreateConvexHull(&*linePtrs.begin(), &*linePtrs.begin() + linePtrs.size());
 }
 void CDCutRing::Print(std::ostream& os){
 	if (vtxs.size()){

@@ -21,7 +21,7 @@ void FWObject::Sync(){
 		phSolid->GetPose().ToAffine(af);
 		DCAST(GRFrame, grFrame)->SetTransform(af);
 	}else{
-		DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
+		//DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
 	}
 }
 

@@ -397,8 +397,8 @@ public:
 		F_NONE, F_BOOL, F_INT, F_REAL, F_STR, F_BLOCK
 	};
 	UTTypeDesc* type;						///<	読み出し中のUTTypeDesc
-//	UTTypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
-	UTTypeDesc::Field* field;	///<	組み立て型の場合，その中のどのフィールドか
+	UTTypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
+	//UTTypeDesc::Field* field;	///<	組み立て型の場合，その中のどのフィールドか
 	int arrayPos;							///<	配列の場合，読み出し中の添え字
 	int arrayLength;						///<	固定長の場合の配列の長さ
 	FieldType fieldType;					///<	読み出すフィールドの型

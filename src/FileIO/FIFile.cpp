@@ -356,7 +356,7 @@ void FIFile::SaveBlock(FISaveContext* sc){
 	void* base = sc->datas.Top()->data;
 	while(sc->fieldIts.back().NextField()){
 		//UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
-		UTTypeDesc::Field* field = sc->fieldIts.back().field;
+		UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
 		//	要素数の取得
 		int nElements = 1;
 		if (field->varType == UTTypeDesc::Field::VECTOR){
