@@ -222,9 +222,9 @@ public:
 	///	ÉIÉCÉâÅ[äpÇ÷ïœä∑
 	template <class VET> void ToEular(TVec3<VET>& v){
 		ET poleCheck = X()*Y() + Z()*W();
-		VET& heading = v[0];
-		VET& attitude = v[1];
-		VET& bank = v[2];
+		VET heading = v[0];
+		VET attitude = v[1];
+		VET bank = v[2];
 		if (poleCheck == 0.5){				//	north pole
 			heading = 2 * atan2(X(),W());
 			bank = 0;
@@ -239,9 +239,9 @@ public:
 	}
 	///
 	template <class VET> void FromEular(const TVec3<VET>& v){
-		VET& heading = v[0];	//	yaw		mech z  ->  CG y
-		VET& attitude = v[1];	//	pitch	mech y  ->  CG x
-		VET& bank = v[2];		//	roll	mech x  ->  CG z
+		VET heading = v[0];	//	yaw		mech z  ->  CG y
+		VET attitude = v[1];	//	pitch	mech y  ->  CG x
+		VET bank = v[2];		//	roll	mech x  ->  CG z
 
 		ET c1 = cos(heading / 2);
 		ET c2 = cos(attitude / 2);
