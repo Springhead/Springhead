@@ -26,6 +26,7 @@
 #endif
 
 #include <boost/spirit/core.hpp>
+#include <boost/spirit/core/safe_bool.hpp>
 #include <boost/spirit/dynamic/if.hpp>
 #include <boost/spirit/dynamic/while.hpp>
 #include <boost/spirit/utility/chset.hpp>
@@ -75,7 +76,7 @@ struct FISkipParser: boost::spirit::parser<FISkipParser>{
     typedef boost::spirit::scanner<PhraseScannerT::iterator_t, policies_t> SkipperScannerT;
 
 	//	SkipperScannerTでパーサを定義していく．
-	typedef boost::spirit::match_result<SkipperScannerT, boost::spirit::parser_context::context_linker_t::attr_t>::type Result;
+	typedef boost::spirit::match_result<SkipperScannerT, boost::spirit::parser_context<>::context_linker_t::attr_t>::type Result;
     FISkipParser(){}
     FISkipParser(const FISkipParser& wp): ptr_(wp.ptr_? wp.ptr_->clone() : NULL){}
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
@@ -212,7 +213,7 @@ template <typename AttrT = boost::spirit::nil_t>
 #else
 template <typename AttrT>
 #endif
-struct FIPTMatch{
+struct FIPTMatch : public boost::spirit::safe_bool<FIPTMatch<AttrT> >{
     typedef AttrT attr_t;
     typedef typename boost::call_traits<AttrT>::param_type      param_type;
     typedef typename boost::call_traits<AttrT>::reference       reference;
@@ -260,8 +261,11 @@ struct FIPTMatch{
         cp_swap(trees, x.trees);
     }
 
-    operator boost::spirit::impl::safe_bool() const { 
-		return BOOST_SPIRIT_SAFE_BOOL(len >= 0); 
+    //operator boost::spirit::impl::safe_bool() const { 
+	//	return BOOST_SPIRIT_SAFE_BOOL(len >= 0); 
+	//}
+	bool operator_bool(){
+		return len >= 0;
 	}
 
     bool operator!() const { return len < 0; }
@@ -345,7 +349,7 @@ struct FIPTSkipParser: boost::spirit::parser< FIPTSkipParser >{
     typedef boost::spirit::scanner<FIIteratorT, policies_t> SkipperScannerT;
 
 	//	SkipperScannerTでパーサを定義していく．
-	typedef boost::spirit::match_result<SkipperScannerT, boost::spirit::parser_context::context_linker_t::attr_t>::type Result;
+	typedef boost::spirit::match_result<SkipperScannerT, boost::spirit::parser_context<>::context_linker_t::attr_t>::type Result;
     FIPTSkipParser(){}
     FIPTSkipParser(const FIPTSkipParser& wp): ptr_(wp.ptr_? wp.ptr_->clone() : NULL){}
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
@@ -375,7 +379,7 @@ struct FIPTPhraseParser: public boost::spirit::parser< FIPTPhraseParser >{
 
 	///	本文(Phrase)のためのスキャナ型
 	typedef FIPTSkipParser::PhraseScannerT PhraseScannerT;
-	typedef boost::spirit::match_result<PhraseScannerT, boost::spirit::parser_context::context_linker_t::attr_t>::type Result;
+	typedef boost::spirit::match_result<PhraseScannerT, boost::spirit::parser_context<>::context_linker_t::attr_t>::type Result;
 
 	FIPTPhraseParser(){}
 	FIPTPhraseParser(FIPTPhraseParser const& fp): ptr_(fp.ptr_? fp.ptr_->clone() : NULL){}
@@ -404,7 +408,7 @@ struct FIPTPhraseParserWithID: public boost::spirit::parser< FIPTPhraseParserWit
 
 	///	本文(Phrase)のためのスキャナ型
 	typedef FIPTSkipParser::PhraseScannerT PhraseScannerT;
-	typedef boost::spirit::match_result<PhraseScannerT, boost::spirit::parser_context::context_linker_t::attr_t>::type Result;
+	typedef boost::spirit::match_result<PhraseScannerT, boost::spirit::parser_context<>::context_linker_t::attr_t>::type Result;
 
 	FIPTPhraseParserWithID(){}
 	FIPTPhraseParserWithID(FIPTPhraseParserWithID const& fp): ptr_(fp.ptr_? fp.ptr_->clone() : NULL){}
