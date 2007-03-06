@@ -22,7 +22,6 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
-	virtual void CompBias();
 	PHSliderJointNode(const PHSliderJointNodeDesc& desc = PHSliderJointNodeDesc()){}
 };
 
@@ -31,10 +30,8 @@ class PHSliderJoint : public PHJoint1D, public PHSliderJointIfInit{
 public:
 	OBJECTDEF(PHSliderJoint, PHJoint1D);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
-	//virtual void CompConstraintJacobian();
 	virtual void CompBias();
-	//virtual void CompError(double dt);
-	//virtual void ProjectionCorrection(double& F, int k);
+	virtual void CompError();
 	virtual void UpdateJointState();
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHSliderJointNode();

@@ -105,11 +105,9 @@ void PHSolid::UpdateCacheLCP(double dt){
 	else{
 		dv.clear();
 	}
-}
-/*void PHSolid::SetupCorrection(){
 	dV.clear();
-	dW.clear();
-}*/
+}
+
 void PHSolid::UpdateCachePenalty(int c){
 	if ((unsigned)c == count) return;
 	count = c;
@@ -130,8 +128,8 @@ void PHSolid::UpdateVelocity(double dt){
 	SetAngularVelocity(GetOrientation() * v.w());
 }
 void PHSolid::UpdatePosition(double dt){
-	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt/* + solid->GetOrientation() * info->dV*/);
-	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt/* + info->dW*/)).unit());
+	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
+	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
 	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
 }

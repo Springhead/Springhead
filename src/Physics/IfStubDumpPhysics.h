@@ -200,6 +200,9 @@ typedef IfInitTemplate<PHSpringIfStub, PHSpring>	PHSpringIfInit;
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHTreeNodeIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void Enable(bool bEnable = true){
+		return ((OBJ*)(MIF*)this)->Enable(bEnable);
+	}
 };
 struct PHTreeNodeIf;	class PHTreeNode;
 typedef PHTreeNodeIfStubTemplate<PHTreeNodeIf, ObjectIfBuf, PHTreeNode>	PHTreeNodeIfStub;
@@ -215,19 +218,35 @@ typedef IfInitTemplate<PHRootNodeIfStub, PHRootNode>	PHRootNodeIfInit;
 
 template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct PHHingeJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+struct PHTreeNode1DIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHTreeNode1DIf;	class PHTreeNode1D;
+typedef PHTreeNode1DIfStubTemplate<PHTreeNode1DIf, ObjectIfBuf, PHTreeNode1D>	PHTreeNode1DIfStub;
+typedef IfInitTemplate<PHTreeNode1DIfStub, PHTreeNode1D>	PHTreeNode1DIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHTreeNode1DIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHHingeJointNodeIfStubTemplate: public PHTreeNode1DIfStubTemplate<IF, MIF, OBJ> {
 };
 struct PHHingeJointNodeIf;	class PHHingeJointNode;
 typedef PHHingeJointNodeIfStubTemplate<PHHingeJointNodeIf, ObjectIfBuf, PHHingeJointNode>	PHHingeJointNodeIfStub;
 typedef IfInitTemplate<PHHingeJointNodeIfStub, PHHingeJointNode>	PHHingeJointNodeIfInit;
 
-template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
+template <class IF, class MIF, class OBJ> struct PHTreeNode1DIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct PHSliderJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
+struct PHSliderJointNodeIfStubTemplate: public PHTreeNode1DIfStubTemplate<IF, MIF, OBJ> {
 };
 struct PHSliderJointNodeIf;	class PHSliderJointNode;
 typedef PHSliderJointNodeIfStubTemplate<PHSliderJointNodeIf, ObjectIfBuf, PHSliderJointNode>	PHSliderJointNodeIfStub;
 typedef IfInitTemplate<PHSliderJointNodeIfStub, PHSliderJointNode>	PHSliderJointNodeIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHTreeNode1DIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHPathJointNodeIfStubTemplate: public PHTreeNode1DIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHPathJointNodeIf;	class PHPathJointNode;
+typedef PHPathJointNodeIfStubTemplate<PHPathJointNodeIf, ObjectIfBuf, PHPathJointNode>	PHPathJointNodeIfStub;
+typedef IfInitTemplate<PHPathJointNodeIfStub, PHPathJointNode>	PHPathJointNodeIfInit;
 
 template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
 template <class IF, class MIF, class OBJ>
@@ -236,14 +255,6 @@ struct PHBallJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, O
 struct PHBallJointNodeIf;	class PHBallJointNode;
 typedef PHBallJointNodeIfStubTemplate<PHBallJointNodeIf, ObjectIfBuf, PHBallJointNode>	PHBallJointNodeIfStub;
 typedef IfInitTemplate<PHBallJointNodeIfStub, PHBallJointNode>	PHBallJointNodeIfInit;
-
-template <class IF, class MIF, class OBJ> struct PHTreeNodeIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct PHPathJointNodeIfStubTemplate: public PHTreeNodeIfStubTemplate<IF, MIF, OBJ> {
-};
-struct PHPathJointNodeIf;	class PHPathJointNode;
-typedef PHPathJointNodeIfStubTemplate<PHPathJointNodeIf, ObjectIfBuf, PHPathJointNode>	PHPathJointNodeIfStub;
-typedef IfInitTemplate<PHPathJointNodeIfStub, PHPathJointNode>	PHPathJointNodeIfInit;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
@@ -295,7 +306,7 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHJointIf *  GetJoint(int i){
 		return ((OBJ*)(MIF*)this)->GetJoint(i);
 	}
-	virtual PHTreeNodeIf *  CreateRootNode(PHSolidIf *  root, const PHRootNodeDesc &  desc){
+	virtual PHRootNodeIf *  CreateRootNode(PHSolidIf *  root, const PHRootNodeDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreateRootNode(root, desc);
 	}
 	virtual int NRootNodes() const {

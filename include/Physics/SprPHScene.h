@@ -67,13 +67,13 @@ struct PHSceneDesc: public PHSceneState{
 		MODE_LCP		///< LCPで解く
 	};
 	
-	Vec3f	gravity;		///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
-	int		numIteration;	///< LCPの反復回数
+	Vec3f	gravity;	///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
+	int		numIter;	///< LCPの反復回数
 
 	PHSceneDesc(){Init();}
 	void Init(){
 		gravity=Vec3f(0,-9.8f,0);
-		numIteration = 15;
+		numIter = 15;
 	}
 };
 
@@ -160,7 +160,7 @@ public:
 		@return ルートノードのインタフェース
 		関節ツリーの根となるノードを作成する．
 	 */
-	virtual PHTreeNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc)=0;
+	virtual PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc)=0;
 
 	/** @brief ルートノードの数
 	 */
@@ -192,7 +192,7 @@ public:
 		を満たすように拘束される．
 	 */
 	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc)=0;
-
+	
 	/** @brief ギアの数
 	 */
 	virtual int NGears()const=0;

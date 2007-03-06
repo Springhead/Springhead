@@ -40,12 +40,13 @@ class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPa
 	OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
 public:
 	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
-	int		numIteration;			///< 速度更新LCPの反復回数
-	double	correctionRate;			///< 誤差修正比率
+	int		numIter;				///< 速度更新LCPの反復回数
+	int		numIterCorrection;		///< 誤差修正LCPの反復回数
+	double	velCorrectionRate;		///< 誤差修正比率
+	double	posCorrectionRate;
 	double	shrinkRate;				///< LCP初期値を前回の解に対して縮小させる比率
-	//int max_iter_correction;		///< 誤差修正LCPの反復回数
-	//double max_error;
-
+	double	shrinkRateCorrection;
+	
 	PHConstraintEngine();
 	~PHConstraintEngine();
 	
@@ -69,13 +70,13 @@ public:
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;
 	
-	void SetupLCP();	///< 速度更新LCPの準備
-	void IterateLCP();			///< 速度更新LCPの一度の反復
-	
-	//void SetupCorrection(double dt);///< 誤差修正LCPの準備
-	//void IterateCorrection();		///< 誤差修正LCPの一度の反復
+	void SetupLCP();				///< 速度更新LCPの準備
+	void IterateLCP();				///< 速度更新LCPの一度の反復
+	void SetupCorrectionLCP();		///< 誤差修正LCPの準備
+	void IterateCorrectionLCP();	///< 誤差修正LCPの一度の反復
 
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 };
 
 }	//	namespace Spr

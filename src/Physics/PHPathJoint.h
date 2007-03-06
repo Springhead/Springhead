@@ -39,7 +39,7 @@ struct PHPathPointWithJacobian : public PHPathPoint{
 class PHPath : public SceneObject, public PHPathIfInit, public std::vector<PHPathPointWithJacobian>{
 	bool bReady;
 	bool bLoop;	//[-pi, pi]ÇÃñ≥å¿âÒì]ä÷êﬂ
-	iterator Find(double s);
+	iterator Find(double &s);
 public:
 	OBJECTDEF_ABST(PHPath, SceneObject);
 	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
@@ -60,7 +60,6 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
-	virtual void CompBias();
 	PHPathJointNode(const PHPathJointNodeDesc& desc = PHPathJointNodeDesc()){}
 };
 

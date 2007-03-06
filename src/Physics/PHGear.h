@@ -25,11 +25,11 @@ public:
 	OBJECTDEF(PHGear, SceneObject);
 	PHScene*			scene;
 	PHConstraintEngine* engine;
-	PHJoint1D*	joint[2];
-	bool		bArticulated;
-	double		ratio;
-	double		A, Ainv, b;
-	double		f;
+	PHJoint1D*		joint[2];		///< ˜A“®‚³‚¹‚éŠÖß
+	bool			bArticulated;
+	double			ratio;
+	double			A, Ainv, b;
+	double			f;
 
 	void	SetDesc(const PHGearDesc& desc);
 	void	CompResponse(double f);

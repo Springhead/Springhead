@@ -93,6 +93,7 @@ void PHContactPoint::CompBias(){
 
 		2çÑëÃä‘ÇÃê⁄êGÇÇ–Ç∆Ç¬ÇÃêßñÒÇ∆ÇµÇƒÇ†ÇÁÇÌÇπÇÈÇÊÇ§Ç…Ç»ÇÍÇŒâåàÇ∑ÇÈÇ∆évÇ§ÅD	
 	*/
+#if 0
 	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v().x;
 	if (err < 0) err = 0;
 	if (err){
@@ -102,6 +103,12 @@ void PHContactPoint::CompBias(){
 //		DSTR << "err: " << err << std::edl;
 		db.v().x = -err * engine->correctionRate;
 	}
+#else
+	const double damper = 100.0, spring = 0.0;
+	double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+	dA[0] = tmp * dtinv;
+	db[0] = -spring * (shapePair->depth - 1e-3) * tmp;
+#endif
 }
 
 void PHContactPoint::Projection(double& f, int k){
@@ -119,16 +126,19 @@ void PHContactPoint::Projection(double& f, int k){
 	}
 }
 
-/*void PHContactPoint::CompError(double dt){
+void PHContactPoint::CompError(){
 	const double eps = 0.0;
 	//è’ìÀîªíËÉAÉãÉSÉäÉYÉÄÇÃìsçáè„ÅACorrectionÇ…ÇÊÇ¡ÇƒäÆëSÇ…çÑëÃÇ™ó£ÇÍÇƒÇµÇ‹Ç§ÇÃÇÕç¢ÇÈÇÃÇ≈
 	//åÎç∑ÇepsÇæÇØè¨Ç≥Ç≠å©ÇπÇÈ
-	B[0] = min(0.0, -shapePair->depth + eps);
-}*/
+	B.v().x = min(0.0, -shapePair->depth + eps);
+}
 
-/*void PHContactPoint::ProjectionCorrection(double& F, int k){
-	//êÇíºçRóÕ >= 0ÇÃêßñÒ
-	F = Spr::max(0.0, F);
-}*/
+void PHContactPoint::ProjectionCorrection(double& F, int k){
+	if(k == 0){	//êÇíºçRóÕ >= 0ÇÃêßñÒ
+		F = max(0.0, F);
+	}
+	else if(k == 1 || k == 2)
+		F = 0;
+}
 
 }

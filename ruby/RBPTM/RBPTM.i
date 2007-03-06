@@ -3,7 +3,8 @@
 %include "workaround.i"
 
 %{
-#include <SprBase.h>
+#include "Base/TQuaternion.h"
+#include "Base/Affine.h"
 using namespace PTM;
 using namespace Spr;
 %}

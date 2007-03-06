@@ -161,13 +161,16 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
-	numIteration	= 10;
-	correctionRate	= 0.2;
-	shrinkRate		= 0.9;
+	numIter				 = 15;
+	numIterCorrection	 = 5;
+	velCorrectionRate	 = 0.2;
+	posCorrectionRate	 = 0.1;
+	shrinkRate			 = 0.7;
+	shrinkRateCorrection = 0.7;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
-
+	
 }
 
 void PHConstraintEngine::Clear(){
@@ -207,18 +210,6 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc, PHSolid* lhs, 
 	AddChildObject(joint->Cast());
 	return joint;
 }
-/*bool PHConstraintEngine::AddJoint(PHSolidIf* lhs, PHSolidIf* rhs, PHJointIf* j){
-	PHSolids::iterator islhs, isrhs;
-	islhs = (PHSolids::iterator) solids.Find(lhs->Cast());
-	isrhs = (PHSolids::iterator) solids.Find(rhs->Cast());
-	if(islhs == solids.end() || isrhs == solids.end()) return false;
-	
-	PHJoint* joint = DCAST(PHJoint, j);
-	joint->solid[0] = *islhs;
-	joint->solid[1] = *isrhs;
-	joints.push_back(joint);
-	return true;
-}*/
 
 PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid){
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
@@ -302,8 +293,44 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 				nodeR->AddGear(gear, nodeL);
 			else if(nodeR->GetParent() == nodeL)
 				nodeL->AddGear(gear, nodeR);
+			else if(nodeL->GetParent() == nodeR->GetParent())
+				nodeL->AddGear(gear, nodeR);
 		}
 		return true;
+	}
+	return false;
+}
+
+bool PHConstraintEngine::DelChildObject(ObjectIf* o){
+	
+	// ＊相互依存するオブジェクトの削除が必要だが未実装
+	
+	PHJoint* joint = DCAST(PHJoint, o);
+	if(joint){
+		PHConstraints::iterator it = find(joints.begin(), joints.end(), joint);
+		if(it != joints.end()){
+			joints.erase(it);
+			return true;
+		}
+		return false;
+	}
+	PHRootNode* root = DCAST(PHRootNode, o);
+	if(root){
+		PHRootNodes::iterator it = find(trees.begin(), trees.end(), root);
+		if(it != trees.end()){
+			trees.erase(it);
+			return true;
+		}
+		return false;
+	}
+	PHGear* gear = DCAST(PHGear, o);
+	if(gear){
+		PHGears::iterator it = find(gears.begin(), gears.end(), gear);
+		if(it != gears.end()){
+			gears.erase(it);
+			return true;
+		}
+		return false;
 	}
 	return false;
 }
@@ -329,17 +356,19 @@ void PHConstraintEngine::SetupLCP(){
 		(*it)->SetupLCP();
 
 }
-/*void PHConstraintEngine::SetupCorrection(double dt){
-	PHSolidInfos<PHSolidInfoForLCP>::iterator it;
-	for(it = solids.begin(); it != solids.end(); it++)
-		(*it)->SetupCorrection();
-	points.SetupCorrection(dt, max_error);
-	joints.SetupCorrection(dt, max_error);
-}*/
+void PHConstraintEngine::SetupCorrectionLCP(){
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		(*it)->SetupCorrectionABA();
+
+	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+		(*it)->SetupCorrectionLCP();
+	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+		(*it)->SetupCorrectionLCP();
+}
 void PHConstraintEngine::IterateLCP(){
 	int count = 0;
 	while(true){
-		if(count == numIteration)
+		if(count == numIter)
 			break;
 		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
 			(*it)->IterateLCP();
@@ -352,19 +381,18 @@ void PHConstraintEngine::IterateLCP(){
 		count++;
 	}
 }
-/*void PHConstraintEngine::IterateCorrection(){
+void PHConstraintEngine::IterateCorrectionLCP(){
 	int count = 0;
 	while(true){
-		if(count == max_iter_correction){
-			//DSTR << "max count." << " iteration count: " << count << " dFsum: " << dFsum << endl;
+		if(count == numIterCorrection)
 			break;
-		}
-		points.IterateCorrection();
-		joints.IterateCorrection();
-
+		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+			(*it)->IterateCorrectionLCP();
+		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+			(*it)->IterateCorrectionLCP();
 		count++;
 	}
-}*/
+}
 
 void PHConstraintEngine::UpdateSolids(){
 	PHScene* scene = DCAST(PHScene, GetScene());
@@ -409,7 +437,8 @@ void PHConstraintEngine::Step(){
 	
 	SetupLCP();
 	IterateLCP();
-	//Correction(dt, ct);
+	SetupCorrectionLCP();
+	IterateCorrectionLCP();
 
 	//位置・速度の更新
 	UpdateSolids();	
@@ -418,22 +447,6 @@ void PHConstraintEngine::Step(){
 PHConstraints PHConstraintEngine::GetContactPoints(){
 	return points;
 }
-
-/*void PHConstraintEngine::Correction(double dt, int ct){
-	LARGE_INTEGER freq, val[2];
-	QueryPerformanceFrequency(&freq);
-
-	QueryPerformanceCounter(&val[0]);
-	SetupCorrection(dt);
-	QueryPerformanceCounter(&val[1]);
-	//DSTR << "sc " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-
-	QueryPerformanceCounter(&val[0]);
-	IterateCorrection();
-	QueryPerformanceCounter(&val[1]);
-	//DSTR << "ic " << (double)(val[1].QuadPart - val[0].QuadPart)/(double)(freq.QuadPart) << endl;
-}*/
-
 
 }
 

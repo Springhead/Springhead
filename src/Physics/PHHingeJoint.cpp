@@ -42,7 +42,7 @@ void PHHingeJoint::CompBias(){
 	db.v() = (Xjrel.r * dtinv + vjrel.v());
 	db.w() = (Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w());
 	db.w().z = 0.0;
-	db *= engine->correctionRate;
+	db *= engine->velCorrectionRate;
 
 	double diff;
 	if(mode == MODE_VELOCITY){
@@ -60,26 +60,19 @@ void PHHingeJoint::CompBias(){
 	}
 }
 
-/*void PHHingeJoint::CompError(double dt){
-	B.SUBVEC(0, 3) = rjrel;
-	B.SUBVEC(3, 3) = qjrel.V();
-}*/
+void PHHingeJoint::CompError(){
+	B.v() = Xjrel.r;
+	//B.w() = Xjrel.q.V();
+	//B.w().z = 0.0;
+}
 
-/*void PHHingeJoint::ProjectionCorrection(double& F, int k){
-	if(k == 5){
-		if(on_lower)
-			F = max(0.0, F);
-		if(on_upper)
-			F = min(0.0, F);
-	}
-}*/
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHHingeJointNode, PHTreeNode);
+IF_OBJECT_IMP(PHHingeJointNode, PHTreeNode1D);
 
 void PHHingeJointNode::CompJointJacobian(){
-	J[0].v().clear();
-	J[0].w() = Vec3d(0.0, 0.0, 1.0);
+	J.col(0).SUBVEC(0, 3).clear();
+	J.col(0).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHHingeJointNode::CompJointCoriolisAccel(){
@@ -94,24 +87,6 @@ void PHHingeJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.q = Quaterniond::Rot(j->position[0], 'z');
 	j->Xjrel.r.clear();
-}
-void PHHingeJointNode::CompBias(){
-	PHJoint1D* j = GetJoint();
-	double diff;
-	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
-	if(j->mode == PHJoint::MODE_VELOCITY){
-		db[0] = -j->vel_d;
-	}
-	else if(j->onLower || j->onUpper){
-	}
-	else if(j->spring != 0.0 || j->damper != 0.0){
-		diff = j->GetPosition() - j->origin;
-		while(diff >  M_PI) diff -= 2 * M_PI;
-		while(diff < -M_PI) diff += 2 * M_PI;
-		double tmp = 1.0 / (j->damper + j->spring * dt);
-		dA[0] = tmp * dtinv;
-		db[0] = j->spring * (diff) * tmp;
-	}
 }
 
 }

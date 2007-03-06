@@ -33,11 +33,12 @@ void PHPath::Rollover(double& s){
 	double upper = back().s;
 	assert(lower < upper);
 	double range = upper - lower;
+	//DSTR << s << ", " << range << endl;
 	while(s >= upper)s -= range;
 	while(s <  lower)s += range;
 }
 
-PHPath::iterator PHPath::Find(double s){
+PHPath::iterator PHPath::Find(double& s){
 	if(size() <= 1)return begin();
 	if(bLoop)
 		Rollover(s);
@@ -100,7 +101,7 @@ void PHPath::CompJacobian(){
 		it->J.row(5).SUBVEC(0, 3) =  v;
 		it->J.row(5).SUBVEC(3, 3) =  w;
 		//double ninv = 1.0 / it->J.row(5).norm();
-		it->J.row(5).unitize();// *= ninv;
+		//it->J.row(5).unitize();// *= ninv;
 		Orthogonalize(it->J);
 		//it->J.row(5) *= ninv;
 	}
@@ -129,6 +130,7 @@ void PHPath::GetPose(double s, Posed& pose){
 	if(angle < -M_PI) angle += 2 * M_PI;
 	angle *= (s - lhs.s) * tmp;
 	pose.Ori() = lhs.pose.Ori() * Quaterniond::Rot(angle, axis);
+	//DSTR << lhs.pose << ", " << rhs.pose << ", " << pose << ", " << lhs.s << ", " << rhs.s << ", " << s << endl;
 }
 
 void PHPath::GetJacobian(double s, Matrix6d& J){
@@ -208,7 +210,7 @@ void PHPathJoint::CompBias(){
 	path->GetJacobian(position[0], Jq);
 	(Vec6d&)db = Jq * db;
 	db.w().z = 0.0;
-	db *= engine->correctionRate;
+	db *= engine->velCorrectionRate;
 
 	double diff;
 	if(mode == MODE_VELOCITY){
@@ -252,7 +254,7 @@ void PHPathJoint::CompBias(){
 }*/
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHPathJointNode, PHTreeNode)
+IF_OBJECT_IMP(PHPathJointNode, PHTreeNode1D)
 
 void PHPathJointNode::CompJointJacobian(){
 	PHPathJoint* j = GetJoint();
@@ -276,24 +278,6 @@ void PHPathJointNode::CompRelativePosition(){
 	j->path->GetPose(j->position[0], p);
 	j->Xjrel.q = p.Ori();
 	j->Xjrel.r = p.Pos();
-}
-void PHPathJointNode::CompBias(){
-	PHPathJoint* j = GetJoint();
-	double diff;
-	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
-	if(j->mode == PHJoint::MODE_VELOCITY){
-		db[0] = -j->vel_d;
-	}
-	else if(j->spring != 0.0 || j->damper != 0.0){
-		diff = j->GetPosition() - j->origin;
-		// diffが非常に大きな値をとると浮動小数点精度の限界から以下が無限ループになる場合がある模様
-		//while(diff >  M_PI) diff -= 2 * M_PI;
-		//while(diff < -M_PI) diff += 2 * M_PI;
-		double tmp = 1.0 / (j->damper + j->spring * dt);
-		dA[0] = tmp * dtinv;
-		db[0] = j->spring * (diff) * tmp;
-	}
-	else dA[0] = db[0] = 0.0;
 }
 
 }

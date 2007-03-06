@@ -43,9 +43,9 @@ public:
 	SpatialMatrix		T[2];
 	
 	SpatialVector f;				///< 拘束力の力積
-	//Vec3d		Fv, Fq;				/// correctionにおける関節力
-
-	SpatialVector b, db;			///< LCPのbベクトルとその補正量
+	SpatialVector F;
+	
+	SpatialVector b, db, B;			///< LCPのbベクトルとその補正量
 	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
 	SpatialVector scale;
 
@@ -61,8 +61,8 @@ public:
 	virtual void CompBias(){}								///< 
 	virtual void Projection(double& f, int k){}				///< 拘束力の射影
 	virtual void UpdateJointState(){}						///< 関節座標の位置・速度を更新する
-	//virtual void CompError(double dt)=0;					///< Bv, Bqを設定する
-	//virtual void ProjectionCorrection(double& F, int k){}	///< 
+	virtual void CompError(){}								///< Correction用の拘束誤差を設定する
+	virtual void ProjectionCorrection(double& F, int k){}	///< 
 	
 	/// インタフェースの実装
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
@@ -84,8 +84,8 @@ public:
 	void	UpdateState();
 	void	CompResponseMatrix();
 	void	CompResponseMatrixABA();
-	//void SetupCorrection(double dt, double max_error);
-	//void IterateCorrection();
+	void	SetupCorrectionLCP();
+	void	IterateCorrectionLCP();
 	
 	PHConstraint();
 };

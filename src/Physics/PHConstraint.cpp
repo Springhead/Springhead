@@ -114,7 +114,7 @@ void PHConstraint::CompResponseMatrix(){
 				for(j = 0; j < 6; j++){
 					if(!constr[j])continue;
 					(Vec6d&)df = J[i].row(j);
-					solid[i]->treeNode->CompResponse(df, false);
+					solid[i]->treeNode->CompResponse(df, false, false);
 					A[j] += J[i].row(j) * solid[i]->treeNode->da;
 					int ic = !i;
 					//‚à‚¤•Ğ•û‚Ì„‘Ì‚à“¯ˆê‚ÌƒcƒŠ[‚É‘®‚·‚éê‡‚Í‚»‚Ì‰e‹¿€‚à‰ÁZ
@@ -165,9 +165,14 @@ void PHConstraint::SetupLCP(){
 	bool con[6];
 	SetConstrainedIndex(con);
 	for(int i = 0; i < 6; i++){
-		if(con[i] && constr[i])				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
+		if(con[i] && constr[i]){				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
 			 f[i] *= engine->shrinkRate;
-		else f[i] = 0.0;					// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
+			 F[i] *= engine->shrinkRateCorrection;
+		}
+		else{
+			f[i] = 0.0;					// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
+			F[i] = 0.0;
+		}
 		constr[i] = con[i];
 	}
 	FPCK_FINITE(f.v());
@@ -188,18 +193,6 @@ void PHConstraint::SetupLCP(){
 	// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
 	CompResponseMatrix();
 
-	// ƒ„ƒRƒrƒAƒ“ƒXƒP[ƒŠƒ“ƒO
-	/*for(int j = 0; j < 6; j++){
-		if(!constr[j])continue;
-		scale[j] = sqrt(1.0 / (A[j] + dA[j]));
-		J[0].row(j) *= scale[j];
-		J[1].row(j) *= scale[j];
-		T[0].row(j) *= scale[j];
-		T[1].row(j) *= scale[j];
-		db[j] *= scale[j];
-		dA[j] *= scale[j] * scale[j];
-	}*/
-
 	// LCP‚ÌbƒxƒNƒgƒ‹
 	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
 	
@@ -209,7 +202,7 @@ void PHConstraint::SetupLCP(){
 		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
 		if(solid[i]->treeNode){
 			(Vec6d&)fs = J[i].trans() * f;
-			solid[i]->treeNode->CompResponse(fs);
+			solid[i]->treeNode->CompResponse(fs, true, false);
 		}
 		else solid[i]->dv += T[i].trans() * f;
 	}
@@ -245,77 +238,63 @@ void PHConstraint::IterateLCP(){
 			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
 			if(solid[i]->treeNode){
 				(Vec6d&)dfs = J[i].row(j) * df[j];
-				solid[i]->treeNode->CompResponse(dfs);
+				solid[i]->treeNode->CompResponse(dfs, true, false);
 			}
 			else solid[i]->dv += T[i].row(j) * df[j];
 		}
 		f[j] = fnew[j];
 	}
-//	DSTR << f << endl;
 }
 
-/*void PHConstraint::SetupCorrection(double dt, double max_error){
-	if(!bEnabled || !bFeasible || dim_c == 0)return;
-
-	CompError(dt);
-
-	int i, j;
-	for(i = 0; i < 2; i++){
-		if(solid[i]->solid->IsDynamical()){
-			solid[i]->dV += Tcv[i].trans() * F;
-			solid[i]->dW += Tcw[i].trans() * F;
-		}
-	}
-	
-	Vec3d v[2], w[2];
-	for(i = 0; i < 2; i++){
-		v[i] = solid[i]->v + solid[i]->dv0 + solid[i]->dv;
-		w[i] = solid[i]->w + solid[i]->dw0 + solid[i]->dw;
-	}
+void PHConstraint::SetupCorrectionLCP(){
+	if(!bEnabled || !bFeasible || bArticulated)
+		return;
+	B.clear();
+	CompError();
 	// velocity update‚É‚æ‚é‰e‹¿‚ğ‰ÁZ
-	//for(j = 0; j < dim_c; j++){
-	//	B[j] += (Jcv[0].row(j) * v[0] + Jcw[0].row(j) * w[0] +
-	//			 Jcv[1].row(j) * v[1] + Jcw[1].row(j) * w[1]) * dt;
-	//}
-	//ˆê“x‚ÉŒë·‚ğ0‚É‚µ‚æ‚¤‚Æ‚·‚é‚ÆU“®“I‚É‚È‚é‚Ì‚Å“K“–‚ÉŒë·‚ğ¬‚³‚­Œ©‚¹‚é
-	//Œë·‚Ímax_error‚Å–O˜a‚³‚¹‚é
-	B *= 0.1;	
-	double tmp = B[0];
+	B += (J[0] * (solid[0]->v + solid[0]->dv) + J[1] * (solid[1]->v + solid[1]->dv)) * scene->GetTimeStep();
+	B *= engine->posCorrectionRate;
+	
+	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
+	SpatialVector Fs;
+	for(int i = 0; i < 2; i++){
+		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+		if(solid[i]->treeNode){
+			(Vec6d&)Fs = J[i].trans() * F;
+			solid[i]->treeNode->CompResponse(Fs, true, true);
+		}
+		else solid[i]->dV += T[i].trans() * F;
+	}
+
+	/*double tmp = B[0];
 	for(j = 1; j < dim_c; j++)
 		if(tmp < B[j])
 			tmp = B[j];
 	if(tmp > max_error)
-		B *= (max_error / tmp);
-	//double tmp;
-	for(j = 0; j < dim_c; j++){
-		tmp = 1.0 / Ac[j];
-		B[j] *= tmp;
-		Jcv[0].row(j) *= tmp;
-		Jcw[0].row(j) *= tmp;
-		Jcv[1].row(j) *= tmp;
-		Jcw[1].row(j) *= tmp;
-	}
+		B *= (max_error / tmp);*/
 }
 
-void PHConstraint::IterateCorrection(){
-	if(!bEnabled || !bFeasible || dim_c == 0)return;
-
-	Vec6d Fnew, dF;
+void PHConstraint::IterateCorrectionLCP(){
+	if(!bEnabled || !bFeasible || bArticulated)
+		return;
+	
+	SpatialVector Fnew, dF, dFs;
 	int i, j;
-	for(j = 0; j < dim_c; j++){
-		Fnew[j] = F[j] - (B[j] + 
-			Jcv[0].row(j) * (solid[0]->dV) + Jcw[0].row(j) * (solid[0]->dW) +
-			Jcv[1].row(j) * (solid[1]->dV) + Jcw[1].row(j) * (solid[1]->dW));
+	for(j = 0; j < 6; j++){
+		if(!constr[j])continue;
+		Fnew[j] = F[j] - Ainv[j] * (B[j] + J[0].row(j) * solid[0]->dV + J[1].row(j) * solid[1]->dV);
 		ProjectionCorrection(Fnew[j], j);
 		dF[j] = Fnew[j] - F[j];
 		for(i = 0; i < 2; i++){
-			if(solid[i]->solid->IsDynamical()){
-				solid[i]->dV += Tcv[i].row(j) * dF[j];
-				solid[i]->dW += Tcw[i].row(j) * dF[j];
+			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+			if(solid[i]->treeNode){
+				(Vec6d&)dFs = J[i].row(j) * dF[j];
+				solid[i]->treeNode->CompResponse(dFs, true, true);
 			}
+			else solid[i]->dV += T[i].row(j) * dF[j];
 		}
 		F[j] = Fnew[j];
 	}
-}*/
+}
 
 }

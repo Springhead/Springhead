@@ -35,7 +35,7 @@ void PHSliderJoint::CompBias(){
 	db.v() = Xjrel.r * dtinv + vjrel.v();
 	db.v().z = 0.0;
 	db.w() = Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w();
-	db *= engine->correctionRate;
+	db *= engine->velCorrectionRate;
 	if(mode == MODE_VELOCITY){
 		db.v().z = -vel_d;
 	}
@@ -47,33 +47,22 @@ void PHSliderJoint::CompBias(){
 	}
 }
 
-/*void PHSliderJoint::CompError(double dt){
-	B[0] = rjrel.x;
-	B[1] = rjrel.y;
-	B[2] = qjrel.x;
-	B[3] = qjrel.y;
-	B[4] = qjrel.z;
-	if(on_upper)
-		B[5] = rjrel.z - upper;
-	if(on_lower)
-		B[5] = rjrel.z - lower;
-}*/
-
-/*void PHSliderJoint::ProjectionCorrection(double& F, int k){
-	if(k == 5){
-		if(on_lower)
-			F = max(0.0, F);
-		if(on_upper)
-			F = min(0.0, F);
-	}
-}*/
+void PHSliderJoint::CompError(){
+	/*B.v() = Xjrel.r;
+	B.w() = Xjrel.q.V();
+	if(onUpper)
+		B.v().z = Xjrel.r.z - upper;
+	else if(onLower)
+		B.v().z = Xjrel.r.z - lower;
+	else B.v().z = 0.0;*/
+}
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHSliderJointNode, PHTreeNode);
+IF_OBJECT_IMP(PHSliderJointNode, PHTreeNode1D);
 
 void PHSliderJointNode::CompJointJacobian(){
-	J[0].v() = Vec3d(0.0, 0.0, 1.0);
-	J[0].w().clear();
+	J.col(0).SUBVEC(0, 3) = Vec3d(0.0, 0.0, 1.0);
+	J.col(0).SUBVEC(3, 3).clear();
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHSliderJointNode::CompJointCoriolisAccel(){
@@ -88,22 +77,6 @@ void PHSliderJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.q = Matrix3d::Unit();
 	j->Xjrel.r = Vec3d(0.0, 0.0, j->position[0]);
-}
-void PHSliderJointNode::CompBias(){
-	PHJoint1D* j = GetJoint();
-	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
-	double diff;
-	if(j->mode == PHJoint::MODE_VELOCITY){
-		db[0] = -j->vel_d;
-	}
-	else if(j->onLower || j->onUpper){
-	}
-	else if(j->spring != 0.0 || j->damper != 0.0){
-		diff = j->GetPosition() - j->origin;
-		double tmp = 1.0 / (j->damper + j->spring * dt);
-		dA[0] = tmp * dtinv;
-		db[0] = j->spring * (diff) * tmp;
-	}
 }
 
 }

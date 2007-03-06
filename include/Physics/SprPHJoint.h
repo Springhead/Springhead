@@ -119,16 +119,22 @@ struct PHSpringDesc : public PHConstraintDesc{
 /** @brief ツリーノードのディスクリプタ
  */
 struct PHTreeNodeDesc{
+	bool bEnabled;
+	PHTreeNodeDesc(){
+		bEnabled = true;
+	}
 };
 struct PHRootNodeDesc : public PHTreeNodeDesc{
 };
-struct PHHingeJointNodeDesc : public PHTreeNodeDesc{
+struct PHTreeNode1DDesc : public PHTreeNodeDesc{
 };
-struct PHSliderJointNodeDesc : public PHTreeNodeDesc{
+struct PHHingeJointNodeDesc : public PHTreeNode1DDesc{
+};
+struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{
+};
+struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
 };
 struct PHBallJointNodeDesc : public PHTreeNodeDesc{
-};
-struct PHPathJointNodeDesc : public PHTreeNodeDesc{
 };
 
 /// ギアのディスクリプタ
@@ -385,22 +391,27 @@ struct PHSpringIf : public PHConstraintIf{
 /// ツリーノードのインタフェース
 struct PHTreeNodeIf : public SceneObjectIf{
 	IF_DEF(PHTreeNode);
+	virtual void Enable(bool bEnable = true)=0;
 };
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{
 	IF_DEF(PHRootNode);
 };
-struct PHHingeJointNodeIf : public PHTreeNodeIf{
+/// １軸関節ノードのインタフェース
+struct PHTreeNode1DIf : public PHTreeNodeIf{
+	IF_DEF(PHTreeNode1D);
+};
+struct PHHingeJointNodeIf : public PHTreeNode1DIf{
 	IF_DEF(PHHingeJointNode);
 };
-struct PHSliderJointNodeIf : public PHTreeNodeIf{
+struct PHSliderJointNodeIf : public PHTreeNode1DIf{
 	IF_DEF(PHSliderJointNode);
+};
+struct PHPathJointNodeIf : public PHTreeNode1DIf{
+	IF_DEF(PHPathJointNode);
 };
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	IF_DEF(PHBallJointNode);
-};
-struct PHPathJointNodeIf : public PHTreeNodeIf{
-	IF_DEF(PHPathJointNode);
 };
 
 /// ギアのインタフェース

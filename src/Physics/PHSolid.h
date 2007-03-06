@@ -107,7 +107,7 @@ public:
 	SpatialVector v;		/// ローカル座標での現在の速度
 	//Vec3d		dv0, dw0;	/// 拘束力以外の外力による速度変化量
 	SpatialVector dv;		/// 拘束力による速度変化量
-	//Vec3d		dV, dW;		/// Correctionによる移動量，回転量
+	SpatialVector dV;		/// Correctionによる移動量，回転量
 	void UpdateCacheLCP(double dt);
 	//void SetupCorrection();
 	void UpdateVelocity(double dt);

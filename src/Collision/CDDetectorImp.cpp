@@ -233,8 +233,8 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 			for(VtxBuffer::iterator it=vtxBuffer.begin(); it != vtxBuffer.end(); ++it){
 				vtxs.push_back(&*it);
 			}
-			planes.CreateConvexHull(&*vtxs.begin(), &*vtxs.end());
-			for(CDContactAnalysisFace** it = &*vtxs.begin(); it != &*vtxs.end(); ++it){
+			planes.CreateConvexHull(&*vtxs.begin(), &*vtxs.begin() + vtxs.size());
+			for(CDContactAnalysisFace** it = &*vtxs.begin(); it != &*vtxs.begin() + vtxs.size(); ++it){
 				(*it)->dualPlanes.clear();
 			}
 			for(CDQHPlane<CDContactAnalysisFace>* it = planes.begin; it != planes.end; ++it){

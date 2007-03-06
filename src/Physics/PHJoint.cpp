@@ -62,5 +62,15 @@ void PHJoint1D::Projection(double& f, int k){
 			f = min(0.0, f);
 	}
 }
+
+void PHJoint1D::ProjectionCorrection(double& F, int k){
+	if(k == axisIndex[0]){
+		if(onLower)
+			F = max(0.0, F);
+		if(onUpper)
+			F = min(0.0, F);
+	}
+}
+
 	
 }

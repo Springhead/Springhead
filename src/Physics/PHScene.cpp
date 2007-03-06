@@ -38,7 +38,7 @@ void PHScene::Init(){
 	engines.Add(penaltyEngine);
 	
 	constraintEngine = DBG_NEW PHConstraintEngine;
-	constraintEngine->numIteration = numIteration;
+	constraintEngine->numIter = numIter;
 	engines.Add(constraintEngine);
 
 	count = 0;
@@ -177,10 +177,10 @@ void PHScene::SetContactMode(PHSceneDesc::ContactMode mode){
 	constraintEngine->EnableContact(mode == PHSceneDesc::MODE_LCP);
 }
 int PHScene::GetNumIteration(){
-	return constraintEngine->numIteration;
+	return constraintEngine->numIter;
 }
 void PHScene::SetNumIteration(int n){
-	constraintEngine->numIteration = n;
+	constraintEngine->numIter = n;
 }
 
 void PHScene::SetGravity(const Vec3d& accel){
@@ -257,15 +257,15 @@ bool PHScene::DelChildObject(ObjectIf* o){
 	}
 	PHJointIf* con = DCAST(PHJointIf, o);
 	if(con)
-		constraintEngine->DelChildObject(con);
+		return constraintEngine->DelChildObject(o);
 
 	PHTreeNodeIf* node = DCAST(PHTreeNodeIf, o);
 	if(node)
-		constraintEngine->DelChildObject(o);
+		return constraintEngine->DelChildObject(o);
 
 	PHGearIf* gear = DCAST(PHGearIf, o);
 	if(gear)
-		constraintEngine->DelChildObject(o);
+		return constraintEngine->DelChildObject(o);
 	
 	return false;
 }

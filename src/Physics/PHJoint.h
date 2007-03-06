@@ -71,6 +71,7 @@ public:
 	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque[0] * scene->GetTimeStep();}
 	virtual void	SetConstrainedIndex(bool* con);
 	virtual void	Projection(double& f, int k);
+	virtual void	ProjectionCorrection(double& F, int k);
 	PHJoint1D();
 };
 

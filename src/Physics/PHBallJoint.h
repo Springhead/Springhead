@@ -76,8 +76,7 @@ public:
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
 	virtual void UpdateJointState();
-	//virtual void CompError(double dt);
-	//virtual void ProjectionCorrection(double& F, int k);
+	virtual void CompError();
 	
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHBallJointNode();

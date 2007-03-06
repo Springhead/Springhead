@@ -38,7 +38,7 @@ void PHGear::CompResponse(double f){
 			if(!s->IsDynamical())continue;
 			if(s->treeNode){
 				(Vec6d&)fs = joint[i]->J[j].row(joint[i]->axisIndex[0]) * fc;
-				s->treeNode->CompResponse(fs);
+				s->treeNode->CompResponse(fs, true, false);
 			}
 			else s->dv += joint[i]->T[j].row(joint[i]->axisIndex[0]) * fc;
 		}

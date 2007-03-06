@@ -144,6 +144,8 @@
 	desc->ifInfo = PHTreeNodeIf::GetIfInfoStatic();
 	((IfInfo*)PHTreeNodeIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHTreeNodeDesc>;
+	field = desc->AddField("", "bool", "bEnabled", "");
+	field->offset = int((char*)&(pPHTreeNodeDesc->bEnabled) - (char*)pPHTreeNodeDesc);
 	db->RegisterDesc(desc);
 	
 	PHRootNodeDesc* pPHRootNodeDesc = NULL;
@@ -156,14 +158,24 @@
 	field->offset = int((char*)(PHTreeNodeDesc*)pPHRootNodeDesc - (char*)pPHRootNodeDesc);
 	db->RegisterDesc(desc);
 	
+	PHTreeNode1DDesc* pPHTreeNode1DDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHTreeNode1DDesc");
+	desc->size = sizeof(PHTreeNode1DDesc);
+	desc->ifInfo = PHTreeNode1DIf::GetIfInfoStatic();
+	((IfInfo*)PHTreeNode1DIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHTreeNode1DDesc>;
+	field = desc->AddBase("PHTreeNodeDesc");
+	field->offset = int((char*)(PHTreeNodeDesc*)pPHTreeNode1DDesc - (char*)pPHTreeNode1DDesc);
+	db->RegisterDesc(desc);
+	
 	PHHingeJointNodeDesc* pPHHingeJointNodeDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("PHHingeJointNodeDesc");
 	desc->size = sizeof(PHHingeJointNodeDesc);
 	desc->ifInfo = PHHingeJointNodeIf::GetIfInfoStatic();
 	((IfInfo*)PHHingeJointNodeIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHHingeJointNodeDesc>;
-	field = desc->AddBase("PHTreeNodeDesc");
-	field->offset = int((char*)(PHTreeNodeDesc*)pPHHingeJointNodeDesc - (char*)pPHHingeJointNodeDesc);
+	field = desc->AddBase("PHTreeNode1DDesc");
+	field->offset = int((char*)(PHTreeNode1DDesc*)pPHHingeJointNodeDesc - (char*)pPHHingeJointNodeDesc);
 	db->RegisterDesc(desc);
 	
 	PHSliderJointNodeDesc* pPHSliderJointNodeDesc = NULL;
@@ -172,8 +184,18 @@
 	desc->ifInfo = PHSliderJointNodeIf::GetIfInfoStatic();
 	((IfInfo*)PHSliderJointNodeIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHSliderJointNodeDesc>;
-	field = desc->AddBase("PHTreeNodeDesc");
-	field->offset = int((char*)(PHTreeNodeDesc*)pPHSliderJointNodeDesc - (char*)pPHSliderJointNodeDesc);
+	field = desc->AddBase("PHTreeNode1DDesc");
+	field->offset = int((char*)(PHTreeNode1DDesc*)pPHSliderJointNodeDesc - (char*)pPHSliderJointNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHPathJointNodeDesc* pPHPathJointNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHPathJointNodeDesc");
+	desc->size = sizeof(PHPathJointNodeDesc);
+	desc->ifInfo = PHPathJointNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHPathJointNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHPathJointNodeDesc>;
+	field = desc->AddBase("PHTreeNode1DDesc");
+	field->offset = int((char*)(PHTreeNode1DDesc*)pPHPathJointNodeDesc - (char*)pPHPathJointNodeDesc);
 	db->RegisterDesc(desc);
 	
 	PHBallJointNodeDesc* pPHBallJointNodeDesc = NULL;
@@ -184,16 +206,6 @@
 	desc->access = DBG_NEW UTAccess<PHBallJointNodeDesc>;
 	field = desc->AddBase("PHTreeNodeDesc");
 	field->offset = int((char*)(PHTreeNodeDesc*)pPHBallJointNodeDesc - (char*)pPHBallJointNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHPathJointNodeDesc* pPHPathJointNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHPathJointNodeDesc");
-	desc->size = sizeof(PHPathJointNodeDesc);
-	desc->ifInfo = PHPathJointNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHPathJointNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHPathJointNodeDesc>;
-	field = desc->AddBase("PHTreeNodeDesc");
-	field->offset = int((char*)(PHTreeNodeDesc*)pPHPathJointNodeDesc - (char*)pPHPathJointNodeDesc);
 	db->RegisterDesc(desc);
 	
 	PHGearDesc* pPHGearDesc = NULL;
@@ -234,8 +246,8 @@
 	field->offset = int((char*)(PHSceneState*)pPHSceneDesc - (char*)pPHSceneDesc);
 	field = desc->AddField("", "Vec3f", "gravity", "");
 	field->offset = int((char*)&(pPHSceneDesc->gravity) - (char*)pPHSceneDesc);
-	field = desc->AddField("", "int", "numIteration", "");
-	field->offset = int((char*)&(pPHSceneDesc->numIteration) - (char*)pPHSceneDesc);
+	field = desc->AddField("", "int", "numIter", "");
+	field->offset = int((char*)&(pPHSceneDesc->numIter) - (char*)pPHSceneDesc);
 	db->RegisterDesc(desc);
 	
 	PHSdkDesc* pPHSdkDesc = NULL;

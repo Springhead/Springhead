@@ -829,6 +829,8 @@ public:
 			fileX->LoadImp((FILoadContext*)fc);
 		}
 		fc->fileMaps.Pop();
+
+		imPath.SetCwd(oldCwd);
 	}
 };
 

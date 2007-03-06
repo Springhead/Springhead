@@ -142,13 +142,17 @@ void PHBallJoint::CompBias(){
 	db.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) * dtinv : 0.0);
 	db.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
 			     twistOnUpper ? (angle.Twist() - twistUpper) * dtinv : 0.0);
-	db *= engine->correctionRate;
+	db *= engine->velCorrectionRate;
 }
 
-/*void PHBallJoint::CompError(double dt){
-	B.SUBVEC(0, 3) = rjrel;
-	B.SUBVEC(3, 3) = qjrel.V();
-}*/
+void PHBallJoint::CompError(){
+	/*B.v() = Xjrel.r;
+	B.w()[0] = 0.0;
+	B.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) : 0.0);
+	B.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) :
+			    twistOnUpper ? (angle.Twist() - twistUpper) : 0.0);
+	*/
+}
 
 void PHBallJoint::Projection(double& f, int k){
 	if(k == 4 && swingOnUpper)
@@ -172,14 +176,14 @@ void PHBallJointNode::CompJointJacobian(){
 	//Matrix3d test = Jst * Jstinv;
 	Quaterniond q = j->Xjrel.q;
 	for(int i = 0; i < 3; i++)
-		J[i].v().clear();
+		J.col(i).SUBVEC(0, 3).clear();
 	/*J[0].w() = 2.0 * Vec3d(-q.x, -q.y, -q.z);
 	J[1].w() = 2.0 * Vec3d( q.w,  q.z, -q.y);
     J[2].w() = 2.0 * Vec3d(-q.z,  q.w,  q.x);
     J[3].w() = 2.0 * Vec3d( q.y, -q.x,  q.w);*/
-	J[0].w() = Vec3d(1.0, 0.0, 0.0);
-	J[1].w() = Vec3d(0.0, 1.0, 0.0);
-	J[2].w() = Vec3d(0.0, 0.0, 1.0);
+	J.col(0).SUBVEC(3, 3) = Vec3d(1.0, 0.0, 0.0);
+	J.col(1).SUBVEC(3, 3) = Vec3d(0.0, 1.0, 0.0);
+	J.col(2).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNodeND<3>::CompJointJacobian();
 }
 void PHBallJointNode::CompJointCoriolisAccel(){

@@ -21,12 +21,11 @@ public:
 	PHShapePairForLCP* shapePair;
 	Vec3d pos;
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
-	//virtual void CompConstraintJacobian();
-	//virtual void CompError(double dt);
+	virtual void CompError();
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
-	//virtual void ProjectionCorrection(double& F, int k);
+	virtual void ProjectionCorrection(double& F, int k);
 	PHContactPoint(){}
 	PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);

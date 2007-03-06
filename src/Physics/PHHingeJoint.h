@@ -22,8 +22,6 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
-	virtual void CompBias();
-	//virtual void Projection(double&, int){}
 	PHHingeJointNode(const PHHingeJointNodeDesc& desc = PHHingeJointNodeDesc()){}
 };
 
@@ -37,10 +35,7 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHHingeJointNode();
 	}
-
-	// virtual void CompConstraintJacobian();
-	// virtual void CompError(double dt);
-	// virtual void ProjectionCorrection(double& F, int k);
+	virtual void CompError();
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
 
