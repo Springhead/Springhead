@@ -258,6 +258,30 @@ void keyboard(unsigned char key, int x, int y){
 				os << "box" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
 			}break;
+		case 'z':
+			{
+				PHSolidDesc soliddesc;
+				double tower_radius = 10;
+				int tower_height = 10;
+				int numbox = 20;
+				double theta;
+				for(int i = 0; i < tower_height; i++){
+					for(int j = 0; j < numbox; j++){
+						soBox.push_back(scene->CreateSolid(soliddesc));
+						soBox.back()->AddShape(meshBox);
+						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)numbox;
+						soBox.back()->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i + 0.5), tower_radius * sin(theta)));
+						soBox.back()->SetOrientation(Quaterniond::Rot(-theta, 'y'));  
+					}
+				}
+			}break;
+		case 'x':
+			{
+				soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 10.0));
+				soBox.back()->SetVelocity(Vec3d(0.0, 0.0, -5.0));
+			}break;
 		default:
 			break;
 	}
@@ -288,13 +312,13 @@ int main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
+	dscene.numIter = 5;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	soFloor->SetGravity(false);
 	soFloor->SetDynamical(false);
 	
 	// soBox用のdesc
@@ -322,7 +346,7 @@ int main(int argc, char* argv[]){
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 	}
 	soFloor->AddShape(meshFloor);
-	soFloor->SetFramePosition(Vec3f(0,-2,0));
+	soFloor->SetFramePosition(Vec3f(0,-1,0));
 
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
@@ -336,6 +360,7 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(0, timer, 0);
 
+	glutReshapeWindow(800, 600);
 	glutMainLoop();
 
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．

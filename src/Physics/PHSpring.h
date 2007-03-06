@@ -24,14 +24,10 @@ public:
 
 	virtual void SetDesc(const PHConstraintDesc& desc);
 	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SPRING;}
-	//virtual void CompConstraintJacobian();
+	virtual void SetConstrainedIndex(bool* con);
 	virtual void CompBias();
 	virtual void Projection(double& f, int k){}
-	//virtual void CompError(double dt){}
-	//virtual void ProjectionCorrection(double& F, int k){}
-	PHSpring(const PHSpringDesc& desc = PHSpringDesc()){
-		constr[3] = constr[4] = constr[5] = false;
-	}
+	PHSpring(const PHSpringDesc& desc = PHSpringDesc());
 };
 
 }

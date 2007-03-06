@@ -104,7 +104,7 @@ void PHContactPoint::CompBias(){
 		db.v().x = -err * engine->correctionRate;
 	}
 #else
-	const double damper = 100.0, spring = 0.0;
+	const double damper = 1000.0, spring = 10.0;
 	double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
 	dA[0] = tmp * dtinv;
 	db[0] = -spring * (shapePair->depth - 1e-3) * tmp;

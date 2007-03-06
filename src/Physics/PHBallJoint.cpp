@@ -83,8 +83,6 @@ IF_OBJECT_IMP(PHBallJoint, PHJoint)
 
 PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	SetDesc(desc);
-	axis[0] = axis[1] = axis[2] = false;
-	axis[3] = axis[4] = axis[5] = true;
 	axisIndex[0] = 3;
 	axisIndex[1] = 4;
 	axisIndex[2] = 5;

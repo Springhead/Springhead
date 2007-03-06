@@ -21,8 +21,6 @@ IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	SetDesc(desc);
 	axisIndex[0] = 5;
-	for(int i = 0; i < 6; i++)
-		axis[i] = (i == axisIndex[0]);
 }
 
 void PHHingeJoint::UpdateJointState(){

@@ -265,7 +265,7 @@ public:
 		if (it == end()) return NULL;
 		UTRef<PHSolid> rv = *it;
 		erase(it);
-		return *it;
+		return rv;
 	}
 	UTRef<PHSolid>* Find(const PHSolid* s){
 		iterator it = std::find(begin(), end(), s);

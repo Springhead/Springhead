@@ -473,7 +473,7 @@ void PHTreeNodeND<NDOF>::CompAccel(){
 		(Vec6d&)a = Xcg * gearNode->GetParent()->a + c + J * gearNode->accel;
 	}
 	else{
-		accel = JIJinv * (GetJoint()->torque * scene->GetTimeStep() - XtrIJ.trans() * GetParent()->ap - JtrZplusIc);
+		accel = JIJinv * (GetJoint()->torque * scene->GetTimeStep() - XtrIJ.trans() * GetParent()->a - JtrZplusIc);
 		(Vec6d&)a = Xcp * GetParent()->a + c + J * accel;
 	}
 
@@ -488,7 +488,7 @@ void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate, bool bImpulse){
 	if(gearNode){
 		if(gearNode == this){
 			//DSTR << "top" << endl;
-			 daccel = sumJIJinv * (dtau - sumXtrIJ * GetParent()->da - JtrdZ);
+			 daccel = sumJIJinv * (dtau - sumXtrIJ.trans() * GetParent()->da - JtrdZ);
 		}
 		else if(GetParent() != gearNode->GetParent()){
 			//DSTR << "ser" << endl;
@@ -640,14 +640,15 @@ void PHTreeNodeND<NDOF>::IterateLCP(){
 	if(gearNode && gearNode != this)
 		return;
 
-	TVector<NDOF, double> fnew;
+	VecNd fnew, Jrow;
 	double df;
 	for(int i = 0; i < NDOF; i++){
 		if(!constr[i])continue;
 		fnew[i] = f[i] - Ainv[i] * (dA[i] * f[i] + b[i] + Jq.row(i) * accel);
 		Projection(fnew[i], i);
 		df = fnew[i] - f[i];
-		CompResponse((const VecNd&)Jq.row(i) * df, true);
+		Jrow = Jq.row(i);
+		CompResponse(Jrow * df, true);
 		f[i] = fnew[i];
 	}
 	PHTreeNode::IterateLCP();
@@ -694,7 +695,7 @@ void PHTreeNode1D::CompBias(){
 			origin /= K;
 	}
 	if(K != 0.0 || D != 0.0){
-		diff = j->GetPosition() - j->origin;
+		diff = j->GetPosition() - origin;
 		// たまに不安定性により無限大に張り付くことがあり、下のwhileで無限ループしてしまう
 		if(abs(diff) > 1.0e3)
 			diff = 0.0;

@@ -18,11 +18,20 @@ namespace Spr{;
 // PHSpring
 IF_OBJECT_IMP(PHSpring, PHConstraint)
 
+PHSpring::PHSpring(const PHSpringDesc& desc){
+	SetDesc(desc);
+}
+
 void PHSpring::SetDesc(const PHConstraintDesc& desc){
 	PHConstraint::SetDesc(desc);
 	const PHSpringDesc& descSpring = (const PHSpringDesc&)desc;
 	spring = descSpring.spring;
 	damper = descSpring.damper;
+}
+
+void PHSpring::SetConstrainedIndex(bool* con){
+	con[0] = con[1] = con[2] = true;
+	con[3] = con[4] = con[5] = false;
 }
 
 void PHSpring::CompBias(){

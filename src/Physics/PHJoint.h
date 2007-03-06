@@ -41,8 +41,6 @@ class PHJoint1D : public PHJointND<1>, public PHJoint1DIfInit{
 public:
 	OBJECTDEF_ABST(PHJoint1D, PHJoint);
 	
-	//int		axisIndex;					///< 関節軸のインデックス．派生クラスが設定する
-	//double	position, velocity, torque;	///< 変位，速度，トルク
 	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
 	double	lower, upper;				///< 可動範囲の下限、上限
 	double	pos_d, vel_d;				///< 目標変位、目標速度

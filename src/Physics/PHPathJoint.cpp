@@ -159,8 +159,6 @@ IF_OBJECT_IMP(PHPathJoint, PHJoint1D)
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
 	SetDesc(desc);
 	axisIndex[0] = 5;
-	for(int i = 0; i < 6; i++)
-		axis[i] = (i == axisIndex[0]);
 }
 
 bool PHPathJoint::AddChildObject(ObjectIf* o){

@@ -162,7 +162,7 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
-	numIterCorrection	 = 5;
+	numIterCorrection	 = 0;
 	velCorrectionRate	 = 0.2;
 	posCorrectionRate	 = 0.1;
 	shrinkRate			 = 0.7;
@@ -265,11 +265,12 @@ PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PHJoint1D* lhs, P
 bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	if(Detector::AddChildObject(o))
 		return true;
-	PHJoint* joint = DCAST(PHJoint, o);
-	if(joint){
-		joint->scene = DCAST(PHScene, GetScene());
-		joint->engine = this;
-		joints.push_back(joint);
+	
+	PHConstraint* con = DCAST(PHConstraint, o);
+	if(con){
+		con->scene = DCAST(PHScene, GetScene());
+		con->engine = this;
+		joints.push_back(con);
 		return true;
 	}
 	PHRootNode* root = DCAST(PHRootNode, o);

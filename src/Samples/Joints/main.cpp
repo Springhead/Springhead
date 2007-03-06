@@ -295,9 +295,8 @@ void BuildScene5(){
 	jntLink[2] = scene->CreateJoint(soBox[1], soBox[2], descHinge);
 	jntLink[3] = scene->CreateJoint(soBox[2], soBox[3], descHinge);
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
+
 	//以下を有効化すると鎖がABAで計算されて関節のドリフトが防がれる．
-	//現状ではABAでの関節バネは未実装
-	
 	PHTreeNodeIf* node = scene->CreateRootNode(soFloor, PHRootNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[0], PHTreeNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[1], PHTreeNodeDesc());
@@ -305,8 +304,7 @@ void BuildScene5(){
 	node = scene->CreateTreeNode(node, soBox[3], PHTreeNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[4], PHTreeNodeDesc());
 	
-	
-	double K = 2000, D = 100;
+	double K = 2000, D = 1000;
 	//double K = 100000, D = 10000;	
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
@@ -320,8 +318,8 @@ void BuildScene5(){
 	DCAST(PHHingeJointIf, jntLink[4])->SetDamper(D);
 #ifndef USE_EXPLICIT
 	PHSpringDesc descSpring;
-	descSpring.spring = 500 * 0.1 *Vec3f(1,1,1);
-	descSpring.damper = 100 * 0.1 *Vec3f(1,1,1);
+	descSpring.spring = 500 * Vec3f(1,1,1);
+	descSpring.damper = 100 * Vec3f(1,1,1);
 	jntLink[5] = scene->CreateJoint(soBox[4], soBox[5], descSpring);
 #endif
 
