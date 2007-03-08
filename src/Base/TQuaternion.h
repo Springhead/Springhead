@@ -135,7 +135,10 @@ public:
 	/// 回転角度 (angleに関数名を変更する予定)
 	ET Theta(){
 		/// 数値誤差でWが1.0を上回るとエラーする場合がある
-		return (ET)( acos(min(1.0, W())) * 2 );
+		double w = W();
+		w = min(w,  1.0);
+		w = max(w, -1.0);
+		return (ET)( acos(w) * 2 );
 	}
 	//@}
 

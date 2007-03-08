@@ -251,10 +251,11 @@ void PHConstraint::SetupCorrectionLCP(){
 		return;
 	B.clear();
 	CompError();
+	
 	// velocity update‚É‚æ‚é‰e‹¿‚ğ‰ÁZ
 	B += (J[0] * (solid[0]->v + solid[0]->dv) + J[1] * (solid[1]->v + solid[1]->dv)) * scene->GetTimeStep();
 	B *= engine->posCorrectionRate;
-	
+		
 	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
 	SpatialVector Fs;
 	for(int i = 0; i < 2; i++){
@@ -282,14 +283,14 @@ void PHConstraint::IterateCorrectionLCP(){
 	int i, j;
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
-		Fnew[j] = F[j] - Ainv[j] * (B[j] + J[0].row(j) * solid[0]->dV + J[1].row(j) * solid[1]->dV);
+		Fnew[j] = F[j] - /*Ainv[j]*/(1.0 / A[j]) * (B[j] + J[0].row(j) * solid[0]->dV + J[1].row(j) * solid[1]->dV);
 		ProjectionCorrection(Fnew[j], j);
 		dF[j] = Fnew[j] - F[j];
 		for(i = 0; i < 2; i++){
 			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
 			if(solid[i]->treeNode){
 				(Vec6d&)dFs = J[i].row(j) * dF[j];
-				solid[i]->treeNode->CompResponse(dFs, true, true);
+				solid[i]->treeNode->CompResponse(dFs, true, true);			
 			}
 			else solid[i]->dV += T[i].row(j) * dF[j];
 		}

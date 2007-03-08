@@ -144,12 +144,11 @@ void PHBallJoint::CompBias(){
 }
 
 void PHBallJoint::CompError(){
-	/*B.v() = Xjrel.r;
+	B.v() = Xjrel.r;
 	B.w()[0] = 0.0;
 	B.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) : 0.0);
 	B.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) :
 			    twistOnUpper ? (angle.Twist() - twistUpper) : 0.0);
-	*/
 }
 
 void PHBallJoint::Projection(double& f, int k){

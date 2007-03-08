@@ -52,6 +52,7 @@ public:
 	virtual void CompJointCoriolisAccel(){}			///< コリオリの加速度を計算	
 	virtual void AccumulateInertia(){}				///< Iaを親ノードのIaに積み上げる
 	virtual void AccumulateBiasForce(){}			///< Zaを親ノードのZaに積み上げる
+			void ResetCorrectionVarsRecursive();
 	virtual void ResetCorrectionVars();				///< Correctionの変数の初期化
 	virtual void UpdateVelocity(double dt);			///< 剛体の速度の更新
 	virtual void UpdatePosition(double dt);			///< 剛体の位置の更新
@@ -73,7 +74,7 @@ public:
 	SpatialTransform		Xcp, Xcj;
 	SpatialMatrix			XIX, XtrIJ_JIJinv_Jtr, XtrIJ_JIJinv_JtrIX;
 	SpatialVector			a, da;			///< 加速度とその変化量
-	SpatialVector			v, dv;			///< 速度とその変化量
+	//SpatialVector			v, dv;			///< 速度とその変化量
 	SpatialVector			ap, Ic, ZplusIc, XtrZplusIc;
 
 	PHScene*	scene;
@@ -151,13 +152,13 @@ public:
 	PHTreeNodeND<NDOF>*	parentND;
 	
 	PHTreeNodeND();
-protected:
+//protected:
 	bool			constr[NDOF];			///< ABAとして各自由度を拘束するか
 	Matrix6Nd		J;						///< 関節座標から相対速度へのヤコビアン
 	Matrix6Nd		IJ, XtrIJ, J_JIJinv, IJ_JIJinv, XtrIJ_JIJinv;
 	MatrixNd		JIJ, JIJinv;
 	VecNd	JtrZplusIc;
-	VecNd	accel, daccel, dtau, vel, dvel;	///< 関節加速度（と変化量），関節トルクの変化量，関節速度（と変化量）
+	VecNd	accel, daccel, dtau, vel;	///< 関節加速度（と変化量），関節トルクの変化量，関節速度
 
 	SpatialTransform	Xcg;			///< ギアトレインの親ノードとの間の座標変換
 	SpatialMatrix	sumXIX;

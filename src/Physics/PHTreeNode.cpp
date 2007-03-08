@@ -179,11 +179,13 @@ void PHTreeNode::CompArticulatedBiasForce(){
 	
 }
 
-void PHTreeNode::ResetCorrectionVars(){
-	v.clear();
-	Z.clear();
+void PHTreeNode::ResetCorrectionVarsRecursive(){
+	ResetCorrectionVars();
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->ResetCorrectionVars();
+		(*it)->ResetCorrectionVarsRecursive();
+}
+void PHTreeNode::ResetCorrectionVars(){
+	Z.clear();
 }
 
 void PHTreeNode::CompResponse(const SpatialVector& df, bool bUpdate, bool bImpulse){
@@ -240,6 +242,7 @@ bool PHRootNode::AddChildObject(ObjectIf* o){
 	PHSolidIf* s = DCAST(PHSolidIf, o);
 	if(s){
 		solid = s->Cast();
+		solid->treeNode = this;
 		return true;
 	}
 	return false;
@@ -266,7 +269,7 @@ void PHRootNode::SetupABA(){
 
 void PHRootNode::SetupCorrectionABA(){
 	if(!bEnabled)return;
-	ResetCorrectionVars();
+	ResetCorrectionVarsRecursive();
 }
 
 void PHRootNode::CompArticulatedInertia(){
@@ -311,10 +314,10 @@ void PHRootNode::CompBiasForceDiff(bool bUpdate, bool bImpulse){
 				 solid->dV += da;
 			else{
 				solid->dv += da;
-				//DSTR << da << ", " << dZ << endl;
 			}
 		}
 	}
+	else da.clear();
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->CompAccelDiff(bUpdate, bImpulse);
 }
@@ -487,19 +490,15 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate, bool bImpulse){
 	if(gearNode){
 		if(gearNode == this){
-			//DSTR << "top" << endl;
 			 daccel = sumJIJinv * (dtau - sumXtrIJ.trans() * GetParent()->da - JtrdZ);
 		}
 		else if(GetParent() != gearNode->GetParent()){
-			//DSTR << "ser" << endl;
 			 daccel = gear->ratio * parentND->daccel;
 		}
 		else{
-			//DSTR << "par" << endl;
 			daccel = gear->ratio * gearNode->daccel;
 		}
 		(Vec6d&)da = Xcg * gearNode->GetParent()->da + J * gearNode->daccel;
-		//DSTR << da << ", " << daccel << endl;
 	}
 	else{
 		daccel = JIJinv * (dtau - XtrIJ.trans() * GetParent()->da - JtrdZ);
@@ -511,11 +510,14 @@ void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate, bool bImpulse){
 	JtrdZ.clear();
 	
 	if(bUpdate){
-		accel += daccel;
-		a += da;
-		if(bImpulse)
-			 GetSolid()->dV = a;
-		else GetSolid()->dv = a;
+		if(bImpulse){
+			vel += daccel;
+			(Vec6d&)GetSolid()->dV = Xcp * GetParent()->GetSolid()->dV + J * vel;
+		}
+		else{
+			accel += daccel;
+			(Vec6d&)GetSolid()->dv = Xcp * GetParent()->GetSolid()->dv + J * accel;
+		}
 	}
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->CompAccelDiff(bUpdate, bImpulse);
@@ -523,11 +525,8 @@ void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate, bool bImpulse){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::ResetCorrectionVars(){
-	v.clear();
-	Z.clear();
 	vel.clear();
-	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
-		(*it)->ResetCorrectionVars();
+	PHTreeNode::ResetCorrectionVars();
 }
 
 template<int NDOF>
@@ -562,7 +561,9 @@ void PHTreeNodeND<NDOF>::UpdateJointPosition(double dt){
 			 GetJoint()->position = gear->ratio * parentND->GetJoint()->position;
 		else GetJoint()->position = gear->ratio * gearNode->GetJoint()->position;
 	}
-	else GetJoint()->position += GetJoint()->velocity * dt + vel;
+	else{
+		GetJoint()->position += GetJoint()->velocity * dt + vel;		
+	}
 }
 
 template<int NDOF>

@@ -162,7 +162,7 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
-	numIterCorrection	 = 0;
+	numIterCorrection	 = 3;
 	velCorrectionRate	 = 0.2;
 	posCorrectionRate	 = 0.1;
 	shrinkRate			 = 0.7;
@@ -220,9 +220,8 @@ PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSol
 		return NULL;
 	
 	PHRootNode* root = DBG_NEW PHRootNode();
-	root->solid = solid;
-	solid->treeNode = root;
 	AddChildObject(root->Cast());
+	root->AddChildObject(solid->Cast());
 	return root;
 }
 PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent, PHSolid* solid){
@@ -358,6 +357,7 @@ void PHConstraintEngine::SetupLCP(){
 
 }
 void PHConstraintEngine::SetupCorrectionLCP(){
+	if(numIterCorrection == 0)return;
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		(*it)->SetupCorrectionABA();
 

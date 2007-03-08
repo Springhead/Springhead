@@ -59,7 +59,7 @@ void PHHingeJoint::CompBias(){
 }
 
 void PHHingeJoint::CompError(){
-	B.v() = Xjrel.r;
+	//B.v() = Xjrel.r;
 	//B.w() = Xjrel.q.V();
 	//B.w().z = 0.0;
 }
