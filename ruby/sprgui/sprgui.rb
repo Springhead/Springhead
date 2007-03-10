@@ -33,9 +33,6 @@ class SprGUIApp < FXApp
 
 		# Make window
 		@window = SprMainWindow.new(self)
-		$cameraview.makeCurrent
-		$sprapp.CreateRender
-		$cameraview.makeNonCurrent
 
 		threadsEnabled = false
 

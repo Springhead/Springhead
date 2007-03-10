@@ -19,6 +19,12 @@ class SprCameraView < FXGLCanvas
 		@cameraZoom = 1
 	end
 
+	def create
+		super
+		makeCurrent
+		$sprapp.CreateRender
+		makeNonCurrent
+	end
 	# draw scene
 	def	drawScene()
 	    # Make context current
@@ -74,4 +80,5 @@ class SprCameraView < FXGLCanvas
 			drawScene
 		end
 	end
+
 end
