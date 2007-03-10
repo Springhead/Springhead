@@ -43,7 +43,12 @@ public:
 	~GRMesh();
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
+	
 	virtual bool AddChildObject(ObjectIf* o);
+	///	子オブジェクトの数
+	virtual size_t NChildObject() const ;
+	///	子オブジェクトの取得
+	virtual ObjectIf* GetChildObject(size_t pos) ;
 };
 }
 #endif

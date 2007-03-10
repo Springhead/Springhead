@@ -398,6 +398,8 @@ UTLoadContext::UTLoadContext():errorStream(NULL){
 	rootNameManagerForData = DBG_NEW UTLoadedData(NULL, NULL);
 	rootNameManagerForData->nameMan = DBG_NEW UTNameManagerForData;
 	rootNameManagerForData->nameMan->data = rootNameManagerForData;
+	typeDbs.Push(DBG_NEW UTTypeDescDb);
+	handlerDbs.Push(DBG_NEW UTLoadHandlerDb);
 }
 void UTLoadContext::WriteBool(bool v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
@@ -547,6 +549,22 @@ ObjectIf* UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTS
 		objects.Top()->AddChildObject(obj);
 	}
 	return obj;
+}
+
+void UTLoadContext::RegisterGroupToDb(const char* gp){
+	const char* p = gp;
+	while(1){
+		const char* end = strchr(p, ' ');
+		if (!end) end = gp + strlen(gp);
+		if (p < end){
+			UTString group(p, end);
+			p = end+1;
+			*handlerDbs.Top() += *UTLoadHandlerDbPool::Get(group.c_str());
+			*typeDbs.Top() += *UTTypeDescDbPool::Get(group.c_str());
+		}else{
+			break;
+		}
+	}
 }
 
 };

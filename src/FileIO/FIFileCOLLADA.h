@@ -19,10 +19,8 @@ public:
 protected:
 	FIPhraseParser start, head, body, element, startTag, endTag, emptyTag, contents, property, id, string, text;
 	FISkipParser cmt;
-
 public:
 	FIFileCOLLADA();
-	UTTypeDescDb* GetTypeDb(){return &typeDb;}
 	void LoadImp(FILoadContext* fc);
 	virtual void PushLoaderContext(FILoadContext* fc);
 	virtual void PopLoaderContext();

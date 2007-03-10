@@ -24,7 +24,7 @@ void SPR_CDECL CDRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDb::GetDb("Physics");
+	UTTypeDescDb* db = UTTypeDescDbPool::Get("Physics");
 	assert(db);
 	#include "TypeDescDumpImpCollision.h"
 	db->Link();

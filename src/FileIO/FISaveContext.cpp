@@ -20,6 +20,8 @@ namespace Spr{;
 //	FISaveContext
 FISaveContext::FISaveContext(){
 	errorStream = &DSTR;
+	typeDbs.Push(DBG_NEW UTTypeDescDb);
+	handlerDbs.Push(DBG_NEW UTLoadHandlerDb);
 }
 
 void FISaveContext::Open(const char* fn){

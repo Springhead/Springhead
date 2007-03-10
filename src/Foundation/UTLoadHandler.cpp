@@ -9,16 +9,17 @@
 #include "UTLoadContext.h"
 namespace Spr{;
 
-UTRef<UTLoadHandlerDb> UTLoadHandlerDb::handlerDb;
-UTLoadHandlers* SPR_CDECL UTLoadHandlerDb::GetHandlers(const char* gp){
-	if (!handlerDb) handlerDb = DBG_NEW UTLoadHandlerDb;
-	return handlerDb->GetHandlersImp(gp);
+UTRef<UTLoadHandlerDbPool> UTLoadHandlerDbPool::pool;
+UTLoadHandlerDbPool* SPR_CDECL UTLoadHandlerDbPool::GetPool(){
+	if (!pool) pool = DBG_NEW UTLoadHandlerDbPool;
+	return pool;
 }
 
-UTLoadHandlers* UTLoadHandlerDb::GetHandlersImp(const char* gp){
-	UTRef<UTLoadHandlers> key = DBG_NEW UTLoadHandlers;
-	key->group = gp;
-	std::pair<iterator, bool> r = insert(key);
+UTLoadHandlerDb* SPR_CDECL UTLoadHandlerDbPool::Get(const char* gp){
+	UTRef<UTLoadHandlerDb> key = DBG_NEW UTLoadHandlerDb;
+	key->group=gp;
+	std::pair<UTLoadHandlerDbPool::iterator, bool> r = GetPool()->insert(key);
 	return *r.first;
 }
+
 }

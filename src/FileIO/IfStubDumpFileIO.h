@@ -10,9 +10,6 @@ struct FIFileIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual bool Save(const ObjectIfs &  objs, const char *  fn){
 		return ((OBJ*)(MIF*)this)->Save(objs, fn);
 	}
-	virtual void RegisterGroup(const char *  gp){
-		return ((OBJ*)(MIF*)this)->RegisterGroup(gp);
-	}
 };
 struct FIFileIf;	class FIFile;
 typedef FIFileIfStubTemplate<FIFileIf, ObjectIfBuf, FIFile>	FIFileIfStub;

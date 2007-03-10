@@ -190,5 +190,12 @@ bool GRMesh::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
+size_t GRMesh::NChildObject() const {
+	return material.size();
+}
+ObjectIf* GRMesh::GetChildObject(size_t pos){
+	if (pos < material.size()) return material[pos]->Cast();
+	return NULL;
+}
 
 }

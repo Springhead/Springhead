@@ -198,10 +198,10 @@ static void ArrayNum(int n){
 	tdesc->GetComposit().back().length = n;
 }
 static void TempEnd(char c){
-	tdesc->Link(fileX->GetTypeDb());
+	tdesc->Link(fileContext->typeDbs.Top());
 	PDEBUG(DSTR << "load template:" << std::endl);
 	tdesc->Print(DSTR);
-	fileX->GetTypeDb()->RegisterDesc(tdesc);
+	fileContext->typeDbs.Top()->RegisterDesc(tdesc);
 }
 }
 using namespace FileX;
@@ -231,14 +231,6 @@ FIFileX::FIFileX(){
 	Init();
 }
 void FIFileX::Init(){
-	handlers.clear();
-	typeDb.Clear();
-	RegisterGroup("Foundation Physics Graphics Framework OldSpringhead");
-	typeDb.RegisterAlias("Vec3f", "Vector");
-	typeDb.RegisterAlias("Vec2f", "Coords2d");
-	typeDb.RegisterAlias("Affinef", "Matrix3x3");
-	typeDb.RegisterAlias("Affined", "Matrix4x4");
-
 	using namespace std;
 	using namespace boost::spirit;
 	using namespace Spr;
@@ -295,6 +287,12 @@ void FIFileX::Init(){
 
 //------------------------------------------------------------------------------
 void FIFileX::PushLoaderContext(FILoadContext* fc){
+	fc->RegisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	fc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
+	fc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
+	fc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");
+	fc->typeDbs.Top()->RegisterAlias("Affined", "Matrix4x4");
+
 	fileContexts.Push(fc);
 	fileXs.Push(this);
 	fileContext = fileContexts.Top();

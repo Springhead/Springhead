@@ -24,10 +24,10 @@ public:
 	UTString fileName;
 	///	セーブファイルのファイルストリーム
 	std::ofstream file;
-	///	ノードハンドラ
-	FINodeHandlers* handlers;
-	///	型DB
-	UTTypeDescDb* typeDb;
+	///	typeDb のスタック
+	UTStack< UTRef<UTTypeDescDb> > typeDbs;
+	///	handlerDbのスタック
+	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
 	///	UTTypeDescのフィールドへのイタレータのスタック
 	UTTypeDescFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．

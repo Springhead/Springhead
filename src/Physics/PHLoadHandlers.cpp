@@ -41,7 +41,7 @@ public:
 	}
 };
 void SPR_CDECL PHRegisterLoadHandlers(){
-	UTLoadHandlerDb::GetHandlers("Physics")->insert( DBG_NEW PHLoadHandlerPHInactiveSolids );
+	UTLoadHandlerDbPool::Get("Physics")->insert( DBG_NEW PHLoadHandlerPHInactiveSolids );
 }
 
 }

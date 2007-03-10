@@ -27,7 +27,7 @@ void SPR_CDECL FIRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
-	UTTypeDescDb* db = UTTypeDescDb::GetDb("FileIO");
+	UTTypeDescDb* db = UTTypeDescDbPool::Get("FileIO");
 	#include "TypeDescDumpImpFileIO.h"
 	db->Link();
 }

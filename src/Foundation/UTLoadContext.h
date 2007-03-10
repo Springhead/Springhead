@@ -157,6 +157,7 @@ public:
 typedef std::pair<UTRef<ObjectIf>, UTRef<ObjectIf> > UTPairObject;
 typedef std::map<UTRef<ObjectIf>, UTRef<ObjectIf> >  UTMapObject;
 
+class UTLoadHandlerDb;
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
@@ -183,6 +184,11 @@ public:
 	UTTypeDescFieldIts fieldIts;
 	///	フラグのスタック
 	UTStack<bool> flags;
+
+	///	typeDb のスタック
+	UTStack< UTRef<UTTypeDescDb> > typeDbs;
+	///	handlerDbのスタック
+	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
 
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
@@ -242,6 +248,10 @@ public:
 	void PostTask();
 	///	ファイルマップを作成してスタック(fileMaps)に積む
 	virtual void PushFileMap(const UTString fn)=0;
+	/**	ロードするノードのグループを登録。グループ名をスペースで区切って指定。
+		例：ResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	*/
+	void RegisterGroupToDb(const char* gp);
 protected:
 	void LinkNode(UTLoadedData* ld);
 };

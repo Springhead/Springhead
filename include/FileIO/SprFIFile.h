@@ -21,8 +21,6 @@ struct FIFileIf: public ObjectIf{
 	virtual bool Load(ObjectIfs& objs, const char* fn)=0;
 	///	セーブ
 	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
-	///	ノード型の登録
-	virtual void RegisterGroup(const char* gp)=0;
 };
 
 ///	DirectXファイルのファイルローダとセーバ

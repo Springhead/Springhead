@@ -76,26 +76,53 @@ public:
 	virtual void AfterLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
 };
 
+///	型情報(UTTypeDescDb)，ハンドラ(UTLoadHandlerDb) を切り替えるハンドラ
+template <class T>
+class UTLoadHandlerSetDb: public UTLoadHandlerImp<T>{
+public:
+	UTLoadHandlerSetDb(const char* t):UTLoadHandlerImp<T>(t){}
+	UTRef<UTTypeDescDb> typeDb;
+	UTRef<UTLoadHandlerDb> handlerDb;
+	virtual void BeforeLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){
+		if (typeDb) ctx->typeDbs.Push(typeDb);
+		if (handlerDb) ctx->handlerDbs.Push(handlerDb);
+	}
+	virtual void AfterLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){
+		if (handlerDb) ctx->handlerDbs.Pop();
+		if (typeDb) ctx->typeDbs.Pop();
+	}
+};
+
 /**	
 	
 */
-class UTLoadHandlers:public std::multiset< UTRef<UTLoadHandler>, UTLoadHandler::Less >, public UTRefCount{
+class UTLoadHandlerDb:public std::multiset< UTRef<UTLoadHandler>, UTLoadHandler::Less >, public UTRefCount{
+	std::set<UTString, UTStringLess> addedGroups;
 public:
 	UTString group;
-	UTLoadHandlers& operator += (const UTLoadHandlers& b){
-		insert(b.begin(), b.end());
+	UTLoadHandlerDb& operator += (const UTLoadHandlerDb& b){
+		if (b.group != group && addedGroups.find(b.group) == addedGroups.end()){
+			insert(b.begin(), b.end());
+			addedGroups.insert(b.group);
+		}
 		return *this;
 	}
+	void Print(std::ostream& os) const {
+		os << group << ":" << std::endl;
+		for(const_iterator it = begin(); it != end(); ++it){
+			os << "  " << (*it)->type << std::endl;
+		}
+	}
 };
-inline bool operator < (const UTLoadHandlers& a, const UTLoadHandlers& b){
-	return a.group < b.group;
+inline bool operator < (const UTLoadHandlerDb& a, const UTLoadHandlerDb& b){
+	return a.group.compare(b.group) < 0;
 }
 
-class UTLoadHandlerDb: public std::set< UTRef<UTLoadHandlers>, UTContentsLess< UTRef<UTLoadHandlers> > >, public UTRefCount{
-	static UTRef<UTLoadHandlerDb> handlerDb;
+class UTLoadHandlerDbPool: public std::set< UTRef<UTLoadHandlerDb>, UTContentsLess< UTRef<UTLoadHandlerDb> > >, public UTRefCount{
+	static UTRef<UTLoadHandlerDbPool> pool;
+	static UTLoadHandlerDbPool* SPR_CDECL GetPool();
 public:
-	static UTLoadHandlers* SPR_CDECL GetHandlers(const char* gp);
-	virtual UTLoadHandlers* GetHandlersImp(const char* gp);
+	static UTLoadHandlerDb* SPR_CDECL Get(const char* gp);
 };
 
 }

@@ -841,7 +841,7 @@ public:
 namespace Spr{
 using namespace SprOldSpringhead;
 void SPR_CDECL FWRegisterOldSpringheadNode(){
-	UTLoadHandlers* handlers = UTLoadHandlerDb::GetHandlers("OldSpringhead");
+	UTLoadHandlerDb* handlers = UTLoadHandlerDbPool::Get("OldSpringhead");
 	handlers->insert(DBG_NEW FWNodeHandlerXHeader);
 	handlers->insert(DBG_NEW FWNodeHandlerXFrame);
 	handlers->insert(DBG_NEW FWNodeHandlerXFrameTransformMatrix);

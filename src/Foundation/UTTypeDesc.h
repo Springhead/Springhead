@@ -324,6 +324,7 @@ protected:
 
 ///	型のデータベース
 class SPR_DLL UTTypeDescDb: public UTRefCount{
+	std::set<UTString, UTStringLess> addedGroups;
 public:
 	///	コンテナの型
 	typedef std::set< UTRef<UTTypeDesc>, UTContentsLess< UTRef<UTTypeDesc> > > Db;
@@ -331,13 +332,10 @@ protected:
 	std::string group;			///<	グループ名
 	std::string prefix;			///<	名前のうちプレフィックスの部分
 	Db db;						///<	UTTypeDesc を入れておくコンテナ
-	typedef std::set< UTRef<UTTypeDescDb>, UTContentsLess< UTRef<UTTypeDescDb> > > Dbs;
-	static Dbs dbs;
 public:
 	UTTypeDescDb(UTString gp=""):group(gp){}
 	///	
 	~UTTypeDescDb();
-	static UTTypeDescDb* SPR_CDECL GetDb(std::string gp);
 	/**	型情報をデータベースに登録．	*/
 	void RegisterDesc(UTTypeDesc* n){
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
@@ -365,10 +363,13 @@ public:
 	void Link();
 	///	DB内の型情報の表示
 	void Print(std::ostream& os) const;
-	static void SPR_CDECL PrintDbs(std::ostream& os);
 	UTTypeDescDb& operator += (const UTTypeDescDb& b){
-		db.insert(b.db.begin(), b.db.end());
-		Link();
+		if (b.group.compare(group)!=0 && 
+			addedGroups.find(b.group) == addedGroups.end()){
+			db.insert(b.db.begin(), b.db.end());
+			Link();
+			addedGroups.insert(b.group);
+		}
 		return *this;
 	}
 	UTString GetGroup() const {
@@ -377,10 +378,21 @@ public:
 	void Clear(){
 		db.clear();
 	}
+	friend class UTTypeDescDbPool;
 };
 inline bool operator < (const UTTypeDescDb& d1, const UTTypeDescDb& d2){
 	return d1.GetGroup() < d2.GetGroup();
 }
+
+class UTTypeDescDbPool: public UTRefCount, 
+	public std::set< UTRef<UTTypeDescDb>, UTContentsLess< UTRef<UTTypeDescDb> > >{
+protected:
+	static UTRef<UTTypeDescDbPool> pool;
+	static UTTypeDescDbPool* GetPool();
+public:
+	static UTTypeDescDb* SPR_CDECL Get(std::string gp);
+	static void SPR_CDECL Print(std::ostream& os);
+};
 
 /**	TypeDescのフィールドのイタレータ
 	バイナリファイルやXファイルから，ある型のデータを順に読み出していく場合，

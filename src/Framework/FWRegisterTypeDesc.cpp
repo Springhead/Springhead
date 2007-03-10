@@ -19,7 +19,7 @@ namespace SprOldSpringhead{
 
 		UTRegisterTypeDescs();
 
-		UTTypeDescDb* db = UTTypeDescDb::GetDb("OldSpringhead");
+		UTTypeDescDb* db = UTTypeDescDbPool::Get("OldSpringhead");
 		#include "TypeDescDumpImpForOldSpringheadHandler.h"
 		db->Link();
 	}
@@ -35,7 +35,7 @@ namespace Spr{
 		bFirst=false;
 		//
 		UTRegisterTypeDescs();
-		UTTypeDescDb* db = UTTypeDescDb::GetDb("Framework");
+		UTTypeDescDb* db = UTTypeDescDbPool::Get("Framework");
 		assert(db);
 		#include "TypeDescDumpImpFramework.h"
 		db->Link();

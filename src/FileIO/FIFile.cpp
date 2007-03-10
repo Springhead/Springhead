@@ -115,22 +115,6 @@ IF_OBJECT_IMP_ABST(FIFile, Object);
 //#define PDEBUG_EVAL(x)	x
 #define PDEBUG_EVAL(x)
 
-void FIFile::RegisterGroup(const char* gp){
-	const char* p = gp;
-	while(1){
-		const char* end = strchr(p, ' ');
-		if (!end) end = gp + strlen(gp);
-		if (p < end){
-			UTString group(p, end);
-			p = end+1;
-			handlers += *UTLoadHandlerDb::GetHandlers(group.c_str());
-			typeDb += *UTTypeDescDb::GetDb(group.c_str());
-		}else{
-			break;
-		}
-	}
-}
-
 
 //---------------------------------------------------------------------------
 //	FIFile
@@ -165,8 +149,8 @@ void FIFile::Load(FILoadContext* fc){
 }
 void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
 	//	データを作ってスタックに積む
-	UTTypeDesc* type = GetTypeDb()->Find(tn);
-	if (!type) type = GetTypeDb()->Find(tn + "Desc");	
+	UTTypeDesc* type = fc->typeDbs.Top()->Find(tn);
+	if (!type) type = fc->typeDbs.Top()->Find(tn + "Desc");	
 	if (type){
 		fc->PushType(type);	//	これからロードする型としてPush
 	}else{
@@ -179,9 +163,9 @@ void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
 	if (type){
 		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 		key->type = type->GetTypeName();
-		std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
-			= handlers.equal_range(key);
-		for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+			= fc->handlerDbs.Top()->equal_range(key);
+		for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 			(*it)->BeforeLoadData(fc->datas.Top(), fc);
 		}
 	}
@@ -192,9 +176,9 @@ void FIFile::LNodeEnd(FILoadContext* fc){
 	if (type){
 		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 		key->type = type->GetTypeName();
-		std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
-			= handlers.equal_range(key);
-		for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+		std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+			= fc->handlerDbs.Top()->equal_range(key);
+		for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 			(*it)->AfterLoadData(fc->datas.Top(), fc);
 		}
 	}
@@ -230,10 +214,10 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 	//	ハンドラーの処理
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 	key->type = ld->type->GetTypeName();
-	std::pair<UTLoadHandlers::iterator, UTLoadHandlers::iterator> range 
-		= handlers.equal_range(key);
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+		= fc->handlerDbs.Top()->equal_range(key);
 	typedef std::vector<UTLoadHandler*> Handlers;
-	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->BeforeCreateObject(ld, fc);
 	}
 
@@ -251,7 +235,7 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 			}
 		}
 	}
-	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->AfterCreateObject(ld, fc);
 	}
 
@@ -262,7 +246,7 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 		fc->datas.Pop();
 	}
 	//	ハンドラーの処理
-	for(UTLoadHandlers::iterator it = range.first; it != range.second; ++it){
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->AfterCreateChildren(ld, fc);
 	}
 	
@@ -299,7 +283,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 
 	UTString tn = sc->GetNodeTypeName();
 	tn.append("Desc");
-	UTTypeDesc* type = typeDb.Find(tn);
+	UTTypeDesc* type = sc->typeDbs.Top()->Find(tn);
 	if(type){
 		//	セーブ位置を設定
 		sc->fieldIts.Push(UTTypeDescFieldIt(type));

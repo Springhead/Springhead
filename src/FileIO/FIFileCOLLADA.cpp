@@ -10,7 +10,8 @@
 #pragma hdrstop
 #endif
 
-#include "FIFileCOLLADA.h"
+#include "FIFileCollada.h"
+#include "FIFileColladaHandler.h"
 #include <Foundation/UTLoadHandler.h>
 #include <fstream>
 #include <sstream>
@@ -46,8 +47,8 @@ static void NodeStart(const char* b, const char* e){
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
 
 	//	å^èÓïÒÇÃéÊìæ
-	UTTypeDesc* type = fileCOLLADA->GetTypeDb()->Find(tn);
-	if (!type) type = fileCOLLADA->GetTypeDb()->Find(tn + "Desc");
+	UTTypeDesc* type = fileContext->typeDbs.Top()->Find(tn);
+	if (!type) type = fileContext->typeDbs.Top()->Find(tn + "Desc");
 	
 	if (type){
 		fileContext->PushType(type);	//	Ç±ÇÍÇ©ÇÁÉçÅ[ÉhÇ∑ÇÈå^Ç∆ÇµÇƒPush
@@ -249,9 +250,6 @@ FIFileCOLLADA::FIFileCOLLADA(){
 	Init();
 }
 void FIFileCOLLADA::Init(){
-	handlers.clear();
-	typeDb.Clear();
-	RegisterGroup("Foundation Physics Graphics Framework OldSpringhead");
 
 	using namespace std;
 	using namespace boost::spirit;
@@ -280,7 +278,19 @@ void FIFileCOLLADA::Init(){
 
 
 //------------------------------------------------------------------------------
+
+class FINHC_library_physics_models: public UTLoadHandlerSetDb<library_physics_models>{
+public:
+	FINHC_library_physics_models():UTLoadHandlerSetDb<Desc>("library_physics_models"){
+//	TODO:
+//		handlerDb = ;
+//		typeDb = ;
+	}
+};
+
+
 void FIFileCOLLADA::PushLoaderContext(FILoadContext* fc){
+
 	fileContexts.Push(fc);
 	fileCOLLADAs.Push(this);
 	fileContext = fileContexts.Top();

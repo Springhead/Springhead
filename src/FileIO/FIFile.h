@@ -28,16 +28,9 @@ class FISdk;
 */
 class FIFile:public Object, public FIFileIfInit{
 public:
-	///	ファイルにセーブ・ファイルからロードする型の情報(UTTypeDesc)
-	UTTypeDescDb typeDb;
-	///	ロード時に自動ロードとは別の処理が必要なノードのハンドラ
-	UTLoadHandlers handlers;
-public:
 	FISdk* sdk;
 	OBJECTDEF_ABST(FIFile, Object);
 	FISdk* GetSdk(){ return sdk; }
-	virtual UTTypeDescDb* GetTypeDb()=0;
-
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
@@ -72,11 +65,6 @@ public:
 	///	ノードの名前の設定
 	virtual void LSetNodeName(FILoadContext* fc, UTString n);
 	//@}
-
-	/**	ロードするノードのグループを登録。グループ名をスペースで区切って指定。
-		例：ResisterGroup("Foundation Physics Graphics Framework OldSpringhead");
-	*/
-	void RegisterGroup(const char* gp);
 
 protected:
 	///	ノードを再帰的に作成

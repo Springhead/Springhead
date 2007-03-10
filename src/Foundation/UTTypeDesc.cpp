@@ -191,14 +191,6 @@ void UTTypeDesc::Print(std::ostream& os) const{
 
 //----------------------------------------------------------------------------
 //	UTTypeDescDb
-UTTypeDescDb::Dbs UTTypeDescDb::dbs;
-UTTypeDescDb* SPR_CDECL UTTypeDescDb::GetDb(std::string gp){
-	static UTRef<UTTypeDescDb> key;
-	key = DBG_NEW UTTypeDescDb(gp);
-	Dbs::iterator it = dbs.find(key);
-	if (it == dbs.end()) it = dbs.insert(DBG_NEW UTTypeDescDb(gp)).first;
-	return *it;
-}
 UTTypeDescDb::~UTTypeDescDb(){
 	db.clear();
 }
@@ -242,8 +234,21 @@ void UTTypeDescDb::Print(std::ostream& os) const{
 		os << std::endl;
 	}
 }
-void SPR_CDECL UTTypeDescDb::PrintDbs(std::ostream& os){
-	for(Dbs::const_iterator it = dbs.begin(); it != dbs.end(); ++it){
+
+//---------------------------------------------------------------------------
+//	UTTypeDescDbPool
+UTRef<UTTypeDescDbPool> UTTypeDescDbPool::pool;
+UTTypeDescDb* SPR_CDECL UTTypeDescDbPool::Get(std::string gp){
+	UTRef<UTTypeDescDb> key = DBG_NEW UTTypeDescDb(gp);
+	std::pair<UTTypeDescDbPool::iterator, bool> r = GetPool()->insert(key);
+	return *r.first;
+}
+UTTypeDescDbPool* SPR_CDECL UTTypeDescDbPool::GetPool(){
+	if (!pool) pool = new UTTypeDescDbPool;
+	return pool;
+}
+void SPR_CDECL UTTypeDescDbPool::Print(std::ostream& os){
+	for(const_iterator it = GetPool()->begin(); it != GetPool()->end(); ++it){
 		(*it)->Print(os);
 		os << std::endl;
 	}
