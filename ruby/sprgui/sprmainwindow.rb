@@ -1,10 +1,6 @@
-require 'rubygems'
-require 'fox16'
-require 'fox16/responder'
-require 'fox16/undolist'
 require 'sprsceneview'
 require 'sprpropertymanager'
-#require 'sprcameraview'
+require 'sprcameraview'
 
 include Fox
 
@@ -187,15 +183,8 @@ class SprMainWindow < FXMainWindow
 
 	    # ディスプレイ
     	displayframe = FXVerticalFrame.new(@hsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
-	    @glvisual = FXGLVisual.new(getApp(), VISUAL_DOUBLEBUFFER)
-	    @glcanvas = FXGLCanvas.new(displayframe, @glvisual, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y|LAYOUT_TOP|LAYOUT_LEFT)
-	    @glcanvas.connect(SEL_PAINT){drawScene}
-	    @glcanvas.connect(SEL_CONFIGURE) {
-	    	if @glcanvas.makeCurrent
-	        	$sprapp.GetSdk().GetRender().SetViewport([0, 0], [@glcanvas.width, @glcanvas.height])
-	        	@glcanvas.makeNonCurrent
-	      	end
-	    }
+
+		$cameraview = SprCameraView.new(displayframe)
 
     	# Time control tool bar
     	dragshell3 = FXToolBarShell.new(displayframe, FRAME_RAISED|FRAME_THICK)
@@ -218,24 +207,6 @@ class SprMainWindow < FXMainWindow
     	newFile()
 	end
 
-	# draw scene
-	def	drawScene()
-
-	    # Make context current
-    	@glcanvas.makeCurrent()
-
-		$sprapp.GetSdk().GetRender().Reshape([0,0], [@glcanvas.width, @glcanvas.height])
-		$sprapp.Display()
-		
-		# Swap if it is double-buffered
-    	if @glvisual.isDoubleBuffer
-      		@glcanvas.swapBuffers
-    	end
-    
-    	# Make context non-current
-    	@glcanvas.makeNonCurrent
-	end
-
 	# 現在のドキュメントをクリア
 	def clearDocument()
 		$sprapp.GetSdk().Clear()
@@ -248,19 +219,34 @@ class SprMainWindow < FXMainWindow
 
 	# New file
 	def newFile()
+		puts 'newfilebegin'
 		clearDocument()
 
 		# デフォルトシーンの構築
 		scene = $sprapp.GetSdk().CreateScene(PHSceneDesc.new, GRSceneDesc.new)
 		phsdk = $sprapp.GetSdk().GetPHSdk()
 		phscene = scene.GetPHScene()
+		# 床
 		floor = phscene.CreateSolid(PHSolidDesc.new)
 		floor.SetDynamical(false)
 		boxdesc = CDBoxDesc.new
 		boxdesc.boxsize = [0.1, 0.1, 0.1]
 		floor.AddShape(phsdk.CreateShape(boxdesc))
 		floor.SetName('floor')
-		$sprapp.GetSdk().SetDebugMode(true)
+		# カメラ
+		grscene = scene.GetGRScene()
+		cameradesc = GRCameraDesc.new
+		grscene.SetCamera(cameradesc)
+		camera = grscene.GetCamera()
+		camera.SetName('camera')
+		# カメラフレーム
+		cameraframe = GRFrameIf.Cast(grscene.CreateVisual(GRFrameDesc.new))
+		cameraframe.SetName('cameraframe')
+		af = Affinef.new
+		af.pos = Vec3f.new(0.0, 0.0, -1.0)
+		af.LookAtGL(Vec3f.new(0.0, 0.0, 0.0), Vec3f.new(0.0, 1.0, 0.0));
+		cameraframe.SetTransform(af)
+		camera.SetFrame(cameraframe)
 
 		$sceneview.addTab(scene)
 		$propertymanager.update(nil)
@@ -271,6 +257,7 @@ class SprMainWindow < FXMainWindow
     	@undolist.clear
     	@undolist.mark
 
+		puts 'newfile'
 	end
 
   	# Load file
@@ -522,26 +509,8 @@ class SprMainWindow < FXMainWindow
 		if @simRunning
 			@timer = getApp().addTimeout(100, method(:onTimeout))
 		end
-		drawScene()
+		$cameraview.drawScene()
 	end
-
- 	# Released right button
-  	def onTextRightMouse(sender, sel, event)
-    	if !event.moved
-      	pane = FXMenuPane.new(self)
-      	FXMenuCommand.new(pane, "Undo", @undoicon, @undolist, FXUndoList::ID_UNDO)
-      	FXMenuCommand.new(pane, "Redo", @redoicon, @undolist, FXUndoList::ID_REDO)
-      	FXMenuSeparator.new(pane)
-      	FXMenuCommand.new(pane, "Cut", @cuticon, @editor, FXText::ID_CUT_SEL)
-      	FXMenuCommand.new(pane, "Copy", @copyicon, @editor, FXText::ID_COPY_SEL)
-      	FXMenuCommand.new(pane, "Paste", @pasteicon, @editor, FXText::ID_PASTE_SEL)
-      	FXMenuCommand.new(pane, "Select All", nil, @editor, FXText::ID_SELECT_ALL)
-      	pane.create
-      	pane.popup(nil, event.root_x, event.root_y)
-      	getApp().runModalWhileShown(pane)
-   		end
-    	return 1
-  	end
 
  	# Show preferences dialog
   	def onCmdPreferences(sender, sel, ptr)
@@ -565,17 +534,6 @@ class SprMainWindow < FXMainWindow
       	"Springhead GUI", @bigicon, MBOX_OK|DECOR_TITLE|DECOR_BORDER)
     	about.execute
     	return 1
-  	end
-
-
-	#--------------------------------------------------------------------------------
-	# message handlers
-
-	# Start the ball rolling
-	def start(args)
-    	if args.length > 0
-      		loadFile(File.expand_path(args[1]))
-    	end
   	end
 
   	# Create and show window

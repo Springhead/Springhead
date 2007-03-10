@@ -31,29 +31,32 @@ mat		trans();
 mat		inv();
 %enddef
 
-%define VEC_EXTEND(type)
-double __getitem__(size_t index){
+%define VEC_EXTEND(vec, elem)
+elem __getitem__(size_t index){
 	return $self->operator[](index);
 }
-void __setitem__(size_t index, double val){
+void __setitem__(size_t index, elem val){
 	$self->operator[](index) = val;
 }
-type __add__(type v){
+vec __add__(vec v){
 	return *$self + v;
 }
-type __sub__(type v){
+vec __sub__(vec v){
 	return *$self - v;
 }
-double __mul__(type v){
+vec __mul__(elem k){
+	return *$self * k;
+}
+elem __mul__(vec v){
 	return *$self * v;
 }
 %enddef
 
-%define MAT_EXTEND(mat, vec)
-double __getitem__(size_t r, size_t c){
+%define MAT_EXTEND(mat, vec, elem)
+elem __getitem__(size_t r, size_t c){
 	return (*$self)[r][c];
 }
-void __setitem__(size_t r, size_t c, double val){
+void __setitem__(size_t r, size_t c, elem val){
 	(*$self)[r][c] = val;
 }
 mat __add__(mat m){
@@ -68,11 +71,25 @@ mat __mul__(mat m){
 vec __mul__(vec v){
 	return *$self * v;
 }
+mat __mul__(elem k){
+	return *$self * k;
+}
 %enddef
 
 double Deg(double rad);
 double Rad(double deg);
 
+class Vec2f{
+public:
+	float x, y;
+	VEC_MEMBER(Vec2f)
+	static Vec2f Zero();
+	Vec2f();
+	Vec2f(float xi, float yi);
+};
+%extend Vec2f{
+	VEC_EXTEND(Vec2f, float)
+}
 class Vec2d{
 public:
 	double x, y;
@@ -82,9 +99,20 @@ public:
 	Vec2d(double xi, double yi);
 };
 %extend Vec2d{
-	VEC_EXTEND(Vec2d)
+	VEC_EXTEND(Vec2d, double)
 }
 
+class Vec3f{
+public:
+	float x, y, z;
+	VEC_MEMBER(Vec3f)
+	static Vec3f Zero();
+	Vec3f();
+	Vec3f(float xi, float yi, float zi);
+};
+%extend Vec3f{
+	VEC_EXTEND(Vec3f, float)
+}
 class Vec3d{
 public:
 	double x, y, z;
@@ -94,9 +122,20 @@ public:
 	Vec3d(double xi, double yi, double zi);
 };
 %extend Vec3d{
-	VEC_EXTEND(Vec3d)
+	VEC_EXTEND(Vec3d, double)
 }
 
+class Vec4f{
+public:
+	float x, y, z, w;
+	VEC_MEMBER(Vec4f)
+	static Vec4f Zero();
+	Vec4f();
+	Vec4f(float xi, float yi, float zi, float wi);
+};
+%extend Vec4f{
+	VEC_EXTEND(Vec4f, float)
+}
 class Vec4d{
 public:
 	double x, y, z, w;
@@ -106,9 +145,26 @@ public:
 	Vec4d(double xi, double yi, double zi, double wi);
 };
 %extend Vec4d{
-	VEC_EXTEND(Vec4d)
+	VEC_EXTEND(Vec4d, double)
 }
 
+class Matrix2f{
+public:
+	float xx, xy, yx, yy;
+	MAT_MEMBER(Matrix2f, Vec2f)
+	Matrix2f();
+	Matrix2f(const Vec2f& exi, const Vec2f& eyi);
+	Matrix2f(float m11, float m12, float m21, float m22);
+	static Matrix2f Zero();
+	static Matrix2f Unit();
+	static Matrix2f Diag(float x, float y);
+	static Matrix2f Rot(float rad);
+	static Matrix2f Rot(const Vec2f& a, char axis);
+	float angle() const;
+};
+%extend Matrix2f{
+	MAT_EXTEND(Matrix2f, Vec2f, float)
+}
 class Matrix2d{
 public:
 	double xx, xy, yx, yy;
@@ -123,11 +179,33 @@ public:
 	static Matrix2d Rot(const Vec2d& a, char axis);
 	double angle() const;
 };
-
 %extend Matrix2d{
-	MAT_EXTEND(Matrix2d, Vec2d)
+	MAT_EXTEND(Matrix2d, Vec2d, double)
 }
 
+class Matrix3f{
+public:
+	float xx, xy, xz;
+	float yx, yy, yz;
+	float zx, zy, zz;
+	MAT_MEMBER(Matrix3f, Vec3f)
+	Matrix3f();
+	Matrix3f(const Vec3f& exi, const Vec3f& eyi, const Vec3f& ezi);
+	Matrix3f(float m11, float m12, float m13, float m21, float m22, float m23, float m31, float m32, float m33);
+
+	static Matrix3f Zero();
+	static Matrix3f Unit();
+	static Matrix3f Diag(float x, float y, float z);
+	static Matrix3f Rot(const Vec3f& a, const Vec3f& b, char axis = 'x');
+	static Matrix3f Rot(float th, char axis);
+	static Matrix3f Rot(float th, const Vec3f& axis);
+	static Matrix3f Rot(const Vec4f& q);
+	static Matrix3f Cross(const Vec3f& v);
+};
+%extend Matrix3f{
+	MAT_EXTEND(Matrix3f, Vec3f, float)
+}
+bool IsUnitary(Matrix3f r);
 class Matrix3d{
 public:
 	double xx, xy, xz;
@@ -147,12 +225,108 @@ public:
 	static Matrix3d Rot(const Vec4d& q);
 	static Matrix3d Cross(const Vec3d& v);
 };
-
 %extend Matrix3d{
-	MAT_EXTEND(Matrix3d, Vec3d)
+	MAT_EXTEND(Matrix3d, Vec3d, double)
 }
-
 bool IsUnitary(Matrix3d r);
+
+// TAffineだけはグラフィクス系との親和性を考慮してfloat, double両方の具現化をポートする
+
+%rename("trn")  Affine2f::getTrn;
+%rename("trn=") Affine2f::setTrn;
+%rename("pos")  Affine2f::getPos;
+%rename("pos=") Affine2f::setPos;
+%rename("rot")  Affine2f::getRot;
+%rename("rot=") Affine2f::setRot;
+%extend Affine2f{
+	MAT_EXTEND(Affine2f, Vec2f, float)
+	void setTrn(const Vec2f& v){
+		$self->Trn() = v;
+	}
+	Vec2f getTrn(){
+		return $self->Trn();
+	}
+	void setPos(const Vec2f& v){
+		$self->Pos() = v;
+	}
+	Vec2f getPos(){
+		return $self->Pos();
+	}
+	void setRot(const Matrix2f& m){
+		$self->Rot() = m;
+	}
+	Matrix2f getRot(){
+		return $self->Rot();
+	}
+}	
+class Affine2f{
+public:
+	float xx, xy, xz;
+	float yx, yy, yz;
+	float px, py, pz;
+	MAT_MEMBER(Affine2f, Vec3d)
+	static Affine2f Unit();
+	static Affine2f Trn(float px, float py);
+	static Affine2f Rot(float th);
+	static Affine2f Scale(float sx, float sy);
+	Affine2f();
+};
+
+%rename("trn")  Affinef::getTrn;
+%rename("trn=") Affinef::setTrn;
+%rename("pos")  Affinef::getPos;
+%rename("pos=") Affinef::setPos;
+%rename("rot")  Affinef::getRot;
+%rename("rot=") Affinef::setRot;
+%extend Affinef{
+	MAT_EXTEND(Affinef, Vec3f, float)
+	void setTrn(const Vec3f& v){
+		$self->Trn() = v;
+	}
+	Vec3f getTrn(){
+		return $self->Trn();
+	}
+	void setPos(const Vec3f& v){
+		$self->Pos() = v;
+	}
+	Vec3f getPos(){
+		return $self->Pos();
+	}
+	void setRot(const Matrix3f& m){
+		$self->Rot() = m;
+	}
+	Matrix3f getRot(){
+		return $self->Rot();
+	}
+}	
+class Affinef{
+public:
+	float xx, xy, xz, xw;
+	float yx, yy, yz, yw;
+	float zx, zy, zz, zw;
+	float px, py, pz, pw;
+	MAT_MEMBER(Affinef, Vec4f)
+	static Affinef Unit();
+	static Affinef Trn(float px, float py, float pz);
+	static Affinef Rot(float th, char axis);
+	static Affinef Rot(float th, const Vec3d& axis);
+	static Affinef Scale(float sx, float sy, float sz);
+	static Affinef ProjectionGL(
+		const Vec3f& screen,
+		const Vec2f& size,
+		float front=1.0f, float back=10000.0f);
+	static Affinef ProjectionD3D(
+		const Vec3f& screen,
+		const Vec2f& size,
+		float front=1.0f, float back=10000.0f);
+		
+	void LookAt(const Vec3f& posi);
+	void LookAt(const Vec3f& posz, const Vec3f& posy);
+	void LookAtGL(const Vec3f& posi);
+	void LookAtGL(const Vec3f& posz, const Vec3f& posy);
+	
+	Affinef();
+};
 
 %rename("trn")  Affine2d::getTrn;
 %rename("trn=") Affine2d::setTrn;
@@ -161,7 +335,7 @@ bool IsUnitary(Matrix3d r);
 %rename("rot")  Affine2d::getRot;
 %rename("rot=") Affine2d::setRot;
 %extend Affine2d{
-	MAT_EXTEND(Affine2d, Vec2d)
+	MAT_EXTEND(Affine2d, Vec2d, double)
 	void setTrn(const Vec2d& v){
 		$self->Trn() = v;
 	}
@@ -202,7 +376,7 @@ public:
 %rename("rot")  Affined::getRot;
 %rename("rot=") Affined::setRot;
 %extend Affined{
-	MAT_EXTEND(Affined, Vec3d)
+	MAT_EXTEND(Affined, Vec3d, double)
 	void setTrn(const Vec3d& v){
 		$self->Trn() = v;
 	}

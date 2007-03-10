@@ -1542,17 +1542,24 @@ SWIG_Ruby_SetModule(swig_module_info *pointer)
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_Affine2d swig_types[0]
-#define SWIGTYPE_p_Affined swig_types[1]
-#define SWIGTYPE_p_Matrix2d swig_types[2]
-#define SWIGTYPE_p_Matrix3d swig_types[3]
-#define SWIGTYPE_p_Posed swig_types[4]
-#define SWIGTYPE_p_Quaterniond swig_types[5]
-#define SWIGTYPE_p_Vec2d swig_types[6]
-#define SWIGTYPE_p_Vec3d swig_types[7]
-#define SWIGTYPE_p_Vec4d swig_types[8]
-#define SWIGTYPE_p_char swig_types[9]
-static swig_type_info *swig_types[11];
-static swig_module_info swig_module = {swig_types, 10, 0, 0, 0, 0};
+#define SWIGTYPE_p_Affine2f swig_types[1]
+#define SWIGTYPE_p_Affined swig_types[2]
+#define SWIGTYPE_p_Affinef swig_types[3]
+#define SWIGTYPE_p_Matrix2d swig_types[4]
+#define SWIGTYPE_p_Matrix2f swig_types[5]
+#define SWIGTYPE_p_Matrix3d swig_types[6]
+#define SWIGTYPE_p_Matrix3f swig_types[7]
+#define SWIGTYPE_p_Posed swig_types[8]
+#define SWIGTYPE_p_Quaterniond swig_types[9]
+#define SWIGTYPE_p_Vec2d swig_types[10]
+#define SWIGTYPE_p_Vec2f swig_types[11]
+#define SWIGTYPE_p_Vec3d swig_types[12]
+#define SWIGTYPE_p_Vec3f swig_types[13]
+#define SWIGTYPE_p_Vec4d swig_types[14]
+#define SWIGTYPE_p_Vec4f swig_types[15]
+#define SWIGTYPE_p_char swig_types[16]
+static swig_type_info *swig_types[18];
+static swig_module_info swig_module = {swig_types, 17, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1629,6 +1636,32 @@ SWIG_AsVal_double (VALUE obj, double *val)
   #define SWIG_From_double   rb_float_new 
 
 
+#include <float.h>
+
+
+SWIGINTERN int
+SWIG_AsVal_float (VALUE obj, float *val)
+{
+  double v;
+  int res = SWIG_AsVal_double (obj, &v);
+  if (SWIG_IsOK(res)) {
+    if ((v < -FLT_MAX || v > FLT_MAX)) {
+      return SWIG_OverflowError;
+    } else {
+      if (val) *val = static_cast< float >(v);
+    }
+  }  
+  return res;
+}
+
+
+SWIGINTERNINLINE VALUE
+SWIG_From_float  (float value)
+{    
+  return SWIG_From_double  (value);
+}
+
+
 /*@SWIG:%ruby_aux_method@*/
 SWIGINTERN VALUE SWIG_AUX_NUM2ULONG(VALUE *args)
 {
@@ -1696,6 +1729,24 @@ SWIG_From_size_t  (size_t value)
   return SWIG_From_unsigned_SS_long  (static_cast< unsigned long >(value));
 }
 
+SWIGINTERN float Vec2f___getitem__(Vec2f *self,size_t index){
+	return self->operator[](index);
+}
+SWIGINTERN void Vec2f___setitem__(Vec2f *self,size_t index,float val){
+	self->operator[](index) = val;
+}
+SWIGINTERN Vec2f Vec2f___add__(Vec2f *self,Vec2f v){
+	return *self + v;
+}
+SWIGINTERN Vec2f Vec2f___sub__(Vec2f *self,Vec2f v){
+	return *self - v;
+}
+SWIGINTERN Vec2f Vec2f___mul____SWIG_0(Vec2f *self,float k){
+	return *self * k;
+}
+SWIGINTERN float Vec2f___mul____SWIG_1(Vec2f *self,Vec2f v){
+	return *self * v;
+}
 SWIGINTERN double Vec2d___getitem__(Vec2d *self,size_t index){
 	return self->operator[](index);
 }
@@ -1708,7 +1759,28 @@ SWIGINTERN Vec2d Vec2d___add__(Vec2d *self,Vec2d v){
 SWIGINTERN Vec2d Vec2d___sub__(Vec2d *self,Vec2d v){
 	return *self - v;
 }
-SWIGINTERN double Vec2d___mul__(Vec2d *self,Vec2d v){
+SWIGINTERN Vec2d Vec2d___mul____SWIG_0(Vec2d *self,double k){
+	return *self * k;
+}
+SWIGINTERN double Vec2d___mul____SWIG_1(Vec2d *self,Vec2d v){
+	return *self * v;
+}
+SWIGINTERN float Vec3f___getitem__(Vec3f *self,size_t index){
+	return self->operator[](index);
+}
+SWIGINTERN void Vec3f___setitem__(Vec3f *self,size_t index,float val){
+	self->operator[](index) = val;
+}
+SWIGINTERN Vec3f Vec3f___add__(Vec3f *self,Vec3f v){
+	return *self + v;
+}
+SWIGINTERN Vec3f Vec3f___sub__(Vec3f *self,Vec3f v){
+	return *self - v;
+}
+SWIGINTERN Vec3f Vec3f___mul____SWIG_0(Vec3f *self,float k){
+	return *self * k;
+}
+SWIGINTERN float Vec3f___mul____SWIG_1(Vec3f *self,Vec3f v){
 	return *self * v;
 }
 SWIGINTERN double Vec3d___getitem__(Vec3d *self,size_t index){
@@ -1723,7 +1795,28 @@ SWIGINTERN Vec3d Vec3d___add__(Vec3d *self,Vec3d v){
 SWIGINTERN Vec3d Vec3d___sub__(Vec3d *self,Vec3d v){
 	return *self - v;
 }
-SWIGINTERN double Vec3d___mul__(Vec3d *self,Vec3d v){
+SWIGINTERN Vec3d Vec3d___mul____SWIG_0(Vec3d *self,double k){
+	return *self * k;
+}
+SWIGINTERN double Vec3d___mul____SWIG_1(Vec3d *self,Vec3d v){
+	return *self * v;
+}
+SWIGINTERN float Vec4f___getitem__(Vec4f *self,size_t index){
+	return self->operator[](index);
+}
+SWIGINTERN void Vec4f___setitem__(Vec4f *self,size_t index,float val){
+	self->operator[](index) = val;
+}
+SWIGINTERN Vec4f Vec4f___add__(Vec4f *self,Vec4f v){
+	return *self + v;
+}
+SWIGINTERN Vec4f Vec4f___sub__(Vec4f *self,Vec4f v){
+	return *self - v;
+}
+SWIGINTERN Vec4f Vec4f___mul____SWIG_0(Vec4f *self,float k){
+	return *self * k;
+}
+SWIGINTERN float Vec4f___mul____SWIG_1(Vec4f *self,Vec4f v){
 	return *self * v;
 }
 SWIGINTERN double Vec4d___getitem__(Vec4d *self,size_t index){
@@ -1738,7 +1831,10 @@ SWIGINTERN Vec4d Vec4d___add__(Vec4d *self,Vec4d v){
 SWIGINTERN Vec4d Vec4d___sub__(Vec4d *self,Vec4d v){
 	return *self - v;
 }
-SWIGINTERN double Vec4d___mul__(Vec4d *self,Vec4d v){
+SWIGINTERN Vec4d Vec4d___mul____SWIG_0(Vec4d *self,double k){
+	return *self * k;
+}
+SWIGINTERN double Vec4d___mul____SWIG_1(Vec4d *self,Vec4d v){
 	return *self * v;
 }
 
@@ -1864,6 +1960,27 @@ SWIG_AsVal_char (VALUE obj, char *val)
   return res;
 }
 
+SWIGINTERN float Matrix2f___getitem__(Matrix2f *self,size_t r,size_t c){
+	return (*self)[r][c];
+}
+SWIGINTERN void Matrix2f___setitem__(Matrix2f *self,size_t r,size_t c,float val){
+	(*self)[r][c] = val;
+}
+SWIGINTERN Matrix2f Matrix2f___add__(Matrix2f *self,Matrix2f m){
+	return *self + m;
+}
+SWIGINTERN Matrix2f Matrix2f___sub__(Matrix2f *self,Matrix2f m){
+	return *self - m;
+}
+SWIGINTERN Matrix2f Matrix2f___mul____SWIG_0(Matrix2f *self,Matrix2f m){
+	return *self * m;
+}
+SWIGINTERN Vec2f Matrix2f___mul____SWIG_1(Matrix2f *self,Vec2f v){
+	return *self * v;
+}
+SWIGINTERN Matrix2f Matrix2f___mul____SWIG_2(Matrix2f *self,float k){
+	return *self * k;
+}
 SWIGINTERN double Matrix2d___getitem__(Matrix2d *self,size_t r,size_t c){
 	return (*self)[r][c];
 }
@@ -1882,6 +1999,37 @@ SWIGINTERN Matrix2d Matrix2d___mul____SWIG_0(Matrix2d *self,Matrix2d m){
 SWIGINTERN Vec2d Matrix2d___mul____SWIG_1(Matrix2d *self,Vec2d v){
 	return *self * v;
 }
+SWIGINTERN Matrix2d Matrix2d___mul____SWIG_2(Matrix2d *self,double k){
+	return *self * k;
+}
+SWIGINTERN float Matrix3f___getitem__(Matrix3f *self,size_t r,size_t c){
+	return (*self)[r][c];
+}
+SWIGINTERN void Matrix3f___setitem__(Matrix3f *self,size_t r,size_t c,float val){
+	(*self)[r][c] = val;
+}
+SWIGINTERN Matrix3f Matrix3f___add__(Matrix3f *self,Matrix3f m){
+	return *self + m;
+}
+SWIGINTERN Matrix3f Matrix3f___sub__(Matrix3f *self,Matrix3f m){
+	return *self - m;
+}
+SWIGINTERN Matrix3f Matrix3f___mul____SWIG_0(Matrix3f *self,Matrix3f m){
+	return *self * m;
+}
+SWIGINTERN Vec3f Matrix3f___mul____SWIG_1(Matrix3f *self,Vec3f v){
+	return *self * v;
+}
+SWIGINTERN Matrix3f Matrix3f___mul____SWIG_2(Matrix3f *self,float k){
+	return *self * k;
+}
+
+SWIGINTERNINLINE VALUE
+SWIG_From_bool  (bool value)
+{
+  return value ? Qtrue : Qfalse;
+}
+
 SWIGINTERN double Matrix3d___getitem__(Matrix3d *self,size_t r,size_t c){
 	return (*self)[r][c];
 }
@@ -1900,13 +2048,87 @@ SWIGINTERN Matrix3d Matrix3d___mul____SWIG_0(Matrix3d *self,Matrix3d m){
 SWIGINTERN Vec3d Matrix3d___mul____SWIG_1(Matrix3d *self,Vec3d v){
 	return *self * v;
 }
-
-SWIGINTERNINLINE VALUE
-SWIG_From_bool  (bool value)
-{
-  return value ? Qtrue : Qfalse;
+SWIGINTERN Matrix3d Matrix3d___mul____SWIG_2(Matrix3d *self,double k){
+	return *self * k;
 }
-
+SWIGINTERN float Affine2f___getitem__(Affine2f *self,size_t r,size_t c){
+	return (*self)[r][c];
+}
+SWIGINTERN void Affine2f___setitem__(Affine2f *self,size_t r,size_t c,float val){
+	(*self)[r][c] = val;
+}
+SWIGINTERN Affine2f Affine2f___add__(Affine2f *self,Affine2f m){
+	return *self + m;
+}
+SWIGINTERN Affine2f Affine2f___sub__(Affine2f *self,Affine2f m){
+	return *self - m;
+}
+SWIGINTERN Affine2f Affine2f___mul____SWIG_0(Affine2f *self,Affine2f m){
+	return *self * m;
+}
+SWIGINTERN Vec2f Affine2f___mul____SWIG_1(Affine2f *self,Vec2f v){
+	return *self * v;
+}
+SWIGINTERN Affine2f Affine2f___mul____SWIG_2(Affine2f *self,float k){
+	return *self * k;
+}
+SWIGINTERN void Affine2f_setTrn(Affine2f *self,Vec2f const &v){
+		self->Trn() = v;
+	}
+SWIGINTERN Vec2f Affine2f_getTrn(Affine2f *self){
+		return self->Trn();
+	}
+SWIGINTERN void Affine2f_setPos(Affine2f *self,Vec2f const &v){
+		self->Pos() = v;
+	}
+SWIGINTERN Vec2f Affine2f_getPos(Affine2f *self){
+		return self->Pos();
+	}
+SWIGINTERN void Affine2f_setRot(Affine2f *self,Matrix2f const &m){
+		self->Rot() = m;
+	}
+SWIGINTERN Matrix2f Affine2f_getRot(Affine2f *self){
+		return self->Rot();
+	}
+SWIGINTERN float Affinef___getitem__(Affinef *self,size_t r,size_t c){
+	return (*self)[r][c];
+}
+SWIGINTERN void Affinef___setitem__(Affinef *self,size_t r,size_t c,float val){
+	(*self)[r][c] = val;
+}
+SWIGINTERN Affinef Affinef___add__(Affinef *self,Affinef m){
+	return *self + m;
+}
+SWIGINTERN Affinef Affinef___sub__(Affinef *self,Affinef m){
+	return *self - m;
+}
+SWIGINTERN Affinef Affinef___mul____SWIG_0(Affinef *self,Affinef m){
+	return *self * m;
+}
+SWIGINTERN Vec3f Affinef___mul____SWIG_1(Affinef *self,Vec3f v){
+	return *self * v;
+}
+SWIGINTERN Affinef Affinef___mul____SWIG_2(Affinef *self,float k){
+	return *self * k;
+}
+SWIGINTERN void Affinef_setTrn(Affinef *self,Vec3f const &v){
+		self->Trn() = v;
+	}
+SWIGINTERN Vec3f Affinef_getTrn(Affinef *self){
+		return self->Trn();
+	}
+SWIGINTERN void Affinef_setPos(Affinef *self,Vec3f const &v){
+		self->Pos() = v;
+	}
+SWIGINTERN Vec3f Affinef_getPos(Affinef *self){
+		return self->Pos();
+	}
+SWIGINTERN void Affinef_setRot(Affinef *self,Matrix3f const &m){
+		self->Rot() = m;
+	}
+SWIGINTERN Matrix3f Affinef_getRot(Affinef *self){
+		return self->Rot();
+	}
 SWIGINTERN double Affine2d___getitem__(Affine2d *self,size_t r,size_t c){
 	return (*self)[r][c];
 }
@@ -1924,6 +2146,9 @@ SWIGINTERN Affine2d Affine2d___mul____SWIG_0(Affine2d *self,Affine2d m){
 }
 SWIGINTERN Vec2d Affine2d___mul____SWIG_1(Affine2d *self,Vec2d v){
 	return *self * v;
+}
+SWIGINTERN Affine2d Affine2d___mul____SWIG_2(Affine2d *self,double k){
+	return *self * k;
 }
 SWIGINTERN void Affine2d_setTrn(Affine2d *self,Vec2d const &v){
 		self->Trn() = v;
@@ -1960,6 +2185,9 @@ SWIGINTERN Affined Affined___mul____SWIG_0(Affined *self,Affined m){
 }
 SWIGINTERN Vec3d Affined___mul____SWIG_1(Affined *self,Vec3d v){
 	return *self * v;
+}
+SWIGINTERN Affined Affined___mul____SWIG_2(Affined *self,double k){
+	return *self * k;
 }
 SWIGINTERN void Affined_setTrn(Affined *self,Vec3d const &v){
 		self->Trn() = v;
@@ -2068,6 +2296,665 @@ fail:
   return Qnil;
 }
 
+
+swig_class cVec2f;
+
+SWIGINTERN VALUE
+_wrap_Vec2f_x_set(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_x_get(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (float) ((arg1)->x);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_y_set(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_y_get(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (float) ((arg1)->y);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_clear(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_norm(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "norm" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (double)(arg1)->norm();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_square(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "square" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (double)(arg1)->square();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_resize(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  size_t arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  (arg1)->resize(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_size(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "size" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (arg1)->size();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_unit(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unit" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (arg1)->unit();
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_unitize(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unitize" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  (arg1)->unitize();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f_Zero(int argc, VALUE *argv, VALUE self) {
+  Vec2f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Vec2f::Zero();
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec2f__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec2f *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Vec2f *)new Vec2f();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Vec2f_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Vec2f_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Vec2f);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Vec2f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  Vec2f *result = 0 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vec2f" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vec2f" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = (Vec2f *)new Vec2f(arg1,arg2);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Vec2f(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Vec2f__SWIG_0(nargs, args, self);
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_new_Vec2f__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Vec2f'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f___getitem__(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  size_t arg2 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (float)Vec2f___getitem__(arg1,arg2);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f___setitem__(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  size_t arg2 ;
+  float arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_float(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  Vec2f___setitem__(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f___add__(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  Vec2f arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Vec2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Vec2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec2f * >(argp2));
+    }
+  }
+  result = Vec2f___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f___sub__(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  Vec2f arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Vec2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Vec2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec2f * >(argp2));
+    }
+  }
+  result = Vec2f___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  float arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Vec2f___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2f___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = (Vec2f *) 0 ;
+  Vec2f arg2 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec2f * >(argp2));
+    }
+  }
+  result = (float)Vec2f___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Vec2f___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Vec2f___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Vec2f___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Vec2f___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Vec2f(Vec2f *arg1) {
+    delete arg1;
+}
 
 swig_class cVec2d;
 
@@ -2607,7 +3494,39 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Vec2d___mul__(int argc, VALUE *argv, VALUE self) {
+_wrap_Vec2d___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = (Vec2d *) 0 ;
+  double arg2 ;
+  Vec2d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Vec2d___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec2d(static_cast< const Vec2d& >(result))), SWIGTYPE_p_Vec2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec2d___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
   Vec2d *arg1 = (Vec2d *) 0 ;
   Vec2d arg2 ;
   double result;
@@ -2636,7 +3555,7 @@ _wrap_Vec2d___mul__(int argc, VALUE *argv, VALUE self) {
       arg2 = *(reinterpret_cast< Vec2d * >(argp2));
     }
   }
-  result = (double)Vec2d___mul__(arg1,arg2);
+  result = (double)Vec2d___mul____SWIG_1(arg1,arg2);
   vresult = SWIG_From_double(static_cast< double >(result));
   return vresult;
 fail:
@@ -2644,8 +3563,782 @@ fail:
 }
 
 
+SWIGINTERN VALUE _wrap_Vec2d___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Vec2d___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Vec2d___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Vec2d___mul__'");
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Vec2d(Vec2d *arg1) {
+    delete arg1;
+}
+
+swig_class cVec3f;
+
+SWIGINTERN VALUE
+_wrap_Vec3f_x_set(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_x_get(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (float) ((arg1)->x);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_y_set(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_y_get(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (float) ((arg1)->y);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_z_set(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "z" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "z" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->z = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_z_get(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "z" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (float) ((arg1)->z);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_clear(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_norm(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "norm" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (double)(arg1)->norm();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_square(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "square" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (double)(arg1)->square();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_resize(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  size_t arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  (arg1)->resize(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_size(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "size" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (arg1)->size();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_unit(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unit" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (arg1)->unit();
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_unitize(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unitize" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  (arg1)->unitize();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f_Zero(int argc, VALUE *argv, VALUE self) {
+  Vec3f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Vec3f::Zero();
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec3f__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3f *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Vec3f *)new Vec3f();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Vec3f_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Vec3f_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Vec3f);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Vec3f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  Vec3f *result = 0 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vec3f" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vec3f" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vec3f" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = (Vec3f *)new Vec3f(arg1,arg2,arg3);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Vec3f(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 3) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Vec3f__SWIG_0(nargs, args, self);
+  }
+  if (argc == 3) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_new_Vec3f__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Vec3f'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f___getitem__(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  size_t arg2 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (float)Vec3f___getitem__(arg1,arg2);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f___setitem__(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  size_t arg2 ;
+  float arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_float(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  Vec3f___setitem__(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f___add__(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  Vec3f arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Vec3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Vec3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec3f * >(argp2));
+    }
+  }
+  result = Vec3f___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f___sub__(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  Vec3f arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Vec3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Vec3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec3f * >(argp2));
+    }
+  }
+  result = Vec3f___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  float arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Vec3f___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3f___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = (Vec3f *) 0 ;
+  Vec3f arg2 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec3f * >(argp2));
+    }
+  }
+  result = (float)Vec3f___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Vec3f___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Vec3f___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Vec3f___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Vec3f___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Vec3f(Vec3f *arg1) {
     delete arg1;
 }
 
@@ -3255,7 +4948,39 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Vec3d___mul__(int argc, VALUE *argv, VALUE self) {
+_wrap_Vec3d___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = (Vec3d *) 0 ;
+  double arg2 ;
+  Vec3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec3d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec3d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Vec3d___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3d(static_cast< const Vec3d& >(result))), SWIGTYPE_p_Vec3d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec3d___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
   Vec3d *arg1 = (Vec3d *) 0 ;
   Vec3d arg2 ;
   double result;
@@ -3284,7 +5009,7 @@ _wrap_Vec3d___mul__(int argc, VALUE *argv, VALUE self) {
       arg2 = *(reinterpret_cast< Vec3d * >(argp2));
     }
   }
-  result = (double)Vec3d___mul__(arg1,arg2);
+  result = (double)Vec3d___mul____SWIG_1(arg1,arg2);
   vresult = SWIG_From_double(static_cast< double >(result));
   return vresult;
 fail:
@@ -3292,8 +5017,850 @@ fail:
 }
 
 
+SWIGINTERN VALUE _wrap_Vec3d___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Vec3d___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Vec3d___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Vec3d___mul__'");
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Vec3d(Vec3d *arg1) {
+    delete arg1;
+}
+
+swig_class cVec4f;
+
+SWIGINTERN VALUE
+_wrap_Vec4f_x_set(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "x" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->x = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_x_get(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "x" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (float) ((arg1)->x);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_y_set(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "y" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->y = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_y_get(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "y" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (float) ((arg1)->y);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_z_set(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "z" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "z" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->z = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_z_get(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "z" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (float) ((arg1)->z);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_w_set(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "w" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "w" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->w = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_w_get(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "w" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (float) ((arg1)->w);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_clear(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_norm(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "norm" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (double)(arg1)->norm();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_square(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "square" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (double)(arg1)->square();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_resize(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  size_t arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  (arg1)->resize(arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_size(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "size" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (arg1)->size();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_unit(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  Vec4f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unit" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (arg1)->unit();
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_unitize(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "unitize" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  (arg1)->unitize();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f_Zero(int argc, VALUE *argv, VALUE self) {
+  Vec4f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Vec4f::Zero();
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec4f__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec4f *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Vec4f *)new Vec4f();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Vec4f_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Vec4f_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Vec4f);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Vec4f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  Vec4f *result = 0 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Vec4f" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Vec4f" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Vec4f" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Vec4f" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  result = (Vec4f *)new Vec4f(arg1,arg2,arg3,arg4);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Vec4f(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Vec4f__SWIG_0(nargs, args, self);
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_float(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_new_Vec4f__SWIG_1(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Vec4f'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f___getitem__(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  size_t arg2 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (float)Vec4f___getitem__(arg1,arg2);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f___setitem__(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  size_t arg2 ;
+  float arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_float(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  Vec4f___setitem__(arg1,arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f___add__(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  Vec4f arg2 ;
+  Vec4f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec4f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Vec4f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Vec4f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec4f * >(argp2));
+    }
+  }
+  result = Vec4f___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f___sub__(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  Vec4f arg2 ;
+  Vec4f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec4f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Vec4f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Vec4f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec4f * >(argp2));
+    }
+  }
+  result = Vec4f___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  float arg2 ;
+  Vec4f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Vec4f___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4f___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = (Vec4f *) 0 ;
+  Vec4f arg2 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec4f *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec4f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec4f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec4f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec4f * >(argp2));
+    }
+  }
+  result = (float)Vec4f___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Vec4f___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec4f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Vec4f___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Vec4f___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Vec4f___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Vec4f(Vec4f *arg1) {
     delete arg1;
 }
 
@@ -3971,7 +6538,39 @@ fail:
 
 
 SWIGINTERN VALUE
-_wrap_Vec4d___mul__(int argc, VALUE *argv, VALUE self) {
+_wrap_Vec4d___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = (Vec4d *) 0 ;
+  double arg2 ;
+  Vec4d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Vec4d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Vec4d *""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Vec4d___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec4d(static_cast< const Vec4d& >(result))), SWIGTYPE_p_Vec4d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Vec4d___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
   Vec4d *arg1 = (Vec4d *) 0 ;
   Vec4d arg2 ;
   double result;
@@ -4000,7 +6599,7 @@ _wrap_Vec4d___mul__(int argc, VALUE *argv, VALUE self) {
       arg2 = *(reinterpret_cast< Vec4d * >(argp2));
     }
   }
-  result = (double)Vec4d___mul__(arg1,arg2);
+  result = (double)Vec4d___mul____SWIG_1(arg1,arg2);
   vresult = SWIG_From_double(static_cast< double >(result));
   return vresult;
 fail:
@@ -4008,8 +6607,1217 @@ fail:
 }
 
 
+SWIGINTERN VALUE _wrap_Vec4d___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec4d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Vec4d___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Vec4d___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Vec4d___mul__'");
+  return Qnil;
+}
+
+
 SWIGINTERN void
 free_Vec4d(Vec4d *arg1) {
+    delete arg1;
+}
+
+swig_class cMatrix2f;
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_xx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_xx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (float) ((arg1)->xx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_xy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_xy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (float) ((arg1)->xy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_yx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_yx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (float) ((arg1)->yx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_yy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_yy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (float) ((arg1)->yy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_clear(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_col(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "col" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "col" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->col(arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_row(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "row" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "row" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->row(arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_det(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "det" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (double)(arg1)->det();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_height(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "height" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (arg1)->height();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_width(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "width" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (arg1)->width();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_resize(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "resize" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  (arg1)->resize(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_trans(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "trans" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (arg1)->trans();
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_inv(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "inv" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (arg1)->inv();
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix2f__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Matrix2f *)new Matrix2f();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix2f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  Matrix2f *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix2f" "', argument " "1"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix2f" "', argument " "1"" of type '" "Vec2f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Matrix2f" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix2f" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  result = (Matrix2f *)new Matrix2f((Vec2f const &)*arg1,(Vec2f const &)*arg2);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Matrix2f_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Matrix2f_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Matrix2f);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Matrix2f__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  Matrix2f *result = 0 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix2f" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix2f" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix2f" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Matrix2f" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  result = (Matrix2f *)new Matrix2f(arg1,arg2,arg3,arg4);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Matrix2f(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Matrix2f__SWIG_0(nargs, args, self);
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_new_Matrix2f__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_float(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_new_Matrix2f__SWIG_2(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Matrix2f'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_Zero(int argc, VALUE *argv, VALUE self) {
+  Matrix2f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix2f::Zero();
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_Unit(int argc, VALUE *argv, VALUE self) {
+  Matrix2f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix2f::Unit();
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_Diag(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  Matrix2f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix2f::Diag" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix2f::Diag" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Matrix2f::Diag(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  Matrix2f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix2f::Rot" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  result = Matrix2f::Rot(arg1);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = 0 ;
+  char arg2 ;
+  Matrix2f result;
+  void *argp1 ;
+  int res1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix2f::Rot" "', argument " "1"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix2f::Rot" "', argument " "1"" of type '" "Vec2f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix2f::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Matrix2f::Rot((Vec2f const &)*arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Matrix2f_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      return _wrap_Matrix2f_Rot__SWIG_0(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix2f_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix2f_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f_angle(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "angle" "', argument " "1"" of type '" "Matrix2f const *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  result = (float)((Matrix2f const *)arg1)->angle();
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___getitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__getitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  result = (float)Matrix2f___getitem__(arg1,arg2,arg3);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___setitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_float(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "__setitem__" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  Matrix2f___setitem__(arg1,arg2,arg3,arg4);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___add__(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  Matrix2f arg2 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Matrix2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Matrix2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Matrix2f * >(argp2));
+    }
+  }
+  result = Matrix2f___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___sub__(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  Matrix2f arg2 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Matrix2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Matrix2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Matrix2f * >(argp2));
+    }
+  }
+  result = Matrix2f___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  Matrix2f arg2 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Matrix2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Matrix2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Matrix2f * >(argp2));
+    }
+  }
+  result = Matrix2f___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  Vec2f arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec2f * >(argp2));
+    }
+  }
+  result = Matrix2f___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix2f___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Matrix2f *arg1 = (Matrix2f *) 0 ;
+  float arg2 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Matrix2f___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Matrix2f___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Matrix2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix2f___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix2f___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix2f___mul____SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix2f___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Matrix2f(Matrix2f *arg1) {
     delete arg1;
 }
 
@@ -5077,6 +8885,38 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Matrix2d___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Matrix2d *arg1 = (Matrix2d *) 0 ;
+  double arg2 ;
+  Matrix2d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Matrix2d___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix2d(static_cast< const Matrix2d& >(result))), SWIGTYPE_p_Matrix2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN VALUE _wrap_Matrix2d___mul__(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
@@ -5116,6 +8956,21 @@ SWIGINTERN VALUE _wrap_Matrix2d___mul__(int nargs, VALUE *args, VALUE self) {
       }
     }
   }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix2d___mul____SWIG_2(nargs, args, self);
+      }
+    }
+  }
   
 fail:
   rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix2d___mul__'");
@@ -5127,6 +8982,1733 @@ SWIGINTERN void
 free_Matrix2d(Matrix2d *arg1) {
     delete arg1;
 }
+
+swig_class cMatrix3f;
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_xx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_xx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->xx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_xy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_xy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->xy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_xz_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_xz_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->xz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_yx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_yx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->yx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_yy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_yy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->yy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_yz_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_yz_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->yz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_zx_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zx" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_zx_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zx" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->zx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_zy_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zy" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_zy_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zy" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->zy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_zz_set(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zz" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_zz_get(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zz" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (float) ((arg1)->zz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_clear(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_col(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "col" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "col" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->col(arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_row(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "row" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "row" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->row(arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_det(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "det" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (double)(arg1)->det();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_height(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "height" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (arg1)->height();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_width(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "width" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (arg1)->width();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_resize(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "resize" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  (arg1)->resize(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_trans(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "trans" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (arg1)->trans();
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_inv(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "inv" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  result = (arg1)->inv();
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix3f__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Matrix3f *)new Matrix3f();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Matrix3f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec3f *arg2 = 0 ;
+  Vec3f *arg3 = 0 ;
+  Matrix3f *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix3f" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Matrix3f" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[2], &argp3, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "Matrix3f" "', argument " "3"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f" "', argument " "3"" of type '" "Vec3f const &""'"); 
+  }
+  arg3 = reinterpret_cast< Vec3f * >(argp3);
+  result = (Matrix3f *)new Matrix3f((Vec3f const &)*arg1,(Vec3f const &)*arg2,(Vec3f const &)*arg3);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Matrix3f_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Matrix3f_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Matrix3f);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Matrix3f__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  float arg4 ;
+  float arg5 ;
+  float arg6 ;
+  float arg7 ;
+  float arg8 ;
+  float arg9 ;
+  Matrix3f *result = 0 ;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  float val5 ;
+  int ecode5 = 0 ;
+  float val6 ;
+  int ecode6 = 0 ;
+  float val7 ;
+  int ecode7 = 0 ;
+  float val8 ;
+  int ecode8 = 0 ;
+  float val9 ;
+  int ecode9 = 0 ;
+  
+  if ((argc < 9) || (argc > 9)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 9)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3f" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix3f" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix3f" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Matrix3f" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  ecode5 = SWIG_AsVal_float(argv[4], &val5);
+  if (!SWIG_IsOK(ecode5)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "Matrix3f" "', argument " "5"" of type '" "float""'");
+  } 
+  arg5 = static_cast< float >(val5);
+  ecode6 = SWIG_AsVal_float(argv[5], &val6);
+  if (!SWIG_IsOK(ecode6)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "Matrix3f" "', argument " "6"" of type '" "float""'");
+  } 
+  arg6 = static_cast< float >(val6);
+  ecode7 = SWIG_AsVal_float(argv[6], &val7);
+  if (!SWIG_IsOK(ecode7)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "Matrix3f" "', argument " "7"" of type '" "float""'");
+  } 
+  arg7 = static_cast< float >(val7);
+  ecode8 = SWIG_AsVal_float(argv[7], &val8);
+  if (!SWIG_IsOK(ecode8)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "Matrix3f" "', argument " "8"" of type '" "float""'");
+  } 
+  arg8 = static_cast< float >(val8);
+  ecode9 = SWIG_AsVal_float(argv[8], &val9);
+  if (!SWIG_IsOK(ecode9)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "Matrix3f" "', argument " "9"" of type '" "float""'");
+  } 
+  arg9 = static_cast< float >(val9);
+  result = (Matrix3f *)new Matrix3f(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Matrix3f(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[9];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 9) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Matrix3f__SWIG_0(nargs, args, self);
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Vec3f, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_new_Matrix3f__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  if (argc == 9) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_float(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            {
+              int res = SWIG_AsVal_float(argv[4], NULL);
+              _v = SWIG_CheckState(res);
+            }
+            if (_v) {
+              {
+                int res = SWIG_AsVal_float(argv[5], NULL);
+                _v = SWIG_CheckState(res);
+              }
+              if (_v) {
+                {
+                  int res = SWIG_AsVal_float(argv[6], NULL);
+                  _v = SWIG_CheckState(res);
+                }
+                if (_v) {
+                  {
+                    int res = SWIG_AsVal_float(argv[7], NULL);
+                    _v = SWIG_CheckState(res);
+                  }
+                  if (_v) {
+                    {
+                      int res = SWIG_AsVal_float(argv[8], NULL);
+                      _v = SWIG_CheckState(res);
+                    }
+                    if (_v) {
+                      return _wrap_new_Matrix3f__SWIG_2(nargs, args, self);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Matrix3f'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Zero(int argc, VALUE *argv, VALUE self) {
+  Matrix3f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix3f::Zero();
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Unit(int argc, VALUE *argv, VALUE self) {
+  Matrix3f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Matrix3f::Unit();
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Diag(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  Matrix3f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3f::Diag" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix3f::Diag" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix3f::Diag" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = Matrix3f::Diag(arg1,arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec3f *arg2 = 0 ;
+  char arg3 ;
+  Matrix3f result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  char val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  ecode3 = SWIG_AsVal_char(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Matrix3f::Rot" "', argument " "3"" of type '" "char""'");
+  } 
+  arg3 = static_cast< char >(val3);
+  result = Matrix3f::Rot((Vec3f const &)*arg1,(Vec3f const &)*arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec3f *arg2 = 0 ;
+  Matrix3f result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  result = Matrix3f::Rot((Vec3f const &)*arg1,(Vec3f const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Rot__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  char arg2 ;
+  Matrix3f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Matrix3f::Rot(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Rot__SWIG_3(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  Vec3f *arg2 = 0 ;
+  Matrix3f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Rot" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  result = Matrix3f::Rot(arg1,(Vec3f const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Rot__SWIG_4(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = 0 ;
+  Matrix3f result;
+  void *argp1 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec4f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "Vec4f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Rot" "', argument " "1"" of type '" "Vec4f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = Matrix3f::Rot((Vec4f const &)*arg1);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Matrix3f_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 3) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_Matrix3f_Rot__SWIG_4(nargs, args, self);
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix3f_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix3f_Rot__SWIG_3(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix3f_Rot__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_char(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Matrix3f_Rot__SWIG_0(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix3f_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f_Cross(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Matrix3f result;
+  void *argp1 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Matrix3f::Cross" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Matrix3f::Cross" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = Matrix3f::Cross((Vec3f const &)*arg1);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___getitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__getitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  result = (float)Matrix3f___getitem__(arg1,arg2,arg3);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___setitem__(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_float(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "__setitem__" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  Matrix3f___setitem__(arg1,arg2,arg3,arg4);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___add__(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  Matrix3f arg2 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Matrix3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Matrix3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Matrix3f * >(argp2));
+    }
+  }
+  result = Matrix3f___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___sub__(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  Matrix3f arg2 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Matrix3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Matrix3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Matrix3f * >(argp2));
+    }
+  }
+  result = Matrix3f___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  Matrix3f arg2 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Matrix3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Matrix3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Matrix3f * >(argp2));
+    }
+  }
+  result = Matrix3f___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  Vec3f arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec3f * >(argp2));
+    }
+  }
+  result = Matrix3f___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Matrix3f___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Matrix3f *arg1 = (Matrix3f *) 0 ;
+  float arg2 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix3f *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Matrix3f___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Matrix3f___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Matrix3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix3f___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Matrix3f___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix3f___mul____SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix3f___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Matrix3f(Matrix3f *arg1) {
+    delete arg1;
+}
+
+SWIGINTERN VALUE
+_wrap_IsUnitary__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Matrix3f arg1 ;
+  bool result;
+  void *argp1 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  {
+    res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Matrix3f,  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "IsUnitary" "', argument " "1"" of type '" "Matrix3f""'"); 
+    }  
+    if (!argp1) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "IsUnitary" "', argument " "1"" of type '" "Matrix3f""'");
+    } else {
+      arg1 = *(reinterpret_cast< Matrix3f * >(argp1));
+    }
+  }
+  result = (bool)IsUnitary(arg1);
+  vresult = SWIG_From_bool(static_cast< bool >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
 
 swig_class cMatrix3d;
 
@@ -6727,6 +12309,38 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Matrix3d___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Matrix3d *arg1 = (Matrix3d *) 0 ;
+  double arg2 ;
+  Matrix3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Matrix3d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Matrix3d *""'"); 
+  }
+  arg1 = reinterpret_cast< Matrix3d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Matrix3d___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Matrix3d(static_cast< const Matrix3d& >(result))), SWIGTYPE_p_Matrix3d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN VALUE _wrap_Matrix3d___mul__(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
@@ -6766,6 +12380,21 @@ SWIGINTERN VALUE _wrap_Matrix3d___mul__(int nargs, VALUE *args, VALUE self) {
       }
     }
   }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Matrix3d___mul____SWIG_2(nargs, args, self);
+      }
+    }
+  }
   
 fail:
   rb_raise(rb_eArgError, "No matching function for overloaded 'Matrix3d___mul__'");
@@ -6779,7 +12408,7 @@ free_Matrix3d(Matrix3d *arg1) {
 }
 
 SWIGINTERN VALUE
-_wrap_IsUnitary(int argc, VALUE *argv, VALUE self) {
+_wrap_IsUnitary__SWIG_1(int argc, VALUE *argv, VALUE self) {
   Matrix3d arg1 ;
   bool result;
   void *argp1 ;
@@ -6807,6 +12436,3946 @@ fail:
   return Qnil;
 }
 
+
+SWIGINTERN VALUE _wrap_IsUnitary(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[1];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 1) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_IsUnitary__SWIG_0(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Matrix3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_IsUnitary__SWIG_1(nargs, args, self);
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'IsUnitary'");
+  return Qnil;
+}
+
+
+swig_class cAffine2f;
+
+SWIGINTERN VALUE
+_wrap_Affine2f_xx_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_xx_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->xx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_xy_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_xy_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->xy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_xz_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_xz_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->xz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_yx_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_yx_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->yx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_yy_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_yy_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->yy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_yz_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_yz_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->yz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_px_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "px" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->px = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_px_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->px);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_py_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "py" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->py = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_py_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->py);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_pz_set(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->pz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_pz_get(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (float) ((arg1)->pz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_clear(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_col(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t arg2 ;
+  Vec3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "col" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "col" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->col(arg2);
+  vresult = SWIG_NewPointerObj((new Vec3d(static_cast< const Vec3d& >(result))), SWIGTYPE_p_Vec3d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_row(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t arg2 ;
+  Vec3d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "row" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "row" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->row(arg2);
+  vresult = SWIG_NewPointerObj((new Vec3d(static_cast< const Vec3d& >(result))), SWIGTYPE_p_Vec3d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_det(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "det" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (double)(arg1)->det();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_height(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "height" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (arg1)->height();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_width(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "width" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (arg1)->width();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_resize(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "resize" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  (arg1)->resize(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_trans(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Affine2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "trans" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (arg1)->trans();
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_inv(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Affine2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "inv" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = (arg1)->inv();
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_Unit(int argc, VALUE *argv, VALUE self) {
+  Affine2f result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Affine2f::Unit();
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_Trn(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  Affine2f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affine2f::Trn" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affine2f::Trn" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Affine2f::Trn(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_Rot(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  Affine2f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affine2f::Rot" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  result = Affine2f::Rot(arg1);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_Scale(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  Affine2f result;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affine2f::Scale" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affine2f::Scale" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Affine2f::Scale(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Affine2f_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Affine2f_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Affine2f);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Affine2f(int argc, VALUE *argv, VALUE self) {
+  Affine2f *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Affine2f *)new Affine2f();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___getitem__(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__getitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  result = (float)Affine2f___getitem__(arg1,arg2,arg3);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___setitem__(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_float(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "__setitem__" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  Affine2f___setitem__(arg1,arg2,arg3,arg4);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___add__(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Affine2f arg2 ;
+  Affine2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affine2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Affine2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Affine2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Affine2f * >(argp2));
+    }
+  }
+  result = Affine2f___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___sub__(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Affine2f arg2 ;
+  Affine2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affine2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Affine2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Affine2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Affine2f * >(argp2));
+    }
+  }
+  result = Affine2f___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Affine2f arg2 ;
+  Affine2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affine2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Affine2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Affine2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Affine2f * >(argp2));
+    }
+  }
+  result = Affine2f___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Vec2f arg2 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec2f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec2f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec2f * >(argp2));
+    }
+  }
+  result = Affine2f___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  float arg2 ;
+  Affine2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Affine2f___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2f(static_cast< const Affine2f& >(result))), SWIGTYPE_p_Affine2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affine2f___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affine2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Affine2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affine2f___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affine2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affine2f___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affine2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Affine2f___mul____SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affine2f___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_trne___(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Vec2f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setTrn" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setTrn" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setTrn" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  Affine2f_setTrn(arg1,(Vec2f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_trn(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getTrn" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = Affine2f_getTrn(arg1);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_pose___(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Vec2f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setPos" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setPos" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setPos" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  Affine2f_setPos(arg1,(Vec2f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_pos(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Vec2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getPos" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = Affine2f_getPos(arg1);
+  vresult = SWIG_NewPointerObj((new Vec2f(static_cast< const Vec2f& >(result))), SWIGTYPE_p_Vec2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_rote___(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Matrix2f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setRot" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setRot" "', argument " "2"" of type '" "Matrix2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setRot" "', argument " "2"" of type '" "Matrix2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Matrix2f * >(argp2);
+  Affine2f_setRot(arg1,(Matrix2f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affine2f_rot(int argc, VALUE *argv, VALUE self) {
+  Affine2f *arg1 = (Affine2f *) 0 ;
+  Matrix2f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2f, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getRot" "', argument " "1"" of type '" "Affine2f *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2f * >(argp1);
+  result = Affine2f_getRot(arg1);
+  vresult = SWIG_NewPointerObj((new Matrix2f(static_cast< const Matrix2f& >(result))), SWIGTYPE_p_Matrix2f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Affine2f(Affine2f *arg1) {
+    delete arg1;
+}
+
+swig_class cAffinef;
+
+SWIGINTERN VALUE
+_wrap_Affinef_xx_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xx_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xx" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->xx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xy_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xy_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xy" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->xy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xz_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xz_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->xz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xw_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "xw" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->xw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_xw_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "xw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->xw);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yx_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yx_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yx" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->yx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yy_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yy_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yy" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->yy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yz_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yz_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->yz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yw_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "yw" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->yw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_yw_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "yw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->yw);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zx_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zx" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zx" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zx = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zx_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zx" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->zx);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zy_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zy" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zy" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zy = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zy_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zy" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->zy);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zz_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zz_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->zz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zw_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "zw" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->zw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_zw_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "zw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->zw);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_px_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "px" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->px = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_px_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "px" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->px);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_py_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "py" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->py = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_py_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "py" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->py);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_pz_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pz" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->pz = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_pz_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pz" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->pz);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_pw_set(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "pw" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  if (arg1) (arg1)->pw = arg2;
+  
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_pw_get(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "pw" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (float) ((arg1)->pw);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_clear(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "clear" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  (arg1)->clear();
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_col(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t arg2 ;
+  Vec4f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "col" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "col" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->col(arg2);
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_row(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t arg2 ;
+  Vec4f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "row" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "row" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  result = (arg1)->row(arg2);
+  vresult = SWIG_NewPointerObj((new Vec4f(static_cast< const Vec4f& >(result))), SWIGTYPE_p_Vec4f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_det(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  double result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "det" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (double)(arg1)->det();
+  vresult = SWIG_From_double(static_cast< double >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_height(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "height" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (arg1)->height();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_width(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "width" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (arg1)->width();
+  vresult = SWIG_From_size_t(static_cast< size_t >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_resize(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "resize" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "resize" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "resize" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  (arg1)->resize(arg2,arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_trans(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Affinef result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "trans" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (arg1)->trans();
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_inv(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Affinef result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "inv" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = (arg1)->inv();
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_Unit(int argc, VALUE *argv, VALUE self) {
+  Affinef result;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = Affinef::Unit();
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_Trn(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  Affinef result;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affinef::Trn" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affinef::Trn" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affinef::Trn" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = Affinef::Trn(arg1,arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_Rot__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  char arg2 ;
+  Affinef result;
+  float val1 ;
+  int ecode1 = 0 ;
+  char val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affinef::Rot" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_char(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affinef::Rot" "', argument " "2"" of type '" "char""'");
+  } 
+  arg2 = static_cast< char >(val2);
+  result = Affinef::Rot(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_Rot__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  Vec3d *arg2 = 0 ;
+  Affinef result;
+  float val1 ;
+  int ecode1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affinef::Rot" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec3d,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::Rot" "', argument " "2"" of type '" "Vec3d const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::Rot" "', argument " "2"" of type '" "Vec3d const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3d * >(argp2);
+  result = Affinef::Rot(arg1,(Vec3d const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affinef_Rot(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[2];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 2) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3d, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef_Rot__SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    {
+      int res = SWIG_AsVal_float(argv[0], NULL);
+      _v = SWIG_CheckState(res);
+    }
+    if (_v) {
+      {
+        int res = SWIG_AsVal_char(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Affinef_Rot__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affinef_Rot'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_Scale(int argc, VALUE *argv, VALUE self) {
+  float arg1 ;
+  float arg2 ;
+  float arg3 ;
+  Affinef result;
+  float val1 ;
+  int ecode1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  ecode1 = SWIG_AsVal_float(argv[0], &val1);
+  if (!SWIG_IsOK(ecode1)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "Affinef::Scale" "', argument " "1"" of type '" "float""'");
+  } 
+  arg1 = static_cast< float >(val1);
+  ecode2 = SWIG_AsVal_float(argv[1], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "Affinef::Scale" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affinef::Scale" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = Affinef::Scale(arg1,arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_ProjectionGL__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  float arg3 ;
+  float arg4 ;
+  Affinef result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Affinef::ProjectionGL" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionGL" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::ProjectionGL" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionGL" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affinef::ProjectionGL" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Affinef::ProjectionGL" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  result = Affinef::ProjectionGL((Vec3f const &)*arg1,(Vec2f const &)*arg2,arg3,arg4);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_ProjectionGL__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  float arg3 ;
+  Affinef result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Affinef::ProjectionGL" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionGL" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::ProjectionGL" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionGL" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affinef::ProjectionGL" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = Affinef::ProjectionGL((Vec3f const &)*arg1,(Vec2f const &)*arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_ProjectionGL__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  Affinef result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Affinef::ProjectionGL" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionGL" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::ProjectionGL" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionGL" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  result = Affinef::ProjectionGL((Vec3f const &)*arg1,(Vec2f const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affinef_ProjectionGL(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef_ProjectionGL__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Affinef_ProjectionGL__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_float(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_Affinef_ProjectionGL__SWIG_0(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affinef_ProjectionGL'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_ProjectionD3D__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  float arg3 ;
+  float arg4 ;
+  Affinef result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 4) || (argc > 4)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 4)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Affinef::ProjectionD3D" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionD3D" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::ProjectionD3D" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionD3D" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affinef::ProjectionD3D" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  ecode4 = SWIG_AsVal_float(argv[3], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "Affinef::ProjectionD3D" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  result = Affinef::ProjectionD3D((Vec3f const &)*arg1,(Vec2f const &)*arg2,arg3,arg4);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_ProjectionD3D__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  float arg3 ;
+  Affinef result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  float val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Affinef::ProjectionD3D" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionD3D" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::ProjectionD3D" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionD3D" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  ecode3 = SWIG_AsVal_float(argv[2], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "Affinef::ProjectionD3D" "', argument " "3"" of type '" "float""'");
+  } 
+  arg3 = static_cast< float >(val3);
+  result = Affinef::ProjectionD3D((Vec3f const &)*arg1,(Vec2f const &)*arg2,arg3);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_ProjectionD3D__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec2f *arg2 = 0 ;
+  Affinef result;
+  void *argp1 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Affinef::ProjectionD3D" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionD3D" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[1], &argp2, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "Affinef::ProjectionD3D" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Affinef::ProjectionD3D" "', argument " "2"" of type '" "Vec2f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec2f * >(argp2);
+  result = Affinef::ProjectionD3D((Vec3f const &)*arg1,(Vec2f const &)*arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affinef_ProjectionD3D(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 4) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef_ProjectionD3D__SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          return _wrap_Affinef_ProjectionD3D__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  if (argc == 4) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec2f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        {
+          int res = SWIG_AsVal_float(argv[2], NULL);
+          _v = SWIG_CheckState(res);
+        }
+        if (_v) {
+          {
+            int res = SWIG_AsVal_float(argv[3], NULL);
+            _v = SWIG_CheckState(res);
+          }
+          if (_v) {
+            return _wrap_Affinef_ProjectionD3D__SWIG_0(nargs, args, self);
+          }
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affinef_ProjectionD3D'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_LookAt__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAt" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LookAt" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LookAt" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  (arg1)->LookAt((Vec3f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_LookAt__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f *arg2 = 0 ;
+  Vec3f *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAt" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LookAt" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LookAt" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LookAt" "', argument " "3"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LookAt" "', argument " "3"" of type '" "Vec3f const &""'"); 
+  }
+  arg3 = reinterpret_cast< Vec3f * >(argp3);
+  (arg1)->LookAt((Vec3f const &)*arg2,(Vec3f const &)*arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affinef_LookAt(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 4) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef_LookAt__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Vec3f, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_Affinef_LookAt__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affinef_LookAt'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_LookAtGL__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAtGL" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LookAtGL" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LookAtGL" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  (arg1)->LookAtGL((Vec3f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_LookAtGL__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f *arg2 = 0 ;
+  Vec3f *arg3 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  void *argp3 ;
+  int res3 = 0 ;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LookAtGL" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LookAtGL" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LookAtGL" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  res3 = SWIG_ConvertPtr(argv[1], &argp3, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res3)) {
+    SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "LookAtGL" "', argument " "3"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp3) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "LookAtGL" "', argument " "3"" of type '" "Vec3f const &""'"); 
+  }
+  arg3 = reinterpret_cast< Vec3f * >(argp3);
+  (arg1)->LookAtGL((Vec3f const &)*arg2,(Vec3f const &)*arg3);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affinef_LookAtGL(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[4];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 4) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef_LookAtGL__SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 3) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        void *vptr = 0;
+        int res = SWIG_ConvertPtr(argv[2], &vptr, SWIGTYPE_p_Vec3f, 0);
+        _v = SWIG_CheckState(res);
+        if (_v) {
+          return _wrap_Affinef_LookAtGL__SWIG_1(nargs, args, self);
+        }
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affinef_LookAtGL'");
+  return Qnil;
+}
+
+
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+SWIGINTERN VALUE
+_wrap_Affinef_allocate(VALUE self) {
+#else
+  SWIGINTERN VALUE
+  _wrap_Affinef_allocate(int argc, VALUE *argv, VALUE self) {
+#endif
+    
+    
+    VALUE vresult = SWIG_NewClassInstance(self, SWIGTYPE_p_Affinef);
+#ifndef HAVE_RB_DEFINE_ALLOC_FUNC
+    rb_obj_call_init(vresult, argc, argv);
+#endif
+    return vresult;
+  }
+  
+
+SWIGINTERN VALUE
+_wrap_new_Affinef(int argc, VALUE *argv, VALUE self) {
+  Affinef *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Affinef *)new Affinef();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___getitem__(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 2) || (argc > 2)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 2)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__getitem__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__getitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__getitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  result = (float)Affinef___getitem__(arg1,arg2,arg3);
+  vresult = SWIG_From_float(static_cast< float >(result));
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___setitem__(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  size_t arg2 ;
+  size_t arg3 ;
+  float arg4 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  size_t val2 ;
+  int ecode2 = 0 ;
+  size_t val3 ;
+  int ecode3 = 0 ;
+  float val4 ;
+  int ecode4 = 0 ;
+  
+  if ((argc < 3) || (argc > 3)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 3)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__setitem__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_size_t(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__setitem__" "', argument " "2"" of type '" "size_t""'");
+  } 
+  arg2 = static_cast< size_t >(val2);
+  ecode3 = SWIG_AsVal_size_t(argv[1], &val3);
+  if (!SWIG_IsOK(ecode3)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "__setitem__" "', argument " "3"" of type '" "size_t""'");
+  } 
+  arg3 = static_cast< size_t >(val3);
+  ecode4 = SWIG_AsVal_float(argv[2], &val4);
+  if (!SWIG_IsOK(ecode4)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "__setitem__" "', argument " "4"" of type '" "float""'");
+  } 
+  arg4 = static_cast< float >(val4);
+  Affinef___setitem__(arg1,arg2,arg3,arg4);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___add__(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Affinef arg2 ;
+  Affinef result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__add__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affinef,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__add__" "', argument " "2"" of type '" "Affinef""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__add__" "', argument " "2"" of type '" "Affinef""'");
+    } else {
+      arg2 = *(reinterpret_cast< Affinef * >(argp2));
+    }
+  }
+  result = Affinef___add__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___sub__(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Affinef arg2 ;
+  Affinef result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__sub__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affinef,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__sub__" "', argument " "2"" of type '" "Affinef""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__sub__" "', argument " "2"" of type '" "Affinef""'");
+    } else {
+      arg2 = *(reinterpret_cast< Affinef * >(argp2));
+    }
+  }
+  result = Affinef___sub__(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___mul____SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Affinef arg2 ;
+  Affinef result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Affinef,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Affinef""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Affinef""'");
+    } else {
+      arg2 = *(reinterpret_cast< Affinef * >(argp2));
+    }
+  }
+  result = Affinef___mul____SWIG_0(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___mul____SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f arg2 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  {
+    res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "__mul__" "', argument " "2"" of type '" "Vec3f""'"); 
+    }  
+    if (!argp2) {
+      SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "__mul__" "', argument " "2"" of type '" "Vec3f""'");
+    } else {
+      arg2 = *(reinterpret_cast< Vec3f * >(argp2));
+    }
+  }
+  result = Affinef___mul____SWIG_1(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  float arg2 ;
+  Affinef result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  float val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  ecode2 = SWIG_AsVal_float(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "float""'");
+  } 
+  arg2 = static_cast< float >(val2);
+  result = Affinef___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affinef(static_cast< const Affinef& >(result))), SWIGTYPE_p_Affinef, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_Affinef___mul__(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[3];
+  int ii;
+  
+  argc = nargs + 1;
+  argv[0] = self;
+  if (argc > 3) SWIG_fail;
+  for (ii = 1; (ii < argc); ii++) {
+    argv[ii] = args[ii-1];
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Affinef, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef___mul____SWIG_0(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      void *vptr = 0;
+      int res = SWIG_ConvertPtr(argv[1], &vptr, SWIGTYPE_p_Vec3f, 0);
+      _v = SWIG_CheckState(res);
+      if (_v) {
+        return _wrap_Affinef___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affinef, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_float(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Affinef___mul____SWIG_2(nargs, args, self);
+      }
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'Affinef___mul__'");
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_trne___(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setTrn" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setTrn" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setTrn" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  Affinef_setTrn(arg1,(Vec3f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_trn(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getTrn" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = Affinef_getTrn(arg1);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_pose___(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setPos" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setPos" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setPos" "', argument " "2"" of type '" "Vec3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Vec3f * >(argp2);
+  Affinef_setPos(arg1,(Vec3f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_pos(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Vec3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getPos" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = Affinef_getPos(arg1);
+  vresult = SWIG_NewPointerObj((new Vec3f(static_cast< const Vec3f& >(result))), SWIGTYPE_p_Vec3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_rote___(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Matrix3f *arg2 = 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  void *argp2 ;
+  int res2 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "setRot" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  res2 = SWIG_ConvertPtr(argv[0], &argp2, SWIGTYPE_p_Matrix3f,  0 );
+  if (!SWIG_IsOK(res2)) {
+    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "setRot" "', argument " "2"" of type '" "Matrix3f const &""'"); 
+  }
+  if (!argp2) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "setRot" "', argument " "2"" of type '" "Matrix3f const &""'"); 
+  }
+  arg2 = reinterpret_cast< Matrix3f * >(argp2);
+  Affinef_setRot(arg1,(Matrix3f const &)*arg2);
+  return Qnil;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_Affinef_rot(int argc, VALUE *argv, VALUE self) {
+  Affinef *arg1 = (Affinef *) 0 ;
+  Matrix3f result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affinef, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "getRot" "', argument " "1"" of type '" "Affinef *""'"); 
+  }
+  arg1 = reinterpret_cast< Affinef * >(argp1);
+  result = Affinef_getRot(arg1);
+  vresult = SWIG_NewPointerObj((new Matrix3f(static_cast< const Matrix3f& >(result))), SWIGTYPE_p_Matrix3f, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN void
+free_Affinef(Affinef *arg1) {
+    delete arg1;
+}
 
 swig_class cAffine2d;
 
@@ -7911,6 +17480,38 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Affine2d___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Affine2d *arg1 = (Affine2d *) 0 ;
+  double arg2 ;
+  Affine2d result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affine2d, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affine2d *""'"); 
+  }
+  arg1 = reinterpret_cast< Affine2d * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Affine2d___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affine2d(static_cast< const Affine2d& >(result))), SWIGTYPE_p_Affine2d, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN VALUE _wrap_Affine2d___mul__(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
@@ -7947,6 +17548,21 @@ SWIGINTERN VALUE _wrap_Affine2d___mul__(int nargs, VALUE *args, VALUE self) {
       _v = SWIG_CheckState(res);
       if (_v) {
         return _wrap_Affine2d___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affine2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Affine2d___mul____SWIG_2(nargs, args, self);
       }
     }
   }
@@ -10400,6 +20016,38 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_Affined___mul____SWIG_2(int argc, VALUE *argv, VALUE self) {
+  Affined *arg1 = (Affined *) 0 ;
+  double arg2 ;
+  Affined result;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  double val2 ;
+  int ecode2 = 0 ;
+  VALUE vresult = Qnil;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(self, &argp1,SWIGTYPE_p_Affined, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "__mul__" "', argument " "1"" of type '" "Affined *""'"); 
+  }
+  arg1 = reinterpret_cast< Affined * >(argp1);
+  ecode2 = SWIG_AsVal_double(argv[0], &val2);
+  if (!SWIG_IsOK(ecode2)) {
+    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "__mul__" "', argument " "2"" of type '" "double""'");
+  } 
+  arg2 = static_cast< double >(val2);
+  result = Affined___mul____SWIG_2(arg1,arg2);
+  vresult = SWIG_NewPointerObj((new Affined(static_cast< const Affined& >(result))), SWIGTYPE_p_Affined, SWIG_POINTER_OWN |  0 );
+  return vresult;
+fail:
+  return Qnil;
+}
+
+
 SWIGINTERN VALUE _wrap_Affined___mul__(int nargs, VALUE *args, VALUE self) {
   int argc;
   VALUE argv[3];
@@ -10436,6 +20084,21 @@ SWIGINTERN VALUE _wrap_Affined___mul__(int nargs, VALUE *args, VALUE self) {
       _v = SWIG_CheckState(res);
       if (_v) {
         return _wrap_Affined___mul____SWIG_1(nargs, args, self);
+      }
+    }
+  }
+  if (argc == 2) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Affined, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      {
+        int res = SWIG_AsVal_double(argv[1], NULL);
+        _v = SWIG_CheckState(res);
+      }
+      if (_v) {
+        return _wrap_Affined___mul____SWIG_2(nargs, args, self);
       }
     }
   }
@@ -13413,50 +23076,78 @@ free_Posed(Posed *arg1) {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_Affine2d = {"_p_Affine2d", "Affine2d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Affine2f = {"_p_Affine2f", "Affine2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Affined = {"_p_Affined", "Affined *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Affinef = {"_p_Affinef", "Affinef *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Matrix2d = {"_p_Matrix2d", "Matrix2d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Matrix2f = {"_p_Matrix2f", "Matrix2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Matrix3d = {"_p_Matrix3d", "Matrix3d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Matrix3f = {"_p_Matrix3f", "Matrix3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Posed = {"_p_Posed", "Posed *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Quaterniond = {"_p_Quaterniond", "Quaterniond *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec2d = {"_p_Vec2d", "Vec2d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Vec2f = {"_p_Vec2f", "Vec2f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec3d = {"_p_Vec3d", "Vec3d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Vec3f = {"_p_Vec3f", "Vec3f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_Vec4d = {"_p_Vec4d", "Vec4d *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_Vec4f = {"_p_Vec4f", "Vec4f *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_Affine2d,
+  &_swigt__p_Affine2f,
   &_swigt__p_Affined,
+  &_swigt__p_Affinef,
   &_swigt__p_Matrix2d,
+  &_swigt__p_Matrix2f,
   &_swigt__p_Matrix3d,
+  &_swigt__p_Matrix3f,
   &_swigt__p_Posed,
   &_swigt__p_Quaterniond,
   &_swigt__p_Vec2d,
+  &_swigt__p_Vec2f,
   &_swigt__p_Vec3d,
+  &_swigt__p_Vec3f,
   &_swigt__p_Vec4d,
+  &_swigt__p_Vec4f,
   &_swigt__p_char,
 };
 
 static swig_cast_info _swigc__p_Affine2d[] = {  {&_swigt__p_Affine2d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Affine2f[] = {  {&_swigt__p_Affine2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Affined[] = {  {&_swigt__p_Affined, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Affinef[] = {  {&_swigt__p_Affinef, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Matrix2d[] = {  {&_swigt__p_Matrix2d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Matrix2f[] = {  {&_swigt__p_Matrix2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Matrix3d[] = {  {&_swigt__p_Matrix3d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Matrix3f[] = {  {&_swigt__p_Matrix3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Posed[] = {  {&_swigt__p_Posed, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Quaterniond[] = {  {&_swigt__p_Quaterniond, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec2d[] = {  {&_swigt__p_Vec2d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Vec2f[] = {  {&_swigt__p_Vec2f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec3d[] = {  {&_swigt__p_Vec3d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Vec3f[] = {  {&_swigt__p_Vec3f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_Vec4d[] = {  {&_swigt__p_Vec4d, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_Vec4f[] = {  {&_swigt__p_Vec4f, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_Affine2d,
+  _swigc__p_Affine2f,
   _swigc__p_Affined,
+  _swigc__p_Affinef,
   _swigc__p_Matrix2d,
+  _swigc__p_Matrix2f,
   _swigc__p_Matrix3d,
+  _swigc__p_Matrix3f,
   _swigc__p_Posed,
   _swigc__p_Quaterniond,
   _swigc__p_Vec2d,
+  _swigc__p_Vec2f,
   _swigc__p_Vec3d,
+  _swigc__p_Vec3f,
   _swigc__p_Vec4d,
+  _swigc__p_Vec4f,
   _swigc__p_char,
 };
 
@@ -13710,6 +23401,31 @@ SWIGEXPORT void Init_PTM(void) {
   rb_define_module_function(mPTM, "Deg", VALUEFUNC(_wrap_Deg), -1);
   rb_define_module_function(mPTM, "Rad", VALUEFUNC(_wrap_Rad), -1);
   
+  cVec2f.klass = rb_define_class_under(mPTM, "Vec2f", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Vec2f, (void *) &cVec2f);
+  rb_define_alloc_func(cVec2f.klass, _wrap_Vec2f_allocate);
+  rb_define_method(cVec2f.klass, "initialize", VALUEFUNC(_wrap_new_Vec2f), -1);
+  rb_define_method(cVec2f.klass, "x=", VALUEFUNC(_wrap_Vec2f_x_set), -1);
+  rb_define_method(cVec2f.klass, "x", VALUEFUNC(_wrap_Vec2f_x_get), -1);
+  rb_define_method(cVec2f.klass, "y=", VALUEFUNC(_wrap_Vec2f_y_set), -1);
+  rb_define_method(cVec2f.klass, "y", VALUEFUNC(_wrap_Vec2f_y_get), -1);
+  rb_define_method(cVec2f.klass, "clear", VALUEFUNC(_wrap_Vec2f_clear), -1);
+  rb_define_method(cVec2f.klass, "norm", VALUEFUNC(_wrap_Vec2f_norm), -1);
+  rb_define_method(cVec2f.klass, "square", VALUEFUNC(_wrap_Vec2f_square), -1);
+  rb_define_method(cVec2f.klass, "resize", VALUEFUNC(_wrap_Vec2f_resize), -1);
+  rb_define_method(cVec2f.klass, "size", VALUEFUNC(_wrap_Vec2f_size), -1);
+  rb_define_method(cVec2f.klass, "unit", VALUEFUNC(_wrap_Vec2f_unit), -1);
+  rb_define_method(cVec2f.klass, "unitize", VALUEFUNC(_wrap_Vec2f_unitize), -1);
+  rb_define_singleton_method(cVec2f.klass, "Zero", VALUEFUNC(_wrap_Vec2f_Zero), -1);
+  rb_define_method(cVec2f.klass, "[]", VALUEFUNC(_wrap_Vec2f___getitem__), -1);
+  rb_define_method(cVec2f.klass, "[]=", VALUEFUNC(_wrap_Vec2f___setitem__), -1);
+  rb_define_method(cVec2f.klass, "+", VALUEFUNC(_wrap_Vec2f___add__), -1);
+  rb_define_method(cVec2f.klass, "-", VALUEFUNC(_wrap_Vec2f___sub__), -1);
+  rb_define_method(cVec2f.klass, "*", VALUEFUNC(_wrap_Vec2f___mul__), -1);
+  cVec2f.mark = 0;
+  cVec2f.destroy = (void (*)(void *)) free_Vec2f;
+  cVec2f.trackObjects = 0;
+  
   cVec2d.klass = rb_define_class_under(mPTM, "Vec2d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Vec2d, (void *) &cVec2d);
   rb_define_alloc_func(cVec2d.klass, _wrap_Vec2d_allocate);
@@ -13734,6 +23450,33 @@ SWIGEXPORT void Init_PTM(void) {
   cVec2d.mark = 0;
   cVec2d.destroy = (void (*)(void *)) free_Vec2d;
   cVec2d.trackObjects = 0;
+  
+  cVec3f.klass = rb_define_class_under(mPTM, "Vec3f", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Vec3f, (void *) &cVec3f);
+  rb_define_alloc_func(cVec3f.klass, _wrap_Vec3f_allocate);
+  rb_define_method(cVec3f.klass, "initialize", VALUEFUNC(_wrap_new_Vec3f), -1);
+  rb_define_method(cVec3f.klass, "x=", VALUEFUNC(_wrap_Vec3f_x_set), -1);
+  rb_define_method(cVec3f.klass, "x", VALUEFUNC(_wrap_Vec3f_x_get), -1);
+  rb_define_method(cVec3f.klass, "y=", VALUEFUNC(_wrap_Vec3f_y_set), -1);
+  rb_define_method(cVec3f.klass, "y", VALUEFUNC(_wrap_Vec3f_y_get), -1);
+  rb_define_method(cVec3f.klass, "z=", VALUEFUNC(_wrap_Vec3f_z_set), -1);
+  rb_define_method(cVec3f.klass, "z", VALUEFUNC(_wrap_Vec3f_z_get), -1);
+  rb_define_method(cVec3f.klass, "clear", VALUEFUNC(_wrap_Vec3f_clear), -1);
+  rb_define_method(cVec3f.klass, "norm", VALUEFUNC(_wrap_Vec3f_norm), -1);
+  rb_define_method(cVec3f.klass, "square", VALUEFUNC(_wrap_Vec3f_square), -1);
+  rb_define_method(cVec3f.klass, "resize", VALUEFUNC(_wrap_Vec3f_resize), -1);
+  rb_define_method(cVec3f.klass, "size", VALUEFUNC(_wrap_Vec3f_size), -1);
+  rb_define_method(cVec3f.klass, "unit", VALUEFUNC(_wrap_Vec3f_unit), -1);
+  rb_define_method(cVec3f.klass, "unitize", VALUEFUNC(_wrap_Vec3f_unitize), -1);
+  rb_define_singleton_method(cVec3f.klass, "Zero", VALUEFUNC(_wrap_Vec3f_Zero), -1);
+  rb_define_method(cVec3f.klass, "[]", VALUEFUNC(_wrap_Vec3f___getitem__), -1);
+  rb_define_method(cVec3f.klass, "[]=", VALUEFUNC(_wrap_Vec3f___setitem__), -1);
+  rb_define_method(cVec3f.klass, "+", VALUEFUNC(_wrap_Vec3f___add__), -1);
+  rb_define_method(cVec3f.klass, "-", VALUEFUNC(_wrap_Vec3f___sub__), -1);
+  rb_define_method(cVec3f.klass, "*", VALUEFUNC(_wrap_Vec3f___mul__), -1);
+  cVec3f.mark = 0;
+  cVec3f.destroy = (void (*)(void *)) free_Vec3f;
+  cVec3f.trackObjects = 0;
   
   cVec3d.klass = rb_define_class_under(mPTM, "Vec3d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Vec3d, (void *) &cVec3d);
@@ -13761,6 +23504,35 @@ SWIGEXPORT void Init_PTM(void) {
   cVec3d.mark = 0;
   cVec3d.destroy = (void (*)(void *)) free_Vec3d;
   cVec3d.trackObjects = 0;
+  
+  cVec4f.klass = rb_define_class_under(mPTM, "Vec4f", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Vec4f, (void *) &cVec4f);
+  rb_define_alloc_func(cVec4f.klass, _wrap_Vec4f_allocate);
+  rb_define_method(cVec4f.klass, "initialize", VALUEFUNC(_wrap_new_Vec4f), -1);
+  rb_define_method(cVec4f.klass, "x=", VALUEFUNC(_wrap_Vec4f_x_set), -1);
+  rb_define_method(cVec4f.klass, "x", VALUEFUNC(_wrap_Vec4f_x_get), -1);
+  rb_define_method(cVec4f.klass, "y=", VALUEFUNC(_wrap_Vec4f_y_set), -1);
+  rb_define_method(cVec4f.klass, "y", VALUEFUNC(_wrap_Vec4f_y_get), -1);
+  rb_define_method(cVec4f.klass, "z=", VALUEFUNC(_wrap_Vec4f_z_set), -1);
+  rb_define_method(cVec4f.klass, "z", VALUEFUNC(_wrap_Vec4f_z_get), -1);
+  rb_define_method(cVec4f.klass, "w=", VALUEFUNC(_wrap_Vec4f_w_set), -1);
+  rb_define_method(cVec4f.klass, "w", VALUEFUNC(_wrap_Vec4f_w_get), -1);
+  rb_define_method(cVec4f.klass, "clear", VALUEFUNC(_wrap_Vec4f_clear), -1);
+  rb_define_method(cVec4f.klass, "norm", VALUEFUNC(_wrap_Vec4f_norm), -1);
+  rb_define_method(cVec4f.klass, "square", VALUEFUNC(_wrap_Vec4f_square), -1);
+  rb_define_method(cVec4f.klass, "resize", VALUEFUNC(_wrap_Vec4f_resize), -1);
+  rb_define_method(cVec4f.klass, "size", VALUEFUNC(_wrap_Vec4f_size), -1);
+  rb_define_method(cVec4f.klass, "unit", VALUEFUNC(_wrap_Vec4f_unit), -1);
+  rb_define_method(cVec4f.klass, "unitize", VALUEFUNC(_wrap_Vec4f_unitize), -1);
+  rb_define_singleton_method(cVec4f.klass, "Zero", VALUEFUNC(_wrap_Vec4f_Zero), -1);
+  rb_define_method(cVec4f.klass, "[]", VALUEFUNC(_wrap_Vec4f___getitem__), -1);
+  rb_define_method(cVec4f.klass, "[]=", VALUEFUNC(_wrap_Vec4f___setitem__), -1);
+  rb_define_method(cVec4f.klass, "+", VALUEFUNC(_wrap_Vec4f___add__), -1);
+  rb_define_method(cVec4f.klass, "-", VALUEFUNC(_wrap_Vec4f___sub__), -1);
+  rb_define_method(cVec4f.klass, "*", VALUEFUNC(_wrap_Vec4f___mul__), -1);
+  cVec4f.mark = 0;
+  cVec4f.destroy = (void (*)(void *)) free_Vec4f;
+  cVec4f.trackObjects = 0;
   
   cVec4d.klass = rb_define_class_under(mPTM, "Vec4d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Vec4d, (void *) &cVec4d);
@@ -13790,6 +23562,41 @@ SWIGEXPORT void Init_PTM(void) {
   cVec4d.mark = 0;
   cVec4d.destroy = (void (*)(void *)) free_Vec4d;
   cVec4d.trackObjects = 0;
+  
+  cMatrix2f.klass = rb_define_class_under(mPTM, "Matrix2f", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Matrix2f, (void *) &cMatrix2f);
+  rb_define_alloc_func(cMatrix2f.klass, _wrap_Matrix2f_allocate);
+  rb_define_method(cMatrix2f.klass, "initialize", VALUEFUNC(_wrap_new_Matrix2f), -1);
+  rb_define_method(cMatrix2f.klass, "xx=", VALUEFUNC(_wrap_Matrix2f_xx_set), -1);
+  rb_define_method(cMatrix2f.klass, "xx", VALUEFUNC(_wrap_Matrix2f_xx_get), -1);
+  rb_define_method(cMatrix2f.klass, "xy=", VALUEFUNC(_wrap_Matrix2f_xy_set), -1);
+  rb_define_method(cMatrix2f.klass, "xy", VALUEFUNC(_wrap_Matrix2f_xy_get), -1);
+  rb_define_method(cMatrix2f.klass, "yx=", VALUEFUNC(_wrap_Matrix2f_yx_set), -1);
+  rb_define_method(cMatrix2f.klass, "yx", VALUEFUNC(_wrap_Matrix2f_yx_get), -1);
+  rb_define_method(cMatrix2f.klass, "yy=", VALUEFUNC(_wrap_Matrix2f_yy_set), -1);
+  rb_define_method(cMatrix2f.klass, "yy", VALUEFUNC(_wrap_Matrix2f_yy_get), -1);
+  rb_define_method(cMatrix2f.klass, "clear", VALUEFUNC(_wrap_Matrix2f_clear), -1);
+  rb_define_method(cMatrix2f.klass, "col", VALUEFUNC(_wrap_Matrix2f_col), -1);
+  rb_define_method(cMatrix2f.klass, "row", VALUEFUNC(_wrap_Matrix2f_row), -1);
+  rb_define_method(cMatrix2f.klass, "det", VALUEFUNC(_wrap_Matrix2f_det), -1);
+  rb_define_method(cMatrix2f.klass, "height", VALUEFUNC(_wrap_Matrix2f_height), -1);
+  rb_define_method(cMatrix2f.klass, "width", VALUEFUNC(_wrap_Matrix2f_width), -1);
+  rb_define_method(cMatrix2f.klass, "resize", VALUEFUNC(_wrap_Matrix2f_resize), -1);
+  rb_define_method(cMatrix2f.klass, "trans", VALUEFUNC(_wrap_Matrix2f_trans), -1);
+  rb_define_method(cMatrix2f.klass, "inv", VALUEFUNC(_wrap_Matrix2f_inv), -1);
+  rb_define_singleton_method(cMatrix2f.klass, "Zero", VALUEFUNC(_wrap_Matrix2f_Zero), -1);
+  rb_define_singleton_method(cMatrix2f.klass, "Unit", VALUEFUNC(_wrap_Matrix2f_Unit), -1);
+  rb_define_singleton_method(cMatrix2f.klass, "Diag", VALUEFUNC(_wrap_Matrix2f_Diag), -1);
+  rb_define_singleton_method(cMatrix2f.klass, "Rot", VALUEFUNC(_wrap_Matrix2f_Rot), -1);
+  rb_define_method(cMatrix2f.klass, "angle", VALUEFUNC(_wrap_Matrix2f_angle), -1);
+  rb_define_method(cMatrix2f.klass, "[]", VALUEFUNC(_wrap_Matrix2f___getitem__), -1);
+  rb_define_method(cMatrix2f.klass, "[]=", VALUEFUNC(_wrap_Matrix2f___setitem__), -1);
+  rb_define_method(cMatrix2f.klass, "+", VALUEFUNC(_wrap_Matrix2f___add__), -1);
+  rb_define_method(cMatrix2f.klass, "-", VALUEFUNC(_wrap_Matrix2f___sub__), -1);
+  rb_define_method(cMatrix2f.klass, "*", VALUEFUNC(_wrap_Matrix2f___mul__), -1);
+  cMatrix2f.mark = 0;
+  cMatrix2f.destroy = (void (*)(void *)) free_Matrix2f;
+  cMatrix2f.trackObjects = 0;
   
   cMatrix2d.klass = rb_define_class_under(mPTM, "Matrix2d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Matrix2d, (void *) &cMatrix2d);
@@ -13825,6 +23632,51 @@ SWIGEXPORT void Init_PTM(void) {
   cMatrix2d.mark = 0;
   cMatrix2d.destroy = (void (*)(void *)) free_Matrix2d;
   cMatrix2d.trackObjects = 0;
+  
+  cMatrix3f.klass = rb_define_class_under(mPTM, "Matrix3f", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Matrix3f, (void *) &cMatrix3f);
+  rb_define_alloc_func(cMatrix3f.klass, _wrap_Matrix3f_allocate);
+  rb_define_method(cMatrix3f.klass, "initialize", VALUEFUNC(_wrap_new_Matrix3f), -1);
+  rb_define_method(cMatrix3f.klass, "xx=", VALUEFUNC(_wrap_Matrix3f_xx_set), -1);
+  rb_define_method(cMatrix3f.klass, "xx", VALUEFUNC(_wrap_Matrix3f_xx_get), -1);
+  rb_define_method(cMatrix3f.klass, "xy=", VALUEFUNC(_wrap_Matrix3f_xy_set), -1);
+  rb_define_method(cMatrix3f.klass, "xy", VALUEFUNC(_wrap_Matrix3f_xy_get), -1);
+  rb_define_method(cMatrix3f.klass, "xz=", VALUEFUNC(_wrap_Matrix3f_xz_set), -1);
+  rb_define_method(cMatrix3f.klass, "xz", VALUEFUNC(_wrap_Matrix3f_xz_get), -1);
+  rb_define_method(cMatrix3f.klass, "yx=", VALUEFUNC(_wrap_Matrix3f_yx_set), -1);
+  rb_define_method(cMatrix3f.klass, "yx", VALUEFUNC(_wrap_Matrix3f_yx_get), -1);
+  rb_define_method(cMatrix3f.klass, "yy=", VALUEFUNC(_wrap_Matrix3f_yy_set), -1);
+  rb_define_method(cMatrix3f.klass, "yy", VALUEFUNC(_wrap_Matrix3f_yy_get), -1);
+  rb_define_method(cMatrix3f.klass, "yz=", VALUEFUNC(_wrap_Matrix3f_yz_set), -1);
+  rb_define_method(cMatrix3f.klass, "yz", VALUEFUNC(_wrap_Matrix3f_yz_get), -1);
+  rb_define_method(cMatrix3f.klass, "zx=", VALUEFUNC(_wrap_Matrix3f_zx_set), -1);
+  rb_define_method(cMatrix3f.klass, "zx", VALUEFUNC(_wrap_Matrix3f_zx_get), -1);
+  rb_define_method(cMatrix3f.klass, "zy=", VALUEFUNC(_wrap_Matrix3f_zy_set), -1);
+  rb_define_method(cMatrix3f.klass, "zy", VALUEFUNC(_wrap_Matrix3f_zy_get), -1);
+  rb_define_method(cMatrix3f.klass, "zz=", VALUEFUNC(_wrap_Matrix3f_zz_set), -1);
+  rb_define_method(cMatrix3f.klass, "zz", VALUEFUNC(_wrap_Matrix3f_zz_get), -1);
+  rb_define_method(cMatrix3f.klass, "clear", VALUEFUNC(_wrap_Matrix3f_clear), -1);
+  rb_define_method(cMatrix3f.klass, "col", VALUEFUNC(_wrap_Matrix3f_col), -1);
+  rb_define_method(cMatrix3f.klass, "row", VALUEFUNC(_wrap_Matrix3f_row), -1);
+  rb_define_method(cMatrix3f.klass, "det", VALUEFUNC(_wrap_Matrix3f_det), -1);
+  rb_define_method(cMatrix3f.klass, "height", VALUEFUNC(_wrap_Matrix3f_height), -1);
+  rb_define_method(cMatrix3f.klass, "width", VALUEFUNC(_wrap_Matrix3f_width), -1);
+  rb_define_method(cMatrix3f.klass, "resize", VALUEFUNC(_wrap_Matrix3f_resize), -1);
+  rb_define_method(cMatrix3f.klass, "trans", VALUEFUNC(_wrap_Matrix3f_trans), -1);
+  rb_define_method(cMatrix3f.klass, "inv", VALUEFUNC(_wrap_Matrix3f_inv), -1);
+  rb_define_singleton_method(cMatrix3f.klass, "Zero", VALUEFUNC(_wrap_Matrix3f_Zero), -1);
+  rb_define_singleton_method(cMatrix3f.klass, "Unit", VALUEFUNC(_wrap_Matrix3f_Unit), -1);
+  rb_define_singleton_method(cMatrix3f.klass, "Diag", VALUEFUNC(_wrap_Matrix3f_Diag), -1);
+  rb_define_singleton_method(cMatrix3f.klass, "Rot", VALUEFUNC(_wrap_Matrix3f_Rot), -1);
+  rb_define_singleton_method(cMatrix3f.klass, "Cross", VALUEFUNC(_wrap_Matrix3f_Cross), -1);
+  rb_define_method(cMatrix3f.klass, "[]", VALUEFUNC(_wrap_Matrix3f___getitem__), -1);
+  rb_define_method(cMatrix3f.klass, "[]=", VALUEFUNC(_wrap_Matrix3f___setitem__), -1);
+  rb_define_method(cMatrix3f.klass, "+", VALUEFUNC(_wrap_Matrix3f___add__), -1);
+  rb_define_method(cMatrix3f.klass, "-", VALUEFUNC(_wrap_Matrix3f___sub__), -1);
+  rb_define_method(cMatrix3f.klass, "*", VALUEFUNC(_wrap_Matrix3f___mul__), -1);
+  cMatrix3f.mark = 0;
+  cMatrix3f.destroy = (void (*)(void *)) free_Matrix3f;
+  cMatrix3f.trackObjects = 0;
   
   cMatrix3d.klass = rb_define_class_under(mPTM, "Matrix3d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Matrix3d, (void *) &cMatrix3d);
@@ -13871,6 +23723,124 @@ SWIGEXPORT void Init_PTM(void) {
   cMatrix3d.destroy = (void (*)(void *)) free_Matrix3d;
   cMatrix3d.trackObjects = 0;
   rb_define_module_function(mPTM, "IsUnitary", VALUEFUNC(_wrap_IsUnitary), -1);
+  
+  cAffine2f.klass = rb_define_class_under(mPTM, "Affine2f", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Affine2f, (void *) &cAffine2f);
+  rb_define_alloc_func(cAffine2f.klass, _wrap_Affine2f_allocate);
+  rb_define_method(cAffine2f.klass, "initialize", VALUEFUNC(_wrap_new_Affine2f), -1);
+  rb_define_method(cAffine2f.klass, "xx=", VALUEFUNC(_wrap_Affine2f_xx_set), -1);
+  rb_define_method(cAffine2f.klass, "xx", VALUEFUNC(_wrap_Affine2f_xx_get), -1);
+  rb_define_method(cAffine2f.klass, "xy=", VALUEFUNC(_wrap_Affine2f_xy_set), -1);
+  rb_define_method(cAffine2f.klass, "xy", VALUEFUNC(_wrap_Affine2f_xy_get), -1);
+  rb_define_method(cAffine2f.klass, "xz=", VALUEFUNC(_wrap_Affine2f_xz_set), -1);
+  rb_define_method(cAffine2f.klass, "xz", VALUEFUNC(_wrap_Affine2f_xz_get), -1);
+  rb_define_method(cAffine2f.klass, "yx=", VALUEFUNC(_wrap_Affine2f_yx_set), -1);
+  rb_define_method(cAffine2f.klass, "yx", VALUEFUNC(_wrap_Affine2f_yx_get), -1);
+  rb_define_method(cAffine2f.klass, "yy=", VALUEFUNC(_wrap_Affine2f_yy_set), -1);
+  rb_define_method(cAffine2f.klass, "yy", VALUEFUNC(_wrap_Affine2f_yy_get), -1);
+  rb_define_method(cAffine2f.klass, "yz=", VALUEFUNC(_wrap_Affine2f_yz_set), -1);
+  rb_define_method(cAffine2f.klass, "yz", VALUEFUNC(_wrap_Affine2f_yz_get), -1);
+  rb_define_method(cAffine2f.klass, "px=", VALUEFUNC(_wrap_Affine2f_px_set), -1);
+  rb_define_method(cAffine2f.klass, "px", VALUEFUNC(_wrap_Affine2f_px_get), -1);
+  rb_define_method(cAffine2f.klass, "py=", VALUEFUNC(_wrap_Affine2f_py_set), -1);
+  rb_define_method(cAffine2f.klass, "py", VALUEFUNC(_wrap_Affine2f_py_get), -1);
+  rb_define_method(cAffine2f.klass, "pz=", VALUEFUNC(_wrap_Affine2f_pz_set), -1);
+  rb_define_method(cAffine2f.klass, "pz", VALUEFUNC(_wrap_Affine2f_pz_get), -1);
+  rb_define_method(cAffine2f.klass, "clear", VALUEFUNC(_wrap_Affine2f_clear), -1);
+  rb_define_method(cAffine2f.klass, "col", VALUEFUNC(_wrap_Affine2f_col), -1);
+  rb_define_method(cAffine2f.klass, "row", VALUEFUNC(_wrap_Affine2f_row), -1);
+  rb_define_method(cAffine2f.klass, "det", VALUEFUNC(_wrap_Affine2f_det), -1);
+  rb_define_method(cAffine2f.klass, "height", VALUEFUNC(_wrap_Affine2f_height), -1);
+  rb_define_method(cAffine2f.klass, "width", VALUEFUNC(_wrap_Affine2f_width), -1);
+  rb_define_method(cAffine2f.klass, "resize", VALUEFUNC(_wrap_Affine2f_resize), -1);
+  rb_define_method(cAffine2f.klass, "trans", VALUEFUNC(_wrap_Affine2f_trans), -1);
+  rb_define_method(cAffine2f.klass, "inv", VALUEFUNC(_wrap_Affine2f_inv), -1);
+  rb_define_singleton_method(cAffine2f.klass, "Unit", VALUEFUNC(_wrap_Affine2f_Unit), -1);
+  rb_define_singleton_method(cAffine2f.klass, "Trn", VALUEFUNC(_wrap_Affine2f_Trn), -1);
+  rb_define_singleton_method(cAffine2f.klass, "Rot", VALUEFUNC(_wrap_Affine2f_Rot), -1);
+  rb_define_singleton_method(cAffine2f.klass, "Scale", VALUEFUNC(_wrap_Affine2f_Scale), -1);
+  rb_define_method(cAffine2f.klass, "[]", VALUEFUNC(_wrap_Affine2f___getitem__), -1);
+  rb_define_method(cAffine2f.klass, "[]=", VALUEFUNC(_wrap_Affine2f___setitem__), -1);
+  rb_define_method(cAffine2f.klass, "+", VALUEFUNC(_wrap_Affine2f___add__), -1);
+  rb_define_method(cAffine2f.klass, "-", VALUEFUNC(_wrap_Affine2f___sub__), -1);
+  rb_define_method(cAffine2f.klass, "*", VALUEFUNC(_wrap_Affine2f___mul__), -1);
+  rb_define_method(cAffine2f.klass, "trn=", VALUEFUNC(_wrap_Affine2f_trne___), -1);
+  rb_define_method(cAffine2f.klass, "trn", VALUEFUNC(_wrap_Affine2f_trn), -1);
+  rb_define_method(cAffine2f.klass, "pos=", VALUEFUNC(_wrap_Affine2f_pose___), -1);
+  rb_define_method(cAffine2f.klass, "pos", VALUEFUNC(_wrap_Affine2f_pos), -1);
+  rb_define_method(cAffine2f.klass, "rot=", VALUEFUNC(_wrap_Affine2f_rote___), -1);
+  rb_define_method(cAffine2f.klass, "rot", VALUEFUNC(_wrap_Affine2f_rot), -1);
+  cAffine2f.mark = 0;
+  cAffine2f.destroy = (void (*)(void *)) free_Affine2f;
+  cAffine2f.trackObjects = 0;
+  
+  cAffinef.klass = rb_define_class_under(mPTM, "Affinef", rb_cObject);
+  SWIG_TypeClientData(SWIGTYPE_p_Affinef, (void *) &cAffinef);
+  rb_define_alloc_func(cAffinef.klass, _wrap_Affinef_allocate);
+  rb_define_method(cAffinef.klass, "initialize", VALUEFUNC(_wrap_new_Affinef), -1);
+  rb_define_method(cAffinef.klass, "xx=", VALUEFUNC(_wrap_Affinef_xx_set), -1);
+  rb_define_method(cAffinef.klass, "xx", VALUEFUNC(_wrap_Affinef_xx_get), -1);
+  rb_define_method(cAffinef.klass, "xy=", VALUEFUNC(_wrap_Affinef_xy_set), -1);
+  rb_define_method(cAffinef.klass, "xy", VALUEFUNC(_wrap_Affinef_xy_get), -1);
+  rb_define_method(cAffinef.klass, "xz=", VALUEFUNC(_wrap_Affinef_xz_set), -1);
+  rb_define_method(cAffinef.klass, "xz", VALUEFUNC(_wrap_Affinef_xz_get), -1);
+  rb_define_method(cAffinef.klass, "xw=", VALUEFUNC(_wrap_Affinef_xw_set), -1);
+  rb_define_method(cAffinef.klass, "xw", VALUEFUNC(_wrap_Affinef_xw_get), -1);
+  rb_define_method(cAffinef.klass, "yx=", VALUEFUNC(_wrap_Affinef_yx_set), -1);
+  rb_define_method(cAffinef.klass, "yx", VALUEFUNC(_wrap_Affinef_yx_get), -1);
+  rb_define_method(cAffinef.klass, "yy=", VALUEFUNC(_wrap_Affinef_yy_set), -1);
+  rb_define_method(cAffinef.klass, "yy", VALUEFUNC(_wrap_Affinef_yy_get), -1);
+  rb_define_method(cAffinef.klass, "yz=", VALUEFUNC(_wrap_Affinef_yz_set), -1);
+  rb_define_method(cAffinef.klass, "yz", VALUEFUNC(_wrap_Affinef_yz_get), -1);
+  rb_define_method(cAffinef.klass, "yw=", VALUEFUNC(_wrap_Affinef_yw_set), -1);
+  rb_define_method(cAffinef.klass, "yw", VALUEFUNC(_wrap_Affinef_yw_get), -1);
+  rb_define_method(cAffinef.klass, "zx=", VALUEFUNC(_wrap_Affinef_zx_set), -1);
+  rb_define_method(cAffinef.klass, "zx", VALUEFUNC(_wrap_Affinef_zx_get), -1);
+  rb_define_method(cAffinef.klass, "zy=", VALUEFUNC(_wrap_Affinef_zy_set), -1);
+  rb_define_method(cAffinef.klass, "zy", VALUEFUNC(_wrap_Affinef_zy_get), -1);
+  rb_define_method(cAffinef.klass, "zz=", VALUEFUNC(_wrap_Affinef_zz_set), -1);
+  rb_define_method(cAffinef.klass, "zz", VALUEFUNC(_wrap_Affinef_zz_get), -1);
+  rb_define_method(cAffinef.klass, "zw=", VALUEFUNC(_wrap_Affinef_zw_set), -1);
+  rb_define_method(cAffinef.klass, "zw", VALUEFUNC(_wrap_Affinef_zw_get), -1);
+  rb_define_method(cAffinef.klass, "px=", VALUEFUNC(_wrap_Affinef_px_set), -1);
+  rb_define_method(cAffinef.klass, "px", VALUEFUNC(_wrap_Affinef_px_get), -1);
+  rb_define_method(cAffinef.klass, "py=", VALUEFUNC(_wrap_Affinef_py_set), -1);
+  rb_define_method(cAffinef.klass, "py", VALUEFUNC(_wrap_Affinef_py_get), -1);
+  rb_define_method(cAffinef.klass, "pz=", VALUEFUNC(_wrap_Affinef_pz_set), -1);
+  rb_define_method(cAffinef.klass, "pz", VALUEFUNC(_wrap_Affinef_pz_get), -1);
+  rb_define_method(cAffinef.klass, "pw=", VALUEFUNC(_wrap_Affinef_pw_set), -1);
+  rb_define_method(cAffinef.klass, "pw", VALUEFUNC(_wrap_Affinef_pw_get), -1);
+  rb_define_method(cAffinef.klass, "clear", VALUEFUNC(_wrap_Affinef_clear), -1);
+  rb_define_method(cAffinef.klass, "col", VALUEFUNC(_wrap_Affinef_col), -1);
+  rb_define_method(cAffinef.klass, "row", VALUEFUNC(_wrap_Affinef_row), -1);
+  rb_define_method(cAffinef.klass, "det", VALUEFUNC(_wrap_Affinef_det), -1);
+  rb_define_method(cAffinef.klass, "height", VALUEFUNC(_wrap_Affinef_height), -1);
+  rb_define_method(cAffinef.klass, "width", VALUEFUNC(_wrap_Affinef_width), -1);
+  rb_define_method(cAffinef.klass, "resize", VALUEFUNC(_wrap_Affinef_resize), -1);
+  rb_define_method(cAffinef.klass, "trans", VALUEFUNC(_wrap_Affinef_trans), -1);
+  rb_define_method(cAffinef.klass, "inv", VALUEFUNC(_wrap_Affinef_inv), -1);
+  rb_define_singleton_method(cAffinef.klass, "Unit", VALUEFUNC(_wrap_Affinef_Unit), -1);
+  rb_define_singleton_method(cAffinef.klass, "Trn", VALUEFUNC(_wrap_Affinef_Trn), -1);
+  rb_define_singleton_method(cAffinef.klass, "Rot", VALUEFUNC(_wrap_Affinef_Rot), -1);
+  rb_define_singleton_method(cAffinef.klass, "Scale", VALUEFUNC(_wrap_Affinef_Scale), -1);
+  rb_define_singleton_method(cAffinef.klass, "ProjectionGL", VALUEFUNC(_wrap_Affinef_ProjectionGL), -1);
+  rb_define_singleton_method(cAffinef.klass, "ProjectionD3D", VALUEFUNC(_wrap_Affinef_ProjectionD3D), -1);
+  rb_define_method(cAffinef.klass, "LookAt", VALUEFUNC(_wrap_Affinef_LookAt), -1);
+  rb_define_method(cAffinef.klass, "LookAtGL", VALUEFUNC(_wrap_Affinef_LookAtGL), -1);
+  rb_define_method(cAffinef.klass, "[]", VALUEFUNC(_wrap_Affinef___getitem__), -1);
+  rb_define_method(cAffinef.klass, "[]=", VALUEFUNC(_wrap_Affinef___setitem__), -1);
+  rb_define_method(cAffinef.klass, "+", VALUEFUNC(_wrap_Affinef___add__), -1);
+  rb_define_method(cAffinef.klass, "-", VALUEFUNC(_wrap_Affinef___sub__), -1);
+  rb_define_method(cAffinef.klass, "*", VALUEFUNC(_wrap_Affinef___mul__), -1);
+  rb_define_method(cAffinef.klass, "trn=", VALUEFUNC(_wrap_Affinef_trne___), -1);
+  rb_define_method(cAffinef.klass, "trn", VALUEFUNC(_wrap_Affinef_trn), -1);
+  rb_define_method(cAffinef.klass, "pos=", VALUEFUNC(_wrap_Affinef_pose___), -1);
+  rb_define_method(cAffinef.klass, "pos", VALUEFUNC(_wrap_Affinef_pos), -1);
+  rb_define_method(cAffinef.klass, "rot=", VALUEFUNC(_wrap_Affinef_rote___), -1);
+  rb_define_method(cAffinef.klass, "rot", VALUEFUNC(_wrap_Affinef_rot), -1);
+  cAffinef.mark = 0;
+  cAffinef.destroy = (void (*)(void *)) free_Affinef;
+  cAffinef.trackObjects = 0;
   
   cAffine2d.klass = rb_define_class_under(mPTM, "Affine2d", rb_cObject);
   SWIG_TypeClientData(SWIGTYPE_p_Affine2d, (void *) &cAffine2d);
