@@ -12,8 +12,18 @@
   DrawScene API で設定されているマテリアルサンプルを用いて、カラフルな球体および直方体をレンダリングする。　
   また、SPIDARを操作して球体、直方体及び地面と力覚インタラクションを行う。
   
-【終了基準】
-  ・5000ステップ後に強制終了。 
+【キー対応表】
+  - '1' :　周囲の物体による動作の制約を使用した局所的な動力学計算を行う時のバーチャルカップリングによる力覚計算
+  - '2' :　'1'のうち、接触しそうな点を前もって計算する処理を除いたもの
+  - '3' :　周囲の物体による動作の制約を使用しない局所的な動力学計算を行う時のバーチャルカップリングによる力覚計算
+  - '4' :　'3'のうち、接触しそうな転を前もって計算する処理を除いたもの
+  - '5' :　物理シミュレーションの更新を60Hzで行ったときのバーチャルカップリングによる力覚計算
+  - '6' :　物理シミュレーションの更新を500Hzで行ったときのバーチャルカップリングによる力覚計算
+  - ' ' :　提示力をSPIDARに提示する
+  - 'ESC' :　プログラムの終了
+  - 'c' :　SPIDARのキャリブレーション
+  - 'r' :　剛体の位置のリセット
+  - 'g' :　新しい剛体の作成
  */
 
 #include <Springhead.h>		//	Springheadのインタフェース
@@ -78,8 +88,8 @@ using namespace Spr;
 	#define NUM_OBJECTS		2
 #endif
 
-#define SPIDAR_SCALE	2			// SPIDARのVE内での動作スケール
-#define MASS_SCALE		1000			// 剛体の質量のスケール
+#define SPIDAR_SCALE	10			// SPIDARのVE内での動作スケール
+#define MASS_SCALE		100			// 剛体の質量のスケール
 									// この二つのスケールは仮想世界と現実世界のスケールをあわせるのに使われる
 
 #define POINTER_RADIUS 0.1f			// ポインタの半径
@@ -111,7 +121,7 @@ using namespace Spr;
 #ifdef _DEBUG
 	int SIMULATION_FREQ	= 60;		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		500		// 力覚スレッドの周期Hz
-	float Km = 20;//100;					// virtual couplingの係数
+	float Km = 1;//100;					// virtual couplingの係数
 	float Bm = 0;					// 並進
 
 	float Kr = 1;					// 回転
@@ -120,7 +130,7 @@ using namespace Spr;
 #elif _WINDOWS
 	int SIMULATION_FREQ = 60;		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 20;//100;					// virtual couplingの係数
+	float Km = 1;//100;					// virtual couplingの係数
 	float Bm = 0;					// 並進
 
 	float Kr = 1;					// 回転
@@ -434,7 +444,7 @@ void UpdateNewInfoFromCurrent();
 void CheckPenetrations(HapticInfo*, int*, vector<Vec3d>*, vector<double>*, vector<Vec3d>*);
 void CalcTTheta(HapticInfo*, Vec3d*, Vec3d*);
 void CorrectPenetration(HapticInfo*);
-inline void GetParametersOfCollision(double*, double*, double*, double*, double*, double*, double*);
+inline void getParametersOfCollision(double*, double*, double*, double*, double*, double*, double*);
 void MakePointerPosMatrix(int, vector<Vec3d>t, vector<double>, vector<Vec3d>, MatrixN6d*, VecNd*);
 
 // 局所的な動力学計算を行う処理
@@ -497,6 +507,7 @@ void updatePenetrations(HapticInfo* info);
 inline double calcDistance(Vec3d, Vec3d);
 inline void updateSimulationFrequency();
 inline void calcTimeSpan(HapticInfo* info);
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // 周囲の影響を計算するための処理
@@ -1259,7 +1270,7 @@ vector<SpatialVector> PredictSimulation(vector<SpatialVector>* relative_solid_ve
 	// ポインタとの接触に関しては,correctionRateを下げることで発振を防ぐ
 	// こうするとめりこみは起こるが,安定に剛体が運動する
 	// そのほかの接触に関してはcorrectionRateを通常の値にして
-	// 不安定になるがめり込みが起こらないようにする(開発中)
+	// 不安定になるがめり込みが起こらないようにする
 	double pos_correctionRate = scene->GetConstraintEngine()->posCorrectionRate;
 
 	// シミュレーションに必要な情報をセットアップ
@@ -1660,10 +1671,10 @@ inline void feedbackForce(bool feedback, Vec3d VCForce, Vec3d VCTorque)
 	{
 		// SPIDARの空間と見ている空間が違うので行列を掛けて射影する
 		// virtual couplingの逆向きの力・トルクを発生
-		Vec3d f = - view_haptic * VCForce / SPIDAR_SCALE;
-		Vec3d t = - view_haptic * VCTorque / SPIDAR_SCALE;
+		Vec3d f = - MASS_SCALE * view_haptic * VCForce / SPIDAR_SCALE;
+		Vec3d t = - MASS_SCALE * view_haptic * VCTorque / SPIDAR_SCALE;
 
-		spidarG6.SetForce(FORCE_COEFF * MASS_SCALE * f, FORCE_COEFF * MASS_SCALE * t);
+		spidarG6.SetForce(FORCE_COEFF * f, FORCE_COEFF * t);
 	}
 	else spidarG6.SetForce(Vec3d(), Vec3d());
 }
@@ -1832,7 +1843,9 @@ void CalcTTheta(HapticInfo* info, Vec3d* T, Vec3d* Theta)
 	CheckPenetrations(info, &num_cols, &r_vectors, &c_vectors, &n_vectors);
 
 	// めり込みの数の最大値を接触許容数-6にする
-	// これは6行分はSPIDARの位置を反映させるのに使われるため
+	// これはめり込みを解消する位置を計算する時に
+	// 接触の情報から行列を作成するが、
+	// このうちの6行分はSPIDARの位置を反映させるのに使われるため
 	if(num_cols > NUM_COLLISIONS - 6) num_cols = NUM_COLLISIONS - 6;
 
 	MatrixN6d M = MatrixN6d();
@@ -1864,7 +1877,7 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<double> 
 	double RX, RY, RZ;
 
 	// 接触の状況からパラメータを決める
-	GetParametersOfCollision(&MX, &MY, &MZ, &RX, &RY, &RZ, &P);
+	getParametersOfCollision(&MX, &MY, &MZ, &RX, &RY, &RZ, &P);
 
 	// 擬似逆行列で座標計算も兼ねる
 	Vec3d t = spidar_pos - pointer_pos;
@@ -1978,7 +1991,7 @@ void MakePointerPosMatrix(int num_cols, vector<Vec3d> r_vectors, vector<double> 
 }
 
 // ポインタの位置計算につかう重みを返す関数
-inline void GetParametersOfCollision(double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ, double *P)
+inline void getParametersOfCollision(double* MX, double* MY, double* MZ, double* RX, double* RY, double* RZ, double *P)
 {
 	// とりあえずこの値で安定
 	// MX, MY, MZを小さくしすぎるとダンパーが強くなってしまう
@@ -1988,6 +2001,7 @@ inline void GetParametersOfCollision(double* MX, double* MY, double* MZ, double*
 #else
 	*MX = *MY = *MZ = 0.008;
 #endif
+
 	*RX = *RY = *RZ = 1.0;
 	*P = 1.0;
 }
@@ -2005,7 +2019,7 @@ void CorrectPenetration(HapticInfo* info)
 	pointer_pos += M_vec;
 	pointer_ori = Quaterniond::Rot(R_vec) * pointer_ori;
 
-	// すべての接触もその方向に移動・回転
+	// ポインタ上のすべての接触もその方向に移動・回転
 	for(int i = 0; i < info->num_collisions; ++i)
 	{
 		info->pointer_col_positions[i] += M_vec;
@@ -2133,8 +2147,8 @@ void UpdateVelocityByCollision(HapticInfo* info, Vec3d VCForce, bool* feedback)
 					else
 					{
 						// 剛体に加える力を計算する
-						// ratioをかけるのは、
-						// 行列自体がすでにSIMULATION_FREQのdtがかけられており
+						// SHratioをかけるのは、
+						// 行列自体がすでにSIMULATION_FREQのdt(=1/SIMULATION_FREQ)がかけられており
 						// それをHAPTIC_FREQのdtに直すため
 						// また、この行列にはすでにmassinv, inertiainvもかけられているので
 						// 力をかければすべて計算される
@@ -2286,7 +2300,12 @@ void VirtualCoupling(HapticInfo* info, Vec3d *VCForce, Vec3d *VCTorque, bool* fe
 	// 接触剛体の接触力による速度・角速度更新
 	calcForceBySpringDumper(VCForce, VCTorque);
 
+	// 剛体に加える力の計算
+	// すべての接触に均等に力を加える
+	// ratioをかける理由は、
+	// シミュレーションが加えた力の総量を平均してシミュレーションの周期で力積にするため
 	Vec3d addF = FORCE_COEFF * (*VCForce) * info->SHratio;
+
 	// 接触があれば接触している剛体に提示力の逆方向のベクトルを加える
 	// 剛体の挙動は物理シミュレーションに任せる
 	for(int i = 0; i < info->num_collisions; ++i)
@@ -2298,9 +2317,7 @@ void VirtualCoupling(HapticInfo* info, Vec3d *VCForce, Vec3d *VCTorque, bool* fe
 		// 力覚フィードバックON
 		*feedback = true;
 
-		// ratioをかける理由は、
-		// シミュレーションが加えた力の総量を平均してシミュレーションの周期で力積にするため
-		// また、一つの剛体に存在する接触点の数で割って、均等に力を加えるようにする
+		// 一つの剛体に存在する接触点の数で割って、均等に力を加えるようにする
 		int sol_index = info->ColToSol[i];
 		info->nearest_solids[sol_index]->AddForce(addF / info->num_col_per_sol[sol_index], info->col_positions[i]);
 	}
@@ -2436,21 +2453,6 @@ void ErrorCorrection()
 
 			// 動かない剛体は動かない
 			if(!(*it)->IsDynamical()) continue;
-
-/*
-			bool bNearest = false;
-			for(int i = 0; i < info->num_solids; ++i)
-			{
-				if((*it) == info->nearest_solids[i])
-				{
-					bNearest = true;
-					break;
-				}
-			}
-			// この剛体はポインタに直に接しているので、
-			// ここでは更新しない
-			if(bNearest) {ofs << "error " << endl; continue;}
-*/
 
 			// まずは速度を更新
 			// 定数分を加算
@@ -2698,18 +2700,18 @@ void keyboard(unsigned char key, int x, int y){
 	{
 		PHSolidDesc desc;
 #ifdef EXP4
-		desc.mass = 0.2f;
+		desc.mass = 0.2f / MASS_SCALE;
 #elif defined Demo
-		desc.mass = 0.3f;
+		desc.mass = 0.3f / MASS_SCALE;
 #else
-		desc.mass = 1.0f;
+		desc.mass = 1.0f / MASS_SCALE;
 #endif
 		desc.inertia = Matrix3d(desc.mass * 1.5 * 1.5 / 6.0, 0, 0, 0, desc.mass * 1.5 * 1.5 / 6.0, 0, 0, 0, desc.mass * 1.5 * 1.5 / 6.0);
 		soObject.push_back(scene->CreateSolid(desc));
 			
 		CDBoxIf* box = NULL;
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f(1.5f, 1.5f, 1.5f);
+		bd.boxsize = Vec3f(0.3f, 0.3f, 0.3f);
 		box = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 		soObject[soObject.size() - 1]->AddShape(box);
 		soObject[soObject.size() - 1]->SetFramePosition(Vec3d(0, soObject.size() * 1.1, 0));
