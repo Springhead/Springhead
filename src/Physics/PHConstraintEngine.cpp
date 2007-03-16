@@ -401,7 +401,7 @@ void PHConstraintEngine::UpdateSolids(){
 
 	// ツリーに属さない剛体の更新
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
-		if(!(*is)->treeNode){
+		if(!(*is)->treeNode && !(*is)->IsUpdated()){
 			(*is)->UpdateVelocity(dt);
 			(*is)->UpdatePosition(dt);
 			(*is)->SetUpdated(true);

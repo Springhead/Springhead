@@ -388,7 +388,7 @@ class UTTypeDescDbPool: public UTRefCount,
 	public std::set< UTRef<UTTypeDescDb>, UTContentsLess< UTRef<UTTypeDescDb> > >{
 protected:
 	static UTRef<UTTypeDescDbPool> pool;
-	static UTTypeDescDbPool* GetPool();
+	static UTTypeDescDbPool* SPR_CDECL GetPool();
 public:
 	static UTTypeDescDb* SPR_CDECL Get(std::string gp);
 	static void SPR_CDECL Print(std::ostream& os);

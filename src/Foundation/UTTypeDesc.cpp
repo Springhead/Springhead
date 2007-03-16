@@ -238,14 +238,14 @@ void UTTypeDescDb::Print(std::ostream& os) const{
 //---------------------------------------------------------------------------
 //	UTTypeDescDbPool
 UTRef<UTTypeDescDbPool> UTTypeDescDbPool::pool;
+UTTypeDescDbPool* SPR_CDECL UTTypeDescDbPool::GetPool(){
+	if (!pool) pool = new UTTypeDescDbPool();
+	return pool;
+}
 UTTypeDescDb* SPR_CDECL UTTypeDescDbPool::Get(std::string gp){
 	UTRef<UTTypeDescDb> key = DBG_NEW UTTypeDescDb(gp);
 	std::pair<UTTypeDescDbPool::iterator, bool> r = GetPool()->insert(key);
 	return *r.first;
-}
-UTTypeDescDbPool* SPR_CDECL UTTypeDescDbPool::GetPool(){
-	if (!pool) pool = new UTTypeDescDbPool;
-	return pool;
 }
 void SPR_CDECL UTTypeDescDbPool::Print(std::ostream& os){
 	for(const_iterator it = GetPool()->begin(); it != GetPool()->end(); ++it){
