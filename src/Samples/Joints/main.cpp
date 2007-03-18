@@ -80,6 +80,7 @@
 #pragma hdrstop
 #endif
 using namespace Spr;
+using namespace std;
 
 #define ESC		27
 
@@ -93,6 +94,8 @@ double simulationPeriod = 50.0;
 Vec3d lookAt;
 int sceneNo;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
+double	CameraRotX = 0.0, CameraRotY = Rad(30.0), CameraZoom = 10.0;
+bool bLeftButton = false, bRightButton = false;
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
 PHSolidDesc descBox;					//箱剛体のディスクリプタ
@@ -150,6 +153,7 @@ void BuildScene0(){
 // シーン1 : アクチュエータのデモ
 void BuildScene1(){
 	CreateFloor();
+
 	CDBoxDesc bd;
 	soBox.resize(3);
 	bd.boxsize = Vec3f(1.0, 2.0, 1.0);
@@ -192,7 +196,7 @@ void BuildScene1(){
 	nodeTree.push_back(scene->CreateTreeNode(nodeTree[0], soBox[1], PHTreeNodeDesc()));
 
 	scene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
-	scene->SetGravity(Vec3f(0, 0.0, 0));
+	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
 
 void BuildScene2(){
@@ -606,6 +610,16 @@ void OnTimer(){
  return 	なし
  */
 void display(){
+	Affinef view;
+	double yoffset = 10.0;
+	view.Pos() = CameraZoom * Vec3f(
+		cos(CameraRotX) * cos(CameraRotY),
+		sin(CameraRotX),
+		cos(CameraRotX) * sin(CameraRotY));
+	view.PosY() += yoffset;
+	view.LookAtGL(Vec3f(0.0, yoffset, 0.0), Vec3f(0.0f, 100.0f, 0.0f));
+	render->SetViewMatrix(view.inv());
+
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
@@ -748,7 +762,39 @@ void keyboard(unsigned char key, int x, int y){
 			OnKey(key);
 			break;
 	}
-}	
+}
+
+int xlast, ylast;
+void mouse(int button, int state, int x, int y){
+	xlast = x, ylast = y;
+	if(button == GLUT_LEFT_BUTTON)
+		bLeftButton = (state == GLUT_DOWN);
+	if(button == GLUT_RIGHT_BUTTON)
+		bRightButton = (state == GLUT_DOWN);
+}
+
+void motion(int x, int y){
+	static bool bFirst = true;
+	int xrel = x - xlast, yrel = y - ylast;
+	xlast = x;
+	ylast = y;
+	if(bFirst){
+		bFirst = false;
+		return;
+	}
+	// 左ボタン
+	if(bLeftButton){
+		CameraRotY += xrel * 0.01;
+		CameraRotY = Spr::max(Rad(-180.0), Spr::min(CameraRotY, Rad(180.0)));
+		CameraRotX += yrel * 0.01;
+		CameraRotX = Spr::max(Rad(-80.0), Spr::min(CameraRotX, Rad(80.0)));
+	}
+	// 右ボタン
+	if(bRightButton){
+		CameraZoom *= exp(yrel/10.0);
+		CameraZoom = Spr::max(0.1, Spr::min(CameraZoom, 100.0));
+	}
+}
 
 /**
  brief  	glutTimerFuncで指定したコールバック関数
@@ -806,6 +852,8 @@ int main(int argc, char* argv[]){
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
 	//glutIdleFunc(idle);
 	
 	render->SetDevice(device);	// デバイスの設定

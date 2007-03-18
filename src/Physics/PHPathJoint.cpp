@@ -19,13 +19,29 @@ namespace Spr{;
 IF_OBJECT_IMP_ABST(PHPath, SceneObject)
 
 PHPath::PHPath(const PHPathDesc& desc){
-	resize(desc.points.size());
-	for(unsigned int i = 0; i < desc.points.size(); i++){
-		(*this)[i].s = desc.points[i].s;
-		(*this)[i].pose = desc.points[i].pose;
+	SetDesc(&desc);
+}
+
+bool PHPath::GetDesc(void* desc)const{
+	PHPathDesc* pathdesc = (PHPathDesc*)desc;
+	pathdesc->bLoop = bLoop;
+	pathdesc->points.resize(size());
+	for(int i = 0; i < size(); i++){
+		pathdesc->points[i].s = (*this)[i].s;
+		pathdesc->points[i].pose = (*this)[i].pose;
 	}
-	bLoop = desc.bLoop;
-	bReady = false;
+	return true;
+}
+
+void PHPath::SetDesc(const void* desc){
+	const PHPathDesc& pathdesc = *(const PHPathDesc*)desc;
+	resize(pathdesc.points.size());
+	for(unsigned int i = 0; i < pathdesc.points.size(); i++){
+		(*this)[i].s = pathdesc.points[i].s;
+		(*this)[i].pose = pathdesc.points[i].pose;
+	}
+	bLoop = pathdesc.bLoop;
+	bReady = false;	
 }
 
 void PHPath::Rollover(double& s){
@@ -34,6 +50,9 @@ void PHPath::Rollover(double& s){
 	assert(lower < upper);
 	double range = upper - lower;
 	//DSTR << s << ", " << range << endl;
+	// ‹ê“÷‚Ìô
+	if(abs(s) > 1.0e3)
+		s = 0.0;
 	while(s >= upper)s -= range;
 	while(s <  lower)s += range;
 }
@@ -157,7 +176,7 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 IF_OBJECT_IMP(PHPathJoint, PHJoint1D)
 
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
-	SetDesc(desc);
+	SetDesc(&desc);
 	axisIndex[0] = 5;
 }
 
@@ -175,6 +194,7 @@ bool PHPathJoint::AddChildObject(ObjectIf* o){
 			lower = path->front().s;
 			upper = path->back().s;
 		}
+		position[0] = velocity[0] = 0.0;
 		return true;
 	}
 	return PHConstraint::AddChildObject(o);
@@ -276,6 +296,12 @@ void PHPathJointNode::CompRelativePosition(){
 	j->path->GetPose(j->position[0], p);
 	j->Xjrel.q = p.Ori();
 	j->Xjrel.r = p.Pos();
+}
+void PHPathJointNode::UpdateJointPosition(double dt){
+	PHTreeNode1D::UpdateJointPosition(dt);
+	PHPathJoint* j = GetJoint();
+	if(j->path->IsLoop())
+		j->path->Rollover(j->position[0]);
 }
 
 }

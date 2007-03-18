@@ -31,7 +31,11 @@ public:
 	double			A, Ainv, b;
 	double			f;
 
-	void	SetDesc(const PHGearDesc& desc);
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
+	virtual size_t NChildObject()const{ return 2; }
+	virtual ObjectIf* GetChildObject(size_t pos);
+	void	SetDesc(const void* desc);
 	void	CompResponse(double f);
 	void	SetupLCP();
 	void	IterateLCP();

@@ -82,14 +82,14 @@ void SwingTwist::JacobianInverse(Matrix3d& J, const Quaterniond& q){
 IF_OBJECT_IMP(PHBallJoint, PHJoint)
 
 PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
-	SetDesc(desc);
+	SetDesc(&desc);
 	axisIndex[0] = 3;
 	axisIndex[1] = 4;
 	axisIndex[2] = 5;
 }
-void PHBallJoint::SetDesc(const PHConstraintDesc& desc){
+void PHBallJoint::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
-	const PHBallJointDesc& descBall = (const PHBallJointDesc&)desc;
+	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
 	swingUpper  = descBall.swingUpper;
 	swingSpring = descBall.swingSpring;
 	swingDamper = descBall.swingDamper;

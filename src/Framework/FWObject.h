@@ -8,7 +8,7 @@
 
 namespace Spr{;
 
-	class FWObject : public NamedObject, public FWObjectIfInit, public FWObjectDesc {
+	class FWObject : public SceneObject, public FWObjectIfInit, public FWObjectDesc {
     public:
 		OBJECTDEF(FWObject, NamedObject);
 		ACCESS_DESC(FWObject);

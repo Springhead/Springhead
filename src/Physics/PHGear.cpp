@@ -20,11 +20,48 @@ IF_OBJECT_IMP(PHGear, SceneObject);
 
 PHGear::PHGear(const PHGearDesc& desc){
 	f = A = Ainv = b = 0.0;
+	joint[0] = joint[1] = NULL;
 	bArticulated = false;
+	SetDesc(&desc);
 }
 
-void PHGear::SetDesc(const PHGearDesc& desc){
-	ratio = desc.ratio;
+void PHGear::SetDesc(const void* desc){
+	const PHGearDesc& geardesc = *(const PHGearDesc*)desc;
+	ratio = geardesc.ratio;
+}
+
+bool PHGear::AddChildObject(ObjectIf* o){
+	PHJoint1D* j = DCAST(PHJoint1D, o);
+	if(j){
+		if(!joint[0]){
+			joint[0] = j;
+			return true;
+		}
+		if(!joint[1]){
+			joint[1] = j;
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PHGear::DelChildObject(ObjectIf* o){
+	PHJoint1D* j = DCAST(PHJoint1D, o);
+	if(j){
+		if(j == joint[0]){
+			joint[0] = NULL;
+			return true;
+		}
+		if(j == joint[1]){
+			joint[1] = NULL;
+			return true;
+		}
+	}
+	return false;
+}
+
+ObjectIf* PHGear::GetChildObject(size_t pos){
+	return joint[pos]->Cast();
 }
 
 void PHGear::CompResponse(double f){

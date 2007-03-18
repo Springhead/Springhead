@@ -36,7 +36,7 @@ public:
 	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
 	virtual void SetParent(GRFrameIf* fr);
 	virtual int NChildren(){ return (int)children.size(); }
-	virtual GRVisualIf** GetChildren(){ return (GRVisualIf**)&*children.begin(); }
+	virtual GRVisualIf** GetChildren(){ return children.empty() ? NULL : (GRVisualIf**)&*children.begin(); }
 	virtual void SetNameManager(NameManager* n);
 	virtual GRSceneIf* GetScene();
 	virtual bool AddChildObject(ObjectIf* v);
@@ -48,7 +48,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual Affinef GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
 	virtual Affinef GetTransform(){ return transform; }
-	virtual void SetTransform(Affinef& af){ transform = af; }
+	virtual void SetTransform(const Affinef& af){ transform = af; }
 	void Print(std::ostream& os) const ;
 };
 }

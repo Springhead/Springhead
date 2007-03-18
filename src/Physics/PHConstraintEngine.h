@@ -46,6 +46,7 @@ public:
 	double	posCorrectionRate;
 	double	shrinkRate;				///< LCP初期値を前回の解に対して縮小させる比率
 	double	shrinkRateCorrection;
+	bool	bGearNodeReady;			///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	
 	PHConstraintEngine();
 	~PHConstraintEngine();
@@ -55,7 +56,8 @@ public:
 	PHRootNode* CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid = NULL);	///< ツリー構造のルートノードを作成
 	PHTreeNode* CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent = NULL, PHSolid* solid = NULL);	///< ツリー構造の中間ノードを作成
 	PHGear*		CreateGear(const PHGearDesc& desc, PHJoint1D* lhs = NULL, PHJoint1D* rhs = NULL);	///< ギアを作成
-
+	PHPath*		CreatePath(const PHPathDesc& desc);
+	void		UpdateGearNode();
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 
 	//virtual void Dynamics(double dt, int ct);		///< 
@@ -69,6 +71,8 @@ public:
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;
+	typedef std::vector< UTRef<PHPath> > PHPaths;
+	PHPaths			paths;
 	
 	void SetupLCP();				///< 速度更新LCPの準備
 	void IterateLCP();				///< 速度更新LCPの一度の反復

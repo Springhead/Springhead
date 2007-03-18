@@ -34,7 +34,7 @@ public:
 
 	virtual PHSolid*	GetSolid(){return joint->solid[1];}
 	virtual PHRootNode*	GetRootNode(){return GetParent()->GetRootNode();}
-	
+	virtual void ResetGearNode();
 	virtual void CompAccel()=0;
 	virtual void CompAccelDiff(bool bUpdate, bool bImpulse)=0;
 	/// このノードに加わる拘束力の変化量から他のノードの速度変化量への影響を計算．LCPで使用
@@ -123,6 +123,7 @@ public:
 	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
 
 	/// ABA関係の関数
+	virtual void ResetGearNode();
 	virtual void CompCoriolisAccel();
 	virtual void CompSpatialTransform();
 	virtual void InitArticulatedInertia();

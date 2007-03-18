@@ -111,6 +111,8 @@ FWSceneIf* FWSdk::GetScene(int i){
 	return NULL;
 }
 void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
+	if(scene0 == scene1)
+		return;
 	DSTR << "merging " << scene0->GetName() << " and " << scene1->GetName() << endl;
 	
 	Scenes::iterator it0, it1;
@@ -134,10 +136,9 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 		scene0->SetGRScene(scene1->GetGRScene());
 
 	// FWObjectのマージ
-	FWScene* s0 = scene0->Cast();
-	FWScene* s1 = scene1->Cast();
-	s0->fwObjects.insert(s0->fwObjects.end(), s1->fwObjects.begin(), s1->fwObjects.end());
-
+	for(int i = 0; i < scene1->NObject(); i++){
+		scene0->AddChildObject(scene1->GetObjects()[i]);
+	}
 	if(fwScene == scene1)
 		fwScene = scene0;
 
@@ -166,6 +167,21 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
+
+bool FWSdk::DelChildObject(ObjectIf* o){
+	FWSceneIf* s = DCAST(FWSceneIf, o);
+	if(s){
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+		if(it != scenes.end()){
+			scenes.erase(it);
+			if(fwScene == s)
+				fwScene = (scenes.empty() ? NULL : scenes[0]);
+			return true;
+		}
+	}
+	return false;
+}
+
 void FWSdk::Clear(){
 	// 一度全てをクリアしてSDKを作り直す
 	Sdk::Clear();

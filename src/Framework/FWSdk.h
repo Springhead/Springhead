@@ -47,7 +47,7 @@ public:
 	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
-	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc);
+	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
 	virtual void LoadScene(UTString filename);
 	virtual int NScene() const;
 	virtual void SwitchScene(FWSceneIf* scene){ fwScene = scene; }
@@ -59,6 +59,7 @@ public:
 	virtual size_t NChildObject() const { return NScene(); }
 	virtual ObjectIf* GetChildObject(size_t i){ return GetScene((int)i); }
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 	virtual PHSdkIf* GetPHSdk(){ return phSdk; }
 	virtual GRSdkIf* GetGRSdk(){ return grSdk; }
 	virtual FISdkIf* GetFISdk(){ return fiSdk; }

@@ -63,9 +63,10 @@ bool FWScene::AddChildObject(ObjectIf* o){
 	FWSdkIf* sdk = DCAST(FWSdkIf, GetNameManager());
 	bool rv = false;
 	if (!rv) {
-		FWObjectIf* obj = DCAST(FWObjectIf, o);
+		FWObject* obj = DCAST(FWObject, o);
 		if (obj) {
-			fwObjects.push_back(obj);
+			fwObjects.push_back(obj->Cast());
+			obj->SetScene(Cast());
 			rv = true;
 		}
 	}
@@ -154,6 +155,7 @@ void FWScene::Sync(){
 void FWScene::Step(){
 	phScene->Step();
 }
+
 void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
 	Sync();
 	if (debug){

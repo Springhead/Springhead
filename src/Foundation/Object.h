@@ -197,6 +197,7 @@ public:
 #define ACCESS_DESC(cls)															\
 	virtual const void* GetDescAddress() const { return (cls##Desc*)this; }			\
 	virtual bool GetDesc(void* d) const { *(cls##Desc*)d=*this; return true; }		\
+	virtual void SetDesc(const void* d) { *this = *(const cls##Desc*)d; }			\
 	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
 
 ///	ステートとデスクリプタをまとめて定義
@@ -274,6 +275,8 @@ public:
 
 	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const { return false; }
+	/// デスクリプタの設定
+	virtual void SetDesc(const void* desc) {}
 	///	デスクリプタの読み出し(参照版)
 	virtual const void* GetDescAddress() const { return NULL; }
 	///	デスクリプタのサイズ

@@ -52,7 +52,6 @@ public:
 	bool		constr[6];			///< 拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
 
 	/* 派生クラスの機能	*/
-	virtual void SetDesc(const PHConstraintDesc& desc);		///< ディスクリプタの読み込み
 	//virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
 	void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
 	virtual void SetConstrainedIndex(bool* con){}			///< どの自由度を拘束するかを設定
@@ -75,8 +74,8 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject();
 	virtual ObjectIf* GetChildObject(size_t i);
+	virtual void SetDesc(const void* desc);
 	
-
 	void	CompJacobian();
 	void	SetupLCP();
 	void	IterateLCP();

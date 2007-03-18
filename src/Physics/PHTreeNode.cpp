@@ -34,6 +34,7 @@ bool PHTreeNode::AddChildObject(ObjectIf* o){
 		AddChild(n);
 		n->scene = scene;
 		n->engine = engine;
+		engine->bGearNodeReady = false;
 		return true;
 	}
 	return false;
@@ -91,6 +92,11 @@ void PHTreeNode::Prepare(PHScene* s, PHConstraintEngine* e){
 	engine = e;
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->Prepare(s, e);
+}
+
+void PHTreeNode::ResetGearNode(){
+	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
+		(*it)->ResetGearNode();
 }
 
 void PHTreeNode::CompSpatialTransform(){
@@ -366,6 +372,14 @@ void PHTreeNodeND<NDOF>::AddGear(PHGear* gear, PHTreeNodeND<NDOF>* child){
 		child->gearChildren.clear();
 	}
 	gear->bArticulated = true;
+}
+
+template<int NDOF>
+void PHTreeNodeND<NDOF>::ResetGearNode(){
+	gear = NULL;
+	gearNode = NULL;
+	parentND = NULL;
+	PHTreeNode::ResetGearNode();
 }
 
 template<int NDOF>

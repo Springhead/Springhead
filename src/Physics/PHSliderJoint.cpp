@@ -19,7 +19,7 @@ namespace Spr{;
 IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
 
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
-	SetDesc(desc);
+	SetDesc(&desc);
 	axisIndex[0] = 2;
 }
 

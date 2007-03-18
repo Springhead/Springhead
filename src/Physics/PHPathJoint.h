@@ -42,6 +42,9 @@ class PHPath : public SceneObject, public PHPathIfInit, public std::vector<PHPat
 	iterator Find(double &s);
 public:
 	OBJECTDEF_ABST(PHPath, SceneObject);
+	virtual bool GetDesc(void* desc)const;
+	virtual void SetDesc(const void* desc);
+
 	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
 	virtual bool IsLoop(){return bLoop;}
 	void AddPoint(double s, const Posed& pose);
@@ -60,6 +63,7 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
+	virtual void UpdateJointPosition(double dt);
 	PHPathJointNode(const PHPathJointNodeDesc& desc = PHPathJointNodeDesc()){}
 };
 

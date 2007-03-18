@@ -19,6 +19,8 @@ namespace Spr{;
 IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
 PHConstraint::PHConstraint(){
 	solid[0] = solid[1] = NULL;
+	f.clear();
+	F.clear();
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
@@ -48,12 +50,13 @@ ObjectIf* PHConstraint::GetChildObject(size_t i){
 	return solid[i]->Cast();
 }
 
-void PHConstraint::SetDesc(const PHConstraintDesc& desc){
-	Xj[0].r = desc.poseSocket.Pos();
-	Xj[0].q = desc.poseSocket.Ori();
-	Xj[1].r = desc.posePlug.Pos();
-	Xj[1].q = desc.posePlug.Ori();
-	bEnabled = desc.bEnabled;
+void PHConstraint::SetDesc(const void* desc){
+	const PHConstraintDesc& condesc = *(const PHConstraintDesc*)desc;
+	Xj[0].r = condesc.poseSocket.Pos();
+	Xj[0].q = condesc.poseSocket.Ori();
+	Xj[1].r = condesc.posePlug.Pos();
+	Xj[1].q = condesc.posePlug.Ori();
+	bEnabled = condesc.bEnabled;
 }
 
 void PHConstraint::UpdateState(){
@@ -135,7 +138,7 @@ void PHConstraint::CompResponseMatrix(){
 	/** 最大の対角要素との比がepsよりも小さい対角要素がある場合，
 		数値的不安定性の原因となるのでその成分は拘束対象から除外する
 	 */
-	const double eps = 0.01;
+	const double eps = 0.01, epsabs = 1.0e-10;
 	double Amax = 0.0, Amin;
 	for(j = 0; j < 6; j++)
 		if(constr[j] && A[j] > Amax)
@@ -143,7 +146,7 @@ void PHConstraint::CompResponseMatrix(){
 	Amin = Amax * eps;
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
-		if(A[j] < Amin)
+		if(A[j] < Amin || A[j] < epsabs)
 			constr[j] = false;
 		else
 			Ainv[j] = 1.0 / (A[j] + dA[j]);
@@ -154,7 +157,7 @@ void PHConstraint::SetupLCP(){
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
 	if(!bEnabled || !bFeasible)
 		return;
-	
+
 	/* 前回の値を縮小したものを初期値とする．
 	   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
 	   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
@@ -244,6 +247,7 @@ void PHConstraint::IterateLCP(){
 		}
 		f[j] = fnew[j];
 	}
+	//DSTR << f << endl;
 }
 
 void PHConstraint::SetupCorrectionLCP(){

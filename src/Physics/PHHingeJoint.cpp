@@ -19,7 +19,7 @@ namespace Spr{;
 IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
 
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
-	SetDesc(desc);
+	SetDesc(&desc);
 	axisIndex[0] = 5;
 }
 

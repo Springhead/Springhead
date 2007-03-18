@@ -41,6 +41,7 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJoint));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHBallJoint));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPathJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPath));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSpring));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHHingeJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJointNode));
@@ -106,8 +107,7 @@ CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
 		s = DBG_NEW CDBox((const CDBoxDesc&)desc);
 	}
 	if (s){
-		s->SetNameManager(Cast());
-		shapes.push_back(s->Cast());
+		AddChildObject(s->Cast());
 	}else{
 		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
 	}
@@ -128,29 +128,41 @@ ObjectIf* PHSdk::GetChildObject(size_t i){
 }
 
 bool PHSdk::AddChildObject(ObjectIf* o){
-	PHSceneIf* s = DCAST(PHSceneIf, o);
-	if (s){
-		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+	bool ok = false;
+	PHSceneIf* scene = DCAST(PHSceneIf, o);
+	if (scene){
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), scene);
 		if (it == scenes.end()){
-			scenes.push_back(s);
-			return true;
+			scenes.push_back(scene);
+			ok = true;
 		}
-		return false;
 	}
-	CDShape* h = DCAST(CDShape, o);
-	if (h){
-		UTRef<CDShapeIf> shapeif = h->Cast();
-		Shapes::iterator it = std::find(shapes.begin(), shapes.end(), shapeif);
+	CDShapeIf* shape = DCAST(CDShapeIf, o);
+	if (shape){
+		Shapes::iterator it = std::find(shapes.begin(), shapes.end(), shape);
 		if (it == shapes.end()) {
-			shapes.push_back(h->Cast());
-			return true;
+			shapes.push_back(shape);
+			ok = true;
 		}
-		return false;
 	}
-	if (std::find(objects.begin(), objects.end(), DCAST(Object, o)) == objects.end()){
-		objects.push_back(DCAST(Object, o));
-		return true;
+	if(ok){
+		NamedObject* no = DCAST(NamedObject, o);
+		no->SetNameManager(Cast());
+		if(strcmp(no->GetName(), "") == 0){
+			char name[256];
+			if(scene)
+				sprintf(name, "scene%d", NScene()-1);
+			if(shape)
+				sprintf(name, "shape%d", NShape()-1);
+			no->SetName(name);
+		}
 	}
+	// その他のオブジェクト
+	if (std::find(objects.begin(), objects.end(), o->Cast()) == objects.end()){
+		objects.push_back(o->Cast());
+		ok = true;
+	}
+	
 	return false;
 }
 bool PHSdk::DelChildObject(ObjectIf* o){

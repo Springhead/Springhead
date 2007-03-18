@@ -162,11 +162,12 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 
 PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
-	numIterCorrection	 = 3;
-	velCorrectionRate	 = 0.2;
-	posCorrectionRate	 = 0.1;
-	shrinkRate			 = 0.7;
+	numIterCorrection	 = 0;
+	velCorrectionRate	 = 0.4;
+	posCorrectionRate	 = 0.05;
+	shrinkRate			 = 0.0;
 	shrinkRateCorrection = 0.7;
+	bGearNodeReady = false;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -204,7 +205,7 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc, PHSolid* lhs, 
 		break;
 	default: assert(false);
 	}
-	joint->SetDesc(desc);
+	joint->SetDesc(&desc);
 	joint->solid[0] = lhs;
 	joint->solid[1] = rhs;
 	AddChildObject(joint->Cast());
@@ -252,11 +253,17 @@ PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTre
 	return node;
 }
 
+PHPath* PHConstraintEngine::CreatePath(const PHPathDesc& desc){
+	PHPath* path = DBG_NEW PHPath(desc);
+	AddChildObject(path->Cast());
+	return path;
+}
+
 PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PHJoint1D* lhs, PHJoint1D* rhs){
 	PHGear* gear = DBG_NEW PHGear();
 	gear->joint[0] = lhs;
 	gear->joint[1] = rhs;
-	gear->SetDesc(desc);
+	gear->SetDesc(&desc);
 	AddChildObject(gear->Cast());
 	return gear;
 }
@@ -276,6 +283,7 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	if(root){
 		root->Prepare(DCAST(PHScene, GetScene()), this);
 		trees.push_back(root);
+		bGearNodeReady = false;
 		return true;
 	}
 	PHGear* gear = DCAST(PHGear, o);
@@ -283,7 +291,24 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 		gear->scene = DCAST(PHScene, GetScene());
 		gear->engine = this;
 		gears.push_back(gear);
-		//連動する関節が同一のABAツリーで親子関係にある場合、ギアノードを更新する
+		bGearNodeReady = false;
+		return true;
+	}
+	PHPath* path = DCAST(PHPath, o);
+	if(path){
+		paths.push_back(path);
+		return true;
+	}
+	return false;
+}
+
+void PHConstraintEngine::UpdateGearNode(){
+	for(int i = 0; i < trees.size(); i++)
+		trees[i]->ResetGearNode();
+
+	for(int i = 0; i < gears.size(); i++){
+		PHGear* gear = gears[i];
+		gear->bArticulated = false;
 		PHTreeNode1D *nodeL, *nodeR;
 		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 			nodeL = DCAST(PHTreeNode1D, (*it)->FindByJoint(gear->joint[0]));
@@ -296,9 +321,7 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 			else if(nodeL->GetParent() == nodeR->GetParent())
 				nodeL->AddGear(gear, nodeR);
 		}
-		return true;
 	}
-	return false;
 }
 
 bool PHConstraintEngine::DelChildObject(ObjectIf* o){
@@ -319,6 +342,7 @@ bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 		PHRootNodes::iterator it = find(trees.begin(), trees.end(), root);
 		if(it != trees.end()){
 			trees.erase(it);
+			bGearNodeReady = false;
 			return true;
 		}
 		return false;
@@ -328,6 +352,16 @@ bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 		PHGears::iterator it = find(gears.begin(), gears.end(), gear);
 		if(it != gears.end()){
 			gears.erase(it);
+			bGearNodeReady = false;
+			return true;
+		}
+		return false;
+	}
+	PHPath* path = DCAST(PHPath, o);
+	if(path){
+		PHPaths::iterator it = find(paths.begin(), paths.end(), path);
+		if(it != paths.end()){
+			paths.erase(it);
 			return true;
 		}
 		return false;
@@ -420,6 +454,11 @@ void PHConstraintEngine::Step(){
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
 
+	// 必要ならばギアノードの更新
+	if(!bGearNodeReady){
+		UpdateGearNode();
+		bGearNodeReady = true;
+	}
 	//交差を検知
 	points.clear();
 	if(bContactEnabled)

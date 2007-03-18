@@ -65,7 +65,7 @@ public:
 	virtual double	GetDamper(){return damper;}
 
 	/// オーバライド
-	virtual void	SetDesc(const PHConstraintDesc& desc);
+	virtual void	SetDesc(const void* desc);
 	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque[0] * scene->GetTimeStep();}
 	virtual void	SetConstrainedIndex(bool* con);
 	virtual void	Projection(double& f, int k);

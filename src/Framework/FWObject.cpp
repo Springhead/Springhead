@@ -7,8 +7,8 @@
 
 namespace Spr{;
 
-IF_IMP(FWObject, NamedObject);
-OBJECT_IMP(FWObject, NamedObject);
+IF_IMP(FWObject, SceneObject);
+OBJECT_IMP(FWObject, SceneObject);
 
 FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 : desc(d), phSolid(NULL), grFrame(NULL)

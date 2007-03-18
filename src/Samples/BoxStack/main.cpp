@@ -294,7 +294,7 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-	float DT = 0.05f;
+	float DT = 0.1f;
 	int times = (int)(DT / scene->GetTimeStep());
 	for(int i=0; i<times; ++i) scene->Step();
 	glutPostRedisplay();
@@ -311,8 +311,8 @@ void timer(int id){
 int main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
-	dscene.numIter = 5;
+	dscene.timeStep = 0.1;
+	dscene.numIteration = 5;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 
 	// soFloor用のdesc

@@ -19,12 +19,12 @@ namespace Spr{;
 IF_OBJECT_IMP(PHSpring, PHConstraint)
 
 PHSpring::PHSpring(const PHSpringDesc& desc){
-	SetDesc(desc);
+	SetDesc(&desc);
 }
 
-void PHSpring::SetDesc(const PHConstraintDesc& desc){
+void PHSpring::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
-	const PHSpringDesc& descSpring = (const PHSpringDesc&)desc;
+	const PHSpringDesc& descSpring = *(const PHSpringDesc*)desc;
 	spring = descSpring.spring;
 	damper = descSpring.damper;
 }

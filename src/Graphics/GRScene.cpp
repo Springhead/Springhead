@@ -45,10 +45,16 @@ GRVisualIf* GRScene::CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent){
 	case GRVisualDesc::MESH:	 v = DBG_NEW GRMesh((const GRMeshDesc&)desc); break;
 	}
 	if(v){
+		v->SetNameManager(Cast());
 		if(parent) parent->AddChildObject(v->Cast());
 		else GetWorld()->AddChildObject(v->Cast());
+		return v->Cast();
 	}
-	return v->Cast();
+	return NULL;
+}
+void GRScene::SetCamera(const GRCameraDesc& desc){
+	GRCamera* cam = DBG_NEW GRCamera(desc);
+	AddChildObject(cam->Cast());
 }
 bool GRScene::AddChildObject(ObjectIf* o){
 	bool ok = false;

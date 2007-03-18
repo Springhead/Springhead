@@ -53,21 +53,23 @@ public:
 	int NSolids() const;
 	PHSolidIf** GetSolids();
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
-	PHJointIf* CreateJoint(const PHJointDesc& desc);	///< ファイルローダ用
+	//PHJointIf* CreateJoint(const PHJointDesc& desc);	///< ファイルローダ用
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	int NJoints() const;
 	PHJointIf* GetJoint(int i);
-	PHRootNodeIf* CreateRootNode(const PHRootNodeDesc& desc);
+	//PHRootNodeIf* CreateRootNode(const PHRootNodeDesc& desc);
 	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc);
 	int NRootNodes() const;
 	PHRootNodeIf* GetRootNode(int i);
-	PHTreeNodeIf* CreateTreeNode(const PHTreeNodeDesc& desc);
+	//PHTreeNodeIf* CreateTreeNode(const PHTreeNodeDesc& desc);
 	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc);
-	PHGearIf*	CreateGear(const PHGearDesc& desc);
+	//PHGearIf*	CreateGear(const PHGearDesc& desc);
 	PHGearIf*	CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc);
 	int NGears() const;
 	PHGearIf* GetGear(int i);
 	PHPathIf*	CreatePath(const PHPathDesc& desc);
+	int NPaths() const;
+	PHPathIf* GetPath(int i);
 	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
