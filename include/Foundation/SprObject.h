@@ -204,7 +204,9 @@ struct ObjectIf{
 	/**	デスクリプタの読み出し(コピー版 失敗する(falseを返す)こともある)．
 		ObjectIf::GetDescAddress() が実装されていなくても，こちらは実装されていることがある．	*/
 	virtual bool GetDesc(void* desc) const = 0;
-	/**	ディスクリプタのサイズ	*/
+	/** デスクリプタの設定 */
+	virtual void SetDesc(const void* desc) = 0;
+	/**	デスクリプタのサイズ	*/
 	virtual size_t GetDescSize() const = 0;
 	/**	状態の読み出し(参照版 NULLを返すこともある)．
 		これが実装されていなくても，ObjectIf::GetState()は実装されていることがある．	*/

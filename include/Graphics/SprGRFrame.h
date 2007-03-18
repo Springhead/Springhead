@@ -75,7 +75,7 @@ struct GRFrameIf: public GRVisualIf{
 	virtual Affinef GetWorldTransform()=0;
 
 	/** @brief eƒm[ƒh‚Æ‚Ì‘Š‘Î•ÏŠ·‚ğİ’è */
-	virtual void SetTransform(Affinef& af)=0;
+	virtual void SetTransform(const Affinef& af)=0;
 
 	virtual void Print(std::ostream& os) const =0;
 };

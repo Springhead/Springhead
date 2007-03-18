@@ -43,7 +43,10 @@ struct GRSceneIf: public SceneIf{
 	virtual void SetCamera(const GRCameraDesc& desc)=0;
 
 	/** @brief ビジュアルの作成
-		フレーム、メッシュ、マテリアル、およびライトを作成して親フレームparentの下に追加する。
+		@param desc ビジュアルのデスクリプタ
+		@param parent 親フレーム
+		フレーム、メッシュ、マテリアル、あるいはライトを作成して親フレームparentの下に追加する。
+		parentがNULLの場合はワールドフレームが親となる。
 	 */
 	virtual GRVisualIf*  CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent = NULL)=0;
 

@@ -19,7 +19,7 @@ namespace Spr{
 		Frameworkを利用する場合はPHSceneIf::CreateSolidやGRSceneIf::CreateFrameの代わりに
 		FWSceneIf::CreateObjectを使用する．
 	 */
-	struct FWObjectIf : NamedObjectIf {
+	struct FWObjectIf : SceneObjectIf {
 		IF_DEF(FWObject);
 		/// PHSolidを取得する
 		virtual PHSolidIf* GetPHSolid() = 0;

@@ -22,7 +22,7 @@ struct FWSdkIf : ObjectIf {
 		空のシーンを作成し、シーンリストに追加する．
 		作成されたシーンはアクティブとなる．
 	 */
-	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc)=0;
+	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc())=0;
 
 	/** @brief シーンをファイルからロードする
 		@param filename ファイル名
