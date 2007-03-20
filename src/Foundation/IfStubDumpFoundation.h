@@ -51,6 +51,9 @@ struct ObjectIfStubTemplate: public IF {
 	virtual bool GetDesc(void *  desc) const {
 		return ((OBJ*)(MIF*)this)->GetDesc(desc);
 	}
+	virtual void SetDesc(const void *  desc){
+		return ((OBJ*)(MIF*)this)->SetDesc(desc);
+	}
 	virtual size_t GetDescSize() const {
 		return ((OBJ*)(MIF*)this)->GetDescSize();
 	}
