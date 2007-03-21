@@ -12,7 +12,7 @@
 #include <Base/TQuaternion.h>
 #include <vector>
 
-//#define HULL_DEBUG		//	デバッグ出力
+//#define HULL_DEBUG	//	デバッグ出力
 #ifdef HULL_DEBUG
  #define HULL_DEBUG_EVAL(x) x
 #else

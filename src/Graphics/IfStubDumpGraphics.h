@@ -44,7 +44,7 @@ struct GRFrameIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual Affinef GetWorldTransform(){
 		return ((OBJ*)(MIF*)this)->GetWorldTransform();
 	}
-	virtual void SetTransform(Affinef &  af){
+	virtual void SetTransform(const Affinef &  af){
 		return ((OBJ*)(MIF*)this)->SetTransform(af);
 	}
 	virtual void Print(std::ostream &  os) const {

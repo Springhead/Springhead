@@ -101,10 +101,10 @@ void PHContactPoint::CompBias(){
 //		DSTR << shapePair->state;
 //		DSTR << shapePair->shapePoseW[1].Pos();
 //		DSTR << "err: " << err << std::edl;
-		db.v().x = -err * engine->correctionRate;
+		db.v().x = -err * engine->velCorrectionRate;
 	}
 #else
-	const double damper = 50.0, spring = 0.0;
+	const double damper = 100.0, spring = 10.0;
 	double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
 	dA[0] = tmp * dtinv;
 	db[0] = -spring * (shapePair->depth - 1e-3) * tmp;
@@ -114,6 +114,7 @@ void PHContactPoint::CompBias(){
 void PHContactPoint::Projection(double& f, int k){
 	static double flim;
 	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
+//		f = min(1.0, f);	// ƒfƒ‚—p‚Ì‹ê“÷‚ÌôBŒã‚Åíœ‚·‚×‚µ
 		f = max(0.0, f);
 		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	//Å‘åÃ~–€C
 	}

@@ -1,9 +1,9 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 namespace Spr{; 
 
-template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct FWObjectIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
+struct FWObjectIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSolidIf *  GetPHSolid(){
 		return ((OBJ*)(MIF*)this)->GetPHSolid();
 	}
@@ -65,7 +65,7 @@ typedef IfInitTemplate<FWSceneIfStub, FWScene>	FWSceneIfInit;
 template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual FWSceneIf *  CreateScene(const PHSceneDesc &  phdesc, const GRSceneDesc &  grdesc){
+	virtual FWSceneIf *  CreateScene(const PHSceneDesc &  phdesc = PHSceneDesc(), const GRSceneDesc &  grdesc = GRSceneDesc()){
 		return ((OBJ*)(MIF*)this)->CreateScene(phdesc, grdesc);
 	}
 	virtual void LoadScene(UTString filename){

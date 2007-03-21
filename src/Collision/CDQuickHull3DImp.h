@@ -24,7 +24,8 @@ template <class TVtx>
 bool CDQHPlane<TVtx>::Visible(TVtx* p){
 	//	–Ê‚ª—LŒÀ‚Ì‹——£‚É‚ ‚éê‡
 	Vec3d GetPos = p->GetPos();
-	return GetPos*normal > dist;
+	const double eps = 1.0e-10;
+	return GetPos*normal > dist + eps;
 }
 template <class TVtx>
 int CDQHPlane<TVtx>::GetVtxID(TVtx* v){
@@ -188,7 +189,7 @@ void CDQHPlanes<TVtx>::CreateFirstConvex(){
 	planes.end->vtx[2] = vtxBegin[0];
 	planes.end->CalcNormal();
 	planes.end++;
-	
+
 	//	— •\‚ðì‚Á‚ÄÅ‰‚Ì“Ê‘½–Ê‘Ì‚É‚·‚éD
 	*planes.end = *planes.begin;
 	planes.end->Reverse();

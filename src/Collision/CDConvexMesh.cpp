@@ -166,15 +166,21 @@ void CDConvexMesh::CalcFace(){
 	}
 	//	凸多面体に使われた頂点だけを列挙
 	CDVertexIDs vtxIds;
+	int hoge = vtxIds.size();
 	for(std::set<int>::iterator it = usedVtxs.begin(); it != usedVtxs.end(); ++it){
 		vtxIds.push_back(*it);
+		DSTR << base[*it] << std::endl;
 	}
 	//	baseから不要な頂点を削除
 	int pos = base.size()-1;
-	for(int i=vtxIds.size()-1; i>=0; --i){
-		for(; pos>vtxIds[i] && pos>=0; --pos){
+	int i = vtxIds.size()-1;
+	while(true){
+		while(pos >= 0 && (i < 0 || pos>vtxIds[i])){
 			base.erase(base.begin()+pos);
+			 --pos;
 		}
+		if(pos < 0)break;
+		--i;
 		--pos;
 	}
 	//	面の頂点IDを振りなおす
