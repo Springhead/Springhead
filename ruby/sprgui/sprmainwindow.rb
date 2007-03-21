@@ -1,6 +1,7 @@
 require 'sprsceneview'
 require 'sprpropertymanager'
 require 'sprcameraview'
+require 'sprjointcreatedlg'
 
 include Fox
 
@@ -53,27 +54,21 @@ class SprMainWindow < FXMainWindow
     	dragshell1 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
     	menubar = FXMenuBar.new(self, dragshell1, LAYOUT_SIDE_TOP|LAYOUT_FILL_X)
     	FXToolBarGrip.new(menubar, menubar, FXMenuBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
-    
     	# File menu
 		filemenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&File", nil, filemenu)
-  
     	# Edit Menu
 		editmenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&Edit", nil, editmenu)
-  
     	# View menu
 		viewmenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&View", nil, viewmenu)
-  
     	# Options Menu
 		optmenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&Options", nil, optmenu)
-  
     	# Help menu
 		helpmenu = FXMenuPane.new(self)
     	FXMenuTitle.new(menubar, "&Help", nil, helpmenu, LAYOUT_RIGHT)
-  
 		# File Menu entries
     	filenew = FXMenuCommand.new(filemenu, "&New...\tCtl-N\tCreate new document.", @newicon)
 		filenew.connect(SEL_COMMAND, method(:onCmdNew))
@@ -121,27 +116,25 @@ class SprMainWindow < FXMainWindow
     	FXMenuCommand.new(editmenu, "&Paste\tCtl-V\tPaste from clipboard.", @pasteicon)
     	FXMenuCommand.new(editmenu, "&Delete\t\tDelete selection.", @deleteicon)
     	FXMenuSeparator.new(editmenu)
- 
     	# Options menu
     	FXMenuCommand.new(optmenu, "Preferences...\t\tChange preferences.", nil)
-
     	# Help Menu entries
     	FXMenuCommand.new(helpmenu, "&Help...\t\tDisplay help information.", @helpicon)
     	FXMenuSeparator.new(helpmenu)
     	FXMenuCommand.new(helpmenu, "&About TextEdit...\t\tDisplay about panel.", @smallicon)
-  
+
     	# Tool bar
-    	dragshell2 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
-    	toolbar = FXToolBar.new(self, dragshell2, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
+    	dragshell = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
+    	toolbar = FXToolBar.new(self, dragshell, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
     	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
   
-		# Toobar buttons: File manipulation
+		# ツールバー : ファイル
 		FXButton.new(toolbar, "New\tNew\tCreate new document.", @newicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 		FXButton.new(toolbar, "Open\tOpen\tOpen document file.", @openicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 		FXButton.new(toolbar, "Save\tSave\tSave document.", @saveicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 		FXButton.new(toolbar, "Save as\tSave As\tSave document to another file.", @saveasicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 
-		# Toobar buttons: Editing
+		# ツールバー : 編集
 		FXFrame.new(toolbar, LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FIX_WIDTH|LAYOUT_FIX_HEIGHT, 0, 0, 5, 5)
 		FXButton.new(toolbar, "Cut\tCut\tCut selection to clipboard.", @cuticon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
 		FXButton.new(toolbar, "Copy\tCopy\tCopy selection to clipboard.", @copyicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT))
@@ -151,12 +144,12 @@ class SprMainWindow < FXMainWindow
 
 		FXButton.new(toolbar, "Help\tHelp on editor\tDisplay help information.", @helpicon, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_RIGHT))		
 
-    	# Time control tool bar
-    	dragshell3 = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
-    	toolbar = FXToolBar.new(self, dragshell3, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
+		# ツールバー : Springheadオブジェクト
+    	dragshell = FXToolBarShell.new(self, FRAME_RAISED|FRAME_THICK)
+    	toolbar = FXToolBar.new(self, dragshell, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
     	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
-		FXButton.new(toolbar, "Object\tObject\tCreate object.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
-		FXButton.new(toolbar, "Joint\tJoint\tCreate joint.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
+		FXButton.new(toolbar, "Object\tObject\tCreate object.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onCreateObject))
+		FXButton.new(toolbar, "Joint\tJoint\tCreate joint.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onCreateJoint))
 
     	# Status bar
     	statusbar = FXStatusBar.new(self, LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X|STATUSBAR_WITH_DRAGCORNER)
@@ -186,9 +179,9 @@ class SprMainWindow < FXMainWindow
 
 		$cameraview = SprCameraView.new(displayframe)
 
-    	# Time control tool bar
-    	dragshell3 = FXToolBarShell.new(displayframe, FRAME_RAISED|FRAME_THICK)
-    	toolbar = FXToolBar.new(displayframe, dragshell3, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
+    	# ツールバー : シミュレーション制御
+    	dragshell = FXToolBarShell.new(displayframe, FRAME_RAISED|FRAME_THICK)
+    	toolbar = FXToolBar.new(displayframe, dragshell, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT)
     	FXToolBarGrip.new(toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_DOUBLE)
 		FXButton.new(toolbar, "Start\tStart\tStart simulation.", 	nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStart))
 		FXButton.new(toolbar, "Stop\tStop\tStop simulation.", 		nil, nil, 0, (ICON_ABOVE_TEXT|BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT)).connect(SEL_COMMAND, method(:onSimStop))
@@ -219,7 +212,6 @@ class SprMainWindow < FXMainWindow
 
 	# New file
 	def newFile()
-		puts 'newfilebegin'
 		clearDocument()
 
 		# デフォルトシーンの構築
@@ -249,15 +241,13 @@ class SprMainWindow < FXMainWindow
 		camera.SetFrame(cameraframe)
 
 		$sceneview.addTab(scene)
-		$propertymanager.update(nil)
+		$propertymanager.refresh(nil)
 
     	@filename = "untitled"
     	@filetime = nil
     	@filenameset = false
     	@undolist.clear
     	@undolist.mark
-
-		puts 'newfile'
 	end
 
   	# Load file
@@ -279,7 +269,7 @@ class SprMainWindow < FXMainWindow
 			$sceneview.addTab($sprapp.GetSdk().GetScene(i))
 		end
 		$sceneview.create		# createしないとタブが表示されない
-		$propertymanager.update(nil)
+		$propertymanager.refresh(nil)
   	end
 
 	# Insert file
@@ -486,6 +476,21 @@ class SprMainWindow < FXMainWindow
     	return 1
   	end
 
+	# create sprinthead object
+	def onCreateObject(sender, sel, ptr)
+		$sprapp.GetSdk.GetScene.CreateObject(PHSolidDesc.new, GRFrameDesc.new)
+		$sceneview.refresh
+	end
+
+	# create springhead joint
+	def onCreateJoint(sender, sel, ptr)
+		dlg = SprJointCreateDlg.new(self)
+		if dlg.execute != 0
+			##$sprapp.GetSdk.GetScene.GetPHScene.CreateJoint(PHHingeJointDesc.new)
+			##$sceneview.refresh
+		end
+	end
+
 	# start simulation
 	def	onSimStart(sender, sel, ptr)
 		@simRunning = true
@@ -542,7 +547,7 @@ class SprMainWindow < FXMainWindow
     	readRegistry
     	super
 		# 左ペインの幅
-		@hsplitter.setSplit(0, 200) #$sceneview.font.getTextWidth('MMMMMMMMMMMMMMMM'))
+		@hsplitter.setSplit(0, 300) #$sceneview.font.getTextWidth('MMMMMMMMMMMMMMMM'))
 		# 左ペインの上下分割比
 		@vsplitter.setSplit(0, @vsplitter.getHeight() * 0.7);
 

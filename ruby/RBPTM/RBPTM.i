@@ -9,6 +9,27 @@ using namespace PTM;
 using namespace Spr;
 %}
 
+// const T* を渡すコンストラクタのためのtypemap
+%define INPUT_ARRAY_TYPEMAP(type, argname, ndim)
+%typemap(typecheck) type const * argname %{
+	Check_Type($input, T_ARRAY);
+	$1 = RARRAY($input)->len == ndim;
+%}
+%typemap(in) type const * argname(type temp[ndim]) %{
+	for(int i = 0; i < ndim; i++)
+		temp[i] = (type)(RARRAY($input)->ptr[i]);
+	$1 = temp;
+%}
+%enddef
+INPUT_ARRAY_TYPEMAP(float, _2f, 2)	//Vec2f
+INPUT_ARRAY_TYPEMAP(float, _3f, 3)	//Vec3f
+INPUT_ARRAY_TYPEMAP(float, _4f, 4)	//Vec4f
+INPUT_ARRAY_TYPEMAP(double, _2d, 2)	//Vec2d
+INPUT_ARRAY_TYPEMAP(double, _3d, 3)	//Vec3d
+INPUT_ARRAY_TYPEMAP(double, _4d, 4)	//Vec4d, Quaterniond
+INPUT_ARRAY_TYPEMAP(double, _7d, 7)	//Posed
+
+
 %define VEC_MEMBER(type)
 void	clear();
 double	norm();
@@ -19,16 +40,10 @@ type	unit();
 void	unitize();
 %enddef
 	
-%define MAT_MEMBER(mat, vec)
-void	clear();
-vec		col(size_t i);
-vec		row(size_t i);
-double	det();
-size_t	height();
-size_t	width();
-void	resize(size_t nrow, size_t ncol);
-mat		trans();
-mat		inv();
+%define VEC_CONSTRUCTOR(vec, elem, argname)
+vec();
+vec(const vec&);
+vec(const elem* argname);
 %enddef
 
 %define VEC_EXTEND(vec, elem)
@@ -50,6 +65,23 @@ vec __mul__(elem k){
 elem __mul__(vec v){
 	return *$self * v;
 }
+%enddef
+
+%define MAT_MEMBER(mat, vec)
+void	clear();
+vec		col(size_t i);
+vec		row(size_t i);
+double	det();
+size_t	height();
+size_t	width();
+void	resize(size_t nrow, size_t ncol);
+mat		trans();
+mat		inv();
+%enddef
+
+%define MAT_CONSTRUCTOR(mat)
+mat();
+mat(const mat&);
 %enddef
 
 %define MAT_EXTEND(mat, vec, elem)
@@ -84,7 +116,7 @@ public:
 	float x, y;
 	VEC_MEMBER(Vec2f)
 	static Vec2f Zero();
-	Vec2f();
+	VEC_CONSTRUCTOR(Vec2f, float, _2f)
 	Vec2f(float xi, float yi);
 };
 %extend Vec2f{
@@ -95,7 +127,7 @@ public:
 	double x, y;
 	VEC_MEMBER(Vec2d)
 	static Vec2d Zero();
-	Vec2d();
+	VEC_CONSTRUCTOR(Vec2d, double, _2d)
 	Vec2d(double xi, double yi);
 };
 %extend Vec2d{
@@ -107,7 +139,7 @@ public:
 	float x, y, z;
 	VEC_MEMBER(Vec3f)
 	static Vec3f Zero();
-	Vec3f();
+	VEC_CONSTRUCTOR(Vec3f, float, _3f)
 	Vec3f(float xi, float yi, float zi);
 };
 %extend Vec3f{
@@ -118,7 +150,7 @@ public:
 	double x, y, z;
 	VEC_MEMBER(Vec3d)
 	static Vec3d Zero();
-	Vec3d();
+	VEC_CONSTRUCTOR(Vec3d, double, _3d)
 	Vec3d(double xi, double yi, double zi);
 };
 %extend Vec3d{
@@ -130,7 +162,7 @@ public:
 	float x, y, z, w;
 	VEC_MEMBER(Vec4f)
 	static Vec4f Zero();
-	Vec4f();
+	VEC_CONSTRUCTOR(Vec4f, float, _4f)
 	Vec4f(float xi, float yi, float zi, float wi);
 };
 %extend Vec4f{
@@ -141,7 +173,7 @@ public:
 	double x, y, z, w;
 	VEC_MEMBER(Vec4d)
 	static Vec4d Zero();
-	Vec4d();
+	VEC_CONSTRUCTOR(Vec4d, double, _4d)
 	Vec4d(double xi, double yi, double zi, double wi);
 };
 %extend Vec4d{
@@ -463,7 +495,7 @@ public:
 	Vec3d Axis();
 	double Theta();
 	
-	Quaterniond();
+	VEC_CONSTRUCTOR(Quaterniond, double, _4d)
 	Quaterniond(double wi, double xi, double yi, double zi);
 	
 	static Quaterniond Rot(double angle, const Vec3d& axis);
@@ -530,5 +562,5 @@ public:
 	void FromAffine(const Affined& f);
 	void ToAffine(Affined& af) const;
 
-	Posed();	
+	VEC_CONSTRUCTOR(Posed, double, _7d)
 };

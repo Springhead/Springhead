@@ -15,10 +15,10 @@ class SprPropertyManager < FXSwitcher
 
 	def create()
 		super
-		update(nil)
+		refresh(nil)
 	end
 
-	def update(obj)
+	def refresh(obj)
 		if obj.nil?
 			setCurrent(@noproperty.index)
 			return
@@ -36,6 +36,6 @@ class SprPropertyManager < FXSwitcher
 	end
 
 	def clear()
-		update(nil)
+		refresh(nil)
 	end
 end

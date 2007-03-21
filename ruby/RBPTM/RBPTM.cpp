@@ -2605,6 +2605,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Vec2f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2f *arg1 = 0 ;
+  Vec2f *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec2f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vec2f" "', argument " "1"" of type '" "Vec2f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vec2f" "', argument " "1"" of type '" "Vec2f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2f * >(argp1);
+  result = (Vec2f *)new Vec2f((Vec2f const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec2f__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  float *arg1 = (float *) 0 ;
+  Vec2f *result = 0 ;
+  float temp1[2] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 2; i++)
+  temp1[i] = (float)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Vec2f *)new Vec2f((float const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Vec2f_allocate(VALUE self) {
@@ -2623,7 +2671,7 @@ _wrap_Vec2f_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Vec2f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Vec2f__SWIG_3(int argc, VALUE *argv, VALUE self) {
   float arg1 ;
   float arg2 ;
   Vec2f *result = 0 ;
@@ -2666,6 +2714,25 @@ SWIGINTERN VALUE _wrap_new_Vec2f(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Vec2f__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Vec2f__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 2;
+    
+    if (_v) {
+      return _wrap_new_Vec2f__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 2) {
     int _v;
     {
@@ -2678,7 +2745,7 @@ SWIGINTERN VALUE _wrap_new_Vec2f(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_new_Vec2f__SWIG_1(nargs, args, self);
+        return _wrap_new_Vec2f__SWIG_3(nargs, args, self);
       }
     }
   }
@@ -3264,6 +3331,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Vec2d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec2d *arg1 = 0 ;
+  Vec2d *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec2d,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vec2d" "', argument " "1"" of type '" "Vec2d const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vec2d" "', argument " "1"" of type '" "Vec2d const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec2d * >(argp1);
+  result = (Vec2d *)new Vec2d((Vec2d const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec2d__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double *arg1 = (double *) 0 ;
+  Vec2d *result = 0 ;
+  double temp1[2] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 2; i++)
+  temp1[i] = (double)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Vec2d *)new Vec2d((double const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Vec2d_allocate(VALUE self) {
@@ -3282,7 +3397,7 @@ _wrap_Vec2d_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Vec2d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Vec2d__SWIG_3(int argc, VALUE *argv, VALUE self) {
   double arg1 ;
   double arg2 ;
   Vec2d *result = 0 ;
@@ -3325,6 +3440,25 @@ SWIGINTERN VALUE _wrap_new_Vec2d(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Vec2d__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec2d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Vec2d__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 2;
+    
+    if (_v) {
+      return _wrap_new_Vec2d__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 2) {
     int _v;
     {
@@ -3337,7 +3471,7 @@ SWIGINTERN VALUE _wrap_new_Vec2d(int nargs, VALUE *args, VALUE self) {
         _v = SWIG_CheckState(res);
       }
       if (_v) {
-        return _wrap_new_Vec2d__SWIG_1(nargs, args, self);
+        return _wrap_new_Vec2d__SWIG_3(nargs, args, self);
       }
     }
   }
@@ -3977,6 +4111,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Vec3f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3f *arg1 = 0 ;
+  Vec3f *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vec3f" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vec3f" "', argument " "1"" of type '" "Vec3f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3f * >(argp1);
+  result = (Vec3f *)new Vec3f((Vec3f const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec3f__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  float *arg1 = (float *) 0 ;
+  Vec3f *result = 0 ;
+  float temp1[3] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = (float)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Vec3f *)new Vec3f((float const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Vec3f_allocate(VALUE self) {
@@ -3995,7 +4177,7 @@ _wrap_Vec3f_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Vec3f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Vec3f__SWIG_3(int argc, VALUE *argv, VALUE self) {
   float arg1 ;
   float arg2 ;
   float arg3 ;
@@ -4046,6 +4228,25 @@ SWIGINTERN VALUE _wrap_new_Vec3f(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Vec3f__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Vec3f__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 3;
+    
+    if (_v) {
+      return _wrap_new_Vec3f__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 3) {
     int _v;
     {
@@ -4063,7 +4264,7 @@ SWIGINTERN VALUE _wrap_new_Vec3f(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_new_Vec3f__SWIG_1(nargs, args, self);
+          return _wrap_new_Vec3f__SWIG_3(nargs, args, self);
         }
       }
     }
@@ -4704,6 +4905,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Vec3d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec3d *arg1 = 0 ;
+  Vec3d *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec3d,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vec3d" "', argument " "1"" of type '" "Vec3d const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vec3d" "', argument " "1"" of type '" "Vec3d const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec3d * >(argp1);
+  result = (Vec3d *)new Vec3d((Vec3d const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec3d__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double *arg1 = (double *) 0 ;
+  Vec3d *result = 0 ;
+  double temp1[3] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 3; i++)
+  temp1[i] = (double)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Vec3d *)new Vec3d((double const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Vec3d_allocate(VALUE self) {
@@ -4722,7 +4971,7 @@ _wrap_Vec3d_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Vec3d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Vec3d__SWIG_3(int argc, VALUE *argv, VALUE self) {
   double arg1 ;
   double arg2 ;
   double arg3 ;
@@ -4773,6 +5022,25 @@ SWIGINTERN VALUE _wrap_new_Vec3d(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Vec3d__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec3d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Vec3d__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 3;
+    
+    if (_v) {
+      return _wrap_new_Vec3d__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 3) {
     int _v;
     {
@@ -4790,7 +5058,7 @@ SWIGINTERN VALUE _wrap_new_Vec3d(int nargs, VALUE *args, VALUE self) {
           _v = SWIG_CheckState(res);
         }
         if (_v) {
-          return _wrap_new_Vec3d__SWIG_1(nargs, args, self);
+          return _wrap_new_Vec3d__SWIG_3(nargs, args, self);
         }
       }
     }
@@ -5485,6 +5753,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Vec4f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec4f *arg1 = 0 ;
+  Vec4f *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec4f,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vec4f" "', argument " "1"" of type '" "Vec4f const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vec4f" "', argument " "1"" of type '" "Vec4f const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4f * >(argp1);
+  result = (Vec4f *)new Vec4f((Vec4f const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec4f__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  float *arg1 = (float *) 0 ;
+  Vec4f *result = 0 ;
+  float temp1[4] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = (float)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Vec4f *)new Vec4f((float const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Vec4f_allocate(VALUE self) {
@@ -5503,7 +5819,7 @@ _wrap_Vec4f_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Vec4f__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Vec4f__SWIG_3(int argc, VALUE *argv, VALUE self) {
   float arg1 ;
   float arg2 ;
   float arg3 ;
@@ -5562,6 +5878,25 @@ SWIGINTERN VALUE _wrap_new_Vec4f(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Vec4f__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4f, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Vec4f__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 4;
+    
+    if (_v) {
+      return _wrap_new_Vec4f__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 4) {
     int _v;
     {
@@ -5584,7 +5919,7 @@ SWIGINTERN VALUE _wrap_new_Vec4f(int nargs, VALUE *args, VALUE self) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_new_Vec4f__SWIG_1(nargs, args, self);
+            return _wrap_new_Vec4f__SWIG_3(nargs, args, self);
           }
         }
       }
@@ -6280,6 +6615,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Vec4d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Vec4d *arg1 = 0 ;
+  Vec4d *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Vec4d,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Vec4d" "', argument " "1"" of type '" "Vec4d const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Vec4d" "', argument " "1"" of type '" "Vec4d const &""'"); 
+  }
+  arg1 = reinterpret_cast< Vec4d * >(argp1);
+  result = (Vec4d *)new Vec4d((Vec4d const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Vec4d__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double *arg1 = (double *) 0 ;
+  Vec4d *result = 0 ;
+  double temp1[4] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = (double)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Vec4d *)new Vec4d((double const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Vec4d_allocate(VALUE self) {
@@ -6298,7 +6681,7 @@ _wrap_Vec4d_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Vec4d__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Vec4d__SWIG_3(int argc, VALUE *argv, VALUE self) {
   double arg1 ;
   double arg2 ;
   double arg3 ;
@@ -6357,6 +6740,25 @@ SWIGINTERN VALUE _wrap_new_Vec4d(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Vec4d__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Vec4d, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Vec4d__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 4;
+    
+    if (_v) {
+      return _wrap_new_Vec4d__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 4) {
     int _v;
     {
@@ -6379,7 +6781,7 @@ SWIGINTERN VALUE _wrap_new_Vec4d(int nargs, VALUE *args, VALUE self) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_new_Vec4d__SWIG_1(nargs, args, self);
+            return _wrap_new_Vec4d__SWIG_3(nargs, args, self);
           }
         }
       }
@@ -20778,6 +21180,54 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Quaterniond__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Quaterniond *arg1 = 0 ;
+  Quaterniond *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Quaterniond,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Quaterniond" "', argument " "1"" of type '" "Quaterniond const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Quaterniond" "', argument " "1"" of type '" "Quaterniond const &""'"); 
+  }
+  arg1 = reinterpret_cast< Quaterniond * >(argp1);
+  result = (Quaterniond *)new Quaterniond((Quaterniond const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Quaterniond__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double *arg1 = (double *) 0 ;
+  Quaterniond *result = 0 ;
+  double temp1[4] ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  
+  for(int i = 0; i < 4; i++)
+  temp1[i] = (double)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Quaterniond *)new Quaterniond((double const *)arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Quaterniond_allocate(VALUE self) {
@@ -20796,7 +21246,7 @@ _wrap_Quaterniond_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Quaterniond__SWIG_1(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Quaterniond__SWIG_3(int argc, VALUE *argv, VALUE self) {
   double arg1 ;
   double arg2 ;
   double arg3 ;
@@ -20855,6 +21305,25 @@ SWIGINTERN VALUE _wrap_new_Quaterniond(int nargs, VALUE *args, VALUE self) {
   if (argc == 0) {
     return _wrap_new_Quaterniond__SWIG_0(nargs, args, self);
   }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Quaterniond, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Quaterniond__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 4;
+    
+    if (_v) {
+      return _wrap_new_Quaterniond__SWIG_2(nargs, args, self);
+    }
+  }
   if (argc == 4) {
     int _v;
     {
@@ -20877,7 +21346,7 @@ SWIGINTERN VALUE _wrap_new_Quaterniond(int nargs, VALUE *args, VALUE self) {
             _v = SWIG_CheckState(res);
           }
           if (_v) {
-            return _wrap_new_Quaterniond__SWIG_1(nargs, args, self);
+            return _wrap_new_Quaterniond__SWIG_3(nargs, args, self);
           }
         }
       }
@@ -22847,6 +23316,47 @@ fail:
 }
 
 
+SWIGINTERN VALUE
+_wrap_new_Posed__SWIG_0(int argc, VALUE *argv, VALUE self) {
+  Posed *result = 0 ;
+  
+  if ((argc < 0) || (argc > 0)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  }
+  result = (Posed *)new Posed();DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE
+_wrap_new_Posed__SWIG_1(int argc, VALUE *argv, VALUE self) {
+  Posed *arg1 = 0 ;
+  Posed *result = 0 ;
+  void *argp1 ;
+  int res1 = 0 ;
+  
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
+  }
+  res1 = SWIG_ConvertPtr(argv[0], &argp1, SWIGTYPE_p_Posed,  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Posed" "', argument " "1"" of type '" "Posed const &""'"); 
+  }
+  if (!argp1) {
+    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "Posed" "', argument " "1"" of type '" "Posed const &""'"); 
+  }
+  arg1 = reinterpret_cast< Posed * >(argp1);
+  result = (Posed *)new Posed((Posed const &)*arg1);DATA_PTR(self) = result;
+  
+  return self;
+fail:
+  return Qnil;
+}
+
+
 #ifdef HAVE_RB_DEFINE_ALLOC_FUNC
 SWIGINTERN VALUE
 _wrap_Posed_allocate(VALUE self) {
@@ -22865,16 +23375,62 @@ _wrap_Posed_allocate(VALUE self) {
   
 
 SWIGINTERN VALUE
-_wrap_new_Posed(int argc, VALUE *argv, VALUE self) {
+_wrap_new_Posed__SWIG_2(int argc, VALUE *argv, VALUE self) {
+  double *arg1 = (double *) 0 ;
   Posed *result = 0 ;
+  double temp1[7] ;
   
-  if ((argc < 0) || (argc > 0)) {
-    rb_raise(rb_eArgError, "wrong # of arguments(%d for 0)",argc); SWIG_fail;
+  if ((argc < 1) || (argc > 1)) {
+    rb_raise(rb_eArgError, "wrong # of arguments(%d for 1)",argc); SWIG_fail;
   }
-  result = (Posed *)new Posed();DATA_PTR(self) = result;
+  
+  for(int i = 0; i < 7; i++)
+  temp1[i] = (double)(RARRAY(argv[0])->ptr[i]);
+  arg1 = temp1;
+  
+  result = (Posed *)new Posed((double const *)arg1);DATA_PTR(self) = result;
   
   return self;
 fail:
+  return Qnil;
+}
+
+
+SWIGINTERN VALUE _wrap_new_Posed(int nargs, VALUE *args, VALUE self) {
+  int argc;
+  VALUE argv[1];
+  int ii;
+  
+  argc = nargs;
+  if (argc > 1) SWIG_fail;
+  for (ii = 0; (ii < argc); ii++) {
+    argv[ii] = args[ii];
+  }
+  if (argc == 0) {
+    return _wrap_new_Posed__SWIG_0(nargs, args, self);
+  }
+  if (argc == 1) {
+    int _v;
+    void *vptr = 0;
+    int res = SWIG_ConvertPtr(argv[0], &vptr, SWIGTYPE_p_Posed, 0);
+    _v = SWIG_CheckState(res);
+    if (_v) {
+      return _wrap_new_Posed__SWIG_1(nargs, args, self);
+    }
+  }
+  if (argc == 1) {
+    int _v;
+    
+    Check_Type(argv[0], T_ARRAY);
+    _v = RARRAY(argv[0])->len == 7;
+    
+    if (_v) {
+      return _wrap_new_Posed__SWIG_2(nargs, args, self);
+    }
+  }
+  
+fail:
+  rb_raise(rb_eArgError, "No matching function for overloaded 'new_Posed'");
   return Qnil;
 }
 

@@ -5,6 +5,7 @@ require 'sprmatrixproperty'
 require 'sprquatproperty'
 require 'sprobjectproperty'
 require 'sprobjectproperty'
+require 'sprshapeseditdlg'
 
 include Fox
 
@@ -62,11 +63,16 @@ class SprSolidProperty < FXVerticalFrame
 		# dynamical?
 		FXLabel.new(matrix, 'dynamical')
 		@dynamical = SprBoolProperty.new(matrix)
+
+		# shapes
+		FXLabel.new(matrix, 'shapes')
+		FXButton.new(matrix, ' edit ').connect(SEL_COMMAND, method(:onEditShapes))
 	end
 
 	def update(solid, upload)
 		@object.update(solid, upload)
 		if upload
+			@solid = solid
 			@mass.update([solid.GetMass()], true)
 			@inertia.update(solid.GetInertia(), upload)
 		else
@@ -76,6 +82,13 @@ class SprSolidProperty < FXVerticalFrame
 			@inertia.update(i, false)
 			solid.SetMass(m)
 			solid.SetInertia(i)
+		end
+	end
+
+	def onEditShapes(sender, sel, ptr)
+		dlg = SprShapesEditDlg.new(self, @solid)
+		if dlg.execute != 0
+
 		end
 	end
 end

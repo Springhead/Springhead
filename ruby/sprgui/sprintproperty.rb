@@ -8,9 +8,9 @@ class SprIntProperty < FXSpinner
 
 	def update(val, upload)
 		if upload
-			self.value = val
+			self.value = val[0]
 		else
-			val = self.value
+			val[0] = self.value
 		end
 	end
 end

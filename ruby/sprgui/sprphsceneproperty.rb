@@ -28,9 +28,9 @@ class SprPHSceneProperty < FXVerticalFrame
 
 	def update(scene, upload)
 		if upload
-			@timestep.update(scene.GetTimeStep(), true)
+			@timestep.update([scene.GetTimeStep()], true)
 			@gravity.update(scene.GetGravity(), true)
-			@numiteration.update(scene.GetNumIteration(), true)
+			@numiteration.update([scene.GetNumIteration()], true)
 		else
 			step = 0
 			grav = [0,0,0]
