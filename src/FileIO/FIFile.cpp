@@ -147,47 +147,38 @@ void FIFile::Load(FILoadContext* fc){
 	//	リンク後の処理
 	fc->PostTask();
 }
+
+void FIFile::LNodeSkip(FILoadContext* fc, UTString dat){
+	assert(!fc->datas.Top()->type);
+	fc->datas.Top()->str = dat;
+}
 void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
 	//	データを作ってスタックに積む
-	UTTypeDesc* type = fc->typeDbs.Top()->Find(tn);
-	if (!type) type = fc->typeDbs.Top()->Find(tn + "Desc");	
-	if (type){
-		fc->PushType(type);	//	これからロードする型としてPush
-	}else{
-		tn.append(" not defined.");
-		fc->ErrorMessage(NULL, NULL, tn.c_str());
-		fc->PushType(NULL);	//	Popに備えて，Pushしておく
-	}
-
+	fc->PushType(tn);
 	//	データロード前ハンドラの呼び出し
-	if (type){
-		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
-		key->type = type->GetTypeName();
-		std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
-			= fc->handlerDbs.Top()->equal_range(key);
-		for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-			(*it)->BeforeLoadData(fc->datas.Top(), fc);
-		}
+	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+	key->type = fc->datas.Top()->GetAttribute("type");
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+		= fc->handlerDbs.Top()->equal_range(key);
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->BeforeLoadData(fc->datas.Top(), fc);
 	}
 }
 void FIFile::LNodeEnd(FILoadContext* fc){
 	//	データロード後ハンドラの呼び出し
-	UTTypeDesc* type = fc->fieldIts.Top().type;
-	if (type){
-		static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
-		key->type = type->GetTypeName();
-		std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
-			= fc->handlerDbs.Top()->equal_range(key);
-		for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-			(*it)->AfterLoadData(fc->datas.Top(), fc);
-		}
+	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+	key->type = fc->datas.Top()->GetAttribute("type");
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+		= fc->handlerDbs.Top()->equal_range(key);
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterLoadData(fc->datas.Top(), fc);
 	}
 
 	//	スタックの片付け
 	fc->PopType();
 }
 void FIFile::LSetNodeName(FILoadContext* fc, UTString n){
-	fc->datas.back()->SetName(n);
+	fc->datas.back()->SetName(n.c_str());
 }
 
 void FIFile::LBlockStart(FILoadContext* fc){
@@ -213,7 +204,7 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 
 	//	ハンドラーの処理
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
-	key->type = ld->type->GetTypeName();
+	key->type = ld->GetAttribute("type");
 	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
 		= fc->handlerDbs.Top()->equal_range(key);
 	typedef std::vector<UTLoadHandler*> Handlers;

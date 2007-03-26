@@ -48,8 +48,25 @@ UTLoadedData::~UTLoadedData(){
 		data = NULL;
 	}
 }
+UTString UTLoadedData::GetName() const {
+	return GetAttribute("name");
+}
+bool UTLoadedData::HasAttribute(UTString key) const {
+	std::map<UTString, UTString>::const_iterator it;
+	it = attributes.find(key);
+	return it != attributes.end();
+}
+UTString UTLoadedData::GetAttribute(UTString key) const {
+	std::map<UTString, UTString>::const_iterator it;
+	it = attributes.find(key);
+	if (it != attributes.end()) return it->second;
+	return "";
+}
+void UTLoadedData::SetAttribute(UTString key, UTString val){
+	attributes[key] = val;
+}
 void UTLoadedData::SetName(UTString n){
-	name = n;
+	attributes["name"] = n;
 	UTLoadedData* ld = this;
 	while(ld && !ld->nameMan) ld = ld->parent;
 	if (ld){
@@ -98,10 +115,18 @@ void UTLoadContext::LoadedDatas::Print(std::ostream& os){
 	os.width(w);
 }
 void UTLoadedData::Print(std::ostream& os){
+	UTString typeStr;
+	if (type) typeStr = type->GetTypeName();
+	else typeStr = UTString("(") + GetAttribute("type") + UTString(")");
+
 	int w = os.width();
 	os.width(0);
-	os << UTPadding(w) << "<" << (type ? type->GetTypeName().c_str() : "(null)");
-	if (name.length()) os << " name=" << name;
+	os << UTPadding(w) << "<" << typeStr;
+	for(Attributes::iterator it = attributes.begin(); it!=attributes.end(); ++it){
+		if (it->first.compare("type")!=0){
+			os << " " << it->first << "=" << it->second;
+		}
+	}
 	os << (haveData ? " haveData" : "") << ">" << std::endl;
 	if (linkTo.size()){
 		os << UTPadding(w+2) << "linkTo = ";
@@ -118,8 +143,10 @@ void UTLoadedData::Print(std::ostream& os){
 		children[i]->Print(os);
 		os.width(0);
 	}
-	os << UTPadding(w) << "</" << (type ? type->GetTypeName().c_str() : "(null)")
-		<< ">" << std::endl;
+	if (str.length()){
+		os << UTPadding(w+2) << "str=\"" << str << "\"" << std::endl;
+	}
+	os << UTPadding(w) << "</" << typeStr << ">" << std::endl;
 	os.width(w);
 }
 
@@ -292,23 +319,23 @@ UTNameManagerForData::UTNameManagerForData():parent(NULL), data(NULL){
 }
 
 bool UTNameManagerForData::AddData(UTLoadedData* data){
-	if (!data->name.length()) return false;
+	if (!data->GetName().length()) return false;
 	std::pair<DataSet::iterator, bool> rv = dataSet.insert(data);
 	if (rv.second){
 		return true;
 	}else if (*rv.first == data){
 		return false;
 	}
-	UTString base = data->name;
+	UTString base = data->GetName();
 	int i=1;
 	do{
 		std::ostringstream ss;
 		ss << "_" << i << '\0';
-		data->name = base + ss.str();
+		data->SetName( (base + ss.str()).c_str());
 		rv = dataSet.insert(data);
 		i++;
 	} while(!rv.second);
-	nameMap[base] = data->name;
+	nameMap[base] = data->GetName();
 	return true;
 }
 UTLoadedData* UTNameManagerForData::FindData(UTString name, UTString cls){
@@ -385,7 +412,7 @@ UTLoadedData* UTNameManagerForData::FindDataExact(UTString name, UTString cls){
 }
 UTLoadedData* UTNameManagerForData::SearchSet(UTString name, UTString cls){
 	static UTLoadedData key(NULL, 0, NULL);
-	key.name = name;
+	key.SetName(name.c_str());
 	UTNameManagerForData::DataSet::iterator it = dataSet.find(&key);
 	if (it != dataSet.end()) return *it;
 	return NULL;
@@ -413,19 +440,34 @@ void UTLoadContext::WriteString(std::string v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
-void UTLoadContext::PushType(UTTypeDesc* type){
+void UTLoadContext::PushType(UTString tn){
+	UTTypeDesc* type = typeDbs.Top()->Find(tn);
+	if (!type) type = typeDbs.Top()->Find(tn + "Desc");	
+	if (!type){
+		UTString msg = tn;
+		msg.append(" not defined.");
+		Message(NULL, NULL, msg.c_str());
+	}
+
 	//	ロードすべきtypeとしてセット
 	fieldIts.PushType(type);
 	//	typeにあったDescのノード(DOMノード)を用意
 	UTLoadedData* data = DBG_NEW UTLoadedData(this, type);
+	//	型名を設定
+	data->SetAttribute("type", type ? type->GetTypeName() : tn);
+
+	//	データツリーに追加
 	if (datas.size()){
 		datas.Top()->AddChild(data);	//	子データとして追加
 	}else{
 		loadedDatas.push_back(data);	//	Topのデータとして記録しておく．
 		rootNameManagerForData->AddChild(data);
 	}
+	
+	//	名前管理ツリーに追加
 	data->SetupNameManager();
-	//	データのスタックに追加
+
+	//	データを子ノードのロード用にスタックに積んでおく．
 	datas.Push(data);
 }
 void UTLoadContext::PopType(){

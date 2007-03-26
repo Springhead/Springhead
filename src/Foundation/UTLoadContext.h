@@ -46,7 +46,11 @@ class UTNameManagerForData;
 	ObjectDesc へのポインタ(data) と 型情報 (type) を持つ．
 	メモリの管理も行う．	*/
 class UTLoadedData: public UTRefCount{
-	UTString name;					///<	ノード名
+public:
+	typedef std::map<UTString, UTString> Attributes;
+protected:
+	 Attributes attributes;			///<	属性
+
 public:
 	UTRef<UTFileMap> fileInfo;		///<	ファイル情報
 	const char* filePos;			///<	ファイル内での位置
@@ -56,6 +60,7 @@ public:
 	UTLoadedDatas linkTo;			///<	参照先ノード
 	UTTypeDesc* type;				///<	型
 	void* data;						///<	ロードしたディスクリプタ
+	UTString str;					///<	ロード内容の文字列．型情報がない場合に使う．
 	bool haveData;					///<	dataを所有するかどうか
 
 	///	typeがNameManagerの派生クラスの場合だけ，Data用NameMangerを持つ
@@ -69,13 +74,16 @@ public:
 	~UTLoadedData();
 	void AddLink(UTLoadedData* to);	///<	参照の追加
 	void AddChild(UTLoadedData* c);	///<	子ノードのデータの追加
+	void SetupNameManager();
 	void SetType(UTTypeDesc* t);
 	void SetName(UTString n);
-	void SetupNameManager();
-	UTString GetName(){ return name; }
+	UTString GetName() const;
+	void SetAttribute(UTString key, UTString val);
+	UTString GetAttribute(UTString key) const;
+	bool HasAttribute(UTString key) const;
 	friend class UTNameManagerForData;
 	bool operator < (const UTLoadedData& d2) const {
-		return name < d2.name;
+		return GetName() < d2.GetName();
 	}
 	UTLoadedData* FindAncestor(UTString tn);
 	UTLoadedData* FindDescendant(UTString tn);
@@ -215,7 +223,7 @@ public:
 	///	ロードできる状態ならtrue
 	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)
-	void PushType(UTTypeDesc* type);
+	void PushType(UTString tn);
 	////
 	void PopType();
 	///

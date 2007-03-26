@@ -45,22 +45,11 @@ static bool TypeAvail(){
 static void NodeStart(const char* b, const char* e){
 	std::string tn(b,e);
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
-
-	//	型情報の取得
-	UTTypeDesc* type = fileContext->typeDbs.Top()->Find(tn);
-	if (!type) type = fileContext->typeDbs.Top()->Find(tn + "Desc");
-	
-	if (type){
-		fileContext->PushType(type);	//	これからロードする型としてPush
-	}else{
-		tn.append(" not defined.");
-		fileContext->ErrorMessage(NULL, b, tn.c_str());
-		fileContext->PushType(NULL);	//	Popに備えて，Pushしておく
-	}
+	fileContext->PushType(tn);	//	これからロードする型としてPush
 }
 ///	ノードの名前の設定
 static void NameSet(const char* b, const char* e){
-	fileContext->datas.back()->SetName(UTString(b,e));
+	fileContext->datas.back()->SetName(UTString(b,e).c_str());
 }
 
 ///	ノード読み出しの後処理

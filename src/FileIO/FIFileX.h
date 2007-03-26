@@ -17,7 +17,7 @@ class FIFileX:public FIFile, public FIFileXIfInit{
 public:
 	OBJECTDEF(FIFileX, FIFile);
 protected:
-	FIPhraseParser start, temp, uuid, define, defNormal, defArray, blockSkip, 
+	FIPhraseParser start, temp, uuid, define, defNormal, defArray, dataSkip, blockSkip, 
 		defOpen, defRestrict, arraySuffix, data, block, exp, ref, id, 
 		boolVal, iNum, rNum, str;
 	FISkipParser cmt;

@@ -68,6 +68,11 @@ static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
 	fileX->LBlockEnd(fileContext);
 }
+///	ブロック型のスキップ
+static void NodeSkip(const char* b, const char* e){
+	UTString data(b,e);
+	fileX->LNodeSkip(fileContext, data);
+}
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
 	TypeDescを見て次に読み出すべきフィールドをセットする．
@@ -253,8 +258,9 @@ void FIFileX::Init(){
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
 				  if_p(&TypeAvail)[ block >> !ch_p(';') >> *(data|ref) ].
-				  else_p[ *blockSkip ]		//<	知らない型名の場合スキップ
+				  else_p[ (!dataSkip)[&NodeSkip] ]	//<	知らない型名の場合スキップ
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
+	dataSkip	= *(~ch_p('{') & ~ch_p('}')) | blockSkip;
 	blockSkip	= ch_p('{') >> *(blockSkip|~ch_p('}')) >> ch_p('}');
 	ref			= ch_p('{') >> (id[&RefSet] | ExpP("id")) >> (ch_p('}')|ExpP("'}'"));
 	block		= while_p(&NextField)[
