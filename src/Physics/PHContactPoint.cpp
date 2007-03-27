@@ -79,6 +79,10 @@ void PHContactPoint::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;
 	con[3] = con[4] = con[5] = false;
 }
+
+double PHContactPoint::correctionSpring = 100.0;
+double PHContactPoint::correctionDamper = 1000.0;
+
 void PHContactPoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
@@ -104,10 +108,10 @@ void PHContactPoint::CompBias(){
 		db.v().x = -err * engine->velCorrectionRate;
 	}
 #else
-	const double damper = 100.0, spring = 10.0;
-	double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+//	const double damper = 100.0, spring = 10.0;
+	double tmp = 1.0 / (correctionDamper + correctionSpring * scene->GetTimeStep());
 	dA[0] = tmp * dtinv;
-	db[0] = -spring * (shapePair->depth - 1e-3) * tmp;
+	db[0] = -correctionSpring * (shapePair->depth - 1e-3) * tmp;
 #endif
 }
 

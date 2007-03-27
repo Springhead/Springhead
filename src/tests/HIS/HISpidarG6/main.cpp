@@ -89,10 +89,10 @@ using namespace Spr;
 #endif
 
 #define SPIDAR_SCALE	10			// SPIDARのVE内での動作スケール
-#define MASS_SCALE		100			// 剛体の質量のスケール
+#define MASS_SCALE		5			// 剛体の質量のスケール
 									// この二つのスケールは仮想世界と現実世界のスケールをあわせるのに使われる
 
-#define POINTER_RADIUS 0.1f			// ポインタの半径
+#define POINTER_RADIUS 0.15f		// ポインタの半径
 #define EPSILON 2.0					// ポインタに接触しそうな剛体を予測するためにポインタのBBoxを膨らませて接触判定をするときの膨らませる倍率
 									// 式としてはd = (EPSILON - 1) x POINTER_RADIUSだけ先の剛体を検索して接触候補点を作る
 									// 大きくするほどたくさんの接触を予想できるが、その分量も増えるので計算が重くなる
@@ -105,10 +105,10 @@ using namespace Spr;
 #define NUM_COL_SOLIDS 20			// ポインタへの許容接触剛体数　
 									// NUM_COLLISIONSと区別するのはプログラムを読みやすくするため。実質的な存在意義はない
 
-#define COLLISION_DENSITY 0.4		// 力覚の計算に使用する接触点の分布量を調節する値
+#define COLLISION_DENSITY 0.05		// 力覚の計算に使用する接触点の分布量を調節する値
 									// 接触を前回から引き継いだ場合接触点はこの値より大きい距離で分布する
 
-#define DISTANCE_LIMIT    0.3		// 接触点が離れたときに接触を解除するかを決定する距離
+#define DISTANCE_LIMIT    0.04		// 接触点が離れたときに接触を解除するかを決定する距離
 									// これより距離が大きくなった場合はその接触はなくなったものとみなす
 									// 高速回転による誤判定を防ぐ機能
 
@@ -121,7 +121,7 @@ using namespace Spr;
 #ifdef _DEBUG
 	int SIMULATION_FREQ	= 60;		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		500		// 力覚スレッドの周期Hz
-	float Km = 1;//100;					// virtual couplingの係数
+	float Km = 330;//100;			// virtual couplingの係数
 	float Bm = 0;					// 並進
 
 	float Kr = 1;					// 回転
@@ -130,7 +130,7 @@ using namespace Spr;
 #elif _WINDOWS
 	int SIMULATION_FREQ = 60;		// シミュレーションの更新周期Hz
 	#define HAPTIC_FREQ		1000	// 力覚スレッドの周期Hz
-	float Km = 1;//100;					// virtual couplingの係数
+	float Km = 330;//100;			// virtual couplingの係数
 	float Bm = 0;					// 並進
 
 	float Kr = 1;					// 回転
@@ -211,10 +211,11 @@ bool bDisplayCollision = false;
 // 接触予想を使うかどうか
 bool bPredictCollision = false;
 
-// KとBの値どちらの変更を有効にするか
-// trueの場合並進
-// falseの場合回転
-bool bMode = true;
+// 併進と回転についてどのKとBの値の変更を有効にするか
+// 0の場合並進
+// 1の場合回転
+// 2の場合めり込み補正
+int iMode = 0;
 
 // 接触候補点の情報を格納する構造体
 typedef struct{
@@ -244,7 +245,7 @@ typedef struct{
 // 力覚計算を高速で行えるように
 // シミュレーションでデータを格納し、
 // HapticRenderingに渡す
-typedef struct {
+struct HData{
 	// collision data
 	PHConstraint* constraint[NUM_COLLISIONS];
 	
@@ -305,7 +306,7 @@ typedef struct {
 
 	// 接触によって他の接する剛体がどのように動くのかを格納する変数
 	// 各軸ごと・定数を保存
-	// ErrorCorrectionで使う
+	// SetSolidPropertiesToSimulatorで使う
 	vector<SEData> relative_solids_velocity;
 	set<PHSolid *> relative_solids;
 
@@ -334,7 +335,11 @@ typedef struct {
 	double SHratio;
 	double Hdt;
 	double Sdt;
-} HapticInfo;
+
+	// コンストラクタ
+	HData(){num_collisions = 0;}
+};
+typedef HData HapticInfo;
 
 // pointer data
 Vec3d pointer_pos;
@@ -456,7 +461,7 @@ void UpdateSolids(HapticInfo*);
 void VirtualCoupling(HapticInfo*, Vec3d*, Vec3d*, bool*);
 
 // バネダンパモデルから力を計算する関数
-inline void calcForceBySpringDumper(Vec3d*, Vec3d*);
+inline void calcForceBySpringDamper(Vec3d*, Vec3d*);
 
 // 接触点に加える力の重みを計算する処理
 void CalcForceWeight(HapticInfo*);
@@ -466,7 +471,7 @@ inline void scheduleSimulationFromHaptic();
 
 ////////////////////////////////////////////////////////////////////////////////////
 // 中立的な処理
-void ErrorCorrection();
+void SetSolidPropertiesToSimulator();
 void UpdatePointer();
 void StepSimulation();
 
@@ -501,6 +506,7 @@ inline PHSolid* GetAdjacentSolid(PHConstraint*, PHSolid*, int* sign = NULL);
 PHContactPoint* CreateContactPoint(Vec3d, Vec3d, PHSolid*, PHSolid*, Spr::PHShapePairForLCP*);
 void ResetOriginalContactPoints(multimap<double, PHContactPoint*>*);
 void AddInactiveSolid(PHSolidIf*);
+void InitHapticDevice();
 void InitDeviceManager();
 void InitHapticInfo(HapticInfo*);
 void updatePenetrations(HapticInfo* info);
@@ -1701,7 +1707,7 @@ inline HapticInfo* updateInfo()
 }
 
 // バネダンパから提示力を計算する関数
-inline void calcForceBySpringDumper(Vec3d* VCForce, Vec3d* VCTorque)
+inline void calcForceBySpringDamper(Vec3d* VCForce, Vec3d* VCTorque)
 {
 	*VCForce = Km * (spidar_pos - pointer_pos);// + Bm * (SPIDARVel - M_vec/dt);
 	*VCTorque = (Kr * spidar_ori * pointer_ori.Inv()).Rotation();// + Br * (SPIDARAngVel.Rotation() - R_vec/dt);
@@ -1717,7 +1723,7 @@ inline void calcLocalDynamics(HapticInfo* info, Vec3d* VCForce, Vec3d* VCTorque,
 	CorrectPenetration(info);
 
 	// 接触剛体の接触力による速度・角速度更新
-	calcForceBySpringDumper(VCForce, VCTorque);
+	calcForceBySpringDamper(VCForce, VCTorque);
 
 	// 接触点のめり込み量から
 	// 各接触点での力の重みを計算する関数
@@ -2298,7 +2304,7 @@ void VirtualCoupling(HapticInfo* info, Vec3d *VCForce, Vec3d *VCTorque, bool* fe
 	CorrectPenetration(info);
 
 	// 接触剛体の接触力による速度・角速度更新
-	calcForceBySpringDumper(VCForce, VCTorque);
+	calcForceBySpringDamper(VCForce, VCTorque);
 
 	// 剛体に加える力の計算
 	// すべての接触に均等に力を加える
@@ -2381,8 +2387,8 @@ inline void scheduleSimulationFromHaptic()
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //　関連があり中立性な処理
 
-// 提案手法によって生じた剛体の位置の誤差を修正する関数
-void ErrorCorrection()
+// 提案手法によって更新された剛体の位置を反映する関数
+void SetSolidPropertiesToSimulator()
 {
 	// 局所的な動力学を行わない場合は
 	// 誤差が生じないはずなのでそのままリターン
@@ -2505,7 +2511,7 @@ void StepSimulation()
 	UpdatePointer();
 
 	// 局所的動力学計算によって生じた差を修正する
-	ErrorCorrection();
+	SetSolidPropertiesToSimulator();
 
 	// シミュレーション周波数に変更があれば更新を行う関数
 	updateSimulationFrequency();
@@ -2560,18 +2566,8 @@ int main(int argc, char* argv[]){
 	// rendering関係の初期化
 	InitRendering(&argc, argv);
 
-	// device managerの初期化
-	InitDeviceManager();
-
-	// deviceの初期化
-	spidarG6.Init(devMan, false);			//	SPIDARの初期化，キャリブレーションもする．
-
-	timeBeginPeriod(1);							//分解能の最小値
-
-	DWORD time = 0;
-
-	info1.num_collisions = 0;
-	info2.num_collisions = 0;
+	// haptic deviceの初期化
+	InitHapticDevice();
 
 #ifdef EXP1
 	StepSimulation();
@@ -2584,6 +2580,9 @@ int main(int argc, char* argv[]){
 		HapticRendering();
 	}
 #else
+	timeBeginPeriod(1);							//分解能の最小値
+	DWORD time = 0;
+
 	// hapticスレッドの生成・開始
 	FTimerId1 = timeSetEvent(1000 / HAPTIC_FREQ,    // タイマー間隔[ms]
 	                        1,   // 時間分解能
@@ -2872,33 +2871,39 @@ void keyboard(unsigned char key, int x, int y){
 	{
 		cout << "Km = " << Km << " Bm = " << Bm << endl;
 		cout << "Kr = " << Kr << " Br = " << Br << endl;
+		cout << "PentrationK = " << PHContactPoint::GetCorrectionSpring() <<
+			" PenetrationB = " << PHContactPoint::GetCorrectionDamper() << endl;
 	}
 	// バーチャルカップリングの係数のKを1増加して現在の状態を表示する
 	else if(key == 'k')
 	{
-		if(bMode)Km += 1;
-		else Kr += 1;
+		if(iMode == 0)Km += 1;
+		else if(iMode == 1)Kr += 1;
+		else PHContactPoint::SetCorrectionSpring(PHContactPoint::GetCorrectionSpring() + 0.1);
 		keyboard('e', 0, 0);
 	}
 	// バーチャルカップリングの係数のBを1増加して現在の状態を表示する
 	else if(key == 'b')
 	{
-		if(bMode)Bm += 1;
-		else Br += 1;
+		if(iMode == 0)Bm += 1;
+		else if(iMode == 1)Br += 1;
+		else PHContactPoint::SetCorrectionDamper(PHContactPoint::GetCorrectionDamper() + 0.1);
 		keyboard('e', 0, 0);
 	}
 	// バーチャルカップリングの係数のKを1減少して現在の状態を表示する
 	else if(key == 'j')
 	{
-		if(bMode)Km -= 1;
-		else Kr -= 1;
+		if(iMode == 0)Km -= 1;
+		else if(iMode == 1)Kr -= 1;
+		else if(PHContactPoint::GetCorrectionSpring() > 0.1) PHContactPoint::SetCorrectionSpring(PHContactPoint::GetCorrectionSpring() - 0.1);
 		keyboard('e', 0, 0);
 	}
 	// バーチャルカップリングの係数のBを1減少して現在の状態を表示する
 	else if(key == 'v')
 	{
-		if(bMode)Bm -= 1;
-		else Br -= 1;
+		if(iMode == 0)Bm -= 1;
+		else if(iMode == 1)Br -= 1;
+		else if(PHContactPoint::GetCorrectionDamper() > 0.1) PHContactPoint::SetCorrectionDamper(PHContactPoint::GetCorrectionDamper() - 0.1);
 		keyboard('e', 0, 0);
 	}
 	// 提示力を調節する値を0.1増加する
@@ -2916,9 +2921,11 @@ void keyboard(unsigned char key, int x, int y){
 	// パラメータ編集対象の切り替え処理
 	else if(key == 't')
 	{
-		bMode = !bMode;
-		if(bMode)cout << "MOVEMENT ";
-		else cout << "ROTATION ";
+		iMode++;
+		if(iMode == 3) iMode = 0;
+		if(iMode == 0)cout << "MOVEMENT ";
+		else if(iMode == 1) cout << "ROTATION ";
+		else cout << "Penetration Correction Parameters";
 		cout << "Edit Mode" << endl;
 	}
 	// 局所的動力学計算のフラグ変更
@@ -3438,7 +3445,7 @@ void InitScene()
 		soPointer->SetFramePosition(Vec3f(0, 0, 0));
 
 		// 通常の剛体用のshape
-		bd.boxsize = Vec3f(0.3f, 0.3f, 0.3f);
+		bd.boxsize = Vec3f(0.5f, 0.5f, 0.5f);
 		floor = DCAST(CDBoxIf, phSdk->CreateShape(bd));
 	}	
 
@@ -3897,6 +3904,15 @@ void DisplayCollisions()
 	}
 }
 
+// haptic deviceの初期化
+void InitHapticDevice()
+{
+	// device managerの初期化
+	InitDeviceManager();
+
+	// deviceの初期化
+	spidarG6.Init(devMan, false);			//	SPIDARの初期化，キャリブレーションもする．
+}
 /**
  brief  	device managerの初期化を行う関数
  param	 	なし
