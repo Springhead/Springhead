@@ -22,7 +22,7 @@ namespace Spr{;
 
 IF_OBJECT_IMP(FIFileCOLLADA, FIFile);
 
-//#define TRACE_PARSE
+#define TRACE_PARSE
 #ifdef TRACE_PARSE
 # define PDEBUG(x)	x
 #else 
@@ -38,6 +38,7 @@ static FIFileCOLLADA* fileCOLLADA;
 ///	テンプレートのTypeDescがあるかどうか．
 static bool TypeAvail(){
 	return fileContext->fieldIts.size() && fileContext->fieldIts.back().type;
+//	return fileContext->datas.size() && fileContext->datas.Top()->type;
 }
 
 UTString tagName;
@@ -60,8 +61,7 @@ static void TagStart(const char* b, const char* e){
 
 ///	ノード読み出しの後処理
 static void TagEnd(const char* b, const char* e){
-	PDEBUG(DSTR << "TagEnd " << fileContext->fieldIts.back().type->GetTypeName() 
-		<< std::endl);
+	PDEBUG(DSTR << "TagEnd " << std::endl);
 	if(tagStack.Top()) fileContext->NodeEnd();
 	tagStack.Pop();
 }
@@ -269,7 +269,7 @@ void FIFileCOLLADA::Init(){
 				>> "encoding" >> "=" >> "\"utf-8\"" >> "?>";
 	body	= element;
 	element = ch_p('<') >> id[&TagStart] >> *(property[&SetProperty]) >> (
-				ch_p('/>') | (ch_p('>') >> *field >> str_p("</") >> id >> ch_p('>') )
+				str_p("/>") | (ch_p('>') >> *field >> str_p("</") >> id >> ch_p('>') )
 			  )[ &TagEnd ];
 	property= id[&SetPropertyKey] >> '=' >> (id | string)[&SetPropertyValue];
 
@@ -277,14 +277,19 @@ void FIFileCOLLADA::Init(){
 	data	= if_p(&TypeAvail)[
 				while_p(&ArrayCount)[ exp[&SetVal] | eps_p[&StopArray] ]
 			  ].else_p[
-				(* ~ch_p('<'))[&SkipData]
+				(+ ~ch_p('<'))[&SkipData]
 			  ];
 	exp		= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
 			  if_p(&IsFieldInt)[ iNum | ExpP("int value") ] >>
 			  if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ] >>
 			  if_p(&IsFieldStr)[ str | ExpP("string") ] >> 
 			  if_p(&IsFieldBlock)[ eps_p[&BlockStart] >>  *field >> eps_p[&BlockEnd] ];
-	
+	boolVal	= (str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
+	iNum	= id[&EnumSet] | int_p[&NumSet];
+	rNum	= real_p[&NumSet];
+	str		= lexeme_d[ ch_p('"') >> *( (ch_p('\\')>>anychar_p) | 
+						~ch_p('"') ) >> ch_p('"') ][&StrSet];
+
 	// xml の名前
 	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
 	string		= lexeme_d[ ch_p('"') >> *~ch_p('"') >> '"' ];
@@ -308,6 +313,7 @@ public:
 */
 
 void FIFileCOLLADA::PushLoaderContext(FILoadContext* fc){
+	fc->RegisterGroupToDb("Foundation Physics Graphics Framework COLLADA");
 
 	fileContexts.Push(fc);
 	fileCOLLADAs.Push(this);
