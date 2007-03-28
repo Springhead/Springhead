@@ -282,6 +282,27 @@ bool UTTypeDescFieldIt::NextField(){
 			return false;
 		}
 	}
+	SetFieldInfo();
+	return true;
+}
+	
+bool UTTypeDescFieldIt::FindField(UTString name){
+	if (!type || !type->IsComposit()) return false;
+	//	次のフィールドへ進む
+	for(field = type->GetComposit().begin(); field != type->GetComposit().end(); ++field){
+		if (field->name.compare(name) == 0){
+			break;
+		}
+	}
+	if (field == type->GetComposit().end()){
+		fieldType = F_NONE;
+		return false;
+	}
+	SetFieldInfo();
+	return true;
+}
+
+void UTTypeDescFieldIt::SetFieldInfo(){
 	//	フィールドの配列要素数を設定
 	if (field->varType==UTTypeDesc::Field::SINGLE){
 		arrayLength = 1;
@@ -322,7 +343,6 @@ bool UTTypeDescFieldIt::NextField(){
 	}else if (field->type->IsComposit()){
 		fieldType = F_BLOCK;
 	}
-	return true;
 }
 
 

@@ -12,6 +12,7 @@
 #endif
 
 #include "TypeDescDumpFileIO.h"
+#include "TypeDescDumpCOLLADA.h"
 
 
 using namespace Spr;
@@ -29,6 +30,11 @@ void SPR_CDECL FIRegisterTypeDescs(){
 
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("FileIO");
 	#include "TypeDescDumpImpFileIO.h"
+	db->Link();
+
+	db = UTTypeDescDbPool::Get("COLLADA");
+	using namespace SprCOLLADA;
+	#include "TypeDescDumpImpCOLLADA.h"
 	db->Link();
 }
 

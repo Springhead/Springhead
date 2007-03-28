@@ -9,11 +9,17 @@
 #define FIFILECOLLADAHANDLER_H
 #include "FIFile.h"
 
-namespace Spr{;
+namespace SprCOLLADA{;
+using namespace Spr;
 
-struct library_physics_models{
+struct physics_materialCommon{
+	float dynamic_friction;
+	float restitution;
+	float static_friction;
 };
-
+struct physics_material{
+	physics_materialCommon technique_common;
+};
 
 
 }

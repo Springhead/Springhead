@@ -417,6 +417,9 @@ public:
 
 	UTTypeDescFieldIt(UTTypeDesc* d);					///<	コンストラクタ
 	bool NextField();						///<	次のフィールドに進む
+	bool FindField(UTString n);				///<	指定のフィールドに進む
+protected:
+	void SetFieldInfo();					//<		NextField FindFieldが使う
 };
 class UTTypeDescFieldIts:public UTStack<UTTypeDescFieldIt>{
 public:
@@ -427,6 +430,12 @@ public:
 	///	次のフィールドに進む
 	bool NextField(){
 		if(size()) return back().NextField();
+		return false;
+	}
+	/**	現在の組み立て型の中から，指定の名前のフィールドを探す．
+		見つけたらそのフィールドを指してtrueを返す．	*/
+	bool FindField(UTString n){
+		if(size()) return back().FindField(n);
 		return false;
 	}
 	///	配列中での位置

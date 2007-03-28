@@ -17,7 +17,8 @@ class FIFileCOLLADA:public FIFile, FIFileCOLLADAIfInit{
 public:
 	OBJECTDEF(FIFileCOLLADA, FIFile);
 protected:
-	FIPhraseParser start, head, body, element, startTag, endTag, emptyTag, contents, property, id, string, text;
+	FIPhraseParser start, head, body, element, field, 
+		property, id, string, text, data, boolVal, iNum, rNum, str, exp;
 	FISkipParser cmt;
 public:
 	FIFileCOLLADA();

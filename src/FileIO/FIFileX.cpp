@@ -43,18 +43,18 @@ static bool TypeAvail(){
 static void NodeStart(const char* b, const char* e){
 	UTString tn(b,e);
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
-	fileX->LNodeStart(fileContext, tn);
+	fileContext->NodeStart(tn);
 }
 ///	ノードの名前の設定
 static void NameSet(const char* b, const char* e){
 	UTString n(b,e);
-	fileX->LSetNodeName(fileContext, n);
+	fileContext->datas.back()->SetName(UTString(b,e));
 }
 
 ///	ノードの終わり
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
-	fileX->LNodeEnd(fileContext);
+	fileContext->NodeEnd();
 }
 
 ///	ブロック型の読み出し準備
@@ -70,8 +70,7 @@ static void BlockEnd(const char* b, const char* e){
 }
 ///	ブロック型のスキップ
 static void NodeSkip(const char* b, const char* e){
-	UTString data(b,e);
-	fileX->LNodeSkip(fileContext, data);
+	fileContext->datas.Top()->str = UTString(b,e);
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．

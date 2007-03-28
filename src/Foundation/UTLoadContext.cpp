@@ -440,7 +440,8 @@ void UTLoadContext::WriteString(std::string v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
 	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 }
-void UTLoadContext::PushType(UTString tn){
+void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
+	//	ノードの型情報を検索
 	UTTypeDesc* type = typeDbs.Top()->Find(tn);
 	if (!type) type = typeDbs.Top()->Find(tn + "Desc");	
 	if (!type){
@@ -449,28 +450,49 @@ void UTLoadContext::PushType(UTString tn){
 		Message(NULL, NULL, msg.c_str());
 	}
 
-	//	ロードすべきtypeとしてセット
+	//	型情報をロード用イタレータにセット
 	fieldIts.PushType(type);
+
 	//	typeにあったDescのノード(DOMノード)を用意
 	UTLoadedData* data = DBG_NEW UTLoadedData(this, type);
-	//	型名を設定
-	data->SetAttribute("type", type ? type->GetTypeName() : tn);
-
-	//	データツリーに追加
+	data->SetAttribute("type", type ? type->GetTypeName() : tn);	//	DOMノードに型情報を設定
+	if (attrs){
+		for(UTLoadedData::Attributes::iterator it = attrs->begin(); it!=attrs->end(); ++it){
+			data->SetAttribute(it->first, it->second);
+		}
+	}
+	//	DOMツリーに追加
 	if (datas.size()){
-		datas.Top()->AddChild(data);	//	子データとして追加
+		datas.Top()->AddChild(data);	//	子ノードとして追加
 	}else{
-		loadedDatas.push_back(data);	//	Topのデータとして記録しておく．
+		loadedDatas.push_back(data);	//	Topノードとして記録
 		rootNameManagerForData->AddChild(data);
 	}
-	
-	//	名前管理ツリーに追加
-	data->SetupNameManager();
+	data->SetupNameManager();			//	名前管理ツリーに追加
 
-	//	データを子ノードのロード用にスタックに積んでおく．
+	//	子ノードのロード用に，DOMノードをスタックに積む．
 	datas.Push(data);
+
+	//	DOMロード前ハンドラの呼び出し
+	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+	key->type = datas.Top()->GetAttribute("type");
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+		= handlerDbs.Top()->equal_range(key);
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->BeforeLoadData(datas.Top(), this);
+	}
 }
-void UTLoadContext::PopType(){
+void UTLoadContext::NodeEnd(){
+	//	データロード後ハンドラの呼び出し
+	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+	key->type = datas.Top()->GetAttribute("type");
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+		= handlerDbs.Top()->equal_range(key);
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterLoadData(datas.Top(), this);
+	}
+
+	//	スタックの片付け
 	datas.Pop();
 	fieldIts.Pop();
 }

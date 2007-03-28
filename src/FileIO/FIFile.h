@@ -54,18 +54,10 @@ public:
 	
 	//@name ローダーを書くためのユーティリティ関数
 	//@{	
-	///	ノードに入る
-	virtual void LNodeStart(FILoadContext* fc, UTString type);
-	///	ノードから出る
-	virtual void LNodeEnd(FILoadContext* fc);
-	///	ノードの型情報がない場合にデータをスキップ
-	virtual void LNodeSkip(FILoadContext* fc, UTString data);
 	///	ブロック(組み立て型)に入る
 	virtual void LBlockStart(FILoadContext* fc);
 	///	ブロック(組み立て型)から出る
 	virtual void LBlockEnd(FILoadContext* fc);
-	///	ノードの名前の設定
-	virtual void LSetNodeName(FILoadContext* fc, UTString n);
 	//@}
 
 protected:

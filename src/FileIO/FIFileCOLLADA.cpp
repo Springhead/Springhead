@@ -22,7 +22,6 @@ namespace Spr{;
 
 IF_OBJECT_IMP(FIFileCOLLADA, FIFile);
 
-
 //#define TRACE_PARSE
 #ifdef TRACE_PARSE
 # define PDEBUG(x)	x
@@ -41,22 +40,46 @@ static bool TypeAvail(){
 	return fileContext->fieldIts.size() && fileContext->fieldIts.back().type;
 }
 
-///	ノードデータの読み出し準備
-static void NodeStart(const char* b, const char* e){
-	std::string tn(b,e);
-	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
-	fileContext->PushType(tn);	//	これからロードする型としてPush
-}
-///	ノードの名前の設定
-static void NameSet(const char* b, const char* e){
-	fileContext->datas.back()->SetName(UTString(b,e).c_str());
+UTString tagName;
+UTLoadedData::Attributes attrs;
+UTStack<char> tagStack;
+///	XML要素(タグ)の始まり
+static void TagStart(const char* b, const char* e){
+	attrs.clear();
+	tagName = UTString(b,e);
+	if (fileContext->fieldIts.FindField(tagName)){	
+		//	組み立て型のロード中で，メンバが見つかった場合
+		tagStack.Push(false);
+	}else{
+		//	見つからない場合，子ノードとしてロード
+		fileContext->NodeStart(tagName);
+		tagStack.Push(true);
+	}
+	PDEBUG( DSTR << "TagStart " << tagName << std::endl );
 }
 
 ///	ノード読み出しの後処理
-static void NodeEnd(const char* b, const char* e){
-	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
-	fileContext->PopType();
-	std::cout << "これはテストです" << std::endl;
+static void TagEnd(const char* b, const char* e){
+	PDEBUG(DSTR << "TagEnd " << fileContext->fieldIts.back().type->GetTypeName() 
+		<< std::endl);
+	if(tagStack.Top()) fileContext->NodeEnd();
+	tagStack.Pop();
+}
+
+///	ノードのデータをスキップ
+static void SkipData(const char* b, const char* e){
+	fileContext->datas.Top()->str = UTString(b,e);
+}
+
+UTString propKey, propValue;
+static void SetPropertyKey(const char* b, const char* e){
+	propKey = UTString(b, e);
+}
+static void SetPropertyValue(const char* b, const char* e){
+	propValue = UTString(b, e);
+}
+static void SetProperty(const char* b, const char* e){
+	attrs[propKey] = propValue;
 }
 
 ///	ブロック型の読み出し準備
@@ -167,7 +190,7 @@ static void SetVal(const char* b, const char* e){
 		curField.arrayPos=UTTypeDesc::BIGVALUE;
 	}
 }
-static void StopArray(const char c){
+static void StopArray(const char* b, const char* e){
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
 	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
@@ -179,36 +202,6 @@ static void RefSet(const char* b, const char* e){
 	fileContext->AddDataLink(ref, b);
 }
 
-//--テスト--------------------------------------------------------
-std::ofstream os("test.txt");
-static void test(const std::string& str, const char* start, const char* end) {
-	std::cout << str << ": ";
-	os << str << ": ";
-	std::string buf(start, end);
-	while(start < end) {
-		std::cout << *start;
-		os << *start;
-		++start;
-	}
-	std::cout << std::endl;
-	os << '\n';
-	os.flush();
-}
-
-//--Element読み込み開始-----------------------------------------------
-static void elementStart(const char* start, const char* end)
-{
-	std::string tagName(start, end);
-	std::cout << "elementStart :" << tagName << std::endl;
-	os << "elementStart :" << tagName << std::endl;
-}
-
-static void elementEnd(const char* start, const char* end)
-{
-	std::string tagName(start, end);
-	std::cout << "elementEnd :" << tagName << std::endl;
-	os << "elementEnd :" << tagName << std::endl;
-}
 
 }
 using namespace FileCOLLADA;
@@ -238,6 +231,32 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 FIFileCOLLADA::FIFileCOLLADA(){
 	Init();
 }
+
+
+/*
+---------------------------------------------------------------------------------
+COLLADAのノードの例：
+<physics_material	id="pmat2_0-PhysicsMaterial"	name="pmat2_0-PhysicsMaterial">
+	<technique_common>
+		<dynamic_friction>0</dynamic_friction>
+		<restitution>0.800000012</restitution>
+		<static_friction>0</static_friction>
+	</technique_common>
+</physics_material>
+---------------------------------------------------------------------------------
+対応させたい構造体：
+struct physics_materialCommon{
+	float dynamic_friction;
+	float restitution;
+	float static_friction;
+};
+struct physics_material{
+	physics_materialCommon technique_common;
+};
+---------------------------------------------------------------------------------
+*/
+
+
 void FIFileCOLLADA::Init(){
 
 	using namespace std;
@@ -246,15 +265,26 @@ void FIFileCOLLADA::Init(){
 	//	パーサの定義
 	//	本文用パーサ
 	start	= head >> body;
-	head	= str_p("<?") >> "xml" >> "version" >> "=" >> "\"1.0\"" >> "encoding" >> "=" >> "\"utf-8\"" >> "?>";
+	head	= str_p("<?") >> "xml" >> "version" >> "=" >> "\"1.0\"" 
+				>> "encoding" >> "=" >> "\"utf-8\"" >> "?>";
 	body	= element;
-	element	= emptyTag | startTag >> contents >> endTag;
-	startTag= ch_p('<') >> id[&elementStart] >> *property >> '>';
-	endTag	= str_p("</") >> id[&elementEnd] >> '>';
-	emptyTag= ch_p('<') >> id >> *property >> "/>";
-	property= id >> '=' >> (id | string);
-	contents= *(~ch_p('<') | element);
+	element = ch_p('<') >> id[&TagStart] >> *(property[&SetProperty]) >> (
+				ch_p('/>') | (ch_p('>') >> *field >> str_p("</") >> id >> ch_p('>') )
+			  )[ &TagEnd ];
+	property= id[&SetPropertyKey] >> '=' >> (id | string)[&SetPropertyValue];
 
+	field	= element | data;
+	data	= if_p(&TypeAvail)[
+				while_p(&ArrayCount)[ exp[&SetVal] | eps_p[&StopArray] ]
+			  ].else_p[
+				(* ~ch_p('<'))[&SkipData]
+			  ];
+	exp		= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
+			  if_p(&IsFieldInt)[ iNum | ExpP("int value") ] >>
+			  if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ] >>
+			  if_p(&IsFieldStr)[ str | ExpP("string") ] >> 
+			  if_p(&IsFieldBlock)[ eps_p[&BlockStart] >>  *field >> eps_p[&BlockEnd] ];
+	
 	// xml の名前
 	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
 	string		= lexeme_d[ ch_p('"') >> *~ch_p('"') >> '"' ];
@@ -265,9 +295,8 @@ void FIFileCOLLADA::Init(){
 }
 
 
-
 //------------------------------------------------------------------------------
-
+/*	型セットの切り替えのサンプルになる予定だったけど，不要かも
 class FINHC_library_physics_models: public UTLoadHandlerSetDb<library_physics_models>{
 public:
 	FINHC_library_physics_models():UTLoadHandlerSetDb<Desc>("library_physics_models"){
@@ -276,7 +305,7 @@ public:
 //		typeDb = ;
 	}
 };
-
+*/
 
 void FIFileCOLLADA::PushLoaderContext(FILoadContext* fc){
 

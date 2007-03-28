@@ -148,44 +148,11 @@ void FIFile::Load(FILoadContext* fc){
 	fc->PostTask();
 }
 
-void FIFile::LNodeSkip(FILoadContext* fc, UTString dat){
-	assert(!fc->datas.Top()->type);
-	fc->datas.Top()->str = dat;
-}
-void FIFile::LNodeStart(FILoadContext* fc, UTString tn){
-	//	データを作ってスタックに積む
-	fc->PushType(tn);
-	//	データロード前ハンドラの呼び出し
-	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
-	key->type = fc->datas.Top()->GetAttribute("type");
-	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
-		= fc->handlerDbs.Top()->equal_range(key);
-	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-		(*it)->BeforeLoadData(fc->datas.Top(), fc);
-	}
-}
-void FIFile::LNodeEnd(FILoadContext* fc){
-	//	データロード後ハンドラの呼び出し
-	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
-	key->type = fc->datas.Top()->GetAttribute("type");
-	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
-		= fc->handlerDbs.Top()->equal_range(key);
-	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-		(*it)->AfterLoadData(fc->datas.Top(), fc);
-	}
-
-	//	スタックの片付け
-	fc->PopType();
-}
-void FIFile::LSetNodeName(FILoadContext* fc, UTString n){
-	fc->datas.back()->SetName(n.c_str());
-}
-
 void FIFile::LBlockStart(FILoadContext* fc){
 	char* base = (char*)fc->datas.Top()->data;
 	void* ptr = fc->fieldIts.back().field->GetAddressEx(base, fc->fieldIts.ArrayPos());
 	fc->datas.Push(DBG_NEW UTLoadedData(fc, NULL, ptr));
-	fc->fieldIts.push_back(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
+	fc->fieldIts.Push(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
 }
 void FIFile::LBlockEnd(FILoadContext* fc){
 	fc->fieldIts.Pop();

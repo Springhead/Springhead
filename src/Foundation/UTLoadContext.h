@@ -191,7 +191,7 @@ public:
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
 	UTTypeDescFieldIts fieldIts;
 	///	フラグのスタック
-	UTStack<bool> flags;
+	UTStack<char> flags;
 
 	///	typeDb のスタック
 	UTStack< UTRef<UTTypeDescDb> > typeDbs;
@@ -223,9 +223,9 @@ public:
 	///	ロードできる状態ならtrue
 	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)
-	void PushType(UTString tn);
+	void NodeStart(UTString tn, UTLoadedData::Attributes* attrs=NULL);
 	////
-	void PopType();
+	void NodeEnd();
 	///
 	void WriteString(std::string v);
 	///
