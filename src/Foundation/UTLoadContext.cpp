@@ -293,7 +293,7 @@ public:
 };
 
 UTDataLinkTask::UTDataLinkTask(UTLoadedData* from, std::string to, UTFileMap* fm, const char* p):
-	linkFrom(from), linkTo(to), info(fm), pos(p){
+	info(fm), pos(p), linkFrom(from), linkTo(to){
 }
 
 void UTDataLinkTask::Execute(UTLoadContext* ctx){
@@ -315,7 +315,7 @@ void UTDataLinkTask::Execute(UTLoadContext* ctx){
 
 //---------------------------------------------------------------------------
 //	UTNameMangerForData
-UTNameManagerForData::UTNameManagerForData():parent(NULL), data(NULL){
+UTNameManagerForData::UTNameManagerForData():data(NULL), parent(NULL){
 }
 
 bool UTNameManagerForData::AddData(UTLoadedData* data){
@@ -348,7 +348,7 @@ UTLoadedData* UTNameManagerForData::FindData(UTString name, UTString cls){
 
 	//	それでもないならば、namespaceを削って、もう一度検索
 	int pos = name.find('/');
-	if (pos != UTString::npos){	//	 名前空間の指定がある場合
+	if (pos != (int)UTString::npos){	//	 名前空間の指定がある場合
 		UTString n = name.substr(pos+1);
 		rv = FindData(n, cls);
 	}
@@ -393,7 +393,7 @@ UTLoadedData* UTNameManagerForData::FindDataFromDescendant(UTString name, UTStri
 UTLoadedData* UTNameManagerForData::FindDataExact(UTString name, UTString cls){
 	UTLoadedData* rv = NULL;
 	int pos = name.find('/');
-	if (pos != UTString::npos){	//	 名前空間の指定がある場合
+	if (pos != (int)UTString::npos){	//	 名前空間の指定がある場合
 		UTString n = name.substr(pos+1);
 		UTString ns = name.substr(0, pos);
 		//	ぴったりのものを探す．

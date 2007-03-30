@@ -85,8 +85,8 @@ PHSceneIf* PHSdk::GetScene(size_t i){
 }
 void PHSdk::MergeScene(PHSceneIf* scene0, PHSceneIf* scene1){
 	Scenes::iterator it0, it1;
-	it0 = find(scenes.begin(), scenes.end(), XCAST(scene0));
-	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
+	it0 = find(scenes.begin(), scenes.end(), scene0);
+	it1 = find(scenes.begin(), scenes.end(), scene1);
 	if(it0 == scenes.end() || it1 == scenes.end())
 		return;
 	for(unsigned i = 0; i < scene1->NChildObject(); i++){
@@ -158,7 +158,7 @@ bool PHSdk::AddChildObject(ObjectIf* o){
 		}
 	}
 	// その他のオブジェクト
-	if (std::find(objects.begin(), objects.end(), o->Cast()) == objects.end()){
+	if (std::find(objects.begin(), objects.end(), (Object*)(o->Cast())) == objects.end()){
 		objects.push_back(o->Cast());
 		ok = true;
 	}

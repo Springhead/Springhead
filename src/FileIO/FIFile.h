@@ -19,6 +19,7 @@ namespace Spr{;
 class FILoadContext: public UTLoadContext{
 public:
 	void PushFileMap(const UTString fn);
+	virtual ~FILoadContext(){}
 };
 
 class FISaveContext;

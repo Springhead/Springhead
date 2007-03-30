@@ -261,6 +261,8 @@ public:
 		ó·ÅFResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
 	*/
 	void RegisterGroupToDb(const char* gp);
+
+	  virtual ~UTLoadContext(){}
 protected:
 	void LinkNode(UTLoadedData* ld);
 };

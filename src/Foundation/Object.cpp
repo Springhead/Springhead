@@ -39,10 +39,8 @@ TypeInfoManager* SPR_CDECL TypeInfoManager::Get(){
 	return typeInfoManager;
 }
 TypeInfoManager::TypeInfoManager(){
-int hoge = 0;
 }
 TypeInfoManager::~TypeInfoManager(){
-int hoge = 0;
 }
 void TypeInfoManager::RegisterIf(IfInfo* i){
 	ifs.push_back(i); 

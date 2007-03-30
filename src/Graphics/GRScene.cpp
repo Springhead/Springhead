@@ -43,6 +43,7 @@ GRVisualIf* GRScene::CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent){
 	case GRVisualDesc::MATERIAL: v = DBG_NEW GRMaterial((const GRMaterialDesc&)desc); break;
 	case GRVisualDesc::LIGHT:	 v = DBG_NEW GRLight((const GRLightDesc&)desc); break;
 	case GRVisualDesc::MESH:	 v = DBG_NEW GRMesh((const GRMeshDesc&)desc); break;
+	default:;
 	}
 	if(v){
 		v->SetNameManager(Cast());

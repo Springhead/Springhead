@@ -118,7 +118,7 @@ void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
 		Vec3f n;
 		Vec3f p;
 	} vtxs[10];
-	assert(numIndices < sizeof(vtxs)/sizeof(vtxs[0]));
+	assert((size_t)numIndices < sizeof(vtxs)/sizeof(vtxs[0]));
 	for (int v=0; v<numIndices; ++v) vtxs[v].p = base[face->GetIndices()[v]].data;
 	Vec3f edge0, edge1;
 	edge0 = vtxs[1].p - vtxs[0].p;

@@ -26,7 +26,7 @@ bool PHPath::GetDesc(void* desc)const{
 	PHPathDesc* pathdesc = (PHPathDesc*)desc;
 	pathdesc->bLoop = bLoop;
 	pathdesc->points.resize(size());
-	for(int i = 0; i < size(); i++){
+	for(int i = 0; i < (int)size(); i++){
 		pathdesc->points[i].s = (*this)[i].s;
 		pathdesc->points[i].pose = (*this)[i].pose;
 	}

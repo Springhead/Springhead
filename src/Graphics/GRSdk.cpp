@@ -72,8 +72,8 @@ GRSceneIf* GRSdk::GetScene(size_t i){
 }
 void GRSdk::MergeScene(GRSceneIf* scene0, GRSceneIf* scene1){
 	Scenes::iterator it0, it1;
-	it0 = find(scenes.begin(), scenes.end(), XCAST(scene0));
-	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
+	it0 = find(scenes.begin(), scenes.end(), (GRScene*)(scene0->Cast()));
+	it1 = find(scenes.begin(), scenes.end(), (GRScene*)(scene1->Cast()));
 	if(it0 == scenes.end() || it1 == scenes.end())
 		return;
 	for(int i = 0; i < (int)scene1->NChildObject(); i++){

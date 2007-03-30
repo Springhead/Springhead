@@ -696,7 +696,7 @@ void PHTreeNode1D::CompBias(){
 	if(gearNode){
 		double Di, Ki, ratio;
 		origin = K * j->origin;
-		for(int i = 0; i < gearChildren.size(); i++){
+		for(int i = 0; i < (int)gearChildren.size(); i++){
 			jchild = DCAST(PHJoint1D, gearChildren[i]->GetJoint());
 			if(!jchild)continue;	// 自由度の異なる関節との連動：起こり得ないはず
 			ratio = gearChildren[i]->gear->ratio;

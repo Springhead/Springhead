@@ -303,10 +303,10 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 }
 
 void PHConstraintEngine::UpdateGearNode(){
-	for(int i = 0; i < trees.size(); i++)
+	for(int i = 0; i < (int)trees.size(); i++)
 		trees[i]->ResetGearNode();
 
-	for(int i = 0; i < gears.size(); i++){
+	for(int i = 0; i < (int)gears.size(); i++){
 		PHGear* gear = gears[i];
 		gear->bArticulated = false;
 		PHTreeNode1D *nodeL, *nodeR;

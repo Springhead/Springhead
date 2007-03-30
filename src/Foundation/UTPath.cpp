@@ -81,11 +81,11 @@ UTString UTPath::Dir(){
 		|| (path.length() >=2 && path[1]==':')){
 		int b = path.find('\\', 2);
 		int e = path.find_last_of('\\');
-		if (e == path.npos) return "";
+		if (e == (int)path.npos) return "";
 		return path.substr(b, e-b+1);
 	}else{
 		int e = path.find_last_of('\\');
-		if (e == path.npos) return "";
+		if (e == (int)path.npos) return "";
 		return path.substr(0, e+1);
 	}
 }
@@ -143,7 +143,7 @@ UTString UTPath::RelPath(){
 			return fp;
 		}else{	//	‹¤’Ê•”•ª‚ª‚ ‚é‚Ì‚Å‘Š‘ÎƒpƒX‰»
 			int c=0;
-			for(int p=i; p!=cwd.npos; c++){
+			for(int p=i; p!=(int)cwd.npos; c++){
 				p = cwd.find('\\', p+1);
 			}
 			UTString rv;
