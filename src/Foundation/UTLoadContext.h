@@ -148,12 +148,13 @@ public:
 ///	ロード後にリンクするためのタスク．普通は使わない．
 class UTLinkTask:public UTLoadTask{
 public:
-	ObjectIf* linkTo;
 	ObjectIf* linkFrom;
+	ObjectIf* linkTo;
 	UTLinkTask(ObjectIf* from, ObjectIf* to):linkFrom(from), linkTo(to){}
 	virtual void Execute(UTLoadContext* ctx){
 		linkFrom->AddChildObject(linkTo);
 	};
+	virtual ~UTLinkTask(){}
 };
 
 ///	ロード後の処理を行うためのタスクリスト

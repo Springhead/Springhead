@@ -10,8 +10,8 @@
 #pragma hdrstop
 #endif
 
-#include "FIFileCollada.h"
-#include "FIFileColladaHandler.h"
+#include "FIFileCOLLADA.h"
+#include "FIFileCOLLADAHandler.h"
 #include <Foundation/UTLoadHandler.h>
 #include <fstream>
 #include <sstream>

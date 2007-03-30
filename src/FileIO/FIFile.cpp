@@ -340,6 +340,7 @@ void FIFile::SaveBlock(FISaveContext* sc){
 					PDEBUG_EVAL( DSTR << val; )
 					OnSaveString(sc, val);
 					}break;
+				default:;
 			}
 			PDEBUG_EVAL( if (pos<nElements-1) DSTR << ", "; )
 			OnSaveElementEnd(sc, pos, (pos==nElements-1));
