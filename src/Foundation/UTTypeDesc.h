@@ -42,7 +42,13 @@
 	フィールドは，数値，文字列，ポインタ，組み立て
 	組み立てはTypeDescを持つ．
 */
+/*
+	Fieldと構造体の関係の見直し→Field = Cの型にしたい．
 
+	Cの型は，単純型とstruct (の配列)
+	∴ Field = 単純型 or struct (の配列)
+		TypeDesc は単純型とstruct
+*/
 
 namespace Spr{;
 /**	@page UTTypeDesc ドキュメントオブジェクトと型記述
@@ -420,6 +426,7 @@ public:
 	bool FindField(UTString n);				///<	指定のフィールドに進む
 protected:
 	void SetFieldInfo();					//<		NextField FindFieldが使う
+	FieldType GetTypeId(UTTypeDesc* t);
 };
 class UTTypeDescFieldIts:public UTStack<UTTypeDescFieldIt>{
 public:

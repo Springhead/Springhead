@@ -260,15 +260,19 @@ void SPR_CDECL UTTypeDescDbPool::Print(std::ostream& os){
 UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 	type = d;
 	if (type){
-		//field = &*type->GetComposit().end();
-		field = type->GetComposit().end();
+		if (type->IsComposit()){
+			field = type->GetComposit().end();
+			arrayPos = -1;
+			arrayLength = 0;
+			fieldType=F_NONE;
+		}else{
+			//	TODO ‘g‚İ—§‚ÄŒ^‚Å‚È‚¢ê‡
+			DSTR << "Not a composit type" << std::endl;
+			arrayPos = -1;
+			arrayLength = 1;
+			fieldType=GetTypeId(type);
+		}
 	}
-	//else{
-	//	field = NULL;
-	//}
-	arrayPos = -1;
-	arrayLength = 0;
-	fieldType=F_NONE;
 }
 bool UTTypeDescFieldIt::NextField(){
 	if (!type || !type->IsComposit()) return false;
@@ -319,31 +323,36 @@ void UTTypeDescFieldIt::SetFieldInfo(){
 		type->Print(DSTR);
 		assert(0);
 	}
-	if(		field->type->GetTypeName().compare("BYTE")==0
-		||	field->type->GetTypeName().compare("WORD")==0
-		||	field->type->GetTypeName().compare("DWORD")==0
-		||	field->type->GetTypeName().compare("char")==0
-		||	field->type->GetTypeName().compare("short")==0
-		||	field->type->GetTypeName().compare("int")==0
-		||	field->type->GetTypeName().compare("unsigned")==0
-		||	field->type->GetTypeName().compare("size_t")==0
-		||	field->type->GetTypeName().compare("enum")==0){
-		fieldType = F_INT;
-	}else if (field->type->GetTypeName().compare("bool")==0
-		||	field->type->GetTypeName().compare("BOOL")==0){
-		fieldType = F_BOOL;
-	}else if (field->type->GetTypeName().compare("float")==0
-		||	field->type->GetTypeName().compare("double")==0
-		||	field->type->GetTypeName().compare("FLOAT")==0
-		||	field->type->GetTypeName().compare("DOUBLE")==0){
-		fieldType = F_REAL;
-	}else if (field->type->GetTypeName().compare("string")==0
-		||  field->type->GetTypeName().compare("STRING")==0){
-		fieldType = F_STR;
-	}else if (field->type->IsComposit()){
-		fieldType = F_BLOCK;
-	}
+	fieldType = GetTypeId(field->type);
 }
 
+UTTypeDescFieldIt::FieldType UTTypeDescFieldIt::GetTypeId(UTTypeDesc* type){
+	UTTypeDescFieldIt::FieldType fieldType = F_NONE;
+	if(		type->GetTypeName().compare("BYTE")==0
+		||	type->GetTypeName().compare("WORD")==0
+		||	type->GetTypeName().compare("DWORD")==0
+		||	type->GetTypeName().compare("char")==0
+		||	type->GetTypeName().compare("short")==0
+		||	type->GetTypeName().compare("int")==0
+		||	type->GetTypeName().compare("unsigned")==0
+		||	type->GetTypeName().compare("size_t")==0
+		||	type->GetTypeName().compare("enum")==0){
+		fieldType = F_INT;
+	}else if (type->GetTypeName().compare("bool")==0
+		||	type->GetTypeName().compare("BOOL")==0){
+		fieldType = F_BOOL;
+	}else if (type->GetTypeName().compare("float")==0
+		||	type->GetTypeName().compare("double")==0
+		||	type->GetTypeName().compare("FLOAT")==0
+		||	type->GetTypeName().compare("DOUBLE")==0){
+		fieldType = F_REAL;
+	}else if (type->GetTypeName().compare("string")==0
+		||  type->GetTypeName().compare("STRING")==0){
+		fieldType = F_STR;
+	}else if (type->IsComposit()){
+		fieldType = F_BLOCK;
+	}
+	return fieldType;
+}
 
 }

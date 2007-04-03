@@ -444,12 +444,15 @@ void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	//	ノードの型情報を検索
 	UTTypeDesc* type = typeDbs.Top()->Find(tn);
 	if (!type) type = typeDbs.Top()->Find(tn + "Desc");	
+/*	TODOhase	
+	//	データファイルに知らない型があったとき，エラーを出す処理.
+	//	XMLの場合など，うるさいので消した．
 	if (!type){
 		UTString msg = tn;
 		msg.append(" not defined.");
 		Message(NULL, NULL, msg.c_str());
 	}
-
+*/
 	//	型情報をロード用イタレータにセット
 	fieldIts.PushType(type);
 
