@@ -260,8 +260,8 @@ void SPR_CDECL UTTypeDescDbPool::Print(std::ostream& os){
 UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 	type = d;
 	if (type){
+		field = type->GetComposit().end();
 		if (type->IsComposit()){
-			field = type->GetComposit().end();
 			arrayPos = -1;
 			arrayLength = 0;
 			fieldType=F_NONE;

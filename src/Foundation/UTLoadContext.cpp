@@ -430,15 +430,27 @@ UTLoadContext::UTLoadContext():errorStream(NULL){
 }
 void UTLoadContext::WriteBool(bool v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
-	curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
+	if (curField.type->IsComposit()){
+		curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
+	}else{
+		curField.type->WriteBool(v, datas.Top()->data);
+	}
 }
 void UTLoadContext::WriteNumber(double v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
-	curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
+	if (curField.type->IsComposit()){
+		curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
+	}else{
+		curField.type->WriteNumber(v, datas.Top()->data);
+	}
 }
 void UTLoadContext::WriteString(std::string v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
-	curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
+	if (curField.type->IsComposit()){
+		curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
+	}else{
+		curField.type->WriteString(v.c_str(), datas.Top()->data);
+	}
 }
 void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	//	ƒm[ƒh‚ÌŒ^î•ñ‚ğŒŸõ

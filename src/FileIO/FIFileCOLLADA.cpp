@@ -112,7 +112,9 @@ static bool NextField(){
 }
 ///	配列のカウント．まだ読み出すべきデータが残っていれば true を返す．
 static bool ArrayCount(){
-	return fileContext->fieldIts.IncArrayPos();
+	bool rv = fileContext->fieldIts.IncArrayPos();
+//	DSTR << "ArrayCount=" << (rv ? "true" : "false") << std::endl;
+	return rv;
 }
 
 static bool IsFieldInt(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_INT; }
@@ -165,7 +167,7 @@ static void SetVal(const char* b, const char* e){
 		if (curField.fieldType==UTTypeDescFieldIt::F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
 		}else{
-			if (curField.arrayPos==0){
+			if (curField.arrayPos==0 && curField.type->IsComposit()){
 				DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 			}
 		}
@@ -256,7 +258,9 @@ struct physics_material{
 ---------------------------------------------------------------------------------
 */
 
-
+static void FieldDump(const char* b, const char* e){
+	DSTR << "Field: " << UTString(b,e) << std::endl; 
+}
 void FIFileCOLLADA::Init(){
 
 	using namespace std;
@@ -275,6 +279,11 @@ void FIFileCOLLADA::Init(){
 
 	field	= element | data;
 	data	= if_p(&TypeAvail)[
+				if_p(&ArrayCount)[
+					exp[&SetVal] | eps_p[&StopArray] 
+				].else_p[
+					nothing_p
+				] >> 
 				while_p(&ArrayCount)[ exp[&SetVal] | eps_p[&StopArray] ]
 			  ].else_p[
 				(+ ~ch_p('<'))[&SkipData]
