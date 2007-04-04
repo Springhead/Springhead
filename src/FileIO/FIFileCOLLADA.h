@@ -13,7 +13,7 @@
 
 namespace Spr{;
 
-class FIFileCOLLADA:public FIFile, FIFileCOLLADAIfInit{
+class FIFileCOLLADA:public FIFile, public FIFileCOLLADAIfInit{
 public:
 	OBJECTDEF(FIFileCOLLADA, FIFile);
 protected:
