@@ -75,7 +75,8 @@ class FWNodeHandlerXFrame: public UTLoadHandlerImp<Frame>{
 public:	
 	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}	
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		ObjectIf* o = fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &GRFrameDesc());
+		GRFrameDesc desc;
+		ObjectIf* o = fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &desc);
 		fc->flags.Push(o != NULL);
 		if (o) fc->objects.Push(o);
 	}
@@ -225,7 +226,8 @@ class FWNodeHandlerXMesh: public UTLoadHandlerImp<Mesh>{
 public:
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &GRMeshDesc()));	
+		GRMeshDesc desc;
+		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc));	
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
 			mesh->positions = d.vertices;	// í∏ì_ç¿ïW
@@ -326,8 +328,7 @@ public:
 			for (unsigned j=0; j<cmd.vertices.size(); ++j){
 				cmd.vertices[j] = afShape * cmd.vertices[j];
 			}
-			CDConvexMesh* cmesh = fc->CreateObject(
-				CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
+			fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
 		}
 	}
 };
@@ -380,8 +381,9 @@ class FWNodeHandlerSphere: public UTLoadHandlerImp<Sphere>{
 public:
 	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &GRSphereDesc()));
-		GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
+ GRSphereDesc desc; 
+ fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &desc));
+   GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
 		sphere->radius = d.radius;
 		sphere->slices = d.slices;
 		sphere->stacks = d.stacks;
@@ -605,7 +607,8 @@ public:
 
 	FWNodeHandlerSolid():UTLoadHandlerImp<Desc>("Solid"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		fc->objects.Push(fc->CreateObject(PHSolidIf::GetIfInfoStatic(), &PHSolidDesc()));
+ PHSolidDesc desc; 
+		fc->objects.Push(fc->CreateObject(PHSolidIf::GetIfInfoStatic(), &desc));
 		PHSolid* solid = DCAST(PHSolid, fc->objects.Top());
 		solid->center = d.center;
 		solid->velocity = d.velocity;

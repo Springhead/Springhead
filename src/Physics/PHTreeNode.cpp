@@ -350,7 +350,8 @@ PHTreeNodeND<NDOF>::PHTreeNodeND(){
 	dZ.clear();
 	JtrdZ.clear();
 	f.clear();
-
+	accel.clear();
+	vel.clear();
 	gear = NULL;
 	gearNode = NULL;
 	parentND = NULL;

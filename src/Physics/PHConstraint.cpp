@@ -60,12 +60,12 @@ void PHConstraint::SetDesc(const void* desc){
 }
 
 void PHConstraint::UpdateState(){
-	// ツリーを構成していない拘束の場合，剛体の相対位置からヤコビアン，関節速度・位置を逆算する
-	if(!bArticulated){
+	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
+  //if(!bArticulated){
 		CompJacobian();
 		vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
 		UpdateJointState();
-	}
+	//}
 }
 
 // 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算

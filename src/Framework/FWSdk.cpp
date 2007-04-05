@@ -116,8 +116,8 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	DSTR << "merging " << scene0->GetName() << " and " << scene1->GetName() << endl;
 	
 	Scenes::iterator it0, it1;
-	it0 = find(scenes.begin(), scenes.end(), XCAST(scene0));
-	it1 = find(scenes.begin(), scenes.end(), XCAST(scene1));
+	it0 = find(scenes.begin(), scenes.end(), scene0);
+	it1 = find(scenes.begin(), scenes.end(), scene1);
 	if(it0 == scenes.end() || it1 == scenes.end())
 		return;
 	// PHScene‚Ìƒ}[ƒW

@@ -32,7 +32,7 @@ void FWAppGLUT::GlutTimerFunc(int id){
 	PHSceneIf* ps = fs->GetPHScene();
 	if(!ps)return;
 
-	int timeStep = ps->GetTimeStep() * 1000.0;
+	int timeStep = (int)(ps->GetTimeStep() * 1000.0);
 	if (timeStep<1) timeStep = 1;
 	glutTimerFunc(timeStep, GlutTimerFunc, 0);
 }

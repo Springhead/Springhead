@@ -19,6 +19,7 @@ public:
 	virtual bool MouseMove(int x, int y) = 0;
 	virtual bool Step() = 0;
 	virtual void AtExit() = 0;
+	virtual ~FWVFuncBridge(){}
 };
 
 /** @brief アプリケーションクラス
