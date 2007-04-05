@@ -125,6 +125,7 @@ struct PHTreeNodeDesc{
 	}
 };
 struct PHRootNodeDesc : public PHTreeNodeDesc{
+	PHRootNodeDesc(){}
 };
 struct PHTreeNode1DDesc : public PHTreeNodeDesc{
 };

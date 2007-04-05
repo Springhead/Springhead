@@ -16,35 +16,20 @@
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
 #include <Foundation/SprScene.h>
+#include <Physics/SprPHSolid.h>
+#include <Physics/SprPHJoint.h>
 
 namespace Spr{;
 
 struct PHSdkIf;
 
-struct PHSolidIf;
-struct PHSolidDesc;
-
 struct CDShapeIf;
 struct CDShapeDesc;
 
-struct PHJointIf;
-struct PHJoint1DIf;
-struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
 
-struct PHTreeNodeIf;
-struct PHTreeNodeDesc;
-struct PHRootNodeIf;
-struct PHRootNodeDesc;
-
-struct PHGearIf;
-struct PHGearDesc;
-
-class PHConstraintEngine;
-class PHGravityEngine;
-
-struct PHPathIf;
-struct PHPathDesc;
+//class PHConstraintEngine;
+//class PHGravityEngine;
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
@@ -91,7 +76,7 @@ public:
 		@param desc 作成するSolidのディスクリプタ
 		@return Solidのインタフェース
 	*/
-	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc)=0;
+	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc())=0;
 	
 	/** @brief Solidの数を取得する
 		@return Solidの数
@@ -160,7 +145,7 @@ public:
 		@return ルートノードのインタフェース
 		関節ツリーの根となるノードを作成する．
 	 */
-	virtual PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc)=0;
+	virtual PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc())=0;
 
 	/** @brief ルートノードの数
 	 */
@@ -179,7 +164,7 @@ public:
 		CreateJointによって作成されていなければならない．
 		さらに，parentがソケット側，childがプラグ側である必要がある．
 	 */
-	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc)=0;
+	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc())=0;
 
 	/** @brief ギアを作成する
 		@param lhs ギアで連動させる関節
@@ -191,7 +176,7 @@ public:
 		rhs->GetPosition() = desc.ratio * lhs->GetPosition()
 		を満たすように拘束される．
 	 */
-	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc)=0;
+	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc())=0;
 	
 	/** @brief ギアの数
 	 */
@@ -206,7 +191,7 @@ public:
 		パスを作成する．
 		パスはPHPathJointの軌道を表現するために用いる．
 	 */
-	virtual PHPathIf* CreatePath(const PHPathDesc& desc)=0;
+	virtual PHPathIf* CreatePath(const PHPathDesc& desc = PHPathDesc())=0;
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ
@@ -251,8 +236,8 @@ public:
 	 */
 	virtual Vec3d GetGravity()=0;
 
-	virtual PHConstraintEngine* GetConstraintEngine()=0;
-	virtual PHGravityEngine*	GetGravityEngine()=0;
+	//virtual PHConstraintEngine* GetConstraintEngine()=0;
+	//virtual PHGravityEngine*	GetGravityEngine()=0;
 };
 
 //@}

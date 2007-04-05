@@ -74,6 +74,11 @@ public:
 		if(!bEnabled)return false;
 		// いずれかのSolidに形状が割り当てられていない場合は接触なし
 		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+		// 両方ともフリーズ状態の場合は接触なし
+		if(solid[0]->IsFrozen() && solid[1]->IsFrozen()){
+			DSTR << "both frozen" << endl;
+			return false;
+		}
 		
 		std::vector<Vec3d> deltaPos[2];
 		std::vector<Posed> shapePose[2];
@@ -107,6 +112,16 @@ public:
 				OnContDetect(sp, engine, ct, dt);
 			}
 		}
+		// フリーズの解除
+		if(found){
+			if(solid[0]->IsDynamical() && !solid[1]->IsFrozen()){
+				solid[0]->SetFrozen(false);
+			}
+			else if(solid[1]->IsDynamical() && !solid[0]->IsFrozen()){
+				solid[1]->SetFrozen(false);
+			}
+		}
+
 		return found;
 	}
 

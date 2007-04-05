@@ -166,7 +166,7 @@ int main(int argc, char* argv[]){
 	robot[0].Build(pose, scene, phSdk);
 	pose.Pos() = Vec3d(0.0, 1.0, 1.0);
 
-//	car.Build(pose, scene, phSdk);
+	//car.Build(pose, scene, phSdk);
 	CDBoxDesc box;
 	box.boxsize = Vec3f(1.0, 1.0, 2.0);
 	CDBoxIf* boxBody = DCAST(CDBoxIf, phSdk->CreateShape(box));
@@ -181,8 +181,8 @@ int main(int argc, char* argv[]){
 		pose.PosY()+=1.0;
 		pose.PosX()-=0.1;
 	}
-	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));
-	scene->SetNumIteration(60);
+	scene->SetGravity(Vec3f(0.0, -3.0, 0.0));
+	scene->SetNumIteration(10);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

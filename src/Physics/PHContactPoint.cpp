@@ -81,7 +81,7 @@ void PHContactPoint::SetConstrainedIndex(bool* con){
 }
 
 double PHContactPoint::correctionSpring = 100.0;
-double PHContactPoint::correctionDamper = 1000.0;
+double PHContactPoint::correctionDamper = 10.0;
 
 void PHContactPoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();

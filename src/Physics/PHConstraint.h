@@ -52,8 +52,7 @@ public:
 	bool		constr[6];			///< 拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
 
 	/* 派生クラスの機能	*/
-	//virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
-	void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
+	virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
 	virtual void SetConstrainedIndex(bool* con){}			///< どの自由度を拘束するかを設定
 	virtual void ModifyJacobian(){}							///< 独自座標系を使う場合のヤコビアンの修正
 	virtual void CompBias(){}								///< 

@@ -91,7 +91,8 @@ void FWSdk::LoadScene(UTString filename){
 	//	ファイルのロード
 	if (! fiFileX->Load(objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
-		exit(EXIT_FAILURE);
+		//exit(EXIT_FAILURE);
+		return false;
 	}
 	//	ロードしたシーンを取得
 	DSTR << "Loaded " << NScene() - first << " scenes." << std::endl;
@@ -100,7 +101,20 @@ void FWSdk::LoadScene(UTString filename){
 		fwScene = GetScene(i);
 		fwScene->Print(DSTR);
 	}
+	return true;
 }
+void FWSdk::SaveScene(UTString filename){
+	// 保存
+	ObjectIfs objs;
+	objs.push_back(Cast());
+	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
+	if(!fiFileX->Save(objs, filename.c_str())){
+		DSTR << "Error: Cannot save file " << filename.c_str() << std::endl;
+		return false;
+	}
+	return true;
+}
+
 int FWSdk::NScene() const{
 	return (int)scenes.size();
 }

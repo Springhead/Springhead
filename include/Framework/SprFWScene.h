@@ -39,7 +39,7 @@ namespace Spr{
 			PHSceneIf::CreateSolid‚¨‚æ‚ÑGRSceneIf::CreateFrame‚É‚æ‚èì¬‚³‚ê‚éB
 			Ÿ‚É—¼Ò‚ğQÆ‚·‚éFWObject‚ªì¬‚³‚êFWScene‚É“o˜^‚³‚ê‚éB
 		 */
-		virtual FWObjectIf*	CreateObject(const PHSolidDesc& soliddesc, const GRFrameDesc& framedesc)=0;
+		virtual FWObjectIf*	CreateObject(const PHSolidDesc& soliddesc = PHSolidDesc(), const GRFrameDesc& framedesc = GRFrameDesc())=0;
 		virtual int NObject()const=0;
 		virtual FWObjectIf** GetObjects()=0;
 

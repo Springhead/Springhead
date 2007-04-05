@@ -49,25 +49,24 @@ public:
 
 	PHConstraintEngine* GetConstraintEngine();
 	PHGravityEngine*	GetGravityEngine();
-	PHSolidIf* CreateSolid(const PHSolidDesc& desc);
+	PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	int NSolids() const;
 	PHSolidIf** GetSolids();
 	CDShapeIf* CreateShape(const CDShapeDesc& desc);
-	//PHJointIf* CreateJoint(const PHJointDesc& desc);	///< ファイルローダ用
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	int NJoints() const;
 	PHJointIf* GetJoint(int i);
 	//PHRootNodeIf* CreateRootNode(const PHRootNodeDesc& desc);
-	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc);
+	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 	int NRootNodes() const;
 	PHRootNodeIf* GetRootNode(int i);
 	//PHTreeNodeIf* CreateTreeNode(const PHTreeNodeDesc& desc);
-	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc);
+	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
 	//PHGearIf*	CreateGear(const PHGearDesc& desc);
-	PHGearIf*	CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc);
+	PHGearIf*	CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	int NGears() const;
 	PHGearIf* GetGear(int i);
-	PHPathIf*	CreatePath(const PHPathDesc& desc);
+	PHPathIf*	CreatePath(const PHPathDesc& desc = PHPathDesc());
 	int NPaths() const;
 	PHPathIf* GetPath(int i);
 	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);

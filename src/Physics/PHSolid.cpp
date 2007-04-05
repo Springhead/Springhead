@@ -22,6 +22,7 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	integrationMode = PHINT_SIMPLETIC;
 	inertia_inv = inertia.inv();
 	treeNode = NULL;
+	bFrozen = false;
 	if (s){ SetScene(s); }
 }
 void PHSolid::SetGravity(bool bOn){
@@ -98,7 +99,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	// ツリーに属する場合はPHRootNode::SetupDynamicsでdvが計算される
 	if(treeNode)return;
 	
-	if(IsDynamical()){
+	if(IsDynamical() && !IsFrozen()){
 		dv.v() = minv * f.v() * dt;
 		dv.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
 	}
@@ -121,13 +122,23 @@ void PHSolid::UpdateCachePenalty(int c){
 }
 
 void PHSolid::UpdateVelocity(double dt){
-	v += dv;
-	//oldVel = GetVelocity();
-	//oldAngVel = GetAngularVelocity();
-	SetVelocity       (GetOrientation() * v.v());
-	SetAngularVelocity(GetOrientation() * v.w());
+	SpatialVector vold = v;
+	if(IsDynamical() && !IsFrozen()){
+		v += dv;
+		//oldVel = GetVelocity();
+		//oldAngVel = GetAngularVelocity();
+		SetVelocity       (GetOrientation() * v.v());
+		SetAngularVelocity(GetOrientation() * v.w());
+	}
+	// フリーズ判定
+	if(!IsFrozen()){
+		if(vold.square() < engine->freezeThreshold && v.square() < engine->freezeThreshold){
+			SetFrozen(true);
+		}
+	}
 }
 void PHSolid::UpdatePosition(double dt){
+	if(IsFrozen())return;
 	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());

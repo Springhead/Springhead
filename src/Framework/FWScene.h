@@ -47,7 +47,7 @@ public:
 	virtual void		SetPHScene(PHSceneIf* s){ phScene = s; }
 	virtual GRSceneIf*	GetGRScene(){ return grScene; }
 	virtual void		SetGRScene(GRSceneIf* s){ grScene = s; }
-	virtual FWObjectIf* CreateObject(const PHSolidDesc& soliddesc, const GRFrameDesc& framedesc);
+	virtual FWObjectIf* CreateObject(const PHSolidDesc& soliddesc = PHSolidDesc(), const GRFrameDesc& framedesc = GRFrameDesc());
 	virtual int NObject()const{return fwObjects.size();}
 	virtual FWObjectIf** GetObjects(){return (FWObjectIf**)&*fwObjects.begin();}
 	virtual void Sync();

@@ -167,6 +167,7 @@ PHConstraintEngine::PHConstraintEngine(){
 	posCorrectionRate	 = 0.05;
 	shrinkRate			 = 0.0;
 	shrinkRateCorrection = 0.7;
+	freezeThreshold		 = 0.0;
 	bGearNodeReady = false;
 }
 

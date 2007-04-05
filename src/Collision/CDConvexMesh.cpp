@@ -169,7 +169,6 @@ void CDConvexMesh::CalcFace(){
 	int hoge = vtxIds.size();
 	for(std::set<int>::iterator it = usedVtxs.begin(); it != usedVtxs.end(); ++it){
 		vtxIds.push_back(*it);
-		DSTR << base[*it] << std::endl;
 	}
 	//	base‚©‚ç•s—v‚È’¸“_‚ðíœ
 	int pos = base.size()-1;

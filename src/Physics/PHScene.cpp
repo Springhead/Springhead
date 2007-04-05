@@ -245,14 +245,16 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 }
 bool PHScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
-	PHSolidIf* solid = DCAST(PHSolidIf, o);
+	PHSolid* solid = DCAST(PHSolid, o);
 	if(solid){
 		if(	solids->AddChildObject(o) &&
 			gravityEngine->AddChildObject(o) &&
 			penaltyEngine->AddChildObject(o) &&
 			constraintEngine->AddChildObject(o))
 		{
-            SetContactMode(solid, PHSceneDesc::MODE_LCP);	//デフォルトでLCP
+            SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);	//デフォルトでLCP
+			solid->scene = this;
+			solid->engine = constraintEngine;
 			ok = true;
 		}
 	}

@@ -30,7 +30,12 @@ struct FWSdkIf : ObjectIf {
 		ロード後は，ロードされたシーンがアクティブとなる．
 		ファイル中に複数のシーンが含まれていた場合は，最後にロードされたシーンがアクティブとなる．
 	 */
-	virtual void LoadScene(UTString filename)=0;
+	virtual bool LoadScene(UTString filename)=0;
+
+	/** @brief シーンをファイルへセーブする
+		@param filename ファイル名
+	 */
+	virtual bool SaveScene(UTString filename)=0;
 
 	/// シーンの個数を取得する
 	virtual int NScene() const=0;

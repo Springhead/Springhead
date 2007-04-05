@@ -44,7 +44,8 @@
 		・'l'で、バネ原点(バネの力が0となる関節変位)を-1.0に設定する
 	シーン2：
 		・'2'で、ボールジョイントシーンの設定を行う（シーン切換え）
-		・スペースキーでボールジョイント用のboxを生成
+		・' 'あるいは'b'でヒンジ用のboxを生成
+		　' 'の場合は内部アルゴリズムはABAとなる
 	シーン3：
 		・'3'で、スライダシーンの設定を行う（シーン切換え）
 		・'a'で、重力方向を、(5.0, -5, 0.0)に設定する
@@ -94,7 +95,7 @@ double simulationPeriod = 50.0;
 Vec3d lookAt;
 int sceneNo;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
-double	CameraRotX = 0.0, CameraRotY = Rad(30.0), CameraZoom = 10.0;
+double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 20.0;
 bool bLeftButton = false, bRightButton = false;
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ

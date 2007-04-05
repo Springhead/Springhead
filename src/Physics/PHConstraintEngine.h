@@ -46,6 +46,7 @@ public:
 	double	posCorrectionRate;
 	double	shrinkRate;				///< LCP初期値を前回の解に対して縮小させる比率
 	double	shrinkRateCorrection;
+	double	freezeThreshold;		///< 剛体がフリーズする閾値
 	bool	bGearNodeReady;			///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	
 	PHConstraintEngine();

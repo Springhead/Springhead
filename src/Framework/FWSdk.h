@@ -48,7 +48,8 @@ public:
 	FWSdk();
 	~FWSdk();
 	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
-	virtual void LoadScene(UTString filename);
+	virtual bool LoadScene(UTString filename);
+	virtual bool SaveScene(UTString filename);
 	virtual int NScene() const;
 	virtual void SwitchScene(FWSceneIf* scene){ fwScene = scene; }
 	virtual FWSceneIf* GetScene(int i = -1);

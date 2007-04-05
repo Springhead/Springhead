@@ -22,7 +22,7 @@ public:
 		CDBoxIf			*boxCrank, *boxFoot, *boxGuide;
 		PHSolidIf		*soCrank, *soFoot[2], *soGuide[2];
 		PHHingeJointIf	*jntCrank, *jntFoot[2], *jntFootGuide[2], *jntGuideBody[2];
-		void Build(PHSolidIf* body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
+		void Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
 	};
 
 	Leg	leg[4];

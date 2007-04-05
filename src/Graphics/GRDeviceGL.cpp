@@ -701,13 +701,19 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	if (filename.empty()) return 0;
 
 	// paintLib でファイルをロード．
-	int h = LoadBmpCreate(filename.c_str());
-	tx = LoadBmpGetWidth(h);
-	ty = LoadBmpGetHeight(h);
-	nc = LoadBmpGetBytePerPixel(h);
-	texbuf = new char[tx*ty*nc];
-	LoadBmpGetBmp(h, texbuf);
-	LoadBmpRelease(h);
+	try{
+		int h = LoadBmpCreate(filename.c_str());
+		tx = LoadBmpGetWidth(h);
+		ty = LoadBmpGetHeight(h);
+		nc = LoadBmpGetBytePerPixel(h);
+		texbuf = new char[tx*ty*nc];
+		LoadBmpGetBmp(h, texbuf);
+		LoadBmpRelease(h);
+	}
+	catch(.../*PLTextException e*/){
+		//DSTR << e << endl;
+		return 0;
+	}
 
 	// テクスチャの生成．
 	glGenTextures(1, (GLuint *)&texId);

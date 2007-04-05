@@ -36,7 +36,7 @@ struct FWSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetGRScene(GRSceneIf *  s){
 		return ((OBJ*)(MIF*)this)->SetGRScene(s);
 	}
-	virtual FWObjectIf *	 CreateObject(const PHSolidDesc &  soliddesc, const GRFrameDesc &  framedesc){
+	virtual FWObjectIf *	 CreateObject(const PHSolidDesc &  soliddesc = PHSolidDesc(), const GRFrameDesc &  framedesc = GRFrameDesc()){
 		return ((OBJ*)(MIF*)this)->CreateObject(soliddesc, framedesc);
 	}
 	virtual int NObject() const {
@@ -68,8 +68,11 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual FWSceneIf *  CreateScene(const PHSceneDesc &  phdesc = PHSceneDesc(), const GRSceneDesc &  grdesc = GRSceneDesc()){
 		return ((OBJ*)(MIF*)this)->CreateScene(phdesc, grdesc);
 	}
-	virtual void LoadScene(UTString filename){
+	virtual bool LoadScene(UTString filename){
 		return ((OBJ*)(MIF*)this)->LoadScene(filename);
+	}
+	virtual bool SaveScene(UTString filename){
+		return ((OBJ*)(MIF*)this)->SaveScene(filename);
 	}
 	virtual int NScene() const {
 		return ((OBJ*)(MIF*)this)->NScene();

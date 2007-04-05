@@ -79,11 +79,14 @@ enum PHIntegrationMode{
 };
 
 class PHTreeNode;
+class PHScene;
+class PHConstraintEngine;
 
 ///	剛体
 class PHSolid : public SceneObject, public PHSolidIfInit, public PHSolidDesc{
 protected:
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
+	bool		bFrozen;		///<	フリーズ状態か
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
 	///	積分方式
@@ -100,6 +103,8 @@ protected:
 public:
 	///@name LCP関連補助変数
 	//@{
+	PHScene*	scene;
+	PHConstraintEngine* engine;
 	PHTreeNode*	treeNode;	/// 関節系を構成している場合の対応するノード
 	double		minv;		///< 質量の逆数
 	Matrix3d	Iinv;		///< 慣性行列の逆行列
@@ -211,12 +216,18 @@ public:
 	///	質量中心の速度の取得
 	Vec3d		GetVelocity() const {return velocity;}
 	///	質量中心の速度の設定
-	void		SetVelocity(const Vec3d& v){velocity = v;}
+	void		SetVelocity(const Vec3d& v){
+		velocity = v;
+		SetFrozen(false);
+	}
 
 	///	角速度の取得
 	Vec3d		GetAngularVelocity() const {return angVelocity;}
 	///	角速度の設定
-	void		SetAngularVelocity(const Vec3d& av){angVelocity = av;}
+	void		SetAngularVelocity(const Vec3d& av){
+		angVelocity = av;
+		SetFrozen(false);
+	}
 
 	///	任意の位置での速度の取得
 	Vec3d		GetPointVelocity(Vec3d posW) const {
@@ -236,6 +247,8 @@ public:
 	void		SetGravity(bool bOn);
 	void		SetDynamical(bool bOn){dynamical = bOn;}
 	bool		IsDynamical(){return dynamical;}
+	void		SetFrozen(bool bOn){bFrozen = bOn;}
+	bool		IsFrozen(){return bFrozen;}
 
 	ACCESS_DESC_STATE(PHSolid);
 };

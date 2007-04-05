@@ -270,7 +270,7 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHSdkIf *  GetSdk(){
 		return ((OBJ*)(MIF*)this)->GetSdk();
 	}
-	virtual PHSolidIf *  CreateSolid(const PHSolidDesc &  desc){
+	virtual PHSolidIf *  CreateSolid(const PHSolidDesc &  desc = PHSolidDesc()){
 		return ((OBJ*)(MIF*)this)->CreateSolid(desc);
 	}
 	virtual int NSolids() const {
@@ -306,7 +306,7 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHJointIf *  GetJoint(int i){
 		return ((OBJ*)(MIF*)this)->GetJoint(i);
 	}
-	virtual PHRootNodeIf *  CreateRootNode(PHSolidIf *  root, const PHRootNodeDesc &  desc){
+	virtual PHRootNodeIf *  CreateRootNode(PHSolidIf *  root, const PHRootNodeDesc &  desc = PHRootNodeDesc()){
 		return ((OBJ*)(MIF*)this)->CreateRootNode(root, desc);
 	}
 	virtual int NRootNodes() const {
@@ -315,10 +315,10 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHRootNodeIf *  GetRootNode(int i){
 		return ((OBJ*)(MIF*)this)->GetRootNode(i);
 	}
-	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child, const PHTreeNodeDesc &  desc){
+	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child, const PHTreeNodeDesc &  desc = PHTreeNodeDesc()){
 		return ((OBJ*)(MIF*)this)->CreateTreeNode(parent, child, desc);
 	}
-	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc){
+	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc = PHGearDesc()){
 		return ((OBJ*)(MIF*)this)->CreateGear(lhs, rhs, desc);
 	}
 	virtual int NGears() const {
@@ -327,7 +327,7 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHGearIf *  GetGear(int i){
 		return ((OBJ*)(MIF*)this)->GetGear(i);
 	}
-	virtual PHPathIf *  CreatePath(const PHPathDesc &  desc){
+	virtual PHPathIf *  CreatePath(const PHPathDesc &  desc = PHPathDesc()){
 		return ((OBJ*)(MIF*)this)->CreatePath(desc);
 	}
 	virtual double GetTimeStep() const {
@@ -362,12 +362,6 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual Vec3d GetGravity(){
 		return ((OBJ*)(MIF*)this)->GetGravity();
-	}
-	virtual PHConstraintEngine *  GetConstraintEngine(){
-		return ((OBJ*)(MIF*)this)->GetConstraintEngine();
-	}
-	virtual PHGravityEngine *	 GetGravityEngine(){
-		return ((OBJ*)(MIF*)this)->GetGravityEngine();
 	}
 };
 struct PHSceneIf;	class PHScene;
