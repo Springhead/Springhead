@@ -76,7 +76,7 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	AddChildObject(scene);
 	return scene;
 }
-void FWSdk::LoadScene(UTString filename){
+bool FWSdk::LoadScene(UTString filename){
 	//	デフォルトの先祖オブジェクトをを設定
 	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
 	ObjectIfs objs;
@@ -103,7 +103,7 @@ void FWSdk::LoadScene(UTString filename){
 	}
 	return true;
 }
-void FWSdk::SaveScene(UTString filename){
+bool FWSdk::SaveScene(UTString filename){
 	// 保存
 	ObjectIfs objs;
 	objs.push_back(Cast());
