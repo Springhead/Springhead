@@ -38,6 +38,7 @@ void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, 
 	jd.poseSocket = base;
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jntCrank = DCAST(PHHingeJointIf, scene->CreateJoint(body, soCrank, jd));
+	jntCrank->SetDamper(1.0);
 	scene->CreateTreeNode(root, soCrank);
 	
 	const double K = 100.0, D = 10.0;
@@ -132,7 +133,7 @@ void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 }
 
 
-const double speed = 1.0;
+const double speed = 3.0;
 void Robot2::Stop(){
 	leg[0].jntCrank->SetMotorTorque(0);
 	leg[1].jntCrank->SetMotorTorque(0);

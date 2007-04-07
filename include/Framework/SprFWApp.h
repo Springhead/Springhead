@@ -68,7 +68,7 @@ public:
 	/** @brief 初期化
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
 	 */
-	virtual void Init(int argc, char* argv[]);
+	virtual void Init(int argc = 0, char* argv[] = NULL);
 
 	/** @brief コマンドライン引数の処理
 		アプリケーションに渡されたコマンドライン引数を処理したい場合にオーバライドする

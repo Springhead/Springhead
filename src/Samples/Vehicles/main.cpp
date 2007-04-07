@@ -136,7 +136,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
-	glutTimerFunc(25, timer, 0);
+	glutTimerFunc(50, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	for(int i = 0; i < 1; i++)
 		scene->Step();
@@ -157,6 +157,7 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
+	dscene.numIteration = 5;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	
 	// シーンの構築
@@ -181,9 +182,8 @@ int main(int argc, char* argv[]){
 		pose.PosY()+=1.0;
 		pose.PosX()-=0.1;
 	}
-	scene->SetGravity(Vec3f(0.0, -3.0, 0.0));
-	scene->SetNumIteration(10);
-
+	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));
+	
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
@@ -194,7 +194,7 @@ int main(int argc, char* argv[]){
 	device->Init();
 	render->SetDevice(device);	// デバイスの設定
 
-	glutTimerFunc(10, timer, 0);
+	glutTimerFunc(50, timer, 0);
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
