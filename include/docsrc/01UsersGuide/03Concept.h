@@ -4,13 +4,19 @@
 \section secStructure Springhead‚Ì\¬
 Springhead‚Í‘å‚«‚­•ª‚¯‚ÄˆÈ‰º‚Ì3‚Â‚Ìƒ‚ƒWƒ…[ƒ‹‚©‚ç\¬‚³‚ê‚Ä‚¢‚Ü‚·D
 - @ \c Springhead \c Physics@ Ë@ \ref pagePhysics
-- @ \c Springhead \c Graphics@ Ë@ \ref pageGraphics (–¢ƒŠƒŠ[ƒX)
-- @ \c Springhead \c File \c I/O@ Ë@ \ref pageFileIO (–¢ƒŠƒŠ[ƒX)
+- @ \c Springhead \c Graphics@ Ë@ \ref pageGraphics
+- @ \c Springhead \c File \c I/O@ Ë@ \ref pageFileIO
 
 ‚±‚ê‚ç‚Ìƒ‚ƒWƒ…[ƒ‹‚ÍCŒÂ•Ê‚É—p‚¢‚é‚±‚Æ‚à‚Å‚«‚é‚æ‚¤‚ÉÝŒv‚³‚ê‚Ä‚¢‚Ü‚·D
 —á‚¦‚ÎCƒ†[ƒU‚Ì’†‚É‚ÍƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÍŽèŽ‚¿‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ðŽg‚¢C•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‚Ý‚ð
 Springhead‚Ås‚¢‚½‚¢‚Æl‚¦‚Ä‚¢‚él‚à‚¢‚é‚Å‚µ‚å‚¤D‚±‚Ì‚æ‚¤‚Èê‡‚É‚àC•K—vÅ’áŒÀ‚Ì’Ç‰Á“I‚È
 ƒR[ƒh‚¾‚¯‚Åƒ†[ƒU‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ÆSpringhead‚Æ‚ð˜A“®‚³‚¹‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+
+‚Ü‚½C‚±‚ê‚ç‚ð“‡‚·‚é
+-	 \c Springhead \c Framework@Ë@ \ref pageFramework
+
+‚ª‚ ‚è‚Ü‚·Dˆê’Ê‚è‚Ì‹@”\‚ðSpringhead‚É”C‚¹‚½‚¢ƒ†[ƒU‚É‚Æ‚Á‚Ä‚ÍC
+Framework‚ðŽg—p‚·‚é‚±‚Æ‚ªÅ“K‚Ì‘I‘ð‚É‚È‚é‚Å‚µ‚å‚¤D
 
 ˆÈ‰º‚Å‚ÍŒÂ•Ê‚Ìƒ‚ƒWƒ…[ƒ‹‚É‚Â‚¢‚Ä‡‚É‰ðà‚µ‚Ü‚·D
 <br><br><br>
@@ -53,4 +59,15 @@ FileIO‚Í‘¼‚Ìƒ‚ƒWƒ…[ƒ‹‚ÌAPI‚ð—˜—p‚µ‚Äƒ[ƒh‚µ‚½ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ð¶¬‚µ‚½‚
 \par
 FileIO‚ðŽg‚í‚¸‚ÉCŽ©•ª‚Å1‚©‚çƒf[ƒ^ƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚éŽd‘g‚Ý‚ðì‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
 <br><br><br><br>
+
+
+\section secFramework ƒtƒŒ[ƒ€ƒ[ƒNSDK
+\par
+\ref pageFramework ‚ÍCPhysicsCGraphicsCFileIO‚Ì3ƒ‚ƒWƒ…[ƒ‹‚ð“‡‚µ‚Ü‚·D
+Framework‚ðŽg‚¤‚ÆCƒtƒ@ƒCƒ‹‚©‚ç‚Ìƒ[ƒh‚âƒZ[ƒuC•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Œ‹‰Ê‚Ì•`‰æ—pƒV[ƒ“ƒOƒ‰ƒt‚Ö‚Ì
+”½‰f‚Æ‚¢‚Á‚½ì‹Æ‚ªŽ©“®‰»‚³‚ê‚Ü‚·D
+ƒ†[ƒU‚ÍFramework‚ª’ñ‹Ÿ‚·‚éƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX‚ðŒp³‚·‚é‚±‚Æ‚É‚æ‚Á‚Ä“ÆŽ©‚Ì‹@”\‚ðŽÀ‘•‚·‚é‚±‚Æ‚ª
+‚Å‚«‚Ü‚·D
+<br><br><br><br>
+
 */
