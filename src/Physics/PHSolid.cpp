@@ -33,8 +33,8 @@ void PHSolid::SetGravity(bool bOn){
 	else ge->solids.Erase(this);
 }
 
-CDShapeIf* PHSolid::CreateShape(const CDShapeDesc& desc){
-	CDShapeIf* rv = DCAST(PHScene, GetScene())->CreateShape(desc);
+CDShapeIf* PHSolid::CreateShape(const IfInfo*  info, const CDShapeDesc& desc){
+	CDShapeIf* rv = DCAST(PHScene, GetScene())->CreateShape(info, desc);
 	if (rv){
 		AddShape(rv);
 	}
@@ -44,7 +44,7 @@ ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = SceneObject::CreateObject(info, desc);
 	if (!rv){
 		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-			rv = CreateShape(*(CDShapeDesc*)desc);
+			rv = CreateShape(info, *(CDShapeDesc*)desc);
 		}
 	}
 	return rv;

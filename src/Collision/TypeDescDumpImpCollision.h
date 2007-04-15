@@ -18,14 +18,6 @@
 	desc->ifInfo = CDShapeIf::GetIfInfoStatic();
 	((IfInfo*)CDShapeIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<CDShapeDesc>;
-	field = desc->AddField("ShapeType", "enum", "type",  "");
-	field->AddEnumConst("CONVEX");
-	field->AddEnumConst("CONVEXMESH");
-	field->AddEnumConst("SPHERE");
-	field->AddEnumConst("CAPSULE");
-	field->AddEnumConst("BOX");
-	field->AddEnumConst("BOX");
-	field->offset = int((char*)(&pCDShapeDesc->type) - (char*)pCDShapeDesc);
 	field = desc->AddField("", "PHMaterial", "material", "");
 	field->offset = int((char*)&(pCDShapeDesc->material) - (char*)pCDShapeDesc);
 	db->RegisterDesc(desc);

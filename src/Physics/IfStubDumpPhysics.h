@@ -386,8 +386,8 @@ struct PHSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
 	virtual void MergeScene(PHSceneIf *  scene0, PHSceneIf *  scene1){
 		return ((OBJ*)(MIF*)this)->MergeScene(scene0, scene1);
 	}
-	virtual CDShapeIf *  CreateShape(const CDShapeDesc &  desc){
-		return ((OBJ*)(MIF*)this)->CreateShape(desc);
+	virtual CDShapeIf *  CreateShape(const IfInfo *  ii, const CDShapeDesc &  desc){
+		return ((OBJ*)(MIF*)this)->CreateShape(ii, desc);
 	}
 	virtual int NShape(){
 		return ((OBJ*)(MIF*)this)->NShape();

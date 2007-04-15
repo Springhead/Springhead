@@ -56,9 +56,6 @@ public:
 	CDConvexMesh();
 	CDConvexMesh(const CDConvexMeshDesc& desc);
 
-	///	ShapeType
-	virtual int ShapeType(){ return CDShapeDesc::CONVEXMESH; }
-
 	///	頂点から面や接続情報を生成する．
 	void CalcFace();
 	///	同一平面上で接続されている3角形をマージする

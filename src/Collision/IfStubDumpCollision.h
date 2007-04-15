@@ -20,10 +20,10 @@ typedef IfInitTemplate<CDConvexIfStub, CDConvex>	CDConvexIfInit;
 template <class IF, class MIF, class OBJ>
 struct CDFaceIfStubTemplate: public IF {
 	virtual int NIndex(){
-		return ((OBJ*)(MIF*)this)->OBJ::NIndex();
+		return ((OBJ*)(MIF*)this)->NIndex();
 	}
 	virtual int *  GetIndices(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetIndices();
+		return ((OBJ*)(MIF*)this)->GetIndices();
 	}
 };
 struct CDFaceIf;	class CDFace;
@@ -34,16 +34,16 @@ template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CDConvexMeshIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual CDFaceIf *  GetFace(size_t i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetFace(i);
+		return ((OBJ*)(MIF*)this)->GetFace(i);
 	}
 	virtual size_t NFace(){
-		return ((OBJ*)(MIF*)this)->OBJ::NFace();
+		return ((OBJ*)(MIF*)this)->NFace();
 	}
 	virtual Vec3f *  GetVertices(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetVertices();
+		return ((OBJ*)(MIF*)this)->GetVertices();
 	}
 	virtual size_t NVertex(){
-		return ((OBJ*)(MIF*)this)->OBJ::NVertex();
+		return ((OBJ*)(MIF*)this)->NVertex();
 	}
 };
 struct CDConvexMeshIf;	class CDConvexMesh;
@@ -54,7 +54,7 @@ template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CDSphereIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual float GetRadius(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetRadius();
+		return ((OBJ*)(MIF*)this)->GetRadius();
 	}
 };
 struct CDSphereIf;	class CDSphere;
@@ -65,10 +65,10 @@ template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CDCapsuleIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual float GetRadius(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetRadius();
+		return ((OBJ*)(MIF*)this)->GetRadius();
 	}
 	virtual float GetLength(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetLength();
+		return ((OBJ*)(MIF*)this)->GetLength();
 	}
 };
 struct CDCapsuleIf;	class CDCapsule;
@@ -79,13 +79,13 @@ template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CDBoxIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3f GetBoxSize(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetBoxSize();
+		return ((OBJ*)(MIF*)this)->GetBoxSize();
 	}
 	virtual Vec3f *  GetVertices(){
-		return ((OBJ*)(MIF*)this)->OBJ::GetVertices();
+		return ((OBJ*)(MIF*)this)->GetVertices();
 	}
 	virtual CDFaceIf *  GetFace(size_t i){
-		return ((OBJ*)(MIF*)this)->OBJ::GetFace(i);
+		return ((OBJ*)(MIF*)this)->GetFace(i);
 	}
 };
 struct CDBoxIf;	class CDBox;

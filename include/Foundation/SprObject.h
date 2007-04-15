@@ -143,6 +143,13 @@ public:																	\
 		return (I*)GetIfDynamic(I::GetIfInfoStatic());						\
 	}																		\
 
+///	ディスクリプタが持つべきメンバの宣言部．
+#define DESC_DEF_FOR_OBJECT(cls)										\
+public:																	\
+	const static IfInfo* GetIfInfo(){									\
+		return cls##If::GetIfInfoStatic();								\
+	}																	\
+
 #endif // !SWIG
 
 // Rubyなどのポートで使用されるキャスト
@@ -194,6 +201,10 @@ struct ObjectIf{
 	virtual void Clear()=0;
 	///	オブジェクトを作成し，AddChildObject()を呼ぶ．
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
+	///	CreateObjectを呼び出すユーティリティ関数
+	template <class T> ObjectIf* CreateObject(const T& desc){
+		return CreateObject(desc::GetIfInfo(), &desc);
+	}
 	//@}
 
 	///	@name デスクリプタと状態

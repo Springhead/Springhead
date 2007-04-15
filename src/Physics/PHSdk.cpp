@@ -95,21 +95,21 @@ void PHSdk::MergeScene(PHSceneIf* scene0, PHSceneIf* scene1){
 	scenes.erase(it1);
 }
 	
-CDShapeIf* PHSdk::CreateShape(const CDShapeDesc& desc){
+CDShapeIf* PHSdk::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 	CDShape* s = NULL;
-	if (desc.type == CDShapeDesc::CONVEXMESH){
+	if (ii == CDConvexMeshIf::GetIfInfoStatic()){
 		s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
-	}else if (desc.type == CDShapeDesc::SPHERE){
+	}else if (ii == CDSphereIf::GetIfInfoStatic()){
 		s = DBG_NEW CDSphere((const CDSphereDesc&)desc);
-	}else if (desc.type == CDShapeDesc::CAPSULE){
+	}else if (ii == CDCapsuleIf::GetIfInfoStatic()){
 		s = DBG_NEW CDCapsule((const CDCapsuleDesc&)desc);
-	}else if (desc.type == CDShapeDesc::BOX){
+	}else if (ii == CDBoxIf::GetIfInfoStatic()){
 		s = DBG_NEW CDBox((const CDBoxDesc&)desc);
 	}
 	if (s){
 		AddChildObject(s->Cast());
 	}else{
-		DSTR << "Error: Unknown shape type " << desc.type << std::endl;
+		DSTR << "Error: Unknown shape type " << ii->ClassName() << std::endl;
 	}
 	return s->Cast();
 }
@@ -117,7 +117,7 @@ ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = Object::CreateObject(info, desc);
 	if (!rv){
 		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-			rv = CreateShape(*(CDShapeDesc*)desc);
+			rv = CreateShape(info, *(CDShapeDesc*)desc);
 		}
 	}
 	return rv;

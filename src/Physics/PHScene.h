@@ -52,7 +52,7 @@ public:
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	int NSolids() const;
 	PHSolidIf** GetSolids();
-	CDShapeIf* CreateShape(const CDShapeDesc& desc);
+	CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
 	int NJoints() const;
 	PHJointIf* GetJoint(int i);

@@ -46,7 +46,7 @@ public:
 	virtual int NScene();
 	virtual PHSceneIf* GetScene(size_t i);
 	virtual void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1);
-	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc);
+	virtual CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
 	virtual int NShape(){ return (int)shapes.size(); }
 	virtual CDShapeIf* GetShape(int i){ return (0 <= i && i < (int)shapes.size()) ? shapes[i] : NULL; }
 	

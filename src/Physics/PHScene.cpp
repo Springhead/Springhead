@@ -62,8 +62,8 @@ PHSolidIf** PHScene::GetSolids(){
 	return solids->solids.empty() ? NULL : (PHSolidIf**)&*solids->solids.begin();
 }
 
-CDShapeIf* PHScene::CreateShape(const CDShapeDesc& desc){
-	return GetSdk()->CreateShape(desc);
+CDShapeIf* PHScene::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
+	return GetSdk()->CreateShape(ii, desc);
 }
 
 /*PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
@@ -221,7 +221,7 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = Scene::CreateObject(info, desc);
 	if (!rv){
 		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-			rv = CreateShape(*(const CDShapeDesc*)desc);
+			rv = CreateShape(info, *(const CDShapeDesc*)desc);
 		}
 	}
 	return rv;

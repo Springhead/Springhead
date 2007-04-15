@@ -45,8 +45,6 @@ public:
 	
 	CDBox();
 	CDBox(const CDBoxDesc& desc);
-	
-	virtual int ShapeType(){ return CDShapeDesc::BOX; }
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
 	///	切り口を求める．接触解析に使う．

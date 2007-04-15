@@ -25,8 +25,6 @@ public:
 	//CDCapsule(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
 	CDCapsule(const CDCapsuleDesc& desc);
 	
-	/// ShapeType
-	virtual int ShapeType(){ return CDShapeDesc::CAPSULE; }
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
 	///	切り口を求める．接触解析に使う．

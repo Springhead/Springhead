@@ -43,7 +43,11 @@ struct PHSdkIf : public SdkIf{
 		@param desc 作成するShapeのディスクリプタ
 		@return Shapeのインタフェース
 	 */
-	virtual CDShapeIf* CreateShape(const CDShapeDesc& desc)=0;
+	virtual CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc)=0;
+	template <class T> CDShapeIf* CreateShape(const T& desc){
+		return CreateShape(T::GetIfInfo(), desc);
+	}
+	
 	
 	///	Shapeの数
 	virtual int NShape()=0;

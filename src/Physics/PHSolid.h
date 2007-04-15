@@ -139,7 +139,7 @@ public:
 	OBJECTDEF(PHSolid, SceneObject);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
-	CDShapeIf* CreateShape(const CDShapeDesc& desc);
+	CDShapeIf* CreateShape(const IfInfo* info, const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	bool AddChildObject(ObjectIf* obj);
 	size_t NChildObject() const{

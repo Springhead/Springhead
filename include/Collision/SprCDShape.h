@@ -63,24 +63,10 @@ struct PHMaterial{
 
 ///	形状のディスクリプタ(基本クラス)
 struct CDShapeDesc{
-	enum ShapeType{
-		CONVEX,				///< 凸形状
-		CONVEXMESH,			///< 凸形状メッシュ
-		SPHERE,				///< 球体
-		CAPSULE,			///< カプセル
-		BOX					///< 直方体
-	} type;
 	PHMaterial material;	///<	材質
-	CDShapeDesc(ShapeType t=CONVEXMESH): type(t){}
 };
 
 
-/**	凸形状のメッシュのディスクリプタ	*/
-struct CDConvexMeshDesc: public CDShapeDesc{
-	CDConvexMeshDesc():CDShapeDesc(CONVEXMESH){}
-	std::vector<Vec3f> vertices;	///<	頂点の座標
-};
-	
 /**	凸形状のメッシュ*/
 struct CDConvexMeshIf: public CDConvexIf{
 	IF_DEF(CDConvexMesh);
@@ -89,29 +75,25 @@ struct CDConvexMeshIf: public CDConvexIf{
 	virtual Vec3f* GetVertices()=0;
 	virtual size_t NVertex()=0;
 };
+/**	凸形状のメッシュのディスクリプタ	*/	
+struct CDConvexMeshDesc: public CDShapeDesc{
+	DESC_DEF_FOR_OBJECT(CDConvexMesh);
+	CDConvexMeshDesc():CDShapeDesc(){}
+	std::vector<Vec3f> vertices;	///<	頂点の座標
+};
 	
-/** 球体のディスクリプタ　*/
-struct CDSphereDesc: public CDShapeDesc{
-	CDSphereDesc():CDShapeDesc(SPHERE){
-		radius = 1.0f;
-	}
-	float radius;					// 球体の半径
-};	
-
 /** 球体　*/
 struct CDSphereIf: public CDConvexIf{
 	IF_DEF(CDSphere);
 	virtual float GetRadius()=0;
 };	
-
-/** カプセルのディスクリプタ　*/
-struct CDCapsuleDesc: public CDShapeDesc{
-	CDCapsuleDesc():CDShapeDesc(CAPSULE){
+/** 球体のディスクリプタ　*/
+struct CDSphereDesc: public CDShapeDesc{
+	DESC_DEF_FOR_OBJECT(CDSphere);
+	CDSphereDesc():CDShapeDesc(){
 		radius = 1.0f;
-		length = 1.0f;
 	}
-	float radius;					///< カプセルの球の半径
-	float length;					///< カプセルの長さ Z軸向きが長い
+	float radius;					// 球体の半径
 };	
 
 /** カプセル　*/
@@ -120,14 +102,17 @@ struct CDCapsuleIf: public CDConvexIf{
 	virtual float GetRadius()=0;
 	virtual float GetLength()=0;
 };	
-
-/** 直方体のディスクリプタ */
-struct CDBoxDesc: public CDShapeDesc{
-	CDBoxDesc():CDShapeDesc(BOX){
-		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
+/** カプセルのディスクリプタ　*/
+struct CDCapsuleDesc: public CDShapeDesc{
+	DESC_DEF_FOR_OBJECT(CDCapsule);
+	CDCapsuleDesc():CDShapeDesc(){
+		radius = 1.0f;
+		length = 1.0f;
 	}
-	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
+	float radius;					///< カプセルの球の半径
+	float length;					///< カプセルの長さ Z軸向きが長い
 };	
+
 	
 /** 直方体 */
 struct CDBoxIf: public CDConvexIf{
@@ -136,6 +121,14 @@ struct CDBoxIf: public CDConvexIf{
 	virtual Vec3f* GetVertices()=0;
 	virtual CDFaceIf* GetFace(size_t i)=0;
 };
+/** 直方体のディスクリプタ */
+struct CDBoxDesc: public CDShapeDesc{
+	DESC_DEF_FOR_OBJECT(CDBox);
+	CDBoxDesc():CDShapeDesc(){
+		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
+	}
+	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
+};	
 
 
 //@}

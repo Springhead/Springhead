@@ -54,7 +54,6 @@ CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
 bool CDConvexMesh::GetDesc(void *ptr) const {
 	CDConvexMeshDesc* desc = (CDConvexMeshDesc*)ptr;
 	desc->material = material;
-	desc->type = CDConvexMeshDesc::CONVEXMESH;
 	desc->vertices = base;
 	return true;
 }
