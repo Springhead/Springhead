@@ -29,7 +29,7 @@ public:
 class PHHingeJoint : public PHJoint1D, public PHHingeJointIfInit{
 public:
 	OBJECTDEF(PHHingeJoint, PHJoint1D);
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
 	virtual void CompBias();
 	virtual void UpdateJointState();
 	virtual PHTreeNode* CreateTreeNode(){

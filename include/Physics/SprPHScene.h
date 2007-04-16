@@ -130,8 +130,11 @@ public:
 		descには作成したい関節の種類に対応するディスクリプタ（PHJointDescから派生する）を渡す．
 		lhsにソケットが，rhsにプラグが取り付けられる．
 	 */
-	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc)=0;
-
+	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc)=0;
+	template <class T> PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const T& desc){
+		return CreateJoint(lhs, rhs, T::GetIfInfo(), desc);
+	}
+	
 	/** @brief 関節の数を取得する
 	 */
 	virtual int NJoints()const=0;

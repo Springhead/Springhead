@@ -180,7 +180,7 @@ void PHConstraintEngine::Clear(){
 	joints.clear();
 }
 
-PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc, PHSolid* lhs, PHSolid* rhs){
+PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs, PHSolid* rhs){
 	UTRef<PHSolid> *plhs, *prhs;
 	plhs = solids.Find(lhs);
 	prhs = solids.Find(rhs);
@@ -188,24 +188,18 @@ PHJoint* PHConstraintEngine::CreateJoint(const PHJointDesc& desc, PHSolid* lhs, 
 		return NULL;
 	
 	PHJoint* joint = NULL;
-	switch(desc.type){
-	case PHConstraintDesc::HINGEJOINT:
+	if(ii == PHHingeJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHHingeJoint();
-		break;
-	case PHConstraintDesc::SLIDERJOINT:
+	else if(ii == PHSliderJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHSliderJoint();
-		break;
-	case PHConstraintDesc::BALLJOINT:
+	else if(ii == PHBallJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHBallJoint();
-		break;
-	case PHConstraintDesc::PATHJOINT:
+	else if(ii == PHPathJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHPathJoint();
-		break;
-	case PHConstraintDesc::SPRING:
+	else if(ii == PHSpringIf::GetIfInfoStatic())
 		joint = DBG_NEW PHSpring();
-		break;
-	default: assert(false);
-	}
+	else assert(false);
+	
 	joint->SetDesc(&desc);
 	joint->solid[0] = lhs;
 	joint->solid[1] = rhs;

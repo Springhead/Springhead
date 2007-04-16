@@ -29,7 +29,7 @@ public:
 class PHSliderJoint : public PHJoint1D, public PHSliderJointIfInit{
 public:
 	OBJECTDEF(PHSliderJoint, PHJoint1D);
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
 	virtual void CompBias();
 	virtual void CompError();
 	virtual void UpdateJointState();

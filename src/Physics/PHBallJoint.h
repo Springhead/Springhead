@@ -58,7 +58,7 @@ public:
 	/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン
 	Matrix3d	Jstinv;
 	/// インタフェースの実装
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	virtual void	SetSwingRange(double u){swingUpper = u;}
 	virtual double	GetSwingRange(){return swingUpper;}
 	virtual void	SetTwistRange(double l, double u){twistLower = l; twistUpper = u;}

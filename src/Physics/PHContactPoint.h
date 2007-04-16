@@ -24,7 +24,7 @@ public:
 	OBJECTDEF(PHContactPoint, PHConstraint);
 	PHShapePairForLCP* shapePair;
 	Vec3d pos;
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
 	virtual void CompError();
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void CompBias();

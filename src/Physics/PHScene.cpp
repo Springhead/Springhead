@@ -66,13 +66,8 @@ CDShapeIf* PHScene::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 	return GetSdk()->CreateShape(ii, desc);
 }
 
-/*PHJointIf* PHScene::CreateJoint(const PHJointDesc& desc){
-	PHJoint* joint = constraintEngine->CreateJoint(desc);
-	joint->SetScene(Cast());
-	return joint->Cast();
-}*/
-PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc){
-	PHJoint* joint = constraintEngine->CreateJoint(desc, lhs->Cast(), rhs->Cast());
+PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc){
+	PHJoint* joint = constraintEngine->CreateJoint(ii, desc, lhs->Cast(), rhs->Cast());
 	joint->SetScene(Cast());
 	return joint->Cast();	
 }
@@ -83,11 +78,6 @@ PHJointIf* PHScene::GetJoint(int i){
 	return DCAST(PHJointIf, constraintEngine->joints[i]);
 }
 
-/*PHRootNodeIf* PHScene::CreateRootNode(const PHRootNodeDesc& desc){
-	PHRootNode* node = constraintEngine->CreateRootNode(desc);
-	node->SetScene(Cast());
-	return node->Cast();
-}*/
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
 	PHRootNode* node = constraintEngine->CreateRootNode(desc, root->Cast());
 	node->SetScene(Cast());
@@ -99,21 +89,13 @@ int PHScene::NRootNodes()const{
 PHRootNodeIf* PHScene::GetRootNode(int i){
 	return constraintEngine->trees[i]->Cast();
 }
-/*PHTreeNodeIf* PHScene::CreateTreeNode(const PHTreeNodeDesc& desc){
-	PHTreeNode* node = constraintEngine->CreateTreeNode(desc);
-	node->SetScene(Cast());
-	return node->Cast();
-}*/
+
 PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc){
 	PHTreeNode* node = constraintEngine->CreateTreeNode(desc, parent->Cast(), child->Cast());
 	node->SetScene(Cast());
 	return node->Cast();
 }
-/*PHGearIf* PHScene::CreateGear(const PHGearDesc& desc){
-	PHGear* gear = constraintEngine->CreateGear(desc);
-	gear->SetScene(Cast());
-	return gear->Cast();
-}*/
+
 PHGearIf* PHScene::CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc){
 	PHGear* gear = constraintEngine->CreateGear(desc, lhs->Cast(), rhs->Cast());
 	gear->SetScene(Cast());

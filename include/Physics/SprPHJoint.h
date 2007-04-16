@@ -23,7 +23,7 @@ namespace Spr{;
 /// 拘束のディスクリプタ
 struct PHConstraintDesc{
 	/// 拘束の種類
-	enum ConstraintType{
+	/*enum ConstraintType{
 		INVALID_CONSTRAINT,
 		CONTACT,
 		HINGEJOINT,
@@ -31,7 +31,7 @@ struct PHConstraintDesc{
 		BALLJOINT,
 		PATHJOINT,
 		SPRING
-	} type;
+	} type;*/
 	/// 有効/無効フラグ
 	bool bEnabled;
 	/// 剛体から見た関節の位置と傾き
@@ -54,67 +54,6 @@ struct PHJoint1DDesc : public PHJointDesc{
 	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), torque(0.0){}
 };
 
-/// ヒンジのディスクリプタ
-struct PHHingeJointDesc : public PHJoint1DDesc{
-	PHHingeJointDesc(){
-		type = HINGEJOINT;
-	}
-};
-
-/// スライダのディスクリプタ
-struct PHSliderJointDesc : public PHJoint1DDesc{
-	PHSliderJointDesc(){
-		type = SLIDERJOINT;
-	}
-};
-
-/// パス上の1つの点
-struct PHPathPoint{
-	double	s;			///< スカラーパラメータ
-	Posed	pose;		///< 位置と傾き
-};
-/// パスのディスクリプタ
-struct PHPathDesc{
-	std::vector<PHPathPoint> points;	///< パス上の点列
-	bool bLoop;							///< trueならばループパス，falseならばオープンパス．デフォルトはfalse．
-	PHPathDesc():bLoop(false){}
-};
-
-/// パスジョイントのディスクリプタ
-struct PHPathJointDesc : public PHJoint1DDesc{
-	PHPathJointDesc(){
-		type = PATHJOINT;
-	}
-};
-
-/// ボールジョイントのディスクリプタ
-struct PHBallJointDesc : public PHJointDesc{
-	double	swingUpper;		///< スイング角度の上限
-	double  twistLower;		///< ツイスト角度の下限
-	double  twistUpper;		///< ツイスト角度の上限
-	double	swingSpring;	///< スイング角のバネ係数
-	double  swingDamper;	///< スイング角のダンパ係数
-	double	twistSpring;	///< ツイスト角のバネ係数
-	double  twistDamper;	///< ツイスト角のダンパ係数
-	Vec3d	torque;			///< モータトルク
-	PHBallJointDesc(){
-		type = BALLJOINT;
-		swingUpper = -1.0;
-		swingSpring = swingDamper = 0.0;
-		twistLower =  1.0;
-		twistUpper = -1.0;
-		twistSpring = twistDamper = 0.0;
-	}
-};
-
-/// バネダンパのディスクリプタ
-struct PHSpringDesc : public PHConstraintDesc{
-	Vec3d spring;		///< バネ係数
-	Vec3d damper;		///< ダンパ係数
-	PHSpringDesc(){
-		type = SPRING;
-	}
-};
 
 /** @brief ツリーノードのディスクリプタ
  */
@@ -163,7 +102,7 @@ struct PHConstraintIf : public SceneObjectIf{
 	/** @brief 拘束の種類を取得する
 		@return 拘束の種類
 	 */
-	virtual PHConstraintDesc::ConstraintType GetConstraintType() = 0;
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType() = 0;
 
 	/** @brief 拘束する剛体間の相対位置・姿勢を取得
 		@param p ソケットに対するプラグの位置と向き
@@ -279,12 +218,33 @@ struct PHJoint1DIf : public PHJointIf{
 struct PHHingeJointIf : public PHJoint1DIf{
 	IF_DEF(PHHingeJoint);
 };
+/// ヒンジのディスクリプタ
+struct PHHingeJointDesc : public PHJoint1DDesc{
+	DESC_DEF_FOR_OBJECT(PHHingeJoint);
+	PHHingeJointDesc(){}
+};
 
 /// スライダのインタフェース
 struct PHSliderJointIf : public PHJoint1DIf{
 	IF_DEF(PHSliderJoint);
 };
+/// スライダのディスクリプタ
+struct PHSliderJointDesc : public PHJoint1DDesc{
+	DESC_DEF_FOR_OBJECT(PHSliderJoint);
+	PHSliderJointDesc(){}
+};
 
+/// パス上の1つの点
+struct PHPathPoint{
+	double	s;			///< スカラーパラメータ
+	Posed	pose;		///< 位置と傾き
+};
+/// パスのディスクリプタ
+struct PHPathDesc{
+	std::vector<PHPathPoint> points;	///< パス上の点列
+	bool bLoop;							///< trueならばループパス，falseならばオープンパス．デフォルトはfalse．
+	PHPathDesc():bLoop(false){}
+};
 /// パスのインタフェース
 struct PHPathIf : public SceneObjectIf{
 	IF_DEF(PHPath);
@@ -312,6 +272,11 @@ struct PHPathIf : public SceneObjectIf{
 struct PHPathJointIf : public PHJoint1DIf{
 	IF_DEF(PHPathJoint);
 	virtual void SetPosition(double q)=0;
+};
+/// パスジョイントのディスクリプタ
+struct PHPathJointDesc : public PHJoint1DDesc{
+	DESC_DEF_FOR_OBJECT(PHPathJoint);
+	PHPathJointDesc(){}
 };
 
 /// ボールジョイントのインタフェース
@@ -363,6 +328,25 @@ struct PHBallJointIf : public PHConstraintIf{
 	virtual Vec3d GetVelocity() = 0;
 
 };
+/// ボールジョイントのディスクリプタ
+struct PHBallJointDesc : public PHJointDesc{
+	DESC_DEF_FOR_OBJECT(PHBallJoint);
+	double	swingUpper;		///< スイング角度の上限
+	double  twistLower;		///< ツイスト角度の下限
+	double  twistUpper;		///< ツイスト角度の上限
+	double	swingSpring;	///< スイング角のバネ係数
+	double  swingDamper;	///< スイング角のダンパ係数
+	double	twistSpring;	///< ツイスト角のバネ係数
+	double  twistDamper;	///< ツイスト角のダンパ係数
+	Vec3d	torque;			///< モータトルク
+	PHBallJointDesc(){
+		swingUpper = -1.0;
+		swingSpring = swingDamper = 0.0;
+		twistLower =  1.0;
+		twistUpper = -1.0;
+		twistSpring = twistDamper = 0.0;
+	}
+};
 
 /// バネダンパのインタフェース
 struct PHSpringIf : public PHConstraintIf{
@@ -387,6 +371,13 @@ struct PHSpringIf : public PHConstraintIf{
 	 */
 	virtual Vec3d GetDamper()=0;
 
+};
+/// バネダンパのディスクリプタ
+struct PHSpringDesc : public PHConstraintDesc{
+	DESC_DEF_FOR_OBJECT(PHSpring);
+	Vec3d spring;		///< バネ係数
+	Vec3d damper;		///< ダンパ係数
+	PHSpringDesc(){}
 };
 
 /// ツリーノードのインタフェース

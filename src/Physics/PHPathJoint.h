@@ -71,7 +71,7 @@ class PHPathJoint : public PHJoint1D, public PHPathJointIfInit{
 	OBJECTDEF(PHPathJoint, PHJoint1D);
 	UTRef<PHPath> path;
 public:
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHPathJointNode();
 	}

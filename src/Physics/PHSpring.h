@@ -23,7 +23,7 @@ public:
 	virtual Vec3d GetDamper(){return damper;}
 
 	virtual void SetDesc(const void* desc);
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SPRING;}
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SPRING;}
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void CompBias();
 	virtual void Projection(double& f, int k){}

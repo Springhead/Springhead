@@ -6,16 +6,6 @@
 	desc->ifInfo = PHConstraintIf::GetIfInfoStatic();
 	((IfInfo*)PHConstraintIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<PHConstraintDesc>;
-	field = desc->AddField("ConstraintType", "enum", "type",  "");
-	field->AddEnumConst("INVALID_CONSTRAINT");
-	field->AddEnumConst("CONTACT");
-	field->AddEnumConst("HINGEJOINT");
-	field->AddEnumConst("SLIDERJOINT");
-	field->AddEnumConst("BALLJOINT");
-	field->AddEnumConst("PATHJOINT");
-	field->AddEnumConst("SPRING");
-	field->AddEnumConst("SPRING");
-	field->offset = int((char*)(&pPHConstraintDesc->type) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "bool", "bEnabled", "");
 	field->offset = int((char*)&(pPHConstraintDesc->bEnabled) - (char*)pPHConstraintDesc);
 	field = desc->AddField("", "Posed", "poseSocket", "");
@@ -44,6 +34,86 @@
 	field->offset = int((char*)&(pPHJoint1DDesc->damper) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "torque", "");
 	field->offset = int((char*)&(pPHJoint1DDesc->torque) - (char*)pPHJoint1DDesc);
+	db->RegisterDesc(desc);
+	
+	PHTreeNodeDesc* pPHTreeNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHTreeNodeDesc");
+	desc->size = sizeof(PHTreeNodeDesc);
+	desc->ifInfo = PHTreeNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHTreeNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHTreeNodeDesc>;
+	field = desc->AddField("", "bool", "bEnabled", "");
+	field->offset = int((char*)&(pPHTreeNodeDesc->bEnabled) - (char*)pPHTreeNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHRootNodeDesc* pPHRootNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHRootNodeDesc");
+	desc->size = sizeof(PHRootNodeDesc);
+	desc->ifInfo = PHRootNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHRootNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHRootNodeDesc>;
+	field = desc->AddBase("PHTreeNodeDesc");
+	field->offset = int((char*)(PHTreeNodeDesc*)pPHRootNodeDesc - (char*)pPHRootNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHTreeNode1DDesc* pPHTreeNode1DDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHTreeNode1DDesc");
+	desc->size = sizeof(PHTreeNode1DDesc);
+	desc->ifInfo = PHTreeNode1DIf::GetIfInfoStatic();
+	((IfInfo*)PHTreeNode1DIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHTreeNode1DDesc>;
+	field = desc->AddBase("PHTreeNodeDesc");
+	field->offset = int((char*)(PHTreeNodeDesc*)pPHTreeNode1DDesc - (char*)pPHTreeNode1DDesc);
+	db->RegisterDesc(desc);
+	
+	PHHingeJointNodeDesc* pPHHingeJointNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHHingeJointNodeDesc");
+	desc->size = sizeof(PHHingeJointNodeDesc);
+	desc->ifInfo = PHHingeJointNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHHingeJointNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHHingeJointNodeDesc>;
+	field = desc->AddBase("PHTreeNode1DDesc");
+	field->offset = int((char*)(PHTreeNode1DDesc*)pPHHingeJointNodeDesc - (char*)pPHHingeJointNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHSliderJointNodeDesc* pPHSliderJointNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHSliderJointNodeDesc");
+	desc->size = sizeof(PHSliderJointNodeDesc);
+	desc->ifInfo = PHSliderJointNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHSliderJointNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHSliderJointNodeDesc>;
+	field = desc->AddBase("PHTreeNode1DDesc");
+	field->offset = int((char*)(PHTreeNode1DDesc*)pPHSliderJointNodeDesc - (char*)pPHSliderJointNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHPathJointNodeDesc* pPHPathJointNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHPathJointNodeDesc");
+	desc->size = sizeof(PHPathJointNodeDesc);
+	desc->ifInfo = PHPathJointNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHPathJointNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHPathJointNodeDesc>;
+	field = desc->AddBase("PHTreeNode1DDesc");
+	field->offset = int((char*)(PHTreeNode1DDesc*)pPHPathJointNodeDesc - (char*)pPHPathJointNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHBallJointNodeDesc* pPHBallJointNodeDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHBallJointNodeDesc");
+	desc->size = sizeof(PHBallJointNodeDesc);
+	desc->ifInfo = PHBallJointNodeIf::GetIfInfoStatic();
+	((IfInfo*)PHBallJointNodeIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHBallJointNodeDesc>;
+	field = desc->AddBase("PHTreeNodeDesc");
+	field->offset = int((char*)(PHTreeNodeDesc*)pPHBallJointNodeDesc - (char*)pPHBallJointNodeDesc);
+	db->RegisterDesc(desc);
+	
+	PHGearDesc* pPHGearDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHGearDesc");
+	desc->size = sizeof(PHGearDesc);
+	desc->ifInfo = PHGearIf::GetIfInfoStatic();
+	((IfInfo*)PHGearIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHGearDesc>;
+	field = desc->AddField("", "double", "ratio", "");
+	field->offset = int((char*)&(pPHGearDesc->ratio) - (char*)pPHGearDesc);
 	db->RegisterDesc(desc);
 	
 	PHHingeJointDesc* pPHHingeJointDesc = NULL;
@@ -136,86 +206,6 @@
 	field->offset = int((char*)&(pPHSpringDesc->spring) - (char*)pPHSpringDesc);
 	field = desc->AddField("", "Vec3d", "damper", "");
 	field->offset = int((char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc);
-	db->RegisterDesc(desc);
-	
-	PHTreeNodeDesc* pPHTreeNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHTreeNodeDesc");
-	desc->size = sizeof(PHTreeNodeDesc);
-	desc->ifInfo = PHTreeNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHTreeNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHTreeNodeDesc>;
-	field = desc->AddField("", "bool", "bEnabled", "");
-	field->offset = int((char*)&(pPHTreeNodeDesc->bEnabled) - (char*)pPHTreeNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHRootNodeDesc* pPHRootNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHRootNodeDesc");
-	desc->size = sizeof(PHRootNodeDesc);
-	desc->ifInfo = PHRootNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHRootNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHRootNodeDesc>;
-	field = desc->AddBase("PHTreeNodeDesc");
-	field->offset = int((char*)(PHTreeNodeDesc*)pPHRootNodeDesc - (char*)pPHRootNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHTreeNode1DDesc* pPHTreeNode1DDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHTreeNode1DDesc");
-	desc->size = sizeof(PHTreeNode1DDesc);
-	desc->ifInfo = PHTreeNode1DIf::GetIfInfoStatic();
-	((IfInfo*)PHTreeNode1DIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHTreeNode1DDesc>;
-	field = desc->AddBase("PHTreeNodeDesc");
-	field->offset = int((char*)(PHTreeNodeDesc*)pPHTreeNode1DDesc - (char*)pPHTreeNode1DDesc);
-	db->RegisterDesc(desc);
-	
-	PHHingeJointNodeDesc* pPHHingeJointNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHHingeJointNodeDesc");
-	desc->size = sizeof(PHHingeJointNodeDesc);
-	desc->ifInfo = PHHingeJointNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHHingeJointNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHHingeJointNodeDesc>;
-	field = desc->AddBase("PHTreeNode1DDesc");
-	field->offset = int((char*)(PHTreeNode1DDesc*)pPHHingeJointNodeDesc - (char*)pPHHingeJointNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHSliderJointNodeDesc* pPHSliderJointNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHSliderJointNodeDesc");
-	desc->size = sizeof(PHSliderJointNodeDesc);
-	desc->ifInfo = PHSliderJointNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHSliderJointNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHSliderJointNodeDesc>;
-	field = desc->AddBase("PHTreeNode1DDesc");
-	field->offset = int((char*)(PHTreeNode1DDesc*)pPHSliderJointNodeDesc - (char*)pPHSliderJointNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHPathJointNodeDesc* pPHPathJointNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHPathJointNodeDesc");
-	desc->size = sizeof(PHPathJointNodeDesc);
-	desc->ifInfo = PHPathJointNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHPathJointNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHPathJointNodeDesc>;
-	field = desc->AddBase("PHTreeNode1DDesc");
-	field->offset = int((char*)(PHTreeNode1DDesc*)pPHPathJointNodeDesc - (char*)pPHPathJointNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHBallJointNodeDesc* pPHBallJointNodeDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHBallJointNodeDesc");
-	desc->size = sizeof(PHBallJointNodeDesc);
-	desc->ifInfo = PHBallJointNodeIf::GetIfInfoStatic();
-	((IfInfo*)PHBallJointNodeIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHBallJointNodeDesc>;
-	field = desc->AddBase("PHTreeNodeDesc");
-	field->offset = int((char*)(PHTreeNodeDesc*)pPHBallJointNodeDesc - (char*)pPHBallJointNodeDesc);
-	db->RegisterDesc(desc);
-	
-	PHGearDesc* pPHGearDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("PHGearDesc");
-	desc->size = sizeof(PHGearDesc);
-	desc->ifInfo = PHGearIf::GetIfInfoStatic();
-	((IfInfo*)PHGearIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<PHGearDesc>;
-	field = desc->AddField("", "double", "ratio", "");
-	field->offset = int((char*)&(pPHGearDesc->ratio) - (char*)pPHGearDesc);
 	db->RegisterDesc(desc);
 	
 	PHInactiveSolids* pPHInactiveSolids = NULL;

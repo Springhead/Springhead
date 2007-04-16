@@ -53,16 +53,13 @@ public:
 	int NSolids() const;
 	PHSolidIf** GetSolids();
 	CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
-	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const PHJointDesc& desc);
+	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
 	int NJoints() const;
 	PHJointIf* GetJoint(int i);
-	//PHRootNodeIf* CreateRootNode(const PHRootNodeDesc& desc);
 	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 	int NRootNodes() const;
 	PHRootNodeIf* GetRootNode(int i);
-	//PHTreeNodeIf* CreateTreeNode(const PHTreeNodeDesc& desc);
 	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
-	//PHGearIf*	CreateGear(const PHGearDesc& desc);
 	PHGearIf*	CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	int NGears() const;
 	PHGearIf* GetGear(int i);

@@ -62,7 +62,7 @@ public:
 	virtual void ProjectionCorrection(double& F, int k){}	///< 
 	
 	/// インタフェースの実装
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
+	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
 	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool IsEnabled(){return bEnabled;}
 	virtual void SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}

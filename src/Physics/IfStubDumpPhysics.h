@@ -18,9 +18,6 @@ struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ
 	virtual bool IsEnabled(){
 		return ((OBJ*)(MIF*)this)->IsEnabled();
 	}
-	virtual PHConstraintDesc::ConstraintType GetConstraintType(){
-		return ((OBJ*)(MIF*)this)->GetConstraintType();
-	}
 	virtual void GetRelativePose(Posed &  p){
 		return ((OBJ*)(MIF*)this)->GetRelativePose(p);
 	}
@@ -297,8 +294,8 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetNumIteration(int n){
 		return ((OBJ*)(MIF*)this)->SetNumIteration(n);
 	}
-	virtual PHJointIf *  CreateJoint(PHSolidIf *  lhs, PHSolidIf *  rhs, const PHJointDesc &  desc){
-		return ((OBJ*)(MIF*)this)->CreateJoint(lhs, rhs, desc);
+	virtual PHJointIf *  CreateJoint(PHSolidIf *  lhs, PHSolidIf *  rhs, const IfInfo *  ii, const PHJointDesc &  desc){
+		return ((OBJ*)(MIF*)this)->CreateJoint(lhs, rhs, ii, desc);
 	}
 	virtual int NJoints() const {
 		return ((OBJ*)(MIF*)this)->NJoints();
