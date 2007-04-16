@@ -203,7 +203,7 @@ struct ObjectIf{
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
 	///	CreateObjectを呼び出すユーティリティ関数
 	template <class T> ObjectIf* CreateObject(const T& desc){
-		return CreateObject(desc::GetIfInfo(), &desc);
+		return CreateObject(desc.GetIfInfo(), &desc);
 	}
 	//@}
 

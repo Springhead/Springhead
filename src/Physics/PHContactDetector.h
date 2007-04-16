@@ -75,10 +75,8 @@ public:
 		// ‚¢‚¸‚ê‚©‚ÌSolid‚ÉŒ`ó‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢ê‡‚ÍÚG‚È‚µ
 		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
 		// —¼•û‚Æ‚àƒtƒŠ[ƒYó‘Ô‚Ìê‡‚ÍÚG‚È‚µ
-		if(solid[0]->IsFrozen() && solid[1]->IsFrozen()){
-			DSTR << "both frozen" << endl;
+		if(solid[0]->IsFrozen() && solid[1]->IsFrozen())
 			return false;
-		}
 		
 		std::vector<Vec3d> deltaPos[2];
 		std::vector<Posed> shapePose[2];

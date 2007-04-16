@@ -165,7 +165,6 @@ void CDConvexMesh::CalcFace(){
 	}
 	//	“Ê‘½–Ê‘Ì‚ÉŽg‚í‚ê‚½’¸“_‚¾‚¯‚ð—ñ‹“
 	CDVertexIDs vtxIds;
-	int hoge = vtxIds.size();
 	for(std::set<int>::iterator it = usedVtxs.begin(); it != usedVtxs.end(); ++it){
 		vtxIds.push_back(*it);
 	}

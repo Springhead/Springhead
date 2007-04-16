@@ -489,7 +489,7 @@ public:
 						mdesc.material.mu = maptask->mu;
 						mdesc.material.mu0 = maptask->mu0;
 					}
-					solid->CreateShape(mdesc);
+					solid->CreateShape(mdesc.GetIfInfo(), mdesc);
 					Posed pose;
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);
@@ -507,7 +507,7 @@ public:
 							sdesc.material.mu = maptask->mu;
 							sdesc.material.mu0 = maptask->mu0;
 					}
-					solid->CreateShape(sdesc);
+					solid->CreateShape(sdesc.GetIfInfo(), sdesc);
 					Posed pose;
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);
@@ -734,6 +734,7 @@ public:
 		PHScene* phScene;
 		JointCreator* parent;
 		PHJoint1DDesc desc;
+		int nType;
 		PHSolid* solid;
 		UTString name;
 		JointCreator(): phScene(NULL), parent(NULL), solid(NULL){}
@@ -760,7 +761,10 @@ public:
 				parent->solid = DCAST(PHSolid, phScene->CreateSolid(sd));
 			}
 			if (parent){
-				PHJointIf* j= phScene->CreateJoint(solid->Cast(), parent->solid->Cast(), desc);
+				PHSceneIf* phSceneIf = phScene->Cast();
+				PHJointIf* j = (nType ? 
+					phSceneIf->CreateJoint(solid->Cast(), parent->solid->Cast(), (const PHSliderJointDesc&)desc) : 
+					phSceneIf->CreateJoint(solid->Cast(), parent->solid->Cast(), (const PHHingeJointDesc&)desc));
 				j->SetName(name.c_str());
 			}
 		}
@@ -787,7 +791,7 @@ public:
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		JointCreator* j = DBG_NEW JointCreator;
 		j->name = ld->GetName();
-		j->desc.type = d.nType ? PHJointDesc::SLIDERJOINT : PHJointDesc::HINGEJOINT;
+		j->nType = d.nType;
 		j->desc.posePlug.Pos() = d.crj;
 		j->desc.posePlug.Ori().FromMatrix(d.cRj);
 		j->desc.poseSocket.Pos() = d.prj;
