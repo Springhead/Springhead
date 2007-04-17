@@ -64,7 +64,8 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	if (module && !dllNameIn && !addPathIn) return true;
 	Cleanup();
 	char dll[1024];
-	GetEnv(dll, dllName);
+	if(!GetEnv(dll, dllName))
+		return false;
 	char path[1024];
 	strcpy(path, addPath);
 	char* token = strtok(path, ";");

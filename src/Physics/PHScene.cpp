@@ -214,15 +214,15 @@ size_t PHScene::NChildObject() const{
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
 	//return engines[pos]->Cast();
-	if(pos < NSolids()) return GetSolids()[pos];
+	if(pos < (size_t)NSolids()) return GetSolids()[pos];
 	pos -= NSolids();
-	if(pos < NJoints()) return GetJoint(pos);
+	if(pos < (size_t)NJoints()) return GetJoint(pos);
 	pos -= NJoints();
-	if(pos < NRootNodes()) return GetRootNode(pos);
+	if(pos < (size_t)NRootNodes()) return GetRootNode(pos);
 	pos -= NRootNodes();
-	if(pos < NGears()) return GetGear(pos);
+	if(pos < (size_t)NGears()) return GetGear(pos);
 	pos -= NGears();
-	if(pos < NPaths()) return GetPath(pos);
+	if(pos < (size_t)NPaths()) return GetPath(pos);
 	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
