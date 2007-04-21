@@ -1,18 +1,21 @@
 include Fox
 
+#
+# 指定されたタイプのオブジェクト名の一覧を作成する
+#
 class SprNameList < FXComboBox
 	SOLIDS = 0
 	JOINTS = 1
 	SHAPES = 2
 	JOINTTYPE = 3
-	def initialize(owner, type=nil)
+	def initialize(owner, type=nil, obj=nil)
 		super(owner, 25, nil, 0, COMBOBOX_STATIC|LAYOUT_FILL_X|FRAME_SUNKEN|FRAME_THICK)
 		numVisible = 4
 
-		update(type) if type
+		update(type, obj) if type
 	end
 
-	def update(type)
+	def update(type, obj)
 		clearItems
 		phsdk = $sprapp.GetSdk.GetPHSdk
 		phscene = $sprapp.GetSdk.GetScene.GetPHScene
@@ -27,9 +30,16 @@ class SprNameList < FXComboBox
 				appendItem(joint.GetName(), joint)
 			end
 		elsif type == SHAPES
-			for i in 0..phsdk.NShapes()-1
-				shape = phsdk.GetShape(i)
-				appendItem(shape.GetName(), shape)
+			if obj			# 特定のsolidが参照するshapeの一覧
+				for i in 0..obj.NShapes()-1
+					shape = obj.GetShape(i)
+					appendItem(shape.GetName(), shape)
+				end
+			else			# sdkが保有するshapeの一覧
+				for i in 0..phsdk.NShapes()-1
+					shape = phsdk.GetShape(i)
+					appendItem(shape.GetName(), shape)
+				end
 			end
 		elsif type == JOINTTYPE
 			appendItem('hinge')

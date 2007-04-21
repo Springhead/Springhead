@@ -84,6 +84,7 @@ void PHHingeJointNode::CompRelativeVelocity(){
 void PHHingeJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.q = Quaterniond::Rot(j->position[0], 'z');
+	DSTR << j->Xjrel.q << endl;
 	j->Xjrel.r.clear();
 }
 
