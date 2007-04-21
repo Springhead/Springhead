@@ -95,6 +95,18 @@ bool FWScene::AddChildObject(ObjectIf* o){
 	return rv;
 }
 
+bool FWScene::DelChildObject(ObjectIf* o){
+	FWObjectIf* obj = DCAST(FWObjectIf, o);
+	if(obj){
+		FWObjects::iterator it = find(fwObjects.begin(), fwObjects.end(), obj);
+		if(it != fwObjects.end()){
+			fwObjects.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
 HIForceDevice6D* FWScene::GetHumanInterface(size_t pos){
 /*	hase:	TBW
 	if (pos < humanInterfaces.size()) return humanInterfaces[pos];

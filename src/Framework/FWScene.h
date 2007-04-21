@@ -57,6 +57,7 @@ public:
 	//
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual NamedObjectIf* FindObject(UTString name, UTString cls);
