@@ -320,23 +320,36 @@ UTNameManagerForData::UTNameManagerForData():data(NULL), parent(NULL){
 
 bool UTNameManagerForData::AddData(UTLoadedData* data){
 	if (!data->GetName().length()) return false;
-	std::pair<DataSet::iterator, bool> rv = dataSet.insert(data);
-	if (rv.second){
+	DataSet::iterator it = dataSet.find(data);
+	if (it == dataSet.end()){
+		dataSet.insert(data);
 		return true;
-	}else if (*rv.first == data){
-		return false;
+	}else{
+		if (data == *it) return false;
 	}
 	UTString base = data->GetName();
 	int i=1;
-	do{
+	while(1){
 		std::ostringstream ss;
 		ss << "_" << i << '\0';
-		data->SetName( (base + ss.str()).c_str());
-		rv = dataSet.insert(data);
+		data->attributes["name"] = base + ss.str();
+		DataSet::iterator it = dataSet.find(data);
+		if (it == dataSet.end()){
+			dataSet.insert(data);
+			nameMap[base] = data->GetName();
+			return true;
+		}
 		i++;
-	} while(!rv.second);
-	nameMap[base] = data->GetName();
-	return true;
+/*
+		DSTR << base << ss.str() << std::endl;
+		DSTR << "set:";
+		for(DataSet::iterator it = dataSet.begin();it!= dataSet.end(); ++it){
+			DSTR << " " << (*it)->GetName();
+		}
+		DSTR << std::endl;
+*/
+	}
+	return false;
 }
 UTLoadedData* UTNameManagerForData::FindData(UTString name, UTString cls){
 	//	Ž©•ª‚ÆŽq‘·‚ð’T‚·B
@@ -430,26 +443,26 @@ UTLoadContext::UTLoadContext():errorStream(NULL){
 }
 void UTLoadContext::WriteBool(bool v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
-	if (curField.type->IsComposit()){
-		curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
-	}else{
+	if (curField.type->IsPrimitive()){
 		curField.type->WriteBool(v, datas.Top()->data);
+	}else{
+		curField.field->WriteBool(datas.Top()->data, v, curField.arrayPos);
 	}
 }
 void UTLoadContext::WriteNumber(double v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
-	if (curField.type->IsComposit()){
-		curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
-	}else{
+	if (curField.type->IsPrimitive()){
 		curField.type->WriteNumber(v, datas.Top()->data);
+	}else{
+		curField.field->WriteNumber(datas.Top()->data, v, curField.arrayPos);
 	}
 }
 void UTLoadContext::WriteString(std::string v){
 	UTTypeDescFieldIt& curField = fieldIts.back();
-	if (curField.type->IsComposit()){
-		curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
-	}else{
+	if (curField.type->IsPrimitive()){
 		curField.type->WriteString(v.c_str(), datas.Top()->data);
+	}else{
+		curField.field->WriteString(datas.Top()->data, v.c_str(), curField.arrayPos);
 	}
 }
 void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){

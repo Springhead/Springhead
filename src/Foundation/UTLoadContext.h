@@ -83,7 +83,7 @@ public:
 	bool HasAttribute(UTString key) const;
 	friend class UTNameManagerForData;
 	bool operator < (const UTLoadedData& d2) const {
-		return GetName() < d2.GetName();
+		return GetName().compare(d2.GetName()) < 0;
 	}
 	UTLoadedData* FindAncestor(UTString tn);
 	UTLoadedData* FindDescendant(UTString tn);

@@ -190,8 +190,10 @@ public:
 	std::string typeName;
 	///	データの長さ
 	size_t size;
-	///	組み立て型の中身の記述．単純型の場合は，size() == 0
+	///	組み立て型の中身の記述．
 	Composit composit;
+	///	プリミティブかどうか
+	bool bPrimitive;
 	///	IfInfo
 	const IfInfo* ifInfo;
 	///
@@ -200,10 +202,10 @@ public:
 	friend class UTTypeDescDb;
 public:
 	///	コンストラクタ
-	UTTypeDesc():size(0), ifInfo(NULL){}
+	UTTypeDesc():size(0), ifInfo(NULL), bPrimitive(false){}
 	///	コンストラクタ
 	UTTypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), 
-		ifInfo(NULL){}
+		ifInfo(NULL), bPrimitive(false){}
 	///	
 	virtual ~UTTypeDesc(){}
 	///
@@ -220,7 +222,7 @@ public:
 	Field* AddBase(std::string tn);
 
 	///	組み立て型かどうか
-	bool IsComposit(){ return composit.size()!=0; }
+	bool IsPrimitive(){ return bPrimitive; }
 	///	組み立て型の要素
 	Composit& GetComposit(){ return composit; }
 	///	フィールドの型情報のリンク
@@ -274,9 +276,11 @@ class SPR_DLL UTTypeDescNumber:public UTTypeDesc{
 public:
 	UTTypeDescNumber(){
 		access = DBG_NEW UTAccess<N>;
+		bPrimitive = true;
 	}
 	UTTypeDescNumber(std::string tn): UTTypeDesc(tn, sizeof(N)){
 		access = DBG_NEW UTAccess<N>;
+		bPrimitive = true;
 	}
 protected:
 	///	数値読み出し
@@ -294,9 +298,11 @@ class SPR_DLL UTTypeDescBool:public UTTypeDesc{
 public:
 	UTTypeDescBool(){
 		access = DBG_NEW UTAccess<N>;
+		bPrimitive = true;
 	}
 	UTTypeDescBool(std::string tn): UTTypeDesc(tn, sizeof(N)){
 		access = DBG_NEW UTAccess<N>;
+		bPrimitive = true;
 	}
 protected:
 	///	数値読み出し
@@ -313,9 +319,11 @@ class SPR_DLL UTTypeDescString:public UTTypeDesc{
 public:
 	UTTypeDescString(){
 		access = DBG_NEW UTAccess<std::string>;
+		bPrimitive = true;
 	}
 	UTTypeDescString(std::string tn): UTTypeDesc(tn, sizeof(std::string)){
 		access = DBG_NEW UTAccess<std::string>;
+		bPrimitive = true;
 	}
 protected:
 	///	数値読み出し

@@ -167,7 +167,7 @@ static void SetVal(const char* b, const char* e){
 		if (curField.fieldType==UTTypeDescFieldIt::F_BLOCK){
 			DSTR << " => (" << curField.field->typeName << ") " << curField.field->name << std::endl;
 		}else{
-			if (curField.arrayPos==0 && curField.type->IsComposit()){
+			if (curField.arrayPos==0 && curField.type->GetComposit().size()){
 				DSTR << "(" << curField.field->typeName << ") " << curField.field->name << " = " ;
 			}
 		}

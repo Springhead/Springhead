@@ -120,7 +120,7 @@ void UTTypeDesc::Composit::Print(std::ostream& os) const{
 		it->Print(os);
 	}
 	if (size()){
-		if (!back().type || !back().type->IsComposit()) DSTR << std::endl;
+		if (!back().type || !back().type->GetComposit().size()) DSTR << std::endl;
 	}
 }
 void UTTypeDesc::Composit::Link(UTTypeDescDb* db) {
@@ -261,21 +261,21 @@ UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 	type = d;
 	if (type){
 		field = type->GetComposit().end();
-		if (type->IsComposit()){
-			arrayPos = -1;
-			arrayLength = 0;
-			fieldType=F_NONE;
-		}else{
-			//	TODO 組み立て型でない場合
+		if (type->IsPrimitive()){
+			//	組み立て型でない場合
 			DSTR << "Not a composit type" << std::endl;
 			arrayPos = -1;
 			arrayLength = 1;
 			fieldType=GetTypeId(type);
+		}else{
+			arrayPos = -1;
+			arrayLength = 0;
+			fieldType=F_NONE;
 		}
 	}
 }
 bool UTTypeDescFieldIt::NextField(){
-	if (!type || !type->IsComposit()) return false;
+	if (!type || !type->GetComposit().size()) return false;
 	//	次のフィールドへ進む
 	if (field == type->GetComposit().end()){
 		field = type->GetComposit().begin();
@@ -291,7 +291,7 @@ bool UTTypeDescFieldIt::NextField(){
 }
 	
 bool UTTypeDescFieldIt::FindField(UTString name){
-	if (!type || !type->IsComposit()) return false;
+	if (!type || !type->GetComposit().size()) return false;
 	//	次のフィールドへ進む
 	for(field = type->GetComposit().begin(); field != type->GetComposit().end(); ++field){
 		if (field->name.compare(name) == 0){
@@ -328,28 +328,30 @@ void UTTypeDescFieldIt::SetFieldInfo(){
 
 UTTypeDescFieldIt::FieldType UTTypeDescFieldIt::GetTypeId(UTTypeDesc* type){
 	UTTypeDescFieldIt::FieldType fieldType = F_NONE;
-	if(		type->GetTypeName().compare("BYTE")==0
-		||	type->GetTypeName().compare("WORD")==0
-		||	type->GetTypeName().compare("DWORD")==0
-		||	type->GetTypeName().compare("char")==0
-		||	type->GetTypeName().compare("short")==0
-		||	type->GetTypeName().compare("int")==0
-		||	type->GetTypeName().compare("unsigned")==0
-		||	type->GetTypeName().compare("size_t")==0
-		||	type->GetTypeName().compare("enum")==0){
-		fieldType = F_INT;
-	}else if (type->GetTypeName().compare("bool")==0
-		||	type->GetTypeName().compare("BOOL")==0){
-		fieldType = F_BOOL;
-	}else if (type->GetTypeName().compare("float")==0
-		||	type->GetTypeName().compare("double")==0
-		||	type->GetTypeName().compare("FLOAT")==0
-		||	type->GetTypeName().compare("DOUBLE")==0){
-		fieldType = F_REAL;
-	}else if (type->GetTypeName().compare("string")==0
-		||  type->GetTypeName().compare("STRING")==0){
-		fieldType = F_STR;
-	}else if (type->IsComposit()){
+	if(type->IsPrimitive()){
+		if(		type->GetTypeName().compare("BYTE")==0
+			||	type->GetTypeName().compare("WORD")==0
+			||	type->GetTypeName().compare("DWORD")==0
+			||	type->GetTypeName().compare("char")==0
+			||	type->GetTypeName().compare("short")==0
+			||	type->GetTypeName().compare("int")==0
+			||	type->GetTypeName().compare("unsigned")==0
+			||	type->GetTypeName().compare("size_t")==0
+			||	type->GetTypeName().compare("enum")==0){
+			fieldType = F_INT;
+		}else if (type->GetTypeName().compare("bool")==0
+			||	type->GetTypeName().compare("BOOL")==0){
+			fieldType = F_BOOL;
+		}else if (type->GetTypeName().compare("float")==0
+			||	type->GetTypeName().compare("double")==0
+			||	type->GetTypeName().compare("FLOAT")==0
+			||	type->GetTypeName().compare("DOUBLE")==0){
+			fieldType = F_REAL;
+		}else if (type->GetTypeName().compare("string")==0
+			||  type->GetTypeName().compare("STRING")==0){
+			fieldType = F_STR;
+		}
+	}else{
 		fieldType = F_BLOCK;
 	}
 	return fieldType;
