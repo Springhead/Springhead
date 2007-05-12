@@ -5,19 +5,19 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "robot2.h"
+#include "robot.h"
 #include <vector>
 
 using namespace std;
 
-void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
+void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(0.1, 0.4, 0.1);
-	boxCrank = DCAST(CDBoxIf, sdk->CreateShape(bd));
+	boxCrank = sdk->CreateShape(bd)->Cast();
 	bd.boxsize = Vec3f(0.1, 1.5, 0.1);
-	boxFoot = DCAST(CDBoxIf, sdk->CreateShape(bd));
+	boxFoot = sdk->CreateShape(bd)->Cast();
 	bd.boxsize = Vec3f(0.1, 0.8, 0.1);
-	boxGuide = DCAST(CDBoxIf, sdk->CreateShape(bd));
+	boxGuide = sdk->CreateShape(bd)->Cast();
 
 	PHSolidDesc sd;
 	sd.mass = 0.1;
@@ -37,7 +37,7 @@ void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, 
 	PHHingeJointDesc jd;
 	jd.poseSocket = base;
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
-	jntCrank = DCAST(PHHingeJointIf, scene->CreateJoint(body, soCrank, jd));
+	jntCrank = scene->CreateJoint(body, soCrank, jd)->Cast();
 	jntCrank->SetDamper(1.0);
 	scene->CreateTreeNode(root, soCrank);
 	
@@ -49,7 +49,7 @@ void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, 
 		pose.Pos() = Vec3d(0.9, 0.4, (i == 0 ? 0.06 : -0.06));
 		jd.poseSocket = base * pose;
 		jd.posePlug.Pos() = Vec3d(0.0, 0.4, (i == 0 ? -0.06 : 0.06));
-		jntGuideBody[i] = DCAST(PHHingeJointIf, scene->CreateJoint(body, soGuide[i], jd));
+		jntGuideBody[i] = scene->CreateJoint(body, soGuide[i], jd)->Cast();
 		jntGuideBody[i]->SetDamper(D);
 		jntGuideBody[i]->SetSpring(K);
 		jntGuideBody[i]->SetSpringOrigin(Rad(-90.0));
@@ -58,7 +58,7 @@ void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, 
 		jd.poseSocket.Ori() = Quaterniond();
 		jd.poseSocket.Pos() = Vec3d(0.0, -0.4, 0.0);
 		jd.posePlug.Pos() = Vec3d(0.0, 0.7, 0.0);
-		jntFootGuide[i] = DCAST(PHHingeJointIf, scene->CreateJoint(soGuide[i], soFoot[i], jd));
+		jntFootGuide[i] = scene->CreateJoint(soGuide[i], soFoot[i], jd)->Cast();
 		scene->CreateTreeNode(node, soFoot[i]);
 		jntFootGuide[i]->SetSpring(K);
 		jntFootGuide[i]->SetDamper(D);
@@ -82,7 +82,7 @@ void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, 
 		jd.poseSocket = Posed();
 		jd.poseSocket.Pos() = Vec3d(0.0, (i == 0 ? 0.1 : -0.1), (i == 0 ? 0.06: -0.06));
 		jd.posePlug.Pos() = Vec3d(0.0, -0.1+0.25, (i == 0 ? -0.06 : 0.06));
-		jntFoot[i] = DCAST(PHHingeJointIf, scene->CreateJoint(soCrank, soFoot[i], jd));
+		jntFoot[i] = scene->CreateJoint(soCrank, soFoot[i], jd)->Cast();
 	}
 	
 	scene->SetContactMode(soCrank, soFoot[0], PHSceneDesc::MODE_NONE);
@@ -93,10 +93,10 @@ void Robot2::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, 
 	scene->SetContactMode(soGuide[1], soFoot[1], PHSceneDesc::MODE_NONE);	
 }
 
-void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
+void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(0.8, 0.6, 1.0);
-	boxBody = DCAST(CDBoxIf, sdk->CreateShape(bd));
+	boxBody = sdk->CreateShape(bd)->Cast();
 	
 	PHSolidDesc sd;
 	soBody = scene->CreateSolid(sd);
@@ -133,36 +133,36 @@ void Robot2::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 }
 
 
-const double speed = 3.0;
-void Robot2::Stop(){
+const double speed = 10.0;
+void Robot::Stop(){
 	leg[0].jntCrank->SetMotorTorque(0);
 	leg[1].jntCrank->SetMotorTorque(0);
 	leg[2].jntCrank->SetMotorTorque(0);
 	leg[3].jntCrank->SetMotorTorque(0);
 }
 
-void Robot2::Forward(){
+void Robot::Forward(){
 	leg[0].jntCrank->SetMotorTorque(speed);
 	leg[1].jntCrank->SetMotorTorque(-speed);
 	leg[2].jntCrank->SetMotorTorque(speed);
 	leg[3].jntCrank->SetMotorTorque(-speed);
 }
 
-void Robot2::Backward(){
+void Robot::Backward(){
 	leg[0].jntCrank->SetMotorTorque(-speed);
 	leg[1].jntCrank->SetMotorTorque(speed);
 	leg[2].jntCrank->SetMotorTorque(-speed);
 	leg[3].jntCrank->SetMotorTorque(speed);
 }
 
-void Robot2::TurnLeft(){
+void Robot::TurnLeft(){
 	leg[0].jntCrank->SetMotorTorque(speed);
 	leg[1].jntCrank->SetMotorTorque(-speed);
 	leg[2].jntCrank->SetMotorTorque(-speed);
 	leg[3].jntCrank->SetMotorTorque(speed);
 }
 
-void Robot2::TurnRight(){
+void Robot::TurnRight(){
 	leg[0].jntCrank->SetMotorTorque(-speed);
 	leg[1].jntCrank->SetMotorTorque(speed);
 	leg[2].jntCrank->SetMotorTorque(speed);

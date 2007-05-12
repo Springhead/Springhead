@@ -5,14 +5,14 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef ROBOT2_H
-#define ROBOT2_H
+#ifndef ROBOT_H
+#define ROBOT_H
 
 #include <Springhead.h>		//	Springheadのインタフェース
 
 using namespace Spr;
 
-class Robot2{
+class Robot{
 public:
 	PHSolidIf*	soBody;
 	CDBoxIf*	boxBody;

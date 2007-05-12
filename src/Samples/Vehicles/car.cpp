@@ -12,7 +12,7 @@ void Robot1::InitCylinder(CDConvexMeshDesc& md, float height, float radius, int 
 	float theta, x, y;
 	float halfh = 0.5f * height;
 	for(int i = 0; i < ndiv; i++){
-		theta = 2 * M_PI * float(i)/float(ndiv);
+		theta = 2 * (float)M_PI * float(i)/float(ndiv);
 		x = radius * cos(theta);
 		y = radius * sin(theta);
 		md.vertices[2 * i + 0] = Vec3f(x, y,  halfh);
@@ -23,11 +23,11 @@ void Robot1::InitCylinder(CDConvexMeshDesc& md, float height, float radius, int 
 void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(1.0, 1.0, 1.0);
-	boxBody = DCAST(CDBoxIf, sdk->CreateShape(bd));
+	boxBody = sdk->CreateShape(bd)->Cast();
 	
 	CDConvexMeshDesc md;
-	InitCylinder(md, 0.1, 0.5, 12);
-	meshWheel = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+	InitCylinder(md, 0.1f, 0.5f, 12);
+	meshWheel = sdk->CreateShape(md)->Cast();
 
 	PHSolidDesc sd;
 	soBody = scene->CreateSolid(sd);
@@ -43,13 +43,13 @@ void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 
 	PHHingeJointDesc jd;
 	jd.poseSocket.Pos() = Vec3d( 1.5, -1.0,  1.5);
-	jntWheel[0] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[0], jd));
+	jntWheel[0] = scene->CreateJoint(soBody, soWheel[0], jd)->Cast();
 	jd.poseSocket.Pos() = Vec3d(-1.5, -1.0,  1.5);
-	jntWheel[1] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[1], jd));
+	jntWheel[1] = scene->CreateJoint(soBody, soWheel[1], jd)->Cast();
 	jd.poseSocket.Pos() = Vec3d( 1.5, -1.0, -1.5);
-	jntWheel[2] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[2], jd));
+	jntWheel[2] = scene->CreateJoint(soBody, soWheel[2], jd)->Cast();
 	jd.poseSocket.Pos() = Vec3d(-1.5, -1.0, -1.5);
-	jntWheel[3] = DCAST(PHHingeJointIf, scene->CreateJoint(soBody, soWheel[3], jd));
+	jntWheel[3] = scene->CreateJoint(soBody, soWheel[3], jd)->Cast();
 
 	for(int i = 0; i < 4; i++){
 		scene->SetContactMode(soBody, soWheel[i], PHSceneDesc::MODE_NONE);
@@ -59,7 +59,7 @@ void Robot1::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	}
 }
 
-const double speed = 4.0;
+const double speed = 20.0;
 void Robot1::Stop(){
 	jntWheel[0]->SetDesiredVelocity(0);
 	jntWheel[1]->SetDesiredVelocity(0);

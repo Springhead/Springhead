@@ -8,7 +8,7 @@
 /**
  Springhead2/src/Samples/Vehicles/main.cpp
 
-【概要】Springhead2の総合的なデモ第１段
+【概要】Springhead2の総合的なデモ第１段．8足ロボットの歩行
  
 【仕様】
 
@@ -16,8 +16,8 @@
 
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <GL/glut.h>
-#include "robot1.h"
-#include "robot2.h"
+#include "robot.h"
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -25,35 +25,34 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* phSdk;			// SDKインタフェース
-GRSdkIf* grSdk;
-PHSceneIf* scene;		// Sceneインタフェース
-GRDebugRenderIf* render;
-GRDeviceGLIf* device;
+UTRef<PHSdkIf> phSdk;			// SDK
+UTRef<GRSdkIf> grSdk;
+UTRef<PHSceneIf> scene;			// Scene
+UTRef<GRDebugRenderIf> render;
+UTRef<GRDeviceGLIf> device;
 
-Robot1 car;
-Robot2 robot[2];
+Robot robot;
 
 void CreateFloor(){
-	CDBoxDesc desc;
-	desc.boxsize = Vec3f(30.0f, 10.0f, 20.0f);
 	PHSolidDesc sd;
 	PHSolidIf* soFloor = scene->CreateSolid(sd);
-	soFloor->AddShape(phSdk->CreateShape(desc));
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(30.0f, 10.0f, 20.0f);
+	soFloor->AddShape(phSdk->CreateShape(bd));
 	soFloor->SetFramePosition(Vec3f(0,-5, 0));
-	soFloor->SetDynamical(false);			// 床は外力によって動かないようにする
+	soFloor->SetDynamical(false);					// 床は外力によって動かないようにする
 }
 
 /**
- brief     	glutDisplayFuncで指定したコールバック関数
+ brief     	glutDisplayFuncで指定するコールバック関数．画面の描画を行う．
  param	 	なし
  return 	なし
  */
-void display(){
+void Display(){
 	Affinef af;
 	af.Pos() = Vec3f(0, 3, 4)*1.2;
 	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
-	render->SetViewMatrix(af.inv());
+	render->SetViewMatrix(af.inv());	//	視点の設定
 	
 	render->ClearBuffer();
 	render->DrawScene(scene);
@@ -90,7 +89,7 @@ void initialize(){
  param		<in/--> h　　高さ
  return		なし
  */
-void reshape(int w, int h){
+void Reshape(int w, int h){
 	// Viewportと射影行列を設定
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
@@ -102,7 +101,7 @@ void reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void keyboard(unsigned char key, int x, int y){
+void Keyboard(unsigned char key, int x, int y){
 	unsigned int i = 0;
 	switch (key) {
 	//終了
@@ -111,19 +110,19 @@ void keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		robot[0].Forward();
+		robot.Forward();
 		break;
 	case 's':
-		robot[0].Backward();
+		robot.Backward();
 		break;
 	case 'd':
-		robot[0].TurnLeft();
+		robot.TurnLeft();
 		break;
 	case 'f':
-		robot[0].TurnRight();
+		robot.TurnRight();
 		break;
 	case 'g':
-		robot[0].Stop();
+		robot.Stop();
 		break;
 	default:
 		break;
@@ -145,9 +144,6 @@ void timer(int id){
 
 /**
  brief		メイン関数
- param		<in/--> argc　　コマンドライン入力の個数
- param		<in/--> argv　　コマンドライン入力
- return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
 
@@ -158,19 +154,18 @@ int main(int argc, char* argv[]){
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
 	dscene.numIteration = 5;
-	scene = phSdk->CreateScene(dscene);				// シーンの作成
+	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	
 	// シーンの構築
-	CreateFloor();
+	CreateFloor();								//	床
 	Posed pose;
 	pose.Pos() = Vec3d(3.0, 2.0, 0.0);
-	robot[0].Build(pose, scene, phSdk);
+	robot.Build(pose, scene, phSdk);			//	ロボット
 	pose.Pos() = Vec3d(0.0, 1.0, 1.0);
 
-	//car.Build(pose, scene, phSdk);
-	CDBoxDesc box;
+	CDBoxDesc box;								//	三つ重なっている箱
 	box.boxsize = Vec3f(1.0, 1.0, 2.0);
-	CDBoxIf* boxBody = DCAST(CDBoxIf, phSdk->CreateShape(box));
+	CDBoxIf* boxBody = phSdk->CreateShape(box)->Cast();
 	PHSolidDesc sd;
 	sd.mass *= 0.7;
 	sd.inertia *= 0.7;
@@ -182,8 +177,10 @@ int main(int argc, char* argv[]){
 		pose.PosY()+=1.0;
 		pose.PosX()-=0.1;
 	}
-	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));
+
+	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
 	
+	//	GLUTの初期化
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(800, 600);
@@ -195,15 +192,11 @@ int main(int argc, char* argv[]){
 	render->SetDevice(device);	// デバイスの設定
 
 	glutTimerFunc(50, timer, 0);
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboard);
-	//glutIdleFunc(idle);
+	glutDisplayFunc(Display);
+	glutReshapeFunc(Reshape);
+	glutKeyboardFunc(Keyboard);
 	
 	initialize();
 
 	glutMainLoop();
-
-	delete phSdk;
-	delete grSdk;
 }
