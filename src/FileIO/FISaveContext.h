@@ -45,6 +45,11 @@ public:
 	///	エラーメッセージの出力
 	void ErrorMessage(const char* msg);
 
+	/**	セーブするノードのグループを登録。グループ名をスペースで区切って指定。
+		例：ResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	*/
+	void RegisterGroupToDb(const char* gp);
+
 	UTString GetNodeTypeName();
 	UTString GetNodeName();
 };

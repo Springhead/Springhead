@@ -44,5 +44,21 @@ UTString FISaveContext::GetNodeName(){
 	return rv;
 }
 
+void FISaveContext::RegisterGroupToDb(const char* gp){
+	const char* p = gp;
+	while(1){
+		const char* end = strchr(p, ' ');
+		if (!end) end = gp + strlen(gp);
+		if (p < end){
+			UTString group(p, end);
+			p = end+1;
+			*handlerDbs.Top() += *UTLoadHandlerDbPool::Get(group.c_str());
+			*typeDbs.Top() += *UTTypeDescDbPool::Get(group.c_str());
+		}else{
+			break;
+		}
+	}
+}
+
 };
 

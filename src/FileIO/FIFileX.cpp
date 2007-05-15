@@ -325,12 +325,17 @@ void FIFileX::LoadImp(FILoadContext* fc){
 	PopLoaderContext();
 }
 
-
 //----------------------------------------------------
 //	セーブ時のハンドラ
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileX::OnSaveFileStart(FISaveContext* sc){
+	sc->RegisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	sc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
+	sc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
+	sc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");
+	sc->typeDbs.Top()->RegisterAlias("Affined", "Matrix4x4");
+
 	sc->file << "xof 0302txt 0064" << std::endl;
 }
 static bool cont;
