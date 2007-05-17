@@ -20,6 +20,10 @@ VisualC++を立ち上げて，ファイル(F)-新規作成(N)-プロジェクト(P)を選択して，
 「$(SPRINGHEAD2)/include」を追加してください．
 これで，Springheadのヘッダファイルがインクルードできるようになります．
 
+\section secSetOption オプションの設定
+作成したプロジェクトを右クリックし，プロパティ(R)でプロパティを表示し，
+C C++-コード生成を選び、ランタイムライブラリをMT(リリース版)またはMTd(デバッグ版)に設定する
+
 \section secAddLibs ライブラリの追加
 Springheadを使うためには，ライブラリを追加する必要があります．
 新しく作ったプロジェクト(下図のfirst)を右クリックして 追加(D)-既存項目の追加(G)を選び，
@@ -37,13 +41,13 @@ lib/win32/Springhead.lib を追加します．
 <pre>
 // first.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 //
-#include "stdafx.h"
-#include <springhead.h>
+##include "stdafx.h"
+##include <springhead.h>
 using namespace Spr;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	PHSdkIf* sdk = CreatePHSdk();				//	物理エンジンSDKの作成
+	PHSdkIf* sdk = PHSdkIf::CreateSdk();		//	物理エンジンSDKの作成
 	PHSceneIf* scene = sdk->CreateScene();		//	シーンの作成
 	PHSolidIf* solid = scene->CreateSolid();	//	剛体の作成
 	for(int i=0; i<10; ++i){
