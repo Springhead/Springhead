@@ -67,7 +67,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	
 	// ‚µ‚Î‚µ‘Ò‚Â
 	double dt = scene->GetTimeStep();
-	double T = 1.0;
+	double T = 0.1;
 	for(double t = 0.0; t < T; t+=dt)
 		scene->Step();
 
