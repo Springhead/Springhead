@@ -33,6 +33,8 @@ UTRef<GRDeviceGLIf> device;
 
 Robot robot;
 
+double zoom = 0.1;
+
 void CreateFloor(){
 	PHSolidDesc sd;
 	PHSolidIf* soFloor = scene->CreateSolid(sd);
@@ -50,8 +52,8 @@ void CreateFloor(){
  */
 void Display(){
 	Affinef af;
-	af.Pos() = Vec3f(0, 3, 4)*1.0;
-	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,100,0));
+	af.Pos() = Vec3f(0, 3.5, 4)*zoom;
+	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,10,0));
 	render->SetViewMatrix(af.inv());	//	視点の設定
 	
 	render->ClearBuffer();
@@ -67,8 +69,8 @@ void Display(){
  */
 void setLight() {
 	GRLightDesc light0, light1;
-	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
-	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	light0.position = Vec4f(10.0, 20.0, 20.0, 0.5);
+	light1.position = Vec4f(-10.0, 10.0, 10.0, 0.5);
 	render->PushLight(light0);
 	render->PushLight(light1);
 }
@@ -112,21 +114,28 @@ void Keyboard(unsigned char key, int x, int y){
 	case 'a':
 		robot.Forward();
 		break;
+	case 'z':
+		zoom -= 0.01;
+		break;
+	case 'x':
+		zoom += 0.01;
+		break;
 	case 's':
 		robot.Backward();
 		break;
-	case 'd':
+	/*case 'd':
 		robot.TurnLeft();
 		break;
 	case 'f':
 		robot.TurnRight();
-		break;
-	case 'g':
+		break;*/
+	case 'd':
 		robot.Stop();
 		break;
 	default:
 		break;
 	}
+
 }	
 
 /**
@@ -159,8 +168,8 @@ int main(int argc, char* argv[]){
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
-	pose.Pos() = Vec3d(0.0, 2.0, 0.0);
-	robot.Build(pose, scene, phSdk);			//	ロボット
+	pose.Pos() = Vec3d(0.0, 0.1, 0.0);
+	robot.Build(pose, scene, phSdk);//	ロボット
 	//pose.Pos() = Vec3d(0.0, 1.0, 1.0);
 
 	/*CDBoxDesc box;								//	三つ重なっている箱
