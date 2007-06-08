@@ -10,6 +10,7 @@
 
 using namespace std;
 
+//ロボットの脚を構築
 void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
 
 	//部品のサイズを指定する
@@ -59,7 +60,6 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		jntDX1->SetSpringOrigin(Rad(-90.0));
 		node = scene->CreateTreeNode(root, soDX1);
 		
-
 	//第二関節
 		jd.poseSocket.Ori() = Quaterniond::Rot(Rad(-90.0), 'y');//ピッチ軸関節
 		jd.poseSocket.Pos() = Vec3d(0.0, -0.033, 0.0);
@@ -110,8 +110,8 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 											scene->SetContactMode(soGuide[1], soFoot[1], PHSceneDesc::MODE_NONE);*/
 }
 
-
-void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
+//ロボットを構築
+void Robot::Build(int module_num, const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 
 	CDConvexMeshDesc md;                                                    // メッシュディスクリプタ(md)
     md.vertices.push_back(Vec3f( 0.0,   0.02, 0.06));							// 六角柱の頂点座標を登録
@@ -139,20 +139,22 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	Posed poseLeg;
 	poseLeg.Ori() = Quaterniond::Rot(Rad(60.0), 'y');
 	poseLeg.Pos() = Vec3d(-0.075, -0.04, 0.13);//原点に対する”クランク（アクチュエータ）の”位置?
-	leg[0].Build(soBody, root, poseLeg, scene, sdk);
+	leg[module_num][0].Build(soBody, root, poseLeg, scene, sdk);
 	poseLeg.Ori() = Quaterniond::Rot(Rad(180.0), 'y');//脚の生える向きを反転
 	poseLeg.Pos() = Vec3d(0.145, -0.04, 0.0);
-	leg[1].Build(soBody, root, poseLeg, scene, sdk);
+	leg[module_num][1].Build(soBody, root, poseLeg, scene, sdk);
 	poseLeg.Ori() = Quaterniond::Rot(Rad(-60.0), 'y');
 	poseLeg.Pos() = Vec3d(-0.075, -0.04, -0.13);
-	leg[2].Build(soBody, root, poseLeg, scene, sdk);
+	leg[module_num][2].Build(soBody, root, poseLeg, scene, sdk);
 	
 	vector<PHSolidIf*> group;
 	group.push_back(soBody);
 
 	for(int i = 0; i < 3; i++){
-		group.push_back(leg[i].soDX1);
-		group.push_back(leg[i].soDX2);
+		group.push_back(leg[module_num][i].soDX1);
+		group.push_back(leg[module_num][i].soDX2);
+		group.push_back(leg[module_num][i].soFoot);
+		group.push_back(leg[module_num][i].soSphere);
 	}
 	/*for(int i = 0; i < 3; i++){
 		group.push_back(leg[i].soCrank);
@@ -163,42 +165,43 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	}*/
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 	for(int i = 0; i < 3; i++){
-		scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soDX2, soBody, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[module_num][i].soDX1, soBody, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[module_num][i].soDX2, soBody, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[module_num][i].soFoot, soBody, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[module_num][i].soSphere, soBody, PHSceneDesc::MODE_NONE);
 	}
-	
 
 	soBody->SetDynamical(true);
 }
 
 const double speed = 20.0;
 
-void Robot::Stop(){
-	leg[0].jntDX1->SetMotorTorque(0);
-	leg[1].jntDX1->SetMotorTorque(0);
-	leg[2].jntDX1->SetMotorTorque(0);
-	leg[0].jntDX2->SetMotorTorque(0);
-	leg[1].jntDX2->SetMotorTorque(0);
-	leg[2].jntDX2->SetMotorTorque(0);
+void Robot::Stop(int module_num){
+	leg[module_num][0].jntDX1->SetMotorTorque(0);
+	leg[module_num][1].jntDX1->SetMotorTorque(0);
+	leg[module_num][2].jntDX1->SetMotorTorque(0);
+	leg[module_num][0].jntDX2->SetMotorTorque(0);
+	leg[module_num][1].jntDX2->SetMotorTorque(0);
+	leg[module_num][2].jntDX2->SetMotorTorque(0);
 	//leg[3].jntCrank->SetMotorTorque(0);
 }
-void Robot::Forward(){
-	leg[0].jntDX1->SetMotorTorque(-speed);
-	leg[1].jntDX1->SetMotorTorque(-speed);
-	leg[2].jntDX1->SetMotorTorque(-speed);
-	leg[0].jntDX2->SetMotorTorque(speed);
-	leg[1].jntDX2->SetMotorTorque(speed);
-	leg[2].jntDX2->SetMotorTorque(speed);
+void Robot::Forward(int module_num){
+	leg[module_num][0].jntDX1->SetMotorTorque(-speed);
+	leg[module_num][1].jntDX1->SetMotorTorque(-speed);
+	leg[module_num][2].jntDX1->SetMotorTorque(-speed);
+	leg[module_num][0].jntDX2->SetMotorTorque(speed);
+	leg[module_num][1].jntDX2->SetMotorTorque(speed);
+	leg[module_num][2].jntDX2->SetMotorTorque(speed);
 	//leg[3].jntCrank->SetMotorTorque(-speed);
 }
 
-void Robot::Backward(){
-	leg[0].jntDX1->SetMotorTorque(speed);
-	leg[1].jntDX1->SetMotorTorque(speed);
-	leg[2].jntDX1->SetMotorTorque(speed);
-	leg[0].jntDX2->SetMotorTorque(-speed);
-	leg[1].jntDX2->SetMotorTorque(-speed);
-	leg[2].jntDX2->SetMotorTorque(-speed);
+void Robot::Backward(int module_num){
+	leg[module_num][0].jntDX1->SetMotorTorque(speed);
+	leg[module_num][1].jntDX1->SetMotorTorque(speed);
+	leg[module_num][2].jntDX1->SetMotorTorque(speed);
+	leg[module_num][0].jntDX2->SetMotorTorque(-speed);
+	leg[module_num][1].jntDX2->SetMotorTorque(-speed);
+	leg[module_num][2].jntDX2->SetMotorTorque(-speed);
 	//leg[3].jntCrank->SetMotorTorque(speed);
 }
 

@@ -36,12 +36,12 @@ public:
 		//void Build(PHSolidIf* body, PHHingeJointIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
 	};
 
-	Leg	leg[3];
+	Leg	leg[10][3];
 
-	void Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
-	void Stop();
-	void Forward();
-	void Backward();
+	void Build(int module_num, const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
+	void Stop(int module_num);
+	void Forward(int module_num);
+	void Backward(int module_num);
 	//void TurnLeft();
 	//void TurnRight();
 };

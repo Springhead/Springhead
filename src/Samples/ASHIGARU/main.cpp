@@ -41,7 +41,7 @@ void CreateFloor(){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(30.0f, 10.0f, 20.0f);
 	soFloor->AddShape(phSdk->CreateShape(bd));
-	soFloor->SetFramePosition(Vec3f(0,-5, 0));
+	soFloor->SetFramePosition(Vec3f( 0, -5, 0));
 	soFloor->SetDynamical(false);					// 床は外力によって動かないようにする
 }
 
@@ -53,7 +53,7 @@ void CreateFloor(){
 void Display(){
 	Affinef af;
 	af.Pos() = Vec3f(0, 3.5, 4)*zoom;
-	af.LookAtGL(Vec3f(0,0,0), Vec3f(0,10,0));
+	af.LookAtGL(Vec3f(0.1,0,0.1), Vec3f(0,10,0));
 	render->SetViewMatrix(af.inv());	//	視点の設定
 	
 	render->ClearBuffer();
@@ -69,10 +69,10 @@ void Display(){
  */
 void setLight() {
 	GRLightDesc light0, light1;
-	light0.position = Vec4f(10.0, 20.0, 20.0, 0.5);
-	light1.position = Vec4f(-10.0, 10.0, 10.0, 0.5);
+	light0.position = Vec4f(20.0, 40.0, 40.0, 0.1);
+	//light1.position = Vec4f(-20.0, 20.0, 20.0, 0.1);
 	render->PushLight(light0);
-	render->PushLight(light1);
+	//render->PushLight(light1);
 }
 
 /**
@@ -112,7 +112,9 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		robot.Forward();
+		for(int i=0; i<4; i++){
+			robot.Forward(i);
+		}
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -121,7 +123,9 @@ void Keyboard(unsigned char key, int x, int y){
 		zoom += 0.01;
 		break;
 	case 's':
-		robot.Backward();
+		for(int i=0; i<4; i++){
+			robot.Backward(i);
+		}
 		break;
 	/*case 'd':
 		robot.TurnLeft();
@@ -130,7 +134,9 @@ void Keyboard(unsigned char key, int x, int y){
 		robot.TurnRight();
 		break;*/
 	case 'd':
-		robot.Stop();
+		for(int i=0; i<4; i++){
+			robot.Stop(i);
+		}
 		break;
 	default:
 		break;
@@ -168,26 +174,14 @@ int main(int argc, char* argv[]){
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
-	pose.Pos() = Vec3d(0.0, 0.1, 0.0);
-	robot.Build(pose, scene, phSdk);//	ロボット
-	//pose.Pos() = Vec3d(0.0, 1.0, 1.0);
+	for(int i=0; i<2; i++){
+		for(int j=0; j<2; j++){
+			pose.Pos() = Vec3d(0.2*i, 0.1, 0.2*j);
+			robot.Build(j+2*i, pose, scene, phSdk);//	ロボット
+		}
+	}
 
-	/*CDBoxDesc box;								//	三つ重なっている箱
-	box.boxsize = Vec3f(1.0, 1.0, 2.0);
-	CDBoxIf* boxBody = phSdk->CreateShape(box)->Cast();
-	PHSolidDesc sd;
-	sd.mass *= 0.7;
-	sd.inertia *= 0.7;
-	PHSolidIf* soBox;
-	for(int i=0; i<3;++i){
-		soBox = scene->CreateSolid(sd);
-		soBox->AddShape(boxBody);
-		soBox->SetPose(pose);
-		pose.PosY()+=1.0;
-		pose.PosX()-=0.1;
-	}*/
-
-	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
+	scene->SetGravity(Vec3f(0.0, -20, 0.0));	//	重力を設定
 	
 	//	GLUTの初期化
 	glutInit(&argc, argv);
