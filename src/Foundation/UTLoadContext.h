@@ -34,6 +34,11 @@ public:
 	bool IsGood();
 };
 
+class UTFileContext{
+
+};
+
+
 class UTLoadContext;
 class UTLoadedData;
 class UTLoadedDatas: public std::vector< UTLoadedData* >{
