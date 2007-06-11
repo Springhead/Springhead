@@ -15,7 +15,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 
 	//部品のサイズを指定する
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(0.038, 0.12, 0.002);//ASHIGARU足先アルミ板部分
+	bd.boxsize = Vec3f(0.005, 0.12, 0.038);//ASHIGARU足先アルミ板部分
 	boxFoot = sdk->CreateShape(bd)->Cast();
 	bd.boxsize = Vec3f(0.026, 0.067, 0.032);//ダイナミクセル１
 	boxDX1 = sdk->CreateShape(bd)->Cast();
@@ -28,14 +28,16 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 
 	//部品のソリッドモデルを作成する
 	PHSolidDesc sd;
-	sd.mass = 0.09;//単位Kg??
+	sd.mass = 0.04;//単位Kg??
 	sd.inertia = Matrix3d::Unit() * 0.1;//Unit()は単位行列
 	soFoot = scene->CreateSolid(sd);
 	soFoot->AddShape(boxFoot);
+	sd.mass = 0.09;
 	soDX1 = scene->CreateSolid(sd);
 	soDX1->AddShape(boxDX1);
 	soDX2 = scene->CreateSolid(sd);
 	soDX2->AddShape(boxDX2);
+	sd.mass = 0.001;
 	soSphere = scene->CreateSolid(sd);
 	soSphere->AddShape(Sphere);
 
@@ -73,14 +75,14 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		//node = scene->CreateTreeNode(root, soDX2);
 
 	//第三関節（足先アルミ板＋球）
-		/*jd.poseSocket.Ori() = Quaterniond();
-		jd.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-		jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
+		jd.poseSocket.Ori() = Quaterniond::Rot(Rad(0.0), 'y');
+		jd.poseSocket.Pos() = Vec3d(0.0, -0.05, 0.0);
+		jd.posePlug.Pos() = Vec3d(0.0, 0.05, 0.0);
 		jntFoot = scene->CreateJoint(soDX2, soFoot, jd)->Cast();
-		scene->CreateTreeNode(node, soFoot);
+		//scene->CreateTreeNode(node, soFoot);
 		jntFoot->SetSpring(K);
 		jntFoot->SetDamper(D);
-		jntFoot->SetSpringOrigin(Rad(0.0));*/
+		jntFoot->SetSpringOrigin(Rad(30.0));
 		//node = scene->CreateTreeNode(root, soFoot);
 
 	//関節の可動範囲を設定
@@ -89,18 +91,19 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	
 	// しばしお待ちあれ
 	double dt = scene->GetTimeStep();
-	double T = 0.3;
+	double T = 0.5;
 	for(double t = 0.0; t < T; t+=dt)
 		scene->Step();
 
 	// バネ解除
 	jntDX1->SetSpring(0.0);
 	jntDX2->SetSpring(0.0);
-	//jntFoot->SetSpring(0.0);
+	jntFoot->SetSpring(0.0);
 
 	//soFoot->SetDynamical(true);
 
 	scene->SetContactMode(soDX1, soDX2, PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(soDX2, soFoot, PHSceneDesc::MODE_NONE);
 											
 											/*scene->SetContactMode(soCrank, soFoot[0], PHSceneDesc::MODE_NONE);
 											scene->SetContactMode(soCrank, soFoot[1], PHSceneDesc::MODE_NONE);
@@ -171,7 +174,7 @@ void Robot::Build(int module_num, const Posed& pose, PHSceneIf* scene, PHSdkIf* 
 		scene->SetContactMode(leg[module_num][i].soSphere, soBody, PHSceneDesc::MODE_NONE);
 	}
 
-	soBody->SetDynamical(true);
+	//soBody->SetDynamical(true);
 }
 
 const double speed = 20.0;
@@ -183,6 +186,9 @@ void Robot::Stop(int module_num){
 	leg[module_num][0].jntDX2->SetMotorTorque(0);
 	leg[module_num][1].jntDX2->SetMotorTorque(0);
 	leg[module_num][2].jntDX2->SetMotorTorque(0);
+	leg[module_num][0].jntFoot->SetMotorTorque(0);
+	leg[module_num][1].jntFoot->SetMotorTorque(0);
+	leg[module_num][2].jntFoot->SetMotorTorque(0);
 	//leg[3].jntCrank->SetMotorTorque(0);
 }
 void Robot::Forward(int module_num){
@@ -192,6 +198,9 @@ void Robot::Forward(int module_num){
 	leg[module_num][0].jntDX2->SetMotorTorque(speed);
 	leg[module_num][1].jntDX2->SetMotorTorque(speed);
 	leg[module_num][2].jntDX2->SetMotorTorque(speed);
+	leg[module_num][0].jntFoot->SetMotorTorque(speed);
+	leg[module_num][1].jntFoot->SetMotorTorque(speed);
+	leg[module_num][2].jntFoot->SetMotorTorque(speed);
 	//leg[3].jntCrank->SetMotorTorque(-speed);
 }
 
@@ -202,6 +211,9 @@ void Robot::Backward(int module_num){
 	leg[module_num][0].jntDX2->SetMotorTorque(-speed);
 	leg[module_num][1].jntDX2->SetMotorTorque(-speed);
 	leg[module_num][2].jntDX2->SetMotorTorque(-speed);
+	leg[module_num][0].jntFoot->SetMotorTorque(-speed);
+	leg[module_num][1].jntFoot->SetMotorTorque(-speed);
+	leg[module_num][2].jntFoot->SetMotorTorque(-speed);
 	//leg[3].jntCrank->SetMotorTorque(speed);
 }
 
