@@ -177,7 +177,7 @@ void Robot::Build(int module_num, const Posed& pose, PHSceneIf* scene, PHSdkIf* 
 	//soBody->SetDynamical(true);
 }
 
-const double speed = 20.0;
+const double speed = 40.0;
 
 void Robot::Stop(int module_num){
 	leg[module_num][0].jntDX1->SetMotorTorque(0);

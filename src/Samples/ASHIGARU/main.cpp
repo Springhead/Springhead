@@ -112,9 +112,9 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		//for(int i=0; i<4; i++){
-			robot.Forward(0);
-		//}
+		for(int i=0; i<4; i++){
+			robot.Forward(i);
+		}
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -123,9 +123,9 @@ void Keyboard(unsigned char key, int x, int y){
 		zoom += 0.01;
 		break;
 	case 's':
-		//for(int i=0; i<4; i++){
-			robot.Backward(0);
-		//}
+		for(int i=0; i<4; i++){
+			robot.Backward(i);
+		}
 		break;
 	/*case 'd':
 		robot.TurnLeft();
@@ -134,9 +134,9 @@ void Keyboard(unsigned char key, int x, int y){
 		robot.TurnRight();
 		break;*/
 	case 'd':
-		//for(int i=0; i<4; i++){
-			robot.Stop(0);
-		//}
+		for(int i=0; i<4; i++){
+			robot.Stop(i);
+		}
 		break;
 	default:
 		break;
@@ -174,14 +174,14 @@ int main(int argc, char* argv[]){
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
-	//for(int i=0; i<2; i++){
-	//	for(int j=0; j<2; j++){
-			//pose.Pos() = Vec3d(0.2*i, 0.1, 0.2*j);
-			pose.Pos() = Vec3d(0.0, 0.25, 0.0);
-			//robot.Build(j+2*i, pose, scene, phSdk);//	ロボット
-			robot.Build(0, pose, scene, phSdk);
-	//	}
-	//}
+	for(int i=0; i<2; i++){
+		for(int j=0; j<2; j++){
+			pose.Pos() = Vec3d(0.2*i, 0.25, 0.2*j);
+			//pose.Pos() = Vec3d(0.0, 0.25, 0.0);
+			robot.Build(j+2*i, pose, scene, phSdk);//	ロボット
+			//robot.Build(0, pose, scene, phSdk);
+		}
+	}
 
 	scene->SetGravity(Vec3f(0.0, -20, 0.0));	//	重力を設定
 	
