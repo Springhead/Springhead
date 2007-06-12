@@ -432,8 +432,12 @@ UTLoadedData* UTNameManagerForData::SearchSet(UTString name, UTString cls){
 }
 
 //---------------------------------------------------------------------------
+//	UTFileContext
+UTFileContext::UTFileContext():errorStream(NULL){
+}
+//---------------------------------------------------------------------------
 //	UTLoadContext
-UTLoadContext::UTLoadContext():errorStream(NULL){
+UTLoadContext::UTLoadContext(){
 	errorStream=&DSTR;
 	rootNameManagerForData = DBG_NEW UTLoadedData(NULL, NULL);
 	rootNameManagerForData->nameMan = DBG_NEW UTNameManagerForData;

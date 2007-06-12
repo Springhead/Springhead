@@ -16,18 +16,12 @@
 namespace Spr{;
 
 class FINodeHandlers;
-class FISaveContext{
+class FISaveContext: public UTFileContext{
 public:
-	///	エラーメッセージ出力用のストリーム
-	std::ostream* errorStream;
 	///	セーブするファイルの名前
 	UTString fileName;
 	///	セーブファイルのファイルストリーム
 	std::ofstream file;
-	///	typeDb のスタック
-	UTStack< UTRef<UTTypeDescDb> > typeDbs;
-	///	handlerDbのスタック
-	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
 	///	UTTypeDescのフィールドへのイタレータのスタック
 	UTTypeDescFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
@@ -36,8 +30,6 @@ public:
 	std::set<ObjectIf*> savedObjects;
 	
 	FISaveContext();
-	///	セーブ中のオブジェクトのスタック
-	ObjectIfs objects;
 	///	セーブ用にファイルを開く
 	void Open(const char* fn);
 	///	メッセージの出力

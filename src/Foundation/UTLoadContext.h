@@ -34,10 +34,6 @@ public:
 	bool IsGood();
 };
 
-class UTFileContext{
-
-};
-
 
 class UTLoadContext;
 class UTLoadedData;
@@ -171,20 +167,35 @@ public:
 typedef std::pair<UTRef<ObjectIf>, UTRef<ObjectIf> > UTPairObject;
 typedef std::map<UTRef<ObjectIf>, UTRef<ObjectIf> >  UTMapObject;
 
+
 class UTLoadHandlerDb;
+
+/**	ファイルロード/セーブ時に使用するコンテキストの基本クラス	*/
+class UTFileContext{
+public:
+	UTFileContext();
+	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
+	std::ostream* errorStream;
+	///	typeDb のスタック
+	UTStack< UTRef<UTTypeDescDb> > typeDbs;
+	///	handlerDbのスタック
+	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
+	/**	現在ロード中 or セーブ中のオブジェクト．
+		ネストしたオブジェクトに備えてスタックになっている．	*/
+	ObjectIfs objects;
+};
+
 /**	ファイルロード時に使用するコンテキスト
 	ファイルをロードする際は，データをノードごとにロードして，
 	オブジェクトを作るためのディスクリプタ構造体(PHSolidDescなど)を
 	まずロードする．
 	そのあと，オブジェクトを生成する．	*/
-class UTLoadContext{
+class UTLoadContext: public UTFileContext{
 public:	
 	//--------------------------------------------------------------------------
 	//	変数
 	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
 	UTStack< UTRef<UTFileMap> > fileMaps;
-	///	現在ロード中のオブジェクト．ネストしたオブジェクトに備えてスタックになっている．
-	ObjectIfs objects;
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
 	ObjectIfs rootObjects;
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
@@ -199,13 +210,6 @@ public:
 	///	フラグのスタック
 	UTStack<char> flags;
 
-	///	typeDb のスタック
-	UTStack< UTRef<UTTypeDescDb> > typeDbs;
-	///	handlerDbのスタック
-	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
-
-	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
-	std::ostream* errorStream;
 	///	データのリンクを後でするための記録．
 	UTLoadTasks dataLinks;
 	///	リファレンスを後でリンクするための記録．
