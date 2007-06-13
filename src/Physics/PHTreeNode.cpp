@@ -688,7 +688,7 @@ void PHTreeNode1D::CompBias(){
 
 	if(j->onLower || j->onUpper){
 		// 未対応
-		return;
+		//return;
 	}
 
 	double D = j->damper, K = j->spring, origin = j->origin;
@@ -715,8 +715,8 @@ void PHTreeNode1D::CompBias(){
 		// たまに不安定性により無限大に張り付くことがあり、下のwhileで無限ループしてしまう
 		if(abs(diff) > 1.0e3)
 			diff = 0.0;
-		while(diff >  M_PI) diff -= 2 * M_PI;
-		while(diff < -M_PI) diff += 2 * M_PI;
+		//while(diff >  M_PI) diff -= 2 * M_PI;
+		//while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (D + K * dt);
 		dA[0] = tmp * dtinv;
 		db[0] = K * (diff) * tmp;

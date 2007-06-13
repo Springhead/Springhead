@@ -119,7 +119,8 @@ inline SpatialVector operator*(const SpatialTransform& X, const SpatialVector& V
 	return SpatialVector(X.q.Conjugated() * (V.v() + V.w() % X.r), X.q.Conjugated() * V.w());
 }
 inline SpatialVector operator*(const SpatialTransformTranspose& X, const SpatialVector& V){
-	return SpatialVector(X.q * V.v(), X.r % (X.q * V.v()) + X.q * V.w());
+	Vec3d tmp = X.q * V.v();
+	return SpatialVector(tmp, X.r % tmp + X.q * V.w());
 }
 
 /// SpatialMatrix

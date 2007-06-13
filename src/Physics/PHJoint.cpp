@@ -28,11 +28,11 @@ PHJoint1D::PHJoint1D(){
 void PHJoint1D::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
 	const PHJoint1DDesc& desc1D = *(const PHJoint1DDesc*)desc;
-	lower = desc1D.lower;
-	upper = desc1D.upper;
-	spring = desc1D.spring;
-	origin = desc1D.origin;
-	damper = desc1D.damper;
+	SetRange(desc1D.lower, desc1D.upper);
+	SetSpring(desc1D.spring);
+	SetSpringOrigin(desc1D.origin);
+	SetDamper(desc1D.damper);
+	SetDesiredVelocity(desc1D.desiredVelocity);
 	SetMotorTorque(desc1D.torque);
 }
 
