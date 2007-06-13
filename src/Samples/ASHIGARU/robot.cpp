@@ -67,28 +67,26 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		jd.poseSocket.Pos() = Vec3d(0.0, -0.033, 0.0);
 		jd.posePlug.Pos() = Vec3d(0.0, 0.033, 0.0);
 		jntDX2 = scene->CreateJoint(soDX1, soDX2, jd)->Cast();
-		scene->CreateTreeNode(node, soDX2);
 		jntDX2->SetSpring(K);
 		jntDX2->SetDamper(D);
 		jntDX2->SetSpringOrigin(Rad(60.0));
-		//PHRootNodeIf* DX2 = scene->CreateRootNode(soDX2);
-		//node = scene->CreateTreeNode(root, soDX2);
+		node = scene->CreateTreeNode(node, soDX2);
 
 	//第三関節（足先アルミ板＋球）
 		jd.poseSocket.Ori() = Quaterniond::Rot(Rad(0.0), 'y');
 		jd.poseSocket.Pos() = Vec3d(0.0, -0.05, 0.0);
 		jd.posePlug.Pos() = Vec3d(0.0, 0.05, 0.0);
 		jntFoot = scene->CreateJoint(soDX2, soFoot, jd)->Cast();
-		//scene->CreateTreeNode(node, soFoot);
+		scene->CreateTreeNode(node, soFoot);
 		jntFoot->SetSpring(K);
 		jntFoot->SetDamper(D);
 		jntFoot->SetSpringOrigin(Rad(30.0));
-		//node = scene->CreateTreeNode(root, soFoot);
 
 	//関節の可動範囲を設定
-		//jntDX1->SetRange(Rad(-180.0),Rad(0.0));			//<-何故かこの１行を入れると初期描画がうまくいかない。なんで？？
-		jntDX2->SetRange(Rad(-90.0),Rad(90.0));
-	
+	jntDX1->SetRange(Rad(-100.0),Rad(-80.0));			//<-何故かこの１行を入れると初期描画がうまくいかない。なんで？？
+	jntDX2->SetRange(Rad(-10.0),Rad(10.0));
+	jntFoot->SetRange(Rad(-10.0),Rad(10.0));
+
 	// しばしお待ちあれ
 	double dt = scene->GetTimeStep();
 	double T = 0.5;
