@@ -49,9 +49,10 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	spring;			///< バネ係数
 	double  origin;			///< バネ原点
 	double  damper;			///< ダンパ係数
+	double	desiredVelocity; ///< 目標速度
 	double	torque;			///< モータトルク
 
-	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), torque(0.0){}
+	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0){}
 };
 
 
