@@ -12,6 +12,7 @@
 #include <GL/gl.h>		// OpenGL
 #include <GL/glu.h>
 #include <Springhead.h>		//	Springheadのインタフェース
+#include <vector>
 
 using namespace Spr;
 
@@ -28,7 +29,7 @@ public:
 		//CDBoxIf			*boxCrank, *boxFoot, *boxGuide;
 		PHSolidIf		*soFoot, *soDX1, *soDX2, *soSphere;
 		//PHSolidIf		*soCrank, *soFoot[2], *soGuide[2];
-		PHHingeJointIf	*jntFoot, *jntDX1, *jntDX2, *jntSphere;
+		PHHingeJointIf	*jntFoot, *jntDX1, *jntDX2, *jntSphere, *jntConnect[10];
 		//PHHingeJointIf	*jntCrank, *jntFoot[2], *jntFootGuide[2], *jntGuideBody[2];
 		//PHRootNodeIf	*DX2;
 
@@ -36,12 +37,12 @@ public:
 		//void Build(PHSolidIf* body, PHHingeJointIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
 	};
 
-	Leg	leg[10][3];
+	Leg	leg[3];
 
-	void Build(int module_num, const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
-	void Stop(int module_num);
-	void Forward(int module_num);
-	void Backward(int module_num);
+	void Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
+	void Stop();
+	void Forward();
+	void Backward();
 	//void TurnLeft();
 	//void TurnRight();
 };

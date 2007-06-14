@@ -24,6 +24,7 @@
 using namespace Spr;
 
 #define ESC		27
+#define module_max 3
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
@@ -31,9 +32,10 @@ UTRef<PHSceneIf> scene;			// Scene
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
 
-Robot robot;
+Robot robot[10];
+//vector<Robot> robots;
 
-double zoom = 0.1;
+double zoom = 0.2;
 
 void CreateFloor(){
 	PHSolidDesc sd;
@@ -107,14 +109,14 @@ void Keyboard(unsigned char key, int x, int y){
 	unsigned int i = 0;
 	switch (key) {
 	//終了
-	case ESC:		
+	case ESC:	
+		exit(0);
+		break;
 	case 'q':
 		exit(0);
 		break;
 	case 'a':
-		for(int i=0; i<4; i++){
-			robot.Forward(i);
-		}
+		for(int i=0; i<module_max; i++){robot[i].Forward();}
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -123,9 +125,7 @@ void Keyboard(unsigned char key, int x, int y){
 		zoom += 0.01;
 		break;
 	case 's':
-		for(int i=0; i<4; i++){
-			robot.Backward(i);
-		}
+		for(int i=0; i<module_max; i++){robot[i].Backward();}
 		break;
 	/*case 'd':
 		robot.TurnLeft();
@@ -134,9 +134,7 @@ void Keyboard(unsigned char key, int x, int y){
 		robot.TurnRight();
 		break;*/
 	case 'd':
-		for(int i=0; i<4; i++){
-			robot.Stop(i);
-		}
+		for(int i=0; i<module_max; i++){robot[i].Stop();}
 		break;
 	default:
 		break;
@@ -162,28 +160,68 @@ void timer(int id){
  */
 int main(int argc, char* argv[]){
 
+	PHHingeJointDesc Connect;
+	PHTreeNodeIf* node_connect;
+	//PHRootNodeIf* root = scene->CreateRootNode(robot[0].soBody);
+
 	// SDKの作成　
 	phSdk = PHSdkIf::CreateSdk();
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
+	dscene.timeStep = 0.1;
 	dscene.numIteration = 5;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
-	for(int i=0; i<2; i++){
-		for(int j=0; j<2; j++){
-			pose.Pos() = Vec3d(0.2*i, 0.25, 0.2*j);
-			//pose.Pos() = Vec3d(0.0, 0.25, 0.0);
-			robot.Build(j+2*i, pose, scene, phSdk);//	ロボット
-			//robot.Build(0, pose, scene, phSdk);
+	for(int i=0; i<module_max; i++){
+			pose.Pos() = Vec3d(0.3*i, 0.2, 0.0);
+			//pose.Pos() = Vec3d(0.0, 0.2, 0.0);
+			robot[i].Build(pose, scene, phSdk);			//	ロボット
 		}
-	}
 
-	scene->SetGravity(Vec3f(0.0, -20, 0.0));	//	重力を設定
+	//３モジュール直列結合/////////////////////////////////////////////////////////////////////////
+
+	robot[0].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の位置を設定
+	robot[0].leg[0].jntDX1  -> SetSpring(1000);
+	robot[0].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
+	robot[0].leg[0].jntDX2  -> SetSpring(1000);
+	robot[0].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
+	robot[0].leg[0].jntFoot -> SetSpring(1000);
+	robot[1].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));
+	robot[1].leg[0].jntDX1  -> SetSpring(1000);
+	robot[1].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
+	robot[1].leg[0].jntDX2  -> SetSpring(1000);
+	robot[1].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
+	robot[1].leg[0].jntFoot -> SetSpring(1000);
+	robot[2].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));
+	robot[2].leg[0].jntDX1  -> SetSpring(1000);
+	robot[2].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
+	robot[2].leg[0].jntDX2  -> SetSpring(1000);
+	robot[2].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
+	robot[2].leg[0].jntFoot -> SetSpring(1000);
+
+	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//結合部分構築
+	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.0, 0.0);
+	robot[1].leg[0].jntConnect[0] = scene->CreateJoint(robot[0].soBody, robot[1].leg[0].soDX2, Connect)->Cast();
+	robot[1].leg[0].jntConnect[0]->SetSpring(1000);
+	robot[1].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
+	//node_connect = scene->CreateTreeNode(root, robot[1].leg[0].soDX2);
+
+	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//結合部分構築
+	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.0, 0.0);
+	robot[2].leg[0].jntConnect[0] = scene->CreateJoint(robot[1].soBody, robot[2].leg[0].soDX2, Connect)->Cast();
+	//scene->CreateTreeNode(node_connect, robot[2].leg[0].soDX2);
+	robot[2].leg[0].jntConnect[0]->SetSpring(1000);
+	robot[2].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
+
+	///////////////////////////////////////////////////////////////////////////////////////////////
+
+	scene->SetGravity(Vec3f(0.0, -10.0, 0.0));	//	重力を設定
 	
 	//	GLUTの初期化
 	glutInit(&argc, argv);
