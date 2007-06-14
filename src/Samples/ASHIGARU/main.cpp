@@ -161,8 +161,8 @@ void timer(int id){
 int main(int argc, char* argv[]){
 
 	PHHingeJointDesc Connect;
-	//PHTreeNodeIf* node_connect;
-	//PHRootNodeIf* root = scene->CreateRootNode(robot[0].soBody);
+	PHTreeNodeIf* node_connect;
+	PHRootNodeIf* root_connect = scene->CreateRootNode(robot[0].soBody);
 
 	// SDKÇÃçÏê¨Å@
 	phSdk = PHSdkIf::CreateSdk();
@@ -177,14 +177,14 @@ int main(int argc, char* argv[]){
 	CreateFloor();								//	è∞
 	Posed pose;
 	for(int i=0; i<module_max; i++){
-			pose.Pos() = Vec3d(0.2*i, 0.2, 0.0);
+			pose.Pos() = Vec3d(0.3*i, 0.2, 0.0);
 			//pose.Pos() = Vec3d(0.0, 0.2, 0.0);
 			robot[i].Build(pose, scene, phSdk);			//	ÉçÉ{ÉbÉgç\íz
 		}
 
 	//ÇRÉÇÉWÉÖÅ[ÉãíºóÒåãçá/////////////////////////////////////////////////////////////////////////
 
-	//robot[0].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//åãçáãr(leg[0])ÇÃà íuÇê›íË
+	//robot[0].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//åãçáãr(leg[0])ÇÃépê®Çê›íË
 	//robot[0].leg[0].jntDX1  -> SetSpring(1000);
 	//robot[0].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
 	//robot[0].leg[0].jntDX2  -> SetSpring(1000);
@@ -205,18 +205,18 @@ int main(int argc, char* argv[]){
 
 	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//åãçáïîï™ç\íz
 	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	Connect.posePlug.Pos() = Vec3d(0.03, 0.02, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
 	robot[1].leg[0].jntConnect[0] = scene->CreateJoint(robot[0].soBody, robot[1].leg[0].soDX2, Connect)->Cast();
 	robot[1].leg[0].jntConnect[0]->SetSpring(100);
 	robot[1].leg[0].jntConnect[0]->SetDamper(10);
 	robot[1].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
-	//node_connect = scene->CreateTreeNode(root, robot[1].leg[0].soDX2);
+	node_connect = scene->CreateTreeNode(root_connect, robot[1].soBody);
 
 	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//åãçáïîï™ç\íz
 	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	Connect.posePlug.Pos() = Vec3d(0.03, 0.02, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
 	robot[2].leg[0].jntConnect[0] = scene->CreateJoint(robot[1].soBody, robot[2].leg[0].soDX2, Connect)->Cast();
-	//scene->CreateTreeNode(node_connect, robot[2].leg[0].soDX2);
+	scene->CreateTreeNode(node_connect, robot[2].leg[0].soDX2);
 	robot[2].leg[0].jntConnect[0]->SetSpring(100);
 	robot[2].leg[0].jntConnect[0]->SetDamper(10);
 	robot[2].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
