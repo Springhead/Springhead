@@ -208,7 +208,7 @@ int main(int argc, char* argv[]){
 	Connect.posePlug.Pos() = Vec3d(0.03, 0.02, 0.0);
 	robot[1].leg[0].jntConnect[0] = scene->CreateJoint(robot[0].soBody, robot[1].leg[0].soDX2, Connect)->Cast();
 	robot[1].leg[0].jntConnect[0]->SetSpring(100);
-	robot[1].leg[0].jntConnect[0]->SetDamper(100);
+	robot[1].leg[0].jntConnect[0]->SetDamper(10);
 	robot[1].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 	//node_connect = scene->CreateTreeNode(root, robot[1].leg[0].soDX2);
 
@@ -218,7 +218,7 @@ int main(int argc, char* argv[]){
 	robot[2].leg[0].jntConnect[0] = scene->CreateJoint(robot[1].soBody, robot[2].leg[0].soDX2, Connect)->Cast();
 	//scene->CreateTreeNode(node_connect, robot[2].leg[0].soDX2);
 	robot[2].leg[0].jntConnect[0]->SetSpring(100);
-	robot[2].leg[0].jntConnect[0]->SetDamper(100);
+	robot[2].leg[0].jntConnect[0]->SetDamper(10);
 	robot[2].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
