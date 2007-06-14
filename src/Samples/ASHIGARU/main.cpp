@@ -148,7 +148,7 @@ void Keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(100, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	for(int i = 0; i < 1; i++)
 		scene->Step();
@@ -161,7 +161,7 @@ void timer(int id){
 int main(int argc, char* argv[]){
 
 	PHHingeJointDesc Connect;
-	PHTreeNodeIf* node_connect;
+	//PHTreeNodeIf* node_connect;
 	//PHRootNodeIf* root = scene->CreateRootNode(robot[0].soBody);
 
 	// SDKの作成　
@@ -169,7 +169,7 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.1;
+	dscene.timeStep = 0.05;
 	dscene.numIteration = 5;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	
@@ -177,19 +177,19 @@ int main(int argc, char* argv[]){
 	CreateFloor();								//	床
 	Posed pose;
 	for(int i=0; i<module_max; i++){
-			pose.Pos() = Vec3d(0.3*i, 0.2, 0.0);
+			pose.Pos() = Vec3d(0.2*i, 0.2, 0.0);
 			//pose.Pos() = Vec3d(0.0, 0.2, 0.0);
-			robot[i].Build(pose, scene, phSdk);			//	ロボット
+			robot[i].Build(pose, scene, phSdk);			//	ロボット構築
 		}
 
 	//３モジュール直列結合/////////////////////////////////////////////////////////////////////////
 
-	robot[0].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の位置を設定
-	robot[0].leg[0].jntDX1  -> SetSpring(1000);
-	robot[0].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
-	robot[0].leg[0].jntDX2  -> SetSpring(1000);
-	robot[0].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
-	robot[0].leg[0].jntFoot -> SetSpring(1000);
+	//robot[0].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の位置を設定
+	//robot[0].leg[0].jntDX1  -> SetSpring(1000);
+	//robot[0].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
+	//robot[0].leg[0].jntDX2  -> SetSpring(1000);
+	//robot[0].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
+	//robot[0].leg[0].jntFoot -> SetSpring(1000);
 	robot[1].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));
 	robot[1].leg[0].jntDX1  -> SetSpring(1000);
 	robot[1].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
@@ -205,18 +205,20 @@ int main(int argc, char* argv[]){
 
 	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//結合部分構築
 	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	Connect.posePlug.Pos() = Vec3d(0.03, 0.0, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.02, 0.0);
 	robot[1].leg[0].jntConnect[0] = scene->CreateJoint(robot[0].soBody, robot[1].leg[0].soDX2, Connect)->Cast();
-	robot[1].leg[0].jntConnect[0]->SetSpring(1000);
+	robot[1].leg[0].jntConnect[0]->SetSpring(100);
+	robot[1].leg[0].jntConnect[0]->SetDamper(100);
 	robot[1].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 	//node_connect = scene->CreateTreeNode(root, robot[1].leg[0].soDX2);
 
 	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//結合部分構築
 	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	Connect.posePlug.Pos() = Vec3d(0.03, 0.0, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.02, 0.0);
 	robot[2].leg[0].jntConnect[0] = scene->CreateJoint(robot[1].soBody, robot[2].leg[0].soDX2, Connect)->Cast();
 	//scene->CreateTreeNode(node_connect, robot[2].leg[0].soDX2);
-	robot[2].leg[0].jntConnect[0]->SetSpring(1000);
+	robot[2].leg[0].jntConnect[0]->SetSpring(100);
+	robot[2].leg[0].jntConnect[0]->SetDamper(100);
 	robot[2].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
@@ -234,7 +236,7 @@ int main(int argc, char* argv[]){
 	device->Init();
 	render->SetDevice(device);	// デバイスの設定
 
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(100, timer, 0);
 	glutDisplayFunc(Display);
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);

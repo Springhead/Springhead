@@ -115,12 +115,6 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	scene->SetContactMode(soDX1, soDX2, PHSceneDesc::MODE_NONE);
 	scene->SetContactMode(soDX2, soFoot, PHSceneDesc::MODE_NONE);
 											
-											/*scene->SetContactMode(soCrank, soFoot[0], PHSceneDesc::MODE_NONE);
-											scene->SetContactMode(soCrank, soFoot[1], PHSceneDesc::MODE_NONE);
-											scene->SetContactMode(soCrank, soGuide[0], PHSceneDesc::MODE_NONE);
-											scene->SetContactMode(soCrank, soGuide[1], PHSceneDesc::MODE_NONE);
-											scene->SetContactMode(soGuide[0], soFoot[0], PHSceneDesc::MODE_NONE);
-											scene->SetContactMode(soGuide[1], soFoot[1], PHSceneDesc::MODE_NONE);*/
 }
 
 //ロボットを構築
@@ -143,6 +137,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	boxBody = sdk->CreateShape(md)->Cast();
 	
 	PHSolidDesc sd;
+	sd.mass = 0.1;
 	soBody = scene->CreateSolid(sd);
 	soBody->AddShape(boxBody);
 	soBody->SetPose(pose);
@@ -169,14 +164,9 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 		group.push_back(leg[i].soFoot);
 		group.push_back(leg[i].soSphere);
 	}
-	/*for(int i = 0; i < 3; i++){
-		group.push_back(leg[i].soCrank);
-		group.push_back(leg[i].soFoot[0]);
-		group.push_back(leg[i].soFoot[1]);
-		group.push_back(leg[i].soGuide[0]);
-		group.push_back(leg[i].soGuide[1]);
-	}*/
+
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
+
 	for(int i = 0; i < 3; i++){
 		scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soDX2, soBody, PHSceneDesc::MODE_NONE);
@@ -202,26 +192,26 @@ void Robot::Stop(){
 	//leg[3].jntCrank->SetMotorTorque(0);
 }
 void Robot::Forward(){
-	leg[0].jntDX1->SetMotorTorque(-speed);
+	//leg[0].jntDX1->SetMotorTorque(-speed);
 	leg[1].jntDX1->SetMotorTorque(-speed);
 	leg[2].jntDX1->SetMotorTorque(-speed);
-	leg[0].jntDX2->SetMotorTorque(speed);
+	//leg[0].jntDX2->SetMotorTorque(speed);
 	leg[1].jntDX2->SetMotorTorque(speed);
 	leg[2].jntDX2->SetMotorTorque(speed);
-	leg[0].jntFoot->SetMotorTorque(speed);
+	//leg[0].jntFoot->SetMotorTorque(speed);
 	leg[1].jntFoot->SetMotorTorque(speed);
 	leg[2].jntFoot->SetMotorTorque(speed);
 	//leg[3].jntCrank->SetMotorTorque(-speed);
 }
 
 void Robot::Backward(){
-	leg[0].jntDX1->SetMotorTorque(speed);
+	//leg[0].jntDX1->SetMotorTorque(speed);
 	leg[1].jntDX1->SetMotorTorque(speed);
 	leg[2].jntDX1->SetMotorTorque(speed);
-	leg[0].jntDX2->SetMotorTorque(-speed);
+	//leg[0].jntDX2->SetMotorTorque(-speed);
 	leg[1].jntDX2->SetMotorTorque(-speed);
 	leg[2].jntDX2->SetMotorTorque(-speed);
-	leg[0].jntFoot->SetMotorTorque(-speed);
+	//leg[0].jntFoot->SetMotorTorque(-speed);
 	leg[1].jntFoot->SetMotorTorque(-speed);
 	leg[2].jntFoot->SetMotorTorque(-speed);
 	//leg[3].jntCrank->SetMotorTorque(speed);

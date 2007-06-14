@@ -20,21 +20,16 @@ class Robot{
 public:
 	PHSolidIf*	soBody;
 	CDConvexMeshIf*   boxBody;
-	//CDBoxIf*	boxBody;
 
 	class Leg{
 	public:
 		CDBoxIf			*boxFoot, *boxDX1, *boxDX2; //足先のアルミ板、ダイナミクセル１、２、３
 		CDSphereIf		*Sphere;					//足先の球
-		//CDBoxIf			*boxCrank, *boxFoot, *boxGuide;
 		PHSolidIf		*soFoot, *soDX1, *soDX2, *soSphere;
-		//PHSolidIf		*soCrank, *soFoot[2], *soGuide[2];
 		PHHingeJointIf	*jntFoot, *jntDX1, *jntDX2, *jntSphere, *jntConnect[10];
-		//PHHingeJointIf	*jntCrank, *jntFoot[2], *jntFootGuide[2], *jntGuideBody[2];
-		//PHRootNodeIf	*DX2;
 
 		void Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
-		//void Build(PHSolidIf* body, PHHingeJointIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
+
 	};
 
 	Leg	leg[3];
