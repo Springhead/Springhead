@@ -168,16 +168,22 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 
 	for(int i = 0; i < 3; i++){
-		scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
+		/*scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soDX2, soBody, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soFoot, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soSphere, soBody, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[i].soSphere, soBody, PHSceneDesc::MODE_NONE);*/
+		scene->SetContactMode(leg[i].soDX1, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[i].soDX2, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[i].soFoot, PHSceneDesc::MODE_NONE);
+		//scene->SetContactMode(leg[i].soSphere, PHSceneDesc::MODE_NONE);
 	}
+
+	scene->SetContactMode(soBody, PHSceneDesc::MODE_NONE);
 
 	soBody->SetDynamical(true);
 }
 
-const double speed = 20.0;
+const double speed = 60.0;
 
 void Robot::Stop(){
 	leg[0].jntDX1->SetMotorTorque(0);
@@ -193,26 +199,26 @@ void Robot::Stop(){
 }
 void Robot::Forward(){
 	//leg[0].jntDX1->SetMotorTorque(-speed);
-	leg[1].jntDX1->SetMotorTorque(-speed);
-	leg[2].jntDX1->SetMotorTorque(-speed);
+	leg[1].jntDX1->SetMotorTorque(speed);
+	leg[2].jntDX1->SetMotorTorque(speed);
 	//leg[0].jntDX2->SetMotorTorque(speed);
 	leg[1].jntDX2->SetMotorTorque(speed);
-	leg[2].jntDX2->SetMotorTorque(speed);
+	leg[2].jntDX2->SetMotorTorque(-speed);
 	//leg[0].jntFoot->SetMotorTorque(speed);
-	leg[1].jntFoot->SetMotorTorque(speed);
+	leg[1].jntFoot->SetMotorTorque(-speed);
 	leg[2].jntFoot->SetMotorTorque(speed);
 	//leg[3].jntCrank->SetMotorTorque(-speed);
 }
 
 void Robot::Backward(){
 	//leg[0].jntDX1->SetMotorTorque(speed);
-	leg[1].jntDX1->SetMotorTorque(speed);
-	leg[2].jntDX1->SetMotorTorque(speed);
+	leg[1].jntDX1->SetMotorTorque(-speed);
+	leg[2].jntDX1->SetMotorTorque(-speed);
 	//leg[0].jntDX2->SetMotorTorque(-speed);
 	leg[1].jntDX2->SetMotorTorque(-speed);
-	leg[2].jntDX2->SetMotorTorque(-speed);
+	leg[2].jntDX2->SetMotorTorque(speed);
 	//leg[0].jntFoot->SetMotorTorque(-speed);
-	leg[1].jntFoot->SetMotorTorque(-speed);
+	leg[1].jntFoot->SetMotorTorque(speed);
 	leg[2].jntFoot->SetMotorTorque(-speed);
 	//leg[3].jntCrank->SetMotorTorque(speed);
 }
