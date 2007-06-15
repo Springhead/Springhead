@@ -41,6 +41,8 @@ Robot robot[10];
 //vector<Robot> robots;
 
 double zoom = 0.2;
+double shift_LR = 0.1;
+double shift_UD = 0.1;
 
 void CreateFloor(){
 	PHSolidDesc sd;
@@ -60,7 +62,7 @@ void CreateFloor(){
 void Display(){
 	Affinef af;
 	af.Pos() = Vec3f(0, 3.5, 4)*zoom;
-	af.LookAtGL(Vec3f(0.1,0,0.1), Vec3f(0,10,0));
+	af.LookAtGL(Vec3f(shift_LR,0,shift_UD), Vec3f(shift_LR,10,shift_UD));
 	render->SetViewMatrix(af.inv());	//	Ž‹“_‚ÌÝ’è
 	
 	render->ClearBuffer();
@@ -132,6 +134,18 @@ void Keyboard(unsigned char key, int x, int y){
 	case 's':
 		for(int i=0; i<module_max; i++){robot[i].Backward();}
 		break;
+	case 'c':
+		shift_LR += 0.01;
+		break;
+	case 'v':
+		shift_LR -= 0.01;
+		break;
+	case 'k':
+		shift_UD += 0.01;
+		break;
+	case 'm':
+		shift_UD -= 0.01;
+		break;
 	/*case 'd':
 		robot.TurnLeft();
 		break;
@@ -173,7 +187,6 @@ int main(int argc, char* argv[]){
 	dscene.timeStep = 0.05;
 	dscene.numIteration = 5;
 	scene = phSdk->CreateScene(dscene);			// ƒV[ƒ“‚Ìì¬
-	
 	// ƒV[ƒ“‚Ì\’z
 	CreateFloor();								//	°
 	Posed pose;
@@ -188,25 +201,15 @@ int main(int argc, char* argv[]){
 	PHHingeJointDesc Connect;
 	PHTreeNodeIf* node_connect;
 	//PHRootNodeIf* root_connect = scene->CreateRootNode(robot[1].soBody);
-
-	robot[0].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//Œ‹‡‹r(leg[0])‚ÌŽp¨‚ðÝ’è
-	robot[0].leg[0].jntDX1  -> SetSpring(1000);
-	robot[0].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
-	robot[0].leg[0].jntDX2  -> SetSpring(1000);
-	robot[0].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
-	robot[0].leg[0].jntFoot -> SetSpring(1000);
-	robot[1].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));
-	robot[1].leg[0].jntDX1  -> SetSpring(1000);
-	robot[1].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
-	robot[1].leg[0].jntDX2  -> SetSpring(1000);
-	robot[1].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
-	robot[1].leg[0].jntFoot -> SetSpring(1000);
-	/*robot[2].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));
-	robot[2].leg[0].jntDX1  -> SetSpring(1000);
-	robot[2].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
-	robot[2].leg[0].jntDX2  -> SetSpring(1000);
-	robot[2].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
-	robot[2].leg[0].jntFoot -> SetSpring(1000);*/
+	
+	for(int i=0; i<module_max-1; i++){
+		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//Œ‹‡‹r(leg[0])‚ÌŽp¨‚ðÝ’è
+		robot[i].leg[0].jntDX1  -> SetSpring(1000);
+		robot[i].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
+		robot[i].leg[0].jntDX2  -> SetSpring(1000);
+		robot[i].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
+		robot[i].leg[0].jntFoot -> SetSpring(1000);
+	}
 
 	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//Œ‹‡•”•ª‡@\’z
 	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
@@ -219,9 +222,9 @@ int main(int argc, char* argv[]){
 
 	//PHRootNodeIf* root_connect = scene->CreateRootNode(robot[2].soBody);
 
-	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//Œ‹‡•”•ª‡A\’z
+	/*Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');//Œ‹‡•”•ª‡A\’z
 	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
+	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);*/
 	robot[1].leg[0].jntConnect[0] = scene->CreateJoint(robot[2].soBody, robot[1].leg[0].soDX2, Connect)->Cast();
 	//scene->CreateTreeNode(node_connect, robot[1].leg[0].soDX2);
 	robot[1].leg[0].jntConnect[0]->SetSpring(1000);
