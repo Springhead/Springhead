@@ -183,7 +183,7 @@ void timer(int id){
 	glutTimerFunc(100, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	if (stepOnTimer){
-		for(int i = 0; i < 1; i++)
+		for(int i = 0; i < 5; i++)
 			scene->Step();
 		glutPostRedisplay();
 	}
@@ -200,8 +200,9 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.005;
-	dscene.numIteration = 20;
+	dscene.numIteration = 5;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
+	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
@@ -220,7 +221,19 @@ int main(int argc, char* argv[]){
 		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
 		robot[i].leg[2].jntDX1 -> SetSpringOrigin(Rad(-120.0));
 	}
-	
+
+	std::vector<PHSolidIf*> allSolids;
+	for(int i=0; i<module_max; i++){
+		allSolids.push_back(robot[i].soBody);
+		for(int j=0; j<3; ++j){
+			allSolids.push_back(robot[i].leg[j].soDX1);
+			allSolids.push_back(robot[i].leg[j].soDX2);
+			allSolids.push_back(robot[i].leg[j].soFoot);
+			allSolids.push_back(robot[i].leg[j].soSphere);
+		}
+	}
+	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
+
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
 		robot[i].leg[0].jntDX1  -> SetSpring(1000);
@@ -243,7 +256,6 @@ int main(int argc, char* argv[]){
 
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
-	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
 	
 	//	GLUTの初期化
 	glutInit(&argc, argv);
