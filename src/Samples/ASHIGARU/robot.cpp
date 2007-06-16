@@ -190,13 +190,6 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	}*/
 
 	scene->SetContactMode(soBody, PHSceneDesc::MODE_NONE);
-
-	/*static bool bFirst = true;
-	if (bFirst){
-		soBody->SetDynamical(true);
-		bFirst = false;
-	}else
-		soBody->SetDynamical(false);*/
 }
 
 const double speed = 60.0;

@@ -168,6 +168,10 @@ void Keyboard(unsigned char key, int x, int y){
 	case 'd':
 		for(int i=0; i<module_max; i++){robot[i].Stop();}
 		break;
+	case 'o':
+		robot[0].soBody->SetDynamical(true);
+		break;
+
 	default:
 		break;
 	}
@@ -203,6 +207,7 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
+	scene->SetGravity(Vec3f(0.0, 0.0, 0.0));	//	重力を設定
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
