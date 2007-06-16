@@ -249,8 +249,8 @@ int main(int argc, char* argv[]){
 	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX2, Connect)->Cast();
-		robot[i].leg[0].jntConnect[0]->SetSpring(1000);
-		robot[i].leg[0].jntConnect[0]->SetDamper(10);
+		robot[i].leg[0].jntConnect[0]->SetSpring(10);
+		robot[i].leg[0].jntConnect[0]->SetDamper(1);
 		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 	}
 
