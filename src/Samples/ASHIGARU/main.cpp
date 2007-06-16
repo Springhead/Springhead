@@ -199,8 +199,8 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.005;
-	dscene.numIteration = 5;
+	dscene.timeStep = 0.05;
+	dscene.numIteration = 10;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
 	// シーンの構築
@@ -234,13 +234,17 @@ int main(int argc, char* argv[]){
 	}
 	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
 
+	double K = 1, D = 10;
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
-		robot[i].leg[0].jntDX1  -> SetSpring(1000);
+		robot[i].leg[0].jntDX1  -> SetSpring(K);
+		robot[i].leg[0].jntDX1  -> SetDamper(D);
 		robot[i].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
-		robot[i].leg[0].jntDX2  -> SetSpring(1000);
+		robot[i].leg[0].jntDX2  -> SetSpring(K);
+		robot[i].leg[0].jntDX2  -> SetDamper(D);
 		robot[i].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
-		robot[i].leg[0].jntFoot -> SetSpring(1000);
+		robot[i].leg[0].jntFoot -> SetSpring(K);
+		robot[i].leg[0].jntFoot -> SetDamper(D);
 	}
 
 	//結合部分構築
@@ -254,6 +258,7 @@ int main(int argc, char* argv[]){
 		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 	}
 
+	scene->SetContactMode(PHSceneDesc::MODE_NONE);
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
 	

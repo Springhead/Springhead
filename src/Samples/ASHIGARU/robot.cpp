@@ -10,6 +10,11 @@
 
 using namespace std;
 
+void SetMass(PHSolidIf* solid, double m, const Vec3d& sz){
+	solid->SetMass(m);
+	solid->SetInertia(0.33 * m * Matrix3d::Diag(sz.y*sz.y + sz.z*sz.z, sz.x*sz.x + sz.z*sz.z, sz.x*sz.x + sz.y*sz.y));
+}
+
 //ロボットの脚を構築
 void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
 
@@ -28,24 +33,29 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 
 	//部品のソリッドモデルを作成する
 	PHSolidDesc sd;
-	sd.mass = 0.04;//単位Kg??
-	sd.inertia = Matrix3d::Unit() * 0.1;//Unit()は単位行列
+	//sd.mass = 0.04;//単位Kg??
+	//sd.inertia = Matrix3d::Unit() * sd.mass * 0.1;//Unit()は単位行列
 	soFoot = scene->CreateSolid(sd);
+	SetMass(soFoot, 0.4, Vec3d(0.005, 0.12, 0.038));
 	soFoot->AddShape(boxFoot);
-	sd.mass = 0.09;
+	//sd.mass = 0.09;
+	//sd.inertia = Matrix3d::Unit() * sd.mass * 0.1;
 	soDX1 = scene->CreateSolid(sd);
+	SetMass(soDX1, 0.9, Vec3d(0.026, 0.067, 0.032));
 	soDX1->AddShape(boxDX1);
 	soDX2 = scene->CreateSolid(sd);
 	soDX2->AddShape(boxDX2);
-	sd.mass = 0.001;
+	//sd.mass = 0.001;
+	//sd.inertia = Matrix3d::Unit() * sd.mass * 0.1;
 	soSphere = scene->CreateSolid(sd);
+	SetMass(soSphere, 0.01, Vec3d(0.008, 0.008, 0.008));
 	soSphere->AddShape(Sphere);
 
 	PHHingeJointDesc jd;
 	jd.poseSocket = base;
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);//これは何の意味？？変えても何も変化が無い。
 	
-	const double K = 100.0, D = 10.0;
+	const double K = 10.0, D = 10.0;
 	
 	Posed pose;
 	PHTreeNodeIf* node;
@@ -88,10 +98,9 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		jd.posePlug.Pos() = Vec3d(0.0, 0.03, 0.0);
 		jntSphere = scene->CreateJoint(soFoot, soSphere, jd)->Cast();
 		scene->CreateTreeNode(node, soSphere);
-		jntSphere->SetSpring(1000);
-		jntSphere->SetDamper(1000);
+		jntSphere->SetSpring(10);
+		jntSphere->SetDamper(10);
 		jntSphere->SetSpringOrigin(Rad(0.0));
-
 
 
 	//関節の可動範囲を設定
@@ -137,8 +146,10 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	boxBody = sdk->CreateShape(md)->Cast();
 	
 	PHSolidDesc sd;
-	sd.mass = 0.1;
+	//sd.mass = 0.1;
+	//sd.inertia *= 0.01;
 	soBody = scene->CreateSolid(sd);
+	SetMass(soBody, 1, Vec3d(0.1, 0.04, 0.1));
 	soBody->AddShape(boxBody);
 	soBody->SetPose(pose);
 	soBody->SetDynamical(false);
@@ -158,7 +169,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	vector<PHSolidIf*> group;
 	group.push_back(soBody);
 
-	for(int i = 0; i < 3; i++){
+	/*for(int i = 0; i < 3; i++){
 		group.push_back(leg[i].soDX1);
 		group.push_back(leg[i].soDX2);
 		group.push_back(leg[i].soFoot);
@@ -168,24 +179,24 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 
 	for(int i = 0; i < 3; i++){
-		/*scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
+		scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soDX2, soBody, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soFoot, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soSphere, soBody, PHSceneDesc::MODE_NONE);*/
+		scene->SetContactMode(leg[i].soSphere, soBody, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soDX1, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soDX2, PHSceneDesc::MODE_NONE);
 		scene->SetContactMode(leg[i].soFoot, PHSceneDesc::MODE_NONE);
 		//scene->SetContactMode(leg[i].soSphere, PHSceneDesc::MODE_NONE);
-	}
+	}*/
 
 	scene->SetContactMode(soBody, PHSceneDesc::MODE_NONE);
 
-	static bool bFirst = true;
+	/*static bool bFirst = true;
 	if (bFirst){
 		soBody->SetDynamical(true);
 		bFirst = false;
 	}else
-		soBody->SetDynamical(false);
+		soBody->SetDynamical(false);*/
 }
 
 const double speed = 60.0;
