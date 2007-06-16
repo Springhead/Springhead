@@ -32,6 +32,8 @@
 	field->offset = int((char*)&(pPHJoint1DDesc->origin) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "damper", "");
 	field->offset = int((char*)&(pPHJoint1DDesc->damper) - (char*)pPHJoint1DDesc);
+	field = desc->AddField("", "double", "desiredVelocity", "");
+	field->offset = int((char*)&(pPHJoint1DDesc->desiredVelocity) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "torque", "");
 	field->offset = int((char*)&(pPHJoint1DDesc->torque) - (char*)pPHJoint1DDesc);
 	db->RegisterDesc(desc);

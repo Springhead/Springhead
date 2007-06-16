@@ -29,7 +29,7 @@
 using namespace Spr;
 
 #define ESC		27
-#define module_max 3
+#define module_max 2
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
@@ -43,6 +43,9 @@ Robot robot[10];
 double zoom = 0.2;
 double shift_LR = 0.1;
 double shift_UD = 0.1;
+
+bool stepOnTimer = false;
+
 
 void CreateFloor(){
 	PHSolidDesc sd;
@@ -127,12 +130,22 @@ void Keyboard(unsigned char key, int x, int y){
 		break;
 	case 'z':
 		zoom -= 0.01;
+		glutPostRedisplay();
 		break;
 	case 'x':
 		zoom += 0.01;
+		glutPostRedisplay();
 		break;
 	case 's':
 		for(int i=0; i<module_max; i++){if(i==1)robot[i].Backward();else robot[i].Forward();}
+		break;
+	case 't':
+		stepOnTimer = !stepOnTimer;
+		break;
+	case 'p':
+		stepOnTimer = false;
+		scene->Step();
+		glutPostRedisplay();
 		break;
 	case 'c':
 		shift_LR += 0.01;
@@ -169,9 +182,11 @@ void Keyboard(unsigned char key, int x, int y){
 void timer(int id){
 	glutTimerFunc(100, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
-	for(int i = 0; i < 1; i++)
-		scene->Step();
-	glutPostRedisplay();
+	if (stepOnTimer){
+		for(int i = 0; i < 1; i++)
+			scene->Step();
+		glutPostRedisplay();
+	}
 }
 
 /**
@@ -184,8 +199,8 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.05;
-	dscene.numIteration = 5;
+	dscene.timeStep = 0.005;
+	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	// シーンの構築
 	CreateFloor();								//	床
@@ -200,8 +215,6 @@ int main(int argc, char* argv[]){
 	//３モジュール直列結合/////////////////////////////////////////////////////////////////////////
 
 	PHHingeJointDesc Connect;
-	//PHTreeNodeIf* node_connect;
-	//PHRootNodeIf* root_connect = scene->CreateRootNode(robot[1].soBody);
 
 	for(int i=0; i<module_max; i++){
 		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
