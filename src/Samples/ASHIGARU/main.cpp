@@ -220,7 +220,7 @@ int main(int argc, char* argv[]){
 
 	//‚Rƒ‚ƒWƒ…[ƒ‹’¼—ñŒ‹‡/////////////////////////////////////////////////////////////////////////
 
-	PHHingeJointDesc Connect;
+	PHHingeJointDesc jdConnect;
 
 	for(int i=0; i<module_max; i++){
 		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
@@ -234,7 +234,6 @@ int main(int argc, char* argv[]){
 			allSolids.push_back(robot[i].leg[j].soDX1);
 			allSolids.push_back(robot[i].leg[j].soDX2);
 			allSolids.push_back(robot[i].leg[j].soFoot);
-			allSolids.push_back(robot[i].leg[j].soSphere);
 		}
 	}
 	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
@@ -253,14 +252,14 @@ int main(int argc, char* argv[]){
 	}
 
 	//Œ‹‡•”•ª\’z
-	Connect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');
-	Connect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
+	jdConnect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
 	for(int i=0; i<module_max-1; i++){
-		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX2, Connect)->Cast();
+		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX2, jdConnect)->Cast();
 		robot[i].leg[0].jntConnect[0]->SetSpring(K);
 		robot[i].leg[0].jntConnect[0]->SetDamper(D);
-		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
+		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(0.0));
 	}
 	
 	//	GLUT‚Ì‰Šú‰»

@@ -28,7 +28,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	boxDX2 = sdk->CreateShape(bd)->Cast();
 
 	CDSphereDesc sp;						//足先の球
-	sp.radius = 0.008;
+	sp.radius = 0.008f;
 	Sphere = sdk->CreateShape(sp)->Cast();
 
 	//部品のソリッドモデルを作成する
@@ -55,7 +55,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	jd.poseSocket = base;
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);//これは何の意味？？変えても何も変化が無い。
 	
-	const double K = 10.0, D = 10.0;
+	const double K = 100.0, D = 10.0;
 	
 	Posed pose;
 	PHTreeNodeIf* node;
@@ -87,19 +87,18 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		jd.poseSocket.Pos() = Vec3d(0.0, -0.04, 0.0);
 		jd.posePlug.Pos() = Vec3d(0.0, 0.05, 0.0);
 		jntFoot = scene->CreateJoint(soDX2, soFoot, jd)->Cast();
-		//scene->CreateTreeNode(node, soFoot);
 		jntFoot->SetSpring(K);
 		jntFoot->SetDamper(D);
 		jntFoot->SetSpringOrigin(Rad(30.0));
 		node = scene->CreateTreeNode(node, soFoot);
 
 		jd.poseSocket.Ori() = Quaterniond();
-		//jd.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+		jd.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 		jd.posePlug.Pos() = Vec3d(0.0, 0.03, 0.0);
 		jntSphere = scene->CreateJoint(soFoot, soSphere, jd)->Cast();
-		scene->CreateTreeNode(node, soSphere);
-		jntSphere->SetSpring(10);
-		jntSphere->SetDamper(10);
+		node = scene->CreateTreeNode(node, soSphere);
+		jntSphere->SetSpring(K);
+		jntSphere->SetDamper(D);
 		jntSphere->SetSpringOrigin(Rad(0.0));
 
 
@@ -107,17 +106,6 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	//jntDX1->SetRange(Rad(-150.0),Rad(-30.0));			//<-何故かこの１行を入れると初期描画がうまくいかない。なんで？？
 	//jntDX2->SetRange(Rad(-10.0),Rad(10.0));
 	//jntFoot->SetRange(Rad(-10.0),Rad(10.0));
-
-	// しばしお待ちあれ
-	double dt = scene->GetTimeStep();
-	double T = 0.3;
-	for(double t = 0.0; t < T; t+=dt)
-		scene->Step();
-
-	// バネ解除
-	//jntDX1->SetSpring(0.0);
-	//jntDX2->SetSpring(0.0);
-	//jntFoot->SetSpring(0.0);
 
 	soFoot->SetDynamical(true);
 
