@@ -43,7 +43,7 @@ public:
 	SpatialMatrix		T[2];
 	
 	SpatialVector f;				///< S‘©—Í‚Ì—ÍÏ
-	SpatialVector F;
+	SpatialVector F;				///< S‘©Œë·‚ðˆÊ’u‚ÌLCP‚Å•â³‚·‚éê‡‚Ì•â³—Ê*Ž¿—Ê
 	
 	SpatialVector b, db, B;			///< LCP‚ÌbƒxƒNƒgƒ‹‚Æ‚»‚Ì•â³—Ê
 	SpatialVector A, dA, Ainv;		///< LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚Æ‚»‚Ì•â³—ÊC‹t”

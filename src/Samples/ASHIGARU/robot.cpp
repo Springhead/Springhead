@@ -168,28 +168,13 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	
 	vector<PHSolidIf*> group;
 	group.push_back(soBody);
-
-	/*for(int i = 0; i < 3; i++){
+	for(int i = 0; i < 3; i++){
 		group.push_back(leg[i].soDX1);
 		group.push_back(leg[i].soDX2);
 		group.push_back(leg[i].soFoot);
 		group.push_back(leg[i].soSphere);
 	}
-
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
-
-	for(int i = 0; i < 3; i++){
-		scene->SetContactMode(leg[i].soDX1, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soDX2, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soFoot, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soSphere, soBody, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soDX1, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soDX2, PHSceneDesc::MODE_NONE);
-		scene->SetContactMode(leg[i].soFoot, PHSceneDesc::MODE_NONE);
-		//scene->SetContactMode(leg[i].soSphere, PHSceneDesc::MODE_NONE);
-	}*/
-
-	scene->SetContactMode(soBody, PHSceneDesc::MODE_NONE);
 }
 
 const double speed = 60.0;

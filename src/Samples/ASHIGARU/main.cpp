@@ -170,6 +170,7 @@ void Keyboard(unsigned char key, int x, int y){
 		break;
 	case 'o':
 		robot[0].soBody->SetDynamical(true);
+		robot[1].soBody->SetDynamical(true);
 		break;
 
 	default:
@@ -204,10 +205,9 @@ int main(int argc, char* argv[]){
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
-	dscene.numIteration = 10;
+	dscene.numIteration = 5;
 	scene = phSdk->CreateScene(dscene);			// シーンの作成
 	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
-	scene->SetGravity(Vec3f(0.0, 0.0, 0.0));	//	重力を設定
 	// シーンの構築
 	CreateFloor();								//	床
 	Posed pose;
@@ -239,7 +239,7 @@ int main(int argc, char* argv[]){
 	}
 	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
 
-	double K = 1, D = 10;
+	double K = 100, D = 100;
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
 		robot[i].leg[0].jntDX1  -> SetSpring(K);
@@ -258,14 +258,10 @@ int main(int argc, char* argv[]){
 	Connect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX2, Connect)->Cast();
-		robot[i].leg[0].jntConnect[0]->SetSpring(10);
-		robot[i].leg[0].jntConnect[0]->SetDamper(1);
+		robot[i].leg[0].jntConnect[0]->SetSpring(K);
+		robot[i].leg[0].jntConnect[0]->SetDamper(D);
 		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(180.0));
 	}
-
-	scene->SetContactMode(PHSceneDesc::MODE_NONE);
-	///////////////////////////////////////////////////////////////////////////////////////////////
-
 	
 	//	GLUTの初期化
 	glutInit(&argc, argv);
