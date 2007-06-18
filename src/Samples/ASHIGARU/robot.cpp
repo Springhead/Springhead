@@ -94,7 +94,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 
 		jd.poseSocket.Ori() = Quaterniond();
 		jd.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-		jd.posePlug.Pos() = Vec3d(0.0, 0.03, 0.0);
+		jd.posePlug.Pos() = Vec3d(0.0, 0.07, 0.0);
 		jntSphere = scene->CreateJoint(soFoot, soSphere, jd)->Cast();
 		node = scene->CreateTreeNode(node, soSphere);
 		jntSphere->SetSpring(K);
@@ -165,7 +165,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 }
 
-const double speed = 60.0;
+const double speed = 20.0;
 
 void Robot::Stop(){
 	leg[0].jntDX1->SetMotorTorque(0);
