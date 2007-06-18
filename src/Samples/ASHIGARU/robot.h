@@ -20,6 +20,8 @@ class Robot{
 public:
 	PHSolidIf*	soBody;
 	CDConvexMeshIf*   boxBody;
+	PHRootNodeIf* root;
+	PHHingeJointIf* jntConnect;
 
 	class Leg{
 	public:
@@ -28,13 +30,15 @@ public:
 		PHSolidIf		*soFoot, *soDX1, *soDX2, *soSphere;
 		PHHingeJointIf	*jntFoot, *jntDX1, *jntDX2, *jntSphere, *jntConnect[10];
 
-		void Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
+		void Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
+		void Build_node(PHSolidIf* body, PHTreeNodeIf* node_body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
 
 	};
 
 	Leg	leg[3];
 
-	void Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
+	void Build_root(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
+	void Build_node(PHSolidIf* pre_body, PHTreeNodeIf* node, const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
 	void Stop();
 	void Forward();
 	void Backward();

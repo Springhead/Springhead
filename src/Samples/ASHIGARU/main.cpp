@@ -32,7 +32,7 @@ using namespace Spr;
 //<<<<<<< .mine
 //#define module_max 9
 //=======
-#define module_max 2
+#define module_max 1
 //>>>>>>> .r2499
 
 UTRef<PHSdkIf> phSdk;			// SDK
@@ -173,8 +173,11 @@ void Keyboard(unsigned char key, int x, int y){
 		for(int i=0; i<module_max; i++){robot[i].Stop();}
 		break;
 	case 'o':
-		robot[0].soBody->SetDynamical(true);
-		robot[1].soBody->SetDynamical(true);
+		for(int i=0; i<module_max; i++){
+			robot[i].soBody->SetDynamical(true);
+		}
+		//robot[0].soBody->SetDynamical(true);
+		//robot[1].soBody->SetDynamical(true);
 		break;
 
 	default:
@@ -214,17 +217,23 @@ int main(int argc, char* argv[]){
 	scene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
 	// シーンの構築
 	CreateFloor();								//	床
+
+	PHTreeNodeIf* node_Connect;
 	Posed pose;
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
-	for(int i=0; i<module_max; i++){
+	pose.Pos() = Vec3d(0.0, 0.15, 0.0);
+	robot[0].Build_root(pose, scene, phSdk);	//	ルートモジュール構築
+
+	//node_Connect = scene->CreateTreeNode(robot[0].root, robot[1].soBody);
+
+	/*for(int i=1; i<module_max; i++){
 			pose.Pos() = Vec3d(0.2*i, 0.2, 0.0);
-			//pose.Pos() = Vec3d(0.0, 0.2, 0.0);
-			robot[i].Build(pose, scene, phSdk);			//	ロボット構築
-		}
+			robot[i].Build_node(node_Connect, pose, scene, phSdk);			//	ノードモジュール構築
+		}*/
 
 	//３モジュール直列結合/////////////////////////////////////////////////////////////////////////
 
-	PHHingeJointDesc jdConnect;
+	//PHHingeJointDesc jdConnect;
 
 	for(int i=0; i<module_max; i++){
 		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
@@ -256,16 +265,16 @@ int main(int argc, char* argv[]){
 	}
 
 	//結合部分構築
-	jdConnect.poseSocket.Ori() = Quaterniond::Rot(Rad(90.0), 'x');
+	/*jdConnect.poseSocket.Ori() = Quaterniond();
 	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jdConnect.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	for(int i=0; i<module_max-1; i++){
 		//robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX1, jdConnect)->Cast();
-		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i].leg[0].soDX1, robot[i+1].soBody, jdConnect)->Cast();
-		robot[i].leg[0].jntConnect[0]->SetSpring(10*K);
+		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i].soBody, robot[i+1].soBody, jdConnect)->Cast();
+		robot[i].leg[0].jntConnect[0]->SetSpring(K);
 		robot[i].leg[0].jntConnect[0]->SetDamper(D);
 		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(0.0));
-	}
+	}*/
 	
 	//	GLUTの初期化
 	glutInit(&argc, argv);
