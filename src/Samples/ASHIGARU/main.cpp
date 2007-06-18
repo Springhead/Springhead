@@ -29,7 +29,11 @@
 using namespace Spr;
 
 #define ESC		27
+//<<<<<<< .mine
+//#define module_max 9
+//=======
 #define module_max 2
+//>>>>>>> .r2499
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
@@ -241,8 +245,8 @@ int main(int argc, char* argv[]){
 	double K = 100, D = 100;
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//åãçáãr(leg[0])ÇÃépê®Çê›íË
-		robot[i].leg[0].jntDX1  -> SetSpring(K);
-		robot[i].leg[0].jntDX1  -> SetDamper(D);
+		robot[i].leg[0].jntDX1  -> SetSpring(10*K);
+		robot[i].leg[0].jntDX1  -> SetDamper(0);
 		robot[i].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
 		robot[i].leg[0].jntDX2  -> SetSpring(K);
 		robot[i].leg[0].jntDX2  -> SetDamper(D);
@@ -252,12 +256,13 @@ int main(int argc, char* argv[]){
 	}
 
 	//åãçáïîï™ç\íz
-	jdConnect.poseSocket.Ori() = Quaterniond::Rot(Rad(60.0), 'y');
+	jdConnect.poseSocket.Ori() = Quaterniond::Rot(Rad(90.0), 'x');
 	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	jdConnect.posePlug.Pos() = Vec3d(0.03, 0.025, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	for(int i=0; i<module_max-1; i++){
-		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX2, jdConnect)->Cast();
-		robot[i].leg[0].jntConnect[0]->SetSpring(K);
+		//robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX1, jdConnect)->Cast();
+		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i].leg[0].soDX1, robot[i+1].soBody, jdConnect)->Cast();
+		robot[i].leg[0].jntConnect[0]->SetSpring(10*K);
 		robot[i].leg[0].jntConnect[0]->SetDamper(D);
 		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(0.0));
 	}
