@@ -37,7 +37,8 @@ void PHHingeJoint::CompBias(){
 	//	本来速度をその都度修正しているので、PD制御ではないのだけど、
 	//	shrinkRatio が高い場合、拘束力が残るため、Dを入れると安定化する。
 	//	tazz 追記．要するに現在の誤差ではなく次時刻の予測誤差を0にするようにする
-	db.v() = (Xjrel.r * dtinv/* + vjrel.v()*/);
+	db.v() = (Xjrel.r * dtinv + vjrel.v());
+	//	DSTR << "db.v: " << db.v() << std::endl;
 	//古い方法：不安定
 	//db.w() = (Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv)/* + vjrel.w()*/);
 	//db.w().z = 0.0;
