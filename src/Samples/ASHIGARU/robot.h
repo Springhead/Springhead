@@ -31,14 +31,14 @@ public:
 		PHHingeJointIf	*jntFoot, *jntDX1, *jntDX2, *jntSphere, *jntConnect[10];
 
 		void Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
-		void Build_node(PHSolidIf* body, PHTreeNodeIf* node_body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
+		//void Build_Tree(PHSolidIf* body, PHTreeNodeIf* node_body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
 
 	};
 
 	Leg	leg[3];
 
 	void Build_root(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
-	void Build_node(PHSolidIf* pre_body, PHTreeNodeIf* node, const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
+	void Build_Tree(PHSolidIf* pre_body, PHRootNodeIf* root_node, const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk);
 	void Stop();
 	void Forward();
 	void Backward();

@@ -32,7 +32,7 @@ using namespace Spr;
 //<<<<<<< .mine
 //#define module_max 9
 //=======
-#define module_max 1
+#define module_max 2
 //>>>>>>> .r2499
 
 UTRef<PHSdkIf> phSdk;			// SDK
@@ -130,7 +130,8 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		for(int i=0; i<module_max; i++){if(i==1)robot[i].Forward();else robot[i].Backward();}
+		for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Forward();else robot[i].Backward();}
+		//for(int i=0; i<module_max; i++){robot[i].Forward();}
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -141,7 +142,8 @@ void Keyboard(unsigned char key, int x, int y){
 		glutPostRedisplay();
 		break;
 	case 's':
-		for(int i=0; i<module_max; i++){if(i==1)robot[i].Backward();else robot[i].Forward();}
+		for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Backward();else robot[i].Forward();}
+		//for(int i=0; i<module_max; i++){robot[i].Backward();}
 		break;
 	case 't':
 		stepOnTimer = !stepOnTimer;
@@ -179,7 +181,6 @@ void Keyboard(unsigned char key, int x, int y){
 		//robot[0].soBody->SetDynamical(true);
 		//robot[1].soBody->SetDynamical(true);
 		break;
-
 	default:
 		break;
 	}
@@ -195,7 +196,7 @@ void timer(int id){
 	glutTimerFunc(100, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	if (stepOnTimer){
-		for(int i = 0; i < 5; i++)
+		for(int i = 0; i < 1; i++)
 			scene->Step();
 		glutPostRedisplay();
 	}
@@ -218,11 +219,18 @@ int main(int argc, char* argv[]){
 	// シーンの構築
 	CreateFloor();								//	床
 
-	PHTreeNodeIf* node_Connect;
+//	PHTreeNodeIf* node_Connect;
 	Posed pose;
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
-	pose.Pos() = Vec3d(0.0, 0.15, 0.0);
+	pose.Pos() = Vec3d(0.0, 0.17, 0.0);
 	robot[0].Build_root(pose, scene, phSdk);	//	ルートモジュール構築
+	pose.Pos() = Vec3d(0.18, 0.17, 0.0);
+	robot[1].Build_Tree(robot[0].soBody, robot[0].root, pose, scene, phSdk);
+
+	/*for(int i=0; i<module_max; i++){
+		pose.Pos() = Vec3d(0.3*i, 0.15, 0.0);
+		robot[i].Build_root(pose, scene, phSdk);
+	}*/
 
 	//node_Connect = scene->CreateTreeNode(robot[0].root, robot[1].soBody);
 
@@ -235,12 +243,12 @@ int main(int argc, char* argv[]){
 
 	//PHHingeJointDesc jdConnect;
 
-	for(int i=0; i<module_max; i++){
+	/*for(int i=0; i<module_max; i++){
 		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
 		robot[i].leg[2].jntDX1 -> SetSpringOrigin(Rad(-120.0));
-	}
+	}*/
 
-	std::vector<PHSolidIf*> allSolids;
+	/*std::vector<PHSolidIf*> allSolids;
 	for(int i=0; i<module_max; i++){
 		allSolids.push_back(robot[i].soBody);
 		for(int j=0; j<3; ++j){
@@ -249,20 +257,20 @@ int main(int argc, char* argv[]){
 			allSolids.push_back(robot[i].leg[j].soFoot);
 		}
 	}
-	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);*/
 
-	double K = 100, D = 100;
+	/*double K = 100, D = 100;
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
-		robot[i].leg[0].jntDX1  -> SetSpring(10*K);
-		robot[i].leg[0].jntDX1  -> SetDamper(0);
+		robot[i].leg[0].jntDX1  -> SetSpring(K);
+		robot[i].leg[0].jntDX1  -> SetDamper(D);
 		robot[i].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
 		robot[i].leg[0].jntDX2  -> SetSpring(K);
 		robot[i].leg[0].jntDX2  -> SetDamper(D);
 		robot[i].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
 		robot[i].leg[0].jntFoot -> SetSpring(K);
 		robot[i].leg[0].jntFoot -> SetDamper(D);
-	}
+	}*/
 
 	//結合部分構築
 	/*jdConnect.poseSocket.Ori() = Quaterniond();
