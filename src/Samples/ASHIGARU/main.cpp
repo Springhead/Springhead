@@ -133,14 +133,10 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		for(int i=0; i<module_max; i++){robot[i].Forward();}
-		//robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
-		//robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
+		NowTime += 0.05;
 		break;
 	case 's':
-		for(int i=0; i<module_max; i++){robot[i].Backward();}
-		//robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
-		//robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
+		NowTime -= 0.05;
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -163,12 +159,6 @@ void Keyboard(unsigned char key, int x, int y){
 		break;
 	case 'v':
 		shift_LR -= 0.01;
-		break;
-	case 'k':
-		NowTime += 0.05;
-		break;
-	case 'm':
-		NowTime -= 0.05;
 		break;
 	case 'o':
 		for(int i=0; i<module_max; i++){
