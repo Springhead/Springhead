@@ -44,7 +44,7 @@ double zoom = 0.2;
 double shift_LR = 0.1;
 double shift_UD = 0.1;
 
-double para_X1 = 0.11, para_a1 = 0.05, para_b1 = 0.07, para_H1 = 0.17;
+double para_X1 = 0.11, para_a1 = 0.03, para_b1 = 0.07, para_H1 = 0.17;
 double	L1 = 0.067, L2 = 0.067, L3 = 0.12;	// 関節間長さ
 
 double			NowTime = 0.0;	// 時間
@@ -170,9 +170,6 @@ void Keyboard(unsigned char key, int x, int y){
 	case 'm':
 		NowTime -= 0.05;
 		break;
-	case 'd':
-		for(int i=0; i<module_max; i++){robot[i].Stop();}
-		break;
 	case 'o':
 		for(int i=0; i<module_max; i++){
 			robot[i].soBody->SetDynamical(true);
@@ -213,38 +210,37 @@ void timer(int id){
 		Phase = (2 * PI / CycleTime) * NowTime;
 	
 		for(int module_num=0; module_num<module_max; module_num++){
-				for(int leg_num = 1; leg_num < 3; leg_num++){
-				double	PhaseTemp;
-				PhaseTemp = Phase + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
-				//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num];
-				//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
-				//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0;
+			for(int leg_num = 1; leg_num < 3; leg_num++){
+			double	PhaseTemp;
+			PhaseTemp = Phase + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
+			//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num];
+			//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
+			//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0;
 
-				// 足先軌道の計算（楕円軌道）
-				double	xx = para_X1;
-				//double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
-				double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp);
-				//double	yy = pow(-1, module_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
-				//double	yy = para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
-				double	zz;
-					if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
-					//if(sin(PhaseTemp[module_num * 2 + leg_num]) < 0.0)	zz = - para_H1;
-					else zz = para_b1 * sin(PhaseTemp) - para_H1;
-					//else zz = para_b1 * sin(PhaseTemp[module_num * 2 + leg_num]) - para_H1;
+			// 足先軌道の計算（楕円軌道）
+			double	xx = para_X1;
+			//double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
+			double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp);
+			//double	yy = pow(-1, module_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
+			//double	yy = para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
+			double	zz;
+				if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
+				//if(sin(PhaseTemp[module_num * 2 + leg_num]) < 0.0)	zz = - para_H1;
+				else zz = para_b1 * sin(PhaseTemp) - para_H1;
+				//else zz = para_b1 * sin(PhaseTemp[module_num * 2 + leg_num]) - para_H1;
 
-				// 各関節角度の計算
-				double	theta1 = CalcTheta1(xx, yy);
-				if(leg_num)theta1 += pow(-1, leg_num) * PI / 6.0;
-				double	theta2 = CalcTheta2(xx, yy, zz, L1, L2, L3);
-				double	theta3 = CalcTheta3(xx, yy, zz, L1, L2, L3);
+			// 各関節角度の計算
+			double	theta1 = CalcTheta1(xx, yy);
+			if(leg_num)theta1 += pow(-1, leg_num) * PI / 6.0;
+			double	theta2 = CalcTheta2(xx, yy, zz, L1, L2, L3);
+			double	theta3 = CalcTheta3(xx, yy, zz, L1, L2, L3);
 
-				// グラフィック表示のために各値をセット
-				robot[module_num].leg[leg_num].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-				robot[module_num].leg[leg_num].jntDX2  ->  SetSpringOrigin(-theta2);
-				robot[module_num].leg[leg_num].jntFoot ->  SetSpringOrigin(-theta3);
+			// グラフィック表示のために各値をセット
+			robot[module_num].leg[leg_num].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
+			robot[module_num].leg[leg_num].jntDX2  ->  SetSpringOrigin(-theta2);
+			robot[module_num].leg[leg_num].jntFoot ->  SetSpringOrigin(-theta3);
 			}
 		}
-
 		glutPostRedisplay();
 	}
 }

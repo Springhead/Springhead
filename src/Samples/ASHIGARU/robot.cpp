@@ -313,19 +313,6 @@ void Robot::Build_Tree(PHSolidIf* pre_body, PHRootNodeIf* root_node, const Posed
 	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);*/
 }
 
-//const double speed = 5.0;
-
-void Robot::Stop(){
-	/*leg[0].jntDX1->SetMotorTorque(0);
-	leg[1].jntDX1->SetMotorTorque(0);
-	leg[2].jntDX1->SetMotorTorque(0);
-	leg[0].jntDX2->SetMotorTorque(0);
-	leg[1].jntDX2->SetMotorTorque(0);
-	leg[2].jntDX2->SetMotorTorque(0);
-	leg[0].jntFoot->SetMotorTorque(0);
-	leg[1].jntFoot->SetMotorTorque(0);
-	leg[2].jntFoot->SetMotorTorque(0);*/
-}
 void Robot::Forward(){
 
 	//leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
