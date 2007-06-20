@@ -100,12 +100,6 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 		jntSphere->SetDamper(D);
 		jntSphere->SetSpringOrigin(Rad(0.0));
 
-
-	//ŠÖß‚Ì‰Â“®”ÍˆÍ‚ðÝ’è
-	//jntDX1->SetRange(Rad(-150.0),Rad(-30.0));			//<-‰½ŒÌ‚©‚±‚Ì‚Ps‚ð“ü‚ê‚é‚Æ‰Šú•`‰æ‚ª‚¤‚Ü‚­‚¢‚©‚È‚¢B‚È‚ñ‚ÅHH
-	//jntDX2->SetRange(Rad(-10.0),Rad(10.0));
-	//jntFoot->SetRange(Rad(-10.0),Rad(10.0));
-
 	// ‚µ‚Î‚µ‚¨‘Ò‚¿‚ ‚ê
 	/*double dt = scene->GetTimeStep();
 	double T = 0.3;
@@ -371,17 +365,3 @@ void Robot::Backward(){
 	//leg[1].jntFoot->SetMotorTorque(-speed);
 	//leg[2].jntFoot->SetMotorTorque(-speed);
 }
-
-/*void Robot::TurnLeft(){
-	leg[0].jntCrank->SetMotorTorque(speed);
-	leg[1].jntCrank->SetMotorTorque(-speed);
-	leg[2].jntCrank->SetMotorTorque(-speed);
-	//leg[3].jntCrank->SetMotorTorque(speed);
-}
-
-void Robot::TurnRight(){
-	leg[0].jntCrank->SetMotorTorque(-speed);
-	leg[1].jntCrank->SetMotorTorque(speed);
-	leg[2].jntCrank->SetMotorTorque(speed);
-	//leg[3].jntCrank->SetMotorTorque(-speed);
-}*/

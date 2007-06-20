@@ -5,10 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/**
- Springhead2/src/Samples/Vehicles/main.cpp
+/*
+ Springhead2/src/Samples/ASHIGARU/main.cpp
 
-【概要】Springhead2の総合的なデモ第１段．8足ロボットの歩行
+【概要】３脚モジュラーロボットASHIGARUの歩容生成シミュレータ
  
 【仕様】
 
@@ -37,8 +37,7 @@ UTRef<PHSceneIf> scene;			// Scene
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
 
-Robot robot[10];
-//vector<Robot> robots;
+Robot robot[10];//とりあえずASHIGARU最大１０体
 
 double zoom = 0.2;
 double shift_LR = 0.1;
@@ -125,10 +124,14 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		//for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Forward();else robot[i].Backward();}
 		for(int i=0; i<module_max; i++){robot[i].Forward();}
 		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
 		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
+		break;
+	case 's':
+		for(int i=0; i<module_max; i++){robot[i].Backward();}
+		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
+		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -137,12 +140,6 @@ void Keyboard(unsigned char key, int x, int y){
 	case 'x':
 		zoom += 0.01;
 		glutPostRedisplay();
-		break;
-	case 's':
-		//for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Backward();else robot[i].Forward();}
-		for(int i=0; i<module_max; i++){robot[i].Backward();}
-		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
-		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
 		break;
 	case 't':
 		stepOnTimer = !stepOnTimer;
@@ -171,8 +168,6 @@ void Keyboard(unsigned char key, int x, int y){
 		for(int i=0; i<module_max; i++){
 			robot[i].soBody->SetDynamical(true);
 		}
-		//robot[0].soBody->SetDynamical(true);
-		//robot[1].soBody->SetDynamical(true);
 		break;
 	default:
 		break;
@@ -186,7 +181,7 @@ void Keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
-	glutTimerFunc(100, timer, 0);
+	glutTimerFunc(50, timer, 0);
 	/// 時刻のチェックと画面の更新を行う
 	if (stepOnTimer){
 		for(int i = 0; i < 1; i++)
@@ -212,25 +207,15 @@ int main(int argc, char* argv[]){
 	// シーンの構築
 	CreateFloor();								//	床
 
-//	PHTreeNodeIf* node_Connect;
 	Posed pose;
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
-	/*pose.Pos() = Vec3d(0.0, 0.17, 0.0);
-	robot[0].Build_root(pose, scene, phSdk);	//	ルートモジュール構築
-	pose.Pos() = Vec3d(0.18, 0.17, 0.0);
-	robot[1].Build_Tree(robot[0].soBody, robot[0].root, pose, scene, phSdk);  //	ツリーモジュール構築
-	pose.Pos() = Vec3d(0.36, 0.17, 0.0);
-	robot[2].Build_Tree(robot[1].soBody, robot[0].root, pose, scene, phSdk);
-	pose.Pos() = Vec3d(0.54, 0.17, 0.0);
-	robot[3].Build_Tree(robot[2].soBody, robot[0].root, pose, scene, phSdk);*/
-
 	for(int i=0; i<module_max; i++){
 		pose.Pos() = Vec3d(0.3*i, 0.17, 0.0);
 		robot[i].Build_root(pose, scene, phSdk);
 	}
 
 
-//////３モジュール直列結合/////////////////////////////////////////////////////////////////////////
+//////モジュール直列結合構築/////////////////////////////////////////////////////////////////////////
 
 	PHHingeJointDesc jdConnect;
 
