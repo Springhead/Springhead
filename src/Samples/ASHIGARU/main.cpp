@@ -22,6 +22,7 @@
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <GL/glut.h>
 #include "robot.h"
+#include "myheader.h"	// 自作関数，構造体
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -29,7 +30,7 @@
 using namespace Spr;
 
 #define ESC		27
-#define module_max 6
+#define module_max 5
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
@@ -42,6 +43,14 @@ Robot robot[10];//とりあえずASHIGARU最大１０体
 double zoom = 0.2;
 double shift_LR = 0.1;
 double shift_UD = 0.1;
+
+double para_X1 = 0.11, para_a1 = 0.05, para_b1 = 0.07, para_H1 = 0.17;
+double	L1 = 0.067, L2 = 0.067, L3 = 0.12;	// 関節間長さ
+
+double			NowTime = 0.0;	// 時間
+double			s_time = 0.0;					// サンプリングタイム初期化
+double			CycleTime = 2.0;
+double			Phase = 0.0;
 
 bool stepOnTimer = false;
 
@@ -63,7 +72,7 @@ void CreateFloor(){
 void Display(){
 	Affinef af;
 	af.Pos() = Vec3f(0, 3.5, 4)*zoom;
-	af.LookAtGL(Vec3f(shift_LR,0,shift_UD), Vec3f(shift_LR,10,shift_UD));
+	af.LookAtGL(Vec3f(shift_LR+0.5,0,shift_UD), Vec3f(shift_LR,10,shift_UD));
 	render->SetViewMatrix(af.inv());	//	視点の設定
 	
 	render->ClearBuffer();
@@ -125,13 +134,13 @@ void Keyboard(unsigned char key, int x, int y){
 		break;
 	case 'a':
 		for(int i=0; i<module_max; i++){robot[i].Forward();}
-		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
-		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
+		//robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
+		//robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
 		break;
 	case 's':
 		for(int i=0; i<module_max; i++){robot[i].Backward();}
-		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
-		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
+		//robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
+		//robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -156,10 +165,10 @@ void Keyboard(unsigned char key, int x, int y){
 		shift_LR -= 0.01;
 		break;
 	case 'k':
-		shift_UD += 0.01;
+		NowTime += 0.05;
 		break;
 	case 'm':
-		shift_UD -= 0.01;
+		NowTime -= 0.05;
 		break;
 	case 'd':
 		for(int i=0; i<module_max; i++){robot[i].Stop();}
@@ -181,11 +190,61 @@ void Keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void timer(int id){
-	glutTimerFunc(50, timer, 0);
+
+	static LARGE_INTEGER	freq, start, now, past;			// 周波数，開始時間，現在時間，前回時間
+
+	// 時間計測準備
+	start.QuadPart = now.QuadPart = past.QuadPart = 0;
+	QueryPerformanceFrequency( &freq );	// 計算機の周波数計測
+
+	glutTimerFunc(100, timer, 0);
+
 	/// 時刻のチェックと画面の更新を行う
 	if (stepOnTimer){
 		for(int i = 0; i < 1; i++)
-			scene->Step();
+		scene->Step();
+
+		// 位相生成
+		/*QueryPerformanceCounter( &now );
+		NowTime = (double)( now.QuadPart - start.QuadPart ) / (double)freq.QuadPart;	// 経過時間の計算
+		s_time = (double)( now.QuadPart - past.QuadPart ) / (double)freq.QuadPart;
+		past.QuadPart = now.QuadPart;*/	
+
+		Phase = (2 * PI / CycleTime) * NowTime;
+	
+		for(int module_num=0; module_num<module_max; module_num++){
+				for(int leg_num = 1; leg_num < 3; leg_num++){
+				double	PhaseTemp;
+				PhaseTemp = Phase + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
+				//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num];
+				//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
+				//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0;
+
+				// 足先軌道の計算（楕円軌道）
+				double	xx = para_X1;
+				//double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
+				double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp);
+				//double	yy = pow(-1, module_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
+				//double	yy = para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
+				double	zz;
+					if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
+					//if(sin(PhaseTemp[module_num * 2 + leg_num]) < 0.0)	zz = - para_H1;
+					else zz = para_b1 * sin(PhaseTemp) - para_H1;
+					//else zz = para_b1 * sin(PhaseTemp[module_num * 2 + leg_num]) - para_H1;
+
+				// 各関節角度の計算
+				double	theta1 = CalcTheta1(xx, yy);
+				if(leg_num)theta1 += pow(-1, leg_num) * PI / 6.0;
+				double	theta2 = CalcTheta2(xx, yy, zz, L1, L2, L3);
+				double	theta3 = CalcTheta3(xx, yy, zz, L1, L2, L3);
+
+				// グラフィック表示のために各値をセット
+				robot[module_num].leg[leg_num].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
+				robot[module_num].leg[leg_num].jntDX2  ->  SetSpringOrigin(-theta2);
+				robot[module_num].leg[leg_num].jntFoot ->  SetSpringOrigin(-theta3);
+			}
+		}
+
 		glutPostRedisplay();
 	}
 }
@@ -209,7 +268,7 @@ int main(int argc, char* argv[]){
 
 	Posed pose;
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
-	for(int i=0; i<module_max; i++){
+	for(int i=0; i<module_max; i++){			//ASHIGARU構築
 		pose.Pos() = Vec3d(0.3*i, 0.17, 0.0);
 		robot[i].Build_root(pose, scene, phSdk);
 	}
@@ -235,8 +294,8 @@ int main(int argc, char* argv[]){
 	}
 	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
 
-	double K = 10000.0, D = 100;
-	for(int i=0; i<module_max-1; i++){
+	double K = 10000.0, D = 0.0;
+	for(int i=0; i<module_max; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
 		robot[i].leg[0].jntDX1  -> SetSpring(K);
 		robot[i].leg[0].jntDX1  -> SetDamper(D);
@@ -276,7 +335,7 @@ int main(int argc, char* argv[]){
 	glutDisplayFunc(Display);
 	glutReshapeFunc(Reshape);
 	glutKeyboardFunc(Keyboard);
-	
+
 	initialize();
 
 	glutMainLoop();
