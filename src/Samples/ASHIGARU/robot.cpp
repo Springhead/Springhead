@@ -55,7 +55,7 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 	jd.poseSocket = base;
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);//これは何の意味？？変えても何も変化が無い。
 	
-	const double K = 100.0, D = 10.0;
+	const double K = 100.0, D = 15.0; //これで関節トルクが決まる
 	
 	Posed pose;
 	PHTreeNodeIf* node;
@@ -120,7 +120,7 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 }
 
 //ツリーモジュールの脚
-/*void Robot::Leg::Build_Tree(PHSolidIf* body, PHTreeNodeIf* node_body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
+void Robot::Leg::Build_Tree(PHSolidIf* body, PHTreeNodeIf* node_body, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
 
 	//部品のサイズを指定する
 	CDBoxDesc bd;
@@ -204,7 +204,7 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 	scene->SetContactMode(soDX1, soDX2, PHSceneDesc::MODE_NONE);
 	scene->SetContactMode(soDX2, soFoot, PHSceneDesc::MODE_NONE);
 											
-}*/
+}
 
 //ルートモジュールを構築
 void Robot::Build_root(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
@@ -295,7 +295,7 @@ void Robot::Build_Tree(PHSolidIf* pre_body, PHRootNodeIf* root_node, const Posed
 	jntConnect->SetSpring(10000);
 	jntConnect->SetDamper(100);
 	jntConnect->SetSpringOrigin(Rad(0.0));
-	node = scene->CreateTreeNode(root_node, soBody);
+	//node = scene->CreateTreeNode(root_node, soBody);		　　　　　　　　　　　　　　　　//ここで止まってしまう
 
 	//Posed poseLeg;
 	//poseLeg.Ori() = Quaterniond::Rot(Rad(60.0), 'y');
@@ -334,10 +334,10 @@ void Robot::Stop(){
 }
 void Robot::Forward(){
 
-	leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
+	//leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
 	leg[1].jntDX2->SetSpringOrigin(Rad(80.0));
 	leg[2].jntDX2->SetSpringOrigin(Rad(80.0));
-	leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
+	//leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
 	leg[1].jntFoot->SetSpringOrigin(Rad(10.0));
 	leg[2].jntFoot->SetSpringOrigin(Rad(10.0));
 
@@ -354,10 +354,10 @@ void Robot::Forward(){
 
 void Robot::Backward(){
 
-	leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
+	//leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
 	leg[1].jntDX2->SetSpringOrigin(Rad(-60.0));
 	leg[2].jntDX2->SetSpringOrigin(Rad(-60.0));
-	leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
+	//leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
 	leg[1].jntFoot->SetSpringOrigin(Rad(150.0));
 	leg[2].jntFoot->SetSpringOrigin(Rad(150.0));
 

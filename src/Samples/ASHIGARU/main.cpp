@@ -29,11 +29,7 @@
 using namespace Spr;
 
 #define ESC		27
-//<<<<<<< .mine
-//#define module_max 9
-//=======
-#define module_max 2
-//>>>>>>> .r2499
+#define module_max 6
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
@@ -49,7 +45,6 @@ double shift_LR = 0.1;
 double shift_UD = 0.1;
 
 bool stepOnTimer = false;
-
 
 void CreateFloor(){
 	PHSolidDesc sd;
@@ -130,8 +125,10 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Forward();else robot[i].Backward();}
-		//for(int i=0; i<module_max; i++){robot[i].Forward();}
+		//for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Forward();else robot[i].Backward();}
+		for(int i=0; i<module_max; i++){robot[i].Forward();}
+		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(80.0));
+		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(10.0));
 		break;
 	case 'z':
 		zoom -= 0.01;
@@ -142,8 +139,10 @@ void Keyboard(unsigned char key, int x, int y){
 		glutPostRedisplay();
 		break;
 	case 's':
-		for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Backward();else robot[i].Forward();}
-		//for(int i=0; i<module_max; i++){robot[i].Backward();}
+		//for(int i=0; i<module_max; i++){if(i%2==1)robot[i].Backward();else robot[i].Forward();}
+		for(int i=0; i<module_max; i++){robot[i].Backward();}
+		robot[module_max-1].leg[0].jntDX2->SetSpringOrigin(Rad(-60.0));
+		robot[module_max-1].leg[0].jntFoot->SetSpringOrigin(Rad(150.0));
 		break;
 	case 't':
 		stepOnTimer = !stepOnTimer;
@@ -165,12 +164,6 @@ void Keyboard(unsigned char key, int x, int y){
 	case 'm':
 		shift_UD -= 0.01;
 		break;
-	/*case 'd':
-		robot.TurnLeft();
-		break;
-	case 'f':
-		robot.TurnRight();
-		break;*/
 	case 'd':
 		for(int i=0; i<module_max; i++){robot[i].Stop();}
 		break;
@@ -222,33 +215,31 @@ int main(int argc, char* argv[]){
 //	PHTreeNodeIf* node_Connect;
 	Posed pose;
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
-	pose.Pos() = Vec3d(0.0, 0.17, 0.0);
+	/*pose.Pos() = Vec3d(0.0, 0.17, 0.0);
 	robot[0].Build_root(pose, scene, phSdk);	//	ルートモジュール構築
 	pose.Pos() = Vec3d(0.18, 0.17, 0.0);
-	robot[1].Build_Tree(robot[0].soBody, robot[0].root, pose, scene, phSdk);
+	robot[1].Build_Tree(robot[0].soBody, robot[0].root, pose, scene, phSdk);  //	ツリーモジュール構築
+	pose.Pos() = Vec3d(0.36, 0.17, 0.0);
+	robot[2].Build_Tree(robot[1].soBody, robot[0].root, pose, scene, phSdk);
+	pose.Pos() = Vec3d(0.54, 0.17, 0.0);
+	robot[3].Build_Tree(robot[2].soBody, robot[0].root, pose, scene, phSdk);*/
 
-	/*for(int i=0; i<module_max; i++){
-		pose.Pos() = Vec3d(0.3*i, 0.15, 0.0);
+	for(int i=0; i<module_max; i++){
+		pose.Pos() = Vec3d(0.3*i, 0.17, 0.0);
 		robot[i].Build_root(pose, scene, phSdk);
-	}*/
+	}
 
-	//node_Connect = scene->CreateTreeNode(robot[0].root, robot[1].soBody);
 
-	/*for(int i=1; i<module_max; i++){
-			pose.Pos() = Vec3d(0.2*i, 0.2, 0.0);
-			robot[i].Build_node(node_Connect, pose, scene, phSdk);			//	ノードモジュール構築
-		}*/
+//////３モジュール直列結合/////////////////////////////////////////////////////////////////////////
 
-	//３モジュール直列結合/////////////////////////////////////////////////////////////////////////
+	PHHingeJointDesc jdConnect;
 
-	//PHHingeJointDesc jdConnect;
-
-	/*for(int i=0; i<module_max; i++){
+	for(int i=0; i<module_max; i++){
 		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
 		robot[i].leg[2].jntDX1 -> SetSpringOrigin(Rad(-120.0));
-	}*/
+	}
 
-	/*std::vector<PHSolidIf*> allSolids;
+	std::vector<PHSolidIf*> allSolids;
 	for(int i=0; i<module_max; i++){
 		allSolids.push_back(robot[i].soBody);
 		for(int j=0; j<3; ++j){
@@ -257,9 +248,9 @@ int main(int argc, char* argv[]){
 			allSolids.push_back(robot[i].leg[j].soFoot);
 		}
 	}
-	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);*/
+	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
 
-	/*double K = 100, D = 100;
+	double K = 10000.0, D = 100;
 	for(int i=0; i<module_max-1; i++){
 		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
 		robot[i].leg[0].jntDX1  -> SetSpring(K);
@@ -270,20 +261,21 @@ int main(int argc, char* argv[]){
 		robot[i].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
 		robot[i].leg[0].jntFoot -> SetSpring(K);
 		robot[i].leg[0].jntFoot -> SetDamper(D);
-	}*/
+	}
 
 	//結合部分構築
-	/*jdConnect.poseSocket.Ori() = Quaterniond();
+	jdConnect.poseSocket.Ori() = Quaterniond();
 	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
-	jdConnect.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, 0.173);
 	for(int i=0; i<module_max-1; i++){
-		//robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].leg[0].soDX1, jdConnect)->Cast();
-		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i].soBody, robot[i+1].soBody, jdConnect)->Cast();
+		robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].soBody, jdConnect)->Cast();
 		robot[i].leg[0].jntConnect[0]->SetSpring(K);
 		robot[i].leg[0].jntConnect[0]->SetDamper(D);
 		robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(0.0));
-	}*/
-	
+	}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	//	GLUTの初期化
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
