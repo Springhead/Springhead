@@ -55,7 +55,7 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 	jd.poseSocket = base;
 	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);//これは何の意味？？変えても何も変化が無い。
 	
-	const double K = 100.0, D = 15.0; //これで関節トルクが決まる
+	const double K = 200.0, D = 0.0; //これで関節トルクが決まる
 	
 	Posed pose;
 	PHTreeNodeIf* node;
