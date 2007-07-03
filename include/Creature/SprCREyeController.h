@@ -5,25 +5,25 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#ifndef SPR_CREyeControllerIf_H
+#define SPR_CREyeControllerIf_H
 
-/*
-#ifndef CRSIMPLE_H
-#define CRSIMPLE_H
-
-#include <SprCreature.h>
-#include <Physics/PHEngine.h>
+#include <SprFoundation.h>
+#include <SprPhysics.h>
 
 namespace Spr{;
 
-class CRSimple : public PHEngine, CRSimpleIfInit, public CRSimpleDesc{
-public:
-	OBJECT_DEF(CRSimple);
-	int GetPriority() const { return SGBP_CREATURE; }
-	void Step();
+//@{
+
+struct CREyeControllerIf : SceneObjectIf{
+	IF_DEF(CREyeController);
+	virtual void SetLeftEyeSolid(PHSolidIf* eyeSolid)= 0;
+	virtual void SetRightEyeSolid(PHSolidIf* eyeSolid)= 0;
+	virtual void Step()= 0;
 };
 
-}	//	namespace Spr
+//@}
 
-#endif
+}
 
-*/
+#endif//SPR_CREyeControllerIf_H

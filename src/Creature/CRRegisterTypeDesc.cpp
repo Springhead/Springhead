@@ -5,6 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+
+
+// •K—v‚É‚È‚Á‚½‚ç‚¿‚á‚ñ‚Æ‘‚­ 07/07/03 mitake
+/*
 #include <Foundation/Foundation.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -29,3 +33,5 @@ void CRRegisterTypeDescs(){
 	db->Link();
 }
 }
+*/
+

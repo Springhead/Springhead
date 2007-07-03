@@ -5,6 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+
+/*
 #include "CRSimple.h"
 #include <Foundation/Scene.h>
 #include <Foundation/Object.h>
@@ -21,16 +23,7 @@ namespace Spr{
 IF_IMP(CRSimple, PHEngine);
 OBJECT_IMP(CRSimple, PHEngine);
 
-void CRRegisterFactories(){
-	static bool bFirst = true;
-	if (!bFirst) return;
-	bFirst=false;
-
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(CRSimple));
-	std::cout << "CRSimple Factory Registered." << std::endl;
-}
-
-CRSimple::CRSimple(const CRSimpleDesc& d/*=CRSimpleDesc()*/) : desc(d), solid(NULL) {
+CRSimple::CRSimple() : desc(d), solid(NULL) {
 }
 
 void CRSimple::Step(){
@@ -42,3 +35,5 @@ void CRSimple::Step(){
 }
 
 }
+*/
+

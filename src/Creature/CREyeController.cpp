@@ -5,14 +5,25 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/**
- *	@file SprCollision.h
- *	@brief 衝突判定のヘッダファイル群
-*/
-#ifndef SPR_CREATURE_H
-#define SPR_CREATURE_H
+#include "CREyeController.h"
 
-// #include "Creature/SprCRSimple.h"  テスト用のクラスなので段階的に削除の方向 mitake
-#include "Creature/SprCREyeController.h"
-
+#ifdef USE_HDRSTOP
+#pragma hdrstop
 #endif
+
+namespace Spr{
+
+IF_OBJECT_IMP(CREyeController, SceneObject);
+
+void CREyeController::SetLeftEyeSolid(PHSolidIf* eyeSolid){
+	soLeftEye = eyeSolid;
+}
+
+void CREyeController::SetRightEyeSolid(PHSolidIf* eyeSolid){
+	soRightEye = eyeSolid;
+}
+
+void CREyeController::Step(){
+}
+
+}
