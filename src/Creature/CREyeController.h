@@ -20,13 +20,23 @@ namespace Spr{;
 class CREyeController : public SceneObject, CREyeControllerIfInit{
 	OBJECTDEF(CREyeController, SceneObject);
 private:
-	PHSolidIf* soLeftEye;
-	PHSolidIf* soRightEye;
+	PHSolidIf* soLEye;
+	PHSolidIf* soREye;
+	PHSolidIf* soHead;
+	Vec3f      lookatPoint;
+
+	// Value for Controlling
+	Vec3f      targetDirL, targetDirR;
+
+	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f aim);
+
 public:
 	CREyeController(){}
 	~CREyeController(){}
 	virtual void SetLeftEyeSolid(PHSolidIf* eyeSolid);
 	virtual void SetRightEyeSolid(PHSolidIf* eyeSolid);
+	virtual void SetHeadSolid(PHSolidIf* headSolid);
+	virtual void LookAt(Vec3f point);
 	virtual void Step();
 };
 

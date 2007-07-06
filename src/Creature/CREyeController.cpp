@@ -16,14 +16,40 @@ namespace Spr{
 IF_OBJECT_IMP(CREyeController, SceneObject);
 
 void CREyeController::SetLeftEyeSolid(PHSolidIf* eyeSolid){
-	soLeftEye = eyeSolid;
+	soLEye = eyeSolid;
 }
 
 void CREyeController::SetRightEyeSolid(PHSolidIf* eyeSolid){
-	soRightEye = eyeSolid;
+	soREye = eyeSolid;
+}
+
+void CREyeController::SetHeadSolid(PHSolidIf* headSolid){
+	soHead = headSolid;
+}
+
+void CREyeController::LookAt(Vec3f point){
+	lookatPoint = point;
 }
 
 void CREyeController::Step(){
+	targetDirL = lookatPoint - soLEye->GetPose().Pos(); targetDirL.unitize();
+	targetDirR = lookatPoint - soREye->GetPose().Pos();
+
+	ControlEyeToTargetDir(soLEye, targetDirL);
+	ControlEyeToTargetDir(soREye, targetDirR);
+}
+
+void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
+	Vec3f currentDir = soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f);
+	currentDir.unitize();
+	
+	Vec3f error  = PTM::cross(currentDir, target);
+	Vec3f derror = soEye->GetAngularVelocity();
+	float Kp = 500.0f;
+	float Kd = 20.0f;
+	Vec3f torque = (Kp * error) - (Kd * derror);
+
+ 	soEye->AddTorque(torque);
 }
 
 }
