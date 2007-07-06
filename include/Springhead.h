@@ -24,4 +24,6 @@
 #include "SprDevice.h"
 
 #include "SprFramework.h"
+
+#include "SprCreature.h"
 #endif

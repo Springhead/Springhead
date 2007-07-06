@@ -19,6 +19,8 @@ struct CREyeControllerIf : SceneObjectIf{
 	IF_DEF(CREyeController);
 	virtual void SetLeftEyeSolid(PHSolidIf* eyeSolid)= 0;
 	virtual void SetRightEyeSolid(PHSolidIf* eyeSolid)= 0;
+	virtual void SetHeadSolid(PHSolidIf* headSolid)= 0;
+	virtual void LookAt(Vec3f point)= 0;
 	virtual void Step()= 0;
 };
 
