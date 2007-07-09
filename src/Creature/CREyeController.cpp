@@ -49,8 +49,8 @@ void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
 	
 	Vec3f error  = PTM::cross(currentDir, target);
 	Vec3f derror = soEye->GetAngularVelocity();
-	float Kp = 0.1f;
-	float Kd = 0.01f;
+	float Kp = 0.3f;
+	float Kd = 0.025f;
 	Vec3f torque = (Kp * error) - (Kd * derror);
 
  	soEye->AddTorque(torque);
