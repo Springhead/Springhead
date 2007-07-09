@@ -32,21 +32,25 @@ void CREyeController::LookAt(Vec3f point){
 }
 
 void CREyeController::Step(){
-	targetDirL = lookatPoint - soLEye->GetPose().Pos(); targetDirL.unitize();
-	targetDirR = lookatPoint - soREye->GetPose().Pos();
+	targetDirL  = (lookatPoint - soLEye->GetPose().Pos()).unit();
+	targetDirR  = (lookatPoint - soREye->GetPose().Pos()).unit();
 
 	ControlEyeToTargetDir(soLEye, targetDirL);
 	ControlEyeToTargetDir(soREye, targetDirR);
 }
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
-	Vec3f currentDir = soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f);
-	currentDir.unitize();
+	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
+
+	double targetAngH = atan2(target.X(), target.Z());
+	double targetAngV = atan2(target.Y(), target.Z());
+
+	Quaternionf targetQ = Quaternionf::Rot(Rad(targetAngV),'x') * Quaternionf::Rot(Rad(targetAngH),'y');
 	
 	Vec3f error  = PTM::cross(currentDir, target);
 	Vec3f derror = soEye->GetAngularVelocity();
-	float Kp = 500.0f;
-	float Kd = 20.0f;
+	float Kp = 0.1f;
+	float Kd = 0.01f;
 	Vec3f torque = (Kp * error) - (Kd * derror);
 
  	soEye->AddTorque(torque);
