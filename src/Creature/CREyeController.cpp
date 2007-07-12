@@ -21,6 +21,7 @@ void CREyeController::LookAt(Vec3f pos, Vec3f vel){
 }
 
 void CREyeController::Step(){
+	/*/ ‚±‚Á‚¿‚Í‚Æ‚è‚ ‚¦‚¸“®‚­ƒR[ƒh
 	currLookatPos = nextLookatPos;
 	
 	Vec3f targetDirL  = (currLookatPos - soLEye->GetPose().Pos()).unit();
@@ -28,6 +29,48 @@ void CREyeController::Step(){
 
 	ControlEyeToTargetDir(soLEye, targetDirL);
 	ControlEyeToTargetDir(soREye, targetDirR);
+	/*/
+	controlState = GetNextState(controlState);
+
+	Vec3f targetDirL, targetDirR;
+	switch(controlState){
+	case CS_SACCADE:
+		SaccadeControl();
+		break;
+	case CS_PURSUIT:
+		PursuitControl();
+		break;
+	default:
+		break;
+	}
+	/**/
+}
+
+CREyeControllerState::ControlState CREyeController::GetNextState(ControlState currentCS){
+	switch(controlState){
+	case CS_SACCADE:
+		return CS_SACCADE;
+		break;
+	case CS_PURSUIT:
+		return CS_SACCADE;
+		break;
+	default:
+		break;
+	}
+}
+
+void CREyeController::SaccadeControl(){
+	currLookatPos = nextLookatPos;
+	currLookatVel = nextLookatVel;
+
+	Vec3f targetDirL  = (currLookatPos - soLEye->GetPose().Pos()).unit();
+	Vec3f targetDirR  = (currLookatPos - soREye->GetPose().Pos()).unit();
+
+	ControlEyeToTargetDir(soLEye, targetDirL);
+	ControlEyeToTargetDir(soREye, targetDirR);
+}
+
+void CREyeController::PursuitControl(){
 }
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){

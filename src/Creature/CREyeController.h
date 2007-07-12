@@ -20,6 +20,9 @@ namespace Spr{;
 /// Šá‹…‰^“®ƒRƒ“ƒgƒ[ƒ‰‚ÌÀ‘•
 class CREyeController : public SceneObject,	public CREyeControllerIfInit, 	public CREyeControllerDesc {
 private:
+	CREyeControllerState::ControlState GetNextState(ControlState currentCS);
+	void SaccadeControl();
+	void PursuitControl();
 	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f aim);
 
 public:
