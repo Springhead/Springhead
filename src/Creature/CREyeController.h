@@ -17,26 +17,26 @@
 
 namespace Spr{;
 
-class CREyeController : public SceneObject, CREyeControllerIfInit{
-	OBJECTDEF(CREyeController, SceneObject);
+/// 眼球運動コントローラの実装
+class CREyeController : public SceneObject,	public CREyeControllerIfInit, 	public CREyeControllerDesc {
 private:
-	PHSolidIf* soLEye;
-	PHSolidIf* soREye;
-	PHSolidIf* soHead;
-	Vec3f      lookatPoint;
-
-	// Value for Controlling
-	Vec3f      targetDirL, targetDirR;
-
 	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f aim);
 
 public:
+	OBJECTDEF(CREyeController, SceneObject);
+	ACCESS_DESC_STATE(CREyeController);
+
 	CREyeController(){}
-	~CREyeController(){}
-	virtual void SetLeftEyeSolid(PHSolidIf* eyeSolid);
-	virtual void SetRightEyeSolid(PHSolidIf* eyeSolid);
-	virtual void SetHeadSolid(PHSolidIf* headSolid);
-	virtual void LookAt(Vec3f point);
+	CREyeController(const CREyeControllerDesc& desc):CREyeControllerDesc(desc){}
+
+	/** @brief 注視点を設定する
+		@param pos 注視点の３次元座標
+		@param vel 注視点の移動速度ベクトル
+	*/
+	virtual void LookAt(Vec3f pos, Vec3f vel);
+
+	/** @brief 制御処理を実行する
+	*/
 	virtual void Step();
 };
 

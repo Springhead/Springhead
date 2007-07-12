@@ -15,25 +15,16 @@ namespace Spr{
 
 IF_OBJECT_IMP(CREyeController, SceneObject);
 
-void CREyeController::SetLeftEyeSolid(PHSolidIf* eyeSolid){
-	soLEye = eyeSolid;
-}
-
-void CREyeController::SetRightEyeSolid(PHSolidIf* eyeSolid){
-	soREye = eyeSolid;
-}
-
-void CREyeController::SetHeadSolid(PHSolidIf* headSolid){
-	soHead = headSolid;
-}
-
-void CREyeController::LookAt(Vec3f point){
-	lookatPoint = point;
+void CREyeController::LookAt(Vec3f pos, Vec3f vel){
+	nextLookatPos = pos;
+	nextLookatVel = vel;
 }
 
 void CREyeController::Step(){
-	targetDirL  = (lookatPoint - soLEye->GetPose().Pos()).unit();
-	targetDirR  = (lookatPoint - soREye->GetPose().Pos()).unit();
+	currLookatPos = nextLookatPos;
+	
+	Vec3f targetDirL  = (currLookatPos - soLEye->GetPose().Pos()).unit();
+	Vec3f targetDirR  = (currLookatPos - soREye->GetPose().Pos()).unit();
 
 	ControlEyeToTargetDir(soLEye, targetDirL);
 	ControlEyeToTargetDir(soREye, targetDirR);
@@ -41,17 +32,9 @@ void CREyeController::Step(){
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
 	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
-
-	double targetAngH = atan2(target.X(), target.Z());
-	double targetAngV = atan2(target.Y(), target.Z());
-
-	Quaternionf targetQ = Quaternionf::Rot(Rad(targetAngV),'x') * Quaternionf::Rot(Rad(targetAngH),'y');
-	
-	Vec3f error  = PTM::cross(currentDir, target);
+	Vec3f errorYawPitch = PTM::cross(currentDir, target);
 	Vec3f derror = soEye->GetAngularVelocity();
-	float Kp = 0.3f;
-	float Kd = 0.025f;
-	Vec3f torque = (Kp * error) - (Kd * derror);
+	Vec3f torque = (Kp * (errorYawPitch)) - (Kd * derror);
 
  	soEye->AddTorque(torque);
 }
