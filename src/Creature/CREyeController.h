@@ -25,12 +25,28 @@ private:
 	void PursuitControl();
 	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f aim);
 
+	// 最終的にはStateクラスに移動することが望まれる変数群
+	Vec3f currLookatPos; ///< 現在視線移動中の注視点
+	Vec3f currLookatVel; ///< 現在視線移動中の注視点の移動速度ベクトル
+	Vec3f nextLookatPos; ///< 次の注視点
+	Vec3f nextLookatVel; ///< 次の注視点の移動速度ベクトル
+
+	float saccadeTimer; ///< サッケード制御の時間経過を示すタイマ
+	Vec3f saccadeFromL; ///< サッケード開始時の左目の視線方向
+	Vec3f saccadeFromR; ///< サッケード開始時の左目の視線方向
+
+
 public:
 	OBJECTDEF(CREyeController, SceneObject);
 	ACCESS_DESC_STATE(CREyeController);
 
-	CREyeController(){}
-	CREyeController(const CREyeControllerDesc& desc):CREyeControllerDesc(desc){}
+	CREyeController(){
+		currLookatPos = currLookatVel = Vec3f(0,0,0);
+		nextLookatPos = nextLookatVel = Vec3f(0,0,0);
+		saccadeTimer = 0.0;
+	}
+	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL)
+		:CREyeControllerDesc(desc){ if(s){SetScene(s);}	}
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標

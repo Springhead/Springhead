@@ -19,16 +19,10 @@ namespace Spr{;
 
 /// 眼球運動コントローラのステート
 struct CREyeControllerState{
-	Vec3f currLookatPos; ///< 現在視線移動中の注視点
-	Vec3f currLookatVel; ///< 現在視線移動中の注視点の移動速度ベクトル
-	Vec3f nextLookatPos; ///< 次の注視点
-	Vec3f nextLookatVel; ///< 次の注視点の移動速度ベクトル
-
+	/// 制御の状態
 	enum ControlState{
 		CS_SACCADE, CS_PURSUIT,
-	} controlState; ///< 制御の状態
-
-	float saccadeTimer; ///< サッケード制御の時間経過を示すタイマ
+	} controlState; 
 };
 
 /// 眼球運動コントローラのデスクリプタ
@@ -46,14 +40,12 @@ struct CREyeControllerDesc: public CREyeControllerState{
 	float Kd; ///< 眼球PD制御のD係数
 
 	CREyeControllerDesc(){
-		currLookatPos = currLookatVel = Vec3f(0,0,0);
-		nextLookatPos = nextLookatVel = Vec3f(0,0,0);
 		soLEye = NULL; soREye = NULL; joLEye = NULL; joREye = NULL;
 		soHead = NULL; joNeck = NULL;
 
 		Kp = 0.3f; Kd = 0.025f;
 
-		controlState = CS_PURSUIT; saccadeTimer = 0.0;
+		controlState = CS_PURSUIT;
 	}
 };
 
