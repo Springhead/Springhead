@@ -239,6 +239,8 @@ public:
 			attitude = asin(2*X()*Y() + 2*Z()*W());
 			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()*X() - 2*Z()*Z());
 		}
+		// ToEular‚ª(0,0,0)‚µ‚©•Ô‚µ‚Ä‚­‚ê‚È‚¢‚Ì‚Åmitake‚ªŸè‚É‘‚«‰Á‚¦‚½ (07/07/13)
+		v[0]=heading; v[1]=attitude; v[2]=bank;
 	}
 	///
 	template <class VET> void FromEular(const TVec3<VET>& v){
