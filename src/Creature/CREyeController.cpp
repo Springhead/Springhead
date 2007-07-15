@@ -26,6 +26,10 @@ void CREyeController::Step(){
 	// 視覚制御に用いる状態量の計算
 	CalcEyeStatusValue();
 
+	ControlEyeToTargetDir(soLEye, nextLookatPos - soLEye->GetPose().Pos());
+	//ControlEyeToTargetDir(soREye, nextLookatPos - soREye->GetPose().Pos());
+	return;
+
 	// 制御状態の遷移
 	controlState = GetNextState(controlState);
 
@@ -44,40 +48,77 @@ void CREyeController::Step(){
 		break;
 	}
 
-	ControlEyeToTargetDir(soLEye, nextLookatPos - soLEye->GetPose().Pos());
+	//ControlEyeToTargetDir(soLEye, nextLookatPos - soLEye->GetPose().Pos());
 	//ControlEyeToTargetDir(soREye, nextLookatPos - soREye->GetPose().Pos());
 }
 
 void CREyeController::CalcEyeStatusValue(){
-	// 頭の前方向をZ軸、上方向をY軸とする右手系ローカル座標に変換
-	Quaterniond qHeadOriInv = soHead->GetPose().Ori().Inv();
-	// -- 目の回転量、視軸の角度
-	Quaterniond localOriLEye, localOriREye;
-	localOriLEye = qHeadOriInv * soLEye->GetPose().Ori();
-	localOriREye = qHeadOriInv * soREye->GetPose().Ori();
-	Vec3d localEularAngleLEye, localEularAngleREye;
-	localOriLEye.ToEular(localEularAngleLEye);
-	localOriREye.ToEular(localEularAngleREye);
-	double localHorizAngleLEye=localEularAngleLEye[0], localHorizAngleREye=localEularAngleREye[0];
-	double localVertAngleLEye=localEularAngleLEye[1], localVertAngleREye=localEularAngleREye[1];
-	// -- 目の回転角速度
-	Vec3d localangvelLEye, localangvelREye;
-	localangvelLEye = qHeadOriInv * soLEye->GetAngularVelocity();
-	localangvelREye = qHeadOriInv * soREye->GetAngularVelocity();
-	// -- 頭の回転角速度
-	Vec3d localangvelHead;
-	localangvelHead = qHeadOriInv * soHead->GetAngularVelocity();
-	// -- 視標の位置、方向
-	Vec3d localLookatPosFromLEye, localLookatPosFromREye;
-	localLookatPosFromLEye = qHeadOriInv * (currLookatPos - soLEye->GetPose().Pos());
-	localLookatPosFromREye = qHeadOriInv * (currLookatPos - soREye->GetPose().Pos());
-	Vec3d llpflh = localLookatPosFromLEye, llpflv = localLookatPosFromLEye;
-	Vec3d llpfrh = localLookatPosFromREye, llpfrv = localLookatPosFromREye;
-	double localLookatHorizAngleFromLEye = -atan2(llpflh.X(),llpflh.Z())
-	double localLookatHorizAngleFromREye = -atan2(llpfrh.X(),llpfrh.Z())
-	double localLookatVertAngleFromLEye = -atan2(llpflh.X(),llpflh.Z())
-	double localLookatVertAngleFromREye = -atan2(llpfrh.X(),llpfrh.Z())
+	// 臨時
+	currLookatPos = nextLookatPos;
+	currLookatVel = nextLookatVel;
 
+	// 眼球の座標系として頭の前方向をZ軸、上方向をY軸とする右手系ローカル座標に変換
+	Quaterniond qToLoc = soHead->GetPose().Ori().Inv(); // グローバルからローカル座標に変換
+
+	// 基本量
+	// -- 目の回転量
+	Quaterniond locLEyeOri, locREyeOri;
+	locLEyeOri = qToLoc * soLEye->GetPose().Ori();
+	locREyeOri = qToLoc * soREye->GetPose().Ori();
+	// -- 目の回転角速度
+	Vec3d locLEyeAngvel, locREyeAngvel;
+	locLEyeAngvel = qToLoc * soLEye->GetAngularVelocity();
+	locREyeAngvel = qToLoc * soREye->GetAngularVelocity();
+	// -- 頭の回転角速度
+	Vec3d locHeadAngvel;
+	locHeadAngvel = qToLoc * soHead->GetAngularVelocity();
+
+	// 中間量
+	// -- 視軸（角度表示）
+	double locLEyeAxisH = Vec3ToAngH(locLEyeOri * Vec3d(0,0,1));
+	double locLEyeAxisV = Vec3ToAngV(locLEyeOri * Vec3d(0,0,1));
+	double locREyeAxisH = Vec3ToAngH(locREyeOri * Vec3d(0,0,1));
+	double locREyeAxisV = Vec3ToAngV(locREyeOri * Vec3d(0,0,1));
+	// -- 各眼球から見た視標の方向（角度表示）
+	Vec3d locLLookat = qToLoc * (currLookatPos - soLEye->GetPose().Pos());
+	Vec3d locRLookat = qToLoc * (currLookatPos - soREye->GetPose().Pos());
+	double locLLookatH = Vec3ToAngH(locLLookat), locLLookatV = Vec3ToAngV(locLLookat);
+	double locRLookatH = Vec3ToAngH(locRLookat), locRLookatV = Vec3ToAngV(locRLookat);
+
+	// 制御に使う量
+	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
+	// -- 視標視軸誤差
+	locErrLH = locLLookatH - locLEyeAxisH;
+	locErrLV = locLLookatV - locLEyeAxisV;
+	locErrRH = locRLookatH - locREyeAxisH;
+	locErrRV = locRLookatV - locREyeAxisV;
+	// -- 視標視軸誤差変化量
+	locDErrLH = (locErrLH - locLastErrLH) / dt; locLastErrLH = locErrLH;
+	locDErrLV = (locErrLV - locLastErrLV) / dt; locLastErrLV = locErrLV;
+	locDErrRH = (locErrRH - locLastErrRH) / dt; locLastErrRH = locErrRH;
+	locDErrRV = (locErrRV - locLastErrRV) / dt; locLastErrRV = locErrRV;
+	// -- 頭部回転角速度
+	locHeadAngvelH = Vec3ToAngH(locHeadAngvel);
+	locHeadAngvelV = Vec3ToAngV(locHeadAngvel);
+
+	if (CREYECTRL_DEBUG) {
+		std::cout << "locLEyeAxisH : " << Deg(locLEyeAxisH) << std::endl;
+		std::cout << "locLEyeAxisV : " << Deg(locLEyeAxisV) << std::endl;
+		std::cout << "locREyeAxisH : " << Deg(locREyeAxisH) << std::endl;
+		std::cout << "locREyeAxisV : " << Deg(locREyeAxisV) << std::endl;
+
+		std::cout << "locLLookatH : " << Deg(locLLookatH) << std::endl;
+		std::cout << "locLLookatV : " << Deg(locLLookatV) << std::endl;
+		std::cout << "locRLookatH : " << Deg(locRLookatH) << std::endl;
+		std::cout << "locRLookatV : " << Deg(locRLookatV) << std::endl;
+
+		std::cout << "locErrLH : " << Deg(locErrLH) << std::endl;
+		std::cout << "locErrLV : " << Deg(locErrLV) << std::endl;
+		std::cout << "locErrRH : " << Deg(locErrRH) << std::endl;
+		std::cout << "locErrRV : " << Deg(locErrRV) << std::endl;
+	}
+
+	/*
 	Vec3f apHoriz, apVert;
 	apHoriz = apVert = soHead->GetPose().Ori().Inv() * currLookatPos;
 
@@ -122,6 +163,7 @@ void CREyeController::CalcEyeStatusValue(){
 	eRV  = t4_a - t4;
 	vRV  = (t4_a - last_t4_a) / dt;
 	last_t4_a = t4_a;
+	*/
 }
 
 CREyeControllerState::ControlState CREyeController::GetNextState(ControlState currentCS){
@@ -142,8 +184,8 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 		break;
 	case CS_PURSUIT:
 		//if ((abs(eL) > Rad(1.0f)) || (abs(eR)  > Rad(1.0f)) || (abs(eLV) > Rad(1.0f)) || (abs(eRV) > Rad(1.0f))) {
-		//if ((abs(eL) > Rad(5.0f)) || (abs(eR)  > Rad(5.0f)) || (abs(eLV) > Rad(5.0f)) || (abs(eRV) > Rad(5.0f))) {
-		if ((abs(eL) > Rad(50.0f)) || (abs(eR)  > Rad(50.0f)) || (abs(eLV) > Rad(50.0f)) || (abs(eRV) > Rad(50.0f))) {
+		if ((abs(eL) > Rad(5.0f)) || (abs(eR)  > Rad(5.0f)) || (abs(eLV) > Rad(5.0f)) || (abs(eRV) > Rad(5.0f))) {
+		//if ((abs(eL) > Rad(50.0f)) || (abs(eR)  > Rad(50.0f)) || (abs(eLV) > Rad(50.0f)) || (abs(eRV) > Rad(50.0f))) {
 			// Saccadeへ移行
 			currLookatPos = nextLookatPos;
 			currLookatVel = nextLookatVel;
@@ -279,25 +321,46 @@ void CREyeController::PursuitControl(){
 }
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
-	/*/
+	/**/
 	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
 	Vec3f errorYawPitch = PTM::cross(currentDir, target);
 	Vec3f derror = soEye->GetAngularVelocity();
 	Vec3f torque = (Kp * (errorYawPitch)) - (Kd * derror);
  	soEye->AddTorque(torque);
+	/**/
+
 	/*/
-	Vec3f targH, targV; targH = targV = target;
-	targH[1]=0.0f; targH.unitize();
-	targV[0]=0.0f; targV.unitize();
-	float angH, angV;
-	angH = atan2(targH[0],targH[2]);
-	angV = atan2(targV[1],targV[2]);
-	//std::cout << Deg(angH) << ", " << Deg(angV) << std::endl;
-	Quaterniond ori = Quaternionf::Rot(angV,'x')*Quaternionf::Rot(angH,'y');
+	double angH = Vec3ToAngH(target);
+	double angV = Vec3ToAngV(target);
+	std::cout << "(angH, angV) = (" << Deg(angH) << ", " << Deg(angV) << ")" << std::endl;
+	Quaterniond ori = Quaterniond::Rot(-angV,'x')*Quaterniond::Rot(angH,'y');
 	Posed pose = soEye->GetPose();
 	pose.Ori() = ori;
 	soEye->SetPose(pose);
 	/**/
+
+	/*/
+	double angH = Vec3ToAngH(target);
+	double angV = Vec3ToAngV(target);
+	std::cout << "(angH, angV) = (" << Deg(angH) << ", " << Deg(angV) << ")" << std::endl;
+
+	Vec3f curr = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
+	double angHc = Vec3ToAngH(curr);
+	double angVc = Vec3ToAngV(curr);
+
+	Vec3f tqD = soEye->GetAngularVelocity()*Kd;
+	Vec3f tqH = Vec3d(0,1,0)*angHc*Kp, tqV = Vec3d(-1,0,0)*angVc*Kp;
+	soEye->AddTorque(tqH+tqV-tqD);
+	/**/
 }
 
+double CREyeController::Vec3ToAngH(Vec3d v){
+	double D = sqrt(v.X()*v.X()+v.Z()*v.Z());
+	return(atan2(v.X()/D, v.Z()/D));
+}
+
+double CREyeController::Vec3ToAngV(Vec3d v){
+	double D = sqrt(v.Y()*v.Y()+v.Z()*v.Z());
+	return(atan2(v.Y()/D, v.Z()/D));
+}
 }

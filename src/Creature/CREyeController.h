@@ -42,7 +42,22 @@ private:
 	*/
 	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f aim);
 
+	/** @brief ベクトルのXZ平面への射影がZ軸となす角（Z軸→X軸向きの回転を正とする）
+		@param v 入力ベクトル
+	*/
+	double Vec3ToAngH(Vec3d v);
+
+	/** @brief ベクトルのYZ平面への射影がZ軸となす角（Z軸→Y軸向きの回転を正とする）
+		@param v 入力ベクトル
+	*/
+	double Vec3ToAngV(Vec3d v);
+
 	// 最終的にはStateクラスに移動することが望まれる変数群
+	double locErrLH, locErrLV, locErrRH, locErrRV;
+	double locDErrLH, locDErrLV, locDErrRH, locDErrRV;
+	double locLastErrLH, locLastErrLV, locLastErrRH, locLastErrRV;
+	double locHeadAngvelH, locHeadAngvelV;
+
 	// -- 眼球の状態量
 	float t1, t2, t3, t4; ///< 視線方向の角度を示す数値
 	float eL, eR, eLV, eRV; ///< 視線方向と目標方向の誤差量
@@ -73,6 +88,7 @@ public:
 		vL = vR = vLV = vRV = 0.0f;
 		last_t1_a = last_t2_a = last_t3_a = last_t4_a = 0.0f;
 		integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
+		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
 	}
 	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL)
 		:CREyeControllerDesc(desc){ if(s){SetScene(s);}	}
