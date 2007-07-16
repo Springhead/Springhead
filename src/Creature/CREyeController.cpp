@@ -20,18 +20,17 @@ IF_OBJECT_IMP(CREyeController, SceneObject);
 void CREyeController::LookAt(Vec3f pos, Vec3f vel){
 	nextLookatPos = pos;
 	nextLookatVel = vel;
+	currLookatPos = pos;
+	currLookatVel = vel;
 }
 
 void CREyeController::Step(){
 	// 視覚制御に用いる状態量の計算
 	CalcEyeStatusValue();
 
-	ControlEyeToTargetDir(soLEye, nextLookatPos - soLEye->GetPose().Pos());
-	//ControlEyeToTargetDir(soREye, nextLookatPos - soREye->GetPose().Pos());
-	return;
-
 	// 制御状態の遷移
-	controlState = GetNextState(controlState);
+	//controlState = GetNextState(controlState);
+	controlState = CS_PURSUIT;
 
 	// 実際の眼球運動制御の実行
 	Vec3f targetDirL, targetDirR;
@@ -47,18 +46,12 @@ void CREyeController::Step(){
 	default:
 		break;
 	}
-
-	//ControlEyeToTargetDir(soLEye, nextLookatPos - soLEye->GetPose().Pos());
-	//ControlEyeToTargetDir(soREye, nextLookatPos - soREye->GetPose().Pos());
 }
 
 void CREyeController::CalcEyeStatusValue(){
-	// 臨時
-	currLookatPos = nextLookatPos;
-	currLookatVel = nextLookatVel;
-
 	// 眼球の座標系として頭の前方向をZ軸、上方向をY軸とする右手系ローカル座標に変換
-	Quaterniond qToLoc = soHead->GetPose().Ori().Inv(); // グローバルからローカル座標に変換
+	qToLoc = soHead->GetPose().Ori().Inv(); // グローバルからローカル座標に変換
+	qToGlo = soHead->GetPose().Ori();       // ローカルからグローバル座標に変換
 
 	// 基本量
 	// -- 目の回転量
@@ -75,10 +68,10 @@ void CREyeController::CalcEyeStatusValue(){
 
 	// 中間量
 	// -- 視軸（角度表示）
-	double locLEyeAxisH = Vec3ToAngH(locLEyeOri * Vec3d(0,0,1));
-	double locLEyeAxisV = Vec3ToAngV(locLEyeOri * Vec3d(0,0,1));
-	double locREyeAxisH = Vec3ToAngH(locREyeOri * Vec3d(0,0,1));
-	double locREyeAxisV = Vec3ToAngV(locREyeOri * Vec3d(0,0,1));
+	locLEyeAxisH = Vec3ToAngH(locLEyeOri * Vec3d(0,0,1));
+	locLEyeAxisV = Vec3ToAngV(locLEyeOri * Vec3d(0,0,1));
+	locREyeAxisH = Vec3ToAngH(locREyeOri * Vec3d(0,0,1));
+	locREyeAxisV = Vec3ToAngV(locREyeOri * Vec3d(0,0,1));
 	// -- 各眼球から見た視標の方向（角度表示）
 	Vec3d locLLookat = qToLoc * (currLookatPos - soLEye->GetPose().Pos());
 	Vec3d locRLookat = qToLoc * (currLookatPos - soREye->GetPose().Pos());
@@ -92,6 +85,12 @@ void CREyeController::CalcEyeStatusValue(){
 	locErrLV = locLLookatV - locLEyeAxisV;
 	locErrRH = locRLookatH - locREyeAxisH;
 	locErrRV = locRLookatV - locREyeAxisV;
+
+	if (abs(locErrLH - locLastErrLH) > 1.0) {locLastErrLH = locErrLH;}
+	if (abs(locErrLV - locLastErrLV) > 1.0) {locLastErrLV = locErrLV;}
+	if (abs(locErrRH - locLastErrRH) > 1.0) {locLastErrRH = locErrRH;}
+	if (abs(locErrRV - locLastErrRV) > 1.0) {locLastErrRV = locErrRV;}
+
 	// -- 視標視軸誤差変化量
 	locDErrLH = (locErrLH - locLastErrLH) / dt; locLastErrLH = locErrLH;
 	locDErrLV = (locErrLV - locLastErrLV) / dt; locLastErrLV = locErrLV;
@@ -107,6 +106,8 @@ void CREyeController::CalcEyeStatusValue(){
 		std::cout << "locREyeAxisH : " << Deg(locREyeAxisH) << std::endl;
 		std::cout << "locREyeAxisV : " << Deg(locREyeAxisV) << std::endl;
 
+		std::cout << "currLookatPos : " << currLookatPos << std::endl;
+
 		std::cout << "locLLookatH : " << Deg(locLLookatH) << std::endl;
 		std::cout << "locLLookatV : " << Deg(locLLookatV) << std::endl;
 		std::cout << "locRLookatH : " << Deg(locRLookatH) << std::endl;
@@ -116,66 +117,22 @@ void CREyeController::CalcEyeStatusValue(){
 		std::cout << "locErrLV : " << Deg(locErrLV) << std::endl;
 		std::cout << "locErrRH : " << Deg(locErrRH) << std::endl;
 		std::cout << "locErrRV : " << Deg(locErrRV) << std::endl;
+
+		std::cout << "locDErrLH : " << Deg(locDErrLH) << std::endl;
+		std::cout << "locDErrLV : " << Deg(locDErrLV) << std::endl;
+		std::cout << "locDErrRH : " << Deg(locDErrRH) << std::endl;
+		std::cout << "locDErrRV : " << Deg(locDErrRV) << std::endl;
 	}
-
-	/*
-	Vec3f apHoriz, apVert;
-	apHoriz = apVert = soHead->GetPose().Ori().Inv() * currLookatPos;
-
-	apHoriz[1] = 0.0f;
-	apHoriz = soHead->GetPose().Ori() * apHoriz;
-	apVert[0]  = 0.0f;
-	apVert  = soHead->GetPose().Ori() * apVert;
-
-	Vec3f eyeDirRelL = soHead->GetPose().Ori().Inv() * soLEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, -1.0f);
-	Vec3f eyeDirRelR = soHead->GetPose().Ori().Inv() * soREye->GetPose().Ori() * Vec3f(0.0f, 0.0f, -1.0f);
-	t1 =  atan2(eyeDirRelL.Z(), -eyeDirRelL.X());
-	t2 =  atan2(eyeDirRelR.Z(), -eyeDirRelR.X());
-	t3 = -atan2(eyeDirRelL.Y(),  eyeDirRelL.Z());
-	t4 = -atan2(eyeDirRelR.Y(),  eyeDirRelR.Z());
-
-	float dt = (float)(DCAST(PHSceneIf, GetScene())->GetTimeStep());
-
-	Vec3f vecL = apHoriz - soLEye->GetCenterPosition();
-	vecL = soHead->GetPose().Ori().Inv() * vecL;
-	float t1_a = atan2(-vecL.Z(),vecL.X());
-	eL   = t1_a - t1;
-	vL   = (t1_a - last_t1_a) / dt;
-	last_t1_a = t1_a;
-
-	Vec3f vecR = apHoriz - soREye->GetCenterPosition();
-	vecR = soHead->GetPose().Ori().Inv() * vecR;
-	float t2_a = atan2(-vecR.Z(),vecR.X());
-	eR   = t2_a - t2;
-	vR   = (t2_a - last_t2_a) / dt;
-	last_t2_a = t2_a;
-
-	Vec3f vecLV = apVert - soLEye->GetCenterPosition();
-	vecLV = soHead->GetPose().Ori().Inv() * vecLV;
-	float t3_a = atan2(vecLV.Y(),-vecLV.Z());
-	eLV  = t3_a - t3;
-	vLV  = (t3_a - last_t3_a) / dt;
-	last_t3_a = t3_a;
-
-	Vec3f vecRV = apVert - soREye->GetCenterPosition();
-	vecRV = soHead->GetPose().Ori().Inv() * vecRV;
-	float t4_a = atan2(vecRV.Y(),-vecRV.Z());
-	eRV  = t4_a - t4;
-	vRV  = (t4_a - last_t4_a) / dt;
-	last_t4_a = t4_a;
-	*/
 }
 
 CREyeControllerState::ControlState CREyeController::GetNextState(ControlState currentCS){
 	// 条件判定と次の制御状態の決定
 	switch(controlState){
 	case CS_SACCADE:
-		std::cout << Deg(eL) << ", " << Deg(eR) << ", " << Deg(eLV) << ", " << Deg(eRV) << std::endl;
-		if ((abs(eL) < Rad(0.1f)) && (abs(eR)  < Rad(0.1f)) && (abs(eLV) < Rad(0.1f)) && (abs(eRV) < Rad(0.1f))) {
+		if ((abs(locErrLH) < Rad(1.0f)) && (abs(locErrRH)  < Rad(1.0f)) && (abs(locErrLV) < Rad(1.0f)) && (abs(locErrRV) < Rad(1.0f))
+			&& (abs(locDErrLH) < Rad(0.1f)) && (abs(locDErrRH)  < Rad(0.1f)) && (abs(locDErrLV) < Rad(0.1f)) && (abs(locDErrRV) < Rad(0.1f))) {
 			// Saccade終了, Pursuitへ移行
 			integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
-			soLEye->SetVelocity(Vec3f(0,0,0));
-			soREye->SetVelocity(Vec3f(0,0,0));
 			return CS_PURSUIT;
 		}else{
 			// Saccade継続
@@ -183,9 +140,7 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 		}
 		break;
 	case CS_PURSUIT:
-		//if ((abs(eL) > Rad(1.0f)) || (abs(eR)  > Rad(1.0f)) || (abs(eLV) > Rad(1.0f)) || (abs(eRV) > Rad(1.0f))) {
-		if ((abs(eL) > Rad(5.0f)) || (abs(eR)  > Rad(5.0f)) || (abs(eLV) > Rad(5.0f)) || (abs(eRV) > Rad(5.0f))) {
-		//if ((abs(eL) > Rad(50.0f)) || (abs(eR)  > Rad(50.0f)) || (abs(eLV) > Rad(50.0f)) || (abs(eRV) > Rad(50.0f))) {
+		if ((abs(locErrLH) > Rad(5.0f)) || (abs(locErrRH)  > Rad(5.0f)) || (abs(locErrLV) > Rad(5.0f)) || (abs(locErrRV) > Rad(5.0f))) {
 			// Saccadeへ移行
 			currLookatPos = nextLookatPos;
 			currLookatVel = nextLookatVel;
@@ -208,59 +163,12 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 }
 
 void CREyeController::SaccadeControl(){
-	Vec3f saccadeToL  = (currLookatPos - soLEye->GetPose().Pos()).unit();
-	Vec3f saccadeToR  = (currLookatPos - soREye->GetPose().Pos()).unit();
-
-	float aL = acos(PTM::dot(saccadeToL/saccadeToL.norm(), saccadeFromL/saccadeFromL.norm()));
-	float aR = acos(PTM::dot(saccadeToR/saccadeToR.norm(), saccadeFromR/saccadeFromR.norm()));
-	float t = (saccadeTimer += (float)((DCAST(PHSceneIf, GetScene()))->GetTimeStep()));
-	float L = (float)Rad(500.0f);
-	float T = 0.05f;
-	float lengthL = 1.0f;
-	float lengthR = 1.0f;
-
-	#define theta(x)   (6*pow(((x)/T),5) - 15*pow(((x)/T),4) + 10*pow(((x)/T),3))
-	#define dtheta(x)  (30*pow((x),4)/pow(T,5) - 60*pow((x),4)/pow(T,4) + 30*pow((x),2)/pow(T,3))
-
-	if (aL*dtheta(T/2.0f) >= L) {
-		float a_ = L/dtheta(T/2.0f);
-		if (0 <= t && t < T/2.0f) {
-			lengthL = (a_*theta(t))/aL;
-		} else if (t < ((aL-a_)/L + T/2.0f)) {
-			lengthL = (L*t + a_/2.0f -L*T/2.0f)/aL;
-		} else if (t < ((aL-a_)/L + T     )) {
-			lengthL = (a_*theta(t-(aL-a_)/L) + (aL-a_))/aL;
-		}
-	} else {
-		if (0 <=t && t < T) {
-			lengthL = (aL*theta(t))/aL;
-		}
-	}
-	if (aR*dtheta(T/2.0f) >= L) {
-		float a_ = L/dtheta(T/2.0f);
-		if (0 <= t && t < T/2.0f) {
-			lengthR = (a_*theta(t))/aR;
-		} else if (t < ((aR-a_)/L + T/2.0f)) {
-			lengthR = (L*t + a_/2.0f -L*T/2.0f)/aR;
-		} else if (t < ((aR-a_)/L + T     )) {
-			lengthR = (a_*theta(t-(aR-a_)/L) + (aR-a_))/aR;
-		}
-	} else {
-		if (0 <=t && t < T) {
-			lengthR = (aR*theta(t))/aR;
-		}
-	}
-
-	Quaternionf headori     = soHead->GetPose().Ori();
-	Quaternionf headori_inv = headori.Inv();
-	Vec3f dirL = headori*((headori_inv*saccadeToL)*lengthL) + saccadeFromL*(1-lengthL);
-	Vec3f dirR = headori*((headori_inv*saccadeToR)*lengthR) + saccadeFromR*(1-lengthR);
-
-	ControlEyeToTargetDir(soLEye, dirL);
-	ControlEyeToTargetDir(soREye, dirR);
+	ControlEyeToTargetDir(soLEye, nextLookatPos - soLEye->GetPose().Pos());
+	ControlEyeToTargetDir(soREye, nextLookatPos - soREye->GetPose().Pos());
 }
 
 void CREyeController::PursuitControl(){
+	/*
 	const float alpha1 = 0.5f;
 	const float rho1 = 1.50f;
 	const float rho2 = 0.50f;
@@ -270,37 +178,65 @@ void CREyeController::PursuitControl(){
 	// Velocity
 	const float nu =  0.5f;
 	const float eta = 0.2f;
+	*/
 
-	currLookatPos = nextLookatPos;
-	currLookatVel = nextLookatVel;
+	// Head Rotation
+	const float alpha1 = 0.0f;
+	// Output Ratio
+	const float rho1 = 1.5f;
+	const float rho2 = 0.5f;
+	// Error Input
+	const float sigma = 1.0f;
+	const float kappa = 0.5f;
+	// Velocity Input
+	const float nu =  0.5f;
+	const float eta = 0.2f;
 
-	float dw  = (float)(soHead->GetAngularVelocity().Y());
-	float dwv = (float)(soHead->GetAngularVelocity().X());
+	std::cout << " IL : " << integrator_L << std::endl;
 
 	float dt  = (float)(DCAST(PHSceneIf, GetScene())->GetTimeStep());
 
 	//// Horizontal
-	float node_L_1 = -(sigma*eL + nu*vL) - (kappa*eR + eta*vR) + (dw*alpha1);
-	float node_R_1 =  (sigma*eR + nu*vR) + (kappa*eL + eta*vL) - (dw*alpha1);
+	/*
+	float node_L_1 = -(sigma*locErrLH + nu*locDErrLH) - (kappa*locErrRH + eta*locDErrRH) + (locHeadAngvelH*alpha1);
+	float node_R_1 =  (sigma*locErrRH + nu*locDErrRH) + (kappa*locErrLH + eta*locDErrLH) - (locHeadAngvelH*alpha1);
 	
 	integrator_L += node_L_1 * dt;
 	integrator_R += node_R_1 * dt;
-	
-	float out_t1 = -(integrator_L * rho1) + (integrator_R * rho2) + t1;
-	float out_t2 = -(integrator_L * rho2) + (integrator_R * rho1) + t2;
+
+	std::cout << " locErrLH : " << locErrLH << std::endl;
+	std::cout << " locDErrLH : " << locDErrLH << std::endl;
+	std::cout << " locErrRH : " << locErrRH << std::endl;
+	std::cout << " locDErrLH : " << locDErrRH << std::endl;
+
+	std::cout << " nodeL : " << node_L_1 << std::endl;
+	std::cout << " nodeR : " << node_R_1 << std::endl;
+	std::cout << " IL : " << integrator_L << std::endl;
+	std::cout << std::endl;
+
+	float out_t1 = -(integrator_L * rho1) + (integrator_R * rho2) + locLEyeAxisH;
+	float out_t2 = -(integrator_L * rho2) + (integrator_R * rho1) + locREyeAxisH;
+	*/
+
+	integrator_L += dt * ((rho1*nu+rho2*eta)*locDErrLH + (rho1*sigma+rho2*kappa)*locErrLH + (rho1*eta+rho2*nu)*locDErrRH + (rho1*kappa+rho2*sigma)*locErrRH);
+	integrator_R += dt * ((rho1*nu+rho2*eta)*locDErrRH + (rho1*sigma+rho2*kappa)*locErrRH + (rho1*eta+rho2*nu)*locDErrLH + (rho1*kappa+rho2*sigma)*locErrLH);
+
+	float out_t1 = integrator_L + locLEyeAxisH;
+	float out_t2 = integrator_R + locREyeAxisH;
 
 	//// Vertical
-	float node_L_2 = (sigma*eLV + nu*vLV);// + (dwv*alpha1);
-	float node_R_2 = (sigma*eRV + nu*vRV);// + (dwv*alpha1);
+	float node_L_2 = (sigma*locErrLV + nu*locDErrLV);// + (locHeadAngvelV*alpha1);
+	float node_R_2 = (sigma*locErrRV + nu*locDErrRV);// + (locHeadAngvelV*alpha1);
 
 	integrator_Lv += node_L_2 * dt;
 	integrator_Rv += node_R_2 * dt;
 
-	float out_t3 = (integrator_Lv * rho1) + t3;
-	float out_t4 = (integrator_Rv * rho1) + t4;
+	float out_t3 = (integrator_Lv * rho1) + locLEyeAxisV;
+	float out_t4 = (integrator_Rv * rho1) + locREyeAxisV;
 
 	Vec3f dirL, dirR;
 
+	/*
 	if (cos(out_t3)!=0){
 		dirL = Vec3f(-cos(out_t1), -sin(out_t1)*tan(out_t3), sin(out_t1));
 	}else{
@@ -315,13 +251,17 @@ void CREyeController::PursuitControl(){
 
 	dirL = -(soHead->GetPose().Ori() * dirL);
 	dirR = -(soHead->GetPose().Ori() * dirR);
-	
+	*/
+
+	dirL = qToGlo*Quaternionf::Rot(-out_t3,'x')*Quaternionf::Rot(out_t1,'y')*Vec3f(0,0,1);
+	dirR = qToGlo*Quaternionf::Rot(-out_t4,'x')*Quaternionf::Rot(out_t2,'y')*Vec3f(0,0,1);
+
 	ControlEyeToTargetDir(soLEye, dirL);
 	ControlEyeToTargetDir(soREye, dirR);
 }
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
-	/**/
+	/*/
 	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
 	Vec3f errorYawPitch = PTM::cross(currentDir, target);
 	Vec3f derror = soEye->GetAngularVelocity();
@@ -329,7 +269,7 @@ void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f target){
  	soEye->AddTorque(torque);
 	/**/
 
-	/*/
+	/**/
 	double angH = Vec3ToAngH(target);
 	double angV = Vec3ToAngV(target);
 	std::cout << "(angH, angV) = (" << Deg(angH) << ", " << Deg(angV) << ")" << std::endl;

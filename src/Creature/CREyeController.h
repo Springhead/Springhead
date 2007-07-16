@@ -53,10 +53,12 @@ private:
 	double Vec3ToAngV(Vec3d v);
 
 	// 最終的にはStateクラスに移動することが望まれる変数群
+	double locLEyeAxisH, locLEyeAxisV, locREyeAxisH, locREyeAxisV;
 	double locErrLH, locErrLV, locErrRH, locErrRV;
 	double locDErrLH, locDErrLV, locDErrRH, locDErrRV;
 	double locLastErrLH, locLastErrLV, locLastErrRH, locLastErrRV;
 	double locHeadAngvelH, locHeadAngvelV;
+	Quaterniond qToLoc, qToGlo;
 
 	// -- 眼球の状態量
 	float t1, t2, t3, t4; ///< 視線方向の角度を示す数値
@@ -91,7 +93,18 @@ public:
 		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
 	}
 	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL)
-		:CREyeControllerDesc(desc){ if(s){SetScene(s);}	}
+		:CREyeControllerDesc(desc){ 
+		if(s){SetScene(s);}
+		currLookatPos = currLookatVel = Vec3f(0,0,0);
+		nextLookatPos = nextLookatVel = Vec3f(0,0,0);
+		saccadeTimer = 0.0f;
+		t1 = t2 = t3 = t4 = 0.0f;
+		eL = eR = eLV = eRV = 0.0f;
+		vL = vR = vLV = vRV = 0.0f;
+		last_t1_a = last_t2_a = last_t3_a = last_t4_a = 0.0f;
+		integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
+		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
+	}
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
