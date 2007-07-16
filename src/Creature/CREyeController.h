@@ -40,7 +40,7 @@ private:
 		@param soEye 制御対象の眼球
 		@param aim   眼球方向の目標値
 	*/
-	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3f aim);
+	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d aim);
 
 	/** @brief ベクトルのXZ平面への射影がZ軸となす角（Z軸→X軸向きの回転を正とする）
 		@param v 入力ベクトル
@@ -53,57 +53,41 @@ private:
 	double Vec3ToAngV(Vec3d v);
 
 	// 最終的にはStateクラスに移動することが望まれる変数群
+	// -- 眼球および頭部の状態量
 	double locLEyeAxisH, locLEyeAxisV, locREyeAxisH, locREyeAxisV;
 	double locErrLH, locErrLV, locErrRH, locErrRV;
 	double locDErrLH, locDErrLV, locDErrRH, locDErrRV;
-	double locLastErrLH, locLastErrLV, locLastErrRH, locLastErrRV;
 	double locHeadAngvelH, locHeadAngvelV;
 	Quaterniond qToLoc, qToGlo;
-
-	// -- 眼球の状態量
-	float t1, t2, t3, t4; ///< 視線方向の角度を示す数値
-	float eL, eR, eLV, eRV; ///< 視線方向と目標方向の誤差量
-	float vL, vR, vLV, vRV; ///< 視線方向と目標方向の誤差量の変化量
-	float last_t1_a, last_t2_a, last_t3_a, last_t4_a; ///< 前回の目標位置（視角）
-	// -- 目標地点関連
-	Vec3f currLookatPos; ///< 現在視線移動中の注視点
-	Vec3f currLookatVel; ///< 現在視線移動中の注視点の移動速度ベクトル
-	Vec3f nextLookatPos; ///< 次の注視点
-	Vec3f nextLookatVel; ///< 次の注視点の移動速度ベクトル
+	double locLastErrLH, locLastErrLV, locLastErrRH, locLastErrRV;
+	bool bContLocErr;
+	// -- 目標地点
+	Vec3f lookatPos; ///< 注視点
+	Vec3f lookatVel; ///< 注視点の移動速度ベクトル
 	// -- サッケード制御関連
-	float saccadeTimer; ///< サッケード制御の時間経過を示すタイマ
-	Vec3f saccadeFromL; ///< サッケード開始時の左目の視線方向
-	Vec3f saccadeFromR; ///< サッケード開始時の左目の視線方向
+	double saccadeTimer; ///< サッケード制御の時間経過を示すタイマ
+	Vec3d  saccadeFromL; ///< サッケード開始時の左目の視線方向
+	Vec3d  saccadeFromR; ///< サッケード開始時の左目の視線方向
 	// -- スムースパーシュート制御関連
-	float integrator_L, integrator_R, integrator_Lv, integrator_Rv; ///< 積分器
+	double integrator_L, integrator_R, integrator_Lv, integrator_Rv; ///< 積分器
 
 public:
 	OBJECTDEF(CREyeController, SceneObject);
 	ACCESS_DESC_STATE(CREyeController);
 
 	CREyeController(){
-		currLookatPos = currLookatVel = Vec3f(0,0,0);
-		nextLookatPos = nextLookatVel = Vec3f(0,0,0);
 		saccadeTimer = 0.0f;
-		t1 = t2 = t3 = t4 = 0.0f;
-		eL = eR = eLV = eRV = 0.0f;
-		vL = vR = vLV = vRV = 0.0f;
-		last_t1_a = last_t2_a = last_t3_a = last_t4_a = 0.0f;
 		integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
 		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
+		bContLocErr = false;
 	}
 	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL)
 		:CREyeControllerDesc(desc){ 
 		if(s){SetScene(s);}
-		currLookatPos = currLookatVel = Vec3f(0,0,0);
-		nextLookatPos = nextLookatVel = Vec3f(0,0,0);
 		saccadeTimer = 0.0f;
-		t1 = t2 = t3 = t4 = 0.0f;
-		eL = eR = eLV = eRV = 0.0f;
-		vL = vR = vLV = vRV = 0.0f;
-		last_t1_a = last_t2_a = last_t3_a = last_t4_a = 0.0f;
 		integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
 		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
+		bContLocErr = false;
 	}
 
 	/** @brief 注視点を設定する
