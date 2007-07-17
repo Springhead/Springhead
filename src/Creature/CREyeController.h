@@ -15,8 +15,59 @@
 #include <Foundation/Object.h>
 #include "IfStubDumpCreature.h"
 
+//@{
 namespace Spr{;
 
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// CRPursuitController
+// スムースパーシュート用コントローラの状態量定義クラス
+class CRPursuitControllerState {
+public:
+	double angleLH, angleRH, angleV;
+	double intL, intR;
+	double lastIL, lastIR;
+
+	CRPursuitControllerState() {
+		angleLH = angleRH = angleV = 0.0;
+		lastIL = lastIR = 0.0;
+	}
+
+	void Reset(){
+		intL = intR = 0.0;
+		lastIL = lastIR = 0.0;
+	}
+};
+
+// スムースパーシュート用コントローラのパラメータ定義クラス
+class CRPursuitControllerDesc : public CRPursuitControllerState {
+public:
+	double R1, R2;
+	double N, H, S, K;
+	double A1;
+	CRPursuitControllerDesc() : CRPursuitControllerState() {
+		R1 = 1.5;
+		R2 = 0.5;
+		N  = 0.5;
+		H  = 0.2;
+		S  = 1.0;
+		K  = 0.5;
+		A1 = 0.5;
+	}
+};
+
+// スムースパーシュート用コントローラ(CREyeControllerが内部で使う、非APIクラス)
+class CRPursuitController : public CRPursuitControllerDesc {
+private:
+public:
+	CRPursuitController() : CRPursuitControllerDesc() {}
+	CRPursuitController(CRPursuitControllerDesc& desc) : CRPursuitControllerDesc(desc){}
+	void StepHoriz(double destLH, double destRH, double angleHeadH, double dt);
+	void StepVert(double destV, double angleHeadV, double dt);
+};
+
+
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// CREyeController
 /// 眼球運動コントローラの実装
 class CREyeController : public SceneObject,	public CREyeControllerIfInit, 	public CREyeControllerDesc {
 private:
@@ -28,19 +79,18 @@ private:
 	*/
 	CREyeControllerState::ControlState GetNextState(ControlState currentCS);
 
-	/** @briefサッケード制御を実行する
-	*/
-	void SaccadeControl();
-
-	/** @brief スムースパーシュート制御を実行する
-	*/
-	void PursuitControl();
-
 	/** @brief 眼球の向きを目標の方向へPD制御する
 		@param soEye 制御対象の眼球
 		@param aim   眼球方向の目標値
 	*/
 	void ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d aim);
+
+	/** @brief 眼球の向きを目標の方向へPD制御する
+		@param soEye 制御対象の眼球
+		@param horiz 目標角度（水平方向）
+		@param vert  目標角度（垂直方向）
+	*/
+	void ControlEyeToTargetDir(PHSolidIf* soEye, double horiz, double vert);
 
 	/** @brief ベクトルのXZ平面への射影がZ軸となす角（Z軸→X軸向きの回転を正とする）
 		@param v 入力ベクトル
@@ -54,41 +104,22 @@ private:
 
 	// 最終的にはStateクラスに移動することが望まれる変数群
 	// -- 眼球および頭部の状態量
-	double locLEyeAxisH, locLEyeAxisV, locREyeAxisH, locREyeAxisV;
-	double locErrLH, locErrLV, locErrRH, locErrRV;
-	double locDErrLH, locDErrLV, locDErrRH, locDErrRV;
-	double locHeadAngvelH, locHeadAngvelV;
 	Quaterniond qToLoc, qToGlo;
-	double locLastErrLH, locLastErrLV, locLastErrRH, locLastErrRV;
-	bool bContLocErr;
+	double locLEyeAxisH, locLEyeAxisV, locREyeAxisH, locREyeAxisV;
+	double locLLookatH,  locLLookatV,  locRLookatH,  locRLookatV;
 	// -- 目標地点
 	Vec3f lookatPos; ///< 注視点
 	Vec3f lookatVel; ///< 注視点の移動速度ベクトル
-	// -- サッケード制御関連
-	double saccadeTimer; ///< サッケード制御の時間経過を示すタイマ
-	Vec3d  saccadeFromL; ///< サッケード開始時の左目の視線方向
-	Vec3d  saccadeFromR; ///< サッケード開始時の左目の視線方向
-	// -- スムースパーシュート制御関連
-	double integrator_L, integrator_R, integrator_Lv, integrator_Rv; ///< 積分器
+	
+	// スムースパーシュートコントローラ
+	CRPursuitController pursuitCtrl;
 
 public:
 	OBJECTDEF(CREyeController, SceneObject);
 	ACCESS_DESC_STATE(CREyeController);
 
-	CREyeController(){
-		saccadeTimer = 0.0f;
-		integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
-		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
-		bContLocErr = false;
-	}
-	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL)
-		:CREyeControllerDesc(desc){ 
-		if(s){SetScene(s);}
-		saccadeTimer = 0.0f;
-		integrator_L = integrator_R = integrator_Lv = integrator_Rv = 0.0f;
-		locLastErrLH=0; locLastErrLV=0; locLastErrRH=0; locLastErrRV=0;
-		bContLocErr = false;
-	}
+	CREyeController(){}
+	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL) : CREyeControllerDesc(desc) {if(s){SetScene(s);}}
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
@@ -101,6 +132,6 @@ public:
 	virtual void Step();
 };
 
-}
+}//@}
 
 #endif//CREYECONTROLLER_H
