@@ -111,8 +111,8 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 	// 条件判定と次の制御状態の決定
 	switch(controlState){
 	case CS_SACCADE:
-		if ((abs(locErrLH) < Rad(10.0f)) && (abs(locErrRH)  < Rad(10.0f))) {
-		//if ((abs(locErrLH) < Rad(10.0f)) && (abs(locErrRH)  < Rad(10.0f)) && (abs(locErrLV) < Rad(10.0f)) && (abs(locErrRV) < Rad(10.0f))) {
+		//if ((abs(locErrLH) < Rad(10.0f)) && (abs(locErrRH)  < Rad(10.0f))) {
+		if ((abs(locErrLH) < Rad(10.0f)) && (abs(locErrRH)  < Rad(10.0f)) && (abs(locErrLV) < Rad(10.0f)) && (abs(locErrRV) < Rad(10.0f))) {
 			//&& (abs(locDErrLH) < Rad(1.0f)) && (abs(locDErrRH)  < Rad(1.0f)) && (abs(locDErrLV) < Rad(1.0f)) && (abs(locDErrRV) < Rad(1.0f))) {
 			// Saccade終了, Pursuitへ移行
 			locLastErrLH = 0; locLastErrLV = 0; locLastErrRH = 0; locLastErrRV = 0;
@@ -172,17 +172,18 @@ void CREyeController::PursuitControl(){
 	double out_t2 = integrator_R + locREyeAxisH;
 
 	// Vertical
-	double node_L_2 = (sigma*locErrLV + nu*locDErrLV);// + (locHeadAngvelV*alpha1);
-	double node_R_2 = (sigma*locErrRV + nu*locDErrRV);// + (locHeadAngvelV*alpha1);
+	integrator_Lv += dt * ((rho1*nu+rho2*eta)*locDErrLV + (rho1*sigma+rho2*kappa)*locErrLV);
+	integrator_Rv += dt * ((rho1*nu+rho2*eta)*locDErrRH + (rho1*sigma+rho2*kappa)*locErrRH);
+	double out_t3 = integrator_Lv + locLEyeAxisH;
+	double out_t4 = integrator_Rv + locREyeAxisH;
 
-	integrator_Lv += node_L_2 * dt;
-	integrator_Rv += node_R_2 * dt;
+	std::cout << "deg_integrator_L  : " << Deg(integrator_L ) << std::endl;
+	std::cout << "deg_integrator_R  : " << Deg(integrator_R ) << std::endl;
+	std::cout << "deg_integrator_Lv : " << Deg(integrator_Lv) << std::endl;
+	std::cout << "deg_integrator_Rv : " << Deg(integrator_Rv) << std::endl;
 
-	double out_t3 = (integrator_Lv * rho1) + locLEyeAxisV;
-	double out_t4 = (integrator_Rv * rho1) + locREyeAxisV;
-
-	std::cout << "deg_integrator_L : " << Deg(integrator_L) << std::endl;
-	std::cout << "deg_integrator_R : " << Deg(integrator_R) << std::endl;
+	out_t3 = Vec3ToAngV(qToLoc*(lookatPos - soLEye->GetPose().Pos()));
+	out_t4 = Vec3ToAngV(qToLoc*(lookatPos - soREye->GetPose().Pos()));
 
 	// Output
 	ControlEyeToTargetDir(soLEye, qToGlo*Quaterniond::Rot(-out_t3,'x')*Quaterniond::Rot(out_t1,'y')*Vec3f(0,0,1));
@@ -200,7 +201,7 @@ void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d target){
 
 	/**/ //制御しないで直接姿勢設定（理想的なもっとも硬い制御）
 	double angH = Vec3ToAngH(target);
-	double angV = 0.0;//Vec3ToAngV(target);
+	double angV = Vec3ToAngV(target);
 	std::cout << "(angH, angV) = (" << Deg(angH) << ", " << Deg(angV) << ")" << std::endl;
 	Quaterniond ori = Quaterniond::Rot(-angV,'x')*Quaterniond::Rot(angH,'y');
 	Posed pose = soEye->GetPose();
