@@ -145,7 +145,7 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 }
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d target){
-	/*/ //普通のPD制御
+	/**/ //普通のPD制御
 	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
 	Vec3f errorYawPitch = PTM::cross(currentDir, target);
 	Vec3f derror = soEye->GetAngularVelocity();
@@ -153,7 +153,7 @@ void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d target){
  	soEye->AddTorque(torque);
 	/**/
 
-	/**/ //制御しないで直接姿勢設定（理想的なもっとも硬い制御）
+	/*/ //制御しないで直接姿勢設定（理想的なもっとも硬い制御）
 	double angH = Vec3ToAngH(target);
 	double angV = Vec3ToAngV(target);
 	std::cout << "(angH, angV) = (" << Deg(angH) << ", " << Deg(angV) << ")" << std::endl;
@@ -165,7 +165,16 @@ void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d target){
 }
 
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, double horiz, double vert){
-	/**/ //制御しないで直接姿勢設定（理想的なもっとも硬い制御）
+	/**/ //普通のPD制御
+	Vec3d target = Quaterniond::Rot(-vert,'x')*Quaterniond::Rot(horiz,'y')*Vec3d(0,0,1);
+	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
+	Vec3f errorYawPitch = PTM::cross(currentDir, target);
+	Vec3f derror = soEye->GetAngularVelocity();
+	Vec3f torque = (Kp * (errorYawPitch)) - (Kd * derror);
+ 	soEye->AddTorque(torque);
+	/**/
+
+	/*/ //制御しないで直接姿勢設定（理想的なもっとも硬い制御）
 	double angH = horiz;
 	double angV = vert;
 	std::cout << "(angH, angV) = (" << Deg(angH) << ", " << Deg(angV) << ")" << std::endl;
