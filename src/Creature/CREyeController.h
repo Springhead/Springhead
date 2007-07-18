@@ -69,7 +69,7 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CREyeController
 /// 眼球運動コントローラの実装
-class CREyeController : public SceneObject,	public CREyeControllerIfInit, 	public CREyeControllerDesc {
+class CREyeController : public SceneObject,	public CREyeControllerIfInit, public CREyeControllerDesc {
 private:
 	/** @brief 視覚制御に用いる眼球の状態量を計算する
 	*/
