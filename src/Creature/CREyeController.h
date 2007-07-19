@@ -8,12 +8,10 @@
 #ifndef CREYECONTROLLER_H
 #define CREYECONTROLLER_H
 
-#include <SprCreature.h>
-#include <SprFoundation.h>
-#include <SprPhysics.h>
+#include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubDumpCreature.h"
+#include "IfStubCreature.h"
 
 //@{
 namespace Spr{;

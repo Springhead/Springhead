@@ -59,9 +59,9 @@ void CREyeController::Step(){
 	case CS_SACCADE:
 		if(CREYECTRL_DEBUG){std::cout << "Saccade" << std::endl;}
 		pursuitCtrl.Reset();
-		pursuitCtrl.angleLH = Vec3ToAngH(lookatPos-soLEye->GetPose().Pos());
-		pursuitCtrl.angleV = Vec3ToAngV(lookatPos-soLEye->GetPose().Pos());
-		pursuitCtrl.angleRH = Vec3ToAngH(lookatPos-soREye->GetPose().Pos());
+		pursuitCtrl.angleLH = Vec3ToAngH(qToLoc*(lookatPos-soLEye->GetPose().Pos()));
+		pursuitCtrl.angleV = Vec3ToAngV(qToLoc*(lookatPos-soLEye->GetPose().Pos()));
+		pursuitCtrl.angleRH = Vec3ToAngH(qToLoc*(lookatPos-soREye->GetPose().Pos()));
 		ControlEyeToTargetDir(soLEye, pursuitCtrl.angleLH, pursuitCtrl.angleV);
 		ControlEyeToTargetDir(soREye, pursuitCtrl.angleRH, pursuitCtrl.angleV);
 		break;
@@ -70,7 +70,7 @@ void CREyeController::Step(){
 		pursuitCtrl.StepHoriz(locLLookatH, locRLookatH, 0, dt);
 		pursuitCtrl.StepVert(locLLookatV, 0, dt);
 		ControlEyeToTargetDir(soLEye, pursuitCtrl.angleLH, pursuitCtrl.angleV);
-		ControlEyeToTargetDir(soLEye, pursuitCtrl.angleRH, pursuitCtrl.angleV);
+		ControlEyeToTargetDir(soREye, pursuitCtrl.angleRH, pursuitCtrl.angleV);
 		break;
 	default:
 		break;
@@ -91,8 +91,8 @@ void CREyeController::CalcEyeStatusValue(){
 	// -- 各眼球から見た視標の方向（角度表示）
 	Vec3d locLLookat = qToLoc * (lookatPos - soLEye->GetPose().Pos());
 	Vec3d locRLookat = qToLoc * (lookatPos - soREye->GetPose().Pos());
-	double locLLookatH = Vec3ToAngH(locLLookat), locLLookatV = Vec3ToAngV(locLLookat);
-	double locRLookatH = Vec3ToAngH(locRLookat), locRLookatV = Vec3ToAngV(locRLookat);
+	locLLookatH = Vec3ToAngH(locLLookat); locLLookatV = Vec3ToAngV(locLLookat);
+	locRLookatH = Vec3ToAngH(locRLookat); locRLookatV = Vec3ToAngV(locRLookat);
 
 	if (CREYECTRL_DEBUG) {
 		std::cout << "lookatPos : " << lookatPos << std::endl;
@@ -114,6 +114,9 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 	double locErrLV = locLLookatV - locLEyeAxisV;
 	double locErrRH = locRLookatH - locREyeAxisH;
 	double locErrRV = locRLookatV - locREyeAxisV;
+
+	std::cout << Deg(locLLookatH) << " - " << Deg(locLEyeAxisH) << " = ";
+	std::cout << Deg(locErrLH) << std::endl;
 
 	// 条件判定と次の制御状態の決定
 	switch(controlState){
@@ -147,7 +150,7 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, Vec3d target){
 	/**/ //普通のPD制御
 	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
-	Vec3f errorYawPitch = PTM::cross(currentDir, target);
+	Vec3f errorYawPitch = PTM::cross(currentDir, qToGlo*target);
 	Vec3f derror = soEye->GetAngularVelocity();
 	Vec3f torque = (Kp * (errorYawPitch)) - (Kd * derror);
  	soEye->AddTorque(torque);
@@ -168,7 +171,7 @@ void CREyeController::ControlEyeToTargetDir(PHSolidIf* soEye, double horiz, doub
 	/**/ //普通のPD制御
 	Vec3d target = Quaterniond::Rot(-vert,'x')*Quaterniond::Rot(horiz,'y')*Vec3d(0,0,1);
 	Vec3f currentDir = (soEye->GetPose().Ori() * Vec3f(0.0f, 0.0f, 1.0f)).unit();
-	Vec3f errorYawPitch = PTM::cross(currentDir, target);
+	Vec3f errorYawPitch = PTM::cross(currentDir, qToGlo*target);
 	Vec3f derror = soEye->GetAngularVelocity();
 	Vec3f torque = (Kp * (errorYawPitch)) - (Kd * derror);
  	soEye->AddTorque(torque);

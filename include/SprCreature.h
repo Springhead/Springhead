@@ -14,6 +14,6 @@
 
 // #include "Creature/SprCRSimple.h"  テスト用のクラスなので段階的に削除の方向 mitake
 #include "Creature/SprCREyeController.h"
-#include "Creature/SprCRHindgeHuman.h"
+#include "Creature/SprCRHingeHuman.h"
 
 #endif
