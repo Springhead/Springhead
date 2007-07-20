@@ -15,6 +15,7 @@ void CRHingeHuman::Init(){
 
 	CDBoxDesc          boxDesc;
 	CDSphereDesc       sphereDesc;
+	CDCapsuleDesc      capsuleDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 	PHBallJointDesc    ballDesc;
@@ -195,7 +196,7 @@ void CRHingeHuman::Init(){
 	joRightShoulderY           = scene->CreateJoint(soRightShoulderYX, soRightShoulderZY, hingeDesc);
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.09, 0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.09, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 10.0;

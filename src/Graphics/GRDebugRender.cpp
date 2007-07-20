@@ -94,7 +94,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 			float r = cap->GetRadius();
 			this->PushModelMatrix();
 			glTranslatef(0,0,-cap->GetLength()/2);
-			glutSolidSphere(r, 20, 20);			
+			glutSolidSphere(r, 20, 20);
 			glTranslatef(0,0,cap->GetLength());
 			glutSolidSphere(r, 20, 20);
 			this->PopModelMatrix();
