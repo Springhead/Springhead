@@ -261,7 +261,7 @@ void CRHingeHuman::Init(){
 	*/
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.03, 0.0, 0.06);
-	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
 	ballDesc.poseSocket.Pos()  = Vec3d(0,0,0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
 	joRightEyeY                = scene->CreateJoint(soRightEye, soHead, ballDesc);
@@ -348,7 +348,7 @@ void CRHingeHuman::Init(){
 	*/
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(-0.03, 0.0, 0.06);
-	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
 	ballDesc.poseSocket.Pos()  = Vec3d(0,0,0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
 	joLeftEyeY                 = scene->CreateJoint(soLeftEye, soHead, ballDesc);
