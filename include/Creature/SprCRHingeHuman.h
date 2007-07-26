@@ -43,6 +43,14 @@ struct CRHingeHumanDesc{
 		JO_LEFT_EYE,
 	};
 
+	double headRadius, headLength;
+	double chestWidth, chestHeight, chestThinkness;
+	double abdomenWidth, abdomenHeight, abdomenThinkness;
+	double waistWidth, waistHeight, waistThinkness;
+	double upperarmRadius, upperarmLength;
+	double lowerarmRadius, lowerarmLength;
+	double handLength, handWidth, handThickness;
+
 	CRHingeHumanDesc(){
 	}
 };

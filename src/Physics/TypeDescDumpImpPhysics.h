@@ -194,6 +194,12 @@
 	field->offset = int((char*)&(pPHBallJointDesc->twistDamper) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "spring", "");
+	field->offset = int((char*)&(pPHBallJointDesc->spring) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Quaterniond", "origin", "");
+	field->offset = int((char*)&(pPHBallJointDesc->origin) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "damper", "");
+	field->offset = int((char*)&(pPHBallJointDesc->damper) - (char*)pPHBallJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHSpringDesc* pPHSpringDesc = NULL;

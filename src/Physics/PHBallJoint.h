@@ -52,6 +52,8 @@ public:
 	bool		swingOnUpper, twistOnLower, twistOnUpper;
 	double		swingUpper, swingDamper, swingSpring;
 	double		twistLower, twistUpper, twistDamper, twistSpring;
+	double      spring, damper;
+	Quaterniond origin;
 	
 	SwingTwist	angle; //, velocity;	///< スイング・ツイスト角表現の角度と角速度
 	//Vec3d		torque;

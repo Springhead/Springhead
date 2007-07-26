@@ -97,6 +97,9 @@ void PHBallJoint::SetDesc(const void* desc){
 	twistUpper  = descBall.twistUpper;
 	twistSpring = descBall.twistSpring;
 	twistDamper = descBall.twistDamper;
+	spring      = descBall.spring;
+	origin      = descBall.origin;
+	damper      = descBall.damper;
 	SetMotorTorque(descBall.torque);
 }
 
@@ -118,9 +121,9 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	twistOnUpper = (twistLower <= twistUpper && angle.Twist() >= twistUpper);
 	// 可動範囲にかかる場合は回転をSwing/Twistに座標変換する(ModifyJacobian)．
 	// 以下3 -> swing方位，4 -> swing角, 5 -> twist角
-	con[3] = false;
-	con[4] = swingOnUpper;
-	con[5] = twistOnLower || twistOnUpper;
+	con[3] = false || (spring != 0.0 || damper != 0.0);
+	con[4] = swingOnUpper || (spring != 0.0 || damper != 0.0);
+	con[5] = twistOnLower || twistOnUpper || (spring != 0.0 || damper != 0.0);
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
@@ -141,6 +144,16 @@ void PHBallJoint::CompBias(){
 	db.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
 			     twistOnUpper ? (angle.Twist() - twistUpper) * dtinv : 0.0);
 	db *= engine->velCorrectionRate;
+
+	if(spring != 0.0 || damper != 0.0){
+		Quaterniond diff =  Xjrel.q * origin.Inv();
+		Vec3d prop = origin * diff.RotationHalf();
+
+		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
+		db.w() = spring * (prop) * tmp;
+		std::cout << spring * (prop) * tmp << std::endl;
+	}
 }
 
 void PHBallJoint::CompError(){

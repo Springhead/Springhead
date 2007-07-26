@@ -56,8 +56,9 @@ void PHHingeJoint::CompBias(){
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		diff = GetPosition() - origin;
-		while(diff >  M_PI) diff -= 2 * M_PI;
-		while(diff < -M_PI) diff += 2 * M_PI;
+		// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
+		// while(diff >  M_PI) diff -= 2 * M_PI;
+		// while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
 		dA.w().z = tmp * dtinv;
 		db.w().z = spring * (diff) * tmp;
