@@ -16,6 +16,12 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
+Vec2d Deg(Vec2d v){
+	return Vec2d(Deg(v[0]), Deg(v[1]));
+}
+
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// 
 void CRSaccadeController::Reset(){
 	angleLH = angleRH = angleV = 0.0;
 }
@@ -107,50 +113,51 @@ void CRPhysicalEye::Control(Vec2d angleLEye, Vec2d angleREye){
 Vec2d CRPhysicalEye::GetAxisL(){
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d axisVec = qToLocal * soLEye->GetPose().Ori() * Vec3d(0,0,-1);
-	Vec2d angle = Vec2d(Vec3ToAngV(axisVec), Vec3ToAngH(axisVec));
+	Vec2d angle   = Vec3ToAngle(axisVec);
 	return angle;
 }
 
 Vec2d CRPhysicalEye::GetAxisR(){
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d axisVec = qToLocal * soREye->GetPose().Ori() * Vec3d(0,0,-1);
-	Vec2d angle = Vec2d(Vec3ToAngV(axisVec), Vec3ToAngH(axisVec));
+	Vec2d angle   = Vec3ToAngle(axisVec);
 	return angle;
 }
 
 Vec2d CRPhysicalEye::GetTargetFromL(){
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d target = qToLocal * (targetPos - soLEye->GetPose().Pos());
-	Vec2d angle = Vec2d(Vec3ToAngV(target), Vec3ToAngH(target));
+	Vec2d angle  = Vec3ToAngle(target);
 	return angle;
 }
 
 Vec2d CRPhysicalEye::GetTargetFromR(){
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d target = qToLocal * (targetPos - soREye->GetPose().Pos());
-	Vec2d angle = Vec2d(Vec3ToAngV(target), Vec3ToAngH(target));
+	Vec2d angle  = Vec3ToAngle(target);
+	return angle;
+}
+
+Vec2d CRPhysicalEye::GetHeadAngle(){
+	Vec3d axisVec = soHead->GetPose().Ori() * Vec3d(0,0,-1);
+	Vec2d angle   = Vec3ToAngle(axisVec);
 	return angle;
 }
 
 void CRPhysicalEye::Control(PHSolidIf* soEye, Vec2d angle){
 	Quaterniond qToGlobal = soHead->GetPose().Ori();
-	Vec3d headF=Vec3d(0,0,-1), eyeF=Vec3d(0,0,-1);
-	Vec3d target = Quaterniond::Rot(-angle[0],'x')*Quaterniond::Rot(angle[1],'y')*eyeF;
-	Vec3d currentDir = (soEye->GetPose().Ori() * eyeF).unit();
+	Vec3d target = Quaterniond::Rot(angle[0],'x')*Quaterniond::Rot(angle[1],'y')*Vec3d(0,0,-1);
+	Vec3d currentDir = (soEye->GetPose().Ori() * Vec3d(0,0,-1)).unit();
 	Vec3d error = PTM::cross(currentDir, qToGlobal*target);
 	Vec3d derror = soEye->GetAngularVelocity();
 	Vec3d torque = (Kp * (error)) - (Kd * derror);
  	soEye->AddTorque(torque);
 }
 
-double CRPhysicalEye::Vec3ToAngH(Vec3d v){
-	double D = sqrt(v.X()*v.X()+v.Z()*v.Z());
-	return(atan2(v.X()/D, v.Z()/D));
-}
-
-double CRPhysicalEye::Vec3ToAngV(Vec3d v){
-	double D = sqrt(v.Y()*v.Y()+v.Z()*v.Z());
-	return(atan2(v.Y()/D, v.Z()/D));
+Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
+	double D1 = sqrt(v.Y()*v.Y()+v.Z()*v.Z());
+	double D2 = sqrt(v.X()*v.X()+v.Z()*v.Z());
+	return(Vec2d( atan2( v.Y()/D1, -v.Z()/D1), atan2(-v.X()/D2, -v.Z()/D2) ));
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -158,8 +165,7 @@ double CRPhysicalEye::Vec3ToAngV(Vec3d v){
 IF_OBJECT_IMP(CREyeController, SceneObject);
 
 void CREyeController::LookAt(Vec3f pos, Vec3f vel){
-	lookatPos = pos;
-	lookatVel = vel;
+	physicalEye.SetTarget(pos, vel);
 }
 
 void CREyeController::Step(){
@@ -207,7 +213,6 @@ void CREyeController::Control(){
 
 	switch(controlState){
 	case CS_SACCADE: 
-		std::cout << "Saccade" << std::endl;
 		saccadeCtrl.StepHoriz(
 			physicalEye.GetTargetFromL()[1], physicalEye.GetTargetFromR()[1],
 			physicalEye.GetHeadAngle()[1],
@@ -217,25 +222,28 @@ void CREyeController::Control(){
 			dt);
 		physicalEye.Control(saccadeCtrl.GetLEyeAngle(), saccadeCtrl.GetREyeAngle());
 		// 次回Pursuitに切り替わったときのためリセットしておく
-		pursuitCtrl.Reset(physicalEye.GetAxisL[1], physicalEye.GetAxisR[1], physicalEye.GetAxisL[0]);
+		pursuitCtrl.Reset(physicalEye.GetAxisL()[1], physicalEye.GetAxisR()[1], physicalEye.GetAxisL()[0]);
 		break;
 	
 	case CS_PURSUIT:
-		std::cout << "Pursuit" << std::endl;
-		saccadeCtrl.StepHoriz(
+		pursuitCtrl.StepHoriz(
 			physicalEye.GetTargetFromL()[1], physicalEye.GetTargetFromR()[1],
 			physicalEye.GetHeadAngle()[1],
 			dt);
-		saccadeCtrl.StepVert(
+		pursuitCtrl.StepVert(
 			physicalEye.GetTargetFromL()[0], physicalEye.GetHeadAngle()[0],
 			dt);
 		physicalEye.Control(pursuitCtrl.GetLEyeAngle(), pursuitCtrl.GetREyeAngle());
 		// 次回Saccadeに切り替わったときのためリセットしておく
-		saccadeCtrl.Reset(physicalEye.GetAxisL[1], physicalEye.GetAxisR[1], physicalEye.GetAxisL[0]);
+		saccadeCtrl.Reset(physicalEye.GetAxisL()[1], physicalEye.GetAxisR()[1], physicalEye.GetAxisL()[0]);
 		break;
 
 	default:
 		break;
 	}
+}
+
+CREyeControllerState::ControlState CREyeController::GetControlState(){
+	return controlState;
 }
 }

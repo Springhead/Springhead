@@ -117,20 +117,24 @@ void CRHingeHuman::Init(){
 	soLeftHand->AddShape(sdk->CreateShape(sphereDesc));
 
 	// -- RightEye
-	solidDesc.mass     = 1.0;
+	solidDesc.mass     = 0.01;
 	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
 	soRightEye         = scene->CreateSolid(solidDesc);
 	soRightEyeYX       = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.01;
+	sphereDesc.radius  = 0.02;
 	soRightEye->AddShape(sdk->CreateShape(sphereDesc));
+	boxDesc.boxsize    = Vec3f(0.01,0.01,0.05);
+	soRightEye->AddShape(sdk->CreateShape(boxDesc));
 	
 	// -- LeftEye
-	solidDesc.mass     = 1.0;
+	solidDesc.mass     = 0.01;
 	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
 	soLeftEye          = scene->CreateSolid(solidDesc);
 	soLeftEyeYX        = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.01;
+	sphereDesc.radius  = 0.02;
 	soLeftEye->AddShape(sdk->CreateShape(sphereDesc));
+	boxDesc.boxsize    = Vec3f(0.01,0.01,0.05);
+	soLeftEye->AddShape(sdk->CreateShape(boxDesc));
 
 	// --- --- --- --- --- --- --- --- --- ---
 	// Create Joints
@@ -260,7 +264,7 @@ void CRHingeHuman::Init(){
 	joRightEyeX                = scene->CreateJoint(soRightEye, soRightEyeYX, hingeDesc);
 	*/
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.03, 0.0, 0.06);
+	ballDesc.posePlug.Pos()    = Vec3d(0.03, 0.0, -0.06);
 	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
 	ballDesc.poseSocket.Pos()  = Vec3d(0,0,0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
@@ -347,7 +351,7 @@ void CRHingeHuman::Init(){
 	joLeftEyeX                 = scene->CreateJoint(soLeftEye, soLeftEyeYX, hingeDesc);
 	*/
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(-0.03, 0.0, 0.06);
+	ballDesc.posePlug.Pos()    = Vec3d(-0.03, 0.0, -0.06);
 	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
 	ballDesc.poseSocket.Pos()  = Vec3d(0,0,0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');

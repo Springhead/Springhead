@@ -127,15 +127,11 @@ private:
 	*/
 	void Control(PHSolidIf* soEye, Vec2d angle);
 
-	/** @brief ベクトルのXZ平面への射影がZ軸となす角（Z軸→X軸向きの回転を正とする）
+	/** @brief (0,0,-1)と成す角を、右手系でX軸・Y軸周りの回転として求める
 		@param v 入力ベクトル
+		@return (ZY射影が(0,0,-1)と成す角(X軸回転), ZX射影が(0,0,-1)と成す角(Y軸回転))
 	*/
-	double Vec3ToAngH(Vec3d v);
-
-	/** @brief ベクトルのYZ平面への射影がZ軸となす角（Z軸→Y軸向きの回転を正とする）
-		@param v 入力ベクトル
-	*/
-	double Vec3ToAngV(Vec3d v);
+	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
 	CRPhysicalEye() : soLEye(NULL), soREye(NULL), soHead(NULL) {
@@ -170,6 +166,10 @@ public:
 	/** @brief 右目から見た視標方向の角度を取得する
 	*/
 	Vec2d GetTargetFromR();
+
+	/** @brief 頭部の角度（絶対座標系）を取得する
+	*/
+	Vec2d GetHeadAngle();
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -197,7 +197,7 @@ public:
 	ACCESS_DESC_STATE(CREyeController);
 
 	CREyeController(){}
-	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL) : CREyeControllerDesc(desc) {
+	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL) : CREyeControllerDesc(desc), physicalEye(soLEye, soREye, soHead, Kp, Kd) {
 		if(s){SetScene(s);}
 	}
 
@@ -210,6 +210,11 @@ public:
 	/** @brief 制御処理を実行する
 	*/
 	virtual void Step();
+
+	// 非API関数
+	/** @brief 現在のコントロール状態を取得する
+	*/
+	CREyeControllerState::ControlState GetControlState();
 };
 
 }//@}
