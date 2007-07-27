@@ -148,11 +148,15 @@ void PHBallJoint::CompBias(){
 	if(spring != 0.0 || damper != 0.0){
 		Quaterniond diff =  Xjrel.q * origin.Inv();
 		Vec3d prop = origin * diff.RotationHalf();
-
 		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
 		dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
-		db.w() = spring * (prop) * tmp;
-		std::cout << spring * (prop) * tmp << std::endl;
+		if(swingOnUpper || twistOnLower || twistOnUpper){
+			//	ModifyJacobianが呼ばれているので，Swing-Tweistの座標系にあわせてばねを付ける．
+			db.w() = Jstinv.trans() * spring * (prop) * tmp;
+		}else{
+			db.w() = spring * (prop) * tmp;
+		}
+		//std::cout << spring * (prop) * tmp << std::endl;
 	}
 }
 
