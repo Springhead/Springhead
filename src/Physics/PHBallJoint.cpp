@@ -152,7 +152,7 @@ void PHBallJoint::CompBias(){
 		dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
 		if(swingOnUpper || twistOnLower || twistOnUpper){
 			//	ModifyJacobianが呼ばれているので，Swing-Tweistの座標系にあわせてばねを付ける．
-			db.w() = Jstinv.trans() * spring * (prop) * tmp;
+			db.w() = Jstinv.inv() * spring * (prop) * tmp;
 		}else{
 			db.w() = spring * (prop) * tmp;
 		}
