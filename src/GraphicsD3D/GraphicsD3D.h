@@ -6,13 +6,13 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- *	@file Graphics.h
- *	@brief グラフィックスレンダラーのヘッダファイル群
+ *	@file GraphicsD3D.h
+ *	@brief DirectXのグラフィックスレンダラーのヘッダファイル群
 */
 #include <Springhead.h>
+#include <SprGraphicsD3D.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
-#include "GRSdk.h"
-#include "GRRender.h"
-#include "GRDebugRender.h"
-#include "GRDeviceGL.h"
+#include "../Graphics/Graphics.h"
+#include "GRSdkD3D.h"
+#include "GRDeviceD3D.h"

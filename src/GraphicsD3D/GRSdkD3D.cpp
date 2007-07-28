@@ -5,25 +5,31 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#if 0
-#include "Graphics.h"
+#include <GraphicsD3D/GraphicsD3D.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+#include "GRDeviceD3D.h"
 
-namespace Spr {;
-IF_OBJECT_IMP(GRDeviceD3D, GRDevice);
+namespace Spr{;
+GRSdkD3DIf* SPR_CDECL GRSdkD3DIf::CreateSdk(){
+	GRSdkD3D* rv = DBG_NEW GRSdkD3D;
+	return rv->Cast();
+}
 
 //----------------------------------------------------------------------------
-//	GRDeviceD3D
-void GRDeviceD3D::DrawDirect(TPrimitiveType ty, Vec3f* begin, size_t count, size_t stride){
+//	GRSdkD3D
+IF_OBJECT_IMP(GRSdkD3D, Sdk);
+GRSdkD3D::GRSdkD3D(const GRSdkD3DDesc& desc):GRSdkD3DDesc(desc){
 }
-void GRDeviceD3D::DrawIndexed(TPrimitiveType ty, size_t* idx, Vec3f* vtx, size_t count, size_t stride){
+GRDeviceD3DIf* GRSdkD3D::CreateDeviceD3D(){
+	GRDeviceD3D* rv = DBG_NEW GRDeviceD3D();
+	objects.push_back(rv);
+	return rv->Cast();
 }
-void GRDeviceD3D::SetMaterial(const GRMaterial& mat){
+void GRSdkD3D::Clear(){
+	Sdk::Clear();
+	objects.clear();
 }
 
-
-}	//	Spr
-
-#endif
+}
