@@ -73,6 +73,8 @@ static void VFT2fN3fP3f_toFVF(void* p, void* vtx, int count)
 //----------------------------------------------------------------------------
 //	GRDeviceD3D
 IF_OBJECT_IMP(GRDeviceD3D, GRDevice);
+/// D3Dデバイス。GRDeviceD3D::GetD3DDevice()で取得。
+IDirect3DDevice9* GRDeviceD3D::s_d3ddevice;
 /// 初期設定
 void GRDeviceD3D::Init(){
 	assert( GetActiveWindow()!=NULL );
@@ -111,6 +113,7 @@ void GRDeviceD3D::Init(){
 	}
 	}
 	}
+	s_d3ddevice = d3ddevice;
 
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 	d3ddevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);

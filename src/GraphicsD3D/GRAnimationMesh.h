@@ -1,0 +1,66 @@
+/*
+ *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+#ifndef GRAnimationMesh_H
+#define GRAnimationMesh_H
+
+#include <SprGraphics.h>
+#include <SprGraphicsD3D.h>
+#include "../Graphics/GRFrame.h"
+#include <d3dx9.h>
+#include <atlcomcli.h>
+
+namespace Spr{;
+
+/**	@class	GRAnimationMesh
+    @brief	キャラクタアニメーション用メッシュ */
+class GRAnimationMesh: public GRVisual, public GRAnimationMeshIfInit, public GRAnimationMeshDesc{
+	OBJECTDEF(GRAnimationMesh, GRVisual);
+protected:
+	struct Frame;
+	struct MeshContainer;
+	class AllocateHierarchy;
+protected:
+	Frame*								rootFrame;
+	CComPtr<ID3DXAnimationController>	controller;
+	bool								loaded;
+public:
+	GRAnimationMesh(const GRAnimationMeshDesc& desc=GRAnimationMeshDesc());
+	~GRAnimationMesh();
+	virtual void SetMotion(const std::string& name);
+	virtual void SetTime(double time);
+	void Render(GRRenderIf* r);
+	void Rendered(GRRenderIf* r);
+protected:
+	bool LoadMesh();
+	void InitFrame(Frame* frame);
+	void CreateBlendedMesh(MeshContainer* meshContainer);
+	void SetBoneMatrices(MeshContainer* meshContainer);
+	void UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix);
+	void DrawFrame(const Frame *frame);
+	void DrawSkinnedMeshContainer(MeshContainer *meshContainer);
+	void DrawNormalMeshContainer(MeshContainer *meshContainer, const Frame *frame);
+};
+
+struct GRAnimationMesh::Frame : public D3DXFRAME
+{
+	D3DXMATRIX CombinedTransformationMatrix;
+};
+
+struct GRAnimationMesh::MeshContainer : public D3DXMESHCONTAINER
+{
+	CComPtr<ID3DXMesh>		blendedMesh;
+	DWORD					maxFaceInfl;
+	DWORD					numBoneCombinations;
+	CComPtr<ID3DXBuffer>	boneCombinationTableBuffer;
+	LPD3DXBONECOMBINATION	boneCombinationTable;
+	D3DXMATRIX**			boneOffsetMatrices;
+	D3DXMATRIX**			boneFrameMatrices;
+	LPDIRECT3DTEXTURE9		*ppTextures;
+};
+}
+#endif

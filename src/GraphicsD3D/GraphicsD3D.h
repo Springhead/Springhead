@@ -16,3 +16,4 @@
 #include "../Graphics/Graphics.h"
 #include "GRSdkD3D.h"
 #include "GRDeviceD3D.h"
+#include "GRAnimationMesh.h"

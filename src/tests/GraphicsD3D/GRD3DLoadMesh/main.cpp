@@ -25,9 +25,10 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
+#include <mmsystem.h>
 #define	ESC				27				// Esc key
 
-#define TEST_CASE		2				// テストケース
+#define TEST_CASE		3				// テストケース
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
@@ -39,7 +40,12 @@
 
 #elif defined(TEST_CASE) && (TEST_CASE == 2)
 #define EXIT_TIMER	20000				
-#define TEST_FILEX	"tire.x"			
+#define TEST_FILEX	"tire.x"				
+
+#elif defined(TEST_CASE) && (TEST_CASE == 3)
+#define EXIT_TIMER	20000				
+#define TEST_FILEX	"kobito.x"			
+#define TEST_MOTION	"push"				// 再生するモーション
 
 #endif
 
@@ -51,7 +57,8 @@ namespace Spr{
 	UTRef<FISdkIf> fiSdk; 
 	//GRDeviceGLIf* grDevice;
 	GRDeviceD3DIf* grDevice;
-	GRDebugRenderIf* render;
+	GRDebugRenderIf* render = NULL;
+	GRAnimationMeshIf* aniMesh = NULL;
 	void FWRegisterTypeDescs();
 	void FWRegisterOldSpringheadNode();
 }
@@ -130,7 +137,13 @@ void reshape(int w, int h){
  */
 void idle(HWND hWnd){
 //	if(scene && *scene) (*(scene))->Step();
-	scene->GetWorld()->SetTransform( Affinef::Rot((float)M_PI/180.0f/10,'X') * scene->GetWorld()->GetTransform() );
+	if(aniMesh){
+		aniMesh->SetTime(timeGetTime()/1000.0);
+		scene->GetWorld()->SetTransform( Affinef::Rot((float)M_PI/180.0f/10,'Y') * scene->GetWorld()->GetTransform() );
+	}
+	else{
+		scene->GetWorld()->SetTransform( Affinef::Rot((float)M_PI/180.0f/10,'X') * scene->GetWorld()->GetTransform() );
+	}
 	//glutPostRedisplay();
 	InvalidateRect(hWnd, NULL, FALSE);
 	static int count=0;
@@ -224,6 +237,16 @@ HWND createMainWindow(HINSTANCE hInstance)
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
+	grSdk = GRSdkIf::CreateSdk();	
+	grSdkD3D = GRSdkD3DIf::CreateSdk();
+	scene = grSdk->CreateScene(GRSceneDesc());
+
+#if defined(TEST_CASE) && (TEST_CASE == 3)
+	GRAnimationMeshDesc aniDesc;
+	aniDesc.filename = TEST_FILEX;
+	aniMesh = grSdkD3D->CreateAnimationMesh(aniDesc);
+	scene->AddChildObject(aniMesh);
+#else
 	//	すべてのSDKとDirectXのローダの登録
 	//	全ライブラリをリンクしなければならなくなる．
 	FWSdkIf::RegisterSdk();
@@ -232,9 +255,7 @@ int main(int argc, char* argv[]){
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
 
-	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
-	scene = grSdk->CreateScene(GRSceneDesc());
 	objs.push_back(scene);
 	fileX->Load(objs, TEST_FILEX);
  
@@ -247,6 +268,7 @@ int main(int argc, char* argv[]){
 	fiSdk->Clear();	//	ファイルローダのメモリを解放．
 	objs.clear();
 	grSdk->Print(DSTR);
+#endif
 
 	DSTR << "Loaded : " << "NScene=" << (int)grSdk->NScene() << std::endl;
 	scene->Print(DSTR);
@@ -262,7 +284,6 @@ int main(int argc, char* argv[]){
 
 	render = grSdk->CreateDebugRender();
 	//grDevice = grSdk->CreateDeviceGL();
-	grSdkD3D = GRSdkD3DIf::CreateSdk();
 	grDevice = grSdkD3D->CreateDeviceD3D();
 	grDevice->Init();
 	render->SetDevice(grDevice);
@@ -275,13 +296,21 @@ int main(int argc, char* argv[]){
 
 	// 視点設定
 	Affinef view;
-	view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
-		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
+	if(aniMesh){
+		view.Pos() = Vec3f(0.0, 40.0,-80.0);								// eye
+			view.LookAtGL(Vec3f(0.0, 40.0, 0.0), Vec3f(0.0, 41.0, 0.0));	// center, up 
+	}
+	else{
+		view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
+			view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
+	}
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
 	// 光源の設定
 	setLight();
+
+	if(aniMesh) aniMesh->SetMotion(TEST_MOTION);
 
 	/*
 	glutDisplayFunc(display);

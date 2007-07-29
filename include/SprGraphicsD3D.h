@@ -13,5 +13,6 @@
 #define SPR_GRAPHICSD3D_H
 
 #include "GraphicsD3D/SprGRSdkD3D.h"
+#include "GraphicsD3D/SprGRAnimationMesh.h"
 
 #endif

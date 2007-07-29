@@ -15,6 +15,9 @@
 
 namespace Spr{;
 
+struct GRAnimationMeshIf;
+struct GRAnimationMeshDesc;
+
 //@{
 
 /**	@brief	DirectXのレンダラー基本クラス */
@@ -29,6 +32,7 @@ struct GRSdkD3DDesc{
 struct GRSdkD3DIf: public SdkIf{
 	IF_DEF(GRSdkD3D);
 	virtual GRDeviceD3DIf* CreateDeviceD3D()=0;
+	virtual GRAnimationMeshIf* CreateAnimationMesh(const GRAnimationMeshDesc& desc)=0;
 	static GRSdkD3DIf* SPR_CDECL CreateSdk();
 };
 

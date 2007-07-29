@@ -46,12 +46,13 @@ protected:
 
 	bool deviceLost;		///< デバイスはロストしているか？
 
+	static IDirect3DDevice9* s_d3ddevice;
+
 public:
 	///	コンストラクタ
 	GRDeviceD3D(){}
 	/// 初期設定
 	virtual void Init();
-
 	///	Viewport設定
 	virtual void SetViewport(Vec2f pos, Vec2f sz);
 	///	バッファクリア
@@ -151,6 +152,9 @@ public:
 	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
 	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
 	virtual void GetShaderLocation(GRHandler shader, void* location);		
+
+	/// D3Dデバイスを取得する
+	static IDirect3DDevice9* GetD3DDevice() { return s_d3ddevice; }
 
 protected:
 	/// デバイスがロストしたら呼ぶ
