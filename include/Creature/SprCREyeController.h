@@ -73,11 +73,13 @@ struct CRNeckControllerState{
 /// 首運動コントローラのデスクリプタ
 struct CRNeckControllerDesc: public CRNeckControllerState{
 	PHSolidIf* soHead; ///< 頭のソリッド
+	PHSolidIf* soChest; ///< 胸部のソリッド
 	PHBallJointIf* joNeck; ///< 頭を固定しているジョイント
 
 	CRNeckControllerDesc(){
-		soHead = NULL;
-		joNeck = NULL;
+		soHead  = NULL;
+		soChest = NULL;
+		joNeck  = NULL;
 	}
 };
 

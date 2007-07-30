@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CREYECONTROLLER_H
-#define CREYECONTROLLER_H
+#ifndef CRNECKCONTROLLER_H
+#define CRNECKCONTROLLER_H
 
 #include <Springhead.h>
 

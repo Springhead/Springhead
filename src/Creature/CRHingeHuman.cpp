@@ -171,6 +171,7 @@ void CRHingeHuman::Init(){
 	joAbdomenChest             = scene->CreateJoint(soChest, soAbdomen, hingeDesc);
 
 	// -- Neck (Chest-Head)
+	/*
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Pos()   = Vec3d(0, 0.1, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
@@ -180,6 +181,13 @@ void CRHingeHuman::Init(){
 	hingeDesc.damper           = 3.0;
 	hingeDesc.origin           = Rad(0);
 	joNeck                     = scene->CreateJoint(soHead, soChest, hingeDesc);
+	*/
+	ballDesc                   = PHBallJointDesc();
+	ballDesc.posePlug.Pos()    = Vec3d(0, 0.1, 0);
+	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
+	ballDesc.poseSocket.Pos()  = Vec3d(0,-0.08,0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'y');
+	joNeck                     = scene->CreateJoint(soHead, soChest, ballDesc);
 
 	// -- RightShoulder (Chest-RightUpperArm)
 	hingeDesc                  = PHHingeJointDesc();

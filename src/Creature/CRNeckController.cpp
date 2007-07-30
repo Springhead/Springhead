@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CREyeController.h"
+#include "CRNeckController.h"
 
 #define CREYECTRL_DEBUG true
 
@@ -25,7 +25,17 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel){
 
 void CRNeckController::Step(){
 	Quaterniond qLook;
-	qLook.RotationArc(Vec3d(0,0,-1), pos.unitize());
-	std::cout << "qLook : " << qLook << std::endl;
+	qLook.RotationArc(pos.unit(), Vec3d(0,0,-1));
+	qLook = qLook * soChest->GetPose().Ori();
+
+	PHBallJointDesc ballDesc   = PHBallJointDesc();
+	ballDesc.posePlug.Pos()    = Vec3d(0, 0.1, 0);
+	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
+	ballDesc.poseSocket.Pos()  = Vec3d(0,-0.08,0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'y');
+	ballDesc.spring            = 100.0;
+	ballDesc.origin            = qLook;
+	ballDesc.damper            = 50.0;
+	joNeck->SetDesc(&ballDesc);
 }
 }
