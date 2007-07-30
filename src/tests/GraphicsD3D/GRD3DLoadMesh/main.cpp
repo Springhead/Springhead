@@ -45,7 +45,7 @@
 #elif defined(TEST_CASE) && (TEST_CASE == 3)
 #define EXIT_TIMER	20000				
 #define TEST_FILEX	"kobito.x"			
-#define TEST_MOTION	"push"				// 再生するモーション
+#define TEST_MOTION	"walk"				// 再生するモーション
 
 #endif
 
@@ -138,8 +138,29 @@ void reshape(int w, int h){
 void idle(HWND hWnd){
 //	if(scene && *scene) (*(scene))->Step();
 	if(aniMesh){
-		aniMesh->SetTime(timeGetTime()/1000.0);
+		static DWORD prevTime = timeGetTime();
+		DWORD currTime = timeGetTime();
+		aniMesh->SetTime(currTime/1000.0);
 		scene->GetWorld()->SetTransform( Affinef::Rot((float)M_PI/180.0f/10,'Y') * scene->GetWorld()->GetTransform() );
+		if(GetKeyState('Q')<0 || GetKeyState('W')){
+			static double w;
+			if(GetKeyState('Q')<0) { w+=(currTime-prevTime)/500.0f;  if(w>1) w=1; }
+			if(GetKeyState('W')<0) { w-=(currTime-prevTime)/500.0f;  if(w<0) w=0; }
+			aniMesh->OverrideBoneOrientation("head", Quaterniond::Rot(Radf(-90), Vec3d(0,1,0)), w);
+		}
+		if(GetKeyState('A')<0 || GetKeyState('S')){
+			static double w;
+			if(GetKeyState('A')<0) { w+=(currTime-prevTime)/500.0f;  if(w>1) w=1; }
+			if(GetKeyState('S')<0) { w-=(currTime-prevTime)/500.0f;  if(w<0) w=0; }
+			aniMesh->OverrideBoneOrientation("arm1_L_", Quaterniond::Rot(Radf(-90), Vec3d(1,0,0)), w);
+		}
+		if(GetKeyState('Z')<0 || GetKeyState('X')){
+			static double w;
+			if(GetKeyState('Z')<0) { w+=(currTime-prevTime)/500.0f;  if(w>1) w=1; }
+			if(GetKeyState('X')<0) { w-=(currTime-prevTime)/500.0f;  if(w<0) w=0; }
+			aniMesh->OverrideBoneOrientation("leg1_R_", Quaterniond::Rot(Radf(90), Vec3d(1,0,0)), w);
+		}
+		prevTime = currTime;
 	}
 	else{
 		scene->GetWorld()->SetTransform( Affinef::Rot((float)M_PI/180.0f/10,'X') * scene->GetWorld()->GetTransform() );

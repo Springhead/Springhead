@@ -32,6 +32,12 @@ struct GRAnimationMeshIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ
 	virtual void SetTime(double time){
 		return ((OBJ*)(MIF*)this)->SetTime(time);
 	}
+	virtual void OverrideBoneOrientation(const std::string &  name, const Quaterniond &  orientation, double weight){
+		return ((OBJ*)(MIF*)this)->OverrideBoneOrientation(name, orientation, weight);
+	}
+	virtual void OverrideBonePose(const std::string &  name, const Posed &  pose, double weight){
+		return ((OBJ*)(MIF*)this)->OverrideBonePose(name, pose, weight);
+	}
 };
 struct GRAnimationMeshIf;	class GRAnimationMesh;
 typedef GRAnimationMeshIfStubTemplate<GRAnimationMeshIf, ObjectIfBuf, GRAnimationMesh>	GRAnimationMeshIfStub;

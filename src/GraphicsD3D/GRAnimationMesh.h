@@ -33,6 +33,8 @@ public:
 	~GRAnimationMesh();
 	virtual void SetMotion(const std::string& name);
 	virtual void SetTime(double time);
+	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
+	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 protected:
@@ -48,7 +50,10 @@ protected:
 
 struct GRAnimationMesh::Frame : public D3DXFRAME
 {
-	D3DXMATRIX CombinedTransformationMatrix;
+	D3DXMATRIX	CombinedTransformationMatrix;
+	Posed		overridePose;
+	double		overrideWeight;
+	bool		overridePosition;
 };
 
 struct GRAnimationMesh::MeshContainer : public D3DXMESHCONTAINER

@@ -43,12 +43,13 @@ HRESULT GRAnimationMesh::AllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME
 	Frame *result = new Frame();
 	ZeroMemory(result, sizeof(Frame));
 	try{
-		result->Name                         = (Name==NULL) ? NULL : AllocateArray(strlen(Name)+1, Name);
-		result->TransformationMatrix         = D3DXMATRIX(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
-		result->pMeshContainer               = NULL;
-		result->pFrameSibling                = NULL;
-		result->pFrameFirstChild             = NULL;
-		result->CombinedTransformationMatrix = D3DXMATRIX(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+		result->Name							= (Name==NULL) ? NULL : AllocateArray(strlen(Name)+1, Name);
+		result->TransformationMatrix			= D3DXMATRIX(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+		result->pMeshContainer					= NULL;
+		result->pFrameSibling					= NULL;
+		result->pFrameFirstChild				= NULL;
+		result->CombinedTransformationMatrix	= D3DXMATRIX(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1);
+		result->overrideWeight					= 0;
 	}
 	catch(...){
 		return E_FAIL;
@@ -197,17 +198,43 @@ void GRAnimationMesh::SetTime(double time){
 	
 	controller->SetTrackPosition(0, time);
 }
+inline void PoseInvertZAxis(Posed& pose){
+	pose.Ori().x *= -1;
+	pose.Ori().y *= -1;
+	pose.Pos().z *= -1;
+}
+void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight){
+	Frame* frame = (Frame*)D3DXFrameFind(rootFrame, name.c_str());
+	assert(frame);
+	frame->overridePose     = Posed::Unit(orientation);
+	frame->overrideWeight   = weight;
+	frame->overridePosition = false;
+	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
+}
+void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pose, double weight){
+	Frame* frame = (Frame*)D3DXFrameFind(rootFrame, name.c_str());
+	assert(frame);
+	frame->overridePose     = pose;
+	frame->overrideWeight   = weight;
+	frame->overridePosition = true;
+	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
+}
 void GRAnimationMesh::Render(GRRenderIf* r){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame || !controller) return;
 	
-	LPDIRECT3DDEVICE9 d3ddevice = GRDeviceD3D::GetD3DDevice();
-	D3DMATRIX world;
+	LPDIRECT3DDEVICE9	d3ddevice = GRDeviceD3D::GetD3DDevice();
+	D3DXMATRIX			world;
+	D3DCULL				cull;
+
 	d3ddevice->GetTransform(D3DTS_WORLD, &world);
+	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
+	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						// ‚yŽ²‚ð”½“]‚·‚é‚Ì‚ÅƒJƒŠƒ“ƒO‚à‹t‚É‚·‚é
 	controller->AdvanceTime(0, NULL);
-	UpdateFrame(rootFrame, world);
+	UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// Šeƒ{[ƒ“‚ÌÀ•W•ÏŠ·iDirectXÀ•WŒnj -> ‚yÀ•W”½“] -> ƒ[ƒ‹ƒh•ÏŠ·iSpringheadÀ•WŒnj
 	DrawFrame(rootFrame);
 	d3ddevice->SetTransform(D3DTS_WORLD, &world);
+	d3ddevice->SetRenderState(D3DRS_CULLMODE, cull);							// ƒJƒŠƒ“ƒO‚ðŒ³‚É–ß‚·
 }
 void GRAnimationMesh::Rendered(GRRenderIf* r){
 }
@@ -258,9 +285,31 @@ void GRAnimationMesh::SetBoneMatrices(MeshContainer* meshContainer){
 	}
 }
 void GRAnimationMesh::UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix){
-	frame->CombinedTransformationMatrix = frame->TransformationMatrix * parentMatrix;
+	if(frame->overrideWeight<=0){
+		frame->CombinedTransformationMatrix = frame->TransformationMatrix * parentMatrix;
+	}
+	else if(frame->overrideWeight>=1){
+		if(frame->overridePosition){
+			Affinef af;
+			frame->overridePose.ToAffine(af);
+			D3DXMatrixMultiply(&frame->CombinedTransformationMatrix, (D3DXMATRIX*)&af, &parentMatrix);
+		}
+		else{
+			Affinef af = (*(Affinef*)&frame->TransformationMatrix);
+			frame->overridePose.Ori().ToMatrix(af.Rot());
+			D3DXMatrixMultiply(&frame->CombinedTransformationMatrix, (D3DXMATRIX*)&af, &parentMatrix);
+		}
+	}
+	else{
+		Affinef af = (*(Affinef*)&frame->TransformationMatrix);
+		Quaterniond frameOri;  frameOri.FromMatrix(af.Rot());
+		interpolate(frame->overrideWeight, frameOri, frame->overridePose.Ori()).ToMatrix(af.Rot());
+		if(frame->overridePosition)  af.Pos() = frame->overridePose.Pos() * frame->overrideWeight + af.Pos() * (1-frame->overrideWeight);
+		D3DXMatrixMultiply(&frame->CombinedTransformationMatrix, (D3DXMATRIX*)&af, &parentMatrix);
+	}
+
 	if(frame->pFrameSibling)    UpdateFrame((Frame*)frame->pFrameSibling,    parentMatrix);
-	if(frame->pFrameFirstChild) UpdateFrame((Frame*)frame->pFrameFirstChild, frame->TransformationMatrix * parentMatrix);
+	if(frame->pFrameFirstChild) UpdateFrame((Frame*)frame->pFrameFirstChild, frame->CombinedTransformationMatrix);
 }
 void GRAnimationMesh::DrawFrame(const Frame *frame){
 	for(LPD3DXMESHCONTAINER meshContainer=frame->pMeshContainer; meshContainer!=NULL; meshContainer=meshContainer->pNextMeshContainer){
