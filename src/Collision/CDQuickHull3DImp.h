@@ -13,6 +13,7 @@
 #include <Base/BaseDebug.h>
 #include <vector>
 #include <float.h>
+#include <process.h>
 
 namespace Spr{;
 
