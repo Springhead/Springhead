@@ -142,19 +142,19 @@ void idle(HWND hWnd){
 		DWORD currTime = timeGetTime();
 		aniMesh->SetTime(currTime/1000.0);
 		scene->GetWorld()->SetTransform( Affinef::Rot((float)M_PI/180.0f/10,'Y') * scene->GetWorld()->GetTransform() );
-		if(GetKeyState('Q')<0 || GetKeyState('W')){
+		if(GetKeyState('Q')<0 || GetKeyState('W')<0){
 			static double w;
 			if(GetKeyState('Q')<0) { w+=(currTime-prevTime)/500.0f;  if(w>1) w=1; }
 			if(GetKeyState('W')<0) { w-=(currTime-prevTime)/500.0f;  if(w<0) w=0; }
 			aniMesh->OverrideBoneOrientation("head", Quaterniond::Rot(Radf(-90), Vec3d(0,1,0)), w);
 		}
-		if(GetKeyState('A')<0 || GetKeyState('S')){
+		if(GetKeyState('A')<0 || GetKeyState('S')<0){
 			static double w;
 			if(GetKeyState('A')<0) { w+=(currTime-prevTime)/500.0f;  if(w>1) w=1; }
 			if(GetKeyState('S')<0) { w-=(currTime-prevTime)/500.0f;  if(w<0) w=0; }
 			aniMesh->OverrideBoneOrientation("arm1_L_", Quaterniond::Rot(Radf(-90), Vec3d(1,0,0)), w);
 		}
-		if(GetKeyState('Z')<0 || GetKeyState('X')){
+		if(GetKeyState('Z')<0 || GetKeyState('X')<0){
 			static double w;
 			if(GetKeyState('Z')<0) { w+=(currTime-prevTime)/500.0f;  if(w>1) w=1; }
 			if(GetKeyState('X')<0) { w-=(currTime-prevTime)/500.0f;  if(w<0) w=0; }
