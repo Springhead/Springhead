@@ -7,8 +7,6 @@
  */
 #include "CRNeckController.h"
 
-#define CREYECTRL_DEBUG true
-
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

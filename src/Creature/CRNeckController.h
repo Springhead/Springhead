@@ -50,7 +50,4 @@ public:
 }
 //@}
 
-#endif//CREYECONTROLLER_H
-
-
-
+#endif//CRNECKCONTROLLER_H

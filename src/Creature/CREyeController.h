@@ -94,7 +94,7 @@ public:
 
 	/** @brief 水平方向の目標値をセットして積分
 	*/
-	void StepHoriz(double destLH, double destRH, double angleHeadH, double dt);
+	void StepHoriz(double destLH, double destRH, double angvelHeadH, double dt);
 
 	/** @brief 垂直方向の目標値をセットして積分
 	*/
@@ -172,6 +172,10 @@ public:
 	/** @brief 頭部の角度（絶対座標系）を取得する
 	*/
 	Vec2d GetHeadAngle();
+
+	/** @brief 頭部の各速度（頭部座標系）を取得する
+	*/
+	Vec2d GetHeadAngvel();
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

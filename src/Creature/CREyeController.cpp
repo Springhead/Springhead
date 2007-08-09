@@ -67,7 +67,7 @@ void CRPursuitController::Reset(double angleLH, double angleRH, double angleV) {
 	this->angleV  = angleV;
 }
 
-void CRPursuitController::StepHoriz(double destLH, double destRH, double angleHeadH, double dt){
+void CRPursuitController::StepHoriz(double destLH, double destRH, double angvelHeadH, double dt){
 	// Œë·—Ê‚ÆŒë·•Ï‰»—Ê‚ÌŒvŽZ
 	double IL = destLH - angleLH;
 	double IR = destRH - angleRH;
@@ -77,12 +77,12 @@ void CRPursuitController::StepHoriz(double destLH, double destRH, double angleHe
 	lastIR = IR;
 
 	// Ï•ª
-	intL += ((R1*S + R2*K)*IL + (R1*N + R2*H)*IVL + (R1*K + R2*S)*IR + (R1*H + R2*N)*IVR) * dt;
-	intR += ((R1*S + R2*K)*IR + (R1*N + R2*H)*IVR + (R1*K + R2*S)*IL + (R1*H + R2*N)*IVL) * dt;
+	intL += (dt * (-(S*IL + N*IVL + K*IR + H*IVR) + A1*angvelHeadH));
+	intR += (dt * (+(S*IR + N*IVR + K*IL + H*IVL) - A1*angvelHeadH));
 
 	// Šp“xŽw—ß’l‚ÌŒvŽZ
-	angleLH += intL - A1*(R1+R2)*angleHeadH;
-	angleRH += intR - A1*(R1+R2)*angleHeadH;
+	angleLH += (-R1*intL + R2*intR);
+	angleRH += (+R1*intR - R2*intL);
 }
 
 void CRPursuitController::StepVert(double destV, double angleHeadV, double dt){
@@ -144,12 +144,17 @@ Vec2d CRPhysicalEye::GetHeadAngle(){
 	return angle;
 }
 
+Vec2d CRPhysicalEye::GetHeadAngvel(){
+	Vec3d angvel = soHead->GetPose().Ori().Inv() * soHead->GetAngularVelocity();
+	return Vec2d(angvel[0], angvel[1]);
+}
+
 void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle){
 	joX->SetSpringOrigin(-angle[0]);
 	joY->SetSpringOrigin(-angle[1]);
 
-	std::cout << "Vert : " << (int)Deg(angle[0]) << std::endl;
-	std::cout << "Horz : " << (int)Deg(angle[1]) << std::endl;
+	std::cout << "Vert : " << Deg(angle[0]) << std::endl;
+	std::cout << "Horz : " << Deg(angle[1]) << std::endl;
 
 	/*
 	Quaterniond qToGlobal = soHead->GetPose().Ori();
@@ -236,7 +241,7 @@ void CREyeController::Control(){
 	case CS_PURSUIT:
 		pursuitCtrl.StepHoriz(
 			physicalEye.GetTargetFromL()[1], physicalEye.GetTargetFromR()[1],
-			physicalEye.GetHeadAngle()[1],
+			physicalEye.GetHeadAngvel()[1],
 			dt);
 		pursuitCtrl.StepVert(
 			physicalEye.GetTargetFromL()[0], physicalEye.GetHeadAngle()[0],
