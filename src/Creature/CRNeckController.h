@@ -24,6 +24,10 @@ private:
 	*/
 	Vec3d pos, vel;
 
+	/** @brief 注意の度合
+	*/
+	float attractiveness;
+
 public:
 	OBJECTDEF(CRNeckController, SceneObject);
 	ACCESS_DESC_STATE(CRNeckController);
@@ -37,7 +41,7 @@ public:
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 	*/
-	virtual void LookAt(Vec3f pos, Vec3f vel);
+	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness);
 
 	/** @brief 制御処理を実行する
 	*/
@@ -47,3 +51,6 @@ public:
 //@}
 
 #endif//CREYECONTROLLER_H
+
+
+

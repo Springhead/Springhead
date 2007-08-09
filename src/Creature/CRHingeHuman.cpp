@@ -20,412 +20,392 @@ void CRHingeHuman::Init(){
 	PHHingeJointDesc   hingeDesc;
 	PHBallJointDesc    ballDesc;
 
-	CDShapeIf* shape;
-
 	// --- --- --- --- --- --- --- --- --- ---
 	// Create Solids
 
-	PHSolidIf *soWaist, *soAbdomen, *soChest, *soHead;
-	PHSolidIf *soRightShoulderZY, *soRightShoulderYX, *soRightUpperArm, *soRightLowerArm;
-	PHSolidIf *soRightWristZY, *soRightWristYX, *soRightHand;
-	PHSolidIf *soRightEye, *soRightEyeYX;
-	PHSolidIf *soLeftShoulderZY, *soLeftShoulderYX, *soLeftUpperArm, *soLeftLowerArm;
-	PHSolidIf *soLeftWristZY, *soLeftWristYX, *soLeftHand;
-	PHSolidIf *soLeftEye, *soLeftEyeYX;
+	///// --- 中心パーツ
 
 	// -- Waist
 	solidDesc.mass     = 1.0;
-	soWaist            = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.19, 0.077, 0.137);
-	soWaist->AddShape(sdk->CreateShape(boxDesc));
-	//soWaist->SetOrientation(Quaternionf::Rot(Rad(180), 'y'));
-	//soWaist->SetFramePosition(Vec3f(3,0,0));
-	soWaist->SetDynamical(false);
+	solids[SO_WAIST]   = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
+	solids[SO_WAIST]->AddShape(sdk->CreateShape(boxDesc));
+	solids[SO_WAIST]->SetDynamical(false);
+	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
+	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 
 	// -- Abdomen
 	solidDesc.mass     = 1.0;
-	soAbdomen          = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.15, 0.08, 0.108);
-	soAbdomen->AddShape(sdk->CreateShape(boxDesc));
+	solids[SO_ABDOMEN] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize    = Vec3f(abdomenBreadth, abdomenHeight, abdomenThickness);
+	solids[SO_ABDOMEN]->AddShape(sdk->CreateShape(boxDesc));
 
 	// -- Chest
-	solidDesc.mass     = 1.0;
-	soChest            = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.18, 0.2, 0.1);
-	soChest->AddShape(sdk->CreateShape(boxDesc));
+	solidDesc.mass   = 1.0;
+	solids[SO_CHEST] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
+	solids[SO_CHEST]->AddShape(sdk->CreateShape(boxDesc));
+
+	// -- Neck
+	solidDesc.mass  = 1.0;
+	solids[SO_NECK] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize = Vec3f(neckDiameter/1.414, neckLength, neckDiameter/1.414);
+	solids[SO_NECK]->AddShape(sdk->CreateShape(boxDesc));
 
 	// -- Head
-	solidDesc.mass     = 1.0;
-	soHead             = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.06;
-	soHead->AddShape(sdk->CreateShape(sphereDesc));
+	solidDesc.mass    = 1.0;
+	solids[SO_HEAD]   = scene->CreateSolid(solidDesc);
+	sphereDesc.radius = headDiameter / 2.0;
+	solids[SO_HEAD]->AddShape(sdk->CreateShape(sphereDesc));
 
-	// -- RightShoulder
-	solidDesc.mass     = 0.1;
-	soRightShoulderZY  = scene->CreateSolid(solidDesc);
-	soRightShoulderYX  = scene->CreateSolid(solidDesc);
+	///// --- 右パーツ
 
 	// -- RightUpperArm
-	solidDesc.mass     = 1.0;
-	soRightUpperArm    = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.049, 0.16, 0.048);
-	soRightUpperArm->AddShape(sdk->CreateShape(boxDesc));
+	solidDesc.mass             = 1.0;
+	solids[SO_RIGHT_UPPER_ARM] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize            = Vec3f(upperArmDiameter, upperArmLength, upperArmDiameter);
+	solids[SO_RIGHT_UPPER_ARM]->AddShape(sdk->CreateShape(boxDesc));
 
 	// -- RightLowerArm
-	solidDesc.mass     = 1.0;
-	soRightLowerArm    = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.046, 0.12, 0.046);
-	soRightLowerArm->AddShape(sdk->CreateShape(boxDesc));
-
-	// -- RightWrist
-	solidDesc.mass     = 0.1;
-	soRightWristZY     = scene->CreateSolid(solidDesc);
-	soRightWristYX     = scene->CreateSolid(solidDesc);
+	solidDesc.mass             = 1.0;
+	solids[SO_RIGHT_LOWER_ARM] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize            = Vec3f(lowerArmDiameter, lowerArmLength, lowerArmDiameter);
+	solids[SO_RIGHT_LOWER_ARM]->AddShape(sdk->CreateShape(boxDesc));
 
 	// -- RightHand
-	solidDesc.mass     = 1.0;
-	soRightHand        = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.025;
-	soRightHand->AddShape(sdk->CreateShape(sphereDesc));
-
-	// -- LeftShoulder
-	solidDesc.mass     = 0.1;
-	soLeftShoulderZY   = scene->CreateSolid(solidDesc);
-	soLeftShoulderYX   = scene->CreateSolid(solidDesc);
-
-	// -- LeftUpperArm
-	solidDesc.mass     = 1.0;
-	soLeftUpperArm     = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.049, 0.16, 0.048);
-	soLeftUpperArm->AddShape(sdk->CreateShape(boxDesc));
-
-	// -- LeftLowerArm
-	solidDesc.mass     = 1.0;
-	soLeftLowerArm     = scene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(0.046, 0.12, 0.046);
-	soLeftLowerArm->AddShape(sdk->CreateShape(boxDesc));
-
-	// -- LeftWrist
-	solidDesc.mass     = 0.1;
-	soLeftWristZY      = scene->CreateSolid(solidDesc);
-	soLeftWristYX      = scene->CreateSolid(solidDesc);
-
-	// -- LeftHand
-	solidDesc.mass     = 1.0;
-	soLeftHand         = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.025;
-	soLeftHand->AddShape(sdk->CreateShape(sphereDesc));
+	solidDesc.mass        = 1.0;
+	solids[SO_RIGHT_HAND] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize       = Vec3f(handBreadth, handLength, handThickness);
+	solids[SO_RIGHT_HAND]->AddShape(sdk->CreateShape(boxDesc));
 
 	// -- RightEye
-	solidDesc.mass     = 0.01;
-	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
-	soRightEye         = scene->CreateSolid(solidDesc);
-	soRightEyeYX       = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.02;
-	soRightEye->AddShape(sdk->CreateShape(sphereDesc));
-	boxDesc.boxsize    = Vec3f(0.01,0.01,0.05);
-	soRightEye->AddShape(sdk->CreateShape(boxDesc));
+	solidDesc.mass       = 0.001;
+	solidDesc.inertia    = Matrix3d::Unit() * 0.001;
+	solids[SO_RIGHT_EYE] = scene->CreateSolid(solidDesc);
+	sphereDesc.radius    = eyeDiameter;
+	solids[SO_RIGHT_EYE]->AddShape(sdk->CreateShape(sphereDesc));
+	boxDesc.boxsize      = Vec3f(0.01,0.01,eyeDiameter+0.05);
+	solids[SO_RIGHT_EYE]->AddShape(sdk->CreateShape(boxDesc));
+
+	///// --- 左パーツ
+
+	// -- LeftUpperArm
+	solidDesc.mass            = 1.0;
+	solids[SO_LEFT_UPPER_ARM] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize           = Vec3f(upperArmDiameter, upperArmLength, upperArmDiameter);
+	solids[SO_LEFT_UPPER_ARM]->AddShape(sdk->CreateShape(boxDesc));
+
+	// -- LeftLowerArm
+	solidDesc.mass            = 1.0;
+	solids[SO_LEFT_LOWER_ARM] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize           = Vec3f(lowerArmDiameter, lowerArmLength, lowerArmDiameter);
+	solids[SO_LEFT_LOWER_ARM]->AddShape(sdk->CreateShape(boxDesc));
+
+	// -- LeftHand
+	solidDesc.mass       = 1.0;
+	solids[SO_LEFT_HAND] = scene->CreateSolid(solidDesc);
+	boxDesc.boxsize      = Vec3f(handBreadth, handLength, handThickness);
+	solids[SO_LEFT_HAND]->AddShape(sdk->CreateShape(boxDesc));
 	
 	// -- LeftEye
-	solidDesc.mass     = 0.01;
-	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
-	soLeftEye          = scene->CreateSolid(solidDesc);
-	soLeftEyeYX        = scene->CreateSolid(solidDesc);
-	sphereDesc.radius  = 0.02;
-	soLeftEye->AddShape(sdk->CreateShape(sphereDesc));
-	boxDesc.boxsize    = Vec3f(0.01,0.01,0.05);
-	soLeftEye->AddShape(sdk->CreateShape(boxDesc));
+	solidDesc.mass      = 0.001;
+	solidDesc.inertia   = Matrix3d::Unit() * 0.001;
+	solids[SO_LEFT_EYE] = scene->CreateSolid(solidDesc);
+	sphereDesc.radius   = eyeDiameter;
+	solids[SO_LEFT_EYE]->AddShape(sdk->CreateShape(sphereDesc));
+	boxDesc.boxsize     = Vec3f(0.01,0.01,eyeDiameter+0.05);
+	solids[SO_LEFT_EYE]->AddShape(sdk->CreateShape(boxDesc));
+
+	///// --- 関節の中継ぎ用の形状を有しない剛体
+
+	solidDesc.mass    = 0.001;
+	solidDesc.inertia = Matrix3d::Unit() * 0.001;
+	solids[SO_CHEST_NECK_XZ] = scene->CreateSolid(solidDesc);
+	solids[SO_CHEST_NECK_ZY] = scene->CreateSolid(solidDesc);
+	solids[SO_NECK_HEAD_XZ] = scene->CreateSolid(solidDesc);
+	solids[SO_RIGHT_SHOULDER_ZX] = scene->CreateSolid(solidDesc);
+	solids[SO_RIGHT_SHOULDER_XY] = scene->CreateSolid(solidDesc);
+	solids[SO_RIGHT_WRIST_YX] = scene->CreateSolid(solidDesc);
+	solids[SO_RIGHT_WRIST_XZ] = scene->CreateSolid(solidDesc);
+	solids[SO_RIGHT_EYE_YX] = scene->CreateSolid(solidDesc);
+	solids[SO_LEFT_SHOULDER_ZX] = scene->CreateSolid(solidDesc);
+	solids[SO_LEFT_SHOULDER_XY] = scene->CreateSolid(solidDesc);
+	solids[SO_LEFT_WRIST_YX] = scene->CreateSolid(solidDesc);
+	solids[SO_LEFT_WRIST_XZ] = scene->CreateSolid(solidDesc);
+	solids[SO_LEFT_EYE_YX] = scene->CreateSolid(solidDesc);
 
 	// --- --- --- --- --- --- --- --- --- ---
 	// Create Joints
-	PHJointIf *joWaistAbdomen, *joAbdomenChest, *joNeck;
-	PHJointIf *joRightShoulderZ, *joRightShoulderY, *joRightShoulderX;
-	PHJointIf *joRightElbow;
-	PHJointIf *joRightWristZ, *joRightWristY, *joRightWristX;
-	PHJointIf *joRightEyeY, *joRightEyeX;
-	PHJointIf *joLeftShoulderZ, *joLeftShoulderY, *joLeftShoulderX;
-	PHJointIf *joLeftElbow;
-	PHJointIf *joLeftWristZ, *joLeftWristY, *joLeftWristX;
-	PHJointIf *joLeftEyeY, *joLeftEyeX;
 	
-	// -- Waist-Abdomen
+	///// --- 中心パーツ
+
+	// -- [p]Waist-[s]Abdomen
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0, 0.04, 0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'x');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, -0.04, 0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
+	hingeDesc.posePlug.Pos()   = Vec3d(0,  waistHeight / 2.0, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -abdomenHeight / 2.0, 0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.spring           = 160.0;
 	hingeDesc.damper           = 60.0;
 	hingeDesc.origin           = Rad(0);
-	joWaistAbdomen             = scene->CreateJoint(soAbdomen, soWaist, hingeDesc);
+	joints[JO_WAIST_ABDOMEN] = scene->CreateJoint(solids[SO_ABDOMEN], solids[SO_WAIST], hingeDesc);
 
-	// -- Abdomen-Chest
+	scene->SetContactMode(solids[SO_ABDOMEN], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+
+	// -- [p]Abdomen-[s]Chest
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0, 0.04, 0);
+	hingeDesc.posePlug.Pos()   = Vec3d(0,  abdomenHeight / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, -0.1, 0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 160.0;
 	hingeDesc.damper           = 60.0;
 	hingeDesc.origin           = Rad(0);
-	joAbdomenChest             = scene->CreateJoint(soChest, soAbdomen, hingeDesc);
+	joints[JO_ABDOMEN_CHEST] = scene->CreateJoint(solids[SO_CHEST], solids[SO_ABDOMEN], hingeDesc);
 
-	// -- Neck (Chest-Head)
-	/*
+	scene->SetContactMode(solids[SO_CHEST], solids[SO_ABDOMEN], PHSceneDesc::MODE_NONE);
+
+	// -- [p]Chest-[s]Neck
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0, 0.1, 0);
+	hingeDesc.posePlug.Pos()   = Vec3d(0, chestHeight / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, -0.08, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 3.0;
-	hingeDesc.damper           = 3.0;
+	hingeDesc.spring           = 160.0;
+	hingeDesc.damper           = 60.0;
 	hingeDesc.origin           = Rad(0);
-	joNeck                     = scene->CreateJoint(soHead, soChest, hingeDesc);
-	*/
-	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0, 0.1, 0);
-	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
-	ballDesc.poseSocket.Pos()  = Vec3d(0,-0.08,0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'y');
-	joNeck                     = scene->CreateJoint(soHead, soChest, ballDesc);
+	joints[JO_CHEST_NECK_X] = scene->CreateJoint(solids[SO_CHEST_NECK_XZ], solids[SO_CHEST], hingeDesc);
 
-	// -- RightShoulder (Chest-RightUpperArm)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0.13, 0.1, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.spring           = 160.0;
+	hingeDesc.damper           = 60.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_CHEST_NECK_Z] = scene->CreateJoint(solids[SO_CHEST_NECK_ZY], solids[SO_CHEST_NECK_XZ], hingeDesc);
+
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -neckLength / 2.0, 0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.spring           = 160.0;
+	hingeDesc.damper           = 60.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_CHEST_NECK_Y] = scene->CreateJoint(solids[SO_NECK], solids[SO_CHEST_NECK_ZY], hingeDesc);
+
+	scene->SetContactMode(solids[SO_NECK], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
+
+	// -- [p]Neck-[s]Head
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0, neckLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 10.0;
 	hingeDesc.damper           = 6.0;
-	hingeDesc.origin           = Rad(-30);
-	joRightShoulderZ           = scene->CreateJoint(soRightShoulderZY, soChest, hingeDesc);
+	hingeDesc.origin           = Rad(0);
+	joints[JO_CHEST_NECK_X] = scene->CreateJoint(solids[SO_NECK_HEAD_XZ], solids[SO_NECK], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.spring           = 150.0;
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter / 2.0, 0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.spring           = 10.0;
 	hingeDesc.damper           = 6.0;
 	hingeDesc.origin           = Rad(0);
-	joRightShoulderY           = scene->CreateJoint(soRightShoulderYX, soRightShoulderZY, hingeDesc);
+	joints[JO_CHEST_NECK_Z] = scene->CreateJoint(solids[SO_HEAD], solids[SO_NECK_HEAD_XZ], hingeDesc);
+
+	scene->SetContactMode(solids[SO_HEAD], solids[SO_NECK], PHSceneDesc::MODE_NONE);
+
+	///// --- 右パーツ
+
+	// -- RightShoulder ([p]Chest-[s]RightUpperArm)
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(chestBreadth/2.0 + upperArmDiameter*1.414, chestHeight/2.0, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.spring           = 10.0;
+	hingeDesc.damper           = 6.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_RIGHT_SHOULDER_Z] = scene->CreateJoint(solids[SO_RIGHT_SHOULDER_ZX], solids[SO_CHEST], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.09, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 10.0;
 	hingeDesc.origin           = Rad(0);
-	joRightShoulderX           = scene->CreateJoint(soRightUpperArm, soRightShoulderYX, hingeDesc);
+	joints[JO_RIGHT_SHOULDER_X] = scene->CreateJoint(solids[SO_RIGHT_SHOULDER_XY], solids[SO_RIGHT_SHOULDER_ZX], hingeDesc);
 
-	// -- RightElbow (RightUpperArm-RightLowerArm)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0, -0.09, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, upperArmLength / 2.0, 0.0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.spring           = 150.0;
+	hingeDesc.damper           = 6.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_RIGHT_SHOULDER_Y] = scene->CreateJoint(solids[SO_RIGHT_UPPER_ARM], solids[SO_RIGHT_SHOULDER_XY], hingeDesc);
+
+	scene->SetContactMode(solids[SO_RIGHT_UPPER_ARM], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
+
+	// -- RightElbow ([p]RightUpperArm-[s]RightLowerArm)
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0, -upperArmLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.07, 0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerArmLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 4.0;
-	hingeDesc.origin           = Rad(-90);
-	joRightElbow               = scene->CreateJoint(soRightLowerArm, soRightUpperArm, hingeDesc);
+	hingeDesc.origin           = Rad(0);
+	joints[JO_RIGHT_ELBOW] = scene->CreateJoint(solids[SO_RIGHT_LOWER_ARM], solids[SO_RIGHT_UPPER_ARM], hingeDesc);
 
-	// -- RightWrist (RightLowerArm-RightHand)
+	scene->SetContactMode(solids[SO_RIGHT_LOWER_ARM], solids[SO_RIGHT_UPPER_ARM], PHSceneDesc::MODE_NONE);
+
+	// -- RightWrist ([p]RightLowerArm-[s]RightHand)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0.0, -0.02, 0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 10.0;
-	hingeDesc.damper           = 6.0;
-	hingeDesc.origin           = Rad(-30);
-	joRightWristZ              = scene->CreateJoint(soRightWristZY, soRightLowerArm, hingeDesc);
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	hingeDesc.posePlug.Pos()   = Vec3d(0.0, -lowerArmLength / 2.0, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.spring           = 150.0;
 	hingeDesc.damper           = 6.0;
-	joRightWristY              = scene->CreateJoint(soRightWristYX, soRightWristZY, hingeDesc);
+	hingeDesc.origin           = Rad(0);
+	joints[JO_RIGHT_WRIST_Y] = scene->CreateJoint(solids[SO_RIGHT_WRIST_YX], solids[SO_RIGHT_LOWER_ARM], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.02, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 6.0;
-	hingeDesc.damper           = 10.0;
-	joRightWristX              = scene->CreateJoint(soRightHand, soRightWristYX, hingeDesc);
-
-	// -- Right Eye (Head-RightEye)
-	/*
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0.03, 0.0, 0.06);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.spring           = 0.0;
-	hingeDesc.damper           = 0.0;
+	hingeDesc.spring           = 150.0;
+	hingeDesc.damper           = 6.0;
 	hingeDesc.origin           = Rad(0);
-	joRightEyeY                = scene->CreateJoint(soRightEyeYX, soHead, hingeDesc);
+	joints[JO_RIGHT_WRIST_X] = scene->CreateJoint(solids[SO_RIGHT_WRIST_XZ], solids[SO_RIGHT_WRIST_YX], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0,0,0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, handLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = 0.0;
-	hingeDesc.damper           = 0.0;
-	hingeDesc.origin           = Rad(0);
-	joRightEyeX                = scene->CreateJoint(soRightEye, soRightEyeYX, hingeDesc);
-	*/
-	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.03, 0.0, -0.06);
-	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
-	ballDesc.poseSocket.Pos()  = Vec3d(0,0,0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
-	joRightEyeY                = scene->CreateJoint(soRightEye, soHead, ballDesc);
+	hingeDesc.spring           = 6.0;
+	hingeDesc.damper           = 10.0;
+	joints[JO_RIGHT_WRIST_Z] = scene->CreateJoint(solids[SO_RIGHT_HAND], solids[SO_RIGHT_WRIST_XZ], hingeDesc);
 
-	// -- LeftShoulder (Chest-LeftUpperArm)
+	scene->SetContactMode(solids[SO_RIGHT_HAND], solids[SO_RIGHT_LOWER_ARM], PHSceneDesc::MODE_NONE);
+
+	// -- Right Eye ([p]Head-[s]RightEye)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(-0.13, 0.1, 0);
+	//hingeDesc.posePlug.Pos()   = Vec3d(interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -occiputToEyeDistance+headDiameter/2.0);
+	hingeDesc.posePlug.Pos()   = Vec3d(interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -headDiameter/2.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.spring           = 0.1;
+	hingeDesc.damper           = 0.1;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_RIGHT_EYE_Y] = scene->CreateJoint(solids[SO_RIGHT_EYE_YX], solids[SO_HEAD], hingeDesc);
+
+	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 10.0;
-	hingeDesc.damper           = 6.0;
-	hingeDesc.origin           = Rad(-30);
-	joLeftShoulderZ            = scene->CreateJoint(soLeftShoulderZY, soChest, hingeDesc);
+	hingeDesc.spring           = 0.1;
+	hingeDesc.damper           = 0.1;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_RIGHT_EYE_X] = scene->CreateJoint(solids[SO_RIGHT_EYE], solids[SO_RIGHT_EYE_YX], hingeDesc);
+
+	scene->SetContactMode(solids[SO_RIGHT_EYE], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
+
+	///// --- 左パーツ
+
+	// -- LeftShoulder ([p]Chest-[s]LeftUpperArm)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.spring           = 150.0;
-	hingeDesc.damper           = 6.0;
-	joLeftShoulderY            = scene->CreateJoint(soLeftShoulderYX, soLeftShoulderZY, hingeDesc);
+	hingeDesc.posePlug.Pos()   = Vec3d(-chestBreadth/2.0 - upperArmDiameter*1.414, chestHeight/2.0, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.spring           = 20.0;
+	hingeDesc.damper           = 10.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_LEFT_SHOULDER_Z] = scene->CreateJoint(solids[SO_LEFT_SHOULDER_ZX], solids[SO_CHEST], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.09, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 10.0;
-	joLeftShoulderX            = scene->CreateJoint(soLeftUpperArm, soLeftShoulderYX, hingeDesc);
+	hingeDesc.origin           = Rad(0);
+	joints[JO_LEFT_SHOULDER_X] = scene->CreateJoint(solids[SO_LEFT_SHOULDER_XY], solids[SO_LEFT_SHOULDER_ZX], hingeDesc);
 
-	// -- LeftElbow (LeftUpperArm-LeftLowerArm)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0, -0.09, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, upperArmLength / 2.0, 0.0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.spring           = 150.0;
+	hingeDesc.damper           = 6.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_LEFT_SHOULDER_Y] = scene->CreateJoint(solids[SO_LEFT_UPPER_ARM], solids[SO_LEFT_SHOULDER_XY], hingeDesc);
+
+	scene->SetContactMode(solids[SO_LEFT_UPPER_ARM], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
+
+	// -- LeftElbow ([p]LeftUpperArm-[s]LeftLowerArm)
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0, -upperArmLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.07, 0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerArmLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 4.0;
-	hingeDesc.origin           = Rad(-90);
-	joLeftElbow                = scene->CreateJoint(soLeftLowerArm, soLeftUpperArm, hingeDesc);
+	hingeDesc.origin           = Rad(0);
+	joints[JO_LEFT_ELBOW] = scene->CreateJoint(solids[SO_LEFT_LOWER_ARM], solids[SO_LEFT_UPPER_ARM], hingeDesc);
 
-	// -- LeftWrist (LeftLowerArm-LeftHand)
+	scene->SetContactMode(solids[SO_LEFT_LOWER_ARM], solids[SO_LEFT_UPPER_ARM], PHSceneDesc::MODE_NONE);	
+
+	// -- LeftWrist ([p]LeftLowerArm-[s]LeftHand)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0.0, -0.02, 0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 10.0;
-	hingeDesc.damper           = 6.0;
-	hingeDesc.origin           = Rad(-30);
-	joLeftWristZ               = scene->CreateJoint(soLeftWristZY, soLeftLowerArm, hingeDesc);
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
+	hingeDesc.posePlug.Pos()   = Vec3d(0, -lowerArmLength / 2.0, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.spring           = 150.0;
 	hingeDesc.damper           = 6.0;
-	joLeftWristY               = scene->CreateJoint(soLeftWristYX, soLeftWristZY, hingeDesc);
+	hingeDesc.origin           = Rad(0);
+	joints[JO_LEFT_WRIST_Y] = scene->CreateJoint(solids[SO_LEFT_WRIST_YX], solids[SO_LEFT_LOWER_ARM], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, 0.02, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.spring           = 150.0;
+	hingeDesc.damper           = 6.0;
+	hingeDesc.origin           = Rad(0);
+	joints[JO_LEFT_WRIST_X] = scene->CreateJoint(solids[SO_LEFT_WRIST_XZ], solids[SO_LEFT_WRIST_YX], hingeDesc);
+
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, handLength / 2.0, 0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 10.0;
-	joLeftWristX               = scene->CreateJoint(soLeftHand, soLeftWristYX, hingeDesc);
+	joints[JO_LEFT_WRIST_Z] = scene->CreateJoint(solids[SO_LEFT_HAND], solids[SO_LEFT_WRIST_XZ], hingeDesc);
 
-	// -- Left Eye (Head-LeftEye)
-	/*
+	scene->SetContactMode(solids[SO_LEFT_HAND], solids[SO_LEFT_LOWER_ARM], PHSceneDesc::MODE_NONE);	
+
+	// -- Left Eye ([p]Head-[s]LeftEye)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(-0.03, 0.0, 0.06);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'z');
-	hingeDesc.spring           = 0.0;
-	hingeDesc.damper           = 0.0;
+	//hingeDesc.posePlug.Pos()   = Vec3d(-interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -occiputToEyeDistance+headDiameter/2.0);
+	hingeDesc.posePlug.Pos()   = Vec3d(-interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -headDiameter/2.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.spring           = 0.05;
+	hingeDesc.damper           = 0.1;
 	hingeDesc.origin           = Rad(0);
-	joLeftEyeY                 = scene->CreateJoint(soLeftEyeYX, soHead, hingeDesc);
+	joints[JO_LEFT_EYE_Y] = scene->CreateJoint(solids[SO_LEFT_EYE_YX], solids[SO_HEAD], hingeDesc);
+
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0,0,0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = 0.0;
-	hingeDesc.damper           = 0.0;
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.spring           = 0.05;
+	hingeDesc.damper           = 0.1;
 	hingeDesc.origin           = Rad(0);
-	joLeftEyeX                 = scene->CreateJoint(soLeftEye, soLeftEyeYX, hingeDesc);
-	*/
-	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(-0.03, 0.0, -0.06);
-	ballDesc.posePlug.Ori()    = Quaternionf::Rot(Rad(0), 'y');
-	ballDesc.poseSocket.Pos()  = Vec3d(0,0,0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
-	joLeftEyeY                 = scene->CreateJoint(soLeftEye, soHead, ballDesc);
+	joints[JO_LEFT_EYE_X] = scene->CreateJoint(solids[SO_LEFT_EYE], solids[SO_LEFT_EYE_YX], hingeDesc);
 
-	// --- --- --- --- --- --- --- --- --- ---
-	// Initialize
-	scene->SetContactMode(soWaist, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soAbdomen, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soChest, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soHead, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soRightShoulderZY, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soRightShoulderYX, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soRightHand, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soRightEye, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soRightEyeYX, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soLeftShoulderZY, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soLeftShoulderYX, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soLeftHand, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soLeftEye, PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soLeftEyeYX, PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(solids[SO_LEFT_EYE], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
 
-	solids.push_back(soWaist);
-	solids.push_back(soAbdomen);
-	solids.push_back(soChest);
-	solids.push_back(soHead);
-	solids.push_back(soRightShoulderZY);
-	solids.push_back(soRightShoulderYX);
-	solids.push_back(soRightUpperArm);
-	solids.push_back(soRightLowerArm);
-	solids.push_back(soRightWristZY);
-	solids.push_back(soRightWristYX);
-	solids.push_back(soRightHand);
-	solids.push_back(soRightEye);
-	solids.push_back(soRightEyeYX);
-	solids.push_back(soLeftShoulderZY);
-	solids.push_back(soLeftShoulderYX);
-	solids.push_back(soLeftUpperArm);
-	solids.push_back(soLeftLowerArm);
-	solids.push_back(soLeftWristZY);
-	solids.push_back(soLeftWristYX);
-	solids.push_back(soLeftHand);
-	solids.push_back(soLeftEye);
-	solids.push_back(soLeftEyeYX);
-
-	joints.push_back(joWaistAbdomen);
-	joints.push_back(joAbdomenChest);
-	joints.push_back(joNeck);
-	joints.push_back(joRightShoulderZ);
-	joints.push_back(joRightShoulderY);
-	joints.push_back(joRightShoulderX);
-	joints.push_back(joRightElbow);
-	joints.push_back(joRightWristZ);
-	joints.push_back(joRightWristY);
-	joints.push_back(joRightShoulderX);
-	joints.push_back(joRightEyeY);
-	joints.push_back(joRightEyeX);
-	joints.push_back(joLeftShoulderZ);
-	joints.push_back(joLeftShoulderY);
-	joints.push_back(joLeftShoulderX);
-	joints.push_back(joLeftElbow);
-	joints.push_back(joLeftWristZ);
-	joints.push_back(joLeftWristY);
-	joints.push_back(joLeftShoulderX);
-	joints.push_back(joLeftEyeY);
-	joints.push_back(joLeftEyeX);
+	for(int i=0; i<(int)SO_NSOLIDS; i++){
+		scene->SetContactMode(solids[i], PHSceneDesc::MODE_NONE);
+	}
 }
 
 int CRHingeHuman::NSolids(){

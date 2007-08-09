@@ -18,9 +18,10 @@ namespace Spr{
 // 
 IF_OBJECT_IMP(CRNeckController, SceneObject);
 
-void CRNeckController::LookAt(Vec3f pos, Vec3f vel){
+void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 	this->pos = pos;
 	this->vel = vel;
+	this->attractiveness = attractiveness;
 }
 
 void CRNeckController::Step(){

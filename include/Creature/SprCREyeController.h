@@ -91,7 +91,7 @@ struct CRNeckControllerIf : SceneObjectIf{
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 	*/
-	virtual void LookAt(Vec3f pos, Vec3f vel)= 0;
+	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness)= 0;
 
 	/** @brief 制御処理を実行する
 	*/

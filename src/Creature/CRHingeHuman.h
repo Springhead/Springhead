@@ -33,7 +33,12 @@ public:
 	ACCESS_DESC(CRHingeHuman);
 
 	CRHingeHuman(){eyeCtrl=NULL;}
-	CRHingeHuman(const CRHingeHumanDesc& desc, SceneIf* s=NULL) : CRHingeHumanDesc(desc) {eyeCtrl=NULL;if(s){SetScene(s);Init();}}
+	CRHingeHuman(const CRHingeHumanDesc& desc, SceneIf* s=NULL) : CRHingeHumanDesc(desc), solids(SO_NSOLIDS), joints(JO_NJOINTS) {
+		eyeCtrl=NULL;
+		if(s){
+			SetScene(s);Init();
+		}
+	}
 
 	/** @brief „‘Ì‚Ì”‚ğ“¾‚é
 	*/
