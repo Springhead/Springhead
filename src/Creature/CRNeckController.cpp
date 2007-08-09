@@ -25,6 +25,20 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 }
 
 void CRNeckController::Step(){
+	// 首-頭をつなぐ関節の制御
+	/// 首基準座標系でのターゲットの位置
+	Vec3d vecTargetFromNeck = soNeck->GetPose().Ori().Inv() * (pos - soNeck->GetPose().Pos());
+	/// Quaternionに変換
+	Quaterniond qtnTargetFromNeck;
+	qtnTargetFromNeck.RotationArc(vecTargetFromNeck.unit(), Vec3d(0,0,-1));
+	/// Eular角に変換
+	Vec3d eulTargetFromNeck;
+	qtnTargetFromNeck.ToEular(eulTargetFromNeck);
+	/// 関節の目標値をセット
+	joNeckHeadX->SetSpringOrigin(eulTargetFromNeck.Z());
+	joChestNeckY->SetSpringOrigin(eulTargetFromNeck.X());
+
+	/*
 	Quaterniond qLook;
 	qLook.RotationArc(pos.unit(), Vec3d(0,0,-1));
 	qLook = qLook * soChest->GetPose().Ori();
@@ -38,5 +52,6 @@ void CRNeckController::Step(){
 	ballDesc.origin            = qLook;
 	ballDesc.damper            = 50.0;
 	joNeck->SetDesc(&ballDesc);
+	*/
 }
 }

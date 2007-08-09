@@ -202,7 +202,7 @@ void CRHingeHuman::Init(){
 	hingeDesc.spring           = 10.0;
 	hingeDesc.damper           = 6.0;
 	hingeDesc.origin           = Rad(0);
-	joints[JO_CHEST_NECK_X] = scene->CreateJoint(solids[SO_NECK_HEAD_XZ], solids[SO_NECK], hingeDesc);
+	joints[JO_NECK_HEAD_X] = scene->CreateJoint(solids[SO_NECK_HEAD_XZ], solids[SO_NECK], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
@@ -211,7 +211,7 @@ void CRHingeHuman::Init(){
 	hingeDesc.spring           = 10.0;
 	hingeDesc.damper           = 6.0;
 	hingeDesc.origin           = Rad(0);
-	joints[JO_CHEST_NECK_Z] = scene->CreateJoint(solids[SO_HEAD], solids[SO_NECK_HEAD_XZ], hingeDesc);
+	joints[JO_NECK_HEAD_Z] = scene->CreateJoint(solids[SO_HEAD], solids[SO_NECK_HEAD_XZ], hingeDesc);
 
 	scene->SetContactMode(solids[SO_HEAD], solids[SO_NECK], PHSceneDesc::MODE_NONE);
 
@@ -293,8 +293,8 @@ void CRHingeHuman::Init(){
 	hingeDesc.posePlug.Pos()   = Vec3d(interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -headDiameter/2.0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = 0.1;
-	hingeDesc.damper           = 0.1;
+	hingeDesc.spring           = 500.0;
+	hingeDesc.damper           = 5.0;
 	hingeDesc.origin           = Rad(0);
 	joints[JO_RIGHT_EYE_Y] = scene->CreateJoint(solids[SO_RIGHT_EYE_YX], solids[SO_HEAD], hingeDesc);
 
@@ -302,8 +302,8 @@ void CRHingeHuman::Init(){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 0.1;
-	hingeDesc.damper           = 0.1;
+	hingeDesc.spring           = 500.0;
+	hingeDesc.damper           = 5.0;
 	hingeDesc.origin           = Rad(0);
 	joints[JO_RIGHT_EYE_X] = scene->CreateJoint(solids[SO_RIGHT_EYE], solids[SO_RIGHT_EYE_YX], hingeDesc);
 
@@ -387,8 +387,8 @@ void CRHingeHuman::Init(){
 	hingeDesc.posePlug.Pos()   = Vec3d(-interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -headDiameter/2.0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = 0.05;
-	hingeDesc.damper           = 0.1;
+	hingeDesc.spring           = 500.0;
+	hingeDesc.damper           = 5.0;
 	hingeDesc.origin           = Rad(0);
 	joints[JO_LEFT_EYE_Y] = scene->CreateJoint(solids[SO_LEFT_EYE_YX], solids[SO_HEAD], hingeDesc);
 
@@ -396,8 +396,8 @@ void CRHingeHuman::Init(){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = 0.05;
-	hingeDesc.damper           = 0.1;
+	hingeDesc.spring           = 500.0;
+	hingeDesc.damper           = 5.0;
 	hingeDesc.origin           = Rad(0);
 	joints[JO_LEFT_EYE_X] = scene->CreateJoint(solids[SO_LEFT_EYE], solids[SO_LEFT_EYE_YX], hingeDesc);
 

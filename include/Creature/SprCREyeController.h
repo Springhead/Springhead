@@ -29,21 +29,16 @@ struct CREyeControllerState{
 struct CREyeControllerDesc: public CREyeControllerState{
 	PHSolidIf* soLEye; ///< 左目のソリッド
 	PHSolidIf* soREye; ///< 右目のソリッド
-	
-	PHBallJointIf* joLEye; ///< 左目を固定するボールジョイント
-	PHBallJointIf* joREye; ///< 右目を固定するボールジョイント
-
 	PHSolidIf* soHead; ///< 頭のソリッド
-	PHBallJointIf* joNeck; ///< 頭を固定するボールジョイント
-
-	float Kp; ///< 眼球PD制御のP係数
-	float Kd; ///< 眼球PD制御のD係数
+	
+	PHHingeJointIf* joLEyeX; ///< 左目を固定するボールジョイント
+	PHHingeJointIf* joLEyeY; ///< 左目を固定するボールジョイント
+	PHHingeJointIf* joREyeX; ///< 右目を固定するボールジョイント
+	PHHingeJointIf* joREyeY; ///< 右目を固定するボールジョイント
 
 	CREyeControllerDesc(){
-		soLEye = NULL; soREye = NULL; joLEye = NULL; joREye = NULL;
-		soHead = NULL; joNeck = NULL;
-
-		Kp = 0.3f; Kd = 0.025f;
+		soHead = soLEye = soREye = NULL; 
+		joLEyeX = joLEyeY = joREyeX = joREyeY = NULL;
 
 		controlState = CS_PURSUIT;
 	}
@@ -72,14 +67,19 @@ struct CRNeckControllerState{
 
 /// 首運動コントローラのデスクリプタ
 struct CRNeckControllerDesc: public CRNeckControllerState{
-	PHSolidIf* soHead; ///< 頭のソリッド
 	PHSolidIf* soChest; ///< 胸部のソリッド
-	PHBallJointIf* joNeck; ///< 頭を固定しているジョイント
+	PHSolidIf* soNeck;  ///< 首のソリッド
+	PHSolidIf* soHead;  ///< 頭のソリッド
+	PHHingeJointIf* joChestNeckX; ///< 胸と首を固定しているジョイント
+	PHHingeJointIf* joChestNeckY; ///< 胸と首を固定しているジョイント
+	PHHingeJointIf* joChestNeckZ; ///< 胸と首を固定しているジョイント
+	PHHingeJointIf* joNeckHeadX;  ///< 首と頭を固定しているジョイント
+	PHHingeJointIf* joNeckHeadZ;  ///< 首と頭を固定しているジョイント
 
 	CRNeckControllerDesc(){
-		soHead  = NULL;
-		soChest = NULL;
-		joNeck  = NULL;
+		soChest = soNeck = soHead = NULL;
+		joChestNeckX = joChestNeckY = joChestNeckZ = NULL;
+		joNeckHeadX  = joNeckHeadZ  = NULL;
 	}
 };
 

@@ -106,8 +106,8 @@ void CRPhysicalEye::SetTarget(Vec3d pos, Vec3d vel){
 }
 
 void CRPhysicalEye::Control(Vec2d angleLEye, Vec2d angleREye){
-	Control(soLEye, angleLEye);
-	Control(soREye, angleREye);
+	Control(joLEyeX, joLEyeY, angleLEye);
+	Control(joREyeX, joREyeY, angleREye);
 }
 
 Vec2d CRPhysicalEye::GetAxisL(){
@@ -144,7 +144,14 @@ Vec2d CRPhysicalEye::GetHeadAngle(){
 	return angle;
 }
 
-void CRPhysicalEye::Control(PHSolidIf* soEye, Vec2d angle){
+void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle){
+	joX->SetSpringOrigin(-angle[0]);
+	joY->SetSpringOrigin(-angle[1]);
+
+	std::cout << "Vert : " << (int)Deg(angle[0]) << std::endl;
+	std::cout << "Horz : " << (int)Deg(angle[1]) << std::endl;
+
+	/*
 	Quaterniond qToGlobal = soHead->GetPose().Ori();
 	Vec3d target = Quaterniond::Rot(angle[0],'x')*Quaterniond::Rot(angle[1],'y')*Vec3d(0,0,-1);
 	Vec3d currentDir = (soEye->GetPose().Ori() * Vec3d(0,0,-1)).unit();
@@ -152,6 +159,7 @@ void CRPhysicalEye::Control(PHSolidIf* soEye, Vec2d angle){
 	Vec3d derror = soEye->GetAngularVelocity();
 	Vec3d torque = (Kp * (error)) - (Kd * derror);
  	soEye->AddTorque(torque);
+	*/
 }
 
 Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
@@ -184,7 +192,7 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 	switch(controlState){
 	case CS_SACCADE:
 		// サッケード完了条件
-		if ((abs(eL[1]) < Rad(10.0f)) && (abs(eR[1])  < Rad(10.0f)) && (abs(eL[0]) < Rad(10.0f)) && (abs(eR[0]) < Rad(10.0f))) {
+		if ((abs(eL[1]) < Rad(5.0f)) && (abs(eR[1])  < Rad(5.0f)) && (abs(eL[0]) < Rad(5.0f)) && (abs(eR[0]) < Rad(5.0f))) {
 			return CS_PURSUIT;
 		}else{
 			return CS_SACCADE;
@@ -193,7 +201,7 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 
 	case CS_PURSUIT:
 		// パーシュート中断条件
-		if ((abs(eL[1]) > Rad(15.0f)) || (abs(eR[1])  > Rad(15.0f)) || (abs(eL[0]) > Rad(15.0f)) || (abs(eR[0]) > Rad(15.0f))) {
+		if ((abs(eL[1]) > Rad(10.0f)) || (abs(eR[1])  > Rad(10.0f)) || (abs(eL[0]) > Rad(10.0f)) || (abs(eR[0]) > Rad(10.0f))) {
 			return CS_SACCADE;
 		}else{
 			return CS_PURSUIT;

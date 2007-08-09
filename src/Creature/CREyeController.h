@@ -118,14 +118,14 @@ class CRPhysicalEye {
 private:
 	/// 制御に使用する剛体
 	PHSolidIf *soLEye, *soREye, *soHead;
+	/// 制御に使用する関節
+	PHHingeJointIf *joLEyeX, *joLEyeY, *joREyeX, *joREyeY;
 	/// 視標位置
 	Vec3d targetPos, targetVel;
-	/// 制御の係数
-	double Kp, Kd;
 
 	/** @brief 片目に関して制御
 	*/
-	void Control(PHSolidIf* soEye, Vec2d angle);
+	void Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle);
 
 	/** @brief (0,0,-1)と成す角を、右手系でX軸・Y軸周りの回転として求める
 		@param v 入力ベクトル
@@ -135,10 +135,12 @@ private:
 
 public:
 	CRPhysicalEye() : soLEye(NULL), soREye(NULL), soHead(NULL) {
-		Kp = Kd = 0.0;
 	}
 
-	CRPhysicalEye(PHSolidIf* lEye, PHSolidIf* rEye, PHSolidIf* head, double kp, double kd) : soLEye(lEye), soREye(rEye), soHead(head), Kp(kp), Kd(kd) {
+	CRPhysicalEye(const CREyeControllerDesc &desc) {
+		soHead  = desc.soHead;
+		soLEye  = desc.soLEye; joLEyeX = desc.joLEyeX; joLEyeY = desc.joLEyeY;
+		soREye  = desc.soREye; joREyeX = desc.joREyeX; joREyeY = desc.joREyeY;
 	}
 
 	/** @brief ３次元空間内の視標位置を設定する（絶対位置）
@@ -197,7 +199,7 @@ public:
 	ACCESS_DESC_STATE(CREyeController);
 
 	CREyeController(){}
-	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL) : CREyeControllerDesc(desc), physicalEye(soLEye, soREye, soHead, Kp, Kd) {
+	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL) : CREyeControllerDesc(desc), physicalEye(desc) {
 		if(s){SetScene(s);}
 	}
 
