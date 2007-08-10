@@ -143,6 +143,8 @@ void GRDeviceD3D::ResetDevice(){
 	d3ddevice->GetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&projection);
 	std::vector<D3DLIGHT9> lights(nLights);
 	for(int i=0; i<nLights; ++i) { d3ddevice->GetLight(i, &lights[i]); }
+	DWORD ambient;
+	d3ddevice->GetRenderState(D3DRS_AMBIENT, &ambient);
 
 	HRESULT hr;
 	hr = d3ddevice->TestCooperativeLevel();
@@ -163,6 +165,7 @@ void GRDeviceD3D::ResetDevice(){
 	d3ddevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	d3ddevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	for(int i=0; i<nLights; ++i) { d3ddevice->SetLight(i, &lights[i]);  d3ddevice->LightEnable(i, TRUE); }
+	d3ddevice->SetRenderState(D3DRS_AMBIENT, ambient);
 	/* ここでリソースの再作成を行う */
 }
 ///	Viewport設定
