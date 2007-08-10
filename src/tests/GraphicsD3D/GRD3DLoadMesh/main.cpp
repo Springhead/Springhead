@@ -231,7 +231,7 @@ HWND createMainWindow(HINSTANCE hInstance)
     wndClass.lpszClassName = "GRD3DLoadMesh";
 	wndClass.hIconSm       = NULL;
 
-	assert( RegisterClassEx(&wndClass)!=0 );
+	RegisterClassEx(&wndClass);
 
 
 	HWND        result  = NULL;

@@ -14,6 +14,7 @@
 #define SPR_GRAnimationMesh_H
 
 #include <Graphics/SprGRFrame.h>
+#include <windows.h>
 
 namespace Spr{;
 
@@ -22,6 +23,7 @@ struct GRAnimationMeshDesc /*: GRVisualDesc*/{
 	std::string filename;		///< 読み込むファイル名(.x)
 };
 
+typedef void (SPR_CDECL *GRAnimationMeshDrawSubsetListenerFunc)(DWORD attribId);
 
 /**	@brief	グラフィックスで使うキャラクタアニメーション表示用のMesh */
 struct GRAnimationMeshIf: public GRVisualIf{
@@ -42,6 +44,12 @@ struct GRAnimationMeshIf: public GRVisualIf{
 		@param weight 上書き率（0～1, 0：キーフレームに100%従う, 1：poseに100%従う）
 	*/
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight)=0;
+	
+	/** @brief DrawSubsetの実行時にコールバックされる関数を登録
+		@param beforeFunc DrawSubsetが実行される直前にコールバックされる関数
+		@param afterFunc  DrawSubsetが実行された直後にコールバックされる関数
+	*/
+	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc=NULL, GRAnimationMeshDrawSubsetListenerFunc afterFunc=NULL)=0;
 };
 
 

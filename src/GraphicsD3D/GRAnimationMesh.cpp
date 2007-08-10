@@ -204,6 +204,9 @@ inline void PoseInvertZAxis(Posed& pose){
 	pose.Pos().z *= -1;
 }
 void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight){
+	if(!loaded) if(!LoadMesh()) return;
+	if(!rootFrame || !controller) return;
+	
 	Frame* frame = (Frame*)D3DXFrameFind(rootFrame, name.c_str());
 	assert(frame);
 	frame->overridePose     = Posed::Unit(orientation);
@@ -212,6 +215,9 @@ void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Qua
 	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
 }
 void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pose, double weight){
+	if(!loaded) if(!LoadMesh()) return;
+	if(!rootFrame || !controller) return;
+	
 	Frame* frame = (Frame*)D3DXFrameFind(rootFrame, name.c_str());
 	assert(frame);
 	frame->overridePose     = pose;
@@ -219,9 +225,13 @@ void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pos
 	frame->overridePosition = true;
 	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
 }
+void GRAnimationMesh::AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc){
+	if(beforeFunc) beforeDrawSubsetListeners.push_back(beforeFunc);
+	if(afterFunc)  afterDrawSubsetListeners.push_back(afterFunc);
+}
 void GRAnimationMesh::Render(GRRenderIf* r){
 	if(!loaded) if(!LoadMesh()) return;
-	if(!rootFrame || !controller) return;
+	if(!rootFrame) return;
 	
 	LPDIRECT3DDEVICE9	d3ddevice = GRDeviceD3D::GetD3DDevice();
 	D3DXMATRIX			world;
@@ -230,7 +240,7 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 	d3ddevice->GetTransform(D3DTS_WORLD, &world);
 	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						// ‚yŽ²‚ð”½“]‚·‚é‚Ì‚ÅƒJƒŠƒ“ƒO‚à‹t‚É‚·‚é
-	controller->AdvanceTime(0, NULL);
+	if(controller) controller->AdvanceTime(0, NULL);
 	UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// Šeƒ{[ƒ“‚ÌÀ•W•ÏŠ·iDirectXÀ•WŒnj -> ‚yÀ•W”½“] -> ƒ[ƒ‹ƒh•ÏŠ·iSpringheadÀ•WŒnj
 	DrawFrame(rootFrame);
 	d3ddevice->SetTransform(D3DTS_WORLD, &world);
@@ -249,7 +259,7 @@ bool GRAnimationMesh::LoadMesh(){
 		return true;
 	}
 	rootFrame = (Frame*)rootFrameBase;
-	controller->ResetTime();
+	if(controller) controller->ResetTime();
 	loaded = true;
 	InitFrame(rootFrame);
 	return true;
@@ -336,7 +346,9 @@ void GRAnimationMesh::DrawSkinnedMeshContainer(MeshContainer *meshContainer){
 		d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, i-1);
 		d3ddevice->SetMaterial(&meshContainer->pMaterials[ meshContainer->boneCombinationTable[subset].AttribId ].MatD3D);
 		d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
+		for(size_t i=0; i<beforeDrawSubsetListeners.size(); ++i){ beforeDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
 		meshContainer->blendedMesh->DrawSubset(subset);
+		for(size_t i=0; i<afterDrawSubsetListeners.size(); ++i){ afterDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
 	}
 
 	d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, 0);

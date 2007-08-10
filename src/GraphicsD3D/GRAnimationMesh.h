@@ -28,6 +28,8 @@ protected:
 	Frame*								rootFrame;
 	CComPtr<ID3DXAnimationController>	controller;
 	bool								loaded;
+	std::vector<GRAnimationMeshDrawSubsetListenerFunc> beforeDrawSubsetListeners;
+	std::vector<GRAnimationMeshDrawSubsetListenerFunc> afterDrawSubsetListeners;
 public:
 	GRAnimationMesh(const GRAnimationMeshDesc& desc=GRAnimationMeshDesc());
 	~GRAnimationMesh();
@@ -35,6 +37,7 @@ public:
 	virtual void SetTime(double time);
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
+	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc);
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 protected:

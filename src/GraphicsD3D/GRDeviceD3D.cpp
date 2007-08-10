@@ -116,6 +116,8 @@ void GRDeviceD3D::Init(){
 	s_d3ddevice = d3ddevice;
 
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+	d3ddevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
+	d3ddevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 	d3ddevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	d3ddevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 
@@ -156,6 +158,8 @@ void GRDeviceD3D::ResetDevice(){
 	d3ddevice->SetTransform(D3DTS_VIEW, (D3DMATRIX*)&view);
 	d3ddevice->SetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&projection);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
+	d3ddevice->SetRenderState(D3DRS_SPECULARENABLE, TRUE);
+	d3ddevice->SetRenderState(D3DRS_NORMALIZENORMALS, TRUE);
 	d3ddevice->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 	d3ddevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	for(int i=0; i<nLights; ++i) { d3ddevice->SetLight(i, &lights[i]);  d3ddevice->LightEnable(i, TRUE); }
@@ -413,7 +417,7 @@ void GRDeviceD3D::PushLight(const GRLightDesc& light){
 	d3dlight.Position		= *(D3DVECTOR*)&light.position;
 	d3dlight.Direction		= (light.position.w==0) ? *(D3DVECTOR*)&(-light.position): *(D3DVECTOR*)&light.spotDirection;
 	if(d3dlight.Type != D3DLIGHT_DIRECTIONAL){
-		d3dlight.Range			= light.range;
+		d3dlight.Range			= min(light.range, sqrt(FLT_MAX));
 		d3dlight.Falloff		= light.spotFalloff;
 		d3dlight.Attenuation0	= light.attenuation0;
 		d3dlight.Attenuation1	= light.attenuation1;
