@@ -25,6 +25,11 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 	IF_DEF(GRDeviceD3D);
 };
 
+/**	@brief	DirectXのデバッグ情報レンダラーの基本クラス */
+struct GRDebugRenderD3DIf:public GRDebugRenderIf{
+	IF_DEF(GRDebugRenderD3D);
+};
+
 struct GRSdkD3DDesc{
 };
 
@@ -32,6 +37,7 @@ struct GRSdkD3DDesc{
 struct GRSdkD3DIf: public SdkIf{
 	IF_DEF(GRSdkD3D);
 	virtual GRDeviceD3DIf* CreateDeviceD3D()=0;
+	virtual GRDebugRenderD3DIf* CreateDebugRenderD3D()=0;
 	virtual GRAnimationMeshIf* CreateAnimationMesh(const GRAnimationMeshDesc& desc)=0;
 	static GRSdkD3DIf* SPR_CDECL CreateSdk();
 };

@@ -27,6 +27,7 @@ public:
 	OBJECTDEF(GRSdkD3D, Sdk);
 	GRSdkD3D(const GRSdkD3DDesc& = GRSdkD3DDesc());
 	virtual GRDeviceD3DIf* CreateDeviceD3D();
+	virtual GRDebugRenderD3DIf* CreateDebugRenderD3D();
 	virtual GRAnimationMeshIf* CreateAnimationMesh(const GRAnimationMeshDesc& desc);
 	virtual void Clear();
 };

@@ -9,13 +9,24 @@ struct GRDeviceD3DIf;	class GRDeviceD3D;
 typedef GRDeviceD3DIfStubTemplate<GRDeviceD3DIf, ObjectIfBuf, GRDeviceD3D>	GRDeviceD3DIfStub;
 typedef IfInitTemplate<GRDeviceD3DIfStub, GRDeviceD3D>	GRDeviceD3DIfInit;
 
+template <class IF, class MIF, class OBJ> struct GRDebugRenderIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct GRDebugRenderD3DIfStubTemplate: public GRDebugRenderIfStubTemplate<IF, MIF, OBJ> {
+};
+struct GRDebugRenderD3DIf;	class GRDebugRenderD3D;
+typedef GRDebugRenderD3DIfStubTemplate<GRDebugRenderD3DIf, ObjectIfBuf, GRDebugRenderD3D>	GRDebugRenderD3DIfStub;
+typedef IfInitTemplate<GRDebugRenderD3DIfStub, GRDebugRenderD3D>	GRDebugRenderD3DIfInit;
+
 template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRSdkD3DIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
-	virtual GRDeviceD3DIf * CreateDeviceD3D(){
+	virtual GRDeviceD3DIf *  CreateDeviceD3D(){
 		return ((OBJ*)(MIF*)this)->CreateDeviceD3D();
 	}
-	virtual GRAnimationMeshIf * CreateAnimationMesh(const GRAnimationMeshDesc & desc){
+	virtual GRDebugRenderD3DIf *  CreateDebugRenderD3D(){
+		return ((OBJ*)(MIF*)this)->CreateDebugRenderD3D();
+	}
+	virtual GRAnimationMeshIf *  CreateAnimationMesh(const GRAnimationMeshDesc &  desc){
 		return ((OBJ*)(MIF*)this)->CreateAnimationMesh(desc);
 	}
 };
@@ -26,16 +37,16 @@ typedef IfInitTemplate<GRSdkD3DIfStub, GRSdkD3D>	GRSdkD3DIfInit;
 template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRAnimationMeshIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetMotion(const std::string & name){
+	virtual void SetMotion(const std::string &  name){
 		return ((OBJ*)(MIF*)this)->SetMotion(name);
 	}
 	virtual void SetTime(double time){
 		return ((OBJ*)(MIF*)this)->SetTime(time);
 	}
-	virtual void OverrideBoneOrientation(const std::string & name, const Quaterniond & orientation, double weight){
+	virtual void OverrideBoneOrientation(const std::string &  name, const Quaterniond &  orientation, double weight){
 		return ((OBJ*)(MIF*)this)->OverrideBoneOrientation(name, orientation, weight);
 	}
-	virtual void OverrideBonePose(const std::string & name, const Posed & pose, double weight){
+	virtual void OverrideBonePose(const std::string &  name, const Posed &  pose, double weight){
 		return ((OBJ*)(MIF*)this)->OverrideBonePose(name, pose, weight);
 	}
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc = NULL, GRAnimationMeshDrawSubsetListenerFunc afterFunc = NULL){

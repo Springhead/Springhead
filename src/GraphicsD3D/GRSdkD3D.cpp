@@ -27,6 +27,11 @@ GRDeviceD3DIf* GRSdkD3D::CreateDeviceD3D(){
 	objects.push_back(rv);
 	return rv->Cast();
 }
+GRDebugRenderD3DIf* GRSdkD3D::CreateDebugRenderD3D(){
+	GRDebugRenderD3D* rv = DBG_NEW GRDebugRenderD3D;
+	objects.push_back(rv);
+	return rv->Cast();
+}
 GRAnimationMeshIf* GRSdkD3D::CreateAnimationMesh(const GRAnimationMeshDesc& desc){
 	GRAnimationMesh* rv = DBG_NEW GRAnimationMesh(desc);
 	objects.push_back(rv);
