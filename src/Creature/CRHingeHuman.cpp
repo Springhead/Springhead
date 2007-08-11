@@ -227,7 +227,7 @@ void CRHingeHuman::Init(){
 
 	// -- RightShoulder ([p]Chest-[s]RightUpperArm)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(chestBreadth/2.0 + (upperArmDiameter/2.0*1.414), chestHeight/2.0, 0);
+	hingeDesc.posePlug.Pos()   = (posRightUpperArm==Vec3d(0,0,0)) ? Vec3d(chestBreadth/2.0 + (upperArmDiameter/2.0*1.414), chestHeight/2.0, 0) : Vec3d(0,chestHeight/2.0,0)+posRightUpperArm;
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.spring           = 10.0;
@@ -246,7 +246,7 @@ void CRHingeHuman::Init(){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, upperArmLength / 2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = oriRightUpperArm.Inv() * Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.spring           = 50.0;
 	hingeDesc.damper           = 6.0;
 	hingeDesc.origin           = Rad(0);
@@ -259,7 +259,7 @@ void CRHingeHuman::Init(){
 	hingeDesc.posePlug.Pos()   = Vec3d(0, -upperArmLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerArmLength / 2.0, 0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = oriRightLowerArm.Inv() * Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 4.0;
 	hingeDesc.origin           = Rad(0);
@@ -288,7 +288,7 @@ void CRHingeHuman::Init(){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, handLength / 2.0, 0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Ori() = oriRightHand.Inv() * Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.spring           = 15.0;
 	hingeDesc.damper           = 10.0;
 	joints[JO_RIGHT_WRIST_Z] = scene->CreateJoint(solids[SO_RIGHT_HAND], solids[SO_RIGHT_WRIST_XZ], hingeDesc);
@@ -321,7 +321,7 @@ void CRHingeHuman::Init(){
 
 	// -- LeftShoulder ([p]Chest-[s]LeftUpperArm)
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(-chestBreadth/2.0 - (upperArmDiameter/2.0*1.414), chestHeight/2.0, 0);
+	hingeDesc.posePlug.Pos()   = (posRightUpperArm==Vec3d(0,0,0)) ? Vec3d(-chestBreadth/2.0 - (upperArmDiameter/2.0*1.414), chestHeight/2.0, 0) : Vec3d(-posRightUpperArm.x, posRightUpperArm.y+chestHeight/2.0, posRightUpperArm.z);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.spring           = 10.0;
@@ -340,7 +340,7 @@ void CRHingeHuman::Init(){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, upperArmLength / 2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaterniond(-oriRightUpperArm.w, -oriRightUpperArm.x, oriRightUpperArm.y, oriRightUpperArm.z).Inv() * Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.spring           = 50.0;
 	hingeDesc.damper           = 6.0;
 	hingeDesc.origin           = Rad(0);
@@ -353,7 +353,7 @@ void CRHingeHuman::Init(){
 	hingeDesc.posePlug.Pos()   = Vec3d(0, -upperArmLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerArmLength / 2.0, 0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = Quaterniond(-oriRightLowerArm.w, -oriRightLowerArm.x, oriRightLowerArm.y, oriRightLowerArm.z).Inv() * Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = 6.0;
 	hingeDesc.damper           = 4.0;
 	hingeDesc.origin           = Rad(0);
@@ -382,7 +382,7 @@ void CRHingeHuman::Init(){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, handLength / 2.0, 0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Ori() = Quaterniond(-oriRightHand.w, -oriRightHand.x, oriRightHand.y, oriRightHand.z).Inv() * Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.spring           = 15.0;
 	hingeDesc.damper           = 10.0;
 	joints[JO_LEFT_WRIST_Z] = scene->CreateJoint(solids[SO_LEFT_HAND], solids[SO_LEFT_WRIST_XZ], hingeDesc);

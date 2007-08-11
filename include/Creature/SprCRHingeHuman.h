@@ -87,6 +87,11 @@ struct CRHingeHumanDesc{
 	double springEyeY,         damperEyeY;
 	double springEyeX,         damperEyeX;
 
+	Vec3d       posRightUpperArm;
+	Quaterniond oriRightUpperArm;
+	Quaterniond oriRightLowerArm;
+	Quaterniond oriRightHand;
+
 	CRHingeHumanDesc(){
 		waistHeight    = 0.2298;
 		waistBreadth   = 0.3067;
@@ -119,6 +124,8 @@ struct CRHingeHumanDesc{
 		occiputToEyeDistance  = 0.1688;
 		eyeDiameter           = 0.0240;
 		interpupillaryBreadth = 0.0619;
+
+		posRightUpperArm = Vec3d(0,0,0);
 	}
 };
 
