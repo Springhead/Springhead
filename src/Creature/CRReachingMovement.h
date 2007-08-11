@@ -32,14 +32,18 @@ private:
 	/// 達成後の待機時間
 	float offset;
 
-	/// 最終目標位置・速度
-	Vec3f finalPos, finalVel;
+	/// 姿勢制御のバネダンパ係数
+	float springOri, damperOri;
+
+	/// 最終目標位置・速度・姿勢・角速度
+	Vec3f finalPos, finalVel, finalAngV;
+	Quaterniond finalQuat;
 
 	/// 目標剛体のローカル座標
 	Vec3f localPos;
 
 	/// 有効かどうか
-	bool bActive;
+	bool bActive, bOri;
 
 	/// 初期化を行う
 	void Init();
@@ -65,6 +69,16 @@ public:
 		@param o 到達後の待機時間
 	*/
 	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o);
+
+	/** @brief 目標位置・姿勢を設定する
+		@param p 目標位置
+		@param v 目標の速度
+		@param q 目標姿勢
+		@param av 目標角速度
+		@param t 目標到達時間
+		@param o 到達後の待機時間
+	*/
+	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o);
 
 	/** @ brief 制御のステップを実行する
 	*/

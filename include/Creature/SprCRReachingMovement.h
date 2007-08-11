@@ -39,6 +39,16 @@ struct CRReachingMovementIf : SceneObjectIf{
 	*/
 	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o)= 0;
 
+	/** @brief 目標位置・姿勢を設定する
+		@param p 目標位置
+		@param v 目標の速度
+		@param q 目標姿勢
+		@param av 目標角速度
+		@param t 目標到達時間
+		@param o 到達後の待機時間
+	*/
+	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o)= 0;
+
 	/** @ brief 制御のステップを実行する
 	*/
 	virtual void Step()= 0;

@@ -25,11 +25,14 @@ void CRReachingMovement::Init(){
 	soTarget->SetDynamical(false);
 
 	PHSpringDesc springDesc;
-	springDesc.spring = Vec3d(1,1,1) * 500.0;
-	springDesc.damper = Vec3d(1,1,1) * 100.0;
+	springDesc.spring = Vec3d(1,1,1) * 50.0;
+	springDesc.damper = Vec3d(1,1,1) * 5.0;
 	spring = DCAST(PHSpringIf, phScene->CreateJoint(soTarget, solid, springDesc));
 
 	spring->Enable(false);
+
+	springOri = 10.0;
+	damperOri = 1.0;
 }
 
 void CRReachingMovement::Reset(){
@@ -37,6 +40,7 @@ void CRReachingMovement::Reset(){
 	limitForce = 350.0f;
 	spring->Enable(false);
 	bActive = false;
+	bOri = false;
 }
 
 void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
@@ -47,6 +51,13 @@ void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	offset   = o;
 	spring->Enable(true);
 	bActive  = true;
+}
+
+void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
+	finalQuat = q;
+	finalAngV = av;
+	bOri = true;
+	SetTarget(p, v, t, o);
 }
 
 void CRReachingMovement::Step(){
@@ -81,13 +92,24 @@ void CRReachingMovement::Step(){
 
 		time -= dt;
 
-		std::cout << length << std::endl;
-
 		/*
 		if (force.norm() >= limitForce){
 			Reset();
 		}
 		*/
+
+		if (bOri) {
+			Quaterniond dQuat = finalQuat * solid->GetPose().Ori().Inv();
+			if (dQuat.W() < 0){
+				dQuat *= -1;
+			}
+			Vec3f dAngV = finalAngV - solid->GetAngularVelocity();
+			Vec3f torque = springOri * dQuat.Rotation() + damperOri * dAngV;
+			if (torque.norm() > 1e5f) {
+				torque = torque.unit() * 1e5f;
+			}
+			solid->AddTorque(torque);
+		}
 	}
 }
 

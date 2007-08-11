@@ -57,6 +57,7 @@ struct CRHingeHumanDesc{
 		JO_NJOINTS
 	};
 
+	/// サイズに関するパラメータ
 	double waistHeight, waistBreadth, waistThickness;
 	double abdomenHeight, abdomenBreadth, abdomenThickness;
 	double chestHeight, chestBreadth, chestThickness;
@@ -67,6 +68,24 @@ struct CRHingeHumanDesc{
 	double handLength, handBreadth, handThickness;
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;
+
+	/// 各関節のバネダンパ
+	double springWaistAbdomen, damperWaistAbdomen;
+	double springAbdomenChest, damperAbdomenChest;
+	double springChestNeckX,   damperChestNeckX;
+	double springChestNeckY,   damperChestNeckY;
+	double springChestNeckZ,   damperChestNeckZ;
+	double springNeckHeadX,    damperNeckHeadX;
+	double springNeckHeadZ,    damperNeckHeadZ;
+	double springShoulderZ,    damperShoulderZ;
+	double springShoulderX,    damperShoulderX;
+	double springShoulderY,    damperShoulderY;
+	double springElbow,        damperElbow;
+	double springWristY,       damperWristY;
+	double springWristX,       damperWristX;
+	double springWristZ,       damperWristZ;
+	double springEyeY,         damperEyeY;
+	double springEyeX,         damperEyeX;
 
 	CRHingeHumanDesc(){
 		waistHeight    = 0.2298;

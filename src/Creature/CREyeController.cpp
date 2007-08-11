@@ -153,9 +153,6 @@ void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angl
 	joX->SetSpringOrigin(-angle[0]);
 	joY->SetSpringOrigin(-angle[1]);
 
-	std::cout << "Vert : " << Deg(angle[0]) << std::endl;
-	std::cout << "Horz : " << Deg(angle[1]) << std::endl;
-
 	/*
 	Quaterniond qToGlobal = soHead->GetPose().Ori();
 	Vec3d target = Quaterniond::Rot(angle[0],'x')*Quaterniond::Rot(angle[1],'y')*Vec3d(0,0,-1);
