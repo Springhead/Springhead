@@ -32,9 +32,6 @@ private:
 	/// 達成後の待機時間
 	float offset;
 
-	/// 姿勢制御のバネダンパ係数
-	float springOri, damperOri;
-
 	/// 最終目標位置・速度・姿勢・角速度
 	Vec3f finalPos, finalVel, finalAngV;
 	Quaterniond finalQuat;

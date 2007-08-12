@@ -25,14 +25,12 @@ void CRReachingMovement::Init(){
 	soTarget->SetDynamical(false);
 
 	PHSpringDesc springDesc;
-	springDesc.spring = Vec3d(1,1,1) * 50.0;
-	springDesc.damper = Vec3d(1,1,1) * 5.0;
+	springDesc.posePlug.Pos() = Vec3d(0,-0.1,0);
+	springDesc.spring = Vec3d(1,1,1) * springPos;
+	springDesc.damper = Vec3d(1,1,1) * damperPos;
 	spring = DCAST(PHSpringIf, phScene->CreateJoint(soTarget, solid, springDesc));
 
 	spring->Enable(false);
-
-	springOri = 10.0;
-	damperOri = 1.0;
 }
 
 void CRReachingMovement::Reset(){

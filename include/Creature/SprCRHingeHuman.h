@@ -125,6 +125,23 @@ struct CRHingeHumanDesc{
 		eyeDiameter           = 0.0240;
 		interpupillaryBreadth = 0.0619;
 
+		springWaistAbdomen =  10.0;  damperWaistAbdomen =   5.0;
+		springAbdomenChest =  10.0;  damperAbdomenChest =   5.0;
+		springChestNeckX   = 100.0;  damperChestNeckX   =  50.0;
+		springChestNeckY   = 100.0;  damperChestNeckY   =  50.0;
+		springChestNeckZ   = 100.0;  damperChestNeckZ   =  50.0;
+		springNeckHeadX    =  50.0;  damperNeckHeadX    =  20.0;
+		springNeckHeadZ    =  50.0;  damperNeckHeadZ    =  20.0;
+		springShoulderZ    =   5.0;  damperShoulderZ    =   2.0;
+		springShoulderX    =   5.0;  damperShoulderX    =   2.0;
+		springShoulderY    =   5.0;  damperShoulderY    =   2.0;
+		springElbow        =   5.0;  damperElbow        =   2.0;
+		springWristY       =   5.0;  damperWristY       =   2.0;
+		springWristX       =   5.0;  damperWristX       =   2.0;
+		springWristZ       =  10.0;  damperWristZ       =   5.0;
+		springEyeY         = 500.0;  damperEyeY         =   5.0;
+		springEyeX         = 500.0;  damperEyeX         =   5.0;
+
 		posRightUpperArm = Vec3d(0,0,0);
 	}
 };

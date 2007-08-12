@@ -18,12 +18,16 @@ namespace Spr{;
 // ------------------------------------------------------------------------------
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingMovementDesc{
-	float limitForce; ///< 力の最大値
 	PHSolidIf* solid; ///< 制御対象のソリッド
+	float limitForce; ///< 力の最大値
+	float springPos, damperPos; ///< 位置制御のバネダンパ係数
+	float springOri, damperOri; ///< 姿勢制御のバネダンパ係数
 
 	CRReachingMovementDesc(){
-		limitForce = 1000.0f;
 		solid = NULL;
+		limitForce = 1000.0f;
+		springPos = 500.0;  damperPos =  20.0;
+		springOri =  10.0;  damperOri =   0.5;
 	}
 };
 
