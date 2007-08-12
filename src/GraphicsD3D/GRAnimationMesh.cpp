@@ -154,8 +154,16 @@ LPDIRECT3DTEXTURE9* GRAnimationMesh::AllocateHierarchy::AllocateTextures(DWORD N
 	try{
 		for(DWORD i=0; i<NumMaterials; i++){
 			if(pMaterials[i].pTextureFilename != NULL){
-				if(FAILED(D3DXCreateTextureFromFile(device, (directory + pMaterials[i].pTextureFilename).c_str(), &(result[i]))) ){
-					DSTR << "Failed to load: " << (directory + pMaterials[i].pTextureFilename) << std::endl;
+				DWORD j;
+				for(j=0; j<i; ++j){ if(strcmp(pMaterials[j].pTextureFilename, pMaterials[i].pTextureFilename)==0) break; }
+				if(j<i){
+					result[i] = result[j];
+					if(result[i]) result[i]->AddRef();
+				}
+				else{
+					if(FAILED(D3DXCreateTextureFromFile(device, (directory + pMaterials[i].pTextureFilename).c_str(), &(result[i]))) ){
+						DSTR << "Failed to load: " << (directory + pMaterials[i].pTextureFilename) << std::endl;
+					}
 				}
 			}
 		}
