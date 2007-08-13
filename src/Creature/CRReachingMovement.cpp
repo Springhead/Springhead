@@ -23,9 +23,13 @@ void CRReachingMovement::Init(){
 	solidDesc.mass = 0.0001;
 	soTarget = phScene->CreateSolid(solidDesc);
 	soTarget->SetDynamical(false);
+	CDSphereDesc sphereDesc;
+	sphereDesc.radius = 0.02;
+	soTarget->AddShape(phScene->GetSdk()->CreateShape(sphereDesc));
+	phScene->SetContactMode(soTarget, PHSceneDesc::MODE_NONE);
 
 	PHSpringDesc springDesc;
-	springDesc.posePlug.Pos() = Vec3d(0,-0.1,0);
+	springDesc.posePlug.Pos() = Vec3d(0,0,0);
 	springDesc.spring = Vec3d(1,1,1) * springPos;
 	springDesc.damper = Vec3d(1,1,1) * damperPos;
 	spring = DCAST(PHSpringIf, phScene->CreateJoint(soTarget, solid, springDesc));
@@ -42,6 +46,7 @@ void CRReachingMovement::Reset(){
 }
 
 void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
+	firstPos = solid->GetPose().Pos();
 	finalPos = p;
 	finalVel = v;
 
@@ -83,6 +88,7 @@ void CRReachingMovement::Step(){
 			deltaLength = 0;
 		}
 		Vec3f dir = solid->GetPose().Pos()-finalPos;
+		//Vec3f dir = firstPos - finalPos;
 		pos = finalPos + dir*length;
 		vel = dir*deltaLength;
 		soTarget->SetFramePosition(pos);
@@ -96,7 +102,7 @@ void CRReachingMovement::Step(){
 		}
 		*/
 
-		if (bOri) {
+		if (/*/ false /*/ bOri /**/) {
 			Quaterniond dQuat = finalQuat * solid->GetPose().Ori().Inv();
 			if (dQuat.W() < 0){
 				dQuat *= -1;

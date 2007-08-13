@@ -118,8 +118,8 @@ void CRHingeHuman::Init(){
 
 	///// --- ŠÖß‚Ì’†Œp‚¬—p‚ÌŒ`ó‚ð—L‚µ‚È‚¢„‘Ì
 
-	solidDesc.mass    = 0.001;
-	solidDesc.inertia = Matrix3d::Unit() * 0.001;
+	solidDesc.mass    = 0.04;
+	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[SO_CHEST_NECK_XZ] = scene->CreateSolid(solidDesc);
 	solids[SO_CHEST_NECK_ZY] = scene->CreateSolid(solidDesc);
 	solids[SO_NECK_HEAD_XZ] = scene->CreateSolid(solidDesc);

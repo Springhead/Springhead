@@ -33,7 +33,7 @@ private:
 	float offset;
 
 	/// 最終目標位置・速度・姿勢・角速度
-	Vec3f finalPos, finalVel, finalAngV;
+	Vec3f firstPos, finalPos, finalVel, finalAngV;
 	Quaterniond finalQuat;
 
 	/// 目標剛体のローカル座標
