@@ -20,7 +20,7 @@ void CRReachingMovement::Init(){
 	PHSceneIf* phScene = DCAST(PHSceneIf, GetScene());
 
 	PHSolidDesc solidDesc;
-	solidDesc.mass = 0.0001;
+	solidDesc.mass = 1.0;
 	soTarget = phScene->CreateSolid(solidDesc);
 	soTarget->SetDynamical(false);
 	CDSphereDesc sphereDesc;
@@ -45,6 +45,55 @@ void CRReachingMovement::Reset(){
 	bOri = false;
 }
 
+void CRReachingMovement::UnfixHinge(){
+	for(int i=0; i<CRHingeHumanDesc::CRHumanJoints::JO_NJOINTS; i++){
+		if (   i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Y
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Z
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_Z
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_Y
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_Y)
+		{
+			PHHingeJointIf* joint = DCAST(PHHingeJointIf, human->GetJoint(i));
+			if (fixmode == CRR_UNFIXED) {
+			} else if (fixmode == CRR_NORMAL) {
+				joint->SetSpring(joint->GetSpring() * softenRate);
+			} else if (fixmode == CRR_FIXED) {
+				joint->SetSpring(joint->GetSpring() / hardenRate * softenRate);
+			}
+			fixmode = CRR_UNFIXED;
+		}
+	}
+}
+
+void CRReachingMovement::FixHinge(){
+	for(int i=0; i<CRHingeHumanDesc::CRHumanJoints::JO_NJOINTS; i++){
+		if (   i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Y
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Z
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_Z
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_Y
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_X
+			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_Y)
+		{
+			PHHingeJointIf* joint = DCAST(PHHingeJointIf, human->GetJoint(i));
+			if (fixmode == CRR_UNFIXED) {
+				joint->SetSpring(joint->GetSpring() / softenRate * hardenRate);
+			} else if (fixmode == CRR_NORMAL) {
+				joint->SetSpring(joint->GetSpring() * hardenRate);
+			} else if (fixmode == CRR_FIXED) {
+			}
+			joint->SetSpringOrigin(joint->GetPosition());
+			fixmode = CRR_FIXED;
+		}
+	}
+}
+
 void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	firstPos = solid->GetPose().Pos();
 	finalPos = p;
@@ -54,6 +103,7 @@ void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	offset   = o;
 	spring->Enable(true);
 	bActive  = true;
+	UnfixHinge();
 }
 
 void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
@@ -73,6 +123,7 @@ void CRReachingMovement::Step(){
 		*/
 
 		if(time <= -offset){
+			FixHinge();
 			Reset();
 			return;
 		}

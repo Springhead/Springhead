@@ -19,15 +19,21 @@ namespace Spr{;
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingMovementDesc{
 	PHSolidIf* solid; ///< 制御対象のソリッド
+	CRHingeHumanIf* human; ///< 制御対象の人型
 	float limitForce; ///< 力の最大値
 	float springPos, damperPos; ///< 位置制御のバネダンパ係数
 	float springOri, damperOri; ///< 姿勢制御のバネダンパ係数
+	float softenRate; ///< 関節を柔らかい状態にするためのバネダンパ倍率
+	float hardenRate; ///< 関節を固い状態にするためのバネダンパ倍率
 
 	CRReachingMovementDesc(){
 		solid = NULL;
+		human = NULL;
 		limitForce = 1000.0f;
-		springPos = 500.0;  damperPos =  20.0;
-		springOri =  10.0;  damperOri =   0.5;
+		springPos = 500.0f;  damperPos =  20.0f;
+		springOri =  10.0f;  damperOri =   0.5f;
+		softenRate = 0.2f;
+		hardenRate = 5.0f;
 	}
 };
 

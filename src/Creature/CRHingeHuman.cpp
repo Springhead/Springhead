@@ -127,11 +127,14 @@ void CRHingeHuman::Init(){
 	solids[SO_RIGHT_SHOULDER_XY] = scene->CreateSolid(solidDesc);
 	solids[SO_RIGHT_WRIST_YX] = scene->CreateSolid(solidDesc);
 	solids[SO_RIGHT_WRIST_XZ] = scene->CreateSolid(solidDesc);
-	solids[SO_RIGHT_EYE_YX] = scene->CreateSolid(solidDesc);
 	solids[SO_LEFT_SHOULDER_ZX] = scene->CreateSolid(solidDesc);
 	solids[SO_LEFT_SHOULDER_XY] = scene->CreateSolid(solidDesc);
 	solids[SO_LEFT_WRIST_YX] = scene->CreateSolid(solidDesc);
 	solids[SO_LEFT_WRIST_XZ] = scene->CreateSolid(solidDesc);
+
+	solidDesc.mass    = 0.001;
+	solidDesc.inertia = Matrix3d::Unit() * 0.001;
+	solids[SO_RIGHT_EYE_YX] = scene->CreateSolid(solidDesc);
 	solids[SO_LEFT_EYE_YX] = scene->CreateSolid(solidDesc);
 
 	// --- --- --- --- --- --- --- --- --- ---

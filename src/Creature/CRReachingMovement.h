@@ -20,6 +20,11 @@ namespace Spr{;
 */
 class CRReachingMovement : public SceneObject, public CRReachingMovementIfInit, public CRReachingMovementDesc {
 private:
+	/// 関節固定モード
+	enum CRRFixMode {
+		CRR_FIXED = 0, CRR_NORMAL, CRR_UNFIXED,
+	} fixmode;
+
 	/// 制御用のバネダンパ
 	PHSpringIf* spring;
 
@@ -47,6 +52,12 @@ private:
 
 	/// リセットする
 	void Reset();
+
+	/// 制御対象の関節を柔らかくする
+	void UnfixHinge();
+
+	/// 制御対象の関節を固くする
+	void FixHinge();
 
 public:
 	OBJECTDEF(CRReachingMovement, SceneObject);
