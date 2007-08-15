@@ -416,11 +416,13 @@ void CRHingeHuman::Init(){
 
 	scene->SetContactMode(solids[SO_LEFT_EYE], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
 
+	/*
 	for(int i=0; i<(int)SO_NSOLIDS; i++){
 		if (i != SO_RIGHT_HAND && i != SO_LEFT_HAND){
 			scene->SetContactMode(solids[i], PHSceneDesc::MODE_NONE);
 		}
 	}
+	*/
 }
 
 int CRHingeHuman::NSolids(){
