@@ -88,7 +88,7 @@ void CRReachingMovement::FixHinge(){
 				joint->SetSpring(joint->GetSpring() * hardenRate);
 			} else if (fixmode == CRR_FIXED) {
 			}
-			joint->SetSpringOrigin(joint->GetPosition());
+			//joint->SetSpringOrigin(joint->GetPosition());
 			fixmode = CRR_FIXED;
 		}
 	}
