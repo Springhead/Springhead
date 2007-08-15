@@ -155,7 +155,7 @@ LPDIRECT3DTEXTURE9* GRAnimationMesh::AllocateHierarchy::AllocateTextures(DWORD N
 		for(DWORD i=0; i<NumMaterials; i++){
 			if(pMaterials[i].pTextureFilename != NULL){
 				DWORD j;
-				for(j=0; j<i; ++j){ if(strcmp(pMaterials[j].pTextureFilename, pMaterials[i].pTextureFilename)==0) break; }
+				for(j=0; j<i; ++j){ if(pMaterials[j].pTextureFilename!=NULL && strcmp(pMaterials[j].pTextureFilename, pMaterials[i].pTextureFilename)==0) break; }
 				if(j<i){
 					result[i] = result[j];
 					if(result[i]) result[i]->AddRef();
