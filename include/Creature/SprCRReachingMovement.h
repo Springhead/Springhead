@@ -59,9 +59,13 @@ struct CRReachingMovementIf : SceneObjectIf{
 	*/
 	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o)= 0;
 
-	/** @ brief 制御のステップを実行する
+	/** @brief 制御のステップを実行する
 	*/
 	virtual void Step()= 0;
+
+	/** @brief 作動中かどうかを返す
+	*/
+	virtual bool IsActive()= 0;
 };
 
 //@}

@@ -24,17 +24,17 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 
 void CRNeckController::Step(){
 	// 首-頭をつなぐ関節の制御
-	/// 首基準座標系でのターゲットの位置
-	Vec3d vecTargetFromNeck = soNeck->GetPose().Ori().Inv() * (pos - soNeck->GetPose().Pos());
+	/// 頭基準座標系でのターゲットの位置
+	Vec3d vecTargetFromHead = soHead->GetPose().Ori().Inv() * (pos - soHead->GetPose().Pos());
 	/// Quaternionに変換
-	Quaterniond qtnTargetFromNeck;
-	qtnTargetFromNeck.RotationArc(vecTargetFromNeck.unit(), Vec3d(0,0,-1));
+	Quaterniond qtnTargetFromHead;
+	qtnTargetFromHead.RotationArc(vecTargetFromHead.unit(), Vec3d(0,0,-1));
 	/// Eular角に変換
-	Vec3d eulTargetFromNeck;
-	qtnTargetFromNeck.ToEular(eulTargetFromNeck);
+	Vec3d eulTargetFromHead;
+	qtnTargetFromHead.ToEular(eulTargetFromHead);
 	/// 関節の目標値をセット
-	joNeckHeadX->SetSpringOrigin(eulTargetFromNeck.Z());
-	joChestNeckY->SetSpringOrigin(eulTargetFromNeck.X());
+	joNeckHeadX->SetSpringOrigin(eulTargetFromHead.Z());
+	joChestNeckY->SetSpringOrigin(eulTargetFromHead.X());
 
 	/*
 	Quaterniond qLook;

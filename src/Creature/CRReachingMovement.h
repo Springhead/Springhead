@@ -91,6 +91,10 @@ public:
 	/** @ brief 制御のステップを実行する
 	*/
 	virtual void Step();
+
+	/** @brief 作動中かどうかを返す
+	*/
+	virtual bool IsActive();
 };
 }
 //@}

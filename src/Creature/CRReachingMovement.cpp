@@ -168,4 +168,8 @@ void CRReachingMovement::Step(){
 	}
 }
 
+bool CRReachingMovement::IsActive(){
+	return bActive;
+}
+
 }
