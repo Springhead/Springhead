@@ -47,6 +47,11 @@
 #define TEST_FILEX	"kobito.x"			
 #define TEST_MOTION	"walk"				// 再生するモーション
 
+#elif defined(TEST_CASE) && (TEST_CASE == 4)
+#define EXIT_TIMER	20000				
+#define TEST_FILEX	"n175Anim.x"			
+#define TEST_MOTION	"RunUpGround"				// 再生するモーション
+
 #endif
 
 
@@ -262,7 +267,7 @@ int main(int argc, char* argv[]){
 	grSdkD3D = GRSdkD3DIf::CreateSdk();
 	scene = grSdk->CreateScene(GRSceneDesc());
 
-#if defined(TEST_CASE) && (TEST_CASE == 3)
+#if defined(TEST_CASE) && (TEST_CASE == 3 || TEST_CASE == 4) 
 	GRAnimationMeshDesc aniDesc;
 	aniDesc.filename = TEST_FILEX;
 	aniMesh = grSdkD3D->CreateAnimationMesh(aniDesc);
@@ -316,6 +321,17 @@ int main(int argc, char* argv[]){
 	}
 
 	// 視点設定
+#if defined(TEST_CASE) && (TEST_CASE == 4) 
+	Affinef view;
+	if(aniMesh){
+		view.Pos() = Vec3f(0.0, 1.0,-2.0);								// eye
+			view.LookAtGL(Vec3f(0.0, 1.0, 0.0), Vec3f(0.0, 1.1, 0.0));	// center, up 
+	}
+	else{
+		view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
+			view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
+	}
+#else
 	Affinef view;
 	if(aniMesh){
 		view.Pos() = Vec3f(0.0, 40.0,-80.0);								// eye
@@ -325,6 +341,7 @@ int main(int argc, char* argv[]){
 		view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
 			view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	}
+#endif
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
