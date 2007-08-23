@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #define USE_GREW
-#define GLEWMX
+//#define GLEW_MX
 
 #if defined(USE_GREW)
 #ifndef _MSC_VER
@@ -736,12 +736,12 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 void GRDeviceGL::InitShader(){
 #if defined(USE_GREW)
     glewInit();
-    if (GLEW_ARB_vertex_program && GLEW_ARB_fragment_program)
-		DSTR << "Ready for GLSL" << std::endl;
-    else {
-		DSTR << "No GLSL support." << std::endl;
+	if ( GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader ) {
+		DSTR << "GLSL ready" << std::endl;
+	} else {
+		DSTR << "GLSL not ready" << std::endl;
 		assert(0);
-    }
+	}
 #elif defined(GL_VERSION_2_0)    
 	if(glslInit())	assert(0);
  	DSTR << "Ready for OpenGL 2.0" << std::endl;
@@ -827,7 +827,9 @@ GRHandler GRDeviceGL::CreateShader(){
 	GRHandler fragmentShader;
 	GRHandler shaderProgram;
 #if defined(USE_GREW)
-    vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
+//	GLEWContext* ctx = NULL;
+//	ctx = glewGetContext();
+	vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
     fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
     if (ReadShaderSource(vertexShader, vertexShaderFile)==false)   return 0;
 	if (ReadShaderSource(fragmentShader, fragmentShaderFile)==false) return 0;
