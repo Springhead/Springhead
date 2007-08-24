@@ -30,6 +30,7 @@ protected:
 	bool								loaded;
 	std::vector<GRAnimationMeshDrawSubsetListenerFunc> beforeDrawSubsetListeners;
 	std::vector<GRAnimationMeshDrawSubsetListenerFunc> afterDrawSubsetListeners;
+	CComPtr<ID3DXEffect>				effect;
 public:
 	GRAnimationMesh(const GRAnimationMeshDesc& desc=GRAnimationMeshDesc());
 	~GRAnimationMesh();
@@ -38,6 +39,7 @@ public:
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc);
+	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize);
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 protected:
@@ -45,6 +47,8 @@ protected:
 	void InitFrame(Frame* frame);
 	void CreateBlendedMesh(MeshContainer* meshContainer);
 	void SetBoneMatrices(MeshContainer* meshContainer);
+	void CreateIndexedBlendedMeshes(Frame* frame, int matrixPaletteSize);
+	void CreateIndexedBlendedMesh(MeshContainer* meshContainer, int matrixPaletteSize);
 	void UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix);
 	void DrawFrame(const Frame *frame);
 	void DrawSkinnedMeshContainer(MeshContainer *meshContainer);
@@ -69,6 +73,8 @@ struct GRAnimationMesh::MeshContainer : public D3DXMESHCONTAINER
 	D3DXMATRIX**			boneOffsetMatrices;
 	D3DXMATRIX**			boneFrameMatrices;
 	LPDIRECT3DTEXTURE9		*ppTextures;
+	DWORD					maxVertexInfl;
+	DWORD					matrixPaletteSize;
 };
 }
 #endif

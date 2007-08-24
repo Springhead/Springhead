@@ -44,13 +44,17 @@ protected:
 	};
 	std::vector<DisplayList> displayLists;				///< ディスプレイリスト
 
+	GRDeviceD3DConfirmDeviceFunc confirmDeviceFunc;
+
 	bool deviceLost;		///< デバイスはロストしているか？
+	std::vector<GRDeviceD3DListenerFunc> lostDeviceListeners;
+	std::vector<GRDeviceD3DListenerFunc> resetDeviceListeners;
 
 	static IDirect3DDevice9* s_d3ddevice;
 
 public:
 	///	コンストラクタ
-	GRDeviceD3D(){}
+	GRDeviceD3D() : confirmDeviceFunc(NULL) {}
 	/// 初期設定
 	virtual void Init();
 	///	Viewport設定
@@ -152,6 +156,12 @@ public:
 	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
 	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
 	virtual void GetShaderLocation(GRHandler shader, void* location);		
+	/// デバイス選定用のコールバック関数を登録
+	virtual void SetConfirmDeviceFunc(GRDeviceD3DConfirmDeviceFunc func) { confirmDeviceFunc = func; }
+	/// デバイスがロストしたときに呼ばれるコールバック関数を登録
+	virtual void AddLostDeviceListener(GRDeviceD3DListenerFunc func)  { lostDeviceListeners.push_back(func); }
+	/// デバイスがリセットされたときに呼ばれるコールバック関数を登録
+	virtual void AddResetDeviceListener(GRDeviceD3DListenerFunc func) { resetDeviceListeners.push_back(func); }
 
 	/// D3Dデバイスを取得する
 	static IDirect3DDevice9* GetD3DDevice() { return s_d3ddevice; }

@@ -15,6 +15,7 @@
 
 #include <Graphics/SprGRFrame.h>
 #include <windows.h>
+#include <d3dx9.h>
 
 namespace Spr{;
 
@@ -50,6 +51,21 @@ struct GRAnimationMeshIf: public GRVisualIf{
 		@param afterFunc  DrawSubsetが実行された直後にコールバックされる関数
 	*/
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc=NULL, GRAnimationMeshDrawSubsetListenerFunc afterFunc=NULL)=0;
+
+	/** @brief 描画に使用するエフェクトを設定
+		@param effect            描画に使用するエフェクト
+		@param matrixPaletteSize ボーンのワールド変換を格納する配列のサイズ
+		エフェクトを使う場合はRender()呼び出しをID3DXEffect::BeginPass()とEndPass()で挟む
+		エフェクト内に用意するパラメータは以下のとおり（型、セマンティクス）
+			float4x4						WORLD						// ワールド行列
+			int								MAXVERTEXINFL				// 一つの頂点に影響するボーンの最大数
+			float4x3[matrixPaletteSize]		BONEMATRIXARRAY				// ボーンの変換行列の配列（デュアルクォータニオンを使うなら不要）
+			float4[matrixPaletteSize]		BONEQUATERNIONARRAYREAL		// ボーンのデュアルクォータニオンのreal-partの配列（行列を使うなら不要）
+			float4[matrixPaletteSize]		BONEQUATERNIONARRAYDUAL		// ボーンのデュアルクォータニオンのdual-partの配列（行列を使うなら不要）
+			float4							DIFFUSECOLOR				// マテリアルのディフューズ色
+		スキニングしないメッシュではMAXVERTEXINFL,BONE***は使われない
+	*/
+	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize)=0;
 };
 
 

@@ -106,9 +106,11 @@ void GRDeviceD3D::Init(){
 	}
 
 	// デバイスの作成
-	if(FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
-	if(FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
-	if(FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, pp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
+	D3DCAPS9 capsHAL;  direct3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &capsHAL);
+	D3DCAPS9 capsREF;  direct3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, &capsREF);
+	if((confirmDeviceFunc && !confirmDeviceFunc(&capsHAL, D3DCREATE_HARDWARE_VERTEXPROCESSING)) || FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
+	if((confirmDeviceFunc && !confirmDeviceFunc(&capsHAL, D3DCREATE_SOFTWARE_VERTEXPROCESSING)) || FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
+	if((confirmDeviceFunc && !confirmDeviceFunc(&capsREF, D3DCREATE_SOFTWARE_VERTEXPROCESSING)) || FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, pp.hDeviceWindow, D3DCREATE_SOFTWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
 		assert( false );
 	}
 	}
@@ -132,7 +134,7 @@ void GRDeviceD3D::LostDevice(){
 	if(deviceLost) return;
 
 	deviceLost = true;
-	/* ここでリソースの開放を行う */
+	for(size_t i=0; i<lostDeviceListeners.size(); ++i) { lostDeviceListeners[i](); }
 }
 /// デバイスをリセットする
 void GRDeviceD3D::ResetDevice(){
@@ -166,7 +168,8 @@ void GRDeviceD3D::ResetDevice(){
 	d3ddevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 	for(int i=0; i<nLights; ++i) { d3ddevice->SetLight(i, &lights[i]);  d3ddevice->LightEnable(i, TRUE); }
 	d3ddevice->SetRenderState(D3DRS_AMBIENT, ambient);
-	/* ここでリソースの再作成を行う */
+	
+	for(size_t i=0; i<resetDeviceListeners.size(); ++i) { resetDeviceListeners[i](); }
 }
 ///	Viewport設定
 void GRDeviceD3D::SetViewport(Vec2f pos, Vec2f sz){

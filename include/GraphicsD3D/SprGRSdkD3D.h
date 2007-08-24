@@ -13,6 +13,8 @@
 #ifndef SPR_GRSDKD3D_H
 #define SPR_GRSDKD3D_H
 
+#include <d3d9.h>
+
 namespace Spr{;
 
 struct GRAnimationMeshIf;
@@ -20,9 +22,15 @@ struct GRAnimationMeshDesc;
 
 //@{
 
+typedef bool (SPR_CDECL *GRDeviceD3DConfirmDeviceFunc)(D3DCAPS9* pCaps, DWORD dwBehavior);
+typedef void (SPR_CDECL *GRDeviceD3DListenerFunc)();
+
 /**	@brief	DirectXのレンダラー基本クラス */
 struct GRDeviceD3DIf: public GRDeviceIf{
 	IF_DEF(GRDeviceD3D);
+	virtual void SetConfirmDeviceFunc(GRDeviceD3DConfirmDeviceFunc func)=0;
+	virtual void AddLostDeviceListener(GRDeviceD3DListenerFunc func)=0;
+	virtual void AddResetDeviceListener(GRDeviceD3DListenerFunc func)=0;
 };
 
 /**	@brief	DirectXのデバッグ情報レンダラーの基本クラス */

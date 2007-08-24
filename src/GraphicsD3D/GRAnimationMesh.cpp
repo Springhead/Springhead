@@ -36,9 +36,11 @@ private:
 protected:
 	std::string directory;
 };
+
 GRAnimationMesh::AllocateHierarchy::AllocateHierarchy(const std::string& filename){
 	directory = (filename.find_last_of("/\\")==std::string::npos) ? "" : filename.substr(0,filename.find_last_of("/\\")+1);
 }
+
 HRESULT GRAnimationMesh::AllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME *ppNewFrame){
 	Frame *result = new Frame();
 	ZeroMemory(result, sizeof(Frame));
@@ -57,6 +59,7 @@ HRESULT GRAnimationMesh::AllocateHierarchy::CreateFrame(LPCSTR Name, LPD3DXFRAME
 	*ppNewFrame = result;
 	return D3D_OK;
 }
+
 HRESULT GRAnimationMesh::AllocateHierarchy::CreateMeshContainer(LPCSTR Name,
                                                                CONST D3DXMESHDATA *pMeshData,
                                                                CONST D3DXMATERIAL *pMaterials,
@@ -117,12 +120,14 @@ HRESULT GRAnimationMesh::AllocateHierarchy::CreateMeshContainer(LPCSTR Name,
 	*ppNewMeshContainer = result;
 	return D3D_OK;
 }
+
 HRESULT GRAnimationMesh::AllocateHierarchy::DestroyFrame(LPD3DXFRAME pFrameBase){
 	Frame *pFrame = (Frame*)pFrameBase;
 	delete [] pFrame->Name;
 	delete    pFrame;
 	return D3D_OK;
 }
+
 HRESULT GRAnimationMesh::AllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTAINER pMeshContainerBase){
 	MeshContainer *pMeshContainer = (MeshContainer*)pMeshContainerBase;
 	delete [] pMeshContainer->Name;
@@ -139,6 +144,7 @@ HRESULT GRAnimationMesh::AllocateHierarchy::DestroyMeshContainer(LPD3DXMESHCONTA
 	delete    pMeshContainer;
 	return D3D_OK;
 }
+
 template<typename T> T* GRAnimationMesh::AllocateHierarchy::AllocateArray(size_t count, const T *src){
 	if(src==NULL) return NULL;
 	T *result;
@@ -146,6 +152,7 @@ template<typename T> T* GRAnimationMesh::AllocateHierarchy::AllocateArray(size_t
 	std::copy(src, src+count, result);
 	return result;
 }
+
 LPDIRECT3DTEXTURE9* GRAnimationMesh::AllocateHierarchy::AllocateTextures(DWORD NumMaterials, CONST D3DXMATERIAL *pMaterials, LPDIRECT3DDEVICE9 device){
 	if(NumMaterials==0) return NULL;
 	LPDIRECT3DTEXTURE9 *result;
@@ -185,9 +192,11 @@ GRAnimationMesh::GRAnimationMesh(const GRAnimationMeshDesc& desc):GRAnimationMes
 	controller = NULL;
 	loaded = false;
 }
+
 GRAnimationMesh::~GRAnimationMesh(){
 	D3DXFrameDestroy(rootFrame, &AllocateHierarchy());
 }
+
 void GRAnimationMesh::SetMotion(const std::string& name){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame || !controller) return;
@@ -200,17 +209,20 @@ void GRAnimationMesh::SetMotion(const std::string& name){
 	controller->SetTrackAnimationSet(0, aniSet);
 	controller->SetTrackEnable(0, TRUE);
 }
+
 void GRAnimationMesh::SetTime(double time){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame || !controller) return;
 	
 	controller->SetTrackPosition(0, time);
 }
+
 inline void PoseInvertZAxis(Posed& pose){
 	pose.Ori().x *= -1;
 	pose.Ori().y *= -1;
 	pose.Pos().z *= -1;
 }
+
 void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame || !controller) return;
@@ -222,6 +234,7 @@ void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Qua
 	frame->overridePosition = false;
 	PoseInvertZAxis(frame->overridePose);	// Springhead座標系からDirectX座標系に変換
 }
+
 void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pose, double weight){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame || !controller) return;
@@ -233,10 +246,23 @@ void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pos
 	frame->overridePosition = true;
 	PoseInvertZAxis(frame->overridePose);	// Springhead座標系からDirectX座標系に変換
 }
+
+
 void GRAnimationMesh::AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc){
 	if(beforeFunc) beforeDrawSubsetListeners.push_back(beforeFunc);
 	if(afterFunc)  afterDrawSubsetListeners.push_back(afterFunc);
 }
+
+void GRAnimationMesh::SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize)
+{
+	if(!loaded) if(!LoadMesh()) return;
+	assert(rootFrame);
+	
+	this->effect = effect;
+	if(effect) CreateIndexedBlendedMeshes(rootFrame, matrixPaletteSize);
+	else       InitFrame(rootFrame);
+}
+
 void GRAnimationMesh::Render(GRRenderIf* r){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame) return;
@@ -249,13 +275,24 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						// Ｚ軸を反転するのでカリングも逆にする
 	if(controller) controller->AdvanceTime(0, NULL);
-	UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// 各ボーンの座標変換（DirectX座標系） -> Ｚ座標反転 -> ワールド変換（Springhead座標系）
+
+	if(effect){
+		d3ddevice->SetTransform(D3DTS_WORLD, &(*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));
+		UpdateFrame(rootFrame, *D3DXMatrixIdentity(&D3DXMATRIX()));
+	}
+	else{
+		UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// 各ボーンの座標変換（DirectX座標系） -> Ｚ座標反転 -> ワールド変換（Springhead座標系）
+	}
+
 	DrawFrame(rootFrame);
+
 	d3ddevice->SetTransform(D3DTS_WORLD, &world);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, cull);							// カリングを元に戻す
 }
+
 void GRAnimationMesh::Rendered(GRRenderIf* r){
 }
+
 bool GRAnimationMesh::LoadMesh(){
 	LPDIRECT3DDEVICE9 d3ddevice = GRDeviceD3D::GetD3DDevice();
 	if(!d3ddevice) return false;
@@ -272,6 +309,7 @@ bool GRAnimationMesh::LoadMesh(){
 	InitFrame(rootFrame);
 	return true;
 }
+
 void GRAnimationMesh::InitFrame(Frame* frame){
 	for(LPD3DXMESHCONTAINER meshContainer=frame->pMeshContainer; meshContainer!=NULL; meshContainer=meshContainer->pNextMeshContainer){
 		if(meshContainer->pSkinInfo != NULL){
@@ -282,6 +320,7 @@ void GRAnimationMesh::InitFrame(Frame* frame){
 	if(frame->pFrameSibling)    InitFrame((Frame*)frame->pFrameSibling);
 	if(frame->pFrameFirstChild) InitFrame((Frame*)frame->pFrameFirstChild);
 }
+
 void GRAnimationMesh::CreateBlendedMesh(MeshContainer* meshContainer){
 	DWORD* adjacency = new DWORD[meshContainer->MeshData.pMesh->GetNumFaces()*3];
 	meshContainer->MeshData.pMesh->GenerateAdjacency(0, adjacency);
@@ -293,6 +332,7 @@ void GRAnimationMesh::CreateBlendedMesh(MeshContainer* meshContainer){
 	meshContainer->boneCombinationTable = (LPD3DXBONECOMBINATION)meshContainer->boneCombinationTableBuffer->GetBufferPointer();
 	delete [] adjacency;
 }
+
 void GRAnimationMesh::SetBoneMatrices(MeshContainer* meshContainer){
 	const DWORD n = meshContainer->pSkinInfo->GetNumBones();
 	meshContainer->boneOffsetMatrices = new D3DXMATRIX*[n];
@@ -302,6 +342,33 @@ void GRAnimationMesh::SetBoneMatrices(MeshContainer* meshContainer){
 		meshContainer->boneFrameMatrices[i]  = &((Frame*)D3DXFrameFind(rootFrame, meshContainer->pSkinInfo->GetBoneName(i)))->CombinedTransformationMatrix;
 	}
 }
+
+void GRAnimationMesh::CreateIndexedBlendedMeshes(Frame* frame, int matrixPaletteSize){
+	for(LPD3DXMESHCONTAINER meshContainer=frame->pMeshContainer; meshContainer!=NULL; meshContainer=meshContainer->pNextMeshContainer){
+		if(meshContainer->pSkinInfo != NULL){
+			CreateIndexedBlendedMesh((MeshContainer*)meshContainer, matrixPaletteSize);
+		}
+	}
+	if(frame->pFrameSibling)    CreateIndexedBlendedMeshes((Frame*)frame->pFrameSibling, matrixPaletteSize);
+	if(frame->pFrameFirstChild) CreateIndexedBlendedMeshes((Frame*)frame->pFrameFirstChild, matrixPaletteSize);
+}
+
+void GRAnimationMesh::CreateIndexedBlendedMesh(MeshContainer* meshContainer, int matrixPaletteSize){
+	DWORD* adjacency = new DWORD[meshContainer->MeshData.pMesh->GetNumFaces()*3];
+	D3DCAPS9 caps;  GRDeviceD3D::GetD3DDevice()->GetDeviceCaps(&caps);
+
+	meshContainer->MeshData.pMesh->GenerateAdjacency(0, adjacency);
+	meshContainer->matrixPaletteSize = min((DWORD)matrixPaletteSize, min(meshContainer->pSkinInfo->GetNumBones(), (caps.MaxVertexBlendMatrixIndex+1)/2));
+	meshContainer->pSkinInfo->ConvertToIndexedBlendedMesh(
+		meshContainer->MeshData.pMesh, 0, meshContainer->matrixPaletteSize, adjacency, NULL, NULL, NULL,
+		&meshContainer->maxVertexInfl, &meshContainer->numBoneCombinations,
+		&meshContainer->boneCombinationTableBuffer, &meshContainer->blendedMesh
+	);
+	meshContainer->boneCombinationTable = (LPD3DXBONECOMBINATION)meshContainer->boneCombinationTableBuffer->GetBufferPointer();
+
+	delete [] adjacency;
+}
+
 void GRAnimationMesh::UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix){
 	if(frame->overrideWeight<=0){
 		frame->CombinedTransformationMatrix = frame->TransformationMatrix * parentMatrix;
@@ -329,6 +396,7 @@ void GRAnimationMesh::UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix){
 	if(frame->pFrameSibling)    UpdateFrame((Frame*)frame->pFrameSibling,    parentMatrix);
 	if(frame->pFrameFirstChild) UpdateFrame((Frame*)frame->pFrameFirstChild, frame->CombinedTransformationMatrix);
 }
+
 void GRAnimationMesh::DrawFrame(const Frame *frame){
 	for(LPD3DXMESHCONTAINER meshContainer=frame->pMeshContainer; meshContainer!=NULL; meshContainer=meshContainer->pNextMeshContainer){
 		if(meshContainer->pSkinInfo != NULL)  DrawSkinnedMeshContainer((MeshContainer*)meshContainer);
@@ -337,42 +405,115 @@ void GRAnimationMesh::DrawFrame(const Frame *frame){
 	if(frame->pFrameSibling)    DrawFrame((Frame*)frame->pFrameSibling);
 	if(frame->pFrameFirstChild) DrawFrame((Frame*)frame->pFrameFirstChild);
 }
+
 void GRAnimationMesh::DrawSkinnedMeshContainer(MeshContainer *meshContainer){
 	LPDIRECT3DDEVICE9 d3ddevice = GRDeviceD3D::GetD3DDevice();
 
-	d3ddevice->SetFVF(meshContainer->blendedMesh->GetFVF());
+	if(effect){
+		D3DXHANDLE paramWorld               = effect->GetParameterBySemantic(NULL, "WORLD");
+		D3DXHANDLE paramMaxVertexInfl       = effect->GetParameterBySemantic(NULL, "MAXVERTEXINFL");
+		D3DXHANDLE paramBoneMatrices        = effect->GetParameterBySemantic(NULL, "BONEMATRIXARRAY");
+		D3DXHANDLE paramBoneQuaternionsReal = effect->GetParameterBySemantic(NULL, "BONEQUATERNIONARRAYREAL");
+		D3DXHANDLE paramBoneQuaternionsDual = effect->GetParameterBySemantic(NULL, "BONEQUATERNIONARRAYDUAL");
+		D3DXHANDLE paramDiffuseColor        = effect->GetParameterBySemantic(NULL, "DIFFUSECOLOR");
 
-	for(DWORD subset=0; subset<meshContainer->numBoneCombinations; subset++){
-		DWORD i;
-		for(i=0; i<meshContainer->maxFaceInfl; i++){
-			const DWORD b = meshContainer->boneCombinationTable[subset].BoneId[i];
-			if(b==UINT_MAX) break;
-			d3ddevice->SetTransform(
-				D3DTS_WORLDMATRIX(i),
-				D3DXMatrixMultiply(&D3DXMATRIX(), meshContainer->boneOffsetMatrices[b], meshContainer->boneFrameMatrices[b]) );
+		D3DXMATRIX world;
+		d3ddevice->GetTransform(D3DTS_WORLD, &world);
+		effect->SetMatrix(paramWorld, &world);
+
+		d3ddevice->SetFVF(meshContainer->blendedMesh->GetFVF());
+		effect->SetInt(paramMaxVertexInfl, meshContainer->maxVertexInfl);
+
+		for(DWORD subset=0; subset<meshContainer->numBoneCombinations; subset++){
+			std::vector<D3DXMATRIX>     worldMatrices(meshContainer->matrixPaletteSize);
+			std::vector<D3DXQUATERNION> boneQuaternionsReal(meshContainer->matrixPaletteSize);
+			std::vector<D3DXQUATERNION> boneQuaternionsDual(meshContainer->matrixPaletteSize);
+
+			assert(paramBoneMatrices || (paramBoneQuaternionsReal && paramBoneQuaternionsDual));
+
+			for(DWORD i=0; i<meshContainer->matrixPaletteSize; i++){
+				const DWORD b = meshContainer->boneCombinationTable[subset].BoneId[i];
+				if(b==UINT_MAX) break;
+				D3DXMatrixMultiply(&worldMatrices[i], meshContainer->boneOffsetMatrices[b], meshContainer->boneFrameMatrices[b]);
+				if(paramBoneQuaternionsReal && paramBoneQuaternionsDual){
+					D3DXQuaternionRotationMatrix(&boneQuaternionsReal[i], &worldMatrices[i]);
+					const D3DXVECTOR3& t = *(D3DXVECTOR3*)&worldMatrices[i]._41;
+					D3DXQuaternionMultiply(&boneQuaternionsDual[i], &boneQuaternionsReal[i], &D3DXQUATERNION(t.x/2, t.y/2, t.z/2, 0));
+				}
+			}
+
+			if(paramBoneMatrices)        effect->SetMatrixArray(paramBoneMatrices, &worldMatrices[0], (UINT)worldMatrices.size());
+			if(paramBoneQuaternionsReal) effect->SetVectorArray(paramBoneQuaternionsReal, (D3DXVECTOR4*)&boneQuaternionsReal[0], (UINT)boneQuaternionsReal.size());
+			if(paramBoneQuaternionsDual) effect->SetVectorArray(paramBoneQuaternionsDual, (D3DXVECTOR4*)&boneQuaternionsDual[0], (UINT)boneQuaternionsDual.size());
+
+			const D3DMATERIAL9& material = meshContainer->pMaterials[ meshContainer->boneCombinationTable[subset].AttribId ].MatD3D;
+			effect->SetVector(paramDiffuseColor,  (D3DXVECTOR4*)&material.Diffuse);
+
+			d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
+
+			for(size_t i=0; i<beforeDrawSubsetListeners.size(); ++i){ beforeDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+			effect->CommitChanges();
+			meshContainer->blendedMesh->DrawSubset(subset);
+			for(size_t i=0; i<afterDrawSubsetListeners.size(); ++i){ afterDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
 		}
-		d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, i-1);
-		d3ddevice->SetMaterial(&meshContainer->pMaterials[ meshContainer->boneCombinationTable[subset].AttribId ].MatD3D);
-		d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
-		for(size_t i=0; i<beforeDrawSubsetListeners.size(); ++i){ beforeDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
-		meshContainer->blendedMesh->DrawSubset(subset);
-		for(size_t i=0; i<afterDrawSubsetListeners.size(); ++i){ afterDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
-	}
 
-	d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, 0);
-	d3ddevice->SetTexture(0, NULL);
+		d3ddevice->SetTexture(0, NULL);
+	}
+	else{
+		d3ddevice->SetFVF(meshContainer->blendedMesh->GetFVF());
+
+		for(DWORD subset=0; subset<meshContainer->numBoneCombinations; subset++){
+			DWORD i;
+			for(i=0; i<meshContainer->maxFaceInfl; i++){
+				const DWORD b = meshContainer->boneCombinationTable[subset].BoneId[i];
+				if(b==UINT_MAX) break;
+				d3ddevice->SetTransform(
+					D3DTS_WORLDMATRIX(i),
+					D3DXMatrixMultiply(&D3DXMATRIX(), meshContainer->boneOffsetMatrices[b], meshContainer->boneFrameMatrices[b]) );
+			}
+			d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, i-1);
+			d3ddevice->SetMaterial(&meshContainer->pMaterials[ meshContainer->boneCombinationTable[subset].AttribId ].MatD3D);
+			d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
+			for(size_t i=0; i<beforeDrawSubsetListeners.size(); ++i){ beforeDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+			meshContainer->blendedMesh->DrawSubset(subset);
+			for(size_t i=0; i<afterDrawSubsetListeners.size(); ++i){ afterDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+		}
+
+		d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, 0);
+		d3ddevice->SetTexture(0, NULL);
+	}
 }
+
 void GRAnimationMesh::DrawNormalMeshContainer(MeshContainer *meshContainer, const Frame *frame){
 	LPDIRECT3DDEVICE9 d3ddevice = GRDeviceD3D::GetD3DDevice();
 
-	d3ddevice->SetFVF(meshContainer->MeshData.pMesh->GetFVF());
-	d3ddevice->SetTransform(D3DTS_WORLD, &frame->CombinedTransformationMatrix);
-	for(int i=0; i<(int)meshContainer->NumMaterials; i++){
-		d3ddevice->SetMaterial(&meshContainer->pMaterials[i].MatD3D);
-		d3ddevice->SetTexture(0, meshContainer->ppTextures[i]);
-		meshContainer->MeshData.pMesh->DrawSubset(i);
+	if(effect){
+		D3DXHANDLE paramWorld        = effect->GetParameterBySemantic(NULL, "WORLD");
+		D3DXHANDLE paramDiffuseColor = effect->GetParameterBySemantic(NULL, "DIFFUSECOLOR");
+		
+		D3DXMATRIX world;
+		d3ddevice->GetTransform(D3DTS_WORLD, &world);
+		effect->SetMatrix(paramWorld, &(frame->CombinedTransformationMatrix*world));
+
+		d3ddevice->SetFVF(meshContainer->MeshData.pMesh->GetFVF());
+		for(int i=0; i<(int)meshContainer->NumMaterials; i++){
+			const D3DMATERIAL9& material = meshContainer->pMaterials[i].MatD3D;
+			effect->SetFloatArray(paramDiffuseColor,  (float*)&material.Diffuse,  4);
+			d3ddevice->SetTexture(0, meshContainer->ppTextures[i]);
+			effect->CommitChanges();
+			meshContainer->MeshData.pMesh->DrawSubset(i);
+		}
 	}
-	d3ddevice->SetTexture(0, NULL);
+	else{
+		d3ddevice->SetFVF(meshContainer->MeshData.pMesh->GetFVF());
+		d3ddevice->SetTransform(D3DTS_WORLD, &frame->CombinedTransformationMatrix);
+		for(int i=0; i<(int)meshContainer->NumMaterials; i++){
+			d3ddevice->SetMaterial(&meshContainer->pMaterials[i].MatD3D);
+			d3ddevice->SetTexture(0, meshContainer->ppTextures[i]);
+			meshContainer->MeshData.pMesh->DrawSubset(i);
+		}
+		d3ddevice->SetTexture(0, NULL);
+	}
 }
 
 }
