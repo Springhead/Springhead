@@ -23,10 +23,39 @@ namespace Spr{;
 // ヒンジジョイントを用いた人体モデル・クラスの実装
 class CRHingeHuman : public SceneObject, public CRHingeHumanIfInit, public CRHingeHumanDesc {
 private:
+	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
+
 	std::vector<PHSolidIf*> solids;
 	std::vector<PHJointIf*> joints;
 
 	CREyeControllerIf *eyeCtrl;
+
+	PHSceneIf *phScene;
+	PHSdkIf   *phSdk;
+
+	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
+
+	void InitBody();
+	void CreateWaist();
+	void CreateAbdomen();
+	void CreateChest();
+
+	void InitHead();
+	void CreateNeck();
+	void CreateHead();
+
+	void InitArms();
+	void CreateUpperArm(LREnum lr);
+	void CreateLowerArm(LREnum lr);
+	void CreateHand(LREnum lr);
+
+	void InitEyes();
+	void CreateEye(LREnum lr);
+
+	void InitLegs();
+	void CreateUpperLeg(LREnum lr);
+	void CreateLowerLeg(LREnum lr);
+	void CreateFoot(LREnum lr);
 
 public:
 	OBJECTDEF(CRHingeHuman, SceneObject);
