@@ -150,8 +150,13 @@ Vec2d CRPhysicalEye::GetHeadAngvel(){
 }
 
 void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle){
-	joX->SetSpringOrigin(-angle[0]);
-	joY->SetSpringOrigin(-angle[1]);
+	if (joLEyeX->GetChildObject(1)==soLEye) {
+		joX->SetSpringOrigin(angle[0]);
+		joY->SetSpringOrigin(angle[1]);
+	} else {
+		joX->SetSpringOrigin(-angle[0]);
+		joY->SetSpringOrigin(-angle[1]);
+	}
 
 	/*
 	Quaterniond qToGlobal = soHead->GetPose().Ori();

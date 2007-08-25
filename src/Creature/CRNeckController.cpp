@@ -33,8 +33,13 @@ void CRNeckController::Step(){
 	Vec3d eulTargetFromHead;
 	qtnTargetFromHead.ToEular(eulTargetFromHead);
 	/// 関節の目標値をセット
-	joNeckHeadX->SetSpringOrigin(eulTargetFromHead.Z());
-	joChestNeckY->SetSpringOrigin(eulTargetFromHead.X());
+	if (joNeckHeadX->GetChildObject(0)==soNeck) {
+		joNeckHeadX->SetSpringOrigin(-eulTargetFromHead.Z());
+		joChestNeckY->SetSpringOrigin(-eulTargetFromHead.X());
+	} else {
+		joNeckHeadX->SetSpringOrigin(eulTargetFromHead.Z());
+		joChestNeckY->SetSpringOrigin(eulTargetFromHead.X());
+	}
 
 	/*
 	Quaterniond qLook;
