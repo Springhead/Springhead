@@ -78,7 +78,10 @@ public:
 		GRFrameDesc desc;
 		ObjectIf* o = fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &desc);
 		fc->flags.Push(o != NULL);
-		if (o) fc->objects.Push(o);
+		if (o){
+			fc->objects.Push(o);
+			ld->loadedObjects.push_back(o);
+		}
 	}
 	void AfterCreateChildren(Desc& d,  UTLoadedData* ld, UTLoadContext* fc){
 		if(fc->flags.Pop()) fc->objects.Pop();
@@ -215,6 +218,7 @@ public:
 		desc.power = d.power;
 		fc->objects.Push(fc->CreateObject(GRMaterialIf::GetIfInfoStatic(), 
 			&desc, ld->GetName() ));
+		ld->loadedObjects.push_back(fc->objects.Top());
 	}
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Pop();		// GRMaterial
@@ -228,6 +232,7 @@ public:
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMeshDesc desc;
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc));	
+		ld->loadedObjects.push_back(fc->objects.Top());
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
 			mesh->positions = d.vertices;	// 頂点座標
@@ -330,7 +335,8 @@ public:
 			for (unsigned j=0; j<cmd.vertices.size(); ++j){
 				cmd.vertices[j] = afShape * cmd.vertices[j];
 			}
-			fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
+			ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
+			ld->loadedObjects.push_back(obj);
 		}
 	}
 };
@@ -365,8 +371,9 @@ public:
 					}
 				}
 			}
-			fc->CreateObject(
+			ObjectIf* obj = fc->CreateObject(
 				CDSphereIf::GetIfInfoStatic(), &csd, spheres[i][0]->GetName())->Cast();
+			ld->loadedObjects.push_back(obj);
 
 			PHSolid* solid = fc->objects.Top()->Cast();
 			if (solid){
@@ -383,9 +390,10 @@ class FWNodeHandlerSphere: public UTLoadHandlerImp<Sphere>{
 public:
 	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
- GRSphereDesc desc; 
- fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &desc));
-   GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
+	GRSphereDesc desc; 
+	fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &desc));
+	ld->loadedObjects.push_back(fc->objects.Top());
+	GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
 		sphere->radius = d.radius;
 		sphere->slices = d.slices;
 		sphere->stacks = d.stacks;
@@ -455,19 +463,11 @@ public:
 // Springhead1のContactEngine．
 class FWNodeHandlerContactEngine: public UTLoadHandlerImp<ContactEngine>{
 public:	
-	class Disabler: public UTLoadTask{
-	public:
-		PHSceneIf* phScene;
-		Disabler():phScene(NULL){}
-		void Execute(UTLoadContext* fc){
-			phScene->SetContactMode(PHSceneDesc::MODE_NONE);
-		}
-	};
 	class Adapter: public UTLoadTask{
 	public:
 		PHSceneIf* phScene;
-		std::vector< UTRef<PHSolidIf> > solids;						// ContactEngineノードに追加されていく順でsolidsに登録．
-																	// ContactInactiveノードのロードで利用．
+		std::vector< UTRef<PHSolidIf> > solids;	// ContactEngineノードに追加されていく順でsolidsに登録．
+												// ContactInactiveノードのロードで利用．
 		std::vector< UTRef<FWContactInactiveTask> > inactiveTask;	// ContactEngineタスク
 		UTLoadContext* fc;
 		Adapter():phScene(NULL){}
@@ -477,6 +477,8 @@ public:
 				GRVisual* v = DCAST(GRVisual, fr->GetChildObject(i));
 				GRFrame* f = DCAST(GRFrame, v);
 				if (f) AddFrameToSolid(solid, f, af);
+
+				//	Meshの場合，CDConvexMeshを追加
 				GRMesh* m = DCAST(GRMesh, v);
 				if (m){
 					CDConvexMeshDesc mdesc;
@@ -497,6 +499,7 @@ public:
 					solid->SetShapePose(solid->NShape()-1, pose);
 				}
 
+				//	Sphereの場合，CDSphereを追加
 				GRSphere* s = DCAST(GRSphere, v);
 				if (s){
 					CDSphereDesc sdesc;
@@ -529,14 +532,11 @@ public:
 				pose.FromAffine(fr->GetTransform());
 				solid->SetPose(pose);
 				AddFrameToSolid(solid, fr, fr->GetTransform().inv());
-				phScene->SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);
 				solids.push_back(solid->Cast());
 				return true;
 			}
 			PHSolid* so = DCAST(PHSolid, o);
-			if (so){	//	solidなら何もしない。デフォルトONなので。
-				//	受け取ったObjectを接触ONにする。
-				phScene->SetContactMode(DCAST(PHSolid, o)->Cast(), PHSceneDesc::MODE_LCP);
+			if (so){
 				solids.push_back(so->Cast());
 				return true;
 			}
@@ -547,6 +547,10 @@ public:
 			return false;
 		}
 		void Execute(UTLoadContext* fc){
+			phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+			for(int i=0; i<solids.size(); ++i){
+				phScene->SetContactMode(solids[i], PHSceneDesc::MODE_LCP);
+			}
 			// ContactInactiveノード
 			int iindex=0, jindex=0;
 			for (unsigned int t=0; t<inactiveTask.size(); ++t){		
@@ -554,7 +558,8 @@ public:
 					for (unsigned int j=i+1; j<inactiveTask[t]->solidIndexes.size(); ++j){
 						iindex = inactiveTask[t]->solidIndexes[i];
 						jindex = inactiveTask[t]->solidIndexes[j];
-						phScene->SetContactMode(solids[iindex], solids[jindex], PHSceneDesc::MODE_NONE);
+						phScene->SetContactMode(solids[iindex], solids[jindex], 
+							PHSceneDesc::MODE_NONE);
 					}
 				}
 			}
@@ -563,13 +568,11 @@ public:
 	FWNodeHandlerContactEngine():UTLoadHandlerImp<Desc>("ContactEngine"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		PHScene* ps = FindPHScene(fc);
-		Disabler* dis = DBG_NEW Disabler;
-		dis->phScene = FindPHScene(fc)->Cast();
-		fc->links.push_back(dis);
 		Adapter* task = DBG_NEW Adapter;
 		task->phScene = ps->Cast();
 		task->fc = fc;
 		fc->objects.Push(task->Cast());
+		ld->loadedObjects.push_back(fc->objects.Top());
 	}
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
@@ -577,6 +580,7 @@ public:
 		fc->objects.Pop();	//	task
 	}
 };
+
 
 // Springhead1のSolid．
 class FWNodeHandlerSolid: public UTLoadHandlerImp<Solid>{
@@ -586,7 +590,7 @@ public:
 		PHSolid* solid;
 		GRFrame* frame;
 		FWScene* fwScene;
-		Adapter():solid(NULL), fwScene(NULL){}
+		Adapter():solid(NULL), frame(NULL), fwScene(NULL){}
 		virtual bool AddChildObject(ObjectIf* o){
 			frame = DCAST(GRFrame, o);
 			if (frame){	//	fr以下の全MeshをSolidに追加
@@ -609,19 +613,22 @@ public:
 
 	FWNodeHandlerSolid():UTLoadHandlerImp<Desc>("Solid"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
- PHSolidDesc desc; 
+		PHSolidDesc desc; 
 		fc->objects.Push(fc->CreateObject(PHSolidIf::GetIfInfoStatic(), &desc));
+		ld->loadedObjects.push_back(fc->objects.Top());
 		PHSolid* solid = DCAST(PHSolid, fc->objects.Top());
 		solid->center = d.center;
 		solid->velocity = d.velocity;
 		solid->angVelocity = d.angularVelocity;
 		solid->inertia = d.inertia;
 		solid->mass = d.mass;
+		
 		Adapter* task = DBG_NEW Adapter;
 		task->solid = solid;
 		task->fwScene = FindFWScene(fc);
 		task->fc = fc;
 		fc->objects.Push(task->Cast());
+		ld->loadedObjects.push_back(fc->objects.Top());
 	}
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		Adapter* task = (Adapter*)DCAST(UTLoadTask, fc->objects.Top());
@@ -650,6 +657,7 @@ public:
 		cd.center = Vec2f(d.offsetX, d.offsetY);
 		cd.size = Vec2f(d.width, d.height);
 		fc->objects.Push(fc->CreateObject(GRCameraIf::GetIfInfoStatic(), &cd));
+		ld->loadedObjects.push_back(fc->objects.Top());
 		GRCamera* cam = DCAST(GRCamera, fc->objects.Top());
 		GRFrameDesc fd;
 		fd.transform = d.view;
@@ -685,6 +693,7 @@ public:
 		//	Frameworkを作る．
 		FWSceneDesc fwsd;
 		fc->objects.Push(fc->CreateObject(FWSceneIf::GetIfInfoStatic(), &fwsd));
+		ld->loadedObjects.push_back(fc->objects.Top());
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
 		
 		//	PHSDKを作る．スタックからは消す．

@@ -187,8 +187,8 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 		obj = fc->CreateObject(info, ld->data, ld->GetName());	//	作成して，
 		if (obj){
 			ld->loadedObjects.Push(obj);
-			fc->objects.Push(obj);									//	スタックに積む
-			if (fc->objects.size() == 1){ 
+			fc->objects.Push(obj);								//	スタックに積む
+			if (fc->objects.size() == 1){
 				fc->rootObjects.push_back(fc->objects.Top());	//	ルートオブジェクトとして記録
 			}
 		}
@@ -210,7 +210,7 @@ void FIFile::CreateObjectRecursive(UTLoadContext* fc){
 	
 	//	終了処理
 	if(obj){
-		fc->objects.Pop();								//	スタックをPop
+		fc->objects.Pop();										//	スタックをPop
 	}
 }
 
