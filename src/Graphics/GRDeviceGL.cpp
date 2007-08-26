@@ -207,6 +207,18 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		vertexSize = sizeof(float)*24;
 		vertexColor = true;
 	}else {
+		for(int i=0; GRVertexElement::typicalFormats[i]; ++i){
+			if (CompareVertexFormat(e, GRVertexElement::typicalFormats[i])){
+				SetVertexFormat(GRVertexElement::typicalFormats[i]);
+				return;
+			}
+		}
+		for(int i=0; GRVertexElement::typicalBlendFormats[i]; ++i){
+			if (CompareVertexFormat(e, GRVertexElement::typicalBlendFormats[i])){
+				SetVertexFormat(GRVertexElement::typicalBlendFormats[i]);
+				return;
+			}
+		}
 		vertexFormatGl = 0;
 		vertexSize = 0;
 		vertexColor = false;

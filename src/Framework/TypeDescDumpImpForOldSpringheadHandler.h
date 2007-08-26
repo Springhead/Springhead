@@ -143,6 +143,86 @@
 	field->offset = int((char*)&(pMeshTextureCoords->textureCoords) - (char*)pMeshTextureCoords);
 	db->RegisterDesc(desc);
 	
+	XSkinMeshHeader* pXSkinMeshHeader = NULL;
+	desc = DBG_NEW UTTypeDesc("XSkinMeshHeader");
+	desc->size = sizeof(XSkinMeshHeader);
+	desc->access = DBG_NEW UTAccess<XSkinMeshHeader>;
+	field = desc->AddField("", "short", "nMaxSkinWeightsPerVertex", "");
+	field->offset = int((char*)&(pXSkinMeshHeader->nMaxSkinWeightsPerVertex) - (char*)pXSkinMeshHeader);
+	field = desc->AddField("", "short", "nMaxSkinWeightsPerFace", "");
+	field->offset = int((char*)&(pXSkinMeshHeader->nMaxSkinWeightsPerFace) - (char*)pXSkinMeshHeader);
+	field = desc->AddField("", "short", "nBones", "");
+	field->offset = int((char*)&(pXSkinMeshHeader->nBones) - (char*)pXSkinMeshHeader);
+	db->RegisterDesc(desc);
+	
+	SkinWeights* pSkinWeights = NULL;
+	desc = DBG_NEW UTTypeDesc("SkinWeights");
+	desc->size = sizeof(SkinWeights);
+	desc->access = DBG_NEW UTAccess<SkinWeights>;
+	field = desc->AddField("", "string", "transformNodeName", "");
+	field->offset = int((char*)&(pSkinWeights->transformNodeName) - (char*)pSkinWeights);
+	field = desc->AddField("", "int", "nWeights", "");
+	field->offset = int((char*)&(pSkinWeights->nWeights) - (char*)pSkinWeights);
+	field = desc->AddField("vector", "int", "vertexIndices", "");
+	field->offset = int((char*)&(pSkinWeights->vertexIndices) - (char*)pSkinWeights);
+	field = desc->AddField("vector", "float", "weights", "");
+	field->offset = int((char*)&(pSkinWeights->weights) - (char*)pSkinWeights);
+	field = desc->AddField("", "Affinef", "matrixOffset", "");
+	field->offset = int((char*)&(pSkinWeights->matrixOffset) - (char*)pSkinWeights);
+	db->RegisterDesc(desc);
+	
+	Animation* pAnimation = NULL;
+	desc = DBG_NEW UTTypeDesc("Animation");
+	desc->size = sizeof(Animation);
+	desc->access = DBG_NEW UTAccess<Animation>;
+	db->RegisterDesc(desc);
+	
+	AnimationSet* pAnimationSet = NULL;
+	desc = DBG_NEW UTTypeDesc("AnimationSet");
+	desc->size = sizeof(AnimationSet);
+	desc->access = DBG_NEW UTAccess<AnimationSet>;
+	db->RegisterDesc(desc);
+	
+	FloatKeys* pFloatKeys = NULL;
+	desc = DBG_NEW UTTypeDesc("FloatKeys");
+	desc->size = sizeof(FloatKeys);
+	desc->access = DBG_NEW UTAccess<FloatKeys>;
+	field = desc->AddField("", "int", "nValues", "");
+	field->offset = int((char*)&(pFloatKeys->nValues) - (char*)pFloatKeys);
+	field = desc->AddField("vector", "float", "values", "");
+	field->offset = int((char*)&(pFloatKeys->values) - (char*)pFloatKeys);
+	db->RegisterDesc(desc);
+	
+	TimedFloatKeys* pTimedFloatKeys = NULL;
+	desc = DBG_NEW UTTypeDesc("TimedFloatKeys");
+	desc->size = sizeof(TimedFloatKeys);
+	desc->access = DBG_NEW UTAccess<TimedFloatKeys>;
+	field = desc->AddField("", "int", "time", "");
+	field->offset = int((char*)&(pTimedFloatKeys->time) - (char*)pTimedFloatKeys);
+	field = desc->AddField("", "FloatKeys", "tfkeys", "");
+	field->offset = int((char*)&(pTimedFloatKeys->tfkeys) - (char*)pTimedFloatKeys);
+	db->RegisterDesc(desc);
+	
+	AnimationKey* pAnimationKey = NULL;
+	desc = DBG_NEW UTTypeDesc("AnimationKey");
+	desc->size = sizeof(AnimationKey);
+	desc->access = DBG_NEW UTAccess<AnimationKey>;
+	field = desc->AddField("", "int", "keyType", "");
+	field->offset = int((char*)&(pAnimationKey->keyType) - (char*)pAnimationKey);
+	field = desc->AddField("", "int", "nKeys", "");
+	field->offset = int((char*)&(pAnimationKey->nKeys) - (char*)pAnimationKey);
+	field = desc->AddField("vector", "TimedFloatKeys", "keys", "");
+	field->offset = int((char*)&(pAnimationKey->keys) - (char*)pAnimationKey);
+	db->RegisterDesc(desc);
+	
+	AnimTicksPerSecond* pAnimTicksPerSecond = NULL;
+	desc = DBG_NEW UTTypeDesc("AnimTicksPerSecond");
+	desc->size = sizeof(AnimTicksPerSecond);
+	desc->access = DBG_NEW UTAccess<AnimTicksPerSecond>;
+	field = desc->AddField("", "int", "hz", "");
+	field->offset = int((char*)&(pAnimTicksPerSecond->hz) - (char*)pAnimTicksPerSecond);
+	db->RegisterDesc(desc);
+	
 	Scene* pScene = NULL;
 	desc = DBG_NEW UTTypeDesc("Scene");
 	desc->size = sizeof(Scene);

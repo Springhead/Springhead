@@ -101,6 +101,50 @@ struct MeshTextureCoords{
 	std::vector<Vec2f> textureCoords;
 };
 
+//	DirectXのSkinメッシュのSkinWeight部のヘッダ
+struct XSkinMeshHeader{
+	unsigned short nMaxSkinWeightsPerVertex;
+	unsigned short nMaxSkinWeightsPerFace;
+	unsigned short nBones;
+};
+
+//	DirectXのSkinメッシュのSkinWeight
+struct SkinWeights {
+	std::string transformNodeName;
+	unsigned int nWeights;
+	std::vector<unsigned int> vertexIndices;
+	std::vector<float> weights;
+	Affinef matrixOffset;
+};
+
+//	アニメーション関係
+struct Animation {
+};
+
+struct AnimationSet {
+};
+
+struct FloatKeys {
+ unsigned int nValues;
+ std::vector<float> values;
+};
+
+struct TimedFloatKeys {
+	unsigned int time;
+	FloatKeys tfkeys;
+};
+
+struct AnimationKey {
+ unsigned int keyType;
+ unsigned int nKeys;
+ std::vector<TimedFloatKeys> keys;
+};
+
+struct AnimTicksPerSecond {
+	unsigned int hz;
+};
+
+
 ///	Springhead1のScene．
 struct Scene{
 };

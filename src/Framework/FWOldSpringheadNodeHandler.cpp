@@ -278,6 +278,8 @@ public:
 				MeshMaterialList* mlDesc = (MeshMaterialList*) mlData->data;
 				mesh->materialList = mlDesc->faceIndexes;
 			}
+			//	スキンメッシュ
+			
 		}else{
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}

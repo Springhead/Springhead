@@ -78,9 +78,15 @@ struct GRVertexElement {
 	static GRVertexElement Color4b(size_t o);
 	static GRVertexElement Color4f(size_t o);
 	static GRVertexElement Color3f(size_t o);
-	static GRVertexElement Blend4f(size_t o);
-	static GRVertexElement MatrixIndices4f(size_t o);
-	static GRVertexElement NumBones4f(size_t o);
+	static GRVertexElement BlendNf(size_t o, size_t n);
+	static GRVertexElement Blend4f(size_t o){ return BlendNf(o, 4); }
+	static GRVertexElement Blend3f(size_t o){ return BlendNf(o, 3); }
+	static GRVertexElement Blend2f(size_t o){ return BlendNf(o, 2); }
+	static GRVertexElement Blend1f(size_t o){ return BlendNf(o, 1); }
+	static GRVertexElement MatrixIndicesNf(size_t o, size_t n){ return BlendNf(o,n); }
+	static GRVertexElement NumBonesNf(size_t o, size_t n){ return BlendNf(o,n); }
+	static GRVertexElement MatrixIndices4f(size_t o){ return BlendNf(o,4); }
+	static GRVertexElement NumBones4f(size_t o){ return BlendNf(o,4); }
 
 	///	@name 典型的な頂点フォーマット．シェーダーを指定せずレンダリングできる．
 	//@{
@@ -106,8 +112,7 @@ struct GRVertexElement {
 	static const GRVertexElement vfT2fC4bP3fB4f[];			
 	static const GRVertexElement vfT2fN3fP3fB4f[];			
 	static const GRVertexElement vfT2fC4fN3fP3fB4f[];			
-	static const GRVertexElement* typicalBlendFormats[];		
-		
+	static const GRVertexElement* typicalBlendFormats[];	
 	//@}
 	
 	/// @name 典型的な頂点フォーマットに対するデータ構造
@@ -219,6 +224,7 @@ struct GRVertexElement {
 	//@}		
 	
 };
+bool CompareVertexFormat(const GRVertexElement* e1, const GRVertexElement* e2);
 
 /**	インターリーブされていない頂点バッファの指定
 <pre>
