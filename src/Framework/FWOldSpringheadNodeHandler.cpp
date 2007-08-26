@@ -695,18 +695,18 @@ public:
 		fc->objects.Push(fc->CreateObject(FWSceneIf::GetIfInfoStatic(), &fwsd));
 		ld->loadedObjects.push_back(fc->objects.Top());
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
-		
-		//	PHSDKを作る．スタックからは消す．
-		PHSdkDesc phsdkd;
-		PHSdkIf* phSdk = DCAST(PHSdkIf, fc->CreateObject(PHSdkIf::GetIfInfoStatic(), &phsdkd));
-		//	GRSDKを作る．スタックからは消す．
-		GRSdkDesc grsdkd;
-		GRSdkIf* grSdk = DCAST(GRSdkIf, fc->CreateObject(GRSdkIf::GetIfInfoStatic(), &grsdkd));
+		FWSdk* sdk = NULL;
+		for(int i=fc->objects.size()-1; i>=0; --i){
+			sdk = fc->objects[i]->Cast();
+			if (sdk) break;
+		}
+		assert(sdk);	//<	FWSdkをスタックに積んでおく必要あり．
+
 		//	GRSceneを作る．
-		GRSceneIf* grScene = grSdk->CreateScene(GRSceneDesc());
+		GRSceneIf* grScene = sdk->GetGRSdk()->CreateScene(GRSceneDesc());
 		//	PHSceneを作る．
 		PHSceneDesc psd;
-		PHSceneIf* phScene = phSdk->CreateScene(psd);
+		PHSceneIf* phScene = sdk->GetPHSdk()->CreateScene(psd);
 
 		//	Frameworkにシーンを登録．
 		fws->AddChildObject(phScene);

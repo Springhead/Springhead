@@ -27,6 +27,7 @@ protected:
 	static void SPR_CDECL AtExit();
 	int windowID;
 public:
+	~FWAppGLUT();
 	virtual void Init(int argc, char* argv[]);
 	virtual void Display();
 	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc());

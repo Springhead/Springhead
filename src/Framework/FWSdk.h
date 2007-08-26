@@ -25,8 +25,6 @@ public:
 
 class SPR_DLL FWSdk:public Sdk, public FWSdkIfInit{
 protected:
-	//	Œ^î•ñDB
-	static UTRef<UTTypeDescDb> typeDb, oldSpringheadTypeDb;
 	//	scene
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
 	///	ƒV[ƒ“

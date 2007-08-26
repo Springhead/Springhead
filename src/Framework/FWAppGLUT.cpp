@@ -15,6 +15,10 @@ namespace Spr{;
 
 FWAppGLUT* FWAppGLUT::instance;
 	
+FWAppGLUT::~FWAppGLUT(){
+	FWAppGLUT::AtExit();
+	instance = NULL;
+}
 void FWAppGLUT::GlutDisplayFunc(){
 	FWAppGLUT::instance->CallDisplay();
 }
@@ -41,7 +45,7 @@ void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 }
 
 void FWAppGLUT::AtExit(){
-	if(FWAppGLUT::instance->vfBridge)
+	if(FWAppGLUT::instance && FWAppGLUT::instance->vfBridge)
 		FWAppGLUT::instance->vfBridge->AtExit();
 }
 
