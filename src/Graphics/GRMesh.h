@@ -31,6 +31,15 @@ public:
 
 	std::vector< UTRef<GRMaterial> > material;				///< マテリアル
 	std::vector<int>                 materialList;			///< マテリアルのインデックスリスト
+
+	struct SkinWeight{
+		std::string name;
+		Affinef offset;
+		std::vector<unsigned> indices;
+		std::vector<float> weights;
+	};
+	std::vector<SkinWeight>	skinWeights;					///< スキンMeshの場合のskinWeights
+
 	/**
 	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
 	  （Xファイルからロードされた面は、すべて三角形分割されているため、

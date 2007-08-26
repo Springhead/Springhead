@@ -283,8 +283,25 @@ public:
 				MeshMaterialList* mlDesc = (MeshMaterialList*) mlData->data;
 				mesh->materialList = mlDesc->faceIndexes;
 			}
-			//	スキンメッシュ
-			
+			//	スキンメッシュのヘッダ
+			UTLoadedData* skinHeader = ld->FindDescendant("XSkinMeshHeader");
+			if (skinHeader){
+				XSkinMeshHeader* sd = (XSkinMeshHeader*) skinHeader->data;
+				//	特に何もしない？	
+			}
+			//	スキンメッシュの重みづけ
+			for(int i=0; i<ld->children.size(); ++i){
+				if (ld->children[i]->type->GetTypeName().compare("SkinWeights")==0){
+					SkinWeights* sw = (SkinWeights*) ld->children[i]->data;
+					mesh->skinWeights.push_back(GRMesh::SkinWeight());
+					for(int i=0; i<sw->nWeights; ++i){
+						mesh->skinWeights.back().indices.push_back(sw->vertexIndices[i]);
+						mesh->skinWeights.back().weights.push_back(sw->weights[i]);
+					}
+					mesh->skinWeights.back().name = sw->transformNodeName;
+					mesh->skinWeights.back().offset = sw->matrixOffset;
+				}
+			}
 		}else{
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
 		}
