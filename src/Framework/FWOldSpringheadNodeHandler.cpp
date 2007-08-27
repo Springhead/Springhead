@@ -76,7 +76,7 @@ public:
 	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}	
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRFrameDesc desc;
-		ObjectIf* o = fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &desc);
+		ObjectIf* o = fc->CreateObject(GRFrameIf::GetIfInfoStatic(), &desc, ld->GetName());
 		fc->flags.Push(o != NULL);
 		if (o){
 			fc->objects.Push(o);
@@ -170,7 +170,7 @@ public:
 		//	¶ŽèŒn¨‰EŽèŒn‚Ì•ÏŠ·
 		grld.position.Z() *= -1;
 		grld.spotDirection.Z() *= -1;
-		fc->objects.Push(fc->CreateObject(GRLightIf::GetIfInfoStatic(), &grld));
+		fc->objects.Push(fc->CreateObject(GRLightIf::GetIfInfoStatic(), &grld, ld->GetName()));
 		Adapter* a = DBG_NEW Adapter;
 		a->light = DCAST(GRLight, fc->objects.Top());
 		fc->objects.Push(a->Cast());
@@ -231,7 +231,7 @@ public:
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMeshDesc desc;
-		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc));	
+		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc, ld->GetName()));	
 		ld->loadedObjects.push_back(fc->objects.Top());
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
 		if (mesh){
@@ -408,7 +408,7 @@ public:
 	FWNodeHandlerSphere():UTLoadHandlerImp<Desc>("Sphere"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 	GRSphereDesc desc; 
-	fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &desc));
+	fc->objects.Push(fc->CreateObject(GRSphereIf::GetIfInfoStatic(), &desc, ld->GetName()));
 	ld->loadedObjects.push_back(fc->objects.Top());
 	GRSphere* sphere = DCAST(GRSphere, fc->objects.Top());
 		sphere->radius = d.radius;
@@ -631,7 +631,7 @@ public:
 	FWNodeHandlerSolid():UTLoadHandlerImp<Desc>("Solid"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		PHSolidDesc desc; 
-		fc->objects.Push(fc->CreateObject(PHSolidIf::GetIfInfoStatic(), &desc));
+		fc->objects.Push(fc->CreateObject(PHSolidIf::GetIfInfoStatic(), &desc, ld->GetName()));
 		ld->loadedObjects.push_back(fc->objects.Top());
 		PHSolid* solid = DCAST(PHSolid, fc->objects.Top());
 		solid->center = d.center;
@@ -673,7 +673,7 @@ public:
 		cd.front = d.front;
 		cd.center = Vec2f(d.offsetX, d.offsetY);
 		cd.size = Vec2f(d.width, d.height);
-		fc->objects.Push(fc->CreateObject(GRCameraIf::GetIfInfoStatic(), &cd));
+		fc->objects.Push(fc->CreateObject(GRCameraIf::GetIfInfoStatic(), &cd, ld->GetName()));
 		ld->loadedObjects.push_back(fc->objects.Top());
 		GRCamera* cam = DCAST(GRCamera, fc->objects.Top());
 		GRFrameDesc fd;
@@ -709,7 +709,7 @@ public:
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		//	Framework‚ðì‚éD
 		FWSceneDesc fwsd;
-		fc->objects.Push(fc->CreateObject(FWSceneIf::GetIfInfoStatic(), &fwsd));
+		fc->objects.Push(fc->CreateObject(FWSceneIf::GetIfInfoStatic(), &fwsd, ld->GetName()));
 		ld->loadedObjects.push_back(fc->objects.Top());
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
 		FWSdk* sdk = NULL;
