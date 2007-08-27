@@ -33,8 +33,8 @@ public:
 	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
 	  （Xファイルからロードされた面は、すべて三角形分割されているため、
 	   どの面がどのマテリアルを適用するのか判断するためのもの）			*/
-	std::vector<int> originalFaces;				///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
-	std::vector<unsigned int> elementIndex;		///< 面を構成するための頂点インデックス（三角形分割後の面に対するインデックス）
+	std::vector<int> originalFaces;				///< 三角形分割前の面に対応する頂点
+	std::vector<unsigned int> originalFaceIds;	///< 三角形に対応する分割前の面の番号
 	std::vector<int> faceNormals;				///< 法線インデックス
 	
 	std::vector<Affinef>				blendMatrix;			///< ブレンド変換行列

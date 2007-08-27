@@ -13,180 +13,223 @@ namespace Spr{;
 IF_OBJECT_IMP(GRMesh, GRVisual);
 
 GRMesh::GRMesh(const GRMeshDesc& desc):GRMeshDesc(desc){
+	list = 0;
 	render = NULL;
+	vtxs = NULL;
+	nVtxs = 0;
+	vtxFormat = NULL;
+	blendedVtxs = NULL;
+	stride = -1;
+	normalOffset = -1;
+	positionOffset = -1;
 }
 GRMesh::~GRMesh(){
-	for (unsigned int id=0; id<list.size(); ++id){
-		if (list[id]) render->ReleaseList(list[id]);
-	}
+	if (list) render->ReleaseList(list);
+	delete vtxs;
+	delete blendedVtxs;
 }
-void GRMesh::CreateList(GRRenderIf* r){
-	for (unsigned int id=0; id<list.size(); ++id){
-		if (list[id])	render->ReleaseList(list[id]);
-	}
-	list.clear();
-	render = r;
-	unsigned int vtxsize = max(max(positions.size(), normals.size()), max(colors.size(), texCoords.size()));
-
+void GRMesh::MakeBuffer(){
+	nVtxs = max(max(positions.size(), normals.size()), max(colors.size(), texCoords.size()));
 	if (texCoords.size() && normals.size() && colors.size()){
-		std::vector<GRVertexElement::VFT2fC4fN3fP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
-		for (unsigned i=0; i<colors.size(); ++i){ vtx[i].c = colors[i];	}
-		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fC4fN3fP3f);
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFT2fC4fN3fP3f)/sizeof(float);
+		normalOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->n) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<originalFaces.size(); ++i)
+			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+			= normals[faceNormals[i]];
+		for (unsigned i=0; i<colors.size(); ++i)
+			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->c = colors[i];
+		for (unsigned i=0; i<texCoords.size(); ++i)
+			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->t = texCoords[i];
+		vtxFormat = GRVertexElement::vfT2fC4fN3fP3f;
 	}else if (texCoords.size() && normals.size()){
-		std::vector<GRVertexElement::VFT2fN3fP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
-		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fN3fP3f);
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFT2fN3fP3f)/sizeof(float);
+		normalOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->n) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFT2fN3fP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<originalFaces.size(); ++i)
+			((GRVertexElement::VFT2fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+			= normals[faceNormals[i]];
+		for (unsigned i=0; i<texCoords.size(); ++i)
+			((GRVertexElement::VFT2fN3fP3f*)(vtxs + i*stride))->t = texCoords[i];
+		vtxFormat = GRVertexElement::vfT2fN3fP3f;
 	}else if (texCoords.size() && colors.size()){
-		std::vector<GRVertexElement::VFT2fC4bP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<colors.size(); ++i){ 
-			vtx[i].c = ((unsigned char)(colors[i].x*255)) |
-			 		   ((unsigned char)(colors[i].y*255) << 8) |
-					   ((unsigned char)(colors[i].z*255) << 16) |
-					   ((unsigned char)(colors[i].w*255) << 24);
-		}
-		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fC4bP3f);
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFT2fC4bP3f)/sizeof(float);
+		positionOffset = (float*)(((GRVertexElement::VFT2fC4bP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFT2fC4bP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<originalFaces.size(); ++i)
+			((GRVertexElement::VFT2fC4bP3f*)(vtxs + i*stride))->c =
+						((unsigned char)(colors[i].x*255)) |
+						((unsigned char)(colors[i].y*255) << 8) |
+						((unsigned char)(colors[i].z*255) << 16) |
+						((unsigned char)(colors[i].w*255) << 24);
+		for (unsigned i=0; i<texCoords.size(); ++i)
+			((GRVertexElement::VFT2fC4bP3f*)(vtxs + i*stride))->t = texCoords[i];
+		vtxFormat = GRVertexElement::vfT2fC4bP3f;
 	}else if (normals.size() && colors.size()){
-		std::vector<GRVertexElement::VFC4fN3fP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
-		for (unsigned i=0; i<colors.size(); ++i){ vtx[i].c = colors[i];	}
-		render->SetVertexFormat(GRVertexElement::vfC4fN3fP3f);
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFC4fN3fP3f)/sizeof(float);
+		normalOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->n) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFC4fN3fP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<originalFaces.size(); ++i)
+			((GRVertexElement::VFC4fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+			= normals[faceNormals[i]];
+		for (unsigned i=0; i<colors.size(); ++i)
+			((GRVertexElement::VFC4fN3fP3f*)(vtxs + i*stride))->c = colors[i];
+		vtxFormat = GRVertexElement::vfC4fN3fP3f;
 	}else if (normals.size()){
-		std::vector<GRVertexElement::VFN3fP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<originalFaces.size(); ++i){ vtx[originalFaces[i]].n = normals[faceNormals[i]]; }
-		render->SetVertexFormat(GRVertexElement::vfN3fP3f);
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFN3fP3f)/sizeof(float);
+		normalOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->n) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFN3fP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<originalFaces.size(); ++i)
+			((GRVertexElement::VFN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+			= normals[faceNormals[i]];
+		vtxFormat = GRVertexElement::vfN3fP3f;
 	}else if (texCoords.size()){
-		std::vector<GRVertexElement::VFT2fP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<texCoords.size(); ++i){ vtx[i].t = texCoords[i]; }
-		render->SetVertexFormat(GRVertexElement::vfT2fP3f);
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFT2fP3f)/sizeof(float);
+		positionOffset = (float*)(((GRVertexElement::VFT2fP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFT2fP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<texCoords.size(); ++i)
+			((GRVertexElement::VFT2fP3f*)(vtxs + i*stride))->t = texCoords[i];
+		vtxFormat = GRVertexElement::vfT2fP3f;
 	}else if (colors.size()){
-		std::vector<GRVertexElement::VFC4bP3f> vtx;
-		vtx.resize(vtxsize);
-		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<colors.size(); ++i){ 
-			vtx[i].c = ((unsigned char)(colors[i].x*255)) |
-			 		   ((unsigned char)(colors[i].y*255) << 8) |
-					   ((unsigned char)(colors[i].z*255) << 16) |
-					   ((unsigned char)(colors[i].w*255) << 24);
-		}
-		this->CreateListElement(&*vtx.begin());
+		stride = sizeof(GRVertexElement::VFC4bP3f)/sizeof(float);
+		positionOffset = (float*)(((GRVertexElement::VFC4bP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFC4bP3f*)(vtxs + i*stride))->p = positions[i];
+		for (unsigned i=0; i<originalFaces.size(); ++i)
+			((GRVertexElement::VFC4bP3f*)(vtxs + i*stride))->c =
+						((unsigned char)(colors[i].x*255)) |
+						((unsigned char)(colors[i].y*255) << 8) |
+						((unsigned char)(colors[i].z*255) << 16) |
+						((unsigned char)(colors[i].w*255) << 24);
+		vtxFormat = GRVertexElement::vfC4bP3f;
 	}else{
-		render->SetVertexFormat(GRVertexElement::vfP3f);
-		this->CreateListElement(&*positions.begin());
+		stride = sizeof(GRVertexElement::VFP3f)/sizeof(float);
+		positionOffset = (float*)(((GRVertexElement::VFP3f*)NULL)->p) - (float*)NULL;
+		vtxs = new float[stride * nVtxs];
+		for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFP3f*)(vtxs + i*stride))->p = positions[i];
+		vtxFormat = GRVertexElement::vfP3f;
+	}
+	if (skinWeights.size()){
+		blendedVtxs = new float[stride * nVtxs];
+		memcpy(blendedVtxs, vtxs, stride*sizeof(float)*nVtxs);
 	}
 }
-
 /// 同じマテリアルインデックスが続く場合は、それ毎に１つのディスプレイリストとして、登録する．
-void GRMesh::CreateListElement(void *vtx){
-	int base = 0;		// ディスプレイリストの識別子
-	// Xファイルからの materialList 指定がない場合
-	//if (!materialList.size()){		
-	if (materialList.empty()){
-		base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin(), vtx, faces.size());
-		list.push_back(base);		
-	}
-	// Xファイルからの materialList 指定がある場合、material単位で Display List 分割する
-	else{							
-		unsigned int first	= 0;				// elementIndex[]上における、境界の first frame
-		unsigned int end	= first+1;			// elementIndex[]上における、境界の end frame
-		
-		// (分割後の)三角形の面の数だけループ
-		while (end < elementIndex.size()){		
-			// Xファイルからの指定で、定義した面の数より、マテリアル設定された面の数が少ないかどうかのチェック
-			if (materialList.size() > elementIndex[end]){ 
-				// マテリアルインデックスが同じかどうか比較
-				if (materialList[elementIndex[first]] == materialList[elementIndex[end]]){
-					end++;							// 1個ずらして、またfirstと比較
-					if (end >= elementIndex.size()){		// elementIndex配列の一番最後の要素かどうかのチェック					
-						// 適用するマテリアルIDが、materialとして用意されているか？
-						if (materialList[elementIndex[first]] < (int)material.size()){
-							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(), 	
-																GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-						}else{
-							base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);							
-						}
-						list.push_back(base);
-						break;
-					}
-				}else{
-					// 適用するマテリアルIDが、materialとして用意されているか？
-					if (materialList[elementIndex[first]] < (int)material.size()) {		
-						base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(), 					
-																GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-					}else{
-						base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-					}
-					list.push_back(base);
-					
-					first = end;
-					end = end+1;
-						
-					if (end >= elementIndex.size()){			// elementIndex配列の一番最後の要素かどうかのチェック
-						// 適用するマテリアルIDが、materialとして用意されているか？
-						if (materialList[elementIndex[first]] < (int)material.size()) {		
-							base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(),  
-																	GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3);
-						}else{
-							base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, (end-first)*3); 
-						}	
-						list.push_back(base);
-						break;
-					}
+void GRMesh::DrawBuffer(void* vtx){
+	if (materialList.empty()){	// Mesh に material の指定がない場合
+		render->DrawIndexed(GRRenderIf::TRIANGLES, &*faces.begin(), vtx, faces.size());
+	}else{	// Xファイルからの materialList 指定がある場合、materialごとに描画
+		for(int i=0; i < material.size(); ++i){
+			render->SetMaterial(*material[i]);
+			int from=0, to=0;
+			for(; to<originalFaceIds.size(); ++to){
+				if (originalFaceIds[to] >= materialList.size()) continue;
+				if (materialList[originalFaceIds[to]] == i) continue;
+				if (from < to){
+					render->DrawIndexed(GRRenderIf::TRIANGLES, 
+						&*faces.begin() + 3*from, vtx, (to-from)*3);
 				}
-
-			}else{
-				/** Xファイルで MeshMaterialList を指定した場合、
-					全ての定義した面に対して、たいていマテリアルを設定をしてあるが、
-					面の数より、マテリアル設定された面の数が少ない場合は、
-					最後にマテリアル設定された面と同じマテリアルが、マテリアル設定されていない面に対して適用される。*/
-				// 適用するマテリアルIDが、materialとして用意されているか？
-				if (materialList[elementIndex[first]] < (int)material.size()) {	
-					base = render->CreateIndexedList(material[materialList[elementIndex[first]]]->Cast(), 
-														GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);
-				}else{
-					base = render->CreateIndexedList(GRRenderIf::TRIANGLES, &*faces.begin()+first*3, vtx, faces.size()-first*3);				
-				}
-				list.push_back(base);
-				break;
-					
+				from = to+1;
+			}
+			if (from < to){
+				render->DrawIndexed(GRRenderIf::TRIANGLES, 
+					&*faces.begin() + 3*from, vtx, (to-from)*3);
 			}
 		}	
 	}
 }
+
+void GRMesh::CreateList(GRRenderIf* r){
+	render = r;
+	if (list) render->ReleaseList(list);
+	list = 0;
+	list = render->StartList();
+	MakeBuffer();
+	render->SetVertexFormat(vtxFormat);
+	DrawBuffer(vtxs);
+	render->EndList();
+}
+
 void GRMesh::Render(GRRenderIf* r){
-	if (r!=render || !list.size()) CreateList(r);
-	for (unsigned int id=0; id<list.size(); ++id){
-		render->DrawList(list[id]);
+	if (skinWeights.size()){	//	SkinMeshは毎回描画する必要がある
+		if (r!=render || !list) CreateList(r);
+		render = r;
+		if (positionOffset>=0){
+			for(int v=0; v<nVtxs; ++v){
+				blendedVtxs[v*stride + positionOffset] = 0;
+				blendedVtxs[v*stride + positionOffset+1] = 0;
+				blendedVtxs[v*stride + positionOffset+2] = 0;
+			}
+			for(int i=0; i<skinWeights.size(); ++i){
+				Affinef afBone = skinWeights[i].frame->GetWorldTransform();
+				for(int j=0; j<skinWeights[i].indices.size(); ++j){
+					int v = skinWeights[i].indices[j];
+					float w = skinWeights[i].weights[j];
+					*(Vec3f*)(blendedVtxs + v*stride + positionOffset) += 
+						afBone *
+						(skinWeights[i].offset * *(Vec3f*)(vtxs + v*stride + positionOffset)) * w;
+				}
+			}
+		}
+		if (normalOffset>=0){
+			for(int v=0; v<nVtxs; ++v){
+				blendedVtxs[v*stride + normalOffset] = 0;
+				blendedVtxs[v*stride + normalOffset+1] = 0;
+				blendedVtxs[v*stride + normalOffset+2] = 0;
+			}
+			for(int i=0; i<skinWeights.size(); ++i){
+				Affinef afBone = skinWeights[i].frame->GetWorldTransform();
+				for(int j=0; j<skinWeights[i].indices.size(); ++j){
+					int v = skinWeights[i].indices[j];
+					float w = skinWeights[i].weights[j];
+					*(Vec3f*)(blendedVtxs + v*stride + normalOffset) += 
+						afBone*
+						(skinWeights[i].offset * *(Vec3f*)(vtxs + v*stride + normalOffset)) * w;
+				}
+			}
+		}
+
+		render->SetVertexFormat(vtxFormat);
+		DrawBuffer(blendedVtxs);
+	}else{
+		if (r!=render || !list) CreateList(r);
+		if (list) render->DrawList(list);
 	}
 }
 void GRMesh::Rendered(GRRenderIf* r){
 }
 bool GRMesh::AddChildObject(ObjectIf* o){			
-	GRMaterial* m = DCAST(GRMaterial, o);
+	GRMaterial* m = o->Cast();
 	if (m){
 		material.push_back(m);
 		return GetNameManager()->AddChildObject(m->Cast());
+	}
+	GRFrame* f = o->Cast();
+	if (f){
+		for(int i=0; i<skinWeights.size(); ++i){
+			if (!skinWeights[i].frame){
+				skinWeights[i].frame = f;
+				return true;
+			}
+		}
 	}
 	return false;
 }

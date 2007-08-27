@@ -111,25 +111,17 @@ public:
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){}
 	///	頂点とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){}
+	///	球体を描画
+	virtual void DrawSphere(float radius, int slices, int stacks){}
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
 	
-	///	ダイレクト形式による DiplayList の作成
-	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){return 0;}
-	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){return 0;}
-	/// 球オブジェクトの DisplayList の作成
-	virtual int CreateList(float radius, int slices, int stacks){return 0;}
-	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks){return 0;}
-	///	インデックス形式による DiplayList の作成
-	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}
-	virtual int CreateIndexedList(GRMaterialIf* mat, 
-								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}
-	/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
-	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 
-									GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){return 0;}	
+	///	DiplayList の作成(リスト作成開始)
+	virtual int StartList(){return 0;}
+	///	リスト作成終了
+	virtual void EndList(){}
 	///	DisplayListの表示
 	virtual void DrawList(int i){}
 	///	DisplayListの解放
@@ -205,24 +197,12 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,												\
 		size_t* idx, void* vtx, size_t ct, size_t st=0)														\
 		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }															\
-	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)		\
-		{ return ptr CreateList(ty, vtx, count, stride); }													\
-	virtual int CreateList(GRMaterialIf* mat, unsigned int texid,											\
-		GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)						\
-		{ return ptr CreateList(mat, texid, ty, vtx, count, stride); }										\
-	virtual int CreateList(float radius, int slices, int stacks)											\
-		{ return ptr CreateList(radius, slices, stacks); }													\
-	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks)							\
-		{ return ptr CreateList(mat, radius, slices, stacks); }												\
-	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, 				\
-		size_t count, size_t stride=0)																		\
-		{ return ptr CreateIndexedList(ty, idx, vtx, count, stride); }										\
-	virtual int CreateIndexedList(GRMaterialIf* mat,														\
-		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)			\
-		{ return ptr CreateIndexedList(mat, ty, idx, vtx, count, stride); }									\
-	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 									\
-		GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)			\
-		{ return ptr CreateShaderIndexedList(shader, location, ty, idx, vtx, count, stride); }				\
+	virtual void DrawSphere(float radius, int stacks, int slice)											\
+		{ ptr DrawSphere(radius, stacks, slice); }															\
+	virtual int StartList()																					\
+		{ return ptr StartList(); }																			\
+	virtual void EndList()																					\
+		{ ptr EndList(); }																					\
 	virtual void DrawList(int i){ ptr DrawList(i); }														\
 	virtual void ReleaseList(int i){ ptr ReleaseList(i); }													\
 	virtual void DrawFont(Vec2f pos, const std::string str){ ptr DrawFont(pos, str); }						\

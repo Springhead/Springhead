@@ -24,11 +24,10 @@ GRSphere::~GRSphere(){
 void GRSphere::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);
 	render = r;	
-	if (material){
-		list = render->CreateList(material->Cast(), radius, slices, stacks);
-	}else{
-		list = render->CreateList(radius, slices, stacks);
-	}
+	list = render->StartList();
+	if (material) render->SetMaterial(material->Cast());
+	render->DrawSphere(radius, slices, stacks);
+	render->EndList();
 }
 void GRSphere::Render(GRRenderIf* r){
 	if (r!=render || !list) CreateList(r);

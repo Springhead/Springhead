@@ -29,10 +29,14 @@ NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
 	if (rv) return rv;
 
 	//	なければ，phSceneとgrSceneについて自分と子孫を探す。
-	rv = DCAST(PHScene, phScene)->FindObjectFromDescendant(name, cls);
-	if (rv) return rv;
-	rv = DCAST(GRScene, grScene)->FindObjectFromDescendant(name, cls);
-	if (rv) return rv;
+	if (phScene){
+		rv = DCAST(PHScene, phScene)->FindObjectFromDescendant(name, cls);
+		if (rv) return rv;
+	}
+	if (grScene){
+		rv = DCAST(GRScene, grScene)->FindObjectFromDescendant(name, cls);
+		if (rv) return rv;
+	}
 
 	//	それでもないならば、namespaceを削って、もう一度検索
 	size_t pos = name.find('/');
@@ -54,7 +58,7 @@ FWObjectIf* FWScene::CreateObject(const PHSolidDesc& soliddesc, const GRFrameDes
 	FWObjectDesc desc;
 	FWObjectIf* obj = DCAST(FWObjectIf, CreateObject(FWObjectIf::GetIfInfoStatic(), &desc));
 	obj->SetPHSolid(GetPHScene()->CreateSolid(soliddesc));
-	obj->SetGRFrame(DCAST(GRFrameIf, GetGRScene()->CreateVisual(framedesc)));
+	obj->SetGRFrame(DCAST(GRFrameIf, GetGRScene()->CreateVisual(framedesc.GetIfInfo(), framedesc)));
 	AddChildObject(obj);
 	return obj;
 }
@@ -158,7 +162,8 @@ void FWScene::Sync(){
 			pose.Ori() = device->GetOri();
 	*/		if (!camera->GetFrame()){
 				GRSceneIf* scene = DCAST(GRSceneIf, camera->GetNameManager());
-				if (scene) camera->SetFrame(DCAST(GRFrameIf, scene->CreateVisual(GRFrameDesc())));
+				if (scene) camera->SetFrame(DCAST(GRFrameIf, 
+					scene->CreateVisual(GRFrameIf::GetIfInfoStatic(), GRFrameDesc())));
 			}
 			if (camera->GetFrame()){
 				Affinef af;
@@ -169,7 +174,7 @@ void FWScene::Sync(){
 	}
 }
 void FWScene::Step(){
-	phScene->Step();
+	if (phScene) phScene->Step();
 }
 
 void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){

@@ -20,7 +20,8 @@ GRBlendMesh::~GRBlendMesh(){
 	}
 }
 void GRBlendMesh::CreateList(GRRenderIf* r){
-
+	assert(0);
+/*
 	for (unsigned int id=0; id<list.size(); ++id){
 		if (list[id])	render->ReleaseList(list[id]);
 	}
@@ -157,6 +158,7 @@ void GRBlendMesh::CreateList(GRRenderIf* r){
 		int base = render->CreateShaderIndexedList(shader, &location, GRRenderIf::TRIANGLES, &*faces.begin(), &*vtx.begin(), faces.size());
 		list.push_back(base);		
 	}
+	*/
 }
 
 void GRBlendMesh::Render(GRRenderIf* r){

@@ -23,13 +23,6 @@ struct GRRenderIf;
 
 /** @brief ビジュアルのディスクリプタ */
 struct GRVisualDesc{
-	enum VisualType{
-		FRAME,
-		MESH,
-		MATERIAL,
-		CAMERA,
-		LIGHT
-	} type;
 };
 
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
@@ -46,11 +39,6 @@ struct GRFrameTransformMatrix{
 	Affinef transform;
 };
 
-///	@brief GRFrame のDesc．座標系を指定する
-struct GRFrameDesc : GRVisualDesc{
-	Affinef transform;
-	GRFrameDesc(){ type = FRAME; }
-};
 	
 /**	@brief	グラフィックスシーングラフのツリーのノード．座標系を持つ．*/
 struct GRFrameIf: public GRVisualIf{
@@ -78,6 +66,11 @@ struct GRFrameIf: public GRVisualIf{
 	virtual void SetTransform(const Affinef& af)=0;
 
 	virtual void Print(std::ostream& os) const =0;
+};
+///	@brief GRFrame のDesc．座標系を指定する
+struct GRFrameDesc:public GRVisualDesc{
+	DESC_DEF_FOR_OBJECT(GRFrame);
+	Affinef transform;
 };
 
 //@}

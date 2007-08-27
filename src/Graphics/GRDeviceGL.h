@@ -102,23 +102,12 @@ public:
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	///	ダイレクト形式による DiplayList の作成
-	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
-	///	ダイレクト形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
-	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
-	/// 球オブジェクトの DisplayList の作成
-	virtual int CreateList(float radius, int slices, int stacks);
-	/// 球オブジェクトの DisplayList の作成（マテリアル、テクスチャの設定も行う）
-	virtual int CreateList(GRMaterialIf* mat,  float radius, int slices, int stacks);
-	///	インデックス形式によるDiplayListの作成
-	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）
-	virtual int CreateIndexedList(GRMaterialIf* mat, 
-								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
-	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 
-										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);	
+	///	球体の描画
+	void DrawSphere(float radius, int slices, int stacks);
+	///	DiplayList の作成(記録開始)
+	virtual int StartList();
+	///	DiplayList の作成の終了(記録終了)
+	virtual void EndList();
 	///	DisplayListの表示
 	virtual void DrawList(int i);
 	///	DisplayListの解放

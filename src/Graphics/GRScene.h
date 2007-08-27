@@ -40,7 +40,8 @@ public:
 	///	ƒV[ƒ“‚ğ‹ó‚É‚·‚éD
 	void Clear();
 
-	virtual GRVisualIf*  CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent = NULL);
+	virtual GRVisualIf* CreateVisual(const IfInfo* info, 
+		const GRVisualDesc& desc, GRFrameIf* parent = NULL);
 	virtual GRFrameIf* GetWorld(){return world->Cast();}
 	virtual void		SetCamera(const GRCameraDesc& desc);
 	virtual GRCameraIf* GetCamera(){return camera->Cast();}

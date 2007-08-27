@@ -18,13 +18,22 @@ class GRMaterial;
 /**	@class	GRMesh
     @brief	グラフィックスシーングラフでの座標系を表す． */
 class GRMesh: public GRVisual, public GRMeshIfInit, public GRMeshDesc{
-	UTRef<GRRenderIf> render;					///< レンダラー
-	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
+	UTRef<GRRenderIf> render;			///< レンダラー
+	unsigned int list;					///< ディスプレイリストの識別子
 
-	/// 頂点フォーマット GRVertexElement に合わせ、ディスプレイリストを作成する．
+	/// 頂点バッファの作成
+	void MakeBuffer();
+	/// 頂点バッファの描画
+	void DrawBuffer(void* vtx);
+	/// ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
-	/// MaterialListのインデックスに合わせ、ディスプレイリストを細分化．
-	void CreateListElement(void* vtx);
+
+	///	頂点フォーマットに合った頂点バッファ
+	float* vtxs;
+	int nVtxs;
+	float* blendedVtxs;
+	const GRVertexElement* vtxFormat;
+	int stride, normalOffset, positionOffset;
 public:
 	OBJECTDEF(GRMesh, GRVisual);
 	ACCESS_DESC(GRMesh);
@@ -33,10 +42,11 @@ public:
 	std::vector<int>                 materialList;			///< マテリアルのインデックスリスト
 
 	struct SkinWeight{
-		std::string name;
+		GRFrame* frame;
 		Affinef offset;
 		std::vector<unsigned> indices;
 		std::vector<float> weights;
+		SkinWeight(): frame(NULL){}
 	};
 	std::vector<SkinWeight>	skinWeights;					///< スキンMeshの場合のskinWeights
 
@@ -44,8 +54,8 @@ public:
 	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
 	  （Xファイルからロードされた面は、すべて三角形分割されているため、
 	   どの面がどのマテリアルを適用するのか判断するためのもの）			*/
-	std::vector<int> originalFaces;				///< 面を構成するための頂点インデックス（三角形分割前の面に対するインデックス）
-	std::vector<unsigned int> elementIndex;		///< 面を構成するための頂点インデックス（三角形分割後の面に対するインデックス）
+	std::vector<int> originalFaces;				///< 三角形分割前の面に対応する頂点
+	std::vector<unsigned int> originalFaceIds;	///< 三角形に対応する分割前の面の番号
 	std::vector<int> faceNormals;				///< 法線インデックス
 
 	GRMesh(const GRMeshDesc& desc=GRMeshDesc());

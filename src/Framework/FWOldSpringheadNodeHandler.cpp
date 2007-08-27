@@ -238,25 +238,25 @@ public:
 			mesh->positions = d.vertices;	// 頂点座標
 			for (int f=0; f < d.nFaces; ++f){		
 				if ((d.faces[f].nFaceVertexIndices == 3) || (d.faces[f].nFaceVertexIndices == 4)) {
+					mesh->originalFaceIds.push_back(f);
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
-					mesh->elementIndex.push_back(f);
 					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[0] );
 					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[2] );
 
 					if (d.faces[f].nFaceVertexIndices == 4){
+						mesh->originalFaceIds.push_back(f);
 						// facesには、面が四角形なら三角形に分割したインデックスをpush
 						mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
 						mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
 						mesh->faces.push_back( d.faces[f].faceVertexIndices[3] );
-						mesh->elementIndex.push_back(f);
 						// originalFaces には、4頂点目のインデックスをpush
 						mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[3] );
 					}
 				}else{
-					fc->ErrorMessage(NULL, NULL, "Number of faces for mesh = 3 or 4.");
+					fc->ErrorMessage(NULL, NULL, "Number of faces for mesh != 3 or 4.");
 				}
 			}
 			//	法線情報
@@ -298,8 +298,9 @@ public:
 						mesh->skinWeights.back().indices.push_back(sw->vertexIndices[i]);
 						mesh->skinWeights.back().weights.push_back(sw->weights[i]);
 					}
-					mesh->skinWeights.back().name = sw->transformNodeName;
 					mesh->skinWeights.back().offset = sw->matrixOffset;
+					fc->links.push_back(DBG_NEW UTLinkTask(mesh->Cast(), 
+						sw->transformNodeName, mesh->GetNameManager()));
 				}
 			}
 		}else{

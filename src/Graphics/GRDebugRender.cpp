@@ -54,6 +54,7 @@ GRDebugRender::GRDebugRender(){
 
 /// シーン内の全てのオブジェクトをレンダリングする
 void GRDebugRender::DrawScene(PHSceneIf* scene){
+	if (!scene) return;
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
 		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)num);

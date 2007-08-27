@@ -30,14 +30,6 @@
 	desc->ifInfo = GRVisualIf::GetIfInfoStatic();
 	((IfInfo*)GRVisualIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRVisualDesc>;
-	field = desc->AddField("VisualType", "enum", "type",  "");
-	field->AddEnumConst("FRAME");
-	field->AddEnumConst("MESH");
-	field->AddEnumConst("MATERIAL");
-	field->AddEnumConst("CAMERA");
-	field->AddEnumConst("LIGHT");
-	field->AddEnumConst("LIGHT");
-	field->offset = int((char*)(&pGRVisualDesc->type) - (char*)pGRVisualDesc);
 	db->RegisterDesc(desc);
 	
 	GRFrameTransformMatrix* pGRFrameTransformMatrix = NULL;

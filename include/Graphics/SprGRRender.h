@@ -22,7 +22,7 @@ namespace Spr{;
 
 /**
  *	@file SprGRRender.h
- *	@brief グラフィックスレンダラーの基本クラス、基本インタフェース
+ *	@brief グラフィックスレンダラーのインタフェース、基本インタフェース
  */
 
 /**	@brief	テキスト描画のフォント */
@@ -58,8 +58,13 @@ public:
 	}
 };
 	
+/** @brief 光源のインタフェース		*/
+struct GRLightIf: public GRVisualIf{
+	IF_DEF(GRLight);
+};
 /**	@brief	光源		*/
 struct GRLightDesc : GRVisualDesc{
+	DESC_DEF_FOR_OBJECT(GRLight);
     Vec4f ambient;		///<	環境光
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
@@ -84,7 +89,6 @@ struct GRLightDesc : GRVisualDesc{
 	float spotInner;	///<	スポットライトの中心部分(内部コーン)（deviceがDirectXの場合のみ利用可能） 0..spotCutoff
 	float spotCutoff;	///<	スポットライトの広がり角度(度)(外部コーン) 0..π(pi)
 	GRLightDesc(){
-		type = LIGHT;
 		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
 		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
 		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
@@ -100,13 +104,16 @@ struct GRLightDesc : GRVisualDesc{
 	}
 };
 
-/** @brief 光源の基本クラス		*/
-struct GRLightIf: public GRVisualIf{
-	IF_DEF(GRLight);
-};
 
+
+/** @brief　材質のインタフェース　　	*/
+struct GRMaterialIf: public GRVisualIf{
+	IF_DEF(GRMaterial);
+	virtual bool IsOpaque() const = 0;
+};
 /**	@brief	材質	*/
 struct GRMaterialDesc : GRVisualDesc{
+	DESC_DEF_FOR_OBJECT(GRMaterial);
 	Vec4f ambient;					///<	環境光に対する反射率
 	Vec4f diffuse;					///<	拡散光に対する反射率
 	Vec4f specular;					///<	鏡面光に対する反射率
@@ -115,7 +122,6 @@ struct GRMaterialDesc : GRVisualDesc{
 	std::string	texname;			///<	テクスチャファイル名
 
 	GRMaterialDesc(){
-		type = MATERIAL;
 		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);
 		diffuse = Vec4f(0.8, 0.8, 0.8, 1.0);
 		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
@@ -136,34 +142,28 @@ struct GRMaterialDesc : GRVisualDesc{
 	}	
 };
 
-/** @brief　材質の基本クラス　　	*/
-struct GRMaterialIf: public GRVisualIf{
-	IF_DEF(GRMaterial);
-	virtual bool IsOpaque() const = 0;
-};
-
-/**	@brief	カメラの情報			*/
-struct GRCameraDesc : GRVisualDesc{
-	Vec2f size;				///<	スクリーンのサイズ
-	Vec2f center;			///<	カメラからのスクリーンのずれ
-	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
-	//GRCameraDesc():center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){}
-	GRCameraDesc(Vec2f sz = Vec2f(0.2f, 0.0f), Vec2f c = Vec2f(), float f = 0.1f, float b = 500.0f):
-		size(sz), center(c), front(f), back(b) { type = CAMERA;}
-};
-
 struct GRFrameIf;
-
+///	カメラのインタフェース
 struct GRCameraIf: public GRVisualIf{
 	IF_DEF(GRCamera);
 	virtual GRFrameIf* GetFrame()=0;
 	virtual void SetFrame(GRFrameIf* fr)=0;
 };
+/**	@brief	カメラの情報			*/
+struct GRCameraDesc : GRVisualDesc{
+	DESC_DEF_FOR_OBJECT(GRCamera);
+	Vec2f size;				///<	スクリーンのサイズ
+	Vec2f center;			///<	カメラからのスクリーンのずれ
+	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
+	//GRCameraDesc():center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){}
+	GRCameraDesc(Vec2f sz = Vec2f(0.2f, 0.0f), Vec2f c = Vec2f(), float f = 0.1f, float b = 500.0f):
+		size(sz), center(c), front(f), back(b) {}
+};
 
 struct GRDeviceIf;
 typedef unsigned GRHandler;
 
-/**	@brief	グラフィックスレンダラーの基本クラス（ユーザインタフェース） */
+/**	@brief	グラフィックスレンダラーのインタフェース（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
 	IF_DEF(GRRenderBase);
 
@@ -255,21 +255,13 @@ struct GRRenderBaseIf: public ObjectIf{
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}	
-	///	ダイレクト形式による DiplayList の作成
-	virtual int CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
-	virtual int CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
-	/// 球オブジェクトの DisplayList の作成
-	virtual int CreateList(float radius, int slices, int stacks)=0;
-	virtual int CreateList(GRMaterialIf* mat, float radius, int slices, int stacks)=0;
-	///	インデックス形式による DiplayList の作成
-	virtual int CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
-	virtual int CreateIndexedList(GRMaterialIf* mat, 
-								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
-	///	インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
-	virtual int CreateShaderIndexedList(GRHandler shader, void* location, 
-									GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;	
+	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}	///	球体を描画
+	virtual void DrawSphere(float radius, int slices, int stacks)=0;
+	
+	///	DiplayList の作成(記録開始)
+	virtual int StartList()=0;
+	///	DiplayList の終了(記録終了)
+	virtual void EndList()=0;
 	///	DisplayListの表示
 	virtual void DrawList(int i)=0;
 	///	DisplayListの解放
@@ -314,7 +306,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void GetShaderLocation(GRHandler shader, void* location)=0;	
 };
 
-/**	@brief	グラフィックスレンダラーの基本クラス（デバイスの設定、カメラの設定） */
+/**	@brief	グラフィックスレンダラーのインタフェース（デバイスの設定、カメラの設定） */
 struct GRRenderIf: public GRRenderBaseIf{
 	IF_DEF(GRRender);
 	///	デバイスの設定
@@ -346,7 +338,7 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 };
 */
 
-/**	@brief	デバッグ情報レンダラーの基本クラス */
+/**	@brief	デバッグ情報レンダラーのインタフェース */
 struct GRDebugRenderIf:public GRRenderIf{
 	IF_DEF(GRDebugRender);
 	///	レンダラーで用意してある材質(24種類)

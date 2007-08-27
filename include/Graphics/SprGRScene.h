@@ -48,7 +48,8 @@ struct GRSceneIf: public SceneIf{
 		フレーム、メッシュ、マテリアル、あるいはライトを作成して親フレームparentの下に追加する。
 		parentがNULLの場合はワールドフレームが親となる。
 	 */
-	virtual GRVisualIf*  CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent = NULL)=0;
+	virtual GRVisualIf*  CreateVisual(
+		const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent = NULL)=0;
 
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース

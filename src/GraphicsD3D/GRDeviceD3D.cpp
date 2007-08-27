@@ -269,33 +269,9 @@ void GRDeviceD3D::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_
 void GRDeviceD3D::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	DSTR << "GRDeviceD3D::DrawIndexed() is not implemented." << std::endl;
 }
-///	ダイレクト形式による DiplayList の作成
-int GRDeviceD3D::CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
-	DSTR << "GRDeviceD3D::CreateList() is not implemented." << std::endl;
-	return GRDevice::CreateList(ty, vtx, count, stride);
-}
-///	ダイレクト形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）	
-int GRDeviceD3D::CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
-	DSTR << "GRDeviceD3D::CreateList() is not implemented." << std::endl;
-	return GRDevice::CreateList(mat, texid, ty, vtx, count, stride);
-}
-/// 球オブジェクトの DisplayList の作成	
-int GRDeviceD3D::CreateList(float radius, int slices, int stacks){
-	DSTR << "GRDeviceD3D::CreateList() is not implemented." << std::endl;
-	return GRDevice::CreateList(radius, slices, stacks);
-}
-/// 球オブジェクトの DisplayList の作成（マテリアル、テクスチャの設定も行う）	
-int GRDeviceD3D::CreateList(GRMaterialIf* mat, float radius, int slices, int stacks){
-	DSTR << "GRDeviceD3D::CreateList() is not implemented." << std::endl;
-	return GRDevice::CreateList(mat, radius, slices, stacks);
-}	
-///	インデックス形式によるDiplayListの作成	
-int GRDeviceD3D::CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	DSTR << "GRDeviceD3D::CreateIndexedList() is not implemented." << std::endl;
-	return GRDevice::CreateIndexedList(ty, idx, vtx, count, stride);
-}
+
 ///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）	
+/*
 int GRDeviceD3D::CreateIndexedList(GRMaterialIf* mat,  
 								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	displayLists.push_back(DisplayList());
@@ -355,12 +331,7 @@ int GRDeviceD3D::CreateIndexedList(GRMaterialIf* mat,
 
 	return displayLists.size()-1;
 }
-/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
-int GRDeviceD3D::CreateShaderIndexedList(GRHandler shader, void* location, 
-										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	DSTR << "GRDeviceD3D::CreateShaderIndexedList() is not implemented." << std::endl;
-	return GRDevice::CreateShaderIndexedList(shader, location, ty, idx, vtx, count, stride);
-}	
+*/
 ///	DisplayListの表示	
 void GRDeviceD3D::DrawList(int list){
 	if(list==0) return;

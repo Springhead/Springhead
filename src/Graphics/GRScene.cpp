@@ -36,15 +36,16 @@ void GRScene::Clear(){
 	world = NULL;
 	Init();
 }
-GRVisualIf* GRScene::CreateVisual(const GRVisualDesc& desc, GRFrameIf* parent){
+GRVisualIf* GRScene::CreateVisual(const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent){
 	GRVisual* v = NULL;
-	switch(desc.type){
-	case GRVisualDesc::FRAME:	 v = DBG_NEW GRFrame((const GRFrameDesc&)desc); break;
-	case GRVisualDesc::MATERIAL: v = DBG_NEW GRMaterial((const GRMaterialDesc&)desc); break;
-	case GRVisualDesc::LIGHT:	 v = DBG_NEW GRLight((const GRLightDesc&)desc); break;
-	case GRVisualDesc::MESH:	 v = DBG_NEW GRMesh((const GRMeshDesc&)desc); break;
-	default:;
-	}
+	if (info==GRFrameIf::GetIfInfoStatic()) 
+		v = DBG_NEW GRFrame((const GRFrameDesc&)desc);
+	else if (info==GRMaterialIf::GetIfInfoStatic()) 
+		v = DBG_NEW GRMaterial((const GRMaterialDesc&)desc);
+	else if (info==GRLightIf::GetIfInfoStatic()) 
+		v = DBG_NEW GRLight((const GRLightDesc&)desc);
+	else if (info==GRMeshIf::GetIfInfoStatic()) 
+		v = DBG_NEW GRMesh((const GRMeshDesc&)desc);
 	if(v){
 		v->SetNameManager(Cast());
 		if(parent) parent->AddChildObject(v->Cast());

@@ -269,158 +269,19 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
-///	ダイレクト形式による DiplayList の作成
-int GRDeviceGL::CreateList(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
-	int list = glGenLists(1);
-	glNewList(list, GL_COMPILE);
-	DrawDirect(ty, vtx, count, stride);
-	glEndList();
-	return list;
-}
-///	ダイレクト形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）	
-int GRDeviceGL::CreateList(GRMaterialIf* mat, unsigned int texid, 
-						   GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
-	int list = glGenLists(1);
-	glNewList(list, GL_COMPILE);
-	SetMaterial(*DCAST(GRMaterial, mat));
-	if (texid){
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, texid);
-	}else{
-		glDisable(GL_TEXTURE_2D);
-	}
-	DrawDirect(ty, vtx, count, stride);
-	glEndList();
-	return list;
-}
-/// 球オブジェクトの DisplayList の作成	
-int GRDeviceGL::CreateList(float radius, int slices, int stacks){
-	int list = glGenLists(1);
-	glNewList(list, GL_COMPILE);
+void GRDeviceGL::DrawSphere(float radius, int slices, int stacks){
 	glutSolidSphere(radius, slices, stacks);
-	glEndList();
-	return list;
 }
-/// 球オブジェクトの DisplayList の作成（マテリアル、テクスチャの設定も行う）	
-int GRDeviceGL::CreateList(GRMaterialIf* mat, float radius, int slices, int stacks){
+
+///	DiplayList の作成
+int GRDeviceGL::StartList(){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
-	GRMaterialDesc* desc = DCAST(GRMaterial, mat);
-	SetMaterial(*desc);
-	unsigned int texid = LoadTexture(desc->texname);
-	if (texid){
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, texid);
-		glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-		glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
-		glEnable(GL_TEXTURE_GEN_S);
-		glEnable(GL_TEXTURE_GEN_T);
-	}else{
-		glDisable(GL_TEXTURE_2D);
-	}		
-	glutSolidSphere(radius, slices, stacks);
-	glEndList();
-	return list;	
-}	
-///	インデックス形式によるDiplayListの作成	
-int GRDeviceGL::CreateIndexedList(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	int list = glGenLists(1);
-	glNewList(list, GL_COMPILE);
-	DrawIndexed(ty, idx, vtx, count, stride);
-	glEndList();
 	return list;
 }
-///	インデックス形式による DiplayList の作成（マテリアル、テクスチャの設定も行う）	
-int GRDeviceGL::CreateIndexedList(GRMaterialIf* mat,  
-								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	int list = glGenLists(1);						  
-	glNewList(list, GL_COMPILE);
-	GRMaterialDesc* desc = DCAST(GRMaterial, mat);
-	SetMaterial(*desc);								  	
-	unsigned int texid = LoadTexture(desc->texname);
-	if (texid){
-		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, texid);
-	}else{
-		glDisable(GL_TEXTURE_2D);
-	}
-	DrawIndexed(ty, idx, vtx, count, stride);
+void GRDeviceGL::EndList(){
 	glEndList();
-	return list;
 }
-/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
-int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location, 
-										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
-	int list = glGenLists(1);
-	glNewList(list, GL_COMPILE);
-
-	if (!stride) stride = vertexSize;	
-	GLenum mode = GL_TRIANGLES;
-	switch(ty) {
-		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
-		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
-		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
-		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
-		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
-		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
-		case GRRenderBaseIf::QUADS:				mode = GL_QUADS;			break;
-		default:				/* DO NOTHING */			break;
-	}											
-	
-	if ((shaderType == GRShaderFormat::shP3fB4f)		// 他のGRShaderFormatは未対応	
-			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
-			|| (shaderType == GRShaderFormat::shC3fP3fB4f))			
-	{
-		glUseProgram(shader);
-
-		// ロケーション型へのキャスト
-		GRShaderFormat::SFBlendLocation *loc = (GRShaderFormat::SFBlendLocation *)location;
-		if (loc) {
-			glUniformMatrix4fv(loc->uBlendMatrix, 4, false, (GLfloat *)&*blendMatrix.begin());
-			
-			glEnableVertexAttribArray(loc->aWeight); 
-			glEnableVertexAttribArray(loc->aMatrixIndices); 
-			glEnableVertexAttribArray(loc->aNumMatrix); 
-			
-			// vtxを頂点フォーマット型へキャスト
-			if (shaderType == GRShaderFormat::shP3fB4f) {
-				GRVertexElement::VFP3fB4f* basePointer = (GRVertexElement::VFP3fB4f *)vtx;
-				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
-				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
-				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
-			} else if(shaderType == GRShaderFormat::shC4bP3fB4f){
-				GRVertexElement::VFC4bP3fB4f* basePointer = (GRVertexElement::VFC4bP3fB4f *)vtx;
-				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
-				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
-				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
-			} else if(shaderType == GRShaderFormat::shC3fP3fB4f){
-				GRVertexElement::VFC3fP3fB4f* basePointer = (GRVertexElement::VFC3fP3fB4f *)vtx;
-				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
-				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
-				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
-			}
-
-			glInterleavedArrays(vertexFormatGl, stride, vtx);
-			glDrawElements(mode, count, GL_UNSIGNED_INT, idx);	
-	
-			glDisableVertexAttribArray(loc->aWeight);
-			glDisableVertexAttribArray(loc->aMatrixIndices);
-			glDisableVertexAttribArray(loc->aNumMatrix);
-
-		} else {
-			DSTR << "To Be Implemented. " << std::endl;		
-			assert(0);
-		}
-	} else {
-		DSTR << "To Be Implemented. " << std::endl;
-		assert(0);
-	}									
-										
-	glEndList();
-
-
-	return list;
-}	
 ///	DisplayListの表示	
 void GRDeviceGL::DrawList(int list){
 	glCallList(list);

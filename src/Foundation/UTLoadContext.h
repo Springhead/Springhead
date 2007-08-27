@@ -150,11 +150,9 @@ public:
 class UTLinkTask:public UTLoadTask{
 public:
 	ObjectIf* linkFrom;
-	ObjectIf* linkTo;
-	UTLinkTask(ObjectIf* from, ObjectIf* to):linkFrom(from), linkTo(to){}
-	virtual void Execute(UTLoadContext* ctx){
-		linkFrom->AddChildObject(linkTo);
-	};
+	UTString linkTo;
+	UTLinkTask(ObjectIf* from, UTString to, NameManagerIf* nm);
+	virtual void Execute(UTLoadContext* ctx);
 	virtual ~UTLinkTask(){}
 };
 

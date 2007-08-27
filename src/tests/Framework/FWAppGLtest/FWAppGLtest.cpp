@@ -30,7 +30,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	app = new MyApp;
 	app->Init(argc, argv);
 #ifdef _DEBUG
-	app->GetSdk()->SetDebugMode(true);
+//	app->GetSdk()->SetDebugMode(true);
 #endif
 	app->GetSdk()->Clear();
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
@@ -41,7 +41,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app->GetSdk()->GetPHSdk()->CreateShape(boxdesc));
 
-	app->GetSdk()->LoadScene("test.x");
+	app->GetSdk()->LoadScene("test2.x");
 //	app->GetFWScene()->AddHumanInterface(new HIMouse);
 
 	app->Start();

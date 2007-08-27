@@ -8,6 +8,7 @@
 #include "UTLoadContext.h"
 #include "UTLoadHandler.h"
 #include "UTTypeDesc.h"
+#include "Scene.h"
 #include <Base/Affine.h>
 #include <fstream>
 #include <sstream>
@@ -312,6 +313,20 @@ void UTDataLinkTask::Execute(UTLoadContext* ctx){
 		ctx->ErrorMessage(info, pos, err.c_str());
 	}
 }
+
+
+
+UTLinkTask::UTLinkTask(ObjectIf* from, UTString to, NameManagerIf* nm):
+	linkFrom(from), linkTo(to){
+		SetNameManager(nm);
+		assert(nameManager);
+}
+void UTLinkTask::Execute(UTLoadContext* ctx){
+	assert(nameManager);
+	ObjectIf* to = nameManager->FindObject(linkTo);
+	assert(to);
+	linkFrom->AddChildObject(to);
+};
 
 //---------------------------------------------------------------------------
 //	UTNameMangerForData

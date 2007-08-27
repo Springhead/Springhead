@@ -20,20 +20,18 @@
 
 namespace Spr{;
 
+/**	@brief	グラフィックスで使う表示用のMesh */
+struct GRMeshIf: public GRVisualIf{
+	IF_DEF(GRMesh);
+};
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
 struct GRMeshDesc : GRVisualDesc{
+	DESC_DEF_FOR_OBJECT(GRMesh);
 	std::vector<Vec3f> positions;				///< 頂点の座標
 	std::vector<Vec3f> normals;					///< 頂点の法線
 	std::vector<Vec4f> colors;					///< 頂点の色
 	std::vector<Vec2f> texCoords;				///< テクスチャUV
 	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
-	GRMeshDesc(){ type = MESH; }
-};
-
-
-/**	@brief	グラフィックスで使う表示用のMesh */
-struct GRMeshIf: public GRVisualIf{
-	IF_DEF(GRMesh);
 };
 
 
