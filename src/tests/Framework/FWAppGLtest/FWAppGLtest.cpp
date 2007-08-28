@@ -5,6 +5,7 @@
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
 #include <HumanInterface/HIBase.h>
+#include <GL/glut.h>
 
 using namespace Spr;
 
@@ -21,9 +22,26 @@ public:
 		if (key==0x1b){
 			exit(0);
 		}
+		GRCameraIf* cam;
+		app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 		Affinef af = cam->GetFrame()->GetTransform();
+		af =  Affinef::Rot(Rad(5), 'y') * af;
+		cam->GetFrame()->SetTransform(af);
 	}
 };
 
+void idle(void){
+/*	Affinef afV;
+	afV.LookAt(Vec3f(10,0,0), Vec3f(0,1,0));
+*/
+	GRFrameIf* frLeftFoot;
+	app->GetSdk()->GetScene()->GetGRScene()->FindObject( frLeftFoot, "LeftFoot");
+	static Affinef af;
+	af = af * Affinef::Rot(Rad(5), 'X');
+	frLeftFoot->SetTransform(af);
+	glutPostRedisplay();
+
+}
 
 int SPR_CDECL main(int argc, char* argv[]){
 	MyApp app_;
@@ -32,6 +50,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 #ifdef _DEBUG
 //	app->GetSdk()->SetDebugMode(true);
 #endif
+	glutIdleFunc(idle);
 	app->GetSdk()->Clear();
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
 	PHSceneIf* phscene = app->GetSdk()->GetScene()->GetPHScene();
