@@ -302,9 +302,9 @@ void CRHingeHuman::CreateLowerArm(LREnum lr){
 	// Joint -- Elbow ([p]UpperArm-[c]LowerArm)
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Pos()   = Vec3d(0, -upperArmLength / 2.0, 0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerArmLength / 2.0, 0);
-	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightLowerArm.w, lr*oriRightLowerArm.x, oriRightLowerArm.y, oriRightLowerArm.z).Inv() * Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightLowerArm.w, lr*oriRightLowerArm.x, oriRightLowerArm.y, oriRightLowerArm.z).Inv() * Quaternionf::Rot(Rad(0), 'y');
 	hingeDesc.spring           = springElbow;
 	hingeDesc.damper           = damperElbow;
 	hingeDesc.origin           = Rad(0);
