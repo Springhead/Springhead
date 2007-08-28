@@ -52,6 +52,24 @@
 	field->offset = int((char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc);
 	db->RegisterDesc(desc);
 	
+	GRAnimationDesc* pGRAnimationDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRAnimationDesc");
+	desc->size = sizeof(GRAnimationDesc);
+	desc->ifInfo = GRAnimationIf::GetIfInfoStatic();
+	((IfInfo*)GRAnimationIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRAnimationDesc>;
+	field = desc->AddField("vector", "Animation", "animations", "");
+	field->offset = int((char*)&(pGRAnimationDesc->animations) - (char*)pGRAnimationDesc);
+	db->RegisterDesc(desc);
+	
+	GRAnimationSetDesc* pGRAnimationSetDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRAnimationSetDesc");
+	desc->size = sizeof(GRAnimationSetDesc);
+	desc->ifInfo = GRAnimationSetIf::GetIfInfoStatic();
+	((IfInfo*)GRAnimationSetIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRAnimationSetDesc>;
+	db->RegisterDesc(desc);
+	
 	GRMeshDesc* pGRMeshDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("GRMeshDesc");
 	desc->size = sizeof(GRMeshDesc);

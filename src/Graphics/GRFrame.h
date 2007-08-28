@@ -51,5 +51,38 @@ public:
 	virtual void SetTransform(const Affinef& af){ transform = af; }
 	void Print(std::ostream& os) const ;
 };
+
+
+class GRAnimation: public SceneObject, public GRAnimationIfInit, public GRAnimationDesc{
+public:
+	OBJECTDEF(GRAnimation, SceneObject);
+	bool activated;
+	float duration;
+	float weight;
+	float weightTo;
+	float time;
+	GRAnimation();
+	///	éûçèÇê›íËÇ∑ÇÈ
+	void SetTime(float time);
+};
+
+class GRAnimationSet: public SceneObject, public GRAnimationSetIfInit{
+	typedef std::vector< UTRef<GRAnimation> > Animations;
+	Animations animations;
+	Animations activeAnimations;
+public:
+	OBJECTDEF(GRAnimationSet, SceneObject);
+	ObjectIf* GetChildObject(size_t p);
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
+	virtual int NChildObject();
+	virtual void Activate(UTString name, 
+		float weightStart=1, float weightEnd=1, float duration=-1);
+	virtual void Deactivate(UTString name);
+	///	éûçèÇê›íËÇ∑ÇÈ
+	void SetTime(float time);
+};
+
+
 }
 #endif

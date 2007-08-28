@@ -9,8 +9,14 @@
 #include "GRFrame.h"
 
 namespace Spr{;
+//-----------------------------------------------------------------
+//	GRVisual
+//
 IF_OBJECT_IMP_ABST(GRVisual, NamedObject);
 
+//-----------------------------------------------------------------
+//	GRFrame
+//
 IF_OBJECT_IMP(GRFrame, GRVisual);
 GRFrame::GRFrame(const GRFrameDesc& desc):GRFrameDesc(desc){
 	parent = NULL;
@@ -86,5 +92,79 @@ void GRFrame::Print(std::ostream& os) const {
 	GRVisual::PrintChildren(os);
 	GRVisual::PrintFooter(os);
 }
+
+
+//-----------------------------------------------------------------
+//	GRAnimation
+//
+IF_OBJECT_IMP(GRAnimation, SceneObject);
+GRAnimation::GRAnimation(): activated(false){
+	weight = 0;
+	weightTo = 0;
+	duration = 0;
+};
+
+void GRAnimation::SetTime(float time){
+/*	
+	for(vector<GRAnimationDesc::Animation>::iterator it = animations.begin(); 
+		it != animations.end(); ++it){
+		GRAnimationDesc::Animation& anim = *it;
+		for(int i=0; i<	anim.keys.size(); ++i){
+			if (anim.keys[i].time > time){
+				if (i==0){	//	i=0‚¾‚¯‚ðƒZƒbƒg
+
+				}
+
+			}
+		}
+	}
+	*/
+}
+
+//-----------------------------------------------------------------
+//	GRAnimationSet
+//
+IF_OBJECT_IMP(GRAnimationSet, SceneObject);
+
+bool GRAnimationSet::AddChildObject(ObjectIf* o){
+	GRAnimation* ani = o->Cast();
+	if (ani){
+		animations.push_back(ani);
+	}
+	return false;
+}
+bool GRAnimationSet::DelChildObject(ObjectIf* o){
+	GRAnimation* ani = o->Cast();
+	if (ani){
+		for(Animations::iterator it = animations.begin(); it != animations.end(); ++it){
+			if(ani == *it){
+				animations.erase(it);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+int GRAnimationSet::NChildObject(){
+	return animations.size();
+}
+ObjectIf* GRAnimationSet::GetChildObject(size_t p){
+	return animations[p]->Cast();
+}
+
+void GRAnimationSet::Activate(UTString name, float weightStart, float weightEnd, float duration){
+	for(Animations::iterator it = animations.begin(); it!=animations.end(); ++it){
+		if (name.compare((*it)->GetName())==0){
+			(*it)->activated = true;
+
+		}
+	}
+
+}
+
+void GRAnimationSet::Deactivate(UTString name){
+	
+}
+
 
 }

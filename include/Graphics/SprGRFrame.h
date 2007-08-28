@@ -73,6 +73,43 @@ struct GRFrameDesc:public GRVisualDesc{
 	Affinef transform;
 };
 
+
+/**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
+struct GRAnimationIf: public SceneObjectIf{
+	IF_DEF(GRAnimation);
+};
+///	@brief アニメーションのデスクリプタ XのAnimationSetに対応
+struct GRAnimationDesc{
+	DESC_DEF_FOR_OBJECT(GRAnimation);
+	enum KeyType { ROTATION, SCALE, POSITION, MATRIX };
+	struct Key{
+		unsigned time;				//	時刻
+		std::vector<float> values;	//	変換の値
+	};
+	///	キーフレーム XのAnimationKeyに対応
+	struct AnimationKey{
+		KeyType keyType;			//	変換の種類
+		std::vector<Key> keys;		//	キーフレーム(時刻と変換のセット)たち
+	};
+	///	フレーム１つ分のアニメーション XのAnimationに対応
+	struct Animation{
+		std::vector<AnimationKey> keys;		//	複数のキーフレーム
+		std::vector<GRFrameIf*> targets;	//	対象のフレーム
+	};
+	///	アニメーション＝ひとつの行動に対応するアニメーション＝複数のフレームのアニメーション
+	std::vector<Animation> animations;
+};
+
+/**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
+struct GRAnimationSetIf: public SceneObjectIf{
+	IF_DEF(GRAnimationSet);
+};
+///	@brief アニメーションセットのデスクリプタ
+struct GRAnimationSetDesc{
+	DESC_DEF_FOR_OBJECT(GRAnimationSet);
+};
+
+
 //@}
 }
 #endif

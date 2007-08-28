@@ -34,7 +34,6 @@ struct GRMeshDesc : GRVisualDesc{
 	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
 };
 
-
 //@}
 }
 #endif

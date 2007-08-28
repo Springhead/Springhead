@@ -43,6 +43,7 @@ public:
 
 	struct SkinWeight{
 		GRFrame* frame;
+		Affinef bone;
 		Affinef offset;
 		std::vector<unsigned> indices;
 		std::vector<float> weights;
@@ -69,5 +70,6 @@ public:
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos) ;
 };
+
 }
 #endif

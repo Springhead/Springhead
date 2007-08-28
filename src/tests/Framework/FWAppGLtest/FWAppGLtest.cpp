@@ -19,7 +19,6 @@ public:
 	}
 	void Keyboard(unsigned char key, int x, int y){
 		if (key==0x1b){
-			delete app;
 			exit(0);
 		}
 	}
@@ -27,7 +26,8 @@ public:
 
 
 int SPR_CDECL main(int argc, char* argv[]){
-	app = new MyApp;
+	MyApp app_;
+	app = &app_;
 	app->Init(argc, argv);
 #ifdef _DEBUG
 //	app->GetSdk()->SetDebugMode(true);

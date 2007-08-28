@@ -179,30 +179,16 @@ void GRMesh::Render(GRRenderIf* r){
 				blendedVtxs[v*stride + positionOffset+2] = 0;
 			}
 			for(int i=0; i<skinWeights.size(); ++i){
-				Affinef afBone = skinWeights[i].frame->GetWorldTransform();
+				Affinef af = skinWeights[i].bone * skinWeights[i].offset;
 				for(int j=0; j<skinWeights[i].indices.size(); ++j){
 					int v = skinWeights[i].indices[j];
 					float w = skinWeights[i].weights[j];
 					*(Vec3f*)(blendedVtxs + v*stride + positionOffset) += 
-						afBone *
-						(skinWeights[i].offset * *(Vec3f*)(vtxs + v*stride + positionOffset)) * w;
-				}
-			}
-		}
-		if (normalOffset>=0){
-			for(int v=0; v<nVtxs; ++v){
-				blendedVtxs[v*stride + normalOffset] = 0;
-				blendedVtxs[v*stride + normalOffset+1] = 0;
-				blendedVtxs[v*stride + normalOffset+2] = 0;
-			}
-			for(int i=0; i<skinWeights.size(); ++i){
-				Affinef afBone = skinWeights[i].frame->GetWorldTransform();
-				for(int j=0; j<skinWeights[i].indices.size(); ++j){
-					int v = skinWeights[i].indices[j];
-					float w = skinWeights[i].weights[j];
-					*(Vec3f*)(blendedVtxs + v*stride + normalOffset) += 
-						afBone*
-						(skinWeights[i].offset * *(Vec3f*)(vtxs + v*stride + normalOffset)) * w;
+						af * *(Vec3f*)(vtxs + v*stride + positionOffset) * w;
+					if (normalOffset>=0){
+						*(Vec3f*)(blendedVtxs + v*stride + normalOffset) += 
+							af.Rot() * *(Vec3f*)(vtxs + v*stride + normalOffset) * w;
+					}
 				}
 			}
 		}
