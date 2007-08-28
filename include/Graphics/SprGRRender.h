@@ -313,6 +313,8 @@ struct GRRenderIf: public GRRenderBaseIf{
 	virtual void SetDevice(GRDeviceIf* dev)=0;
 	///	カメラの設定
 	virtual void SetCamera(const GRCameraDesc& cam)=0;
+	///	カメラの設定
+	virtual const GRCameraDesc& GetCamera()=0;
 	///	スクリーン(ウィンドウ)サイズ変更時のViewportと射影行列を設定
 	virtual void Reshape(Vec2f pos, Vec2f screenSize)=0;
 };

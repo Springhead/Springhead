@@ -244,6 +244,7 @@ public:
 	virtual void Print(std::ostream& os) const;
 	///	カメラの設定
 	void SetCamera(const GRCameraDesc& c);
+	const GRCameraDesc& GetCamera(){ return camera; }
 	///	スクリーンサイズとプロジェクション行列の設定
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 };

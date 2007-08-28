@@ -28,7 +28,7 @@
 #include <mmsystem.h>
 #define	ESC				27				// Esc key
 
-#define TEST_CASE		3				// テストケース
+#define TEST_CASE		4				// テストケース
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数

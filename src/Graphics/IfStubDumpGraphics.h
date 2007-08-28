@@ -261,6 +261,9 @@ struct GRRenderIfStubTemplate: public GRRenderBaseIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetCamera(const GRCameraDesc & cam){
 		return ((OBJ*)(MIF*)this)->SetCamera(cam);
 	}
+	virtual const GRCameraDesc & GetCamera(){
+		return ((OBJ*)(MIF*)this)->GetCamera();
+	}
 	virtual void Reshape(Vec2f pos, Vec2f screenSize){
 		return ((OBJ*)(MIF*)this)->Reshape(pos, screenSize);
 	}
