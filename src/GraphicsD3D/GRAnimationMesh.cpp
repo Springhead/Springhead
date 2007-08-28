@@ -208,6 +208,7 @@ void GRAnimationMesh::SetMotion(const std::string& name){
 	}
 	controller->SetTrackAnimationSet(0, aniSet);
 	controller->SetTrackEnable(0, TRUE);
+	if(controller) controller->AdvanceTime(0, NULL);
 }
 
 void GRAnimationMesh::SetTime(double time){
@@ -215,12 +216,24 @@ void GRAnimationMesh::SetTime(double time){
 	if(!rootFrame || !controller) return;
 	
 	controller->SetTrackPosition(0, time);
+	if(controller) controller->AdvanceTime(0, NULL);
 }
 
 inline void PoseInvertZAxis(Posed& pose){
 	pose.Ori().x *= -1;
 	pose.Ori().y *= -1;
 	pose.Pos().z *= -1;
+}
+
+Posed GRAnimationMesh::GetBoneKeyframePose(const std::string& name){
+	if(!loaded) if(!LoadMesh()) return Posed::Unit();
+	if(!rootFrame || !controller) return Posed::Unit();
+	
+	Posed result;
+	assert(D3DXFrameFind(rootFrame, name.c_str()));
+	result.FromAffine( *(Affinef*)& ((Frame*)D3DXFrameFind(rootFrame, name.c_str()))->TransformationMatrix );
+	PoseInvertZAxis(result);	// DirectXÀ•WŒn‚©‚çSpringheadÀ•WŒn‚É•ÏŠ·
+	return result;
 }
 
 void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight){
@@ -274,7 +287,6 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 	d3ddevice->GetTransform(D3DTS_WORLD, &world);
 	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						// ‚yŽ²‚ð”½“]‚·‚é‚Ì‚ÅƒJƒŠƒ“ƒO‚à‹t‚É‚·‚é
-	if(controller) controller->AdvanceTime(0, NULL);
 
 	if(effect){
 		d3ddevice->SetTransform(D3DTS_WORLD, &(*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));
@@ -304,7 +316,7 @@ bool GRAnimationMesh::LoadMesh(){
 		return true;
 	}
 	rootFrame = (Frame*)rootFrameBase;
-	if(controller) controller->ResetTime();
+	if(controller) { controller->ResetTime(); controller->AdvanceTime(0, NULL); }
 	loaded = true;
 	InitFrame(rootFrame);
 	return true;
@@ -359,6 +371,8 @@ void GRAnimationMesh::CreateIndexedBlendedMesh(MeshContainer* meshContainer, int
 
 	meshContainer->MeshData.pMesh->GenerateAdjacency(0, adjacency);
 	meshContainer->matrixPaletteSize = min((DWORD)matrixPaletteSize, min(meshContainer->pSkinInfo->GetNumBones(), (caps.MaxVertexBlendMatrixIndex+1)/2));
+	meshContainer->blendedMesh.Release();
+	meshContainer->boneCombinationTableBuffer.Release();
 	meshContainer->pSkinInfo->ConvertToIndexedBlendedMesh(
 		meshContainer->MeshData.pMesh, 0, meshContainer->matrixPaletteSize, adjacency, NULL, NULL, NULL,
 		&meshContainer->maxVertexInfl, &meshContainer->numBoneCombinations,

@@ -269,9 +269,16 @@ public:
 		v1 = rhs.unit();
 		c = PTM::cross(v0, v1);
 		d = PTM::dot(v0, v1);
-		s = sqrt((1.0 + d) * 2.0);
-		W() = s / 2.0;
-		V() = c / s;
+		if(d==-1){
+			// lhsとrhsが正反対の向きのときにゼロ割りを起こしていたのでikkoが勝手に書き加えた (07/08/27)
+			W() = 0;
+			V() = PTM::cross(v0, (v0==TVec3<ET>(1,0,0) ? TVec3<ET>(0,1,0) : TVec3<ET>(1,0,0))).unit();
+		}
+		else{
+			s = sqrt((1.0 + d) * 2.0);
+			W() = s / 2.0;
+			V() = c / s;
+		}
 	}
 
 	///オイラー角で指定

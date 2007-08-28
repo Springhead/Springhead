@@ -36,6 +36,7 @@ public:
 	~GRAnimationMesh();
 	virtual void SetMotion(const std::string& name);
 	virtual void SetTime(double time);
+	virtual Posed GetBoneKeyframePose(const std::string& name);
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc);

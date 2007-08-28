@@ -31,6 +31,11 @@ struct GRAnimationMeshIf: public GRVisualIf{
 	IF_DEF(GRAnimationMesh);
 	virtual void SetMotion(const std::string& name)=0;		///< モーションを選択
 	virtual void SetTime(double time)=0;					///< モーションの時刻を設定(単位は秒)
+
+	/** @brief キーフレームによるボーンの角度を取得
+		@param name   ボーンの名前
+	*/
+	virtual Posed GetBoneKeyframePose(const std::string& name)=0;
 	
 	/** @brief ボーンの角度を（物理モデルの関節の角度などで）上書きする
 		@param name        ボーンの名前
