@@ -229,6 +229,18 @@ public:
 class FWNodeHandlerXMesh: public UTLoadHandlerImp<Mesh>{
 public:
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
+	class LinkUpdate: public UTLinkTask{
+	protected:
+		int weightId;
+	public:
+		LinkUpdate(ObjectIf* from, UTString to, NameManagerIf* nm, int w):
+			UTLinkTask(from, to, nm), weightId(w){}
+		void Execute(UTLoadContext* ctx){
+			UTLinkTask::Execute(ctx);
+			GRMesh* mesh = linkFrom->Cast();
+			mesh->skinWeights[weightId].bone = mesh->skinWeights[weightId].frame->GetWorldTransform();
+		}
+	};
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMeshDesc desc;
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc, ld->GetName()));	
@@ -290,17 +302,18 @@ public:
 				//	特に何もしない？	
 			}
 			//	スキンメッシュの重みづけ
-			for(int i=0; i<ld->children.size(); ++i){
+			for(unsigned i=0; i<ld->children.size(); ++i){
 				if (ld->children[i]->type->GetTypeName().compare("SkinWeights")==0){
 					SkinWeights* sw = (SkinWeights*) ld->children[i]->data;
 					mesh->skinWeights.push_back(GRMesh::SkinWeight());
-					for(int i=0; i<sw->nWeights; ++i){
+					for(unsigned i=0; i<sw->nWeights; ++i){
 						mesh->skinWeights.back().indices.push_back(sw->vertexIndices[i]);
 						mesh->skinWeights.back().weights.push_back(sw->weights[i]);
 					}
 					mesh->skinWeights.back().offset = sw->matrixOffset;
-					fc->links.push_back(DBG_NEW UTLinkTask(mesh->Cast(), 
-						sw->transformNodeName, mesh->GetNameManager()));
+					fc->links.push_back(DBG_NEW LinkUpdate(mesh->Cast(), 
+						sw->transformNodeName, mesh->GetNameManager(), 
+						(int)mesh->skinWeights.size()-1));
 				}
 			}
 		}else{
@@ -566,7 +579,7 @@ public:
 		}
 		void Execute(UTLoadContext* fc){
 			phScene->SetContactMode(PHSceneDesc::MODE_NONE);
-			for(int i=0; i<solids.size(); ++i){
+			for(unsigned i=0; i<solids.size(); ++i){
 				phScene->SetContactMode(solids[i], PHSceneDesc::MODE_LCP);
 			}
 			// ContactInactiveノード
@@ -714,7 +727,7 @@ public:
 		ld->loadedObjects.push_back(fc->objects.Top());
 		FWScene* fws = DCAST(FWScene, fc->objects.Top());
 		FWSdk* sdk = NULL;
-		for(int i=fc->objects.size()-1; i>=0; --i){
+		for(int i=(int)fc->objects.size()-1; i>=0; --i){
 			sdk = fc->objects[i]->Cast();
 			if (sdk) break;
 		}

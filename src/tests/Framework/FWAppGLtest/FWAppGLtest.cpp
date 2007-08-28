@@ -29,6 +29,7 @@ public:
 		cam->GetFrame()->SetTransform(af);
 	}
 };
+MyApp app_;
 
 void idle(void){
 /*	Affinef afV;
@@ -44,7 +45,6 @@ void idle(void){
 }
 
 int SPR_CDECL main(int argc, char* argv[]){
-	MyApp app_;
 	app = &app_;
 	app->Init(argc, argv);
 #ifdef _DEBUG
