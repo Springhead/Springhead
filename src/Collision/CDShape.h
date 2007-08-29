@@ -21,10 +21,9 @@ public:
 	PHMaterial material;
 
 	OBJECTDEF_ABST(CDShape, NamedObject);
-	//Posef GetPose() const { return pose; }
-	//void SetPose(const Posef& p){ pose = p; }
-	
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
+	virtual float CalcVolume(){ return FLT_MAX; }
+	virtual Matrix3f MomentOfInertia(){ return Matrix3f(); }
 };
 
 /// Œ`ó‚Ö‚ÌQÆ‚Æ„‘Ì‚É‘Î‚·‚é‘Š‘ÎˆÊ’u

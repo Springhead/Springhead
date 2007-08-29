@@ -4,6 +4,12 @@ namespace Spr{;
 template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CDShapeIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual float CalcVolume(){
+		return ((OBJ*)(MIF*)this)->CalcVolume();
+	}
+	virtual Matrix3f MomentOfInertia(){
+		return ((OBJ*)(MIF*)this)->MomentOfInertia();
+	}
 };
 struct CDShapeIf;	class CDShape;
 typedef CDShapeIfStubTemplate<CDShapeIf, ObjectIfBuf, CDShape>	CDShapeIfStub;
@@ -22,7 +28,7 @@ struct CDFaceIfStubTemplate: public IF {
 	virtual int NIndex(){
 		return ((OBJ*)(MIF*)this)->NIndex();
 	}
-	virtual int *  GetIndices(){
+	virtual int * GetIndices(){
 		return ((OBJ*)(MIF*)this)->GetIndices();
 	}
 };
@@ -33,13 +39,13 @@ typedef IfInitTemplate<CDFaceIfStub, CDFace>	CDFaceIfInit;
 template <class IF, class MIF, class OBJ> struct CDConvexIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CDConvexMeshIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
-	virtual CDFaceIf *  GetFace(size_t i){
+	virtual CDFaceIf * GetFace(size_t i){
 		return ((OBJ*)(MIF*)this)->GetFace(i);
 	}
 	virtual size_t NFace(){
 		return ((OBJ*)(MIF*)this)->NFace();
 	}
-	virtual Vec3f *  GetVertices(){
+	virtual Vec3f * GetVertices(){
 		return ((OBJ*)(MIF*)this)->GetVertices();
 	}
 	virtual size_t NVertex(){
@@ -81,10 +87,10 @@ struct CDBoxIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3f GetBoxSize(){
 		return ((OBJ*)(MIF*)this)->GetBoxSize();
 	}
-	virtual Vec3f *  GetVertices(){
+	virtual Vec3f * GetVertices(){
 		return ((OBJ*)(MIF*)this)->GetVertices();
 	}
-	virtual CDFaceIf *  GetFace(size_t i){
+	virtual CDFaceIf * GetFace(size_t i){
 		return ((OBJ*)(MIF*)this)->GetFace(i);
 	}
 };

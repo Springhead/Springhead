@@ -35,6 +35,8 @@ namespace Spr{;
 ///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	IF_DEF(CDShape);
+	virtual float CalcVolume()=0;			///	体積を計算
+	virtual Matrix3f MomentOfInertia()=0;	///	断面二次モーメント
 };
 
 ///	凸形状の基本クラス
