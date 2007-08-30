@@ -25,7 +25,7 @@ void CRAttentionList::Init(){
 IF_OBJECT_IMP(CRAttentionList, SceneObject);
 
 void CRAttentionList::Clear(){
-	for (int i; i<attentionList.size(); i++) {
+	for (int i=0; i<attentionList.size(); i++) {
 		delete attentionList[i];
 	}
 	attentionList.clear();

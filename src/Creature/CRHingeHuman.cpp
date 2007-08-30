@@ -34,6 +34,45 @@ void CRHingeHuman::Init(){
 	InitArms();
 	InitEyes();
 	InitLegs();
+
+	// FeatherStone法の使用（暫定）
+	/*
+	PHTreeNodeIf* rhand   = phScene->CreateRootNode(solids[SO_RIGHT_HAND], PHRootNodeDesc());
+	PHTreeNodeIf* rwrixz  = phScene->CreateTreeNode(rhand, solids[SO_RIGHT_WRIST_XZ], PHTreeNodeDesc());
+	PHTreeNodeIf* rwriyx  = phScene->CreateTreeNode(rwrixz, solids[SO_RIGHT_WRIST_YX], PHTreeNodeDesc());
+	PHTreeNodeIf* rlarm   = phScene->CreateTreeNode(rwriyx, solids[SO_RIGHT_LOWER_ARM], PHTreeNodeDesc());
+	PHTreeNodeIf* ruarm   = phScene->CreateTreeNode(rlarm, solids[SO_RIGHT_UPPER_ARM], PHTreeNodeDesc());
+	PHTreeNodeIf* rshldxy = phScene->CreateTreeNode(ruarm, solids[SO_RIGHT_SHOULDER_XY], PHTreeNodeDesc());
+	PHTreeNodeIf* rshldzx = phScene->CreateTreeNode(rshldxy, solids[SO_RIGHT_SHOULDER_ZX], PHTreeNodeDesc());
+	PHTreeNodeIf* rchest  = phScene->CreateTreeNode(rshldzx, solids[SO_CHEST], PHTreeNodeDesc());
+	*/
+
+	/*
+	PHTreeNodeIf* waist   = phScene->CreateRootNode(solids[SO_WAIST], PHRootNodeDesc());
+	PHTreeNodeIf* abdomen = phScene->CreateTreeNode(waist, solids[SO_ABDOMEN], PHTreeNodeDesc());
+	PHTreeNodeIf* chest   = phScene->CreateTreeNode(abdomen, solids[SO_CHEST], PHTreeNodeDesc());
+	PHTreeNodeIf* neckxz  = phScene->CreateTreeNode(chest, solids[SO_CHEST_NECK_XZ], PHTreeNodeDesc());
+	PHTreeNodeIf* neckzy  = phScene->CreateTreeNode(neckxz, solids[SO_CHEST_NECK_ZY], PHTreeNodeDesc());
+	PHTreeNodeIf* neck    = phScene->CreateTreeNode(neckzy, solids[SO_NECK], PHTreeNodeDesc());
+	PHTreeNodeIf* headxz  = phScene->CreateTreeNode(neck, solids[SO_NECK_HEAD_XZ], PHTreeNodeDesc());
+	PHTreeNodeIf* head    = phScene->CreateTreeNode(neck, solids[SO_HEAD], PHTreeNodeDesc());
+
+	PHTreeNodeIf* rshldzx = phScene->CreateTreeNode(chest, solids[SO_RIGHT_SHOULDER_ZX], PHTreeNodeDesc());
+	PHTreeNodeIf* rshldxy = phScene->CreateTreeNode(rshldzx, solids[SO_RIGHT_SHOULDER_XY], PHTreeNodeDesc());
+	PHTreeNodeIf* ruarm   = phScene->CreateTreeNode(rshldxy, solids[SO_RIGHT_UPPER_ARM], PHTreeNodeDesc());
+	PHTreeNodeIf* rlarm   = phScene->CreateTreeNode(ruarm, solids[SO_RIGHT_LOWER_ARM], PHTreeNodeDesc());
+	PHTreeNodeIf* rwriyx  = phScene->CreateTreeNode(rlarm, solids[SO_RIGHT_WRIST_YX], PHTreeNodeDesc());
+	PHTreeNodeIf* rwrixz  = phScene->CreateTreeNode(rwriyx, solids[SO_RIGHT_WRIST_XZ], PHTreeNodeDesc());
+	PHTreeNodeIf* rhand   = phScene->CreateTreeNode(rwrixz, solids[SO_RIGHT_HAND], PHTreeNodeDesc());
+
+	PHTreeNodeIf* lshldzx = phScene->CreateTreeNode(chest, solids[SO_LEFT_SHOULDER_ZX], PHTreeNodeDesc());
+	PHTreeNodeIf* lshldxy = phScene->CreateTreeNode(lshldzx, solids[SO_LEFT_SHOULDER_XY], PHTreeNodeDesc());
+	PHTreeNodeIf* luarm   = phScene->CreateTreeNode(lshldxy, solids[SO_LEFT_UPPER_ARM], PHTreeNodeDesc());
+	PHTreeNodeIf* llarm   = phScene->CreateTreeNode(luarm, solids[SO_LEFT_LOWER_ARM], PHTreeNodeDesc());
+	PHTreeNodeIf* lwriyx  = phScene->CreateTreeNode(llarm, solids[SO_LEFT_WRIST_YX], PHTreeNodeDesc());
+	PHTreeNodeIf* lwrixz  = phScene->CreateTreeNode(lwriyx, solids[SO_LEFT_WRIST_XZ], PHTreeNodeDesc());
+	PHTreeNodeIf* lhand   = phScene->CreateTreeNode(lwrixz, solids[SO_LEFT_HAND], PHTreeNodeDesc());
+	*/
 }
 
 // --- --- ---
@@ -52,7 +91,7 @@ void CRHingeHuman::CreateWaist(){
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_WAIST]->SetDynamical(false);
+	//solids[SO_WAIST]->SetDynamical(false);
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
