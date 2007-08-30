@@ -24,6 +24,8 @@ public:
 	//CDSphere(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
 	//CDSphere(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
 	CDSphere(const CDSphereDesc& desc);
+	virtual float CalcVolume();
+	virtual Matrix3f CalcMomentOfInertia();
 	
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
@@ -31,6 +33,7 @@ public:
 	/// ただし、球体に関しては、切り口は求めない。接触解析時には最近傍の１点さえあればいい。
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
+
 	
 	/// 球体の半径を取得
 	float GetRadius();

@@ -7,8 +7,8 @@ struct CDShapeIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual float CalcVolume(){
 		return ((OBJ*)(MIF*)this)->CalcVolume();
 	}
-	virtual Matrix3f MomentOfInertia(){
-		return ((OBJ*)(MIF*)this)->MomentOfInertia();
+	virtual Matrix3f CalcMomentOfInertia(){
+		return ((OBJ*)(MIF*)this)->CalcMomentOfInertia();
 	}
 };
 struct CDShapeIf;	class CDShape;
