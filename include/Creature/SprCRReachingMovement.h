@@ -15,6 +15,9 @@ namespace Spr{;
 
 //@{
 
+struct PHSolidIf;
+struct CRHingeHumanIf;
+
 // ------------------------------------------------------------------------------
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingMovementDesc{

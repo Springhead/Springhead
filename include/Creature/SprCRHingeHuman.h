@@ -15,6 +15,9 @@ namespace Spr{;
 
 //@{
 
+struct PHSolidIf;
+struct PHJointIf;
+
 // ------------------------------------------------------------------------------
 /// ヒンジジョイント人体モデルのデスクリプタ
 struct CRHingeHumanDesc{

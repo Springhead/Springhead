@@ -12,9 +12,20 @@
 #ifndef SPR_CREATURE_H
 #define SPR_CREATURE_H
 
-// #include "Creature/SprCRSimple.h"  テスト用のクラスなので段階的に削除の方向 mitake
-#include "Creature/SprCREyeController.h"
+// そのうちファイル名を下記分類に従って整理しようかと思う（070829,mitake）
+
+// HumanModel
 #include "Creature/SprCRHingeHuman.h"
+
+// Sensor
+#include "Creature/SprCRSensor.h"
+
+// Controller
+#include "Creature/SprCRAttentionController.h"
+#include "Creature/SprCREyeController.h"
 #include "Creature/SprCRReachingMovement.h"
+
+// InternalModel
+#include "Creature/SprCRAttentionList.h"
 
 #endif

@@ -15,6 +15,11 @@ namespace Spr{;
 
 //@{
 
+struct PHSolidIf;
+struct PHHingeJointIf;
+struct CREyeControllerIf;
+struct CRNeckControllerIf;
+
 // ------------------------------------------------------------------------------
 
 /// 眼球運動コントローラのステート
