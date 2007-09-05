@@ -12,11 +12,24 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRAttentionController, SceneObject);
+IF_OBJECT_IMP(CRAttentionController, CRController);
 
+void CRAttentionController::Init(){
+	CRController::Init();
+
+	internalScene = creature->GetInternalScene();
+	for (int i=0; i<creature->NControllers(); i++) {
+		if (!gazeCtrl) {
+			gazeCtrl = DCAST(CRGazeControllerIf, creature->GetController(i));
+		}
+	}
+}
+	
 void CRAttentionController::Step(){
-	attentionList->SortAttentionList();
-	CRAttentionItem* att = attentionList->GetAttentionItem(0);
-	gazeController->LookAt(att->solid->GetPose()*att->pos, att->solid->GetVelocity(), att->attractiveness);
+	CRController::Step();
+
+	creature->GetInternalScene()->SortByAttractiveness();
+	CRInternalSceneObjectIf* obj = creature->GetInternalScene()->GetObject(0);
+	gazeCtrl->LookAt(obj->GetSolid()->GetPose()*obj->GetPos(), obj->GetSolid()->GetVelocity(), DCAST(CRISAttractiveObjectIf, obj)->GetAttractiveness());
 }
 }

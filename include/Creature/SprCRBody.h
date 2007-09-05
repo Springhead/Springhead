@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef SPR_CRHingeHumanIf_H
-#define SPR_CRHingeHumanIf_H
+#ifndef SPR_CRBodyIf_H
+#define SPR_CRBodyIf_H
 
 #include <SprFoundation.h>
 #include <SprPhysics.h>
@@ -18,9 +18,60 @@ namespace Spr{;
 struct PHSolidIf;
 struct PHJointIf;
 
+struct CRBodyIf;
+struct CRHingeHumanBodyIf;
+
 // ------------------------------------------------------------------------------
+/// クリーチャのボディモデルのインターフェイス
+struct CRBodyIf : SceneObjectIf{
+	IF_DEF(CRBody);
+
+	/** @brief 初期化を行う
+	*/
+	virtual void Init()= 0;
+
+	/** @brief 剛体の数を得る
+	*/
+	virtual int NSolids()= 0;
+
+	/** @brief i番目の剛体を得る
+	*/
+	virtual PHSolidIf* GetSolid(int i)= 0;
+
+	/** @brief 関節の数を得る
+	*/
+	virtual int NJoints()= 0;
+
+	/** @brief i番目の関節を得る
+	*/
+	virtual PHJointIf* GetJoint(int i)= 0;
+};
+
+/// クリーチャのボディモデルのデスクリプタ
+struct CRBodyDesc{
+	DESC_DEF_FOR_OBJECT(CRBody);
+
+	/// プラグ側を親剛体にするかソケット側を親剛体にするか
+	enum CRHumanJointOrder{
+		SOCKET_PARENT,
+		PLUG_PARENT,
+	} jointOrder;
+
+	CRBodyDesc(){
+	}
+};
+
+// ------------------------------------------------------------------------------
+/// ヒンジジョイント人体モデルのインターフェイス
+struct CRHingeHumanBodyIf : CRBodyIf {
+	IF_DEF(CRHingeHumanBody);
+
+};
+
 /// ヒンジジョイント人体モデルのデスクリプタ
-struct CRHingeHumanDesc{
+struct CRHingeHumanBodyDesc : CRBodyDesc {
+	DESC_DEF_FOR_OBJECT(CRHingeHumanBody);
+
 	enum CRHumanSolids{
 		// Center
 		SO_WAIST=0,
@@ -88,12 +139,6 @@ struct CRHingeHumanDesc{
 		JO_NJOINTS
 	};
 
-	/// プラグ側を親剛体にするかソケット側を親剛体にするか
-	enum CRHumanJointOrder{
-		SOCKET_PARENT,
-		PLUG_PARENT,
-	} jointOrder;
-
 	/// サイズに関するパラメータ
 	double waistHeight, waistBreadth, waistThickness;
 	double abdomenHeight, abdomenBreadth, abdomenThickness;
@@ -139,7 +184,7 @@ struct CRHingeHumanDesc{
 	Quaterniond oriRightLowerArm;
 	Quaterniond oriRightHand;
 
-	CRHingeHumanDesc(){
+	CRHingeHumanBodyDesc(){
 		jointOrder = PLUG_PARENT;
 
 		waistHeight    = 0.2298;
@@ -214,29 +259,8 @@ struct CRHingeHumanDesc{
 	}
 };
 
-/// ヒンジジョイント人体モデルのインターフェイス
-struct CRHingeHumanIf : SceneObjectIf{
-	IF_DEF(CRHingeHuman);
-
-	/** @brief 剛体の数を得る
-	*/
-	virtual int NSolids()= 0;
-
-	/** @brief i番目の剛体を得る
-	*/
-	virtual PHSolidIf* GetSolid(int i)= 0;
-
-	/** @brief 関節の数を得る
-	*/
-	virtual int NJoints()= 0;
-
-	/** @brief i番目の関節を得る
-	*/
-	virtual PHJointIf* GetJoint(int i)= 0;
-};
-
 //@}
 
 }
 
-#endif//SPR_CRHingeHumanIf_H
+#endif//SPR_CRHingeHumanBodyIf_H

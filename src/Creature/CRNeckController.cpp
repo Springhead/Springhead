@@ -14,7 +14,7 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRNeckController, SceneObject);
+IF_OBJECT_IMP(CRNeckController, CRController);
 
 void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 	this->pos = pos;
@@ -22,7 +22,19 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 	this->attractiveness = attractiveness;
 }
 
+void CRNeckController::Init(){
+	CRController::Init();
+
+	soHead = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);
+	soNeck = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_NECK);
+	
+	joNeckHeadX  = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
+	joChestNeckY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
+}
+
 void CRNeckController::Step(){
+	CRController::Step();
+
 	// 首-頭をつなぐ関節の制御
 	/// 頭基準座標系でのターゲットの位置
 	Vec3d vecTargetFromHead = soHead->GetPose().Ori().Inv() * (pos - soHead->GetPose().Pos());

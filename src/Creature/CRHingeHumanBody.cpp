@@ -1,4 +1,4 @@
-#include "CRHingeHuman.h"
+#include "CRHingeHumanBody.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -6,28 +6,12 @@
 
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRHingeHuman
-IF_OBJECT_IMP(CRHingeHuman, SceneObject);
+// CRHingeHumanBody
+IF_OBJECT_IMP(CRHingeHumanBody, CRBody);
 
 // --- --- ---
-
-PHJointIf* CRHingeHuman::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc){
-	PHJointIf* joint;
-	if (jointOrder == PLUG_PARENT) {
-		joint = phScene->CreateJoint(soChild, soParent, desc);
-	} else { // SOCKET_PARENT
-		Posed pp=desc.posePlug, ps=desc.poseSocket;
-		desc.posePlug=ps; desc.poseSocket=pp;
-		joint = phScene->CreateJoint(soParent, soChild, desc);
-	}
-	return joint;
-}
-
-// --- --- ---
-
-void CRHingeHuman::Init(){
-	phScene = DCAST(PHSceneIf, GetScene());
-	phSdk   = DCAST(PHSdkIf, phScene->GetSdk());
+void CRHingeHumanBody::Init(){
+	CRBody::Init();
 
 	InitBody();
 	InitHead();
@@ -76,13 +60,13 @@ void CRHingeHuman::Init(){
 }
 
 // --- --- ---
-void CRHingeHuman::InitBody(){
+void CRHingeHumanBody::InitBody(){
 	CreateWaist();
 	CreateAbdomen();
 	CreateChest();
 }
 
-void CRHingeHuman::CreateWaist(){
+void CRHingeHumanBody::CreateWaist(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 
@@ -96,7 +80,7 @@ void CRHingeHuman::CreateWaist(){
 	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
 
-void CRHingeHuman::CreateAbdomen(){
+void CRHingeHumanBody::CreateAbdomen(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -123,7 +107,7 @@ void CRHingeHuman::CreateAbdomen(){
 	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateChest(){
+void CRHingeHumanBody::CreateChest(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -151,12 +135,12 @@ void CRHingeHuman::CreateChest(){
 }
 
 // --- --- ---
-void CRHingeHuman::InitHead(){
+void CRHingeHumanBody::InitHead(){
 	CreateNeck();
 	CreateHead();
 }
 
-void CRHingeHuman::CreateNeck(){
+void CRHingeHumanBody::CreateNeck(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -207,7 +191,7 @@ void CRHingeHuman::CreateNeck(){
 	phScene->SetContactMode(solids[SO_NECK], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateHead(){
+void CRHingeHumanBody::CreateHead(){
 	CDSphereDesc       sphereDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -246,7 +230,7 @@ void CRHingeHuman::CreateHead(){
 }
 
 // --- --- ---
-void CRHingeHuman::InitArms(){
+void CRHingeHumanBody::InitArms(){
 	CreateUpperArm(LEFTPART);
 	CreateLowerArm(LEFTPART);
 	CreateHand(LEFTPART);
@@ -256,13 +240,13 @@ void CRHingeHuman::InitArms(){
 	CreateHand(RIGHTPART);
 }
 
-void CRHingeHuman::CreateUpperArm(LREnum lr){
+void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNShoulderZX, soNShoulderXY, soNUpperArm;
-	CRHingeHumanDesc::CRHumanJoints joNShoulderZ, joNShoulderX, joNShoulderY;
+	CRHingeHumanBodyDesc::CRHumanSolids soNShoulderZX, soNShoulderXY, soNUpperArm;
+	CRHingeHumanBodyDesc::CRHumanJoints joNShoulderZ, joNShoulderX, joNShoulderY;
 	if (lr==LEFTPART) {
 		soNShoulderZX = SO_LEFT_SHOULDER_ZX; soNShoulderXY = SO_LEFT_SHOULDER_XY; soNUpperArm   = SO_LEFT_UPPER_ARM;
 		joNShoulderZ  = JO_LEFT_SHOULDER_Z;  joNShoulderX  = JO_LEFT_SHOULDER_X;  joNShoulderY  = JO_LEFT_SHOULDER_Y;
@@ -317,13 +301,13 @@ void CRHingeHuman::CreateUpperArm(LREnum lr){
 	phScene->SetContactMode(solids[soNUpperArm], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateLowerArm(LREnum lr){
+void CRHingeHumanBody::CreateLowerArm(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNUpperArm, soNLowerArm;
-	CRHingeHumanDesc::CRHumanJoints joNElbow;
+	CRHingeHumanBodyDesc::CRHumanSolids soNUpperArm, soNLowerArm;
+	CRHingeHumanBodyDesc::CRHumanJoints joNElbow;
 	if (lr==LEFTPART) {
 		soNUpperArm = SO_LEFT_UPPER_ARM; soNLowerArm = SO_LEFT_LOWER_ARM;
 		joNElbow = JO_LEFT_ELBOW;
@@ -352,13 +336,13 @@ void CRHingeHuman::CreateLowerArm(LREnum lr){
 	phScene->SetContactMode(solids[soNLowerArm], solids[soNUpperArm], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateHand(LREnum lr){
+void CRHingeHumanBody::CreateHand(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNLowerArm, soNWristYX, soNWristXZ, soNHand;
-	CRHingeHumanDesc::CRHumanJoints joNWristY, joNWristX, joNWristZ;
+	CRHingeHumanBodyDesc::CRHumanSolids soNLowerArm, soNWristYX, soNWristXZ, soNHand;
+	CRHingeHumanBodyDesc::CRHumanJoints joNWristY, joNWristX, joNWristZ;
 	if (lr==LEFTPART) {
 		soNLowerArm = SO_LEFT_LOWER_ARM; soNWristYX = SO_LEFT_WRIST_YX; soNWristXZ = SO_LEFT_WRIST_XZ; soNHand = SO_LEFT_HAND;
 		joNWristY = JO_LEFT_WRIST_Y; joNWristX = JO_LEFT_WRIST_X; joNWristZ = JO_LEFT_WRIST_Z; 
@@ -410,19 +394,19 @@ void CRHingeHuman::CreateHand(LREnum lr){
 }
 
 // --- --- ---
-void CRHingeHuman::InitEyes(){
+void CRHingeHumanBody::InitEyes(){
 	CreateEye(LEFTPART);
 	CreateEye(RIGHTPART);
 }
 
-void CRHingeHuman::CreateEye(LREnum lr){
+void CRHingeHumanBody::CreateEye(LREnum lr){
 	CDBoxDesc          boxDesc;
 	CDSphereDesc       sphereDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNEyeYX, soNEye;
-	CRHingeHumanDesc::CRHumanJoints joNEyeY, joNEyeX;
+	CRHingeHumanBodyDesc::CRHumanSolids soNEyeYX, soNEye;
+	CRHingeHumanBodyDesc::CRHumanJoints joNEyeY, joNEyeX;
 	if (lr==LEFTPART) {
 		soNEyeYX = SO_LEFT_EYE_YX; soNEye = SO_LEFT_EYE;
 		joNEyeY = JO_LEFT_EYE_Y; joNEyeX = JO_LEFT_EYE_X;
@@ -469,7 +453,7 @@ void CRHingeHuman::CreateEye(LREnum lr){
 }
 
 // --- --- ---
-void CRHingeHuman::InitLegs(){
+void CRHingeHumanBody::InitLegs(){
 	CreateUpperLeg(LEFTPART);
 	CreateLowerLeg(LEFTPART);
 	CreateFoot(LEFTPART);
@@ -482,13 +466,13 @@ void CRHingeHuman::InitLegs(){
 	phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateUpperLeg(LREnum lr){
+void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNWaistLegZX, soNWaistLegXY, soNUpperLeg;
-	CRHingeHumanDesc::CRHumanJoints joNWaistLegZ, joNWaistLegX, joNWaistLegY;
+	CRHingeHumanBodyDesc::CRHumanSolids soNWaistLegZX, soNWaistLegXY, soNUpperLeg;
+	CRHingeHumanBodyDesc::CRHumanJoints joNWaistLegZ, joNWaistLegX, joNWaistLegY;
 	if (lr==LEFTPART) {
 		soNWaistLegZX = SO_LEFT_WAIST_LEG_ZX; soNWaistLegXY = SO_LEFT_WAIST_LEG_XY; soNUpperLeg   = SO_LEFT_UPPER_LEG;
 		joNWaistLegZ  = JO_LEFT_WAIST_LEG_Z;  joNWaistLegX  = JO_LEFT_WAIST_LEG_X;  joNWaistLegY  = JO_LEFT_WAIST_LEG_Y;
@@ -539,13 +523,13 @@ void CRHingeHuman::CreateUpperLeg(LREnum lr){
 	phScene->SetContactMode(solids[soNUpperLeg], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateLowerLeg(LREnum lr){
+void CRHingeHumanBody::CreateLowerLeg(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNUpperLeg, soNLowerLeg;
-	CRHingeHumanDesc::CRHumanJoints joNKnee;
+	CRHingeHumanBodyDesc::CRHumanSolids soNUpperLeg, soNLowerLeg;
+	CRHingeHumanBodyDesc::CRHumanJoints joNKnee;
 	if (lr==LEFTPART) {
 		soNUpperLeg = SO_LEFT_UPPER_LEG; soNLowerLeg = SO_LEFT_LOWER_LEG;
 		joNKnee = JO_LEFT_KNEE;
@@ -574,13 +558,13 @@ void CRHingeHuman::CreateLowerLeg(LREnum lr){
 	phScene->SetContactMode(solids[soNLowerLeg], solids[soNUpperLeg], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeHuman::CreateFoot(LREnum lr){
+void CRHingeHumanBody::CreateFoot(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeHumanDesc::CRHumanSolids soNLowerLeg, soNAnkleYX, soNAnkleXZ, soNFoot;
-	CRHingeHumanDesc::CRHumanJoints joNAnkleY, joNAnkleX, joNAnkleZ;
+	CRHingeHumanBodyDesc::CRHumanSolids soNLowerLeg, soNAnkleYX, soNAnkleXZ, soNFoot;
+	CRHingeHumanBodyDesc::CRHumanJoints joNAnkleY, joNAnkleX, joNAnkleZ;
 	if (lr==LEFTPART) {
 		soNLowerLeg = SO_LEFT_LOWER_LEG; soNAnkleYX = SO_LEFT_ANKLE_YX; soNAnkleXZ = SO_LEFT_ANKLE_XZ; soNFoot = SO_LEFT_FOOT;
 		joNAnkleY = JO_LEFT_ANKLE_Y; joNAnkleX = JO_LEFT_ANKLE_X; joNAnkleZ = JO_LEFT_ANKLE_Z; 
@@ -630,22 +614,4 @@ void CRHingeHuman::CreateFoot(LREnum lr){
 
 	phScene->SetContactMode(solids[soNFoot], solids[soNLowerLeg], PHSceneDesc::MODE_NONE);
 }
-
-// --- --- ---
-int CRHingeHuman::NSolids(){
-	return solids.size();
-}
-
-PHSolidIf* CRHingeHuman::GetSolid(int i){
-	return solids[i];
-}
-
-int CRHingeHuman::NJoints(){
-	return joints.size();
-}
-
-PHJointIf* CRHingeHuman::GetJoint(int i){
-	return joints[i];
-}
-
 }

@@ -12,20 +12,19 @@
 #ifndef SPR_CREATURE_H
 #define SPR_CREATURE_H
 
-// そのうちファイル名を下記分類に従って整理しようかと思う（070829,mitake）
+// クリーチャ全体
+#include "Creature/SprCRCreature.h"
 
-// HumanModel
-#include "Creature/SprCRHingeHuman.h"
+// ボディ
+#include "Creature/SprCRBody.h"
 
-// Sensor
+// 感覚系
 #include "Creature/SprCRSensor.h"
 
-// Controller
-#include "Creature/SprCRAttentionController.h"
-#include "Creature/SprCREyeController.h"
-#include "Creature/SprCRReachingMovement.h"
+// キャラクタの内部状態（記憶）
+#include "Creature/SprCRInternalScene.h"
 
-// InternalModel
-#include "Creature/SprCRAttentionList.h"
+// 運動系
+#include "Creature/SprCRController.h"
 
 #endif

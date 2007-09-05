@@ -13,39 +13,51 @@
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
 
+#include "CRController.h"
+
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 首（頭部）運動コントローラ
 */
-class CRNeckController : public SceneObject, public CRNeckControllerIfInit, public CRNeckControllerDesc {
+class CRNeckController : public CRController, public CRNeckControllerIfInit, public CRNeckControllerDesc {
 private:
-	/** @brief 注視点
-	*/
+	/// 注視点
 	Vec3d pos, vel;
 
-	/** @brief 注意の度合
-	*/
+	/// 注意の度合
 	float attractiveness;
 
+	/// 制御につかう剛体
+	PHSolidIf *soHead, *soNeck;
+
+	/// 制御につかう関節
+	PHHingeJointIf *joNeckHeadX, *joChestNeckY;
+
 public:
-	OBJECTDEF(CRNeckController, SceneObject);
+	OBJECTDEF(CRNeckController, CRController);
 	ACCESS_DESC_STATE(CRNeckController);
 
 	CRNeckController(){}
-	CRNeckController(const CRNeckControllerDesc& desc, SceneIf* s=NULL) : CRNeckControllerDesc(desc) {
-		if(s){SetScene(s);}
+	CRNeckController(const CRNeckControllerDesc& desc, CRCreatureIf* c=NULL)
+		: CRNeckControllerDesc(desc)
+		, CRController((const CRControllerDesc&)desc, c)
+	{
 	}
+
+	/** @brief 初期化を実行する
+	*/
+	virtual void Init();
+
+	/** @brief 制御処理を実行する
+	*/
+	virtual void Step();
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 	*/
 	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness);
-
-	/** @brief 制御処理を実行する
-	*/
-	virtual void Step();
 };
 }
 //@}

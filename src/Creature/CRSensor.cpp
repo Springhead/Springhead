@@ -5,25 +5,19 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include "CRSensor.h"
 
-/*
-#ifndef CRSIMPLE_H
-#define CRSIMPLE_H
-
-#include <SprCreature.h>
-#include <Physics/PHEngine.h>
-
-namespace Spr{;
-
-class CRSimple : public PHEngine, CRSimpleIfInit, public CRSimpleDesc{
-public:
-	OBJECT_DEF(CRSimple);
-	int GetPriority() const { return SGBP_CREATURE; }
-	void Step();
-};
-
-}	//	namespace Spr
-
+#ifdef USE_HDRSTOP
+#pragma hdrstop
 #endif
 
-*/
+namespace Spr{
+IF_OBJECT_IMP(CRSensor, SceneObject);
+
+void CRSensor::Init(){
+	phScene = DCAST(PHSceneIf, GetScene());
+}
+	
+void CRSensor::Step(){
+}
+}

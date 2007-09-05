@@ -13,6 +13,8 @@
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
 
+#include "CRController.h"
+
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -112,14 +114,19 @@ public:
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief 眼球運動コントローラの実装
+/** @brief 眼球コントローラの物理レイヤ(CREyeControllerが内部で使う、非APIクラス)
 */
 class CRPhysicalEye {
 private:
+	/// 制御対象のクリーチャ
+	CRCreatureIf* creature;
+
 	/// 制御に使用する剛体
 	PHSolidIf *soLEye, *soREye, *soHead;
+
 	/// 制御に使用する関節
 	PHHingeJointIf *joLEyeX, *joLEyeY, *joREyeX, *joREyeY;
+
 	/// 視標位置
 	Vec3d targetPos, targetVel;
 
@@ -134,14 +141,13 @@ private:
 	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
-	CRPhysicalEye() : soLEye(NULL), soREye(NULL), soHead(NULL) {
+	CRPhysicalEye(CRCreatureIf* c=NULL) {
+		creature = c;
 	}
 
-	CRPhysicalEye(const CREyeControllerDesc &desc) {
-		soHead  = desc.soHead;
-		soLEye  = desc.soLEye; joLEyeX = desc.joLEyeX; joLEyeY = desc.joLEyeY;
-		soREye  = desc.soREye; joREyeX = desc.joREyeX; joREyeY = desc.joREyeY;
-	}
+	/** @brief 初期化を実行する
+	*/
+	void Init();
 
 	/** @brief ３次元空間内の視標位置を設定する（絶対位置）
 	*/
@@ -181,7 +187,7 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 眼球運動コントローラの実装
 */
-class CREyeController : public SceneObject,	public CREyeControllerIfInit, public CREyeControllerDesc {
+class CREyeController : public CRController, public CREyeControllerIfInit, public CREyeControllerDesc {
 private:
 	/** @brief 次の制御状態を求める
 	*/
@@ -199,23 +205,30 @@ private:
 	CRSaccadeController saccadeCtrl;
 
 public:
-	OBJECTDEF(CREyeController, SceneObject);
+	OBJECTDEF(CREyeController, CRController);
 	ACCESS_DESC_STATE(CREyeController);
 
 	CREyeController(){}
-	CREyeController(const CREyeControllerDesc& desc, SceneIf* s=NULL) : CREyeControllerDesc(desc), physicalEye(desc) {
-		if(s){SetScene(s);}
+	CREyeController(const CREyeControllerDesc& desc, CRCreatureIf* c=NULL) 
+		: CREyeControllerDesc(desc) 
+		, CRController((const CRControllerDesc&)desc, c)
+		, physicalEye(c)
+	{
 	}
+
+	/** @brief 初期化を実行する
+	*/
+	virtual void Init();
+
+	/** @brief 制御処理を実行する
+	*/
+	virtual void Step();
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 	*/
 	virtual void LookAt(Vec3f pos, Vec3f vel);
-
-	/** @brief 制御処理を実行する
-	*/
-	virtual void Step();
 
 	// 非API関数
 	/** @brief 現在のコントロール状態を取得する

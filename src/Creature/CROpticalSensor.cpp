@@ -16,13 +16,26 @@ bool CROpticalSensor::IsVisible(PHSolidIf* solid){
 	return true;
 }
 
+IF_OBJECT_IMP(CROpticalSensor, CRSensor);
+
 void CROpticalSensor::Init(){
-	phScene = DCAST(PHSceneIf, GetScene());
+	CRSensor::Init();
+
+	/// 依存する他オブジェクトの取得
+	soLEye = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);
+	soREye = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);
+	internalScene = creature->GetInternalScene();
+
+	/// InternalSceneの組み立て
+	for(int i=0; i<phScene->NSolids(); i++) {
+		PHSolidIf* solid = DCAST(PHSceneIf, creature->GetScene())->GetSolids()[i];
+		// internalScene->CreateObject(ほにゃらら)
+	}
 }
-	
-IF_OBJECT_IMP(CROpticalSensor, SceneObject);
 
 void CROpticalSensor::Step(){
+	CRSensor::Init();
+
 	Vec3f dirL = soLEye->GetPose().Ori() * Vec3f(0,0,-1);
 	Vec3f dirR = soREye->GetPose().Ori() * Vec3f(0,0,-1);
 	Vec3f visualAxis = ((dirL + dirR) * 0.5f).unit();
@@ -43,8 +56,8 @@ void CROpticalSensor::Step(){
 			float divAmmount = abs(PTM::dot(velocity,visualAxis)) * 2.0f / r;
 			float rotAmmount = abs(PTM::dot(angVelocity,visualAxis));
 
-			CRAttentionItem* attentionItem = attentionList->GetAttentionItem(solid, Vec3f(0,0,0));
-			attentionItem->attractiveness += (trnAmmount + divAmmount + rotAmmount);
+			CRISAttractiveObjectIf* ao = DCAST(CRISAttractiveObjectIf, internalScene->FindObject(solid, Vec3f(0,0,0)));
+			ao->SetAttractiveness(ao->GetAttractiveness() + (trnAmmount + divAmmount + rotAmmount));
 		}
 	}
 }

@@ -22,8 +22,8 @@
 #endif
 
 namespace Spr{;
-const double sqEpsilon = 3.3e-4;
-const double epsilon = 1e-7;
+const double sqEpsilon = 1e-3;
+const double epsilon = 1e-6;
 const double epsilon2 = epsilon*epsilon;
 
 static Vec3d p[4];			// Aのサポートポイント(ローカル系)
@@ -117,7 +117,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	cur->i[2] = 0;	//	もとの線分
 	while(1){
 		double s = w[(int)cur->i[0]].XY() ^ w[(int)cur->i[1]].XY();
-		if (s > epsilon){		//	1-0からはみ出している  epsilon=1e-8だと無限ループ
+		if (s > epsilon){		//	1-0からはみ出している  epsilon=1e-8だと無限ループ，1e-7でも稀に無限ループ
 			Vec2d l = w[(int)cur->i[1]].XY() - w[(int)cur->i[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
 			double ll_inv = 1/l.square();

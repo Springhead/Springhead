@@ -1,0 +1,105 @@
+/*
+ *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+#ifndef CRCREATURE_H
+#define CRCREATURE_H
+
+#include <Springhead.h>
+
+#include <Foundation/Object.h>
+#include "IfStubCreature.h"
+
+#include <vector>
+
+//@{
+namespace Spr{;
+
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+/** @brief クリーチャの実装
+*/
+class CRCreature : public SceneObject, public CRCreatureIfInit, public CRCreatureDesc {
+protected:
+	/** @brief 感覚系
+	*/
+	std::vector<CRSensorIf*> sensors;
+
+	/** @brief 運動コントローラ
+	*/
+	std::vector<CRControllerIf*> controllers;
+
+	/** @brief 内部シーン（記憶の類）
+	*/
+	CRInternalSceneIf* internalScene;
+
+	/** @brief ボディ
+	*/
+	CRBodyIf* body;
+
+public:
+	OBJECTDEF(CRCreature, SceneObject);
+	ACCESS_DESC(CRCreature);
+
+	CRCreature(){
+		CRRegisterTypeDescs();
+	}
+	CRCreature(const CRCreatureDesc& desc, SceneIf* s=NULL) : CRCreatureDesc(desc) {
+		CRRegisterTypeDescs();
+		if(s){SetScene(s);}
+	}
+
+	/** @brief 初期化を実行する
+	*/
+	virtual void Init();
+
+	/** @brief 感覚→情報処理→運動 の１ステップを実行する
+	*/
+	virtual void Step();
+
+	/** @brief ボディをつくる
+	*/
+	virtual CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc);
+
+	/** @brief ボディを取得する
+	*/
+	virtual CRBodyIf* GetBody();
+
+	/** @brief 感覚系を追加する
+	*/
+	virtual CRSensorIf* CreateSensor(const IfInfo* ii, const CRSensorDesc& desc);
+
+	/** @brief 感覚系を取得する
+	*/
+	virtual CRSensorIf* GetSensor(int i);
+
+	/** @brief 感覚系の数を取得する
+	*/
+	virtual int NSensors();
+
+	/** @brief 運動コントローラを追加する
+	*/
+	virtual CRControllerIf* CreateController(const IfInfo* ii, const CRControllerDesc& desc);
+
+	/** @brief 運動コントローラを取得する
+	*/
+	virtual CRControllerIf* GetController(int i);
+
+	/** @brief 運動コントローラの数を取得する
+	*/
+	virtual int NControllers();
+
+	/** @brief 内部シーンをつくる
+	*/
+	virtual CRInternalSceneIf* CreateInternalScene(const CRInternalSceneDesc& desc);
+
+	/** @brief 内部シーンを取得する
+	*/
+	virtual CRInternalSceneIf* GetInternalScene();
+};
+}
+//@}
+
+#endif//CRCREATURE_H

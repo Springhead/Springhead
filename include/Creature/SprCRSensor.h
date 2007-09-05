@@ -9,40 +9,55 @@
 #define SPR_CRSensorIf_H
 
 #include <SprFoundation.h>
-#include <SprPhysics.h>
 
 namespace Spr{;
 
 //@{
 
-struct CRAttentionListIf;
-struct PHSolidIf;
+struct CRCreatureIf;
+
+struct CRSensorIf;
+struct CROpticalSensorIf;
 
 // ------------------------------------------------------------------------------
-/// 視覚センサのデスクリプタ
-struct CROpticalSensorDesc{
-	/// 入力対象の注意リスト
-	CRAttentionListIf* attentionList;
+/// センサのインタフェース
+struct CRSensorIf : SceneObjectIf{
+	IF_DEF(CRSensor);
 
-	/// 目のSolid
-	PHSolidIf *soLEye, *soREye;
-
-	CROpticalSensorDesc(){
-		attentionList = NULL;
-	}
-};
-
-/// 視覚センサのインタフェース
-struct CROpticalSensorIf : SceneObjectIf{
-	IF_DEF(CROpticalSensor);
+	/** @brief 初期化を行う
+	*/
+	virtual void Init()= 0;
 
 	/** @brief 感覚入力の処理を実行する
 	*/
 	virtual void Step()= 0;
 };
 
+/// センサのデスクリプタ
+struct CRSensorDesc{
+	DESC_DEF_FOR_OBJECT(CRSensor);
+
+	CRSensorDesc(){
+	}
+};
+
+// ------------------------------------------------------------------------------
+/// 視覚センサのインタフェース
+struct CROpticalSensorIf : CRSensorIf{
+	IF_DEF(CROpticalSensor);
+
+};
+
+/// 視覚センサのデスクリプタ
+struct CROpticalSensorDesc : CRSensorDesc{
+	DESC_DEF_FOR_OBJECT(CROpticalSensor);
+
+	CROpticalSensorDesc(){
+	}
+};
+
 //@}
 
 }
 
-#endif//SPR_CRReachingMovementIf_H
+#endif//SPR_CRSensorIf_H

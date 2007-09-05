@@ -100,6 +100,16 @@ Vec2d CRPursuitController::GetREyeAngle(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
+void CRPhysicalEye::Init(){
+	soLEye  = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);	
+	soREye  = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);	
+	soHead  = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);	
+	joLEyeX = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_X));
+	joLEyeY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_Y));	
+	joREyeX = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_X));	
+	joREyeY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y));	
+}
+
 void CRPhysicalEye::SetTarget(Vec3d pos, Vec3d vel){
 	targetPos = pos;
 	targetVel = vel;
@@ -157,16 +167,6 @@ void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angl
 		joX->SetSpringOrigin(-angle[0]);
 		joY->SetSpringOrigin(-angle[1]);
 	}
-
-	/*
-	Quaterniond qToGlobal = soHead->GetPose().Ori();
-	Vec3d target = Quaterniond::Rot(angle[0],'x')*Quaterniond::Rot(angle[1],'y')*Vec3d(0,0,-1);
-	Vec3d currentDir = (soEye->GetPose().Ori() * Vec3d(0,0,-1)).unit();
-	Vec3d error = PTM::cross(currentDir, qToGlobal*target);
-	Vec3d derror = soEye->GetAngularVelocity();
-	Vec3d torque = (Kp * (error)) - (Kd * derror);
- 	soEye->AddTorque(torque);
-	*/
 }
 
 Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
@@ -177,13 +177,21 @@ Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CREyeController, SceneObject);
+IF_OBJECT_IMP(CREyeController, CRController);
 
 void CREyeController::LookAt(Vec3f pos, Vec3f vel){
 	physicalEye.SetTarget(pos, vel);
 }
 
+void CREyeController::Init(){
+	CRController::Init();
+
+	physicalEye.Init();
+}
+
 void CREyeController::Step(){
+	CRController::Step();
+
 	// êßå‰èÛë‘ÇÃëJà⁄
 	controlState = GetNextState(controlState);
 

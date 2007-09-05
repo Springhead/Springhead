@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRATTENTIONCONTROLLER_H
-#define CRATTENTIONCONTROLLER_H
+#ifndef CRWALKINGCONTROLLER_H
+#define CRWALKINGCONTROLLER_H
 
 #include <Springhead.h>
 
@@ -20,22 +20,27 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意コントローラ
 */
-class CRAttentionController : public CRController, public CRAttentionControllerIfInit, public CRAttentionControllerDesc {
+class CRWalkingController : public CRController, public CRWalkingControllerIfInit, public CRWalkingControllerDesc {
 private:
-	/// 内部シーン
+	/// 依存する他のオブジェクトの例．必要なものを選んで記述．
+	/*
+	PHSceneIf*          phScene;
+	CRHingeHumanBodyIf* body;
 	CRInternalSceneIf*  internalScene;
+	CRGazeControllerIf* gazeController;
+	CROpticalSensorIf*  opticalSensor;
+	*/
 
-	/// 下位のコントローラ：視線コントローラ
-	CRGazeControllerIf* gazeCtrl;
+	/// ほかにPrivateな変数やメソッドが必要ならここに定義を追加．
 
 public:
-	OBJECTDEF(CRAttentionController, CRController);
-	ACCESS_DESC(CRAttentionController);
+	OBJECTDEF(CRWalkingController, CRController);
+	ACCESS_DESC(CRWalkingController);
 
-	CRAttentionController(){
+	CRWalkingController(){
 	}
-	CRAttentionController(const CRAttentionControllerDesc& desc, CRCreatureIf* c=NULL)
-		: CRAttentionControllerDesc(desc)
+	CRWalkingController(const CRWalkingControllerDesc& desc, CRCreatureIf* c=NULL) 
+		: CRWalkingControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
 	}
@@ -44,11 +49,13 @@ public:
 	*/
 	virtual void Init();
 
-	/** @brief 注意制御を実行する
+	/** @brief 制御を実行する
 	*/
 	virtual void Step();
+
+	/// 上記以外にCRWalkingControllerIfに追加したAPI関数の定義をここに追加．
 };
 }
 //@}
 
-#endif//CRATTENTIONCONTROLLER_H
+#endif//CRWALKINGCONTROLLER_H

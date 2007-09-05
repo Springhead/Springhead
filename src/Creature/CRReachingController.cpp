@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRReachingMovement.h"
+#include "CRReachingController.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -14,30 +14,42 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRReachingMovement, SceneObject);
+IF_OBJECT_IMP(CRReachingController, CRController);
 
-void CRReachingMovement::Init(){
-	PHSceneIf* phScene = DCAST(PHSceneIf, GetScene());
+void CRReachingController::Init(){
+	CRController::Init();
+
+	if (solid==NULL && (0 <= solidNo && solidNo < CRHingeHumanBodyDesc::SO_NSOLIDS)) {
+		solid = creature->GetBody()->GetSolid(solidNo);
+	}
 
 	PHSolidDesc solidDesc;
-	solidDesc.mass = 1.0;
+	{
+		solidDesc.mass = 1.0;
+	}
 	soTarget = phScene->CreateSolid(solidDesc);
 	soTarget->SetDynamical(false);
+
 	CDSphereDesc sphereDesc;
-	sphereDesc.radius = 0.02;
+	{
+		sphereDesc.radius = 0.02;
+	}
 	soTarget->AddShape(phScene->GetSdk()->CreateShape(sphereDesc));
 	phScene->SetContactMode(soTarget, PHSceneDesc::MODE_NONE);
 
 	PHSpringDesc springDesc;
-	springDesc.posePlug.Pos() = Vec3d(0,0,0);
-	springDesc.spring = Vec3d(1,1,1) * springPos;
-	springDesc.damper = Vec3d(1,1,1) * damperPos;
+	{
+		springDesc.posePlug.Pos() = Vec3d(0,0,0);
+		springDesc.spring = Vec3d(1,1,1) * springPos;
+		springDesc.damper = Vec3d(1,1,1) * damperPos;
+	}
 	spring = DCAST(PHSpringIf, phScene->CreateJoint(soTarget, solid, springDesc));
-
 	spring->Enable(false);
+
+	Reset();
 }
 
-void CRReachingMovement::Reset(){
+void CRReachingController::Reset(){
 	time  = 0.0f;
 	limitForce = 350.0f;
 	spring->Enable(false);
@@ -45,19 +57,20 @@ void CRReachingMovement::Reset(){
 	bOri = false;
 }
 
-void CRReachingMovement::UnfixHinge(){
-	for(int i=0; i<CRHingeHumanDesc::CRHumanJoints::JO_NJOINTS; i++){
-		if (   i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Y
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Z
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_Z
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_Y
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_Y)
+void CRReachingController::UnfixHinge(){
+	/*
+	for(int i=0; i<CRHingeHumanBodyDesc::JO_NJOINTS; i++){
+		if (   i != CRHingeHumanBodyDesc::JO_CHEST_NECK_X
+			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Y
+			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Z
+			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_X
+			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_Z
+			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_X
+			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y
+			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_X
+			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_Y)
 		{
-			PHHingeJointIf* joint = DCAST(PHHingeJointIf, human->GetJoint(i));
+			PHHingeJointIf* joint = DCAST(PHHingeJointIf, body->GetJoint(i));
 			if (fixmode == CRR_UNFIXED) {
 			} else if (fixmode == CRR_NORMAL) {
 				joint->SetSpring(joint->GetSpring() * softenRate);
@@ -67,21 +80,23 @@ void CRReachingMovement::UnfixHinge(){
 			fixmode = CRR_UNFIXED;
 		}
 	}
+	*/
 }
 
-void CRReachingMovement::FixHinge(){
-	for(int i=0; i<CRHingeHumanDesc::CRHumanJoints::JO_NJOINTS; i++){
-		if (   i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Y
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_CHEST_NECK_Z
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_NECK_HEAD_Z
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_RIGHT_EYE_Y
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_X
-			&& i != CRHingeHumanDesc::CRHumanJoints::JO_LEFT_EYE_Y)
+void CRReachingController::FixHinge(){
+	/*
+	for(int i=0; i<CRHingeHumanBodyDesc::JO_NJOINTS; i++){
+		if (   i != CRHingeHumanBodyDesc::JO_CHEST_NECK_X
+			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Y
+			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Z
+			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_X
+			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_Z
+			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_X
+			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y
+			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_X
+			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_Y)
 		{
-			PHHingeJointIf* joint = DCAST(PHHingeJointIf, human->GetJoint(i));
+			PHHingeJointIf* joint = DCAST(PHHingeJointIf, body->GetJoint(i));
 			if (fixmode == CRR_UNFIXED) {
 				joint->SetSpring(joint->GetSpring() / softenRate * hardenRate);
 			} else if (fixmode == CRR_NORMAL) {
@@ -92,9 +107,10 @@ void CRReachingMovement::FixHinge(){
 			fixmode = CRR_FIXED;
 		}
 	}
+	*/
 }
 
-void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
+void CRReachingController::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	firstPos = solid->GetPose().Pos();
 	finalPos = p;
 	finalVel = v;
@@ -106,15 +122,17 @@ void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	UnfixHinge();
 }
 
-void CRReachingMovement::SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
+void CRReachingController::SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
 	finalQuat = q;
 	finalAngV = av;
 	bOri = true;
 	SetTarget(p, v, t, o);
 }
 
-void CRReachingMovement::Step(){
-	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
+void CRReachingController::Step(){
+	CRController::Step();
+
+	double dt = phScene->GetTimeStep();
 	if(bActive){
 		/*
 		if(bInitIfContact && (solid->GetForce().norm() > 30.0f)){	
@@ -168,7 +186,7 @@ void CRReachingMovement::Step(){
 	}
 }
 
-bool CRReachingMovement::IsActive(){
+bool CRReachingController::IsActive(){
 	return bActive;
 }
 

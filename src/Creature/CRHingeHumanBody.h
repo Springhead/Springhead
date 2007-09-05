@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRHINGEHUMAN_H
-#define CRHINGEHUMAN_H
+#ifndef CRHINGEHUMANBODY_H
+#define CRHINGEHUMANBODY_H
 
 #include <Springhead.h>
 
@@ -15,25 +15,17 @@
 
 #include <vector>
 
+#include "CRBody.h"
+
 //@{
 namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRHingeHuman
+// CRHingeHumanBody
 // ヒンジジョイントを用いた人体モデル・クラスの実装
-class CRHingeHuman : public SceneObject, public CRHingeHumanIfInit, public CRHingeHumanDesc {
+class CRHingeHumanBody : public CRBody, public CRHingeHumanBodyIfInit, public CRHingeHumanBodyDesc {
 private:
 	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
-
-	std::vector<PHSolidIf*> solids;
-	std::vector<PHJointIf*> joints;
-
-	CREyeControllerIf *eyeCtrl;
-
-	PHSceneIf *phScene;
-	PHSdkIf   *phSdk;
-
-	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
 
 	void InitBody();
 	void CreateWaist();
@@ -58,39 +50,22 @@ private:
 	void CreateFoot(LREnum lr);
 
 public:
-	OBJECTDEF(CRHingeHuman, SceneObject);
-	ACCESS_DESC(CRHingeHuman);
+	OBJECTDEF(CRHingeHumanBody, CRBody);
+	ACCESS_DESC(CRHingeHumanBody);
 
-	CRHingeHuman(){eyeCtrl=NULL;}
-	CRHingeHuman(const CRHingeHumanDesc& desc, SceneIf* s=NULL) : CRHingeHumanDesc(desc), solids(SO_NSOLIDS), joints(JO_NJOINTS) {
-		eyeCtrl=NULL;
-		if(s){
-			SetScene(s);Init();
-		}
+	CRHingeHumanBody(){}
+	CRHingeHumanBody(const CRHingeHumanBodyDesc& desc, CRCreatureIf* c=NULL) 
+		: CRHingeHumanBodyDesc(desc) 
+		, CRBody((const CRBodyDesc&)desc, c)
+	{
 	}
 
-	/** @brief 剛体の数を得る
+	/** @brief 初期化を実行する
 	*/
-	virtual int NSolids();
-
-	/** @brief i番目の剛体を得る
-	*/
-	virtual PHSolidIf* GetSolid(int i);
-
-	/** @brief 関節の数を得る
-	*/
-	virtual int NJoints();
-
-	/** @brief i番目の関節を得る
-	*/
-	virtual PHJointIf* GetJoint(int i);
-
-	/** @brief 人体モデルの初期化（構築含む）を行う
-	*/
-	void Init();
+	virtual void Init();
 };
 
 }
 //@}
 
-#endif//CRHINGEHUMAN_H
+#endif//CRHINGEHUMANBODY_H

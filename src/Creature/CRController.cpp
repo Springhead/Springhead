@@ -5,29 +5,19 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include "CRController.h"
 
-#include <Foundation/Foundation.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
-#include "TypeDescDumpCreature.h"
+namespace Spr{
+IF_OBJECT_IMP(CRController, SceneObject);
 
-namespace Spr{ 
-static UTTypeDesc* desc; 
-static UTTypeDesc::Field* field; 
-
-void SPR_CDECL CRRegisterTypeDescs(){
-	static bool bFirst=true;
-	if (!bFirst) return;
-	bFirst = false;
-
-	UTRegisterTypeDescs();
-
-	UTTypeDescDb* db = UTTypeDescDbPool::Get("Creature");
-	assert(db);
-	#include "TypeDescDumpImpCreature.h"
-	db->Link();
+void CRController::Init(){
+	phScene = DCAST(PHSceneIf, GetScene());
+}
+	
+void CRController::Step(){
 }
 }
-

@@ -5,20 +5,22 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRREACHINGMOVEMENT_H
-#define CRREACHINGMOVEMENT_H
+#ifndef CRREACHINGCONTROLLER_H
+#define CRREACHINGCONTROLLER_H
 
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
 
+#include "CRController.h"
+
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 到達運動コントローラ
 */
-class CRReachingMovement : public SceneObject, public CRReachingMovementIfInit, public CRReachingMovementDesc {
+class CRReachingController : public CRController, public CRReachingControllerIfInit, public CRReachingControllerDesc {
 private:
 	/// 関節固定モード
 	enum CRRFixMode {
@@ -47,28 +49,39 @@ private:
 	/// 有効かどうか
 	bool bActive, bOri;
 
-	/// 初期化を行う
-	void Init();
+	/// 制御対象のボディ
+	CRHingeHumanBodyIf* body;
 
-	/// リセットする
+	/** @brief リセットする
+	*/
 	void Reset();
 
-	/// 制御対象の関節を柔らかくする
+	/** @brief 制御対象の関節を柔らかくする
+	*/
 	void UnfixHinge();
 
-	/// 制御対象の関節を固くする
+	/** @brief 制御対象の関節を固くする
+	*/
 	void FixHinge();
 
 public:
-	OBJECTDEF(CRReachingMovement, SceneObject);
-	ACCESS_DESC(CRReachingMovement);
+	OBJECTDEF(CRReachingController, CRController);
+	ACCESS_DESC(CRReachingController);
 
-	CRReachingMovement(){}
-	CRReachingMovement(const CRReachingMovementDesc& desc, SceneIf* s=NULL) : CRReachingMovementDesc(desc) {
-		if(s){SetScene(s);}
-		Init();
-		Reset();
+	CRReachingController(){}
+	CRReachingController(const CRReachingControllerDesc& desc, CRCreatureIf* c=NULL) 
+		: CRReachingControllerDesc(desc) 
+		, CRController((const CRControllerDesc&)desc, c)
+	{
 	}
+
+	/** @ brief 初期化を実行する
+	*/
+	virtual void Init();
+
+	/** @ brief 制御のステップを実行する
+	*/
+	virtual void Step();
 
 	/** @brief 目標位置を設定する
 		@param p 目標位置
@@ -88,10 +101,6 @@ public:
 	*/
 	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o);
 
-	/** @ brief 制御のステップを実行する
-	*/
-	virtual void Step();
-
 	/** @brief 作動中かどうかを返す
 	*/
 	virtual bool IsActive();
@@ -99,4 +108,4 @@ public:
 }
 //@}
 
-#endif//CRREACHINGMOVEMENT_H
+#endif//CRREACHINGCONTROLLER_H

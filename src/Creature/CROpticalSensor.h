@@ -16,36 +16,44 @@
 #include <vector>
 #include <algorithm>
 
+#include "CRSensor.h"
+
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief 注意物体リスト
+/** @brief 視覚センサ
 */
-class CROpticalSensor : public SceneObject, public CROpticalSensorIfInit, public CROpticalSensorDesc {
+class CROpticalSensor : public CRSensor, public CROpticalSensorIfInit, public CROpticalSensorDesc {
 private:
-	PHSceneIf* phScene;
+	/// 利用する剛体
+	PHSolidIf *soLEye, *soREye;
+
+	/// 書き込み先の内部シーン
+	CRInternalSceneIf* internalScene;
 
 	/** @brief 視野内かどうか
 	*/
 	bool IsVisible(PHSolidIf* solid);
 
-	/** @brief 初期化処理
-	*/
-	void Init();
-
 public:
-	OBJECTDEF(CROpticalSensor, SceneObject);
+	OBJECTDEF(CROpticalSensor, CRSensor);
 	ACCESS_DESC(CROpticalSensor);
 
-	CROpticalSensor(){ Init(); }
-	CROpticalSensor(const CROpticalSensorDesc& desc, SceneIf* s=NULL) : CROpticalSensorDesc(desc) {
-		if(s){SetScene(s);}
-		Init();
+	CROpticalSensor(){}
+	CROpticalSensor(const CROpticalSensorDesc& desc, CRCreatureIf* c=NULL) 
+		: CROpticalSensorDesc(desc) 
+		, CRSensor((const CRSensorDesc&)desc, c)
+	{
 	}
 
-	/** @brief 感覚入力の処理を実行する
+	/** @brief 初期化処理
+	*/
+	virtual void Init();
+
+	/** @brief １ステップ分の処理
 	*/
 	virtual void Step();
+
 };
 }
 //@}
