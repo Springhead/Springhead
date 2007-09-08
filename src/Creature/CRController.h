@@ -26,6 +26,9 @@ protected:
 	/// 所属するシーン
 	PHSceneIf* phScene;
 
+	/// 有効かどうか
+	bool isEnabled;
+
 public:
 	OBJECTDEF(CRController, SceneObject);
 	ACCESS_DESC(CRController);
@@ -43,6 +46,14 @@ public:
 	/** @brief 運動制御の処理を実行する
 	*/
 	virtual void Step();
+
+	/** @breif 有効・無効を切り替える
+	*/
+	virtual void SetEnable(bool enable);
+
+	/** @brief 有効・無効かを返す
+	*/
+	virtual bool IsEnabled();
 };
 }
 //@}

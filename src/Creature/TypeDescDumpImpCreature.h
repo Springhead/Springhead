@@ -283,6 +283,26 @@
 	field->offset = int((char*)(CRControllerDesc*)pCRWalkingControllerDesc - (char*)pCRWalkingControllerDesc);
 	db->RegisterDesc(desc);
 	
+	CREseWalkingControllerDesc* pCREseWalkingControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CREseWalkingControllerDesc");
+	desc->size = sizeof(CREseWalkingControllerDesc);
+	desc->ifInfo = CREseWalkingControllerIf::GetIfInfoStatic();
+	((IfInfo*)CREseWalkingControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CREseWalkingControllerDesc>;
+	field = desc->AddBase("CRControllerDesc");
+	field->offset = int((char*)(CRControllerDesc*)pCREseWalkingControllerDesc - (char*)pCREseWalkingControllerDesc);
+	db->RegisterDesc(desc);
+	
+	CRTravelControllerDesc* pCRTravelControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRTravelControllerDesc");
+	desc->size = sizeof(CRTravelControllerDesc);
+	desc->ifInfo = CRTravelControllerIf::GetIfInfoStatic();
+	((IfInfo*)CRTravelControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRTravelControllerDesc>;
+	field = desc->AddBase("CRControllerDesc");
+	field->offset = int((char*)(CRControllerDesc*)pCRTravelControllerDesc - (char*)pCRTravelControllerDesc);
+	db->RegisterDesc(desc);
+	
 	CRCreatureDesc* pCRCreatureDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRCreatureDesc");
 	desc->size = sizeof(CRCreatureDesc);
@@ -299,8 +319,8 @@
 	desc->access = DBG_NEW UTAccess<CRInternalSceneObjectDesc>;
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
 	field->offset = int((char*)&(pCRInternalSceneObjectDesc->solid) - (char*)pCRInternalSceneObjectDesc);
-	field = desc->AddField("", "Vec3f", "pos", "");
-	field->offset = int((char*)&(pCRInternalSceneObjectDesc->pos) - (char*)pCRInternalSceneObjectDesc);
+	field = desc->AddField("", "Vec3f", "position", "");
+	field->offset = int((char*)&(pCRInternalSceneObjectDesc->position) - (char*)pCRInternalSceneObjectDesc);
 	db->RegisterDesc(desc);
 	
 	CRISAttractiveObjectDesc* pCRISAttractiveObjectDesc = NULL;
@@ -323,8 +343,10 @@
 	desc->access = DBG_NEW UTAccess<CRISTravelPotentialObjectDesc>;
 	field = desc->AddBase("CRInternalSceneObjectDesc");
 	field->offset = int((char*)(CRInternalSceneObjectDesc*)pCRISTravelPotentialObjectDesc - (char*)pCRISTravelPotentialObjectDesc);
-	field = desc->AddField("", "Vec2f", "potential", "");
-	field->offset = int((char*)&(pCRISTravelPotentialObjectDesc->potential) - (char*)pCRISTravelPotentialObjectDesc);
+	field = desc->AddField("", "Vec2f", "strength", "");
+	field->offset = int((char*)&(pCRISTravelPotentialObjectDesc->strength) - (char*)pCRISTravelPotentialObjectDesc);
+	field = desc->AddField("", "Vec2f", "decay", "");
+	field->offset = int((char*)&(pCRISTravelPotentialObjectDesc->decay) - (char*)pCRISTravelPotentialObjectDesc);
 	db->RegisterDesc(desc);
 	
 	CRInternalSceneDesc* pCRInternalSceneDesc = NULL;

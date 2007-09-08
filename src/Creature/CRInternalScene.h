@@ -21,18 +21,33 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 内部シーンを構成するオブジェクト
 */
-class CRInternalSceneObject : public SceneObject, public CRInternalSceneObjectIfInit, public CRInternalSceneObjectDesc {
+class CRInternalSceneObject : public SceneObject, public CRInternalSceneObjectIfInit {
 private:
 	/// 所属する内部シーン
 	CRInternalSceneIf* internalScene;
 
 public:
 	OBJECTDEF(CRInternalSceneObject, SceneObject);
-	// ACCESS_DESC(CRInternalSceneObject);
 
 	CRInternalSceneObject(){}
-	CRInternalSceneObject(const CRInternalSceneObjectDesc& desc, CRInternalSceneIf* is) : CRInternalSceneObjectDesc(desc) {
+	CRInternalSceneObject(const CRInternalSceneObjectDesc& desc, CRInternalSceneIf* is) {
+		SetDesc(&desc);
 		internalScene = is;
+	}
+
+	/// デスクリプタ関連
+protected:
+	PHSolidIf* solid;
+	Vec3f position;
+public:
+	virtual void SetDesc(const void* desc){
+		solid    = ((CRInternalSceneObjectDesc*)desc)->solid;
+		position = ((CRInternalSceneObjectDesc*)desc)->position;
+	}
+	virtual bool GetDesc(void* desc){
+		((CRInternalSceneObjectDesc*)desc)->solid    = solid;
+		((CRInternalSceneObjectDesc*)desc)->position = position;
+		return true;
 	}
 
 	/** @brief 剛体を返す
@@ -47,18 +62,31 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意をひきつける物体
 */
-class CRISAttractiveObject : public CRInternalSceneObject, public CRISAttractiveObjectIfInit, public CRISAttractiveObjectDesc {
+class CRISAttractiveObject : public CRInternalSceneObject, public CRISAttractiveObjectIfInit {
 private:
 
 public:
 	OBJECTDEF(CRISAttractiveObject, CRInternalSceneObject);
-	// ACCESS_DESC(CRISAttractiveObject);
 
 	CRISAttractiveObject(){}
 	CRISAttractiveObject(const CRISAttractiveObjectDesc& desc, CRInternalSceneIf* is) 
-		: CRISAttractiveObjectDesc(desc)
-		, CRInternalSceneObject((const CRInternalSceneObjectDesc&)desc, is)
+		: CRInternalSceneObject((const CRInternalSceneObjectDesc&)desc, is)
 	{
+		SetDesc(&desc);
+	}
+
+	/// デスクリプタ関連
+protected:
+	float  attractiveness;
+public:
+	virtual void SetDesc(const void* desc){
+		CRInternalSceneObject::SetDesc(desc);
+		attractiveness = ((CRISAttractiveObjectDesc*)desc)->attractiveness;
+	}
+	virtual bool GetDesc(void* desc){
+		CRInternalSceneObject::GetDesc(desc);
+		((CRISAttractiveObjectDesc*)desc)->attractiveness = attractiveness;
+		return true;
 	}
 
 	/** @brief 注意をひきつける度合を得る
@@ -73,27 +101,55 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 歩行のポテンシャルにかかわる物体
 */
-class CRISTravelPotentialObject : public CRInternalSceneObject, public CRISTravelPotentialObjectIfInit, public CRISTravelPotentialObjectDesc {
+class CRISTravelPotentialObject : public CRInternalSceneObject, public CRISTravelPotentialObjectIfInit {
 private:
 
 public:
 	OBJECTDEF(CRISTravelPotentialObject, CRInternalSceneObject);
-	// ACCESS_DESC(CRISTravelPotentialObject);
 
 	CRISTravelPotentialObject(){}
 	CRISTravelPotentialObject(const CRISTravelPotentialObjectDesc& desc, CRInternalSceneIf* is) 
-		: CRISTravelPotentialObjectDesc(desc) 
-		, CRInternalSceneObject((const CRInternalSceneObjectDesc&)desc, is)
+		: CRInternalSceneObject((const CRInternalSceneObjectDesc&)desc, is)
 	{
+		SetDesc(&desc);
 	}
 
-	/** @brief ポテンシャル係数を設定する
-	*/
-	virtual Vec2f GetPotential();
+	/// デスクリプタ関連
+protected:
+	Vec2f  strength;
+	Vec2f  decay;
+public:
+	virtual void SetDesc(const void* desc){
+		CRInternalSceneObject::SetDesc(desc);
+		strength = ((CRISTravelPotentialObjectDesc*)desc)->strength;
+		decay    = ((CRISTravelPotentialObjectDesc*)desc)->decay;
+	}
+	virtual bool GetDesc(void* desc){
+		CRInternalSceneObject::GetDesc(desc);
+		((CRISTravelPotentialObjectDesc*)desc)->strength = strength;
+		((CRISTravelPotentialObjectDesc*)desc)->decay    = decay;
+		return true;
+	}
 
-	/** @brief ポテンシャル係数を設定する
+	/** @brief ポテンシャルの強さの係数（A, B）を得る
 	*/
-	virtual void SetPotential(Vec2f potential);
+	virtual Vec2f GetStrengthCoeff();
+
+	/** @brief ポテンシャルの強さの係数（A, B）を設定する
+	*/
+	virtual void SetStrengthCoeff(Vec2f strength);
+
+	/** @brief ポテンシャルの減衰の係数（n, m）を得る
+	*/
+	virtual Vec2f GetDecayCoeff();
+
+	/** @brief ポテンシャルの減衰の係数（n, m）を設定する
+	*/
+	virtual void SetDecayCoeff(Vec2f decay);
+
+	/** @brief ある位置に対応するポテンシャルを計算する
+	*/
+	virtual Vec2f GetPotential(Vec2f currPos);
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

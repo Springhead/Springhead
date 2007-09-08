@@ -31,6 +31,14 @@ struct CRControllerIf : SceneObjectIf{
 	/** @brief 制御処理を実行する
 	*/
 	virtual void Step()= 0;
+
+	/** @breif 有効・無効を切り替える
+	*/
+	virtual void SetEnable(bool enable)= 0;
+
+	/** @brief 有効・無効かを返す
+	*/
+	virtual bool IsEnabled()= 0;
 };
 
 /// コントローラのデスクリプタ
@@ -193,11 +201,13 @@ struct CRReachingControllerDesc : public CRControllerDesc{
 struct CRWalkingControllerIf : CRControllerIf{
 	IF_DEF(CRWalkingController);
 
-	/// StepとInit以外のAPI関数をここに追加．
-	/// API関数は，他クラスから呼ぶことができる．
-	/// （ここで定義されない関数は基本的に他クラスから呼ぶことができない．）
-	/// 例:
-	/// virtual void SetForwardSpeed(float speed)= 0;
+	/** @brief 歩行の速度を設定する
+	*/
+	virtual void SetSpeed(float speed)= 0;
+
+	/** @brief 転回角度を設定する
+	*/
+	virtual void SetRotationAngle(float rot)= 0;
 };
 
 /// 歩行コントローラのデスクリプタ
@@ -209,6 +219,46 @@ struct CRWalkingControllerDesc : public CRControllerDesc{
 
 	CRWalkingControllerDesc(){
 		/// 各変数にデフォルトの値を入れる．ゼロとかNULLでもいい．
+	}
+};
+
+// ------------------------------------------------------------------------------
+/// 偽歩行コントローラ：本当の歩行コントローラができるまでの中継ぎ
+struct CREseWalkingControllerIf : CRControllerIf{
+	IF_DEF(CREseWalkingController);
+
+	/** @brief 歩行の速度を設定する
+	*/
+	virtual void SetSpeed(float speed)= 0;
+
+	/** @brief 転回角度を設定する
+	*/
+	virtual void SetRotationAngle(float rot)= 0;
+};
+
+/// 偽歩行コントローラのデスクリプタ
+struct CREseWalkingControllerDesc : public CRControllerDesc{
+	DESC_DEF_FOR_OBJECT(CREseWalkingController);
+
+	CREseWalkingControllerDesc(){
+	}
+};
+
+// ------------------------------------------------------------------------------
+/// 移動コントローラ：目標地点への移動と障害物回避
+struct CRTravelControllerIf : CRControllerIf{
+	IF_DEF(CRTravelController);
+
+	/** @brief 目標地点を設定する
+	*/
+	virtual void SetGoal(Vec2f goal)= 0;
+};
+
+/// 移動コントローラのデスクリプタ
+struct CRTravelControllerDesc : public CRControllerDesc{
+	DESC_DEF_FOR_OBJECT(CRTravelController);
+
+	CRTravelControllerDesc(){
 	}
 };
 

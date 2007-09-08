@@ -55,10 +55,11 @@ void CRWalkingController::Init(){
 	
 void CRWalkingController::Step(){
 	CRController::Step();
-
-	/// 制御のステップを実行する．
 }
 
-/// 上記以外にCRWalkingControllerIfに追加したAPI関数の実装をここに追加．
+void CRWalkingController::SetSpeed(float speed){
+}
 
+void CRWalkingController::SetRotationAngle(float rot){
+}
 }

@@ -21,7 +21,7 @@ PHSolidIf* CRInternalSceneObject::GetSolid(){
 }
 
 Vec3f CRInternalSceneObject::GetPos(){
-	return pos;
+	return position;
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -40,12 +40,29 @@ void CRISAttractiveObject::SetAttractiveness(float attractiveness){
 // 
 IF_OBJECT_IMP(CRISTravelPotentialObject, CRInternalSceneObject);
 
-Vec2f CRISTravelPotentialObject::GetPotential(){
-	return potential;
+Vec2f CRISTravelPotentialObject::GetStrengthCoeff(){
+	return strength;
 }
 
-void CRISTravelPotentialObject::SetPotential(Vec2f potential){
-	this->potential = potential;
+void CRISTravelPotentialObject::SetStrengthCoeff(Vec2f strength){
+	this->strength = strength;
+}
+
+Vec2f CRISTravelPotentialObject::GetDecayCoeff(){
+	return decay;
+}
+
+void CRISTravelPotentialObject::SetDecayCoeff(Vec2f decay){
+	this->decay = decay;
+}
+
+Vec2f CRISTravelPotentialObject::GetPotential(Vec2f currPos){
+	Vec3f objPos3 = solid->GetPose() * position;
+	Vec2f objPos = Vec2f(objPos3.X(), objPos3.Z());
+	float dist = (currPos - objPos).norm();
+	Vec2f dir  = (currPos - objPos).unit();
+	float U = -strength.X()/pow(dist, decay.X()) + strength.Y()/pow(dist, decay.Y());
+	return(U * dir);
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -76,7 +93,7 @@ void CRInternalScene::SortByAttractiveness(){
 
 CRInternalSceneObjectIf* CRInternalScene::FindObject(PHSolidIf* solid, Vec3f pos){
 	for (int i=0; i<sceneObjects.size(); i++) {
-		if (sceneObjects[i]->solid == solid && (sceneObjects[i]->pos - pos).norm() < 0.001) { // 数値は変更可能にすること(mitake)
+		if (sceneObjects[i]->GetSolid() == solid && (sceneObjects[i]->GetPos() - pos).norm() < 0.001) { // 数値は変更可能にすること(mitake)
 			return sceneObjects[i]->Cast();
 		}
 	}

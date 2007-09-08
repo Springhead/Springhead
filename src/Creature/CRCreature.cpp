@@ -17,6 +17,8 @@
 #include "CRNeckController.h"
 #include "CRReachingController.h"
 #include "CRWalkingController.h"
+#include "CREseWalkingController.h"
+#include "CRTravelController.h"
 
 #include "CRBody.h"
 #include "CRHingeHumanBody.h"
@@ -50,7 +52,9 @@ void CRCreature::Step(){
 	}
 
 	for (int i=0; i<controllers.size(); i++){
-		controllers[i]->Step();
+		if (controllers[i]->IsEnabled()) {
+			controllers[i]->Step();
+		}
 	}
 }
 
@@ -110,6 +114,12 @@ CRControllerIf* CRCreature::CreateController(const IfInfo* ii, const CRControlle
 
 	} else if (ii == CRWalkingControllerIf::GetIfInfoStatic()) {
 		controllers.push_back((DBG_NEW CRWalkingController((const CRWalkingControllerDesc&)desc, this->Cast()))->Cast());
+
+	} else if (ii == CREseWalkingControllerIf::GetIfInfoStatic()) {
+		controllers.push_back((DBG_NEW CREseWalkingController((const CREseWalkingControllerDesc&)desc, this->Cast()))->Cast());
+
+	} else if (ii == CRTravelControllerIf::GetIfInfoStatic()) {
+		controllers.push_back((DBG_NEW CRTravelController((const CRTravelControllerDesc&)desc, this->Cast()))->Cast());
 
 	} else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");

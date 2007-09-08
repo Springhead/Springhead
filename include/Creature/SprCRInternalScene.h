@@ -39,11 +39,11 @@ struct CRInternalSceneObjectDesc{
 	PHSolidIf* solid;
 
 	/// 剛体ローカル座標系における位置
-	Vec3f pos;
+	Vec3f position;
 
 	CRInternalSceneObjectDesc(){
 		solid          = NULL;
-		pos            = Vec3f(0,0,0);
+		position       = Vec3f(0,0,0);
 	}
 };
 
@@ -78,24 +78,44 @@ struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
 struct CRISTravelPotentialObjectIf : CRInternalSceneObjectIf{
 	IF_DEF(CRISTravelPotentialObject);
 
-	/** @brief ポテンシャル係数を設定する
+	/*
+	** 距離rにおけるレナード・ジョーンズポテンシャル
+	**     U = -A / (r^n) + B / (r^m)
 	*/
-	virtual Vec2f GetPotential()= 0;
 
-	/** @brief ポテンシャル係数を設定する
+	/** @brief ポテンシャルの強さの係数（A, B）を得る
 	*/
-	virtual void SetPotential(Vec2f potential)= 0;
+	virtual Vec2f GetStrengthCoeff()= 0;
+
+	/** @brief ポテンシャルの強さの係数（A, B）を設定する
+	*/
+	virtual void SetStrengthCoeff(Vec2f strength)= 0;
+
+	/** @brief ポテンシャルの減衰の係数（n, m）を得る
+	*/
+	virtual Vec2f GetDecayCoeff()= 0;
+
+	/** @brief ポテンシャルの減衰の係数（n, m）を設定する
+	*/
+	virtual void SetDecayCoeff(Vec2f decay)= 0;
+
+	/** @brief ある位置に対応するポテンシャルを計算する
+	*/
+	virtual Vec2f GetPotential(Vec2f currPos)= 0;
 };
 
 /// 歩行のポテンシャル制御にかかわる物体のデスクリプタ
 struct CRISTravelPotentialObjectDesc : CRInternalSceneObjectDesc{
 	DESC_DEF_FOR_OBJECT(CRISTravelPotentialObject);
 
-	/// ポテンシャル係数のベクトル
-	Vec2f  potential;
+	/// 強さの計数
+	Vec2f  strength;
+	/// 減衰の計数
+	Vec2f  decay;
 
 	CRISTravelPotentialObjectDesc(){
-		potential = Vec2f(0.0f, 0.0f);
+		strength = Vec2f(0.0f, 0.0f);
+		decay    = Vec2f(0.0f, 0.0f);
 	}
 };
 

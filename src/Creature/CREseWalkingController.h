@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRWALKINGCONTROLLER_H
-#define CRWALKINGCONTROLLER_H
+#ifndef CRESEWALKINGCONTROLLER_H
+#define CRESEWALKINGCONTROLLER_H
 
 #include <Springhead.h>
 
@@ -18,30 +18,37 @@
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief 注意コントローラ
+/** @brief 偽歩行コントローラ
 */
-class CRWalkingController : public CRController, public CRWalkingControllerIfInit, public CRWalkingControllerDesc {
+class CREseWalkingController : public CRController, public CREseWalkingControllerIfInit, public CREseWalkingControllerDesc {
 private:
-	/// 依存する他のオブジェクトの例．必要なものを選んで記述．ただしCRControllerに既にあるものは不要．
-	/*
-	CRHingeHumanBodyIf* body;
-	CRInternalSceneIf*  internalScene;
-	CRGazeControllerIf* gazeController;
-	CROpticalSensorIf*  opticalSensor;
-	*/
+	/// 制御対象となるボディの腰の剛体
+	PHSolidIf* soWaist;
 
-	/// ほかにPrivateな変数やメソッドが必要ならここに定義を追加．
+	/// ボディを固定するための不可視剛体と間接
+	PHSolidIf* soFixpoint;
+	PHJointIf* joFixpoint;
+
+	/// 歩行スピード
+	float speed;
+
+	/// 転回角度
+	float rotation;
 
 public:
-	OBJECTDEF(CRWalkingController, CRController);
-	ACCESS_DESC(CRWalkingController);
+	OBJECTDEF(CREseWalkingController, CRController);
+	ACCESS_DESC(CREseWalkingController);
 
-	CRWalkingController(){
+	CREseWalkingController(){
+		speed    = 0.0f;
+		rotation = 0.0f;
 	}
-	CRWalkingController(const CRWalkingControllerDesc& desc, CRCreatureIf* c=NULL) 
-		: CRWalkingControllerDesc(desc) 
+	CREseWalkingController(const CREseWalkingControllerDesc& desc, CRCreatureIf* c=NULL) 
+		: CREseWalkingControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
+		speed    = 0.0f;
+		rotation = 0.0f;
 	}
 
 	/** @brief 初期化を行う
@@ -63,4 +70,4 @@ public:
 }
 //@}
 
-#endif//CRWALKINGCONTROLLER_H
+#endif//CRESEWALKINGCONTROLLER_H

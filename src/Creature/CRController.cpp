@@ -20,4 +20,12 @@ void CRController::Init(){
 	
 void CRController::Step(){
 }
+
+void CRController::SetEnable(bool enable){
+	isEnabled = enable;
+}
+
+bool CRController::IsEnabled(){
+	return(isEnabled);
+}
 }

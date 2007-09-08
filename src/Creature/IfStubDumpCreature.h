@@ -41,6 +41,12 @@ struct CRControllerIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
+	virtual void SetEnable(bool enable){
+		return ((OBJ*)(MIF*)this)->SetEnable(enable);
+	}
+	virtual bool IsEnabled(){
+		return ((OBJ*)(MIF*)this)->IsEnabled();
+	}
 };
 struct CRControllerIf;	class CRController;
 typedef CRControllerIfStubTemplate<CRControllerIf, ObjectIfBuf, CRController>	CRControllerIfStub;
@@ -107,10 +113,41 @@ typedef IfInitTemplate<CRReachingControllerIfStub, CRReachingController>	CRReach
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRWalkingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual void SetSpeed(float speed){
+		return ((OBJ*)(MIF*)this)->SetSpeed(speed);
+	}
+	virtual void SetRotationAngle(float rot){
+		return ((OBJ*)(MIF*)this)->SetRotationAngle(rot);
+	}
 };
 struct CRWalkingControllerIf;	class CRWalkingController;
 typedef CRWalkingControllerIfStubTemplate<CRWalkingControllerIf, ObjectIfBuf, CRWalkingController>	CRWalkingControllerIfStub;
 typedef IfInitTemplate<CRWalkingControllerIfStub, CRWalkingController>	CRWalkingControllerIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CREseWalkingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual void SetSpeed(float speed){
+		return ((OBJ*)(MIF*)this)->SetSpeed(speed);
+	}
+	virtual void SetRotationAngle(float rot){
+		return ((OBJ*)(MIF*)this)->SetRotationAngle(rot);
+	}
+};
+struct CREseWalkingControllerIf;	class CREseWalkingController;
+typedef CREseWalkingControllerIfStubTemplate<CREseWalkingControllerIf, ObjectIfBuf, CREseWalkingController>	CREseWalkingControllerIfStub;
+typedef IfInitTemplate<CREseWalkingControllerIfStub, CREseWalkingController>	CREseWalkingControllerIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRTravelControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual void SetGoal(Vec2f goal){
+		return ((OBJ*)(MIF*)this)->SetGoal(goal);
+	}
+};
+struct CRTravelControllerIf;	class CRTravelController;
+typedef CRTravelControllerIfStubTemplate<CRTravelControllerIf, ObjectIfBuf, CRTravelController>	CRTravelControllerIfStub;
+typedef IfInitTemplate<CRTravelControllerIfStub, CRTravelController>	CRTravelControllerIfInit;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
@@ -187,11 +224,20 @@ typedef IfInitTemplate<CRISAttractiveObjectIfStub, CRISAttractiveObject>	CRISAtt
 template <class IF, class MIF, class OBJ> struct CRInternalSceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRISTravelPotentialObjectIfStubTemplate: public CRInternalSceneObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual Vec2f GetPotential(){
-		return ((OBJ*)(MIF*)this)->GetPotential();
+	virtual Vec2f GetStrengthCoeff(){
+		return ((OBJ*)(MIF*)this)->GetStrengthCoeff();
 	}
-	virtual void SetPotential(Vec2f potential){
-		return ((OBJ*)(MIF*)this)->SetPotential(potential);
+	virtual void SetStrengthCoeff(Vec2f strength){
+		return ((OBJ*)(MIF*)this)->SetStrengthCoeff(strength);
+	}
+	virtual Vec2f GetDecayCoeff(){
+		return ((OBJ*)(MIF*)this)->GetDecayCoeff();
+	}
+	virtual void SetDecayCoeff(Vec2f decay){
+		return ((OBJ*)(MIF*)this)->SetDecayCoeff(decay);
+	}
+	virtual Vec2f GetPotential(Vec2f currPos){
+		return ((OBJ*)(MIF*)this)->GetPotential(currPos);
 	}
 };
 struct CRISTravelPotentialObjectIf;	class CRISTravelPotentialObject;
