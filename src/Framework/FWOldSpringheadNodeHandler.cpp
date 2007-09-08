@@ -319,7 +319,7 @@ public:
 			//アニメーションセットを探してくる
 			UTLoadedData* animationSetData = ld->FindDescendant("AnimationSet");
 			if (animationSetData){//animationSetDataに値が何も入っていない。
-				;
+
 				//アニメーションを探してくる
 				UTLoadedData* animationData = ld->FindDescendant("Animaiton");
 				if(animationData){
