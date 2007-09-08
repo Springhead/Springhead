@@ -15,6 +15,7 @@
 namespace Spr {;
 
 class GRCamera;
+class GRAnimationController;
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
 	レンダラが違うとシーングラフはそのまま使用できない．
@@ -28,6 +29,8 @@ protected:
 	UTRef<GRFrame> world;
 	///	カメラ
 	UTRef<GRCamera> camera;
+	///	アニメーションコントローラ
+	UTRef<GRAnimationController> animationController;
 public:
 	///	コンストラクタ
 	GRScene(const GRSceneDesc& desc=GRSceneDesc());
@@ -45,6 +48,7 @@ public:
 	virtual GRFrameIf* GetWorld(){return world->Cast();}
 	virtual void		SetCamera(const GRCameraDesc& desc);
 	virtual GRCameraIf* GetCamera(){return camera->Cast();}
+	virtual GRAnimationControllerIf* GetAnimationController(){return animationController->Cast();}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);

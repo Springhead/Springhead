@@ -55,13 +55,14 @@ void GRFrame::SetParent(GRFrameIf* fr){
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* o){
-	GRVisualIf* v = DCAST(GRVisualIf, o);
+	GRVisualIf* v = o->Cast();
 	if (v){
 		children.push_back(v);
 		GRFrame* f = DCAST(GRFrame, v);
 		if (f && f->parent != this){
-			//ここで元の持ち主から削除するのはやりすぎでは？
-			//if (f->parent) f->parent->DelChildObject(f->Cast());
+			//	ここで元の持ち主から削除するのはやりすぎでは？	by tazaki ?
+			//	 -> いや、Frame は parentがひとつなので、複数のフレームの子になるのはだめです。 by hase
+			if (f->parent) f->parent->DelChildObject(f->Cast());
 			f->parent = this;
 		}
 		return true;
@@ -98,41 +99,92 @@ void GRFrame::Print(std::ostream& os) const {
 //	GRAnimation
 //
 IF_OBJECT_IMP(GRAnimation, SceneObject);
-GRAnimation::GRAnimation(): activated(false){
-	weight = 0;
-	weightTo = 0;
-	duration = 0;
-};
-
-void GRAnimation::SetTime(float time){
-	/*
-	for(vector<GRAnimationDesc::Animation>::iterator it = animations.begin(); 
-		it != animations.end(); ++it){
-		GRAnimationDesc::Animation& anim = *it;
-		for(int i=0; i<	anim.keys.size(); ++i){
-			if (anim.keys[i].time > time){
+void GRAnimation::BlendPose(float time, float weight){
+	//	ターゲットに変換を加える
+	Affinef transform;
+	for(std::vector<AnimationKey>::iterator it = keys.begin(); it != keys.end(); ++it){
+		AnimationKey& anim = *it;
+		//	時刻でキーを検索
+		for(unsigned i=0; i < anim.keys.size(); ++i){
+			float blended[16];
+			if (anim.keys[i].time > time){	//	見つかったのでブレンドした変換を計算
 				if (i==0){	//	i=0だけをセット
-
+					for(unsigned v=0; v<anim.keys[i].values.size(); ++v){
+						blended[v] = anim.keys[i].values[v];
+					}
+				}else{		//	i-1とiをブレンド
+					float k = (anim.keys[i].time - time) / 
+							(anim.keys[i].time - anim.keys[i-1].time);
+					for(unsigned v=0; v<anim.keys[i].values.size(); ++v){
+						blended[v] = (1-k) * anim.keys[i].values[v]
+							+ k * anim.keys[i-1].values[v];
+					}						
 				}
+				//	見つかった変換をtransformに適用
+				switch(anim.keyType){
+					case GRAnimationDesc::ROTATION:{
+						Matrix3f mat;
+						((Quaternionf*)blended)->ToMatrix(mat);
+						transform.Rot() = transform.Rot() * mat;
 
+						}break;
+					case GRAnimationDesc::SCALE:
+						transform.Ex() *= blended[0];
+						transform.Ey() *= blended[1];
+						transform.Ez() *= blended[2];
+						break;
+					case GRAnimationDesc::POSITION:
+						transform.Pos() += *((Vec3f*)blended);
+						break;
+					case GRAnimationDesc::MATRIX:
+						transform = transform * *((Affinef*)blended);
+						break;
+				}
+				break;
 			}
 		}
 	}
-	*/
+	//	transform をターゲットに適用
+	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
+		it->target->SetTransform(it->target->GetTransform() * transform);
+	}
+}
+void GRAnimation::ResetPose(){
+	//	transform を初期値に戻す
+	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
+		it->target->SetTransform(it->initalTransform);
+	}
+}
+void GRAnimation::LoadInitialPose(){
+	//	フレームの変換に初期値を設定する
+	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
+		it->initalTransform = it->target->GetTransform();
+	}
+}
+bool GRAnimation::AddChildObject(ObjectIf* o){
+	GRFrame* fr = o->Cast();
+	if (fr){
+		targets.push_back(Target());
+		targets.back().target = fr->Cast();
+		targets.back().initalTransform = fr->GetTransform();
+		return true;
+	}
+	return false;
 }
 
 //-----------------------------------------------------------------
 //	GRAnimationSet
 //
 IF_OBJECT_IMP(GRAnimationSet, SceneObject);
-
 bool GRAnimationSet::AddChildObject(ObjectIf* o){
 	GRAnimation* ani = o->Cast();
 	if (ani){
 		animations.push_back(ani);
+		return true;
 	}
 	return false;
 }
+
 bool GRAnimationSet::DelChildObject(ObjectIf* o){
 	GRAnimation* ani = o->Cast();
 	if (ani){
@@ -148,22 +200,73 @@ bool GRAnimationSet::DelChildObject(ObjectIf* o){
 int GRAnimationSet::NChildObject(){
 	return animations.size();
 }
+
+
 ObjectIf* GRAnimationSet::GetChildObject(size_t p){
 	return animations[p]->Cast();
 }
-
-void GRAnimationSet::Activate(UTString name, float weightStart, float weightEnd, float duration){
-	for(Animations::iterator it = animations.begin(); it!=animations.end(); ++it){
-		if (name.compare((*it)->GetName())==0){
-			(*it)->activated = true;
-
-		}
+void GRAnimationSet::BlendPose(float time, float weight){
+	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
+		(*it)->BlendPose(time, weight);
 	}
-
+}
+void GRAnimationSet::ResetPose(){
+	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
+		(*it)->ResetPose();
+	}	
+}
+void GRAnimationSet::LoadInitialPose(){
+	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
+		(*it)->LoadInitialPose();
+	}
 }
 
-void GRAnimationSet::Deactivate(UTString name){
-	
+
+IF_OBJECT_IMP(GRAnimationController, SceneObject);
+bool GRAnimationController::AddChildObject(ObjectIf* o){
+	GRAnimationSet* ani = o->Cast();
+	if (ani){
+		sets.insert(std::make_pair(ani->GetName(), ani));
+		return true;
+	}
+	return false;
+}
+
+bool GRAnimationController::DelChildObject(ObjectIf* o){
+	GRAnimationSet* ani = o->Cast();
+	if (ani){
+		Sets::iterator it = sets.find(ani->GetName());
+		if (it->second == o->Cast()){
+			sets.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+int GRAnimationController::NChildObject(){
+	return sets.size();
+}
+
+ObjectIf* GRAnimationController::GetChildObject(size_t p){
+	Sets::iterator it = sets.begin();
+	for(unsigned i=0; i<p; ++i) ++it;
+	return it->second->Cast();
+}
+void GRAnimationController::BlendPose(UTString name, float time, float weight){
+	Sets::iterator it = sets.find(name);
+	if (it != sets.end()){
+		it->second->BlendPose(time, weight);
+	}
+}
+void GRAnimationController::ResetPose(){
+	for(Sets::iterator it = sets.begin(); it != sets.end(); ++it){
+		it->second->ResetPose();
+	}
+}
+void GRAnimationController::LoadInitialPose(){
+	for(Sets::iterator it = sets.begin(); it != sets.end(); ++it){
+		it->second->LoadInitialPose();
+	}
 }
 
 

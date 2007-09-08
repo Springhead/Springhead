@@ -58,6 +58,15 @@ typedef IfInitTemplate<GRFrameIfStub, GRFrame>	GRFrameIfInit;
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRAnimationIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void BlendPose(float time, float weight){
+		return ((OBJ*)(MIF*)this)->BlendPose(time, weight);
+	}
+	virtual void ResetPose(){
+		return ((OBJ*)(MIF*)this)->ResetPose();
+	}
+	virtual void LoadInitialPose(){
+		return ((OBJ*)(MIF*)this)->LoadInitialPose();
+	}
 };
 struct GRAnimationIf;	class GRAnimation;
 typedef GRAnimationIfStubTemplate<GRAnimationIf, ObjectIfBuf, GRAnimation>	GRAnimationIfStub;
@@ -66,10 +75,36 @@ typedef IfInitTemplate<GRAnimationIfStub, GRAnimation>	GRAnimationIfInit;
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRAnimationSetIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void BlendPose(float time, float weight){
+		return ((OBJ*)(MIF*)this)->BlendPose(time, weight);
+	}
+	virtual void ResetPose(){
+		return ((OBJ*)(MIF*)this)->ResetPose();
+	}
+	virtual void LoadInitialPose(){
+		return ((OBJ*)(MIF*)this)->LoadInitialPose();
+	}
 };
 struct GRAnimationSetIf;	class GRAnimationSet;
 typedef GRAnimationSetIfStubTemplate<GRAnimationSetIf, ObjectIfBuf, GRAnimationSet>	GRAnimationSetIfStub;
 typedef IfInitTemplate<GRAnimationSetIfStub, GRAnimationSet>	GRAnimationSetIfInit;
+
+template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct GRAnimationControllerIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void BlendPose(UTString name, float time, float weight){
+		return ((OBJ*)(MIF*)this)->BlendPose(name, time, weight);
+	}
+	virtual void ResetPose(){
+		return ((OBJ*)(MIF*)this)->ResetPose();
+	}
+	virtual void LoadInitialPose(){
+		return ((OBJ*)(MIF*)this)->LoadInitialPose();
+	}
+};
+struct GRAnimationControllerIf;	class GRAnimationController;
+typedef GRAnimationControllerIfStubTemplate<GRAnimationControllerIf, ObjectIfBuf, GRAnimationController>	GRAnimationControllerIfStub;
+typedef IfInitTemplate<GRAnimationControllerIfStub, GRAnimationController>	GRAnimationControllerIfInit;
 
 template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;
 template <class IF, class MIF, class OBJ>
@@ -325,6 +360,9 @@ struct GRSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual GRCameraIf * GetCamera(){
 		return ((OBJ*)(MIF*)this)->GetCamera();
+	}
+	virtual GRAnimationControllerIf * GetAnimationController(){
+		return ((OBJ*)(MIF*)this)->GetAnimationController();
 	}
 	virtual void SetCamera(const GRCameraDesc & desc){
 		return ((OBJ*)(MIF*)this)->SetCamera(desc);

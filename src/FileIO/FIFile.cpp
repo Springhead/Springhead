@@ -141,7 +141,7 @@ void FIFile::Load(FILoadContext* fc){
 	fc->loadedDatas.Print(DSTR);
 
 	//	データからノードを作成
-	CreateScene(fc);
+	fc->CreateScene();
 	//	ノードをリンク
 	fc->LinkNode();
 	//	リンク後の処理
@@ -158,62 +158,6 @@ void FIFile::LBlockEnd(FILoadContext* fc){
 	fc->fieldIts.Pop();
 	fc->datas.Pop();
 }
-
-void FIFile::CreateScene(UTLoadContext* fc){
-	for(UTLoadedDataRefs::iterator it = fc->loadedDatas.begin(); it!=fc->loadedDatas.end(); ++it){
-		fc->datas.Push(*it);
-		CreateObjectRecursive(fc);
-		fc->datas.Pop();
-	}
-}
-void FIFile::CreateObjectRecursive(UTLoadContext* fc){
-	UTLoadedData* ld = fc->datas.Top();
-
-	//	ハンドラーの処理
-	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
-	key->type = ld->GetAttribute("type");
-	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
-		= fc->handlerDbs.Top()->equal_range(key);
-	typedef std::vector<UTLoadHandler*> Handlers;
-	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-		(*it)->BeforeCreateObject(ld, fc);
-	}
-
-	//	先祖オブジェクトに作ってもらう
-	ObjectIf* obj = NULL;
-	const IfInfo* info = NULL;
-	if (ld->type) info = ld->type->GetIfInfo();
-	if (info){
-		obj = fc->CreateObject(info, ld->data, ld->GetName());	//	作成して，
-		if (obj){
-			ld->loadedObjects.Push(obj);
-			fc->objects.Push(obj);								//	スタックに積む
-			if (fc->objects.size() == 1){
-				fc->rootObjects.push_back(fc->objects.Top());	//	ルートオブジェクトとして記録
-			}
-		}
-	}
-	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-		(*it)->AfterCreateObject(ld, fc);
-	}
-
-	//	子ノードの作成
-	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
-		fc->datas.Push(*it);
-		CreateObjectRecursive(fc);	//	子孫データに対応するオブジェクトの作成
-		fc->datas.Pop();
-	}
-	//	ハンドラーの処理
-	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
-		(*it)->AfterCreateChildren(ld, fc);
-	}
-	
-	//	終了処理
-	if(obj){
-		fc->objects.Pop();										//	スタックをPop
-	}
-}
-
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
 	FISaveContext sc;

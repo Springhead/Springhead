@@ -32,16 +32,25 @@ public:
 MyApp app_;
 
 void idle(void){
-/*	Affinef afV;
+	Affinef afV;
 	afV.LookAt(Vec3f(10,0,0), Vec3f(0,1,0));
-*/
-	GRFrameIf* frLeftFoot;
-	app->GetSdk()->GetScene()->GetGRScene()->FindObject( frLeftFoot, "LeftFoot");
-	static Affinef af;
-	af = af * Affinef::Rot(Rad(5), 'X');
-	frLeftFoot->SetTransform(af);
+#if 0
+	GRFrameIf* fr;
+	app->GetSdk()->GetScene()->GetGRScene()->FindObject(fr, "RightUpperArm");
+	if (fr){
+		Affinef af = fr->GetTransform();
+		af = af * Affinef::Rot(Rad(5), 'X');
+		fr->SetTransform(af);
+	}
+#else
+	GRAnimationControllerIf* anim = app->GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
+	anim->ResetPose();
+	static float time;
+	anim->BlendPose("Walk", time, 1);
+	time += 1;
+	if (time > 70) time = 0;
+#endif
 	glutPostRedisplay();
-
 }
 
 int SPR_CDECL main(int argc, char* argv[]){

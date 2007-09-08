@@ -39,6 +39,9 @@ struct GRSceneIf: public SceneIf{
 	///	カメラの取得
 	virtual GRCameraIf* GetCamera()=0;
 
+	///	アニメーションコントローラの取得
+	virtual GRAnimationControllerIf* GetAnimationController()=0;
+
 	/// カメラの作成・設定
 	virtual void SetCamera(const GRCameraDesc& desc)=0;
 

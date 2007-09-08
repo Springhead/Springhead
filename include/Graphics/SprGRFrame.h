@@ -77,8 +77,14 @@ struct GRFrameDesc:public GRVisualDesc{
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationIf: public SceneObjectIf{
 	IF_DEF(GRAnimation);
+	///	アニメーション名と時刻で定まるボーンの変更を，重みをつけて現在のボーンの変換行列に適用する．
+	virtual void BlendPose(float time, float weight)=0;
+	///	ボーンの変換行列を初期値に戻す．
+	virtual void ResetPose()=0;
+	///	フレームの変換行列を初期値に戻す．
+	virtual void LoadInitialPose()=0;
 };
-///	@brief アニメーションのデスクリプタ XのAnimationSetに対応
+///	@brief アニメーションのデスクリプタ XのAnimationに対応
 struct GRAnimationDesc{
 	DESC_DEF_FOR_OBJECT(GRAnimation);
 	enum KeyType { ROTATION, SCALE, POSITION, MATRIX };
@@ -86,30 +92,44 @@ struct GRAnimationDesc{
 		unsigned time;				//	時刻
 		std::vector<float> values;	//	変換の値
 	};
-	///	キーフレーム XのAnimationKeyに対応
+	///	時刻と変換の対応表 XのAnimationKeyに対応
 	struct AnimationKey{
 		KeyType keyType;			//	変換の種類
-		std::vector<Key> keys;		//	キーフレーム(時刻と変換のセット)たち
+		std::vector<Key> keys;		//	時刻と変換のセット
 	};
-	///	フレーム１つ分のアニメーション XのAnimationに対応
-	struct Animation{
-		std::vector<AnimationKey> keys;		//	複数のキーフレーム
-		std::vector<GRFrameIf*> targets;	//	対象のフレーム
-	};
-	///	アニメーション＝ひとつの行動に対応するアニメーション＝複数のフレームのアニメーション
-	std::vector<Animation> animations;
+	///	複数のAnimationKeyでひとつの変換を表す
+	std::vector<AnimationKey> keys;	
 };
 
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationSetIf: public SceneObjectIf{
 	IF_DEF(GRAnimationSet);
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
+	virtual void BlendPose(float time, float weight)=0;
+	///	フレームの変換行列を初期値に戻す．
+	virtual void ResetPose()=0;
+	///	フレームの変換行列を初期値に戻す．
+	virtual void LoadInitialPose()=0;
 };
 ///	@brief アニメーションセットのデスクリプタ
 struct GRAnimationSetDesc{
 	DESC_DEF_FOR_OBJECT(GRAnimationSet);
 };
 
-
+/**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
+struct GRAnimationControllerIf: public SceneObjectIf{
+	IF_DEF(GRAnimationController);
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
+	virtual void BlendPose(UTString name, float time, float weight)=0;
+	///	フレームの変換行列を初期値に戻す．
+	virtual void ResetPose()=0;
+	///	フレームの変換行列を初期値に戻す．
+	virtual void LoadInitialPose()=0;
+};
+///	@brief アニメーションコントローラのデスクリプタ
+struct GRAnimationControllerDesc{
+	DESC_DEF_FOR_OBJECT(GRAnimationController);
+};
 //@}
 }
 #endif

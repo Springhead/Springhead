@@ -135,7 +135,7 @@ void NameManager::Print(std::ostream& os) const {
 
 //	名前を再帰的に検索。namespace を考慮
 NamedObjectIf* NameManager::FindObject(UTString name, UTString cls){
-	//	DSTR << "NameManager(" << GetName() << ")::FindObject search " << name << std::endl;
+//	DSTR << "NameManager(" << GetName() << ")::FindObject search " << name << std::endl;
 	
 	//	自分と子孫を探す。
 	NamedObjectIf* rv = FindObjectFromDescendant(name, cls);

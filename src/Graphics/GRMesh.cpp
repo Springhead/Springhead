@@ -137,9 +137,9 @@ void GRMesh::DrawBuffer(void* vtx){
 	if (materialList.empty()){	// Mesh に material の指定がない場合
 		render->DrawIndexed(GRRenderIf::TRIANGLES, &*faces.begin(), vtx, faces.size());
 	}else{	// Xファイルからの materialList 指定がある場合、materialごとに描画
-		for(int i=0; i < material.size(); ++i){
+		for(unsigned i=0; i < material.size(); ++i){
 			render->SetMaterial(*material[i]);
-			int from=0, to=0;
+			unsigned from=0, to=0;
 			for(; to<originalFaceIds.size(); ++to){
 				if (originalFaceIds[to] >= materialList.size()) continue;
 				if (materialList[originalFaceIds[to]] == i) continue;
@@ -178,9 +178,9 @@ void GRMesh::Render(GRRenderIf* r){
 				blendedVtxs[v*stride + positionOffset+1] = 0;
 				blendedVtxs[v*stride + positionOffset+2] = 0;
 			}
-			for(int i=0; i<skinWeights.size(); ++i){
-				Affinef af = skinWeights[i].bone * skinWeights[i].offset;
-				for(int j=0; j<skinWeights[i].indices.size(); ++j){
+			for(unsigned i=0; i<skinWeights.size(); ++i){
+				Affinef af = skinWeights[i].frame->GetWorldTransform() * skinWeights[i].offset;
+				for(unsigned j=0; j<skinWeights[i].indices.size(); ++j){
 					int v = skinWeights[i].indices[j];
 					float w = skinWeights[i].weights[j];
 					*(Vec3f*)(blendedVtxs + v*stride + positionOffset) += 
@@ -210,7 +210,7 @@ bool GRMesh::AddChildObject(ObjectIf* o){
 	}
 	GRFrame* f = o->Cast();
 	if (f){
-		for(int i=0; i<skinWeights.size(); ++i){
+		for(unsigned i=0; i<skinWeights.size(); ++i){
 			if (!skinWeights[i].frame){
 				skinWeights[i].frame = f;
 				return true;

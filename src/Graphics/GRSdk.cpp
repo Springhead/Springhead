@@ -13,6 +13,7 @@
 #include "GRMesh.h"
 #include "GRBlendMesh.h"
 #include "GRSphere.h"
+#include "GRFrame.h"
 
 namespace Spr{;
 GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){
@@ -40,8 +41,11 @@ void SPR_CDECL GRSdkIf::RegisterSdk(){
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRFrame));
 
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRFrame));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimationController));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimationSet));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimation));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
 }
 

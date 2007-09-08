@@ -50,8 +50,6 @@ public:
 	*/
 	///	ロードの実装
 	virtual void LoadImp(FILoadContext* fc)=0;
-	///	ロードしたデータから，シーングラフを作成．
-	void CreateScene(UTLoadContext* fc);
 	
 	//@name ローダーを書くためのユーティリティ関数
 	//@{	
@@ -61,10 +59,7 @@ public:
 	virtual void LBlockEnd(FILoadContext* fc);
 	//@}
 
-protected:
-	///	ノードを再帰的に作成
-	void CreateObjectRecursive(UTLoadContext* fc);
-	
+protected:	
 	///	ノードのセーブ
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);
 	///	ブロックのセーブ

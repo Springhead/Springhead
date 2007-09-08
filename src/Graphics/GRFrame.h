@@ -52,37 +52,75 @@ public:
 	void Print(std::ostream& os) const ;
 };
 
-
 class GRAnimation: public SceneObject, public GRAnimationIfInit, public GRAnimationDesc{
 public:
 	OBJECTDEF(GRAnimation, SceneObject);
-	bool activated;
-	float duration;
-	float weight;
-	float weightTo;
-	float time;
-	GRAnimation();
-	///	時刻を設定する
-	void SetTime(float time);
+	GRAnimation(GRAnimationDesc& d = GRAnimationDesc()){}
+	///
+	struct Target{
+		GRFrameIf* target;
+		Affinef initalTransform;
+	};
+	typedef std::vector<Target> Targets;
+	///	変換対象フレーム
+	Targets targets;
+	///	
+	virtual void BlendPose(float time, float weight);
+	///
+	virtual void ResetPose();
+	///
+	virtual void LoadInitialPose();
+	///	
+	virtual bool AddChildObject(ObjectIf* v);
 };
 
 class GRAnimationSet: public SceneObject, public GRAnimationSetIfInit{
 	typedef std::vector< UTRef<GRAnimation> > Animations;
 	Animations animations;
-	Animations activeAnimations;
+	std::vector<GRFrame*> roots;
+
 public:
 	OBJECTDEF(GRAnimationSet, SceneObject);
+	GRAnimationSet(GRAnimationSetDesc& d = GRAnimationSetDesc()){}
+	///	子オブジェクト(animations)を返す
 	ObjectIf* GetChildObject(size_t p);
+	///	GRAnimationの追加
 	virtual bool AddChildObject(ObjectIf* o);
+	///	GRAnimationの削除
 	virtual bool DelChildObject(ObjectIf* o);
+	///	GRAnimationの数
 	virtual int NChildObject();
-	virtual void Activate(UTString name, 
-		float weightStart=1, float weightEnd=1, float duration=-1);
-	virtual void Deactivate(UTString name);
-	///	時刻を設定する
-	void SetTime(float time);
+
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
+	virtual void BlendPose(float time, float weight);
+	///	ボーンをあらわすターゲットのフレームの行列を初期値に戻す．
+	virtual void ResetPose();
+	///
+	virtual void LoadInitialPose();
 };
 
+class GRAnimationController: public SceneObject, GRAnimationControllerIfInit{
+public:
+	typedef std::map<UTString, UTRef<GRAnimationSet>, UTStringLess> Sets;
+	Sets sets;
+	OBJECTDEF(GRAnimationController, SceneObject);
+	GRAnimationController(const GRAnimationControllerDesc& d = GRAnimationControllerDesc()){}
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
+	virtual void BlendPose(UTString name, float time, float weight);
+	///	フレームの変換行列を初期値に戻す．
+	virtual void ResetPose();
+	///	フレームの変換行列を初期値に戻す．
+	virtual void LoadInitialPose();
 
-}
+	///	GRAnimationの追加
+	virtual bool AddChildObject(ObjectIf* o);
+	///	GRAnimationの削除
+	virtual bool DelChildObject(ObjectIf* o);
+	///	GRAnimationの数
+	virtual int NChildObject();
+	///	GRAnimationの取得
+	ObjectIf* GetChildObject(size_t p);
+};
+
+}//	namespace Spr
 #endif

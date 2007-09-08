@@ -11,6 +11,7 @@
 #endif
 #include "GRScene.h"
 #include "GRMesh.h"
+#include "GRFrame.h"
 #include <sstream>
 
 namespace Spr{;
@@ -60,26 +61,38 @@ void GRScene::SetCamera(const GRCameraDesc& desc){
 }
 bool GRScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
-	GRCamera* c = DCAST(GRCamera, o);
-	if(c){
+	GRCamera* c = o->Cast();
+	if(!ok && c){
 		camera = c;
 		ok = true;
-	}else{
+	}
+	GRAnimationController* ac = o->Cast();
+	if(!ok && ac){
+		animationController = ac;
+	}
+	GRAnimationSet* as = o->Cast();
+	if(!ok && as){
+		if (!animationController) 
+			animationController = CreateObject(GRAnimationControllerIf::GetIfInfoStatic(), NULL)->Cast();
+		animationController->AddChildObject(as->Cast());
+		ok = true;
+	}
+	if (!ok){
         ok = world->AddChildObject(o);
 	}
-	if(ok)
+	if(ok){
 		DCAST(NamedObject, o)->SetNameManager(Cast());
+	}
 	return ok;
 }
 size_t GRScene::NChildObject() const{
-	//return (camera ? 1:0) + (world ? 1:0);
-	return world->NChildObject() + (camera ? 1 : 0);
+	return world->NChildObject() + (camera ? 1 : 0) + (animationController ? 1 : 0);
 }
 ObjectIf* GRScene::GetChildObject(size_t pos){
-	//return camera ? (pos == 0 ? (ObjectIf*)camera->Cast() : (ObjectIf*)world->Cast()) : (ObjectIf*)world->Cast();
 	if(pos < world->NChildObject())
 		return world->GetChildObject(pos);
-	return camera->Cast();
+	if (pos == world->NChildObject()) return camera->Cast();
+	return animationController->Cast();
 }
 void GRScene::Render(GRRenderIf* r){
 	if (camera) camera->Render(r);

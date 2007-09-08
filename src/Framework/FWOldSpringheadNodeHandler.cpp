@@ -229,18 +229,6 @@ public:
 class FWNodeHandlerXMesh: public UTLoadHandlerImp<Mesh>{
 public:
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
-	class LinkUpdate: public UTLinkTask{
-	protected:
-		int weightId;
-	public:
-		LinkUpdate(ObjectIf* from, UTString to, NameManagerIf* nm, int w):
-			UTLinkTask(from, to, nm), weightId(w){}
-		void Execute(UTLoadContext* ctx){
-			UTLinkTask::Execute(ctx);
-			GRMesh* mesh = linkFrom->Cast();
-			mesh->skinWeights[weightId].bone = mesh->skinWeights[weightId].frame->GetWorldTransform();
-		}
-	};
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMeshDesc desc;
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc, ld->GetName()));	
@@ -311,9 +299,8 @@ public:
 						mesh->skinWeights.back().weights.push_back(sw->weights[i]);
 					}
 					mesh->skinWeights.back().offset = sw->matrixOffset;
-					fc->links.push_back(DBG_NEW LinkUpdate(mesh->Cast(), 
-						sw->transformNodeName, mesh->GetNameManager(), 
-						(int)mesh->skinWeights.size()-1));
+					fc->links.push_back( DBG_NEW UTLinkTask(mesh->Cast(), 
+						sw->transformNodeName, mesh->GetNameManager()) );
 				}
 			}
 			//アニメーションセットを探してくる
@@ -386,6 +373,64 @@ public:
 			}
 			ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
 			ld->loadedObjects.push_back(obj);
+		}
+	}
+};
+
+// DirectXのAnimationSet．
+class FWNodeHandlerXAnimationSet: public UTLoadHandlerImp<AnimationSet>{
+public:
+	FWNodeHandlerXAnimationSet():UTLoadHandlerImp<Desc>("AnimationSet"){}
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		GRAnimationSetDesc ad;
+		fc->objects.Push(fc->CreateObject(
+			GRAnimationSetIf::GetIfInfoStatic(), &ad, ld->GetName()));	
+		ld->loadedObjects.push_back(fc->objects.Top());
+	}
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		fc->objects.Pop();
+	}
+};
+
+// DirectXのAnimation．
+class FWNodeHandlerXAnimation: public UTLoadHandlerImp<Animation>{
+	class LoadInitalPose: public UTLoadTask{
+		GRAnimation* anim;
+	public:
+		LoadInitalPose(GRAnimation* a):anim(a){}
+		void Execute(UTLoadContext* ctx){
+			anim->LoadInitialPose();
+		}
+	};
+public:
+	FWNodeHandlerXAnimation():UTLoadHandlerImp<Desc>("Animation"){}
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		GRAnimationDesc ad;
+		fc->objects.Push(fc->CreateObject(
+			GRAnimationIf::GetIfInfoStatic(), &ad, ld->GetName()));	
+		ld->loadedObjects.push_back(fc->objects.Top());
+		fc->postTasks.push_back(new LoadInitalPose(fc->objects.Top()->Cast()));
+	}
+	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		fc->objects.Pop();
+	}
+	
+};
+
+// DirectXのAnimationKey．
+class FWNodeHandlerXAnimationKey: public UTLoadHandlerImp<AnimationKey>{
+public:
+	FWNodeHandlerXAnimationKey():UTLoadHandlerImp<Desc>("AnimationKey"){}
+	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		GRAnimation* anim = fc->objects.Top()->Cast();
+		assert(anim);
+		anim->keys.push_back(GRAnimationDesc::AnimationKey());
+		GRAnimationDesc::AnimationKey& key = anim->keys.back();
+		key.keyType = (GRAnimationDesc::KeyType)d.keyType;
+		for(unsigned i=0; i<d.keys.size(); ++i){
+			key.keys.push_back(GRAnimationDesc::Key());
+			key.keys.back().time = d.keys[i].time;
+			key.keys.back().values = d.keys[i].tfkeys.values;
 		}
 	}
 };
@@ -916,6 +961,9 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerXTextureFilename);
 	handlers->insert(DBG_NEW FWNodeHandlerXMaterial);		
 	handlers->insert(DBG_NEW FWNodeHandlerXMesh);
+	handlers->insert(DBG_NEW FWNodeHandlerXAnimation);
+	handlers->insert(DBG_NEW FWNodeHandlerXAnimationKey);
+	handlers->insert(DBG_NEW FWNodeHandlerXAnimationSet);
 	handlers->insert(DBG_NEW FWNodeHandlerSolidXMesh);
 	handlers->insert(DBG_NEW FWNodeHandlerSolidSphere);
 	handlers->insert(DBG_NEW FWNodeHandlerSolid);

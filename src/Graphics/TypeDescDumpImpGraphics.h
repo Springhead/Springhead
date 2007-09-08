@@ -58,8 +58,8 @@
 	desc->ifInfo = GRAnimationIf::GetIfInfoStatic();
 	((IfInfo*)GRAnimationIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRAnimationDesc>;
-	field = desc->AddField("vector", "Animation", "animations", "");
-	field->offset = int((char*)&(pGRAnimationDesc->animations) - (char*)pGRAnimationDesc);
+	field = desc->AddField("vector", "AnimationKey", "keys", "");
+	field->offset = int((char*)&(pGRAnimationDesc->keys) - (char*)pGRAnimationDesc);
 	db->RegisterDesc(desc);
 	
 	GRAnimationSetDesc* pGRAnimationSetDesc = NULL;
@@ -68,6 +68,14 @@
 	desc->ifInfo = GRAnimationSetIf::GetIfInfoStatic();
 	((IfInfo*)GRAnimationSetIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRAnimationSetDesc>;
+	db->RegisterDesc(desc);
+	
+	GRAnimationControllerDesc* pGRAnimationControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRAnimationControllerDesc");
+	desc->size = sizeof(GRAnimationControllerDesc);
+	desc->ifInfo = GRAnimationControllerIf::GetIfInfoStatic();
+	((IfInfo*)GRAnimationControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRAnimationControllerDesc>;
 	db->RegisterDesc(desc);
 	
 	GRMeshDesc* pGRMeshDesc = NULL;

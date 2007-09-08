@@ -259,6 +259,8 @@ public:
 	//@}
 	void LinkData();
 	///
+	void CreateScene();
+	///
 	void LinkNode();
 	///
 	void PostTask();
@@ -272,6 +274,7 @@ public:
 	  virtual ~UTLoadContext(){}
 protected:
 	void LinkNode(UTLoadedData* ld);
+	void CreateSceneRecursive();
 };
 
 }

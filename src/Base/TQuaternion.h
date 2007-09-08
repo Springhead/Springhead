@@ -343,6 +343,18 @@ inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVec
 	//TYPENAME BD::ret_type r = q.W()*q.W()*v + 2*q.W()*tmp + (q.V()*v)*q.V() + q.V()%tmp;
 	return r;
 }
+
+///	TQuaternionで行列を回転． TQuaternion * (ex,ey,ez) * TQuaternion.conjugated() と同じ．
+template <class ET, class BD>
+inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TMatrixBase<DIMENC(3), DIMENC(3), BD>& m){
+	TYPENAME BD::ret_type r;
+	for(int i=0; i<3; ++i){
+		TQuaternion<ET> qv(1, ET(m.col(i)[0]), ET(m.col(i)[1]), ET(m.col(i)[2]));
+		r.col(i) = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
+	}
+	return r;
+}
+
 ///	TQuaternion の内積．
 template <class T1, class T2>
 inline T1 dot(const TQuaternion<T1>& q1, const TQuaternion<T2>& q2) {

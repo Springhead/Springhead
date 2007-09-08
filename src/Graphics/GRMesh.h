@@ -43,7 +43,6 @@ public:
 
 	struct SkinWeight{
 		GRFrame* frame;
-		Affinef bone;
 		Affinef offset;
 		std::vector<unsigned> indices;
 		std::vector<float> weights;

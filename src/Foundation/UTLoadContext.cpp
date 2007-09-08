@@ -558,6 +558,8 @@ void UTLoadContext::LinkNode(UTLoadedData* ld){
 	for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
 		for(UTLoadedDatas::iterator ld2 = ld->linkTo.begin(); ld2 != ld->linkTo.end(); ++ld2){
 			for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
+				//	DSTR << DCAST(NamedObject, *o1)->GetName() << "->" 
+				//	<< DCAST(NamedObject, *o2)->GetName() << std::endl; 
 				if (  !(*o1)->AddChildObject( (*o2)->Cast() )  ){
 					std::string err("Can not add referenced object '");
 					err.append((*ld2)->GetName());
@@ -573,6 +575,62 @@ void UTLoadContext::LinkNode(UTLoadedData* ld){
 		LinkNode(*it);
 	}
 }
+
+void UTLoadContext::CreateScene(){
+	for(UTLoadedDataRefs::iterator it = loadedDatas.begin(); it!=loadedDatas.end(); ++it){
+		datas.Push(*it);
+		CreateSceneRecursive();
+		datas.Pop();
+	}
+}
+void UTLoadContext::CreateSceneRecursive(){
+	UTLoadedData* ld = datas.Top();
+
+	//	ハンドラーの処理
+	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
+	key->type = ld->GetAttribute("type");
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+		= handlerDbs.Top()->equal_range(key);
+	typedef std::vector<UTLoadHandler*> Handlers;
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->BeforeCreateObject(ld, this);
+	}
+
+	//	先祖オブジェクトに作ってもらう
+	ObjectIf* obj = NULL;
+	const IfInfo* info = NULL;
+	if (ld->type) info = ld->type->GetIfInfo();
+	if (info){
+		obj = CreateObject(info, ld->data, ld->GetName());	//	作成して，
+		if (obj){
+			ld->loadedObjects.Push(obj);
+			objects.Push(obj);								//	スタックに積む
+			if (objects.size() == 1){
+				rootObjects.push_back(objects.Top());	//	ルートオブジェクトとして記録
+			}
+		}
+	}
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterCreateObject(ld, this);
+	}
+
+	//	子ノードの作成
+	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
+		datas.Push(*it);
+		CreateSceneRecursive();	//	子孫データに対応するオブジェクトの作成
+		datas.Pop();
+	}
+	//	ハンドラーの処理
+	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
+		(*it)->AfterCreateChildren(ld, this);
+	}
+	
+	//	終了処理
+	if(obj){
+		objects.Pop();										//	スタックをPop
+	}
+}
+
 void UTLoadContext::LinkNode(){
 	for(UTLoadedDataRefs::iterator it = loadedDatas.begin(); it!=loadedDatas.end(); ++it){
 		LinkNode(*it);
@@ -580,11 +638,11 @@ void UTLoadContext::LinkNode(){
 	links.Execute(this);
 	links.clear();
 }
-void UTLoadContext::PostTask(){
+
+void UTLoadContext::PostTask(){	
 	postTasks.Execute(this);
 	postTasks.clear();
 }
-
 void UTLoadContext::ErrorMessage(UTFileMap* info, const char* pos, const char* msg){
 	std::string m("error: ");
 	m.append(msg);
