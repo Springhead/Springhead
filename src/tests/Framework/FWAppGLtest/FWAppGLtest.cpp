@@ -48,7 +48,7 @@ void idle(void){
 	static float time;
 	anim->BlendPose("Walk", time, 1);
 	time += 1;
-	if (time > 70) time = 0;
+	if (time > 72) time = 0;
 #endif
 	glutPostRedisplay();
 }
