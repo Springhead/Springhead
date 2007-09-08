@@ -105,7 +105,7 @@ GRAnimation::GRAnimation(): activated(false){
 };
 
 void GRAnimation::SetTime(float time){
-/*	
+	/*
 	for(vector<GRAnimationDesc::Animation>::iterator it = animations.begin(); 
 		it != animations.end(); ++it){
 		GRAnimationDesc::Animation& anim = *it;
