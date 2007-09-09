@@ -234,6 +234,10 @@ struct CREseWalkingControllerIf : CRControllerIf{
 	/** @brief 転回角度を設定する
 	*/
 	virtual void SetRotationAngle(float rot)= 0;
+
+	/** @brief 位置を設定する（初期状態決定のため）
+	*/
+	virtual void SetPos(Vec3f pos)= 0;
 };
 
 /// 偽歩行コントローラのデスクリプタ

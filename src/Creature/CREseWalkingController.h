@@ -66,6 +66,10 @@ public:
 	/** @brief 転回角度を設定する
 	*/
 	virtual void SetRotationAngle(float rot);
+
+	/** @brief 位置を設定する（初期状態決定のため）
+	*/
+	virtual void SetPos(Vec3f pos);
 };
 }
 //@}

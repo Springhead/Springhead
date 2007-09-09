@@ -133,6 +133,9 @@ struct CREseWalkingControllerIfStubTemplate: public CRControllerIfStubTemplate<I
 	virtual void SetRotationAngle(float rot){
 		return ((OBJ*)(MIF*)this)->SetRotationAngle(rot);
 	}
+	virtual void SetPos(Vec3f pos){
+		return ((OBJ*)(MIF*)this)->SetPos(pos);
+	}
 };
 struct CREseWalkingControllerIf;	class CREseWalkingController;
 typedef CREseWalkingControllerIfStubTemplate<CREseWalkingControllerIf, ObjectIfBuf, CREseWalkingController>	CREseWalkingControllerIfStub;

@@ -44,4 +44,8 @@ void CREseWalkingController::SetSpeed(float speed){
 void CREseWalkingController::SetRotationAngle(float rot){
 	this->rotation = rot;
 }
+
+void CREseWalkingController::SetPos(Vec3f pos){
+	soFixpoint->SetFramePosition(pos);
+}
 }
