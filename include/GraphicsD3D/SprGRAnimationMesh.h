@@ -24,7 +24,7 @@ struct GRAnimationMeshDesc /*: GRVisualDesc*/{
 	std::string filename;		///< 読み込むファイル名(.x)
 };
 
-typedef void (SPR_CDECL *GRAnimationMeshDrawSubsetListenerFunc)(DWORD attribId);
+typedef void (SPR_CDECL *GRAnimationMeshDrawSubsetListenerFunc)(DWORD attribId, void* ptr);
 
 /**	@brief	グラフィックスで使うキャラクタアニメーション表示用のMesh */
 struct GRAnimationMeshIf: public GRVisualIf{
@@ -54,8 +54,9 @@ struct GRAnimationMeshIf: public GRVisualIf{
 	/** @brief DrawSubsetの実行時にコールバックされる関数を登録
 		@param beforeFunc DrawSubsetが実行される直前にコールバックされる関数
 		@param afterFunc  DrawSubsetが実行された直後にコールバックされる関数
+		@param ptr        コールバック関数に引数として渡される
 	*/
-	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc=NULL, GRAnimationMeshDrawSubsetListenerFunc afterFunc=NULL)=0;
+	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr=NULL)=0;
 
 	/** @brief 描画に使用するエフェクトを設定
 		@param effect            描画に使用するエフェクト

@@ -260,10 +260,12 @@ void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pos
 	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
 }
 
-
-void GRAnimationMesh::AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc){
-	if(beforeFunc) beforeDrawSubsetListeners.push_back(beforeFunc);
-	if(afterFunc)  afterDrawSubsetListeners.push_back(afterFunc);
+void GRAnimationMesh::AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr){
+	DrawSubsetListener l;
+	l.beforeFunc = beforeFunc;
+	l.afterFunc  = afterFunc;
+	l.ptr        = ptr;
+	drawSubsetListeners.push_back(l);
 }
 
 void GRAnimationMesh::SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize)
@@ -465,10 +467,10 @@ void GRAnimationMesh::DrawSkinnedMeshContainer(MeshContainer *meshContainer){
 
 			d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
 
-			for(size_t i=0; i<beforeDrawSubsetListeners.size(); ++i){ beforeDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+			for(size_t i=0; i<drawSubsetListeners.size(); ++i){ drawSubsetListeners[i].beforeFunc(meshContainer->boneCombinationTable[subset].AttribId, drawSubsetListeners[i].ptr); }
 			effect->CommitChanges();
 			meshContainer->blendedMesh->DrawSubset(subset);
-			for(size_t i=0; i<afterDrawSubsetListeners.size(); ++i){ afterDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+			for(size_t i=0; i<drawSubsetListeners.size(); ++i){ drawSubsetListeners[i].afterFunc(meshContainer->boneCombinationTable[subset].AttribId, drawSubsetListeners[i].ptr); }
 		}
 
 		d3ddevice->SetTexture(0, NULL);
@@ -488,9 +490,9 @@ void GRAnimationMesh::DrawSkinnedMeshContainer(MeshContainer *meshContainer){
 			d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, i-1);
 			d3ddevice->SetMaterial(&meshContainer->pMaterials[ meshContainer->boneCombinationTable[subset].AttribId ].MatD3D);
 			d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
-			for(size_t i=0; i<beforeDrawSubsetListeners.size(); ++i){ beforeDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+			for(size_t i=0; i<drawSubsetListeners.size(); ++i){ drawSubsetListeners[i].beforeFunc(meshContainer->boneCombinationTable[subset].AttribId, drawSubsetListeners[i].ptr); }
 			meshContainer->blendedMesh->DrawSubset(subset);
-			for(size_t i=0; i<afterDrawSubsetListeners.size(); ++i){ afterDrawSubsetListeners[i](meshContainer->boneCombinationTable[subset].AttribId); }
+			for(size_t i=0; i<drawSubsetListeners.size(); ++i){ drawSubsetListeners[i].afterFunc(meshContainer->boneCombinationTable[subset].AttribId, drawSubsetListeners[i].ptr); }
 		}
 
 		d3ddevice->SetRenderState(D3DRS_VERTEXBLEND, 0);

@@ -24,12 +24,12 @@ protected:
 	struct Frame;
 	struct MeshContainer;
 	class AllocateHierarchy;
+	struct DrawSubsetListener;
 protected:
 	Frame*								rootFrame;
 	CComPtr<ID3DXAnimationController>	controller;
 	bool								loaded;
-	std::vector<GRAnimationMeshDrawSubsetListenerFunc> beforeDrawSubsetListeners;
-	std::vector<GRAnimationMeshDrawSubsetListenerFunc> afterDrawSubsetListeners;
+	std::vector<DrawSubsetListener>		drawSubsetListeners;
 	CComPtr<ID3DXEffect>				effect;
 public:
 	GRAnimationMesh(const GRAnimationMeshDesc& desc=GRAnimationMeshDesc());
@@ -39,7 +39,7 @@ public:
 	virtual Posed GetBoneKeyframePose(const std::string& name);
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
-	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc);
+	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr);
 	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize);
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
@@ -76,6 +76,12 @@ struct GRAnimationMesh::MeshContainer : public D3DXMESHCONTAINER
 	LPDIRECT3DTEXTURE9		*ppTextures;
 	DWORD					maxVertexInfl;
 	DWORD					matrixPaletteSize;
+};
+
+struct GRAnimationMesh::DrawSubsetListener{
+	GRAnimationMeshDrawSubsetListenerFunc	beforeFunc;
+	GRAnimationMeshDrawSubsetListenerFunc	afterFunc;
+	void*									ptr;
 };
 }
 #endif
