@@ -303,23 +303,6 @@ public:
 						sw->transformNodeName, mesh->GetNameManager()) );
 				}
 			}
-			//アニメーションセットを探してくる
-			UTLoadedData* animationSetData = ld->FindDescendant("AnimationSet");
-			if (animationSetData){//animationSetDataに値が何も入っていない。
-
-				//アニメーションを探してくる
-				UTLoadedData* animationData = ld->FindDescendant("Animaiton");
-				if(animationData){
-					;	
-					//アニメーションキーを探してくる
-					UTLoadedData* animationKeyData = ld->FindDescendant("AnimationKey");
-					if(animationKeyData){
-						;
-					}
-
-				}
-
-			}
 
 		}else{
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
