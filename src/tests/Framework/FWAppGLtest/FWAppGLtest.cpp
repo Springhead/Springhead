@@ -6,7 +6,7 @@
 #include <Framework/SprFWAppGLUT.h>
 #include <HumanInterface/HIBase.h>
 #include <GL/glut.h>
-
+#include <windows.h>
 using namespace Spr;
 
 class MyApp;
@@ -18,8 +18,8 @@ MyApp* app;
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define FILE_NAME "test2.x"
 #define FRAME_NAME "RightUpperArm"
-#define ANIMATION_SET_NAME "Walk"
-#define FRAME_NUMBER 72
+#define ANIMATION_SET_NAME "WaveOnesArm"
+#define FRAME_NUMBER 60
 
 //XŽ²•ûŒü‚ÉŠg‘åAk¬
 #elif defined(TEST_CASE) && (TEST_CASE==1)
@@ -199,6 +199,7 @@ void idle(void){
 	anim->BlendPose(ANIMATION_SET_NAME, time, 1);
 	time += 1;
 	if (time > FRAME_NUMBER - 1) time = 0;
+	Sleep(10);
 #endif
 	glutPostRedisplay();
 }
