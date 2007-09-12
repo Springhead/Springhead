@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 12
+#define TEST_CASE 0
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -102,6 +102,13 @@ MyApp* app;
 #define FILE_NAME "test14.x"
 #define FRAME_NAME "Hand"
 #define ANIMATION_SET_NAME "Rotations"
+#define FRAME_NUMBER 60
+
+//X軸方向に回転⇒Y軸方向に回転
+#elif defined(TEST_CASE) && (TEST_CASE==13)
+#define FILE_NAME "test15.x"
+#define FRAME_NAME "right"
+#define ANIMATION_SET_NAME "kick"
 #define FRAME_NUMBER 60
 
 #endif
