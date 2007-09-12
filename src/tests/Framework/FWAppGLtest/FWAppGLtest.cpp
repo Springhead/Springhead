@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 0
+#define TEST_CASE 10
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -124,11 +124,35 @@ public:
 		if (key==0x1b){
 			exit(0);
 		}
+		Affinef af;
 		GRCameraIf* cam;
-		app->GetSdk()->GetScene()->FindObject(cam, "cam");
- 		Affinef af = cam->GetFrame()->GetTransform();
-		af =  Affinef::Rot(Rad(5), 'y') * af;
-		cam->GetFrame()->SetTransform(af);
+		switch(key){
+		
+			case('a'):	app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 						af = cam->GetFrame()->GetTransform();
+						af =  Affinef::Rot(Rad(5), 'y') * af;
+						cam->GetFrame()->SetTransform(af);
+						break;
+		
+			case('s'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 						af = cam->GetFrame()->GetTransform();
+						af =  Affinef::Rot(Rad(-5), 'y') * af;
+						cam->GetFrame()->SetTransform(af);
+						break;
+		
+			case('w'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 						af = cam->GetFrame()->GetTransform();
+						af =  Affinef::Rot(Rad(5), 'x') * af;
+						cam->GetFrame()->SetTransform(af);
+						break;
+
+			case('z'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 						af = cam->GetFrame()->GetTransform();
+						af =  Affinef::Rot(Rad(-5), 'x') * af;
+						cam->GetFrame()->SetTransform(af);
+						break;
+
+		}
 	}
 };
 MyApp app_;
