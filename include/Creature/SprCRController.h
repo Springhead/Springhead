@@ -172,6 +172,10 @@ struct CRReachingControllerIf : CRControllerIf{
 	/** @brief 作動中かどうかを返す
 	*/
 	virtual bool IsActive()= 0;
+
+	/** @brief リセットする
+	*/
+	virtual void Reset()= 0;
 };
 
 /// 到達運動コントローラのデスクリプタ
@@ -263,6 +267,42 @@ struct CRTravelControllerDesc : public CRControllerDesc{
 	DESC_DEF_FOR_OBJECT(CRTravelController);
 
 	CRTravelControllerDesc(){
+	}
+};
+
+// ------------------------------------------------------------------------------
+/// 把持コントローラ
+struct CRGrabControllerIf : CRControllerIf{
+	IF_DEF(CRGrabController);
+
+	/** @brief 掴む
+	*/
+	virtual void Grab(PHSolidIf* solid, float radius)= 0;
+
+	/** @brief 現在何か掴んでいれば，放す
+	*/
+	virtual void Ungrab()= 0;
+
+	/** @brief 現在何か掴んでいれば，それを持って移動する
+	*/
+	virtual void MoveTo(Vec3f pos)= 0;
+
+	/** @brief 現在の把持の状態を返す
+	*/
+	enum GrabState{
+		GS_STANDBY = 0, /// 待機状態
+		GS_GRAB_START,  /// 把持動作開始
+		GS_GRAB,        /// 把持中
+		GS_MOVE,        /// 把持物体を移動中
+	};
+	virtual CRGrabControllerIf::GrabState GetGrabState()= 0;
+};
+
+/// 把持コントローラのデスクリプタ
+struct CRGrabControllerDesc : public CRControllerDesc{
+	DESC_DEF_FOR_OBJECT(CRGrabController);
+
+	CRGrabControllerDesc(){
 	}
 };
 

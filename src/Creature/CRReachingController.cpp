@@ -140,10 +140,17 @@ void CRReachingController::Step(){
 		}
 		*/
 
-		if(time <= -offset){
-			FixHinge();
-			Reset();
-			return;
+		if (offset < 0) {
+			if (time < 0) {
+				FixHinge();
+				return;
+			}
+		} else {
+			if (time <= -offset) {
+				FixHinge();
+				Reset();
+				return;
+			}
 		}
 
 		Vec3f pos, vel;

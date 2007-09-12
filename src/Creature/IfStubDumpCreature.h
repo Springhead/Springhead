@@ -105,6 +105,9 @@ struct CRReachingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF,
 	virtual bool IsActive(){
 		return ((OBJ*)(MIF*)this)->IsActive();
 	}
+	virtual void Reset(){
+		return ((OBJ*)(MIF*)this)->Reset();
+	}
 };
 struct CRReachingControllerIf;	class CRReachingController;
 typedef CRReachingControllerIfStubTemplate<CRReachingControllerIf, ObjectIfBuf, CRReachingController>	CRReachingControllerIfStub;
@@ -151,6 +154,26 @@ struct CRTravelControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, M
 struct CRTravelControllerIf;	class CRTravelController;
 typedef CRTravelControllerIfStubTemplate<CRTravelControllerIf, ObjectIfBuf, CRTravelController>	CRTravelControllerIfStub;
 typedef IfInitTemplate<CRTravelControllerIfStub, CRTravelController>	CRTravelControllerIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRGrabControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual void Grab(PHSolidIf * solid, float radius){
+		return ((OBJ*)(MIF*)this)->Grab(solid, radius);
+	}
+	virtual void Ungrab(){
+		return ((OBJ*)(MIF*)this)->Ungrab();
+	}
+	virtual void MoveTo(Vec3f pos){
+		return ((OBJ*)(MIF*)this)->MoveTo(pos);
+	}
+	virtual CRGrabControllerIf::GrabState GetGrabState(){
+		return ((OBJ*)(MIF*)this)->GetGrabState();
+	}
+};
+struct CRGrabControllerIf;	class CRGrabController;
+typedef CRGrabControllerIfStubTemplate<CRGrabControllerIf, ObjectIfBuf, CRGrabController>	CRGrabControllerIfStub;
+typedef IfInitTemplate<CRGrabControllerIfStub, CRGrabController>	CRGrabControllerIfInit;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>

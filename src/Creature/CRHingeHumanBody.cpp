@@ -19,6 +19,10 @@ void CRHingeHumanBody::Init(){
 	InitEyes();
 	InitLegs();
 
+	for (int i=0; i<solids.size(); i++) {
+		phScene->SetContactMode(solids[i], PHSceneDesc::MODE_NONE);
+	}
+
 	// FeatherStone法の使用（暫定）
 	/*
 	PHTreeNodeIf* rhand   = phScene->CreateRootNode(solids[SO_RIGHT_HAND], PHRootNodeDesc());

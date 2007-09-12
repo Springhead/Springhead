@@ -12,6 +12,7 @@
 
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
+#include "AccessDescDumpCreature.h"
 
 #include <vector>
 #include <algorithm>
@@ -28,6 +29,7 @@ private:
 
 public:
 	OBJECTDEF(CRInternalSceneObject, SceneObject);
+	ACCESS_DESC_CRInternalSceneObjectDesc_NOBASE;
 
 	CRInternalSceneObject(){}
 	CRInternalSceneObject(const CRInternalSceneObjectDesc& desc, CRInternalSceneIf* is) {
@@ -35,6 +37,7 @@ public:
 		internalScene = is;
 	}
 
+	/*
 	/// デスクリプタ関連
 protected:
 	PHSolidIf* solid;
@@ -49,6 +52,7 @@ public:
 		((CRInternalSceneObjectDesc*)desc)->position = position;
 		return true;
 	}
+	*/
 
 	/** @brief 剛体を返す
 	*/
@@ -67,6 +71,7 @@ private:
 
 public:
 	OBJECTDEF(CRISAttractiveObject, CRInternalSceneObject);
+	ACCESS_DESC_CRISAttractiveObjectDesc(CRInternalSceneObject);
 
 	CRISAttractiveObject(){}
 	CRISAttractiveObject(const CRISAttractiveObjectDesc& desc, CRInternalSceneIf* is) 
@@ -75,6 +80,7 @@ public:
 		SetDesc(&desc);
 	}
 
+	/*
 	/// デスクリプタ関連
 protected:
 	float  attractiveness;
@@ -88,6 +94,7 @@ public:
 		((CRISAttractiveObjectDesc*)desc)->attractiveness = attractiveness;
 		return true;
 	}
+	*/
 
 	/** @brief 注意をひきつける度合を得る
 	*/
@@ -106,6 +113,7 @@ private:
 
 public:
 	OBJECTDEF(CRISTravelPotentialObject, CRInternalSceneObject);
+	ACCESS_DESC_CRISTravelPotentialObjectDesc(CRInternalSceneObject);
 
 	CRISTravelPotentialObject(){}
 	CRISTravelPotentialObject(const CRISTravelPotentialObjectDesc& desc, CRInternalSceneIf* is) 
@@ -114,6 +122,7 @@ public:
 		SetDesc(&desc);
 	}
 
+	/*
 	/// デスクリプタ関連
 protected:
 	Vec2f  strength;
@@ -130,6 +139,7 @@ public:
 		((CRISTravelPotentialObjectDesc*)desc)->decay    = decay;
 		return true;
 	}
+	*/
 
 	/** @brief ポテンシャルの強さの係数（A, B）を得る
 	*/

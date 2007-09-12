@@ -8,6 +8,7 @@ set DESCIF=TypeDescDump%1.h
 set DESCIMP=TypeDescDumpImp%1.h
 set STUBIF=IfStubDump%1.h
 set STUBIMP=IfStubDumpImp%1.h
+set ACCESSDESC=AccessDescDump%1.h
 set TARGET=%1 %2 %3 %4 %5 %6 %7 %8 %9
 set MAKEFILE=MakeTypeDescMAK.txt
 cmd /v:on /c%0 LISTSRC
@@ -38,12 +39,13 @@ echo //	Do not edit. MakeTypeDesc.bat will update this file.> %DESCIF%
 echo //	Do not edit. MakeTypeDesc.bat will update this file.> %DESCIMP%
 echo //	Do not edit. MakeTypeDesc.bat will update this file.> %STUBIF%
 echo //	Do not edit. MakeTypeDesc.bat will update this file.> %STUBIMP%
+echo //	Do not edit. MakeTypeDesc.bat will update this file.> %ACCESSDESC%
 
 echo namespace Spr{; >> %STUBIF%
 
 for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do echo #include "../../include/%%p/%%f" >> %DESCIF%
 
-for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do typedesc ../../include/%%p/%%f %DESCIMP% %STUBIF% %STUBIMP%
+for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do typedesc ../../include/%%p/%%f %DESCIMP% %STUBIF% %STUBIMP% %ACCESSDESC%
 if exist UTBaseType.h typedesc UTBaseType.h %DESCIMP%
 
 echo }	//	namespace Spr; >> %STUBIF%

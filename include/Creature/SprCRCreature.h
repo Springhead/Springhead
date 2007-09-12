@@ -52,7 +52,7 @@ struct CRCreatureIf : SceneObjectIf{
 	*/
 	virtual CRBodyIf* GetBody()= 0;
 
-	/** @brief 感覚系を追加する
+	/** @brief 感覚系を追加する（依存するセンサーは先にCreateしておく必要がある．要対策）
 	*/
 	virtual CRSensorIf* CreateSensor(const IfInfo* ii, const CRSensorDesc& desc)= 0;
 	template <class T> CRSensorIf* CreateSensor(const T& desc){
@@ -67,7 +67,7 @@ struct CRCreatureIf : SceneObjectIf{
 	*/
 	virtual int NSensors()= 0;
 
-	/** @brief 運動コントローラを追加する
+	/** @brief 運動コントローラを追加する（依存するコントローラは先にCreateしておく必要がある．要対策）
 	*/
 	virtual CRControllerIf* CreateController(const IfInfo* ii, const CRControllerDesc& desc)= 0;
 	template <class T> CRControllerIf* CreateController(const T& desc){

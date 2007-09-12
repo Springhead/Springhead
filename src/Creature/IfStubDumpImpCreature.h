@@ -10,6 +10,7 @@ IF_IMP(CRReachingController, CRController);
 IF_IMP(CRWalkingController, CRController);
 IF_IMP(CREseWalkingController, CRController);
 IF_IMP(CRTravelController, CRController);
+IF_IMP(CRGrabController, CRController);
 IF_IMP(CRCreature, SceneObject);
 IF_IMP(CRInternalSceneObject, SceneObject);
 IF_IMP(CRISAttractiveObject, CRInternalSceneObject);

@@ -303,6 +303,16 @@
 	field->offset = int((char*)(CRControllerDesc*)pCRTravelControllerDesc - (char*)pCRTravelControllerDesc);
 	db->RegisterDesc(desc);
 	
+	CRGrabControllerDesc* pCRGrabControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRGrabControllerDesc");
+	desc->size = sizeof(CRGrabControllerDesc);
+	desc->ifInfo = CRGrabControllerIf::GetIfInfoStatic();
+	((IfInfo*)CRGrabControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRGrabControllerDesc>;
+	field = desc->AddBase("CRControllerDesc");
+	field->offset = int((char*)(CRControllerDesc*)pCRGrabControllerDesc - (char*)pCRGrabControllerDesc);
+	db->RegisterDesc(desc);
+	
 	CRCreatureDesc* pCRCreatureDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRCreatureDesc");
 	desc->size = sizeof(CRCreatureDesc);

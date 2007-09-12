@@ -37,6 +37,7 @@ IF_OBJECT_IMP(CRCreature, SceneObject);
 void CRCreature::Init(){
 	body->Init();
 
+	// 将来的には依存するセンサ・コントローラを先にInitするようコードしたほうがよさそうだ．(07/09/11, mitake)
 	for (int i=0; i<sensors.size(); i++){
 		sensors[i]->Init();
 	}

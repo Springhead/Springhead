@@ -52,10 +52,6 @@ private:
 	/// 制御対象のボディ
 	CRHingeHumanBodyIf* body;
 
-	/** @brief リセットする
-	*/
-	void Reset();
-
 	/** @brief 制御対象の関節を柔らかくする
 	*/
 	void UnfixHinge();
@@ -82,6 +78,10 @@ public:
 	/** @ brief 制御のステップを実行する
 	*/
 	virtual void Step();
+
+	/** @brief リセットする
+	*/
+	virtual void Reset();
 
 	/** @brief 目標位置を設定する
 		@param p 目標位置
