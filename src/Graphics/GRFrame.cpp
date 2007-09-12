@@ -124,7 +124,12 @@ void GRAnimation::BlendPose(float time, float weight){
 				switch(anim.keyType){
 					case GRAnimationDesc::ROTATION:{
 						Matrix3f mat;
-						((Quaternionf*)blended)->ToMatrix(mat);
+						//((Quaternionf*)blended)->ToMatrix(mat);
+						Quaternionf q = *((Quaternionf*) blended);
+//						q.w*=-1;
+						q.x*=-1;
+						q.y*=-1;
+						q.ToMatrix(mat);
 						transform.Rot() = transform.Rot() * mat;
 
 						}break;
@@ -134,7 +139,7 @@ void GRAnimation::BlendPose(float time, float weight){
 						transform.Ez() *= blended[2];
 						break;
 					case GRAnimationDesc::POSITION:
-						transform.Pos() += *((Vec3f*)blended);
+//						transform.Pos() += *((Vec3f*)blended);
 						break;
 					case GRAnimationDesc::MATRIX:
 						transform = transform * *((Affinef*)blended);
