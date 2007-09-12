@@ -126,16 +126,15 @@ void GRAnimation::BlendPose(float time, float weight){
 						Affinef mat;
 						//((Quaternionf*)blended)->ToMatrix(mat);
 						Quaternionf q = *((Quaternionf*) blended);
-						q.x*=-1;
-						q.y*=-1;
+						q.w*=-1;
 						q.ToMatrix(mat.Rot());
 						transform = mat * transform;
 						}break;
 					case GRAnimationDesc::SCALE:
-/*						transform.Ex() *= blended[0];
+						transform.Ex() *= blended[0];
 						transform.Ey() *= blended[1];
 						transform.Ez() *= blended[2];
-*/						break;
+						break;
 					case GRAnimationDesc::POSITION:
 						transform.Pos()[0] += blended[0];
 						transform.Pos()[1] += blended[1];
