@@ -12,6 +12,20 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
+#define TEST_CASE 1
+
+#if defined(TEST_CASE) && (TEST_CASE == 0)
+#define FILE_NAME "test2.x"
+#define FRAME_NAME "RightUpperArm"
+#define ANIMATION_NAME "Walk"
+
+#elif defined(TEST_CASE) && (TEST_CASE==1)
+#define FILE_NAME "test3.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Movement"
+
+
+#endif
 class MyApp: public FWAppGLUT{
 public:
 	void Step(){
@@ -36,7 +50,7 @@ void idle(void){
 	afV.LookAt(Vec3f(10,0,0), Vec3f(0,1,0));
 #if 0
 	GRFrameIf* fr;
-	app->GetSdk()->GetScene()->GetGRScene()->FindObject(fr, "RightUpperArm");
+	app->GetSdk()->GetScene()->GetGRScene()->FindObject(fr, FRAME_NAME);
 	if (fr){
 		Affinef af = fr->GetTransform();
 		af = af * Affinef::Rot(Rad(5), 'X');
@@ -46,7 +60,7 @@ void idle(void){
 	GRAnimationControllerIf* anim = app->GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
 	anim->ResetPose();
 	static float time;
-	anim->BlendPose("Walk", time, 1);
+	anim->BlendPose(ANIMATION_NAME, time, 1);
 	time += 1;
 	if (time > 72) time = 0;
 #endif
@@ -69,7 +83,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app->GetSdk()->GetPHSdk()->CreateShape(boxdesc));
 
-	app->GetSdk()->LoadScene("test2.x");
+	app->GetSdk()->LoadScene(FILE_NAME);
 //	app->GetFWScene()->AddHumanInterface(new HIMouse);
 
 	app->Start();
