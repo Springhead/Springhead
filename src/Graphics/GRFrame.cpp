@@ -123,26 +123,26 @@ void GRAnimation::BlendPose(float time, float weight){
 				//	見つかった変換をtransformに適用
 				switch(anim.keyType){
 					case GRAnimationDesc::ROTATION:{
-						Matrix3f mat;
+						Affinef mat;
 						//((Quaternionf*)blended)->ToMatrix(mat);
 						Quaternionf q = *((Quaternionf*) blended);
-//						q.w*=-1;
 						q.x*=-1;
 						q.y*=-1;
-						q.ToMatrix(mat);
-						transform.Rot() = transform.Rot() * mat;
-
+						q.ToMatrix(mat.Rot());
+						transform = mat * transform;
 						}break;
 					case GRAnimationDesc::SCALE:
-						transform.Ex() *= blended[0];
+/*						transform.Ex() *= blended[0];
 						transform.Ey() *= blended[1];
 						transform.Ez() *= blended[2];
-						break;
+*/						break;
 					case GRAnimationDesc::POSITION:
-//						transform.Pos() += *((Vec3f*)blended);
+						transform.Pos()[0] += blended[0];
+						transform.Pos()[1] += blended[1];
+						transform.Pos()[2] += blended[2];
 						break;
 					case GRAnimationDesc::MATRIX:
-						transform = transform * *((Affinef*)blended);
+//						transform =  *((Affinef*)blended) * transform ;
 						break;
 				}
 				break;
@@ -151,7 +151,7 @@ void GRAnimation::BlendPose(float time, float weight){
 	}
 	//	transform をターゲットに適用
 	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
-		it->target->SetTransform(it->target->GetTransform() * transform);
+		it->target->SetTransform(transform);
 	}
 }
 void GRAnimation::ResetPose(){
