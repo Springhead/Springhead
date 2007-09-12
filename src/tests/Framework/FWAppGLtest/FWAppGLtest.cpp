@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 1
+#define TEST_CASE 7
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define FILE_NAME "test2.x"
@@ -22,7 +22,47 @@ MyApp* app;
 #elif defined(TEST_CASE) && (TEST_CASE==1)
 #define FILE_NAME "test3.x"
 #define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Amplification"
+
+#elif defined(TEST_CASE) && (TEST_CASE==2)
+#define FILE_NAME "test4.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Amplification"
+
+#elif defined(TEST_CASE) && (TEST_CASE==3)
+#define FILE_NAME "test5.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Amplification"
+
+#elif defined(TEST_CASE) && (TEST_CASE==4)
+#define FILE_NAME "test6.x"
+#define FRAME_NAME "Hand"
 #define ANIMATION_NAME "Movement"
+
+#elif defined(TEST_CASE) && (TEST_CASE==5)
+#define FILE_NAME "test7.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Movement"
+
+#elif defined(TEST_CASE) && (TEST_CASE==6)
+#define FILE_NAME "test8.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Movement"
+
+#elif defined(TEST_CASE) && (TEST_CASE==7)
+#define FILE_NAME "test9.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Rotation"
+
+#elif defined(TEST_CASE) && (TEST_CASE==8)
+#define FILE_NAME "test10.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Rotation"
+
+#elif defined(TEST_CASE) && (TEST_CASE==9)
+#define FILE_NAME "test11.x"
+#define FRAME_NAME "Hand"
+#define ANIMATION_NAME "Rotation"
 
 
 #endif
