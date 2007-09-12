@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 7
+#define TEST_CASE 0
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -111,7 +111,7 @@ void idle(void){
 	static float time;
 	anim->BlendPose(ANIMATION_NAME, time, 1);
 	time += 1;
-	if (time > 72) time = 0;
+	if (time > 71) time = 0;
 #endif
 	glutPostRedisplay();
 }
