@@ -234,6 +234,17 @@
 	field->offset = int((char*)(CRControllerDesc*)pCRNeckControllerDesc - (char*)pCRNeckControllerDesc);
 	db->RegisterDesc(desc);
 	
+	CRReachingControllerDesc* pCRReachingControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRReachingControllerDesc");
+	desc->size = sizeof(CRReachingControllerDesc);
+	desc->ifInfo = CRReachingControllerIf::GetIfInfoStatic();
+	((IfInfo*)CRReachingControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRReachingControllerDesc>;
+	field = desc->AddBase("CRControllerDesc");
+	field->offset = int((char*)(CRControllerDesc*)pCRReachingControllerDesc - (char*)pCRReachingControllerDesc);
+	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
+	field->offset = int((char*)&(pCRReachingControllerDesc->solid) - (char*)pCRReachingControllerDesc);
+	
 	CRGazeControllerState* pCRGazeControllerState = NULL;
 	desc = DBG_NEW UTTypeDesc("CRGazeControllerState");
 	desc->size = sizeof(CRGazeControllerState);
@@ -261,17 +272,6 @@
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRAttentionControllerDesc - (char*)pCRAttentionControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRReachingControllerDesc* pCRReachingControllerDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRReachingControllerDesc");
-	desc->size = sizeof(CRReachingControllerDesc);
-	desc->ifInfo = CRReachingControllerIf::GetIfInfoStatic();
-	((IfInfo*)CRReachingControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRReachingControllerDesc>;
-	field = desc->AddBase("CRControllerDesc");
-	field->offset = int((char*)(CRControllerDesc*)pCRReachingControllerDesc - (char*)pCRReachingControllerDesc);
-	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
-	field->offset = int((char*)&(pCRReachingControllerDesc->solid) - (char*)pCRReachingControllerDesc);
 	
 	CRWalkingControllerDesc* pCRWalkingControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRWalkingControllerDesc");

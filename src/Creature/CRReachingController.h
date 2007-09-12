@@ -12,6 +12,7 @@
 
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
+#include "AccessDescDumpCreature.h"
 
 #include "CRController.h"
 
@@ -52,17 +53,9 @@ private:
 	/// 制御対象のボディ
 	CRHingeHumanBodyIf* body;
 
-	/** @brief 制御対象の関節を柔らかくする
-	*/
-	void UnfixHinge();
-
-	/** @brief 制御対象の関節を固くする
-	*/
-	void FixHinge();
-
 public:
 	OBJECTDEF(CRReachingController, CRController);
-	ACCESS_DESC(CRReachingController);
+	ACCESS_DESC_CRReachingController(CRController);
 
 	CRReachingController(){}
 	CRReachingController(const CRReachingControllerDesc& desc, CRCreatureIf* c=NULL) 
@@ -78,10 +71,6 @@ public:
 	/** @ brief 制御のステップを実行する
 	*/
 	virtual void Step();
-
-	/** @brief リセットする
-	*/
-	virtual void Reset();
 
 	/** @brief 目標位置を設定する
 		@param p 目標位置
@@ -101,9 +90,21 @@ public:
 	*/
 	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o);
 
-	/** @brief 作動中かどうかを返す
+	/** @brief 動作中かどうか（TargetPointを移動しているかどうか）を返す
+	*/
+	virtual bool IsMoving();
+
+	/** @brief 到達したかどうかを返す
+	*/
+	virtual bool IsReached();
+
+	/** @brief 動作中かどうか（制御が有効かどうか）を返す
 	*/
 	virtual bool IsActive();
+
+	/** @brief 到達運動をやめ、初期状態に戻る
+	*/
+	virtual void Reset();
 };
 }
 //@}

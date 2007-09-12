@@ -76,6 +76,32 @@ typedef IfInitTemplate<CRNeckControllerIfStub, CRNeckController>	CRNeckControlle
 
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
+struct CRReachingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o){
+		return ((OBJ*)(MIF*)this)->SetTarget(p, v, t, o);
+	}
+	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
+		return ((OBJ*)(MIF*)this)->SetTarget(p, v, q, av, t, o);
+	}
+	virtual bool IsMoving(){
+		return ((OBJ*)(MIF*)this)->IsMoving();
+	}
+	virtual bool IsReached(){
+		return ((OBJ*)(MIF*)this)->IsReached();
+	}
+	virtual bool IsActive(){
+		return ((OBJ*)(MIF*)this)->IsActive();
+	}
+	virtual void Reset(){
+		return ((OBJ*)(MIF*)this)->Reset();
+	}
+};
+struct CRReachingControllerIf;	class CRReachingController;
+typedef CRReachingControllerIfStubTemplate<CRReachingControllerIf, ObjectIfBuf, CRReachingController>	CRReachingControllerIfStub;
+typedef IfInitTemplate<CRReachingControllerIfStub, CRReachingController>	CRReachingControllerIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
 struct CRGazeControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
 	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 		return ((OBJ*)(MIF*)this)->LookAt(pos, vel, attractiveness);
@@ -92,26 +118,6 @@ struct CRAttentionControllerIfStubTemplate: public CRControllerIfStubTemplate<IF
 struct CRAttentionControllerIf;	class CRAttentionController;
 typedef CRAttentionControllerIfStubTemplate<CRAttentionControllerIf, ObjectIfBuf, CRAttentionController>	CRAttentionControllerIfStub;
 typedef IfInitTemplate<CRAttentionControllerIfStub, CRAttentionController>	CRAttentionControllerIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRReachingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o){
-		return ((OBJ*)(MIF*)this)->SetTarget(p, v, t, o);
-	}
-	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
-		return ((OBJ*)(MIF*)this)->SetTarget(p, v, q, av, t, o);
-	}
-	virtual bool IsActive(){
-		return ((OBJ*)(MIF*)this)->IsActive();
-	}
-	virtual void Reset(){
-		return ((OBJ*)(MIF*)this)->Reset();
-	}
-};
-struct CRReachingControllerIf;	class CRReachingController;
-typedef CRReachingControllerIfStubTemplate<CRReachingControllerIf, ObjectIfBuf, CRReachingController>	CRReachingControllerIfStub;
-typedef IfInitTemplate<CRReachingControllerIfStub, CRReachingController>	CRReachingControllerIfInit;
 
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>

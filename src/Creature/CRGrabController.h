@@ -37,6 +37,9 @@ private:
 	/// Œ»İ‚Ì”có‘Ô
 	CRGrabControllerIf::GrabState grabState;
 
+	/// ”cŠ®—¹Œã‚ÉˆÚ“®‚ğs‚¤‚©‚Ç‚¤‚©
+	bool bMoveto;
+
 public:
 	OBJECTDEF(CRGrabController, CRController);
 	ACCESS_DESC(CRGrabController);

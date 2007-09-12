@@ -49,67 +49,6 @@ void CRReachingController::Init(){
 	Reset();
 }
 
-void CRReachingController::Reset(){
-	time  = 0.0f;
-	limitForce = 350.0f;
-	spring->Enable(false);
-	bActive = false;
-	bOri = false;
-}
-
-void CRReachingController::UnfixHinge(){
-	/*
-	for(int i=0; i<CRHingeHumanBodyDesc::JO_NJOINTS; i++){
-		if (   i != CRHingeHumanBodyDesc::JO_CHEST_NECK_X
-			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Y
-			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Z
-			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_X
-			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_Z
-			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_X
-			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y
-			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_X
-			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_Y)
-		{
-			PHHingeJointIf* joint = DCAST(PHHingeJointIf, body->GetJoint(i));
-			if (fixmode == CRR_UNFIXED) {
-			} else if (fixmode == CRR_NORMAL) {
-				joint->SetSpring(joint->GetSpring() * softenRate);
-			} else if (fixmode == CRR_FIXED) {
-				joint->SetSpring(joint->GetSpring() / hardenRate * softenRate);
-			}
-			fixmode = CRR_UNFIXED;
-		}
-	}
-	*/
-}
-
-void CRReachingController::FixHinge(){
-	/*
-	for(int i=0; i<CRHingeHumanBodyDesc::JO_NJOINTS; i++){
-		if (   i != CRHingeHumanBodyDesc::JO_CHEST_NECK_X
-			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Y
-			&& i != CRHingeHumanBodyDesc::JO_CHEST_NECK_Z
-			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_X
-			&& i != CRHingeHumanBodyDesc::JO_NECK_HEAD_Z
-			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_X
-			&& i != CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y
-			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_X
-			&& i != CRHingeHumanBodyDesc::JO_LEFT_EYE_Y)
-		{
-			PHHingeJointIf* joint = DCAST(PHHingeJointIf, body->GetJoint(i));
-			if (fixmode == CRR_UNFIXED) {
-				joint->SetSpring(joint->GetSpring() / softenRate * hardenRate);
-			} else if (fixmode == CRR_NORMAL) {
-				joint->SetSpring(joint->GetSpring() * hardenRate);
-			} else if (fixmode == CRR_FIXED) {
-			}
-			//joint->SetSpringOrigin(joint->GetPosition());
-			fixmode = CRR_FIXED;
-		}
-	}
-	*/
-}
-
 void CRReachingController::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	firstPos = solid->GetPose().Pos();
 	finalPos = p;
@@ -119,7 +58,6 @@ void CRReachingController::SetTarget(Vec3f p, Vec3f v, float t, float o){
 	offset   = o;
 	spring->Enable(true);
 	bActive  = true;
-	UnfixHinge();
 }
 
 void CRReachingController::SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
@@ -142,12 +80,10 @@ void CRReachingController::Step(){
 
 		if (offset < 0) {
 			if (time < 0) {
-				FixHinge();
 				return;
 			}
 		} else {
 			if (time <= -offset) {
-				FixHinge();
 				Reset();
 				return;
 			}
@@ -193,8 +129,36 @@ void CRReachingController::Step(){
 	}
 }
 
+bool CRReachingController::IsMoving(){
+	if (bActive) {
+		if (offset < 0) {
+			if (time < 0) {
+				return false;
+			}
+		} else {
+			if (time <= -offset) {
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
+
+bool CRReachingController::IsReached(){
+	return( (solid->GetPose().Pos() - finalPos).norm() < 0.01 );
+}
+
 bool CRReachingController::IsActive(){
 	return bActive;
+}
+
+void CRReachingController::Reset(){
+	time  = 0.0f;
+	limitForce = 350.0f;
+	spring->Enable(false);
+	bActive = false;
+	bOri = false;
 }
 
 }

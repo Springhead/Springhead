@@ -105,6 +105,73 @@ struct CRNeckControllerDesc: public CRNeckControllerState, public CRControllerDe
 
 // ------------------------------------------------------------------------------
 
+/// 到達運動コントローラのインターフェース
+struct CRReachingControllerIf : CRControllerIf{
+	IF_DEF(CRReachingController);
+
+	/** @brief 目標位置を設定し、到達運動を開始する
+		@param p 目標位置
+		@param v 目標の速度
+		@param t 目標到達時間
+		@param o 到達後の待機時間
+	*/
+	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o)= 0;
+
+	/** @brief 目標位置・姿勢を設定し、到達運動を開始する
+		@param p 目標位置
+		@param v 目標の速度
+		@param q 目標姿勢
+		@param av 目標角速度
+		@param t 目標到達時間
+		@param o 到達後の待機時間
+	*/
+	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o)= 0;
+
+	/** @brief 移動中かどうか（TargetPointを移動しているかどうか）を返す
+	*/
+	virtual bool IsMoving()= 0;
+
+	/** @brief 到達したかどうかを返す
+	*/
+	virtual bool IsReached()= 0;
+
+	/** @brief 動作中かどうか（制御が有効かどうか）を返す
+	*/
+	virtual bool IsActive()= 0;
+
+	/** @brief 到達運動をやめ、初期状態に戻る
+	*/
+	virtual void Reset()= 0;
+};
+
+/// 到達運動コントローラのデスクリプタ
+struct CRReachingControllerDesc : public CRControllerDesc{
+	DESC_DEF_FOR_OBJECT(CRReachingController);
+
+	PHSolidIf* solid; ///< 到達させたい剛体
+	CRHingeHumanBodyDesc::CRHumanSolids solidNo; ///< 到達させたい剛体
+
+	float limitForce; ///< 力の最大値
+	float springPos; ///< 位置制御のバネ係数
+	float damperPos; ///< 位置制御のダンパ係数
+	float springOri; ///< 姿勢制御のバネ係数
+	float damperOri; ///< 姿勢制御のダンパ係数
+	float softenRate; ///< 関節を柔らかい状態にするためのバネダンパ倍率
+	float hardenRate; ///< 関節を固い状態にするためのバネダンパ倍率
+
+	CRReachingControllerDesc(){
+		solid = NULL;
+		solidNo = CRHingeHumanBodyDesc::SO_NSOLIDS;
+		limitForce = 1000.0f;
+		springPos = 500.0f;  damperPos =  20.0f;
+		springOri =  10.0f;  damperOri =   0.5f;
+		softenRate = 0.2f;
+		hardenRate = 5.0f;
+	}
+};
+
+// ------------------------------------------------------------------------------
+
 /// 視線コントローラ（眼球運動・首運動のコントローラの上位機構）のインターフェイス
 struct CRGazeControllerIf : CRControllerIf{
 	IF_DEF(CRGazeController);
@@ -142,61 +209,6 @@ struct CRAttentionControllerDesc : public CRControllerDesc{
 	DESC_DEF_FOR_OBJECT(CRAttentionController);
 
 	CRAttentionControllerDesc(){
-	}
-};
-
-// ------------------------------------------------------------------------------
-
-/// 到達運動コントローラのインターフェース
-struct CRReachingControllerIf : CRControllerIf{
-	IF_DEF(CRReachingController);
-
-	/** @brief 目標位置を設定する
-		@param p 目標位置
-		@param v 目標の速度
-		@param t 目標到達時間
-		@param o 到達後の待機時間
-	*/
-	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o)= 0;
-
-	/** @brief 目標位置・姿勢を設定する
-		@param p 目標位置
-		@param v 目標の速度
-		@param q 目標姿勢
-		@param av 目標角速度
-		@param t 目標到達時間
-		@param o 到達後の待機時間
-	*/
-	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o)= 0;
-
-	/** @brief 作動中かどうかを返す
-	*/
-	virtual bool IsActive()= 0;
-
-	/** @brief リセットする
-	*/
-	virtual void Reset()= 0;
-};
-
-/// 到達運動コントローラのデスクリプタ
-struct CRReachingControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRReachingController);
-
-	PHSolidIf* solid; ///< 到達させたい剛体
-	CRHingeHumanBodyDesc::CRHumanSolids solidNo; ///< 到達させたい剛体
-
-	float limitForce; ///< 力の最大値
-	float springPos, damperPos; ///< 位置制御のバネダンパ係数
-	float springOri, damperOri; ///< 姿勢制御のバネダンパ係数
-	float softenRate; ///< 関節を柔らかい状態にするためのバネダンパ倍率
-	float hardenRate; ///< 関節を固い状態にするためのバネダンパ倍率
-
-	CRReachingControllerDesc(){
-		limitForce = 1000.0f;
-		springPos = 500.0f;  damperPos =  20.0f;
-		springOri =  10.0f;  damperOri =   0.5f;
-		softenRate = 0.2f;
-		hardenRate = 5.0f;
 	}
 };
 
