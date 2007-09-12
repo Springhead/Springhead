@@ -154,7 +154,7 @@ public:
 
 			case('e'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
  						af = cam->GetFrame()->GetTransform();
-						af =  Affinef::Rot(Rad(-5), 'z') * af;
+						af =  Affinef::Rot(Rad(5), 'z') * af;
 						cam->GetFrame()->SetTransform(af);
 						break;
 
@@ -170,7 +170,6 @@ public:
 						cam->GetFrame()->SetTransform(af);
 						break;
 
-			
 			case('f'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
  						af = cam->GetFrame()->GetTransform();
 						af = af * Affinef::Trn(0,0,-0.1);
