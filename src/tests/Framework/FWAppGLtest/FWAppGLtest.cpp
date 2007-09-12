@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 10
+#define TEST_CASE 11
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -152,6 +152,19 @@ public:
 						cam->GetFrame()->SetTransform(af);
 						break;
 
+			case('d'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 						af = cam->GetFrame()->GetTransform();
+						af = af * Affinef::Trn(0,0,0.1);
+						cam->GetFrame()->SetTransform(af);
+						break;
+
+			
+			case('f'):  app->GetSdk()->GetScene()->FindObject(cam, "cam");
+ 						af = cam->GetFrame()->GetTransform();
+						af = af * Affinef::Trn(0,0,-0.1);
+						cam->GetFrame()->SetTransform(af);
+						break;
+
 		}
 	}
 };
@@ -174,7 +187,7 @@ void idle(void){
 	static float time;
 	anim->BlendPose(ANIMATION_SET_NAME, time, 1);
 	time += 1;
-	if (time > FRAME_NUMBER - 1) time = 0;
+	if (time > FRAME_NUMBER*2 - 1) time = 0;
 #endif
 	glutPostRedisplay();
 }
