@@ -12,34 +12,58 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 0
+#define TEST_CASE 1
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test.x"
+#define FILE_NAME "test2.x"
 #define ANIMATION_SET_NAME "Walk"
-#define FRAME_NUMBER 60
+#define FRAME_NUMBER 72
 
-#elif defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test.x"
+#elif defined(TEST_CASE) && (TEST_CASE == 1)
+#define FILE_NAME "test2.x"
 #define ANIMATION_SET_NAME "Run"
-#define FRAME_NUMBER 60
+#define FRAME_NUMBER 48
 
-#elif defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test.x"
+#elif defined(TEST_CASE) && (TEST_CASE == 2)
+#define FILE_NAME "test2.x"
 #define ANIMATION_SET_NAME "WaveOnesArm"
-#define FRAME_NUMBER 60
+#define FRAME_NUMBER 48
 
-#elif defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test.x"
+#elif defined(TEST_CASE) && (TEST_CASE == 3)
+#define FILE_NAME "test2.x"
 #define ANIMATION_SET_NAME "RunGround"
-#define FRAME_NUMBER 60
+#define FRAME_NUMBER 72
 
 #endif
 
 
 class MyApp: public FWAppGLUT{
 public:
+	void Display(){
+		static int timing = 0;
+		GRRenderIf* grRender = fwSdk->GetRender();
+		grRender->ClearBuffer();
+		grRender->BeginScene();
+		
+		GRMaterialDesc material;
+		if(timing == 0){
+			material.emissive = Vec4f(0.0,0.0,1.0,1.0);
+			timing = 1;
+		}
+		else{
+			material.emissive = Vec4f(1.0,0.0,0.0,1.0);
+			timing = 0;
+		}
+		grRender->SetMaterial(material);
+		FWSceneIf* fwScene = fwSdk->GetScene();
+
+	if(fwScene)
+		fwScene->Draw(grRender, false);
+
+	grRender->EndScene();
+	glutSwapBuffers();
+	}
 	void Step(){
 		FWAppGLUT::Step();
 		PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
