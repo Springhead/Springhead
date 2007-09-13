@@ -77,6 +77,9 @@ typedef IfInitTemplate<CRNeckControllerIfStub, CRNeckController>	CRNeckControlle
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRReachingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual PHSolidIf * GetSolid(){
+		return ((OBJ*)(MIF*)this)->GetSolid();
+	}
 	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o){
 		return ((OBJ*)(MIF*)this)->SetTarget(p, v, t, o);
 	}

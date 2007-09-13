@@ -12,7 +12,6 @@
 
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
-#include "AccessDescDumpCreature.h"
 
 #include "CRController.h"
 
@@ -21,7 +20,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 到達運動コントローラ
 */
-class CRReachingController : public CRController, public CRReachingControllerIfInit, public CRReachingControllerDesc {
+class CRReachingController : public CRController, public CRReachingControllerIfInit , public CRReachingControllerDesc {
 private:
 	/// 関節固定モード
 	enum CRRFixMode {
@@ -55,14 +54,18 @@ private:
 
 public:
 	OBJECTDEF(CRReachingController, CRController);
-	ACCESS_DESC_CRReachingController(CRController);
+	ACCESS_DESC(CRReachingController);
 
 	CRReachingController(){}
 	CRReachingController(const CRReachingControllerDesc& desc, CRCreatureIf* c=NULL) 
-		: CRReachingControllerDesc(desc) 
-		, CRController((const CRControllerDesc&)desc, c)
+		: CRController((const CRControllerDesc&)desc, c)
+		, CRReachingControllerDesc(desc)
 	{
 	}
+
+	/** @brief 制御対象の剛体を返す
+	*/
+	virtual PHSolidIf* GetSolid();
 
 	/** @ brief 初期化を実行する
 	*/

@@ -109,6 +109,10 @@ struct CRNeckControllerDesc: public CRNeckControllerState, public CRControllerDe
 struct CRReachingControllerIf : CRControllerIf{
 	IF_DEF(CRReachingController);
 
+	/** @brief 制御対象の剛体を返す
+	*/
+	virtual PHSolidIf* GetSolid()= 0;
+
 	/** @brief 目標位置を設定し、到達運動を開始する
 		@param p 目標位置
 		@param v 目標の速度
@@ -149,7 +153,7 @@ struct CRReachingControllerDesc : public CRControllerDesc{
 	DESC_DEF_FOR_OBJECT(CRReachingController);
 
 	PHSolidIf* solid; ///< 到達させたい剛体
-	CRHingeHumanBodyDesc::CRHumanSolids solidNo; ///< 到達させたい剛体
+	int        solidNo; ///< 到達させたい剛体
 
 	float limitForce; ///< 力の最大値
 	float springPos; ///< 位置制御のバネ係数
@@ -160,8 +164,8 @@ struct CRReachingControllerDesc : public CRControllerDesc{
 	float hardenRate; ///< 関節を固い状態にするためのバネダンパ倍率
 
 	CRReachingControllerDesc(){
-		solid = NULL;
-		solidNo = CRHingeHumanBodyDesc::SO_NSOLIDS;
+		solid   = NULL;
+		solidNo = 9999;
 		limitForce = 1000.0f;
 		springPos = 500.0f;  damperPos =  20.0f;
 		springOri =  10.0f;  damperOri =   0.5f;

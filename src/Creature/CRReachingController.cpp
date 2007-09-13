@@ -16,10 +16,17 @@ namespace Spr{
 // 
 IF_OBJECT_IMP(CRReachingController, CRController);
 
+PHSolidIf* CRReachingController::GetSolid(){
+	return solid;
+}
+
 void CRReachingController::Init(){
 	CRController::Init();
 
 	if (solid==NULL && (0 <= solidNo && solidNo < CRHingeHumanBodyDesc::SO_NSOLIDS)) {
+		std::cout << solidNo << std::endl;
+		std::cout << creature << std::endl;
+		std::cout << creature->GetBody() << std::endl;
 		solid = creature->GetBody()->GetSolid(solidNo);
 	}
 

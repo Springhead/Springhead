@@ -29,9 +29,7 @@ void CRGrabController::Init(){
 	}
 
 	if (reach1 && reach2) {
-		CRReachingControllerDesc* desc=NULL;
-		reach1->GetDesc(desc);
-		if (desc->solid == creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
+		if (reach1->GetSolid() == creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
 			reachLeft = reach1;  reachRight = reach2;
 		} else {
 			reachLeft = reach2;  reachRight = reach1;
