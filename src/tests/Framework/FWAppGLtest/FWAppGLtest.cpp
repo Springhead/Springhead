@@ -17,98 +17,22 @@ MyApp* app;
 //lŠÔƒ‚ƒfƒ‹‚Ìƒ[ƒh
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define FILE_NAME "test2.x"
-#define FRAME_NAME "RightUpperArm"
+#define ANIMATION_SET_NAME "Walk"
+#define FRAME_NUMBER 60
+
+#elif defined(TEST_CASE) && (TEST_CASE == 0)
+#define FILE_NAME "test2.x"
+#define ANIMATION_SET_NAME "Run"
+#define FRAME_NUMBER 60
+
+#elif defined(TEST_CASE) && (TEST_CASE == 0)
+#define FILE_NAME "test2.x"
 #define ANIMATION_SET_NAME "WaveOnesArm"
 #define FRAME_NUMBER 60
 
-//XŽ²•ûŒü‚ÉŠg‘åAk¬
-#elif defined(TEST_CASE) && (TEST_CASE==1)
-#define FILE_NAME "test3.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Amplification"
-#define FRAME_NUMBER 60
-//YŽ²•ûŒü‚ÉŠg‘åAk¬
-#elif defined(TEST_CASE) && (TEST_CASE==2)
-#define FILE_NAME "test4.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Amplification"
-#define FRAME_NUMBER 60
-
-//ZŽ²•ûŒü‚ÉŠg‘åAk¬
-#elif defined(TEST_CASE) && (TEST_CASE==3)
-#define FILE_NAME "test5.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Amplification"
-#define FRAME_NUMBER 60
-
-//XŽ²•ûŒü‚ÉˆÚ“®
-#elif defined(TEST_CASE) && (TEST_CASE==4)
-#define FILE_NAME "test6.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Movement"
-#define FRAME_NUMBER 60
-
-//YŽ²•ûŒü‚ÉˆÚ“®
-#elif defined(TEST_CASE) && (TEST_CASE==5)
-#define FILE_NAME "test7.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Movement"
-#define FRAME_NUMBER 60
-
-//ZŽ²•ûŒü‚ÉˆÚ“®
-#elif defined(TEST_CASE) && (TEST_CASE==6)
-#define FILE_NAME "test8.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Movement"
-#define FRAME_NUMBER 60
-
-//XŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==7)
-#define FILE_NAME "test9.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Rotation"
-#define FRAME_NUMBER 60
-
-//YŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==8)
-#define FILE_NAME "test10.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Rotation"
-#define FRAME_NUMBER 60
-
-//ZŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==9)
-#define FILE_NAME "test11.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Rotation"
-#define FRAME_NUMBER 60
-
-//XŽ²•ûŒü‚É‰ñ“]ËYŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==10)
-#define FILE_NAME "test12.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "RotationXY"
-#define FRAME_NUMBER 60
-
-//XŽ²•ûŒü‚É‰ñ“]ËYŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==11)
-#define FILE_NAME "test13.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "RotationXYZ"
-#define FRAME_NUMBER 60
-
-//XŽ²•ûŒü‚É‰ñ“]ËYŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==12)
-#define FILE_NAME "test14.x"
-#define FRAME_NAME "Hand"
-#define ANIMATION_SET_NAME "Rotations"
-#define FRAME_NUMBER 60
-
-//XŽ²•ûŒü‚É‰ñ“]ËYŽ²•ûŒü‚É‰ñ“]
-#elif defined(TEST_CASE) && (TEST_CASE==13)
-#define FILE_NAME "test15.x"
-#define FRAME_NAME "right"
-#define ANIMATION_SET_NAME "kick"
+#elif defined(TEST_CASE) && (TEST_CASE == 0)
+#define FILE_NAME "test2.x"
+#define ANIMATION_SET_NAME "RunGround"
 #define FRAME_NUMBER 60
 
 #endif
@@ -184,15 +108,6 @@ MyApp app_;
 void idle(void){
 	Affinef afV;
 	afV.LookAt(Vec3f(10,0,0), Vec3f(0,1,0));
-#if 0
-	GRFrameIf* fr;
-	app->GetSdk()->GetScene()->GetGRScene()->FindObject(fr, FRAME_NAME);
-	if (fr){
-		Affinef af = fr->GetTransform();
-		af = af * Affinef::Rot(Rad(5), 'X');
-		fr->SetTransform(af);
-	}
-#else
 	GRAnimationControllerIf* anim = app->GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
 	anim->ResetPose();
 	static float time;
@@ -200,7 +115,6 @@ void idle(void){
 	time += 1;
 	if (time > FRAME_NUMBER - 1) time = 0;
 	Sleep(10);
-#endif
 	glutPostRedisplay();
 }
 
