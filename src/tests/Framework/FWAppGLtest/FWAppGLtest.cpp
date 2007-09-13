@@ -40,6 +40,25 @@ MyApp* app;
 
 class MyApp: public FWAppGLUT{
 public:
+	void Init(int argc, char* argv[]){
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+		FWAppGL::Init(argc, argv);
+		atexit(FWAppGLUT::AtExit);
+	}
+	void Start(){
+		instance = this;
+		glutGameModeString("800x600:32@60");
+		Sleep(500);
+		windowID = glutEnterGameMode();
+		CreateRender();
+		glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
+		glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
+		glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
+		glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+		glutMainLoop();
+	}
+
 	void Display(){
 		glDisable(GL_LIGHT0);
 		glDisable(GL_LIGHT1);
