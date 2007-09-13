@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 1
+#define TEST_CASE 0
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -41,18 +41,30 @@ MyApp* app;
 class MyApp: public FWAppGLUT{
 public:
 	void Display(){
+		glDisable(GL_LIGHT0);
+		glDisable(GL_LIGHT1);
+		glDisable(GL_LIGHT2);
+		glDisable(GL_LIGHT3);
+		glDisable(GL_LIGHT4);
 		static int timing = 0;
 		GRRenderIf* grRender = fwSdk->GetRender();
-		grRender->ClearBuffer();
+		//grRender->ClearBuffer();
 		grRender->BeginScene();
-		
-		GRMaterialDesc material;
 		if(timing == 0){
-			material.emissive = Vec4f(0.0,0.0,1.0,1.0);
+			glClearColor(0.0,0.0,0.95,1.0);
+		}
+		else{
+			glClearColor(0.25,0.0,0.0,1.0);
+		}
+
+		GRMaterialDesc material;
+		memset(&material, 0, sizeof(material));
+		if(timing == 0){
+			material.emissive = Vec4f(0.0,0.0,0.95,1.0);
 			timing = 1;
 		}
 		else{
-			material.emissive = Vec4f(1.0,0.0,0.0,1.0);
+			material.emissive = Vec4f(0.25,0.0,0.0,1.0);
 			timing = 0;
 		}
 		grRender->SetMaterial(material);
@@ -63,6 +75,7 @@ public:
 
 	grRender->EndScene();
 	glutSwapBuffers();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	void Step(){
 		FWAppGLUT::Step();
