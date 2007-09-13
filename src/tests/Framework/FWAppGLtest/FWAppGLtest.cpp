@@ -16,22 +16,22 @@ MyApp* app;
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test2.x"
+#define FILE_NAME "test.x"
 #define ANIMATION_SET_NAME "Walk"
 #define FRAME_NUMBER 60
 
 #elif defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test2.x"
+#define FILE_NAME "test.x"
 #define ANIMATION_SET_NAME "Run"
 #define FRAME_NUMBER 60
 
 #elif defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test2.x"
+#define FILE_NAME "test.x"
 #define ANIMATION_SET_NAME "WaveOnesArm"
 #define FRAME_NUMBER 60
 
 #elif defined(TEST_CASE) && (TEST_CASE == 0)
-#define FILE_NAME "test2.x"
+#define FILE_NAME "test.x"
 #define ANIMATION_SET_NAME "RunGround"
 #define FRAME_NUMBER 60
 
