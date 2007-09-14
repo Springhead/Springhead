@@ -49,6 +49,8 @@ private:
 	void CreateLowerLeg(LREnum lr);
 	void CreateFoot(LREnum lr);
 
+	void InitContact();
+
 public:
 	OBJECTDEF(CRHingeHumanBody, CRBody);
 	ACCESS_DESC(CRHingeHumanBody);

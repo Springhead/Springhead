@@ -19,48 +19,7 @@ void CRHingeHumanBody::Init(){
 	InitEyes();
 	InitLegs();
 
-	for (int i=0; i<solids.size(); i++) {
-		phScene->SetContactMode(solids[i], PHSceneDesc::MODE_NONE);
-	}
-
-	// FeatherStone法の使用（暫定）
-	/*
-	PHTreeNodeIf* rhand   = phScene->CreateRootNode(solids[SO_RIGHT_HAND], PHRootNodeDesc());
-	PHTreeNodeIf* rwrixz  = phScene->CreateTreeNode(rhand, solids[SO_RIGHT_WRIST_XZ], PHTreeNodeDesc());
-	PHTreeNodeIf* rwriyx  = phScene->CreateTreeNode(rwrixz, solids[SO_RIGHT_WRIST_YX], PHTreeNodeDesc());
-	PHTreeNodeIf* rlarm   = phScene->CreateTreeNode(rwriyx, solids[SO_RIGHT_LOWER_ARM], PHTreeNodeDesc());
-	PHTreeNodeIf* ruarm   = phScene->CreateTreeNode(rlarm, solids[SO_RIGHT_UPPER_ARM], PHTreeNodeDesc());
-	PHTreeNodeIf* rshldxy = phScene->CreateTreeNode(ruarm, solids[SO_RIGHT_SHOULDER_XY], PHTreeNodeDesc());
-	PHTreeNodeIf* rshldzx = phScene->CreateTreeNode(rshldxy, solids[SO_RIGHT_SHOULDER_ZX], PHTreeNodeDesc());
-	PHTreeNodeIf* rchest  = phScene->CreateTreeNode(rshldzx, solids[SO_CHEST], PHTreeNodeDesc());
-	*/
-
-	/*
-	PHTreeNodeIf* waist   = phScene->CreateRootNode(solids[SO_WAIST], PHRootNodeDesc());
-	PHTreeNodeIf* abdomen = phScene->CreateTreeNode(waist, solids[SO_ABDOMEN], PHTreeNodeDesc());
-	PHTreeNodeIf* chest   = phScene->CreateTreeNode(abdomen, solids[SO_CHEST], PHTreeNodeDesc());
-	PHTreeNodeIf* neckxz  = phScene->CreateTreeNode(chest, solids[SO_CHEST_NECK_XZ], PHTreeNodeDesc());
-	PHTreeNodeIf* neckzy  = phScene->CreateTreeNode(neckxz, solids[SO_CHEST_NECK_ZY], PHTreeNodeDesc());
-	PHTreeNodeIf* neck    = phScene->CreateTreeNode(neckzy, solids[SO_NECK], PHTreeNodeDesc());
-	PHTreeNodeIf* headxz  = phScene->CreateTreeNode(neck, solids[SO_NECK_HEAD_XZ], PHTreeNodeDesc());
-	PHTreeNodeIf* head    = phScene->CreateTreeNode(neck, solids[SO_HEAD], PHTreeNodeDesc());
-
-	PHTreeNodeIf* rshldzx = phScene->CreateTreeNode(chest, solids[SO_RIGHT_SHOULDER_ZX], PHTreeNodeDesc());
-	PHTreeNodeIf* rshldxy = phScene->CreateTreeNode(rshldzx, solids[SO_RIGHT_SHOULDER_XY], PHTreeNodeDesc());
-	PHTreeNodeIf* ruarm   = phScene->CreateTreeNode(rshldxy, solids[SO_RIGHT_UPPER_ARM], PHTreeNodeDesc());
-	PHTreeNodeIf* rlarm   = phScene->CreateTreeNode(ruarm, solids[SO_RIGHT_LOWER_ARM], PHTreeNodeDesc());
-	PHTreeNodeIf* rwriyx  = phScene->CreateTreeNode(rlarm, solids[SO_RIGHT_WRIST_YX], PHTreeNodeDesc());
-	PHTreeNodeIf* rwrixz  = phScene->CreateTreeNode(rwriyx, solids[SO_RIGHT_WRIST_XZ], PHTreeNodeDesc());
-	PHTreeNodeIf* rhand   = phScene->CreateTreeNode(rwrixz, solids[SO_RIGHT_HAND], PHTreeNodeDesc());
-
-	PHTreeNodeIf* lshldzx = phScene->CreateTreeNode(chest, solids[SO_LEFT_SHOULDER_ZX], PHTreeNodeDesc());
-	PHTreeNodeIf* lshldxy = phScene->CreateTreeNode(lshldzx, solids[SO_LEFT_SHOULDER_XY], PHTreeNodeDesc());
-	PHTreeNodeIf* luarm   = phScene->CreateTreeNode(lshldxy, solids[SO_LEFT_UPPER_ARM], PHTreeNodeDesc());
-	PHTreeNodeIf* llarm   = phScene->CreateTreeNode(luarm, solids[SO_LEFT_LOWER_ARM], PHTreeNodeDesc());
-	PHTreeNodeIf* lwriyx  = phScene->CreateTreeNode(llarm, solids[SO_LEFT_WRIST_YX], PHTreeNodeDesc());
-	PHTreeNodeIf* lwrixz  = phScene->CreateTreeNode(lwriyx, solids[SO_LEFT_WRIST_XZ], PHTreeNodeDesc());
-	PHTreeNodeIf* lhand   = phScene->CreateTreeNode(lwrixz, solids[SO_LEFT_HAND], PHTreeNodeDesc());
-	*/
+	InitContact();
 }
 
 // --- --- ---
@@ -79,7 +38,6 @@ void CRHingeHumanBody::CreateWaist(){
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
-	//solids[SO_WAIST]->SetDynamical(false);
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
@@ -104,8 +62,8 @@ void CRHingeHumanBody::CreateAbdomen(){
 	hingeDesc.spring           = springWaistAbdomen;
 	hingeDesc.damper           = damperWaistAbdomen;
 	hingeDesc.origin           = Rad(0);
-	//hingeDesc.lower            = -0.0902;
-	//hingeDesc.upper            = 1.7915;
+	hingeDesc.lower            = rangeWaistAbdomen[0];
+	hingeDesc.upper            = rangeWaistAbdomen[1];
 	joints[JO_WAIST_ABDOMEN] = CreateJoint(solids[SO_ABDOMEN], solids[SO_WAIST], hingeDesc);
 
 	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
@@ -131,8 +89,8 @@ void CRHingeHumanBody::CreateChest(){
 	hingeDesc.spring           = springAbdomenChest;
 	hingeDesc.damper           = damperAbdomenChest;
 	hingeDesc.origin           = Rad(0);
-	//hingeDesc.lower            = -0.8552;
-	//hingeDesc.upper            = 0.8552;
+	hingeDesc.lower            = rangeAbdomenChest[0];
+	hingeDesc.upper            = rangeAbdomenChest[1];
 	joints[JO_ABDOMEN_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_ABDOMEN], hingeDesc);
 
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_ABDOMEN], PHSceneDesc::MODE_NONE);
@@ -169,8 +127,8 @@ void CRHingeHumanBody::CreateNeck(){
 	hingeDesc.spring           = springChestNeckX;
 	hingeDesc.damper           = damperChestNeckX;
 	hingeDesc.origin           = Rad(0);
-	//hingeDesc.lower            = -1.7628;
-	//hingeDesc.upper            = 1.2217;
+	hingeDesc.lower            = rangeChestNeckX[0];
+	hingeDesc.upper            = rangeChestNeckX[1];
 	joints[JO_CHEST_NECK_X] = CreateJoint(solids[SO_CHEST_NECK_XZ], solids[SO_CHEST], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -179,6 +137,8 @@ void CRHingeHumanBody::CreateNeck(){
 	hingeDesc.spring           = springChestNeckZ;
 	hingeDesc.damper           = damperChestNeckZ;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeChestNeckZ[0];
+	hingeDesc.upper            = rangeChestNeckZ[1];
 	joints[JO_CHEST_NECK_Z] = CreateJoint(solids[SO_CHEST_NECK_ZY], solids[SO_CHEST_NECK_XZ], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -188,8 +148,8 @@ void CRHingeHumanBody::CreateNeck(){
 	hingeDesc.spring           = springChestNeckY;
 	hingeDesc.damper           = damperChestNeckY;
 	hingeDesc.origin           = Rad(0);
-	//hingeDesc.lower            = -1.0036;
-	//hingeDesc.upper            = 1.0036;
+	hingeDesc.lower            = rangeChestNeckY[0];
+	hingeDesc.upper            = rangeChestNeckY[1];
 	joints[JO_CHEST_NECK_Y] = CreateJoint(solids[SO_NECK], solids[SO_CHEST_NECK_ZY], hingeDesc);
 
 	phScene->SetContactMode(solids[SO_NECK], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
@@ -219,6 +179,8 @@ void CRHingeHumanBody::CreateHead(){
 	hingeDesc.spring           = springNeckHeadX;
 	hingeDesc.damper           = damperNeckHeadX;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeNeckHeadX[0];
+	hingeDesc.upper            = rangeNeckHeadX[1];
 	joints[JO_NECK_HEAD_X] = CreateJoint(solids[SO_NECK_HEAD_XZ], solids[SO_NECK], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -228,6 +190,8 @@ void CRHingeHumanBody::CreateHead(){
 	hingeDesc.spring           = springNeckHeadZ;
 	hingeDesc.damper           = damperNeckHeadZ;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeNeckHeadZ[0];
+	hingeDesc.upper            = rangeNeckHeadZ[1];
 	joints[JO_NECK_HEAD_Z] = CreateJoint(solids[SO_HEAD], solids[SO_NECK_HEAD_XZ], hingeDesc);
 
 	phScene->SetContactMode(solids[SO_HEAD], solids[SO_NECK], PHSceneDesc::MODE_NONE);
@@ -283,6 +247,8 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc.spring           = springShoulderZ;
 	hingeDesc.damper           = damperShoulderZ;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeShoulderZ[0]; /// 本当は左右で異なる．未実装．肩のほかの関節も同じ
+	hingeDesc.upper            = rangeShoulderZ[1];
 	joints[joNShoulderZ]       = CreateJoint(solids[soNShoulderZX], solids[SO_CHEST], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -291,6 +257,8 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc.spring           = springShoulderX;
 	hingeDesc.damper           = damperShoulderX;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeShoulderX[0];
+	hingeDesc.upper            = rangeShoulderX[1];
 	joints[joNShoulderX]       = CreateJoint(solids[soNShoulderXY], solids[soNShoulderZX], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -300,6 +268,8 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc.spring           = springShoulderY;
 	hingeDesc.damper           = damperShoulderY;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeShoulderY[0];
+	hingeDesc.upper            = rangeShoulderY[1];
 	joints[joNShoulderY]       = CreateJoint(solids[soNUpperArm], solids[soNShoulderXY], hingeDesc);
 
 	phScene->SetContactMode(solids[soNUpperArm], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
@@ -335,6 +305,8 @@ void CRHingeHumanBody::CreateLowerArm(LREnum lr){
 	hingeDesc.spring           = springElbow;
 	hingeDesc.damper           = damperElbow;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeElbow[0];
+	hingeDesc.upper            = rangeElbow[1];
 	joints[joNElbow] = CreateJoint(solids[soNLowerArm], solids[soNUpperArm], hingeDesc);
 
 	phScene->SetContactMode(solids[soNLowerArm], solids[soNUpperArm], PHSceneDesc::MODE_NONE);
@@ -375,6 +347,8 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.spring           = springWristY;
 	hingeDesc.damper           = damperWristY;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeWristY[0];
+	hingeDesc.upper            = rangeWristY[1];
 	joints[joNWristY]          = CreateJoint(solids[soNWristYX], solids[soNLowerArm], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -383,6 +357,8 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.spring           = springWristX;
 	hingeDesc.damper           = damperWristX;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeWristX[0];
+	hingeDesc.upper            = rangeWristX[1];
 	joints[joNWristX]          = CreateJoint(solids[soNWristXZ], solids[soNWristYX], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -392,6 +368,8 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.spring           = springWristZ;
 	hingeDesc.damper           = damperWristZ;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeWristZ[0];
+	hingeDesc.upper            = rangeWristZ[1];
 	joints[joNWristZ]          = CreateJoint(solids[soNHand], solids[soNWristXZ], hingeDesc);
 
 	phScene->SetContactMode(solids[soNHand], solids[soNLowerArm], PHSceneDesc::MODE_NONE);
@@ -442,6 +420,8 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 	hingeDesc.spring           = springEyeY;
 	hingeDesc.damper           = damperEyeY;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeEyeY[0];
+	hingeDesc.upper            = rangeEyeY[1];
 	joints[joNEyeY]            = CreateJoint(solids[soNEyeYX], solids[SO_HEAD], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -451,6 +431,8 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 	hingeDesc.spring           = springEyeX;
 	hingeDesc.damper           = damperEyeX;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeEyeX[0];
+	hingeDesc.upper            = rangeEyeX[1];
 	joints[joNEyeX] = CreateJoint(solids[soNEye], solids[soNEyeYX], hingeDesc);
 
 	phScene->SetContactMode(solids[soNEye], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
@@ -505,6 +487,8 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.spring           = springWaistLegZ;
 	hingeDesc.damper           = damperWaistLegZ;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeWaistLegZ[0];
+	hingeDesc.upper            = rangeWaistLegZ[1];
 	joints[joNWaistLegZ]       = CreateJoint(solids[soNWaistLegZX], solids[SO_WAIST], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -513,6 +497,8 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.spring           = springWaistLegX;
 	hingeDesc.damper           = damperWaistLegX;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeWaistLegX[0];
+	hingeDesc.upper            = rangeWaistLegX[1];
 	joints[joNWaistLegX]       = CreateJoint(solids[soNWaistLegXY], solids[soNWaistLegZX], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -522,6 +508,8 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.spring           = springWaistLegY;
 	hingeDesc.damper           = damperWaistLegY;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeWaistLegY[0];
+	hingeDesc.upper            = rangeWaistLegY[1];
 	joints[joNWaistLegY]       = CreateJoint(solids[soNUpperLeg], solids[soNWaistLegXY], hingeDesc);
 
 	phScene->SetContactMode(solids[soNUpperLeg], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
@@ -557,6 +545,8 @@ void CRHingeHumanBody::CreateLowerLeg(LREnum lr){
 	hingeDesc.spring           = springKnee;
 	hingeDesc.damper           = damperKnee;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeKnee[0];
+	hingeDesc.upper            = rangeKnee[1];
 	joints[joNKnee] = CreateJoint(solids[soNLowerLeg], solids[soNUpperLeg], hingeDesc);
 
 	phScene->SetContactMode(solids[soNLowerLeg], solids[soNUpperLeg], PHSceneDesc::MODE_NONE);
@@ -597,6 +587,8 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	hingeDesc.spring           = springAnkleY;
 	hingeDesc.damper           = damperAnkleY;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeAnkleY[0];
+	hingeDesc.upper            = rangeAnkleY[1];
 	joints[joNAnkleY]          = CreateJoint(solids[soNAnkleYX], solids[soNLowerLeg], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -605,6 +597,8 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	hingeDesc.spring           = springAnkleX;
 	hingeDesc.damper           = damperAnkleX;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeAnkleX[0];
+	hingeDesc.upper            = rangeAnkleX[1];
 	joints[joNAnkleX]          = CreateJoint(solids[soNAnkleXZ], solids[soNAnkleYX], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -614,8 +608,18 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	hingeDesc.spring           = springAnkleZ;
 	hingeDesc.damper           = damperAnkleZ;
 	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeAnkleZ[0];
+	hingeDesc.upper            = rangeAnkleZ[1];
 	joints[joNAnkleZ]          = CreateJoint(solids[soNFoot], solids[soNAnkleXZ], hingeDesc);
 
 	phScene->SetContactMode(solids[soNFoot], solids[soNLowerLeg], PHSceneDesc::MODE_NONE);
+}
+
+// --- --- ---
+void CRHingeHumanBody::InitContact(){
+	// 全接触判定をOff（これは過剰と思う，いずれ最低限の接触は残したい（07/09/14, mitake））
+	for (int i=0; i<solids.size(); i++) {
+		phScene->SetContactMode(solids[i], PHSceneDesc::MODE_NONE);
+	}
 }
 }

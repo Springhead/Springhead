@@ -35,13 +35,8 @@ public:
 
 	CRController(){}
 	CRController(const CRControllerDesc& desc, CRCreatureIf* c=NULL) : CRControllerDesc(desc) {
-		std::cout << "CRController()::c        : " << c << std::endl;
-		std::cout << "CRController()::creature : " << creature << std::endl;
-		std::cout << "SetScene" << std::endl;
 		if(c!=NULL && c->GetScene()){SetScene(c->GetScene());}
 		creature = c;
-		std::cout << "CRController()::c        : " << c << std::endl;
-		std::cout << "CRController()::creature : " << creature << std::endl;
 	}
 
 	/** @brief ‰Šú‰»‚ðs‚¤

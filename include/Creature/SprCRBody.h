@@ -179,10 +179,36 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	double springEyeY,         damperEyeY;
 	double springEyeX,         damperEyeX;
 
+	/// 関節取り付け角度・位置
 	Vec3d       posRightUpperArm;
 	Quaterniond oriRightUpperArm;
 	Quaterniond oriRightLowerArm;
 	Quaterniond oriRightHand;
+
+	/// 可動域制限
+	Vec2d rangeWaistAbdomen;
+	Vec2d rangeAbdomenChest;
+	Vec2d rangeChestNeckX;
+	Vec2d rangeChestNeckY;
+	Vec2d rangeChestNeckZ;
+	Vec2d rangeNeckHeadX;
+	Vec2d rangeNeckHeadZ;
+	Vec2d rangeShoulderZ;
+	Vec2d rangeShoulderX;
+	Vec2d rangeShoulderY;
+	Vec2d rangeElbow;
+	Vec2d rangeWristY;
+	Vec2d rangeWristX;
+	Vec2d rangeWristZ;
+	Vec2d rangeWaistLegZ;
+	Vec2d rangeWaistLegX;
+	Vec2d rangeWaistLegY;
+	Vec2d rangeKnee;
+	Vec2d rangeAnkleY;
+	Vec2d rangeAnkleX;
+	Vec2d rangeAnkleZ;
+	Vec2d rangeEyeY;
+	Vec2d rangeEyeX;
 
 	CRHingeHumanBodyDesc(){
 		jointOrder = PLUG_PARENT;
@@ -256,6 +282,31 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 		springEyeX         = 500.0;  damperEyeX         =   5.0;
 
 		posRightUpperArm = Vec3d(0,0,0);
+
+		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
+		rangeWaistAbdomen = Vec2d(Rad(+360) , Rad(-360));
+		rangeAbdomenChest = Vec2d(Rad(+360) , Rad(-360));
+		rangeChestNeckX   = Vec2d(Rad(+360) , Rad(-360));
+		rangeChestNeckY   = Vec2d(Rad(+360) , Rad(-360));
+		rangeChestNeckZ   = Vec2d(Rad(+360) , Rad(-360));
+		rangeNeckHeadX    = Vec2d(Rad(+360) , Rad(-360));
+		rangeNeckHeadZ    = Vec2d(Rad(+360) , Rad(-360));
+		rangeShoulderZ    = Vec2d(Rad(+360) , Rad(-360));
+		rangeShoulderX    = Vec2d(Rad(+360) , Rad(-360));
+		rangeShoulderY    = Vec2d(Rad(+360) , Rad(-360));
+		rangeElbow        = Vec2d(Rad(+360) , Rad(-360));
+		rangeWristY       = Vec2d(Rad(+360) , Rad(-360));
+		rangeWristX       = Vec2d(Rad(+360) , Rad(-360));
+		rangeWristZ       = Vec2d(Rad(+360) , Rad(-360));
+		rangeWaistLegZ    = Vec2d(Rad(+360) , Rad(-360));
+		rangeWaistLegX    = Vec2d(Rad(+360) , Rad(-360));
+		rangeWaistLegY    = Vec2d(Rad(+360) , Rad(-360));
+		rangeKnee         = Vec2d(Rad(+360) , Rad(-360));
+		rangeAnkleY       = Vec2d(Rad(+360) , Rad(-360));
+		rangeAnkleX       = Vec2d(Rad(+360) , Rad(-360));
+		rangeAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
+		rangeEyeY         = Vec2d(Rad(+360) , Rad(-360));
+		rangeEyeX         = Vec2d(Rad(+360) , Rad(-360));
 	}
 };
 
