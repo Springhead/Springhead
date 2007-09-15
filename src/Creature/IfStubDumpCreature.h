@@ -319,6 +319,9 @@ typedef IfInitTemplate<CRSensorIfStub, CRSensor>	CRSensorIfInit;
 template <class IF, class MIF, class OBJ> struct CRSensorIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CROpticalSensorIfStubTemplate: public CRSensorIfStubTemplate<IF, MIF, OBJ> {
+	virtual bool IsVisible(PHSolidIf * solid){
+		return ((OBJ*)(MIF*)this)->IsVisible(solid);
+	}
 };
 struct CROpticalSensorIf;	class CROpticalSensor;
 typedef CROpticalSensorIfStubTemplate<CROpticalSensorIf, ObjectIfBuf, CROpticalSensor>	CROpticalSensorIfStub;

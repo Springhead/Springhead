@@ -31,9 +31,7 @@ private:
 	/// 書き込み先の内部シーン
 	CRInternalSceneIf* internalScene;
 
-	/** @brief 視野内かどうか
-	*/
-	bool IsVisible(PHSolidIf* solid);
+	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
 	OBJECTDEF(CROpticalSensor, CRSensor);
@@ -54,6 +52,9 @@ public:
 	*/
 	virtual void Step();
 
+	/** @brief 視野内外判定を行う
+	*/
+	virtual bool IsVisible(PHSolidIf* solid);
 };
 }
 //@}

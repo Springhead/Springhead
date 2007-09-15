@@ -12,10 +12,6 @@
 #endif
 
 namespace Spr{
-bool CROpticalSensor::IsVisible(PHSolidIf* solid){
-	return true;
-}
-
 IF_OBJECT_IMP(CROpticalSensor, CRSensor);
 
 void CROpticalSensor::Init(){
@@ -28,8 +24,13 @@ void CROpticalSensor::Init(){
 
 	/// InternalScene‚Ì‘g‚Ý—§‚Ä
 	for(int i=0; i<phScene->NSolids(); i++) {
-		PHSolidIf* solid = DCAST(PHSceneIf, creature->GetScene())->GetSolids()[i];
-		// internalScene->CreateObject(‚Ù‚É‚á‚ç‚ç)
+		CRISAttractiveObjectDesc desc;
+		{
+			desc.solid          = DCAST(PHSceneIf, creature->GetScene())->GetSolids()[i];
+			desc.position       = Vec3f(0,0,0);
+			desc.attractiveness = 0.0f;
+		}
+		//internalScene->CreateInternalSceneObject(desc);
 	}
 }
 
@@ -40,6 +41,7 @@ void CROpticalSensor::Step(){
 	Vec3f dirR = soREye->GetPose().Ori() * Vec3f(0,0,-1);
 	Vec3f visualAxis = ((dirL + dirR) * 0.5f).unit();
 
+	/*
 	for(int i=0; i<phScene->NSolids(); i++) {
 		PHSolidIf* solid = phScene->GetSolids()[i];
 		if (IsVisible(solid)) {
@@ -60,5 +62,28 @@ void CROpticalSensor::Step(){
 			ao->SetAttractiveness(ao->GetAttractiveness() + (trnAmmount + divAmmount + rotAmmount));
 		}
 	}
+	*/
+}
+
+Vec2d CROpticalSensor::Vec3ToAngle(Vec3d v){
+	double D1 = sqrt(v.Y()*v.Y()+v.Z()*v.Z());
+	double D2 = sqrt(v.X()*v.X()+v.Z()*v.Z());
+	return(Vec2d( atan2( v.Y()/D1, -v.Z()/D1), atan2(-v.X()/D2, -v.Z()/D2) ));
+}
+
+bool CROpticalSensor::IsVisible(PHSolidIf* solid){
+	double rangeIn = Rad(30), rangeOut = Rad(50), rangeVert = Rad(45);
+
+	Vec2d angleL = Vec3ToAngle(soLEye->GetPose().Ori().Inv() * (solid->GetPose().Pos()-soLEye->GetPose().Pos()));
+	if ((-rangeIn<angleL.Y() && angleL.Y()<rangeOut) && (-rangeVert<angleL.X() && angleL.X()<rangeVert)) {
+		return true;
+	}
+
+	Vec2d angleR = Vec3ToAngle(soREye->GetPose().Ori().Inv() * (solid->GetPose().Pos()-soREye->GetPose().Pos()));
+	if ((-rangeOut<angleR.Y() && angleR.Y()<rangeIn) && (-rangeVert<angleR.X() && angleR.X()<rangeVert)) {
+		return true;
+	}
+
+	return false;
 }
 }

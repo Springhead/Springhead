@@ -46,6 +46,9 @@ struct CRSensorDesc{
 struct CROpticalSensorIf : CRSensorIf{
 	IF_DEF(CROpticalSensor);
 
+	/** @brief 視野内外判定を行う
+	*/
+	virtual bool IsVisible(PHSolidIf* solid)= 0;
 };
 
 /// 視覚センサのデスクリプタ
