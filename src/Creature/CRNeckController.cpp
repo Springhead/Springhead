@@ -31,13 +31,8 @@ void CRNeckController::Init(){
 	joNeckHeadX  = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
 	joChestNeckY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
 
-	Vec3d vecTargetFromHead = soHead->GetPose().Ori().Inv() * (pos - soHead->GetPose().Pos());
-	Quaterniond qtnTargetFromHead;
-	qtnTargetFromHead.RotationArc(vecTargetFromHead.unit(), Vec3d(0,0,-1));
-	Vec3d eulTargetFromHead;
-	qtnTargetFromHead.ToEular(eulTargetFromHead);
-	origX = eulTargetFromHead.X();
-	origZ = eulTargetFromHead.Z();
+	origX = 0.0;
+	origZ = 0.0;
 }
 
 void CRNeckController::Step(){
