@@ -27,8 +27,11 @@ PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJ
 }
 
 void CRBody::Init(){
+	// コンストラクタに移動
+	/*
 	phScene = DCAST(PHSceneIf, GetScene());
 	phSdk   = DCAST(PHSdkIf, phScene->GetSdk());
+	*/
 }
 
 int CRBody::NSolids(){

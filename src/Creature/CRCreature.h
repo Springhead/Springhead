@@ -48,6 +48,8 @@ public:
 	}
 	CRCreature(const CRCreatureDesc& desc, SceneIf* s=NULL) : CRCreatureDesc(desc) {
 		CRRegisterTypeDescs();
+		internalScene = NULL;
+		body = NULL;
 		if(s){SetScene(s);}
 	}
 

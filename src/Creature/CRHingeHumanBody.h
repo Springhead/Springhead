@@ -60,6 +60,13 @@ public:
 		: CRHingeHumanBodyDesc(desc) 
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
+		InitBody();
+		InitHead();
+		InitArms();
+		InitEyes();
+		InitLegs();
+
+		InitContact();
 	}
 
 	/** @brief ‰Šú‰»‚ğÀs‚·‚é

@@ -16,18 +16,10 @@ namespace Spr{
 // 
 IF_OBJECT_IMP(CRGazeController, CRController);
 
-void CRGazeController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
-	this->pos = pos;
-	this->vel = vel;
-	this->attractiveness = attractiveness;
-
-	eyeCtrl->LookAt(pos, vel);
-	neckCtrl->LookAt(pos, vel, attractiveness);
-}
-
 void CRGazeController::Init(){
 	CRController::Init();
 
+	eyeCtrl = NULL; neckCtrl = NULL;
 	for (int i=0; i<creature->NControllers(); i++) {
 		if (!eyeCtrl) {
 			eyeCtrl = DCAST(CREyeControllerIf, creature->GetController(i));
@@ -40,5 +32,14 @@ void CRGazeController::Init(){
 
 void CRGazeController::Step(){
 	CRController::Step();
+}
+
+void CRGazeController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
+	this->pos = pos;
+	this->vel = vel;
+	this->attractiveness = attractiveness;
+
+	eyeCtrl->LookAt(pos, vel);
+	neckCtrl->LookAt(pos, vel, attractiveness);
 }
 }

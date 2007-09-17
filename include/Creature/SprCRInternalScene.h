@@ -124,6 +124,10 @@ struct CRISTravelPotentialObjectDesc : CRInternalSceneObjectDesc{
 struct CRInternalSceneIf : SceneObjectIf{
 	IF_DEF(CRInternalScene);
 
+	/** @brief Attractivenessをクリアする（本当はBottomupだけ）
+	*/
+	virtual void ClearAttractiveness()= 0;
+
 	/** @brief Attractivenessの大きい順にソートする
 	*/
 	virtual void SortByAttractiveness()= 0;

@@ -230,6 +230,10 @@ public:
 	*/
 	virtual void LookAt(Vec3f pos, Vec3f vel);
 
+	/** @brief サッケード中かどうかを返す
+	*/
+	virtual bool IsSaccading();
+
 	// 非API関数
 	/** @brief 現在のコントロール状態を取得する
 	*/

@@ -188,6 +188,10 @@ public:
 		creature = c;
 	}
 
+	/** @brief Attractivenessをクリアする（本当はBottomupだけ）
+	*/
+	virtual void ClearAttractiveness();
+
 	/** @brief Attractivenessの大きい順にソートする
 	*/
 	virtual void SortByAttractiveness();

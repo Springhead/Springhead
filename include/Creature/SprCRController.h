@@ -60,6 +60,10 @@ struct CREyeControllerIf : CRControllerIf{
 		@param vel 注視点の移動速度ベクトル
 	*/
 	virtual void LookAt(Vec3f pos, Vec3f vel)= 0;
+
+	/** @brief サッケード中かどうかを返す
+	*/
+	virtual bool IsSaccading()= 0;
 };
 
 /// 眼球運動コントローラのステート
@@ -99,7 +103,14 @@ struct CRNeckControllerState{
 struct CRNeckControllerDesc: public CRNeckControllerState, public CRControllerDesc{
 	DESC_DEF_FOR_OBJECT(CRNeckController);
 
+	/// 首を動かしはじめるAttractivenessの閾値
+	float lowerAttractiveness;
+	/// 首を完全に対象に向けるAttractivenessの閾値
+	float upperAttractiveness;
+
 	CRNeckControllerDesc(){
+		lowerAttractiveness = -1.0;
+		upperAttractiveness =  0.0;
 	}
 };
 

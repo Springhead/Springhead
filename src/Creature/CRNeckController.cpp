@@ -30,6 +30,14 @@ void CRNeckController::Init(){
 	
 	joNeckHeadX  = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
 	joChestNeckY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
+
+	Vec3d vecTargetFromHead = soHead->GetPose().Ori().Inv() * (pos - soHead->GetPose().Pos());
+	Quaterniond qtnTargetFromHead;
+	qtnTargetFromHead.RotationArc(vecTargetFromHead.unit(), Vec3d(0,0,-1));
+	Vec3d eulTargetFromHead;
+	qtnTargetFromHead.ToEular(eulTargetFromHead);
+	origX = eulTargetFromHead.X();
+	origZ = eulTargetFromHead.Z();
 }
 
 void CRNeckController::Step(){
@@ -44,13 +52,74 @@ void CRNeckController::Step(){
 	/// Eular角に変換
 	Vec3d eulTargetFromHead;
 	qtnTargetFromHead.ToEular(eulTargetFromHead);
-	/// 関節の目標値をセット
-	if (joNeckHeadX->GetChildObject(0)==soNeck) {
-		joNeckHeadX->SetSpringOrigin(-eulTargetFromHead.Z());
-		joChestNeckY->SetSpringOrigin(-eulTargetFromHead.X());
+	double Z = eulTargetFromHead.Z(), X = eulTargetFromHead.X();
+
+	/// Attractivenessに応じた割合に修正
+	if (attractiveness < lowerAttractiveness) {
+		X = origX;
+		Z = origZ;
+	} else if (attractiveness < upperAttractiveness) {
+		X = origX + ((X-origX) * (attractiveness-lowerAttractiveness) / (upperAttractiveness-lowerAttractiveness));
+		Z = origZ + ((Z-origZ) * (attractiveness-lowerAttractiveness) / (upperAttractiveness-lowerAttractiveness));
 	} else {
-		joNeckHeadX->SetSpringOrigin(eulTargetFromHead.Z());
-		joChestNeckY->SetSpringOrigin(eulTargetFromHead.X());
+		origX = X;
+		origZ = Z;
+	}
+
+	/// 関節の目標値をセット
+	double lower, upper;
+	if (joNeckHeadX->GetChildObject(0)==soNeck) {
+		joNeckHeadX->GetRange(lower, upper);
+		if (lower < upper) {
+			if (-Z < lower) {
+				joNeckHeadX->SetSpringOrigin(lower);
+			} else if (upper < -Z) {
+				joNeckHeadX->SetSpringOrigin(upper);
+			} else {
+				joNeckHeadX->SetSpringOrigin(-Z);
+			}
+		} else {
+			joNeckHeadX->SetSpringOrigin(-Z);
+		}
+
+		joChestNeckY->GetRange(lower, upper);
+		if (lower < upper) {
+			if (-X < lower) {
+				joChestNeckY->SetSpringOrigin(lower);
+			} else if (upper < -X) {
+				joChestNeckY->SetSpringOrigin(upper);
+			} else {
+				joChestNeckY->SetSpringOrigin(-X);
+			}
+		} else {
+			joChestNeckY->SetSpringOrigin(-X);
+		}
+	} else {
+		joNeckHeadX->GetRange(lower, upper);
+		if (lower < upper) {
+			if (Z < lower) {
+				joNeckHeadX->SetSpringOrigin(lower);
+			} else if (upper < Z) {
+				joNeckHeadX->SetSpringOrigin(upper);
+			} else {
+				joNeckHeadX->SetSpringOrigin(Z);
+			}
+		} else {
+			joNeckHeadX->SetSpringOrigin(Z);
+		}
+
+		joChestNeckY->GetRange(lower, upper);
+		if (lower < upper) {
+			if (X < lower) {
+				joChestNeckY->SetSpringOrigin(lower);
+			} else if (upper < X) {
+				joChestNeckY->SetSpringOrigin(upper);
+			} else {
+				joChestNeckY->SetSpringOrigin(X);
+			}
+		} else {
+			joChestNeckY->SetSpringOrigin(X);
+		}
 	}
 
 	/*

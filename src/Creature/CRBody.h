@@ -51,6 +51,8 @@ public:
 	{
 		if(c!=NULL && c->GetScene()){SetScene(c->GetScene());}
 		creature = c;
+		phScene = DCAST(PHSceneIf, c->GetScene());
+		phSdk   = phScene->GetSdk();
 	}
 
 	/** @brief ‰Šú‰»‚ğs‚¤

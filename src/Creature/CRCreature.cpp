@@ -49,6 +49,10 @@ void CRCreature::Init(){
 }
 
 void CRCreature::Step(){
+	if (internalScene) {
+		internalScene->ClearAttractiveness();
+	}
+
 	for (int i=0; i<sensors.size(); i++){
 		sensors[i]->Step();
 	}

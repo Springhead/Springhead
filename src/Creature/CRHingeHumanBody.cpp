@@ -12,14 +12,6 @@ IF_OBJECT_IMP(CRHingeHumanBody, CRBody);
 // --- --- ---
 void CRHingeHumanBody::Init(){
 	CRBody::Init();
-
-	InitBody();
-	InitHead();
-	InitArms();
-	InitEyes();
-	InitLegs();
-
-	InitContact();
 }
 
 // --- --- ---
@@ -420,8 +412,8 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 	hingeDesc.spring           = springEyeY;
 	hingeDesc.damper           = damperEyeY;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeEyeY[0];
-	hingeDesc.upper            = rangeEyeY[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeRightEyeY[0]) : (-rangeRightEyeY[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeRightEyeY[1]) : (-rangeRightEyeY[0]));
 	joints[joNEyeY]            = CreateJoint(solids[soNEyeYX], solids[SO_HEAD], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();

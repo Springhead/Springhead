@@ -160,12 +160,59 @@ Vec2d CRPhysicalEye::GetHeadAngvel(){
 }
 
 void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle){
+	double lower, upper;
 	if (joLEyeX->GetChildObject(1)==soLEye) {
-		joX->SetSpringOrigin(angle[0]);
-		joY->SetSpringOrigin(angle[1]);
+		joX->GetRange(lower, upper);
+		if (lower < upper) {
+			if (angle[0] < lower) {
+				joX->SetSpringOrigin(lower);
+			} else if (upper < angle[0]) {
+				joX->SetSpringOrigin(upper);
+			} else {
+				joX->SetSpringOrigin(angle[0]);
+			}
+		} else {
+			joX->SetSpringOrigin(angle[0]);
+		}
+
+		joY->GetRange(lower, upper);
+		if (lower < upper) {
+			if (angle[1] < lower) {
+				joY->SetSpringOrigin(lower);
+			} else if (upper < angle[1]) {
+				joY->SetSpringOrigin(upper);
+			} else {
+				joY->SetSpringOrigin(angle[1]);
+			}
+		} else {
+			joY->SetSpringOrigin(angle[1]);
+		}
 	} else {
-		joX->SetSpringOrigin(-angle[0]);
-		joY->SetSpringOrigin(-angle[1]);
+		joX->GetRange(lower, upper);
+		if (lower < upper) {
+			if (-angle[0] < lower) {
+				joX->SetSpringOrigin(lower);
+			} else if (upper < -angle[0]) {
+				joX->SetSpringOrigin(upper);
+			} else {
+				joX->SetSpringOrigin(-angle[0]);
+			}
+		} else {
+			joX->SetSpringOrigin(angle[0]);
+		}
+
+		joY->GetRange(lower, upper);
+		if (lower < upper) {
+			if (-angle[1] < lower) {
+				joY->SetSpringOrigin(lower);
+			} else if (upper < -angle[1]) {
+				joY->SetSpringOrigin(upper);
+			} else {
+				joY->SetSpringOrigin(-angle[1]);
+			}
+		} else {
+			joY->SetSpringOrigin(angle[1]);
+		}
 	}
 }
 
@@ -264,6 +311,10 @@ void CREyeController::Control(){
 	default:
 		break;
 	}
+}
+
+bool CREyeController::IsSaccading(){
+	return controlState==CS_SACCADE;
 }
 
 CREyeControllerState::ControlState CREyeController::GetControlState(){

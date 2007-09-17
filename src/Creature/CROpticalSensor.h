@@ -15,6 +15,7 @@
 
 #include <vector>
 #include <algorithm>
+#include <set>
 
 #include "CRSensor.h"
 
@@ -31,6 +32,13 @@ private:
 	/// 書き込み先の内部シーン
 	CRInternalSceneIf* internalScene;
 
+	/// 自己の剛体のセット（自己に属する剛体かどうかを判定するのに使う）
+	std::set<PHSolidIf*> selfSolids;
+
+	/// 視野内外判定の基盤となる関数
+	bool  IsInside(PHSolidIf* solid, double rangeIn, double rangeOut, double rangeVert);
+
+	/// 方向ベクトルを水平・垂直角度に変換
 	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
@@ -55,6 +63,10 @@ public:
 	/** @brief 視野内外判定を行う
 	*/
 	virtual bool IsVisible(PHSolidIf* solid);
+
+	/** @brief 中心視野内外判定を行う
+	*/
+	virtual bool IsInCenter(PHSolidIf* solid);
 };
 }
 //@}

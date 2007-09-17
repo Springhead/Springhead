@@ -74,18 +74,27 @@ bool CRInternalScene::LargerAttention(const CRInternalSceneObject* &a, const CRI
 	CRISAttractiveObjectIf* attA = DCAST(CRISAttractiveObjectIf, a);
 	CRISAttractiveObjectIf* attB = DCAST(CRISAttractiveObjectIf, b);
 
-	if (a==NULL && b==NULL) {
-		return true;
-	} else if (a==NULL && b!=NULL) {
+	if (attA!=NULL && attB!=NULL) {
+		return(attA->GetAttractiveness() > attB->GetAttractiveness());
+	} else if (attA==NULL && attB!=NULL) {
 		return false;
-	} else if (a!=NULL && b==NULL) {
+	} else if (attA!=NULL && attB==NULL) {
 		return true;
 	} else {
-		return(attA->GetAttractiveness() > attB->GetAttractiveness());
+		return true;
 	}
 }
 
 IF_OBJECT_IMP(CRInternalScene, SceneObject);
+
+void CRInternalScene::ClearAttractiveness(){
+	for (int i=0; i<sceneObjects.size(); i++) {
+		CRISAttractiveObjectIf* isAtt = DCAST(CRISAttractiveObjectIf, sceneObjects[i]);
+		if (isAtt) {
+			isAtt->SetAttractiveness(0.0f);
+		}
+	}	
+}
 
 void CRInternalScene::SortByAttractiveness(){
 	std::sort(sceneObjects.begin(), sceneObjects.end(), CRInternalScene::LargerAttention);

@@ -207,7 +207,7 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	Vec2d rangeAnkleY;
 	Vec2d rangeAnkleX;
 	Vec2d rangeAnkleZ;
-	Vec2d rangeEyeY;
+	Vec2d rangeRightEyeY;
 	Vec2d rangeEyeX;
 
 	CRHingeHumanBodyDesc(){
@@ -305,7 +305,9 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 		rangeAnkleY       = Vec2d(Rad(+360) , Rad(-360));
 		rangeAnkleX       = Vec2d(Rad(+360) , Rad(-360));
 		rangeAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
-		rangeEyeY         = Vec2d(Rad(+360) , Rad(-360));
+		//rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
+		//rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
+		rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));
 		rangeEyeX         = Vec2d(Rad(+360) , Rad(-360));
 	}
 };

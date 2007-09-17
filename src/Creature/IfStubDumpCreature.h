@@ -58,6 +58,9 @@ struct CREyeControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF,
 	virtual void LookAt(Vec3f pos, Vec3f vel){
 		return ((OBJ*)(MIF*)this)->LookAt(pos, vel);
 	}
+	virtual bool IsSaccading(){
+		return ((OBJ*)(MIF*)this)->IsSaccading();
+	}
 };
 struct CREyeControllerIf;	class CREyeController;
 typedef CREyeControllerIfStubTemplate<CREyeControllerIf, ObjectIfBuf, CREyeController>	CREyeControllerIfStub;
@@ -282,6 +285,9 @@ typedef IfInitTemplate<CRISTravelPotentialObjectIfStub, CRISTravelPotentialObjec
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRInternalSceneIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void ClearAttractiveness(){
+		return ((OBJ*)(MIF*)this)->ClearAttractiveness();
+	}
 	virtual void SortByAttractiveness(){
 		return ((OBJ*)(MIF*)this)->SortByAttractiveness();
 	}
@@ -321,6 +327,9 @@ template <class IF, class MIF, class OBJ>
 struct CROpticalSensorIfStubTemplate: public CRSensorIfStubTemplate<IF, MIF, OBJ> {
 	virtual bool IsVisible(PHSolidIf * solid){
 		return ((OBJ*)(MIF*)this)->IsVisible(solid);
+	}
+	virtual bool IsInCenter(PHSolidIf * solid){
+		return ((OBJ*)(MIF*)this)->IsInCenter(solid);
 	}
 };
 struct CROpticalSensorIf;	class CROpticalSensor;

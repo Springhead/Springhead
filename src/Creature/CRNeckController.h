@@ -34,6 +34,9 @@ private:
 	/// 制御につかう関節
 	PHHingeJointIf *joNeckHeadX, *joChestNeckY;
 
+	/// 基準方向（ここを中心に割合移動する，attractivenessが一定値を超えるとその方向へ変更される）
+	double origX, origZ;
+
 public:
 	OBJECTDEF(CRNeckController, CRController);
 	ACCESS_DESC_STATE(CRNeckController);

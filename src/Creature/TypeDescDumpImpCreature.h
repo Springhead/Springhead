@@ -226,8 +226,8 @@
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeAnkleX) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "Vec2d", "rangeAnkleZ", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeAnkleZ) - (char*)pCRHingeHumanBodyDesc);
-	field = desc->AddField("", "Vec2d", "rangeEyeY", "");
-	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeEyeY) - (char*)pCRHingeHumanBodyDesc);
+	field = desc->AddField("", "Vec2d", "rangeRightEyeY", "");
+	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeRightEyeY) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "Vec2d", "rangeEyeX", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeEyeX) - (char*)pCRHingeHumanBodyDesc);
 	db->RegisterDesc(desc);
@@ -278,6 +278,10 @@
 	field->offset = int((char*)(CRNeckControllerState*)pCRNeckControllerDesc - (char*)pCRNeckControllerDesc);
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRNeckControllerDesc - (char*)pCRNeckControllerDesc);
+	field = desc->AddField("", "float", "lowerAttractiveness", "");
+	field->offset = int((char*)&(pCRNeckControllerDesc->lowerAttractiveness) - (char*)pCRNeckControllerDesc);
+	field = desc->AddField("", "float", "upperAttractiveness", "");
+	field->offset = int((char*)&(pCRNeckControllerDesc->upperAttractiveness) - (char*)pCRNeckControllerDesc);
 	db->RegisterDesc(desc);
 	
 	CRReachingControllerDesc* pCRReachingControllerDesc = NULL;

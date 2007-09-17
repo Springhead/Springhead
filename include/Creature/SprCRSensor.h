@@ -49,6 +49,10 @@ struct CROpticalSensorIf : CRSensorIf{
 	/** @brief 視野内外判定を行う
 	*/
 	virtual bool IsVisible(PHSolidIf* solid)= 0;
+
+	/** @brief 中心視野内外判定を行う
+	*/
+	virtual bool IsInCenter(PHSolidIf* solid)= 0;
 };
 
 /// 視覚センサのデスクリプタ
