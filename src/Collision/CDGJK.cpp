@@ -22,8 +22,8 @@
 #endif
 
 namespace Spr{;
-const double sqEpsilon = 1e-3;
-const double epsilon   = 1e-6;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
+const double sqEpsilon = 1e-4;
+const double epsilon   = 1e-8;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
 const double epsilon2  = epsilon*epsilon;
 
 static Vec3d p[4];			// Aのサポートポイント(ローカル系)
@@ -116,8 +116,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	cur->i[1] = 0;	//	もとの線分
 	cur->i[2] = 0;	//	もとの線分
 	while(1){
-		double s = w[(int)cur->i[0]].XY() ^ w[(int)cur->i[1]].XY();
-		if (s > epsilon){		//	1-0からはみ出している  epsilon=1e-8だと無限ループ，1e-7でも稀に無限ループ
+		double s;
+		if ((s = w[(int)cur->i[0]].XY() ^ w[(int)cur->i[1]].XY()) > epsilon){
+			//	点Oが、線分1-0から、三角形の外にはみ出している場合  ... epsilon=1e-8だと無限ループ，1e-7でも稀に無限ループ
+			//	1-0の法線の向きvでsupport pointを探し、新しい三角形にする。
 			Vec2d l = w[(int)cur->i[1]].XY() - w[(int)cur->i[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
 			double ll_inv = 1/l.square();
@@ -126,29 +128,37 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			v.Z() = 0;
 			cur->i[2] = cur->i[0];
 			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
+		}else if ((s = w[(int)cur->i[2]].XY() ^ w[(int)cur->i[0]].XY()) > epsilon){
+			//	点Oが、線分2-0から、三角形の外にはみ出している場合
+			//	2-0の法線の向きvでsupport pointを探し、新しい三角形にする。
+			Vec2d l = w[(int)cur->i[2]].XY() - w[(int)cur->i[0]].XY();
+			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
+			double ll_inv = 1/l.square();
+			v.XY() = (w[(int)cur->i[2]].XY()*l*ll_inv) * w[(int)cur->i[0]].XY()
+				   - (w[(int)cur->i[0]].XY()*l*ll_inv) * w[(int)cur->i[2]].XY();
+			v.Z() = 0;
+			cur->i[1] = cur->i[0];
+			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
 		}else{
-			s = w[(int)cur->i[2]].XY() ^ w[(int)cur->i[0]].XY();
-			if (s > epsilon){	//	0-2からはみ出している
-				Vec2d l = w[(int)cur->i[2]].XY() - w[(int)cur->i[0]].XY();
-				assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
-				double ll_inv = 1/l.square();
-				v.XY() = (w[(int)cur->i[2]].XY()*l*ll_inv) * w[(int)cur->i[0]].XY()
-					   - (w[(int)cur->i[0]].XY()*l*ll_inv) * w[(int)cur->i[2]].XY();
-				v.Z() = 0;
-				cur->i[1] = cur->i[0];
-				cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
-			}else{				//	内側
-				break;
-			}
+			//	点Oは三角形の内側にある。
+			break;
 		}
-		CalcSupport(v, (int)cur->i[0]);
+		CalcSupport(v, (int)cur->i[0]);		//	法線の向きvでサポートポイントを探す
 		if (w[(int)cur->i[0]].XY() * v.XY() > -epsilon2){	//	0の外側にoがあるので触ってない
 			return 0;
 		}
+/*
+		//	これは怪しい、チェックが不完全な気がする。辺と新しいsupport点の距離を見るべき
 		if(	(w[(int)cur->i[0]].XY()-w[(int)cur->i[1]].XY()).square() < epsilon2 || 
 			(w[(int)cur->i[2]].XY()-w[(int)cur->i[1]].XY()).square() < epsilon2){
 			return 0;								//	同じw: 辺の更新なし＝Oは辺の外側
 		}
+*/
+		//	新しいsupportが1回前の線分からまったく動いていない → 点Oは外側
+		double d1 = -v.XY() * (w[(int)cur->i[0]].XY()-w[(int)cur->i[1]].XY());
+		double d2 = -v.XY() * (w[(int)cur->i[0]].XY()-w[(int)cur->i[2]].XY());
+		if (d1 < epsilon2) return 0;
+		if (d2 < epsilon2) return 0;
 	}
 	last->nVtx = 0;
 	//	三角形 cur 0-1-2 の中にoがある．	cur 0が最後に更新した頂点w

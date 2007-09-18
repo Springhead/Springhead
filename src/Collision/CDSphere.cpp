@@ -55,7 +55,7 @@ float CDSphere::GetRadius() {
 	return radius;
 }
 float CDSphere::CalcVolume(){
-	return 4.0f/3.0f*M_PI*radius*radius*radius;
+	return float(4.0/3.0*M_PI*radius*radius*radius);
 }
 Matrix3f CDSphere::CalcMomentOfInertia(){
 	return Matrix3f();
