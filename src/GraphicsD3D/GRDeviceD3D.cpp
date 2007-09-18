@@ -263,7 +263,59 @@ void GRDeviceD3D::SetVertexShader(void* s){
 }
 /// 頂点座標を指定してプリミティブを描画
 void GRDeviceD3D::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
-	DSTR << "GRDeviceD3D::DrawDirect() is not implemented." << std::endl;
+	assert( ty!=GRRenderBaseIf::QUADS );
+
+	DisplayList dl;
+
+	void (*to_fvf_func)(void*,void*,int);
+
+	if(currentVertexFormat==GRVertexElement::vfP3f){			dl.fvf = D3DFVF_XYZ;								to_fvf_func = VFP3f_toFVF; }
+	else if(currentVertexFormat==GRVertexElement::vfC4bP3f){	dl.fvf = D3DFVF_XYZ | D3DFVF_DIFFUSE;				to_fvf_func = VFC4bP3f_toFVF; }
+	else if(currentVertexFormat==GRVertexElement::vfN3fP3f){	dl.fvf = D3DFVF_XYZ | D3DFVF_NORMAL;				to_fvf_func = VFN3fP3f_toFVF; }
+	else if(currentVertexFormat==GRVertexElement::vfT2fP3f){	dl.fvf = D3DFVF_XYZ | D3DFVF_TEX1;					to_fvf_func = VFT2fP3f_toFVF; }
+	else if(currentVertexFormat==GRVertexElement::vfT2fC4bP3f){	dl.fvf = D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1;	to_fvf_func = VFT2fC4bP3f_toFVF; }
+	else if(currentVertexFormat==GRVertexElement::vfT2fN3fP3f){	dl.fvf = D3DFVF_XYZ | D3DFVF_NORMAL  | D3DFVF_TEX1;	to_fvf_func = VFT2fN3fP3f_toFVF; }
+	else{
+		dl.fvf = 0;
+		to_fvf_func = NULL;
+		CreateDeclFromVertexFormat(currentVertexFormat, d3ddevice, &dl.decl, &dl.stride);
+	}
+
+	if(dl.fvf!=0)  dl.stride = D3DXGetFVFVertexSize(dl.fvf);
+
+	dl.vtxCount = count;
+
+	/*
+	d3ddevice->CreateVertexBuffer(dl.stride * dl.vtxCount, D3DUSAGE_WRITEONLY, 0, D3DPOOL_MANAGED, &dl.vtxBuf, NULL);
+	{
+		void* p;
+		dl.vtxBuf->Lock(0, 0, &p, 0);
+		assert(p);
+		if(to_fvf_func)  to_fvf_func(p, vtx, dl.vtxCount);
+		else             memcpy(p, vtx, dl.stride * dl.vtxCount);
+		dl.vtxBuf->Unlock();
+	}
+	*/
+	std::vector<BYTE> vertices(dl.stride*dl.vtxCount);
+	if(to_fvf_func)  to_fvf_func(&vertices[0], vtx, dl.vtxCount);
+	else             memcpy(&vertices[0], vtx, dl.stride * dl.vtxCount);
+	
+	int cnt = dl.vtxCount;
+	switch(ty) {
+		case GRRenderBaseIf::POINTS:			dl.primType = D3DPT_POINTLIST;			dl.primCount = cnt;		break;
+		case GRRenderBaseIf::LINES:				dl.primType = D3DPT_LINELIST;			dl.primCount = cnt/2;	break;
+		case GRRenderBaseIf::LINE_STRIP:		dl.primType = D3DPT_LINESTRIP;			dl.primCount = cnt-1;	break;
+		case GRRenderBaseIf::TRIANGLES:			dl.primType = D3DPT_TRIANGLELIST;		dl.primCount = cnt/3;	break;
+		case GRRenderBaseIf::TRIANGLE_STRIP:	dl.primType = D3DPT_TRIANGLESTRIP;		dl.primCount = cnt-2;	break;
+		case GRRenderBaseIf::TRIANGLE_FAN:		dl.primType = D3DPT_TRIANGLEFAN;		dl.primCount = cnt-2;	break;
+		default:								assert(false);	break;
+	}
+
+	if(dl.decl)	d3ddevice->SetVertexDeclaration(dl.decl);
+	else		d3ddevice->SetFVF(dl.fvf);
+	//d3ddevice->SetStreamSource(0, dl.vtxBuf, 0, dl.stride);
+	//d3ddevice->DrawPrimitive(dl.primType, 0, dl.primCount);
+	d3ddevice->DrawPrimitiveUP(dl.primType, dl.primCount, &vertices[0], dl.stride);
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
 void GRDeviceD3D::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){

@@ -57,13 +57,16 @@ void GRDebugRenderD3D::DrawSolid(PHSolidIf* so){
 		}
 		CDCapsuleIf* cap = DCAST(CDCapsuleIf, shape);
 		if (cap){
+			/*
 			float r = cap->GetRadius();
 			this->PushModelMatrix();
-			//glTranslatef(0,0,-cap->GetLength()/2);
-			//glutSolidSphere(r, 20, 20);
-			//glTranslatef(0,0,cap->GetLength());
-			//glutSolidSphere(r, 20, 20);
+			glTranslatef(0,0,-cap->GetLength()/2);
+			glutSolidSphere(r, 20, 20);
+			glTranslatef(0,0,cap->GetLength());
+			glutSolidSphere(r, 20, 20);
 			this->PopModelMatrix();
+			*/
+			DSTR << "GRDebugRenderD3D: Rendering CDCapsuleIf is not implemented." << std::endl;
 		}
 		CDBoxIf* box = DCAST(CDBoxIf, shape);
 		if (box){
