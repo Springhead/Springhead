@@ -287,8 +287,10 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 	D3DCULL				cull;
 
 	d3ddevice->GetTransform(D3DTS_WORLD, &world);
+	
+	// Ｚ軸を反転するのでカリングも逆にする
 	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
-	d3ddevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);						// Ｚ軸を反転するのでカリングも逆にする
+	d3ddevice->SetRenderState(D3DRS_CULLMODE, (cull==D3DCULL_NONE) ? D3DCULL_NONE : (cull==D3DCULL_CW) ? D3DCULL_CCW : D3DCULL_CW);
 
 	if(effect){
 		d3ddevice->SetTransform(D3DTS_WORLD, &(*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));
@@ -301,7 +303,7 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 	DrawFrame(rootFrame);
 
 	d3ddevice->SetTransform(D3DTS_WORLD, &world);
-	d3ddevice->SetRenderState(D3DRS_CULLMODE, cull);							// カリングを元に戻す
+	d3ddevice->SetRenderState(D3DRS_CULLMODE, cull);	// カリングを元に戻す
 }
 
 void GRAnimationMesh::Rendered(GRRenderIf* r){
