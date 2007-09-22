@@ -30,7 +30,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	app = new MyApp;
 	app->Init(argc, argv);
 #ifdef _DEBUG
-	app->GetSdk()->SetDebugMode(true);
+//	app->GetSdk()->SetDebugMode(true);
 #endif
 	app->GetSdk()->Clear();
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());

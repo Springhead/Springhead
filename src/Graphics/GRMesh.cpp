@@ -93,9 +93,15 @@ void GRMesh::MakeBuffer(){
 		vtxs = new float[stride * nVtxs];
 		for (unsigned i=0; i<positions.size(); ++i)
 			((GRVertexElement::VFN3fP3f*)(vtxs + i*stride))->p = positions[i];
-		for (unsigned i=0; i<originalFaces.size(); ++i)
-			((GRVertexElement::VFN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
-			= normals[faceNormals[i]];
+		if (faceNormals.size()){
+			for (unsigned i=0; i<originalFaces.size(); ++i)
+				((GRVertexElement::VFN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+				= normals[faceNormals[i]];
+		}else{
+			for (unsigned i=0; i<normals.size(); ++i)
+				((GRVertexElement::VFN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+				= normals[i];
+		}
 		vtxFormat = GRVertexElement::vfN3fP3f;
 	}else if (texCoords.size()){
 		stride = sizeof(GRVertexElement::VFT2fP3f)/sizeof(float);

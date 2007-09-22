@@ -198,7 +198,7 @@ void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
 			if (cam) cam->Rendered(render);
 		}
 	}else{
-		grScene->Render(grRender);
+		if (grScene) grScene->Render(grRender);
 	}
 }
 
