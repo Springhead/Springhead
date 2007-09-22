@@ -29,6 +29,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual GRFrameIf* GetFrame(){ return frame; }
 	virtual void SetFrame(GRFrameIf* fr){ frame = fr; }
+	virtual void SetDesc(const GRCameraDesc& desc);
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Render(GRRenderIf* render);	
 };

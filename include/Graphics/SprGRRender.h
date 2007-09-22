@@ -143,11 +143,13 @@ struct GRMaterialDesc : GRVisualDesc{
 };
 
 struct GRFrameIf;
+struct GRCameraDesc;
 ///	カメラのインタフェース
 struct GRCameraIf: public GRVisualIf{
 	IF_DEF(GRCamera);
 	virtual GRFrameIf* GetFrame()=0;
 	virtual void SetFrame(GRFrameIf* fr)=0;
+	virtual void SetDesc(const GRCameraDesc& desc)=0;
 };
 /**	@brief	カメラの情報			*/
 struct GRCameraDesc : GRVisualDesc{

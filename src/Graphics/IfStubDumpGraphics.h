@@ -142,6 +142,9 @@ struct GRCameraIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetFrame(GRFrameIf * fr){
 		return ((OBJ*)(MIF*)this)->SetFrame(fr);
 	}
+	virtual void SetDesc(const GRCameraDesc & desc){
+		return ((OBJ*)(MIF*)this)->SetDesc(desc);
+	}
 };
 struct GRCameraIf;	class GRCamera;
 typedef GRCameraIfStubTemplate<GRCameraIf, ObjectIfBuf, GRCamera>	GRCameraIfStub;

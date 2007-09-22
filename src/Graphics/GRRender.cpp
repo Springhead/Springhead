@@ -89,6 +89,8 @@ void GRCamera::Render(GRRenderIf* r){
 	}
 	r->SetCamera(*this);
 }
+void GRCamera::SetDesc(const GRCameraDesc& desc){
+	*(GRCameraDesc*)this = desc;
+}
 
 }	//	Spr
-

@@ -56,8 +56,8 @@ GRVisualIf* GRScene::CreateVisual(const IfInfo* info, const GRVisualDesc& desc, 
 	return NULL;
 }
 void GRScene::SetCamera(const GRCameraDesc& desc){
-	GRCamera* cam = DBG_NEW GRCamera(desc);
-	AddChildObject(cam->Cast());
+	if (camera) camera->SetDesc(desc);
+	else camera = DBG_NEW GRCamera(desc);
 }
 bool GRScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
