@@ -554,29 +554,29 @@ public:
 		return y;
 	}
 
-	///	posiにEz()が向いたTAffine行列
+	///	targetPosにEz()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUF>
-	void LookAt(const PTM::TVectorBase<DIMENC(3), BUF>& posi)
+	void LookAt(const PTM::TVectorBase<DIMENC(3), BUF>& targetPos)
 	{
-		PTM::init_look_at(*this, posi);
+		PTM::init_look_at(*this, targetPos);
 	}
-	///	poszにEz(), posy に Ey() が向いたTAffine行列
+	///	targetPosにEz()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUFZ, class BUFY>
-	void LookAt(const PTM::TVectorBase<DIMENC(3), BUFZ>& posz, const PTM::TVectorBase<DIMENC(3), BUFY>& posy)
+	void LookAt(const PTM::TVectorBase<DIMENC(3), BUFZ>& targetPos, const PTM::TVectorBase<DIMENC(3), BUFY>& upDir)
 	{
-		PTM::init_look_at(*this, posz, posy);
+		PTM::init_look_at(*this, targetPos, upDir);
 	}
-	///	posiに-Ez()が向いたTAffine行列
+	///	targetPosに-Ez()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUF>
-	void LookAtGL(const PTM::TVectorBase<DIMENC(3), BUF>& posi)
+	void LookAtGL(const PTM::TVectorBase<DIMENC(3), BUF>& targetPos)
 	{
-		PTM::init_look_at_gl(*this, posi);
+		PTM::init_look_at_gl(*this, targetPos);
 	}
-	///	poszに-Ez(), posy に Ey() が向いたTAffine行列
+	///	targetPosに-Ez()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUFZ, class BUFY>
-	void LookAtGL(const PTM::TVectorBase<DIMENC(3), BUFZ>& posz, const PTM::TVectorBase<DIMENC(3), BUFY>& posy)
+	void LookAtGL(const PTM::TVectorBase<DIMENC(3), BUFZ>& targetPos, const PTM::TVectorBase<DIMENC(3), BUFY>& upDir)
 	{
-		PTM::init_look_at_gl(*this, posz, posy);
+		PTM::init_look_at_gl(*this, targetPos, upDir);
 	}
 	
 	///コンストラクタ
