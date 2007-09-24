@@ -30,8 +30,7 @@ void CRAttentionController::Step(){
 	CRController::Step();
 
 	creature->GetInternalScene()->SortByAttractiveness();
-	CRInternalSceneObjectIf* obj = creature->GetInternalScene()->GetObject(0);
-	// std::cout << "Attr(AttC) : " << DCAST(CRISAttractiveObjectIf,obj)->GetAttractiveness() << std::endl;
-	gazeCtrl->LookAt(obj->GetSolid()->GetPose() * obj->GetPos(), obj->GetSolid()->GetVelocity(), DCAST(CRISAttractiveObjectIf, obj)->GetAttractiveness());
+	CRInternalSceneObjectIf* obj = creature->GetInternalScene()->GetISObject(0);
+	gazeCtrl->LookAt(obj->GetSolid()->GetPose() * obj->GetPos(), obj->GetSolid()->GetVelocity(), DCAST(CRISAttractiveObjectIf, obj)->GetTotalAttractiveness());
 }
 }

@@ -196,6 +196,18 @@ struct CRCreatureIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> 
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
+	virtual void ClearInternalScene(){
+		return ((OBJ*)(MIF*)this)->ClearInternalScene();
+	}
+	virtual void SensorStep(){
+		return ((OBJ*)(MIF*)this)->SensorStep();
+	}
+	virtual void InternalSceneStep(){
+		return ((OBJ*)(MIF*)this)->InternalSceneStep();
+	}
+	virtual void ControllerStep(){
+		return ((OBJ*)(MIF*)this)->ControllerStep();
+	}
 	virtual CRBodyIf * CreateBody(const IfInfo * ii, const CRBodyDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateBody(ii, desc);
 	}
@@ -234,6 +246,12 @@ typedef IfInitTemplate<CRCreatureIfStub, CRCreature>	CRCreatureIfInit;
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRInternalSceneObjectIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual bool IsA(const char * typestr){
+		return ((OBJ*)(MIF*)this)->IsA(typestr);
+	}
+	virtual const char * GetISObjType(){
+		return ((OBJ*)(MIF*)this)->GetISObjType();
+	}
 	virtual PHSolidIf * GetSolid(){
 		return ((OBJ*)(MIF*)this)->GetSolid();
 	}
@@ -248,11 +266,26 @@ typedef IfInitTemplate<CRInternalSceneObjectIfStub, CRInternalSceneObject>	CRInt
 template <class IF, class MIF, class OBJ> struct CRInternalSceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRISAttractiveObjectIfStubTemplate: public CRInternalSceneObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual float GetAttractiveness(){
-		return ((OBJ*)(MIF*)this)->GetAttractiveness();
+	virtual float GetTotalAttractiveness(){
+		return ((OBJ*)(MIF*)this)->GetTotalAttractiveness();
 	}
-	virtual void SetAttractiveness(float attractiveness){
-		return ((OBJ*)(MIF*)this)->SetAttractiveness(attractiveness);
+	virtual void AddBottomupAttr(float attr){
+		return ((OBJ*)(MIF*)this)->AddBottomupAttr(attr);
+	}
+	virtual void ClearBottomupAttr(){
+		return ((OBJ*)(MIF*)this)->ClearBottomupAttr();
+	}
+	virtual void SetTopdownAttr(float attr){
+		return ((OBJ*)(MIF*)this)->SetTopdownAttr(attr);
+	}
+	virtual void IncUncertainty(){
+		return ((OBJ*)(MIF*)this)->IncUncertainty();
+	}
+	virtual void DecUncertainty(){
+		return ((OBJ*)(MIF*)this)->DecUncertainty();
+	}
+	virtual float GetUncertainty(){
+		return ((OBJ*)(MIF*)this)->GetUncertainty();
 	}
 };
 struct CRISAttractiveObjectIf;	class CRISAttractiveObject;
@@ -285,6 +318,9 @@ typedef IfInitTemplate<CRISTravelPotentialObjectIfStub, CRISTravelPotentialObjec
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRInternalSceneIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void Step(){
+		return ((OBJ*)(MIF*)this)->Step();
+	}
 	virtual void ClearAttractiveness(){
 		return ((OBJ*)(MIF*)this)->ClearAttractiveness();
 	}
@@ -294,14 +330,17 @@ struct CRInternalSceneIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, 
 	virtual CRInternalSceneObjectIf * FindObject(PHSolidIf * solid, Vec3f pos){
 		return ((OBJ*)(MIF*)this)->FindObject(solid, pos);
 	}
-	virtual CRInternalSceneObjectIf * GetObject(int i){
-		return ((OBJ*)(MIF*)this)->GetObject(i);
+	virtual CRInternalSceneObjectIf * GetISObject(int i){
+		return ((OBJ*)(MIF*)this)->GetISObject(i);
 	}
 	virtual int NObjects(){
 		return ((OBJ*)(MIF*)this)->NObjects();
 	}
 	virtual CRInternalSceneObjectIf * CreateInternalSceneObject(const IfInfo * ii, const CRInternalSceneObjectDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateInternalSceneObject(ii, desc);
+	}
+	virtual float GetDefaultTopdownAttr(){
+		return ((OBJ*)(MIF*)this)->GetDefaultTopdownAttr();
 	}
 };
 struct CRInternalSceneIf;	class CRInternalScene;

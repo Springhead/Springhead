@@ -61,6 +61,22 @@ public:
 	*/
 	virtual void Step();
 
+	/** @brief 内部シーンのボトムアップ注意をリセットする
+	*/
+	virtual void ClearInternalScene();
+
+	/** @brief センサーからの入力を行う
+	*/
+	virtual void SensorStep();
+
+	/** @brief 内部シーンの処理を行う
+	*/
+	virtual void InternalSceneStep();
+
+	/** @brief 制御を行う
+	*/
+	virtual void ControllerStep();
+
 	/** @brief ボディをつくる
 	*/
 	virtual CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc);

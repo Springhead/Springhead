@@ -23,7 +23,7 @@ namespace Spr{;
 /** @brief 内部シーンを構成するオブジェクト
 */
 class CRInternalSceneObject : public SceneObject, public CRInternalSceneObjectIfInit {
-private:
+protected:
 	/// 所属する内部シーン
 	CRInternalSceneIf* internalScene;
 
@@ -37,22 +37,13 @@ public:
 		internalScene = is;
 	}
 
-	/*
-	/// デスクリプタ関連
-protected:
-	PHSolidIf* solid;
-	Vec3f position;
-public:
-	virtual void SetDesc(const void* desc){
-		solid    = ((CRInternalSceneObjectDesc*)desc)->solid;
-		position = ((CRInternalSceneObjectDesc*)desc)->position;
-	}
-	virtual bool GetDesc(void* desc){
-		((CRInternalSceneObjectDesc*)desc)->solid    = solid;
-		((CRInternalSceneObjectDesc*)desc)->position = position;
-		return true;
-	}
+	/** @brief 指定したtypeか判定する
 	*/
+	virtual bool IsA(const char* typestr);
+
+	/** @brief 種類を返す
+	*/
+	virtual const char* GetISObjType();
 
 	/** @brief 剛体を返す
 	*/
@@ -80,29 +71,33 @@ public:
 		SetDesc(&desc);
 	}
 
-	/*
-	/// デスクリプタ関連
-protected:
-	float  attractiveness;
-public:
-	virtual void SetDesc(const void* desc){
-		CRInternalSceneObject::SetDesc(desc);
-		attractiveness = ((CRISAttractiveObjectDesc*)desc)->attractiveness;
-	}
-	virtual bool GetDesc(void* desc){
-		CRInternalSceneObject::GetDesc(desc);
-		((CRISAttractiveObjectDesc*)desc)->attractiveness = attractiveness;
-		return true;
-	}
+	/** @brief 総合的にこの物体が注意をひきつける度合を得る
 	*/
+	virtual float GetTotalAttractiveness();
 
-	/** @brief 注意をひきつける度合を得る
+	/** @brief ボトムアップ注意の度合を加算する
 	*/
-	virtual float GetAttractiveness();
+	virtual void AddBottomupAttr(float attr);
 
-	/** @brief 注意をひきつける度合を設定する
+	/** @brief ボトムアップ注意の度合をリセットする
 	*/
-	virtual void SetAttractiveness(float attractiveness);
+	virtual void ClearBottomupAttr();
+
+	/** @brief トップダウン注意の度合を設定する
+	*/
+	virtual void SetTopdownAttr(float attr);
+
+	/** @brief 不確実性を増す
+	*/
+	virtual void IncUncertainty();
+
+	/** @brief 不確実性を減らす
+	*/
+	virtual void DecUncertainty();
+
+	/** @brief 不確実性を取得する
+	*/
+	virtual float GetUncertainty();
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -188,6 +183,10 @@ public:
 		creature = c;
 	}
 
+	/** @brief ステップごとの処理を実行する
+	*/
+	virtual void Step();
+
 	/** @brief Attractivenessをクリアする（本当はBottomupだけ）
 	*/
 	virtual void ClearAttractiveness();
@@ -204,7 +203,7 @@ public:
 
 	/** @brief i番目の物体を取得する（Sort後に用いるとSortされた順序で取得できる）
 	*/
-	virtual CRInternalSceneObjectIf* GetObject(int i);
+	virtual CRInternalSceneObjectIf* GetISObject(int i);
 
 	/** @brief 物体の数
 	*/
@@ -213,6 +212,10 @@ public:
 	/** @brief オブジェクトを作成する
 	*/
 	virtual CRInternalSceneObjectIf* CreateInternalSceneObject(const IfInfo* ii, const CRInternalSceneObjectDesc& desc);
+
+	/** @brief 正体のわからない物体がデフォルトで持つトップダウン注意の量を返す
+	*/
+	virtual float GetDefaultTopdownAttr();
 };
 }
 //@}

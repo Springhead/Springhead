@@ -49,14 +49,29 @@ void CRCreature::Init(){
 }
 
 void CRCreature::Step(){
+	ClearInternalScene();
+	SensorStep();
+	InternalSceneStep();
+	ControllerStep();
+}
+
+void CRCreature::ClearInternalScene(){
 	if (internalScene) {
 		internalScene->ClearAttractiveness();
 	}
+}
 
+void CRCreature::SensorStep(){
 	for (int i=0; i<sensors.size(); i++){
 		sensors[i]->Step();
 	}
+}
 
+void CRCreature::InternalSceneStep(){
+	internalScene->Step();
+}
+
+void CRCreature::ControllerStep(){
 	for (int i=0; i<controllers.size(); i++){
 		if (controllers[i]->IsEnabled()) {
 			controllers[i]->Step();

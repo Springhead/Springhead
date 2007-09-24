@@ -42,10 +42,24 @@ void CRGrabController::Step(){
 	} else if (grabState == CRGrabControllerIf::GS_GRAB_START) {
 		if (reachLeft->IsReached() && reachRight->IsReached()) {
 			grabState = CRGrabControllerIf::GS_GRAB;
+			std::cout << " -> GS_GRAB " << std::endl;
+			SolSprMap::iterator it = grabSprings.find(grabSolid);
+			if (it!=grabSprings.end()) {
+				it->second->Enable(true);
+			} else {
+				PHSpringDesc descSpring;
+				{
+					descSpring.bEnabled = true;
+					descSpring.spring   = Vec3d(1,1,1) * 500;
+					descSpring.damper   = Vec3d(1,1,1) *  10;
+				}
+				grabSprings[grabSolid] = DCAST(PHSpringIf, phScene->CreateJoint(reachRight->GetSolid(), grabSolid, descSpring));
+			}
 		}
 	} else if (grabState == CRGrabControllerIf::GS_GRAB) {
 		if (bMoveto) {
 			grabState = CRGrabControllerIf::GS_MOVE;
+			std::cout << " -> GS_MOVE " << std::endl;
 			reachLeft->SetTarget(movetoPos+Vec3d(-radius*0.9f,-radius*0.3f,0), Vec3f(0,0,0), Quaterniond::Rot(Rad(+100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
 			reachRight->SetTarget(movetoPos+Vec3d(+radius*0.9f,-radius*0.3f,0), Vec3f(0,0,0), Quaterniond::Rot(Rad(-100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
 		}
@@ -62,13 +76,19 @@ void CRGrabController::Grab(PHSolidIf* solid, float radius){
 	reachLeft->SetTarget(grabSolid->GetPose()*Vec3d(-radius*0.9f,-radius*0.3f,0), solid->GetVelocity(), Quaterniond::Rot(Rad(+100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
 	reachRight->SetTarget(grabSolid->GetPose()*Vec3d(+radius*0.9f,-radius*0.3f,0), solid->GetVelocity(), Quaterniond::Rot(Rad(-100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
 	grabState = CRGrabControllerIf::GS_GRAB_START;
+	std::cout << " -> GS_GRAB_START " << std::endl;
 }
 
 void CRGrabController::Ungrab(){
 	reachLeft->Reset();
 	reachRight->Reset();
 	bMoveto = false;
+	SolSprMap::iterator it = grabSprings.find(grabSolid);
+	if (it!=grabSprings.end()) {
+		it->second->Enable(false);
+	}
 	grabState = CRGrabControllerIf::GS_STANDBY;
+	std::cout << " -> GS_STANDBY " << std::endl;
 }
 
 void CRGrabController::MoveTo(Vec3f pos){

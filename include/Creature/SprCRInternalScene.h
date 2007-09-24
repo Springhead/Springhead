@@ -22,6 +22,14 @@ struct PHSolidIf;
 struct CRInternalSceneObjectIf : SceneObjectIf{
 	IF_DEF(CRInternalSceneObject);
 
+	/** @brief 指定したtypeか判定する
+	*/
+	virtual bool IsA(const char* typestr)= 0;
+
+	/** @brief 種類を返す
+	*/
+	virtual const char* GetISObjType()= 0;
+
 	/** @brief 剛体を返す
 	*/
 	virtual PHSolidIf* GetSolid()= 0;
@@ -35,6 +43,9 @@ struct CRInternalSceneObjectIf : SceneObjectIf{
 struct CRInternalSceneObjectDesc{
 	DESC_DEF_FOR_OBJECT(CRInternalSceneObject);
 
+	/// 種類
+	char* type;
+
 	/// 位置の基準となる剛体
 	PHSolidIf* solid;
 
@@ -42,6 +53,7 @@ struct CRInternalSceneObjectDesc{
 	Vec3f position;
 
 	CRInternalSceneObjectDesc(){
+		type           = NULL;
 		solid          = NULL;
 		position       = Vec3f(0,0,0);
 	}
@@ -52,24 +64,60 @@ struct CRInternalSceneObjectDesc{
 struct CRISAttractiveObjectIf : CRInternalSceneObjectIf{
 	IF_DEF(CRISAttractiveObject);
 
-	/** @brief 注意をひきつける度合を得る
+	/** @brief 総合的にこの物体が注意をひきつける度合を得る
 	*/
-	virtual float GetAttractiveness()= 0;
+	virtual float GetTotalAttractiveness()= 0;
 
-	/** @brief 注意をひきつける度合を設定する
+	/** @brief ボトムアップ注意の度合を加算する
 	*/
-	virtual void SetAttractiveness(float attractiveness)= 0;
+	virtual void AddBottomupAttr(float attr)= 0;
+
+	/** @brief ボトムアップ注意の度合をリセットする
+	*/
+	virtual void ClearBottomupAttr()= 0;
+
+	/** @brief トップダウン注意の度合を設定する
+	*/
+	virtual void SetTopdownAttr(float attr)= 0;
+
+	/** @brief 不確実性を増す
+	*/
+	virtual void IncUncertainty()= 0;
+
+	/** @brief 不確実性を減らす
+	*/
+	virtual void DecUncertainty()= 0;
+
+	/** @brief 不確実性を取得する
+	*/
+	virtual float GetUncertainty()= 0;
 };
 
 /// 注意をひきつける物体のデスクリプタ
 struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
 	DESC_DEF_FOR_OBJECT(CRISAttractiveObject);
 
-	/// 注意を引き付ける度合
-	float  attractiveness;
+	/// ボトムアップ性の注意の度合
+	float bottomupAttr;
+
+	/// トップダウン性の注意として割り当てられた値
+	float topdownAttr;
+
+	/// 不確実性レベル（物体が見えると減少し，見えないと増加する，0.0～1.0の値）
+	float uncertainty;
+
+	/// 不確実性レベルの増加率
+	float uncertaintyIncRate;
+
+	/// 不確実性レベルの減少率
+	float uncertaintyDecRate;
 
 	CRISAttractiveObjectDesc(){
-		attractiveness = 0.0f;
+		bottomupAttr = 0.0f;
+		topdownAttr  = 0.0f;
+		uncertainty  = 1.0f;
+		uncertaintyIncRate = 0.99f;
+		uncertaintyDecRate = 0.9f;
 	}
 };
 
@@ -124,6 +172,10 @@ struct CRISTravelPotentialObjectDesc : CRInternalSceneObjectDesc{
 struct CRInternalSceneIf : SceneObjectIf{
 	IF_DEF(CRInternalScene);
 
+	/** @brief ステップごとの処理を実行する
+	*/
+	virtual void Step()= 0;
+
 	/** @brief Attractivenessをクリアする（本当はBottomupだけ）
 	*/
 	virtual void ClearAttractiveness()= 0;
@@ -140,7 +192,7 @@ struct CRInternalSceneIf : SceneObjectIf{
 
 	/** @brief i番目の物体を取得する（Sort後に用いるとSortされた順序で取得できる）
 	*/
-	virtual CRInternalSceneObjectIf* GetObject(int i)= 0;
+	virtual CRInternalSceneObjectIf* GetISObject(int i)= 0;
 
 	/** @brief 物体の数
 	*/
@@ -152,13 +204,21 @@ struct CRInternalSceneIf : SceneObjectIf{
 	template <class T> CRInternalSceneObjectIf* CreateInternalSceneObject(const T& desc){
 		return CreateInternalSceneObject(T::GetIfInfo(), desc);
 	}
+
+	/** @brief 正体のわからない物体がデフォルトで持つトップダウン注意の量を返す
+	*/
+	virtual float GetDefaultTopdownAttr()= 0;
 };
 
 /// 内部シーンのデスクリプタ
 struct CRInternalSceneDesc{
 	DESC_DEF_FOR_OBJECT(CRInternalScene);
 
+	/// Uncertaintyが1の物体が持つTopDownAttentionの量
+	float defaultTopdownAttr;
+
 	CRInternalSceneDesc(){
+		defaultTopdownAttr = 0.0f;
 	}
 };
 

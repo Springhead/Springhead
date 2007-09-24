@@ -394,6 +394,8 @@
 	desc->ifInfo = CRInternalSceneObjectIf::GetIfInfoStatic();
 	((IfInfo*)CRInternalSceneObjectIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<CRInternalSceneObjectDesc>;
+	field = desc->AddField("pointer", "char", "type", "");
+	field->offset = int((char*)&(pCRInternalSceneObjectDesc->type) - (char*)pCRInternalSceneObjectDesc);
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
 	field->offset = int((char*)&(pCRInternalSceneObjectDesc->solid) - (char*)pCRInternalSceneObjectDesc);
 	field = desc->AddField("", "Vec3f", "position", "");
@@ -408,8 +410,16 @@
 	desc->access = DBG_NEW UTAccess<CRISAttractiveObjectDesc>;
 	field = desc->AddBase("CRInternalSceneObjectDesc");
 	field->offset = int((char*)(CRInternalSceneObjectDesc*)pCRISAttractiveObjectDesc - (char*)pCRISAttractiveObjectDesc);
-	field = desc->AddField("", "float", "attractiveness", "");
-	field->offset = int((char*)&(pCRISAttractiveObjectDesc->attractiveness) - (char*)pCRISAttractiveObjectDesc);
+	field = desc->AddField("", "float", "bottomupAttr", "");
+	field->offset = int((char*)&(pCRISAttractiveObjectDesc->bottomupAttr) - (char*)pCRISAttractiveObjectDesc);
+	field = desc->AddField("", "float", "topdownAttr", "");
+	field->offset = int((char*)&(pCRISAttractiveObjectDesc->topdownAttr) - (char*)pCRISAttractiveObjectDesc);
+	field = desc->AddField("", "float", "uncertainty", "");
+	field->offset = int((char*)&(pCRISAttractiveObjectDesc->uncertainty) - (char*)pCRISAttractiveObjectDesc);
+	field = desc->AddField("", "float", "uncertaintyIncRate", "");
+	field->offset = int((char*)&(pCRISAttractiveObjectDesc->uncertaintyIncRate) - (char*)pCRISAttractiveObjectDesc);
+	field = desc->AddField("", "float", "uncertaintyDecRate", "");
+	field->offset = int((char*)&(pCRISAttractiveObjectDesc->uncertaintyDecRate) - (char*)pCRISAttractiveObjectDesc);
 	db->RegisterDesc(desc);
 	
 	CRISTravelPotentialObjectDesc* pCRISTravelPotentialObjectDesc = NULL;
@@ -432,6 +442,8 @@
 	desc->ifInfo = CRInternalSceneIf::GetIfInfoStatic();
 	((IfInfo*)CRInternalSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<CRInternalSceneDesc>;
+	field = desc->AddField("", "float", "defaultTopdownAttr", "");
+	field->offset = int((char*)&(pCRInternalSceneDesc->defaultTopdownAttr) - (char*)pCRInternalSceneDesc);
 	db->RegisterDesc(desc);
 	
 	CRSensorDesc* pCRSensorDesc = NULL;

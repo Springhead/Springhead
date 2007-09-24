@@ -41,6 +41,22 @@ struct CRCreatureIf : SceneObjectIf{
 	*/
 	virtual void Step()= 0;
 
+	/** @brief 内部シーンのボトムアップ注意をリセットする
+	*/
+	virtual void ClearInternalScene()= 0;
+
+	/** @brief センサーからの入力を行う
+	*/
+	virtual void SensorStep()= 0;
+
+	/** @brief 内部シーンの処理を行う
+	*/
+	virtual void InternalSceneStep()= 0;
+
+	/** @brief 制御を行う
+	*/
+	virtual void ControllerStep()= 0;
+
 	/** @brief ボディをつくる
 	*/
 	virtual CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc)= 0;

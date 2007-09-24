@@ -33,7 +33,7 @@ void CRTravelController::Step(){
 	Vec2f potential = Vec2f(0,0);
 
 	for (int i=0; i<internalScene->NObjects(); i++) {
-		CRISTravelPotentialObjectIf* obj = DCAST(CRISTravelPotentialObjectIf, internalScene->GetObject(i));
+		CRISTravelPotentialObjectIf* obj = DCAST(CRISTravelPotentialObjectIf, internalScene->GetISObject(i));
 		if (obj) {
 			Vec3f myPos = soWaist->GetPose().Pos();
 			potential += obj->GetPotential(Vec2f(myPos.X(), myPos.Z()));

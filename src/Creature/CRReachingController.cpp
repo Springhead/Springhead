@@ -150,7 +150,7 @@ bool CRReachingController::IsMoving(){
 }
 
 bool CRReachingController::IsReached(){
-	return( (solid->GetPose().Pos() - finalPos).norm() < 0.01 );
+	return( (solid->GetPose().Pos() - finalPos).norm() < 0.1 );
 }
 
 bool CRReachingController::IsActive(){

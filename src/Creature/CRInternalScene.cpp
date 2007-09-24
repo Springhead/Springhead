@@ -16,6 +16,20 @@ namespace Spr{;
 // 
 IF_OBJECT_IMP(CRInternalSceneObject, SceneObject);
 
+bool CRInternalSceneObject::IsA(const char* typestr){
+	if (type) {
+		std::string mytype(type);
+		std::string othertype(typestr);
+		return(mytype.compare(othertype)==0);
+	} else {
+		return false;
+	}
+}
+
+const char* CRInternalSceneObject::GetISObjType(){
+	return type;
+}
+
 PHSolidIf* CRInternalSceneObject::GetSolid(){
 	return solid;
 }
@@ -28,12 +42,34 @@ Vec3f CRInternalSceneObject::GetPos(){
 // 
 IF_OBJECT_IMP(CRISAttractiveObject, CRInternalSceneObject);
 
-float CRISAttractiveObject::GetAttractiveness(){
-	return attractiveness;
+float CRISAttractiveObject::GetTotalAttractiveness(){
+	return bottomupAttr + (topdownAttr * (1.0 - uncertainty)) + (internalScene->GetDefaultTopdownAttr() * uncertainty);
 }
 
-void CRISAttractiveObject::SetAttractiveness(float attractiveness){
-	this->attractiveness = attractiveness;
+void CRISAttractiveObject::AddBottomupAttr(float attr){
+	bottomupAttr += attr;
+}
+
+void CRISAttractiveObject::ClearBottomupAttr(){
+	bottomupAttr = 0.0f;
+}
+
+void CRISAttractiveObject::SetTopdownAttr(float attr){
+	topdownAttr  = attr;
+}
+
+void CRISAttractiveObject::IncUncertainty(){
+	uncertainty = (uncertainty - 1.0f) * uncertaintyIncRate + 1.0f;
+}
+
+void CRISAttractiveObject::DecUncertainty(){
+	uncertainty = uncertainty * uncertaintyDecRate;
+	// IncUncertainty‚Í–ˆStep‚²‚Æ‚É•K‚¸ŒÄ‚Î‚ê‚é‚½‚ßƒLƒƒƒ“ƒZƒ‹‚·‚é
+	uncertainty = (uncertainty - 1.0f) / uncertaintyIncRate + 1.0f;
+}
+
+float CRISAttractiveObject::GetUncertainty(){
+	return uncertainty;
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -75,7 +111,7 @@ bool CRInternalScene::LargerAttention(const CRInternalSceneObject* &a, const CRI
 	CRISAttractiveObjectIf* attB = DCAST(CRISAttractiveObjectIf, b);
 
 	if (attA!=NULL && attB!=NULL) {
-		return(attA->GetAttractiveness() > attB->GetAttractiveness());
+		return(attA->GetTotalAttractiveness() > attB->GetTotalAttractiveness());
 	} else if (attA==NULL && attB!=NULL) {
 		return false;
 	} else if (attA!=NULL && attB==NULL) {
@@ -87,11 +123,37 @@ bool CRInternalScene::LargerAttention(const CRInternalSceneObject* &a, const CRI
 
 IF_OBJECT_IMP(CRInternalScene, SceneObject);
 
+void CRInternalScene::Step(){
+	for (int i=0; i<sceneObjects.size(); i++) {
+		CRISAttractiveObjectIf* isAtt = DCAST(CRISAttractiveObjectIf, sceneObjects[i]);
+		if (isAtt) {
+			isAtt->IncUncertainty();
+			/*
+			if (isAtt->IsA("strawberry")) {
+				CRISAttractiveObjectDesc disAtt;
+				isAtt->GetDesc(&disAtt);
+				//std::cout << "ATT[" << i << "] : " << isAtt->GetTotalAttractiveness() << std::endl;
+				std::cout << "ATT[" << i << "] : ";
+				std::cout << "  b: " << (int)(disAtt.bottomupAttr * 10);
+				std::cout << "  t: " << (int)(disAtt.topdownAttr  * 10);
+				std::cout << "  u: " << (int)(disAtt.uncertainty  * 10);
+				std::cout << std::endl;
+			}
+			*/
+			continue;
+		}
+		CRISTravelPotentialObjectIf* tpObj = DCAST(CRISTravelPotentialObjectIf, sceneObjects[i]);
+		if (tpObj) {
+			continue;
+		}
+	}	
+}
+
 void CRInternalScene::ClearAttractiveness(){
 	for (int i=0; i<sceneObjects.size(); i++) {
 		CRISAttractiveObjectIf* isAtt = DCAST(CRISAttractiveObjectIf, sceneObjects[i]);
 		if (isAtt) {
-			isAtt->SetAttractiveness(0.0f);
+			isAtt->ClearBottomupAttr();
 		}
 	}	
 }
@@ -109,7 +171,7 @@ CRInternalSceneObjectIf* CRInternalScene::FindObject(PHSolidIf* solid, Vec3f pos
 	return NULL;
 }
 
-CRInternalSceneObjectIf* CRInternalScene::GetObject(int i){
+CRInternalSceneObjectIf* CRInternalScene::GetISObject(int i){
 	return sceneObjects[i]->Cast();
 }
 
@@ -130,5 +192,9 @@ CRInternalSceneObjectIf* CRInternalScene::CreateInternalSceneObject(const IfInfo
 	}
 
 	return sceneObjects.back()->Cast();
+}
+
+float CRInternalScene::GetDefaultTopdownAttr(){
+	return defaultTopdownAttr;
 }
 }

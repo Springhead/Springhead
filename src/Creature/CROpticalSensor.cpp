@@ -26,9 +26,9 @@ void CROpticalSensor::Init(){
 	for (int i=0; i<phScene->NSolids(); i++) {
 		CRISAttractiveObjectDesc desc;
 		{
-			desc.solid          = DCAST(PHSceneIf, creature->GetScene())->GetSolids()[i];
-			desc.position       = Vec3f(0,0,0);
-			desc.attractiveness = 0.0f;
+			desc.solid        = DCAST(PHSceneIf, creature->GetScene())->GetSolids()[i];
+			desc.position     = Vec3f(0,0,0);
+			desc.bottomupAttr = 0.0f;
 		}
 		internalScene->CreateInternalSceneObject(desc);
 	}
@@ -49,22 +49,28 @@ void CROpticalSensor::Step(){
 	for(int i=0; i<phScene->NSolids(); i++) {
 		PHSolidIf* solid = phScene->GetSolids()[i];
 		if (IsVisible(solid) && selfSolids.find(solid)==selfSolids.end()) {
-			Vec3f position    = solid->GetPose().Pos();
-			Vec3f velocity    = solid->GetVelocity();
-			Vec3f angVelocity = solid->GetAngularVelocity();
-
-			float r = 1.0f + (position - ((soLEye->GetPose().Pos() + soREye->GetPose().Pos())*0.5)).norm();
-
-			Vec3f dir = (position - ((soLEye->GetPose().Pos() + soREye->GetPose().Pos())*0.5)).unit();
-			Vec3f letinalPos = position - (visualAxis * PTM::dot(visualAxis,position));
-			
-			float trnAmmount = (velocity - (visualAxis * PTM::dot(velocity,visualAxis))).norm() * 3.0f / r;
-			float divAmmount = abs(PTM::dot(velocity,visualAxis)) * 2.0f / r;
-			float rotAmmount = abs(PTM::dot(angVelocity,visualAxis));
-
 			CRISAttractiveObjectIf* ao = DCAST(CRISAttractiveObjectIf, internalScene->FindObject(solid, Vec3f(0,0,0)));
 			if (ao) {
-				ao->SetAttractiveness(ao->GetAttractiveness() + (trnAmmount + divAmmount + rotAmmount));
+				// Where-Howストリーム
+				Vec3f position    = solid->GetPose().Pos();
+				Vec3f velocity    = solid->GetVelocity();
+				Vec3f angVelocity = solid->GetAngularVelocity();
+
+				float r = 1.0f + (position - ((soLEye->GetPose().Pos() + soREye->GetPose().Pos())*0.5)).norm();
+
+				Vec3f dir = (position - ((soLEye->GetPose().Pos() + soREye->GetPose().Pos())*0.5)).unit();
+				Vec3f letinalPos = position - (visualAxis * PTM::dot(visualAxis,position));
+				
+				float trnAmmount = (velocity - (visualAxis * PTM::dot(velocity,visualAxis))).norm() * 3.0f / r;
+				float divAmmount = abs(PTM::dot(velocity,visualAxis)) * 2.0f / r;
+				float rotAmmount = abs(PTM::dot(angVelocity,visualAxis));
+
+				ao->AddBottomupAttr(trnAmmount + divAmmount + rotAmmount);
+
+				// Whatストリーム
+				if (IsInCenter(solid)) {
+					ao->DecUncertainty();
+				}
 			}
 		}
 	}

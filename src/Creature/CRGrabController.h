@@ -15,6 +15,8 @@
 
 #include "CRController.h"
 
+#include <map>
+
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -39,6 +41,10 @@ private:
 
 	/// 把持完了後に移動を行うかどうか
 	bool bMoveto;
+
+	/// 把持を行うためのSpringのセット
+	typedef std::map<PHSolidIf*, PHSpringIf*> SolSprMap;
+	SolSprMap grabSprings;
 
 public:
 	OBJECTDEF(CRGrabController, CRController);
