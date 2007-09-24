@@ -67,6 +67,10 @@ public:
 	/** @brief 中心視野内外判定を行う
 	*/
 	virtual bool IsInCenter(PHSolidIf* solid);
+
+	/** @brief 自分自身の剛体かどうかを判定する
+	*/
+	virtual bool IsSelfSolid(PHSolidIf* solid);
 };
 }
 //@}

@@ -48,7 +48,7 @@ void CROpticalSensor::Step(){
 
 	for(int i=0; i<phScene->NSolids(); i++) {
 		PHSolidIf* solid = phScene->GetSolids()[i];
-		if (IsVisible(solid) && selfSolids.find(solid)==selfSolids.end()) {
+		if (IsVisible(solid) && !IsSelfSolid(solid)) {
 			CRISAttractiveObjectIf* ao = DCAST(CRISAttractiveObjectIf, internalScene->FindObject(solid, Vec3f(0,0,0)));
 			if (ao) {
 				// Where-HowÉXÉgÉäÅ[ÉÄ
@@ -102,5 +102,9 @@ bool CROpticalSensor::IsVisible(PHSolidIf* solid){
 
 bool CROpticalSensor::IsInCenter(PHSolidIf* solid){
 	return IsInside(solid, Rad(5), Rad(5), Rad(5));
+}
+
+bool CROpticalSensor::IsSelfSolid(PHSolidIf* solid){
+	return(!(selfSolids.find(solid)==selfSolids.end()));
 }
 }

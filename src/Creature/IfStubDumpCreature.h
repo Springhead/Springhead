@@ -370,6 +370,9 @@ struct CROpticalSensorIfStubTemplate: public CRSensorIfStubTemplate<IF, MIF, OBJ
 	virtual bool IsInCenter(PHSolidIf * solid){
 		return ((OBJ*)(MIF*)this)->IsInCenter(solid);
 	}
+	virtual bool IsSelfSolid(PHSolidIf * solid){
+		return ((OBJ*)(MIF*)this)->IsSelfSolid(solid);
+	}
 };
 struct CROpticalSensorIf;	class CROpticalSensor;
 typedef CROpticalSensorIfStubTemplate<CROpticalSensorIf, ObjectIfBuf, CROpticalSensor>	CROpticalSensorIfStub;
