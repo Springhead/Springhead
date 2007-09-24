@@ -432,12 +432,16 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 
 // --- --- ---
 void CRHingeHumanBody::InitLegs(){
-	// CreateUpperLeg(LEFTPART);
-	// CreateLowerLeg(LEFTPART);
+	if (!noLegs) {
+		CreateUpperLeg(LEFTPART);
+		CreateLowerLeg(LEFTPART);
+	}
 	CreateFoot(LEFTPART);
 
-	// CreateUpperLeg(RIGHTPART);
-	// CreateLowerLeg(RIGHTPART);
+	if (!noLegs) {
+		CreateUpperLeg(RIGHTPART);
+		CreateLowerLeg(RIGHTPART);
+	}
 	CreateFoot(RIGHTPART);
 
 	// —¼‘«‚Í‹ß‚·‚¬‚Ä‘«‚Ì‘¾‚³ŽŸ‘æ‚Å‚ÍÕ“Ë‚µ‚Ä‚µ‚Ü‚¤‚½‚ßD
@@ -571,40 +575,40 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	solids[soNAnkleYX] = phScene->CreateSolid(solidDesc);
 	solids[soNAnkleXZ] = phScene->CreateSolid(solidDesc);
 
-	/*
-	// Joint -- Ankle ([p]LowerLeg-[c]Foot)
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Pos()   = Vec3d(0.0, -lowerLegLength / 2.0, 0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springAnkleY;
-	hingeDesc.damper           = damperAnkleY;
-	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeAnkleY[0];
-	hingeDesc.upper            = rangeAnkleY[1];
-	joints[joNAnkleY]          = CreateJoint(solids[soNAnkleYX], solids[soNLowerLeg], hingeDesc);
+	if (!noLegs) {
+		// Joint -- Ankle ([p]LowerLeg-[c]Foot)
+		hingeDesc                  = PHHingeJointDesc();
+		hingeDesc.posePlug.Pos()   = Vec3d(0.0, -lowerLegLength / 2.0, 0);
+		hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+		hingeDesc.spring           = springAnkleY;
+		hingeDesc.damper           = damperAnkleY;
+		hingeDesc.origin           = Rad(0);
+		hingeDesc.lower            = rangeAnkleY[0];
+		hingeDesc.upper            = rangeAnkleY[1];
+		joints[joNAnkleY]          = CreateJoint(solids[soNAnkleYX], solids[soNLowerLeg], hingeDesc);
 
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springAnkleX;
-	hingeDesc.damper           = damperAnkleX;
-	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeAnkleX[0];
-	hingeDesc.upper            = rangeAnkleX[1];
-	joints[joNAnkleX]          = CreateJoint(solids[soNAnkleXZ], solids[soNAnkleYX], hingeDesc);
+		hingeDesc                  = PHHingeJointDesc();
+		hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		hingeDesc.spring           = springAnkleX;
+		hingeDesc.damper           = damperAnkleX;
+		hingeDesc.origin           = Rad(0);
+		hingeDesc.lower            = rangeAnkleX[0];
+		hingeDesc.upper            = rangeAnkleX[1];
+		joints[joNAnkleX]          = CreateJoint(solids[soNAnkleXZ], solids[soNAnkleYX], hingeDesc);
 
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, footThickness / 2.0, (ankleToeDistance - footLength/2.0));
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = springAnkleZ;
-	hingeDesc.damper           = damperAnkleZ;
-	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeAnkleZ[0];
-	hingeDesc.upper            = rangeAnkleZ[1];
-	joints[joNAnkleZ]          = CreateJoint(solids[soNFoot], solids[soNAnkleXZ], hingeDesc);
-	*/
+		hingeDesc                  = PHHingeJointDesc();
+		hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+		hingeDesc.poseSocket.Pos() = Vec3d(0, footThickness / 2.0, (ankleToeDistance - footLength/2.0));
+		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+		hingeDesc.spring           = springAnkleZ;
+		hingeDesc.damper           = damperAnkleZ;
+		hingeDesc.origin           = Rad(0);
+		hingeDesc.lower            = rangeAnkleZ[0];
+		hingeDesc.upper            = rangeAnkleZ[1];
+		joints[joNAnkleZ]          = CreateJoint(solids[soNFoot], solids[soNAnkleXZ], hingeDesc);
+	}
 
 	phScene->SetContactMode(solids[soNFoot], solids[soNLowerLeg], PHSceneDesc::MODE_NONE);
 }

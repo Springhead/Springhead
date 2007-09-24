@@ -230,6 +230,8 @@
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeRightEyeY) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "Vec2d", "rangeEyeX", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->rangeEyeX) - (char*)pCRHingeHumanBodyDesc);
+	field = desc->AddField("", "bool", "noLegs", "");
+	field->offset = int((char*)&(pCRHingeHumanBodyDesc->noLegs) - (char*)pCRHingeHumanBodyDesc);
 	db->RegisterDesc(desc);
 	
 	CRControllerDesc* pCRControllerDesc = NULL;

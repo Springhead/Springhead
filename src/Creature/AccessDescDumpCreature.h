@@ -126,6 +126,7 @@ protected: \
 	Vec2d rangeAnkleZ ; \
 	Vec2d rangeRightEyeY ; \
 	Vec2d rangeEyeX ; \
+	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
@@ -234,6 +235,7 @@ public: \
 		rangeAnkleZ = ((CRHingeHumanBodyDesc*)desc)->rangeAnkleZ; \
 		rangeRightEyeY = ((CRHingeHumanBodyDesc*)desc)->rangeRightEyeY; \
 		rangeEyeX = ((CRHingeHumanBodyDesc*)desc)->rangeEyeX; \
+		noLegs = ((CRHingeHumanBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
@@ -342,6 +344,7 @@ public: \
 		((CRHingeHumanBodyDesc*)desc)->rangeAnkleZ = rangeAnkleZ; \
 		((CRHingeHumanBodyDesc*)desc)->rangeRightEyeY = rangeRightEyeY; \
 		((CRHingeHumanBodyDesc*)desc)->rangeEyeX = rangeEyeX; \
+		((CRHingeHumanBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
 
@@ -452,6 +455,7 @@ protected: \
 	Vec2d rangeAnkleZ ; \
 	Vec2d rangeRightEyeY ; \
 	Vec2d rangeEyeX ; \
+	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		waistHeight = ((CRHingeHumanBodyDesc*)desc)->waistHeight; \
@@ -559,6 +563,7 @@ public: \
 		rangeAnkleZ = ((CRHingeHumanBodyDesc*)desc)->rangeAnkleZ; \
 		rangeRightEyeY = ((CRHingeHumanBodyDesc*)desc)->rangeRightEyeY; \
 		rangeEyeX = ((CRHingeHumanBodyDesc*)desc)->rangeEyeX; \
+		noLegs = ((CRHingeHumanBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		((CRHingeHumanBodyDesc*)desc)->waistHeight = waistHeight; \
@@ -666,6 +671,7 @@ public: \
 		((CRHingeHumanBodyDesc*)desc)->rangeAnkleZ = rangeAnkleZ; \
 		((CRHingeHumanBodyDesc*)desc)->rangeRightEyeY = rangeRightEyeY; \
 		((CRHingeHumanBodyDesc*)desc)->rangeEyeX = rangeEyeX; \
+		((CRHingeHumanBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
 

@@ -210,6 +210,9 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	Vec2d rangeRightEyeY;
 	Vec2d rangeEyeX;
 
+	/// — ƒIƒvƒVƒ‡ƒ“
+	bool noLegs;
+
 	CRHingeHumanBodyDesc(){
 		jointOrder = PLUG_PARENT;
 
@@ -309,6 +312,8 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 		//rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
 		rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));
 		rangeEyeX         = Vec2d(Rad(+360) , Rad(-360));
+
+		noLegs = false;
 	}
 };
 
