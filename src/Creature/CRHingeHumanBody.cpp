@@ -432,12 +432,12 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 
 // --- --- ---
 void CRHingeHumanBody::InitLegs(){
-	CreateUpperLeg(LEFTPART);
-	CreateLowerLeg(LEFTPART);
+	// CreateUpperLeg(LEFTPART);
+	// CreateLowerLeg(LEFTPART);
 	CreateFoot(LEFTPART);
 
-	CreateUpperLeg(RIGHTPART);
-	CreateLowerLeg(RIGHTPART);
+	// CreateUpperLeg(RIGHTPART);
+	// CreateLowerLeg(RIGHTPART);
 	CreateFoot(RIGHTPART);
 
 	// —¼‘«‚Í‹ß‚·‚¬‚Ä‘«‚Ì‘¾‚³ŽŸ‘æ‚Å‚ÍÕ“Ë‚µ‚Ä‚µ‚Ü‚¤‚½‚ßD
@@ -571,6 +571,7 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	solids[soNAnkleYX] = phScene->CreateSolid(solidDesc);
 	solids[soNAnkleXZ] = phScene->CreateSolid(solidDesc);
 
+	/*
 	// Joint -- Ankle ([p]LowerLeg-[c]Foot)
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Pos()   = Vec3d(0.0, -lowerLegLength / 2.0, 0);
@@ -603,6 +604,7 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	hingeDesc.lower            = rangeAnkleZ[0];
 	hingeDesc.upper            = rangeAnkleZ[1];
 	joints[joNAnkleZ]          = CreateJoint(solids[soNFoot], solids[soNAnkleXZ], hingeDesc);
+	*/
 
 	phScene->SetContactMode(solids[soNFoot], solids[soNLowerLeg], PHSceneDesc::MODE_NONE);
 }

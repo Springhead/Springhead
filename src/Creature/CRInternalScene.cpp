@@ -128,18 +128,6 @@ void CRInternalScene::Step(){
 		CRISAttractiveObjectIf* isAtt = DCAST(CRISAttractiveObjectIf, sceneObjects[i]);
 		if (isAtt) {
 			isAtt->IncUncertainty();
-			/*
-			if (isAtt->IsA("strawberry")) {
-				CRISAttractiveObjectDesc disAtt;
-				isAtt->GetDesc(&disAtt);
-				//std::cout << "ATT[" << i << "] : " << isAtt->GetTotalAttractiveness() << std::endl;
-				std::cout << "ATT[" << i << "] : ";
-				std::cout << "  b: " << (int)(disAtt.bottomupAttr * 10);
-				std::cout << "  t: " << (int)(disAtt.topdownAttr  * 10);
-				std::cout << "  u: " << (int)(disAtt.uncertainty  * 10);
-				std::cout << std::endl;
-			}
-			*/
 			continue;
 		}
 		CRISTravelPotentialObjectIf* tpObj = DCAST(CRISTravelPotentialObjectIf, sceneObjects[i]);

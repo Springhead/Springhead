@@ -247,9 +247,63 @@ struct CRWalkingControllerDesc : public CRControllerDesc{
 
 	/// 歩行コントローラの特性を決めるパラメータをここに記述．
 	/// 実行中に変化させるものや，ほかの要素（Bodyなど）から計算で求めるものは除く．
+	//double paramVelocityX, paramVelocityZ;              //X, Z方向の目標歩行速度 
+    //double paramHalfStrideX, paramHalfStrideZ;          //X, Z方向の目標歩幅          
+    double paramLdx, paramLdz;                          //両足支持期間に進むX, Z方向の距離 
+    double maxHalfStride;                               //歩幅の限界値 
+    double height;                                      //目標重心高 
+    double minCycleRate;                                //最短着地時間の基本周期に対する割合 
+    double maxDSRate;                                   //両足支持期間の最大延長割合 
+	double FootLength;                                  //標準状態の脚の長さ
+    double MaxFootLength;                               //歩行中の脚の最長値
+    double MinFootLength;                               //歩行中の脚の最短値
+    double MaxRoGround;                                 //歩行を継続する上体角度の閾値
+	double MaxRoLandingSiteFront;                       //着地を維持可能な上体と脚の角度の閾値
+	double MaxRoLandingSiteSide;                        //着地を維持可能な上体と脚の角度の閾値
+	double MaxRoLandingSiteBack;                        //着地を維持可能な上体と脚の角度の閾値
+    double MaxRoConstraint;                             //上体と脚の角度の限界値
+	double MaxFootSpeedFront;                           //足の移動速度の限界値
+	double MaxFootSpeedSide;                            //足の移動速度の限界値
+	double MaxFootSpeedBack;                            //足の移動速度の限界値
+	double MaxFootAccelerationFront;                    //足の加速度の最大値
+	double MaxFootAccelerationSide;                     //足の加速度の最大値
+	double MaxFootAccelerationBack;                     //足の加速度の最大値
+    double DoubleSupportLimitRate;                      //バランスが崩れた時に両脚支持期間の長さ決定するパラメータ
+    double LimitChange;                                 //どれほどバランスを崩したときに両脚支持期間を縮めるか決定する閾値
+    double footsize;                                    //足のサイズ
+	double pi;                                          //π
+	double miu;
 
 	CRWalkingControllerDesc(){
 		/// 各変数にデフォルトの値を入れる．ゼロとかNULLでもいい．
+		//paramVelocityX = 0.6;           
+		//paramHalfStrideX = 0.115;            
+		//paramHalfStrideZ = 0.015;          
+		paramLdx = 0.00001;             
+		paramLdz = 0.0000001;                 
+		maxHalfStride = 0.83;                   
+		height = 1.0;                   
+		minCycleRate = 0.4;                
+		maxDSRate = 1.5;     
+		FootLength = 0.9;
+		MaxFootLength = 1.2;           
+		MinFootLength = 0.5;         
+		MaxRoGround = 3.14 / 2.0;    
+		MaxRoLandingSiteFront = 3.14 / 2.2; 
+	    MaxRoLandingSiteSide = 3.14 / 2.2; 
+	    MaxRoLandingSiteBack = 3.14 / 2.2; 
+		MaxRoConstraint = 3.14 / 2.2; 
+		MaxFootSpeedFront = 10.0;    
+	    MaxFootSpeedSide = 5.0;
+	    MaxFootSpeedBack = 7.5;  
+	    MaxFootAccelerationFront = 6.0;  
+	    MaxFootAccelerationSide = 3.0;
+	    MaxFootAccelerationBack = 4.5; 
+		DoubleSupportLimitRate = 0.05;    
+		LimitChange = 11.0;  
+	    footsize = 0.0625; 
+		pi = 3.1415926535;
+		miu = 0.8;
 	}
 };
 

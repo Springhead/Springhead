@@ -857,21 +857,171 @@ public: \
 
 #define ACCESS_DESC_CRWalkingControllerDesc(cls) \
 protected: \
+	double paramLdx ; \
+	double paramLdz ; \
+	double maxHalfStride ; \
+	double height ; \
+	double minCycleRate ; \
+	double maxDSRate ; \
+	double FootLength ; \
+	double MaxFootLength ; \
+	double MinFootLength ; \
+	double MaxRoGround ; \
+	double MaxRoLandingSiteFront ; \
+	double MaxRoLandingSiteSide ; \
+	double MaxRoLandingSiteBack ; \
+	double MaxRoConstraint ; \
+	double MaxFootSpeedFront ; \
+	double MaxFootSpeedSide ; \
+	double MaxFootSpeedBack ; \
+	double MaxFootAccelerationFront ; \
+	double MaxFootAccelerationSide ; \
+	double MaxFootAccelerationBack ; \
+	double DoubleSupportLimitRate ; \
+	double LimitChange ; \
+	double footsize ; \
+	double pi ; \
+	double miu ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
+		paramLdx = ((CRWalkingControllerDesc*)desc)->paramLdx; \
+		paramLdz = ((CRWalkingControllerDesc*)desc)->paramLdz; \
+		maxHalfStride = ((CRWalkingControllerDesc*)desc)->maxHalfStride; \
+		height = ((CRWalkingControllerDesc*)desc)->height; \
+		minCycleRate = ((CRWalkingControllerDesc*)desc)->minCycleRate; \
+		maxDSRate = ((CRWalkingControllerDesc*)desc)->maxDSRate; \
+		FootLength = ((CRWalkingControllerDesc*)desc)->FootLength; \
+		MaxFootLength = ((CRWalkingControllerDesc*)desc)->MaxFootLength; \
+		MinFootLength = ((CRWalkingControllerDesc*)desc)->MinFootLength; \
+		MaxRoGround = ((CRWalkingControllerDesc*)desc)->MaxRoGround; \
+		MaxRoLandingSiteFront = ((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteFront; \
+		MaxRoLandingSiteSide = ((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteSide; \
+		MaxRoLandingSiteBack = ((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteBack; \
+		MaxRoConstraint = ((CRWalkingControllerDesc*)desc)->MaxRoConstraint; \
+		MaxFootSpeedFront = ((CRWalkingControllerDesc*)desc)->MaxFootSpeedFront; \
+		MaxFootSpeedSide = ((CRWalkingControllerDesc*)desc)->MaxFootSpeedSide; \
+		MaxFootSpeedBack = ((CRWalkingControllerDesc*)desc)->MaxFootSpeedBack; \
+		MaxFootAccelerationFront = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationFront; \
+		MaxFootAccelerationSide = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationSide; \
+		MaxFootAccelerationBack = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack; \
+		DoubleSupportLimitRate = ((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate; \
+		LimitChange = ((CRWalkingControllerDesc*)desc)->LimitChange; \
+		footsize = ((CRWalkingControllerDesc*)desc)->footsize; \
+		pi = ((CRWalkingControllerDesc*)desc)->pi; \
+		miu = ((CRWalkingControllerDesc*)desc)->miu; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
+		((CRWalkingControllerDesc*)desc)->paramLdx = paramLdx; \
+		((CRWalkingControllerDesc*)desc)->paramLdz = paramLdz; \
+		((CRWalkingControllerDesc*)desc)->maxHalfStride = maxHalfStride; \
+		((CRWalkingControllerDesc*)desc)->height = height; \
+		((CRWalkingControllerDesc*)desc)->minCycleRate = minCycleRate; \
+		((CRWalkingControllerDesc*)desc)->maxDSRate = maxDSRate; \
+		((CRWalkingControllerDesc*)desc)->FootLength = FootLength; \
+		((CRWalkingControllerDesc*)desc)->MaxFootLength = MaxFootLength; \
+		((CRWalkingControllerDesc*)desc)->MinFootLength = MinFootLength; \
+		((CRWalkingControllerDesc*)desc)->MaxRoGround = MaxRoGround; \
+		((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteFront = MaxRoLandingSiteFront; \
+		((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteSide = MaxRoLandingSiteSide; \
+		((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteBack = MaxRoLandingSiteBack; \
+		((CRWalkingControllerDesc*)desc)->MaxRoConstraint = MaxRoConstraint; \
+		((CRWalkingControllerDesc*)desc)->MaxFootSpeedFront = MaxFootSpeedFront; \
+		((CRWalkingControllerDesc*)desc)->MaxFootSpeedSide = MaxFootSpeedSide; \
+		((CRWalkingControllerDesc*)desc)->MaxFootSpeedBack = MaxFootSpeedBack; \
+		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationFront = MaxFootAccelerationFront; \
+		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationSide = MaxFootAccelerationSide; \
+		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack = MaxFootAccelerationBack; \
+		((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate = DoubleSupportLimitRate; \
+		((CRWalkingControllerDesc*)desc)->LimitChange = LimitChange; \
+		((CRWalkingControllerDesc*)desc)->footsize = footsize; \
+		((CRWalkingControllerDesc*)desc)->pi = pi; \
+		((CRWalkingControllerDesc*)desc)->miu = miu; \
 		return true; \
 	} \
 
 #define ACCESS_DESC_CRWalkingControllerDesc_NOBASE \
 protected: \
+	double paramLdx ; \
+	double paramLdz ; \
+	double maxHalfStride ; \
+	double height ; \
+	double minCycleRate ; \
+	double maxDSRate ; \
+	double FootLength ; \
+	double MaxFootLength ; \
+	double MinFootLength ; \
+	double MaxRoGround ; \
+	double MaxRoLandingSiteFront ; \
+	double MaxRoLandingSiteSide ; \
+	double MaxRoLandingSiteBack ; \
+	double MaxRoConstraint ; \
+	double MaxFootSpeedFront ; \
+	double MaxFootSpeedSide ; \
+	double MaxFootSpeedBack ; \
+	double MaxFootAccelerationFront ; \
+	double MaxFootAccelerationSide ; \
+	double MaxFootAccelerationBack ; \
+	double DoubleSupportLimitRate ; \
+	double LimitChange ; \
+	double footsize ; \
+	double pi ; \
+	double miu ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
+		paramLdx = ((CRWalkingControllerDesc*)desc)->paramLdx; \
+		paramLdz = ((CRWalkingControllerDesc*)desc)->paramLdz; \
+		maxHalfStride = ((CRWalkingControllerDesc*)desc)->maxHalfStride; \
+		height = ((CRWalkingControllerDesc*)desc)->height; \
+		minCycleRate = ((CRWalkingControllerDesc*)desc)->minCycleRate; \
+		maxDSRate = ((CRWalkingControllerDesc*)desc)->maxDSRate; \
+		FootLength = ((CRWalkingControllerDesc*)desc)->FootLength; \
+		MaxFootLength = ((CRWalkingControllerDesc*)desc)->MaxFootLength; \
+		MinFootLength = ((CRWalkingControllerDesc*)desc)->MinFootLength; \
+		MaxRoGround = ((CRWalkingControllerDesc*)desc)->MaxRoGround; \
+		MaxRoLandingSiteFront = ((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteFront; \
+		MaxRoLandingSiteSide = ((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteSide; \
+		MaxRoLandingSiteBack = ((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteBack; \
+		MaxRoConstraint = ((CRWalkingControllerDesc*)desc)->MaxRoConstraint; \
+		MaxFootSpeedFront = ((CRWalkingControllerDesc*)desc)->MaxFootSpeedFront; \
+		MaxFootSpeedSide = ((CRWalkingControllerDesc*)desc)->MaxFootSpeedSide; \
+		MaxFootSpeedBack = ((CRWalkingControllerDesc*)desc)->MaxFootSpeedBack; \
+		MaxFootAccelerationFront = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationFront; \
+		MaxFootAccelerationSide = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationSide; \
+		MaxFootAccelerationBack = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack; \
+		DoubleSupportLimitRate = ((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate; \
+		LimitChange = ((CRWalkingControllerDesc*)desc)->LimitChange; \
+		footsize = ((CRWalkingControllerDesc*)desc)->footsize; \
+		pi = ((CRWalkingControllerDesc*)desc)->pi; \
+		miu = ((CRWalkingControllerDesc*)desc)->miu; \
 	} \
 	virtual bool GetDesc(void* desc){ \
+		((CRWalkingControllerDesc*)desc)->paramLdx = paramLdx; \
+		((CRWalkingControllerDesc*)desc)->paramLdz = paramLdz; \
+		((CRWalkingControllerDesc*)desc)->maxHalfStride = maxHalfStride; \
+		((CRWalkingControllerDesc*)desc)->height = height; \
+		((CRWalkingControllerDesc*)desc)->minCycleRate = minCycleRate; \
+		((CRWalkingControllerDesc*)desc)->maxDSRate = maxDSRate; \
+		((CRWalkingControllerDesc*)desc)->FootLength = FootLength; \
+		((CRWalkingControllerDesc*)desc)->MaxFootLength = MaxFootLength; \
+		((CRWalkingControllerDesc*)desc)->MinFootLength = MinFootLength; \
+		((CRWalkingControllerDesc*)desc)->MaxRoGround = MaxRoGround; \
+		((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteFront = MaxRoLandingSiteFront; \
+		((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteSide = MaxRoLandingSiteSide; \
+		((CRWalkingControllerDesc*)desc)->MaxRoLandingSiteBack = MaxRoLandingSiteBack; \
+		((CRWalkingControllerDesc*)desc)->MaxRoConstraint = MaxRoConstraint; \
+		((CRWalkingControllerDesc*)desc)->MaxFootSpeedFront = MaxFootSpeedFront; \
+		((CRWalkingControllerDesc*)desc)->MaxFootSpeedSide = MaxFootSpeedSide; \
+		((CRWalkingControllerDesc*)desc)->MaxFootSpeedBack = MaxFootSpeedBack; \
+		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationFront = MaxFootAccelerationFront; \
+		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationSide = MaxFootAccelerationSide; \
+		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack = MaxFootAccelerationBack; \
+		((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate = DoubleSupportLimitRate; \
+		((CRWalkingControllerDesc*)desc)->LimitChange = LimitChange; \
+		((CRWalkingControllerDesc*)desc)->footsize = footsize; \
+		((CRWalkingControllerDesc*)desc)->pi = pi; \
+		((CRWalkingControllerDesc*)desc)->miu = miu; \
 		return true; \
 	} \
 
