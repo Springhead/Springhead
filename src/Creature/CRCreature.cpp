@@ -68,7 +68,9 @@ void CRCreature::SensorStep(){
 }
 
 void CRCreature::InternalSceneStep(){
-	internalScene->Step();
+	if (internalScene) {
+		internalScene->Step();
+	}
 }
 
 void CRCreature::ControllerStep(){
