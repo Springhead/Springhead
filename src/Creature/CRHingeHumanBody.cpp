@@ -615,9 +615,25 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 
 // --- --- ---
 void CRHingeHumanBody::InitContact(){
-	// 全接触判定をOff（これは過剰と思う，いずれ最低限の接触は残したい（07/09/14, mitake））
-	for (int i=0; i<solids.size(); i++) {
-		phScene->SetContactMode(solids[i], PHSceneDesc::MODE_NONE);
+	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
+	for (int i=0; i<solids.size(); ++i) {
+		for (int j=0; j<solids.size(); ++j) {
+			if (i!=j) {
+				phScene->SetContactMode(solids[i], solids[j], PHSceneDesc::MODE_NONE);
+			}
+		}
+	}
+
+	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRBodyIf* body = creature->GetBody(i);
+		if (DCAST(CRHingeHumanBodyIf,body)!=(this->Cast())) {
+			for (int s=0; s<body->NSolids(); ++s) {
+				for (int j=0; j<solids.size(); ++j) {
+					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
+				}
+			}
+		}
 	}
 }
 }
