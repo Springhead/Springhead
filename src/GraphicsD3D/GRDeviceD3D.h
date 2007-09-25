@@ -50,6 +50,10 @@ protected:
 	std::vector<GRDeviceD3DListenerFunc> lostDeviceListeners;
 	std::vector<GRDeviceD3DListenerFunc> resetDeviceListeners;
 
+	D3DVIEWPORT9	viewportStore;
+	RECT			windowRectStore;
+	bool			shouldResetWindowRect;
+
 	static IDirect3DDevice9* s_d3ddevice;
 
 public:
@@ -145,6 +149,10 @@ public:
 	virtual void AddLostDeviceListener(GRDeviceD3DListenerFunc func)  { lostDeviceListeners.push_back(func); }
 	/// デバイスがリセットされたときに呼ばれるコールバック関数を登録
 	virtual void AddResetDeviceListener(GRDeviceD3DListenerFunc func) { resetDeviceListeners.push_back(func); }
+	/// ウインドウモード<->フルスクリーン 切り替え
+	virtual void ToggleFullScreen();
+	/// フルスクリーンモードか？
+	virtual bool IsFullScreen() { return !pp.Windowed; }
 
 	/// D3Dデバイスを取得する
 	static IDirect3DDevice9* GetD3DDevice() { return s_d3ddevice; }

@@ -31,6 +31,8 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 	virtual void SetConfirmDeviceFunc(GRDeviceD3DConfirmDeviceFunc func)=0;
 	virtual void AddLostDeviceListener(GRDeviceD3DListenerFunc func)=0;
 	virtual void AddResetDeviceListener(GRDeviceD3DListenerFunc func)=0;
+	virtual void ToggleFullScreen()=0;
+	virtual bool IsFullScreen()=0;
 };
 
 /**	@brief	DirectXのデバッグ情報レンダラーの基本クラス */

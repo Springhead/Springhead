@@ -128,6 +128,7 @@ void GRDeviceD3D::Init(){
 	textures.push_back(NULL);					// textures[0] = NULL
 
 	deviceLost = false;
+	shouldResetWindowRect = false;
 }
 /// デバイスがロストしたら呼ぶ
 void GRDeviceD3D::LostDevice(){
@@ -152,6 +153,13 @@ void GRDeviceD3D::ResetDevice(){
 	hr = d3ddevice->TestCooperativeLevel();
 	if(hr!=D3D_OK && hr!=D3DERR_DEVICENOTRESET){
 		return;
+	}
+	if(shouldResetWindowRect){
+		SetWindowPos(
+			pp.hDeviceWindow, HWND_NOTOPMOST,
+			windowRectStore.left, windowRectStore.top, windowRectStore.right-windowRectStore.left, windowRectStore.bottom-windowRectStore.top,
+			SWP_SHOWWINDOW );
+		shouldResetWindowRect = false;
 	}
 	hr = d3ddevice->Reset(&pp);
 	if(hr!=D3D_OK){
@@ -519,6 +527,28 @@ bool GRDeviceD3D::ReadShaderSource(GRHandler shader, std::string file){
 void GRDeviceD3D::GetShaderLocation(GRHandler shader, void* location){
 	DSTR << "GRDeviceD3D::GetShaderLocation() is not implemented." << std::endl;
 }	
+/// ウインドウモード<->フルスクリーン 切り替え
+void GRDeviceD3D::ToggleFullScreen(){
+	if(pp.Windowed){
+		d3ddevice->GetViewport(&viewportStore);
+		GetWindowRect(pp.hDeviceWindow, &windowRectStore);
+		HDC displayDC = CreateDC("DISPLAY", NULL, NULL, NULL);
+		pp.Windowed                   = FALSE;
+		pp.BackBufferWidth            = GetSystemMetrics(SM_CXSCREEN);
+		pp.BackBufferHeight           = GetSystemMetrics(SM_CYSCREEN);
+		pp.FullScreen_RefreshRateInHz = GetDeviceCaps(displayDC, VREFRESH);
+		DeleteDC(displayDC);
+	}
+	else{
+		pp.Windowed                   = TRUE;
+		pp.BackBufferWidth            = (UINT)viewportStore.Width;
+		pp.BackBufferHeight           = (UINT)viewportStore.Height;
+		pp.FullScreen_RefreshRateInHz = 0;
+		shouldResetWindowRect = true;
+	}
+	LostDevice();
+	ResetDevice();
+}
 
 
 }	//	Spr
