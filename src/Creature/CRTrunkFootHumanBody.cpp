@@ -45,6 +45,17 @@ void CRTrunkFootHumanBody::CreateChest(){
 	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 
+	//˜•”ˆÊ‚Æã”¼g‚ÌŠÔ‚ÌŠÖß
+	PHBallJointDesc ballDesc;
+    ballDesc.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
+	ballDesc.posePlug.Ori() = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Pos() = Vec3d(0, -0.32, 0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+	joints[JO_WAIST_CHEST] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
+	DCAST(PHBallJointIf, joints[JO_WAIST_CHEST])->SetSwingRange(0.01);
+	DCAST(PHBallJointIf, joints[JO_WAIST_CHEST])->SetTwistRange(0.0, 0.01);
+
+	/*
 	// Joint -- [p]Waist-[c]Chest
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Pos()   = Vec3d(0,  chestHeight / 2.0, 0);
@@ -57,6 +68,7 @@ void CRTrunkFootHumanBody::CreateChest(){
 	hingeDesc.lower            = rangeWaistChest[0];
 	hingeDesc.upper            = rangeWaistChest[1];
 	joints[JO_WAIST_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], hingeDesc);
+	*/
 
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
@@ -72,6 +84,17 @@ void CRTrunkFootHumanBody::CreateHead(){
 	sphereDesc.radius = headDiameter / 2.0;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 
+	//ã”¼g‚Æ“ª•”‚ÌŠÔ‚ÌŠÖß
+	hingeDesc                  = PHHingeJointDesc();
+    hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -0.36, 0.0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+    hingeDesc.lower = 0.0;
+	hingeDesc.upper = 0.01;
+    joints[JO_CHEST_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);
+
+	/*
 	// Joint -- [p]Chest-[c]Head
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Pos()   = Vec3d(0, chestHeight / 2.0 + neckLength, 0);
@@ -84,6 +107,7 @@ void CRTrunkFootHumanBody::CreateHead(){
 	hingeDesc.lower            = rangeChestHead[0];
 	hingeDesc.upper            = rangeChestHead[1];
 	joints[JO_CHEST_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);
+	*/
 
 	phScene->SetContactMode(solids[SO_HEAD], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
