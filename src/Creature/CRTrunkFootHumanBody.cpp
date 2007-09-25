@@ -118,7 +118,9 @@ void CRTrunkFootHumanBody::InitContact(){
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (int i=0; i<solids.size(); ++i) {
 		for (int j=0; j<solids.size(); ++j) {
-			phScene->SetContactMode(solids[i], solids[j], PHSceneDesc::MODE_NONE);
+			if (i!=j) {
+				phScene->SetContactMode(solids[i], solids[j], PHSceneDesc::MODE_NONE);
+			}
 		}
 	}
 
