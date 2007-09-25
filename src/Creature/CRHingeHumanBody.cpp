@@ -239,8 +239,8 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc.spring           = springShoulderZ;
 	hingeDesc.damper           = damperShoulderZ;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeShoulderZ[0]; /// 本当は左右で異なる．未実装．肩のほかの関節も同じ
-	hingeDesc.upper            = rangeShoulderZ[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeShoulderZ[0]) : (-rangeShoulderZ[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeShoulderZ[1]) : (-rangeShoulderZ[0]));
 	joints[joNShoulderZ]       = CreateJoint(solids[soNShoulderZX], solids[SO_CHEST], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -260,8 +260,8 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc.spring           = springShoulderY;
 	hingeDesc.damper           = damperShoulderY;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeShoulderY[0];
-	hingeDesc.upper            = rangeShoulderY[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeShoulderY[0]) : (-rangeShoulderY[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeShoulderY[1]) : (-rangeShoulderY[0]));
 	joints[joNShoulderY]       = CreateJoint(solids[soNUpperArm], solids[soNShoulderXY], hingeDesc);
 
 	phScene->SetContactMode(solids[soNUpperArm], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
@@ -297,8 +297,8 @@ void CRHingeHumanBody::CreateLowerArm(LREnum lr){
 	hingeDesc.spring           = springElbow;
 	hingeDesc.damper           = damperElbow;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeElbow[0];
-	hingeDesc.upper            = rangeElbow[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeElbow[0]) : (-rangeElbow[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeElbow[1]) : (-rangeElbow[0]));
 	joints[joNElbow] = CreateJoint(solids[soNLowerArm], solids[soNUpperArm], hingeDesc);
 
 	phScene->SetContactMode(solids[soNLowerArm], solids[soNUpperArm], PHSceneDesc::MODE_NONE);
@@ -339,8 +339,8 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.spring           = springWristY;
 	hingeDesc.damper           = damperWristY;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeWristY[0];
-	hingeDesc.upper            = rangeWristY[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWristY[0]) : (-rangeWristY[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWristY[1]) : (-rangeWristY[0]));
 	joints[joNWristY]          = CreateJoint(solids[soNWristYX], solids[soNLowerArm], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -360,8 +360,8 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.spring           = springWristZ;
 	hingeDesc.damper           = damperWristZ;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeWristZ[0];
-	hingeDesc.upper            = rangeWristZ[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWristZ[0]) : (-rangeWristZ[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWristZ[1]) : (-rangeWristZ[0]));
 	joints[joNWristZ]          = CreateJoint(solids[soNHand], solids[soNWristXZ], hingeDesc);
 
 	phScene->SetContactMode(solids[soNHand], solids[soNLowerArm], PHSceneDesc::MODE_NONE);
