@@ -1,6 +1,7 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 IF_IMP(CRBody, SceneObject);
 IF_IMP(CRHingeHumanBody, CRBody);
+IF_IMP(CRTrunkFootHumanBody, CRBody);
 IF_IMP(CRController, SceneObject);
 IF_IMP(CREyeController, CRController);
 IF_IMP(CRNeckController, CRController);

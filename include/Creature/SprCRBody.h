@@ -109,7 +109,7 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 
 	enum CRHumanJoints{
 		// -- Center
-		JO_WAIST_ABDOMEN, JO_ABDOMEN_CHEST,
+		JO_WAIST_ABDOMEN=0, JO_ABDOMEN_CHEST,
 		JO_CHEST_NECK_X, JO_CHEST_NECK_Z, JO_CHEST_NECK_Y,
 		JO_NECK_HEAD_X, JO_NECK_HEAD_Z,
 
@@ -317,6 +317,72 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	}
 };
 
+// ------------------------------------------------------------------------------
+/// おもに胴体と足のみの人体モデルのインターフェイス（歩行制御用）
+struct CRTrunkFootHumanBodyIf : CRBodyIf {
+	IF_DEF(CRTrunkFootHumanBody);
+
+};
+
+/// 胴体・足人体モデルのデスクリプタ
+struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
+	DESC_DEF_FOR_OBJECT(CRTrunkFootHumanBody);
+
+	enum CRHumanSolids{
+		// 剛体
+		SO_WAIST=0, SO_CHEST, SO_HEAD, SO_RIGHT_FOOT, SO_LEFT_FOOT,
+		// 剛体の数
+		SO_NSOLIDS
+	};
+
+	enum CRHumanJoints{
+		// 関節
+		JO_WAIST_CHEST=0, JO_CHEST_HEAD,
+		// 関節の数
+		JO_NJOINTS
+	};
+
+	/// サイズに関するパラメータ
+	double waistHeight, waistBreadth, waistThickness;
+	double chestHeight, chestBreadth, chestThickness;
+	double neckLength;
+	double headDiameter;
+	double footLength, footBreadth, footThickness;
+
+	/// 各関節のバネダンパ
+	double springWaistChest, damperWaistChest;
+	double springChestHead,    damperChestHead;
+
+	/// 可動域制限
+	Vec2d rangeWaistChest;
+	Vec2d rangeChestHead;
+
+	CRTrunkFootHumanBodyDesc(){
+		jointOrder = PLUG_PARENT;
+
+		waistHeight    = 0.2298;
+		waistBreadth   = 0.3067;
+		waistThickness = 0.2307;
+
+		chestHeight    = 1.4020 - 1.2253 + 1.2253 - 1.0142;
+		chestBreadth   = 0.2887;
+		chestThickness = 0.2118;
+
+		neckLength   = 1.7219 - 1.4564 - 0.1732;
+		headDiameter = 0.2387;
+
+		footLength       = 0.2544;
+		footBreadth      = 0.0994;
+		footThickness    = 0.0619;
+
+		springWaistChest   = 100.0;  damperWaistChest   =  50.0;
+		springChestHead    = 100.0;  damperChestHead    =  50.0;
+
+		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
+		rangeWaistChest   = Vec2d(Rad(0.0) , Rad(0.01));
+		rangeChestHead    = Vec2d(Rad(0.0) , Rad(0.01));
+	}
+};
 //@}
 
 }

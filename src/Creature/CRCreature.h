@@ -35,9 +35,9 @@ protected:
 	*/
 	CRInternalSceneIf* internalScene;
 
-	/** @brief ボディ
+	/** @brief ボディ（複数持てる）
 	*/
-	CRBodyIf* body;
+	std::vector<CRBodyIf*> body;
 
 public:
 	OBJECTDEF(CRCreature, SceneObject);
@@ -49,7 +49,6 @@ public:
 	CRCreature(const CRCreatureDesc& desc, SceneIf* s=NULL) : CRCreatureDesc(desc) {
 		CRRegisterTypeDescs();
 		internalScene = NULL;
-		body = NULL;
 		if(s){SetScene(s);}
 	}
 
@@ -83,7 +82,11 @@ public:
 
 	/** @brief ボディを取得する
 	*/
-	virtual CRBodyIf* GetBody();
+	virtual CRBodyIf* GetBody(int i);
+
+	/** @brief ボディの数を取得する
+	*/
+	virtual int NBodies();
 
 	/** @brief 感覚系を追加する
 	*/

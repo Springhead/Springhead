@@ -17,7 +17,12 @@ IF_OBJECT_IMP(CRWalkingController, CRController);
 void CRWalkingController::Init(){
 	CRController::Init();
 
-	body = DCAST(CRHingeHumanBodyIf, creature->GetBody());
+	body = NULL;
+	for (int i=0; i<creature->NBodies(); ++i) {
+		if (!body) {
+			body = DCAST(CRTrunkFootHumanBodyIf, creature->GetBody(i));
+		}
+	}
 
 	CreateUpperBody();
 	AssignFoot();  
@@ -68,6 +73,7 @@ void CRWalkingController::Init(){
 
 	/// < Body >
 	/*
+	この方法は今となっては使えない．bodyが複数ある状況に対応したため．
 	body = DCAST(CRHingeHumanBodyIf, creature->GetBody());
 	*/
 

@@ -32,6 +32,14 @@ struct CRHingeHumanBodyIf;	class CRHingeHumanBody;
 typedef CRHingeHumanBodyIfStubTemplate<CRHingeHumanBodyIf, ObjectIfBuf, CRHingeHumanBody>	CRHingeHumanBodyIfStub;
 typedef IfInitTemplate<CRHingeHumanBodyIfStub, CRHingeHumanBody>	CRHingeHumanBodyIfInit;
 
+template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRTrunkFootHumanBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRTrunkFootHumanBodyIf;	class CRTrunkFootHumanBody;
+typedef CRTrunkFootHumanBodyIfStubTemplate<CRTrunkFootHumanBodyIf, ObjectIfBuf, CRTrunkFootHumanBody>	CRTrunkFootHumanBodyIfStub;
+typedef IfInitTemplate<CRTrunkFootHumanBodyIfStub, CRTrunkFootHumanBody>	CRTrunkFootHumanBodyIfInit;
+
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRControllerIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
@@ -211,8 +219,11 @@ struct CRCreatureIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> 
 	virtual CRBodyIf * CreateBody(const IfInfo * ii, const CRBodyDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateBody(ii, desc);
 	}
-	virtual CRBodyIf * GetBody(){
-		return ((OBJ*)(MIF*)this)->GetBody();
+	virtual CRBodyIf * GetBody(int i){
+		return ((OBJ*)(MIF*)this)->GetBody(i);
+	}
+	virtual int NBodies(){
+		return ((OBJ*)(MIF*)this)->NBodies();
 	}
 	virtual CRSensorIf * CreateSensor(const IfInfo * ii, const CRSensorDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateSensor(ii, desc);

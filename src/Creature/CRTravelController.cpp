@@ -18,7 +18,13 @@ void CRTravelController::Init(){
 	CRController::Init();
 
 	internalScene = creature->GetInternalScene();
-	soWaist = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
+
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			soWaist = body->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
+		}
+	}
 
 	for (int i=0; i<creature->NControllers(); i++) {
 		if (!walkCtrl) {
@@ -46,8 +52,8 @@ void CRTravelController::Step(){
 		Vec3f currDir3 = soWaist->GetPose().Ori() * Vec3f(0,0,-1);
 		Vec2f currDir = Vec2f(currDir3.X(), currDir3.Z()).unit();
 
-		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 1.0);
-		walkCtrl->SetSpeed((PTM::dot(currDir, dir)+1) * 0.1);
+		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 3.0);
+		walkCtrl->SetSpeed((PTM::dot(currDir, dir)+1) * 1.0);
 	}
 }
 

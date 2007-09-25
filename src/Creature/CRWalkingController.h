@@ -29,7 +29,7 @@ class CRWalkingController : public CRController, public CRWalkingControllerIfIni
 private:
 	/// 依存する他のオブジェクトの例．必要なものを選んで記述．ただしCRControllerに既にあるものは不要．
 	
-	CRHingeHumanBodyIf* body;
+	CRTrunkFootHumanBodyIf* body;
 
 	std::vector<PHSolidIf*> UpperBody;
 	PHSolidIf* soHead;

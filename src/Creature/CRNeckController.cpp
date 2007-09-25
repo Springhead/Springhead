@@ -25,11 +25,16 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 void CRNeckController::Init(){
 	CRController::Init();
 
-	soHead = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);
-	soNeck = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_NECK);
-	
-	joNeckHeadX  = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
-	joChestNeckY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			soHead = body->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);
+			soNeck = body->GetSolid(CRHingeHumanBodyDesc::SO_NECK);
+			
+			joNeckHeadX  = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
+			joChestNeckY = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
+		}
+	}
 
 	origX = 0.0;
 	origZ = 0.0;

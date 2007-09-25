@@ -66,7 +66,11 @@ struct CRCreatureIf : SceneObjectIf{
 
 	/** @brief ボディを取得する
 	*/
-	virtual CRBodyIf* GetBody()= 0;
+	virtual CRBodyIf* GetBody(int i)= 0;
+
+	/** @brief ボディの数を取得する
+	*/
+	virtual int NBodies()= 0;
 
 	/** @brief 感覚系を追加する（依存するセンサーは先にCreateしておく必要がある．要対策）
 	*/

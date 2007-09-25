@@ -101,13 +101,18 @@ Vec2d CRPursuitController::GetREyeAngle(){
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRPhysicalEye::Init(){
-	soLEye  = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);	
-	soREye  = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);	
-	soHead  = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);	
-	joLEyeX = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_X));
-	joLEyeY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_Y));	
-	joREyeX = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_X));	
-	joREyeY = DCAST(PHHingeJointIf, creature->GetBody()->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y));	
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			soLEye  = body->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);	
+			soREye  = body->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);	
+			soHead  = body->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);	
+			joLEyeX = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_X));
+			joLEyeY = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_Y));	
+			joREyeX = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_X));	
+			joREyeY = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y));	
+		}
+	}
 }
 
 void CRPhysicalEye::SetTarget(Vec3d pos, Vec3d vel){

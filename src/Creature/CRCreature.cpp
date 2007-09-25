@@ -23,6 +23,7 @@
 
 #include "CRBody.h"
 #include "CRHingeHumanBody.h"
+#include "CRTrunkFootHumanBody.h"
 
 #include "CRInternalScene.h"
 
@@ -36,14 +37,17 @@ namespace Spr{
 IF_OBJECT_IMP(CRCreature, SceneObject);
 
 void CRCreature::Init(){
-	body->Init();
-
 	// 将来的には依存するセンサ・コントローラを先にInitするようコードしたほうがよさそうだ．(07/09/11, mitake)
-	for (int i=0; i<sensors.size(); i++){
+
+	for (int i=0; i<body.size(); ++i){
+		body[i]->Init();
+	}
+
+	for (int i=0; i<sensors.size(); ++i){
 		sensors[i]->Init();
 	}
 
-	for (int i=0; i<controllers.size(); i++){
+	for (int i=0; i<controllers.size(); ++i){
 		controllers[i]->Init();
 	}
 }
@@ -83,7 +87,10 @@ void CRCreature::ControllerStep(){
 
 CRBodyIf* CRCreature::CreateBody(const IfInfo* ii, const CRBodyDesc& desc){
 	if (ii == CRHingeHumanBodyIf::GetIfInfoStatic()) {
-		body = (DBG_NEW CRHingeHumanBody((const CRHingeHumanBodyDesc&)desc, this->Cast()))->Cast();
+		body.push_back((DBG_NEW CRHingeHumanBody((const CRHingeHumanBodyDesc&)desc, this->Cast()))->Cast());
+
+	} else if (ii == CRTrunkFootHumanBodyIf::GetIfInfoStatic()) {
+		body.push_back((DBG_NEW CRTrunkFootHumanBody((const CRTrunkFootHumanBodyDesc&)desc, this->Cast()))->Cast());
 
 	} else {
 		assert(0 && "想定されてない型");
@@ -91,11 +98,15 @@ CRBodyIf* CRCreature::CreateBody(const IfInfo* ii, const CRBodyDesc& desc){
 
 	}
 
-	return body;
+	return body.back();
 }
 
-CRBodyIf* CRCreature::GetBody(){
-	return body;
+CRBodyIf* CRCreature::GetBody(int i){
+	return body[i];
+}
+
+int CRCreature::NBodies(){
+	return body.size();
 }
 
 CRSensorIf* CRCreature::CreateSensor(const IfInfo* ii, const CRSensorDesc& desc){

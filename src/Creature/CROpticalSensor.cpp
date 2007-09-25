@@ -18,8 +18,14 @@ void CROpticalSensor::Init(){
 	CRSensor::Init();
 
 	/// 依存する他オブジェクトの取得
-	soLEye = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);
-	soREye = creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			soLEye = body->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);
+			soREye = body->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);
+		}
+	}
+
 	internalScene = creature->GetInternalScene();
 
 	/// InternalSceneの組み立て
@@ -34,8 +40,13 @@ void CROpticalSensor::Init(){
 	}
 
 	/// 自己に属する剛体をあらかじめ取得
-	for (int i=0; i<CRHingeHumanBodyDesc::SO_NSOLIDS; i++) {
-		selfSolids.insert(creature->GetBody()->GetSolid(i));
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			for (int i=0; i<CRHingeHumanBodyDesc::SO_NSOLIDS; i++) {
+				selfSolids.insert(body->GetSolid(i));
+			}
+		}
 	}
 }
 

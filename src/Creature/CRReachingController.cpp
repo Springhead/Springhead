@@ -23,8 +23,13 @@ PHSolidIf* CRReachingController::GetSolid(){
 void CRReachingController::Init(){
 	CRController::Init();
 
-	if (solid==NULL && (0 <= solidNo && solidNo < CRHingeHumanBodyDesc::SO_NSOLIDS)) {
-		solid = creature->GetBody()->GetSolid(solidNo);
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			if (solid==NULL && (0 <= solidNo && solidNo < CRHingeHumanBodyDesc::SO_NSOLIDS)) {
+				solid = body->GetSolid(solidNo);
+			}
+		}
 	}
 
 	PHSolidDesc solidDesc;

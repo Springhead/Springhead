@@ -28,11 +28,17 @@ void CRGrabController::Init(){
 		}
 	}
 
-	if (reach1 && reach2) {
-		if (reach1->GetSolid() == creature->GetBody()->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
-			reachLeft = reach1;  reachRight = reach2;
-		} else {
-			reachLeft = reach2;  reachRight = reach1;
+	// このへんのコードは creature->FindObject(型) とかでもっと簡単に書けるようにするべきである（07/09/25, mitake）
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			if (reach1 && reach2) {
+				if (reach1->GetSolid() == body->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
+					reachLeft = reach1;  reachRight = reach2;
+				} else {
+					reachLeft = reach2;  reachRight = reach1;
+				}
+			}
 		}
 	}
 }

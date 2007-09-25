@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRHINGEHUMANBODY_H
-#define CRHINGEHUMANBODY_H
+#ifndef CRTRUNKFOOTHUMANBODY_H
+#define CRTRUNKFOOTHUMANBODY_H
 
 #include <Springhead.h>
 
@@ -21,50 +21,33 @@
 namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRHingeHumanBody
+// CRTrunkFootHumanBody
 // ヒンジジョイントを用いた人体モデル・クラスの実装
-class CRHingeHumanBody : public CRBody, public CRHingeHumanBodyIfInit, public CRHingeHumanBodyDesc {
+class CRTrunkFootHumanBody : public CRBody, public CRTrunkFootHumanBodyIfInit, public CRTrunkFootHumanBodyDesc {
 private:
 	void InitBody();
 	void CreateWaist();
-	void CreateAbdomen();
 	void CreateChest();
-
-	void InitHead();
-	void CreateNeck();
 	void CreateHead();
 
-	void InitArms();
-	void CreateUpperArm(LREnum lr);
-	void CreateLowerArm(LREnum lr);
-	void CreateHand(LREnum lr);
-
-	void InitEyes();
-	void CreateEye(LREnum lr);
-
 	void InitLegs();
-	void CreateUpperLeg(LREnum lr);
-	void CreateLowerLeg(LREnum lr);
 	void CreateFoot(LREnum lr);
 
 	void InitContact();
 
 public:
-	OBJECTDEF(CRHingeHumanBody, CRBody);
-	ACCESS_DESC(CRHingeHumanBody);
+	OBJECTDEF(CRTrunkFootHumanBody, CRBody);
+	ACCESS_DESC(CRTrunkFootHumanBody);
 
-	CRHingeHumanBody(){}
-	CRHingeHumanBody(const CRHingeHumanBodyDesc& desc, CRCreatureIf* c=NULL) 
-		: CRHingeHumanBodyDesc(desc) 
+	CRTrunkFootHumanBody(){}
+	CRTrunkFootHumanBody(const CRTrunkFootHumanBodyDesc& desc, CRCreatureIf* c=NULL) 
+		: CRTrunkFootHumanBodyDesc(desc) 
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
-		solids.resize(CRHingeHumanBodyDesc::SO_NSOLIDS);
-		joints.resize(CRHingeHumanBodyDesc::JO_NJOINTS);
+		solids.resize(CRTrunkFootHumanBodyDesc::SO_NSOLIDS);
+		joints.resize(CRTrunkFootHumanBodyDesc::JO_NJOINTS);
 
 		InitBody();
-		InitHead();
-		InitArms();
-		InitEyes();
 		InitLegs();
 
 		InitContact();
@@ -78,4 +61,4 @@ public:
 }
 //@}
 
-#endif//CRHINGEHUMANBODY_H
+#endif//CRTRUNKFOOTHUMANBODY_H

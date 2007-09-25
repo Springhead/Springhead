@@ -20,6 +20,8 @@ namespace Spr{;
 */
 class CRBody : public SceneObject, public CRBodyIfInit, public CRBodyDesc {
 protected:
+	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
+
 	/// ボディを構成する剛体
 	std::vector<PHSolidIf*> solids;
 
@@ -46,8 +48,6 @@ public:
 	CRBody(){}
 	CRBody(const CRBodyDesc& desc, CRCreatureIf* c=NULL) 
 		: CRBodyDesc(desc)
-		, solids(CRHingeHumanBodyDesc::SO_NSOLIDS)
-		, joints(CRHingeHumanBodyDesc::JO_NJOINTS)  
 	{
 		if(c!=NULL && c->GetScene()){SetScene(c->GetScene());}
 		creature = c;

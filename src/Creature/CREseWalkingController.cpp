@@ -17,7 +17,12 @@ IF_OBJECT_IMP(CREseWalkingController, CRController);
 void CREseWalkingController::Init(){
 	CRController::Init();
 
-	soWaist = DCAST(CRHingeHumanBodyIf, creature->GetBody())->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (body) {
+			soWaist = body->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
+		}
+	}
 
 	// ƒ{ƒfƒB‚Ì‹óŠÔŒÅ’è
 	PHSolidDesc solidDesc;

@@ -675,6 +675,128 @@ public: \
 		return true; \
 	} \
 
+#define ACCESS_DESC_CRTrunkFootHumanBodyDesc(cls) \
+protected: \
+	double waistHeight ; \
+	double waistBreadth ; \
+	double waistThickness ; \
+	double chestHeight ; \
+	double chestBreadth ; \
+	double chestThickness ; \
+	double neckLength ; \
+	double headDiameter ; \
+	double footLength ; \
+	double footBreadth ; \
+	double footThickness ; \
+	double springWaistChest ; \
+	double damperWaistChest ; \
+	double springChestHead ; \
+	double damperChestHead ; \
+	Vec2d rangeWaistChest ; \
+	Vec2d rangeChestHead ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		waistHeight = ((CRTrunkFootHumanBodyDesc*)desc)->waistHeight; \
+		waistBreadth = ((CRTrunkFootHumanBodyDesc*)desc)->waistBreadth; \
+		waistThickness = ((CRTrunkFootHumanBodyDesc*)desc)->waistThickness; \
+		chestHeight = ((CRTrunkFootHumanBodyDesc*)desc)->chestHeight; \
+		chestBreadth = ((CRTrunkFootHumanBodyDesc*)desc)->chestBreadth; \
+		chestThickness = ((CRTrunkFootHumanBodyDesc*)desc)->chestThickness; \
+		neckLength = ((CRTrunkFootHumanBodyDesc*)desc)->neckLength; \
+		headDiameter = ((CRTrunkFootHumanBodyDesc*)desc)->headDiameter; \
+		footLength = ((CRTrunkFootHumanBodyDesc*)desc)->footLength; \
+		footBreadth = ((CRTrunkFootHumanBodyDesc*)desc)->footBreadth; \
+		footThickness = ((CRTrunkFootHumanBodyDesc*)desc)->footThickness; \
+		springWaistChest = ((CRTrunkFootHumanBodyDesc*)desc)->springWaistChest; \
+		damperWaistChest = ((CRTrunkFootHumanBodyDesc*)desc)->damperWaistChest; \
+		springChestHead = ((CRTrunkFootHumanBodyDesc*)desc)->springChestHead; \
+		damperChestHead = ((CRTrunkFootHumanBodyDesc*)desc)->damperChestHead; \
+		rangeWaistChest = ((CRTrunkFootHumanBodyDesc*)desc)->rangeWaistChest; \
+		rangeChestHead = ((CRTrunkFootHumanBodyDesc*)desc)->rangeChestHead; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRTrunkFootHumanBodyDesc*)desc)->waistHeight = waistHeight; \
+		((CRTrunkFootHumanBodyDesc*)desc)->waistBreadth = waistBreadth; \
+		((CRTrunkFootHumanBodyDesc*)desc)->waistThickness = waistThickness; \
+		((CRTrunkFootHumanBodyDesc*)desc)->chestHeight = chestHeight; \
+		((CRTrunkFootHumanBodyDesc*)desc)->chestBreadth = chestBreadth; \
+		((CRTrunkFootHumanBodyDesc*)desc)->chestThickness = chestThickness; \
+		((CRTrunkFootHumanBodyDesc*)desc)->neckLength = neckLength; \
+		((CRTrunkFootHumanBodyDesc*)desc)->headDiameter = headDiameter; \
+		((CRTrunkFootHumanBodyDesc*)desc)->footLength = footLength; \
+		((CRTrunkFootHumanBodyDesc*)desc)->footBreadth = footBreadth; \
+		((CRTrunkFootHumanBodyDesc*)desc)->footThickness = footThickness; \
+		((CRTrunkFootHumanBodyDesc*)desc)->springWaistChest = springWaistChest; \
+		((CRTrunkFootHumanBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
+		((CRTrunkFootHumanBodyDesc*)desc)->springChestHead = springChestHead; \
+		((CRTrunkFootHumanBodyDesc*)desc)->damperChestHead = damperChestHead; \
+		((CRTrunkFootHumanBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
+		((CRTrunkFootHumanBodyDesc*)desc)->rangeChestHead = rangeChestHead; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRTrunkFootHumanBodyDesc_NOBASE \
+protected: \
+	double waistHeight ; \
+	double waistBreadth ; \
+	double waistThickness ; \
+	double chestHeight ; \
+	double chestBreadth ; \
+	double chestThickness ; \
+	double neckLength ; \
+	double headDiameter ; \
+	double footLength ; \
+	double footBreadth ; \
+	double footThickness ; \
+	double springWaistChest ; \
+	double damperWaistChest ; \
+	double springChestHead ; \
+	double damperChestHead ; \
+	Vec2d rangeWaistChest ; \
+	Vec2d rangeChestHead ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		waistHeight = ((CRTrunkFootHumanBodyDesc*)desc)->waistHeight; \
+		waistBreadth = ((CRTrunkFootHumanBodyDesc*)desc)->waistBreadth; \
+		waistThickness = ((CRTrunkFootHumanBodyDesc*)desc)->waistThickness; \
+		chestHeight = ((CRTrunkFootHumanBodyDesc*)desc)->chestHeight; \
+		chestBreadth = ((CRTrunkFootHumanBodyDesc*)desc)->chestBreadth; \
+		chestThickness = ((CRTrunkFootHumanBodyDesc*)desc)->chestThickness; \
+		neckLength = ((CRTrunkFootHumanBodyDesc*)desc)->neckLength; \
+		headDiameter = ((CRTrunkFootHumanBodyDesc*)desc)->headDiameter; \
+		footLength = ((CRTrunkFootHumanBodyDesc*)desc)->footLength; \
+		footBreadth = ((CRTrunkFootHumanBodyDesc*)desc)->footBreadth; \
+		footThickness = ((CRTrunkFootHumanBodyDesc*)desc)->footThickness; \
+		springWaistChest = ((CRTrunkFootHumanBodyDesc*)desc)->springWaistChest; \
+		damperWaistChest = ((CRTrunkFootHumanBodyDesc*)desc)->damperWaistChest; \
+		springChestHead = ((CRTrunkFootHumanBodyDesc*)desc)->springChestHead; \
+		damperChestHead = ((CRTrunkFootHumanBodyDesc*)desc)->damperChestHead; \
+		rangeWaistChest = ((CRTrunkFootHumanBodyDesc*)desc)->rangeWaistChest; \
+		rangeChestHead = ((CRTrunkFootHumanBodyDesc*)desc)->rangeChestHead; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRTrunkFootHumanBodyDesc*)desc)->waistHeight = waistHeight; \
+		((CRTrunkFootHumanBodyDesc*)desc)->waistBreadth = waistBreadth; \
+		((CRTrunkFootHumanBodyDesc*)desc)->waistThickness = waistThickness; \
+		((CRTrunkFootHumanBodyDesc*)desc)->chestHeight = chestHeight; \
+		((CRTrunkFootHumanBodyDesc*)desc)->chestBreadth = chestBreadth; \
+		((CRTrunkFootHumanBodyDesc*)desc)->chestThickness = chestThickness; \
+		((CRTrunkFootHumanBodyDesc*)desc)->neckLength = neckLength; \
+		((CRTrunkFootHumanBodyDesc*)desc)->headDiameter = headDiameter; \
+		((CRTrunkFootHumanBodyDesc*)desc)->footLength = footLength; \
+		((CRTrunkFootHumanBodyDesc*)desc)->footBreadth = footBreadth; \
+		((CRTrunkFootHumanBodyDesc*)desc)->footThickness = footThickness; \
+		((CRTrunkFootHumanBodyDesc*)desc)->springWaistChest = springWaistChest; \
+		((CRTrunkFootHumanBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
+		((CRTrunkFootHumanBodyDesc*)desc)->springChestHead = springChestHead; \
+		((CRTrunkFootHumanBodyDesc*)desc)->damperChestHead = damperChestHead; \
+		((CRTrunkFootHumanBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
+		((CRTrunkFootHumanBodyDesc*)desc)->rangeChestHead = rangeChestHead; \
+		return true; \
+	} \
+
 #define ACCESS_DESC_CRControllerDesc(cls) \
 protected: \
 public: \
