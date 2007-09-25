@@ -358,18 +358,24 @@ double CRWCTimeLeft::CalcLocalX(double xb, double zb, double xt, double zt, doub
 		vari1 = ((xt - xb) + tan(theta)*zb + zt/tan(theta)) / (tan(theta) + 1/tan(theta));
 	}
 
-	if(abs(theta) < pi/2){
+	if(abs(theta) < pi/2.0){
 		if(vari0 < xt) relativeX = sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
 		else relativeX = -sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
-	} else if(abs(theta) > pi/2 && abs(theta) < 3*pi/2) {
+	} else if(abs(theta) > pi/2.0 && abs(theta) < 3.0*pi/2.0) {
 		if(vari0 < xt) relativeX = -sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
 		else relativeX = sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
-	} else if(abs(theta) > 3/2*pi){
+	} else if(abs(theta) > 3.0/2.0*pi){
 		if(vari0 < xt) relativeX = sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
 		else relativeX = -sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
     } else {
-		if(theta > 0.0) relativeX = zt - zb;
-		else relativeX = zb - zt;
+		if(theta > 0.0) {
+			if(theta < pi) relativeX = zb - zt;
+			else  relativeX = zt - zb;
+		}
+		else {
+			if(theta > -pi) relativeX = zt - zb;
+			else relativeX = zb - zt;
+		}
 	}
 
 	return relativeX;
@@ -394,18 +400,24 @@ double CRWCTimeLeft::CalcLocalZ(double xb, double zb, double xt, double zt, doub
 		vari1 = ((xt - xb) + tan(theta)*zb + zt/tan(theta)) / (tan(theta) + 1/tan(theta));
 	}
 
-	if(abs(theta) < pi/2){
+	if(abs(theta) < pi/2.0){
 		if(vari1 > zb) relativeZ = sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 		else relativeZ = -sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
-	} else if(abs(theta) > pi/2 && abs(theta) < 3*pi/2) {
+	} else if(abs(theta) > pi/2.0 && abs(theta) < 3.0*pi/2.0) {
 		if(vari1 > zb) relativeZ = -sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 		else relativeZ = sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
-	} else if(abs(theta) > 3/2*pi){
+	} else if(abs(theta) > 3.0/2.0*pi){
 		if(vari1 > zb) relativeZ = sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 		else relativeZ = -sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 	} else {
-		if(theta > 0.0) relativeZ = xt - xb;
-		else relativeZ = xb - xt;
+		if(theta > 0.0) {
+			if(theta < pi) relativeZ = xt - xb;
+			else relativeZ = xb - xt;
+		}
+		else {
+			if(theta > -pi) relativeZ = xb - xt;
+			else relativeZ = xt - xb;
+		}
 	}
 
 	return relativeZ;

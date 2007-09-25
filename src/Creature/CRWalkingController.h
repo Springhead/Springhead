@@ -134,6 +134,7 @@ private:
 	void GenerateCenterForce();
 	void GenerateFootForce();
 	void gait();
+	void stand();
 	void test();
 
 public:

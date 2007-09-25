@@ -16,6 +16,8 @@ class CRWCFootForce
 	Vec3d VelocityOfHip;
 	PHSolidIf* FootLeft;
 	PHSolidIf* FootRight;
+	Vec3d InitialRotLeft;
+	Vec3d InitialRotRight;
 
 	double timeleft;
 	double TimeStep;
@@ -24,6 +26,8 @@ class CRWCFootForce
 
 	bool LF;
 	bool RF;
+	bool PreLF;
+	bool PreRF;
 	bool LandAble;
 	bool EarthConnection;
 	bool footMoveTermFlag;
@@ -32,9 +36,15 @@ class CRWCFootForce
 	double MaxFootLength;
 	double MinFootLength;
 	double FootSize;
+	double TargetDirection;
 
 	void FootMoveLeft(void);
 	void FootMoveRight(void);
+	Vec3d CalcSwingFootForce(void);
+	Vec3d CalcSwingFootTorque(void);
+	Vec3d CalcSupportFootForce(void);
+	Vec3d CalcDoubleSupportPreFootForce(void);
+	Vec3d CalcDoubleSupportNextFootForce(void);
 
 public:
 	CRWCFootForce(double ts, Vec3d g, bool lf);
@@ -42,12 +52,8 @@ public:
 	void Init(void);
 	void FootMove(void);
 	void FootMove2(void);
-	Vec3d CalcSwingFootForce(void);
-	Vec3d CalcSupportFootForce(void);
-	Vec3d CalcDoubleSupportPreFootForce(void);
-	Vec3d CalcDoubleSupportNextFootForce(void);
 	void FootDoubleSupport(void);
-	void UpdateState(Vec3d cls, Vec3d nls, Vec3d ph, Vec3d vh, double tl, bool la, bool ec);
+	void UpdateState(Vec3d cls, Vec3d nls, Vec3d ph, Vec3d vh, double tl, bool la, bool ec, double td);
 	void ChangeSupportLegs(bool lf);
 	void SetFoots(PHSolidIf* fl, PHSolidIf* fr){
 		FootLeft = fl;

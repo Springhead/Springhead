@@ -15,6 +15,7 @@ namespace Spr{
 IF_OBJECT_IMP(CRWalkingController, CRController);
 
 void CRWalkingController::Init(){
+
 	CRController::Init();
 
 	body = NULL;
@@ -37,6 +38,8 @@ void CRWalkingController::Init(){
 	paramHalfStrideZ = 0.1;         
 	footHeight = 0.05;                                  
     amplitude = 0.0;   
+
+	footsize = 0.0619;
 	////////////////////////////
 
 	SetTimeParams();
@@ -45,9 +48,8 @@ void CRWalkingController::Init(){
 
 	///ëÂàÊïœêîÇÃèâä˙âª/////
 	et = 0.0;     
-	TargetDirection = pi/2-0.1; 
-	CurrentDirection = pi/2-0.1;
-	footsize = 0.12;
+	TargetDirection = 0.0; 
+	CurrentDirection = 0.0;
 	LF = true;     
 	RF = false;    
 	DSterm = false; 
@@ -108,7 +110,8 @@ void CRWalkingController::Init(){
 	
 void CRWalkingController::Step(){
 	CRController::Step();
-	gait();
+	if(totalStep > 200)gait();
+	else stand();
 	test();
 }
 
@@ -120,44 +123,32 @@ void CRWalkingController::SetRotationAngle(float rot){
 
 void CRWalkingController::CreateUpperBody(void){
 
-	/*for(int i=0;i < body->NSolids();i++) {
-		DSTR << "mass = " << (body->GetSolid(i))->GetMass() << std::endl;
-	}*/
-	int i;
-	
-	for(i=0; i<8 ;i++) UpperBody.push_back(body->GetSolid(i));
-	for(i=11; i<15 ;i++) UpperBody.push_back(body->GetSolid(i));
-	for(i=18; i<26 ;i++) UpperBody.push_back(body->GetSolid(i));
-	for(i=30; i<35 ;i++) UpperBody.push_back(body->GetSolid(i));
-	for(i=39; i<body->NSolids() ;i++) UpperBody.push_back(body->GetSolid(i));
+	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST));
+	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST));
+	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_HEAD));
 }
 
 void CRWalkingController::AssignFoot(void){
-	footleft = body->GetSolid(17);
-	footright = body->GetSolid(10);
+	footleft = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_LEFT_FOOT);
+	footright = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_RIGHT_FOOT);
 }
 
 void CRWalkingController::AssignCenterObject(void){
-	soCenterObject = body->GetSolid(0);
+	soCenterObject = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST);
+	soCenterObject->SetMass(0.44);
 }
 
 void CRWalkingController::AssignHip(void){
-	soHip = body->GetSolid(1);
+	soHip = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST);
+	soHip->SetMass(0.17);
 }
 
 void CRWalkingController::AssignHead(void){
-	soHead = body->GetSolid(4);
+	soHead = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_HEAD);
+	soHead->SetMass(0.178);
 }
 
 void CRWalkingController::InvalidGravity(void){
-	int i;
-	
-	/*
-	for(i=8; i<11 ;i++) (body->GetSolid(i))->SetGravity(false);
-	for(i=15; i<18 ;i++) (body->GetSolid(i))->SetGravity(false);
-	for(i=26; i<30 ;i++) (body->GetSolid(i))->SetGravity(false);
-	for(i=35; i<39 ;i++) (body->GetSolid(i))->SetGravity(false);
-	*/
 }
 
 void CRWalkingController::SetTimeParams(){
@@ -167,7 +158,9 @@ void CRWalkingController::SetTimeParams(){
 }
 
 void CRWalkingController::AssignInitialLandingSite(){
-    currentlandingsite = Vec3d(footright->GetFramePosition().x, 0.0, footright->GetFramePosition().z); 	//ç≈èâÇÕâEë´Ç™éxéùãr 
+	////////////////////////Ç†Ç∆Ç≈ïœçX
+	currentlandingsite = Vec3d(footright->GetFramePosition().x, 0.0, footright->GetFramePosition().z); 	//ç≈èâÇÕâEë´Ç™éxéùãr 
+    ////////////////////////
 }
 
 void CRWalkingController::CreateCRWCTimeLeft(){
@@ -211,13 +204,14 @@ void CRWalkingController::CreateCRWCLandingSite(){
 
 void CRWalkingController::CreateCRWCFootForce(){
 	ff = new CRWCFootForce(TimeStep, phScene->GetGravity(),LF);    //scene->GetGravity()
-    ff->Init();
     ff->SetFoots(footleft, footright);
 	ff->SetParamT0(T0);
 	ff->SetParamFootHeight(footHeight);
 	ff->SetParamMaxFootLength(MaxFootLength);
 	ff->SetParamMinFootLength(MinFootLength);
 	ff->SetParamFootSize(footsize);
+	
+	ff->Init();
 }
 
 void CRWalkingController::CreateCRWCGeneForce(){
@@ -342,18 +336,24 @@ double CRWalkingController::CalcLocalX(double xb, double zb, double xt, double z
 		vari1 = ((xt - xb) + tan(theta)*zb + zt/tan(theta)) / (tan(theta) + 1/tan(theta));
 	}
 
-	if(abs(theta) < pi/2){
+	if(abs(theta) < pi/2.0){
 		if(vari0 < xt) relativeX = sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
 		else relativeX = -sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
-	} else if(abs(theta) > pi/2 && abs(theta) < 3*pi/2) {
+	} else if(abs(theta) > pi/2.0 && abs(theta) < 3.0*pi/2.0) {
 		if(vari0 < xt) relativeX = -sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
 		else relativeX = sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
-	} else if(abs(theta) > 3/2*pi){
+	} else if(abs(theta) > 3.0/2.0*pi){
 		if(vari0 < xt) relativeX = sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
 		else relativeX = -sqrt((vari0-xt)*(vari0-xt) + (vari1-zt)*(vari1-zt));
     } else {
-		if(theta > 0.0) relativeX = zt - zb;
-		else relativeX = zb - zt;
+		if(theta > 0.0) {
+			if(theta < pi) relativeX = zb - zt;
+			else  relativeX = zt - zb;
+		}
+		else {
+			if(theta > -pi) relativeX = zt - zb;
+			else relativeX = zb - zt;
+		}
 	}
 
 	return relativeX;
@@ -378,18 +378,24 @@ double CRWalkingController::CalcLocalZ(double xb, double zb, double xt, double z
 		vari1 = ((xt - xb) + tan(theta)*zb + zt/tan(theta)) / (tan(theta) + 1/tan(theta));
 	}
 
-	if(abs(theta) < pi/2){
+	if(abs(theta) < pi/2.0){
 		if(vari1 > zb) relativeZ = sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 		else relativeZ = -sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
-	} else if(abs(theta) > pi/2 && abs(theta) < 3*pi/2) {
+	} else if(abs(theta) > pi/2.0 && abs(theta) < 3.0*pi/2.0) {
 		if(vari1 > zb) relativeZ = -sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 		else relativeZ = sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
-	} else if(abs(theta) > 3/2*pi){
+	} else if(abs(theta) > 3.0/2.0*pi){
 		if(vari1 > zb) relativeZ = sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 		else relativeZ = -sqrt((vari0-xb)*(vari0-xb) + (vari1-zb)*(vari1-zb));
 	} else {
-		if(theta > 0.0) relativeZ = xt - xb;
-		else relativeZ = xb - xt;
+		if(theta > 0.0) {
+			if(theta < pi) relativeZ = xt - xb;
+			else relativeZ = xb - xt;
+		}
+		else {
+			if(theta > -pi) relativeZ = xb - xt;
+			else relativeZ = xt - xb;
+		}
 	}
 
 	return relativeZ;
@@ -520,7 +526,7 @@ void CRWalkingController::CalcTargetAngle(){
 	if(totalStep >= 200 && totalStep < 600) TargetDirection = pi/6.0;
 	if(totalStep >= 600 && totalStep < 1000) TargetDirection = pi/3.0;
 	if(totalStep >= 1000) TargetDirection = pi/2.2;*/
-	TargetDirection = pi/2-0.1;
+	TargetDirection = 0.0;
 	//DSTR << "TargetDirection = " << TargetDirection << std::endl;
 	if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
     if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
@@ -903,7 +909,7 @@ void CRWalkingController::GenerateCenterForce(void){
 void CRWalkingController::GenerateFootForce(void){
 	if(katoki < gaitbegin) katoki = katoki + 1;   //âΩåÃÇ©ãrÇÃìÆÇ´ÇíxÇÁÇπÇ»Ç¢Ç∆èdêSÇÃâ^ìÆÇ™Ç®Ç©ÇµÇ≠Ç»ÇÈ
 	else {
-		ff->UpdateState(currentlandingsite, nextlandingsite, soHip->GetCenterPosition(), soHip->GetVelocity(), timeleft, LandAble, EarthConnection);
+		ff->UpdateState(currentlandingsite, nextlandingsite, soHip->GetCenterPosition(), soHip->GetVelocity(), timeleft, LandAble, EarthConnection, TargetDirection);
 		if(DSterm == true) ff->FootDoubleSupport();
 		else ff->FootMove(); //éxéùãrÇ®ÇÊÇ—óVãrÇÃêßå‰
 	}
@@ -959,8 +965,8 @@ void CRWalkingController::gait(void){
 
     ConstraintForce();  //ç\ë¢ìIêßñÒÇ…ÇÊÇËè„îºêgÇ…ä|Ç©ÇÈóÕ
 
-	//DSTR << "CenterVelocity = " << CenterVelocity << std::endl;
-	//DSTR << "PositionOfUpperBody = " << PositionOfUpperBody << std::endl;
+	DSTR << "CenterVelocity = " << CenterVelocity << std::endl;
+	DSTR << "PositionOfUpperBody = " << PositionOfUpperBody << std::endl;
 	//DSTR << "timeleft = " << timeleft << std::endl;
 	//DSTR << "change = " << change << std::endl;
     //DSTR << "timehalfcycle = " << timehalfcycle << std::endl;
@@ -1087,6 +1093,15 @@ void CRWalkingController::gait(void){
 
 void CRWalkingController::test(){
 		//soCenterObject->AddTorque((-100)*soCenterObject->GetAngularVelocity()); //åÉóÕÇ™â¡ÇÌÇ¡ÇΩéûÇ…yï˚å¸Ç…âÒì]ÇµÇ»Ç¢ÇΩÇﬂÇÃÉgÉãÉN
+}
+
+void CRWalkingController::stand(){
+	soCenterObject->AddForce(-1*phScene->GetGravity()*TotalMass(UpperBody));
+	soCenterObject->AddForce(10*(Vec3d(0,height,0) - GetCenterOfBlocks(UpperBody)) - 5*CalcCenterVelocity(UpperBody));
+	totalStep = totalStep + 1;
+
+	//footleft->AddForce(2*(Vec3d(-0.1,0.1,0)-footleft->GetCenterPosition()) - 0.8*footleft->GetVelocity());
+	//footright->AddForce(2*(Vec3d(0.1,0.1,0)-footright->GetCenterPosition()) - 0.8*footright->GetVelocity());
 }
 
 }

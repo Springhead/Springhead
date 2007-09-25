@@ -17,9 +17,11 @@ CRWCFootForce::~CRWCFootForce(void)
 
 void CRWCFootForce::Init(){
 	footMoveTermFlag = true;
+	InitialRotLeft = (FootLeft->GetOrientation()).Rotation();   ///////////////////‚ ‚Æ‚Å•ÏX
+	InitialRotRight = (FootRight->GetOrientation()).Rotation();  ///////////////////‚ ‚Æ‚Å•ÏX
 }
 
-void CRWCFootForce::UpdateState(Vec3d cls, Vec3d nls, Vec3d ph, Vec3d vh, double tl, bool la, bool ec){
+void CRWCFootForce::UpdateState(Vec3d cls, Vec3d nls, Vec3d ph, Vec3d vh, double tl, bool la, bool ec, double td){
 	CurrentLandingSite = cls;
 	NextLandingSite = nls;
 	PositionOfHip = ph;
@@ -27,6 +29,7 @@ void CRWCFootForce::UpdateState(Vec3d cls, Vec3d nls, Vec3d ph, Vec3d vh, double
 	timeleft = tl;
 	LandAble = la;
 	EarthConnection = ec;
+	TargetDirection = td;
 }
 
 void CRWCFootForce::ChangeSupportLegs(bool lf){
@@ -45,16 +48,17 @@ void CRWCFootForce::ChangeSupportLegs(bool lf){
 //—¼‹r‚Ì§Œä
 void CRWCFootForce::FootMove(){
 
-	double kp = 500.0;
-	double kv = 80.0;
+	double kp = 3.0;
+	double kv = 15.0;
 	double LengthSwing;
 	double LengthSupport;
 	double CrossSwing;
 	double CrossSupport;
 	double CrossVelocitySwing;
 	double CrossVelocitySupport;
-	Vec3d ForceSwing = Vec3d(0.0,0.0,0.0);
-	Vec3d ForceSupport = Vec3d(0.0,0.0,0.0);
+	Vec3d ForceSwing = Vec3d(0,0,0);
+	Vec3d TorqueSwing = Vec3d(0,0,0);
+	Vec3d ForceSupport = Vec3d(0,0,0);
 	Vec3d Rotleft;
 	Vec3d Rotright;
 	Vec3d AVleft;
@@ -65,7 +69,10 @@ void CRWCFootForce::FootMove(){
 	Vec3d VelocityHipSupport;
 
 
-    if(LandAble == true) ForceSwing = CalcSwingFootForce();
+	if(LandAble == true) {
+		ForceSwing = CalcSwingFootForce();
+		TorqueSwing = CalcSwingFootTorque();
+	}
 	if(EarthConnection == true) ForceSupport = CalcSupportFootForce();
 
 	if(LF == true){
@@ -121,21 +128,59 @@ void CRWCFootForce::FootMove(){
 		FootLeft->AddForce(ForceSupport);
 	}
 
-	Rotleft = (FootLeft->GetOrientation()).Rotation();
+	if(PreLF != LF && PreRF != RF) {
+		InitialRotLeft = (FootLeft->GetOrientation()).Rotation();
+		InitialRotRight = (FootRight->GetOrientation()).Rotation();
+	}
+
+	Rotleft = (FootLeft->GetOrientation()).Rotation();   
 	Rotright = (FootRight->GetOrientation()).Rotation();
 	AVleft = FootLeft->GetAngularVelocity();
 	AVright = FootRight->GetAngularVelocity();
 
-	FootLeft->AddTorque(-kp * Rotleft - kv * AVleft);
-    FootRight->AddTorque(-kp * Rotright - kv * AVright);
+	/*
+	if(Rotleft.y > InitialRotLeft.y + 2*3.1415926535){
+		do{
+			Rotleft.y = Rotleft.y - 2*3.1415926535;
+		} while(Rotleft.y - InitialRotLeft.y > 2*3.1415926535);
+	} else if(Rotleft.y < InitialRotLeft.y - 2*3.1415926535){
+		do{
+			Rotleft.y = Rotleft.y + 2*3.1415926535;
+		} while(Rotleft.y - InitialRotLeft.y < -2*3.1415926535);
+	}
+
+	//DSTR << "pre " << " Rotright " << Rotright << " InitialRotRight " << InitialRotRight << std::endl;
+	if(Rotright.y > InitialRotRight.y + 2*3.1415926535){
+		do{
+			Rotright.y = Rotright.y - 2*3.1415926535;
+		} while(Rotright.y - InitialRotRight.y > 2*3.1415926535);
+	} else if(Rotright.y < InitialRotRight.y - 2*3.1415926535){
+		do{
+			Rotright.y = Rotright.y + 2*3.1415926535;
+		} while(Rotright.y - InitialRotRight.y < -2*3.1415926535);
+	}*/
+	//DSTR << "after " << " Rotright " << Rotright << " InitialRotRight " << InitialRotRight << std::endl;
+    //DSTR << "TorqueSwing = " << TorqueSwing << std::endl;
+
+	if(LF == true) {
+		FootLeft->AddTorque(TorqueSwing);
+		FootRight->AddTorque(-kv * AVright); //kp * (InitialRotRight- Rotright) 
+	}
+	else {
+		FootLeft->AddTorque(-kv * AVleft); //kp * (InitialRotLeft- Rotleft)
+		FootRight->AddTorque(TorqueSwing);
+	}
+
+	PreLF = LF;
+	PreRF = RF;
 }
 
 //ŽxŽ‹r‚Ì“®‚«‚ð¶¬‚·‚é—Í‚ÌŒvŽZ
 Vec3d CRWCFootForce::CalcSwingFootForce(void){
 
 	Vec3d Force = Vec3d(0.0,0.0,0.0);
-	double kp = 500.0;
-    double kv = 80.0;
+	double kp = 3.0;
+    double kv = 1.0;
 	double pdx;
 	double vdx;
 	double pdy;
@@ -194,11 +239,75 @@ Vec3d CRWCFootForce::CalcSwingFootForce(void){
 	return Force;
 }
 
+Vec3d CRWCFootForce::CalcSwingFootTorque(void){
+
+	double tl;
+    double CurrentRot;
+	double CurrentAV;
+	double AVd;
+	double Rotd;
+	double kRot = 100.0;
+	double kAV = 1.0;
+	double vari;
+	double vari2;
+	double paramMaxAVd = 10.0;
+
+	if(timeleft == 0.0) tl = TimeStep;
+	else tl = timeleft;
+
+	if(LF == true){
+	    CurrentRot = (FootLeft->GetOrientation()).Rotation().y;
+	    CurrentAV = (FootLeft->GetAngularVelocity()).y;
+	} else {
+		CurrentRot = (FootRight->GetOrientation()).Rotation().y;
+	    CurrentAV = (FootRight->GetAngularVelocity()).y;
+	}
+
+	TargetDirection = TargetDirection - 3.1415926535/2.0;
+    if(TargetDirection < -2.0*3.1415926535) TargetDirection = TargetDirection + 2.0*3.1415926535;
+
+	/*
+	Quaterniond QuatT;
+	Quaterniond dQuat;
+	QuatT = QuatT.Rot(Vec3d(0,TargetDirection,0));
+	DSTR << "QuatT = " << QuatT << std::endl;
+	dQuat = QuatT * CurrentQuat.Inv();*/
+
+	/*
+	if(vari2 > CurrentRot + 2*3.1415926535){
+		do{
+			vari2 = vari2 - 2*3.1415926535;
+		} while(vari2 - CurrentRot > 2*3.1415926535);
+	} else if(vari2 < CurrentRot - 2*3.1415926535){
+		do{
+			vari2 = vari2 + 2*3.1415926535;
+		} while(vari2 - CurrentRot < -2*3.1415926535);
+	}*/
+	if(abs(TargetDirection - CurrentRot - 2*3.1415926535) < abs(TargetDirection - CurrentRot)){
+		if(abs(TargetDirection - CurrentRot - 4*3.1415926535) < abs(TargetDirection - CurrentRot - 2*3.1415926535)) CurrentRot = CurrentRot + 4*3.1415926535;
+		else CurrentRot = CurrentRot + 2*3.1415926535;
+	}
+
+	if(abs(TargetDirection - CurrentRot + 2*3.1415926535) < abs(TargetDirection - CurrentRot)){
+		if(abs(TargetDirection - CurrentRot + 4*3.1415926535) < abs(TargetDirection - CurrentRot + 2*3.1415926535)) CurrentRot = CurrentRot - 4*3.1415926535;
+		else CurrentRot = CurrentRot - 2*3.1415926535;
+	}
+
+	//DSTR << " CurrentRot " << CurrentRot << std::endl;
+	AVd = (TargetDirection - CurrentRot) / tl;
+	if(abs(AVd) > paramMaxAVd) AVd = AVd / abs(AVd) * paramMaxAVd;
+	Rotd = AVd*TimeStep;                    //CurrentRot + AVd*TimeStep;
+
+	vari = kRot*Rotd + kAV*(AVd-CurrentAV);
+
+	return Vec3d(0,vari,0);
+}
+
 //ŽxŽ‹r‚Ì“®‚«‚ð¶¬‚·‚é—Í‚ÌŒvŽZ
 Vec3d CRWCFootForce::CalcSupportFootForce(void){
 
-	double kp = 500.0;
-    double kv = 80.0;
+	double kp = 3.0;
+    double kv = 1.0;
 	Vec3d Force;
 
 	if(LF == true){
@@ -215,8 +324,8 @@ Vec3d CRWCFootForce::CalcSupportFootForce(void){
 //—¼‹rŽxŽŠúŠÔ‚ÌØ‚è‘Ö‚¦‘O‚Ì‘«‚Ì“®‚«‚ð¶¬‚·‚é—Í‚ÌŒvŽZ
 Vec3d CRWCFootForce::CalcDoubleSupportPreFootForce(void){
 
-	double kp = 1100.0;
-	double kv = 70.0;
+	double kp = 3.0;
+	double kv = 1.0;
 	Vec3d Force;
 
 	if(LF == true){
@@ -233,8 +342,8 @@ Vec3d CRWCFootForce::CalcDoubleSupportPreFootForce(void){
 //—¼‹rŽxŽŠúŠÔ‚ÌØ‚è‘Ö‚¦Œã‚Ì‘«‚Ì“®‚«‚ð¶¬‚·‚é—Í‚ÌŒvŽZ
 Vec3d CRWCFootForce::CalcDoubleSupportNextFootForce(void){
 
-	double kp = 1100.0;
-	double kv = 70.0;
+	double kp = 3.0;
+	double kv = 1.0;
 	Vec3d Force;
 
 	if(LF == true){
@@ -250,8 +359,8 @@ Vec3d CRWCFootForce::CalcDoubleSupportNextFootForce(void){
 //—¼‹rŽxŽŠúŠÔ‚Ì‹r‚Ì“®‚«
 void CRWCFootForce::FootDoubleSupport(void){
 
-	double kp = 1100.0;
-	double kv = 70.0;
+	double kp = 3.0;
+	double kv = 15.0;
     double LengthPre;
 	double LengthNext;
 	double CrossPre;
@@ -260,8 +369,8 @@ void CRWCFootForce::FootDoubleSupport(void){
 	double CrossVelocityNext;
 	Vec3d ForcePre = Vec3d(0.0,0.0,0.0);
 	Vec3d ForceNext = Vec3d(0.0,0.0,0.0);
-	Vec3d Rotleft;
-	Vec3d Rotright;
+	//Vec3d Rotleft;
+	//Vec3d Rotright;
 	Vec3d AVleft;
 	Vec3d AVright;
 	Vec3d HipToPreFoot;
@@ -325,13 +434,13 @@ void CRWCFootForce::FootDoubleSupport(void){
 		FootRight->AddForce(ForceNext);
 	}
 	
-	Rotleft = (FootLeft->GetOrientation()).Rotation();
-	Rotright = (FootRight->GetOrientation()).Rotation();
+	//Rotleft = (FootLeft->GetOrientation()).Rotation();
+	//Rotright = (FootRight->GetOrientation()).Rotation();
 	AVleft = FootLeft->GetAngularVelocity();
 	AVright = FootRight->GetAngularVelocity();
 
-	FootLeft->AddTorque(-kp * Rotleft - kv * AVleft);
-    FootRight->AddTorque(-kp * Rotright - kv * AVright);
+	FootLeft->AddTorque(-kv * AVleft);
+    FootRight->AddTorque(-kv * AVright);
 
 	FootLeft->AddForce(Vec3d(0.0, kp*(FootSize/2.0 - FootLeft->GetCenterPosition().y) - kv*FootLeft->GetVelocity().y, 0.0)); 
 	FootRight->AddForce(Vec3d(0.0, kp*(FootSize/2.0 - FootRight->GetCenterPosition().y) - kv*FootRight->GetVelocity().y, 0.0)); 
