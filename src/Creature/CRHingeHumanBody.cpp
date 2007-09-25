@@ -483,8 +483,8 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.spring           = springWaistLegZ;
 	hingeDesc.damper           = damperWaistLegZ;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeWaistLegZ[0];
-	hingeDesc.upper            = rangeWaistLegZ[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWaistLegZ[0]) : (-rangeWaistLegZ[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWaistLegZ[1]) : (-rangeWaistLegZ[0]));
 	joints[joNWaistLegZ]       = CreateJoint(solids[soNWaistLegZX], solids[SO_WAIST], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
@@ -504,8 +504,8 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.spring           = springWaistLegY;
 	hingeDesc.damper           = damperWaistLegY;
 	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeWaistLegY[0];
-	hingeDesc.upper            = rangeWaistLegY[1];
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWaistLegY[0]) : (-rangeWaistLegY[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWaistLegY[1]) : (-rangeWaistLegY[0]));
 	joints[joNWaistLegY]       = CreateJoint(solids[soNUpperLeg], solids[soNWaistLegXY], hingeDesc);
 
 	phScene->SetContactMode(solids[soNUpperLeg], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
@@ -584,8 +584,8 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 		hingeDesc.spring           = springAnkleY;
 		hingeDesc.damper           = damperAnkleY;
 		hingeDesc.origin           = Rad(0);
-		hingeDesc.lower            = rangeAnkleY[0];
-		hingeDesc.upper            = rangeAnkleY[1];
+		hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeAnkleY[0]) : (-rangeAnkleY[1]));
+		hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeAnkleY[1]) : (-rangeAnkleY[0]));
 		joints[joNAnkleY]          = CreateJoint(solids[soNAnkleYX], solids[soNLowerLeg], hingeDesc);
 
 		hingeDesc                  = PHHingeJointDesc();
@@ -605,8 +605,8 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 		hingeDesc.spring           = springAnkleZ;
 		hingeDesc.damper           = damperAnkleZ;
 		hingeDesc.origin           = Rad(0);
-		hingeDesc.lower            = rangeAnkleZ[0];
-		hingeDesc.upper            = rangeAnkleZ[1];
+		hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeAnkleZ[0]) : (-rangeAnkleZ[1]));
+		hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeAnkleZ[1]) : (-rangeAnkleZ[0]));
 		joints[joNAnkleZ]          = CreateJoint(solids[soNFoot], solids[soNAnkleXZ], hingeDesc);
 	}
 
