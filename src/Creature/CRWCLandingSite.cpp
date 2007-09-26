@@ -1,4 +1,4 @@
-#include ".\crwclandingsite.h"
+#include ".\crwcLandingsite.h"
 
 CRWCLandingSite::CRWCLandingSite(Vec3d InitialLanding , bool lf)
 {
@@ -68,7 +68,6 @@ void CRWCLandingSite::CalcNextLandingSiteWithoutConstraint(){
 	LocalBodyVelocityZ = CalcLocalVZ(VelocityOfWholeBody.x, VelocityOfWholeBody.z, TargetAngle);
 
 
-	//DSTR << "LocalX = " << LocalX << " LocalZ = " << LocalZ << " LocalBodyVelocityX = " << LocalBodyVelocityX << " LocalBodyVelocityZ = " << LocalBodyVelocityZ << std::endl;
 	//DSTR << "PositionOfWholeBody.x - CurrentLandingSite.x = " << PositionOfWholeBody.x - CurrentLandingSite.x << " LocalX = " << LocalX << std::endl;
 	npx = CalcPosition(0.0, LocalX, LocalBodyVelocityX);
 	nvx = CalcVelocity(0.0, LocalX, LocalBodyVelocityX);
@@ -304,6 +303,13 @@ Vec3d CRWCLandingSite::CalcNextLandingSite(){
 		if(LZ < -MaxStride)
             LZ = -MaxStride;
 	}
+
+	/*
+	if(LF == true) {
+		if(LZ > 0.0) LZ = 0.0;
+	} else {
+		if(LZ < 0.0) LZ = 0.0;
+	}*/
 
 	/*
 	if(LF == true){

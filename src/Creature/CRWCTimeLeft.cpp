@@ -128,7 +128,7 @@ double CRWCTimeLeft::CalcNextStepTimeLeft(double cx, double cz, double sx, doubl
 
 /*
 //—¼‹rxŠúŠÔ‚Ì—\‘zc‚èŠÔ
-double TimeLeft::CalcDoubleSupportTimeLeft(double cx, double sx, double cvx, double dsdx){
+double CRWCTimeLeft::CalcDoubleSupportTimeLeft(double cx, double sx, double cvx, double dsdx){
   
     double param0 = 1.0;
 	double param1 = 0.2;

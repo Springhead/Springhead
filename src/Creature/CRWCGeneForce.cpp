@@ -1,5 +1,4 @@
 #include ".\crwcgeneforce.h"
-
 #include <Base/TMatrix.h>
 #include <Base/TVector.h>
 
@@ -43,7 +42,7 @@ void CRWCGeneForce::UpdateState(Vec3d pw, Vec3d vw, Vec3d ph, double thc, Vec3d 
 }
 
 /*
-double GeneForce::CalcPitchDelay(void){
+double CRWCGeneForce::CalcPitchDelay(void){
     double vari;
 	double fv;
 
@@ -157,15 +156,14 @@ void CRWCGeneForce::GeneCenterForce(void){
 	 }
 
 	 Fyd = kpA * (pd - PositionOfWholeBody.y) + kvA * (vd - VelocityOfWholeBody.y) + AntiGravityForce.y;
-     Fx = ForwardForce(change.z, Fyd) + AntiGravityForce.x; 
-	 Fz = SideForce(change.x, Fyd) + AntiGravityForce.z;     
+     Fx = ForwardForce(change.z, Fyd) + AntiGravityForce.x;
+	 Fz = SideForce(change.x, Fyd) + AntiGravityForce.z;
 	 vari = max(Fyd, abs(Fx)/miu);
 	 Fy = max(vari, abs(Fz)/miu);
 
 	 //DSTR << "Fyd = " << Fyd << " Fy = " << Fy << std::endl;
 
-	 //DSTR << "Pre 1" << " Fx = " << Fx << " Fy = " << Fy << " Fz = " << Fz << std::endl;
-	 //DSTR << "LocalBodyX = " << LocalBodyX << " LocalBodyZ = " << LocalBodyZ << std::endl;
+	 if(Fy > 1.5*AntiGravityForce.y) Fy = 1.5*AntiGravityForce.y;
 	 
 	 if(LocalBodyX > 0.0){
 		 if(Fx < 0.0) Fx = 0.0;
@@ -179,7 +177,7 @@ void CRWCGeneForce::GeneCenterForce(void){
 		 if(Fz > 0.0) Fz = 0.0;
 	 }
 
-	 //DSTR << "Pre 2" << " Fx = " << Fx << " Fy = " << Fy << " Fz = " << Fz << std::endl;
+	 //DSTR << "Pre" << " Fx = " << Fx << " Fy = " << Fy << " Fz = " << Fz << std::endl;
 
 	 ////—Í‚Ìg‘Ì“I§–ñ//////
 	 if(CurrentFootLength > MaxFootLength-paramFootMargin) {
@@ -189,7 +187,7 @@ void CRWCGeneForce::GeneCenterForce(void){
 	 }
 	 //DSTR << "CurrentFootLength = " << CurrentFootLength << std::endl;
 	 //DSTR << "force = " << Vec3d(Fx,Fy,Fz) << std::endl;
-    
+
 	 //DSTR << "after" << " Fx = " << Fx << " Fy = " << Fy << " Fz = " << Fz << std::endl;
 
 	 vari0 = cos(CurrentDirection)*Fx + sin(CurrentDirection)*Fz;
@@ -199,7 +197,6 @@ void CRWCGeneForce::GeneCenterForce(void){
 
 	 //DSTR << "Fx = " << Fx << " Fy = " << Fy << " Fz = " << Fz << std::endl;
 	 if(DoubleSupportTermFlag) {
-		 DSTR << "path " << std::endl;
 		 CenterObject-> AddForce(Vec3d(0.0, Fy/2, 0.0), CurrentLandingSite);
          CenterObject-> AddForce(Vec3d(0.0, Fy/2, 0.0), NextLandingSite);
 		 //CenterObject->AddTorque(Vec3d(100*change.x, 0.0, 100*change.z));
@@ -241,8 +238,6 @@ void CRWCGeneForce::InitialGeneForce(void){
 	 
 	 DSTR << "force = " << Vec3d(Fx,Fy,Fz) << std::endl;
 }
-
-
 double CRWCGeneForce::CalcLocalX(double xb, double zb, double xt, double zt, double theta){
 
 	double vari0;

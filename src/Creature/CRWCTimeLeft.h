@@ -4,6 +4,7 @@
 
 using namespace Spr;
 
+
 class CRWCTimeLeft
 {
 	Vec3d VelocityOfWholeBody;

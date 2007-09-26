@@ -14,225 +14,8 @@
 namespace Spr{
 IF_OBJECT_IMP(CRWalkingController, CRController);
 
-void CRWalkingController::Init(){
-
-	CRController::Init();
-
-	body = NULL;
-	for (int i=0; i<creature->NBodies(); ++i) {
-		if (!body) {
-			body = DCAST(CRTrunkFootHumanBodyIf, creature->GetBody(i));
-		}
-	}
-
-	CreateUpperBody();
-	AssignFoot();  
-	AssignCenterObject(); 
-	AssignHip();        
-	AssignHead();    
-	InvalidGravity();
-
-	///初期パラメータの設定/////
-	paramVelocityX = 0.7;
-	paramHalfStrideX = 0.2;
-	paramHalfStrideZ = 0.05;
-	amplitude = 0.01;
-	/*
-    paramVelocityX = 1.0; 
-    paramHalfStrideX = 0.3;
-	paramHalfStrideZ = 0.1;         
-	footHeight = 0.05;                                  
-    amplitude = 0.0;
-	*/
-
-	footsize = 0.0619;
-	////////////////////////////
-
-	SetTimeParams();
-	paramVelocityZ = CalcZParamV(paramHalfStrideZ,T0); //Z方向のパラメータの計算
-    AssignInitialLandingSite();
-
-	///大域変数の初期化/////
-	et = 0.0;     
-	TargetDirection = 0.0; 
-	CurrentDirection = 0.0;
-	LF = true;     
-	RF = false;    
-	DSterm = false; 
-	completefall = false; 
-	totalStep = 0;   
-	katoki = 0;      
-	gaitbegin = 30;  
-	forcestep1 = 0;  
-	flag = 0;       
-	forcestep2 = 0;  
-	flag2 = 0;      
-	flag3 = 0;  
-
-	CreateCRWCTimeLeft();
-	CreateCRWCChangeAroundCenter();
-	CreateCRWCLandingSite();
-	CreateCRWCFootForce();
-	CreateCRWCGeneForce();
-
-	DSTR << "BasicCycle = " << T0 << std::endl;
-
-	/// 依存する他のオブジェクトの取得方法（もし必要なら）．
-
-	/// < Body >
-	/*
-	この方法は今となっては使えない．bodyが複数ある状況に対応したため．
-	body = DCAST(CRHingeHumanBodyIf, creature->GetBody());
-	*/
-
-	/// < PHScene >
-	/*
-	phScene = DCAST(PHSceneIf, creature->GetScene());
-	*/
-
-	/// < InternalScene >
-	/*
-	internalScene = creature->GetInternalScene();
-	*/
-
-	/// < ほかのController > 
-	/*
-	for (int i=0; i<creature->NControllers(); i++) {
-		if (!gazeCtrl) {
-			gazeCtrl = DCAST(CRGazeControllerIf, creature->GetController(i))
-		}
-	}
-	*/
-
-	// < ほかのSensor >
-	/*
-	for (int i=0; i<creature->NSensors(); i++) {
-		if (!opticalSensor) {
-			opticalSensor = DCAST(CROpticalSensorIf, creature->GetSensor(i))
-		}
-	}
-	*/
-}
-	
-void CRWalkingController::Step(){
-	CRController::Step();
-	if(totalStep > 200)gait();
-	else stand();
-	test();
-}
-
-void CRWalkingController::SetSpeed(float speed){
-}
-
-void CRWalkingController::SetRotationAngle(float rot){
-}
-
-void CRWalkingController::CreateUpperBody(void){
-
-	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST));
-	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST));
-	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_HEAD));
-}
-
-void CRWalkingController::AssignFoot(void){
-	footleft = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_LEFT_FOOT);
-	footright = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_RIGHT_FOOT);
-}
-
-void CRWalkingController::AssignCenterObject(void){
-	soCenterObject = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST);
-	soCenterObject->SetMass(0.44);
-}
-
-void CRWalkingController::AssignHip(void){
-	soHip = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST);
-	soHip->SetMass(0.17);
-}
-
-void CRWalkingController::AssignHead(void){
-	soHead = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_HEAD);
-	soHead->SetMass(0.178);
-}
-
-void CRWalkingController::InvalidGravity(void){
-}
-
-void CRWalkingController::SetTimeParams(){
-	T0 = CalcBasicCycle();          //歩行の基本周期の計算 
-	timeleft = T0; 
-	TimeStep = phScene->GetTimeStep();  
-}
-
-void CRWalkingController::AssignInitialLandingSite(){
-	////////////////////////あとで変更
-	currentlandingsite = Vec3d(footright->GetFramePosition().x, 0.0, footright->GetFramePosition().z); 	//最初は右足が支持脚 
-    ////////////////////////
-}
-
-void CRWalkingController::CreateCRWCTimeLeft(){
-	tl = new CRWCTimeLeft(TimeStep);   
-	tl->Init();
-	tl->SetParamT0(T0);
-	tl->SetParamCycleRate(minCycleRate, maxDSRate);
-	tl->SetParamMaxFootLength(MaxFootLength);
-	tl->SetParamDoubleSupportLimitRate(DoubleSupportLimitRate);
-	tl->SetParamLimitChange(LimitChange);
-	tl->SetParamVelocityX(paramVelocityX);
-	tl->SetParamVelocityZ(paramVelocityZ);
-	tl->SetParamFootSize(footsize);
-	tl->SetParamMaxFootSpeedY(2.5);
-}
-
-void CRWalkingController::CreateCRWCChangeAroundCenter(){
-	cac = new CRWCChangeAroundCenter(UpperBody);
-	cac->Init();
-}
-
-void CRWalkingController::CreateCRWCLandingSite(){
-	ls = new CRWCLandingSite(currentlandingsite , LF);
-	ls->Init();
-	ls->SetParamLd(paramLdx, paramLdz);
-    ls->SetParamT0(T0);
-	ls->SetParamMaxStride(maxHalfStride);
-	ls->SetParamTc(Tc);
-	ls->SetParamTimeStep(TimeStep);
-	ls->SetParamVelocityX(paramVelocityX);
-	ls->SetParamVelocityZ(paramVelocityZ);
-	ls->SetParamStrideX(paramHalfStrideX);
-	ls->SetParamStrideZ(paramHalfStrideZ);
-	ls->SetParamFootLength(FootLength);
-	ls->SetParamMaxFootSpeeds(MaxFootSpeedFront,MaxFootSpeedSide,MaxFootSpeedBack);
-	ls->SetParamMaxFootAccerelations(MaxFootAccelerationFront,MaxFootAccelerationSide,MaxFootAccelerationBack);
-	ls->SetParamMaxFootLength(MaxFootLength);
-	ls->SetParamMaxRoGround(MaxRoGround);
-	ls->SetParamMaxRoLandingSite(MaxRoLandingSiteFront,MaxRoLandingSiteSide,MaxRoLandingSiteBack);
-}
-
-void CRWalkingController::CreateCRWCFootForce(){
-	ff = new CRWCFootForce(TimeStep, phScene->GetGravity(),LF);    //scene->GetGravity()
-    ff->SetFoots(footleft, footright);
-	ff->SetParamT0(T0);
-	ff->SetParamFootHeight(footHeight);
-	ff->SetParamMaxFootLength(MaxFootLength);
-	ff->SetParamMinFootLength(MinFootLength);
-	ff->SetParamFootSize(footsize);
-	
-	ff->Init();
-}
-
-void CRWalkingController::CreateCRWCGeneForce(){
-	gf = new CRWCGeneForce((-1) * phScene->GetGravity() * TotalMass(UpperBody) , TimeStep);  //scene->GetGravity()
-    gf->Init();
-	gf->SetCenterObject(soCenterObject);    //centerObjectの指定
-	gf->SetParamAmplitude(amplitude);
-	gf->SetParamheight(height);
-	gf->SetParamT0(T0);
-	gf->SetParamT0ds(paramLdx/paramVelocityX);
-	gf->SetParamVX(paramVelocityX);
-	gf->SetParamVZ(paramVelocityZ);
-	gf->SetParamMaxFootLength(MaxFootLength);
-}
-
+/////////////遊脚制御の実験に使用している変数////
+/////////////////////////////////////////////////
 
 //ベクトルobjects内に含まれるソリッドを,一つの剛体と見た重心位置を返す
 Vec3d CRWalkingController::GetCenterOfBlocks(std::vector<PHSolidIf*> objects){
@@ -425,6 +208,91 @@ double CRWalkingController::CalcLocalVZ(double vx, double vz, double theta){
 	return LocalVZ;
 }
 
+void CRWalkingController::CalcCurrentDirection(){
+
+	double angle;
+
+	/*
+	if(abs(CenterVelocity.z) > 0.00001 && abs(CenterVelocity.x) > 0.00001) {
+		if(CenterVelocity.x > 0.0 && CurrentDirection >= -1.49*pi && CurrentDirection <= 1.49*pi) angle = atan(-CenterVelocity.z / CenterVelocity.x);
+		else if(CenterVelocity.x > 0.0 && CurrentDirection > 1.49*pi) angle = atan(-CenterVelocity.z / CenterVelocity.x) + 2*pi;
+		else if(CenterVelocity.x > 0.0 && CurrentDirection < -1.49*pi) angle = atan(-CenterVelocity.z / CenterVelocity.x) - 2*pi;
+		else if(CurrentDirection > 0.0) angle = atan(-CenterVelocity.z / CenterVelocity.x) + pi;
+		else angle = atan(-CenterVelocity.z / CenterVelocity.x) - pi;
+	} else if(abs(CenterVelocity.z) > 0.00001 && abs(CenterVelocity.x) <= 0.00001){
+		angle = (-CenterVelocity.z / abs(CenterVelocity.z))*pi/2;
+	} else angle = 0.0;*/
+
+
+	//angle = TargetDirection;
+
+	if(angle > 2.0*pi) angle = angle - 2.0*pi;
+	if(angle < -2.0*pi) angle = angle + 2.0*pi;
+
+	//DSTR << "CurrentDirection = " << CurrentDirection << std::endl;
+	//CurrentDirection = angle;
+	CurrentDirection = TargetDirection;
+}
+
+void CRWalkingController::CalcTargetAngle(){
+
+	//double paramAngle = 0.3;
+	//double CurrentRot;
+
+	//CurrentRot = (soCenterObject->GetOrientation()).Rotation().y;
+	/*
+	if(flag == 1) {
+		flag = 0;
+		TargetDirection = TargetDirection + 0.25;
+		if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
+	    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
+		DSTR << "TargetDirection = " << TargetDirection << std::endl;
+	} 
+	if(flag2 == 1) {
+		flag2 = 0;
+		TargetDirection = TargetDirection - 0.25;
+		if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
+	    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
+		DSTR << "TargetDirection = " << TargetDirection << std::endl;
+	} 
+	*/
+	
+	if(totalStep < 250) TargetDirection = 0.0;
+	if(totalStep >= 250 && totalStep < 450) TargetDirection = -pi/12.0;
+	if(totalStep >= 450 && totalStep < 650) TargetDirection = -pi/6.0;
+	if(totalStep >= 650 && totalStep < 850) TargetDirection = -pi/4.0;
+	if(totalStep >= 850 && totalStep < 1050) TargetDirection = -5*pi/12.0;
+	if(totalStep >= 1050 && totalStep < 1250) TargetDirection = -pi/2.0;
+	if(totalStep >= 1250 && totalStep < 1450) TargetDirection = -7*pi/12.0; 
+	if(totalStep >= 1450 && totalStep < 1650) TargetDirection = -8*pi/12.0; 
+	if(totalStep >= 1650 && totalStep < 1850) TargetDirection = -9*pi/12.0; 
+	if(totalStep >= 1850 && totalStep < 2050) TargetDirection = -10*pi/12.0; 
+	if(totalStep >= 2050 && totalStep < 2250) TargetDirection = -11*pi/12.0; 
+	if(totalStep >= 2250 && totalStep < 2450) TargetDirection = -pi; 
+	if(totalStep >= 2450 && totalStep < 2650) TargetDirection = -13*pi/12.0; 
+	if(totalStep >= 2650 && totalStep < 2850) TargetDirection = -14*pi/12.0; 
+	if(totalStep >= 2850 && totalStep < 3050) TargetDirection = -15*pi/12.0; 
+	if(totalStep >= 3050 && totalStep < 3250) TargetDirection = -16*pi/12.0; 
+	if(totalStep >= 3250 && totalStep < 3450) TargetDirection = -17*pi/12.0; 
+	if(totalStep >= 3450 && totalStep < 3650) TargetDirection = -18.0*pi/12.0; 
+	if(totalStep >= 3650 && totalStep < 3850) TargetDirection = -19*pi/12.0; 
+	if(totalStep >= 3850 && totalStep < 4050) TargetDirection = -20*pi/12.0; 
+	if(totalStep >= 4050 && totalStep < 4250) TargetDirection = -21*pi/12.0; 
+	if(totalStep >= 4250 && totalStep < 4450) TargetDirection = -22*pi/12.0; 
+	if(totalStep >= 4450 && totalStep < 4650) TargetDirection = -23.0*pi/12.0; 
+	if(totalStep >= 4650 && totalStep < 4850) TargetDirection = -24*pi/12.0; 
+	if(totalStep >= 4850 && totalStep < 5050) TargetDirection = -25*pi/12.0; 
+	if(totalStep >= 5050 && totalStep < 5250) TargetDirection = -26*pi/12.0; 
+	if(totalStep >= 5250 && totalStep < 5450) TargetDirection = -27*pi/12.0; 
+	//TargetDirection = CurrentRot + 0.1;
+	//TargetDirection = 0.0;
+	//TargetDirection = 0.0;
+	//DSTR << "TargetDirection = " << TargetDirection << std::endl;
+	//if(abs(TargetDirection - ((soCenterObject->GetOrientation()).Rotation()).y) > paramAngle)
+	if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
+    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
+}
+
 //歩行中に速度を変える
 void CRWalkingController::VelocityXChange(double vx){
 
@@ -486,56 +354,10 @@ void CRWalkingController::AmplitudeChange(double amp){
 	gf->SetParamAmplitude(amplitude);
 }
 
-void CRWalkingController::CalcCurrentDirection(){
-
-	double angle;
-
-	if(abs(CenterVelocity.z) > 0.00001 && abs(CenterVelocity.x) > 0.00001) {
-		if(CenterVelocity.x > 0.0 && CurrentDirection >= -1.49*pi && CurrentDirection <= 1.49*pi) angle = atan(-CenterVelocity.z / CenterVelocity.x);
-		else if(CenterVelocity.x > 0.0 && CurrentDirection > 1.49*pi) angle = atan(-CenterVelocity.z / CenterVelocity.x) + 2*pi;
-		else if(CenterVelocity.x > 0.0 && CurrentDirection < -1.49*pi) angle = atan(-CenterVelocity.z / CenterVelocity.x) - 2*pi;
-		else if(CurrentDirection > 0.0) angle = atan(-CenterVelocity.z / CenterVelocity.x) + pi;
-		else angle = atan(-CenterVelocity.z / CenterVelocity.x) - pi;
-	} else if(abs(CenterVelocity.z) > 0.00001 && abs(CenterVelocity.x) <= 0.00001){
-		angle = (-CenterVelocity.z / abs(CenterVelocity.z))*pi/2;
-	} else angle = 0.0;
-
-	//angle = TargetDirection;
-
-	if(angle > 2.0*pi) angle = angle - 2.0*pi;
-	if(angle < -2.0*pi) angle = angle + 2.0*pi;
-
-	//DSTR << "CurrentDirection = " << CurrentDirection << std::endl;
-	//CurrentDirection = angle;
-	CurrentDirection = TargetDirection;
-}
-
-void CRWalkingController::CalcTargetAngle(){
-
-	/*
-	if(flag == 1) {
-		flag = 0;
-		TargetDirection = TargetDirection + 0.25;
-		if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
-	    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
-		DSTR << "TargetDirection = " << TargetDirection << std::endl;
-	} 
-	if(flag2 == 1) {
-		flag2 = 0;
-		TargetDirection = TargetDirection - 0.25;
-		if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
-	    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
-		DSTR << "TargetDirection = " << TargetDirection << std::endl;
-	} 
-	*/
-	/*if(totalStep < 200) TargetDirection = 0.0;
-	if(totalStep >= 200 && totalStep < 600) TargetDirection = pi/6.0;
-	if(totalStep >= 600 && totalStep < 1000) TargetDirection = pi/3.0;
-	if(totalStep >= 1000) TargetDirection = pi/2.2;*/
-	TargetDirection = 0.0;
-	//DSTR << "TargetDirection = " << TargetDirection << std::endl;
-	if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
-    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
+//上げる足の高さを変える
+void CRWalkingController::FootHeightChange(double fh){
+	footHeight = fh;
+	ff->SetParamFootHeight(fh);
 }
 
 //現在の支持脚が維持できるか判定する
@@ -578,11 +400,12 @@ bool CRWalkingController::CalcSustainable(void){
 	else return true;
 }
 
+
 //身体的制約によって発生する力をオブジェクトに与える
 void CRWalkingController::ConstraintForce(void){
  
 	double kp = 3.0;
-	double kv = 4.0;
+	double kv = 1.0;
 	double param0 = 50.0;
 	//double param1 = 3.0;
 	//double MaxConstraintVelocity = 25.0;
@@ -698,6 +521,7 @@ void CRWalkingController::ConstraintForce(void){
 
 	//脚の長さがMaxFootLengthを超えた場合に腰にかける力
 	if(LengthLeft > MaxFootLength) {
+		DSTR << "path " << std::endl;
         CrossVelocityLeft = VelocityHipFootLeft.dot(HipToLeftFoot);
 		ForceLeft = -kp*((MaxFootLength/LengthLeft)*HipToLeftFoot - HipToLeftFoot) - kv*((-CrossVelocityLeft/LengthLeft)*HipToLeftFoot.unit());
 		soHip->AddForce(ForceLeft);
@@ -751,7 +575,7 @@ void CRWalkingController::ConstraintForce(void){
 //次の着地点が不適切な場合, 腰の位置が一定値を下回った場合, 重心の加速度が一定値を超えた場合, 
 //上体の角度がMaxRoGroundを超えた場合, 腰に対する頭の速度, 脚の速度が一定値を超えた場合
 //歩行継続を不可能とする
-void CRWalkingController::CompleteFall(){
+void CRWalkingController::completeFall(){
 
 	double param0 = 0.02;   //quit reason1に関わるパラメータ
 	double param1 = 1.3;    //quit reason1に関わるパラメータ
@@ -806,6 +630,224 @@ void CRWalkingController::CompleteFall(){
 	}
 	else completefall = false;
 	//DSTR << "hipPosition = " << solid1->GetCenterPosition().y << std::endl;
+}
+
+//歩行継続不可となった場合に体のパーツにかける力
+void CRWalkingController::fallForce(){
+
+	double kp = 3.0;
+	double kv = 1.8;
+	double param0 = 50.0;
+	double param1 = 3.0;
+	double LengthLeft;
+	double LengthRight;
+	double CrossVelocityLeft;
+	double CrossVelocityRight;
+	double HousenVelocityFootLeft;
+    double HousenVelocityFootRight;
+	double HousenVelocityBodyLeft;
+	double HousenVelocityBodyRight;
+	Vec3d ForceLeft = Vec3d(0.0,0.0,0.0);
+	Vec3d ForceRight = Vec3d(0.0,0.0,0.0);
+	Vec3d HipToLeftFoot;
+	Vec3d HipToRightFoot;
+	Vec3d VelocityHipLeft;
+	Vec3d VelocityHipRight;
+	Vec3d Bvec;        //上体の姿勢の単位ベクトル
+	Vec3d Leftvec;        //腰と左脚を結んだベクトル
+	Vec3d Rightvec;       //腰と右脚を結んだベクトル
+	Vec3d dvec = Vec3d(0.0, -1.0 , 0.0);
+	Vec3d RoLeft;         //左足と上体の間の角度
+	Vec3d RoRight;         //右足と上体の間の角度
+	Vec3d HousenFootLeft = Vec3d(0.0,0.0,0.0);
+	Vec3d HousenBodyLeft = Vec3d(0.0,0.0,0.0);
+	Vec3d HousenFootRight = Vec3d(0.0,0.0,0.0);
+	Vec3d HousenBodyRight = Vec3d(0.0,0.0,0.0);
+	Vec3d ForceFootLeft;
+	Vec3d ForceBodyLeft;
+	Vec3d ForceFootRight;
+	Vec3d ForceBodyRight;
+	Vec3d VelocityHipFootLeft = footleft->GetVelocity() - soHip->GetVelocity();
+	Vec3d VelocityHipFootRight = footright->GetVelocity() - soHip->GetVelocity();
+	Vec3d VelocityHipBody = soHead->GetVelocity() - soHip->GetVelocity();
+	Vec3d Pd;
+	Quaterniond qua;
+
+
+	
+	Bvec = soHip->GetCenterPosition() - soHead->GetCenterPosition();
+	Leftvec = Vec3d(footleft->GetCenterPosition().x - soHip->GetCenterPosition().x , - soHip->GetCenterPosition().y , footleft->GetCenterPosition().z - soHip->GetCenterPosition().z);
+    Rightvec = Vec3d(footright->GetCenterPosition().x - soHip->GetCenterPosition().x , - soHip->GetCenterPosition().y , footright->GetCenterPosition().z - soHip->GetCenterPosition().z);
+
+	qua.RotationArc(Bvec, Leftvec);
+	RoLeft = qua.Rotation();
+	qua.RotationArc(Bvec, Rightvec);
+	RoRight = qua.Rotation();
+
+	if(Bvec.dot(Leftvec) != 0.0){
+		HousenFootLeft = (Leftvec - (Leftvec.dot(Leftvec)/Bvec.dot(Leftvec)) * Bvec).unit();
+		if(HousenFootLeft.dot(Bvec) < 0.0) HousenFootLeft = -HousenFootLeft;
+		HousenBodyLeft = (Bvec - (Bvec.dot(Bvec)/Bvec.dot(Leftvec)) * Leftvec).unit();
+        if(HousenBodyLeft.dot(Leftvec) > 0.0) HousenBodyLeft = -HousenBodyLeft;
+	}
+	
+	if(Bvec.dot(Rightvec) != 0.0){
+		HousenFootRight = (Rightvec - (Rightvec.dot(Rightvec)/Bvec.dot(Rightvec)) * Bvec).unit();
+		if(HousenFootRight.dot(Bvec) < 0.0) HousenFootRight = -HousenFootRight;
+		HousenBodyRight = (Bvec - (Bvec.dot(Bvec)/Bvec.dot(Rightvec)) * Rightvec).unit();
+        if(HousenBodyRight.dot(Rightvec) > 0.0) HousenBodyRight = -HousenBodyRight;
+	}
+
+	if(soHip->GetCenterPosition().y < 0.3){
+		soHead->AddForce(-1.0*soHead->GetVelocity());
+	    soCenterObject->AddForce(-1.0*soCenterObject->GetVelocity());
+	    soHip->AddForce(-1.0*soHip->GetVelocity());
+	    soHip->AddTorque(2*(RoLeft+RoRight));
+	}
+   
+	/*
+	ForceFootLeft = (param0*RoLeft.norm()) * HousenFootLeft;
+	ForceBodyLeft = (param0*RoLeft.norm()) * (Leftvec.norm()/Bvec.norm()) * HousenBodyLeft;
+
+	solid3->AddForce(ForceBodyLeft);
+	solid1->AddForce(-ForceBodyLeft);
+	solid1->AddForce(-ForceFootLeft);
+	footleft->AddForce(ForceFootLeft);
+	
+	ForceFootRight = (param0*RoRight.norm()) * HousenFootRight;
+	ForceBodyRight = (param0*RoRight.norm()) * (Rightvec.norm()/Bvec.norm()) * HousenBodyRight;
+		
+	solid3->AddForce(ForceBodyRight);
+	solid1->AddForce(-ForceBodyRight);
+	solid1->AddForce(-ForceFootRight);
+	footright->AddForce(ForceFootRight);
+	*/
+
+	LengthLeft = (soHip->GetCenterPosition() - footleft->GetCenterPosition()).norm();
+	LengthRight = (soHip->GetCenterPosition() - footright->GetCenterPosition()).norm();
+	HipToLeftFoot = footleft->GetCenterPosition() - soHip->GetCenterPosition();
+	HipToRightFoot = footright->GetCenterPosition() - soHip->GetCenterPosition();
+	VelocityHipLeft = footleft->GetVelocity() - soHip->GetVelocity();
+	VelocityHipRight = footright->GetVelocity() - soHip->GetVelocity();
+	
+	HousenVelocityFootLeft = VelocityHipFootLeft.dot(HousenFootLeft);
+    HousenVelocityFootRight = VelocityHipFootRight.dot(HousenFootRight);
+	HousenVelocityBodyLeft = VelocityHipBody.dot(HousenBodyLeft);
+    HousenVelocityBodyRight = VelocityHipBody.dot(HousenBodyRight);
+	
+
+	/*
+	ForceFootLeft = -(param1*HousenVelocityFootLeft) * HousenFootLeft;
+	ForceBodyLeft = -(param1*HousenVelocityFootLeft) * (Leftvec.norm()/Bvec.norm()) * HousenBodyLeft;
+    solid3->AddForce(ForceBodyLeft);
+	solid1->AddForce(-ForceBodyLeft);
+	solid1->AddForce(-ForceFootLeft);
+	footleft->AddForce(ForceFootLeft);
+
+	ForceFootRight = -(param1*HousenVelocityFootRight) * HousenFootRight;
+	ForceBodyRight = -(param1*HousenVelocityFootRight) * (Rightvec.norm()/Bvec.norm()) * HousenBodyRight;
+	solid3->AddForce(ForceBodyRight);
+	solid1->AddForce(-ForceBodyRight);
+	solid1->AddForce(-ForceFootRight);
+	footright->AddForce(ForceFootRight);
+	
+
+	ForceFootLeft = -(param1*HousenVelocityBodyLeft) * HousenFootLeft;
+    ForceBodyLeft = -(param1*HousenVelocityBodyLeft) * (Leftvec.norm()/Bvec.norm()) * HousenBodyLeft;
+	solid3->AddForce(ForceBodyLeft);
+	solid1->AddForce(-ForceBodyLeft);
+	solid1->AddForce(-ForceFootLeft);
+	footleft->AddForce(ForceFootLeft);
+	
+
+	ForceFootRight = -(param1*HousenVelocityBodyRight) * HousenFootLeft;
+    ForceBodyRight = -(param1*HousenVelocityBodyRight) * (Rightvec.norm()/Bvec.norm()) * HousenBodyRight;
+	solid3->AddForce(ForceBodyRight);
+	solid1->AddForce(-ForceBodyRight);
+	solid1->AddForce(-ForceFootRight);
+	footright->AddForce(ForceFootRight);
+	*/
+
+	Pd = FootLength*Bvec.unit() + soHip->GetCenterPosition();
+
+	footleft->AddForce(kp*(Pd - footleft->GetCenterPosition()) - kv*footleft->GetVelocity());
+	footright->AddForce(kp*(Pd - footright->GetCenterPosition()) - kv*footright->GetVelocity());
+
+	/*
+	if(LengthLeft > MaxFootLength){
+        CrossVelocityLeft = VelocityHipLeft.dot(HipToLeftFoot);
+		ForceLeft = -kp*((MaxFootLength/LengthLeft)*HipToLeftFoot - HipToLeftFoot) - kv*((-CrossVelocityLeft/LengthLeft)*HipToLeftFoot.unit());
+		soHip->AddForce(ForceLeft);
+		footleft->AddForce(-ForceLeft);
+	}
+
+	if(LengthRight > MaxFootLength) {
+        CrossVelocityRight = VelocityHipRight.dot(HipToRightFoot);
+		ForceRight = -kp*((MaxFootLength/LengthRight)*HipToRightFoot - HipToRightFoot) - kv*((-CrossVelocityRight/LengthRight)*HipToRightFoot.unit());
+		soHip->AddForce(ForceRight);
+		footright->AddForce(-ForceRight);
+	}
+
+	if(LengthLeft < MinFootLength) {
+        CrossVelocityLeft = VelocityHipLeft.dot(HipToLeftFoot);
+		ForceLeft = -kp*((MinFootLength/LengthLeft)*HipToLeftFoot - HipToLeftFoot) + kv*((CrossVelocityLeft/LengthLeft)*HipToLeftFoot.unit());
+		soHip->AddForce(ForceLeft);
+		footleft->AddForce(-ForceLeft);
+	}
+
+	if(LengthRight < MinFootLength) {
+        CrossVelocityRight = VelocityHipRight.dot(HipToRightFoot);
+		ForceRight = -kp*((MinFootLength/LengthRight)*HipToRightFoot - HipToRightFoot) + kv*((CrossVelocityRight/LengthRight)*HipToRightFoot.unit());
+		soHip->AddForce(ForceRight);
+		footright->AddForce(-ForceRight);
+	}
+
+	    //脚と上体の角度がMaxRoConstraintを超えた場合に脚と腰にかける力
+	if(RoLeft.norm() > MaxRoConstraint) {
+		ForceFootLeft = (param0*RoLeft.norm()-MaxRoConstraint) * HousenFootLeft;
+		ForceBodyLeft = (param0*RoLeft.norm()-MaxRoConstraint) * (Leftvec.norm()/Bvec.norm()) * HousenBodyLeft;
+
+		soHead->AddForce(ForceBodyLeft);
+	    soHip->AddForce(-ForceBodyLeft);
+		soHip->AddForce(-ForceFootLeft);
+		footleft->AddForce(ForceFootLeft);
+		}
+
+	//脚と上体の角度がMaxRoConstraintを超えた場合に脚と腰にかける力
+	if(RoRight.norm() > MaxRoConstraint) {
+		ForceFootRight = (param0*RoRight.norm()-MaxRoConstraint) * HousenFootRight;
+		ForceBodyRight = (param0*RoRight.norm()-MaxRoConstraint) * (Rightvec.norm()/Bvec.norm()) * HousenBodyRight;
+		
+		soHead->AddForce(ForceBodyRight);
+	    soHip->AddForce(-ForceBodyRight); 
+		soHip->AddForce(-ForceFootRight);
+		footright->AddForce(ForceFootRight);
+		}
+		*/
+}
+
+/*
+void setLight() {
+	GRLightDesc light0, light1;
+	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
+	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	render->PushLight(light0);
+	render->PushLight(light1);
+}
+
+void display(){
+	render->ClearBuffer();
+	render->Drawscene(scene);
+	render->EndScene();
+	glutSwapBuffers();
+}
+*/
+
+double CRWalkingController::square(double a){
+	double square;
+	square = a*a;
+
+	return square;
 }
 
 //changeの計算
@@ -956,7 +998,6 @@ void CRWalkingController::gait(void){
 	
 
 	change = CalcChange();                   //changeの計算
-	//change = Vec3d(0,0,0);
 	timeleft = CalcTimeLeft();               //timeleftの計算
 	if(timeleft < 0.0) timeleft = 0.0;       //timeleftがマイナスとなった場合修正
 	nextlandingsite = CalcNextLandingSite(); //目標着地点の計算
@@ -971,8 +1012,8 @@ void CRWalkingController::gait(void){
 
     ConstraintForce();  //構造的制約により上半身に掛かる力
 
-	DSTR << "CenterVelocity = " << CenterVelocity << std::endl;
-	DSTR << "PositionOfUpperBody = " << PositionOfUpperBody << std::endl;
+	//DSTR << "CenterVelocity = " << CenterVelocity << std::endl;
+	//DSTR << "PositionOfUpperBody = " << PositionOfUpperBody << std::endl;
 	//DSTR << "timeleft = " << timeleft << std::endl;
 	//DSTR << "change = " << change << std::endl;
     //DSTR << "timehalfcycle = " << timehalfcycle << std::endl;
@@ -982,17 +1023,17 @@ void CRWalkingController::gait(void){
 	//DSTR << soHead->GetCenterPosition() << std::endl;
 	//DSTR << "geneforce = " << gf->GetCenterForce() << std::endl;
 	//DSTR << "totalStep = " << totalStep << std::endl;
-	//DSTR << "footleft pos = " << footleft->GetCenterPosition() << " footright pos = " << footright->GetCenterPosition() << std::endl;
-	//DSTR << "LF = " << LF << " RF = " << RF << std::endl;
+	//DSTR << "TargetDirection = " << TargetDirection << std::endl;
+	
 
 ///////途中で撃力を加える//////////
-	if(totalStep > 200000){
+	if(totalStep > 700){
 		if(forcestep1 < 5) {
 			//solid1->AddForce(Vec3d(10.0 ,0.0 ,0.0));
 			//solid2->AddForce(Vec3d(400.0 ,0.0 ,0.0));
-			//soHead->AddForce(Vec3d(-85.0 ,0.0 ,0.0));
-			//soHip->AddForce(Vec3d(-50.0, 0.0, 0.0));
-			//soCenterObject->AddForce(Vec3d(100.0,0.0,0.0));
+			//soHead->AddForce(Vec3d(0.0 ,70.0 ,0.0));
+			//soHip->AddForce(Vec3d(10.0, 0.0, -50.0));
+			//soCenterObject->AddTorque(Vec3d(0.0,1500.0,0.0));
 			DSTR << " " << std::endl;
 			DSTR << " " << std::endl;
 			DSTR << " " << std::endl;
@@ -1017,7 +1058,19 @@ void CRWalkingController::gait(void){
 ///////////////////////////////////
 
 	//if(totalStep < 50 && totalStep > 35) solid2->AddForce(Vec3d(20,0.0,0.0) , PositionOfWholeBody);  //開始時の動きを良くするための力 いずれ直していく必要がある
-	//soCenterObject->AddTorque(Vec3d(0.0, (-10.0) * soCenterObject->GetAngularVelocity().y ,0.0)); //激力が加わった時にy方向に回転しないためのトルク
+	double vari2;
+
+	Quaterniond Quat0;
+	Quaterniond Quat1;
+
+	Quat0 = (footright->GetPose().Ori() + footleft->GetPose().Ori())/2.0;
+	Quat1 = soCenterObject->GetPose().Ori();
+	vari2 = (soCenterObject->GetAngularVelocity()).y;
+
+	Quaterniond dQuat = Quat0 * Quat1.Inv();
+    //Vec3f torque = springOri * dQuat.Rotation() + damperOri * dAngV;
+
+	soCenterObject->AddTorque(Vec3d(0.0, 5*(dQuat.Rotation().y) + (-4.0)*vari2 ,0.0)); //激力が加わった時にy方向に回転しないためのトルク
 
 	LocalBodyVelocityX = CalcLocalVX(CenterVelocity.x, CenterVelocity.z, CurrentDirection);
 	LocalBodyVelocityZ = CalcLocalVZ(CenterVelocity.x, CenterVelocity.z, CurrentDirection);
@@ -1026,7 +1079,7 @@ void CRWalkingController::gait(void){
 	if(timeleft == 0.0 && DSterm == false){
 		
 		//DSTR << "CenterVelocity = " << CenterVelocity << std::endl;
-		DSTR << "step = " << CalcLocalX(currentlandingsite.x, currentlandingsite.z, nextlandingsite.x, nextlandingsite.z, CurrentDirection) << std::endl;
+		DSTR << "step = " << CalcLocalX(currentlandingsite.x, currentlandingsite.z, nextlandingsite.x, currentlandingsite.z, CurrentDirection) << std::endl;
         DSTR << "LocalVX begin = " << LocalBodyVelocityX << std::endl;
 
 		SingleSupportEndX = PositionOfUpperBody.x;
@@ -1079,6 +1132,19 @@ void CRWalkingController::gait(void){
 		timeleft = T0;
 		currentlandingsite = nextlandingsite;
 
+		if(nextSpeed > 0.0){
+			WCSetSpeed(nextSpeed);
+			nextSpeed = -1;
+		}
+		if(stop == true){
+			WCStop();
+			stop = false;
+		}
+		if(reverse == true){
+			WCReverse();
+			reverse = false;
+		}
+
 		if(LF == true) DSTR << "RIGHT " << std::endl;
 		else DSTR << "LEFT " << std::endl;
 
@@ -1092,22 +1158,319 @@ void CRWalkingController::gait(void){
 	previousPZ = PositionOfUpperBody.z;
 	PreviousV = CenterVelocity;
 
-	CompleteFall();
+	completeFall();
 	totalStep = totalStep + 1;
 	//DSTR << "force = " << soCenterObject->GetForce() << std::endl;
 }
 
-void CRWalkingController::test(){
-		//soCenterObject->AddTorque((-100)*soCenterObject->GetAngularVelocity()); //激力が加わった時にy方向に回転しないためのトルク
+
+/*
+void standToWalk()
+{}
+*/
+
+void CRWalkingController::func(){
+	totalStep = totalStep + 1;
+
+	//if(DSterm == true) DSTR << "force solid1 = " << solid1->GetForce() << " force solid2 = " << solid2->GetForce() << "force solid3 = " << solid3->GetForce() << std::endl;
+	//DSTR << "Position solid1 = " << solid1->GetCenterPosition().y << std::endl;
+	if(completefall == false)gait();
+	else fallForce();
+}
+
+void CRWalkingController::Init(){
+
+	CRController::Init();
+
+	body = NULL;
+	for (int i=0; i<creature->NBodies(); ++i) {
+		if (!body) {
+			body = DCAST(CRTrunkFootHumanBodyIf, creature->GetBody(i));
+		}
+	}
+
+	CreateUpperBody();
+	AssignFoot();  
+	AssignCenterObject(); 
+	AssignHip();        
+	AssignHead();    
+
+	///初期パラメータの設定/////
+    paramVelocityX = 0.8; 
+    paramHalfStrideX = 0.2;
+	paramHalfStrideZ = 0.1;         
+	footHeight = 0.05;                                  
+    amplitude = 0.0;   
+
+	footsize = 0.0619;
+	////////////////////////////
+
+	SetTimeParams();
+	paramVelocityZ = CalcZParamV(paramHalfStrideZ,T0); //Z方向のパラメータの計算
+    AssignInitialLandingSite();
+
+	///大域変数の初期化/////
+	et = 0.0;     
+	TargetDirection = pi/2; 
+	CurrentDirection = pi/2;
+	LF = true;     
+	RF = false;    
+	DSterm = false; 
+	completefall = false; 
+	totalStep = 0;   
+	katoki = 0;      
+	gaitbegin = 30;  
+	forcestep1 = 0;  
+	flag = 0;       
+	forcestep2 = 0;  
+	flag2 = 0;      
+	flag3 = 0;   
+
+	nextSpeed = -1;
+	reverse = false;
+	stop = false;
+
+	Xs = 0.0;//////////////////////////////////////////////////////////////////////
+	Zs = 0.0;//////////////////////////////////////////////////////////////////////
+
+	CreateCRWCTimeLeft();
+	CreateCRWCChangeAroundCenter();
+	CreateCRWCLandingSite();
+	CreateCRWCFootForce();
+	CreateCRWCGeneForce();
+
+	DSTR << "BasicCycle = " << T0 << std::endl;
+
+	/// 依存する他のオブジェクトの取得方法（もし必要なら）．
+
+	/// < Body >
+	/*
+	この方法は今となっては使えない．bodyが複数ある状況に対応したため．
+	body = DCAST(CRHingeHumanBodyIf, creature->GetBody());
+	*/
+
+	/// < PHScene >
+	/*
+	phScene = DCAST(PHSceneIf, creature->GetScene());
+	*/
+
+	/// < InternalScene >
+	/*
+	internalScene = creature->GetInternalScene();
+	*/
+
+	/// < ほかのController > 
+	/*
+	for (int i=0; i<creature->NControllers(); i++) {
+		if (!gazeCtrl) {
+			gazeCtrl = DCAST(CRGazeControllerIf, creature->GetController(i))
+		}
+	}
+	*/
+
+	// < ほかのSensor >
+	/*
+	for (int i=0; i<creature->NSensors(); i++) {
+		if (!opticalSensor) {
+			opticalSensor = DCAST(CROpticalSensorIf, creature->GetSensor(i))
+		}
+	}
+	*/
+}
+
+	
+void CRWalkingController::Step(){
+	totalStep = totalStep + 1;
+	CRController::Step();
+
+	if(totalStep > 200 && completefall == false)gait();
+	else if(completefall == false) stand();
+	else fallForce();
+
+	if(totalStep == 400) SetSpeed(0.3);
+	if(totalStep == 600) SetSpeed(0.2);
+	//if(totalStep == 800) Reverse();
+	/*if(totalStep == 800) SetSpeed(0.3);
+	if(totalStep == 1000) SetSpeed(0.1);
+	if(totalStep == 1200) Stop();*/
+}
+
+void CRWalkingController::CreateUpperBody(void){
+	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST));
+	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST));
+	UpperBody.push_back(body->GetSolid(CRTrunkFootHumanBodyDesc::SO_HEAD));
+}
+
+void CRWalkingController::AssignFoot(void){
+	footleft = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_LEFT_FOOT);
+	footright = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_RIGHT_FOOT);
+}
+
+void CRWalkingController::AssignCenterObject(void){
+	soCenterObject = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST);
+	//soCenterObject->SetMass(0.44);
+}
+
+void CRWalkingController::AssignHip(void){
+	soHip = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST);
+	//soHip->SetMass(0.17);
+}
+
+void CRWalkingController::AssignHead(void){
+	soHead = body->GetSolid(CRTrunkFootHumanBodyDesc::SO_HEAD);
+}
+
+void CRWalkingController::SetTimeParams(){
+	T0 = CalcBasicCycle();          //歩行の基本周期の計算 
+	timeleft = T0; 
+	TimeStep = phScene->GetTimeStep();  
+}
+
+void CRWalkingController::AssignInitialLandingSite(){
+	////////////////////////あとで変更
+	currentlandingsite = Vec3d(footright->GetFramePosition().x, 0.0, footright->GetFramePosition().z); 	//最初は右足が支持脚 
+    ////////////////////////
+}
+
+void CRWalkingController::CreateCRWCTimeLeft(){
+	tl = new CRWCTimeLeft(TimeStep);   
+	tl->Init();
+	tl->SetParamT0(T0);
+	tl->SetParamCycleRate(minCycleRate, maxDSRate);
+	tl->SetParamMaxFootLength(MaxFootLength);
+	tl->SetParamDoubleSupportLimitRate(DoubleSupportLimitRate);
+	tl->SetParamLimitChange(LimitChange);
+	tl->SetParamVelocityX(paramVelocityX);
+	tl->SetParamVelocityZ(paramVelocityZ);
+	tl->SetParamFootSize(footsize);
+	tl->SetParamMaxFootSpeedY(2.5);
+}
+
+void CRWalkingController::CreateCRWCChangeAroundCenter(){
+	cac = new CRWCChangeAroundCenter(UpperBody);
+	cac->Init();
+}
+
+void CRWalkingController::CreateCRWCLandingSite(){
+	ls = new CRWCLandingSite(currentlandingsite , LF);
+	ls->Init();
+	ls->SetParamLd(paramLdx, paramLdz);
+    ls->SetParamT0(T0);
+	ls->SetParamMaxStride(maxHalfStride);
+	ls->SetParamTc(Tc);
+	ls->SetParamTimeStep(TimeStep);
+	ls->SetParamVelocityX(paramVelocityX);
+	ls->SetParamVelocityZ(paramVelocityZ);
+	ls->SetParamStrideX(paramHalfStrideX);
+	ls->SetParamStrideZ(paramHalfStrideZ);
+	ls->SetParamFootLength(FootLength);
+	ls->SetParamMaxFootSpeeds(MaxFootSpeedFront,MaxFootSpeedSide,MaxFootSpeedBack);
+	ls->SetParamMaxFootAccerelations(MaxFootAccelerationFront,MaxFootAccelerationSide,MaxFootAccelerationBack);
+	ls->SetParamMaxFootLength(MaxFootLength);
+	ls->SetParamMaxRoGround(MaxRoGround);
+	ls->SetParamMaxRoLandingSite(MaxRoLandingSiteFront,MaxRoLandingSiteSide,MaxRoLandingSiteBack);
+}
+
+void CRWalkingController::CreateCRWCFootForce(){
+	ff = new CRWCFootForce(TimeStep, phScene->GetGravity(),LF);    //scene->GetGravity()
+    ff->Init();
+    ff->SetFoots(footleft, footright);
+	ff->SetParamT0(T0);
+	ff->SetParamFootHeight(footHeight);
+	ff->SetParamMaxFootLength(MaxFootLength);
+	ff->SetParamMinFootLength(MinFootLength);
+	ff->SetParamFootSize(footsize);
+}
+
+void CRWalkingController::CreateCRWCGeneForce(){
+	gf = new CRWCGeneForce((-1) * phScene->GetGravity() * TotalMass(UpperBody) , TimeStep);  //scene->GetGravity()
+    gf->Init();
+	gf->SetCenterObject(soCenterObject);    //centerObjectの指定
+	gf->SetParamAmplitude(amplitude);
+	gf->SetParamheight(height);
+	gf->SetParamT0(T0);
+	gf->SetParamT0ds(paramLdx/paramVelocityX);
+	gf->SetParamVX(paramVelocityX);
+	gf->SetParamVZ(paramVelocityZ);
+	gf->SetParamMaxFootLength(MaxFootLength);
 }
 
 void CRWalkingController::stand(){
 	soCenterObject->AddForce(-1*phScene->GetGravity()*TotalMass(UpperBody));
-	soCenterObject->AddForce(10*(Vec3d(0,height,0) - GetCenterOfBlocks(UpperBody)) - 5*CalcCenterVelocity(UpperBody));
-	totalStep = totalStep + 1;
+	soCenterObject->AddForce(10*(Vec3d(Xs,height,Zs) - GetCenterOfBlocks(UpperBody)) - 5*CalcCenterVelocity(UpperBody));
+}
 
-	//footleft->AddForce(2*(Vec3d(-0.1,0.1,0)-footleft->GetCenterPosition()) - 0.8*footleft->GetVelocity());
-	//footright->AddForce(2*(Vec3d(0.1,0.1,0)-footright->GetCenterPosition()) - 0.8*footright->GetVelocity());
+void CRWalkingController::SetSpeed(double v){
+	if(v < 0) {
+		DSTR << "SetSpeed;;Input Positive Value" << std::endl;
+		exit(1);
+	} else if(v > 1.2){
+		DSTR << "SetSpeed;;Too Fast Speed Parametor" << std::endl;
+		exit(1);
+	}
+
+	nextSpeed = v;
+}
+
+void CRWalkingController::WCSetSpeed(double v){
+
+	if(v > 0.8){
+		HalfStrideXChange(0.18*v);
+		VelocityXChange(v);
+    	AmplitudeChange(0.01);
+		FootHeightChange(0.06*v);
+		if(v < 0.7) VelocityZChange(0.3*v);
+		else VelocityZChange(0.21);
+    } else if(v > 0.4){
+		HalfStrideXChange(0.18*v);
+		VelocityXChange(v);
+    	AmplitudeChange(v*0.02);
+		FootHeightChange(0.06*v);
+		if(v < 0.7) VelocityZChange(0.3*v);
+		else VelocityZChange(0.21);
+	} else {
+		HalfStrideXChange(0.15*v);
+		VelocityXChange(v);
+    	AmplitudeChange(v*0.01);
+		FootHeightChange(0.06*v);
+		VelocityZChange(0.4*v);
+	}
+}
+
+void CRWalkingController::Stop(){
+	stop = true;
+}
+
+void CRWalkingController::WCStop(){
+    HalfStrideXChange(0.0001);
+	VelocityXChange(0.0004);
+	AmplitudeChange(0.0);
+	ff->SetParamFootHeight(0.00005);
+	VelocityZChange(0.07);
+}
+
+void CRWalkingController::Reverse(void){
+	reverse = true;
+}
+
+void CRWalkingController::WCReverse(void){
+	ls->SetParamStrideX(-1.0);
+	ls->SetParamVelocityX(-0.35);
+	AmplitudeChange(0.005);
+}
+
+void CRWalkingController::SetRotationAngle(double r){
+	TargetDirection = (soCenterObject->GetOrientation()).Rotation().y + r + pi/2;
+	if(TargetDirection > 2.0*pi) TargetDirection = TargetDirection - 2.0*pi;
+    if(TargetDirection < -2.0*pi) TargetDirection = TargetDirection + 2.0*pi;
+}
+
+void CRWalkingController::SetRotationWorldCoordinate(double r){
+	if(r > 2*pi || r < -2*pi){
+		DSTR << "SetRotationWorldCoordinate;;Inadequate Input" << std::endl;
+		exit(1);
+	}
+	TargetDirection = r + pi/2;
 }
 
 }

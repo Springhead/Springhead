@@ -1,7 +1,7 @@
 #pragma once
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <Physics/PHScene.h>
-#include ".\crwctimeleft.h"
+
 
 using namespace Spr;
 
@@ -75,8 +75,8 @@ class CRWCLandingSite
 	double MaxRoLandingSiteSide;
 	double MaxRoLandingSiteBack;
 
-    double CalcPosition(double landingsite, double cx, double cv);
-	double CalcVelocity(double landingsite, double cx, double cv);
+    double CalcPosition(double LandingSite, double cx, double cv);
+	double CalcVelocity(double LandingSite, double cx, double cv);
 	double CalcNextVelocity(double nextlandingsite, double np, double nv);
     double CalcWeightForBalanceX(double cz);
 	double CalcWeightForBalanceZ(double cx);

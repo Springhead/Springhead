@@ -8,10 +8,10 @@
 #ifndef CRWALKINGCONTROLLER_H
 #define CRWALKINGCONTROLLER_H
 
-#include <Springhead.h>
-
 #include <Foundation/Object.h>
 #include "IfStubCreature.h"
+
+#include <Springhead.h>		//	Springheadのインタフェース
 
 #include "CRController.h"
 #include ".\crwctimeleft.h"
@@ -19,8 +19,8 @@
 #include ".\crwclandingsite.h"
 #include ".\crwcfootforce.h"
 #include ".\crwcgeneforce.h"
+/////////////////////////////
 
-//@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意コントローラ
@@ -28,8 +28,6 @@ namespace Spr{;
 class CRWalkingController : public CRController, public CRWalkingControllerIfInit, public CRWalkingControllerDesc {
 private:
 	/// 依存する他のオブジェクトの例．必要なものを選んで記述．ただしCRControllerに既にあるものは不要．
-	
-	CRTrunkFootHumanBodyIf* body;
 
 	std::vector<PHSolidIf*> UpperBody;
 	PHSolidIf* soHead;
@@ -38,11 +36,12 @@ private:
 	PHSolidIf* footleft;
 	PHSolidIf* footright;
 
-    double paramVelocityX, paramVelocityZ;              //X, Z方向の目標歩行速度 
+	CRTrunkFootHumanBodyIf* body;
+
+	double paramVelocityX, paramVelocityZ;              //X, Z方向の目標歩行速度 
     double paramHalfStrideX, paramHalfStrideZ;          //X, Z方向の目標歩幅 
 	double footHeight;                                  //遊脚の最高点 
     double amplitude;                                   //重心の上下動の振幅 
-
 
 	/////////////大域変数//////
 	double T0;            //基本歩行周期
@@ -83,24 +82,56 @@ private:
 	int flag2;        //デモ用に使用
 	int flag3;        //デモ用に使用
 
-	CRWCTimeLeft* tl;
+	double Xs;
+	double Zs;
+
+	double nextSpeed;
+	bool stop;
+	bool reverse;
+
+	CRWCTimeLeft* tl; 
 	CRWCChangeAroundCenter* cac;
 	CRWCLandingSite* ls;
 	CRWCFootForce* ff;
 	CRWCGeneForce* gf;
-	/*
-	CRInternalSceneIf*  internalScene;
-	CRGazeControllerIf* gazeController;
-	CROpticalSensorIf*  opticalSensor;
-	*/
 
-	/// ほかにPrivateな変数やメソッドが必要ならここに定義を追加．
+	Vec3d GetCenterOfBlocks(std::vector<PHSolidIf*> objects);
+	Vec3d CalcCenterVelocity(std::vector<PHSolidIf*> objs);
+	double TotalMass(std::vector<PHSolidIf*> objects);
+	double CalcBasicCycle(void);
+	double CalcZParamV(double hz, double restT);
+	double CalcZParamH(double v, double restT);
+	double CalcLocalX(double xb, double zb, double xt, double zt, double theta);
+	double CalcLocalZ(double xb, double zb, double xt, double zt, double theta);
+	double CalcLocalVX(double vx, double vz, double theta);
+	double CalcLocalVZ(double vx, double vz, double theta);
+	double square(double a);
+	void VelocityXChange(double vx);
+	void VelocityZChange(double vz);
+	void HalfStrideXChange(double sx);
+	void AmplitudeChange(double amp);
+	void FootHeightChange(double fh);
+	void WCSetSpeed(double v);
+	void WCStop(void);
+	void WCReverse(void);
+	void CalcCurrentDirection(void);
+	void CalcTargetAngle(void);
+	void ConstraintForce(void);
+	void completeFall(void);
+	void fallForce(void);
+	bool CalcSustainable(void);
+	Vec3d CalcChange(void);
+	double CalcTimeLeft(void);
+	Vec3d CalcNextLandingSite(void);
+	double CalcTimeHalfCycle(void);
+	void GenerateCenterForce(void);
+	void GenerateFootForce(void);
+	void func(void);
 	void CreateUpperBody();
-	void AssignFoot();  
-	void AssignCenterObject(); 
-	void AssignHip();        
-	void AssignHead();  
-	void InvalidGravity();
+	void AssignFoot();
+	void AssignCenterObject();
+	void AssignHip();
+	void AssignHead();
 	void SetTimeParams();
 	void AssignInitialLandingSite();
 	void CreateCRWCTimeLeft();
@@ -108,34 +139,8 @@ private:
 	void CreateCRWCLandingSite();
 	void CreateCRWCFootForce();
 	void CreateCRWCGeneForce();
-	Vec3d GetCenterOfBlocks(std::vector<PHSolidIf*> objs);
-	Vec3d CalcCenterVelocity(std::vector<PHSolidIf*> objs);
-	double TotalMass(std::vector<PHSolidIf*> objs);
-	double CalcBasicCycle();
-	double CalcZParamV(double hz, double restT);
-	double CalcZParamH(double v, double restT);
-	double CalcLocalX(double xb, double zb, double xt, double zt, double theta);
-	double CalcLocalZ(double xb, double zb, double xt, double zt, double theta);
-	double CalcLocalVX(double vx, double vz, double theta);
-	double CalcLocalVZ(double vx, double vz, double theta);
-	void CalcCurrentDirection();
-	void CalcTargetAngle();
-	void VelocityXChange(double vx);
-	void VelocityZChange(double vz);
-	void HalfStrideXChange(double sx);
-	void AmplitudeChange(double amp);
-	bool CalcSustainable();
-	void ConstraintForce();
-	void CompleteFall();
-	Vec3d CalcChange();
-	double CalcTimeLeft();
-	Vec3d CalcNextLandingSite();
-	double CalcTimeHalfCycle();
-	void GenerateCenterForce();
-	void GenerateFootForce();
-	void gait();
-	void stand();
-	void test();
+	void gait(void);
+
 
 public:
 	OBJECTDEF(CRWalkingController, CRController);
@@ -159,16 +164,17 @@ public:
 
 	/** @brief 歩行の速度を設定する
 	*/
-	virtual void SetSpeed(float speed);
+	virtual void SetSpeed(double speed);
 
 	/** @brief 転回角度を設定する
 	*/
-	virtual void SetRotationAngle(float rot);
+	virtual void SetRotationAngle(double rot);
 
-	virtual void SetVelocityX(double vx) {VelocityXChange(vx);}
-	virtual void SetVelocityZ(double vz) {VelocityZChange(vz);}
-	virtual void SetHalfStrideX(double hsx) {HalfStrideXChange(hsx);}
-	virtual void SetAmplitude(double amp) {AmplitudeChange(amp);}
+	virtual void SetRotationWorldCoordinate(double r);
+	virtual void Stop(void);
+	virtual void Reverse(void);
+	virtual void stand(void);
+	
 };
 }
 //@}
