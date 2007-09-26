@@ -33,11 +33,17 @@ void CRWalkingController::Init(){
 	InvalidGravity();
 
 	///‰Šúƒpƒ‰ƒ[ƒ^‚Ìİ’è/////
+	paramVelocityX = 0.7;
+	paramHalfStrideX = 0.2;
+	paramHalfStrideZ = 0.05;
+	amplitude = 0.01;
+	/*
     paramVelocityX = 1.0; 
     paramHalfStrideX = 0.3;
 	paramHalfStrideZ = 0.1;         
 	footHeight = 0.05;                                  
-    amplitude = 0.0;   
+    amplitude = 0.0;
+	*/
 
 	footsize = 0.0619;
 	////////////////////////////

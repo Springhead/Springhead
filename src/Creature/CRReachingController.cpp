@@ -43,7 +43,7 @@ void CRReachingController::Init(){
 	{
 		sphereDesc.radius = 0.02;
 	}
-	soTarget->AddShape(phScene->GetSdk()->CreateShape(sphereDesc));
+	// soTarget->AddShape(phScene->GetSdk()->CreateShape(sphereDesc));
 	phScene->SetContactMode(soTarget, PHSceneDesc::MODE_NONE);
 
 	PHSpringDesc springDesc;
@@ -155,7 +155,7 @@ bool CRReachingController::IsMoving(){
 }
 
 bool CRReachingController::IsReached(){
-	return( (solid->GetPose().Pos() - finalPos).norm() < 0.1 );
+	return( (solid->GetPose().Pos() - finalPos).norm() < 0.2 );
 }
 
 bool CRReachingController::IsActive(){
