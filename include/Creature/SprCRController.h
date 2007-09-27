@@ -248,11 +248,19 @@ struct CRWalkingControllerIf : CRControllerIf{
 
 	/** @brief 静止する
 	*/
+<<<<<<< .mine
+	virtual void Stop()=0;
+=======
 	virtual void Stop()= 0;
+>>>>>>> .r2665
 
 	/** @brief 後ろ向きに歩く
 	*/
+<<<<<<< .mine
+	virtual void Reverse()=0;
+=======
 	virtual void Reverse()= 0;
+>>>>>>> .r2665
 };
 
 /// 歩行コントローラのデスクリプタ
