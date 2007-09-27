@@ -19,90 +19,195 @@ IF_OBJECT_IMP(CRGrabController, CRController);
 void CRGrabController::Init(){
 	CRController::Init();
 
-	CRReachingControllerIf *reach1=NULL, *reach2=NULL;
-	for (int i=0; i<creature->NControllers(); i++) {
-		if (!reach1) {
-			reach1 = DCAST(CRReachingControllerIf, creature->GetController(i));
-		} else if (!reach2) {
-			reach2 = DCAST(CRReachingControllerIf, creature->GetController(i));
+	CRHingeHumanBodyIf* hiBody=NULL;
+	for (int i=0; i<creature->NBodies(); ++i) {
+		if (!hiBody) {
+			hiBody = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
 		}
 	}
 
-	// このへんのコードは creature->FindObject(型) とかでもっと簡単に書けるようにするべきである（07/09/25, mitake）
-	for (int i=0; i<creature->NBodies(); ++i) {
-		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
-		if (body) {
-			if (reach1 && reach2) {
-				if (reach1->GetSolid() == body->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
-					reachLeft = reach1;  reachRight = reach2;
-				} else {
-					reachLeft = reach2;  reachRight = reach1;
-				}
+	soWaist = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
+
+	CRHingeHumanBodyDesc descHIBody;
+	hiBody->GetDesc(&descHIBody);
+	reachableDistance = (descHIBody.upperArmLength + descHIBody.lowerArmLength + (descHIBody.handLength / 2.0f) + descHIBody.chestHeight + descHIBody.abdomenHeight);
+	shoulderHeightFromWaist = descHIBody.waistHeight/2.0 + descHIBody.abdomenHeight + descHIBody.chestHeight;
+
+	reachLeft  = NULL;
+	reachRight = NULL;
+	reachChest = NULL;
+	for (int i=0; i<creature->NControllers(); i++) {
+		if (!reachLeft) {
+			CRReachingControllerIf* r = DCAST(CRReachingControllerIf, creature->GetController(i));
+			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
+				reachLeft = r;
+			}
+		}
+		if (!reachRight) {
+			CRReachingControllerIf* r = DCAST(CRReachingControllerIf, creature->GetController(i));
+			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_HAND)) {
+				reachRight = r;
+			}
+		}
+		if (!reachChest) {
+			CRReachingControllerIf* r = DCAST(CRReachingControllerIf, creature->GetController(i));
+			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyDesc::SO_CHEST)) {
+				reachChest = r;
 			}
 		}
 	}
+
+	controlState = CRGrabControllerIf::CRGC_STANDBY;
 }
 
 void CRGrabController::Step(){
-	if (grabState == CRGrabControllerIf::GS_STANDBY) {
-	} else if (grabState == CRGrabControllerIf::GS_GRAB_START) {
+	if (controlState==CRGrabControllerIf::CRGC_REACH) {
 		if (reachLeft->IsReached() && reachRight->IsReached()) {
-			grabState = CRGrabControllerIf::GS_GRAB;
-			std::cout << " -> GS_GRAB " << std::endl;
-			SolSprMap::iterator it = grabSprings.find(grabSolid);
-			if (it!=grabSprings.end()) {
-				it->second->Enable(true);
-			} else {
-				PHSpringDesc descSpring;
-				{
-					descSpring.bEnabled = true;
-					descSpring.spring   = Vec3d(1,1,1) * 500;
-					descSpring.damper   = Vec3d(1,1,1) *  10;
-				}
-				grabSprings[grabSolid] = DCAST(PHSpringIf, phScene->CreateJoint(reachRight->GetSolid(), grabSolid, descSpring));
-			}
+			grabSpring.first->Enable(true);
+			grabSpring.second->Enable(true);
+			controlState = CRGrabControllerIf::CRGC_REACH_COMPLETE;
 		}
-	} else if (grabState == CRGrabControllerIf::GS_GRAB) {
-		if (bMoveto) {
-			grabState = CRGrabControllerIf::GS_MOVE;
-			std::cout << " -> GS_MOVE " << std::endl;
-			reachLeft->SetTarget(movetoPos+Vec3d(-radius*0.9f,-radius*0.3f,0), Vec3f(0,0,0), Quaterniond::Rot(Rad(+100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
-			reachRight->SetTarget(movetoPos+Vec3d(+radius*0.9f,-radius*0.3f,0), Vec3f(0,0,0), Quaterniond::Rot(Rad(-100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
+	} else if (controlState==CRGrabControllerIf::CRGC_UPHOLD) {
+		if (reachChest->IsReached()) {
+			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
 		}
-	} else if (grabState == CRGrabControllerIf::GS_MOVE) {
+		/*
 		if (reachLeft->IsReached() && reachRight->IsReached()) {
-			Ungrab();
+			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
 		}
+		*/
 	}
 }
 
-void CRGrabController::Grab(PHSolidIf* solid, float radius){
-	this->grabSolid = solid;
-	this->radius    = radius;
-	reachLeft->SetTarget(grabSolid->GetPose()*Vec3d(-radius*0.9f,-radius*0.3f,0), solid->GetVelocity(), Quaterniond::Rot(Rad(+100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
-	reachRight->SetTarget(grabSolid->GetPose()*Vec3d(+radius*0.9f,-radius*0.3f,0), solid->GetVelocity(), Quaterniond::Rot(Rad(-100),'z')*Quaterniond::Rot(Rad(90),'x'), Vec3d(0,0,0), 0.5, -1);
-	grabState = CRGrabControllerIf::GS_GRAB_START;
-	std::cout << " -> GS_GRAB_START " << std::endl;
+bool CRGrabController::Reach(PHSolidIf* solid, float radius){
+	if (!IsReachable(solid)) {
+		return false;
+	}
+	
+	targetSolid  = solid;
+	targetRadius = radius;
+
+	Vec3f reachPointDirL;
+	Vec3f w2t = (targetSolid->GetPose().Pos() - soWaist->GetPose().Pos());
+	reachPointDirL = Vec3f(w2t.Z(), 0, -w2t.X()).unit();
+	if (PTM::cross(w2t, reachPointDirL).Y() < 0) {
+		reachPointDirL = -reachPointDirL;
+	}
+
+	GrabSpringMap::iterator it = grabSpringMap.find(targetSolid);
+	if (it==grabSpringMap.end()) {
+		PHSpringDesc descSpring;
+		descSpring.bEnabled = false;
+		descSpring.spring   = Vec3d(1,1,1) * 500;
+		descSpring.damper   = Vec3d(1,1,1) *  10;
+		descSpring.poseSocket.Pos() = Vec3f(0,0,0);
+
+		descSpring.posePlug.Pos()   =  reachPointDirL*targetRadius;
+		PHJointIf* sprL = phScene->CreateJoint(reachLeft->GetSolid(), targetSolid, descSpring);
+
+		descSpring.posePlug.Pos()   = -reachPointDirL*targetRadius;
+		PHJointIf* sprR = phScene->CreateJoint(reachRight->GetSolid(), targetSolid, descSpring);
+
+		SpringPair sp;
+		sp.first  = DCAST(PHSpringIf,sprL);
+		sp.second = DCAST(PHSpringIf,sprR);
+		grabSpringMap[targetSolid] = sp;
+
+		grabSpring = sp;
+	} else {
+		grabSpring = it->second;
+	}
+
+	// 本当はここで体をやわらかくする
+
+	/*
+	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0), 1.5, -1);
+	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y'), Vec3d(0,0,0), 1.5, -1);
+	*/
+	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.2, solid->GetVelocity(), 1.5, -1);
+	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.2, solid->GetVelocity(), 1.5, -1);
+	reachChest->SetTarget(targetSolid->GetPose().Pos(), Vec3f(0,0,0), 1.5, -1);
+	
+	controlState = CRGrabControllerIf::CRGC_REACH;
+	return true;
 }
 
-void CRGrabController::Ungrab(){
+bool CRGrabController::IsReachable(PHSolidIf* solid){
+	return IsReachable(solid, 1.0f);
+}
+
+bool CRGrabController::IsReachable(PHSolidIf* solid, float safety){
+	float distance = (solid->GetPose().Pos() - soWaist->GetPose().Pos()).norm();
+	return(distance < (reachableDistance*safety));
+}
+
+bool CRGrabController::IsReachComplete(){
+	return(controlState==CRGrabControllerIf::CRGC_REACH_COMPLETE);
+}
+
+bool CRGrabController::Uphold(){
+	if (!IsUpholdable()) {
+		return false;
+	}
+
 	reachLeft->Reset();
 	reachRight->Reset();
-	bMoveto = false;
-	SolSprMap::iterator it = grabSprings.find(grabSolid);
-	if (it!=grabSprings.end()) {
-		it->second->Enable(false);
+	reachChest->SetTarget(soWaist->GetPose()*Vec3f(0,shoulderHeightFromWaist,0), Vec3f(0,0,0), 2.0, -1);
+
+	/*
+	reachChest->Reset();
+	reachLeft->SetTarget(soWaist->GetPose()*Vec3f(-targetRadius, targetRadius*2.0, -targetRadius*1.2), Vec3f(0,0,0), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0), 2.0, -1);
+	reachRight->SetTarget(soWaist->GetPose()*Vec3f( targetRadius, targetRadius*2.0, -targetRadius*1.2), Vec3f(0,0,0), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y'), Vec3d(0,0,0), 2.0, -1);
+	*/
+	
+	controlState = CRGrabControllerIf::CRGC_UPHOLD;
+	return true;
+}
+
+bool CRGrabController::IsUpholdable(){
+	return(controlState==CRGrabControllerIf::CRGC_REACH_COMPLETE);
+}
+
+bool CRGrabController::IsUpholdComplete(){
+	return(controlState==CRGrabControllerIf::CRGC_UPHOLD_COMPLETE);
+}
+
+bool CRGrabController::Place(Vec3d pos){
+	//
+	return false;
+}
+
+bool CRGrabController::IsPlaceable(Vec3d pos){
+	return IsPlaceable(pos, 1.0f);
+}
+
+bool CRGrabController::IsPlaceable(Vec3d pos, float safety){
+	if (controlState!=CRGrabControllerIf::CRGC_UPHOLD_COMPLETE) {
+		return false;
 	}
-	grabState = CRGrabControllerIf::GS_STANDBY;
-	std::cout << " -> GS_STANDBY " << std::endl;
+	float distance = (pos - soWaist->GetPose().Pos()).norm();
+	return(distance < (reachableDistance*safety));
 }
 
-void CRGrabController::MoveTo(Vec3f pos){
-	movetoPos = pos;
-	bMoveto = true;
+bool CRGrabController::IsPlaceComplete(){
+	return(controlState==CRGrabControllerIf::CRGC_PLACE_COMPLETE);
 }
 
-CRGrabControllerIf::GrabState CRGrabController::GetGrabState(){
-	return grabState;
+void CRGrabController::Abort(){
+	//
+}
+
+void CRGrabController::AbortAll(){
+	//
+	targetSolid = NULL;
+	targetRadius = 0.0f;
+	placePos = Vec3f(0,0,0);
+	grabSpring.first = NULL;
+	grabSpring.second = NULL;
+	controlState = CRGrabControllerIf::CRGC_STANDBY;
+}
+
+CRGrabControllerIf::CRGCControlState CRGrabController::GetControlState(){
+	return controlState;
 }
 }

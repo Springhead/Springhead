@@ -38,6 +38,10 @@ Vec3f CRInternalSceneObject::GetPos(){
 	return position;
 }
 
+void CRInternalSceneObject::SetPos(Vec3d pos){
+	position = pos;
+}
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 IF_OBJECT_IMP(CRISAttractiveObject, CRInternalSceneObject);

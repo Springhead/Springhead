@@ -37,6 +37,10 @@ struct CRInternalSceneObjectIf : SceneObjectIf{
 	/** @brief 位置を返す
 	*/
 	virtual Vec3f GetPos()= 0;
+
+	/** @brief 位置を設定する
+	*/
+	virtual void SetPos(Vec3d pos)= 0;
 };
 
 /// 内部シーンを構成する物体のデスクリプタ

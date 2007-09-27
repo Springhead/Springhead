@@ -178,17 +178,47 @@ typedef IfInitTemplate<CRTravelControllerIfStub, CRTravelController>	CRTravelCon
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRGrabControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
-	virtual void Grab(PHSolidIf * solid, float radius){
-		return ((OBJ*)(MIF*)this)->Grab(solid, radius);
+	virtual bool Reach(PHSolidIf * solid, float radius){
+		return ((OBJ*)(MIF*)this)->Reach(solid, radius);
 	}
-	virtual void Ungrab(){
-		return ((OBJ*)(MIF*)this)->Ungrab();
+	virtual bool IsReachable(PHSolidIf * solid){
+		return ((OBJ*)(MIF*)this)->IsReachable(solid);
 	}
-	virtual void MoveTo(Vec3f pos){
-		return ((OBJ*)(MIF*)this)->MoveTo(pos);
+	virtual bool IsReachable(PHSolidIf * solid, float safety){
+		return ((OBJ*)(MIF*)this)->IsReachable(solid, safety);
 	}
-	virtual CRGrabControllerIf::GrabState GetGrabState(){
-		return ((OBJ*)(MIF*)this)->GetGrabState();
+	virtual bool IsReachComplete(){
+		return ((OBJ*)(MIF*)this)->IsReachComplete();
+	}
+	virtual bool Uphold(){
+		return ((OBJ*)(MIF*)this)->Uphold();
+	}
+	virtual bool IsUpholdable(){
+		return ((OBJ*)(MIF*)this)->IsUpholdable();
+	}
+	virtual bool IsUpholdComplete(){
+		return ((OBJ*)(MIF*)this)->IsUpholdComplete();
+	}
+	virtual bool Place(Vec3d pos){
+		return ((OBJ*)(MIF*)this)->Place(pos);
+	}
+	virtual bool IsPlaceable(Vec3d pos){
+		return ((OBJ*)(MIF*)this)->IsPlaceable(pos);
+	}
+	virtual bool IsPlaceable(Vec3d pos, float safety){
+		return ((OBJ*)(MIF*)this)->IsPlaceable(pos, safety);
+	}
+	virtual bool IsPlaceComplete(){
+		return ((OBJ*)(MIF*)this)->IsPlaceComplete();
+	}
+	virtual void Abort(){
+		return ((OBJ*)(MIF*)this)->Abort();
+	}
+	virtual void AbortAll(){
+		return ((OBJ*)(MIF*)this)->AbortAll();
+	}
+	virtual CRGrabControllerIf::CRGCControlState GetControlState(){
+		return ((OBJ*)(MIF*)this)->GetControlState();
 	}
 };
 struct CRGrabControllerIf;	class CRGrabController;
@@ -268,6 +298,9 @@ struct CRInternalSceneObjectIfStubTemplate: public SceneObjectIfStubTemplate<IF,
 	}
 	virtual Vec3f GetPos(){
 		return ((OBJ*)(MIF*)this)->GetPos();
+	}
+	virtual void SetPos(Vec3d pos){
+		return ((OBJ*)(MIF*)this)->SetPos(pos);
 	}
 };
 struct CRInternalSceneObjectIf;	class CRInternalSceneObject;

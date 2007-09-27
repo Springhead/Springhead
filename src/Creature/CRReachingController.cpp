@@ -44,11 +44,11 @@ void CRReachingController::Init(){
 		sphereDesc.radius = 0.02;
 	}
 	// soTarget->AddShape(phScene->GetSdk()->CreateShape(sphereDesc));
-	phScene->SetContactMode(soTarget, PHSceneDesc::MODE_NONE);
+	// phScene->SetContactMode(soTarget, PHSceneDesc::MODE_NONE);
 
 	PHSpringDesc springDesc;
 	{
-		springDesc.posePlug.Pos() = Vec3d(0,0,0);
+		springDesc.posePlug.Pos() = reachPos;
 		springDesc.spring = Vec3d(1,1,1) * springPos;
 		springDesc.damper = Vec3d(1,1,1) * damperPos;
 	}

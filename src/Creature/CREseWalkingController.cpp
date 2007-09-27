@@ -28,16 +28,28 @@ void CREseWalkingController::Init(){
 	PHSolidDesc solidDesc;
 	soFixpoint = phScene->CreateSolid(solidDesc);
 	soFixpoint->SetDynamical(false);
+	/*
+	CDBoxDesc descBox;
+	descBox.boxsize = Vec3f(0.5,1.7,0.2);
+	soFixpoint->AddShape(phScene->GetSdk()->CreateShape(descBox));
+	*/
 	PHBallJointDesc ballJointDesc;
 	ballJointDesc.origin = Quaternionf::Rot(Rad(0),'y');
-	ballJointDesc.spring = 1000.0;
+	ballJointDesc.spring = 5000.0;
 	ballJointDesc.damper =  100.0;
 	joFixpoint = phScene->CreateJoint(soFixpoint, soWaist, ballJointDesc);
+
+	// phScene->SetContactMode(soFixpoint, PHSceneDesc::MODE_NONE);
 }
 	
 void CREseWalkingController::Step(){
+	// phScene->SetContactMode(soFixpoint, PHSceneDesc::MODE_NONE);
+
 	CRController::Step();
 
+	Vec3d p = soFixpoint->GetPose().Pos();
+	p.Y() = 0.0;
+	soFixpoint->SetFramePosition(p);
 	soFixpoint->SetVelocity(soWaist->GetPose().Ori() * Vec3d(0,0,-speed));
 	soFixpoint->SetAngularVelocity(Vec3d(0,rotation,0));
 }

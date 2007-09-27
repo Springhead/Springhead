@@ -165,6 +165,7 @@ struct CRReachingControllerDesc : public CRControllerDesc{
 
 	PHSolidIf* solid; ///< 到達させたい剛体
 	int        solidNo; ///< 到達させたい剛体
+	Vec3f      reachPos; ///< 剛体内の到達させたいポイント
 
 	float limitForce; ///< 力の最大値
 	float springPos; ///< 位置制御のバネ係数
@@ -182,6 +183,7 @@ struct CRReachingControllerDesc : public CRControllerDesc{
 		springOri =  10.0f;  damperOri =   0.5f;
 		softenRate = 0.2f;
 		hardenRate = 5.0f;
+		reachPos = Vec3f(0,0,0);
 	}
 };
 
@@ -356,34 +358,87 @@ struct CRTravelControllerDesc : public CRControllerDesc{
 struct CRGrabControllerIf : CRControllerIf{
 	IF_DEF(CRGrabController);
 
-	/** @brief 掴む
+	/** @brief 物体の所へ手を伸ばしてつかむ．
+	*** @return true: Reach開始した． false: その物体へは手が届かない．
 	*/
-	virtual void Grab(PHSolidIf* solid, float radius)= 0;
+	virtual bool Reach(PHSolidIf* solid, float radius)= 0;
 
-	/** @brief 現在何か掴んでいれば，放す
+	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
 	*/
-	virtual void Ungrab()= 0;
+	virtual bool IsReachable(PHSolidIf* solid)= 0;
 
-	/** @brief 現在何か掴んでいれば，それを持って移動する
+	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
+	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
 	*/
-	virtual void MoveTo(Vec3f pos)= 0;
+	virtual bool IsReachable(PHSolidIf* solid, float safety)= 0;
 
-	/** @brief 現在の把持の状態を返す
+	/** @brief Reachが完了したかどうかを返す
 	*/
-	enum GrabState{
-		GS_STANDBY = 0, /// 待機状態
-		GS_GRAB_START,  /// 把持動作開始
-		GS_GRAB,        /// 把持中
-		GS_MOVE,        /// 把持物体を移動中
+	virtual bool IsReachComplete()= 0;
+
+	/** @brief 現在物体をつかんでいれば，その物体を手元に引き寄せ保持する．
+	*** @return true: Uphold開始した． false: 物体をつかんでいない(Reach未完了含む．)
+	*/
+	virtual bool Uphold()= 0;
+
+	/** @brief Upholdが可能かどうかを返す
+	*/
+	virtual bool IsUpholdable()= 0;
+
+	/** @brief Upholdが完了したかどうかを返す
+	*/
+	virtual bool IsUpholdComplete()= 0;
+
+	/** @brief 現在物体をつかんでいれば，その物体を特定の場所に置く．
+	*** @return true: Place開始した． false: その場所へは手が届かない，または物体を持ってない．
+	*/
+	virtual bool Place(Vec3d pos)= 0;
+
+	/** @brief Placeが可能かどうかを返す
+	*/
+	virtual bool IsPlaceable(Vec3d pos)= 0;
+
+	/** @brief Placeが可能かどうかを返す
+	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
+	*/
+	virtual bool IsPlaceable(Vec3d pos, float safety)= 0;
+
+	/** @brief Placeが完了したかどうかを返す
+	*/
+	virtual bool IsPlaceComplete()= 0;
+
+	/** @brief 現在の動作を中断する
+	*/
+	virtual void Abort()= 0;
+
+	/** @brief すべての把持動作を中断する
+	*/
+	virtual void AbortAll()= 0;
+
+	/** @brief 現在の動作状態を返す
+	*/
+	enum CRGCControlState {
+		CRGC_STANDBY=0,
+		CRGC_REACH,  CRGC_REACH_COMPLETE,
+		CRGC_UPHOLD, CRGC_UPHOLD_COMPLETE,
+		CRGC_PLACE,  CRGC_PLACE_COMPLETE,
 	};
-	virtual CRGrabControllerIf::GrabState GetGrabState()= 0;
+	virtual CRGrabControllerIf::CRGCControlState GetControlState()= 0;
 };
 
 /// 把持コントローラのデスクリプタ
-struct CRGrabControllerDesc : public CRControllerDesc{
+struct CRGrabControllerDesc : public CRControllerDesc {
 	DESC_DEF_FOR_OBJECT(CRGrabController);
 
+	/// 体を柔らかくするためのバネダンパへの係数
+	double rateSpringSoften, rateDamperSoften;
+
+	/// 体をかたくするためのバネダンパへの係数
+	double rateSpringHarden, rateDamperHarden;
+
 	CRGrabControllerDesc(){
+		rateSpringSoften = 0.0;  rateDamperSoften = 0.5;
+		rateSpringHarden = 1.5;  rateDamperHarden = 1.5;
 	}
 };
 

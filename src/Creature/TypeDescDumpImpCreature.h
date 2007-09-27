@@ -342,6 +342,8 @@
 	field->offset = int((char*)&(pCRReachingControllerDesc->solid) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "int", "solidNo", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->solidNo) - (char*)pCRReachingControllerDesc);
+	field = desc->AddField("", "Vec3f", "reachPos", "");
+	field->offset = int((char*)&(pCRReachingControllerDesc->reachPos) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "float", "limitForce", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->limitForce) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "float", "springPos", "");
@@ -474,6 +476,14 @@
 	desc->access = DBG_NEW UTAccess<CRGrabControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRGrabControllerDesc - (char*)pCRGrabControllerDesc);
+	field = desc->AddField("", "double", "rateSpringSoften", "");
+	field->offset = int((char*)&(pCRGrabControllerDesc->rateSpringSoften) - (char*)pCRGrabControllerDesc);
+	field = desc->AddField("", "double", "rateDamperSoften", "");
+	field->offset = int((char*)&(pCRGrabControllerDesc->rateDamperSoften) - (char*)pCRGrabControllerDesc);
+	field = desc->AddField("", "double", "rateSpringHarden", "");
+	field->offset = int((char*)&(pCRGrabControllerDesc->rateSpringHarden) - (char*)pCRGrabControllerDesc);
+	field = desc->AddField("", "double", "rateDamperHarden", "");
+	field->offset = int((char*)&(pCRGrabControllerDesc->rateDamperHarden) - (char*)pCRGrabControllerDesc);
 	db->RegisterDesc(desc);
 	
 	CRCreatureDesc* pCRCreatureDesc = NULL;

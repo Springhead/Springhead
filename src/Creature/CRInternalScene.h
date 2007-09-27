@@ -52,6 +52,10 @@ public:
 	/** @brief ˆÊ’u‚ğ•Ô‚·
 	*/
 	virtual Vec3f GetPos();
+
+	/** @brief ˆÊ’u‚ğİ’è‚·‚é
+	*/
+	virtual void SetPos(Vec3d pos);
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
