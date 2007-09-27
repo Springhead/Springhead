@@ -30,13 +30,20 @@ private:
 	/// 依存する他のオブジェクトの例．必要なものを選んで記述．ただしCRControllerに既にあるものは不要．
 
 	std::vector<PHSolidIf*> UpperBody;
-	PHSolidIf* soHead;
-	PHSolidIf* soCenterObject;
-	PHSolidIf* soHip;
-	PHSolidIf* footleft;
-	PHSolidIf* footright;
+	PHSolidIf* tfHead;
+	PHSolidIf* tfChest;
+	PHSolidIf* tfHip;
+	PHSolidIf* tfFootLeft;
+	PHSolidIf* tfFootRight;
 
-	CRTrunkFootHumanBodyIf* body;
+	PHSolidIf* hiHead;
+	PHSolidIf* hiChest;
+	PHSolidIf* hiHip;
+	PHSolidIf* hiFootLeft;
+	PHSolidIf* hiFootRight;
+
+	CRHingeHumanBodyIf* hibody;
+	CRTrunkFootHumanBodyIf* tfbody;
 
 	double paramVelocityX, paramVelocityZ;              //X, Z方向の目標歩行速度 
     double paramHalfStrideX, paramHalfStrideZ;          //X, Z方向の目標歩幅 
@@ -127,19 +134,22 @@ private:
 	void GenerateCenterForce(void);
 	void GenerateFootForce(void);
 	void func(void);
-	void CreateUpperBody();
-	void AssignFoot();
-	void AssignCenterObject();
-	void AssignHip();
-	void AssignHead();
-	void SetTimeParams();
-	void AssignInitialLandingSite();
-	void CreateCRWCTimeLeft();
-	void CreateCRWCChangeAroundCenter();
-	void CreateCRWCLandingSite();
-	void CreateCRWCFootForce();
-	void CreateCRWCGeneForce();
+	void CreateUpperBody(void);
+	void AssignFoot(void);
+	void AssignCenterObject(void);
+	void AssignHip(void);
+	void AssignHead(void);
+	void SetTimeParams(void);
+	void AssignInitialLandingSite(void);
+	void CreateCRWCTimeLeft(void);
+	void CreateCRWCChangeAroundCenter(void);
+	void CreateCRWCLandingSite(void);
+	void CreateCRWCFootForce(void);
+	void CreateCRWCGeneForce(void);
+	void stand(void);
 	void gait(void);
+
+	void SuperimposeHingeBody(void);
 
 
 public:
@@ -170,10 +180,17 @@ public:
 	*/
 	virtual void SetRotationAngle(double rot);
 
+	/** @brief ワールド座標系の進行角度を設定する
+	*/
 	virtual void SetRotationWorldCoordinate(double r);
+
+	/** @brief 静止する
+	*/
 	virtual void Stop(void);
+
+	/** @brief 後ろ向きに歩く
+	*/
 	virtual void Reverse(void);
-	virtual void stand(void);
 	
 };
 }
