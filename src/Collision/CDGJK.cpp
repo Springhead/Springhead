@@ -22,8 +22,8 @@
 #endif
 
 namespace Spr{;
-const double sqEpsilon = 1e-4;
-const double epsilon   = 1e-8;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
+const double sqEpsilon = 1e-3;
+const double epsilon   = 1e-6;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
 const double epsilon2  = epsilon*epsilon;
 
 static Vec3d p[4];			// Aのサポートポイント(ローカル系)
