@@ -241,6 +241,18 @@ struct CRWalkingControllerIf : CRControllerIf{
 	/** @brief 転回角度を設定する
 	*/
 	virtual void SetRotationAngle(float rot)= 0;
+
+		/** @brief ワールド座標系の進行角度を設定する
+	*/
+	virtual void SetRotationWorldCoordinate(double r)=0;
+
+	/** @brief 静止する
+	*/
+	virtual void Stop(void)=0;
+
+	/** @brief 後ろ向きに歩く
+	*/
+	virtual void Reverse(void)=0;
 };
 
 /// 歩行コントローラのデスクリプタ
@@ -272,8 +284,8 @@ struct CRWalkingControllerDesc : public CRControllerDesc{
 	double MaxFootAccelerationBack;                     //足の加速度の最大値
     double DoubleSupportLimitRate;                      //バランスが崩れた時に両脚支持期間の長さ決定するパラメータ
     double LimitChange;                                 //どれほどバランスを崩したときに両脚支持期間を縮めるか決定する閾値
-    double footsize;                                    //足のサイズ
 	double pi;                                          //π
+	double footsize;
 	double miu;
 
 	CRWalkingControllerDesc(){
@@ -284,16 +296,16 @@ struct CRWalkingControllerDesc : public CRControllerDesc{
 		paramLdx = 0.00001;             
 		paramLdz = 0.0000001;                 
 		maxHalfStride = 0.83;                   
-		height = 1.0;                   
+		height = 1.1;                   
 		minCycleRate = 0.4;                
 		maxDSRate = 1.5;     
-		FootLength = 0.9;
-		MaxFootLength = 1.2;           
+		FootLength = 0.85;
+		MaxFootLength = 1.05;           
 		MinFootLength = 0.5;         
 		MaxRoGround = 3.14 / 2.0;    
 		MaxRoLandingSiteFront = 3.14 / 2.2; 
-	    MaxRoLandingSiteSide = 3.14 / 2.2; 
-	    MaxRoLandingSiteBack = 3.14 / 2.2; 
+	    MaxRoLandingSiteSide = 3.14 / 6.0; 
+	    MaxRoLandingSiteBack = 3.14 / 4.0; 
 		MaxRoConstraint = 3.14 / 2.2; 
 		MaxFootSpeedFront = 10.0;    
 	    MaxFootSpeedSide = 5.0;
@@ -303,8 +315,8 @@ struct CRWalkingControllerDesc : public CRControllerDesc{
 	    MaxFootAccelerationBack = 4.5; 
 		DoubleSupportLimitRate = 0.05;    
 		LimitChange = 11.0;  
-	    footsize = 0.0625; 
 		pi = 3.1415926535;
+		footsize = 0.0619;
 		miu = 0.8;
 	}
 };
