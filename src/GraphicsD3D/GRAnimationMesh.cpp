@@ -191,6 +191,7 @@ GRAnimationMesh::GRAnimationMesh(const GRAnimationMeshDesc& desc):GRAnimationMes
 	rootFrame = NULL;
 	controller = NULL;
 	loaded = false;
+	directRenderMode = false;
 }
 
 GRAnimationMesh::~GRAnimationMesh(){
@@ -292,12 +293,11 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, (cull==D3DCULL_NONE) ? D3DCULL_NONE : (cull==D3DCULL_CW) ? D3DCULL_CCW : D3DCULL_CW);
 
-	if(effect){
-		d3ddevice->SetTransform(D3DTS_WORLD, &(*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));
-		UpdateFrame(rootFrame, *D3DXMatrixIdentity(&D3DXMATRIX()));
-	}
-	else{
-		UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// 各ボーンの座標変換（DirectX座標系） -> Ｚ座標反転 -> ワールド変換（Springhead座標系）
+	if(effect) d3ddevice->SetTransform(D3DTS_WORLD, &(*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));
+
+	if(!directRenderMode){
+		if(effect) UpdateFrame(rootFrame, *D3DXMatrixIdentity(&D3DXMATRIX()));
+		else       UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// 各ボーンの座標変換（DirectX座標系） -> Ｚ座標反転 -> ワールド変換（Springhead座標系）
 	}
 
 	DrawFrame(rootFrame);
@@ -327,6 +327,7 @@ bool GRAnimationMesh::LoadMesh(){
 }
 
 void GRAnimationMesh::InitFrame(Frame* frame){
+	frames.push_back(frame);
 	for(LPD3DXMESHCONTAINER meshContainer=frame->pMeshContainer; meshContainer!=NULL; meshContainer=meshContainer->pNextMeshContainer){
 		if(meshContainer->pSkinInfo != NULL){
 			CreateBlendedMesh((MeshContainer*)meshContainer);
@@ -532,6 +533,27 @@ void GRAnimationMesh::DrawNormalMeshContainer(MeshContainer *meshContainer, cons
 		}
 		d3ddevice->SetTexture(0, NULL);
 	}
+}
+
+int GRAnimationMesh::NFrames(){
+	if(!loaded) if(!LoadMesh()) return 0;
+	if(!rootFrame) return 0;
+
+	return frames.size();
+}
+
+Affinef GRAnimationMesh::GetFrameCombinedTransform(int index){
+	if(!loaded) if(!LoadMesh()) return Affinef();
+	if(!rootFrame) return Affinef();
+
+	return *(Affinef*)&frames[index]->CombinedTransformationMatrix;
+}
+
+void GRAnimationMesh::SetFrameCombinedTransform(int index, const Affinef& transform){
+	if(!loaded) if(!LoadMesh()) return;
+	if(!rootFrame) return;
+
+	frames[index]->CombinedTransformationMatrix = *(D3DXMATRIX*)&transform;
 }
 
 }

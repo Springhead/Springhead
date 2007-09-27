@@ -31,6 +31,8 @@ protected:
 	bool								loaded;
 	std::vector<DrawSubsetListener>		drawSubsetListeners;
 	CComPtr<ID3DXEffect>				effect;
+	std::vector<Frame*>					frames;
+	bool								directRenderMode;
 public:
 	GRAnimationMesh(const GRAnimationMeshDesc& desc=GRAnimationMeshDesc());
 	~GRAnimationMesh();
@@ -43,6 +45,10 @@ public:
 	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize);
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
+	int     NFrames();
+	Affinef GetFrameCombinedTransform(int index);
+	void    SetFrameCombinedTransform(int index, const Affinef& transform);
+	void    SetDirectRenderMode() { directRenderMode = true; }
 protected:
 	bool LoadMesh();
 	void InitFrame(Frame* frame);
