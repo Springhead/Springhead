@@ -26,6 +26,18 @@ PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJ
 	return joint;
 }
 
+PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc){
+	PHJointIf* joint;
+	if (jointOrder == PLUG_PARENT) {
+		joint = phScene->CreateJoint(soChild, soParent, desc);
+	} else { // SOCKET_PARENT
+		Posed pp=desc.posePlug, ps=desc.poseSocket;
+		desc.posePlug=ps; desc.poseSocket=pp;
+		joint = phScene->CreateJoint(soParent, soChild, desc);
+	}
+	return joint;
+}
+
 void CRBody::Init(){
 	// コンストラクタに移動
 	/*

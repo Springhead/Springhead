@@ -40,6 +40,7 @@ protected:
 	/** @brief ä÷êﬂÇçÏÇÈ
 	*/
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
+	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc);
 
 public:
 	OBJECTDEF(CRBody, SceneObject);
