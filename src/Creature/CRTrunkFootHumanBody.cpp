@@ -28,8 +28,8 @@ void CRTrunkFootHumanBody::CreateWaist(){
 	// Solid
 	solidDesc.mass     = 0.17;
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
-	// boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
-	boxDesc.boxsize = Vec3f(0.2307, 0.2298, 0.3067);
+	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
+	// boxDesc.boxsize = Vec3f(0.2307, 0.2298, 0.3067);
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 	// solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
@@ -44,17 +44,18 @@ void CRTrunkFootHumanBody::CreateChest(){
 	// solidDesc.mass   = 0.252;
 	solidDesc.mass   = 0.44;
 	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
-	boxDesc.boxsize  = Vec3f(0.2, 0.3879, 0.2749);
-	// boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
+	// boxDesc.boxsize  = Vec3f(0.2, 0.3879, 0.2749);
+	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 
 	//˜•”ˆÊ‚Æã”¼g‚ÌŠÔ‚ÌŠÖß
 	PHBallJointDesc ballDesc;
     ballDesc.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	ballDesc.posePlug.Ori() = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.poseSocket.Pos() = Vec3d(0, -0.32, 0.0);
+	//ballDesc.poseSocket.Pos() = Vec3d(0, -0.32, 0.0);
+	ballDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + waistHeight/2.0), 0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
-	joints[JO_WAIST_CHEST] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
+	joints[JO_WAIST_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
 	DCAST(PHBallJointIf, joints[JO_WAIST_CHEST])->SetSwingRange(0.01);
 	DCAST(PHBallJointIf, joints[JO_WAIST_CHEST])->SetTwistRange(0.0, 0.01);
 
@@ -85,19 +86,20 @@ void CRTrunkFootHumanBody::CreateHead(){
 	// solidDesc.mass    = 0.07;
 	solidDesc.mass    = 0.178;
 	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
-	// sphereDesc.radius = headDiameter / 2.0;
-	sphereDesc.radius = 0.2387/2.0;
+	sphereDesc.radius = headDiameter / 2.0;
+	// sphereDesc.radius = 0.2387/2.0;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 
 	//ã”¼g‚Æ“ª•”‚ÌŠÔ‚ÌŠÖß
 	hingeDesc                  = PHHingeJointDesc();
     hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, -0.36, 0.0);
+	// hingeDesc.poseSocket.Pos() = Vec3d(0, -0.36, 0.0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + neckLength + headDiameter/2.0), 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
     hingeDesc.lower = 0.0;
 	hingeDesc.upper = 0.01;
-    joints[JO_CHEST_HEAD] = phScene->CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);
+    joints[JO_CHEST_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);
 
 	/*
 	// Joint -- [p]Chest-[c]Head
@@ -138,8 +140,8 @@ void CRTrunkFootHumanBody::CreateFoot(LREnum lr){
 	// Solid
 	solidDesc.mass   = 0.01;
 	solids[soNFoot]  = phScene->CreateSolid(solidDesc);
-	// boxDesc.boxsize  = Vec3f(footBreadth, footThickness, footLength);
-    boxDesc.boxsize = Vec3f(0.2544, 0.0619, 0.0994);
+	boxDesc.boxsize  = Vec3f(footBreadth, footThickness, footLength);
+    // boxDesc.boxsize = Vec3f(0.2544, 0.0619, 0.0994);
 	solids[soNFoot]->AddShape(phSdk->CreateShape(boxDesc));
 }
 
