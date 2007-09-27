@@ -222,19 +222,23 @@ void PHConstraint::IterateLCP(){
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
 		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+
+		// ‚Æ‚è‚ ‚¦‚¸—Ž‚¿‚È‚¢‚æ‚¤‚ÉŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh
+		if (!_finite(fnew[j])) fnew[j] = f[j];
+
 		//fnew[j] = f[j] - (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 		/*FPCK_FINITE(AinvJ[0].vv.row(j));
-		FPCK_FINITE(AinvJ[1].vv.row(j));
-		if (!FPCK_FINITE(fnew.v)){
-			FPCK_FINITE(b.v);
-			DSTR << AinvJ[0].vv << AinvJ[1].vv;
-			DSTR << AinvJ[0].vw << AinvJ[1].vw;
-			DSTR << dA.v[j];
-			DSTR << std::endl;
-			DSTR << "f.v:" << f.v << "b.v:" << b.v << std::endl;
-			DSTR << "s0:" << (solid[0]->dv.v) << (solid[0]->dv.w) << std::endl;
-			DSTR << "s1:" << (solid[1]->dv.v) << (solid[1]->dv.w) << std::endl;
-		}*/
+		FPCK_FINITE(AinvJ[1].vv.row(j));*/
+		if (!FPCK_FINITE(fnew[0])){
+			FPCK_FINITE(b[0]);
+//			DSTR << AinvJ[0].vv << AinvJ[1].vv;
+//			DSTR << AinvJ[0].vw << AinvJ[1].vw;
+//			DSTR << dA.v[j];
+//			DSTR << std::endl;
+//			DSTR << "f.v:" << f.v << "b.v:" << b.v << std::endl;
+			DSTR << "s0:" << (solid[0]->dv) << std::endl;
+			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
+		}
 		Projection(fnew[j], j);
 		df[j] = fnew[j] - f[j];
 		for(i = 0; i < 2; i++){
