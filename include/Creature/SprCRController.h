@@ -242,17 +242,17 @@ struct CRWalkingControllerIf : CRControllerIf{
 	*/
 	virtual void SetRotationAngle(float rot)= 0;
 
-		/** @brief ワールド座標系の進行角度を設定する
+	/** @brief ワールド座標系の進行角度を設定する
 	*/
-	virtual void SetRotationWorldCoordinate(double r)=0;
+	virtual void SetRotationWorldCoordinate(double r)= 0;
 
 	/** @brief 静止する
 	*/
-	virtual void Stop(void)=0;
+	virtual void Stop()= 0;
 
 	/** @brief 後ろ向きに歩く
 	*/
-	virtual void Reverse(void)=0;
+	virtual void Reverse()= 0;
 };
 
 /// 歩行コントローラのデスクリプタ

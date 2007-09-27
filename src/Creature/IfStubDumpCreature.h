@@ -142,6 +142,15 @@ struct CRWalkingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, 
 	virtual void SetRotationAngle(float rot){
 		return ((OBJ*)(MIF*)this)->SetRotationAngle(rot);
 	}
+	virtual void SetRotationWorldCoordinate(double r){
+		return ((OBJ*)(MIF*)this)->SetRotationWorldCoordinate(r);
+	}
+	virtual void Stop(){
+		return ((OBJ*)(MIF*)this)->Stop();
+	}
+	virtual void Reverse(){
+		return ((OBJ*)(MIF*)this)->Reverse();
+	}
 };
 struct CRWalkingControllerIf;	class CRWalkingController;
 typedef CRWalkingControllerIfStubTemplate<CRWalkingControllerIf, ObjectIfBuf, CRWalkingController>	CRWalkingControllerIfStub;
@@ -382,9 +391,6 @@ struct CRInternalSceneIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, 
 	}
 	virtual CRInternalSceneObjectIf * CreateInternalSceneObject(const IfInfo * ii, const CRInternalSceneObjectDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateInternalSceneObject(ii, desc);
-	}
-	virtual float GetDefaultTopdownAttr(){
-		return ((OBJ*)(MIF*)this)->GetDefaultTopdownAttr();
 	}
 };
 struct CRInternalSceneIf;	class CRInternalScene;

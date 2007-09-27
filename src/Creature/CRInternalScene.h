@@ -216,10 +216,6 @@ public:
 	/** @brief オブジェクトを作成する
 	*/
 	virtual CRInternalSceneObjectIf* CreateInternalSceneObject(const IfInfo* ii, const CRInternalSceneObjectDesc& desc);
-
-	/** @brief 正体のわからない物体がデフォルトで持つトップダウン注意の量を返す
-	*/
-	virtual float GetDefaultTopdownAttr();
 };
 }
 //@}

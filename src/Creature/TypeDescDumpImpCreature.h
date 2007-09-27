@@ -440,10 +440,10 @@
 	field->offset = int((char*)&(pCRWalkingControllerDesc->DoubleSupportLimitRate) - (char*)pCRWalkingControllerDesc);
 	field = desc->AddField("", "double", "LimitChange", "");
 	field->offset = int((char*)&(pCRWalkingControllerDesc->LimitChange) - (char*)pCRWalkingControllerDesc);
-	field = desc->AddField("", "double", "footsize", "");
-	field->offset = int((char*)&(pCRWalkingControllerDesc->footsize) - (char*)pCRWalkingControllerDesc);
 	field = desc->AddField("", "double", "pi", "");
 	field->offset = int((char*)&(pCRWalkingControllerDesc->pi) - (char*)pCRWalkingControllerDesc);
+	field = desc->AddField("", "double", "footsize", "");
+	field->offset = int((char*)&(pCRWalkingControllerDesc->footsize) - (char*)pCRWalkingControllerDesc);
 	field = desc->AddField("", "double", "miu", "");
 	field->offset = int((char*)&(pCRWalkingControllerDesc->miu) - (char*)pCRWalkingControllerDesc);
 	db->RegisterDesc(desc);
@@ -520,6 +520,8 @@
 	field->offset = int((char*)&(pCRISAttractiveObjectDesc->bottomupAttr) - (char*)pCRISAttractiveObjectDesc);
 	field = desc->AddField("", "float", "topdownAttr", "");
 	field->offset = int((char*)&(pCRISAttractiveObjectDesc->topdownAttr) - (char*)pCRISAttractiveObjectDesc);
+	field = desc->AddField("", "float", "unknownAttr", "");
+	field->offset = int((char*)&(pCRISAttractiveObjectDesc->unknownAttr) - (char*)pCRISAttractiveObjectDesc);
 	field = desc->AddField("", "float", "uncertainty", "");
 	field->offset = int((char*)&(pCRISAttractiveObjectDesc->uncertainty) - (char*)pCRISAttractiveObjectDesc);
 	field = desc->AddField("", "float", "uncertaintyIncRate", "");
@@ -548,8 +550,6 @@
 	desc->ifInfo = CRInternalSceneIf::GetIfInfoStatic();
 	((IfInfo*)CRInternalSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<CRInternalSceneDesc>;
-	field = desc->AddField("", "float", "defaultTopdownAttr", "");
-	field->offset = int((char*)&(pCRInternalSceneDesc->defaultTopdownAttr) - (char*)pCRInternalSceneDesc);
 	db->RegisterDesc(desc);
 	
 	CRSensorDesc* pCRSensorDesc = NULL;

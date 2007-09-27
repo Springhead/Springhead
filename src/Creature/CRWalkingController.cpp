@@ -126,6 +126,7 @@ void CRWalkingController::Step(){
 	totalStep = totalStep + 1;
 	CRController::Step();
 
+	if(totalStep == 200) Stop();
 	if(totalStep > 200 && completefall == false)gait();
 	else if(completefall == false) stand();
 	else fallForce();

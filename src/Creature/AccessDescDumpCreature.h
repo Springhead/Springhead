@@ -1013,8 +1013,8 @@ protected: \
 	double MaxFootAccelerationBack ; \
 	double DoubleSupportLimitRate ; \
 	double LimitChange ; \
-	double footsize ; \
 	double pi ; \
+	double footsize ; \
 	double miu ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -1041,8 +1041,8 @@ public: \
 		MaxFootAccelerationBack = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack; \
 		DoubleSupportLimitRate = ((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate; \
 		LimitChange = ((CRWalkingControllerDesc*)desc)->LimitChange; \
-		footsize = ((CRWalkingControllerDesc*)desc)->footsize; \
 		pi = ((CRWalkingControllerDesc*)desc)->pi; \
+		footsize = ((CRWalkingControllerDesc*)desc)->footsize; \
 		miu = ((CRWalkingControllerDesc*)desc)->miu; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -1069,8 +1069,8 @@ public: \
 		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack = MaxFootAccelerationBack; \
 		((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate = DoubleSupportLimitRate; \
 		((CRWalkingControllerDesc*)desc)->LimitChange = LimitChange; \
-		((CRWalkingControllerDesc*)desc)->footsize = footsize; \
 		((CRWalkingControllerDesc*)desc)->pi = pi; \
+		((CRWalkingControllerDesc*)desc)->footsize = footsize; \
 		((CRWalkingControllerDesc*)desc)->miu = miu; \
 		return true; \
 	} \
@@ -1099,8 +1099,8 @@ protected: \
 	double MaxFootAccelerationBack ; \
 	double DoubleSupportLimitRate ; \
 	double LimitChange ; \
-	double footsize ; \
 	double pi ; \
+	double footsize ; \
 	double miu ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -1126,8 +1126,8 @@ public: \
 		MaxFootAccelerationBack = ((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack; \
 		DoubleSupportLimitRate = ((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate; \
 		LimitChange = ((CRWalkingControllerDesc*)desc)->LimitChange; \
-		footsize = ((CRWalkingControllerDesc*)desc)->footsize; \
 		pi = ((CRWalkingControllerDesc*)desc)->pi; \
+		footsize = ((CRWalkingControllerDesc*)desc)->footsize; \
 		miu = ((CRWalkingControllerDesc*)desc)->miu; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -1153,8 +1153,8 @@ public: \
 		((CRWalkingControllerDesc*)desc)->MaxFootAccelerationBack = MaxFootAccelerationBack; \
 		((CRWalkingControllerDesc*)desc)->DoubleSupportLimitRate = DoubleSupportLimitRate; \
 		((CRWalkingControllerDesc*)desc)->LimitChange = LimitChange; \
-		((CRWalkingControllerDesc*)desc)->footsize = footsize; \
 		((CRWalkingControllerDesc*)desc)->pi = pi; \
+		((CRWalkingControllerDesc*)desc)->footsize = footsize; \
 		((CRWalkingControllerDesc*)desc)->miu = miu; \
 		return true; \
 	} \
@@ -1305,6 +1305,7 @@ public: \
 protected: \
 	float bottomupAttr ; \
 	float topdownAttr ; \
+	float unknownAttr ; \
 	float uncertainty ; \
 	float uncertaintyIncRate ; \
 	float uncertaintyDecRate ; \
@@ -1313,6 +1314,7 @@ public: \
 		cls##::SetDesc(desc); \
 		bottomupAttr = ((CRISAttractiveObjectDesc*)desc)->bottomupAttr; \
 		topdownAttr = ((CRISAttractiveObjectDesc*)desc)->topdownAttr; \
+		unknownAttr = ((CRISAttractiveObjectDesc*)desc)->unknownAttr; \
 		uncertainty = ((CRISAttractiveObjectDesc*)desc)->uncertainty; \
 		uncertaintyIncRate = ((CRISAttractiveObjectDesc*)desc)->uncertaintyIncRate; \
 		uncertaintyDecRate = ((CRISAttractiveObjectDesc*)desc)->uncertaintyDecRate; \
@@ -1321,6 +1323,7 @@ public: \
 		cls##::GetDesc(desc); \
 		((CRISAttractiveObjectDesc*)desc)->bottomupAttr = bottomupAttr; \
 		((CRISAttractiveObjectDesc*)desc)->topdownAttr = topdownAttr; \
+		((CRISAttractiveObjectDesc*)desc)->unknownAttr = unknownAttr; \
 		((CRISAttractiveObjectDesc*)desc)->uncertainty = uncertainty; \
 		((CRISAttractiveObjectDesc*)desc)->uncertaintyIncRate = uncertaintyIncRate; \
 		((CRISAttractiveObjectDesc*)desc)->uncertaintyDecRate = uncertaintyDecRate; \
@@ -1331,6 +1334,7 @@ public: \
 protected: \
 	float bottomupAttr ; \
 	float topdownAttr ; \
+	float unknownAttr ; \
 	float uncertainty ; \
 	float uncertaintyIncRate ; \
 	float uncertaintyDecRate ; \
@@ -1338,6 +1342,7 @@ public: \
 	virtual void SetDesc(const void* desc){ \
 		bottomupAttr = ((CRISAttractiveObjectDesc*)desc)->bottomupAttr; \
 		topdownAttr = ((CRISAttractiveObjectDesc*)desc)->topdownAttr; \
+		unknownAttr = ((CRISAttractiveObjectDesc*)desc)->unknownAttr; \
 		uncertainty = ((CRISAttractiveObjectDesc*)desc)->uncertainty; \
 		uncertaintyIncRate = ((CRISAttractiveObjectDesc*)desc)->uncertaintyIncRate; \
 		uncertaintyDecRate = ((CRISAttractiveObjectDesc*)desc)->uncertaintyDecRate; \
@@ -1345,6 +1350,7 @@ public: \
 	virtual bool GetDesc(void* desc){ \
 		((CRISAttractiveObjectDesc*)desc)->bottomupAttr = bottomupAttr; \
 		((CRISAttractiveObjectDesc*)desc)->topdownAttr = topdownAttr; \
+		((CRISAttractiveObjectDesc*)desc)->unknownAttr = unknownAttr; \
 		((CRISAttractiveObjectDesc*)desc)->uncertainty = uncertainty; \
 		((CRISAttractiveObjectDesc*)desc)->uncertaintyIncRate = uncertaintyIncRate; \
 		((CRISAttractiveObjectDesc*)desc)->uncertaintyDecRate = uncertaintyDecRate; \
@@ -1385,27 +1391,21 @@ public: \
 
 #define ACCESS_DESC_CRInternalSceneDesc(cls) \
 protected: \
-	float defaultTopdownAttr ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
-		defaultTopdownAttr = ((CRInternalSceneDesc*)desc)->defaultTopdownAttr; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
-		((CRInternalSceneDesc*)desc)->defaultTopdownAttr = defaultTopdownAttr; \
 		return true; \
 	} \
 
 #define ACCESS_DESC_CRInternalSceneDesc_NOBASE \
 protected: \
-	float defaultTopdownAttr ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
-		defaultTopdownAttr = ((CRInternalSceneDesc*)desc)->defaultTopdownAttr; \
 	} \
 	virtual bool GetDesc(void* desc){ \
-		((CRInternalSceneDesc*)desc)->defaultTopdownAttr = defaultTopdownAttr; \
 		return true; \
 	} \
 

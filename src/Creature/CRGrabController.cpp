@@ -76,6 +76,11 @@ void CRGrabController::Step(){
 			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
 		}
 		*/
+	} else if (controlState==CRGrabControllerIf::CRGC_PLACE) {
+		if (reachLeft->IsReached() && reachRight->IsReached()) {
+			AbortAll();
+			controlState = CRGrabControllerIf::CRGC_PLACE_COMPLETE;
+		}
 	}
 }
 
@@ -173,8 +178,24 @@ bool CRGrabController::IsUpholdComplete(){
 }
 
 bool CRGrabController::Place(Vec3d pos){
-	//
-	return false;
+	if (!IsPlaceable(pos)) {
+		return false;
+	}
+
+	Vec3f reachPointDirL;
+	Vec3f w2t = (pos - soWaist->GetPose().Pos());
+	reachPointDirL = Vec3f(w2t.Z(), 0, -w2t.X()).unit();
+	if (PTM::cross(w2t, reachPointDirL).Y() < 0) {
+		reachPointDirL = -reachPointDirL;
+	}
+
+	reachLeft->SetTarget(pos + reachPointDirL*targetRadius*1.2, Vec3f(0,0,0), 1.5, -1);
+	reachRight->SetTarget(pos - reachPointDirL*targetRadius*1.2, Vec3f(0,0,0), 1.5, -1);
+	reachChest->SetTarget(pos, Vec3f(0,0,0), 1.5, -1);
+
+	controlState = CRGrabControllerIf::CRGC_PLACE;
+
+	return true;
 }
 
 bool CRGrabController::IsPlaceable(Vec3d pos){
@@ -182,7 +203,7 @@ bool CRGrabController::IsPlaceable(Vec3d pos){
 }
 
 bool CRGrabController::IsPlaceable(Vec3d pos, float safety){
-	if (controlState!=CRGrabControllerIf::CRGC_UPHOLD_COMPLETE) {
+	if (controlState!=CRGrabControllerIf::CRGC_UPHOLD_COMPLETE && controlState!=CRGrabControllerIf::CRGC_PLACE) {
 		return false;
 	}
 	float distance = (pos - soWaist->GetPose().Pos()).norm();
@@ -190,15 +211,39 @@ bool CRGrabController::IsPlaceable(Vec3d pos, float safety){
 }
 
 bool CRGrabController::IsPlaceComplete(){
-	return(controlState==CRGrabControllerIf::CRGC_PLACE_COMPLETE);
+	return(controlState==CRGrabControllerIf::CRGC_PLACE_COMPLETE
+		|| controlState==CRGrabControllerIf::CRGC_STANDBY);
 }
 
 void CRGrabController::Abort(){
-	//
+	if (controlState==CRGrabControllerIf::CRGC_REACH) {
+		AbortAll();
+	} else if (controlState==CRGrabControllerIf::CRGC_UPHOLD) {
+		reachChest->Reset();
+		controlState = CRGrabControllerIf::CRGC_REACH_COMPLETE;
+	} else if (controlState==CRGrabControllerIf::CRGC_PLACE) {
+		reachLeft->Reset();
+		reachRight->Reset();
+		reachChest->Reset();
+		if (reachLeft->IsReached() && reachRight->IsReached()) {
+			targetSolid = NULL;
+			targetRadius = 0.0f;
+			placePos = Vec3f(0,0,0);
+			grabSpring.first = NULL;
+			grabSpring.second = NULL;
+			controlState = CRGrabControllerIf::CRGC_PLACE_COMPLETE;
+		}
+	}
 }
 
 void CRGrabController::AbortAll(){
-	//
+	if (grabSpring.first && grabSpring.second) {
+		grabSpring.first->Enable(false);
+		grabSpring.second->Enable(false);
+	}
+	reachLeft->Reset();
+	reachRight->Reset();
+	reachChest->Reset();
 	targetSolid = NULL;
 	targetRadius = 0.0f;
 	placePos = Vec3f(0,0,0);

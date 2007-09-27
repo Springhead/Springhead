@@ -107,6 +107,9 @@ struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
 	/// トップダウン性の注意として割り当てられた値
 	float topdownAttr;
 
+	/// この物体が不確実な時に発するAttention
+	float unknownAttr;
+
 	/// 不確実性レベル（物体が見えると減少し，見えないと増加する，0.0～1.0の値）
 	float uncertainty;
 
@@ -119,6 +122,7 @@ struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
 	CRISAttractiveObjectDesc(){
 		bottomupAttr = 0.0f;
 		topdownAttr  = 0.0f;
+		unknownAttr  = 1.0f;
 		uncertainty  = 1.0f;
 		uncertaintyIncRate = 0.99f;
 		uncertaintyDecRate = 0.9f;
@@ -208,21 +212,13 @@ struct CRInternalSceneIf : SceneObjectIf{
 	template <class T> CRInternalSceneObjectIf* CreateInternalSceneObject(const T& desc){
 		return CreateInternalSceneObject(T::GetIfInfo(), desc);
 	}
-
-	/** @brief 正体のわからない物体がデフォルトで持つトップダウン注意の量を返す
-	*/
-	virtual float GetDefaultTopdownAttr()= 0;
 };
 
 /// 内部シーンのデスクリプタ
 struct CRInternalSceneDesc{
 	DESC_DEF_FOR_OBJECT(CRInternalScene);
 
-	/// Uncertaintyが1の物体が持つTopDownAttentionの量
-	float defaultTopdownAttr;
-
 	CRInternalSceneDesc(){
-		defaultTopdownAttr = 0.0f;
 	}
 };
 

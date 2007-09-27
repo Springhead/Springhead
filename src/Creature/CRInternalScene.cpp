@@ -47,7 +47,7 @@ void CRInternalSceneObject::SetPos(Vec3d pos){
 IF_OBJECT_IMP(CRISAttractiveObject, CRInternalSceneObject);
 
 float CRISAttractiveObject::GetTotalAttractiveness(){
-	return bottomupAttr + (topdownAttr * (1.0 - uncertainty)) + (internalScene->GetDefaultTopdownAttr() * uncertainty);
+	return bottomupAttr + (topdownAttr * (1.0 - uncertainty)) + (unknownAttr * uncertainty);
 }
 
 void CRISAttractiveObject::AddBottomupAttr(float attr){
@@ -184,9 +184,5 @@ CRInternalSceneObjectIf* CRInternalScene::CreateInternalSceneObject(const IfInfo
 	}
 
 	return sceneObjects.back()->Cast();
-}
-
-float CRInternalScene::GetDefaultTopdownAttr(){
-	return defaultTopdownAttr;
 }
 }

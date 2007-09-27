@@ -186,11 +186,11 @@ public:
 
 	/** @brief Ã~‚·‚é
 	*/
-	virtual void Stop(void);
+	virtual void Stop();
 
 	/** @brief Œã‚ëŒü‚«‚É•à‚­
 	*/
-	virtual void Reverse(void);
+	virtual void Reverse();
 	
 };
 }
