@@ -29,10 +29,10 @@ private:
 	float attractiveness;
 
 	/// 制御につかう剛体
-	PHSolidIf *soHead, *soNeck;
+	PHSolidIf *soHead, *soNeck, *soChest, *soAbdomen;
 
 	/// 制御につかう関節
-	PHHingeJointIf *joNeckHeadX, *joChestNeckY;
+	PHHingeJointIf *joNeckHeadX, *joChestNeckY, *joAbdomenChest;
 
 	/// 基準方向（ここを中心に割合移動する，attractivenessが一定値を超えるとその方向へ変更される）
 	double origX, origZ;

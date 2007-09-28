@@ -29,8 +29,20 @@ void CRAttentionController::Init(){
 void CRAttentionController::Step(){
 	CRController::Step();
 
-	creature->GetInternalScene()->SortByAttractiveness();
-	CRInternalSceneObjectIf* obj = creature->GetInternalScene()->GetISObject(0);
-	gazeCtrl->LookAt(obj->GetSolid()->GetPose() * obj->GetPos(), obj->GetSolid()->GetVelocity(), DCAST(CRISAttractiveObjectIf, obj)->GetTotalAttractiveness());
+	// creature->GetInternalScene()->SortByAttractiveness();
+	// CRInternalSceneObjectIf* obj = creature->GetInternalScene()->GetISObject(0);
+
+	float maxattr = 0;
+	CRISAttractiveObjectIf* maxattrObj = NULL;
+	for (int i=0; i<creature->GetInternalScene()->NObjects(); ++i) {
+		CRISAttractiveObjectIf* att = DCAST(CRISAttractiveObjectIf, creature->GetInternalScene()->GetISObject(i));
+		if (att && att->GetTotalAttractiveness() > maxattr) {
+			maxattr = att->GetTotalAttractiveness();
+			maxattrObj = att;
+		}
+	}
+	if (maxattrObj) {
+		gazeCtrl->LookAt(maxattrObj->GetSolid()->GetPose() * maxattrObj->GetPos(), maxattrObj->GetSolid()->GetVelocity(), maxattrObj->GetTotalAttractiveness());
+	}
 }
 }

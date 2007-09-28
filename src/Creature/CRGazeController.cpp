@@ -39,6 +39,8 @@ void CRGazeController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 	this->vel = vel;
 	this->attractiveness = attractiveness;
 
+	// std::cout << "P:" << pos << " V:" << vel << " A:" << attractiveness << std::endl;
+
 	eyeCtrl->LookAt(pos, vel);
 	neckCtrl->LookAt(pos, vel, attractiveness);
 }

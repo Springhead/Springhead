@@ -28,11 +28,13 @@ void CRNeckController::Init(){
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
 		if (body) {
-			soHead = body->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);
-			soNeck = body->GetSolid(CRHingeHumanBodyDesc::SO_NECK);
+			soHead  = body->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);
+			soNeck  = body->GetSolid(CRHingeHumanBodyDesc::SO_NECK);
+			soChest = body->GetSolid(CRHingeHumanBodyDesc::SO_CHEST);
 			
-			joNeckHeadX  = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
-			joChestNeckY = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
+			joNeckHeadX    = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
+			joChestNeckY   = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
+			joAbdomenChest = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_ABDOMEN_CHEST));
 		}
 	}
 
@@ -42,6 +44,10 @@ void CRNeckController::Init(){
 
 void CRNeckController::Step(){
 	CRController::Step();
+
+	Vec3f dir = (pos - soChest->GetPose()*Vec3f(0,0,-10)).unit();
+	soChest->AddForce(dir *  10.0f, soChest->GetPose()*Vec3f(0,0,-10));
+	soChest->AddForce(dir * -10.0f, soChest->GetPose()*Vec3f(0,0, 10));
 
 	// 首-頭をつなぐ関節の制御
 	/// 頭基準座標系でのターゲットの位置
@@ -65,6 +71,10 @@ void CRNeckController::Step(){
 		origX = X;
 		origZ = Z;
 	}
+
+	float alpha = 0.9;
+	origX = origX*alpha + X*(1.0-alpha);
+	origZ = origZ*alpha + Z*(1.0-alpha);
 
 	/// 関節の目標値をセット
 	double lower, upper;

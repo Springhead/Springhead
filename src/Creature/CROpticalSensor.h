@@ -36,7 +36,7 @@ private:
 	std::set<PHSolidIf*> selfSolids;
 
 	/// 視野内外判定の基盤となる関数
-	bool  IsInside(PHSolidIf* solid, double rangeIn, double rangeOut, double rangeVert);
+	bool  IsInside(Vec3f pos, double rangeIn, double rangeOut, double rangeVert);
 
 	/// 方向ベクトルを水平・垂直角度に変換
 	Vec2d Vec3ToAngle(Vec3d v);
@@ -67,6 +67,14 @@ public:
 	/** @brief 中心視野内外判定を行う
 	*/
 	virtual bool IsInCenter(PHSolidIf* solid);
+
+	/** @brief 視野内外判定を行う
+	*/
+	virtual bool IsVisible(Vec3f pos);
+
+	/** @brief 中心視野内外判定を行う
+	*/
+	virtual bool IsInCenter(Vec3f pos);
 
 	/** @brief 自分自身の剛体かどうかを判定する
 	*/

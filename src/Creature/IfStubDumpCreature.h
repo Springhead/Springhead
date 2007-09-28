@@ -151,6 +151,9 @@ struct CRWalkingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, 
 	virtual void Reverse(){
 		return ((OBJ*)(MIF*)this)->Reverse();
 	}
+	virtual void SetPos(Vec3f pos){
+		return ((OBJ*)(MIF*)this)->SetPos(pos);
+	}
 };
 struct CRWalkingControllerIf;	class CRWalkingController;
 typedef CRWalkingControllerIfStubTemplate<CRWalkingControllerIf, ObjectIfBuf, CRWalkingController>	CRWalkingControllerIfStub;
@@ -176,7 +179,7 @@ typedef IfInitTemplate<CREseWalkingControllerIfStub, CREseWalkingController>	CRE
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRTravelControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetGoal(Vec2f goal){
+	virtual void SetGoal(Vec3f goal){
 		return ((OBJ*)(MIF*)this)->SetGoal(goal);
 	}
 };
@@ -419,6 +422,12 @@ struct CROpticalSensorIfStubTemplate: public CRSensorIfStubTemplate<IF, MIF, OBJ
 	}
 	virtual bool IsInCenter(PHSolidIf * solid){
 		return ((OBJ*)(MIF*)this)->IsInCenter(solid);
+	}
+	virtual bool IsVisible(Vec3f pos){
+		return ((OBJ*)(MIF*)this)->IsVisible(pos);
+	}
+	virtual bool IsInCenter(Vec3f pos){
+		return ((OBJ*)(MIF*)this)->IsInCenter(pos);
 	}
 	virtual bool IsSelfSolid(PHSolidIf * solid){
 		return ((OBJ*)(MIF*)this)->IsSelfSolid(solid);

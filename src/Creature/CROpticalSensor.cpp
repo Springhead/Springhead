@@ -57,7 +57,24 @@ void CROpticalSensor::Step(){
 	Vec3f dirR = soREye->GetPose().Ori() * Vec3f(0,0,-1);
 	Vec3f visualAxis = ((dirL + dirR) * 0.5f).unit();
 
-	for(int i=0; i<phScene->NSolids(); i++) {
+	for (int i=0; i<internalScene->NObjects(); ++i) {
+		CRISAttractiveObjectIf* att = DCAST(CRISAttractiveObjectIf, internalScene->GetISObject(i));
+		if (att && !IsSelfSolid(att->GetSolid())) {
+			Vec3f pos = att->GetSolid()->GetPose() * att->GetPos();
+			if (IsInCenter(pos)) {
+				att->DecUncertainty();
+				/*
+				if (att->GetISObjType()) {
+					std::cout << "InCenter : " << att->GetSolid()->GetPose().Pos() << att->GetISObjType() << std::endl;
+				} else {
+					std::cout << "InCenter : " << att->GetSolid()->GetPose().Pos() << std::endl;
+				}
+				*/
+			}
+		}
+	}
+
+	for (int i=0; i<phScene->NSolids(); ++i) {
 		PHSolidIf* solid = phScene->GetSolids()[i];
 		if (IsVisible(solid) && !IsSelfSolid(solid)) {
 			CRISAttractiveObjectIf* ao = DCAST(CRISAttractiveObjectIf, internalScene->FindObject(solid, Vec3f(0,0,0)));
@@ -78,10 +95,17 @@ void CROpticalSensor::Step(){
 
 				ao->AddBottomupAttr(trnAmmount + divAmmount + rotAmmount);
 
+				/*
 				// WhatƒXƒgƒŠ[ƒ€
 				if (IsInCenter(solid)) {
 					ao->DecUncertainty();
+					if (ao->GetISObjType()) {
+						std::cout << "InCenter : " << ao->GetSolid()->GetPose().Pos() << ao->GetISObjType() << std::endl;
+					} else {
+						std::cout << "InCenter : " << ao->GetSolid()->GetPose().Pos() << std::endl;
+					}
 				}
+				*/
 			}
 		}
 	}
@@ -93,13 +117,13 @@ Vec2d CROpticalSensor::Vec3ToAngle(Vec3d v){
 	return(Vec2d( atan2( v.Y()/D1, -v.Z()/D1), atan2(-v.X()/D2, -v.Z()/D2) ));
 }
 
-bool CROpticalSensor::IsInside(PHSolidIf* solid, double rangeIn, double rangeOut, double rangeVert){
-	Vec2d angleL = Vec3ToAngle(soLEye->GetPose().Ori().Inv() * (solid->GetPose().Pos()-soLEye->GetPose().Pos()));
+bool CROpticalSensor::IsInside(Vec3f pos, double rangeIn, double rangeOut, double rangeVert){
+	Vec2d angleL = Vec3ToAngle(soLEye->GetPose().Ori().Inv() * (pos-soLEye->GetPose().Pos()));
 	if ((-rangeIn<angleL.Y() && angleL.Y()<rangeOut) && (-rangeVert<angleL.X() && angleL.X()<rangeVert)) {
 		return true;
 	}
 
-	Vec2d angleR = Vec3ToAngle(soREye->GetPose().Ori().Inv() * (solid->GetPose().Pos()-soREye->GetPose().Pos()));
+	Vec2d angleR = Vec3ToAngle(soREye->GetPose().Ori().Inv() * (pos-soREye->GetPose().Pos()));
 	if ((-rangeOut<angleR.Y() && angleR.Y()<rangeIn) && (-rangeVert<angleR.X() && angleR.X()<rangeVert)) {
 		return true;
 	}
@@ -108,11 +132,19 @@ bool CROpticalSensor::IsInside(PHSolidIf* solid, double rangeIn, double rangeOut
 }
 
 bool CROpticalSensor::IsVisible(PHSolidIf* solid){
-	return IsInside(solid, Rad(30), Rad(50), Rad(45));
+	return IsInside(solid->GetPose().Pos(), Rad(30), Rad(50), Rad(45));
 }
 
 bool CROpticalSensor::IsInCenter(PHSolidIf* solid){
-	return IsInside(solid, Rad(5), Rad(5), Rad(5));
+	return IsInside(solid->GetPose().Pos(), Rad(5), Rad(5), Rad(5));
+}
+
+bool CROpticalSensor::IsVisible(Vec3f pos){
+	return IsInside(pos, Rad(30), Rad(50), Rad(45));
+}
+
+bool CROpticalSensor::IsInCenter(Vec3f pos){
+	return IsInside(pos, Rad(20), Rad(20), Rad(20));
 }
 
 bool CROpticalSensor::IsSelfSolid(PHSolidIf* solid){

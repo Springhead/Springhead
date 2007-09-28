@@ -28,9 +28,13 @@ void CRTravelController::Init(){
 
 	for (int i=0; i<creature->NControllers(); i++) {
 		if (!walkCtrl) {
-			walkCtrl = DCAST(CREseWalkingControllerIf, creature->GetController(i));
+			// walkCtrl = DCAST(CREseWalkingControllerIf, creature->GetController(i));
+			walkCtrl = DCAST(CRWalkingControllerIf, creature->GetController(i));
 		}
 	}
+
+	goal = Vec3f(0,-10,0);
+	maxSpeed = 1.0;
 }
 
 void CRTravelController::Step(){
@@ -46,18 +50,48 @@ void CRTravelController::Step(){
 		}
 	}
 
+	if (goal.Y() > -5) {
+		Vec3f currPos = soWaist->GetPose().Pos();
+		Vec3f goalPos = goal;
+		currPos.Y()=0; goalPos.Y()=0;
+		float distance = (goalPos - currPos).norm();
+
+		float limitStartDist = 2.0;
+		float limitSatDist   = 0.7;
+		float maxMax = 1.0;
+		float minMax = 0.1;
+
+		if (distance < limitSatDist) {
+			maxSpeed = minMax;
+		} else if (distance < limitStartDist) {
+			maxSpeed = minMax + (distance-limitSatDist)/(limitStartDist-limitSatDist)*(maxMax-minMax);
+		} else {
+			maxSpeed = maxMax;
+		}
+
+		/*
+		std::cout << "ƒS[ƒ‹ : " << goal;
+		std::cout << ", ƒS[ƒ‹‚Ü‚Å‚Ì‹——£ : " << distance;
+		std::cout << ", MaxSpeed : " << maxSpeed << std::endl;
+		*/
+	}
+
 	if (potential.norm() > 0) {
 		Vec2f dir = potential.unit();
 
 		Vec3f currDir3 = soWaist->GetPose().Ori() * Vec3f(0,0,-1);
 		Vec2f currDir = Vec2f(currDir3.X(), currDir3.Z()).unit();
 
+		/*
 		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 3.0);
 		walkCtrl->SetSpeed((PTM::dot(currDir, dir)+1) * 1.0);
+		*/
+		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 0.5);
+		walkCtrl->SetSpeed((PTM::dot(currDir, dir)+1) / 2.0 * maxSpeed);
 	}
 }
 
-void CRTravelController::SetGoal(Vec2f goal){
+void CRTravelController::SetGoal(Vec3f goal){
 	this->goal = goal;
 }
 }
