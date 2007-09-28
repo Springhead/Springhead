@@ -42,6 +42,10 @@ private:
 	PHSolidIf* hiFootLeft;
 	PHSolidIf* hiFootRight;
 
+	PHSolidIf* syncFootLeft;
+	PHSolidIf* syncFootRight;
+	PHSolidIf* syncHip;
+
 	CRHingeHumanBodyIf* hibody;
 	CRTrunkFootHumanBodyIf* tfbody;
 

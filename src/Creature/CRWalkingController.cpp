@@ -38,6 +38,22 @@ void CRWalkingController::Init(){
 	AssignHip();        
 	AssignHead();    
 
+	// ヒンジボディ追従用の剛体・関節
+	PHSolidDesc descSolid;
+	descSolid.dynamical = false;
+	syncFootLeft  = phScene->CreateSolid(descSolid);
+	syncFootRight = phScene->CreateSolid(descSolid);
+	syncHip       = phScene->CreateSolid(descSolid);
+	PHBallJointDesc descBall;
+	{
+		descBall.origin = Quaternionf();
+		descBall.spring = 10000.0f;
+		descBall.damper =   100.0f;
+	}
+	phScene->CreateJoint(hiFootLeft,  syncFootLeft,  descBall);
+	phScene->CreateJoint(hiFootRight, syncFootRight, descBall);
+	phScene->CreateJoint(hiHip,       syncHip,       descBall);
+
 	///初期パラメータの設定/////
     paramVelocityX = 0.8; 
     paramHalfStrideX = 0.175;
@@ -1547,7 +1563,16 @@ void CRWalkingController::SetPos(Vec3f pos){
 }
 
 void CRWalkingController::SuperimposeHingeBody(){
+	syncFootLeft->SetFramePosition(tfFootLeft->GetPose().Pos());
+	syncFootLeft->SetOrientation(tfFootLeft->GetPose().Ori());
 
+	syncFootRight->SetFramePosition(tfFootRight->GetPose().Pos());
+	syncFootRight->SetOrientation(tfFootRight->GetPose().Ori());
+
+	syncHip->SetFramePosition(tfHip->GetPose().Pos());
+	syncHip->SetOrientation(tfHip->GetPose().Ori());
+
+	/*
 	double KpHip = 2500.0;
 	double KvHip = 100.0;
 	double KpFoot = 1800.0;
@@ -1582,6 +1607,7 @@ void CRWalkingController::SuperimposeHingeBody(){
 	hiHip->AddTorque(KroHip*(dQuatHip.Rotation()) - KavHip*hiHip->GetAngularVelocity());
 	hiFootLeft->AddTorque(KroFoot*(dQuatFootLeft.Rotation()) - KavFoot*hiFootLeft->GetAngularVelocity());
 	hiFootRight->AddTorque(KroFoot*(dQuatFootRight.Rotation()) - KavFoot*hiFootRight->GetAngularVelocity());
+	*/
 }
 
 }
