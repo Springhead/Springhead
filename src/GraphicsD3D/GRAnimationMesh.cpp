@@ -261,6 +261,16 @@ void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pos
 	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
 }
 
+void GRAnimationMesh::SetAllBonesOverrideWeight(double weight){
+	OverrideFrame(rootFrame, weight);
+}
+
+void GRAnimationMesh::OverrideFrame(Frame* frame, double weight){
+	frame->overrideWeight = weight;
+	if(frame->pFrameSibling)    OverrideFrame((Frame*)frame->pFrameSibling, weight);
+	if(frame->pFrameFirstChild) OverrideFrame((Frame*)frame->pFrameFirstChild, weight);
+}
+
 void GRAnimationMesh::AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr){
 	DrawSubsetListener l;
 	l.beforeFunc = beforeFunc;

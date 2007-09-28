@@ -41,6 +41,7 @@ public:
 	virtual Posed GetBoneKeyframePose(const std::string& name);
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
+	virtual void SetAllBonesOverrideWeight(double weight);
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr);
 	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize);
 	void Render(GRRenderIf* r);
@@ -60,6 +61,7 @@ protected:
 	void DrawFrame(const Frame *frame);
 	void DrawSkinnedMeshContainer(MeshContainer *meshContainer);
 	void DrawNormalMeshContainer(MeshContainer *meshContainer, const Frame *frame);
+	void OverrideFrame(Frame* frame, double weight);
 };
 
 struct GRAnimationMesh::Frame : public D3DXFRAME

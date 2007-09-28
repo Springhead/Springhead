@@ -191,7 +191,22 @@ public:
 	/** @brief 後ろ向きに歩く
 	*/
 	virtual void Reverse();
-	
+
+	/** @brief 位置を設定する（初期状態決定のため）
+	*/
+	virtual void SetPos(Vec3f pos);
+
+	/** @brief 基本歩行周期を取得
+	*/
+	virtual double GetBasicCycle() { return et/(et+timeleft); }
+
+	/** @brief 歩行の継続が不可能か？
+	*/
+	virtual bool IsCompleteFall() { return completefall; }
+
+	/** @brief 左足が遊足か？
+	*/
+	virtual bool isLeftSwingFoot() { return LF; }
 };
 }
 //@}

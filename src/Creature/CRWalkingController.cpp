@@ -73,8 +73,12 @@ void CRWalkingController::Init(){
 	reverse = false;
 	stop = false;
 
+	/*
 	Xs = 0.0;//////////////////////////////////////////////////////////////////////
 	Zs = 0.0;//////////////////////////////////////////////////////////////////////
+	*/
+	Xs = tfChest->GetPose().Pos().X();
+	Zs = tfChest->GetPose().Pos().Z();
 
 	CreateCRWCTimeLeft();
 	CreateCRWCChangeAroundCenter();
@@ -126,9 +130,12 @@ void CRWalkingController::Step(){
 	totalStep = totalStep + 1;
 	CRController::Step();
 
-	if(totalStep == 200) Stop();
 	if(totalStep > 200 && completefall == false)gait();
-	else if(completefall == false) stand();
+	else if(completefall == false && totalStep < 200) {
+		stand();
+		SetRotationAngle(0.0);
+		Stop();
+	}
 	else fallForce();
 
 	SuperimposeHingeBody();
@@ -774,7 +781,7 @@ void CRWalkingController::ConstraintForce(void){
 		tfHip->AddForce(-ForceBodyLeft);
 		tfHip->AddForce(-ForceFootLeft);
 		tfFootLeft->AddForce(ForceFootLeft);
-		}
+	}
 
 	//‹r‚Æã‘Ì‚ÌŠp“x‚ªMaxRoConstraint‚ð’´‚¦‚½ê‡‚É‹r‚Æ˜‚É‚©‚¯‚é—Í
 	if(RoRight.norm() > MaxRoConstraint) {
@@ -782,10 +789,10 @@ void CRWalkingController::ConstraintForce(void){
 		ForceBodyRight = (param0*RoRight.norm()-MaxRoConstraint) * (Rightvec.norm()/Bvec.norm()) * HousenBodyRight;
 		
 		tfHead->AddForce(ForceBodyRight);
-	    tfHip->AddForce(-ForceBodyRight);   //Œ´ˆö•s–¾.‰½ŒÌ‚©‚±‚ê‚ð“ü‚ê‚é‚Æ‚¨‚©‚µ‚­‚È‚é
+	    tfHip->AddForce(-ForceBodyRight);
 		tfHip->AddForce(-ForceFootRight);
 		tfFootRight->AddForce(ForceFootRight);
-		}
+	}
 }
 
 //•às‚ªŒp‘±‰Â”\‚©”»’è‚·‚é
@@ -916,10 +923,10 @@ void CRWalkingController::fallForce(){
 	}
 
 	if(tfHip->GetCenterPosition().y < 0.3){
-		tfHead->AddForce(-35.0*tfHead->GetVelocity());
-	    tfChest->AddForce(-35.0*tfChest->GetVelocity());
-	    tfHip->AddForce(-35.0*tfHip->GetVelocity());
-	    tfHip->AddTorque(8.0*(RoLeft+RoRight));
+		tfHead->AddForce(-3.5*tfHead->GetVelocity());
+	    tfChest->AddForce(-3.5*tfChest->GetVelocity());
+	    tfHip->AddForce(-3.5*tfHip->GetVelocity());
+	    tfHip->AddTorque(2.0*(RoLeft+RoRight));
 	}
    
 	/*
@@ -989,6 +996,10 @@ void CRWalkingController::fallForce(){
 
 	tfFootLeft->AddForce(kp*(Pd - tfFootLeft->GetCenterPosition()) - kv*tfFootLeft->GetVelocity());
 	tfFootRight->AddForce(kp*(Pd - tfFootRight->GetCenterPosition()) - kv*tfFootRight->GetVelocity());
+
+	tfChest->AddTorque(-2.0*tfChest->GetAngularVelocity());
+	tfFootLeft->AddTorque(-1.0*tfFootLeft->GetAngularVelocity());
+	tfFootRight->AddTorque(-1.0*tfFootRight->GetAngularVelocity());
 
 	/*
 	if(LengthLeft > MaxFootLength){
@@ -1394,17 +1405,19 @@ void CRWalkingController::func(){
 }
 
 void CRWalkingController::stand(){
-	tfChest->AddForce(-1*phScene->GetGravity()*TotalMass(UpperBody));
-	tfChest->AddForce(10*(Vec3d(Xs,height,Zs) - GetCenterOfBlocks(UpperBody)) - 5*CalcCenterVelocity(UpperBody));
+	tfChest->AddForce(-1*phScene->GetGravity()*TotalMass(UpperBody),Vec3d(Xs,10,Zs));
+	tfChest->AddForce(10*(Vec3d(Xs,height,Zs) - GetCenterOfBlocks(UpperBody)) - 5*CalcCenterVelocity(UpperBody),Vec3d(Xs,10,Zs));
 }
 
 void CRWalkingController::SetSpeed(double v){
 	if(v < 0) {
-		DSTR << "SetSpeed;;Input Positive Value" << std::endl;
-		exit(1);
+		DSTR << "SetSpeed;;Input Negative Value" << std::endl;
+		//exit(1);
+		v = 0.05;
 	} else if(v > 1.2){
 		DSTR << "SetSpeed;;Too Fast Speed Parametor" << std::endl;
-		exit(1);
+		//exit(1);
+		v = 1.2;
 	}
 
 	nextSpeed = v;
@@ -1528,12 +1541,17 @@ void CRWalkingController::SetRotationWorldCoordinate(double r){
 	TargetDirection = r + pi/2;
 }
 
+void CRWalkingController::SetPos(Vec3f pos){
+	Xs = pos.X();
+	Zs = pos.Z();
+}
+
 void CRWalkingController::SuperimposeHingeBody(){
 
-	double KpHip = 1900.0;
-	double KvHip = 135.0;
-	double KpFoot = 800.0;
-	double KvFoot = 82.0;
+	double KpHip = 2500.0;
+	double KvHip = 100.0;
+	double KpFoot = 1800.0;
+	double KvFoot = 80.0;
 	double KroHip = 700.0;
 	double KavHip = 80.0;
 	double KroFoot = 600.0;
@@ -1557,9 +1575,9 @@ void CRWalkingController::SuperimposeHingeBody(){
 	//hiHead->AddForce(KpHip*(tfHead->GetCenterPosition() - hiHead->GetCenterPosition()) - KvHip*hiHead->GetVelocity());
 	//hiChest->AddTorque(KroChest*((tfChest->GetOrientation()).Rotation() - (hiChest->GetOrientation()).Rotation()) - KavChest*hiChest->GetAngularVelocity());
 	//hiHead->AddTorque(KroHip*((tfHead->GetOrientation()).Rotation() - (hiHead->GetOrientation()).Rotation()) - KavHip*hiHead->GetAngularVelocity());
-	hiHip->AddForce(KpHip*(tfHip->GetCenterPosition() - hiHip->GetCenterPosition()) - KvHip*hiHip->GetVelocity());
-    hiFootLeft->AddForce(KpFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetCenterPosition()) - KvFoot*hiFootLeft->GetVelocity());
-	hiFootRight->AddForce(KpFoot*(tfFootRight->GetCenterPosition() - hiFootRight->GetCenterPosition()) - KvFoot*hiFootRight->GetVelocity());
+	hiHip->AddForce(KpHip*(tfHip->GetCenterPosition() - hiHip->GetCenterPosition()) + KvHip*(tfHip->GetCenterPosition() - hiHip->GetVelocity()));
+	hiFootLeft->AddForce(KpFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetCenterPosition()) + KvFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetVelocity()));
+	hiFootRight->AddForce(KpFoot*(tfFootRight->GetCenterPosition() - hiFootRight->GetCenterPosition()) + KvFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetVelocity()));
 
 	hiHip->AddTorque(KroHip*(dQuatHip.Rotation()) - KavHip*hiHip->GetAngularVelocity());
 	hiFootLeft->AddTorque(KroFoot*(dQuatFootLeft.Rotation()) - KavFoot*hiFootLeft->GetAngularVelocity());

@@ -51,6 +51,11 @@ struct GRAnimationMeshIf: public GRVisualIf{
 	*/
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight)=0;
 	
+	/** @brief 全てのボーンの上書き率を一定値にする
+		@param weight 上書き率（0～1, 0：キーフレームに100%従う, 1：poseに100%従う）
+	*/
+	virtual void SetAllBonesOverrideWeight(double weight)=0;
+	
 	/** @brief DrawSubsetの実行時にコールバックされる関数を登録
 		@param beforeFunc DrawSubsetが実行される直前にコールバックされる関数
 		@param afterFunc  DrawSubsetが実行された直後にコールバックされる関数

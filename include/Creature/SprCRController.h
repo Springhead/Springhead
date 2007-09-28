@@ -248,19 +248,23 @@ struct CRWalkingControllerIf : CRControllerIf{
 
 	/** @brief 静止する
 	*/
-<<<<<<< .mine
-	virtual void Stop()=0;
-=======
 	virtual void Stop()= 0;
->>>>>>> .r2665
 
 	/** @brief 後ろ向きに歩く
 	*/
-<<<<<<< .mine
-	virtual void Reverse()=0;
-=======
 	virtual void Reverse()= 0;
->>>>>>> .r2665
+
+	/** @brief 位置を設定する（初期状態決定のため）
+	*/
+	virtual void SetPos(Vec3f pos)= 0;
+
+	/** @brief 基本歩行周期を取得
+	*/
+	virtual double GetBasicCycle()= 0;
+
+	/** @brief 歩行の継続が不可能か？
+	*/
+	virtual bool IsCompleteFall()= 0;
 };
 
 /// 歩行コントローラのデスクリプタ
@@ -362,7 +366,7 @@ struct CRTravelControllerIf : CRControllerIf{
 
 	/** @brief 目標地点を設定する
 	*/
-	virtual void SetGoal(Vec2f goal)= 0;
+	virtual void SetGoal(Vec3f goal)= 0;
 };
 
 /// 移動コントローラのデスクリプタ

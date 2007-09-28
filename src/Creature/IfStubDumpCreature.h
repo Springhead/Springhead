@@ -154,6 +154,12 @@ struct CRWalkingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, 
 	virtual void SetPos(Vec3f pos){
 		return ((OBJ*)(MIF*)this)->SetPos(pos);
 	}
+	virtual double GetBasicCycle(){
+		return ((OBJ*)(MIF*)this)->GetBasicCycle();
+	}
+	virtual bool IsCompleteFall(){
+		return ((OBJ*)(MIF*)this)->IsCompleteFall();
+	}
 };
 struct CRWalkingControllerIf;	class CRWalkingController;
 typedef CRWalkingControllerIfStubTemplate<CRWalkingControllerIf, ObjectIfBuf, CRWalkingController>	CRWalkingControllerIfStub;

@@ -19,6 +19,9 @@ struct GRAnimationMeshIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ
 	virtual void OverrideBonePose(const std::string & name, const Posed & pose, double weight){
 		return ((OBJ*)(MIF*)this)->OverrideBonePose(name, pose, weight);
 	}
+	virtual void SetAllBonesOverrideWeight(double weight){
+		return ((OBJ*)(MIF*)this)->SetAllBonesOverrideWeight(weight);
+	}
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void * ptr = NULL){
 		return ((OBJ*)(MIF*)this)->AddDrawSubsetListener(beforeFunc, afterFunc, ptr);
 	}
