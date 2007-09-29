@@ -17,9 +17,9 @@ void CRWCChangeAroundCenter::Init(){
 	kpz = 300.0;  //kpz = 40.0;
 	kvz = 30000.0;   //kvz = 2.4;
 	Maxkpx = 50.0;
-	Maxkpz = 130.0;
+	Maxkpz = 80.0;
 	Maxkvx = 50.0;
-	Maxkvz = 130.0;
+	Maxkvz = 80.0;
 
 }
 
@@ -46,12 +46,12 @@ Vec3d CRWCChangeAroundCenter::CalcChangeAroundCenter(void){
 	if(lkvx > Maxkvx) lkvx = Maxkvx;
 	if(lkvz > Maxkvz) lkvz = Maxkvz;
 
-	
-	/*lkpx = 50.0;
-	lkpz = 50.0;*/
-	//lkvx = 500.0;
-	//lkvz = 500.0;
-
+	/*
+	lkpx = 50.0;
+	lkpz = 50.0;
+	lkvx = 130.0;
+	lkvz = 130.0;
+*/
 	//DSTR << "lkpx = " << lkpx << " lkpz = " << lkpz << " lkvx = " << lkvx << " lkvz = " << lkvz << std::endl;
 
 	LocalChangeX = cos(CurrentDirection)*((lkpx * RoDiff - lkvx * AMAC).x) - sin(CurrentDirection)*((lkpz * RoDiff - lkvz * AMAC).z);

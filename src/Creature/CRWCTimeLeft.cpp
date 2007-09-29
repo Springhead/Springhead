@@ -10,10 +10,10 @@ CRWCTimeLeft::~CRWCTimeLeft(void)
 }
 
 void CRWCTimeLeft::Init(){
-	Tkc = 400.0;
-	Tkvx = 3.0;
-	Tkvz = 3.0;
-	Tkl = 6.0; 
+	Tkc = 6.0;
+	Tkvx = 0.8;
+	Tkvz = 0.35;
+	Tkl = 0.5; 
 
 	pi = 3.1415926535;
 }
