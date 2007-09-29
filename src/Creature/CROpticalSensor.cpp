@@ -93,7 +93,7 @@ void CROpticalSensor::Step(){
 				float divAmmount = abs(PTM::dot(velocity,visualAxis)) * 2.0f / r;
 				float rotAmmount = abs(PTM::dot(angVelocity,visualAxis));
 
-				ao->AddBottomupAttr(trnAmmount + divAmmount + rotAmmount);
+				ao->AddBottomupAttr((trnAmmount + divAmmount + rotAmmount) * 5);
 
 				/*
 				// WhatƒXƒgƒŠ[ƒ€
