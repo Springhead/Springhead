@@ -23,7 +23,8 @@ namespace Spr{;
 class CRTravelController : public CRController, public CRTravelControllerIfInit, public CRTravelControllerDesc {
 private:
 	/// 下位のコントローラ：歩行コントローラ
-	CREseWalkingControllerIf* walkCtrl;
+	// CREseWalkingControllerIf* walkCtrl;
+	CRWalkingControllerIf* walkCtrl;
 
 	/// 情報源：内部シーン
 	CRInternalSceneIf* internalScene;
@@ -32,7 +33,10 @@ private:
 	PHSolidIf* soWaist;
 
 	/// 目標地点（平面内座標）
-	Vec2f goal;
+	Vec3f goal;
+
+	/// 歩行コントローラに出力可能な最大のスピード
+	float maxSpeed;
 
 public:
 	OBJECTDEF(CRTravelController, CRController);
@@ -59,7 +63,9 @@ public:
 
 	/** @brief 目標地点を設定する
 	*/
-	virtual void SetGoal(Vec2f goal);
+	virtual void SetGoal(Vec3f goal);
+
+	virtual float GetMaxSpeed() { return maxSpeed; }
 };
 }
 //@}

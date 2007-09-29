@@ -34,7 +34,7 @@ void CRTravelController::Init(){
 	}
 
 	goal = Vec3f(0,-10,0);
-	maxSpeed = 1.0;
+	maxSpeed = 0.1;
 }
 
 void CRTravelController::Step(){

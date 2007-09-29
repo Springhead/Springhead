@@ -10,6 +10,9 @@ struct GRAnimationMeshIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ
 	virtual void SetTime(double time){
 		return ((OBJ*)(MIF*)this)->SetTime(time);
 	}
+	virtual void SetBlend(const std::vector <GRAnimationMeshBlendData> & data){
+		return ((OBJ*)(MIF*)this)->SetBlend(data);
+	}
 	virtual Posed GetBoneKeyframePose(const std::string & name){
 		return ((OBJ*)(MIF*)this)->GetBoneKeyframePose(name);
 	}

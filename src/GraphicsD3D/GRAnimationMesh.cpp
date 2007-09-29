@@ -208,7 +208,9 @@ void GRAnimationMesh::SetMotion(const std::string& name){
 		return;
 	}
 	controller->SetTrackAnimationSet(0, aniSet);
+	controller->SetTrackWeight(0, 1.0f);
 	controller->SetTrackEnable(0, TRUE);
+	for(UINT i=1; i<controller->GetMaxNumTracks(); ++i)  controller->SetTrackEnable(i, FALSE);
 	if(controller) controller->AdvanceTime(0, NULL);
 }
 
@@ -218,6 +220,33 @@ void GRAnimationMesh::SetTime(double time){
 	
 	controller->SetTrackPosition(0, time);
 	if(controller) controller->AdvanceTime(0, NULL);
+}
+
+void GRAnimationMesh::SetBlend(const std::vector<GRAnimationMeshBlendData>& data){
+	if(!loaded) if(!LoadMesh()) return;
+	if(!rootFrame || !controller) return;
+	
+	if(controller->GetMaxNumTracks() < data.size()){
+		DSTR << "アニメーショントラックが足りない" << std::endl;
+		exit(1);
+	}
+
+	for(UINT i=0; i<data.size(); ++i){
+		CComPtr<ID3DXAnimationSet> aniSet;
+		if(FAILED(controller->GetAnimationSetByName(data[i].name.c_str(), &aniSet))){
+			DSTR << "Motion not found: " << data[i].name << std::endl;
+			return;
+		}
+		controller->SetTrackAnimationSet(i, aniSet);
+		controller->SetTrackPosition(i, data[i].time);
+		controller->SetTrackWeight(i, data[i].weight);
+		controller->SetTrackEnable(i, TRUE);
+	}
+	for(UINT i=data.size(); i<controller->GetMaxNumTracks(); ++i){
+		controller->SetTrackEnable(i, FALSE);
+	}
+
+	controller->AdvanceTime(0, NULL);
 }
 
 inline void PoseInvertZAxis(Posed& pose){

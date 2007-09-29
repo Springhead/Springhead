@@ -56,9 +56,9 @@ void CRWalkingController::Init(){
 
 	///‰Šúƒpƒ‰ƒ[ƒ^‚Ìİ’è/////
     paramVelocityX = 0.8; 
-    paramHalfStrideX = 0.175;
+    paramHalfStrideX = 0.01;
 	paramHalfStrideZ = 0.1;         
-	footHeight = 0.02;                                  
+	footHeight = 0.005;                                  
     amplitude = 0.0;   
 
 	footsize = 0.0619;

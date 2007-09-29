@@ -211,6 +211,10 @@ public:
 	/** @brief ¶‘«‚ª—V‘«‚©H
 	*/
 	virtual bool isLeftSwingFoot() { return LF; }
+
+	/** @brief •à•
+	*/
+	virtual double GetHalfStrideX() { return abs(CalcLocalX(currentlandingsite.x, currentlandingsite.z, nextlandingsite.x, currentlandingsite.z, CurrentDirection)/2.0); }
 };
 }
 //@}

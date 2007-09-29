@@ -16,12 +16,20 @@
 #include <Graphics/SprGRFrame.h>
 #include <windows.h>
 #include <d3dx9.h>
+#include <vector>
 
 namespace Spr{;
 
 ///	@brief GRAnimationMeshのデスクリプタ．
 struct GRAnimationMeshDesc /*: GRVisualDesc*/{
 	std::string filename;		///< 読み込むファイル名(.x)
+};
+
+///	@brief SetBlend()で使う。
+struct GRAnimationMeshBlendData{
+	std::string	name;
+	double		time;
+	float		weight;
 };
 
 typedef void (SPR_CDECL *GRAnimationMeshDrawSubsetListenerFunc)(DWORD attribId, void* ptr);
@@ -31,6 +39,7 @@ struct GRAnimationMeshIf: public GRVisualIf{
 	IF_DEF(GRAnimationMesh);
 	virtual void SetMotion(const std::string& name)=0;		///< モーションを選択
 	virtual void SetTime(double time)=0;					///< モーションの時刻を設定(単位は秒)
+	virtual void SetBlend(const std::vector<GRAnimationMeshBlendData>& data)=0;
 
 	/** @brief キーフレームによるボーンの角度を取得
 		@param name   ボーンの名前

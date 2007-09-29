@@ -38,6 +38,7 @@ public:
 	~GRAnimationMesh();
 	virtual void SetMotion(const std::string& name);
 	virtual void SetTime(double time);
+	virtual void SetBlend(const std::vector<GRAnimationMeshBlendData>& data);
 	virtual Posed GetBoneKeyframePose(const std::string& name);
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
