@@ -172,6 +172,10 @@ public:
 	*/
 	virtual void Init();
 
+	/** @brief Ä‰Šú‰»‚ğs‚¤
+	*/
+	virtual void ReInit();
+
 	/** @brief §Œä‚ğÀs‚·‚é
 	*/
 	virtual void Step();

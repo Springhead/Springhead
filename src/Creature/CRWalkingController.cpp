@@ -141,6 +141,52 @@ void CRWalkingController::Init(){
 	*/
 }
 
+void CRWalkingController::ReInit(){
+
+	///初期パラメータの設定/////
+    paramVelocityX = 0.8; 
+    paramHalfStrideX = 0.01;
+	paramHalfStrideZ = 0.1;         
+	footHeight = 0.005;                                  
+    amplitude = 0.0;   
+
+	footsize = 0.0619;
+	////////////////////////////
+
+	SetTimeParams();
+	paramVelocityZ = CalcZParamV(paramHalfStrideZ,T0); //Z方向のパラメータの計算
+    AssignInitialLandingSite();
+
+	///大域変数の初期化/////
+	et = 0.0;     
+	TargetDirection = (tfChest->GetOrientation()).Rotation().y + pi/2; 
+	CurrentDirection = (tfChest->GetOrientation()).Rotation().y + pi/2;
+	LF = true;     
+	RF = false;    
+	DSterm = false; 
+	completefall = false; 
+	totalStep = 0;   
+	katoki = 0;      
+	gaitbegin = 30;  
+	forcestep1 = 0;  
+	flag = 0;       
+	forcestep2 = 0;  
+	flag2 = 0;      
+	flag3 = 0;   
+
+	nextSpeed = -1;
+	reverse = false;
+	stop = false;
+
+	/*
+	Xs = 0.0;//////////////////////////////////////////////////////////////////////
+	Zs = 0.0;//////////////////////////////////////////////////////////////////////
+	*/
+	Xs = tfChest->GetPose().Pos().X();
+	Zs = tfChest->GetPose().Pos().Z();
+
+	DSTR << "BasicCycle = " << T0 << std::endl;
+}
 	
 void CRWalkingController::Step(){
 	totalStep = totalStep + 1;
