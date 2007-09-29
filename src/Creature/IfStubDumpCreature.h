@@ -109,6 +109,9 @@ struct CRReachingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF,
 	virtual void Reset(){
 		return ((OBJ*)(MIF*)this)->Reset();
 	}
+	virtual void SetTargetPos(Vec3f pos){
+		return ((OBJ*)(MIF*)this)->SetTargetPos(pos);
+	}
 };
 struct CRReachingControllerIf;	class CRReachingController;
 typedef CRReachingControllerIfStubTemplate<CRReachingControllerIf, ObjectIfBuf, CRReachingController>	CRReachingControllerIfStub;

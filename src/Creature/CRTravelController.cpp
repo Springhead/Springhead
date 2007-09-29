@@ -56,10 +56,16 @@ void CRTravelController::Step(){
 		currPos.Y()=0; goalPos.Y()=0;
 		float distance = (goalPos - currPos).norm();
 
+		/*
 		float limitStartDist = 2.0;
 		float limitSatDist   = 0.7;
-		float maxMax = 1.0;
+		float maxMax = 1.5;
 		float minMax = 0.1;
+		*/
+		float limitStartDist = 2.0;
+		float limitSatDist   = 0.7;
+		float maxMax = 1.5;
+		float minMax = 0.4;
 
 		if (distance < limitSatDist) {
 			maxSpeed = minMax;

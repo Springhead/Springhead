@@ -68,14 +68,24 @@ void CRGrabController::Step(){
 			controlState = CRGrabControllerIf::CRGC_REACH_COMPLETE;
 		}
 	} else if (controlState==CRGrabControllerIf::CRGC_UPHOLD) {
-		if (reachChest->IsReached()) {
-			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
-		}
 		/*
-		if (reachLeft->IsReached() && reachRight->IsReached()) {
+		++waittime;
+		if (waittime > 100) {
+			reachChest->Reset();
 			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
 		}
 		*/
+		/*
+		if (reachChest->IsReached()) {
+			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
+		}
+		*/
+		if (reachLeft->IsReached() && reachRight->IsReached()) {
+			controlState = CRGrabControllerIf::CRGC_UPHOLD_COMPLETE;
+		}
+	} else if (controlState==CRGrabControllerIf::CRGC_UPHOLD_COMPLETE) {
+		reachLeft->SetTargetPos(soWaist->GetPose()*Vec3f(-targetRadius, targetRadius*2.0, -targetRadius*1.2));
+		reachRight->SetTargetPos(soWaist->GetPose()*Vec3f( targetRadius, targetRadius*2.0, -targetRadius*1.2));
 	} else if (controlState==CRGrabControllerIf::CRGC_PLACE) {
 		if (reachLeft->IsReached() && reachRight->IsReached()) {
 			AbortAll();
@@ -107,10 +117,10 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 		descSpring.damper   = Vec3d(1,1,1) *  10;
 		descSpring.poseSocket.Pos() = Vec3f(0,0,0);
 
-		descSpring.posePlug.Pos()   =  reachPointDirL*targetRadius;
+		descSpring.posePlug.Pos()   = targetSolid->GetPose().Ori().Inv() *  reachPointDirL*targetRadius*0.95 - Vec3f(0,0.25,0);
 		PHJointIf* sprL = phScene->CreateJoint(reachLeft->GetSolid(), targetSolid, descSpring);
 
-		descSpring.posePlug.Pos()   = -reachPointDirL*targetRadius;
+		descSpring.posePlug.Pos()   = targetSolid->GetPose().Ori().Inv() * -reachPointDirL*targetRadius*0.95 - Vec3f(0,0.25,0);
 		PHJointIf* sprR = phScene->CreateJoint(reachRight->GetSolid(), targetSolid, descSpring);
 
 		SpringPair sp;
@@ -129,8 +139,8 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0), 1.5, -1);
 	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y'), Vec3d(0,0,0), 1.5, -1);
 	*/
-	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.2, solid->GetVelocity(), 1.5, -1);
-	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.2, solid->GetVelocity(), 1.5, -1);
+	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.05  + Vec3f(0,0.25,0), solid->GetVelocity(), 1.0, -1);
+	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.05 + Vec3f(0,0.25,0), solid->GetVelocity(), 1.0, -1);
 	reachChest->SetTarget(targetSolid->GetPose().Pos(), Vec3f(0,0,0), 1.5, -1);
 	
 	controlState = CRGrabControllerIf::CRGC_REACH;
@@ -155,9 +165,15 @@ bool CRGrabController::Uphold(){
 		return false;
 	}
 
+	/*
 	reachLeft->Reset();
 	reachRight->Reset();
+	*/
+	reachLeft->SetTarget(soWaist->GetPose()*Vec3f(-targetRadius, targetRadius*2.0, -targetRadius*1.2), Vec3f(0,0,0), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0), 2.0, -1);
+	reachRight->SetTarget(soWaist->GetPose()*Vec3f( targetRadius, targetRadius*2.0, -targetRadius*1.2), Vec3f(0,0,0), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y'), Vec3d(0,0,0), 2.0, -1);
 	reachChest->SetTarget(soWaist->GetPose()*Vec3f(0,shoulderHeightFromWaist,0), Vec3f(0,0,0), 2.0, -1);
+
+	waittime = 0;
 
 	/*
 	reachChest->Reset();

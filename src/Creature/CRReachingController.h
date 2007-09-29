@@ -108,6 +108,8 @@ public:
 	/** @brief “’B‰^“®‚ğ‚â‚ßA‰Šúó‘Ô‚É–ß‚é
 	*/
 	virtual void Reset();
+
+	virtual void SetTargetPos(Vec3f pos);
 };
 }
 //@}

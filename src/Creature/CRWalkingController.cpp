@@ -938,12 +938,27 @@ void CRWalkingController::fallForce(){
         if(HousenBodyRight.dot(Rightvec) > 0.0) HousenBodyRight = -HousenBodyRight;
 	}
 
+	if(tfHip->GetCenterPosition().y < 0.4 && tfHip->GetCenterPosition().y > 0.25){
+	    tfHip->AddTorque(12.0*(RoLeft+RoRight));
+	} else if(tfChest->GetCenterPosition().y > 0.3 && tfHip->GetCenterPosition().y < 0.25){
+		tfHip->AddTorque(8.0*(RoLeft+RoRight));
+		tfHip->AddForce(-2.0*tfHip->GetVelocity());
+		tfChest->AddForce(-2.0*tfChest->GetVelocity());
+		tfHead->AddForce(-2.0*tfHead->GetVelocity());
+	} else if(tfChest->GetCenterPosition().y < 0.3 && tfHip->GetCenterPosition().y < 0.25){
+		tfHip->AddForce(-12.0*tfHip->GetVelocity());
+		tfChest->AddForce(-12.0*tfChest->GetVelocity());
+		tfHead->AddForce(-12.0*tfHead->GetVelocity());
+	} else true;
+
+	/*
 	if(tfHip->GetCenterPosition().y < 0.3){
 		tfHead->AddForce(-3.5*tfHead->GetVelocity());
 	    tfChest->AddForce(-3.5*tfChest->GetVelocity());
 	    tfHip->AddForce(-3.5*tfHip->GetVelocity());
 	    tfHip->AddTorque(2.0*(RoLeft+RoRight));
 	}
+	*/
    
 	/*
 	ForceFootLeft = (param0*RoLeft.norm()) * HousenFootLeft;
@@ -1013,9 +1028,9 @@ void CRWalkingController::fallForce(){
 	tfFootLeft->AddForce(kp*(Pd - tfFootLeft->GetCenterPosition()) - kv*tfFootLeft->GetVelocity());
 	tfFootRight->AddForce(kp*(Pd - tfFootRight->GetCenterPosition()) - kv*tfFootRight->GetVelocity());
 
-	tfChest->AddTorque(-2.0*tfChest->GetAngularVelocity());
-	tfFootLeft->AddTorque(-1.0*tfFootLeft->GetAngularVelocity());
-	tfFootRight->AddTorque(-1.0*tfFootRight->GetAngularVelocity());
+	tfChest->AddTorque(-4.0*tfChest->GetAngularVelocity());
+	tfFootLeft->AddTorque(-2.0*tfFootLeft->GetAngularVelocity());
+	tfFootRight->AddTorque(-2.0*tfFootRight->GetAngularVelocity());
 
 	/*
 	if(LengthLeft > MaxFootLength){

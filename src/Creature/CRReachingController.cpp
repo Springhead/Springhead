@@ -155,7 +155,7 @@ bool CRReachingController::IsMoving(){
 }
 
 bool CRReachingController::IsReached(){
-	return( (solid->GetPose().Pos() - finalPos).norm() < 0.2 );
+	return( (solid->GetPose().Pos() - finalPos).norm() < 0.05 );
 }
 
 bool CRReachingController::IsActive(){
@@ -168,6 +168,10 @@ void CRReachingController::Reset(){
 	spring->Enable(false);
 	bActive = false;
 	bOri = false;
+}
+
+void CRReachingController::SetTargetPos(Vec3f pos){
+	soTarget->SetFramePosition(pos);
 }
 
 }

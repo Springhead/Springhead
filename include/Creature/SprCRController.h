@@ -157,6 +157,8 @@ struct CRReachingControllerIf : CRControllerIf{
 	/** @brief 到達運動をやめ、初期状態に戻る
 	*/
 	virtual void Reset()= 0;
+
+	virtual void SetTargetPos(Vec3f pos)= 0;
 };
 
 /// 到達運動コントローラのデスクリプタ

@@ -125,7 +125,7 @@ struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
 		unknownAttr  = 1.0f;
 		uncertainty  = 1.0f;
 		uncertaintyIncRate = 0.99f;
-		uncertaintyDecRate = 0.9f;
+		uncertaintyDecRate = 0.2f;
 	}
 };
 
