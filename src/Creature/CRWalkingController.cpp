@@ -865,9 +865,9 @@ void CRWalkingController::completeFall(){
 
 	double param0 = 0.02;   //quit reason1に関わるパラメータ
 	double param1 = 1.3;    //quit reason1に関わるパラメータ
-	double param2 = 0.8;    //quit reason1に関わるパラメータ
-	double param3 = -0.6;   //quit reason2に関わるパラメータ
-	double param4 = -0.4;   //quit reason3に関わるパラメータ
+	double param2 = 0.5;    //quit reason1に関わるパラメータ
+	double param3 = -0.4;   //quit reason2に関わるパラメータ
+	double param4 = -0.17;   //quit reason3に関わるパラメータ
 	double param5 = 0.85*MinFootLength;    //これより腰の位置が落ちると歩行継続不可
 	double param6 = 18.0;  //これより重心位置の加速度があると歩行継続不可
 	double MaxCompleteFallVelocity = 100.0;  //これより腰に対する頭の速度と脚の速度があると歩行継続不可
@@ -1074,9 +1074,9 @@ void CRWalkingController::fallForce(){
 	tfFootLeft->AddForce(kp*(Pd - tfFootLeft->GetCenterPosition()) - kv*tfFootLeft->GetVelocity());
 	tfFootRight->AddForce(kp*(Pd - tfFootRight->GetCenterPosition()) - kv*tfFootRight->GetVelocity());
 
-	//tfChest->AddTorque(-4.0*tfChest->GetAngularVelocity());
-	//tfFootLeft->AddTorque(-2.0*tfFootLeft->GetAngularVelocity());
-	//tfFootRight->AddTorque(-2.0*tfFootRight->GetAngularVelocity());
+	tfChest->AddTorque(-4.0*tfChest->GetAngularVelocity());
+	tfFootLeft->AddTorque(-2.0*tfFootLeft->GetAngularVelocity());
+	tfFootRight->AddTorque(-2.0*tfFootRight->GetAngularVelocity());
 
 	/*
 	if(LengthLeft > MaxFootLength){

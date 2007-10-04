@@ -14,8 +14,8 @@ CRWCLandingSite::~CRWCLandingSite(void)
 }
 
 void CRWCLandingSite::Init(void){
-	kx = 3.5;
-	kz = 3.5;
+	kx = 6.5;
+	kz = 6.5;
 
 	ax = 1.0;
 	bx = 10.0;
@@ -84,7 +84,6 @@ void CRWCLandingSite::CalcNextLandingSiteWithoutConstraint(){
 	LX = CalcLandingSiteX(npx, nvx,change.z, BLX);
 
 	//DSTR << "BLX = " << BLX << " LX = " << LX << std::endl;
-	//DSTR << "BLZ = " << BLZ << " LZ = " << LZ << std::endl;
 	//DSTR << "VelocityX = " << VelocityX << " StrideX = " << StrideX << " BLX = " << BLX << " LX = " << LX << " LocalX = " << LocalX << " PositionOfWholeBody.x = " << PositionOfWholeBody.x << " VelocityOfWholeBody.x = " << VelocityOfWholeBody.x << " TargetAngle = " << TargetAngle << std::endl;
 	//DSTR << "VelocityX = " << VelocityX << " StrideX = " << StrideX << " BLX = " << BLX << " LX = " << LX << " nvx = " << nvx << " npx = " << npx << " nextV = "  << CalcNextVelocity(LX,npx,nvx)  << std::endl;
 	//DSTR << "npx = " << npx << " nvx = " << nvx << std::endl;
@@ -157,7 +156,6 @@ Vec3d CRWCLandingSite::CalcNextLandingSite(){
     LX = NextLandingSiteWithoutConstraint.x;
 	LZ = NextLandingSiteWithoutConstraint.z; 
 
-	
 	//DSTR << "1 LX = " << LX <<" LZ = " << LZ << std::endl;
 
 	LocalHipX = CalcLocalX(CurrentLandingSite.x, CurrentLandingSite.z, PositionOfHip.x, PositionOfHip.z, TargetAngle);
@@ -216,7 +214,6 @@ Vec3d CRWCLandingSite::CalcNextLandingSite(){
 
 	//////////着地点に関する構造的制約の条件//////////////////////
 
-	
 	LocalFootX = CalcLocalX(CurrentLandingSite.x, CurrentLandingSite.z, PositionOfSwingFoot.x, PositionOfSwingFoot.z, TargetAngle);
 	LocalFootZ = CalcLocalZ(CurrentLandingSite.x, CurrentLandingSite.z, PositionOfSwingFoot.x, PositionOfSwingFoot.z, TargetAngle);
     LocalFootVX = CalcLocalVX(VelocityOfSwingFoot.x, VelocityOfSwingFoot.z, TargetAngle);
