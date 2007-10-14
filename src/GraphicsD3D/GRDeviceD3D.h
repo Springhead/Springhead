@@ -158,6 +158,8 @@ public:
 	static IDirect3DDevice9* GetD3DDevice() { return s_d3ddevice; }
 
 protected:
+	/// アンチエイリアスを使用するための設定
+	void SetMultiSampleType();
 	/// デバイスがロストしたら呼ぶ
 	void LostDevice();
 	/// デバイスをリセットする

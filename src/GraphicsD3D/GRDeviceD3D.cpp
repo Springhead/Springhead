@@ -103,6 +103,8 @@ void GRDeviceD3D::Init(){
 		pp.FullScreen_RefreshRateInHz = 0;
 		pp.hDeviceWindow              = GetActiveWindow();
 		pp.PresentationInterval       = D3DPRESENT_INTERVAL_IMMEDIATE;
+
+		SetMultiSampleType();
 	}
 
 	// デバイスの作成
@@ -129,6 +131,16 @@ void GRDeviceD3D::Init(){
 
 	deviceLost = false;
 	shouldResetWindowRect = false;
+}
+/// アンチエイリアスを使用するための設定
+void GRDeviceD3D::SetMultiSampleType(){
+	for(int n=D3DMULTISAMPLE_16_SAMPLES; n>=D3DMULTISAMPLE_2_SAMPLES; --n){
+		if( SUCCEEDED(direct3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.BackBufferFormat, pp.Windowed, (D3DMULTISAMPLE_TYPE)n, NULL)) ){
+			pp.MultiSampleType = (D3DMULTISAMPLE_TYPE)n;
+			return;
+		}
+	}
+	pp.MultiSampleType = D3DMULTISAMPLE_NONE;
 }
 /// デバイスがロストしたら呼ぶ
 void GRDeviceD3D::LostDevice(){
@@ -537,6 +549,7 @@ void GRDeviceD3D::ToggleFullScreen(){
 		pp.BackBufferWidth            = GetSystemMetrics(SM_CXSCREEN);
 		pp.BackBufferHeight           = GetSystemMetrics(SM_CYSCREEN);
 		pp.FullScreen_RefreshRateInHz = GetDeviceCaps(displayDC, VREFRESH);
+		SetMultiSampleType();
 		DeleteDC(displayDC);
 	}
 	else{
@@ -544,6 +557,7 @@ void GRDeviceD3D::ToggleFullScreen(){
 		pp.BackBufferWidth            = (UINT)viewportStore.Width;
 		pp.BackBufferHeight           = (UINT)viewportStore.Height;
 		pp.FullScreen_RefreshRateInHz = 0;
+		SetMultiSampleType();
 		shouldResetWindowRect = true;
 	}
 	LostDevice();
