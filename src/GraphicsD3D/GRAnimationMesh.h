@@ -30,9 +30,18 @@ protected:
 	CComPtr<ID3DXAnimationController>	controller;
 	bool								loaded;
 	std::vector<DrawSubsetListener>		drawSubsetListeners;
-	CComPtr<ID3DXEffect>				effect;
 	std::vector<Frame*>					frames;
 	bool								directRenderMode;
+	CComPtr<ID3DXEffect>	effect;
+	D3DXHANDLE				fxpWorld;
+	D3DXHANDLE				fxpMaxVertexInfl;
+	D3DXHANDLE				fxpBoneMatrices;
+	D3DXHANDLE				fxpBoneQuaternionsReal;
+	D3DXHANDLE				fxpBoneQuaternionsDual;
+	D3DXHANDLE				fxpDiffuseColor;
+	D3DXHANDLE				fxpEmissiveColor;
+	D3DXHANDLE				fxpTexture;
+	D3DXHANDLE				fxpIsTextured;
 public:
 	GRAnimationMesh(const GRAnimationMeshDesc& desc=GRAnimationMeshDesc());
 	~GRAnimationMesh();

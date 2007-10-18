@@ -78,12 +78,15 @@ struct GRAnimationMeshIf: public GRVisualIf{
 		エフェクトを使う場合はRender()呼び出しをID3DXEffect::BeginPass()とEndPass()で挟む
 		エフェクト内に用意するパラメータは以下のとおり（型、セマンティクス）
 			float4x4						WORLD						// ワールド行列
-			int								MAXVERTEXINFL				// 一つの頂点に影響するボーンの最大数
+			int								MAXVERTEXINFL				// 一つの頂点に影響するボーンの最大数（スキニングしないメッシュでは０）
 			float4x3[matrixPaletteSize]		BONEMATRIXARRAY				// ボーンの変換行列の配列（デュアルクォータニオンを使うなら不要）
 			float4[matrixPaletteSize]		BONEQUATERNIONARRAYREAL		// ボーンのデュアルクォータニオンのreal-partの配列（行列を使うなら不要）
 			float4[matrixPaletteSize]		BONEQUATERNIONARRAYDUAL		// ボーンのデュアルクォータニオンのdual-partの配列（行列を使うなら不要）
 			float4							DIFFUSECOLOR				// マテリアルのディフューズ色
-		スキニングしないメッシュではMAXVERTEXINFL,BONE***は使われない
+			float4							EMISSIVECOLOR				// マテリアルのエミッシブ色
+			texture							TEXTURE						// テクスチャ
+			bool							ISTEXTURED					// テクスチャが使われているかどうか
+		スキニングしないメッシュではBONE***は使われない
 	*/
 	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize)=0;
 };

@@ -314,8 +314,30 @@ void GRAnimationMesh::SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize)
 	assert(rootFrame);
 	
 	this->effect = effect;
-	if(effect) CreateIndexedBlendedMeshes(rootFrame, matrixPaletteSize);
-	else       InitFrame(rootFrame);
+	if(effect){
+		CreateIndexedBlendedMeshes(rootFrame, matrixPaletteSize);
+		fxpWorld				= effect->GetParameterBySemantic(NULL, "WORLD");
+		fxpMaxVertexInfl		= effect->GetParameterBySemantic(NULL, "MAXVERTEXINFL");
+		fxpBoneMatrices			= effect->GetParameterBySemantic(NULL, "BONEMATRIXARRAY");
+		fxpBoneQuaternionsReal	= effect->GetParameterBySemantic(NULL, "BONEQUATERNIONARRAYREAL");
+		fxpBoneQuaternionsDual	= effect->GetParameterBySemantic(NULL, "BONEQUATERNIONARRAYDUAL");
+		fxpDiffuseColor			= effect->GetParameterBySemantic(NULL, "DIFFUSECOLOR");
+		fxpEmissiveColor		= effect->GetParameterBySemantic(NULL, "EMISSIVECOLOR");
+		fxpTexture				= effect->GetParameterBySemantic(NULL, "TEXTURE");
+		fxpIsTextured			= effect->GetParameterBySemantic(NULL, "ISTEXTURED");
+	}
+	else{
+		InitFrame(rootFrame);
+		fxpWorld				= NULL;
+		fxpMaxVertexInfl		= NULL;
+		fxpBoneMatrices			= NULL;
+		fxpBoneQuaternionsReal	= NULL;
+		fxpBoneQuaternionsDual	= NULL;
+		fxpDiffuseColor			= NULL;
+		fxpEmissiveColor		= NULL;
+		fxpTexture				= NULL;
+		fxpIsTextured			= NULL;
+	}
 }
 
 void GRAnimationMesh::Render(GRRenderIf* r){
@@ -468,46 +490,53 @@ void GRAnimationMesh::DrawSkinnedMeshContainer(MeshContainer *meshContainer){
 	LPDIRECT3DDEVICE9 d3ddevice = GRDeviceD3D::GetD3DDevice();
 
 	if(effect){
-		D3DXHANDLE paramWorld               = effect->GetParameterBySemantic(NULL, "WORLD");
-		D3DXHANDLE paramMaxVertexInfl       = effect->GetParameterBySemantic(NULL, "MAXVERTEXINFL");
-		D3DXHANDLE paramBoneMatrices        = effect->GetParameterBySemantic(NULL, "BONEMATRIXARRAY");
-		D3DXHANDLE paramBoneQuaternionsReal = effect->GetParameterBySemantic(NULL, "BONEQUATERNIONARRAYREAL");
-		D3DXHANDLE paramBoneQuaternionsDual = effect->GetParameterBySemantic(NULL, "BONEQUATERNIONARRAYDUAL");
-		D3DXHANDLE paramDiffuseColor        = effect->GetParameterBySemantic(NULL, "DIFFUSECOLOR");
+		bool usingPS;
+		{
+			CComPtr<IDirect3DPixelShader9> ps;
+			d3ddevice->GetPixelShader(&ps);
+			usingPS = (ps!=NULL);
+		}
 
 		D3DXMATRIX world;
 		d3ddevice->GetTransform(D3DTS_WORLD, &world);
-		effect->SetMatrix(paramWorld, &world);
+		if(fxpWorld) effect->SetMatrix(fxpWorld, &world);
 
 		d3ddevice->SetFVF(meshContainer->blendedMesh->GetFVF());
-		effect->SetInt(paramMaxVertexInfl, meshContainer->maxVertexInfl);
+		if(fxpMaxVertexInfl) effect->SetInt(fxpMaxVertexInfl, meshContainer->maxVertexInfl);
 
 		for(DWORD subset=0; subset<meshContainer->numBoneCombinations; subset++){
 			std::vector<D3DXMATRIX>     worldMatrices(meshContainer->matrixPaletteSize);
 			std::vector<D3DXQUATERNION> boneQuaternionsReal(meshContainer->matrixPaletteSize);
 			std::vector<D3DXQUATERNION> boneQuaternionsDual(meshContainer->matrixPaletteSize);
 
-			assert(paramBoneMatrices || (paramBoneQuaternionsReal && paramBoneQuaternionsDual));
+			assert(fxpBoneMatrices || (fxpBoneQuaternionsReal && fxpBoneQuaternionsDual));
 
 			for(DWORD i=0; i<meshContainer->matrixPaletteSize; i++){
 				const DWORD b = meshContainer->boneCombinationTable[subset].BoneId[i];
 				if(b==UINT_MAX) break;
 				D3DXMatrixMultiply(&worldMatrices[i], meshContainer->boneOffsetMatrices[b], meshContainer->boneFrameMatrices[b]);
-				if(paramBoneQuaternionsReal && paramBoneQuaternionsDual){
+				if(fxpBoneQuaternionsReal && fxpBoneQuaternionsDual){
 					D3DXQuaternionRotationMatrix(&boneQuaternionsReal[i], &worldMatrices[i]);
 					const D3DXVECTOR3& t = *(D3DXVECTOR3*)&worldMatrices[i]._41;
 					D3DXQuaternionMultiply(&boneQuaternionsDual[i], &boneQuaternionsReal[i], &D3DXQUATERNION(t.x/2, t.y/2, t.z/2, 0));
 				}
 			}
 
-			if(paramBoneMatrices)        effect->SetMatrixArray(paramBoneMatrices, &worldMatrices[0], (UINT)worldMatrices.size());
-			if(paramBoneQuaternionsReal) effect->SetVectorArray(paramBoneQuaternionsReal, (D3DXVECTOR4*)&boneQuaternionsReal[0], (UINT)boneQuaternionsReal.size());
-			if(paramBoneQuaternionsDual) effect->SetVectorArray(paramBoneQuaternionsDual, (D3DXVECTOR4*)&boneQuaternionsDual[0], (UINT)boneQuaternionsDual.size());
+			if(fxpBoneMatrices)        effect->SetMatrixArray(fxpBoneMatrices, &worldMatrices[0], (UINT)worldMatrices.size());
+			if(fxpBoneQuaternionsReal) effect->SetVectorArray(fxpBoneQuaternionsReal, (D3DXVECTOR4*)&boneQuaternionsReal[0], (UINT)boneQuaternionsReal.size());
+			if(fxpBoneQuaternionsDual) effect->SetVectorArray(fxpBoneQuaternionsDual, (D3DXVECTOR4*)&boneQuaternionsDual[0], (UINT)boneQuaternionsDual.size());
 
 			const D3DMATERIAL9& material = meshContainer->pMaterials[ meshContainer->boneCombinationTable[subset].AttribId ].MatD3D;
-			effect->SetVector(paramDiffuseColor,  (D3DXVECTOR4*)&material.Diffuse);
-
-			d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
+			d3ddevice->SetMaterial(&material);
+			if(fxpDiffuseColor)  effect->SetVector(fxpDiffuseColor,  (D3DXVECTOR4*)&material.Diffuse);
+			if(fxpEmissiveColor) effect->SetVector(fxpEmissiveColor, (D3DXVECTOR4*)&material.Emissive);
+			if(fxpIsTextured) effect->SetBool(fxpIsTextured, (meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]!=NULL));
+			if(usingPS){
+				if(fxpTexture) effect->SetTexture(fxpTexture, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
+			}
+			else{
+				d3ddevice->SetTexture(0, meshContainer->ppTextures[ meshContainer->boneCombinationTable[subset].AttribId ]);
+			}
 
 			for(size_t i=0; i<drawSubsetListeners.size(); ++i){ drawSubsetListeners[i].beforeFunc(meshContainer->boneCombinationTable[subset].AttribId, drawSubsetListeners[i].ptr); }
 			effect->CommitChanges();
@@ -515,7 +544,7 @@ void GRAnimationMesh::DrawSkinnedMeshContainer(MeshContainer *meshContainer){
 			for(size_t i=0; i<drawSubsetListeners.size(); ++i){ drawSubsetListeners[i].afterFunc(meshContainer->boneCombinationTable[subset].AttribId, drawSubsetListeners[i].ptr); }
 		}
 
-		d3ddevice->SetTexture(0, NULL);
+		if(!usingPS) d3ddevice->SetTexture(0, NULL);
 	}
 	else{
 		d3ddevice->SetFVF(meshContainer->blendedMesh->GetFVF());
@@ -546,21 +575,36 @@ void GRAnimationMesh::DrawNormalMeshContainer(MeshContainer *meshContainer, cons
 	LPDIRECT3DDEVICE9 d3ddevice = GRDeviceD3D::GetD3DDevice();
 
 	if(effect){
-		D3DXHANDLE paramWorld        = effect->GetParameterBySemantic(NULL, "WORLD");
-		D3DXHANDLE paramDiffuseColor = effect->GetParameterBySemantic(NULL, "DIFFUSECOLOR");
+		bool usingPS;
+		{
+			CComPtr<IDirect3DPixelShader9> ps;
+			d3ddevice->GetPixelShader(&ps);
+			usingPS = (ps!=NULL);
+		}
 		
 		D3DXMATRIX world;
 		d3ddevice->GetTransform(D3DTS_WORLD, &world);
-		effect->SetMatrix(paramWorld, &(frame->CombinedTransformationMatrix*world));
+		if(fxpWorld) effect->SetMatrix(fxpWorld, &(frame->CombinedTransformationMatrix*world));
+
+		if(fxpMaxVertexInfl) effect->SetInt(fxpMaxVertexInfl, 0);
 
 		d3ddevice->SetFVF(meshContainer->MeshData.pMesh->GetFVF());
 		for(int i=0; i<(int)meshContainer->NumMaterials; i++){
 			const D3DMATERIAL9& material = meshContainer->pMaterials[i].MatD3D;
-			effect->SetFloatArray(paramDiffuseColor,  (float*)&material.Diffuse,  4);
-			d3ddevice->SetTexture(0, meshContainer->ppTextures[i]);
+			d3ddevice->SetMaterial(&material);
+			if(fxpDiffuseColor)  effect->SetFloatArray(fxpDiffuseColor,  (float*)&material.Diffuse,  4);
+			if(fxpEmissiveColor) effect->SetFloatArray(fxpEmissiveColor, (float*)&material.Emissive, 4);
+			if(fxpIsTextured) effect->SetBool(fxpIsTextured, (meshContainer->ppTextures[i]!=NULL));
+			if(usingPS){
+				if(fxpTexture) effect->SetTexture(fxpTexture, meshContainer->ppTextures[i]);
+			}
+			else{
+				d3ddevice->SetTexture(0, meshContainer->ppTextures[i]);
+			}
 			effect->CommitChanges();
 			meshContainer->MeshData.pMesh->DrawSubset(i);
 		}
+		if(!usingPS) d3ddevice->SetTexture(0, NULL);
 	}
 	else{
 		d3ddevice->SetFVF(meshContainer->MeshData.pMesh->GetFVF());

@@ -43,14 +43,14 @@ public:
 	ACCESS_DESC(CRTravelController);
 
 	CRTravelController(){
-		goal = Vec2f(0,0);
+		goal = Vec3f(0,0,0);
 	}
 	CRTravelController(const CRTravelControllerDesc& desc, CRCreatureIf* c=NULL) 
 		: CRTravelControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
 		walkCtrl = NULL;
-		goal = Vec2f(0,0);
+		goal = Vec3f(0,0,0);
 	}
 
 	/** @brief èâä˙âªÇçsÇ§
