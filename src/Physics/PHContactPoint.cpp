@@ -80,8 +80,8 @@ void PHContactPoint::SetConstrainedIndex(bool* con){
 	con[3] = con[4] = con[5] = false;
 }
 
-double PHContactPoint::correctionSpring = 100.0;
-double PHContactPoint::correctionDamper = 10.0;
+double PHContactPoint::correctionSpring = 1000.0;
+double PHContactPoint::correctionDamper = 250.0;
 
 void PHContactPoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();
