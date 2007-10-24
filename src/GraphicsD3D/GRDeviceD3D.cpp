@@ -134,10 +134,12 @@ void GRDeviceD3D::Init(){
 }
 /// アンチエイリアスを使用するための設定
 void GRDeviceD3D::SetMultiSampleType(){
-	for(int n=D3DMULTISAMPLE_16_SAMPLES; n>=D3DMULTISAMPLE_2_SAMPLES; --n){
-		if( SUCCEEDED(direct3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.BackBufferFormat, pp.Windowed, (D3DMULTISAMPLE_TYPE)n, NULL)) ){
-			pp.MultiSampleType = (D3DMULTISAMPLE_TYPE)n;
-			return;
+	if(!pp.Windowed){
+		for(int n=D3DMULTISAMPLE_16_SAMPLES; n>=D3DMULTISAMPLE_2_SAMPLES; --n){
+			if( SUCCEEDED(direct3D->CheckDeviceMultiSampleType(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.BackBufferFormat, pp.Windowed, (D3DMULTISAMPLE_TYPE)n, NULL)) ){
+				pp.MultiSampleType = (D3DMULTISAMPLE_TYPE)n;
+				return;
+			}
 		}
 	}
 	pp.MultiSampleType = D3DMULTISAMPLE_NONE;
