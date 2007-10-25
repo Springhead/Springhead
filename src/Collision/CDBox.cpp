@@ -27,6 +27,8 @@ CDBox::CDBox() {
 }
 
 CDBox::CDBox(const CDBoxDesc& desc) {
+	material = desc.material;
+
 	boxsize = desc.boxsize;
 	// ローカル座標系で、boxの位置を設定
 	Vec3f halfsize = Vec3f(boxsize.x/2.0, boxsize.y/2.0, boxsize.z/2.0);
