@@ -59,7 +59,7 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 	for (int num=0; num < scene->NSolids(); ++num){
 		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)num);
 		this->DrawSolid(solids[num]);
-	}	
+	}
 }
 
 /// 剛体をレンダリングする
@@ -94,6 +94,18 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		if (cap){
 			float r = cap->GetRadius();
 			this->PushModelMatrix();
+			glBegin(GL_QUAD_STRIP);
+			{
+				int sides = 20; double step = (3.141592653 * 2) / (double)sides;
+				for (int i=0; i<=sides; i++) {
+					double t = step * (double)i;
+					double x=sin(t), y=cos(t);
+					glNormal3d(x, y, 0.0);
+					glVertex3f(r * x, r * y,   cap->GetLength()/2 );
+					glVertex3f(r * x, r * y, -(cap->GetLength()/2));
+				}
+			}
+			glEnd();
 			glTranslatef(0,0,-cap->GetLength()/2);
 			glutSolidSphere(r, 20, 20);
 			glTranslatef(0,0,cap->GetLength());
@@ -107,6 +119,20 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 			glutSolidCube(1.0);		
 		}
 		this->PopModelMatrix();
+
+		// 各剛体のローカル座標軸を表示する．
+		/*
+		double length=0.5, width=length/10.0;
+		this->PushModelMatrix();
+		glTranslatef(length/2, 0, 0); glScalef(length, width, width); glutSolidCube(1.0);
+		this->PopModelMatrix();
+		this->PushModelMatrix();
+		glTranslatef(0, length/2, 0); glScalef(width, length, width); glutSolidCube(1.0);
+		this->PopModelMatrix();
+		this->PushModelMatrix();
+		glTranslatef(0, 0, length/2); glScalef(width, width, length); glutSolidCube(1.0);
+		this->PopModelMatrix();
+		*/
 	}
 
 	this->PopModelMatrix();
