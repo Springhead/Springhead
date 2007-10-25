@@ -376,12 +376,33 @@ struct PHSpringIf : public PHConstraintIf{
 	 */
 	virtual Vec3d GetDamper()=0;
 
+	/** @brief バネ係数を設定する
+		@param spring バネ係数
+	 */
+	virtual void SetSpringOri(const double spring)=0;
+
+	/** @brief バネ係数を取得する
+		@return バネ係数
+	 */
+	virtual double GetSpringOri()=0;
+
+	/** @brief ダンパ係数を設定する
+		@param damper ダンパ係数
+	 */
+	virtual void SetDamperOri(const double damper)=0;
+
+	/** @brief ダンパ係数を取得する
+		@return ダンパ係数
+	 */
+	virtual double GetDamperOri()=0;
 };
 /// バネダンパのディスクリプタ
 struct PHSpringDesc : public PHConstraintDesc{
 	DESC_DEF_FOR_OBJECT(PHSpring);
 	Vec3d spring;		///< バネ係数
 	Vec3d damper;		///< ダンパ係数
+	double springOri;
+	double damperOri;
 	PHSpringDesc(){}
 };
 
