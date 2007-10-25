@@ -20,7 +20,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 	boxGuide = sdk->CreateShape(bd)->Cast();
 
 	PHSolidDesc sd;
-	sd.mass = 0.1;
+	//sd.mass = 0.1;
 	sd.inertia = Matrix3d::Unit() * 0.1;
 	soCrank = scene->CreateSolid(sd);
 	soCrank->AddShape(boxCrank);
