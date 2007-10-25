@@ -27,11 +27,13 @@ void PHSpring::SetDesc(const void* desc){
 	const PHSpringDesc& descSpring = *(const PHSpringDesc*)desc;
 	spring = descSpring.spring;
 	damper = descSpring.damper;
+	springOri = descSpring.springOri;
+	damperOri = descSpring.damperOri;
 }
 
 void PHSpring::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;
-	con[3] = con[4] = con[5] = false;
+	con[3] = con[4] = con[5] = true;
 }
 
 void PHSpring::CompBias(){
@@ -48,6 +50,15 @@ void PHSpring::CompBias(){
 		db[i] = spring[i] * Xjrel.r[i] * tmp;
 	}
 	//DSTR << "spring" << fv << rjrel.y * spring.y * dt << endl;
+
+	// Žp¨‚É‘Î‚·‚éƒoƒl
+	if(springOri != 0.0 || damperOri != 0.0){
+		Quaterniond diff =  Xjrel.q; // * origin.Inv();
+		Vec3d prop = diff.RotationHalf();
+		double tmp = 1.0 / (damperOri + springOri * scene->GetTimeStep());
+		dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
+		db.w() = springOri * (prop) * tmp;
+	}
 }
 
 }

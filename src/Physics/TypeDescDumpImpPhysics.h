@@ -214,6 +214,10 @@
 	field->offset = int((char*)&(pPHSpringDesc->spring) - (char*)pPHSpringDesc);
 	field = desc->AddField("", "Vec3d", "damper", "");
 	field->offset = int((char*)&(pPHSpringDesc->damper) - (char*)pPHSpringDesc);
+	field = desc->AddField("", "double", "springOri", "");
+	field->offset = int((char*)&(pPHSpringDesc->springOri) - (char*)pPHSpringDesc);
+	field = desc->AddField("", "double", "damperOri", "");
+	field->offset = int((char*)&(pPHSpringDesc->damperOri) - (char*)pPHSpringDesc);
 	db->RegisterDesc(desc);
 	
 	PHInactiveSolids* pPHInactiveSolids = NULL;

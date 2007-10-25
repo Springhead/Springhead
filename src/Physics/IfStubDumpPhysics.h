@@ -18,13 +18,13 @@ struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ
 	virtual bool IsEnabled(){
 		return ((OBJ*)(MIF*)this)->IsEnabled();
 	}
-	virtual void GetRelativePose(Posed &  p){
+	virtual void GetRelativePose(Posed & p){
 		return ((OBJ*)(MIF*)this)->GetRelativePose(p);
 	}
-	virtual void GetRelativeVelocity(Vec3d &  v, Vec3d &  w){
+	virtual void GetRelativeVelocity(Vec3d & v, Vec3d & w){
 		return ((OBJ*)(MIF*)this)->GetRelativeVelocity(v, w);
 	}
-	virtual void GetConstraintForce(Vec3d &  f, Vec3d &  t){
+	virtual void GetConstraintForce(Vec3d & f, Vec3d & t){
 		return ((OBJ*)(MIF*)this)->GetConstraintForce(f, t);
 	}
 };
@@ -54,7 +54,7 @@ struct PHJoint1DIfStubTemplate: public PHJointIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetRange(double lower, double upper){
 		return ((OBJ*)(MIF*)this)->SetRange(lower, upper);
 	}
-	virtual void GetRange(double &  lower, double &  upper){
+	virtual void GetRange(double & lower, double & upper){
 		return ((OBJ*)(MIF*)this)->GetRange(lower, upper);
 	}
 	virtual void SetMotorTorque(double t){
@@ -117,7 +117,7 @@ typedef IfInitTemplate<PHSliderJointIfStub, PHSliderJoint>	PHSliderJointIfInit;
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHPathIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual void AddPoint(double s, const Posed &  pose){
+	virtual void AddPoint(double s, const Posed & pose){
 		return ((OBJ*)(MIF*)this)->AddPoint(s, pose);
 	}
 	virtual void SetLoop(bool bOnOff = true){
@@ -154,10 +154,10 @@ struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ
 	virtual void SetTwistRange(double lower, double upper){
 		return ((OBJ*)(MIF*)this)->SetTwistRange(lower, upper);
 	}
-	virtual void GetTwistRange(double &  lower, double &  upper){
+	virtual void GetTwistRange(double & lower, double & upper){
 		return ((OBJ*)(MIF*)this)->GetTwistRange(lower, upper);
 	}
-	virtual void SetMotorTorque(const Vec3d &  torque){
+	virtual void SetMotorTorque(const Vec3d & torque){
 		return ((OBJ*)(MIF*)this)->SetMotorTorque(torque);
 	}
 	virtual Vec3d GetMotorTorque(){
@@ -177,17 +177,29 @@ typedef IfInitTemplate<PHBallJointIfStub, PHBallJoint>	PHBallJointIfInit;
 template <class IF, class MIF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSpringIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetSpring(const Vec3d &  spring){
+	virtual void SetSpring(const Vec3d & spring){
 		return ((OBJ*)(MIF*)this)->SetSpring(spring);
 	}
 	virtual Vec3d GetSpring(){
 		return ((OBJ*)(MIF*)this)->GetSpring();
 	}
-	virtual void SetDamper(const Vec3d &  damper){
+	virtual void SetDamper(const Vec3d & damper){
 		return ((OBJ*)(MIF*)this)->SetDamper(damper);
 	}
 	virtual Vec3d GetDamper(){
 		return ((OBJ*)(MIF*)this)->GetDamper();
+	}
+	virtual void SetSpringOri(const double spring){
+		return ((OBJ*)(MIF*)this)->SetSpringOri(spring);
+	}
+	virtual double GetSpringOri(){
+		return ((OBJ*)(MIF*)this)->GetSpringOri();
+	}
+	virtual void SetDamperOri(const double damper){
+		return ((OBJ*)(MIF*)this)->SetDamperOri(damper);
+	}
+	virtual double GetDamperOri(){
+		return ((OBJ*)(MIF*)this)->GetDamperOri();
 	}
 };
 struct PHSpringIf;	class PHSpring;
@@ -264,25 +276,25 @@ typedef IfInitTemplate<PHGearIfStub, PHGear>	PHGearIfInit;
 template <class IF, class MIF, class OBJ> struct SceneIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
-	virtual PHSdkIf *  GetSdk(){
+	virtual PHSdkIf * GetSdk(){
 		return ((OBJ*)(MIF*)this)->GetSdk();
 	}
-	virtual PHSolidIf *  CreateSolid(const PHSolidDesc &  desc = PHSolidDesc()){
+	virtual PHSolidIf * CreateSolid(const PHSolidDesc & desc = PHSolidDesc()){
 		return ((OBJ*)(MIF*)this)->CreateSolid(desc);
 	}
 	virtual int NSolids() const {
 		return ((OBJ*)(MIF*)this)->NSolids();
 	}
-	virtual PHSolidIf * *  GetSolids(){
+	virtual PHSolidIf * * GetSolids(){
 		return ((OBJ*)(MIF*)this)->GetSolids();
 	}
-	virtual void SetContactMode(PHSolidIf *  lhs, PHSolidIf *  rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
+	virtual void SetContactMode(PHSolidIf * lhs, PHSolidIf * rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
 		return ((OBJ*)(MIF*)this)->SetContactMode(lhs, rhs, mode);
 	}
-	virtual void SetContactMode(PHSolidIf * *  group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
+	virtual void SetContactMode(PHSolidIf * * group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
 		return ((OBJ*)(MIF*)this)->SetContactMode(group, length, mode);
 	}
-	virtual void SetContactMode(PHSolidIf *  solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
+	virtual void SetContactMode(PHSolidIf * solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
 		return ((OBJ*)(MIF*)this)->SetContactMode(solid, mode);
 	}
 	virtual void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP){
@@ -294,37 +306,37 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetNumIteration(int n){
 		return ((OBJ*)(MIF*)this)->SetNumIteration(n);
 	}
-	virtual PHJointIf *  CreateJoint(PHSolidIf *  lhs, PHSolidIf *  rhs, const IfInfo *  ii, const PHJointDesc &  desc){
+	virtual PHJointIf * CreateJoint(PHSolidIf * lhs, PHSolidIf * rhs, const IfInfo * ii, const PHJointDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateJoint(lhs, rhs, ii, desc);
 	}
 	virtual int NJoints() const {
 		return ((OBJ*)(MIF*)this)->NJoints();
 	}
-	virtual PHJointIf *  GetJoint(int i){
+	virtual PHJointIf * GetJoint(int i){
 		return ((OBJ*)(MIF*)this)->GetJoint(i);
 	}
-	virtual PHRootNodeIf *  CreateRootNode(PHSolidIf *  root, const PHRootNodeDesc &  desc = PHRootNodeDesc()){
+	virtual PHRootNodeIf * CreateRootNode(PHSolidIf * root, const PHRootNodeDesc & desc = PHRootNodeDesc()){
 		return ((OBJ*)(MIF*)this)->CreateRootNode(root, desc);
 	}
 	virtual int NRootNodes() const {
 		return ((OBJ*)(MIF*)this)->NRootNodes();
 	}
-	virtual PHRootNodeIf *  GetRootNode(int i){
+	virtual PHRootNodeIf * GetRootNode(int i){
 		return ((OBJ*)(MIF*)this)->GetRootNode(i);
 	}
-	virtual PHTreeNodeIf *  CreateTreeNode(PHTreeNodeIf *  parent, PHSolidIf *  child, const PHTreeNodeDesc &  desc = PHTreeNodeDesc()){
+	virtual PHTreeNodeIf * CreateTreeNode(PHTreeNodeIf * parent, PHSolidIf * child, const PHTreeNodeDesc & desc = PHTreeNodeDesc()){
 		return ((OBJ*)(MIF*)this)->CreateTreeNode(parent, child, desc);
 	}
-	virtual PHGearIf *  CreateGear(PHJoint1DIf *  lhs, PHJoint1DIf *  rhs, const PHGearDesc &  desc = PHGearDesc()){
+	virtual PHGearIf * CreateGear(PHJoint1DIf * lhs, PHJoint1DIf * rhs, const PHGearDesc & desc = PHGearDesc()){
 		return ((OBJ*)(MIF*)this)->CreateGear(lhs, rhs, desc);
 	}
 	virtual int NGears() const {
 		return ((OBJ*)(MIF*)this)->NGears();
 	}
-	virtual PHGearIf *  GetGear(int i){
+	virtual PHGearIf * GetGear(int i){
 		return ((OBJ*)(MIF*)this)->GetGear(i);
 	}
-	virtual PHPathIf *  CreatePath(const PHPathDesc &  desc = PHPathDesc()){
+	virtual PHPathIf * CreatePath(const PHPathDesc & desc = PHPathDesc()){
 		return ((OBJ*)(MIF*)this)->CreatePath(desc);
 	}
 	virtual double GetTimeStep() const {
@@ -354,7 +366,7 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Clear(){
 		return ((OBJ*)(MIF*)this)->Clear();
 	}
-	virtual void SetGravity(const Vec3d &  accel){
+	virtual void SetGravity(const Vec3d & accel){
 		return ((OBJ*)(MIF*)this)->SetGravity(accel);
 	}
 	virtual Vec3d GetGravity(){
@@ -368,28 +380,28 @@ typedef IfInitTemplate<PHSceneIfStub, PHScene>	PHSceneIfInit;
 template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
-	virtual PHSceneIf *  CreateScene(){
+	virtual PHSceneIf * CreateScene(){
 		return ((OBJ*)(MIF*)this)->CreateScene();
 	}
-	virtual PHSceneIf *  CreateScene(const PHSceneDesc &  desc){
+	virtual PHSceneIf * CreateScene(const PHSceneDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateScene(desc);
 	}
 	virtual int NScene(){
 		return ((OBJ*)(MIF*)this)->NScene();
 	}
-	virtual PHSceneIf *  GetScene(size_t i){
+	virtual PHSceneIf * GetScene(size_t i){
 		return ((OBJ*)(MIF*)this)->GetScene(i);
 	}
-	virtual void MergeScene(PHSceneIf *  scene0, PHSceneIf *  scene1){
+	virtual void MergeScene(PHSceneIf * scene0, PHSceneIf * scene1){
 		return ((OBJ*)(MIF*)this)->MergeScene(scene0, scene1);
 	}
-	virtual CDShapeIf *  CreateShape(const IfInfo *  ii, const CDShapeDesc &  desc){
+	virtual CDShapeIf * CreateShape(const IfInfo * ii, const CDShapeDesc & desc){
 		return ((OBJ*)(MIF*)this)->CreateShape(ii, desc);
 	}
 	virtual int NShape(){
 		return ((OBJ*)(MIF*)this)->NShape();
 	}
-	virtual CDShapeIf *  GetShape(int i){
+	virtual CDShapeIf * GetShape(int i){
 		return ((OBJ*)(MIF*)this)->GetShape(i);
 	}
 };
@@ -421,7 +433,7 @@ struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3d GetCenterOfMass(){
 		return ((OBJ*)(MIF*)this)->GetCenterOfMass();
 	}
-	virtual void SetCenterOfMass(const Vec3d &  center){
+	virtual void SetCenterOfMass(const Vec3d & center){
 		return ((OBJ*)(MIF*)this)->SetCenterOfMass(center);
 	}
 	virtual Matrix3d GetInertia(){
@@ -430,22 +442,22 @@ struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual Matrix3d GetInertiaInv(){
 		return ((OBJ*)(MIF*)this)->GetInertiaInv();
 	}
-	virtual void SetInertia(const Matrix3d &  I){
+	virtual void SetInertia(const Matrix3d & I){
 		return ((OBJ*)(MIF*)this)->SetInertia(I);
 	}
 	virtual Vec3d GetFramePosition() const {
 		return ((OBJ*)(MIF*)this)->GetFramePosition();
 	}
-	virtual void SetFramePosition(const Vec3d &  p){
+	virtual void SetFramePosition(const Vec3d & p){
 		return ((OBJ*)(MIF*)this)->SetFramePosition(p);
 	}
 	virtual Vec3d GetCenterPosition() const {
 		return ((OBJ*)(MIF*)this)->GetCenterPosition();
 	}
-	virtual void SetCenterPosition(const Vec3d &  p){
+	virtual void SetCenterPosition(const Vec3d & p){
 		return ((OBJ*)(MIF*)this)->SetCenterPosition(p);
 	}
-	virtual Vec3d GetDeltaPosition(const Vec3d &  p) const {
+	virtual Vec3d GetDeltaPosition(const Vec3d & p) const {
 		return ((OBJ*)(MIF*)this)->GetDeltaPosition(p);
 	}
 	virtual Vec3d GetDeltaPosition() const {
@@ -454,25 +466,25 @@ struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual Quaterniond GetOrientation() const {
 		return ((OBJ*)(MIF*)this)->GetOrientation();
 	}
-	virtual void SetOrientation(const Quaterniond &  q){
+	virtual void SetOrientation(const Quaterniond & q){
 		return ((OBJ*)(MIF*)this)->SetOrientation(q);
 	}
 	virtual Posed GetPose() const {
 		return ((OBJ*)(MIF*)this)->GetPose();
 	}
-	virtual void SetPose(const Posed &  p){
+	virtual void SetPose(const Posed & p){
 		return ((OBJ*)(MIF*)this)->SetPose(p);
 	}
 	virtual Vec3d GetVelocity() const {
 		return ((OBJ*)(MIF*)this)->GetVelocity();
 	}
-	virtual void SetVelocity(const Vec3d &  v){
+	virtual void SetVelocity(const Vec3d & v){
 		return ((OBJ*)(MIF*)this)->SetVelocity(v);
 	}
 	virtual Vec3d GetAngularVelocity() const {
 		return ((OBJ*)(MIF*)this)->GetAngularVelocity();
 	}
-	virtual void SetAngularVelocity(const Vec3d &  av){
+	virtual void SetAngularVelocity(const Vec3d & av){
 		return ((OBJ*)(MIF*)this)->SetAngularVelocity(av);
 	}
 	virtual Vec3d GetForce() const {
@@ -481,19 +493,19 @@ struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3d GetTorque() const {
 		return ((OBJ*)(MIF*)this)->GetTorque();
 	}
-	virtual void AddShape(CDShapeIf *  shape){
+	virtual void AddShape(CDShapeIf * shape){
 		return ((OBJ*)(MIF*)this)->AddShape(shape);
 	}
 	virtual int NShape(){
 		return ((OBJ*)(MIF*)this)->NShape();
 	}
-	virtual CDShapeIf *	 GetShape(int index){
+	virtual CDShapeIf * GetShape(int index){
 		return ((OBJ*)(MIF*)this)->GetShape(index);
 	}
 	virtual Posed GetShapePose(int index){
 		return ((OBJ*)(MIF*)this)->GetShapePose(index);
 	}
-	virtual void SetShapePose(int index, const Posed &  pose){
+	virtual void SetShapePose(int index, const Posed & pose){
 		return ((OBJ*)(MIF*)this)->SetShapePose(index, pose);
 	}
 	virtual void SetGravity(bool bOn){
