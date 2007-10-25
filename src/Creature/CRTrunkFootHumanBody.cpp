@@ -49,6 +49,23 @@ void CRTrunkFootHumanBody::CreateChest(){
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 
 	//çòïîà Ç∆è„îºêgÇÃä‘ÇÃä÷êﬂ
+	{
+		PHHingeJointDesc hingeDesc;
+		// hingeDesc.posePlug.Pos() = Vec3d(0,0,0);
+		hingeDesc.posePlug.Pos() = Vec3d(0,waistHeight / 2.0,0);
+		hingeDesc.posePlug.Ori() = Quaternionf::Rot(Rad(0), 'x');
+		// hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + waistHeight/2.0), 0);
+		hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight/2.0, 0);
+		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+
+		hingeDesc.origin =   0.0;
+		hingeDesc.spring = 500.0;
+		hingeDesc.damper =  50.0;
+
+		joints[JO_WAIST_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], hingeDesc);
+	}
+
+	/*
 	PHBallJointDesc ballDesc;
     ballDesc.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 	ballDesc.posePlug.Ori() = Quaternionf::Rot(Rad(0), 'x');
@@ -58,6 +75,7 @@ void CRTrunkFootHumanBody::CreateChest(){
 	joints[JO_WAIST_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
 	DCAST(PHBallJointIf, joints[JO_WAIST_CHEST])->SetSwingRange(0.01);
 	DCAST(PHBallJointIf, joints[JO_WAIST_CHEST])->SetTwistRange(0.0, 0.01);
+	*/
 
 	/*
 	// Joint -- [p]Waist-[c]Chest
@@ -92,13 +110,21 @@ void CRTrunkFootHumanBody::CreateHead(){
 
 	//è„îºêgÇ∆ì™ïîÇÃä‘ÇÃä÷êﬂ
 	hingeDesc                  = PHHingeJointDesc();
-    hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
+    // hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
+    hingeDesc.posePlug.Pos()   = Vec3d(0.0, chestHeight/2.0 + neckLength/2.0, 0.0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
 	// hingeDesc.poseSocket.Pos() = Vec3d(0, -0.36, 0.0);
-	hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + neckLength + headDiameter/2.0), 0.0);
+	// hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + neckLength + headDiameter/2.0), 0.0);
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter/2.0 - neckLength/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+
+	hingeDesc.origin =   0.0;
+	hingeDesc.spring = 500.0;
+	hingeDesc.damper =  50.0;
+	/*
     hingeDesc.lower = 0.0;
 	hingeDesc.upper = 0.01;
+	*/
     joints[JO_CHEST_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);
 
 	/*

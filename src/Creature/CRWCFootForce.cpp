@@ -428,7 +428,7 @@ void CRWCFootForce::FootDoubleSupport(void){
     FootRight->AddTorque(-kv * AVright);
 
 	FootLeft->AddForce(Vec3d(0.0, kp*(FootSize/2.0 - FootLeft->GetCenterPosition().y) - kv*FootLeft->GetVelocity().y, 0.0)); 
-	FootRight->AddForce(Vec3d(0.0, kp*(FootSize/2.0 - FootRight->GetCenterPosition().y) - kv*FootRight->GetVelocity().y, 0.0)); 
+	FootRight->AddForce(Vec3d(0.0, kp*(FootSize/2.0 - FootRight->GetCenterPosition().y) - kv*FootRight->GetVelocity().y, 0.0));
 
 	//DSTR << "footleft.y = " << FootLeft->GetCenterPosition().y << std::endl;
 	//DSTR << "footrihgt.y = " << FootRight->GetCenterPosition().y << std::endl;

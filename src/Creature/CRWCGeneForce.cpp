@@ -19,8 +19,8 @@ void CRWCGeneForce::Init(){
 	pitchdiff = 0.0;
 	currentAmp = 0.0;
 	pi= 3.1415926535;
-    kpA = 10.0;
-	kvA = 22.0; 
+    kpA = 5.0;
+	kvA = 3.0; 
     miu = 0.8;
 	DoubleFootForcePre.resize(6);
 }
@@ -146,6 +146,10 @@ void CRWCGeneForce::GeneCenterForce(void){
 	 if(timehalfcycle < 0.005 && timehalfcycle > 0.0) T1 = preT1;/////////////////////////////////////////////////////////////////////////////////////////TimeStepÇ∆ÇÃåìÇÀçáÇ¢Ç≈ÉpÉâÉÅÅ[É^í≤êÆÇµíºÇ∑
 	 else  T1 = 2*pi * timehalfcycle / (2*pi + 2*pi*pitchdiff/(T0+T0ds) - presheta);;  // 2pi/T1*timeleft + presheta = 2pi + 2pi*pitchdiff/T0
 
+	 pd = height;
+	 vd = 0.0;
+
+	 /*
 	 if(T1 == 0.0){
 		 pd = (-amplitude) * cos(0.0) + height;
 		 vd = 0.0;
@@ -153,7 +157,7 @@ void CRWCGeneForce::GeneCenterForce(void){
 	 else{
 		 pd = (-amplitude) * cos(2*pi * (delta + TimeStep) / T1) + height;
 	     vd = 2*pi / T1 * amplitude * sin(2*pi * (delta + TimeStep) / T1);
-	 }
+	 }*/
 
 	 Fyd = kpA * (pd - PositionOfWholeBody.y) + kvA * (vd - VelocityOfWholeBody.y) + AntiGravityForce.y;
      Fx = ForwardForce(change.z, Fyd) + AntiGravityForce.x;
@@ -162,9 +166,11 @@ void CRWCGeneForce::GeneCenterForce(void){
 	 Fy = max(vari, abs(Fz)/miu);
 
 	 //DSTR << "Fyd = " << Fyd << " Fy = " << Fy << std::endl;
+	 //DSTR << "change.z " << change.z << std::endl;
 
 	 if(Fy > 1.5*AntiGravityForce.y) Fy = 1.5*AntiGravityForce.y;
 	 
+	 /*
 	 if(LocalBodyX > 0.0){
 		 if(Fx < 0.0) Fx = 0.0;
 	 } else if(LocalBodyX < 0.0){
@@ -175,7 +181,7 @@ void CRWCGeneForce::GeneCenterForce(void){
 		 if(Fz < 0.0) Fz = 0.0;
 	 } else if(LocalBodyZ < 0.0){
 		 if(Fz > 0.0) Fz = 0.0;
-	 }
+	 }*/
 
 	 //DSTR << "Pre" << " Fx = " << Fx << " Fy = " << Fy << " Fz = " << Fz << std::endl;
 

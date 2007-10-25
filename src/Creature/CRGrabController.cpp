@@ -135,12 +135,12 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 
 	// –{“–‚Í‚±‚±‚Å‘Ì‚ð‚â‚í‚ç‚©‚­‚·‚é
 
-	/*
-	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0), 1.5, -1);
-	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y'), Vec3d(0,0,0), 1.5, -1);
-	*/
-	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.05  + Vec3f(0,0.25,0), solid->GetVelocity(), 1.0, -1);
-	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.05 + Vec3f(0,0.25,0), solid->GetVelocity(), 1.0, -1);
+	reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.0, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y')*soWaist->GetOrientation(), Vec3d(0,0,0), 1.5, -1);
+	reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.0, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y')*soWaist->GetOrientation(), Vec3d(0,0,0), 1.5, -1);
+	//reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0), 1.5, -1);
+	//reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.2, solid->GetVelocity(), Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(+90),'y'), Vec3d(0,0,0), 1.5, -1);
+	//reachLeft->SetTarget(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.05  + Vec3f(0,0.25,0), solid->GetVelocity(), 1.0, -1);
+	//reachRight->SetTarget(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.05 + Vec3f(0,0.25,0), solid->GetVelocity(), 1.0, -1);
 	reachChest->SetTarget(targetSolid->GetPose().Pos(), Vec3f(0,0,0), 1.5, -1);
 	
 	controlState = CRGrabControllerIf::CRGC_REACH;

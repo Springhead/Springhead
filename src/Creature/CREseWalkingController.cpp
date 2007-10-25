@@ -48,7 +48,7 @@ void CREseWalkingController::Step(){
 	CRController::Step();
 
 	Vec3d p = soFixpoint->GetPose().Pos();
-	p.Y() = 0.0;
+	// p.Y() = 0.0;
 	soFixpoint->SetFramePosition(p);
 	soFixpoint->SetVelocity(soWaist->GetPose().Ori() * Vec3d(0,0,-speed));
 	soFixpoint->SetAngularVelocity(Vec3d(0,rotation,0));

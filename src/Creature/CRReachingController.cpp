@@ -51,6 +51,8 @@ void CRReachingController::Init(){
 		springDesc.posePlug.Pos() = reachPos;
 		springDesc.spring = Vec3d(1,1,1) * springPos;
 		springDesc.damper = Vec3d(1,1,1) * damperPos;
+		springDesc.springOri = 1000.0f;
+		springDesc.damperOri =   10.0f;
 	}
 	spring = DCAST(PHSpringIf, phScene->CreateJoint(soTarget, solid, springDesc));
 	spring->Enable(false);
@@ -124,16 +126,12 @@ void CRReachingController::Step(){
 		*/
 
 		if (/*/ false /*/ bOri /**/) {
-			Quaterniond dQuat = finalQuat * solid->GetPose().Ori().Inv();
-			if (dQuat.W() < 0){
-				dQuat *= -1;
-			}
-			Vec3f dAngV = finalAngV - solid->GetAngularVelocity();
-			Vec3f torque = springOri * dQuat.Rotation() + damperOri * dAngV;
-			if (torque.norm() > 1e5f) {
-				torque = torque.unit() * 1e5f;
-			}
-			solid->AddTorque(torque);
+			soTarget->SetOrientation(finalQuat);
+			spring->SetSpringOri(1000 * (1-length));
+			spring->SetDamperOri(   5 * (1-length) + 5);
+		} else {
+			spring->SetSpringOri(0);
+			spring->SetDamperOri(0);
 		}
 	}
 }
