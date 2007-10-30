@@ -23,6 +23,7 @@ namespace Spr{;
 /** @brief 内部シーンを構成するオブジェクト
 */
 class CRInternalSceneObject : public SceneObject, public CRInternalSceneObjectIfInit {
+
 protected:
 	/// 所属する内部シーン
 	CRInternalSceneIf* internalScene;
@@ -62,6 +63,7 @@ public:
 /** @brief 注意をひきつける物体
 */
 class CRISAttractiveObject : public CRInternalSceneObject, public CRISAttractiveObjectIfInit {
+
 private:
 
 public:
@@ -108,6 +110,7 @@ public:
 /** @brief 歩行のポテンシャルにかかわる物体
 */
 class CRISTravelPotentialObject : public CRInternalSceneObject, public CRISTravelPotentialObjectIfInit {
+
 private:
 
 public:
@@ -165,6 +168,7 @@ public:
 /** @brief 内部シーン
 */
 class CRInternalScene : public SceneObject, public CRInternalSceneIfInit, public CRInternalSceneDesc {
+
 private:
 	/// 持ち主たるCreature
 	CRCreatureIf* creature;

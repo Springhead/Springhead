@@ -22,6 +22,7 @@ namespace Spr{;
 /** @brief クリーチャの実装
 */
 class CRCreature : public SceneObject, public CRCreatureIfInit, public CRCreatureDesc {
+
 protected:
 	/** @brief 感覚系
 	*/

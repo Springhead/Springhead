@@ -34,11 +34,27 @@ typedef IfInitTemplate<CRHingeHumanBodyIfStub, CRHingeHumanBody>	CRHingeHumanBod
 
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
+struct CRHingeMammalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRHingeMammalBodyIf;	class CRHingeMammalBody;
+typedef CRHingeMammalBodyIfStubTemplate<CRHingeMammalBodyIf, ObjectIfBuf, CRHingeMammalBody>	CRHingeMammalBodyIfStub;
+typedef IfInitTemplate<CRHingeMammalBodyIfStub, CRHingeMammalBody>	CRHingeMammalBodyIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
+template <class IF, class MIF, class OBJ>
 struct CRTrunkFootHumanBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
 };
 struct CRTrunkFootHumanBodyIf;	class CRTrunkFootHumanBody;
 typedef CRTrunkFootHumanBodyIfStubTemplate<CRTrunkFootHumanBodyIf, ObjectIfBuf, CRTrunkFootHumanBody>	CRTrunkFootHumanBodyIfStub;
 typedef IfInitTemplate<CRTrunkFootHumanBodyIfStub, CRTrunkFootHumanBody>	CRTrunkFootHumanBodyIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRTrunkFootMammalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRTrunkFootMammalBodyIf;	class CRTrunkFootMammalBody;
+typedef CRTrunkFootMammalBodyIfStubTemplate<CRTrunkFootMammalBodyIf, ObjectIfBuf, CRTrunkFootMammalBody>	CRTrunkFootMammalBodyIfStub;
+typedef IfInitTemplate<CRTrunkFootMammalBodyIfStub, CRTrunkFootMammalBody>	CRTrunkFootMammalBodyIfInit;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
