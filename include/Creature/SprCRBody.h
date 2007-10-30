@@ -565,9 +565,9 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 		rangeWaistLegX    = Vec2d(Rad(+360) , Rad(-360));
 		rangeWaistLegY    = Vec2d(Rad(+360) , Rad(-360));
 		rangeKnee         = Vec2d(Rad(+360) , Rad(-360));
-		rangeRearAnkleY       = Vec2d(Rad(+360) , Rad(-360));
-		rangeRearAnkleX       = Vec2d(Rad(+360) , Rad(-360));
-		rangeRearAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
+		rangeRearAnkleY   = Vec2d(Rad(+360) , Rad(-360));
+		rangeRearAnkleX   = Vec2d(Rad(+360) , Rad(-360));
+		rangeRearAnkleZ   = Vec2d(Rad(+360) , Rad(-360));
 		//rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
 		//rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
 		rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));
