@@ -689,22 +689,22 @@ protected: \
 	double neckLength ; \
 	double neckDiameter ; \
 	double headDiameter ; \
-	double upperArmLength ; \
-	double upperArmDiameter ; \
-	double lowerArmLength ; \
-	double lowerArmDiameter ; \
-	double handLength ; \
-	double handBreadth ; \
-	double handThickness ; \
-	double upperLegLength ; \
-	double upperLegDiameter ; \
-	double interLegDistance ; \
-	double lowerLegLength ; \
-	double lowerLegDiameter ; \
-	double footLength ; \
-	double footBreadth ; \
-	double footThickness ; \
-	double ankleToeDistance ; \
+	double frontUpperLegLength ; \
+	double frontUpperLegDiameter ; \
+	double frontLowerLegLength ; \
+	double frontLowerLegDiameter ; \
+	double frontFootLength ; \
+	double frontFootBreadth ; \
+	double frontFootThickness ; \
+	double rearUpperLegLength ; \
+	double rearUpperLegDiameter ; \
+	double rearInterLegDistance ; \
+	double rearLowerLegLength ; \
+	double rearLowerLegDiameter ; \
+	double rearFootLength ; \
+	double rearFootBreadth ; \
+	double rearFootThickness ; \
+	double rearAnkleToeDistance ; \
 	double vertexToEyeHeight ; \
 	double occiputToEyeDistance ; \
 	double eyeDiameter ; \
@@ -731,12 +731,12 @@ protected: \
 	double damperShoulderY ; \
 	double springElbow ; \
 	double damperElbow ; \
-	double springWristY ; \
-	double damperWristY ; \
-	double springWristX ; \
-	double damperWristX ; \
-	double springWristZ ; \
-	double damperWristZ ; \
+	double springFrontAnkleY ; \
+	double damperFrontAnkleY ; \
+	double springFrontAnkleX ; \
+	double damperFrontAnkleX ; \
+	double springFrontAnkleZ ; \
+	double damperFrontAnkleZ ; \
 	double springWaistLegZ ; \
 	double damperWaistLegZ ; \
 	double springWaistLegX ; \
@@ -745,19 +745,19 @@ protected: \
 	double damperWaistLegY ; \
 	double springKnee ; \
 	double damperKnee ; \
-	double springAnkleY ; \
-	double damperAnkleY ; \
-	double springAnkleX ; \
-	double damperAnkleX ; \
-	double springAnkleZ ; \
-	double damperAnkleZ ; \
+	double springRearAnkleY ; \
+	double damperRearAnkleY ; \
+	double springRearAnkleX ; \
+	double damperRearAnkleX ; \
+	double springRearAnkleZ ; \
+	double damperRearAnkleZ ; \
 	double springEyeY ; \
 	double damperEyeY ; \
 	double springEyeX ; \
 	double damperEyeX ; \
-	Vec3d posRightUpperArm ; \
-	Quaterniond oriRightUpperArm ; \
-	Quaterniond oriRightLowerArm ; \
+	Vec3d posRightFrontUpperLeg ; \
+	Quaterniond oriRightFrontUpperLeg ; \
+	Quaterniond oriRightFrontLowerLeg ; \
 	Quaterniond oriRightHand ; \
 	Vec2d rangeWaistAbdomen ; \
 	Vec2d rangeAbdomenChest ; \
@@ -770,16 +770,16 @@ protected: \
 	Vec2d rangeShoulderX ; \
 	Vec2d rangeShoulderY ; \
 	Vec2d rangeElbow ; \
-	Vec2d rangeWristY ; \
-	Vec2d rangeWristX ; \
-	Vec2d rangeWristZ ; \
+	Vec2d rangeFrontAnkleY ; \
+	Vec2d rangeFrontAnkleX ; \
+	Vec2d rangeFrontAnkleZ ; \
 	Vec2d rangeWaistLegZ ; \
 	Vec2d rangeWaistLegX ; \
 	Vec2d rangeWaistLegY ; \
 	Vec2d rangeKnee ; \
-	Vec2d rangeAnkleY ; \
-	Vec2d rangeAnkleX ; \
-	Vec2d rangeAnkleZ ; \
+	Vec2d rangeRearAnkleY ; \
+	Vec2d rangeRearAnkleX ; \
+	Vec2d rangeRearAnkleZ ; \
 	Vec2d rangeRightEyeY ; \
 	Vec2d rangeEyeX ; \
 	bool noLegs ; \
@@ -798,22 +798,22 @@ public: \
 		neckLength = ((CRHingeMammalBodyDesc*)desc)->neckLength; \
 		neckDiameter = ((CRHingeMammalBodyDesc*)desc)->neckDiameter; \
 		headDiameter = ((CRHingeMammalBodyDesc*)desc)->headDiameter; \
-		upperArmLength = ((CRHingeMammalBodyDesc*)desc)->upperArmLength; \
-		upperArmDiameter = ((CRHingeMammalBodyDesc*)desc)->upperArmDiameter; \
-		lowerArmLength = ((CRHingeMammalBodyDesc*)desc)->lowerArmLength; \
-		lowerArmDiameter = ((CRHingeMammalBodyDesc*)desc)->lowerArmDiameter; \
-		handLength = ((CRHingeMammalBodyDesc*)desc)->handLength; \
-		handBreadth = ((CRHingeMammalBodyDesc*)desc)->handBreadth; \
-		handThickness = ((CRHingeMammalBodyDesc*)desc)->handThickness; \
-		upperLegLength = ((CRHingeMammalBodyDesc*)desc)->upperLegLength; \
-		upperLegDiameter = ((CRHingeMammalBodyDesc*)desc)->upperLegDiameter; \
-		interLegDistance = ((CRHingeMammalBodyDesc*)desc)->interLegDistance; \
-		lowerLegLength = ((CRHingeMammalBodyDesc*)desc)->lowerLegLength; \
-		lowerLegDiameter = ((CRHingeMammalBodyDesc*)desc)->lowerLegDiameter; \
-		footLength = ((CRHingeMammalBodyDesc*)desc)->footLength; \
-		footBreadth = ((CRHingeMammalBodyDesc*)desc)->footBreadth; \
-		footThickness = ((CRHingeMammalBodyDesc*)desc)->footThickness; \
-		ankleToeDistance = ((CRHingeMammalBodyDesc*)desc)->ankleToeDistance; \
+		frontUpperLegLength = ((CRHingeMammalBodyDesc*)desc)->frontUpperLegLength; \
+		frontUpperLegDiameter = ((CRHingeMammalBodyDesc*)desc)->frontUpperLegDiameter; \
+		frontLowerLegLength = ((CRHingeMammalBodyDesc*)desc)->frontLowerLegLength; \
+		frontLowerLegDiameter = ((CRHingeMammalBodyDesc*)desc)->frontLowerLegDiameter; \
+		frontFootLength = ((CRHingeMammalBodyDesc*)desc)->frontFootLength; \
+		frontFootBreadth = ((CRHingeMammalBodyDesc*)desc)->frontFootBreadth; \
+		frontFootThickness = ((CRHingeMammalBodyDesc*)desc)->frontFootThickness; \
+		rearUpperLegLength = ((CRHingeMammalBodyDesc*)desc)->rearUpperLegLength; \
+		rearUpperLegDiameter = ((CRHingeMammalBodyDesc*)desc)->rearUpperLegDiameter; \
+		rearInterLegDistance = ((CRHingeMammalBodyDesc*)desc)->rearInterLegDistance; \
+		rearLowerLegLength = ((CRHingeMammalBodyDesc*)desc)->rearLowerLegLength; \
+		rearLowerLegDiameter = ((CRHingeMammalBodyDesc*)desc)->rearLowerLegDiameter; \
+		rearFootLength = ((CRHingeMammalBodyDesc*)desc)->rearFootLength; \
+		rearFootBreadth = ((CRHingeMammalBodyDesc*)desc)->rearFootBreadth; \
+		rearFootThickness = ((CRHingeMammalBodyDesc*)desc)->rearFootThickness; \
+		rearAnkleToeDistance = ((CRHingeMammalBodyDesc*)desc)->rearAnkleToeDistance; \
 		vertexToEyeHeight = ((CRHingeMammalBodyDesc*)desc)->vertexToEyeHeight; \
 		occiputToEyeDistance = ((CRHingeMammalBodyDesc*)desc)->occiputToEyeDistance; \
 		eyeDiameter = ((CRHingeMammalBodyDesc*)desc)->eyeDiameter; \
@@ -840,12 +840,12 @@ public: \
 		damperShoulderY = ((CRHingeMammalBodyDesc*)desc)->damperShoulderY; \
 		springElbow = ((CRHingeMammalBodyDesc*)desc)->springElbow; \
 		damperElbow = ((CRHingeMammalBodyDesc*)desc)->damperElbow; \
-		springWristY = ((CRHingeMammalBodyDesc*)desc)->springWristY; \
-		damperWristY = ((CRHingeMammalBodyDesc*)desc)->damperWristY; \
-		springWristX = ((CRHingeMammalBodyDesc*)desc)->springWristX; \
-		damperWristX = ((CRHingeMammalBodyDesc*)desc)->damperWristX; \
-		springWristZ = ((CRHingeMammalBodyDesc*)desc)->springWristZ; \
-		damperWristZ = ((CRHingeMammalBodyDesc*)desc)->damperWristZ; \
+		springFrontAnkleY = ((CRHingeMammalBodyDesc*)desc)->springFrontAnkleY; \
+		damperFrontAnkleY = ((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleY; \
+		springFrontAnkleX = ((CRHingeMammalBodyDesc*)desc)->springFrontAnkleX; \
+		damperFrontAnkleX = ((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleX; \
+		springFrontAnkleZ = ((CRHingeMammalBodyDesc*)desc)->springFrontAnkleZ; \
+		damperFrontAnkleZ = ((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleZ; \
 		springWaistLegZ = ((CRHingeMammalBodyDesc*)desc)->springWaistLegZ; \
 		damperWaistLegZ = ((CRHingeMammalBodyDesc*)desc)->damperWaistLegZ; \
 		springWaistLegX = ((CRHingeMammalBodyDesc*)desc)->springWaistLegX; \
@@ -854,19 +854,19 @@ public: \
 		damperWaistLegY = ((CRHingeMammalBodyDesc*)desc)->damperWaistLegY; \
 		springKnee = ((CRHingeMammalBodyDesc*)desc)->springKnee; \
 		damperKnee = ((CRHingeMammalBodyDesc*)desc)->damperKnee; \
-		springAnkleY = ((CRHingeMammalBodyDesc*)desc)->springAnkleY; \
-		damperAnkleY = ((CRHingeMammalBodyDesc*)desc)->damperAnkleY; \
-		springAnkleX = ((CRHingeMammalBodyDesc*)desc)->springAnkleX; \
-		damperAnkleX = ((CRHingeMammalBodyDesc*)desc)->damperAnkleX; \
-		springAnkleZ = ((CRHingeMammalBodyDesc*)desc)->springAnkleZ; \
-		damperAnkleZ = ((CRHingeMammalBodyDesc*)desc)->damperAnkleZ; \
+		springRearAnkleY = ((CRHingeMammalBodyDesc*)desc)->springRearAnkleY; \
+		damperRearAnkleY = ((CRHingeMammalBodyDesc*)desc)->damperRearAnkleY; \
+		springRearAnkleX = ((CRHingeMammalBodyDesc*)desc)->springRearAnkleX; \
+		damperRearAnkleX = ((CRHingeMammalBodyDesc*)desc)->damperRearAnkleX; \
+		springRearAnkleZ = ((CRHingeMammalBodyDesc*)desc)->springRearAnkleZ; \
+		damperRearAnkleZ = ((CRHingeMammalBodyDesc*)desc)->damperRearAnkleZ; \
 		springEyeY = ((CRHingeMammalBodyDesc*)desc)->springEyeY; \
 		damperEyeY = ((CRHingeMammalBodyDesc*)desc)->damperEyeY; \
 		springEyeX = ((CRHingeMammalBodyDesc*)desc)->springEyeX; \
 		damperEyeX = ((CRHingeMammalBodyDesc*)desc)->damperEyeX; \
-		posRightUpperArm = ((CRHingeMammalBodyDesc*)desc)->posRightUpperArm; \
-		oriRightUpperArm = ((CRHingeMammalBodyDesc*)desc)->oriRightUpperArm; \
-		oriRightLowerArm = ((CRHingeMammalBodyDesc*)desc)->oriRightLowerArm; \
+		posRightFrontUpperLeg = ((CRHingeMammalBodyDesc*)desc)->posRightFrontUpperLeg; \
+		oriRightFrontUpperLeg = ((CRHingeMammalBodyDesc*)desc)->oriRightFrontUpperLeg; \
+		oriRightFrontLowerLeg = ((CRHingeMammalBodyDesc*)desc)->oriRightFrontLowerLeg; \
 		oriRightHand = ((CRHingeMammalBodyDesc*)desc)->oriRightHand; \
 		rangeWaistAbdomen = ((CRHingeMammalBodyDesc*)desc)->rangeWaistAbdomen; \
 		rangeAbdomenChest = ((CRHingeMammalBodyDesc*)desc)->rangeAbdomenChest; \
@@ -879,16 +879,16 @@ public: \
 		rangeShoulderX = ((CRHingeMammalBodyDesc*)desc)->rangeShoulderX; \
 		rangeShoulderY = ((CRHingeMammalBodyDesc*)desc)->rangeShoulderY; \
 		rangeElbow = ((CRHingeMammalBodyDesc*)desc)->rangeElbow; \
-		rangeWristY = ((CRHingeMammalBodyDesc*)desc)->rangeWristY; \
-		rangeWristX = ((CRHingeMammalBodyDesc*)desc)->rangeWristX; \
-		rangeWristZ = ((CRHingeMammalBodyDesc*)desc)->rangeWristZ; \
+		rangeFrontAnkleY = ((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleY; \
+		rangeFrontAnkleX = ((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleX; \
+		rangeFrontAnkleZ = ((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleZ; \
 		rangeWaistLegZ = ((CRHingeMammalBodyDesc*)desc)->rangeWaistLegZ; \
 		rangeWaistLegX = ((CRHingeMammalBodyDesc*)desc)->rangeWaistLegX; \
 		rangeWaistLegY = ((CRHingeMammalBodyDesc*)desc)->rangeWaistLegY; \
 		rangeKnee = ((CRHingeMammalBodyDesc*)desc)->rangeKnee; \
-		rangeAnkleY = ((CRHingeMammalBodyDesc*)desc)->rangeAnkleY; \
-		rangeAnkleX = ((CRHingeMammalBodyDesc*)desc)->rangeAnkleX; \
-		rangeAnkleZ = ((CRHingeMammalBodyDesc*)desc)->rangeAnkleZ; \
+		rangeRearAnkleY = ((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleY; \
+		rangeRearAnkleX = ((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleX; \
+		rangeRearAnkleZ = ((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleZ; \
 		rangeRightEyeY = ((CRHingeMammalBodyDesc*)desc)->rangeRightEyeY; \
 		rangeEyeX = ((CRHingeMammalBodyDesc*)desc)->rangeEyeX; \
 		noLegs = ((CRHingeMammalBodyDesc*)desc)->noLegs; \
@@ -907,22 +907,22 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->neckLength = neckLength; \
 		((CRHingeMammalBodyDesc*)desc)->neckDiameter = neckDiameter; \
 		((CRHingeMammalBodyDesc*)desc)->headDiameter = headDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->upperArmLength = upperArmLength; \
-		((CRHingeMammalBodyDesc*)desc)->upperArmDiameter = upperArmDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->lowerArmLength = lowerArmLength; \
-		((CRHingeMammalBodyDesc*)desc)->lowerArmDiameter = lowerArmDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->handLength = handLength; \
-		((CRHingeMammalBodyDesc*)desc)->handBreadth = handBreadth; \
-		((CRHingeMammalBodyDesc*)desc)->handThickness = handThickness; \
-		((CRHingeMammalBodyDesc*)desc)->upperLegLength = upperLegLength; \
-		((CRHingeMammalBodyDesc*)desc)->upperLegDiameter = upperLegDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->interLegDistance = interLegDistance; \
-		((CRHingeMammalBodyDesc*)desc)->lowerLegLength = lowerLegLength; \
-		((CRHingeMammalBodyDesc*)desc)->lowerLegDiameter = lowerLegDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->footLength = footLength; \
-		((CRHingeMammalBodyDesc*)desc)->footBreadth = footBreadth; \
-		((CRHingeMammalBodyDesc*)desc)->footThickness = footThickness; \
-		((CRHingeMammalBodyDesc*)desc)->ankleToeDistance = ankleToeDistance; \
+		((CRHingeMammalBodyDesc*)desc)->frontUpperLegLength = frontUpperLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->frontUpperLegDiameter = frontUpperLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->frontLowerLegLength = frontLowerLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->frontLowerLegDiameter = frontLowerLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->frontFootLength = frontFootLength; \
+		((CRHingeMammalBodyDesc*)desc)->frontFootBreadth = frontFootBreadth; \
+		((CRHingeMammalBodyDesc*)desc)->frontFootThickness = frontFootThickness; \
+		((CRHingeMammalBodyDesc*)desc)->rearUpperLegLength = rearUpperLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->rearUpperLegDiameter = rearUpperLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->rearInterLegDistance = rearInterLegDistance; \
+		((CRHingeMammalBodyDesc*)desc)->rearLowerLegLength = rearLowerLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->rearLowerLegDiameter = rearLowerLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->rearFootLength = rearFootLength; \
+		((CRHingeMammalBodyDesc*)desc)->rearFootBreadth = rearFootBreadth; \
+		((CRHingeMammalBodyDesc*)desc)->rearFootThickness = rearFootThickness; \
+		((CRHingeMammalBodyDesc*)desc)->rearAnkleToeDistance = rearAnkleToeDistance; \
 		((CRHingeMammalBodyDesc*)desc)->vertexToEyeHeight = vertexToEyeHeight; \
 		((CRHingeMammalBodyDesc*)desc)->occiputToEyeDistance = occiputToEyeDistance; \
 		((CRHingeMammalBodyDesc*)desc)->eyeDiameter = eyeDiameter; \
@@ -949,12 +949,12 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->damperShoulderY = damperShoulderY; \
 		((CRHingeMammalBodyDesc*)desc)->springElbow = springElbow; \
 		((CRHingeMammalBodyDesc*)desc)->damperElbow = damperElbow; \
-		((CRHingeMammalBodyDesc*)desc)->springWristY = springWristY; \
-		((CRHingeMammalBodyDesc*)desc)->damperWristY = damperWristY; \
-		((CRHingeMammalBodyDesc*)desc)->springWristX = springWristX; \
-		((CRHingeMammalBodyDesc*)desc)->damperWristX = damperWristX; \
-		((CRHingeMammalBodyDesc*)desc)->springWristZ = springWristZ; \
-		((CRHingeMammalBodyDesc*)desc)->damperWristZ = damperWristZ; \
+		((CRHingeMammalBodyDesc*)desc)->springFrontAnkleY = springFrontAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleY = damperFrontAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->springFrontAnkleX = springFrontAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleX = damperFrontAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->springFrontAnkleZ = springFrontAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleZ = damperFrontAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->springWaistLegZ = springWaistLegZ; \
 		((CRHingeMammalBodyDesc*)desc)->damperWaistLegZ = damperWaistLegZ; \
 		((CRHingeMammalBodyDesc*)desc)->springWaistLegX = springWaistLegX; \
@@ -963,19 +963,19 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->damperWaistLegY = damperWaistLegY; \
 		((CRHingeMammalBodyDesc*)desc)->springKnee = springKnee; \
 		((CRHingeMammalBodyDesc*)desc)->damperKnee = damperKnee; \
-		((CRHingeMammalBodyDesc*)desc)->springAnkleY = springAnkleY; \
-		((CRHingeMammalBodyDesc*)desc)->damperAnkleY = damperAnkleY; \
-		((CRHingeMammalBodyDesc*)desc)->springAnkleX = springAnkleX; \
-		((CRHingeMammalBodyDesc*)desc)->damperAnkleX = damperAnkleX; \
-		((CRHingeMammalBodyDesc*)desc)->springAnkleZ = springAnkleZ; \
-		((CRHingeMammalBodyDesc*)desc)->damperAnkleZ = damperAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->springRearAnkleY = springRearAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->damperRearAnkleY = damperRearAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->springRearAnkleX = springRearAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->damperRearAnkleX = damperRearAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->springRearAnkleZ = springRearAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->damperRearAnkleZ = damperRearAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->springEyeY = springEyeY; \
 		((CRHingeMammalBodyDesc*)desc)->damperEyeY = damperEyeY; \
 		((CRHingeMammalBodyDesc*)desc)->springEyeX = springEyeX; \
 		((CRHingeMammalBodyDesc*)desc)->damperEyeX = damperEyeX; \
-		((CRHingeMammalBodyDesc*)desc)->posRightUpperArm = posRightUpperArm; \
-		((CRHingeMammalBodyDesc*)desc)->oriRightUpperArm = oriRightUpperArm; \
-		((CRHingeMammalBodyDesc*)desc)->oriRightLowerArm = oriRightLowerArm; \
+		((CRHingeMammalBodyDesc*)desc)->posRightFrontUpperLeg = posRightFrontUpperLeg; \
+		((CRHingeMammalBodyDesc*)desc)->oriRightFrontUpperLeg = oriRightFrontUpperLeg; \
+		((CRHingeMammalBodyDesc*)desc)->oriRightFrontLowerLeg = oriRightFrontLowerLeg; \
 		((CRHingeMammalBodyDesc*)desc)->oriRightHand = oriRightHand; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistAbdomen = rangeWaistAbdomen; \
 		((CRHingeMammalBodyDesc*)desc)->rangeAbdomenChest = rangeAbdomenChest; \
@@ -988,16 +988,16 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->rangeShoulderX = rangeShoulderX; \
 		((CRHingeMammalBodyDesc*)desc)->rangeShoulderY = rangeShoulderY; \
 		((CRHingeMammalBodyDesc*)desc)->rangeElbow = rangeElbow; \
-		((CRHingeMammalBodyDesc*)desc)->rangeWristY = rangeWristY; \
-		((CRHingeMammalBodyDesc*)desc)->rangeWristX = rangeWristX; \
-		((CRHingeMammalBodyDesc*)desc)->rangeWristZ = rangeWristZ; \
+		((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleY = rangeFrontAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleX = rangeFrontAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleZ = rangeFrontAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistLegZ = rangeWaistLegZ; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistLegX = rangeWaistLegX; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistLegY = rangeWaistLegY; \
 		((CRHingeMammalBodyDesc*)desc)->rangeKnee = rangeKnee; \
-		((CRHingeMammalBodyDesc*)desc)->rangeAnkleY = rangeAnkleY; \
-		((CRHingeMammalBodyDesc*)desc)->rangeAnkleX = rangeAnkleX; \
-		((CRHingeMammalBodyDesc*)desc)->rangeAnkleZ = rangeAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleY = rangeRearAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleX = rangeRearAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleZ = rangeRearAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->rangeRightEyeY = rangeRightEyeY; \
 		((CRHingeMammalBodyDesc*)desc)->rangeEyeX = rangeEyeX; \
 		((CRHingeMammalBodyDesc*)desc)->noLegs = noLegs; \
@@ -1018,22 +1018,22 @@ protected: \
 	double neckLength ; \
 	double neckDiameter ; \
 	double headDiameter ; \
-	double upperArmLength ; \
-	double upperArmDiameter ; \
-	double lowerArmLength ; \
-	double lowerArmDiameter ; \
-	double handLength ; \
-	double handBreadth ; \
-	double handThickness ; \
-	double upperLegLength ; \
-	double upperLegDiameter ; \
-	double interLegDistance ; \
-	double lowerLegLength ; \
-	double lowerLegDiameter ; \
-	double footLength ; \
-	double footBreadth ; \
-	double footThickness ; \
-	double ankleToeDistance ; \
+	double frontUpperLegLength ; \
+	double frontUpperLegDiameter ; \
+	double frontLowerLegLength ; \
+	double frontLowerLegDiameter ; \
+	double frontFootLength ; \
+	double frontFootBreadth ; \
+	double frontFootThickness ; \
+	double rearUpperLegLength ; \
+	double rearUpperLegDiameter ; \
+	double rearInterLegDistance ; \
+	double rearLowerLegLength ; \
+	double rearLowerLegDiameter ; \
+	double rearFootLength ; \
+	double rearFootBreadth ; \
+	double rearFootThickness ; \
+	double rearAnkleToeDistance ; \
 	double vertexToEyeHeight ; \
 	double occiputToEyeDistance ; \
 	double eyeDiameter ; \
@@ -1060,12 +1060,12 @@ protected: \
 	double damperShoulderY ; \
 	double springElbow ; \
 	double damperElbow ; \
-	double springWristY ; \
-	double damperWristY ; \
-	double springWristX ; \
-	double damperWristX ; \
-	double springWristZ ; \
-	double damperWristZ ; \
+	double springFrontAnkleY ; \
+	double damperFrontAnkleY ; \
+	double springFrontAnkleX ; \
+	double damperFrontAnkleX ; \
+	double springFrontAnkleZ ; \
+	double damperFrontAnkleZ ; \
 	double springWaistLegZ ; \
 	double damperWaistLegZ ; \
 	double springWaistLegX ; \
@@ -1074,19 +1074,19 @@ protected: \
 	double damperWaistLegY ; \
 	double springKnee ; \
 	double damperKnee ; \
-	double springAnkleY ; \
-	double damperAnkleY ; \
-	double springAnkleX ; \
-	double damperAnkleX ; \
-	double springAnkleZ ; \
-	double damperAnkleZ ; \
+	double springRearAnkleY ; \
+	double damperRearAnkleY ; \
+	double springRearAnkleX ; \
+	double damperRearAnkleX ; \
+	double springRearAnkleZ ; \
+	double damperRearAnkleZ ; \
 	double springEyeY ; \
 	double damperEyeY ; \
 	double springEyeX ; \
 	double damperEyeX ; \
-	Vec3d posRightUpperArm ; \
-	Quaterniond oriRightUpperArm ; \
-	Quaterniond oriRightLowerArm ; \
+	Vec3d posRightFrontUpperLeg ; \
+	Quaterniond oriRightFrontUpperLeg ; \
+	Quaterniond oriRightFrontLowerLeg ; \
 	Quaterniond oriRightHand ; \
 	Vec2d rangeWaistAbdomen ; \
 	Vec2d rangeAbdomenChest ; \
@@ -1099,16 +1099,16 @@ protected: \
 	Vec2d rangeShoulderX ; \
 	Vec2d rangeShoulderY ; \
 	Vec2d rangeElbow ; \
-	Vec2d rangeWristY ; \
-	Vec2d rangeWristX ; \
-	Vec2d rangeWristZ ; \
+	Vec2d rangeFrontAnkleY ; \
+	Vec2d rangeFrontAnkleX ; \
+	Vec2d rangeFrontAnkleZ ; \
 	Vec2d rangeWaistLegZ ; \
 	Vec2d rangeWaistLegX ; \
 	Vec2d rangeWaistLegY ; \
 	Vec2d rangeKnee ; \
-	Vec2d rangeAnkleY ; \
-	Vec2d rangeAnkleX ; \
-	Vec2d rangeAnkleZ ; \
+	Vec2d rangeRearAnkleY ; \
+	Vec2d rangeRearAnkleX ; \
+	Vec2d rangeRearAnkleZ ; \
 	Vec2d rangeRightEyeY ; \
 	Vec2d rangeEyeX ; \
 	bool noLegs ; \
@@ -1126,22 +1126,22 @@ public: \
 		neckLength = ((CRHingeMammalBodyDesc*)desc)->neckLength; \
 		neckDiameter = ((CRHingeMammalBodyDesc*)desc)->neckDiameter; \
 		headDiameter = ((CRHingeMammalBodyDesc*)desc)->headDiameter; \
-		upperArmLength = ((CRHingeMammalBodyDesc*)desc)->upperArmLength; \
-		upperArmDiameter = ((CRHingeMammalBodyDesc*)desc)->upperArmDiameter; \
-		lowerArmLength = ((CRHingeMammalBodyDesc*)desc)->lowerArmLength; \
-		lowerArmDiameter = ((CRHingeMammalBodyDesc*)desc)->lowerArmDiameter; \
-		handLength = ((CRHingeMammalBodyDesc*)desc)->handLength; \
-		handBreadth = ((CRHingeMammalBodyDesc*)desc)->handBreadth; \
-		handThickness = ((CRHingeMammalBodyDesc*)desc)->handThickness; \
-		upperLegLength = ((CRHingeMammalBodyDesc*)desc)->upperLegLength; \
-		upperLegDiameter = ((CRHingeMammalBodyDesc*)desc)->upperLegDiameter; \
-		interLegDistance = ((CRHingeMammalBodyDesc*)desc)->interLegDistance; \
-		lowerLegLength = ((CRHingeMammalBodyDesc*)desc)->lowerLegLength; \
-		lowerLegDiameter = ((CRHingeMammalBodyDesc*)desc)->lowerLegDiameter; \
-		footLength = ((CRHingeMammalBodyDesc*)desc)->footLength; \
-		footBreadth = ((CRHingeMammalBodyDesc*)desc)->footBreadth; \
-		footThickness = ((CRHingeMammalBodyDesc*)desc)->footThickness; \
-		ankleToeDistance = ((CRHingeMammalBodyDesc*)desc)->ankleToeDistance; \
+		frontUpperLegLength = ((CRHingeMammalBodyDesc*)desc)->frontUpperLegLength; \
+		frontUpperLegDiameter = ((CRHingeMammalBodyDesc*)desc)->frontUpperLegDiameter; \
+		frontLowerLegLength = ((CRHingeMammalBodyDesc*)desc)->frontLowerLegLength; \
+		frontLowerLegDiameter = ((CRHingeMammalBodyDesc*)desc)->frontLowerLegDiameter; \
+		frontFootLength = ((CRHingeMammalBodyDesc*)desc)->frontFootLength; \
+		frontFootBreadth = ((CRHingeMammalBodyDesc*)desc)->frontFootBreadth; \
+		frontFootThickness = ((CRHingeMammalBodyDesc*)desc)->frontFootThickness; \
+		rearUpperLegLength = ((CRHingeMammalBodyDesc*)desc)->rearUpperLegLength; \
+		rearUpperLegDiameter = ((CRHingeMammalBodyDesc*)desc)->rearUpperLegDiameter; \
+		rearInterLegDistance = ((CRHingeMammalBodyDesc*)desc)->rearInterLegDistance; \
+		rearLowerLegLength = ((CRHingeMammalBodyDesc*)desc)->rearLowerLegLength; \
+		rearLowerLegDiameter = ((CRHingeMammalBodyDesc*)desc)->rearLowerLegDiameter; \
+		rearFootLength = ((CRHingeMammalBodyDesc*)desc)->rearFootLength; \
+		rearFootBreadth = ((CRHingeMammalBodyDesc*)desc)->rearFootBreadth; \
+		rearFootThickness = ((CRHingeMammalBodyDesc*)desc)->rearFootThickness; \
+		rearAnkleToeDistance = ((CRHingeMammalBodyDesc*)desc)->rearAnkleToeDistance; \
 		vertexToEyeHeight = ((CRHingeMammalBodyDesc*)desc)->vertexToEyeHeight; \
 		occiputToEyeDistance = ((CRHingeMammalBodyDesc*)desc)->occiputToEyeDistance; \
 		eyeDiameter = ((CRHingeMammalBodyDesc*)desc)->eyeDiameter; \
@@ -1168,12 +1168,12 @@ public: \
 		damperShoulderY = ((CRHingeMammalBodyDesc*)desc)->damperShoulderY; \
 		springElbow = ((CRHingeMammalBodyDesc*)desc)->springElbow; \
 		damperElbow = ((CRHingeMammalBodyDesc*)desc)->damperElbow; \
-		springWristY = ((CRHingeMammalBodyDesc*)desc)->springWristY; \
-		damperWristY = ((CRHingeMammalBodyDesc*)desc)->damperWristY; \
-		springWristX = ((CRHingeMammalBodyDesc*)desc)->springWristX; \
-		damperWristX = ((CRHingeMammalBodyDesc*)desc)->damperWristX; \
-		springWristZ = ((CRHingeMammalBodyDesc*)desc)->springWristZ; \
-		damperWristZ = ((CRHingeMammalBodyDesc*)desc)->damperWristZ; \
+		springFrontAnkleY = ((CRHingeMammalBodyDesc*)desc)->springFrontAnkleY; \
+		damperFrontAnkleY = ((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleY; \
+		springFrontAnkleX = ((CRHingeMammalBodyDesc*)desc)->springFrontAnkleX; \
+		damperFrontAnkleX = ((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleX; \
+		springFrontAnkleZ = ((CRHingeMammalBodyDesc*)desc)->springFrontAnkleZ; \
+		damperFrontAnkleZ = ((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleZ; \
 		springWaistLegZ = ((CRHingeMammalBodyDesc*)desc)->springWaistLegZ; \
 		damperWaistLegZ = ((CRHingeMammalBodyDesc*)desc)->damperWaistLegZ; \
 		springWaistLegX = ((CRHingeMammalBodyDesc*)desc)->springWaistLegX; \
@@ -1182,19 +1182,19 @@ public: \
 		damperWaistLegY = ((CRHingeMammalBodyDesc*)desc)->damperWaistLegY; \
 		springKnee = ((CRHingeMammalBodyDesc*)desc)->springKnee; \
 		damperKnee = ((CRHingeMammalBodyDesc*)desc)->damperKnee; \
-		springAnkleY = ((CRHingeMammalBodyDesc*)desc)->springAnkleY; \
-		damperAnkleY = ((CRHingeMammalBodyDesc*)desc)->damperAnkleY; \
-		springAnkleX = ((CRHingeMammalBodyDesc*)desc)->springAnkleX; \
-		damperAnkleX = ((CRHingeMammalBodyDesc*)desc)->damperAnkleX; \
-		springAnkleZ = ((CRHingeMammalBodyDesc*)desc)->springAnkleZ; \
-		damperAnkleZ = ((CRHingeMammalBodyDesc*)desc)->damperAnkleZ; \
+		springRearAnkleY = ((CRHingeMammalBodyDesc*)desc)->springRearAnkleY; \
+		damperRearAnkleY = ((CRHingeMammalBodyDesc*)desc)->damperRearAnkleY; \
+		springRearAnkleX = ((CRHingeMammalBodyDesc*)desc)->springRearAnkleX; \
+		damperRearAnkleX = ((CRHingeMammalBodyDesc*)desc)->damperRearAnkleX; \
+		springRearAnkleZ = ((CRHingeMammalBodyDesc*)desc)->springRearAnkleZ; \
+		damperRearAnkleZ = ((CRHingeMammalBodyDesc*)desc)->damperRearAnkleZ; \
 		springEyeY = ((CRHingeMammalBodyDesc*)desc)->springEyeY; \
 		damperEyeY = ((CRHingeMammalBodyDesc*)desc)->damperEyeY; \
 		springEyeX = ((CRHingeMammalBodyDesc*)desc)->springEyeX; \
 		damperEyeX = ((CRHingeMammalBodyDesc*)desc)->damperEyeX; \
-		posRightUpperArm = ((CRHingeMammalBodyDesc*)desc)->posRightUpperArm; \
-		oriRightUpperArm = ((CRHingeMammalBodyDesc*)desc)->oriRightUpperArm; \
-		oriRightLowerArm = ((CRHingeMammalBodyDesc*)desc)->oriRightLowerArm; \
+		posRightFrontUpperLeg = ((CRHingeMammalBodyDesc*)desc)->posRightFrontUpperLeg; \
+		oriRightFrontUpperLeg = ((CRHingeMammalBodyDesc*)desc)->oriRightFrontUpperLeg; \
+		oriRightFrontLowerLeg = ((CRHingeMammalBodyDesc*)desc)->oriRightFrontLowerLeg; \
 		oriRightHand = ((CRHingeMammalBodyDesc*)desc)->oriRightHand; \
 		rangeWaistAbdomen = ((CRHingeMammalBodyDesc*)desc)->rangeWaistAbdomen; \
 		rangeAbdomenChest = ((CRHingeMammalBodyDesc*)desc)->rangeAbdomenChest; \
@@ -1207,16 +1207,16 @@ public: \
 		rangeShoulderX = ((CRHingeMammalBodyDesc*)desc)->rangeShoulderX; \
 		rangeShoulderY = ((CRHingeMammalBodyDesc*)desc)->rangeShoulderY; \
 		rangeElbow = ((CRHingeMammalBodyDesc*)desc)->rangeElbow; \
-		rangeWristY = ((CRHingeMammalBodyDesc*)desc)->rangeWristY; \
-		rangeWristX = ((CRHingeMammalBodyDesc*)desc)->rangeWristX; \
-		rangeWristZ = ((CRHingeMammalBodyDesc*)desc)->rangeWristZ; \
+		rangeFrontAnkleY = ((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleY; \
+		rangeFrontAnkleX = ((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleX; \
+		rangeFrontAnkleZ = ((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleZ; \
 		rangeWaistLegZ = ((CRHingeMammalBodyDesc*)desc)->rangeWaistLegZ; \
 		rangeWaistLegX = ((CRHingeMammalBodyDesc*)desc)->rangeWaistLegX; \
 		rangeWaistLegY = ((CRHingeMammalBodyDesc*)desc)->rangeWaistLegY; \
 		rangeKnee = ((CRHingeMammalBodyDesc*)desc)->rangeKnee; \
-		rangeAnkleY = ((CRHingeMammalBodyDesc*)desc)->rangeAnkleY; \
-		rangeAnkleX = ((CRHingeMammalBodyDesc*)desc)->rangeAnkleX; \
-		rangeAnkleZ = ((CRHingeMammalBodyDesc*)desc)->rangeAnkleZ; \
+		rangeRearAnkleY = ((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleY; \
+		rangeRearAnkleX = ((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleX; \
+		rangeRearAnkleZ = ((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleZ; \
 		rangeRightEyeY = ((CRHingeMammalBodyDesc*)desc)->rangeRightEyeY; \
 		rangeEyeX = ((CRHingeMammalBodyDesc*)desc)->rangeEyeX; \
 		noLegs = ((CRHingeMammalBodyDesc*)desc)->noLegs; \
@@ -1234,22 +1234,22 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->neckLength = neckLength; \
 		((CRHingeMammalBodyDesc*)desc)->neckDiameter = neckDiameter; \
 		((CRHingeMammalBodyDesc*)desc)->headDiameter = headDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->upperArmLength = upperArmLength; \
-		((CRHingeMammalBodyDesc*)desc)->upperArmDiameter = upperArmDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->lowerArmLength = lowerArmLength; \
-		((CRHingeMammalBodyDesc*)desc)->lowerArmDiameter = lowerArmDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->handLength = handLength; \
-		((CRHingeMammalBodyDesc*)desc)->handBreadth = handBreadth; \
-		((CRHingeMammalBodyDesc*)desc)->handThickness = handThickness; \
-		((CRHingeMammalBodyDesc*)desc)->upperLegLength = upperLegLength; \
-		((CRHingeMammalBodyDesc*)desc)->upperLegDiameter = upperLegDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->interLegDistance = interLegDistance; \
-		((CRHingeMammalBodyDesc*)desc)->lowerLegLength = lowerLegLength; \
-		((CRHingeMammalBodyDesc*)desc)->lowerLegDiameter = lowerLegDiameter; \
-		((CRHingeMammalBodyDesc*)desc)->footLength = footLength; \
-		((CRHingeMammalBodyDesc*)desc)->footBreadth = footBreadth; \
-		((CRHingeMammalBodyDesc*)desc)->footThickness = footThickness; \
-		((CRHingeMammalBodyDesc*)desc)->ankleToeDistance = ankleToeDistance; \
+		((CRHingeMammalBodyDesc*)desc)->frontUpperLegLength = frontUpperLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->frontUpperLegDiameter = frontUpperLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->frontLowerLegLength = frontLowerLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->frontLowerLegDiameter = frontLowerLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->frontFootLength = frontFootLength; \
+		((CRHingeMammalBodyDesc*)desc)->frontFootBreadth = frontFootBreadth; \
+		((CRHingeMammalBodyDesc*)desc)->frontFootThickness = frontFootThickness; \
+		((CRHingeMammalBodyDesc*)desc)->rearUpperLegLength = rearUpperLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->rearUpperLegDiameter = rearUpperLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->rearInterLegDistance = rearInterLegDistance; \
+		((CRHingeMammalBodyDesc*)desc)->rearLowerLegLength = rearLowerLegLength; \
+		((CRHingeMammalBodyDesc*)desc)->rearLowerLegDiameter = rearLowerLegDiameter; \
+		((CRHingeMammalBodyDesc*)desc)->rearFootLength = rearFootLength; \
+		((CRHingeMammalBodyDesc*)desc)->rearFootBreadth = rearFootBreadth; \
+		((CRHingeMammalBodyDesc*)desc)->rearFootThickness = rearFootThickness; \
+		((CRHingeMammalBodyDesc*)desc)->rearAnkleToeDistance = rearAnkleToeDistance; \
 		((CRHingeMammalBodyDesc*)desc)->vertexToEyeHeight = vertexToEyeHeight; \
 		((CRHingeMammalBodyDesc*)desc)->occiputToEyeDistance = occiputToEyeDistance; \
 		((CRHingeMammalBodyDesc*)desc)->eyeDiameter = eyeDiameter; \
@@ -1276,12 +1276,12 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->damperShoulderY = damperShoulderY; \
 		((CRHingeMammalBodyDesc*)desc)->springElbow = springElbow; \
 		((CRHingeMammalBodyDesc*)desc)->damperElbow = damperElbow; \
-		((CRHingeMammalBodyDesc*)desc)->springWristY = springWristY; \
-		((CRHingeMammalBodyDesc*)desc)->damperWristY = damperWristY; \
-		((CRHingeMammalBodyDesc*)desc)->springWristX = springWristX; \
-		((CRHingeMammalBodyDesc*)desc)->damperWristX = damperWristX; \
-		((CRHingeMammalBodyDesc*)desc)->springWristZ = springWristZ; \
-		((CRHingeMammalBodyDesc*)desc)->damperWristZ = damperWristZ; \
+		((CRHingeMammalBodyDesc*)desc)->springFrontAnkleY = springFrontAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleY = damperFrontAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->springFrontAnkleX = springFrontAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleX = damperFrontAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->springFrontAnkleZ = springFrontAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->damperFrontAnkleZ = damperFrontAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->springWaistLegZ = springWaistLegZ; \
 		((CRHingeMammalBodyDesc*)desc)->damperWaistLegZ = damperWaistLegZ; \
 		((CRHingeMammalBodyDesc*)desc)->springWaistLegX = springWaistLegX; \
@@ -1290,19 +1290,19 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->damperWaistLegY = damperWaistLegY; \
 		((CRHingeMammalBodyDesc*)desc)->springKnee = springKnee; \
 		((CRHingeMammalBodyDesc*)desc)->damperKnee = damperKnee; \
-		((CRHingeMammalBodyDesc*)desc)->springAnkleY = springAnkleY; \
-		((CRHingeMammalBodyDesc*)desc)->damperAnkleY = damperAnkleY; \
-		((CRHingeMammalBodyDesc*)desc)->springAnkleX = springAnkleX; \
-		((CRHingeMammalBodyDesc*)desc)->damperAnkleX = damperAnkleX; \
-		((CRHingeMammalBodyDesc*)desc)->springAnkleZ = springAnkleZ; \
-		((CRHingeMammalBodyDesc*)desc)->damperAnkleZ = damperAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->springRearAnkleY = springRearAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->damperRearAnkleY = damperRearAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->springRearAnkleX = springRearAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->damperRearAnkleX = damperRearAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->springRearAnkleZ = springRearAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->damperRearAnkleZ = damperRearAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->springEyeY = springEyeY; \
 		((CRHingeMammalBodyDesc*)desc)->damperEyeY = damperEyeY; \
 		((CRHingeMammalBodyDesc*)desc)->springEyeX = springEyeX; \
 		((CRHingeMammalBodyDesc*)desc)->damperEyeX = damperEyeX; \
-		((CRHingeMammalBodyDesc*)desc)->posRightUpperArm = posRightUpperArm; \
-		((CRHingeMammalBodyDesc*)desc)->oriRightUpperArm = oriRightUpperArm; \
-		((CRHingeMammalBodyDesc*)desc)->oriRightLowerArm = oriRightLowerArm; \
+		((CRHingeMammalBodyDesc*)desc)->posRightFrontUpperLeg = posRightFrontUpperLeg; \
+		((CRHingeMammalBodyDesc*)desc)->oriRightFrontUpperLeg = oriRightFrontUpperLeg; \
+		((CRHingeMammalBodyDesc*)desc)->oriRightFrontLowerLeg = oriRightFrontLowerLeg; \
 		((CRHingeMammalBodyDesc*)desc)->oriRightHand = oriRightHand; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistAbdomen = rangeWaistAbdomen; \
 		((CRHingeMammalBodyDesc*)desc)->rangeAbdomenChest = rangeAbdomenChest; \
@@ -1315,16 +1315,16 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->rangeShoulderX = rangeShoulderX; \
 		((CRHingeMammalBodyDesc*)desc)->rangeShoulderY = rangeShoulderY; \
 		((CRHingeMammalBodyDesc*)desc)->rangeElbow = rangeElbow; \
-		((CRHingeMammalBodyDesc*)desc)->rangeWristY = rangeWristY; \
-		((CRHingeMammalBodyDesc*)desc)->rangeWristX = rangeWristX; \
-		((CRHingeMammalBodyDesc*)desc)->rangeWristZ = rangeWristZ; \
+		((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleY = rangeFrontAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleX = rangeFrontAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->rangeFrontAnkleZ = rangeFrontAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistLegZ = rangeWaistLegZ; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistLegX = rangeWaistLegX; \
 		((CRHingeMammalBodyDesc*)desc)->rangeWaistLegY = rangeWaistLegY; \
 		((CRHingeMammalBodyDesc*)desc)->rangeKnee = rangeKnee; \
-		((CRHingeMammalBodyDesc*)desc)->rangeAnkleY = rangeAnkleY; \
-		((CRHingeMammalBodyDesc*)desc)->rangeAnkleX = rangeAnkleX; \
-		((CRHingeMammalBodyDesc*)desc)->rangeAnkleZ = rangeAnkleZ; \
+		((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleY = rangeRearAnkleY; \
+		((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleX = rangeRearAnkleX; \
+		((CRHingeMammalBodyDesc*)desc)->rangeRearAnkleZ = rangeRearAnkleZ; \
 		((CRHingeMammalBodyDesc*)desc)->rangeRightEyeY = rangeRightEyeY; \
 		((CRHingeMammalBodyDesc*)desc)->rangeEyeX = rangeEyeX; \
 		((CRHingeMammalBodyDesc*)desc)->noLegs = noLegs; \

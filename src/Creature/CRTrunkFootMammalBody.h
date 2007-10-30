@@ -61,4 +61,4 @@ public:
 }
 //@}
 
-#endif//CRTRUNKFOOTMammalBODY_H
+#endif//CRTRUNKFOOTMAMMALBODY_H

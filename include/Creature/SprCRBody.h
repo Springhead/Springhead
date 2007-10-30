@@ -333,16 +333,16 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	enum CRMammalSolids{
 		// Center
 		SO_WAIST=0,
-		SO_ABDOMEN, SO_CHEST, SO_NECK, SO_HEAD,
+		SO_ABDOMEN, SO_CHEST, SO_NECK, SO_HEAD, SO_TAIL1, SO_TAIL2,SO_TAIL3,
 
 		// Right
-		SO_RIGHT_UPPER_ARM, SO_RIGHT_LOWER_ARM, SO_RIGHT_HAND,
-		SO_RIGHT_UPPER_LEG, SO_RIGHT_LOWER_LEG, SO_RIGHT_FOOT,
+		SO_RIGHT_FRONT_UPPER_LEG, SO_RIGHT_FRONT_LOWER_LEG, SO_RIGHT_FRONT_FOOT,
+		SO_RIGHT_REAR_UPPER_LEG , SO_RIGHT_REAR_LOWER_LEG , SO_RIGHT_REAR_FOOT ,
 		SO_RIGHT_EYE,
 
 		// Left
-		SO_LEFT_UPPER_ARM, SO_LEFT_LOWER_ARM, SO_LEFT_HAND,
-		SO_LEFT_UPPER_LEG, SO_LEFT_LOWER_LEG, SO_LEFT_FOOT,
+		SO_LEFT_FRONT_UPPER_LEG, SO_LEFT_FRONT_LOWER_LEG, SO_LEFT_FRONT_FOOT,
+		SO_LEFT_REAR_UPPER_LEG , SO_LEFT_REAR_LOWER_LEG , SO_LEFT_REAR_FOOT,
 		SO_LEFT_EYE,
 
 		// 関節の中継ぎ用の形状を有しない剛体
@@ -350,15 +350,15 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 		SO_NECK_HEAD_XZ,
 
 		SO_RIGHT_SHOULDER_ZX, SO_RIGHT_SHOULDER_XY, 
-		SO_RIGHT_WRIST_YX, SO_RIGHT_WRIST_XZ,
+		SO_RIGHT_FRONT_ANKLE_YX, SO_RIGHT_FRONT_ANKLE_XZ,
 		SO_RIGHT_WAIST_LEG_ZX, SO_RIGHT_WAIST_LEG_XY, 
-		SO_RIGHT_ANKLE_YX, SO_RIGHT_ANKLE_XZ,
+		SO_RIGHT_REAR_ANKLE_YX, SO_RIGHT_REAR_ANKLE_XZ,
 		SO_RIGHT_EYE_YX,
 
 		SO_LEFT_SHOULDER_ZX, SO_LEFT_SHOULDER_XY, 
-		SO_LEFT_WRIST_YX, SO_LEFT_WRIST_XZ, 
+		SO_LEFT_FRONT_ANKLE_YX, SO_LEFT_FRONT_ANKLE_XZ, 
 		SO_LEFT_WAIST_LEG_ZX, SO_LEFT_WAIST_LEG_XY, 
-		SO_LEFT_ANKLE_YX, SO_LEFT_ANKLE_XZ,
+		SO_LEFT_REAR_ANKLE_YX, SO_LEFT_REAR_ANKLE_XZ,
 		SO_LEFT_EYE_YX,
 
 		// 剛体の数
@@ -370,26 +370,28 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 		JO_WAIST_ABDOMEN=0, JO_ABDOMEN_CHEST,
 		JO_CHEST_NECK_X, JO_CHEST_NECK_Z, JO_CHEST_NECK_Y,
 		JO_NECK_HEAD_X, JO_NECK_HEAD_Z,
+		JO_TAIL12_X,JO_TAIL12_Y,JO_TAIL12_Z,
+		JO_TAIL23_X,JO_TAIL23_Y,JO_TAIL23_Z,
 
 		// -- Right
 		JO_RIGHT_SHOULDER_Z, JO_RIGHT_SHOULDER_X, JO_RIGHT_SHOULDER_Y,
 		JO_RIGHT_ELBOW,
-		JO_RIGHT_WRIST_Y, JO_RIGHT_WRIST_X, JO_RIGHT_WRIST_Z,
+		JO_RIGHT_FRONT_ANKLE_Y, JO_RIGHT_FRONT_ANKLE_X, JO_RIGHT_FRONT_ANKLE_Z,
 
 		JO_RIGHT_WAIST_LEG_Z, JO_RIGHT_WAIST_LEG_X, JO_RIGHT_WAIST_LEG_Y,
 		JO_RIGHT_KNEE,
-		JO_RIGHT_ANKLE_Y, JO_RIGHT_ANKLE_X, JO_RIGHT_ANKLE_Z,
+		JO_RIGHT_REAR_ANKLE_Y, JO_RIGHT_REAR_ANKLE_X, JO_RIGHT_REAR_ANKLE_Z,
 
 		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
 
 		// -- Left
 		JO_LEFT_SHOULDER_Z, JO_LEFT_SHOULDER_X, JO_LEFT_SHOULDER_Y,
 		JO_LEFT_ELBOW,
-		JO_LEFT_WRIST_Y, JO_LEFT_WRIST_X, JO_LEFT_WRIST_Z,
+		JO_LEFT_FRONT_ANKLE_Y, JO_LEFT_FRONT_ANKLE_X, JO_LEFT_FRONT_ANKLE_Z,
 
 		JO_LEFT_WAIST_LEG_Z, JO_LEFT_WAIST_LEG_X, JO_LEFT_WAIST_LEG_Y,
 		JO_LEFT_KNEE,
-		JO_LEFT_ANKLE_Y, JO_LEFT_ANKLE_X, JO_LEFT_ANKLE_Z,
+		JO_LEFT_REAR_ANKLE_Y, JO_LEFT_REAR_ANKLE_X, JO_LEFT_REAR_ANKLE_Z,
 
 		JO_LEFT_EYE_Y, JO_LEFT_EYE_X,
 
@@ -403,12 +405,12 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	double chestHeight, chestBreadth, chestThickness;
 	double neckLength, neckDiameter;
 	double headDiameter;
-	double upperArmLength, upperArmDiameter;
-	double lowerArmLength, lowerArmDiameter;
-	double handLength, handBreadth, handThickness;
-	double upperLegLength, upperLegDiameter, interLegDistance;
-	double lowerLegLength, lowerLegDiameter;
-	double footLength, footBreadth, footThickness, ankleToeDistance;
+	double frontUpperLegLength, frontUpperLegDiameter;
+	double frontLowerLegLength, frontLowerLegDiameter;
+	double frontFootLength, frontFootBreadth, frontFootThickness;
+	double rearUpperLegLength, rearUpperLegDiameter, rearInterLegDistance;
+	double rearLowerLegLength, rearLowerLegDiameter;
+	double rearFootLength, rearFootBreadth, rearFootThickness, rearAnkleToeDistance;
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;
 
@@ -424,23 +426,23 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	double springShoulderX,    damperShoulderX;
 	double springShoulderY,    damperShoulderY;
 	double springElbow,        damperElbow;
-	double springWristY,       damperWristY;
-	double springWristX,       damperWristX;
-	double springWristZ,       damperWristZ;
+	double springFrontAnkleY,  damperFrontAnkleY;
+	double springFrontAnkleX,  damperFrontAnkleX;
+	double springFrontAnkleZ,  damperFrontAnkleZ;
 	double springWaistLegZ,    damperWaistLegZ;
 	double springWaistLegX,    damperWaistLegX;
 	double springWaistLegY,    damperWaistLegY;
 	double springKnee,         damperKnee;
-	double springAnkleY,       damperAnkleY;
-	double springAnkleX,       damperAnkleX;
-	double springAnkleZ,       damperAnkleZ;
+	double springRearAnkleY,   damperRearAnkleY;
+	double springRearAnkleX,   damperRearAnkleX;
+	double springRearAnkleZ,   damperRearAnkleZ;
 	double springEyeY,         damperEyeY;
 	double springEyeX,         damperEyeX;
 
 	/// 関節取り付け角度・位置
-	Vec3d       posRightUpperArm;
-	Quaterniond oriRightUpperArm;
-	Quaterniond oriRightLowerArm;
+	Vec3d       posRightFrontUpperLeg;
+	Quaterniond oriRightFrontUpperLeg;
+	Quaterniond oriRightFrontLowerLeg;
 	Quaterniond oriRightHand;
 
 	/// 可動域制限
@@ -455,16 +457,16 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	Vec2d rangeShoulderX;
 	Vec2d rangeShoulderY;
 	Vec2d rangeElbow;
-	Vec2d rangeWristY;
-	Vec2d rangeWristX;
-	Vec2d rangeWristZ;
+	Vec2d rangeFrontAnkleY;
+	Vec2d rangeFrontAnkleX;
+	Vec2d rangeFrontAnkleZ;
 	Vec2d rangeWaistLegZ;
 	Vec2d rangeWaistLegX;
 	Vec2d rangeWaistLegY;
 	Vec2d rangeKnee;
-	Vec2d rangeAnkleY;
-	Vec2d rangeAnkleX;
-	Vec2d rangeAnkleZ;
+	Vec2d rangeRearAnkleY;
+	Vec2d rangeRearAnkleX;
+	Vec2d rangeRearAnkleZ;
 	Vec2d rangeRightEyeY;
 	Vec2d rangeEyeX;
 
@@ -491,27 +493,27 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 
 		headDiameter = 0.2387;
 
-		upperArmLength   = 0.3406;
-		upperArmDiameter = 0.2808 / 3.1415;
+		frontUpperLegLength   = 0.3406;
+		frontUpperLegDiameter = 0.2808 / 3.1415;
 
-		lowerArmLength   = 0.2766;
-		lowerArmDiameter = 0.1677 / 3.1415;
+		frontLowerLegLength   = 0.2766;
+		frontLowerLegDiameter = 0.1677 / 3.1415;
 
-		handLength    = 0.1908;
-		handBreadth   = 0.1018;
-		handThickness = 0.0275;
+		frontFootLength    = 0.1908;
+		frontFootBreadth   = 0.1018;
+		frontFootThickness = 0.0275;
 
-		upperLegLength   = 0.4092;
-		upperLegDiameter = 0.1682;
-		interLegDistance = waistBreadth - upperLegDiameter;
+		rearUpperLegLength   = 0.4092;
+		rearUpperLegDiameter = 0.1682;
+		rearInterLegDistance = waistBreadth - rearUpperLegDiameter;
 
-		lowerLegLength   = 0.3946;
-		lowerLegDiameter = 0.1109;
+		rearLowerLegLength   = 0.3946;
+		rearLowerLegDiameter = 0.1109;
 
-		footLength       = 0.2544;
-		footBreadth      = 0.0994;
-		footThickness    = 0.0619;
-		ankleToeDistance = 0.2010;
+		rearFootLength       = 0.2544;
+		rearFootBreadth      = 0.0994;
+		rearFootThickness    = 0.0619;
+		rearAnkleToeDistance = 0.2010;
 
 		vertexToEyeHeight     = 0.1255;
 		occiputToEyeDistance  = 0.1688;
@@ -529,20 +531,20 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 		springShoulderX    =   5.0;  damperShoulderX    =   2.0;
 		springShoulderY    =   5.0;  damperShoulderY    =   2.0;
 		springElbow        =   5.0;  damperElbow        =   2.0;
-		springWristY       =   5.0;  damperWristY       =   2.0;
-		springWristX       =   5.0;  damperWristX       =   2.0;
-		springWristZ       =  10.0;  damperWristZ       =   5.0;
+		springFrontAnkleY  =   5.0;  damperFrontAnkleY  =   2.0;
+		springFrontAnkleX  =   5.0;  damperFrontAnkleX  =   2.0;
+		springFrontAnkleZ  =  10.0;  damperFrontAnkleZ  =   5.0;
 		springWaistLegZ    =   5.0;  damperWaistLegZ    =   2.0;
 		springWaistLegX    =   5.0;  damperWaistLegX    =   2.0;
 		springWaistLegY    =   5.0;  damperWaistLegY    =   2.0;
 		springKnee         =   5.0;  damperKnee         =   2.0;
-		springAnkleY       =   5.0;  damperAnkleY       =   2.0;
-		springAnkleX       =   5.0;  damperAnkleX       =   2.0;
-		springAnkleZ       =  10.0;  damperAnkleZ       =   5.0;
+		springRearAnkleY   =   5.0;  damperRearAnkleY   =   2.0;
+		springRearAnkleX   =   5.0;  damperRearAnkleX   =   2.0;
+		springRearAnkleZ   =  10.0;  damperRearAnkleZ   =   5.0;
 		springEyeY         = 500.0;  damperEyeY         =   5.0;
 		springEyeX         = 500.0;  damperEyeX         =   5.0;
 
-		posRightUpperArm = Vec3d(0,0,0);
+		posRightFrontUpperLeg = Vec3d(0,0,0);
 
 		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
 		rangeWaistAbdomen = Vec2d(Rad(+360) , Rad(-360));
@@ -556,16 +558,16 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 		rangeShoulderX    = Vec2d(Rad(+360) , Rad(-360));
 		rangeShoulderY    = Vec2d(Rad(+360) , Rad(-360));
 		rangeElbow        = Vec2d(Rad(+360) , Rad(-360));
-		rangeWristY       = Vec2d(Rad(+360) , Rad(-360));
-		rangeWristX       = Vec2d(Rad(+360) , Rad(-360));
-		rangeWristZ       = Vec2d(Rad(+360) , Rad(-360));
+		rangeFrontAnkleY  = Vec2d(Rad(+360) , Rad(-360));
+		rangeFrontAnkleX  = Vec2d(Rad(+360) , Rad(-360));
+		rangeFrontAnkleZ  = Vec2d(Rad(+360) , Rad(-360));
 		rangeWaistLegZ    = Vec2d(Rad(+360) , Rad(-360));
 		rangeWaistLegX    = Vec2d(Rad(+360) , Rad(-360));
 		rangeWaistLegY    = Vec2d(Rad(+360) , Rad(-360));
 		rangeKnee         = Vec2d(Rad(+360) , Rad(-360));
-		rangeAnkleY       = Vec2d(Rad(+360) , Rad(-360));
-		rangeAnkleX       = Vec2d(Rad(+360) , Rad(-360));
-		rangeAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
+		rangeRearAnkleY       = Vec2d(Rad(+360) , Rad(-360));
+		rangeRearAnkleX       = Vec2d(Rad(+360) , Rad(-360));
+		rangeRearAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
 		//rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
 		//rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
 		rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));

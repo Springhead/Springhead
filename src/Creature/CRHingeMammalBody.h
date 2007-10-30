@@ -22,30 +22,31 @@ namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRHingeMammalBody
-// ヒンジジョイントを用いた人体モデル・クラスの実装
+// ヒンジジョイントを用いた哺乳類モデル・クラスの実装
 class CRHingeMammalBody : public CRBody, public CRHingeMammalBodyIfInit, public CRHingeMammalBodyDesc {
 private:
 	void InitBody();
 	void CreateWaist();
 	void CreateAbdomen();
 	void CreateChest();
+	void CreateTail();
 
 	void InitHead();
 	void CreateNeck();
 	void CreateHead();
 
-	void InitArms();
-	void CreateUpperArm(LREnum lr);
-	void CreateLowerArm(LREnum lr);
-	void CreateHand(LREnum lr);
+	void InitFrontLegs();
+	void CreateFrontUpperLeg(LREnum lr);
+	void CreateFrontLowerLeg(LREnum lr);
+	void CreateFrontFoot(LREnum lr);
 
 	void InitEyes();
 	void CreateEye(LREnum lr);
 
-	void InitLegs();
-	void CreateUpperLeg(LREnum lr);
-	void CreateLowerLeg(LREnum lr);
-	void CreateFoot(LREnum lr);
+	void InitRearLegs();
+	void CreateRearUpperLeg(LREnum lr);
+	void CreateRearLowerLeg(LREnum lr);
+	void CreateRearFoot(LREnum lr);
 
 	void InitContact();
 
@@ -63,9 +64,10 @@ public:
 
 		InitBody();
 		InitHead();
-		InitArms();
+		InitFrontLegs();
+		InitRearLegs();
 		InitEyes();
-		InitLegs();
+		
 
 		InitContact();
 	}
@@ -78,4 +80,4 @@ public:
 }
 //@}
 
-#endif//CRHINGEHUMANBODY_H
+#endif//CRHINGEMAMMALBODY_H
