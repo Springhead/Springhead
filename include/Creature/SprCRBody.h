@@ -581,12 +581,6 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 
 
 
-
-
-
-
-
-
 // ------------------------------------------------------------------------------
 /// おもに胴体と足のみの人体モデルのインターフェイス（歩行制御用）
 struct CRTrunkFootHumanBodyIf : CRBodyIf {
