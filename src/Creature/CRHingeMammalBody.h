@@ -40,13 +40,13 @@ private:
 	void CreateFrontLowerLeg(LREnum lr);
 	void CreateFrontFoot(LREnum lr);
 
-	void InitEyes();
-	void CreateEye(LREnum lr);
-
 	void InitRearLegs();
 	void CreateRearUpperLeg(LREnum lr);
 	void CreateRearLowerLeg(LREnum lr);
 	void CreateRearFoot(LREnum lr);
+	
+	void InitEyes();
+	void CreateEye(LREnum lr);
 
 	void InitContact();
 

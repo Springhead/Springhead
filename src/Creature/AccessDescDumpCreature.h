@@ -686,6 +686,15 @@ protected: \
 	double chestHeight ; \
 	double chestBreadth ; \
 	double chestThickness ; \
+	double tail1Height ; \
+	double tail1Breath ; \
+	double tail1Thickness ; \
+	double tail2Height ; \
+	double tail2Breath ; \
+	double tail2Thickness ; \
+	double tail3Height ; \
+	double tail3Breath ; \
+	double tail3Thickness ; \
 	double neckLength ; \
 	double neckDiameter ; \
 	double headDiameter ; \
@@ -795,6 +804,15 @@ public: \
 		chestHeight = ((CRHingeMammalBodyDesc*)desc)->chestHeight; \
 		chestBreadth = ((CRHingeMammalBodyDesc*)desc)->chestBreadth; \
 		chestThickness = ((CRHingeMammalBodyDesc*)desc)->chestThickness; \
+		tail1Height = ((CRHingeMammalBodyDesc*)desc)->tail1Height; \
+		tail1Breath = ((CRHingeMammalBodyDesc*)desc)->tail1Breath; \
+		tail1Thickness = ((CRHingeMammalBodyDesc*)desc)->tail1Thickness; \
+		tail2Height = ((CRHingeMammalBodyDesc*)desc)->tail2Height; \
+		tail2Breath = ((CRHingeMammalBodyDesc*)desc)->tail2Breath; \
+		tail2Thickness = ((CRHingeMammalBodyDesc*)desc)->tail2Thickness; \
+		tail3Height = ((CRHingeMammalBodyDesc*)desc)->tail3Height; \
+		tail3Breath = ((CRHingeMammalBodyDesc*)desc)->tail3Breath; \
+		tail3Thickness = ((CRHingeMammalBodyDesc*)desc)->tail3Thickness; \
 		neckLength = ((CRHingeMammalBodyDesc*)desc)->neckLength; \
 		neckDiameter = ((CRHingeMammalBodyDesc*)desc)->neckDiameter; \
 		headDiameter = ((CRHingeMammalBodyDesc*)desc)->headDiameter; \
@@ -904,6 +922,15 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->chestHeight = chestHeight; \
 		((CRHingeMammalBodyDesc*)desc)->chestBreadth = chestBreadth; \
 		((CRHingeMammalBodyDesc*)desc)->chestThickness = chestThickness; \
+		((CRHingeMammalBodyDesc*)desc)->tail1Height = tail1Height; \
+		((CRHingeMammalBodyDesc*)desc)->tail1Breath = tail1Breath; \
+		((CRHingeMammalBodyDesc*)desc)->tail1Thickness = tail1Thickness; \
+		((CRHingeMammalBodyDesc*)desc)->tail2Height = tail2Height; \
+		((CRHingeMammalBodyDesc*)desc)->tail2Breath = tail2Breath; \
+		((CRHingeMammalBodyDesc*)desc)->tail2Thickness = tail2Thickness; \
+		((CRHingeMammalBodyDesc*)desc)->tail3Height = tail3Height; \
+		((CRHingeMammalBodyDesc*)desc)->tail3Breath = tail3Breath; \
+		((CRHingeMammalBodyDesc*)desc)->tail3Thickness = tail3Thickness; \
 		((CRHingeMammalBodyDesc*)desc)->neckLength = neckLength; \
 		((CRHingeMammalBodyDesc*)desc)->neckDiameter = neckDiameter; \
 		((CRHingeMammalBodyDesc*)desc)->headDiameter = headDiameter; \
@@ -1015,6 +1042,15 @@ protected: \
 	double chestHeight ; \
 	double chestBreadth ; \
 	double chestThickness ; \
+	double tail1Height ; \
+	double tail1Breath ; \
+	double tail1Thickness ; \
+	double tail2Height ; \
+	double tail2Breath ; \
+	double tail2Thickness ; \
+	double tail3Height ; \
+	double tail3Breath ; \
+	double tail3Thickness ; \
 	double neckLength ; \
 	double neckDiameter ; \
 	double headDiameter ; \
@@ -1123,6 +1159,15 @@ public: \
 		chestHeight = ((CRHingeMammalBodyDesc*)desc)->chestHeight; \
 		chestBreadth = ((CRHingeMammalBodyDesc*)desc)->chestBreadth; \
 		chestThickness = ((CRHingeMammalBodyDesc*)desc)->chestThickness; \
+		tail1Height = ((CRHingeMammalBodyDesc*)desc)->tail1Height; \
+		tail1Breath = ((CRHingeMammalBodyDesc*)desc)->tail1Breath; \
+		tail1Thickness = ((CRHingeMammalBodyDesc*)desc)->tail1Thickness; \
+		tail2Height = ((CRHingeMammalBodyDesc*)desc)->tail2Height; \
+		tail2Breath = ((CRHingeMammalBodyDesc*)desc)->tail2Breath; \
+		tail2Thickness = ((CRHingeMammalBodyDesc*)desc)->tail2Thickness; \
+		tail3Height = ((CRHingeMammalBodyDesc*)desc)->tail3Height; \
+		tail3Breath = ((CRHingeMammalBodyDesc*)desc)->tail3Breath; \
+		tail3Thickness = ((CRHingeMammalBodyDesc*)desc)->tail3Thickness; \
 		neckLength = ((CRHingeMammalBodyDesc*)desc)->neckLength; \
 		neckDiameter = ((CRHingeMammalBodyDesc*)desc)->neckDiameter; \
 		headDiameter = ((CRHingeMammalBodyDesc*)desc)->headDiameter; \
@@ -1231,6 +1276,15 @@ public: \
 		((CRHingeMammalBodyDesc*)desc)->chestHeight = chestHeight; \
 		((CRHingeMammalBodyDesc*)desc)->chestBreadth = chestBreadth; \
 		((CRHingeMammalBodyDesc*)desc)->chestThickness = chestThickness; \
+		((CRHingeMammalBodyDesc*)desc)->tail1Height = tail1Height; \
+		((CRHingeMammalBodyDesc*)desc)->tail1Breath = tail1Breath; \
+		((CRHingeMammalBodyDesc*)desc)->tail1Thickness = tail1Thickness; \
+		((CRHingeMammalBodyDesc*)desc)->tail2Height = tail2Height; \
+		((CRHingeMammalBodyDesc*)desc)->tail2Breath = tail2Breath; \
+		((CRHingeMammalBodyDesc*)desc)->tail2Thickness = tail2Thickness; \
+		((CRHingeMammalBodyDesc*)desc)->tail3Height = tail3Height; \
+		((CRHingeMammalBodyDesc*)desc)->tail3Breath = tail3Breath; \
+		((CRHingeMammalBodyDesc*)desc)->tail3Thickness = tail3Thickness; \
 		((CRHingeMammalBodyDesc*)desc)->neckLength = neckLength; \
 		((CRHingeMammalBodyDesc*)desc)->neckDiameter = neckDiameter; \
 		((CRHingeMammalBodyDesc*)desc)->headDiameter = headDiameter; \

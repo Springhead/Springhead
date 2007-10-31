@@ -19,6 +19,7 @@ void CRHingeMammalBody::InitBody(){
 	CreateWaist();
 	CreateAbdomen();
 	CreateChest();
+	CreateTail();
 }
 
 void CRHingeMammalBody::CreateWaist(){
@@ -26,10 +27,13 @@ void CRHingeMammalBody::CreateWaist(){
 	PHSolidDesc        solidDesc;
 
 	// Solid
+	// define the solid(it has no shape)
 	solidDesc.mass     = 0.17;
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
+	// define the shape of the solid.
 	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
+	// define the position.
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
@@ -86,6 +90,30 @@ void CRHingeMammalBody::CreateChest(){
 	joints[JO_ABDOMEN_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_ABDOMEN], hingeDesc);
 
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_ABDOMEN], PHSceneDesc::MODE_NONE);
+}
+
+void CRHingeMammalBody::CreateTail(){
+	CDBoxDesc          boxDesc;
+	PHSolidDesc        solidDesc;
+	PHHingeJointDesc   hingeDesc;
+
+	// Solids
+	// define the existance
+	solidDesc.mass	= 0.01;
+	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
+	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
+	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
+	// define the shape
+	boxDesc.boxsize = Vec3f();
+	solids[SO_TAIL1]->AddShape(phSdk->CreateShape(boxDesc));
+	boxDesc.boxsize = Vec3f();
+	solids[SO_TAIL2]->AddShape(phSdk->CreateShape(boxDesc));
+	boxDesc.boxsize = Vec3f();
+	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
+	// define the connection
+	// define the position
+	
+
 }
 
 // --- --- ---
@@ -231,7 +259,8 @@ void CRHingeMammalBody::CreateFrontUpperLeg(LREnum lr){
 	hingeDesc                  = PHHingeJointDesc();
 	if (posRightFrontUpperLeg==Vec3d(0,0,0)) {
 		hingeDesc.posePlug.Pos() = Vec3d(lr*chestBreadth/2.0 + lr*(frontUpperLegDiameter/2.0*1.414), chestHeight/2.0, 0);
-	} else {
+	} 
+	else {
 		hingeDesc.posePlug.Pos() = Vec3d(lr*posRightFrontUpperLeg.x, posRightFrontUpperLeg.y+chestHeight/2.0, posRightFrontUpperLeg.z);
 	}
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
@@ -368,69 +397,6 @@ void CRHingeMammalBody::CreateFrontFoot(LREnum lr){
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitEyes(){
-	CreateEye(LEFTPART);
-	CreateEye(RIGHTPART);
-}
-
-void CRHingeMammalBody::CreateEye(LREnum lr){
-	CDBoxDesc          boxDesc;
-	CDSphereDesc       sphereDesc;
-	PHSolidDesc        solidDesc;
-	PHHingeJointDesc   hingeDesc;
-
-	CRHingeMammalBodyDesc::CRMammalSolids soNEyeYX, soNEye;
-	CRHingeMammalBodyDesc::CRMammalJoints joNEyeY, joNEyeX;
-	if (lr==LEFTPART) {
-		soNEyeYX = SO_LEFT_EYE_YX; soNEye = SO_LEFT_EYE;
-		joNEyeY = JO_LEFT_EYE_Y; joNEyeX = JO_LEFT_EYE_X;
-	} else {
-		soNEyeYX = SO_RIGHT_EYE_YX; soNEye = SO_RIGHT_EYE;
-		joNEyeY = JO_RIGHT_EYE_Y; joNEyeX = JO_RIGHT_EYE_X;
-	}
-
-	// Solid
-	solidDesc.mass     = 0.001;
-	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
-	solids[soNEye]     = phScene->CreateSolid(solidDesc);
-	sphereDesc.radius  = eyeDiameter;
-	solids[soNEye]->AddShape(phSdk->CreateShape(sphereDesc));
-	boxDesc.boxsize    = Vec3f(0.015,0.015,eyeDiameter+0.029);
-	solids[soNEye]->AddShape(phSdk->CreateShape(boxDesc));
-
-	// non-shaped Solid
-	solidDesc.mass    = 0.001;
-	solidDesc.inertia = Matrix3d::Unit() * 0.001;
-	solids[soNEyeYX] = phScene->CreateSolid(solidDesc);
-
-	// Joint -- Eye ([p]Head-[c]Eye)
-	hingeDesc                  = PHHingeJointDesc();
-	//hingeDesc.posePlug.Pos()   = Vec3d(lr*interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -occiputToEyeDistance+headDiameter/2.0);
-	hingeDesc.posePlug.Pos()   = Vec3d(lr*interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -headDiameter/2.0+eyeDiameter/2.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springEyeY;
-	hingeDesc.damper           = damperEyeY;
-	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeRightEyeY[0]) : (-rangeRightEyeY[1]));
-	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeRightEyeY[1]) : (-rangeRightEyeY[0]));
-	joints[joNEyeY]            = CreateJoint(solids[soNEyeYX], solids[SO_HEAD], hingeDesc);
-
-	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springEyeX;
-	hingeDesc.damper           = damperEyeX;
-	hingeDesc.origin           = Rad(0);
-	hingeDesc.lower            = rangeEyeX[0];
-	hingeDesc.upper            = rangeEyeX[1];
-	joints[joNEyeX] = CreateJoint(solids[soNEye], solids[soNEyeYX], hingeDesc);
-
-	phScene->SetContactMode(solids[soNEye], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
-}
-
-// --- --- ---
 void CRHingeMammalBody::InitRearLegs(){
 	if (!noLegs) {
 		CreateRearUpperLeg(LEFTPART);
@@ -458,7 +424,8 @@ void CRHingeMammalBody::CreateRearUpperLeg(LREnum lr){
 	if (lr==LEFTPART) {
 		soNWaistLegZX = SO_LEFT_WAIST_LEG_ZX; soNWaistLegXY = SO_LEFT_WAIST_LEG_XY; soNUpperLeg   = SO_LEFT_REAR_UPPER_LEG;
 		joNWaistLegZ  = JO_LEFT_WAIST_LEG_Z;  joNWaistLegX  = JO_LEFT_WAIST_LEG_X;  joNWaistLegY  = JO_LEFT_WAIST_LEG_Y;
-	} else {
+	} 
+	else {
 		soNWaistLegZX = SO_RIGHT_WAIST_LEG_ZX; soNWaistLegXY = SO_RIGHT_WAIST_LEG_XY; soNUpperLeg   = SO_RIGHT_REAR_UPPER_LEG;
 		joNWaistLegZ  = JO_RIGHT_WAIST_LEG_Z;  joNWaistLegX  = JO_RIGHT_WAIST_LEG_X;  joNWaistLegY  = JO_RIGHT_WAIST_LEG_Y;
 	}
@@ -611,6 +578,69 @@ void CRHingeMammalBody::CreateRearFoot(LREnum lr){
 	}
 
 	phScene->SetContactMode(solids[soNFoot], solids[soNLowerLeg], PHSceneDesc::MODE_NONE);
+}
+
+// --- --- ---
+void CRHingeMammalBody::InitEyes(){
+	CreateEye(LEFTPART);
+	CreateEye(RIGHTPART);
+}
+
+void CRHingeMammalBody::CreateEye(LREnum lr){
+	CDBoxDesc          boxDesc;
+	CDSphereDesc       sphereDesc;
+	PHSolidDesc        solidDesc;
+	PHHingeJointDesc   hingeDesc;
+
+	CRHingeMammalBodyDesc::CRMammalSolids soNEyeYX, soNEye;
+	CRHingeMammalBodyDesc::CRMammalJoints joNEyeY, joNEyeX;
+	if (lr==LEFTPART) {
+		soNEyeYX = SO_LEFT_EYE_YX; soNEye = SO_LEFT_EYE;
+		joNEyeY = JO_LEFT_EYE_Y; joNEyeX = JO_LEFT_EYE_X;
+	} else {
+		soNEyeYX = SO_RIGHT_EYE_YX; soNEye = SO_RIGHT_EYE;
+		joNEyeY = JO_RIGHT_EYE_Y; joNEyeX = JO_RIGHT_EYE_X;
+	}
+
+	// Solid
+	solidDesc.mass     = 0.001;
+	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
+	solids[soNEye]     = phScene->CreateSolid(solidDesc);
+	sphereDesc.radius  = eyeDiameter;
+	solids[soNEye]->AddShape(phSdk->CreateShape(sphereDesc));
+	boxDesc.boxsize    = Vec3f(0.015,0.015,eyeDiameter+0.029);
+	solids[soNEye]->AddShape(phSdk->CreateShape(boxDesc));
+
+	// non-shaped Solid
+	solidDesc.mass    = 0.001;
+	solidDesc.inertia = Matrix3d::Unit() * 0.001;
+	solids[soNEyeYX] = phScene->CreateSolid(solidDesc);
+
+	// Joint -- Eye ([p]Head-[c]Eye)
+	hingeDesc                  = PHHingeJointDesc();
+	//hingeDesc.posePlug.Pos()   = Vec3d(lr*interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -occiputToEyeDistance+headDiameter/2.0);
+	hingeDesc.posePlug.Pos()   = Vec3d(lr*interpupillaryBreadth/2.0, headDiameter/2.0 - vertexToEyeHeight, -headDiameter/2.0+eyeDiameter/2.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.spring           = springEyeY;
+	hingeDesc.damper           = damperEyeY;
+	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeRightEyeY[0]) : (-rangeRightEyeY[1]));
+	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeRightEyeY[1]) : (-rangeRightEyeY[0]));
+	joints[joNEyeY]            = CreateJoint(solids[soNEyeYX], solids[SO_HEAD], hingeDesc);
+
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Pos() = Vec3d(0,0,0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.spring           = springEyeX;
+	hingeDesc.damper           = damperEyeX;
+	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeEyeX[0];
+	hingeDesc.upper            = rangeEyeX[1];
+	joints[joNEyeX] = CreateJoint(solids[soNEye], solids[soNEyeYX], hingeDesc);
+
+	phScene->SetContactMode(solids[soNEye], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
 }
 
 // --- --- ---

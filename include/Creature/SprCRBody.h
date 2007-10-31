@@ -403,14 +403,20 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	double waistHeight, waistBreadth, waistThickness;
 	double abdomenHeight, abdomenBreadth, abdomenThickness;
 	double chestHeight, chestBreadth, chestThickness;
+	double tail1Height, tail1Breath, tail1Thickness;
+	double tail2Height, tail2Breath, tail2Thickness;
+	double tail3Height, tail3Breath, tail3Thickness;
+
 	double neckLength, neckDiameter;
 	double headDiameter;
+	
 	double frontUpperLegLength, frontUpperLegDiameter;
 	double frontLowerLegLength, frontLowerLegDiameter;
 	double frontFootLength, frontFootBreadth, frontFootThickness;
 	double rearUpperLegLength, rearUpperLegDiameter, rearInterLegDistance;
 	double rearLowerLegLength, rearLowerLegDiameter;
 	double rearFootLength, rearFootBreadth, rearFootThickness, rearAnkleToeDistance;
+	
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;
 
