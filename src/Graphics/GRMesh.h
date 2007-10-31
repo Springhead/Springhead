@@ -68,6 +68,8 @@ public:
 	virtual size_t NChildObject() const ;
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos) ;
+	void Print(std::ostream& os) const ;
+
 };
 
 }

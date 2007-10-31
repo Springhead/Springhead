@@ -23,7 +23,7 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 
-#define TEST_CASE		0				// テストケース
+#define TEST_CASE		2				// テストケース
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
@@ -34,7 +34,7 @@
 #define TEST_FILEX	"funiture.x"			
 
 #elif defined(TEST_CASE) && (TEST_CASE == 2)
-#define EXIT_TIMER	200				
+#define EXIT_TIMER	20000				
 #define TEST_FILEX	"tire.x"			
 
 #endif

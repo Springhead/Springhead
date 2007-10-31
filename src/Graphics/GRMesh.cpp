@@ -7,6 +7,7 @@
  */
 #include "Graphics.h"
 #include "GRMesh.h"
+#include <gl/glut.h>
 
 
 namespace Spr{;
@@ -164,11 +165,11 @@ void GRMesh::DrawBuffer(void* vtx){
 }
 
 void GRMesh::CreateList(GRRenderIf* r){
-	render = r;
 	if (list) render->ReleaseList(list);
+	render = r;
 	list = 0;
-	list = render->StartList();
 	MakeBuffer();
+	list = render->StartList();
 	render->SetVertexFormat(vtxFormat);
 	DrawBuffer(vtxs);
 	render->EndList();
@@ -231,6 +232,20 @@ size_t GRMesh::NChildObject() const {
 ObjectIf* GRMesh::GetChildObject(size_t pos){
 	if (pos < material.size()) return material[pos]->Cast();
 	return NULL;
+}
+void GRMesh::Print(std::ostream& os) const {
+	PrintHeader(os, false);
+	int w = os.width();
+	os.width(0);
+	os << UTPadding(w+2) << "positions: " << positions.size() << std::endl;
+	os << UTPadding(w+2) << "texCoords: " << texCoords.size() << std::endl;
+	os << UTPadding(w+2) << "normals:   " << normals.size() << std::endl;
+	os << UTPadding(w+2) << "faces:     " << faces.size() << std::endl;
+	os << UTPadding(w+2) << "origFaces: " << originalFaces.size() << std::endl;
+	os << UTPadding(w+2) << "origFaceId:" << originalFaceIds.size() << std::endl;
+
+	os.width(w);
+	PrintFooter(os);
 }
 
 }

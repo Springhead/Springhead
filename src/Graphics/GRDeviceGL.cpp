@@ -44,7 +44,8 @@ void GRDeviceGL::Init(){
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_BLEND);
-	glDisable(GL_CULL_FACE);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_CULL_FACE);
 	SetVertexFormat(GRVertexElement::vfP3f);
 	
 	// 視点行列の設定
@@ -470,11 +471,17 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 }
 /// 描画の材質の設定
 void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,   mat.ambient);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,   mat.diffuse);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  mat.specular);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION,  mat.emissive);
-	glMaterialf (GL_FRONT_AND_BACK, GL_SHININESS, mat.power);
+	glMaterialfv(GL_FRONT, GL_AMBIENT,   mat.ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat.diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR,  mat.specular);
+	glMaterialfv(GL_FRONT, GL_EMISSION,  mat.emissive);
+	glMaterialf (GL_FRONT, GL_SHININESS, mat.power);
+	if (mat.texname.length()){
+		int texId = LoadTexture(mat.texname);
+		glBindTexture(GL_TEXTURE_2D, texId);
+	}else{
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 	currentMaterial = mat;
 }
 /// 描画する点・線の太さの設定
@@ -566,6 +573,10 @@ void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TB
 /// テクスチャのロード（戻り値：テクスチャID）	
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
+	GRTexnameMap::iterator it = texnameMap.find(filename);
+	if (it != texnameMap.end()) return it->second;
+
+
 	char *texbuf = NULL;
 	int tx=0, ty=0, nc=0;
 	unsigned int texId=0;
@@ -598,11 +609,12 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 
 	int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	if (rv){
 		DSTR << gluErrorString(rv) << std::endl;
 	}
 	delete texbuf;
-
+	texnameMap[filename] = texId;
 	return texId;
 }
 /// シェーダの初期化	

@@ -274,8 +274,8 @@ public:
 				mesh->normals.resize(mesh->positions.size());
 				std::vector<int> nFace;
 				nFace.resize(mesh->positions.size());
-				for(int i=0; i<nFace.size(); ++i) nFace[i] = 0;
-				for(int i=0; i<mesh->faces.size(); i+=3){
+				for(unsigned i=0; i<nFace.size(); ++i) nFace[i] = 0;
+				for(unsigned i=0; i<mesh->faces.size(); i+=3){
 					Vec3f normal = 
 						(mesh->positions[mesh->faces[i+1]]-mesh->positions[mesh->faces[i]])
 						^ (mesh->positions[mesh->faces[i+2]]-mesh->positions[mesh->faces[i]]);
@@ -288,7 +288,7 @@ public:
 					nFace[mesh->faces[i+1]] ++;
 					nFace[mesh->faces[i+2]] ++;
 				}
-				for(int i=0; i<mesh->normals.size(); ++i){
+				for(unsigned i=0; i<mesh->normals.size(); ++i){
 					mesh->normals[i] /= nFace[i];
 				}
 			}

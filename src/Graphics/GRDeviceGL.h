@@ -42,6 +42,15 @@ protected:
 	/** @} */
 
 	/**
+	 *	@name	テクスチャマネージャ
+	 *　　 ロードされたテクスチャのIDを覚えておくmap
+	 *
+	 */
+	typedef std::map<std::string, unsigned int, UTStringLess> GRTexnameMap;
+	GRTexnameMap texnameMap;
+
+
+	/**
 	 *	@name	フォント変数
 	 *　　 新規に指定されたフォントはfontListに格納される。
 	 *	@{
