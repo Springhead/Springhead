@@ -91,13 +91,20 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// define the connection
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -waistHeight/2.0, 0.1);
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -waistHeight, 0.1);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight, 0.0);
 	ballDesc.spring            = springTailWaist;
 	ballDesc.damper            = damperTailWaist;
 //	ballDesc.origin            = Rad(0);
 	ballDesc.swingUpper        = rangeTailWaist;
 	joints[JO_TAIL_WAIST]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
+	ballDesc                   = PHBallJointDesc();
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight, 0.0);
+	ballDesc.spring            = springTailWaist;
+	ballDesc.damper            = damperTailWaist;
+//	ballDesc.origin            = Rad(0);
+	ballDesc.swingUpper        = rangeTailWaist;
 	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
 	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
 

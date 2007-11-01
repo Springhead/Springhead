@@ -438,20 +438,20 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	CRHingeAnimalBodyDesc(){
 		jointOrder = SOCKET_PARENT;
 
-		waistBreadth   = 0.3067;
-		waistHeight    = 0.2298;
-		waistThickness = 0.2307;
+		waistBreadth   = 0.5;
+		waistHeight    = 0.6;
+		waistThickness = 0.4;
 
-		chestBreadth   = 0.2887;
-		chestHeight    = 1.4020 - 1.2253;
-		chestThickness = 0.2118;
+		chestBreadth   = 0.5;
+		chestHeight    = 1.0;
+		chestThickness = 0.4;
 
-		tailBreath    = 0.05;
-		tailHeight    = 0.5;
-		tailThickness = 0.05;
+		tailBreath    = 0.1;
+		tailHeight    = 0.2;
+		tailThickness = 0.1;
 
-		springWaistChest   =  10.0;  damperWaistChest   =   5.0;
-		springTailWaist    =  10.0;  damperTailWaist    =   5.0;
+		springWaistChest   =  5.0;  damperWaistChest   =   2.0;
+		springTailWaist    =  5.0;  damperTailWaist    =   2.0;
 		
 		//posRightBreastBone = Vec3d(0,0,0);
 
