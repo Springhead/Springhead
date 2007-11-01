@@ -65,6 +65,10 @@ void CRGrabController::Init(){
 void CRGrabController::Step(){
 	int RSSR = CRReachingControllerIf::RS_SOLID_REACHED;
 	if (controlState==CRGrabControllerIf::CRGC_REACH) {
+		{
+			reachLeft->SetTargetOri(soChest->GetPose().Ori()*Quaterniond::Rot(Rad(90),'y'), Vec3d(0,0,0));
+			reachRight->SetTargetOri(soChest->GetPose().Ori()*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0));
+		}
 		if (reachLeft->GetReachState()==RSSR && reachRight->GetReachState()==RSSR) {
 			grabSpring.first->Enable(true);
 			grabSpring.second->Enable(true);
@@ -135,17 +139,17 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 	}
 
 	// ‚±‚±‚Å‘Ì‚ð‚â‚í‚ç‚©‚­‚µ‚Ä‚Ý‚éH
-	DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(0.1);
+	// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(0.1);
 
 	std::cout << Quaterniond::Rot(Rad(90),'y')  << std::endl;
 	std::cout << Quaterniond::Rot(Rad(450),'y') << std::endl;
 
 	reachLeft->SetTargetPos(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.0, solid->GetVelocity());
-	reachLeft->SetTargetOri(Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(450),'y')*soChest->GetOrientation(), Vec3d(0,0,0));
+	reachLeft->SetTargetOri(soChest->GetPose().Ori()*Quaterniond::Rot(Rad(90),'y'), Vec3d(0,0,0));
 	reachLeft->SetTargetTime(1.5);
 
 	reachRight->SetTargetPos(targetSolid->GetPose().Pos() - reachPointDirL*targetRadius*1.0, solid->GetVelocity());
-	reachRight->SetTargetOri(Quaterniond::Rot(Rad(+90),'x')*Quaterniond::Rot(Rad(-90),'y')*soChest->GetOrientation(), Vec3d(0,0,0));
+	reachRight->SetTargetOri(soChest->GetPose().Ori()*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0));
 	reachRight->SetTargetTime(1.5);
 
 	reachChest->SetTargetPos(targetSolid->GetPose().Pos(), Vec3f(0,0,0));

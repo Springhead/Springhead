@@ -76,7 +76,8 @@ void CRReachingController::Step(){
 			if (0 <= offset) {
 				Reset();
 			}
-			return;
+		} else {
+			time += dt;
 		}
 
 		Vec3f pos, vel;
@@ -92,11 +93,9 @@ void CRReachingController::Step(){
 		Vec3f dir = solid->GetPose().Pos()-finalPos;
 		pos = finalPos + dir*length;
 		vel = dir*deltaLength;
+
 		soTargetDirect->SetFramePosition(pos);
 		soTargetDirect->SetVelocity(vel);
-
-		time += dt;
-
 		soTargetDirect->SetOrientation(finalQuat);
 	}
 }
@@ -124,6 +123,9 @@ void CRReachingController::SetTargetTime(float t){
 void CRReachingController::Start(CRReachingControllerIf::ConstraintMode mode, float keeptime){
 	time     = 0.0f;
 	offset   = keeptime;
+
+	soTargetDirect->SetFramePosition(solid->GetPose().Pos());
+	soTargetHinged->SetFramePosition(solid->GetPose().Pos());
 
 	if (mode==CRReachingControllerIf::CM_P3R0) {
 		springDirect->SetSpringOri(0);
