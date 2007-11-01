@@ -617,6 +617,100 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	texnameMap[filename] = texId;
 	return texId;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+#if 0		//	頂点シェーダーを使って頂点ブレンドをする時の参考用
+/// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
+int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location, 
+										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+	int list = glGenLists(1);
+	glNewList(list, GL_COMPILE);
+
+	if (!stride) stride = vertexSize;	
+	GLenum mode = GL_TRIANGLES;
+	switch(ty) {
+		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
+		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
+		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
+		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
+		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
+		case GRRenderBaseIf::QUADS:				mode = GL_QUADS;			break;
+		default:				/* DO NOTHING */			break;
+	}											
+	
+	if ((shaderType == GRShaderFormat::shP3fB4f)		// 他のGRShaderFormatは未対応	
+			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
+			|| (shaderType == GRShaderFormat::shC3fP3fB4f))			
+	{
+		glUseProgram(shader);
+
+		// ロケーション型へのキャスト
+		GRShaderFormat::SFBlendLocation *loc = (GRShaderFormat::SFBlendLocation *)location;
+		if (loc) {
+			glUniformMatrix4fv(loc->uBlendMatrix, 4, false, (GLfloat *)&*blendMatrix.begin());
+			
+			glEnableVertexAttribArray(loc->aWeight); 
+			glEnableVertexAttribArray(loc->aMatrixIndices); 
+			glEnableVertexAttribArray(loc->aNumMatrix); 
+			
+			// vtxを頂点フォーマット型へキャスト
+			if (shaderType == GRShaderFormat::shP3fB4f) {
+				GRVertexElement::VFP3fB4f* basePointer = (GRVertexElement::VFP3fB4f *)vtx;
+				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
+				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
+				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
+			} else if(shaderType == GRShaderFormat::shC4bP3fB4f){
+				GRVertexElement::VFC4bP3fB4f* basePointer = (GRVertexElement::VFC4bP3fB4f *)vtx;
+				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
+				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
+				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
+			} else if(shaderType == GRShaderFormat::shC3fP3fB4f){
+				GRVertexElement::VFC3fP3fB4f* basePointer = (GRVertexElement::VFC3fP3fB4f *)vtx;
+				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
+				glVertexAttribPointer(loc->aMatrixIndices, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->mi.data[0]));
+				glVertexAttribPointer(loc->aNumMatrix, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->nb.data[0]));
+			}
+
+			glInterleavedArrays(vertexFormatGl, stride, vtx);
+			glDrawElements(mode, count, GL_UNSIGNED_INT, idx);	
+	
+			glDisableVertexAttribArray(loc->aWeight);
+			glDisableVertexAttribArray(loc->aMatrixIndices);
+			glDisableVertexAttribArray(loc->aNumMatrix);
+
+		} else {
+			DSTR << "To Be Implemented. " << std::endl;		
+			assert(0);
+		}
+	} else {
+		DSTR << "To Be Implemented. " << std::endl;
+		assert(0);
+	}									
+										
+	glEndList();
+
+
+	return list;
+}	
+
+
+#endif
+
+
+
+
 /// シェーダの初期化	
 void GRDeviceGL::InitShader(){
 #if defined(USE_GREW)

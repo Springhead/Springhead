@@ -288,18 +288,26 @@ int main(int argc, char **argv) {
 	SetShader();
 
 	// シェーダを適用したディスプレイリストを作成する
+	listP3fB4f = render->StartList();
 	render->SetVertexFormat(GRVertexElement::vfP3fB4f);
 	render->SetShaderFormat(GRShaderFormat::shP3fB4f);
-	listP3fB4f = render->CreateShaderIndexedList(shaderP3fB4f, &locP3fB4f, 
-												GRRenderIf::QUADS, &*faces.begin(), &*vtxP3fB4f.begin(), faces.size());
+	render->DrawIndexed(GRRenderIf::QUADS, &*faces.begin(), &*vtxP3fB4f.begin(), faces.size());
+	render->EndList();
+
+	listC3fP3fB4f = render->StartList();
 	render->SetVertexFormat(GRVertexElement::vfC3fP3fB4f);
 	render->SetShaderFormat(GRShaderFormat::shC3fP3fB4f);
+	
 	listC3fP3fB4f = render->CreateShaderIndexedList(shaderC3fP3fB4f, &locC3fP3fB4f, 
 												GRRenderIf::QUADS, &*faces.begin(), &*vtxC3fP3fB4f.begin(), faces.size());	
+	render->EndList();
+
+
+	listC4bP3fB4f = render->StartList();
 	render->SetVertexFormat(GRVertexElement::vfC4bP3fB4f);
 	render->SetShaderFormat(GRShaderFormat::shC4bP3fB4f);	
-	listC4bP3fB4f = render->CreateShaderIndexedList(shaderC4bP3fB4f, &locC4bP3fB4f, 
-												GRRenderIf::QUADS, &*faces.begin(), &*vtxC4bP3fB4f.begin(), faces.size());
+	render->DrawIndexed(GRRenderIf::QUADS, &*faces.begin(), &*vtxC4bP3fB4f.begin(), faces.size());
+	render->EndList();
 
  	glutDisplayFunc(display);
 	glutIdleFunc(idle);
