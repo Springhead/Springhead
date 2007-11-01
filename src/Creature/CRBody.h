@@ -24,7 +24,7 @@ protected:
 
 	/// ボディを構成する剛体
 	std::vector<PHSolidIf*> solids;
-
+	
 	/// ボディを構成する関節
 	std::vector<PHJointIf*> joints;
 

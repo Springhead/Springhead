@@ -27,7 +27,6 @@ class CRHingeAnimalBody : public CRBody, public CRHingeAnimalBodyIfInit, public 
 private:
 	void InitBody();
 	void CreateWaist();
-	void CreateAbdomen();
 	void CreateChest();
 	void CreateTail();
 
@@ -36,14 +35,16 @@ private:
 	void CreateHead();
 
 	void InitFrontLegs();
-	void CreateFrontUpperLeg(LREnum lr);
-	void CreateFrontLowerLeg(LREnum lr);
-	void CreateFrontFoot(LREnum lr);
+	void CreateBreastBone(LREnum lr);
+	void CreateRadius(LREnum lr);
+	void CreateFrontCannonBone(LREnum lr);
+	void CreateFrontToeBones(LREnum lr);
 
 	void InitRearLegs();
-	void CreateRearUpperLeg(LREnum lr);
-	void CreateRearLowerLeg(LREnum lr);
-	void CreateRearFoot(LREnum lr);
+	void CreateFemur(LREnum lr);
+	void CreateTibia(LREnum lr);
+	void CreateRearCannonBone(LREnum lr);
+	void CreateRearToeBones(LREnum lr);
 	
 	void InitEyes();
 	void CreateEye(LREnum lr);
