@@ -321,16 +321,16 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 
 // ------------------------------------------------------------------------------
 /// ヒンジジョイント哺乳類モデルのインターフェイス
-struct CRHingeMammalBodyIf : CRBodyIf {
-	IF_DEF(CRHingeMammalBody);
+struct CRHingeAnimalBodyIf : CRBodyIf {
+	IF_DEF(CRHingeAnimalBody);
 
 };
 
 /// ヒンジジョイント哺乳類モデルのデスクリプタ
-struct CRHingeMammalBodyDesc : CRBodyDesc {
-	DESC_DEF_FOR_OBJECT(CRHingeMammalBody);
+struct CRHingeAnimalBodyDesc : CRBodyDesc {
+	DESC_DEF_FOR_OBJECT(CRHingeAnimalBody);
 
-	enum CRMammalSolids{
+	enum CRAnimalSolids{
 		// Center
 		SO_WAIST=0,
 		SO_ABDOMEN, SO_CHEST, SO_NECK, SO_HEAD, SO_TAIL1, SO_TAIL2,SO_TAIL3,
@@ -365,7 +365,7 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 		SO_NSOLIDS
 	};
 
-	enum CRMammalJoints{
+	enum CRAnimalJoints{
 		// -- Center
 		JO_WAIST_ABDOMEN=0, JO_ABDOMEN_CHEST,
 		JO_CHEST_NECK_X, JO_CHEST_NECK_Z, JO_CHEST_NECK_Y,
@@ -449,7 +449,7 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	Vec3d       posRightFrontUpperLeg;
 	Quaterniond oriRightFrontUpperLeg;
 	Quaterniond oriRightFrontLowerLeg;
-	Quaterniond oriRightHand;
+	Quaterniond oriRightFrontFoot;
 
 	/// 可動域制限
 	Vec2d rangeWaistAbdomen;
@@ -479,7 +479,7 @@ struct CRHingeMammalBodyDesc : CRBodyDesc {
 	/// 裏オプション
 	bool noLegs;
 
-	CRHingeMammalBodyDesc(){
+	CRHingeAnimalBodyDesc(){
 		jointOrder = PLUG_PARENT;
 
 		waistHeight    = 0.2298;
@@ -657,22 +657,22 @@ struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
 
 // ------------------------------------------------------------------------------
 /// おもに胴体と足のみの哺乳類モデルのインターフェイス（制御用）
-struct CRTrunkFootMammalBodyIf : CRBodyIf{
-	IF_DEF(CRTrunkFootMammalBody);
+struct CRTrunkFootAnimalBodyIf : CRBodyIf{
+	IF_DEF(CRTrunkFootAnimalBody);
 };
 
 /// 胴体と足のみの哺乳類モデルのディスクリプタ
-struct CRTrunkFootMammalBodyDesc : CRBodyDesc{
-	DESC_DEF_FOR_OBJECT(CRTrunkFootMammalBody);
+struct CRTrunkFootAnimalBodyDesc : CRBodyDesc{
+	DESC_DEF_FOR_OBJECT(CRTrunkFootAnimalBody);
 
-	enum CRMammalSolids{
+	enum CRAnimalSolids{
 		// 剛体
 		SO_WAIST=0, SO_CHEST, SO_HEAD, SO_RIGHT_FOOT, SO_LEFT_FOOT,
 		// 剛体の数
 		SO_NSOLIDS
 	};
 
-	enum CRMammalJoints{
+	enum CRAnimalJoints{
 		// 関節
 		JO_WAIST_CHEST=0, JO_CHEST_HEAD,
 		// 関節の数
@@ -694,7 +694,7 @@ struct CRTrunkFootMammalBodyDesc : CRBodyDesc{
 	Vec2d rangeWaistChest;
 	Vec2d rangeChestHead;
 
-	CRTrunkFootMammalBodyDesc(){
+	CRTrunkFootAnimalBodyDesc(){
 		
 		jointOrder = PLUG_PARENT;
 

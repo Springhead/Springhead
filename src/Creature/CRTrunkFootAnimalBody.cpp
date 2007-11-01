@@ -1,4 +1,4 @@
-#include "CRTrunkFootMammalBody.h"
+#include "CRTrunkFootAnimalBody.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -6,22 +6,22 @@
 
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRTrunkFootMammalBody
-IF_OBJECT_IMP(CRTrunkFootMammalBody, CRBody);
+// CRTrunkFootAnimalBody
+IF_OBJECT_IMP(CRTrunkFootAnimalBody, CRBody);
 
 // --- --- ---
-void CRTrunkFootMammalBody::Init(){
+void CRTrunkFootAnimalBody::Init(){
 	CRBody::Init();
 }
 
 // --- --- ---
-void CRTrunkFootMammalBody::InitBody(){
+void CRTrunkFootAnimalBody::InitBody(){
 	CreateWaist();
 	CreateChest();
 	CreateHead();
 }
 
-void CRTrunkFootMammalBody::CreateWaist(){
+void CRTrunkFootAnimalBody::CreateWaist(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 
@@ -35,7 +35,7 @@ void CRTrunkFootMammalBody::CreateWaist(){
 	// solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
 
-void CRTrunkFootMammalBody::CreateChest(){
+void CRTrunkFootAnimalBody::CreateChest(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -95,7 +95,7 @@ void CRTrunkFootMammalBody::CreateChest(){
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
-void CRTrunkFootMammalBody::CreateHead(){
+void CRTrunkFootAnimalBody::CreateHead(){
 	CDSphereDesc       sphereDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -146,17 +146,17 @@ void CRTrunkFootMammalBody::CreateHead(){
 }
 
 // --- --- ---
-void CRTrunkFootMammalBody::InitLegs(){
+void CRTrunkFootAnimalBody::InitLegs(){
 	CreateFoot(LEFTPART);
 	CreateFoot(RIGHTPART);
 }
 
-void CRTrunkFootMammalBody::CreateFoot(LREnum lr){
+void CRTrunkFootAnimalBody::CreateFoot(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRTrunkFootMammalBodyDesc::CRMammalSolids soNFoot;
+	CRTrunkFootAnimalBodyDesc::CRAnimalSolids soNFoot;
 	if (lr==LEFTPART) {
 		soNFoot = SO_LEFT_FOOT;
 	} else {
@@ -172,7 +172,7 @@ void CRTrunkFootMammalBody::CreateFoot(LREnum lr){
 }
 
 // --- --- ---
-void CRTrunkFootMammalBody::InitContact(){
+void CRTrunkFootAnimalBody::InitContact(){
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (int i=0; i<solids.size(); ++i) {
 		for (int j=0; j<solids.size(); ++j) {
@@ -185,7 +185,7 @@ void CRTrunkFootMammalBody::InitContact(){
 	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);
-		if (DCAST(CRTrunkFootMammalBodyIf,body)!=(this->Cast())) {
+		if (DCAST(CRTrunkFootAnimalBodyIf,body)!=(this->Cast())) {
 			for (int s=0; s<body->NSolids(); ++s) {
 				for (int j=0; j<solids.size(); ++j) {
 					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);

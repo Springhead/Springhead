@@ -34,11 +34,11 @@ typedef IfInitTemplate<CRHingeHumanBodyIfStub, CRHingeHumanBody>	CRHingeHumanBod
 
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct CRHingeMammalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+struct CRHingeAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
 };
-struct CRHingeMammalBodyIf;	class CRHingeMammalBody;
-typedef CRHingeMammalBodyIfStubTemplate<CRHingeMammalBodyIf, ObjectIfBuf, CRHingeMammalBody>	CRHingeMammalBodyIfStub;
-typedef IfInitTemplate<CRHingeMammalBodyIfStub, CRHingeMammalBody>	CRHingeMammalBodyIfInit;
+struct CRHingeAnimalBodyIf;	class CRHingeAnimalBody;
+typedef CRHingeAnimalBodyIfStubTemplate<CRHingeAnimalBodyIf, ObjectIfBuf, CRHingeAnimalBody>	CRHingeAnimalBodyIfStub;
+typedef IfInitTemplate<CRHingeAnimalBodyIfStub, CRHingeAnimalBody>	CRHingeAnimalBodyIfInit;
 
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
@@ -50,11 +50,11 @@ typedef IfInitTemplate<CRTrunkFootHumanBodyIfStub, CRTrunkFootHumanBody>	CRTrunk
 
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct CRTrunkFootMammalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+struct CRTrunkFootAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
 };
-struct CRTrunkFootMammalBodyIf;	class CRTrunkFootMammalBody;
-typedef CRTrunkFootMammalBodyIfStubTemplate<CRTrunkFootMammalBodyIf, ObjectIfBuf, CRTrunkFootMammalBody>	CRTrunkFootMammalBodyIfStub;
-typedef IfInitTemplate<CRTrunkFootMammalBodyIfStub, CRTrunkFootMammalBody>	CRTrunkFootMammalBodyIfInit;
+struct CRTrunkFootAnimalBodyIf;	class CRTrunkFootAnimalBody;
+typedef CRTrunkFootAnimalBodyIfStubTemplate<CRTrunkFootAnimalBodyIf, ObjectIfBuf, CRTrunkFootAnimalBody>	CRTrunkFootAnimalBodyIfStub;
+typedef IfInitTemplate<CRTrunkFootAnimalBodyIfStub, CRTrunkFootAnimalBody>	CRTrunkFootAnimalBodyIfInit;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>

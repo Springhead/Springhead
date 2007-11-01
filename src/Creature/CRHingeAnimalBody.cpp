@@ -1,4 +1,4 @@
-#include "CRHingeMammalBody.h"
+#include "CRHingeAnimalBody.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -6,23 +6,23 @@
 
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRHingeMammalBody
-IF_OBJECT_IMP(CRHingeMammalBody, CRBody);
+// CRHingeAnimalBody
+IF_OBJECT_IMP(CRHingeAnimalBody, CRBody);
 
 // --- --- ---
-void CRHingeMammalBody::Init(){
+void CRHingeAnimalBody::Init(){
 	CRBody::Init();
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitBody(){
+void CRHingeAnimalBody::InitBody(){
 	CreateWaist();
 	CreateAbdomen();
 	CreateChest();
 	CreateTail();
 }
 
-void CRHingeMammalBody::CreateWaist(){
+void CRHingeAnimalBody::CreateWaist(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 
@@ -38,7 +38,7 @@ void CRHingeMammalBody::CreateWaist(){
 	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
 
-void CRHingeMammalBody::CreateAbdomen(){
+void CRHingeAnimalBody::CreateAbdomen(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -65,7 +65,7 @@ void CRHingeMammalBody::CreateAbdomen(){
 	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateChest(){
+void CRHingeAnimalBody::CreateChest(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -92,14 +92,14 @@ void CRHingeMammalBody::CreateChest(){
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_ABDOMEN], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateTail(){
+void CRHingeAnimalBody::CreateTail(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
 	// Solids
 	// define the existance
-	solidDesc.mass	= 0.01;
+/*	solidDesc.mass	= 0.01;
 	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
 	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
 	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
@@ -112,17 +112,17 @@ void CRHingeMammalBody::CreateTail(){
 	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
 	// define the connection
 	// define the position
-	
+*/	
 
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitHead(){
+void CRHingeAnimalBody::InitHead(){
 	CreateNeck();
 	CreateHead();
 }
 
-void CRHingeMammalBody::CreateNeck(){
+void CRHingeAnimalBody::CreateNeck(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -175,7 +175,7 @@ void CRHingeMammalBody::CreateNeck(){
 	phScene->SetContactMode(solids[SO_NECK], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateHead(){
+void CRHingeAnimalBody::CreateHead(){
 	CDSphereDesc       sphereDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -218,7 +218,7 @@ void CRHingeMammalBody::CreateHead(){
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitFrontLegs(){
+void CRHingeAnimalBody::InitFrontLegs(){
 	CreateFrontUpperLeg(LEFTPART);
 	CreateFrontLowerLeg(LEFTPART);
 	CreateFrontFoot(LEFTPART);
@@ -228,13 +228,13 @@ void CRHingeMammalBody::InitFrontLegs(){
 	CreateFrontFoot(RIGHTPART);
 }
 
-void CRHingeMammalBody::CreateFrontUpperLeg(LREnum lr){
+void CRHingeAnimalBody::CreateFrontUpperLeg(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNShoulderZX, soNShoulderXY, soNUpperArm;
-	CRHingeMammalBodyDesc::CRMammalJoints joNShoulderZ, joNShoulderX, joNShoulderY;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNShoulderZX, soNShoulderXY, soNUpperArm;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNShoulderZ, joNShoulderX, joNShoulderY;
 	if (lr==LEFTPART) {
 		soNShoulderZX = SO_LEFT_SHOULDER_ZX; soNShoulderXY = SO_LEFT_SHOULDER_XY; soNUpperArm   = SO_LEFT_FRONT_UPPER_LEG;
 		joNShoulderZ  = JO_LEFT_SHOULDER_Z;  joNShoulderX  = JO_LEFT_SHOULDER_X;  joNShoulderY  = JO_LEFT_SHOULDER_Y;
@@ -296,13 +296,13 @@ void CRHingeMammalBody::CreateFrontUpperLeg(LREnum lr){
 	phScene->SetContactMode(solids[soNUpperArm], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateFrontLowerLeg(LREnum lr){
+void CRHingeAnimalBody::CreateFrontLowerLeg(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNUpperArm, soNLowerArm;
-	CRHingeMammalBodyDesc::CRMammalJoints joNElbow;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNUpperArm, soNLowerArm;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNElbow;
 	if (lr==LEFTPART) {
 		soNUpperArm = SO_LEFT_FRONT_UPPER_LEG; soNLowerArm = SO_LEFT_FRONT_LOWER_LEG;
 		joNElbow = JO_LEFT_ELBOW;
@@ -333,13 +333,13 @@ void CRHingeMammalBody::CreateFrontLowerLeg(LREnum lr){
 	phScene->SetContactMode(solids[soNLowerArm], solids[soNUpperArm], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateFrontFoot(LREnum lr){
+void CRHingeAnimalBody::CreateFrontFoot(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNLowerArm, soNWristYX, soNWristXZ, soNHand;
-	CRHingeMammalBodyDesc::CRMammalJoints joNWristY, joNWristX, joNWristZ;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNLowerArm, soNWristYX, soNWristXZ, soNHand;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNWristY, joNWristX, joNWristZ;
 	if (lr==LEFTPART) {
 		soNLowerArm = SO_LEFT_FRONT_LOWER_LEG; soNWristYX = SO_LEFT_FRONT_ANKLE_YX; soNWristXZ = SO_LEFT_FRONT_ANKLE_XZ; soNHand = SO_LEFT_FRONT_FOOT;
 		joNWristY = JO_LEFT_FRONT_ANKLE_Y; joNWristX = JO_LEFT_FRONT_ANKLE_X; joNWristZ = JO_LEFT_FRONT_ANKLE_Z; 
@@ -385,7 +385,7 @@ void CRHingeMammalBody::CreateFrontFoot(LREnum lr){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, frontFootLength / 2.0, 0);
-	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightHand.w, lr*oriRightHand.x, oriRightHand.y, oriRightHand.z).Inv() * Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightFrontFoot.w, lr*oriRightFrontFoot.x, oriRightFrontFoot.y, oriRightFrontFoot.z).Inv() * Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.spring           = springFrontAnkleZ;
 	hingeDesc.damper           = damperFrontAnkleZ;
 	hingeDesc.origin           = Rad(0);
@@ -397,7 +397,7 @@ void CRHingeMammalBody::CreateFrontFoot(LREnum lr){
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitRearLegs(){
+void CRHingeAnimalBody::InitRearLegs(){
 	if (!noLegs) {
 		CreateRearUpperLeg(LEFTPART);
 		CreateRearLowerLeg(LEFTPART);
@@ -414,13 +414,13 @@ void CRHingeMammalBody::InitRearLegs(){
 	phScene->SetContactMode(solids[SO_LEFT_REAR_UPPER_LEG], solids[SO_RIGHT_REAR_UPPER_LEG], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateRearUpperLeg(LREnum lr){
+void CRHingeAnimalBody::CreateRearUpperLeg(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNWaistLegZX, soNWaistLegXY, soNUpperLeg;
-	CRHingeMammalBodyDesc::CRMammalJoints joNWaistLegZ, joNWaistLegX, joNWaistLegY;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNWaistLegZX, soNWaistLegXY, soNUpperLeg;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNWaistLegZ, joNWaistLegX, joNWaistLegY;
 	if (lr==LEFTPART) {
 		soNWaistLegZX = SO_LEFT_WAIST_LEG_ZX; soNWaistLegXY = SO_LEFT_WAIST_LEG_XY; soNUpperLeg   = SO_LEFT_REAR_UPPER_LEG;
 		joNWaistLegZ  = JO_LEFT_WAIST_LEG_Z;  joNWaistLegX  = JO_LEFT_WAIST_LEG_X;  joNWaistLegY  = JO_LEFT_WAIST_LEG_Y;
@@ -478,13 +478,13 @@ void CRHingeMammalBody::CreateRearUpperLeg(LREnum lr){
 	phScene->SetContactMode(solids[soNUpperLeg], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateRearLowerLeg(LREnum lr){
+void CRHingeAnimalBody::CreateRearLowerLeg(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNUpperLeg, soNLowerLeg;
-	CRHingeMammalBodyDesc::CRMammalJoints joNKnee;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNUpperLeg, soNLowerLeg;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNKnee;
 	if (lr==LEFTPART) {
 		soNUpperLeg = SO_LEFT_REAR_UPPER_LEG; soNLowerLeg = SO_LEFT_REAR_LOWER_LEG;
 		joNKnee = JO_LEFT_KNEE;
@@ -515,13 +515,13 @@ void CRHingeMammalBody::CreateRearLowerLeg(LREnum lr){
 	phScene->SetContactMode(solids[soNLowerLeg], solids[soNUpperLeg], PHSceneDesc::MODE_NONE);
 }
 
-void CRHingeMammalBody::CreateRearFoot(LREnum lr){
+void CRHingeAnimalBody::CreateRearFoot(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNLowerLeg, soNAnkleYX, soNAnkleXZ, soNFoot;
-	CRHingeMammalBodyDesc::CRMammalJoints joNAnkleY, joNAnkleX, joNAnkleZ;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNLowerLeg, soNAnkleYX, soNAnkleXZ, soNFoot;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNAnkleY, joNAnkleX, joNAnkleZ;
 	if (lr==LEFTPART) {
 		soNLowerLeg = SO_LEFT_REAR_LOWER_LEG; soNAnkleYX = SO_LEFT_REAR_ANKLE_YX; soNAnkleXZ = SO_LEFT_REAR_ANKLE_XZ; soNFoot = SO_LEFT_REAR_FOOT;
 		joNAnkleY = JO_LEFT_REAR_ANKLE_Y; joNAnkleX = JO_LEFT_REAR_ANKLE_X; joNAnkleZ = JO_LEFT_REAR_ANKLE_Z; 
@@ -581,19 +581,19 @@ void CRHingeMammalBody::CreateRearFoot(LREnum lr){
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitEyes(){
+void CRHingeAnimalBody::InitEyes(){
 	CreateEye(LEFTPART);
 	CreateEye(RIGHTPART);
 }
 
-void CRHingeMammalBody::CreateEye(LREnum lr){
+void CRHingeAnimalBody::CreateEye(LREnum lr){
 	CDBoxDesc          boxDesc;
 	CDSphereDesc       sphereDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRHingeMammalBodyDesc::CRMammalSolids soNEyeYX, soNEye;
-	CRHingeMammalBodyDesc::CRMammalJoints joNEyeY, joNEyeX;
+	CRHingeAnimalBodyDesc::CRAnimalSolids soNEyeYX, soNEye;
+	CRHingeAnimalBodyDesc::CRAnimalJoints joNEyeY, joNEyeX;
 	if (lr==LEFTPART) {
 		soNEyeYX = SO_LEFT_EYE_YX; soNEye = SO_LEFT_EYE;
 		joNEyeY = JO_LEFT_EYE_Y; joNEyeX = JO_LEFT_EYE_X;
@@ -644,7 +644,7 @@ void CRHingeMammalBody::CreateEye(LREnum lr){
 }
 
 // --- --- ---
-void CRHingeMammalBody::InitContact(){
+void CRHingeAnimalBody::InitContact(){
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (int i=0; i<solids.size(); ++i) {
 		for (int j=0; j<solids.size(); ++j) {
@@ -657,7 +657,7 @@ void CRHingeMammalBody::InitContact(){
 	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);
-		if (DCAST(CRHingeMammalBodyIf,body)!=(this->Cast())) {
+		if (DCAST(CRHingeAnimalBodyIf,body)!=(this->Cast())) {
 			for (int s=0; s<body->NSolids(); ++s) {
 				for (int j=0; j<solids.size(); ++j) {
 					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
