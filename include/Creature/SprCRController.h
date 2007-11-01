@@ -124,68 +124,74 @@ struct CRReachingControllerIf : CRControllerIf{
 	*/
 	virtual PHSolidIf* GetSolid()= 0;
 
-	/** @brief 目標位置を設定し、到達運動を開始する
+	/** @brief 目標位置を設定する
 		@param p 目標位置
 		@param v 目標の速度
-		@param t 目標到達時間
-		@param o 到達後の待機時間
 	*/
-	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o)= 0;
+	virtual void SetTargetPos(Vec3f p, Vec3f v)= 0;
 
-	/** @brief 目標位置・姿勢を設定し、到達運動を開始する
-		@param p 目標位置
-		@param v 目標の速度
+	/** @brief 目標姿勢を設定する
 		@param q 目標姿勢
 		@param av 目標角速度
+	*/
+	virtual void SetTargetOri(Quaterniond q, Vec3f av)= 0;
+
+	/** @brief 到達目標時間を設定する
 		@param t 目標到達時間
-		@param o 到達後の待機時間
 	*/
-	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o)= 0;
+	virtual void SetTargetTime(float t)= 0;
 
-	/** @brief 移動中かどうか（TargetPointを移動しているかどうか）を返す
+	/** @brief 到達運動を開始する
+		@param mode 到達の拘束モード
+		@param keeptime 到達運動終了後に保持を続ける時間（負なら保持を続ける）
 	*/
-	virtual bool IsMoving()= 0;
+	enum ConstraintMode {
+		CM_P3R0=0,  // ３自由度拘束（位置のみを合わせる）
+		CM_P3R2,    // ３＋２自由度拘束（位置と向きを合わせるが向きに１軸の自由度がある）
+		CM_P3R3,    // ３＋３自由度拘束（位置と向きを合わせる）
+	};
+	virtual void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime)=0;
 
-	/** @brief 到達したかどうかを返す
+	/** @brief 制御の残り時間を返す
 	*/
-	virtual bool IsReached()= 0;
+	virtual float GetRemainingTime()= 0;
 
-	/** @brief 動作中かどうか（制御が有効かどうか）を返す
+	/** @brief 到達状況を返す
 	*/
-	virtual bool IsActive()= 0;
+	enum ReachState {
+		RS_NOTHING_REACHED=0,  // 目標剛体も対象剛体も到達していない
+		RS_TARGET_REACHED,     // 目標剛体は到達した（対象剛体はまだ追いついていない）
+		RS_SOLID_REACHED,      // 対象剛体も到達した
+		RS_STOP,               // 動作していない
+	};
+	virtual CRReachingControllerIf::ReachState GetReachState()= 0;
 
-	/** @brief 到達運動をやめ、初期状態に戻る
+	/** @brief 到達状態をやめる
 	*/
 	virtual void Reset()= 0;
-
-	virtual void SetTargetPos(Vec3f pos)= 0;
 };
 
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingControllerDesc : public CRControllerDesc{
 	DESC_DEF_FOR_OBJECT(CRReachingController);
 
-	PHSolidIf* solid; ///< 到達させたい剛体
-	int        solidNo; ///< 到達させたい剛体
-	Vec3f      reachPos; ///< 剛体内の到達させたいポイント
+	PHSolidIf*  solid;    ///< 到達させたい剛体
+	Vec3f       reachPos; ///< 剛体内の到達させたいポイント
+	Quaterniond fixOri;   ///< HingeJointを入れる向き
 
 	float limitForce; ///< 力の最大値
-	float springPos; ///< 位置制御のバネ係数
-	float damperPos; ///< 位置制御のダンパ係数
-	float springOri; ///< 姿勢制御のバネ係数
-	float damperOri; ///< 姿勢制御のダンパ係数
-	float softenRate; ///< 関節を柔らかい状態にするためのバネダンパ倍率
-	float hardenRate; ///< 関節を固い状態にするためのバネダンパ倍率
+	float springPos;  ///< 位置制御のバネ係数
+	float damperPos;  ///< 位置制御のダンパ係数
+	float springOri;  ///< 姿勢制御のバネ係数
+	float damperOri;  ///< 姿勢制御のダンパ係数
 
 	CRReachingControllerDesc(){
-		solid   = NULL;
-		solidNo = 9999;
+		solid = NULL;
 		limitForce = 1000.0f;
 		springPos = 500.0f;  damperPos =  20.0f;
-		springOri =  10.0f;  damperOri =   0.5f;
-		softenRate = 0.2f;
-		hardenRate = 5.0f;
+		springOri = 500.0f;  damperOri =  20.0f;
 		reachPos = Vec3f(0,0,0);
+		fixOri = Quaterniond();
 	}
 };
 

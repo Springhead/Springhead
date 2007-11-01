@@ -27,8 +27,14 @@ private:
 	/// 下位のコントローラ：ReachingController
 	CRReachingControllerIf *reachLeft, *reachRight, *reachChest;
 
+	/// ボディ
+	CRBodyIf* body;
+
 	/// 腰の剛体（いろいろ基準になる）
 	PHSolidIf* soWaist;
+
+	/// 胸の剛体（やはりいろいろ基準になる）
+	PHSolidIf* soChest;
 
 	/// 腰を中心に到達可能な距離
 	float reachableDistance;

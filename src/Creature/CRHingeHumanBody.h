@@ -73,6 +73,19 @@ public:
 	/** @brief 初期化を実行する
 	*/
 	virtual void Init();
+
+	/** @brief 上半身の関節の堅さを変える
+		@param stifness 堅さ：デフォルトの堅さに対する倍数で指定
+	*/
+	virtual void SetUpperBodyStiffness(float stiffness);
+
+	/** @brief 上半身のポーズを保持する
+	*/
+	virtual void KeepUpperBodyPose();
+
+	/** @brief 上半身のポーズを初期位置に戻す
+	*/
+	virtual void ResetUpperBodyPose();
 };
 
 }

@@ -22,19 +22,17 @@ namespace Spr{;
 */
 class CRReachingController : public CRController, public CRReachingControllerIfInit , public CRReachingControllerDesc {
 private:
-	/// 関節固定モード
-	enum CRRFixMode {
-		CRR_FIXED = 0, CRR_NORMAL, CRR_UNFIXED,
-	} fixmode;
-
 	/// 制御用のバネダンパ
-	PHSpringIf* spring;
+	PHSpringIf *springDirect, *springHinged;
 
 	/// 制御用の仮目標剛体
-	PHSolidIf*  soTarget;
+	PHSolidIf  *soTargetDirect, *soTargetHinged;
 
-	/// 目標時間
-	float time, period;
+	/// 経過時間
+	float time;
+
+	/// 到達目標時間
+	float period;
 
 	/// 達成後の待機時間
 	float offset;
@@ -46,8 +44,11 @@ private:
 	/// 目標剛体のローカル座標
 	Vec3f localPos;
 
+	/// 制御モード
+	CRReachingControllerIf::ConstraintMode constraintMode;
+
 	/// 有効かどうか
-	bool bActive, bOri;
+	bool bActive;
 
 	/// 制御対象のボディ
 	CRHingeHumanBodyIf* body;
@@ -63,10 +64,6 @@ public:
 	{
 	}
 
-	/** @brief 制御対象の剛体を返す
-	*/
-	virtual PHSolidIf* GetSolid();
-
 	/** @ brief 初期化を実行する
 	*/
 	virtual void Init();
@@ -75,41 +72,44 @@ public:
 	*/
 	virtual void Step();
 
+	/** @brief 制御対象の剛体を返す
+	*/
+	virtual PHSolidIf* GetSolid();
+
 	/** @brief 目標位置を設定する
 		@param p 目標位置
 		@param v 目標の速度
-		@param t 目標到達時間
-		@param o 到達後の待機時間
 	*/
-	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o);
+	virtual void SetTargetPos(Vec3f p, Vec3f v);
 
-	/** @brief 目標位置・姿勢を設定する
-		@param p 目標位置
-		@param v 目標の速度
+	/** @brief 目標姿勢を設定する
 		@param q 目標姿勢
 		@param av 目標角速度
+	*/
+	virtual void SetTargetOri(Quaterniond q, Vec3f av);
+
+	/** @brief 到達目標時間を設定する
 		@param t 目標到達時間
-		@param o 到達後の待機時間
 	*/
-	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o);
+	virtual void SetTargetTime(float t);
 
-	/** @brief 動作中かどうか（TargetPointを移動しているかどうか）を返す
+	/** @brief 到達運動を開始する
+		@param mode 到達の拘束モード
+		@param keeptime 到達運動終了後に保持を続ける時間（負なら保持を続ける）
 	*/
-	virtual bool IsMoving();
+	virtual void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime);
 
-	/** @brief 到達したかどうかを返す
+	/** @brief 制御の残り時間を返す
 	*/
-	virtual bool IsReached();
+	virtual float GetRemainingTime();
 
-	/** @brief 動作中かどうか（制御が有効かどうか）を返す
+	/** @brief 到達状況を返す
 	*/
-	virtual bool IsActive();
+	virtual CRReachingControllerIf::ReachState GetReachState();
 
-	/** @brief 到達運動をやめ、初期状態に戻る
+	/** @brief 到達状態をやめる
 	*/
 	virtual void Reset();
-
-	virtual void SetTargetPos(Vec3f pos);
 };
 }
 //@}

@@ -624,10 +624,10 @@
 	field->offset = int((char*)(CRControllerDesc*)pCRReachingControllerDesc - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->solid) - (char*)pCRReachingControllerDesc);
-	field = desc->AddField("", "int", "solidNo", "");
-	field->offset = int((char*)&(pCRReachingControllerDesc->solidNo) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "Vec3f", "reachPos", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->reachPos) - (char*)pCRReachingControllerDesc);
+	field = desc->AddField("", "Quaterniond", "fixOri", "");
+	field->offset = int((char*)&(pCRReachingControllerDesc->fixOri) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "float", "limitForce", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->limitForce) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "float", "springPos", "");
@@ -638,10 +638,6 @@
 	field->offset = int((char*)&(pCRReachingControllerDesc->springOri) - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("", "float", "damperOri", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->damperOri) - (char*)pCRReachingControllerDesc);
-	field = desc->AddField("", "float", "softenRate", "");
-	field->offset = int((char*)&(pCRReachingControllerDesc->softenRate) - (char*)pCRReachingControllerDesc);
-	field = desc->AddField("", "float", "hardenRate", "");
-	field->offset = int((char*)&(pCRReachingControllerDesc->hardenRate) - (char*)pCRReachingControllerDesc);
 	db->RegisterDesc(desc);
 	
 	CRGazeControllerState* pCRGazeControllerState = NULL;

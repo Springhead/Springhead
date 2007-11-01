@@ -27,6 +27,15 @@ typedef IfInitTemplate<CRBodyIfStub, CRBody>	CRBodyIfInit;
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRHingeHumanBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+	virtual void SetUpperBodyStiffness(float stiffness){
+		return ((OBJ*)(MIF*)this)->SetUpperBodyStiffness(stiffness);
+	}
+	virtual void KeepUpperBodyPose(){
+		return ((OBJ*)(MIF*)this)->KeepUpperBodyPose();
+	}
+	virtual void ResetUpperBodyPose(){
+		return ((OBJ*)(MIF*)this)->ResetUpperBodyPose();
+	}
 };
 struct CRHingeHumanBodyIf;	class CRHingeHumanBody;
 typedef CRHingeHumanBodyIfStubTemplate<CRHingeHumanBodyIf, ObjectIfBuf, CRHingeHumanBody>	CRHingeHumanBodyIfStub;
@@ -107,26 +116,26 @@ struct CRReachingControllerIfStubTemplate: public CRControllerIfStubTemplate<IF,
 	virtual PHSolidIf * GetSolid(){
 		return ((OBJ*)(MIF*)this)->GetSolid();
 	}
-	virtual void SetTarget(Vec3f p, Vec3f v, float t, float o){
-		return ((OBJ*)(MIF*)this)->SetTarget(p, v, t, o);
+	virtual void SetTargetPos(Vec3f p, Vec3f v){
+		return ((OBJ*)(MIF*)this)->SetTargetPos(p, v);
 	}
-	virtual void SetTarget(Vec3f p, Vec3f v, Quaterniond q, Vec3f av, float t, float o){
-		return ((OBJ*)(MIF*)this)->SetTarget(p, v, q, av, t, o);
+	virtual void SetTargetOri(Quaterniond q, Vec3f av){
+		return ((OBJ*)(MIF*)this)->SetTargetOri(q, av);
 	}
-	virtual bool IsMoving(){
-		return ((OBJ*)(MIF*)this)->IsMoving();
+	virtual void SetTargetTime(float t){
+		return ((OBJ*)(MIF*)this)->SetTargetTime(t);
 	}
-	virtual bool IsReached(){
-		return ((OBJ*)(MIF*)this)->IsReached();
+	virtual void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime){
+		return ((OBJ*)(MIF*)this)->Start(mode, keeptime);
 	}
-	virtual bool IsActive(){
-		return ((OBJ*)(MIF*)this)->IsActive();
+	virtual float GetRemainingTime(){
+		return ((OBJ*)(MIF*)this)->GetRemainingTime();
+	}
+	virtual CRReachingControllerIf::ReachState GetReachState(){
+		return ((OBJ*)(MIF*)this)->GetReachState();
 	}
 	virtual void Reset(){
 		return ((OBJ*)(MIF*)this)->Reset();
-	}
-	virtual void SetTargetPos(Vec3f pos){
-		return ((OBJ*)(MIF*)this)->SetTargetPos(pos);
 	}
 };
 struct CRReachingControllerIf;	class CRReachingController;

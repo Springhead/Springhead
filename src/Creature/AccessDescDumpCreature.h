@@ -1704,80 +1704,68 @@ public: \
 #define ACCESS_DESC_CRReachingControllerDesc(cls) \
 protected: \
 	PHSolidIf *solid ; \
-	int solidNo ; \
 	Vec3f reachPos ; \
+	Quaterniond fixOri ; \
 	float limitForce ; \
 	float springPos ; \
 	float damperPos ; \
 	float springOri ; \
 	float damperOri ; \
-	float softenRate ; \
-	float hardenRate ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
 		solid = ((CRReachingControllerDesc*)desc)->solid; \
-		solidNo = ((CRReachingControllerDesc*)desc)->solidNo; \
 		reachPos = ((CRReachingControllerDesc*)desc)->reachPos; \
+		fixOri = ((CRReachingControllerDesc*)desc)->fixOri; \
 		limitForce = ((CRReachingControllerDesc*)desc)->limitForce; \
 		springPos = ((CRReachingControllerDesc*)desc)->springPos; \
 		damperPos = ((CRReachingControllerDesc*)desc)->damperPos; \
 		springOri = ((CRReachingControllerDesc*)desc)->springOri; \
 		damperOri = ((CRReachingControllerDesc*)desc)->damperOri; \
-		softenRate = ((CRReachingControllerDesc*)desc)->softenRate; \
-		hardenRate = ((CRReachingControllerDesc*)desc)->hardenRate; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
 		((CRReachingControllerDesc*)desc)->solid = solid; \
-		((CRReachingControllerDesc*)desc)->solidNo = solidNo; \
 		((CRReachingControllerDesc*)desc)->reachPos = reachPos; \
+		((CRReachingControllerDesc*)desc)->fixOri = fixOri; \
 		((CRReachingControllerDesc*)desc)->limitForce = limitForce; \
 		((CRReachingControllerDesc*)desc)->springPos = springPos; \
 		((CRReachingControllerDesc*)desc)->damperPos = damperPos; \
 		((CRReachingControllerDesc*)desc)->springOri = springOri; \
 		((CRReachingControllerDesc*)desc)->damperOri = damperOri; \
-		((CRReachingControllerDesc*)desc)->softenRate = softenRate; \
-		((CRReachingControllerDesc*)desc)->hardenRate = hardenRate; \
 		return true; \
 	} \
 
 #define ACCESS_DESC_CRReachingControllerDesc_NOBASE \
 protected: \
 	PHSolidIf *solid ; \
-	int solidNo ; \
 	Vec3f reachPos ; \
+	Quaterniond fixOri ; \
 	float limitForce ; \
 	float springPos ; \
 	float damperPos ; \
 	float springOri ; \
 	float damperOri ; \
-	float softenRate ; \
-	float hardenRate ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		solid = ((CRReachingControllerDesc*)desc)->solid; \
-		solidNo = ((CRReachingControllerDesc*)desc)->solidNo; \
 		reachPos = ((CRReachingControllerDesc*)desc)->reachPos; \
+		fixOri = ((CRReachingControllerDesc*)desc)->fixOri; \
 		limitForce = ((CRReachingControllerDesc*)desc)->limitForce; \
 		springPos = ((CRReachingControllerDesc*)desc)->springPos; \
 		damperPos = ((CRReachingControllerDesc*)desc)->damperPos; \
 		springOri = ((CRReachingControllerDesc*)desc)->springOri; \
 		damperOri = ((CRReachingControllerDesc*)desc)->damperOri; \
-		softenRate = ((CRReachingControllerDesc*)desc)->softenRate; \
-		hardenRate = ((CRReachingControllerDesc*)desc)->hardenRate; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		((CRReachingControllerDesc*)desc)->solid = solid; \
-		((CRReachingControllerDesc*)desc)->solidNo = solidNo; \
 		((CRReachingControllerDesc*)desc)->reachPos = reachPos; \
+		((CRReachingControllerDesc*)desc)->fixOri = fixOri; \
 		((CRReachingControllerDesc*)desc)->limitForce = limitForce; \
 		((CRReachingControllerDesc*)desc)->springPos = springPos; \
 		((CRReachingControllerDesc*)desc)->damperPos = damperPos; \
 		((CRReachingControllerDesc*)desc)->springOri = springOri; \
 		((CRReachingControllerDesc*)desc)->damperOri = damperOri; \
-		((CRReachingControllerDesc*)desc)->softenRate = softenRate; \
-		((CRReachingControllerDesc*)desc)->hardenRate = hardenRate; \
 		return true; \
 	} \
 

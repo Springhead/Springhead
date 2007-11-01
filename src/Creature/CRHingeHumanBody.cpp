@@ -636,4 +636,93 @@ void CRHingeHumanBody::InitContact(){
 		}
 	}
 }
+
+// --- --- ---
+void CRHingeHumanBody::SetUpperBodyStiffness(float stiffness){
+	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetSpring(springWaistAbdomen * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetDamper(damperWaistAbdomen * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetSpring(springAbdomenChest * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetDamper(damperAbdomenChest * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetSpring(springShoulderZ * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetDamper(damperShoulderZ * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetSpring(springShoulderX * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetDamper(damperShoulderX * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetSpring(springShoulderY * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetDamper(damperShoulderY * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetSpring(springElbow * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetDamper(damperElbow * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetSpring(springWristY * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetDamper(damperWristY * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetSpring(springWristX * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetDamper(damperWristX * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetSpring(springWristZ * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetDamper(damperWristZ * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetSpring(springShoulderZ * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetDamper(damperShoulderZ * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetSpring(springShoulderX * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetDamper(damperShoulderX * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetSpring(springShoulderY * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetDamper(damperShoulderY * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetSpring(springElbow * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetDamper(damperElbow * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetSpring(springWristY * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetDamper(damperWristY * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetSpring(springWristX * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetDamper(damperWristX * stiffness);
+
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetSpring(springWristZ * stiffness);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetDamper(damperWristZ * stiffness);
+}
+
+void CRHingeHumanBody::KeepUpperBodyPose(){
+	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_WAIST_ABDOMEN])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_ABDOMEN_CHEST])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_ELBOW])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_ELBOW])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_Z])->GetPosition());
+}
+
+void CRHingeHumanBody::ResetUpperBodyPose(){
+	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetSpringOrigin(0);
+}
 }

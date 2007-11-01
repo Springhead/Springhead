@@ -49,8 +49,8 @@ void CRWalkingController::Init(){
 		descBall.origin = Quaternionf();
 		// descBall.spring = 10000.0f;
 		// descBall.damper =   100.0f;
-		descBall.spring = 500.0f;
-		descBall.damper =  50.0f;
+		descBall.spring = 300.0f;
+		descBall.damper =  30.0f;
 	}
 	phScene->CreateJoint(hiFootLeft,  syncFootLeft,  descBall);
 	phScene->CreateJoint(hiFootRight, syncFootRight, descBall);
