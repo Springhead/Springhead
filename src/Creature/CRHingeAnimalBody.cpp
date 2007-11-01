@@ -99,15 +99,27 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// Solids
 	// define the existance
-/*	solidDesc.mass	= 0.01;
+	solidDesc.mass	= 0.01;
 	solids[SO_TAIL] = phScene->CreateSolid(solidDesc);
 	// define the shape
-	boxDesc.boxsize = Vec3f();
+	boxDesc.boxsize = Vec3f(0.01, 1.0, 0.01);
 	solids[SO_TAIL]->AddShape(phSdk->CreateShape(boxDesc));
 	// define the connection
-	// define the position
-*/	
+	hingeDesc                  = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0,  abdomenHeight / 2.0, 0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight / 2.0, 0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.spring           = springTailAbdomen;
+	hingeDesc.damper           = damperTailAbdomen;
+	hingeDesc.origin           = Rad(0);
+	hingeDesc.lower            = rangeTailAbdomen[0];
+	hingeDesc.upper            = rangeTailAbdomen[1];
+	joints[JO_ABDOMEN_CHEST] = CreateJoint(solids[SO_TAIL], solids[SO_ABDOMEN], hingeDesc);
 
+	// define the position
+	
+	phScene->SetContactMode(solids[SO_TAIL], solids[SO_ABDOMEN], PHSceneDesc::MODE_NONE);
 }
 
 // --- --- ---

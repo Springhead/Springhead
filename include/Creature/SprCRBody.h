@@ -415,9 +415,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double waistHeight, waistBreadth, waistThickness;
 	double abdomenHeight, abdomenBreadth, abdomenThickness;
 	double chestHeight, chestBreadth, chestThickness;
-	double tail1Height, tail1Breath, tail1Thickness;
-	double tail2Height, tail2Breath, tail2Thickness;
-	double tail3Height, tail3Breath, tail3Thickness;
+	double tailHeight, tailBreath, tailThickness;
 
 	double neckLength, neckDiameter;
 	double headDiameter;
@@ -440,6 +438,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double springChestNeckZ,   damperChestNeckZ;
 	double springNeckHeadX,    damperNeckHeadX;
 	double springNeckHeadZ,    damperNeckHeadZ;
+	double springTailAbdomen,  damperTailAbdomen;
 	double springShoulderZ,    damperShoulderZ;
 	double springShoulderX,    damperShoulderX;
 	double springShoulderY,    damperShoulderY;
@@ -471,6 +470,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	Vec2d rangeChestNeckZ;
 	Vec2d rangeNeckHeadX;
 	Vec2d rangeNeckHeadZ;
+	Vec2d rangeTailAbdomen;
 	Vec2d rangeShoulderZ;
 	Vec2d rangeShoulderX;
 	Vec2d rangeShoulderY;
@@ -511,6 +511,10 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 
 		headDiameter = 0.2387;
 
+		tailHeight    = 0.01;
+		tailBreath    = 1.0;
+		tailThickness = 0.01;
+
 		frontUpperLegLength   = 0.3406;
 		frontUpperLegDiameter = 0.2808 / 3.1415;
 
@@ -545,6 +549,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		springChestNeckZ   = 100.0;  damperChestNeckZ   =  50.0;
 		springNeckHeadX    =  50.0;  damperNeckHeadX    =  20.0;
 		springNeckHeadZ    =  50.0;  damperNeckHeadZ    =  20.0;
+		springTailAbdomen  =  10.0;  damperTailAbdomen  =   5.0;
 		springShoulderZ    =   5.0;  damperShoulderZ    =   2.0;
 		springShoulderX    =   5.0;  damperShoulderX    =   2.0;
 		springShoulderY    =   5.0;  damperShoulderY    =   2.0;
@@ -572,6 +577,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		rangeChestNeckZ   = Vec2d(Rad(+360) , Rad(-360));
 		rangeNeckHeadX    = Vec2d(Rad(+360) , Rad(-360));
 		rangeNeckHeadZ    = Vec2d(Rad(+360) , Rad(-360));
+		rangeTailAbdomen  = Vec2d(Rad(+360) , Rad(-360));
 		rangeShoulderZ    = Vec2d(Rad(+360) , Rad(-360));
 		rangeShoulderX    = Vec2d(Rad(+360) , Rad(-360));
 		rangeShoulderY    = Vec2d(Rad(+360) , Rad(-360));
