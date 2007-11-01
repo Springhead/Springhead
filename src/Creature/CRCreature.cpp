@@ -100,7 +100,7 @@ CRBodyIf* CRCreature::CreateBody(const IfInfo* ii, const CRBodyDesc& desc){
 	} else if (ii == CRTrunkFootAnimalBodyIf::GetIfInfoStatic()) {
 		body.push_back((DBG_NEW CRTrunkFootAnimalBody((const CRTrunkFootAnimalBodyDesc&)desc, this->Cast()))->Cast());
 
-	}else {
+	} else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
 		return NULL;
 

@@ -100,16 +100,10 @@ void CRHingeAnimalBody::CreateTail(){
 	// Solids
 	// define the existance
 /*	solidDesc.mass	= 0.01;
-	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
-	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
-	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
+	solids[SO_TAIL] = phScene->CreateSolid(solidDesc);
 	// define the shape
 	boxDesc.boxsize = Vec3f();
-	solids[SO_TAIL1]->AddShape(phSdk->CreateShape(boxDesc));
-	boxDesc.boxsize = Vec3f();
-	solids[SO_TAIL2]->AddShape(phSdk->CreateShape(boxDesc));
-	boxDesc.boxsize = Vec3f();
-	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[SO_TAIL]->AddShape(phSdk->CreateShape(boxDesc));
 	// define the connection
 	// define the position
 */	
