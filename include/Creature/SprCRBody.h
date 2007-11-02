@@ -421,16 +421,18 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	/// 各関節のバネダンパ
 	double springWaistChest,   damperWaistChest;
 	double springTailWaist,	   damperTailWaist;
+	double springTail,		   damperTail;
+
 
 	/// 関節取り付け角度・位置
-/*	Vec3d       posRightFrontUpperLeg;
-	Quaterniond oriRightFrontUpperLeg;
-	Quaterniond oriRightFrontLowerLeg;
-	Quaterniond oriRightFrontFoot;
-*/
+	//Vec3d       posRightFrontUpperLeg;
+	//Quaterniond oriRightFrontUpperLeg;
+	Quaterniond oriTail;
+
 	/// 可動域制限
 	double rangeWaistChest;
 	double rangeTailWaist;
+	double rangeTail;
 
 	/// 裏オプション
 	bool noLegs;
@@ -450,15 +452,21 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		tailHeight    = 0.2;
 		tailThickness = 0.1;
 
-		springWaistChest   =  5.0;  damperWaistChest   =   2.0;
-		springTailWaist    =  5.0;  damperTailWaist    =   2.0;
+		springWaistChest   =  50.0;  damperWaistChest   =   20.0;
+		springTailWaist    =   1.0;  damperTailWaist    =    1.0;
+		springTail		   =   1.0;  damperTail		    =    1.0;
 		
 		//posRightBreastBone = Vec3d(0,0,0);
 
-		//BallJointの倒し込み角度の指定
+
+		
+
+		// Range of  ball joints
 		rangeWaistChest = Rad(+40);
 		rangeTailWaist  = Rad(+30);
-		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
+		rangeTail		= Rad(+20);
+
+		// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
 		
 		
 		noLegs = false;

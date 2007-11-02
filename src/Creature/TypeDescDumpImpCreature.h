@@ -268,10 +268,18 @@
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->springTailWaist) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "double", "damperTailWaist", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->damperTailWaist) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "double", "springTail", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->springTail) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "double", "damperTail", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->damperTail) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "Quaterniond", "oriTail", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->oriTail) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "double", "rangeWaistChest", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeWaistChest) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "double", "rangeTailWaist", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeTailWaist) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "double", "rangeTail", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeTail) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "bool", "noLegs", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->noLegs) - (char*)pCRHingeAnimalBodyDesc);
 	db->RegisterDesc(desc);

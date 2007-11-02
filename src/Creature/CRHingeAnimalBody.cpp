@@ -59,12 +59,12 @@ void CRHingeAnimalBody::CreateChest(){
 	// Joint -- [p]Waist-[c]Chest
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.posePlug.Pos()   = Vec3d(0, waistHeight / 2.0, 0);
-	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'y');
 	ballDesc.poseSocket.Pos() = Vec3d(0, -chestHeight / 2.0, 0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'y');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
-//	ballDesc.origin           = Rad(0);											//Quotaniondのoriginってどうやって指定するの？
+	ballDesc.origin           = Quaterniond::Rot(Rad(0), 'y');										//Quotaniondのoriginってどうやって指定するの？
 	ballDesc.swingUpper       = rangeWaistChest;
 	joints[JO_WAIST_CHEST]  = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
 
@@ -91,26 +91,35 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// define the connection
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -waistHeight, 0.1);
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight, 0.0);
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -waistHeight/2.0, 0.1);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
 	ballDesc.spring            = springTailWaist;
 	ballDesc.damper            = damperTailWaist;
 //	ballDesc.origin            = Rad(0);
 	ballDesc.swingUpper        = rangeTailWaist;
 	joints[JO_TAIL_WAIST]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
+
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight, 0.0);
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight, 0.0);
-	ballDesc.spring            = springTailWaist;
-	ballDesc.damper            = damperTailWaist;
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.spring            = springTail;
+	ballDesc.damper            = damperTail;
 //	ballDesc.origin            = Rad(0);
-	ballDesc.swingUpper        = rangeTailWaist;
+	ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
+	
+	ballDesc                   = PHBallJointDesc();
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.spring            = springTail;
+	ballDesc.damper            = damperTail;
+//	ballDesc.origin            = Rad(0);
+	ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
 
 	// define the position
 	
-	phScene->SetContactMode(solids[SO_TAIL1], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+	//phScene->SetContactMode(solids[SO_TAIL1], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
 // --- --- ---

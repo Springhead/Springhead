@@ -690,8 +690,12 @@ protected: \
 	double damperWaistChest ; \
 	double springTailWaist ; \
 	double damperTailWaist ; \
+	double springTail ; \
+	double damperTail ; \
+	Quaterniond oriTail ; \
 	double rangeWaistChest ; \
 	double rangeTailWaist ; \
+	double rangeTail ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -709,8 +713,12 @@ public: \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
 		damperTailWaist = ((CRHingeAnimalBodyDesc*)desc)->damperTailWaist; \
+		springTail = ((CRHingeAnimalBodyDesc*)desc)->springTail; \
+		damperTail = ((CRHingeAnimalBodyDesc*)desc)->damperTail; \
+		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
 		rangeWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest; \
 		rangeTailWaist = ((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist; \
+		rangeTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTail; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -728,8 +736,12 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->damperTailWaist = damperTailWaist; \
+		((CRHingeAnimalBodyDesc*)desc)->springTail = springTail; \
+		((CRHingeAnimalBodyDesc*)desc)->damperTail = damperTail; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist = rangeTailWaist; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTail = rangeTail; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
@@ -749,8 +761,12 @@ protected: \
 	double damperWaistChest ; \
 	double springTailWaist ; \
 	double damperTailWaist ; \
+	double springTail ; \
+	double damperTail ; \
+	Quaterniond oriTail ; \
 	double rangeWaistChest ; \
 	double rangeTailWaist ; \
+	double rangeTail ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -767,8 +783,12 @@ public: \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
 		damperTailWaist = ((CRHingeAnimalBodyDesc*)desc)->damperTailWaist; \
+		springTail = ((CRHingeAnimalBodyDesc*)desc)->springTail; \
+		damperTail = ((CRHingeAnimalBodyDesc*)desc)->damperTail; \
+		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
 		rangeWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest; \
 		rangeTailWaist = ((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist; \
+		rangeTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTail; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -785,8 +805,12 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->damperTailWaist = damperTailWaist; \
+		((CRHingeAnimalBodyDesc*)desc)->springTail = springTail; \
+		((CRHingeAnimalBodyDesc*)desc)->damperTail = damperTail; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist = rangeTailWaist; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTail = rangeTail; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
