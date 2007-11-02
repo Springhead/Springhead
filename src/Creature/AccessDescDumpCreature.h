@@ -683,19 +683,38 @@ protected: \
 	double chestBreadth ; \
 	double chestHeight ; \
 	double chestThickness ; \
-	double tailHeight ; \
 	double tailBreath ; \
+	double tailHeight ; \
 	double tailThickness ; \
+	double neckBreath ; \
+	double neckHeight ; \
+	double neckThickness ; \
+	double headRadius ; \
+	double headLength ; \
 	double springWaistChest ; \
 	double damperWaistChest ; \
 	double springTailWaist ; \
 	double damperTailWaist ; \
 	double springTail ; \
 	double damperTail ; \
+	double springChestNeckXY ; \
+	double damperChestNeckXY ; \
+	double springChestNeckYZ ; \
+	double damperChestNeckYZ ; \
+	double springChestNeck ; \
+	double damperChestNeck ; \
+	double springNeckHead ; \
+	double damperNeckHead ; \
+	Quaterniond oriTailWaist ; \
 	Quaterniond oriTail ; \
+	Quaterniond oriNeckHead ; \
+	Vec2d rangeChestNeckXY ; \
+	Vec2d rangeChestNeckYZ ; \
+	Vec2d rangeChestNeck ; \
 	double rangeWaistChest ; \
 	double rangeTailWaist ; \
 	double rangeTail ; \
+	double rangeNeckHead ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -706,19 +725,38 @@ public: \
 		chestBreadth = ((CRHingeAnimalBodyDesc*)desc)->chestBreadth; \
 		chestHeight = ((CRHingeAnimalBodyDesc*)desc)->chestHeight; \
 		chestThickness = ((CRHingeAnimalBodyDesc*)desc)->chestThickness; \
-		tailHeight = ((CRHingeAnimalBodyDesc*)desc)->tailHeight; \
 		tailBreath = ((CRHingeAnimalBodyDesc*)desc)->tailBreath; \
+		tailHeight = ((CRHingeAnimalBodyDesc*)desc)->tailHeight; \
 		tailThickness = ((CRHingeAnimalBodyDesc*)desc)->tailThickness; \
+		neckBreath = ((CRHingeAnimalBodyDesc*)desc)->neckBreath; \
+		neckHeight = ((CRHingeAnimalBodyDesc*)desc)->neckHeight; \
+		neckThickness = ((CRHingeAnimalBodyDesc*)desc)->neckThickness; \
+		headRadius = ((CRHingeAnimalBodyDesc*)desc)->headRadius; \
+		headLength = ((CRHingeAnimalBodyDesc*)desc)->headLength; \
 		springWaistChest = ((CRHingeAnimalBodyDesc*)desc)->springWaistChest; \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
 		damperTailWaist = ((CRHingeAnimalBodyDesc*)desc)->damperTailWaist; \
 		springTail = ((CRHingeAnimalBodyDesc*)desc)->springTail; \
 		damperTail = ((CRHingeAnimalBodyDesc*)desc)->damperTail; \
+		springChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->springChestNeckXY; \
+		damperChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeckXY; \
+		springChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->springChestNeckYZ; \
+		damperChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeckYZ; \
+		springChestNeck = ((CRHingeAnimalBodyDesc*)desc)->springChestNeck; \
+		damperChestNeck = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeck; \
+		springNeckHead = ((CRHingeAnimalBodyDesc*)desc)->springNeckHead; \
+		damperNeckHead = ((CRHingeAnimalBodyDesc*)desc)->damperNeckHead; \
+		oriTailWaist = ((CRHingeAnimalBodyDesc*)desc)->oriTailWaist; \
 		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
+		oriNeckHead = ((CRHingeAnimalBodyDesc*)desc)->oriNeckHead; \
+		rangeChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY; \
+		rangeChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ; \
+		rangeChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck; \
 		rangeWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest; \
 		rangeTailWaist = ((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist; \
 		rangeTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTail; \
+		rangeNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -729,19 +767,38 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->chestBreadth = chestBreadth; \
 		((CRHingeAnimalBodyDesc*)desc)->chestHeight = chestHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->chestThickness = chestThickness; \
-		((CRHingeAnimalBodyDesc*)desc)->tailHeight = tailHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->tailBreath = tailBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->tailHeight = tailHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->tailThickness = tailThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->neckBreath = neckBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->neckHeight = neckHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->neckThickness = neckThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->headRadius = headRadius; \
+		((CRHingeAnimalBodyDesc*)desc)->headLength = headLength; \
 		((CRHingeAnimalBodyDesc*)desc)->springWaistChest = springWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->damperTailWaist = damperTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->springTail = springTail; \
 		((CRHingeAnimalBodyDesc*)desc)->damperTail = damperTail; \
+		((CRHingeAnimalBodyDesc*)desc)->springChestNeckXY = springChestNeckXY; \
+		((CRHingeAnimalBodyDesc*)desc)->damperChestNeckXY = damperChestNeckXY; \
+		((CRHingeAnimalBodyDesc*)desc)->springChestNeckYZ = springChestNeckYZ; \
+		((CRHingeAnimalBodyDesc*)desc)->damperChestNeckYZ = damperChestNeckYZ; \
+		((CRHingeAnimalBodyDesc*)desc)->springChestNeck = springChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->damperChestNeck = damperChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->springNeckHead = springNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->damperNeckHead = damperNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTailWaist = oriTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
+		((CRHingeAnimalBodyDesc*)desc)->oriNeckHead = oriNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY = rangeChestNeckXY; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ = rangeChestNeckYZ; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck = rangeChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist = rangeTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTail = rangeTail; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead = rangeNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
@@ -754,19 +811,38 @@ protected: \
 	double chestBreadth ; \
 	double chestHeight ; \
 	double chestThickness ; \
-	double tailHeight ; \
 	double tailBreath ; \
+	double tailHeight ; \
 	double tailThickness ; \
+	double neckBreath ; \
+	double neckHeight ; \
+	double neckThickness ; \
+	double headRadius ; \
+	double headLength ; \
 	double springWaistChest ; \
 	double damperWaistChest ; \
 	double springTailWaist ; \
 	double damperTailWaist ; \
 	double springTail ; \
 	double damperTail ; \
+	double springChestNeckXY ; \
+	double damperChestNeckXY ; \
+	double springChestNeckYZ ; \
+	double damperChestNeckYZ ; \
+	double springChestNeck ; \
+	double damperChestNeck ; \
+	double springNeckHead ; \
+	double damperNeckHead ; \
+	Quaterniond oriTailWaist ; \
 	Quaterniond oriTail ; \
+	Quaterniond oriNeckHead ; \
+	Vec2d rangeChestNeckXY ; \
+	Vec2d rangeChestNeckYZ ; \
+	Vec2d rangeChestNeck ; \
 	double rangeWaistChest ; \
 	double rangeTailWaist ; \
 	double rangeTail ; \
+	double rangeNeckHead ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -776,19 +852,38 @@ public: \
 		chestBreadth = ((CRHingeAnimalBodyDesc*)desc)->chestBreadth; \
 		chestHeight = ((CRHingeAnimalBodyDesc*)desc)->chestHeight; \
 		chestThickness = ((CRHingeAnimalBodyDesc*)desc)->chestThickness; \
-		tailHeight = ((CRHingeAnimalBodyDesc*)desc)->tailHeight; \
 		tailBreath = ((CRHingeAnimalBodyDesc*)desc)->tailBreath; \
+		tailHeight = ((CRHingeAnimalBodyDesc*)desc)->tailHeight; \
 		tailThickness = ((CRHingeAnimalBodyDesc*)desc)->tailThickness; \
+		neckBreath = ((CRHingeAnimalBodyDesc*)desc)->neckBreath; \
+		neckHeight = ((CRHingeAnimalBodyDesc*)desc)->neckHeight; \
+		neckThickness = ((CRHingeAnimalBodyDesc*)desc)->neckThickness; \
+		headRadius = ((CRHingeAnimalBodyDesc*)desc)->headRadius; \
+		headLength = ((CRHingeAnimalBodyDesc*)desc)->headLength; \
 		springWaistChest = ((CRHingeAnimalBodyDesc*)desc)->springWaistChest; \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
 		damperTailWaist = ((CRHingeAnimalBodyDesc*)desc)->damperTailWaist; \
 		springTail = ((CRHingeAnimalBodyDesc*)desc)->springTail; \
 		damperTail = ((CRHingeAnimalBodyDesc*)desc)->damperTail; \
+		springChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->springChestNeckXY; \
+		damperChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeckXY; \
+		springChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->springChestNeckYZ; \
+		damperChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeckYZ; \
+		springChestNeck = ((CRHingeAnimalBodyDesc*)desc)->springChestNeck; \
+		damperChestNeck = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeck; \
+		springNeckHead = ((CRHingeAnimalBodyDesc*)desc)->springNeckHead; \
+		damperNeckHead = ((CRHingeAnimalBodyDesc*)desc)->damperNeckHead; \
+		oriTailWaist = ((CRHingeAnimalBodyDesc*)desc)->oriTailWaist; \
 		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
+		oriNeckHead = ((CRHingeAnimalBodyDesc*)desc)->oriNeckHead; \
+		rangeChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY; \
+		rangeChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ; \
+		rangeChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck; \
 		rangeWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest; \
 		rangeTailWaist = ((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist; \
 		rangeTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTail; \
+		rangeNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -798,19 +893,38 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->chestBreadth = chestBreadth; \
 		((CRHingeAnimalBodyDesc*)desc)->chestHeight = chestHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->chestThickness = chestThickness; \
-		((CRHingeAnimalBodyDesc*)desc)->tailHeight = tailHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->tailBreath = tailBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->tailHeight = tailHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->tailThickness = tailThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->neckBreath = neckBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->neckHeight = neckHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->neckThickness = neckThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->headRadius = headRadius; \
+		((CRHingeAnimalBodyDesc*)desc)->headLength = headLength; \
 		((CRHingeAnimalBodyDesc*)desc)->springWaistChest = springWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->damperTailWaist = damperTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->springTail = springTail; \
 		((CRHingeAnimalBodyDesc*)desc)->damperTail = damperTail; \
+		((CRHingeAnimalBodyDesc*)desc)->springChestNeckXY = springChestNeckXY; \
+		((CRHingeAnimalBodyDesc*)desc)->damperChestNeckXY = damperChestNeckXY; \
+		((CRHingeAnimalBodyDesc*)desc)->springChestNeckYZ = springChestNeckYZ; \
+		((CRHingeAnimalBodyDesc*)desc)->damperChestNeckYZ = damperChestNeckYZ; \
+		((CRHingeAnimalBodyDesc*)desc)->springChestNeck = springChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->damperChestNeck = damperChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->springNeckHead = springNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->damperNeckHead = damperNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTailWaist = oriTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
+		((CRHingeAnimalBodyDesc*)desc)->oriNeckHead = oriNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY = rangeChestNeckXY; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ = rangeChestNeckYZ; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck = rangeChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist = rangeTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTail = rangeTail; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead = rangeNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \

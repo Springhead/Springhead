@@ -362,7 +362,6 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 
 		// 関節の中継ぎ用の形状を有しない剛体
 		SO_CHEST_NECK_XY, SO_CHEST_NECK_YZ, 
-		SO_NECK_HEAD_XY, SO_CHEST_HEAD_YZ,
 
 		SO_RIGHT_SHOULDER_XY, SO_RIGHT_SHOULDER_YZ, 
 		SO_RIGHT_FRONT_ANKLE_YX, SO_RIGHT_FRONT_ANKLE_YZ,
@@ -384,7 +383,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		// -- Center
 		JO_WAIST_CHEST=0,
 		JO_CHEST_NECK_X, JO_CHEST_NECK_Y, JO_CHEST_NECK_Z,
-		JO_NECK_HEAD_X, JO_NECK_HEAD_Y,
+		JO_NECK_HEAD,
 		JO_TAIL_WAIST, JO_TAIL_12, JO_TAIL_23,
 
 		// -- Right
@@ -416,23 +415,37 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	/// サイズに関するパラメータ
 	double waistBreadth, waistHeight, waistThickness;
 	double chestBreadth, chestHeight, chestThickness;
-	double tailHeight, tailBreath, tailThickness;
+	double tailBreath,   tailHeight,  tailThickness;
+	double neckBreath,   neckHeight,  neckThickness;
+	double headRadius,   headLength;
 
 	/// 各関節のバネダンパ
 	double springWaistChest,   damperWaistChest;
 	double springTailWaist,	   damperTailWaist;
 	double springTail,		   damperTail;
+	double springChestNeckXY,  damperChestNeckXY;
+	double springChestNeckYZ,  damperChestNeckYZ;
+	double springChestNeck,	   damperChestNeck;
+	double springNeckHead,	   damperNeckHead;
 
 
 	/// 関節取り付け角度・位置
 	//Vec3d       posRightFrontUpperLeg;
 	//Quaterniond oriRightFrontUpperLeg;
+	Quaterniond oriTailWaist;
 	Quaterniond oriTail;
+	Quaterniond oriNeckHead;
 
-	/// 可動域制限
+	/// 可動域制限hingejoint
+	Vec2d  rangeChestNeckXY;
+	Vec2d  rangeChestNeckYZ;
+	Vec2d  rangeChestNeck;
+
+	/// 可動域制限balljoint
 	double rangeWaistChest;
 	double rangeTailWaist;
 	double rangeTail;
+	double rangeNeckHead;
 
 	/// 裏オプション
 	bool noLegs;
@@ -452,22 +465,39 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		tailHeight    = 0.2;
 		tailThickness = 0.1;
 
+		neckBreath	  = 0.5;
+		neckHeight	  = 1.0;
+		neckThickness = 0.4;
+
+		headRadius    = 0.3;
+		headLength    = 0.5;
+
+
+		// spring and damper
 		springWaistChest   =  50.0;  damperWaistChest   =   20.0;
-		springTailWaist    =   1.0;  damperTailWaist    =    1.0;
-		springTail		   =   1.0;  damperTail		    =    1.0;
-		
+		springTailWaist    =  50.0;  damperTailWaist    =   20.0;
+		springTail		   =  50.0;  damperTail		    =   20.0;
+		springChestNeckXY  =  50.0;  damperChestNeckXY  =   20.0;
+		springChestNeckYZ  =  50.0;  damperChestNeckYZ  =   20.0;
+		springChestNeck    =  50.0;  damperChestNeck    =   20.0;
+		springNeckHead	   =  50.0;  damperNeckHead     =   20.0;
+
 		//posRightBreastBone = Vec3d(0,0,0);
-
-
-		
+	
+		oriTailWaist = Quaterniond::Rot(Rad(+60), 'x');
+		oriTail		 = Quaterniond::Rot(Rad(+30), 'x');		
+		oriNeckHead	 = Quaterniond::Rot(Rad(+45), 'x');
 
 		// Range of  ball joints
 		rangeWaistChest = Rad(+40);
 		rangeTailWaist  = Rad(+30);
 		rangeTail		= Rad(+20);
+		rangeNeckHead   = Rad(+30);
 
 		// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
-		
+		rangeChestNeckXY = Vec2d(Rad(-360),Rad(+360));
+		rangeChestNeckYZ = Vec2d(Rad(-360),Rad(+360));
+		rangeChestNeck   = Vec2d(Rad(-360),Rad(+360));
 		
 		noLegs = false;
 	}

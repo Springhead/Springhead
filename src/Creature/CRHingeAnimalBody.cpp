@@ -29,7 +29,7 @@ void CRHingeAnimalBody::CreateWaist(){
 
 	// Solid
 	// define the solid(it has no shape)
-	solidDesc.mass     = 0.17;
+	solidDesc.mass     = 0.3;
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
 	// define the shape of the solid.
 	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
@@ -51,20 +51,20 @@ void CRHingeAnimalBody::CreateChest(){
 	PHBallJointDesc    ballDesc;
 
 	// Solid
-	solidDesc.mass   = 0.252;
+	solidDesc.mass   = 0.5;
 	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// Joint -- [p]Waist-[c]Chest
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.posePlug.Pos()   = Vec3d(0, waistHeight / 2.0, 0);
-	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'y');
-	ballDesc.poseSocket.Pos() = Vec3d(0, -chestHeight / 2.0, 0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'y');
+	ballDesc.posePlug.Pos()   = Vec3d(0.0, waistHeight / 2.0, 0.0);
+	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Pos() = Vec3d(0.0, -chestHeight / 2.0, 0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
-	ballDesc.origin           = Quaterniond::Rot(Rad(0), 'y');										//Quotaniondのoriginってどうやって指定するの？
+	ballDesc.origin           = Quaterniond::Rot(Rad(0), 'x');										//Quotaniondのoriginってどうやって指定するの？
 	ballDesc.swingUpper       = rangeWaistChest;
 	joints[JO_WAIST_CHEST]  = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
 
@@ -78,9 +78,11 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// Solids
 	// define the existance
-	solidDesc.mass	= 0.01;
+	solidDesc.mass	= 0.05;
 	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
+	solidDesc.mass  = 0.04;
 	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
+	solidDesc.mass	= 0.03;
 	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
 	
 	// define the shape
@@ -95,7 +97,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
 	ballDesc.spring            = springTailWaist;
 	ballDesc.damper            = damperTailWaist;
-//	ballDesc.origin            = Rad(0);
+	ballDesc.origin            = oriTailWaist;
 	ballDesc.swingUpper        = rangeTailWaist;
 	joints[JO_TAIL_WAIST]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
 
@@ -104,7 +106,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
-//	ballDesc.origin            = Rad(0);
+	ballDesc.origin            = oriTail;
 	ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
 	
@@ -113,13 +115,15 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
-//	ballDesc.origin            = Rad(0);
+	ballDesc.origin            = oriTail;
 	ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
 
 	// define the position
 	
-	//phScene->SetContactMode(solids[SO_TAIL1], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_TAIL1], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_TAIL2], solids[SO_TAIL1], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_TAIL3], solids[SO_TAIL2], PHSceneDesc::MODE_NONE);
 }
 
 // --- --- ---
@@ -130,9 +134,89 @@ void CRHingeAnimalBody::InitHead(){
 
 void CRHingeAnimalBody::CreateNeck(){
 	
+	CDBoxDesc			boxDesc;
+	PHSolidDesc			solidDesc;
+	PHHingeJointDesc	hingeDesc;
+
+	// Solid
+	solidDesc.mass = 0.01;
+	solids[SO_CHEST_NECK_XY] = phScene->CreateSolid(solidDesc);
+	solids[SO_CHEST_NECK_YZ] = phScene->CreateSolid(solidDesc);
+	solidDesc.mass = 0.2;
+	solids[SO_NECK] = phScene->CreateSolid(solidDesc);
+
+	boxDesc.boxsize = Vec3f(neckBreath, neckHeight, neckThickness);
+	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
+
+	// Joint -- [p]Chest - [c]Neck
+	hingeDesc				   = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+	hingeDesc.spring		   = springChestNeckXY;
+	hingeDesc.damper		   = damperChestNeckXY;
+	hingeDesc.origin		   = Rad(0);
+	hingeDesc.lower			   = rangeChestNeckXY[0];
+	hingeDesc.upper			   = rangeChestNeckXY[1];
+	joints[JO_CHEST_NECK_X]   = CreateJoint(solids[SO_CHEST_NECK_XY], solids[SO_CHEST], hingeDesc);
+	phScene->SetContactMode(solids[SO_CHEST_NECK_XY], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
+	
+	hingeDesc				   = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
+	hingeDesc.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+	hingeDesc.spring		   = springChestNeckYZ;
+	hingeDesc.damper		   = damperChestNeckYZ;
+	hingeDesc.origin		   = Rad(0);
+	hingeDesc.lower			   = rangeChestNeckYZ[0];
+	hingeDesc.upper			   = rangeChestNeckYZ[1];
+	joints[JO_CHEST_NECK_Y]   = CreateJoint(solids[SO_CHEST_NECK_YZ], solids[SO_CHEST_NECK_XY], hingeDesc);
+	phScene->SetContactMode(solids[SO_CHEST_NECK_YZ], solids[SO_CHEST_NECK_XY], PHSceneDesc::MODE_NONE);
+
+	hingeDesc				   = PHHingeJointDesc();
+	hingeDesc.posePlug.Pos()   = Vec3d(0.0, chestHeight/2.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Pos() = Vec3d(0.0, neckHeight/2.0, 0.0);
+	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.spring		   = springChestNeck;
+	hingeDesc.damper		   = damperChestNeck;
+	hingeDesc.origin		   = Rad(240);
+	hingeDesc.lower			   = rangeChestNeck[0];
+	hingeDesc.upper			   = rangeChestNeck[1];
+	joints[JO_CHEST_NECK_Z]   = CreateJoint(solids[SO_NECK], solids[SO_CHEST_NECK_YZ], hingeDesc);
+	phScene->SetContactMode(solids[SO_NECK], solids[SO_CHEST_NECK_YZ], PHSceneDesc::MODE_NONE);
+
 }
 
 void CRHingeAnimalBody::CreateHead(){
+	
+	CDCapsuleDesc		capsuleDesc;
+	PHSolidDesc			solidDesc;
+	PHBallJointDesc		ballDesc;
+
+	// define the solid
+	solidDesc.mass = 0.15;
+	solids[SO_HEAD] = phScene->CreateSolid(solidDesc);
+	
+	// define the shape
+	capsuleDesc.radius = headRadius;
+	capsuleDesc.length = headLength;
+	solids[SO_HEAD]->AddShape(phSdk->CreateShape(capsuleDesc));
+
+	// define the connection [p]neck - [c]head
+	ballDesc                   = PHBallJointDesc();
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, neckHeight/2.0, 0.1);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -headLength/2.0, 0.0);
+	ballDesc.spring            = springNeckHead;
+	ballDesc.damper            = damperNeckHead;
+	ballDesc.origin            = oriNeckHead;
+	ballDesc.swingUpper        = rangeNeckHead;
+	joints[JO_NECK_HEAD]	   = CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
+
+
+
 	
 }
 
