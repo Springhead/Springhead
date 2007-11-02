@@ -689,8 +689,9 @@ protected: \
 	double neckBreath ; \
 	double neckHeight ; \
 	double neckThickness ; \
-	double headRadius ; \
-	double headLength ; \
+	double headBreath ; \
+	double headHeight ; \
+	double headThickness ; \
 	double springWaistChest ; \
 	double damperWaistChest ; \
 	double springTailWaist ; \
@@ -731,8 +732,9 @@ public: \
 		neckBreath = ((CRHingeAnimalBodyDesc*)desc)->neckBreath; \
 		neckHeight = ((CRHingeAnimalBodyDesc*)desc)->neckHeight; \
 		neckThickness = ((CRHingeAnimalBodyDesc*)desc)->neckThickness; \
-		headRadius = ((CRHingeAnimalBodyDesc*)desc)->headRadius; \
-		headLength = ((CRHingeAnimalBodyDesc*)desc)->headLength; \
+		headBreath = ((CRHingeAnimalBodyDesc*)desc)->headBreath; \
+		headHeight = ((CRHingeAnimalBodyDesc*)desc)->headHeight; \
+		headThickness = ((CRHingeAnimalBodyDesc*)desc)->headThickness; \
 		springWaistChest = ((CRHingeAnimalBodyDesc*)desc)->springWaistChest; \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
@@ -773,8 +775,9 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->neckBreath = neckBreath; \
 		((CRHingeAnimalBodyDesc*)desc)->neckHeight = neckHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->neckThickness = neckThickness; \
-		((CRHingeAnimalBodyDesc*)desc)->headRadius = headRadius; \
-		((CRHingeAnimalBodyDesc*)desc)->headLength = headLength; \
+		((CRHingeAnimalBodyDesc*)desc)->headBreath = headBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->headHeight = headHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->headThickness = headThickness; \
 		((CRHingeAnimalBodyDesc*)desc)->springWaistChest = springWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
@@ -817,8 +820,9 @@ protected: \
 	double neckBreath ; \
 	double neckHeight ; \
 	double neckThickness ; \
-	double headRadius ; \
-	double headLength ; \
+	double headBreath ; \
+	double headHeight ; \
+	double headThickness ; \
 	double springWaistChest ; \
 	double damperWaistChest ; \
 	double springTailWaist ; \
@@ -858,8 +862,9 @@ public: \
 		neckBreath = ((CRHingeAnimalBodyDesc*)desc)->neckBreath; \
 		neckHeight = ((CRHingeAnimalBodyDesc*)desc)->neckHeight; \
 		neckThickness = ((CRHingeAnimalBodyDesc*)desc)->neckThickness; \
-		headRadius = ((CRHingeAnimalBodyDesc*)desc)->headRadius; \
-		headLength = ((CRHingeAnimalBodyDesc*)desc)->headLength; \
+		headBreath = ((CRHingeAnimalBodyDesc*)desc)->headBreath; \
+		headHeight = ((CRHingeAnimalBodyDesc*)desc)->headHeight; \
+		headThickness = ((CRHingeAnimalBodyDesc*)desc)->headThickness; \
 		springWaistChest = ((CRHingeAnimalBodyDesc*)desc)->springWaistChest; \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
@@ -899,8 +904,9 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->neckBreath = neckBreath; \
 		((CRHingeAnimalBodyDesc*)desc)->neckHeight = neckHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->neckThickness = neckThickness; \
-		((CRHingeAnimalBodyDesc*)desc)->headRadius = headRadius; \
-		((CRHingeAnimalBodyDesc*)desc)->headLength = headLength; \
+		((CRHingeAnimalBodyDesc*)desc)->headBreath = headBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->headHeight = headHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->headThickness = headThickness; \
 		((CRHingeAnimalBodyDesc*)desc)->springWaistChest = springWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \

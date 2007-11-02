@@ -266,10 +266,12 @@
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->neckHeight) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "double", "neckThickness", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->neckThickness) - (char*)pCRHingeAnimalBodyDesc);
-	field = desc->AddField("", "double", "headRadius", "");
-	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->headRadius) - (char*)pCRHingeAnimalBodyDesc);
-	field = desc->AddField("", "double", "headLength", "");
-	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->headLength) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "double", "headBreath", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->headBreath) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "double", "headHeight", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->headHeight) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "double", "headThickness", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->headThickness) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "double", "springWaistChest", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->springWaistChest) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "double", "damperWaistChest", "");

@@ -417,7 +417,8 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double chestBreadth, chestHeight, chestThickness;
 	double tailBreath,   tailHeight,  tailThickness;
 	double neckBreath,   neckHeight,  neckThickness;
-	double headRadius,   headLength;
+//	double headRadius,   headLength;
+	double headBreath,   headHeight,  headThickness;
 
 	/// 各関節のバネダンパ
 	double springWaistChest,   damperWaistChest;
@@ -432,6 +433,8 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	/// 関節取り付け角度・位置
 	//Vec3d       posRightFrontUpperLeg;
 	//Quaterniond oriRightFrontUpperLeg;
+	
+	//ball joints取り付け位置・角度
 	Quaterniond oriTailWaist;
 	Quaterniond oriTail;
 	Quaterniond oriNeckHead;
@@ -469,9 +472,12 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		neckHeight	  = 1.0;
 		neckThickness = 0.4;
 
-		headRadius    = 0.3;
-		headLength    = 0.5;
+//		headRadius    = 0.3;
+//		headLength    = 0.5;
 
+		headBreath    = 0.4;
+		headHeight	  = 0.7;
+		headThickness = 0.3;
 
 		// spring and damper
 		springWaistChest   =  50.0;  damperWaistChest   =   20.0;
@@ -483,7 +489,8 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		springNeckHead	   =  50.0;  damperNeckHead     =   20.0;
 
 		//posRightBreastBone = Vec3d(0,0,0);
-	
+
+		// origin of ball joints
 		oriTailWaist = Quaterniond::Rot(Rad(+60), 'x');
 		oriTail		 = Quaterniond::Rot(Rad(+30), 'x');		
 		oriNeckHead	 = Quaterniond::Rot(Rad(+45), 'x');

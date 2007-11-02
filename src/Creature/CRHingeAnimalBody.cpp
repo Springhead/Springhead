@@ -191,8 +191,8 @@ void CRHingeAnimalBody::CreateNeck(){
 }
 
 void CRHingeAnimalBody::CreateHead(){
-	
-	CDCapsuleDesc		capsuleDesc;
+
+	CDBoxDesc			boxDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -201,27 +201,24 @@ void CRHingeAnimalBody::CreateHead(){
 	solids[SO_HEAD] = phScene->CreateSolid(solidDesc);
 	
 	// define the shape
-	capsuleDesc.radius = headRadius;
-	capsuleDesc.length = headLength;
-	solids[SO_HEAD]->AddShape(phSdk->CreateShape(capsuleDesc));
+	boxDesc.boxsize = Vec3f(headBreath, headHeight, headThickness);
+	solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// define the connection [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, neckHeight/2.0, 0.1);
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -headLength/2.0, 0.0);
+	ballDesc.posePlug.Pos()    = Vec3d(0.0,  neckHeight/2.0, neckThickness/2.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -headHeight/2.0, 0.0);
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.origin            = oriNeckHead;
 	ballDesc.swingUpper        = rangeNeckHead;
 	joints[JO_NECK_HEAD]	   = CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
-
-
-
 	
 }
 
 // --- --- ---
 void CRHingeAnimalBody::InitFrontLegs(){
+	
 	CreateBreastBone(LEFTPART);
 	CreateRadius(LEFTPART);
 	CreateFrontCannonBone(LEFTPART);
@@ -253,6 +250,7 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 
 // --- --- ---
 void CRHingeAnimalBody::InitRearLegs(){
+	
 	if (!noLegs) {
 		CreateFemur(LEFTPART);
 		CreateTibia(LEFTPART);
