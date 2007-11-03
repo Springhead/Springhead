@@ -29,7 +29,7 @@ void CRHingeAnimalBody::CreateWaist(){
 
 	// Solid
 	// define the solid(it has no shape)
-	solidDesc.mass     = 0.3;
+	solidDesc.mass     = 0.2;
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
 	// define the shape of the solid.
 	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
@@ -51,7 +51,7 @@ void CRHingeAnimalBody::CreateChest(){
 	PHBallJointDesc    ballDesc;
 
 	// Solid
-	solidDesc.mass   = 0.5;
+	solidDesc.mass   = 0.3;
 	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
@@ -78,11 +78,11 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// Solids
 	// define the existance
-	solidDesc.mass	= 0.05;
+	solidDesc.mass	= 0.01;
 	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
-	solidDesc.mass  = 0.04;
+	solidDesc.mass  = 0.01;
 	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
-	solidDesc.mass	= 0.03;
+	solidDesc.mass	= 0.01;
 	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
 	
 	// define the shape
@@ -142,7 +142,7 @@ void CRHingeAnimalBody::CreateNeck(){
 	solidDesc.mass = 0.01;
 	solids[SO_CHEST_NECK_XY] = phScene->CreateSolid(solidDesc);
 	solids[SO_CHEST_NECK_YZ] = phScene->CreateSolid(solidDesc);
-	solidDesc.mass = 0.2;
+	solidDesc.mass = 0.1;
 	solids[SO_NECK] = phScene->CreateSolid(solidDesc);
 
 	boxDesc.boxsize = Vec3f(neckBreath, neckHeight, neckThickness);
@@ -197,7 +197,7 @@ void CRHingeAnimalBody::CreateHead(){
 	PHBallJointDesc		ballDesc;
 
 	// define the solid
-	solidDesc.mass = 0.15;
+	solidDesc.mass = 0.05;
 	solids[SO_HEAD] = phScene->CreateSolid(solidDesc);
 	
 	// define the shape
@@ -206,14 +206,14 @@ void CRHingeAnimalBody::CreateHead(){
 
 	// define the connection [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0,  neckHeight/2.0, neckThickness/2.0);
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -neckHeight/2.0, neckThickness/2.0);
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -headHeight/2.0, 0.0);
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.origin            = oriNeckHead;
 	ballDesc.swingUpper        = rangeNeckHead;
-	joints[JO_NECK_HEAD]	   = CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
-	
+	joints[JO_NECK_HEAD]	   = CreateJoint(solids[SO_HEAD], solids[SO_NECK], ballDesc);
+	phScene->SetContactMode(solids[SO_HEAD], solids[SO_NECK], PHSceneDesc::MODE_NONE);
 }
 
 // --- --- ---
