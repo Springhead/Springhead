@@ -232,18 +232,50 @@ void CRHingeAnimalBody::InitFrontLegs(){
 }
 
 void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
+
+	if(lr == LEFTPART){
 	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
+
 }
 
 void CRHingeAnimalBody::CreateRadius(LREnum lr){
 	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
+
 }
 
 void CRHingeAnimalBody::CreateFrontCannonBone(LREnum lr){
 	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
+
 }
 
 void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
+	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
 
 }
 
@@ -270,18 +302,50 @@ void CRHingeAnimalBody::InitRearLegs(){
 }
 
 void CRHingeAnimalBody::CreateFemur(LREnum lr){
+	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
 
 }
 
 void CRHingeAnimalBody::CreateTibia(LREnum lr){
 	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
+
 }
 
 void CRHingeAnimalBody::CreateRearCannonBone(LREnum lr){
+	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
 
 }
 
 void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
+	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
 
 }
 // --- --- ---
@@ -292,6 +356,14 @@ void CRHingeAnimalBody::InitEyes(){
 
 void CRHingeAnimalBody::CreateEye(LREnum lr){
 	
+	if(lr == LEFTPART){
+	
+	}
+
+	else if(lr == RIGHTPART){
+	
+	}
+
 }
 
 // --- --- ---
