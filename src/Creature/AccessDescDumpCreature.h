@@ -692,6 +692,30 @@ protected: \
 	double headBreath ; \
 	double headHeight ; \
 	double headThickness ; \
+	double breathtboneBreath ; \
+	double breathtboneHeight ; \
+	double breathtboneThickness ; \
+	double radiusBreath ; \
+	double radiusHeight ; \
+	double radiusThickness ; \
+	double frontCannonBoneBreath ; \
+	double frontCannonBoneHeight ; \
+	double frontCannonBoneThickness ; \
+	double frontToeBreath ; \
+	double frontToeHeight ; \
+	double frontToeThickness ; \
+	double femurBreath ; \
+	double femurHeight ; \
+	double femurThickness ; \
+	double tibiaBreath ; \
+	double tibiaHeight ; \
+	double tibiaThickness ; \
+	double rearCannonBoneBreath ; \
+	double rearCannonBoneHeight ; \
+	double rearCannonBoneThickness ; \
+	double rearToeBreath ; \
+	double rearToeHeight ; \
+	double rearToeThickness ; \
 	double springWaistChest ; \
 	double damperWaistChest ; \
 	double springTailWaist ; \
@@ -706,16 +730,64 @@ protected: \
 	double damperChestNeck ; \
 	double springNeckHead ; \
 	double damperNeckHead ; \
-	Quaterniond oriTailWaist ; \
-	Quaterniond oriTail ; \
-	Quaterniond oriNeckHead ; \
+	double springShoulder_X ; \
+	double damperShoulder_X ; \
+	double springShoulder_Y ; \
+	double damperShoulder_Y ; \
+	double springShoulder_Z ; \
+	double damperShoulder_Z ; \
+	double springElbow ; \
+	double damperElbow ; \
+	double springFrontKnee ; \
+	double damperFrontKnee ; \
+	double springFrontAnkle_X ; \
+	double damperFrontAnkle_X ; \
+	double springFrontAnkle_Y ; \
+	double damperFrontAnkle_Y ; \
+	double springFrontAnkle_Z ; \
+	double damperFrontAnkle_Z ; \
+	double springHip_X ; \
+	double damperHip_X ; \
+	double springHip_Y ; \
+	double damperHip_Y ; \
+	double springHip_Z ; \
+	double damperHip_Z ; \
+	double springStifle ; \
+	double damperStifle ; \
+	double springRearKnee ; \
+	double damperRearKnee ; \
+	double springRearAnkle_X ; \
+	double damperRearAnkle_X ; \
+	double springRearAnkle_Y ; \
+	double damperRearAnkle_Y ; \
+	double springRearAnkle_Z ; \
+	double damperRearAnkle_Z ; \
 	Vec2d rangeChestNeckXY ; \
 	Vec2d rangeChestNeckYZ ; \
 	Vec2d rangeChestNeck ; \
+	Vec2d rangeNeckHead ; \
+	Vec2d rangeShoulder_X ; \
+	Vec2d rangeShoulder_Y ; \
+	Vec2d rangeShoulder_Z ; \
+	Vec2d rangeElbow ; \
+	Vec2d rangeFrontKnee ; \
+	Vec2d rangeFrontAnkle_X ; \
+	Vec2d rangeFrontAnkle_Y ; \
+	Vec2d rangeFrontAnkle_Z ; \
+	Vec2d rangeHip_X ; \
+	Vec2d rangeHip_Y ; \
+	Vec2d rangeHip_Z ; \
+	Vec2d rangeStifle ; \
+	Vec2d rangeRearKnee ; \
+	Vec2d rangeRearAnkle_X ; \
+	Vec2d rangeRearAnkle_Y ; \
+	Vec2d rangeRearAnkle_Z ; \
+	Quaterniond oriTailWaist ; \
+	Quaterniond oriTail ; \
+	Quaterniond oriNeckHead ; \
 	double rangeWaistChest ; \
 	double rangeTailWaist ; \
 	double rangeTail ; \
-	double rangeNeckHead ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -735,6 +807,30 @@ public: \
 		headBreath = ((CRHingeAnimalBodyDesc*)desc)->headBreath; \
 		headHeight = ((CRHingeAnimalBodyDesc*)desc)->headHeight; \
 		headThickness = ((CRHingeAnimalBodyDesc*)desc)->headThickness; \
+		breathtboneBreath = ((CRHingeAnimalBodyDesc*)desc)->breathtboneBreath; \
+		breathtboneHeight = ((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight; \
+		breathtboneThickness = ((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness; \
+		radiusBreath = ((CRHingeAnimalBodyDesc*)desc)->radiusBreath; \
+		radiusHeight = ((CRHingeAnimalBodyDesc*)desc)->radiusHeight; \
+		radiusThickness = ((CRHingeAnimalBodyDesc*)desc)->radiusThickness; \
+		frontCannonBoneBreath = ((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneBreath; \
+		frontCannonBoneHeight = ((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneHeight; \
+		frontCannonBoneThickness = ((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneThickness; \
+		frontToeBreath = ((CRHingeAnimalBodyDesc*)desc)->frontToeBreath; \
+		frontToeHeight = ((CRHingeAnimalBodyDesc*)desc)->frontToeHeight; \
+		frontToeThickness = ((CRHingeAnimalBodyDesc*)desc)->frontToeThickness; \
+		femurBreath = ((CRHingeAnimalBodyDesc*)desc)->femurBreath; \
+		femurHeight = ((CRHingeAnimalBodyDesc*)desc)->femurHeight; \
+		femurThickness = ((CRHingeAnimalBodyDesc*)desc)->femurThickness; \
+		tibiaBreath = ((CRHingeAnimalBodyDesc*)desc)->tibiaBreath; \
+		tibiaHeight = ((CRHingeAnimalBodyDesc*)desc)->tibiaHeight; \
+		tibiaThickness = ((CRHingeAnimalBodyDesc*)desc)->tibiaThickness; \
+		rearCannonBoneBreath = ((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneBreath; \
+		rearCannonBoneHeight = ((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneHeight; \
+		rearCannonBoneThickness = ((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneThickness; \
+		rearToeBreath = ((CRHingeAnimalBodyDesc*)desc)->rearToeBreath; \
+		rearToeHeight = ((CRHingeAnimalBodyDesc*)desc)->rearToeHeight; \
+		rearToeThickness = ((CRHingeAnimalBodyDesc*)desc)->rearToeThickness; \
 		springWaistChest = ((CRHingeAnimalBodyDesc*)desc)->springWaistChest; \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
@@ -749,16 +845,64 @@ public: \
 		damperChestNeck = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeck; \
 		springNeckHead = ((CRHingeAnimalBodyDesc*)desc)->springNeckHead; \
 		damperNeckHead = ((CRHingeAnimalBodyDesc*)desc)->damperNeckHead; \
-		oriTailWaist = ((CRHingeAnimalBodyDesc*)desc)->oriTailWaist; \
-		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
-		oriNeckHead = ((CRHingeAnimalBodyDesc*)desc)->oriNeckHead; \
+		springShoulder_X = ((CRHingeAnimalBodyDesc*)desc)->springShoulder_X; \
+		damperShoulder_X = ((CRHingeAnimalBodyDesc*)desc)->damperShoulder_X; \
+		springShoulder_Y = ((CRHingeAnimalBodyDesc*)desc)->springShoulder_Y; \
+		damperShoulder_Y = ((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Y; \
+		springShoulder_Z = ((CRHingeAnimalBodyDesc*)desc)->springShoulder_Z; \
+		damperShoulder_Z = ((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Z; \
+		springElbow = ((CRHingeAnimalBodyDesc*)desc)->springElbow; \
+		damperElbow = ((CRHingeAnimalBodyDesc*)desc)->damperElbow; \
+		springFrontKnee = ((CRHingeAnimalBodyDesc*)desc)->springFrontKnee; \
+		damperFrontKnee = ((CRHingeAnimalBodyDesc*)desc)->damperFrontKnee; \
+		springFrontAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_X; \
+		damperFrontAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_X; \
+		springFrontAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Y; \
+		damperFrontAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Y; \
+		springFrontAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Z; \
+		damperFrontAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Z; \
+		springHip_X = ((CRHingeAnimalBodyDesc*)desc)->springHip_X; \
+		damperHip_X = ((CRHingeAnimalBodyDesc*)desc)->damperHip_X; \
+		springHip_Y = ((CRHingeAnimalBodyDesc*)desc)->springHip_Y; \
+		damperHip_Y = ((CRHingeAnimalBodyDesc*)desc)->damperHip_Y; \
+		springHip_Z = ((CRHingeAnimalBodyDesc*)desc)->springHip_Z; \
+		damperHip_Z = ((CRHingeAnimalBodyDesc*)desc)->damperHip_Z; \
+		springStifle = ((CRHingeAnimalBodyDesc*)desc)->springStifle; \
+		damperStifle = ((CRHingeAnimalBodyDesc*)desc)->damperStifle; \
+		springRearKnee = ((CRHingeAnimalBodyDesc*)desc)->springRearKnee; \
+		damperRearKnee = ((CRHingeAnimalBodyDesc*)desc)->damperRearKnee; \
+		springRearAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_X; \
+		damperRearAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_X; \
+		springRearAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Y; \
+		damperRearAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Y; \
+		springRearAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Z; \
+		damperRearAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Z; \
 		rangeChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY; \
 		rangeChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ; \
 		rangeChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck; \
+		rangeNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead; \
+		rangeShoulder_X = ((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_X; \
+		rangeShoulder_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Y; \
+		rangeShoulder_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Z; \
+		rangeElbow = ((CRHingeAnimalBodyDesc*)desc)->rangeElbow; \
+		rangeFrontKnee = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontKnee; \
+		rangeFrontAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_X; \
+		rangeFrontAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Y; \
+		rangeFrontAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Z; \
+		rangeHip_X = ((CRHingeAnimalBodyDesc*)desc)->rangeHip_X; \
+		rangeHip_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeHip_Y; \
+		rangeHip_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeHip_Z; \
+		rangeStifle = ((CRHingeAnimalBodyDesc*)desc)->rangeStifle; \
+		rangeRearKnee = ((CRHingeAnimalBodyDesc*)desc)->rangeRearKnee; \
+		rangeRearAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_X; \
+		rangeRearAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Y; \
+		rangeRearAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Z; \
+		oriTailWaist = ((CRHingeAnimalBodyDesc*)desc)->oriTailWaist; \
+		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
+		oriNeckHead = ((CRHingeAnimalBodyDesc*)desc)->oriNeckHead; \
 		rangeWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest; \
 		rangeTailWaist = ((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist; \
 		rangeTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTail; \
-		rangeNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -778,6 +922,30 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->headBreath = headBreath; \
 		((CRHingeAnimalBodyDesc*)desc)->headHeight = headHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->headThickness = headThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->breathtboneBreath = breathtboneBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight = breathtboneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness = breathtboneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->radiusBreath = radiusBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->radiusHeight = radiusHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->radiusThickness = radiusThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneBreath = frontCannonBoneBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneHeight = frontCannonBoneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneThickness = frontCannonBoneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->frontToeBreath = frontToeBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->frontToeHeight = frontToeHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->frontToeThickness = frontToeThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->femurBreath = femurBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->femurHeight = femurHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->femurThickness = femurThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->tibiaBreath = tibiaBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->tibiaHeight = tibiaHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->tibiaThickness = tibiaThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneBreath = rearCannonBoneBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneHeight = rearCannonBoneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneThickness = rearCannonBoneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->rearToeBreath = rearToeBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->rearToeHeight = rearToeHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->rearToeThickness = rearToeThickness; \
 		((CRHingeAnimalBodyDesc*)desc)->springWaistChest = springWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
@@ -792,16 +960,64 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->damperChestNeck = damperChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->springNeckHead = springNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->damperNeckHead = damperNeckHead; \
-		((CRHingeAnimalBodyDesc*)desc)->oriTailWaist = oriTailWaist; \
-		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
-		((CRHingeAnimalBodyDesc*)desc)->oriNeckHead = oriNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->springShoulder_X = springShoulder_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperShoulder_X = damperShoulder_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springShoulder_Y = springShoulder_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Y = damperShoulder_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springShoulder_Z = springShoulder_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Z = damperShoulder_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->springElbow = springElbow; \
+		((CRHingeAnimalBodyDesc*)desc)->damperElbow = damperElbow; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontKnee = springFrontKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontKnee = damperFrontKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_X = springFrontAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_X = damperFrontAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Y = springFrontAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Y = damperFrontAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Z = springFrontAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Z = damperFrontAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->springHip_X = springHip_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperHip_X = damperHip_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springHip_Y = springHip_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperHip_Y = damperHip_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springHip_Z = springHip_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperHip_Z = damperHip_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->springStifle = springStifle; \
+		((CRHingeAnimalBodyDesc*)desc)->damperStifle = damperStifle; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearKnee = springRearKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearKnee = damperRearKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_X = springRearAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_X = damperRearAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Y = springRearAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Y = damperRearAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Z = springRearAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Z = damperRearAnkle_Z; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY = rangeChestNeckXY; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ = rangeChestNeckYZ; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck = rangeChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead = rangeNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_X = rangeShoulder_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Y = rangeShoulder_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Z = rangeShoulder_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeElbow = rangeElbow; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontKnee = rangeFrontKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_X = rangeFrontAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Y = rangeFrontAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Z = rangeFrontAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeHip_X = rangeHip_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeHip_Y = rangeHip_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeHip_Z = rangeHip_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeStifle = rangeStifle; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearKnee = rangeRearKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_X = rangeRearAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Y = rangeRearAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Z = rangeRearAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTailWaist = oriTailWaist; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
+		((CRHingeAnimalBodyDesc*)desc)->oriNeckHead = oriNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist = rangeTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTail = rangeTail; \
-		((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead = rangeNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
@@ -823,6 +1039,30 @@ protected: \
 	double headBreath ; \
 	double headHeight ; \
 	double headThickness ; \
+	double breathtboneBreath ; \
+	double breathtboneHeight ; \
+	double breathtboneThickness ; \
+	double radiusBreath ; \
+	double radiusHeight ; \
+	double radiusThickness ; \
+	double frontCannonBoneBreath ; \
+	double frontCannonBoneHeight ; \
+	double frontCannonBoneThickness ; \
+	double frontToeBreath ; \
+	double frontToeHeight ; \
+	double frontToeThickness ; \
+	double femurBreath ; \
+	double femurHeight ; \
+	double femurThickness ; \
+	double tibiaBreath ; \
+	double tibiaHeight ; \
+	double tibiaThickness ; \
+	double rearCannonBoneBreath ; \
+	double rearCannonBoneHeight ; \
+	double rearCannonBoneThickness ; \
+	double rearToeBreath ; \
+	double rearToeHeight ; \
+	double rearToeThickness ; \
 	double springWaistChest ; \
 	double damperWaistChest ; \
 	double springTailWaist ; \
@@ -837,16 +1077,64 @@ protected: \
 	double damperChestNeck ; \
 	double springNeckHead ; \
 	double damperNeckHead ; \
-	Quaterniond oriTailWaist ; \
-	Quaterniond oriTail ; \
-	Quaterniond oriNeckHead ; \
+	double springShoulder_X ; \
+	double damperShoulder_X ; \
+	double springShoulder_Y ; \
+	double damperShoulder_Y ; \
+	double springShoulder_Z ; \
+	double damperShoulder_Z ; \
+	double springElbow ; \
+	double damperElbow ; \
+	double springFrontKnee ; \
+	double damperFrontKnee ; \
+	double springFrontAnkle_X ; \
+	double damperFrontAnkle_X ; \
+	double springFrontAnkle_Y ; \
+	double damperFrontAnkle_Y ; \
+	double springFrontAnkle_Z ; \
+	double damperFrontAnkle_Z ; \
+	double springHip_X ; \
+	double damperHip_X ; \
+	double springHip_Y ; \
+	double damperHip_Y ; \
+	double springHip_Z ; \
+	double damperHip_Z ; \
+	double springStifle ; \
+	double damperStifle ; \
+	double springRearKnee ; \
+	double damperRearKnee ; \
+	double springRearAnkle_X ; \
+	double damperRearAnkle_X ; \
+	double springRearAnkle_Y ; \
+	double damperRearAnkle_Y ; \
+	double springRearAnkle_Z ; \
+	double damperRearAnkle_Z ; \
 	Vec2d rangeChestNeckXY ; \
 	Vec2d rangeChestNeckYZ ; \
 	Vec2d rangeChestNeck ; \
+	Vec2d rangeNeckHead ; \
+	Vec2d rangeShoulder_X ; \
+	Vec2d rangeShoulder_Y ; \
+	Vec2d rangeShoulder_Z ; \
+	Vec2d rangeElbow ; \
+	Vec2d rangeFrontKnee ; \
+	Vec2d rangeFrontAnkle_X ; \
+	Vec2d rangeFrontAnkle_Y ; \
+	Vec2d rangeFrontAnkle_Z ; \
+	Vec2d rangeHip_X ; \
+	Vec2d rangeHip_Y ; \
+	Vec2d rangeHip_Z ; \
+	Vec2d rangeStifle ; \
+	Vec2d rangeRearKnee ; \
+	Vec2d rangeRearAnkle_X ; \
+	Vec2d rangeRearAnkle_Y ; \
+	Vec2d rangeRearAnkle_Z ; \
+	Quaterniond oriTailWaist ; \
+	Quaterniond oriTail ; \
+	Quaterniond oriNeckHead ; \
 	double rangeWaistChest ; \
 	double rangeTailWaist ; \
 	double rangeTail ; \
-	double rangeNeckHead ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -865,6 +1153,30 @@ public: \
 		headBreath = ((CRHingeAnimalBodyDesc*)desc)->headBreath; \
 		headHeight = ((CRHingeAnimalBodyDesc*)desc)->headHeight; \
 		headThickness = ((CRHingeAnimalBodyDesc*)desc)->headThickness; \
+		breathtboneBreath = ((CRHingeAnimalBodyDesc*)desc)->breathtboneBreath; \
+		breathtboneHeight = ((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight; \
+		breathtboneThickness = ((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness; \
+		radiusBreath = ((CRHingeAnimalBodyDesc*)desc)->radiusBreath; \
+		radiusHeight = ((CRHingeAnimalBodyDesc*)desc)->radiusHeight; \
+		radiusThickness = ((CRHingeAnimalBodyDesc*)desc)->radiusThickness; \
+		frontCannonBoneBreath = ((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneBreath; \
+		frontCannonBoneHeight = ((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneHeight; \
+		frontCannonBoneThickness = ((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneThickness; \
+		frontToeBreath = ((CRHingeAnimalBodyDesc*)desc)->frontToeBreath; \
+		frontToeHeight = ((CRHingeAnimalBodyDesc*)desc)->frontToeHeight; \
+		frontToeThickness = ((CRHingeAnimalBodyDesc*)desc)->frontToeThickness; \
+		femurBreath = ((CRHingeAnimalBodyDesc*)desc)->femurBreath; \
+		femurHeight = ((CRHingeAnimalBodyDesc*)desc)->femurHeight; \
+		femurThickness = ((CRHingeAnimalBodyDesc*)desc)->femurThickness; \
+		tibiaBreath = ((CRHingeAnimalBodyDesc*)desc)->tibiaBreath; \
+		tibiaHeight = ((CRHingeAnimalBodyDesc*)desc)->tibiaHeight; \
+		tibiaThickness = ((CRHingeAnimalBodyDesc*)desc)->tibiaThickness; \
+		rearCannonBoneBreath = ((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneBreath; \
+		rearCannonBoneHeight = ((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneHeight; \
+		rearCannonBoneThickness = ((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneThickness; \
+		rearToeBreath = ((CRHingeAnimalBodyDesc*)desc)->rearToeBreath; \
+		rearToeHeight = ((CRHingeAnimalBodyDesc*)desc)->rearToeHeight; \
+		rearToeThickness = ((CRHingeAnimalBodyDesc*)desc)->rearToeThickness; \
 		springWaistChest = ((CRHingeAnimalBodyDesc*)desc)->springWaistChest; \
 		damperWaistChest = ((CRHingeAnimalBodyDesc*)desc)->damperWaistChest; \
 		springTailWaist = ((CRHingeAnimalBodyDesc*)desc)->springTailWaist; \
@@ -879,16 +1191,64 @@ public: \
 		damperChestNeck = ((CRHingeAnimalBodyDesc*)desc)->damperChestNeck; \
 		springNeckHead = ((CRHingeAnimalBodyDesc*)desc)->springNeckHead; \
 		damperNeckHead = ((CRHingeAnimalBodyDesc*)desc)->damperNeckHead; \
-		oriTailWaist = ((CRHingeAnimalBodyDesc*)desc)->oriTailWaist; \
-		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
-		oriNeckHead = ((CRHingeAnimalBodyDesc*)desc)->oriNeckHead; \
+		springShoulder_X = ((CRHingeAnimalBodyDesc*)desc)->springShoulder_X; \
+		damperShoulder_X = ((CRHingeAnimalBodyDesc*)desc)->damperShoulder_X; \
+		springShoulder_Y = ((CRHingeAnimalBodyDesc*)desc)->springShoulder_Y; \
+		damperShoulder_Y = ((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Y; \
+		springShoulder_Z = ((CRHingeAnimalBodyDesc*)desc)->springShoulder_Z; \
+		damperShoulder_Z = ((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Z; \
+		springElbow = ((CRHingeAnimalBodyDesc*)desc)->springElbow; \
+		damperElbow = ((CRHingeAnimalBodyDesc*)desc)->damperElbow; \
+		springFrontKnee = ((CRHingeAnimalBodyDesc*)desc)->springFrontKnee; \
+		damperFrontKnee = ((CRHingeAnimalBodyDesc*)desc)->damperFrontKnee; \
+		springFrontAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_X; \
+		damperFrontAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_X; \
+		springFrontAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Y; \
+		damperFrontAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Y; \
+		springFrontAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Z; \
+		damperFrontAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Z; \
+		springHip_X = ((CRHingeAnimalBodyDesc*)desc)->springHip_X; \
+		damperHip_X = ((CRHingeAnimalBodyDesc*)desc)->damperHip_X; \
+		springHip_Y = ((CRHingeAnimalBodyDesc*)desc)->springHip_Y; \
+		damperHip_Y = ((CRHingeAnimalBodyDesc*)desc)->damperHip_Y; \
+		springHip_Z = ((CRHingeAnimalBodyDesc*)desc)->springHip_Z; \
+		damperHip_Z = ((CRHingeAnimalBodyDesc*)desc)->damperHip_Z; \
+		springStifle = ((CRHingeAnimalBodyDesc*)desc)->springStifle; \
+		damperStifle = ((CRHingeAnimalBodyDesc*)desc)->damperStifle; \
+		springRearKnee = ((CRHingeAnimalBodyDesc*)desc)->springRearKnee; \
+		damperRearKnee = ((CRHingeAnimalBodyDesc*)desc)->damperRearKnee; \
+		springRearAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_X; \
+		damperRearAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_X; \
+		springRearAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Y; \
+		damperRearAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Y; \
+		springRearAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Z; \
+		damperRearAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Z; \
 		rangeChestNeckXY = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY; \
 		rangeChestNeckYZ = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ; \
 		rangeChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck; \
+		rangeNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead; \
+		rangeShoulder_X = ((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_X; \
+		rangeShoulder_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Y; \
+		rangeShoulder_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Z; \
+		rangeElbow = ((CRHingeAnimalBodyDesc*)desc)->rangeElbow; \
+		rangeFrontKnee = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontKnee; \
+		rangeFrontAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_X; \
+		rangeFrontAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Y; \
+		rangeFrontAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Z; \
+		rangeHip_X = ((CRHingeAnimalBodyDesc*)desc)->rangeHip_X; \
+		rangeHip_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeHip_Y; \
+		rangeHip_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeHip_Z; \
+		rangeStifle = ((CRHingeAnimalBodyDesc*)desc)->rangeStifle; \
+		rangeRearKnee = ((CRHingeAnimalBodyDesc*)desc)->rangeRearKnee; \
+		rangeRearAnkle_X = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_X; \
+		rangeRearAnkle_Y = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Y; \
+		rangeRearAnkle_Z = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Z; \
+		oriTailWaist = ((CRHingeAnimalBodyDesc*)desc)->oriTailWaist; \
+		oriTail = ((CRHingeAnimalBodyDesc*)desc)->oriTail; \
+		oriNeckHead = ((CRHingeAnimalBodyDesc*)desc)->oriNeckHead; \
 		rangeWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest; \
 		rangeTailWaist = ((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist; \
 		rangeTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTail; \
-		rangeNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -907,6 +1267,30 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->headBreath = headBreath; \
 		((CRHingeAnimalBodyDesc*)desc)->headHeight = headHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->headThickness = headThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->breathtboneBreath = breathtboneBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight = breathtboneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness = breathtboneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->radiusBreath = radiusBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->radiusHeight = radiusHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->radiusThickness = radiusThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneBreath = frontCannonBoneBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneHeight = frontCannonBoneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->frontCannonBoneThickness = frontCannonBoneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->frontToeBreath = frontToeBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->frontToeHeight = frontToeHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->frontToeThickness = frontToeThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->femurBreath = femurBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->femurHeight = femurHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->femurThickness = femurThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->tibiaBreath = tibiaBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->tibiaHeight = tibiaHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->tibiaThickness = tibiaThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneBreath = rearCannonBoneBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneHeight = rearCannonBoneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->rearCannonBoneThickness = rearCannonBoneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->rearToeBreath = rearToeBreath; \
+		((CRHingeAnimalBodyDesc*)desc)->rearToeHeight = rearToeHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->rearToeThickness = rearToeThickness; \
 		((CRHingeAnimalBodyDesc*)desc)->springWaistChest = springWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->damperWaistChest = damperWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->springTailWaist = springTailWaist; \
@@ -921,16 +1305,64 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->damperChestNeck = damperChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->springNeckHead = springNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->damperNeckHead = damperNeckHead; \
-		((CRHingeAnimalBodyDesc*)desc)->oriTailWaist = oriTailWaist; \
-		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
-		((CRHingeAnimalBodyDesc*)desc)->oriNeckHead = oriNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->springShoulder_X = springShoulder_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperShoulder_X = damperShoulder_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springShoulder_Y = springShoulder_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Y = damperShoulder_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springShoulder_Z = springShoulder_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperShoulder_Z = damperShoulder_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->springElbow = springElbow; \
+		((CRHingeAnimalBodyDesc*)desc)->damperElbow = damperElbow; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontKnee = springFrontKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontKnee = damperFrontKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_X = springFrontAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_X = damperFrontAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Y = springFrontAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Y = damperFrontAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springFrontAnkle_Z = springFrontAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperFrontAnkle_Z = damperFrontAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->springHip_X = springHip_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperHip_X = damperHip_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springHip_Y = springHip_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperHip_Y = damperHip_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springHip_Z = springHip_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperHip_Z = damperHip_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->springStifle = springStifle; \
+		((CRHingeAnimalBodyDesc*)desc)->damperStifle = damperStifle; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearKnee = springRearKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearKnee = damperRearKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_X = springRearAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_X = damperRearAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Y = springRearAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Y = damperRearAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->springRearAnkle_Z = springRearAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->damperRearAnkle_Z = damperRearAnkle_Z; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckXY = rangeChestNeckXY; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeckYZ = rangeChestNeckYZ; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeChestNeck = rangeChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead = rangeNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_X = rangeShoulder_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Y = rangeShoulder_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeShoulder_Z = rangeShoulder_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeElbow = rangeElbow; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontKnee = rangeFrontKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_X = rangeFrontAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Y = rangeFrontAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeFrontAnkle_Z = rangeFrontAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeHip_X = rangeHip_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeHip_Y = rangeHip_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeHip_Z = rangeHip_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeStifle = rangeStifle; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearKnee = rangeRearKnee; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_X = rangeRearAnkle_X; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Y = rangeRearAnkle_Y; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle_Z = rangeRearAnkle_Z; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTailWaist = oriTailWaist; \
+		((CRHingeAnimalBodyDesc*)desc)->oriTail = oriTail; \
+		((CRHingeAnimalBodyDesc*)desc)->oriNeckHead = oriNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeWaistChest = rangeWaistChest; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTailWaist = rangeTailWaist; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTail = rangeTail; \
-		((CRHingeAnimalBodyDesc*)desc)->rangeNeckHead = rangeNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
