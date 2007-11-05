@@ -22,8 +22,8 @@
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-
 #define TEST_CASE		2				// テストケース
+
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define EXIT_TIMER	20000				// 強制終了させるステップ数
@@ -157,6 +157,8 @@ int main(int argc, char* argv[]){
 	fiSdk = FISdkIf::CreateSdk();
 	FIFileXIf* fileX = fiSdk->CreateFileX();
 	ObjectIfs objs;
+
+	
 
 	grSdk = GRSdkIf::CreateSdk();	
 	objs.push_back(grSdk);
