@@ -553,8 +553,8 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 
 		// spring and damper
 		springWaistChest   = 500.0;  damperWaistChest	= 200.0;
-		springTailWaist    =  50.0;  damperTailWaist	=  20.0;
-		springTail		   =   0.0;  damperTail			=   0.0;
+		springTailWaist    =   0.0;  damperTailWaist	=   1.0;
+		springTail		   =   0.0;  damperTail			=   1.0;
 		springChestNeckXY  =  50.0;  damperChestNeckXY	=  20.0;
 		springChestNeckYZ  =  50.0;  damperChestNeckYZ	=  20.0;
 		springChestNeck    =  50.0;  damperChestNeck	=  20.0;

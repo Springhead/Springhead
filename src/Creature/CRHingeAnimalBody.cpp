@@ -78,11 +78,11 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// Solids
 	// define the existance
-	solidDesc.mass	= 0.005;
+	solidDesc.mass	= 0.05;
 	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
-	solidDesc.mass  = 0.005;
+	solidDesc.mass  = 0.05;
 	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
-	solidDesc.mass	= 0.005;
+	solidDesc.mass	= 0.05;
 	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
 	
 	// define the shape
@@ -98,7 +98,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.spring            = springTailWaist;
 	ballDesc.damper            = damperTailWaist;
 	ballDesc.origin            = oriTailWaist;
-	ballDesc.swingUpper        = rangeTailWaist;
+	//ballDesc.swingUpper        = rangeTailWaist;
 	joints[JO_TAIL_WAIST]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
 
 	ballDesc                   = PHBallJointDesc();
@@ -107,7 +107,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
-	ballDesc.swingUpper        = rangeTail;
+	//ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
 	
 	ballDesc                   = PHBallJointDesc();
@@ -116,7 +116,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
-	ballDesc.swingUpper        = rangeTail;
+	//ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
 
 	// define the position
