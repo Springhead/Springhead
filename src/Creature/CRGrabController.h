@@ -63,9 +63,6 @@ private:
 	typedef std::map< PHSolidIf*, std::pair<PHSpringIf*, PHSpringIf*> > GrabSpringMap;
 	GrabSpringMap grabSpringMap;
 
-	///
-	int waittime;
-
 public:
 	OBJECTDEF(CRGrabController, CRController);
 	ACCESS_DESC(CRGrabController);

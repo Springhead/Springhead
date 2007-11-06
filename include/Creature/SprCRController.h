@@ -125,12 +125,14 @@ struct CRReachingControllerIf : CRControllerIf{
 	virtual PHSolidIf* GetSolid()= 0;
 
 	/** @brief 目標位置を設定する
+		（現在の実装では、到達運動の途中でも目標位置の変更は反映される。）
 		@param p 目標位置
 		@param v 目標の速度
 	*/
 	virtual void SetTargetPos(Vec3f p, Vec3f v)= 0;
 
 	/** @brief 目標姿勢を設定する
+		（現在の実装では、到達運動の途中でも目標姿勢の変更は反映される。）
 		@param q 目標姿勢
 		@param av 目標角速度
 	*/
@@ -142,12 +144,13 @@ struct CRReachingControllerIf : CRControllerIf{
 	virtual void SetTargetTime(float t)= 0;
 
 	/** @brief 到達運動を開始する
+		（現在の実装では、到達運動の途中でもただちに新しい条件で運動を開始する。）
 		@param mode 到達の拘束モード
 		@param keeptime 到達運動終了後に保持を続ける時間（負なら保持を続ける）
 	*/
 	enum ConstraintMode {
 		CM_P3R0=0,  // ３自由度拘束（位置のみを合わせる）
-		CM_P3R2,    // ３＋２自由度拘束（位置と向きを合わせるが向きに１軸の自由度がある）
+		CM_P3R2,    // ３＋２自由度拘束（位置と向きを合わせるが、向きに１軸の自由度がある）
 		CM_P3R3,    // ３＋３自由度拘束（位置と向きを合わせる）
 	};
 	virtual void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime)=0;

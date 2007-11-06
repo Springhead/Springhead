@@ -21,18 +21,14 @@ void CRReachingController::Init(){
 
 	// 目標位置用剛体の作成
 	{
+		// 目標位置と制御対象剛体を直接結合する剛体
 		PHSolidDesc solidDesc;
 		solidDesc.mass = 1.0;
 		soTargetDirect = phScene->CreateSolid(solidDesc);
 		soTargetDirect->SetDynamical(false);
-		
-		/*
-		CDBoxDesc boxDesc;
-		boxDesc.boxsize = Vec3f(1,4,9) * 0.02;
-		soTargetDirect->AddShape(phScene->GetSdk()->CreateShape(boxDesc));
-		*/
 	}
 	{
+		// 目標位置と制御対象剛体を１軸関節を介して結合する剛体
 		PHSolidDesc solidDesc;
 		solidDesc.mass = 1.0;
 		soTargetHinged = phScene->CreateSolid(solidDesc);
@@ -42,12 +38,6 @@ void CRReachingController::Init(){
 			jointDesc.poseSocket.Ori() = fixOri;
 		}
 		phScene->CreateJoint(soTargetDirect, soTargetHinged, jointDesc);
-
-		/*
-		CDBoxDesc boxDesc;
-		boxDesc.boxsize = Vec3f(1,4,9) * 0.02;
-		soTargetHinged->AddShape(phScene->GetSdk()->CreateShape(boxDesc));
-		*/
 	}
 
 	// 目標位置用剛体と制御対象をバネで結合
@@ -70,11 +60,6 @@ void CRReachingController::Init(){
 
 void CRReachingController::Step(){
 	CRController::Step();
-
-	/*
-	phScene->SetContactMode(soTargetDirect, PHSceneDesc::MODE_NONE);
-	phScene->SetContactMode(soTargetHinged, PHSceneDesc::MODE_NONE);
-	*/
 
 	double dt = phScene->GetTimeStep();
 	if(bActive){
@@ -111,10 +96,8 @@ PHSolidIf* CRReachingController::GetSolid(){
 }
 
 void CRReachingController::SetTargetPos(Vec3f p, Vec3f v){
-	firstPos = solid->GetPose().Pos();
 	finalPos = p;
 	finalVel = v;
-
 }
 
 void CRReachingController::SetTargetOri(Quaterniond q, Vec3f av){
@@ -163,11 +146,12 @@ float CRReachingController::GetRemainingTime(){
 }
 
 CRReachingControllerIf::ReachState CRReachingController::GetReachState(){
+	std::cout << ((solid->GetPose() * reachPos) - finalPos).norm() << std::endl;
 	if (!bActive) {
 		return CRReachingControllerIf::RS_STOP;
 	} else if (time < period) {
 		return CRReachingControllerIf::RS_NOTHING_REACHED;
-	} else if (((solid->GetPose() * reachPos) - finalPos).norm() > 0.05) {
+	} else if (((solid->GetPose() * reachPos) - finalPos).norm() > 0.09) {
 		return CRReachingControllerIf::RS_TARGET_REACHED;
 	} else {
 		return CRReachingControllerIf::RS_SOLID_REACHED;
