@@ -26,9 +26,11 @@ void CRReachingController::Init(){
 		soTargetDirect = phScene->CreateSolid(solidDesc);
 		soTargetDirect->SetDynamical(false);
 		
+		/*
 		CDBoxDesc boxDesc;
 		boxDesc.boxsize = Vec3f(1,4,9) * 0.02;
 		soTargetDirect->AddShape(phScene->GetSdk()->CreateShape(boxDesc));
+		*/
 	}
 	{
 		PHSolidDesc solidDesc;
@@ -41,9 +43,11 @@ void CRReachingController::Init(){
 		}
 		phScene->CreateJoint(soTargetDirect, soTargetHinged, jointDesc);
 
+		/*
 		CDBoxDesc boxDesc;
 		boxDesc.boxsize = Vec3f(1,4,9) * 0.02;
 		soTargetHinged->AddShape(phScene->GetSdk()->CreateShape(boxDesc));
+		*/
 	}
 
 	// 目標位置用剛体と制御対象をバネで結合
@@ -67,8 +71,10 @@ void CRReachingController::Init(){
 void CRReachingController::Step(){
 	CRController::Step();
 
+	/*
 	phScene->SetContactMode(soTargetDirect, PHSceneDesc::MODE_NONE);
 	phScene->SetContactMode(soTargetHinged, PHSceneDesc::MODE_NONE);
+	*/
 
 	double dt = phScene->GetTimeStep();
 	if(bActive){
