@@ -1,6 +1,6 @@
 #include "CRHingeAnimalBody.h"
 
-#define GRAVITYMODE 0
+#define GRAVITYMODE 1
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -104,7 +104,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.spring            = springTailWaist;
 	ballDesc.damper            = damperTailWaist;
 	ballDesc.origin            = oriTailWaist;
-	//ballDesc.swingUpper        = rangeTailWaist;
+	ballDesc.swingUpper        = rangeTailWaist;
 	joints[JO_TAIL_WAIST]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
 	joints[JO_TAIL_WAIST]->SetName("joTailWaist");
 
@@ -114,7 +114,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
-	//ballDesc.swingUpper        = rangeTail;
+	ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
 	joints[JO_TAIL_12]->SetName("joTail12");
 
@@ -124,7 +124,7 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
-	//ballDesc.swingUpper        = rangeTail;
+	ballDesc.swingUpper        = rangeTail;
 	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
 	joints[JO_TAIL_23]->SetName("joTail23");
 	// define the position
@@ -160,7 +160,7 @@ void CRHingeAnimalBody::CreateNeck(){
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.origin			  = oriChestNeck;
-	ballDesc.swingUpper		  = rangeChestNeck;
+	//ballDesc.swingUpper		  = rangeChestNeck;
 	joints[JO_CHEST_NECK] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_NECK], ballDesc);
 	joints[JO_CHEST_NECK]->SetName("joChestNeck");
 
@@ -250,8 +250,8 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	ballDesc.poseSocket.Pos() = Vec3f(-lr*breathtboneBreath/2.0, breathtboneHeight/2.0, 0.0);
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
-	ballDesc.origin			  = oriShoulder;
-	ballDesc.swingUpper		  = rangeShoulder;
+	//ballDesc.origin			  = oriShoulder;
+	//ballDesc.swingUpper		  = rangeShoulder;
 	joints[joShoulder] = phScene->CreateJoint(solids[SO_CHEST], solids[soBreastbone], ballDesc);
 	if(lr == LEFTPART)
 		joints[joShoulder]->SetName("joLeftShoulder");
@@ -390,6 +390,9 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 	else
 		solids[soToe]->SetName("soRightFrontToe");
 
+	boxDesc.boxsize = Vec3f(frontToeBreath, frontToeHeight, frontToeThickness);
+	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
+
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, frontCannonBoneHeight/2.0, 0.0);
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, frontToeHeight/2.0, 0.0);
 	ballDesc.spring			  = springFrontAnkle;
@@ -460,8 +463,8 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	ballDesc.poseSocket.Pos() = Vec3f(-lr*femurBreath/2.0, -femurHeight/2.0, 0.0);
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
-	ballDesc.origin			  = oriHip;
-	ballDesc.swingUpper		  = rangeHip;
+	//ballDesc.origin			  = oriHip;
+	//ballDesc.swingUpper		  = rangeHip;
 	
 	joints[joHip] = phScene->CreateJoint(solids[SO_WAIST], solids[soFemur], ballDesc);
 	if(lr == LEFTPART)

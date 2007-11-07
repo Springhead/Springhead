@@ -538,7 +538,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		// origin of ball joints
 		oriTailWaist  = Quaterniond::Rot(Rad(+60), 'x');
 		oriTail		  = Quaterniond::Rot(Rad(-30), 'x');	
-		oriChestNeck  = Quaterniond::Rot(Rad(+60), 'x');
+		oriChestNeck  = Quaterniond::Rot(Rad(-120), 'x');
 		oriNeckHead	  = Quaterniond::Rot(Rad(+60), 'x');
 		oriShoulder   = Quaterniond::Rot(Rad(+60), 'x');
 		oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
