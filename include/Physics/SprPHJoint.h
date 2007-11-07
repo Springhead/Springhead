@@ -335,20 +335,14 @@ struct PHBallJointDesc : public PHJointDesc{
 	double	swingUpper;		///< スイング角度の上限
 	double  twistLower;		///< ツイスト角度の下限
 	double  twistUpper;		///< ツイスト角度の上限
-	double	swingSpring;	///< スイング角のバネ係数
-	double  swingDamper;	///< スイング角のダンパ係数
-	double	twistSpring;	///< ツイスト角のバネ係数
-	double  twistDamper;	///< ツイスト角のダンパ係数
 	Vec3d	torque;			///< モータトルク
 	double	spring;			///< バネ係数
 	Quaterniond  origin;	///< バネ原点
 	double  damper;			///< ダンパ係数
 	PHBallJointDesc(){
 		swingUpper = -1.0;
-		swingSpring = swingDamper = 0.0;
 		twistLower =  1.0;
 		twistUpper = -1.0;
-		twistSpring = twistDamper = 0.0;
 		spring = damper = 0.0;
 	}
 };

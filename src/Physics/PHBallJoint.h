@@ -50,8 +50,8 @@ public:
 	OBJECTDEF(PHBallJoint, PHJoint);
 	
 	bool		swingOnUpper, twistOnLower, twistOnUpper;
-	double		swingUpper, swingDamper, swingSpring;
-	double		twistLower, twistUpper, twistDamper, twistSpring;
+	double		swingUpper;
+	double		twistLower, twistUpper;
 	double      spring, damper;
 	Quaterniond origin;
 	

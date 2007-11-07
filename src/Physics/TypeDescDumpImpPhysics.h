@@ -184,14 +184,6 @@
 	field->offset = int((char*)&(pPHBallJointDesc->twistLower) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "double", "twistUpper", "");
 	field->offset = int((char*)&(pPHBallJointDesc->twistUpper) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "swingSpring", "");
-	field->offset = int((char*)&(pPHBallJointDesc->swingSpring) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "swingDamper", "");
-	field->offset = int((char*)&(pPHBallJointDesc->swingDamper) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "twistSpring", "");
-	field->offset = int((char*)&(pPHBallJointDesc->twistSpring) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "twistDamper", "");
-	field->offset = int((char*)&(pPHBallJointDesc->twistDamper) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "double", "spring", "");

@@ -91,12 +91,8 @@ void PHBallJoint::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
 	swingUpper  = descBall.swingUpper;
-	swingSpring = descBall.swingSpring;
-	swingDamper = descBall.swingDamper;
 	twistLower  = descBall.twistLower;
 	twistUpper  = descBall.twistUpper;
-	twistSpring = descBall.twistSpring;
-	twistDamper = descBall.twistDamper;
 	spring      = descBall.spring;
 	origin      = descBall.origin;
 	damper      = descBall.damper;

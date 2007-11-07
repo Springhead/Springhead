@@ -336,6 +336,32 @@ void BuildScene5(){
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// ÚG‚ðØ‚é
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
+void BuildScene6(){
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
+	
+	soBox.resize(2);
+	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0]->AddShape(shapeBox);
+	soBox[0]->SetDynamical(false);
+	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1]->AddShape(shapeBox);
+	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
+
+	jntLink.resize(1);
+	PHBallJointDesc desc;
+	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
+#if 0
+	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
+#else
+	desc.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
+	desc.origin = Quaterniond::Rot(Rad(180), 'z');
+	desc.spring = 100.0;
+	desc.damper = 1.0;
+#endif
+	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
+}
 
 void BuildScene(){
 	switch(sceneNo){
@@ -345,6 +371,7 @@ void BuildScene(){
 	case 3: BuildScene3(); break;
 	case 4: BuildScene4(); break;
 	case 5: BuildScene5(); break;
+	case 6: BuildScene6(); break;
 	}
 }
 
