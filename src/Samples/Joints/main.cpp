@@ -198,6 +198,8 @@ void BuildScene1(){
 
 	scene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
 	scene->SetGravity(Vec3f(0, -9.8, 0));
+
+	scene->Print(DSTR);
 }
 
 void BuildScene2(){
