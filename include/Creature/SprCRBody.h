@@ -361,18 +361,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		SO_LEFT_EYE,
 
 		// 関節の中継ぎ用の形状を有しない剛体
-		SO_CHEST_NECK_XY, SO_CHEST_NECK_YZ, 
-
-		SO_RIGHT_SHOULDER_XY, SO_RIGHT_SHOULDER_YZ, 
-		SO_RIGHT_FRONT_ANKLE_XY, SO_RIGHT_FRONT_ANKLE_YZ,
-		SO_RIGHT_HIP_XY, SO_RIGHT_HIP_YZ, 
-		SO_RIGHT_REAR_ANKLE_XY, SO_RIGHT_REAR_ANKLE_YZ,
 		SO_RIGHT_EYE_XY,
-
-		SO_LEFT_SHOULDER_XY, SO_LEFT_SHOULDER_YZ,
-		SO_LEFT_FRONT_ANKLE_XY, SO_LEFT_FRONT_ANKLE_YZ, 
-		SO_LEFT_HIP_XY, SO_LEFT_HIP_YZ, 
-		SO_LEFT_REAR_ANKLE_XY, SO_LEFT_REAR_ANKLE_YZ,
 		SO_LEFT_EYE_XY,
 
 		// 剛体の数
@@ -382,29 +371,29 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	enum CRAnimalJoints{
 		// -- Center
 		JO_WAIST_CHEST=0,
-		JO_CHEST_NECK_X, JO_CHEST_NECK_Y, JO_CHEST_NECK_Z,
+		JO_CHEST_NECK,
 		JO_NECK_HEAD,
 		JO_TAIL_WAIST, JO_TAIL_12, JO_TAIL_23,
 
 		// -- Right
-		JO_RIGHT_SHOULDER_Z, JO_RIGHT_SHOULDER_X, JO_RIGHT_SHOULDER_Y,
+		JO_RIGHT_SHOULDER,
 		JO_RIGHT_ELBOW,JO_RIGHT_FRONT_KNEE,
-		JO_RIGHT_FRONT_ANKLE_Y, JO_RIGHT_FRONT_ANKLE_X, JO_RIGHT_FRONT_ANKLE_Z,
+		JO_RIGHT_FRONT_ANKLE,
 
-		JO_RIGHT_HIP_X, JO_RIGHT_HIP_Y, JO_RIGHT_HIP_Z,
+		JO_RIGHT_HIP,
 		JO_RIGHT_STIFLE,JO_RIGHT_REAR_KNEE,
-		JO_RIGHT_REAR_ANKLE_Y, JO_RIGHT_REAR_ANKLE_X, JO_RIGHT_REAR_ANKLE_Z,
+		JO_RIGHT_REAR_ANKLE,
 
 		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
 
 		// -- Left
-		JO_LEFT_SHOULDER_Z, JO_LEFT_SHOULDER_X, JO_LEFT_SHOULDER_Y,
+		JO_LEFT_SHOULDER,
 		JO_LEFT_ELBOW,JO_LEFT_FRONT_KNEE,
-		JO_LEFT_FRONT_ANKLE_Y, JO_LEFT_FRONT_ANKLE_X, JO_LEFT_FRONT_ANKLE_Z,
+		JO_LEFT_FRONT_ANKLE,
 
-		JO_LEFT_HIP_X, JO_LEFT_HIP_Y, JO_LEFT_HIP_Z,
+		JO_LEFT_HIP,
 		JO_LEFT_STIFLE,JO_LEFT_REAR_KNEE,
-		JO_LEFT_REAR_ANKLE_Y, JO_LEFT_REAR_ANKLE_X, JO_LEFT_REAR_ANKLE_Z,
+		JO_LEFT_REAR_ANKLE,
 
 		JO_LEFT_EYE_Y, JO_LEFT_EYE_X,
 
@@ -417,7 +406,6 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double chestBreadth,	      chestHeight,			 chestThickness;
 	double tailBreath,		      tailHeight,		     tailThickness;
 	double neckBreath,		      neckHeight,			 neckThickness;
-//	double headRadius,		      headLength;
 	double headBreath,		      headHeight,			 headThickness;
 	double breathtboneBreath,     breathtboneHeight,	 breathtboneThickness;
 	double radiusBreath,	      radiusHeight,		     radiusThickness;
@@ -432,63 +420,47 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double springWaistChest,   damperWaistChest;	//腰-胸
 	double springTailWaist,	   damperTailWaist;		//腰-尾
 	double springTail,		   damperTail;			//尾
-	double springChestNeckXY,  damperChestNeckXY;	//胸-首
-	double springChestNeckYZ,  damperChestNeckYZ;
-	double springChestNeck,	   damperChestNeck;
+	double springChestNeck,	   damperChestNeck;     //胸-首
 	double springNeckHead,	   damperNeckHead;		//首-頭
-	double springShoulder_X,   damperShoulder_X;	//肩
-	double springShoulder_Y,   damperShoulder_Y;
-	double springShoulder_Z,   damperShoulder_Z;
+	double springShoulder,	   damperShoulder;		//肩
 	double springElbow,		   damperElbow;			//肘（前足）
 	double springFrontKnee,	   damperFrontKnee;		//膝（前足）
-	double springFrontAnkle_X, damperFrontAnkle_X;	//かかと（前足）
-	double springFrontAnkle_Y, damperFrontAnkle_Y;
-	double springFrontAnkle_Z, damperFrontAnkle_Z;
-	double springHip_X,		   damperHip_X;			//尻
-	double springHip_Y,		   damperHip_Y;
-	double springHip_Z,		   damperHip_Z;
+	double springFrontAnkle,   damperFrontAnkle;	//かかと（前足）
+	double springHip,		   damperHip;			//尻
 	double springStifle,	   damperStifle;		//肘？（後足）
 	double springRearKnee,	   damperRearKnee;		//膝（後足）
-	double springRearAnkle_X,  damperRearAnkle_X;	//かかと（後足）
-	double springRearAnkle_Y,  damperRearAnkle_Y;
-	double springRearAnkle_Z,  damperRearAnkle_Z;
+	double springRearAnkle,  damperRearAnkle;		//かかと（後足）
 	
 	/// 関節取り付け角度・位置
 	//Vec3d       posRightFrontUpperLeg;
 	//Quaterniond oriRightFrontUpperLeg;
 	
 	/// 可動域制限hingejoint
-	Vec2d  rangeChestNeckXY;
-	Vec2d  rangeChestNeckYZ;
-	Vec2d  rangeChestNeck;
-	Vec2d  rangeNeckHead;
-	Vec2d  rangeShoulder_X;
-	Vec2d  rangeShoulder_Y;
-	Vec2d  rangeShoulder_Z;
 	Vec2d  rangeElbow;
 	Vec2d  rangeFrontKnee;
-	Vec2d  rangeFrontAnkle_X;
-	Vec2d  rangeFrontAnkle_Y;
-	Vec2d  rangeFrontAnkle_Z;
-	Vec2d  rangeHip_X;
-	Vec2d  rangeHip_Y;
-	Vec2d  rangeHip_Z;
 	Vec2d  rangeStifle;
 	Vec2d  rangeRearKnee;
-	Vec2d  rangeRearAnkle_X;
-	Vec2d  rangeRearAnkle_Y;
-	Vec2d  rangeRearAnkle_Z;
-
+	
 	//ball joints取り付け位置・角度
 	Quaterniond oriTailWaist;
 	Quaterniond oriTail;
+	Quaterniond oriChestNeck;
 	Quaterniond oriNeckHead;
+	Quaterniond oriShoulder;
+	Quaterniond oriFrontAnkle;
+	Quaterniond oriHip;
+	Quaterniond oriRearAnkle;
 
 	/// 可動域制限balljoint
 	double rangeWaistChest;
 	double rangeTailWaist;
 	double rangeTail;
-//	double rangeNeckHead;
+	double rangeChestNeck;
+	double rangeNeckHead;
+	double rangeShoulder;
+	double rangeFrontAnkle;
+	double rangeHip;
+	double rangeRearAnkle;
 
 	/// 裏オプション
 	bool noLegs;
@@ -511,9 +483,6 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		neckBreath	  = 0.5;
 		neckHeight	  = 1.0;
 		neckThickness = 0.4;
-
-//		headRadius    = 0.3;
-//		headLength    = 0.5;
 
 		headBreath    = 0.4;
 		headHeight	  = 0.7;
@@ -555,60 +524,43 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		springWaistChest   = 500.0;  damperWaistChest	= 200.0;
 		springTailWaist    =   0.0;  damperTailWaist	=   1.0;
 		springTail		   =   0.0;  damperTail			=   1.0;
-		springChestNeckXY  =  50.0;  damperChestNeckXY	=  20.0;
-		springChestNeckYZ  =  50.0;  damperChestNeckYZ	=  20.0;
 		springChestNeck    =  50.0;  damperChestNeck	=  20.0;
 		springNeckHead	   =  50.0;  damperNeckHead		=  20.0;
-		springShoulder_X   =  50.0;  damperShoulder_X	=  20.0;
-		springShoulder_Y   =  50.0;  damperShoulder_Y	=  20.0;
-		springShoulder_Z   =  50.0;  damperShoulder_Z	=  20.0;
+		springShoulder	   =  50.0;  damperShoulder		=  20.0;
 		springElbow		   =  50.0;  damperElbow		=  20.0;
 		springFrontKnee	   =  50.0;  damperFrontKnee	=  20.0;
-		springFrontAnkle_X =  50.0;  damperFrontAnkle_X	=  20.0;
-		springFrontAnkle_Y =  50.0;  damperFrontAnkle_Y	=  20.0;
-		springFrontAnkle_Z =  50.0;  damperFrontAnkle_Z	=  20.0;
-		springHip_X		   =  50.0;  damperHip_X		=  20.0;
-		springHip_Y		   =  50.0;  damperHip_Y		=  20.0;
-		springHip_Z		   =  50.0;  damperHip_Z		=  20.0;
+		springFrontAnkle   =  50.0;  damperFrontAnkle	=  20.0;
+		springHip		   =  50.0;  damperHip			=  20.0;
 		springStifle	   =  50.0;  damperStifle		=  20.0;
 		springRearKnee	   =  50.0;  damperRearKnee		=  20.0;
-		springRearAnkle_X  =  50.0;  damperRearAnkle_X	=  20.0;
-		springRearAnkle_Y  =  50.0;  damperRearAnkle_Y	=  20.0;
-		springRearAnkle_Z  =  50.0;  damperRearAnkle_Z	=  20.0;
+		springRearAnkle	   =  50.0;  damperRearAnkle	=  20.0;
 		
 		// origin of ball joints
-		oriTailWaist = Quaterniond::Rot(Rad(+60), 'x');
-		oriTail		 = Quaterniond::Rot(Rad(-30), 'x');		
-//		oriNeckHead	 = Quaterniond::Rot(Rad(+60), 'x');
+		oriTailWaist  = Quaterniond::Rot(Rad(+60), 'x');
+		oriTail		  = Quaterniond::Rot(Rad(-30), 'x');	
+		oriChestNeck  = Quaterniond::Rot(Rad(+60), 'x');
+		oriNeckHead	  = Quaterniond::Rot(Rad(+60), 'x');
+		oriShoulder   = Quaterniond::Rot(Rad(+60), 'x');
+		oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
+		oriHip		  = Quaterniond::Rot(Rad(+60), 'x');
+		oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
 
 		// Range of  ball joints
 		rangeWaistChest = Rad(+40);
 		rangeTailWaist  = Rad(+30);
 		rangeTail		= Rad(+20);
-//		rangeNeckHead   = Rad(+30);
+		rangeChestNeck  = Rad(+50);
+		rangeNeckHead   = Rad(+30);
+		rangeShoulder	= Rad(+40);
+		rangeFrontAnkle = Rad(+30);
+		rangeHip		= Rad(+40);
+		rangeRearAnkle  = Rad(+20);
 
 		// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
-		rangeChestNeckXY  = Vec2d(Rad(-360), Rad(+360));
-		rangeChestNeckYZ  = Vec2d(Rad(-360), Rad(+360));
-		rangeChestNeck    = Vec2d(Rad(-360), Rad(+360));
-		rangeNeckHead	  = Vec2d(Rad(   0), Rad(+180));
-		rangeShoulder_X   = Vec2d(Rad(- 90), Rad(+120));
-		rangeShoulder_Y   = Vec2d(Rad(- 30), Rad(+ 30));
-		rangeShoulder_Z	  = Vec2d(Rad(- 30), Rad(+ 30));
 		rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
 		rangeFrontKnee	  = Vec2d(Rad(- 90), Rad(   0));
-		rangeFrontAnkle_X = Vec2d(Rad(- 30), Rad(+ 30));
-		rangeFrontAnkle_Y = Vec2d(Rad(- 30), Rad(+ 30));
-		rangeFrontAnkle_Z = Vec2d(Rad(- 20), Rad(+ 20));
-		rangeHip_X		  = Vec2d(Rad(+ 30), Rad(+180));
-		rangeHip_Y		  = Vec2d(Rad(- 30), Rad(+ 30));
-		rangeHip_Z		  = Vec2d(Rad(- 30), Rad(+ 30));
 		rangeStifle		  = Vec2d(Rad(- 90), Rad(+ 90));
 		rangeRearKnee	  = Vec2d(Rad(- 90), Rad(+ 90));
-		rangeRearAnkle_X  = Vec2d(Rad(- 30), Rad(+ 30));
-		rangeRearAnkle_Y  = Vec2d(Rad(- 30), Rad(+ 30));
-		rangeRearAnkle_Z  = Vec2d(Rad(- 20), Rad(+ 20));
-
 
 		noLegs = false;
 	}
