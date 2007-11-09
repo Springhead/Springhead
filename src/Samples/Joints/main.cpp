@@ -347,19 +347,25 @@ void BuildScene6(){
 	soBox[0]->SetDynamical(false);
 	soBox[1] = scene->CreateSolid(descBox);
 	soBox[1]->AddShape(shapeBox);
+	soBox[1]->SetOrientation(Quaternionf::Rot( Rad(30), 'z'));
 	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
 
 	jntLink.resize(1);
 	PHBallJointDesc desc;
 	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
-#if 0
+#if 1
 	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
 #else
 	desc.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
 	desc.origin = Quaterniond::Rot(Rad(180), 'z');
-	desc.spring = 100.0;
-	desc.damper = 1.0;
 #endif
+//	desc.swingUpper = Rad(30);
+	desc.twistLower = -Rad(30);
+	desc.twistUpper = Rad(30);
+//	desc.twistLower = -Rad(360);
+//	desc.twistUpper = Rad(360);
+	desc.spring = 0;
+	desc.damper = 0;
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 }
 
@@ -622,7 +628,9 @@ void OnTimer5(){
 	soBox[4]->AddForce(force, soBox[4]->GetPose()*Vec3f(0,3,0));
 #endif
 }
-
+void OnTimer6(){
+	soBox[1]->AddTorque(Vec3f(0,1,0));
+}
 void OnTimer(){
 	switch(sceneNo){
 	case 0: OnTimer0(); break;
@@ -631,6 +639,7 @@ void OnTimer(){
 	case 3: OnTimer3(); break;
 	case 4: OnTimer4(); break;
 	case 5: OnTimer5(); break;
+	case 6: OnTimer6(); break;
 	}
 }	
 

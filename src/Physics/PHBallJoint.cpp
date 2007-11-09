@@ -124,35 +124,28 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
 void PHBallJoint::ModifyJacobian(){
-	if(swingOnUpper || twistOnLower || twistOnUpper){
-		J[0].wv() = Jstinv * J[0].wv();
-		J[0].ww() = Jstinv * J[0].ww();
-		J[1].wv() = Jstinv * J[1].wv();
-		J[1].ww() = Jstinv * J[1].ww();
-	}
+	J[0].wv() = Jstinv * J[0].wv();
+	J[0].ww() = Jstinv * J[0].ww();
+	J[1].wv() = Jstinv * J[1].wv();
+	J[1].ww() = Jstinv * J[1].ww();
 }
 
 void PHBallJoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();
-	db.v() = Xjrel.r * dtinv;
+	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算
 	db.w()[0] = 0.0;
 	db.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) * dtinv : 0.0);
 	db.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
 			     twistOnUpper ? (angle.Twist() - twistUpper) * dtinv : 0.0);
 	db *= engine->velCorrectionRate;
 
-	if(spring != 0.0 || damper != 0.0){
-		Quaterniond diff =  Xjrel.q * origin.Inv();
-		Vec3d prop = origin * diff.RotationHalf();
+	if(spring != 0.0 || damper != 0.0){	//	バネダンパはSwingTwist座標系で働く
+		Quaterniond diff =  Xjrel.q * origin.Inv();	//	originからみた q
+		Vec3d prop = origin * diff.RotationHalf();	//	外部座標系から見た 回転ベクトル
+		prop = Jstinv * prop;							//	回転軸ベクトルをSwingTwistに変換
 		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
 		dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
-		if(swingOnUpper || twistOnLower || twistOnUpper){
-			//	ModifyJacobianが呼ばれているので，Swing-Tweistの座標系にあわせてばねを付ける．
-			db.w() = Jstinv.inv() * spring * (prop) * tmp;
-		}else{
-			db.w() = spring * (prop) * tmp;
-		}
-		//std::cout << spring * (prop) * tmp << std::endl;
+		db.w() = spring * (prop) * tmp;
 	}
 }
 
