@@ -347,25 +347,20 @@ void BuildScene6(){
 	soBox[0]->SetDynamical(false);
 	soBox[1] = scene->CreateSolid(descBox);
 	soBox[1]->AddShape(shapeBox);
-	soBox[1]->SetOrientation(Quaternionf::Rot( Rad(30), 'z'));
+	soBox[1]->SetOrientation(Quaternionf::Rot( Rad(1), 'z'));
 	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
 
 	jntLink.resize(1);
 	PHBallJointDesc desc;
 	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
-#if 1
+	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'x');
 	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
-#else
-	desc.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
-	desc.origin = Quaterniond::Rot(Rad(180), 'z');
-#endif
-//	desc.swingUpper = Rad(30);
-	desc.twistLower = -Rad(30);
-	desc.twistUpper = Rad(30);
-//	desc.twistLower = -Rad(360);
-//	desc.twistUpper = Rad(360);
-	desc.spring = 0;
-	desc.damper = 0;
+	desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'x');
+	desc.swingUpper = Rad(20);
+	desc.twistLower = -Rad(120);
+	desc.twistUpper = Rad(120);
+	desc.spring = 4;
+	desc.damper = 2;
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 }
 
@@ -873,7 +868,7 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 0;
+	sceneNo = 6;
 	BuildScene();
 
 	glutInit(&argc, argv);

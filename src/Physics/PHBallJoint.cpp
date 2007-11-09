@@ -112,14 +112,13 @@ void PHBallJoint::UpdateJointState(){
 }
 
 void PHBallJoint::SetConstrainedIndex(bool* con){
+//	DSTR << "ST=" << angle << std::endl;
+//	DSTR << "JI=" << Jstinv << std::endl;
 	con[0] = con[1] = con[2] = true;
 	// 可動範囲をチェック
-	SwingTwist angle;
-	angle.FromQuaternion(Xjrel.q);
 	swingOnUpper = (swingUpper > 0 && angle.Swing() >= swingUpper);
 	twistOnLower = (twistLower <= twistUpper && angle.Twist() <= twistLower);
 	twistOnUpper = (twistLower <= twistUpper && angle.Twist() >= twistUpper);
-	// 可動範囲にかかる場合は回転をSwing/Twistに座標変換する(ModifyJacobian)．
 	// 以下3 -> swing方位，4 -> swing角, 5 -> twist角
 	con[3] = false || (spring != 0.0 || damper != 0.0);
 	con[4] = swingOnUpper || (spring != 0.0 || damper != 0.0);
@@ -142,14 +141,21 @@ void PHBallJoint::CompBias(){
 	db.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
 			     twistOnUpper ? (angle.Twist() - twistUpper) * dtinv : 0.0);
 	db *= engine->velCorrectionRate;
-
 	if(spring != 0.0 || damper != 0.0){	//	バネダンパはSwingTwist座標系で働く
 		Quaterniond diff =  Xjrel.q * origin.Inv();	//	originからみた q
 		Vec3d prop = origin * diff.RotationHalf();	//	外部座標系から見た 回転ベクトル
-		prop = Jstinv * prop;							//	回転軸ベクトルをSwingTwistに変換
+		prop = Jstinv * prop;						//	回転軸ベクトルをSwingTwistに変換
 		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
-		dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
-		db.w() = spring * (prop) * tmp;
+		dA.w()[0] = tmp * dtinv;
+		db.w()[0] = spring * prop[0] * tmp;
+		if (!swingOnUpper){
+			dA.w()[1] = tmp * dtinv;
+			db.w()[1] = spring * prop[1] * tmp;
+		}
+		if (!twistOnLower && !twistOnUpper ){
+			dA.w()[2] = tmp * dtinv;
+			db.w()[2] = spring * prop[1] * tmp;
+		}
 	}
 }
 
