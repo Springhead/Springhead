@@ -18,6 +18,7 @@ namespace Spr{;
 // SwingTwist
 
 void SwingTwist::ToQuaternion(Quaterniond& q){
+	// tazzさんのメモの(11)式、軸[cos(psi), sin(psi), 0]^Tまわりにthetaだけ回転した後Z軸まわりにphi回転するquaternion
 	double psi = SwingDir(), the = Swing(), phi = Twist();
 	double cos_the = cos(the / 2), sin_the = sin(the / 2);
 	double cos_phi = cos(phi / 2), sin_phi = sin(phi / 2);
@@ -28,11 +29,13 @@ void SwingTwist::ToQuaternion(Quaterniond& q){
 	q.z = cos_the * sin_phi;
 }
 void SwingTwist::FromQuaternion(const Quaterniond& q){
+	// tazzさんのメモの(12)式、item[0]:psi, item[1]:theta, item[2]:phi
 	item(0) = atan2(q.w * q.y + q.x * q.z, q.w * q.x - q.y * q.z);
 	item(1) = 2 * atan2(sqrt(q.x * q.x + q.y * q.y), sqrt(q.w * q.w + q.z * q.z));
 	item(2) = 2 * atan2(q.z, q.w);
 }
 void SwingTwist::Jacobian(Matrix3d& J){
+	// tazzさんのメモの(13)式、st=[psi, theta, phi]^Tの時間微分から角速度ωを与えるヤコビアンJ (ω = J * (d/dt)st)
 	double psi = SwingDir();
 	double the = max(Rad(1.0), Swing());	// スイング角0でランク落ちするので無理やり回避
 	double cos_psi = cos(psi), sin_psi = sin(psi);
@@ -58,6 +61,7 @@ void SwingTwist::Coriolis(Vec3d& c, const Vec3d& sd){
 	c[2] =  sin_the * tmp1;	
 }
 void SwingTwist::JacobianInverse(Matrix3d& J, const Quaterniond& q){
+	// tazzさんのメモの(14)式、角速度ωからst=[psi, theta, phi]^Tの時間微分を求めるヤコビアンJInv ((d/dt)st = JInv * ω)
 	const double eps = 1.0e-12;
 	double w2z2 = max(eps, q.w * q.w + q.z * q.z);
 	double w2z2inv = 1.0 / w2z2;
@@ -101,7 +105,7 @@ void PHBallJoint::SetDesc(const void* desc){
 
 void PHBallJoint::UpdateJointState(){
 	// 相対quaternionからスイング・ツイスト角を計算
-	position = Xjrel.q.V();
+	position = Xjrel.q.V();								/// Xjrel:ソケットに対するプラグの位置と向きのクォータニオン
 	angle.FromQuaternion(Xjrel.q);
 	angle.JacobianInverse(Jstinv, Xjrel.q);
 	velocity = Xjrel.q.Derivative(vjrel.w()).V();

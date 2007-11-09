@@ -49,8 +49,8 @@ class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 public:
 	OBJECTDEF(PHBallJoint, PHJoint);
 	
-	bool		swingOnUpper, twistOnLower, twistOnUpper;
-	double		swingUpper;
+	bool		swingOnLower, swingOnUpper, twistOnLower, twistOnUpper;
+	double		swingLower, swingUpper;
 	double		twistLower, twistUpper;
 	double      spring, damper;
 	Quaterniond origin;
