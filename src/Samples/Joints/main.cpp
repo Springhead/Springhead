@@ -355,12 +355,26 @@ void BuildScene6(){
 	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
 	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'x');
 	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
+
+#if 0
+	desc.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
+	desc.origin = Quaterniond::Rot(Rad(180), 'z');
+#endif
+//	desc.swingUpper = Rad(30);
+//	desc.twistLower = -Rad(30);
+//	desc.twistUpper = Rad(30);
+//	desc.twistLower = -Rad(360);
+//	desc.twistUpper = Rad(360);
+	desc.spring = 0;
+	desc.damper = 0;
+
 	desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'x');
 	desc.swingUpper = Rad(20);
 	desc.twistLower = -Rad(120);
 	desc.twistUpper = Rad(120);
 	desc.spring = 4;
 	desc.damper = 2;
+
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 }
 
