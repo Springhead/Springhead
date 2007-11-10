@@ -105,7 +105,7 @@ void PHBallJoint::SetDesc(const void* desc){
 
 void PHBallJoint::UpdateJointState(){
 	// 相対quaternionからスイング・ツイスト角を計算
-	position = Xjrel.q.V();								/// Xjrel:ソケットに対するプラグの位置と向きのクォータニオン
+	position = Xjrel.q.V();								/// Xjrel:ソケットに対するプラグの位置と向き
 	angle.FromQuaternion(Xjrel.q);
 	angle.JacobianInverse(Jstinv, Xjrel.q);
 	velocity = Xjrel.q.Derivative(vjrel.w()).V();
@@ -116,7 +116,10 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 //	DSTR << "JI=" << Jstinv << std::endl;
 	con[0] = con[1] = con[2] = true;
 	// 可動範囲をチェック
-	swingOnUpper = (swingUpper > 0 && angle.Swing() >= swingUpper);
+	SwingTwist angle;
+	angle.FromQuaternion(Xjrel.q);
+	swingOnUpper = (swingLower <= swingUpper && angle.Swing() >= swingUpper);
+	swingOnLower = (swingLower <= swingUpper && angle.Twist() <= twistLower);
 	twistOnLower = (twistLower <= twistUpper && angle.Twist() <= twistLower);
 	twistOnUpper = (twistLower <= twistUpper && angle.Twist() >= twistUpper);
 	// 以下3 -> swing方位，4 -> swing角, 5 -> twist角
