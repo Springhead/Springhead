@@ -569,9 +569,9 @@ void CRHingeAnimalBody::CreateRearCannonBone(LREnum lr){
 
 	joints[joKnee] = phScene->CreateJoint(solids[soTibia], solids[soCannonBone], hingeDesc);
 	if(lr == LEFTPART)
-		joints[joKnee]->SetName("joLeftRearCannonBone");
+		joints[joKnee]->SetName("joLeftRearKnee");
 	else
-		joints[joKnee]->SetName("joRightRearCannonBone");
+		joints[joKnee]->SetName("joRightRearKnee");
 
 	phScene->SetContactMode(solids[soTibia],solids[soCannonBone],PHSceneDesc::MODE_NONE);
 
