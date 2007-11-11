@@ -521,7 +521,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		rearToeThickness = 0.25;
 
 		// spring and damper
-		springWaistChest   = 500.0;  damperWaistChest	= 200.0;
+		springWaistChest   =   0.0;  damperWaistChest	= 200.0;
 		springTailWaist    =   0.0;  damperTailWaist	=   1.0;
 		springTail		   =   0.0;  damperTail			=   1.0;
 		springChestNeck    =  50.0;  damperChestNeck	=  20.0;
@@ -546,7 +546,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
 
 		// Range of  ball joints
-		rangeWaistChest = Rad(+40);
+		rangeWaistChest = Rad(40);
 		rangeTailWaist  = Rad(+30);
 		rangeTail		= Rad(+20);
 		rangeChestNeck  = Rad(+50);

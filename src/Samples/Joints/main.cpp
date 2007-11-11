@@ -374,7 +374,7 @@ void BuildScene6(){
 	desc.twistUpper = Rad(120);
 	desc.spring = 4;
 	desc.damper = 2;
-
+	
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 }
 

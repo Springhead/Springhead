@@ -1,6 +1,6 @@
 #include "CRHingeAnimalBody.h"
 
-#define GRAVITYMODE 1
+#define GRAVITYMODE 0
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -20,7 +20,7 @@ void CRHingeAnimalBody::Init(){
 void CRHingeAnimalBody::InitBody(){
 	CreateWaist();
 	CreateChest();
-	CreateTail();
+	//CreateTail();
 }
 
 void CRHingeAnimalBody::CreateWaist(){
@@ -60,13 +60,13 @@ void CRHingeAnimalBody::CreateChest(){
 
 	// Joint -- [p]Waist-[c]Chest
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.posePlug.Pos()   = Vec3d(0.0, waistHeight / 2.0, 0.0);
-	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.poseSocket.Pos() = Vec3d(0.0, -chestHeight / 2.0, 0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Pos() = Vec3d(0.0, -waistHeight / 2.0, 0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.posePlug.Pos()   = Vec3d(0.0, chestHeight / 2.0, 0.0);
+	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
-	ballDesc.origin           = Quaterniond::Rot(Rad(0), 'x');										//Quotaniondのoriginってどうやって指定するの？
+	ballDesc.origin           = Quaterniond::Rot(Rad(10), 'z');										//Quotaniondのoriginってどうやって指定するの？
 	ballDesc.swingUpper       = rangeWaistChest;
 	joints[JO_WAIST_CHEST]    = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);
 	joints[JO_WAIST_CHEST]->SetName("joWaistChest");
@@ -100,7 +100,9 @@ void CRHingeAnimalBody::CreateTail(){
 	// define the connection
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -waistHeight/2.0, 0.1);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springTailWaist;
 	ballDesc.damper            = damperTailWaist;
 	ballDesc.origin            = oriTailWaist;
@@ -110,7 +112,9 @@ void CRHingeAnimalBody::CreateTail(){
 
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
@@ -120,7 +124,9 @@ void CRHingeAnimalBody::CreateTail(){
 
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
@@ -136,8 +142,8 @@ void CRHingeAnimalBody::CreateTail(){
 
 // --- --- ---
 void CRHingeAnimalBody::InitHead(){
-	CreateNeck();
-	CreateHead();
+	//CreateNeck();
+	//CreateHead();
 }
 
 void CRHingeAnimalBody::CreateNeck(){
@@ -156,7 +162,9 @@ void CRHingeAnimalBody::CreateNeck(){
 
 	// define the joint [p]chest - [c]neck
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, chestHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, neckHeight/2.0,  0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.origin			  = oriChestNeck;
@@ -185,7 +193,9 @@ void CRHingeAnimalBody::CreateHead(){
 	// define the connection [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -neckHeight/2.0, neckThickness/2.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -headHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.origin            = oriNeckHead;
@@ -200,17 +210,23 @@ void CRHingeAnimalBody::CreateHead(){
 
 // --- --- ---
 void CRHingeAnimalBody::InitFrontLegs(){
-	
-	CreateBreastBone(LEFTPART);
-	CreateRadius(LEFTPART);
-	CreateFrontCannonBone(LEFTPART);
-	CreateFrontToeBones(LEFTPART);
+/*
+	if(! noLegs){
+		CreateBreastBone(LEFTPART);
+		CreateRadius(LEFTPART);
+		CreateFrontCannonBone(LEFTPART);
+		CreateFrontToeBones(LEFTPART);
 
-	CreateBreastBone(RIGHTPART);
-	CreateRadius(RIGHTPART);
-	CreateFrontCannonBone(RIGHTPART);
-	CreateFrontToeBones(RIGHTPART);
+	}
+	if(! noLegs){
+		CreateBreastBone(RIGHTPART);
+		CreateRadius(RIGHTPART);
+		CreateFrontCannonBone(RIGHTPART);
+		CreateFrontToeBones(RIGHTPART);
 
+	}
+	phScene->SetContactMode(solids[SO_LEFT_BREASTBONE], solids[SO_RIGHT_BREASTBONE], PHSceneDesc::MODE_NONE);
+*/
 }
 
 void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
@@ -247,7 +263,9 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.posePlug.Pos()   = Vec3f(lr*chestBreadth/3.0, 0.0, chestThickness);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(-lr*breathtboneBreath/2.0, breathtboneHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
 	//ballDesc.origin			  = oriShoulder;
@@ -394,7 +412,9 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, frontCannonBoneHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, frontToeHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springFrontAnkle;
 	ballDesc.damper			  = damperFrontAnkle;
 	ballDesc.origin			  = oriFrontAnkle;
@@ -411,24 +431,26 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 
 // --- --- ---
 void CRHingeAnimalBody::InitRearLegs(){
-	
+	/*
 	if (!noLegs) {
 		CreateFemur(LEFTPART);
 		CreateTibia(LEFTPART);
+		CreateRearCannonBone(LEFTPART);
+		CreateRearToeBones(LEFTPART);
 	}
-	CreateRearCannonBone(LEFTPART);
-	CreateRearToeBones(LEFTPART);
-
+	
 	if (!noLegs) {
 		CreateFemur(RIGHTPART);
 		CreateTibia(RIGHTPART);
+		CreateRearCannonBone(RIGHTPART);
+		CreateRearToeBones(RIGHTPART);
 	}
-	CreateRearCannonBone(RIGHTPART);
-	CreateRearToeBones(RIGHTPART);
-
+	
 	// 両足は近すぎて足の太さ次第では衝突してしまうため．
 	phScene->SetContactMode(solids[SO_LEFT_FEMUR], solids[SO_RIGHT_FEMUR], PHSceneDesc::MODE_NONE);
+*/
 }
+
 
 void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	
@@ -460,7 +482,9 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.posePlug.Pos()   = Vec3f(lr*waistBreadth/3.2, -waistHeight/3.0, -waistThickness/2.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(-lr*femurBreath/2.0, -femurHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
 	//ballDesc.origin			  = oriHip;
@@ -609,7 +633,9 @@ void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, rearCannonBoneHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, rearToeHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring		   = springRearAnkle;
 	ballDesc.damper		   = damperRearAnkle;
 	ballDesc.origin		   = oriRearAnkle;
@@ -626,8 +652,8 @@ void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
 }
 // --- --- ---
 void CRHingeAnimalBody::InitEyes(){
-	CreateEye(LEFTPART);
-	CreateEye(RIGHTPART);
+//	CreateEye(LEFTPART);
+//	CreateEye(RIGHTPART);
 }
 
 void CRHingeAnimalBody::CreateEye(LREnum lr){
