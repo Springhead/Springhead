@@ -121,6 +121,8 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
 	ballDesc.swingUpper        = rangeTail;
+	ballDesc.twistLower		   = rangeTwistTail[0];
+	ballDesc.twistUpper		   = rangeTwistTail[1];
 	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
 	joints[JO_TAIL_12]->SetName("joTail12");
 
@@ -133,6 +135,8 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
 	ballDesc.swingUpper        = rangeTail;
+	ballDesc.twistLower		   = rangeTwistTail[0];
+	ballDesc.twistUpper		   = rangeTwistTail[1];
 	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
 	joints[JO_TAIL_23]->SetName("joTail23");
 	// define the position
@@ -145,7 +149,7 @@ void CRHingeAnimalBody::CreateTail(){
 // --- --- ---
 void CRHingeAnimalBody::InitHead(){
 	CreateNeck();
-	//CreateHead();
+	CreateHead();
 }
 
 void CRHingeAnimalBody::CreateNeck(){
@@ -196,14 +200,16 @@ void CRHingeAnimalBody::CreateHead(){
 
 	// define the connection  [c]head - [p]neck
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -neckHeight/2.0, neckThickness/2.0);
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, headHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -headHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, neckHeight/2.0, neckThickness/2.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.origin            = oriNeckHead;
 	ballDesc.swingUpper        = rangeNeckHead;
+	ballDesc.twistLower		   = rangeTwistNeckHead[0];
+	ballDesc.twistUpper		   = rangeTwistNeckHead[1];
 	joints[JO_NECK_HEAD]	   = CreateJoint(solids[SO_HEAD], solids[SO_NECK], ballDesc);
 	joints[JO_NECK_HEAD]->SetName("joNeckHead");
 

@@ -465,9 +465,10 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 
 	/// TwistŠp‚Ì‰Â“®ˆæ§ŒÀballjoint
 	Vec2d rangeTwistWaistChest;
-	Vec2d rangeTwistChestNeck;
 	Vec2d rangeTwistWaistTail;
 	Vec2d rangeTwistTail;
+	Vec2d rangeTwistChestNeck;
+	Vec2d rangeTwistNeckHead;
 
 
 	/// — ƒIƒvƒVƒ‡ƒ“
@@ -529,7 +530,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		rearToeThickness = 0.25;
 
 		// spring and damper
-		springWaistChest   =   0.0;  damperWaistChest	=	0.0;
+		springWaistChest   =   1.0;  damperWaistChest	=  20.0;
 		springWaistTail    =   0.0;  damperWaistTail	=   1.0;
 		springTail		   =   0.0;  damperTail			=   1.0;
 		springChestNeck    = 100.0;  damperChestNeck	=  20.0;
@@ -554,7 +555,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		oriHip		  = Quaterniond::Rot(Rad(+60), 'x');
 		oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
 
-		// Range of  ball joints
+		// Range of Swing of ball joints
 		rangeWaistChest = Rad(5);
 		rangeWaistTail  = Rad(10);
 		rangeTail		= Rad(20);
@@ -570,6 +571,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		rangeTwistChestNeck  = Vec2d(Rad(- 5), Rad( 5)); 
 		rangeTwistWaistTail  = Vec2d(Rad(-10), Rad(10));
 		rangeTwistTail		 = Vec2d(Rad(- 5), Rad( 5));
+		rangeTwistNeckHead	 = Vec2d(Rad(-15), Rad(15));
 
 		// Range of hinge joints (Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø)
 		rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));

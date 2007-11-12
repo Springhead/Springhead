@@ -765,9 +765,10 @@ protected: \
 	double rangeHip ; \
 	double rangeRearAnkle ; \
 	Vec2d rangeTwistWaistChest ; \
-	Vec2d rangeTwistChestNeck ; \
 	Vec2d rangeTwistWaistTail ; \
 	Vec2d rangeTwistTail ; \
+	Vec2d rangeTwistChestNeck ; \
+	Vec2d rangeTwistNeckHead ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -860,9 +861,10 @@ public: \
 		rangeHip = ((CRHingeAnimalBodyDesc*)desc)->rangeHip; \
 		rangeRearAnkle = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle; \
 		rangeTwistWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistChest; \
-		rangeTwistChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck; \
 		rangeTwistWaistTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistTail; \
 		rangeTwistTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail; \
+		rangeTwistChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck; \
+		rangeTwistNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -955,9 +957,10 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->rangeHip = rangeHip; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle = rangeRearAnkle; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistChest = rangeTwistWaistChest; \
-		((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck = rangeTwistChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistTail = rangeTwistWaistTail; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail = rangeTwistTail; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck = rangeTwistChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead = rangeTwistNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
@@ -1052,9 +1055,10 @@ protected: \
 	double rangeHip ; \
 	double rangeRearAnkle ; \
 	Vec2d rangeTwistWaistChest ; \
-	Vec2d rangeTwistChestNeck ; \
 	Vec2d rangeTwistWaistTail ; \
 	Vec2d rangeTwistTail ; \
+	Vec2d rangeTwistChestNeck ; \
+	Vec2d rangeTwistNeckHead ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -1146,9 +1150,10 @@ public: \
 		rangeHip = ((CRHingeAnimalBodyDesc*)desc)->rangeHip; \
 		rangeRearAnkle = ((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle; \
 		rangeTwistWaistChest = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistChest; \
-		rangeTwistChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck; \
 		rangeTwistWaistTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistTail; \
 		rangeTwistTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail; \
+		rangeTwistChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck; \
+		rangeTwistNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -1240,9 +1245,10 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->rangeHip = rangeHip; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeRearAnkle = rangeRearAnkle; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistChest = rangeTwistWaistChest; \
-		((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck = rangeTwistChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistWaistTail = rangeTwistWaistTail; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail = rangeTwistTail; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck = rangeTwistChestNeck; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead = rangeTwistNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
