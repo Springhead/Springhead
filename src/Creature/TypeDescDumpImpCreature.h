@@ -426,6 +426,10 @@
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeTwistChestNeck) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "Vec2d", "rangeTwistNeckHead", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeTwistNeckHead) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "Vec2d", "rangeTwistShoulder", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeTwistShoulder) - (char*)pCRHingeAnimalBodyDesc);
+	field = desc->AddField("", "Vec2d", "rangeTwistFrontAnkle", "");
+	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->rangeTwistFrontAnkle) - (char*)pCRHingeAnimalBodyDesc);
 	field = desc->AddField("", "bool", "noLegs", "");
 	field->offset = int((char*)&(pCRHingeAnimalBodyDesc->noLegs) - (char*)pCRHingeAnimalBodyDesc);
 	db->RegisterDesc(desc);

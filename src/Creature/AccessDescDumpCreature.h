@@ -769,6 +769,8 @@ protected: \
 	Vec2d rangeTwistTail ; \
 	Vec2d rangeTwistChestNeck ; \
 	Vec2d rangeTwistNeckHead ; \
+	Vec2d rangeTwistShoulder ; \
+	Vec2d rangeTwistFrontAnkle ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -865,6 +867,8 @@ public: \
 		rangeTwistTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail; \
 		rangeTwistChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck; \
 		rangeTwistNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead; \
+		rangeTwistShoulder = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder; \
+		rangeTwistFrontAnkle = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -961,6 +965,8 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail = rangeTwistTail; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck = rangeTwistChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead = rangeTwistNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder = rangeTwistShoulder; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle = rangeTwistFrontAnkle; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
@@ -1059,6 +1065,8 @@ protected: \
 	Vec2d rangeTwistTail ; \
 	Vec2d rangeTwistChestNeck ; \
 	Vec2d rangeTwistNeckHead ; \
+	Vec2d rangeTwistShoulder ; \
+	Vec2d rangeTwistFrontAnkle ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -1154,6 +1162,8 @@ public: \
 		rangeTwistTail = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail; \
 		rangeTwistChestNeck = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck; \
 		rangeTwistNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead; \
+		rangeTwistShoulder = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder; \
+		rangeTwistFrontAnkle = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -1249,6 +1259,8 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistTail = rangeTwistTail; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistChestNeck = rangeTwistChestNeck; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead = rangeTwistNeckHead; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder = rangeTwistShoulder; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle = rangeTwistFrontAnkle; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
