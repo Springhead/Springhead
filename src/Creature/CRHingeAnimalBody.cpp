@@ -25,7 +25,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	tailThickness = 0.1;
 
 	neckBreath	  = 0.5;
-	neckHeight	  = 1.0;
+	neckHeight	  = 1.2;
 	neckThickness = 0.4;
 
 	headBreath    = 0.4;
@@ -69,7 +69,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	springWaistTail    =   0.0;  damperWaistTail	=   1.0;
 	springTail		   =   0.0;  damperTail			=   1.0;
 	springChestNeck    =  10.0;  damperChestNeck	=  20.0;
-	springNeckHead	   =  50.0;  damperNeckHead		=  20.0;
+	springNeckHead	   =  10.0;  damperNeckHead		=  20.0;
 	springShoulder	   =  50.0;  damperShoulder		=  20.0;
 	springElbow		   =  50.0;  damperElbow		=  20.0;
 	springFrontKnee	   =  50.0;  damperFrontKnee	=  20.0;
@@ -83,7 +83,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	oriWaistChest = Quaterniond::Rot(Rad(  0), 'z');
 	oriWaistTail  = Quaterniond::Rot(Rad(  0), 'x');
 	oriTail		  = Quaterniond::Rot(Rad(- 0), 'x');	
-	oriChestNeck  = Quaterniond::Rot(Rad( 70), 'x');
+	oriChestNeck  = Quaterniond::Rot(Rad( 0), 'x');
 	oriNeckHead	  = Quaterniond::Rot(Rad(-90), 'x');
 	oriShoulder   = Quaterniond::Rot(Rad(+60), 'x');
 	oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
@@ -94,8 +94,8 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rangeWaistChest = Rad(5);
 	rangeWaistTail  = Rad(10);
 	rangeTail		= Rad(20);
-	rangeChestNeck  = Rad(70);
-	rangeNeckHead   = Rad(60);
+	rangeChestNeck  = Rad(90);
+	rangeNeckHead   = Rad(100);
 	rangeShoulder	= Rad(40);
 	rangeFrontAnkle = Rad(30);
 	rangeHip		= Rad(40);
@@ -279,9 +279,9 @@ void CRHingeAnimalBody::CreateNeck(){
 
 	// define the joint  [c]neck - [p]chest
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, -neckHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(50), 'x');
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(50), 'x');
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.origin			  = oriChestNeck;
