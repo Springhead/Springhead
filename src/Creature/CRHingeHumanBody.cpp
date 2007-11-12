@@ -5,6 +5,112 @@
 #endif
 
 namespace Spr{
+
+//コンストラクタ
+CRHingeHumanBodyDesc::CRHingeHumanBodyDesc(){
+		
+	jointOrder = PLUG_PARENT;
+
+	waistHeight    = 0.2298;
+	waistBreadth   = 0.3067;
+	waistThickness = 0.2307;
+
+	abdomenHeight    = 1.2253 - 1.0142;
+	abdomenBreadth   = 0.2611;
+	abdomenThickness = 0.1882;
+
+	chestHeight    = 1.4020 - 1.2253;
+	chestBreadth   = 0.2887;
+	chestThickness = 0.2118;
+
+	neckLength   = 1.7219 - 1.4564 - 0.1732;
+	neckDiameter = 0.1442;
+
+	headDiameter = 0.2387;
+
+	upperArmLength   = 0.3406;
+	upperArmDiameter = 0.2808 / 3.1415;
+
+	lowerArmLength   = 0.2766;
+	lowerArmDiameter = 0.1677 / 3.1415;
+
+	handLength    = 0.1908;
+	handBreadth   = 0.1018;
+	handThickness = 0.0275;
+
+	upperLegLength   = 0.4092;
+	upperLegDiameter = 0.1682;
+	interLegDistance = waistBreadth - upperLegDiameter;
+
+	lowerLegLength   = 0.3946;
+	lowerLegDiameter = 0.1109;
+
+	footLength       = 0.2544;
+	footBreadth      = 0.0994;
+	footThickness    = 0.0619;
+	ankleToeDistance = 0.2010;
+
+	vertexToEyeHeight     = 0.1255;
+	occiputToEyeDistance  = 0.1688;
+	eyeDiameter           = 0.0240;
+	interpupillaryBreadth = 0.0619;
+
+	springWaistAbdomen =  10.0;  damperWaistAbdomen =   5.0;
+	springAbdomenChest =  10.0;  damperAbdomenChest =   5.0;
+	springChestNeckX   = 100.0;  damperChestNeckX   =  50.0;
+	springChestNeckY   = 100.0;  damperChestNeckY   =  50.0;
+	springChestNeckZ   = 100.0;  damperChestNeckZ   =  50.0;
+	springNeckHeadX    =  50.0;  damperNeckHeadX    =  20.0;
+	springNeckHeadZ    =  50.0;  damperNeckHeadZ    =  20.0;
+	springShoulderZ    =   5.0;  damperShoulderZ    =   2.0;
+	springShoulderX    =   5.0;  damperShoulderX    =   2.0;
+	springShoulderY    =   5.0;  damperShoulderY    =   2.0;
+	springElbow        =   5.0;  damperElbow        =   2.0;
+	springWristY       =   5.0;  damperWristY       =   2.0;
+	springWristX       =   5.0;  damperWristX       =   2.0;
+	springWristZ       =  10.0;  damperWristZ       =   5.0;
+	springWaistLegZ    =   5.0;  damperWaistLegZ    =   2.0;
+	springWaistLegX    =   5.0;  damperWaistLegX    =   2.0;
+	springWaistLegY    =   5.0;  damperWaistLegY    =   2.0;
+	springKnee         =   5.0;  damperKnee         =   2.0;
+	springAnkleY       =   5.0;  damperAnkleY       =   2.0;
+	springAnkleX       =   5.0;  damperAnkleX       =   2.0;
+	springAnkleZ       =  10.0;  damperAnkleZ       =   5.0;
+	springEyeY         = 500.0;  damperEyeY         =   5.0;
+	springEyeX         = 500.0;  damperEyeX         =   5.0;
+
+	posRightUpperArm = Vec3d(0,0,0);
+
+	// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
+	rangeWaistAbdomen = Vec2d(Rad(+360) , Rad(-360));
+	rangeAbdomenChest = Vec2d(Rad(+360) , Rad(-360));
+	rangeChestNeckX   = Vec2d(Rad(+360) , Rad(-360));
+	rangeChestNeckY   = Vec2d(Rad(+360) , Rad(-360));
+	rangeChestNeckZ   = Vec2d(Rad(+360) , Rad(-360));
+	rangeNeckHeadX    = Vec2d(Rad(+360) , Rad(-360));
+	rangeNeckHeadZ    = Vec2d(Rad(+360) , Rad(-360));
+	rangeShoulderZ    = Vec2d(Rad(+360) , Rad(-360));
+	rangeShoulderX    = Vec2d(Rad(+360) , Rad(-360));
+	rangeShoulderY    = Vec2d(Rad(+360) , Rad(-360));
+	rangeElbow        = Vec2d(Rad(+360) , Rad(-360));
+	rangeWristY       = Vec2d(Rad(+360) , Rad(-360));
+	rangeWristX       = Vec2d(Rad(+360) , Rad(-360));
+	rangeWristZ       = Vec2d(Rad(+360) , Rad(-360));
+	rangeWaistLegZ    = Vec2d(Rad(+360) , Rad(-360));
+	rangeWaistLegX    = Vec2d(Rad(+360) , Rad(-360));
+	rangeWaistLegY    = Vec2d(Rad(+360) , Rad(-360));
+	rangeKnee         = Vec2d(Rad(+360) , Rad(-360));
+	rangeAnkleY       = Vec2d(Rad(+360) , Rad(-360));
+	rangeAnkleX       = Vec2d(Rad(+360) , Rad(-360));
+	rangeAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
+	rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
+	rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
+	rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));
+	rangeEyeX         = Vec2d(Rad(+360) , Rad(-360));
+
+	noLegs = false;
+}
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRHingeHumanBody
 IF_OBJECT_IMP(CRHingeHumanBody, CRBody);

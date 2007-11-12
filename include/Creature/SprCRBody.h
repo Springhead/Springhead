@@ -226,108 +226,7 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	/// 裏オプション
 	bool noLegs;
 
-	CRHingeHumanBodyDesc(){
-		jointOrder = PLUG_PARENT;
-
-		waistHeight    = 0.2298;
-		waistBreadth   = 0.3067;
-		waistThickness = 0.2307;
-
-		abdomenHeight    = 1.2253 - 1.0142;
-		abdomenBreadth   = 0.2611;
-		abdomenThickness = 0.1882;
-
-		chestHeight    = 1.4020 - 1.2253;
-		chestBreadth   = 0.2887;
-		chestThickness = 0.2118;
-
-		neckLength   = 1.7219 - 1.4564 - 0.1732;
-		neckDiameter = 0.1442;
-
-		headDiameter = 0.2387;
-
-		upperArmLength   = 0.3406;
-		upperArmDiameter = 0.2808 / 3.1415;
-
-		lowerArmLength   = 0.2766;
-		lowerArmDiameter = 0.1677 / 3.1415;
-
-		handLength    = 0.1908;
-		handBreadth   = 0.1018;
-		handThickness = 0.0275;
-
-		upperLegLength   = 0.4092;
-		upperLegDiameter = 0.1682;
-		interLegDistance = waistBreadth - upperLegDiameter;
-
-		lowerLegLength   = 0.3946;
-		lowerLegDiameter = 0.1109;
-
-		footLength       = 0.2544;
-		footBreadth      = 0.0994;
-		footThickness    = 0.0619;
-		ankleToeDistance = 0.2010;
-
-		vertexToEyeHeight     = 0.1255;
-		occiputToEyeDistance  = 0.1688;
-		eyeDiameter           = 0.0240;
-		interpupillaryBreadth = 0.0619;
-
-		springWaistAbdomen =  10.0;  damperWaistAbdomen =   5.0;
-		springAbdomenChest =  10.0;  damperAbdomenChest =   5.0;
-		springChestNeckX   = 100.0;  damperChestNeckX   =  50.0;
-		springChestNeckY   = 100.0;  damperChestNeckY   =  50.0;
-		springChestNeckZ   = 100.0;  damperChestNeckZ   =  50.0;
-		springNeckHeadX    =  50.0;  damperNeckHeadX    =  20.0;
-		springNeckHeadZ    =  50.0;  damperNeckHeadZ    =  20.0;
-		springShoulderZ    =   5.0;  damperShoulderZ    =   2.0;
-		springShoulderX    =   5.0;  damperShoulderX    =   2.0;
-		springShoulderY    =   5.0;  damperShoulderY    =   2.0;
-		springElbow        =   5.0;  damperElbow        =   2.0;
-		springWristY       =   5.0;  damperWristY       =   2.0;
-		springWristX       =   5.0;  damperWristX       =   2.0;
-		springWristZ       =  10.0;  damperWristZ       =   5.0;
-		springWaistLegZ    =   5.0;  damperWaistLegZ    =   2.0;
-		springWaistLegX    =   5.0;  damperWaistLegX    =   2.0;
-		springWaistLegY    =   5.0;  damperWaistLegY    =   2.0;
-		springKnee         =   5.0;  damperKnee         =   2.0;
-		springAnkleY       =   5.0;  damperAnkleY       =   2.0;
-		springAnkleX       =   5.0;  damperAnkleX       =   2.0;
-		springAnkleZ       =  10.0;  damperAnkleZ       =   5.0;
-		springEyeY         = 500.0;  damperEyeY         =   5.0;
-		springEyeX         = 500.0;  damperEyeX         =   5.0;
-
-		posRightUpperArm = Vec3d(0,0,0);
-
-		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
-		rangeWaistAbdomen = Vec2d(Rad(+360) , Rad(-360));
-		rangeAbdomenChest = Vec2d(Rad(+360) , Rad(-360));
-		rangeChestNeckX   = Vec2d(Rad(+360) , Rad(-360));
-		rangeChestNeckY   = Vec2d(Rad(+360) , Rad(-360));
-		rangeChestNeckZ   = Vec2d(Rad(+360) , Rad(-360));
-		rangeNeckHeadX    = Vec2d(Rad(+360) , Rad(-360));
-		rangeNeckHeadZ    = Vec2d(Rad(+360) , Rad(-360));
-		rangeShoulderZ    = Vec2d(Rad(+360) , Rad(-360));
-		rangeShoulderX    = Vec2d(Rad(+360) , Rad(-360));
-		rangeShoulderY    = Vec2d(Rad(+360) , Rad(-360));
-		rangeElbow        = Vec2d(Rad(+360) , Rad(-360));
-		rangeWristY       = Vec2d(Rad(+360) , Rad(-360));
-		rangeWristX       = Vec2d(Rad(+360) , Rad(-360));
-		rangeWristZ       = Vec2d(Rad(+360) , Rad(-360));
-		rangeWaistLegZ    = Vec2d(Rad(+360) , Rad(-360));
-		rangeWaistLegX    = Vec2d(Rad(+360) , Rad(-360));
-		rangeWaistLegY    = Vec2d(Rad(+360) , Rad(-360));
-		rangeKnee         = Vec2d(Rad(+360) , Rad(-360));
-		rangeAnkleY       = Vec2d(Rad(+360) , Rad(-360));
-		rangeAnkleX       = Vec2d(Rad(+360) , Rad(-360));
-		rangeAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
-		rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
-		rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
-		rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));
-		rangeEyeX         = Vec2d(Rad(+360) , Rad(-360));
-
-		noLegs = false;
-	}
+	CRHingeHumanBodyDesc();
 };
 
 
@@ -474,113 +373,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	/// 裏オプション
 	bool noLegs;
 
-	CRHingeAnimalBodyDesc(){
-		jointOrder = SOCKET_PARENT;
-
-		waistBreadth   = 0.6;
-		waistHeight    = 0.8;
-		waistThickness = 0.65;
-
-		chestBreadth   = 0.6;
-		chestHeight    = 1.5;
-		chestThickness = 0.65;
-
-		tailBreath    = 0.1;
-		tailHeight    = 0.2;
-		tailThickness = 0.1;
-
-		neckBreath	  = 0.5;
-		neckHeight	  = 1.0;
-		neckThickness = 0.4;
-
-		headBreath    = 0.4;
-		headHeight	  = 0.7;
-		headThickness = 0.3;
-
-		breathtboneBreath    = 0.2;
-		breathtboneHeight    = 0.5;
-		breathtboneThickness = 0.2; 
-
-		radiusBreath	= 0.2;
-		radiusHeight	= 0.7;
-		radiusThickness = 0.2;
-
-		frontCannonBoneBreath	 = 0.15;
-		frontCannonBoneHeight	 = 0.6;
-		frontCannonBoneThickness = 0.15;
-
-		frontToeBreath	  = 0.25;
-		frontToeHeight	  = 0.1;
-		frontToeThickness = 0.25;
-
-		femurBreath    = 0.25;
-		femurHeight	   = 0.65;
-		femurThickness = 0.25;
-
-		tibiaBreath	   = 0.2;
-		tibiaHeight	   = 0.5;
-		tibiaThickness = 0.2;
-
-		rearCannonBoneBreath    = 0.15;
-		rearCannonBoneHeight    = 0.65;
-		rearCannonBoneThickness = 0.15;
-
-		rearToeBreath    = 0.25;
-		rearToeHeight    = 0.1;
-		rearToeThickness = 0.25;
-
-		// spring and damper
-		springWaistChest   =   1.0;  damperWaistChest	=  20.0;
-		springWaistTail    =   0.0;  damperWaistTail	=   1.0;
-		springTail		   =   0.0;  damperTail			=   1.0;
-		springChestNeck    = 100.0;  damperChestNeck	=  20.0;
-		springNeckHead	   =  50.0;  damperNeckHead		=  20.0;
-		springShoulder	   =  50.0;  damperShoulder		=  20.0;
-		springElbow		   =  50.0;  damperElbow		=  20.0;
-		springFrontKnee	   =  50.0;  damperFrontKnee	=  20.0;
-		springFrontAnkle   =  50.0;  damperFrontAnkle	=  20.0;
-		springHip		   =  50.0;  damperHip			=  20.0;
-		springStifle	   =  50.0;  damperStifle		=  20.0;
-		springRearKnee	   =  50.0;  damperRearKnee		=  20.0;
-		springRearAnkle	   =  50.0;  damperRearAnkle	=  20.0;
-		
-		// origin of ball joints
-		oriWaistChest = Quaterniond::Rot(Rad(  0), 'z');
-		oriWaistTail  = Quaterniond::Rot(Rad(  0), 'x');
-		oriTail		  = Quaterniond::Rot(Rad(-30), 'x');	
-		oriChestNeck  = Quaterniond::Rot(Rad( 50), 'x');
-		oriNeckHead	  = Quaterniond::Rot(Rad(+60), 'x');
-		oriShoulder   = Quaterniond::Rot(Rad(+60), 'x');
-		oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
-		oriHip		  = Quaterniond::Rot(Rad(+60), 'x');
-		oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
-
-		// Range of Swing of ball joints
-		rangeWaistChest = Rad(5);
-		rangeWaistTail  = Rad(10);
-		rangeTail		= Rad(20);
-		rangeChestNeck  = Rad(60);
-		rangeNeckHead   = Rad(30);
-		rangeShoulder	= Rad(40);
-		rangeFrontAnkle = Rad(30);
-		rangeHip		= Rad(40);
-		rangeRearAnkle  = Rad(20);
-
-		// Range of Twsit of ball joints(Vec2d(lower, upper)
-		rangeTwistWaistChest = Vec2d(Rad(- 5), Rad( 5));
-		rangeTwistChestNeck  = Vec2d(Rad(- 5), Rad( 5)); 
-		rangeTwistWaistTail  = Vec2d(Rad(-10), Rad(10));
-		rangeTwistTail		 = Vec2d(Rad(- 5), Rad( 5));
-		rangeTwistNeckHead	 = Vec2d(Rad(-15), Rad(15));
-
-		// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
-		rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
-		rangeFrontKnee	  = Vec2d(Rad(- 90), Rad(   0));
-		rangeStifle		  = Vec2d(Rad(- 90), Rad(+ 90));
-		rangeRearKnee	  = Vec2d(Rad(- 90), Rad(+ 90));
-
-		noLegs = false;
-	}
+	CRHingeAnimalBodyDesc();
 };
 
 
@@ -627,31 +420,8 @@ struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
 	Vec2d rangeWaistChest;
 	Vec2d rangeChestHead;
 
-	CRTrunkFootHumanBodyDesc(){
-		jointOrder = PLUG_PARENT;
+	CRTrunkFootHumanBodyDesc();
 
-		waistHeight    = 0.2298;
-		waistBreadth   = 0.3067;
-		waistThickness = 0.2307;
-
-		chestHeight    = 1.4020 - 1.2253 + 1.2253 - 1.0142;
-		chestBreadth   = 0.2887;
-		chestThickness = 0.2118;
-
-		neckLength   = 1.7219 - 1.4564 - 0.1732;
-		headDiameter = 0.2387;
-
-		footLength       = 0.2544;
-		footBreadth      = 0.0994;
-		footThickness    = 0.0619;
-
-		springWaistChest   = 100.0;  damperWaistChest   =  50.0;
-		springChestHead    = 100.0;  damperChestHead    =  50.0;
-
-		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
-		rangeWaistChest   = Vec2d(Rad(0.0) , Rad(0.01));
-		rangeChestHead    = Vec2d(Rad(0.0) , Rad(0.01));
-	}
 };
 //@}
 
@@ -694,32 +464,7 @@ struct CRTrunkFootAnimalBodyDesc : CRBodyDesc{
 	Vec2d rangeWaistChest;
 	Vec2d rangeChestHead;
 
-	CRTrunkFootAnimalBodyDesc(){
-		
-		jointOrder = PLUG_PARENT;
-
-		waistHeight    = 0.2298;
-		waistBreadth   = 0.3067;
-		waistThickness = 0.2307;
-
-		chestHeight    = 1.4020 - 1.2253 + 1.2253 - 1.0142;
-		chestBreadth   = 0.2887;
-		chestThickness = 0.2118;
-
-		neckLength   = 1.7219 - 1.4564 - 0.1732;
-		headDiameter = 0.2387;
-
-		footLength       = 0.2544;
-		footBreadth      = 0.0994;
-		footThickness    = 0.0619;
-
-		springWaistChest   = 100.0;  damperWaistChest   =  50.0;
-		springChestHead    = 100.0;  damperChestHead    =  50.0;
-
-		// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
-		rangeWaistChest   = Vec2d(Rad(0.0) , Rad(0.01));
-		rangeChestHead    = Vec2d(Rad(0.0) , Rad(0.01));
-	}
+	CRTrunkFootAnimalBodyDesc();
 };
 
 }

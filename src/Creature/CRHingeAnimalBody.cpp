@@ -7,6 +7,117 @@
 #endif
 
 namespace Spr{
+
+//コンストラクタ
+CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
+	jointOrder = SOCKET_PARENT;
+
+	waistBreadth   = 0.6;
+	waistHeight    = 0.8;
+	waistThickness = 0.65;
+
+	chestBreadth   = 0.6;
+	chestHeight    = 1.5;
+	chestThickness = 0.65;
+
+	tailBreath    = 0.1;
+	tailHeight    = 0.2;
+	tailThickness = 0.1;
+
+	neckBreath	  = 0.5;
+	neckHeight	  = 1.0;
+	neckThickness = 0.4;
+
+	headBreath    = 0.4;
+	headHeight	  = 0.7;
+	headThickness = 0.3;
+
+	breathtboneBreath    = 0.2;
+	breathtboneHeight    = 0.5;
+	breathtboneThickness = 0.2; 
+
+	radiusBreath	= 0.2;
+	radiusHeight	= 0.7;
+	radiusThickness = 0.2;
+
+	frontCannonBoneBreath	 = 0.15;
+	frontCannonBoneHeight	 = 0.6;
+	frontCannonBoneThickness = 0.15;
+
+	frontToeBreath	  = 0.25;
+	frontToeHeight	  = 0.1;
+	frontToeThickness = 0.25;
+
+	femurBreath    = 0.25;
+	femurHeight	   = 0.65;
+	femurThickness = 0.25;
+
+	tibiaBreath	   = 0.2;
+	tibiaHeight	   = 0.5;
+	tibiaThickness = 0.2;
+
+	rearCannonBoneBreath    = 0.15;
+	rearCannonBoneHeight    = 0.65;
+	rearCannonBoneThickness = 0.15;
+
+	rearToeBreath    = 0.25;
+	rearToeHeight    = 0.1;
+	rearToeThickness = 0.25;
+
+	// spring and damper
+	springWaistChest   =   1.0;  damperWaistChest	=  20.0;
+	springWaistTail    =   0.0;  damperWaistTail	=   1.0;
+	springTail		   =   0.0;  damperTail			=   1.0;
+	springChestNeck    =  10.0;  damperChestNeck	=  20.0;
+	springNeckHead	   =  50.0;  damperNeckHead		=  20.0;
+	springShoulder	   =  50.0;  damperShoulder		=  20.0;
+	springElbow		   =  50.0;  damperElbow		=  20.0;
+	springFrontKnee	   =  50.0;  damperFrontKnee	=  20.0;
+	springFrontAnkle   =  50.0;  damperFrontAnkle	=  20.0;
+	springHip		   =  50.0;  damperHip			=  20.0;
+	springStifle	   =  50.0;  damperStifle		=  20.0;
+	springRearKnee	   =  50.0;  damperRearKnee		=  20.0;
+	springRearAnkle	   =  50.0;  damperRearAnkle	=  20.0;
+	
+	// origin of ball joints
+	oriWaistChest = Quaterniond::Rot(Rad(  0), 'z');
+	oriWaistTail  = Quaterniond::Rot(Rad(  0), 'x');
+	oriTail		  = Quaterniond::Rot(Rad(- 0), 'x');	
+	oriChestNeck  = Quaterniond::Rot(Rad( 70), 'x');
+	oriNeckHead	  = Quaterniond::Rot(Rad(-90), 'x');
+	oriShoulder   = Quaterniond::Rot(Rad(+60), 'x');
+	oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
+	oriHip		  = Quaterniond::Rot(Rad(+60), 'x');
+	oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
+
+	// Range of Swing of ball joints
+	rangeWaistChest = Rad(5);
+	rangeWaistTail  = Rad(10);
+	rangeTail		= Rad(20);
+	rangeChestNeck  = Rad(70);
+	rangeNeckHead   = Rad(60);
+	rangeShoulder	= Rad(40);
+	rangeFrontAnkle = Rad(30);
+	rangeHip		= Rad(40);
+	rangeRearAnkle  = Rad(20);
+
+	// Range of Twsit of ball joints(Vec2d(lower, upper)
+	rangeTwistWaistChest = Vec2d(Rad(- 5), Rad( 5));
+	rangeTwistChestNeck  = Vec2d(Rad(- 5), Rad( 5)); 
+	rangeTwistWaistTail  = Vec2d(Rad(-10), Rad(10));
+	rangeTwistTail		 = Vec2d(Rad(- 5), Rad( 5));
+	rangeTwistNeckHead	 = Vec2d(Rad(-10), Rad(10));
+
+	// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
+	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
+	rangeFrontKnee	  = Vec2d(Rad(- 90), Rad(   0));
+	rangeStifle		  = Vec2d(Rad(- 90), Rad(+ 90));
+	rangeRearKnee	  = Vec2d(Rad(- 90), Rad(+ 90));
+
+	noLegs = false;
+}
+	
+	
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRHingeAnimalBody
 IF_OBJECT_IMP(CRHingeAnimalBody, CRBody);
@@ -101,10 +212,10 @@ void CRHingeAnimalBody::CreateTail(){
 
 	// define the connection
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, waistHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.1);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, waistHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springWaistTail;
 	ballDesc.damper            = damperWaistTail;
 	ballDesc.origin            = oriWaistTail;
@@ -113,10 +224,10 @@ void CRHingeAnimalBody::CreateTail(){
 	joints[JO_TAIL_WAIST]->SetName("joWaistTail");
 
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
@@ -128,9 +239,9 @@ void CRHingeAnimalBody::CreateTail(){
 
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.origin            = oriTail;
@@ -167,10 +278,10 @@ void CRHingeAnimalBody::CreateNeck(){
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// define the joint  [c]neck - [p]chest
-	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(40), 'x');
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, -neckHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(40), 'x');
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(50), 'x');
+	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(50), 'x');
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.origin			  = oriChestNeck;
@@ -201,9 +312,9 @@ void CRHingeAnimalBody::CreateHead(){
 	// define the connection  [c]head - [p]neck
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, headHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, neckHeight/2.0, neckThickness/2.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -neckHeight/2.0, 0.0);
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.origin            = oriNeckHead;
