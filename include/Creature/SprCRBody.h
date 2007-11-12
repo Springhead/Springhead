@@ -321,8 +321,8 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 		rangeAnkleY       = Vec2d(Rad(+360) , Rad(-360));
 		rangeAnkleX       = Vec2d(Rad(+360) , Rad(-360));
 		rangeAnkleZ       = Vec2d(Rad(+360) , Rad(-360));
-		//rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
-		//rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
+		rangeRightEyeY    = Vec2d(Rad( -30) , Rad( +45));
+		rangeEyeX         = Vec2d(Rad( -45) , Rad( +45));
 		rangeRightEyeY    = Vec2d(Rad(+360) , Rad(-360));
 		rangeEyeX         = Vec2d(Rad(+360) , Rad(-360));
 
@@ -418,7 +418,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 
 	/// 各関節のバネダンパ
 	double springWaistChest,   damperWaistChest;	//腰-胸
-	double springTailWaist,	   damperTailWaist;		//腰-尾
+	double springWaistTail,	   damperWaistTail;		//腰-尾
 	double springTail,		   damperTail;			//尾
 	double springChestNeck,	   damperChestNeck;     //胸-首
 	double springNeckHead,	   damperNeckHead;		//首-頭
@@ -429,7 +429,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double springHip,		   damperHip;			//尻
 	double springStifle,	   damperStifle;		//肘？（後足）
 	double springRearKnee,	   damperRearKnee;		//膝（後足）
-	double springRearAnkle,  damperRearAnkle;		//かかと（後足）
+	double springRearAnkle,    damperRearAnkle;		//かかと（後足）
 	
 	/// 関節取り付け角度・位置
 	//Vec3d       posRightFrontUpperLeg;
@@ -442,7 +442,8 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	Vec2d  rangeRearKnee;
 	
 	//ball joints取り付け位置・角度
-	Quaterniond oriTailWaist;
+	Quaterniond oriWaistChest;
+	Quaterniond oriWaistTail;
 	Quaterniond oriTail;
 	Quaterniond oriChestNeck;
 	Quaterniond oriNeckHead;
@@ -451,9 +452,9 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	Quaterniond oriHip;
 	Quaterniond oriRearAnkle;
 
-	/// 可動域制限balljoint
+	/// Swing角の可動域制限balljoint
 	double rangeWaistChest;
-	double rangeTailWaist;
+	double rangeWaistTail;
 	double rangeTail;
 	double rangeChestNeck;
 	double rangeNeckHead;
@@ -461,6 +462,13 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double rangeFrontAnkle;
 	double rangeHip;
 	double rangeRearAnkle;
+
+	/// Twist角の可動域制限balljoint
+	Vec2d rangeTwistWaistChest;
+	Vec2d rangeTwistChestNeck;
+	Vec2d rangeTwistWaistTail;
+	Vec2d rangeTwistTail;
+
 
 	/// 裏オプション
 	bool noLegs;
@@ -521,10 +529,10 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		rearToeThickness = 0.25;
 
 		// spring and damper
-		springWaistChest   =   0.0;  damperWaistChest	= 200.0;
-		springTailWaist    =   0.0;  damperTailWaist	=   1.0;
+		springWaistChest   =   0.0;  damperWaistChest	=	0.0;
+		springWaistTail    =   0.0;  damperWaistTail	=   1.0;
 		springTail		   =   0.0;  damperTail			=   1.0;
-		springChestNeck    =  50.0;  damperChestNeck	=  20.0;
+		springChestNeck    = 100.0;  damperChestNeck	=  20.0;
 		springNeckHead	   =  50.0;  damperNeckHead		=  20.0;
 		springShoulder	   =  50.0;  damperShoulder		=  20.0;
 		springElbow		   =  50.0;  damperElbow		=  20.0;
@@ -536,9 +544,10 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		springRearAnkle	   =  50.0;  damperRearAnkle	=  20.0;
 		
 		// origin of ball joints
-		oriTailWaist  = Quaterniond::Rot(Rad(+60), 'x');
+		oriWaistChest = Quaterniond::Rot(Rad(  0), 'z');
+		oriWaistTail  = Quaterniond::Rot(Rad(  0), 'x');
 		oriTail		  = Quaterniond::Rot(Rad(-30), 'x');	
-		oriChestNeck  = Quaterniond::Rot(Rad(-120), 'x');
+		oriChestNeck  = Quaterniond::Rot(Rad( 50), 'x');
 		oriNeckHead	  = Quaterniond::Rot(Rad(+60), 'x');
 		oriShoulder   = Quaterniond::Rot(Rad(+60), 'x');
 		oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
@@ -546,15 +555,21 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 		oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
 
 		// Range of  ball joints
-		rangeWaistChest = Rad(40);
-		rangeTailWaist  = Rad(+30);
-		rangeTail		= Rad(+20);
-		rangeChestNeck  = Rad(+50);
-		rangeNeckHead   = Rad(+30);
-		rangeShoulder	= Rad(+40);
-		rangeFrontAnkle = Rad(+30);
-		rangeHip		= Rad(+40);
-		rangeRearAnkle  = Rad(+20);
+		rangeWaistChest = Rad(5);
+		rangeWaistTail  = Rad(10);
+		rangeTail		= Rad(20);
+		rangeChestNeck  = Rad(60);
+		rangeNeckHead   = Rad(30);
+		rangeShoulder	= Rad(40);
+		rangeFrontAnkle = Rad(30);
+		rangeHip		= Rad(40);
+		rangeRearAnkle  = Rad(20);
+
+		// Range of Twsit of ball joints(Vec2d(lower, upper)
+		rangeTwistWaistChest = Vec2d(Rad(- 5), Rad( 5));
+		rangeTwistChestNeck  = Vec2d(Rad(- 5), Rad( 5)); 
+		rangeTwistWaistTail  = Vec2d(Rad(-10), Rad(10));
+		rangeTwistTail		 = Vec2d(Rad(- 5), Rad( 5));
 
 		// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
 		rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));

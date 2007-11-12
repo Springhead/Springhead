@@ -251,7 +251,7 @@ Vec3d CRWCFootForce::CalcSwingFootTorque(void){
 	double kRot = 100.0;
 	double kAV = 1.0;
 	double vari;
-	double vari2;
+//	double vari2;
 	double paramMaxAVd = 10.0;
 
 	if(timeleft == 0.0) tl = TimeStep;

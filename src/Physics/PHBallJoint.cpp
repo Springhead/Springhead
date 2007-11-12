@@ -62,7 +62,7 @@ void SwingTwist::Coriolis(Vec3d& c, const Vec3d& sd){
 }
 void SwingTwist::JacobianInverse(Matrix3d& J, const Quaterniond& q){
 	// tazzさんのメモの(14)式、角速度ωからst=[psi, theta, phi]^Tの時間微分を求めるヤコビアンJInv ((d/dt)st = JInv * ω)
-	const double eps = 1.0e-12;
+	const double eps = 1.0e-2;									// (14)式の分母が0になることを防ぐためのeps。小さくし過ぎると（1.0e-12とかすると）0付近で横にしたときに物体が外れてしまう
 	double w2z2 = max(eps, q.w * q.w + q.z * q.z);
 	double w2z2inv = 1.0 / w2z2;
 	double x2y2 = max(eps, 1.0 - w2z2);
