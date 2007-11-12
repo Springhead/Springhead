@@ -771,6 +771,7 @@ protected: \
 	Vec2d rangeTwistNeckHead ; \
 	Vec2d rangeTwistShoulder ; \
 	Vec2d rangeTwistFrontAnkle ; \
+	Vec2d rangeTwistHip ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -869,6 +870,7 @@ public: \
 		rangeTwistNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead; \
 		rangeTwistShoulder = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder; \
 		rangeTwistFrontAnkle = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle; \
+		rangeTwistHip = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistHip; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -967,6 +969,7 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead = rangeTwistNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder = rangeTwistShoulder; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle = rangeTwistFrontAnkle; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistHip = rangeTwistHip; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \
@@ -1067,6 +1070,7 @@ protected: \
 	Vec2d rangeTwistNeckHead ; \
 	Vec2d rangeTwistShoulder ; \
 	Vec2d rangeTwistFrontAnkle ; \
+	Vec2d rangeTwistHip ; \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -1164,6 +1168,7 @@ public: \
 		rangeTwistNeckHead = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead; \
 		rangeTwistShoulder = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder; \
 		rangeTwistFrontAnkle = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle; \
+		rangeTwistHip = ((CRHingeAnimalBodyDesc*)desc)->rangeTwistHip; \
 		noLegs = ((CRHingeAnimalBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
@@ -1261,6 +1266,7 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistNeckHead = rangeTwistNeckHead; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistShoulder = rangeTwistShoulder; \
 		((CRHingeAnimalBodyDesc*)desc)->rangeTwistFrontAnkle = rangeTwistFrontAnkle; \
+		((CRHingeAnimalBodyDesc*)desc)->rangeTwistHip = rangeTwistHip; \
 		((CRHingeAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		return true; \
 	} \

@@ -370,6 +370,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	Vec2d rangeTwistNeckHead;
 	Vec2d rangeTwistShoulder;
 	Vec2d rangeTwistFrontAnkle;
+	Vec2d rangeTwistHip;
 
 
 	/// — ƒIƒvƒVƒ‡ƒ“

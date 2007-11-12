@@ -109,6 +109,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rangeTwistNeckHead	 = Vec2d(Rad(-10), Rad(10));
 	rangeTwistShoulder	 = Vec2d(Rad(-10), Rad(10));
 	rangeTwistFrontAnkle = Vec2d(Rad(- 1), Rad( 1));
+	rangeTwistHip		 = Vec2d(Rad(-10), Rad(10));
 
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø)
 	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
@@ -559,24 +560,24 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 
 // --- --- ---
 void CRHingeAnimalBody::InitRearLegs(){
-	/*
+	
 	if (!noLegs) {
 		CreateFemur(LEFTPART);
-		CreateTibia(LEFTPART);
-		CreateRearCannonBone(LEFTPART);
-		CreateRearToeBones(LEFTPART);
+//		CreateTibia(LEFTPART);
+//		CreateRearCannonBone(LEFTPART);
+//		CreateRearToeBones(LEFTPART);
 	}
 	
 	if (!noLegs) {
-		CreateFemur(RIGHTPART);
-		CreateTibia(RIGHTPART);
-		CreateRearCannonBone(RIGHTPART);
-		CreateRearToeBones(RIGHTPART);
+//		CreateFemur(RIGHTPART);
+//		CreateTibia(RIGHTPART);
+//		CreateRearCannonBone(RIGHTPART);
+//		CreateRearToeBones(RIGHTPART);
 	}
 	
 	// —¼‘«‚Í‹ß‚·‚¬‚Ä‘«‚Ì‘¾‚³ŽŸ‘æ‚Å‚ÍÕ“Ë‚µ‚Ä‚µ‚Ü‚¤‚½‚ßD
-	phScene->SetContactMode(solids[SO_LEFT_FEMUR], solids[SO_RIGHT_FEMUR], PHSceneDesc::MODE_NONE);
-*/
+//	phScene->SetContactMode(solids[SO_LEFT_FEMUR], solids[SO_RIGHT_FEMUR], PHSceneDesc::MODE_NONE);
+
 }
 
 
@@ -609,15 +610,16 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	boxDesc.boxsize = Vec3f(breathtboneBreath, breathtboneHeight, breathtboneThickness);
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()   = Vec3f(-lr*femurBreath/2.0, -femurHeight/2.0, 0.0);
+	ballDesc.posePlug.Pos()   = Vec3f(-lr*femurBreath/2.0, 0.0, 0.0);//-femurHeight/2.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/3.2, -waistHeight/3.0, -waistThickness/2.0);
+	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, 0.0, 0.0);//-waistHeight/2.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
-	//ballDesc.origin			  = oriHip;
-	//ballDesc.swingUpper		  = rangeHip;
-	
+	ballDesc.origin			  = oriHip;
+	ballDesc.swingUpper		  = rangeHip;
+	ballDesc.twistLower		  = rangeTwistHip[0];
+	ballDesc.twistUpper		  = rangeTwistHip[1];
 	joints[joHip] = phScene->CreateJoint(solids[soFemur], solids[SO_WAIST], ballDesc);
 	if(lr == LEFTPART)
 		joints[joHip]->SetName("joLeftHip");
