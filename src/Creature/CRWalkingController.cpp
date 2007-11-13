@@ -60,7 +60,7 @@ void CRWalkingController::Init(){
     paramVelocityX = 0.8; 
     paramHalfStrideX = 0.01;
 	paramHalfStrideZ = 0.1;         
-	footHeight = 0.005;                                  
+	footHeight = 0.19;                                  
     amplitude = 0.0;   
 
 	footsize = 0.0619;
@@ -88,15 +88,12 @@ void CRWalkingController::Init(){
 	flag3 = 0;   
 
 	nextSpeed = -1;
-	reverse = false;
-	stop = false;
+	breverse = false;
+	bprestop = false;
+	bstop = false;
 
-	/*
-	Xs = 0.0;//////////////////////////////////////////////////////////////////////
-	Zs = 0.0;//////////////////////////////////////////////////////////////////////
-	*/
-	Xs = tfChest->GetPose().Pos().X();
-	Zs = tfChest->GetPose().Pos().Z();
+	Xstand = tfChest->GetPose().Pos().X();
+	Zstand = tfChest->GetPose().Pos().Z();
 
 	CreateCRWCTimeLeft();
 	CreateCRWCChangeAroundCenter();
@@ -177,15 +174,16 @@ void CRWalkingController::ReInit(){
 	flag3 = 0;   
 
 	nextSpeed = -1;
-	reverse = false;
-	stop = false;
+	breverse = false;
+	bprestop = false;
+	bstop = false;
 
 	/*
 	Xs = 0.0;//////////////////////////////////////////////////////////////////////
 	Zs = 0.0;//////////////////////////////////////////////////////////////////////
 	*/
-	Xs = tfChest->GetPose().Pos().X();
-	Zs = tfChest->GetPose().Pos().Z();
+	Xstand = tfChest->GetPose().Pos().X();
+	Zstand = tfChest->GetPose().Pos().Z();
 
 	DSTR << "BasicCycle = " << T0 << std::endl;
 }
@@ -194,12 +192,18 @@ void CRWalkingController::Step(){
 	totalStep = totalStep + 1;
 	CRController::Step();
 
-	if(totalStep > 200 && completefall == false)gait();
-	else if(completefall == false && totalStep < 200) {
-		stand();
+	PositionOfUpperBody = GetCenterOfBlocks(UpperBody);       //上体位置
+	CenterVelocity = CalcCenterVelocity(UpperBody);           //上体速度
+	
+	if(totalStep < 40) {
+		Stand();
 		SetRotationAngle(0.0);
 		Stop();
 	}
+	else if(completefall == false && bstop == true) {
+		WCStop();
+	}
+	else if(totalStep > 40 && completefall == false) gait();
 	else fallForce();
 
 	SuperimposeHingeBody();
@@ -306,6 +310,11 @@ void CRWalkingController::CreateCRWCGeneForce(){
 	gf->SetParamMaxFootLength(MaxFootLength);
 }
 
+void CRWalkingController::SetPos(Vec3f pos){
+	Xstand = pos.x;
+	Zstand = pos.z;
+}
+
 //ベクトルobjects内に含まれるソリッドを,一つの剛体と見た重心位置を返す
 Vec3d CRWalkingController::GetCenterOfBlocks(std::vector<PHSolidIf*> objects){
 	
@@ -401,11 +410,11 @@ double CRWalkingController::CalcLocalX(double xb, double zb, double xt, double z
 	double vari1;
 	double relativeX;
 
-	if(abs(tan(theta)) > 100000.0) {
+	if(abs(tan(theta)) > 10000000000.0) {
 		vari0 = xt;
 		vari1 = zb;
 	}
-	else if(abs(1/tan(theta)) > 100000.0) {
+	else if(abs(1/tan(theta)) > 10000000000.0) {
 		vari0 = xb;
 		vari1 = zt;
 	}
@@ -443,11 +452,11 @@ double CRWalkingController::CalcLocalZ(double xb, double zb, double xt, double z
 	double vari1;
 	double relativeZ;
 
-	if(abs(tan(theta)) > 100000.0) {
+	if(abs(tan(theta)) > 10000000000.0) {
 		vari0 = xt;
 		vari1 = zb;
 	}
-	else if(abs(1/tan(theta)) > 100000.0) {
+	else if(abs(1/tan(theta)) > 10000000000.0) {
 		vari0 = xb;
 		vari1 = zt;
 	}
@@ -867,9 +876,9 @@ void CRWalkingController::completeFall(){
 
 	double param0 = 0.02;   //quit reason1に関わるパラメータ
 	double param1 = 1.3;    //quit reason1に関わるパラメータ
-	double param2 = 0.5;    //quit reason1に関わるパラメータ
-	double param3 = -0.4;   //quit reason2に関わるパラメータ
-	double param4 = -0.17;   //quit reason3に関わるパラメータ
+	double param2 = 0.8;    //quit reason1に関わるパラメータ
+	double param3 = -0.6;   //quit reason2に関わるパラメータ
+	double param4 = -0.35;   //quit reason3に関わるパラメータ
 	double param5 = 0.85*MinFootLength;    //これより腰の位置が落ちると歩行継続不可
 	double param6 = 18.0;  //これより重心位置の加速度があると歩行継続不可
 	double MaxCompleteFallVelocity = 100.0;  //これより腰に対する頭の速度と脚の速度があると歩行継続不可
@@ -1288,17 +1297,7 @@ void CRWalkingController::gait(void){
 	Vec3d AMAC;     //重心周りの角運動量
 	Vec3d RoDiff;   //上体姿勢のズレ 
     
-	//WholeBody.push_back(solid1);
-    //WholeBody.push_back(solid2);
-    //WholeBody.push_back(solid3);
 
-	//UpperBody.push_back(solid2);
-	//UpperBody.push_back(solid3);
-
-	//PositionOfWholeBody = GetCenterOfBlocks(WholeBody);       //重心位置
-	PositionOfUpperBody = GetCenterOfBlocks(UpperBody);         //上体位置
-	//PHSolid* so = XCAST(solid2);
-	CenterVelocity = CalcCenterVelocity(UpperBody);  //未定義
 	CalcTargetAngle();                               //再度考慮 　　 目標進行方向の計算
 	CalcCurrentDirection();                          //再度考慮　　　現在の進行方向の計算
 
@@ -1441,13 +1440,13 @@ void CRWalkingController::gait(void){
 			WCSetSpeed(nextSpeed);
 			nextSpeed = -1;
 		}
-		if(stop == true){
-			WCStop();
-			stop = false;
+		if(bprestop == true){
+			WCPreStop();
+			bprestop = false;
 		}
-		if(reverse == true){
+		if(breverse == true){
 			WCReverse();
-			reverse = false;
+			breverse = false;
 		}
 
 		if(LF == true) DSTR << "RIGHT " << std::endl;
@@ -1483,20 +1482,42 @@ void CRWalkingController::func(){
 	else fallForce();
 }
 
-void CRWalkingController::stand(){
-	tfChest->AddForce(-1*phScene->GetGravity()*TotalMass(UpperBody),Vec3d(Xs,10,Zs));
-	tfChest->AddForce(10*(Vec3d(Xs,height,Zs) - GetCenterOfBlocks(UpperBody)) - 5*CalcCenterVelocity(UpperBody),Vec3d(Xs,10,Zs));
+void CRWalkingController::Stand(){
+	double paramKp = 10.0;
+	double paramKv = 5.0;
+	double paramKr = 30.0;
+	double paramKav = 10.0;
+	Vec3d Av;
+	Quaterniond Quat0, Quat1, dQuat;
+
+	//位置に関するPD制御
+	tfChest->AddForce(-1.0*phScene->GetGravity()*TotalMass(UpperBody),Vec3d(Xstand,10,Zstand));
+	tfChest->AddForce(paramKp*(Vec3d(Xstand,height+0.05
+		,Zstand) - GetCenterOfBlocks(UpperBody)) - paramKv*CalcCenterVelocity(UpperBody),Vec3d(Xstand,10,Zstand));
+
+	//姿勢に関するPD制御
+	Quat0 = Quat0.Rot(Vec3d(0,0,0));
+	Quat1 = tfChest->GetPose().Ori();
+	Av = tfChest->GetAngularVelocity();
+	dQuat = Quat0 * Quat1.Inv();
+
+	tfChest->AddTorque(paramKr*dQuat.Rotation() - paramKav*Av); //激力が加わった時にy方向に回転しないためのトルク
 }
 
 void CRWalkingController::SetSpeed(double v){
+	bstop = false;
+	bprestop = false;
+	bstand = false;
+	breverse = false;
+
 	if(v < 0) {
 		DSTR << "SetSpeed;;Input Negative Value" << std::endl;
 		//exit(1);
 		v = 0.05;
-	} else if(v > 1.2){
+	} else if(v > 2.0){
 		DSTR << "SetSpeed;;Too Fast Speed Parametor" << std::endl;
 		//exit(1);
-		v = 1.2;
+		v = 2.0;
 	}
 
 	nextSpeed = v;
@@ -1504,9 +1525,34 @@ void CRWalkingController::SetSpeed(double v){
 
 void CRWalkingController::WCSetSpeed(double v){
 
-	if(v > 0.8){
+	if(v > 1.3){
 		paramVelocityX = v;
-		paramHalfStrideX = 0.16*v;
+        paramHalfStrideX = 0.19;
+        T0 = CalcBasicCycle();
+		paramVelocityZ = CalcZParamV(paramHalfStrideZ, T0);
+
+	    tl->SetParamT0(T0);
+	    tl->SetParamVelocityX(paramVelocityX);
+	    tl->SetParamVelocityZ(paramVelocityZ);
+
+        ls->SetParamT0(T0);
+	    ls->SetParamVelocityX(paramVelocityX);
+		ls->SetParamStrideX(paramHalfStrideX);
+	    ls->SetParamVelocityZ(paramVelocityZ);
+
+	    ff->SetParamT0(T0);
+
+	    gf->SetParamT0(T0);
+	    gf->SetParamT0ds(paramLdx/paramVelocityX);
+	    gf->SetParamVX(paramVelocityX);
+	    gf->SetParamVZ(paramVelocityZ);
+
+		AmplitudeChange(0.01);
+		VelocityZChange(0.21);
+
+	} else if(v > 0.8){
+		paramVelocityX = v;
+		paramHalfStrideX = 0.155*v;
 	    T0 = CalcBasicCycle();
 	    paramVelocityZ = CalcZParamV(paramHalfStrideZ, T0);
 
@@ -1585,19 +1631,67 @@ void CRWalkingController::WCSetSpeed(double v){
 }
 
 void CRWalkingController::Stop(){
-	stop = true;
+	bprestop = true;
+	bstop = true;
+	breverse = false;
+	bstand = false;
 }
 
 void CRWalkingController::WCStop(){
+
+	double paramV = 0.3;
+	double paramStrideZ = 0.12;
+	double paramStrideMarginX = 0.07;
+	double paramStrideMarginZ = 0.12;
+	double paramPose = 0.25;
+	double LCpx, RCpx, LRpx;
+	double LCpz, RCpz, LRpz;
+	bool bpx, bpz, bv, bpose; 
+
+	LCpx = CalcLocalX(tfFootLeft->GetCenterPosition().x, tfFootLeft->GetCenterPosition().z, PositionOfUpperBody.x, PositionOfUpperBody.z, CurrentDirection);
+    RCpx = CalcLocalX(tfFootRight->GetCenterPosition().x, tfFootRight->GetCenterPosition().z, PositionOfUpperBody.x, PositionOfUpperBody.z, CurrentDirection);
+	LRpx = CalcLocalX(tfFootLeft->GetCenterPosition().x, tfFootLeft->GetCenterPosition().z, tfFootRight->GetCenterPosition().x, tfFootRight->GetCenterPosition().z, CurrentDirection);
+
+	LCpz = CalcLocalZ(tfFootLeft->GetCenterPosition().x, tfFootLeft->GetCenterPosition().z, PositionOfUpperBody.x, PositionOfUpperBody.z, CurrentDirection);
+    RCpz = CalcLocalZ(tfFootRight->GetCenterPosition().x, tfFootRight->GetCenterPosition().z, PositionOfUpperBody.x, PositionOfUpperBody.z, CurrentDirection);
+	LRpz = CalcLocalZ(tfFootLeft->GetCenterPosition().x, tfFootLeft->GetCenterPosition().z, tfFootRight->GetCenterPosition().x, tfFootRight->GetCenterPosition().z, CurrentDirection);
+
+	if(CenterVelocity.norm() < paramV) bv = true;
+	else bv = false;
+	if(abs(LCpx) < paramStrideMarginX && abs(RCpx) < paramStrideMarginX && abs(LRpx) < paramStrideMarginX) bpx = true;
+	else bpx = false;
+	if(abs(LCpz-paramStrideZ) < paramStrideMarginZ && abs(RCpz+paramStrideZ) < paramStrideMarginZ && abs(LRpz-2.0*paramStrideZ) < paramStrideMarginZ) bpz = true;
+	else bpz = false;
+	if(((tfChest->GetOrientation()).Rotation()).norm() < paramPose) bpose = true;
+	else bpose = false;
+
+	if(bv == true && bpx == true && bpz == true && bpose == true) {
+		if(bstand == false) {
+			Xstand = PositionOfUpperBody.x;
+			Zstand = PositionOfUpperBody.z;
+			bstand = true;
+		}
+		Stand();
+	}
+	else {
+		bstand = false;
+		gait();
+	}
+}
+
+void CRWalkingController::WCPreStop(){
     HalfStrideXChange(0.0001);
 	VelocityXChange(0.0009);
 	AmplitudeChange(0.0);
 	ff->SetParamFootHeight(0.00005);
-	VelocityZChange(0.07);
+	VelocityZChange(0.12);
 }
 
 void CRWalkingController::Reverse(void){
-	reverse = true;
+    bprestop = false;
+	bstop = false;
+	bstand = false;
+	breverse = true;
 }
 
 void CRWalkingController::WCReverse(void){
@@ -1620,11 +1714,6 @@ void CRWalkingController::SetRotationWorldCoordinate(double r){
 	TargetDirection = r + pi/2;
 }
 
-void CRWalkingController::SetPos(Vec3f pos){
-	Xs = pos.X();
-	Zs = pos.Z();
-}
-
 void CRWalkingController::SuperimposeHingeBody(){
 	syncFootLeft->SetFramePosition(tfFootLeft->GetPose().Pos());
 	syncFootLeft->SetOrientation(tfFootLeft->GetPose().Ori());
@@ -1634,43 +1723,6 @@ void CRWalkingController::SuperimposeHingeBody(){
 
 	syncHip->SetFramePosition(tfHip->GetPose().Pos());
 	syncHip->SetOrientation(tfHip->GetPose().Ori());
-
-	/*
-	double KpHip = 2500.0;
-	double KvHip = 100.0;
-	double KpFoot = 1800.0;
-	double KvFoot = 80.0;
-	double KroHip = 700.0;
-	double KavHip = 80.0;
-	double KroFoot = 600.0;
-	double KavFoot = 80.0;
-
-	Quaterniond QuattfHip = tfHip->GetPose().Ori();
-	Quaterniond QuathiHip = hiHip->GetPose().Ori();
-	Quaterniond QuattfFootLeft = tfFootLeft->GetPose().Ori();
-	Quaterniond QuathiFootLeft = hiFootLeft->GetPose().Ori();
-	Quaterniond QuattfFootRight = tfFootRight->GetPose().Ori();
-	Quaterniond QuathiFootRight = hiFootRight->GetPose().Ori();
-    Quaterniond dQuatHip;
-	Quaterniond dQuatFootLeft;
-	Quaterniond dQuatFootRight;
-
-	dQuatHip = QuattfHip * QuathiHip.Inv(); 
-	dQuatFootLeft = QuattfFootLeft * QuathiFootLeft.Inv();
-	dQuatFootRight = QuattfFootRight * QuathiFootRight.Inv();
-
-	//hiChest->AddForce(KpChest*(tfChest->GetCenterPosition() - hiChest->GetCenterPosition()) - hiChest->GetVelocity());
-	//hiHead->AddForce(KpHip*(tfHead->GetCenterPosition() - hiHead->GetCenterPosition()) - KvHip*hiHead->GetVelocity());
-	//hiChest->AddTorque(KroChest*((tfChest->GetOrientation()).Rotation() - (hiChest->GetOrientation()).Rotation()) - KavChest*hiChest->GetAngularVelocity());
-	//hiHead->AddTorque(KroHip*((tfHead->GetOrientation()).Rotation() - (hiHead->GetOrientation()).Rotation()) - KavHip*hiHead->GetAngularVelocity());
-	hiHip->AddForce(KpHip*(tfHip->GetCenterPosition() - hiHip->GetCenterPosition()) + KvHip*(tfHip->GetCenterPosition() - hiHip->GetVelocity()));
-	hiFootLeft->AddForce(KpFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetCenterPosition()) + KvFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetVelocity()));
-	hiFootRight->AddForce(KpFoot*(tfFootRight->GetCenterPosition() - hiFootRight->GetCenterPosition()) + KvFoot*(tfFootLeft->GetCenterPosition() - hiFootLeft->GetVelocity()));
-
-	hiHip->AddTorque(KroHip*(dQuatHip.Rotation()) - KavHip*hiHip->GetAngularVelocity());
-	hiFootLeft->AddTorque(KroFoot*(dQuatFootLeft.Rotation()) - KavFoot*hiFootLeft->GetAngularVelocity());
-	hiFootRight->AddTorque(KroFoot*(dQuatFootRight.Rotation()) - KavFoot*hiFootRight->GetAngularVelocity());
-	*/
 }
 
 }

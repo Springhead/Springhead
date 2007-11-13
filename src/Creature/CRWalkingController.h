@@ -95,10 +95,14 @@ private:
 
 	double Xs;
 	double Zs;
+	double Xstand;
+	double Zstand;
 
 	double nextSpeed;
-	bool stop;
-	bool reverse;
+	bool bprestop;
+	bool bstop;
+	bool bstand;
+	bool breverse;
 
 	CRWCTimeLeft* tl; 
 	CRWCChangeAroundCenter* cac;
@@ -123,6 +127,7 @@ private:
 	void AmplitudeChange(double amp);
 	void FootHeightChange(double fh);
 	void WCSetSpeed(double v);
+	void WCPreStop(void);
 	void WCStop(void);
 	void WCReverse(void);
 	void CalcCurrentDirection(void);
@@ -150,7 +155,7 @@ private:
 	void CreateCRWCLandingSite(void);
 	void CreateCRWCFootForce(void);
 	void CreateCRWCGeneForce(void);
-	void stand(void);
+	void Stand(void);
 	void gait(void);
 
 	void SuperimposeHingeBody(void);

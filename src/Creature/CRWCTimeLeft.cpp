@@ -345,11 +345,11 @@ double CRWCTimeLeft::CalcLocalX(double xb, double zb, double xt, double zt, doub
 	double vari1;
 	double relativeX;
 
-	if(abs(tan(theta)) > 100000.0) {
+	if(abs(tan(theta)) > 10000000000.0) {
 		vari0 = xt;
 		vari1 = zb;
 	}
-	else if(abs(1/tan(theta)) > 100000.0) {
+	else if(abs(1/tan(theta)) > 10000000000.0) {
 		vari0 = xb;
 		vari1 = zt;
 	}
@@ -387,11 +387,11 @@ double CRWCTimeLeft::CalcLocalZ(double xb, double zb, double xt, double zt, doub
 	double vari1;
 	double relativeZ;
 
-	if(abs(tan(theta)) > 100000.0) {
+	if(abs(tan(theta)) > 10000000000.0) {
 		vari0 = xt;
 		vari1 = zb;
 	}
-	else if(abs(1/tan(theta)) > 100000.0) {
+	else if(abs(1/tan(theta)) > 10000000000.0) {
 		vari0 = xb;
 		vari1 = zt;
 	}
