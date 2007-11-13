@@ -1,6 +1,6 @@
 #include "CRHingeAnimalBody.h"
 
-#define GRAVITYMODE 1
+#define GRAVITYMODE 0
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -14,53 +14,53 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 
 	waistBreadth   = 0.6;
 	waistHeight    = 0.8;
-	waistThickness = 0.65;
+	waistThickness = 0.8;
 
 	chestBreadth   = 0.6;
 	chestHeight    = 1.5;
-	chestThickness = 0.65;
+	chestThickness = 0.8;
 
-	tailBreath    = 0.1;
+	tailBreadth    = 0.1;
 	tailHeight    = 0.2;
 	tailThickness = 0.1;
 
-	neckBreath	  = 0.5;
+	neckBreadth	  = 0.5;
 	neckHeight	  = 1.2;
 	neckThickness = 0.4;
 
-	headBreath    = 0.4;
+	headBreadth    = 0.4;
 	headHeight	  = 0.7;
 	headThickness = 0.3;
 
-	breathtboneBreath    = 0.2;
+	breathtboneBreadth    = 0.2;
 	breathtboneHeight    = 0.5;
 	breathtboneThickness = 0.2; 
 
-	radiusBreath	= 0.2;
+	radiusBreadth	= 0.2;
 	radiusHeight	= 0.7;
 	radiusThickness = 0.2;
 
-	frontCannonBoneBreath	 = 0.15;
+	frontCannonBoneBreadth	 = 0.15;
 	frontCannonBoneHeight	 = 0.6;
 	frontCannonBoneThickness = 0.15;
 
-	frontToeBreath	  = 0.25;
+	frontToeBreadth	  = 0.25;
 	frontToeHeight	  = 0.1;
 	frontToeThickness = 0.25;
 
-	femurBreath    = 0.25;
+	femurBreadth   = 0.25;
 	femurHeight	   = 0.65;
 	femurThickness = 0.25;
 
-	tibiaBreath	   = 0.2;
-	tibiaHeight	   = 0.5;
+	tibiaBreadth   = 0.2;
+	tibiaHeight	   = 0.7;
 	tibiaThickness = 0.2;
 
-	rearCannonBoneBreath    = 0.15;
+	rearCannonBoneBreadth    = 0.15;
 	rearCannonBoneHeight    = 0.65;
 	rearCannonBoneThickness = 0.15;
 
-	rearToeBreath    = 0.25;
+	rearToeBreadth    = 0.25;
 	rearToeHeight    = 0.1;
 	rearToeThickness = 0.25;
 
@@ -87,7 +87,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	oriNeckHead	  = Quaterniond::Rot(Rad(-90), 'x');
 	oriShoulder   = Quaterniond::Rot(Rad(120), 'x');
 	oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
-	oriHip		  = Quaterniond::Rot(Rad(+60), 'x');
+	oriHip		  = Quaterniond::Rot(Rad(-120), 'x');
 	oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
 
 	// Range of Swing of ball joints
@@ -98,7 +98,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rangeNeckHead   = Rad(100);
 	rangeShoulder	= Rad(180);
 	rangeFrontAnkle = Rad(5);
-	rangeHip		= Rad(40);
+	rangeHip		= Rad(180);
 	rangeRearAnkle  = Rad(5);
 
 	// Range of Twsit of ball joints(Vec2d(lower, upper)
@@ -110,6 +110,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rangeTwistShoulder	 = Vec2d(Rad(-10), Rad(10));
 	rangeTwistFrontAnkle = Vec2d(Rad(- 1), Rad( 1));
 	rangeTwistHip		 = Vec2d(Rad(-10), Rad(10));
+	rangeTwistRearAnkle  = Vec2d(Rad(- 1), Rad( 1));
 
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø)
 	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
@@ -143,7 +144,7 @@ void CRHingeAnimalBody::CreateWaist(){
 
 	// Solid
 	// define the solid(it has no shape)
-	solidDesc.mass   = 0.2;
+	solidDesc.mass   = 0.7;
 	solids[SO_WAIST] = phScene->CreateSolid(solidDesc);
 	solids[SO_WAIST]->SetName("soWaist");
 	// define the shape of the solid.
@@ -208,7 +209,7 @@ void CRHingeAnimalBody::CreateTail(){
 	solids[SO_TAIL3]->SetName("soTail3");
 	
 	// define the shape
-	boxDesc.boxsize = Vec3f(tailBreath, tailHeight, tailThickness);
+	boxDesc.boxsize = Vec3f(tailBreadth, tailHeight, tailThickness);
 	solids[SO_TAIL1]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_TAIL2]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
@@ -272,12 +273,12 @@ void CRHingeAnimalBody::CreateNeck(){
 	PHBallJointDesc		ballDesc;
 
 	// define the solid
-	solidDesc.mass = 0.1;
+	solidDesc.mass = 0.2;
 	solids[SO_NECK] = phScene->CreateSolid(solidDesc);
 	solids[SO_NECK]->SetName("soNeck");
 
 	// define the shape
-	boxDesc.boxsize = Vec3f(neckBreath, neckHeight, neckThickness);
+	boxDesc.boxsize = Vec3f(neckBreadth, neckHeight, neckThickness);
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// define the joint  [c]neck - [p]chest
@@ -309,7 +310,7 @@ void CRHingeAnimalBody::CreateHead(){
 	solids[SO_HEAD] = phScene->CreateSolid(solidDesc);
 	solids[SO_HEAD]->SetName("soHead");
 	// define the shape
-	boxDesc.boxsize = Vec3f(headBreath, headHeight, headThickness);
+	boxDesc.boxsize = Vec3f(headBreadth, headHeight, headThickness);
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// define the connection  [c]head - [p]neck
@@ -384,10 +385,10 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 		solids[soBreastbone]->SetName("soRightBreastbone");
 
 	
-	boxDesc.boxsize = Vec3f(breathtboneBreath, breathtboneHeight, breathtboneThickness);
+	boxDesc.boxsize = Vec3f(breathtboneBreadth, breathtboneHeight, breathtboneThickness);
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()   = Vec3f(lr*breathtboneBreath/2.0, 0.0,  breathtboneHeight/2.0);
+	ballDesc.posePlug.Pos()   = Vec3f(lr*breathtboneBreadth/2.0, 0.0,  breathtboneHeight/2.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, -chestThickness/3.0, -chestHeight/2.5);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
@@ -433,7 +434,7 @@ void CRHingeAnimalBody::CreateRadius(LREnum lr){
 	else
 		solids[soRadius]->SetName("soRightRadius");
 
-	boxDesc.boxsize = Vec3f(radiusBreath, radiusHeight, radiusThickness);
+	boxDesc.boxsize = Vec3f(radiusBreadth, radiusHeight, radiusThickness);
 	solids[soRadius]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	//[p]breastbone-[c]radius
@@ -483,7 +484,7 @@ void CRHingeAnimalBody::CreateFrontCannonBone(LREnum lr){
 	else
 		solids[soCannonBone]->SetName("soRightFrontCannonBone");
 
-	boxDesc.boxsize = Vec3f(frontCannonBoneBreath, frontCannonBoneHeight, frontCannonBoneThickness);
+	boxDesc.boxsize = Vec3f(frontCannonBoneBreadth, frontCannonBoneHeight, frontCannonBoneThickness);
 	solids[soCannonBone]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	// [p]Radius - [c]CannonBone
@@ -528,14 +529,14 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 		joAnkle		 = JO_RIGHT_FRONT_ANKLE;
 	}
 	//@[p]frontCannonBoneË[c]frontToe‚Ö
-	solidDesc.mass = 0.02;
+	solidDesc.mass = 0.2;
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soToe]->SetName("soLeftFrontToe");
 	else
 		solids[soToe]->SetName("soRightFrontToe");
 
-	boxDesc.boxsize = Vec3f(frontToeBreath, frontToeHeight, frontToeThickness);
+	boxDesc.boxsize = Vec3f(frontToeBreadth, frontToeHeight, frontToeThickness);
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, frontToeHeight/2.0, 0.0);
@@ -563,16 +564,16 @@ void CRHingeAnimalBody::InitRearLegs(){
 	
 	if (!noLegs) {
 		CreateFemur(LEFTPART);
-//		CreateTibia(LEFTPART);
-//		CreateRearCannonBone(LEFTPART);
-//		CreateRearToeBones(LEFTPART);
+		CreateTibia(LEFTPART);
+		CreateRearCannonBone(LEFTPART);
+		CreateRearToeBones(LEFTPART);
 	}
 	
 	if (!noLegs) {
-//		CreateFemur(RIGHTPART);
-//		CreateTibia(RIGHTPART);
-//		CreateRearCannonBone(RIGHTPART);
-//		CreateRearToeBones(RIGHTPART);
+		CreateFemur(RIGHTPART);
+		CreateTibia(RIGHTPART);
+		CreateRearCannonBone(RIGHTPART);
+		CreateRearToeBones(RIGHTPART);
 	}
 	
 	// —¼‘«‚Í‹ß‚·‚¬‚Ä‘«‚Ì‘¾‚³ŽŸ‘æ‚Å‚ÍÕ“Ë‚µ‚Ä‚µ‚Ü‚¤‚½‚ßD
@@ -607,12 +608,12 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	else
 		solids[soFemur]->SetName("soRighFemur");
     
-	boxDesc.boxsize = Vec3f(breathtboneBreath, breathtboneHeight, breathtboneThickness);
+	boxDesc.boxsize = Vec3f(breathtboneBreadth, breathtboneHeight, breathtboneThickness);
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()   = Vec3f(-lr*femurBreath/2.0, 0.0, 0.0);//-femurHeight/2.0);
+	ballDesc.posePlug.Pos()   = Vec3f(lr*femurBreadth/2.0, femurThickness/2.0, 0.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, 0.0, 0.0);//-waistHeight/2.0);
+	ballDesc.poseSocket.Pos() = Vec3f(-lr*waistBreadth/2.4, 0.0, -waistThickness/2.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
@@ -656,7 +657,7 @@ void CRHingeAnimalBody::CreateTibia(LREnum lr){
 	else
 		solids[soTibia]->SetName("soRightTibia");
 
-	boxDesc.boxsize = Vec3f(tibiaBreath, tibiaHeight, tibiaThickness);
+	boxDesc.boxsize = Vec3f(tibiaBreadth, tibiaHeight, tibiaThickness);
 	solids[soTibia]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	//[p]femur-[c]tibia
@@ -666,7 +667,7 @@ void CRHingeAnimalBody::CreateTibia(LREnum lr){
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springStifle;
 	hingeDesc.damper		   = damperStifle;
-	hingeDesc.origin		   = Rad(-30);
+	hingeDesc.origin		   = Rad(30);
 	hingeDesc.lower			   = rangeStifle[0];
 	hingeDesc.upper			   = rangeStifle[1];
 
@@ -707,7 +708,7 @@ void CRHingeAnimalBody::CreateRearCannonBone(LREnum lr){
 	else
 		solids[soCannonBone]->SetName("soRightRearCannonBone");
     
-	boxDesc.boxsize = Vec3f(rearCannonBoneBreath, rearCannonBoneHeight, rearCannonBoneThickness);
+	boxDesc.boxsize = Vec3f(rearCannonBoneBreadth, rearCannonBoneHeight, rearCannonBoneThickness);
 	solids[soCannonBone]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	// [p]Tibia - [c]CannonBone
@@ -717,7 +718,7 @@ void CRHingeAnimalBody::CreateRearCannonBone(LREnum lr){
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springRearKnee;
 	hingeDesc.damper		   = damperRearKnee;
-	hingeDesc.origin		   = Rad(10);
+	hingeDesc.origin		   = Rad(-5);
 	hingeDesc.lower			   = rangeRearKnee[0];
 	hingeDesc.upper			   = rangeRearKnee[1];
 
@@ -759,7 +760,7 @@ void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
 	else
 		solids[soToe]->SetName("soRightRearToe");
 
-	boxDesc.boxsize = Vec3f(rearToeBreath, rearToeHeight, rearToeThickness);
+	boxDesc.boxsize = Vec3f(rearToeBreadth, rearToeHeight, rearToeThickness);
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, rearToeHeight/2.0, 0.0);
@@ -770,7 +771,8 @@ void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
 	ballDesc.damper			   = damperRearAnkle;
 	ballDesc.origin			   = oriRearAnkle;
 	ballDesc.swingUpper		   = rangeRearAnkle;
-
+	ballDesc.twistLower		   = rangeTwistRearAnkle[0];
+	ballDesc.twistUpper		   = rangeTwistRearAnkle[1];
 	joints[joAnkle] = phScene->CreateJoint(solids[soToe], solids[soCannonBone], ballDesc);
 	if(lr == LEFTPART)
 		joints[joAnkle]->SetName("joLeftRearAnkle");

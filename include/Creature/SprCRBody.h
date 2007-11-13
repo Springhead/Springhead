@@ -303,17 +303,17 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	/// サイズに関するパラメータ
 	double waistBreadth,	      waistHeight,			 waistThickness;
 	double chestBreadth,	      chestHeight,			 chestThickness;
-	double tailBreath,		      tailHeight,		     tailThickness;
-	double neckBreath,		      neckHeight,			 neckThickness;
-	double headBreath,		      headHeight,			 headThickness;
-	double breathtboneBreath,     breathtboneHeight,	 breathtboneThickness;
-	double radiusBreath,	      radiusHeight,		     radiusThickness;
-	double frontCannonBoneBreath, frontCannonBoneHeight, frontCannonBoneThickness;
-	double frontToeBreath,		  frontToeHeight,		 frontToeThickness;
-	double femurBreath,			  femurHeight,			 femurThickness;
-	double tibiaBreath,			  tibiaHeight,			 tibiaThickness;
-	double rearCannonBoneBreath,  rearCannonBoneHeight,	 rearCannonBoneThickness;
-	double rearToeBreath,		  rearToeHeight,		 rearToeThickness;
+	double tailBreadth,		      tailHeight,		     tailThickness;
+	double neckBreadth,		      neckHeight,			 neckThickness;
+	double headBreadth,		      headHeight,			 headThickness;
+	double breathtboneBreadth,     breathtboneHeight,	 breathtboneThickness;
+	double radiusBreadth,	      radiusHeight,		     radiusThickness;
+	double frontCannonBoneBreadth, frontCannonBoneHeight, frontCannonBoneThickness;
+	double frontToeBreadth,		  frontToeHeight,		 frontToeThickness;
+	double femurBreadth,			  femurHeight,			 femurThickness;
+	double tibiaBreadth,			  tibiaHeight,			 tibiaThickness;
+	double rearCannonBoneBreadth,  rearCannonBoneHeight,	 rearCannonBoneThickness;
+	double rearToeBreadth,		  rearToeHeight,		 rearToeThickness;
 
 	/// 各関節のバネダンパ
 	double springWaistChest,   damperWaistChest;	//腰-胸
@@ -371,6 +371,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	Vec2d rangeTwistShoulder;
 	Vec2d rangeTwistFrontAnkle;
 	Vec2d rangeTwistHip;
+	Vec2d rangeTwistRearAnkle;
 
 
 	/// 裏オプション
