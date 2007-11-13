@@ -91,6 +91,19 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	axisIndex[1] = 4;
 	axisIndex[2] = 5;
 }
+
+bool PHBallJoint::GetDesc(void* desc){
+	PHConstraint::GetDesc(desc);
+	((PHBallJointDesc*)desc)->spring	 = spring;
+	((PHBallJointDesc*)desc)->damper	 = damper;
+	((PHBallJointDesc*)desc)->swingUpper = swingUpper;
+	((PHBallJointDesc*)desc)->twistLower = twistLower;
+	((PHBallJointDesc*)desc)->twistUpper = twistUpper;
+	((PHBallJointDesc*)desc)->origin	 = origin;
+	((PHBallJointDesc*)desc)->torque	 = GetMotorTorque();
+	return true;
+}
+
 void PHBallJoint::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;

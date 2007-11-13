@@ -71,6 +71,7 @@ public:
 	virtual Vec3d	GetVelocity(){return velocity;}
 	
 	/// 仮想関数のオーバライド
+	virtual bool GetDesc(void* desc);
 	virtual void SetDesc(const void* desc);
 	virtual void AddMotorTorque(){f.w() = torque * scene->GetTimeStep();}
 	virtual void SetConstrainedIndex(bool* con);
