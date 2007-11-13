@@ -182,4 +182,10 @@ CDFaceIf* CDBox::GetFace(size_t i){
 	return &qfaces.at(i);
 }
 
+// ’¼•û‘Ì‚ÌƒTƒCƒY‚ğİ’è
+Vec3f CDBox::SetBoxSize(Vec3f boxSize){
+	boxsize = boxSize;
+	return boxsize;
+}
+
 }	//	namespace Spr

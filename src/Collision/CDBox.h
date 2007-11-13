@@ -56,6 +56,9 @@ public:
 	Vec3f GetBoxSize();
 	Vec3f* GetVertices();
 	CDFaceIf* GetFace(size_t i);
+
+	/// ’¼•û‘Ì‚ÌƒTƒCƒY‚ğİ’è
+	Vec3f SetBoxSize(Vec3f boxSize);
 };
 	
 

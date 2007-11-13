@@ -122,6 +122,7 @@ struct CDBoxIf: public CDConvexIf{
 	virtual Vec3f GetBoxSize()=0;
 	virtual Vec3f* GetVertices()=0;
 	virtual CDFaceIf* GetFace(size_t i)=0;
+	virtual Vec3f SetBoxSize(Vec3f boxsize)=0;
 };
 /** 直方体のディスクリプタ */
 struct CDBoxDesc: public CDShapeDesc{

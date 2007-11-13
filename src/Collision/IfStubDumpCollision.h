@@ -93,6 +93,9 @@ struct CDBoxIfStubTemplate: public CDConvexIfStubTemplate<IF, MIF, OBJ> {
 	virtual CDFaceIf * GetFace(size_t i){
 		return ((OBJ*)(MIF*)this)->GetFace(i);
 	}
+	virtual Vec3f SetBoxSize(Vec3f boxsize){
+		return ((OBJ*)(MIF*)this)->SetBoxSize(boxsize);
+	}
 };
 struct CDBoxIf;	class CDBox;
 typedef CDBoxIfStubTemplate<CDBoxIf, ObjectIfBuf, CDBox>	CDBoxIfStub;
