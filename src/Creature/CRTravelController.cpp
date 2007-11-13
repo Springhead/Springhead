@@ -64,8 +64,12 @@ void CRTravelController::Step(){
 		/*/
 		float limitStartDist = 2.0;
 		float limitSatDist   = 0.7;
+<<<<<<< .mine
+		float maxMax = 2.0;
+=======
 		// float maxMax = 1.5;
 		float maxMax = 3.0;
+>>>>>>> .r2726
 		float minMax = 0.4;
 		/**/
 
@@ -94,7 +98,7 @@ void CRTravelController::Step(){
 		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 3.0);
 		walkCtrl->SetSpeed((PTM::dot(currDir, dir)+1) * 1.0);
 		*/
-		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 0.5);
+		walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 1.0); //walkCtrl->SetRotationAngle(-asin(PTM::cross(currDir, dir)) * 0.5);
 		walkCtrl->SetSpeed((PTM::dot(currDir, dir)+1) / 2.0 * maxSpeed);
 	}
 }
