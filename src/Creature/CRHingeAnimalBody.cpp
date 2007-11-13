@@ -613,7 +613,7 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	
 	ballDesc.posePlug.Pos()   = Vec3f(lr*femurBreadth/2.0, femurThickness/2.0, 0.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos() = Vec3f(-lr*waistBreadth/2.4, 0.0, -waistThickness/2.0);
+	ballDesc.poseSocket.Pos() = Vec3f(-lr*waistBreadth/2.2, 0.0, -waistThickness/2.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
