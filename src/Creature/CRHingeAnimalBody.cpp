@@ -20,7 +20,7 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	chestHeight    = 1.5;
 	chestThickness = 0.8;
 
-	tailBreadth    = 0.1;
+	tailBreadth   = 0.1;
 	tailHeight    = 0.2;
 	tailThickness = 0.1;
 
@@ -28,11 +28,11 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	neckHeight	  = 1.2;
 	neckThickness = 0.4;
 
-	headBreadth    = 0.4;
+	headBreadth   = 0.4;
 	headHeight	  = 0.7;
 	headThickness = 0.3;
 
-	breathtboneBreadth    = 0.2;
+	breathtboneBreadth   = 0.2;
 	breathtboneHeight    = 0.5;
 	breathtboneThickness = 0.2; 
 
@@ -56,11 +56,11 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	tibiaHeight	   = 0.7;
 	tibiaThickness = 0.2;
 
-	rearCannonBoneBreadth    = 0.15;
+	rearCannonBoneBreadth   = 0.15;
 	rearCannonBoneHeight    = 0.65;
 	rearCannonBoneThickness = 0.15;
 
-	rearToeBreadth    = 0.25;
+	rearToeBreadth   = 0.25;
 	rearToeHeight    = 0.1;
 	rearToeThickness = 0.25;
 
@@ -224,8 +224,8 @@ void CRHingeAnimalBody::CreateTail(){
 	ballDesc.damper            = damperWaistTail;
 	ballDesc.origin            = oriWaistTail;
 	ballDesc.swingUpper        = rangeWaistTail;
-	joints[JO_TAIL_WAIST]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
-	joints[JO_TAIL_WAIST]->SetName("joWaistTail");
+	joints[JO_WAIST_TAIL]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
+	joints[JO_WAIST_TAIL]->SetName("joWaistTail");
 
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);

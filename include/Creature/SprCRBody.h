@@ -242,78 +242,75 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	DESC_DEF_FOR_OBJECT(CRHingeAnimalBody);
 
 	enum CRAnimalSolids{
-		// Center
+		// Center part of the solids
 		SO_WAIST=0,
 		SO_CHEST, SO_TAIL1, SO_TAIL2, SO_TAIL3,
-		
-		//Head parts
 		SO_NECK, SO_HEAD, 
 
-		// Right
-		SO_RIGHT_BREASTBONE, SO_RIGHT_RADIUS, SO_RIGHT_FRONT_CANNON_BONE, SO_RIGHT_FRONT_TOE,
-		SO_RIGHT_FEMUR , SO_RIGHT_TIBIA, SO_RIGHT_REAR_CANNON_BONE, SO_RIGHT_REAR_TOE,
-		SO_RIGHT_EYE,
-
-		// Left
+		// -- Left part of the solids
 		SO_LEFT_BREASTBONE, SO_LEFT_RADIUS, SO_LEFT_FRONT_CANNON_BONE, SO_LEFT_FRONT_TOE,
 		SO_LEFT_FEMUR , SO_LEFT_TIBIA, SO_LEFT_REAR_CANNON_BONE, SO_LEFT_REAR_TOE,
-		SO_LEFT_EYE,
+		
+		// -- Right part of the solids
+		SO_RIGHT_BREASTBONE, SO_RIGHT_RADIUS, SO_RIGHT_FRONT_CANNON_BONE, SO_RIGHT_FRONT_TOE,
+		SO_RIGHT_FEMUR , SO_RIGHT_TIBIA, SO_RIGHT_REAR_CANNON_BONE, SO_RIGHT_REAR_TOE,
+		
+		// -- Undefined members (the reality is NULL)
+		SO_RIGHT_EYE,SO_LEFT_EYE,
+		SO_RIGHT_EYE_XY,SO_LEFT_EYE_XY,
 
-		// 関節の中継ぎ用の形状を有しない剛体
-		SO_RIGHT_EYE_XY,
-		SO_LEFT_EYE_XY,
-
-		// 剛体の数
+		// -- The number of the solids
 		SO_NSOLIDS
 	};
 
 	enum CRAnimalJoints{
-		// -- Center
+		// -- Center part of the ball joints
 		JO_WAIST_CHEST=0,
 		JO_CHEST_NECK,
 		JO_NECK_HEAD,
-		JO_TAIL_WAIST, JO_TAIL_12, JO_TAIL_23,
+		JO_WAIST_TAIL, JO_TAIL_12, JO_TAIL_23,
 
-		// -- Right
-		JO_RIGHT_SHOULDER,
-		JO_RIGHT_ELBOW,JO_RIGHT_FRONT_KNEE,
-		JO_RIGHT_FRONT_ANKLE,
+		// -- Left part of the ball joints
+		JO_LEFT_SHOULDER,JO_LEFT_FRONT_ANKLE,
+		JO_LEFT_HIP, JO_LEFT_REAR_ANKLE,
 
-		JO_RIGHT_HIP,
-		JO_RIGHT_STIFLE,JO_RIGHT_REAR_KNEE,
-		JO_RIGHT_REAR_ANKLE,
+		// -- Right part of the ball joints
+		JO_RIGHT_SHOULDER, JO_RIGHT_FRONT_ANKLE,
+		JO_RIGHT_HIP, JO_RIGHT_REAR_ANKLE,
 
-		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
-
-		// -- Left
-		JO_LEFT_SHOULDER,
+		// -- The number of the ball joints
+		JO_NBALLJOINTS,
+		
+		// -- Left part of the hinge joints
 		JO_LEFT_ELBOW,JO_LEFT_FRONT_KNEE,
-		JO_LEFT_FRONT_ANKLE,
-
-		JO_LEFT_HIP,
 		JO_LEFT_STIFLE,JO_LEFT_REAR_KNEE,
-		JO_LEFT_REAR_ANKLE,
 
+		// -- Right part of the hinge joints
+		JO_RIGHT_ELBOW,JO_RIGHT_FRONT_KNEE,
+		JO_RIGHT_STIFLE,JO_RIGHT_REAR_KNEE,
+
+		// --　Undefined members (its reality is NULL)
+		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
 		JO_LEFT_EYE_Y, JO_LEFT_EYE_X,
 
-		// 関節の数
-		JO_NJOINTS
+		// -- The number of the all joints (ball + hinge)
+		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)
 	};
 
 	/// サイズに関するパラメータ
-	double waistBreadth,	      waistHeight,			 waistThickness;
-	double chestBreadth,	      chestHeight,			 chestThickness;
-	double tailBreadth,		      tailHeight,		     tailThickness;
-	double neckBreadth,		      neckHeight,			 neckThickness;
-	double headBreadth,		      headHeight,			 headThickness;
-	double breathtboneBreadth,     breathtboneHeight,	 breathtboneThickness;
-	double radiusBreadth,	      radiusHeight,		     radiusThickness;
+	double waistBreadth,	       waistHeight,			  waistThickness;
+	double chestBreadth,	       chestHeight,			  chestThickness;
+	double tailBreadth,		       tailHeight,		      tailThickness;
+	double neckBreadth,		       neckHeight,			  neckThickness;
+	double headBreadth,		       headHeight,			  headThickness;
+	double breathtboneBreadth,     breathtboneHeight,	  breathtboneThickness;
+	double radiusBreadth,	       radiusHeight,		  radiusThickness;
 	double frontCannonBoneBreadth, frontCannonBoneHeight, frontCannonBoneThickness;
-	double frontToeBreadth,		  frontToeHeight,		 frontToeThickness;
-	double femurBreadth,			  femurHeight,			 femurThickness;
-	double tibiaBreadth,			  tibiaHeight,			 tibiaThickness;
-	double rearCannonBoneBreadth,  rearCannonBoneHeight,	 rearCannonBoneThickness;
-	double rearToeBreadth,		  rearToeHeight,		 rearToeThickness;
+	double frontToeBreadth,		   frontToeHeight,		  frontToeThickness;
+	double femurBreadth,		   femurHeight,			  femurThickness;
+	double tibiaBreadth,		   tibiaHeight,			  tibiaThickness;
+	double rearCannonBoneBreadth,  rearCannonBoneHeight,  rearCannonBoneThickness;
+	double rearToeBreadth,		   rearToeHeight,		  rearToeThickness;
 
 	/// 各関節のバネダンパ
 	double springWaistChest,   damperWaistChest;	//腰-胸
@@ -329,10 +326,6 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double springStifle,	   damperStifle;		//肘？（後足）
 	double springRearKnee,	   damperRearKnee;		//膝（後足）
 	double springRearAnkle,    damperRearAnkle;		//かかと（後足）
-	
-	/// 関節取り付け角度・位置
-	//Vec3d       posRightFrontUpperLeg;
-	//Quaterniond oriRightFrontUpperLeg;
 	
 	/// 可動域制限hingejoint
 	Vec2d  rangeElbow;
