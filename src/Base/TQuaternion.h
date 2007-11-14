@@ -602,5 +602,83 @@ typedef TPose<double> Posed;
 
 //@}
 
+
+//----------------------------------------------------------------------------
+// SwingTwist
+/** 回転のスイング・ツイスト角表現 */
+struct SwingTwist : public Vec3d{
+	double& SwingDir(){return item(0);}
+	double& Swing(){return item(1);}
+	double& Twist(){return item(2);}
+	
+	void ToQuaternion(Quaterniond& q){
+		// tazzさんのメモの(11)式、軸[cos(psi), sin(psi), 0]^Tまわりにthetaだけ回転した後Z軸まわりにphi回転するquaternion
+		double psi = SwingDir(), the = Swing(), phi = Twist();
+		double cos_the = cos(the / 2), sin_the = sin(the / 2);
+		double cos_phi = cos(phi / 2), sin_phi = sin(phi / 2);
+		double cos_psiphi = cos(psi - phi / 2), sin_psiphi = sin(psi - phi / 2);
+		q.w = cos_the * cos_phi;
+		q.x = sin_the * cos_psiphi;
+		q.y = sin_the * sin_psiphi;
+		q.z = cos_the * sin_phi;
+	}
+	
+	void FromQuaternion(const Quaterniond& q){
+		// tazzさんのメモの(12)式、item[0]:psi, item[1]:theta, item[2]:phi
+		item(0) = atan2(q.w * q.y + q.x * q.z, q.w * q.x - q.y * q.z);
+		item(1) = 2 * atan2(sqrt(q.x * q.x + q.y * q.y), sqrt(q.w * q.w + q.z * q.z));
+		item(2) = 2 * atan2(q.z, q.w);
+	}
+	
+	void Jacobian(Matrix3d& J){
+		// tazzさんのメモの(13)式、st=[psi, theta, phi]^Tの時間微分から角速度ωを与えるヤコビアンJ (ω = J * (d/dt)st)
+		double psi = SwingDir();
+		double the = max(Rad(1.0), Swing());	// スイング角0でランク落ちするので無理やり回避
+		double cos_psi = cos(psi), sin_psi = sin(psi);
+		double cos_the = cos(the), sin_the = sin(the);
+		J[0][0] = -sin_the * sin_psi;
+		J[0][1] =  cos_psi;
+		J[0][2] =  sin_the * sin_psi;
+		J[1][0] =  sin_the * cos_psi;
+		J[1][1] =  sin_psi;
+		J[1][2] = -sin_the * cos_psi;
+		J[2][0] =  1.0 - cos_the;
+		J[2][1] =  0.0;
+		J[2][2] =  cos_the;
+	}
+	
+	void JacobianInverse(Matrix3d& J, const Quaterniond& q){
+		// tazzさんのメモの(14)式、角速度ωからst=[psi, theta, phi]^Tの時間微分を求めるヤコビアンJInv ((d/dt)st = JInv * ω)
+		const double eps = 1.0e-2;									// (14)式の分母が0になることを防ぐためのeps。小さくし過ぎると（1.0e-12とかすると）0付近で横にしたときに物体が外れてしまう
+		double w2z2 = max(eps, q.w * q.w + q.z * q.z);
+		double w2z2inv = 1.0 / w2z2;
+		double x2y2 = max(eps, 1.0 - w2z2);
+		double x2y2inv = 1.0 / x2y2;
+		double tmp = sqrt(w2z2inv * x2y2inv);
+		double wy_xz = q.w * q.y + q.x * q.z;
+		double wx_yz = q.w * q.x - q.y * q.z;
+		J[0][0] =  0.5 * (w2z2inv - x2y2inv) * wy_xz;
+		J[0][1] = -0.5 * (w2z2inv - x2y2inv) * wx_yz;
+		J[0][2] =  1.0;
+		J[1][0] =  tmp * wx_yz;
+		J[1][1] =  tmp * wy_xz;
+		J[1][2] =  0.0;
+		J[2][0] =  w2z2inv * wy_xz;
+		J[2][1] = -w2z2inv * wx_yz;
+		J[2][2] =  1.0;
+	}
+	
+	void Coriolis(Vec3d& c, const Vec3d& sd){
+		double cos_psi = cos(SwingDir()), sin_psi = sin(SwingDir());
+		double cos_the = cos(Swing()), sin_the = sin(Swing());
+		double tmp1 = sd[1] * (sd[0] - sd[2]);
+		double tmp2 = sd[0] * (sd[0] - sd[2]);
+		double tmp3 = sd[0] * sd[1];
+		c[0] = -cos_the * sin_psi * tmp1 - sin_the * cos_psi * tmp2 - sin_psi * tmp3;
+		c[1] =  cos_the * cos_psi * tmp1 - sin_the * sin_psi * tmp2 + cos_psi * tmp3;
+		c[2] =  sin_the * tmp1;	
+	}
+};
+
 }
 #endif

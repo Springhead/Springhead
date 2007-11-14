@@ -15,73 +15,6 @@ using namespace std;
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// SwingTwist
-
-void SwingTwist::ToQuaternion(Quaterniond& q){
-	// tazzさんのメモの(11)式、軸[cos(psi), sin(psi), 0]^Tまわりにthetaだけ回転した後Z軸まわりにphi回転するquaternion
-	double psi = SwingDir(), the = Swing(), phi = Twist();
-	double cos_the = cos(the / 2), sin_the = sin(the / 2);
-	double cos_phi = cos(phi / 2), sin_phi = sin(phi / 2);
-	double cos_psiphi = cos(psi - phi / 2), sin_psiphi = sin(psi - phi / 2);
-	q.w = cos_the * cos_phi;
-	q.x = sin_the * cos_psiphi;
-	q.y = sin_the * sin_psiphi;
-	q.z = cos_the * sin_phi;
-}
-void SwingTwist::FromQuaternion(const Quaterniond& q){
-	// tazzさんのメモの(12)式、item[0]:psi, item[1]:theta, item[2]:phi
-	item(0) = atan2(q.w * q.y + q.x * q.z, q.w * q.x - q.y * q.z);
-	item(1) = 2 * atan2(sqrt(q.x * q.x + q.y * q.y), sqrt(q.w * q.w + q.z * q.z));
-	item(2) = 2 * atan2(q.z, q.w);
-}
-void SwingTwist::Jacobian(Matrix3d& J){
-	// tazzさんのメモの(13)式、st=[psi, theta, phi]^Tの時間微分から角速度ωを与えるヤコビアンJ (ω = J * (d/dt)st)
-	double psi = SwingDir();
-	double the = max(Rad(1.0), Swing());	// スイング角0でランク落ちするので無理やり回避
-	double cos_psi = cos(psi), sin_psi = sin(psi);
-	double cos_the = cos(the), sin_the = sin(the);
-	J[0][0] = -sin_the * sin_psi;
-	J[0][1] =  cos_psi;
-	J[0][2] =  sin_the * sin_psi;
-	J[1][0] =  sin_the * cos_psi;
-	J[1][1] =  sin_psi;
-	J[1][2] = -sin_the * cos_psi;
-	J[2][0] =  1.0 - cos_the;
-	J[2][1] =  0.0;
-	J[2][2] =  cos_the;
-}
-void SwingTwist::Coriolis(Vec3d& c, const Vec3d& sd){
-	double cos_psi = cos(SwingDir()), sin_psi = sin(SwingDir());
-	double cos_the = cos(Swing()), sin_the = sin(Swing());
-	double tmp1 = sd[1] * (sd[0] - sd[2]);
-	double tmp2 = sd[0] * (sd[0] - sd[2]);
-	double tmp3 = sd[0] * sd[1];
-	c[0] = -cos_the * sin_psi * tmp1 - sin_the * cos_psi * tmp2 - sin_psi * tmp3;
-	c[1] =  cos_the * cos_psi * tmp1 - sin_the * sin_psi * tmp2 + cos_psi * tmp3;
-	c[2] =  sin_the * tmp1;	
-}
-void SwingTwist::JacobianInverse(Matrix3d& J, const Quaterniond& q){
-	// tazzさんのメモの(14)式、角速度ωからst=[psi, theta, phi]^Tの時間微分を求めるヤコビアンJInv ((d/dt)st = JInv * ω)
-	const double eps = 1.0e-2;									// (14)式の分母が0になることを防ぐためのeps。小さくし過ぎると（1.0e-12とかすると）0付近で横にしたときに物体が外れてしまう
-	double w2z2 = max(eps, q.w * q.w + q.z * q.z);
-	double w2z2inv = 1.0 / w2z2;
-	double x2y2 = max(eps, 1.0 - w2z2);
-	double x2y2inv = 1.0 / x2y2;
-	double tmp = sqrt(w2z2inv * x2y2inv);
-	double wy_xz = q.w * q.y + q.x * q.z;
-	double wx_yz = q.w * q.x - q.y * q.z;
-	J[0][0] =  0.5 * (w2z2inv - x2y2inv) * wy_xz;
-	J[0][1] = -0.5 * (w2z2inv - x2y2inv) * wx_yz;
-	J[0][2] =  1.0;
-	J[1][0] =  tmp * wx_yz;
-	J[1][1] =  tmp * wy_xz;
-	J[1][2] =  0.0;
-	J[2][0] =  w2z2inv * wy_xz;
-	J[2][1] = -w2z2inv * wx_yz;
-	J[2][2] =  1.0;
-}
-
-//----------------------------------------------------------------------------
 // PHBallJoint
 IF_OBJECT_IMP(PHBallJoint, PHJoint)
 
@@ -94,24 +27,20 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 bool PHBallJoint::GetDesc(void* desc){
 	PHConstraint::GetDesc(desc);
-	((PHBallJointDesc*)desc)->spring	 = spring;
-	((PHBallJointDesc*)desc)->damper	 = damper;
-	((PHBallJointDesc*)desc)->swingUpper = swingUpper;
-	((PHBallJointDesc*)desc)->twistLower = twistLower;
-	((PHBallJointDesc*)desc)->twistUpper = twistUpper;
-	((PHBallJointDesc*)desc)->origin	 = origin;
-	((PHBallJointDesc*)desc)->torque	 = GetMotorTorque();
+	((PHBallJointDesc*)desc)->spring		 = spring;
+	((PHBallJointDesc*)desc)->damper		 = damper;
+	((PHBallJointDesc*)desc)->limit			 = limit;
+	((PHBallJointDesc*)desc)->goal			 = goal;
+	((PHBallJointDesc*)desc)->torque		 = GetMotorTorque();
 	return true;
 }
 
 void PHBallJoint::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
-	swingUpper  = descBall.swingUpper;
-	twistLower  = descBall.twistLower;
-	twistUpper  = descBall.twistUpper;
+	limit = descBall.limit;
 	spring      = descBall.spring;
-	origin      = descBall.origin;
+	goal	    = descBall.goal;
 	damper      = descBall.damper;
 	SetMotorTorque(descBall.torque);
 }
@@ -125,20 +54,15 @@ void PHBallJoint::UpdateJointState(){
 }
 
 void PHBallJoint::SetConstrainedIndex(bool* con){
-//	DSTR << "ST=" << angle << std::endl;
-//	DSTR << "JI=" << Jstinv << std::endl;
 	con[0] = con[1] = con[2] = true;
 	// 可動範囲をチェック
-	SwingTwist angle;
-	angle.FromQuaternion(Xjrel.q);
-	swingOnUpper = (swingLower <= swingUpper && angle.Swing() >= swingUpper);
-	swingOnLower = (swingLower <= swingUpper && angle.Twist() <= twistLower);
-	twistOnLower = (twistLower <= twistUpper && angle.Twist() <= twistLower);
-	twistOnUpper = (twistLower <= twistUpper && angle.Twist() >= twistUpper);
-	// 以下3 -> swing方位，4 -> swing角, 5 -> twist角
-	con[3] = false || (spring != 0.0 || damper != 0.0);
-	con[4] = swingOnUpper || (spring != 0.0 || damper != 0.0);
-	con[5] = twistOnLower || twistOnUpper || (spring != 0.0 || damper != 0.0);
+	for(int i=0; i<3;++i){
+		onLimit[i].onUpper = limit.lower[i] < limit.upper[i] && angle[i] >= limit.upper[i];
+		onLimit[i].onLower = limit.lower[i] < limit.upper[i] && angle[i] <= limit.lower[i];
+	}
+	for(int i=0; i<3;++i){
+		con[i+3] = onLimit[i].onUpper || onLimit[i].onLower || spring[i]!=0.0 || damper[i] != 0.0;
+	}
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
@@ -152,44 +76,37 @@ void PHBallJoint::ModifyJacobian(){
 void PHBallJoint::CompBias(){
 	double dtinv = 1.0 / scene->GetTimeStep();
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算
-	db.w()[0] = 0.0;
-	db.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) * dtinv : 0.0);
-	db.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) * dtinv :
-			     twistOnUpper ? (angle.Twist() - twistUpper) * dtinv : 0.0);
+	
+	for(int i=0; i<3; ++i){
+		db.w()[i] = (onLimit[i].onLower ? (angle[i] - limit.lower[i]) * dtinv :
+			     onLimit[i].onUpper ? (angle[i] - limit.upper[i]) * dtinv : 0.0);
+	}
 	db *= engine->velCorrectionRate;
-	if(spring != 0.0 || damper != 0.0){	//	バネダンパはSwingTwist座標系で働く
-		Quaterniond diff =  Xjrel.q * origin.Inv();	//	originからみた q
-		Vec3d prop = origin * diff.RotationHalf();	//	外部座標系から見た 回転ベクトル
-		prop = Jstinv * prop;						//	回転軸ベクトルをSwingTwistに変換
-		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
-		dA.w()[0] = tmp * dtinv;
-		db.w()[0] = spring * prop[0] * tmp;
-		if (!swingOnUpper){
-			dA.w()[1] = tmp * dtinv;
-			db.w()[1] = spring * prop[1] * tmp;
-		}
-		if (!twistOnLower && !twistOnUpper ){
-			dA.w()[2] = tmp * dtinv;
-			db.w()[2] = spring * prop[1] * tmp;
+	Vec3d prop = angle - goal;
+	DSTR << "goal" << goal << "  angle" << angle << std::endl;
+	for(int i=0; i<3; ++i){
+		if (onLimit[i].onLower || onLimit[i].onUpper) continue;
+		if (spring[i] != 0.0 || damper[i] != 0.0){	//	バネダンパはSwingTwist座標系で働く
+			double tmp = 1.0 / (damper[i] + spring[i] * scene->GetTimeStep());
+			dA.w()[i] = tmp * dtinv;
+			db.w()[i] = spring[i] * prop[i] * tmp;
 		}
 	}
 }
 
 void PHBallJoint::CompError(){
 	B.v() = Xjrel.r;
-	B.w()[0] = 0.0;
-	B.w()[1] = (swingOnUpper ? (angle.Swing() - swingUpper) : 0.0);
-	B.w()[2] = (twistOnLower ? (angle.Twist() - twistLower) :
-			    twistOnUpper ? (angle.Twist() - twistUpper) : 0.0);
+	for(int i=0; i<3; ++i){
+		B.w()[i] = (onLimit[i].onLower ? (angle[i] - limit.lower[i]) :
+			onLimit[2].onUpper ? (angle[i] - limit.upper[i]) : 0.0);
+	}
 }
 
 void PHBallJoint::Projection(double& f, int k){
-	if(k == 4 && swingOnUpper)
-		f = min(0.0, f);
-	if(k == 5 && twistLower < twistUpper){
-		if(twistOnLower)
+	if (3<=k){
+		if(onLimit[k-3].onLower)
 			f = max(0.0, f);
-		if(twistOnUpper)
+		if(onLimit[k-3].onUpper)
 			f = min(0.0, f);
 	}
 }
@@ -250,14 +167,11 @@ void PHBallJointNode::CompBias(){
 }
 void PHBallJointNode::Projection(double& f, int k){
 	PHBallJoint* j = GetJoint();
-	if(k == 1 && j->swingOnUpper)
+	if(j->onLimit[k].onLower)
+		f = max(0.0, f);
+	if(j->onLimit[k].onUpper)
 		f = min(0.0, f);
-	if(k == 2 && j->twistLower < j->twistUpper){
-		if(j->twistOnLower)
-			f = max(0.0, f);
-		if(j->twistOnUpper)
-			f = min(0.0, f);
-	}
 }
+
 
 }

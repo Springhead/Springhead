@@ -14,17 +14,6 @@
 
 namespace Spr{;
 
-/** 回転のスイング・ツイスト角表現 */
-struct SwingTwist : public Vec3d{
-	double SwingDir(){return item(0);}
-	double Swing(){return item(1);}
-	double Twist(){return item(2);}
-	void ToQuaternion(Quaterniond& q);
-	void FromQuaternion(const Quaterniond& q);
-	void Jacobian(Matrix3d& J);
-	void JacobianInverse(Matrix3d& J, const Quaterniond& q);
-	void Coriolis(Vec3d& c, const Vec3d& sd);
-};
 
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
@@ -45,15 +34,29 @@ public:
 	PHBallJointNode(const PHBallJointNodeDesc& desc = PHBallJointNodeDesc()){}
 };
 
+
+
 class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 public:
 	OBJECTDEF(PHBallJoint, PHJoint);
-	
-	bool		swingOnLower, swingOnUpper, twistOnLower, twistOnUpper;
-	double		swingLower, swingUpper;
-	double		twistLower, twistUpper;
-	double      spring, damper;
-	Quaterniond origin;
+	struct OnLimit{
+		bool onLower;
+		bool onUpper;
+		bool& operator [] (int i){
+			return i==0 ? onLower : onUpper;
+		}
+	};
+	LimitST limit;		//	可動域
+	OnLimit onLimit[3];				//	可動域制限にかかっていると true
+// メモ↑-------------------------------------------------------------------------------------
+//	Swing軸：onLimit[0]
+//	Swing角：onLimit[1]
+//	Twist角：onLimit[2]
+//	である。例えばSwing軸のonLowerを得るためにはonLimit[0][0] or onLimit[0].onLowerと指定する
+// -------------------------------------------------------------------------------------------	
+
+	Vec3d spring, damper;
+	SwingTwist goal;
 	
 	SwingTwist	angle; //, velocity;	///< スイング・ツイスト角表現の角度と角速度
 	//Vec3d		torque;
@@ -61,10 +64,16 @@ public:
 	Matrix3d	Jstinv;
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
-	virtual void	SetSwingRange(double u){swingUpper = u;}
-	virtual double	GetSwingRange(){return swingUpper;}
-	virtual void	SetTwistRange(double l, double u){twistLower = l; twistUpper = u;}
-	virtual void	GetTwistRange(double& l, double& u){l = twistLower; u = twistUpper;}
+
+	virtual void	SetSwingDirRange(double l, double u){limit.upper.SwingDir() = u; limit.lower.SwingDir() = l;}
+	virtual void	GetSwingDirRange(double& l, double& u){l = limit.lower.SwingDir(); u = limit.upper.SwingDir();}
+
+	virtual void	SetSwingRange(double l, double u){limit.upper.Swing() = u; limit.lower.Swing() = l;}
+	virtual void	GetSwingRange(double& l, double& u){l = limit.lower.Swing(); u = limit.upper.Swing();}
+
+	virtual void	SetTwistRange(double l, double u){limit.lower.Twist() = l; limit.upper.Twist() = u;}
+	virtual void	GetTwistRange(double& l, double& u){l = limit.lower.Twist(); u = limit.upper.Twist();}
+
 	virtual void	SetMotorTorque(const Vec3d& t){torque = t;}
 	virtual Vec3d	GetMotorTorque(){return torque;}
 	virtual Vec3d	GetAngle(){return position;}

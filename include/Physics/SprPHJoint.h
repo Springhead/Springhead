@@ -17,6 +17,25 @@ namespace Spr{;
 
 /** \addtogroup gpPhysics */
 //@{
+
+template <class T> class Limit{
+public:
+	T lower;
+	T upper;
+	T& operator [] (int i){
+		return i==0 ? lower : upper;
+	}
+};
+
+struct LimitST{
+	SwingTwist lower;
+	SwingTwist upper;
+	SwingTwist& operator [] (int i){
+		return i==0 ? lower : upper;
+	}
+};
+
+
 /** \defgroup gpJoint ジョイント*/
 //@{
 
@@ -284,16 +303,31 @@ struct PHPathJointDesc : public PHJoint1DDesc{
 struct PHBallJointIf : public PHConstraintIf{
 	IF_DEF(PHBallJoint);
 
-	/** @brief スイング角の可動範囲を設定する
-		@param upper 最大スイング角度
-		可動範囲制限を無効化するにはupperに負の値を設定する
+	/** @brief スイングDir角の可動範囲を設定する
+		@param lower 最小スイングDir角度
+		@param upper 最大スイングDir角度
+		可動範囲制限を無効化するにはlower > upperな値を設定する
 	 */
-	virtual void SetSwingRange(double upper) = 0;
+	virtual void SetSwingDirRange(double lower, double upper) = 0;
+	/** @brief スイングDir角の可動範囲を取得する
+		@param lower 最大スイングDir角度
+		@param upper 最大スイングDir角度
+		可動範囲制限を無効化するにはlower > upperな値を設定する
+	 */
+	virtual void GetSwingDirRange(double& lower, double& upper) = 0;
 
-	/** @brief スイング角の可動範囲を取得する
-		@return 最大スイング角度
+	/** @brief スイング角の可動範囲を設定する
+		@param lower 最小スイング角度
+		@param upper 最大スイング角度
+		可動範囲制限を無効化するにはlower > upperな値を設定する
 	 */
-	virtual double GetSwingRange() = 0;
+	virtual void SetSwingRange(double lower, double upper) = 0;
+	/** @brief スイング角の可動範囲を取得する
+		@param lower 最大スイング角度
+		@param upper 最大スイング角度
+		可動範囲制限を無効化するにはlower > upperな値を設定する
+	 */
+	virtual void GetSwingRange(double& lower, double& upper) = 0;
 
 	/** @brief ツイスト角の可動範囲を設定する
 		@param lower 最小ツイスト角度
@@ -301,7 +335,6 @@ struct PHBallJointIf : public PHConstraintIf{
 		可動範囲制限を無効化するにはlower > upperな値を設定する
 	 */
 	virtual void SetTwistRange(double lower, double upper) = 0;
-
 	/** @brief ツイスト角の可動範囲を取得する
 		@param lower 最小ツイスト角度
 		@param upper 最大ツイスト角度
@@ -332,19 +365,11 @@ struct PHBallJointIf : public PHConstraintIf{
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
 	DESC_DEF_FOR_OBJECT(PHBallJoint);
-	double	swingUpper;		///< スイング角度の上限
-	double  twistLower;		///< ツイスト角度の下限
-	double  twistUpper;		///< ツイスト角度の上限
-	Vec3d	torque;			///< モータトルク
-	double	spring;			///< バネ係数
-	Quaterniond  origin;	///< バネ原点
-	double  damper;			///< ダンパ係数
-	PHBallJointDesc(){
-		swingUpper = -1.0;
-		twistLower =  1.0;
-		twistUpper = -1.0;
-		spring = damper = 0.0;
-	}
+	LimitST limit;				///< 可動域
+	Vec3d	torque;				///< モータトルク
+	SwingTwist goal;			///< バネ制御目標
+	Vec3d spring;
+	Vec3d damper;
 };
 
 /// バネダンパのインタフェース

@@ -145,11 +145,17 @@ typedef IfInitTemplate<PHPathJointIfStub, PHPathJoint>	PHPathJointIfInit;
 template <class IF, class MIF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetSwingRange(double upper){
-		return ((OBJ*)(MIF*)this)->SetSwingRange(upper);
+	virtual void SetSwingDirRange(double lower, double upper){
+		return ((OBJ*)(MIF*)this)->SetSwingDirRange(lower, upper);
 	}
-	virtual double GetSwingRange(){
-		return ((OBJ*)(MIF*)this)->GetSwingRange();
+	virtual void GetSwingDirRange(double & lower, double & upper){
+		return ((OBJ*)(MIF*)this)->GetSwingDirRange(lower, upper);
+	}
+	virtual void SetSwingRange(double lower, double upper){
+		return ((OBJ*)(MIF*)this)->SetSwingRange(lower, upper);
+	}
+	virtual void GetSwingRange(double & lower, double & upper){
+		return ((OBJ*)(MIF*)this)->GetSwingRange(lower, upper);
 	}
 	virtual void SetTwistRange(double lower, double upper){
 		return ((OBJ*)(MIF*)this)->SetTwistRange(lower, upper);

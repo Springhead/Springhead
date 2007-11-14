@@ -1,5 +1,14 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
+	LimitST* pLimitST = NULL;
+	desc = DBG_NEW UTTypeDesc("LimitST");
+	desc->size = sizeof(LimitST);
+	desc->access = DBG_NEW UTAccess<LimitST>;
+	field = desc->AddField("", "SwingTwist", "lower", "");
+	field->offset = int((char*)&(pLimitST->lower) - (char*)pLimitST);
+	field = desc->AddField("", "SwingTwist", "upper", "");
+	field->offset = int((char*)&(pLimitST->upper) - (char*)pLimitST);
+	
 	PHConstraintDesc* pPHConstraintDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("PHConstraintDesc");
 	desc->size = sizeof(PHConstraintDesc);
@@ -178,19 +187,15 @@
 	desc->access = DBG_NEW UTAccess<PHBallJointDesc>;
 	field = desc->AddBase("PHJointDesc");
 	field->offset = int((char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "swingUpper", "");
-	field->offset = int((char*)&(pPHBallJointDesc->swingUpper) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "twistLower", "");
-	field->offset = int((char*)&(pPHBallJointDesc->twistLower) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "twistUpper", "");
-	field->offset = int((char*)&(pPHBallJointDesc->twistUpper) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "LimitST", "limit", "");
+	field->offset = int((char*)&(pPHBallJointDesc->limit) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "spring", "");
+	field = desc->AddField("", "SwingTwist", "goal", "");
+	field->offset = int((char*)&(pPHBallJointDesc->goal) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Vec3d", "spring", "");
 	field->offset = int((char*)&(pPHBallJointDesc->spring) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "Quaterniond", "origin", "");
-	field->offset = int((char*)&(pPHBallJointDesc->origin) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "double", "damper", "");
+	field = desc->AddField("", "Vec3d", "damper", "");
 	field->offset = int((char*)&(pPHBallJointDesc->damper) - (char*)pPHBallJointDesc);
 	db->RegisterDesc(desc);
 	

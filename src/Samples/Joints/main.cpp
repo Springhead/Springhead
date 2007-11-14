@@ -336,6 +336,7 @@ void BuildScene5(){
 	scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 	scene->SetGravity(Vec3f(0, -9.8, 0));	
 }
+
 void BuildScene6(){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
@@ -354,26 +355,19 @@ void BuildScene6(){
 	PHBallJointDesc desc;
 	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
 	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'x');
+	desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'x');
 	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
 
-#if 0
-	desc.posePlug.Pos() = Vec3d(0.0, 3.0, 0.0);
-	desc.origin = Quaterniond::Rot(Rad(180), 'z');
-#endif
-//	desc.swingUpper = Rad(30);
-//	desc.twistLower = -Rad(30);
-//	desc.twistUpper = Rad(30);
-//	desc.twistLower = -Rad(360);
-//	desc.twistUpper = Rad(360);
-	desc.spring = 0;
-	desc.damper = 0;
+	desc.limit.upper.Swing() = Rad(20);
+	desc.limit.lower.Twist() = -Rad(120);
+	desc.limit.upper.Twist() = Rad(120);
 
-	desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'x');
-	desc.swingUpper = Rad(20);
-	desc.twistLower = -Rad(120);
-	desc.twistUpper = Rad(120);
-	desc.spring = 4;
-	desc.damper = 2;
+//	desc.spring = Vec3f(0,1000,0);
+//	desc.damper = Vec3f(0,10,0);
+	desc.spring = Vec3f(100,100,100);
+	desc.damper = Vec3f(10,10,10);
+
+	desc.goal.SwingDir() = M_PI/2;
 	
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 }
@@ -502,9 +496,9 @@ void OnKey2(char key){
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
-		//jdesc.swingUpper =  0.2;	// 最大スイング角
-		//jdesc.twistLower = -0.2;	// ツイスト角範囲
-		//jdesc.twistUpper =  0.2;
+		//jdesc.limit[1].upper =  0.2;	// 最大スイング角
+		//jdesc.limit[2].lower= -0.2;	// ツイスト角範囲
+		//jdesc.limit[2].upper =  0.2;
 		jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 		jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 		size_t n = soBox.size();
@@ -547,7 +541,7 @@ void OnKey4(char key){
 	}
 }
 
-float origin = 0;
+float goal = 0;
 void OnKey5(char key){
 	switch(key){
 	case 'a': soBox[5]->SetFramePosition(Vec3d(-20.0, 30.0, 0.0)); break;
@@ -582,17 +576,17 @@ void OnKey5(char key){
 		scene->SetContactMode(PHSceneDesc::MODE_NONE);	// 接触を切る
 		}break;*/
 	case 'n':
-		origin += 0.01;
+		goal += 0.01;
 		for(unsigned i=0; i<jntLink.size(); ++i){
 			PHHingeJointIf* j = DCAST(PHHingeJointIf, jntLink[i]);
-			if (j) j->SetSpringOrigin(origin);
+			if (j) j->SetSpringOrigin(goal);
 		}
 		break;
 	case 'm':
-		origin -= 0.01;
+		goal -= 0.01;
 		for(unsigned i=0; i<jntLink.size(); ++i){
 			PHHingeJointIf* j = DCAST(PHHingeJointIf, jntLink[i]);
-			if (j) j->SetSpringOrigin(origin);
+			if (j) j->SetSpringOrigin(goal);
 		}
 		break;
 	}
