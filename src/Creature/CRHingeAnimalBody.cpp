@@ -1,6 +1,6 @@
 #include "CRHingeAnimalBody.h"
 
-#define GRAVITYMODE 0
+#define GRAVITYMODE 1
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -10,6 +10,7 @@ namespace Spr{
 
 //コンストラクタ
 CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
+
 	jointOrder = SOCKET_PARENT;
 
 	waistBreadth   = 0.6;
@@ -93,15 +94,15 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	oriHip		  = Quaterniond::Rot(Rad(-120), 'x');
 	oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
 */
-	goalWaistChest.Swing()   = Rad(0);
-	goalWaistTail.Swing()    = Rad(0);
-	goalTail.Swing()	     = Rad(0);
-	goalChestNeck.SwingDir() = Rad(-70);
-	goalNeckHead.SwingDir()  = Rad(-90);
-	goalShoulder.SwingDir()	 = Rad(120);
-	goalFrontAnkle.Swing()	 = Rad(0);
-	goalHip.SwingDir()		 = Rad(-120);
-	goalRearAnkle.Swing()	 = Rad(0);
+	goalWaistChest.Swing()    = Rad(0);
+	goalChestNeck.SwingDir()  = Rad(180);
+	goalChestNeck.Swing()	  = Rad(70);
+	goalNeckHead.SwingDir()	  = Rad(60);
+	goalNeckHead.Swing()	  = Rad(70);
+	goalShoulder.Swing()	  = Rad(120);
+	goalFrontAnkle.Swing()	  = Rad(0);
+	goalHip.Swing()			  = Rad(120);
+	goalRearAnkle.Swing()	  = Rad(0);
 /*
 	// Range of Swing of ball joints
 	rangeWaistChest = Rad(5);
@@ -126,35 +127,34 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rangeTwistRearAnkle  = Vec2d(Rad(- 1), Rad( 1));
 */
 	// Range of ball joints
-	limitWaistChest.upper.Swing() = Rad(5);
-	limitWaistChest.lower.Twist() = Rad(-5);
-	limitWaistChest.upper.Twist() = Rad(5);
-	limitWaistTail.upper.Swing()  = Rad(10);
-	limitWaistTail.lower.Twist()  = Rad(-5);
-	limitWaistTail.upper.Twist()  = Rad(5);
-	limitTail.upper.Swing()		  = Rad(20);
-	limitTail.lower.Twist()		  = Rad(-5);
-	limitTail.upper.Twist()		  = Rad(5);
-	limitChestNeck.upper.Swing()  = Rad(90);
-	limitChestNeck.lower.Twist()  = Rad(-5);
-	limitChestNeck.upper.Twist()  = Rad(5);
-	limitNeckHead.upper.Swing()	  = Rad(100);
-	limitNeckHead.lower.Twist()   = Rad(-10);
-	limitNeckHead.upper.Twist()   = Rad(10);
-	limitShoulder.upper.Swing()	  = Rad(180);
-	limitShoulder.lower.Twist()   = Rad(-10);
-	limitShoulder.upper.Twist()   = Rad(10);
-	limitFrontAnkle.upper.Swing() = Rad(5);
-	limitFrontAnkle.lower.Twist() = Rad(-1);
-	limitFrontAnkle.upper.Twist() = Rad(1);
-	limitHip.upper.Swing()		  = Rad(180);
-	limitHip.lower.Twist()		  = Rad(-10);
-	limitHip.upper.Twist()		  = Rad(10);
-	limitRearAnkle.upper.Swing()  = Rad(5);
-	limitRearAnkle.lower.Twist()  = Rad(-1);
-	limitRearAnkle.upper.Twist()  = Rad(1);
 
-
+	limitWaistChest.upper.Swing()	 = Rad(5);
+	limitWaistChest.lower.Twist()	 = Rad(-5);
+	limitWaistChest.upper.Twist()	 = Rad(5);
+	limitWaistTail.upper.Swing()	 = Rad(10);
+	limitWaistTail.lower.Twist()	 = Rad(-5);
+	limitWaistTail.upper.Twist()	 = Rad(5);
+	limitTail.upper.Swing()			 = Rad(20);
+	limitTail.lower.Twist()			 = Rad(-5);
+	limitTail.upper.Twist()			 = Rad(5);
+	limitChestNeck.upper.Swing()	 = Rad(90);
+	limitChestNeck.lower.Twist()	 = Rad(-5);
+	limitChestNeck.upper.Twist()	 = Rad(5);
+	limitNeckHead.upper.Swing()		 = Rad(100);
+	limitNeckHead.lower.Twist()		 = Rad(-10);
+	limitNeckHead.upper.Twist()		 = Rad(10);
+	limitShoulder.upper.Swing()		 = Rad(180);
+	limitShoulder.lower.Twist()		 = Rad(-10);
+	limitShoulder.upper.Twist()		 = Rad(10);
+	limitFrontAnkle.upper.Swing()	 = Rad(5);
+	limitFrontAnkle.lower.Twist()	 = Rad(-1);
+	limitFrontAnkle.upper.Twist()	 = Rad(1);
+	limitHip.upper.Swing()			 = Rad(180);
+	limitHip.lower.Twist()			 = Rad(-10);
+	limitHip.upper.Twist()			 = Rad(10);
+	limitRearAnkle.upper.Swing()	 = Rad(5);
+	limitRearAnkle.lower.Twist()	 = Rad(-1);
+	limitRearAnkle.upper.Twist()	 = Rad(1);
 
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
 	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
@@ -352,9 +352,9 @@ void CRHingeAnimalBody::CreateHead(){
 	// define the connection  [c]head - [p]neck
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, headHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -neckHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.goal			   = goalNeckHead;
@@ -371,18 +371,18 @@ void CRHingeAnimalBody::CreateHead(){
 void CRHingeAnimalBody::InitFrontLegs(){
 
 	if(! noLegs){
-		CreateBreastBone(LEFTPART);
-		CreateRadius(LEFTPART);
-		CreateFrontCannonBone(LEFTPART);
-		CreateFrontToeBones(LEFTPART);
+	//	CreateBreastBone(LEFTPART);
+	//	CreateRadius(LEFTPART);
+	//	CreateFrontCannonBone(LEFTPART);
+	//	CreateFrontToeBones(LEFTPART);
 
 	}
 
 	if(! noLegs){
-		CreateBreastBone(RIGHTPART);
-		CreateRadius(RIGHTPART);
-		CreateFrontCannonBone(RIGHTPART);
-		CreateFrontToeBones(RIGHTPART);
+	//	CreateBreastBone(RIGHTPART);
+	//	CreateRadius(RIGHTPART);
+	//	CreateFrontCannonBone(RIGHTPART);
+	//	CreateFrontToeBones(RIGHTPART);
 
 	}
 	phScene->SetContactMode(solids[SO_LEFT_BREASTBONE], solids[SO_RIGHT_BREASTBONE], PHSceneDesc::MODE_NONE);
@@ -593,17 +593,17 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 void CRHingeAnimalBody::InitRearLegs(){
 	
 	if (!noLegs) {
-		CreateFemur(LEFTPART);
-		CreateTibia(LEFTPART);
-		CreateRearCannonBone(LEFTPART);
-		CreateRearToeBones(LEFTPART);
+	//	CreateFemur(LEFTPART);
+	//	CreateTibia(LEFTPART);
+	//	CreateRearCannonBone(LEFTPART);
+	//	CreateRearToeBones(LEFTPART);
 	}
 	
 	if (!noLegs) {
-		CreateFemur(RIGHTPART);
-		CreateTibia(RIGHTPART);
-		CreateRearCannonBone(RIGHTPART);
-		CreateRearToeBones(RIGHTPART);
+	//	CreateFemur(RIGHTPART);
+	//	CreateTibia(RIGHTPART);
+	//	CreateRearCannonBone(RIGHTPART);
+	//	CreateRearToeBones(RIGHTPART);
 	}
 	
 	// 両足は近すぎて足の太さ次第では衝突してしまうため．

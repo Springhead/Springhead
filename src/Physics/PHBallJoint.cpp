@@ -23,6 +23,9 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	axisIndex[0] = 3;
 	axisIndex[1] = 4;
 	axisIndex[2] = 5;
+	goal.SwingDir() = M_PI/2.0;
+	goal.Swing()	= 0;
+	goal.Twist()	= 0;
 }
 
 bool PHBallJoint::GetDesc(void* desc){
