@@ -312,60 +312,52 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double rearCannonBoneBreadth,  rearCannonBoneHeight,  rearCannonBoneThickness;
 	double rearToeBreadth,		   rearToeHeight,		  rearToeThickness;
 
-	/// 各関節のバネダンパ
-	double springWaistChest,   damperWaistChest;	//腰-胸
-	double springWaistTail,	   damperWaistTail;		//腰-尾
-	double springTail,		   damperTail;			//尾
-	double springChestNeck,	   damperChestNeck;     //胸-首
-	double springNeckHead,	   damperNeckHead;		//首-頭
-	double springShoulder,	   damperShoulder;		//肩
+	/// 各BallJointのバネダンパ
+	Vec3d springWaistChest,    damperWaistChest;	//腰-胸
+	Vec3d springWaistTail,	   damperWaistTail;		//腰-尾
+	Vec3d springTail,		   damperTail;			//尾
+	Vec3d springChestNeck,	   damperChestNeck;     //胸-首
+	Vec3d springNeckHead,	   damperNeckHead;		//首-頭
+	Vec3d springShoulder,	   damperShoulder;		//肩
+	Vec3d springFrontAnkle,    damperFrontAnkle;	//かかと（前足）
+	Vec3d springHip,		   damperHip;			//尻
+	Vec3d springRearAnkle,     damperRearAnkle;		//かかと（後足）
+	
+	// 各HingeJointのバネダンパ
 	double springElbow,		   damperElbow;			//肘（前足）
 	double springFrontKnee,	   damperFrontKnee;		//膝（前足）
-	double springFrontAnkle,   damperFrontAnkle;	//かかと（前足）
-	double springHip,		   damperHip;			//尻
 	double springStifle,	   damperStifle;		//肘？（後足）
 	double springRearKnee,	   damperRearKnee;		//膝（後足）
-	double springRearAnkle,    damperRearAnkle;		//かかと（後足）
 	
-	/// 可動域制限hingejoint
+	/// HingeJoint可動域制限
 	Vec2d  rangeElbow;
 	Vec2d  rangeFrontKnee;
 	Vec2d  rangeStifle;
 	Vec2d  rangeRearKnee;
 	
-	//ball joints取り付け位置・角度
-	Quaterniond oriWaistChest;
-	Quaterniond oriWaistTail;
-	Quaterniond oriTail;
-	Quaterniond oriChestNeck;
-	Quaterniond oriNeckHead;
-	Quaterniond oriShoulder;
-	Quaterniond oriFrontAnkle;
-	Quaterniond oriHip;
-	Quaterniond oriRearAnkle;
+	// BallJoint制御目標
+	SwingTwist goalWaistChest;
+	SwingTwist goalWaistTail;
+	SwingTwist goalTail;
+	SwingTwist goalChestNeck;
+	SwingTwist goalNeckHead;
+	SwingTwist goalShoulder;
+	SwingTwist goalFrontAnkle;
+	SwingTwist goalHip;
+	SwingTwist goalRearAnkle;
 
-	/// Swing角の可動域制限balljoint
-	double rangeWaistChest;
-	double rangeWaistTail;
-	double rangeTail;
-	double rangeChestNeck;
-	double rangeNeckHead;
-	double rangeShoulder;
-	double rangeFrontAnkle;
-	double rangeHip;
-	double rangeRearAnkle;
+	/// BallJointの可動域制限
+	LimitST limitWaistChest;
+	LimitST limitWaistTail;
+	LimitST limitTail;
+	LimitST limitChestNeck;
+	LimitST limitNeckHead;
+	LimitST limitShoulder;
+	LimitST limitFrontAnkle;
+	LimitST limitHip;
+	LimitST limitRearAnkle;
 
-	/// Twist角の可動域制限balljoint
-	Vec2d rangeTwistWaistChest;
-	Vec2d rangeTwistWaistTail;
-	Vec2d rangeTwistTail;
-	Vec2d rangeTwistChestNeck;
-	Vec2d rangeTwistNeckHead;
-	Vec2d rangeTwistShoulder;
-	Vec2d rangeTwistFrontAnkle;
-	Vec2d rangeTwistHip;
-	Vec2d rangeTwistRearAnkle;
-
+	// 
 
 	/// 裏オプション
 	bool noLegs;

@@ -34,9 +34,10 @@ void CREseWalkingController::Init(){
 	soFixpoint->AddShape(phScene->GetSdk()->CreateShape(descBox));
 	*/
 	PHBallJointDesc ballJointDesc;
-	ballJointDesc.origin = Quaternionf::Rot(Rad(0),'y');
-	ballJointDesc.spring = 5000.0;
-	ballJointDesc.damper =  100.0;
+	//ballJointDesc.origin = Quaternionf::Rot(Rad(0),'y');
+	ballJointDesc.goal.SwingDir() = 1;
+	ballJointDesc.spring.item(2) = 5000.0;
+	ballJointDesc.damper.item(2) =  100.0;
 	joFixpoint = phScene->CreateJoint(soFixpoint, soWaist, ballJointDesc);
 
 	// phScene->SetContactMode(soFixpoint, PHSceneDesc::MODE_NONE);

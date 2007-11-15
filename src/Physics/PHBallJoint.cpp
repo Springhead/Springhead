@@ -83,7 +83,7 @@ void PHBallJoint::CompBias(){
 	}
 	db *= engine->velCorrectionRate;
 	Vec3d prop = angle - goal;
-	DSTR << "goal" << goal << "  angle" << angle << std::endl;
+	//DSTR << "goal" << goal << "  angle" << angle << std::endl;
 	for(int i=0; i<3; ++i){
 		if (onLimit[i].onLower || onLimit[i].onUpper) continue;
 		if (spring[i] != 0.0 || damper[i] != 0.0){	//	バネダンパはSwingTwist座標系で働く

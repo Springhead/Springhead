@@ -5,6 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+
+// 未実装メモ---tquaternion.h-----------------------------------------
+//fromQuaternion()が0度近辺で働く場合、360度として認識するのか、
+//0度として認識するのかでそのあと発振しないようなアルゴリズムを導入する必要がある
+
 #ifndef PHBALLJOINT_H
 #define PHBALLJOINT_H
 
