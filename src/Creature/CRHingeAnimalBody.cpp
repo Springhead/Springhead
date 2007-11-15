@@ -67,33 +67,23 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 
 	// spring and damper of ball joints
 	// example:Vec3d(swingDir, swing, twist)
-	springWaistChest   = Vec3d(0.0, 1.0, 0.0);   damperWaistChest	= Vec3d(0.0, 20.0, 0.0);
-	springWaistTail    = Vec3d(0.0, 0.0, 0.0);   damperWaistTail	= Vec3d(0.0, 1.0, 0.0);
-	springTail		   = Vec3d(0.0, 0.0, 0.0);   damperTail			= Vec3d(0.0, 1.0, 0.0);
-	springChestNeck    = Vec3d(0.0, 100.0, 0.0); damperChestNeck	= Vec3d(0.0, 20.0, 0.0);
-	springNeckHead	   = Vec3d(0.0, 100.0, 0.0); damperNeckHead		= Vec3d(0.0, 20.0, 0.0);
-	springShoulder	   = Vec3d(0.0, 50.0, 0.0);  damperShoulder		= Vec3d(0.0, 20.0, 0.0);
-	springFrontAnkle   = Vec3d(0.0,100.0, 0.0);  damperFrontAnkle	= Vec3d(0.0, 20.0, 0.0);
-	springHip		   = Vec3d(0.0, 50.0, 0.0);  damperHip			= Vec3d(0.0, 20.0, 0.0);
-	springRearAnkle	   = Vec3d(0.0,100.0, 0.0);  damperRearAnkle	= Vec3d(0.0, 20.0, 0.0);
+	springWaistChest   = Vec3d(0.0, 1.0, 0.0);    damperWaistChest	= Vec3d(0.0, 20.0, 0.0);
+	springWaistTail    = Vec3d(0.0, 0.0, 0.0);    damperWaistTail	= Vec3d(0.0, 1.0, 0.0);
+	springTail		   = Vec3d(0.0, 0.0, 0.0);    damperTail		= Vec3d(0.0, 1.0, 0.0);
+	springChestNeck    = Vec3d(10.0, 100.0, 0.0); damperChestNeck	= Vec3d(50.0, 20.0, 0.0);
+	springNeckHead	   = Vec3d(10.0, 100.0, 0.0); damperNeckHead	= Vec3d(50.0, 20.0, 0.0);
+	springShoulder	   = Vec3d(0.0, 50.0, 0.0);   damperShoulder	= Vec3d(0.0, 20.0, 0.0);
+	springFrontAnkle   = Vec3d(10.0,100.0, 0.0);  damperFrontAnkle	= Vec3d(5.0, 20.0, 0.0);
+	springHip		   = Vec3d(0.0, 50.0, 0.0);   damperHip			= Vec3d(0.0, 20.0, 0.0);
+	springRearAnkle	   = Vec3d(10.0,100.0, 0.0);  damperRearAnkle	= Vec3d(5.0, 20.0, 0.0);
 	
 	// spring and damper of hinge joints
 	springElbow		   = 50.0;  damperElbow		= 20.0;
 	springFrontKnee	   = 50.0;  damperFrontKnee	= 20.0;
 	springStifle	   = 50.0;  damperStifle	= 20.0;
 	springRearKnee	   = 50.0;  damperRearKnee	= 20.0;
+	
 	// origin of ball joints
-/*	
-	oriWaistChest = Quaterniond::Rot(Rad(  0), 'z');
-	oriWaistTail  = Quaterniond::Rot(Rad(  0), 'x');
-	oriTail		  = Quaterniond::Rot(Rad(- 0), 'x');	
-	oriChestNeck  = Quaterniond::Rot(Rad(-70), 'x');
-	oriNeckHead	  = Quaterniond::Rot(Rad(-90), 'x');
-	oriShoulder   = Quaterniond::Rot(Rad(120), 'x');
-	oriFrontAnkle = Quaterniond::Rot(Rad(  0), 'x');
-	oriHip		  = Quaterniond::Rot(Rad(-120), 'x');
-	oriRearAnkle  = Quaterniond::Rot(Rad(  0), 'x');
-*/
 	goalWaistChest.Swing()    = Rad(0);
 	goalChestNeck.SwingDir()  = Rad(180);
 	goalChestNeck.Swing()	  = Rad(70);
@@ -101,33 +91,11 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	goalShoulder.SwingDir()   = Rad(0);
 	goalShoulder.Swing()	  = Rad(120);
 	goalFrontAnkle.Swing()	  = Rad(0);
+	goalHip.SwingDir()		  = Rad(180);
 	goalHip.Swing()			  = Rad(120);
 	goalRearAnkle.Swing()	  = Rad(0);
-/*
-	// Range of Swing of ball joints
-	rangeWaistChest = Rad(5);
-	rangeWaistTail  = Rad(10);
-	rangeTail		= Rad(20);
-	rangeChestNeck  = Rad(90);
-	rangeNeckHead   = Rad(100);
-	rangeShoulder	= Rad(180);
-	rangeFrontAnkle = Rad(5);
-	rangeHip		= Rad(180);
-	rangeRearAnkle  = Rad(5);
 
-	// Range of Twsit of ball joints(Vec2d(lower, upper)
-	rangeTwistWaistChest = Vec2d(Rad(- 5), Rad( 5));
-	rangeTwistChestNeck  = Vec2d(Rad(- 5), Rad( 5)); 
-	rangeTwistWaistTail  = Vec2d(Rad(-10), Rad(10));
-	rangeTwistTail		 = Vec2d(Rad(- 5), Rad( 5));
-	rangeTwistNeckHead	 = Vec2d(Rad(-10), Rad(10));
-	rangeTwistShoulder	 = Vec2d(Rad(-10), Rad(10));
-	rangeTwistFrontAnkle = Vec2d(Rad(- 1), Rad( 1));
-	rangeTwistHip		 = Vec2d(Rad(-10), Rad(10));
-	rangeTwistRearAnkle  = Vec2d(Rad(- 1), Rad( 1));
-*/
 	// Range of ball joints
-
 	limitWaistChest.upper.Swing()	 = Rad(5);
 	limitWaistChest.lower.Twist()	 = Rad(-5);
 	limitWaistChest.upper.Twist()	 = Rad(5);
@@ -422,12 +390,10 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	boxDesc.boxsize = Vec3f(breastboneBreadth, breastboneHeight, breastboneThickness);
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	//ballDesc.posePlug.Pos()   = Vec3f(lr*breastboneBreadth/2.0, 0.0,  -breastboneHeight/2.0);
-	ballDesc.posePlug.Pos()   = Vec3f(lr*breastboneBreadth/2.0, 0.0,  -breastboneThickness/2.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	//ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, chestThickness/3.0, chestHeight/2.5);
-	ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, chestHeight/3.0, chestThickness/2.5);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Pos()   = Vec3f(lr*breastboneBreadth/2.0, breastboneThickness/2.0, 0.0);
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'y');
+	ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, -chestThickness/2.0, 0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
 	ballDesc.goal			  = goalShoulder;
