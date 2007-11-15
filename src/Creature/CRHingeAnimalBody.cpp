@@ -33,9 +33,9 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	headHeight	  = 0.7;
 	headThickness = 0.3;
 
-	breathtboneBreadth   = 0.2;
-	breathtboneHeight    = 0.5;
-	breathtboneThickness = 0.2; 
+	breastboneBreadth   = 0.2;
+	breastboneHeight    = 0.5;
+	breastboneThickness = 0.2; 
 
 	radiusBreadth	= 0.2;
 	radiusHeight	= 0.7;
@@ -97,8 +97,8 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	goalWaistChest.Swing()    = Rad(0);
 	goalChestNeck.SwingDir()  = Rad(180);
 	goalChestNeck.Swing()	  = Rad(70);
-	goalNeckHead.SwingDir()	  = Rad(60);
-	goalNeckHead.Swing()	  = Rad(70);
+	goalNeckHead.Swing()	  = Rad(90);
+	goalShoulder.SwingDir()   = Rad(180);
 	goalShoulder.Swing()	  = Rad(120);
 	goalFrontAnkle.Swing()	  = Rad(0);
 	goalHip.Swing()			  = Rad(120);
@@ -353,7 +353,7 @@ void CRHingeAnimalBody::CreateHead(){
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.posePlug.Pos()    = Vec3d(0.0, headHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -neckHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, neckHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
@@ -371,18 +371,18 @@ void CRHingeAnimalBody::CreateHead(){
 void CRHingeAnimalBody::InitFrontLegs(){
 
 	if(! noLegs){
-	//	CreateBreastBone(LEFTPART);
-	//	CreateRadius(LEFTPART);
-	//	CreateFrontCannonBone(LEFTPART);
-	//	CreateFrontToeBones(LEFTPART);
+		CreateBreastBone(LEFTPART);
+		CreateRadius(LEFTPART);
+		CreateFrontCannonBone(LEFTPART);
+		CreateFrontToeBones(LEFTPART);
 
 	}
 
 	if(! noLegs){
-	//	CreateBreastBone(RIGHTPART);
-	//	CreateRadius(RIGHTPART);
-	//	CreateFrontCannonBone(RIGHTPART);
-	//	CreateFrontToeBones(RIGHTPART);
+		CreateBreastBone(RIGHTPART);
+		CreateRadius(RIGHTPART);
+		CreateFrontCannonBone(RIGHTPART);
+		CreateFrontToeBones(RIGHTPART);
 
 	}
 	phScene->SetContactMode(solids[SO_LEFT_BREASTBONE], solids[SO_RIGHT_BREASTBONE], PHSceneDesc::MODE_NONE);
@@ -419,12 +419,14 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 		solids[soBreastbone]->SetName("soRightBreastbone");
 
 	
-	boxDesc.boxsize = Vec3f(breathtboneBreadth, breathtboneHeight, breathtboneThickness);
+	boxDesc.boxsize = Vec3f(breastboneBreadth, breastboneHeight, breastboneThickness);
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()   = Vec3f(lr*breathtboneBreadth/2.0, 0.0,  breathtboneHeight/2.0);
+	//ballDesc.posePlug.Pos()   = Vec3f(lr*breastboneBreadth/2.0, 0.0,  -breastboneHeight/2.0);
+	ballDesc.posePlug.Pos()   = Vec3f(lr*breastboneBreadth/2.0, 0.0,  -breastboneThickness/2.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, -chestThickness/3.0, -chestHeight/2.5);
+	//ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, chestThickness/3.0, chestHeight/2.5);
+	ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, chestHeight/3.0, chestThickness/2.5);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
@@ -472,7 +474,7 @@ void CRHingeAnimalBody::CreateRadius(LREnum lr){
 	//[p]breastbone-[c]radius
 	hingeDesc.posePlug.Pos()   = Vec3f(0.0, radiusHeight/2.0, 0.0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.poseSocket.Pos() = Vec3f(0.0, -breathtboneHeight/2.0, 0.0);
+	hingeDesc.poseSocket.Pos() = Vec3f(0.0, -breastboneHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springElbow;
 	hingeDesc.damper		   = damperElbow;
@@ -593,17 +595,17 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 void CRHingeAnimalBody::InitRearLegs(){
 	
 	if (!noLegs) {
-	//	CreateFemur(LEFTPART);
-	//	CreateTibia(LEFTPART);
-	//	CreateRearCannonBone(LEFTPART);
-	//	CreateRearToeBones(LEFTPART);
+		CreateFemur(LEFTPART);
+		CreateTibia(LEFTPART);
+		CreateRearCannonBone(LEFTPART);
+		CreateRearToeBones(LEFTPART);
 	}
 	
 	if (!noLegs) {
-	//	CreateFemur(RIGHTPART);
-	//	CreateTibia(RIGHTPART);
-	//	CreateRearCannonBone(RIGHTPART);
-	//	CreateRearToeBones(RIGHTPART);
+		CreateFemur(RIGHTPART);
+		CreateTibia(RIGHTPART);
+		CreateRearCannonBone(RIGHTPART);
+		CreateRearToeBones(RIGHTPART);
 	}
 	
 	// —¼‘«‚Í‹ß‚·‚¬‚Ä‘«‚Ì‘¾‚³ŽŸ‘æ‚Å‚ÍÕ“Ë‚µ‚Ä‚µ‚Ü‚¤‚½‚ßD
@@ -638,7 +640,7 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	else
 		solids[soFemur]->SetName("soRighFemur");
     
-	boxDesc.boxsize = Vec3f(breathtboneBreadth, breathtboneHeight, breathtboneThickness);
+	boxDesc.boxsize = Vec3f(femurBreadth, femurHeight, femurThickness);
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.posePlug.Pos()   = Vec3f(lr*femurBreadth/2.0, femurThickness/2.0, 0.0);

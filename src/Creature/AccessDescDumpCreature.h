@@ -692,9 +692,9 @@ protected: \
 	double headBreadth ; \
 	double headHeight ; \
 	double headThickness ; \
-	double breathtboneBreadth ; \
-	double breathtboneHeight ; \
-	double breathtboneThickness ; \
+	double breastboneBreadth ; \
+	double breastboneHeight ; \
+	double breastboneThickness ; \
 	double radiusBreadth ; \
 	double radiusHeight ; \
 	double radiusThickness ; \
@@ -783,9 +783,9 @@ public: \
 		headBreadth = ((CRHingeAnimalBodyDesc*)desc)->headBreadth; \
 		headHeight = ((CRHingeAnimalBodyDesc*)desc)->headHeight; \
 		headThickness = ((CRHingeAnimalBodyDesc*)desc)->headThickness; \
-		breathtboneBreadth = ((CRHingeAnimalBodyDesc*)desc)->breathtboneBreadth; \
-		breathtboneHeight = ((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight; \
-		breathtboneThickness = ((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness; \
+		breastboneBreadth = ((CRHingeAnimalBodyDesc*)desc)->breastboneBreadth; \
+		breastboneHeight = ((CRHingeAnimalBodyDesc*)desc)->breastboneHeight; \
+		breastboneThickness = ((CRHingeAnimalBodyDesc*)desc)->breastboneThickness; \
 		radiusBreadth = ((CRHingeAnimalBodyDesc*)desc)->radiusBreadth; \
 		radiusHeight = ((CRHingeAnimalBodyDesc*)desc)->radiusHeight; \
 		radiusThickness = ((CRHingeAnimalBodyDesc*)desc)->radiusThickness; \
@@ -874,9 +874,9 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->headBreadth = headBreadth; \
 		((CRHingeAnimalBodyDesc*)desc)->headHeight = headHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->headThickness = headThickness; \
-		((CRHingeAnimalBodyDesc*)desc)->breathtboneBreadth = breathtboneBreadth; \
-		((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight = breathtboneHeight; \
-		((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness = breathtboneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->breastboneBreadth = breastboneBreadth; \
+		((CRHingeAnimalBodyDesc*)desc)->breastboneHeight = breastboneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->breastboneThickness = breastboneThickness; \
 		((CRHingeAnimalBodyDesc*)desc)->radiusBreadth = radiusBreadth; \
 		((CRHingeAnimalBodyDesc*)desc)->radiusHeight = radiusHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->radiusThickness = radiusThickness; \
@@ -967,9 +967,9 @@ protected: \
 	double headBreadth ; \
 	double headHeight ; \
 	double headThickness ; \
-	double breathtboneBreadth ; \
-	double breathtboneHeight ; \
-	double breathtboneThickness ; \
+	double breastboneBreadth ; \
+	double breastboneHeight ; \
+	double breastboneThickness ; \
 	double radiusBreadth ; \
 	double radiusHeight ; \
 	double radiusThickness ; \
@@ -1057,9 +1057,9 @@ public: \
 		headBreadth = ((CRHingeAnimalBodyDesc*)desc)->headBreadth; \
 		headHeight = ((CRHingeAnimalBodyDesc*)desc)->headHeight; \
 		headThickness = ((CRHingeAnimalBodyDesc*)desc)->headThickness; \
-		breathtboneBreadth = ((CRHingeAnimalBodyDesc*)desc)->breathtboneBreadth; \
-		breathtboneHeight = ((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight; \
-		breathtboneThickness = ((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness; \
+		breastboneBreadth = ((CRHingeAnimalBodyDesc*)desc)->breastboneBreadth; \
+		breastboneHeight = ((CRHingeAnimalBodyDesc*)desc)->breastboneHeight; \
+		breastboneThickness = ((CRHingeAnimalBodyDesc*)desc)->breastboneThickness; \
 		radiusBreadth = ((CRHingeAnimalBodyDesc*)desc)->radiusBreadth; \
 		radiusHeight = ((CRHingeAnimalBodyDesc*)desc)->radiusHeight; \
 		radiusThickness = ((CRHingeAnimalBodyDesc*)desc)->radiusThickness; \
@@ -1147,9 +1147,9 @@ public: \
 		((CRHingeAnimalBodyDesc*)desc)->headBreadth = headBreadth; \
 		((CRHingeAnimalBodyDesc*)desc)->headHeight = headHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->headThickness = headThickness; \
-		((CRHingeAnimalBodyDesc*)desc)->breathtboneBreadth = breathtboneBreadth; \
-		((CRHingeAnimalBodyDesc*)desc)->breathtboneHeight = breathtboneHeight; \
-		((CRHingeAnimalBodyDesc*)desc)->breathtboneThickness = breathtboneThickness; \
+		((CRHingeAnimalBodyDesc*)desc)->breastboneBreadth = breastboneBreadth; \
+		((CRHingeAnimalBodyDesc*)desc)->breastboneHeight = breastboneHeight; \
+		((CRHingeAnimalBodyDesc*)desc)->breastboneThickness = breastboneThickness; \
 		((CRHingeAnimalBodyDesc*)desc)->radiusBreadth = radiusBreadth; \
 		((CRHingeAnimalBodyDesc*)desc)->radiusHeight = radiusHeight; \
 		((CRHingeAnimalBodyDesc*)desc)->radiusThickness = radiusThickness; \

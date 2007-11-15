@@ -303,7 +303,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double tailBreadth,		       tailHeight,		      tailThickness;
 	double neckBreadth,		       neckHeight,			  neckThickness;
 	double headBreadth,		       headHeight,			  headThickness;
-	double breathtboneBreadth,     breathtboneHeight,	  breathtboneThickness;
+	double breastboneBreadth,      breastboneHeight,	  breastboneThickness;
 	double radiusBreadth,	       radiusHeight,		  radiusThickness;
 	double frontCannonBoneBreadth, frontCannonBoneHeight, frontCannonBoneThickness;
 	double frontToeBreadth,		   frontToeHeight,		  frontToeThickness;
