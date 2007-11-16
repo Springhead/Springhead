@@ -20,6 +20,8 @@
 	desc->access = DBG_NEW UTAccess<CRHingeHumanBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRHingeHumanBodyDesc - (char*)pCRHingeHumanBodyDesc);
+	field = desc->AddField("", "double", "bodyMass", "");
+	field->offset = int((char*)&(pCRHingeHumanBodyDesc->bodyMass) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "waistHeight", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->waistHeight) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "waistBreadth", "");
@@ -84,6 +86,10 @@
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->eyeDiameter) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "interpupillaryBreadth", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->interpupillaryBreadth) - (char*)pCRHingeHumanBodyDesc);
+	field = desc->AddField("", "double", "spring", "");
+	field->offset = int((char*)&(pCRHingeHumanBodyDesc->spring) - (char*)pCRHingeHumanBodyDesc);
+	field = desc->AddField("", "double", "damper", "");
+	field->offset = int((char*)&(pCRHingeHumanBodyDesc->damper) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "springWaistAbdomen", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->springWaistAbdomen) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "damperWaistAbdomen", "");

@@ -152,6 +152,9 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 		JO_NJOINTS
 	};
 
+	/// 体重
+	double bodyMass;
+
 	/// サイズに関するパラメータ
 	double waistHeight, waistBreadth, waistThickness;
 	double abdomenHeight, abdomenBreadth, abdomenThickness;
@@ -166,6 +169,9 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	double footLength, footBreadth, footThickness, ankleToeDistance;
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;
+
+	/// 関節バネダンパ係数
+	double spring, damper;
 
 	/// 各関節のバネダンパ
 	double springWaistAbdomen, damperWaistAbdomen;

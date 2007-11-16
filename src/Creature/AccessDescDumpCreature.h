@@ -21,6 +21,7 @@ public: \
 
 #define ACCESS_DESC_CRHingeHumanBodyDesc(cls) \
 protected: \
+	double bodyMass ; \
 	double waistHeight ; \
 	double waistBreadth ; \
 	double waistThickness ; \
@@ -53,6 +54,8 @@ protected: \
 	double occiputToEyeDistance ; \
 	double eyeDiameter ; \
 	double interpupillaryBreadth ; \
+	double spring ; \
+	double damper ; \
 	double springWaistAbdomen ; \
 	double damperWaistAbdomen ; \
 	double springAbdomenChest ; \
@@ -130,6 +133,7 @@ protected: \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
+		bodyMass = ((CRHingeHumanBodyDesc*)desc)->bodyMass; \
 		waistHeight = ((CRHingeHumanBodyDesc*)desc)->waistHeight; \
 		waistBreadth = ((CRHingeHumanBodyDesc*)desc)->waistBreadth; \
 		waistThickness = ((CRHingeHumanBodyDesc*)desc)->waistThickness; \
@@ -162,6 +166,8 @@ public: \
 		occiputToEyeDistance = ((CRHingeHumanBodyDesc*)desc)->occiputToEyeDistance; \
 		eyeDiameter = ((CRHingeHumanBodyDesc*)desc)->eyeDiameter; \
 		interpupillaryBreadth = ((CRHingeHumanBodyDesc*)desc)->interpupillaryBreadth; \
+		spring = ((CRHingeHumanBodyDesc*)desc)->spring; \
+		damper = ((CRHingeHumanBodyDesc*)desc)->damper; \
 		springWaistAbdomen = ((CRHingeHumanBodyDesc*)desc)->springWaistAbdomen; \
 		damperWaistAbdomen = ((CRHingeHumanBodyDesc*)desc)->damperWaistAbdomen; \
 		springAbdomenChest = ((CRHingeHumanBodyDesc*)desc)->springAbdomenChest; \
@@ -239,6 +245,7 @@ public: \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
+		((CRHingeHumanBodyDesc*)desc)->bodyMass = bodyMass; \
 		((CRHingeHumanBodyDesc*)desc)->waistHeight = waistHeight; \
 		((CRHingeHumanBodyDesc*)desc)->waistBreadth = waistBreadth; \
 		((CRHingeHumanBodyDesc*)desc)->waistThickness = waistThickness; \
@@ -271,6 +278,8 @@ public: \
 		((CRHingeHumanBodyDesc*)desc)->occiputToEyeDistance = occiputToEyeDistance; \
 		((CRHingeHumanBodyDesc*)desc)->eyeDiameter = eyeDiameter; \
 		((CRHingeHumanBodyDesc*)desc)->interpupillaryBreadth = interpupillaryBreadth; \
+		((CRHingeHumanBodyDesc*)desc)->spring = spring; \
+		((CRHingeHumanBodyDesc*)desc)->damper = damper; \
 		((CRHingeHumanBodyDesc*)desc)->springWaistAbdomen = springWaistAbdomen; \
 		((CRHingeHumanBodyDesc*)desc)->damperWaistAbdomen = damperWaistAbdomen; \
 		((CRHingeHumanBodyDesc*)desc)->springAbdomenChest = springAbdomenChest; \
@@ -350,6 +359,7 @@ public: \
 
 #define ACCESS_DESC_CRHingeHumanBodyDesc_NOBASE \
 protected: \
+	double bodyMass ; \
 	double waistHeight ; \
 	double waistBreadth ; \
 	double waistThickness ; \
@@ -382,6 +392,8 @@ protected: \
 	double occiputToEyeDistance ; \
 	double eyeDiameter ; \
 	double interpupillaryBreadth ; \
+	double spring ; \
+	double damper ; \
 	double springWaistAbdomen ; \
 	double damperWaistAbdomen ; \
 	double springAbdomenChest ; \
@@ -458,6 +470,7 @@ protected: \
 	bool noLegs ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
+		bodyMass = ((CRHingeHumanBodyDesc*)desc)->bodyMass; \
 		waistHeight = ((CRHingeHumanBodyDesc*)desc)->waistHeight; \
 		waistBreadth = ((CRHingeHumanBodyDesc*)desc)->waistBreadth; \
 		waistThickness = ((CRHingeHumanBodyDesc*)desc)->waistThickness; \
@@ -490,6 +503,8 @@ public: \
 		occiputToEyeDistance = ((CRHingeHumanBodyDesc*)desc)->occiputToEyeDistance; \
 		eyeDiameter = ((CRHingeHumanBodyDesc*)desc)->eyeDiameter; \
 		interpupillaryBreadth = ((CRHingeHumanBodyDesc*)desc)->interpupillaryBreadth; \
+		spring = ((CRHingeHumanBodyDesc*)desc)->spring; \
+		damper = ((CRHingeHumanBodyDesc*)desc)->damper; \
 		springWaistAbdomen = ((CRHingeHumanBodyDesc*)desc)->springWaistAbdomen; \
 		damperWaistAbdomen = ((CRHingeHumanBodyDesc*)desc)->damperWaistAbdomen; \
 		springAbdomenChest = ((CRHingeHumanBodyDesc*)desc)->springAbdomenChest; \
@@ -566,6 +581,7 @@ public: \
 		noLegs = ((CRHingeHumanBodyDesc*)desc)->noLegs; \
 	} \
 	virtual bool GetDesc(void* desc){ \
+		((CRHingeHumanBodyDesc*)desc)->bodyMass = bodyMass; \
 		((CRHingeHumanBodyDesc*)desc)->waistHeight = waistHeight; \
 		((CRHingeHumanBodyDesc*)desc)->waistBreadth = waistBreadth; \
 		((CRHingeHumanBodyDesc*)desc)->waistThickness = waistThickness; \
@@ -598,6 +614,8 @@ public: \
 		((CRHingeHumanBodyDesc*)desc)->occiputToEyeDistance = occiputToEyeDistance; \
 		((CRHingeHumanBodyDesc*)desc)->eyeDiameter = eyeDiameter; \
 		((CRHingeHumanBodyDesc*)desc)->interpupillaryBreadth = interpupillaryBreadth; \
+		((CRHingeHumanBodyDesc*)desc)->spring = spring; \
+		((CRHingeHumanBodyDesc*)desc)->damper = damper; \
 		((CRHingeHumanBodyDesc*)desc)->springWaistAbdomen = springWaistAbdomen; \
 		((CRHingeHumanBodyDesc*)desc)->damperWaistAbdomen = damperWaistAbdomen; \
 		((CRHingeHumanBodyDesc*)desc)->springAbdomenChest = springAbdomenChest; \

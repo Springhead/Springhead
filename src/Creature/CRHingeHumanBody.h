@@ -49,6 +49,8 @@ private:
 
 	void InitContact();
 
+	void SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass);
+
 public:
 	OBJECTDEF(CRHingeHumanBody, CRBody);
 	ACCESS_DESC(CRHingeHumanBody);

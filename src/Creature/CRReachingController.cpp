@@ -48,7 +48,7 @@ void CRReachingController::Init(){
 			springDesc.spring = Vec3d(1,1,1) * springPos;
 			springDesc.damper = Vec3d(1,1,1) * damperPos;
 			springDesc.springOri = 1000.0f;
-			springDesc.damperOri =   10.0f;
+			springDesc.damperOri =   50.0f;
 			springDesc.bEnabled = false;
 		}
 		springDirect = DCAST(PHSpringIf, phScene->CreateJoint(soTargetDirect, solid, springDesc));

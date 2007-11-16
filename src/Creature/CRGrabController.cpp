@@ -124,8 +124,8 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 	if (it==grabSpringMap.end()) {
 		PHSpringDesc descSpring;
 		descSpring.bEnabled = false;
-		descSpring.spring   = Vec3d(1,1,1) * 1000;
-		descSpring.damper   = Vec3d(1,1,1) *   10;
+		descSpring.spring   = Vec3d(1,1,1) * 50;
+		descSpring.damper   = Vec3d(1,1,1) * 50;
 		descSpring.poseSocket.Pos() = Vec3f(0,0,0);
 
 		descSpring.posePlug.Pos()   = targetSolid->GetPose().Ori().Inv() *  reachPointDirL*targetRadius*0.95 - Vec3f(0,0.25,0);
@@ -199,7 +199,7 @@ bool CRGrabController::Uphold(){
 
 	reachLeft->Start(CRReachingControllerIf::CM_P3R2, -1);
 	reachRight->Start(CRReachingControllerIf::CM_P3R2, -1);
-	reachChest->Start(CRReachingControllerIf::CM_P3R0, -1);
+	// reachChest->Start(CRReachingControllerIf::CM_P3R0, -1);
 
 	controlState = CRGrabControllerIf::CRGC_UPHOLD;
 	return true;
@@ -236,7 +236,7 @@ bool CRGrabController::Place(Vec3d pos){
 
 	reachLeft->Start(CRReachingControllerIf::CM_P3R0, -1);
 	reachRight->Start(CRReachingControllerIf::CM_P3R0, -1);
-	reachChest->Start(CRReachingControllerIf::CM_P3R0, -1);
+	// reachChest->Start(CRReachingControllerIf::CM_P3R0, -1);
 
 	controlState = CRGrabControllerIf::CRGC_PLACE;
 

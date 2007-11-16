@@ -8,8 +8,9 @@ namespace Spr{
 
 //コンストラクタ
 CRHingeHumanBodyDesc::CRHingeHumanBodyDesc(){
-		
-	jointOrder = PLUG_PARENT;
+	jointOrder = SOCKET_PARENT; // そのうちなくす
+
+	bodyMass = 1.0f;  /// デフォルトがこれなのはどうも変だが(mitake)
 
 	waistHeight    = 0.2298;
 	waistBreadth   = 0.3067;
@@ -55,29 +56,32 @@ CRHingeHumanBodyDesc::CRHingeHumanBodyDesc(){
 	eyeDiameter           = 0.0240;
 	interpupillaryBreadth = 0.0619;
 
-	springWaistAbdomen =  10.0;  damperWaistAbdomen =   5.0;
-	springAbdomenChest =  10.0;  damperAbdomenChest =   5.0;
-	springChestNeckX   = 100.0;  damperChestNeckX   =  50.0;
-	springChestNeckY   = 100.0;  damperChestNeckY   =  50.0;
-	springChestNeckZ   = 100.0;  damperChestNeckZ   =  50.0;
-	springNeckHeadX    =  50.0;  damperNeckHeadX    =  20.0;
-	springNeckHeadZ    =  50.0;  damperNeckHeadZ    =  20.0;
-	springShoulderZ    =   5.0;  damperShoulderZ    =   2.0;
-	springShoulderX    =   5.0;  damperShoulderX    =   2.0;
-	springShoulderY    =   5.0;  damperShoulderY    =   2.0;
-	springElbow        =   5.0;  damperElbow        =   2.0;
-	springWristY       =   5.0;  damperWristY       =   2.0;
-	springWristX       =   5.0;  damperWristX       =   2.0;
-	springWristZ       =  10.0;  damperWristZ       =   5.0;
-	springWaistLegZ    =   5.0;  damperWaistLegZ    =   2.0;
-	springWaistLegX    =   5.0;  damperWaistLegX    =   2.0;
-	springWaistLegY    =   5.0;  damperWaistLegY    =   2.0;
-	springKnee         =   5.0;  damperKnee         =   2.0;
-	springAnkleY       =   5.0;  damperAnkleY       =   2.0;
-	springAnkleX       =   5.0;  damperAnkleX       =   2.0;
-	springAnkleZ       =  10.0;  damperAnkleZ       =   5.0;
-	springEyeY         = 500.0;  damperEyeY         =   5.0;
-	springEyeX         = 500.0;  damperEyeX         =   5.0;
+	spring = 0.2;             damper = 0.6;
+
+	springWaistAbdomen = -1;  damperWaistAbdomen = -1;
+	springAbdomenChest = -1;  damperAbdomenChest = -1;
+	springChestNeckX   = -1;  damperChestNeckX   = -1;
+	springChestNeckY   = -1;  damperChestNeckY   = -1;
+	springChestNeckZ   = -1;  damperChestNeckZ   = -1;
+	springNeckHeadX    = -1;  damperNeckHeadX    = -1;
+	springNeckHeadZ    = -1;  damperNeckHeadZ    = -1;
+	springShoulderZ    = -1;  damperShoulderZ    = -1;
+	springShoulderX    = -1;  damperShoulderX    = -1;
+	springShoulderY    = -1;  damperShoulderY    = -1;
+	springElbow        = -1;  damperElbow        = -1;
+	springWristY       = -1;  damperWristY       = -1;
+	springWristX       = -1;  damperWristX       = -1;
+	springWristZ       = -1;  damperWristZ       = -1;
+	springWaistLegZ    = -1;  damperWaistLegZ    = -1;
+	springWaistLegX    = -1;  damperWaistLegX    = -1;
+	springWaistLegY    = -1;  damperWaistLegY    = -1;
+	springKnee         = -1;  damperKnee         = -1;
+	springAnkleY       = -1;  damperAnkleY       = -1;
+	springAnkleX       = -1;  damperAnkleX       = -1;
+	springAnkleZ       = -1;  damperAnkleZ       = -1;
+
+	springEyeY         = 500.0;  damperEyeY      =  5.0;
+	springEyeX         = 500.0;  damperEyeX      =  5.0;
 
 	posRightUpperArm = Vec3d(0,0,0);
 
@@ -157,8 +161,9 @@ void CRHingeHumanBody::CreateAbdomen(){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -abdomenHeight / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springWaistAbdomen;
-	hingeDesc.damper           = damperWaistAbdomen;
+	SetJointSpringDamper(hingeDesc, springWaistAbdomen, damperWaistAbdomen, solids[SO_WAIST]->GetMass());
+	// hingeDesc.spring           = springWaistAbdomen;
+	// hingeDesc.damper           = damperWaistAbdomen;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeWaistAbdomen[0];
 	hingeDesc.upper            = rangeWaistAbdomen[1];
@@ -184,8 +189,9 @@ void CRHingeHumanBody::CreateChest(){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springAbdomenChest;
-	hingeDesc.damper           = damperAbdomenChest;
+	SetJointSpringDamper(hingeDesc, springAbdomenChest, damperAbdomenChest, solids[SO_ABDOMEN]->GetMass());
+	// hingeDesc.spring           = springAbdomenChest;
+	// hingeDesc.damper           = damperAbdomenChest;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeAbdomenChest[0];
 	hingeDesc.upper            = rangeAbdomenChest[1];
@@ -212,7 +218,7 @@ void CRHingeHumanBody::CreateNeck(){
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.04;
+	solidDesc.mass    = 0.014;
 	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[SO_CHEST_NECK_XZ] = phScene->CreateSolid(solidDesc);
 	solids[SO_CHEST_NECK_ZY] = phScene->CreateSolid(solidDesc);
@@ -222,8 +228,9 @@ void CRHingeHumanBody::CreateNeck(){
 	hingeDesc.posePlug.Pos()   = Vec3d(0, chestHeight / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springChestNeckX;
-	hingeDesc.damper           = damperChestNeckX;
+	SetJointSpringDamper(hingeDesc, springChestNeckX, damperChestNeckX, solids[SO_CHEST]->GetMass());
+	// hingeDesc.spring           = springChestNeckX;
+	// hingeDesc.damper           = damperChestNeckX;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeChestNeckX[0];
 	hingeDesc.upper            = rangeChestNeckX[1];
@@ -232,8 +239,9 @@ void CRHingeHumanBody::CreateNeck(){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = springChestNeckZ;
-	hingeDesc.damper           = damperChestNeckZ;
+	SetJointSpringDamper(hingeDesc, springChestNeckZ, damperChestNeckZ, solids[SO_CHEST]->GetMass());
+	// hingeDesc.spring           = springChestNeckZ;
+	// hingeDesc.damper           = damperChestNeckZ;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeChestNeckZ[0];
 	hingeDesc.upper            = rangeChestNeckZ[1];
@@ -243,8 +251,9 @@ void CRHingeHumanBody::CreateNeck(){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -neckLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springChestNeckY;
-	hingeDesc.damper           = damperChestNeckY;
+	SetJointSpringDamper(hingeDesc, springChestNeckY, damperChestNeckY, solids[SO_CHEST]->GetMass());
+	// hingeDesc.spring           = springChestNeckY;
+	// hingeDesc.damper           = damperChestNeckY;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeChestNeckY[0];
 	hingeDesc.upper            = rangeChestNeckY[1];
@@ -265,7 +274,7 @@ void CRHingeHumanBody::CreateHead(){
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.04;
+	solidDesc.mass    = 0.035;
 	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[SO_NECK_HEAD_XZ] = phScene->CreateSolid(solidDesc);
 
@@ -274,8 +283,9 @@ void CRHingeHumanBody::CreateHead(){
 	hingeDesc.posePlug.Pos()   = Vec3d(0, neckLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springNeckHeadX;
-	hingeDesc.damper           = damperNeckHeadX;
+	SetJointSpringDamper(hingeDesc, springNeckHeadX, damperNeckHeadX, solids[SO_NECK]->GetMass());
+	// hingeDesc.spring           = springNeckHeadX;
+	// hingeDesc.damper           = damperNeckHeadX;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeNeckHeadX[0];
 	hingeDesc.upper            = rangeNeckHeadX[1];
@@ -285,8 +295,9 @@ void CRHingeHumanBody::CreateHead(){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = springNeckHeadZ;
-	hingeDesc.damper           = damperNeckHeadZ;
+	SetJointSpringDamper(hingeDesc, springNeckHeadZ, damperNeckHeadZ, solids[SO_NECK]->GetMass());
+	// hingeDesc.spring           = springNeckHeadZ;
+	// hingeDesc.damper           = damperNeckHeadZ;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeNeckHeadZ[0];
 	hingeDesc.upper            = rangeNeckHeadZ[1];
@@ -328,7 +339,7 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	solids[soNUpperArm]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.04;
+	solidDesc.mass    = 0.02;
 	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[soNShoulderZX] = phScene->CreateSolid(solidDesc);
 	solids[soNShoulderXY] = phScene->CreateSolid(solidDesc);
@@ -342,8 +353,9 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	}
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = springShoulderZ;
-	hingeDesc.damper           = damperShoulderZ;
+	SetJointSpringDamper(hingeDesc, springShoulderZ, damperShoulderZ, solids[SO_CHEST]->GetMass());
+	// hingeDesc.spring           = springShoulderZ;
+	// hingeDesc.damper           = damperShoulderZ;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeShoulderZ[0]) : (-rangeShoulderZ[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeShoulderZ[1]) : (-rangeShoulderZ[0]));
@@ -352,8 +364,9 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springShoulderX;
-	hingeDesc.damper           = damperShoulderX;
+	SetJointSpringDamper(hingeDesc, springShoulderX, damperShoulderX, solids[SO_CHEST]->GetMass());
+	// hingeDesc.spring           = springShoulderX;
+	// hingeDesc.damper           = damperShoulderX;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeShoulderX[0];
 	hingeDesc.upper            = rangeShoulderX[1];
@@ -363,8 +376,9 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, upperArmLength / 2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightUpperArm.w, lr*oriRightUpperArm.x, oriRightUpperArm.y, oriRightUpperArm.z).Inv() * Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springShoulderY;
-	hingeDesc.damper           = damperShoulderY;
+	SetJointSpringDamper(hingeDesc, springShoulderY, damperShoulderY, solids[SO_CHEST]->GetMass());
+	// hingeDesc.spring           = springShoulderY;
+	// hingeDesc.damper           = damperShoulderY;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeShoulderY[0]) : (-rangeShoulderY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeShoulderY[1]) : (-rangeShoulderY[0]));
@@ -400,8 +414,9 @@ void CRHingeHumanBody::CreateLowerArm(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerArmLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightLowerArm.w, lr*oriRightLowerArm.x, oriRightLowerArm.y, oriRightLowerArm.z).Inv() * Quaternionf::Rot(Rad(0), 'y');
-	hingeDesc.spring           = springElbow;
-	hingeDesc.damper           = damperElbow;
+	SetJointSpringDamper(hingeDesc, springElbow, damperElbow, solids[soNUpperArm]->GetMass());
+	// hingeDesc.spring           = springElbow;
+	// hingeDesc.damper           = damperElbow;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeElbow[0]) : (-rangeElbow[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeElbow[1]) : (-rangeElbow[0]));
@@ -432,7 +447,7 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	solids[soNHand]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.04;
+	solidDesc.mass    = 0.005;
 	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[soNWristYX] = phScene->CreateSolid(solidDesc);
 	solids[soNWristXZ] = phScene->CreateSolid(solidDesc);
@@ -442,8 +457,9 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.posePlug.Pos()   = Vec3d(0.0, -lowerArmLength / 2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springWristY;
-	hingeDesc.damper           = damperWristY;
+	SetJointSpringDamper(hingeDesc, springWristY, damperWristY, solids[soNLowerArm]->GetMass());
+	// hingeDesc.spring           = springWristY;
+	// hingeDesc.damper           = damperWristY;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWristY[0]) : (-rangeWristY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWristY[1]) : (-rangeWristY[0]));
@@ -452,8 +468,9 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springWristX;
-	hingeDesc.damper           = damperWristX;
+	SetJointSpringDamper(hingeDesc, springWristX, damperWristX, solids[soNLowerArm]->GetMass());
+	// hingeDesc.spring           = springWristX;
+	// hingeDesc.damper           = damperWristX;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeWristX[0];
 	hingeDesc.upper            = rangeWristX[1];
@@ -463,8 +480,9 @@ void CRHingeHumanBody::CreateHand(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, handLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightHand.w, lr*oriRightHand.x, oriRightHand.y, oriRightHand.z).Inv() * Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = springWristZ;
-	hingeDesc.damper           = damperWristZ;
+	SetJointSpringDamper(hingeDesc, springWristZ, damperWristZ, solids[soNLowerArm]->GetMass());
+	// hingeDesc.spring           = springWristZ;
+	// hingeDesc.damper           = damperWristZ;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWristZ[0]) : (-rangeWristZ[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWristZ[1]) : (-rangeWristZ[0]));
@@ -505,7 +523,7 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 	solids[soNEye]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.001;
+	solidDesc.mass    = 0.0005;
 	solidDesc.inertia = Matrix3d::Unit() * 0.001;
 	solids[soNEyeYX] = phScene->CreateSolid(solidDesc);
 
@@ -549,9 +567,6 @@ void CRHingeHumanBody::InitLegs(){
 		CreateLowerLeg(RIGHTPART);
 	}
 	CreateFoot(RIGHTPART);
-
-	// 両足は近すぎて足の太さ次第では衝突してしまうため．
-	phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
 }
 
 void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
@@ -576,7 +591,7 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	solids[soNUpperLeg]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.04;
+	solidDesc.mass    = 0.03;
 	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[soNWaistLegZX] = phScene->CreateSolid(solidDesc);
 	solids[soNWaistLegXY] = phScene->CreateSolid(solidDesc);
@@ -586,8 +601,9 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.posePlug.Pos()   = Vec3d(lr*interLegDistance/2.0, -waistHeight/2.0, 0);
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	hingeDesc.spring           = springWaistLegZ;
-	hingeDesc.damper           = damperWaistLegZ;
+	SetJointSpringDamper(hingeDesc, springWaistLegZ, damperWaistLegZ, solids[SO_WAIST]->GetMass());
+	// hingeDesc.spring           = springWaistLegZ;
+	// hingeDesc.damper           = damperWaistLegZ;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWaistLegZ[0]) : (-rangeWaistLegZ[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWaistLegZ[1]) : (-rangeWaistLegZ[0]));
@@ -596,8 +612,9 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springWaistLegX;
-	hingeDesc.damper           = damperWaistLegX;
+	SetJointSpringDamper(hingeDesc, springWaistLegX, damperWaistLegX, solids[SO_WAIST]->GetMass());
+	// hingeDesc.spring           = springWaistLegX;
+	// hingeDesc.damper           = damperWaistLegX;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeWaistLegX[0];
 	hingeDesc.upper            = rangeWaistLegX[1];
@@ -607,8 +624,9 @@ void CRHingeHumanBody::CreateUpperLeg(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, upperLegLength / 2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-	hingeDesc.spring           = springWaistLegY;
-	hingeDesc.damper           = damperWaistLegY;
+	SetJointSpringDamper(hingeDesc, springWaistLegY, damperWaistLegY, solids[SO_WAIST]->GetMass());
+	// hingeDesc.spring           = springWaistLegY;
+	// hingeDesc.damper           = damperWaistLegY;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWaistLegY[0]) : (-rangeWaistLegY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWaistLegY[1]) : (-rangeWaistLegY[0]));
@@ -644,8 +662,9 @@ void CRHingeHumanBody::CreateLowerLeg(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerLegLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-	hingeDesc.spring           = springKnee;
-	hingeDesc.damper           = damperKnee;
+	SetJointSpringDamper(hingeDesc, springKnee, damperKnee, solids[soNUpperLeg]->GetMass());
+	// hingeDesc.spring           = springKnee;
+	// hingeDesc.damper           = damperKnee;
 	hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeKnee[0];
 	hingeDesc.upper            = rangeKnee[1];
@@ -676,7 +695,7 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 	solids[soNFoot]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// non-shaped Solid
-	solidDesc.mass    = 0.04;
+	solidDesc.mass    = 0.005;
 	solidDesc.inertia = Matrix3d::Unit() * 1.0;
 	solids[soNAnkleYX] = phScene->CreateSolid(solidDesc);
 	solids[soNAnkleXZ] = phScene->CreateSolid(solidDesc);
@@ -687,8 +706,9 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 		hingeDesc.posePlug.Pos()   = Vec3d(0.0, -lowerLegLength / 2.0, 0);
 		hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(-90), 'x');
 		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
-		hingeDesc.spring           = springAnkleY;
-		hingeDesc.damper           = damperAnkleY;
+		SetJointSpringDamper(hingeDesc, springAnkleY, damperAnkleY, solids[soNLowerLeg]->GetMass());
+		// hingeDesc.spring           = springAnkleY;
+		// hingeDesc.damper           = damperAnkleY;
 		hingeDesc.origin           = Rad(0);
 		hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeAnkleY[0]) : (-rangeAnkleY[1]));
 		hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeAnkleY[1]) : (-rangeAnkleY[0]));
@@ -697,8 +717,9 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 		hingeDesc                  = PHHingeJointDesc();
 		hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-		hingeDesc.spring           = springAnkleX;
-		hingeDesc.damper           = damperAnkleX;
+		SetJointSpringDamper(hingeDesc, springAnkleX, damperAnkleX, solids[soNLowerLeg]->GetMass());
+		// hingeDesc.spring           = springAnkleX;
+		// hingeDesc.damper           = damperAnkleX;
 		hingeDesc.origin           = Rad(0);
 		hingeDesc.lower            = rangeAnkleX[0];
 		hingeDesc.upper            = rangeAnkleX[1];
@@ -708,8 +729,9 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 		hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 		hingeDesc.poseSocket.Pos() = Vec3d(0, footThickness / 2.0, (ankleToeDistance - footLength/2.0));
 		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-		hingeDesc.spring           = springAnkleZ;
-		hingeDesc.damper           = damperAnkleZ;
+		SetJointSpringDamper(hingeDesc, springAnkleZ, damperAnkleZ, solids[soNLowerLeg]->GetMass());
+		// hingeDesc.spring           = springAnkleZ;
+		// hingeDesc.damper           = damperAnkleZ;
 		hingeDesc.origin           = Rad(0);
 		hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeAnkleZ[0]) : (-rangeAnkleZ[1]));
 		hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeAnkleZ[1]) : (-rangeAnkleZ[0]));
@@ -721,6 +743,10 @@ void CRHingeHumanBody::CreateFoot(LREnum lr){
 
 // --- --- ---
 void CRHingeHumanBody::InitContact(){
+	// 両足は近すぎて足の太さ次第では衝突してしまうため．
+	// 念のため今は残してあるが下のコードがあれば不要な気がする．(mitake)
+	phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
+
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (int i=0; i<solids.size(); ++i) {
 		for (int j=0; j<solids.size(); ++j) {
@@ -740,6 +766,17 @@ void CRHingeHumanBody::InitContact(){
 				}
 			}
 		}
+	}
+}
+
+void CRHingeHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
+	if (springOrig > 0 && damperOrig > 0) {
+		hingeDesc.spring = springOrig;
+		hingeDesc.damper = damperOrig;
+	} else {
+		double dt = phScene->GetTimeStep();
+		hingeDesc.spring = spring*2 * actuatorMass / (dt*dt);
+		hingeDesc.damper = damper   * actuatorMass /  dt;
 	}
 }
 

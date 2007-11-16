@@ -50,8 +50,8 @@ void CRWalkingController::Init(){
 		// descBall.spring = 10000.0f;
 		// descBall.damper =   100.0f;
 		
-		descBall.spring.item(2) = 300.0f;
-		descBall.damper.item(2) =  30.0f;
+		descBall.spring = Vec3d(1,1,1) *  1000.0f;
+		descBall.damper = Vec3d(1,1,1) *   500.0f;
 	}
 	phScene->CreateJoint(hiFootLeft,  syncFootLeft,  descBall);
 	phScene->CreateJoint(hiFootRight, syncFootRight, descBall);
