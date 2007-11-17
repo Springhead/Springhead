@@ -58,7 +58,7 @@ struct GRAnimationMeshIf: public GRVisualIf{
 		@param pose   上書きする位置角度
 		@param weight 上書き率（0～1, 0：キーフレームに100%従う, 1：poseに100%従う）
 	*/
-	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight)=0;
+	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight, bool posRelative=false)=0;
 	
 	/** @brief 全てのボーンの上書き率を一定値にする
 		@param weight 上書き率（0～1, 0：キーフレームに100%従う, 1：poseに100%従う）

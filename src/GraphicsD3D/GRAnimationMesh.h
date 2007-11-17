@@ -50,7 +50,7 @@ public:
 	virtual void SetBlend(const std::vector<GRAnimationMeshBlendData>& data);
 	virtual Posed GetBoneKeyframePose(const std::string& name);
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight);
-	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight);
+	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight, bool posRelative=false);
 	virtual void SetAllBonesOverrideWeight(double weight);
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr);
 	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize);
@@ -80,6 +80,7 @@ struct GRAnimationMesh::Frame : public D3DXFRAME
 	Posed		overridePose;
 	double		overrideWeight;
 	bool		overridePosition;
+	bool		posRelative;
 };
 
 struct GRAnimationMesh::MeshContainer : public D3DXMESHCONTAINER

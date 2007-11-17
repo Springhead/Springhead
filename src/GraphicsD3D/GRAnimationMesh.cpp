@@ -278,7 +278,7 @@ void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Qua
 	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
 }
 
-void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pose, double weight){
+void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pose, double weight, bool posRelative){
 	if(!loaded) if(!LoadMesh()) return;
 	if(!rootFrame || !controller) return;
 	
@@ -287,6 +287,7 @@ void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pos
 	frame->overridePose     = pose;
 	frame->overrideWeight   = weight;
 	frame->overridePosition = true;
+	frame->posRelative      = posRelative;
 	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
 }
 
@@ -416,8 +417,9 @@ void GRAnimationMesh::SetBoneMatrices(MeshContainer* meshContainer){
 	meshContainer->boneOffsetMatrices = new D3DXMATRIX*[n];
 	meshContainer->boneFrameMatrices  = new D3DXMATRIX*[n];
 	for(DWORD i=0; i<n; ++i){
+		Frame* boneFrame = (Frame*) D3DXFrameFind(rootFrame, meshContainer->pSkinInfo->GetBoneName(i));
 		meshContainer->boneOffsetMatrices[i] = meshContainer->pSkinInfo->GetBoneOffsetMatrix(i);
-		meshContainer->boneFrameMatrices[i]  = &((Frame*)D3DXFrameFind(rootFrame, meshContainer->pSkinInfo->GetBoneName(i)))->CombinedTransformationMatrix;
+		meshContainer->boneFrameMatrices[i]  = &boneFrame->CombinedTransformationMatrix;
 	}
 }
 
@@ -456,7 +458,9 @@ void GRAnimationMesh::UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix){
 	else if(frame->overrideWeight>=1){
 		if(frame->overridePosition){
 			Affinef af;
-			frame->overridePose.ToAffine(af);
+			Posed p = frame->overridePose;
+			if(frame->posRelative) p.Pos() += ((Affinef*)&frame->TransformationMatrix)->Pos();
+			p.ToAffine(af);
 			D3DXMatrixMultiply(&frame->CombinedTransformationMatrix, (D3DXMATRIX*)&af, &parentMatrix);
 		}
 		else{
@@ -469,7 +473,18 @@ void GRAnimationMesh::UpdateFrame(Frame *frame, const D3DXMATRIX& parentMatrix){
 		Affinef af = (*(Affinef*)&frame->TransformationMatrix);
 		Quaterniond frameOri;  frameOri.FromMatrix(af.Rot());
 		interpolate(frame->overrideWeight, frameOri, frame->overridePose.Ori()).ToMatrix(af.Rot());
-		if(frame->overridePosition)  af.Pos() = frame->overridePose.Pos() * frame->overrideWeight + af.Pos() * (1-frame->overrideWeight);
+		if(frame->overridePosition){
+			if(frame->posRelative){
+				af.Pos() =
+					(frame->overridePose.Pos() + ((Affinef*)&frame->TransformationMatrix)->Pos()) * frame->overrideWeight
+					+ af.Pos() * float(1-frame->overrideWeight);
+			}
+			else{
+				af.Pos() =
+					frame->overridePose.Pos() * frame->overrideWeight
+					+ af.Pos() * float(1-frame->overrideWeight);
+			}
+		}
 		D3DXMatrixMultiply(&frame->CombinedTransformationMatrix, (D3DXMATRIX*)&af, &parentMatrix);
 	}
 
