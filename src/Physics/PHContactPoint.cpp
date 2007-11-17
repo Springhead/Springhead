@@ -89,6 +89,9 @@ double PHContactPoint::correctionDamper = 100.0;
 
 
 void PHContactPoint::CompBias(){
+	//	correctionを位置LCPで別に行い場合は不要
+	if (engine->numIterCorrection) return;
+
 	double dtinv = 1.0 / scene->GetTimeStep();
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
 	/*	hase	本当は 1e-3は引きすぎ
@@ -141,6 +144,9 @@ void PHContactPoint::CompError(){
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる
 	B.v().x = min(0.0, -shapePair->depth + eps);
+
+	// 誤差を全部解消すると振動するので、少なめに
+	B.v().x *= 0.2;
 }
 
 void PHContactPoint::ProjectionCorrection(double& F, int k){

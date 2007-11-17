@@ -95,7 +95,7 @@ double simulationPeriod = 50.0;
 Vec3d lookAt;
 int sceneNo;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
-double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 20.0;
+double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
 bool bLeftButton = false, bRightButton = false;
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
@@ -304,14 +304,16 @@ void BuildScene5(){
 	jntLink[4] = scene->CreateJoint(soBox[3], soBox[4], descHinge);
 
 	//以下を有効化すると鎖がABAで計算されて関節のドリフトが防がれる．
+	/*
 	PHTreeNodeIf* node = scene->CreateRootNode(soFloor, PHRootNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[0], PHTreeNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[1], PHTreeNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[2], PHTreeNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[3], PHTreeNodeDesc());
 	node = scene->CreateTreeNode(node, soBox[4], PHTreeNodeDesc());
-	
-	double K = 2000, D = 1000;
+	*/
+
+	double K = 2000, D = 100;
 	//double K = 100000, D = 10000;	
 	DCAST(PHHingeJointIf, jntLink[0])->SetSpring(K);
 	DCAST(PHHingeJointIf, jntLink[0])->SetDamper(D);
@@ -611,17 +613,6 @@ void OnTimer3(){}
 void OnTimer4(){}
 
 void OnTimer5(){
-/*
-	PHSpringDesc descSpring;
-	descSpring.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
-	descSpring.spring = Vec3d(1.0, 1.0, 1.0) * K;
-	descSpring.damper = Vec3d(1.0, 1.0, 1.0) * D;
-	jntLink[5] = scene->CreateJoint(soBox[5], soBox[4], descSpring);
-
-	
-	soBox[5]->SetFramePosition(Vec3d(10.0, 5.0, 0.0));
-	soBox[5]->SetDynamical(false);
-*/
 #ifdef USE_EXPLICIT
 	Vec3f dVel = Vec3f() - soBox[4]->GetVelocity();
 	Vec3f dPos = soBox[5]->GetPose().Pos() - soBox[4]->GetPose().Pos();
@@ -630,6 +621,7 @@ void OnTimer5(){
 	Vec3f force = K*dPos + B*dVel;
 	soBox[4]->AddForce(force, soBox[4]->GetPose()*Vec3f(0,3,0));
 #endif
+//	DSTR << soBox[4]->GetVelocity() << std::endl;
 }
 void OnTimer6(){
 	soBox[1]->AddTorque(Vec3f(0,1,0));
@@ -876,7 +868,7 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 6;
+	sceneNo = 5;
 	BuildScene();
 
 	glutInit(&argc, argv);

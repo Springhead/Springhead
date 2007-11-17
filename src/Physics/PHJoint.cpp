@@ -53,6 +53,15 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 		else con[i] = true;
 	}
 }
+void PHJoint1D::SetConstrainedIndexCorrection(bool* con){
+	// 各自由度を拘束するかどうか
+	//  関節軸に対応する自由度は可動範囲にかかっている場合true	
+	for(int i = 0; i < 6; i++){
+		if(i == axisIndex[0])
+			 con[i] = (onLower || onUpper);
+		else con[i] = true;
+	}
+}
 
 void PHJoint1D::Projection(double& f, int k){
 	if(k == axisIndex[0]){

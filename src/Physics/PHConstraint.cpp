@@ -170,14 +170,12 @@ void PHConstraint::SetupLCP(){
 	for(int i = 0; i < 6; i++){
 		if(con[i] && constr[i]){				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
 			 f[i] *= engine->shrinkRate;
-			 F[i] *= engine->shrinkRateCorrection;
-		}
-		else{
-			f[i] = 0.0;					// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
-			F[i] = 0.0;
+		}else{
+			f[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
 		}
 		constr[i] = con[i];
 	}
+
 	FPCK_FINITE(f.v());
 
 	// ABA‚Ìê‡‚Í‚±‚±‚Ü‚Å
@@ -221,14 +219,12 @@ void PHConstraint::IterateLCP(){
 	int i, j;
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
-		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
+									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 
 		// ‚Æ‚è‚ ‚¦‚¸—‚¿‚È‚¢‚æ‚¤‚ÉŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh
 		if (!_finite(fnew[j])) fnew[j] = f[j];
 
-		//fnew[j] = f[j] - (dA[j] * f[j] + b[j] + db[j] + J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
-		/*FPCK_FINITE(AinvJ[0].vv.row(j));
-		FPCK_FINITE(AinvJ[1].vv.row(j));*/
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);
 //			DSTR << AinvJ[0].vv << AinvJ[1].vv;
@@ -251,20 +247,31 @@ void PHConstraint::IterateLCP(){
 		}
 		f[j] = fnew[j];
 	}
-	//	DSTR << "f:" << f << endl;
 }
 
 void PHConstraint::SetupCorrectionLCP(){
 	if(!bEnabled || !bFeasible || bArticulated)
 		return;
+	//	S‘©‚·‚é©—R“x‚ÌŒˆ’è
+	bool con[6];
+	SetConstrainedIndexCorrection(con);
+	for(int i = 0; i < 6; i++){
+		if(con[i] && constrCorrection[i]){		// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
+			 F[i] *= engine->shrinkRateCorrection;
+		}else{
+			F[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
+		}
+		constrCorrection[i] = con[i];
+	}
 	B.clear();
 	CompError();
 	
 	// velocity update‚É‚æ‚é‰e‹¿‚ğ‰ÁZ
-	B += (J[0] * (solid[0]->v + solid[0]->dv) + J[1] * (solid[1]->v + solid[1]->dv)) * scene->GetTimeStep();
+	B += (J[0] * (solid[0]->v + solid[0]->dv)
+			+ J[1] * (solid[1]->v + solid[1]->dv)) * scene->GetTimeStep();
 	B *= engine->posCorrectionRate;
 		
-	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
+	// S‘©—Í‰Šú’l‚É‚æ‚éˆÊ’u•Ï‰»—Ê‚ğŒvZ
 	SpatialVector Fs;
 	for(int i = 0; i < 2; i++){
 		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
@@ -274,13 +281,6 @@ void PHConstraint::SetupCorrectionLCP(){
 		}
 		else solid[i]->dV += T[i].trans() * F;
 	}
-
-	/*double tmp = B[0];
-	for(j = 1; j < dim_c; j++)
-		if(tmp < B[j])
-			tmp = B[j];
-	if(tmp > max_error)
-		B *= (max_error / tmp);*/
 }
 
 void PHConstraint::IterateCorrectionLCP(){
@@ -290,8 +290,8 @@ void PHConstraint::IterateCorrectionLCP(){
 	SpatialVector Fnew, dF, dFs;
 	int i, j;
 	for(j = 0; j < 6; j++){
-		if(!constr[j])continue;
-		Fnew[j] = F[j] - /*Ainv[j]*/(1.0 / A[j]) * (B[j] + J[0].row(j) * solid[0]->dV + J[1].row(j) * solid[1]->dV);
+		if(!constrCorrection[j]) continue;
+		Fnew[j] = F[j] - Ainv[j] * (B[j] + J[0].row(j) * solid[0]->dV + J[1].row(j) * solid[1]->dV);
 		ProjectionCorrection(Fnew[j], j);
 		dF[j] = Fnew[j] - F[j];
 		for(i = 0; i < 2; i++){

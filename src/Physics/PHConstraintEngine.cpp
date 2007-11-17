@@ -163,8 +163,8 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
 	numIterCorrection	 = 0;
-	velCorrectionRate	 = 0.4;
-	posCorrectionRate	 = 0.05;
+	velCorrectionRate	 = 0.5;
+	posCorrectionRate	 = 1.0;
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
 	freezeThreshold		 = 0.0;
@@ -443,7 +443,7 @@ void PHConstraintEngine::UpdateSolids(){
 		(*it)->UpdatePosition(dt);
 	}
 }
-	
+bool correction = true;
 void PHConstraintEngine::Step(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
@@ -472,9 +472,10 @@ void PHConstraintEngine::Step(){
 	
 	SetupLCP();
 	IterateLCP();
-	SetupCorrectionLCP();
-	IterateCorrectionLCP();
-
+	if (correction){
+		SetupCorrectionLCP();
+		IterateCorrectionLCP();
+	}
 	//位置・速度の更新
 	UpdateSolids();	
 }

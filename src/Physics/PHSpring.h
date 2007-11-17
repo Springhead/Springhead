@@ -29,10 +29,9 @@ public:
 	virtual double GetDamperOri(){return damperOri;}
 
 	virtual void SetDesc(const void* desc);
-	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SPRING;}
 	virtual void SetConstrainedIndex(bool* con);
+	virtual void SetConstrainedIndexCorrection(bool* con);
 	virtual void CompBias();
-	virtual void Projection(double& f, int k){}
 	PHSpring(const PHSpringDesc& desc = PHSpringDesc());
 };
 

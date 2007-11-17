@@ -49,11 +49,15 @@ public:
 	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
 	SpatialVector scale;
 
-	bool		constr[6];			///< 拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
+	bool		constr[6];			///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
+	bool		constrCorrection[6];///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
 
 	/* 派生クラスの機能	*/
 	virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
-	virtual void SetConstrainedIndex(bool* con){}			///< どの自由度を拘束するかを設定
+	virtual void SetConstrainedIndex(bool* con){}			///< どの自由度を速度拘束するかを設定
+	virtual void SetConstrainedIndexCorrection(bool* con){	///< どの自由度を位置拘束するかを設定
+		SetConstrainedIndex(con);
+	}														
 	virtual void ModifyJacobian(){}							///< 独自座標系を使う場合のヤコビアンの修正
 	virtual void CompBias(){}								///< 
 	virtual void Projection(double& f, int k){}				///< 拘束力の射影

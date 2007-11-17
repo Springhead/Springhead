@@ -422,7 +422,7 @@ struct PHSpringDesc : public PHConstraintDesc{
 	Vec3d damper;		///< ダンパ係数
 	double springOri;
 	double damperOri;
-	PHSpringDesc(){}
+	PHSpringDesc();
 };
 
 /// ツリーノードのインタフェース

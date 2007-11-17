@@ -14,6 +14,10 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
+PHSpringDesc::PHSpringDesc(){
+	springOri = damperOri = 0.0;
+}
+
 //----------------------------------------------------------------------------
 // PHSpring
 IF_OBJECT_IMP(PHSpring, PHConstraint)
@@ -32,24 +36,22 @@ void PHSpring::SetDesc(const void* desc){
 }
 
 void PHSpring::SetConstrainedIndex(bool* con){
-	con[0] = con[1] = con[2] = true;
-	con[3] = con[4] = con[5] = true;
+	for(int i=0; i<3; ++i) con[i] = (damper[i] != 0.0 || spring[i] != 0.0);
+	con[3] = con[4] = con[5] = (damperOri != 0.0 || springOri != 0.0);
+}
+void PHSpring::SetConstrainedIndexCorrection(bool* con){
+	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = false;
 }
 
 void PHSpring::CompBias(){
 	//rjrel
 	double dtinv = 1.0 / scene->GetTimeStep(), tmp;
 	for(int i = 0; i < 3; i++){
-		if(damper[i] == 0.0 && spring[i] == 0.0){
-			constr[i] = false;
-			continue;
-		}
-		constr[i] = true;
+		if (!constr[i]) continue;
 		tmp = 1.0 / (damper[i] + spring[i] * scene->GetTimeStep());
 		dA[i] = tmp * dtinv;
 		db[i] = spring[i] * Xjrel.r[i] * tmp;
 	}
-	//DSTR << "spring" << fv << rjrel.y * spring.y * dt << endl;
 
 	// Žp¨‚É‘Î‚·‚éƒoƒl
 	if(springOri != 0.0 || damperOri != 0.0){
