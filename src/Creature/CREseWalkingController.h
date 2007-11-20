@@ -25,7 +25,7 @@ private:
 	/// 制御対象となるボディの腰の剛体
 	PHSolidIf* soWaist;
 
-	/// ボディを固定するための不可視剛体と間接
+	/// ボディを固定するための不可視剛体と関節
 	PHSolidIf* soFixpoint;
 	PHJointIf* joFixpoint;
 

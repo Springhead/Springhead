@@ -45,6 +45,21 @@ struct CRBodyIf : SceneObjectIf{
 	/** @brief i番目の関節を得る
 	*/
 	virtual PHJointIf* GetJoint(int i)= 0;
+
+	/** @brief IK用の制御点を追加する
+	*/
+	enum CRIKCPType{
+		IKCP_POS=0,  // 位置を制御する
+		IKCP_ORI,    // 姿勢を制御する
+		IKCP_FORCE,  // 力を出す
+	};
+	virtual int AddIKControlPoint(CRBodyIf::CRIKCPType type, PHSolidIf* solid, Vec3d pos)= 0;
+	
+	/** @brief IK用の可動物を追加する
+	*/
+	virtual int AddIKMovableJoint(int cpnum, PHBallJointIf* ballJoint)= 0;
+	virtual int AddIKMovableJoint(int cpnum, PHHingeJointIf* jo1, PHHingeJointIf* jo2, PHHingeJointIf* jo3)= 0;
+	virtual int AddIKMovableSolid(int cpnum, PHSolidIf* solid)= 0;
 };
 
 /// クリーチャのボディモデルのデスクリプタ

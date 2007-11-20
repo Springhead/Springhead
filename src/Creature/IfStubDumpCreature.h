@@ -19,6 +19,18 @@ struct CRBodyIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHJointIf * GetJoint(int i){
 		return ((OBJ*)(MIF*)this)->GetJoint(i);
 	}
+	virtual int AddIKControlPoint(CRBodyIf::CRIKCPType type, PHSolidIf * solid, Vec3d pos){
+		return ((OBJ*)(MIF*)this)->AddIKControlPoint(type, solid, pos);
+	}
+	virtual int AddIKMovableJoint(int cpnum, PHBallJointIf * ballJoint){
+		return ((OBJ*)(MIF*)this)->AddIKMovableJoint(cpnum, ballJoint);
+	}
+	virtual int AddIKMovableJoint(int cpnum, PHHingeJointIf * jo1, PHHingeJointIf * jo2, PHHingeJointIf * jo3){
+		return ((OBJ*)(MIF*)this)->AddIKMovableJoint(cpnum, jo1, jo2, jo3);
+	}
+	virtual int AddIKMovableSolid(int cpnum, PHSolidIf * solid){
+		return ((OBJ*)(MIF*)this)->AddIKMovableSolid(cpnum, solid);
+	}
 };
 struct CRBodyIf;	class CRBody;
 typedef CRBodyIfStubTemplate<CRBodyIf, ObjectIfBuf, CRBody>	CRBodyIfStub;
