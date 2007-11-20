@@ -37,9 +37,8 @@ public:
 	virtual void CompBias();
 	virtual void Projection(double& f, int i);
 	PHBallJointNode(const PHBallJointNodeDesc& desc = PHBallJointNodeDesc()){}
+	
 };
-
-
 
 class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 public:
@@ -60,10 +59,18 @@ public:
 //	である。例えばSwing軸のonLowerを得るためにはonLimit[0][0] or onLimit[0].onLowerと指定する
 // -------------------------------------------------------------------------------------------	
 
-	Vec3d spring, damper;
-	SwingTwist goal;
+	Vec3d		spring, damper;			/// バネ、ダンパ係数
+	Vec3f		goalVector;				/// ゴールベクトル（Socket座標利用型）
+	Vec3f		currentVector;			/// 今、ソケットからプラグにかけて伸びているベクトル
+	Vec3f		nowTheta;				/// Cornの関数用のangle
+	Vec3f		velocity;				/// Cornの関数用のvelocity
 	
-	SwingTwist	angle; //, velocity;	///< スイング・ツイスト角表現の角度と角速度
+		
+
+
+	//SwingTwist	angle; //, velocity;	///< スイング・ツイスト角表現の角度と角速度
+	
+
 	//Vec3d		torque;
 	/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン
 	Matrix3d	Jstinv;
@@ -83,7 +90,7 @@ public:
 	virtual Vec3d	GetMotorTorque(){return torque;}
 	virtual Vec3d	GetAngle(){return position;}
 	virtual Vec3d	GetVelocity(){return velocity;}
-	
+
 	/// 仮想関数のオーバライド
 	virtual bool GetDesc(void* desc);
 	virtual void SetDesc(const void* desc);

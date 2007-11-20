@@ -369,7 +369,7 @@ void BuildScene6(){
 	desc.spring = Vec3f(100,100,100);
 	desc.damper = Vec3f(10,10,10);
 
-	desc.goal.SwingDir() = M_PI/2;
+	//desc.goal.SwingDir() = M_PI/2;
 	
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 }
@@ -543,7 +543,7 @@ void OnKey4(char key){
 	}
 }
 
-float goal = 0;
+//float goal = 0;
 void OnKey5(char key){
 	switch(key){
 	case 'a': soBox[5]->SetFramePosition(Vec3d(-20.0, 30.0, 0.0)); break;
@@ -578,17 +578,17 @@ void OnKey5(char key){
 		scene->SetContactMode(PHSceneDesc::MODE_NONE);	// ÚG‚ğØ‚é
 		}break;*/
 	case 'n':
-		goal += 0.01;
+	//	goal += 0.01;
 		for(unsigned i=0; i<jntLink.size(); ++i){
 			PHHingeJointIf* j = DCAST(PHHingeJointIf, jntLink[i]);
-			if (j) j->SetSpringOrigin(goal);
+			//if (j) j->SetSpringOrigin(goal);
 		}
 		break;
 	case 'm':
-		goal -= 0.01;
+		//goal -= 0.01;
 		for(unsigned i=0; i<jntLink.size(); ++i){
 			PHHingeJointIf* j = DCAST(PHHingeJointIf, jntLink[i]);
-			if (j) j->SetSpringOrigin(goal);
+			//if (j) j->SetSpringOrigin(goal);
 		}
 		break;
 	}

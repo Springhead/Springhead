@@ -23,9 +23,12 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	axisIndex[0] = 3;
 	axisIndex[1] = 4;
 	axisIndex[2] = 5;
-	goal.SwingDir() = M_PI/2.0;
-	goal.Swing()	= 0;
-	goal.Twist()	= 0;
+	
+	// limit上に居るかどうかのフラグの初期化
+	for(int i=0; i<3; ++i){
+		onLimit[i].onLower = 0;
+		onLimit[i].onUpper = 0;
+	}
 }
 
 bool PHBallJoint::GetDesc(void* desc){
@@ -33,7 +36,7 @@ bool PHBallJoint::GetDesc(void* desc){
 	((PHBallJointDesc*)desc)->spring		 = spring;
 	((PHBallJointDesc*)desc)->damper		 = damper;
 	((PHBallJointDesc*)desc)->limit			 = limit;
-	((PHBallJointDesc*)desc)->goal			 = goal;
+	((PHBallJointDesc*)desc)->goalVector	 = goalVector;
 	((PHBallJointDesc*)desc)->torque		 = GetMotorTorque();
 	return true;
 }
@@ -43,29 +46,55 @@ void PHBallJoint::SetDesc(const void* desc){
 	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
 	limit = descBall.limit;
 	spring      = descBall.spring;
-	goal	    = descBall.goal;
+	//goal	    = descBall.goal;		//(SwingTwist)
+	goalVector  = descBall.goalVector; 
 	damper      = descBall.damper;
 	SetMotorTorque(descBall.torque);
 }
 
 void PHBallJoint::UpdateJointState(){
-	// 相対quaternionからスイング・ツイスト角を計算
-	position = Xjrel.q.V();								/// Xjrel:ソケットに対するプラグの位置と向き
-	angle.FromQuaternion(Xjrel.q);
-	angle.JacobianInverse(Jstinv, Xjrel.q);
-	velocity = Xjrel.q.Derivative(vjrel.w()).V();
+
+	currentVector = Xjrel.q.Conjugated() * Quaterniond(0.0, 0.0, 0.0, 1.0) * Xjrel.q;
+
 }
 
 void PHBallJoint::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;
 	// 可動範囲をチェック
-	for(int i=0; i<3;++i){
-		onLimit[i].onUpper = limit.lower[i] < limit.upper[i] && angle[i] >= limit.upper[i];
-		onLimit[i].onLower = limit.lower[i] < limit.upper[i] && angle[i] <= limit.lower[i];
+	float nowTheta;
+	goalVector  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
+	goalVector  = Xj[0].q.Conjugated() * goalVector;
+	
+	//DSTR << "Xj[0].q.Conjugated : " << Xj[0].q.Conjugated() << endl;
+	//DSTR << "Xj[0].q : " << Xj[0].q << endl;
+	//DSTR << "goalVector : " << goalVector << endl;
+
+	nowTheta = acos(dot(goalVector.unit(), currentVector.unit()));			//"vector".unit():<Vector>の単位ベクトル
+	
+	//cout << "nowTheta" << nowTheta << endl;
+	DSTR << "nowTheta" << nowTheta << endl;
+	
+	for(int i=0; i<3; ++i){
+		if(nowTheta > limit.upper[i]){
+			onLimit[i].onUpper = 1;
+		}
+		else if(nowTheta < limit.lower[i]){
+			onLimit[i].onLower  = 1;
+		}
+		else{
+			onLimit[i].onUpper = 0;
+			onLimit[i].onLower = 0;
+		}
+
+		DSTR << "onLimit[" << i << "].onUpper : " << onLimit[i].onUpper << endl;
+		DSTR << "onLimit[" << i << "].onLower : " << onLimit[i].onLower << endl;
+	
 	}
+
 	for(int i=0; i<3;++i){
 		con[i+3] = onLimit[i].onUpper || onLimit[i].onLower || spring[i]!=0.0 || damper[i] != 0.0;
 	}
+
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
@@ -77,16 +106,17 @@ void PHBallJoint::ModifyJacobian(){
 }
 
 void PHBallJoint::CompBias(){
+
 	double dtinv = 1.0 / scene->GetTimeStep();
-	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算
+	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
 	
 	for(int i=0; i<3; ++i){
-		db.w()[i] = (onLimit[i].onLower ? (angle[i] - limit.lower[i]) * dtinv :
-			     onLimit[i].onUpper ? (angle[i] - limit.upper[i]) * dtinv : 0.0);
+		db.w()[i] = (onLimit[i].onLower ? (nowTheta[i] - limit.lower[i]) * dtinv :
+			     onLimit[i].onUpper ? (nowTheta[i] - limit.upper[i]) * dtinv : 0.0);
 	}
 	db *= engine->velCorrectionRate;
-	Vec3d prop = angle - goal;
-	//DSTR << "goal" << goal << "  angle" << angle << std::endl;
+	Vec3d prop = nowTheta - goalVector;
+
 	for(int i=0; i<3; ++i){
 		if (onLimit[i].onLower || onLimit[i].onUpper) continue;
 		if (spring[i] != 0.0 || damper[i] != 0.0){	//	バネダンパはSwingTwist座標系で働く
@@ -95,13 +125,14 @@ void PHBallJoint::CompBias(){
 			db.w()[i] = spring[i] * prop[i] * tmp;
 		}
 	}
+
 }
 
 void PHBallJoint::CompError(){
 	B.v() = Xjrel.r;
 	for(int i=0; i<3; ++i){
-		B.w()[i] = (onLimit[i].onLower ? (angle[i] - limit.lower[i]) :
-			onLimit[2].onUpper ? (angle[i] - limit.upper[i]) : 0.0);
+		B.w()[i] = (onLimit[i].onLower ? (nowTheta[i] - limit.lower[i]) :
+			onLimit[2].onUpper ? (nowTheta[i] - limit.upper[i]) : 0.0);
 	}
 }
 
