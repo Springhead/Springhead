@@ -64,12 +64,6 @@ public:
 	Vec3f		currentVector;			/// 今、ソケットからプラグにかけて伸びているベクトル
 	Vec3f		nowTheta;				/// Cornの関数用のangle
 	Vec3f		velocity;				/// Cornの関数用のvelocity
-	
-		
-
-
-	//SwingTwist	angle; //, velocity;	///< スイング・ツイスト角表現の角度と角速度
-	
 
 	//Vec3d		torque;
 	/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン

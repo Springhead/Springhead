@@ -93,7 +93,7 @@ UTRef<GRDeviceGLIf> device;
 
 double simulationPeriod = 50.0;
 Vec3d lookAt;
-int sceneNo;							// シーン番号
+int sceneNo	= 6;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
 double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
 bool bLeftButton = false, bRightButton = false;
@@ -868,7 +868,6 @@ int main(int argc, char* argv[]){
 	dscene.numIteration = 20;
 	scene = phSdk->CreateScene(dscene);				// シーンの作成
 	// シーンの構築
-	sceneNo = 5;
 	BuildScene();
 
 	glutInit(&argc, argv);
