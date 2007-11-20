@@ -16,51 +16,6 @@
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief IKの制御点
-*/
-class CRControlPoint{
-public:
-	/// 制御点の種別
-	CRBodyIf::CRIKCPType cpType;
-
-	/// 制御点のあるSolid
-	PHSolidIf* cpSolid;
-
-	/// 制御点の位置(SolidLocal座標系)
-	Vec3d cpPos;
-
-	/// 制御点の目標値
-	Vec3d cpGoal;
-
-	CRControlPoint(){
-		cpType = CRBodyIf::IKCP_ORI;
-		cpSolid = NULL;
-		cpPos = Vec3d(0,0,0);
-		cpGoal = Vec3d(0,0,0);
-	}
-};
-/** @brief IKのための可動物
-*/
-class CRMovableObject{
-public:
-	/// 可動なボールジョイント
-	PHBallJointIf* movableBallJoint;
-
-	/// 可動な３連ヒンジジョイント
-	PHHingeJointIf *movableHinge1, *movableHinge2, *movableHinge3;
-
-	/// 可動な剛体
-	PHSolidIf* movableSolid;
-
-	CRMovableObject(){
-		movableBallJoint = NULL;
-		movableHinge1 = NULL;
-		movableHinge2 = NULL;
-		movableHinge3 = NULL;
-		movableSolid = NULL;
-	}
-};
-// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief ボディ
 */
 class CRBody : public SceneObject, public CRBodyIfInit, public CRBodyDesc {
@@ -82,25 +37,31 @@ protected:
 	/// 所属するSdk
 	PHSdkIf* phSdk;
 
-	/// ボディ全体のヤコビアンを管理する行列
-	PTM::VMatrixCol<Matrix3d> jacobian;
+	/// 位置・姿勢の制御点の集合
+	std::vector<CRIKControlIf*> controlsPosOri;
 
-	/// 可動性を管理する行列
-	PTM::VMatrixCol<bool>     movability;
+	/// 位置・姿勢の制御対象の集合
+	std::vector<CRIKMovableIf*> movablesPosOri;
 
-	/// 行番号と制御点の対応
-	std::vector<CRControlPoint>  cpNums;
+	/// 位置・姿勢の可動性行列
+	PTM::VMatrixCol<bool> movabilityPosOri;
 
-	/// 列番号と可動物の対応
-	std::vector<CRMovableObject> moNums;
+	/// 位置・姿勢のヤコビアン
+	PTM::VMatrixCol<Matrix3d> jacobianPosOri;
+
+	/// 位置・姿勢のヤコビアン（転置を掛けて正方化）
+	PTM::VMatrixCol<Matrix3d> sqjacobianPosOri;
 
 	/** @brief 関節を作る
 	*/
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc);
 
-	
+	/** @brief 行列をリサイズする
+	*/
+	void ResizeMatrix(int hInc, int wInc);
 
+	
 public:
 	OBJECTDEF(CRBody, SceneObject);
 	ACCESS_DESC(CRBody);
@@ -137,13 +98,11 @@ public:
 
 	/** @brief IK用の制御点を追加する
 	*/
-	virtual int AddIKControlPoint(CRBodyIf::CRIKCPType type, PHSolidIf* solid, Vec3d pos);
+	virtual CRIKControlIf* AddIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
 	
 	/** @brief IK用の可動物を追加する
 	*/
-	virtual int AddIKMovableJoint(int cpnum, PHBallJointIf* ballJoint);
-	virtual int AddIKMovableJoint(int cpnum, PHHingeJointIf* jo1, PHHingeJointIf* jo2, PHHingeJointIf* jo3);
-	virtual int AddIKMovableSolid(int cpnum, PHSolidIf* solid);
+	virtual CRIKMovableIf* AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
 };
 }
 //@}

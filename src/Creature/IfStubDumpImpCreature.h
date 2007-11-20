@@ -1,4 +1,15 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
+IF_IMP(CRIKControl, SceneObject);
+IF_IMP(CRIKControlPos, CRIKControl);
+IF_IMP(CRIKControlOri, CRIKControl);
+IF_IMP(CRIKControlForce, CRIKControl);
+IF_IMP(CRIKMovable, SceneObject);
+IF_IMP(CRIKMovableSolidPos, CRIKMovable);
+IF_IMP(CRIKMovableSolidOri, CRIKMovable);
+IF_IMP(CRIKMovableBallJointOri, CRIKMovable);
+IF_IMP(CRIKMovableBallJointTorque, CRIKMovable);
+IF_IMP(CRIKMovable3HingeJointOri, CRIKMovable);
+IF_IMP(CRIKMovable3HingeJointTorque, CRIKMovable);
 IF_IMP(CRBody, SceneObject);
 IF_IMP(CRHingeHumanBody, CRBody);
 IF_IMP(CRHingeAnimalBody, CRBody);

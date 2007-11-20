@@ -1,4 +1,226 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
+#define ACCESS_DESC_CRIKControlDesc(cls) \
+protected: \
+	PHSolidIf *solid ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		solid = ((CRIKControlDesc*)desc)->solid; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKControlDesc*)desc)->solid = solid; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlDesc_NOBASE \
+protected: \
+	PHSolidIf *solid ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		solid = ((CRIKControlDesc*)desc)->solid; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKControlDesc*)desc)->solid = solid; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlPosDesc(cls) \
+protected: \
+	Vec3d pos ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		pos = ((CRIKControlPosDesc*)desc)->pos; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKControlPosDesc*)desc)->pos = pos; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlPosDesc_NOBASE \
+protected: \
+	Vec3d pos ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		pos = ((CRIKControlPosDesc*)desc)->pos; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKControlPosDesc*)desc)->pos = pos; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlOriDesc(cls) \
+protected: \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlOriDesc_NOBASE \
+protected: \
+public: \
+	virtual void SetDesc(const void* desc){ \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlForceDesc(cls) \
+protected: \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKControlForceDesc_NOBASE \
+protected: \
+public: \
+	virtual void SetDesc(const void* desc){ \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableDesc(cls) \
+protected: \
+	float bias ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		bias = ((CRIKMovableDesc*)desc)->bias; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKMovableDesc*)desc)->bias = bias; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableDesc_NOBASE \
+protected: \
+	float bias ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		bias = ((CRIKMovableDesc*)desc)->bias; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKMovableDesc*)desc)->bias = bias; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableSolidPosDesc(cls) \
+protected: \
+	PHSolidIf *solid ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		solid = ((CRIKMovableSolidPosDesc*)desc)->solid; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKMovableSolidPosDesc*)desc)->solid = solid; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableSolidPosDesc_NOBASE \
+protected: \
+	PHSolidIf *solid ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		solid = ((CRIKMovableSolidPosDesc*)desc)->solid; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKMovableSolidPosDesc*)desc)->solid = solid; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableSolidOriDesc(cls) \
+protected: \
+	PHSolidIf *solid ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		solid = ((CRIKMovableSolidOriDesc*)desc)->solid; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKMovableSolidOriDesc*)desc)->solid = solid; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableSolidOriDesc_NOBASE \
+protected: \
+	PHSolidIf *solid ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		solid = ((CRIKMovableSolidOriDesc*)desc)->solid; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKMovableSolidOriDesc*)desc)->solid = solid; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableBallJointOriDesc(cls) \
+protected: \
+	PHBallJointIf *joint ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		joint = ((CRIKMovableBallJointOriDesc*)desc)->joint; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKMovableBallJointOriDesc*)desc)->joint = joint; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableBallJointOriDesc_NOBASE \
+protected: \
+	PHBallJointIf *joint ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		joint = ((CRIKMovableBallJointOriDesc*)desc)->joint; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKMovableBallJointOriDesc*)desc)->joint = joint; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableBallJointTorqueDesc(cls) \
+protected: \
+	PHBallJointIf *joint ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		joint = ((CRIKMovableBallJointTorqueDesc*)desc)->joint; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKMovableBallJointTorqueDesc*)desc)->joint = joint; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovableBallJointTorqueDesc_NOBASE \
+protected: \
+	PHBallJointIf *joint ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		joint = ((CRIKMovableBallJointTorqueDesc*)desc)->joint; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKMovableBallJointTorqueDesc*)desc)->joint = joint; \
+		return true; \
+	} \
+
 #define ACCESS_DESC_CRBodyDesc(cls) \
 protected: \
 public: \
@@ -21,7 +243,7 @@ public: \
 
 #define ACCESS_DESC_CRHingeHumanBodyDesc(cls) \
 protected: \
-	double bodyMass ; \
+	double *bodyMass ; \
 	double waistHeight ; \
 	double waistBreadth ; \
 	double waistThickness ; \
@@ -359,7 +581,7 @@ public: \
 
 #define ACCESS_DESC_CRHingeHumanBodyDesc_NOBASE \
 protected: \
-	double bodyMass ; \
+	double *bodyMass ; \
 	double waistHeight ; \
 	double waistBreadth ; \
 	double waistThickness ; \

@@ -7,6 +7,8 @@
  */
 #include "CRBody.h"
 
+#include "CRBodyIK.h"
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -57,94 +59,75 @@ PHJointIf* CRBody::GetJoint(int i){
 	return joints[i];
 }
 
-int CRBody::AddIKControlPoint(CRBodyIf::CRIKCPType type, PHSolidIf* solid, Vec3d pos){
-	for(int i=0; i<cpNums.size(); ++i){
-		if (cpNums[i].cpType==type && cpNums[i].cpSolid==solid) {
-			cpNums[i].cpPos = pos;
-			return i;
-		}
-	}
-	cpNums.resize(cpNums.size()+1);
-	cpNums.back().cpType  = type;
-	cpNums.back().cpSolid = solid;
-	cpNums.back().cpPos   = pos;
+CRIKControlIf* CRBody::AddIKControl(const IfInfo* ii, const CRIKControlDesc& desc){
+	if (ii == CRIKControlPosIf::GetIfInfoStatic()) {
+		controlsPosOri.push_back((DBG_NEW CRIKControlPos((const CRIKControlPosDesc&)desc))->Cast());
+		ResizeMatrix(0,1);
+		return controlsPosOri.back();
 
-	jacobian.resize(cpNums.size(), moNums.size());
-	movability.resize(cpNums.size(), moNums.size());
-	for(int i=0; i<moNums.size(); ++i){
-		movability[cpNums.size()-1][i] = false;
-	}
+	} else if (ii == CRIKControlOriIf::GetIfInfoStatic()) {
+		controlsPosOri.push_back((DBG_NEW CRIKControlOri((const CRIKControlOriDesc&)desc))->Cast());
+		ResizeMatrix(0,1);
+		return controlsPosOri.back();
 
-	return(cpNums.size()-1);
+	} else if (ii == CRIKControlForceIf::GetIfInfoStatic()) {
+		return NULL;
+
+	} else {
+		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
+		return NULL;
+	}
 }
 
-int CRBody::AddIKMovableJoint(int cpnum, PHBallJointIf* ballJoint){
-	for(int i=0; i<moNums.size(); ++i){
-		if (moNums[i].movableBallJoint == ballJoint) {
-			movability[cpnum][i] = true;
-			return i;
-		}
-	}
-	moNums.resize(moNums.size()+1);
-	moNums.back().movableBallJoint = ballJoint;
+CRIKMovableIf* CRBody::AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc){
+	if (ii == CRIKMovableSolidPosIf::GetIfInfoStatic()) {
+		movablesPosOri.push_back((DBG_NEW CRIKMovableSolidPos((const CRIKMovableSolidPosDesc&)desc))->Cast());
+		ResizeMatrix(1,0);
+		return movablesPosOri.back();
+	
+	} else if (ii == CRIKMovableSolidOriIf::GetIfInfoStatic()) {
+		movablesPosOri.push_back((DBG_NEW CRIKMovableSolidOri((const CRIKMovableSolidOriDesc&)desc))->Cast());
+		ResizeMatrix(1,0);
+		return movablesPosOri.back();
 
-	jacobian.resize(cpNums.size(), moNums.size());
-	movability.resize(cpNums.size(), moNums.size());
-	for(int i=0; i<cpNums.size(); ++i){
-		movability[i][moNums.size()-1] = false;
-	}
-	movability[cpnum][moNums.size()-1] = true;
+	} else if (ii == CRIKMovableBallJointOriIf::GetIfInfoStatic()) {
+		movablesPosOri.push_back((DBG_NEW CRIKMovableBallJointOri((const CRIKMovableBallJointOriDesc&)desc))->Cast());
+		ResizeMatrix(1,0);
+		return movablesPosOri.back();
 
-	return(moNums.size()-1);
+	} else if (ii == CRIKMovableBallJointTorqueIf::GetIfInfoStatic()) {
+		movablesPosOri.push_back((DBG_NEW CRIKMovableBallJointTorque((const CRIKMovableBallJointTorqueDesc&)desc))->Cast());
+		ResizeMatrix(1,0);
+		return movablesPosOri.back();
+
+	} else if (ii == CRIKMovable3HingeJointOriIf::GetIfInfoStatic()) {
+		return NULL;
+
+	} else if (ii == CRIKMovable3HingeJointTorqueIf::GetIfInfoStatic()) {
+		return NULL;
+
+	} else {
+		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
+		return NULL;
+	}
 }
 
-int CRBody::AddIKMovableJoint(int cpnum, PHHingeJointIf* jo1, PHHingeJointIf* jo2, PHHingeJointIf* jo3){
-	for(int i=0; i<moNums.size(); ++i){
-		if (
-			   (moNums[i].movableHinge1 == jo1 && moNums[i].movableHinge2 == jo2 && moNums[i].movableHinge3 == jo3)
-			|| (moNums[i].movableHinge1 == jo1 && moNums[i].movableHinge2 == jo3 && moNums[i].movableHinge3 == jo2)
-			|| (moNums[i].movableHinge1 == jo2 && moNums[i].movableHinge2 == jo1 && moNums[i].movableHinge3 == jo3)
-			|| (moNums[i].movableHinge1 == jo2 && moNums[i].movableHinge2 == jo3 && moNums[i].movableHinge3 == jo1)
-			|| (moNums[i].movableHinge1 == jo3 && moNums[i].movableHinge2 == jo1 && moNums[i].movableHinge3 == jo2)
-			|| (moNums[i].movableHinge1 == jo3 && moNums[i].movableHinge2 == jo2 && moNums[i].movableHinge3 == jo1)
-			)
-		{
-			movability[cpnum][i] = true;
-			return i;
+void CRBody::ResizeMatrix(int hInc, int wInc){
+	jacobianPosOri.resize(movablesPosOri.size(), controlsPosOri.size());
+	movabilityPosOri.resize(movablesPosOri.size(), controlsPosOri.size());
+	sqjacobianPosOri.resize(movablesPosOri.size(), movablesPosOri.size());
+
+	for(int i=0; i<hInc; ++i){
+		for(int j=0; j<movablesPosOri.size(); ++j){
+			movabilityPosOri[controlsPosOri.size()-i-1][j] = false;
 		}
 	}
-	moNums.resize(moNums.size()+1);
-	moNums.back().movableHinge1 = jo1;
-	moNums.back().movableHinge2 = jo2;
-	moNums.back().movableHinge3 = jo3;
 
-	jacobian.resize(cpNums.size(), moNums.size());
-	movability.resize(cpNums.size(), moNums.size());
-	for(int i=0; i<cpNums.size(); ++i){
-		movability[i][moNums.size()-1] = false;
-	}
-	movability[cpnum][moNums.size()-1] = true;
-
-	return(moNums.size()-1);
-}
-
-int CRBody::AddIKMovableSolid(int cpnum, PHSolidIf* solid){
-	for(int i=0; i<moNums.size(); ++i){
-		if (moNums[i].movableSolid == solid) {
-			movability[cpnum][i] = true;
-			return i;
+	for(int i=0; i<wInc; ++i){
+		for(int j=0; j<controlsPosOri.size(); ++j){
+			movabilityPosOri[j][movablesPosOri.size()-i-1] = false;
 		}
 	}
-	moNums.resize(moNums.size()+1);
-	moNums.back().movableSolid = solid;
-
-	jacobian.resize(cpNums.size(), moNums.size());
-	movability.resize(cpNums.size(), moNums.size());
-	for(int i=0; i<cpNums.size(); ++i){
-		movability[i][moNums.size()-1] = false;
-	}
-	movability[cpnum][moNums.size()-1] = true;
-
-	return(moNums.size()-1);
 }
+
 }

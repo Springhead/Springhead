@@ -22,6 +22,131 @@ struct CRBodyIf;
 struct CRHingeHumanBodyIf;
 
 // ------------------------------------------------------------------------------
+/// ボディをIKで動作させるための制御点
+struct CRIKControlIf : SceneObjectIf{
+	IF_DEF(CRIKControl);
+
+	virtual void SetGoal(Vec3d goal)= 0;
+	virtual Vec3d GetGoal()= 0;
+};
+
+struct CRIKControlDesc{
+	DESC_DEF_FOR_OBJECT(CRIKControl);
+
+	PHSolidIf* solid;  ///< 制御点のある剛体
+};
+
+// --- 位置制御点
+struct CRIKControlPosIf : CRIKControlIf{
+	IF_DEF(CRIKControlPos);
+};
+
+struct CRIKControlPosDesc : CRIKControlDesc{
+	DESC_DEF_FOR_OBJECT(CRIKControlPos);
+
+	Vec3d pos;  ///< 制御点の位置（剛体ローカル座標系における）
+};
+
+// --- 姿勢制御点
+struct CRIKControlOriIf : CRIKControlIf{
+	IF_DEF(CRIKControlOri);
+};
+
+struct CRIKControlOriDesc : CRIKControlDesc{
+	DESC_DEF_FOR_OBJECT(CRIKControlOri);
+};
+
+// --- 力制御点
+struct CRIKControlForceIf : CRIKControlIf{
+	IF_DEF(CRIKControlForce);
+};
+
+struct CRIKControlForceDesc : CRIKControlDesc{
+	DESC_DEF_FOR_OBJECT(CRIKControlForce);
+};
+
+// ------------------------------------------------------------------------------
+/// ボディをIKで動作させるための制御対象（関節・剛体）
+struct CRIKMovableIf : SceneObjectIf{
+	IF_DEF(CRIKMovable);
+
+	virtual void SetValue(Vec3d value)= 0;
+	virtual Vec3d GetValue()= 0;
+};
+
+struct CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovable);
+
+	float bias;  ///< 動かしやすさの係数
+};
+
+// --- 位置制御可能な剛体
+struct CRIKMovableSolidPosIf : CRIKMovableIf{
+	IF_DEF(CRIKMovableSolidPos);
+};
+
+struct CRIKMovableSolidPosDesc : CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovableSolidPos);
+
+	PHSolidIf* solid;  ///< 制御対象の剛体
+};
+
+// --- 姿勢制御可能な剛体
+struct CRIKMovableSolidOriIf : CRIKMovableIf{
+	IF_DEF(CRIKMovableSolidOri);
+};
+
+struct CRIKMovableSolidOriDesc : CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovableSolidOri);
+
+	PHSolidIf* solid;  ///< 制御対象の剛体
+};
+
+// --- 角度制御可能なボールジョイント
+struct CRIKMovableBallJointOriIf : CRIKMovableIf{
+	IF_DEF(CRIKMovableBallJointOri);
+};
+
+struct CRIKMovableBallJointOriDesc : CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovableBallJointOri);
+
+	PHBallJointIf* joint;  ///< 制御対象の関節
+};
+
+// --- トルク制御可能なボールジョイント
+struct CRIKMovableBallJointTorqueIf : CRIKMovableIf{
+	IF_DEF(CRIKMovableBallJointTorque);
+};
+
+struct CRIKMovableBallJointTorqueDesc : CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovableBallJointTorque);
+
+	PHBallJointIf* joint;  ///< 制御対象の関節
+};
+
+// --- 角度制御可能な三連ヒンジジョイント
+struct CRIKMovable3HingeJointOriIf : CRIKMovableIf{
+	IF_DEF(CRIKMovable3HingeJointOri);
+};
+
+struct CRIKMovable3HingeJointOriDesc : CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovable3HingeJointOri);
+
+	PHHingeJointIf *joint1, *joint2, *joint3;  ///< 制御対象の関節
+};
+
+// --- トルク制御可能な三連ヒンジジョイント
+struct CRIKMovable3HingeJointTorqueIf : CRIKMovableIf{
+	IF_DEF(CRIKMovable3HingeJointTorque);
+};
+
+struct CRIKMovable3HingeJointTorqueDesc : CRIKMovableDesc{
+	DESC_DEF_FOR_OBJECT(CRIKMovable3HingeJointTorque);
+
+	PHHingeJointIf *joint1, *joint2, *joint3;  ///< 制御対象の関節
+};
+
+// ------------------------------------------------------------------------------
 /// クリーチャのボディモデルのインターフェイス
 struct CRBodyIf : SceneObjectIf{
 	IF_DEF(CRBody);
@@ -48,18 +173,17 @@ struct CRBodyIf : SceneObjectIf{
 
 	/** @brief IK用の制御点を追加する
 	*/
-	enum CRIKCPType{
-		IKCP_POS=0,  // 位置を制御する
-		IKCP_ORI,    // 姿勢を制御する
-		IKCP_FORCE,  // 力を出す
-	};
-	virtual int AddIKControlPoint(CRBodyIf::CRIKCPType type, PHSolidIf* solid, Vec3d pos)= 0;
+	virtual CRIKControlIf* AddIKControl(const IfInfo* ii, const CRIKControlDesc& desc)= 0;
+	template <class T> CRIKControlIf* AddIKControl(const T& desc){
+		return AddIKControl(T::GetIfInfo(), desc);
+	}
 	
 	/** @brief IK用の可動物を追加する
 	*/
-	virtual int AddIKMovableJoint(int cpnum, PHBallJointIf* ballJoint)= 0;
-	virtual int AddIKMovableJoint(int cpnum, PHHingeJointIf* jo1, PHHingeJointIf* jo2, PHHingeJointIf* jo3)= 0;
-	virtual int AddIKMovableSolid(int cpnum, PHSolidIf* solid)= 0;
+	virtual CRIKMovableIf* AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc)= 0;
+	template <class T> CRIKMovableIf* AddIKMovable(const T& desc){
+		return AddIKMovable(T::GetIfInfo(), desc);
+	}
 };
 
 /// クリーチャのボディモデルのデスクリプタ
