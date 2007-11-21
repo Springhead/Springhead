@@ -22,12 +22,20 @@ public:
 	CDConvexMeshIf*   boxBody;
 	PHHingeJointIf* jntConnect;
 
+	double x,y;
+	double theta;
+
 	class Leg{
 	public:
 		CDBoxIf			*boxFoot, *boxDX1, *boxDX2; //足先のアルミ板、ダイナミクセル１、２、３
 		CDSphereIf		*Sphere;					//足先の球
 		PHSolidIf		*soFoot, *soDX1, *soDX2, *soSphere;
 		PHHingeJointIf	*jntFoot, *jntDX1, *jntDX2, *jntSphere, *jntConnect[10];
+
+		double x1, y1;
+		double direction;
+
+		bool Joint_flag;
 
 		void Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
 	};

@@ -8,9 +8,9 @@
 /*
  Springhead2/src/Samples/ASHIGARU/main.cpp
 
-【概要】３脚モジュラーロボットASHIGARUの歩容生成シミュレータ
+【概要】３脚モジュラーロボットASHIGARUの歩行シミュレータ
  
-【仕様】
+【仕様】結合部分の設定及びモジュールの初期設定を変えることで「3モジュール直列」「3モジュール環状」に対応
 
 */
 
@@ -28,21 +28,19 @@
 #pragma hdrstop
 #endif
 
-#define CN 9 
-#define CK 4 
-typedef unsigned int set; 
-#define first(n) ((set) ((1U << (n)) - 1U))
-
 using namespace Spr;
 
 #define ESC		27
-#define module_max 4
+#define module_max 3
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
 UTRef<PHSceneIf> scene;			// Scene
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
+
+void GetTrajectory(int module_num, int leg_num, double para_a1, double para_b1, double para_X1, double para_H1, double Phase[]);
+void GetLegPosition(int module_num);
 
 INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);	// メインダイアログ
 
@@ -54,22 +52,6 @@ Robot robot[50];//とりあえずASHIGARU最大１０体
 
 double zoom = 0.2;
 
-//CPG関連
-double Tr=0.1;//uの時定数
-double ae=1.5;//２つのニューロンの結合係数
-double af=1.5;//２つのニューロンの結合係数
-double s=1.0;//外部入力
-double b=2.5;//疲労係数
-double Ta=0.5;//vの時定数
-double U[10];//ニューロンの内部状態
-double V[10];//ニューロンの自己抑制度
-double WY[10];//重みと出力の積
-double w[10][10];//結合係数
-double Y[10], Y_Past[10];//ＣＰＧ出力
-double smp[10];//最大振幅
-double ue[10], ye[10], ve[10], sume[10];//eニューロンに関する出力
-double uf[10], yf[10], vf[10], sumf[10];//fニューロンに関する出力
-
 double para_X1 = 0.11, para_a1 = 0.03, para_b1 = 0.05, para_H1 = 0.17;
 double	L1 = 0.067, L2 = 0.067, L3 = 0.125;	// 関節間長さ
 double   direction_theta = 0.0;  //進行方向
@@ -78,32 +60,11 @@ double			NowTime = 0.0;	// 時間
 double			s_time = 0.0;	// サンプリングタイム初期化
 double			CycleTime = 1.0;
 double			Phase = 0.0;
+double			PhaseTemp[50];
 
 bool stepOnTimer = false;
 int turn_flag = 0;
 
-
-//CPG計算用関数たち////////////////////////////////////////////////////////////////////////////////////////////
-double _max(double x) {return ((x>0) ? x : 0);}//xが０より大きいかどうかを判別する関数
-
-double CalcU(int cpgnum, double u, double a, double y, double v, double sum)//ニューロンの内部状態を計算する関数
-{
-	U[cpgnum] = ( - u - a*y + s - b*v - sum ) / Tr;
-
-	return U[cpgnum];
-}
-
-double CalcV(int cpgnum, double v, double y)//ニューロンの自己抑制度を計算する関数
-{
-	V[cpgnum] = ( - v + y ) / Ta;
-	return V[cpgnum];
-}
-
-double CalcWY(int cpgnum, int othercpg, double y)//重みと出力の積を計算する関数
-{	
-	WY[cpgnum] = w[othercpg][cpgnum] * y;
-	return WY[cpgnum];
-}
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void CreateFloor(){
@@ -175,10 +136,10 @@ void Keyboard(unsigned char key, int x, int y){
 		exit(0);
 		break;
 	case 'a':
-		NowTime += 0.05;
+		NowTime += 0.03;
 		break;
 	case 's':
-		NowTime -= 0.05;
+		NowTime -= 0.03;
 		break;
 	case 'w':
 		turn_flag++ ;
@@ -229,230 +190,45 @@ void timer(int id){
 
 		// 位相生成
 		QueryPerformanceCounter( &now );
-		NowTime = (double)( now.QuadPart - start.QuadPart ) / (double)freq.QuadPart;	// 経過時間の計算
+		//NowTime = (double)( now.QuadPart - start.QuadPart ) / (double)freq.QuadPart;	// 経過時間の計算
 		s_time = (double)( now.QuadPart - past.QuadPart ) / (double)freq.QuadPart;
 		past.QuadPart = now.QuadPart;
 
 		Phase = (2 * PI / CycleTime) * NowTime;
 	
-	//直列結合
-		for(int module_num=0; module_num<module_max; module_num++){
-			for(int leg_num = 1; leg_num < 3; leg_num++){
-			double	PhaseTemp;
-			PhaseTemp = Phase + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
-			//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num];
-			//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0 + module_num * 2 * PI / 2.0;
-			//PhaseTemp[module_num * 2 + leg_num]= Phase[module_num * 2 + leg_num] + leg_num * 2 * PI / 2.0;
+	//3モジュール直列結合の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			// 足先軌道の計算（楕円軌道）
-			double	xx = para_X1;
-			//double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
-			double	yy; 
-					if(turn_flag%2 == 0)yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp);
-			        else if(turn_flag%2 == 1)yy = para_a1 * cos(PhaseTemp);
-			//double	yy = pow(-1, module_num) * para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
-			//double	yy = para_a1 * cos(PhaseTemp[module_num * 2 + leg_num]);
-			double	zz;
-				if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
-				//if(sin(PhaseTemp[module_num * 2 + leg_num]) < 0.0)	zz = - para_H1;
-				else zz = para_b1 * sin(PhaseTemp) - para_H1;
-				//else zz = para_b1 * sin(PhaseTemp[module_num * 2 + leg_num]) - para_H1;
+		robot[0].theta = 0.0;//モジュールの姿勢設定
+		robot[1].theta = 0.0;
+		robot[2].theta = 0.0;
 
-			// 各関節角度の計算
-			double	theta1 = CalcTheta1(xx, yy);
-			if(leg_num)theta1 += pow(-1, leg_num) * PI / 6.0;
-			double	theta2 = CalcTheta2(xx, yy, zz, L1, L2, L3);
-			double	theta3 = CalcTheta3(xx, yy, zz, L1, L2, L3);
+		robot[0].leg[0].Joint_flag = true;//結合脚指定
+		robot[1].leg[0].Joint_flag = true;
 
-			// グラフィック表示のために各値をセット
-			robot[module_num].leg[leg_num].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-			robot[module_num].leg[leg_num].jntDX2  ->  SetSpringOrigin(-theta2);
-			robot[module_num].leg[leg_num].jntFoot ->  SetSpringOrigin(-theta3);
-			}
-		}
+		PhaseTemp[0] = 0.0;				PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase;//各脚の位相指定
+		PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase + PI;		PhaseTemp[5] = Phase + PI;
+		PhaseTemp[6] = Phase + PI;	PhaseTemp[7] = Phase;				PhaseTemp[8] = Phase;
 
-	//バトルドロイド
-		// module0（脚）
-			/*for(int leg_num = 1; leg_num < 3; leg_num++){
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				double	PhaseTemp = Phase + leg_num * 2 * PI / 2.0;
+	//3モジュール直列結合の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-				// 足先軌道の計算（楕円軌道）
-				double	zz = - para_a1 * cos(PhaseTemp);
-				double	yy = 0.0;
-				double	xx;
-					if(sin(PhaseTemp) < 0.0)	xx = - para_H1;
-					else						xx = para_b1 * sin(PhaseTemp) - para_H1;
+		//robot[0].theta = 0.0;//モジュールの姿勢設定
+		//robot[1].theta = 2*PI/3;
+		//robot[2].theta = -2*PI/3;
 
-				// 各関節角度の計算
-				double	theta1 = 0.0;
-				if(leg_num)
-					theta1 -= pow(-1, leg_num) * PI / 3.0;
-				double	theta2 = atan(zz / xx) + acos( (L2*L2 + xx*xx + zz*zz - L3*L3) / (2 * L2 * sqrt(xx*xx + zz*zz)) );
-				double	theta3 = - PI + acos( (L2*L2 + L3*L3 - xx*xx - zz*zz) / (2 * L2 * L3) );
+		//robot[0].leg[0].Joint_flag = true;//結合脚指定
+		//robot[1].leg[0].Joint_flag = true;
+		//robot[2].leg[0].Joint_flag = true;
 
-				// グラフィック表示のために各値をセット
-				robot[0].leg[leg_num].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-				robot[0].leg[leg_num].jntDX2  ->  SetSpringOrigin(-theta2);
-				robot[0].leg[leg_num].jntFoot ->  SetSpringOrigin(-theta3);
+		//PhaseTemp[0] = 0.0;				PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase + PI;//各脚の位相指定
+		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase;			PhaseTemp[5] = Phase + PI;
+		//PhaseTemp[6] = 0.0;				PhaseTemp[7] = Phase;			PhaseTemp[8] = Phase + PI;
 
-			}
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-			// module1（腕，顔）
-			double	theta0 = -20.0 * PI / 180.0 * sin(Phase);
-			robot[1].leg[0].jntDX1  ->  SetSpringOrigin(-theta0-Rad(90));
-
-			for(int leg_num = 1; leg_num < 3; leg_num++){
-
-				double	PhaseTemp = Phase + leg_num * 2 * PI / 2.0 + 2 * PI / 2.0;
-
-				// 手軌道の計算（楕円軌道）
-				double	xx = para_X1;
-				double	yy = pow(-1, leg_num) * para_a1 * cos(PhaseTemp);
-				double	zz = para_b1 * sin(PhaseTemp) - 0.10;
-					//if(sin(PhaseTemp) < 0.0)	zz = - 0.12;
-					//else						zz = para_b1 * sin(PhaseTemp) - 0.12;
-
-				// 各関節角度の計算
-				double	theta1 = 0.0;
-				//if(leg_num)
-				//	theta1 += pow(-1, leg_num) * PI / 3.0;
-				double	theta2 = CalcTheta2(xx, yy, zz, L1, L2, L3);
-				double	theta3 = CalcTheta3(xx, yy, zz, L1, L2, L3);
-
-				// グラフィック表示のために各値をセット
-				robot[1].leg[leg_num].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-				robot[1].leg[leg_num].jntDX2  ->  SetSpringOrigin(-theta2);
-				robot[1].leg[leg_num].jntFoot ->  SetSpringOrigin(-theta3);
-
-			}*/
-
-	//３モジュール環状
-		//module0//leg2
-		/*double	PhaseTemp = Phase;
-
-		// 足先軌道の計算（楕円軌道）
-		double	xx = 0.0;
-		double	yy = pow(-1, 2) * para_a1 * cos(PhaseTemp);
-		double	zz;
-			if(sin(PhaseTemp) < 0.0)	zz =  - para_H1;
-			else						zz =  para_b1 * sin(PhaseTemp) - para_H1;
-		double  YY = xx * cos(direction_theta + PI/2.0) - yy * sin(direction_theta + PI/2.0);
-		double  XX = xx * sin(direction_theta + PI/2.0) + yy * cos(direction_theta + PI/2.0) + para_X1;
-
-		// 各関節角度の計算
-		double	theta1 = CalcTheta1(XX, YY);
-		double	theta2 = CalcTheta2(XX, YY, zz, L1, L2, L3);
-		double	theta3 = CalcTheta3(XX, YY, zz, L1, L2, L3);
-
-		robot[0].leg[2].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-		robot[0].leg[2].jntDX2  ->  SetSpringOrigin(-theta2);
-		robot[0].leg[2].jntFoot ->  SetSpringOrigin(-theta3);
-
-		//leg1
-		PhaseTemp = Phase + 1 * 2 * PI / 2.0;
-
-		// 足先軌道の計算（楕円軌道）
-		xx = 0.0;
-		yy = pow(-1, 2) * para_a1 * cos(PhaseTemp);
-		zz;
-			if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
-			else						zz = para_b1 * sin(PhaseTemp) - para_H1;
-		YY = xx * cos(direction_theta - PI/6) - yy * sin(direction_theta - PI/6);
-		XX = xx * sin(direction_theta - PI/6) + yy * cos(direction_theta - PI/6) + para_X1;
-
-		// 各関節角度の計算
-		theta1 = CalcTheta1(XX, YY);
-		theta2 = CalcTheta2(XX, YY, zz, L1, L2, L3);
-		theta3 = CalcTheta3(XX, YY, zz, L1, L2, L3);
-
-		robot[0].leg[1].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-		robot[0].leg[1].jntDX2  ->  SetSpringOrigin(-theta2);
-		robot[0].leg[1].jntFoot ->  SetSpringOrigin(-theta3);
-
-	//module1//leg2
-		PhaseTemp = Phase;
-
-		// 足先軌道の計算（楕円軌道）
-			xx = 0.0;
-			yy = pow(-1, 1) * para_a1 * cos(PhaseTemp);
-			zz;
-				if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
-				else						zz = para_b1 * sin(PhaseTemp) - para_H1;
-			YY = xx * cos(direction_theta + PI/6) - yy * sin(direction_theta + PI/6);
-			XX = xx * sin(direction_theta + PI/6) + yy * cos(direction_theta + PI/6) + para_X1;
-
-		// 各関節角度の計算
-		theta1 = CalcTheta1(XX, YY);
-		theta2 = CalcTheta2(XX, YY, zz, L1, L2, L3);
-		theta3 = CalcTheta3(XX, YY, zz, L1, L2, L3);
-
-		robot[1].leg[2].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-		robot[1].leg[2].jntDX2  ->  SetSpringOrigin(-theta2);
-		robot[1].leg[2].jntFoot ->  SetSpringOrigin(-theta3);
-
-		//leg1
-		PhaseTemp = Phase + 1 * 2 * PI / 2.0;
-
-		// 足先軌道の計算（楕円軌道）
-		xx = 0.0;
-		yy = pow(-1, 0) * para_a1 * cos(PhaseTemp);
-		zz;
-			if(sin(PhaseTemp) < 0.0)	zz =  - para_H1;
-			else						zz =  para_b1 * sin(PhaseTemp) - para_H1;
-		YY = xx * cos(direction_theta + PI/2.0) - yy * sin(direction_theta + PI/2.0);
-		XX = xx * sin(direction_theta + PI/2.0) + yy * cos(direction_theta + PI/2.0) + para_X1;
-
-		// 各関節角度の計算
-		theta1 = CalcTheta1(XX, YY);
-		theta2 = CalcTheta2(XX, YY, zz, L1, L2, L3);
-		theta3 = CalcTheta3(XX, YY, zz, L1, L2, L3);
-
-		robot[1].leg[1].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-		robot[1].leg[1].jntDX2  ->  SetSpringOrigin(-theta2);
-		robot[1].leg[1].jntFoot ->  SetSpringOrigin(-theta3);
-
-	// module2//leg2
-		PhaseTemp = Phase;
-
-		// 足先軌道の計算（楕円軌道）
-			xx = 0.0;
-			yy = pow(-1, 1) * para_a1 * cos(PhaseTemp);
-			zz;
-				if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
-				else						zz = para_b1 * sin(PhaseTemp) - para_H1;
-			YY = xx * cos(direction_theta - PI/6) - yy * sin(direction_theta - PI/6);
-			XX = xx * sin(direction_theta - PI/6) + yy * cos(direction_theta - PI/6) - para_X1;
-
-		// 各関節角度の計算
-		theta1 = CalcTheta1(XX, YY);
-		theta2 = CalcTheta2(XX, YY, zz, L1, L2, L3);
-		theta3 = CalcTheta3(XX, YY, zz, L1, L2, L3);
-
-		robot[2].leg[2].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-		robot[2].leg[2].jntDX2  ->  SetSpringOrigin(-theta2);
-		robot[2].leg[2].jntFoot ->  SetSpringOrigin(-theta3);
-
-	//leg1
-		PhaseTemp = Phase + 2 * PI / 2.0;
-
-		// 足先軌道の計算（楕円軌道）
-		xx = 0.0;
-		yy = pow(-1, 1) * para_a1 * cos(PhaseTemp);
-		zz;
-			if(sin(PhaseTemp) < 0.0)	zz = - para_H1;
-			else						zz = para_b1 * sin(PhaseTemp) - para_H1;
-		YY = xx * cos(direction_theta + PI/6) - yy * sin(direction_theta + PI/6);
-		XX = xx * sin(direction_theta + PI/6) + yy * cos(direction_theta + PI/6) + para_X1;
-
-		// 各関節角度の計算
-		theta1 = CalcTheta1(XX, YY);
-		theta2 = CalcTheta2(XX, YY, zz, L1, L2, L3);
-		theta3 = CalcTheta3(XX, YY, zz, L1, L2, L3);
-
-		robot[2].leg[1].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
-		robot[2].leg[1].jntDX2  ->  SetSpringOrigin(-theta2);
-		robot[2].leg[1].jntFoot ->  SetSpringOrigin(-theta3);*/
+		GetLegPosition(3);//各モジュールの姿勢情報を取得
+		GetTrajectory(module_max, 3, para_a1, para_b1, para_X1, para_H1, PhaseTemp);//足先軌道の計算	
 
 		glutPostRedisplay();
 	}
@@ -460,38 +236,6 @@ void timer(int id){
 
 /* brief		メイン関数 */
 int main(int argc, char* argv[]){
-
-
-	//CPG系初期化
-	for(int i=1; i<7; i++){
-		ue[i]=0.0; uf[i]=0.0;
-		ve[i]=ue[i]; vf[i]=uf[i];
-		sume[i]=0.0; sumf[i]=0.0;
-	}
-
-	ue[1]=0.5;	//CPG活性化エネルギー？これがないと振動しません。
-
-	for(int i=1; i<7; i++){//結合係数を初期化
-		for(int j=1; j<7; j++){
-			w[i][j]=0.0;
-		}
-	}
-
-	for(int i=1; i<7; i++)smp[i] = 0;
-	//for(int i=1; i<7; i++)n[i] = 0;
-
-	////結合係数を設定　２個目の数字が影響を受けるCPGの番号
-	w[1][3] = 0.5; w[3][1] = 0.5;
-	w[2][4] = 0.5; w[4][2] = 0.5;
-	w[1][2] = 0.5; w[2][1] = 0.5;
-	w[3][4] = 0.5; w[4][3] = 0.5;
-
-	w[3][5] = 0.5; w[5][3] = 0.5;
-	w[4][6] = 0.5; w[6][4] = 0.5;
-	w[6][5] = 0.5; w[5][6] = 0.5;
-
-	w[1][6] = 0.5; w[6][1] = 0.5;
-	w[2][5] = 0.5; w[5][2] = 0.5;
 
 	// SDKの作成　
 	phSdk = PHSdkIf::CreateSdk();
@@ -506,14 +250,21 @@ int main(int argc, char* argv[]){
 	// シーンの構築
 	CreateFloor();								//	床
 
+	//ここで結合状態の設定を行う
 	Posed pose;
+
+	//3モジュール直列の初期描画位置/////////////////////////////////////////////////////////////////////////
+
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
 	for(int i=0; i<module_max; i++){			//ASHIGARU構築
 		pose.Pos() = Vec3d(0.3*i, 0.17, 0.0);
 		robot[i].Build_root(pose, scene, phSdk);
 	}
 
-	//３モジュール環状のときはこの初期描画で
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//3モジュール環状の初期描画位置////////////////////////////////////////////////////////////////////////
+
 	/*pose.Pos() = Vec3d(0.0, 0.17, 0.0);
 	robot[0].Build_root(pose, scene, phSdk);
 	pose.Ori() = Quaterniond::Rot(Rad(240.0), 'y');
@@ -522,6 +273,8 @@ int main(int argc, char* argv[]){
 	pose.Ori() = Quaterniond::Rot(Rad(360.0), 'y');
 	pose.Pos() = Vec3d(0.1, 0.17, -0.173);
 	robot[2].Build_root(pose, scene, phSdk);*/
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	PHHingeJointDesc jdConnect;
 
@@ -549,29 +302,14 @@ int main(int argc, char* argv[]){
 		robot[i].leg[0].jntFoot -> SetSpring(K);
 		robot[i].leg[0].jntFoot -> SetDamper(D);
 	}
-	/*robot[1].leg[0].jntDX2  -> SetSpringOrigin(Rad(0.0));
-	robot[1].leg[0].jntDX2  -> SetSpring(K);
-	robot[1].leg[0].jntDX2  -> SetDamper(D);
-	robot[1].leg[0].jntFoot -> SetSpringOrigin(Rad(120.0));
-	robot[1].leg[0].jntFoot -> SetSpring(K);
-	robot[1].leg[0].jntFoot -> SetDamper(D);*/
 
 //////モジュール直列結合構築/////////////////////////////////////////////////////////////////////////
-
-	for(int i=0; i<module_max; i++){
-		robot[i].leg[1].jntDX1 -> SetSpringOrigin(Rad(-60.0));
-		robot[i].leg[2].jntDX1 -> SetSpringOrigin(Rad(-120.0));
-	}
 
 	//結合部分構築
 	jdConnect.poseSocket.Ori() = Quaterniond();
 	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, 0.173);
 	for(int i=0; i<module_max-1; i++){
-		//robot[i].leg[0].jntConnect[0] = scene->CreateJoint(robot[i+1].soBody, robot[i].soBody, jdConnect)->Cast();
-		//robot[i].leg[0].jntConnect[0]->SetSpring(K);
-		//robot[i].leg[0].jntConnect[0]->SetDamper(D);
-		//robot[i].leg[0].jntConnect[0]->SetSpringOrigin(Rad(0.0));
 		robot[i].jntConnect = scene->CreateJoint(robot[i+1].soBody, robot[i].soBody, jdConnect)->Cast();
 		robot[i].jntConnect->SetSpring(K);
 		robot[i].jntConnect->SetDamper(D);
@@ -600,11 +338,10 @@ int main(int argc, char* argv[]){
 	jdConnect.poseSocket.Ori() = Quaterniond::Rot(Rad(-120.0), 'y');
 	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, 0.173);*/
-	/*robot[2].jntConnect = scene->CreateJoint(robot[0].soBody, robot[2].soBody, jdConnect)->Cast();
+	/*robot[2].jntConnect = scene->CreateJoint(robot[0].soBody, robot[2].soBody, jdConnect)->Cast();//これの設定がおかしい。これなくてもそこそこ様にはなってる。
 	robot[2].jntConnect->SetSpring(K);
 	robot[2].jntConnect->SetDamper(D);
 	robot[2].jntConnect->SetSpringOrigin(Rad(0.0));*/
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -627,4 +364,50 @@ int main(int argc, char* argv[]){
 	initialize();
 
 	glutMainLoop();
+}
+
+//関節角度計算用関数
+void GetTrajectory(int module_num, int leg_num, double para_a1, double para_b1, double para_X1, double para_H1, double Phase[]){
+
+	double	PhaseTemp[100];
+	double	L1 = 0.067, L2 = 0.067, L3 = 0.12;	// 関節間長さ
+
+	for(int i = 0; i < module_num; i++){
+		for(int j = 0; j < leg_num; j++){
+			PhaseTemp[i * 3 + j] = Phase[i * 3 + j];
+			// 足先軌道の計算（楕円軌道）
+			double	xx = 0.0;
+			double	yy = - para_a1 * cos(PhaseTemp[i * 3 + j]);
+			double	zz;
+				if(sin(PhaseTemp[i * 3 + j]) < 0.0)	zz = - para_H1;
+				else zz = para_b1 * sin(PhaseTemp[i * 3 + j]) - para_H1;
+
+			double  YY = xx * cos(robot[i].leg[j].direction) - yy * sin(robot[i].leg[j].direction);
+			double  XX = xx * sin(robot[i].leg[j].direction) + yy * cos(robot[i].leg[j].direction) + para_X1;
+
+			// 各関節角度の計算
+			double	theta1 = atan(YY / XX);
+			double	m = sqrt(XX*XX + YY*YY) - L1;
+			double	theta2 = atan(zz / m) + acos( (L2*L2 + m*m + zz*zz - L3*L3) / (2 * L2 * sqrt(m*m + zz*zz)) );
+			double	theta3 = - PI + acos( (L2*L2 + L3*L3 - m*m - zz*zz) / (2 * L2 * L3) );
+
+			// グラフィック表示のために各値をセット
+			if(robot[i].leg[j].Joint_flag == true)continue;
+			else{
+				robot[i].leg[j].jntDX1  ->  SetSpringOrigin(-theta1-Rad(90));
+				robot[i].leg[j].jntDX2  ->  SetSpringOrigin(-theta2);
+				robot[i].leg[j].jntFoot ->  SetSpringOrigin(-theta3);
+			}	
+		}
+	}
+}
+
+//脚位置取得（この関数は拡張後も使える）
+void GetLegPosition(int module_num){
+
+	for(int i=0; i<module_num; i++){
+		robot[i].leg[0].direction = robot[i].theta;
+		robot[i].leg[1].direction = robot[i].theta + 2*PI/3;
+		robot[i].leg[2].direction = robot[i].theta - 2*PI/3;
+	}
 }
