@@ -46,15 +46,23 @@ void PHBallJoint::SetDesc(const void* desc){
 	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
 	limit = descBall.limit;
 	spring      = descBall.spring;
-	//goal	    = descBall.goal;		//(SwingTwist)
 	goalVector  = descBall.goalVector; 
 	damper      = descBall.damper;
 	SetMotorTorque(descBall.torque);
 }
 
 void PHBallJoint::UpdateJointState(){
+	Vec3f vecBuffer;
 
-	currentVector = Xjrel.q.Conjugated() * Quaterniond(0.0, 0.0, 0.0, 1.0) * Xjrel.q;
+	//DSTR << "Xjrel.q              : " << Xjrel.q << endl;
+	//DSTR << "Xjrel.q.Conjugated() : " << Xjrel.q.Conjugated() << endl;
+	//DSTR << Xjrel.q + Xjrel.q.Conjugated() << endl;
+
+	vecBuffer = Xjrel.q.Conjugated() * Vec3f(0.0, 0.0, 1.0);
+	//Matrix6Nd mat;
+	//mat = Xjrel.q;
+
+	currentVector = Xjrel.q * vecBuffer;
 
 }
 
@@ -62,18 +70,23 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;
 	// 可動範囲をチェック
 	float nowTheta;
-	goalVector  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
-	goalVector  = Xj[0].q.Conjugated() * goalVector;
+	Vec3f goalBuffer;
+
+	goalBuffer  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
+	goalVector  = Xj[0].q.Conjugated() * goalBuffer;
 	
 	//DSTR << "Xj[0].q.Conjugated : " << Xj[0].q.Conjugated() << endl;
-	//DSTR << "Xj[0].q : " << Xj[0].q << endl;
+	//DSTR << "Xj[0].q            : " << Xj[0].q << endl;
 	//DSTR << "goalVector : " << goalVector << endl;
 
 	nowTheta = acos(dot(goalVector.unit(), currentVector.unit()));			//"vector".unit():<Vector>の単位ベクトル
 	
 	//cout << "nowTheta" << nowTheta << endl;
-	DSTR << "nowTheta" << nowTheta << endl;
-	
+	//DSTR << "nowTheta" << nowTheta << endl;
+	//DSTR << nowTheta << endl;
+	//DSTR << "goalVector : " << goalVector << endl;
+	//DSTR << "currentVector : " << currentVector << endl;
+
 	for(int i=0; i<3; ++i){
 		if(nowTheta > limit.upper[i]){
 			onLimit[i].onUpper = 1;
@@ -86,8 +99,8 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 			onLimit[i].onLower = 0;
 		}
 
-		DSTR << "onLimit[" << i << "].onUpper : " << onLimit[i].onUpper << endl;
-		DSTR << "onLimit[" << i << "].onLower : " << onLimit[i].onLower << endl;
+		//DSTR << "onLimit[" << i << "].onUpper : " << onLimit[i].onUpper << endl;
+		//DSTR << "onLimit[" << i << "].onLower : " << onLimit[i].onLower << endl;
 	
 	}
 
