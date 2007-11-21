@@ -62,11 +62,13 @@ PHJointIf* CRBody::GetJoint(int i){
 CRIKControlIf* CRBody::AddIKControl(const IfInfo* ii, const CRIKControlDesc& desc){
 	if (ii == CRIKControlPosIf::GetIfInfoStatic()) {
 		controlsPosOri.push_back((DBG_NEW CRIKControlPos((const CRIKControlPosDesc&)desc))->Cast());
+		controlsPosOri.back()->SetNumber(controlsPosOri.size()-1);
 		ResizeMatrix(0,1);
 		return controlsPosOri.back();
 
 	} else if (ii == CRIKControlOriIf::GetIfInfoStatic()) {
 		controlsPosOri.push_back((DBG_NEW CRIKControlOri((const CRIKControlOriDesc&)desc))->Cast());
+		controlsPosOri.back()->SetNumber(controlsPosOri.size()-1);
 		ResizeMatrix(0,1);
 		return controlsPosOri.back();
 
@@ -82,21 +84,25 @@ CRIKControlIf* CRBody::AddIKControl(const IfInfo* ii, const CRIKControlDesc& des
 CRIKMovableIf* CRBody::AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc){
 	if (ii == CRIKMovableSolidPosIf::GetIfInfoStatic()) {
 		movablesPosOri.push_back((DBG_NEW CRIKMovableSolidPos((const CRIKMovableSolidPosDesc&)desc))->Cast());
+		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
 		ResizeMatrix(1,0);
 		return movablesPosOri.back();
-	
+
 	} else if (ii == CRIKMovableSolidOriIf::GetIfInfoStatic()) {
 		movablesPosOri.push_back((DBG_NEW CRIKMovableSolidOri((const CRIKMovableSolidOriDesc&)desc))->Cast());
+		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
 		ResizeMatrix(1,0);
 		return movablesPosOri.back();
 
 	} else if (ii == CRIKMovableBallJointOriIf::GetIfInfoStatic()) {
 		movablesPosOri.push_back((DBG_NEW CRIKMovableBallJointOri((const CRIKMovableBallJointOriDesc&)desc))->Cast());
+		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
 		ResizeMatrix(1,0);
 		return movablesPosOri.back();
 
 	} else if (ii == CRIKMovableBallJointTorqueIf::GetIfInfoStatic()) {
 		movablesPosOri.push_back((DBG_NEW CRIKMovableBallJointTorque((const CRIKMovableBallJointTorqueDesc&)desc))->Cast());
+		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
 		ResizeMatrix(1,0);
 		return movablesPosOri.back();
 
@@ -110,6 +116,10 @@ CRIKMovableIf* CRBody::AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& des
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
 		return NULL;
 	}
+}
+
+void CRBody::SetMovableForControl(CRIKMovableIf* movable, CRIKControlIf* control){
+	movabilityPosOri[control->GetNumber()][movable->GetNumber()] = true;
 }
 
 void CRBody::ResizeMatrix(int hInc, int wInc){
@@ -126,6 +136,14 @@ void CRBody::ResizeMatrix(int hInc, int wInc){
 	for(int i=0; i<wInc; ++i){
 		for(int j=0; j<controlsPosOri.size(); ++j){
 			movabilityPosOri[j][movablesPosOri.size()-i-1] = false;
+		}
+	}
+}
+
+void CRBody::CalcJacobian(){
+	for(int i=0; i<controlsPosOri.size(); i++){
+		for (int j=0; j<movablesPosOri.size(); j++){
+			jacobianPosOri[i][j] = movablesPosOri[j]->CalcJacobian(controlsPosOri[i]);
 		}
 	}
 }

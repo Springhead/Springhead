@@ -61,6 +61,9 @@ protected:
 	*/
 	void ResizeMatrix(int hInc, int wInc);
 
+	/** @brief ヤコビアンを計算する
+	*/
+	void CalcJacobian();
 	
 public:
 	OBJECTDEF(CRBody, SceneObject);
@@ -103,6 +106,10 @@ public:
 	/** @brief IK用の可動物を追加する
 	*/
 	virtual CRIKMovableIf* AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
+
+	/** @brief 指定した可動物を指定した制御点で制御可能にする
+	*/
+	virtual void SetMovableForControl(CRIKMovableIf* movable, CRIKControlIf* control);
 };
 }
 //@}

@@ -44,6 +44,7 @@ void CRWalkingController::Init(){
 	syncFootLeft  = phScene->CreateSolid(descSolid);
 	syncFootRight = phScene->CreateSolid(descSolid);
 	syncHip       = phScene->CreateSolid(descSolid);
+	/*
 	PHBallJointDesc descBall;
 	{
 		//descBall.origin = Quaternionf();
@@ -56,6 +57,17 @@ void CRWalkingController::Init(){
 	phScene->CreateJoint(hiFootLeft,  syncFootLeft,  descBall);
 	phScene->CreateJoint(hiFootRight, syncFootRight, descBall);
 	phScene->CreateJoint(hiHip,       syncHip,       descBall);
+	*/
+	PHSpringDesc descSpring;
+	{
+		descSpring.spring    = Vec3d(1,1,1) * 5000.0f;
+		descSpring.damper    = Vec3d(1,1,1) *   10.0f;
+		descSpring.springOri = 1000.0f;
+		descSpring.damperOri =   50.0f;
+	}
+	phScene->CreateJoint(hiFootLeft,  syncFootLeft,  descSpring);
+	phScene->CreateJoint(hiFootRight, syncFootRight, descSpring);
+	phScene->CreateJoint(hiHip,       syncHip,       descSpring);
 
 	///‰Šúƒpƒ‰ƒ[ƒ^‚Ìİ’è/////
     paramVelocityX = 0.8; 

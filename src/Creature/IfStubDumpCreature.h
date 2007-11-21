@@ -10,6 +10,12 @@ struct CRIKControlIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ>
 	virtual Vec3d GetGoal(){
 		return ((OBJ*)(MIF*)this)->GetGoal();
 	}
+	virtual void SetNumber(int i){
+		return ((OBJ*)(MIF*)this)->SetNumber(i);
+	}
+	virtual int GetNumber(){
+		return ((OBJ*)(MIF*)this)->GetNumber();
+	}
 };
 struct CRIKControlIf;	class CRIKControl;
 typedef CRIKControlIfStubTemplate<CRIKControlIf, ObjectIfBuf, CRIKControl>	CRIKControlIfStub;
@@ -47,6 +53,15 @@ struct CRIKMovableIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ>
 	}
 	virtual Vec3d GetValue(){
 		return ((OBJ*)(MIF*)this)->GetValue();
+	}
+	virtual void SetNumber(int i){
+		return ((OBJ*)(MIF*)this)->SetNumber(i);
+	}
+	virtual int GetNumber(){
+		return ((OBJ*)(MIF*)this)->GetNumber();
+	}
+	virtual Matrix3d CalcJacobian(CRIKControlIf * control){
+		return ((OBJ*)(MIF*)this)->CalcJacobian(control);
 	}
 };
 struct CRIKMovableIf;	class CRIKMovable;
@@ -124,6 +139,9 @@ struct CRBodyIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual CRIKMovableIf * AddIKMovable(const IfInfo * ii, const CRIKMovableDesc & desc){
 		return ((OBJ*)(MIF*)this)->AddIKMovable(ii, desc);
+	}
+	virtual void SetMovableForControl(CRIKMovableIf * movable, CRIKControlIf * control){
+		return ((OBJ*)(MIF*)this)->SetMovableForControl(movable, control);
 	}
 };
 struct CRBodyIf;	class CRBody;

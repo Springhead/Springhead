@@ -28,6 +28,9 @@ struct CRIKControlIf : SceneObjectIf{
 
 	virtual void SetGoal(Vec3d goal)= 0;
 	virtual Vec3d GetGoal()= 0;
+
+	virtual void SetNumber(int i)= 0;
+	virtual int  GetNumber()= 0;
 };
 
 struct CRIKControlDesc{
@@ -72,6 +75,11 @@ struct CRIKMovableIf : SceneObjectIf{
 
 	virtual void SetValue(Vec3d value)= 0;
 	virtual Vec3d GetValue()= 0;
+
+	virtual void SetNumber(int i)= 0;
+	virtual int  GetNumber()= 0;
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control)= 0;
 };
 
 struct CRIKMovableDesc{
@@ -184,6 +192,10 @@ struct CRBodyIf : SceneObjectIf{
 	template <class T> CRIKMovableIf* AddIKMovable(const T& desc){
 		return AddIKMovable(T::GetIfInfo(), desc);
 	}
+
+	/** @brief 指定した可動物を指定した制御点で制御可能にする
+	*/
+	virtual void SetMovableForControl(CRIKMovableIf* movable, CRIKControlIf* control)= 0;
 };
 
 /// クリーチャのボディモデルのデスクリプタ

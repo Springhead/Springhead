@@ -22,6 +22,7 @@ class CRIKControl : public SceneObject, public CRIKControlIfInit {
 protected:
 	PHSolidIf* solid;
 	Vec3d goal;
+	int number;
 
 public:
 	OBJECTDEF(CRIKControl, SceneObject);
@@ -33,6 +34,9 @@ public:
 
 	virtual void SetGoal(Vec3d goal){ this->goal = goal; }
 	virtual Vec3d GetGoal(){ return goal; }
+
+	virtual void SetNumber(int i){ number = i; }
+	virtual int  GetNumber(){ return number; }
 };
 
 /** @brief 位置制御点
@@ -81,6 +85,17 @@ class CRIKMovable : public SceneObject, public CRIKMovableIfInit {
 protected:
 	float bias;
 	Vec3d value;
+	int number;
+
+	Matrix3d CrossMatrix(Vec3d v){
+		Matrix3d c = Matrix3d();
+		c[0][1] = -v[2];
+		c[0][2] =  v[1];
+		c[1][0] =  v[2];
+		c[1][2] = -v[0];
+		c[2][0] = -v[1];
+		c[2][1] =  v[0];
+	}
 
 public:
 	OBJECTDEF(CRIKMovable, SceneObject);
@@ -92,6 +107,11 @@ public:
 
 	virtual void SetValue(Vec3d value){ this->value = value; }
 	virtual Vec3d GetValue(){ return value; }
+
+	virtual void SetNumber(int i){ number = i; }
+	virtual int  GetNumber(){ return number; }
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 
 /** @brief 位置制御可能な剛体
@@ -107,6 +127,8 @@ public:
 	CRIKMovableSolidPos(const CRIKMovableSolidPosDesc& desc) : CRIKMovable(desc){
 		this->solid = desc.solid;
 	}
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 
 /** @brief 姿勢制御可能な剛体
@@ -122,6 +144,8 @@ public:
 	CRIKMovableSolidOri(const CRIKMovableSolidOriDesc& desc) : CRIKMovable(desc){
 		this->solid = desc.solid;
 	}
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 
 /** @brief 角度制御可能なボールジョイント
@@ -137,6 +161,8 @@ public:
 	CRIKMovableBallJointOri(const CRIKMovableBallJointOriDesc& desc) : CRIKMovable(desc){
 		this->joint = desc.joint;
 	}
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 
 /** @brief トルク制御可能なボールジョイント
@@ -152,6 +178,8 @@ public:
 	CRIKMovableBallJointTorque(const CRIKMovableBallJointTorqueDesc& desc) : CRIKMovable(desc){
 		this->joint = desc.joint;
 	}
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 
 /** @brief 角度制御可能な三連ヒンジジョイント
@@ -169,6 +197,8 @@ public:
 		this->joint2 = desc.joint2;
 		this->joint3 = desc.joint3;
 	}
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 
 /** @brief トルク制御可能な三連ヒンジジョイント
@@ -186,6 +216,8 @@ public:
 		this->joint2 = desc.joint2;
 		this->joint3 = desc.joint3;
 	}
+
+	virtual Matrix3d CalcJacobian(CRIKControlIf* control);
 };
 }
 //@}
