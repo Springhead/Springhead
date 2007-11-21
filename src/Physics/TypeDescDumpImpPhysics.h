@@ -192,6 +192,8 @@
 	field->offset = int((char*)&(pPHBallJointDesc->limit) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "SwingTwist", "goal", "");
+	field->offset = int((char*)&(pPHBallJointDesc->goal) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3f", "goalVector", "");
 	field->offset = int((char*)&(pPHBallJointDesc->goalVector) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "spring", "");

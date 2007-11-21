@@ -367,7 +367,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	DESC_DEF_FOR_OBJECT(PHBallJoint);
 	LimitST limit;				///< 可動域
 	Vec3d	torque;				///< モータトルク
-	//SwingTwist goal;			///< バネ制御目標(SwingTwist)
+	SwingTwist goal;			///< バネ制御目標(SwingTwist)
 	Vec3f goalVector;			///< バネ制御目標(Socket利用型)
 	Vec3d spring;
 	Vec3d damper;

@@ -29,6 +29,8 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 		onLimit[i].onLower = 0;
 		onLimit[i].onUpper = 0;
 	}
+
+	socketOri = desc.poseSocket.Ori();
 }
 
 bool PHBallJoint::GetDesc(void* desc){
@@ -52,17 +54,18 @@ void PHBallJoint::SetDesc(const void* desc){
 }
 
 void PHBallJoint::UpdateJointState(){
-	Vec3f vecBuffer;
 
+	Vec3f vecBuffer;
 	//DSTR << "Xjrel.q              : " << Xjrel.q << endl;
 	//DSTR << "Xjrel.q.Conjugated() : " << Xjrel.q.Conjugated() << endl;
 	//DSTR << Xjrel.q + Xjrel.q.Conjugated() << endl;
 
-	vecBuffer = Xjrel.q.Conjugated() * Vec3f(0.0, 0.0, 1.0);
-	//Matrix6Nd mat;
-	//mat = Xjrel.q;
-
-	currentVector = Xjrel.q * vecBuffer;
+	//vecBuffer = socketOri * Vec3f(0.0, 0.0, 1.0);
+	//currentVector = Xjrel.q * vecBuffer;
+	
+	currentVector = Xjrel.q * Vec3f(0.0, 0.0, 1.0);
+	
+	DSTR << "currentVector : " << currentVector << endl;
 
 }
 
@@ -70,10 +73,8 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;
 	// 可動範囲をチェック
 	float nowTheta;
-	Vec3f goalBuffer;
 
-	goalBuffer  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
-	goalVector  = Xj[0].q.Conjugated() * goalBuffer;
+	goalVector  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
 	
 	//DSTR << "Xj[0].q.Conjugated : " << Xj[0].q.Conjugated() << endl;
 	//DSTR << "Xj[0].q            : " << Xj[0].q << endl;
@@ -84,8 +85,6 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	//cout << "nowTheta" << nowTheta << endl;
 	//DSTR << "nowTheta" << nowTheta << endl;
 	//DSTR << nowTheta << endl;
-	//DSTR << "goalVector : " << goalVector << endl;
-	//DSTR << "currentVector : " << currentVector << endl;
 
 	for(int i=0; i<3; ++i){
 		if(nowTheta > limit.upper[i]){

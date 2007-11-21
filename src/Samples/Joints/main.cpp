@@ -356,9 +356,9 @@ void BuildScene6(){
 	jntLink.resize(1);
 	PHBallJointDesc desc;
 	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
-	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'x');
+	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
-	desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'x');
+	desc.posePlug.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 
 	desc.limit.upper.Swing() = Rad(20);
 	desc.limit.lower.Twist() = -Rad(120);

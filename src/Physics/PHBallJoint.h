@@ -51,7 +51,7 @@ public:
 	Vec3f		velocity;				/// Cornの関数用のvelocity
 	//Vec3d		torque;
 	Matrix3d	Jstinv;					/// 角速度からスイング・ツイスト角の時間変化率へのヤコビアン
-
+	Quaterniond  socketOri;
 
 	LimitST limit;						///	可動域
 
