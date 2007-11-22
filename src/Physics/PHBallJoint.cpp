@@ -61,11 +61,12 @@ void PHBallJoint::UpdateJointState(){
 	//DSTR << Xjrel.q + Xjrel.q.Conjugated() << endl;
 
 	//vecBuffer = socketOri * Vec3f(0.0, 0.0, 1.0);
+	//vecBuffer = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
 	//currentVector = Xjrel.q * vecBuffer;
-	
+
 	currentVector = Xjrel.q * Vec3f(0.0, 0.0, 1.0);
 	
-	DSTR << "currentVector : " << currentVector << endl;
+	//DSTR << "currentVector : " << currentVector << endl;
 
 }
 
@@ -84,7 +85,7 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	
 	//cout << "nowTheta" << nowTheta << endl;
 	//DSTR << "nowTheta" << nowTheta << endl;
-	//DSTR << nowTheta << endl;
+	DSTR << nowTheta*180/M_PI << endl;
 
 	for(int i=0; i<3; ++i){
 		if(nowTheta > limit.upper[i]){
