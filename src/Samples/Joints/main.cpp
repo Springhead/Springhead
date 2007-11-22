@@ -360,9 +360,12 @@ void BuildScene6(){
 	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
 	desc.posePlug.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 
-	desc.limit.upper.Swing() = Rad(20);
-	desc.limit.lower.Twist() = -Rad(120);
-	desc.limit.upper.Twist() = Rad(120);
+	//desc.limit.lower.SwingDir() = Rad(0);
+	//desc.limit.upper.SwingDir() = Rad(360);
+	//desc.limit.lower.Swing()    = Rad(0);
+	desc.limit.upper.Swing()    = Rad(20);
+	desc.limit.lower.Twist()    = -Rad(120);
+	desc.limit.upper.Twist()    = Rad(120);
 
 //	desc.spring = Vec3f(0,1000,0);
 //	desc.damper = Vec3f(0,10,0);

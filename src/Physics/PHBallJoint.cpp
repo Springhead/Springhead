@@ -110,13 +110,13 @@ void PHBallJoint::CompBias(){
 
 	double dtinv = 1.0 / scene->GetTimeStep();
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
-	/*
+	
 	for(int i=0; i<3; ++i){
-		db.w()[i] = (onLimit[i].onLower ? (nowTheta[i] - limit.lower[i]) * dtinv :
+		db.w()[i] = (onLimit[i].onLower ? (limit.lower[i] - nowTheta[i]) * dtinv :
 			     onLimit[i].onUpper ? (nowTheta[i] - limit.upper[i]) * dtinv : 0.0);
 	}
 	db *= engine->velCorrectionRate;
-	Vec3d prop = nowTheta - goalVector;
+	Vec3d prop = currentVector - goalVector;
 
 	for(int i=0; i<3; ++i){
 		if (onLimit[i].onLower || onLimit[i].onUpper) continue;
@@ -125,7 +125,7 @@ void PHBallJoint::CompBias(){
 			dA.w()[i] = tmp * dtinv;
 			db.w()[i] = spring[i] * prop[i] * tmp;
 		}
-	}*/
+	}
 
 }
 
