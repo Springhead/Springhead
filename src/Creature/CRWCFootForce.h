@@ -59,6 +59,7 @@ public:
 		FootLeft = fl;
 		FootRight = fr;
 	}
+	void SetSingleSupport() {footMoveTermFlag = true;} 
 	void SetParamT0(double t) {T0 = t;}
 	void SetParamFootHeight(double fh) {footheight = fh;}
 	void SetParamMaxFootLength(double maxfl) {MaxFootLength = maxfl;}

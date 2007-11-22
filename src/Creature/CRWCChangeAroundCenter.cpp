@@ -10,7 +10,7 @@ CRWCChangeAroundCenter::~CRWCChangeAroundCenter(void)
 }
 
 void CRWCChangeAroundCenter::Init(){
-	dvec = Vec3d(0.00,1.0,0.0);
+	dvec = Vec3d(0.0,1.0,0.0);
 
 	kpx = 300.0;
 	kvx = 30000.0;

@@ -227,6 +227,7 @@ Vec3d CRWCFootForce::CalcSwingFootForce(void){
 		if(cy > FootSize/2.0 + footheight) footMoveTermFlag = false;  /////////
 	    }
 	else {
+		footMoveTermFlag = false;
 		vdy = (FootSize/2.0 - cy) / tl;                               /////////
 	}
     pdy = cy + TimeStep * vdy;
@@ -363,8 +364,6 @@ void CRWCFootForce::FootDoubleSupport(void){
 	Vec3d VelocityHipPre;
 	Vec3d VelocityHipNext;
 
-
-	footMoveTermFlag = true;
 
 	if(EarthConnection == true) ForcePre = CalcDoubleSupportPreFootForce();
 	if(LandAble == true) ForceNext = CalcDoubleSupportNextFootForce();

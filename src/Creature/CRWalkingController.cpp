@@ -73,7 +73,7 @@ void CRWalkingController::Init(){
     paramVelocityX = 0.8; 
     paramHalfStrideX = 0.01;
 	paramHalfStrideZ = 0.1;         
-	footHeight = 0.19;                                  
+	footHeight = 0.13;                                  
     amplitude = 0.0;   
 
 	footsize = 0.0619;
@@ -159,7 +159,7 @@ void CRWalkingController::ReInit(){
     paramVelocityX = 0.8; 
     paramHalfStrideX = 0.01;
 	paramHalfStrideZ = 0.1;         
-	footHeight = 0.005;                                  
+	footHeight = 0.13;                                  
     amplitude = 0.0;   
 
 	footsize = 0.0619;
@@ -1009,9 +1009,9 @@ void CRWalkingController::fallForce(){
 	}
 
 	if(tfHip->GetCenterPosition().y < 0.4 && tfHip->GetCenterPosition().y > 0.25){
-	    tfHip->AddTorque(12.0*(RoLeft+RoRight));
+	    tfHip->AddTorque(50.0*(RoLeft+RoRight));  //12
 	} else if(tfChest->GetCenterPosition().y > 0.3 && tfHip->GetCenterPosition().y < 0.25){
-		tfHip->AddTorque(8.0*(RoLeft+RoRight));
+		tfHip->AddTorque(30.0*(RoLeft+RoRight));   //8
 		tfHip->AddForce(-2.0*tfHip->GetVelocity());
 		tfChest->AddForce(-2.0*tfChest->GetVelocity());
 		tfHead->AddForce(-2.0*tfHead->GetVelocity());
@@ -1437,6 +1437,7 @@ void CRWalkingController::gait(void){
 		DSTR << "CenterVelocity end = " << CenterVelocity << std::endl;
 		ls->ChangeSupportLegs(LF);
 		ff->ChangeSupportLegs(LF);
+		ff->SetSingleSupport();
 
 		if(LF == true) {
 			LF = false;
@@ -1538,6 +1539,8 @@ void CRWalkingController::SetSpeed(double v){
 
 void CRWalkingController::WCSetSpeed(double v){
 
+	ff->SetParamFootHeight(footHeight);
+
 	if(v > 1.3){
 		paramVelocityX = v;
         paramHalfStrideX = 0.19;
@@ -1638,7 +1641,7 @@ void CRWalkingController::WCSetSpeed(double v){
 	    gf->SetParamVZ(paramVelocityZ);
 
     	AmplitudeChange(v*0.01);
-		FootHeightChange(0.06*v);
+		//FootHeightChange(0.06*v);
 		VelocityZChange(0.4*v);
 	}
 }
@@ -1652,10 +1655,10 @@ void CRWalkingController::Stop(){
 
 void CRWalkingController::WCStop(){
 
-	double paramV = 0.3;
+	double paramV = 0.5;
 	double paramStrideZ = 0.12;
-	double paramStrideMarginX = 0.07;
-	double paramStrideMarginZ = 0.12;
+	double paramStrideMarginX = 0.11;
+	double paramStrideMarginZ = 0.14;
 	double paramPose = 0.25;
 	double LCpx, RCpx, LRpx;
 	double LCpz, RCpz, LRpz;
@@ -1673,7 +1676,7 @@ void CRWalkingController::WCStop(){
 	else bv = false;
 	if(abs(LCpx) < paramStrideMarginX && abs(RCpx) < paramStrideMarginX && abs(LRpx) < paramStrideMarginX) bpx = true;
 	else bpx = false;
-	if(abs(LCpz-paramStrideZ) < paramStrideMarginZ && abs(RCpz+paramStrideZ) < paramStrideMarginZ && abs(LRpz-2.0*paramStrideZ) < paramStrideMarginZ) bpz = true;
+	if(abs(LCpz-paramStrideZ) < paramStrideMarginZ && abs(RCpz+paramStrideZ) < paramStrideMarginZ && LRpz-2.0*paramStrideZ > -paramStrideMarginZ && LRpz-2.0*paramStrideZ < 2.5*paramStrideMarginZ) bpz = true;
 	else bpz = false;
 	if(((tfChest->GetOrientation()).Rotation()).norm() < paramPose) bpose = true;
 	else bpose = false;
@@ -1695,8 +1698,8 @@ void CRWalkingController::WCStop(){
 void CRWalkingController::WCPreStop(){
     HalfStrideXChange(0.0001);
 	VelocityXChange(0.0009);
+	ff->SetParamFootHeight(0.07);
 	AmplitudeChange(0.0);
-	ff->SetParamFootHeight(0.00005);
 	VelocityZChange(0.12);
 }
 

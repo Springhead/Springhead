@@ -304,6 +304,16 @@ Vec3d CRWCLandingSite::CalcNextLandingSite(){
             LZ = -MaxStride;
 	}
 
+	if(LF == true){
+		if(LX < 0.12 && LX > -0.12){
+			if(LZ < 0.03 && LZ > -0.03) LZ = -0.03;
+		}
+	} else {
+		if(LX < 0.12 && LX > -0.12){
+			if(LZ < 0.03 && LZ > -0.03) LZ = 0.03;
+		}
+	}
+
 	/*
 	if(LF == true) {
 		if(LZ > 0.0) LZ = 0.0;
