@@ -55,18 +55,13 @@ void PHBallJoint::SetDesc(const void* desc){
 
 void PHBallJoint::UpdateJointState(){
 
-	Vec3f vecBuffer;
-	//DSTR << "Xjrel.q              : " << Xjrel.q << endl;
-	//DSTR << "Xjrel.q.Conjugated() : " << Xjrel.q.Conjugated() << endl;
-	//DSTR << Xjrel.q + Xjrel.q.Conjugated() << endl;
+	double eps = 1e-4;
 
-	//vecBuffer = socketOri * Vec3f(0.0, 0.0, 1.0);
-	//vecBuffer = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
-	//currentVector = Xjrel.q * vecBuffer;
+	goalVector  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
+	currentVector = Xj[0].q * Xjrel.q * Vec3f(0.0, 0.0, 1.0);
 
-	currentVector = Xjrel.q * Vec3f(0.0, 0.0, 1.0);
-	
-	//DSTR << "currentVector : " << currentVector << endl;
+//	DSTR << "goalVector : " << goalVector << endl;
+//	DSTR << "currentVector : " << currentVector << endl;
 
 }
 
@@ -75,15 +70,8 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	// 可動範囲をチェック
 	float nowTheta;
 
-	goalVector  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
-	
-	//DSTR << "Xj[0].q.Conjugated : " << Xj[0].q.Conjugated() << endl;
-	//DSTR << "Xj[0].q            : " << Xj[0].q << endl;
-	//DSTR << "goalVector : " << goalVector << endl;
-
 	nowTheta = acos(dot(goalVector.unit(), currentVector.unit()));			//"vector".unit():<Vector>の単位ベクトル
 	
-	//cout << "nowTheta" << nowTheta << endl;
 	//DSTR << "nowTheta" << nowTheta << endl;
 	DSTR << nowTheta*180/M_PI << endl;
 
@@ -122,7 +110,7 @@ void PHBallJoint::CompBias(){
 
 	double dtinv = 1.0 / scene->GetTimeStep();
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
-	
+	/*
 	for(int i=0; i<3; ++i){
 		db.w()[i] = (onLimit[i].onLower ? (nowTheta[i] - limit.lower[i]) * dtinv :
 			     onLimit[i].onUpper ? (nowTheta[i] - limit.upper[i]) * dtinv : 0.0);
@@ -137,7 +125,7 @@ void PHBallJoint::CompBias(){
 			dA.w()[i] = tmp * dtinv;
 			db.w()[i] = spring[i] * prop[i] * tmp;
 		}
-	}
+	}*/
 
 }
 
