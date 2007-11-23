@@ -1655,10 +1655,10 @@ void CRWalkingController::Stop(){
 
 void CRWalkingController::WCStop(){
 
-	double paramV = 0.5;
+	double paramV = 0.3;
 	double paramStrideZ = 0.12;
-	double paramStrideMarginX = 0.11;
-	double paramStrideMarginZ = 0.14;
+	double paramStrideMarginX = 0.1;
+	double paramStrideMarginZ = 0.12;
 	double paramPose = 0.25;
 	double LCpx, RCpx, LRpx;
 	double LCpz, RCpz, LRpz;
