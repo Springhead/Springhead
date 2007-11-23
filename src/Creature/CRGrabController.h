@@ -31,10 +31,10 @@ private:
 	CRBodyIf* body;
 
 	/// 腰の剛体（いろいろ基準になる）
-	PHSolidIf* soWaist;
+	PHSolidIf *soWaist, *soWaistT;
 
 	/// 胸の剛体（やはりいろいろ基準になる）
-	PHSolidIf* soChest;
+	PHSolidIf *soChest, *soChestT;
 
 	/// 腰を中心に到達可能な距離
 	float reachableDistance;

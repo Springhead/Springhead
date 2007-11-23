@@ -21,15 +21,22 @@ void CRGrabController::Init(){
 
 	// 制御に用いるBodyとその剛体の取得
 	CRHingeHumanBodyIf* hiBody=NULL;
+	CRTrunkFootHumanBodyIf* tfBody=NULL;
 	for (int i=0; i<creature->NBodies(); ++i) {
 		if (!hiBody) {
 			hiBody = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
 		}
+		if (!tfBody) {
+			tfBody = DCAST(CRTrunkFootHumanBodyIf, creature->GetBody(i));
+		}
 	}
 	body = hiBody;
 
-	soWaist = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
-	soChest = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_CHEST);
+	soWaist  = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
+	soChest  = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_CHEST);
+
+	soWaistT = tfBody->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST);
+	soChestT = tfBody->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST);
 
 	// 下位のコントローラ（Reaching）の取得
 	reachLeft  = NULL; reachRight = NULL; reachChest = NULL;
@@ -93,8 +100,10 @@ void CRGrabController::Step(){
 		}
 
 	} else if (controlState==CRGrabControllerIf::CRGC_UPHOLD_COMPLETE) {
-		reachLeft->SetTargetPos(soWaist->GetPose()*Vec3f(-targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
-		reachRight->SetTargetPos(soWaist->GetPose()*Vec3f( targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
+		reachLeft->SetTargetPos(soWaistT->GetPose()*Vec3f(-targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
+		reachLeft->SetTargetOri(soChestT->GetPose().Ori()*Quaterniond::Rot(Rad(90),'y'), Vec3d(0,0,0));
+		reachRight->SetTargetPos(soWaistT->GetPose()*Vec3f( targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
+		reachRight->SetTargetOri(soChestT->GetPose().Ori()*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0));
 
 	} else if (controlState==CRGrabControllerIf::CRGC_PLACE) {
 		if (reachLeft->GetReachState()==RSSR && reachRight->GetReachState()==RSSR) {
@@ -190,15 +199,15 @@ bool CRGrabController::Uphold(){
 		return false;
 	}
 
-	reachLeft->SetTargetPos(soWaist->GetPose()*Vec3f(-targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
-	reachLeft->SetTargetOri(soChest->GetPose().Ori()*Quaterniond::Rot(Rad(90),'y'), Vec3d(0,0,0));
+	reachLeft->SetTargetPos(soWaistT->GetPose()*Vec3f(-targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
+	reachLeft->SetTargetOri(soChestT->GetPose().Ori()*Quaterniond::Rot(Rad(90),'y'), Vec3d(0,0,0));
 	reachLeft->SetTargetTime(2.0);
 
-	reachRight->SetTargetPos(soWaist->GetPose()*Vec3f( targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
-	reachRight->SetTargetOri(soChest->GetPose().Ori()*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0));
+	reachRight->SetTargetPos(soWaistT->GetPose()*Vec3f( targetRadius, targetRadius*2.5, -targetRadius*1.2), Vec3f(0,0,0));
+	reachRight->SetTargetOri(soChestT->GetPose().Ori()*Quaterniond::Rot(Rad(-90),'y'), Vec3d(0,0,0));
 	reachRight->SetTargetTime(2.0);
 
-	reachChest->SetTargetPos(soWaist->GetPose().Pos()+Vec3f(0,shoulderHeightFromWaist,0), Vec3f(0,0,0));
+	reachChest->SetTargetPos(soWaistT->GetPose().Pos()+Vec3f(0,shoulderHeightFromWaist,0), Vec3f(0,0,0));
 	reachChest->SetTargetTime(1.0);
 
 	reachLeft->Start(CRReachingControllerIf::CM_P3R2, -1);
