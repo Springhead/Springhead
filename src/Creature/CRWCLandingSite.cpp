@@ -305,12 +305,12 @@ Vec3d CRWCLandingSite::CalcNextLandingSite(){
 	}
 
 	if(LF == true){
-		if(LX < 0.12 && LX > -0.12){
-			if(LZ < 0.03 && LZ > -0.03) LZ = -0.03;
+		if(LX < 0.24 && LX > -0.24){
+			if(LZ < 0.1 && LZ > -0.1) LZ = -0.1;
 		}
 	} else {
-		if(LX < 0.12 && LX > -0.12){
-			if(LZ < 0.03 && LZ > -0.03) LZ = 0.03;
+		if(LX < 0.24 && LX > -0.24){
+			if(LZ < 0.1 && LZ > -0.1) LZ = 0.1;
 		}
 	}
 

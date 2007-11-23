@@ -665,7 +665,7 @@ void CRHingeHumanBody::CreateLowerLeg(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springKnee, damperKnee, solids[soNUpperLeg]->GetMass());
 	// hingeDesc.spring           = springKnee;
 	// hingeDesc.damper           = damperKnee;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.origin           = Rad(-20);    // hingeDesc.origin           = Rad(0);
 	hingeDesc.lower            = rangeKnee[0];
 	hingeDesc.upper            = rangeKnee[1];
 	joints[joNKnee] = CreateJoint(solids[soNLowerLeg], solids[soNUpperLeg], hingeDesc);

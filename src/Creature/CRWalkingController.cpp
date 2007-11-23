@@ -65,15 +65,27 @@ void CRWalkingController::Init(){
 		descSpring.springOri = 1000.0f;
 		descSpring.damperOri =   50.0f;
 	}
+	phScene->CreateJoint(hiHip,       syncHip,       descSpring);
+	/*PHSpringDesc descSpring;
+	{
+		descSpring.spring    = Vec3d(1,1,1) * 5000.0f;
+		descSpring.damper    = Vec3d(1,1,1) *  10.0f;
+		descSpring.springOri = 1000.0f;
+		descSpring.damperOri =   50.0f;
+	}*/
+	descSpring.spring    = Vec3d(1,1,1) * 10000.0f;
+	descSpring.damper    = Vec3d(1,1,1) *  60.0f;
+	descSpring.springOri = 1000.0f;
+	descSpring.damperOri =   50.0f;
+
 	phScene->CreateJoint(hiFootLeft,  syncFootLeft,  descSpring);
 	phScene->CreateJoint(hiFootRight, syncFootRight, descSpring);
-	phScene->CreateJoint(hiHip,       syncHip,       descSpring);
 
 	///初期パラメータの設定/////
     paramVelocityX = 0.8; 
     paramHalfStrideX = 0.01;
 	paramHalfStrideZ = 0.1;         
-	footHeight = 0.13;                                  
+	footHeight = 0.15;                                  
     amplitude = 0.0;   
 
 	footsize = 0.0619;
@@ -159,7 +171,7 @@ void CRWalkingController::ReInit(){
     paramVelocityX = 0.8; 
     paramHalfStrideX = 0.01;
 	paramHalfStrideZ = 0.1;         
-	footHeight = 0.13;                                  
+	footHeight = 0.15;                                  
     amplitude = 0.0;   
 
 	footsize = 0.0619;
@@ -1506,7 +1518,7 @@ void CRWalkingController::Stand(){
 
 	//位置に関するPD制御
 	tfChest->AddForce(-1.0*phScene->GetGravity()*TotalMass(UpperBody),Vec3d(Xstand,10,Zstand));
-	tfChest->AddForce(paramKp*(Vec3d(Xstand,height+0.05
+	tfChest->AddForce(paramKp*(Vec3d(Xstand,height+0.2
 		,Zstand) - GetCenterOfBlocks(UpperBody)) - paramKv*CalcCenterVelocity(UpperBody),Vec3d(Xstand,10,Zstand));
 
 	//姿勢に関するPD制御
