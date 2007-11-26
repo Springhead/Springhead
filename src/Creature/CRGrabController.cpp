@@ -17,7 +17,7 @@ namespace Spr{
 IF_OBJECT_IMP(CRGrabController, CRController);
 
 void CRGrabController::Init(){
-	CRController::Init();
+	CRController::Init(); 
 
 	// §Œä‚É—p‚¢‚éBody‚Æ‚»‚Ì„‘Ì‚Ìæ“¾
 	CRHingeHumanBodyIf* hiBody=NULL;
