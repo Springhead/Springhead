@@ -82,15 +82,21 @@ void PHContactPoint::SetConstrainedIndex(bool* con){
 
 // double PHContactPoint::correctionSpring = 100.0;
 // double PHContactPoint::correctionDamper = 10.0;
-// double PHContactPoint::correctionSpring = 100.0;
-// double PHContactPoint::correctionDamper = 10.0;
 double PHContactPoint::correctionSpring = 1000.0;
 double PHContactPoint::correctionDamper = 100.0;
 
 
 void PHContactPoint::CompBias(){
-	//	correctionを位置LCPで別に行い場合は不要
-	if (engine->numIterCorrection) return;
+	//	correctionを位置LCPで別に行う場合は不要
+	if (engine->numIterContactCorrection) return;
+
+	//	次のステップでの位置の誤差の予測値が0になるような速度を設定
+	//	dv * dt = x + v*dt
+	double dtinv = 1.0 / scene->GetTimeStep();
+	db[0] = -(shapePair->depth - 1e-3) * dtinv + vjrel[0];
+	db[0] *= 0.2; 
+
+#if 0
 
 	double dtinv = 1.0 / scene->GetTimeStep();
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
@@ -121,6 +127,7 @@ void PHContactPoint::CompBias(){
 	dA[0] = tmp * dtinv;
 	db[0] = -correctionSpring * (shapePair->depth - 1e-3) * tmp;
 #endif
+#endif
 }
 
 void PHContactPoint::Projection(double& f, int k){
@@ -140,13 +147,13 @@ void PHContactPoint::Projection(double& f, int k){
 }
 
 void PHContactPoint::CompError(){
-	const double eps = 0.0;
+	const double eps = 0.001;
 	//衝突判定アルゴリズムの都合上、Correctionによって完全に剛体が離れてしまうのは困るので
 	//誤差をepsだけ小さく見せる
 	B.v().x = min(0.0, -shapePair->depth + eps);
 
 	// 誤差を全部解消すると振動するので、少なめに
-	B.v().x *= 0.2;
+	B.v().x *= engine->posCorrectionRate;
 }
 
 void PHContactPoint::ProjectionCorrection(double& F, int k){

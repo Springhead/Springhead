@@ -163,8 +163,9 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
 	numIterCorrection	 = 0;
+	numIterContactCorrection = 10;
 	velCorrectionRate	 = 0.5;
-	posCorrectionRate	 = 1.0;
+	posCorrectionRate	 = 0.5;
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
 	freezeThreshold		 = 0.0;
@@ -386,14 +387,17 @@ void PHConstraintEngine::SetupLCP(){
 
 }
 void PHConstraintEngine::SetupCorrectionLCP(){
-	if(numIterCorrection == 0)return;
-	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->SetupCorrectionABA();
+	if(numIterCorrection)
+		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+			(*it)->SetupCorrectionABA();
 
-	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
-		(*it)->SetupCorrectionLCP();
-	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
-		(*it)->SetupCorrectionLCP();
+	if(numIterContactCorrection)
+		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+			(*it)->SetupCorrectionLCP();
+
+	if(numIterCorrection)
+		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+			(*it)->SetupCorrectionLCP();
 }
 void PHConstraintEngine::IterateLCP(){
 	int count = 0;
@@ -412,15 +416,14 @@ void PHConstraintEngine::IterateLCP(){
 	}
 }
 void PHConstraintEngine::IterateCorrectionLCP(){
-	int count = 0;
-	while(true){
-		if(count == numIterCorrection)
-			break;
-		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
-			(*it)->IterateCorrectionLCP();
-		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
-			(*it)->IterateCorrectionLCP();
-		count++;
+	int end = max(numIterCorrection, numIterContactCorrection);
+	for(int i=0; i!=end; ++i){
+		if (i<numIterContactCorrection)
+			for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+				(*it)->IterateCorrectionLCP();
+		if (i<numIterCorrection)
+			for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+				(*it)->IterateCorrectionLCP();
 	}
 }
 
@@ -443,7 +446,6 @@ void PHConstraintEngine::UpdateSolids(){
 		(*it)->UpdatePosition(dt);
 	}
 }
-bool correction = true;
 void PHConstraintEngine::Step(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
@@ -472,10 +474,8 @@ void PHConstraintEngine::Step(){
 	
 	SetupLCP();
 	IterateLCP();
-	if (correction){
-		SetupCorrectionLCP();
-		IterateCorrectionLCP();
-	}
+	SetupCorrectionLCP();
+	IterateCorrectionLCP();
 	//位置・速度の更新
 	UpdateSolids();	
 }

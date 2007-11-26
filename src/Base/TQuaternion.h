@@ -334,7 +334,7 @@ TQuaternion<A> operator*(const TQuaternion<A>& q1, const TQuaternion<B>& q2){
 	return rv;
 }
 
-///	TQuaternionでベクトルを回転． TQuaternion * vector * TQuaternion.conjugated() と同じ．
+///	TQuaternionでベクトルを回転． Quaternion * vector * Quaternion^{*} と同じ．
 template <class ET, class BD>
 inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVectorBase<DIMENC(3), BD>& v){
 	TQuaternion<ET> qv(1, ET(v[0]), ET(v[1]), ET(v[2]));

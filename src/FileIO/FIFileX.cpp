@@ -204,7 +204,7 @@ static void ArrayNum(int n){
 static void TempEnd(char c){
 	tdesc->Link(fileContext->typeDbs.Top());
 	PDEBUG(DSTR << "load template:" << std::endl);
-	tdesc->Print(DSTR);
+	PDEBUG(tdesc->Print(DSTR));
 	fileContext->typeDbs.Top()->RegisterDesc(tdesc);
 }
 }

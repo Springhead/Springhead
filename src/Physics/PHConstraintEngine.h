@@ -40,9 +40,10 @@ class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPa
 	OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
 public:
 	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
-	int		numIter;				///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”
-	int		numIterCorrection;		///< Œë·C³LCP‚Ì”½•œ‰ñ”
-	double	velCorrectionRate;		///< Œë·C³”ä—¦
+	int		numIter;					///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”
+	int		numIterCorrection;			///< Œë·C³LCP‚Ì”½•œ‰ñ”
+	int		numIterContactCorrection;	///< ÚG“_‚ÌŒë·C³LCP‚Ì”½•œ‰ñ”
+	double	velCorrectionRate;			///< Œë·C³”ä—¦
 	double	posCorrectionRate;
 	double	shrinkRate;				///< LCP‰Šú’l‚ð‘O‰ñ‚Ì‰ð‚É‘Î‚µ‚Äk¬‚³‚¹‚é”ä—¦
 	double	shrinkRateCorrection;
