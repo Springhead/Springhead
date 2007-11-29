@@ -28,6 +28,7 @@
 #include <ctime>
 #include <GL/glut.h>
 #include <sstream>
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -288,6 +289,9 @@ void keyboard(unsigned char key, int x, int y){
 	}
 }	
 
+//	#include <WinBasis/WBPreciseTimer.h>
+//	WBPreciseTimer ptimer;
+
 /**
  brief  	glutTimerFuncで指定したコールバック関数
  param	 	<in/--> id　　 タイマーの区別をするための情報
@@ -295,9 +299,10 @@ void keyboard(unsigned char key, int x, int y){
  */
 void timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-	float DT = 0.1f;
-	int times = (int)(DT / scene->GetTimeStep());
-	for(int i=0; i<times; ++i) scene->Step();
+	float DT = 0.05f;
+//	int times = (int)(DT / scene->GetTimeStep());
+//	for(int i=0; i<times; ++i) 
+	scene->Step();
 	glutPostRedisplay();
 	unsigned int msecs = static_cast<unsigned int>(1000*DT);
 	glutTimerFunc(msecs, timer, 0);
@@ -351,6 +356,7 @@ int main(int argc, char* argv[]){
 
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
+	scene->SetTimeStep(0.05);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

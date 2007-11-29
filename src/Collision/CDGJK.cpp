@@ -205,6 +205,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				if (approach > -epsilon || cur->dist >= last->dist) break;	//	return last
 			}
 			Vec3d l = w[(int)cur->i[0]] - w[(int)cur->i[1]];
+			if (l.sub_vector(PTM::TSubVectorDim<0,2>()).square() < epsilon2){
+				if (last->nVtx) break;
+				assert(0);	//	same point was returned.
+			}
 			cur->normal = Vec3d(0,0,1) - l.Z() / l.square() * l;
 			cur->normal.unitize();
 			std::swap(cur, last);

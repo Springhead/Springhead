@@ -87,14 +87,17 @@ double PHContactPoint::correctionDamper = 100.0;
 
 
 void PHContactPoint::CompBias(){
-	//	correction‚ðˆÊ’uLCP‚Å•Ê‚És‚¤ê‡‚Í•s—v
+	//	correction‚ðˆÊ’uLCP‚Å•Ê‚És‚¤ê‡‚ÍA‘¬“x‚ð•ÏX‚µ‚Ä‚ÌˆÊ’u•â³‚Í‚µ‚È‚¢B
 	if (engine->numIterContactCorrection) return;
 
-	//	ŽŸ‚ÌƒXƒeƒbƒv‚Å‚ÌˆÊ’u‚ÌŒë·‚Ì—\‘ª’l‚ª0‚É‚È‚é‚æ‚¤‚È‘¬“x‚ðÝ’è
-	//	dv * dt = x + v*dt
-	double dtinv = 1.0 / scene->GetTimeStep();
-	db[0] = -(shapePair->depth - 1e-3) * dtinv + vjrel[0];
-	db[0] *= 0.2; 
+	//	’µ‚Ë•Ô‚èŒW”: 2•¨‘Ì‚Ì•½‹Ï’l‚ðŽg‚¤
+	double e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
+	
+	//	ÚG—p‚Ì correctionRate
+	double contactCorrectionRate = 0.1;
+	//	‘¬“x‚ª¬‚³‚¢ê‡‚ÍA’µ‚Ë•Ô‚è‚È‚µB
+	if (vjrel[0]*scene->GetTimeStep() > -0.001) e=0;
+	db[0] = - contactCorrectionRate * (shapePair->depth - 1e-3) / scene->GetTimeStep() + e * vjrel[0];
 
 #if 0
 
@@ -133,16 +136,28 @@ void PHContactPoint::CompBias(){
 void PHContactPoint::Projection(double& f, int k){
 	static double flim;
 	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
-//		f = min(1.0, f);	// ƒfƒ‚—p‚Ì‹ê“÷‚ÌôBŒã‚Åíœ‚·‚×‚µ
 		f = max(0.0, f);
-		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	//Å‘åÃŽ~–€ŽC
-	}
+		//	Å‘åÃŽ~–€ŽC
+		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	}
 	else{
+		//	“®–€ŽC‚ðŽŽ‚µ‚ÉŽÀ‘•‚µ‚Ä‚Ý‚éB
+		double fu = (shapePair->shape[0]->material.mu + shapePair->shape[1]->material.mu)
+			/ (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0)
+			* flim;	
+		if (std::abs(vjrel[1]) < 0.01){	//	ÃŽ~–€ŽC
+			if (f > flim) f = fu;
+			else if (f < -flim) f = -fu;
+		}else{					//	“®–€ŽC
+			if (f > fu) f = fu;
+			else if (f < -fu) f = -fu;		
+		}
+#if 0
 		//|–€ŽC—Í| <= Å‘åÃŽ~–€ŽC‚Ì§–ñ
 		//	E–€ŽC—Í‚ÌŠe¬•ª‚ªÅ‘åÃŽ~–€ŽC‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
 		//	EÃŽ~–€ŽC‚Æ“®–€ŽC‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
 		//–€ŽCŒW”‚Í—¼ŽÒ‚ÌÃŽ~–€ŽCŒW”‚Ì•½‹Ï‚Æ‚·‚é
 		f = min(max(-flim, f), flim);
+#endif
 	}
 }
 

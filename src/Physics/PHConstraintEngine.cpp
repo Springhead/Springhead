@@ -163,7 +163,7 @@ OBJECT_IMP(PHConstraintEngine, PHEngine);
 PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
 	numIterCorrection	 = 0;
-	numIterContactCorrection = 10;
+	numIterContactCorrection = 0;
 	velCorrectionRate	 = 0.5;
 	posCorrectionRate	 = 0.5;
 	shrinkRate			 = 0.7;
@@ -446,6 +446,14 @@ void PHConstraintEngine::UpdateSolids(){
 		(*it)->UpdatePosition(dt);
 	}
 }
+
+#ifdef REPORT_TIME
+}
+#include <WinBasis/WBPreciseTimer.h>
+extern Spr::WBPreciseTimer ptimer;
+namespace Spr{
+#endif
+
 void PHConstraintEngine::Step(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
@@ -458,13 +466,21 @@ void PHConstraintEngine::Step(){
 	}
 	//交差を検知
 	points.clear();
+#ifdef REPORT_TIME
+	ptimer.CountUS();
+#endif
 	if(bContactEnabled)
 		//Detect(ct, dt);
 		ContDetect(ct, dt);
-
+#ifdef REPORT_TIME
+	DSTR << " col:" << ptimer.CountUS();
+#endif
 	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
 	//ヤコビアン等の再計算
 	//各剛体の前処理
+#ifdef REPORT_TIME
+	ptimer.CountUS();
+#endif
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
 		(*it)->UpdateCacheLCP(dt);
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
@@ -473,7 +489,13 @@ void PHConstraintEngine::Step(){
 		(*it)->UpdateState();
 	
 	SetupLCP();
+#ifdef REPORT_TIME
+	DSTR << " sup:" << ptimer.CountUS();
+#endif
 	IterateLCP();
+#ifdef REPORT_TIME
+	DSTR << " ite:" << ptimer.CountUS() << std::endl;
+#endif
 	SetupCorrectionLCP();
 	IterateCorrectionLCP();
 	//位置・速度の更新
