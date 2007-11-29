@@ -38,33 +38,16 @@ protected:
 	PHSdkIf* phSdk;
 
 	/// 位置・姿勢の制御点の集合
-	std::vector<CRIKControlIf*> controlsPosOri;
+	std::vector<CRIKControlIf*> postureControls;
 
 	/// 位置・姿勢の制御対象の集合
-	std::vector<CRIKMovableIf*> movablesPosOri;
-
-	/// 位置・姿勢の可動性行列
-	PTM::VMatrixCol<bool> movabilityPosOri;
-
-	/// 位置・姿勢のヤコビアン
-	PTM::VMatrixCol<Matrix3d> jacobianPosOri;
-
-	/// 位置・姿勢のヤコビアン（転置を掛けて正方化）
-	PTM::VMatrixCol<Matrix3d> sqjacobianPosOri;
+	std::vector<CRIKMovableIf*> postureMovables;
 
 	/** @brief 関節を作る
 	*/
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc);
 
-	/** @brief 行列をリサイズする
-	*/
-	void ResizeMatrix(int hInc, int wInc);
-
-	/** @brief ヤコビアンを計算する
-	*/
-	void CalcJacobian();
-	
 public:
 	OBJECTDEF(CRBody, SceneObject);
 	ACCESS_DESC(CRBody);
@@ -101,15 +84,16 @@ public:
 
 	/** @brief IK用の制御点を追加する
 	*/
-	virtual CRIKControlIf* AddIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
+	virtual CRIKControlIf* CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
 	
 	/** @brief IK用の可動物を追加する
 	*/
-	virtual CRIKMovableIf* AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
+	virtual CRIKMovableIf* CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
 
-	/** @brief 指定した可動物を指定した制御点で制御可能にする
+	/** @brief IKを計算する
 	*/
-	virtual void SetMovableForControl(CRIKMovableIf* movable, CRIKControlIf* control);
+	virtual void CalcIK();
+	
 };
 }
 //@}

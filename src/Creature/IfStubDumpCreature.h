@@ -3,121 +3,6 @@ namespace Spr{;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct CRIKControlIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetGoal(Vec3d goal){
-		return ((OBJ*)(MIF*)this)->SetGoal(goal);
-	}
-	virtual Vec3d GetGoal(){
-		return ((OBJ*)(MIF*)this)->GetGoal();
-	}
-	virtual void SetNumber(int i){
-		return ((OBJ*)(MIF*)this)->SetNumber(i);
-	}
-	virtual int GetNumber(){
-		return ((OBJ*)(MIF*)this)->GetNumber();
-	}
-};
-struct CRIKControlIf;	class CRIKControl;
-typedef CRIKControlIfStubTemplate<CRIKControlIf, ObjectIfBuf, CRIKControl>	CRIKControlIfStub;
-typedef IfInitTemplate<CRIKControlIfStub, CRIKControl>	CRIKControlIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKControlIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKControlPosIfStubTemplate: public CRIKControlIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKControlPosIf;	class CRIKControlPos;
-typedef CRIKControlPosIfStubTemplate<CRIKControlPosIf, ObjectIfBuf, CRIKControlPos>	CRIKControlPosIfStub;
-typedef IfInitTemplate<CRIKControlPosIfStub, CRIKControlPos>	CRIKControlPosIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKControlIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKControlOriIfStubTemplate: public CRIKControlIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKControlOriIf;	class CRIKControlOri;
-typedef CRIKControlOriIfStubTemplate<CRIKControlOriIf, ObjectIfBuf, CRIKControlOri>	CRIKControlOriIfStub;
-typedef IfInitTemplate<CRIKControlOriIfStub, CRIKControlOri>	CRIKControlOriIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKControlIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKControlForceIfStubTemplate: public CRIKControlIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKControlForceIf;	class CRIKControlForce;
-typedef CRIKControlForceIfStubTemplate<CRIKControlForceIf, ObjectIfBuf, CRIKControlForce>	CRIKControlForceIfStub;
-typedef IfInitTemplate<CRIKControlForceIfStub, CRIKControlForce>	CRIKControlForceIfInit;
-
-template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovableIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetValue(Vec3d value){
-		return ((OBJ*)(MIF*)this)->SetValue(value);
-	}
-	virtual Vec3d GetValue(){
-		return ((OBJ*)(MIF*)this)->GetValue();
-	}
-	virtual void SetNumber(int i){
-		return ((OBJ*)(MIF*)this)->SetNumber(i);
-	}
-	virtual int GetNumber(){
-		return ((OBJ*)(MIF*)this)->GetNumber();
-	}
-	virtual Matrix3d CalcJacobian(CRIKControlIf * control){
-		return ((OBJ*)(MIF*)this)->CalcJacobian(control);
-	}
-};
-struct CRIKMovableIf;	class CRIKMovable;
-typedef CRIKMovableIfStubTemplate<CRIKMovableIf, ObjectIfBuf, CRIKMovable>	CRIKMovableIfStub;
-typedef IfInitTemplate<CRIKMovableIfStub, CRIKMovable>	CRIKMovableIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovableSolidPosIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKMovableSolidPosIf;	class CRIKMovableSolidPos;
-typedef CRIKMovableSolidPosIfStubTemplate<CRIKMovableSolidPosIf, ObjectIfBuf, CRIKMovableSolidPos>	CRIKMovableSolidPosIfStub;
-typedef IfInitTemplate<CRIKMovableSolidPosIfStub, CRIKMovableSolidPos>	CRIKMovableSolidPosIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovableSolidOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKMovableSolidOriIf;	class CRIKMovableSolidOri;
-typedef CRIKMovableSolidOriIfStubTemplate<CRIKMovableSolidOriIf, ObjectIfBuf, CRIKMovableSolidOri>	CRIKMovableSolidOriIfStub;
-typedef IfInitTemplate<CRIKMovableSolidOriIfStub, CRIKMovableSolidOri>	CRIKMovableSolidOriIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovableBallJointOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKMovableBallJointOriIf;	class CRIKMovableBallJointOri;
-typedef CRIKMovableBallJointOriIfStubTemplate<CRIKMovableBallJointOriIf, ObjectIfBuf, CRIKMovableBallJointOri>	CRIKMovableBallJointOriIfStub;
-typedef IfInitTemplate<CRIKMovableBallJointOriIfStub, CRIKMovableBallJointOri>	CRIKMovableBallJointOriIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovableBallJointTorqueIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKMovableBallJointTorqueIf;	class CRIKMovableBallJointTorque;
-typedef CRIKMovableBallJointTorqueIfStubTemplate<CRIKMovableBallJointTorqueIf, ObjectIfBuf, CRIKMovableBallJointTorque>	CRIKMovableBallJointTorqueIfStub;
-typedef IfInitTemplate<CRIKMovableBallJointTorqueIfStub, CRIKMovableBallJointTorque>	CRIKMovableBallJointTorqueIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovable3HingeJointOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKMovable3HingeJointOriIf;	class CRIKMovable3HingeJointOri;
-typedef CRIKMovable3HingeJointOriIfStubTemplate<CRIKMovable3HingeJointOriIf, ObjectIfBuf, CRIKMovable3HingeJointOri>	CRIKMovable3HingeJointOriIfStub;
-typedef IfInitTemplate<CRIKMovable3HingeJointOriIfStub, CRIKMovable3HingeJointOri>	CRIKMovable3HingeJointOriIfInit;
-
-template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
-template <class IF, class MIF, class OBJ>
-struct CRIKMovable3HingeJointTorqueIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
-};
-struct CRIKMovable3HingeJointTorqueIf;	class CRIKMovable3HingeJointTorque;
-typedef CRIKMovable3HingeJointTorqueIfStubTemplate<CRIKMovable3HingeJointTorqueIf, ObjectIfBuf, CRIKMovable3HingeJointTorque>	CRIKMovable3HingeJointTorqueIfStub;
-typedef IfInitTemplate<CRIKMovable3HingeJointTorqueIfStub, CRIKMovable3HingeJointTorque>	CRIKMovable3HingeJointTorqueIfInit;
-
-template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
-template <class IF, class MIF, class OBJ>
 struct CRBodyIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Init(){
 		return ((OBJ*)(MIF*)this)->Init();
@@ -134,14 +19,14 @@ struct CRBodyIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHJointIf * GetJoint(int i){
 		return ((OBJ*)(MIF*)this)->GetJoint(i);
 	}
-	virtual CRIKControlIf * AddIKControl(const IfInfo * ii, const CRIKControlDesc & desc){
-		return ((OBJ*)(MIF*)this)->AddIKControl(ii, desc);
+	virtual CRIKControlIf * CreateIKControl(const IfInfo * ii, const CRIKControlDesc & desc){
+		return ((OBJ*)(MIF*)this)->CreateIKControl(ii, desc);
 	}
-	virtual CRIKMovableIf * AddIKMovable(const IfInfo * ii, const CRIKMovableDesc & desc){
-		return ((OBJ*)(MIF*)this)->AddIKMovable(ii, desc);
+	virtual CRIKMovableIf * CreateIKMovable(const IfInfo * ii, const CRIKMovableDesc & desc){
+		return ((OBJ*)(MIF*)this)->CreateIKMovable(ii, desc);
 	}
-	virtual void SetMovableForControl(CRIKMovableIf * movable, CRIKControlIf * control){
-		return ((OBJ*)(MIF*)this)->SetMovableForControl(movable, control);
+	virtual void CalcIK(){
+		return ((OBJ*)(MIF*)this)->CalcIK();
 	}
 };
 struct CRBodyIf;	class CRBody;
@@ -557,6 +442,93 @@ struct CRInternalSceneIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, 
 struct CRInternalSceneIf;	class CRInternalScene;
 typedef CRInternalSceneIfStubTemplate<CRInternalSceneIf, ObjectIfBuf, CRInternalScene>	CRInternalSceneIfStub;
 typedef IfInitTemplate<CRInternalSceneIfStub, CRInternalScene>	CRInternalSceneIfInit;
+
+template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKControlIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void SetGoal(Vec3d goal){
+		return ((OBJ*)(MIF*)this)->SetGoal(goal);
+	}
+};
+struct CRIKControlIf;	class CRIKControl;
+typedef CRIKControlIfStubTemplate<CRIKControlIf, ObjectIfBuf, CRIKControl>	CRIKControlIfStub;
+typedef IfInitTemplate<CRIKControlIfStub, CRIKControl>	CRIKControlIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKControlIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKControlPosIfStubTemplate: public CRIKControlIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKControlPosIf;	class CRIKControlPos;
+typedef CRIKControlPosIfStubTemplate<CRIKControlPosIf, ObjectIfBuf, CRIKControlPos>	CRIKControlPosIfStub;
+typedef IfInitTemplate<CRIKControlPosIfStub, CRIKControlPos>	CRIKControlPosIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKControlIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKControlOriIfStubTemplate: public CRIKControlIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKControlOriIf;	class CRIKControlOri;
+typedef CRIKControlOriIfStubTemplate<CRIKControlOriIf, ObjectIfBuf, CRIKControlOri>	CRIKControlOriIfStub;
+typedef IfInitTemplate<CRIKControlOriIfStub, CRIKControlOri>	CRIKControlOriIfInit;
+
+template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKMovableIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual void PrepareSolve(){
+		return ((OBJ*)(MIF*)this)->PrepareSolve();
+	}
+	virtual void ProceedSolve(){
+		return ((OBJ*)(MIF*)this)->ProceedSolve();
+	}
+	virtual PTM::VVector <double> GetValue(){
+		return ((OBJ*)(MIF*)this)->GetValue();
+	}
+	virtual void AddIKControl(CRIKControlIf * control){
+		return ((OBJ*)(MIF*)this)->AddIKControl(control);
+	}
+};
+struct CRIKMovableIf;	class CRIKMovable;
+typedef CRIKMovableIfStubTemplate<CRIKMovableIf, ObjectIfBuf, CRIKMovable>	CRIKMovableIfStub;
+typedef IfInitTemplate<CRIKMovableIfStub, CRIKMovable>	CRIKMovableIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKMovableSolidPosIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKMovableSolidPosIf;	class CRIKMovableSolidPos;
+typedef CRIKMovableSolidPosIfStubTemplate<CRIKMovableSolidPosIf, ObjectIfBuf, CRIKMovableSolidPos>	CRIKMovableSolidPosIfStub;
+typedef IfInitTemplate<CRIKMovableSolidPosIfStub, CRIKMovableSolidPos>	CRIKMovableSolidPosIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKMovableSolidOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKMovableSolidOriIf;	class CRIKMovableSolidOri;
+typedef CRIKMovableSolidOriIfStubTemplate<CRIKMovableSolidOriIf, ObjectIfBuf, CRIKMovableSolidOri>	CRIKMovableSolidOriIfStub;
+typedef IfInitTemplate<CRIKMovableSolidOriIfStub, CRIKMovableSolidOri>	CRIKMovableSolidOriIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKMovableBallJointOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKMovableBallJointOriIf;	class CRIKMovableBallJointOri;
+typedef CRIKMovableBallJointOriIfStubTemplate<CRIKMovableBallJointOriIf, ObjectIfBuf, CRIKMovableBallJointOri>	CRIKMovableBallJointOriIfStub;
+typedef IfInitTemplate<CRIKMovableBallJointOriIfStub, CRIKMovableBallJointOri>	CRIKMovableBallJointOriIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKMovable3HingeJointOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKMovable3HingeJointOriIf;	class CRIKMovable3HingeJointOri;
+typedef CRIKMovable3HingeJointOriIfStubTemplate<CRIKMovable3HingeJointOriIf, ObjectIfBuf, CRIKMovable3HingeJointOri>	CRIKMovable3HingeJointOriIfStub;
+typedef IfInitTemplate<CRIKMovable3HingeJointOriIfStub, CRIKMovable3HingeJointOri>	CRIKMovable3HingeJointOriIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRIKMovableIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRIKMovableHingeJointOriIfStubTemplate: public CRIKMovableIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRIKMovableHingeJointOriIf;	class CRIKMovableHingeJointOri;
+typedef CRIKMovableHingeJointOriIfStubTemplate<CRIKMovableHingeJointOriIf, ObjectIfBuf, CRIKMovableHingeJointOri>	CRIKMovableHingeJointOriIfStub;
+typedef IfInitTemplate<CRIKMovableHingeJointOriIfStub, CRIKMovableHingeJointOri>	CRIKMovableHingeJointOriIfInit;
 
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>

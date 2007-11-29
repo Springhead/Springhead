@@ -27,4 +27,7 @@
 // ‰^“®Œn
 #include "Creature/SprCRController.h"
 
+// ‹t‰^“®Šw
+#include "Creature/SprCRInverseKinematics.h"
+
 #endif

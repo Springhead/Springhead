@@ -1,4 +1,4 @@
 #	Do not edit. MakeTypeDesc.bat will update this file.
 all: TypeDescDumpImpCreature.h
-TypeDescDumpImpCreature.h:  ../../include/Creature/SprCRBody.h ../../include/Creature/SprCRController.h ../../include/Creature/SprCRCreature.h ../../include/Creature/SprCRInternalScene.h ../../include/Creature/SprCRSensor.h
+TypeDescDumpImpCreature.h:  ../../include/Creature/SprCRBody.h ../../include/Creature/SprCRController.h ../../include/Creature/SprCRCreature.h ../../include/Creature/SprCRInternalScene.h ../../include/Creature/SprCRInverseKinematics.h ../../include/Creature/SprCRSensor.h
 	..\Foundation\MakeTypeDesc.bat EXECUTE

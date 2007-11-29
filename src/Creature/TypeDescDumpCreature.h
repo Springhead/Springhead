@@ -3,4 +3,5 @@
 #include "../../include/Creature/SprCRController.h" 
 #include "../../include/Creature/SprCRCreature.h" 
 #include "../../include/Creature/SprCRInternalScene.h" 
+#include "../../include/Creature/SprCRInverseKinematics.h" 
 #include "../../include/Creature/SprCRSensor.h" 

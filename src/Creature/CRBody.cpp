@@ -7,7 +7,7 @@
  */
 #include "CRBody.h"
 
-#include "CRBodyIK.h"
+#include "CRInverseKinematics.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -59,21 +59,16 @@ PHJointIf* CRBody::GetJoint(int i){
 	return joints[i];
 }
 
-CRIKControlIf* CRBody::AddIKControl(const IfInfo* ii, const CRIKControlDesc& desc){
+CRIKControlIf* CRBody::CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc){
 	if (ii == CRIKControlPosIf::GetIfInfoStatic()) {
-		controlsPosOri.push_back((DBG_NEW CRIKControlPos((const CRIKControlPosDesc&)desc))->Cast());
-		controlsPosOri.back()->SetNumber(controlsPosOri.size()-1);
-		ResizeMatrix(0,1);
-		return controlsPosOri.back();
+		postureControls.push_back((DBG_NEW CRIKControlPos((const CRIKControlPosDesc&)desc))->Cast());
+		DCAST(CRIKControl,postureControls.back())->SetNumber(postureControls.size()-1);
+		return postureControls.back();
 
 	} else if (ii == CRIKControlOriIf::GetIfInfoStatic()) {
-		controlsPosOri.push_back((DBG_NEW CRIKControlOri((const CRIKControlOriDesc&)desc))->Cast());
-		controlsPosOri.back()->SetNumber(controlsPosOri.size()-1);
-		ResizeMatrix(0,1);
-		return controlsPosOri.back();
-
-	} else if (ii == CRIKControlForceIf::GetIfInfoStatic()) {
-		return NULL;
+		postureControls.push_back((DBG_NEW CRIKControlOri((const CRIKControlOriDesc&)desc))->Cast());
+		DCAST(CRIKControl,postureControls.back())->SetNumber(postureControls.size()-1);
+		return postureControls.back();
 
 	} else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
@@ -81,36 +76,31 @@ CRIKControlIf* CRBody::AddIKControl(const IfInfo* ii, const CRIKControlDesc& des
 	}
 }
 
-CRIKMovableIf* CRBody::AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc){
+CRIKMovableIf* CRBody::CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc){
 	if (ii == CRIKMovableSolidPosIf::GetIfInfoStatic()) {
-		movablesPosOri.push_back((DBG_NEW CRIKMovableSolidPos((const CRIKMovableSolidPosDesc&)desc))->Cast());
-		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
-		ResizeMatrix(1,0);
-		return movablesPosOri.back();
+		postureMovables.push_back((DBG_NEW CRIKMovableSolidPos((const CRIKMovableSolidPosDesc&)desc))->Cast());
+		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
+		return postureMovables.back();
 
 	} else if (ii == CRIKMovableSolidOriIf::GetIfInfoStatic()) {
-		movablesPosOri.push_back((DBG_NEW CRIKMovableSolidOri((const CRIKMovableSolidOriDesc&)desc))->Cast());
-		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
-		ResizeMatrix(1,0);
-		return movablesPosOri.back();
+		postureMovables.push_back((DBG_NEW CRIKMovableSolidOri((const CRIKMovableSolidOriDesc&)desc))->Cast());
+		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
+		return postureMovables.back();
 
 	} else if (ii == CRIKMovableBallJointOriIf::GetIfInfoStatic()) {
-		movablesPosOri.push_back((DBG_NEW CRIKMovableBallJointOri((const CRIKMovableBallJointOriDesc&)desc))->Cast());
-		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
-		ResizeMatrix(1,0);
-		return movablesPosOri.back();
-
-	} else if (ii == CRIKMovableBallJointTorqueIf::GetIfInfoStatic()) {
-		movablesPosOri.push_back((DBG_NEW CRIKMovableBallJointTorque((const CRIKMovableBallJointTorqueDesc&)desc))->Cast());
-		movablesPosOri.back()->SetNumber(movablesPosOri.size()-1);
-		ResizeMatrix(1,0);
-		return movablesPosOri.back();
+		postureMovables.push_back((DBG_NEW CRIKMovableBallJointOri((const CRIKMovableBallJointOriDesc&)desc))->Cast());
+		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
+		return postureMovables.back();
 
 	} else if (ii == CRIKMovable3HingeJointOriIf::GetIfInfoStatic()) {
-		return NULL;
+		postureMovables.push_back((DBG_NEW CRIKMovable3HingeJointOri((const CRIKMovable3HingeJointOriDesc&)desc))->Cast());
+		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
+		return postureMovables.back();
 
-	} else if (ii == CRIKMovable3HingeJointTorqueIf::GetIfInfoStatic()) {
-		return NULL;
+	} else if (ii == CRIKMovableHingeJointOriIf::GetIfInfoStatic()) {
+		postureMovables.push_back((DBG_NEW CRIKMovableHingeJointOri((const CRIKMovableHingeJointOriDesc&)desc))->Cast());
+		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
+		return postureMovables.back();
 
 	} else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
@@ -118,32 +108,14 @@ CRIKMovableIf* CRBody::AddIKMovable(const IfInfo* ii, const CRIKMovableDesc& des
 	}
 }
 
-void CRBody::SetMovableForControl(CRIKMovableIf* movable, CRIKControlIf* control){
-	movabilityPosOri[control->GetNumber()][movable->GetNumber()] = true;
-}
-
-void CRBody::ResizeMatrix(int hInc, int wInc){
-	jacobianPosOri.resize(movablesPosOri.size(), controlsPosOri.size());
-	movabilityPosOri.resize(movablesPosOri.size(), controlsPosOri.size());
-	sqjacobianPosOri.resize(movablesPosOri.size(), movablesPosOri.size());
-
-	for(int i=0; i<hInc; ++i){
-		for(int j=0; j<movablesPosOri.size(); ++j){
-			movabilityPosOri[controlsPosOri.size()-i-1][j] = false;
-		}
+void CRBody::CalcIK(){
+	for(int i=0; i<postureMovables.size(); ++i){
+		postureMovables[i]->PrepareSolve();
 	}
-
-	for(int i=0; i<wInc; ++i){
-		for(int j=0; j<controlsPosOri.size(); ++j){
-			movabilityPosOri[j][movablesPosOri.size()-i-1] = false;
-		}
-	}
-}
-
-void CRBody::CalcJacobian(){
-	for(int i=0; i<controlsPosOri.size(); i++){
-		for (int j=0; j<movablesPosOri.size(); j++){
-			jacobianPosOri[i][j] = movablesPosOri[j]->CalcJacobian(controlsPosOri[i]);
+	int niterIK = 20;
+	for(int n=0; n<niterIK; n++){
+		for(int i=0; i<postureMovables.size(); ++i){
+			postureMovables[i]->ProceedSolve();
 		}
 	}
 }

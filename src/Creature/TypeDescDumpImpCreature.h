@@ -1,127 +1,5 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
-	CRIKControlDesc* pCRIKControlDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKControlDesc");
-	desc->size = sizeof(CRIKControlDesc);
-	desc->ifInfo = CRIKControlIf::GetIfInfoStatic();
-	((IfInfo*)CRIKControlIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlDesc>;
-	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
-	field->offset = int((char*)&(pCRIKControlDesc->solid) - (char*)pCRIKControlDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKControlPosDesc* pCRIKControlPosDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKControlPosDesc");
-	desc->size = sizeof(CRIKControlPosDesc);
-	desc->ifInfo = CRIKControlPosIf::GetIfInfoStatic();
-	((IfInfo*)CRIKControlPosIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlPosDesc>;
-	field = desc->AddBase("CRIKControlDesc");
-	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlPosDesc - (char*)pCRIKControlPosDesc);
-	field = desc->AddField("", "Vec3d", "pos", "");
-	field->offset = int((char*)&(pCRIKControlPosDesc->pos) - (char*)pCRIKControlPosDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKControlOriDesc* pCRIKControlOriDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKControlOriDesc");
-	desc->size = sizeof(CRIKControlOriDesc);
-	desc->ifInfo = CRIKControlOriIf::GetIfInfoStatic();
-	((IfInfo*)CRIKControlOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlOriDesc>;
-	field = desc->AddBase("CRIKControlDesc");
-	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlOriDesc - (char*)pCRIKControlOriDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKControlForceDesc* pCRIKControlForceDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKControlForceDesc");
-	desc->size = sizeof(CRIKControlForceDesc);
-	desc->ifInfo = CRIKControlForceIf::GetIfInfoStatic();
-	((IfInfo*)CRIKControlForceIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlForceDesc>;
-	field = desc->AddBase("CRIKControlDesc");
-	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlForceDesc - (char*)pCRIKControlForceDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKMovableDesc* pCRIKMovableDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovableDesc");
-	desc->size = sizeof(CRIKMovableDesc);
-	desc->ifInfo = CRIKMovableIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovableIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableDesc>;
-	field = desc->AddField("", "float", "bias", "");
-	field->offset = int((char*)&(pCRIKMovableDesc->bias) - (char*)pCRIKMovableDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKMovableSolidPosDesc* pCRIKMovableSolidPosDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovableSolidPosDesc");
-	desc->size = sizeof(CRIKMovableSolidPosDesc);
-	desc->ifInfo = CRIKMovableSolidPosIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovableSolidPosIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableSolidPosDesc>;
-	field = desc->AddBase("CRIKMovableDesc");
-	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableSolidPosDesc - (char*)pCRIKMovableSolidPosDesc);
-	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
-	field->offset = int((char*)&(pCRIKMovableSolidPosDesc->solid) - (char*)pCRIKMovableSolidPosDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKMovableSolidOriDesc* pCRIKMovableSolidOriDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovableSolidOriDesc");
-	desc->size = sizeof(CRIKMovableSolidOriDesc);
-	desc->ifInfo = CRIKMovableSolidOriIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovableSolidOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableSolidOriDesc>;
-	field = desc->AddBase("CRIKMovableDesc");
-	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableSolidOriDesc - (char*)pCRIKMovableSolidOriDesc);
-	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
-	field->offset = int((char*)&(pCRIKMovableSolidOriDesc->solid) - (char*)pCRIKMovableSolidOriDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKMovableBallJointOriDesc* pCRIKMovableBallJointOriDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovableBallJointOriDesc");
-	desc->size = sizeof(CRIKMovableBallJointOriDesc);
-	desc->ifInfo = CRIKMovableBallJointOriIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovableBallJointOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableBallJointOriDesc>;
-	field = desc->AddBase("CRIKMovableDesc");
-	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableBallJointOriDesc - (char*)pCRIKMovableBallJointOriDesc);
-	field = desc->AddField("pointer", "PHBallJointIf", "joint", "");
-	field->offset = int((char*)&(pCRIKMovableBallJointOriDesc->joint) - (char*)pCRIKMovableBallJointOriDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKMovableBallJointTorqueDesc* pCRIKMovableBallJointTorqueDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovableBallJointTorqueDesc");
-	desc->size = sizeof(CRIKMovableBallJointTorqueDesc);
-	desc->ifInfo = CRIKMovableBallJointTorqueIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovableBallJointTorqueIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableBallJointTorqueDesc>;
-	field = desc->AddBase("CRIKMovableDesc");
-	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableBallJointTorqueDesc - (char*)pCRIKMovableBallJointTorqueDesc);
-	field = desc->AddField("pointer", "PHBallJointIf", "joint", "");
-	field->offset = int((char*)&(pCRIKMovableBallJointTorqueDesc->joint) - (char*)pCRIKMovableBallJointTorqueDesc);
-	db->RegisterDesc(desc);
-	
-	CRIKMovable3HingeJointOriDesc* pCRIKMovable3HingeJointOriDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovable3HingeJointOriDesc");
-	desc->size = sizeof(CRIKMovable3HingeJointOriDesc);
-	desc->ifInfo = CRIKMovable3HingeJointOriIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovable3HingeJointOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovable3HingeJointOriDesc>;
-	field = desc->AddBase("CRIKMovableDesc");
-	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovable3HingeJointOriDesc - (char*)pCRIKMovable3HingeJointOriDesc);
-	field = desc->AddField("pointer", "PHHingeJointIf", "joint1", "");
-	field->offset = int((char*)&(pCRIKMovable3HingeJointOriDesc->joint1) - (char*)pCRIKMovable3HingeJointOriDesc);
-	
-	CRIKMovable3HingeJointTorqueDesc* pCRIKMovable3HingeJointTorqueDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRIKMovable3HingeJointTorqueDesc");
-	desc->size = sizeof(CRIKMovable3HingeJointTorqueDesc);
-	desc->ifInfo = CRIKMovable3HingeJointTorqueIf::GetIfInfoStatic();
-	((IfInfo*)CRIKMovable3HingeJointTorqueIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovable3HingeJointTorqueDesc>;
-	field = desc->AddBase("CRIKMovableDesc");
-	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovable3HingeJointTorqueDesc - (char*)pCRIKMovable3HingeJointTorqueDesc);
-	field = desc->AddField("pointer", "PHHingeJointIf", "joint1", "");
-	field->offset = int((char*)&(pCRIKMovable3HingeJointTorqueDesc->joint1) - (char*)pCRIKMovable3HingeJointTorqueDesc);
-	
 	CRBodyDesc* pCRBodyDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRBodyDesc");
 	desc->size = sizeof(CRBodyDesc);
@@ -142,7 +20,7 @@
 	desc->access = DBG_NEW UTAccess<CRHingeHumanBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRHingeHumanBodyDesc - (char*)pCRHingeHumanBodyDesc);
-	field = desc->AddField("pointer", "double", "bodyMass", "");
+	field = desc->AddField("", "double", "bodyMass", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->bodyMass) - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "waistHeight", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->waistHeight) - (char*)pCRHingeHumanBodyDesc);
@@ -904,6 +782,107 @@
 	desc->ifInfo = CRInternalSceneIf::GetIfInfoStatic();
 	((IfInfo*)CRInternalSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<CRInternalSceneDesc>;
+	db->RegisterDesc(desc);
+	
+	CRIKControlDesc* pCRIKControlDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKControlDesc");
+	desc->size = sizeof(CRIKControlDesc);
+	desc->ifInfo = CRIKControlIf::GetIfInfoStatic();
+	((IfInfo*)CRIKControlIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKControlDesc>;
+	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
+	field->offset = int((char*)&(pCRIKControlDesc->solid) - (char*)pCRIKControlDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKControlPosDesc* pCRIKControlPosDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKControlPosDesc");
+	desc->size = sizeof(CRIKControlPosDesc);
+	desc->ifInfo = CRIKControlPosIf::GetIfInfoStatic();
+	((IfInfo*)CRIKControlPosIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKControlPosDesc>;
+	field = desc->AddBase("CRIKControlDesc");
+	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlPosDesc - (char*)pCRIKControlPosDesc);
+	field = desc->AddField("", "Vec3d", "pos", "");
+	field->offset = int((char*)&(pCRIKControlPosDesc->pos) - (char*)pCRIKControlPosDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKControlOriDesc* pCRIKControlOriDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKControlOriDesc");
+	desc->size = sizeof(CRIKControlOriDesc);
+	desc->ifInfo = CRIKControlOriIf::GetIfInfoStatic();
+	((IfInfo*)CRIKControlOriIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKControlOriDesc>;
+	field = desc->AddBase("CRIKControlDesc");
+	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlOriDesc - (char*)pCRIKControlOriDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKMovableDesc* pCRIKMovableDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKMovableDesc");
+	desc->size = sizeof(CRIKMovableDesc);
+	desc->ifInfo = CRIKMovableIf::GetIfInfoStatic();
+	((IfInfo*)CRIKMovableIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKMovableDesc>;
+	field = desc->AddField("", "float", "bias", "");
+	field->offset = int((char*)&(pCRIKMovableDesc->bias) - (char*)pCRIKMovableDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKMovableSolidPosDesc* pCRIKMovableSolidPosDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKMovableSolidPosDesc");
+	desc->size = sizeof(CRIKMovableSolidPosDesc);
+	desc->ifInfo = CRIKMovableSolidPosIf::GetIfInfoStatic();
+	((IfInfo*)CRIKMovableSolidPosIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKMovableSolidPosDesc>;
+	field = desc->AddBase("CRIKMovableDesc");
+	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableSolidPosDesc - (char*)pCRIKMovableSolidPosDesc);
+	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
+	field->offset = int((char*)&(pCRIKMovableSolidPosDesc->solid) - (char*)pCRIKMovableSolidPosDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKMovableSolidOriDesc* pCRIKMovableSolidOriDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKMovableSolidOriDesc");
+	desc->size = sizeof(CRIKMovableSolidOriDesc);
+	desc->ifInfo = CRIKMovableSolidOriIf::GetIfInfoStatic();
+	((IfInfo*)CRIKMovableSolidOriIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKMovableSolidOriDesc>;
+	field = desc->AddBase("CRIKMovableDesc");
+	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableSolidOriDesc - (char*)pCRIKMovableSolidOriDesc);
+	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
+	field->offset = int((char*)&(pCRIKMovableSolidOriDesc->solid) - (char*)pCRIKMovableSolidOriDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKMovableBallJointOriDesc* pCRIKMovableBallJointOriDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKMovableBallJointOriDesc");
+	desc->size = sizeof(CRIKMovableBallJointOriDesc);
+	desc->ifInfo = CRIKMovableBallJointOriIf::GetIfInfoStatic();
+	((IfInfo*)CRIKMovableBallJointOriIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKMovableBallJointOriDesc>;
+	field = desc->AddBase("CRIKMovableDesc");
+	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableBallJointOriDesc - (char*)pCRIKMovableBallJointOriDesc);
+	field = desc->AddField("pointer", "PHBallJointIf", "joint", "");
+	field->offset = int((char*)&(pCRIKMovableBallJointOriDesc->joint) - (char*)pCRIKMovableBallJointOriDesc);
+	db->RegisterDesc(desc);
+	
+	CRIKMovable3HingeJointOriDesc* pCRIKMovable3HingeJointOriDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKMovable3HingeJointOriDesc");
+	desc->size = sizeof(CRIKMovable3HingeJointOriDesc);
+	desc->ifInfo = CRIKMovable3HingeJointOriIf::GetIfInfoStatic();
+	((IfInfo*)CRIKMovable3HingeJointOriIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKMovable3HingeJointOriDesc>;
+	field = desc->AddBase("CRIKMovableDesc");
+	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovable3HingeJointOriDesc - (char*)pCRIKMovable3HingeJointOriDesc);
+	field = desc->AddField("pointer", "PHHingeJointIf", "joint1", "");
+	field->offset = int((char*)&(pCRIKMovable3HingeJointOriDesc->joint1) - (char*)pCRIKMovable3HingeJointOriDesc);
+	
+	CRIKMovableHingeJointOriDesc* pCRIKMovableHingeJointOriDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRIKMovableHingeJointOriDesc");
+	desc->size = sizeof(CRIKMovableHingeJointOriDesc);
+	desc->ifInfo = CRIKMovableHingeJointOriIf::GetIfInfoStatic();
+	((IfInfo*)CRIKMovableHingeJointOriIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRIKMovableHingeJointOriDesc>;
+	field = desc->AddBase("CRIKMovableDesc");
+	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableHingeJointOriDesc - (char*)pCRIKMovableHingeJointOriDesc);
+	field = desc->AddField("pointer", "PHHingeJointIf", "joint", "");
+	field->offset = int((char*)&(pCRIKMovableHingeJointOriDesc->joint) - (char*)pCRIKMovableHingeJointOriDesc);
 	db->RegisterDesc(desc);
 	
 	CRSensorDesc* pCRSensorDesc = NULL;
