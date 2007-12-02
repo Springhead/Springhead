@@ -482,6 +482,9 @@ struct CRIKMovableIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ>
 	virtual PTM::VVector <double> GetValue(){
 		return ((OBJ*)(MIF*)this)->GetValue();
 	}
+	virtual void Move(){
+		return ((OBJ*)(MIF*)this)->Move();
+	}
 	virtual void AddIKControl(CRIKControlIf * control){
 		return ((OBJ*)(MIF*)this)->AddIKControl(control);
 	}

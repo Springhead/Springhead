@@ -68,6 +68,10 @@ struct CRIKMovableIf : SceneObjectIf{
 	*/
 	virtual PTM::VVector<double> GetValue()= 0;
 
+	/** @brief ŒvZŒ‹‰Ê‚É]‚Á‚Ä§Œä‘ÎÛ‚ğ“®‚©‚·
+	*/
+	virtual void Move()= 0;
+
 	/** @brief §Œä“_‚ğ’Ç‰Á‚·‚é
 	*/
 	virtual void AddIKControl(CRIKControlIf* control)= 0;

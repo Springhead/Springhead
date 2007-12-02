@@ -22,7 +22,7 @@ namespace Spr{;
 /** @brief 制御点
 */
 class CRIKControl : public SceneObject, public CRIKControlIfInit {
-protected:
+public:
 	/// 簡略表記用typedef
 	typedef std::set<CRIKControlIf*>           CSet;
 	typedef std::set<CRIKControlIf*>::iterator CSetIter;
@@ -62,6 +62,10 @@ public:
 	*/
 	Vec3d GetGoal(){ return goal; }
 
+	/** @brief 暫定目標地点を取得する
+	*/
+	virtual Vec3d GetTmpGoal(){ return goal; }
+
 	/** @brief 番号を設定する
 	*/
 	void SetNumber(int i){ number = i; }
@@ -74,7 +78,7 @@ public:
 /** @brief 位置制御点
 */
 class CRIKControlPos : public CRIKControl, CRIKControlPosIfInit {
-protected:
+public:
 	/// 制御点の位置（剛体ローカル座標系）
 	Vec3d pos;
 
@@ -90,12 +94,16 @@ public:
 	CRIKControlPos(const CRIKControlPosDesc& desc) : CRIKControl(desc) {
 		this->pos = desc.pos;
 	}
+
+	/** @brief 暫定目標地点を取得する
+	*/
+	virtual Vec3d GetTmpGoal();
 };
 
 /** @brief 姿勢制御点
 */
 class CRIKControlOri : public CRIKControl, CRIKControlOriIfInit {
-protected:
+public:
 public:
 	OBJECTDEF(CRIKControlOri, CRIKControl);
 
@@ -107,6 +115,10 @@ public:
 	*/
 	CRIKControlOri(const CRIKControlOriDesc& desc) : CRIKControl(desc) {
 	}
+
+	/** @brief 暫定目標地点を取得する
+	*/
+	virtual Vec3d GetTmpGoal();
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -167,6 +179,10 @@ public:
 	/** @brief 計算結果を取得する
 	*/
 	virtual PTM::VVector<double> GetValue(){ return value; }
+
+	/** @brief 計算結果に従って制御対象を動かす
+	*/
+	virtual void Move(){}
 
 	/** @brief 制御点を追加する
 	*/
@@ -290,6 +306,10 @@ public:
 		this->joint3 = desc.joint3;
 	}
 
+	/** @brief 計算結果に従って制御対象を動かす
+	*/
+	virtual void Move();
+
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual PTM::VMatrixRow<double> CalcJacobian(CRIKControlIf* control);
@@ -307,14 +327,18 @@ public:
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	CRIKMovableHingeJointOri(){SetNDOF(3);}
+	CRIKMovableHingeJointOri(){SetNDOF(1);}
 
 	/** @brief コンストラクタ
 	*/
 	CRIKMovableHingeJointOri(const CRIKMovableHingeJointOriDesc& desc) : CRIKMovable(desc){
-		SetNDOF(3);
+		SetNDOF(1);
 		this->joint = desc.joint;
 	}
+
+	/** @brief 計算結果に従って制御対象を動かす
+	*/
+	virtual void Move();
 
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/

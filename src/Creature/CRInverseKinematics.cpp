@@ -7,6 +7,9 @@
  */
 #include "CRInverseKinematics.h"
 
+#include "Physics/PHBallJoint.h"
+#include "Physics/PHHingeJoint.h"
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -16,8 +19,35 @@ namespace Spr{
 // 制御点
 IF_OBJECT_IMP(CRIKControl, SceneObject);
 
+// --- --- --- --- ---
 IF_OBJECT_IMP(CRIKControlPos, CRIKControl);
+
+Vec3d CRIKControlPos::GetTmpGoal(){
+	Vec3d spos = solid->GetPose()*pos;
+	Vec3d dir = goal - spos;
+	double epsilon = 0.05;
+	// std::cout << dir/dir.norm()*epsilon << std::endl;
+	if (dir.norm() < epsilon) {
+		return(dir);
+	} else {
+		return(dir/dir.norm()*epsilon);
+	}
+}
+
+// --- --- --- --- ---
 IF_OBJECT_IMP(CRIKControlOri, CRIKControl);
+
+Vec3d CRIKControlOri::GetTmpGoal(){
+	Vec3d sorieul; solid->GetPose().Ori().ToEular(sorieul);
+	Vec3d dir = goal - sorieul;
+	double epsilon = 0.05;
+	// std::cout << dir/dir.norm()*epsilon << std::endl;
+	if (dir.norm() < epsilon) {
+		return(dir);
+	} else {
+		return(dir/dir.norm()*epsilon);
+	}
+}
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 制御対象
@@ -50,9 +80,12 @@ void CRIKMovable::PrepareSolve(){
 	for(CSetIter it=linkedControls.begin(); it!=linkedControls.end(); ++it){
 		PTM::VMatrixRow<double> J; J.resize(ndof,ndof);
 		J = CalcJacobian(*it);
+		// std::cout << "J : " << std::endl << J << std::endl;
 		JtJ += J.trans() * J;
-		Jtx += J.trans() * DCAST(CRIKControl,(*it))->GetGoal();
+		Jtx += J.trans() * DCAST(CRIKControl,(*it))->GetTmpGoal();
+		// std::cout << "Goal : " << DCAST(CRIKControl,(*it))->GetTmpGoal() << std::endl;
 	}
+	// std::cout << "JtJ : " << std::endl << JtJ << std::endl;
 
 	for(int i=0; i<ndof; i++){
 		iD[i]  = 1.0 / JtJ[i][i];
@@ -65,8 +98,14 @@ void CRIKMovable::PrepareSolve(){
 		for(CSetIter ci=linkedControls.begin(); ci!=linkedControls.end(); ++ci){
 			K[m] += (CalcJacobian(*ci).trans() * DCAST(CRIKMovable,(*mi))->CalcJacobian(*ci));
 		}
+		// std::cout << "K[" << m << "] : " << std::endl << K[m] << std::endl;
 		++m;
 	}
+	// std::cout << "iDx : " << iDx << std::endl;
+	// std::cout << "iD  : " << iD  << std::endl;
+	// std::cout << "F   : " << std::endl << F << std::endl;
+
+	value.clear();
 }
 
 void CRIKMovable::ProceedSolve(){
@@ -103,12 +142,20 @@ IF_OBJECT_IMP(CRIKMovableSolidPos, CRIKMovable);
 PTM::VMatrixRow<double> CRIKMovableSolidPos::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,3); return M; /// 適切なのを返す
+		PTM::VMatrixRow<double> M; M.resize(3,3); M.clear();
+		M[0][0]=1; M[1][1]=1; M[2][2]=1;
+		return M;
 	}
  
 	CRIKControlOriIf* cpOri;
 	if (cpOri = DCAST(CRIKControlOriIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,3); return M; /// 適切なのを返す
+		PTM::VMatrixRow<double> M; M.resize(3,3);
+		Vec3d Pm = solid->GetPose().Pos();
+		CRIKControlOri* cp = DCAST(CRIKControlOri,cpOri);
+		Vec3d Pc = cp->solid->GetPose().Pos();
+		double norm = (Pm-Pc).norm();
+		M = CrossMatrix((Pm-Pc)/(norm*norm));
+		return M;
 	}
 
 	return PTM::VMatrixRow<double>();
@@ -137,12 +184,21 @@ IF_OBJECT_IMP(CRIKMovableBallJointOri, CRIKMovable);
 PTM::VMatrixRow<double> CRIKMovableBallJointOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,3); return M; /// 適切なのを返す
+		PTM::VMatrixRow<double> M; M.resize(3,3);
+		PHBallJoint* j = DCAST(PHBallJoint,joint);
+		PHBallJointDesc d; j->GetDesc(&d);
+		Vec3d Pm = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
+		CRIKControlPos* cp = DCAST(CRIKControlPos,cpPos);
+		Vec3d Pc = cp->solid->GetPose() * cp->pos;
+		M = CrossMatrix(Pm-Pc);
+		return M;	 
 	}
- 
+
 	CRIKControlOriIf* cpOri;
 	if (cpOri = DCAST(CRIKControlOriIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,3); return M; /// 適切なのを返す
+		PTM::VMatrixRow<double> M; M.resize(3,3); M.clear();
+		M[0][0]=1; M[1][1]=1; M[2][2]=1;
+		return M;
 	}
 
 	return PTM::VMatrixRow<double>();
@@ -154,7 +210,19 @@ IF_OBJECT_IMP(CRIKMovable3HingeJointOri, CRIKMovable);
 PTM::VMatrixRow<double> CRIKMovable3HingeJointOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,3); return M; /// 適切なのを返す
+		PTM::VMatrixRow<double> M; M.resize(3,3);
+		PHHingeJoint* j[3] = {DCAST(PHHingeJoint,joint1),DCAST(PHHingeJoint,joint2),DCAST(PHHingeJoint,joint3)};
+		for(int i=0; i<3; i++){
+			PTM::VMatrixRow<double> J; J.resize(3,1);
+			Vec3d Pm = j[i]->solid[0]->GetPose() * j[i]->Xj[0].r;
+			Vec3d Rm = j[i]->solid[0]->GetPose().Ori() * j[i]->Xj[0].q * Vec3d(0,0,1);
+			CRIKControlPos* cp = DCAST(CRIKControlPos,cpPos);
+			Vec3d Pc = cp->solid->GetPose() * cp->pos;
+			M[i] = PTM::cross((Pm-Pc), Rm);
+			// std::cout << "Pc[" << i << "]: " << Pc << std::endl;
+		}
+		// std::cout << "M3hinge:" << std::endl << M << std::endl;
+		return M;
 	}
  
 	CRIKControlOriIf* cpOri;
@@ -165,13 +233,37 @@ PTM::VMatrixRow<double> CRIKMovable3HingeJointOri::CalcJacobian(CRIKControlIf* c
 	return PTM::VMatrixRow<double>();
 }
 
+void CRIKMovable3HingeJointOri::Move(){
+	static const double PI     = 3.141592653589;
+	static const double HALFPI = PI / 2.0;
+	if (value.norm() < 100.0f) {
+		/*
+		for (int i=0; i<3; ++i) {
+			while (HALFPI  < value[i]) { value[i] -= PI; }
+			while (value[i] < -HALFPI) { value[i] += PI; }
+		}
+		*/
+		joint1->SetSpringOrigin(joint1->GetPosition() + value[0]);
+		joint2->SetSpringOrigin(joint2->GetPosition() + value[1]);
+		joint3->SetSpringOrigin(joint3->GetPosition() + value[2]);
+	}
+}
+
 // --- --- --- --- ---
 IF_OBJECT_IMP(CRIKMovableHingeJointOri, CRIKMovable);
 
 PTM::VMatrixRow<double> CRIKMovableHingeJointOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,1); return M; /// 適切なのを返す
+		PTM::VMatrixRow<double> M; M.resize(3,1);
+		PHHingeJoint* j = DCAST(PHHingeJoint,joint);
+		Vec3d Pm = j->solid[0]->GetPose() * j->Xj[0].r;
+		Vec3d Rm = j->solid[0]->GetPose().Ori() * j->Xj[0].q * Vec3d(0,0,1);
+		CRIKControlPos* cp = DCAST(CRIKControlPos,cpPos);
+		Vec3d Pc = cp->solid->GetPose() * cp->pos;
+		Vec3d M3 = PTM::cross((Pm-Pc), Rm);
+		M[0][0]=M3[0]; M[0][1]=M3[1]; M[0][2]=M3[2];
+		return M;
 	}
  
 	CRIKControlOriIf* cpOri;
@@ -180,6 +272,10 @@ PTM::VMatrixRow<double> CRIKMovableHingeJointOri::CalcJacobian(CRIKControlIf* co
 	}
 
 	return PTM::VMatrixRow<double>();
+}
+
+void CRIKMovableHingeJointOri::Move(){
+	joint->SetSpringOrigin(joint->GetPosition() + value[0]);
 }
 
 }
