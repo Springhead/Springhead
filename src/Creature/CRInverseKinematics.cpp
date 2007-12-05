@@ -25,7 +25,7 @@ IF_OBJECT_IMP(CRIKControlPos, CRIKControl);
 Vec3d CRIKControlPos::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
 	Vec3d dir = goal - spos;
-	double epsilon = 0.05;
+	double epsilon = 0.1;
 	// std::cout << dir/dir.norm()*epsilon << std::endl;
 	if (dir.norm() < epsilon) {
 		return(dir);
@@ -40,7 +40,7 @@ IF_OBJECT_IMP(CRIKControlOri, CRIKControl);
 Vec3d CRIKControlOri::GetTmpGoal(){
 	Vec3d sorieul; solid->GetPose().Ori().ToEular(sorieul);
 	Vec3d dir = goal - sorieul;
-	double epsilon = 0.05;
+	double epsilon = 0.1;
 	// std::cout << dir/dir.norm()*epsilon << std::endl;
 	if (dir.norm() < epsilon) {
 		return(dir);

@@ -107,7 +107,7 @@ Vec2f CRISTravelPotentialObject::GetPotential(Vec2f currPos){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-bool CRInternalScene::LargerAttention(const CRInternalSceneObject* &a, const CRInternalSceneObject* &b){
+bool CRInternalScene::LargerAttention(const CRInternalSceneObject* a, const CRInternalSceneObject* b){
 	// Attention‚Ì~‡‚É•À‚×‚é‚Ì‚ª–Ú“I
 	// ‚½‚¾‚µAttractiveObject‚Å‚È‚¢ISObj‚ÍAttractiveObject‚æ‚è‚³‚ç‚ÉŒã
 

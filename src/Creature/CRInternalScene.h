@@ -179,7 +179,7 @@ private:
 
 	/** @brief ソートに使う
 	*/
-	static bool LargerAttention(const CRInternalSceneObject* &a, const CRInternalSceneObject* &b);
+	static bool LargerAttention(const CRInternalSceneObject* a, const CRInternalSceneObject* b);
 
 public:
 	OBJECTDEF(CRInternalScene, SceneObject);

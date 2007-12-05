@@ -112,7 +112,7 @@ void CRBody::CalcIK(){
 	for(int i=0; i<postureMovables.size(); ++i){
 		postureMovables[i]->PrepareSolve();
 	}
-	int niterIK = 20;
+	int niterIK = 25;
 	for(int n=0; n<niterIK; n++){
 		for(int i=0; i<postureMovables.size(); ++i){
 			postureMovables[i]->ProceedSolve();
