@@ -138,6 +138,11 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rangeStifle		  = Vec2d(Rad(- 90), Rad(+ 90));
 	rangeRearKnee	  = Vec2d(Rad(- 90), Rad(+ 90));
 
+	//-----------------------------------------------------------------------------------
+	// limit Direction of the ball joints
+
+	//-----------------------------------------------------------------------------------
+	// Do you want to make the legs?
 	noLegs = false;
 }
 	
@@ -422,6 +427,7 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	ballDesc.goal			  = goalShoulder;
 	ballDesc.limitSwing		  = limitSwingShoulder;
 	ballDesc.limitTwist		  = limitTwistShoulder;
+	ballDesc.limitDir		  = limitDirShoulder;
 
 	//----------------------------------------------------------------------------
 	// phScene->CreateJoint([p], [c], desc)‚Åg‚¤B
