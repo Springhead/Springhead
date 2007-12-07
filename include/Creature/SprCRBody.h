@@ -342,15 +342,15 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	double rearToeBreadth,		   rearToeHeight,		  rearToeThickness;
 
 	/// 各BallJointのバネダンパ
-	Vec3d springWaistChest,    damperWaistChest;	//腰-胸
-	Vec3d springWaistTail,	   damperWaistTail;		//腰-尾
-	Vec3d springTail,		   damperTail;			//尾
-	Vec3d springChestNeck,	   damperChestNeck;     //胸-首
-	Vec3d springNeckHead,	   damperNeckHead;		//首-頭
-	Vec3d springShoulder,	   damperShoulder;		//肩
-	Vec3d springFrontAnkle,    damperFrontAnkle;	//かかと（前足）
-	Vec3d springHip,		   damperHip;			//尻
-	Vec3d springRearAnkle,     damperRearAnkle;		//かかと（後足）
+	double springWaistChest,   damperWaistChest;	//腰-胸
+	double springWaistTail,	   damperWaistTail;		//腰-尾
+	double springTail,		   damperTail;			//尾
+	double springChestNeck,	   damperChestNeck;     //胸-首
+	double springNeckHead,	   damperNeckHead;		//首-頭
+	double springShoulder,	   damperShoulder;		//肩
+	double springFrontAnkle,   damperFrontAnkle;	//かかと（前足）
+	double springHip,		   damperHip;			//尻
+	double springRearAnkle,    damperRearAnkle;		//かかと（後足）
 	
 	// 各HingeJointのバネダンパ
 	double springElbow,		   damperElbow;			//肘（前足）
@@ -365,26 +365,48 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	Vec2d  rangeRearKnee;
 	
 	// BallJoint制御目標
-	SwingTwist goalWaistChest;
-	SwingTwist goalWaistTail;
-	SwingTwist goalTail;
-	SwingTwist goalChestNeck;
-	SwingTwist goalNeckHead;
-	SwingTwist goalShoulder;
-	SwingTwist goalFrontAnkle;
-	SwingTwist goalHip;
-	SwingTwist goalRearAnkle;
+	Quaterniond goalWaistChest;
+	Quaterniond goalWaistTail;
+	Quaterniond goalTail;
+	Quaterniond goalChestNeck;
+	Quaterniond goalNeckHead;
+	Quaterniond goalShoulder;
+	Quaterniond goalFrontAnkle;
+	Quaterniond goalHip;
+	Quaterniond goalRearAnkle;
 
-	/// BallJointの可動域制限
-	LimitST limitWaistChest;
-	LimitST limitWaistTail;
-	LimitST limitTail;
-	LimitST limitChestNeck;
-	LimitST limitNeckHead;
-	LimitST limitShoulder;
-	LimitST limitFrontAnkle;
-	LimitST limitHip;
-	LimitST limitRearAnkle;
+	// BallJoint可動域制限の中心
+	Vec3d limitDirWaistChest;
+	Vec3d limitDirWaistTail;
+	Vec3d limitDirTail;
+	Vec3d limitDirChestNeck;
+	Vec3d limitDirNeckHead;
+	Vec3d limitDirShoulder;
+	Vec3d limitDirFrontAnkle;
+	Vec3d limitDirHip;
+	Vec3d limitDirRearAnkle;
+
+	/// BallJointのswing可動域:
+	Range<double> limitSwingWaistChest;
+	Range<double> limitSwingWaistTail;
+	Range<double> limitSwingTail;
+	Range<double> limitSwingChestNeck;
+	Range<double> limitSwingNeckHead;
+	Range<double> limitSwingShoulder;
+	Range<double> limitSwingFrontAnkle;
+	Range<double> limitSwingHip;
+	Range<double> limitSwingRearAnkle;
+
+	/// BallJointのtwist可動域
+	Range<double> limitTwistWaistChest;
+	Range<double> limitTwistWaistTail;
+	Range<double> limitTwistTail;
+	Range<double> limitTwistChestNeck;
+	Range<double> limitTwistNeckHead;
+	Range<double> limitTwistShoulder;
+	Range<double> limitTwistFrontAnkle;
+	Range<double> limitTwistHip;
+	Range<double> limitTwistRearAnkle;
 
 	// 
 

@@ -99,7 +99,7 @@ double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
 bool bLeftButton = false, bRightButton = false;
 
 PHSolidDesc descFloor;					//床剛体のディスクリプタ
-PHSolidDesc descBox;					//箱剛体のディスクリプタ
+PHSolidDesc solidDesc;					//箱剛体のディスクリプタ
 CDShapeIf* shapeBox;
 CDShapeIf* shapeSphere;
 
@@ -107,7 +107,8 @@ PHSolidIf* soFloor;						//床剛体のインタフェース
 std::vector<PHSolidIf*> soBox;			//箱剛体のインタフェース
 std::vector<PHJointIf*> jntLink;		//関節のインタフェース
 std::vector<PHTreeNodeIf*> nodeTree;
-
+PHHingeJointIf* hingeIf;
+PHHingeJointDesc hingeDesc;
 
 void CreateFloor(bool s=true){
 	CDConvexMeshDesc desc;
@@ -140,7 +141,7 @@ void BuildScene0(){
 	bd.vertices.push_back(Vec3f( 1.0,  1.0,  1.0));
 	shapeBox = phSdk->CreateShape(bd);
 	shapeBox->SetName("shapeBox");
-	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.push_back(scene->CreateSolid(solidDesc));
 	soBox.back()->AddShape(shapeBox);
 	//空中に固定する
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
@@ -158,17 +159,17 @@ void BuildScene1(){
 	CDBoxDesc bd;
 	soBox.resize(3);
 	bd.boxsize = Vec3f(1.0, 2.0, 1.0);
-	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0] = scene->CreateSolid(solidDesc);
 	soBox[0]->AddShape(phSdk->CreateShape(bd));
 	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
 	bd.boxsize = Vec3f(1.0, 5.0, 1.0);
-	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1] = scene->CreateSolid(solidDesc);
 	soBox[1]->AddShape(phSdk->CreateShape(bd));
 	soBox[1]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
 	bd.boxsize = Vec3f(1.0, 10.0, 1.0);
-	soBox[2] = scene->CreateSolid(descBox);
+	soBox[2] = scene->CreateSolid(solidDesc);
 	soBox[2]->AddShape(phSdk->CreateShape(bd));
 	soBox[2]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
@@ -207,7 +208,7 @@ void BuildScene2(){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
-	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.push_back(scene->CreateSolid(solidDesc));
 	soBox[0]->AddShape(shapeBox);
 	soBox[0]->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox[0]->SetDynamical(false);
@@ -220,9 +221,9 @@ void BuildScene3(){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
-	descBox.mass=10.0;
-	descBox.inertia = 10 * Matrix3d::Unit();
-	soBox.push_back(scene->CreateSolid(descBox));
+	solidDesc.mass=10.0;
+	solidDesc.inertia = 10 * Matrix3d::Unit();
+	soBox.push_back(scene->CreateSolid(solidDesc));
 	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 	soBox.back()->SetDynamical(false);
@@ -234,7 +235,7 @@ void BuildScene4(){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 2.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
-	soBox.push_back(scene->CreateSolid(descBox));
+	soBox.push_back(scene->CreateSolid(solidDesc));
 	soBox.back()->AddShape(shapeBox);
 	soBox.back()->SetFramePosition(Vec3f(0.0, 20.0, 0.0));
 
@@ -271,24 +272,24 @@ void BuildScene5(){
 	
 	soBox.resize(6);
 
-	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0] = scene->CreateSolid(solidDesc);
 	soBox[0]->AddShape(shapeBox);
 
-	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1] = scene->CreateSolid(solidDesc);
 	soBox[1]->AddShape(shapeBox);
 
-	soBox[2] = scene->CreateSolid(descBox);
+	soBox[2] = scene->CreateSolid(solidDesc);
 	soBox[2]->AddShape(shapeBox);
 
-	soBox[3] = scene->CreateSolid(descBox);
+	soBox[3] = scene->CreateSolid(solidDesc);
 	soBox[3]->AddShape(shapeBox);
 
-	soBox[4] = scene->CreateSolid(descBox);
+	soBox[4] = scene->CreateSolid(solidDesc);
 	soBox[4]->AddShape(shapeBox);
 
 	CDSphereDesc descSphere;
 	descSphere.radius = 1.0;
-	soBox[5] = scene->CreateSolid(descBox);
+	soBox[5] = scene->CreateSolid(solidDesc);
 	soBox[5]->AddShape(phSdk->CreateShape(descSphere));
 
 	jntLink.resize(6);
@@ -340,41 +341,64 @@ void BuildScene5(){
 }
 
 void BuildScene6(){
+
+// #if->縦、#else->横
+#if 0
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
 	
 	soBox.resize(2);
-	soBox[0] = scene->CreateSolid(descBox);
+	soBox[0] = scene->CreateSolid(solidDesc);
 	soBox[0]->AddShape(shapeBox);
 	soBox[0]->SetDynamical(false);
-	soBox[1] = scene->CreateSolid(descBox);
+	soBox[1] = scene->CreateSolid(solidDesc);
 	soBox[1]->AddShape(shapeBox);
-	soBox[1]->SetOrientation(Quaternionf::Rot( Rad(1), 'z'));
 	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
 
 	jntLink.resize(1);
 	PHBallJointDesc desc;
 	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
 	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
-	desc.posePlug.Pos() = Vec3d(0.0, -3.0, 0.0);
-	desc.posePlug.Ori() = Quaterniond::Rot(Rad(-90), 'x');
-
-	//desc.limit.lower.SwingDir() = Rad(0);
-	//desc.limit.upper.SwingDir() = Rad(360);
-	//desc.limit.lower.Swing()    = Rad(0);
-	desc.limit.upper.Swing()    = Rad(20);
-	desc.limit.lower.Twist()    = -Rad(120);
-	desc.limit.upper.Twist()    = Rad(120);
-
-//	desc.spring = Vec3f(0,1000,0);
-//	desc.damper = Vec3f(0,10,0);
-	desc.spring = Vec3f(100,100,100);
-	desc.damper = Vec3f(10,10,10);
-
-	//desc.goal.SwingDir() = M_PI/2;
-	
+	desc.posePlug.Pos()   = Vec3d(0.0, -3.0, 0.0);
+	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(-90), 'x');
+//	desc.spring			  = 100;
+//	desc.damper			  = 10;
+	desc.limitSwing[0]	  = Rad(  0); // swing lower
+	desc.limitSwing[1]	  = Rad( 20); // swing upper
+	desc.limitTwist[0]	  = Rad(-20); // twist lower
+	desc.limitTwist[1]	  = Rad( 20); // twist upper
+	//	desc.goal			  = Quaterniond(0, 0, 1, 1);
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
+#else
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(6.0, 2.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
+	
+	soBox.resize(2);
+	soBox[0] = scene->CreateSolid(solidDesc);
+	soBox[0]->AddShape(shapeBox);
+	soBox[0]->SetDynamical(false);
+	soBox[1] = scene->CreateSolid(solidDesc);
+	soBox[1]->AddShape(shapeBox);
+	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
+
+	jntLink.resize(1);
+	PHBallJointDesc desc;
+	desc.poseSocket.Pos() = Vec3d(3.0, 0.0, 0.0);
+	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
+	desc.posePlug.Pos()   = Vec3d(-3.0, 0.0, 0.0);
+	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
+//	desc.spring			  = 100;
+//	desc.damper			  = 10;
+	desc.limitSwing[0]	  = Rad(  0); // swing lower
+	desc.limitSwing[1]	  = Rad( 20); // swing upper
+	desc.limitTwist[0]	  = Rad(-20); // twist lower
+	desc.limitTwist[1]	  = Rad( 20); // twist upper
+	//	desc.goal			  = Quaterniond(0, 0, 1, 1);
+	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
+#endif
+
 }
 
 void BuildScene(){
@@ -394,7 +418,7 @@ void OnKey0(char key){
 	case ' ':
 	case 'b':
 		{
-		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.push_back(scene->CreateSolid(solidDesc));
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10, 10, 0));
 		PHHingeJointDesc jdesc;
@@ -477,7 +501,7 @@ void OnKey1(char key){
 		}
 	
 		soBox.resize(4);
-		soBox[3] = scene->CreateSolid(descBox);
+		soBox[3] = scene->CreateSolid(solidDesc);
 		soBox[3]->AddShape(soBox[2]->GetShape(0));
 		soBox[3]->SetFramePosition(Vec3f(10.0, 20.0, 0.0));
 
@@ -497,7 +521,7 @@ void OnKey2(char key){
 	switch(key){
 	case ' ':
 	case 'b':{
-		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.push_back(scene->CreateSolid(solidDesc));
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHBallJointDesc jdesc;
@@ -518,7 +542,7 @@ void OnKey2(char key){
 void OnKey3(char key){
 	switch(key){
 	case ' ':{
-		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.push_back(scene->CreateSolid(solidDesc));
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 		PHSliderJointDesc jdesc;
@@ -565,7 +589,7 @@ void OnKey5(char key){
 		break;
 	/*case ' ':{
 		//	剛体追加
-		soBox.push_back(scene->CreateSolid(descBox));
+		soBox.push_back(scene->CreateSolid(solidDesc));
 		soBox.back()->AddShape(shapeBox);
 		soBox.back()->SetFramePosition(Vec3f(10.0, 10.0, 0.0));
 
@@ -598,6 +622,102 @@ void OnKey5(char key){
 
 }
 
+void OnKey6(char key){
+	
+#if 1
+	PHBallJointDesc ballDesc;
+	switch (key){
+		case 'a':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond(0, 1, 0, 0);
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl;
+			break;
+		case 's':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond(0, -1, 0, 0);
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl;
+			break;
+		case 'd':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond(0, 0, 1, 0);
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl; 
+			break;
+		case 'f':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond(0, 0, -1, 0);
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl; 
+			break;
+		case 'w':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond(0, 0, 1, 1);
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl; 
+			break;
+
+		
+		default:
+			break;
+	}
+
+#else
+	switch (key){
+		case 'a': 
+			soBox[1]->SetVelocity(Vec3d(2.0, 0.0, 0.0));
+			break;
+		case 's':
+			soBox[1]->SetVelocity(Vec3d(-2.0, 0.0, 0.0));
+			break;
+		case 'd':
+			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, -2.0));
+			break;
+		case 'f':
+			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, 2.0));
+			break;
+		case 'g':
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, 2.0, 0.0));
+			break;
+		case 'h':
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
+			break;
+		case 'w':
+			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, 2.0));
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
+			break;
+		case 'e':
+			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, 2.0));
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, 2.0, 0.0));
+			break;
+		case 'r':
+			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, -2.0));
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
+			break;
+		case 't':
+			soBox[1]->SetVelocity(Vec3d(2.0, 0.0, 0.0));
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, 2.0, 0.0));
+			break;
+		case 'y':
+			soBox[1]->SetVelocity(Vec3d(-2.0, 0.0, 0.0));
+			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
+			break;
+		case 'u':
+			soBox[1]->SetAngularVelocity(Vec3d(2.0, 0.0, 0.0));
+			break;
+
+		default :
+			break;
+	}
+#endif
+
+}
 void OnKey(char key){
 	switch(sceneNo){
 	case 0: OnKey0(key); break;
@@ -606,6 +726,7 @@ void OnKey(char key){
 	case 3: OnKey3(key); break;
 	case 4: OnKey4(key); break;
 	case 5: OnKey5(key); break;
+	case 6: OnKey6(key); break;
 	}
 }
 
@@ -627,7 +748,9 @@ void OnTimer5(){
 //	DSTR << soBox[4]->GetVelocity() << std::endl;
 }
 void OnTimer6(){
-	soBox[1]->AddTorque(Vec3f(0,1,0));
+	//soBox[1]->AddTorque(Vec3f(0,0,200));
+		
+
 }
 void OnTimer(){
 	switch(sceneNo){
@@ -746,7 +869,7 @@ void keyboard(unsigned char key, int x, int y){
 					jntLink[i]->Enable(bEnable);
 			}break;
 		case 'z':{
-			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.push_back(scene->CreateSolid(solidDesc));
 			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(1), 'z'));
@@ -755,7 +878,7 @@ void keyboard(unsigned char key, int x, int y){
 //			scene->SetContactMode(PHSceneDesc::MODE_PENALTY);
 			}break;	
 		case 'Z':{
-			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.push_back(scene->CreateSolid(solidDesc));
 			soBox.back()->AddShape(shapeBox);
 			soBox.back()->SetFramePosition(Vec3f(5.0, 13.0, 5.0));
 			soBox.back()->SetVelocity(Vec3d(0.0, 0.0, -20.0));
@@ -767,7 +890,7 @@ void keyboard(unsigned char key, int x, int y){
 			cd.length = 4.0;
 			CDShapeIf* shape = phSdk->CreateShape(cd);
 
-			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.push_back(scene->CreateSolid(solidDesc));
 			soBox.back()->AddShape(shape);
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
@@ -780,7 +903,7 @@ void keyboard(unsigned char key, int x, int y){
 			sd.radius = 1.0;
 			CDShapeIf* shape = phSdk->CreateShape(sd);
 
-			soBox.push_back(scene->CreateSolid(descBox));
+			soBox.push_back(scene->CreateSolid(solidDesc));
 			soBox.back()->AddShape(shape);
 			soBox.back()->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
 			soBox.back()->SetFramePosition(Vec3f(15.0, 15.0, 0.0));
@@ -846,7 +969,9 @@ void timer(int id){
 		scene->GenerateForce();
 		scene->Integrate();
 		glutPostRedisplay();
+		 
 	}
+	
 }
 void idle(){
 	scene->ClearForce();
@@ -860,9 +985,9 @@ void idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-
 int main(int argc, char* argv[]){
-	// SDKの作成　
+	// SDKの作成
+
 	phSdk = PHSdkIf::CreateSdk();
 	grSdk = GRSdkIf::CreateSdk();
 	// シーンオブジェクトの作成

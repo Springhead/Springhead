@@ -28,6 +28,10 @@ public:
 	PHScene*			scene;
 	PHConstraintEngine* engine;
 
+	/// „‘Ì‚©‚çŒ©‚½ŠÖß‚ÌˆÊ’u‚ÆŒX‚«
+	Posed poseSocket;
+	Posed posePlug;
+
 	bool		bEnabled;			///< —LŒø‰»‚³‚ê‚Ä‚¢‚éê‡‚Étrue
 	bool		bFeasible;			///< —¼•û‚Ì„‘Ì‚ªundynamical‚Èê‡true
 	bool		bArticulated;		///< ŠÖßŒn‚ğ\¬‚µ‚Ä‚¢‚éê‡true
@@ -77,6 +81,7 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject();
 	virtual ObjectIf* GetChildObject(size_t i);
+	virtual bool GetDesc(void* desc);
 	virtual void SetDesc(const void* desc);
 	
 	void	CompJacobian();

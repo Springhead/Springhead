@@ -1,22 +1,41 @@
 /*
- *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2007, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ * 
+ *　SwingDirの制限は入っていません。必要な人が頑張って実装してください(by toki 2007.12.05)
+ *
  */
 #include "Physics.h"
+#include <fstream>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
 using namespace PTM;
 using namespace std;
+
 namespace Spr{;
+//----------------------------------------------------------------------------
+// PHBallJointDesc
+
+PHBallJointDesc::PHBallJointDesc(){
+
+	spring		  = 0.0;
+	damper		  = 0.0;
+	limitSwing[0] = Rad(0)-0.1;
+	limitSwing[1] = Rad(180)+0.1;
+	limitTwist[0] = Rad(-180)-0.1;
+	limitTwist[1] = Rad(180)+0.1;	
+	limitDir	  = Vec3d(0.0, 0.0, 1.0);
+	goal		  = Quaterniond(1, 0, 0, 0);
+}
 
 //----------------------------------------------------------------------------
 // PHBallJoint
-IF_OBJECT_IMP(PHBallJoint, PHJoint)
+IF_OBJECT_IMP(PHBallJoint, PHJoint);
 
 PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	SetDesc(&desc);
@@ -26,124 +45,215 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	
 	// limit上に居るかどうかのフラグの初期化
 	for(int i=0; i<3; ++i){
-		onLimit[i].onLower = 0;
-		onLimit[i].onUpper = 0;
+		onLimit[i].onLower = false;
+		onLimit[i].onUpper = false;
 	}
-
-	socketOri = desc.poseSocket.Ori();
+	anyLimit = false;
 }
 
 bool PHBallJoint::GetDesc(void* desc){
 	PHConstraint::GetDesc(desc);
 	((PHBallJointDesc*)desc)->spring		 = spring;
 	((PHBallJointDesc*)desc)->damper		 = damper;
-	((PHBallJointDesc*)desc)->limit			 = limit;
-	((PHBallJointDesc*)desc)->goalVector	 = goalVector;
+	((PHBallJointDesc*)desc)->limitSwing	 = limitSwing;
+	((PHBallJointDesc*)desc)->limitTwist	 = limitTwist;
+	((PHBallJointDesc*)desc)->limitDir		 = limitDir;
+	((PHBallJointDesc*)desc)->goal			 = goal;
 	((PHBallJointDesc*)desc)->torque		 = GetMotorTorque();
+	
 	return true;
 }
 
 void PHBallJoint::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
 	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
-	limit = descBall.limit;
-	spring      = descBall.spring;
-	goalVector  = descBall.goalVector; 
-	damper      = descBall.damper;
+	
+	spring		  = descBall.spring;
+	damper		  = descBall.damper;
+	limitSwing	  = descBall.limitSwing;
+	limitTwist	  = descBall.limitTwist;
+	limitDir	  = descBall.limitDir;
+	goal		  = descBall.goal;
+	torque		  = descBall.torque;
+	
 	SetMotorTorque(descBall.torque);
 }
 
 void PHBallJoint::UpdateJointState(){
-
-	double eps = 1e-4;
-
-	goalVector  = Xj[0].q * Vec3f(0.0, 0.0, 1.0);
-	currentVector = Xj[0].q * Xjrel.q * Vec3f(0.0, 0.0, 1.0);
-
-//	DSTR << "goalVector : " << goalVector << endl;
-//	DSTR << "currentVector : " << currentVector << endl;
-
+	// Jc.Ez() : Socketに対するPlugの向いている方向(旧currentVector)
+	Jc.Ez() = Xjrel.q * Vec3f(0.0, 0.0, 1.0);
+	
+	if(onLimit[0].onLower || onLimit[0].onUpper){
+		Jc.Ex() = cross(Jc.Ez(),(Jc.Ez() - limitDir)).unit();
+		Jc.Ey() = cross(Jc.Ez(), Jc.Ex());
+		Jcinv   = Jc.trans();
+	}
 }
 
 void PHBallJoint::SetConstrainedIndex(bool* con){
-	con[0] = con[1] = con[2] = true;
-	// 可動範囲をチェック
-	float nowTheta;
 
-	nowTheta = acos(dot(goalVector.unit(), currentVector.unit()));			//"vector".unit():<Vector>の単位ベクトル
+	// -----bool* conの意味----------------------------------
+	// 拘束する軸についてのフラグ
+	// con[0]-con[2]:並進運動（x,y,z）
+	// con[3]-con[5]:回転運動（x軸まわり,y軸まわり,z軸まわり）
+	// true:拘束する、false:拘束しない
+	//-------------------------------------------------------
+
+	con[0] = con[1] = con[2] = true;				
+	con[3] = con[4] = con[5] = false;
 	
-	//DSTR << "nowTheta" << nowTheta << endl;
-	DSTR << nowTheta*180/M_PI << endl;
+	// 現在のSocketとPlugとの間の角度を計算
 
-	for(int i=0; i<3; ++i){
-		if(nowTheta > limit.upper[i]){
-			onLimit[i].onUpper = 1;
-		}
-		else if(nowTheta < limit.lower[i]){
-			onLimit[i].onLower  = 1;
-		}
-		else{
-			onLimit[i].onUpper = 0;
-			onLimit[i].onLower = 0;
-		}
-
-		//DSTR << "onLimit[" << i << "].onUpper : " << onLimit[i].onUpper << endl;
-		//DSTR << "onLimit[" << i << "].onLower : " << onLimit[i].onLower << endl;
+	nowTheta[0]	= acos(dot(limitDir, Jc.Ez()));			///< Swing角の計算	
 	
+	Quaterniond qSwing;
+	Vec3d half =  0.5 * (Vec3d(0.0, 0.0, 1.0) + Jc.Ez());	
+	double l = half.norm();
+	if (l>1e-20){
+		half /= l;
+		qSwing.V() = cross(half, Vec3d(0,0,1));
+		qSwing.w = sqrt(1-qSwing.V().square());
+	}
+	else{
+		qSwing.V() = Vec3d(1,0,0);
+		qSwing.w = 0;
 	}
 
-	for(int i=0; i<3;++i){
-		con[i+3] = onLimit[i].onUpper || onLimit[i].onLower || spring[i]!=0.0 || damper[i] != 0.0;
+	Quaterniond twistQ = qSwing * Xjrel.q;
+	nowTheta[1] = twistQ.Theta();						///< Twist角の計算を行っている	
+	if (twistQ.z < 0) 
+		nowTheta[1]  *= -1;								///< Twist回転軸が反対を向くことがあるのでその対策
+	
+	if(nowTheta[1] < Rad(-180)) nowTheta[1] += Rad(360);
+	if(nowTheta[1] > Rad( 180)) nowTheta[1] -= Rad(360);
+	
+	// 可動域制限にかかっているかの判定
+	// swing角の可動域制限の確認
+	if(nowTheta[0] < limitSwing[0])
+		onLimit[0].onLower = true;
+	else if(nowTheta[0] > limitSwing[1])
+		onLimit[0].onUpper = true;
+	else{
+		onLimit[0].onLower = false;
+		onLimit[0].onUpper = false;
+	}	
+
+	// twist角の可動域制限の確認
+	if(nowTheta[1] < limitTwist[0])
+		onLimit[1].onLower = true;
+	else if(nowTheta[1] > limitTwist[1])
+		onLimit[1].onUpper = true;
+	else{
+		onLimit[1].onLower = false;
+		onLimit[1].onUpper = false;
 	}
+
+	// どこかが可動域制限にかかっているとtrue
+	if((onLimit[0].onUpper || onLimit[0].onLower) ||
+	   (onLimit[1].onUpper || onLimit[1].onLower))  
+	   anyLimit = true;
+	else anyLimit = false;
+
+	// 上の計算を踏まえて毎回、回転軸の拘束条件の更新をする
+	con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
+	con[4] = spring != 0.0	    || damper != 0.0;
+	con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
 
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
 void PHBallJoint::ModifyJacobian(){
-	J[0].wv() = Jstinv * J[0].wv();
-	J[0].ww() = Jstinv * J[0].ww();
-	J[1].wv() = Jstinv * J[1].wv();
-	J[1].ww() = Jstinv * J[1].ww();
+	//J[0].wv()剛体0の速度から相対角速度へ変換するヤコビアン
+	//J[0].ww()剛体0の速度から相対角速度へ変換するヤコビアン
+	//J[1].wv()剛体1の速度から相対角速度へ変換するヤコビアン
+	//J[1].ww()剛体1の速度から相対角速度へ変換するヤコビアン
+	if(anyLimit){
+		J[0].wv() = Jcinv * J[0].wv();
+		J[0].ww() = Jcinv * J[0].ww();
+		J[1].wv() = Jcinv * J[1].wv();
+		J[1].ww() = Jcinv * J[1].ww();
+	}
 }
 
 void PHBallJoint::CompBias(){
-
-	double dtinv = 1.0 / scene->GetTimeStep();
-	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
 	
-	for(int i=0; i<3; ++i){
-		db.w()[i] = (onLimit[i].onLower ? (limit.lower[i] - nowTheta[i]) * dtinv :
-			     onLimit[i].onUpper ? (nowTheta[i] - limit.upper[i]) * dtinv : 0.0);
-	}
-	db *= engine->velCorrectionRate;
-	Vec3d prop = currentVector - goalVector;
+	double dtinv = 1.0 / scene->GetTimeStep();
+	
+	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
+	db.v() *= engine->velCorrectionRate;
 
-	for(int i=0; i<3; ++i){
-		if (onLimit[i].onLower || onLimit[i].onUpper) continue;
-		if (spring[i] != 0.0 || damper[i] != 0.0){	//	バネダンパはSwingTwist座標系で働く
-			double tmp = 1.0 / (damper[i] + spring[i] * scene->GetTimeStep());
-			dA.w()[i] = tmp * dtinv;
-			db.w()[i] = spring[i] * prop[i] * tmp;
-		}
+	Quaterniond propQ = Xjrel.q * goal.Inv();	
+	Vec3d propV = propQ.RotationHalf();
+
+	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
+	if (anyLimit){
+		propV = Jcinv * propV;
+	}
+	
+	// バネダンパが入っていたら構築する
+	if (spring != 0.0 || damper != 0.0){
+		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		dA.w()[0] = tmp * dtinv;
+		dA.w()[1] = tmp * dtinv;
+		dA.w()[2] = tmp * dtinv;
+
+		db.w() = spring * propV * tmp;
+	}
+	else{
+		//dA.w().clear();
+		db.w().clear();
+	}
+	
+	Vec3d vJc = Jc * vjrel.w();
+	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
+	//x軸方向に拘束をかける場合	
+	if(onLimit[0].onLower ){
+		dA.w()[0] = 0;
+		db.w()[0] = (nowTheta[0] - limitSwing[0]) * dtinv * engine->velCorrectionRate;
+	}
+	
+	else if(onLimit[0].onUpper){
+		dA.w()[0] = 0;
+		db.w()[0] = (nowTheta[0] - limitSwing[1]) * dtinv * engine->velCorrectionRate;
 	}
 
+	//z軸方向に拘束をかける場合
+	if(onLimit[1].onLower && (vJc.z < 0)){
+		dA.w()[2] = 0;
+		db.w()[2] = (nowTheta[1] - limitTwist[0]) * dtinv * engine->velCorrectionRate;
+	}
+	else if(onLimit[1].onUpper && (vJc.z > 0)){
+		dA.w()[2] = 0;
+		db.w()[2] = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;
+	}
 }
 
 void PHBallJoint::CompError(){
 	B.v() = Xjrel.r;
-	for(int i=0; i<3; ++i){
-		B.w()[i] = (onLimit[i].onLower ? (nowTheta[i] - limit.lower[i]) :
-			onLimit[2].onUpper ? (nowTheta[i] - limit.upper[i]) : 0.0);
-	}
+	
+	B.w()[0] = (onLimit[0].onLower ? (nowTheta[0] - limitSwing[0]) :
+	onLimit[0].onUpper ? (nowTheta[0] - limitSwing[1]) : 0.0);
+
 }
 
 void PHBallJoint::Projection(double& f, int k){
-	if (3<=k){
-		if(onLimit[k-3].onLower)
+	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする関数
+	//k:con[i]のiの部分、fは力λのこと
+	
+	if (k==3){
+		if(onLimit[0].onLower)
 			f = max(0.0, f);
-		if(onLimit[k-3].onUpper)
+		else if(onLimit[0].onUpper)
 			f = min(0.0, f);
 	}
+
+	if (k==5){
+		if(onLimit[1].onLower)
+			f = max(0.0, f);
+		else if(onLimit[1].onUpper)
+			f = min(0.0, f);
+	}
+
 }
 
 //----------------------------------------------------------------------------
@@ -154,7 +264,7 @@ void PHBallJointNode::CompJointJacobian(){
 	PHBallJoint* j = GetJoint();
 	//SwingTwist& angle = (SwingTwist&)(j->position);
 	//angle.Jacobian(Jst);
-	//Matrix3d test = Jst * Jstinv;
+	//Matrix3d test = Jst * Jcinv;
 	Quaterniond q = j->Xjrel.q;
 	for(int i = 0; i < 3; i++)
 		J.col(i).SUBVEC(0, 3).clear();
@@ -167,6 +277,7 @@ void PHBallJointNode::CompJointJacobian(){
 	J.col(2).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNodeND<3>::CompJointJacobian();
 }
+
 void PHBallJointNode::CompJointCoriolisAccel(){
 	//PHBallJoint* j = GetJoint();
 	//cj.v().clear();
@@ -174,11 +285,13 @@ void PHBallJointNode::CompJointCoriolisAccel(){
 	//cj.w.clear();
 	cj.clear();		//関節座標をquaternionにとる場合コリオリ項は0
 }
+
 void PHBallJointNode::UpdateJointPosition(double dt){
 	PHBallJoint* j = GetJoint();
 	j->Xjrel.q += j->Xjrel.q.Derivative(j->vjrel.w()) * dt;
 	j->Xjrel.q.unitize();
 }
+
 void PHBallJointNode::CompRelativePosition(){
 	PHBallJoint* j = GetJoint();
 	j->Xjrel.r.clear();
@@ -193,20 +306,23 @@ void PHBallJointNode::CompRelativeVelocity(){
 
 void PHBallJointNode::ModifyJacobian(){
 	PHBallJoint* j = GetJoint();
-	Jq = j->Jstinv;
+	Jq = j->Jcinv;
 }
 
 void PHBallJointNode::CompBias(){
 	dA.clear();
 	db.clear();
 }
+
 void PHBallJointNode::Projection(double& f, int k){
 	PHBallJoint* j = GetJoint();
-	if(j->onLimit[k].onLower)
-		f = max(0.0, f);
-	if(j->onLimit[k].onUpper)
-		f = min(0.0, f);
+	
+	for(int i=0; k<2; k++){
+		if(j->onLimit[i].onLower)
+			f = max(0.0, f);
+		if(j->onLimit[i].onUpper)
+			f = min(0.0, f);
+	}
 }
-
 
 }

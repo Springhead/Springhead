@@ -18,7 +18,7 @@ namespace Spr{;
 /** \addtogroup gpPhysics */
 //@{
 
-template <class T> class Limit{
+template <class T> class Range{
 public:
 	T lower;
 	T upper;
@@ -34,7 +34,6 @@ struct LimitST{
 		return i==0 ? lower : upper;
 	}
 };
-
 
 /** \defgroup gpJoint ジョイント*/
 //@{
@@ -303,43 +302,36 @@ struct PHPathJointDesc : public PHJoint1DDesc{
 struct PHBallJointIf : public PHConstraintIf{
 	IF_DEF(PHBallJoint);
 
-	/** @brief スイングDir角の可動範囲を設定する
-		@param lower 最小スイングDir角度
-		@param upper 最大スイングDir角度
-		可動範囲制限を無効化するにはlower > upperな値を設定する
-	 */
-	virtual void SetSwingDirRange(double lower, double upper) = 0;
-	/** @brief スイングDir角の可動範囲を取得する
-		@param lower 最大スイングDir角度
-		@param upper 最大スイングDir角度
-		可動範囲制限を無効化するにはlower > upperな値を設定する
-	 */
-	virtual void GetSwingDirRange(double& lower, double& upper) = 0;
-
+	
 	/** @brief スイング角の可動範囲を設定する
 		@param lower 最小スイング角度
 		@param upper 最大スイング角度
-		可動範囲制限を無効化するにはlower > upperな値を設定する
+		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
+		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void SetSwingRange(double lower, double upper) = 0;
+	virtual void SetSwingRange(Range<double> range) = 0;
 	/** @brief スイング角の可動範囲を取得する
 		@param lower 最大スイング角度
 		@param upper 最大スイング角度
-		可動範囲制限を無効化するにはlower > upperな値を設定する
+		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
+		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void GetSwingRange(double& lower, double& upper) = 0;
+	virtual void GetSwingRange(Range<double>& range) = 0;
 
 	/** @brief ツイスト角の可動範囲を設定する
 		@param lower 最小ツイスト角度
 		@param upper 最大ツイスト角度
-		可動範囲制限を無効化するにはlower > upperな値を設定する
+		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
+		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void SetTwistRange(double lower, double upper) = 0;
+	virtual void SetTwistRange(Range<double> range) = 0;
 	/** @brief ツイスト角の可動範囲を取得する
-		@param lower 最小ツイスト角度
+		@param lower 最大ツイスト角度
 		@param upper 最大ツイスト角度
+		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
+		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void GetTwistRange(double& lower, double& upper) = 0;
+	virtual void GetTwistRange(Range<double>& range) = 0;
 
 	/** @brief モータトルクを設定する
 		@param torque モータトルク
@@ -365,12 +357,16 @@ struct PHBallJointIf : public PHConstraintIf{
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
 	DESC_DEF_FOR_OBJECT(PHBallJoint);
-	LimitST limit;				///< 可動域
-	Vec3d	torque;				///< モータトルク
-	SwingTwist goal;			///< バネ制御目標(SwingTwist)
-	Vec3f goalVector;			///< バネ制御目標(Socket利用型)
-	Vec3d spring;
-	Vec3d damper;
+	double			spring;		///< バネ係数
+	double			damper;		///< ダンパ係数
+	Range<double>	limitSwing; ///< swing角の可動域（[0] or .lower, [1] or .upper）
+	Range<double>	limitTwist;	///< twist角の可動域（[0] or .lower, [1] or .upper）
+	Vec3d			limitDir;	///< 可動域の中心ベクトル
+	Quaterniond		goal;		///< バネダンパの制御目標
+	Vec3d			torque;		///< モータトルク
+	
+	
+	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
 
 /// バネダンパのインタフェース

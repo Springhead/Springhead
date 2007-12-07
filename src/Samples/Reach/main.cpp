@@ -10,6 +10,8 @@
 
 【概要】関節機能のデモ
 */
+
+
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <string>

@@ -13,6 +13,8 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 
 	jointOrder = SOCKET_PARENT;
 
+	//---------------------------------------------------------
+	// sizes of solids
 	waistBreadth   = 0.6;
 	waistHeight    = 0.8;
 	waistThickness = 0.8;
@@ -65,65 +67,71 @@ CRHingeAnimalBodyDesc::CRHingeAnimalBodyDesc(){
 	rearToeHeight    = 0.1;
 	rearToeThickness = 0.25;
 
+	//------------------------------------------------------------------
 	// spring and damper of ball joints
-	// example:Vec3d(swingDir, swing, twist)
-	springWaistChest   = Vec3d(0.0, 1.0, 0.0);    damperWaistChest	= Vec3d(0.0, 20.0, 0.0);
-	springWaistTail    = Vec3d(0.0, 0.0, 0.0);    damperWaistTail	= Vec3d(0.0, 1.0, 0.0);
-	springTail		   = Vec3d(0.0, 0.0, 0.0);    damperTail		= Vec3d(0.0, 1.0, 0.0);
-	springChestNeck    = Vec3d(10.0, 100.0, 0.0); damperChestNeck	= Vec3d(50.0, 20.0, 0.0);
-	springNeckHead	   = Vec3d(10.0, 100.0, 0.0); damperNeckHead	= Vec3d(50.0, 20.0, 0.0);
-	springShoulder	   = Vec3d(0.0, 50.0, 0.0);   damperShoulder	= Vec3d(0.0, 20.0, 0.0);
-	springFrontAnkle   = Vec3d(10.0,100.0, 0.0);  damperFrontAnkle	= Vec3d(5.0, 20.0, 0.0);
-	springHip		   = Vec3d(0.0, 50.0, 0.0);   damperHip			= Vec3d(0.0, 20.0, 0.0);
-	springRearAnkle	   = Vec3d(10.0,100.0, 0.0);  damperRearAnkle	= Vec3d(5.0, 20.0, 0.0);
+	springWaistChest   =  100.0; damperWaistChest	= 20.0;
+	springWaistTail    =    0.0; damperWaistTail	=  0.0;
+	springTail		   =    0.0; damperTail			=  0.0;
+	springChestNeck    =  100.0; damperChestNeck	= 20.0;
+	springNeckHead	   =  100.0; damperNeckHead		= 20.0;
+	springShoulder	   =   50.0; damperShoulder		= 20.0;
+	springFrontAnkle   = 1000.0; damperFrontAnkle	= 20.0;
+	springHip		   =   50.0; damperHip			= 20.0;
+	springRearAnkle	   = 1000.0; damperRearAnkle	= 20.0;
 	
+	//-------------------------------------------------------------------
 	// spring and damper of hinge joints
-	springElbow		   = 50.0;  damperElbow		= 20.0;
-	springFrontKnee	   = 50.0;  damperFrontKnee	= 20.0;
-	springStifle	   = 50.0;  damperStifle	= 20.0;
-	springRearKnee	   = 50.0;  damperRearKnee	= 20.0;
+	springElbow		   =   50.0; damperElbow		= 20.0;
+	springFrontKnee	   =   50.0; damperFrontKnee	= 20.0;
+	springStifle	   =   50.0; damperStifle		= 20.0;
+	springRearKnee	   =   50.0; damperRearKnee		= 20.0;
 	
-	// origin of ball joints
-	goalWaistChest.Swing()    = Rad(0);
-	goalChestNeck.SwingDir()  = Rad(180);
-	goalChestNeck.Swing()	  = Rad(70);
-	goalNeckHead.Swing()	  = Rad(90);
-	goalShoulder.SwingDir()   = Rad(0);
-	goalShoulder.Swing()	  = Rad(120);
-	goalFrontAnkle.Swing()	  = Rad(0);
-	goalHip.SwingDir()		  = Rad(180);
-	goalHip.Swing()			  = Rad(120);
-	goalRearAnkle.Swing()	  = Rad(0);
+	//-------------------------------------------------------------------
+	// ball joints are conrtroled to the direction
+	goalChestNeck		  = Quaterniond::Rot(Rad(  60), 'x');
+	goalNeckHead		  = Quaterniond::Rot(Rad(- 90), 'x');
+	goalShoulder		  = Quaterniond::Rot(Rad(-120), 'x');
+	goalHip				  = Quaterniond::Rot(Rad(- 60), 'x');
 
+	//----------------------------------------------------------------------
 	// Range of ball joints
-	limitWaistChest.upper.Swing()	 = Rad(5);
-	limitWaistChest.lower.Twist()	 = Rad(-5);
-	limitWaistChest.upper.Twist()	 = Rad(5);
-	limitWaistTail.upper.Swing()	 = Rad(10);
-	limitWaistTail.lower.Twist()	 = Rad(-5);
-	limitWaistTail.upper.Twist()	 = Rad(5);
-	limitTail.upper.Swing()			 = Rad(20);
-	limitTail.lower.Twist()			 = Rad(-5);
-	limitTail.upper.Twist()			 = Rad(5);
-	limitChestNeck.upper.Swing()	 = Rad(90);
-	limitChestNeck.lower.Twist()	 = Rad(-5);
-	limitChestNeck.upper.Twist()	 = Rad(5);
-	limitNeckHead.upper.Swing()		 = Rad(100);
-	limitNeckHead.lower.Twist()		 = Rad(-10);
-	limitNeckHead.upper.Twist()		 = Rad(10);
-	limitShoulder.upper.Swing()		 = Rad(180);
-	limitShoulder.lower.Twist()		 = Rad(-10);
-	limitShoulder.upper.Twist()		 = Rad(10);
-	limitFrontAnkle.upper.Swing()	 = Rad(5);
-	limitFrontAnkle.lower.Twist()	 = Rad(-1);
-	limitFrontAnkle.upper.Twist()	 = Rad(1);
-	limitHip.upper.Swing()			 = Rad(180);
-	limitHip.lower.Twist()			 = Rad(-10);
-	limitHip.upper.Twist()			 = Rad(10);
-	limitRearAnkle.upper.Swing()	 = Rad(5);
-	limitRearAnkle.lower.Twist()	 = Rad(-1);
-	limitRearAnkle.upper.Twist()	 = Rad(1);
+	limitSwingWaistChest.upper	= Rad(5);
+	limitTwistWaistChest.lower	= Rad(-5);
+	limitTwistWaistChest.upper	= Rad(5);
+	
+	limitSwingWaistTail.upper	= Rad(10);
+	limitTwistWaistTail.lower	= Rad(-5);
+	limitTwistWaistTail.upper	= Rad(5);
 
+	limitSwingTail.upper		= Rad(20);
+	limitTwistTail.lower		= Rad(-5);
+	limitTwistTail.upper		= Rad(5);
+	
+	limitSwingChestNeck.upper	= Rad(180);
+	limitTwistChestNeck.lower	= Rad(-5);
+	limitTwistChestNeck.upper	= Rad(5);
+
+	limitSwingNeckHead.upper	= Rad(150);
+	limitTwistNeckHead.lower	= Rad(-10);
+	limitTwistNeckHead.upper	= Rad(10);
+
+	limitSwingShoulder.upper	= Rad(180);
+	limitTwistShoulder.lower	= Rad(-10);
+	limitTwistShoulder.upper	= Rad(10);
+
+	limitSwingFrontAnkle.upper	= Rad(5);
+	limitTwistFrontAnkle.lower	= Rad(-1);
+	limitTwistFrontAnkle.upper	= Rad(1);
+
+	limitSwingHip.upper			= Rad(180);
+	limitTwistHip.lower			= Rad(-10);
+	limitTwistHip.upper			= Rad(10);
+
+	limitSwingRearAnkle.upper	= Rad(5);
+	limitTwistRearAnkle.lower	= Rad(-1);
+	limitTwistRearAnkle.upper	= Rad(1);
+
+	//-----------------------------------------------------------------------------------
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
 	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
 	rangeFrontKnee	  = Vec2d(Rad(- 90), Rad(   0));
@@ -187,18 +195,24 @@ void CRHingeAnimalBody::CreateChest(){
 
 	// Joint -- [c]Chest - [p]Waist
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.posePlug.Pos()   = Vec3d(0.0, chestHeight / 2.0, 0.0);
-	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
-	ballDesc.poseSocket.Pos() = Vec3d(0.0, -waistHeight / 2.0, 0.0);
+	ballDesc.poseSocket.Pos() = Vec3d(0.0, waistHeight / 2.0, 0.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.posePlug.Pos()   = Vec3d(0.0, -chestHeight / 2.0, 0.0);
+	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
 	ballDesc.goal			  = goalWaistChest;
-	ballDesc.limit			  = limitWaistChest;
-	joints[JO_WAIST_CHEST]    = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], ballDesc);		//CreateJoint([c],[p],desc)
+	ballDesc.limitSwing		  = limitSwingWaistChest;
+	ballDesc.limitTwist		  = limitTwistWaistChest;	
+
+	//----------------------------------------------------------------------------
+	// PHScene::CreateJoint([p], [c], desc)で使う。
+	// <memo>: [絶滅API]CRBody::CreateJoint([c], [p], desc)と宣言が逆なので注意！
+	//----------------------------------------------------------------------------
+	joints[JO_WAIST_CHEST]    = phScene->CreateJoint(solids[SO_WAIST], solids[SO_CHEST], ballDesc);		
 	joints[JO_WAIST_CHEST]->SetName("joWaistChest");
 
-	phScene->SetContactMode(solids[SO_CHEST], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_WAIST], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
 
 void CRHingeAnimalBody::CreateTail(){
@@ -225,40 +239,46 @@ void CRHingeAnimalBody::CreateTail(){
 	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
 
 	// define the connection
+	// [p]waist - [c]tail1
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.1);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, waistHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -waistHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, tailHeight/2.0, 0.1);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springWaistTail;
 	ballDesc.damper            = damperWaistTail;
 	ballDesc.goal			   = goalWaistTail;
-	ballDesc.limit			   = limitWaistTail;
-	joints[JO_WAIST_TAIL]	   = CreateJoint(solids[SO_TAIL1], solids[SO_WAIST], ballDesc);
+	ballDesc.limitSwing		   = limitSwingWaistTail;
+	ballDesc.limitTwist		   = limitTwistWaistTail;
+	joints[JO_WAIST_TAIL]	   = phScene->CreateJoint(solids[SO_WAIST], solids[SO_TAIL1], ballDesc);
 	joints[JO_WAIST_TAIL]->SetName("joWaistTail");
 
+	//[p]tail1 - [c]tail2
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -tailHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.goal			   = goalTail;
-	ballDesc.limit			   = limitTail;
-	joints[JO_TAIL_12]		   = CreateJoint(solids[SO_TAIL2], solids[SO_TAIL1], ballDesc);
+	ballDesc.limitSwing		   = limitSwingTail;
+	ballDesc.limitTwist		   = limitTwistTail;
+	joints[JO_TAIL_12]		   = phScene->CreateJoint(solids[SO_TAIL1], solids[SO_TAIL2], ballDesc);
 	joints[JO_TAIL_12]->SetName("joTail12");
 
+	//[p]tail2 - [c]tail3
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -tailHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -tailHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.goal			   = goalTail;
-	ballDesc.limit			   = limitTail;
-	joints[JO_TAIL_23]		   = CreateJoint(solids[SO_TAIL3], solids[SO_TAIL2], ballDesc);
+	ballDesc.limitSwing		   = limitSwingTail;
+	ballDesc.limitTwist		   = limitTwistTail;
+	joints[JO_TAIL_23]		   = phScene->CreateJoint(solids[SO_TAIL2], solids[SO_TAIL3], ballDesc);
 	joints[JO_TAIL_23]->SetName("joTail23");
 	// define the position
 	
@@ -287,18 +307,21 @@ void CRHingeAnimalBody::CreateNeck(){
 	boxDesc.boxsize = Vec3f(neckBreadth, neckHeight, neckThickness);
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
 
-	// define the joint  [c]neck - [p]chest
-	ballDesc.posePlug.Pos()   = Vec3f(0.0, neckHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos() = Vec3f(0.0, -chestHeight/2.0,  0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
+	// define the joint  [p]chest - [c]neck
+	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(150), 'x');
+	ballDesc.posePlug.Pos()   = Vec3f(0.0, -neckHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(150), 'x');
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.goal			  = goalChestNeck;
-	ballDesc.limit			  = limitChestNeck;
-	joints[JO_CHEST_NECK] = phScene->CreateJoint(solids[SO_NECK], solids[SO_CHEST], ballDesc);
+	ballDesc.limitSwing		  = limitSwingChestNeck;
+	ballDesc.limitTwist		  = limitTwistChestNeck;
+
+	joints[JO_CHEST_NECK] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_NECK], ballDesc);
 	joints[JO_CHEST_NECK]->SetName("joChestNeck");
 
+	phScene->SetContactMode(solids[SO_CHEST], solids[SO_NECK], PHSceneDesc::MODE_NONE);
 }
 
 void CRHingeAnimalBody::CreateHead(){
@@ -319,18 +342,20 @@ void CRHingeAnimalBody::CreateHead(){
 
 	// define the connection  [c]head - [p]neck
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, headHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3d(0.0, neckHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Pos()    = Vec3d(0.0, -headHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.goal			   = goalNeckHead;
-	ballDesc.limit			   = limitNeckHead;
-	joints[JO_NECK_HEAD]	   = CreateJoint(solids[SO_HEAD], solids[SO_NECK], ballDesc);
+	ballDesc.limitSwing		   = limitSwingNeckHead;
+	ballDesc.limitTwist		   = limitTwistNeckHead;
+
+	joints[JO_NECK_HEAD]	   = phScene->CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
 	joints[JO_NECK_HEAD]->SetName("joNeckHead");
 
-	phScene->SetContactMode(solids[SO_HEAD], solids[SO_NECK], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_NECK], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
 	
 
 }
@@ -343,7 +368,6 @@ void CRHingeAnimalBody::InitFrontLegs(){
 		CreateRadius(LEFTPART);
 		CreateFrontCannonBone(LEFTPART);
 		CreateFrontToeBones(LEFTPART);
-
 	}
 
 	if(! noLegs){
@@ -351,7 +375,6 @@ void CRHingeAnimalBody::InitFrontLegs(){
 		CreateRadius(RIGHTPART);
 		CreateFrontCannonBone(RIGHTPART);
 		CreateFrontToeBones(RIGHTPART);
-
 	}
 	phScene->SetContactMode(solids[SO_LEFT_BREASTBONE], solids[SO_RIGHT_BREASTBONE], PHSceneDesc::MODE_NONE);
 
@@ -378,7 +401,7 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	else {
 
 	}
-	// [c]breastboneへ - [p]chest
+	// [p]chest - [c]breastbone
 	solidDesc.mass = 0.02;
 	solids[soBreastbone] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
@@ -390,21 +413,28 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	boxDesc.boxsize = Vec3f(breastboneBreadth, breastboneHeight, breastboneThickness);
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()   = Vec3f(lr*breastboneBreadth/2.0, breastboneThickness/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'y');
-	ballDesc.poseSocket.Pos() = Vec3f(-lr*chestBreadth/2.0, -chestThickness/2.0, 0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, -chestThickness/2.0);
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Pos()	  = Vec3f(-lr*breastboneBreadth/2.0, -breastboneHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
 	ballDesc.goal			  = goalShoulder;
-	ballDesc.limit			  = limitShoulder;
-	joints[joShoulder] = phScene->CreateJoint(solids[soBreastbone], solids[SO_CHEST], ballDesc);
+	ballDesc.limitSwing		  = limitSwingShoulder;
+	ballDesc.limitTwist		  = limitTwistShoulder;
+
+	//----------------------------------------------------------------------------
+	// phScene->CreateJoint([p], [c], desc)で使う。
+	// <memo>: [絶滅API]CRBody::CreateJoint([c], [p], desc)と宣言が逆なので注意！
+	//----------------------------------------------------------------------------
+	joints[joShoulder] = phScene->CreateJoint(solids[SO_CHEST], solids[soBreastbone], ballDesc);
 	if(lr == LEFTPART)
 		joints[joShoulder]->SetName("joLeftShoulder");
 	else
 		joints[joShoulder]->SetName("joRightShoulder");
 
-	phScene->SetContactMode(solids[soBreastbone], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_CHEST], solids[soBreastbone], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_NECK], solids[soBreastbone], PHSceneDesc::MODE_NONE);
 }
 
 void CRHingeAnimalBody::CreateRadius(LREnum lr){
@@ -437,24 +467,24 @@ void CRHingeAnimalBody::CreateRadius(LREnum lr){
 	boxDesc.boxsize = Vec3f(radiusBreadth, radiusHeight, radiusThickness);
 	solids[soRadius]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	//[p]breastbone-[c]radius
-	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -radiusHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	//[p]breastbone - [c]radius
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, breastboneHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -radiusHeight/2.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springElbow;
 	hingeDesc.damper		   = damperElbow;
-	hingeDesc.origin		   = Rad(-40);
+	hingeDesc.origin		   = Rad(40);
 	hingeDesc.lower			   = rangeElbow[0];
 	hingeDesc.upper			   = rangeElbow[1];
 
-	joints[joElbow] = phScene->CreateJoint(solids[soRadius], solids[soBreastbone], hingeDesc);
+	joints[joElbow] = phScene->CreateJoint(solids[soBreastbone], solids[soRadius], hingeDesc);
 	if(lr == LEFTPART)
 		joints[joElbow]->SetName("joLeftElbow");
 	else
 		joints[joElbow]->SetName("joRightElbow");
 
-	phScene->SetContactMode(solids[soRadius], solids[soBreastbone], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[soBreastbone], solids[soRadius], PHSceneDesc::MODE_NONE);
 }	
 
 void CRHingeAnimalBody::CreateFrontCannonBone(LREnum lr){
@@ -488,23 +518,23 @@ void CRHingeAnimalBody::CreateFrontCannonBone(LREnum lr){
 	solids[soCannonBone]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	// [p]Radius - [c]CannonBone
-	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -frontCannonBoneHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, radiusHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -frontCannonBoneHeight/2.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springFrontKnee;
 	hingeDesc.damper		   = damperFrontKnee;
 	hingeDesc.origin		   = Rad(0);
 	hingeDesc.lower			   = rangeFrontKnee[0];
 	hingeDesc.upper			   = rangeFrontKnee[1];
 
-	joints[joKnee] = phScene->CreateJoint(solids[soCannonBone], solids[soRadius], hingeDesc);
+	joints[joKnee] = phScene->CreateJoint(solids[soRadius], solids[soCannonBone], hingeDesc);
 	if(lr == LEFTPART)
 		joints[joKnee]->SetName("joLeftFrontKnee");
 	else
 		joints[joKnee]->SetName("joRightFrontKnee");
 
-	phScene->SetContactMode(solids[soCannonBone], solids[soRadius], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[soRadius], solids[soCannonBone], PHSceneDesc::MODE_NONE);
 
 }
 
@@ -528,7 +558,7 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 		soCannonBone = SO_RIGHT_FRONT_CANNON_BONE;
 		joAnkle		 = JO_RIGHT_FRONT_ANKLE;
 	}
-	//　[p]frontCannonBone⇒[c]frontToeへ
+	//　[p]frontCannonBone - [c]frontToe
 	solidDesc.mass = 0.2;
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
@@ -539,23 +569,24 @@ void CRHingeAnimalBody::CreateFrontToeBones(LREnum lr){
 	boxDesc.boxsize = Vec3f(frontToeBreadth, frontToeHeight, frontToeThickness);
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 
-	ballDesc.posePlug.Pos()   = Vec3f(0.0, -frontToeHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(0), 'z');
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, frontCannonBoneHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.posePlug.Pos()   = Vec3f(0.0, -frontToeHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(0), 'z');
 	ballDesc.spring			  = springFrontAnkle;
 	ballDesc.damper			  = damperFrontAnkle;
 	ballDesc.goal			  = goalFrontAnkle;
-	ballDesc.limit			  = limitFrontAnkle;
-	joints[joAnkle] = phScene->CreateJoint(solids[soToe], solids[soCannonBone], ballDesc);
+	ballDesc.limitSwing		  = limitSwingFrontAnkle;
+	ballDesc.limitTwist		  = limitTwistFrontAnkle;
+
+	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
 	if(lr == LEFTPART)
 		joints[joAnkle]->SetName("joLeftFrontAnkle");
 	else
 		joints[joAnkle]->SetName("joRightFrontAnkle");
 
-	phScene->SetContactMode(solids[soToe], solids[soCannonBone], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[soCannonBone], solids[soToe], PHSceneDesc::MODE_NONE);
 }
-
 
 // --- --- ---
 void CRHingeAnimalBody::InitRearLegs(){
@@ -575,16 +606,15 @@ void CRHingeAnimalBody::InitRearLegs(){
 	}
 	
 	// 両足は近すぎて足の太さ次第では衝突してしまうため．
-//	phScene->SetContactMode(solids[SO_LEFT_FEMUR], solids[SO_RIGHT_FEMUR], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_LEFT_FEMUR], solids[SO_RIGHT_FEMUR], PHSceneDesc::MODE_NONE);
 
 }
-
 
 void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	
 	CDBoxDesc		 boxDesc;
 	PHSolidDesc		 solidDesc;
-	PHBallJointDesc ballDesc;
+	PHBallJointDesc  ballDesc;
 	int soFemur;
 	int joHip;
 	if(lr == LEFTPART){
@@ -598,7 +628,7 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	}
 	
 
-	// [p]waist⇒[c]femurへ
+	// [p]waist - [c]femur
 	solidDesc.mass = 0.02;
 	solids[soFemur] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
@@ -609,21 +639,23 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	boxDesc.boxsize = Vec3f(femurBreadth, femurHeight, femurThickness);
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()   = Vec3f(lr*femurBreadth/2.0, femurThickness/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(90), 'x');
-	ballDesc.poseSocket.Pos() = Vec3f(-lr*waistBreadth/2.2, 0.0, -waistThickness/2.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistThickness/2.0, -waistHeight/2.0); 
+	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Pos()	  = Vec3f(-lr*femurBreadth/2.0, -femurHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
 	ballDesc.goal			  = goalHip;
-	ballDesc.limit			  = limitHip;
-	joints[joHip] = phScene->CreateJoint(solids[soFemur], solids[SO_WAIST], ballDesc);
+	ballDesc.limitSwing		  = limitSwingHip;
+	ballDesc.limitTwist		  = limitTwistHip;
+
+	joints[joHip] = phScene->CreateJoint(solids[SO_WAIST], solids[soFemur], ballDesc);
 	if(lr == LEFTPART)
 		joints[joHip]->SetName("joLeftHip");
 	else
 		joints[joHip]->SetName("joRightHip");
 
-	phScene->SetContactMode(solids[soFemur], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[SO_WAIST], solids[soFemur], PHSceneDesc::MODE_NONE);
 }
 
 void CRHingeAnimalBody::CreateTibia(LREnum lr){
@@ -656,24 +688,24 @@ void CRHingeAnimalBody::CreateTibia(LREnum lr){
 	boxDesc.boxsize = Vec3f(tibiaBreadth, tibiaHeight, tibiaThickness);
 	solids[soTibia]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	//[p]femur-[c]tibia
-	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -tibiaHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	//[p]femur - [c]tibia
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, femurHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -tibiaHeight/2.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springStifle;
 	hingeDesc.damper		   = damperStifle;
-	hingeDesc.origin		   = Rad(30);
+	hingeDesc.origin		   = Rad(-30);
 	hingeDesc.lower			   = rangeStifle[0];
 	hingeDesc.upper			   = rangeStifle[1];
 
-	joints[joStifle] = phScene->CreateJoint(solids[soTibia], solids[soFemur], hingeDesc);
+	joints[joStifle] = phScene->CreateJoint(solids[soFemur], solids[soTibia], hingeDesc);
 	if(lr == LEFTPART)
 		joints[joStifle]->SetName("joLeftStifle");
 	else
 		joints[joStifle]->SetName("joRightStifle");
 
-	phScene->SetContactMode(solids[soTibia], solids[soFemur], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[soFemur], solids[soTibia], PHSceneDesc::MODE_NONE);
 
 }
 
@@ -708,23 +740,23 @@ void CRHingeAnimalBody::CreateRearCannonBone(LREnum lr){
 	solids[soCannonBone]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	// [p]Tibia - [c]CannonBone
-	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -rearCannonBoneHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, tibiaHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -rearCannonBoneHeight/2.0, 0.0);
+	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springRearKnee;
 	hingeDesc.damper		   = damperRearKnee;
 	hingeDesc.origin		   = Rad(-5);
 	hingeDesc.lower			   = rangeRearKnee[0];
 	hingeDesc.upper			   = rangeRearKnee[1];
 
-	joints[joKnee] = phScene->CreateJoint(solids[soCannonBone], solids[soTibia], hingeDesc);
+	joints[joKnee] = phScene->CreateJoint(solids[soTibia], solids[soCannonBone], hingeDesc);
 	if(lr == LEFTPART)
 		joints[joKnee]->SetName("joLeftRearKnee");
 	else
 		joints[joKnee]->SetName("joRightRearKnee");
 
-	phScene->SetContactMode(solids[soCannonBone], solids[soTibia], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[soTibia], solids[soCannonBone], PHSceneDesc::MODE_NONE);
 
 }
 
@@ -748,7 +780,7 @@ void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
 		soCannonBone = SO_RIGHT_REAR_CANNON_BONE;
 		joAnkle		 = JO_RIGHT_REAR_ANKLE;
 	}
-	//　[p]rearCannonBone⇒[c]rearToeへ
+	//　[p]rearCannonBone - [c]rearToe
 	solidDesc.mass = 0.02;
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
@@ -759,21 +791,23 @@ void CRHingeAnimalBody::CreateRearToeBones(LREnum lr){
 	boxDesc.boxsize = Vec3f(rearToeBreadth, rearToeHeight, rearToeThickness);
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.posePlug.Pos()    = Vec3f(0.0, rearToeHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, rearCannonBoneHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Pos()    = Vec3f(0.0, rearToeHeight/2.0, 0.0);
+	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(90), 'x');
 	ballDesc.spring		       = springRearAnkle;
 	ballDesc.damper			   = damperRearAnkle;
 	ballDesc.goal			   = goalRearAnkle;
-	ballDesc.limit			   = limitRearAnkle;
-	joints[joAnkle] = phScene->CreateJoint(solids[soToe], solids[soCannonBone], ballDesc);
+	ballDesc.limitSwing		   = limitSwingRearAnkle;
+	ballDesc.limitTwist		   = limitTwistRearAnkle;
+
+	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
 	if(lr == LEFTPART)
 		joints[joAnkle]->SetName("joLeftRearAnkle");
 	else
 		joints[joAnkle]->SetName("joRightRearAnkle");
 
-	phScene->SetContactMode(solids[soToe], solids[soCannonBone], PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(solids[soCannonBone], solids[soToe], PHSceneDesc::MODE_NONE);
 
 }
 // --- --- ---
@@ -817,4 +851,5 @@ void CRHingeAnimalBody::InitContact(){
 		}
 	}
 }
+
 }

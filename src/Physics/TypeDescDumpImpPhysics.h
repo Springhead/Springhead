@@ -188,19 +188,10 @@
 	desc->access = DBG_NEW UTAccess<PHBallJointDesc>;
 	field = desc->AddBase("PHJointDesc");
 	field->offset = int((char*)(PHJointDesc*)pPHBallJointDesc - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "LimitST", "limit", "");
-	field->offset = int((char*)&(pPHBallJointDesc->limit) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "Vec3d", "torque", "");
-	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "SwingTwist", "goal", "");
-	field->offset = int((char*)&(pPHBallJointDesc->goal) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "Vec3f", "goalVector", "");
-	field->offset = int((char*)&(pPHBallJointDesc->goalVector) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "Vec3d", "spring", "");
+	field = desc->AddField("", "double", "spring", "");
 	field->offset = int((char*)&(pPHBallJointDesc->spring) - (char*)pPHBallJointDesc);
-	field = desc->AddField("", "Vec3d", "damper", "");
+	field = desc->AddField("", "double", "damper", "");
 	field->offset = int((char*)&(pPHBallJointDesc->damper) - (char*)pPHBallJointDesc);
-	db->RegisterDesc(desc);
 	
 	PHSpringDesc* pPHSpringDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSpringDesc");

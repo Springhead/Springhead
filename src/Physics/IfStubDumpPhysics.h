@@ -145,23 +145,17 @@ typedef IfInitTemplate<PHPathJointIfStub, PHPathJoint>	PHPathJointIfInit;
 template <class IF, class MIF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ> {
-	virtual void SetSwingDirRange(double lower, double upper){
-		return ((OBJ*)(MIF*)this)->SetSwingDirRange(lower, upper);
+	virtual void SetSwingRange(Range <double> range){
+		return ((OBJ*)(MIF*)this)->SetSwingRange(range);
 	}
-	virtual void GetSwingDirRange(double & lower, double & upper){
-		return ((OBJ*)(MIF*)this)->GetSwingDirRange(lower, upper);
+	virtual void GetSwingRange(Range <double> & range){
+		return ((OBJ*)(MIF*)this)->GetSwingRange(range);
 	}
-	virtual void SetSwingRange(double lower, double upper){
-		return ((OBJ*)(MIF*)this)->SetSwingRange(lower, upper);
+	virtual void SetTwistRange(Range <double> range){
+		return ((OBJ*)(MIF*)this)->SetTwistRange(range);
 	}
-	virtual void GetSwingRange(double & lower, double & upper){
-		return ((OBJ*)(MIF*)this)->GetSwingRange(lower, upper);
-	}
-	virtual void SetTwistRange(double lower, double upper){
-		return ((OBJ*)(MIF*)this)->SetTwistRange(lower, upper);
-	}
-	virtual void GetTwistRange(double & lower, double & upper){
-		return ((OBJ*)(MIF*)this)->GetTwistRange(lower, upper);
+	virtual void GetTwistRange(Range <double> & range){
+		return ((OBJ*)(MIF*)this)->GetTwistRange(range);
 	}
 	virtual void SetMotorTorque(const Vec3d & torque){
 		return ((OBJ*)(MIF*)this)->SetMotorTorque(torque);
