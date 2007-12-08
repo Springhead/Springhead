@@ -9,7 +9,6 @@
  *
  */
 #include "Physics.h"
-#include <fstream>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

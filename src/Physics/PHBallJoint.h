@@ -13,7 +13,6 @@
 #include <SprPhysics.h>
 #include <Physics/PHJoint.h>
 #include <Physics/PHTreeNode.h>
-#include <fstream>
 
 namespace Spr{
 
