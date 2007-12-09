@@ -78,6 +78,10 @@ public:
 	element_type& U() { return this->item(0); }
 	///	ベクトルのy成分
 	element_type& V() { return this->item(1); }
+	///	ベクトルのx成分
+	element_type& Lower() { return this->item(0); }
+	///	ベクトルのy成分
+	element_type& Upper() { return this->item(1); }
 	//@}
 protected:
 	void set_default(){this->clear();}
