@@ -28,7 +28,8 @@ class SprGUIApp < FXApp
 		# Springhead‰Šú‰»
 		$sprapp = FWAppGL.new
 		$sprapp.Link
-		$sprapp.Init(1 + ARGV.size, [$0] + ARGV)
+		#$sprapp.Init(1 + ARGV.size, [$0] + ARGV)
+		$sprapp.Init()
 		$sprapp.GetSdk.SetDebugMode()
 
 		# Make window

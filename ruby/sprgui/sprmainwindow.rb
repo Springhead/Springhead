@@ -223,16 +223,16 @@ class SprMainWindow < FXMainWindow
 		floor.SetDynamical(false)
 		boxdesc = CDBoxDesc.new
 		boxdesc.boxsize = [0.1, 0.1, 0.1]
-		floor.AddShape(phsdk.CreateShape(boxdesc))
+		floor.AddShape(phsdk.CreateShape(CDBoxDesc.GetIfInfo(), boxdesc))
 		floor.SetName('floor')
 		# カメラ
 		grscene = scene.GetGRScene()
 		cameradesc = GRCameraDesc.new
 		grscene.SetCamera(cameradesc)
 		camera = grscene.GetCamera()
-		camera.SetName('camera')
+		#camera.SetName('camera')
 		# カメラフレーム
-		cameraframe = GRFrameIf.Cast(grscene.CreateVisual(GRFrameDesc.new))
+		cameraframe = GRFrameIf.Cast(grscene.CreateVisual(GRFrameDesc.GetIfInfo(), GRFrameDesc.new))
 		cameraframe.SetName('cameraframe')
 		af = Affinef.new
 		af.pos = Vec3f.new(0.0, 0.0, -1.0)

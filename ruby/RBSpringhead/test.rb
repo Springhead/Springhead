@@ -1,13 +1,12 @@
-#require "../rbPhysics/RBPhysics"
-#require "../rbGraphics/RBGraphics"
-require "RBFramework"
+require 'RBSpringhead'
 
-#include RBPhysics
-#include RBGraphics
-include RBFramework
+include Springhead
 
-app = FWAppGLUT.new
-app.Link
-app.Init(1 + ARGV.size, [$0] + ARGV + ["hoge", "moge"])
-app.LoadScene("test.x")
-#app.Start
+CreateSdk();
+
+scene = Scene.new
+solid = scene.solids.add
+solid.mass = 3.0
+
+puts scene.solids.size.to_s
+puts solid.mass

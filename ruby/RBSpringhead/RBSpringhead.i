@@ -29,15 +29,26 @@ namespace Spr{
 }
 }
 
+//以下ではヘッダ内の#includeによって参照される方を先に列挙することに注意．そうしないとランタイムエラーとなる．
+
 %import	 <Base/Env.h>			// SPR_CDECL
+
+namespace Spr{
+struct IfInfo;
+}
 
 %include <Foundation/SprObject.h>
 %include <Foundation/SprScene.h>
 
 %include <Collision/SprCDShape.h>
 
-%include <FileIO/SprFISdk.h>
-%include <FileIO/SprFIFile.h>
+%include <Physics/SprPHDef.h>
+%include <Physics/SprPHSdk.h>
+%include <Physics/SprPHSolid.h>
+%include <Physics/SprPHJoint.h>
+%include <Physics/SprPHScene.h>
+%include <Physics/SprPHEngine.h>
+%include <Physics/SprPHNodeHandlers.h>
 
 %include <Graphics/SprGRFrame.h>
 %include <Graphics/SprGRRender.h>
@@ -48,19 +59,12 @@ namespace Spr{
 %include <Graphics/SprGRSphere.h>
 %include <Graphics/SprGRScene.h>
 
-%include <Physics/SprPHDef.h>
-%include <Physics/SprPHSdk.h>
-%include <Physics/SprPHScene.h>
-%include <Physics/SprPHSolid.h>
-%include <Physics/SprPHJoint.h>
-%include <Physics/SprPHEngine.h>
-%include <Physics/SprPHNodeHandlers.h>
+%include <FileIO/SprFISdk.h>
+%include <FileIO/SprFIFile.h>
 
 %include <Framework/SprFWObject.h>
 %include <Framework/SprFWScene.h>
 %include <Framework/SprFWSdk.h>
 %include <Framework/SprFWApp.h>
 %include <Framework/SprFWAppGL.h>
-%include <Framework/SprFWAppGLUT.h>
-
-
+//%include <Framework/SprFWAppGLUT.h>
