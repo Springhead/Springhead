@@ -40,6 +40,9 @@ public:
 		struct{
 			T x,y;
 		};
+		struct{
+			T lower,upper;
+		};
 	};
 	///	要素のアクセス
 	T& item_impl(size_t i){ return data[i]; }
@@ -78,9 +81,9 @@ public:
 	element_type& U() { return this->item(0); }
 	///	ベクトルのy成分
 	element_type& V() { return this->item(1); }
-	///	ベクトルのx成分
+	///	範囲としてみた場合の開始値（ベクトルのx成分）
 	element_type& Lower() { return this->item(0); }
-	///	ベクトルのy成分
+	///	範囲としてみた場合の終了値（ベクトルのy成分）
 	element_type& Upper() { return this->item(1); }
 	//@}
 protected:
