@@ -54,6 +54,8 @@ public:
 	PHSolidIf** GetSolids();
 	CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
+	PHJointIf* SearchJoint(PHSolidIf* member);
+	
 	int NJoints() const;
 	PHJointIf* GetJoint(int i);
 	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());

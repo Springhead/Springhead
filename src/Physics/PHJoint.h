@@ -16,8 +16,13 @@ namespace Spr{;
 class PHJoint : public PHConstraint, public PHJointIfInit{
 public:
 	OBJECTDEF_ABST(PHJoint, PHConstraint);
+	
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
+	
+	/// コンストラクタ
+	PHJoint();
+
 };
 
 template<int NDOF>
