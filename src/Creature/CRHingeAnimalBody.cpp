@@ -198,11 +198,11 @@ void CRHingeAnimalBody::CreateChest(){
 	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 
-	// Joint -- [c]Chest - [p]Waist
+	// Joint -- [p]Waist - [c]Chest
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.poseSocket.Pos() = Vec3d(0.0, waistHeight / 2.0, 0.0);
+	ballDesc.poseSocket.Pos() = Vec3f(0.0, waistHeight / 2.0, 0.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
-	ballDesc.posePlug.Pos()   = Vec3d(0.0, -chestHeight / 2.0, 0.0);
+	ballDesc.posePlug.Pos()   = Vec3f(0.0, -chestHeight / 2.0, 0.0);
 	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
@@ -246,9 +246,9 @@ void CRHingeAnimalBody::CreateTail(){
 	// define the connection
 	// [p]waist - [c]tail1
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -waistHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3f(0.0, -waistHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, tailHeight/2.0, 0.1);
+	ballDesc.posePlug.Pos()    = Vec3f(0.0, tailHeight/2.0, 0.1);
 	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springWaistTail;
 	ballDesc.damper            = damperWaistTail;
@@ -260,9 +260,9 @@ void CRHingeAnimalBody::CreateTail(){
 
 	//[p]tail1 - [c]tail2
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3f(0.0, -tailHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Pos()    = Vec3f(0.0, tailHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
@@ -274,9 +274,9 @@ void CRHingeAnimalBody::CreateTail(){
 
 	//[p]tail2 - [c]tail3
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, -tailHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3f(0.0, -tailHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, tailHeight/2.0, 0.0);
+	ballDesc.posePlug.Pos()    = Vec3f(0.0, tailHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
@@ -345,11 +345,11 @@ void CRHingeAnimalBody::CreateHead(){
 	boxDesc.boxsize = Vec3f(headBreadth, headHeight, headThickness);
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
 
-	// define the connection  [c]head - [p]neck
+	// define the connection  [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
-	ballDesc.poseSocket.Pos()  = Vec3d(0.0, neckHeight/2.0, 0.0);
+	ballDesc.poseSocket.Pos()  = Vec3f(0.0, neckHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(-90), 'x');
-	ballDesc.posePlug.Pos()    = Vec3d(0.0, -headHeight/2.0, 0.0);
+	ballDesc.posePlug.Pos()    = Vec3f(0.0, -headHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;

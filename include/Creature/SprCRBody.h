@@ -327,19 +327,19 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	};
 
 	/// サイズに関するパラメータ
-	double waistBreadth,	       waistHeight,			  waistThickness;
-	double chestBreadth,	       chestHeight,			  chestThickness;
-	double tailBreadth,		       tailHeight,		      tailThickness;
-	double neckBreadth,		       neckHeight,			  neckThickness;
-	double headBreadth,		       headHeight,			  headThickness;
-	double breastboneBreadth,      breastboneHeight,	  breastboneThickness;
-	double radiusBreadth,	       radiusHeight,		  radiusThickness;
-	double frontCannonBoneBreadth, frontCannonBoneHeight, frontCannonBoneThickness;
-	double frontToeBreadth,		   frontToeHeight,		  frontToeThickness;
-	double femurBreadth,		   femurHeight,			  femurThickness;
-	double tibiaBreadth,		   tibiaHeight,			  tibiaThickness;
-	double rearCannonBoneBreadth,  rearCannonBoneHeight,  rearCannonBoneThickness;
-	double rearToeBreadth,		   rearToeHeight,		  rearToeThickness;
+	float waistBreadth,	       waistHeight,			  waistThickness;
+	float chestBreadth,	       chestHeight,			  chestThickness;
+	float tailBreadth,		       tailHeight,		      tailThickness;
+	float neckBreadth,		       neckHeight,			  neckThickness;
+	float headBreadth,		       headHeight,			  headThickness;
+	float breastboneBreadth,      breastboneHeight,	  breastboneThickness;
+	float radiusBreadth,	       radiusHeight,		  radiusThickness;
+	float frontCannonBoneBreadth, frontCannonBoneHeight, frontCannonBoneThickness;
+	float frontToeBreadth,		   frontToeHeight,		  frontToeThickness;
+	float femurBreadth,		   femurHeight,			  femurThickness;
+	float tibiaBreadth,		   tibiaHeight,			  tibiaThickness;
+	float rearCannonBoneBreadth,  rearCannonBoneHeight,  rearCannonBoneThickness;
+	float rearToeBreadth,		   rearToeHeight,		  rearToeThickness;
 
 	/// 各BallJointのバネダンパ
 	double springWaistChest,   damperWaistChest;	//腰-胸

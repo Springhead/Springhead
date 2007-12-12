@@ -59,7 +59,7 @@ bool PHBallJoint::GetDesc(void* desc){
 	((PHBallJointDesc*)desc)->limitDir		 = limitDir;
 	((PHBallJointDesc*)desc)->goal			 = goal;
 	((PHBallJointDesc*)desc)->torque		 = GetMotorTorque();
-	
+
 	return true;
 }
 
