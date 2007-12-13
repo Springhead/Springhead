@@ -8,7 +8,6 @@
 	field->offset = int((char*)&(pLimitST->lower) - (char*)pLimitST);
 	field = desc->AddField("", "SwingTwist", "upper", "");
 	field->offset = int((char*)&(pLimitST->upper) - (char*)pLimitST);
-	db->RegisterDesc(desc);
 	
 	PHConstraintDesc* pPHConstraintDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("PHConstraintDesc");
