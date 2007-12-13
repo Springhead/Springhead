@@ -418,7 +418,7 @@ void CRHingeAnimalBody::CreateBreastBone(LREnum lr){
 	boxDesc.boxsize = Vec3f(breastboneBreadth, breastboneHeight, breastboneThickness);
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, -chestThickness/2.0);
+	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, -chestThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*breastboneBreadth/2.0, -breastboneHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(-90), 'x');
@@ -645,7 +645,7 @@ void CRHingeAnimalBody::CreateFemur(LREnum lr){
 	boxDesc.boxsize = Vec3f(femurBreadth, femurHeight, femurThickness);
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistThickness/2.0, -waistHeight/2.0); 
+	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistHeight/2.0, -waistThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*femurBreadth/2.0, -femurHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(-90), 'x');
