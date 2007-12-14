@@ -1117,6 +1117,26 @@ public: \
 		return true; \
 	} \
 
+#define ACCESS_DESC_CRTryToStandUpControllerDesc(cls) \
+protected: \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRTryToStandUpControllerDesc_NOBASE \
+protected: \
+public: \
+	virtual void SetDesc(const void* desc){ \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		return true; \
+	} \
+
 #define ACCESS_DESC_CRWalkingControllerDesc(cls) \
 protected: \
 	double paramLdx ; \

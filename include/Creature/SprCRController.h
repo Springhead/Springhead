@@ -241,6 +241,21 @@ struct CRAttentionControllerDesc : public CRControllerDesc{
 };
 
 // ------------------------------------------------------------------------------
+/// 倒れたら立とうと努力するコントローラ
+struct CRTryToStandUpControllerIf : CRControllerIf{
+	IF_DEF(CRTryToStandUpController);
+
+
+};
+/// 倒れたら立とうと努力するコントローラのデスクリプタ
+struct CRTryToStandUpControllerDesc : public CRControllerDesc{
+	DESC_DEF_FOR_OBJECT(CRTryToStandUpController);
+	
+	CRTryToStandUpControllerDesc(){
+	}
+};
+
+// ------------------------------------------------------------------------------
 /// 歩行コントローラのインタフェース
 struct CRWalkingControllerIf : CRControllerIf{
 	IF_DEF(CRWalkingController);

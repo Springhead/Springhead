@@ -1,7 +1,7 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 IF_IMP(CRBody, SceneObject);
 IF_IMP(CRHingeHumanBody, CRBody);
-IF_IMP(CRHingeAnimalBody, CRBody);
+IF_IMP(CRFourLegsAnimalBody, CRBody);
 IF_IMP(CRTrunkFootHumanBody, CRBody);
 IF_IMP(CRTrunkFootAnimalBody, CRBody);
 IF_IMP(CRController, SceneObject);
@@ -10,6 +10,7 @@ IF_IMP(CRNeckController, CRController);
 IF_IMP(CRReachingController, CRController);
 IF_IMP(CRGazeController, CRController);
 IF_IMP(CRAttentionController, CRController);
+IF_IMP(CRTryToStandUpController, CRController);
 IF_IMP(CRWalkingController, CRController);
 IF_IMP(CREseWalkingController, CRController);
 IF_IMP(CRTravelController, CRController);

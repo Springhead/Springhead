@@ -85,7 +85,7 @@ void CRTrunkFootHumanBody::CreateChest(){
 		hingeDesc.posePlug.Ori() = Quaternionf::Rot(Rad(0), 'x');
 		// hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + waistHeight/2.0), 0);
 		hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight/2.0, 0);
-		hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+		hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
 
 		hingeDesc.origin =   0.0;
 		hingeDesc.spring = 500.0;
@@ -145,7 +145,7 @@ void CRTrunkFootHumanBody::CreateHead(){
 	// hingeDesc.poseSocket.Pos() = Vec3d(0, -0.36, 0.0);
 	// hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + neckLength + headDiameter/2.0), 0.0);
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter/2.0 - neckLength/2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'x');
+	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
 
 	hingeDesc.origin =   0.0;
 	hingeDesc.spring = 500.0;

@@ -23,7 +23,7 @@
 
 #include "CRBody.h"
 #include "CRHingeHumanBody.h"
-#include "CRHingeAnimalBody.h"
+#include "CRFourLegsAnimalBody.h"
 #include "CRTrunkFootHumanBody.h"
 #include "CRTrunkFootAnimalBody.h"
 
@@ -94,8 +94,8 @@ CRBodyIf* CRCreature::CreateBody(const IfInfo* ii, const CRBodyDesc& desc){
 	} else if (ii == CRTrunkFootHumanBodyIf::GetIfInfoStatic()) {
 		body.push_back((DBG_NEW CRTrunkFootHumanBody((const CRTrunkFootHumanBodyDesc&)desc, this->Cast()))->Cast());
 
-	} else if (ii == CRHingeAnimalBodyIf::GetIfInfoStatic()) {
-		body.push_back((DBG_NEW CRHingeAnimalBody((const CRHingeAnimalBodyDesc&)desc, this->Cast()))->Cast());
+	} else if (ii == CRFourLegsAnimalBodyIf::GetIfInfoStatic()) {
+		body.push_back((DBG_NEW CRFourLegsAnimalBody((const CRFourLegsAnimalBodyDesc&)desc, this->Cast()))->Cast());
 
 	} else if (ii == CRTrunkFootAnimalBodyIf::GetIfInfoStatic()) {
 		body.push_back((DBG_NEW CRTrunkFootAnimalBody((const CRTrunkFootAnimalBodyDesc&)desc, this->Cast()))->Cast());

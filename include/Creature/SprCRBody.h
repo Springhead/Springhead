@@ -260,15 +260,15 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 
 
 // ------------------------------------------------------------------------------
-/// ヒンジジョイント動物モデルのインターフェイス
-struct CRHingeAnimalBodyIf : CRBodyIf {
-	IF_DEF(CRHingeAnimalBody);
+/// ４足動物モデルのインターフェイス
+struct CRFourLegsAnimalBodyIf : CRBodyIf {
+	IF_DEF(CRFourLegsAnimalBody);
 
 };
 
-/// ヒンジジョイント動物モデルのデスクリプタ
-struct CRHingeAnimalBodyDesc : CRBodyDesc {
-	DESC_DEF_FOR_OBJECT(CRHingeAnimalBody);
+/// 4足動物モデルのデスクリプタ
+struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
+	DESC_DEF_FOR_OBJECT(CRFourLegsAnimalBody);
 
 	enum CRAnimalSolids{
 		// Center part of the solids
@@ -413,7 +413,7 @@ struct CRHingeAnimalBodyDesc : CRBodyDesc {
 	/// 裏オプション
 	bool noLegs;
 
-	CRHingeAnimalBodyDesc();
+	CRFourLegsAnimalBodyDesc();
 };
 
 

@@ -52,11 +52,11 @@ typedef IfInitTemplate<CRHingeHumanBodyIfStub, CRHingeHumanBody>	CRHingeHumanBod
 
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct CRHingeAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+struct CRFourLegsAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
 };
-struct CRHingeAnimalBodyIf;	class CRHingeAnimalBody;
-typedef CRHingeAnimalBodyIfStubTemplate<CRHingeAnimalBodyIf, ObjectIfBuf, CRHingeAnimalBody>	CRHingeAnimalBodyIfStub;
-typedef IfInitTemplate<CRHingeAnimalBodyIfStub, CRHingeAnimalBody>	CRHingeAnimalBodyIfInit;
+struct CRFourLegsAnimalBodyIf;	class CRFourLegsAnimalBody;
+typedef CRFourLegsAnimalBodyIfStubTemplate<CRFourLegsAnimalBodyIf, ObjectIfBuf, CRFourLegsAnimalBody>	CRFourLegsAnimalBodyIfStub;
+typedef IfInitTemplate<CRFourLegsAnimalBodyIfStub, CRFourLegsAnimalBody>	CRFourLegsAnimalBodyIfInit;
 
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
@@ -169,6 +169,14 @@ struct CRAttentionControllerIfStubTemplate: public CRControllerIfStubTemplate<IF
 struct CRAttentionControllerIf;	class CRAttentionController;
 typedef CRAttentionControllerIfStubTemplate<CRAttentionControllerIf, ObjectIfBuf, CRAttentionController>	CRAttentionControllerIfStub;
 typedef IfInitTemplate<CRAttentionControllerIfStub, CRAttentionController>	CRAttentionControllerIfInit;
+
+template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct CRTryToStandUpControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+};
+struct CRTryToStandUpControllerIf;	class CRTryToStandUpController;
+typedef CRTryToStandUpControllerIfStubTemplate<CRTryToStandUpControllerIf, ObjectIfBuf, CRTryToStandUpController>	CRTryToStandUpControllerIfStub;
+typedef IfInitTemplate<CRTryToStandUpControllerIfStub, CRTryToStandUpController>	CRTryToStandUpControllerIfInit;
 
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
