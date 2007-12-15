@@ -179,7 +179,7 @@ void CRFourLegsAnimalBody::CreateWaist(){
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
 	// define the position.
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
-	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(-90), 'x'));
+	solids[SO_WAIST]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
 
 	//d—ÍØ‚é‚©
 
