@@ -157,7 +157,6 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
 	con[4] = spring != 0.0	    || damper != 0.0;
 	con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
-
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする
