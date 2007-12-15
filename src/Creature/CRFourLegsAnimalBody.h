@@ -22,7 +22,7 @@ namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsAnimalBody
-// ヒンジジョイントを用いた哺乳類モデル・クラスの実装
+// ボールやヒンジのジョイントを用いた哺乳類モデル・クラスの実装
 class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyIfInit, public CRFourLegsAnimalBodyDesc {
 private:
 	void InitBody();

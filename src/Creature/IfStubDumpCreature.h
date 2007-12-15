@@ -172,11 +172,11 @@ typedef IfInitTemplate<CRAttentionControllerIfStub, CRAttentionController>	CRAtt
 
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
-struct CRTryToStandUpControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+struct CRTryStandingUpControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
 };
-struct CRTryToStandUpControllerIf;	class CRTryToStandUpController;
-typedef CRTryToStandUpControllerIfStubTemplate<CRTryToStandUpControllerIf, ObjectIfBuf, CRTryToStandUpController>	CRTryToStandUpControllerIfStub;
-typedef IfInitTemplate<CRTryToStandUpControllerIfStub, CRTryToStandUpController>	CRTryToStandUpControllerIfInit;
+struct CRTryStandingUpControllerIf;	class CRTryStandingUpController;
+typedef CRTryStandingUpControllerIfStubTemplate<CRTryStandingUpControllerIf, ObjectIfBuf, CRTryStandingUpController>	CRTryStandingUpControllerIfStub;
+typedef IfInitTemplate<CRTryStandingUpControllerIfStub, CRTryStandingUpController>	CRTryStandingUpControllerIfInit;
 
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>

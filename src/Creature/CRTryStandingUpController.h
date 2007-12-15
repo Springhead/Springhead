@@ -7,8 +7,8 @@
  */
 
 //////////////////////////////////////////////////////
-#ifndef CRTRYTOSTANDUPCONTROLLER_H
-#define CRTRYTOSTANDUPCONTROLLER_H
+#ifndef CRTRYSTANDINGUPCONTROLLER_H
+#define CRTRYSTANDINGUPCONTROLLER_H
 //////////////////////////////////////////////////////
 
 #include <Springhead.h>
@@ -24,15 +24,15 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 倒れたら立とうと努力するコントローラ
 */
-class CRTryToStandUpController : public CRController, public CRTryToStandUpControllerIfInit, public CRTryToStandUpControllerDesc {
+class CRTryStandingUpController : public CRController, public CRTryStandingUpControllerIfInit, public CRTryStandingUpControllerDesc {
 
 private:
-
+	unsigned long totalStep;	//< シミュレーション開始時からのステップ数
 public:
 	//----------------------------------------------------------
 	// DCASTをできるようにするための仕組みが入っている。
 	// これを書かないとLNK2019 Errorになる。
-	OBJECTDEF(CRTryToStandUpController, CRController);
+	OBJECTDEF(CRTryStandingUpController, CRController);
 	//----------------------------------------------------------
 
 	//----------------------------------------------------------
@@ -40,14 +40,14 @@ public:
 	// これを書かないとLNK2019 Errorになる。
 	// 定義するクラスのコンストラクタと合わせて書く必要がある。
 	// また、引数のある特殊なコンストラクタも必要である。
-	ACCESS_DESC(CRTryToStandUpController);
+	ACCESS_DESC(CRTryStandingUpController);
 	//----------------------------------------------------------
 
 	// コンストラクタ
-	CRTryToStandUpController(){
+	CRTryStandingUpController(){
 	}
-	CRTryToStandUpController(const CRTryToStandUpControllerDesc& desc, CRCreatureIf* c=NULL) 
-		: CRTryToStandUpControllerDesc(desc) 
+	CRTryStandingUpController(const CRTryStandingUpControllerDesc& desc, CRCreatureIf* c=NULL) 
+		: CRTryStandingUpControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
 	}
@@ -63,4 +63,4 @@ public:
 }
 //@}
 
-#endif//CRTRYTOSTANDUPCONTROLLER_H
+#endif//CRTRYSTANDINGUPCONTROLLER_H

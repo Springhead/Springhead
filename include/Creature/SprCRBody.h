@@ -412,6 +412,8 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 
 	/// 裏オプション
 	bool noLegs;
+	/// ダイナミカルを入れるかどうか
+	bool dynamicalMode;
 
 	CRFourLegsAnimalBodyDesc();
 };

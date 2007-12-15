@@ -1117,7 +1117,7 @@ public: \
 		return true; \
 	} \
 
-#define ACCESS_DESC_CRTryToStandUpControllerDesc(cls) \
+#define ACCESS_DESC_CRTryStandingUpControllerDesc(cls) \
 protected: \
 public: \
 	virtual void SetDesc(const void* desc){ \
@@ -1128,7 +1128,7 @@ public: \
 		return true; \
 	} \
 
-#define ACCESS_DESC_CRTryToStandUpControllerDesc_NOBASE \
+#define ACCESS_DESC_CRTryStandingUpControllerDesc_NOBASE \
 protected: \
 public: \
 	virtual void SetDesc(const void* desc){ \

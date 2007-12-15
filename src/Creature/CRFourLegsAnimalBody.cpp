@@ -1,7 +1,5 @@
 #include "CRFourLegsAnimalBody.h"
 
-#define GRAVITYMODE 1
-
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -144,6 +142,10 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	//-----------------------------------------------------------------------------------
 	// Do you want to make the legs?
 	noLegs = false;
+
+	//-----------------------------------------------------------------------------------
+	// dynamical 
+	dynamicalMode = false;
 }
 	
 	
@@ -180,10 +182,10 @@ void CRFourLegsAnimalBody::CreateWaist(){
 	solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(-90), 'x'));
 
 	//d—ÍØ‚é‚©
-#if GRAVITYMODE
-	solids[SO_WAIST]->SetFramePosition(Vec3f(0.0, 1.5, 0.0));
-	solids[SO_WAIST]->SetDynamical(false);
-#endif
+
+	solids[SO_WAIST]->SetFramePosition(Vec3f(0.0, 3, 0.0));
+	solids[SO_WAIST]->SetDynamical(dynamicalMode);
+
 }
 
 void CRFourLegsAnimalBody::CreateChest(){
@@ -201,9 +203,9 @@ void CRFourLegsAnimalBody::CreateChest(){
 	// Joint -- [p]Waist - [c]Chest
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, waistHeight / 2.0, 0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'z');
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, -chestHeight / 2.0, 0.0);
-	ballDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'z');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
 	ballDesc.goal			  = goalWaistChest;
@@ -247,9 +249,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	// [p]waist - [c]tail1
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, -waistHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, tailHeight/2.0, 0.1);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring            = springWaistTail;
 	ballDesc.damper            = damperWaistTail;
 	ballDesc.goal			   = goalWaistTail;
@@ -261,9 +263,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	//[p]tail1 - [c]tail2
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, -tailHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, tailHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.goal			   = goalTail;
@@ -275,9 +277,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	//[p]tail2 - [c]tail3
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, -tailHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, tailHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(0), 'x');
+	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.goal			   = goalTail;
@@ -314,9 +316,9 @@ void CRFourLegsAnimalBody::CreateNeck(){
 
 	// define the joint  [p]chest - [c]neck
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(150), 'x');
+	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(150), 'x');
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, -neckHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(150), 'x');
+	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(150), 'x');
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.goal			  = goalChestNeck;
@@ -348,9 +350,9 @@ void CRFourLegsAnimalBody::CreateHead(){
 	// define the connection  [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, neckHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, -headHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.goal			   = goalNeckHead;
@@ -419,9 +421,9 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, -chestThickness/3.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*breastboneBreadth/2.0, -breastboneHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
 	ballDesc.goal			  = goalShoulder;
@@ -475,9 +477,9 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	
 	//[p]breastbone - [c]radius
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, breastboneHeight/2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -radiusHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springElbow;
 	hingeDesc.damper		   = damperElbow;
 	hingeDesc.origin		   = Rad(40);
@@ -525,9 +527,9 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 	
 	// [p]Radius - [c]CannonBone
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, radiusHeight/2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -frontCannonBoneHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springFrontKnee;
 	hingeDesc.damper		   = damperFrontKnee;
 	hingeDesc.origin		   = Rad(0);
@@ -576,9 +578,9 @@ void CRFourLegsAnimalBody::CreateFrontToeBones(LREnum lr){
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, frontCannonBoneHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'z');
 	ballDesc.posePlug.Pos()   = Vec3f(0.0, -frontToeHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(0), 'z');
+	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(0), 'z');
 	ballDesc.spring			  = springFrontAnkle;
 	ballDesc.damper			  = damperFrontAnkle;
 	ballDesc.goal			  = goalFrontAnkle;
@@ -646,9 +648,9 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistHeight/2.0, -waistThickness/3.0);
-	ballDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*femurBreadth/2.0, -femurHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	  = Quaternionf::Rot(Rad(-90), 'x');
+	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
 	ballDesc.goal			  = goalHip;
@@ -696,9 +698,9 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 	
 	//[p]femur - [c]tibia
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, femurHeight/2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -tibiaHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springStifle;
 	hingeDesc.damper		   = damperStifle;
 	hingeDesc.origin		   = Rad(-30);
@@ -747,9 +749,9 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 	
 	// [p]Tibia - [c]CannonBone
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, tibiaHeight/2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.posePlug.Pos()   = Vec3f(0.0, -rearCannonBoneHeight/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(90), 'y');
+	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springRearKnee;
 	hingeDesc.damper		   = damperRearKnee;
 	hingeDesc.origin		   = Rad(-5);

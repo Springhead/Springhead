@@ -242,16 +242,16 @@ struct CRAttentionControllerDesc : public CRControllerDesc{
 
 // ------------------------------------------------------------------------------
 /// 倒れたら立とうと努力するコントローラ
-struct CRTryToStandUpControllerIf : CRControllerIf{
-	IF_DEF(CRTryToStandUpController);
+struct CRTryStandingUpControllerIf : CRControllerIf{
+	IF_DEF(CRTryStandingUpController);
 
 
 };
 /// 倒れたら立とうと努力するコントローラのデスクリプタ
-struct CRTryToStandUpControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRTryToStandUpController);
+struct CRTryStandingUpControllerDesc : public CRControllerDesc{
+	DESC_DEF_FOR_OBJECT(CRTryStandingUpController);
 	
-	CRTryToStandUpControllerDesc(){
+	CRTryStandingUpControllerDesc(){
 	}
 };
 

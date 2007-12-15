@@ -617,14 +617,14 @@
 	field->offset = int((char*)(CRControllerDesc*)pCRAttentionControllerDesc - (char*)pCRAttentionControllerDesc);
 	db->RegisterDesc(desc);
 	
-	CRTryToStandUpControllerDesc* pCRTryToStandUpControllerDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRTryToStandUpControllerDesc");
-	desc->size = sizeof(CRTryToStandUpControllerDesc);
-	desc->ifInfo = CRTryToStandUpControllerIf::GetIfInfoStatic();
-	((IfInfo*)CRTryToStandUpControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRTryToStandUpControllerDesc>;
+	CRTryStandingUpControllerDesc* pCRTryStandingUpControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRTryStandingUpControllerDesc");
+	desc->size = sizeof(CRTryStandingUpControllerDesc);
+	desc->ifInfo = CRTryStandingUpControllerIf::GetIfInfoStatic();
+	((IfInfo*)CRTryStandingUpControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<CRTryStandingUpControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
-	field->offset = int((char*)(CRControllerDesc*)pCRTryToStandUpControllerDesc - (char*)pCRTryToStandUpControllerDesc);
+	field->offset = int((char*)(CRControllerDesc*)pCRTryStandingUpControllerDesc - (char*)pCRTryStandingUpControllerDesc);
 	db->RegisterDesc(desc);
 	
 	CRWalkingControllerDesc* pCRWalkingControllerDesc = NULL;
