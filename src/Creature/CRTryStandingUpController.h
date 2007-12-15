@@ -28,6 +28,15 @@ class CRTryStandingUpController : public CRController, public CRTryStandingUpCon
 
 private:
 	unsigned long totalStep;	//< シミュレーション開始時からのステップ数
+	Vec3d centerOfMass;			//< 重心
+	Vec3d rightFrontFootPos;	//< 右前足の位置
+	Vec3d rightRearFootPos;		//< 右後足の位置
+	Vec3d leftFrontFootPos;		//< 左前足の位置
+	Vec3d leftRearFootPos;		//< 左後足の位置
+
+	Vec3d GetCenterOfMass(CRBodyIf* crBody);
+	Vec3d GetFootPos(PHSolidIf* footSolid);
+
 public:
 	//----------------------------------------------------------
 	// DCASTをできるようにするための仕組みが入っている。

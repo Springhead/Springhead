@@ -14,8 +14,25 @@ void CRTryStandingUpController::Init(){
 void CRTryStandingUpController::Step(){
 	totalStep += 1;
 	CRController::Step();
+/*
+	centerOfMass = GetCenterOfMass(crBody);
+	rightFrontFootPos = GetFootPos(footSolid);
+	rightRearFootPos  = GetFootPos(footSolid);
+	leftFrontFootPos  = GetFootPos(footSolid);
+	lefrRearFootPos	  = GetFootPos(footSolid);
+*/
+}
 
-	
+Vec3d GetCenterOfMass(CRBodyIf* crBody){
+	Vec3d center;
+
+	return center;
+}
+
+Vec3d GetFootPos(PHSolidIf* footSolid){
+	Vec3d pos;
+
+	return pos;
 }
 
 
