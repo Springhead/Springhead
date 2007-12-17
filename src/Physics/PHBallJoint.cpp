@@ -120,7 +120,7 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 
 	Quaterniond twistQ = qSwing * Xjrel.q;
 	nowTheta[1] = twistQ.Theta();						///< TwistŠp‚ÌŒvŽZ‚ðs‚Á‚Ä‚¢‚é	
-	if (twistQ.z < 0) 
+	if (twistQ.z < 0)
 		nowTheta[1]  *= -1;								///< Twist‰ñ“]Ž²‚ª”½‘Î‚ðŒü‚­‚±‚Æ‚ª‚ ‚é‚Ì‚Å‚»‚Ì‘Îô
 	
 	if(nowTheta[1] < Rad(-180)) nowTheta[1] += Rad(360);
