@@ -10,7 +10,7 @@
 
 【概要】３脚モジュラーロボットASHIGARUの歩行シミュレータ
  
-【仕様】結合部分の設定及びモジュールの初期設定を変えることで「3モジュール直列」「3モジュール環状」に対応
+【仕様】結合部分の設定及びモジュールの初期設定を変えることで「3モジュール直列」「3モジュール環状」「4モジュール放射状」に対応
 
 */
 
@@ -31,7 +31,9 @@
 using namespace Spr;
 
 #define ESC		27
-#define module_max 3
+#define module_max 6
+
+double K = 100000.0, D = 0.0;//結合部分をガッチガチに
 
 UTRef<PHSdkIf> phSdk;			// SDK
 UTRef<GRSdkIf> grSdk;
@@ -71,7 +73,7 @@ void CreateFloor(){
 	PHSolidDesc sd;
 	PHSolidIf* soFloor = scene->CreateSolid(sd);
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(3.0f, 0.3f, 3.0f);
+	bd.boxsize = Vec3f(5.0f, 0.3f, 5.0f);
 	soFloor->AddShape(phSdk->CreateShape(bd));
 	soFloor->SetFramePosition(Vec3f( 0, -0.15, 0));
 	soFloor->SetDynamical(false);					// 床は外力によって動かないようにする
@@ -146,11 +148,9 @@ void Keyboard(unsigned char key, int x, int y){
 		break;
 	case 'z':
 		zoom -= 0.01;
-		//glutPostRedisplay();
 		break;
 	case 'x':
 		zoom += 0.01;
-		//glutPostRedisplay();
 		break;
 	case 't':
 		stepOnTimer = !stepOnTimer;
@@ -180,12 +180,11 @@ void timer(int id){
 	// 時間計測準備
 	start.QuadPart = now.QuadPart = past.QuadPart = 0;
 	QueryPerformanceFrequency( &freq );	// 計算機の周波数計測
-
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(100, timer, 0);
 
 	/// 時刻のチェックと画面の更新を行う
 	if (stepOnTimer){
-		//for(int i = 0; i < 1; i++)
+		
 		scene->Step();
 
 		// 位相生成
@@ -198,28 +197,21 @@ void timer(int id){
 	
 	//3モジュール直列結合の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		robot[0].theta = 0.0;//モジュールの姿勢設定
-		robot[1].theta = 0.0;
-		robot[2].theta = 0.0;
+		//robot[0].theta = 0.0;	robot[1].theta = 0.0;	robot[2].theta = 0.0;//モジュールの姿勢設定
 
-		robot[0].leg[0].Joint_flag = true;//結合脚指定
-		robot[1].leg[0].Joint_flag = true;
+		//robot[0].leg[0].Joint_flag = true;	robot[1].leg[0].Joint_flag = true;//結合脚指定
 
-		PhaseTemp[0] = 0.0;				PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase;//各脚の位相指定
-		PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase + PI;		PhaseTemp[5] = Phase + PI;
-		PhaseTemp[6] = Phase + PI;	PhaseTemp[7] = Phase;				PhaseTemp[8] = Phase;
+		//PhaseTemp[0] = 0.0;				PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase;//各脚の位相指定
+		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase + PI;		PhaseTemp[5] = Phase + PI;
+		//PhaseTemp[6] = Phase + PI;	PhaseTemp[7] = Phase;				PhaseTemp[8] = Phase;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//3モジュール直列結合の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//3モジュール環状結合の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		//robot[0].theta = 0.0;//モジュールの姿勢設定
-		//robot[1].theta = 2*PI/3;
-		//robot[2].theta = -2*PI/3;
+		//robot[0].theta = 0.0;	robot[1].theta = 2*PI/3;	robot[2].theta = -2*PI/3;//モジュールの姿勢設定
 
-		//robot[0].leg[0].Joint_flag = true;//結合脚指定
-		//robot[1].leg[0].Joint_flag = true;
-		//robot[2].leg[0].Joint_flag = true;
+		//robot[0].leg[0].Joint_flag = true;	robot[1].leg[0].Joint_flag = true;	robot[2].leg[0].Joint_flag = true;//結合脚指定
 
 		//PhaseTemp[0] = 0.0;				PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase + PI;//各脚の位相指定
 		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase;			PhaseTemp[5] = Phase + PI;
@@ -227,9 +219,87 @@ void timer(int id){
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-		GetLegPosition(3);//各モジュールの姿勢情報を取得
-		GetTrajectory(module_max, 3, para_a1, para_b1, para_X1, para_H1, PhaseTemp);//足先軌道の計算	
+	//4モジュール放射状結合の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+		//robot[0].theta = 0.0;	robot[1].theta = 0.0;	robot[2].theta = 0.0;	robot[3].theta = 0.0;//モジュールの姿勢設定
+
+		//robot[0].leg[0].Joint_flag = true;	robot[2].leg[1].Joint_flag = true;	robot[3].leg[2].Joint_flag = true;//結合脚指定
+		//robot[1].leg[0].Joint_flag = true;	robot[1].leg[1].Joint_flag = true;	robot[1].leg[2].Joint_flag = true;//結合脚指定
+
+		//PhaseTemp[0] = 0.0;					PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase + PI;//各脚の位相指定
+		////PhaseTemp[3] = Phase + PI;			PhaseTemp[4] = Phase;			PhaseTemp[5] = Phase + PI;
+		//PhaseTemp[3] = 0.0;					PhaseTemp[4] = 0.0;				PhaseTemp[5] = 0.0;
+		//PhaseTemp[6] = Phase + PI;			PhaseTemp[7] = 0.0;				PhaseTemp[8] = Phase;
+		//PhaseTemp[9] = Phase;				PhaseTemp[10] = Phase + PI;		PhaseTemp[11] = 0.0;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	//6モジュール不定形の設定////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		robot[0].theta = 0.0;	robot[1].theta = 0.0;	robot[2].theta = 0.0;//モジュールの姿勢設定
+		robot[3].theta = 0.0;	robot[4].theta = 0.0;	robot[5].theta = 0.0;
+
+		robot[1].leg[0].Joint_flag = true;	robot[1].leg[2].Joint_flag = true;	robot[3].leg[1].Joint_flag = true;//結合脚指定
+		robot[3].leg[2].Joint_flag = true;	robot[4].leg[2].Joint_flag = true;
+
+		//PhaseTemp[0] = Phase;				PhaseTemp[1] = Phase + PI;			PhaseTemp[2] = Phase + PI;//各脚の位相指定(安定余裕のみ考慮したときの最適解)
+		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase;				PhaseTemp[5] = 0.0;
+		//PhaseTemp[6] = Phase;				PhaseTemp[7] = Phase;				PhaseTemp[8] = Phase + PI;
+		//PhaseTemp[9] = Phase + PI;		PhaseTemp[10] = 0.0;				PhaseTemp[11] = 0.0;
+		//PhaseTemp[12] = Phase + PI;		PhaseTemp[13] = Phase + PI;			PhaseTemp[14] = 0.0;
+		//PhaseTemp[15] = Phase;			PhaseTemp[16] = Phase;				PhaseTemp[17] = Phase + PI;
+
+		//PhaseTemp[0] = Phase;				PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase + PI;//各脚の位相指定(面積のみ考慮したときの最適解)
+		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase + PI;		PhaseTemp[5] = 0.0;
+		//PhaseTemp[6] = Phase + PI;		PhaseTemp[7] = Phase;			PhaseTemp[8] = Phase + PI;
+		//PhaseTemp[9] = Phase;				PhaeTemp[10] = 0.0;				PhaseTemp[11] = 0.0;
+		//PhaseTemp[12] = Phase;			PhaseTemp[13] = Phase;			PhaseTemp[14] = 0.0;
+		//PhaseTemp[15] = Phase + PI;		PhaseTemp[16] = Phase + PI;		PhaseTemp[17] = Phase;
+
+		//PhaseTemp[0] = Phase;			PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase;//各脚の位相指定(安定余裕＋面積も考慮したときの最適解)
+		//PhaseTemp[3] = 0.0;			PhaseTemp[4] = Phase + PI;		PhaseTemp[5] = 0.0;
+		//PhaseTemp[6] = Phase + PI;	PhaseTemp[7] = Phase;			PhaseTemp[8] = Phase + PI;
+		//PhaseTemp[9] = Phase;			PhaseTemp[10] = 0.0;			PhaseTemp[11] = 0.0;
+		//PhaseTemp[12] = Phase + PI;	PhaseTemp[13] = Phase;			PhaseTemp[14] = 0.0;
+		//PhaseTemp[15] = Phase + PI;	PhaseTemp[16] = Phase + PI;		PhaseTemp[17] = Phase;
+
+		PhaseTemp[0] = Phase;			PhaseTemp[1] = Phase + PI;		PhaseTemp[2] = Phase;//各脚の位相指定(面積+分散も考慮したときの最適解)
+		PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase;			PhaseTemp[5] = 0.0;
+		PhaseTemp[6] = Phase;			PhaseTemp[7] = Phase + PI;		PhaseTemp[8] = Phase;
+		PhaseTemp[9] = Phase + PI;		PhaseTemp[10] = 0.0;			PhaseTemp[11] = 0.0;
+		PhaseTemp[12] = Phase + PI;		PhaseTemp[13] = Phase + PI;		PhaseTemp[14] = 0.0;
+		PhaseTemp[15] = Phase;			PhaseTemp[16] = Phase;			PhaseTemp[17] = Phase + PI;
+
+		//PhaseTemp[0] = Phase;			PhaseTemp[1] = Phase;			PhaseTemp[2] = Phase + PI;//各脚の位相指定(安定余裕＋面積＋分散も考慮したときの最適解)
+		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase + PI;		PhaseTemp[5] = 0.0;
+		//PhaseTemp[6] = Phase;			PhaseTemp[7] = Phase + PI;		PhaseTemp[8] = Phase;
+		//PhaseTemp[9] = Phase + PI;		PhaseTemp[10] = 0.0;			PhaseTemp[11] = 0.0;
+		//PhaseTemp[12] = Phase + PI;		PhaseTemp[13] = Phase;			PhaseTemp[14] = 0.0;
+		//PhaseTemp[15] = Phase;			PhaseTemp[16] = Phase;			PhaseTemp[17] = Phase + PI;
+
+		//PhaseTemp[0] = Phase;			PhaseTemp[1] = Phase + PI;		PhaseTemp[2] = Phase;//各脚の位相指定(ローテーション法の解)
+		//PhaseTemp[3] = 0.0;				PhaseTemp[4] = Phase;			PhaseTemp[5] = 0.0;
+		//PhaseTemp[6] = Phase;			PhaseTemp[7] = Phase + PI;		PhaseTemp[8] = Phase + PI;
+		//PhaseTemp[9] = Phase;			PhaseTemp[10] = 0.0;			PhaseTemp[11] = 0.0;
+		//PhaseTemp[12] = Phase + PI;		PhaseTemp[13] = Phase + PI;		PhaseTemp[14] = 0.0;
+		//PhaseTemp[15] = Phase;			PhaseTemp[16] = Phase;			PhaseTemp[17] = Phase + PI;
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+		//double K = 1000.0, D = 0.0;//結合部分をガッチガチに
+
+		GetLegPosition(module_max);//各モジュールの姿勢情報を取得
+		GetTrajectory(module_max, 3, para_a1, para_b1, para_X1, para_H1, PhaseTemp);//足先軌道の計算
+
+		for(int i=0; i<module_max; i++){//結合脚の姿勢を設定
+			for(int j=0; j<3; j++){
+				if(robot[i].leg[j].Joint_flag == true){
+					robot[i].leg[j].jntDX1  -> SetSpringOrigin(Rad(-90.0));robot[i].leg[j].jntDX1  -> SetSpring(K);robot[i].leg[j].jntDX1  -> SetDamper(D);
+					robot[i].leg[j].jntDX2  -> SetSpringOrigin(Rad(-90.0));robot[i].leg[j].jntDX2  -> SetSpring(K);robot[i].leg[j].jntDX2  -> SetDamper(D);
+					robot[i].leg[j].jntFoot -> SetSpringOrigin(Rad(180.0));robot[i].leg[j].jntFoot -> SetSpring(K);robot[i].leg[j].jntFoot -> SetDamper(D);
+				}
+			}
+		}
 		glutPostRedisplay();
 	}
 }
@@ -253,7 +323,7 @@ int main(int argc, char* argv[]){
 	//ここで結合状態の設定を行う
 	Posed pose;
 
-	//3モジュール直列の初期描画位置/////////////////////////////////////////////////////////////////////////
+	//初期描画位置/////////////////////////////////////////////////////////////////////////初期描画位置をこれにしないとエラるっぽい
 
 	pose.Ori() = Quaterniond::Rot(Rad(120.0), 'y');
 	for(int i=0; i<module_max; i++){			//ASHIGARU構築
@@ -263,22 +333,7 @@ int main(int argc, char* argv[]){
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//3モジュール環状の初期描画位置////////////////////////////////////////////////////////////////////////
-
-	/*pose.Pos() = Vec3d(0.0, 0.17, 0.0);
-	robot[0].Build_root(pose, scene, phSdk);
-	pose.Ori() = Quaterniond::Rot(Rad(240.0), 'y');
-	pose.Pos() = Vec3d(0.2, 0.17, 0.0);
-	robot[1].Build_root(pose, scene, phSdk);
-	pose.Ori() = Quaterniond::Rot(Rad(360.0), 'y');
-	pose.Pos() = Vec3d(0.1, 0.17, -0.173);
-	robot[2].Build_root(pose, scene, phSdk);*/
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 	PHHingeJointDesc jdConnect;
-
-	double K = 10.0, D = 0.0;//結合部分をガッチガチに
 
 	std::vector<PHSolidIf*> allSolids;
 	for(int i=0; i<module_max; i++){
@@ -291,22 +346,10 @@ int main(int argc, char* argv[]){
 	}
 	scene->SetContactMode(&allSolids[0], allSolids.size(), PHSceneDesc::MODE_NONE);
 
-	for(int i=0; i<module_max; i++){
-		robot[i].leg[0].jntDX1  -> SetSpringOrigin(Rad(-90.0));//結合脚(leg[0])の姿勢を設定
-		robot[i].leg[0].jntDX1  -> SetSpring(K);
-		robot[i].leg[0].jntDX1  -> SetDamper(D);
-		robot[i].leg[0].jntDX2  -> SetSpringOrigin(Rad(-90.0));
-		robot[i].leg[0].jntDX2  -> SetSpring(K);
-		robot[i].leg[0].jntDX2  -> SetDamper(D);
-		robot[i].leg[0].jntFoot -> SetSpringOrigin(Rad(180.0));
-		robot[i].leg[0].jntFoot -> SetSpring(K);
-		robot[i].leg[0].jntFoot -> SetDamper(D);
-	}
-
 //////モジュール直列結合構築/////////////////////////////////////////////////////////////////////////
 
 	//結合部分構築
-	jdConnect.poseSocket.Ori() = Quaterniond();
+	/*jdConnect.poseSocket.Ori() = Quaterniond();
 	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
 	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, 0.173);
 	for(int i=0; i<module_max-1; i++){
@@ -314,7 +357,7 @@ int main(int argc, char* argv[]){
 		robot[i].jntConnect->SetSpring(K);
 		robot[i].jntConnect->SetDamper(D);
 		robot[i].jntConnect->SetSpringOrigin(Rad(0.0));
-	}
+	}*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -344,6 +387,67 @@ int main(int argc, char* argv[]){
 	robot[2].jntConnect->SetSpringOrigin(Rad(0.0));*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////4モジュール放射状結合////////////////////////////////////////////////////////////////////////////////////////////
+
+	//結合部分構築
+	/*jdConnect.poseSocket.Ori() = Quaterniond();
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, 0.173);
+	robot[0].jntConnect = scene->CreateJoint(robot[1].soBody, robot[0].soBody, jdConnect)->Cast();
+	robot[0].jntConnect->SetSpring(K);
+	robot[0].jntConnect->SetDamper(D);
+	robot[0].jntConnect->SetSpringOrigin(Rad(0.0));
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(0.2, 0.0, 0.0);
+	robot[2].jntConnect = scene->CreateJoint(robot[1].soBody, robot[2].soBody, jdConnect)->Cast();
+	robot[2].jntConnect->SetSpring(K);
+	robot[2].jntConnect->SetDamper(D);
+	robot[2].jntConnect->SetSpringOrigin(Rad(0.0));
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, -0.173);
+	robot[3].jntConnect = scene->CreateJoint(robot[1].soBody, robot[3].soBody, jdConnect)->Cast();
+	robot[3].jntConnect->SetSpring(K);
+	robot[3].jntConnect->SetDamper(D);
+	robot[3].jntConnect->SetSpringOrigin(Rad(0.0));*/
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////6モジュール不定形///////////////////////////////////////////////////////////////////////////////////////////////////
+
+	jdConnect.poseSocket.Ori() = Quaterniond();
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(0.1, 0.0, -0.173);
+	robot[2].jntConnect = scene->CreateJoint(robot[1].soBody, robot[2].soBody, jdConnect)->Cast();
+	robot[2].jntConnect->SetSpring(K);
+	robot[2].jntConnect->SetDamper(D);
+	robot[2].jntConnect->SetSpringOrigin(Rad(0.0));
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, -0.173);
+	robot[1].jntConnect = scene->CreateJoint(robot[0].soBody, robot[1].soBody, jdConnect)->Cast();
+	robot[1].jntConnect->SetSpring(K);
+	robot[1].jntConnect->SetDamper(D);
+	robot[1].jntConnect->SetSpringOrigin(Rad(0.0));
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.2, 0.0, 0.0);
+	robot[0].jntConnect = scene->CreateJoint(robot[3].soBody, robot[0].soBody, jdConnect)->Cast();
+	robot[0].jntConnect->SetSpring(K);
+	robot[0].jntConnect->SetDamper(D);
+	robot[0].jntConnect->SetSpringOrigin(Rad(0.0));
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, -0.173);
+	robot[3].jntConnect = scene->CreateJoint(robot[4].soBody, robot[3].soBody, jdConnect)->Cast();
+	robot[3].jntConnect->SetSpring(K);
+	robot[3].jntConnect->SetDamper(D);
+	robot[3].jntConnect->SetSpringOrigin(Rad(0.0));
+	jdConnect.poseSocket.Pos() = Vec3d(0.0, 0.0, 0.0);
+	jdConnect.posePlug.Pos() = Vec3d(-0.1, 0.0, -0.173);
+	robot[4].jntConnect = scene->CreateJoint(robot[5].soBody, robot[4].soBody, jdConnect)->Cast();
+	robot[4].jntConnect->SetSpring(K);
+	robot[4].jntConnect->SetDamper(D);
+	robot[4].jntConnect->SetSpringOrigin(Rad(0.0));
+	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	//	GLUTの初期化
 	glutInit(&argc, argv);
@@ -402,9 +506,8 @@ void GetTrajectory(int module_num, int leg_num, double para_a1, double para_b1, 
 	}
 }
 
-//脚位置取得（この関数は拡張後も使える）
+//脚位置取得
 void GetLegPosition(int module_num){
-
 	for(int i=0; i<module_num; i++){
 		robot[i].leg[0].direction = robot[i].theta;
 		robot[i].leg[1].direction = robot[i].theta + 2*PI/3;
