@@ -455,6 +455,8 @@ namespace Spr{
 #endif
 
 void PHConstraintEngine::Step(){
+//	DSTR << "nContact:" <<  points.size() << std::endl;
+
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();

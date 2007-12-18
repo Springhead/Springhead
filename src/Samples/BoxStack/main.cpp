@@ -36,6 +36,7 @@ using namespace Spr;
 
 #define ESC		27
 
+bool bStep = true;
 UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;
@@ -51,7 +52,10 @@ static GLfloat light_diffuse[]  = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
 // 材質の設定
 static GLfloat mat_floor[]      = { 1.0, 0.0, 0.0, 1.0 };
-static GLfloat mat_box[]        = { 0.8, 0.8, 1.0, 1.0 };
+static GLfloat mat_box[2][4]     = {
+	{ 1.0, 0.6, 0.6, 1.0 },
+	{ 0.6, 0.6, 1.0, 1.0 }
+};
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
 
@@ -123,7 +127,7 @@ void display(){
 	
 	// ボックス(soBox)
 	for (unsigned int boxCnt=0; boxCnt<soBox.size(); ++boxCnt) {	
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_box);
+		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_box[boxCnt%2]);
 		glPushMatrix();
 		pose = soBox[boxCnt]->GetPose();
 		ad = Affined(pose);
@@ -220,6 +224,13 @@ void keyboard(unsigned char key, int x, int y){
 		case 'q':
 			exit(0);
 			break;
+		case 'r':
+			bStep = true;
+			break;
+		case 's':
+			bStep = false;
+			scene->Step();
+			break;
 		case ' ':
 			{
 				soBox.push_back(scene->CreateSolid(desc));
@@ -302,7 +313,7 @@ void timer(int id){
 	float DT = 0.05f;
 //	int times = (int)(DT / scene->GetTimeStep());
 //	for(int i=0; i<times; ++i) 
-	scene->Step();
+	if (bStep) scene->Step();
 	glutPostRedisplay();
 	unsigned int msecs = static_cast<unsigned int>(1000*DT);
 	glutTimerFunc(msecs, timer, 0);
@@ -329,7 +340,7 @@ int main(int argc, char* argv[]){
 	
 	// soBox用のdesc
 	desc.mass = 2.0;
-	desc.inertia = 2.0 * Matrix3d::Unit();
+	desc.inertia = 2.0 * Matrix3d::Unit() * 100000;
 
 	//	形状の作成
 	{
@@ -343,6 +354,7 @@ int main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1, 1,-1));
 		md.vertices.push_back(Vec3f( 1, 1, 1));
 		meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+		meshBox->SetName("meshBox");
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
@@ -350,6 +362,7 @@ int main(int argc, char* argv[]){
 			md.vertices[i].z *= 20;
 		}
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+		meshFloor->SetName("meshFloor");
 	}
 	soFloor->AddShape(meshFloor);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));

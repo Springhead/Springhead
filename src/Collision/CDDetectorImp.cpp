@@ -75,8 +75,8 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 			toi = dist / rangeLen;
 			if (toi > 1) return false;	//	接触時刻がこのステップより未来．
 			if (toi >= 0){	//	今回の移動で接触していれば
-				//	DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-				//	DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
+				//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
+				//DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
 				shapePoseW[0].Pos() += toi*delta0;
 				shapePoseW[1].Pos() += toi*delta1;
 				center = commonPoint = shapePoseW[0] * closestPoint[0];

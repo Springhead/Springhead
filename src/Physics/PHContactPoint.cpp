@@ -92,11 +92,16 @@ void PHContactPoint::CompBias(){
 
 	//	跳ね返り係数: 2物体の平均値を使う
 	double e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
+	e = 0;
 	
 	//	接触用の correctionRate
-	double contactCorrectionRate = 0.1;
+	double contactCorrectionRate = 0;
 	//	速度が小さい場合は、跳ね返りなし。
-	if (vjrel[0]*scene->GetTimeStep() > -0.001) e=0;
+//	if (vjrel[0]*scene->GetTimeStep() > -0.001){
+	if (vjrel[0]*scene->GetTimeStep() > -0.1){
+		e=0;
+		contactCorrectionRate = 0.3;
+	}
 	db[0] = - contactCorrectionRate * (shapePair->depth - 1e-3) / scene->GetTimeStep() + e * vjrel[0];
 
 #if 0

@@ -222,7 +222,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			cur->dist = w[(int)cur->i[0]] * cur->normal / cur->normal.Z();
 			if (last->nVtx){
 				double approach = last->normal * (w[(int)cur->i[0]] - w[(int)last->i[0]]);
-				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist >= last->dist)) break;	//	return last;
+				
+//				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist >= last->dist)) break;	//	return last;
+				if (approach > -sqEpsilon && cur->dist >= last->dist) break;
 			}
 
 			int newVtx = VacantIdFromId(cur->i[0], cur->i[1], cur->i[2]);
@@ -280,16 +282,12 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	}
 	dist = last->dist;
 	normal = w2z.Conjugated() * last->normal;
-//	HASE_REPORT
-/*	DSTR << "nVtx:" << (int)last->nVtx;
-	DSTR << "  dist:" << dist << "  cur:" << cur->dist;
-	CDBox* box = DCAST(CDBox, b);
-	if (box){
-		DSTR << "  v:" << box->curPos;
-	}
-	DSTR << "  ori:" << b2w.Ori() * Vec3f(0,1,0);
-	DSTR << std::endl;
-*/	
+	//	//	HASE_REPORT
+	//	DSTR << "nVtx:" << (int)last->nVtx;
+	//	DSTR << "  dist:" << dist << "  cur:" << cur->dist;
+	//	DSTR << "  " << pa << pb;
+	//	DSTR << std::endl;
+	
 	return last->nVtx;
 }
 
@@ -495,17 +493,18 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					n *= -1;
 				}
 				double dist = n * (-vtxs[0]);
-				DSTR << "n:\t" << nUsed << "Dist:\t" << dist << std::endl;
+/*				DSTR << "n:\t" << nUsed << "Dist:\t" << dist << std::endl;
 				DSTR << "v:\t" << v.x << "\t" << v.y << "\t" << v.z << std::endl; 
-//				DSTR << "Normal:\t" << n.x << "\t" << n.y << "\t" << n.z << std::endl;
+				DSTR << "Normal:\t" << n.x << "\t" << n.y << "\t" << n.z << std::endl;
 				for(int i=0; i<nUsed; ++i){
 					DSTR << "Use:\t" << vtxs[i].x << "\t" << vtxs[i].y << "\t" << vtxs[i].z << std::endl;
 				}
 				for(int i=0; i<nNotUsed; ++i){
 					DSTR << "Not:\t" << notUsed[i].x << "\t" << notUsed[i].y << "\t" << notUsed[i].z << std::endl;
 				}
+				*/
 			}else{
-				DSTR << "n:\t" << nUsed << std::endl;
+				/*	DSTR << "n:\t" << nUsed << std::endl;
 				DSTR << "v:\t" << v.x << "\t" << v.y << "\t" << v.z << std::endl;
 				for(int i=0; i<nUsed; ++i){
 					DSTR << "Use:\t" << vtxs[i].x << "\t" << vtxs[i].y << "\t" << vtxs[i].z << std::endl;
@@ -513,6 +512,7 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 				for(int i=0; i<nNotUsed; ++i){
 					DSTR << "Not:\t" << notUsed[i].x << "\t" << notUsed[i].y << "\t" << notUsed[i].z << std::endl;
 				}
+				*/
 			}
 		}
 	} while ( usedBits < 15 && !(v.square() < epsilon2) ) ;
