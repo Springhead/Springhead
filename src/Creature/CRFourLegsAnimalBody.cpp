@@ -867,7 +867,6 @@ void CRFourLegsAnimalBody::SetUpperBody(){
 	upperBody.push_back(solids[CRFourLegsAnimalBodyDesc::SO_HEAD]);
 }
 
-
 Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(){
 	
 	SetUpperBody();
