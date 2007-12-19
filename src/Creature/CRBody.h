@@ -23,7 +23,7 @@ protected:
 	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
 
 	/// ボディを構成する剛体
-	std::vector<PHSolidIf*> solids;
+	std::vector<PHSolidIf*> solids;	
 	
 	/// ボディを構成する関節
 	std::vector<PHJointIf*> joints;
@@ -43,6 +43,12 @@ protected:
 	/// 位置・姿勢の制御対象の集合
 	std::vector<CRIKMovableIf*> postureMovables;
 
+	/// 重心を求める時に使うi番目までの重心の小計
+	double totalWeight;
+
+	/// 重心を求めるときに使うi番目までのブロックの中心座標
+	Vec3d  centerPosOfBlocks;
+
 	/** @brief 関節を作る
 	*/
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
@@ -60,6 +66,9 @@ public:
 		creature = c;
 		phScene = DCAST(PHSceneIf, c->GetScene());
 		phSdk   = phScene->GetSdk();
+		totalWeight = 0;
+		centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
+
 	}
 
 	/** @brief 初期化を行う
@@ -93,6 +102,10 @@ public:
 	/** @brief IKを計算する
 	*/
 	virtual void CalcIK();
+
+	/** @brief ボディの重心座標を得る
+	*/
+	virtual Vec3d GetCenterOfMass();
 	
 };
 }

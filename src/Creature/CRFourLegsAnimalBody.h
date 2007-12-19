@@ -77,6 +77,10 @@ public:
 	*/
 	virtual void Init();
 
+	/** @brief ボディ全体の重心を得る
+	*/
+	//virtual Vec3d GetCenterOfMass();
+
 };
 
 }

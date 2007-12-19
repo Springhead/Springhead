@@ -56,6 +56,7 @@ public:
 	/** @brief ‰Šú‰»‚ğÀs‚·‚é
 	*/
 	virtual void Init();
+
 };
 
 }

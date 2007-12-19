@@ -88,6 +88,7 @@ public:
 	/** @brief 上半身のポーズを初期位置に戻す
 	*/
 	virtual void ResetUpperBodyPose();
+
 };
 
 }

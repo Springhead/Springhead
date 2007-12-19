@@ -66,7 +66,12 @@ struct CRBodyIf : SceneObjectIf{
 
 	/** @brief IKを計算する
 	*/
-	virtual void CalcIK()= 0;
+	virtual void CalcIK() = 0;
+
+	/** @brief ボディの重心座標を得る
+	*/
+	virtual Vec3d GetCenterOfMass() = 0;
+
 	
 };
 

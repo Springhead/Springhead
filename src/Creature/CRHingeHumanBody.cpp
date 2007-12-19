@@ -292,7 +292,7 @@ void CRHingeHumanBody::CreateHead(){
 	joints[JO_NECK_HEAD_X] = CreateJoint(solids[SO_NECK_HEAD_XZ], solids[SO_NECK], hingeDesc);
 
 	hingeDesc                  = PHHingeJointDesc();
-	hingeDesc.posePlug.Ori()   = Quaternionf::Rot(Rad(0), 'z');
+	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'z');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'z');
 	SetJointSpringDamper(hingeDesc, springNeckHeadZ, damperNeckHeadZ, solids[SO_NECK]->GetMass());
@@ -375,7 +375,7 @@ void CRHingeHumanBody::CreateUpperArm(LREnum lr){
 	hingeDesc                  = PHHingeJointDesc();
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(-90), 'x');
 	hingeDesc.poseSocket.Pos() = Vec3d(0, upperArmLength / 2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightUpperArm.w, lr*oriRightUpperArm.x, oriRightUpperArm.y, oriRightUpperArm.z).Inv() * Quaternionf::Rot(Rad(-90), 'x');
+	hingeDesc.poseSocket.Ori() = Quaterniond(lr*oriRightUpperArm.w, lr*oriRightUpperArm.x, oriRightUpperArm.y, oriRightUpperArm.z).Inv() * Quaterniond::Rot(Rad(-90), 'x');
 	SetJointSpringDamper(hingeDesc, springShoulderY, damperShoulderY, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springShoulderY;
 	// hingeDesc.damper           = damperShoulderY;

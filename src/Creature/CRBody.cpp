@@ -41,6 +41,7 @@ PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJo
 }
 
 void CRBody::Init(){
+
 }
 
 int CRBody::NSolids(){
@@ -119,5 +120,17 @@ void CRBody::CalcIK(){
 		}
 	}
 }
+
+Vec3d CRBody::GetCenterOfMass(){
+	for(int i = 0; i<NSolids(); i++){
+		if(solids[i]){
+			centerPosOfBlocks = centerPosOfBlocks + solids[i]->GetCenterPosition() * solids[i]->GetMass();
+			totalWeight = totalWeight + solids[i]->GetMass(); 
+		}
+	}
+
+	return centerPosOfBlocks / totalWeight;
+}
+
 
 }
