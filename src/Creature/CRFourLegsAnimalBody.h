@@ -91,7 +91,7 @@ public:
 	*/
 	virtual void Init();
 	
-	/** @brief 引数の剛体配列の重心を得る
+	/** @brief 上体の剛体の重心を得る
 	*/
 	Vec3d GetUpperCenterOfMass();
 
