@@ -860,22 +860,27 @@ void CRFourLegsAnimalBody::InitContact(){
 	}
 }
 
-void SetUpperBody(){
-	//UpperBody.push_back() = 
+void CRFourLegsAnimalBody::SetUpperBody(){
+	upperBody.push_back(solids[CRFourLegsAnimalBodyDesc::SO_WAIST]);
+	upperBody.push_back(solids[CRFourLegsAnimalBodyDesc::SO_CHEST]);
+	upperBody.push_back(solids[CRFourLegsAnimalBodyDesc::SO_NECK]);
+	upperBody.push_back(solids[CRFourLegsAnimalBodyDesc::SO_HEAD]);
 }
 
 
-Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(std::vector<PHSolidIf*> solids){
+Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(){
 	
+	SetUpperBody();
+
 	/// ボディ上体の重量小計
 	double totalWeightOfUpperPart = 0;
 	/// ボディ上体の中心座標
 	Vec3d  centerPosOfUpperBlocks = Vec3d(0.0, 0.0, 0.0);
 
-	for(int i = 0; i<(int)solids.size(); i++){
-		if(solids[i]){
-			centerPosOfUpperBlocks = centerPosOfUpperBlocks + solids[i]->GetCenterPosition() * solids[i]->GetMass();
-			totalWeightOfUpperPart = totalWeightOfUpperPart + solids[i]->GetMass(); 
+	for(int i = 0; i<(int)upperBody.size(); i++){
+		if(upperBody[i]){
+			centerPosOfUpperBlocks = centerPosOfUpperBlocks + upperBody[i]->GetCenterPosition() * upperBody[i]->GetMass();
+			totalWeightOfUpperPart = totalWeightOfUpperPart + upperBody[i]->GetMass(); 
 		}
 	}
 

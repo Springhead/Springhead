@@ -26,7 +26,7 @@ namespace Spr{;
 class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyIfInit, public CRFourLegsAnimalBodyDesc {
 private:
 
-	std::vector<PHSolidIf*> Upperbody;	//< 上体を構成する剛体の登録先の配列
+	std::vector<PHSolidIf*> upperBody;	//< 上体を構成する剛体の登録先の配列
 	
 	/// 体幹部の作成
 	void InitBody();
@@ -62,7 +62,7 @@ private:
 
 	/// ボディの上体を構成する剛体を登録する
 	void SetUpperBody();
-
+	
 public:
 	OBJECTDEF(CRFourLegsAnimalBody, CRBody);
 	ACCESS_DESC(CRFourLegsAnimalBody);
@@ -85,15 +85,15 @@ public:
 		InitContact();
 	}
 
+	
+
 	/** @brief 初期化を実行する
 	*/
 	virtual void Init();
-
-	/** @brief ボディ上体の重心を得る
+	
+	/** @brief 引数の剛体配列の重心を得る
 	*/
-	Vec3d GetUpperCenterOfMass(std::vector<PHSolidIf*> solids);
-
-
+	Vec3d GetUpperCenterOfMass();
 
 };
 

@@ -269,6 +269,9 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	IF_DEF(CRFourLegsAnimalBody);
 
+	/** @brief 状態の重心座標を返す
+	*/
+	virtual Vec3d GetUpperCenterOfMass() = 0;
 };
 
 /// 4足動物モデルのデスクリプタ

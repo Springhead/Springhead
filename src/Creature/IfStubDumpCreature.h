@@ -56,6 +56,9 @@ typedef IfInitTemplate<CRHingeHumanBodyIfStub, CRHingeHumanBody>	CRHingeHumanBod
 template <class IF, class MIF, class OBJ> struct CRBodyIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRFourLegsAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, OBJ> {
+	virtual Vec3d GetUpperCenterOfMass(){
+		return ((OBJ*)(MIF*)this)->GetUpperCenterOfMass();
+	}
 };
 struct CRFourLegsAnimalBodyIf;	class CRFourLegsAnimalBody;
 typedef CRFourLegsAnimalBodyIfStubTemplate<CRFourLegsAnimalBodyIf, ObjectIfBuf, CRFourLegsAnimalBody>	CRFourLegsAnimalBodyIfStub;
