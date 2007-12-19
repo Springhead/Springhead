@@ -25,9 +25,10 @@ class GRMesh: public GRVisual, public GRMeshIfInit, public GRMeshDesc{
 	void MakeBuffer();
 	/// 頂点バッファの描画
 	void DrawBuffer(void* vtx);
+public:
 	/// ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
-
+private:
 	///	頂点フォーマットに合った頂点バッファ
 	float* vtxs;
 	int nVtxs;
