@@ -860,4 +860,27 @@ void CRFourLegsAnimalBody::InitContact(){
 	}
 }
 
+void SetUpperBody(){
+	//UpperBody.push_back() = 
+}
+
+
+Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(std::vector<PHSolidIf*> solids){
+	
+	/// ボディ上体の重量小計
+	double totalWeightOfUpperPart = 0;
+	/// ボディ上体の中心座標
+	Vec3d  centerPosOfUpperBlocks = Vec3d(0.0, 0.0, 0.0);
+
+	for(int i = 0; i<(int)solids.size(); i++){
+		if(solids[i]){
+			centerPosOfUpperBlocks = centerPosOfUpperBlocks + solids[i]->GetCenterPosition() * solids[i]->GetMass();
+			totalWeightOfUpperPart = totalWeightOfUpperPart + solids[i]->GetMass(); 
+		}
+	}
+
+	return centerPosOfUpperBlocks / totalWeightOfUpperPart;
+}
+
+
 }

@@ -122,6 +122,11 @@ void CRBody::CalcIK(){
 }
 
 Vec3d CRBody::GetCenterOfMass(){
+	/// 重心を求める時に使うi番目までの重心の小計
+	double totalWeight = 0;
+	/// 重心を求めるときに使うi番目までのブロックの中心座標
+	Vec3d  centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
+
 	for(int i = 0; i<NSolids(); i++){
 		if(solids[i]){
 			centerPosOfBlocks = centerPosOfBlocks + solids[i]->GetCenterPosition() * solids[i]->GetMass();

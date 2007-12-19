@@ -43,12 +43,7 @@ protected:
 	/// 位置・姿勢の制御対象の集合
 	std::vector<CRIKMovableIf*> postureMovables;
 
-	/// 重心を求める時に使うi番目までの重心の小計
-	double totalWeight;
-
-	/// 重心を求めるときに使うi番目までのブロックの中心座標
-	Vec3d  centerPosOfBlocks;
-
+	
 	/** @brief 関節を作る
 	*/
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
@@ -66,9 +61,6 @@ public:
 		creature = c;
 		phScene = DCAST(PHSceneIf, c->GetScene());
 		phSdk   = phScene->GetSdk();
-		totalWeight = 0;
-		centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
-
 	}
 
 	/** @brief 初期化を行う

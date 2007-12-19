@@ -25,31 +25,43 @@ namespace Spr{;
 // ボールやヒンジのジョイントを用いた哺乳類モデル・クラスの実装
 class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyIfInit, public CRFourLegsAnimalBodyDesc {
 private:
+
+	std::vector<PHSolidIf*> Upperbody;	//< 上体を構成する剛体の登録先の配列
+	
+	/// 体幹部の作成
 	void InitBody();
 	void CreateWaist();
 	void CreateChest();
 	void CreateTail();
 
+	/// 頭部の作成
 	void InitHead();
 	void CreateNeck();
 	void CreateHead();
 
+	/// 前脚部の作成
 	void InitFrontLegs();
 	void CreateBreastBone(LREnum lr);
 	void CreateRadius(LREnum lr);
 	void CreateFrontCannonBone(LREnum lr);
 	void CreateFrontToeBones(LREnum lr);
 
+	/// 後脚部の作成
 	void InitRearLegs();
 	void CreateFemur(LREnum lr);
 	void CreateTibia(LREnum lr);
 	void CreateRearCannonBone(LREnum lr);
 	void CreateRearToeBones(LREnum lr);
 	
+	/// 感覚器の作成（未実装）
 	void InitEyes();
 	void CreateEye(LREnum lr);
 
+	/// ボディ全ての剛体同士の接触を切る
 	void InitContact();
+
+	/// ボディの上体を構成する剛体を登録する
+	void SetUpperBody();
 
 public:
 	OBJECTDEF(CRFourLegsAnimalBody, CRBody);
@@ -77,9 +89,11 @@ public:
 	*/
 	virtual void Init();
 
-	/** @brief ボディ全体の重心を得る
+	/** @brief ボディ上体の重心を得る
 	*/
-	//virtual Vec3d GetCenterOfMass();
+	Vec3d GetUpperCenterOfMass(std::vector<PHSolidIf*> solids);
+
+
 
 };
 

@@ -500,7 +500,7 @@ struct CRTrunkFootAnimalBodyDesc : CRBodyDesc{
 	double waistHeight, waistBreadth, waistThickness;
 	double chestHeight, chestBreadth, chestThickness;
 	double neckLength;
-	double headDiameter;
+	float  headDiameter;
 	double footLength, footBreadth, footThickness;
 
 	/// 各関節のバネダンパ

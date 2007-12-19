@@ -489,7 +489,7 @@
 	field->offset = int((char*)&(pCRTrunkFootAnimalBodyDesc->chestThickness) - (char*)pCRTrunkFootAnimalBodyDesc);
 	field = desc->AddField("", "double", "neckLength", "");
 	field->offset = int((char*)&(pCRTrunkFootAnimalBodyDesc->neckLength) - (char*)pCRTrunkFootAnimalBodyDesc);
-	field = desc->AddField("", "double", "headDiameter", "");
+	field = desc->AddField("", "float", "headDiameter", "");
 	field->offset = int((char*)&(pCRTrunkFootAnimalBodyDesc->headDiameter) - (char*)pCRTrunkFootAnimalBodyDesc);
 	field = desc->AddField("", "double", "footLength", "");
 	field->offset = int((char*)&(pCRTrunkFootAnimalBodyDesc->footLength) - (char*)pCRTrunkFootAnimalBodyDesc);

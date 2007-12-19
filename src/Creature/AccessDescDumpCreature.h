@@ -824,7 +824,7 @@ protected: \
 	double chestBreadth ; \
 	double chestThickness ; \
 	double neckLength ; \
-	double headDiameter ; \
+	float headDiameter ; \
 	double footLength ; \
 	double footBreadth ; \
 	double footThickness ; \
@@ -886,7 +886,7 @@ protected: \
 	double chestBreadth ; \
 	double chestThickness ; \
 	double neckLength ; \
-	double headDiameter ; \
+	float headDiameter ; \
 	double footLength ; \
 	double footBreadth ; \
 	double footThickness ; \
