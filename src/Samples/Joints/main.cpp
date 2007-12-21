@@ -93,7 +93,7 @@ UTRef<GRDeviceGLIf> device;
 
 double simulationPeriod = 50.0;
 Vec3d lookAt;
-int sceneNo	= 6;							// シーン番号
+int sceneNo	= 7;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
 double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
 bool bLeftButton = false, bRightButton = false;
@@ -343,7 +343,7 @@ void BuildScene5(){
 void BuildScene6(){
 
 // #if->縦、#else->横
-#if 0
+#if 1
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
 	shapeBox = phSdk->CreateShape(bd);
@@ -362,8 +362,8 @@ void BuildScene6(){
 	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	desc.posePlug.Pos()   = Vec3d(0.0, -3.0, 0.0);
 	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(-90), 'x');
-//	desc.spring			  = 100;
-//	desc.damper			  = 10;
+	desc.spring			  = 100;
+	desc.damper			  = 10;
 	desc.limitSwing[0]	  = Rad(  0); // swing lower
 	desc.limitSwing[1]	  = Rad( 20); // swing upper
 	desc.limitTwist[0]	  = Rad(-20); // twist lower
@@ -401,6 +401,62 @@ void BuildScene6(){
 
 }
 
+void BuildScene7(){
+	
+
+#if 1
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(2.0, 6.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
+	
+	soBox.resize(2);
+	soBox[0] = scene->CreateSolid(solidDesc);
+	soBox[0]->AddShape(shapeBox);
+	soBox[0]->SetDynamical(false);
+	soBox[1] = scene->CreateSolid(solidDesc);
+	soBox[1]->AddShape(shapeBox);
+	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
+
+	jntLink.resize(1);
+	PHHingeJointDesc desc;
+	desc.poseSocket.Pos() = Vec3d(0.0, 3.0, 0.0);
+	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
+	desc.posePlug.Pos()   = Vec3d(0.0, -3.0, 0.0);
+	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
+	desc.spring			  = 100;
+	desc.damper			  = 10;
+	desc.origin			  = Rad(0);
+	desc.lower			  = Rad(0);
+	desc.upper			  = Rad(60);
+	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
+#else 
+	CDBoxDesc bd;
+	bd.boxsize = Vec3f(6.0, 2.0, 2.0);
+	shapeBox = phSdk->CreateShape(bd);
+	
+	soBox.resize(2);
+	soBox[0] = scene->CreateSolid(solidDesc);
+	soBox[0]->AddShape(shapeBox);
+	soBox[0]->SetDynamical(false);
+	soBox[1] = scene->CreateSolid(solidDesc);
+	soBox[1]->AddShape(shapeBox);
+	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
+
+	jntLink.resize(1);
+	PHHingeJointDesc desc;
+	desc.poseSocket.Pos() = Vec3d(3.0, 0.0, 0.0);
+	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
+	desc.posePlug.Pos()   = Vec3d(-3.0, 0.0, 0.0);
+	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
+	desc.spring			  = 100;
+	desc.damper			  = 10;
+	desc.origin			  = Rad(0);
+	desc.lower			  = Rad(0);
+	desc.upper			  = Rad(60);
+	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
+#endif
+}
+
 void BuildScene(){
 	switch(sceneNo){
 	case 0: BuildScene0(); break;
@@ -410,6 +466,7 @@ void BuildScene(){
 	case 4: BuildScene4(); break;
 	case 5: BuildScene5(); break;
 	case 6: BuildScene6(); break;
+	case 7: BuildScene7(); break;
 	}
 }
 
@@ -718,6 +775,113 @@ void OnKey6(char key){
 #endif
 
 }
+
+void OnKey7(char key){
+	PHHingeJointDesc hingeDesc;
+	switch(key){
+		
+		// plus value origins
+		{
+		case 'w':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(10);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'e':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(20);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'r':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(30);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'a':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(40);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 's':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(50);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'd':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(60);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'z':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(70);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'x':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(80);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'c':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(90);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		}
+
+		// minous value origin
+		{
+		case 'i':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-10);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'o':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-20);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'p':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-30);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'j':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-40);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'k':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-50);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'l':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-60);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'b':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-70);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'n':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-80);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		case 'm':
+			jntLink[0]->GetDesc(&hingeDesc);
+			hingeDesc.origin = Rad(-90);
+			jntLink[0]->SetDesc(&hingeDesc);
+			break;
+		}
+
+	}
+
+}
+
 void OnKey(char key){
 	switch(sceneNo){
 	case 0: OnKey0(key); break;
@@ -727,6 +891,7 @@ void OnKey(char key){
 	case 4: OnKey4(key); break;
 	case 5: OnKey5(key); break;
 	case 6: OnKey6(key); break;
+	case 7: OnKey7(key); break;
 	}
 }
 
@@ -752,6 +917,8 @@ void OnTimer6(){
 		
 
 }
+void OnTimer7(){
+}
 void OnTimer(){
 	switch(sceneNo){
 	case 0: OnTimer0(); break;
@@ -761,6 +928,7 @@ void OnTimer(){
 	case 4: OnTimer4(); break;
 	case 5: OnTimer5(); break;
 	case 6: OnTimer6(); break;
+	case 7: OnTimer7(); break;
 	}
 }	
 
@@ -852,7 +1020,7 @@ void keyboard(unsigned char key, int x, int y){
 			exit(0);
 			break;
 		//シーン切り替え
-		case '0': case '1': case '2': case '3': case '4': case '5': case '6':
+		case '0': case '1': case '2': case '3': case '4': case '5': case '6': case '7':
 			scene->Clear();
 			soFloor = NULL;
 			soBox.clear();

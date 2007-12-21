@@ -203,9 +203,11 @@ void PHBallJoint::CompBias(){
 	}
 	
 	Vec3d vJc = Jc * vjrel.w();
+	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
+	// nowTheta[0]: swing, nowTheta[1]: twist
 	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
-	//x軸方向に拘束をかける場合	
-	if(onLimit[0].onLower ){
+	// x軸方向に拘束をかける場合	
+	if(onLimit[0].onLower){
 		dA.w()[0] = 0;
 		db.w()[0] = (nowTheta[0] - limitSwing[0]) * dtinv * engine->velCorrectionRate;
 	}
@@ -236,7 +238,7 @@ void PHBallJoint::CompError(){
 
 void PHBallJoint::Projection(double& f, int k){
 	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする関数
-	//k:con[i]のiの部分、fは力λのこと
+	//k:con[k]のkの部分、fは力λのこと
 	
 	if (k==3){
 		if(onLimit[0].onLower)

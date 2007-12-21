@@ -134,7 +134,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
 	rangeFrontKnee	  = Vec2d(Rad(   0), Rad(+ 90));
 	rangeStifle		  = Vec2d(Rad(- 90), Rad(+ 90));
-	rangeRearKnee	  = Vec2d(Rad(- 90), Rad(+ 90));
+	rangeRearKnee	  = Vec2d(Rad(- 90), Rad(	0));
 
 	//-----------------------------------------------------------------------------------
 	// limit Direction of the ball joints

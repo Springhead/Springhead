@@ -46,8 +46,12 @@ void PHHingeJoint::CompBias(){
 
 	if(mode == MODE_VELOCITY){
 		db.w().z = -vel_d;
-	}else if(onLower || onUpper){
-	}else if(spring != 0.0 || damper != 0.0){
+	}
+	else if(onLower || onUpper){
+		dA.w()[2] = 0;
+		db.w()[2] = (position[0] - origin) * dtinv * engine->velCorrectionRate;
+	}
+	else if(spring != 0.0 || damper != 0.0){
 		double diff;
 		diff = GetPosition() - origin;
 		// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
@@ -71,6 +75,17 @@ void PHHingeJoint::CompError(){
 
 }
 
+void PHHingeJoint::Projection(double& f, int k){
+	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする関数
+	//k:con[k]のkの部分、fは力λのこと
+	if(k == 5){
+		if(onLower)
+			f = max(0.0, f);
+		else if(onUpper)
+			f = min(0.0, f);
+	}
+
+}
 
 //-----------------------------------------------------------------------------
 IF_OBJECT_IMP(PHHingeJointNode, PHTreeNode1D);

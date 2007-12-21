@@ -46,6 +46,7 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 		double theta = GetPosition();
 		onLower = (theta <= lower);
 		onUpper = (theta >= upper);
+		DSTR << onUpper << endl;
 	}
 	// 各自由度を拘束するかどうか
 	//  関節軸に対応する自由度は可動範囲にかかっている場合，バネ・ダンパが設定されている場合にtrue
