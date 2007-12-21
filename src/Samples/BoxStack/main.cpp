@@ -41,9 +41,16 @@ UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;
 CDConvexMeshIf* meshFloor=NULL;
-CDConvexMeshIf* meshBox=NULL;
+CDConvexMeshIf* meshConvex=NULL;
+CDBoxIf* meshBox=NULL;
+CDSphereIf* meshSphere=NULL;
+CDCapsuleIf* meshCapsule=NULL;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBox;
+
+UTRef<GRSdkIf> grSdk;
+GRDebugRenderIf* render;
+UTRef<GRDeviceGLIf> device;
 
 // 光源の設定 
 static GLfloat light_position[] = { 25.0, 50.0, 20.0, 1.0 };
@@ -92,6 +99,17 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
  return 	なし
  */
 void display(){
+	//	バッファクリア
+	render->ClearBuffer();
+	render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
+	render->DrawSolid(soFloor);
+	for(unsigned int i=0; i<soBox.size(); ++i){
+		render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)(i+1));
+		render->DrawSolid(soBox[i]);
+	}
+	glutSwapBuffers();
+
+/*
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -161,6 +179,7 @@ void display(){
 	}
 
 	glutSwapBuffers();
+*/
 }
 
 /**
@@ -239,6 +258,26 @@ void keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "box" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+			}break;
+		case 'c':
+			{
+				soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->AddShape(meshCapsule);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				std::ostringstream os;
+				os << "capsule" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+			}break;
+		case 'd':
+			{
+				soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->AddShape(meshSphere);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				std::ostringstream os;
+				os << "sphere" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'v':
@@ -344,6 +383,21 @@ int main(int argc, char* argv[]){
 
 	//	形状の作成
 	{
+		CDBoxDesc bd;
+		bd.boxsize = Vec3f(2,2,2);
+		meshBox = XCAST(sdk->CreateShape(bd));
+		meshBox->SetName("meshBox");
+		CDSphereDesc sd;
+		sd.radius = 1;
+		meshSphere = XCAST(sdk->CreateShape(sd));
+		meshSphere->SetName("meshSphere");
+		CDCapsuleDesc cd;
+		cd.radius = 1;
+		cd.length = 1;
+		meshCapsule = XCAST(sdk->CreateShape(cd));
+		meshCapsule->SetName("meshCapsule");
+	}
+	{
 		CDConvexMeshDesc md;
 		md.vertices.push_back(Vec3f(-1,-1,-1));
 		md.vertices.push_back(Vec3f(-1,-1, 1));	
@@ -353,8 +407,8 @@ int main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1,-1, 1));
 		md.vertices.push_back(Vec3f( 1, 1,-1));
 		md.vertices.push_back(Vec3f( 1, 1, 1));
-		meshBox = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
-		meshBox->SetName("meshBox");
+		meshConvex = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+		meshConvex->SetName("meshConvex");
 
 		// soFloor(meshFloor)に対してスケーリング
 		for(unsigned i=0; i<md.vertices.size(); ++i){
@@ -373,14 +427,23 @@ int main(int argc, char* argv[]){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInitWindowSize(800, 600);
 	glutCreateWindow("BoxStack");
-	initialize();
+
+	grSdk = GRSdkIf::CreateSdk();
+	render = grSdk->CreateDebugRender();
+	device = grSdk->CreateDeviceGL();
+	device->Init();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(0, timer, 0);
 
 	glutReshapeWindow(800, 600);
+
+	render->SetDevice(device);
+	initialize();
+
 	glutMainLoop();
 
 	//	SDKは開放しなくても良い．しなくてもmainを抜けてから開放される．
