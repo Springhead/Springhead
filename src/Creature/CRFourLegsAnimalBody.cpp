@@ -131,10 +131,10 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 
 	//-----------------------------------------------------------------------------------
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø)
-	rangeElbow		  = Vec2d(Rad(- 90), Rad(+ 90));
-	rangeFrontKnee	  = Vec2d(Rad(   0), Rad(+ 90));
-	rangeStifle		  = Vec2d(Rad(- 90), Rad(+ 90));
-	rangeRearKnee	  = Vec2d(Rad(- 90), Rad(	0));
+	rangeElbow		  = Vec2d(Rad(	 0), Rad(+ 90));
+	rangeFrontKnee	  = Vec2d(Rad(- 90), Rad(	0));
+	rangeStifle		  = Vec2d(Rad(- 90), Rad(	0));
+	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+ 90));
 
 	//-----------------------------------------------------------------------------------
 	// limit Direction of the ball joints
