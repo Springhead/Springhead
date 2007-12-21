@@ -28,6 +28,17 @@ IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 PHJoint1D::PHJoint1D(){
 }	
 
+bool PHJoint1D::GetDesc(void* desc){
+	PHConstraint::GetDesc(desc);
+	GetRange(((PHJoint1DDesc*)desc)->lower, ((PHJoint1DDesc*)desc)->upper);
+	((PHJoint1DDesc*)desc)->spring			= GetSpring();
+	((PHJoint1DDesc*)desc)->damper			= GetDamper();
+	((PHJoint1DDesc*)desc)->origin			= GetSpringOrigin();
+	((PHJoint1DDesc*)desc)->desiredVelocity = GetDesiredVelocity();
+	((PHJoint1DDesc*)desc)->torque			= GetMotorTorque();
+	return true;
+}
+
 void PHJoint1D::SetDesc(const void* desc){
 	PHConstraint::SetDesc(desc);
 	const PHJoint1DDesc& desc1D = *(const PHJoint1DDesc*)desc;
@@ -46,7 +57,7 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 		double theta = GetPosition();
 		onLower = (theta <= lower);
 		onUpper = (theta >= upper);
-		DSTR << onUpper << endl;
+	//	DSTR << onUpper << endl;
 	}
 	// 各自由度を拘束するかどうか
 	//  関節軸に対応する自由度は可動範囲にかかっている場合，バネ・ダンパが設定されている場合にtrue

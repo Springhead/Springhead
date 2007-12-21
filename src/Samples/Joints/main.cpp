@@ -778,103 +778,106 @@ void OnKey6(char key){
 
 void OnKey7(char key){
 	PHHingeJointDesc hingeDesc;
+	PHHingeJointIf* hiJoint = DCAST(PHHingeJointIf, jntLink[0]);
+
 	switch(key){
 		
 		// plus value origins
 		{
 		case 'w':
-			jntLink[0]->GetDesc(&hingeDesc);
+			DSTR << hiJoint->GetIfInfo()->ClassName() << endl;
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(10);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'e':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(20);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'r':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(30);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'a':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(40);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 's':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(50);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'd':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(60);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'z':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(70);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'x':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(80);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'c':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(90);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		}
 
 		// minous value origin
 		{
 		case 'i':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-10);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'o':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-20);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'p':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-30);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'j':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-40);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'k':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-50);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'l':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-60);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'b':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-70);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'n':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-80);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'm':
-			jntLink[0]->GetDesc(&hingeDesc);
+			hiJoint->GetDesc(&hingeDesc);
 			hingeDesc.origin = Rad(-90);
-			jntLink[0]->SetDesc(&hingeDesc);
+			hiJoint->SetDesc(&hingeDesc);
 			break;
 		}
 

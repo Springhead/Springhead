@@ -24,6 +24,19 @@ PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	axisIndex[0] = 5;
 }
 
+bool PHHingeJoint::GetDesc(void* desc){
+	PHJoint1D::GetDesc(desc);
+	return true;
+}
+
+void PHHingeJoint::SetDesc(const void* desc){
+	PHJoint1D::SetDesc(desc);
+	
+	const PHHingeJointDesc& descHinge = *(const PHHingeJointDesc*)desc;
+
+	SetMotorTorque(descHinge.torque);
+}
+
 void PHHingeJoint::UpdateJointState(){
 	//軸方向の拘束は合致しているものと仮定して角度を見る
 	position[0] = Xjrel.q.Theta();
@@ -33,6 +46,7 @@ void PHHingeJoint::UpdateJointState(){
 }
 
 void PHHingeJoint::CompBias(){
+//	DSTR << "spring " << spring << " goal " << origin*180/M_PI << endl;
 	double dtinv = 1.0 / scene->GetTimeStep();
 	if (engine->numIterCorrection==0){	//	Correction を速度LCPで行う場合
 		//	次のステップでの位置の誤差の予測値が0になるような速度を設定
@@ -62,6 +76,7 @@ void PHHingeJoint::CompBias(){
 		dA.w().z = tmp * dtinv;
 		db.w().z = spring * (diff) * tmp;
 	}
+
 }
 
 void PHHingeJoint::CompError(){
@@ -72,8 +87,6 @@ void PHHingeJoint::CompError(){
 	Quaterniond qarc;
 	qarc.RotationArc(Xjrel.q * Vec3d(0,0,1), Vec3d(0,0,1)); // 軸を一致させるような回転
 	B.w() = -qarc.Theta() * qarc.Axis();
-
-
 }
 
 void PHHingeJoint::Projection(double& f, int k){
@@ -85,7 +98,6 @@ void PHHingeJoint::Projection(double& f, int k){
 		else if(onUpper)
 			f = min(0.0, f);
 	}
-
 }
 
 //-----------------------------------------------------------------------------
@@ -96,14 +108,17 @@ void PHHingeJointNode::CompJointJacobian(){
 	J.col(0).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNode1D::CompJointJacobian();
 }
+
 void PHHingeJointNode::CompJointCoriolisAccel(){
 	cj.clear();
 }
+
 void PHHingeJointNode::CompRelativeVelocity(){
 	PHJoint1D* j = GetJoint();
 	j->vjrel.v().clear();
 	j->vjrel.w() = Vec3d(0.0, 0.0, j->velocity[0]);
 }
+
 void PHHingeJointNode::CompRelativePosition(){
 	PHJoint1D* j = GetJoint();
 	j->Xjrel.q = Quaterniond::Rot(j->position[0], 'z');
