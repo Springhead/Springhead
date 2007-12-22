@@ -3,6 +3,24 @@
 namespace Spr{;
 
 IF_OBJECT_IMP(CRTryStandingUpController, CRController);
+/*
+Vec3d GetCenterOfMass(CRBodyIf* crBody){
+	Vec3d center;
+
+	return center;
+}
+*/
+
+Vec3d GetFootPos(PHSolidIf* footSolid){
+	Vec3d pos;
+	//pos = standUpBody->GetCenterOfMass();
+	return pos;
+}
+
+void TransitionPoseModel(CRBodyIf* crBody){
+	
+	;
+}
 
 void CRTryStandingUpController::Init(){	
 	CRController::Init();
@@ -22,18 +40,5 @@ void CRTryStandingUpController::Step(){
 	lefrRearFootPos	  = GetFootPos(footSolid);
 */
 }
-
-Vec3d GetCenterOfMass(CRBodyIf* crBody){
-	Vec3d center;
-
-	return center;
-}
-
-Vec3d GetFootPos(PHSolidIf* footSolid){
-	Vec3d pos;
-
-	return pos;
-}
-
 
 }

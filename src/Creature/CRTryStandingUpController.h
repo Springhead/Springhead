@@ -34,8 +34,20 @@ private:
 	Vec3d leftFrontFootPos;		//< 左前足の位置
 	Vec3d leftRearFootPos;		//< 左後足の位置
 
-	Vec3d GetCenterOfMass(CRBodyIf* crBody);
+	CRBodyIf* standUpBody;
+
+
+	/** @brief ボディ全体の重心の位置座標を出す
+	*/
+	//Vec3d GetCenterOfMass(CRBodyIf* crBody);
+
+	/** @brief 足の座標を返す
+	*/
 	Vec3d GetFootPos(PHSolidIf* footSolid);
+
+	/** @brief 遺伝子に格納されている目標角度情報からボディを実際に動かす
+	*/
+	void TranisitionPoseModel(CRBodyIf* crBody);
 
 public:
 	//----------------------------------------------------------
@@ -68,6 +80,7 @@ public:
 	/** @brief 制御のシミュレーションをする
 	*/
 	virtual void Step();
+
 };
 }
 //@}
