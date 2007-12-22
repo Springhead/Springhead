@@ -47,13 +47,23 @@ private:
 	Vec3d leftFrontFootPos;		//< 左前足の位置
 	Vec3d leftRearFootPos;		//< 左後足の位置
 
+	/** @brief CreatureのBodyを得る
+	*/
+	CRBodyIf* GetBody(CRCreatureIf* creature);
+	
+	/** @brief 足の剛体を指定する。
+	*/
+	std::vector<PHSolidIf*> SetFootSolid(CRBodyIf* body);
+
 	/** @brief 足の座標を返す
 	*/
 	Vec3d GetFootPos(PHSolidIf* footSolid);
 
 	/** @brief 遺伝子に格納されている目標角度情報からボディを実際に動かす
 	*/
-	void TranisitionPoseModel(CRBodyIf* crBody);
+	void TransitionPoseModel(CRBodyIf* crBody);
+
+
 
 public:
 	//----------------------------------------------------------
