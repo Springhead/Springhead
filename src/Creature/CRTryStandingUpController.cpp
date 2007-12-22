@@ -3,17 +3,9 @@
 namespace Spr{;
 
 IF_OBJECT_IMP(CRTryStandingUpController, CRController);
-/*
-Vec3d GetCenterOfMass(CRBodyIf* crBody){
-	Vec3d center;
-
-	return center;
-}
-*/
 
 Vec3d GetFootPos(PHSolidIf* footSolid){
 	Vec3d pos;
-	//pos = standUpBody->GetCenterOfMass();
 	return pos;
 }
 
@@ -29,16 +21,22 @@ void CRTryStandingUpController::Init(){
 	totalStep = 0;
 }
 
-void CRTryStandingUpController::Step(){
+void CRTryStandingUpController::Step(){	
 	totalStep += 1;
 	CRController::Step();
+
+	// 各ボディの重心を出す
+	for(int i=0; i<creature->NBodies(); i++){
+	centerOfMass = creature->GetBody(i)->GetCenterOfMass();
+	DSTR << centerOfMass << std::endl;
+
 /*
-	centerOfMass = GetCenterOfMass(crBody);
 	rightFrontFootPos = GetFootPos(footSolid);
 	rightRearFootPos  = GetFootPos(footSolid);
 	leftFrontFootPos  = GetFootPos(footSolid);
 	lefrRearFootPos	  = GetFootPos(footSolid);
 */
+	}
 }
 
 }
