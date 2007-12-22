@@ -28,11 +28,11 @@ OUTPUT_SCALER_TYPEMAP(double);
 %}
 %typemap(argout) const type&, const type* ""	// const無しのtypemapが適用されないためのダミー
 %enddef
-INPUT_VECTOR_TYPEMAP(Vec2f, 2);
-INPUT_VECTOR_TYPEMAP(Vec3f, 3);
-INPUT_VECTOR_TYPEMAP(Vec3d, 3);
-INPUT_VECTOR_TYPEMAP(Quaterniond, 4);
-INPUT_VECTOR_TYPEMAP(Posed, 7);
+//INPUT_VECTOR_TYPEMAP(Vec2f, 2);
+//INPUT_VECTOR_TYPEMAP(Vec3f, 3);
+//INPUT_VECTOR_TYPEMAP(Vec3d, 3);
+//INPUT_VECTOR_TYPEMAP(Quaterniond, 4);
+//INPUT_VECTOR_TYPEMAP(Posed, 7);
 
 // 行列変数の即値，constポインタあるいはconst参照
 // Rubyにおける行列の表現は列ベクトルの配列とする
@@ -72,8 +72,8 @@ INPUT_VECTOR_TYPEMAP(Posed, 7);
 %}
 %typemap(argout) const type&, const type* ""	// const無しのtypemapが適用されないためのダミー
 %enddef
-INPUT_MATRIX_TYPEMAP(Matrix3f, 3, 3);
-INPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
+//INPUT_MATRIX_TYPEMAP(Matrix3f, 3, 3);
+//INPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 
 // ベクトル変数のポインタあるいは参照
 %define OUTPUT_VECTOR_TYPEMAP(type, size)
@@ -85,10 +85,10 @@ INPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 	rb_ary_push($result, v);
 }
 %enddef
-OUTPUT_VECTOR_TYPEMAP(Vec3f, 3);
-OUTPUT_VECTOR_TYPEMAP(Vec3d, 3);
-OUTPUT_VECTOR_TYPEMAP(Quaterniond, 4);
-OUTPUT_VECTOR_TYPEMAP(Posed, 7);
+//OUTPUT_VECTOR_TYPEMAP(Vec3f, 3);
+//OUTPUT_VECTOR_TYPEMAP(Vec3d, 3);
+//OUTPUT_VECTOR_TYPEMAP(Quaterniond, 4);
+//OUTPUT_VECTOR_TYPEMAP(Posed, 7);
 
 // 行列変数のポインタあるいは参照
 %define OUTPUT_MATRIX_TYPEMAP(type, nrow, ncol)
@@ -104,8 +104,8 @@ OUTPUT_VECTOR_TYPEMAP(Posed, 7);
 	rb_ary_push($result, m);
 }
 %enddef
-OUTPUT_MATRIX_TYPEMAP(Matrix3f, 3, 3);
-OUTPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
+//OUTPUT_MATRIX_TYPEMAP(Matrix3f, 3, 3);
+//OUTPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 
 // 戻り値でベクトル型の即値
 %define RETURN_VECTOR_TYPEMAP(type, size)
@@ -115,10 +115,10 @@ OUTPUT_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 		rb_ary_store($result, i, rb_float_new($1[i]));
 %}
 %enddef
-RETURN_VECTOR_TYPEMAP(Vec3f, 3);
-RETURN_VECTOR_TYPEMAP(Vec3d, 3);
-RETURN_VECTOR_TYPEMAP(Quaterniond, 4);
-RETURN_VECTOR_TYPEMAP(Posed, 7);
+//RETURN_VECTOR_TYPEMAP(Vec3f, 3);
+//RETURN_VECTOR_TYPEMAP(Vec3d, 3);
+//RETURN_VECTOR_TYPEMAP(Quaterniond, 4);
+//RETURN_VECTOR_TYPEMAP(Posed, 7);
 
 // 戻り値で行列型の即値
 %define RETURN_MATRIX_TYPEMAP(type, nrow, ncol)
@@ -132,8 +132,8 @@ RETURN_VECTOR_TYPEMAP(Posed, 7);
 	}
 %}
 %enddef
-RETURN_MATRIX_TYPEMAP(Matrix3f, 3, 3);
-RETURN_MATRIX_TYPEMAP(Matrix3d, 3, 3);
+//RETURN_MATRIX_TYPEMAP(Matrix3f, 3, 3);
+//RETURN_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 
 // UTString
 %typemap(in) UTString %{
@@ -147,6 +147,13 @@ RETURN_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 	for(int i = 0; i < RARRAY_LEN($input); i++)
 		temp[i] = STR2CSTR(rb_ary_entry($input, i));
 	$1 = &temp[0];
+%}
+
+// FWSceneIf::GetObjectsの戻り値でFWObjectIf**
+%typemap(out) Spr::FWObjectIf ** %{
+	$result = rb_ary_new2(arg1->NObject());
+	for(int i = 0; i < arg1->NObject(); i++)
+		rb_ary_store($result, i, SWIG_NewPointerObj(SWIG_as_voidptr($1[i]), SWIGTYPE_p_Spr__FWObjectIf, 0 |  0 ));
 %}
 
 // PHSceneIf::GetSolidsの戻り値でPHSolidIf**

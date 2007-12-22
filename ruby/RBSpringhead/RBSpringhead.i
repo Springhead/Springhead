@@ -1,9 +1,10 @@
 %module Springhead
 
 %include "workaround.i"
-%include "sprtypemaps.i"
 
 %{
+#include <Base/TQuaternion.h>
+#include <Base/Affine.h>
 #include <SprFoundation.h>
 #include <SprCollision.h>
 #include <SprFileIO.h>
@@ -12,12 +13,16 @@
 #include <SprFramework.h>
 #include <Framework/SprFWApp.h>
 #include <Framework/SprFWAppGL.h>
-#include <Framework/SprFWAppGLUT.h>
+//#include <Framework/SprFWAppGLUT.h>
 #include "FWVFuncBridgeRuby.h"
 #include <iostream>
 using namespace std;
+using namespace PTM;
 using namespace Spr;
 %}
+
+%include "ptmtypemaps.i"
+%include "sprtypemaps.i"
 
 %typemap(argout) int *dummy_for_vfuncbridge %{
 	arg1->vfBridge = DBG_NEW FWVFuncBridgeRuby();
@@ -36,6 +41,8 @@ namespace Spr{
 namespace Spr{
 struct IfInfo;
 }
+
+
 
 %include <Foundation/SprObject.h>
 %include <Foundation/SprScene.h>
