@@ -241,10 +241,17 @@ struct CRAttentionControllerDesc : public CRControllerDesc{
 };
 
 // ------------------------------------------------------------------------------
-/// 倒れたら立とうと努力するコントローラ
+/// 倒れたら立とうと努力するコントローラのインタフェース
 struct CRTryStandingUpControllerIf : CRControllerIf{
 	IF_DEF(CRTryStandingUpController);
 
+	/** @brief 初期化を行う
+	*/
+	virtual void Init() = 0;
+
+	/** @brief 制御のシミュレーションをする
+	*/
+	virtual void Step() = 0;	
 
 };
 /// 倒れたら立とうと努力するコントローラのデスクリプタ

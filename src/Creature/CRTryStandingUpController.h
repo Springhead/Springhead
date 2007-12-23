@@ -69,6 +69,9 @@ private:
 	*/
 	void TransitionPoseModel(CRBodyIf* crBody);
 
+	/** @brief クリーチャー達のボディの情報（重心、足の位置）を更新する
+	*/
+	void UpdateBodyState();
 
 
 public:
@@ -94,7 +97,7 @@ public:
 		: CRTryStandingUpControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
-		Init();
+		//Init();
 	}
 	
 	//----------------------------------------------------------

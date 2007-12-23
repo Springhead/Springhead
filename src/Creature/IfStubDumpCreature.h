@@ -179,6 +179,12 @@ typedef IfInitTemplate<CRAttentionControllerIfStub, CRAttentionController>	CRAtt
 template <class IF, class MIF, class OBJ> struct CRControllerIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct CRTryStandingUpControllerIfStubTemplate: public CRControllerIfStubTemplate<IF, MIF, OBJ> {
+	virtual void Init(){
+		return ((OBJ*)(MIF*)this)->Init();
+	}
+	virtual void Step(){
+		return ((OBJ*)(MIF*)this)->Step();
+	}
 };
 struct CRTryStandingUpControllerIf;	class CRTryStandingUpController;
 typedef CRTryStandingUpControllerIfStubTemplate<CRTryStandingUpControllerIf, ObjectIfBuf, CRTryStandingUpController>	CRTryStandingUpControllerIfStub;
