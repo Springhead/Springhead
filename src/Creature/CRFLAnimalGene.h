@@ -5,18 +5,22 @@
 #include <Creature/CRFourLegsAnimalBody.h>
 #include <vector>
 
-#include "GeneData.h"
+#include "CRController.h"
+#include "CRFLAnimalGeneData.h"
 
-class CRFLAnimalGene{
+class CRFLAnimalGene: public CRController{
 
 private:
 	std::vector<CRFLAnimalGeneData> flAnimalGenes;
+	std::vector<CRBodyIf*>		    crBody;
 public:
-	void				  Init();
-	void				  CreateGene();
-	void				  SetGene(std::vector<CRFLAnimalGeneData> gene);
-	std::vector<CRFLAnimalGeneData> GetGene();
-	void				  MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB);
+	
+	std::vector<CRFLAnimalGeneData> CreateGene(CRBodyIf* body);
+	std::vector<CRFLAnimalGeneData> GetGene(CRBodyIf* body);
+	
+	void SetGene(std::vector<CRFLAnimalGeneData> gene, CRBodyIf* body);
+	void Init();
+	void MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB);
 
 	CRFLAnimalGene();
 };

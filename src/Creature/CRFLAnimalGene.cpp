@@ -2,75 +2,78 @@
 
 using namespace Spr;
 
-extern CRFourLegsAnimalBodyIf* animalBody;
-
 CRFLAnimalGene::CRFLAnimalGene(){
+	for(int i=0; i<creature->NBodies(); i++){
+		crBody.push_back(creature->GetBody(i));
+	}
+
 }
-void CRFLAnimalGene::CreateGene(){
+std::vector<CRFLAnimalGeneData> CRFLAnimalGene::CreateGene(CRBodyIf* body){
 	DSTR << "---------make gene------------" << std::endl;
-	for(int i=0; i< animalBody->NJoints(); i++){
-		if(animalBody->GetJoint(i) != NULL){
-			if(DCAST(PHBallJointIf, animalBody->GetJoint(i))){
+	for(int i=0; i<body->NJoints(); i++){
+		if(body->GetJoint(i) != NULL){
+			if(DCAST(PHBallJointIf, body->GetJoint(i))){
 				PHBallJointDesc ballDesc;
-				animalBody->GetJoint(i)->GetDesc(&ballDesc);
+				body->GetJoint(i)->GetDesc(&ballDesc);
 				Quaterniond goalQ = ballDesc.goal;
 
 				flAnimalGenes.resize(flAnimalGenes.size() + 1);
 				flAnimalGenes.back().goalDir  = goalQ;
-				flAnimalGenes.back().geneType	= GeneData::GEN_QUATERNIOND;
-				DSTR << animalBody->GetJoint(i)->GetIfInfo()->ClassName();
+				flAnimalGenes.back().geneType = CRFLAnimalGeneData::GEN_QUATERNIOND;
+				DSTR << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-			else if(DCAST(PHHingeJointIf, animalBody->GetJoint(i))){
+			else if(DCAST(PHHingeJointIf, body->GetJoint(i))){
 				PHHingeJointDesc hingeDesc;
-				animalBody->GetJoint(i)->GetDesc(&hingeDesc);
+				body->GetJoint(i)->GetDesc(&hingeDesc);
 				double goalD = hingeDesc.origin;
 
 				flAnimalGenes.resize(flAnimalGenes.size() +1);
 				flAnimalGenes.back().goalDir[0] = goalD;
-				flAnimalGenes.back().geneType   = GeneData::GEN_DOUBLE;
+				flAnimalGenes.back().geneType   = CRFLAnimalGeneData::GEN_DOUBLE;
 
-				DSTR << animalBody->GetJoint(i)->GetIfInfo()->ClassName();
+				DSTR << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-		DSTR << " " << animalBody->GetJoint(i)->GetName() << " " << flAnimalGenes.back().goalDir << std::endl;
+		DSTR << " " << body->GetJoint(i)->GetName() << " " << flAnimalGenes.back().goalDir << std::endl;
 		}		
-	}
+	}	
+	return flAnimalGenes;
 }
 
-std::vector<GeneData> CRFLAnimalGene::GetGene(){
+std::vector<CRFLAnimalGeneData> CRFLAnimalGene::GetGene(CRBodyIf* body){
 	DSTR << "---------gene info------------" << std::endl;
-	for(int i=0; i< animalBody->NJoints(); i++){
-		if(animalBody->GetJoint(i) != NULL){
-			if(DCAST(PHBallJointIf, animalBody->GetJoint(i))){
-				DSTR << animalBody->GetJoint(i)->GetIfInfo()->ClassName();
+	for(int i=0; i< body->NJoints(); i++){
+		if(body->GetJoint(i) != NULL){
+			if(DCAST(PHBallJointIf, body->GetJoint(i))){
+				DSTR << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-			else if(DCAST(PHHingeJointIf, animalBody->GetJoint(i))){
-				DSTR << animalBody->GetJoint(i)->GetIfInfo()->ClassName();
+			else if(DCAST(PHHingeJointIf, body->GetJoint(i))){
+				DSTR << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-		DSTR << " " << animalBody->GetJoint(i)->GetName() << " " << flAnimalGenes[i].goalDir << std::endl;
+		DSTR << " " << body->GetJoint(i)->GetName() << " " << flAnimalGenes[i].goalDir << std::endl;
 		}		
 	}
 	return flAnimalGenes;
 }
 
-void CRFLAnimalGene::SetGene(std::vector<GeneData> gene){
+void CRFLAnimalGene::SetGene(std::vector<CRFLAnimalGeneData> gene, CRBodyIf* body){
 	flAnimalGenes = gene;
 	
 	DSTR << "---------rewrite gene info------------" << std::endl;
-	for(int i=0; i< animalBody->NJoints(); i++){
-		if(animalBody->GetJoint(i) != NULL){
-			if(DCAST(PHBallJointIf, animalBody->GetJoint(i))){
-				DSTR << animalBody->GetJoint(i)->GetIfInfo()->ClassName();
+	for(int i=0; i< body->NJoints(); i++){
+		if(body->GetJoint(i) != NULL){
+			if(DCAST(PHBallJointIf, body->GetJoint(i))){
+				DSTR << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-			else if(DCAST(PHHingeJointIf, animalBody->GetJoint(i))){
-				DSTR << animalBody->GetJoint(i)->GetIfInfo()->ClassName();
+			else if(DCAST(PHHingeJointIf, body->GetJoint(i))){
+				DSTR << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-		DSTR << " " << animalBody->GetJoint(i)->GetName() << " " << flAnimalGenes[i].goalDir << std::endl;
+		DSTR << " " << body->GetJoint(i)->GetName() << " " << flAnimalGenes[i].goalDir << std::endl;
 		}	
 	}
 	
 }
 
-void CRFLAnimalGene::MixGenes(std::vector<GeneData> geneA, std::vector<GeneData> geneB){
+void CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB){
 	DSTR << "--------mix two genes------------" << std::endl;
 
 }

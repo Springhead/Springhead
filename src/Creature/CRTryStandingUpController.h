@@ -18,6 +18,7 @@
 #include "IfStubCreature.h"
 
 #include "CRController.h"
+#include "CRFLAnimalGene.h"
 
 //////////////////////////////////////////////////////
 
@@ -40,11 +41,14 @@ private:
 	///////////////////////////////////////////////////////////////
 
 	// このクラスとその派生クラス（今はまだない）で使える変数
-	std::vector<PHSolidIf*> foot;	//< 足を構成する剛体を格納しておく配列
-	std::vector<CRBodyIf*> body;	//< 制御対象のボディ
+	std::vector<PHSolidIf*>			foot;			//< 足を構成する剛体を格納しておく配列
+	std::vector<CRBodyIf*>			body;			//< 制御対象のボディを扱う配列
+	std::vector<CRFLAnimalGene*>	animalGene;		//< 遺伝子操作をするためのインタフェース
+	std::vector<CRFLAnimalGeneData> animalGeneData;	//< 動物の遺伝子を扱う配列
+	
 
 	unsigned long totalStep;		//< シミュレーション開始時からのステップ数
-	Vec3d centerOfMass;				//< 重心
+	Vec3d centerOfMass;				//< ボディ全体の重心
 	
 	// human foot positions	
 	Vec3d rightFootPos;				//< 右足の位置
@@ -56,7 +60,6 @@ private:
 	Vec3d leftFrontFootPos;			//< 左前足の位置
 	Vec3d leftRearFootPos;			//< 左後足の位置
 
-
 	/** @brief 足の剛体を指定する。
 	*/
 	std::vector<PHSolidIf*> SetFootSolid(CRBodyIf* body);
@@ -67,7 +70,7 @@ private:
 
 	/** @brief 遺伝子に格納されている目標角度情報からボディを実際に動かす
 	*/
-	void TransitionPoseModel(CRBodyIf* crBody);
+	void TransitionPoseModel(CRFLAnimalGeneData gene);
 
 	/** @brief クリーチャー達のボディの情報（重心、足の位置）を更新する
 	*/
@@ -97,7 +100,7 @@ public:
 		: CRTryStandingUpControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
-		//Init();
+		Init();
 	}
 	
 	//----------------------------------------------------------
