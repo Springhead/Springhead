@@ -44,8 +44,7 @@ private:
 	std::vector<PHSolidIf*>			foot;			//< 足を構成する剛体を格納しておく配列
 	std::vector<CRBodyIf*>			body;			//< 制御対象のボディを扱う配列
 	std::vector<CRFLAnimalGene*>	animalGene;		//< 遺伝子操作をするためのインタフェース
-	std::vector<CRFLAnimalGeneData> animalGeneData;	//< 動物の遺伝子を扱う配列
-	
+	std::vector<CRFLAnimalGeneData> animalGeneData;	//< 動物の遺伝子を扱う配列	
 
 	unsigned long totalStep;		//< シミュレーション開始時からのステップ数
 	Vec3d centerOfMass;				//< ボディ全体の重心
@@ -75,7 +74,6 @@ private:
 	/** @brief クリーチャー達のボディの情報（重心、足の位置）を更新する
 	*/
 	void UpdateBodyState();
-
 
 public:
 	//----------------------------------------------------------

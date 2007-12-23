@@ -13,25 +13,25 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 
 	//---------------------------------------------------------
 	// sizes of solids
-	waistBreadth   = 0.6;
+	waistBreadth   = 0.5;
 	waistHeight    = 0.8;
-	waistThickness = 0.8;
+	waistThickness = 0.6;
 
 	chestBreadth   = 0.6;
 	chestHeight    = 1.5;
-	chestThickness = 0.8;
+	chestThickness = 0.7;
 
 	tailBreadth   = 0.1;
 	tailHeight    = 0.2;
 	tailThickness = 0.1;
 
-	neckBreadth	  = 0.5;
+	neckBreadth	  = 0.3;
 	neckHeight	  = 1.2;
-	neckThickness = 0.4;
+	neckThickness = 0.2;
 
-	headBreadth   = 0.4;
+	headBreadth   = 0.3;
 	headHeight	  = 0.7;
-	headThickness = 0.3;
+	headThickness = 0.4;
 
 	breastboneBreadth   = 0.2;
 	breastboneHeight    = 0.5;
@@ -86,10 +86,10 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	
 	//-------------------------------------------------------------------
 	// ball joints are conrtroled to the direction
-	goalChestNeck		  = Quaterniond::Rot(Rad(  60), 'x');
-	goalNeckHead		  = Quaterniond::Rot(Rad(- 90), 'x');
-	goalShoulder		  = Quaterniond::Rot(Rad(-120), 'x');
-	goalHip				  = Quaterniond::Rot(Rad(- 60), 'x');
+	goalChestNeck	  = Quaterniond::Rot(Rad(  60), 'x');
+	goalNeckHead	  = Quaterniond::Rot(Rad(- 90), 'x');
+	goalShoulder	  = Quaterniond::Rot(Rad(-120), 'x');
+	goalHip			  = Quaterniond::Rot(Rad(- 60), 'x');
 
 	//----------------------------------------------------------------------
 	// Range of ball joints

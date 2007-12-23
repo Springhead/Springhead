@@ -69,8 +69,8 @@ void CRTryStandingUpController::Init(){
 		body.push_back(creature->GetBody(i));
 	}
 
-	//animalGene.push_back((new CRFLAnimalGene())->Cast());
-	//animalGeneData = animalGene[0]->CreateGene(body[0]);
+	animalGene.push_back(DBG_NEW CRFLAnimalGene(creature));
+	animalGeneData = animalGene[0]->CreateGene(body[0]);
 	
 }
 
@@ -79,6 +79,9 @@ void CRTryStandingUpController::Step(){
 	CRController::Step();
 	UpdateBodyState();
 
+	for(int i=0; i<creature->NBodies(); i++){
+		animalGeneData = animalGene[i]->CreateGene(body[i]);
+	}
 }
 
 }

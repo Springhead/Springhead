@@ -8,13 +8,23 @@
 #include "CRController.h"
 #include "CRFLAnimalGeneData.h"
 
-class CRFLAnimalGene: public CRController{
+class CRFLAnimalGene{
 
 private:
+	CRCreatureIf*					creature;
 	std::vector<CRFLAnimalGeneData> flAnimalGenes;
 	std::vector<CRBodyIf*>		    crBody;
 public:
 	
+	// コンストラクタ
+	
+	CRFLAnimalGene(CRCreatureIf* charactors){
+		creature = charactors;
+		Init();
+	}
+	~CRFLAnimalGene(){
+	}
+
 	std::vector<CRFLAnimalGeneData> CreateGene(CRBodyIf* body);
 	std::vector<CRFLAnimalGeneData> GetGene(CRBodyIf* body);
 	
@@ -22,7 +32,6 @@ public:
 	void Init();
 	void MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB);
 
-	CRFLAnimalGene();
 };
 
 #endif
