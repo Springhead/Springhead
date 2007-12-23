@@ -4,21 +4,13 @@ namespace Spr{;
 
 IF_OBJECT_IMP(CRTryStandingUpController, CRController);
 
-CRBodyIf* CRTryStandingUpController::GetBody(CRCreatureIf* creature){
-	CRBodyIf* body;
-	body = creature->GetBody(0);
-	return body;
-}
-
 std::vector<PHSolidIf*> CRTryStandingUpController::SetFootSolid(CRBodyIf* body){
-	std::vector<PHSolidIf*> foot;
 	
 	if(DCAST(CRHingeHumanBodyIf, body)!=NULL){
 		foot.resize(sizeof(PHSolidIf*) +1);
 		foot.back() = body->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_FOOT);
 		foot.resize(sizeof(PHSolidIf*) +1);
-		foot.back() = body->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_FOOT);
-	
+		foot.back() = body->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_FOOT);	
 	}
 	else if(DCAST(CRFourLegsAnimalBodyIf, body)!=NULL){
 		foot.resize(sizeof(PHSolidIf*) +1);
@@ -47,8 +39,14 @@ void CRTryStandingUpController::TransitionPoseModel(CRBodyIf* crBody){
 void CRTryStandingUpController::Init(){	
 	CRController::Init();
 
-	//大域変数の初期化
+//大域変数の初期化
 	totalStep = 0;
+	
+	// body[i]:i体目のクリーチャーのボディ
+	for(int i=0; i<creature->NBodies(); i++){
+		body.resize(sizeof(CRBodyIf*) +1);	
+		body.back() = creature->GetBody(i);
+	}
 }
 
 void CRTryStandingUpController::Step(){	
@@ -57,14 +55,20 @@ void CRTryStandingUpController::Step(){
 
 	// 各ボディの重心を出す
 	for(int i=0; i<creature->NBodies(); i++){
-	centerOfMass = creature->GetBody(i)->GetCenterOfMass();
-	DSTR << centerOfMass << std::endl;
+		centerOfMass = body[i]->GetCenterOfMass();
+		DSTR << centerOfMass << std::endl;
 
-	rightFrontFootPos = GetFootPos(creature->GetBody(0)->GetSolid(CRFourLegsAnimalBodyDesc::SO_RIGHT_FRONT_TOE));
-	rightRearFootPos  = GetFootPos(creature->GetBody(0)->GetSolid(CRFourLegsAnimalBodyDesc::SO_RIGHT_REAR_TOE));
-	leftFrontFootPos  = GetFootPos(creature->GetBody(0)->GetSolid(CRFourLegsAnimalBodyDesc::SO_LEFT_FRONT_TOE));
-	leftRearFootPos	  = GetFootPos(creature->GetBody(0)->GetSolid(CRFourLegsAnimalBodyDesc::SO_LEFT_REAR_TOE));
-
+		SetFootSolid(body[i]);
+		if(DCAST(CRHingeHumanBodyIf, body[i])!=NULL){
+			rightFootPos = GetFootPos(foot[0]);
+			leftFootPos	 = GetFootPos(foot[1]);
+		}
+		else if(DCAST(CRFourLegsAnimalBodyIf, body[i])!=NULL){
+			rightFrontFootPos = GetFootPos(foot[0]);
+			rightRearFootPos  = GetFootPos(foot[1]);
+			leftFrontFootPos  = GetFootPos(foot[2]);
+			leftRearFootPos	  = GetFootPos(foot[3]);
+		}
 	}
 }
 

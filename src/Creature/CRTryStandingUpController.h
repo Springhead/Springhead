@@ -33,24 +33,30 @@ private:
 	//															 //
 	// <<<CRControllerから継承されてこの中ですでに使える変数>>>> //
 	//															 //
-	// CRCreatureIf* creature;   //< 制御対象のクリーチャー		 //
+	// CRCreatureIf* creature;   //< 制御対象のクリーチャー群	 //
 	// PHSceneIf*	 phScene;    //< 所属するシーン				 //
 	// bool			 isEnabled;  //< 有効かどうか				 //
 	//															 //
 	///////////////////////////////////////////////////////////////
 
 	// このクラスとその派生クラス（今はまだない）で使える変数
-	unsigned long totalStep;	//< シミュレーション開始時からのステップ数
-	Vec3d centerOfMass;			//< 重心
-	Vec3d rightFrontFootPos;	//< 右前足の位置
-	Vec3d rightRearFootPos;		//< 右後足の位置
-	Vec3d leftFrontFootPos;		//< 左前足の位置
-	Vec3d leftRearFootPos;		//< 左後足の位置
+	std::vector<PHSolidIf*> foot;	//< 足を構成する剛体を格納しておく配列
+	std::vector<CRBodyIf*> body;	//< 制御対象のボディ
 
-	/** @brief CreatureのBodyを得る
-	*/
-	CRBodyIf* GetBody(CRCreatureIf* creature);
+	unsigned long totalStep;		//< シミュレーション開始時からのステップ数
+	Vec3d centerOfMass;				//< 重心
 	
+	// human foot positions	
+	Vec3d rightFootPos;				//< 右足の位置
+	Vec3d leftFootPos;				//< 左足の位置
+	
+	// animal foot positions	
+	Vec3d rightFrontFootPos;		//< 右前足の位置
+	Vec3d rightRearFootPos;			//< 右後足の位置
+	Vec3d leftFrontFootPos;			//< 左前足の位置
+	Vec3d leftRearFootPos;			//< 左後足の位置
+
+
 	/** @brief 足の剛体を指定する。
 	*/
 	std::vector<PHSolidIf*> SetFootSolid(CRBodyIf* body);
@@ -88,6 +94,7 @@ public:
 		: CRTryStandingUpControllerDesc(desc) 
 		, CRController((const CRControllerDesc&)desc, c)
 	{
+		Init();
 	}
 	
 	//----------------------------------------------------------
