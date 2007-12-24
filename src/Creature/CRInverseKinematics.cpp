@@ -69,7 +69,7 @@ void CRIKMovable::SetNDOF(int n){
 	iDx.resize(ndof);
 	iD.resize(ndof);
 	F.resize(ndof, ndof);
-	for(int i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); }
+	for(unsigned int i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); }
 	value.resize(ndof);
 }
 
@@ -129,7 +129,7 @@ void CRIKMovable::AddIKControl(CRIKControlIf* control){
 	DCAST(CRIKControl,control)->linkedMovables.insert(this->Cast());
 	linkedControls.insert(control);
 	K.resize(linkedMovables.size());
-	for(int i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); }
+	for(unsigned int i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); }
 }
 
 PTM::VMatrixRow<double> CRIKMovable::CalcJacobian(CRIKControlIf* control){

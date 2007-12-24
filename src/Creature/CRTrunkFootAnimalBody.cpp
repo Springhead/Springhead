@@ -154,8 +154,8 @@ void CRTrunkFootAnimalBody::CreateFoot(LREnum lr){
 // --- --- ---
 void CRTrunkFootAnimalBody::InitContact(){
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
-	for (int i=0; i<solids.size(); ++i) {
-		for (int j=0; j<solids.size(); ++j) {
+	for (unsigned int i=0; i<solids.size(); ++i) {
+		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {
 				phScene->SetContactMode(solids[i], solids[j], PHSceneDesc::MODE_NONE);
 			}
@@ -167,7 +167,7 @@ void CRTrunkFootAnimalBody::InitContact(){
 		CRBodyIf* body = creature->GetBody(i);
 		if (DCAST(CRTrunkFootAnimalBodyIf,body)!=(this->Cast())) {
 			for (int s=0; s<body->NSolids(); ++s) {
-				for (int j=0; j<solids.size(); ++j) {
+				for (unsigned int j=0; j<solids.size(); ++j) {
 					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
 				}
 			}

@@ -4,6 +4,8 @@
 #include <Springhead.h>
 #include <Creature/CRFourLegsAnimalBody.h>
 #include <vector>
+#include <ctime>
+#include <cmath>
 
 #include "CRController.h"
 #include "CRFLAnimalGeneData.h"
@@ -36,7 +38,7 @@ public:
 	
 	void SetGene(std::vector<CRFLAnimalGeneData> gene, CRBodyIf* body);
 	void Init();
-	void MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB);
+	std::vector<CRFLAnimalGeneData> MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB);
 
 };
 

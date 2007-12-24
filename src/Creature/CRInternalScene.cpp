@@ -128,7 +128,7 @@ bool CRInternalScene::LargerAttention(const CRInternalSceneObject* a, const CRIn
 IF_OBJECT_IMP(CRInternalScene, SceneObject);
 
 void CRInternalScene::Step(){
-	for (int i=0; i<sceneObjects.size(); i++) {
+	for (unsigned int i=0; i<sceneObjects.size(); i++) {
 		CRISAttractiveObjectIf* isAtt = DCAST(CRISAttractiveObjectIf, sceneObjects[i]);
 		if (isAtt) {
 			isAtt->IncUncertainty();
@@ -142,7 +142,7 @@ void CRInternalScene::Step(){
 }
 
 void CRInternalScene::ClearAttractiveness(){
-	for (int i=0; i<sceneObjects.size(); i++) {
+	for (unsigned int i=0; i<sceneObjects.size(); i++) {
 		CRISAttractiveObjectIf* isAtt = DCAST(CRISAttractiveObjectIf, sceneObjects[i]);
 		if (isAtt) {
 			isAtt->ClearBottomupAttr();
@@ -155,7 +155,7 @@ void CRInternalScene::SortByAttractiveness(){
 }
 
 CRInternalSceneObjectIf* CRInternalScene::FindObject(PHSolidIf* solid, Vec3f pos){
-	for (int i=0; i<sceneObjects.size(); i++) {
+	for (unsigned int i=0; i<sceneObjects.size(); i++) {
 		if (sceneObjects[i]->GetSolid() == solid && (sceneObjects[i]->GetPos() - pos).norm() < 0.001) { // ”’l‚Í•ÏX‰Â”\‚É‚·‚é‚±‚Æ(mitake)
 			return sceneObjects[i]->Cast();
 		}

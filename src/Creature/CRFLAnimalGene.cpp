@@ -73,7 +73,18 @@ void CRFLAnimalGene::SetGene(std::vector<CRFLAnimalGeneData> gene, CRBodyIf* bod
 	
 }
 
-void CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB){
+std::vector<CRFLAnimalGeneData> CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB){
 	DSTR << "--------mix two genes------------" << std::endl;
-
+	std::vector<CRFLAnimalGeneData> mixedGene;
+	srand((unsigned) time(NULL));	
+	unsigned int changePoint = abs(rand()%geneA.size() + 1);
+	for(unsigned int i=0; i<geneA.size(); i++){
+		if(i<changePoint){
+			mixedGene[i] = geneA[i];
+		} else{
+			mixedGene[i] = geneB[i];
+		}
+	}
+	
+	return mixedGene;
 }

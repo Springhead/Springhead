@@ -110,12 +110,12 @@ CRIKMovableIf* CRBody::CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& 
 }
 
 void CRBody::CalcIK(){
-	for(int i=0; i<postureMovables.size(); ++i){
+	for(unsigned int i=0; i<postureMovables.size(); ++i){
 		postureMovables[i]->PrepareSolve();
 	}
 	int niterIK = 25;
 	for(int n=0; n<niterIK; n++){
-		for(int i=0; i<postureMovables.size(); ++i){
+		for(unsigned int i=0; i<postureMovables.size(); ++i){
 			postureMovables[i]->ProceedSolve();
 		}
 	}
