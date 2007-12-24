@@ -42,15 +42,15 @@ IF_OBJECT_IMP(CRCreature, SceneObject);
 void CRCreature::Init(){
 	// 将来的には依存するセンサ・コントローラを先にInitするようコードしたほうがよさそうだ．(07/09/11, mitake)
 
-	for (int i=0; i<body.size(); ++i){
+	for (unsigned int i=0; i<body.size(); ++i){
 		body[i]->Init();
 	}
 
-	for (int i=0; i<sensors.size(); ++i){
+	for (unsigned int i=0; i<sensors.size(); ++i){
 		sensors[i]->Init();
 	}
 
-	for (int i=0; i<controllers.size(); ++i){
+	for (unsigned int i=0; i<controllers.size(); ++i){
 		controllers[i]->Init();
 	}
 }
@@ -69,7 +69,7 @@ void CRCreature::ClearInternalScene(){
 }
 
 void CRCreature::SensorStep(){
-	for (int i=0; i<sensors.size(); i++){
+	for (unsigned int i=0; i<sensors.size(); i++){
 		sensors[i]->Step();
 	}
 }
@@ -81,7 +81,7 @@ void CRCreature::InternalSceneStep(){
 }
 
 void CRCreature::ControllerStep(){
-	for (int i=0; i<controllers.size(); i++){
+	for (unsigned int i=0; i<controllers.size(); i++){
 		if (controllers[i]->IsEnabled()) {
 			controllers[i]->Step();
 		}

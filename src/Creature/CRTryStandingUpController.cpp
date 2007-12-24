@@ -67,10 +67,11 @@ void CRTryStandingUpController::Init(){
 	// body[i]:i体目のクリーチャーのボディになるように登録する
 	for(int i=0; i<creature->NBodies(); i++){
 		body.push_back(creature->GetBody(i));
+		animalGene.push_back(DBG_NEW CRFLAnimalGene(creature));
+		animalGeneData = animalGene[i]->CreateGene(body[i]);
 	}
 
-	animalGene.push_back(DBG_NEW CRFLAnimalGene(creature));
-	animalGeneData = animalGene[0]->CreateGene(body[0]);
+	
 	
 }
 
