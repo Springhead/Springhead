@@ -9,7 +9,7 @@ void CRFLAnimalGene::Init(){
 }
 
 std::vector<CRFLAnimalGeneData> CRFLAnimalGene::CreateGene(CRBodyIf* body){
-	DSTR << "---------make gene------------" << std::endl;
+//	DSTR << "---------make gene------------" << std::endl;
 	
 	std::vector<CRFLAnimalGeneData> posture;
 	for(int i=0; i<body->NJoints(); i++){
@@ -52,6 +52,7 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::CreateGene(CRBodyIf* body){
 		}
 	}
 	*/
+	
 	return flAnimalGenes.back();
 }
 
@@ -93,16 +94,37 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalG
 	DSTR << "--------mix two genes------------" << std::endl;
 	std::vector<CRFLAnimalGeneData> mixedGene;
 	srand((unsigned) time(NULL));	
-	unsigned int changePoint = (unsigned int)(rand()%geneA.size() + 1);
-	DSTR << geneA.size() << std::endl;
-	DSTR << sizeof(geneA) << std::endl;
-	for(unsigned int i=0; i<geneA.size(); i++){
-		if(i<changePoint){
-			mixedGene[i] = geneA[i];
-		} else{
-			mixedGene[i] = geneB[i];
+	DSTR << "geneA.size(): " << geneA.size() << std::endl;
+	DSTR << "geneB.size(): " << geneB.size() << std::endl;
+	if(geneA.size() == geneB.size()){
+		unsigned int changePoint = (unsigned int)(rand()%geneA.size() + 1);
+		DSTR << "changePoint : " << changePoint << std::endl;
+		for(unsigned int i=0; i<geneA.size(); i++){
+			if(i<changePoint){
+				DSTR << "a" << std::endl;
+				mixedGene.push_back(geneA[i]);
+			} else{
+				DSTR << "b" << std::endl;
+				mixedGene.push_back(geneB[i]);
+			}
 		}
 	}
+	else {
+		DSTR << "Two genes are different type." << std::endl;
+		mixedGene = CreateGene(crBody[0]);
+	}
 	
+	DSTR << "mixedGene: " << mixedGene.size() << std::endl;
+	
+	//出来上がった遺伝子をチェックする
+	/*
+	typedef std::vector< std::vector< CRFLAnimalGeneData > > TVV;
+	typedef std::vector< CRFLAnimalGeneData > TV;
+	for(TVV::iterator it = flAnimalGenes.begin(); it!=flAnimalGenes.end(); ++it){
+		for(TV::iterator it2 = it->begin(); it2!=it->end(); ++it2){
+			DSTR << it2->goalDir << std::endl;
+		}
+	}
+	*/
 	return mixedGene;
 }

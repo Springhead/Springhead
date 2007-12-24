@@ -80,18 +80,23 @@ void CRTryStandingUpController::Step(){
 
 	std::vector<CRFLAnimalGeneData> gene;
 	for(int i=0; i<creature->NBodies(); i++){
-		animalGeneData = animalGene[i]->CreateGene(body[i]);
-		
-		//DSTR << animalGeneData << std::endl;
+		animalGeneData = animalGene[i]->CreateGene(body[i]);		
 	}
-	//DSTR << animalGene[0]->flAnimalGenes.size() << std::endl;
-	//DSTR << animalGeneData.size() << std::endl;
 
-	//gene = animalGene[0]->MixGenes(animalGene[0]->flAnimalGenes[0], animalGeneData);
+	//毎ステップできてくるanimalGeneDataを確認する
+	/*
+	for(int i=0; i<animalGeneData.size(); i++){
+		DSTR << animalGeneData[i].goalDir << std::endl;
+	}
+	*/
+
+	gene = animalGene[0]->MixGenes(animalGene[0]->flAnimalGenes[0], animalGeneData);
 	
-	//for(int i=0; i<creature->NBodies(); i++){
-	//	DSTR << gene[i].goalDir << std::endl;
-	//}
+	/*
+	for(int i=0; i<gene.size(); i++){
+		DSTR << gene[i].goalDir << std::endl;
+	}
+	*/
 }
 
 }
