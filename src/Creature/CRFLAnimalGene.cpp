@@ -91,20 +91,20 @@ void CRFLAnimalGene::SetGene(std::vector<CRFLAnimalGeneData> gene, CRBodyIf* bod
 }
 
 std::vector<CRFLAnimalGeneData> CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB){
-	DSTR << "--------mix two genes------------" << std::endl;
+	//DSTR << "--------mix two genes------------" << std::endl;
 	std::vector<CRFLAnimalGeneData> mixedGene;
 	srand((unsigned) time(NULL));	
-	DSTR << "geneA.size(): " << geneA.size() << std::endl;
-	DSTR << "geneB.size(): " << geneB.size() << std::endl;
+	//DSTR << "geneA.size(): " << geneA.size() << std::endl;
+	//DSTR << "geneB.size(): " << geneB.size() << std::endl;
 	if(geneA.size() == geneB.size()){
 		unsigned int changePoint = (unsigned int)(rand()%geneA.size() + 1);
-		DSTR << "changePoint : " << changePoint << std::endl;
+		//DSTR << "changePoint : " << changePoint << std::endl;
 		for(unsigned int i=0; i<geneA.size(); i++){
 			if(i<changePoint){
-				DSTR << "a" << std::endl;
+				//DSTR << "a" << std::endl;
 				mixedGene.push_back(geneA[i]);
 			} else{
-				DSTR << "b" << std::endl;
+				//DSTR << "b" << std::endl;
 				mixedGene.push_back(geneB[i]);
 			}
 		}
@@ -114,7 +114,7 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalG
 		mixedGene = CreateGene(crBody[0]);
 	}
 	
-	DSTR << "mixedGene: " << mixedGene.size() << std::endl;
+	//DSTR << "mixedGene: " << mixedGene.size() << std::endl;
 	
 	//出来上がった遺伝子をチェックする
 	/*

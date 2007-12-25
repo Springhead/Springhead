@@ -43,8 +43,8 @@ private:
 	// このクラスとその派生クラス（今はまだない）で使える変数
 	std::vector<PHSolidIf*>			foot;			//< 足を構成する剛体を格納しておく配列
 	std::vector<CRBodyIf*>			body;			//< 制御対象のボディを扱う配列
-	std::vector<CRFLAnimalGene*>	animalGene;		//< 遺伝子操作をするためのインタフェース
-	std::vector<CRFLAnimalGeneData> animalGeneData;	//< 動物の遺伝子を扱う配列	
+	CRFLAnimalGene*					animalGeneIf;		//< 遺伝子操作をするためのインタフェース
+	std::vector< std::vector<CRFLAnimalGeneData> > animalGenes;	//< 動物の遺伝子を扱う配列	
 
 	unsigned long totalStep;		//< シミュレーション開始時からのステップ数
 	Vec3d centerOfMass;				//< ボディ全体の重心

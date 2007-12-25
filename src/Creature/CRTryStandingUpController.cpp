@@ -66,9 +66,9 @@ void CRTryStandingUpController::Init(){
 	
 	// body[i]:i体目のクリーチャーのボディになるように登録する
 	for(int i=0; i<creature->NBodies(); i++){
-		body.push_back(creature->GetBody(i));						//< creatureの中にあるボディ情報を順番に格納していく
-		animalGene.push_back(DBG_NEW CRFLAnimalGene(creature));		//< animalGeneの一番最後にクリーチャーの分だけ貼り付ける
-		animalGeneData = animalGene[i]->CreateGene(body[i]);		//< 最後の姿勢をもとに遺伝子をつくる
+		body.push_back(creature->GetBody(i));							//< creatureの中にあるボディ情報を順番に格納していく
+		animalGeneIf = DBG_NEW CRFLAnimalGene(creature);			//< animalGeneの一番最後にクリーチャーの分だけ貼り付ける
+		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));	//< 最後の姿勢をもとに遺伝子をつくる
 	}
 	
 }
@@ -80,17 +80,16 @@ void CRTryStandingUpController::Step(){
 
 	std::vector<CRFLAnimalGeneData> gene;
 	for(int i=0; i<creature->NBodies(); i++){
-		animalGeneData = animalGene[i]->CreateGene(body[i]);		
+		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
 	}
+	DSTR << animalGenes.size() << std::endl;
+	
+	//毎ステップできてくる最新のanimalGenesを確認する
+	for(unsigned int i=0; i<animalGenes.back().size(); i++){
+		DSTR << animalGenes.back()[i].goalDir << std::endl;
+	}	
 
-	//毎ステップできてくるanimalGeneDataを確認する
-	/*
-	for(int i=0; i<animalGeneData.size(); i++){
-		DSTR << animalGeneData[i].goalDir << std::endl;
-	}
-	*/
-
-	gene = animalGene[0]->MixGenes(animalGene[0]->flAnimalGenes[0], animalGeneData);
+	gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
 	
 	/*
 	for(int i=0; i<gene.size(); i++){
