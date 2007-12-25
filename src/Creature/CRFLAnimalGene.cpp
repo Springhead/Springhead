@@ -94,8 +94,6 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalG
 	//DSTR << "--------mix two genes------------" << std::endl;
 	std::vector<CRFLAnimalGeneData> mixedGene;
 	srand((unsigned) time(NULL));	
-	//DSTR << "geneA.size(): " << geneA.size() << std::endl;
-	//DSTR << "geneB.size(): " << geneB.size() << std::endl;
 	if(geneA.size() == geneB.size()){
 		unsigned int changePoint = (unsigned int)(rand()%geneA.size() + 1);
 		//DSTR << "changePoint : " << changePoint << std::endl;
@@ -113,8 +111,6 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::MixGenes(std::vector<CRFLAnimalG
 		DSTR << "Two genes are different type." << std::endl;
 		mixedGene = CreateGene(crBody[0]);
 	}
-	
-	//DSTR << "mixedGene: " << mixedGene.size() << std::endl;
 	
 	//出来上がった遺伝子をチェックする
 	/*
