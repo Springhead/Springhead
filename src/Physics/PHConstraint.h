@@ -76,6 +76,8 @@ public:
 	virtual void SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}
 	virtual bool IsInactive(int index = 0){return bInactive[index];}
 	virtual void GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = Xjrel.q;}
+	virtual Vec3d GetRelativePoseR(){return Xjrel.r;}
+	virtual Quaterniond GetRelativePoseQ(){return Xjrel.q;}
 	virtual void GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
 	virtual void GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v(); _t = f.w();}
 	virtual bool AddChildObject(ObjectIf* o);

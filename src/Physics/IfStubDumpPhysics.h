@@ -21,6 +21,12 @@ struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ
 	virtual void GetRelativePose(Posed & p){
 		return ((OBJ*)(MIF*)this)->GetRelativePose(p);
 	}
+	virtual Vec3d GetRelativePoseR(){
+		return ((OBJ*)(MIF*)this)->GetRelativePoseR();
+	}
+	virtual Quaterniond GetRelativePoseQ(){
+		return ((OBJ*)(MIF*)this)->GetRelativePoseQ();
+	}
 	virtual void GetRelativeVelocity(Vec3d & v, Vec3d & w){
 		return ((OBJ*)(MIF*)this)->GetRelativeVelocity(v, w);
 	}

@@ -37,6 +37,8 @@ void CRTryStandingUpController::TransitionPoseModel(std::vector<CRFLAnimalGeneDa
 			body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->GetDesc(&ballDesc);
 			ballDesc.goal = gene[i].goalDir;
 			body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->SetDesc(&ballDesc);
+			Quaterniond dd = body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->GetRelativePoseQ();
+		
 		}	
 	}
 }
@@ -110,6 +112,7 @@ void CRTryStandingUpController::Step(){
 	}
 	*/
 	TransitionPoseModel(gene);
+	
 }
 
 }

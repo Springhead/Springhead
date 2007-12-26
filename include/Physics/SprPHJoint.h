@@ -127,7 +127,15 @@ struct PHConstraintIf : public SceneObjectIf{
 		@param p ソケットに対するプラグの位置と向き
 	 */
 	virtual void GetRelativePose(Posed& p) = 0;
+	
+	/** @brief 拘束する剛体間の相対位置を取得
+	*/
+	virtual Vec3d GetRelativePoseR() = 0;
 
+	/** @brief 拘束する剛体間の相対姿勢を取得
+	*/
+	virtual Quaterniond GetRelativePoseQ() = 0;
+	
 	/** @brief 拘束する剛体間の相対速度
 		@param v ソケットに対するプラグの速度
 		@param w ソケットに対するプラグの角速度
