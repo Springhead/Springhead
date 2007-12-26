@@ -69,7 +69,7 @@ private:
 
 	/** @brief 遺伝子に格納されている目標角度情報からボディを実際に動かす
 	*/
-	void TransitionPoseModel(CRFLAnimalGeneData gene);
+	void TransitionPoseModel(std::vector<CRFLAnimalGeneData> gene);
 
 	/** @brief クリーチャー達のボディの情報（重心、足の位置）を更新する
 	*/
@@ -118,9 +118,14 @@ public:
 
 	/** @brief 制御のシミュレーションをする
 	*/
-	virtual void Step();	
+	virtual void Step();
+
+	/** @brief 学習する
+	*/
+	void Learning();
 
 };
+
 }
 //@}
 

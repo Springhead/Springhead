@@ -29,8 +29,16 @@ Vec3d CRTryStandingUpController::GetFootPos(PHSolidIf* footSolid){
 	return pos;
 }
 
-void CRTryStandingUpController::TransitionPoseModel(CRFLAnimalGeneData gene){
-	
+void CRTryStandingUpController::TransitionPoseModel(std::vector<CRFLAnimalGeneData> gene){
+	for(unsigned int i=0; i<gene.size(); i++){
+		//BDSTR << gene[i].goalDir << std::endl;
+		if(i==0){
+			PHBallJointDesc ballDesc;
+			body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->GetDesc(&ballDesc);
+			ballDesc.goal = gene[i].goalDir;
+			body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->SetDesc(&ballDesc);
+		}	
+	}
 }
 
 void CRTryStandingUpController::UpdateBodyState(){
@@ -56,6 +64,9 @@ void CRTryStandingUpController::UpdateBodyState(){
 	}
 }
 
+
+
+
 //------------------------------------------------------------------------------------------
 // public Func:
 void CRTryStandingUpController::Init(){	
@@ -63,13 +74,17 @@ void CRTryStandingUpController::Init(){
 
 //大域変数の初期化
 	totalStep = 0;
-	
+	animalGeneIf = DBG_NEW CRFLAnimalGene(creature);			//< animalGeneの一番最後にクリーチャーの分だけ貼り付ける
+
 	// body[i]:i体目のクリーチャーのボディになるように登録する
 	for(int i=0; i<creature->NBodies(); i++){
 		body.push_back(creature->GetBody(i));							//< creatureの中にあるボディ情報を順番に格納していく
-		animalGeneIf = DBG_NEW CRFLAnimalGene(creature);			//< animalGeneの一番最後にクリーチャーの分だけ貼り付ける
-		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));	//< 最後の姿勢をもとに遺伝子をつくる
-	}
+	}	
+}
+
+void CRTryStandingUpController::Learning(){
+	
+	
 	
 }
 
@@ -78,7 +93,6 @@ void CRTryStandingUpController::Step(){
 	CRController::Step();
 	UpdateBodyState();
 
-	std::vector<CRFLAnimalGeneData> gene;
 	for(int i=0; i<creature->NBodies(); i++){
 		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
 	}
@@ -88,14 +102,14 @@ void CRTryStandingUpController::Step(){
 	for(unsigned int i=0; i<animalGenes.back().size(); i++){
 		DSTR << animalGenes.back()[i].goalDir << std::endl;
 	}	
-
-	gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
+	std::vector<CRFLAnimalGeneData> gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
 	
 	/*
 	for(int i=0; i<gene.size(); i++){
 		DSTR << gene[i].goalDir << std::endl;
 	}
 	*/
+	TransitionPoseModel(gene);
 }
 
 }
