@@ -44,6 +44,7 @@ inline char FindVacantId(char a, char b, char c){
 }
 
 #if 1	//	普通じゃないGJK
+static bool bDebug;
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 #define CalcSupport(n)											\
 	p[n] = a->Support(a2z.Ori().Conjugated() * (v[n]));			\
@@ -151,6 +152,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
 	//	三角形を小さくしていく
+	int notuse;
 	while(1){
 		Vec3d s;		//	三角形の有向面積
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
@@ -158,14 +160,16 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			std::swap(ids[1], ids[2]);
 			s *= -1;
 		}
+		notuse = -1;
 		if (s.Z() > epsilon){
+			if (bDebug) DSTR << "TRI ";
 			//	三角形になる場合
 			v[ids[3]] = s.unit();	//	3角形の法線を使う
 		}else{
+			if (bDebug) DSTR << "LINE";
 			//	線分になる場合、法線が求まらないので、oから近い2点を求めた際の法線の平均を使う
 			//	原点Oを含み、一番短い線分を選ぶ -> oから近い2点を選ぶ	x--o--x----x
 			double sqMax = 0;
-			int notuse = 0;
 			for(int i=0; i<3; ++i){
 				double sq = w[ids[i]].XY().square();
 				if (sq > sqMax){
@@ -180,7 +184,6 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		//	新しい w w[3] を求める
 		CalcSupport(ids[3]);
 		
-		static bool bDebug;
 		if (bDebug){
 			for(int i=0; i<4; ++i){
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
@@ -191,30 +194,49 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		if ( (w[ids[3]] - w[ids[0]]).square() < epsilon) break;
 		if ( (w[ids[3]] - w[ids[1]]).square() < epsilon) break;
 		if ( (w[ids[3]] - w[ids[2]]).square() < epsilon) break;
-		//	どの2点とw[3]で三角形を作れるか確認する -> w[3] を、残り2つで表現する
-		double max = 0;
-		for(int i=0; i<3; ++i){
-			Matrix2d m;	//	(w[i] w[i+1])  t(k1,k2) = w[3]
-			m.Ex() = w[ids[i]].XY();
-			m.Ey() = w[ids[(i+1)%3]].XY();
-			Vec2d k = m.inv() * w[ids[3]].XY();
-			if (k.x < 0 && k.y < 0){
-				//	発見
-				std::swap(ids[(i+2)%3], ids[3]);
-				break;
-			} 
+		
+		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
+			std::swap(ids[notuse], ids[3]);
+		}else{
+			//	どの2点とw[3]で三角形を作れるか確認する -> w[3] を、残り2つで表現する
+			double max = 0;
+			for(int i=0; i<3; ++i){
+				Matrix2d m;	//	(w[i] w[i+1])  t(k1,k2) = w[3]
+				m.Ex() = w[ids[i]].XY();
+				m.Ey() = w[ids[(i+1)%3]].XY();
+				Vec2d k = m.inv() * w[ids[3]].XY();
+				if (k.x < 0 && k.y < 0){	//	発見
+					std::swap(ids[(i+2)%3], ids[3]);
+					goto found;
+				} 
+			}
+			assert(0);	//	not found.
+			found: ;
 		}
 	}
 	//	無事停止
-	Matrix2d m;
-	m.Ex() = w[ids[0]].XY()-w[ids[1]].XY();
-	m.Ey() = w[ids[0]].XY()-w[ids[2]].XY();
-	Vec2d k = m.inv() * w[ids[0]].XY();
-	double kz = 1-k.x-k.y;
-	pa = k.x*p[ids[1]] + k.y*p[ids[2]] + kz*p[ids[0]];
-	pb = k.x*q[ids[1]] + k.y*q[ids[2]] + kz*q[ids[0]];
-	dist = k.x*w[ids[1]].z + k.y*w[ids[2]].z + kz*w[ids[0]].z;
-	normal = w2z.Conjugated() * v[ids[3]];
+	if (notuse >=0){
+		int id0 = ids[(notuse+1)%3];
+		int id1 = ids[(notuse+2)%3];
+		double l0 = w[ids[id0]].XY().norm();
+		double l1 = w[ids[id1]].XY().norm();
+		double kx = l1 / (l0+l1);
+		double ky = l0 / (l0+l1);
+		pa = kx*p[ids[id0]] + ky*p[ids[id1]];
+		pb = kx*q[ids[id0]] + ky*q[ids[id1]];
+		dist = kx*w[ids[id0]].z + ky*w[ids[id1]].z;
+		normal = w2z.Conjugated() * v[ids[3]];
+	}else{
+		Matrix2d m;
+		m.Ex() = w[ids[0]].XY()-w[ids[1]].XY();
+		m.Ey() = w[ids[0]].XY()-w[ids[2]].XY();
+		Vec2d k = m.inv() * w[ids[0]].XY();
+		double kz = 1-k.x-k.y;
+		pa = k.x*p[ids[1]] + k.y*p[ids[2]] + kz*p[ids[0]];
+		pb = k.x*q[ids[1]] + k.y*q[ids[2]] + kz*q[ids[0]];
+		dist = k.x*w[ids[1]].z + k.y*w[ids[2]].z + kz*w[ids[0]].z;
+		normal = w2z.Conjugated() * v[ids[3]];
+	}
 	//	HASE_REPORT
 	//	DSTR << "CCDGJK dist:" << dist << "  " << pa << pb << std::endl;
 	
