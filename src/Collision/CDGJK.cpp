@@ -34,26 +34,35 @@ const char vacants[] = {
 	0, 1, 0, 2, 0, 1, 0, 3,
 	0, 1, 0, 2, 0, 1, 0, 4,
 };
-inline char FindVacantId(char a, char b){
+inline char VacantIdFromId(char a, char b){
 	char bits = (1<<a) | (1<<b);
 	return vacants[(int)bits];
 }
-inline char FindVacantId(char a, char b, char c){
+inline char VacantIdFromId(char a, char b, char c){
 	char bits = (1<<a) | (1<<b) | (1<<c);
 	return vacants[(int)bits];
 }
 
-#if 1	//	普通じゃないGJK
-static bool bDebug;
+struct CDGJKIds{
+	char i[3];		//	頂点のID
+	char nVtx;		//	使用する頂点の数
+	double dist;
+	Vec3d normal;
+	double k[4];
+	CDGJKIds(){
+		i[0] = i[1] = i[2] = -1;
+		nVtx = -1;
+		dist = -1;
+	}
+};
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
-#define CalcSupport(n)											\
-	p[n] = a->Support(a2z.Ori().Conjugated() * (v[n]));			\
-	q[n] = b->Support(b2z.Ori().Conjugated() * -(v[n]));		\
+#define CalcSupport(v, n)										\
+	p[n] = a->Support(a2z.Ori().Conjugated() * (v));			\
+	q[n] = b->Support(b2z.Ori().Conjugated() * -(v));			\
 	w[n] = b2z * (q[n]) - a2z * (p[n]);
 
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, 
-	Vec3d& pa, Vec3d& pb, double& dist){
+	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	//	range が+Zになるような座標系を求める．
 	Quaterniond w2z;
 	double endLength = range.norm();
@@ -75,176 +84,213 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 
 	
 	//	GJKと似た方法で，交点を求める
-	//	まず、2次元で見たときに、原点が含まれるような三角形または線分を作る
-	int ids[4];
-	Vec3d w[4], p[4], q[4], v[4];
+	
+	static CDGJKIds ids[2];
+	static Vec3d w[4], p[4], q[4];
+	CDGJKIds* cur = ids;
+	CDGJKIds* last = ids+1;
 
 	//	w0を求める
-	v[0] = Vec3d(0,0,1);
-	CalcSupport(0);
+	CalcSupport(Vec3d(0,0,1), 0);
 	if (w[0].Z() > endLength) return -1;	//	range内では接触しないが，将来接触するかもしれない．
 	if (w[0].Z() < 0){						//	反対側のsupportを求めてみて，範囲外か確認
-		v[3] = Vec3d(0,0,-1);
-		CalcSupport(3);
+		CalcSupport(Vec3d(0,0,-1), 3);
 		if (w[3].Z() <0){
-			//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
-			return -2;			
+			return -2;			//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
 		}
 	}
 	//	w1を求める
-	v[1] = Vec3d(w[0].X(), w[0].Y(), 0);
-	if (v[1].XY().square() < epsilon2){		//	w0=衝突点の場合
+	Vec3d v(w[0].X(), w[0].Y(), 0);
+	if (v.XY().square() < epsilon2){	//	w0=衝突点の場合
 		normal = u.unit();
 		pa = p[0]; pb = q[0];
 		dist = w[0].Z();
 		return 1;
 	}
-	CalcSupport(1);
-	if (w[1].XY() * v[1].XY() > 0) return 0;	//	w[1]の外側にOがあるので触ってない
+	CalcSupport(v, 1);
+	if (w[1].XY() * v.XY() > 0) return 0;	//	w[1]の外側にOがあるので触ってない
 	
 	
 	//	w[0]-w[1]-w[0] を三角形と考えてスタートして，oが三角形の内部に入るまで繰り返し
-	ids[0] = 1;	//	新しい頂点
-	ids[1] = 0;	//	もとの線分
-	ids[2] = 0;	//	もとの線分
+	cur->i[0] = 1;	//	新しい頂点
+	cur->i[1] = 0;	//	もとの線分
+	cur->i[2] = 0;	//	もとの線分
 	while(1){
 		double s;
-		Vec3d vNew;
-		if ((s = w[(int)ids[0]].XY() ^ w[(int)ids[1]].XY()) > epsilon){
-			//	点Oが、線分1-0から、三角形の外にはみ出している場合  
-			//		... epsilon=1e-8だと無限ループ，1e-7でも稀に無限ループ
-			//	1-0の法線の向きvNewでsupport pointを探し、新しい三角形にする。
-			Vec2d l = w[(int)ids[1]].XY() - w[(int)ids[0]].XY();
+		if ((s = w[(int)cur->i[0]].XY() ^ w[(int)cur->i[1]].XY()) > epsilon){
+			//	点Oが、線分1-0から、三角形の外にはみ出している場合  ... epsilon=1e-8だと無限ループ，1e-7でも稀に無限ループ
+			//	1-0の法線の向きvでsupport pointを探し、新しい三角形にする。
+			Vec2d l = w[(int)cur->i[1]].XY() - w[(int)cur->i[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
 			double ll_inv = 1/l.square();
-			vNew.XY() = (w[(int)ids[1]].XY()*l*ll_inv) * w[(int)ids[0]].XY()
-				   - (w[(int)ids[0]].XY()*l*ll_inv) * w[(int)ids[1]].XY();
-			vNew.Z() = 0;
-			ids[2] = ids[0];
-			ids[0] = FindVacantId(ids[1], ids[2]);
-		}else if ((s = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY()) > epsilon){
+			v.XY() = (w[(int)cur->i[1]].XY()*l*ll_inv) * w[(int)cur->i[0]].XY()
+				   - (w[(int)cur->i[0]].XY()*l*ll_inv) * w[(int)cur->i[1]].XY();
+			v.Z() = 0;
+			cur->i[2] = cur->i[0];
+			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
+		}else if ((s = w[(int)cur->i[2]].XY() ^ w[(int)cur->i[0]].XY()) > epsilon){
 			//	点Oが、線分2-0から、三角形の外にはみ出している場合
 			//	2-0の法線の向きvでsupport pointを探し、新しい三角形にする。
-			Vec2d l = w[(int)ids[2]].XY() - w[(int)ids[0]].XY();
+			Vec2d l = w[(int)cur->i[2]].XY() - w[(int)cur->i[0]].XY();
 			assert(l.square() >= epsilon2);		//	w0=w1ならば，すでに抜けているはず．
 			double ll_inv = 1/l.square();
-			vNew.XY() = (w[(int)ids[2]].XY()*l*ll_inv) * w[(int)ids[0]].XY()
-				   - (w[(int)ids[0]].XY()*l*ll_inv) * w[(int)ids[2]].XY();
-			vNew.Z() = 0;
-			ids[1] = ids[0];
-			ids[0] = FindVacantId(ids[1], ids[2]);
+			v.XY() = (w[(int)cur->i[2]].XY()*l*ll_inv) * w[(int)cur->i[0]].XY()
+				   - (w[(int)cur->i[0]].XY()*l*ll_inv) * w[(int)cur->i[2]].XY();
+			v.Z() = 0;
+			cur->i[1] = cur->i[0];
+			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
 		}else{
 			//	点Oは三角形の内側にある。
 			break;
 		}
-		v[ids[0]] = vNew;
-		CalcSupport(ids[0]);	//	法線の向きvNewでサポートポイントを探す
-		if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2){	//	0の外側にoがあるので触ってない
+		CalcSupport(v, (int)cur->i[0]);		//	法線の向きvでサポートポイントを探す
+		if (w[(int)cur->i[0]].XY() * v.XY() > -epsilon2){	//	0の外側にoがあるので触ってない
 			return 0;
 		}
+/*
+		//	これは怪しい、チェックが不完全な気がする。辺と新しいsupport点の距離を見るべき
+		if(	(w[(int)cur->i[0]].XY()-w[(int)cur->i[1]].XY()).square() < epsilon2 || 
+			(w[(int)cur->i[2]].XY()-w[(int)cur->i[1]].XY()).square() < epsilon2){
+			return 0;								//	同じw: 辺の更新なし＝Oは辺の外側
+		}
+*/
 		//	新しいsupportが1回前の線分からまったく動いていない → 点Oは外側
-		double d1 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[1]].XY());
-		double d2 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[2]].XY());
+		double d1 = -v.XY() * (w[(int)cur->i[0]].XY()-w[(int)cur->i[1]].XY());
+		double d2 = -v.XY() * (w[(int)cur->i[0]].XY()-w[(int)cur->i[2]].XY());
 		if (d1 < epsilon2) return 0;
 		if (d2 < epsilon2) return 0;
 	}
-	
-	ids[3] = 3;
-	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
-	//	三角形を小さくしていく
-	int notuse;
+	last->nVtx = 0;
+	//	三角形 cur 0-1-2 の中にoがある．	cur 0が最後に更新した頂点w
 	while(1){
-		Vec3d s;		//	三角形の有向面積
-		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
-		if (s.Z() < 0){		//	逆向きの場合、ひっくり返す
-			std::swap(ids[1], ids[2]);
+		static Vec3d s;		//	三角形の有向面積
+		s = (w[(int)cur->i[1]]-w[(int)cur->i[0]]) % (w[(int)cur->i[2]]-w[(int)cur->i[0]]);
+		//	頂点の並び順をそろえる．
+		if (s.Z() < 0){		//	逆向き
+			std::swap(cur->i[1], cur->i[2]);
 			s *= -1;
 		}
-		notuse = -1;
-		if (s.Z() > epsilon){
-			if (bDebug) DSTR << "TRI ";
-			//	三角形になる場合
-			v[ids[3]] = s.unit();	//	3角形の法線を使う
-		}else{
-			if (bDebug) DSTR << "LINE";
-			//	線分になる場合、法線が求まらないので、oから近い2点を求めた際の法線の平均を使う
-			//	原点Oを含み、一番短い線分を選ぶ -> oから近い2点を選ぶ	x--o--x----x
-			double sqMax = 0;
-			for(int i=0; i<3; ++i){
-				double sq = w[ids[i]].XY().square();
-				if (sq > sqMax){
-					sq = sqMax;
-					notuse = i;
+		if (s.Z() < epsilon){	//	線分になる場合
+			cur->nVtx = 2;		//	使うのは2点，どちらの2点を使うか判定する．
+			double ip1 = w[(int)cur->i[0]].XY() * w[(int)cur->i[1]].XY();
+			double ip2 = w[(int)cur->i[0]].XY() * w[(int)cur->i[2]].XY();
+			if (ip1 < epsilon && ip2 < epsilon){	//	0-1も0-2もoを含む
+				cur->k[(int)cur->i[0]] = w[(int)cur->i[0]].XY().norm();
+				cur->k[(int)cur->i[1]] = w[(int)cur->i[1]].XY().norm();
+				cur->dist = cur->k[(int)cur->i[0]]*w[(int)cur->i[0]].Z()
+					      + cur->k[(int)cur->i[1]]*w[(int)cur->i[1]].Z();
+				double l1 = cur->k[(int)cur->i[0]] + cur->k[(int)cur->i[1]];
+				cur->dist /= l1;
+				
+				cur->k[(int)cur->i[2]] = w[(int)cur->i[1]].XY().norm();
+				double d2 = cur->k[(int)cur->i[0]]*w[(int)cur->i[0]].Z()
+					      + cur->k[(int)cur->i[2]]*w[(int)cur->i[2]].Z();
+				double l2 = cur->k[(int)cur->i[0]] + cur->k[(int)cur->i[2]];
+				d2 /= l2;
+				if (d2 < cur->dist){
+					std::swap(cur->i[1], cur->i[2]);
+					cur->dist = d2;
+				}
+			}else{
+				if (ip2 < ip1) std::swap(cur->i[1], cur->i[2]);
+				cur->k[(int)cur->i[0]] = w[(int)cur->i[0]].XY().norm();
+				cur->k[(int)cur->i[1]] = w[(int)cur->i[1]].XY().norm();
+				cur->dist = cur->k[(int)cur->i[0]]*w[(int)cur->i[0]].Z()
+					      + cur->k[(int)cur->i[1]]*w[(int)cur->i[1]].Z();
+				double l1 = cur->k[(int)cur->i[0]] + cur->k[(int)cur->i[1]];
+				cur->dist /= l1;
+			}
+			if (last->nVtx){
+				double approach = last->normal * (w[(int)cur->i[0]] - w[(int)last->i[0]]);
+				if (approach > -epsilon || cur->dist >= last->dist) break;	//	return last
+			}
+			Vec3d l = w[(int)cur->i[0]] - w[(int)cur->i[1]];
+			if (l.sub_vector(PTM::TSubVectorDim<0,2>()).square() < epsilon2){
+				if (last->nVtx) break;
+				assert(0);	//	same point was returned.
+			}
+			cur->normal = Vec3d(0,0,1) - l.Z() / l.square() * l;
+			cur->normal.unitize();
+			std::swap(cur, last);
+			cur->i[1] = last->i[0];
+			cur->i[2] = last->i[1];
+			cur->i[0] = VacantIdFromId(cur->i[1], cur->i[2]);
+			CalcSupport(last->normal, 0);
+		}else{	//	三角形になる場合
+			cur->nVtx = 3;		//	使うのは3点．
+			cur->normal = s.unit();
+			cur->dist = w[(int)cur->i[0]] * cur->normal / cur->normal.Z();
+			if (last->nVtx){
+				double approach = last->normal * (w[(int)cur->i[0]] - w[(int)last->i[0]]);
+				
+//				if (approach > -epsilon || (approach > -sqEpsilon && cur->dist >= last->dist)) break;	//	return last;
+				if (approach > -sqEpsilon && cur->dist >= last->dist) break;
+			}
+
+			int newVtx = VacantIdFromId(cur->i[0], cur->i[1], cur->i[2]);
+			CalcSupport(cur->normal, newVtx);
+			
+			//	新しい点 newVtxと元の△の2点wで原点を囲む△を作る
+			//	(w[cur->i]-w[newVtx])^(o-w[newVtx]) が + から - に変化するところを探す．
+			bool bPlus = false;
+			bool bMinus = false;
+			double ow[3];
+			int i;
+			for(i=0; i<3;++i){
+				Vec2d wn = w[(int)cur->i[i]].XY()-w[newVtx].XY();
+				ow[i] = wn % (-w[newVtx].XY());
+				if (ow[i] < 0){
+					bMinus = true;
+					if (bPlus) break;
+				}else if(ow[i] > 0) {
+					bPlus= true;
 				}
 			}
-			int id0 = (notuse+1)%3;
-			int id1 = (notuse+2)%3;
-			v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
-		}
-		//	新しい w w[3] を求める
-		CalcSupport(ids[3]);
-		
-		if (bDebug){
-			for(int i=0; i<4; ++i){
-				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
+			int replace = -100;
+			if (bPlus && bMinus){
+				//	+-が出揃った場合：+から-に移った次の頂点が置き換える頂点
+				replace = (i+1)%3;
+			}else{
+				//	+-が出揃わない場合，全部0の場合：w[newVtx]に近いw[i]を置き換え
+				double minDist = DBL_MAX;
+				for(int i=0; i<3; ++i){
+					double d = (w[(int)cur->i[i]].XY() - w[newVtx].XY()).square();
+					if (d<minDist){
+						minDist = d; replace = i;
+					}
+				}
 			}
-			DSTR << std::endl;
-		}
-		//	新しいwが、既出の点でないかチェックする。
-		if ( (w[ids[3]] - w[ids[0]]).square() < epsilon) break;
-		if ( (w[ids[3]] - w[ids[1]]).square() < epsilon) break;
-		if ( (w[ids[3]] - w[ids[2]]).square() < epsilon) break;
-		
-		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
-			std::swap(ids[notuse], ids[3]);
-		}else{
-			//	どの2点とw[3]で三角形を作れるか確認する -> w[3] を、残り2つで表現する
-			double max = 0;
-			for(int i=0; i<3; ++i){
-				Matrix2d m;	//	(w[i] w[i+1])  t(k1,k2) = w[3]
-				m.Ex() = w[ids[i]].XY();
-				m.Ey() = w[ids[(i+1)%3]].XY();
-				Vec2d k = m.inv() * w[ids[3]].XY();
-				if (k.x < 0 && k.y < 0){	//	発見
-					std::swap(ids[(i+2)%3], ids[3]);
-					goto found;
-				} 
-			}
-			assert(0);	//	not found.
-			found: ;
+			std::swap(cur, last);
+			cur->i[0] = newVtx;
+			cur->i[1] = last->i[(replace+1)%3];
+			cur->i[2] = last->i[(replace+2)%3];
 		}
 	}
-	//	無事停止
-	if (notuse >=0){
-		int id0 = ids[(notuse+1)%3];
-		int id1 = ids[(notuse+2)%3];
-		double l0 = w[ids[id0]].XY().norm();
-		double l1 = w[ids[id1]].XY().norm();
-		double kx = l1 / (l0+l1);
-		double ky = l0 / (l0+l1);
-		pa = kx*p[ids[id0]] + ky*p[ids[id1]];
-		pb = kx*q[ids[id0]] + ky*q[ids[id1]];
-		dist = kx*w[ids[id0]].z + ky*w[ids[id1]].z;
-		normal = w2z.Conjugated() * v[ids[3]];
-	}else{
+	if (last->nVtx == 2){	//	線分の場合，計算済みのkを使ってpa,pbを計算
+		double sumInv = 1 / (last->k[0]+last->k[1]);
+		last->k[0] *= sumInv; last->k[1] *= sumInv;
+		pa = last->k[0] * p[(int)last->i[0]] + last->k[1] * p[(int)last->i[1]];
+		pb = last->k[0] * q[(int)last->i[0]] + last->k[1] * q[(int)last->i[1]];
+	}else{					//	三角形の場合，kの計算をしていないのでここで計算
 		Matrix2d m;
-		m.Ex() = w[ids[0]].XY()-w[ids[1]].XY();
-		m.Ey() = w[ids[0]].XY()-w[ids[2]].XY();
-		Vec2d k = m.inv() * w[ids[0]].XY();
+		m.Ex() = w[(int)last->i[0]].XY()-w[(int)last->i[1]].XY();
+		m.Ey() = w[(int)last->i[0]].XY()-w[(int)last->i[2]].XY();
+		Vec2d k = m.inv() * w[(int)last->i[0]].XY();
 		double kz = 1-k.x-k.y;
-		pa = k.x*p[ids[1]] + k.y*p[ids[2]] + kz*p[ids[0]];
-		pb = k.x*q[ids[1]] + k.y*q[ids[2]] + kz*q[ids[0]];
-		dist = k.x*w[ids[1]].z + k.y*w[ids[2]].z + kz*w[ids[0]].z;
-		normal = w2z.Conjugated() * v[ids[3]];
+		pa = k.x*p[(int)last->i[1]] + k.y*p[(int)last->i[2]] + kz*p[(int)last->i[0]];
+		pb = k.x*q[(int)last->i[1]] + k.y*q[(int)last->i[2]] + kz*q[(int)last->i[0]];
 	}
-	//	HASE_REPORT
-	//	DSTR << "CCDGJK dist:" << dist << "  " << pa << pb << std::endl;
+	dist = last->dist;
+	normal = w2z.Conjugated() * last->normal;
+	//	//	HASE_REPORT
+	//	DSTR << "nVtx:" << (int)last->nVtx;
+	//	DSTR << "  dist:" << dist << "  cur:" << cur->dist;
+	//	DSTR << "  " << pa << pb;
+	//	DSTR << std::endl;
 	
-	return 1;
+	return last->nVtx;
 }
-#else	//	普通のGJK
 
-#endif
 
 #define USE_NON_CONTINUOUS_DETECTORS
 #ifdef USE_NON_CONTINUOUS_DETECTORS
