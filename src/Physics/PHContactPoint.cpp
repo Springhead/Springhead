@@ -61,7 +61,7 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	else{
 		t[0] = vjrelproj / vjrelproj_norm;
 	}
-	t[1] = t[0] % n;
+	t[1] = n % t[0];
 	Matrix3d Rjabs;
 	// 接触点の関節フレームはx軸, y軸を接線，z軸を法線とする
 	Rjabs.col(0) = n;

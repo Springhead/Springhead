@@ -379,7 +379,7 @@ int main(int argc, char* argv[]){
 	
 	// soBox—p‚Ìdesc
 	desc.mass = 2.0;
-	desc.inertia = 2.0 * Matrix3d::Unit() * 100000;
+	desc.inertia = 2.0 * Matrix3d::Unit();
 
 	//	Œ`ó‚Ìì¬
 	{
