@@ -427,7 +427,7 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 }
 
 //----------------------------------------------------------------------------
-OBJECT_IMP(PHPenaltyEngine, PHEngine);
+IF_OBJECT_IMP(PHPenaltyEngine, PHEngine);
 
 void PHPenaltyEngine::Step(){
 	if(!bContactEnabled)return;

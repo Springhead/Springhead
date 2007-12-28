@@ -9,6 +9,30 @@ struct PHEngineIf;	class PHEngine;
 typedef PHEngineIfStubTemplate<PHEngineIf, ObjectIfBuf, PHEngine>	PHEngineIfStub;
 typedef IfInitTemplate<PHEngineIfStub, PHEngine>	PHEngineIfInit;
 
+template <class IF, class MIF, class OBJ> struct PHEngineIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHConstraintEngineIfStubTemplate: public PHEngineIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHConstraintEngineIf;	class PHConstraintEngine;
+typedef PHConstraintEngineIfStubTemplate<PHConstraintEngineIf, ObjectIfBuf, PHConstraintEngine>	PHConstraintEngineIfStub;
+typedef IfInitTemplate<PHConstraintEngineIfStub, PHConstraintEngine>	PHConstraintEngineIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHEngineIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHGravityEngineIfStubTemplate: public PHEngineIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHGravityEngineIf;	class PHGravityEngine;
+typedef PHGravityEngineIfStubTemplate<PHGravityEngineIf, ObjectIfBuf, PHGravityEngine>	PHGravityEngineIfStub;
+typedef IfInitTemplate<PHGravityEngineIfStub, PHGravityEngine>	PHGravityEngineIfInit;
+
+template <class IF, class MIF, class OBJ> struct PHEngineIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHPenaltyEngineIfStubTemplate: public PHEngineIfStubTemplate<IF, MIF, OBJ> {
+};
+struct PHPenaltyEngineIf;	class PHPenaltyEngine;
+typedef PHPenaltyEngineIfStubTemplate<PHPenaltyEngineIf, ObjectIfBuf, PHPenaltyEngine>	PHPenaltyEngineIfStub;
+typedef IfInitTemplate<PHPenaltyEngineIfStub, PHPenaltyEngine>	PHPenaltyEngineIfInit;
+
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
@@ -377,6 +401,21 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual Vec3d GetGravity(){
 		return ((OBJ*)(MIF*)this)->GetGravity();
+	}
+	virtual int NEngines(){
+		return ((OBJ*)(MIF*)this)->NEngines();
+	}
+	virtual PHEngineIf * GetEngine(int i){
+		return ((OBJ*)(MIF*)this)->GetEngine(i);
+	}
+	virtual PHConstraintEngineIf * GetConstraintEngine(){
+		return ((OBJ*)(MIF*)this)->GetConstraintEngine();
+	}
+	virtual PHGravityEngineIf * GetGravityEngine(){
+		return ((OBJ*)(MIF*)this)->GetGravityEngine();
+	}
+	virtual PHPenaltyEngineIf * GetPenaltyEngine(){
+		return ((OBJ*)(MIF*)this)->GetPenaltyEngine();
 	}
 };
 struct PHSceneIf;	class PHScene;

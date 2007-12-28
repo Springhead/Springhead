@@ -16,7 +16,7 @@
 
 namespace Spr{;
 
-class PHGravityEngine : public PHEngine{
+class PHGravityEngine : public PHEngine, public PHGravityEngineIfInit{
 	OBJECTDEF_NOIF(PHGravityEngine, PHEngine);
 public:
 	PHSolids solids;

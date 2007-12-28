@@ -25,11 +25,12 @@ struct PHSdkIf;
 
 struct CDShapeIf;
 struct CDShapeDesc;
+struct PHEngineIf;
+struct PHConstraintEngineIf;
+struct PHGravityEngineIf;
+struct PHPenaltyEngineIf;
 
 typedef PHConstraintDesc PHJointDesc;
-
-//class PHConstraintEngine;
-//class PHGravityEngine;
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
@@ -239,8 +240,28 @@ public:
 	 */
 	virtual Vec3d GetGravity()=0;
 
-	//virtual PHConstraintEngine* GetConstraintEngine()=0;
-	//virtual PHGravityEngine*	GetGravityEngine()=0;
+	virtual int NEngines() = 0;
+	/** @brief i番目のエンジンを取得する
+		@param i エンジン番号のインデックス
+		@return 選択したエンジンへのポインタ
+	*/
+	virtual PHEngineIf* GetEngine(int i) = 0;
+
+	/** @brief ConstraintEngineを取得する
+		@return PHConstraintEngineへのポインタ
+	*/
+	virtual PHConstraintEngineIf* GetConstraintEngine() = 0;
+
+	/** @brief GravityEnigneを取得する
+		@return GravityEngineへのポインタ
+	*/
+	virtual PHGravityEngineIf*	GetGravityEngine() = 0;
+
+	/** @brief PenaltyEngineを取得する
+		@return PenaltyEngineへのポインタ
+	*/
+	virtual PHPenaltyEngineIf*  GetPenaltyEngine() = 0;
+
 };
 
 //@}

@@ -34,7 +34,7 @@ public:
 	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 };
 
-class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
+class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>, public PHConstraintEngineIfInit{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
 	OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);

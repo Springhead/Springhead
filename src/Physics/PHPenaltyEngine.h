@@ -113,7 +113,7 @@ protected:
 	void CalcFriction(PHShapePairForPenalty* cp);
 };
 
-class PHPenaltyEngine : public PHContactDetector<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
+class PHPenaltyEngine : public PHContactDetector<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>, public PHPenaltyEngineIfInit{
 	OBJECTDEF_NOIF(PHPenaltyEngine, PHEngine);
 public:
 	int GetPriority() const {return SGBP_PENALTYENGINE;}

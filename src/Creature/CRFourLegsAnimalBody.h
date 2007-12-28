@@ -26,42 +26,35 @@ namespace Spr{;
 class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyIfInit, public CRFourLegsAnimalBodyDesc {
 private:
 
-	std::vector<PHSolidIf*> upperBody;	//< 上体を構成する剛体の登録先の配列
+	std::vector<PHSolidIf*> upperBody;		//< 上体を構成する剛体の登録先の配列
 	
-	/// 体幹部の作成
-	void InitBody();
-	void CreateWaist();
-	void CreateChest();
-	void CreateTail();
+	void InitBody();						//< 体幹部の作成計画を立てる
+	void CreateWaist();						//< 腰を作成する
+	void CreateChest();						//< 胸を作成する
+	void CreateTail();						//< 尾を作成する
 
-	/// 頭部の作成
-	void InitHead();
-	void CreateNeck();
-	void CreateHead();
+	void InitHead();						//< 頭部の作成計画を立てる
+	void CreateNeck();						//< 首を作成する
+	void CreateHead();						//< 頭の作成をする
 
-	/// 前脚部の作成
-	void InitFrontLegs();
-	void CreateBreastBone(LREnum lr);
-	void CreateRadius(LREnum lr);
-	void CreateFrontCannonBone(LREnum lr);
-	void CreateFrontToeBones(LREnum lr);
+	void InitFrontLegs();					//< 前脚部の作成計画を立てる
+	void CreateBreastBone(LREnum lr);		//< 上腕骨を作成する
+	void CreateRadius(LREnum lr);			//< 前腕骨を作成する
+	void CreateFrontCannonBone(LREnum lr);	//< 中手骨を作成する
+	void CreateFrontToeBones(LREnum lr);	//< 指骨を作成する
 
-	/// 後脚部の作成
-	void InitRearLegs();
-	void CreateFemur(LREnum lr);
-	void CreateTibia(LREnum lr);
-	void CreateRearCannonBone(LREnum lr);
-	void CreateRearToeBones(LREnum lr);
+	void InitRearLegs();					//< 後脚部の作成計画を立てる
+	void CreateFemur(LREnum lr);			//< 大腿骨を作成する
+	void CreateTibia(LREnum lr);			//< 脛骨を作成する
+	void CreateRearCannonBone(LREnum lr);	//< 中足骨を作成する
+	void CreateRearToeBones(LREnum lr);		//< 趾骨を作成する
 	
-	/// 感覚器の作成（未実装）
-	void InitEyes();
-	void CreateEye(LREnum lr);
+	void InitEyes();						//< 感覚器の作成計画を立てる（未実装）
+	void CreateEye(LREnum lr);				//< 目を作成する（未実装）
 
-	/// ボディ全ての剛体同士の接触を切る
-	void InitContact();
+	void InitContact();						//< ボディ全ての剛体同士の接触を切る
 
-	/// ボディの上体を構成する剛体を登録する
-	void SetUpperBody();
+	void SetUpperBody();					//< ボディの上体を構成する剛体を登録する
 	
 public:
 	OBJECTDEF(CRFourLegsAnimalBody, CRBody);
@@ -85,15 +78,9 @@ public:
 		InitContact();
 	}
 
+	virtual void Init();				//< 初期化を実行する
 	
-
-	/** @brief 初期化を実行する
-	*/
-	virtual void Init();
-	
-	/** @brief 上体の剛体の重心を得る
-	*/
-	Vec3d GetUpperCenterOfMass();
+	Vec3d GetUpperCenterOfMass();		//< 上体の剛体の重心を得る
 
 };
 

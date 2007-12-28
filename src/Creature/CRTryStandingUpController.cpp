@@ -33,8 +33,12 @@ Vec3d CRTryStandingUpController::GetFootPos(PHSolidIf*		footSolid){
 
 Vec3d CRTryStandingUpController::CalcFootForce(PHSolidIf*	footSolid){
 	Vec3d		force;
+	Vec3d		torque;
+
+//B	phScene->GetEngines();
+
+	force = Vec3d(0,0,0);
 	
-	force = footSolid->GetForce();
 
 	return		force;
 }
@@ -57,7 +61,13 @@ void CRTryStandingUpController::UpdateBodyState(){
 	for(int i = 0; i < creature->NBodies(); i++){
 		if(body[i] != 0){
 			// 重心情報
-			centerOfMass = body[i]->GetCenterOfMass();
+			for(int j = 0; j < body[i]->NSolids(); j++){
+				if(body[i]->GetSolid(j)){
+					if(body[i]->GetSolid(j)->GetMass() != 0){
+						centerOfMass = body[i]->GetCenterOfMass();
+					}
+				}
+			}
 			//DSTR << centerOfMass << std::endl;
 
 			// ボディの足位置情報
@@ -78,6 +88,7 @@ void CRTryStandingUpController::UpdateBodyState(){
 				leftFrontFootForce	= CalcFootForce(foot[2]);
 				leftRearFootForce	= CalcFootForce(foot[3]);
 				//DSTR << "rightFrontFoot: " << rightFrontFootPos << "rightRearFoot: " << rightRearFootPos << "leftFrontFoot: "  << leftFrontFootPos  << "leftRearFoot: "  << leftRearFootPos << std::endl;
+				DSTR << "rightFrontFoot: " << rightFrontFootForce << "rightRearFoot: " << rightRearFootForce << "leftFrontFoot: " << leftFrontFootForce << "leftRearFoot: " << leftRearFootForce << std::endl;
 			}
 		}
 	}
@@ -112,23 +123,23 @@ void CRTryStandingUpController::Step(){
 	CRController::Step();
 	UpdateBodyState();
 
-	for(int i = 0; i < creature->NBodies(); i++){
-		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
-	}
-	DSTR << animalGenes.size() << std::endl;
+//	for(int i = 0; i < creature->NBodies(); i++){
+//		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
+//	}
+//	DSTR << animalGenes.size() << std::endl;
 	
 	//毎ステップできてくる最新のanimalGenesを確認する
-	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
-		DSTR << animalGenes.back()[i].goalDir << std::endl;
-	}	
-	std::vector<CRFLAnimalGeneData> gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
+//	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
+//		DSTR << animalGenes.back()[i].goalDir << std::endl;
+//	}	
+//	std::vector<CRFLAnimalGeneData> gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
 	
 	/*
 	for(int i=0; i<gene.size(); i++){
 		DSTR << gene[i].goalDir << std::endl;
 	}
 	*/
-	TransitionPoseModel(gene);
+//	TransitionPoseModel(gene);
 	
 }
 

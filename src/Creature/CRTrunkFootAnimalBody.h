@@ -22,7 +22,7 @@ namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRTrunkFootAnimalBody
-// ヒンジジョイントを用いた哺乳類モデル・クラスの実装
+// ヒンジジョイントを用いた哺乳類モデル・クラスの実装（未実装：中身はTrunkFootHumanBody）
 class CRTrunkFootAnimalBody : public CRBody, public CRTrunkFootAnimalBodyIfInit, public CRTrunkFootAnimalBodyDesc {
 private:
 	void InitBody();

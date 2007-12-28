@@ -88,7 +88,8 @@ void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
 }
 
 void PHSolid::UpdateCacheLCP(double dt){
-	minv = GetMassInv();
+	if(mass != 0)
+		minv = GetMassInv();
 	Iinv = GetInertiaInv();
 	Quaterniond qc = GetOrientation().Conjugated();
 	f.v() = qc * nextForce;

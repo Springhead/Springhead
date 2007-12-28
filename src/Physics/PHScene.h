@@ -47,65 +47,70 @@ public:
 	///	デストラクタ
 	~PHScene(){}
 
-	PHConstraintEngine* GetConstraintEngine();
-	PHGravityEngine*	GetGravityEngine();
-	PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
-	int NSolids() const;
-	PHSolidIf** GetSolids();
-	CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
-	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
-	PHJointIf* SearchJoint(PHSolidIf* member);
+	PHEngines*			GetEngines();
+	PHSolidIf*			CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
+	int					NSolids() const;
+	PHSolidIf**			GetSolids();
+	CDShapeIf*			CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
+	PHJointIf*			CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
+	PHJointIf*			SearchJoint(PHSolidIf* member);
 	
-	int NJoints() const;
-	PHJointIf* GetJoint(int i);
-	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
-	int NRootNodes() const;
-	PHRootNodeIf* GetRootNode(int i);
-	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
-	PHGearIf*	CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
-	int NGears() const;
-	PHGearIf* GetGear(int i);
-	PHPathIf*	CreatePath(const PHPathDesc& desc = PHPathDesc());
-	int NPaths() const;
-	PHPathIf* GetPath(int i);
-	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
-	void SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
-	void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
-	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
-	virtual int GetNumIteration();
-	virtual void SetNumIteration(int n);
-	PHSdkIf* GetSdk();
-
+	int					NJoints() const;
+	PHJointIf*			GetJoint(int i);
+	PHRootNodeIf*		CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
+	int					NRootNodes() const;
+	PHRootNodeIf*		GetRootNode(int i);
+	PHTreeNodeIf*		CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
+	PHGearIf*			CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
+	int					NGears() const;
+	PHGearIf*			GetGear(int i);
+	PHPathIf*			CreatePath(const PHPathDesc& desc = PHPathDesc());
+	int					NPaths() const;
+	PHPathIf*			GetPath(int i);
+	void				SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
+	void				SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
+	void				SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
+	void				SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
+	virtual int			GetNumIteration();
+	virtual void		SetNumIteration(int n);
+	PHSdkIf*			GetSdk();
+	
 	/// 積分ステップを返す
-	double GetTimeStep()const{return timeStep;}
+	double				GetTimeStep()const{return timeStep;}
 	/// 積分ステップを設定する
-	void SetTimeStep(double dt);
+	void				SetTimeStep(double dt);
 	/// カウント数を返す
-	unsigned GetCount()const{return count;}
+	unsigned			GetCount()const{return count;}
 	/// カウント数を設定する
-	void SetCount(unsigned c){count = c;}
+	void				SetCount(unsigned c){count = c;}
 	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ
-	void Step();
+	void				Step();
 	///	シーンの時刻を進める（力のクリア）
-	void ClearForce();
+	void				ClearForce();
 	///	シーンの時刻を進める（力の生成）
-	void GenerateForce();
+	void				GenerateForce();
 	///	シーンの時刻を進める（力と速度を積分して，速度と位置を更新）
-	void Integrate();
+	void				Integrate();
 	///	シーンを空にする．
-	void Clear();
+	void				Clear();
 
-	virtual void SetGravity(const Vec3d& accel);
-	virtual Vec3f GetGravity();
+	virtual void		SetGravity(const Vec3d& accel);
+	virtual Vec3f		GetGravity();
 
-	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-	virtual size_t NChildObject() const;
-	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual bool AddChildObject(ObjectIf* o);
-	virtual bool DelChildObject(ObjectIf* o);
+	ObjectIf*			CreateObject(const IfInfo* info, const void* desc);
+	virtual size_t		NChildObject() const;
+	virtual ObjectIf*	GetChildObject(size_t pos);
+	virtual bool		AddChildObject(ObjectIf* o);
+	virtual bool		DelChildObject(ObjectIf* o);
 
-	friend class PHSolid;
-	friend class Object;
+	int					  NEngines();
+	PHEngineIf*			  GetEngine(int i);
+	PHConstraintEngineIf* GetConstraintEngine();
+	PHGravityEngineIf*	  GetGravityEngine();
+	PHPenaltyEngineIf*	  GetPenaltyEngine();
+
+	friend class		PHSolid;
+	friend class		Object;
 	ACCESS_DESC_STATE(PHScene);
 };
 

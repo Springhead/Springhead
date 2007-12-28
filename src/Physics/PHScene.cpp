@@ -297,11 +297,30 @@ bool PHScene::DelChildObject(ObjectIf* o){
 	return false;
 }
 
-PHConstraintEngine* PHScene::GetConstraintEngine(){
-	return constraintEngine;
+PHEngines* PHScene::GetEngines(){
+	return &engines;
 }
 
-PHGravityEngine* PHScene::GetGravityEngine(){
-	return gravityEngine;
+int PHScene::NEngines(){
+	
+	return engines.size();
 }
+
+PHEngineIf* PHScene::GetEngine(int i){
+	return XCAST(engines[i]);
+}
+
+PHConstraintEngineIf* PHScene::GetConstraintEngine(){
+	return XCAST(constraintEngine);
+}
+
+PHGravityEngineIf* PHScene::GetGravityEngine(){
+	return XCAST(gravityEngine);
+}
+
+PHPenaltyEngineIf* PHScene::GetPenaltyEngine(){
+	return XCAST(penaltyEngine);
+}
+
+
 }

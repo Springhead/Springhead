@@ -18,6 +18,20 @@ public:
 	IF_DEF(PHEngine);
 };
 
+struct PHConstraintEngineIf : PHEngineIf{
+public:
+	IF_DEF(PHConstraintEngine);
+};
+
+struct PHGravityEngineIf : PHEngineIf{
+public:
+	IF_DEF(PHGravityEngine);
+};
+
+struct PHPenaltyEngineIf : PHEngineIf{
+public:
+	IF_DEF(PHPenaltyEngine);
+};
 //@}
 }
 #endif
