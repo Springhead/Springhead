@@ -18,23 +18,6 @@ namespace Spr{;
 /** \addtogroup gpPhysics */
 //@{
 
-template <class T> class Range{
-public:
-	T lower;
-	T upper;
-	T& operator [] (int i){
-		return i==0 ? lower : upper;
-	}
-};
-
-struct LimitST{
-	SwingTwist lower;
-	SwingTwist upper;
-	SwingTwist& operator [] (int i){
-		return i==0 ? lower : upper;
-	}
-};
-
 /** \defgroup gpJoint ジョイント*/
 //@{
 
@@ -317,14 +300,14 @@ struct PHBallJointIf : public PHConstraintIf{
 		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
 		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void SetSwingRange(Range<double> range) = 0;
+	virtual void SetSwingRange(Vec2d range) = 0;
 	/** @brief スイング角の可動範囲を取得する
 		@param lower 最大スイング角度
 		@param upper 最大スイング角度
 		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
 		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void GetSwingRange(Range<double>& range) = 0;
+	virtual void GetSwingRange(Vec2d& range) = 0;
 
 	/** @brief ツイスト角の可動範囲を設定する
 		@param lower 最小ツイスト角度
@@ -332,14 +315,14 @@ struct PHBallJointIf : public PHConstraintIf{
 		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
 		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void SetTwistRange(Range<double> range) = 0;
+	virtual void SetTwistRange(Vec2d range) = 0;
 	/** @brief ツイスト角の可動範囲を取得する
 		@param lower 最大ツイスト角度
 		@param upper 最大ツイスト角度
 		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
 		（デフォルトで可動域制限は無効になっている）
 	 */
-	virtual void GetTwistRange(Range<double>& range) = 0;
+	virtual void GetTwistRange(Vec2d& range) = 0;
 
 	/** @brief モータトルクを設定する
 		@param torque モータトルク
@@ -367,8 +350,8 @@ struct PHBallJointDesc : public PHJointDesc{
 	DESC_DEF_FOR_OBJECT(PHBallJoint);
 	double			spring;		///< バネ係数
 	double			damper;		///< ダンパ係数
-	Range<double>	limitSwing; ///< swing角の可動域（[0] or .lower, [1] or .upper）
-	Range<double>	limitTwist;	///< twist角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d	limitSwing; ///< swing角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d	limitTwist;	///< twist角の可動域（[0] or .lower, [1] or .upper）
 	Vec3d			limitDir;	///< 可動域の中心ベクトル
 	Quaterniond		goal;		///< バネダンパの制御目標
 	Vec3d			torque;		///< モータトルク

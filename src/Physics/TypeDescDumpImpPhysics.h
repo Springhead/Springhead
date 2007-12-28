@@ -1,15 +1,5 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
-	LimitST* pLimitST = NULL;
-	desc = DBG_NEW UTTypeDesc("LimitST");
-	desc->size = sizeof(LimitST);
-	desc->access = DBG_NEW UTAccess<LimitST>;
-	field = desc->AddField("", "SwingTwist", "lower", "");
-	field->offset = int((char*)&(pLimitST->lower) - (char*)pLimitST);
-	field = desc->AddField("", "SwingTwist", "upper", "");
-	field->offset = int((char*)&(pLimitST->upper) - (char*)pLimitST);
-	db->RegisterDesc(desc);
-	
 	PHConstraintDesc* pPHConstraintDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("PHConstraintDesc");
 	desc->size = sizeof(PHConstraintDesc);
@@ -192,6 +182,17 @@
 	field->offset = int((char*)&(pPHBallJointDesc->spring) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "double", "damper", "");
 	field->offset = int((char*)&(pPHBallJointDesc->damper) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Vec2d", "limitSwing", "");
+	field->offset = int((char*)&(pPHBallJointDesc->limitSwing) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Vec2d", "limitTwist", "");
+	field->offset = int((char*)&(pPHBallJointDesc->limitTwist) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Vec3d", "limitDir", "");
+	field->offset = int((char*)&(pPHBallJointDesc->limitDir) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Quaterniond", "goal", "");
+	field->offset = int((char*)&(pPHBallJointDesc->goal) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "Vec3d", "torque", "");
+	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
+	db->RegisterDesc(desc);
 	
 	PHSpringDesc* pPHSpringDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSpringDesc");

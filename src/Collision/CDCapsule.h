@@ -13,7 +13,6 @@
 #include "CDConvex.h"
 
 namespace Spr{;
-
 	
 /// ‹…‘Ì
 class CDCapsule: public CDConvex, public CDCapsuleIfInit, CDCapsuleDesc{

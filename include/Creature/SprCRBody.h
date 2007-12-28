@@ -395,26 +395,26 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	Vec3d limitDirRearAnkle;
 
 	/// BallJoint‚Ìswing‰Â“®ˆæ:
-	Range<double> limitSwingWaistChest;
-	Range<double> limitSwingWaistTail;
-	Range<double> limitSwingTail;
-	Range<double> limitSwingChestNeck;
-	Range<double> limitSwingNeckHead;
-	Range<double> limitSwingShoulder;
-	Range<double> limitSwingFrontAnkle;
-	Range<double> limitSwingHip;
-	Range<double> limitSwingRearAnkle;
+	Vec2d limitSwingWaistChest;
+	Vec2d limitSwingWaistTail;
+	Vec2d limitSwingTail;
+	Vec2d limitSwingChestNeck;
+	Vec2d limitSwingNeckHead;
+	Vec2d limitSwingShoulder;
+	Vec2d limitSwingFrontAnkle;
+	Vec2d limitSwingHip;
+	Vec2d limitSwingRearAnkle;
 
 	/// BallJoint‚Ìtwist‰Â“®ˆæ
-	Range<double> limitTwistWaistChest;
-	Range<double> limitTwistWaistTail;
-	Range<double> limitTwistTail;
-	Range<double> limitTwistChestNeck;
-	Range<double> limitTwistNeckHead;
-	Range<double> limitTwistShoulder;
-	Range<double> limitTwistFrontAnkle;
-	Range<double> limitTwistHip;
-	Range<double> limitTwistRearAnkle;
+	Vec2d limitTwistWaistChest;
+	Vec2d limitTwistWaistTail;
+	Vec2d limitTwistTail;
+	Vec2d limitTwistChestNeck;
+	Vec2d limitTwistNeckHead;
+	Vec2d limitTwistShoulder;
+	Vec2d limitTwistFrontAnkle;
+	Vec2d limitTwistHip;
+	Vec2d limitTwistRearAnkle;
 
 	// 
 
