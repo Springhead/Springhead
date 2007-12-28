@@ -21,6 +21,12 @@ public:
 struct PHConstraintEngineIf : PHEngineIf{
 public:
 	IF_DEF(PHConstraintEngine);
+
+	/** @brief 
+	*/
+//	virtual std::vector<PHConstraint*> GetContactPoints();
+
+
 };
 
 struct PHGravityEngineIf : PHEngineIf{

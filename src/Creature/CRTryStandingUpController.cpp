@@ -24,18 +24,14 @@ std::vector<PHSolidIf*> CRTryStandingUpController::SetFootSolid(CRBodyIf*	body){
 }
 
 Vec3d CRTryStandingUpController::GetFootPos(PHSolidIf*		footSolid){
-	Vec3d		pos;
-	
-	pos = footSolid->GetPose().Pos();
-
-	return		pos;
+	return		footSolid->GetPose().Pos();
 }
 
 Vec3d CRTryStandingUpController::CalcFootForce(PHSolidIf*	footSolid){
 	Vec3d		force;
 	Vec3d		torque;
 
-//B	phScene->GetEngines();
+	//phScene->GetConstraintEngine()->;
 
 	force = Vec3d(0,0,0);
 	
