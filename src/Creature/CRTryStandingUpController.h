@@ -13,10 +13,9 @@
 //////////////////////////////////////////////////////
 
 #include <Springhead.h>
-
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
+#include "IfStubCreature.h"
 #include "CRController.h"
 #include "CRFLAnimalGene.h"
 
@@ -30,50 +29,75 @@ namespace Spr{;
 class CRTryStandingUpController : public CRController, public CRTryStandingUpControllerIfInit, public CRTryStandingUpControllerDesc {
 
 private:
-	///////////////////////////////////////////////////////////////
-	//															 //
-	// <<<CRControllerから継承されてこの中ですでに使える変数>>>> //
-	//															 //
-	// CRCreatureIf* creature;   //< 制御対象のクリーチャー群	 //
-	// PHSceneIf*	 phScene;    //< 所属するシーン				 //
-	// bool			 isEnabled;  //< 有効かどうか				 //
-	//															 //
-	///////////////////////////////////////////////////////////////
+
+	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	// 変数宣言
+
+	///////////////////////////////////////////////////////////////////
+	//																 //
+	// <<<CRControllerから継承されてこの中ですでに使える変数>>>>	 //
+	//																 //
+	// CRCreatureIf*	creature;   //< 制御対象のクリーチャー群	 //
+	// PHSceneIf*		phScene;    //< 所属するシーン				 //
+	// bool				isEnabled;  //< 有効かどうか				 //
+	//																 //
+	///////////////////////////////////////////////////////////////////
 
 	// このクラスとその派生クラス（今はまだない）で使える変数
-	std::vector<PHSolidIf*>			foot;			//< 足を構成する剛体を格納しておく配列
-	std::vector<CRBodyIf*>			body;			//< 制御対象のボディを扱う配列
-	CRFLAnimalGene*					animalGeneIf;		//< 遺伝子操作をするためのインタフェース
-	std::vector< std::vector<CRFLAnimalGeneData> > animalGenes;	//< 動物の遺伝子を扱う配列	
+	std::vector<PHSolidIf*>							foot;				//< 足を構成する剛体を格納しておく配列
+	std::vector<CRBodyIf*>							body;				//< 制御対象のボディを扱う配列
+	CRFLAnimalGene*									animalGeneIf;		//< 遺伝子操作をするためのインタフェース
+	std::vector< std::vector<CRFLAnimalGeneData> >	animalGenes;		//< 動物の遺伝子を扱う配列
 
-	unsigned long totalStep;		//< シミュレーション開始時からのステップ数
-	Vec3d centerOfMass;				//< ボディ全体の重心
+	unsigned long									totalStep;			//< シミュレーション開始時からのステップ数
+	Vec3d											centerOfMass;		//< ボディ全体の重心
 	
 	// human foot positions	
-	Vec3d rightFootPos;				//< 右足の位置
-	Vec3d leftFootPos;				//< 左足の位置
+	Vec3d											rightFootPos;		//< 右足の位置
+	Vec3d											leftFootPos;		//< 左足の位置
 	
 	// animal foot positions	
-	Vec3d rightFrontFootPos;		//< 右前足の位置
-	Vec3d rightRearFootPos;			//< 右後足の位置
-	Vec3d leftFrontFootPos;			//< 左前足の位置
-	Vec3d leftRearFootPos;			//< 左後足の位置
+	Vec3d											rightFrontFootPos;	//< 右前足の位置
+	Vec3d											rightRearFootPos;	//< 右後足の位置
+	Vec3d											leftFrontFootPos;	//< 左前足の位置
+	Vec3d											leftRearFootPos;	//< 左後足の位置
+
+	// human foot forces
+	Vec3d											rightFootForce;
+	Vec3d											leftFootForce;
+	
+	// animal foot forces
+	Vec3d											rightFrontFootForce;
+	Vec3d											rightRearFootForce;
+	Vec3d											leftFrontFootForce;
+	Vec3d											leftRearFootForce;
+	
+	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+	// 関数宣言
 
 	/** @brief 足の剛体を指定する。
+		@param body 足が付いている体のインタフェース型
 	*/
-	std::vector<PHSolidIf*> SetFootSolid(CRBodyIf* body);
+	std::vector<PHSolidIf*>		SetFootSolid(CRBodyIf* body);
 
 	/** @brief 足の座標を返す
+		@param footSolid 足の剛体のインタフェース型
 	*/
-	Vec3d GetFootPos(PHSolidIf* footSolid);
+	Vec3d						GetFootPos(PHSolidIf* footSolid);
+	
+	/** @briaf 足にかかっている力を計算する
+		@param footSolid 足の剛体のインタフェース型
+	*/
+	Vec3d						CalcFootForce(PHSolidIf* footSolid);
 
 	/** @brief 遺伝子に格納されている目標角度情報からボディを実際に動かす
+		@param gene ある遺伝子（全ての関節の目標角が格納されたvector配列）
 	*/
-	void TransitionPoseModel(std::vector<CRFLAnimalGeneData> gene);
+	void						TransitionPoseModel(std::vector<CRFLAnimalGeneData> gene);
 
-	/** @brief クリーチャー達のボディの情報（重心、足の位置）を更新する
+	/** @brief クリーチャー達のボディの情報（重心, 足の位置, 足にかかる力）を更新する
 	*/
-	void UpdateBodyState();
+	void						UpdateBodyState();
 
 public:
 	//----------------------------------------------------------
@@ -94,35 +118,35 @@ public:
 	// コンストラクタ
 	CRTryStandingUpController(){
 	}
-	CRTryStandingUpController(const CRTryStandingUpControllerDesc& desc, CRCreatureIf* c=NULL) 
+	CRTryStandingUpController(const CRTryStandingUpControllerDesc&		desc, CRCreatureIf*		c = NULL) 
 		: CRTryStandingUpControllerDesc(desc) 
-		, CRController((const CRControllerDesc&)desc, c)
+		, CRController((const CRControllerDesc&)	desc, c)
 	{
 		Init();
 	}
 	
 	//----------------------------------------------------------
 	//関数のオーバーライド等
-	////////////////////////////////////////////////////////////////////
-	//																  //
-	// <<CRControllerで実装されている関数>>							  //
-	//																  //
-	// virtual void SetEnable(bool enable); //< 有効/無効を切り替える //
-	// virtual bool IsEnabled();			//< 有効/無効の状態を返す //
-	//																  //
-	////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////
+	//																	  //
+	// <<CRControllerで実装されている関数>>								  //
+	//																	  //
+	// virtual void		SetEnable(bool enable); //< 有効/無効を切り替える //
+	// virtual bool		IsEnabled();			//< 有効/無効の状態を返す //
+	//																	  //
+	////////////////////////////////////////////////////////////////////////
 	
 	/** @brief 初期化を行う
 	*/
-	virtual void Init();
+	virtual void				Init();
 
 	/** @brief 制御のシミュレーションをする
 	*/
-	virtual void Step();
+	virtual void				Step();
 
-	/** @brief 学習する
+	/** @brief Q学習する
 	*/
-	void Learning();
+	void						QLearning();
 
 };
 
