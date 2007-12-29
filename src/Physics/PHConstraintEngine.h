@@ -37,7 +37,8 @@ public:
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>, public PHConstraintEngineIfInit{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
-	OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
+	//OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
+	OBJECTDEF(PHConstraintEngine, PHEngine);
 public:
 	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
 	int		numIter;					///< 速度更新LCPの反復回数
@@ -64,7 +65,6 @@ public:
 	//virtual void Dynamics(double dt, int ct);		///< 
 	//virtual void Correction(double dt, int ct);		///< 
 	void UpdateSolids();			///< 結果をSolidに反映する
-	PHConstraints GetContactPoints();
 	void Clear();
 
 	PHConstraints	points;			///< 接触点の配列
@@ -79,6 +79,8 @@ public:
 	void IterateLCP();				///< 速度更新LCPの一度の反復
 	void SetupCorrectionLCP();		///< 誤差修正LCPの準備
 	void IterateCorrectionLCP();	///< 誤差修正LCPの一度の反復
+
+	virtual PHConstraintsIf* GetContactPoints();
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);

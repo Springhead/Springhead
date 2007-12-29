@@ -319,5 +319,8 @@ void PHConstraint::IterateCorrectionLCP(){
 		F[j] = Fnew[j];
 	}
 }
+//------------------------------------------------------------------------------------------
+//PHConstraints
+IF_OBJECT_IMP(PHConstraints, SceneObject);
 
 }

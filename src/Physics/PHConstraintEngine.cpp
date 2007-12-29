@@ -504,8 +504,8 @@ void PHConstraintEngine::Step(){
 	UpdateSolids();	
 }
 
-PHConstraints PHConstraintEngine::GetContactPoints(){
-	return points;
+PHConstraintsIf* PHConstraintEngine::GetContactPoints(){
+	return DCAST(PHConstraintsIf, &points);
 }
 
 }

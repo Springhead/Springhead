@@ -12,6 +12,9 @@ typedef IfInitTemplate<PHEngineIfStub, PHEngine>	PHEngineIfInit;
 template <class IF, class MIF, class OBJ> struct PHEngineIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHConstraintEngineIfStubTemplate: public PHEngineIfStubTemplate<IF, MIF, OBJ> {
+	virtual PHConstraintsIf * GetContactPoints(){
+		return ((OBJ*)(MIF*)this)->GetContactPoints();
+	}
 };
 struct PHConstraintEngineIf;	class PHConstraintEngine;
 typedef PHConstraintEngineIfStubTemplate<PHConstraintEngineIf, ObjectIfBuf, PHConstraintEngine>	PHConstraintEngineIfStub;
@@ -61,6 +64,17 @@ struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ
 struct PHConstraintIf;	class PHConstraint;
 typedef PHConstraintIfStubTemplate<PHConstraintIf, ObjectIfBuf, PHConstraint>	PHConstraintIfStub;
 typedef IfInitTemplate<PHConstraintIfStub, PHConstraint>	PHConstraintIfInit;
+
+template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHConstraintsIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual PHConstraintIf * FindBySolidPair(PHSolidIf * lhs, PHSolidIf * rhs){
+		return ((OBJ*)(MIF*)this)->FindBySolidPair(lhs, rhs);
+	}
+};
+struct PHConstraintsIf;	class PHConstraints;
+typedef PHConstraintsIfStubTemplate<PHConstraintsIf, ObjectIfBuf, PHConstraints>	PHConstraintsIfStub;
+typedef IfInitTemplate<PHConstraintsIfStub, PHConstraints>	PHConstraintsIfInit;
 
 template <class IF, class MIF, class OBJ> struct PHConstraintIfStubTemplate;
 template <class IF, class MIF, class OBJ>

@@ -98,16 +98,30 @@ public:
 	PHConstraint();
 };
 
-class PHConstraints : public std::vector< UTRef<PHConstraint> >{
+class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject, public PHConstraintsIfInit{
+	
 public:
+	OBJECTDEF(PHConstraints, SceneObject);
+	virtual PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){
+		for(iterator it = begin(); it != end(); it++)
+			if((*it)->solid[0] == DCAST(PHSolid, lhs) && (*it)->solid[1] == DCAST(PHSolid, rhs))
+				return XCAST(*it);
+			else if((*it)->solid[0] == DCAST(PHSolid, rhs) && (*it)->solid[1] == DCAST(PHSolid, lhs))
+				return XCAST(*it);
+
+		return NULL;
+	}
+	
 	/// Žw’è‚³‚ê‚½„‘Ì‚Ì‘g‚Éì—p‚µ‚Ä‚¢‚éS‘©‚ð•Ô‚·
 	PHConstraint* FindBySolidPair(PHSolid* lhs, PHSolid* rhs){
 		for(iterator it = begin(); it != end(); it++)
 			if((*it)->solid[0] == lhs && (*it)->solid[1] == rhs)
 				return *it;
+
 		return NULL;
 	}
 };
+
 
 }
 

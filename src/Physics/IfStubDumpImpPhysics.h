@@ -4,6 +4,7 @@ IF_IMP(PHConstraintEngine, PHEngine);
 IF_IMP(PHGravityEngine, PHEngine);
 IF_IMP(PHPenaltyEngine, PHEngine);
 IF_IMP(PHConstraint, SceneObject);
+IF_IMP(PHConstraints, SceneObject);
 IF_IMP(PHContactPoint, PHConstraint);
 IF_IMP(PHJoint, PHConstraint);
 IF_IMP(PHJoint1D, PHJoint);

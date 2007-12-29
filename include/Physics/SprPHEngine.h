@@ -22,9 +22,9 @@ struct PHConstraintEngineIf : PHEngineIf{
 public:
 	IF_DEF(PHConstraintEngine);
 
-	/** @brief 
+	/** @brief ÚG“_‚ÌW‡‚ğ•Ô‚·
 	*/
-//	virtual std::vector<PHConstraint*> GetContactPoints();
+	virtual PHConstraintsIf* GetContactPoints() = 0;
 
 
 };

@@ -132,6 +132,18 @@ struct PHConstraintIf : public SceneObjectIf{
 	virtual void GetConstraintForce(Vec3d& f, Vec3d& t) = 0;
 };
 
+/// 拘束の集合のインタフェース
+struct PHConstraintsIf : public SceneObjectIf{
+	IF_DEF(PHConstraints);
+
+	/** @brief 指定された剛体の組に作用している拘束を返す
+		@param lhs 剛体その１
+		@param rhs 剛体その２
+		@return 剛体間に作用している拘束
+	*/
+	virtual PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs) = 0;
+};
+
 /// 接触点拘束のインタフェース
 struct PHContactPointIf : public PHConstraintIf{
 	IF_DEF(PHContactPoint);
