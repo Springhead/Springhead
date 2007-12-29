@@ -197,6 +197,15 @@ public:
 	 */
 	virtual PHPathIf* CreatePath(const PHPathDesc& desc = PHPathDesc())=0;
 
+	/** @brief パスの数
+	*/
+	virtual int NPaths() = 0;
+
+	/** @brief パスを取得する
+	*/
+	virtual PHPathIf* GetPath(int i)=0;
+
+
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ
 	 */

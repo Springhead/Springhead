@@ -20,7 +20,7 @@ std::vector<PHSolidIf*> CRTryStandingUpController::SetFootSolid(CRBodyIf*	body){
 		foot.push_back(body->GetSolid(CRFourLegsAnimalBodyDesc::SO_LEFT_FRONT_TOE));
 		foot.push_back(body->GetSolid(CRFourLegsAnimalBodyDesc::SO_LEFT_REAR_TOE));		
 	}
-	return foot;
+	return			foot;
 }
 
 Vec3d CRTryStandingUpController::GetFootPos(PHSolidIf*		footSolid){
@@ -28,16 +28,14 @@ Vec3d CRTryStandingUpController::GetFootPos(PHSolidIf*		footSolid){
 }
 
 Vec3d CRTryStandingUpController::CalcFootForce(PHSolidIf*	footSolid){
-	Vec3d		force;
-	Vec3d		torque;
-	PHConstraintIf* localPair;
-	
-	localPair = phScene->GetConstraintEngine()->GetContactPoints()
-					   ->FindBySolidPair(DCAST(PHSolidIf, (phScene->FindObject("Floor"))), footSolid);
+	Vec3d				force;
+	Vec3d				torque;
+	PHConstraintIf*		localPair = phScene->GetConstraintEngine()->GetContactPoints()
+										   ->FindBySolidPair(DCAST(PHSolidIf, (phScene->FindObject("Floor"))), footSolid);
 	if(localPair)
 		localPair->GetConstraintForce(force, torque);
 	
-	return		force;
+	return				force;
 }
 
 void CRTryStandingUpController::TransitionPoseModel(std::vector<CRFLAnimalGeneData>		gene){

@@ -17,6 +17,8 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHConstraint
 IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//コンストラクタ
 PHConstraint::PHConstraint(){
 	solid[0] = solid[1] = NULL;
 	f.clear();
@@ -26,6 +28,9 @@ PHConstraint::PHConstraint(){
 	bInactive[1] = true;
 	bArticulated = false;
 }
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//インタフェース(PHConstraintIfの機能)の実装,オーバーライド   cf.SprPHJoint.h
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
@@ -73,6 +78,8 @@ void PHConstraint::SetDesc(const void* desc){
 	bEnabled   = condesc.bEnabled;
 }
 
+//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//このクラス内の機能
 void PHConstraint::UpdateState(){
 	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
   //if(!bArticulated){
@@ -82,8 +89,8 @@ void PHConstraint::UpdateState(){
 	//}
 }
 
-// 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
-void PHConstraint::CompJacobian(){
+
+void PHConstraint::CompJacobian(){ // 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
 	SpatialTransform X[2];
 	X[0].r = solid[0]->GetCenterPosition();
 	X[0].q = solid[0]->GetOrientation();

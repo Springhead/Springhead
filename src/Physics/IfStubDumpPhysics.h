@@ -383,6 +383,12 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	virtual PHPathIf * CreatePath(const PHPathDesc & desc = PHPathDesc()){
 		return ((OBJ*)(MIF*)this)->CreatePath(desc);
 	}
+	virtual int NPaths(){
+		return ((OBJ*)(MIF*)this)->NPaths();
+	}
+	virtual PHPathIf * GetPath(int i){
+		return ((OBJ*)(MIF*)this)->GetPath(i);
+	}
 	virtual double GetTimeStep() const {
 		return ((OBJ*)(MIF*)this)->GetTimeStep();
 	}

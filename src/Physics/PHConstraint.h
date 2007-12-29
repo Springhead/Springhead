@@ -56,46 +56,49 @@ public:
 	bool		constr[6];			///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
 	bool		constrCorrection[6];///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
 
-	/* 派生クラスの機能	*/
-	virtual void AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
-	virtual void SetConstrainedIndex(bool* con){}			///< どの自由度を速度拘束するかを設定
-	virtual void SetConstrainedIndexCorrection(bool* con){	///< どの自由度を位置拘束するかを設定
+	///コンストラクタ
+	PHConstraint();
+
+	///このクラス内の機能
+	void		CompJacobian();
+	void		SetupLCP();
+	void		IterateLCP();
+	void		UpdateState();
+	void		CompResponseMatrix();
+	void		CompResponseMatrixABA();
+	void		SetupCorrectionLCP();
+	void		IterateCorrectionLCP();
+	
+	///派生クラスの機能
+	virtual void		 AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
+	virtual void		 SetConstrainedIndex(bool* con){}			///< どの自由度を速度拘束するかを設定
+	virtual void		 SetConstrainedIndexCorrection(bool* con){	///< どの自由度を位置拘束するかを設定
 		SetConstrainedIndex(con);
 	}														
-	virtual void ModifyJacobian(){}							///< 独自座標系を使う場合のヤコビアンの修正
-	virtual void CompBias(){}								///< 
-	virtual void Projection(double& f, int k){}				///< 拘束力の射影
-	virtual void UpdateJointState(){}						///< 関節座標の位置・速度を更新する
-	virtual void CompError(){}								///< Correction用の拘束誤差を設定する
-	virtual void ProjectionCorrection(double& F, int k){}	///< 
+	virtual void		 ModifyJacobian(){}							///< 独自座標系を使う場合のヤコビアンの修正
+	virtual void		 CompBias(){}								///< 
+	virtual void		 Projection(double& f, int k){}				///< 拘束力の射影
+	virtual void		 UpdateJointState(){}						///< 関節座標の位置・速度を更新する
+	virtual void		 CompError(){}								///< Correction用の拘束誤差を設定する
+	virtual void		 ProjectionCorrection(double& F, int k){}	///< 
 	
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
-	virtual void Enable(bool bEnable = true){bEnabled = bEnable;}
-	virtual bool IsEnabled(){return bEnabled;}
-	virtual void SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}
-	virtual bool IsInactive(int index = 0){return bInactive[index];}
-	virtual void GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = Xjrel.q;}
-	virtual Vec3d GetRelativePoseR(){return Xjrel.r;}
-	virtual Quaterniond GetRelativePoseQ(){return Xjrel.q;}
-	virtual void GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
-	virtual void GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v(); _t = f.w();}
-	virtual bool AddChildObject(ObjectIf* o);
-	virtual size_t NChildObject();
-	virtual ObjectIf* GetChildObject(size_t i);
-	virtual bool GetDesc(void* desc);
-	virtual void SetDesc(const void* desc);
-	
-	void	CompJacobian();
-	void	SetupLCP();
-	void	IterateLCP();
-	void	UpdateState();
-	void	CompResponseMatrix();
-	void	CompResponseMatrixABA();
-	void	SetupCorrectionLCP();
-	void	IterateCorrectionLCP();
-	
-	PHConstraint();
+	virtual void		 Enable(bool bEnable = true){bEnabled = bEnable;}
+	virtual bool		 IsEnabled(){return bEnabled;}
+	virtual void		 SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}
+	virtual bool		 IsInactive(int index = 0){return bInactive[index];}
+	virtual void		 GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = Xjrel.q;}
+	virtual Vec3d		 GetRelativePoseR(){return Xjrel.r;}
+	virtual Quaterniond	 GetRelativePoseQ(){return Xjrel.q;}
+	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
+	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v(); _t = f.w();}
+	virtual bool		 AddChildObject(ObjectIf* o);
+	virtual size_t		 NChildObject();
+	virtual ObjectIf*	 GetChildObject(size_t i);
+	virtual bool		 GetDesc(void* desc);
+	virtual void		 SetDesc(const void* desc);
+
 };
 
 class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject, public PHConstraintsIfInit{
