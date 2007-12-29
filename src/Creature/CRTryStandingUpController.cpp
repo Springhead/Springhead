@@ -30,12 +30,13 @@ Vec3d CRTryStandingUpController::GetFootPos(PHSolidIf*		footSolid){
 Vec3d CRTryStandingUpController::CalcFootForce(PHSolidIf*	footSolid){
 	Vec3d		force;
 	Vec3d		torque;
-
-	phScene->GetConstraintEngine()->GetContactPoints();//->FindBySolidPair(phScene->GetSolid(0), phScene->GetSolid(
-
-	force = Vec3d(0,0,0);
+	PHConstraintIf* localPair;
 	
-
+	localPair = phScene->GetConstraintEngine()->GetContactPoints()
+					   ->FindBySolidPair(DCAST(PHSolidIf, (phScene->FindObject("Floor"))), footSolid);
+	if(localPair)
+		localPair->GetConstraintForce(force, torque);
+	
 	return		force;
 }
 
