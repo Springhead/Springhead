@@ -45,7 +45,7 @@ public:
 };
 
 class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
-public:
+
 	OBJECTDEF(PHBallJoint, PHJoint);
 
 	double			spring, damper;			///< バネ、ダンパ係数
@@ -58,7 +58,7 @@ public:
 	Matrix3d		Jcinv;					///< 拘束座標系の速度、加速度    ＝　Jcinv * Socket座標系の速度・加速度
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	Quaterniond		goal;					///< 制御目標
-
+public:
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	
