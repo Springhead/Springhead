@@ -72,6 +72,10 @@ struct CRBodyIf : SceneObjectIf{
 	*/
 	virtual Vec3d GetCenterOfMass() = 0;
 
+	/** @brief ƒ{ƒfƒB‚ÌŽ¿—Ê‚ð“¾‚é
+	*/
+	virtual double GetSumOfMass() = 0;
+
 	
 };
 

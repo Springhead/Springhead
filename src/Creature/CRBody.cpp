@@ -137,5 +137,16 @@ Vec3d CRBody::GetCenterOfMass(){
 	return centerPosOfBlocks / totalWeight;
 }
 
+double CRBody::GetSumOfMass(){
+	/// 重心を求める時に使うi番目までの重心の小計
+	double totalWeight = 0;
+
+	for(int i = 0; i<NSolids(); i++){
+		if(solids[i])
+			totalWeight = totalWeight + solids[i]->GetMass(); 
+	}
+
+	return totalWeight;
+}
 
 }

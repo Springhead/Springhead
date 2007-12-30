@@ -99,6 +99,9 @@ public:
 	*/
 	virtual Vec3d GetCenterOfMass();
 	
+	/** @brief ƒ{ƒfƒB‚ÌŽ¿—Ê‚ð“¾‚é
+	*/
+	virtual double GetSumOfMass();
 };
 }
 //@}

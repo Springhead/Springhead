@@ -18,6 +18,7 @@
 #include "IfStubCreature.h"
 #include "CRController.h"
 #include "CRFLAnimalGene.h"
+//#include "CRFLAnimalQLearning.h"
 
 //////////////////////////////////////////////////////
 
@@ -37,7 +38,7 @@ private:
 
 	///////////////////////////////////////////////////////////////////
 	//																 //
-	// <<<CRControllerから継承されてこの中ですでに使える変数>>>>	 //
+	// <<<CRControllerから継承されてこの中ですでに使える変数>>>		 //
 	//																 //
 	// CRCreatureIf*	creature;   //< 制御対象のクリーチャー群	 //
 	// PHSceneIf*		phScene;    //< 所属するシーン				 //
@@ -74,12 +75,16 @@ private:
 	Vec3d				leftFrontFootForce;		//< 左前足の力
 	Vec3d				leftRearFootForce;		//< 左後足の力
 	
+	//大域カウンター
+	int					qLearningStep;			//< GA+QLeaningの1試行内でのQLearningのステップ数
+
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	// 関数宣言
 
 	std::vector<PHSolidIf*>		SetFootSolid(CRBodyIf* body);								//< 足の剛体を指定する。
 	Vec3d						GetFootPos(PHSolidIf* footSolid);							//< 足の座標を返す
 	Vec3d						CalcFootForce(PHSolidIf* footSolid);						//< 足にかかっている力を計算する
+	Vec3d						CalcFootTorque(PHSolidIf* footSolid);						//< 足にかかっているトルクを計算する
 	void						TransitionPoseModel(std::vector<CRFLAnimalGeneData> gene);	//< 遺伝子に格納されている目標角度情報からボディを実際に動かす
 	void						UpdateBodyState();											//< クリーチャー達のボディの情報（重心, 足の位置, 足にかかる力）を更新する
 
@@ -120,7 +125,9 @@ public:
 	
 	virtual void		Init();							//< 初期化を行う
 	virtual void		Step();							//< 制御のシミュレーションをする
-	void				QLearning();					//< Q学習する
+	void				CalcQL();						//< Q学習する
+	void				CalcGA();						//< GAを計算する
+
 
 };
 

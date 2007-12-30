@@ -31,6 +31,9 @@ struct CRBodyIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual Vec3d GetCenterOfMass(){
 		return ((OBJ*)(MIF*)this)->GetCenterOfMass();
 	}
+	virtual double GetSumOfMass(){
+		return ((OBJ*)(MIF*)this)->GetSumOfMass();
+	}
 };
 struct CRBodyIf;	class CRBody;
 typedef CRBodyIfStubTemplate<CRBodyIf, ObjectIfBuf, CRBody>	CRBodyIfStub;

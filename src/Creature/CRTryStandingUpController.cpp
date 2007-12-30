@@ -38,6 +38,17 @@ Vec3d CRTryStandingUpController::CalcFootForce(PHSolidIf*	footSolid){
 	return				force;
 }
 
+Vec3d CRTryStandingUpController::CalcFootTorque(PHSolidIf* footSolid){
+	Vec3d				force;
+	Vec3d				torque;
+	PHConstraintIf*		localPair = phScene->GetConstraintEngine()->GetContactPoints()
+										   ->FindBySolidPair(DCAST(PHSolidIf, (phScene->FindObject("Floor"))), footSolid);
+	if(localPair)
+		localPair->GetConstraintForce(force, torque);
+	
+	return				torque;
+}
+
 void CRTryStandingUpController::TransitionPoseModel(std::vector<CRFLAnimalGeneData>		gene){
 	for(unsigned int i = 0; i < gene.size(); i++){
 		//BDSTR << gene[i].goalDir << std::endl;
@@ -83,14 +94,11 @@ void CRTryStandingUpController::UpdateBodyState(){
 				leftFrontFootForce	= CalcFootForce(foot[2]);
 				leftRearFootForce	= CalcFootForce(foot[3]);
 				//DSTR << "rightFrontFoot: " << rightFrontFootPos << "rightRearFoot: " << rightRearFootPos << "leftFrontFoot: "  << leftFrontFootPos  << "leftRearFoot: "  << leftRearFootPos << std::endl;
-				DSTR << "rightFrontFoot: " << rightFrontFootForce << "rightRearFoot: " << rightRearFootForce << "leftFrontFoot: " << leftFrontFootForce << "leftRearFoot: " << leftRearFootForce << std::endl;
+				//DSTR << "rightFrontFoot: " << rightFrontFootForce << "rightRearFoot: " << rightRearFootForce << "leftFrontFoot: " << leftFrontFootForce << "leftRearFoot: " << leftRearFootForce << std::endl;
 			}
 		}
 	}
 }
-
-
-
 
 //------------------------------------------------------------------------------------------
 // public Func:
@@ -98,36 +106,34 @@ void CRTryStandingUpController::Init(){
 	CRController::Init();
 
 //大域変数の初期化
-	totalStep	 = 0;
+	totalStep		= 0;
+	qLearningStep	= 0;
 	animalGeneIf = DBG_NEW CRFLAnimalGene(creature);			//< animalGeneの一番最後にクリーチャーの分だけ貼り付ける
 
 	// body[i]:i体目のクリーチャーのボディになるように登録する
 	for(int i = 0; i < creature->NBodies(); i++){
 		body.push_back(creature->GetBody(i));							//< creatureの中にあるボディ情報を順番に格納していく
-	}	
+	}
 }
 
-void CRTryStandingUpController::QLearning(){
-	
-	
+void CRTryStandingUpController::CalcQL(){
+	qLearningStep += 1;
+//	DSTR << qLearningStep << std::endl;
 	
 }
 
-void CRTryStandingUpController::Step(){	
-	totalStep += 1;
-	CRController::Step();
-	UpdateBodyState();
+void CRTryStandingUpController::CalcGA(){
 
-//	for(int i = 0; i < creature->NBodies(); i++){
-//		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
-//	}
-//	DSTR << animalGenes.size() << std::endl;
+	for(int i = 0; i < creature->NBodies(); i++){
+		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
+	}
+	DSTR << animalGenes.size() << std::endl;
 	
 	//毎ステップできてくる最新のanimalGenesを確認する
-//	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
-//		DSTR << animalGenes.back()[i].goalDir << std::endl;
-//	}	
-//	std::vector<CRFLAnimalGeneData> gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
+	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
+		DSTR << animalGenes.back()[i].goalDir << std::endl;
+	}	
+	std::vector<CRFLAnimalGeneData> gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
 	
 	/*
 	for(int i=0; i<gene.size(); i++){
@@ -135,6 +141,24 @@ void CRTryStandingUpController::Step(){
 	}
 	*/
 //	TransitionPoseModel(gene);
+
+	// 
+	qLearningStep = 0;
+
+}
+
+void CRTryStandingUpController::Step(){	
+	totalStep	  += 1;
+
+	CRController::Step();
+	UpdateBodyState();
+	
+	//QLearningのみを50回行う
+	CalcQL();
+
+	//50回QLearningを行った後、1回だけGAを行う
+//	if(qLearningStep == 50)
+//		CalcGA();
 	
 }
 
