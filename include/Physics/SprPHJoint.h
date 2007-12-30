@@ -138,6 +138,7 @@ struct PHConstraintIf : public SceneObjectIf{
 	/** @brief 拘束力を取得
 		@param f 並進力
 		@param t モーメント
+		拘束力と拘束トルクをソケットのローカル座標系で返す
 	 */
 	virtual void GetConstraintForce(Vec3d& f, Vec3d& t) = 0;
 };

@@ -31,8 +31,8 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	Quaterniond qlocal;
 	qlocal.FromMatrix(local);
 	for(int i = 0; i < 2; i++){
-		Xj[i].q = solid[i]->GetOrientation().Conjugated() * qlocal;
-		Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
+		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qlocal;
+		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
 }
 
@@ -70,8 +70,8 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	Quaterniond qjabs;
 	qjabs.FromMatrix(Rjabs);
 	for(int i = 0; i < 2; i++){
-		Xj[i].q = solid[i]->GetOrientation().Conjugated() * qjabs;
-		Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
+		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qjabs;
+		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
 }
 

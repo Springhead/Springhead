@@ -55,6 +55,8 @@ public:
 	/// À•W²‚Ì•`‰æ
 	void DrawAxis(bool solid);
 	void DrawCoordinateAxis(bool solid);
+	/// ü•ª‚Ì•`‰æ
+	void DrawLine(const Vec3d& p0, const Vec3d& p1);
 	/// –Ê‚Ì•`‰æ
 	void DrawFaceSolid(CDFaceIf* face, Vec3f * base);
 	void DrawFaceWire(CDFaceIf* face, Vec3f * base);

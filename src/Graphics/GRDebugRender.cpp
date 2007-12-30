@@ -62,12 +62,15 @@ GRDebugRender::GRDebugRender(){
 void GRDebugRender::DrawScene(PHSceneIf* scene){
 	if (!scene) return;
 	PHSolidIf **solids = scene->GetSolids();
-	for (int i = 0; i < scene->NSolids(); ++i){
+	for(int i = 0; i < scene->NSolids(); ++i){
 		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
 		this->DrawSolid(solids[i]);
 	}
-	for (int i = 0; i < scene->NJoints(); ++i){
+	for(int i = 0; i < scene->NJoints(); ++i){
 		this->DrawConstraint(scene->GetJoint(i));
+	}
+	for(int i = 0; i < scene->NContacts(); ++i){
+		this->DrawConstraint(scene->GetContact(i));
 	}
 }
 
@@ -120,7 +123,7 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		this->PopModelMatrix();
 
 		// 剛体のローカル座標軸を表示する．
-		if(renderAxis && (modeSolid || modeWire))
+		if(renderAxis)
 			DrawCoordinateAxis(modeSolid);
 	}
 
@@ -130,20 +133,31 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 	PHConstraint* con = conif->Cast();
 	Affinef af;
-	
-	// socket
-	(con->solid[0]->GetPose() * con->poseSocket).ToAffine(af);
-	this->PushModelMatrix();
-	this->MultModelMatrix(af);
-	DrawCoordinateAxis(modeSolid);
-	this->PopModelMatrix();
+	Vec3d f, t;
 
-	// plug
-	(con->solid[1]->GetPose() * con->posePlug).ToAffine(af);
-	this->PushModelMatrix();
-	this->MultModelMatrix(af);
-	DrawCoordinateAxis(modeSolid);
-	this->PopModelMatrix();
+	if(renderAxis || renderForce){
+		// socket
+		(con->solid[0]->GetPose() * con->poseSocket).ToAffine(af);
+		this->PushModelMatrix();
+		this->MultModelMatrix(af);
+		if(renderAxis)	
+			DrawCoordinateAxis(modeSolid);
+		// constraint force
+		if(renderForce){
+			con->GetConstraintForce(f, t);
+			DrawLine(Vec3d(), f * scaleForce);
+			DrawLine(Vec3d(), t * scaleForce);
+		}
+		this->PopModelMatrix();
+	}
+	if(renderAxis){
+		// plug
+		(con->solid[1]->GetPose() * con->posePlug).ToAffine(af);
+		this->PushModelMatrix();
+		this->MultModelMatrix(af);
+		DrawCoordinateAxis(modeSolid);
+		this->PopModelMatrix();
+	}
 }
 
 void GRDebugRender::DrawCapsule(CDCapsuleIf* cap, bool solid){
@@ -234,7 +248,13 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	glTranslatef(0, 0, length/2); glScalef(width, width, length); glutSolidCube(1.0);
 	this->PopModelMatrix();
 	*/
+}
 
+void GRDebugRender::DrawLine(const Vec3d& p0, const Vec3d& p1){
+	glBegin(GL_LINES);
+	glVertex3dv((const double*)&p0);
+	glVertex3dv((const double*)&p1);
+	glEnd();
 }
 
 void GRDebugRender::DrawFaceSolid(CDFaceIf* face, Vec3f * base){

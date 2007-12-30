@@ -148,6 +148,21 @@ void BuildScene0(){
 	soBox.back()->SetDynamical(false);
 	nodeTree.push_back(scene->CreateRootNode(soBox.back(), PHRootNodeDesc()));
 
+PHSolidIf*	so = scene->CreateSolid(solidDesc);
+	so->AddShape(shapeBox);
+	so->SetFramePosition(Vec3f(2.0, 20.0, 0.0));
+	so->SetDynamical(false);
+
+	so = scene->CreateSolid(solidDesc);
+	so->AddShape(shapeBox);
+	so->SetFramePosition(Vec3f(0.0, 22.0, 0.0));
+	so->SetDynamical(false);
+
+	so = scene->CreateSolid(solidDesc);
+	so->AddShape(shapeBox);
+	so->SetFramePosition(Vec3f(0.0, 20.0, 2.0));
+	so->SetDynamical(false);
+
 	// d—Í‚ğİ’è
 	scene->SetGravity(Vec3f(0, -9.8, 0));
 }
@@ -832,7 +847,7 @@ void OnKey7(char key){
 			break;
 		}
 
-		// minous value origin
+		// minus value origin
 		{
 		case 'i':
 			hiJoint->GetDesc(&hingeDesc);
@@ -1175,6 +1190,9 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("Joints");
 
 	render = grSdk->CreateDebugRender();
+	render->SetRenderMode(false, true);
+	render->EnableRenderAxis();
+	render->EnableRenderForce();
 	device = grSdk->CreateDeviceGL();
 
 	// ‰Šúİ’è

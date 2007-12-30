@@ -144,6 +144,14 @@ public:
 	 */
 	virtual PHJointIf* GetJoint(int i)=0;
 
+	/** @brief 接触拘束の数を取得する
+	 */
+	virtual int NContacts()const=0;
+
+	/** @brief 接触拘束を取得する
+	 */
+	virtual PHContactPointIf* GetContact(int i)=0;
+
 	/** @brief ルートノードを作成する
 		@param root ルートノードとなる剛体
 		@return ルートノードのインタフェース

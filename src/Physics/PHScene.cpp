@@ -77,6 +77,12 @@ int PHScene::NJoints()const{
 PHJointIf* PHScene::GetJoint(int i){
 	return DCAST(PHJointIf, constraintEngine->joints[i]);
 }
+int PHScene::NContacts()const{
+	return constraintEngine->points.size();
+}
+PHContactPointIf* PHScene::GetContact(int i){
+	return DCAST(PHContactPointIf, constraintEngine->points[i]);
+}
 
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
 	PHRootNode* node = constraintEngine->CreateRootNode(desc, root->Cast());
