@@ -188,6 +188,12 @@ struct CRTryStandingUpControllerIfStubTemplate: public CRControllerIfStubTemplat
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
+	virtual void CalcQL(){
+		return ((OBJ*)(MIF*)this)->CalcQL();
+	}
+	virtual void CalcGA(){
+		return ((OBJ*)(MIF*)this)->CalcGA();
+	}
 };
 struct CRTryStandingUpControllerIf;	class CRTryStandingUpController;
 typedef CRTryStandingUpControllerIfStubTemplate<CRTryStandingUpControllerIf, ObjectIfBuf, CRTryStandingUpController>	CRTryStandingUpControllerIfStub;

@@ -118,7 +118,7 @@ void CRTryStandingUpController::Init(){
 
 void CRTryStandingUpController::CalcQL(){
 	qLearningStep += 1;
-//	DSTR << qLearningStep << std::endl;
+	DSTR << qLearningStep << std::endl;
 	
 }
 
