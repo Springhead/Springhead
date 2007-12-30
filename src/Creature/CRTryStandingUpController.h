@@ -51,28 +51,28 @@ private:
 	CRFLAnimalGene*									animalGeneIf;			//< 遺伝子操作をするためのインタフェース
 	std::vector< std::vector<CRFLAnimalGeneData> >	animalGenes;			//< 動物の遺伝子を扱う配列
 
-	unsigned long									totalStep;				//< シミュレーション開始時からのステップ数
-	Vec3d											centerOfMass;			//< ボディ全体の重心
+	unsigned long		totalStep;				//< シミュレーション開始時からのステップ数
+	Vec3d				centerOfMass;			//< ボディ全体の重心
 	
 	// human foot positions	
-	Vec3d											rightFootPos;			//< 右足の位置
-	Vec3d											leftFootPos;			//< 左足の位置
+	Vec3d				rightFootPos;			//< 右足の位置
+	Vec3d				leftFootPos;			//< 左足の位置
 	
 	// animal foot positions	
-	Vec3d											rightFrontFootPos;		//< 右前足の位置
-	Vec3d											rightRearFootPos;		//< 右後足の位置
-	Vec3d											leftFrontFootPos;		//< 左前足の位置
-	Vec3d											leftRearFootPos;		//< 左後足の位置
+	Vec3d				rightFrontFootPos;		//< 右前足の位置
+	Vec3d				rightRearFootPos;		//< 右後足の位置
+	Vec3d				leftFrontFootPos;		//< 左前足の位置
+	Vec3d				leftRearFootPos;		//< 左後足の位置
 
 	// human foot forces
-	Vec3d											rightFootForce;			//< 右足の力
-	Vec3d											leftFootForce;			//< 左足の力
+	Vec3d				rightFootForce;			//< 右足の力
+	Vec3d				leftFootForce;			//< 左足の力
 	
 	// animal foot forces
-	Vec3d											rightFrontFootForce;	//< 右前足の力
-	Vec3d											rightRearFootForce;		//< 右後足の力
-	Vec3d											leftFrontFootForce;		//< 左前足の力
-	Vec3d											leftRearFootForce;		//< 左後足の力
+	Vec3d				rightFrontFootForce;	//< 右前足の力
+	Vec3d				rightRearFootForce;		//< 右後足の力
+	Vec3d				leftFrontFootForce;		//< 左前足の力
+	Vec3d				leftRearFootForce;		//< 左後足の力
 	
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	// 関数宣言
@@ -118,9 +118,9 @@ public:
 	//																	  //
 	////////////////////////////////////////////////////////////////////////
 	
-	virtual void				Init();							//< 初期化を行う
-	virtual void				Step();							//< 制御のシミュレーションをする
-	void						QLearning();					//< Q学習する
+	virtual void		Init();							//< 初期化を行う
+	virtual void		Step();							//< 制御のシミュレーションをする
+	void				QLearning();					//< Q学習する
 
 };
 
