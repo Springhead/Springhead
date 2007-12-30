@@ -28,10 +28,14 @@ CDBox::CDBox() {
 
 CDBox::CDBox(const CDBoxDesc& desc) {
 	material = desc.material;
-
 	boxsize = desc.boxsize;
+	Recalc();
+}
+
+void CDBox::Recalc(){
 	// ローカル座標系で、boxの位置を設定
 	Vec3f halfsize = Vec3f(boxsize.x/2.0, boxsize.y/2.0, boxsize.z/2.0);
+	base.clear();
 	base.push_back(Vec3f( halfsize.x,  halfsize.y, -halfsize.z));
 	base.push_back(Vec3f( halfsize.x,  halfsize.y,  halfsize.z));
 	base.push_back(Vec3f( halfsize.x, -halfsize.y,  halfsize.z));
@@ -41,6 +45,7 @@ CDBox::CDBox(const CDBoxDesc& desc) {
 	base.push_back(Vec3f(-halfsize.x, -halfsize.y,  halfsize.z));
 	base.push_back(Vec3f(-halfsize.x, -halfsize.y, -halfsize.z));
 
+	qfaces.clear();
 	for (int nface=0; nface<6; ++nface){	// 立方体は8面
 		qfaces.push_back(CDQuadFace());
 	}
@@ -185,6 +190,7 @@ CDFaceIf* CDBox::GetFace(size_t i){
 // 直方体のサイズを設定
 Vec3f CDBox::SetBoxSize(Vec3f boxSize){
 	boxsize = boxSize;
+	Recalc();
 	return boxsize;
 }
 

@@ -59,6 +59,9 @@ public:
 
 	/// 直方体のサイズを設定
 	Vec3f SetBoxSize(Vec3f boxSize);
+
+	/// 内部情報の再計算
+	void Recalc();
 };
 	
 
