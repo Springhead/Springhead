@@ -1,70 +1,44 @@
 include Fox
 
-class SprPHSceneView < FXTreeList
-	def initialize(owner, phscene)
+class SprSceneView < FXTreeList
+	def initialize(owner, scene)
 		super(owner, nil, 0, (TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|TREELIST_ROOT_BOXES|LAYOUT_FILL_X|LAYOUT_FILL_Y))
-		@phscene = phscene
+		@scene = scene
 		connect(SEL_SELECTED, method(:onSelected))
 		refresh
 	end
 
-	# ツリーを更新
+	# update tree
 	def refresh()
-		clearItems()
+		clearItems
 
-		# information of active scene
-		phsdk   = $sprapp.GetSdk().GetPHSdk()
-		
-		# scene
-		@itemScene = appendItem(nil, "scene", nil, nil, @phscene)
+		# list of Objects
+		@itemObjects = appendItem(nil, "objects (#{@scene.objects.size})")
+		@itemObjects.expanded = true
+		@scene.objects.each {|obj|
+			itemObj = appendItem(@itemObjects, obj.name, nil, nil, obj)
+			itemShapes = appendItem(itemObj, "shapes (#{obj.shapes.size})")
+			obj.shapes.each {|shape|
+				appendItem(itemShapes, shape.name, nil, nil, shape)
+			}
+		}
 
-		# solids
-		solids = @phscene.GetSolids()
-		@itemSolids = appendItem(nil, "solids (#{@phscene.NSolids()})")
-		for i in 0..@phscene.NSolids()-1
-			s = solids[i]
-			appendItem(@itemSolids, s.GetName(), nil, nil, s)
-		end
-
-		# shapes
-		@itemShapes = appendItem(nil, "shapes (#{phsdk.NShape()})")
-		for i in 0..phsdk.NShape()-1
-			shape = phsdk.GetShape(i)
-			appendItem(@itemShapes, shape.GetName, nil, nil, shape)
-		end
-
-		# joints
-		@itemJoints = appendItem(nil, "joints (#{@phscene.NJoints()})")
-		for i in 0..@phscene.NJoints()-1
-			j = @phscene.GetJoint(i)
+		# list of Joints
+		@itemJoints = appendItem(nil, "joints (#{@scene.joints.size})")
+		@itemJoints.expanded = true
+		@scene.joints.each {|joint|
 			appendItem(@itemJoints, j.GetName(), nil, nil, j)
-		end
+		}
 
-	end
+		# list of Shapes
+		@itemShapes = appendItem(nil, "shapes (#{$sprapp.shapes.size})")
+		@itemShapes.expanded = true
+		$sprapp.shapes.each {|shape|
+			itemShape = appendItem(@itemShapes, shape.name, nil, nil, shape)
+		}
 
-	# ツリーアイテム選択
-	def onSelected(sender, sel, item)
-		$propertymanager.refresh(item.data)
-	end
-
-end
-
-class SprGRSceneView < FXTreeList
-	def initialize(owner, grscene)
-		super(owner, nil, 0, (TREELIST_SHOWS_LINES|TREELIST_SHOWS_BOXES|TREELIST_ROOT_BOXES|LAYOUT_FILL_X|LAYOUT_FILL_Y))
-		@grscene = grscene
-		connect(SEL_SELECTED, method(:onSelected))
-		refresh
 	end
 	
-	def refresh
-		clearItems
-		# scene graph
-		world = @grscene.GetWorld()
-		@itemWorld = appendItem(nil, "world (#{world.NChildren()})")
-		appendChildNodes(world, @itemWorld)
-	end
-
 	# シーングラフのツリーを再帰的に構築
 	def appendChildNodes(parent, item)
 		children = parent.GetChildren()
@@ -79,28 +53,12 @@ class SprGRSceneView < FXTreeList
 
 	# ツリーアイテム選択
 	def onSelected(sender, sel, item)
-		$propertymanager.refresh(item.data)
+		$property.text = item.data.to_s
 	end
 
 end
 
-class SprFWSceneView < FXTabBook
-	def initialize(owner, scene)
-		super(owner, nil, 0, TABBOOK_BOTTOMTABS)
-		@scene = scene
-		FXTabItem.new(self, '  physics  ', nil, TAB_BOTTOM)
-		@phsceneview = SprPHSceneView.new(self, @scene.GetPHScene())
-		FXTabItem.new(self, '  graphics  ', nil, TAB_BOTTOM)
-		@grsceneview = SprGRSceneView.new(self, @scene.GetGRScene())
-	end
-
-	def refresh()
-		@phsceneview.refresh
-		@grsceneview.refresh
-	end
-end
-
-class SprSceneView < FXTabBook
+class SprAppView < FXTabBook
 	#
 	def initialize(owner)
 		super(owner, nil, 0, TABBOOK_BOTTOMTABS | LAYOUT_FILL_X | LAYOUT_FILL_Y)
@@ -110,9 +68,8 @@ class SprSceneView < FXTabBook
 
 	#
 	def addTab(scene)
-		puts 'addtab'
-		@tabs.push(FXTabItem.new(self, "  #{scene.GetName()}  ", nil, TAB_BOTTOM))
-		@contents.push(SprFWSceneView.new(self, scene))
+		@tabs.push(FXTabItem.new(self, "  #{scene.name}  ", nil, TAB_BOTTOM))
+		@contents.push(SprSceneView.new(self, scene))
 		recalc
 	end
 

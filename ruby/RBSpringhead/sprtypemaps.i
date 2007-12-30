@@ -136,6 +136,9 @@ OUTPUT_SCALER_TYPEMAP(double);
 //RETURN_MATRIX_TYPEMAP(Matrix3d, 3, 3);
 
 // UTString
+%typemap(typecheck) UTString %{
+	Check_Type($input, T_STRING);
+%}
 %typemap(in) UTString %{
 	$1 = UTString(STR2CSTR($input));
 %}

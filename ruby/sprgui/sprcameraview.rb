@@ -30,9 +30,9 @@ class SprCameraView < FXGLCanvas
 	    # Make context current
     	makeCurrent()
 
-		$sprapp.GetSdk().GetRender().Reshape([0,0], [width, height])
+		$sprapp.Reshape(width, height)
 		$sprapp.Display()
-		
+
 		# Swap if it is double-buffered
     	if $glvisual.isDoubleBuffer
       		swapBuffers
@@ -44,7 +44,7 @@ class SprCameraView < FXGLCanvas
 
 	def configure()
     	if makeCurrent
-        	$sprapp.GetSdk().GetRender().SetViewport([0, 0], [width, height])
+        	$sprapp.Reshape(width, height)
         	makeNonCurrent
       	end
 	end
@@ -75,7 +75,7 @@ class SprCameraView < FXGLCanvas
 			af.pos = Vec3f.new(cos(@cameraRotX) * cos(@cameraRotY), sin(@cameraRotX), cos(@cameraRotX) * sin(@cameraRotY)) * @cameraZoom
 			af.LookAtGL(Vec3f.new(0.0, 0.0, 0.0), Vec3f.new(0.0, 100.0, 0.0))
 
-			$sprapp.GetSdk.GetScene.GetGRScene.GetCamera.GetFrame.SetTransform(af)
+			$sprapp.scene.camera.frame.transform = af
 
 			drawScene
 		end

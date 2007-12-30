@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require '../Springhead'
-require '../PTM'
+require '../rbspringhead'
 require 'rubygems'
 require 'fox16'
 require 'fox16/responder'
@@ -10,7 +10,6 @@ require 'sprmainwindow'
 
 include Fox
 include Springhead
-include PTM
 
 $sprapp
 
@@ -26,11 +25,7 @@ class SprGUIApp < FXApp
 		$glvisual.depthSize = 16
 		
 		# Springhead‰Šú‰»
-		$sprapp = FWAppGL.new
-		$sprapp.Link
-		#$sprapp.Init(1 + ARGV.size, [$0] + ARGV)
-		$sprapp.Init()
-		$sprapp.GetSdk.SetDebugMode()
+		$sprapp = App.new
 
 		# Make window
 		@window = SprMainWindow.new(self)

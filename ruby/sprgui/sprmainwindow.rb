@@ -86,26 +86,6 @@ class SprMainWindow < FXMainWindow
     	fileinsert = FXMenuCommand.new(filemenu, "Insert from file...\t\tInsert text from file.", nil)
 		fileinsert.connect(SEL_COMMAND, method(:onCmdInsert))
 		fileinsert.connect(SEL_UPDATE, method(:onUpdInsert))
-
-    	# Recent file menu; this automatically hides if there are no files
-    	#sep1 = FXMenuSeparator.new(filemenu)
-    	#sep1.setTarget(@mrufiles)
-    	#sep1.setSelector(FXRecentFiles::ID_ANYFILES)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_1)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_2)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_3)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_4)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_5)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_6)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_7)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_8)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_9)
-    	#FXMenuCommand.new(filemenu, nil, nil, @mrufiles, FXRecentFiles::ID_FILE_10)
-    	#FXMenuCommand.new(filemenu, "&Clear Recent Files", nil, @mrufiles, FXRecentFiles::ID_CLEAR)
-    	#sep2 = FXMenuSeparator.new(filemenu)
-    	#sep2.setTarget(@mrufiles)
-    	#sep2.setSelector(FXRecentFiles::ID_ANYFILES)
-    	#FXMenuCommand.new(filemenu, "&Quit\tCtl-Q", nil, self, ID_QUIT)
   
     	# Edit Menu entries
     	FXMenuCommand.new(editmenu, "&Undo\tCtl-Z\tUndo last change.", @undoicon)
@@ -164,20 +144,36 @@ class SprMainWindow < FXMainWindow
     	@hsplitter = FXSplitter.new(self, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_TRACKING)
   
     	# シーングラフツリー（上）とプロパティ（下）のSplitter
-    	@vsplitter = FXSplitter.new(@hsplitter, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_VERTICAL|SPLITTER_TRACKING)
+    	@leftvsplitter = FXSplitter.new(@hsplitter, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_VERTICAL|SPLITTER_TRACKING)
   
 		# シーングラフツリー
-    	treeframe = FXHorizontalFrame.new(@vsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
-	    $sceneview = SprSceneView.new(treeframe)
+    	treeframe = FXHorizontalFrame.new(@leftvsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0)
+	    $sceneview = SprAppView.new(treeframe)
 
 		# プロパティ
-		propertyframe = FXHorizontalFrame.new(@vsplitter)
-	    $propertymanager = SprPropertyManager.new(propertyframe)
+		vframe = FXVerticalFrame.new(@leftvsplitter)
+		$property = FXText.new(vframe, nil, 0, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|TEXT_READONLY)
+		$property.backColor = self.getApp.baseColor
 
-	    # ディスプレイ
-    	displayframe = FXVerticalFrame.new(@hsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
+	    # ディスプレイ（上）とスクリプト画面（下）のSplitter
+		@rightvsplitter = FXSplitter.new(@hsplitter, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_VERTICAL|SPLITTER_TRACKING)
 
+		# ディスプレイ
+    	displayframe = FXVerticalFrame.new(@rightvsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
 		$cameraview = SprCameraView.new(displayframe)
+
+		# スクリプト画面
+		# 入力画面と出力画面のSplitter
+		@scripthsplitter = FXSplitter.new(@rightvsplitter, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|SPLITTER_TRACKING)
+		# スクリプト入力画面
+		vframe = FXVerticalFrame.new(@scripthsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
+		@scriptinput= FXText.new(vframe, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
+		@scriptToolBar = FXToolBar.new(vframe, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH|PACK_UNIFORM_HEIGHT, 0,0,0,0, 0,0,0,0)
+		FXButton.new(@scriptToolBar, 'run', nil, nil, 0, BUTTON_NORMAL, 0,0,0,0, 0,0,0,0).connect(SEL_COMMAND, method(:onScriptRun))
+		# 結果出力画面
+		vframe = FXVerticalFrame.new(@scripthsplitter, FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
+		@scriptoutput = FXText.new(vframe, nil, 0, LAYOUT_FILL_X|LAYOUT_FILL_Y, 0,0,0,0, 0,0,0,0)
+
 
     	# ツールバー : シミュレーション制御
     	dragshell = FXToolBarShell.new(displayframe, FRAME_RAISED|FRAME_THICK)
@@ -202,9 +198,8 @@ class SprMainWindow < FXMainWindow
 
 	# 現在のドキュメントをクリア
 	def clearDocument()
-		$sprapp.GetSdk().Clear()
+		$sprapp.clear
 		$sceneview.clear
-		$propertymanager.clear
     	@undolist.clear
     	@undolist.mark
 
@@ -215,33 +210,25 @@ class SprMainWindow < FXMainWindow
 		clearDocument()
 
 		# デフォルトシーンの構築
-		scene = $sprapp.GetSdk().CreateScene(PHSceneDesc.new, GRSceneDesc.new)
-		phsdk = $sprapp.GetSdk().GetPHSdk()
-		phscene = scene.GetPHScene()
+		scene = $sprapp.scenes.add
+
+		# 形
+		$sprapp.shapes.add(SHAPE_BOX, 'shape_floor').size = Vec3f.new(30, 10, 30)
+		$sprapp.shapes.add(SHAPE_BOX, 'shape_box').size = Vec3f.new(0.1,0.1,0.1)
+
 		# 床
-		floor = phscene.CreateSolid(PHSolidDesc.new)
-		floor.SetDynamical(false)
-		boxdesc = CDBoxDesc.new
-		boxdesc.boxsize = [0.1, 0.1, 0.1]
-		floor.AddShape(phsdk.CreateShape(CDBoxDesc.GetIfInfo(), boxdesc))
-		floor.SetName('floor')
+		floor = scene.objects.add('floor')
+		floor.dynamical = false
+		floor.shapes.add($sprapp.shapes['shape_floor'])
+		floor.pose.pos.y -= 5.0
+
 		# カメラ
-		grscene = scene.GetGRScene()
-		cameradesc = GRCameraDesc.new
-		grscene.SetCamera(cameradesc)
-		camera = grscene.GetCamera()
-		#camera.SetName('camera')
-		# カメラフレーム
-		cameraframe = GRFrameIf.Cast(grscene.CreateVisual(GRFrameDesc.GetIfInfo(), GRFrameDesc.new))
-		cameraframe.SetName('cameraframe')
 		af = Affinef.new
-		af.pos = Vec3f.new(0.0, 0.0, -1.0)
-		af.LookAtGL(Vec3f.new(0.0, 0.0, 0.0), Vec3f.new(0.0, 1.0, 0.0));
-		cameraframe.SetTransform(af)
-		camera.SetFrame(cameraframe)
+		af.pos = Vec3f.new(0.0,0.0,-2.0)
+		af.LookAtGL(Vec3f.new(0.0,0.0,0.0), Vec3f.new(0.0,1.0,0.0));
+		scene.camera.frame.transform = af
 
 		$sceneview.addTab(scene)
-		$propertymanager.refresh(nil)
 
     	@filename = "untitled"
     	@filetime = nil
@@ -269,7 +256,6 @@ class SprMainWindow < FXMainWindow
 			$sceneview.addTab($sprapp.GetSdk().GetScene(i))
 		end
 		$sceneview.create		# createしないとタブが表示されない
-		$propertymanager.refresh(nil)
   	end
 
 	# Insert file
@@ -478,7 +464,11 @@ class SprMainWindow < FXMainWindow
 
 	# create sprinthead object
 	def onCreateObject(sender, sel, ptr)
-		$sprapp.GetSdk.GetScene.CreateObject(PHSolidDesc.new, GRFrameDesc.new)
+		obj = $sprapp.scene.objects.add
+		# add shape with index 0 by default
+		if $sprapp.shapes.size > 0
+			obj.shapes.add($sprapp.shapes[0])
+		end
 		$sceneview.refresh
 	end
 
@@ -489,6 +479,26 @@ class SprMainWindow < FXMainWindow
 			##$sprapp.GetSdk.GetScene.GetPHScene.CreateJoint(PHHingeJointDesc.new)
 			##$sceneview.refresh
 		end
+	end
+
+	# run script
+	def onScriptRun(sender, sel, ptr)
+    errored = false
+    begin
+  		eval(@scriptinput.text)
+    rescue NameError
+      @scriptoutput.setText($!.to_s)
+      errored = true
+    rescue SyntaxError
+      @scriptoutput.setText($!.to_s)
+      errored = true      
+    rescue ArgumentError
+      @scriptoutput.setText($!.to_s)
+      errored = true            
+    end
+    if !errored
+#      @scriptoutput.setText($selectedObject.to_s)
+    end
 	end
 
 	# start simulation
@@ -546,10 +556,11 @@ class SprMainWindow < FXMainWindow
     	@urilistType = getApp().registerDragType(FXWindow.urilistTypeName) unless @urilistType
     	readRegistry
     	super
-		# 左ペインの幅
-		@hsplitter.setSplit(0, 300) #$sceneview.font.getTextWidth('MMMMMMMMMMMMMMMM'))
-		# 左ペインの上下分割比
-		@vsplitter.setSplit(0, @vsplitter.getHeight() * 0.7);
+		rate = 5.0/13.0		# 黄金比
+		@hsplitter.setSplit(0, @hsplitter.getWidth * 0.2)
+		@leftvsplitter.setSplit(0, @leftvsplitter.getHeight * (1-rate))
+		@rightvsplitter.setSplit(0, @rightvsplitter.getHeight * (1-rate))
+		@scripthsplitter.setSplit(0, @scripthsplitter.getWidth * (1-rate))
 
   		show(PLACEMENT_SCREEN)
   	end
