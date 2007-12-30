@@ -84,6 +84,18 @@ public:
 	
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
+	virtual void GetSocketPose(Posed& pose){pose = poseSocket;}
+	virtual void SetSocketPose(const Posed& pose){
+		poseSocket = pose;
+		Xj[0].q = pose.Ori();
+		Xj[0].r = pose.Pos();
+	}
+	virtual void GetPlugPose(Posed& pose){pose = posePlug;}
+	virtual void SetPlugPose(const Posed& pose){
+		posePlug = pose;
+		Xj[1].q = pose.Ori();
+		Xj[1].r = pose.Pos();
+	}
 	virtual void		 Enable(bool bEnable = true){bEnabled = bEnable;}
 	virtual bool		 IsEnabled(){return bEnabled;}
 	virtual void		 SetInactive(int index = 0, bool Inaction = true){bInactive[index] = Inaction;}

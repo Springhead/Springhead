@@ -101,6 +101,16 @@ struct PHConstraintIf : public SceneObjectIf{
 	 */
 	virtual bool IsEnabled() = 0;
 
+	/** @brief ソケットの位置・向きを取得・設定する
+	 */
+	virtual void GetSocketPose(Posed& pose) = 0;
+	virtual void SetSocketPose(const Posed& pose) = 0;
+
+	/** @brief プラグの位置・向きを取得・設定する
+	 */
+	virtual void GetPlugPose(Posed& pose) = 0;
+	virtual void SetPlugPose(const Posed& pose) = 0;
+	
 	/** @brief 拘束の種類を取得する
 		@return 拘束の種類
 	 */

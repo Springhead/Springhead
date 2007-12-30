@@ -15,9 +15,9 @@ namespace Spr{;
 
 /**	@class	GRVisual
     @brief	 */
-class GRVisual: public NamedObject, public GRVisualIfInit{
+class GRVisual: public SceneObject, public GRVisualIfInit{
 public:
-	OBJECTDEF_ABST(GRVisual, NamedObject);
+	OBJECTDEF_ABST(GRVisual, SceneObject);
 	virtual void Render(GRRenderIf* render){}
 	virtual void Rendered(GRRenderIf* render){}
 };
@@ -33,12 +33,12 @@ public:
 	GRVisualIfs children;
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 
+	GRSceneIf* GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
+	
 	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
 	virtual void SetParent(GRFrameIf* fr);
 	virtual int NChildren(){ return (int)children.size(); }
 	virtual GRVisualIf** GetChildren(){ return children.empty() ? NULL : (GRVisualIf**)&*children.begin(); }
-	virtual void SetNameManager(NameManager* n);
-	virtual GRSceneIf* GetScene();
 	virtual bool AddChildObject(ObjectIf* v);
 	virtual bool DelChildObject(ObjectIf* v);
 

@@ -65,38 +65,44 @@ FWObjectIf* FWScene::CreateObject(const PHSolidDesc& soliddesc, const GRFrameDes
 
 bool FWScene::AddChildObject(ObjectIf* o){
 	FWSdkIf* sdk = DCAST(FWSdkIf, GetNameManager());
-	bool rv = false;
-	if (!rv) {
+	bool ok = false;
+	if (!ok) {
 		FWObject* obj = DCAST(FWObject, o);
 		if (obj) {
 			fwObjects.push_back(obj->Cast());
 			obj->SetScene(Cast());
-			rv = true;
+			// デフォルトネーム
+			if(strcmp(obj->GetName(), "") == 0){
+				char name[256];
+				sprintf(name, "object%d", NObject()-1);
+				obj->SetName(name);
+			}
+			ok = true;
 		}
 	}
-	if (!rv) {
+	if (!ok) {
 		PHScene* obj = DCAST(PHScene, o);
 		if (obj) {
 			phScene = obj->Cast();
 			sdk->GetPHSdk()->AddChildObject(obj->Cast());
-			rv = true;
+			ok = true;
 		}
 	}
-	if (!rv) {
+	if (!ok) {
 		GRScene* obj = DCAST(GRScene, o);
 		if (obj) {
 			grScene = obj->Cast();
 			sdk->GetGRSdk()->AddChildObject(obj->Cast());
-			rv = true;
+			ok = true;
 		}
 	}
-	if (!rv && phScene) {
-		rv = phScene->AddChildObject(o);
+	if (!ok && phScene) {
+		ok = phScene->AddChildObject(o);
 	}
-	if (!rv && grScene) {
-		rv = grScene->AddChildObject(o);
+	if (!ok && grScene) {
+		ok = grScene->AddChildObject(o);
 	}
-	return rv;
+	return ok;
 }
 
 bool FWScene::DelChildObject(ObjectIf* o){

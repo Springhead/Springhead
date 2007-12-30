@@ -85,20 +85,20 @@ struct GRAnimationIf: public SceneObjectIf{
 	virtual void LoadInitialPose()=0;
 };
 ///	@brief アニメーションのデスクリプタ XのAnimationに対応
+struct GRKey{
+	unsigned time;				//	時刻
+	std::vector<float> values;	//	変換の値
+};
+///	時刻と変換の対応表 XのAnimationKeyに対応
+struct GRAnimationKey{
+	int keyType;			//	変換の種類
+	std::vector<GRKey> keys;		//	時刻と変換のセット
+};
 struct GRAnimationDesc{
 	DESC_DEF_FOR_OBJECT(GRAnimation);
 	enum KeyType { ROTATION, SCALE, POSITION, MATRIX };
-	struct Key{
-		unsigned time;				//	時刻
-		std::vector<float> values;	//	変換の値
-	};
-	///	時刻と変換の対応表 XのAnimationKeyに対応
-	struct AnimationKey{
-		KeyType keyType;			//	変換の種類
-		std::vector<Key> keys;		//	時刻と変換のセット
-	};
 	///	複数のAnimationKeyでひとつの変換を表す
-	std::vector<AnimationKey> keys;	
+	std::vector<GRAnimationKey> keys;	
 };
 
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/

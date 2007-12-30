@@ -20,6 +20,16 @@ namespace Spr{;
 　　　 GRRender->CreateShader() 後に、															\n
 　　　 GRRender->GetShaderLocation() でシェーダフォーマットに対するロケーション情報を取得する．	\n
 */
+///	@name ロケーション情報および
+//@{		
+struct SFBlendLocation{
+	unsigned int uBlendMatrix;
+	unsigned int aWeight;
+	unsigned int aMatrixIndices;
+	unsigned int aNumMatrix;
+};	
+//@}	
+
 struct GRShaderFormat {
 
 	///	@name シェーダタイプ
@@ -36,18 +46,7 @@ struct GRShaderFormat {
 		shT2fC4fN3fP3fB4f	= 8
 	};
 	//@}	
-	
-	
-	///	@name ロケーション情報および
-	//@{		
-	struct SFBlendLocation{
-		unsigned int uBlendMatrix;
-		unsigned int aWeight;
-		unsigned int aMatrixIndices;
-		unsigned int aNumMatrix;
-	};	
-	//@}	
-	
+		
 };
 
 }

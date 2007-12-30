@@ -7,12 +7,13 @@
  */
 #include "Graphics.h"
 #include "GRFrame.h"
+#include "GRMesh.h"
 
 namespace Spr{;
 //-----------------------------------------------------------------
 //	GRVisual
 //
-IF_OBJECT_IMP_ABST(GRVisual, NamedObject);
+IF_OBJECT_IMP_ABST(GRVisual, SceneObject);
 
 //-----------------------------------------------------------------
 //	GRFrame
@@ -36,13 +37,6 @@ void GRFrame::Render(GRRenderIf* r){
 }
 void GRFrame::Rendered(GRRenderIf* r){
 }
-void GRFrame::SetNameManager(NameManager* m){
-	assert(DCAST(GRScene, m));
-	GRVisual::SetNameManager(m->Cast());
-}
-GRSceneIf* GRFrame::GetScene(){
-	return DCAST(GRSceneIf, GetNameManager());
-}
 void GRFrame::SetParent(GRFrameIf* fr){
 	if((GRFrameIf*)(parent->Cast()) == fr) return;
 	if(parent){
@@ -58,12 +52,28 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 	GRVisualIf* v = o->Cast();
 	if (v){
 		children.push_back(v);
-		GRFrame* f = DCAST(GRFrame, v);
-		if (f && f->parent != this){
+		GRFrame*	frame	= DCAST(GRFrame, v);
+		GRMaterial* mat		= DCAST(GRMaterial, v);
+		GRLight*	light	= DCAST(GRLight, v);
+		GRMesh*		mesh	= DCAST(GRMesh, v);
+		if (frame && frame->parent != this){
 			//	ここで元の持ち主から削除するのはやりすぎでは？	by tazaki ?
 			//	 -> いや、Frame は parentがひとつなので、複数のフレームの子になるのはだめです。 by hase
-			if (f->parent) f->parent->DelChildObject(f->Cast());
-			f->parent = this;
+			if (frame->parent) frame->parent->DelChildObject(frame->Cast());
+			frame->parent = this;
+		}
+		// デフォルトネーム設定
+		if(strcmp(v->GetName(), "") == 0){
+			char name[256];
+			if(frame)
+				sprintf(name, "%s_frame%d", GetName(), children.size()-1);
+			if(mat)
+				sprintf(name, "%s_mat%d", GetName(), children.size()-1);
+			if(light)
+				sprintf(name, "%s_light%d", GetName(), children.size()-1);
+			if(mesh)
+				sprintf(name, "%s_mesh%d", GetName(), children.size()-1);
+			v->SetName(name);
 		}
 		return true;
 	}
@@ -102,8 +112,8 @@ IF_OBJECT_IMP(GRAnimation, SceneObject);
 void GRAnimation::BlendPose(float time, float weight){
 	//	ターゲットに変換を加える
 	Affinef transform;
-	for(std::vector<AnimationKey>::iterator it = keys.begin(); it != keys.end(); ++it){
-		AnimationKey& anim = *it;
+	for(std::vector<GRAnimationKey>::iterator it = keys.begin(); it != keys.end(); ++it){
+		GRAnimationKey& anim = *it;
 		//	時刻でキーを検索
 		for(unsigned i=0; i < anim.keys.size(); ++i){
 			float blended[16];

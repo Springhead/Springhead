@@ -428,11 +428,11 @@ public:
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRAnimation* anim = fc->objects.Top()->Cast();
 		assert(anim);
-		anim->keys.push_back(GRAnimationDesc::AnimationKey());
-		GRAnimationDesc::AnimationKey& key = anim->keys.back();
+		anim->keys.push_back(GRAnimationKey());
+		GRAnimationKey& key = anim->keys.back();
 		key.keyType = (GRAnimationDesc::KeyType)d.keyType;
 		for(unsigned i=0; i<d.keys.size(); ++i){
-			key.keys.push_back(GRAnimationDesc::Key());
+			key.keys.push_back(GRKey());
 			key.keys.back().time = d.keys[i].time;
 			key.keys.back().values = d.keys[i].tfkeys.values;
 		}

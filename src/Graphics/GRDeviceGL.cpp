@@ -877,7 +877,7 @@ void GRDeviceGL::GetShaderLocation(GRHandler shader, void* location){
 	{
 		// shaderType が、shP3fB4f または shC4bP3fB4f または shC3fP3fB4f で、
 		// ロケーション情報 に SFBlendLocation の型が指定された場合
-		GRShaderFormat::SFBlendLocation *loc = (GRShaderFormat::SFBlendLocation *)location;
+		SFBlendLocation *loc = (SFBlendLocation *)location;
 		if (loc) {
 			loc->uBlendMatrix	= glGetUniformLocationARB(shader, "blendMatrix" );
 			loc->aWeight		= glGetAttribLocationARB(shader, "weights");;

@@ -11,6 +11,8 @@
 #endif
 #include <GL/glut.h>
 
+#include <Physics/PHConstraint.h>
+
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDebugRender
@@ -50,15 +52,22 @@ GRDebugRender::GRDebugRender(){
 		it->diffuse += Vec4f(0.5,0.5,0.5,1);
 		it->diffuse /= 2;
 	}
+	modeSolid = true;
+	modeWire = false;
+	renderAxis = false;
+	renderForce = false;
 }
 
 /// シーン内の全てのオブジェクトをレンダリングする
 void GRDebugRender::DrawScene(PHSceneIf* scene){
 	if (!scene) return;
 	PHSolidIf **solids = scene->GetSolids();
-	for (int num=0; num < scene->NSolids(); ++num){
-		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)num);
-		this->DrawSolid(solids[num]);
+	for (int i = 0; i < scene->NSolids(); ++i){
+		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
+		this->DrawSolid(solids[i]);
+	}
+	for (int i = 0; i < scene->NJoints(); ++i){
+		this->DrawConstraint(scene->GetJoint(i));
 	}
 }
 
@@ -79,86 +88,189 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 		
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		if (mesh){
-			Vec3f* base = mesh->GetVertices();
-			for (size_t f=0; f<mesh->NFace(); ++f) {	
-				CDFaceIf* face = mesh->GetFace(f);
-				this->DrawFace(face, base);
-			}
+			if(modeSolid)
+				DrawMesh(mesh, true);
+			if(modeWire)
+				DrawMesh(mesh, false);
 		}
 		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
 		if (sphere){
 			float r = sphere->GetRadius();
-			glutSolidSphere(r, 16, 16);
+			if(modeSolid)
+				glutSolidSphere(r, 16, 16);
+			if(modeWire)
+				glutWireSphere(r, 16, 16);
 		}
 		CDCapsuleIf* cap = DCAST(CDCapsuleIf, shape);
 		if (cap){
-			float r = cap->GetRadius();
-			this->PushModelMatrix();
-			glBegin(GL_QUAD_STRIP);
-			{
-				int sides = 20; double step = (3.141592653 * 2) / (double)sides;
-				for (int i=0; i<=sides; i++) {
-					double t = step * (double)i;
-					double x=sin(t), y=cos(t);
-					glNormal3d(x, y, 0.0);
-					glVertex3f(r * x, r * y,   cap->GetLength()/2 );
-					glVertex3f(r * x, r * y, -(cap->GetLength()/2));
-				}
-			}
-			glEnd();
-			glTranslatef(0,0,-cap->GetLength()/2);
-			glutSolidSphere(r, 20, 20);
-			glTranslatef(0,0,cap->GetLength());
-			glutSolidSphere(r, 20, 20);
-			this->PopModelMatrix();
+			if(modeSolid)
+				DrawCapsule(cap, true);
+			if(modeWire)
+				DrawCapsule(cap, false);
 		}
 		CDBoxIf* box = DCAST(CDBoxIf, shape);
 		if (box){
 			Vec3f boxsize = box->GetBoxSize();
 			glScalef(boxsize.x, boxsize.y, boxsize.z);	
-			glutSolidCube(1.0);		
+			if(modeSolid)
+				glutSolidCube(1.0);		
+			if(modeWire)
+				glutWireCube(1.0);
 		}
 		this->PopModelMatrix();
 
-		// 各剛体のローカル座標軸を表示する．
-		/*
-		double length=0.5, width=length/10.0;
-		this->PushModelMatrix();
-		glTranslatef(length/2, 0, 0); glScalef(length, width, width); glutSolidCube(1.0);
-		this->PopModelMatrix();
-		this->PushModelMatrix();
-		glTranslatef(0, length/2, 0); glScalef(width, length, width); glutSolidCube(1.0);
-		this->PopModelMatrix();
-		this->PushModelMatrix();
-		glTranslatef(0, 0, length/2); glScalef(width, width, length); glutSolidCube(1.0);
-		this->PopModelMatrix();
-		*/
+		// 剛体のローカル座標軸を表示する．
+		if(renderAxis && (modeSolid || modeWire))
+			DrawCoordinateAxis(modeSolid);
 	}
 
 	this->PopModelMatrix();
 }
-		
-/// 面をレンダリングする
-void GRDebugRender::DrawFace(CDFaceIf* face, Vec3f * base){
+
+void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
+	PHConstraint* con = conif->Cast();
+	Affinef af;
+	
+	// socket
+	(con->solid[0]->GetPose() * con->poseSocket).ToAffine(af);
+	this->PushModelMatrix();
+	this->MultModelMatrix(af);
+	DrawCoordinateAxis(modeSolid);
+	this->PopModelMatrix();
+
+	// plug
+	(con->solid[1]->GetPose() * con->posePlug).ToAffine(af);
+	this->PushModelMatrix();
+	this->MultModelMatrix(af);
+	DrawCoordinateAxis(modeSolid);
+	this->PopModelMatrix();
+}
+
+void GRDebugRender::DrawCapsule(CDCapsuleIf* cap, bool solid){
+	float r = cap->GetRadius();
+	float l = cap->GetLength();
+	this->PushModelMatrix();
+
+	DrawCylinder(r, l, 20, solid);
+
+	glTranslatef(0,0,-l/2);
+	solid ? glutSolidSphere(r, 20, 20) : glutWireSphere(r, 20, 20);
+	glTranslatef(0,0,l);
+	solid ? glutSolidSphere(r, 20, 20) : glutWireSphere(r, 20, 20);
+	this->PopModelMatrix();
+}
+
+void GRDebugRender::DrawMesh(CDConvexMeshIf* mesh, bool solid){
+	Vec3f* base = mesh->GetVertices();
+	if(solid){
+		for (size_t f=0; f<mesh->NFace(); ++f) {	
+			CDFaceIf* face = mesh->GetFace(f);
+			this->DrawFaceSolid(face, base);
+		}
+	}
+	else{
+		for (size_t f=0; f<mesh->NFace(); ++f) {	
+			CDFaceIf* face = mesh->GetFace(f);
+			this->DrawFaceWire(face, base);
+		}
+	}
+}
+
+void GRDebugRender::DrawCone(float radius, float height, int slice, bool solid){
+	if(solid)
+		glutSolidCone(radius, height, slice, 1);
+	else
+		glutWireCone(radius, height, slice, 1);
+}
+
+void GRDebugRender::DrawCylinder(float radius, float height, int slice, bool solid){
+	// 現状では側面のみ
+	glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
+	float step = (float)(M_PI * 2.0f) / (float)slice;
+	float t = 0.0;
+	float x,y;
+	for (int i=0; i<=slice; i++) {
+		x=sin(t);
+		y=cos(t);
+		glNormal3f(x, y, 0.0);
+		glVertex3f(radius * x, radius * y,  height/2);
+		glVertex3f(radius * x, radius * y, -height/2);
+		t += step;
+	}
+	glEnd();
+}
+
+void GRDebugRender::DrawAxis(bool solid){
+	this->PushModelMatrix();
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f));
+	DrawCylinder(0.1f, 1.0f, 4, solid);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f));
+	DrawCone(0.2f, 0.3f, 8, solid);
+	this->PopModelMatrix();
+}
+
+void GRDebugRender::DrawCoordinateAxis(bool solid){
+	// z
+	DrawAxis(solid);
+	// x
+	this->PushModelMatrix();
+	this->MultModelMatrix(Affinef::Rot(0.5f*M_PI, 'y'));
+	DrawAxis(solid);
+	this->PopModelMatrix();
+	// y
+	this->PushModelMatrix();
+	this->MultModelMatrix(Affinef::Rot(-0.5f*M_PI, 'x'));
+	DrawAxis(solid);
+	this->PopModelMatrix();	
+	/*
+	double length=0.5, width=length/10.0;
+	this->PushModelMatrix();
+	glTranslatef(length/2, 0, 0); glScalef(length, width, width); glutSolidCube(1.0);
+	this->PopModelMatrix();
+	this->PushModelMatrix();
+	glTranslatef(0, length/2, 0); glScalef(width, length, width); glutSolidCube(1.0);
+	this->PopModelMatrix();
+	this->PushModelMatrix();
+	glTranslatef(0, 0, length/2); glScalef(width, width, length); glutSolidCube(1.0);
+	this->PopModelMatrix();
+	*/
+
+}
+
+void GRDebugRender::DrawFaceSolid(CDFaceIf* face, Vec3f * base){
 	int numIndices = face->NIndex();			// (=3 :三角形なので3頂点)
 	struct Vtx{
 		Vec3f n;
 		Vec3f p;
 	} vtxs[10];
-	assert((size_t)numIndices < sizeof(vtxs)/sizeof(vtxs[0]));
-	for (int v=0; v<numIndices; ++v) vtxs[v].p = base[face->GetIndices()[v]].data;
+	assert((size_t)numIndices <= sizeof(vtxs)/sizeof(vtxs[0]));
+	for(int v = 0; v < numIndices; ++v)
+		vtxs[v].p = base[face->GetIndices()[v]].data;
 	Vec3f edge0, edge1;
 	edge0 = vtxs[1].p - vtxs[0].p;
 	edge1 = vtxs[2].p - vtxs[0].p;
 	Vec3f n = (edge0^edge1).unit();
-	for(int v=0; v<numIndices; ++v) vtxs[v].n = n;
+	for(int v = 0; v < numIndices; ++v)
+		vtxs[v].n = n;
 	SetVertexFormat(GRVertexElement::vfN3fP3f);
 	DrawDirect(GRRenderBaseIf::TRIANGLE_FAN, vtxs, numIndices);
 }
 
+void GRDebugRender::DrawFaceWire(CDFaceIf* face, Vec3f * base){
+	int numIndices = face->NIndex();
+	Vec3f vtxs[10];
+	assert((size_t)numIndices+1 <= sizeof(vtxs)/sizeof(vtxs[0]));
+	int v;
+	for(v = 0; v < numIndices; ++v)
+		vtxs[v] = base[face->GetIndices()[v]].data;
+	vtxs[v] = base[face->GetIndices()[0]].data;
+	SetVertexFormat(GRVertexElement::vfP3f);
+	DrawDirect(GRRenderBaseIf::LINES, vtxs, numIndices+1);
+}
+
 void GRDebugRender::SetMaterialSample(GRDebugRenderIf::TMaterialSample matname){
 	int matID = 0;
-	if (matname > GRDebugRenderIf::EMERALD_GREEN) {
+	if (matname >= GRDebugRenderIf::MATERIAL_SAMPLE_END) {
 		matID = (int)matname;
 		matID = matID % matSampleCount;
 	} else {

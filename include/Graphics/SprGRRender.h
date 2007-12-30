@@ -149,7 +149,6 @@ struct GRCameraIf: public GRVisualIf{
 	IF_DEF(GRCamera);
 	virtual GRFrameIf* GetFrame()=0;
 	virtual void SetFrame(GRFrameIf* fr)=0;
-	virtual void SetDesc(const GRCameraDesc& desc)=0;
 };
 /**	@brief	カメラの情報			*/
 struct GRCameraDesc : GRVisualDesc{
@@ -370,17 +369,40 @@ struct GRDebugRenderIf:public GRRenderIf{
 		OLIVE_GREEN,
 		NAVY_BLUE,
 		TURQUOISE_BLUE,
-		EMERALD_GREEN
+		EMERALD_GREEN,
+		MATERIAL_SAMPLE_END
 	};
 
-	/// シーン内の全てのオブジェクトをレンダリングする
+	/**  @brief シーン内の全てのオブジェクトをレンダリングする
+	     @param  scene		シーン  */
 	virtual void DrawScene(PHSceneIf* scene)=0;
-	/// 剛体をレンダリングする
-	virtual void DrawSolid(PHSolidIf* so)=0;
-	/// 面をレンダリングする
-	virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
-	/// 指定した材質(マテリアルサンプル)を割り当てる
+	/**  @brief 剛体をレンダリングする
+	     @param	solid　　　	剛体  */
+	virtual void DrawSolid(PHSolidIf* solid)=0;
+	
+	/**  @brief 面をレンダリングをする
+		 @param	face　　　	面  
+		 @param	base　　　	凸形状の頂点群  */
+	//
+	// APIとして公開するのは変では？	tazz
+	//
+	//virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
+	
+	/**  @brief 指定したマテリアルを割り当てる
+	     @param matname		マテリアルサンプル  */
 	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname)=0;
+
+	/**	 @brief 描画モードの設定
+		 @param solid 面描画
+		 @param wire ワイヤ描画
+	 */
+	virtual void SetRenderMode(bool solid = true, bool wire = false) = 0;
+	/**	 @brief 座標軸の描画
+	 */
+	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f) = 0;
+	/**  @brief 力の描画
+	 */
+	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f) = 0;
 };
 
 //@}

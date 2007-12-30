@@ -23,22 +23,43 @@ class GRDebugRender:public GRRender, public GRDebugRenderIfInit{
 protected:
 	int matSampleCount;
 	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)
+
+	bool	modeSolid, modeWire;				/// 描画モード
+	bool	renderAxis, renderForce;
+	float	scaleAxis, scaleForce;
 public:
 	/**  コンストラクタ  */
 	GRDebugRender();
-	/**  シーン内の全てのオブジェクトをレンダリングする
-	     @param  scene		シーン  */
-	void DrawScene(PHSceneIf* scene);
-	/**  剛体をレンダリングする
-	     @param	so　　　	剛体  */
-	void DrawSolid(PHSolidIf* so);
-	/**  面をレンダリングをする
-		 @param	face　　　	面  
-		 @param	base　　　	凸形状の頂点群  */
-	void DrawFace(CDFaceIf* face, Vec3f * base);
-	/**  指定したマテリアルを割り当てる
-	     @param mat			マテリアルサンプル  */
-	void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
+	virtual void DrawScene(PHSceneIf* scene);
+	virtual void DrawSolid(PHSolidIf* so);
+	virtual void DrawConstraint(PHConstraintIf* con);
+	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
+	virtual void SetRenderMode(bool solid = true, bool wire = false){ modeSolid = solid; modeWire = wire; }
+	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f){
+		renderAxis = enable;
+		scaleAxis = scale;
+	}
+	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f){
+		renderForce = enable;
+		scaleForce = scale;
+	}
+
+	/// カプセルの描画
+	void DrawCapsule(CDCapsuleIf* cap, bool solid);
+	/// メッシュの描画
+	void DrawMesh(CDConvexMeshIf* mesh, bool solid);
+	/// コーンの描画
+	void DrawCone(float radius, float height, int slice, bool solid);
+	/// シリンダの描画
+	void DrawCylinder(float radius, float height, int slice, bool solid);
+	/// 座標軸の描画
+	void DrawAxis(bool solid);
+	void DrawCoordinateAxis(bool solid);
+	/// 面の描画
+	void DrawFaceSolid(CDFaceIf* face, Vec3f * base);
+	void DrawFaceWire(CDFaceIf* face, Vec3f * base);
+	
+	
 };
 
 }

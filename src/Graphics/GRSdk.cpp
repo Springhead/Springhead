@@ -98,6 +98,12 @@ bool GRSdk::AddChildObject(ObjectIf* o){
 		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if (it == scenes.end()){
 			scenes.push_back(s);
+			// デフォルトネーム
+			if(strcmp(s->GetName(), "") == 0){
+				char name[256];
+				sprintf(name, "scene%d", NScene()-1);
+				s->SetName(name);
+			}
 			return true;
 		}
 	}

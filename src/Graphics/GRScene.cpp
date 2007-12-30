@@ -25,7 +25,8 @@ GRScene::GRScene(const GRSceneDesc& desc):GRSceneDesc(desc){
 }
 void GRScene::Init(){
 	world = DBG_NEW GRFrame;
-	world->SetNameManager(this);
+	world->SetScene(Cast());
+	world->SetName("world");
 }
 
 GRSdkIf* GRScene::GetSdk(){
@@ -48,7 +49,7 @@ GRVisualIf* GRScene::CreateVisual(const IfInfo* info, const GRVisualDesc& desc, 
 	else if (info==GRMeshIf::GetIfInfoStatic()) 
 		v = DBG_NEW GRMesh((const GRMeshDesc&)desc);
 	if(v){
-		v->SetNameManager(Cast());
+		v->SetScene(Cast());
 		if(parent) parent->AddChildObject(v->Cast());
 		else GetWorld()->AddChildObject(v->Cast());
 		return v->Cast();
@@ -56,8 +57,11 @@ GRVisualIf* GRScene::CreateVisual(const IfInfo* info, const GRVisualDesc& desc, 
 	return NULL;
 }
 void GRScene::SetCamera(const GRCameraDesc& desc){
-	if (camera) camera->SetDesc(desc);
-	else camera = DBG_NEW GRCamera(desc);
+	if (camera) camera->SetDesc(&desc);
+	else{
+		camera = DBG_NEW GRCamera(desc);
+		camera->SetNameManager(Cast());
+	}
 }
 bool GRScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
@@ -77,11 +81,22 @@ bool GRScene::AddChildObject(ObjectIf* o){
 		animationController->AddChildObject(as->Cast());
 		ok = true;
 	}
-	if (!ok){
-        ok = world->AddChildObject(o);
-	}
 	if(ok){
-		DCAST(NamedObject, o)->SetNameManager(Cast());
+		SceneObject* so = DCAST(SceneObject, o);
+		so->SetScene(Cast());
+		if(strcmp(so->GetName(), "") == 0){
+			char name[256];
+			if(camera)
+				sprintf(name, "camera");
+			if(ac)
+				sprintf(name, "animation_controller");
+			if(as)
+				sprintf(name, "animation_set%d", animationController->NChildObject()-1);
+			so->SetName(name);		
+		}
+	}
+	else {
+		ok = world->AddChildObject(o);
 	}
 	return ok;
 }
