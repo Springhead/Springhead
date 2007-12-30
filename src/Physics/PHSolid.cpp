@@ -132,11 +132,14 @@ void PHSolid::UpdateVelocity(double dt){
 		SetAngularVelocity(GetOrientation() * v.w());
 	}
 	// フリーズ判定
+	/*	当たり判定が不安定になるので、コメントアウトしました。(by hase)
+	
 	if(!IsFrozen()){
 		if(vold.square() < engine->freezeThreshold && v.square() < engine->freezeThreshold){
 			SetFrozen(true);
 		}
 	}
+*/
 }
 void PHSolid::UpdatePosition(double dt){
 	if(IsFrozen())return;

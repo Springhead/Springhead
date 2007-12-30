@@ -52,13 +52,33 @@
 	field->offset = int((char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc);
 	db->RegisterDesc(desc);
 	
+	GRKey* pGRKey = NULL;
+	desc = DBG_NEW UTTypeDesc("GRKey");
+	desc->size = sizeof(GRKey);
+	desc->access = DBG_NEW UTAccess<GRKey>;
+	field = desc->AddField("", "unsigned", "time", "");
+	field->offset = int((char*)&(pGRKey->time) - (char*)pGRKey);
+	field = desc->AddField("vector", "float", "values", "");
+	field->offset = int((char*)&(pGRKey->values) - (char*)pGRKey);
+	db->RegisterDesc(desc);
+	
+	GRAnimationKey* pGRAnimationKey = NULL;
+	desc = DBG_NEW UTTypeDesc("GRAnimationKey");
+	desc->size = sizeof(GRAnimationKey);
+	desc->access = DBG_NEW UTAccess<GRAnimationKey>;
+	field = desc->AddField("", "int", "keyType", "");
+	field->offset = int((char*)&(pGRAnimationKey->keyType) - (char*)pGRAnimationKey);
+	field = desc->AddField("vector", "GRKey", "keys", "");
+	field->offset = int((char*)&(pGRAnimationKey->keys) - (char*)pGRAnimationKey);
+	db->RegisterDesc(desc);
+	
 	GRAnimationDesc* pGRAnimationDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("GRAnimationDesc");
 	desc->size = sizeof(GRAnimationDesc);
 	desc->ifInfo = GRAnimationIf::GetIfInfoStatic();
 	((IfInfo*)GRAnimationIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRAnimationDesc>;
-	field = desc->AddField("vector", "AnimationKey", "keys", "");
+	field = desc->AddField("vector", "GRAnimationKey", "keys", "");
 	field->offset = int((char*)&(pGRAnimationDesc->keys) - (char*)pGRAnimationDesc);
 	db->RegisterDesc(desc);
 	
@@ -186,6 +206,20 @@
 	desc->ifInfo = GRSdkIf::GetIfInfoStatic();
 	((IfInfo*)GRSdkIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<GRSdkDesc>;
+	db->RegisterDesc(desc);
+	
+	SFBlendLocation* pSFBlendLocation = NULL;
+	desc = DBG_NEW UTTypeDesc("SFBlendLocation");
+	desc->size = sizeof(SFBlendLocation);
+	desc->access = DBG_NEW UTAccess<SFBlendLocation>;
+	field = desc->AddField("", "int", "uBlendMatrix", "");
+	field->offset = int((char*)&(pSFBlendLocation->uBlendMatrix) - (char*)pSFBlendLocation);
+	field = desc->AddField("", "int", "aWeight", "");
+	field->offset = int((char*)&(pSFBlendLocation->aWeight) - (char*)pSFBlendLocation);
+	field = desc->AddField("", "int", "aMatrixIndices", "");
+	field->offset = int((char*)&(pSFBlendLocation->aMatrixIndices) - (char*)pSFBlendLocation);
+	field = desc->AddField("", "int", "aNumMatrix", "");
+	field->offset = int((char*)&(pSFBlendLocation->aNumMatrix) - (char*)pSFBlendLocation);
 	db->RegisterDesc(desc);
 	
 	GRShaderFormat* pGRShaderFormat = NULL;

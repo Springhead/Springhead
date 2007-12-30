@@ -45,6 +45,18 @@ struct PHConstraintIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ
 	virtual bool IsEnabled(){
 		return ((OBJ*)(MIF*)this)->IsEnabled();
 	}
+	virtual void GetSocketPose(Posed & pose){
+		return ((OBJ*)(MIF*)this)->GetSocketPose(pose);
+	}
+	virtual void SetSocketPose(const Posed & pose){
+		return ((OBJ*)(MIF*)this)->SetSocketPose(pose);
+	}
+	virtual void GetPlugPose(Posed & pose){
+		return ((OBJ*)(MIF*)this)->GetPlugPose(pose);
+	}
+	virtual void SetPlugPose(const Posed & pose){
+		return ((OBJ*)(MIF*)this)->SetPlugPose(pose);
+	}
 	virtual void GetRelativePose(Posed & p){
 		return ((OBJ*)(MIF*)this)->GetRelativePose(p);
 	}
@@ -358,6 +370,12 @@ struct PHSceneIfStubTemplate: public SceneIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual PHJointIf * GetJoint(int i){
 		return ((OBJ*)(MIF*)this)->GetJoint(i);
+	}
+	virtual int NContacts() const {
+		return ((OBJ*)(MIF*)this)->NContacts();
+	}
+	virtual PHContactPointIf * GetContact(int i){
+		return ((OBJ*)(MIF*)this)->GetContact(i);
 	}
 	virtual PHRootNodeIf * CreateRootNode(PHSolidIf * root, const PHRootNodeDesc & desc = PHRootNodeDesc()){
 		return ((OBJ*)(MIF*)this)->CreateRootNode(root, desc);

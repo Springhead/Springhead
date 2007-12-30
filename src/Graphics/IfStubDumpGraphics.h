@@ -142,9 +142,6 @@ struct GRCameraIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetFrame(GRFrameIf * fr){
 		return ((OBJ*)(MIF*)this)->SetFrame(fr);
 	}
-	virtual void SetDesc(const GRCameraDesc & desc){
-		return ((OBJ*)(MIF*)this)->SetDesc(desc);
-	}
 };
 struct GRCameraIf;	class GRCamera;
 typedef GRCameraIfStubTemplate<GRCameraIf, ObjectIfBuf, GRCamera>	GRCameraIfStub;
@@ -338,14 +335,20 @@ struct GRDebugRenderIfStubTemplate: public GRRenderIfStubTemplate<IF, MIF, OBJ> 
 	virtual void DrawScene(PHSceneIf * scene){
 		return ((OBJ*)(MIF*)this)->DrawScene(scene);
 	}
-	virtual void DrawSolid(PHSolidIf * so){
-		return ((OBJ*)(MIF*)this)->DrawSolid(so);
-	}
-	virtual void DrawFace(CDFaceIf * face, Vec3f * base){
-		return ((OBJ*)(MIF*)this)->DrawFace(face, base);
+	virtual void DrawSolid(PHSolidIf * solid){
+		return ((OBJ*)(MIF*)this)->DrawSolid(solid);
 	}
 	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname){
 		return ((OBJ*)(MIF*)this)->SetMaterialSample(matname);
+	}
+	virtual void SetRenderMode(bool solid = true, bool wire = false){
+		return ((OBJ*)(MIF*)this)->SetRenderMode(solid, wire);
+	}
+	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f){
+		return ((OBJ*)(MIF*)this)->EnableRenderAxis(enable, scale);
+	}
+	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f){
+		return ((OBJ*)(MIF*)this)->EnableRenderForce(enable, scale);
 	}
 };
 struct GRDebugRenderIf;	class GRDebugRender;

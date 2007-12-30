@@ -432,6 +432,7 @@ int main(int argc, char* argv[]){
 
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
+	render->SetRenderMode(false, true);
 	device = grSdk->CreateDeviceGL();
 	device->Init();
 	glutDisplayFunc(display);

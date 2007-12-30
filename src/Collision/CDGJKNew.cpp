@@ -14,6 +14,8 @@
 	しかし，似ている箇所があります．もし派生物だと認定された場合，
 	ライセンスがLGPLとなります．ご注意ください．
 */
+static bool bDebug;
+
 
 #include "Collision.h"
 #include <Foundation/Scene.h>
@@ -44,7 +46,6 @@ inline char FindVacantId(char a, char b, char c){
 }
 
 #if 1	//	普通じゃないGJK
-static bool bDebug;
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 #define CalcSupport(n)											\
 	p[n] = a->Support(a2z.Ori().Conjugated() * (v[n]));			\
@@ -83,7 +84,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	w0を求める
 	v[0] = Vec3d(0,0,1);
 	CalcSupport(0);
-	if (w[0].Z() > endLength) return -1;	//	range内では接触しないが，将来接触するかもしれない．
+	if (w[0].Z() > endLength) 
+		return -1;	//	range内では接触しないが，将来接触するかもしれない．
 	if (w[0].Z() < 0){						//	反対側のsupportを求めてみて，範囲外か確認
 		v[3] = Vec3d(0,0,-1);
 		CalcSupport(3);
@@ -101,7 +103,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		return 1;
 	}
 	CalcSupport(1);
-	if (w[1].XY() * v[1].XY() > 0) return 0;	//	w[1]の外側にOがあるので触ってない
+	if (w[1].XY() * v[1].XY() > 0) 
+		return 0;	//	w[1]の外側にOがあるので触ってない
 	
 	
 	//	w[0]-w[1]-w[0] を三角形と考えてスタートして，oが三角形の内部に入るまで繰り返し
@@ -146,10 +149,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		//	新しいsupportが1回前の線分からまったく動いていない → 点Oは外側
 		double d1 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[1]].XY());
 		double d2 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[2]].XY());
-		if (d1 < epsilon2) return 0;
-		if (d2 < epsilon2) return 0;
+		if (d1 < epsilon2 || d2 < epsilon2) 
+			return 0;
 	}
-	
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
 	//	三角形を小さくしていく
@@ -157,7 +159,12 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	int count = 0;
 	while(1){
 		count ++;
-		if (count > 100) return false;
+		if (count > 1000) {
+			if (bDebug) return -3;
+			bDebug = true;
+			DSTR << "Too many loop in CCDGJK." << std::endl;
+			ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+		}
 		Vec3d s;		//	三角形の有向面積
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
 		if (s.Z() < 0){		//	逆向きの場合、ひっくり返す
@@ -188,41 +195,50 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		//	新しい w w[3] を求める
 		CalcSupport(ids[3]);
 		
+
 		if (bDebug){
 			for(int i=0; i<4; ++i){
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
 			}
 			DSTR << std::endl;
 		}
-		//	新しいwが、既出の点でないかチェックする。
-		for(int i=0; i<3; ++i){
-			if ( (w[ids[3]] - w[ids[i]]).square() < epsilon) goto final;
-		}
-		
+		//	新しいwが、これまでの点より近いかチェックする。
+		double improvement = -(w[ids[3]] - w[(notuse+1)%3]) * v[ids[3]];
+		if (bDebug) DSTR << "Improvement: " << improvement << std::endl;
+		if (improvement < epsilon) goto final;
+
 		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
 			std::swap(ids[notuse], ids[3]);
 		}else{
 			//	どの2点とw[3]で三角形を作れるか確認する -> w[3] を、残り2つで表現する
-			double max = 0;
+			double min = 1e10;
+			int minId;
 			for(int i=0; i<3; ++i){
 				Matrix2d m;	//	(w[i] w[i+1])  t(k1,k2) = w[3]
 				m.Ex() = w[ids[i]].XY();
 				m.Ey() = w[ids[(i+1)%3]].XY();
 				Vec2d k = m.inv() * w[ids[3]].XY();
-				if (k.x <= epsilon && k.y <= epsilon){	//	発見
-					std::swap(ids[(i+2)%3], ids[3]);
-					goto found;
-				} 
+				if (k.x > k.y){
+					if (k.x < min){
+						min = k.x;
+						minId = i;
+					}
+				}else{
+					if (k.y < min){
+						min = k.y;
+						minId = i;
+					}
+				}
 			}
-			//	not Found
-			{
+			std::swap(ids[(minId+2)%3], ids[3]);
+			if (min > 1e-5){	//	異常。原点を含む三角形が見つからない
+				//	デバッグ用処理
 				DSTR << "No including traiangle found." << std::endl;
 				if (bDebug){
-					ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+					ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, 
+						normal, pa, pb, dist);
 				}
-				return false;
 			}
-			found: ;
 		}
 	}
 	//	無事停止
