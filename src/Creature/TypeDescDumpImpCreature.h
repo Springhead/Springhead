@@ -404,6 +404,14 @@
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->goalHip) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "Quaterniond", "goalRearAnkle", "");
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->goalRearAnkle) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "double", "originElbow", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->originElbow) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "double", "originFrontKnee", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->originFrontKnee) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "double", "originStifle", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->originStifle) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "double", "originRearKnee", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->originRearKnee) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "Vec3d", "limitDirWaistChest", "");
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->limitDirWaistChest) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "Vec3d", "limitDirWaistTail", "");

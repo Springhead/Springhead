@@ -85,13 +85,20 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	springRearKnee	   =   50.0; damperRearKnee		= 20.0;
 	
 	//-------------------------------------------------------------------
-	// ball joints are conrtroled to the direction
+	// ball joints are conrtroled to these directions
 	goalChestNeck	  = Quaterniond::Rot(Rad(  60), 'x');
 	goalNeckHead	  = Quaterniond::Rot(Rad(- 90), 'x');
 	goalShoulder	  = Quaterniond::Rot(Rad(-120), 'x');
 	goalHip			  = Quaterniond::Rot(Rad(- 60), 'x');
 
-	//----------------------------------------------------------------------
+	//-------------------------------------------------------------------
+	// hinge joints are controled to these directions
+	originElbow		  = Rad(40);
+	originFrontKnee	  = Rad(0);
+	originStifle	  = Rad(-30);
+	originRearKnee	  = Rad(-5);
+
+	//-------------------------------------------------------------------
 	// Range of ball joints
 	limitSwingWaistChest.upper	= Rad(5);
 	limitTwistWaistChest.lower	= Rad(-5);
@@ -131,13 +138,10 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 
 	//-----------------------------------------------------------------------------------
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upperのとき可動域制限無効)
-	rangeElbow		  = Vec2d(Rad(	 0), Rad(+ 90));
-	rangeFrontKnee	  = Vec2d(Rad(- 90), Rad(	0));
-	rangeStifle		  = Vec2d(Rad(- 90), Rad(	0));
-	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+ 90));
-
-	//-----------------------------------------------------------------------------------
-	// limit Direction of the ball joints
+	rangeElbow		  = Vec2d(Rad(	 0), Rad(+180));
+	rangeFrontKnee	  = Vec2d(Rad(-180), Rad(	0));
+	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
+	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+180));
 
 	//-----------------------------------------------------------------------------------
 	// Do you want to make the legs?
@@ -482,7 +486,7 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springElbow;
 	hingeDesc.damper		   = damperElbow;
-	hingeDesc.origin		   = Rad(40);
+	hingeDesc.origin		   = originElbow;
 	hingeDesc.lower			   = rangeElbow[0];
 	hingeDesc.upper			   = rangeElbow[1];
 
@@ -532,7 +536,7 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springFrontKnee;
 	hingeDesc.damper		   = damperFrontKnee;
-	hingeDesc.origin		   = Rad(0);
+	hingeDesc.origin		   = originFrontKnee;
 	hingeDesc.lower			   = rangeFrontKnee[0];
 	hingeDesc.upper			   = rangeFrontKnee[1];
 
@@ -703,7 +707,7 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springStifle;
 	hingeDesc.damper		   = damperStifle;
-	hingeDesc.origin		   = Rad(-30);
+	hingeDesc.origin		   = originStifle;
 	hingeDesc.lower			   = rangeStifle[0];
 	hingeDesc.upper			   = rangeStifle[1];
 
@@ -754,7 +758,7 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springRearKnee;
 	hingeDesc.damper		   = damperRearKnee;
-	hingeDesc.origin		   = Rad(-5);
+	hingeDesc.origin		   = originRearKnee;
 	hingeDesc.lower			   = rangeRearKnee[0];
 	hingeDesc.upper			   = rangeRearKnee[1];
 
@@ -838,6 +842,7 @@ void CRFourLegsAnimalBody::CreateEye(LREnum lr){
 
 // --- --- ---
 void CRFourLegsAnimalBody::InitContact(){
+	
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
@@ -858,6 +863,7 @@ void CRFourLegsAnimalBody::InitContact(){
 			}
 		}
 	}
+
 }
 
 void CRFourLegsAnimalBody::SetUpperBody(){

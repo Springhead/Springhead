@@ -387,6 +387,12 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	Quaterniond goalHip;
 	Quaterniond goalRearAnkle;
 
+	// HingeJoint§Œä–Ú•W
+	double originElbow;
+	double originFrontKnee;
+	double originStifle;
+	double originRearKnee;
+
 	// BallJoint‰Â“®ˆæ§ŒÀ‚Ì’†S
 	Vec3d limitDirWaistChest;
 	Vec3d limitDirWaistTail;

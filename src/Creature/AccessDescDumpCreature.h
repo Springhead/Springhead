@@ -773,6 +773,10 @@ protected: \
 	Quaterniond goalFrontAnkle ; \
 	Quaterniond goalHip ; \
 	Quaterniond goalRearAnkle ; \
+	double originElbow ; \
+	double originFrontKnee ; \
+	double originStifle ; \
+	double originRearKnee ; \
 	Vec3d limitDirWaistChest ; \
 	Vec3d limitDirWaistTail ; \
 	Vec3d limitDirTail ; \
@@ -883,6 +887,10 @@ public: \
 		goalFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->goalFrontAnkle; \
 		goalHip = ((CRFourLegsAnimalBodyDesc*)desc)->goalHip; \
 		goalRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->goalRearAnkle; \
+		originElbow = ((CRFourLegsAnimalBodyDesc*)desc)->originElbow; \
+		originFrontKnee = ((CRFourLegsAnimalBodyDesc*)desc)->originFrontKnee; \
+		originStifle = ((CRFourLegsAnimalBodyDesc*)desc)->originStifle; \
+		originRearKnee = ((CRFourLegsAnimalBodyDesc*)desc)->originRearKnee; \
 		limitDirWaistChest = ((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistChest; \
 		limitDirWaistTail = ((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistTail; \
 		limitDirTail = ((CRFourLegsAnimalBodyDesc*)desc)->limitDirTail; \
@@ -993,6 +1001,10 @@ public: \
 		((CRFourLegsAnimalBodyDesc*)desc)->goalFrontAnkle = goalFrontAnkle; \
 		((CRFourLegsAnimalBodyDesc*)desc)->goalHip = goalHip; \
 		((CRFourLegsAnimalBodyDesc*)desc)->goalRearAnkle = goalRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originElbow = originElbow; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originFrontKnee = originFrontKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originStifle = originStifle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originRearKnee = originRearKnee; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistChest = limitDirWaistChest; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistTail = limitDirWaistTail; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitDirTail = limitDirTail; \
@@ -1105,6 +1117,10 @@ protected: \
 	Quaterniond goalFrontAnkle ; \
 	Quaterniond goalHip ; \
 	Quaterniond goalRearAnkle ; \
+	double originElbow ; \
+	double originFrontKnee ; \
+	double originStifle ; \
+	double originRearKnee ; \
 	Vec3d limitDirWaistChest ; \
 	Vec3d limitDirWaistTail ; \
 	Vec3d limitDirTail ; \
@@ -1214,6 +1230,10 @@ public: \
 		goalFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->goalFrontAnkle; \
 		goalHip = ((CRFourLegsAnimalBodyDesc*)desc)->goalHip; \
 		goalRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->goalRearAnkle; \
+		originElbow = ((CRFourLegsAnimalBodyDesc*)desc)->originElbow; \
+		originFrontKnee = ((CRFourLegsAnimalBodyDesc*)desc)->originFrontKnee; \
+		originStifle = ((CRFourLegsAnimalBodyDesc*)desc)->originStifle; \
+		originRearKnee = ((CRFourLegsAnimalBodyDesc*)desc)->originRearKnee; \
 		limitDirWaistChest = ((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistChest; \
 		limitDirWaistTail = ((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistTail; \
 		limitDirTail = ((CRFourLegsAnimalBodyDesc*)desc)->limitDirTail; \
@@ -1323,6 +1343,10 @@ public: \
 		((CRFourLegsAnimalBodyDesc*)desc)->goalFrontAnkle = goalFrontAnkle; \
 		((CRFourLegsAnimalBodyDesc*)desc)->goalHip = goalHip; \
 		((CRFourLegsAnimalBodyDesc*)desc)->goalRearAnkle = goalRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originElbow = originElbow; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originFrontKnee = originFrontKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originStifle = originStifle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->originRearKnee = originRearKnee; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistChest = limitDirWaistChest; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitDirWaistTail = limitDirWaistTail; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitDirTail = limitDirTail; \
