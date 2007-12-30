@@ -164,8 +164,8 @@ PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
 	numIterCorrection	 = 0;
 	numIterContactCorrection = 0;
-	velCorrectionRate	 = 0.5;
-	posCorrectionRate	 = 0.5;
+	velCorrectionRate	 = 0.3;		//< 0.5‚¾‚Æ‘å‚«‚·‚¬‚Ä”n‚ª”­U‚µ‚Ä‚µ‚Ü‚¤
+	posCorrectionRate	 = 0.3;		//< 0.5‚¾‚Æ‘å‚«‚·‚¬‚Ä”n‚ª”­U‚µ‚Ä‚µ‚Ü‚¤(07/12/30 toki)
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
 	freezeThreshold		 = 0.0;

@@ -29,11 +29,11 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	neckHeight	  = 1.2;
 	neckThickness = 0.2;
 
-	headBreadth   = 0.3;
+	headBreadth   = 0.31;
 	headHeight	  = 0.7;
 	headThickness = 0.4;
 
-	breastboneBreadth   = 0.2;
+	breastboneBreadth   = 0.21;
 	breastboneHeight    = 0.5;
 	breastboneThickness = 0.2; 
 
@@ -45,7 +45,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	frontCannonBoneHeight	 = 0.6;
 	frontCannonBoneThickness = 0.15;
 
-	frontToeBreadth	  = 0.25;
+	frontToeBreadth	  = 0.26;
 	frontToeHeight	  = 0.1;
 	frontToeThickness = 0.25;
 
@@ -61,7 +61,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	rearCannonBoneHeight    = 0.65;
 	rearCannonBoneThickness = 0.15;
 
-	rearToeBreadth   = 0.25;
+	rearToeBreadth   = 0.26;
 	rearToeHeight    = 0.1;
 	rearToeThickness = 0.25;
 
