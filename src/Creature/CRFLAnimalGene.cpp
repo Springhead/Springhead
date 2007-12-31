@@ -1,3 +1,10 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
 #include "CRFLAnimalGene.h"
 
 using namespace Spr;
@@ -12,8 +19,9 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::CreateGene(CRBodyIf* body){
 //	DSTR << "---------make gene------------" << std::endl;
 	
 	std::vector<CRFLAnimalGeneData> posture;
+	DSTR << body->NJoints() << std::endl;
 	for(int i=0; i<body->NJoints(); i++){
-		if(body->GetJoint(i) != NULL){
+		if(body->GetJoint(i)){
 			if(DCAST(PHBallJointIf, body->GetJoint(i))){
 				PHBallJointDesc ballDesc;
 				body->GetJoint(i)->GetDesc(&ballDesc);
@@ -36,9 +44,9 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::CreateGene(CRBodyIf* body){
 				posture.push_back(gene);
 				//DSTR << "joint: " << i << " " << body->GetJoint(i)->GetIfInfo()->ClassName();
 			}
-		//各試行でできたごーる方向の要素
-		//DSTR << " " << body->GetJoint(i)->GetName() << " " << flAnimalGenes.back().back().goalDir << std::endl;
-		}		
+		//各試行でできたゴール方向の要素
+		//DSTR << " " << body->GetJoint(i)->GetName() << " " << posture.back().goalDir << std::endl;
+		}
 	}
 	flAnimalGenes.push_back(posture);
 	

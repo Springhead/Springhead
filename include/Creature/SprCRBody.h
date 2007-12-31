@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -349,8 +349,8 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 		JO_RIGHT_HIP, JO_RIGHT_STIFLE, JO_RIGHT_REAR_KNEE, JO_RIGHT_REAR_ANKLE,
 
 		// --Å@Undefined members (its reality is NULL)
-		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
 		JO_LEFT_EYE_Y, JO_LEFT_EYE_X,
+		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
 
 		// -- The number of the all joints (ball + hinge)
 		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)

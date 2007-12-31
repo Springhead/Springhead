@@ -1,3 +1,10 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
 #if !defined(AFX_DRUSBH8_H__618658E7_7169_4BF7_A25E_562BC6BDEE17__INCLUDED_)
 #define AFX_DRUSBH8_H__618658E7_7169_4BF7_A25E_562BC6BDEE17__INCLUDED_
 #if _MSC_VER > 1000
