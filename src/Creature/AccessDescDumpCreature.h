@@ -695,6 +695,10 @@ public: \
 
 #define ACCESS_DESC_CRFourLegsAnimalBodyDesc(cls) \
 protected: \
+	int soNSolids ; \
+	int joNBallJoints ; \
+	int joNHingeJoints ; \
+	int joNJoints ; \
 	double waistBreadth ; \
 	double waistHeight ; \
 	double waistThickness ; \
@@ -809,6 +813,10 @@ protected: \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
+		soNSolids = ((CRFourLegsAnimalBodyDesc*)desc)->soNSolids; \
+		joNBallJoints = ((CRFourLegsAnimalBodyDesc*)desc)->joNBallJoints; \
+		joNHingeJoints = ((CRFourLegsAnimalBodyDesc*)desc)->joNHingeJoints; \
+		joNJoints = ((CRFourLegsAnimalBodyDesc*)desc)->joNJoints; \
 		waistBreadth = ((CRFourLegsAnimalBodyDesc*)desc)->waistBreadth; \
 		waistHeight = ((CRFourLegsAnimalBodyDesc*)desc)->waistHeight; \
 		waistThickness = ((CRFourLegsAnimalBodyDesc*)desc)->waistThickness; \
@@ -923,6 +931,10 @@ public: \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
+		((CRFourLegsAnimalBodyDesc*)desc)->soNSolids = soNSolids; \
+		((CRFourLegsAnimalBodyDesc*)desc)->joNBallJoints = joNBallJoints; \
+		((CRFourLegsAnimalBodyDesc*)desc)->joNHingeJoints = joNHingeJoints; \
+		((CRFourLegsAnimalBodyDesc*)desc)->joNJoints = joNJoints; \
 		((CRFourLegsAnimalBodyDesc*)desc)->waistBreadth = waistBreadth; \
 		((CRFourLegsAnimalBodyDesc*)desc)->waistHeight = waistHeight; \
 		((CRFourLegsAnimalBodyDesc*)desc)->waistThickness = waistThickness; \
@@ -1039,6 +1051,10 @@ public: \
 
 #define ACCESS_DESC_CRFourLegsAnimalBodyDesc_NOBASE \
 protected: \
+	int soNSolids ; \
+	int joNBallJoints ; \
+	int joNHingeJoints ; \
+	int joNJoints ; \
 	double waistBreadth ; \
 	double waistHeight ; \
 	double waistThickness ; \
@@ -1152,6 +1168,10 @@ protected: \
 	bool dynamicalMode ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
+		soNSolids = ((CRFourLegsAnimalBodyDesc*)desc)->soNSolids; \
+		joNBallJoints = ((CRFourLegsAnimalBodyDesc*)desc)->joNBallJoints; \
+		joNHingeJoints = ((CRFourLegsAnimalBodyDesc*)desc)->joNHingeJoints; \
+		joNJoints = ((CRFourLegsAnimalBodyDesc*)desc)->joNJoints; \
 		waistBreadth = ((CRFourLegsAnimalBodyDesc*)desc)->waistBreadth; \
 		waistHeight = ((CRFourLegsAnimalBodyDesc*)desc)->waistHeight; \
 		waistThickness = ((CRFourLegsAnimalBodyDesc*)desc)->waistThickness; \
@@ -1265,6 +1285,10 @@ public: \
 		dynamicalMode = ((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode; \
 	} \
 	virtual bool GetDesc(void* desc){ \
+		((CRFourLegsAnimalBodyDesc*)desc)->soNSolids = soNSolids; \
+		((CRFourLegsAnimalBodyDesc*)desc)->joNBallJoints = joNBallJoints; \
+		((CRFourLegsAnimalBodyDesc*)desc)->joNHingeJoints = joNHingeJoints; \
+		((CRFourLegsAnimalBodyDesc*)desc)->joNJoints = joNJoints; \
 		((CRFourLegsAnimalBodyDesc*)desc)->waistBreadth = waistBreadth; \
 		((CRFourLegsAnimalBodyDesc*)desc)->waistHeight = waistHeight; \
 		((CRFourLegsAnimalBodyDesc*)desc)->waistThickness = waistThickness; \

@@ -51,8 +51,8 @@ class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 	double			spring, damper;			///< バネ、ダンパ係数
 	Vec3d			limitDir;				///< 可動域の中心ベクトル（初期方向Z軸）
 	Vec2d			nowTheta;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:swingDir, .z:twist)
-	Vec2d	limitSwing;				///< swing角の範囲
-	Vec2d	limitTwist;				///< twist角の範囲
+	Vec2d			limitSwing;				///< swing角の範囲
+	Vec2d			limitTwist;				///< twist角の範囲
 	bool			anyLimit;				///< どこかのリミットにかかっているかどうかを調べるフラグ == (onLimit.onUpper || onLimit.onLower)
 	Matrix3d		Jc;						///< Socket座標系の速度・加速度　＝　Jc * 拘束座標系の速度、加速度
 	Matrix3d		Jcinv;					///< 拘束座標系の速度、加速度    ＝　Jcinv * Socket座標系の速度・加速度

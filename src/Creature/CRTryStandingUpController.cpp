@@ -130,21 +130,22 @@ void CRTryStandingUpController::CalcGA(){
 	DSTR << animalGenes.size() << std::endl;
 	
 	//毎ステップできてくる最新のanimalGenesを確認する
+/*	
 	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
 		DSTR << animalGenes.back()[i].goalDir << std::endl;
 	}	
+*/
 	std::vector<CRFLAnimalGeneData> gene = animalGeneIf->MixGenes(animalGeneIf->flAnimalGenes[0], animalGenes.back());
 	
-	/*
+/*
 	for(int i=0; i<gene.size(); i++){
 		DSTR << gene[i].goalDir << std::endl;
 	}
-	*/
+*/
+
 //	TransitionPoseModel(gene);
-
-	// 
+ 
 	qLearningStep = 0;
-
 }
 
 void CRTryStandingUpController::Step(){	
@@ -157,8 +158,8 @@ void CRTryStandingUpController::Step(){
 	CalcQL();
 
 	//50回QLearningを行った後、1回だけGAを行う
-//	if(qLearningStep == 50)
-//		CalcGA();
+	if(qLearningStep == 50)
+		CalcGA();
 	
 }
 

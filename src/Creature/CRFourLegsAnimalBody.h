@@ -25,7 +25,7 @@ namespace Spr{;
 // ボールやヒンジのジョイントを用いた哺乳類モデル・クラスの実装
 class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyIfInit, public CRFourLegsAnimalBodyDesc {
 private:
-
+	
 	std::vector<PHSolidIf*> upperBody;		//< 上体を構成する剛体の登録先の配列
 	
 	void InitBody();						//< 体幹部の作成計画を立てる
@@ -78,9 +78,16 @@ public:
 		InitContact();
 	}
 
-	virtual void Init();				//< 初期化を実行する
-	
-	Vec3d GetUpperCenterOfMass();		//< 上体の剛体の重心を得る
+
+	// インタフェースの実装
+	virtual void		Init();							//< 初期化を実行する
+	virtual Vec3d		GetUpperCenterOfMass();			//< 上体の剛体の重心を得る
+	virtual int			NSolids();						//< ボディに含まれている剛体の数を返す
+	virtual int			NJoints();						//< ボディに含まれている関節の数を返す
+	virtual int			NBallJoints();					//< ボディに含まれているボールジョイントの数を返す
+	virtual int			NHingeJoints();					//< ボディに含まれているヒンジジョイントの数を返す
+
+
 
 };
 

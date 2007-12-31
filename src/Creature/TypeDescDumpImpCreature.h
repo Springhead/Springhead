@@ -248,6 +248,14 @@
 	desc->access = DBG_NEW UTAccess<CRFourLegsAnimalBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRFourLegsAnimalBodyDesc - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "int", "soNSolids", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->soNSolids) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "int", "joNBallJoints", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->joNBallJoints) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "int", "joNHingeJoints", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->joNHingeJoints) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "int", "joNJoints", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->joNJoints) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "double", "waistBreadth", "");
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->waistBreadth) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "double", "waistHeight", "");

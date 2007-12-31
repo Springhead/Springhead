@@ -12,6 +12,13 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	jointOrder = SOCKET_PARENT;
 
 	//---------------------------------------------------------
+	// number of the joints or solids
+	soNSolids = (int)SO_NSOLIDS;
+	joNJoints = (int)JO_NJOINTS;
+	joNBallJoints = 14;
+	joNHingeJoints = joNJoints - joNBallJoints;
+
+	//---------------------------------------------------------
 	// sizes of solids
 	waistBreadth   = 0.5;
 	waistHeight    = 0.8;
@@ -892,5 +899,21 @@ Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(){
 	return centerPosOfUpperBlocks / totalWeightOfUpperPart;
 }
 
+int CRFourLegsAnimalBody::NSolids(){
+	return soNSolids;
+
+}
+
+int CRFourLegsAnimalBody::NJoints(){
+	return joNJoints;
+}
+int CRFourLegsAnimalBody::NBallJoints()
+{
+	return joNBallJoints;
+}
+
+int CRFourLegsAnimalBody::NHingeJoints(){
+	return joNHingeJoints;
+}
 
 }

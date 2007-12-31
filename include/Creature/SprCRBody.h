@@ -273,9 +273,29 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	IF_DEF(CRFourLegsAnimalBody);
 
+	/** @brief 初期化を実行する
+	*/
+	virtual void Init() = 0;
+	
 	/** @brief 状態の重心座標を返す
 	*/
 	virtual Vec3d GetUpperCenterOfMass() = 0;
+
+	/** @brief 剛体の数を返す
+	*/
+	virtual int NSolids() = 0;
+
+	/** @brief 関節の数を返す
+	*/
+	virtual int NJoints() = 0;
+
+	/** @brief ボールジョイントの数を返す
+	*/
+	virtual int NBallJoints() = 0;
+
+	/** @brief ヒンジジョイントの数を返す
+	*/
+	virtual int NHingeJoints() = 0;
 };
 
 /// 4足動物モデルのデスクリプタ
@@ -305,30 +325,28 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	};
 
 	enum CRAnimalJoints{
-		// -- Center part of the ball joints
+
+		//////////////////////////////////////////////////////////////////
+		//																//
+		// < ボディの定義の順番 >										//
+		// PHBallJoint⇒PHHingeJointにしていると遺伝子を組んだ時に		//
+		// うまく一点交叉しなくなってしまうので混合で定義している		//
+		//																//
+		//////////////////////////////////////////////////////////////////
+
+		// -- Center part of the joints
 		JO_WAIST_CHEST=0,
 		JO_CHEST_NECK,
 		JO_NECK_HEAD,
 		JO_WAIST_TAIL, JO_TAIL_12, JO_TAIL_23,
 
-		// -- Left part of the ball joints
-		JO_LEFT_SHOULDER,JO_LEFT_FRONT_ANKLE,
-		JO_LEFT_HIP, JO_LEFT_REAR_ANKLE,
+		// -- Left part of the joints
+		JO_LEFT_SHOULDER, JO_LEFT_ELBOW, JO_LEFT_FRONT_KNEE, JO_LEFT_FRONT_ANKLE,
+		JO_LEFT_HIP, JO_LEFT_STIFLE, JO_LEFT_REAR_KNEE, JO_LEFT_REAR_ANKLE,
 
-		// -- Right part of the ball joints
-		JO_RIGHT_SHOULDER, JO_RIGHT_FRONT_ANKLE,
-		JO_RIGHT_HIP, JO_RIGHT_REAR_ANKLE,
-
-		// -- The number of the ball joints
-		JO_NBALLJOINTS,
-		
-		// -- Left part of the hinge joints
-		JO_LEFT_ELBOW,JO_LEFT_FRONT_KNEE,
-		JO_LEFT_STIFLE,JO_LEFT_REAR_KNEE,
-
-		// -- Right part of the hinge joints
-		JO_RIGHT_ELBOW,JO_RIGHT_FRONT_KNEE,
-		JO_RIGHT_STIFLE,JO_RIGHT_REAR_KNEE,
+		// -- Right part of the joints
+		JO_RIGHT_SHOULDER,JO_RIGHT_ELBOW, JO_RIGHT_FRONT_KNEE, JO_RIGHT_FRONT_ANKLE,
+		JO_RIGHT_HIP, JO_RIGHT_STIFLE, JO_RIGHT_REAR_KNEE, JO_RIGHT_REAR_ANKLE,
 
 		// --　Undefined members (its reality is NULL)
 		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
@@ -337,6 +355,11 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 		// -- The number of the all joints (ball + hinge)
 		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)
 	};
+
+	int soNSolids;
+	int joNBallJoints;
+	int joNHingeJoints;
+	int joNJoints;
 
 	/// サイズに関するパラメータ
 	double waistBreadth,	       waistHeight,			  waistThickness;
