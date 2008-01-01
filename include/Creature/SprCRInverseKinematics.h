@@ -125,8 +125,9 @@ struct CRIKMovable3HingeJointOriIf : CRIKMovableIf{
 
 struct CRIKMovable3HingeJointOriDesc : CRIKMovableDesc{
 	DESC_DEF_FOR_OBJECT(CRIKMovable3HingeJointOri);
-
-	PHHingeJointIf *joint1, *joint2, *joint3;  ///< 制御対象の関節
+	PHHingeJointIf *joint1;
+	PHHingeJointIf *joint2;
+	PHHingeJointIf* joint3;  ///< 制御対象の関節
 };
 
 // --- 角度制御可能なヒンジジョイント

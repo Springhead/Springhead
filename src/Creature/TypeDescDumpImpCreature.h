@@ -936,6 +936,11 @@
 	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovable3HingeJointOriDesc - (char*)pCRIKMovable3HingeJointOriDesc);
 	field = desc->AddField("pointer", "PHHingeJointIf", "joint1", "");
 	field->offset = int((char*)&(pCRIKMovable3HingeJointOriDesc->joint1) - (char*)pCRIKMovable3HingeJointOriDesc);
+	field = desc->AddField("pointer", "PHHingeJointIf", "joint2", "");
+	field->offset = int((char*)&(pCRIKMovable3HingeJointOriDesc->joint2) - (char*)pCRIKMovable3HingeJointOriDesc);
+	field = desc->AddField("pointer", "PHHingeJointIf", "joint3", "");
+	field->offset = int((char*)&(pCRIKMovable3HingeJointOriDesc->joint3) - (char*)pCRIKMovable3HingeJointOriDesc);
+	db->RegisterDesc(desc);
 	
 	CRIKMovableHingeJointOriDesc* pCRIKMovableHingeJointOriDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovableHingeJointOriDesc");

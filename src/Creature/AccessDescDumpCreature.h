@@ -2443,6 +2443,44 @@ public: \
 		return true; \
 	} \
 
+#define ACCESS_DESC_CRIKMovable3HingeJointOriDesc(cls) \
+protected: \
+	PHHingeJointIf *joint1 ; \
+	PHHingeJointIf *joint2 ; \
+	PHHingeJointIf *joint3 ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		cls##::SetDesc(desc); \
+		joint1 = ((CRIKMovable3HingeJointOriDesc*)desc)->joint1; \
+		joint2 = ((CRIKMovable3HingeJointOriDesc*)desc)->joint2; \
+		joint3 = ((CRIKMovable3HingeJointOriDesc*)desc)->joint3; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		cls##::GetDesc(desc); \
+		((CRIKMovable3HingeJointOriDesc*)desc)->joint1 = joint1; \
+		((CRIKMovable3HingeJointOriDesc*)desc)->joint2 = joint2; \
+		((CRIKMovable3HingeJointOriDesc*)desc)->joint3 = joint3; \
+		return true; \
+	} \
+
+#define ACCESS_DESC_CRIKMovable3HingeJointOriDesc_NOBASE \
+protected: \
+	PHHingeJointIf *joint1 ; \
+	PHHingeJointIf *joint2 ; \
+	PHHingeJointIf *joint3 ; \
+public: \
+	virtual void SetDesc(const void* desc){ \
+		joint1 = ((CRIKMovable3HingeJointOriDesc*)desc)->joint1; \
+		joint2 = ((CRIKMovable3HingeJointOriDesc*)desc)->joint2; \
+		joint3 = ((CRIKMovable3HingeJointOriDesc*)desc)->joint3; \
+	} \
+	virtual bool GetDesc(void* desc){ \
+		((CRIKMovable3HingeJointOriDesc*)desc)->joint1 = joint1; \
+		((CRIKMovable3HingeJointOriDesc*)desc)->joint2 = joint2; \
+		((CRIKMovable3HingeJointOriDesc*)desc)->joint3 = joint3; \
+		return true; \
+	} \
+
 #define ACCESS_DESC_CRIKMovableHingeJointOriDesc(cls) \
 protected: \
 	PHHingeJointIf *joint ; \
