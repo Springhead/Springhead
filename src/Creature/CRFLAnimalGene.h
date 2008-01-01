@@ -31,7 +31,7 @@
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 遺伝子関係のことを取り仕切るクラス
 */
-class CRFLAnimalGene{
+class CRFLAnimalGene: public UTRefCount{
 
 private:
 	CRCreatureIf*					creature;						//< 制御対象のクリーチャー群
