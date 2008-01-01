@@ -115,8 +115,8 @@ void CRTryStandingUpController::Init(){
 //大域変数の初期化
 	totalStep		= 0;
 	qLearningStep	= 0;
-	animalGeneIf = DBG_NEW CRFLAnimalGene(creature);			//< animalGeneの一番最後にクリーチャーの分だけ貼り付ける
-
+	animalGeneIf = DBG_NEW CRFLAnimalGene(creature);			//< animalGene型のインスタンスを生成
+	animalQLIf	 = DBG_NEW CRFLAnimalQL(creature);				//< animalQL型のインスタンスを生成
 	// body[i]:i体目のクリーチャーのボディになるように登録する
 	for(int i = 0; i < creature->NBodies(); i++){
 		body.push_back(creature->GetBody(i));							//< creatureの中にあるボディ情報を順番に格納していく
@@ -124,8 +124,9 @@ void CRTryStandingUpController::Init(){
 }
 
 void CRTryStandingUpController::CalcQL(){
-	qLearningStep += 1;
+	
 	DSTR << qLearningStep << std::endl;
+	animalQLIf->Step();
 	
 }
 
@@ -152,12 +153,11 @@ void CRTryStandingUpController::CalcGA(){
 
 //	TransitionPoseModel(gene);
  
-	qLearningStep = 0;
 }
 
 void CRTryStandingUpController::Step(){	
 	totalStep	  += 1;
-
+	qLearningStep += 1;
 	CRController::Step();
 	UpdateBodyState();
 	
@@ -165,8 +165,10 @@ void CRTryStandingUpController::Step(){
 	CalcQL();
 
 	//50回QLearningを行った後、1回だけGAを行う
-	if(qLearningStep == 50)
+	if(qLearningStep == 50){
 		CalcGA();
+		qLearningStep = 0;
+	}
 	
 }
 

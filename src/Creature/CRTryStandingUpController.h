@@ -18,7 +18,7 @@
 #include "IfStubCreature.h"
 #include "CRController.h"
 #include "CRFLAnimalGene.h"
-//#include "CRFLAnimalQLearning.h"
+#include "CRFLAnimalQL.h"
 
 //////////////////////////////////////////////////////
 
@@ -50,6 +50,7 @@ private:
 	std::vector<PHSolidIf*>							foot;					//< 足を構成する剛体を格納しておく配列
 	std::vector<CRBodyIf*>							body;					//< 制御対象のボディを扱う配列
 	CRFLAnimalGene*									animalGeneIf;			//< 遺伝子操作をするためのインタフェース
+	CRFLAnimalQL*									animalQLIf;				//< QLearningをするためのインタフェース
 	std::vector< std::vector<CRFLAnimalGeneData> >	animalGenes;			//< 動物の遺伝子を扱う配列
 
 	unsigned long		totalStep;				//< シミュレーション開始時からのステップ数
