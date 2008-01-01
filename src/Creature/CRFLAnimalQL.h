@@ -35,6 +35,10 @@ private:
 	
 	double					learningRate;	//<	学習率
 	double					decreaseRate;	//< 減衰率（エージェントの忘却率）
+	double					qValue;			//< Q値
+	double					qValueDash;		//< 規格化されたQ値
+	double					penalty;		//< 規格化の際に使用する罰の値
+
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//隠蔽される関数
 	void		BoltzmannSelection();		//< ボルツマン選択
@@ -43,6 +47,11 @@ private:
 	void		TakeAction();				//< アクションを実行する
 	void		EvaluativeFunc();			//< 評価関数
 	void		UpdateQValues();			//< Q値の更新を行う
+	void		StateValueMax();			//< 各状態の価値の最大値を求める
+	void		StateValueMin();			//< 各状態の価値の最小値を求める
+	void		CalcQValueDash();			//< Q値の規格化をすることでQ'を求める
+	void		FitnessFromQValue();		//< Q値の高いものの適合度を高くする
+	void		FitnessFromTimesOfUse();	//< 使用頻度の高いものの適合度を高くする
 
 public:
 	

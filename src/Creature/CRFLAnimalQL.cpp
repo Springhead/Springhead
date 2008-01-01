@@ -10,10 +10,10 @@
 //-----------------------------------------------------------------------------------
 //privateFunc:
 void CRFLAnimalQL::BoltzmannSelection(){
-
+	
 }
 void CRFLAnimalQL::EpsilonGreedySelection(){
-
+	
 }
 
 void CRFLAnimalQL::SelectAction(){
@@ -41,6 +41,26 @@ void CRFLAnimalQL::UpdateQValues(){
 
 }
 
+void CRFLAnimalQL::StateValueMax(){
+
+}
+
+void CRFLAnimalQL::StateValueMin(){
+
+}
+
+void CRFLAnimalQL::CalcQValueDash(){
+
+}
+
+void CRFLAnimalQL::FitnessFromQValue(){
+
+}
+
+void CRFLAnimalQL::FitnessFromTimesOfUse(){
+
+}
+
 //-----------------------------------------------------------------------------------
 //publicFunc:
 
@@ -50,6 +70,7 @@ void CRFLAnimalQL::Init(){
 	}
 	learningRate = 0.2;
 	decreaseRate = 0.8;
+	penalty		 = -100.0;
 	
 }
 
