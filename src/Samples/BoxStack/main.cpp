@@ -101,12 +101,18 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
+	render->DrawScene(scene);
+/*
 	render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
 	render->DrawSolid(soFloor);
 	for(unsigned int i=0; i<soBox.size(); ++i){
 		render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)(i+1));
 		render->DrawSolid(soBox[i]);
 	}
+	if (scene && scene->GetConstraintEngine()){
+		grscene->GetConstraintEngine()
+	}
+*/
 	glutSwapBuffers();
 
 /*
@@ -433,6 +439,9 @@ int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
 	render->SetRenderMode(false, true);
+	render->EnableRenderAxis();
+	render->EnableRenderForce();
+
 	device = grSdk->CreateDeviceGL();
 	device->Init();
 	glutDisplayFunc(display);

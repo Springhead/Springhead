@@ -66,9 +66,11 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
 		this->DrawSolid(solids[i]);
 	}
+	SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
 	for(int i = 0; i < scene->NJoints(); ++i){
 		this->DrawConstraint(scene->GetJoint(i));
 	}
+	SetMaterialSample((GRDebugRenderIf::TMaterialSample)1);
 	for(int i = 0; i < scene->NContacts(); ++i){
 		this->DrawConstraint(scene->GetContact(i));
 	}
