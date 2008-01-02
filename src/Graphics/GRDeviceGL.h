@@ -139,6 +139,10 @@ public:
 	virtual void PushLight(const GRLightIf* light){ GRDevice::PushLight(light); }
 	///	光源スタックをPop
 	virtual void PopLight();
+	///	シェーディングON/OFF
+	virtual void SetLighting(bool on);
+	///	シェーディングON/OFF
+	virtual bool GetLighting();
 	///	デプスバッファへの書き込みを許可/禁止する
 	virtual void SetDepthWrite(bool b);
 	///	デプステストを有効/無効にする

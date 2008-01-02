@@ -246,6 +246,12 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void PopLight(){
 		return ((OBJ*)(MIF*)this)->PopLight();
 	}
+	virtual void SetLighting(bool on){
+		return ((OBJ*)(MIF*)this)->SetLighting(on);
+	}
+	virtual bool GetLighting(){
+		return ((OBJ*)(MIF*)this)->GetLighting();
+	}
 	virtual void SetDepthWrite(bool b){
 		return ((OBJ*)(MIF*)this)->SetDepthWrite(b);
 	}

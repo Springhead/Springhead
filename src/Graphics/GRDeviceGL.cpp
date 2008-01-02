@@ -513,6 +513,14 @@ void GRDeviceGL::PopLight(){
 	nLights--;
 	if (nLights < GL_MAX_LIGHTS) glDisable(GL_LIGHT0+nLights);
 }
+
+void GRDeviceGL::SetLighting(bool on){
+	if (on) glEnable(GL_LIGHTING);
+	else glDisable(GL_LIGHTING);
+}
+bool GRDeviceGL::GetLighting(){
+	return glIsEnabled(GL_LIGHTING)!=0;
+}
 /// デプスバッファへの書き込みを許可/禁止する
 void GRDeviceGL::SetDepthWrite(bool b){
 	glDepthMask(b);

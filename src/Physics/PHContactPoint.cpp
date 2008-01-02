@@ -102,7 +102,7 @@ void PHContactPoint::CompBias(){
 		e=0;
 		contactCorrectionRate = 0.3;
 	}
-	db[0] = - contactCorrectionRate * (shapePair->depth - 1e-3) / scene->GetTimeStep() + e * vjrel[0];
+	db[0] = - contactCorrectionRate * (shapePair->depth - 0.01) / scene->GetTimeStep() + e * vjrel[0];
 
 #if 0
 

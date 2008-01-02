@@ -281,6 +281,9 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void PushLight(const GRLightIf* light)=0;
 	///	光源スタックをPop
 	virtual void PopLight()=0;
+	///	シェーディングON/OFF
+	virtual void SetLighting(bool on)=0;
+	virtual bool GetLighting()=0;
 	///	デプスバッファへの書き込みを許可/禁止する
 	virtual void SetDepthWrite(bool b)=0;
 	///	デプステストを有効/無効にする
