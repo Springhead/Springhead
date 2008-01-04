@@ -27,7 +27,7 @@ void CRFLAnimalQL::SetActionNumber(std::vector<CRFLAnimalGeneData> aGene){
 	}
 
 }
-void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> aGene){
+void CRFLAnimalQL::SelectAction(){
 	////////////////////////////////////
 	//								  //
 	// ボルツマン選択入れるんだっけ？ //
@@ -41,50 +41,50 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> aGene){
 			action[j] = rand()%actionNumber[j];
 	//		DSTR << action[j]  << std::endl;
 			// BallJointだった場合に取る行動
-			if(aGene[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
+			if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
 //				DSTR << "ball" << std::endl;
 				if(action[j] == 0){
-					aGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 1){
-					aGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'y') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 2){
-					aGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 3){
-					aGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 4){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 5){
-					aGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 6){
-					aGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad( 5), 'y') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad( 5), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 7){
-					aGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'y') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 8){
-					aGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * Quaterniond::Rot(Rad( 5), 'y') * aGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * Quaterniond::Rot(Rad( 5), 'y') * thisTermGene[j].goalDir;
 				}
 				else{
 				}
 			}
 			
 			// HingeJointだった場合に取る行動
-			else if(aGene[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
+			else if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
 //				DSTR << "hinge" << std::endl;
 				if(action[j] == 0){
-					aGene[j].goalDir[0] += Rad(5);
+					thisTermGene[j].goalDir[0] += Rad(5);
 				}
 				else if(action[j] == 1){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 2){
-					aGene[j].goalDir[0] -= Rad(5);
+					thisTermGene[j].goalDir[0] -= Rad(5);
 				}
 				else{
 				}
@@ -93,13 +93,13 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> aGene){
 	}
 /*
 	for(unsigned int i = 0; i < actionNumber.size(); i++){
-		DSTR << aGene[i].goalDir << std::endl;
+		DSTR << thisTermGene[i].goalDir << std::endl;
 	}
 */
 }
 
 void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> aGene){
-/*
+
 	for(unsigned int i = 0; i < crBody.size(); i++){
 //		DSTR << "size of aGene : " << aGene.size() << std::endl;
 		for(unsigned int j = 0; j < aGene.size(); j++){
@@ -120,7 +120,7 @@ void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> aGene){
 			else DSTR << "Unknown type." << std::endl;
 		}
 	}
-*/
+
 }
 
 void CRFLAnimalQL::EvaluativeFunc(){
@@ -184,7 +184,7 @@ void CRFLAnimalQL::Step(){
 	}
 */
 	SetActionNumber(thisTermGene);
-	SelectAction(thisTermGene);
+	SelectAction();
 	
 /*
 	DSTR << "----------postAction----------" << std::endl;

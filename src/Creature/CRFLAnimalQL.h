@@ -51,10 +51,9 @@ private:
 	//隠蔽される関数
 	void		BoltzmannSelection();									//< ボルツマン選択
 	void		EpsilonGreedySelection();								//< ε-greedy選択
-
 	void		SetActionNumber(std::vector<CRFLAnimalGeneData> aGene); //< ある遺伝子の各関節が取り得る行動のパターン総数を設定する
-	void		SelectAction(std::vector<CRFLAnimalGeneData> aGene);	//< 行動を決定する
-	void		TakeAction(std::vector<CRFLAnimalGeneData> aGene);		//< アクションを実行する	
+	void		SelectAction();											//< 行動を決定する
+	void		TakeAction(std::vector<CRFLAnimalGeneData> aGene);		//< アクションを実行する		
 	void		EvaluativeFunc();										//< 評価関数
 	void		CalcQValueMax();										//< actionを変動させた時のQ値の最大値を調べる
 	void		CalcQValueMin();										//< actionを変動させた時のQ値の最小値を調べる

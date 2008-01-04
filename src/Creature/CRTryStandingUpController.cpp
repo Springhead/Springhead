@@ -162,15 +162,18 @@ void CRTryStandingUpController::Step(){
 	CRController::Step();
 	UpdateBodyState();
 	
-	//QLearningのみを50回行う
-	CalcQL();
+	//最初のポーズが安定するまで待たないといきなり発振する。
+	//大体totalStep == 200位まで待てばOK。
+	if(totalStep >= 200){
+		//QLearningのみを50回行う
+		CalcQL();
 
-	//50回QLearningを行った後、1回だけGAを行う
-	if(qLearningStep == 50){
-		CalcGA();
-		qLearningStep = 0;
+		//50回QLearningを行った後、1回だけGAを行う
+		if(qLearningStep == 50){
+			CalcGA();
+			qLearningStep = 0;
+		}
 	}
-	
 }
 
 }
