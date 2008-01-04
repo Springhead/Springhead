@@ -112,6 +112,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	originStifle	  = Rad(-30);
 	originRearKnee	  = Rad(-5);
 
+
 	//-------------------------------------------------------------------
 	// Range of ball joints
 	limitSwingWaistChest.upper	= Rad(5);
@@ -156,6 +157,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	rangeFrontKnee	  = Vec2d(Rad(-180), Rad(	0));
 	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
 	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+180));
+
 
 	//-----------------------------------------------------------------------------------
 	// Do you want to make the legs?

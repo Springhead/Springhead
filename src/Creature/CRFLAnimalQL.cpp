@@ -38,11 +38,18 @@ void CRFLAnimalQL::SelectAction(){
 	action.resize(actionNumber.size());
 	for(unsigned int i = 0; i < crBody.size(); i++){
 		for(unsigned int j = 0; j < actionNumber.size(); j++){
+			//適当にアクションを決めているが、ここにボルツマン選択やε-greedy選択を挟み込む必要がある
 			action[j] = rand()%actionNumber[j];
-	//		DSTR << action[j]  << std::endl;
+//			DSTR << action[j]  << std::endl;
+
+			//////////////////////////////////////////////////////////////////////////
+			//																		//
+			// 行動が可動域制限の外に出てしまった場合の処理を考えないと発振する		//
+			//																		//
+			//////////////////////////////////////////////////////////////////////////
+
 			// BallJointだった場合に取る行動
 			if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
-//				DSTR << "ball" << std::endl;
 				if(action[j] == 0){
 					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
 				}
@@ -76,7 +83,6 @@ void CRFLAnimalQL::SelectAction(){
 			
 			// HingeJointだった場合に取る行動
 			else if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
-//				DSTR << "hinge" << std::endl;
 				if(action[j] == 0){
 					thisTermGene[j].goalDir[0] += Rad(5);
 				}
@@ -89,6 +95,7 @@ void CRFLAnimalQL::SelectAction(){
 				else{
 				}
 			}
+
 		}
 	}
 /*
