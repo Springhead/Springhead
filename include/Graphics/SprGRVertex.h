@@ -37,8 +37,9 @@ enum GRVertexElementMethod {
     GRVEM_PARTIALV = 2,
     GRVEM_CROSSUV = 3,
     GRVEM_UV = 4,
-    GRVEM_LOOKUP = 5,
-    GRVEM_LOOKUPPRESAMPLED = 6
+    GRVEM_STRQ = 5,
+    GRVEM_LOOKUP = 6,
+    GRVEM_LOOKUPPRESAMPLED = 7
 };
 enum GRVertexElementUssage{
     GRVEU_POSITION = 0,
@@ -73,8 +74,10 @@ struct GRVertexElement {
 
 	GRVertexElement();
 	static GRVertexElement Position3f(size_t o);
+	static GRVertexElement Position4f(size_t o);
 	static GRVertexElement Normal3f(size_t o);
 	static GRVertexElement TexCoords2f(size_t o);
+	static GRVertexElement TexCoords4f(size_t o);
 	static GRVertexElement Color4b(size_t o);
 	static GRVertexElement Color4f(size_t o);
 	static GRVertexElement Color3f(size_t o);
@@ -90,15 +93,17 @@ struct GRVertexElement {
 
 	///	@name 典型的な頂点フォーマット．シェーダーを指定せずレンダリングできる．
 	//@{
-	static const GRVertexElement vfP3f[];				
-	static const GRVertexElement vfC4bP3f[];			
-	static const GRVertexElement vfN3fP3f[];			
-	static const GRVertexElement vfC4fN3fP3f[];			
-	static const GRVertexElement vfT2fP3f[];			
-	static const GRVertexElement vfT2fC4bP3f[];			
-	static const GRVertexElement vfT2fN3fP3f[];			
-	static const GRVertexElement vfT2fC4fN3fP3f[];		
-	static const GRVertexElement* typicalFormats[];		
+	static const GRVertexElement vfP3f[];
+	static const GRVertexElement vfC4bP3f[];
+	static const GRVertexElement vfN3fP3f[];
+	static const GRVertexElement vfC4fN3fP3f[];
+	static const GRVertexElement vfT2fP3f[];
+	static const GRVertexElement vfT4fP4f[];			//new
+	static const GRVertexElement vfT2fC4bP3f[];
+	static const GRVertexElement vfT2fN3fP3f[];
+	static const GRVertexElement vfT2fC4fN3fP3f[];
+	static const GRVertexElement vfT4fC4fN3fP4f[];		//new
+	static const GRVertexElement* typicalFormats[];
 	//@}
 	
 	/// @name ブレンド付き頂点フォーマット．VertexBlendingシェーダー対応．
