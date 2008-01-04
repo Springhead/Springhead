@@ -258,7 +258,13 @@ final:
 		Matrix2d m;
 		m.Ex() = w[ids[0]].XY()-w[ids[1]].XY();
 		m.Ey() = w[ids[0]].XY()-w[ids[2]].XY();
-		Vec2d k = m.inv() * w[ids[0]].XY();
+		double det = m.det();
+		Vec2d k;
+		if (-epsilon2 < det && det < epsilon2){
+			k = Vec2f(0.5, 0.5);
+		}else{
+			k = m.inv() * w[ids[0]].XY();
+		}
 		double kz = 1-k.x-k.y;
 		pa = k.x*p[ids[1]] + k.y*p[ids[2]] + kz*p[ids[0]];
 		pb = k.x*q[ids[1]] + k.y*q[ids[2]] + kz*q[ids[0]];
