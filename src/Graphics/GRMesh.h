@@ -55,7 +55,7 @@ public:
 	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
 	  （Xファイルからロードされた面は、すべて三角形分割されているため、
 	   どの面がどのマテリアルを適用するのか判断するためのもの）			*/
-	std::vector<int> originalFaces;				///< 三角形分割前の面に対応する頂点
+	std::vector<size_t> originalFaces;			///< 三角形分割前の面に対応する頂点
 	std::vector<unsigned int> originalFaceIds;	///< 三角形に対応する分割前の面の番号
 	std::vector<int> faceNormals;				///< 法線インデックス
 

@@ -38,9 +38,14 @@ void GRMesh::MakeBuffer(){
 		vtxs = new float[stride * nVtxs];
 		for (unsigned i=0; i<positions.size(); ++i)
 			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->p = positions[i];
-		for (unsigned i=0; i<originalFaces.size(); ++i)
-			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
-			= normals[faceNormals[i]];
+		if (faceNormals.size()){
+			for (unsigned i=0; i<originalFaces.size(); ++i)
+				((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+				= normals[faceNormals[i]];
+		}else{
+			for (unsigned i=0; i<normals.size(); ++i)
+				((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->n = normals[i];
+		}
 		for (unsigned i=0; i<colors.size(); ++i)
 			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->c = colors[i];
 		for (unsigned i=0; i<texCoords.size(); ++i)
@@ -53,9 +58,14 @@ void GRMesh::MakeBuffer(){
 		vtxs = new float[stride * nVtxs];
 		for (unsigned i=0; i<positions.size(); ++i)
 			((GRVertexElement::VFT2fN3fP3f*)(vtxs + i*stride))->p = positions[i];
-		for (unsigned i=0; i<originalFaces.size(); ++i)
-			((GRVertexElement::VFT2fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
-			= normals[faceNormals[i]];
+		if (faceNormals.size()){
+			for (unsigned i=0; i<originalFaces.size(); ++i)
+				((GRVertexElement::VFT2fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+				= normals[faceNormals[i]];
+		}else{
+			for (unsigned i=0; i<normals.size(); ++i)
+				((GRVertexElement::VFT2fN3fP3f*)(vtxs + i*stride))->n = normals[i];
+		}
 		for (unsigned i=0; i<texCoords.size(); ++i)
 			((GRVertexElement::VFT2fN3fP3f*)(vtxs + i*stride))->t = texCoords[i];
 		vtxFormat = GRVertexElement::vfT2fN3fP3f;
@@ -65,7 +75,7 @@ void GRMesh::MakeBuffer(){
 		vtxs = new float[stride * nVtxs];
 		for (unsigned i=0; i<positions.size(); ++i)
 			((GRVertexElement::VFT2fC4bP3f*)(vtxs + i*stride))->p = positions[i];
-		for (unsigned i=0; i<originalFaces.size(); ++i)
+		for (unsigned i=0; i<colors.size(); ++i)
 			((GRVertexElement::VFT2fC4bP3f*)(vtxs + i*stride))->c =
 						((unsigned char)(colors[i].x*255)) |
 						((unsigned char)(colors[i].y*255) << 8) |
@@ -81,9 +91,14 @@ void GRMesh::MakeBuffer(){
 		vtxs = new float[stride * nVtxs];
 		for (unsigned i=0; i<positions.size(); ++i)
 			((GRVertexElement::VFC4fN3fP3f*)(vtxs + i*stride))->p = positions[i];
-		for (unsigned i=0; i<originalFaces.size(); ++i)
-			((GRVertexElement::VFC4fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
-			= normals[faceNormals[i]];
+		if (faceNormals.size()){
+			for (unsigned i=0; i<originalFaces.size(); ++i)
+				((GRVertexElement::VFC4fN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
+				= normals[faceNormals[i]];
+		}else{
+			for (unsigned i=0; i<normals.size(); ++i)
+				((GRVertexElement::VFC4fN3fP3f*)(vtxs + i*stride))->n = normals[i];
+		}
 		for (unsigned i=0; i<colors.size(); ++i)
 			((GRVertexElement::VFC4fN3fP3f*)(vtxs + i*stride))->c = colors[i];
 		vtxFormat = GRVertexElement::vfC4fN3fP3f;
@@ -100,8 +115,7 @@ void GRMesh::MakeBuffer(){
 				= normals[faceNormals[i]];
 		}else{
 			for (unsigned i=0; i<normals.size(); ++i)
-				((GRVertexElement::VFN3fP3f*)(vtxs + originalFaces[i]*stride))->n 
-				= normals[i];
+				((GRVertexElement::VFN3fP3f*)(vtxs + i*stride))->n = normals[i];
 		}
 		vtxFormat = GRVertexElement::vfN3fP3f;
 	}else if (texCoords.size()){
@@ -119,7 +133,7 @@ void GRMesh::MakeBuffer(){
 		vtxs = new float[stride * nVtxs];
 		for (unsigned i=0; i<positions.size(); ++i)
 			((GRVertexElement::VFC4bP3f*)(vtxs + i*stride))->p = positions[i];
-		for (unsigned i=0; i<originalFaces.size(); ++i)
+		for (unsigned i=0; i<colors.size(); ++i)
 			((GRVertexElement::VFC4bP3f*)(vtxs + i*stride))->c =
 						((unsigned char)(colors[i].x*255)) |
 						((unsigned char)(colors[i].y*255) << 8) |
