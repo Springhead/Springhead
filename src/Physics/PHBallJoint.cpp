@@ -24,10 +24,10 @@ PHBallJointDesc::PHBallJointDesc(){
 
 	spring		  = 0.0;
 	damper		  = 0.0;
-	limitSwing[0] = Rad(0)-0.1;
-	limitSwing[1] = Rad(180)+0.1;
-	limitTwist[0] = Rad(-180)-0.1;
-	limitTwist[1] = Rad(180)+0.1;	
+	limitSwing[0] = FLT_MAX;
+	limitSwing[1] = FLT_MAX;
+	limitTwist[0] = FLT_MAX;
+	limitTwist[1] = FLT_MAX;	
 	limitDir	  = Vec3d(0.0, 0.0, 1.0);
 	goal		  = Quaterniond(1, 0, 0, 0);
 }
@@ -128,9 +128,9 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	
 	// 可動域制限にかかっているかの判定
 	// swing角の可動域制限の確認
-	if(nowTheta[0] < limitSwing[0])
+	if (limitSwing[0]!=FLT_MAX && nowTheta[0] < limitSwing[0])
 		onLimit[0].onLower = true;
-	else if(nowTheta[0] > limitSwing[1])
+	else if(limitSwing[1]!=FLT_MAX && nowTheta[0] > limitSwing[1])
 		onLimit[0].onUpper = true;
 	else{
 		onLimit[0].onLower = false;
@@ -138,9 +138,9 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	}	
 
 	// twist角の可動域制限の確認
-	if(nowTheta[1] < limitTwist[0])
+	if(limitTwist[0]!=FLT_MAX && nowTheta[1] < limitTwist[0])
 		onLimit[1].onLower = true;
-	else if(nowTheta[1] > limitTwist[1])
+	else if(limitTwist[1]!=FLT_MAX && nowTheta[1] > limitTwist[1])
 		onLimit[1].onUpper = true;
 	else{
 		onLimit[1].onLower = false;

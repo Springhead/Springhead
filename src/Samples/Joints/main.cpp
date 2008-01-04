@@ -356,7 +356,7 @@ void BuildScene5(){
 }
 
 void BuildScene6(){
-
+//PHBallJointのデバッグ
 // #if->縦、#else->横
 #if 1
 	CDBoxDesc bd;
@@ -379,10 +379,10 @@ void BuildScene6(){
 	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(-90), 'x');
 	desc.spring			  = 100;
 	desc.damper			  = 10;
-	desc.limitSwing[0]	  = Rad(  0); // swing lower
-	desc.limitSwing[1]	  = Rad( 20); // swing upper
-	desc.limitTwist[0]	  = Rad(-20); // twist lower
-	desc.limitTwist[1]	  = Rad( 20); // twist upper
+//	desc.limitSwing[0]	  = Rad(  0); // swing lower
+//	desc.limitSwing[1]	  = Rad( 20); // swing upper
+//	desc.limitTwist[0]	  = Rad(-20); // twist lower
+//	desc.limitTwist[1]	  = Rad( 20); // twist upper
 	//	desc.goal			  = Quaterniond(0, 0, 1, 1);
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 #else
@@ -406,10 +406,10 @@ void BuildScene6(){
 	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
 //	desc.spring			  = 100;
 //	desc.damper			  = 10;
-	desc.limitSwing[0]	  = Rad(  0); // swing lower
-	desc.limitSwing[1]	  = Rad( 20); // swing upper
-	desc.limitTwist[0]	  = Rad(-20); // twist lower
-	desc.limitTwist[1]	  = Rad( 20); // twist upper
+//	desc.limitSwing[0]	  = Rad(  0); // swing lower
+//	desc.limitSwing[1]	  = Rad( 20); // swing upper
+//	desc.limitTwist[0]	  = Rad(-20); // twist lower
+//	desc.limitTwist[1]	  = Rad( 20); // twist upper
 	//	desc.goal			  = Quaterniond(0, 0, 1, 1);
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
 #endif
@@ -417,7 +417,8 @@ void BuildScene6(){
 }
 
 void BuildScene7(){
-	
+//PHHingeJointのデバッグ
+// #if->縦、#else->横
 
 #if 1
 	CDBoxDesc bd;
@@ -695,13 +696,14 @@ void OnKey5(char key){
 }
 
 void OnKey6(char key){
-	
+//PHBallJointのデバッグ
+//#if->goalを変更, #else->Velocityを与える
 #if 1
 	PHBallJointDesc ballDesc;
 	switch (key){
 		case 'a':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond(0, 1, 0, 0);
+			ballDesc.goal = Quaterniond::Rot(Rad(30), 'x');
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl;
@@ -730,6 +732,20 @@ void OnKey6(char key){
 		case 'w':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
 			ballDesc.goal = Quaterniond(0, 0, 1, 1);
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl; 
+			break;
+		case 'i':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond::Rot(Rad(120), 'x');
+			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
+			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
+				DSTR << "set the value" << endl; 
+			break;
+		case 'o':
+			scene->GetJoint(0)->GetDesc(&ballDesc);
+			ballDesc.goal = Quaterniond::Rot(Rad(120), 'x') * Quaterniond::Rot(Rad(20), 'y');
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 

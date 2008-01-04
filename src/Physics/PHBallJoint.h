@@ -62,31 +62,31 @@ public:
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
 	
-	virtual void	SetSwingRange(Vec2d  range)	{ limitSwing = range; }		///< スイング角の範囲を設定する関数
-	virtual void	GetSwingRange(Vec2d& range) { range = limitSwing; }		///< スイング角の範囲を得る関数
-	virtual void    SetTwistRange(Vec2d  range)	{ limitTwist = range; }		///< ツイスト角の範囲を設定する関数
-	virtual void	GetTwistRange(Vec2d& range) { range = limitTwist; }		///< ツイスト角の範囲を得る関数
+	virtual void	SetSwingRange(Vec2d  range)	{ limitSwing = range; }			///< スイング角の範囲を設定する関数
+	virtual void	GetSwingRange(Vec2d& range) { range = limitSwing; }			///< スイング角の範囲を得る関数
+	virtual void    SetTwistRange(Vec2d  range)	{ limitTwist = range; }			///< ツイスト角の範囲を設定する関数
+	virtual void	GetTwistRange(Vec2d& range) { range = limitTwist; }			///< ツイスト角の範囲を得る関数
 
-	virtual void	SetMotorTorque(const Vec3d& t){torque = t;}										///< モータのトルクを設定する関数
-	virtual Vec3d	GetMotorTorque(){return torque;}												///< モータのトルクを返す関数
-	virtual Vec3d	GetAngle(){return position;}													///< 角度を返す関数
-	virtual Vec3d	GetVelocity(){return velocity;}													///< 速度を返す関数
+	virtual void	SetMotorTorque(const Vec3d& t){torque = t;}					///< モータのトルクを設定する関数
+	virtual Vec3d	GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
+	virtual Vec3d	GetAngle(){return position;}								///< 角度を返す関数
+	virtual Vec3d	GetVelocity(){return velocity;}								///< 速度を返す関数
 
 	/// 仮想関数のオーバライド
-	virtual bool GetDesc(void* desc);																///< デスクリプタの情報を得るための関数
-	virtual void SetDesc(const void* desc);															///< デスクリプタを設定する関数
-	virtual void AddMotorTorque(){f.w() = torque * scene->GetTimeStep();}							///< トルクを加える関数
-	virtual void SetConstrainedIndex(bool* con);													///< 拘束をあたえるかどうかの判定
-	virtual void ModifyJacobian();
-	virtual void CompBias();																		///< 侵入量の判定
-	virtual void Projection(double& f, int k);														///< LCPで力を拘束するのかどうかの判定をする関数（onLimit[0]がtrueになっている時に働く） 
-	virtual void UpdateJointState();																///< joint情報（Socketに対するPlugの向きベクトル）の更新
-	virtual void CompError();																		///< エラー判定
+	virtual bool	GetDesc(void* desc);										///< デスクリプタの情報を得るための関数
+	virtual void	SetDesc(const void* desc);									///< デスクリプタを設定する関数
+	virtual void	AddMotorTorque(){f.w() = torque * scene->GetTimeStep();}	///< トルクを加える関数
+	virtual void	SetConstrainedIndex(bool* con);								///< 拘束をあたえるかどうかの判定
+	virtual void	ModifyJacobian();
+	virtual void	CompBias();													///< 侵入量の判定
+	virtual void	Projection(double& f, int k);								///< LCPで力を拘束するのかどうかの判定をする関数（onLimit[0]がtrueになっている時に働く） 
+	virtual void	UpdateJointState();											///< joint情報（Socketに対するPlugの向きベクトル）の更新
+	virtual void	CompError();												///< エラー判定
 	
-	virtual PHTreeNode* CreateTreeNode(){
+	virtual PHTreeNode*		CreateTreeNode(){
 		return DBG_NEW PHBallJointNode();
 	}
-	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());									/// - コンストラクタ
+	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());				/// - コンストラクタ
 };
 
 }

@@ -51,31 +51,31 @@ void CRFLAnimalQL::SelectAction(){
 			// BallJointÇæÇ¡ÇΩèÍçáÇ…éÊÇÈçsìÆ
 			if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
 				if(action[j] == 0){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 1){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 2){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * Quaterniond::Rot(Rad(-5), 'y') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 3){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 4){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 5){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 6){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'x') * Quaterniond::Rot(Rad( 5), 'y') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad( moveRatio), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 7){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( 5), 'y') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'y') * thisTermGene[j].goalDir;
 				}
 				else if(action[j] == 8){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-5), 'x') * Quaterniond::Rot(Rad( 5), 'y') * thisTermGene[j].goalDir;
+					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * Quaterniond::Rot(Rad( moveRatio), 'y') * thisTermGene[j].goalDir;
 				}
 				else{
 				}
@@ -84,13 +84,13 @@ void CRFLAnimalQL::SelectAction(){
 			// HingeJointÇæÇ¡ÇΩèÍçáÇ…éÊÇÈçsìÆ
 			else if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
 				if(action[j] == 0){
-					thisTermGene[j].goalDir[0] += Rad(5);
+					thisTermGene[j].goalDir[0] += Rad(3 * moveRatio);
 				}
 				else if(action[j] == 1){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 2){
-					thisTermGene[j].goalDir[0] -= Rad(5);
+					thisTermGene[j].goalDir[0] -= Rad(3 * moveRatio);
 				}
 				else{
 				}
@@ -176,6 +176,7 @@ void CRFLAnimalQL::Init(){
 	learningRate = 0.2;
 	decreaseRate = 0.8;
 	penalty		 = -100.0;
+	moveRatio	 = 0.1;
 
 }
 

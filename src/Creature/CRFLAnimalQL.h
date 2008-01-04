@@ -46,6 +46,7 @@ private:
 	double					qValue;			//< Q’l
 	double					qValueDash;		//< ‹KŠi‰»‚³‚ê‚½Q’l
 	double					penalty;		//< ‹KŠi‰»‚ÌÛ‚ÉŽg—p‚·‚é”±‚Ì’l
+	double					moveRatio;		//< s“®‚Ì•idegreej
 
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//‰B•Á‚³‚ê‚éŠÖ”
