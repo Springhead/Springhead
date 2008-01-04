@@ -6,7 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "CRFLAnimalQL.h"
-
 //-----------------------------------------------------------------------------------
 //privateFunc:
 void CRFLAnimalQL::BoltzmannSelection(){
@@ -25,16 +24,32 @@ void CRFLAnimalQL::SelectAction(){
 
 	srand((unsigned) time(NULL));
 	for(unsigned int i = 0; i < actionNumber.size(); i++){
-		actions[i] = rand()%actionNumber[i];
+		action[i] = rand()%actionNumber[i];
 	}
 }
 
-void CRFLAnimalQL::TakeAction(){
-	
+void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> aGene){
+	for(unsigned int i = 0; i < aGene.size(); i++){
+		if(aGene.back().geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
+			DSTR << "BallJoint" << std::endl;
+		}
+		else if(aGene.back().geneType == CRFLAnimalGeneData::GEN_DOUBLE){
+			DSTR << "HingeJoint" << std::endl;
+		}
+		else DSTR << "Unknown type." << std::endl;
+	}
 }
 
 void CRFLAnimalQL::EvaluativeFunc(){
 	
+}
+
+void CRFLAnimalQL::CalcQValueMax(){
+
+}
+
+void CRFLAnimalQL::CalcQValueMin(){
+
 }
 
 void CRFLAnimalQL::UpdateQValues(){
@@ -76,7 +91,7 @@ void CRFLAnimalQL::Init(){
 
 void CRFLAnimalQL::Step(){
 	SelectAction();
-	TakeAction();
+	//TakeAction();
 	UpdateQValues();
 }
 

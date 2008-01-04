@@ -125,17 +125,18 @@ void CRTryStandingUpController::Init(){
 
 void CRTryStandingUpController::CalcQL(){
 	
-	DSTR << qLearningStep << std::endl;
+	DSTR << "QL : " << qLearningStep << std::endl;
 	animalQLIf->Step();
 	
 }
 
 void CRTryStandingUpController::CalcGA(){
 
+	DSTR << "GA" << std::endl;
 	for(int i = 0; i < creature->NBodies(); i++){
 		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
 	}
-	DSTR << animalGenes.size() << std::endl;
+	DSTR << "今までに作成された遺伝子の数 : "<< animalGenes.size() << std::endl;
 	
 	//毎ステップできてくる最新のanimalGenesを確認する
 /*	

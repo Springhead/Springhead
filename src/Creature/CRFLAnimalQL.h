@@ -23,37 +23,54 @@
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief Q学習を行うクラス
 */
-class CRFLAnimalQL: public UTRefCount{
+class CRFLAnimalQL: public CRFLAnimalGene{
 
 private:
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//大域変数の定義
-	CRCreatureIf*			creature;		//< 学習を行うクリーチャー群
-	std::vector<CRBodyIf*>	crBody;			//< creatureに登録されているボディ情報（X体）を格納する配列
-	std::vector<int>		actions;		//< 各関節の指令が入る配列
+	// CRFLAnimalGeneから継承される変数（protected⇒private化）
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//																										//
+	// CRCreatureIf*			creature;		//< 学習を行うクリーチャー群								//
+	// std::vector<CRBodyIf*>	crBody;			//< creatureに登録されているボディ情報（X体）を格納する配列	//
+	//																										//
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	std::vector<int>		action;			//< 各関節の指令が入る配列
 	std::vector<int>		actionNumber;	//< 各関節の取り得るアクション数が入る配列
 	
 	double					learningRate;	//<	学習率
-	double					decreaseRate;	//< 減衰率（エージェントの忘却率）
+	double					decreaseRate;	//< 割引率（エージェントの忘却率）
+	double					reward;			//< 報酬
 	double					qValue;			//< Q値
 	double					qValueDash;		//< 規格化されたQ値
 	double					penalty;		//< 規格化の際に使用する罰の値
 
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//隠蔽される関数
-	void		BoltzmannSelection();		//< ボルツマン選択
-	void		EpsilonGreedySelection();	//< ε-greedy選択
-	void		SelectAction();				//< 行動を決定する
-	void		TakeAction();				//< アクションを実行する
-	void		EvaluativeFunc();			//< 評価関数
-	void		UpdateQValues();			//< Q値の更新を行う
-	void		StateValueMax();			//< 各状態の価値の最大値を求める
-	void		StateValueMin();			//< 各状態の価値の最小値を求める
-	void		CalcQValueDash();			//< Q値の規格化をすることでQ'を求める
-	void		FitnessFromQValue();		//< Q値の高いものの適合度を高くする
-	void		FitnessFromTimesOfUse();	//< 使用頻度の高いものの適合度を高くする
+	void		BoltzmannSelection();									//< ボルツマン選択
+	void		EpsilonGreedySelection();								//< ε-greedy選択
+	void		SelectAction();											//< 行動を決定する
+	void		TakeAction(std::vector<CRFLAnimalGeneData> aGene);		//< アクションを実行する
+	void		EvaluativeFunc();										//< 評価関数
+	void		CalcQValueMax();										//< actionを変動させた時のQ値の最大値を調べる
+	void		CalcQValueMin();										//< actionを変動させた時のQ値の最小値を調べる
+	void		UpdateQValues();										//< Q値の更新を行う
+	void		StateValueMax();										//< 各状態の価値の最大値を求める
+	void		StateValueMin();										//< 各状態の価値の最小値を求める
+	void		CalcQValueDash();										//< Q値の規格化をすることでQ'を求める
+	void		FitnessFromQValue();									//< Q値の高いものの適合度を高くする
+	void		FitnessFromTimesOfUse();								//< 使用頻度の高いものの適合度を高くする
 
 public:
+
+	// 大域変数の定義
+	//CRFLAnimalGeneから継承される変数(public)
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//																																			   //
+	// std::vector< std::vector<CRFLAnimalGeneData> > flAnimalGenes;	//< 遺伝子（std::vector<CRFLAnimalGeneData）の配列（std::vector<*******>） //
+	//																																			   //
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	//コンストラクタ
 	CRFLAnimalQL(CRCreatureIf* charactors){
@@ -65,15 +82,35 @@ public:
 	}
 	
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		
 	//インタフェースの実装
+
+	// CRFLAnimalGeneから継承されてくるインタフェース
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//																																//
+	// <<遺伝子操作をする関数>>																										//
+	//																																//
+	// @brief 一つのボディについて今現在の姿勢制御方向から遺伝子を作って返す														//
+	// std::vector<CRFLAnimalGeneData> CreateGene(CRBodyIf* body);																	//
+	//																																//
+	// @brief あるボディの現在取っている姿勢を表す遺伝子を返す																		//
+	// std::vector<CRFLAnimalGeneData> GetGene(CRBodyIf* body);																		//
+	//																																//
+	// @brief あるボディの一番新しい遺伝子の姿勢を指定したものに書き換える															//
+	// void SetGene(std::vector<CRFLAnimalGeneData> gene, CRBodyIf* body);															//
+	//																																//
+	// @brief ある遺伝子Aと別のある遺伝子Bをある所から入れ替えて（一点交叉）新しい遺伝子を作る										//
+	// std::vector<CRFLAnimalGeneData> MixGenes(std::vector<CRFLAnimalGeneData> geneA, std::vector<CRFLAnimalGeneData> geneB);		//
+	//																																//
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/** @brief 初期化を行う
 	*/
 	void Init();
 	
 	/** @brief Q学習を進める
 	*/
-	void Step();
-	
+	void Step();	
 	
 };
 

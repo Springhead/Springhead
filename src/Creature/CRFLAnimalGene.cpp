@@ -19,7 +19,7 @@ std::vector<CRFLAnimalGeneData> CRFLAnimalGene::CreateGene(CRBodyIf* body){
 //	DSTR << "---------make gene------------" << std::endl;
 	
 	std::vector<CRFLAnimalGeneData> posture;
-	DSTR << body->NJoints() << std::endl;
+	//DSTR << body->GetIfInfo()->ClassName() << "‚Ìˆâ“`Žq‚ÌŠÖß‘” : " << body->NJoints() << std::endl;
 	for(int i=0; i<body->NJoints(); i++){
 		if(body->GetJoint(i)){
 			if(DCAST(PHBallJointIf, body->GetJoint(i))){

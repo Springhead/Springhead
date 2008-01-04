@@ -33,7 +33,7 @@
 */
 class CRFLAnimalGene: public UTRefCount{
 
-private:
+protected:
 	CRCreatureIf*					creature;						//< 制御対象のクリーチャー群
 	std::vector<CRBodyIf*>		    crBody;							//< creatureに登録されているボディ情報(X体)を格納する配列
 	
@@ -41,6 +41,9 @@ public:
 	std::vector< std::vector<CRFLAnimalGeneData> > flAnimalGenes;	//< 遺伝子（std::vector<CRFLAnimalGeneData）の配列（std::vector<*******>）
 
 	// コンストラクタ
+	CRFLAnimalGene(){
+		//DSTR << "This Constractor is called when a object which is CRFLAnimalQL class has created." << std::endl;
+	}
 	CRFLAnimalGene(CRCreatureIf* charactors){
 		creature = charactors;
 		Init();
