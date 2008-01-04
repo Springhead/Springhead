@@ -35,9 +35,10 @@ private:
 	// std::vector<CRBodyIf*>	crBody;			//< creatureに登録されているボディ情報（X体）を格納する配列	//
 	//																										//
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-	std::vector<int>		action;			//< 各関節の指令が入る配列
-	std::vector<int>		actionNumber;	//< 各関節の取り得るアクション数が入る配列
+	
+	std::vector<int>					action;			//< 各関節の指令が入る配列
+	std::vector<int>					actionNumber;	//< 各関節の取り得るアクション数が入る配列
+	std::vector<CRFLAnimalGeneData>		thisTermGene;	//< あるStep()での遺伝子
 	
 	double					learningRate;	//<	学習率
 	double					decreaseRate;	//< 割引率（エージェントの忘却率）
@@ -50,8 +51,10 @@ private:
 	//隠蔽される関数
 	void		BoltzmannSelection();									//< ボルツマン選択
 	void		EpsilonGreedySelection();								//< ε-greedy選択
-	void		SelectAction();											//< 行動を決定する
-	void		TakeAction(std::vector<CRFLAnimalGeneData> aGene);		//< アクションを実行する
+
+	void		SetActionNumber(std::vector<CRFLAnimalGeneData> aGene); //< ある遺伝子の各関節が取り得る行動のパターン総数を設定する
+	void		SelectAction(std::vector<CRFLAnimalGeneData> aGene);	//< 行動を決定する
+	void		TakeAction(std::vector<CRFLAnimalGeneData> aGene);		//< アクションを実行する	
 	void		EvaluativeFunc();										//< 評価関数
 	void		CalcQValueMax();										//< actionを変動させた時のQ値の最大値を調べる
 	void		CalcQValueMin();										//< actionを変動させた時のQ値の最小値を調べる

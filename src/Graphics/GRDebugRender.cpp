@@ -61,24 +61,19 @@ GRDebugRender::GRDebugRender(){
 /// シーン内の全てのオブジェクトをレンダリングする
 void GRDebugRender::DrawScene(PHSceneIf* scene){
 	if (!scene) return;
-	GRLightDesc l;
-	l.ambient = Vec4f(1,1,1,1);
-	if (modeWire) PushLight(l);
 	PHSolidIf **solids = scene->GetSolids();
 	for(int i = 0; i < scene->NSolids(); ++i){
-		SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
-		DrawSolid(solids[i]);
+		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
+		this->DrawSolid(solids[i]);
 	}
+	SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
 	for(int i = 0; i < scene->NJoints(); ++i){
-		SetMaterialSample(GRDebugRenderIf::WHITE);
-		DrawConstraint(scene->GetJoint(i));
+		this->DrawConstraint(scene->GetJoint(i));
 	}
 	SetMaterialSample((GRDebugRenderIf::TMaterialSample)1);
 	for(int i = 0; i < scene->NContacts(); ++i){
-		SetMaterialSample(GRDebugRenderIf::YELLOW);
-		DrawConstraint(scene->GetContact(i));
+		this->DrawConstraint(scene->GetContact(i));
 	}
-	if (modeWire) PopLight();
 }
 
 /// 剛体をレンダリングする
@@ -145,8 +140,8 @@ void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 	if(renderAxis || renderForce){
 		// socket
 		(con->solid[0]->GetPose() * con->poseSocket).ToAffine(af);
-		PushModelMatrix();
-		MultModelMatrix(af);
+		this->PushModelMatrix();
+		this->MultModelMatrix(af);
 		if(renderAxis)	
 			DrawCoordinateAxis(modeSolid);
 		// constraint force
@@ -155,15 +150,15 @@ void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 			DrawLine(Vec3d(), f * scaleForce);
 			DrawLine(Vec3d(), t * scaleForce);
 		}
-		PopModelMatrix();
+		this->PopModelMatrix();
 	}
 	if(renderAxis){
 		// plug
 		(con->solid[1]->GetPose() * con->posePlug).ToAffine(af);
-		PushModelMatrix();
-		MultModelMatrix(af);
+		this->PushModelMatrix();
+		this->MultModelMatrix(af);
 		DrawCoordinateAxis(modeSolid);
-		PopModelMatrix();
+		this->PopModelMatrix();
 	}
 }
 

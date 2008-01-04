@@ -140,10 +140,6 @@ public:
 	virtual void PushLight(const GRLightIf* light){}
 	///	光源スタックをPop
 	virtual void PopLight(){}
-	///	シェーディングON/OFF
-	virtual void SetLighting(bool on){}
-	///	シェーディングON/OFF
-	virtual bool GetLighting(){ return true; }
 	///	デプスバッファへの書き込みを許可/禁止する
 	virtual void SetDepthWrite(bool b){}
 	///	デプステストを有効/無効にする
@@ -239,11 +235,7 @@ public:
 		{ return ptr ReadShaderSource(shader, file); }														\
 	virtual void GetShaderLocation(GRHandler shader, void* location)										\
 		{ ptr GetShaderLocation(shader, location); }														\
-	virtual bool GetLighting()																				\
-		{ return ptr GetLighting(); }																		\
-	virtual void SetLighting(bool on)																		\
-		{ ptr SetLighting(on); }																			\
-
+	
 	REDIRECTIMP_GRRENDERBASE(device->)
 	
 	///	デバイスの設定
