@@ -134,16 +134,18 @@ void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> *aGene){
 //				DSTR << "The joint " << j << " is BallJoint class" << std::endl;
 				PHBallJointDesc ballDesc;
 				crBody[i]->GetJoint(j)->GetDesc(&ballDesc);
-				DSTR << (*aGene)[j].goalDir << 1 << std::endl;
-				ballDesc.goal = (*aGene)[i].goalDir;
+				DSTR << "BallJoint pre  : " << (*aGene)[j].goalDir << std::endl;
+				ballDesc.goal = (*aGene)[j].goalDir;
+				DSTR << "BallJoint post : " << ballDesc.goal << std::endl;
 				crBody[i]->GetJoint(j)->SetDesc(&ballDesc);
 			}
 			else if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
 //				DSTR << "The joint " << j << " is HingeJoint class" << std::endl;
 				PHHingeJointDesc hingeDesc;
 				crBody[i]->GetJoint(j)->GetDesc(&hingeDesc);
-				DSTR << (*aGene)[j].goalDir << 2 << std::endl;
+				DSTR << "HingeJoint pre  : " << (*aGene)[j].goalDir[0] << std::endl;
 				hingeDesc.origin = (*aGene)[j].goalDir[0];
+				DSTR << "HingeJoint post : " << hingeDesc.origin<< std::endl;
 				crBody[i]->GetJoint(j)->SetDesc(&hingeDesc);
 			}
 			else DSTR << "Unknown type." << std::endl;
