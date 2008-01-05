@@ -203,7 +203,7 @@ void CRFourLegsAnimalBody::CreateWaist(){
 
 	//d—ÍØ‚é‚©
 
-	solids[SO_WAIST]->SetFramePosition(Vec3f(0.0, 3, 0.0));
+	solids[SO_WAIST]->SetFramePosition(Vec3f(0.0, 3.0, 0.0));
 	solids[SO_WAIST]->SetDynamical(dynamicalMode);
 
 }

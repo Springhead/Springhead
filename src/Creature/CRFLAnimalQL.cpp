@@ -12,6 +12,12 @@
 //privateFunc:
 void CRFLAnimalQL::BoltzmannSelection(){
 	
+	//////////////////////////////////////////////////////////////
+	//															//
+	// どういう時にエネルギーが低いか考える						//
+	//															//
+	//////////////////////////////////////////////////////////////
+
 }
 void CRFLAnimalQL::EpsilonGreedySelection(){
 	
@@ -28,6 +34,7 @@ void CRFLAnimalQL::SetActionNumber(std::vector<CRFLAnimalGeneData> aGene){
 
 }
 void CRFLAnimalQL::SelectAction(){
+
 	////////////////////////////////////
 	//								  //
 	// ボルツマン選択入れるんだっけ？ //
@@ -173,10 +180,10 @@ void CRFLAnimalQL::Init(){
 	for(int i=0; i<creature->NBodies(); i++){
 		crBody.push_back(creature->GetBody(i));
 	}
-	learningRate = 0.2;
-	decreaseRate = 0.8;
+	learningRate =	  0.2;
+	decreaseRate =    0.8;
 	penalty		 = -100.0;
-	moveRatio	 = 0.1;
+	moveRatio	 =	  0.1;
 
 }
 
