@@ -51,7 +51,7 @@ private:
 	std::vector<CRBodyIf*>							body;					//< 制御対象のボディを扱う配列
 	UTRef<CRFLAnimalGene>							animalGeneIf;			//< 遺伝子操作をするためのインタフェース
 	UTRef<CRFLAnimalQL>								animalQLIf;				//< QLearningをするためのインタフェース
-	std::vector< std::vector<CRFLAnimalGeneData> >	animalGenes;			//< 動物の遺伝子を扱う配列
+	std::vector< std::vector<CRFLAnimalGeneData> >	animalGenes;			//< ある時の遺伝子std::vector<CRFLAnimalGeneData>が集まった遺伝子系列std::vector<********>
 
 	unsigned long		totalStep;				//< シミュレーション開始時からのステップ数
 	Vec3d				centerOfMass;			//< ボディ全体の重心
@@ -86,7 +86,6 @@ private:
 	Vec3d						GetFootPos(PHSolidIf* footSolid);							//< 足の座標を返す
 	Vec3d						CalcFootForce(PHSolidIf* footSolid);						//< 足にかかっている力を計算する
 	Vec3d						CalcFootTorque(PHSolidIf* footSolid);						//< 足にかかっているトルクを計算する
-	void						TransitionPoseModel(std::vector<CRFLAnimalGeneData> gene);	//< 遺伝子に格納されている目標角度情報からボディを実際に動かす
 	void						UpdateBodyState();											//< クリーチャー達のボディの情報（重心, 足の位置, 足にかかる力）を更新する
 
 public:

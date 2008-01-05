@@ -9,7 +9,18 @@
 #include <cmath>
 #include "CRFLAnimalQL.h"
 //-----------------------------------------------------------------------------------
-//privateFunc:
+//publicFunc:
+void CRFLAnimalQL::Init(){
+	for(int i=0; i<creature->NBodies(); i++){
+		crBody.push_back(creature->GetBody(i));
+	}
+	learningRate =	  0.2;
+	decreaseRate =    0.8;
+	penalty		 = -100.0;
+	moveRatio	 =	  0.1;
+
+}
+
 void CRFLAnimalQL::BoltzmannSelection(){
 	
 	//////////////////////////////////////////////////////////////
@@ -33,7 +44,7 @@ void CRFLAnimalQL::SetActionNumber(std::vector<CRFLAnimalGeneData> aGene){
 	}
 
 }
-void CRFLAnimalQL::SelectAction(){
+void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> aGene){
 
 	////////////////////////////////////
 	//								  //
@@ -56,48 +67,48 @@ void CRFLAnimalQL::SelectAction(){
 			//////////////////////////////////////////////////////////////////////////
 
 			// BallJointÇæÇ¡ÇΩèÍçáÇ…éÊÇÈçsìÆ
-			if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
+			if(aGene[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
 				if(action[j] == 0){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * aGene[j].goalDir;
 				}
 				else if(action[j] == 1){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'y') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'y') * aGene[j].goalDir;
 				}
 				else if(action[j] == 2){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * aGene[j].goalDir;
 				}
 				else if(action[j] == 3){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * aGene[j].goalDir;
 				}
 				else if(action[j] == 4){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 5){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * aGene[j].goalDir;
 				}
 				else if(action[j] == 6){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad( moveRatio), 'y') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad( moveRatio), 'y') * aGene[j].goalDir;
 				}
 				else if(action[j] == 7){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'y') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'y') * aGene[j].goalDir;
 				}
 				else if(action[j] == 8){
-					thisTermGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * Quaterniond::Rot(Rad( moveRatio), 'y') * thisTermGene[j].goalDir;
+					aGene[j].goalDir = Quaterniond::Rot(Rad(-moveRatio), 'x') * Quaterniond::Rot(Rad( moveRatio), 'y') * aGene[j].goalDir;
 				}
 				else{
 				}
 			}
 			
 			// HingeJointÇæÇ¡ÇΩèÍçáÇ…éÊÇÈçsìÆ
-			else if(thisTermGene[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
+			else if(aGene[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
 				if(action[j] == 0){
-					thisTermGene[j].goalDir[0] += Rad(3 * moveRatio);
+					aGene[j].goalDir[0] += Rad(3 * moveRatio);
 				}
 				else if(action[j] == 1){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 2){
-					thisTermGene[j].goalDir[0] -= Rad(3 * moveRatio);
+					aGene[j].goalDir[0] -= Rad(3 * moveRatio);
 				}
 				else{
 				}
@@ -107,7 +118,7 @@ void CRFLAnimalQL::SelectAction(){
 	}
 /*
 	for(unsigned int i = 0; i < actionNumber.size(); i++){
-		DSTR << thisTermGene[i].goalDir << std::endl;
+		DSTR << aGene[i].goalDir << std::endl;
 	}
 */
 }
@@ -172,43 +183,4 @@ void CRFLAnimalQL::FitnessFromQValue(){
 void CRFLAnimalQL::FitnessFromTimesOfUse(){
 
 }
-
-//-----------------------------------------------------------------------------------
-//publicFunc:
-
-void CRFLAnimalQL::Init(){
-	for(int i=0; i<creature->NBodies(); i++){
-		crBody.push_back(creature->GetBody(i));
-	}
-	learningRate =	  0.2;
-	decreaseRate =    0.8;
-	penalty		 = -100.0;
-	moveRatio	 =	  0.1;
-
-}
-
-void CRFLAnimalQL::Step(){
-//	DSTR << "size of CRBody class : " << crBody.size() << std::endl;
-	for(unsigned int i = 0; i < crBody.size(); i++){
-		thisTermGene = CreateGene(crBody[i]);
-	}
-/*
-	DSTR << "----------preAction----------" << std::endl;
-	for(unsigned int i = 0; i < thisTermGene.size(); i++){
-		DSTR << thisTermGene[i].goalDir << "  " << thisTermGene[i].geneType << std::endl;
-	}
-*/
-	SetActionNumber(thisTermGene);
-	SelectAction();
-	
-/*
-	DSTR << "----------postAction----------" << std::endl;
-	for(unsigned int i = 0; i < thisTermGene.size(); i++){
-		DSTR << thisTermGene[i].goalDir << "  " << thisTermGene[i].geneType << std::endl;
-	}
-*/
-	TakeAction(thisTermGene);
-	UpdateQValues();
-}
-
 

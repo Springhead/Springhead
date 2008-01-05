@@ -56,19 +56,6 @@ Vec3d CRTryStandingUpController::CalcFootTorque(PHSolidIf* footSolid){
 	return				torque;
 }
 
-void CRTryStandingUpController::TransitionPoseModel(std::vector<CRFLAnimalGeneData>		gene){
-	for(unsigned int i = 0; i < gene.size(); i++){
-		//BDSTR << gene[i].goalDir << std::endl;
-		if(i == 0){
-			PHBallJointDesc		ballDesc;
-			body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->GetDesc(&ballDesc);
-			ballDesc.goal		= gene[i].goalDir;
-			body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->SetDesc(&ballDesc);
-			Quaterniond		dd  = body[0]->GetJoint(CRFourLegsAnimalBodyDesc::JO_WAIST_CHEST)->GetRelativePoseQ();	
-		}	
-	}
-}
-
 void CRTryStandingUpController::UpdateBodyState(){
 	// 各ボディの情報を更新する
 	for(int i = 0; i < creature->NBodies(); i++){
@@ -126,17 +113,17 @@ void CRTryStandingUpController::Init(){
 void CRTryStandingUpController::CalcQL(){
 	
 	DSTR << "QL : " << qLearningStep << std::endl;
-	animalQLIf->Step();
-	
+	animalQLIf->SetActionNumber(animalGenes.back());
+	animalQLIf->SelectAction(animalGenes.back());
+	animalQLIf->TakeAction(animalGenes.back());
+	animalQLIf->UpdateQValues();	
 }
 
 void CRTryStandingUpController::CalcGA(){
 
 	DSTR << "GA" << std::endl;
-	for(int i = 0; i < creature->NBodies(); i++){
-		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
-	}
-	//DSTR << "今までに作成された遺伝子の数 : "<< animalGenes.size() << std::endl;
+	
+	//DSTR << "今までに作成された遺伝子系列の数 : "<< animalGenes.size() << std::endl;
 	
 	//毎ステップできてくる最新のanimalGenesを確認する
 /*	
@@ -159,15 +146,17 @@ void CRTryStandingUpController::CalcGA(){
 void CRTryStandingUpController::Step(){	
 	totalStep	  += 1;
 	CRController::Step();
-	UpdateBodyState();
-	
+	UpdateBodyState();	
 	//最初のポーズが安定するまで待たないといきなり発振する。
 	//大体totalStep == 200位まで待てばOK。
-	if(totalStep <  200){
+	if(totalStep <=  200){
 		DSTR << "totalStep : " << totalStep << std::endl;
 	}
-	else if(totalStep >= 200){
+	else if(totalStep > 200){
 		qLearningStep += 1;
+		for(int i = 0; i < creature->NBodies(); i++){
+		animalGenes.push_back(animalGeneIf->CreateGene(body[i]));		
+		}
 		//QLearningのみを50回行う
 		CalcQL();
 
