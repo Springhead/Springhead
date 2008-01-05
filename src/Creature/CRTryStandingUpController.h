@@ -82,11 +82,14 @@ private:
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	// 関数宣言
 
-	std::vector<PHSolidIf*>		SetFootSolid(CRBodyIf* body);								//< 足の剛体を指定する。
-	Vec3d						GetFootPos(PHSolidIf* footSolid);							//< 足の座標を返す
-	Vec3d						CalcFootForce(PHSolidIf* footSolid);						//< 足にかかっている力を計算する
-	Vec3d						CalcFootTorque(PHSolidIf* footSolid);						//< 足にかかっているトルクを計算する
-	void						UpdateBodyState();											//< クリーチャー達のボディの情報（重心, 足の位置, 足にかかる力）を更新する
+	std::vector<PHSolidIf*>		SetFootSolid(CRBodyIf* body);			//< 足の剛体を指定する。
+	Vec3d						GetFootPos(PHSolidIf* footSolid);		//< 足の座標を返す
+	Vec3d						CalcFootForce(PHSolidIf* footSolid);	//< 足にかかっている力を計算する
+	Vec3d						CalcFootTorque(PHSolidIf* footSolid);	//< 足にかかっているトルクを計算する
+	void						UpdateBodyState();						//< クリーチャー達のボディの情報（重心, 足の位置, 足にかかる力）を更新する
+	void						MakeLatestGene();						//< 一番新しい遺伝子を一つ作成する
+	void						CalcQL();								//< Q学習する
+	void						CalcGA();								//< GAを計算する
 
 public:
 	//----------------------------------------------------------
@@ -122,12 +125,10 @@ public:
 	// virtual bool		IsEnabled();			//< 有効/無効の状態を返す //
 	//																	  //
 	////////////////////////////////////////////////////////////////////////
-	
+
+	//インタフェースの実装
 	virtual void		Init();							//< 初期化を行う
 	virtual void		Step();							//< 制御のシミュレーションをする
-	void				CalcQL();						//< Q学習する
-	void				CalcGA();						//< GAを計算する
-
 
 };
 

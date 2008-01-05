@@ -252,13 +252,6 @@ struct CRTryStandingUpControllerIf : CRControllerIf{
 	/** @brief 制御のシミュレーションをする
 	*/
 	virtual void Step() = 0;
-	/** @brief QLearningの計算を一回行う
-	*/
-	virtual void CalcQL() = 0;
-	/** @brief GAの計算を一回行う
-	*/
-	virtual void CalcGA() = 0;
-
 
 };
 /// 倒れたら立とうと努力するコントローラのデスクリプタ
