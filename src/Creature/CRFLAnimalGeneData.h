@@ -13,16 +13,15 @@
 
 using namespace Spr;
 
-struct CRFLAnimalGeneData{
+class CRFLAnimalGeneData{
 
 public:
 	Quaterniond goalDir;
 	
-	enum {
+	enum QorD{
 		GEN_QUATERNIOND=0,
 		GEN_DOUBLE
 	} geneType;
-
 };
 
 #endif
