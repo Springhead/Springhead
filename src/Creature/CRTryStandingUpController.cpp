@@ -104,6 +104,9 @@ void CRTryStandingUpController::CalcQL(){
 	DSTR << "QL : " << qLearningStep << std::endl;
 	animalQLIf->SetActionNumber(&animalGenes.back());
 	animalQLIf->SelectAction(&animalGenes.back());
+	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
+		DSTR << animalGenes.back()[i].goalDir << std::endl;
+	}
 	animalQLIf->TakeAction(&animalGenes.back());
 	animalQLIf->UpdateQValues();	
 }

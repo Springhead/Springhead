@@ -69,6 +69,7 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> *aGene){
 			// BallJointÇæÇ¡ÇΩèÍçáÇ…éÊÇÈçsìÆ
 			if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
 				if(action[j] == 0){
+					// QuaternionÇÃåvéZÇÕç∂Ç©ÇÁèáî‘Ç…çlÇ¶ÇÈ
 					(*aGene)[j].goalDir = Quaterniond::Rot(Rad( moveRatio), 'x') * Quaterniond::Rot(Rad(-moveRatio), 'y') * (*aGene)[j].goalDir;
 				}
 				else if(action[j] == 1){
@@ -118,7 +119,7 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> *aGene){
 	}
 /*
 	for(unsigned int i = 0; i < actionNumber.size(); i++){
-		DSTR << aGene[i].goalDir << std::endl;
+		DSTR << (*aGene)[i].goalDir << std::endl;
 	}
 */
 }
@@ -126,12 +127,14 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> *aGene){
 void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> *aGene){
 
 	for(unsigned int i = 0; i < crBody.size(); i++){
-//		DSTR << "size of aGene : " << aGene.size() << std::endl;
+//		DSTR << "crBody.size() : " << crBody.size() << std::endl;
 		for(unsigned int j = 0; j < (*aGene).size(); j++){
+			DSTR << "(*aGene).size() : " << (*aGene).size() << std::endl;
 			if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
 //				DSTR << "The joint " << j << " is BallJoint class" << std::endl;
 				PHBallJointDesc ballDesc;
-				crBody[i]->GetJoint(j)->GetDesc(&ballDesc);	
+				crBody[i]->GetJoint(j)->GetDesc(&ballDesc);
+				DSTR << (*aGene)[j].goalDir << 1 << std::endl;
 				ballDesc.goal = (*aGene)[i].goalDir;
 				crBody[i]->GetJoint(j)->SetDesc(&ballDesc);
 			}
@@ -139,6 +142,7 @@ void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> *aGene){
 //				DSTR << "The joint " << j << " is HingeJoint class" << std::endl;
 				PHHingeJointDesc hingeDesc;
 				crBody[i]->GetJoint(j)->GetDesc(&hingeDesc);
+				DSTR << (*aGene)[j].goalDir << 2 << std::endl;
 				hingeDesc.origin = (*aGene)[j].goalDir[0];
 				crBody[i]->GetJoint(j)->SetDesc(&hingeDesc);
 			}
