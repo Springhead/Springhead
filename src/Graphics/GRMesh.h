@@ -34,7 +34,7 @@ private:
 	int nVtxs;
 	float* blendedVtxs;
 	const GRVertexElement* vtxFormat;
-	int stride, normalOffset, positionOffset;
+	int stride, normalOffset, positionOffset, texOffset;
 public:
 	OBJECTDEF(GRMesh, GRVisual);
 	ACCESS_DESC(GRMesh);
@@ -51,6 +51,19 @@ public:
 		SkinWeight(): frame(NULL){}
 	};
 	std::vector<SkinWeight>	skinWeights;					///< スキンMeshの場合のskinWeights
+
+	float* GetVertex(int i=0){								///< i番目の頂点バッファを返す
+		return vtxs + stride * i;
+	}
+	int GetNVertex(){ return nVtxs; }						///< 頂点数
+	const GRVertexElement* GetVertexFormat(){				///< 頂点フォーマットを返す。
+		return vtxFormat;
+	}
+	bool IsTex3d(){ return tex3d; }							///< 3次元テクスチャなら true
+	int GetStride(){ return stride; }						///< 1頂点のデータがfloat何個分か
+	int GetNormalOffset(){ return normalOffset; }			///< 法線のオフセット(float何個分)
+	int GetPositionOffset(){ return positionOffset; }		///< 位置のオフセット(float何個分)
+	int GetTexOffset(){ return texOffset; }					///< テクスチャ座標のオフセット(float何個分)
 
 	/**
 	   facesと、三角形分割する前のXファイルで指定された面との関連付け \n
@@ -70,6 +83,7 @@ public:
 	virtual size_t NChildObject() const ;
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos) ;
+	///
 	void Print(std::ostream& os) const ;
 
 };

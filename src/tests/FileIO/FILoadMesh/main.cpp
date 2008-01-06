@@ -35,7 +35,7 @@
 
 #elif defined(TEST_CASE) && (TEST_CASE == 2)
 #define EXIT_TIMER	20000				
-#define TEST_FILEX	"tire.x"			
+#define TEST_FILEX	"tire3d.x"			
 
 #endif
 
