@@ -142,6 +142,10 @@ struct GRVertexElement {
 		Vec2f t;
 		Vec3f p;
 	};
+	struct VFT4fP4f{
+		Vec4f t;
+		Vec4f p;
+	};
 	struct VFT2fC4bP3f{
 		Vec2f t;
 		unsigned long c;
@@ -157,6 +161,12 @@ struct GRVertexElement {
 		Vec4f c;
 		Vec3f n;
 		Vec3f p;
+	};	
+	struct VFT4fC4fN3fP4f{
+		Vec4f t;
+		Vec4f c;
+		Vec3f n;
+		Vec4f p;
 	};	
 
 	struct VFP3fB4f{

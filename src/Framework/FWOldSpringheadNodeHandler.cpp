@@ -234,6 +234,11 @@ public:
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc, ld->GetName()));	
 		ld->loadedObjects.push_back(fc->objects.Top());
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
+		
+		//	Meshの名前に、 tex3d が含まれる場合、テクスチャを2Dでなく4Dにする。
+		if (ld->GetName().find("tex3d") != UTString::npos){
+			mesh->tex3d = true;
+		}
 		if (mesh){
 			mesh->positions = d.vertices;	// 頂点座標
 			for (int f=0; f < d.nFaces; ++f){		

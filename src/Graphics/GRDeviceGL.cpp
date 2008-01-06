@@ -158,6 +158,10 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		vertexFormatGl = GL_T2F_V3F;
 		vertexSize = sizeof(float)*5;
 		vertexColor = false;
+	}else if (e == GRVertexElement::vfT4fP4f){
+		vertexFormatGl = GL_T4F_V4F;
+		vertexSize = sizeof(float)*8;
+		vertexColor = false;
 	}else if (e == GRVertexElement::vfT2fC4bP3f){
 		vertexFormatGl = GL_T2F_C4UB_V3F;
 		vertexSize = sizeof(float)*5+sizeof(char)*4;
@@ -170,7 +174,10 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		vertexFormatGl = GL_T2F_C4F_N3F_V3F;
 		vertexSize = sizeof(float)*12;
 		vertexColor = true;
-
+	}else if (e == GRVertexElement::vfT4fC4fN3fP4f){
+		vertexFormatGl = GL_T4F_C4F_N3F_V4F;
+		vertexSize = sizeof(float)*15;
+		vertexColor = false;
 	}else if (e == GRVertexElement::vfP3fB4f) {
 		vertexFormatGl = GL_V3F; 
 		vertexSize = sizeof(float)*15;
@@ -264,7 +271,7 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 		default:				/* DO NOTHING */			break;
 	}
 	if (!stride) stride = vertexSize;
-	if (vertexColor) glEnable(GL_COLOR_MATERIAL);	
+	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
 	else glDisable(GL_COLOR_MATERIAL);
 	SetMaterial(currentMaterial);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);

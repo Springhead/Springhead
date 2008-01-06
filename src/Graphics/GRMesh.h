@@ -39,6 +39,7 @@ public:
 	OBJECTDEF(GRMesh, GRVisual);
 	ACCESS_DESC(GRMesh);
 
+	bool tex3d;												///< 3次元テクスチャの場合 true
 	std::vector< UTRef<GRMaterial> > material;				///< マテリアル
 	std::vector<int>                 materialList;			///< マテリアルのインデックスリスト
 
