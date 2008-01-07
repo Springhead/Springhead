@@ -58,6 +58,8 @@ class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
 	Matrix3d		Jcinv;					///< 拘束座標系の速度、加速度    ＝　Jcinv * Socket座標系の速度・加速度
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	Quaterniond		goal;					///< 制御目標
+	double			fMax, fMin;				///< 関節の出せる力の最大値、最小値
+
 public:
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
@@ -71,6 +73,10 @@ public:
 	virtual Vec3d	GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
 	virtual Vec3d	GetAngle(){return position;}								///< 角度を返す関数
 	virtual Vec3d	GetVelocity(){return velocity;}								///< 速度を返す関数
+	virtual void	SetTorqueMax(double max){fMax = max;}
+	virtual double	GetTorqueMax(){return fMax;}
+	virtual void	SetTorqueMin(double min){fMin = min;}
+	virtual double	GetTorqueMin(){return fMin;}
 
 	/// 仮想関数のオーバライド
 	virtual bool	GetDesc(void* desc);										///< デスクリプタの情報を得るための関数

@@ -26,6 +26,8 @@ PHJoint::PHJoint(){
 IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 
 PHJoint1D::PHJoint1D(){
+	fMax = FLT_MAX;
+	fMin = -FLT_MAX;
 }	
 
 bool PHJoint1D::GetDesc(void* desc){
@@ -83,6 +85,10 @@ void PHJoint1D::Projection(double& f, int k){
 		if(onLower)
 			f = max(0.0, f);
 		if(onUpper)
+			f = min(0.0, f);
+		if(fMax < f)
+			f = max(0.0, f);
+		if(f < fMin)
 			f = min(0.0, f);
 	}
 }

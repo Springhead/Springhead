@@ -50,10 +50,12 @@ struct PHSolidIf : public SceneObjectIf{
 		@param f 力
 	 */
 	virtual void AddForce(Vec3d f)=0;
+	
 	/** @brief トルクを加える
 		@param t トルク
 	 */
 	virtual void AddTorque(Vec3d t)=0;
+	
 	/**	@brief 力を指定した作用点に加える
 		@param f 力
 		@param r シーン座標系で表わした作用点の位置
@@ -64,63 +66,78 @@ struct PHSolidIf : public SceneObjectIf{
 		@return 質量
 	 */
 	virtual double		GetMass()=0;
+	
 	/** @brief 質量の逆数を取得する
 		@return 質量の逆数
 	 */
 	virtual double		GetMassInv()=0;
+	
 	/** @brief 質量を設定する
 		@param m 質量
 	 */
 	virtual void		SetMass(double m)=0;
+	
 	/** @brief 質量中心を取得する
 		@return 質量中心の位置
 	 */
 	virtual Vec3d		GetCenterOfMass()=0;
+	
 	/** @brief 質量中心を設定する
 		@param center 質量中心の位置
 	 */
 	virtual void		SetCenterOfMass(const Vec3d& center)=0;
+	
 	/** @brief 慣性テンソルを取得する
 		@return 慣性テンソル
 	 */
 	virtual Matrix3d	GetInertia()=0;
+	
 	/** @brief 慣性テンソルの逆数を取得する
 		@return 慣性テンソルの逆数
 	 */
 	virtual Matrix3d	GetInertiaInv()=0;
+	
 	/** @brief 慣性テンソルを設定する
 		@param I 慣性テンソル
 	 */
 	virtual void		SetInertia(const Matrix3d& I)=0;
+	
 	/** @brief 剛体の位置を取得する
 		@return シーンに対する剛体フレーム原点の位置
 	 */
 	virtual Vec3d		GetFramePosition() const =0;
+	
 	/** @brief 剛体の位置を設定する
 		@param p シーンに対する剛体フレーム原点の位置
 	 */
 	virtual void		SetFramePosition(const Vec3d& p) =0;
+	
 	/** @brief 剛体の質量中心の位置を取得する
 		@return シーンに対する剛体の質量中心の位置
 	 */
 	virtual Vec3d		GetCenterPosition() const  =0;
+	
 	/** @brief 剛体の位置を設定する
 		@param p シーンに対する剛体の質量中心の位置
 	 */
 	virtual void		SetCenterPosition(const Vec3d& p) =0;
+	
 	/** @brief 剛体の前のステップからの並進移動量を返す
 		@return 前のステップからの並進移動量
 	 */
 	virtual Vec3d GetDeltaPosition(const Vec3d& p) const = 0;
+
 	/** @brief 剛体の前のステップからの並進移動量を返す．
 		@param pos 重心からの相対位置．この位置の並進移動量を返す．
 		@return 前のステップからの並進移動量
 	*/
 	virtual Vec3d GetDeltaPosition() const = 0;
+
 	/** @brief 剛体の向きを取得する
 		@return シーンに対する剛体の向き
 	 */
 	virtual Quaterniond GetOrientation() const =0;
+	
 	/** @brief 剛体の向きを設定する
 		@param q シーンに対する剛体の向き
 	 */
@@ -130,6 +147,16 @@ struct PHSolidIf : public SceneObjectIf{
 		@return シーンに対する剛体の位置と向き
 	 */
 	virtual Posed		GetPose() const = 0;
+	
+	/** @brief 剛体の位置を取得する
+		@return シーンに対する剛体の位置
+	*/
+	virtual Vec3d		GetPoseR() const = 0;
+
+	/** @brief	剛体の向きを取得する
+	*/
+	virtual Quaterniond GetPoseQ() const = 0;
+
 	/** @brief 剛体の位置と向きを設定する
 		@param p シーンに対する剛体の位置と向き
 	 */

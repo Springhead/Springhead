@@ -185,15 +185,16 @@ public:
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
 	Posed		GetPose() const { return pose; }
+	Vec3d		GetPoseR() const{ return pose.Pos();}
+	Quaterniond GetPoseQ() const{ return pose.Ori();}
 	void		SetPose(const Posed& p) { pose = p;}
 	Vec3d		GetFramePosition() const {return pose.Pos();}
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetDeltaPosition() const ;
 	Vec3d		GetDeltaPosition(const Vec3d& pos) const ;
 	Vec3d		GetPrevFramePosition() const { return pose.Pos()-GetDeltaPosition(); }
-	Vec3d		GetCenterPosition() const {return pose*center;}
-														///< 重心位置の取得
-	void		SetCenterPosition(const Vec3d& p){		///< 重心位置の設定
+	Vec3d		GetCenterPosition() const {return pose*center;} 	///< 重心位置の取得
+	void		SetCenterPosition(const Vec3d& p){					///< 重心位置の設定
 		pose.Pos() = p - pose.Ori()*center;
 	}
 

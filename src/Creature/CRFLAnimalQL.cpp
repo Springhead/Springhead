@@ -5,8 +5,6 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <ctime>
-#include <cmath>
 #include "CRFLAnimalQL.h"
 //-----------------------------------------------------------------------------------
 //publicFunc:
@@ -103,6 +101,7 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> *aGene){
 			// HingeJointだった場合に取る行動
 			else if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
 				if(action[j] == 0){
+					//if(crBody[0]->GetJoint(j)->
 					(*aGene)[j].goalDir[0] += Rad(moveRatio);
 				}
 				else if(action[j] == 1){
@@ -150,8 +149,53 @@ void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> *aGene){
 void CRFLAnimalQL::EvaluativeFunc(Vec3d centerOfMass, 
 								  std::vector<Vec3d>footPositions, 
 								  std::vector<Vec3d> footForces){
+
+	if(footPositions.size() == 2){		//< 渡されてきたデータは人型のものだ
+		
+		if(crBody[0]->GetSolid(CRHingeHumanBody::SO_HEAD)){
+			DSTR << "human body is not up to date." << std::endl;
+		}
+	}
+
+	else if(footPositions.size() == 4){		//< 渡されてきたデータは動物型のものだ
+
+		//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		//[check 1]上体の向きはどうなっているの？
+		if(crBody[0]->GetSolid(CRFourLegsAnimalBody::SO_HEAD) && crBody[0]->GetSolid(CRFourLegsAnimalBody::SO_CHEST)){
+			Vec3d		 headPos	=	crBody[0]->GetSolid(CRFourLegsAnimalBody::SO_HEAD)->GetPoseR();
+			Vec3d		 chestPos	=	crBody[0]->GetSolid(CRFourLegsAnimalBody::SO_CHEST)->GetPoseR();
+			Quaterniond  chestOri	=   crBody[0]->GetSolid(CRFourLegsAnimalBody::SO_CHEST)->GetPoseQ();
+
+			// vEvaluateHC  : 頭から胸へ伸びたベクトルの背骨方向への法線ベクトル（評価ベクトル）, localTheta  : 背骨と頭胸ベクトルのなす角
+			//【問題点】	: きちんと単位ベクトルにしてから内積をとっているのに1.0を超えてしまうことがある。なぜだろう。
+			double localTheta	=	acos(min (dot((chestPos - headPos).unit(), (chestOri * chestPos).unit() ), 1.0));
+			vEvaluateHC			=	(chestPos - headPos) * sin(localTheta);
+			//DSTR << localTheta * 180 / M_PI << std::endl;
+		}
+		//thetaHC : 評価ベクトルと重力方向のなす角
+		double thetaHC = acos(min(dot(vEvaluateHC, Vec3d(0.0, -1.0, 0.0)), 1.0));
+		//DSTR << "HC: " << vEvaluateHC << " theta: " << thetaHC *180/3.14 << " " << dot(vEvaluateHC, Vec3d(0, -1, 0)) << std::endl;
+
+		//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		// [check 2]重心は支持脚多角形の中にあるの？
+		// footSolid[0] : rightFront, footSolid[1] : rightRear, footSolid[2] : leftFront, footSolid[3] : leftRear
+		// <<支持脚多角形その1>>
+		Vec3d normalLine = cross((footPositions[0] - footPositions[1]), (footPositions[0] - footPositions[2]));
+
+		//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+		// [check 3]各関節がボディの出せる最大トルク内にあるかを確認する
+		for(int i = 0; i < crBody[0]->NJoints(); i++){
+			if(DCAST(PHBallJointIf, crBody[0]->GetJoint(i)))
+				DCAST(PHBallJointIf, crBody[0]->GetJoint(i))->GetTorqueMax();
+			else if(DCAST(PHHingeJointIf, crBody[0]->GetJoint(i)))
+				DCAST(PHHingeJointIf, crBody[0]->GetJoint(i))->GetTorqueMax();
+		}
+
+	}
+
 	
-	  double valueY = centerOfMass[1];
+
+
 }
 
 void CRFLAnimalQL::CalcQValueMax(){

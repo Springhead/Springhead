@@ -245,6 +245,23 @@ struct PHJoint1DIf : public PHJointIf{
 		@return 関節速度
 	 */
 	virtual double	GetVelocity() = 0;
+	
+	/** @brief 関節の出すことができる最大トルク(N)を設定する
+	*/
+	virtual void SetTorqueMax(double max) = 0;
+
+	/** @brief 関節の出すことができる最大トルク(N)を取得する
+	*/
+	virtual double GetTorqueMax() = 0;
+
+		/** @brief 関節の出すことができる最小トルク(N)を設定する
+	*/
+	virtual void SetTorqueMin(double min) = 0;
+
+	/** @brief 関節の出すことができる最小トルク(N)を取得する
+	*/
+	virtual double GetTorqueMin() = 0;
+
 };
 
 /// ヒンジのインタフェース
@@ -366,6 +383,25 @@ struct PHBallJointIf : public PHConstraintIf{
 		@return スイング方位角，スイング角，ツイスト角の時間変化率からなるベクトル
 	 */
 	virtual Vec3d GetVelocity() = 0;
+
+	/** @brief 関節の出せる最大トルクを設定する
+		@param max 最大トルク
+	*/
+	virtual void SetTorqueMax(double max) = 0;
+
+	/** @brief 関節の出せる最大トルクを取得する
+	*/
+	virtual double GetTorqueMax() = 0;
+
+	/** @brief 関節の出せる最小トルクを設定する
+		@param min 最小トルク
+	*/
+	virtual void SetTorqueMin(double min) = 0;
+
+	/** @brief 関節の出せる最小トルクを取得する
+	*/
+	virtual double GetTorqueMin() = 0;
+
 
 };
 /// ボールジョイントのディスクリプタ

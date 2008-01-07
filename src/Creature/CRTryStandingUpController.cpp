@@ -39,8 +39,7 @@ Vec3d CRTryStandingUpController::CalcFootForce(PHSolidIf*	footSolid){
 	Vec3d				torque;
 	PHConstraintIf*		localPair = phScene->GetConstraintEngine()->GetContactPoints()
 										   ->FindBySolidPair(DCAST(PHSolidIf, (phScene->FindObject("Floor"))), footSolid);
-	if(localPair)
-		localPair->GetConstraintForce(force, torque);
+	if(localPair)	localPair->GetConstraintForce(force, torque);
 	
 	return				force;
 }
@@ -50,9 +49,8 @@ Vec3d CRTryStandingUpController::CalcFootTorque(PHSolidIf* footSolid){
 	Vec3d				torque;
 	PHConstraintIf*		localPair = phScene->GetConstraintEngine()->GetContactPoints()
 										   ->FindBySolidPair(DCAST(PHSolidIf, (phScene->FindObject("Floor"))), footSolid);
-	if(localPair)
-		localPair->GetConstraintForce(force, torque);
-	
+	if(localPair)	localPair->GetConstraintForce(force, torque);
+
 	return				torque;
 }
 
@@ -124,8 +122,8 @@ void CRTryStandingUpController::CalcQL(){
 	animalQLIf->SetActionNumber(&animalGenes.back());
 	animalQLIf->BoltzmannSelection();
 	animalQLIf->SelectAction(&animalGenes.back());
-	animalQLIf->TakeAction(&animalGenes.back());
-//	animalQLIf->EvaluativeFunc(centerOfMass, footPositions, footForces);
+//	animalQLIf->TakeAction(&animalGenes.back());
+	animalQLIf->EvaluativeFunc(centerOfMass, footPositions, footForces);
 	animalQLIf->UpdateQValues();	
 }
 

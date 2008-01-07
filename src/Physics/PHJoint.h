@@ -50,6 +50,7 @@ public:
 	double	lower, upper;				///< 可動範囲の下限、上限
 	double	pos_d, vel_d;				///< 目標変位、目標速度
 	double	spring, origin, damper;		///< バネ係数、バネ原点、ダンパ係数
+	double  fMax, fMin;					///< 関節の出せる力の最大値、最小値
 
 	/// インタフェースの実装
 	virtual double	GetPosition(){return position[0];}
@@ -68,6 +69,10 @@ public:
 	virtual double	GetSpringOrigin(){return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper(){return damper;}
+	virtual void	SetTorqueMax(double max){fMax = max;}
+	virtual double	GetTorqueMax(){return fMax;}
+	virtual void	SetTorqueMin(double min){fMin = min;}
+	virtual double	GetTorqueMin(){return fMin;}
 
 	/// オーバライド
 	virtual bool	GetDesc(void* desc);

@@ -149,6 +149,18 @@ struct PHJoint1DIfStubTemplate: public PHJointIfStubTemplate<IF, MIF, OBJ> {
 	virtual double GetVelocity(){
 		return ((OBJ*)(MIF*)this)->GetVelocity();
 	}
+	virtual void SetTorqueMax(double max){
+		return ((OBJ*)(MIF*)this)->SetTorqueMax(max);
+	}
+	virtual double GetTorqueMax(){
+		return ((OBJ*)(MIF*)this)->GetTorqueMax();
+	}
+	virtual void SetTorqueMin(double min){
+		return ((OBJ*)(MIF*)this)->SetTorqueMin(min);
+	}
+	virtual double GetTorqueMin(){
+		return ((OBJ*)(MIF*)this)->GetTorqueMin();
+	}
 };
 struct PHJoint1DIf;	class PHJoint1D;
 typedef PHJoint1DIfStubTemplate<PHJoint1DIf, ObjectIfBuf, PHJoint1D>	PHJoint1DIfStub;
@@ -224,6 +236,18 @@ struct PHBallJointIfStubTemplate: public PHConstraintIfStubTemplate<IF, MIF, OBJ
 	}
 	virtual Vec3d GetVelocity(){
 		return ((OBJ*)(MIF*)this)->GetVelocity();
+	}
+	virtual void SetTorqueMax(double max){
+		return ((OBJ*)(MIF*)this)->SetTorqueMax(max);
+	}
+	virtual double GetTorqueMax(){
+		return ((OBJ*)(MIF*)this)->GetTorqueMax();
+	}
+	virtual void SetTorqueMin(double min){
+		return ((OBJ*)(MIF*)this)->SetTorqueMin(min);
+	}
+	virtual double GetTorqueMin(){
+		return ((OBJ*)(MIF*)this)->GetTorqueMin();
 	}
 };
 struct PHBallJointIf;	class PHBallJoint;
@@ -554,6 +578,12 @@ struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual Posed GetPose() const {
 		return ((OBJ*)(MIF*)this)->GetPose();
+	}
+	virtual Vec3d GetPoseR() const {
+		return ((OBJ*)(MIF*)this)->GetPoseR();
+	}
+	virtual Quaterniond GetPoseQ() const {
+		return ((OBJ*)(MIF*)this)->GetPoseQ();
 	}
 	virtual void SetPose(const Posed & p){
 		return ((OBJ*)(MIF*)this)->SetPose(p);

@@ -12,6 +12,7 @@
 
 #include <Springhead.h>
 #include <Creature/CRFourLegsAnimalBody.h>
+#include <Creature/CRHingeHumanBody.h>
 #include <vector>
 #include <ctime>
 #include <cmath>
@@ -42,6 +43,9 @@ private:
 	double					penalty;		//< 規格化の際に使用する罰の値
 	double					moveRatio;		//< 行動の幅（degree）
 
+	Vec3d					vEvaluateHC;	//< 上体の姿勢を評価するためのベクトル（頭から胸へのベクトルの背骨方向への垂線成分ベクトル）
+	Vec3d					vEvaluateMF;	//< 支持脚多角形が重心の中にあるかどうかを判別するベクトル（重心から4足の足剛体の中心が作る平面への法線ベクトル）
+	
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//CRTryStandingUpControllerからは呼べない関数
 	void		Init();			//< 初期化を行う
