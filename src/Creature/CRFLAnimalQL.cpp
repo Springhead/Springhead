@@ -103,13 +103,13 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> *aGene){
 			// HingeJointÇæÇ¡ÇΩèÍçáÇ…éÊÇÈçsìÆ
 			else if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
 				if(action[j] == 0){
-					(*aGene)[j].goalDir[0] += Rad(3 * moveRatio);
+					(*aGene)[j].goalDir[0] += Rad(moveRatio);
 				}
 				else if(action[j] == 1){
 //					DSTR << "The joint " << j << " is keep its position" << std::endl;
 				}
 				else if(action[j] == 2){
-					(*aGene)[j].goalDir[0] -= Rad(3 * moveRatio);
+					(*aGene)[j].goalDir[0] -= Rad(moveRatio);
 				}
 				else{
 				}

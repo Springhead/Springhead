@@ -148,7 +148,6 @@ void CRTryStandingUpController::CalcGA(){
 		DSTR << gene[i].goalDir << std::endl;
 	}
 */
-	DSTR << "hoge" << std::endl;
 }
 
 //------------------------------------------------------------------------------------------

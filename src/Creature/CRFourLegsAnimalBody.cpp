@@ -7,6 +7,8 @@
  */
 #include "CRFourLegsAnimalBody.h"
 
+#define USING_RANGE_OF_JOINT 0
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -112,7 +114,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	originStifle	  = Rad(-30);
 	originRearKnee	  = Rad(-5);
 
-
+#if USING_RANGE_OF_JOINT
 	//-------------------------------------------------------------------
 	// Range of ball joints
 	limitSwingWaistChest.upper	= Rad(5);
@@ -157,7 +159,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	rangeFrontKnee	  = Vec2d(Rad(-180), Rad(	0));
 	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
 	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+180));
-
+#endif
 
 	//-----------------------------------------------------------------------------------
 	// Do you want to make the legs?
@@ -229,8 +231,11 @@ void CRFourLegsAnimalBody::CreateChest(){
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
 	ballDesc.goal			  = goalWaistChest;
+
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		  = limitSwingWaistChest;
 	ballDesc.limitTwist		  = limitTwistWaistChest;	
+#endif
 
 	//----------------------------------------------------------------------------
 	// PHScene::CreateJoint([p], [c], desc)で使う。
@@ -275,8 +280,12 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.spring            = springWaistTail;
 	ballDesc.damper            = damperWaistTail;
 	ballDesc.goal			   = goalWaistTail;
+
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		   = limitSwingWaistTail;
 	ballDesc.limitTwist		   = limitTwistWaistTail;
+#endif	
+
 	joints[JO_WAIST_TAIL]	   = phScene->CreateJoint(solids[SO_WAIST], solids[SO_TAIL1], ballDesc);
 	joints[JO_WAIST_TAIL]->SetName("joWaistTail");
 
@@ -289,8 +298,12 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.goal			   = goalTail;
+
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		   = limitSwingTail;
 	ballDesc.limitTwist		   = limitTwistTail;
+#endif	
+
 	joints[JO_TAIL_12]		   = phScene->CreateJoint(solids[SO_TAIL1], solids[SO_TAIL2], ballDesc);
 	joints[JO_TAIL_12]->SetName("joTail12");
 
@@ -303,8 +316,12 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
 	ballDesc.goal			   = goalTail;
+
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		   = limitSwingTail;
 	ballDesc.limitTwist		   = limitTwistTail;
+#endif	
+
 	joints[JO_TAIL_23]		   = phScene->CreateJoint(solids[SO_TAIL2], solids[SO_TAIL3], ballDesc);
 	joints[JO_TAIL_23]->SetName("joTail23");
 	// define the position
@@ -342,8 +359,11 @@ void CRFourLegsAnimalBody::CreateNeck(){
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
 	ballDesc.goal			  = goalChestNeck;
+
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		  = limitSwingChestNeck;
 	ballDesc.limitTwist		  = limitTwistChestNeck;
+#endif
 
 	joints[JO_CHEST_NECK] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_NECK], ballDesc);
 	joints[JO_CHEST_NECK]->SetName("joChestNeck");
@@ -376,8 +396,11 @@ void CRFourLegsAnimalBody::CreateHead(){
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
 	ballDesc.goal			   = goalNeckHead;
+	
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		   = limitSwingNeckHead;
 	ballDesc.limitTwist		   = limitTwistNeckHead;
+#endif
 
 	joints[JO_NECK_HEAD]	   = phScene->CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
 	joints[JO_NECK_HEAD]->SetName("joNeckHead");
@@ -447,9 +470,11 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
 	ballDesc.goal			  = goalShoulder;
+	
+#if USING_RANGE_OF_JOINT	
 	ballDesc.limitSwing		  = limitSwingShoulder;
 	ballDesc.limitTwist		  = limitTwistShoulder;
-	ballDesc.limitDir		  = limitDirShoulder;
+#endif
 
 	//----------------------------------------------------------------------------
 	// phScene->CreateJoint([p], [c], desc)で使う。
@@ -503,8 +528,11 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	hingeDesc.spring		   = springElbow;
 	hingeDesc.damper		   = damperElbow;
 	hingeDesc.origin		   = originElbow;
+
+#if USING_RANGE_OF_JOINT	
 	hingeDesc.lower			   = rangeElbow[0];
 	hingeDesc.upper			   = rangeElbow[1];
+#endif
 
 	joints[joElbow] = phScene->CreateJoint(solids[soBreastbone], solids[soRadius], hingeDesc);
 	if(lr == LEFTPART)
@@ -553,8 +581,11 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 	hingeDesc.spring		   = springFrontKnee;
 	hingeDesc.damper		   = damperFrontKnee;
 	hingeDesc.origin		   = originFrontKnee;
+	
+#if USING_RANGE_OF_JOINT
 	hingeDesc.lower			   = rangeFrontKnee[0];
 	hingeDesc.upper			   = rangeFrontKnee[1];
+#endif
 
 	joints[joKnee] = phScene->CreateJoint(solids[soRadius], solids[soCannonBone], hingeDesc);
 	if(lr == LEFTPART)
@@ -604,8 +635,11 @@ void CRFourLegsAnimalBody::CreateFrontToeBones(LREnum lr){
 	ballDesc.spring			  = springFrontAnkle;
 	ballDesc.damper			  = damperFrontAnkle;
 	ballDesc.goal			  = goalFrontAnkle;
+	
+#if USING_RANGE_OF_JOINT	
 	ballDesc.limitSwing		  = limitSwingFrontAnkle;
 	ballDesc.limitTwist		  = limitTwistFrontAnkle;
+#endif
 
 	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
 	if(lr == LEFTPART)
@@ -674,8 +708,11 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
 	ballDesc.goal			  = goalHip;
+
+#if USING_RANGE_OF_JOINT
 	ballDesc.limitSwing		  = limitSwingHip;
 	ballDesc.limitTwist		  = limitTwistHip;
+#endif
 
 	joints[joHip] = phScene->CreateJoint(solids[SO_WAIST], solids[soFemur], ballDesc);
 	if(lr == LEFTPART)
@@ -724,8 +761,11 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 	hingeDesc.spring		   = springStifle;
 	hingeDesc.damper		   = damperStifle;
 	hingeDesc.origin		   = originStifle;
+	
+#if USING_RANGE_OF_JOINT	
 	hingeDesc.lower			   = rangeStifle[0];
 	hingeDesc.upper			   = rangeStifle[1];
+#endif
 
 	joints[joStifle] = phScene->CreateJoint(solids[soFemur], solids[soTibia], hingeDesc);
 	if(lr == LEFTPART)
@@ -775,8 +815,11 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 	hingeDesc.spring		   = springRearKnee;
 	hingeDesc.damper		   = damperRearKnee;
 	hingeDesc.origin		   = originRearKnee;
+	
+#if USING_RANGE_OF_JOINT
 	hingeDesc.lower			   = rangeRearKnee[0];
 	hingeDesc.upper			   = rangeRearKnee[1];
+#endif
 
 	joints[joKnee] = phScene->CreateJoint(solids[soTibia], solids[soCannonBone], hingeDesc);
 	if(lr == LEFTPART)
@@ -826,8 +869,11 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 	ballDesc.spring		       = springRearAnkle;
 	ballDesc.damper			   = damperRearAnkle;
 	ballDesc.goal			   = goalRearAnkle;
+	
+#if USING_RANGE_OF_JOINT	
 	ballDesc.limitSwing		   = limitSwingRearAnkle;
 	ballDesc.limitTwist		   = limitTwistRearAnkle;
+#endif
 
 	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
 	if(lr == LEFTPART)
