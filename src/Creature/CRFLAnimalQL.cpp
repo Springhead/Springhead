@@ -129,23 +129,16 @@ void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> *aGene){
 	for(unsigned int i = 0; i < crBody.size(); i++){
 //		DSTR << "crBody.size() : " << crBody.size() << std::endl;
 		for(unsigned int j = 0; j < (*aGene).size(); j++){
-			DSTR << "(*aGene).size() : " << (*aGene).size() << std::endl;
 			if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_QUATERNIOND){
-//				DSTR << "The joint " << j << " is BallJoint class" << std::endl;
 				PHBallJointDesc ballDesc;
 				crBody[i]->GetJoint(j)->GetDesc(&ballDesc);
-				DSTR << "BallJoint pre  : " << (*aGene)[j].goalDir << std::endl;
 				ballDesc.goal = (*aGene)[j].goalDir;
-				DSTR << "BallJoint post : " << ballDesc.goal << std::endl;
 				crBody[i]->GetJoint(j)->SetDesc(&ballDesc);
 			}
 			else if((*aGene)[j].geneType == CRFLAnimalGeneData::GEN_DOUBLE){
-//				DSTR << "The joint " << j << " is HingeJoint class" << std::endl;
 				PHHingeJointDesc hingeDesc;
 				crBody[i]->GetJoint(j)->GetDesc(&hingeDesc);
-				DSTR << "HingeJoint pre  : " << (*aGene)[j].goalDir[0] << std::endl;
 				hingeDesc.origin = (*aGene)[j].goalDir[0];
-				DSTR << "HingeJoint post : " << hingeDesc.origin<< std::endl;
 				crBody[i]->GetJoint(j)->SetDesc(&hingeDesc);
 			}
 			else DSTR << "Unknown type." << std::endl;
@@ -154,8 +147,11 @@ void CRFLAnimalQL::TakeAction(std::vector<CRFLAnimalGeneData> *aGene){
 
 }
 
-void CRFLAnimalQL::EvaluativeFunc(){
+void CRFLAnimalQL::EvaluativeFunc(Vec3d centerOfMass, 
+								  std::vector<Vec3d>footPositions, 
+								  std::vector<Vec3d> footForces){
 	
+	  double valueY = centerOfMass[1];
 }
 
 void CRFLAnimalQL::CalcQValueMax(){

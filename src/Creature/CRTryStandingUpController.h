@@ -5,11 +5,15 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-//////////////////////////////////////////////////////
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// <memo>
+// humanに関する変数や複数bodyについて書いてある部分もありますが、基本的に未実装
+// なので、使いたい人が適宜能力を拡張してください(by Toki 2008.01.05)
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
+//////////////////////////////////////////////////////
 #ifndef CRTRYSTANDINGUPCONTROLLER_H
 #define CRTRYSTANDINGUPCONTROLLER_H
-
 //////////////////////////////////////////////////////
 
 #include <Springhead.h>
@@ -53,31 +57,31 @@ private:
 	UTRef<CRFLAnimalQL>								animalQLIf;				//< QLearningをするためのインタフェース
 	std::vector< std::vector<CRFLAnimalGeneData> >	animalGenes;			//< ある時の遺伝子std::vector<CRFLAnimalGeneData>が集まった遺伝子系列std::vector<********>
 
-	unsigned long		totalStep;				//< シミュレーション開始時からのステップ数
-	Vec3d				centerOfMass;			//< ボディ全体の重心
+	unsigned long			totalStep;				//< シミュレーション開始時からのステップ数
+	Vec3d					centerOfMass;			//< ボディ全体の重心
 	
+	std::vector<Vec3d>		footPositions;			//< 足の位置を格納した配列
 	// human foot positions	
-	Vec3d				rightFootPos;			//< 右足の位置
-	Vec3d				leftFootPos;			//< 左足の位置
-	
+	Vec3d					rightFootPos;			//< 右足の位置
+	Vec3d					leftFootPos;			//< 左足の位置	
 	// animal foot positions	
-	Vec3d				rightFrontFootPos;		//< 右前足の位置
-	Vec3d				rightRearFootPos;		//< 右後足の位置
-	Vec3d				leftFrontFootPos;		//< 左前足の位置
-	Vec3d				leftRearFootPos;		//< 左後足の位置
+	Vec3d					rightFrontFootPos;		//< 右前足の位置
+	Vec3d					rightRearFootPos;		//< 右後足の位置
+	Vec3d					leftFrontFootPos;		//< 左前足の位置
+	Vec3d					leftRearFootPos;		//< 左後足の位置
 
+	std::vector<Vec3d>		footForces;				//< 足にかかる力を格納した配列
 	// human foot forces
-	Vec3d				rightFootForce;			//< 右足の力
-	Vec3d				leftFootForce;			//< 左足の力
-	
+	Vec3d					rightFootForce;			//< 右足の力
+	Vec3d					leftFootForce;			//< 左足の力	
 	// animal foot forces
-	Vec3d				rightFrontFootForce;	//< 右前足の力
-	Vec3d				rightRearFootForce;		//< 右後足の力
-	Vec3d				leftFrontFootForce;		//< 左前足の力
-	Vec3d				leftRearFootForce;		//< 左後足の力
+	Vec3d					rightFrontFootForce;	//< 右前足の力
+	Vec3d					rightRearFootForce;		//< 右後足の力
+	Vec3d					leftFrontFootForce;		//< 左前足の力
+	Vec3d					leftRearFootForce;		//< 左後足の力
 	
 	//大域カウンター
-	int					qLearningStep;			//< GA+QLeaningの1試行内でのQLearningのステップ数
+	int						qLearningStep;			//< GA+QLeaningの1試行内でのQLearningのステップ数
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	// 関数宣言

@@ -75,18 +75,37 @@ void CRTryStandingUpController::UpdateBodyState(){
 			if(DCAST(CRHingeHumanBodyIf, body[i]) != NULL){
 				rightFootPos		= GetFootPos(foot[0]);
 				leftFootPos			= GetFootPos(foot[1]);
+				footPositions.resize(2);
+				footPositions[0]	= rightFootPos;
+				footPositions[1]	= leftFootPos;
+
 				rightFootForce		= CalcFootForce(foot[0]);
 				leftFootForce		= CalcFootForce(foot[1]);
+				footForces.resize(2);
+				footForces[0]		= rightFootForce;
+				footForces[1]		= leftFootForce;
 			}
 			else if(DCAST(CRFourLegsAnimalBodyIf, body[i]) != NULL){
+
 				rightFrontFootPos	= GetFootPos(foot[0]);
 				rightRearFootPos	= GetFootPos(foot[1]);
 				leftFrontFootPos	= GetFootPos(foot[2]);
 				leftRearFootPos		= GetFootPos(foot[3]);
+				footPositions.resize(4);
+				footPositions[0]	= rightFrontFootPos;
+				footPositions[1]	= rightRearFootPos;
+				footPositions[2]	= leftFrontFootPos;
+				footPositions[3]	= leftRearFootPos;
+
 				rightFrontFootForce = CalcFootForce(foot[0]);
 				rightRearFootForce	= CalcFootForce(foot[1]);
 				leftFrontFootForce	= CalcFootForce(foot[2]);
 				leftRearFootForce	= CalcFootForce(foot[3]);
+				footForces.resize(4);
+				footForces[0]		= rightFrontFootForce;
+				footForces[1]		= rightRearFootForce;
+				footForces[2]		= leftFrontFootForce;
+				footForces[3]		= leftRearFootForce;
 				//DSTR << "rightFrontFoot: " << rightFrontFootPos << "rightRearFoot: " << rightRearFootPos << "leftFrontFoot: "  << leftFrontFootPos  << "leftRearFoot: "  << leftRearFootPos << std::endl;
 				//DSTR << "rightFrontFoot: " << rightFrontFootForce << "rightRearFoot: " << rightRearFootForce << "leftFrontFoot: " << leftFrontFootForce << "leftRearFoot: " << leftRearFootForce << std::endl;
 			}
@@ -103,11 +122,10 @@ void CRTryStandingUpController::CalcQL(){
 	
 	DSTR << "QL : " << qLearningStep << std::endl;
 	animalQLIf->SetActionNumber(&animalGenes.back());
+	animalQLIf->BoltzmannSelection();
 	animalQLIf->SelectAction(&animalGenes.back());
-	for(unsigned int i = 0; i < animalGenes.back().size(); i++){
-		DSTR << animalGenes.back()[i].goalDir << std::endl;
-	}
 	animalQLIf->TakeAction(&animalGenes.back());
+//	animalQLIf->EvaluativeFunc(centerOfMass, footPositions, footForces);
 	animalQLIf->UpdateQValues();	
 }
 
