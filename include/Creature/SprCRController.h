@@ -253,6 +253,10 @@ struct CRTryStandingUpControllerIf : CRControllerIf{
 	*/
 	virtual void Step() = 0;
 
+	/** @brief 遺伝子情報のシンクロだけする
+	*/
+	virtual void Sync() =0;
+
 };
 /// 倒れたら立とうと努力するコントローラのデスクリプタ
 struct CRTryStandingUpControllerDesc : public CRControllerDesc{

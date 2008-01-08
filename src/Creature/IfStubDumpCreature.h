@@ -203,6 +203,9 @@ struct CRTryStandingUpControllerIfStubTemplate: public CRControllerIfStubTemplat
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
+	virtual void Sync(){
+		return ((OBJ*)(MIF*)this)->Sync();
+	}
 };
 struct CRTryStandingUpControllerIf;	class CRTryStandingUpController;
 typedef CRTryStandingUpControllerIfStubTemplate<CRTryStandingUpControllerIf, ObjectIfBuf, CRTryStandingUpController>	CRTryStandingUpControllerIfStub;

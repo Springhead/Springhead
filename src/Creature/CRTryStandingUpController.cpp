@@ -189,4 +189,8 @@ void CRTryStandingUpController::Step(){
 	}
 }
 
+void CRTryStandingUpController::Sync(){
+	animalQLIf->TakeAction(&animalGenes.back());
+}
+
 }
