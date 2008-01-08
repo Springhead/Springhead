@@ -20,6 +20,9 @@
 
 */
 #include <Springhead.h>
+#include <Graphics/Graphics.h>
+#include <Graphics/GRMesh.h>
+
 #include <GL/glew.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
@@ -59,6 +62,15 @@ using namespace Spr;
  return 	なし
  */
 void display(){
+	static int count;
+	count ++;
+	GRMesh* mesh = scene->FindObject("tire_tex3d")->Cast();
+	if (mesh){
+		for(int i=0; i<mesh->GetNVertex(); ++i){
+			mesh->GetVertex(i)[2] = (i+count)%10 * 0.1;
+		}
+	}
+
 	//	バッファクリア
 	render->ClearBuffer();
 	scene->Render(render);
