@@ -122,7 +122,7 @@ void CRTryStandingUpController::CalcQL(){
 	animalQLIf->SetActionNumber(&animalGenes.back());
 	animalQLIf->BoltzmannSelection();
 	animalQLIf->SelectAction(&animalGenes.back());
-//	animalQLIf->TakeAction(&animalGenes.back());
+	animalQLIf->TakeAction(&animalGenes.back());
 	animalQLIf->EvaluativeFunc(centerOfMass, footPositions, footForces);
 	animalQLIf->UpdateQValues();	
 }
