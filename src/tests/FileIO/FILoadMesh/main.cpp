@@ -20,6 +20,7 @@
 
 */
 #include <Springhead.h>
+#include <GL/glew.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define TEST_CASE		2				// テストケース
@@ -182,6 +183,7 @@ int main(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	int window = glutCreateWindow("FILoadMesh");
+	glewInit();
 
 	render = grSdk->CreateDebugRender();
 	grDevice = grSdk->CreateDeviceGL();

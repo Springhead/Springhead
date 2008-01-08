@@ -12,6 +12,7 @@
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
 
+#include <GL/glew.h>
 #include <GL/glut.h>
 
 #ifdef USE_HDRSTOP
@@ -86,8 +87,7 @@ int FWAppGLUT::CreateWindow(const FWWindowDesc d){
 	glutInitWindowSize(d.width, d.height);
 	glutInitWindowPosition(d.top, d.left);
 	int window = glutCreateWindow("Springhead Application");
+	int rv = glewInit();
 	return window;
 }
-
-
 }

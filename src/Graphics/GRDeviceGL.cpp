@@ -28,7 +28,9 @@
 
 #include <GL/glut.h>
 #include "GRLoadBmp.h"
-
+#include <iomanip>
+#include <sstream>
+#include <io.h>
 
 
 
@@ -484,9 +486,15 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_EMISSION,  mat.emissive);
 	glMaterialf (GL_FRONT, GL_SHININESS, mat.power);
 	if (mat.texname.length()){
-		int texId = LoadTexture(mat.texname);
-		glBindTexture(GL_TEXTURE_2D, texId);
+		if (mat.Is3D()){
+			int texId = LoadTexture(mat.texname);
+			glBindTexture(GL_TEXTURE_3D, texId);
+		}else{
+			int texId = LoadTexture(mat.texname);
+			glBindTexture(GL_TEXTURE_2D, texId);
+		}
 	}else{
+		glBindTexture(GL_TEXTURE_3D, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	currentMaterial = mat;
@@ -583,16 +591,75 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	GRTexnameMap::iterator it = texnameMap.find(filename);
 	if (it != texnameMap.end()) return it->second;
 
-
-	char *texbuf = NULL;
-	int tx=0, ty=0, nc=0;
-	unsigned int texId=0;
-
 	// ファイル名が空なら return 0;
 	if (filename.empty()) return 0;
 
-	// paintLib でファイルをロード．
-	try{
+	char *texbuf = NULL;
+	int tx=0, ty=0, tz=0, nc=0;
+	unsigned int texId=0;
+
+	int ext = filename.rfind('.');
+	int zeroLen;
+	for (zeroLen=0; filename[ext-zeroLen-1]=='0' ; ++zeroLen);
+	std::string id("_tex3d_");
+	int texD = ext-zeroLen - id.length();
+	if (zeroLen && filename.substr(texD, id.length()).compare("_tex3d_")==0){
+		//	3D textureの場合
+		//	ファイルの数を調べる
+		for(tz=0; ; ++tz){
+			std::ostringstream fnStr;
+			fnStr << filename.substr(0, ext-zeroLen)
+				<< std::setfill('0') << std::setw(zeroLen) << tz
+				<< filename.substr(ext);
+			if (_access(fnStr.str().c_str(), 0) != 0) break;
+		}
+		//	画像サイズを調べる
+		int h = LoadBmpCreate(filename.c_str());
+		tx = LoadBmpGetWidth(h);
+		ty = LoadBmpGetHeight(h);
+		nc = LoadBmpGetBytePerPixel(h);
+		int pictureSize = tx*ty*nc;
+		texbuf = new char[pictureSize * tz];
+		LoadBmpRelease(h);
+		//	ファイルのロード
+		for(int i=0; i<tz; ++i){
+			std::ostringstream fnStr;
+			fnStr << filename.substr(0, ext-zeroLen)
+				<< std::setfill('0') << std::setw(zeroLen) << i
+				<< filename.substr(ext);
+			int h = LoadBmpCreate(fnStr.str().c_str());
+			int x = LoadBmpGetWidth(h);
+			int y = LoadBmpGetHeight(h);
+			int c = LoadBmpGetBytePerPixel(h);
+			if (x!=tx || y!=ty || c!=nc){
+				DSTR << "Error: Texture file '" << fnStr.str() << "' has an illegal format." << std::endl;
+				return 0;
+			}
+			LoadBmpGetBmp(h, texbuf+pictureSize*i);
+			LoadBmpRelease(h);	
+		}
+		// テクスチャの生成．
+		glGenTextures(1, (GLuint *)&texId);
+		glBindTexture(GL_TEXTURE_3D, texId);
+//		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		GLenum format=0;
+		if (nc == 1) format = GL_LUMINANCE;
+		else if (nc == 2) format = GL_LUMINANCE_ALPHA;
+		else if (nc == 3) format = GL_RGB;
+		else if (nc == 4) format = GL_RGBA;
+		glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, format, GL_UNSIGNED_BYTE, texbuf);
+
+		glBindTexture(GL_TEXTURE_3D, 0);
+
+		delete texbuf;
+	}else{	
+		//	2D textureの場合
+		// paintLib でファイルをロード．
 		int h = LoadBmpCreate(filename.c_str());
 		tx = LoadBmpGetWidth(h);
 		ty = LoadBmpGetHeight(h);
@@ -600,27 +667,24 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		texbuf = new char[tx*ty*nc];
 		LoadBmpGetBmp(h, texbuf);
 		LoadBmpRelease(h);
-	}
-	catch(.../*PLTextException e*/){
-		//DSTR << e << endl;
-		return 0;
-	}
 
-	// テクスチャの生成．
-	glGenTextures(1, (GLuint *)&texId);
-	glBindTexture(GL_TEXTURE_2D, texId);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		// テクスチャの生成．
+		glGenTextures(1, (GLuint *)&texId);
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+		int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-	int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	if (rv){
-		DSTR << gluErrorString(rv) << std::endl;
+		delete texbuf;
+		if (rv){
+			DSTR << gluErrorString(rv) << std::endl;
+			return 0;
+		}
 	}
-	delete texbuf;
 	texnameMap[filename] = texId;
 	return texId;
 }

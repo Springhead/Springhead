@@ -139,7 +139,8 @@ struct GRMaterialDesc : GRVisualDesc{
 		透明なオブジェクトを描くとき、遠くのものから順番に描画しないと、意図に反した結果となる. */
 	bool IsOpaque() const {		
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
-	}	
+	}
+	bool Is3D() const ;
 };
 
 struct GRFrameIf;

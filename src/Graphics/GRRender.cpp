@@ -12,6 +12,16 @@
 
 namespace Spr {;
 
+bool GRMaterialDesc::Is3D() const{
+	int ext = texname.rfind('.');
+	int zeroLen;
+	for (zeroLen=0; texname[ext-zeroLen-1]=='0' ; ++zeroLen);
+	std::string id("_tex3d_");
+	int texD = ext-zeroLen - id.length();
+	return  zeroLen && texname.substr(texD, id.length()).compare("_tex3d_")==0 ;
+}
+
+
 //----------------------------------------------------------------------------
 //	GRRender
 IF_OBJECT_IMP_ABST(GRRenderBase, Object);
