@@ -376,6 +376,11 @@ struct GRDebugRenderIf:public GRRenderIf{
 	/**  @brief シーン内の全てのオブジェクトをレンダリングする
 	     @param  scene		シーン  */
 	virtual void DrawScene(PHSceneIf* scene)=0;
+
+	/** @brief シーンのWorld座標系の座標軸をレンダリングする
+	*/
+	virtual void DrawWorldAxis(PHSceneIf* scene) = 0;
+
 	/**  @brief 剛体をレンダリングする
 	     @param	solid　　　	剛体  */
 	virtual void DrawSolid(PHSolidIf* solid)=0;
@@ -397,12 +402,14 @@ struct GRDebugRenderIf:public GRRenderIf{
 		 @param wire ワイヤ描画
 	 */
 	virtual void SetRenderMode(bool solid = true, bool wire = false) = 0;
-	/**	 @brief 座標軸の描画
+	/**	 @brief 各関節の座標軸の描画
 	 */
 	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f) = 0;
-	/**  @brief 力の描画
+
+	/**  @brief 各関節の力の描画
 	 */
 	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f) = 0;
+
 };
 
 //@}

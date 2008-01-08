@@ -31,6 +31,7 @@ public:
 	/**  コンストラクタ  */
 	GRDebugRender();
 	virtual void DrawScene(PHSceneIf* scene);
+	virtual void DrawWorldAxis(PHSceneIf* scene);
 	virtual void DrawSolid(PHSolidIf* so);
 	virtual void DrawConstraint(PHConstraintIf* con);
 	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);

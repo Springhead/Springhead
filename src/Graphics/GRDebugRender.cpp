@@ -76,6 +76,13 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 	}
 }
 
+/// シーンのワールド座標系の座標軸をレンダリングする
+void GRDebugRender::DrawWorldAxis(PHSceneIf* scene){
+	if (!scene) return;
+	DrawCoordinateAxis(true);
+}
+
+
 /// 剛体をレンダリングする
 void GRDebugRender::DrawSolid(PHSolidIf* so){
 	Affinef soaf;

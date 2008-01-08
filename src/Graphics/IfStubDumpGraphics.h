@@ -335,6 +335,9 @@ struct GRDebugRenderIfStubTemplate: public GRRenderIfStubTemplate<IF, MIF, OBJ> 
 	virtual void DrawScene(PHSceneIf * scene){
 		return ((OBJ*)(MIF*)this)->DrawScene(scene);
 	}
+	virtual void DrawWorldAxis(PHSceneIf * scene){
+		return ((OBJ*)(MIF*)this)->DrawWorldAxis(scene);
+	}
 	virtual void DrawSolid(PHSolidIf * solid){
 		return ((OBJ*)(MIF*)this)->DrawSolid(solid);
 	}
