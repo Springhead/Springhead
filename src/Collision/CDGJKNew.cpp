@@ -160,7 +160,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	while(1){
 		count ++;
 		if (count > 1000) {
-			if (bDebug) return -3;
+			if (!bDebug) return -1;
 			bDebug = true;
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
