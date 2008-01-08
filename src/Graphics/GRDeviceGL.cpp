@@ -488,9 +488,13 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	if (mat.texname.length()){
 		if (mat.Is3D()){
 			int texId = LoadTexture(mat.texname);
+			glDisable(GL_TEXTURE_2D);
+			glEnable(GL_TEXTURE_3D);
 			glBindTexture(GL_TEXTURE_3D, texId);
 		}else{
 			int texId = LoadTexture(mat.texname);
+			glDisable(GL_TEXTURE_3D);
+			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, texId);
 		}
 	}else{
@@ -639,6 +643,8 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			LoadBmpRelease(h);	
 		}
 		// テクスチャの生成．
+		glDisable(GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_3D);
 		glGenTextures(1, (GLuint *)&texId);
 		glBindTexture(GL_TEXTURE_3D, texId);
 //		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -669,6 +675,8 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		LoadBmpRelease(h);
 
 		// テクスチャの生成．
+		glDisable(GL_TEXTURE_3D);
+		glEnable(GL_TEXTURE_2D);
 		glGenTextures(1, (GLuint *)&texId);
 		glBindTexture(GL_TEXTURE_2D, texId);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
