@@ -20,6 +20,8 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 
 	//部品のサイズを指定する
 	CDBoxDesc bd;
+	bd.material.mu  = 5.0;
+	bd.material.mu0 = 5.0;
 	bd.boxsize = Vec3f(0.005, 0.12, 0.038);//ASHIGARU足先アルミ板部分
 	boxFoot = sdk->CreateShape(bd)->Cast();
 	bd.boxsize = Vec3f(0.026, 0.067, 0.032);//ダイナミクセル１
@@ -27,7 +29,9 @@ void Robot::Leg::Build_root(PHSolidIf* body, PHRootNodeIf* root, const Posed& ba
 	bd.boxsize = Vec3f(0.026, 0.067, 0.032);//ダイナミクセル２
 	boxDX2 = sdk->CreateShape(bd)->Cast();
 
-	CDSphereDesc sp;						//足先の球
+	CDSphereDesc sp;//足先の球
+	sp.material.mu = 5.0;
+	sp.material.mu = 5.0;
 	sp.radius = 0.008f;
 	Sphere = sdk->CreateShape(sp)->Cast();
 
