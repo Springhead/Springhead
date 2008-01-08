@@ -61,7 +61,7 @@ void GRMesh::MakeBuffer(){
 			((GRVertexElement::VFT4fC4fN3fP4f*)(vtxs + i*stride))->t.x = texCoords[i].x;
 			((GRVertexElement::VFT4fC4fN3fP4f*)(vtxs + i*stride))->t.y = texCoords[i].y;
 			((GRVertexElement::VFT4fC4fN3fP4f*)(vtxs + i*stride))->t.z = 0;
-			((GRVertexElement::VFT4fC4fN3fP4f*)(vtxs + i*stride))->t.w = 0;
+			((GRVertexElement::VFT4fC4fN3fP4f*)(vtxs + i*stride))->t.w = 1;
 		}
 		vtxFormat = GRVertexElement::vfT4fC4fN3fP4f;
 	}else if (texCoords.size() && normals.size() && colors.size()){

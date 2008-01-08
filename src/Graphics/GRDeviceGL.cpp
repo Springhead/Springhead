@@ -647,7 +647,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glEnable(GL_TEXTURE_3D);
 		glGenTextures(1, (GLuint *)&texId);
 		glBindTexture(GL_TEXTURE_3D, texId);
-//		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
