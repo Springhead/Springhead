@@ -79,7 +79,38 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 /// シーンのワールド座標系の座標軸をレンダリングする
 void GRDebugRender::DrawWorldAxis(PHSceneIf* scene){
 	if (!scene) return;
-	DrawCoordinateAxis(true);
+	glBegin(GL_LINES);
+		//x軸（赤）
+		GRMaterialDesc material;
+		material.ambient  = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.emissive = Vec4d(1.0, 0.0, 0.0, 1.0);
+		material.diffuse  = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.specular = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.power	  = 0.0;
+		this->SetMaterial(material);
+		glVertex3d(	 0.0,   0.0,   0.0);
+		glVertex3d(100.0,   0.0,   0.0);
+		//y軸（緑）
+		material = GRMaterialDesc();
+		material.ambient  = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.emissive = Vec4d(0.0, 1.0, 0.0,1.0);
+		material.diffuse  = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.specular = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.power	  = 0.0;
+		this->SetMaterial(material);
+		glVertex3d(	 0.0,   0.0,   0.0);
+		glVertex3d(  0.0, 100.0,   0.0);
+		//z軸（青）
+		material = GRMaterialDesc();
+		material.ambient  = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.emissive = Vec4d(0.0, 0.0, 1.0,1.0);
+		material.diffuse  = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.specular = Vec4d(0.0, 0.0, 0.0, 0.0);
+		material.power	  = 0.0;
+		this->SetMaterial(material);
+		glVertex3d(  0.0,   0.0,   0.0);
+		glVertex3d(  0.0,   0.0, 100.0);
+	glEnd();
 }
 
 
