@@ -80,8 +80,12 @@ void GRMesh::MakeBuffer(){
 			for (unsigned i=0; i<normals.size(); ++i)
 				((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->n = normals[i];
 		}
-		for (unsigned i=0; i<colors.size(); ++i)
-			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->c = colors[i];
+		if (colors.size())
+			for (unsigned i=0; i<colors.size(); ++i)
+				((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->c = colors[i];
+		else 
+			for (unsigned i=0; i<positions.size(); ++i)
+			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->c = Vec4f(1,1,1,1);
 		for (unsigned i=0; i<texCoords.size(); ++i)
 			((GRVertexElement::VFT2fC4fN3fP3f*)(vtxs + i*stride))->t = texCoords[i];
 		vtxFormat = GRVertexElement::vfT2fC4fN3fP3f;
