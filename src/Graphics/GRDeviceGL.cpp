@@ -275,7 +275,6 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	if (!stride) stride = vertexSize;
 	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
 	else glDisable(GL_COLOR_MATERIAL);
-	SetMaterial(currentMaterial);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
@@ -653,12 +652,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		GLenum format=0;
-		if (nc == 1) format = GL_LUMINANCE;
-		else if (nc == 2) format = GL_LUMINANCE_ALPHA;
-		else if (nc == 3) format = GL_RGB;
-		else if (nc == 4) format = GL_RGBA;
-		glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, format, GL_UNSIGNED_BYTE, texbuf);
+		glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
 
 		glBindTexture(GL_TEXTURE_3D, 0);
 
