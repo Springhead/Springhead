@@ -379,7 +379,9 @@ struct GRDebugRenderIf:public GRRenderIf{
 	virtual void DrawScene(PHSceneIf* scene)=0;
 
 	/** @brief シーンのWorld座標系の座標軸をレンダリングする
+		@param  scene		シーン
 	*/
+	// 引数が冗長な気がしなくもないです・・・　		toki
 	virtual void DrawWorldAxis(PHSceneIf* scene) = 0;
 
 	/**  @brief 剛体をレンダリングする

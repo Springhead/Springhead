@@ -89,7 +89,7 @@ void GRDebugRender::DrawWorldAxis(PHSceneIf* scene){
 		material.power	  = 0.0;
 		this->SetMaterial(material);
 		glVertex3d(	 0.0,   0.0,   0.0);
-		glVertex3d(100.0,   0.0,   0.0);
+		glVertex3d(100.0,   0.0,   0.0);	//< ’·‚³100ˆÊ‚Å‚¢‚¢‚©‚È
 		//y²i—Îj
 		material = GRMaterialDesc();
 		material.ambient  = Vec4d(0.0, 0.0, 0.0, 0.0);
