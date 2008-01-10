@@ -149,7 +149,7 @@ void guiSetDataBallJoint(int control){
 		}
 	}
 	else{
-		DSTR << "yerrorz: Invailed control value@(SetBallJoint() is failed. )" << endl;
+		DSTR << "yerrorz: Invalid control value@(SetBallJoint() is failed. )" << endl;
 	}	
 	glui->sync_live();
 }
