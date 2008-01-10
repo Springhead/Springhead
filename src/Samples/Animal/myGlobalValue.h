@@ -44,7 +44,7 @@ const double dt               = 0.01;				//シミュレーションの積分幅
 const int    niter            = 200;				//LCPはんぷくかいすう
 /// --- Creatureクラス用の変数
 UTRef<CRCreatureIf>                creature;		//クリーチャー生成用の変数
-UTRef<CRFourLegsAnimalBodyIf>	   animalBody1;		//動物の体をいじるための変数
+UTRef<CRFourLegsAnimalBodyIf>	   animalBody;		//動物の体をいじるための変数
 UTRef<CRTryStandingUpControllerIf> standUpCtrl;		//立とうとするコントローラをいじるための変数
 
 std::vector<PHSolidIf*>			solids;				//GUIに剛体の情報を持たせるための変数

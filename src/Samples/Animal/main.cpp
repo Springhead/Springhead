@@ -91,7 +91,7 @@ void CreateBody(){
 
 	}
     
-	animalBody1 = DCAST(CRFourLegsAnimalBodyIf, creature->CreateBody(bodyDesc));
+	animalBody = DCAST(CRFourLegsAnimalBodyIf, creature->CreateBody(bodyDesc));
 
 
 //test from here
@@ -109,8 +109,8 @@ void CreateBody(){
 	// --- --- --- --- ---
 	// Horseの初期位置調整
 	Vec3f initialPosition = Vec3f(0, 2.0f, 1.5);
-	for (int i=0; i<animalBody1->NSolids(); i++) {
-		PHSolidIf* so = animalBody1->GetSolid(i);
+	for (int i=0; i<animalBody->NSolids(); i++) {
+		PHSolidIf* so = animalBody->GetSolid(i);
 		if (so) {
 			so->SetFramePosition(so->GetPose().Pos() + initialPosition);
 		}
@@ -190,11 +190,11 @@ void onKey(char key){
 		break;
 	
 	case '6'://現在の重心を表示
-		DSTR << "Center Of Mass : " << animalBody1->GetCenterOfMass() << endl;
+		DSTR << "Center Of Mass : " << animalBody->GetCenterOfMass() << endl;
 		break;
 
-	case '7'://現在の状態重心を表示
-		DSTR << "Center Of Mass Of Upper Part : " << animalBody1->GetUpperCenterOfMass() << endl;
+	case '7'://現在の上体重心を表示
+		DSTR << "Center Of Mass Of Upper Part : " << animalBody->GetUpperCenterOfMass() << endl;
 		break;
 	}
 
@@ -202,42 +202,42 @@ void onKey(char key){
 	// --- ボディを動かす
 	{
 	case 'a':
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->GetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->GetDesc(&ballD);
 		ballD.goal = Quaterniond::Rot(Rad(90), 'x');
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->SetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->SetDesc(&ballD);
 		break;
 	case 'A':
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->GetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->GetDesc(&ballD);
 		ballD.goal = Quaterniond::Rot(Rad(60), 'x');
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->SetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_CHEST_NECK)->SetDesc(&ballD);
 		break;
 	
 	case 'z':
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_SHOULDER)->GetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_SHOULDER)->GetDesc(&ballD);
 		ballD.goal = Quaterniond::Rot(Rad(-100), 'x');
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_SHOULDER)->SetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_SHOULDER)->SetDesc(&ballD);
 
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_ELBOW)->GetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_ELBOW)->GetDesc(&hingeD);
 		hingeD.origin = Rad(70);
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_ELBOW)->SetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_ELBOW)->SetDesc(&hingeD);
 
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_FRONT_KNEE)->GetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_FRONT_KNEE)->GetDesc(&hingeD);
 		hingeD.origin = Rad(-60);
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_FRONT_KNEE)->SetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_FRONT_KNEE)->SetDesc(&hingeD);
 		break;
 
 	case 'x':
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_HIP)->GetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_HIP)->GetDesc(&ballD);
 		ballD.goal = Quaterniond::Rot(Rad(-30), 'x');
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_HIP)->SetDesc(&ballD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_HIP)->SetDesc(&ballD);
 
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_STIFLE)->GetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_STIFLE)->GetDesc(&hingeD);
 		hingeD.origin = Rad(-70);
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_STIFLE)->SetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_STIFLE)->SetDesc(&hingeD);
 
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_REAR_KNEE)->GetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_REAR_KNEE)->GetDesc(&hingeD);
 		hingeD.origin = Rad(60);
-		animalBody1->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_REAR_KNEE)->SetDesc(&hingeD);
+		animalBody->GetJoint(CRFourLegsAnimalBodyDesc::JO_RIGHT_REAR_KNEE)->SetDesc(&hingeD);
 		break;
 	}
 

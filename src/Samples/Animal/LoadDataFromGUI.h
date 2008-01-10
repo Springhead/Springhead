@@ -19,7 +19,7 @@ void guiLoadSolid(int control){
 	
 	DSTR << "nowSolid: " << nowSolid << endl;
 	
-	dynamicalValue = (int) animalBody1->GetSolid(CRFourLegsAnimalBodyDesc::SO_WAIST)->IsDynamical();
+	dynamicalValue = (int) animalBody->GetSolid(CRFourLegsAnimalBodyDesc::SO_WAIST)->IsDynamical();
 
 	defaultBoxsize = box[nowSolid]->GetBoxSize();
 	boxsize = defaultBoxsize;
@@ -31,9 +31,9 @@ void guiLoadSolid(int control){
 
 void guiLoadBallJoint(int control){	
 	DSTR << "nowBallJoint: " << nowBallJoint << endl;
-	if(DCAST(PHBallJointIf, animalBody1->GetJoint(nowBallJoint))){
+	if(DCAST(PHBallJointIf, animalBody->GetJoint(nowBallJoint))){
 		PHBallJointDesc ballDesc;
-		DCAST(PHBallJointIf, animalBody1->GetJoint(nowBallJoint))->GetDesc(&ballDesc);
+		DCAST(PHBallJointIf, animalBody->GetJoint(nowBallJoint))->GetDesc(&ballDesc);
 		defaultBallJointData[0] = ballDesc.spring;
 		ballJointData[0]		= defaultBallJointData[0];
 		defaultBallJointData[1] = ballDesc.damper;
@@ -57,21 +57,21 @@ void guiLoadHingeJoint(int control){
 	double lower,upper;
 
 	DSTR << "nowHingeJoint: " << nowHingeJoint << endl;
-	if(DCAST(PHHingeJointIf, animalBody1->GetJoint(nowHingeJoint))){
+	if(DCAST(PHHingeJointIf, animalBody->GetJoint(nowHingeJoint))){
 		
-		defaultHingeJointData[0] =	DCAST(PHHingeJointIf, animalBody1->GetJoint(nowHingeJoint))->GetSpring();
+		defaultHingeJointData[0] =	DCAST(PHHingeJointIf, animalBody->GetJoint(nowHingeJoint))->GetSpring();
 		hingeJointData[0]		 =  defaultHingeJointData[0];
 		
-		defaultHingeJointData[1] =  DCAST(PHHingeJointIf, animalBody1->GetJoint(nowHingeJoint))->GetDamper();
+		defaultHingeJointData[1] =  DCAST(PHHingeJointIf, animalBody->GetJoint(nowHingeJoint))->GetDamper();
 		hingeJointData[1]		 =	defaultHingeJointData[1];
 		
-		DCAST(PHHingeJointIf, animalBody1->GetJoint(nowHingeJoint))->GetRange(lower, upper);
+		DCAST(PHHingeJointIf, animalBody->GetJoint(nowHingeJoint))->GetRange(lower, upper);
 		defaultHingeJointData[2] =	lower;
 		hingeJointData[2]		 =	defaultHingeJointData[2];
 		defaultHingeJointData[3] =	upper;
 		hingeJointData[3]		 =	defaultHingeJointData[3];
 		
-		defaultHingeJointGoal	 =	DCAST(PHHingeJointIf, animalBody1->GetJoint(nowHingeJoint))->GetSpringOrigin();
+		defaultHingeJointGoal	 =	DCAST(PHHingeJointIf, animalBody->GetJoint(nowHingeJoint))->GetSpringOrigin();
 		hingeJointGoal			 =	defaultHingeJointGoal;
 		
 	}
@@ -84,23 +84,23 @@ void guiLoadHingeJoint(int control){
 void guiLoadScene(){
 	// 初期データのロード
 	// Solids
-	dynamicalValue = animalBody1->GetSolid(CRFourLegsAnimalBodyDesc::SO_WAIST)->IsDynamical();
+	dynamicalValue = animalBody->GetSolid(CRFourLegsAnimalBodyDesc::SO_WAIST)->IsDynamical();
 	for (int i=0; i<SO_NSOLIDS; i++){
 		
-		solids.push_back(DCAST(PHSolidIf, animalBody1->GetSolid(i)));
+		solids.push_back(DCAST(PHSolidIf, animalBody->GetSolid(i)));
 		solidsSpace.push_back(i);
 		
-		if(animalBody1->GetSolid(i))
-			box.push_back(DCAST(CDBoxIf,   animalBody1->GetSolid(i)->GetShape(0)));
+		if(animalBody->GetSolid(i))
+			box.push_back(DCAST(CDBoxIf,   animalBody->GetSolid(i)->GetShape(0)));
 	}
 	// Joints
 	for (int i=0; i<JO_NJOINTS; i++){
-		if(DCAST(PHBallJointIf, animalBody1->GetJoint(i)) != NULL){
-			ballJoints.push_back(DCAST(PHBallJointIf, animalBody1->GetJoint(i)));
+		if(DCAST(PHBallJointIf, animalBody->GetJoint(i)) != NULL){
+			ballJoints.push_back(DCAST(PHBallJointIf, animalBody->GetJoint(i)));
 			ballJointsSpace.push_back(i);
 		}	
-		else if(DCAST(PHHingeJointIf, animalBody1->GetJoint(i)) != NULL){
-			hingeJoints.push_back(DCAST(PHHingeJointIf, animalBody1->GetJoint(i)));
+		else if(DCAST(PHHingeJointIf, animalBody->GetJoint(i)) != NULL){
+			hingeJoints.push_back(DCAST(PHHingeJointIf, animalBody->GetJoint(i)));
 			hingeJointsSpace.push_back(i);
 		}
 	}
