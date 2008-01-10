@@ -315,10 +315,6 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 		// -- Right part of the solids
 		SO_RIGHT_BREASTBONE, SO_RIGHT_RADIUS, SO_RIGHT_FRONT_CANNON_BONE, SO_RIGHT_FRONT_TOE,
 		SO_RIGHT_FEMUR , SO_RIGHT_TIBIA, SO_RIGHT_REAR_CANNON_BONE, SO_RIGHT_REAR_TOE,
-		
-		// -- Undefined members (the reality is NULL)
-		SO_RIGHT_EYE,SO_LEFT_EYE,
-		SO_RIGHT_EYE_XY,SO_LEFT_EYE_XY,
 
 		// -- The number of the solids
 		SO_NSOLIDS
@@ -347,10 +343,6 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 		// -- Right part of the joints
 		JO_RIGHT_SHOULDER,JO_RIGHT_ELBOW, JO_RIGHT_FRONT_KNEE, JO_RIGHT_FRONT_ANKLE,
 		JO_RIGHT_HIP, JO_RIGHT_STIFLE, JO_RIGHT_REAR_KNEE, JO_RIGHT_REAR_ANKLE,
-
-		// --Å@Undefined members (its reality is NULL)
-		JO_LEFT_EYE_Y, JO_LEFT_EYE_X,
-		JO_RIGHT_EYE_Y, JO_RIGHT_EYE_X,
 
 		// -- The number of the all joints (ball + hinge)
 		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)

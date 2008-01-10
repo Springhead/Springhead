@@ -22,10 +22,10 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 
 	//---------------------------------------------------------
 	// number of the joints or solids
-	soNSolids = (int)SO_NSOLIDS;
-	joNJoints = (int)JO_NJOINTS;
-	joNBallJoints = 14;
-	joNHingeJoints = joNJoints - joNBallJoints;
+	soNSolids = 0;
+	joNJoints = 0;
+	joNBallJoints = 0;
+	joNHingeJoints = 0;
 
 	//---------------------------------------------------------
 	// sizes of solids
@@ -689,7 +689,6 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 		joHip    = JO_RIGHT_HIP;	
 	}
 	
-
 	// [p]waist - [c]femur
 	solidDesc.mass = 0.02;
 	solids[soFemur] = phScene->CreateSolid(solidDesc);
@@ -955,20 +954,39 @@ Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(){
 }
 
 int CRFourLegsAnimalBody::NSolids(){
+	soNSolids = solids.size();
+	DSTR << "NSolids() : " << soNSolids << std::endl;
 	return soNSolids;
-
 }
-
 int CRFourLegsAnimalBody::NJoints(){
+	joNJoints = joints.size();
+	DSTR << "NJoints() : " << joNJoints << std::endl;
 	return joNJoints;
 }
-int CRFourLegsAnimalBody::NBallJoints()
-{
+int CRFourLegsAnimalBody::NBallJoints(){
+	int counterNBallJoint = 0;
+	DSTR << "counterNBallJoint : " << counterNBallJoint << " , joints.size() : " << joints.size() << std::endl;
+	for(unsigned int i = 0; i < joints.size(); i++){
+		if((char*) joints[i]->GetIfInfo()->ClassName() == "PHBallJoint")
+			counterNBallJoint ++;
+	}
+	DSTR << "counterNBallJoint" << counterNBallJoint << std::endl;
+	joNBallJoints = counterNBallJoint;
 	return joNBallJoints;
-}
+}	
 
 int CRFourLegsAnimalBody::NHingeJoints(){
+	int counterNHingeJoint = 0;
+	DSTR << "counterNHingeJoint : " << counterNHingeJoint << " , joints.size() : " << joints.size() << std::endl;
+	for(unsigned int i = 0; i< joints.size(); i++){
+		if((char*) joints[i]->GetIfInfo()->ClassName() == "PHHingeJoint")
+			 counterNHingeJoint ++;
+	}
+	DSTR << "counterNHingeJoint : " << counterNHingeJoint << std::endl;
+	joNHingeJoints = counterNHingeJoint;
 	return joNHingeJoints;
 }
 
-}
+
+}//end of the namespace Spr;
+
