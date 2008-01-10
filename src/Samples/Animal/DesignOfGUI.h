@@ -37,7 +37,7 @@ void DesignGUI(){
 	// リストボックス
 	listBoxSolid = glui->add_listbox_to_panel(rollSolid, "Solid:", &nowSolid, NULL, guiLoadSolid);
 	
-	for(int i=0; i<SO_NSOLIDS; i++){
+	for(int i=0; i<animalBody->NSolids(); i++){
 		if(solids[i])
 			listBoxSolid->add_item(solidsSpace[i], (char*)solids[i]->GetName());
 	}
@@ -75,7 +75,7 @@ void DesignGUI(){
 	// リストボックス
 	listBoxBallJoint = glui->add_listbox_to_panel(rollBallJoint, "Ball Joint:", &nowBallJoint, NULL, guiLoadBallJoint);
 	
-	for(int i=0; i<JO_NBALLJOINTS; i++){
+	for(int i=0; i<animalBody->NBallJoints(); i++){
 		if(ballJoints[i])
 			listBoxBallJoint->add_item(ballJointsSpace[i], (char*)ballJoints[i]->GetName());
 	}
@@ -126,7 +126,7 @@ void DesignGUI(){
 	glui->add_statictext_to_panel(rollHingeJoint, "Select a hinge joint & set datas of it.");
 	// リストボックス
 	listBoxHingeJoint = glui->add_listbox_to_panel(rollHingeJoint, "Hinge Joint:", &nowHingeJoint, NULL, guiLoadHingeJoint);
-	for(int i=0; i<JO_NHINGEJOINTS; i++){
+	for(int i=0; i<animalBody->NHingeJoints(); i++){
 		if(hingeJoints[i])
 			listBoxHingeJoint->add_item(hingeJointsSpace[i], (char*)hingeJoints[i]->GetName());
 	}

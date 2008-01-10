@@ -85,7 +85,7 @@ void guiLoadScene(){
 	// 初期データのロード
 	// Solids
 	dynamicalValue = animalBody->GetSolid(CRFourLegsAnimalBodyDesc::SO_WAIST)->IsDynamical();
-	for (int i=0; i<SO_NSOLIDS; i++){
+	for (int i=0; i<animalBody->NSolids(); i++){
 		
 		solids.push_back(DCAST(PHSolidIf, animalBody->GetSolid(i)));
 		solidsSpace.push_back(i);
@@ -94,7 +94,7 @@ void guiLoadScene(){
 			box.push_back(DCAST(CDBoxIf,   animalBody->GetSolid(i)->GetShape(0)));
 	}
 	// Joints
-	for (int i=0; i<JO_NJOINTS; i++){
+	for (int i=0; i<animalBody->NJoints(); i++){
 		if(DCAST(PHBallJointIf, animalBody->GetJoint(i)) != NULL){
 			ballJoints.push_back(DCAST(PHBallJointIf, animalBody->GetJoint(i)));
 			ballJointsSpace.push_back(i);

@@ -23,7 +23,7 @@ void guiSetDynamical(int control){
 void guiSetBoxsize(int control){
 	box[nowSolid]->SetBoxSize(boxsize);
 	//DSTR << "nowSolid : " << solids[nowSolid]->GetIfInfo()->ClassName() << " " << solids[nowSolid]->GetName() << endl;
-	for(int i = 0; i<JO_NJOINTS; i++){
+	for(int i = 0; i<animalBody->NJoints(); i++){
 		if(animalBody->GetJoint(i) != NULL){
 			PHJointIf* jInfo = animalBody->GetJoint(i);
 
@@ -35,8 +35,8 @@ void guiSetBoxsize(int control){
 			// この問題を回避するために以下のようにする。↓
 			//-------------------------------------------------------------
 
-			PHBallJointIf* ball = XCAST(jInfo);
-			PHHingeJointIf* hinge = XCAST(jInfo);
+			PHBallJointIf*	ball	= XCAST(jInfo);		//< XCAST:いい感じの型にキャストしてくれるマクロ（この場合はPHBallJointIf*にキャストしようとする。失敗するとNULLポインタ）
+			PHHingeJointIf* hinge	= XCAST(jInfo);
 
 			if (ball){
 				PHBallJointDesc d;

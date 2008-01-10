@@ -29,7 +29,6 @@ void step(){
 
 	phScene->ClearForce();
 	// 独自の制御はここに入れる
-	creature->Step();														//感覚系のループを一つ回す
 	phScene->GenerateForce();
 	phScene->Integrate();
 	
@@ -98,9 +97,7 @@ void CreateBody(){
 
 	// --- --- --- --- ---
 	// コントローラの登録
-	CRTryStandingUpControllerDesc standUpDesc;
-	standUpCtrl = DCAST(CRTryStandingUpControllerIf, creature->CreateController(standUpDesc));
-
+	
 	// --- --- --- --- ---
 	// 初期化
 

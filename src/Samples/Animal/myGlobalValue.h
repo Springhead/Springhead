@@ -21,10 +21,6 @@ using namespace std;
 // --- --- --- --- ---
 // special definition
 #define ESC 27
-#define SO_NSOLIDS 27
-#define JO_NJOINTS 26
-#define JO_NBALLJOINTS 14
-#define JO_NHINGEJOINTS 8
 
 // --- --- --- --- ---
 // グローバル変数定義
