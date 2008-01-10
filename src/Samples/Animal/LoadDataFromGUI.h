@@ -31,6 +31,15 @@ void guiLoadSolid(int control){
 
 void guiLoadBallJoint(int control){	
 	DSTR << "nowBallJoint: " << nowBallJoint << endl;
+
+	//ぐりぐりコントローラのEuler回転行列を編集する関節を変更するたびに初期化
+	for(int i = 0; i < 16; i++){
+		if(i%5 == 0) 
+			rotationBallJoint[i] = 1.0;
+		else 
+			rotationBallJoint[i] = 0.0;
+	}
+
 	if(DCAST(PHBallJointIf, animalBody->GetJoint(nowBallJoint))){
 		PHBallJointDesc ballDesc;
 		DCAST(PHBallJointIf, animalBody->GetJoint(nowBallJoint))->GetDesc(&ballDesc);
@@ -85,23 +94,33 @@ void guiLoadScene(){
 	// 初期データのロード
 	// Solids
 	dynamicalValue = animalBody->GetSolid(CRFourLegsAnimalBodyDesc::SO_WAIST)->IsDynamical();
+	solids.resize(animalBody->NSolids());
+	solidsSpace.resize(animalBody->NSolids());
+	box.resize(animalBody->NSolids());
 	for (int i=0; i<animalBody->NSolids(); i++){
-		
-		solids.push_back(DCAST(PHSolidIf, animalBody->GetSolid(i)));
-		solidsSpace.push_back(i);
-		
+		solids[i]		= DCAST(PHSolidIf, animalBody->GetSolid(i));
+		solidsSpace[i]  = i;		
 		if(animalBody->GetSolid(i))
-			box.push_back(DCAST(CDBoxIf,   animalBody->GetSolid(i)->GetShape(0)));
+			box[i] = DCAST(CDBoxIf,   animalBody->GetSolid(i)->GetShape(0));
 	}
+
 	// Joints
+	ballJoints.resize(animalBody->NBallJoints());
+	ballJointsSpace.resize(animalBody->NBallJoints());
+	hingeJoints.resize(animalBody->NHingeJoints());
+	hingeJointsSpace.resize(animalBody->NHingeJoints());
+	int j = 0;
+	int k = 0;
 	for (int i=0; i<animalBody->NJoints(); i++){
 		if(DCAST(PHBallJointIf, animalBody->GetJoint(i)) != NULL){
-			ballJoints.push_back(DCAST(PHBallJointIf, animalBody->GetJoint(i)));
-			ballJointsSpace.push_back(i);
+			ballJoints[j]		= DCAST(PHBallJointIf, animalBody->GetJoint(i));
+			ballJointsSpace[j]	= i;
+			j ++;
 		}	
 		else if(DCAST(PHHingeJointIf, animalBody->GetJoint(i)) != NULL){
-			hingeJoints.push_back(DCAST(PHHingeJointIf, animalBody->GetJoint(i)));
-			hingeJointsSpace.push_back(i);
+			hingeJoints[k]		= DCAST(PHHingeJointIf, animalBody->GetJoint(i));
+			hingeJointsSpace[k] = i;
+			k ++;
 		}
 	}
 }
