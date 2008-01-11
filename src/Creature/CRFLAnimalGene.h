@@ -33,7 +33,7 @@
 */
 class CRFLAnimalGene: public UTRefCount{
 
-protected:
+private:
 	CRCreatureIf*					creature;						//< §Œä‘ÎÛ‚ÌƒNƒŠ[ƒ`ƒƒ[ŒQ
 	std::vector<CRBodyIf*>		    crBody;							//< creature‚É“o˜^‚³‚ê‚Ä‚¢‚éƒ{ƒfƒBî•ñ(X‘Ì)‚ðŠi”[‚·‚é”z—ñ
 	

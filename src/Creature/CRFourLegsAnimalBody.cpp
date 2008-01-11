@@ -964,7 +964,7 @@ int CRFourLegsAnimalBody::NJoints(){
 int CRFourLegsAnimalBody::NBallJoints(){
 	int counterNBallJoint = 0;
 	for(unsigned int i = 0; i < joints.size(); i++){
-		if((char*) joints[i]->GetIfInfo()->ClassName() == "PHBallJoint")
+		if(DCAST(PHBallJointIf, joints[i]))
 			counterNBallJoint ++;
 	}
 	joNBallJoints = counterNBallJoint;
@@ -974,7 +974,7 @@ int CRFourLegsAnimalBody::NBallJoints(){
 int CRFourLegsAnimalBody::NHingeJoints(){
 	int counterNHingeJoint = 0;
 	for(unsigned int i = 0; i< joints.size(); i++){
-		if((char*) joints[i]->GetIfInfo()->ClassName() == "PHHingeJoint")
+		if(DCAST(PHHingeJointIf, joints[i]))
 			 counterNHingeJoint ++;
 	}
 	joNHingeJoints = counterNHingeJoint;
