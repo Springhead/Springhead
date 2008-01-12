@@ -441,12 +441,41 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	Vec2d limitTwistHip;
 	Vec2d limitTwistRearAnkle;
 
-	// 
+	// 関節の出せる力の最大値
+	double fMaxWaistChest;
+	double fMaxChestNeck;
+	double fMaxNeckHead;
+	double fMaxWaistTail;
+	double fMaxTail12;
+	double fMaxTail23;
+	double fMaxLeftShoulder;
+	double fMaxLeftElbow;
+	double fMaxLeftFrontKnee;
+	double fMaxLeftFrontAnkle;
+	double fMaxLeftHip;
+	double fMaxLeftStifle;
+	double fMaxLeftRearKnee;
+	double fMaxLeftRearAnkle;
+	double fMaxRightShoulder;
+	double fMaxRightElbow;
+	double fMaxRightFrontKnee;
+	double fMaxRightFrontAnkle;
+	double fMaxRightHip;
+	double fMaxRightStifle;
+	double fMaxRightRearKnee;
+	double fMaxRightRearAnkle;
+
+	// 物体の摩擦係数
+	float materialMu;
 
 	/// 裏オプション
 	bool noLegs;
 	/// ダイナミカルを入れるかどうか
 	bool dynamicalMode;
+	/// fMaxを入れるかどうか
+	bool flagFMax;
+	/// 稼働域制限を入れるかどうか
+	bool flagRange;
 
 	CRFourLegsAnimalBodyDesc();
 };

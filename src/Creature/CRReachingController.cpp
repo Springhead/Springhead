@@ -68,7 +68,7 @@ void CRReachingController::Step(){
 				Reset();
 			}
 		} else {
-			time += dt;
+			time += (float)dt;
 		}
 
 		Vec3f pos, vel;

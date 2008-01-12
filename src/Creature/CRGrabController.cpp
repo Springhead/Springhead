@@ -64,8 +64,8 @@ void CRGrabController::Init(){
 	// 到達可能か判断するための数値を先に計算しておく
 	CRHingeHumanBodyDesc descHIBody;
 	hiBody->GetDesc(&descHIBody);
-	reachableDistance = (descHIBody.upperArmLength + descHIBody.lowerArmLength + (descHIBody.handLength / 2.0f) + descHIBody.chestHeight + descHIBody.abdomenHeight + (descHIBody.waistHeight / 2.0f));
-	shoulderHeightFromWaist = descHIBody.waistHeight/2.0 + descHIBody.abdomenHeight + descHIBody.chestHeight;
+	reachableDistance = (float)((descHIBody.upperArmLength + descHIBody.lowerArmLength + (descHIBody.handLength / 2.0f) + descHIBody.chestHeight + descHIBody.abdomenHeight + (descHIBody.waistHeight / 2.0f)));
+	shoulderHeightFromWaist = (float)(descHIBody.waistHeight/2.0 + descHIBody.abdomenHeight + descHIBody.chestHeight);
 
 	// 初期状態の設定
 	controlState = CRGrabControllerIf::CRGC_STANDBY;
@@ -116,7 +116,7 @@ void CRGrabController::Step(){
 }
 
 bool CRGrabController::Reach(PHSolidIf* solid, float radius){
-	if (!IsReachable(solid, 0.9)) {
+	if (!IsReachable(solid, (float)0.9)) {
 		// とどかない
 		return false;
 	}

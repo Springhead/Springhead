@@ -72,7 +72,7 @@ void CRNeckController::Step(){
 		origZ = Z;
 	}
 
-	float alpha = 0.9;
+	float alpha = (float)0.9;
 	origX = origX*alpha + X*(1.0-alpha);
 	origZ = origZ*alpha + Z*(1.0-alpha);
 

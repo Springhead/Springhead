@@ -277,7 +277,7 @@ void CRHingeHumanBody::CreateHead(){
 	// Solid
 	solidDesc.mass    = 0.07;
 	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
-	sphereDesc.radius = headDiameter / 2.0;
+	sphereDesc.radius = (float)(headDiameter / 2.0);
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 
 	// non-shaped Solid
@@ -524,7 +524,7 @@ void CRHingeHumanBody::CreateEye(LREnum lr){
 	solidDesc.mass     = 0.001;
 	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
 	solids[soNEye]     = phScene->CreateSolid(solidDesc);
-	sphereDesc.radius  = eyeDiameter;
+	sphereDesc.radius  = (float)eyeDiameter;
 	solids[soNEye]->AddShape(phSdk->CreateShape(sphereDesc));
 	boxDesc.boxsize    = Vec3f(0.015,0.015,eyeDiameter+0.029);
 	solids[soNEye]->AddShape(phSdk->CreateShape(boxDesc));

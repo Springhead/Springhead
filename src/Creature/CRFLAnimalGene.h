@@ -42,7 +42,6 @@ public:
 
 	// コンストラクタ
 	CRFLAnimalGene(){
-		//DSTR << "This Constractor is called when a object which is CRFLAnimalQL class has created." << std::endl;
 	}
 	CRFLAnimalGene(CRCreatureIf* charactors){
 		creature = charactors;

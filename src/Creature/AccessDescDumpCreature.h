@@ -808,8 +808,33 @@ protected: \
 	Vec2d limitTwistFrontAnkle ; \
 	Vec2d limitTwistHip ; \
 	Vec2d limitTwistRearAnkle ; \
+	double fMaxWaistChest ; \
+	double fMaxChestNeck ; \
+	double fMaxNeckHead ; \
+	double fMaxWaistTail ; \
+	double fMaxTail12 ; \
+	double fMaxTail23 ; \
+	double fMaxLeftShoulder ; \
+	double fMaxLeftElbow ; \
+	double fMaxLeftFrontKnee ; \
+	double fMaxLeftFrontAnkle ; \
+	double fMaxLeftHip ; \
+	double fMaxLeftStifle ; \
+	double fMaxLeftRearKnee ; \
+	double fMaxLeftRearAnkle ; \
+	double fMaxRightShoulder ; \
+	double fMaxRightElbow ; \
+	double fMaxRightFrontKnee ; \
+	double fMaxRightFrontAnkle ; \
+	double fMaxRightHip ; \
+	double fMaxRightStifle ; \
+	double fMaxRightRearKnee ; \
+	double fMaxRightRearAnkle ; \
+	float materialMu ; \
 	bool noLegs ; \
 	bool dynamicalMode ; \
+	bool flagFMax ; \
+	bool flagRange ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		cls##::SetDesc(desc); \
@@ -926,8 +951,33 @@ public: \
 		limitTwistFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->limitTwistFrontAnkle; \
 		limitTwistHip = ((CRFourLegsAnimalBodyDesc*)desc)->limitTwistHip; \
 		limitTwistRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->limitTwistRearAnkle; \
+		fMaxWaistChest = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistChest; \
+		fMaxChestNeck = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxChestNeck; \
+		fMaxNeckHead = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxNeckHead; \
+		fMaxWaistTail = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistTail; \
+		fMaxTail12 = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail12; \
+		fMaxTail23 = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail23; \
+		fMaxLeftShoulder = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftShoulder; \
+		fMaxLeftElbow = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftElbow; \
+		fMaxLeftFrontKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontKnee; \
+		fMaxLeftFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontAnkle; \
+		fMaxLeftHip = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftHip; \
+		fMaxLeftStifle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftStifle; \
+		fMaxLeftRearKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearKnee; \
+		fMaxLeftRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearAnkle; \
+		fMaxRightShoulder = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightShoulder; \
+		fMaxRightElbow = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightElbow; \
+		fMaxRightFrontKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontKnee; \
+		fMaxRightFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontAnkle; \
+		fMaxRightHip = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightHip; \
+		fMaxRightStifle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightStifle; \
+		fMaxRightRearKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearKnee; \
+		fMaxRightRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearAnkle; \
+		materialMu = ((CRFourLegsAnimalBodyDesc*)desc)->materialMu; \
 		noLegs = ((CRFourLegsAnimalBodyDesc*)desc)->noLegs; \
 		dynamicalMode = ((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode; \
+		flagFMax = ((CRFourLegsAnimalBodyDesc*)desc)->flagFMax; \
+		flagRange = ((CRFourLegsAnimalBodyDesc*)desc)->flagRange; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		cls##::GetDesc(desc); \
@@ -1044,8 +1094,33 @@ public: \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitTwistFrontAnkle = limitTwistFrontAnkle; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitTwistHip = limitTwistHip; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitTwistRearAnkle = limitTwistRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistChest = fMaxWaistChest; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxChestNeck = fMaxChestNeck; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxNeckHead = fMaxNeckHead; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistTail = fMaxWaistTail; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail12 = fMaxTail12; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail23 = fMaxTail23; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftShoulder = fMaxLeftShoulder; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftElbow = fMaxLeftElbow; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontKnee = fMaxLeftFrontKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontAnkle = fMaxLeftFrontAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftHip = fMaxLeftHip; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftStifle = fMaxLeftStifle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearKnee = fMaxLeftRearKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearAnkle = fMaxLeftRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightShoulder = fMaxRightShoulder; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightElbow = fMaxRightElbow; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontKnee = fMaxRightFrontKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontAnkle = fMaxRightFrontAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightHip = fMaxRightHip; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightStifle = fMaxRightStifle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearKnee = fMaxRightRearKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearAnkle = fMaxRightRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->materialMu = materialMu; \
 		((CRFourLegsAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode = dynamicalMode; \
+		((CRFourLegsAnimalBodyDesc*)desc)->flagFMax = flagFMax; \
+		((CRFourLegsAnimalBodyDesc*)desc)->flagRange = flagRange; \
 		return true; \
 	} \
 
@@ -1164,8 +1239,33 @@ protected: \
 	Vec2d limitTwistFrontAnkle ; \
 	Vec2d limitTwistHip ; \
 	Vec2d limitTwistRearAnkle ; \
+	double fMaxWaistChest ; \
+	double fMaxChestNeck ; \
+	double fMaxNeckHead ; \
+	double fMaxWaistTail ; \
+	double fMaxTail12 ; \
+	double fMaxTail23 ; \
+	double fMaxLeftShoulder ; \
+	double fMaxLeftElbow ; \
+	double fMaxLeftFrontKnee ; \
+	double fMaxLeftFrontAnkle ; \
+	double fMaxLeftHip ; \
+	double fMaxLeftStifle ; \
+	double fMaxLeftRearKnee ; \
+	double fMaxLeftRearAnkle ; \
+	double fMaxRightShoulder ; \
+	double fMaxRightElbow ; \
+	double fMaxRightFrontKnee ; \
+	double fMaxRightFrontAnkle ; \
+	double fMaxRightHip ; \
+	double fMaxRightStifle ; \
+	double fMaxRightRearKnee ; \
+	double fMaxRightRearAnkle ; \
+	float materialMu ; \
 	bool noLegs ; \
 	bool dynamicalMode ; \
+	bool flagFMax ; \
+	bool flagRange ; \
 public: \
 	virtual void SetDesc(const void* desc){ \
 		soNSolids = ((CRFourLegsAnimalBodyDesc*)desc)->soNSolids; \
@@ -1281,8 +1381,33 @@ public: \
 		limitTwistFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->limitTwistFrontAnkle; \
 		limitTwistHip = ((CRFourLegsAnimalBodyDesc*)desc)->limitTwistHip; \
 		limitTwistRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->limitTwistRearAnkle; \
+		fMaxWaistChest = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistChest; \
+		fMaxChestNeck = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxChestNeck; \
+		fMaxNeckHead = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxNeckHead; \
+		fMaxWaistTail = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistTail; \
+		fMaxTail12 = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail12; \
+		fMaxTail23 = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail23; \
+		fMaxLeftShoulder = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftShoulder; \
+		fMaxLeftElbow = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftElbow; \
+		fMaxLeftFrontKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontKnee; \
+		fMaxLeftFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontAnkle; \
+		fMaxLeftHip = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftHip; \
+		fMaxLeftStifle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftStifle; \
+		fMaxLeftRearKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearKnee; \
+		fMaxLeftRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearAnkle; \
+		fMaxRightShoulder = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightShoulder; \
+		fMaxRightElbow = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightElbow; \
+		fMaxRightFrontKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontKnee; \
+		fMaxRightFrontAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontAnkle; \
+		fMaxRightHip = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightHip; \
+		fMaxRightStifle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightStifle; \
+		fMaxRightRearKnee = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearKnee; \
+		fMaxRightRearAnkle = ((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearAnkle; \
+		materialMu = ((CRFourLegsAnimalBodyDesc*)desc)->materialMu; \
 		noLegs = ((CRFourLegsAnimalBodyDesc*)desc)->noLegs; \
 		dynamicalMode = ((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode; \
+		flagFMax = ((CRFourLegsAnimalBodyDesc*)desc)->flagFMax; \
+		flagRange = ((CRFourLegsAnimalBodyDesc*)desc)->flagRange; \
 	} \
 	virtual bool GetDesc(void* desc){ \
 		((CRFourLegsAnimalBodyDesc*)desc)->soNSolids = soNSolids; \
@@ -1398,8 +1523,33 @@ public: \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitTwistFrontAnkle = limitTwistFrontAnkle; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitTwistHip = limitTwistHip; \
 		((CRFourLegsAnimalBodyDesc*)desc)->limitTwistRearAnkle = limitTwistRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistChest = fMaxWaistChest; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxChestNeck = fMaxChestNeck; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxNeckHead = fMaxNeckHead; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxWaistTail = fMaxWaistTail; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail12 = fMaxTail12; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxTail23 = fMaxTail23; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftShoulder = fMaxLeftShoulder; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftElbow = fMaxLeftElbow; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontKnee = fMaxLeftFrontKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftFrontAnkle = fMaxLeftFrontAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftHip = fMaxLeftHip; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftStifle = fMaxLeftStifle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearKnee = fMaxLeftRearKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxLeftRearAnkle = fMaxLeftRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightShoulder = fMaxRightShoulder; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightElbow = fMaxRightElbow; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontKnee = fMaxRightFrontKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightFrontAnkle = fMaxRightFrontAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightHip = fMaxRightHip; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightStifle = fMaxRightStifle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearKnee = fMaxRightRearKnee; \
+		((CRFourLegsAnimalBodyDesc*)desc)->fMaxRightRearAnkle = fMaxRightRearAnkle; \
+		((CRFourLegsAnimalBodyDesc*)desc)->materialMu = materialMu; \
 		((CRFourLegsAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode = dynamicalMode; \
+		((CRFourLegsAnimalBodyDesc*)desc)->flagFMax = flagFMax; \
+		((CRFourLegsAnimalBodyDesc*)desc)->flagRange = flagRange; \
 		return true; \
 	} \
 

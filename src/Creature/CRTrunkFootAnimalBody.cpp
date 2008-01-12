@@ -27,7 +27,7 @@ CRTrunkFootAnimalBodyDesc::CRTrunkFootAnimalBodyDesc(){
 	chestThickness = 0.2118;
 
 	neckLength   = 1.7219 - 1.4564 - 0.1732;
-	headDiameter = 0.2387;
+	headDiameter = (float)0.2387;
 
 	footLength       = 0.2544;
 	footBreadth      = 0.0994;
@@ -113,7 +113,7 @@ void CRTrunkFootAnimalBody::CreateHead(){
 	// solidDesc.mass    = 0.07;
 	solidDesc.mass    = 0.178;
 	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
-	sphereDesc.radius = headDiameter / 2.0;
+	sphereDesc.radius = (float)(headDiameter / 2.0);
 	// sphereDesc.radius = 0.2387/2.0;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 

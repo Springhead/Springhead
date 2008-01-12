@@ -140,7 +140,7 @@ void CRTrunkFootHumanBody::CreateHead(){
 	// solidDesc.mass    = 0.07;
 	solidDesc.mass    = 0.178;
 	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
-	sphereDesc.radius = headDiameter / 2.0;
+	sphereDesc.radius = (float)(headDiameter / 2.0);
 	// sphereDesc.radius = 0.2387/2.0;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 

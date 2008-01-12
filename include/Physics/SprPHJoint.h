@@ -409,12 +409,11 @@ struct PHBallJointDesc : public PHJointDesc{
 	DESC_DEF_FOR_OBJECT(PHBallJoint);
 	double			spring;		///< バネ係数
 	double			damper;		///< ダンパ係数
-	Vec2d	limitSwing; ///< swing角の可動域（[0] or .lower, [1] or .upper）
-	Vec2d	limitTwist;	///< twist角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d			limitSwing; ///< swing角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d			limitTwist;	///< twist角の可動域（[0] or .lower, [1] or .upper）
 	Vec3d			limitDir;	///< 可動域の中心ベクトル
 	Quaterniond		goal;		///< バネダンパの制御目標
 	Vec3d			torque;		///< モータトルク
-	
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
@@ -465,10 +464,10 @@ struct PHSpringIf : public PHConstraintIf{
 /// バネダンパのディスクリプタ
 struct PHSpringDesc : public PHConstraintDesc{
 	DESC_DEF_FOR_OBJECT(PHSpring);
-	Vec3d spring;		///< バネ係数
-	Vec3d damper;		///< ダンパ係数
-	double springOri;
-	double damperOri;
+	Vec3d		spring;		///< バネ係数
+	Vec3d		damper;		///< ダンパ係数
+	double		springOri;
+	double		damperOri;
 	PHSpringDesc();
 };
 

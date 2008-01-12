@@ -47,7 +47,7 @@ void CRInternalSceneObject::SetPos(Vec3d pos){
 IF_OBJECT_IMP(CRISAttractiveObject, CRInternalSceneObject);
 
 float CRISAttractiveObject::GetTotalAttractiveness(){
-	return bottomupAttr + (topdownAttr * (1.0 - uncertainty)) + (unknownAttr * uncertainty);
+	return (float)(bottomupAttr + (topdownAttr * (1.0 - uncertainty)) + (unknownAttr * uncertainty));
 }
 
 void CRISAttractiveObject::AddBottomupAttr(float attr){

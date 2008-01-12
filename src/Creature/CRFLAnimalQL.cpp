@@ -56,7 +56,6 @@ void CRFLAnimalQL::SelectAction(std::vector<CRFLAnimalGeneData> *aGene){
 		for(unsigned int j = 0; j < actionNumber.size(); j++){
 			//適当にアクションを決めているが、ここにボルツマン選択やε-greedy選択を挟み込む必要がある
 			action[j] = rand()%actionNumber[j];
-//			DSTR << action[j]  << std::endl;
 
 			//////////////////////////////////////////////////////////////////////////
 			//																		//
