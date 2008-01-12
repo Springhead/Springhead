@@ -17,7 +17,6 @@ struct CRFLAnimalGeneData{
 
 public:
 	Quaterniond goalDir;
-	
 	enum {
 		GEN_QUATERNIOND=0,
 		GEN_DOUBLE
