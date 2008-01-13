@@ -29,13 +29,13 @@ protected:
 	std::vector<PHJointIf*> joints;
 
 	/// このセンサの持ち主たるCreature
-	CRCreatureIf* creature;
+	CRCreatureIf*	creature;
 
 	/// 所属するシーン
-	PHSceneIf* phScene;
+	PHSceneIf*		phScene;
 
 	/// 所属するSdk
-	PHSdkIf* phSdk;
+	PHSdkIf*		phSdk;
 
 	/// 位置・姿勢の制御点の集合
 	std::vector<CRIKControlIf*> postureControls;
@@ -58,50 +58,50 @@ public:
 		: CRBodyDesc(desc)
 	{
 		if(c!=NULL && c->GetScene()){SetScene(c->GetScene());}
-		creature = c;
-		phScene = DCAST(PHSceneIf, c->GetScene());
-		phSdk   = phScene->GetSdk();
+		creature	= c;
+		phScene		= DCAST(PHSceneIf, c->GetScene());
+		phSdk		= phScene->GetSdk();
 	}
 
 	/** @brief 初期化を行う
 	*/
-	virtual void Init();
+	virtual void				Init();
 
 	/** @brief 剛体の数を得る
 	*/
-	virtual int NSolids();
+	virtual int					NSolids();
 
 	/** @brief i番目の剛体を得る
 	*/
-	virtual PHSolidIf* GetSolid(int i);
+	virtual PHSolidIf*			GetSolid(int i);
 
 	/** @brief 関節の数を得る
 	*/
-	virtual int NJoints();
+	virtual int					NJoints();
 
 	/** @brief i番目の関節を得る
 	*/
-	virtual PHJointIf* GetJoint(int i);
+	virtual PHJointIf*			GetJoint(int i);
 
 	/** @brief IK用の制御点を追加する
 	*/
-	virtual CRIKControlIf* CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
+	virtual CRIKControlIf*		CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
 	
 	/** @brief IK用の可動物を追加する
 	*/
-	virtual CRIKMovableIf* CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
+	virtual CRIKMovableIf*		CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
 
 	/** @brief IKを計算する
 	*/
-	virtual void CalcIK();
+	virtual void				CalcIK();
 
 	/** @brief ボディの重心座標を得る
 	*/
-	virtual Vec3d GetCenterOfMass();
+	virtual Vec3d				GetCenterOfMass();
 	
 	/** @brief ボディの質量を得る
 	*/
-	virtual double GetSumOfMass();
+	virtual double				GetSumOfMass();
 };
 }
 //@}
