@@ -316,7 +316,7 @@ class NamedObject: public Object, public NamedObjectIfInit{
 protected:
 	friend class ObjectNames;
 	UTString name;					///<	名前
-	NameManager* nameManager;	///<	名前の検索や重複管理をするもの．SceneやSDKなど．
+	NameManager* nameManager;		///<	名前の検索や重複管理をするもの．SceneやSDKなど．
 public:
 	NamedObject():nameManager(NULL){}
 	~NamedObject();
