@@ -48,7 +48,7 @@ void FWAppGLUI::GluiTimerFunc(int id){
 
 	int timeStep = (int)(ps->GetTimeStep() * 100.0);
 	if(timeStep<1) timeStep = 1;
-	glutTimerFunc(timeStep, GluiTimerFunc, 0);
+	GLUI_Master.set_glutTimerFunc(timeStep, GluiTimerFunc, 0);
 }
 
 void FWAppGLUI::GluiKeyboardFunc(unsigned char key, int x, int y){
@@ -72,10 +72,10 @@ void FWAppGLUI::Start(){
 	instance = this;
 	windowID = CreateWindow();
 	CreateRender();
-	glutDisplayFunc(FWAppGLUI::GluiDisplayFunc);
-	glutReshapeFunc(FWAppGLUI::GluiReshapeFunc);
-	glutKeyboardFunc(FWAppGLUI::GluiKeyboardFunc);
-	glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
+	GLUI_Master.set_glutDisplayFunc(FWAppGLUI::GluiDisplayFunc);
+	GLUI_Master.set_glutReshapeFunc(FWAppGLUI::GluiReshapeFunc);
+	GLUI_Master.set_glutKeyboardFunc(FWAppGLUI::GluiKeyboardFunc);
+	GLUI_Master.set_glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
 	glutMainLoop();
 }
 
