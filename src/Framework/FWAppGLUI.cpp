@@ -12,8 +12,6 @@
 #include "FWOldSpringheadNode.h"
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
-
-#include <GL/glew.h>
 #include <GL/glui.h>
 
 #ifdef USE_HDRSTOP
@@ -40,17 +38,20 @@ void FWAppGLUI::GluiReshapeFunc(int w, int h){
 void FWAppGLUI::GluiTimerFunc(int id){
 	FWAppGLUI::instance->CallStep();
 	glutPostRedisplay();
-	FWSceneIf* fs = FWAppGLUI::instance->GetSdk()->GetScene();
-	if(!fs)return;
+	FWSceneIf* fwScene = FWAppGLUI::instance->GetSdk()->GetScene();
+	if(!fwScene)return;
 
-	PHSceneIf* ps = fs->GetPHScene();
-	if(!ps)return;
+	PHSceneIf* phScene = fwScene->GetPHScene();
+	if(!phScene)return;
 
-	int timeStep = (int)(ps->GetTimeStep() * 100.0);
+	int timeStep = (int)(phScene->GetTimeStep() * 100.0);
 	if(timeStep<1) timeStep = 1;
 	GLUI_Master.set_glutTimerFunc(timeStep, GluiTimerFunc, 0);
 }
 
+void FWAppGLUI::GluiIdleFunc(){
+	glutPostRedisplay();
+}
 void FWAppGLUI::GluiKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUI::instance->CallKeyboard(key, x, y);
 }
@@ -70,12 +71,15 @@ void FWAppGLUI::Init(int argc, char* argv[]){
 
 void FWAppGLUI::Start(){
 	instance = this;
-	windowID = CreateWindow();
+	guiID = CreateGUI();
 	CreateRender();
 	GLUI_Master.set_glutDisplayFunc(FWAppGLUI::GluiDisplayFunc);
 	GLUI_Master.set_glutReshapeFunc(FWAppGLUI::GluiReshapeFunc);
 	GLUI_Master.set_glutKeyboardFunc(FWAppGLUI::GluiKeyboardFunc);
 	GLUI_Master.set_glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
+	GLUI_Master.set_glutIdleFunc(FWAppGLUI::GluiIdleFunc);
+
+	guiID->set_main_gfx_window(windowID);
 	glutMainLoop();
 }
 
@@ -85,12 +89,12 @@ void FWAppGLUI::Display(){
 	glutSwapBuffers();
 }
 
-int FWAppGLUI::CreateWindow(const FWWindowDesc d){
-	glutInitWindowSize(d.width, d.height);
-	glutInitWindowPosition(d.top, d.left);
-	int window =  glutCreateWindow("Springhead Application");
-	int rv = glewInit();
-	return window;
+GLUI* FWAppGLUI::CreateGUI(){
+	GLUI* glui;
+	if(createOtherWindow)
+		glui = GLUI_Master.create_glui(gluiName, 0, fromLeft, fromTop);
+	else glui = GLUI_Master.create_glui_subwindow(windowID, subPosition);
+	return glui;
 }
 
 }

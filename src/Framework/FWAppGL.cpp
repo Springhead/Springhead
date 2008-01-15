@@ -6,7 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Framework/SprFWAppGL.h>
-
 #include "FWScene.h"
 #include "FWSdk.h"
 #include "FWOldSpringheadNode.h"

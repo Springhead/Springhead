@@ -10,24 +10,61 @@
 
 #include <Framework/SprFWAppGL.h>
 #include <Framework/SprFWAppGLUT.h>
+#include <GL/glui.h>
+#include <vector>
 
 namespace Spr{;
 
-class FWAppGLUI : public FWAppGL{
+class FWAppGLUIDesc {
+public:
+	GLUI*	guiID;
+	int		windowID;
+	int		fromTop;
+	int		fromLeft;
+	int		subPosition;
+	char*	gluiName;
+	bool	createOtherWindow;
+
+
+	//別ウィンドウを作成する場合のコンストラクタ
+	//gluiの初期値はどうすればいい？NULLとかにすると走らせた瞬間死ぬ。
+	//デスクリプタのコンストラクタに毎回登録するのはおかしい
+	FWAppGLUIDesc(GLUI* glui, int winID = 0, int top = 500, int left = 30,	char* name = "Menu")
+		: guiID(glui), windowID(winID), fromTop(top), fromLeft(left), gluiName(name){
+
+		subPosition			= 0;
+		createOtherWindow	= true;
+	}
+	//サブウィンドウを作成する場合のコンストラクタ
+	FWAppGLUIDesc(GLUI* glui, int winID = 0, int pos = GLUI_SUBWINDOW_RIGHT)
+		: guiID(glui), windowID(winID), subPosition(pos){
+		
+		fromTop				= 0;
+		fromLeft			= 0;
+		gluiName			= NULL;
+		createOtherWindow	= false;
+	}
+};
+
+/** @brief GLUIを用いるアプリケーションクラス
+*/
+class FWAppGLUI : public FWAppGL, public FWAppGLUIDesc{
 protected:
 	static FWAppGLUI* instance;
 	static void SPR_CDECL GluiDisplayFunc();
 	static void SPR_CDECL GluiReshapeFunc(int w, int h);
 	static void SPR_CDECL GluiTimerFunc(int id);
+	static void SPR_CDECL GluiIdleFunc();
 	static void SPR_CDECL GluiKeyboardFunc(unsigned char key, int x, int y);
 	static void SPR_CDECL AtExit();
-	int windowID;
+
 public:
 	~FWAppGLUI();
-	virtual void Init(int argc, char* argv[]);
-	virtual void Display();
-	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc());
-	void Start();
+	virtual void	Init(int argc, char* argv[]);
+	virtual void	DesignGLUI();
+	virtual void	Display();
+	virtual void	Start();
+	virtual GLUI*	CreateGUI();
 
 };
 
