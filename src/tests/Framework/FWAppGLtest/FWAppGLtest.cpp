@@ -5,6 +5,7 @@
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
 #include <HumanInterface/HIBase.h>
+#include <gl/glut.h>
 
 using namespace Spr;
 
@@ -16,6 +17,10 @@ public:
 	void Step(){
 		FWAppGLUT::Step();
 		PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
+		SetWin(GetSdk()->GetWin(0));
+		glutPostRedisplay();
+		SetWin(GetSdk()->GetWin(1));
+		glutPostRedisplay();
 	}
 	void Keyboard(unsigned char key, int x, int y){
 		if (key==0x1b){
