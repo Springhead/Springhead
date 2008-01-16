@@ -83,7 +83,7 @@ struct FWSdkIf : ObjectIf {
 	virtual FISdkIf* GetFISdk()=0;
 
 	/// ウィンドウに対応するコンテキストを作る
-	virtual FWSdkIf::FWWinRender* CreateWin(int wid, GRRenderIf* r)=0;
+	virtual FWWin* CreateWin(int wid, GRRenderIf* r)=0;
 
 	/** @brief デバッグ描画モードの取得
 	 */
@@ -107,11 +107,11 @@ struct FWSdkIf : ObjectIf {
 	 */
 	virtual void Reshape(int wid, int w, int h)=0;
 
-	virtual FWSdkIf::FWWinRender* GetWinRender(int wid)=0;
+	virtual FWWin* GetWinRender(int wid)=0;
 
 	static void SPR_CDECL RegisterSdk();
 };
-inline bool operator < (const FWSdkIf::FWWinRender& a, const FWSdkIf::FWWinRender& b){
+inline bool operator < (const FWWin& a, const FWWin& b){
 	return a.id < b.id;
 }
 
