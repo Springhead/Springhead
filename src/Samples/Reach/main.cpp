@@ -123,8 +123,8 @@ void BuildScene(){
 	PHBallJointDesc bjd = PHBallJointDesc();
 	bjd.posePlug.Pos() = Vec3d(0.13, 0.1, 0.0);
 	bjd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
-	bjd.damper = 6.0*Vec3d(1,1,1);
-	bjd.spring = 10.0*Vec3d(1,1,1);
+	bjd.damper = 6.0;
+	bjd.spring = 10.0;
 	(Vec3d&)bjd.goal = Vec3d(Rad(-30), Rad(30), Rad(-30));
 	jntLink.push_back(scene->CreateJoint(soBox[3], soBox[2], bjd));
 
@@ -187,8 +187,8 @@ void BuildScene(){
 	bjd = PHBallJointDesc();
 	bjd.posePlug.Pos() = Vec3d(-0.13, 0.1, 0.0);
 	bjd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
-	bjd.damper = 6.0*Vec3d(1,1,1);
-	bjd.spring = 10.0*Vec3d(1,1,1);
+	bjd.damper = 6.0;
+	bjd.spring = 10.0;
 	(Vec3d&)bjd.goal = Vec3d(Rad(30), Rad(30), Rad(30));
 	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[2], bjd));
 

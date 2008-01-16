@@ -56,17 +56,17 @@ public:
 */
 	void Display(){
 		static int timing = 0;
-		GRRenderIf* grRender = fwSdk->GetRender();
-		grRender->ClearBuffer();
-		grRender->BeginScene();
+		FWWin* win = GetWin();
+		win->render->ClearBuffer();
+		win->render->BeginScene();
 
 		GRMaterialDesc material;
 		material.diffuse = Vec4f(1.0,0.8,0.4,1.0);
-		grRender->SetMaterial(material);
+		win->render->SetMaterial(material);
 		FWSceneIf* fwScene = fwSdk->GetScene();
-		if(fwScene) fwScene->Draw(grRender, false);
+		if(fwScene) fwScene->Draw(win->render, false);
 
-		grRender->EndScene();
+		win->render->EndScene();
 		glutSwapBuffers();
 	}
 	void Step(){
