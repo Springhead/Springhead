@@ -95,7 +95,7 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual FISdkIf * GetFISdk(){
 		return ((OBJ*)(MIF*)this)->GetFISdk();
 	}
-	virtual FWSdkIf::FWWin * CreateWin(int wid, GRRenderIf * r){
+	virtual FWSdkIf::FWWinRender * CreateWin(int wid, GRRenderIf * r){
 		return ((OBJ*)(MIF*)this)->CreateWin(wid, r);
 	}
 	virtual bool GetDebugMode(){
@@ -112,6 +112,9 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual void Reshape(int wid, int w, int h){
 		return ((OBJ*)(MIF*)this)->Reshape(wid, w, h);
+	}
+	virtual FWSdkIf::FWWinRender * GetWinRender(int wid){
+		return ((OBJ*)(MIF*)this)->GetWinRender(wid);
 	}
 };
 struct FWSdkIf;	class FWSdk;

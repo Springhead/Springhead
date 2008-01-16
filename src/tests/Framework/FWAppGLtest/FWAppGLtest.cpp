@@ -26,7 +26,8 @@ public:
 	void Display(){
 #ifdef _DEBUG
 		GetSdk()->SetDebugMode(true);
-		GRDebugRenderIf* r = GetSdk()->GetRender()->Cast();
+		FWSdkIf::FWWinRender* wr = fwSdk->GetWinRender(GetWin());
+		GRDebugRenderIf* r = wr->render->Cast();
 		r->SetRenderMode(false, true);
 //		r->EnableRenderAxis();
 		r->EnableRenderForce();
@@ -50,8 +51,13 @@ int SPR_CDECL main(int argc, char* argv[]){
 
 	app->GetSdk()->LoadScene("scene.x");
 //	app->GetFWScene()->AddHumanInterface(new HIMouse);
-	int w1 = app->CreateWindow();
-	int w2 = app->CreateWindow();
+	int w1 = app->CreateWin();
+	int w2 = app->CreateWin();
+	FWSdkIf::FWWinRender* wr = app->GetSdk()->GetWinRender(w1);
+	wr->scene = app->GetSdk()->GetScene();
+	
+	wr = app->GetSdk()->GetWinRender(w2);
+	wr->scene = app->GetSdk()->GetScene();
 
 	app->Start();
 	return 0;

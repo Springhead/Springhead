@@ -17,7 +17,7 @@ class FWAppGL : public FWApp{
 public:
 	/** @brief V‚µ‚¢Window‚Ì‚½‚ß‚ÌAGRRender, GRDevice‚ğì‚éB
 	 */
-	FWSdkIf::FWWin* CreateRender(int wid);
+	FWSdkIf::FWWinRender* CreateRender(int wid);
 };
 
 }

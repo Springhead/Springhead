@@ -21,10 +21,10 @@ struct FWSdkDesc{
 struct FWSceneIf;
 struct FWSdkIf : ObjectIf {
 	IF_DEF(FWSdk);
-	struct FWWin{
+	struct FWWinRender{
 		int id;
 		UTRef<GRRenderIf> render;
-		FWWin(int i, GRRenderIf* r)
+		FWWinRender(int i, GRRenderIf* r)
 			:render(r), id(i){
 		}
 		UTRef<FWSceneIf> scene;
@@ -82,7 +82,7 @@ struct FWSdkIf : ObjectIf {
 	virtual FISdkIf* GetFISdk()=0;
 
 	/// ウィンドウに対応するコンテキストを作る
-	virtual FWSdkIf::FWWin* CreateWin(int wid, GRRenderIf* r)=0;
+	virtual FWSdkIf::FWWinRender* CreateWin(int wid, GRRenderIf* r)=0;
 
 	/** @brief デバッグ描画モードの取得
 	 */
@@ -106,9 +106,11 @@ struct FWSdkIf : ObjectIf {
 	 */
 	virtual void Reshape(int wid, int w, int h)=0;
 
+	virtual FWSdkIf::FWWinRender* GetWinRender(int wid)=0;
+
 	static void SPR_CDECL RegisterSdk();
 };
-inline bool operator < (const FWSdkIf::FWWin& a, const FWSdkIf::FWWin& b){
+inline bool operator < (const FWSdkIf::FWWinRender& a, const FWSdkIf::FWWinRender& b){
 	return a.id < b.id;
 }
 
