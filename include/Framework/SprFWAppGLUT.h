@@ -12,7 +12,7 @@
 
 namespace Spr{;
 
-class FWWindowDesc{	//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
+class FWWinDesc{	//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
 public:
 	int width;			///<	幅
 	int height;			///<	高さ
@@ -21,7 +21,7 @@ public:
 	int parentWindow;	///<	子ウィンドウを作る場合は、親のID、そうでなければ0
 	UTString title;		///<	ウィンドウのタイトル文字列(トップレベルウィンドウのみ)
 	bool fullscreen;
-	FWWindowDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
+	FWWinDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
 		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){
 	}
 };
@@ -53,17 +53,17 @@ public:
 	///	作成済みのウィンドウの数
 	virtual int NWindow(){ return (int)windows.size(); }
 	///	ウィンドウIDの取得
-	virtual int GetWindow(int i){ return windows[i].id; }
+	virtual int GetWin(int i){ return windows[i].id; }
 	/// ウィンドウのRenderの取得
-	virtual GRRenderIf* GetWindowRender(int i){ return windows[i].render; }
+	virtual GRRenderIf* GetWinRender(int i){ return windows[i].render; }
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual int CreateGLWin(const FWWindowDesc d=FWWindowDesc());
+	virtual int CreateGLWin(const FWWinDesc d=FWWinDesc());
 	///	ウィンドウを破棄する
-	virtual void DestroyWindow(int wid);
+	virtual void DestroyWin(int wid);
 	///	カレントウィンドウを設定する。設定後のIDを返す。
-	virtual int SetWindow(int wid);
+	virtual int SetWin(int wid);
 	///	カレントウィンドウのIDを返す。
-	virtual int GetWindow();
+	virtual int GetWin();
 
 	///	フレームワークをスタートする。
 	virtual void Start();

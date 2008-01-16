@@ -80,7 +80,7 @@ void FWAppGLUT::Start(){
 	glutMainLoop();
 }
 
-int FWAppGLUT::CreateGLWin(const FWWindowDesc d){
+int FWAppGLUT::CreateGLWin(const FWWinDesc d){
 	int window=0;
 	if (d.parentWindow){
 		window = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
@@ -97,14 +97,14 @@ int FWAppGLUT::CreateGLWin(const FWWindowDesc d){
 	windows.back().id = window;
 	return window;
 }
-void FWAppGLUT::DestroyWindow(int wid){
+void FWAppGLUT::DestroyWin(int wid){
 	glutDestroyWindow(wid);
 }
-int FWAppGLUT::SetWindow(int wid){
+int FWAppGLUT::SetWin(int wid){
 	glutSetWindow(wid);
-	return GetWindow();
+	return GetWin();
 }
-int FWAppGLUT::GetWindow(){
+int FWAppGLUT::GetWin(){
 	return glutGetWindow();
 }
 void FWAppGLUT::Display(){
