@@ -72,15 +72,14 @@ void FWAppGLUT::Init(int argc, char* argv[]){
 void FWAppGLUT::Start(){
 	instance = this;
 	if (!windows.size()){
-		CreateGLWin();
+		CreateWin();
 	}
-	CreateRender();
 	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
 	glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 	glutMainLoop();
 }
 
-int FWAppGLUT::CreateGLWin(const FWWinDesc d){
+int FWAppGLUT::CreateWin(const FWWinDesc d){
 	int window=0;
 	if (d.parentWindow){
 		window = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
@@ -95,6 +94,7 @@ int FWAppGLUT::CreateGLWin(const FWWinDesc d){
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
 	windows.resize(windows.size() +1);
 	windows.back().id = window;
+	CreateRender(window);
 	return window;
 }
 void FWAppGLUT::DestroyWin(int wid){

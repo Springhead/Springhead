@@ -95,17 +95,8 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual FISdkIf * GetFISdk(){
 		return ((OBJ*)(MIF*)this)->GetFISdk();
 	}
-	virtual GRRenderIf * GetRender(){
-		return ((OBJ*)(MIF*)this)->GetRender();
-	}
-	virtual void SetRender(GRRenderIf * render){
-		return ((OBJ*)(MIF*)this)->SetRender(render);
-	}
-	virtual GRDeviceIf * GetDevice(){
-		return ((OBJ*)(MIF*)this)->GetDevice();
-	}
-	virtual void SetDevice(GRDeviceIf * device){
-		return ((OBJ*)(MIF*)this)->SetDevice(device);
+	virtual FWSdkIf::FWWin * CreateWin(int wid, GRRenderIf * r){
+		return ((OBJ*)(MIF*)this)->CreateWin(wid, r);
 	}
 	virtual bool GetDebugMode(){
 		return ((OBJ*)(MIF*)this)->GetDebugMode();
@@ -116,11 +107,11 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
-	virtual void Draw(){
-		return ((OBJ*)(MIF*)this)->Draw();
+	virtual void Draw(int wid){
+		return ((OBJ*)(MIF*)this)->Draw(wid);
 	}
-	virtual void Reshape(int w, int h){
-		return ((OBJ*)(MIF*)this)->Reshape(w, h);
+	virtual void Reshape(int wid, int w, int h){
+		return ((OBJ*)(MIF*)this)->Reshape(wid, w, h);
 	}
 };
 struct FWSdkIf;	class FWSdk;

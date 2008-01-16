@@ -24,6 +24,8 @@ public:
 };
 
 class SPR_DLL FWSdk:public Sdk, public FWSdkIfInit{
+public:
+	typedef FWSdkIf::FWWin FWWin;
 protected:
 	//	scene
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
@@ -36,16 +38,14 @@ protected:
 	UTRef<GRSdkIf> grSdk;
 	UTRef<FISdkIf> fiSdk;
 	// Graphics
-	UTRef<GRRenderIf> grRender;
-	UTRef<GRDeviceIf> grDevice;
-
+	std::set<FWWin> wins;
 	bool debugMode;
-
 public:
 	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
 	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
+	virtual FWWin* CreateWin(int wid, GRRenderIf* r);
 	virtual bool LoadScene(UTString filename);
 	virtual bool SaveScene(UTString filename);
 	virtual int NScene() const;
@@ -62,19 +62,15 @@ public:
 	virtual PHSdkIf* GetPHSdk(){ return phSdk; }
 	virtual GRSdkIf* GetGRSdk(){ return grSdk; }
 	virtual FISdkIf* GetFISdk(){ return fiSdk; }
-	virtual GRRenderIf* GetRender(){return grRender;}
-	virtual void SetRender(GRRenderIf* render){grRender = render;}
-	virtual GRDeviceIf* GetDevice(){return grDevice;}
-	virtual void SetDevice(GRDeviceIf* device){grDevice = device;}
 
 	virtual void Clear();
 	virtual void Step();
-	virtual void Draw();
-	virtual void Reshape(int w, int h);
+	virtual void Draw(int wid);
+	virtual void Reshape(int wid, int w, int h);
 
 protected:
 	void CreateSdks();
+	FWWin* GetWin(int wid);
 };
-
 }
 #endif

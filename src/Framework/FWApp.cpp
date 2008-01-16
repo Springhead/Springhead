@@ -33,11 +33,11 @@ void FWApp::Step(){
 }
 
 void FWApp::Display(){
-	fwSdk->Draw();
+	fwSdk->Draw(GetWin());
 }
 
 void FWApp::Reshape(int w, int h){
-	fwSdk->Reshape(w, h);
+	fwSdk->Reshape(GetWin(), w, h);
 }
 
 }

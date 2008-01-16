@@ -18,8 +18,17 @@ namespace Spr{;
 struct FWSdkDesc{
 };
 
+struct FWSceneIf;
 struct FWSdkIf : ObjectIf {
 	IF_DEF(FWSdk);
+	struct FWWin{
+		int id;
+		UTRef<GRRenderIf> render;
+		FWWin(int i, GRRenderIf* r)
+			:render(r), id(i){
+		}
+		UTRef<FWSceneIf> scene;
+	};
 
 	/** @brief SDKオブジェクトを作成する
 	 */
@@ -72,14 +81,8 @@ struct FWSdkIf : ObjectIf {
 	/// FISdkオブジェクトを取得する
 	virtual FISdkIf* GetFISdk()=0;
 
-	/// レンダラを取得する
-	virtual GRRenderIf* GetRender() = 0;
-	/// レンダラを設定する
-	virtual void SetRender(GRRenderIf* render) = 0;
-	/// デバイスを取得する
-	virtual GRDeviceIf* GetDevice() = 0;
-	/// デバイスを設定する
-	virtual void SetDevice(GRDeviceIf* device) = 0;
+	/// ウィンドウに対応するコンテキストを作る
+	virtual FWSdkIf::FWWin* CreateWin(int wid, GRRenderIf* r)=0;
 
 	/** @brief デバッグ描画モードの取得
 	 */
@@ -95,16 +98,19 @@ struct FWSdkIf : ObjectIf {
 
 	/** @brief 描画を実行
 	 */
-	virtual void Draw() = 0;
+	virtual void Draw(int wid) = 0;
 
 	/** @brief 描画領域のサイズを設定する
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
 	 */
-	virtual void Reshape(int w, int h)=0;
+	virtual void Reshape(int wid, int w, int h)=0;
 
 	static void SPR_CDECL RegisterSdk();
 };
+inline bool operator < (const FWSdkIf::FWWin& a, const FWSdkIf::FWWin& b){
+	return a.id < b.id;
+}
 
 }
 

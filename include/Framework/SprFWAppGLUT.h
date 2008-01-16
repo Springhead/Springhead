@@ -54,10 +54,8 @@ public:
 	virtual int NWindow(){ return (int)windows.size(); }
 	///	ウィンドウIDの取得
 	virtual int GetWin(int i){ return windows[i].id; }
-	/// ウィンドウのRenderの取得
-	virtual GRRenderIf* GetWinRender(int i){ return windows[i].render; }
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual int CreateGLWin(const FWWinDesc d=FWWinDesc());
+	virtual int CreateWin(const FWWinDesc d=FWWinDesc());
 	///	ウィンドウを破棄する
 	virtual void DestroyWin(int wid);
 	///	カレントウィンドウを設定する。設定後のIDを返す。

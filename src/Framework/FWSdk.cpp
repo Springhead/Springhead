@@ -76,6 +76,13 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	AddChildObject(scene);
 	return scene;
 }
+FWSdk::FWWin* FWSdk::CreateWin(int wid, GRRenderIf* r){
+	std::pair<std::set<FWWin>::iterator, bool> rv = wins.insert(FWWin(wid, r));
+	if (!rv.second){
+		rv.first->render = r;
+	}
+	return &*rv.first;
+}
 bool FWSdk::LoadScene(UTString filename){
 	//	デフォルトの先祖オブジェクトをを設定
 	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
@@ -211,17 +218,26 @@ void FWSdk::Step(){
 		fwScene->Step();
 }
 
-void FWSdk::Draw(){
-	grRender->ClearBuffer();
-	grRender->BeginScene();
-
-	if(fwScene)
-		fwScene->Draw(grRender, debugMode);
-
-	grRender->EndScene();	
+void FWSdk::Draw(int wid){
+	FWWin* cur = GetWin(wid);
+	if (cur){
+		cur->render->ClearBuffer();
+		cur->render->BeginScene();
+		if (cur->scene) cur->scene->Draw(cur->render, debugMode);
+		cur->render->EndScene();
+	}
 }
-void FWSdk::Reshape(int w, int h){
-	grRender->Reshape(Vec2f(), Vec2f(w,h));
+void FWSdk::Reshape(int wid, int w, int h){
+	FWWin* cur = GetWin(wid);
+	if (cur){
+		cur->render->Reshape(Vec2f(), Vec2f(w,h));
+	}
+}
+FWSdk::FWWin* FWSdk::GetWin(int wid){
+	FWWin key(wid, NULL);
+	std::set<FWWin>::iterator rv = wins.find(key);
+	if (rv == wins.end()) return NULL;
+	return &*rv;
 }
 
 }

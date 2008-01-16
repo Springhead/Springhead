@@ -124,6 +124,9 @@ public:
 	virtual void MouseMove(int x, int y){}
 
 	virtual ~FWApp();
+
+	//	Œ»İ‚ÌWindow‚ÌID‚ğ•Ô‚·
+	virtual int GetWin(){ return 0; }
 };
 
 }

@@ -20,36 +20,21 @@
 
 namespace Spr{
 
-void FWAppGL::CreateRender(){
-	fwSdk->SetRender(fwSdk->GetGRSdk()->CreateDebugRender());
-	fwSdk->SetDevice(fwSdk->GetGRSdk()->CreateDeviceGL());
-	fwSdk->GetDevice()->Init();
-	fwSdk->GetRender()->SetDevice(fwSdk->GetDevice());
+FWSdkIf::FWWin* FWAppGL::CreateRender(int wid){
+	FWSdkIf::FWWin* win = fwSdk->CreateWin(wid, fwSdk->GetGRSdk()->CreateDebugRender());
+	
+	GRDeviceIf* dev = fwSdk->GetGRSdk()->CreateDeviceGL();
+	dev->Init();
+	win->render->SetDevice(dev);
 
 	Affinef view;
-		view.Pos() = Vec3f(0.0, 3.0, 3.0);
-		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
-		view = view.inv();	
+	view.Pos() = Vec3f(0.0, 3.0, 3.0);
+	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
+	view = view.inv();	
 	
-	fwSdk->GetRender()->SetViewMatrix(view);
-
-/*
-	GRLightDesc light0;
-	light0.ambient			= Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
-	light0.diffuse			= Vec4f(0.7f, 0.7f, 0.7f, 1.0f);
-	light0.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-	light0.position			= Vec4f(0.0f, 10.0f, 0.0f, 1.0f);
-	light0.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
-	light0.spotCutoff		= 145.0f;
-	light0.spotFalloff		= 30.0f;
-	grRender->PushLight(light0);
-
-	GRLightDesc light1;
-	light1.diffuse			= Vec4f(0.8f, 0.8f, 0.8f, 1.0f);
-	light1.specular			= Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-	light1.position			= Vec4f(0.0f, 10.0f, 10.0f, 0.0f);
-	light1.spotDirection	= Vec3f(0.0f, -1.0f, 0.0f);
-	grRender->PushLight(light1);
-*/
+	win->render->SetViewMatrix(view);
+	return win;
 }
+
+
 }

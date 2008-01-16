@@ -80,9 +80,9 @@ void FWAppGLUI::Init(int argc, char* argv[]){
 void FWAppGLUI::Start(){
 	instance = this;
 	if (!windows.size()){
-		CreateGLWin();
+		CreateWin();
+		CreateRender(windows.front().id);
 	}
-	CreateRender();
 	GLUI_Master.set_glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
 	GLUI_Master.set_glutIdleFunc(FWAppGLUI::GluiIdleFunc);
 

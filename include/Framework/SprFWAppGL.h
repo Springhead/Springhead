@@ -15,11 +15,10 @@ namespace Spr{;
  */
 class FWAppGL : public FWApp{
 public:
-	/** @brief OpenGLを使用するための初期化処理を実行する 
+	/** @brief 新しいWindowのための、GRRender, GRDeviceを作る。
 	 */
-	void CreateRender();
+	FWSdkIf::FWWin* CreateRender(int wid);
 };
-
 
 }
 

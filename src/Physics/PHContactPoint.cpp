@@ -149,7 +149,7 @@ void PHContactPoint::Projection(double& f, int k){
 		double fu = (shapePair->shape[0]->material.mu + shapePair->shape[1]->material.mu)
 			/ (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0)
 			* flim;	
-		if (std::abs(vjrel[1]) < 0.01){	//	ÃŽ~–€ŽC
+		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	ÃŽ~–€ŽC
 			if (f > flim) f = fu;
 			else if (f < -flim) f = -fu;
 		}else{					//	“®–€ŽC
