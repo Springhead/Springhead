@@ -25,10 +25,15 @@ public:
 		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){
 	}
 };
-
+	struct Win{
+		int id;
+		GRRenderIf* render;
+	};
 /** @brief GLUTを用いるアプリケーションクラス
  */
 class FWAppGLUT : public FWAppGL{
+public:
+
 protected:
 	static FWAppGLUT* instance;
 	static void SPR_CDECL GlutDisplayFunc();
@@ -37,7 +42,7 @@ protected:
 	static void SPR_CDECL GlutIdleFunc();
 	static void SPR_CDECL GlutKeyboardFunc(unsigned char key, int x, int y);
 	static void SPR_CDECL AtExit();
-	std::vector<int> windows;
+	std::vector<Win> windows;
 public:
 	~FWAppGLUT();
 	///	描画コールバック
@@ -48,9 +53,11 @@ public:
 	///	作成済みのウィンドウの数
 	virtual int NWindow(){ return (int)windows.size(); }
 	///	ウィンドウIDの取得
-	virtual int GetWindow(int i){ return windows[i]; }
+	virtual int GetWindow(int i){ return windows[i].id; }
+	/// ウィンドウのRenderの取得
+	virtual GRRenderIf* GetWindowRender(int i){ return windows[i].render; }
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc());
+	virtual int CreateGLWin(const FWWindowDesc d=FWWindowDesc());
 	///	ウィンドウを破棄する
 	virtual void DestroyWindow(int wid);
 	///	カレントウィンドウを設定する。設定後のIDを返す。

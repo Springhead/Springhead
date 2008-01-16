@@ -1,5 +1,15 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
+	Win* pWin = NULL;
+	desc = DBG_NEW UTTypeDesc("Win");
+	desc->size = sizeof(Win);
+	desc->access = DBG_NEW UTAccess<Win>;
+	field = desc->AddField("", "int", "id", "");
+	field->offset = int((char*)&(pWin->id) - (char*)pWin);
+	field = desc->AddField("pointer", "GRRenderIf", "render", "");
+	field->offset = int((char*)&(pWin->render) - (char*)pWin);
+	db->RegisterDesc(desc);
+	
 	FWObjectDesc* pFWObjectDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("FWObjectDesc");
 	desc->size = sizeof(FWObjectDesc);
