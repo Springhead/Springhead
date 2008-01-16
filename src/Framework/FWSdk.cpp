@@ -76,8 +76,8 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	AddChildObject(scene);
 	return scene;
 }
-FWSdk::FWWinRender* FWSdk::CreateWin(int wid, GRRenderIf* r){
-	std::pair<std::set<FWWinRender>::iterator, bool> rv = wins.insert(FWWinRender(wid, r));
+FWWin* FWSdk::CreateWin(int wid, GRRenderIf* r){
+	std::pair<std::set<FWWin>::iterator, bool> rv = wins.insert(FWWin(wid, r));
 	if (!rv.second){
 		rv.first->render = r;
 	}
@@ -218,8 +218,7 @@ void FWSdk::Step(){
 		fwScene->Step();
 }
 
-void FWSdk::Draw(int wid){
-	FWWinRender* cur = GetWinRender(wid);
+void FWSdk::Draw(FWWin* cur){
 	if (cur){
 		cur->render->ClearBuffer();
 		cur->render->BeginScene();
@@ -227,17 +226,24 @@ void FWSdk::Draw(int wid){
 		cur->render->EndScene();
 	}
 }
-void FWSdk::Reshape(int wid, int w, int h){
-	FWWinRender* cur = GetWinRender(wid);
+void FWSdk::Reshape(FWWin* cur, int w, int h){
 	if (cur){
 		cur->render->Reshape(Vec2f(), Vec2f(w,h));
 	}
 }
-FWSdk::FWWinRender* FWSdk::GetWinRender(int wid){
-	FWWinRender key(wid, NULL);
-	std::set<FWWinRender>::iterator rv = wins.find(key);
+FWWin* FWSdk::GetWinFromId(int wid){
+	FWWin key(wid, NULL);
+	std::set<FWWin>::iterator rv = wins.find(key);
 	if (rv == wins.end()) return NULL;
 	return &*rv;
+}
+FWWin* FWSdk::GetWin(int pos){
+	int count = 0;
+	for(std::set<FWWin>::iterator it = wins.begin(); it != wins.end(); ++it){
+		if (pos == count) return &*it;
+		count ++;
+	}
+	return NULL;
 }
 
 }

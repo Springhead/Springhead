@@ -79,15 +79,14 @@ void FWAppGLUI::Init(int argc, char* argv[]){
 
 void FWAppGLUI::Start(){
 	instance = this;
-	if (!windows.size()){
+	if (!fwSdk->NWin()){
 		CreateWin();
-		CreateRender(windows.front().id);
 	}
 	GLUI_Master.set_glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
 	GLUI_Master.set_glutIdleFunc(FWAppGLUI::GluiIdleFunc);
 
 	if (!guis.size()){
-		CreateGUI(windows.front().id);
+		CreateGUI(GetSdk()->GetWin(0)->id);
 	}
 	glutMainLoop();
 }

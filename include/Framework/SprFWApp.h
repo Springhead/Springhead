@@ -125,8 +125,8 @@ public:
 
 	virtual ~FWApp();
 
-	//	Œ»İ‚ÌWindow‚ÌID‚ğ•Ô‚·
-	virtual int GetWin(){ return 0; }
+	//	Œ»İ‚ÌWindow‚ğ•Ô‚·
+	virtual FWWin* GetWin(){ return NULL; }
 };
 
 }

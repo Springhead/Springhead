@@ -20,8 +20,8 @@
 
 namespace Spr{
 
-FWSdkIf::FWWinRender* FWAppGL::CreateRender(int wid){
-	FWSdkIf::FWWinRender* win = fwSdk->CreateWin(wid, fwSdk->GetGRSdk()->CreateDebugRender());
+FWWin* FWAppGL::CreateRender(int wid){
+	FWWin* win = fwSdk->CreateWin(wid, fwSdk->GetGRSdk()->CreateDebugRender());
 	
 	GRDeviceIf* dev = fwSdk->GetGRSdk()->CreateDeviceGL();
 	dev->Init();

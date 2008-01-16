@@ -1,15 +1,5 @@
 //	Do not edit. MakeTypeDesc.bat will update this file.
 	
-	Win* pWin = NULL;
-	desc = DBG_NEW UTTypeDesc("Win");
-	desc->size = sizeof(Win);
-	desc->access = DBG_NEW UTAccess<Win>;
-	field = desc->AddField("", "int", "id", "");
-	field->offset = int((char*)&(pWin->id) - (char*)pWin);
-	field = desc->AddField("pointer", "GRRenderIf", "render", "");
-	field->offset = int((char*)&(pWin->render) - (char*)pWin);
-	db->RegisterDesc(desc);
-	
 	FWObjectDesc* pFWObjectDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("FWObjectDesc");
 	desc->size = sizeof(FWObjectDesc);
@@ -24,6 +14,18 @@
 	desc->ifInfo = FWSceneIf::GetIfInfoStatic();
 	((IfInfo*)FWSceneIf::GetIfInfoStatic())->desc = desc;
 	desc->access = DBG_NEW UTAccess<FWSceneDesc>;
+	db->RegisterDesc(desc);
+	
+	FWWin* pFWWin = NULL;
+	desc = DBG_NEW UTTypeDesc("FWWin");
+	desc->size = sizeof(FWWin);
+	desc->access = DBG_NEW UTAccess<FWWin>;
+	field = desc->AddField("", "int", "id", "");
+	field->offset = int((char*)&(pFWWin->id) - (char*)pFWWin);
+	field = desc->AddField("UTRef", "GRRenderIf", "render", "");
+	field->offset = int((char*)&(pFWWin->render) - (char*)pFWWin);
+	field = desc->AddField("UTRef", "FWSceneIf", "scene", "");
+	field->offset = int((char*)&(pFWWin->scene) - (char*)pFWWin);
 	db->RegisterDesc(desc);
 	
 	FWSdkDesc* pFWSdkDesc = NULL;

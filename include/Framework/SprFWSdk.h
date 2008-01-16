@@ -18,7 +18,7 @@ namespace Spr{;
 struct FWWin{
 	int id;
 	UTRef<GRRenderIf> render;
-	FWWin(int i, GRRenderIf* r)
+	FWWin(int i=0, GRRenderIf* r=NULL)
 		:render(r), id(i){
 	}
 	UTRef<FWSceneIf> scene;
@@ -99,15 +99,17 @@ struct FWSdkIf : ObjectIf {
 
 	/** @brief •`‰æ‚ğÀs
 	 */
-	virtual void Draw(int wid) = 0;
+	virtual void Draw(FWWin* cur) = 0;
 
 	/** @brief •`‰æ—Ìˆæ‚ÌƒTƒCƒY‚ğİ’è‚·‚é
 		@param w •`‰æ—Ìˆæ‚Ì‰¡•
 		@param h •`‰æ—Ìˆæ‚Ìc•
 	 */
-	virtual void Reshape(int wid, int w, int h)=0;
+	virtual void Reshape(FWWin* cur, int w, int h)=0;
 
-	virtual FWWin* GetWinRender(int wid)=0;
+	virtual FWWin* GetWinFromId(int wid)=0;
+	virtual int NWin()=0;
+	virtual FWWin* GetWin(int pos)=0;
 
 	static void SPR_CDECL RegisterSdk();
 };

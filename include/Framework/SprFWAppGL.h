@@ -14,10 +14,11 @@ namespace Spr{;
 /** OpenGLのコンテキスト作成機能を持つアプリケーションクラス
  */
 class FWAppGL : public FWApp{
-public:
+protected:
 	/** @brief 新しいWindowのための、GRRender, GRDeviceを作る。
 	 */
-	FWSdkIf::FWWinRender* CreateRender(int wid);
+	FWWin* CreateRender(int wid);
+public:
 };
 
 }

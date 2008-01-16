@@ -95,7 +95,7 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual FISdkIf * GetFISdk(){
 		return ((OBJ*)(MIF*)this)->GetFISdk();
 	}
-	virtual FWSdkIf::FWWinRender * CreateWin(int wid, GRRenderIf * r){
+	virtual FWWin * CreateWin(int wid, GRRenderIf * r){
 		return ((OBJ*)(MIF*)this)->CreateWin(wid, r);
 	}
 	virtual bool GetDebugMode(){
@@ -107,14 +107,20 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
-	virtual void Draw(int wid){
-		return ((OBJ*)(MIF*)this)->Draw(wid);
+	virtual void Draw(FWWin * cur){
+		return ((OBJ*)(MIF*)this)->Draw(cur);
 	}
-	virtual void Reshape(int wid, int w, int h){
-		return ((OBJ*)(MIF*)this)->Reshape(wid, w, h);
+	virtual void Reshape(FWWin * cur, int w, int h){
+		return ((OBJ*)(MIF*)this)->Reshape(cur, w, h);
 	}
-	virtual FWSdkIf::FWWinRender * GetWinRender(int wid){
-		return ((OBJ*)(MIF*)this)->GetWinRender(wid);
+	virtual FWWin * GetWinFromId(int wid){
+		return ((OBJ*)(MIF*)this)->GetWinFromId(wid);
+	}
+	virtual int NWin(){
+		return ((OBJ*)(MIF*)this)->NWin();
+	}
+	virtual FWWin * GetWin(int pos){
+		return ((OBJ*)(MIF*)this)->GetWin(pos);
 	}
 };
 struct FWSdkIf;	class FWSdk;

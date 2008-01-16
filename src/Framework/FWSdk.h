@@ -24,8 +24,6 @@ public:
 };
 
 class SPR_DLL FWSdk:public Sdk, public FWSdkIfInit{
-public:
-	typedef FWSdkIf::FWWinRender FWWinRender;
 protected:
 	//	scene
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
@@ -38,14 +36,14 @@ protected:
 	UTRef<GRSdkIf> grSdk;
 	UTRef<FISdkIf> fiSdk;
 	// Graphics
-	std::set<FWWinRender> wins;
+	std::set<FWWin> wins;
 	bool debugMode;
 public:
 	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
 	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
-	virtual FWWinRender* CreateWin(int wid, GRRenderIf* r);
+	virtual FWWin* CreateWin(int wid, GRRenderIf* r);
 	virtual bool LoadScene(UTString filename);
 	virtual bool SaveScene(UTString filename);
 	virtual int NScene() const;
@@ -65,9 +63,11 @@ public:
 
 	virtual void Clear();
 	virtual void Step();
-	virtual void Draw(int wid);
-	virtual void Reshape(int wid, int w, int h);
-	virtual FWWinRender* GetWinRender(int wid);
+	virtual void Draw(FWWin* cur);
+	virtual void Reshape(FWWin* cur, int w, int h);
+	virtual FWWin* GetWinFromId(int wid);
+	virtual int NWin(){ return (int)wins.size(); }
+	virtual FWWin* GetWin(int pos);
 
 protected:
 	void CreateSdks();
