@@ -16,18 +16,14 @@ namespace Spr{;
 
 class FWAppGLUIDesc {
 public:
-	GLUI*	guiID;
-	int		fromTop;
-	int		fromLeft;
-	int		subPosition;
-	char*	gluiName;
-	bool	createOtherWindow;
-	//別ウィンドウを作成する場合のコンストラクタ
-	//gluiの初期値はどうすればいい？NULLとかにすると走らせた瞬間死ぬ。
-	//デスクリプタのコンストラクタに毎回登録するのはおかしい
-	FWAppGLUIDesc(GLUI* glui, int top = 500, int left = 30,	char* name = "Menu");
-	//サブウィンドウを作成する場合のコンストラクタ
-	FWAppGLUIDesc(GLUI* glui, int pos = 0x20);
+	int		fromTop;					//< 別ウィンドウを生成するときの上からのdot数
+	int		fromLeft;					//< 別ウィンドウを生成するときの左からのdot数
+	int		subPosition;				//< OpenGL描画ウィンドウの中にGUIを組み込んでしまう場合の組み込む場所
+	char*	gluiName;					//< 別ウィンドウを作成する場合のウィンドウの名前
+	bool	createOtherWindow;			//< GUIを別ウィンドウにするかどうか
+	
+	//デフォルトコンストラクタ
+	FWAppGLUIDesc();
 };
 
 /** @brief GLUIを用いるアプリケーションクラス
@@ -48,7 +44,7 @@ public:
 	virtual void	DesignGLUI() = 0;
 	virtual void	Display() = 0;
 	virtual void	Start();
-	virtual GLUI*	CreateGUI(int wid=0, int subPos=((long)(1<<5)));
+	virtual GLUI*	CreateGUI(int wid = 0, FWAppGLUIDesc desc = FWAppGLUIDesc());
 };
 
 }

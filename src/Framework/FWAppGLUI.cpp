@@ -22,20 +22,13 @@ namespace Spr{;
 
 FWAppGLUI* FWAppGLUI::instance;
 
-FWAppGLUIDesc::FWAppGLUIDesc(GLUI* glui, int top, int left,	char* name)
-	: guiID(glui), fromTop(top), fromLeft(left), gluiName(name){
-	subPosition			= 0;
+FWAppGLUIDesc::FWAppGLUIDesc(){
+	fromTop				= 50;
+	fromLeft			= 30;
+	subPosition			= GLUI_SUBWINDOW_RIGHT;
+	gluiName			= "Menu";
 	createOtherWindow	= true;
 }
-
-FWAppGLUIDesc::FWAppGLUIDesc(GLUI* glui, int pos)
-	: guiID(glui), subPosition(pos){
-	fromTop				= 0;
-	fromLeft			= 0;
-	gluiName			= NULL;
-	createOtherWindow	= false;
-}
-
 
 FWAppGLUI::~FWAppGLUI(){
 	FWAppGLUI::AtExit();
@@ -99,13 +92,13 @@ void FWAppGLUI::Start(){
 	glutMainLoop();
 }
 
-GLUI* FWAppGLUI::CreateGUI(int wid, int subPos){
+GLUI* FWAppGLUI::CreateGUI(int wid, FWAppGLUIDesc desc){
 	GLUI* glui;
-	if(wid){
-		glui = GLUI_Master.create_glui_subwindow(wid, subPos);
-		glui->set_main_gfx_window(wid);
+	if(!createOtherWindow){
+		glui = GLUI_Master.create_glui_subwindow(wid, subPosition);		
 	}else{
 		glui = GLUI_Master.create_glui(gluiName, 0, fromLeft, fromTop);
+		glui->set_main_gfx_window(wid);
 	}
 	guis.push_back(glui);
 	return glui;
