@@ -23,15 +23,22 @@ public:
 			exit(0);
 		}
 	}
+	void Display(){
+#ifdef _DEBUG
+		GetSdk()->SetDebugMode(true);
+		GRDebugRenderIf* r = GetSdk()->GetRender()->Cast();
+		r->SetRenderMode(false, true);
+//		r->EnableRenderAxis();
+		r->EnableRenderForce();
+#endif
+		FWAppGLUT::Display();
+	}
 };
 
 
 int SPR_CDECL main(int argc, char* argv[]){
 	app = new MyApp;
 	app->Init(argc, argv);
-#ifdef _DEBUG
-	app->GetSdk()->SetDebugMode(true);
-#endif
 	app->GetSdk()->Clear();
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
 	PHSceneIf* phscene = app->GetSdk()->GetScene()->GetPHScene();
@@ -43,6 +50,8 @@ int SPR_CDECL main(int argc, char* argv[]){
 
 	app->GetSdk()->LoadScene("scene.x");
 //	app->GetFWScene()->AddHumanInterface(new HIMouse);
+	int w1 = app->CreateWindow();
+	int w2 = app->CreateWindow();
 
 	app->Start();
 	return 0;

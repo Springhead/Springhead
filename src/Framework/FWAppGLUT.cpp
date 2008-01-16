@@ -34,6 +34,9 @@ void FWAppGLUT::GlutDisplayFunc(){
 void FWAppGLUT::GlutReshapeFunc(int w, int h){
 	FWAppGLUT::instance->CallReshape(w, h);
 }
+void FWAppGLUT::GlutIdleFunc(){
+	FWAppGLUT::instance->CallIdle();
+}
 
 void FWAppGLUT::GlutTimerFunc(int id){
 	FWAppGLUT::instance->CallStep();
@@ -68,26 +71,45 @@ void FWAppGLUT::Init(int argc, char* argv[]){
 
 void FWAppGLUT::Start(){
 	instance = this;
-	windowID = CreateWindow();
+	if (!windows.size()){
+		CreateWindow();
+	}
 	CreateRender();
-	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
-	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
-	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
 	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+	glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 	glutMainLoop();
 }
 
+int FWAppGLUT::CreateWindow(const FWWindowDesc d){
+	int window=0;
+	if (d.parentWindow){
+		window = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
+	}else{
+		glutInitWindowSize(d.width, d.height);
+		glutInitWindowPosition(d.top, d.left);
+		window = glutCreateWindow(d.title.c_str());
+	}
+	int rv = glewInit();
+	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
+	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
+	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
+	windows.push_back(window);
+	return window;
+}
+void FWAppGLUT::DestroyWindow(int wid){
+	glutDestroyWindow(wid);
+}
+int FWAppGLUT::SetWindow(int wid){
+	glutSetWindow(wid);
+	return GetWindow();
+}
+int FWAppGLUT::GetWindow(){
+	return glutGetWindow();
+}
 void FWAppGLUT::Display(){
 	FWAppGL::Display();
 	/// ダブルバッファモード時、カレントウィンドウのバッファ交換を行う
 	glutSwapBuffers();
 }
 
-int FWAppGLUT::CreateWindow(const FWWindowDesc d){
-	glutInitWindowSize(d.width, d.height);
-	glutInitWindowPosition(d.top, d.left);
-	int window = glutCreateWindow("Springhead Application");
-	int rv = glewInit();
-	return window;
-}
 }

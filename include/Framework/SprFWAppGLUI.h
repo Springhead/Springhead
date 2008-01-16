@@ -41,15 +41,14 @@ protected:
 	static void SPR_CDECL GluiIdleFunc();
 	static void SPR_CDECL GluiKeyboardFunc(unsigned char key, int x, int y);
 	static void SPR_CDECL AtExit();
-
+	std::vector<GLUI*> guis;
 public:
 	~FWAppGLUI();
 	virtual void	Init(int argc, char* argv[]);
 	virtual void	DesignGLUI();
 	virtual void	Display();
 	virtual void	Start();
-	virtual GLUI*	CreateGUI();
-
+	virtual GLUI*	CreateGUI(int wid=0, int subPos=((long)(1<<5)));
 };
 
 }

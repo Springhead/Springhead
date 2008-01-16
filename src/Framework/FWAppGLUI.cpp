@@ -86,29 +86,28 @@ void FWAppGLUI::Init(int argc, char* argv[]){
 
 void FWAppGLUI::Start(){
 	instance = this;
-	guiID = CreateGUI();
+	if (!windows.size()){
+		CreateWindow();
+	}
 	CreateRender();
-	GLUI_Master.set_glutDisplayFunc(FWAppGLUI::GluiDisplayFunc);
-	GLUI_Master.set_glutReshapeFunc(FWAppGLUI::GluiReshapeFunc);
-	GLUI_Master.set_glutKeyboardFunc(FWAppGLUI::GluiKeyboardFunc);
 	GLUI_Master.set_glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
 	GLUI_Master.set_glutIdleFunc(FWAppGLUI::GluiIdleFunc);
 
-	guiID->set_main_gfx_window(windowID);
+	if (!guis.size()){
+		CreateGUI(windows.front());
+	}
 	glutMainLoop();
 }
 
-void FWAppGLUI::Display(){
-	FWAppGL::Display();
-	/// change current buffer in double buffer mode
-	glutSwapBuffers();
-}
-
-GLUI* FWAppGLUI::CreateGUI(){
+GLUI* FWAppGLUI::CreateGUI(int wid, int subPos){
 	GLUI* glui;
-	if(createOtherWindow)
+	if(wid){
+		glui = GLUI_Master.create_glui_subwindow(wid, subPos);
+		glui->set_main_gfx_window(wid);
+	}else{
 		glui = GLUI_Master.create_glui(gluiName, 0, fromLeft, fromTop);
-	else glui = GLUI_Master.create_glui_subwindow(windowID, subPosition);
+	}
+	guis.push_back(glui);
 	return glui;
 }
 

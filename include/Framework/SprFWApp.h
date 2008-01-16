@@ -25,6 +25,7 @@ public:
 	virtual bool MouseButton(int button, int state, int x, int y) = 0;
 	virtual bool MouseMove(int x, int y) = 0;
 	virtual bool Step() = 0;
+	virtual bool Idle() = 0;
 	virtual void AtExit() = 0;
 	virtual ~FWVFuncBridge(){}
 };
@@ -65,6 +66,10 @@ protected:
 		if(!vfBridge || !vfBridge->Step())
 			Step();
 	}
+	void CallIdle(){
+		if(!vfBridge || !vfBridge->Idle())
+			Idle();
+	}
 public:
 	UTRef<FWVFuncBridge>	vfBridge;
 
@@ -86,6 +91,10 @@ public:
 		デフォルトではFWSdk::Stepが呼ばれる．
 	 */
 	virtual void Step();
+
+	/** @brief idle関数
+	 */
+	virtual void Idle(){}
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
