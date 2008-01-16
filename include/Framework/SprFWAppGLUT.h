@@ -38,7 +38,7 @@ public:
 	virtual void Init(int argc, char* argv[]);
 	virtual void Display();
 	virtual int CreateWindow(const FWWindowDesc d=FWWindowDesc());
-	void Start();
+	virtual void Start();
 };
 
 

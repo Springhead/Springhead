@@ -22,6 +22,21 @@ namespace Spr{;
 
 FWAppGLUI* FWAppGLUI::instance;
 
+FWAppGLUIDesc::FWAppGLUIDesc(GLUI* glui, int top, int left,	char* name)
+	: guiID(glui), fromTop(top), fromLeft(left), gluiName(name){
+	subPosition			= 0;
+	createOtherWindow	= true;
+}
+
+FWAppGLUIDesc::FWAppGLUIDesc(GLUI* glui, int pos)
+	: guiID(glui), subPosition(pos){
+	fromTop				= 0;
+	fromLeft			= 0;
+	gluiName			= NULL;
+	createOtherWindow	= false;
+}
+
+
 FWAppGLUI::~FWAppGLUI(){
 	FWAppGLUI::AtExit();
 	instance = NULL;

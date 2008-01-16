@@ -8,47 +8,31 @@
 #ifndef SPR_FWAPPGLUI_H
 #define SPR_FWAPPGLUI_H
 
-#include <Framework/SprFWAppGL.h>
 #include <Framework/SprFWAppGLUT.h>
-#include <GL/glui.h>
-#include <vector>
+
+class GLUI;
 
 namespace Spr{;
 
 class FWAppGLUIDesc {
 public:
 	GLUI*	guiID;
-	int		windowID;
 	int		fromTop;
 	int		fromLeft;
 	int		subPosition;
 	char*	gluiName;
 	bool	createOtherWindow;
-
-
 	//別ウィンドウを作成する場合のコンストラクタ
 	//gluiの初期値はどうすればいい？NULLとかにすると走らせた瞬間死ぬ。
 	//デスクリプタのコンストラクタに毎回登録するのはおかしい
-	FWAppGLUIDesc(GLUI* glui, int winID = 0, int top = 500, int left = 30,	char* name = "Menu")
-		: guiID(glui), windowID(winID), fromTop(top), fromLeft(left), gluiName(name){
-
-		subPosition			= 0;
-		createOtherWindow	= true;
-	}
+	FWAppGLUIDesc(GLUI* glui, int top = 500, int left = 30,	char* name = "Menu");
 	//サブウィンドウを作成する場合のコンストラクタ
-	FWAppGLUIDesc(GLUI* glui, int winID = 0, int pos = GLUI_SUBWINDOW_RIGHT)
-		: guiID(glui), windowID(winID), subPosition(pos){
-		
-		fromTop				= 0;
-		fromLeft			= 0;
-		gluiName			= NULL;
-		createOtherWindow	= false;
-	}
+	FWAppGLUIDesc(GLUI* glui, int pos = 0x20);
 };
 
 /** @brief GLUIを用いるアプリケーションクラス
 */
-class FWAppGLUI : public FWAppGL, public FWAppGLUIDesc{
+class FWAppGLUI : public FWAppGLUT, public FWAppGLUIDesc{
 protected:
 	static FWAppGLUI* instance;
 	static void SPR_CDECL GluiDisplayFunc();
