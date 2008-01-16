@@ -15,20 +15,21 @@
 
 namespace Spr{;
 
+struct FWWin{
+	int id;
+	UTRef<GRRenderIf> render;
+	FWWin(int i, GRRenderIf* r)
+		:render(r), id(i){
+	}
+	UTRef<FWSceneIf> scene;
+};
+
 struct FWSdkDesc{
 };
 
 struct FWSceneIf;
 struct FWSdkIf : ObjectIf {
 	IF_DEF(FWSdk);
-	struct FWWinRender{
-		int id;
-		UTRef<GRRenderIf> render;
-		FWWinRender(int i, GRRenderIf* r)
-			:render(r), id(i){
-		}
-		UTRef<FWSceneIf> scene;
-	};
 
 	/** @brief SDKオブジェクトを作成する
 	 */
