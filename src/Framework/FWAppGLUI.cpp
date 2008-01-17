@@ -20,8 +20,6 @@
 
 namespace Spr{;
 
-FWAppGLUI* FWAppGLUI::instance;
-
 FWAppGLUIDesc::FWAppGLUIDesc(){
 	fromTop				= 50;
 	fromLeft			= 30;
@@ -31,42 +29,6 @@ FWAppGLUIDesc::FWAppGLUIDesc(){
 }
 
 FWAppGLUI::~FWAppGLUI(){
-	FWAppGLUI::AtExit();
-	instance = NULL;
-}
-
-void FWAppGLUI::GluiDisplayFunc(){
-	FWAppGLUI::instance->CallDisplay();
-}
-
-void FWAppGLUI::GluiReshapeFunc(int w, int h){
-	FWAppGLUI::instance->CallReshape(w,h);
-}
-
-void FWAppGLUI::GluiTimerFunc(int id){
-	FWAppGLUI::instance->CallStep();
-	glutPostRedisplay();
-	FWSceneIf* fwScene = FWAppGLUI::instance->GetSdk()->GetScene();
-	if(!fwScene)return;
-
-	PHSceneIf* phScene = fwScene->GetPHScene();
-	if(!phScene)return;
-
-	int timeStep = (int)(phScene->GetTimeStep() * 100.0);
-	if(timeStep<1) timeStep = 1;
-	GLUI_Master.set_glutTimerFunc(timeStep, GluiTimerFunc, 0);
-}
-
-void FWAppGLUI::GluiIdleFunc(){
-	glutPostRedisplay();
-}
-void FWAppGLUI::GluiKeyboardFunc(unsigned char key, int x, int y){
-	FWAppGLUI::instance->CallKeyboard(key, x, y);
-}
-
-void FWAppGLUI::AtExit(){
-	if(FWAppGLUI::instance && FWAppGLUI::instance->vfBridge)
-		FWAppGLUI::instance->vfBridge->AtExit();
 }
 
 //------------------------------------------------------------------
@@ -82,8 +44,8 @@ void FWAppGLUI::Start(){
 	if (!fwSdk->NWin()){
 		CreateWin();
 	}
-	GLUI_Master.set_glutTimerFunc(1, FWAppGLUI::GluiTimerFunc, 0);
-	GLUI_Master.set_glutIdleFunc(FWAppGLUI::GluiIdleFunc);
+	GLUI_Master.set_glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+	GLUI_Master.set_glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 
 	if (!guis.size()){
 		CreateGUI(GetSdk()->GetWin(0)->id);

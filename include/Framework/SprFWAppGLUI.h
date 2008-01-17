@@ -30,13 +30,6 @@ public:
 */
 class FWAppGLUI : public FWAppGLUT, public FWAppGLUIDesc{
 protected:
-	static FWAppGLUI* instance;
-	static void SPR_CDECL GluiDisplayFunc();
-	static void SPR_CDECL GluiReshapeFunc(int w, int h);
-	static void SPR_CDECL GluiTimerFunc(int id);
-	static void SPR_CDECL GluiIdleFunc();
-	static void SPR_CDECL GluiKeyboardFunc(unsigned char key, int x, int y);
-	static void SPR_CDECL AtExit();
 	std::vector<GLUI*> guis;
 public:
 	~FWAppGLUI();

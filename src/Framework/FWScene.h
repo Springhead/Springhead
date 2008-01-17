@@ -50,6 +50,8 @@ public:
 	/// コンストラクタ
 	FWScene(const FWSceneDesc& d=FWSceneDesc());
 	
+
+
 	virtual PHSceneIf*	GetPHScene(){ return phScene; }
 	virtual void		SetPHScene(PHSceneIf* s){ phScene = s; }
 	virtual GRSceneIf*	GetGRScene(){ return grScene; }

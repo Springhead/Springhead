@@ -40,6 +40,7 @@ protected:
 	static void SPR_CDECL AtExit();
 public:
 	~FWAppGLUT();
+	
 	///	描画コールバック
 	virtual void Display();
 
