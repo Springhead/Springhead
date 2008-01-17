@@ -94,9 +94,9 @@ void FWAppGLUI::Start(){
 GLUI* FWAppGLUI::CreateGUI(int wid, FWAppGLUIDesc desc){
 	GLUI* glui;
 	if(!createOtherWindow){
-		glui = GLUI_Master.create_glui_subwindow(wid, subPosition);		
+		glui = GLUI_Master.create_glui_subwindow(wid, desc.subPosition);		
 	}else{
-		glui = GLUI_Master.create_glui(gluiName, 0, fromLeft, fromTop);
+		glui = GLUI_Master.create_glui(gluiName, 0, desc.fromLeft, desc.fromTop);
 		glui->set_main_gfx_window(wid);
 	}
 	guis.push_back(glui);

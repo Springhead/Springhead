@@ -79,7 +79,7 @@ void FWAppGLUT::Start(){
 	glutMainLoop();
 }
 
-FWWin* FWAppGLUT::CreateWin(const FWWinDesc d){
+FWWin* FWAppGLUT::CreateWin(const FWAppGLUTDesc d){
 	int window=0;
 	if (d.parentWindow){
 		window = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
