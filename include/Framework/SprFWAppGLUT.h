@@ -12,7 +12,7 @@
 
 namespace Spr{;
 
-class FWWinDesc{	//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
+class FWAppGLUTDesc{	//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
 public:
 	int width;			///<	幅
 	int height;			///<	高さ
@@ -21,7 +21,7 @@ public:
 	int parentWindow;	///<	子ウィンドウを作る場合は、親のID、そうでなければ0
 	UTString title;		///<	ウィンドウのタイトル文字列(トップレベルウィンドウのみ)
 	bool fullscreen;
-	FWWinDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
+	FWAppGLUTDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
 		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){
 	}
 };
@@ -46,7 +46,7 @@ public:
 	///	GLUTの初期化を行う。最初にこれを呼ぶ必要がある。
 	virtual void Init(int argc, char* argv[]);
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual FWWin* CreateWin(const FWWinDesc d=FWWinDesc());
+	virtual FWWin* CreateWin(const FWAppGLUTDesc d=FWAppGLUTDesc());
 	///	ウィンドウを破棄する
 	virtual void DestroyWin(FWWin* w);
 	///	カレントウィンドウを設定する。設定後のIDを返す。
