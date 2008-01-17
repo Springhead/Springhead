@@ -85,7 +85,7 @@ FWWin* FWAppGLUT::CreateWin(const FWAppGLUTDesc d){
 		window = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
 	}else{
 		glutInitWindowSize(d.width, d.height);
-		glutInitWindowPosition(d.top, d.left);
+		glutInitWindowPosition(d.left, d.top);
 		window = glutCreateWindow(d.title.c_str());
 	}
 	int rv = glewInit();
