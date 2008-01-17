@@ -52,6 +52,8 @@ private:
 
 public:
 	//コンストラクタ
+	CRFLAnimalQL(){
+	}
 	CRFLAnimalQL(CRCreatureIf* charactors){
 		creature = charactors;
 		Init();
