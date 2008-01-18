@@ -34,7 +34,7 @@ protected:
 public:
 	~FWAppGLUI();
 	virtual void	Init(int argc, char* argv[]);
-	virtual void	DesignGLUI() = 0;
+	virtual void	DesignGUI() = 0;
 	virtual void	Display() = 0;
 	virtual void	Start();
 	virtual GLUI*	CreateGUI(int wid = 0, FWAppGLUIDesc desc = FWAppGLUIDesc());
