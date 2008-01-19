@@ -26,8 +26,7 @@ PHJoint::PHJoint(){
 IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
 
 PHJoint1D::PHJoint1D(){
-	fMax = FLT_MAX;
-	fMin = -FLT_MAX;
+	
 }	
 
 bool PHJoint1D::GetDesc(void* desc){
@@ -38,6 +37,8 @@ bool PHJoint1D::GetDesc(void* desc){
 	((PHJoint1DDesc*)desc)->origin			= GetSpringOrigin();
 	((PHJoint1DDesc*)desc)->desiredVelocity = GetDesiredVelocity();
 	((PHJoint1DDesc*)desc)->torque			= GetMotorTorque();
+	((PHJoint1DDesc*)desc)->fMax			= fMax;
+	((PHJoint1DDesc*)desc)->fMin			= fMin;
 	return true;
 }
 
@@ -50,6 +51,8 @@ void PHJoint1D::SetDesc(const void* desc){
 	SetDamper(desc1D.damper);
 	SetDesiredVelocity(desc1D.desiredVelocity);
 	SetMotorTorque(desc1D.torque);
+	fMax = desc1D.fMax;
+	fMin = desc1D.fMin;
 }
 
 void PHJoint1D::SetConstrainedIndex(bool* con){

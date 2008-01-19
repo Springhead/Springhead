@@ -14,7 +14,7 @@
 namespace Spr{
 
 //コンストラクタ
-CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
+CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enableFMax){
 
 	jointOrder = SOCKET_PARENT;
 
@@ -24,9 +24,8 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	joNJoints		= 0;
 	joNBallJoints	= 0;
 	joNHingeJoints	= 0;
-	flagRange		= true;
-	flagFMax		= false;
-
+	flagRange		= enableRange;
+	flagFMax		= enableFMax;
 	//---------------------------------------------------------
 	// sizes of solids
 	waistBreadth   = 0.5;
@@ -114,7 +113,6 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	originStifle	  = Rad(-30);
 	originRearKnee	  = Rad(-5);
 
-	if(flagRange){
 	//-------------------------------------------------------------------
 	// Range of ball joints
 	limitSwingWaistChest.upper	= Rad(5);
@@ -159,34 +157,32 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(){
 	rangeFrontKnee	  = Vec2d(Rad(-180), Rad(	0));
 	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
 	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+180));
-	}
+	
 
 	//-----------------------------------------------------------------------------------
 	// fMax
-	if(flagFMax){
-	fMaxWaistChest		= 0;
-	fMaxChestNeck		= 0;
-	fMaxNeckHead		= 0;
-	fMaxWaistTail		= 0;
-	fMaxTail12			= 0;
-	fMaxTail23			= 0;
-	fMaxLeftShoulder	= 0;
-	fMaxLeftElbow		= 0;
-	fMaxLeftFrontKnee	= 0;
-	fMaxLeftFrontAnkle	= 0;
-	fMaxLeftHip			= 0;
-	fMaxLeftStifle		= 0;
-	fMaxLeftRearKnee	= 0;
-	fMaxLeftRearAnkle	= 0;
-	fMaxRightShoulder	= 0;
-	fMaxRightElbow		= 0;
-	fMaxRightFrontKnee	= 0;
-	fMaxRightFrontAnkle	= 0;
-	fMaxRightHip		= 0;
-	fMaxRightStifle		= 0;
-	fMaxRightRearKnee	= 0;
-	fMaxRightRearAnkle	= 0;
-	}
+	fMaxWaistChest		= 1000;
+	fMaxChestNeck		= 1000;
+	fMaxNeckHead		= 1000;
+	fMaxWaistTail		= 1000;
+	fMaxTail12			= 1000;
+	fMaxTail23			= 1000;
+	fMaxLeftShoulder	= 10;
+	fMaxLeftElbow		= 1;
+	fMaxLeftFrontKnee	= 1;
+	fMaxLeftFrontAnkle	= 100;
+	fMaxLeftHip			= 10;
+	fMaxLeftStifle		= 1;
+	fMaxLeftRearKnee	= 1;
+	fMaxLeftRearAnkle	= 100;
+	fMaxRightShoulder	= 10;
+	fMaxRightElbow		= 1;
+	fMaxRightFrontKnee	= 1;
+	fMaxRightFrontAnkle	= 100;
+	fMaxRightHip		= 10;
+	fMaxRightStifle		= 1;
+	fMaxRightRearKnee	= 1;
+	fMaxRightRearAnkle	= 100;
 
 	//-----------------------------------------------------------------------------------
 	// materialMu of All Solids 
@@ -273,6 +269,9 @@ void CRFourLegsAnimalBody::CreateChest(){
 	ballDesc.limitSwing		  = limitSwingWaistChest;
 	ballDesc.limitTwist		  = limitTwistWaistChest;	
 	}
+	if(flagFMax){
+		ballDesc.fMax = fMaxWaistChest;
+	}
 
 	//----------------------------------------------------------------------------
 	// PHScene::CreateJoint([p], [c], desc)で使う。
@@ -324,6 +323,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.limitSwing		   = limitSwingWaistTail;
 	ballDesc.limitTwist		   = limitTwistWaistTail;
 	}
+	if(flagFMax){
+		ballDesc.fMax = fMaxWaistTail;
+	}
 
 	joints[JO_WAIST_TAIL]	   = phScene->CreateJoint(solids[SO_WAIST], solids[SO_TAIL1], ballDesc);
 	joints[JO_WAIST_TAIL]->SetName("joWaistTail");
@@ -342,6 +344,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.limitSwing		   = limitSwingTail;
 	ballDesc.limitTwist		   = limitTwistTail;
 	}
+	if(flagFMax){
+		ballDesc.fMax = fMaxTail12;
+	}
 
 	joints[JO_TAIL_12]		   = phScene->CreateJoint(solids[SO_TAIL1], solids[SO_TAIL2], ballDesc);
 	joints[JO_TAIL_12]->SetName("joTail12");
@@ -359,6 +364,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingTail;
 	ballDesc.limitTwist		   = limitTwistTail;
+	}
+	if(flagFMax){
+		ballDesc.fMax = fMaxTail23;
 	}
 
 	joints[JO_TAIL_23]		   = phScene->CreateJoint(solids[SO_TAIL2], solids[SO_TAIL3], ballDesc);
@@ -405,6 +413,9 @@ void CRFourLegsAnimalBody::CreateNeck(){
 	ballDesc.limitSwing		  = limitSwingChestNeck;
 	ballDesc.limitTwist		  = limitTwistChestNeck;
 	}
+	if(flagFMax){
+		ballDesc.fMax = fMaxChestNeck;
+	}
 
 	joints[JO_CHEST_NECK] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_NECK], ballDesc);
 	joints[JO_CHEST_NECK]->SetName("joChestNeck");
@@ -443,6 +454,9 @@ void CRFourLegsAnimalBody::CreateHead(){
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingNeckHead;
 	ballDesc.limitTwist		   = limitTwistNeckHead;
+	}
+	if(flagFMax){
+		ballDesc.fMax = fMaxNeckHead;
 	}
 
 	joints[JO_NECK_HEAD]	   = phScene->CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
@@ -520,6 +534,9 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	ballDesc.limitSwing		  = limitSwingShoulder;
 	ballDesc.limitTwist		  = limitTwistShoulder;
 	}
+	if(flagFMax){
+		ballDesc.fMax = (lr == LEFTPART) ? fMaxLeftShoulder : fMaxRightShoulder;
+	}
 
 	//----------------------------------------------------------------------------
 	// phScene->CreateJoint([p], [c], desc)で使う。
@@ -580,6 +597,9 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	hingeDesc.lower			   = rangeElbow[0];
 	hingeDesc.upper			   = rangeElbow[1];
 	}
+	if(flagFMax){
+		hingeDesc.fMax = (lr == LEFTPART) ? fMaxLeftElbow : fMaxRightElbow;
+	}
 
 	joints[joElbow] = phScene->CreateJoint(solids[soBreastbone], solids[soRadius], hingeDesc);
 	if(lr == LEFTPART)
@@ -634,6 +654,9 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 	if(flagRange){
 	hingeDesc.lower			   = rangeFrontKnee[0];
 	hingeDesc.upper			   = rangeFrontKnee[1];
+	}
+	if(flagFMax){
+		hingeDesc.fMax = (lr == LEFTPART) ? fMaxLeftFrontKnee : fMaxRightFrontKnee;
 	}
 
 	joints[joKnee] = phScene->CreateJoint(solids[soRadius], solids[soCannonBone], hingeDesc);
@@ -690,6 +713,9 @@ void CRFourLegsAnimalBody::CreateFrontToeBones(LREnum lr){
 	if(flagRange){
 	ballDesc.limitSwing		  = limitSwingFrontAnkle;
 	ballDesc.limitTwist		  = limitTwistFrontAnkle;
+	}
+	if(flagFMax){
+		ballDesc.fMax = (lr ==LEFTPART) ? fMaxLeftFrontAnkle : fMaxRightFrontAnkle;
 	}
 
 	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
@@ -765,6 +791,9 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	ballDesc.limitSwing		  = limitSwingHip;
 	ballDesc.limitTwist		  = limitTwistHip;
 	}
+	if(flagFMax){
+		ballDesc.fMax = (lr == LEFTPART) ? fMaxLeftHip : fMaxRightHip;
+	}
 
 	joints[joHip] = phScene->CreateJoint(solids[SO_WAIST], solids[soFemur], ballDesc);
 	if(lr == LEFTPART)
@@ -819,6 +848,9 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 	if(flagRange){
 	hingeDesc.lower			   = rangeStifle[0];
 	hingeDesc.upper			   = rangeStifle[1];
+	}
+	if(flagFMax){
+		hingeDesc.fMax = (lr ==LEFTPART) ? fMaxLeftStifle : fMaxRightStifle;
 	}
 
 	joints[joStifle] = phScene->CreateJoint(solids[soFemur], solids[soTibia], hingeDesc);
@@ -876,6 +908,9 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 	hingeDesc.lower			   = rangeRearKnee[0];
 	hingeDesc.upper			   = rangeRearKnee[1];
 	}
+	if(flagFMax){
+		hingeDesc.fMax = (lr ==LEFTPART) ? fMaxLeftRearKnee : fMaxRightRearKnee;
+	}
 
 	joints[joKnee] = phScene->CreateJoint(solids[soTibia], solids[soCannonBone], hingeDesc);
 	if(lr == LEFTPART)
@@ -931,6 +966,9 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingRearAnkle;
 	ballDesc.limitTwist		   = limitTwistRearAnkle;
+	}
+	if(flagFMax){
+		ballDesc.fMax = (lr ==LEFTPART) ? fMaxLeftRearAnkle : fMaxRightRearAnkle;
 	}
 
 	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);

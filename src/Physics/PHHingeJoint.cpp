@@ -97,6 +97,10 @@ void PHHingeJoint::Projection(double& f, int k){
 			f = max(0.0, f);
 		else if(onUpper)
 			f = min(0.0, f);
+		if(fMax < f)
+			f = max(0.0, fMax);
+		if(f < fMin)
+			f = min(0.0, fMin);
 	}
 }
 

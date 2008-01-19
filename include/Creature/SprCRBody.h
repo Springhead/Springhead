@@ -477,7 +477,7 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	/// ‰Ò“­ˆæ§ŒÀ‚ğ“ü‚ê‚é‚©‚Ç‚¤‚©
 	bool flagRange;
 
-	CRFourLegsAnimalBodyDesc();
+	CRFourLegsAnimalBodyDesc(bool enableRange = false, bool enableFMax = false);
 };
 
 

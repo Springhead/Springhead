@@ -16,6 +16,7 @@
 #include "myGlobalValue.h"
 //関数定義が邪魔だから外に追いやっているだけなので消してはいけない。
 //そのうちちゃんとクラスとか構造体を作って入れよう。
+//【追記】⇒2008.01.20現在FrameworkにFWAppGLUIクラスが実装されている。
 #include "LoadDataFromGUI.h"
 #include "SetDataFromGUI.h"
 #include "ResetDataFromGUI.h"
@@ -355,7 +356,6 @@ int main(int argc, char* argv[]){
 	GLUI_Master.set_glutTimerFunc(simulationPeriod, GLUT_Timer, 0);
 	GLUI_Master.set_glutKeyboardFunc(GLUT_Keyboard);
 	GLUI_Master.set_glutReshapeFunc(GLUT_Reshape);
-	glutSetIconTitle("animal.ico");
 	
 	glui->set_main_gfx_window(mainWindow);	
 
@@ -386,6 +386,7 @@ int main(int argc, char* argv[]){
 	cout << "************************" << endl;
 	cout << endl;
 	cout << "< Ver 0.7 beta > Last update: 2008.01.10 Toki" << endl;
+	cout << "This program is an easy sample of GLUI." << endl;
 	glutMainLoop();													//GLUTのループを回す
 
 	return 0;

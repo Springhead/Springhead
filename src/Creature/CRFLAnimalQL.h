@@ -26,11 +26,13 @@
 */
 class CRFLAnimalQL: public UTRefCount{
 
-private:
+protected:
 	//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//大域変数の定義	
 	CRCreatureIf*			creature;
 	std::vector<CRBodyIf*>  crBody;
+	std::vector< std::vector<double> >	qValue;
+	std::vector< std::vector<double> >	qValueDash;
 	
 	std::vector<int>					action;			//< 各関節の指令が入る配列
 	std::vector<int>					actionNumber;	//< 各関節の取り得るアクション数が入る配列
@@ -38,8 +40,6 @@ private:
 	double					learningRate;	//<	学習率
 	double					decreaseRate;	//< 割引率（エージェントの忘却率）
 	double					reward;			//< 報酬
-	double					qValue;			//< Q値
-	double					qValueDash;		//< 規格化されたQ値
 	double					penalty;		//< 規格化の際に使用する罰の値
 	double					moveRatio;		//< 行動の幅（degree）
 
@@ -53,6 +53,7 @@ private:
 public:
 	//コンストラクタ
 	CRFLAnimalQL(){
+		Init();
 	}
 	CRFLAnimalQL(CRCreatureIf* charactors){
 		creature = charactors;

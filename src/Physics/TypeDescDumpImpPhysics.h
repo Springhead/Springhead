@@ -36,6 +36,10 @@
 	field->offset = int((char*)&(pPHJoint1DDesc->desiredVelocity) - (char*)pPHJoint1DDesc);
 	field = desc->AddField("", "double", "torque", "");
 	field->offset = int((char*)&(pPHJoint1DDesc->torque) - (char*)pPHJoint1DDesc);
+	field = desc->AddField("", "double", "fMax", "");
+	field->offset = int((char*)&(pPHJoint1DDesc->fMax) - (char*)pPHJoint1DDesc);
+	field = desc->AddField("", "double", "fMin", "");
+	field->offset = int((char*)&(pPHJoint1DDesc->fMin) - (char*)pPHJoint1DDesc);
 	db->RegisterDesc(desc);
 	
 	PHTreeNodeDesc* pPHTreeNodeDesc = NULL;
@@ -192,6 +196,10 @@
 	field->offset = int((char*)&(pPHBallJointDesc->goal) - (char*)pPHBallJointDesc);
 	field = desc->AddField("", "Vec3d", "torque", "");
 	field->offset = int((char*)&(pPHBallJointDesc->torque) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "fMax", "");
+	field->offset = int((char*)&(pPHBallJointDesc->fMax) - (char*)pPHBallJointDesc);
+	field = desc->AddField("", "double", "fMin", "");
+	field->offset = int((char*)&(pPHBallJointDesc->fMin) - (char*)pPHBallJointDesc);
 	db->RegisterDesc(desc);
 	
 	PHSpringDesc* pPHSpringDesc = NULL;

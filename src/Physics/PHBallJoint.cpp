@@ -30,7 +30,8 @@ PHBallJointDesc::PHBallJointDesc(){
 	limitTwist[1] = FLT_MAX;	
 	limitDir	  = Vec3d(0.0, 0.0, 1.0);
 	goal		  = Quaterniond(1, 0, 0, 0);
-
+	fMax		  = FLT_MAX;
+	fMin		  = -FLT_MAX;
 }
 
 //----------------------------------------------------------------------------
@@ -50,8 +51,7 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	}
 	anyLimit = false;
 	
-	fMax		  = FLT_MAX;
-	fMin		  = -FLT_MAX;
+
 }
 
 bool PHBallJoint::GetDesc(void* desc){
@@ -63,7 +63,8 @@ bool PHBallJoint::GetDesc(void* desc){
 	((PHBallJointDesc*)desc)->limitDir		 = limitDir;
 	((PHBallJointDesc*)desc)->goal			 = goal;
 	((PHBallJointDesc*)desc)->torque		 = GetMotorTorque();
-
+	((PHBallJointDesc*)desc)->fMax			 = fMax;
+	((PHBallJointDesc*)desc)->fMin			 = fMin;
 	return true;
 }
 
@@ -78,7 +79,9 @@ void PHBallJoint::SetDesc(const void* desc){
 	limitDir	  = descBall.limitDir;
 	goal		  = descBall.goal;
 	torque		  = descBall.torque;
-	
+	fMax		  = descBall.fMax;
+	fMin		  = descBall.fMin;
+
 	SetMotorTorque(descBall.torque);
 }
 
@@ -250,9 +253,9 @@ void PHBallJoint::Projection(double& f, int k){
 		else if(onLimit[0].onUpper)
 			f = min(0.0, f);
 		else if(fMax < f)
-			f = max(0.0, f);
+			f = max(0.0, fMax);
 		else if(f < fMin)
-			f = min(0.0, f);
+			f = min(0.0, fMin);
 	}
 
 	if (k==5){
@@ -261,9 +264,9 @@ void PHBallJoint::Projection(double& f, int k){
 		else if(onLimit[1].onUpper)
 			f = min(0.0, f);
 		else if(fMax < f)
-			f = max(0.0, f);
+			f = max(0.0, fMax);
 		else if(f < fMin)
-			f = min(0.0, f);
+			f = min(0.0, fMin);
 	}
 
 }

@@ -52,8 +52,10 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double  damper;			///< ダンパ係数
 	double	desiredVelocity; ///< 目標速度
 	double	torque;			///< モータトルク
+	double	fMax;			///< 関節にかけられる最大の力
+	double	fMin;			///< 関節にかけられる最小の力
 
-	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0){}
+	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){}
 };
 
 
@@ -414,6 +416,8 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec3d			limitDir;	///< 可動域の中心ベクトル
 	Quaterniond		goal;		///< バネダンパの制御目標
 	Vec3d			torque;		///< モータトルク
+	double			fMax;		///< 関節にかけられる最大の力
+	double			fMin;		///< 関節にかけられる最小の力
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
