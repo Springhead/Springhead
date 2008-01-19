@@ -259,9 +259,11 @@ void keyboard(unsigned char key, int x, int y){
 		case ' ':
 			{
 				soBox.push_back(scene->CreateSolid(desc));
-				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshConvex);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				soBox.back()->SetOrientation(
+					Quaternionf::Rot(Rad(30), 'y') * 
+					Quaternionf::Rot(Rad(10), 'x'));  
 				std::ostringstream os;
 				os << "box" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());

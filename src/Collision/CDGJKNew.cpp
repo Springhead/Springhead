@@ -19,11 +19,103 @@ static bool bDebug;
 
 #include "Collision.h"
 #include <Foundation/Scene.h>
+#include <fstream>
+#include <windows.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
 namespace Spr{;
+
+void SaveMaterial(std::ostream& file, PHMaterial& m){
+	file << m.e << " ";
+	file << m.mu << " " << m.mu0 << std::endl;
+}
+void LoadMaterial(std::istream& file, PHMaterial& m){
+	file >> m.e;
+	file >> m.mu >> m.mu0;
+}
+void SaveShape(std::ostream& file, CDShape* a){
+	CDConvexMesh* mesh = a->Cast();
+	if (mesh){
+		file << "mesh" << std::endl;
+		CDConvexMeshDesc desc;
+		mesh->GetDesc(&desc);
+		SaveMaterial(file, desc.material);
+		file << desc.vertices.size() << " ";
+		for(unsigned i=0; i<desc.vertices.size(); ++i){
+			file << desc.vertices[i] << std::endl;
+		}
+	}
+	CDBox* box = a->Cast();
+	if (box){
+		file << "box ";
+		CDBoxDesc desc;
+		mesh->GetDesc(&desc);
+		SaveMaterial(file, desc.material);
+		file << desc.boxsize << std::endl;
+	}		
+}
+CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
+	CDConvex* rv = NULL;
+	char type[100];
+	file >> type;
+	if( strcmp(type, "mesh") == 0 ){
+		CDConvexMeshDesc desc;
+		LoadMaterial(file, desc.material);			
+		int size;
+		file >> size;
+		desc.vertices.resize(size);
+		for(int i=0; i<size; ++i){
+			file >> desc.vertices[i];
+		}
+		rv = sdk->CreateShape(CDConvexMeshIf::GetIfInfoStatic(), desc)->Cast();
+	}
+	if( strcmp(type, "box") == 0){
+		CDBoxDesc desc;
+		LoadMaterial(file, desc.material);			
+		file >> desc.boxsize;
+		rv = sdk->CreateShape(CDBoxIf::GetIfInfoStatic(), desc)->Cast();
+	}
+	return rv;
+}
+
+int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, 
+	Vec3d& pa, Vec3d& pb, double& dist);
+void ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, 
+	Vec3d& pa, Vec3d& pb, double& dist){
+	std::ofstream file("ContFindCommonPointSaveParam.txt");
+	SaveShape(file, (CDConvex*)a);
+	SaveShape(file, (CDConvex*)b);
+	file << a2w;
+	file << b2w;
+	file << range;
+	file << normal;
+	file << pa;
+	file << pb;
+	file << dist;
+}
+void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
+	const CDConvex* a;
+	const CDConvex* b;
+	Posed a2w, b2w;
+	Vec3d range, normal, pa, pb;
+	double dist;
+	a = LoadShape(file, sdk);
+	b = LoadShape(file, sdk);
+	file >> a2w;
+	file >> b2w;
+	file >> range;
+	file >> normal;
+	file >> pa;
+	file >> pb;
+	file >> dist;
+	ContFindCommonPoint(a, b, a2w, b2w, range, normal, pa, pb, dist);
+}
+
+
 const double sqEpsilon = 1e-3;
 const double epsilon   = 1e-6;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
 const double epsilon2  = epsilon*epsilon;
@@ -164,6 +256,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			//	長谷川専用デバッグコード。現在当たり判定Debug中。			
 			bDebug = true;
 			DSTR << "Too many loop in CCDGJK." << std::endl;
+			ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+			
+			DebugBreak();
 			ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
 #else
 			if (!bDebug) return -1;
