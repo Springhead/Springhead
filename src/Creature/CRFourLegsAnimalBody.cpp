@@ -32,7 +32,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	chestBreadth			= 0.6;		chestHeight				= 1.5;		chestThickness				= 0.7;
 	tailBreadth				= 0.1;		tailHeight				= 0.2;		tailThickness				= 0.1;
 	neckBreadth				= 0.3;		neckHeight				= 1.2;		neckThickness				= 0.2;
-	headBreadth				= 0.31;		headHeight				= 0.7;		headThickness				= 0.4;
+	headBreadth				= 0.25;		headHeight				= 0.7;		headThickness				= 0.4;
 	breastboneBreadth		= 0.21;		breastboneHeight		= 0.5;		breastboneThickness			= 0.2; 
 	radiusBreadth			= 0.2;		radiusHeight			= 0.7;		radiusThickness				= 0.2;
 	frontCannonBoneBreadth	= 0.15;		frontCannonBoneHeight	= 0.6;		frontCannonBoneThickness	= 0.15;
