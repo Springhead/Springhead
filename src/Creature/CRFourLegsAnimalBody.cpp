@@ -148,7 +148,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	dynamicalMode = false;
 	//-----------------------------------------------------------------------------------
 	// Total Mass
-	totalMass = 15.0;
+	totalMass = 10.0;
 }	
 	
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
