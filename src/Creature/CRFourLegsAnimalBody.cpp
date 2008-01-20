@@ -41,7 +41,6 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	tibiaBreadth			= 0.2;		tibiaHeight				= 0.7;		tibiaThickness				= 0.2;
 	rearCannonBoneBreadth	= 0.15;		rearCannonBoneHeight    = 0.65;		rearCannonBoneThickness		= 0.15;
 	rearToeBreadth			= 0.26;		rearToeHeight			= 0.1;		rearToeThickness			= 0.25;
-
 	//------------------------------------------------------------------
 	// spring and damper of ball joints
 	springWaistChest   =  500.0; damperWaistChest	= 200.0;
@@ -53,34 +52,30 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	springFrontAnkle   = 1000.0; damperFrontAnkle	=  20.0;
 	springHip		   =   50.0; damperHip			=  20.0;
 	springRearAnkle	   = 1000.0; damperRearAnkle	=  20.0;
-	
 	//-------------------------------------------------------------------
 	// spring and damper of hinge joints
 	springElbow		   =   50.0; damperElbow		= 20.0;
 	springFrontKnee	   =   50.0; damperFrontKnee	= 20.0;
 	springStifle	   =   50.0; damperStifle		= 20.0;
 	springRearKnee	   =   50.0; damperRearKnee		= 20.0;
-	
 	//-------------------------------------------------------------------
 	// ball joints are conrtroled to these directions
 	goalChestNeck	  = Quaterniond::Rot(Rad(  60), 'x');
 	goalNeckHead	  = Quaterniond::Rot(Rad(- 90), 'x');
 	goalShoulder	  = Quaterniond::Rot(Rad(-120), 'x');
 	goalHip			  = Quaterniond::Rot(Rad(- 60), 'x');
-
 	//-------------------------------------------------------------------
 	// hinge joints are controled to these directions
 	originElbow		  = Rad(40);
 	originFrontKnee	  = Rad(0);
 	originStifle	  = Rad(-30);
 	originRearKnee	  = Rad(-5);
-
 	//-------------------------------------------------------------------
 	// Range of ball joints
 	limitSwingWaistChest.upper	= Rad(5);
 	limitTwistWaistChest.lower	= Rad(-5);
 	limitTwistWaistChest.upper	= Rad(5);
-	
+
 	limitSwingWaistTail.upper	= Rad(10);
 	limitTwistWaistTail.lower	= Rad(-5);
 	limitTwistWaistTail.upper	= Rad(5);
@@ -112,15 +107,12 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	limitSwingRearAnkle.upper	= Rad(5);
 	limitTwistRearAnkle.lower	= Rad(-1);
 	limitTwistRearAnkle.upper	= Rad(1);
-
 	//-----------------------------------------------------------------------------------
 	// Range of hinge joints (Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø)
 	rangeElbow		  = Vec2d(Rad(	 0), Rad(+180));
 	rangeFrontKnee	  = Vec2d(Rad(-180), Rad(	0));
 	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
 	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+180));
-	
-
 	//-----------------------------------------------------------------------------------
 	// fMax
 	fMaxWaistChest		= 1000;
@@ -129,38 +121,35 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	fMaxWaistTail		= 1000;
 	fMaxTail12			= 1000;
 	fMaxTail23			= 1000;
-	fMaxLeftShoulder	= 10;
-	fMaxLeftElbow		= 1;
-	fMaxLeftFrontKnee	= 1;
+	fMaxLeftShoulder	= 100;
+	fMaxLeftElbow		= 10;
+	fMaxLeftFrontKnee	= 10;
 	fMaxLeftFrontAnkle	= 100;
 	fMaxLeftHip			= 10;
-	fMaxLeftStifle		= 1;
-	fMaxLeftRearKnee	= 1;
+	fMaxLeftStifle		= 10;
+	fMaxLeftRearKnee	= 10;
 	fMaxLeftRearAnkle	= 100;
-	fMaxRightShoulder	= 10;
-	fMaxRightElbow		= 1;
-	fMaxRightFrontKnee	= 1;
+	fMaxRightShoulder	= 100;
+	fMaxRightElbow		= 10;
+	fMaxRightFrontKnee	= 10;
 	fMaxRightFrontAnkle	= 100;
-	fMaxRightHip		= 10;
-	fMaxRightStifle		= 1;
-	fMaxRightRearKnee	= 1;
+	fMaxRightHip		= 100;
+	fMaxRightStifle		= 10;
+	fMaxRightRearKnee	= 10;
 	fMaxRightRearAnkle	= 100;
-
 	//-----------------------------------------------------------------------------------
 	// materialMu of All Solids 
-	materialMu = (float)0.1;
-
+	materialMu = (float)10.0;
 	//-----------------------------------------------------------------------------------
-	// Do you want to make the legs?
+	// Do you want to make no legs?
 	noLegs = false;
-
 	//-----------------------------------------------------------------------------------
-	// dynamical 
+	// Dynamical 
 	dynamicalMode = false;
-
-
-}
-	
+	//-----------------------------------------------------------------------------------
+	// Total Mass
+	totalMass = 5.0;
+}	
 	
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsAnimalBody
@@ -184,7 +173,7 @@ void CRFourLegsAnimalBody::CreateWaist(){
 
 	// Solid
 	// define the solid(it has no shape)
-	solidDesc.mass   = 0.7;
+	solidDesc.mass   = totalMass * VSolid(SO_WAIST) / VSolids();
 	solids[SO_WAIST] = phScene->CreateSolid(solidDesc);
 	solids[SO_WAIST]->SetName("soWaist");
 	// define the shape of the solid.
@@ -209,7 +198,7 @@ void CRFourLegsAnimalBody::CreateChest(){
 	PHBallJointDesc    ballDesc;
 
 	// Solid
-	solidDesc.mass   = 0.3;
+	solidDesc.mass   = totalMass * VSolid(SO_CHEST) / VSolids();
 	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
 	solids[SO_CHEST]->SetName("soChest");
 	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
@@ -252,13 +241,13 @@ void CRFourLegsAnimalBody::CreateTail(){
 
 	// Solids
 	// define the existance
-	solidDesc.mass	= 0.05;
+	solidDesc.mass	= totalMass * VSolid(SO_TAIL1) / VSolids();
 	solids[SO_TAIL1] = phScene->CreateSolid(solidDesc);
 	solids[SO_TAIL1]->SetName("soTail1");
-	solidDesc.mass  = 0.05;
+	solidDesc.mass  = totalMass * VSolid(SO_TAIL2) / VSolids();
 	solids[SO_TAIL2] = phScene->CreateSolid(solidDesc);
 	solids[SO_TAIL2]->SetName("soTail2");
-	solidDesc.mass	= 0.05;
+	solidDesc.mass	= totalMass * VSolid(SO_TAIL3) / VSolids();
 	solids[SO_TAIL3] = phScene->CreateSolid(solidDesc);
 	solids[SO_TAIL3]->SetName("soTail3");
 	
@@ -352,7 +341,7 @@ void CRFourLegsAnimalBody::CreateNeck(){
 	PHBallJointDesc		ballDesc;
 
 	// define the solid
-	solidDesc.mass = 0.2;
+	solidDesc.mass = totalMass * VSolid(SO_NECK) / VSolids();
 	solids[SO_NECK] = phScene->CreateSolid(solidDesc);
 	solids[SO_NECK]->SetName("soNeck");
 
@@ -394,7 +383,7 @@ void CRFourLegsAnimalBody::CreateHead(){
 	PHBallJointDesc		ballDesc;
 
 	// define the solid
-	solidDesc.mass = 0.05;
+	solidDesc.mass = totalMass * VSolid(SO_HEAD) / VSolids();
 	solids[SO_HEAD] = phScene->CreateSolid(solidDesc);
 	solids[SO_HEAD]->SetName("soHead");
 	// define the shape
@@ -471,7 +460,7 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 
 	}
 	// [p]chest - [c]breastbone
-	solidDesc.mass = 0.02;
+	solidDesc.mass = totalMass * VSolid(soBreastbone) / VSolids();
 	solids[soBreastbone] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soBreastbone]->SetName("soLeftBreastbone");
@@ -534,7 +523,7 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 		joElbow		 = JO_RIGHT_ELBOW;
 	}
 
-	solidDesc.mass = 0.01;
+	solidDesc.mass = totalMass * VSolid(soRadius) / VSolids();;
 	solids[soRadius] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soRadius]->SetName("soLeftRadius");
@@ -592,7 +581,7 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 		joKnee		 = JO_RIGHT_FRONT_KNEE;
 	}
 
-	solidDesc.mass = 0.01;
+	solidDesc.mass = totalMass * VSolid(soCannonBone) / VSolids();
 	solids[soCannonBone] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soCannonBone]->SetName("soLeftFrontCannonBone");
@@ -652,7 +641,7 @@ void CRFourLegsAnimalBody::CreateFrontToeBones(LREnum lr){
 		joAnkle		 = JO_RIGHT_FRONT_ANKLE;
 	}
 	//@[p]frontCannonBone - [c]frontToe
-	solidDesc.mass = 0.2;
+	solidDesc.mass = totalMass * VSolid(soToe) / VSolids();
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soToe]->SetName("soLeftFrontToe");
@@ -729,7 +718,7 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	}
 	
 	// [p]waist - [c]femur
-	solidDesc.mass = 0.02;
+	solidDesc.mass = totalMass * VSolid(soFemur) / VSolids();
 	solids[soFemur] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soFemur]->SetName("soLeftFemur");
@@ -786,7 +775,7 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 		joStifle = JO_RIGHT_STIFLE;
 	}
 
-	solidDesc.mass = 0.01;
+	solidDesc.mass = totalMass * VSolid(soTibia) / VSolids();
 	solids[soTibia] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soTibia]->SetName("soLeftTibia");
@@ -845,7 +834,7 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 		joKnee		 = JO_RIGHT_REAR_KNEE;
 	}
 
-	solidDesc.mass = 0.01;
+	solidDesc.mass = totalMass * VSolid(soCannonBone) / VSolids();
 	solids[soCannonBone] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soCannonBone]->SetName("soLeftRearCannonBone");
@@ -892,7 +881,6 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 	int soToe, soCannonBone;
 	int joAnkle;
 
-
 	if(lr == LEFTPART){
 		soToe		 = SO_LEFT_REAR_TOE;
 		soCannonBone = SO_LEFT_REAR_CANNON_BONE;
@@ -904,8 +892,9 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 		soCannonBone = SO_RIGHT_REAR_CANNON_BONE;
 		joAnkle		 = JO_RIGHT_REAR_ANKLE;
 	}
+
 	//@[p]rearCannonBone - [c]rearToe
-	solidDesc.mass = 0.02;
+	solidDesc.mass = totalMass * VSolid(soToe) / VSolids();
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
 		solids[soToe]->SetName("soLeftRearToe");

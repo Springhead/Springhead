@@ -833,6 +833,7 @@ protected: \
 	float materialMu ; \
 	bool noLegs ; \
 	bool dynamicalMode ; \
+	double totalMass ; \
 	bool flagFMax ; \
 	bool flagRange ; \
 public: \
@@ -976,6 +977,7 @@ public: \
 		materialMu = ((CRFourLegsAnimalBodyDesc*)desc)->materialMu; \
 		noLegs = ((CRFourLegsAnimalBodyDesc*)desc)->noLegs; \
 		dynamicalMode = ((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode; \
+		totalMass = ((CRFourLegsAnimalBodyDesc*)desc)->totalMass; \
 		flagFMax = ((CRFourLegsAnimalBodyDesc*)desc)->flagFMax; \
 		flagRange = ((CRFourLegsAnimalBodyDesc*)desc)->flagRange; \
 	} \
@@ -1119,6 +1121,7 @@ public: \
 		((CRFourLegsAnimalBodyDesc*)desc)->materialMu = materialMu; \
 		((CRFourLegsAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode = dynamicalMode; \
+		((CRFourLegsAnimalBodyDesc*)desc)->totalMass = totalMass; \
 		((CRFourLegsAnimalBodyDesc*)desc)->flagFMax = flagFMax; \
 		((CRFourLegsAnimalBodyDesc*)desc)->flagRange = flagRange; \
 		return true; \
@@ -1264,6 +1267,7 @@ protected: \
 	float materialMu ; \
 	bool noLegs ; \
 	bool dynamicalMode ; \
+	double totalMass ; \
 	bool flagFMax ; \
 	bool flagRange ; \
 public: \
@@ -1406,6 +1410,7 @@ public: \
 		materialMu = ((CRFourLegsAnimalBodyDesc*)desc)->materialMu; \
 		noLegs = ((CRFourLegsAnimalBodyDesc*)desc)->noLegs; \
 		dynamicalMode = ((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode; \
+		totalMass = ((CRFourLegsAnimalBodyDesc*)desc)->totalMass; \
 		flagFMax = ((CRFourLegsAnimalBodyDesc*)desc)->flagFMax; \
 		flagRange = ((CRFourLegsAnimalBodyDesc*)desc)->flagRange; \
 	} \
@@ -1548,6 +1553,7 @@ public: \
 		((CRFourLegsAnimalBodyDesc*)desc)->materialMu = materialMu; \
 		((CRFourLegsAnimalBodyDesc*)desc)->noLegs = noLegs; \
 		((CRFourLegsAnimalBodyDesc*)desc)->dynamicalMode = dynamicalMode; \
+		((CRFourLegsAnimalBodyDesc*)desc)->totalMass = totalMass; \
 		((CRFourLegsAnimalBodyDesc*)desc)->flagFMax = flagFMax; \
 		((CRFourLegsAnimalBodyDesc*)desc)->flagRange = flagRange; \
 		return true; \

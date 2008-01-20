@@ -524,6 +524,8 @@
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->noLegs) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "bool", "dynamicalMode", "");
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->dynamicalMode) - (char*)pCRFourLegsAnimalBodyDesc);
+	field = desc->AddField("", "double", "totalMass", "");
+	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->totalMass) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "bool", "flagFMax", "");
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->flagFMax) - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "bool", "flagRange", "");

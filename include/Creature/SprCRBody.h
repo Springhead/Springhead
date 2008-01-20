@@ -478,6 +478,8 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	bool noLegs;
 	/// ダイナミカルを入れるかどうか
 	bool dynamicalMode;
+	/// 全体の体重
+	double totalMass;
 	/// fMaxを入れるかどうか
 	bool flagFMax;
 	/// 稼働域制限を入れるかどうか
