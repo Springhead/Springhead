@@ -107,9 +107,14 @@ struct FWSdkIf : ObjectIf {
 	 */
 	virtual void Reshape(FWWin* cur, int w, int h)=0;
 
+	///	FWWin構造体をwindow idから探す
 	virtual FWWin* GetWinFromId(int wid)=0;
+	///	SDKが持っているウィンドウの数
 	virtual int NWin()=0;
+	///	ウィンドウの取得
 	virtual FWWin* GetWin(int pos)=0;
+	///	ウィンドウに対応するウィンドウをもたないシーンを割り当てる。
+	virtual void AssignScene(FWWin* win)=0;
 
 	static void SPR_CDECL RegisterSdk();
 };

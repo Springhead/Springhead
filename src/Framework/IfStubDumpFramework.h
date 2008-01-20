@@ -122,6 +122,9 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual FWWin * GetWin(int pos){
 		return ((OBJ*)(MIF*)this)->GetWin(pos);
 	}
+	virtual void AssignScene(FWWin * win){
+		return ((OBJ*)(MIF*)this)->AssignScene(win);
+	}
 };
 struct FWSdkIf;	class FWSdk;
 typedef FWSdkIfStubTemplate<FWSdkIf, ObjectIfBuf, FWSdk>	FWSdkIfStub;

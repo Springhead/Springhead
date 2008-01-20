@@ -24,6 +24,7 @@
  
 */
 
+
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <ctime>
 #include <GL/glut.h>

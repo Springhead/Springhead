@@ -27,12 +27,15 @@ FWWin* FWAppGL::CreateRender(int wid){
 	dev->Init();
 	win->render->SetDevice(dev);
 
+	//	仮の視点。このあとうまくシーンが設定されれば、シーンのカメラに上書きされる。
 	Affinef view;
 	view.Pos() = Vec3f(0.0, 3.0, 3.0);
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
-	view = view.inv();	
-	
+	view = view.inv();		
 	win->render->SetViewMatrix(view);
+
+	//	シーンの設定
+	fwSdk->AssignScene(win);
 	return win;
 }
 

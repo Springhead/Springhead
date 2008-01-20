@@ -68,6 +68,7 @@ public:
 	virtual FWWin* GetWinFromId(int wid);
 	virtual int NWin(){ return (int)wins.size(); }
 	virtual FWWin* GetWin(int pos);
+	virtual void AssignScene(FWWin* win);
 
 protected:
 	void CreateSdks();

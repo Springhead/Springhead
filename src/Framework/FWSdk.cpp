@@ -245,5 +245,18 @@ FWWin* FWSdk::GetWin(int pos){
 	}
 	return NULL;
 }
+void FWSdk::AssignScene(FWWin* win){
+	if (win->scene) return;
+	for(Scenes::iterator s=scenes.begin(); s!=scenes.end(); ++s){
+		std::set<FWWin>::iterator w;
+		for(w = wins.begin(); w != wins.end(); ++w){
+			if (w->scene == *s) break;
+		}
+		if (w == wins.end()){	//	‘Î‰‚·‚éwindow‚ª‚È‚¢scene
+			win->scene = *s;
+			return;
+		}
+	}
+}
 
 }
