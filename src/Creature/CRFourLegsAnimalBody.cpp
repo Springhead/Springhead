@@ -28,57 +28,19 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	flagFMax		= enableFMax;
 	//---------------------------------------------------------
 	// sizes of solids
-	waistBreadth   = 0.5;
-	waistHeight    = 0.8;
-	waistThickness = 0.6;
-
-	chestBreadth   = 0.6;
-	chestHeight    = 1.5;
-	chestThickness = 0.7;
-
-	tailBreadth   = 0.1;
-	tailHeight    = 0.2;
-	tailThickness = 0.1;
-
-	neckBreadth	  = 0.3;
-	neckHeight	  = 1.2;
-	neckThickness = 0.2;
-
-	headBreadth   = 0.31;
-	headHeight	  = 0.7;
-	headThickness = 0.4;
-
-	breastboneBreadth   = 0.21;
-	breastboneHeight    = 0.5;
-	breastboneThickness = 0.2; 
-
-	radiusBreadth	= 0.2;
-	radiusHeight	= 0.7;
-	radiusThickness = 0.2;
-
-	frontCannonBoneBreadth	 = 0.15;
-	frontCannonBoneHeight	 = 0.6;
-	frontCannonBoneThickness = 0.15;
-
-	frontToeBreadth	  = 0.26;
-	frontToeHeight	  = 0.1;
-	frontToeThickness = 0.25;
-
-	femurBreadth   = 0.25;
-	femurHeight	   = 0.65;
-	femurThickness = 0.25;
-
-	tibiaBreadth   = 0.2;
-	tibiaHeight	   = 0.7;
-	tibiaThickness = 0.2;
-
-	rearCannonBoneBreadth   = 0.15;
-	rearCannonBoneHeight    = 0.65;
-	rearCannonBoneThickness = 0.15;
-
-	rearToeBreadth   = 0.26;
-	rearToeHeight    = 0.1;
-	rearToeThickness = 0.25;
+	waistBreadth			= 0.5;		waistHeight				= 0.8;		waistThickness				= 0.6;
+	chestBreadth			= 0.6;		chestHeight				= 1.5;		chestThickness				= 0.7;
+	tailBreadth				= 0.1;		tailHeight				= 0.2;		tailThickness				= 0.1;
+	neckBreadth				= 0.3;		neckHeight				= 1.2;		neckThickness				= 0.2;
+	headBreadth				= 0.31;		headHeight				= 0.7;		headThickness				= 0.4;
+	breastboneBreadth		= 0.21;		breastboneHeight		= 0.5;		breastboneThickness			= 0.2; 
+	radiusBreadth			= 0.2;		radiusHeight			= 0.7;		radiusThickness				= 0.2;
+	frontCannonBoneBreadth	= 0.15;		frontCannonBoneHeight	= 0.6;		frontCannonBoneThickness	= 0.15;
+	frontToeBreadth			= 0.26;		frontToeHeight			= 0.1;		frontToeThickness			= 0.25;
+	femurBreadth			= 0.25;		femurHeight				= 0.65;		femurThickness				= 0.25;
+	tibiaBreadth			= 0.2;		tibiaHeight				= 0.7;		tibiaThickness				= 0.2;
+	rearCannonBoneBreadth	= 0.15;		rearCannonBoneHeight    = 0.65;		rearCannonBoneThickness		= 0.15;
+	rearToeBreadth			= 0.26;		rearToeHeight			= 0.1;		rearToeThickness			= 0.25;
 
 	//------------------------------------------------------------------
 	// spring and damper of ball joints
@@ -1076,6 +1038,50 @@ int CRFourLegsAnimalBody::NHingeJoints(){
 	}
 	joNHingeJoints = counterNHingeJoint;
 	return joNHingeJoints;
+}
+
+double CRFourLegsAnimalBody::VSolid(int i){
+	if(i == SO_WAIST)						 return waistBreadth		   * waistHeight		   * waistThickness;
+	else if(i == SO_CHEST)					 return chestBreadth		   * chestHeight		   * chestThickness;
+	else if(i == SO_TAIL1)					 return tailBreadth			   * tailHeight			   * tailThickness;
+	else if(i == SO_TAIL2)					 return tailBreadth			   * tailHeight			   * tailThickness;
+	else if(i == SO_TAIL3)					 return tailBreadth			   * tailHeight			   * tailThickness;
+	else if(i == SO_NECK)					 return neckBreadth			   * neckHeight			   * neckThickness;
+	else if(i == SO_HEAD)					 return headBreadth			   * headHeight			   * headThickness;
+	else if(i == SO_LEFT_BREASTBONE)		 return breastboneBreadth	   * breastboneHeight	   * breastboneThickness;
+	else if(i == SO_LEFT_RADIUS)			 return radiusBreadth		   * radiusHeight		   * radiusThickness;
+	else if(i == SO_LEFT_FRONT_CANNON_BONE)  return frontCannonBoneBreadth * frontCannonBoneHeight * frontCannonBoneThickness;
+	else if(i == SO_LEFT_FRONT_TOE)			 return frontToeBreadth		   * frontToeHeight		   * frontToeThickness;
+	else if(i == SO_RIGHT_BREASTBONE)		 return breastboneBreadth	   * breastboneHeight	   * breastboneThickness;
+	else if(i == SO_RIGHT_RADIUS)			 return radiusBreadth		   * radiusHeight		   * radiusThickness;
+	else if(i == SO_RIGHT_FRONT_CANNON_BONE) return frontCannonBoneBreadth * frontCannonBoneHeight * frontCannonBoneThickness;
+	else if(i == SO_RIGHT_FRONT_TOE)		 return frontToeBreadth		   * frontToeHeight		   * frontToeThickness;
+	else if(i == SO_LEFT_FEMUR)				 return femurBreadth		   * femurHeight		   * femurThickness;
+	else if(i == SO_LEFT_TIBIA)				 return tibiaBreadth		   * tibiaHeight		   * tibiaThickness;
+	else if(i == SO_LEFT_REAR_CANNON_BONE)	 return rearCannonBoneBreadth  * rearCannonBoneHeight  * rearCannonBoneThickness;
+	else if(i == SO_LEFT_REAR_TOE)			 return rearToeBreadth		   * rearToeHeight		   * rearToeThickness;
+	else if(i == SO_RIGHT_FEMUR)			 return femurBreadth		   * femurHeight		   * femurThickness;
+	else if(i == SO_RIGHT_TIBIA)			 return tibiaBreadth		   * tibiaHeight		   * tibiaThickness;
+	else if(i == SO_RIGHT_REAR_CANNON_BONE)	 return rearCannonBoneBreadth  * rearCannonBoneHeight  * rearCannonBoneThickness;
+	else if(i == SO_RIGHT_REAR_TOE)			 return rearToeBreadth		   * rearToeHeight		   * rearToeThickness;
+	else {
+		DSTR << "yerrorz: Invalid value i." << std::endl;
+		std::cout << "yerrorz: Invalid value i." << std::endl;
+		return -1;
+	}
+}
+
+double CRFourLegsAnimalBody::VSolids(){
+	double vSum = 0;
+	for(int i = 0; i < NSolids(); i++){
+		if (VSolid(i) != -1) vSum += VSolid(i);
+		else {
+			DSTR << "yerrorz: Invalid value i = " << i << std::endl;
+			std::cout << "yerrorz: Invalid value i = " << i << std::endl;
+			return -1;
+		}
+	}
+	return vSum;
 }
 
 

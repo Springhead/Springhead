@@ -77,6 +77,12 @@ struct CRFourLegsAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, 
 	virtual int NHingeJoints(){
 		return ((OBJ*)(MIF*)this)->NHingeJoints();
 	}
+	virtual double VSolid(int i){
+		return ((OBJ*)(MIF*)this)->VSolid(i);
+	}
+	virtual double VSolids(){
+		return ((OBJ*)(MIF*)this)->VSolids();
+	}
 };
 struct CRFourLegsAnimalBodyIf;	class CRFourLegsAnimalBody;
 typedef CRFourLegsAnimalBodyIfStubTemplate<CRFourLegsAnimalBodyIf, ObjectIfBuf, CRFourLegsAnimalBody>	CRFourLegsAnimalBodyIfStub;

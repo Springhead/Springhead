@@ -86,7 +86,8 @@ public:
 	virtual int		NJoints();					//< ボディに含まれている関節の数を返す
 	virtual int		NBallJoints();				//< ボディに含まれているボールジョイントの数を返す
 	virtual int		NHingeJoints();				//< ボディに含まれているヒンジジョイントの数を返す
-
+	virtual double	VSolid(int i);				//< i番目の剛体の体積を返す
+	virtual double	VSolids();					//< 剛体の体積総和を返す
 };
 
 }

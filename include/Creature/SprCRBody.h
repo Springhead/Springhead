@@ -296,6 +296,12 @@ struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	/** @brief ヒンジジョイントの数を返す
 	*/
 	virtual int NHingeJoints() = 0;
+	/** @brief i番目の剛体の体積を返す
+	*/
+	virtual double VSolid(int i) = 0;
+	/** @brief 剛体の体積総和を返す
+	*/
+	virtual double VSolids() = 0;
 };
 
 /// 4足動物モデルのデスクリプタ
