@@ -35,10 +35,12 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHHingeJointNode();
 	}
-	virtual void CompError();
-	virtual void Projection(double& f, int k);
-	virtual bool GetDesc(void* desc);
-	virtual void SetDesc(const void* desc);
+	virtual void	CompError();
+	virtual void	Projection(double& f, int k);
+	virtual bool	GetDesc(void* desc);
+	virtual void	SetDesc(const void* desc);
+	virtual double	GetTorqueMax() {return fMax;}
+	virtual void	SetTorqueMax(double setValue){fMax = setValue;}
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
 

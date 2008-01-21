@@ -76,7 +76,7 @@ public:
 	virtual void	SetTorqueMax(double max){fMax = max;}
 	virtual double	GetTorqueMax(){return fMax;}
 	virtual void	SetTorqueMin(double min){fMin = min;}
-	virtual double	GetTorqueMin(){return fMin;}
+	virtual double	GetTorqueMin(){return fMin;}	
 
 	/// 仮想関数のオーバライド
 	virtual bool	GetDesc(void* desc);										///< デスクリプタの情報を得るための関数
