@@ -38,7 +38,7 @@ protected:
 
 	/** @brief ボディ（複数持てる）
 	*/
-	std::vector<CRBodyIf*> body;
+	std::vector< UTRef<CRBodyIf> > body;
 
 public:
 	OBJECTDEF(CRCreature, SceneObject);
