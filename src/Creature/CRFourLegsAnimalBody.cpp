@@ -139,7 +139,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	fMaxRightRearAnkle	= 100;
 	//-----------------------------------------------------------------------------------
 	// materialMu of All Solids 
-	materialMu = (float)10.0;
+	materialMu = (float)1.0;
 	//-----------------------------------------------------------------------------------
 	// Do you want to make no legs?
 	noLegs = false;
