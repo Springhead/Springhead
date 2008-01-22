@@ -38,7 +38,7 @@ UTString FISaveContext::GetNodeTypeName(){
 	return rv;
 }
 UTString FISaveContext::GetNodeName(){
-	NamedObjectIf* n = DCAST(NamedObjectIf, objects.back());
+	NamedObject* n = objects.back()->Cast();
 	UTString rv;
 	if (n && n->GetName()) rv = n->GetName();
 	return rv;
