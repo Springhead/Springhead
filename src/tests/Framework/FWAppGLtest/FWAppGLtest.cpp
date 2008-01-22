@@ -54,12 +54,13 @@ int SPR_CDECL main(int argc, char* argv[]){
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app->GetSdk()->GetPHSdk()->CreateShape(boxdesc));
 
-	app->GetSdk()->LoadScene("scene.x");
+	app->GetSdk()->LoadScene("save.x");
 //	app->GetFWScene()->AddHumanInterface(new HIMouse);
 	FWWin* w1 = app->CreateWin();
 	FWWin* w2 = app->CreateWin();
-	w1->scene = app->GetSdk()->GetScene();
-	w2->scene = app->GetSdk()->GetScene();
+	w1->scene = app->GetSdk()->GetScene(0);
+	w2->scene = app->GetSdk()->GetScene(1);
+	app->GetSdk()->SaveScene("save.x");
 
 	app->Start();
 	return 0;
