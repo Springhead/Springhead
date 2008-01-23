@@ -4,10 +4,10 @@ namespace Spr{;
 template <class IF, class MIF, class OBJ> struct ObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FIFileIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
-	virtual bool Load(ObjectIfs &  objs, const char *  fn){
+	virtual bool Load(ObjectIfs & objs, const char * fn){
 		return ((OBJ*)(MIF*)this)->Load(objs, fn);
 	}
-	virtual bool Save(const ObjectIfs &  objs, const char *  fn){
+	virtual bool Save(const ObjectIfs & objs, const char * fn){
 		return ((OBJ*)(MIF*)this)->Save(objs, fn);
 	}
 };
@@ -18,10 +18,10 @@ typedef IfInitTemplate<FIFileIfStub, FIFile>	FIFileIfInit;
 template <class IF, class MIF, class OBJ> struct FIFileIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FIFileXIfStubTemplate: public FIFileIfStubTemplate<IF, MIF, OBJ> {
-	virtual bool Load(ObjectIfs &  objs, const char *  fn){
+	virtual bool Load(ObjectIfs & objs, const char * fn){
 		return ((OBJ*)(MIF*)this)->Load(objs, fn);
 	}
-	virtual bool Save(const ObjectIfs &  objs, const char *  fn){
+	virtual bool Save(const ObjectIfs & objs, const char * fn){
 		return ((OBJ*)(MIF*)this)->Save(objs, fn);
 	}
 };
@@ -32,10 +32,10 @@ typedef IfInitTemplate<FIFileXIfStub, FIFileX>	FIFileXIfInit;
 template <class IF, class MIF, class OBJ> struct FIFileIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FIFileCOLLADAIfStubTemplate: public FIFileIfStubTemplate<IF, MIF, OBJ> {
-	virtual bool Load(ObjectIfs &  objs, const char *  fn){
+	virtual bool Load(ObjectIfs & objs, const char * fn){
 		return ((OBJ*)(MIF*)this)->Load(objs, fn);
 	}
-	virtual bool Save(const ObjectIfs &  objs, const char *  fn){
+	virtual bool Save(const ObjectIfs & objs, const char * fn){
 		return ((OBJ*)(MIF*)this)->Save(objs, fn);
 	}
 };
@@ -46,10 +46,10 @@ typedef IfInitTemplate<FIFileCOLLADAIfStub, FIFileCOLLADA>	FIFileCOLLADAIfInit;
 template <class IF, class MIF, class OBJ> struct SdkIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct FISdkIfStubTemplate: public SdkIfStubTemplate<IF, MIF, OBJ> {
-	virtual FIFileXIf *  CreateFileX(){
+	virtual FIFileXIf * CreateFileX(){
 		return ((OBJ*)(MIF*)this)->CreateFileX();
 	}
-	virtual FIFileCOLLADAIf *  CreateFileCOLLADA(){
+	virtual FIFileCOLLADAIf * CreateFileCOLLADA(){
 		return ((OBJ*)(MIF*)this)->CreateFileCOLLADA();
 	}
 };
