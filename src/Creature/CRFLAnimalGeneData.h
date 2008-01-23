@@ -21,6 +21,22 @@ public:
 		GEN_QUATERNIOND=0,
 		GEN_DOUBLE
 	} geneType;
-};
 
+};
+/*
+bool equal(const std::vector<CRFLAnimalGeneData>& a, const std::vector<CRFLAnimalGeneData>& b){
+	if (a.size() != b.size()) return false;
+	for(size_t i=0; i<a.size(); ++i)
+		if (a[i].goalDir != b[i].goalDir || a[i].geneType != b[i].geneType) return false;
+	return true;
+}
+///	クラスの比較
+bool operator == (const std::vector<CRFLAnimalGeneData>& a, const std::vector<CRFLAnimalGeneData>& b){
+	return equal(a,b);
+}
+///	クラスの比較
+bool operator != (const std::vector<CRFLAnimalGeneData>& a, const std::vector<CRFLAnimalGeneData>& b){
+	return !equal(a,b);
+}
+*/
 #endif
