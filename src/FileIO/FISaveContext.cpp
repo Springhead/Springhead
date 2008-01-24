@@ -24,8 +24,9 @@ FISaveContext::FISaveContext(){
 	handlerDbs.Push(DBG_NEW UTLoadHandlerDb);
 }
 
-void FISaveContext::Open(const char* fn){
+bool FISaveContext::Open(const char* fn){
 	file.open(fn);
+	return file.is_open();
 }
 void FISaveContext::Message(const char* msg){
 	*errorStream << msg << std::endl;

@@ -43,7 +43,10 @@ void PHScene::Init(){
 
 	count = 0;
 }
-
+void PHScene::UpdateDesc(){
+	if (gravityEngine)
+		gravity = gravityEngine->accel;
+}
 PHSdkIf* PHScene::GetSdk(){
 	NameManagerIf* nm = GetNameManager();
 	PHSdkIf* sdk = DCAST(PHSdkIf, nm);

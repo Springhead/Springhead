@@ -29,7 +29,9 @@ void FWApp::Init(int argc, char* argv[]){
 }
 
 void FWApp::Step(){
-	fwSdk->Step();
+	for(int i=0; i<GetSdk()->NScene(); ++i){
+		GetSdk()->GetScene(i)->Step();
+	}
 }
 
 void FWApp::Display(){

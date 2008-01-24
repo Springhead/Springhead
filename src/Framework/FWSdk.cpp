@@ -113,7 +113,9 @@ bool FWSdk::LoadScene(UTString filename){
 bool FWSdk::SaveScene(UTString filename){
 	// •Û‘¶
 	ObjectIfs objs;
-	objs.push_back(Cast());
+	for(int i=0; i<scenes.size(); ++i){
+		objs.push_back(scenes[i]->Cast());
+	}
 	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
 	if(!fiFileX->Save(objs, filename.c_str())){
 		DSTR << "Error: Cannot save file " << filename.c_str() << std::endl;

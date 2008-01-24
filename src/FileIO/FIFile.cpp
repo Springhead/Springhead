@@ -161,8 +161,10 @@ void FIFile::LBlockEnd(FILoadContext* fc){
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
 	FISaveContext sc;
-	sc.Open(fn);
-	Save(objs, &sc);
+	if (sc.Open(fn)){
+		Save(objs, &sc);
+		return true;
+	}
 	return false;
 }
 void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){

@@ -135,17 +135,15 @@ size_t FWScene::NChildObject() const{
 }
 
 ObjectIf* FWScene::GetChildObject(size_t pos){
+	if (phScene){
+		if (pos == 0) return phScene;
+		pos--;
+	}
+	if (grScene){
+		if (pos == 0) return grScene;
+		pos--;
+	}	
 	if (pos < fwObjects.size()) return fwObjects[pos];
-	if (pos - fwObjects.size() == 0) {
-		if(phScene)
-		  return phScene;
-		return grScene;
-	}
-	if (pos - fwObjects.size() == 1) {
-		if(phScene)
-		  return grScene;
-		return NULL;
-	}
 	return NULL;
 }
 

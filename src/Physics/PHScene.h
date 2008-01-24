@@ -44,7 +44,7 @@ public:
 	
 	friend class			PHSolid;
 	friend class			Object;
-	ACCESS_DESC_STATE(PHScene);
+
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	///	コンストラクタ
@@ -115,7 +115,10 @@ public:
 	virtual ObjectIf*		GetChildObject(size_t pos);
 	virtual bool			AddChildObject(ObjectIf* o);
 	virtual bool			DelChildObject(ObjectIf* o);	
-	
+
+	ACCESS_DESC_STATE(PHScene);
+protected:
+	virtual void UpdateDesc();
 };
 
 }
