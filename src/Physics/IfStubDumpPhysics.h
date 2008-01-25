@@ -516,6 +516,20 @@ struct PHSdkIf;	class PHSdk;
 typedef PHSdkIfStubTemplate<PHSdkIf, ObjectIfBuf, PHSdk>	PHSdkIfStub;
 typedef IfInitTemplate<PHSdkIfStub, PHSdk>	PHSdkIfInit;
 
+template <class IF, class MIF, class OBJ> struct NamedObjectIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct PHFrameIfStubTemplate: public NamedObjectIfStubTemplate<IF, MIF, OBJ> {
+	virtual Posed GetPose(){
+		return ((OBJ*)(MIF*)this)->GetPose();
+	}
+	virtual void SetPose(Posed p){
+		return ((OBJ*)(MIF*)this)->SetPose(p);
+	}
+};
+struct PHFrameIf;	class PHFrame;
+typedef PHFrameIfStubTemplate<PHFrameIf, ObjectIfBuf, PHFrame>	PHFrameIfStub;
+typedef IfInitTemplate<PHFrameIfStub, PHFrame>	PHFrameIfInit;
+
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct PHSolidIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {

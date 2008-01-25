@@ -34,6 +34,7 @@ void PHSdkIf::RegisterSdk(){
 
 	Sdk::RegisterFactory(new PHSdkFactory());
 	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
+
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHRootNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHGear));
@@ -47,6 +48,9 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHBallJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPathJointNode));
+
+	PHSolidIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHFrame));
+
 	PHRegisterTypeDescs();
 	PHRegisterLoadHandlers();
 	CDRegisterTypeDescs();

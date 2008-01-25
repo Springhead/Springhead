@@ -14,6 +14,44 @@
 using namespace PTM;
 namespace Spr{
 
+//----------------------------------------------------------------------------
+//	PHFrame
+IF_OBJECT_IMP(PHFrame, NamedObject);
+PHFrame::PHFrame():shape(NULL), solid(NULL){
+}
+PHFrame::PHFrame(const PHFrameDesc& desc):PHFrameDesc(desc), shape(NULL), solid(NULL){
+}
+
+ObjectIf* PHFrame::GetChildObject(size_t pos){
+	if(pos==0) return shape->Cast(); 
+	return NULL;
+}
+bool PHFrame::AddChildObject(ObjectIf * o){
+	CDShape* s = o->Cast();
+	if (s && !shape){
+		shape = s;
+		if (solid){
+			solid->CalcBBox();
+			//接触エンジンのshapePairsを更新する
+			PHScene* scene = DCAST(PHScene,solid->GetScene());
+			scene->penaltyEngine->UpdateShapePairs(solid);
+			scene->constraintEngine->UpdateShapePairs(solid);
+		}
+		return true;
+	}
+	return false;
+}
+size_t PHFrame::NChildObject() const {
+	if (shape) return 1;
+	return 0;
+}
+Posed PHFrame::GetPose(){
+	return pose;
+}
+void PHFrame::SetPose(Posed p){
+	pose = p;
+}
+
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
 IF_OBJECT_IMP(PHSolid, SceneObject);
@@ -33,7 +71,7 @@ void PHSolid::SetGravity(bool bOn){
 	else ge->solids.Erase(this);
 }
 
-CDShapeIf* PHSolid::CreateShape(const IfInfo*  info, const CDShapeDesc& desc){
+CDShapeIf* PHSolid::CreateAndAddShape(const IfInfo*  info, const CDShapeDesc& desc){
 	CDShapeIf* rv = DCAST(PHScene, GetScene())->CreateShape(info, desc);
 	if (rv){
 		AddShape(rv);
@@ -44,12 +82,16 @@ ObjectIf* PHSolid::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = SceneObject::CreateObject(info, desc);
 	if (!rv){
 		if (info->Inherit(CDShapeIf::GetIfInfoStatic())){
-			rv = CreateShape(info, *(CDShapeDesc*)desc);
+			rv = DCAST(PHScene, GetScene())->CreateShape(info, *(Spr::CDShapeDesc*)desc);
 		}
 	}
 	return rv;
 }
 bool PHSolid::AddChildObject(ObjectIf* obj){
+	if (DCAST(PHFrameIf, obj)){
+		AddFrame(DCAST(PHFrameIf, obj));
+		return true;
+	}
 	if (DCAST(CDShapeIf, obj)){
 		AddShape(DCAST(CDShapeIf, obj));
 		return true;
@@ -70,8 +112,8 @@ Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 void PHSolid::CalcBBox(){
 	Vec3f bboxMin = Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
 	Vec3f bboxMax = Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);
-	for(int i = 0; i < (int)shapes.size(); i++){
-		shapes[i].shape->CalcBBox(bboxMin, bboxMax, shapes[i].pose);
+	for(int i = 0; i < (int)frames.size(); i++){
+		frames[i]->shape->CalcBBox(bboxMin, bboxMax, frames[i]->pose);
 	}
 	if (bboxMin.X() == FLT_MAX){
 		bbox.SetBBoxMinMax(Vec3f(0,0,0), Vec3f(-1,-1,-1));
@@ -297,11 +339,26 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 	force += f;
 }*/
 
-
+int PHSolid::NFrame(){ return frames.size(); }
+PHFrameIf* PHSolid::GetFrame(int i){
+	if (i >= (int)frames.size()) return NULL;
+	return frames[i]->Cast();
+}
+void PHSolid::AddFrame(PHFrameIf* f){
+	frames.push_back(f->Cast());
+	frames.back()->solid = this;
+	if (frames.back()->shape){
+		CalcBBox();
+		//接触エンジンのshapePairsを更新する
+		PHScene* scene = DCAST(PHScene,GetScene());
+		scene->penaltyEngine->UpdateShapePairs(this);
+		scene->constraintEngine->UpdateShapePairs(this);
+	}
+}
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
-	shapes.push_back(CDShapeRefWithPose());
-	shapes.back().shape = sh;
+	frames.push_back(DBG_NEW PHFrame());
+	frames.back()->shape = sh;
 	CalcBBox();
 	//接触エンジンのshapePairsを更新する
 	PHScene* scene = DCAST(PHScene,GetScene());
@@ -310,22 +367,22 @@ void PHSolid::AddShape(CDShapeIf* shape){
 }
 
 Posed	PHSolid::GetShapePose(int i){
-	if(0 <= i && i < (int)shapes.size())
-		return shapes[i].pose;
+	if(0 <= i && i < (int)frames.size())
+		return frames[i]->pose;
 	return Posed();
 }
 
 void	PHSolid::SetShapePose(int i, const Posed& pose){
-	if(0 <= i && i < (int)shapes.size()){
-		shapes[i].pose = pose;
+	if(0 <= i && i < (int)frames.size()){
+		frames[i]->pose = pose;
 		CalcBBox();
 	}
 }
 int PHSolid::NShape(){
-	return shapes.size();
+	return frames.size();
 }
 CDShapeIf* PHSolid::GetShape(int i){
-	return shapes[i].shape->Cast();
+	return frames[i]->shape->Cast();
 }
 
 

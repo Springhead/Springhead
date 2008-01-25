@@ -260,6 +260,16 @@
 	desc->access = DBG_NEW UTAccess<PHSdkDesc>;
 	db->RegisterDesc(desc);
 	
+	PHFrameDesc* pPHFrameDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("PHFrameDesc");
+	desc->size = sizeof(PHFrameDesc);
+	desc->ifInfo = PHFrameIf::GetIfInfoStatic();
+	((IfInfo*)PHFrameIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<PHFrameDesc>;
+	field = desc->AddField("", "Posed", "pose", "");
+	field->offset = int((char*)&(pPHFrameDesc->pose) - (char*)pPHFrameDesc);
+	db->RegisterDesc(desc);
+	
 	PHSolidState* pPHSolidState = NULL;
 	desc = DBG_NEW UTTypeDesc("PHSolidState");
 	desc->size = sizeof(PHSolidState);

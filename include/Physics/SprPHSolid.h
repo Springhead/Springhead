@@ -16,6 +16,19 @@
 /**	\addtogroup gpPhysics	*/
 //@{
 namespace Spr{;
+
+///	形と位置を指定するための衝突判定用フレーム
+struct PHFrameDesc{
+	Posed pose;
+};
+struct PHFrameIf: public NamedObjectIf{
+	IF_DEF(PHFrame);
+	virtual Posed GetPose()=0;
+	virtual void SetPose(Posed p)=0;
+};
+
+
+
 ///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)

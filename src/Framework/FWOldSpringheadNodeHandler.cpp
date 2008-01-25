@@ -596,7 +596,7 @@ public:
 						mdesc.material.mu = maptask->mu;
 						mdesc.material.mu0 = maptask->mu0;
 					}
-					solid->CreateShape(mdesc.GetIfInfo(), mdesc);
+					solid->CreateAndAddShape(mdesc.GetIfInfo(), mdesc);
 					Posed pose;
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);
@@ -615,7 +615,7 @@ public:
 							sdesc.material.mu = maptask->mu;
 							sdesc.material.mu0 = maptask->mu0;
 					}
-					solid->CreateShape(sdesc.GetIfInfo(), sdesc);
+					solid->CreateAndAddShape(sdesc.GetIfInfo(), sdesc);
 					Posed pose;
 					pose.FromAffine(af);
 					solid->SetShapePose(solid->NShape()-1, pose);

@@ -43,6 +43,7 @@ protected:
 public:
 	
 	friend class			PHSolid;
+	friend class			PHFrame;
 	friend class			Object;
 
 

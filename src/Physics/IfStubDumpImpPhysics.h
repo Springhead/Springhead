@@ -24,4 +24,5 @@ IF_IMP(PHBallJointNode, PHTreeNode);
 IF_IMP(PHGear, SceneObject);
 IF_IMP(PHScene, Scene);
 IF_IMP(PHSdk, Sdk);
+IF_IMP(PHFrame, NamedObject);
 IF_IMP(PHSolid, SceneObject);

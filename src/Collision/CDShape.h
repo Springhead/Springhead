@@ -26,11 +26,5 @@ public:
 	virtual Matrix3f CalcMomentOfInertia(){ return Matrix3f(); }
 };
 
-/// Œ`ó‚Ö‚ÌQÆ‚Æ„‘Ì‚É‘Î‚·‚é‘Š‘ÎˆÊ’u
-struct CDShapeRefWithPose{
-	CDShape* shape;
-	Posed pose;
-};
-
 }	//	namespace Spr
 #endif

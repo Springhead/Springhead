@@ -59,7 +59,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 #endif
 	//	ウィンドウ1にシーンを表示するよう設定
 	FWAppGLUTDesc wd;
-	wd.title = "original scene";
+	wd.left = 0; wd.top = 0; wd.width = 500; wd.title = "original scene";
 	FWWin* w1 = app->CreateWin(wd);
 	w1->scene = app->GetSdk()->GetScene(0);
 
@@ -69,7 +69,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	app->GetSdk()->LoadScene("save.x");
 
 	//	ロードしたシーンをウィンドウ２に表示するように設定
-	wd.left = 500; wd.top = 0;wd.title = "saved scene";
+	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
 	FWWin* w2 = app->CreateWin(wd);
 	w2->scene = app->GetSdk()->GetScene(1);
 

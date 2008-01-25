@@ -78,6 +78,24 @@ enum PHIntegrationMode{
 		PHINT_RUNGEKUTTA4		///	４次ルンゲクッタ法
 };
 
+class PHSolid;
+class PHFrame: public NamedObject, public PHFrameIfInit, public PHFrameDesc{
+protected:
+	PHSolid* solid;
+	friend class PHSolid;
+public:
+	OBJECTDEF(PHFrame, NamedObject);
+
+	PHFrame();
+	PHFrame(const PHFrameDesc& desc);
+	CDShape* shape;
+	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual bool AddChildObject(ObjectIf * o);
+	virtual size_t NChildObject() const;
+	virtual Posed GetPose();
+	virtual void SetPose(Posed p);
+};
+
 class PHTreeNode;
 class PHScene;
 class PHConstraintEngine;
@@ -133,20 +151,20 @@ public:
 	//@}
 	
 public:
-	std::vector<CDShapeRefWithPose> shapes;
+	std::vector< UTRef<PHFrame> > frames;
 	PHBBox bbox;
 
 	OBJECTDEF(PHSolid, SceneObject);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
-	CDShapeIf* CreateShape(const IfInfo* info, const CDShapeDesc& desc);
+	CDShapeIf* CreateAndAddShape(const IfInfo* info, const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	bool AddChildObject(ObjectIf* obj);
 	size_t NChildObject() const{
-		return shapes.size();
+		return frames.size();
 	}
 	ObjectIf* GetChildObject(size_t pos) {
-		return shapes[pos].shape->Cast();
+		return frames[pos]->Cast();
 	}
 
 	void CalcBBox();
@@ -234,6 +252,13 @@ public:
 	Vec3d		GetPointVelocity(Vec3d posW) const {
 		return velocity + (angVelocity^(posW - pose*center));
 	}
+
+	///	shapeの数。
+	int			NFrame();
+	///	shapeを、位置指定込みで追加する．
+	void		AddFrame(PHFrameIf* frame);	
+	///	frameで取得
+	PHFrameIf*	GetFrame(int i);
 
 	///	この剛体が持つ Spr::CDShape の数
 	int			NShape();
