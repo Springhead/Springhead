@@ -113,7 +113,7 @@ bool FWSdk::LoadScene(UTString filename){
 bool FWSdk::SaveScene(UTString filename){
 	// •Û‘¶
 	ObjectIfs objs;
-	for(int i=0; i<scenes.size(); ++i){
+	for(unsigned int i=0; i<scenes.size(); ++i){
 		objs.push_back(scenes[i]->Cast());
 	}
 	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
