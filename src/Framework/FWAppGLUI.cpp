@@ -55,7 +55,7 @@ void FWAppGLUI::Start(){
 
 GLUI* FWAppGLUI::CreateGUI(int wid, FWAppGLUIDesc desc){
 	GLUI* glui;
-	if(!createOtherWindow){
+	if(desc.createOtherWindow == false){
 		glui = GLUI_Master.create_glui_subwindow(wid, desc.subPosition);		
 	}else{
 		glui = GLUI_Master.create_glui(gluiName, 0, desc.fromLeft, desc.fromTop);
