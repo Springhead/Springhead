@@ -384,6 +384,9 @@ int PHSolid::NShape(){
 CDShapeIf* PHSolid::GetShape(int i){
 	return frames[i]->shape->Cast();
 }
+void PHSolid::AfterSetDesc(){
+	SetInertia(inertia);
+}
 
 
 //----------------------------------------------------------------------------

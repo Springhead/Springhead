@@ -64,7 +64,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	w1->scene = app->GetSdk()->GetScene(0);
 
 	//	シーンのセーブ
-	app->GetSdk()->SaveScene("save.x");
+//	app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード
 	app->GetSdk()->LoadScene("save.x");
 

@@ -43,7 +43,7 @@ void PHScene::Init(){
 
 	count = 0;
 }
-void PHScene::UpdateDesc(){
+void PHScene::BeforeGetDesc(){
 	if (gravityEngine)
 		gravity = gravityEngine->accel;
 }

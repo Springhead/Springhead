@@ -119,7 +119,7 @@ public:
 
 	ACCESS_DESC_STATE(PHScene);
 protected:
-	virtual void UpdateDesc();
+	virtual void BeforeGetDesc();
 };
 
 }

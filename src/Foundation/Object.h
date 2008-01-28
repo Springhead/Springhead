@@ -196,10 +196,11 @@ public:
 ///	デスクリプタの設定・取得などアクセス用関数の定義
 #define ACCESS_DESC(cls)															\
 	virtual const void* GetDescAddress() const {									\
-		((cls*)this)->UpdateDesc(); return (cls##Desc*)this; }						\
+		((cls*)this)->BeforeGetDesc(); return (cls##Desc*)this; }					\
 	virtual bool GetDesc(void* d) const {											\
-		((cls*)this)->UpdateDesc(); *(cls##Desc*)d=*this; return true; }			\
-	virtual void SetDesc(const void* d) { *this = *(const cls##Desc*)d; }			\
+		((cls*)this)->BeforeGetDesc(); *(cls##Desc*)d=*this; return true; }			\
+	virtual void SetDesc(const void* d) {											\
+		*this = *(const cls##Desc*)d; ((cls*)this)->AfterSetDesc();}				\
 	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
 
 ///	ステートとデスクリプタをまとめて定義
@@ -300,7 +301,11 @@ protected:
 	virtual void PrintChildren(std::ostream& os) const;
 	virtual void PrintFooter(std::ostream& os) const;
 
-	virtual void UpdateDesc(){}
+	///	GetDesc()の前に呼ばれる
+	virtual void BeforeGetDesc(){}
+	///	SetDesc()のあとに呼ばれる
+	virtual void AfterSetDesc(){}
+
 	///	sをoのStateとして初期化する．
 	static void ConstructState(ObjectIf* o, char*& s);
 	///	sをoのStateからメモリブロックに戻す．

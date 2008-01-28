@@ -277,6 +277,8 @@ public:
 	bool		IsFrozen(){return bFrozen;}
 
 	ACCESS_DESC_STATE(PHSolid);
+protected:
+	virtual void AfterSetDesc();
 };
 
 class PHSolidIfs : public std::vector< UTRef<PHSolidIf> >{
