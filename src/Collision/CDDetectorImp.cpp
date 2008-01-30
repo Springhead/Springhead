@@ -69,8 +69,13 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 		}
 		*/
 
-		if (res <= 0) return false;
-		if (dist > 0) return false;	//	法線方向に進めないと接触しない場合．
+		if (res <= 0) {
+			return false;
+		}
+		if (dist > 0){
+			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
+			return false;	//	法線方向に進めないと接触しない場合．
+		}
 		//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		//DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
 
@@ -140,7 +145,7 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 			if (res <= 0) return false;
 			if (depth > 0) return false;
 			depth *= -1;
-			center = shapePoseW[0] * closestPoint[0];
+			center = commonPoint = shapePoseW[0] * closestPoint[0];
 			center -= 0.5f*depth*normal;
 		}
 	}

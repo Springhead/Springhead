@@ -15,7 +15,6 @@
 #include "CDQuickHull3DImp.h"
 
 namespace Spr{;
-const double epsilon = 1e-8;
 
 //----------------------------------------------------------------------------
 //	CDCapsule
@@ -55,11 +54,12 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		float shrink = sqrt(1-dir.X()*dir.X());	//	傾いているために距離が縮む割合
 		float start = -0.5f*length*shrink;
 		float end = 0.5f*length*shrink;
-		if (dir.X() > epsilon){	//	完全に平行でない場合
+		if (dir.X() > 1e-4){	//	完全に平行でない場合
 			Vec3f center = ring.localInv * toW.Pos();
-			float is = -(center.X()-radius) / dir.X() * shrink;	//	接触面と中心線を半径ずらした線との交点
+			float is = -(center.X()-radius/shrink) / dir.X() * shrink;	//	接触面と中心線を半径ずらした線との交点
 			if (is < end) end = is;
-			assert(end > start);
+			assert(end + 0.001 >= start);
+			if (end <= start) return false;
 		}
 
 		//	ringに線分を追加

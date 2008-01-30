@@ -92,7 +92,6 @@ void PHContactPoint::CompBias(){
 
 	//	’µ‚Ë•Ô‚èŒW”: 2•¨‘Ì‚Ì•½‹Ï’l‚ðŽg‚¤
 	double e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
-	e = 0;
 	
 	//	ÚG—p‚Ì correctionRate
 	double contactCorrectionRate = 0;
@@ -103,6 +102,7 @@ void PHContactPoint::CompBias(){
 		contactCorrectionRate = 0.3;
 	}
 	double overlap = 0.01;
+	if (overlap > shapePair->depth) overlap = shapePair->depth;
 	db[0] = - contactCorrectionRate * (shapePair->depth - overlap) / scene->GetTimeStep() + e * vjrel[0];
 
 #if 0

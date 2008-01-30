@@ -49,11 +49,20 @@ void SaveShape(std::ostream& file, CDShape* a){
 	}
 	CDBox* box = a->Cast();
 	if (box){
-		file << "box ";
+		file << "box" << std::endl;
 		CDBoxDesc desc;
 		mesh->GetDesc(&desc);
 		SaveMaterial(file, desc.material);
 		file << desc.boxsize << std::endl;
+	}		
+	CDCapsule* cap = a->Cast();
+	if (cap){
+		file << "cap" << std::endl;
+		CDCapsuleDesc desc;
+		cap->GetDesc(&desc);
+		SaveMaterial(file, desc.material);
+		file << desc.radius << std::endl;
+		file << desc.length << std::endl;
 	}		
 }
 CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
@@ -77,6 +86,13 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
 		file >> desc.boxsize;
 		rv = sdk->CreateShape(CDBoxIf::GetIfInfoStatic(), desc)->Cast();
 	}
+	if( strcmp(type, "cap") == 0){
+		CDCapsuleDesc desc;
+		LoadMaterial(file, desc.material);			
+		file >> desc.radius;
+		file >> desc.length;
+		rv = sdk->CreateShape(CDCapsuleIf::GetIfInfoStatic(), desc)->Cast();
+	}
 	return rv;
 }
 
@@ -89,15 +105,16 @@ void ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 	std::ofstream file("ContFindCommonPointSaveParam.txt");
 	SaveShape(file, (CDConvex*)a);
 	SaveShape(file, (CDConvex*)b);
-	file << a2w;
-	file << b2w;
-	file << range;
-	file << normal;
-	file << pa;
-	file << pb;
-	file << dist;
+	file << a2w << std::endl;
+	file << b2w << std::endl;
+	file << range << std::endl;
+	file << normal << std::endl;
+	file << pa << std::endl;
+	file << pb << std::endl;
+	file << dist << std::endl;
 }
 void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
+	bDebug = true;
 	const CDConvex* a;
 	const CDConvex* b;
 	Posed a2w, b2w;
@@ -112,7 +129,15 @@ void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
 	file >> pa;
 	file >> pb;
 	file >> dist;
+
+	Vec3f dir = b2w.Ori() * Vec3f(0,0,1);
+	DSTR << "dir of capsule = " << dir << std::endl;
+	DSTR << "center of capsule = " << b2w.Pos()  << std::endl;
 	ContFindCommonPoint(a, b, a2w, b2w, range, normal, pa, pb, dist);
+	DSTR << "normal = " << normal << std::endl;
+	DSTR << "pa and pb in W = "<< std::endl;
+	DSTR << a2w * pa << std::endl;
+	DSTR << b2w * pb << std::endl;
 }
 
 
@@ -231,6 +256,16 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			ids[0] = FindVacantId(ids[1], ids[2]);
 		}else{
 			//	点Oは三角形の内側にある。
+			if (ids[1] == ids[2]){
+				//	1と2が同じ点=最初からonlineだったため、3角形ができなかった。
+				assert(ids[0] == 1);
+				assert(ids[1] == 0);
+				ids[2] = 2;
+				w[2] = w[0];
+				v[2] = v[0];
+				p[2] = p[0];
+				q[2] = q[0];
+			}
 			break;
 		}
 		v[ids[0]] = vNew;
@@ -254,11 +289,11 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		if (count > 1000) {
 #if USERNAME==hase
 			//	長谷川専用デバッグコード。現在当たり判定Debug中。			
-			bDebug = true;
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
 			
 			DebugBreak();
+			bDebug=true;
 			ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
 #else
 			if (!bDebug) return -1;
@@ -296,14 +331,24 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		
 
 		if (bDebug){
+			DSTR << "v:" << v[ids[3]];
 			for(int i=0; i<4; ++i){
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
 			}
 			DSTR << std::endl;
 		}
 		//	新しいwが、これまでの点より近いかチェックする。
-		double improvement = -(w[ids[3]] - w[(notuse+1)%3]) * v[ids[3]];
-		if (bDebug) DSTR << "Improvement: " << improvement << std::endl;
+		double improvement = DBL_MAX;
+		for(int i=0; i<3; ++i){
+			double delta = -(w[ids[3]] - w[ids[i]]) * v[ids[3]];
+			if (improvement > delta) improvement = delta;
+		}
+		if (bDebug) {
+			DSTR << "notuse" << notuse;
+			for(int i=0; i<4; ++i) DSTR << " " << ids[i];
+			DSTR << std::endl;
+			DSTR << "Improvement: " << improvement << std::endl;
+		}
 		if (improvement < epsilon) goto final;
 
 		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
@@ -372,7 +417,10 @@ final:
 	}
 	//	HASE_REPORT
 	//	DSTR << "CCDGJK dist:" << dist << "  " << pa << pb << std::endl;
-	
+	static bool bSave = false;
+	if (bSave){
+		ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+	}
 	return 1;
 }
 #else	//	普通のGJK

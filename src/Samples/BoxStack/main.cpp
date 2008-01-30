@@ -26,6 +26,7 @@
 
 
 #include <Springhead.h>		//	Springheadのインタフェース
+#include <Physics/PHConstraintEngine.h>
 #include <ctime>
 #include <GL/glut.h>
 #include <sstream>
@@ -272,6 +273,7 @@ void keyboard(unsigned char key, int x, int y){
 		case 'c':
 			{
 				soBox.push_back(scene->CreateSolid(desc));
+				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
 				soBox.back()->AddShape(meshCapsule);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
