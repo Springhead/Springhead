@@ -448,10 +448,11 @@ void PHConstraintEngine::UpdateSolids(){
 	}
 }
 
+//#define REPORT_TIME 1
 #ifdef REPORT_TIME
 }
-#include <WinBasis/WBPreciseTimer.h>
-extern Spr::WBPreciseTimer ptimer;
+#include <Foundation/UTPreciseTimer.h>
+Spr::UTPreciseTimer ptimer;
 namespace Spr{
 #endif
 

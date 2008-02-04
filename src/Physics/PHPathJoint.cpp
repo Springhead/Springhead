@@ -104,15 +104,27 @@ void Orthogonalize(Matrix6d& J){
 
 void PHPath::CompJacobian(){
 	double delta = (back().s - front().s) / 1000.0;		//数値微分の離散化幅．いいかげん．
-	double div = 1.0 / (2.0 * delta);
+	double div = 1.0 / delta;
 	Posed p, p0, p1, pd;
 	Vec3d v, w;
 	Quaterniond qd;
 	for(iterator it = begin(); it != end(); it++){
 		//一般化座標qについて偏微分して相対速度を出す
-		GetPose(it->s - delta, p0);
-		GetPose(it->s + delta, p1);
-		pd = (p1 - p0) * div;
+		if(it == begin())
+			p0 = it->pose;
+		else GetPose(it->s - delta, p0);
+		iterator itnext = it; ++itnext;
+		if(itnext == end())
+			p1 = it->pose;
+		else GetPose(it->s + delta, p1);
+		// 0deg (q = [1 0 0 0])と360deg (q = [-1 0 0 0])は回転としては同じだが数値的に離れている
+		if(abs(p0.Ori().w - p1.Ori().w) > 1.99)
+			p0.Ori() = -1.0 * p0.Ori();
+		DSTR << it->pose << p0 << p1 << endl;
+		// 差分をとる
+		if(it == begin() || itnext == end())
+			 pd = (p1 - p0) * div;
+		else pd = (p1 - p0) * div * 0.5;
 		//一般化速度qdに1を与えたときの相対速度と角速度
 		v = pd.Pos();
 		qd = pd.Ori();
@@ -153,7 +165,11 @@ void PHPath::GetPose(double s, Posed& pose){
 }
 
 void PHPath::GetJacobian(double s, Matrix6d& J){
-	if(!bReady)CompJacobian();
+	if(!bReady){
+		CompJacobian();
+		for(iterator it = begin(); it != end(); it++)
+			DSTR << it->s << ", " << it->J.row(5) << endl;
+	}
 	iterator it = Find(s);
 	if(it == begin()){
 		assert(!bLoop);
@@ -279,6 +295,7 @@ void PHPathJointNode::CompJointJacobian(){
 	Matrix6d Jq;
 	j->path->GetJacobian(j->position[0], Jq);
 	(Vec6d&)J[0] = Jq.row(5);
+	DSTR << (const Vec6d&)J[0] << endl;
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHPathJointNode::CompJointCoriolisAccel(){
