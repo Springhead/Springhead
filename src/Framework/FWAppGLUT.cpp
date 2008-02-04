@@ -20,9 +20,8 @@
 #endif
 
 namespace Spr{;
-
 FWAppGLUT* FWAppGLUT::instance;
-	
+
 FWAppGLUT::~FWAppGLUT(){
 	FWAppGLUT::AtExit();
 	instance = NULL;
