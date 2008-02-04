@@ -44,8 +44,8 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	//------------------------------------------------------------------
 	// spring and damper of ball joints
 	springWaistChest   =  500.0; damperWaistChest	= 200.0;
-	springWaistTail    =    0.0; damperWaistTail	=	0.0;
-	springTail		   =    0.0; damperTail			=	0.0;
+	springWaistTail    =   10.0; damperWaistTail	=	0.1;
+	springTail		   =   10.0; damperTail			=	0.1;
 	springChestNeck    =  100.0; damperChestNeck	=  20.0;
 	springNeckHead	   =  100.0; damperNeckHead		=  20.0;
 	springShoulder	   =   50.0; damperShoulder		=  20.0;
@@ -60,6 +60,8 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	springRearKnee	   =   50.0; damperRearKnee		= 20.0;
 	//-------------------------------------------------------------------
 	// ball joints are conrtroled to these directions
+	goalWaistTail	  = Quaterniond::Rot(Rad(  60), 'x');
+	goalTail		  = Quaterniond::Rot(Rad(  20), 'x');
 	goalChestNeck	  = Quaterniond::Rot(Rad(  60), 'x');
 	goalNeckHead	  = Quaterniond::Rot(Rad(- 90), 'x');
 	goalShoulder	  = Quaterniond::Rot(Rad(-120), 'x');
