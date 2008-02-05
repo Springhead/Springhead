@@ -291,6 +291,26 @@ void keyboard(unsigned char key, int x, int y){
 				os << "sphere" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
 			}break;
+		case 'm':
+			{
+				soBox.push_back(scene->CreateSolid(desc));
+				CDConvexMeshDesc md;
+				int nv = rand()%10 + 50;
+				for(int i=0; i < nv; ++i){
+					Vec3d v;
+					for(int c=0; c<3; ++c){
+						v[c] = (rand() % 100 / 100.0 - 0.5) * 5;
+					}
+					md.vertices.push_back(v);
+				}
+				CDShapeIf* s = sdk->CreateShape(md);
+				soBox.back()->AddShape(s);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				std::ostringstream os;
+				os << "sphere" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+			}break;
 		case 'v':
 			{
 				soBox.push_back(scene->CreateSolid(desc));
@@ -426,7 +446,16 @@ int main(int argc, char* argv[]){
 			md.vertices[i].x *= 30;
 			md.vertices[i].z *= 20;
 		}
-		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+		CDConvexMeshDesc cmd;
+		cmd = md;
+		for(int i=0; i < 30; ++i){
+			Vec3d v;
+			v.x = (rand() % 100 / 100.0 - 0.5) * 50;
+			v.y = (rand() % 100 / 100.0 - 0.5) * 5;
+			v.z = (rand() % 100 / 100.0 - 0.5) * 30;
+			cmd.vertices.push_back(v);
+		}
+		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(cmd));
 		meshFloor->SetName("meshFloor");
 	}
 	soFloor->AddShape(meshFloor);
