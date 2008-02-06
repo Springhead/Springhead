@@ -43,6 +43,7 @@ UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;
 CDConvexMeshIf* meshFloor=NULL;
+CDConvexMeshIf* meshWall=NULL;
 CDConvexMeshIf* meshConvex=NULL;
 CDBoxIf* meshBox=NULL;
 CDSphereIf* meshSphere=NULL;
@@ -115,6 +116,9 @@ void display(){
 		grscene->GetConstraintEngine()
 	}
 */
+	std::ostringstream sstr;
+	sstr << "NObj = " << scene->NSolids();
+	render->DrawFont(Vec2f(-21, 23), sstr.str());
 	glutSwapBuffers();
 
 /*
@@ -263,7 +267,7 @@ void keyboard(unsigned char key, int x, int y){
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshConvex);
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+				soBox.back()->SetFramePosition(Vec3f(0, 20,0));
 				soBox.back()->SetOrientation(
 					Quaternionf::Rot(Rad(30), 'y') * 
 					Quaternionf::Rot(Rad(10), 'x'));  
@@ -298,11 +302,11 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				CDConvexMeshDesc md;
-				int nv = rand()%10 + 50;
+				int nv = rand()%100 + 50;
 				for(int i=0; i < nv; ++i){
 					Vec3d v;
 					for(int c=0; c<3; ++c){
-						v[c] = (rand() % 100 / 100.0 - 0.5) * 5;
+						v[c] = (rand() % 100 / 100.0 - 0.5) * 5 * 1.3;
 					}
 					md.vertices.push_back(v);
 				}
@@ -463,10 +467,24 @@ int main(int argc, char* argv[]){
 		}
 		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(cmd));
 		meshFloor->SetName("meshFloor");
+		
+		for(unsigned i=0; i<md.vertices.size(); ++i){
+			md.vertices[i].y *= 6;
+		}
+		meshWall = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
+		meshWall->SetName("meshWall");
 	}
 	soFloor->AddShape(meshFloor);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
 
+	soFloor->AddShape(meshWall);
+	soFloor->AddShape(meshWall);
+	soFloor->AddShape(meshWall);
+	soFloor->AddShape(meshWall);
+	soFloor->SetShapePose(1, Posed::Trn(-60, 0,   0));
+	soFloor->SetShapePose(2, Posed::Trn(  0, 0, -40));
+	soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
+	soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ðÝ’è
 	scene->SetTimeStep(0.05);
@@ -478,9 +496,9 @@ int main(int argc, char* argv[]){
 
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	render->SetRenderMode(false, true);
-	render->EnableRenderAxis();
-	render->EnableRenderForce();
+	render->SetRenderMode(true, false);
+//	render->EnableRenderAxis();
+//	render->EnableRenderForce();
 
 	device = grSdk->CreateDeviceGL();
 	device->Init();

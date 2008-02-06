@@ -288,16 +288,13 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	while(1){
 		count ++;
 		if (count > 1000) {
-#if USERNAME==hase
-			//	長谷川専用デバッグコード。現在当たり判定Debug中。			
+#if 1	//	USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
 			
 			DebugBreak();
 			bDebug=true;
 			ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
-#else
-			if (!bDebug) return -1;
 #endif
 		}
 		Vec3d s;		//	三角形の有向面積
