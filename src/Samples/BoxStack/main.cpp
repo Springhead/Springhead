@@ -55,6 +55,10 @@ UTRef<GRSdkIf> grSdk;
 GRDebugRenderIf* render;
 UTRef<GRDeviceGLIf> device;
 
+double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
+bool bLeftButton = false, bRightButton = false;
+
+
 // 光源の設定 
 static GLfloat light_position[] = { 25.0, 50.0, 20.0, 1.0 };
 static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
@@ -104,6 +108,16 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
+	Affinef view;
+	double yoffset = 10.0;
+	view.Pos() = CameraZoom * Vec3f(
+		cos(CameraRotX) * cos(CameraRotY),
+		sin(CameraRotX),
+		cos(CameraRotX) * sin(CameraRotY));
+	view.PosY() += yoffset;
+	view.LookAtGL(Vec3f(0.0, yoffset, 0.0), Vec3f(0.0f, 100.0f, 0.0f));
+	render->SetViewMatrix(view.inv());
+
 	render->DrawScene(scene);
 /*
 	render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
@@ -380,6 +394,38 @@ void keyboard(unsigned char key, int x, int y){
 	}
 }	
 
+int xlast, ylast;
+void mouse(int button, int state, int x, int y){
+	xlast = x, ylast = y;
+	if(button == GLUT_LEFT_BUTTON)
+		bLeftButton = (state == GLUT_DOWN);
+	if(button == GLUT_RIGHT_BUTTON)
+		bRightButton = (state == GLUT_DOWN);
+}
+
+void motion(int x, int y){
+	static bool bFirst = true;
+	int xrel = x - xlast, yrel = y - ylast;
+	xlast = x;
+	ylast = y;
+	if(bFirst){
+		bFirst = false;
+		return;
+	}
+	// 左ボタン
+	if(bLeftButton){
+		CameraRotY += xrel * 0.01;
+		CameraRotY = Spr::max(Rad(-180.0), Spr::min(CameraRotY, Rad(180.0)));
+		CameraRotX += yrel * 0.01;
+		CameraRotX = Spr::max(Rad(-80.0), Spr::min(CameraRotX, Rad(80.0)));
+	}
+	// 右ボタン
+	if(bRightButton){
+		CameraZoom *= exp(yrel/10.0);
+		CameraZoom = Spr::max(0.1, Spr::min(CameraZoom, 100.0));
+	}
+}
+
 //	#include <WinBasis/WBPreciseTimer.h>
 //	WBPreciseTimer ptimer;
 
@@ -506,6 +552,8 @@ int main(int argc, char* argv[]){
 	glutReshapeFunc(reshape);
 	glutKeyboardFunc(keyboard);
 	glutTimerFunc(0, timer, 0);
+	glutMouseFunc(mouse);
+	glutMotionFunc(motion);
 
 	glutReshapeWindow(800, 600);
 
