@@ -20,6 +20,21 @@
 #endif
 
 namespace Spr{;
+void FWWinGLUT::Position(int left, int top){
+	glutPositionWindow(left, top); fullScreen = false;
+}
+void FWWinGLUT::Reshape(int width, int height){
+	glutReshapeWindow(width, height); fullScreen = false;
+}
+void FWWinGLUT::SetTitle(UTString t){
+	glutSetWindowTitle(t.c_str()); title = t;
+}
+void FWWinGLUT::FullScreen(){
+	glutFullScreen(); fullScreen = true;
+}
+
+//-----------------------------------------------------------------------
+
 FWAppGLUT* FWAppGLUT::instance;
 
 FWAppGLUT::~FWAppGLUT(){
@@ -38,17 +53,18 @@ void FWAppGLUT::GlutIdleFunc(){
 }
 
 void FWAppGLUT::GlutTimerFunc(int id){
+	// 渡されるidは対応するウィンドウのID
+	FWWin* win = FWAppGLUT::instance->GetWinFromId(id);
+	FWAppGLUT::instance->SetCurrentWin(win);
+
 	FWAppGLUT::instance->CallStep();
 	glutPostRedisplay();
-	FWSceneIf* fs = FWAppGLUT::instance->GetSdk()->GetScene();
-	if(!fs)return;
-
-	PHSceneIf* ps = fs->GetPHScene();
-	if(!ps)return;
-
-	int timeStep = (int)(ps->GetTimeStep() * 1000.0);
+	
+	// タイマ周期＝物理シミュレーションのインターバル
+	int timeStep = (int)(win->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
 	if (timeStep<1) timeStep = 1;
-	glutTimerFunc(timeStep, GlutTimerFunc, 0);
+	
+	glutTimerFunc(timeStep, GlutTimerFunc, id);
 }
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->CallKeyboard(key, x, y);
@@ -70,37 +86,42 @@ void FWAppGLUT::Init(int argc, char* argv[]){
 
 void FWAppGLUT::Start(){
 	instance = this;
-	if (!GetSdk()->NWin()){
+	if (!NWin()){
 		CreateWin();
 	}
-	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
 	glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 	glutMainLoop();
 }
 
-FWWin* FWAppGLUT::CreateWin(const FWAppGLUTDesc d){
-	int window=0;
+FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
+	int wid=0;
 	if (d.parentWindow){
-		window = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
+		wid = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
 	}else{
 		glutInitWindowSize(d.width, d.height);
 		glutInitWindowPosition(d.left, d.top);
-		window = glutCreateWindow(d.title.c_str());
+		wid = glutCreateWindow(d.title.c_str());
 	}
 	int rv = glewInit();
 	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
-	return CreateRender(window);
+	// ウィンドウIDを指定してタイマを始動
+	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
+	
+	FWWin* win = new FWWinGLUT(wid, fwSdk->CreateRender());
+	wins.push_back(win);
+	return win;
 }
 void FWAppGLUT::DestroyWin(FWWin* w){
-	glutDestroyWindow(w->id);
+	glutDestroyWindow(w->GetID());
 }
-void FWAppGLUT::SetWin(FWWin* w){
-	glutSetWindow(w->id);
+void FWAppGLUT::SetCurrentWin(FWWin* w){
+	glutSetWindow(w->GetID());
 }
-FWWin* FWAppGLUT::GetWin(){
-	return GetSdk()->GetWinFromId(glutGetWindow());
+FWWin* FWAppGLUT::GetCurrentWin(){
+	return GetWinFromId(glutGetWindow());
 }
 void FWAppGLUT::Display(){
 	FWAppGL::Display();

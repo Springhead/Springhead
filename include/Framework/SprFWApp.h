@@ -30,6 +30,48 @@ public:
 	virtual ~FWVFuncBridge(){}
 };
 
+//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
+class FWWinDesc{
+public:
+	int width;			///<	幅
+	int height;			///<	高さ
+	int left;			///<	左端の座標
+	int top;			///<	上端の座標
+	int parentWindow;	///<	子ウィンドウを作る場合は、親のID、そうでなければ0
+	UTString title;		///<	ウィンドウのタイトル文字列(トップレベルウィンドウのみ)
+	bool fullscreen;
+
+	FWWinDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
+		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){
+	}
+};
+
+/**	@brief ウィンドウ
+	window ID, scene, renderを持つ．
+	実装されるのはFWWinGlutなので，FWAppGlutでの使用が前提．
+ */
+class FWWin : public UTRefCount{
+protected:
+	int id;
+	UTRef<GRRenderIf>	render;
+	UTRef<FWSceneIf>	scene;
+
+	FWWin(int wid, GRRenderIf* r):id(wid), render(r){}
+public:
+	virtual void Position(int left, int top){}
+	virtual void Reshape(int width, int height){}
+	virtual void SetTitle(UTString title){}
+	virtual UTString GetTitle(){ return UTString(); }
+	virtual void SetFullScreen(bool full = true){}
+	virtual bool GetFullScreen(){ return false; }
+
+	int			GetID() const{ return id; }
+	GRRenderIf*	GetRender(){ return render; }
+	FWSceneIf*  GetScene(){ return scene; }
+	void		SetScene(FWSceneIf* s){ scene = s; }
+
+};
+
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
 	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
@@ -41,6 +83,8 @@ public:
 class FWApp{
 protected:
 	UTRef<FWSdkIf> fwSdk;
+	typedef std::vector< UTRef<FWWin> > Wins;
+	Wins wins;
 	
 	void CallDisplay(){
 		if(!vfBridge || !vfBridge->Display())
@@ -70,6 +114,7 @@ protected:
 		if(!vfBridge || !vfBridge->Idle())
 			Idle();
 	}
+
 public:
 	UTRef<FWVFuncBridge>	vfBridge;
 
@@ -86,6 +131,38 @@ public:
 		アプリケーションに渡されたコマンドライン引数を処理したい場合にオーバライドする
 	 */
 	virtual void ProcessArguments(int argc, char* argv[]){}
+
+	/** @brief ウィンドウに対応するコンテキストを作る
+		@param desc	ディスクリプタ
+		ウィンドウを作成する．対応するレンダラは新しく作成され，
+		シーンはアクティブなシーンが関連つけられる．
+	 */
+	virtual FWWin* CreateWin(const FWWinDesc& desc){ return NULL; }
+	
+	/** @brief ウィンドウを削除する
+	 */
+	virtual void DestroyWin(FWWin* win){}
+
+	/** @brief ウィンドウの数
+	 */
+	virtual int NWin(){ return 0; }
+	
+	/**	@brief ウィンドウをIDから探す
+	 */
+	virtual FWWin* GetWinFromId(int wid);
+ 	
+	/** @brief ウィンドウを取得する
+		indexで指定されたウィンドウを取得する．
+	 */
+	virtual FWWin* GetWin(int index);
+
+	/** @brief 現在のウィンドウを取得する
+	 */
+	virtual FWWin* GetCurrentWin(){ return NULL;}
+
+	/** @brief 現在のウィンドウを設定する
+	 */
+	virtual void SetCurrentWin(FWWin* win){}
 
 	/** @brief シミュレーションの実行
 		デフォルトではFWSdk::Stepが呼ばれる．
@@ -125,8 +202,6 @@ public:
 
 	virtual ~FWApp();
 
-	//	現在のWindowを返す
-	virtual FWWin* GetWin(){ return NULL; }
 };
 
 }

@@ -25,31 +25,42 @@ public:
 
 class SPR_DLL FWSdk:public Sdk, public FWSdkIfInit{
 protected:
-	//	scene
-	typedef std::vector< UTRef<FWSceneIf> > Scenes;
 	///	シーン
+	typedef std::vector< UTRef<FWSceneIf> > Scenes;
 	Scenes scenes;
-	/// アクティブシーン
-	FWSceneIf* fwScene;
+	
+	/// レンダラ
+	typedef std::vector< UTRef<GRRenderIf> > Renders;
+	Renders renders;
+
+	/// アクティブシーンとレンダラ
+	FWSceneIf*	curScene;
+	GRRenderIf*	curRender;
+
 	// SDKs
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
 	UTRef<FISdkIf> fiSdk;
-	// Graphics
-	std::set<FWWin> wins;
+	
 	bool debugMode;
 public:
 	OBJECTDEF(FWSdk, Sdk);
 	FWSdk();
 	~FWSdk();
+
 	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
-	virtual FWWin* CreateWin(int wid, GRRenderIf* r);
 	virtual bool LoadScene(UTString filename);
 	virtual bool SaveScene(UTString filename);
-	virtual int NScene() const;
-	virtual void SwitchScene(FWSceneIf* scene){ fwScene = scene; }
+	virtual int NScene() const{	return (int)scenes.size(); }
+	virtual void SwitchScene(FWSceneIf* scene){ curScene = scene; }
 	virtual FWSceneIf* GetScene(int i = -1);
 	virtual void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
+
+	virtual GRRenderIf*	CreateRender();
+	virtual int NRender() const{return (int)renders.size();}
+	virtual GRRenderIf* GetRender(int index = -1);
+	virtual void SwitchRender(GRRenderIf* render){ curRender = render; }
+
 	virtual bool GetDebugMode(){return debugMode;}
 	virtual void SetDebugMode(bool debug = true){debugMode = debug;}
 
@@ -63,13 +74,9 @@ public:
 
 	virtual void Clear();
 	virtual void Step();
-	virtual void Draw(FWWin* cur);
-	virtual void Reshape(FWWin* cur, int w, int h);
-	virtual FWWin* GetWinFromId(int wid);
-	virtual int NWin(){ return (int)wins.size(); }
-	virtual FWWin* GetWin(int pos);
-	virtual void AssignScene(FWWin* win);
-
+	virtual void Draw();
+	virtual void Reshape(int w, int h);
+	
 protected:
 	void CreateSdks();
 };

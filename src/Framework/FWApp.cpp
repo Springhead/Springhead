@@ -17,7 +17,6 @@
 #pragma hdrstop
 #endif
 
-
 namespace Spr{;
 
 FWApp::~FWApp(){
@@ -28,18 +27,54 @@ void FWApp::Init(int argc, char* argv[]){
 	fwSdk = FWSdkIf::CreateSdk();
 }
 
-void FWApp::Step(){
-	for(int i=0; i<GetSdk()->NScene(); ++i){
-		GetSdk()->GetScene(i)->Step();
+FWWin* FWApp::GetWinFromId(int wid){
+	for(Wins::iterator i = wins.begin(); i != wins.end(); i++){
+		if((*i)->GetID() == wid)
+			return *i;
 	}
+	return NULL;
+}
+
+FWWin* FWApp::GetWin(int pos){
+	if(0 <= pos && pos < NWin())
+		return wins[pos];
+	return NULL;
+}
+
+/*void FWSdk::AssignScene(FWWin* win){
+	if (win->scene) return;
+	for(Scenes::reverse_iterator s=scenes.rbegin(); s!=scenes.rend(); ++s){
+		std::set<FWWin>::iterator w;
+		for(w = wins.begin(); w != wins.end(); ++w){
+			if (w->scene == *s) break;
+		}
+		if (w == wins.end()){	//	‘Î‰ž‚·‚éwindow‚ª‚È‚¢scene
+			win->scene = *s;
+			return;
+		}
+	}
+}*/
+
+void FWApp::Step(){
+	//for(int i=0; i<GetSdk()->NScene(); ++i){
+	//	GetSdk()->GetScene(i)->Step();
+	//}
+	if(!GetCurrentWin())return;
+	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
+	fwSdk->Step();
 }
 
 void FWApp::Display(){
-	fwSdk->Draw(GetWin());
+	if(!GetCurrentWin())return;
+	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
+	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
+	fwSdk->Draw();
 }
 
 void FWApp::Reshape(int w, int h){
-	fwSdk->Reshape(GetWin(), w, h);
+	if(!GetCurrentWin())return;
+	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
+	fwSdk->Reshape(w, h);
 }
 
 }

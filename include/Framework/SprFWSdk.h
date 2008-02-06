@@ -15,15 +15,6 @@
 
 namespace Spr{;
 
-struct FWWin{
-	int id;
-	UTRef<GRRenderIf> render;
-	FWWin(int i=0, GRRenderIf* r=NULL)
-		:render(r), id(i){
-	}
-	UTRef<FWSceneIf> scene;
-};
-
 struct FWSdkDesc{
 };
 
@@ -58,8 +49,8 @@ struct FWSdkIf : ObjectIf {
 	virtual int NScene() const=0;
 
 	/** @brief シーンを切り替える
-		@param index
-		index番目のシーンをアクティブにする
+		@param scene
+		シーンsceneをアクティブにする
 	 */
 	virtual void	SwitchScene(FWSceneIf* scene)=0;
 
@@ -72,6 +63,22 @@ struct FWSdkIf : ObjectIf {
 		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
 	 */
 	virtual void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1) = 0;
+
+	/** @brief レンダラを作成する
+		レンダラを作成し，レンダラリストに追加する．
+		
+		＊引数でDeviceをGLかD3Dかを指定できるようにするべき
+	 */
+	virtual GRRenderIf*	CreateRender() = 0;
+	/** @brief レンダラの個数を取得する
+	 */
+	virtual int NRender() const = 0;
+	/** @brief レンダラを取得する
+	 */
+	virtual GRRenderIf* GetRender(int index = -1) = 0;
+	/** @brief レンダラをアクティブにする
+	 */
+	virtual void SwitchRender(GRRenderIf* render) = 0;
 	
 	/// PHSdkオブジェクトを取得する
 	virtual PHSdkIf* GetPHSdk()=0;
@@ -81,9 +88,6 @@ struct FWSdkIf : ObjectIf {
 
 	/// FISdkオブジェクトを取得する
 	virtual FISdkIf* GetFISdk()=0;
-
-	/// ウィンドウに対応するコンテキストを作る
-	virtual FWWin* CreateWin(int wid, GRRenderIf* r)=0;
 
 	/** @brief デバッグ描画モードの取得
 	 */
@@ -98,29 +102,19 @@ struct FWSdkIf : ObjectIf {
 	virtual void Step()=0;
 
 	/** @brief 描画を実行
+		アクティブなシーンとアクティブなレンダラを使って描画を行う．
 	 */
-	virtual void Draw(FWWin* cur) = 0;
+	virtual void Draw() = 0;
 
 	/** @brief 描画領域のサイズを設定する
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
+		アクティブなレンダラの描画領域を設定する
 	 */
-	virtual void Reshape(FWWin* cur, int w, int h)=0;
-
-	///	FWWin構造体をwindow idから探す
-	virtual FWWin* GetWinFromId(int wid)=0;
-	///	SDKが持っているウィンドウの数
-	virtual int NWin()=0;
-	///	ウィンドウの取得
-	virtual FWWin* GetWin(int pos)=0;
-	///	ウィンドウに対応するウィンドウをもたないシーンを割り当てる。
-	virtual void AssignScene(FWWin* win)=0;
+	virtual void Reshape(int w, int h)=0;
 
 	static void SPR_CDECL RegisterSdk();
 };
-inline bool operator < (const FWWin& a, const FWWin& b){
-	return a.id < b.id;
-}
 
 }
 

@@ -12,19 +12,20 @@
 
 namespace Spr{;
 
-class FWAppGLUTDesc{	//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
+class FWWinGLUT : public FWWin{
+	UTString title;
+	bool	fullScreen;
 public:
-	int width;			///<	幅
-	int height;			///<	高さ
-	int left;			///<	左端の座標
-	int top;			///<	上端の座標
-	int parentWindow;	///<	子ウィンドウを作る場合は、親のID、そうでなければ0
-	UTString title;		///<	ウィンドウのタイトル文字列(トップレベルウィンドウのみ)
-	bool fullscreen;
-	FWAppGLUTDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
-		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){
-	}
+	FWWinGLUT(int wid, GRRenderIf* r):FWWin(wid, r), fullScreen(false){}
+
+	virtual void Position(int left, int top);
+	virtual void Reshape(int width, int height);
+	virtual void SetTitle(UTString t);
+	virtual UTString GetTitle(){ return title; }
+	virtual void FullScreen();
+	virtual bool IsFullScreen(){ return fullScreen; }
 };
+
 /** @brief GLUTを用いるアプリケーションクラス
  */
 class FWAppGLUT : public FWAppGL{
@@ -47,13 +48,13 @@ public:
 	///	GLUTの初期化を行う。最初にこれを呼ぶ必要がある。
 	virtual void Init(int argc, char* argv[]);
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual FWWin* CreateWin(const FWAppGLUTDesc d=FWAppGLUTDesc());
+	virtual FWWin* CreateWin(const FWWinDesc& d=FWWinDesc());
 	///	ウィンドウを破棄する
 	virtual void DestroyWin(FWWin* w);
 	///	カレントウィンドウを設定する。設定後のIDを返す。
-	virtual void SetWin(FWWin* w);
+	virtual void SetCurrentWin(FWWin* w);
 	///	カレントウィンドウを返す。
-	virtual FWWin* GetWin();
+	virtual FWWin* GetCurrentWin();
 
 	///	フレームワークをスタートする。
 	virtual void Start();

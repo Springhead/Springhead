@@ -53,7 +53,8 @@ IF_OBJECT_IMP(FWSdk, Sdk);
 FWSdk::FWSdk(){
 	name="fwSdk";
 	CreateSdks();
-	fwScene = NULL;
+	curScene = NULL;
+	curRender = NULL;
 	debugMode = false;
 }
 void FWSdk::CreateSdks(){
@@ -75,13 +76,6 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	scene->SetGRScene(GetGRSdk()->CreateScene(grdesc));
 	AddChildObject(scene);
 	return scene;
-}
-FWWin* FWSdk::CreateWin(int wid, GRRenderIf* r){
-	std::pair<std::set<FWWin>::iterator, bool> rv = wins.insert(FWWin(wid, r));
-	if (!rv.second){
-		rv.first->render = r;
-	}
-	return &*rv.first;
 }
 bool FWSdk::LoadScene(UTString filename){
 	//	デフォルトの先祖オブジェクトをを設定
@@ -105,8 +99,8 @@ bool FWSdk::LoadScene(UTString filename){
 	DSTR << "Loaded " << NScene() - first << " scenes." << std::endl;
 	DSTR << "LoadFile Complete." << std::endl;
 	for(int i=first; i<NScene(); ++i){
-		fwScene = GetScene(i);
-		fwScene->Print(DSTR);
+		curScene = GetScene(i);
+		curScene->Print(DSTR);
 	}
 	return true;
 }
@@ -124,12 +118,9 @@ bool FWSdk::SaveScene(UTString filename){
 	return true;
 }
 
-int FWSdk::NScene() const{
-	return (int)scenes.size();
-}
 FWSceneIf* FWSdk::GetScene(int i){
-	if(i == -1)return fwScene;
-    if(0 <= i && i < (int)scenes.size())
+	if(i == -1)return curScene;
+    if(0 <= i && i < NScene())
 		return scenes[i];
 	return NULL;
 }
@@ -162,11 +153,36 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	for(int i = 0; i < scene1->NObject(); i++){
 		scene0->AddChildObject(scene1->GetObjects()[i]);
 	}
-	if(fwScene == scene1)
-		fwScene = scene0;
+	if(curScene == scene1)
+		curScene = scene0;
 
 	scenes.erase(it1);
 
+}
+
+GRRenderIf*	FWSdk::CreateRender(){
+	GRRenderIf* render = GetGRSdk()->CreateDebugRender();
+	GRDeviceIf* dev = GetGRSdk()->CreateDeviceGL();
+	dev->Init();
+	render->SetDevice(dev);
+
+	//	仮の視点。このあとうまくシーンが設定されれば、シーンのカメラに上書きされる。
+	Affinef view;
+	view.Pos() = Vec3f(0.0, 3.0, 3.0);
+	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
+	view = view.inv();		
+	render->SetViewMatrix(view);
+
+	renders.push_back(render);
+	curRender = render;
+	return render;
+}
+
+GRRenderIf* FWSdk::GetRender(int i){
+	if(i == -1)return curRender;
+    if(0 <= i && i < NRender())
+		return renders[i];
+	return NULL;
 }
 
 bool FWSdk::AddChildObject(ObjectIf* o){
@@ -174,7 +190,7 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 	if (s){
 		if (std::find(scenes.begin(), scenes.end(), s) == scenes.end()){
 			scenes.push_back(s);
-			fwScene = s;
+			curScene = s;
 			return true;
 		}
 	}
@@ -197,8 +213,8 @@ bool FWSdk::DelChildObject(ObjectIf* o){
 		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if(it != scenes.end()){
 			scenes.erase(it);
-			if(fwScene == s)
-				fwScene = (scenes.empty() ? NULL : scenes[0]);
+			if(curScene == s)
+				curScene = (scenes.empty() ? NULL : scenes[0]);
 			return true;
 		}
 	}
@@ -212,53 +228,27 @@ void FWSdk::Clear(){
 	grSdk = NULL;
 	fiSdk = NULL;
 	scenes.clear();
-	fwScene = NULL;
+	renders.clear();
+	curScene = NULL;
+	curRender = NULL;
 	CreateSdks();
 }
 void FWSdk::Step(){
-	if (fwScene)
-		fwScene->Step();
+	if (curScene)
+		curScene->Step();
 }
 
-void FWSdk::Draw(FWWin* cur){
-	if (cur){
-		cur->render->ClearBuffer();
-		cur->render->BeginScene();
-		if (cur->scene) cur->scene->Draw(cur->render, debugMode);
-		cur->render->EndScene();
-	}
+void FWSdk::Draw(){
+	if(!curRender)return;
+	curRender->ClearBuffer();
+	curRender->BeginScene();
+	if (curScene)
+		curScene->Draw(curRender, debugMode);
+	curRender->EndScene();
 }
-void FWSdk::Reshape(FWWin* cur, int w, int h){
-	if (cur){
-		cur->render->Reshape(Vec2f(), Vec2f(w,h));
-	}
-}
-FWWin* FWSdk::GetWinFromId(int wid){
-	FWWin key(wid, NULL);
-	std::set<FWWin>::iterator rv = wins.find(key);
-	if (rv == wins.end()) return NULL;
-	return &*rv;
-}
-FWWin* FWSdk::GetWin(int pos){
-	int count = 0;
-	for(std::set<FWWin>::iterator it = wins.begin(); it != wins.end(); ++it){
-		if (pos == count) return &*it;
-		count ++;
-	}
-	return NULL;
-}
-void FWSdk::AssignScene(FWWin* win){
-	if (win->scene) return;
-	for(Scenes::reverse_iterator s=scenes.rbegin(); s!=scenes.rend(); ++s){
-		std::set<FWWin>::iterator w;
-		for(w = wins.begin(); w != wins.end(); ++w){
-			if (w->scene == *s) break;
-		}
-		if (w == wins.end()){	//	対応するwindowがないscene
-			win->scene = *s;
-			return;
-		}
-	}
+void FWSdk::Reshape(int w, int h){
+	if (curRender)
+		curRender->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 }
