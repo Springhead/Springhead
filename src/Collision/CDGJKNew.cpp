@@ -282,8 +282,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
 	//	三角形を小さくしていく
-	int notuse;
+	int notuse = -1;
 	int count = 0;
+	Vec3d lastTriV;
 	while(1){
 		count ++;
 		if (count > 1000) {
@@ -305,15 +306,29 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			std::swap(ids[1], ids[2]);
 			s *= -1;
 		}
-		notuse = -1;
+		double improvement;
 		if (s.Z() > epsilon){
 			if (bDebug) DSTR << "TRI ";
 			//	三角形になる場合
-			v[ids[3]] = s.unit();	//	3角形の法線を使う
+			notuse = -1;
+			lastTriV = v[ids[3]] = s.unit();	//	3角形の法線を使う
+			//	新しい w w[3] を求める
+			CalcSupport(ids[3]);
+#if 0		//	本来は3点とも等しくなるはずなので、1点で十分のはず。
+			improvement = DBL_MAX;
+			for(int i=0; i<3; ++i){
+				double delta = -(w[ids[3]] - w[ids[i]]) * v[ids[3]];
+				if (improvement > delta) improvement = delta;
+			}
+#else
+			improvement = -(w[ids[3]] - w[ids[0]]) * v[ids[3]];
+#endif
 		}else{
 			if (bDebug) DSTR << "LINE";
+#if 0
 			//	線分になる場合、法線が求まらないので、oから近い2点を求めた際の法線の平均を使う
 			//	原点Oを含み、一番短い線分を選ぶ -> oから近い2点を選ぶ	x--o--x----x
+			//	これが間違ってる！！
 			double sqMax = 0;
 			for(int i=0; i<3; ++i){
 				double sq = w[ids[i]].XY().square();
@@ -324,24 +339,89 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			}
 			int id0 = (notuse+1)%3;
 			int id1 = (notuse+2)%3;
-			v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
-		}
-		//	新しい w w[3] を求める
-		CalcSupport(ids[3]);
-		
+#else
+			int id0, id1;
+			if (notuse >= 0){
+				double ip1 = w[ids[notuse]].XY() * w[ids[(notuse+1)%3]].XY();
+				double ip2 = w[ids[notuse]].XY() * w[ids[(notuse+2)%3]].XY();
+				if (ip1 < ip2){
+					id0 = notuse;
+					id1 = (notuse+1)%3;
+					notuse = (notuse+2)%3;
+				}else{
+					id0 = notuse;
+					id1 = (notuse+2)%3;
+					notuse = (notuse+1)%3;
+				}
+			}else{
+				//	線分になる場合、一番最初に z軸と交わる辺を見つける必要がある。
+				bool dontUse[3] = {false, false, false};
+				for(int i=0; i<3; ++i){
+					Vec3d dir = w[ids[(i+1)%3]] - w[ids[i]];
+					double len = dir.norm();
+					if (len < 1e-15){
+						dontUse[i] = true;
+					}else{
+						dir /= len;
+						Vec3d n = Vec3d(0,0,1) - dir.z * dir;
+						if (n * (w[ids[(i+2)%3]] - w[ids[i]]) < -1e-8){
+							dontUse[i] = true;
+						}
+					}
+				}
+				double ipMin = DBL_MAX;
+				int use = -1;
+				for(int i=0; i<3; ++i){
+					if (dontUse[i]) continue;
+					double ip = w[ids[i]].XY() * w[ids[(i+1)%3]].XY();
+					if (ip < ipMin){
+						ipMin = ip;
+						use = i;
+					}
+				}
+				id0 = use;
+				id1 = (use+1)%3;
+				notuse = (use+2)%3;
+			}
+#endif
 
+#if 0	//平均を使う
+			v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
+			//	新しい w w[3] を求める
+			CalcSupport(ids[3]);
+			improvement = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];
+			double imp2 = -(w[ids[3]] - w[ids[id1]]) * v[ids[3]];
+			if (imp2 < improvement) improvement = imp2;
+#elif 0	//	直線に垂直な法線で、z軸に近いもの
+			Vec3d dir = w[ids[id1]] - w[ids[id0]];
+			double len = dir.norm();
+			if (len > 1e-8){
+				dir /= len;
+				v[ids[3]] = Vec3d(0,0,1) - dir.z * dir;
+				v[ids[3]].unitize();
+				//	新しい w w[3] を求める
+				CalcSupport(ids[3]);
+				improvement = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];
+			}else{
+				improvement = 0;
+			}
+#else //	前回の法線を使う
+			if (lastTriV.square() != 0){
+				v[ids[3]] = lastTriV;
+			}else{
+				//	それが無ければ、平均をつかう。
+				lastTriV = v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
+			}
+			CalcSupport(ids[3]);
+			improvement = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];			
+#endif
+		}
 		if (bDebug){
 			DSTR << "v:" << v[ids[3]];
 			for(int i=0; i<4; ++i){
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
 			}
 			DSTR << std::endl;
-		}
-		//	新しいwが、これまでの点より近いかチェックする。
-		double improvement = DBL_MAX;
-		for(int i=0; i<3; ++i){
-			double delta = -(w[ids[3]] - w[ids[i]]) * v[ids[3]];
-			if (improvement > delta) improvement = delta;
 		}
 		if (bDebug) {
 			DSTR << "notuse" << notuse;
@@ -378,10 +458,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			if (min > 1e-5){	//	異常。原点を含む三角形が見つからない
 				//	デバッグ用処理
 				DSTR << "No including traiangle found." << std::endl;
-				if (bDebug){
-					ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, 
-						normal, pa, pb, dist);
-				}
+				ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+				goto final;
 			}
 		}
 	}

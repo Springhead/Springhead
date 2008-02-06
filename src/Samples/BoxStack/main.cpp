@@ -262,7 +262,8 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshConvex);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 				soBox.back()->SetOrientation(
 					Quaternionf::Rot(Rad(30), 'y') * 
 					Quaternionf::Rot(Rad(10), 'x'));  
@@ -275,7 +276,8 @@ void keyboard(unsigned char key, int x, int y){
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
 				soBox.back()->AddShape(meshCapsule);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "capsule" << (unsigned int)soBox.size();
@@ -285,7 +287,8 @@ void keyboard(unsigned char key, int x, int y){
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshSphere);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "sphere" << (unsigned int)soBox.size();
@@ -305,7 +308,8 @@ void keyboard(unsigned char key, int x, int y){
 				}
 				CDShapeIf* s = sdk->CreateShape(md);
 				soBox.back()->AddShape(s);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "sphere" << (unsigned int)soBox.size();
@@ -335,7 +339,8 @@ void keyboard(unsigned char key, int x, int y){
 				pose.Pos() = Vec3d(0, 0, -3);
 				soBox.back()->SetShapePose(6, pose);
 				
-				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
 				os << "box" << (unsigned int)soBox.size();
@@ -353,7 +358,8 @@ void keyboard(unsigned char key, int x, int y){
 						soBox.push_back(scene->CreateSolid(soliddesc));
 						soBox.back()->AddShape(meshBox);
 						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)numbox;
-						soBox.back()->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i + 0.5), tower_radius * sin(theta)));
+						soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+//						soBox.back()->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i + 0.5), tower_radius * sin(theta)));
 						soBox.back()->SetOrientation(Quaterniond::Rot(-theta, 'y'));  
 					}
 				}
