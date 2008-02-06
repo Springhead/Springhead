@@ -16,10 +16,10 @@ class MyApp: public FWAppGLUT{
 public:
 	void Step(){
 		FWAppGLUT::Step();
-		PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
-		SetWin(GetSdk()->GetWin(0));
+		//PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
+		SetCurrentWin(GetWin(0));
 		glutPostRedisplay();
-		SetWin(GetSdk()->GetWin(1));
+		SetCurrentWin(GetWin(1));
 		glutPostRedisplay();
 	}
 	void Keyboard(unsigned char key, int x, int y){
@@ -31,7 +31,7 @@ public:
 	void Display(){
 #ifdef _DEBUG
 		GetSdk()->SetDebugMode(true);
-		FWWin* wr = GetWin();
+		FWWin* wr = GetCurrentWin();
 		GRDebugRenderIf* r = wr->render->Cast();
 		r->SetRenderMode(false, true);
 //		r->EnableRenderAxis();
@@ -64,10 +64,10 @@ int SPR_CDECL main(int argc, char* argv[]){
 	w1->scene = app->GetSdk()->GetScene(0);
 
 	//	シーンのセーブ
-//	app->GetSdk()->SaveScene("save.x");
+	//app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード
 	app->GetSdk()->LoadScene("save.x");
-
+	
 	//	ロードしたシーンをウィンドウ２に表示するように設定
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
 	FWWin* w2 = app->CreateWin(wd);

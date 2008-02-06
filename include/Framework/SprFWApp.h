@@ -53,6 +53,7 @@ public:
 class FWWin : public UTRefCount{
 protected:
 	int id;
+public:	// protectedでよいが互換性のため一時的に
 	UTRef<GRRenderIf>	render;
 	UTRef<FWSceneIf>	scene;
 
@@ -71,6 +72,7 @@ public:
 	void		SetScene(FWSceneIf* s){ scene = s; }
 
 };
+typedef FWWinDesc FWAppGLUTDesc;
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
@@ -145,7 +147,7 @@ public:
 
 	/** @brief ウィンドウの数
 	 */
-	virtual int NWin(){ return 0; }
+	virtual int NWin(){ return wins.size(); }
 	
 	/**	@brief ウィンドウをIDから探す
 	 */
