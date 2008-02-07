@@ -83,6 +83,13 @@ void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->CallKeyboard(key, x, y);
 }
 
+void FWAppGLUT::GlutMouseFunc(int button, int state, int x, int y){
+	FWAppGLUT::instance->CallMouseButton(button, state, x, y);
+}
+void FWAppGLUT::GlutMotionFunc(int x, int y){
+	FWAppGLUT::instance->CallMouseMove(x, y);
+}
+
 void FWAppGLUT::AtExit(){
 	if(FWAppGLUT::instance && FWAppGLUT::instance->vfBridge)
 		FWAppGLUT::instance->vfBridge->AtExit();
@@ -121,6 +128,8 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
+	glutMouseFunc(FWAppGLUT::GlutMouseFunc);
+	glutMotionFunc(FWAppGLUT::GlutMotionFunc);
 	// ウィンドウIDを指定してタイマを始動
 	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
 	

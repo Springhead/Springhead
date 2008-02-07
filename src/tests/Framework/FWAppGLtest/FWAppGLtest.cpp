@@ -55,7 +55,7 @@ public:
 //		r->EnableRenderAxis();
 		r->EnableRenderForce();
 #endif
-		wr->render->SetViewMatrix(mouseCameraView.inv());
+		wr->render->SetViewMatrix(cameraInfo.view.inv());
 		FWAppGLUT::Display();
 	}
 };
@@ -92,6 +92,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	FWWin* w2 = app->CreateWin(wd);
 	w2->scene = app->GetSdk()->GetScene(1);
 */
+
 	app->Start();
 	return 0;
 }

@@ -38,6 +38,8 @@ protected:
 	static void SPR_CDECL GlutTimerFunc(int id);
 	static void SPR_CDECL GlutIdleFunc();
 	static void SPR_CDECL GlutKeyboardFunc(unsigned char key, int x, int y);
+	static void SPR_CDECL GlutMouseFunc(int button, int state, int x, int y);
+	static void SPR_CDECL GlutMotionFunc(int x, int y);
 	static void SPR_CDECL AtExit();
 public:
 	~FWAppGLUT();

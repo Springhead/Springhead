@@ -84,16 +84,31 @@ typedef FWWinDesc FWAppGLUTDesc;
  */
 class FWApp{
 protected:
+	/// マウス情報
+	class MouseInfo{
+	public:
+		TVec2<int> lastPos;	/// 前回のカーソル座標
+		bool left, right;	/// ボタン押し下げ
+		bool first;
+		MouseInfo():left(false), right(false), first(false){}
+	} mouseInfo;
+	/// カメラ情報
+	class CameraInfo{
+	public:
+		Vec3f target;		/// 中心点
+		Vec2f rot;			/// 経度角，緯度角
+		float zoom;			/// 拡大率（対象からの距離）
+		Vec2f rotRangeX, rotRangeY;
+		Vec2f zoomRange;
+		Affinef view;
+		CameraInfo():
+			rot(Rad(0.0), Rad(20.0)), zoom(1.0f),
+			rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){}
+	} cameraInfo;
+
 	UTRef<FWSdkIf> fwSdk;
 	typedef std::vector< UTRef<FWWin> > Wins;
 	Wins wins;
-
-	TVec2<int> lastMousePos;
-	bool bLeftMouseButton;
-	bool bRightMouseButton;
-	Vec2d mouseCameraRot;
-	double mouseCameraZoom;
-	Affinef mouseCameraView;
 
 	void AssignScene(FWWin* win);
 	

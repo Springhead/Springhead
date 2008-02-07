@@ -78,45 +78,45 @@ void FWApp::Reshape(int w, int h){
 }
 
 void FWApp::MouseButton(int button, int state, int x, int y){
-	lastMousePos.x = x, lastMousePos.y = y;
+	mouseInfo.lastPos.x = x, mouseInfo.lastPos.y = y;
 	if(button == 0 /*GLUT_LEFT_BUTTON*/ )
-		bLeftMouseButton = (state == 0 /*GLUT_DOWN*/);
+		mouseInfo.left = (state == 0 /*GLUT_DOWN*/);
 	if(button == 2 /*GLUT_RIGHT_BUTTON*/)
-		bRightMouseButton = (state == 0/*GLUT_DOWN*/);
+		mouseInfo.right = (state == 0/*GLUT_DOWN*/);
+	if(state == 0)
+		mouseInfo.first = true;
 }
+
 void FWApp::MouseMove(int x, int y){
-	static bool bFirst = true;
-	int xrel = x - lastMousePos.x, yrel = y - lastMousePos.y;
-	lastMousePos.x = x;
-	lastMousePos.y = y;
-	if(bFirst){
-		bFirst = false;
+	int xrel = x - mouseInfo.lastPos.x, yrel = y - mouseInfo.lastPos.y;
+	mouseInfo.lastPos.x = x;
+	mouseInfo.lastPos.y = y;
+	if(mouseInfo.first){
+		mouseInfo.first = false;
 		return;
 	}
 	// 左ボタン
-	if(bLeftMouseButton){
-		mouseCameraRot.y += xrel * 0.01;
-		mouseCameraRot.y = Spr::max(Rad(-180.0), Spr::min(mouseCameraRot.y, Rad(180.0)));
-		mouseCameraRot.x += yrel * 0.01;
-		mouseCameraRot.x = Spr::max(Rad(-80.0), Spr::min(mouseCameraRot.x, Rad(80.0)));
+	if(mouseInfo.left){
+		cameraInfo.rot.y += (float)xrel * 0.01f;
+		cameraInfo.rot.y =
+			Spr::max(cameraInfo.rotRangeY[0], Spr::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
+		cameraInfo.rot.x += (float)yrel * 0.01f;
+		cameraInfo.rot.x =
+			Spr::max(cameraInfo.rotRangeX[0], Spr::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
 	}
 	// 右ボタン
-	if(bRightMouseButton){
-		mouseCameraZoom *= exp(yrel/10.0);
-		mouseCameraZoom = Spr::max(0.1, Spr::min(mouseCameraZoom, 100.0));
+	if(mouseInfo.right){
+		cameraInfo.zoom *= (float)exp((double)yrel/10.0);
+		cameraInfo.zoom = Spr::max(cameraInfo.zoomRange[0], Spr::min(cameraInfo.zoom, cameraInfo.zoomRange[1]));
 	}
-	if (bLeftMouseButton || bRightMouseButton){
-		mouseCameraView = Affinef();
-		double yoffset = 10.0;
-		mouseCameraView.Pos() = mouseCameraZoom * Vec3f(
-			cos(mouseCameraRot.x) * cos(mouseCameraRot.y),
-			sin(mouseCameraRot.x),
-			cos(mouseCameraRot.x) * sin(mouseCameraRot.y));
-		mouseCameraView.PosY() += yoffset;
-		mouseCameraView.LookAtGL(Vec3f(0.0, yoffset, 0.0), Vec3f(0.0f, 100.0f, 0.0f));
+	if (mouseInfo.left || mouseInfo.right){
+		cameraInfo.view  = Affinef();
+		cameraInfo.view.Pos() = cameraInfo.target + cameraInfo.zoom * Vec3f(
+			cos(cameraInfo.rot.x) * cos(cameraInfo.rot.y),
+			sin(cameraInfo.rot.x),
+			cos(cameraInfo.rot.x) * sin(cameraInfo.rot.y));
+		cameraInfo.view.LookAtGL(cameraInfo.target, Vec3f(0.0f, 100.0f, 0.0f));
 	}
 }
-
-
 
 }
