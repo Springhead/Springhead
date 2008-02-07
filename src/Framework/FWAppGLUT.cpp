@@ -90,6 +90,7 @@ void FWAppGLUT::Start(){
 	instance = this;
 	if (!NWin()){
 		CreateWin();
+		wins.back()->SetScene(GetSdk()->GetScene());
 	}
 	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
 	glutIdleFunc(FWAppGLUT::GlutIdleFunc);

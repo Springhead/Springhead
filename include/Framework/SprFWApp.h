@@ -83,7 +83,7 @@ typedef FWWinDesc FWAppGLUTDesc;
 	通常は派生クラスであるFWAppGLやFWAppGLUTを使用する．
  */
 class FWApp{
-public:
+protected:
 	UTRef<FWSdkIf> fwSdk;
 	typedef std::vector< UTRef<FWWin> > Wins;
 	Wins wins;
@@ -147,7 +147,7 @@ public:
 
 	/** @brief ウィンドウの数
 	 */
-	virtual int NWin(){ return wins.size(); }
+	virtual int NWin(){ return (int)wins.size(); }
 	
 	/**	@brief ウィンドウをIDから探す
 	 */
