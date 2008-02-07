@@ -58,7 +58,12 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 			Vec3f center = ring.localInv * toW.Pos();
 			float is = -(center.X()-radius/shrink) / dir.X() * shrink;	//	ÚG–Ê‚Æ’†Sü‚ğ”¼Œa‚¸‚ç‚µ‚½ü‚Æ‚ÌŒğ“_
 			if (is < end) end = is;
-			assert(end + 0.001 >= start);
+
+			if (end+0.001 < start){
+				DSTR << "CDCapsule::FindCutRing() may have a problem" << std::endl;
+			}
+//			assert(end + 0.001 >= start);
+
 			if (end <= start) return false;
 		}
 
