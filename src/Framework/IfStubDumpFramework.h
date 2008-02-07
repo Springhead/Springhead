@@ -86,6 +86,18 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void MergeScene(FWSceneIf * scene0, FWSceneIf * scene1){
 		return ((OBJ*)(MIF*)this)->MergeScene(scene0, scene1);
 	}
+	virtual GRRenderIf * CreateRender(){
+		return ((OBJ*)(MIF*)this)->CreateRender();
+	}
+	virtual int NRender() const {
+		return ((OBJ*)(MIF*)this)->NRender();
+	}
+	virtual GRRenderIf * GetRender(int index = -1){
+		return ((OBJ*)(MIF*)this)->GetRender(index);
+	}
+	virtual void SwitchRender(GRRenderIf * render){
+		return ((OBJ*)(MIF*)this)->SwitchRender(render);
+	}
 	virtual PHSdkIf * GetPHSdk(){
 		return ((OBJ*)(MIF*)this)->GetPHSdk();
 	}
@@ -94,9 +106,6 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	}
 	virtual FISdkIf * GetFISdk(){
 		return ((OBJ*)(MIF*)this)->GetFISdk();
-	}
-	virtual FWWin * CreateWin(int wid, GRRenderIf * r){
-		return ((OBJ*)(MIF*)this)->CreateWin(wid, r);
 	}
 	virtual bool GetDebugMode(){
 		return ((OBJ*)(MIF*)this)->GetDebugMode();
@@ -107,23 +116,11 @@ struct FWSdkIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void Step(){
 		return ((OBJ*)(MIF*)this)->Step();
 	}
-	virtual void Draw(FWWin * cur){
-		return ((OBJ*)(MIF*)this)->Draw(cur);
+	virtual void Draw(){
+		return ((OBJ*)(MIF*)this)->Draw();
 	}
-	virtual void Reshape(FWWin * cur, int w, int h){
-		return ((OBJ*)(MIF*)this)->Reshape(cur, w, h);
-	}
-	virtual FWWin * GetWinFromId(int wid){
-		return ((OBJ*)(MIF*)this)->GetWinFromId(wid);
-	}
-	virtual int NWin(){
-		return ((OBJ*)(MIF*)this)->NWin();
-	}
-	virtual FWWin * GetWin(int pos){
-		return ((OBJ*)(MIF*)this)->GetWin(pos);
-	}
-	virtual void AssignScene(FWWin * win){
-		return ((OBJ*)(MIF*)this)->AssignScene(win);
+	virtual void Reshape(int w, int h){
+		return ((OBJ*)(MIF*)this)->Reshape(w, h);
 	}
 };
 struct FWSdkIf;	class FWSdk;

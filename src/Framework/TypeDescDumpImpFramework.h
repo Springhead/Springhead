@@ -16,18 +16,6 @@
 	desc->access = DBG_NEW UTAccess<FWSceneDesc>;
 	db->RegisterDesc(desc);
 	
-	FWWin* pFWWin = NULL;
-	desc = DBG_NEW UTTypeDesc("FWWin");
-	desc->size = sizeof(FWWin);
-	desc->access = DBG_NEW UTAccess<FWWin>;
-	field = desc->AddField("", "int", "id", "");
-	field->offset = int((char*)&(pFWWin->id) - (char*)pFWWin);
-	field = desc->AddField("UTRef", "GRRenderIf", "render", "");
-	field->offset = int((char*)&(pFWWin->render) - (char*)pFWWin);
-	field = desc->AddField("UTRef", "FWSceneIf", "scene", "");
-	field->offset = int((char*)&(pFWWin->scene) - (char*)pFWWin);
-	db->RegisterDesc(desc);
-	
 	FWSdkDesc* pFWSdkDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("FWSdkDesc");
 	desc->size = sizeof(FWSdkDesc);
