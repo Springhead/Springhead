@@ -141,35 +141,22 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		double qfaceDist = qfaceNormal * (base[qfaces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ qfaceNormal).unit();
 		double ip = planeNormalL * qfaceNormal;
-//		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	平行な面は無視
-			double a = -qfaceDist*ip / (1-(ip*ip));
-			double b = qfaceDist / (1-(ip*ip));
-			Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
-			Vec3d lineNormal = planeNormalL ^ lineDirection;
-			double lineDist = lineNormal * lineOff;
-			if (finite(lineDist)) {	
-				// local -> world -> ring2次元系に変換
-				Posed to2D = ring.localInv * toW;
-				Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
-				//	線は内側を向かせたいので， normal, dist を反転して ring.lines に追加
-				ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
-				rv = true;
-			} 
-/*		}else{
-			DSTR << "parallel plane" << std::endl;
-			DSTR << "ip:" << ip << std::endl;
-			DSTR << "pn:" << planeNormalL<<std::endl;
-			DSTR << "fn:" << qfaceNormal<<std::endl;
-			DSTR << "vtx:";
-			for(int j=0; j<4; ++j){
-				int id = qfaces[i].vtxs[j];
-				double vtxDist = planeNormalL * base[id];
-				DSTR << sign[id] << " " << vtxDist-d << " " << base[id];
-			}
-			DSTR << std::endl;
-			exit(0);
-		}
-*/	}
+		double l_ipip = 1-(ip*ip);
+		if (l_ipip < epsilon2) continue;	//	平行な面は無視
+		double a = -qfaceDist*ip / (1-(ip*ip));
+		double b = qfaceDist / (1-(ip*ip));
+		Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
+		Vec3d lineNormal = planeNormalL ^ lineDirection;
+		double lineDist = lineNormal * lineOff;
+		if (finite(lineDist)) {	
+			// local -> world -> ring2次元系に変換
+			Posed to2D = ring.localInv * toW;
+			Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
+			//	線は内側を向かせたいので， normal, dist を反転して ring.lines に追加
+			ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
+			rv = true;
+		} 
+	}
 	//bool 衝突の有無
 	return rv;
 }
