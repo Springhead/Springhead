@@ -53,22 +53,6 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 		Vec3d dir = -normal * 1e-8;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
 
-		//	hase debug
-		/*
-		for(int i=0; i<2; ++i){
-			if ((res <= 0 || dist > 0) 
-				&& strcmp(shape[i]->GetName(), "meshBox") ==0){
-				Vec3d v = shapePoseW[i].Inv() * Vec3f(0,-1,0);
-				Vec3f p = shapePoseW[i] * shape[i]->Support(v);
-				if (p.Y() < 0){
-					int r = ContFindCommonPoint(
-						shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-						dir, normal, closestPoint[0], closestPoint[1], depth);
-				}
-			}
-		}
-		*/
-
 		if (res <= 0) {
 			return false;
 		}
@@ -130,28 +114,16 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 
 			//	仮の法線の向きに動かして，法線を更新し，侵入量などを求める．
 			Vec3d dir = -normal;
-//			Vec3d dir = normal;
 			int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
-
-			/*
-			//	hase debug
-			for(int i=0; i<2; ++i){
-				if ((res <= 0 || depth > 0) 
-					&& strcmp(shape[i]->GetName(), "meshBox") ==0){
-					Vec3d v = shapePoseW[i].Inv() * Vec3f(0,-1,0);
-					Vec3f p = shapePoseW[i] * shape[i]->Support(v);
-					if (p.Y() < 0){
-						int r = ContFindCommonPoint(
-							shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-							dir, normal, closestPoint[0], closestPoint[1], depth);
-					}
-				}
-			}
-			*/
-
-
 			if (res <= 0) return false;
 			if (depth > 0) return false;
+
+			//	depth < 0 (逆)向きに抜けている可能性があるので、向きを逆にして確認
+			Vec3d n; double dist;
+			res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -dir, n, closestPoint[0], closestPoint[1], dist);
+			if (res <= 0) return false;	//	res < 0 -> range内では接触していないので抜ける。
+			if (dist > 0) return false;	//	distが正なら接触していないので抜ける。
+
 			depth *= -1;
 			center = commonPoint = shapePoseW[0] * closestPoint[0];
 			center -= 0.5f*depth*normal;
