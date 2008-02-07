@@ -13,19 +13,34 @@ class MyApp;
 MyApp* app;
 
 class MyApp: public FWAppGLUT{
+protected:
+	bool bRun;
 public:
+	MyApp():bRun(true){
+	}
 	void Step(){
-		FWAppGLUT::Step();
-		//PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
-		SetCurrentWin(GetWin(0));
-		glutPostRedisplay();
-		SetCurrentWin(GetWin(1));
-		glutPostRedisplay();
+		if (bRun){
+			FWAppGLUT::Step();
+			//PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
+			SetCurrentWin(GetWin(0));
+			glutPostRedisplay();
+			if (GetWin(1)){
+				SetCurrentWin(GetWin(1));
+				glutPostRedisplay();
+			}
+		}
 	}
 	void Keyboard(unsigned char key, int x, int y){
 		if (key==0x1b){
 			delete app;
 			exit(0);
+		}
+		if (key=='s'){
+			if (!bRun) FWAppGLUT::Step();
+			bRun = false;
+		}
+		if (key=='r'){
+			bRun = true;
 		}
 	}
 	void Display(){
@@ -66,13 +81,13 @@ int SPR_CDECL main(int argc, char* argv[]){
 	//	シーンのセーブ
 	//app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード
-	app->GetSdk()->LoadScene("save.x");
+/*	app->GetSdk()->LoadScene("save.x");
 	
 	//	ロードしたシーンをウィンドウ２に表示するように設定
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
 	FWWin* w2 = app->CreateWin(wd);
 	w2->scene = app->GetSdk()->GetScene(1);
-
+*/
 	app->Start();
 	return 0;
 }
