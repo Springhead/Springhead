@@ -72,11 +72,12 @@ void FWAppGLUT::GlutTimerFunc(int id){
 	glutPostRedisplay();
 
 	// タイマ周期＝物理シミュレーションのインターバル
-	int timeStep = (int)(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
-	if (timeStep<1) timeStep = 1;
-
+	int timeStep=1;
+	if (FWAppGLUT::instance->GetSdk()->GetScene()){
+		timeStep = (int)(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
+		if (timeStep<1) timeStep = 1;
+	}
 	glutTimerFunc(timeStep, GlutTimerFunc, 0);
-
 }
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->CallKeyboard(key, x, y);

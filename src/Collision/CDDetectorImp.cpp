@@ -106,14 +106,21 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
 				//	交差部の形状の計算は，衝突時点の位置で行うが，depth は現時点のdepth
 				depth = -(1-toi) * delta * normal + 2e-8;
+			}else{	
+				//	toi < 0
+				//	過去に接触を開始したかもしれないが、現在触っているかはわからないので確認
+				//	向きを逆にして toiを求めてみる。 
+				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -dir, normal, closestPoint[0], closestPoint[1], dist);
+				if (res <= 0) return false;	//	res < 0 -> range内では接触していないので抜ける。
+				if (dist > 0) return false;	//	distが正なら接触していないので抜ける。
 			}
 		}else{
 			toi = -1;
-		}		
+		}
 		if (toi < 0){	//	最初から接触していた or 速度が小さすぎる
 			//	現在の位置に移動させる
 			shapePoseW[0].Pos() += delta0;
-			shapePoseW[1].Pos() += delta1;	
+			shapePoseW[1].Pos() += delta1;
 			
 			//	法線を形状の中心を結ぶ向きに仮に設定する
 			normal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
@@ -123,6 +130,7 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 
 			//	仮の法線の向きに動かして，法線を更新し，侵入量などを求める．
 			Vec3d dir = -normal;
+//			Vec3d dir = normal;
 			int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
 
 			/*
