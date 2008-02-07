@@ -532,7 +532,7 @@ int main(int argc, char* argv[]){
 	soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
 	soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
 
-	scene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ðÝ’è
+	scene->SetGravity(Vec3f(0,-30.0f, 0));	// d—Í‚ðÝ’è
 	scene->SetTimeStep(0.05);
 
 	glutInit(&argc, argv);
