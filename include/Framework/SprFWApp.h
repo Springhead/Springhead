@@ -83,7 +83,7 @@ typedef FWWinDesc FWAppGLUTDesc;
 	通常は派生クラスであるFWAppGLやFWAppGLUTを使用する．
  */
 class FWApp{
-protected:
+public:
 	UTRef<FWSdkIf> fwSdk;
 	typedef std::vector< UTRef<FWWin> > Wins;
 	Wins wins;
