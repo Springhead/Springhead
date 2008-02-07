@@ -87,6 +87,8 @@ protected:
 	UTRef<FWSdkIf> fwSdk;
 	typedef std::vector< UTRef<FWWin> > Wins;
 	Wins wins;
+
+	void AssignScene(FWWin* win);
 	
 	void CallDisplay(){
 		if(!vfBridge || !vfBridge->Display())

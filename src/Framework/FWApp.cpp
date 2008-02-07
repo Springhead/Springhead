@@ -41,27 +41,27 @@ FWWin* FWApp::GetWin(int pos){
 	return NULL;
 }
 
-/*void FWSdk::AssignScene(FWWin* win){
-	if (win->scene) return;
-	for(Scenes::reverse_iterator s=scenes.rbegin(); s!=scenes.rend(); ++s){
-		std::set<FWWin>::iterator w;
-		for(w = wins.begin(); w != wins.end(); ++w){
-			if (w->scene == *s) break;
+void FWApp::AssignScene(FWWin* win){
+	if (win->GetScene()) return;
+	for(int i = GetSdk()->NScene() - 1; i >= 0; --i){
+		Wins::iterator it;
+		for(it = wins.begin(); it != wins.end(); ++it){
+			if ((*it)->GetScene() == GetSdk()->GetScene(i)) break;
 		}
-		if (w == wins.end()){	//	‘Î‰ž‚·‚éwindow‚ª‚È‚¢scene
-			win->scene = *s;
+		if (it == wins.end()){	//	‘Î‰ž‚·‚éwindow‚ª‚È‚¢scene
+			win->scene = GetSdk()->GetScene(i);
 			return;
 		}
 	}
-}*/
+}
 
 void FWApp::Step(){
-	//for(int i=0; i<GetSdk()->NScene(); ++i){
-	//	GetSdk()->GetScene(i)->Step();
-	//}
-	if(!GetCurrentWin())return;
-	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
-	fwSdk->Step();
+	for(int i=0; i<GetSdk()->NScene(); ++i){
+		GetSdk()->GetScene(i)->Step();
+	}
+	//if(!GetCurrentWin())return;
+	//fwSdk->SwitchScene(GetCurrentWin()->GetScene());
+	//fwSdk->Step();
 }
 
 void FWApp::Display(){

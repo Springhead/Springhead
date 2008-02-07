@@ -54,7 +54,7 @@ void FWAppGLUT::GlutIdleFunc(){
 
 void FWAppGLUT::GlutTimerFunc(int id){
 	// 渡されるidは対応するウィンドウのID
-	FWWin* win = FWAppGLUT::instance->GetWinFromId(id);
+	/*FWWin* win = FWAppGLUT::instance->GetWinFromId(id);
 	if (win){
 		FWAppGLUT::instance->SetCurrentWin(win);
 
@@ -66,7 +66,17 @@ void FWAppGLUT::GlutTimerFunc(int id){
 		if (timeStep<1) timeStep = 1;
 	
 		glutTimerFunc(timeStep, GlutTimerFunc, id);
-	}
+	}*/
+
+	FWAppGLUT::instance->CallStep();
+	glutPostRedisplay();
+
+	// タイマ周期＝物理シミュレーションのインターバル
+	int timeStep = (int)(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
+	if (timeStep<1) timeStep = 1;
+
+	glutTimerFunc(timeStep, GlutTimerFunc, 0);
+
 }
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->CallKeyboard(key, x, y);
@@ -92,7 +102,7 @@ void FWAppGLUT::Start(){
 		CreateWin();
 		wins.back()->SetScene(GetSdk()->GetScene());
 	}
-	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
 	glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 	glutMainLoop();
 }
@@ -111,9 +121,10 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
 	// ウィンドウIDを指定してタイマを始動
-	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
+	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
 	
 	FWWin* win = new FWWinGLUT(wid, fwSdk->CreateRender());
+	AssignScene(win);
 	wins.push_back(win);
 	return win;
 }
