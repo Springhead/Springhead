@@ -88,6 +88,13 @@ protected:
 	typedef std::vector< UTRef<FWWin> > Wins;
 	Wins wins;
 
+	TVec2<int> lastMousePos;
+	bool bLeftMouseButton;
+	bool bRightMouseButton;
+	Vec2d mouseCameraRot;
+	double mouseCameraZoom;
+	Affinef mouseCameraView;
+
 	void AssignScene(FWWin* win);
 	
 	void CallDisplay(){
@@ -198,11 +205,11 @@ public:
 
 	/** @brief マウスイベントのハンドラ
 	 */
-	virtual void MouseButton(int button, int state, int x, int y){}
+	virtual void MouseButton(int button, int state, int x, int y);
 
 	/** @brief マウスイベントのハンドラ
 	 */
-	virtual void MouseMove(int x, int y){}
+	virtual void MouseMove(int x, int y);
 
 	virtual ~FWApp();
 

@@ -47,14 +47,15 @@ public:
 		}
 	}
 	void Display(){
+		FWWin* wr = GetCurrentWin();
 #ifdef _DEBUG
 		GetSdk()->SetDebugMode(true);
-		FWWin* wr = GetCurrentWin();
 		GRDebugRenderIf* r = wr->render->Cast();
 		r->SetRenderMode(false, true);
 //		r->EnableRenderAxis();
 		r->EnableRenderForce();
 #endif
+		wr->render->SetViewMatrix(mouseCameraView.inv());
 		FWAppGLUT::Display();
 	}
 };
