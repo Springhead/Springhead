@@ -7,25 +7,41 @@
 
 module Springhead
 
-class Pose < Posed
-	def initialize(p, o)
+class Named
+end
+class Solid < Named
+end
+class Joint < Named
+end
+
+class PoseRef < Posed
+	def initialize(p, o, sop = true)	# p : Posed, o : Solid or Joint, sop : SocketPose or PlugPose when owner is Joint
 		super(p)
 		@owner = o
+		@sock_or_plug = sop
 	end
 	def update
-		@owner.pose = self
+		if @owner.instance_of? Object
+			@owner.pose = self
+		elsif @owner.instance_of? Joint
+			if @sock_or_plug
+				@owner.socket = self
+			else
+				@owner.plug = self
+			end
+		end
 	end
 	def pos
-		Vec3.new(super, self)
+		Vec3Ref.new(super, self)
 	end
 	def ori
-		Quaternion.new(super, self)
+		QuaternionRef.new(super, self)
 	end
 	def pos=(v) super(v); update; end
 	def ori=(q) super(q); update; end
 end
 
-class Vec3 < Vec3d
+class Vec3Ref < Vec3d
 	def initialize(v, o)
 		super(v)
 		@owner = o
@@ -39,7 +55,7 @@ class Vec3 < Vec3d
 	def z=(val) super(val); update; end
 end
 
-class Quaternion < Quaterniond
+class QuaternionRef < Quaterniond
 	def initialize(q, o)
 		super(q)
 		@owner = o
@@ -171,8 +187,7 @@ class Object < Named
     end
     
     def pose
-        #@intf.GetPHSolid.GetPose
-		Pose.new(@intf.GetPHSolid.GetPose, self)
+		PoseRef.new(@intf.GetPHSolid.GetPose, self)
     end
     def pose=(p)
         @intf.GetPHSolid.SetPose(p)
@@ -295,7 +310,7 @@ JOINT_HINGE = 1
 JOINT_SLIDER = 2
 JOINT_BALL = 3
 
-class Joint
+class Joint < Named
 	def initialize(i)		# i : PHConstraintIf
 		super(i)
 	end
@@ -318,7 +333,9 @@ class Joint
 	end
 
 	def socket
-		@intf.GetSocketPose
+		p = Posed.new
+		@intf.GetSocketPose(p)
+		PoseRef.new(p, self, true)
 	end
 	def socket=(p)
 		@intf.SetSocketPose(p)
@@ -326,7 +343,9 @@ class Joint
 	end
 
 	def plug
-		@intf.GetPlugPose
+		p = Posed.new
+		@intf.GetPlugPose(p)
+		PoseRef.new(p, self, false)
 	end
 	def plug=(p)
 		@intf.SetPlugPose(p)

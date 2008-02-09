@@ -27,7 +27,7 @@ class SprSceneView < FXTreeList
 		@itemJoints = appendItem(nil, "joints (#{@scene.joints.size})")
 		@itemJoints.expanded = true
 		@scene.joints.each {|joint|
-			appendItem(@itemJoints, j.GetName(), nil, nil, j)
+			appendItem(@itemJoints, joint.name, nil, nil, joint)
 		}
 
 		# list of Shapes

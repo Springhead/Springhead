@@ -214,13 +214,29 @@ class SprMainWindow < FXMainWindow
 
 		# Œ`
 		$sprapp.shapes.add(SHAPE_BOX, 'shape_floor').size = Vec3f.new(30, 10, 30)
-		$sprapp.shapes.add(SHAPE_BOX, 'shape_box').size = Vec3f.new(0.1,0.1,0.1)
+		$sprapp.shapes.add(SHAPE_BOX, 'shape_box').size = Vec3f.new(0.2,0.2,0.2)
 
 		# °
 		floor = scene.objects.add('floor')
 		floor.dynamical = false
 		floor.shapes.add($sprapp.shapes['shape_floor'])
 		floor.pose.pos.y -= 5.0
+
+		# ½
+		box = scene.objects.add('box0')
+		box.dynamical = false
+		box.shapes.add($sprapp.shapes['shape_box'])
+		box.pose.pos.y += 0.5
+
+		box1 = scene.objects.add('box1')
+		box1.shapes.add($sprapp.shapes['shape_box'])
+
+		joint = scene.joints.add(JOINT_HINGE, box, box1)
+		joint.socket.pos = Vec3d.new(0.1, 0.1, 0.0)
+		print joint.socket.pos.y
+		joint.plug.pos = Vec3d.new(0.1, 0.1, 0.0)
+		print joint.plug.pos.y
+
 
 		# ƒJƒƒ‰
 		af = Affinef.new
@@ -515,7 +531,7 @@ class SprMainWindow < FXMainWindow
 	# step forward
 	def onSimForward(sender, sel, ptr)
 		$sprapp.Step()
-		drawScene()
+		$cameraview.drawScene()
 	end
 
 	# time handler
