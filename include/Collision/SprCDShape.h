@@ -56,7 +56,7 @@ protected:
 ///	•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÉŠÖŒW‚·‚éŞ¿
 struct PHMaterial{
 	PHMaterial(){
-		mu = mu0 = e = 0.2f;
+		mu = mu0 = e = 0.4f;
 	}
 	float mu;				///< “®–€C–€CŒW”
 	float mu0;				///< Ã~–€CŒW”
