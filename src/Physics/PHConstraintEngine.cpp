@@ -90,6 +90,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 		cutRing.MakeRing();
+		section.clear();
 //		cutRing.Print(DSTR);
 //		DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
 		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
@@ -125,7 +126,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			Vec3d pos;
 			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
 			pos = cutRing.local * pos;
-
+			section.push_back(pos);
 			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
 			point->scene = DCAST(PHScene, engine->GetScene());
 			point->engine = engine;
@@ -497,6 +498,7 @@ void PHConstraintEngine::Step(){
 	DSTR << " sup:" << ptimer.CountUS();
 #endif
 	IterateLCP();
+
 #ifdef REPORT_TIME
 	DSTR << " ite:" << ptimer.CountUS() << std::endl;
 #endif

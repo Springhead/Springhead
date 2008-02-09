@@ -22,6 +22,7 @@ class PHConstraintEngine;
 ///	形状の組
 class PHShapePairForLCP : public CDShapePair{
 public:
+	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．可視化のために保持
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
 };
