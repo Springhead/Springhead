@@ -40,7 +40,11 @@ public:
 		int ns0 = s0->NShape(), ns1 = s1->NShape();
 		shapePairs.resize(ns0, ns1);
 		for(int i = 0; i < ns0; i++)for(int j = 0; j < ns1; j++){
-			CDShapePair* sp = shapePairs.item(i, j);
+			TShapePair* sp = shapePairs.item(i, j);
+			if (!sp){
+				sp = DBG_NEW TShapePair();
+				shapePairs.item(i, j) = sp;
+			}
 			sp->shape[0] = solid[0]->GetShape(i)->Cast();
 			sp->shape[1] = solid[1]->GetShape(j)->Cast();
 		}
