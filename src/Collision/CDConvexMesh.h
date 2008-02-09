@@ -37,6 +37,8 @@ class CDFaces:public std::vector<CDFace>{
 
 ///	凸多面体
 class CDConvexMesh : public CDConvex, public CDConvexMeshIfInit{
+protected:
+	Vec3f center;
 public:
 	OBJECTDEF(CDConvexMesh, CDConvex);
 
@@ -58,8 +60,6 @@ public:
 
 	///	頂点から面や接続情報を生成する．
 	void CalcFace();
-	///	同一平面上で接続されている3角形をマージする
-	void MergeFace();
 	
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
@@ -72,7 +72,17 @@ public:
 	Vec3f* GetVertices();
 	size_t NVertex();
 
-	virtual bool GetDesc(void *desc) const ;
+	///	中心（大体真ん中）の位置を返す
+	virtual Vec3f GetCenter();
+	///
+	virtual bool GetDesc(void *desc) const;
+
+protected:
+	///	同一平面上で接続されている3角形をマージする
+	void MergeFace();
+	///	中心座標を計算する。
+	void CalcCenter();
+
 };
 
 }	//	namespace Spr

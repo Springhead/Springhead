@@ -57,7 +57,9 @@ bool CDConvexMesh::GetDesc(void *ptr) const {
 	desc->vertices = base;
 	return true;
 }
-
+Vec3f CDConvexMesh::GetCenter(){
+	return center;
+}
 
 bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();
@@ -199,6 +201,7 @@ void CDConvexMesh::CalcFace(){
 	}
 	//	凸多面体の面のうち，半平面表現に必要な面だけを前半に集める．
 	MergeFace();
+	CalcCenter();
 }
 void CDConvexMesh::MergeFace(){
 	//int nf = faces.size();
@@ -225,6 +228,14 @@ void CDConvexMesh::MergeFace(){
 	faces.insert(faces.end(), erased.begin(), erased.end());
 	//	DSTR << "Poly faces:" << nf << "->" << faces.size() << std::endl;
 }
+void CDConvexMesh::CalcCenter(){
+	center = Vec3f();
+	for(unsigned i=0; i<base.size(); ++i){
+		center += base[i];
+	}
+	center /= base.size();
+}
+
 Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 	int lastPos = -1;
 	float h = base[curPos] * v;
