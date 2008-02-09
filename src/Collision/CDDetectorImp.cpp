@@ -19,9 +19,7 @@ const double epsilon2 = epsilon*epsilon;
 
 bool bUseContactVolume=true;
 
-bool CDShapePair::Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Posed& pose1){
-	shape[0] = s0;
-	shape[1] = s1;
+bool CDShapePair::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;
 	
@@ -38,12 +36,9 @@ bool CDShapePair::Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& p
 	}
 	return rv;
 }
-bool CDShapePair::DetectContinuously(unsigned ct, 
-	const Posed& pose0, const Vec3d& delta0, const Vec3d& cog0, const Vec3d& dAng0,
-	const Posed& pose1, const Vec3d& delta1, const Vec3d& cog1, const Vec3d& dAng1){
+bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	shapePoseW[0] = pose0;
-	shapePoseW[1] = pose1;
-	
+	shapePoseW[1] = pose1;	
 	if (lastContactCount == unsigned(ct-1) ){	
 		//	ÇQâÒñ⁄à»ç~ÇÃê⁄êGÇÃèÍçá
 		shapePoseW[0].Pos() += delta0;

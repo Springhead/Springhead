@@ -16,7 +16,7 @@ class MyApp: public FWAppGLUT{
 protected:
 	bool bRun;
 public:
-	MyApp():bRun(false){
+	MyApp():bRun(true){
 	}
 	void Step(){
 		if (bRun){
@@ -74,7 +74,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app->GetSdk()->GetPHSdk()->CreateShape(boxdesc));
 #else	//	シーンをファイルからロードするばあい。
-	app->GetSdk()->LoadScene("save.x");
+	app->GetSdk()->LoadScene("scene.x");
 #endif
 	//	ウィンドウ1にシーンを表示するよう設定
 	FWAppGLUTDesc wd;
@@ -83,15 +83,14 @@ int SPR_CDECL main(int argc, char* argv[]){
 	w1->scene = app->GetSdk()->GetScene(0);
 
 	//	シーンのセーブ
-	//app->GetSdk()->SaveScene("save.x");
+	app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード
-/*	app->GetSdk()->LoadScene("save.x");
+	app->GetSdk()->LoadScene("save.x");
 	
 	//	ロードしたシーンをウィンドウ２に表示するように設定
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
 	FWWin* w2 = app->CreateWin(wd);
 	w2->scene = app->GetSdk()->GetScene(1);
-*/
 
 	app->Start();
 	return 0;

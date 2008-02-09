@@ -39,6 +39,11 @@ public:
 		solid[1] = s1;
 		int ns0 = s0->NShape(), ns1 = s1->NShape();
 		shapePairs.resize(ns0, ns1);
+		for(int i = 0; i < ns0; i++)for(int j = 0; j < ns1; j++){
+			CDShapePair* sp = shapePairs.item(i, j);
+			sp->shape[0] = solid[0]->GetShape(i)->Cast();
+			sp->shape[1] = solid[1]->GetShape(j)->Cast();
+		}
 		bEnabled = true;
 	}
 
@@ -60,7 +65,6 @@ public:
 			//このshape pairの交差判定/法線と接触の位置を求める．
 			if(sp->Detect(
 				ct,
-				DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),
 				solid[0]->GetPose() * solid[0]->GetShapePose(i), solid[1]->GetPose() * solid[1]->GetShapePose(j)))
 			{
 				found = true;
@@ -80,8 +84,6 @@ public:
 		
 		std::vector<Vec3d> deltaPos[2];
 		std::vector<Posed> shapePose[2];
-		Vec3d center[2];
-		Vec3d deltaAngle[2];
 		for(int i = 0; i < 2; i++){
 			deltaPos[i].resize(solid[i]->NShape());
 			shapePose[i].resize(solid[i]->NShape());
@@ -93,8 +95,6 @@ public:
 				shapePose[i][j] = solid[i]->GetPose() * lp;
 				shapePose[i][j].Pos() -= deltaPos[i][j];
 			}
-			center[i] = solid[i]->GetCenterPosition();
-			deltaAngle[i] = solid[i]->GetDeltaAngle();
 		}
 		// 全てのshape pairについて交差を調べる
 		bool found = false;
@@ -103,13 +103,10 @@ public:
 			Vec3d d0 = deltaPos[0][i];
 			Vec3d d1 = deltaPos[1][j];
 			sp = shapePairs.item(i, j);
-			sp->shape[0] = solid[0]->GetShape(i)->Cast();
-			sp->shape[1] = solid[1]->GetShape(j)->Cast();
-
 			//このshape pairの交差判定/法線と接触の位置を求める．
 			if(sp->DetectContinuously(ct, 
-				shapePose[0][i], deltaPos[0][i], center[0], deltaAngle[0],
-				shapePose[1][j], deltaPos[1][j], center[1], deltaAngle[1]))
+				shapePose[0][i], deltaPos[0][i],
+				shapePose[1][j], deltaPos[1][j]))
 			{
 				found = true;
 				OnContDetect(sp, engine, ct, dt);
@@ -304,16 +301,26 @@ public:
 		for(i = 0; i < isolid; i++){
 			sp = solidPairs.item(i, isolid);
 			slhs = sp->solid[0];
-			sp->shapePairs.resize(slhs->NShape(), solid->NShape());
-			for(j = 0; j < slhs->NShape(); j++)
-				sp->shapePairs.item(j, solid->NShape()-1) = DBG_NEW TShapePair();
+			srhs = solid;
+			sp->shapePairs.resize(slhs->NShape(), srhs->NShape());
+			for(j = 0; j < slhs->NShape(); j++){
+				TShapePair* n = DBG_NEW TShapePair();
+				n->shape[0] = slhs->GetShape(j)->Cast();
+				n->shape[1] = srhs->GetShape(srhs->NShape()-1)->Cast();
+				sp->shapePairs.item(j, srhs->NShape()-1) = n;
+			}
 		}
 		for(i = isolid+1; i < (int)solids.size(); i++){
 			sp = solidPairs.item(isolid, i);
+			slhs = solid;
 			srhs = sp->solid[1];
 			sp->shapePairs.resize(solid->NShape(), srhs->NShape());
-			for(j = 0; j < srhs->NShape(); j++)
-				sp->shapePairs.item(solid->NShape()-1, j) = DBG_NEW TShapePair();
+			for(j = 0; j < srhs->NShape(); j++){
+				TShapePair* n = DBG_NEW TShapePair();
+				n->shape[0] = slhs->GetShape(slhs->NShape()-1)->Cast();
+				n->shape[1] = srhs->GetShape(j)->Cast();
+				sp->shapePairs.item(slhs->NShape()-1, j) = n;
+			}
 		}
 	}
 
