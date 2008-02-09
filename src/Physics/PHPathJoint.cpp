@@ -49,7 +49,6 @@ void PHPath::Rollover(double& s){
 	double upper = back().s;
 	assert(lower < upper);
 	double range = upper - lower;
-	//DSTR << s << ", " << range << endl;
 	// ‹ê“÷‚Ìô
 	if(abs(s) > 1.0e3)
 		s = 0.0;
@@ -120,7 +119,6 @@ void PHPath::CompJacobian(){
 		// 0deg (q = [1 0 0 0])‚Æ360deg (q = [-1 0 0 0])‚Í‰ñ“]‚Æ‚µ‚Ä‚Í“¯‚¶‚¾‚ª”’l“I‚É—£‚ê‚Ä‚¢‚é
 		if(abs(p0.Ori().w - p1.Ori().w) > 1.99)
 			p0.Ori() = -1.0 * p0.Ori();
-		DSTR << it->pose << p0 << p1 << endl;
 		// ·•ª‚ð‚Æ‚é
 		if(it == begin() || itnext == end())
 			 pd = (p1 - p0) * div;
@@ -161,14 +159,11 @@ void PHPath::GetPose(double s, Posed& pose){
 	if(angle < -M_PI) angle += 2 * M_PI;
 	angle *= (s - lhs.s) * tmp;
 	pose.Ori() = lhs.pose.Ori() * Quaterniond::Rot(angle, axis);
-	//DSTR << lhs.pose << ", " << rhs.pose << ", " << pose << ", " << lhs.s << ", " << rhs.s << ", " << s << endl;
 }
 
 void PHPath::GetJacobian(double s, Matrix6d& J){
 	if(!bReady){
 		CompJacobian();
-		for(iterator it = begin(); it != end(); it++)
-			DSTR << it->s << ", " << it->J.row(5) << endl;
 	}
 	iterator it = Find(s);
 	if(it == begin()){
@@ -295,7 +290,6 @@ void PHPathJointNode::CompJointJacobian(){
 	Matrix6d Jq;
 	j->path->GetJacobian(j->position[0], Jq);
 	(Vec6d&)J[0] = Jq.row(5);
-	DSTR << (const Vec6d&)J[0] << endl;
 	PHTreeNode1D::CompJointJacobian();
 }
 void PHPathJointNode::CompJointCoriolisAccel(){

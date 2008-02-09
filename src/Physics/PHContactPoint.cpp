@@ -83,13 +83,16 @@ void PHContactPoint::SetConstrainedIndex(bool* con){
 // double PHContactPoint::correctionSpring = 100.0;
 // double PHContactPoint::correctionDamper = 10.0;
 double PHContactPoint::correctionSpring = 1000.0;
-double PHContactPoint::correctionDamper = 100.0;
+double PHContactPoint::correctionDamper = 1000.0;
 
 
 void PHContactPoint::CompBias(){
 	//	correctionを位置LCPで別に行う場合は、速度を変更しての位置補正はしない。
 	if (engine->numIterContactCorrection) return;
+	double dtinv = 1.0 / scene->GetTimeStep();
+	double overlap = 0.01;
 
+#if 1
 	//	跳ね返り係数: 2物体の平均値を使う
 	double e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
 	
@@ -101,13 +104,11 @@ void PHContactPoint::CompBias(){
 		e=0;
 		contactCorrectionRate = 0.3;
 	}
-	double overlap = 0.01;
 	if (overlap > shapePair->depth) overlap = shapePair->depth;
 	db[0] = - contactCorrectionRate * (shapePair->depth - overlap) / scene->GetTimeStep() + e * vjrel[0];
+#endif
 
 #if 0
-
-	double dtinv = 1.0 / scene->GetTimeStep();
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
 	/*	hase	本当は 1e-3は引きすぎ
 		depth 分だけCorrectionを入れると接触が不連続になるので，depth-epsilonで良いが，
@@ -120,7 +121,6 @@ void PHContactPoint::CompBias(){
 
 		2剛体間の接触をひとつの制約としてあらわせるようになれば解決すると思う．	
 	*/
-#if 0
 	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v().x;
 	if (err < 0) err = 0;
 	if (err){
@@ -130,12 +130,12 @@ void PHContactPoint::CompBias(){
 //		DSTR << "err: " << err << std::edl;
 		db.v().x = -err * engine->velCorrectionRate;
 	}
-#else
-//	const double damper = 100.0, spring = 10.0;
+#endif
+
+#if 0
 	double tmp = 1.0 / (correctionDamper + correctionSpring * scene->GetTimeStep());
 	dA[0] = tmp * dtinv;
-	db[0] = -correctionSpring * (shapePair->depth - 1e-3) * tmp;
-#endif
+	db[0] = -correctionSpring * max(0.0, shapePair->depth - overlap) * tmp;
 #endif
 }
 
