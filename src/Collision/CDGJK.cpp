@@ -202,6 +202,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	CalcSupport(0);
 	if (w[0].Z() > endLength) 
 		return -1;	//	range内では接触しないが，将来接触するかもしれない．
+
+/*	これをやると過去の接触がきちんと判定できないので、呼び出し側が困る。
 	if (w[0].Z() < 0){						//	反対側のsupportを求めてみて，範囲外か確認
 		v[3] = Vec3d(0,0,-1);
 		CalcSupport(3);
@@ -210,6 +212,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			return -2;			
 		}
 	}
+*/
 	//	w1を求める
 	v[1] = Vec3d(w[0].X(), w[0].Y(), 0);
 	if (v[1].XY().square() < epsilon2){		//	w0=衝突点の場合

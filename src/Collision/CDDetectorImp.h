@@ -51,7 +51,10 @@ public:
 	///	接触判定
 	bool Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Posed& pose1);
 	///	連続接触判定．同時に法線/中心なども計算してしまう．
-	bool DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
+	bool DetectContinuously(unsigned ct, 
+		const Posed& pose0, const Vec3d& delta0, const Vec3d& cog0, const Vec3d& dAngle0, 
+		const Posed& pose1, const Vec3d& delta1, const Vec3d& cog1, const Vec3d& dAngle1);
+
 	///	法線の計算
 	void CalcNormal();
 };

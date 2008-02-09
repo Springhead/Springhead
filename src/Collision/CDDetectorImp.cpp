@@ -38,9 +38,9 @@ bool CDShapePair::Detect(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& p
 	}
 	return rv;
 }
-bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
-	shape[0] = s0;
-	shape[1] = s1;
+bool CDShapePair::DetectContinuously(unsigned ct, 
+	const Posed& pose0, const Vec3d& delta0, const Vec3d& cog0, const Vec3d& dAng0,
+	const Posed& pose1, const Vec3d& delta1, const Vec3d& cog1, const Vec3d& dAng1){
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;
 	
@@ -53,16 +53,12 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 		Vec3d dir = -normal * 1e-8;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
 
-		if (res <= 0) {
+		if (res <= 0) {	//	範囲内では、接触していない場合
 			return false;
 		}
-		if (dist > 0){
-			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
+		if (dist > 0){	//	距離 > 0 = 離れている
 			return false;	//	法線方向に進めないと接触しない場合．
 		}
-		//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-		//DSTR << " p:" << shapePoseW[0]*closestPoint[0] << " q:" << shapePoseW[1]*closestPoint[1] << std::endl;
-
 		depth = dist * dir * normal;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 	}else{
@@ -77,12 +73,10 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 			//	res==-2:	range内では接触していないが過去していた可能性がある．
 			if (res <= 0) return false;
 
-			double rangeLen = delta * dir;
+			double rangeLen = delta * dir;		//	dirはContFindCommonPoint内で正規化されるのでノルムは1
 			toi = dist / rangeLen;
 			if (toi > 1) return false;	//	接触時刻がこのステップより未来．
 			if (toi >= 0){	//	今回の移動で接触していれば
-				//DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
-				//DSTR << " p:" << shapePoseW[0]*closestPoint[0] + toi*delta0 << " q:" << shapePoseW[1]*closestPoint[1] + toi*delta1 << std::endl;
 				shapePoseW[0].Pos() += toi*delta0;
 				shapePoseW[1].Pos() += toi*delta1;
 				center = commonPoint = shapePoseW[0] * closestPoint[0];
@@ -90,39 +84,49 @@ bool CDShapePair::DetectContinuously(unsigned ct, CDConvex* s0, CDConvex* s1, co
 				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
 				//	交差部の形状の計算は，衝突時点の位置で行うが，depth は現時点のdepth
 				depth = -(1-toi) * delta * normal + 2e-8;
-			}else{	
-				//	toi < 0
-				//	過去に接触を開始したかもしれないが、現在触っているかはわからないので確認
-				//	向きを逆にして toiを求めてみる。 
+			}else{
+				//	とりあえず現在位置で、接触しているかどうか、確認する。
+				shapePoseW[0].Pos() += delta0;
+				shapePoseW[1].Pos() += delta1;
 				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -dir, normal, closestPoint[0], closestPoint[1], dist);
-				if (res <= 0) return false;	//	res < 0 -> range内では接触していないので抜ける。
-				if (dist > 0) return false;	//	distが正なら接触していないので抜ける。
+				if (res <= 0) return false;	//	接触していないので抜ける。
+				if (dist > 0) return false;	//	dist正なら、現在は接触していないので抜ける。
+				//	あとはtoi<0の処理に任せる
 			}
 		}else{
 			toi = -1;
-		}
-		if (toi < 0){	//	最初から接触していた or 速度が小さすぎる
 			//	現在の位置に移動させる
 			shapePoseW[0].Pos() += delta0;
 			shapePoseW[1].Pos() += delta1;
-			
-			//	法線を形状の中心を結ぶ向きに仮に設定する
+		}
+		if (toi < 0){
+			/*	toi < 0 の場合、次の可能性がある。
+				- 回転が原因で接触が起きたため、重心速度に基づくtoiでは、接触検出できない。
+				- 速度が小さすぎてtoiが計算できない。
+				- 最初から接触していた。
+				- ユーザによる非物理移動が原因で接触が起きたため、toiで接触検出できない。
+
+				このような場合は、形状の中心間を結ぶベクトルを仮法線とする。
+				仮法線の向きで接触法線を求め、これを本法線とする。
+				さらに、本法線の向きで、侵入量と法線、最近傍点を計算する。	*/
+
+			//	仮法線（形状の中心を結ぶ向き）の計算
 			normal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
 			double norm = normal.norm();
 			if (norm > epsilon) normal /= norm;
 			else normal = Vec3d(0,1,0);
 
-			//	仮の法線の向きに動かして，法線を更新し，侵入量などを求める．
+			//	仮の法線の向きに動かして，法線を更新する。
 			Vec3d dir = -normal;
 			int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
 			if (res <= 0) return false;
 			if (depth > 0) return false;
 
-			//	depth < 0 (逆)向きに抜けている可能性があるので、向きを逆にして確認
-			Vec3d n; double dist;
-			res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -dir, n, closestPoint[0], closestPoint[1], dist);
-			if (res <= 0) return false;	//	res < 0 -> range内では接触していないので抜ける。
-			if (dist > 0) return false;	//	distが正なら接触していないので抜ける。
+			//	法線を更新してもう一度やってみる。
+			dir = -normal;
+			res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
+			if (res <= 0) return false;
+			if (depth > 0) return false;
 
 			depth *= -1;
 			center = commonPoint = shapePoseW[0] * closestPoint[0];

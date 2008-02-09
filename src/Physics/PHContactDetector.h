@@ -80,6 +80,8 @@ public:
 		
 		std::vector<Vec3d> deltaPos[2];
 		std::vector<Posed> shapePose[2];
+		Vec3d center[2];
+		Vec3d deltaAngle[2];
 		for(int i = 0; i < 2; i++){
 			deltaPos[i].resize(solid[i]->NShape());
 			shapePose[i].resize(solid[i]->NShape());
@@ -91,6 +93,8 @@ public:
 				shapePose[i][j] = solid[i]->GetPose() * lp;
 				shapePose[i][j].Pos() -= deltaPos[i][j];
 			}
+			center[i] = solid[i]->GetCenterPosition();
+			deltaAngle[i] = solid[i]->GetDeltaAngle();
 		}
 		// 全てのshape pairについて交差を調べる
 		bool found = false;
@@ -99,12 +103,13 @@ public:
 			Vec3d d0 = deltaPos[0][i];
 			Vec3d d1 = deltaPos[1][j];
 			sp = shapePairs.item(i, j);
+			sp->shape[0] = solid[0]->GetShape(i)->Cast();
+			sp->shape[1] = solid[1]->GetShape(j)->Cast();
 
 			//このshape pairの交差判定/法線と接触の位置を求める．
-			if(sp->DetectContinuously(
-				ct,
-				DCAST(CDConvex, solid[0]->GetShape(i)), DCAST(CDConvex, solid[1]->GetShape(j)),
-				shapePose[0][i], deltaPos[0][i], shapePose[1][j], deltaPos[1][j]))
+			if(sp->DetectContinuously(ct, 
+				shapePose[0][i], deltaPos[0][i], center[0], deltaAngle[0],
+				shapePose[1][j], deltaPos[1][j], center[1], deltaAngle[1]))
 			{
 				found = true;
 				OnContDetect(sp, engine, ct, dt);

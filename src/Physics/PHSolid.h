@@ -210,6 +210,7 @@ public:
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetDeltaPosition() const ;
 	Vec3d		GetDeltaPosition(const Vec3d& pos) const ;
+	Vec3d		GetDeltaAngle() const;
 	Vec3d		GetPrevFramePosition() const { return pose.Pos()-GetDeltaPosition(); }
 	Vec3d		GetCenterPosition() const {return pose*center;} 	///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){					///< 重心位置の設定

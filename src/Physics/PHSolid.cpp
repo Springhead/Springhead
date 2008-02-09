@@ -103,6 +103,10 @@ Vec3d PHSolid::GetDeltaPosition() const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	return velocity * s->GetTimeStep();
 }
+Vec3d PHSolid::GetDeltaAngle() const {
+	PHScene* s = DCAST(PHScene, nameManager);
+	return angVel * s->GetTimeStep();
+}
 Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	double dt = s->GetTimeStep();
