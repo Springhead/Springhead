@@ -246,6 +246,7 @@ void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t
 		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
 		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
 		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case GRRenderBaseIf::LINE_LOOP:			mode = GL_LINE_LOOP;		break;
 		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
 		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
 		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
@@ -266,6 +267,7 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;
 		case GRRenderBaseIf::LINES:				mode = GL_LINES;			break;
 		case GRRenderBaseIf::LINE_STRIP:		mode = GL_LINE_STRIP;		break;
+		case GRRenderBaseIf::LINE_LOOP:			mode = GL_LINE_LOOP;		break;
 		case GRRenderBaseIf::TRIANGLES:			mode = GL_TRIANGLES;		break;
 		case GRRenderBaseIf::TRIANGLE_STRIP:	mode = GL_TRIANGLE_STRIP;	break;
 		case GRRenderBaseIf::TRIANGLE_FAN:		mode = GL_TRIANGLE_FAN;		break;
@@ -278,9 +280,33 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 }
-void GRDeviceGL::DrawSphere(float radius, int slices, int stacks){
-	glutSolidSphere(radius, slices, stacks);
+void GRDeviceGL::DrawSphere(float radius, int slices, int stacks, bool solid){
+	if(solid)
+		 glutSolidSphere(radius, slices, stacks);
+	else glutWireSphere(radius, slices, stacks);
 }
+void GRDeviceGL::DrawCone(float radius, float height, int slice, bool solid){
+	if(solid)
+		 glutSolidCone(radius, height, slice, 1);
+	else glutWireCone(radius, height, slice, 1);
+}
+void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid){
+	// åªèÛÇ≈ÇÕë§ñ ÇÃÇ›
+	glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
+	float step = (float)(M_PI * 2.0f) / (float)slice;
+	float t = 0.0;
+	float x,y;
+	for (int i=0; i<=slice; i++) {
+		x=sin(t);
+		y=cos(t);
+		glNormal3f(x, y, 0.0);
+		glVertex3f(radius * x, radius * y,  height/2);
+		glVertex3f(radius * x, radius * y, -height/2);
+		t += step;
+	}
+	glEnd();
+}
+	
 
 ///	DiplayList ÇÃçÏê¨
 int GRDeviceGL::StartList(){

@@ -11,7 +11,8 @@
 #endif
 #include <GL/glut.h>
 
-#include <Physics/PHConstraint.h>
+#include <Physics/PHConstraintEngine.h>
+#include <Physics/PHContactPoint.h>
 
 namespace Spr {;
 //----------------------------------------------------------------------------
@@ -63,16 +64,17 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 	if (!scene) return;
 	PHSolidIf **solids = scene->GetSolids();
 	for(int i = 0; i < scene->NSolids(); ++i){
-		this->SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
-		this->DrawSolid(solids[i]);
+		SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
+		DrawSolid(solids[i]);
 	}
 	SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
 	for(int i = 0; i < scene->NJoints(); ++i){
-		this->DrawConstraint(scene->GetJoint(i));
+		DrawConstraint(scene->GetJoint(i));
 	}
 	SetMaterialSample((GRDebugRenderIf::TMaterialSample)1);
 	for(int i = 0; i < scene->NContacts(); ++i){
-		this->DrawConstraint(scene->GetContact(i));
+		DrawConstraint(scene->GetContact(i));
+		DrawContact(scene->GetContact(i));
 	}
 }
 
@@ -200,6 +202,19 @@ void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 	}
 }
 
+void GRDebugRender::DrawContact(PHContactPointIf* con){
+	if(!renderContact)
+		return;
+	PHContactPoint* c = con->Cast();
+	if(c->shapePair->section.size() < 3)
+		return;
+	std::vector<Vec3f> vtx;
+	vtx.resize(c->shapePair->section.size());
+	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
+
+	DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
+}
+
 void GRDebugRender::DrawCapsule(CDCapsuleIf* cap, bool solid){
 	float r = cap->GetRadius();
 	float l = cap->GetLength();
@@ -230,30 +245,7 @@ void GRDebugRender::DrawMesh(CDConvexMeshIf* mesh, bool solid){
 	}
 }
 
-void GRDebugRender::DrawCone(float radius, float height, int slice, bool solid){
-	if(solid)
-		glutSolidCone(radius, height, slice, 1);
-	else
-		glutWireCone(radius, height, slice, 1);
-}
-
-void GRDebugRender::DrawCylinder(float radius, float height, int slice, bool solid){
-	// 現状では側面のみ
-	glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
-	float step = (float)(M_PI * 2.0f) / (float)slice;
-	float t = 0.0;
-	float x,y;
-	for (int i=0; i<=slice; i++) {
-		x=sin(t);
-		y=cos(t);
-		glNormal3f(x, y, 0.0);
-		glVertex3f(radius * x, radius * y,  height/2);
-		glVertex3f(radius * x, radius * y, -height/2);
-		t += step;
-	}
-	glEnd();
-}
-
+/*
 void GRDebugRender::DrawAxis(bool solid){
 	this->PushModelMatrix();
 	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f));
@@ -262,8 +254,18 @@ void GRDebugRender::DrawAxis(bool solid){
 	DrawCone(0.2f, 0.3f, 8, solid);
 	this->PopModelMatrix();
 }
+*/
 
 void GRDebugRender::DrawCoordinateAxis(bool solid){
+	PushModelMatrix();
+	MultModelMatrix(Affinef::Scale(scaleAxis, scaleAxis, scaleAxis));
+	// シンプルに線分三本
+	float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
+	size_t idx[6] = {0, 1, 0, 2, 0, 3};
+	DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 6);
+	PopModelMatrix();
+	/*
+	// 太さのある矢印
 	// z
 	DrawAxis(solid);
 	// x
@@ -276,7 +278,9 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	this->MultModelMatrix(Affinef::Rot(-0.5f*M_PI, 'x'));
 	DrawAxis(solid);
 	this->PopModelMatrix();	
+	*/
 	/*
+	// 箱で表現
 	double length=0.5, width=length/10.0;
 	this->PushModelMatrix();
 	glTranslatef(length/2, 0, 0); glScalef(length, width, width); glutSolidCube(1.0);

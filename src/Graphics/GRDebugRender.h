@@ -25,7 +25,7 @@ protected:
 	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)
 
 	bool	modeSolid, modeWire;				/// 描画モード
-	bool	renderAxis, renderForce;
+	bool	renderAxis, renderForce, renderContact;
 	float	scaleAxis, scaleForce;
 public:
 	/**  コンストラクタ  */
@@ -34,6 +34,7 @@ public:
 	virtual void DrawWorldAxis(PHSceneIf* scene);
 	virtual void DrawSolid(PHSolidIf* so);
 	virtual void DrawConstraint(PHConstraintIf* con);
+	virtual void DrawContact(PHContactPointIf* con);
 	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
 	virtual void SetRenderMode(bool solid = true, bool wire = false){ modeSolid = solid; modeWire = wire; }
 	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f){
@@ -44,17 +45,14 @@ public:
 		renderForce = enable;
 		scaleForce = scale;
 	}
+	virtual void EnableRenderContact(bool enable = true){ renderContact = enable; }
 
 	/// カプセルの描画
 	void DrawCapsule(CDCapsuleIf* cap, bool solid);
 	/// メッシュの描画
 	void DrawMesh(CDConvexMeshIf* mesh, bool solid);
-	/// コーンの描画
-	void DrawCone(float radius, float height, int slice, bool solid);
-	/// シリンダの描画
-	void DrawCylinder(float radius, float height, int slice, bool solid);
 	/// 座標軸の描画
-	void DrawAxis(bool solid);
+	//void DrawAxis(bool solid);
 	void DrawCoordinateAxis(bool solid);
 	/// 線分の描画
 	void DrawLine(const Vec3d& p0, const Vec3d& p1);

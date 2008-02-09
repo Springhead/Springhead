@@ -174,6 +174,7 @@ struct GRRenderBaseIf: public ObjectIf{
 		POINTS,
 		LINES,
 		LINE_STRIP,
+		LINE_LOOP,
 		TRIANGLES,
 		TRIANGLE_STRIP,
 		TRIANGLE_FAN,
@@ -258,7 +259,13 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}	///	球体を描画
-	virtual void DrawSphere(float radius, int slices, int stacks)=0;
+	/// 球体を描画
+	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true)=0;
+	/// 円錐の描画
+	virtual void DrawCone(float radius, float height, int slice, bool solid=true)=0;
+	/// 円筒の描画
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true)=0;
+	
 	
 	///	DiplayList の作成(記録開始)
 	virtual int StartList()=0;
@@ -405,13 +412,15 @@ struct GRDebugRenderIf:public GRRenderIf{
 		 @param wire ワイヤ描画
 	 */
 	virtual void SetRenderMode(bool solid = true, bool wire = false) = 0;
-	/**	 @brief 各関節の座標軸の描画
-	 */
+	
+	/**	 @brief 各関節の座標軸の描画 */
 	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f) = 0;
 
-	/**  @brief 各関節の力の描画
-	 */
+	/**  @brief 各関節の力の描画 */
 	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f) = 0;
+
+	/**  @brief 接触面の描画 */
+	virtual void EnableRenderContact(bool enable = true) = 0;
 
 };
 

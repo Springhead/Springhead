@@ -112,7 +112,11 @@ public:
 	///	頂点座標とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	///	球体の描画
-	void DrawSphere(float radius, int slices, int stacks);
+	void DrawSphere(float radius, int slices, int stacks, bool solid=true);
+	/// 円錐の描画
+	void DrawCone(float radius, float height, int slice, bool solid=true);
+	/// 円筒の描画
+	void DrawCylinder(float radius, float height, int slice, bool solid=true);
 	///	DiplayList の作成(記録開始)
 	virtual int StartList();
 	///	DiplayList の作成の終了(記録終了)

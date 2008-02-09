@@ -207,8 +207,14 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t * idx, GRVertexArray * arrays, size_t count){
 		return ((OBJ*)(MIF*)this)->DrawArrays(ty, idx, arrays, count);
 	}
-	virtual void DrawSphere(float radius, int slices, int stacks){
-		return ((OBJ*)(MIF*)this)->DrawSphere(radius, slices, stacks);
+	virtual void DrawSphere(float radius, int slices, int stacks, bool solid = true){
+		return ((OBJ*)(MIF*)this)->DrawSphere(radius, slices, stacks, solid);
+	}
+	virtual void DrawCone(float radius, float height, int slice, bool solid = true){
+		return ((OBJ*)(MIF*)this)->DrawCone(radius, height, slice, solid);
+	}
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid = true){
+		return ((OBJ*)(MIF*)this)->DrawCylinder(radius, height, slice, solid);
 	}
 	virtual int StartList(){
 		return ((OBJ*)(MIF*)this)->StartList();
@@ -352,6 +358,9 @@ struct GRDebugRenderIfStubTemplate: public GRRenderIfStubTemplate<IF, MIF, OBJ> 
 	}
 	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f){
 		return ((OBJ*)(MIF*)this)->EnableRenderForce(enable, scale);
+	}
+	virtual void EnableRenderContact(bool enable = true){
+		return ((OBJ*)(MIF*)this)->EnableRenderContact(enable);
 	}
 };
 struct GRDebugRenderIf;	class GRDebugRender;

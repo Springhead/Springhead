@@ -112,8 +112,12 @@ public:
 	///	頂点とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){}
 	///	球体を描画
-	virtual void DrawSphere(float radius, int slices, int stacks){}
- 	///	頂点の成分ごとの配列を指定して，プリミティブを描画
+	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true){}
+ 	/// 円錐の描画
+	virtual void DrawCone(float radius, float height, int slice, bool solid=true){}
+	/// 円筒の描画
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true){}
+	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
@@ -197,8 +201,12 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,												\
 		size_t* idx, void* vtx, size_t ct, size_t st=0)														\
 		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }															\
-	virtual void DrawSphere(float radius, int stacks, int slice)											\
-		{ ptr DrawSphere(radius, stacks, slice); }															\
+	virtual void DrawSphere(float radius, int stacks, int slice, bool solid = true)							\
+		{ ptr DrawSphere(radius, stacks, slice, solid); }													\
+	virtual void DrawCone(float radius, float height, int slice, bool solid=true)							\
+		{ ptr DrawCone(radius, height, slice, solid); }														\
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true)						\
+		{ ptr DrawCylinder(radius, height, slice, solid); }													\
 	virtual int StartList()																					\
 		{ return ptr StartList(); }																			\
 	virtual void EndList()																					\
