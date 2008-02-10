@@ -302,6 +302,13 @@ struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	/** @brief 剛体の体積総和を返す
 	*/
 	virtual double VSolids() = 0;
+	/** @brief ボディの総質量を返す
+	*/
+	virtual double	GetTotalMass() = 0;
+	/** @brief ボディの総質量を設定する
+	*/
+	virtual void	SetTotalMass(double value) = 0;
+
 };
 
 /// 4足動物モデルのデスクリプタ

@@ -127,7 +127,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	fMaxLeftElbow		= 10;
 	fMaxLeftFrontKnee	= 10;
 	fMaxLeftFrontAnkle	= 100;
-	fMaxLeftHip			= 10;
+	fMaxLeftHip			= 100;
 	fMaxLeftStifle		= 10;
 	fMaxLeftRearKnee	= 10;
 	fMaxLeftRearAnkle	= 100;
@@ -1075,6 +1075,16 @@ double CRFourLegsAnimalBody::VSolids(){
 	return vSum;
 }
 
+double CRFourLegsAnimalBody::GetTotalMass(){
+	return totalMass;
+}
+
+void CRFourLegsAnimalBody::SetTotalMass(double value){
+	totalMass = value;
+	for(int i = 0; i < NSolids(); i++){
+		solids[i]->SetMass(totalMass * VSolid(i) / VSolids());	
+	}		
+}
 
 }//end of the namespace Spr;
 

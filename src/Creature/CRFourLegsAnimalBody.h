@@ -78,7 +78,6 @@ public:
 		Init();
 	}
 
-
 	// インタフェースの実装
 	virtual void	Init();						//< 初期化を実行する
 	virtual Vec3d	GetUpperCenterOfMass();		//< 上体の剛体の重心を得る
@@ -88,6 +87,8 @@ public:
 	virtual int		NHingeJoints();				//< ボディに含まれているヒンジジョイントの数を返す
 	virtual double	VSolid(int i);				//< i番目の剛体の体積を返す
 	virtual double	VSolids();					//< 剛体の体積総和を返す
+	virtual double	GetTotalMass();				//< 総質量を返す
+	virtual void	SetTotalMass(double value);	//< 総質量を設定する
 };
 
 }

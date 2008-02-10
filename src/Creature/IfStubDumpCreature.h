@@ -83,6 +83,12 @@ struct CRFourLegsAnimalBodyIfStubTemplate: public CRBodyIfStubTemplate<IF, MIF, 
 	virtual double VSolids(){
 		return ((OBJ*)(MIF*)this)->VSolids();
 	}
+	virtual double GetTotalMass(){
+		return ((OBJ*)(MIF*)this)->GetTotalMass();
+	}
+	virtual void SetTotalMass(double value){
+		return ((OBJ*)(MIF*)this)->SetTotalMass(value);
+	}
 };
 struct CRFourLegsAnimalBodyIf;	class CRFourLegsAnimalBody;
 typedef CRFourLegsAnimalBodyIfStubTemplate<CRFourLegsAnimalBodyIf, ObjectIfBuf, CRFourLegsAnimalBody>	CRFourLegsAnimalBodyIfStub;
