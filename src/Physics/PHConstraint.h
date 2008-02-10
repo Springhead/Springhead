@@ -104,7 +104,7 @@ public:
 	virtual Vec3d		 GetRelativePoseR(){return Xjrel.r;}
 	virtual Quaterniond	 GetRelativePoseQ(){return Xjrel.q;}
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
-	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v(); _t = f.w();}
+	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v() / scene->GetTimeStep(); _t = f.w() / scene->GetTimeStep();}
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
 	virtual ObjectIf*	 GetChildObject(size_t i);

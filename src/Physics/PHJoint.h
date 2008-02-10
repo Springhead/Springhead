@@ -69,9 +69,9 @@ public:
 	virtual double	GetSpringOrigin(){return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper(){return damper;}
-	virtual void	SetTorqueMax(double max){fMax = max;}
+	virtual void	SetTorqueMax(double max){fMax = max / scene->GetTimeStep();}
 	virtual double	GetTorqueMax(){return fMax;}
-	virtual void	SetTorqueMin(double min){fMin = min;}
+	virtual void	SetTorqueMin(double min){fMin = min / scene->GetTimeStep();}
 	virtual double	GetTorqueMin(){return fMin;}
 
 	/// オーバライド
