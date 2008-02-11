@@ -54,6 +54,7 @@ public:
 		r->SetRenderMode(false, true);
 //		r->EnableRenderAxis();
 		r->EnableRenderForce();
+		r->EnableRenderContact();
 #endif
 		wr->render->SetViewMatrix(cameraInfo.view.inv());
 		FWAppGLUT::Display();

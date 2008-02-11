@@ -211,7 +211,8 @@ void GRDebugRender::DrawContact(PHContactPointIf* con){
 	std::vector<Vec3f> vtx;
 	vtx.resize(c->shapePair->section.size());
 	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
-
+	
+	SetVertexFormat(GRVertexElement::vfP3f);
 	DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
 }
 
@@ -257,6 +258,7 @@ void GRDebugRender::DrawAxis(bool solid){
 */
 
 void GRDebugRender::DrawCoordinateAxis(bool solid){
+	SetVertexFormat(GRVertexElement::vfP3f);
 	PushModelMatrix();
 	MultModelMatrix(Affinef::Scale(scaleAxis, scaleAxis, scaleAxis));
 	// シンプルに線分三本
@@ -295,6 +297,7 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 }
 
 void GRDebugRender::DrawLine(const Vec3d& p0, const Vec3d& p1){
+	SetVertexFormat(GRVertexElement::vfP3f);
 	glBegin(GL_LINES);
 	glVertex3dv((const double*)&p0);
 	glVertex3dv((const double*)&p1);

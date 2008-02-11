@@ -18,6 +18,7 @@ static bool bDebug;
 
 
 #include "Collision.h"
+#include "CDDetectorImp.h"
 #include <Foundation/Scene.h>
 #include <fstream>
 #include <windows.h>
@@ -96,18 +97,17 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
 	return rv;
 }
 
-int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, 
-	Vec3d& pa, Vec3d& pb, double& dist);
-void ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, 
-	Vec3d& pa, Vec3d& pb, double& dist){
+void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	std::ofstream file("ContFindCommonPointSaveParam.txt");
 	SaveShape(file, (CDConvex*)a);
 	SaveShape(file, (CDConvex*)b);
 	file << a2w << std::endl;
 	file << b2w << std::endl;
-	file << range << std::endl;
+	file << dir << std::endl;
+	file << start << std::endl;
+	file << end << std::endl;
 	file << normal << std::endl;
 	file << pa << std::endl;
 	file << pb << std::endl;
@@ -118,22 +118,24 @@ void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
 	const CDConvex* a;
 	const CDConvex* b;
 	Posed a2w, b2w;
-	Vec3d range, normal, pa, pb;
-	double dist;
+	Vec3d dir, normal, pa, pb;
+	double dist, start, end;
 	a = LoadShape(file, sdk);
 	b = LoadShape(file, sdk);
 	file >> a2w;
 	file >> b2w;
-	file >> range;
+	file >> dir;
+	file >> start;
+	file >> end;
 	file >> normal;
 	file >> pa;
 	file >> pb;
 	file >> dist;
 
-	Vec3f dir = b2w.Ori() * Vec3f(0,0,1);
-	DSTR << "dir of capsule = " << dir << std::endl;
+	Vec3f capdir = b2w.Ori() * Vec3f(0,0,1);
+	DSTR << "dir of capsule = " << capdir << std::endl;
 	DSTR << "center of capsule = " << b2w.Pos()  << std::endl;
-	ContFindCommonPoint(a, b, a2w, b2w, range, normal, pa, pb, dist);
+	ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 	DSTR << "normal = " << normal << std::endl;
 	DSTR << "pa and pb in W = "<< std::endl;
 	DSTR << a2w * pa << std::endl;
@@ -169,14 +171,11 @@ inline char FindVacantId(char a, char b, char c){
 	w[n] = b2z * (q[n]) - a2z * (p[n]);
 
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, 
-	Vec3d& pa, Vec3d& pb, double& dist){
-	Vec3d rangeOrg = range;
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	//	range が+Zになるような座標系を求める．
 	Quaterniond w2z;
-	double endLength = range.norm();
-	range /= endLength;
-	Vec3d u = -range;	//	u: 物体ではなく原点の速度の向きなので - がつく．
+	Vec3d u = -dir;	//	u: 物体ではなく原点の速度の向きなので - がつく．
 	if (u.Z() < -1+epsilon){
 		w2z = Quaterniond::Rot(Rad(180), 'x');
 	}else if (u.Z() < 1-epsilon){
@@ -200,25 +199,26 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	w0を求める
 	v[0] = Vec3d(0,0,1);
 	CalcSupport(0);
-	if (w[0].Z() > endLength) 
-		return -1;	//	range内では接触しないが，将来接触するかもしれない．
+	if (w[0].Z() > end) 
+		return -1;	//	範囲内では接触しないが，endより先で接触するかもしれない．
 
-/*	これをやると過去の接触がきちんと判定できないので、呼び出し側が困る。
-	if (w[0].Z() < 0){						//	反対側のsupportを求めてみて，範囲外か確認
+	if (w[0].Z() < start){	//	反対側のsupportを求めてみて，範囲外か確認
 		v[3] = Vec3d(0,0,-1);
 		CalcSupport(3);
-		if (w[3].Z() <0){
-			//	range内では接触しないが，過去(後ろに延長すると)接触していたかもしれない．
-			return -2;			
+		if (w[3].Z() < start){
+			//	範囲内では接触しないが，後ろに延長すると接触するかもしれない．
+			return -2;
 		}
 	}
-*/
+
 	//	w1を求める
 	v[1] = Vec3d(w[0].X(), w[0].Y(), 0);
 	if (v[1].XY().square() < epsilon2){		//	w0=衝突点の場合
 		normal = u.unit();
 		pa = p[0]; pb = q[0];
 		dist = w[0].Z();
+		if (dist > end) return -1;
+		if (dist < start) return -2;
 		return 1;
 	}
 	CalcSupport(1);
@@ -292,11 +292,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		if (count > 1000) {
 #if 1	//	USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
 			DSTR << "Too many loop in CCDGJK." << std::endl;
-			ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
-			
+			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
 			DebugBreak();
-			bDebug=true;
-			ContFindCommonPoint(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
 #endif
 		}
 		Vec3d s;		//	三角形の有向面積
@@ -414,7 +411,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			if (min > 1e-5){	//	異常。原点を含む三角形が見つからない
 				//	デバッグ用処理
 				DSTR << "No including traiangle found." << std::endl;
-				ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+				ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 				goto final;
 			}
 		}
@@ -453,8 +450,10 @@ final:
 	//	DSTR << "CCDGJK dist:" << dist << "  " << pa << pb << std::endl;
 	static bool bSave = false;
 	if (bSave){
-		ContFindCommonPointSaveParam(a, b, a2w, b2w, rangeOrg, normal, pa, pb, dist);
+		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 	}
+	if (dist > end) return -1;
+	if (dist < start) return -2;
 	return 1;
 }
 

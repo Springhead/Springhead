@@ -56,6 +56,9 @@ public:
 	///	法線の計算
 	void CalcNormal();
 };
+//	デバッグ用ツール
+void CallDetectContinuously(std::istream& file, PHSdkIf* sdk);
+void SaveDetectContinuously(CDShapePair* sp, unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
 
 ///	BBox同士の交差判定．交差していれば true．
 bool FASTCALL BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
@@ -65,9 +68,21 @@ bool FASTCALL BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
 bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
-///	GJKで共有点を見つける．連続版, rangeは正規化される
+/**	GJKで共有点を見つける．連続版
+	startからendの間に接触点があるか調べる。
+	@return 0:まったく接触なし。-2:startより前に接触あり。-1: endより先に接触あり。
+	1: 接触あり。
+*/
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, Vec3d& range, Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end, 
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+
+///	デバッグ用のツール。ファイルに引数を保存する。
+void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end, 
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
+///	デバッグ用のツール。
+void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk);
 
 #if 1
 /// GJKで最近傍点対を見つける

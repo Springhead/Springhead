@@ -12,6 +12,7 @@
 #include "CDDetectorImp.h"
 #include "CDQuickHull3DImp.h"
 #include <float.h>
+#include <fstream>
 
 namespace Spr {;
 const double epsilon = 1e-8;
@@ -36,7 +37,41 @@ bool CDShapePair::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	}
 	return rv;
 }
+
+void SaveShape(std::ostream& file, CDShape* a);
+CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk);
+void SaveDetectContinuously(CDShapePair* sp, unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
+	std::ofstream file("DetectContinuouslySaveParam.txt");
+	file << sp->normal << std::endl;
+	file << sp->lastContactCount << std::endl;
+	SaveShape(file, sp->shape[0]);
+	SaveShape(file, sp->shape[1]);
+	file << ct << std::endl;
+	file << pose0 << std::endl;
+	file << delta0 << std::endl;
+	file << pose1 << std::endl;
+	file << delta1 << std::endl;	
+}
+void CallDetectContinuously(std::istream& file, PHSdkIf* sdk){
+	CDShapePair* sp = DBG_NEW CDShapePair;
+	file >> sp->normal;
+	file >> sp->lastContactCount;
+	sp->shape[0] = LoadShape(file, sdk);
+	sp->shape[1] = LoadShape(file, sdk);
+	unsigned ct;
+	file >> ct;
+	Posed pose0, pose1;
+	Vec3d delta0, delta1;
+	file >> pose0 >> delta0 >> pose1 >> delta1;
+	sp->DetectContinuously(ct, pose0, delta0, pose1, delta1);
+}
+
 bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
+	//	for debug dump
+	Vec3d lastNormal = normal;
+	int lastLCC = lastContactCount;
+
+
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;	
 	if (lastContactCount == unsigned(ct-1) ){	
@@ -45,33 +80,32 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 		shapePoseW[1].Pos() += delta1;	//	最初から現在の位置に移動させる
 
 		double dist;
-		Vec3d dir = -normal * 1e-8;	//	法線向きに判定するとどれだけ戻ると離れるか分かる．
-		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
+		//	法線向きに判定するとどれだけ戻ると離れるか分かる．
+		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 
 		if (res <= 0) {	//	範囲内では、接触していない場合
 			return false;
 		}
-		if (dist > 0){	//	距離 > 0 = 離れている
-			return false;	//	法線方向に進めないと接触しない場合．
-		}
-		depth = dist * dir * normal;
+		depth = -dist;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
+		goto found;
 	}else{
 		//	初めての接触の場合
 		Vec3d delta = delta1-delta0;
-		double toi;
-		if (delta.square() > epsilon2){	//	 速度がある場合
+		double end = delta.norm();
+		if (end < epsilon){	//	速度がほぼ0の場合
+			shapePoseW[0].Pos() += delta0;
+			shapePoseW[1].Pos() += delta1;
+		}else{				//	 速度がある場合
+			Vec3d dir = delta / end;
 			double dist;
-			Vec3d dir = delta;
-			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], dist);
-			//	res==-1:	range内では接触していないが将来接触する可能性がある．	
-			//	res==-2:	range内では接触していないが過去していた可能性がある．
+			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				dir, -DBL_MAX, end, normal, closestPoint[0], closestPoint[1], dist);
 			if (res <= 0) return false;
 
-			double rangeLen = delta * dir;		//	dirはContFindCommonPoint内で正規化されるのでノルムは1
-			toi = dist / rangeLen;
-			if (toi > 1) return false;	//	接触時刻がこのステップより未来．
-			if (toi >= 0){	//	今回の移動で接触していれば
+			if (dist >= 0){	//	今回の移動で接触していれば
+				double toi = dist / end;
 				shapePoseW[0].Pos() += toi*delta0;
 				shapePoseW[1].Pos() += toi*delta1;
 				center = commonPoint = shapePoseW[0] * closestPoint[0];
@@ -79,55 +113,50 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
 				//	交差部の形状の計算は，衝突時点の位置で行うが，depth は現時点のdepth
 				depth = -(1-toi) * delta * normal + 2e-8;
-			}else{
-				//	とりあえず現在位置で、接触しているかどうか、確認する。
-				shapePoseW[0].Pos() += delta0;
-				shapePoseW[1].Pos() += delta1;
-				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], -dir, normal, closestPoint[0], closestPoint[1], dist);
-				if (res <= 0) return false;	//	接触していないので抜ける。
-				if (dist > 0) return false;	//	dist正なら、現在は接触していないので抜ける。
-				//	あとはtoi<0の処理に任せる
+				goto found;
 			}
-		}else{
-			toi = -1;
-			//	現在の位置に移動させる
+			//	とりあえず、現在の位置で接触しているかどうか確認する。
 			shapePoseW[0].Pos() += delta0;
 			shapePoseW[1].Pos() += delta1;
+			double tmp;
+			if (ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				-dir, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], tmp) <= 0)
+				return false;	//	接触していない場合は抜ける。
+
 		}
-		if (toi < 0){
-			/*	toi < 0 の場合、次の可能性がある。
-				- 回転が原因で接触が起きたため、重心速度に基づくtoiでは、接触検出できない。
-				- 速度が小さすぎてtoiが計算できない。
-				- 最初から接触していた。
-				- ユーザによる非物理移動が原因で接触が起きたため、toiで接触検出できない。
+		/*	速度0の場合、または toi < 0 の場合、ここに来る。
+			このようなことが起こる原因には、次の可能性がある。
+			- 回転が原因で接触が起きたため、重心速度に基づくtoiでは、接触検出できない。
+			- 速度が小さすぎてtoiが計算できない。
+			- 最初から接触していた。
+			- ユーザによる非物理移動が原因で接触が起きたため、toiで接触検出できない。
 
-				このような場合は、形状の中心間を結ぶベクトルを仮法線とする。
-				仮法線の向きで接触法線を求め、これを本法線とする。
-				さらに、本法線の向きで、侵入量と法線、最近傍点を計算する。	*/
+			このような場合は、形状の中心間を結ぶベクトルを仮法線として、
+			仮法線の向きで接触法線を求めてこれを本法線とする。
+			本法線の向きで、侵入量と法線、最近傍点を計算する。	
+		*/
+		//	仮法線（形状の中心を結ぶ向き）の計算
+		Vec3d tmpNormal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
+		double norm = tmpNormal.norm();
+		if (norm > epsilon) tmpNormal /= norm;
+		else tmpNormal = Vec3d(0,1,0);
+		double dist;
 
-			//	仮法線（形状の中心を結ぶ向き）の計算
-			normal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
-			double norm = normal.norm();
-			if (norm > epsilon) normal /= norm;
-			else normal = Vec3d(0,1,0);
+		//	仮法線の向きで接触法線を求める。
+		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) return false;
 
-			//	仮の法線の向きに動かして，法線を更新する。
-			Vec3d dir = -normal;
-			int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
-			if (res <= 0) return false;
-			if (depth > 0) return false;
-
-			//	法線を更新してもう一度やってみる。
-			dir = -normal;
-			res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
-			if (res <= 0) return false;
-			if (depth > 0) return false;
-
-			depth *= -1;
-			center = commonPoint = shapePoseW[0] * closestPoint[0];
-			center -= 0.5f*depth*normal;
-		}
+		//	法線を更新してもう一度やってみる。
+		res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) return false;
+		depth = -dist;
+		center = commonPoint = shapePoseW[0] * closestPoint[0];
+		center -= 0.5f*depth*normal;
+		goto found;
 	}
+found:;
 	if (lastContactCount == unsigned(ct-1)){
 		state = CONTINUE;
 	}else{
@@ -139,27 +168,34 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 		}
 	}
 	lastContactCount = ct;
+
+	//	debug dump
+	if (depth > 10){
+		DSTR << "depth=" << depth << std::endl;
+		UTRef<CDShapePair> sp = new CDShapePair(*this);
+		sp->lastContactCount = lastLCC;
+		sp->normal = lastNormal;
+		SaveDetectContinuously(sp, ct, pose0, delta0, pose1, delta1);
+		DSTR << "SaveDetectDetectContinuously() called" << std::endl;
+	}
 	return true;
 }
 void CDShapePair::CalcNormal(){
-	if (state == NEW){		
-		//	物体の重心を離す向きに動かす．
+	if (state == NEW){
+		//	凸形状の中心を離す向きを仮法線にする．
 		normal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
 		double norm = normal.norm();
 		if (norm>epsilon) normal /= norm;
 		else normal = Vec3d(0,1,0);
-		depth = 1;
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
-	Vec3d dir = -normal;
-	int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
+	Vec3d n = normal;
+	int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+		-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], depth);
 	if (res <= 0){
-		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << dir << std::endl;
-		Vec3d v;
-		FindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], v, closestPoint[0], closestPoint[1]);
-		DSTR << "v:" << v << std::endl;
-		DSTR << "cp:" << shapePoseW[0]*closestPoint[0] << shapePoseW[1]*closestPoint[1] << std::endl; 
-		res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, normal, closestPoint[0], closestPoint[1], depth);
+		DSTR << "Error in CalcNormal(): res:" << res << "dist:" << depth << n << std::endl;
+		ContFindCommonPointSaveParam(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-n, -DBL_MAX, 0, n, closestPoint[0], closestPoint[1], depth);
 	}
 	depth *= -1;
 	center = shapePoseW[0] * closestPoint[0];
@@ -385,15 +421,14 @@ void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 		cp->depth = 1e-2;
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
-	Vec3d dir = -cp->normal;
-	int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], dir, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
+	Vec3d n = cp->normal;
+	int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
+		-cp->normal, -DBL_MAX, 0, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	if (res <= 0){
-		DSTR << "Error in CDContactAnalysis::CalcNormal(): res:" << res << "dist:" << cp->depth << dir << std::endl;
-		Vec3d v;
-		FindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], v, cp->closestPoint[0], cp->closestPoint[1]);
-		DSTR << "v:" << v << std::endl;
+		DSTR << "Error in CDContactAnalysis::CalcNormal(): res:" << res << "dist:" << cp->depth << -n << std::endl;
 		DSTR << "cp:" << cp->shapePoseW[0]*cp->closestPoint[0] << cp->shapePoseW[1]*cp->closestPoint[1] << std::endl; 
-		res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], dir, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
+		ContFindCommonPointSaveParam(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
+			-n, -DBL_MAX, 0, n, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	}
 	cp->depth *= -1;
 	cp->center = cp->shapePoseW[0] * cp->closestPoint[0];
