@@ -73,10 +73,10 @@ public:
 	virtual Vec3d	GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
 	virtual Vec3d	GetAngle(){return position;}								///< 角度を返す関数
 	virtual Vec3d	GetVelocity(){return velocity;}								///< 速度を返す関数
-	virtual void	SetTorqueMax(double max){fMax = max;}
-	virtual double	GetTorqueMax(){return fMax;}
-	virtual void	SetTorqueMin(double min){fMin = min;}
-	virtual double	GetTorqueMin(){return fMin;}	
+	virtual void	SetTorqueMax(double max){fMax = max * scene->GetTimeStep();}///< f･⊿tを最大力積値[N･sec]として登録する（引数はf[N]）
+	virtual double	GetTorqueMax(){return fMax / scene->GetTimeStep();}			///< f･⊿tから力の最大値[N]に戻して返す
+	virtual void	SetTorqueMin(double min){fMin = min * scene->GetTimeStep();}///< f･⊿tを最小力積値[N･sec]として登録する（引数はf[N]）
+	virtual double	GetTorqueMin(){return fMin / scene->GetTimeStep();}			///< f･⊿tから力の最小値[N]に戻して返す
 
 	/// 仮想関数のオーバライド
 	virtual bool	GetDesc(void* desc);										///< デスクリプタの情報を得るための関数

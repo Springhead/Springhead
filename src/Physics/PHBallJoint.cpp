@@ -88,7 +88,6 @@ void PHBallJoint::SetDesc(const void* desc){
 void PHBallJoint::UpdateJointState(){
 	// Jc.Ez() : Socketに対するPlugの向いている方向(旧currentVector)
 	Jc.Ez() = Xjrel.q * Vec3f(0.0, 0.0, 1.0);
-
 	if((onLimit[0].onLower || onLimit[0].onUpper) && (Jc.Ez() != limitDir)){
 		Jc.Ex() = cross(Jc.Ez(),(Jc.Ez() - limitDir)).unit();
 		Jc.Ey() = cross(Jc.Ez(), Jc.Ex());
@@ -244,18 +243,21 @@ void PHBallJoint::CompError(){
 }
 
 void PHBallJoint::Projection(double& f, int k){
-	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする関数
-	//k:con[k]のkの部分、fは力λのこと
-	
+	//今の力積の状態に対して何らかの操作を与える．
+	//k:con[k]のkの部分(0～2:並進，3～5:回転)、fはそれに対応する力λのこと
+	//力λ = 0 にすることで関節の拘束が解除される．
+	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする．
+	//< fMax, fMinの条件では関節を拘束したいわけではないので，単なる上書きを行う．
+
 	if (k==3){
 		if(onLimit[0].onLower)
 			f = max(0.0, f);
 		else if(onLimit[0].onUpper)
 			f = min(0.0, f);
 		else if(fMax < f)
-			f = max(0.0, fMax);
+			f = fMax;
 		else if(f < fMin)
-			f = min(0.0, fMin);
+			f = fMin;
 	}
 
 	if (k==5){
@@ -264,9 +266,9 @@ void PHBallJoint::Projection(double& f, int k){
 		else if(onLimit[1].onUpper)
 			f = min(0.0, f);
 		else if(fMax < f)
-			f = max(0.0, fMax);
+			f = fMax;
 		else if(f < fMin)
-			f = min(0.0, fMin);
+			f = fMin;
 	}
 
 }

@@ -69,10 +69,10 @@ public:
 	virtual double	GetSpringOrigin(){return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper(){return damper;}
-	virtual void	SetTorqueMax(double max){fMax = max / scene->GetTimeStep();}
-	virtual double	GetTorqueMax(){return fMax;}
-	virtual void	SetTorqueMin(double min){fMin = min / scene->GetTimeStep();}
-	virtual double	GetTorqueMin(){return fMin;}
+	virtual void	SetTorqueMax(double max){fMax = max * scene->GetTimeStep();}	///< f･⊿tを最大力積値[N･sec]として登録する（引数はf[N]）
+	virtual double	GetTorqueMax(){return fMax / scene->GetTimeStep();}				///< f･⊿tから力の最大値[N]に戻して返す
+	virtual void	SetTorqueMin(double min){fMin = min * scene->GetTimeStep();}	///< f･⊿tを最小力積値[N･sec]として登録する（引数はf[N]）
+	virtual double	GetTorqueMin(){return fMin / scene->GetTimeStep();}				///< f･⊿tから力の最小値[N]に戻して返す
 
 	/// オーバライド
 	virtual bool	GetDesc(void* desc);

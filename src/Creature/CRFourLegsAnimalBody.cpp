@@ -116,7 +116,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
 	rangeRearKnee	  = Vec2d(Rad(	 0), Rad(+180));
 	//-----------------------------------------------------------------------------------
-	// fMax
+	// fMax[N]
 	fMaxWaistChest		= 1000;
 	fMaxChestNeck		= 1000;
 	fMaxNeckHead		= 1000;
@@ -124,20 +124,20 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	fMaxTail12			= 1000;
 	fMaxTail23			= 1000;
 	fMaxLeftShoulder	= 100;
-	fMaxLeftElbow		= 10;
-	fMaxLeftFrontKnee	= 10;
+	fMaxLeftElbow		= 50;
+	fMaxLeftFrontKnee	= 50;
 	fMaxLeftFrontAnkle	= 100;
 	fMaxLeftHip			= 100;
-	fMaxLeftStifle		= 10;
-	fMaxLeftRearKnee	= 10;
+	fMaxLeftStifle		= 50;
+	fMaxLeftRearKnee	= 50;
 	fMaxLeftRearAnkle	= 100;
 	fMaxRightShoulder	= 100;
-	fMaxRightElbow		= 10;
-	fMaxRightFrontKnee	= 10;
+	fMaxRightElbow		= 50;
+	fMaxRightFrontKnee	= 50;
 	fMaxRightFrontAnkle	= 100;
 	fMaxRightHip		= 100;
-	fMaxRightStifle		= 10;
-	fMaxRightRearKnee	= 10;
+	fMaxRightStifle		= 50;
+	fMaxRightRearKnee	= 50;
 	fMaxRightRearAnkle	= 100;
 	//-----------------------------------------------------------------------------------
 	// materialMu of All Solids 
@@ -223,7 +223,7 @@ void CRFourLegsAnimalBody::CreateChest(){
 	ballDesc.limitTwist		  = limitTwistWaistChest;	
 	}
 	if(flagFMax){
-		ballDesc.fMax = fMaxWaistChest;
+		ballDesc.fMax = fMaxWaistChest * phScene->GetTimeStep();
 	}
 
 	//----------------------------------------------------------------------------
@@ -277,7 +277,7 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.limitTwist		   = limitTwistWaistTail;
 	}
 	if(flagFMax){
-		ballDesc.fMax = fMaxWaistTail;
+		ballDesc.fMax = fMaxWaistTail * phScene->GetTimeStep();
 	}
 
 	joints[JO_WAIST_TAIL]	   = phScene->CreateJoint(solids[SO_WAIST], solids[SO_TAIL1], ballDesc);
@@ -298,7 +298,7 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.limitTwist		   = limitTwistTail;
 	}
 	if(flagFMax){
-		ballDesc.fMax = fMaxTail12;
+		ballDesc.fMax = fMaxTail12 * phScene->GetTimeStep();
 	}
 
 	joints[JO_TAIL_12]		   = phScene->CreateJoint(solids[SO_TAIL1], solids[SO_TAIL2], ballDesc);
@@ -319,7 +319,7 @@ void CRFourLegsAnimalBody::CreateTail(){
 	ballDesc.limitTwist		   = limitTwistTail;
 	}
 	if(flagFMax){
-		ballDesc.fMax = fMaxTail23;
+		ballDesc.fMax = fMaxTail23 * phScene->GetTimeStep();
 	}
 
 	joints[JO_TAIL_23]		   = phScene->CreateJoint(solids[SO_TAIL2], solids[SO_TAIL3], ballDesc);
@@ -367,7 +367,7 @@ void CRFourLegsAnimalBody::CreateNeck(){
 	ballDesc.limitTwist		  = limitTwistChestNeck;
 	}
 	if(flagFMax){
-		ballDesc.fMax = fMaxChestNeck;
+		ballDesc.fMax = fMaxChestNeck * phScene->GetTimeStep();
 	}
 
 	joints[JO_CHEST_NECK] = phScene->CreateJoint(solids[SO_CHEST], solids[SO_NECK], ballDesc);
@@ -409,7 +409,7 @@ void CRFourLegsAnimalBody::CreateHead(){
 	ballDesc.limitTwist		   = limitTwistNeckHead;
 	}
 	if(flagFMax){
-		ballDesc.fMax = fMaxNeckHead;
+		ballDesc.fMax = fMaxNeckHead * phScene->GetTimeStep();
 	}
 
 	joints[JO_NECK_HEAD]	   = phScene->CreateJoint(solids[SO_NECK], solids[SO_HEAD], ballDesc);
@@ -488,7 +488,7 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	ballDesc.limitTwist		  = limitTwistShoulder;
 	}
 	if(flagFMax){
-		ballDesc.fMax = (lr == LEFTPART) ? fMaxLeftShoulder : fMaxRightShoulder;
+		ballDesc.fMax = (lr == LEFTPART) ? fMaxLeftShoulder * phScene->GetTimeStep() : fMaxRightShoulder * phScene->GetTimeStep();
 	}
 
 	//----------------------------------------------------------------------------
@@ -551,7 +551,7 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	hingeDesc.upper			   = rangeElbow[1];
 	}
 	if(flagFMax){
-		hingeDesc.fMax = (lr == LEFTPART) ? fMaxLeftElbow : fMaxRightElbow;
+		hingeDesc.fMax = (lr == LEFTPART) ? fMaxLeftElbow * phScene->GetTimeStep() : fMaxRightElbow * phScene->GetTimeStep();
 	}
 
 	joints[joElbow] = phScene->CreateJoint(solids[soBreastbone], solids[soRadius], hingeDesc);
@@ -609,7 +609,7 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 	hingeDesc.upper			   = rangeFrontKnee[1];
 	}
 	if(flagFMax){
-		hingeDesc.fMax = (lr == LEFTPART) ? fMaxLeftFrontKnee : fMaxRightFrontKnee;
+		hingeDesc.fMax = (lr == LEFTPART) ? fMaxLeftFrontKnee * phScene->GetTimeStep() : fMaxRightFrontKnee * phScene->GetTimeStep();
 	}
 
 	joints[joKnee] = phScene->CreateJoint(solids[soRadius], solids[soCannonBone], hingeDesc);
@@ -668,7 +668,7 @@ void CRFourLegsAnimalBody::CreateFrontToeBones(LREnum lr){
 	ballDesc.limitTwist		  = limitTwistFrontAnkle;
 	}
 	if(flagFMax){
-		ballDesc.fMax = (lr ==LEFTPART) ? fMaxLeftFrontAnkle : fMaxRightFrontAnkle;
+		ballDesc.fMax = (lr ==LEFTPART) ? fMaxLeftFrontAnkle * phScene->GetTimeStep() : fMaxRightFrontAnkle * phScene->GetTimeStep();
 	}
 
 	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
@@ -745,7 +745,7 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	ballDesc.limitTwist		  = limitTwistHip;
 	}
 	if(flagFMax){
-		ballDesc.fMax = (lr == LEFTPART) ? fMaxLeftHip : fMaxRightHip;
+		ballDesc.fMax = (lr == LEFTPART) ? fMaxLeftHip * phScene->GetTimeStep() : fMaxRightHip * phScene->GetTimeStep();
 	}
 
 	joints[joHip] = phScene->CreateJoint(solids[SO_WAIST], solids[soFemur], ballDesc);
@@ -803,7 +803,7 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 	hingeDesc.upper			   = rangeStifle[1];
 	}
 	if(flagFMax){
-		hingeDesc.fMax = (lr ==LEFTPART) ? fMaxLeftStifle : fMaxRightStifle;
+		hingeDesc.fMax = (lr ==LEFTPART) ? fMaxLeftStifle * phScene->GetTimeStep() : fMaxRightStifle * phScene->GetTimeStep();
 	}
 
 	joints[joStifle] = phScene->CreateJoint(solids[soFemur], solids[soTibia], hingeDesc);
@@ -862,7 +862,7 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 	hingeDesc.upper			   = rangeRearKnee[1];
 	}
 	if(flagFMax){
-		hingeDesc.fMax = (lr ==LEFTPART) ? fMaxLeftRearKnee : fMaxRightRearKnee;
+		hingeDesc.fMax = (lr ==LEFTPART) ? fMaxLeftRearKnee * phScene->GetTimeStep() : fMaxRightRearKnee * phScene->GetTimeStep();
 	}
 
 	joints[joKnee] = phScene->CreateJoint(solids[soTibia], solids[soCannonBone], hingeDesc);
@@ -921,7 +921,7 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 	ballDesc.limitTwist		   = limitTwistRearAnkle;
 	}
 	if(flagFMax){
-		ballDesc.fMax = (lr ==LEFTPART) ? fMaxLeftRearAnkle : fMaxRightRearAnkle;
+		ballDesc.fMax = (lr ==LEFTPART) ? fMaxLeftRearAnkle * phScene->GetTimeStep() : fMaxRightRearAnkle * phScene->GetTimeStep();
 	}
 
 	joints[joAnkle] = phScene->CreateJoint(solids[soCannonBone], solids[soToe], ballDesc);
