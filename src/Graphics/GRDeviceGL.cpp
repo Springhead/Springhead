@@ -507,6 +507,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_AMBIENT,   mat.ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat.diffuse);
+	glColor3fv(mat.diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR,  mat.specular);
 	glMaterialfv(GL_FRONT, GL_EMISSION,  mat.emissive);
 	glMaterialf (GL_FRONT, GL_SHININESS, mat.power);
@@ -613,6 +614,10 @@ void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TB
 		}
 	}
 	glBlendFunc(glfac[0], glfac[1]);
+}
+void GRDeviceGL::SetLighting(bool on){
+	if (on) glEnable(GL_LIGHTING);
+	else glDisable(GL_LIGHTING);
 }
 /// テクスチャのロード（戻り値：テクスチャID）	
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};

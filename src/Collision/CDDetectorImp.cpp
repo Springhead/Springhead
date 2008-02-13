@@ -109,10 +109,11 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 				shapePoseW[0].Pos() += toi*delta0;
 				shapePoseW[1].Pos() += toi*delta1;
 				center = commonPoint = shapePoseW[0] * closestPoint[0];
-				shapePoseW[0].Pos() -= dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
-				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
+//				shapePoseW[0].Pos() -= dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
+//				shapePoseW[1].Pos() += dir*1e-8;	//確実に交差部分を作るため 1e-8余分に動かす
 				//	交差部の形状の計算は，衝突時点の位置で行うが，depth は現時点のdepth
-				depth = -(1-toi) * delta * normal + 2e-8;
+//				depth = -(1-toi) * delta * normal + 2e-8;
+				depth = -(1-toi) * delta * normal;
 				goto found;
 			}
 			//	とりあえず、現在の位置で接触しているかどうか確認する。

@@ -79,67 +79,65 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 
 	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
 	//	切り口を求める。まず、それぞれの形状の切り口を列挙
-//	CDCutRing cutRing(center, local);	//	centerはまずい。切り口の外の場合もありえる。
 	CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
 	int nPoint = engine->points.size();
 	//	両方に切り口がある場合．(球などないものもある)
 	bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
 	int nLine0 = cutRing.lines.size();
-	if(found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+	if (found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
 	int nLine1 = cutRing.lines.size() - nLine0;
 	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 		cutRing.MakeRing();
 		section.clear();
-//		cutRing.Print(DSTR);
-//		DSTR << "contact center:" << center << " normal:" << normal << "  vtxs:" << std::endl;
-		for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
-			if (vtx->deleted) continue;
-			assert(finite(vtx->dist));
-			if (vtx->dist < 1e-200){
-				DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
-				DSTR << vtx->dist << vtx->normal << std::endl;
-				DSTR << cutRing.local << std::endl;
-				
-				DSTR << "Lines:(" << nLine0 << "+" << nLine1 << ")" << std::endl;
-				for(unsigned i=0; i<cutRing.lines.size(); ++i){
-					DSTR << cutRing.lines[i].dist << "\t" << cutRing.lines[i].normal << "\t";
-					Vec3d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
-					DSTR << pos.X() << "\t" << pos.Y() << std::endl;
+		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
+			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
+			for(; vtx->neighbor[0] != cutRing.vtxs.end-1; vtx = vtx->neighbor[0]){
+				assert(finite(vtx->dist));
+				if (vtx->dist < 1e-200){
+					DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
+					DSTR << vtx->dist << vtx->normal << std::endl;
+					DSTR << cutRing.local << std::endl;
+					
+					DSTR << "Lines:(" << nLine0 << "+" << nLine1 << ")" << std::endl;
+					for(unsigned i=0; i<cutRing.lines.size(); ++i){
+						DSTR << cutRing.lines[i].dist << "\t" << cutRing.lines[i].normal << "\t";
+						Vec3d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
+						DSTR << pos.X() << "\t" << pos.Y() << std::endl;
+					}
+
+					DSTR << "Vertices in dual space:" << std::endl;
+					for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
+						if (vtx->deleted) continue;
+						DSTR << vtx->dist << "\t" << vtx->normal << "\t";
+						double d = vtx->dist;
+						if (d==0) d=1e-100;
+						Vec2d pos = vtx->normal * d;
+						DSTR << pos.X() << "\t" << pos.Y() << std::endl;
+					}
+					cutRing.lines.clear();
+					shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+					shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+					continue;
 				}
 
-				DSTR << "Vertices in dual space:" << std::endl;
-				for(CDQHLine<CDCutLine>* vtx = cutRing.vtxs.begin; vtx!=cutRing.vtxs.end; ++vtx){
-					if (vtx->deleted) continue;
-					DSTR << vtx->dist << "\t" << vtx->normal << "\t";
-					double d = vtx->dist;
-					if (d==0) d=1e-100;
-					Vec2d pos = vtx->normal * d;
-					DSTR << pos.X() << "\t" << pos.Y() << std::endl;
-				}
-				cutRing.lines.clear();
-				shape[0]->FindCutRing(cutRing, shapePoseW[0]);
-				shape[1]->FindCutRing(cutRing, shapePoseW[1]);
-				continue;
+				Vec3d pos;
+				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+				pos = cutRing.local * pos;
+				section.push_back(pos);
+				PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
+				point->scene = DCAST(PHScene, engine->GetScene());
+				point->engine = engine;
+
+				if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
+				if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
+
+				engine->points.push_back(point);
 			}
-
-			Vec3d pos;
-			pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
-			pos = cutRing.local * pos;
-			section.push_back(pos);
-			PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
-			point->scene = DCAST(PHScene, engine->GetScene());
-			point->engine = engine;
-
-			if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
-			if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
-
-			engine->points.push_back(point);
 		}
 	}
 	if (nPoint == (int)engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
 		//	きっと1点で接触している．
-
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
 		point->scene = DCAST(PHScene, engine->GetScene());
 		point->engine = engine;

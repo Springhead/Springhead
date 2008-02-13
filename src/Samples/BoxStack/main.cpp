@@ -542,9 +542,10 @@ int main(int argc, char* argv[]){
 
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	render->SetRenderMode(true, false);
-//	render->EnableRenderAxis();
-//	render->EnableRenderForce();
+	render->SetRenderMode(false, true);
+	render->EnableRenderAxis();
+	render->EnableRenderForce();
+	render->EnableRenderContact();
 
 	device = grSdk->CreateDeviceGL();
 	device->Init();

@@ -187,18 +187,33 @@ void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 		// constraint force
 		if(renderForce){
 			con->GetConstraintForce(f, t);
+
+			GRMaterialDesc mat;
+			mat.ambient = mat.diffuse = Vec4f(1,0.7,0,1);
+			SetMaterial(mat);
+			SetLighting(false);
+			SetDepthTest(false);
 			DrawLine(Vec3d(), f * scaleForce);
 			DrawLine(Vec3d(), t * scaleForce);
+			SetDepthTest(true);
+			SetLighting(true);
 		}
 		this->PopModelMatrix();
 	}
 	if(renderAxis){
 		// plug
+		GRMaterialDesc mat;
+		mat.ambient = mat.diffuse = Vec4f(1,0,0,1);
+		SetMaterial(mat);
+		SetLighting(false);
+		SetDepthTest(false);
 		(con->solid[1]->GetPose() * con->posePlug).ToAffine(af);
 		this->PushModelMatrix();
 		this->MultModelMatrix(af);
 		DrawCoordinateAxis(modeSolid);
 		this->PopModelMatrix();
+		SetLighting(true);
+		SetDepthTest(true);
 	}
 }
 
@@ -213,7 +228,14 @@ void GRDebugRender::DrawContact(PHContactPointIf* con){
 	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
 	
 	SetVertexFormat(GRVertexElement::vfP3f);
+	GRMaterialDesc mat;
+	mat.ambient = mat.diffuse = Vec4f(1,1,0,1);
+	SetMaterial(mat);
+	SetLighting(false);
+	SetDepthTest(false);
 	DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
+	SetDepthTest(true);
+	SetLighting(true);
 }
 
 void GRDebugRender::DrawCapsule(CDCapsuleIf* cap, bool solid){
@@ -332,7 +354,9 @@ void GRDebugRender::DrawFaceWire(CDFaceIf* face, Vec3f * base){
 		vtxs[v] = base[face->GetIndices()[v]].data;
 	vtxs[v] = base[face->GetIndices()[0]].data;
 	SetVertexFormat(GRVertexElement::vfP3f);
+	SetLighting(false);
 	DrawDirect(GRRenderBaseIf::LINES, vtxs, numIndices+1);
+	SetLighting(true);
 }
 
 void GRDebugRender::SetMaterialSample(GRDebugRenderIf::TMaterialSample matname){

@@ -299,6 +299,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetAlphaTest(bool b)=0;
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)=0;
+	///	シェーディングON(glMaterial) or OFF（glColor)
+	virtual void SetLighting(bool l)=0;
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename)=0;
 	/// シェーダの初期化

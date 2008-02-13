@@ -154,6 +154,9 @@ public:
 	virtual void SetAlphaTest(bool b){}
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){}
+	///	シェーディングON(glMaterial) or OFF（glColor)
+	virtual void SetLighting(bool l){}
+
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
 	/// シェーダの初期化
@@ -233,6 +236,7 @@ public:
 	virtual void SetAlphaTest(bool b){ptr SetAlphaTest(b); }												\
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)				\
 		{ ptr SetAlphaMode(src, dest); }																	\
+	virtual void SetLighting(bool l) { ptr SetLighting(l); }												\
 	virtual unsigned int LoadTexture(const std::string filename){ return ptr LoadTexture(filename); }		\
 	virtual void InitShader(){ ptr InitShader(); }															\
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){ ptr SetShaderFormat(type); }				\

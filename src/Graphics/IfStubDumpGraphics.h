@@ -267,6 +267,9 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
 		return ((OBJ*)(MIF*)this)->SetAlphaMode(src, dest);
 	}
+	virtual void SetLighting(bool l){
+		return ((OBJ*)(MIF*)this)->SetLighting(l);
+	}
 	virtual unsigned int LoadTexture(const std::string filename){
 		return ((OBJ*)(MIF*)this)->LoadTexture(filename);
 	}
