@@ -66,6 +66,7 @@ void CallDetectContinuously(std::istream& file, PHSdkIf* sdk){
 	sp->DetectContinuously(ct, pose0, delta0, pose1, delta1);
 }
 
+
 bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	//	for debug dump
 	Vec3d lastNormal = normal;
