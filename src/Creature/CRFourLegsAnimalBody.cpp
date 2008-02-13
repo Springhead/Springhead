@@ -909,9 +909,9 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
 	
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, rearCannonBoneHeight/2.0, 0.0);
-	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(90), 'x');
+	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, rearToeHeight/2.0, 0.0);
-	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(90), 'x');
+	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring		       = springRearAnkle;
 	ballDesc.damper			   = damperRearAnkle;
 	ballDesc.goal			   = goalRearAnkle;
