@@ -47,10 +47,10 @@ public:
 	int		numIterContactCorrection;	///< 接触点の誤差修正LCPの反復回数
 	double	velCorrectionRate;			///< 誤差修正比率
 	double	posCorrectionRate;
-	double	shrinkRate;				///< LCP初期値を前回の解に対して縮小させる比率
+	double	shrinkRate;					///< LCP初期値を前回の解に対して縮小させる比率
 	double	shrinkRateCorrection;
-	double	freezeThreshold;		///< 剛体がフリーズする閾値
-	bool	bGearNodeReady;			///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
+	double	freezeThreshold;			///< 剛体がフリーズする閾値
+	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	
 	PHConstraintEngine();
 	~PHConstraintEngine();

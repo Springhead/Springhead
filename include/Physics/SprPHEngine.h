@@ -25,8 +25,6 @@ public:
 	/** @brief ÚG“_‚ÌW‡‚ğ•Ô‚·
 	*/
 	virtual PHConstraintsIf* GetContactPoints() = 0;
-
-
 };
 
 struct PHGravityEngineIf : PHEngineIf{
