@@ -2,6 +2,7 @@
 #define VR_HAPTIC_HDHAPTIC_H
 
 #include "HIBase.h"
+#include <Device/DRRealDevice.h>
 
 namespace Spr {
 
