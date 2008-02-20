@@ -542,7 +542,7 @@ int main(int argc, char* argv[]){
 
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
-	render->SetRenderMode(false, true);
+	render->SetRenderMode(true, false);
 	render->EnableRenderAxis();
 	render->EnableRenderForce();
 	render->EnableRenderContact();
