@@ -1,9 +1,9 @@
 #ifndef HIBASE_H
 #define HIBASE_H
 
-//#include <Base/Affine.h>
-//#include <Base/BaseUtility.h>
-//#include <Base/BaseTypeInfo.h>
+#include <Base/Affine.h>
+#include <Base/BaseUtility.h>
+#include <Base/BaseTypeInfo.h>
 
 #include <set>
 
