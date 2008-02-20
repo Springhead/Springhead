@@ -73,7 +73,7 @@ void FWAppGLUT::GlutTimerFunc(int id){
 
 	// タイマ周期＝物理シミュレーションのインターバル
 	int timeStep=1;
-	if (FWAppGLUT::instance->GetSdk()->GetScene()){
+	if (FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()){
 		timeStep = (int)(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
 		if (timeStep<1) timeStep = 1;
 	}
