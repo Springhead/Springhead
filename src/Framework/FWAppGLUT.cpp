@@ -133,7 +133,7 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	// ウィンドウIDを指定してタイマを始動
 	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
 	
-	FWWin* win = new FWWinGLUT(wid, fwSdk->CreateRender());
+	FWWin* win = DBG_NEW FWWinGLUT(wid, fwSdk->CreateRender());
 	AssignScene(win);
 	wins.push_back(win);
 	return win;

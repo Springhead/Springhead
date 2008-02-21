@@ -55,6 +55,8 @@ IF_OBJECT_IMP(GRSdk, Sdk);
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 	GRSdkIf::RegisterSdk();
 }
+GRSdk::~GRSdk(){
+}
 GRDebugRenderIf* GRSdk::CreateDebugRender(){
 	GRDebugRender* rv = DBG_NEW GRDebugRender;
 	objects.push_back(rv);

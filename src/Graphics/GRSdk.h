@@ -42,6 +42,7 @@ protected:
 public:
 	OBJECTDEF(GRSdk, Sdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
+	~GRSdk();
 	virtual GRDebugRenderIf* CreateDebugRender();
 	virtual GRDeviceGLIf* CreateDeviceGL();
 	virtual GRSceneIf* CreateScene(const GRSceneDesc& desc);

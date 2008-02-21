@@ -30,44 +30,45 @@ void HISpidarCalc6Dof::Update()
 	int nWire = matA.height();
 
 	for(int step=0; step < nRepeat; ++step){
-		for(i=0;i<nWire;i++) {
-			matA[i][0]=wireDirection[i].X();
-			matA[i][1]=wireDirection[i].Y();
-			matA[i][2]=wireDirection[i].Z();
-			matA[i][3]=wireMoment[i].X();
-			matA[i][4]=wireMoment[i].Y();
-			matA[i][5]=wireMoment[i].Z();
-			lengthDiff[i] = calculatedLength[i]-measuredLength[i] - lengthDiffAve[i];
-		}
-		for(i=0;i<6;i++){
-			matATA[i][i]=0.0f;
-			postureDiff[i]=0.0f;
-			for(k=0;k<nWire;k++) matATA[i][i]+=matA[k][i]*matA[k][i];
-			for(j=i+1;j<6;j++){
-				matATA[i][j]=0.0f;
-				for(k=0;k<nWire;k++) matATA[i][j]+=matA[k][i]*matA[k][j];
-				matATA[j][i]=matATA[i][j];
+		if (matATA.height()){
+			for(i=0;i<nWire;i++) {
+				matA[i][0]=wireDirection[i].X();
+				matA[i][1]=wireDirection[i].Y();
+				matA[i][2]=wireDirection[i].Z();
+				matA[i][3]=wireMoment[i].X();
+				matA[i][4]=wireMoment[i].Y();
+				matA[i][5]=wireMoment[i].Z();
+				lengthDiff[i] = calculatedLength[i]-measuredLength[i] - lengthDiffAve[i];
 			}
-		}
-		for(i=0;i<6;i++) {
-			for(k=0;k<nWire;k++) postureDiff[i]+=matA[k][i]*lengthDiff[k];
-			matATA[i][i]+=sigma;
-		}
+			for(i=0;i<matATA.height();i++){
+				matATA[i][i]=0.0f;
+				postureDiff[i]=0.0f;
+				for(k=0;k<nWire;k++) matATA[i][i]+=matA[k][i]*matA[k][i];
+				for(j=i+1;j<6;j++){
+					matATA[i][j]=0.0f;
+					for(k=0;k<nWire;k++) matATA[i][j]+=matA[k][i]*matA[k][j];
+					matATA[j][i]=matATA[i][j];
+				}
+			}
+			for(i=0;i<matATA.height();i++) {
+				for(k=0;k<nWire;k++) postureDiff[i]+=matA[k][i]*lengthDiff[k];
+				matATA[i][i]+=sigma;
+			}
+			matATA.cholesky(postureDiff);
 
-		matATA.cholesky(postureDiff);
-
-		pos.X() +=postureDiff[0];
-		pos.Y() +=postureDiff[1];
-		pos.Z() +=postureDiff[2];
+			pos.X() +=postureDiff[0];
+			pos.Y() +=postureDiff[1];
+			pos.Z() +=postureDiff[2];
 	
-		Vec3f delta;
-		delta.X() = postureDiff[3];
-		delta.Y() = postureDiff[4];
-		delta.Z() = postureDiff[5];
-		float a = delta.norm();
-		if (a > 1e-10) ori = Quaternionf::Rot(a, delta/a) * ori;
-		UpdatePos();
-		MakeWireVec();
+			Vec3f delta;
+			delta.X() = postureDiff[3];
+			delta.Y() = postureDiff[4];
+			delta.Z() = postureDiff[5];
+			float a = delta.norm();
+			if (a > 1e-10) ori = Quaternionf::Rot(a, delta/a) * ori;
+			UpdatePos();
+			MakeWireVec();
+		}
 	}
 	float alpha = 0.00001f;
 	lengthDiff = calculatedLength-measuredLength-lengthDiffAve;
