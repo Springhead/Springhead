@@ -245,11 +245,11 @@ inline SC Det2(SC a, SC b, SC c, SC d){
 	概要は，\ref pageAffine 参照．
 */
 template <class T>
-class TAffine2:public PTM::TMatrixBase<DIMENC(3),DIMENC(3),
+class TAffine2:public PTM::TMatrixBase<3,3,
 	PTM::TMatrixDescCol< TAffine2<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TAffine2<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> desc;
-	typedef PTM::TMatrixBase<DIMENC(3),DIMENC(3),desc> base_type;
+	typedef PTM::TMatrixBase<3,3,desc> base_type;
 	///	基本的なメンバの定義 @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TAffine2);
 	union{
@@ -359,11 +359,11 @@ public:
 	概要は，\ref pageAffine 参照．	*/
 
 template <class T>
-class TAffine:public PTM::TMatrixBase<DIMENC(4),DIMENC(4),
+class TAffine:public PTM::TMatrixBase<4,4,
 	PTM::TMatrixDescCol< TAffine<T>, PTM::TMatrixRow<4,4,T>, 4,4,4,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TAffine<T>, PTM::TMatrixRow<4,4,T>, 4,4,4,T> desc;
-	typedef PTM::TMatrixBase<DIMENC(4),DIMENC(4),desc> base_type;
+	typedef PTM::TMatrixBase<4,4,desc> base_type;
 	/**	継承されない基本的なメンバの定義.
 		@see ::DEF_MATRIX_BASIC_MEMBER	*/
 	DEF_MATRIX_BASIC_MEMBER(TAffine);
@@ -510,7 +510,7 @@ public:
 \endverbatim
 */
 	template <class BUF>
-	static TAffine<T> Rot(element_type th, const PTM::TVectorBase<DIMENC(3), BUF>& axis)
+	static TAffine<T> Rot(element_type th, const PTM::TVectorBase<3, BUF>& axis)
 	{
 		TAffine<T> y;
 		Matrix3f r;
@@ -531,8 +531,8 @@ public:
 		@param back		奥のクリッピング平面とカメラの距離	*/
 	template <class BUFS, class BUFZ>
 	static TAffine<T> ProjectionGL(
-		const PTM::TVectorBase<DIMENC(3), BUFS>& screen,
-		const PTM::TVectorBase<DIMENC(2), BUFZ>& size,
+		const PTM::TVectorBase<3, BUFS>& screen,
+		const PTM::TVectorBase<2, BUFZ>& size,
 		element_type front=1.0f, element_type back=10000.0f)
 	{
 		TAffine<T> y;
@@ -545,8 +545,8 @@ public:
 		@param front	手前のクリッピング平面とカメラの距離
 		@param back		奥のクリッピング平面とカメラの距離	*/
 	template <class BUFS, class BUFZ>
-	static TAffine<T> ProjectionD3D(const PTM::TVectorBase<DIMENC(3), BUFS>& screen,
-	const PTM::TVectorBase<DIMENC(2), BUFZ>& size,
+	static TAffine<T> ProjectionD3D(const PTM::TVectorBase<3, BUFS>& screen,
+	const PTM::TVectorBase<2, BUFZ>& size,
 		element_type front=1.0f, element_type back=10000.0f)
 	{
 		TAffine<T> y;
@@ -556,25 +556,25 @@ public:
 
 	///	targetPosにEz()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUF>
-	void LookAt(const PTM::TVectorBase<DIMENC(3), BUF>& targetPos)
+	void LookAt(const PTM::TVectorBase<3, BUF>& targetPos)
 	{
 		PTM::init_look_at(*this, targetPos);
 	}
 	///	targetPosにEz()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUFZ, class BUFY>
-	void LookAt(const PTM::TVectorBase<DIMENC(3), BUFZ>& targetPos, const PTM::TVectorBase<DIMENC(3), BUFY>& upDir)
+	void LookAt(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir)
 	{
 		PTM::init_look_at(*this, targetPos, upDir);
 	}
 	///	targetPosに-Ez()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUF>
-	void LookAtGL(const PTM::TVectorBase<DIMENC(3), BUF>& targetPos)
+	void LookAtGL(const PTM::TVectorBase<3, BUF>& targetPos)
 	{
 		PTM::init_look_at_gl(*this, targetPos);
 	}
 	///	targetPosに-Ez()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
 	template <class BUFZ, class BUFY>
-	void LookAtGL(const PTM::TVectorBase<DIMENC(3), BUFZ>& targetPos, const PTM::TVectorBase<DIMENC(3), BUFY>& upDir)
+	void LookAtGL(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir)
 	{
 		PTM::init_look_at_gl(*this, targetPos, upDir);
 	}
@@ -589,32 +589,32 @@ public:
 	TAffine(){*this=Unit();}															\
 	TAffine(element_type px, element_type py, element_type pz){*this=Trn(px, py, pz);}	\
 	template <class BUFX, class BUFY>													\
-	TAffine(const PTM::TVectorBase<DIMENC(3), BUFX>& exi,								\
-			const PTM::TVectorBase<DIMENC(3), BUFY>& eyi){								\
+	TAffine(const PTM::TVectorBase<3, BUFX>& exi,								\
+			const PTM::TVectorBase<3, BUFY>& eyi){								\
 			PTM::init_direct(Rot(), exi, eyi, 'x');										\
 			item(3, 0) = 0; item(3, 1) = 0; item(3, 2) = 0; item(3, 3) = 1;				\
 			item(0, 3) = 0; item(1, 3) = 0; item(2, 3) = 0;								\
 	}																					\
 	template <class BUFX, class BUFY, class BUFP>										\
-	TAffine(	const PTM::TVectorBase<DIMENC(3), BUFX>& exi,							\
-			const PTM::TVectorBase<DIMENC(3), BUFY>& eyi,								\
-			const PTM::TVectorBase<DIMENC(3), BUFP>& posi){								\
+	TAffine(	const PTM::TVectorBase<3, BUFX>& exi,							\
+			const PTM::TVectorBase<3, BUFY>& eyi,								\
+			const PTM::TVectorBase<3, BUFP>& posi){								\
 			PTM::init_direct(Rot(), exi, eyi, 'x');										\
 			item(3, 0) = 0; item(3, 1) = 0; item(3, 2) = 0; item(3, 3) = 1;				\
 			item(0, 3) = posi.X(); item(1, 3) = posi.Y(); item(2, 3) = posi.Z();		\
 	}                                                                                   \
 	template <class BUFA, class BUFB>													\
-	TAffine(	const PTM::TVectorBase<DIMENC(3), BUFA>& a,								\
-			const PTM::TVectorBase<DIMENC(3), BUFB>& b,									\
+	TAffine(	const PTM::TVectorBase<3, BUFA>& a,								\
+			const PTM::TVectorBase<3, BUFB>& b,									\
 			char axis){																	\
 			PTM::init_direct(Rot(), exi, eyi, axis);									\
 			item(3, 0) = 0; item(3, 1) = 0; item(3, 2) = 0; item(3, 3) = 1;				\
 			item(0, 3) = 0; item(1, 3) = 0; item(2, 3) = 0;								\
 	}																					\
 	template <class BUFA, class BUFB, class BUFP>										\
-	TAffine(	const PTM::TVectorBase<DIMENC(3), BUFA>& a,							    \
-			const PTM::TVectorBase<DIMENC(3), BUFB>& b,									\
-			char axis, const PTM::TVectorBase<DIMENC(3), BUFP>& posi){					\
+	TAffine(	const PTM::TVectorBase<3, BUFA>& a,							    \
+			const PTM::TVectorBase<3, BUFB>& b,									\
+			char axis, const PTM::TVectorBase<3, BUFP>& posi){					\
 			PTM::init_direct(Rot(), exi, eyi, axis);									\
 			item(3, 0) = 0; item(3, 1) = 0; item(3, 2) = 0; item(3, 3) = 1;				\
 			item(0, 3) = posi.X(); item(1, 3) = posi.Y(); item(2, 3) = posi.Z();		\
@@ -628,22 +628,22 @@ public:
 	}																					\
 	template <class BUF>																\
 	TAffine(element_type th, char axis,													\
-		const PTM::TVectorBase<DIMENC(3), BUF>& posi) {									\
+		const PTM::TVectorBase<3, BUF>& posi) {									\
 		*this = Rot(th, axis); Pos() = posi; }											\
 	template <class BUFA>																\
-	TAffine(element_type th, const PTM::TVectorBase<DIMENC(3), BUFA>& axis){			\
+	TAffine(element_type th, const PTM::TVectorBase<3, BUFA>& axis){			\
 		*this = Rot(th, axis.unit());			                                        \
 	}                                                                                   \
 	template <class BUFA, class BUFP>													\
-	TAffine(element_type th, const PTM::TVectorBase<DIMENC(3), BUFA>& axis , const PTM::TVectorBase<DIMENC(3), BUFP>& posi){	\
+	TAffine(element_type th, const PTM::TVectorBase<3, BUFA>& axis , const PTM::TVectorBase<3, BUFP>& posi){	\
 		*this = Rot(th, axis.unit()); Pos() = posi;										\
 	}																					\
 	template <class BUFS, class BUFZ>													\
-	TAffine(const PTM::TVectorBase<DIMENC(3), BUFS>& screen, const PTM::TVectorBase<DIMENC(2), BUFZ>& size, element_type front=1.0f, element_type back=10000.0f){	\
+	TAffine(const PTM::TVectorBase<3, BUFS>& screen, const PTM::TVectorBase<2, BUFZ>& size, element_type front=1.0f, element_type back=10000.0f){	\
 		*this = ProjectionGL(screen, size, front, back);								\
 	}                                                                                   \
 	template <class BUF, class BUFV>													\
-	TAffine(const PTM::TMatrixOp<3, 3, BUF>& m, const PTM::TVectorBase<DIMENC(3), BUFV> posi){\
+	TAffine(const PTM::TMatrixOp<3, 3, BUF>& m, const PTM::TVectorBase<3, BUFV> posi){\
 		Rot() = m; Pos() = posi; ExW() = 0; EyW() = 0; EzW() = 0; PosW() = 1;			\
 	}
 

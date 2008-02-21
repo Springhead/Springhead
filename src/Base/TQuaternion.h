@@ -40,10 +40,10 @@ namespace Spr{;
 	bank = 0 
 */
 template<class ET>
-class TQuaternion:public PTM::TVectorBase<DIMENC(4), TVecDesc<TQuaternion<ET>, ET> >{
+class TQuaternion:public PTM::TVectorBase<4, TVecDesc<TQuaternion<ET>, ET> >{
 public:
 	typedef TVecDesc<TQuaternion<ET>, ET> desc;
-	typedef PTM::TVectorBase<DIMENC(4), desc> base_type;
+	typedef PTM::TVectorBase<4, desc> base_type;
 	///	継承されない基本的なメンバの定義.	@see ::DEF_TVECTOR_BASIC_MEMBER
 	DEF_TVECTOR_BASIC_MEMBER(TQuaternion);
 	union{
@@ -147,11 +147,11 @@ public:
 	///	コンストラクタ
 	TQuaternion(element_type wi, element_type xi, element_type yi, element_type zi){ W() = wi; X() = xi; Y() = yi; Z() = zi;}
 	template <class B>
-	void InitDirect(element_type a, const PTM::TVectorBase<DIMENC(3), B> v){
+	void InitDirect(element_type a, const PTM::TVectorBase<3, B> v){
 		W() = a; V() = v;
 	}
 	template <class B>
-	void InitDirect(element_type a, const PTM::TVectorBase<DIMENC(4), B> v){
+	void InitDirect(element_type a, const PTM::TVectorBase<4, B> v){
 		W() = v[0]; X() = v[1]; Y() = v[2]; Z() = v[3];
 	}
 	static TQuaternion<ET> Rot(element_type angle, const TVec3<element_type>& axis){
@@ -336,7 +336,7 @@ TQuaternion<A> operator*(const TQuaternion<A>& q1, const TQuaternion<B>& q2){
 
 ///	TQuaternionでベクトルを回転． Quaternion * vector * Quaternion^{*} と同じ．
 template <class ET, class BD>
-inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVectorBase<DIMENC(3), BD>& v){
+inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVectorBase<3, BD>& v){
 	TQuaternion<ET> qv(1, ET(v[0]), ET(v[1]), ET(v[2]));
 	TYPENAME BD::ret_type r = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
 	//TYPENAME BD::ret_type tmp = q.V() % v;
@@ -346,7 +346,7 @@ inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVec
 
 ///	TQuaternionで行列を回転． TQuaternion * (ex,ey,ez) * TQuaternion.conjugated() と同じ．
 template <class ET, class BD>
-inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TMatrixBase<DIMENC(3), DIMENC(3), BD>& m){
+inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TMatrixBase<3, 3, BD>& m){
 	TYPENAME BD::ret_type r;
 	for(int i=0; i<3; ++i){
 		TQuaternion<ET> qv(1, ET(m.col(i)[0]), ET(m.col(i)[1]), ET(m.col(i)[2]));
@@ -407,10 +407,10 @@ typedef TQuaternion<double> Quaterniond;
 	TAffineの代わりに使える．
 */
 template<class ET>
-class TPose:public PTM::TVectorBase<DIMENC(7), TVecDesc<TPose<ET>, ET> >{
+class TPose:public PTM::TVectorBase<7, TVecDesc<TPose<ET>, ET> >{
 public:
 	typedef TVecDesc<TPose<ET>, ET> desc;
-	typedef PTM::TVectorBase<DIMENC(4), desc> base_type;
+	typedef PTM::TVectorBase<4, desc> base_type;
 	///	継承されない基本的なメンバの定義.	@see ::DEF_TVECTOR_BASIC_MEMBER
 	DEF_TVECTOR_BASIC_MEMBER(TPose);
 	union{

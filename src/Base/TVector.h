@@ -21,6 +21,12 @@
 #include <assert.h>
 #include <stddef.h>
 #include <vector>
+
+//-----------------------------------------------------------------------------
+#ifndef TYPENAME
+# define TYPENAME typename
+#endif
+
 #ifdef _MSC_VER
  #define for if(0); else for
  #pragma warning (disable: 4786)
@@ -30,9 +36,6 @@
 #ifdef __BORLANDC__
  #pragma warn -8027
 #endif
-
-
-namespace PTM {;
 
 #ifdef _WIN32
  #pragma pack(push, 4)
@@ -44,46 +47,13 @@ namespace PTM {;
  #pragma inline_depth(255)
 #endif
 
-#if defined _MSC_VER && _MSC_VER < 1300
-/*	VisualC++のテンプレート対策．
-	VCはどうやら，テンプレート引数に同じ型の引数を複数つくると，全部最初の
-	引数の値をとるらしい．これでは，size_t を2つ以上渡すことができない．
-	そこで，サイズがnになるクラスを作って， sizeof でサイズを取り出すことで
-	複数の size_t を引数で渡すようにする．*/
- template <size_t N> class TVectorDim{
-	char dim[N];
- };
- #define DIMTYPE		class
- #define DIMENC(n)		PTM::TVectorDim<((n)+1)>
- #define DIMDEC(T)		((sizeof(T)-1))
- #define DIMDEF(T, t)	typedef T t
- #define TYPENAME
 
-#else
- //	他のコンパイラにはそんな変な問題はないようだ
- #define DIMTYPE size_t
- #define DIMENC(n) (n)
- #define DIMDEC(n) (n)
- #define DIMDEF(T, t) static const size_t t = T
- #define TYPENAME typename
-#endif
+namespace PTM {;
 
-template <size_t N>
-class TVecDim{
-public:
-	DIMDEF(DIMENC(N), SIZE);
-	DIMDEF(DIMENC(N), STRIDE);
-};
+//-----------------------------------------------------------------------------
 
-template <size_t STR, class EXP, class RET, class E, class Z=E>
-class TVectorDesc{
-public:
-	DIMDEF(DIMENC(STR), STRIDE);	///<	stride
-	typedef EXP		exp_type;		///<	実体
-	typedef RET		ret_type;		///<	返り値の型
-	typedef E		element_type;	///<	要素の型
-	typedef Z		zero;			///<	zero(0) が 要素の型の0を返す型
-};
+///	ベクトル/行列の次元数の型 ( == size_t == unsigned long)
+
 template <class EXP, class RET, class E, class Z=E>
 class VectorDesc{
 public:
@@ -92,11 +62,16 @@ public:
 	typedef E		element_type;	///<	要素の型
 	typedef Z		zero;			///<	zero(0) が 要素の型の0を返す型
 };
+template <size_t STR, class EXP, class RET, class E, class Z=E>
+class TVectorDesc:public VectorDesc<EXP, RET, E, Z>{
+public:
+	static const size_t STRIDE = STR;	///<	stride
+};
 
 ///@name 演算.
 //@{
 template <class D> class VectorImp;
-template <DIMTYPE N, class D> class TVectorBase;
+template <size_t N, class D> class TVectorBase;
 /**	ベクトルの要素を全てvにする.
 	@param v 要素型の値.	*/
 template <class D>
@@ -113,14 +88,14 @@ void assign(VectorImp<AD>& a, const VectorImp<BD>& b) {
 }
 ///	代入(a = b) 2要素専用
 template <class AD, class BD>
-void assign(TVectorBase<DIMENC(2), AD>& a, const TVectorBase<DIMENC(2), BD>& b) {
+void assign(TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	assert(a.size() == b.size());
 	a.item(0) = b.item(0);
 	a.item(1) = b.item(1);
 }
 ///	代入(a = b) 3要素専用
 template <class AD, class BD>
-void assign(TVectorBase<DIMENC(3), AD>& a, const TVectorBase<DIMENC(3), BD>& b) {
+void assign(TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	assert(a.size() == b.size());
         typedef TYPENAME AD::element_type ET;
 	a.item(0) = ET(b.item(0));
@@ -129,7 +104,7 @@ void assign(TVectorBase<DIMENC(3), AD>& a, const TVectorBase<DIMENC(3), BD>& b) 
 }
 ///	代入(a = b) 4要素専用
 template <class AD, class BD>
-void assign(TVectorBase<DIMENC(4), AD>& a, const TVectorBase<DIMENC(4), BD>& b) {
+void assign(TVectorBase<4, AD>& a, const TVectorBase<4, BD>& b) {
 	assert(a.size() == b.size());
 	a.item(0) = (TYPENAME AD::element_type)b.item(0);
 	a.item(1) = (TYPENAME AD::element_type)b.item(1);
@@ -186,7 +161,7 @@ TYPENAME AD::element_type dot(const VectorImp<AD>& a, const VectorImp<BD>& b){
 	return rv;
 }
 template <class AD, class BD>
-TYPENAME AD::element_type dot(const TVectorBase<DIMENC(3), AD>& a, const TVectorBase<DIMENC(3), BD>& b){
+TYPENAME AD::element_type dot(const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b){
         typedef TYPENAME AD::element_type ET;
 	return ET(a.item(0)*b.item(0) + a.item(1)*b.item(1) + a.item(2)*b.item(2));
 }
@@ -258,17 +233,17 @@ public:
 	///@name 基本操作.
 	//@{
 	///	実体の取得
-	exp_type& exp(){ return *(exp_type*)this; }
-	const exp_type& exp() const { return *(const exp_type*)this; }
+	inline exp_type& exp(){ return *(exp_type*)this; }
+	inline const exp_type& exp() const { return *(const exp_type*)this; }
 	///	n番目の要素を返す(基数は0).
-	element_type& item(size_t n){ return exp().item_impl(n); }
-	const element_type& item(size_t n) const { return exp().item_impl(n); }
+	inline element_type& item(size_t n){ return exp().item_impl(n); }
+	inline const element_type& item(size_t n) const { return exp().item_impl(n); }
 	///	サイズの取得
-	size_t size() const { return exp().size_impl(); }
+	inline size_t size() const { return exp().size_impl(); }
 	///	サイズの設定
-	void resize(size_t sz){ exp().resize_impl(sz); }
+	inline void resize(size_t sz){ exp().resize_impl(sz); }
 	///	ストライドの取得
-	size_t stride(){ return exp().stride_impl(); }
+	inline size_t stride(){ return exp().stride_impl(); }
 	//@}
 	
 	///@name 部分ベクトル
@@ -279,30 +254,30 @@ public:
 		@param	SZ::OFFSET	部分ベクトルの最初の要素の位置.
 		@param	SZ::SIZE	部分ベクトルのサイズ.
 		@return	SZ で指定されたベクトルへの参照を返す.	*/
-	template <class SZ> TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&
-	t_slice(SZ){ return (TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&)item(DIMDEC(SZ::OFFSET)); }
-	template <class SZ>	const TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&
-	t_slice(SZ) const { return (TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&)item(DIMDEC(SZ::OFFSET)); }
+	template <class SZ> TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
+	t_slice(SZ){ return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(SZ::OFFSET); }
+	template <class SZ>	const TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
+	t_slice(SZ) const { return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(SZ::OFFSET); }
 	///	部分ベクトルを返す．テンプレート版
-	template <class SZ> TSubVector<DIMDEC(SZ::SIZE), desc>&
-	sub_vector(SZ){ return (TSubVector<DIMDEC(SZ::SIZE), desc>&)item(DIMDEC(SZ::OFFSET)); }
-	template <class SZ>	const TSubVector<DIMDEC(SZ::SIZE), desc>&
-	sub_vector(SZ) const { return (TSubVector<DIMDEC(SZ::SIZE), desc>&)item(DIMDEC(SZ::OFFSET)); }
+	template <class SZ> TSubVector<SZ::SIZE, desc>&
+	sub_vector(SZ){ return (TSubVector<SZ::SIZE, desc>&)item(SZ::OFFSET); }
+	template <class SZ>	const TSubVector<SZ::SIZE, desc>&
+	sub_vector(SZ) const { return (TSubVector<SZ::SIZE, desc>&)item(SZ::OFFSET); }
 	/**	スライスを返す．サイズだけテンプレート版
 		このベクトルの off 要素から off + SZ::SIZE要素までの
 		部分ベクトルへの参照を返す．
 		@param	SZ::OFFSET	部分ベクトルの最初の要素の位置.
 		@param	SZ::SIZE	部分ベクトルのサイズ.
 		@return	SZ で指定されたベクトルへの参照を返す.	*/
-	template <class SZ> TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&
-	t_slice(size_t off, SZ){ return (TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&)item(off); }
-	template <class SZ>	const TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&
-	t_slice(size_t off, SZ) const { return (TVectorSlice<DIMDEC(SZ::SIZE), DIMDEC(SZ::STRIDE), desc>&)item(off); }
+	template <class SZ> TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
+	t_slice(size_t off, SZ){ return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(off); }
+	template <class SZ>	const TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
+	t_slice(size_t off, SZ) const { return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(off); }
 	///	部分ベクトルを返す．サイズだけテンプレート版
-	template <class SZ> TSubVector<DIMDEC(SZ::SIZE), desc>&
-	sub_vector(size_t off, SZ){ return (TSubVector<DIMDEC(SZ::SIZE), desc>&)item(off); }
-	template <class SZ>	const TSubVector<DIMDEC(SZ::SIZE), desc>&
-	sub_vector(size_t off, SZ) const { return (TSubVector<DIMDEC(SZ::SIZE), desc>&)item(off); }
+	template <class SZ> TSubVector<SZ::SIZE, desc>&
+	sub_vector(size_t off, SZ){ return (TSubVector<SZ::SIZE, desc>&)item(off); }
+	template <class SZ>	const TSubVector<SZ::SIZE, desc>&
+	sub_vector(size_t off, SZ) const { return (TSubVector<SZ::SIZE, desc>&)item(off); }
 	
 	///	部分ベクトルを返す．変数版
 	EVectorSlice<element_type> v_range(size_t off, size_t sz){
@@ -465,14 +440,14 @@ protected:
 };
 
 ///	次元をテンプレートで持つベクトルの基本型
-template<DIMTYPE N, class D>
+template<size_t N, class D>
 class TVectorBase: public VectorImp<D> {
 protected:
 	TVectorBase(){}
 public:
-	DIMDEF(N, SIZE);
-	size_t size_impl() const { return DIMDEC(N); }
-	void resize_impl(size_t sz) { assert(sz==DIMDEC(N)); }
+	static const size_t SIZE = N;
+	size_t size_impl() const { return SIZE; }
+	void resize_impl(size_t sz) { assert(sz==SIZE); }
 };
 
 
@@ -530,9 +505,9 @@ public:
 template <const size_t SOFF, const size_t SDIM>
 class TSubVectorDim{
 public:
-	DIMDEF(DIMENC(SOFF),	OFFSET);
-	DIMDEF(DIMENC(SDIM),	SIZE);
-	DIMDEF(DIMENC(1),		STRIDE);
+	static const size_t OFFSET=SOFF;
+	static const size_t SIZE=SDIM;
+	static const size_t STRIDE=1;
 };
 //----------------------------------------------------------------------------
 /**	ベクトル型. TVector<3, float> v; のように使う
@@ -541,11 +516,11 @@ public:
 	@see		TVector型の演算子
 */
 template <size_t N, class T>
-class TVector:public TVectorBase<DIMENC(N), TVectorDesc<1, TVector<N,T>, TVector<N,T>, T> >{
+class TVector:public TVectorBase<N, TVectorDesc<1, TVector<N,T>, TVector<N,T>, T> >{
 public:
-	DIMDEF(DIMENC(1), STRIDE);
+	static const size_t STRIDE=1;
 	typedef TVectorDesc<1, TVector<N,T>, TVector<N,T>, T> desc;	///<	型情報
-	typedef TVectorBase<DIMENC(N),desc> base_type;				///<	基本クラス型
+	typedef TVectorBase<N, desc> base_type;						///<	基本クラス型
 	/**	継承されない基本的なメンバの定義.
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVector);
@@ -561,47 +536,46 @@ public:
 };
 
 template<size_t SZ, size_t STR, class OD>
-class TVectorSlice: public TVectorBase<DIMENC(SZ),
-	TVectorDesc< STR*DIMDEC(OD::STRIDE), 
+class TVectorSlice: public TVectorBase<SZ,	TVectorDesc< STR*OD::STRIDE, 
 		TVectorSlice<SZ, STR, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> > {
 public:
-	DIMDEF(DIMENC(SZ), SIZE);
-	DIMDEF(DIMENC(STR), STRIDE);
+	static const SIZE = SZ;
+	static const STRIDE = STR;
 	typedef void array_type;
 	typedef void const_array_type;
-	typedef TVectorDesc< STR*DIMDEC(OD::STRIDE), TVectorSlice<SZ, STR, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
-	typedef TVectorBase<DIMENC(SZ), desc> base_type;
+	typedef TVectorDesc< STR*OD::STRIDE, TVectorSlice<SZ, STR, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
+	typedef TVectorBase<SZ, desc> base_type;
 	///	継承されない基本的なメンバの定義  @see ::DEF_VECTOR_BASIC_MEMBER
 	DEF_VECTOR_BASIC_MEMBER(TVectorSlice);
 	///	要素のアクセス
 	element_type& item_impl(size_t i){ return data[i][0]; }
 	const element_type& item_impl(size_t i) const { return data[i][0]; }
 	///	ストライド
-	size_t stride_impl() const { return DIMDEC(STRIDE); }
+	size_t stride_impl() const { return STRIDE; }
 protected:
-	element_type data[DIMDEC(SIZE)][DIMDEC(STRIDE)];
+	element_type data[SIZE][STRIDE];
 };
 
 
 template<size_t SZ, class OD>
-class TSubVector: public TVectorBase<DIMENC(SZ),
-	TVectorDesc< DIMDEC(OD::STRIDE), TSubVector<SZ, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> > {
+class TSubVector: public TVectorBase<SZ, TVectorDesc< OD::STRIDE, TSubVector<SZ, OD>, 
+	TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> > {
 public:
-	DIMDEF(DIMENC(SZ), SIZE);
-	DIMDEF(OD::STRIDE, STRIDE);
+	static const SIZE = SZ;
+	static const STRIDE = OD::STRIDE;
 	typedef void array_type;
 	typedef void const_array_type;
-	typedef TVectorDesc< DIMDEC(OD::STRIDE), TSubVector<SZ, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
-	typedef TVectorBase<DIMENC(SZ), desc> base_type;
+	typedef TVectorDesc< OD::STRIDE, TSubVector<SZ, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
+	typedef TVectorBase<SZ, desc> base_type;
 	///	継承されない基本的なメンバの定義  @see ::DEF_VECTOR_BASIC_MEMBER
 	DEF_VECTOR_BASIC_MEMBER(TSubVector);
 	///	要素のアクセス
 	element_type& item_impl(size_t i){ return data[i][0]; }
 	const element_type& item_impl(size_t i) const { return data[i][0]; }
 	///	ストライド
-	size_t stride_impl() const { return DIMDEC(STRIDE); }
+	size_t stride_impl() const { return STRIDE; }
 protected:
-	element_type data[DIMDEC(SIZE)][DIMDEC(STRIDE)];
+	element_type data[SIZE][STRIDE];
 };
 
 //----------------------------------------------------------------------------
@@ -822,7 +796,7 @@ TYPENAME AD::ret_type operator - (const VectorImp<AD>& a, const VectorImp<BD>& b
 	@param	b	要素型
 	@return		ベクトル型	*/
 template <class BD>
-typename BD::ret_type operator * (const TYPENAME BD::element_type& a, const VectorImp<BD>& b) {
+TYPENAME BD::ret_type operator * (const TYPENAME BD::element_type& a, const VectorImp<BD>& b) {
 	TYPENAME BD::ret_type r(b);
 	r.multi(a);
 	return r;
@@ -867,15 +841,15 @@ std::istream& operator >> (std::istream& is, VectorImp<BD>& v){
 	@param	b	2次元ベクトル型
 	@return		要素型	*/
 template <class	AD, class BD>
-typename AD::element_type cross (const TVectorBase<DIMENC(2), AD>& a, const TVectorBase<DIMENC(2), BD>& b) {
+typename AD::element_type cross (const TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	return a[0] * b[1] - a[1] * b[0];
 }
 template <class	AD, class BD>
-typename AD::element_type operator % (const TVectorBase<DIMENC(2), AD>& a, const TVectorBase<DIMENC(2), BD>& b) {
+typename AD::element_type operator % (const TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	return cross(a, b);
 }
 template <class	AD, class BD>
-typename AD::element_type operator ^ (const TVectorBase<DIMENC(2), AD>& a, const TVectorBase<DIMENC(2), BD>& b) {
+typename AD::element_type operator ^ (const TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	return cross(a, b);
 }
 
@@ -884,7 +858,7 @@ typename AD::element_type operator ^ (const TVectorBase<DIMENC(2), AD>& a, const
 	@param	b	3次元ベクトル型
 	@return		3次元ベクトル型	*/
 template <class	AD, class BD>
-TYPENAME AD::ret_type cross (const TVectorBase<DIMENC(3), AD>& a, const TVectorBase<DIMENC(3), BD>& b) {
+TYPENAME AD::ret_type cross (const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	TYPENAME AD::ret_type r;
 	typedef TYPENAME AD::element_type ADET;
 	r[0] = ADET(a[1] * b[2] - a[2] * b[1]);
@@ -894,11 +868,11 @@ TYPENAME AD::ret_type cross (const TVectorBase<DIMENC(3), AD>& a, const TVectorB
 }
 
 template <class	AD, class BD>
-TYPENAME AD::ret_type operator % (const TVectorBase<DIMENC(3), AD>& a, const TVectorBase<DIMENC(3), BD>& b) {
+TYPENAME AD::ret_type operator % (const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	return cross(a, b);
 }
 template <class	AD, class BD>
-TYPENAME AD::ret_type operator ^ (const TVectorBase<DIMENC(3), AD>& a, const TVectorBase<DIMENC(3), BD>& b) {
+TYPENAME AD::ret_type operator ^ (const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	return cross(a, b);
 }
 

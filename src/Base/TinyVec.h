@@ -28,10 +28,10 @@ namespace Spr{;
 template <class EXP, class T> class TVecDesc: public PTM::TVectorDesc<1, EXP, EXP, T>{};
 /**	2次元ベクトルクラス	*/
 template<class T>
-class TVec2:public PTM::TVectorBase<DIMENC(2), TVecDesc<TVec2<T>, T> >{
+class TVec2:public PTM::TVectorBase<2, TVecDesc<TVec2<T>, T> >{
 public:
 	typedef TVecDesc<TVec2<T>, T> desc;
-	typedef PTM::TVectorBase<DIMENC(2), desc> base_type;
+	typedef PTM::TVectorBase<2, desc> base_type;
 	///	基本的なメンバの定義 @see ::DEF_TVECTOR_BASIC_MEMBER
 	DEF_TVECTOR_BASIC_MEMBER(TVec2);
 
@@ -94,10 +94,10 @@ protected:
 //		TVec3
 ///	3次元ベクトルクラス.
 template<class T>
-class TVec3:public PTM::TVectorBase<DIMENC(3), TVecDesc<TVec3<T>, T> >{
+class TVec3:public PTM::TVectorBase<3, TVecDesc<TVec3<T>, T> >{
 public:
 	typedef TVecDesc<TVec3<T>, T> desc;
-	typedef PTM::TVectorBase<DIMENC(3), desc> base_type;
+	typedef PTM::TVectorBase<3, desc> base_type;
 	/**	継承されない基本的なメンバの定義.
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVec3);
@@ -164,10 +164,10 @@ protected:
 //		TVec4
 ///	4次元ベクトルクラス.
 template<class T>
-class TVec4:public PTM::TVectorBase<DIMENC(4), TVecDesc<TVec4<T>, T> >{
+class TVec4:public PTM::TVectorBase<4, TVecDesc<TVec4<T>, T> >{
 public:
 	typedef TVecDesc<TVec4<T>, T> desc;
-	typedef PTM::TVectorBase<DIMENC(4), desc> base_type;
+	typedef PTM::TVectorBase<4, desc> base_type;
 	/**	継承されない基本的なメンバの定義.
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVec4);

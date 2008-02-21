@@ -29,11 +29,11 @@ namespace Spr{;
 //		TMatrix2
 /**	2x2行列クラス.	*/
 template <class T>
-class TMatrix2:public PTM::TMatrixBase<DIMENC(2),DIMENC(2),
+class TMatrix2:public PTM::TMatrixBase<2,2,
 	PTM::TMatrixDescCol< TMatrix2<T>, PTM::TMatrixRow<2,2,T>, 2,2,2,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TMatrix2<T>, PTM::TMatrixRow<2,2,T>, 2,2,2,T> desc;
-	typedef PTM::TMatrixBase<DIMENC(2),DIMENC(2),desc> base_type;
+	typedef PTM::TMatrixBase<2,2,desc> base_type;
 	///	基本的なメンバの定義 @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrix2);
 	union{
@@ -91,7 +91,7 @@ public:
 	}
 	///x/y軸の向きを指定
 	template<typename BUFA>
-	static TMatrix2<T> Rot(const PTM::TVectorBase<DIMENC(2), BUFA>& a, char axis){
+	static TMatrix2<T> Rot(const PTM::TVectorBase<2, BUFA>& a, char axis){
 		TMatrix2<T> m;
 		PTM::init_rot(m, a, axis);
 		return m;
@@ -128,11 +128,11 @@ public:
 
 ///	3x3行列クラス.
 template <class T>
-class TMatrix3:public PTM::TMatrixBase<DIMENC(3),DIMENC(3),
+class TMatrix3:public PTM::TMatrixBase<3,3,
 	PTM::TMatrixDescCol< TMatrix3<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TMatrix3<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> desc;
-	typedef PTM::TMatrixBase<DIMENC(3),DIMENC(3),desc> base_type;
+	typedef PTM::TMatrixBase<3,3,desc> base_type;
 	///	基本的なメンバの定義 @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrix3);
 	union{
@@ -200,7 +200,7 @@ public:
 	void set_default(){*this = Unit();}
 	///コンストラクタ（基底ベクトルを指定）
 	template <class BX, class BY, class BZ>
-	TMatrix3(const PTM::TVectorBase<DIMENC(3), BX>& exi, const PTM::TVectorBase<DIMENC(3), BY>&eyi, const PTM::TVectorBase<DIMENC(3), BZ>&ezi){
+	TMatrix3(const PTM::TVectorBase<3, BX>& exi, const PTM::TVectorBase<3, BY>&eyi, const PTM::TVectorBase<3, BZ>&ezi){
 		Ex() = exi; Ey() = eyi; Ez() = ezi;
 	}
 	///コンストラクタ（成分を指定）
@@ -222,7 +222,7 @@ public:
 	///回転行列
 	///方向ベクトルで指定
 	template <class BA, class BB>
-	static TMatrix3<T> Rot(const PTM::TVectorBase<DIMENC(3),BA>& a, const PTM::TVectorBase<DIMENC(3),BB>&b, char axis = 'x') {
+	static TMatrix3<T> Rot(const PTM::TVectorBase<3,BA>& a, const PTM::TVectorBase<3,BB>&b, char axis = 'x') {
 		TMatrix3<T> m;
 		PTM::init_rot(m, a, b, axis);
 		return m;
@@ -241,14 +241,14 @@ public:
 		+																	   +
 	*/
 	template <class B>
-	static TMatrix3<T> Rot(element_type th, const PTM::TVectorBase<DIMENC(3), B>& axis){
+	static TMatrix3<T> Rot(element_type th, const PTM::TVectorBase<3, B>& axis){
 		TMatrix3<T> m;
 		PTM::init_rot(m, th, axis.unit());
 		return m;
 	}
 	///	Qutaternionで指定
 	template <class B>
-	static TMatrix3<T> Rot(const PTM::TVectorBase<DIMENC(4), B>& q){
+	static TMatrix3<T> Rot(const PTM::TVectorBase<4, B>& q){
 		TMatrix3<T> m;
 		PTM::init_rot(m, q);
 		return m;
@@ -256,7 +256,7 @@ public:
 	
 	///外積と等価な行列
 	template <class B>
-	static TMatrix3<T> Cross(const PTM::TVectorBase<DIMENC(3), B>& v){
+	static TMatrix3<T> Cross(const PTM::TVectorBase<3, B>& v){
 		TMatrix3<T> m;
 		PTM::init_cross(m, v);
 		return m;

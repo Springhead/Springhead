@@ -182,18 +182,18 @@ namespace PTM{;
 template <size_t T, size_t L, size_t H, size_t W>
 class TSubMatrixDim{
 public:
-	DIMDEF(DIMENC(T),		TOP);
-	DIMDEF(DIMENC(L),		LEFT);
-	DIMDEF(DIMENC(H),		HEIGHT);
-	DIMDEF(DIMENC(W),		WIDTH);
+	static const size_t TOP = T;
+	static const size_t LEFT = L;
+	static const size_t HEIGHT = H;
+	static const size_t WIDTH = W;
 };
 /**	部分行列型作成のためのユーティリティークラス.
 	TMatDim<height, width> と次元を指定できる。	*/
 template <size_t H, size_t W>
 class TMatDim{
 public:
-	DIMDEF(DIMENC(H),		HEIGHT);
-	DIMDEF(DIMENC(W),		WIDTH);
+	static const size_t HEIGHT = H;
+	static const size_t WIDTH = W;
 };
 
 template <size_t H, size_t W, class OD> class TSubMatrixRow;
@@ -212,21 +212,21 @@ public:
 	//@{
 	///	部分行列（テンプレート版）
 	template <class SUB>
-		TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(SUB){
-		return (TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(DIMDEC(SUB::TOP), DIMDEC(SUB::LEFT));
+		TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB){
+		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
 	}
 	template <class SUB>
-		const TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(SUB) const {
-		return (TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(DIMDEC(SUB::TOP), DIMDEC(SUB::LEFT));
+		const TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB) const {
+		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
 	}
 	///	部分行列（サイズだけテンプレート版）
 	template <class SUB>
-		TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(size_t t, size_t l, SUB){
-		return (TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(t,l);
+		TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB){
+		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
 	}
 	template <class SUB>
-		const TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(size_t t, size_t l, SUB) const {
-		return (TSubMatrixRow<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(t,l);
+		const TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB) const {
+		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
 	}
 	///	部分行列（変数版）
 	ESubMatrixRow<element_type> vsub_matrix(int t, int l, int h, int w){
@@ -246,21 +246,21 @@ public:
 	//@{
 	///	部分行列（テンプレート版）
 	template <class SUB>
-		TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(SUB){
-		return (TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(DIMDEC(SUB::TOP), DIMDEC(SUB::LEFT));
+		TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB){
+		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
 	}
 	template <class SUB>
-		const TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(SUB) const {
-		return (TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(DIMDEC(SUB::TOP), DIMDEC(SUB::LEFT));
+		const TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB) const {
+		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
 	}
 	///	部分行列（サイズだけテンプレート版）
 	template <class SUB>
-		TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(size_t t, size_t l, SUB){
-		return (TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(t,l);
+		TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB){
+		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
 	}
 	template <class SUB>
-		const TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>& sub_matrix(size_t t, size_t l, SUB) const {
-		return (TSubMatrixCol<DIMDEC(SUB::HEIGHT), DIMDEC(SUB::WIDTH), desc>&)exp().item(t,l);
+		const TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB) const {
+		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
 	}
 	///	部分行列（変数版）
 	ESubMatrixCol<element_type> vsub_matrix(int t, int l, int h, int w){
@@ -306,8 +306,8 @@ public:
 ///	@name 行列演算の実装
 //@{
 template <class DESC> class MatrixImp;
-template <DIMTYPE H, DIMTYPE W, class D> class TMatrixBaseBase;
-template <DIMTYPE H, DIMTYPE W, class D> class TMatrixBase;
+template <size_t H, size_t W, class D> class TMatrixBaseBase;
+template <size_t H, size_t W, class D> class TMatrixBase;
 template <class DESC> class EMatrixBase;
 
 /**	代入(*this = b).
@@ -370,7 +370,7 @@ void multi(VectorImp<RD>& r, const MatrixImp<AD>& a, const VectorImp<BD>& b){
 }
 ///	行列とベクトルの掛け算	:	3x3
 template <class RD, class AD, class BD>
-void multi(TVectorBase<DIMENC(3), RD>& r, const TMatrixBase<DIMENC(3),DIMENC(3),AD>& a, const TVectorBase<DIMENC(3), BD>& b){
+void multi(TVectorBase<3, RD>& r, const TMatrixBase<3,3,AD>& a, const TVectorBase<3, BD>& b){
 	r(0) = a.row(0) * b;
 	r(1) = a.row(1) * b;
 	r(2) = a.row(2) * b;
@@ -393,7 +393,7 @@ void multi(MatrixImp<RD>& r, const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 ///	行列の掛け算	サイズ：3x3
 #ifndef __BORLANDC__
 template <class RD, class AD, class BD>
-void multi(TMatrixBase<DIMENC(3), DIMENC(3), RD>& r, const TMatrixBase<DIMENC(3), DIMENC(3), AD>& a, const TMatrixBase<DIMENC(3), DIMENC(3), BD>& b){
+void multi(TMatrixBase<3, 3, RD>& r, const TMatrixBase<3, 3, AD>& a, const TMatrixBase<3, 3, BD>& b){
         typedef TYPENAME RD::element_type ET;
 #define CALC(i,j) r.item(i,j) = ET( a.item(i,0)*b.item(0,j) + a.item(i,1)*b.item(1,j) + a.item(i,2)*b.item(2,j) )
 	CALC(0,0);	CALC(0,1);	CALC(0,2);
@@ -404,7 +404,7 @@ void multi(TMatrixBase<DIMENC(3), DIMENC(3), RD>& r, const TMatrixBase<DIMENC(3)
 #endif
 ///	行列の掛け算	サイズ：4x4
 template <class RD, class AD, class BD>
-void multi(TMatrixBase<DIMENC(4), DIMENC(4), RD>& r, const TMatrixBase<DIMENC(4), DIMENC(4), AD>& a, const TMatrixBase<DIMENC(4), DIMENC(4), BD>& b){
+void multi(TMatrixBase<4, 4, RD>& r, const TMatrixBase<4, 4, AD>& a, const TMatrixBase<4, 4, BD>& b){
         typedef TYPENAME RD::element_type ET;
 #define CALC(i,j) r.item(i,j) = ET( a.item(i,0)*b.item(0,j) + a.item(i,1)*b.item(1,j) + a.item(i,2)*b.item(2,j) + a.item(i,3)*b.item(3,j) )
 	CALC(0,0);	CALC(0,1);	CALC(0,2);	CALC(0,3);
@@ -425,23 +425,23 @@ TYPENAME AD::element_type det(const MatrixImp<AD>& a){
 	return lu(tmp, ip, w);
 }
 ///	行列式	サイズ：テンプレート
-template <DIMTYPE H, DIMTYPE W, class AD>
+template <size_t H, size_t W, class AD>
 TYPENAME AD::element_type det(const TMatrixBaseBase<H,W,AD>& a){
 	TYPENAME AD::ret_type tmp(a);
-	TVector<DIMDEC(H), int> ip;
-	TVector<DIMDEC(H), TYPENAME AD::element_type> w;
+	TVector<H, int> ip;
+	TVector<H, TYPENAME AD::element_type> w;
 	return lu(tmp, ip, w);
 }
 #ifndef __BORLANDC__
 ///	行列式	サイズ：2x2
 template <class AD>
-TYPENAME AD::element_type det(const TMatrixBase<DIMENC(2),DIMENC(2),AD>& a){
+TYPENAME AD::element_type det(const TMatrixBase<2,2,AD>& a){
 	return a.item(0,0) * a.item(1,1) - a.item(0,1) * a.item(1,0);
 }
 #endif
 ///	行列式	サイズ：3x3
 template <class AD>
-TYPENAME AD::element_type det(const TMatrixBase<DIMENC(3),DIMENC(3),AD>& a){
+TYPENAME AD::element_type det(const TMatrixBase<3,3,AD>& a){
 	return 
 		( a.item(0,0) * a.item(1,1) * a.item(2,2)  +  a.item(1,0) * a.item(2,1) * a.item(0,2)  +  a.item(2,0) * a.item(0,1) * a.item(1,2) ) -
 		( a.item(2,0) * a.item(1,1) * a.item(0,2)  +  a.item(0,0) * a.item(2,1) * a.item(1,2)  +  a.item(1,0) * a.item(0,1) * a.item(2,2) );
@@ -602,18 +602,18 @@ TYPENAME AD::ret_type inv(const MatrixImp<AD>& a){
 	return r;
 }
 ///	 逆行列を返す．	サイズ：テンプレート
-template <class AD, DIMTYPE H, DIMTYPE W>
+template <class AD, size_t H, size_t W>
 TYPENAME AD::ret_type inv(const TMatrixBaseBase<H,W,AD>& a){
 	TYPENAME AD::ret_type r, tmp(a);
-	TVector<DIMDEC(H), int> ip;
-	TVector<DIMDEC(H), TYPENAME AD::element_type> w;
+	TVector<H, int> ip;
+	TVector<H, TYPENAME AD::element_type> w;
 	inv(r, tmp, (int*)ip, (TYPENAME AD::element_type*)w);
 	return r;
 }
 #ifndef __BORLANDC__
 ///	逆行列を返す
 template <class AD>
-TYPENAME AD::ret_type inv(const TMatrixBase<DIMENC(2), DIMENC(2), AD>& a){
+TYPENAME AD::ret_type inv(const TMatrixBase<2, 2, AD>& a){
 	TYPENAME AD::element_type d = a.det();
 	TYPENAME AD::ret_type rv;
 	rv.item(0,0) =  a.item(1,1) / d;
@@ -625,7 +625,7 @@ TYPENAME AD::ret_type inv(const TMatrixBase<DIMENC(2), DIMENC(2), AD>& a){
 #endif
 ///	逆行列
 template <class AD>
-TYPENAME AD::ret_type inv(const TMatrixBase<DIMENC(3), DIMENC(3), AD>& a){
+TYPENAME AD::ret_type inv(const TMatrixBase<3, 3, AD>& a){
 #define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
 	TYPENAME AD::ret_type rtv;
 	TYPENAME AD::element_type det_ = 1 / a.det();
@@ -860,7 +860,7 @@ protected:
 //	次元をテンプレートで持つベクトル	T???Matrix
 //
 ///	次元をテンプレートで持つベクトルの基本型
-template<DIMTYPE H, DIMTYPE W, class D>
+template<size_t H, size_t W, class D>
 class TMatrixBaseBase: public MatrixImp<D> {
 protected:
 	///	バッファの初期化は不用
@@ -868,18 +868,18 @@ protected:
 	///	継承専用
 	TMatrixBaseBase(){} 
 public:
-	DIMDEF(H, HEIGHT);			///<	行数
-	DIMDEF(W, WIDTH);			///<	列数
-	DIMDEF(D::STRIDE, STRIDE);	///<	列(行)の間隔
+	static const size_t HEIGHT = H;			///<	行数
+	static const size_t WIDTH = W;			///<	列数
+	static const size_t STRIDE = D::STRIDE;	///<	列(行)の間隔
 	typedef D desc;
 	typedef MatrixImp<desc> base_type;
 	DEF_MATRIXD_BASIC_MEMBER(TMatrixBaseBase);
 
 	///	行数
-	size_t height_impl() const { return DIMDEC(H); }
+	size_t height_impl() const { return H; }
 	///	列数
-	size_t width_impl() const { return DIMDEC(W); }
-	size_t stride_impl() const { return DIMDEC(D::STRIDE); }
+	size_t width_impl() const { return W; }
+	size_t stride_impl() const { return D::STRIDE; }
 	void resize_impl(size_t h, size_t w) { assert(h==this->height() && w==this->width()); }
 	///	行ベクトル
 	row_vector_ref row_impl(size_t n){ return (row_vector_ref)this->item(n,0); }
@@ -891,12 +891,12 @@ public:
 	trans_ref trans_impl() { return (trans_ref)this->item(0,0); }
 	const_trans_ref trans_impl() const { return (const_trans_ref)this->item(0,0); }
 };
-template<DIMTYPE H, DIMTYPE W, class D>
+template<size_t H, size_t W, class D>
 class TMatrixBase: public TMatrixBaseBase<H,W,D> {
 public:
-	DIMDEF(H, HEIGHT);			///<	行数
-	DIMDEF(W, WIDTH);			///<	列数
-	DIMDEF(D::STRIDE, STRIDE);	///<	列(行)の間隔
+	static const size_t HEIGHT = H;			///<	行数
+	static const size_t WIDTH = W;			///<	列数
+	static const size_t STRIDE = D::STRIDE;	///<	列(行)の間隔
 	typedef D desc;
 	typedef TMatrixBaseBase<H,W,D> base_type;
 	DEF_MATRIXD_BASIC_MEMBER(TMatrixBase);
@@ -905,7 +905,7 @@ public:
 template <class EXP, class TRANS, size_t H, size_t W, size_t STR, class T, class Z=T, class U=Z>
 class TMatrixDescBase{
 public:
-	DIMDEF(DIMENC(STR),				STRIDE);				///<	行列バッファの幅
+	static const size_t STRIDE = STR;				///<	行列バッファの幅
 	typedef EXP						exp_type;				///<	実体
 	typedef exp_type				ret_type;				///<	返り値型
 	typedef T						element_type;			///<	要素の型
@@ -940,12 +940,12 @@ public:
 	typedef const col_vector_type&	const_col_vector_ref;	///<	列ベクトルの参照
 };
 template <class EXP, class TRANS, size_t H, size_t W, class OD>
-class TSubMatrixDescRow: public TMatrixDescRow<EXP, TRANS, H, W, DIMDEC(OD::STRIDE), TYPENAME OD::element_type, TYPENAME OD::zero, TYPENAME OD::unit>{
+class TSubMatrixDescRow: public TMatrixDescRow<EXP, TRANS, H, W, OD::STRIDE, TYPENAME OD::element_type, TYPENAME OD::zero, TYPENAME OD::unit>{
 public:
 	typedef TMakeSubMatrixRow< TSubMatrixDescRow<EXP,TRANS,H,W,OD> > make_sub_matrix;
 };
 template <class EXP, class TRANS, size_t H, size_t W, class OD>
-class TSubMatrixDescCol: public TMatrixDescCol<EXP, TRANS, H, W, DIMDEC(OD::STRIDE), TYPENAME OD::element_type, TYPENAME OD::zero, TYPENAME OD::unit>{
+class TSubMatrixDescCol: public TMatrixDescCol<EXP, TRANS, H, W, OD::STRIDE, TYPENAME OD::element_type, TYPENAME OD::zero, TYPENAME OD::unit>{
 public:
 	typedef TMakeSubMatrixCol< TSubMatrixDescCol<EXP,TRANS,H,W,OD> > make_sub_matrix;
 };
@@ -956,11 +956,11 @@ template <size_t H, size_t W, class T, class Z=T, class U=Z> class TMatrixCol;
 	@param	W	列数．
 	@param	T	要素の型.	*/
 template <size_t H, size_t W, class T, class Z=T, class U=Z>
-class TMatrixRow:public TMatrixBase<DIMENC(H), DIMENC(W), TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> >{
+class TMatrixRow:public TMatrixBase<H, W, TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> >{
 public:
 	///	型情報
 	typedef TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> desc;
-	typedef TMatrixBase<DIMENC(H),DIMENC(W),desc> base_type;		///<	基本クラス型
+	typedef TMatrixBase<H,W,desc> base_type;		///<	基本クラス型
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrixRow);
 
@@ -977,11 +977,11 @@ private:
 	@param	W	列数．
 	@param	T	要素の型.	*/
 template <size_t H, size_t W, class T, class Z, class U>
-class TMatrixCol:public TMatrixBase<DIMENC(H), DIMENC(W), TMatrixDescCol<TMatrixCol<H,W,T,Z,U>, TMatrixRow<W,H,T,Z,U>, H,W,H,T,Z,U> >{
+class TMatrixCol:public TMatrixBase<H, W, TMatrixDescCol<TMatrixCol<H,W,T,Z,U>, TMatrixRow<W,H,T,Z,U>, H,W,H,T,Z,U> >{
 public:
 	///	型情報
 	typedef TMatrixDescCol<TMatrixCol<H,W,T,Z,U>, TMatrixRow<H,W,T,Z,U>, H, W, H, T, Z, U> desc;
-	typedef TMatrixBase<DIMENC(H),DIMENC(W),desc> base_type;		///<	基本クラス型
+	typedef TMatrixBase<H,W,desc> base_type;		///<	基本クラス型
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrixCol);
 
@@ -997,38 +997,38 @@ template <size_t H, size_t W, class OD> class TSubMatrixCol;
 
 ///	部分行列(テンプレート版)
 template <size_t H, size_t W, class OD>
-class TSubMatrixRow:public TMatrixBase<DIMENC(H),DIMENC(W),TSubMatrixDescRow<TSubMatrixRow<H,W,OD>,TSubMatrixCol<W,H,OD>, H,W,OD> >{
+class TSubMatrixRow:public TMatrixBase<H,W,TSubMatrixDescRow<TSubMatrixRow<H,W,OD>,TSubMatrixCol<W,H,OD>, H,W,OD> >{
 public:
 	typedef TSubMatrixDescRow<TSubMatrixRow<H,W,OD>,TSubMatrixCol<W,H,OD>, H,W,OD> desc;
-	typedef TMatrixBase<DIMENC(H),DIMENC(W),desc> base_type;
+	typedef TMatrixBase<H,W,desc> base_type;
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TSubMatrixRow);
-    DIMDEF(base_type::HEIGHT, HEIGHT);
-    DIMDEF(base_type::WIDTH, WIDTH);
+    static const size_t HEIGHT = base_type::HEIGHT;
+    static const size_t WIDTH = base_type::WIDTH;
 
 	///	要素のアクセス
 	element_type& item_impl(size_t i, size_t j){ return data[i][j]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[i][j]; }
 protected:
-	element_type data[DIMDEC(HEIGHT)][DIMDEC(base_type::STRIDE)];
+	element_type data[HEIGHT][base_type::STRIDE];
 };
 
 ///	部分行列(テンプレート版)
 template <size_t H, size_t W, class OD>
-class TSubMatrixCol:public TMatrixBase<DIMENC(H),DIMENC(W),TSubMatrixDescCol<TSubMatrixCol<H,W,OD>,TSubMatrixRow<W,H,OD>, H,W,OD> >{
+class TSubMatrixCol:public TMatrixBase<H,W,TSubMatrixDescCol<TSubMatrixCol<H,W,OD>,TSubMatrixRow<W,H,OD>, H,W,OD> >{
 public:
 	typedef TSubMatrixDescCol<TSubMatrixCol<H,W,OD>,TSubMatrixRow<W,H,OD>, H,W,OD> desc;
-	typedef TMatrixBase<DIMENC(H),DIMENC(W),desc> base_type;
+	typedef TMatrixBase<H,W,desc> base_type;
 	///	継承されない基本的なメンバの定義. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TSubMatrixCol);
-    DIMDEF(base_type::HEIGHT, HEIGHT);
-    DIMDEF(base_type::WIDTH, WIDTH);
+    static const size_t HEIGHT = base_type::HEIGHT;
+    static const size_t WIDTH = base_type::WIDTH;
 
 	///	要素のアクセス
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 protected:
-	element_type data[DIMDEC(WIDTH)][DIMDEC(base_type::STRIDE)];
+	element_type data[WIDTH][base_type::STRIDE];
 };
 
 //-----------------------------------------------------------------------------
@@ -1325,11 +1325,11 @@ TYPENAME AD::ret_type operator - (const MatrixImp<AD>& a, const MatrixImp<BD>& b
 	return r;
 }
 ///	行列の掛け算	サイズ：テンプレート
-template <DIMTYPE AH, DIMTYPE AW, class AD, DIMTYPE BW, class BD>
-TMatrixCol<DIMDEC(AH), DIMDEC(BW), TYPENAME AD::element_type> operator * (
+template <size_t AH, size_t AW, class AD, size_t BW, class BD>
+TMatrixCol<AH, BW, TYPENAME AD::element_type> operator * (
 	const TMatrixBase<AH, AW, AD>& a,
 	const TMatrixBase<AW, BW, BD>& b){
-	TMatrixCol<DIMDEC(AH), DIMDEC(BW), TYPENAME AD::element_type> r;
+	TMatrixCol<AH, BW, TYPENAME AD::element_type> r;
 	multi(r, a, b);
 	return r;
 }
@@ -1343,9 +1343,9 @@ VMatrixCol<TYPENAME AD::element_type> operator * (const MatrixImp<AD>& a, const 
 
 //	ベクトルと行列の掛け算
 ///	ベクトルと行列の掛け算	サイズ：テンプレート
-template <DIMTYPE AH, DIMTYPE AW, class AD, class BD>
-TVector<DIMDEC(AH), TYPENAME AD::element_type> operator * (const TMatrixBase<AH, AW, AD>& a, const VectorImp<BD>& b){
-	TVector<DIMDEC(AH), TYPENAME AD::element_type> r;
+template <size_t AH, size_t AW, class AD, class BD>
+TVector<AH, TYPENAME AD::element_type> operator * (const TMatrixBase<AH, AW, AD>& a, const VectorImp<BD>& b){
+	TVector<AH, TYPENAME AD::element_type> r;
 	multi(r, a, b);
 	return r;
 }
@@ -1357,9 +1357,9 @@ VVector<TYPENAME BD::element_type> operator * (const MatrixImp<AD>& a, const Vec
 	return r;
 }
 ///	ベクトルと行列の掛け算	サイズ：テンプレート
-template <class AD, DIMTYPE BH, DIMTYPE BW, class BD>
-TVector<DIMDEC(BW), TYPENAME AD::element_type> operator * (const VectorImp<AD>& a, const TMatrixBase<BH, BW, BD>& b){
-	TVector<DIMDEC(BW), TYPENAME AD::element_type> r;
+template <class AD, size_t BH, size_t BW, class BD>
+TVector<BW, TYPENAME AD::element_type> operator * (const VectorImp<AD>& a, const TMatrixBase<BH, BW, BD>& b){
+	TVector<BW, TYPENAME AD::element_type> r;
 	multi(r, b.trans(), a);
 	return r;
 }

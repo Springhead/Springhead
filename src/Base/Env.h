@@ -10,14 +10,7 @@
 
 /**	@file Env.h
 	コンパイラ間の互換性を取るためのマクロ定義.	*/
-
-#if defined _MSC_VER && _MSC_VER <= 1300
- #define for if(0); else for
- #pragma warning (disable: 4786)
- #define TYPENAME
-#else
- #define TYPENAME typename
-#endif
+#define TYPENAME typename
 
 #if defined __BORLANDC__
  #pragma warn -8026

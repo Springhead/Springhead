@@ -8,3 +8,9 @@
 #include "HIBase.h"
 #include "HIVirtualDevice.h"
 #include "HIRealDevice.h"
+
+#include "HIBase.h"
+#include "HIHapticDevice.h"
+#include "HISpidarCalcBase.h"
+#include "HISpidarCalc3DOF.h"
+#include "HISpidarCalc6DOF.h"

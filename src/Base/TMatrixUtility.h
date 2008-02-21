@@ -33,8 +33,8 @@ inline void getAxisMap2D(int& x, int& y, int axis){
 }
 ///	x/y軸を指定して2×2行列を回転行列に初期化
 template <class MD, class AD>
-void init_rot(TMatrixBase<DIMENC(2), DIMENC(2), MD>& m,
-				const TVectorBase<DIMENC(2), AD>& a,
+void init_rot(TMatrixBase<2, 2, MD>& m,
+				const TVectorBase<2, AD>& a,
 				char axis){
 	int	x, y;
 	getAxisMap2D(x, y, axis);
@@ -45,7 +45,7 @@ void init_rot(TMatrixBase<DIMENC(2), DIMENC(2), MD>& m,
 
 ///	2×2行列を回転行列に初期化
 template <class D>
-void init_rot(TMatrixBase<DIMENC(2), DIMENC(2), D>& m, TYPENAME D::element_type th){
+void init_rot(TMatrixBase<2, 2, D>& m, TYPENAME D::element_type th){
 	TYPENAME D::element_type c = cos(th);
 	TYPENAME D::element_type s = sin(th);
 	m[0][0] = c; m[0][1] = -s;
@@ -70,9 +70,9 @@ inline void getAxisMap3D(int& x, int& y, int& z, int axis){
 }
 ///	axis軸, axis++軸を指定して3×3行列を回転行列に初期化
 template <class MD, class AD, class BD>
-void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m,
-				const TVectorBase<DIMENC(3), AD>& a,
-				const TVectorBase<DIMENC(3), BD>& b,
+void init_rot(TMatrixBase<3, 3, MD>& m,
+				const TVectorBase<3, AD>& a,
+				const TVectorBase<3, BD>& b,
 				char axis){
 	int x,y,z;
 	getAxisMap3D(x, y, z, axis);
@@ -82,7 +82,7 @@ void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m,
 }
 ///	3×3行列をx/y/z軸まわり回転行列に初期化
 template <class MD>
-void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, TYPENAME MD::element_type th, char axis){
+void init_rot(TMatrixBase<3, 3, MD>& m, TYPENAME MD::element_type th, char axis){
 	int x,y,z;
 	getAxisMap3D(x, y, z, axis);
 	TYPENAME MD::element_type c = (TYPENAME MD::element_type)cos(th);
@@ -98,8 +98,8 @@ void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, TYPENAME MD::element_typ
 		|wu(1-cos(th))-vsin(th)  vw(1-cos(th))+usin(th)  w^2+(1-w^2)cos(th)    |
 		+																	   +*/
 template <class MD, class AD>
-void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, TYPENAME MD::element_type th,
-			 const TVectorBase<DIMENC(3), AD>& axis){
+void init_rot(TMatrixBase<3, 3, MD>& m, TYPENAME MD::element_type th,
+			 const TVectorBase<3, AD>& axis){
 	TYPENAME MD::element_type s = (TYPENAME MD::element_type) sin(th), c = (TYPENAME MD::element_type) cos(th);
 	TYPENAME MD::element_type u = axis[0], v = axis[1], w = axis[2];
 	m.item(0,0) = u*u + (1-u*u)*c;
@@ -117,8 +117,8 @@ void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, TYPENAME MD::element_typ
 
 /**	3×3行列をクォータニオンから任意軸まわり回転行列に初期化	*/
 template <class MD, class QD>
-void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, const TVectorBase<DIMENC(4), QD>& q){
-	typedef TMatrixBase<DIMENC(3), DIMENC(3), MD> MAT;
+void init_rot(TMatrixBase<3, 3, MD>& m, const TVectorBase<4, QD>& q){
+	typedef TMatrixBase<3, 3, MD> MAT;
 	const int W = 0;
 	const int X = 1;
 	const int Y = 2;
@@ -137,7 +137,7 @@ void init_rot(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, const TVectorBase<DIMENC
 
 ///	2×2行列を単位行列に初期化
 template <class D>
-void init_unitize(TMatrixBase<DIMENC(2),DIMENC(2),D>& m){
+void init_unitize(TMatrixBase<2,2,D>& m){
  	typedef TYPENAME D::zero zero;
  	typedef TYPENAME D::unit unit;
 	TYPENAME D::element_type z = zero(0);
@@ -147,7 +147,7 @@ void init_unitize(TMatrixBase<DIMENC(2),DIMENC(2),D>& m){
 }
 ///	3×3行列を単位行列に初期化
 template <class D>
-void init_unitize(TMatrixBase<DIMENC(3),DIMENC(3),D>& m){
+void init_unitize(TMatrixBase<3,3,D>& m){
 	typedef TYPENAME D::zero zero;
  	typedef TYPENAME D::unit unit;
 	TYPENAME D::element_type z = zero(0);
@@ -158,7 +158,7 @@ void init_unitize(TMatrixBase<DIMENC(3),DIMENC(3),D>& m){
 }
 ///	4×4行列を単位行列に初期化
 template <class D>
-void init_unitize(TMatrixBase<DIMENC(4),DIMENC(4),D>& m){
+void init_unitize(TMatrixBase<4,4,D>& m){
  	typedef TYPENAME D::zero zero;
  	typedef TYPENAME D::unit unit;
 	TYPENAME D::element_type z = zero(0);
@@ -179,7 +179,7 @@ void init_unitize(MatrixImp<M>& m){
 }
 ///	3×3行列をベクトルの外積計算になるように初期化(m*b == v^b).
 template <class MD, class D>
-void init_cross(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, const TVectorBase<DIMENC(3), D>& v){
+void init_cross(TMatrixBase<3, 3, MD>& m, const TVectorBase<3, D>& v){
 	m.item(0,0) = 0;		m.item(0,1) = -v[2];	m.item(0,2) =  v[1];
 	m.item(1,0) = v[2];		m.item(1,1) = 0;		m.item(1,2) = -v[0];
 	m.item(2,0) = -v[1];	m.item(2,1) =  v[0];	m.item(2,2) = 0;
@@ -187,7 +187,7 @@ void init_cross(TMatrixBase<DIMENC(3), DIMENC(3), MD>& m, const TVectorBase<DIME
 
 ///	4×4行列をある点を注視する視点行列に初期化する．
 template <class D, class BP>
-void init_look_at(TMatrixBase<DIMENC(4), DIMENC(4), D>& a, const TVectorBase<DIMENC(3), BP>& posi){
+void init_look_at(TMatrixBase<4, 4, D>& a, const TVectorBase<3, BP>& posi){
 
 	typedef TMatrixCol<4,4, TYPENAME D::element_type> TAf;
 	typedef TVector<3, TYPENAME BP::element_type> TVec;
@@ -224,9 +224,9 @@ void init_look_at(TMatrixBase<DIMENC(4), DIMENC(4), D>& a, const TVectorBase<DIM
 	a.col(2).sub_vector(TSubVectorDim<0,3>()) *= sz;
 }
 template <class D, class BP, class BT>
-void init_look_at(TMatrixBase<DIMENC(4),DIMENC(4),D>& a,
-				  const TVectorBase<DIMENC(3), BP>& posz,
-				  const TVectorBase<DIMENC(3), BT>& posy){
+void init_look_at(TMatrixBase<4,4,D>& a,
+				  const TVectorBase<3, BP>& posz,
+				  const TVectorBase<3, BT>& posy){
 	typedef TYPENAME D::ret_type TAf;
 	typedef TYPENAME BP::ret_type TVec;
 	TYPENAME D::element_type sx = a.col(0).sub_vector(TSubVectorDim<0,3>()).norm();
@@ -247,23 +247,23 @@ void init_look_at(TMatrixBase<DIMENC(4),DIMENC(4),D>& a,
 }
 ///	4×4行列をある点を注視する視点行列に初期化する．
 template <class D, class BP>
-void init_look_at_gl(TMatrixBase<DIMENC(4),DIMENC(4),D>& a, const TVectorBase<DIMENC(3), BP>& posi){
+void init_look_at_gl(TMatrixBase<4,4,D>& a, const TVectorBase<3, BP>& posi){
 	TYPENAME BP::ret_type posi_ = posi - 2 * (posi - a.col(3).sub_vector(TSubVectorDim<0,3>()));
 	init_look_at(a, posi_);
 }
 template <class D, class BZ, class BY>
-void init_look_at_gl(TMatrixBase<DIMENC(4),DIMENC(4),D>& a,
-					 const TVectorBase<DIMENC(3), BZ>& posi,
-					 const TVectorBase<DIMENC(3), BY>& posy){
+void init_look_at_gl(TMatrixBase<4,4,D>& a,
+					 const TVectorBase<3, BZ>& posi,
+					 const TVectorBase<3, BY>& posy){
 	TYPENAME BZ::ret_type workAroundForBCB6 = a.col(3).sub_vector(TSubVectorDim<0,3>());
 	TYPENAME BZ::ret_type posi_ = posi - 2 * (posi - workAroundForBCB6);
 	init_look_at(a, posi_, posy);
 }
 
 template <class D, class SD, class ZD>
-void init_projection_gl(TMatrixBase<DIMENC(4),DIMENC(4),D>& a,
-						const TVectorBase<DIMENC(3), SD>& screen_,
-						const TVectorBase<DIMENC(2), ZD>& size_,
+void init_projection_gl(TMatrixBase<4,4,D>& a,
+						const TVectorBase<3, SD>& screen_,
+						const TVectorBase<2, ZD>& size_,
 						TYPENAME D::element_type front=1.0f, TYPENAME D::element_type back=10000.0f){
 	TYPENAME SD::ret_type screen(screen_);
 	TYPENAME ZD::ret_type size(size_);
@@ -285,9 +285,9 @@ void init_projection_gl(TMatrixBase<DIMENC(4),DIMENC(4),D>& a,
 	a.item(0,3) = 0;					a.item(1,3) = 0;					a.item(2,3) = -Q*front;		a.item(3,3) = 0;
 }
 template <class D, class SD, class ZD>
-void init_projection_d3d(TMatrixBase<DIMENC(4), DIMENC(4), D>& a,
-						 const TVectorBase<DIMENC(3), SD>& screen_,
-						 const TVectorBase<DIMENC(2), ZD>& size_,
+void init_projection_d3d(TMatrixBase<4, 4, D>& a,
+						 const TVectorBase<3, SD>& screen_,
+						 const TVectorBase<2, ZD>& size_,
 						 TYPENAME D::element_type front=1.0f, TYPENAME D::element_type back=10000.0f){
 	TYPENAME SD::ret_type screen(screen_);
 	TYPENAME ZD::ret_type size(size_);
@@ -297,7 +297,7 @@ void init_projection_d3d(TMatrixBase<DIMENC(4), DIMENC(4), D>& a,
 	assert(back > front);				//	Check back clipping plane.
 	
 	typedef TYPENAME D::element_type ET;
-	TSubVector<2, TYPENAME TVectorBase<DIMENC(3), SD>::desc > center = screen.sub_vector(TSubVectorDim<0,2>());
+	TSubVector<2, TYPENAME TVectorBase<3, SD>::desc > center = screen.sub_vector(TSubVectorDim<0,2>());
 	
 	center *= front / screen[2];
 	size *= front / screen[2];
@@ -312,17 +312,17 @@ void init_projection_d3d(TMatrixBase<DIMENC(4), DIMENC(4), D>& a,
 
 /**	4行ベクトルを回転をあらわすクォータニオンとして初期化	*/
 template <class QD, class T, class AD>
-void init_quaternion(TVectorBase<DIMENC(4), QD>& q, T angle, const TVectorBase<DIMENC(3),AD>& axis){
+void init_quaternion(TVectorBase<4, QD>& q, T angle, const TVectorBase<3,AD>& axis){
 	TYPENAME QD::element_type d = axis.norm();
 	assert(d);
 	TYPENAME QD::element_type s = (TYPENAME QD::element_type)(sin(angle / 2) / d);
-	q[0] = TYPENAME TVectorBase<DIMENC(4), QD>::element_type( cos(angle / 2) );
+	q[0] = TYPENAME TVectorBase<4, QD>::element_type( cos(angle / 2) );
 	q.sub_vector(TSubVectorDim<1,3>()) = s * axis;
 }
 
 /**	4行ベクトルを回転をあらわすクォータニオンとして初期化	*/
 template <class QD, class AD>
-void init_quaternion(TVectorBase<DIMENC(4), QD>& q, const TVectorBase<DIMENC(3),AD>& rot){
+void init_quaternion(TVectorBase<4, QD>& q, const TVectorBase<3,AD>& rot){
 	typedef TYPENAME QD::element_type ET;
 	ET angle = rot.norm();
 	ET s = (ET)(sin(angle / 2));
@@ -338,7 +338,7 @@ void init_quaternion(TVectorBase<DIMENC(4), QD>& q, const TVectorBase<DIMENC(3),
 
 /**	4行ベクトルを回転をあらわすクォータニオンとして初期化	*/
 template <class QD, class T>
-void init_quaternion(TVectorBase<DIMENC(4), QD>& q, T angle, char axis){
+void init_quaternion(TVectorBase<4, QD>& q, T angle, char axis){
 	q[0] = (TYPENAME QD::element_type) cos(angle / 2);
 	int x,y,z;
 	getAxisMap3D(x,y,z, axis);
@@ -349,7 +349,7 @@ void init_quaternion(TVectorBase<DIMENC(4), QD>& q, T angle, char axis){
 
 /**	4行ベクトルを回転をあらわすクォータニオンとして初期化	*/
 template <class QD, class MD>
-void init_quaternion(TVectorBase<DIMENC(4), QD>& qt, const TMatrixBase<DIMENC(3), DIMENC(3), MD>& m){
+void init_quaternion(TVectorBase<4, QD>& qt, const TMatrixBase<3, 3, MD>& m){
 	typedef TYPENAME QD::element_type QET;
 	// check the diagonal
 	double tr = m[0][0] + m[1][1] + m[2][2];
