@@ -52,7 +52,8 @@ void SaveShape(std::ostream& file, CDShape* a){
 	if (box){
 		file << "box" << std::endl;
 		CDBoxDesc desc;
-		mesh->GetDesc(&desc);
+		if(mesh)
+			mesh->GetDesc(&desc);
 		SaveMaterial(file, desc.material);
 		file << desc.boxsize << std::endl;
 	}		
