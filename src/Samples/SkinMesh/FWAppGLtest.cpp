@@ -56,7 +56,7 @@ public:
 */
 	void Display(){
 		static int timing = 0;
-		FWWin* win = GetWin();
+		FWWin* win = GetWin(0);
 		win->render->ClearBuffer();
 		win->render->BeginScene();
 
