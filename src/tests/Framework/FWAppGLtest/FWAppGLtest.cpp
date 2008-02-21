@@ -56,7 +56,13 @@ public:
 		r->EnableRenderForce();
 		r->EnableRenderContact();
 #endif
-		wr->render->SetViewMatrix(cameraInfo.view.inv());
+		GRCameraIf* cam = wr->scene->GetGRScene()->GetCamera();
+		if (cam && cam->GetFrame()){
+			//Affinef af = cam->GetFrame()->GetTransform();
+			cam->GetFrame()->SetTransform(cameraInfo.view);
+		}else{
+			wr->render->SetViewMatrix(cameraInfo.view.inv());
+		}
 		FWAppGLUT::Display();
 	}
 };
