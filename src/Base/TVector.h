@@ -38,13 +38,8 @@
 #endif
 
 #ifdef _WIN32
- #pragma pack(push, 4)
- 
- #ifdef _DEBUG
-  #pragma optimize ("awgity", on)
- #endif
  #pragma inline_recursion(on)
- #pragma inline_depth(255)
+ #pragma inline_depth(20)
 #endif
 
 
@@ -153,7 +148,7 @@ void div(VectorImp<AD>& a, const TYPENAME AD::element_type& b){
 	@param	b	同じサイズのベクトル.
 	@return		内積の値(要素型)	*/
 template <class AD, class BD>
-TYPENAME AD::element_type dot(const VectorImp<AD>& a, const VectorImp<BD>& b){
+inline TYPENAME AD::element_type dot(const VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() == a.size());
 	typedef TYPENAME AD::zero zero;
 	TYPENAME AD::element_type rv = zero(0);
@@ -161,7 +156,7 @@ TYPENAME AD::element_type dot(const VectorImp<AD>& a, const VectorImp<BD>& b){
 	return rv;
 }
 template <class AD, class BD>
-TYPENAME AD::element_type dot(const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b){
+inline TYPENAME AD::element_type dot(const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b){
         typedef TYPENAME AD::element_type ET;
 	return ET(a.item(0)*b.item(0) + a.item(1)*b.item(1) + a.item(2)*b.item(2));
 }
@@ -325,7 +320,7 @@ public:
 		@param	b	同じサイズのベクトル.
 		@return		内積の値(要素型)	*/
 	template <class B>
-		element_type dot(const VectorImp<B>& b) const { return PTM::dot(exp(), b.exp()); }
+		inline element_type dot(const VectorImp<B>& b) const { return PTM::dot(exp(), b.exp()); }
 	/**	比較(return *this == b).
 		@param	b	同じサイズのベクトル.
 		@return		bool値.	*/
@@ -539,8 +534,8 @@ template<size_t SZ, size_t STR, class OD>
 class TVectorSlice: public TVectorBase<SZ,	TVectorDesc< STR*OD::STRIDE, 
 		TVectorSlice<SZ, STR, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> > {
 public:
-	static const SIZE = SZ;
-	static const STRIDE = STR;
+	static const size_t SIZE = SZ;
+	static const size_t STRIDE = STR;
 	typedef void array_type;
 	typedef void const_array_type;
 	typedef TVectorDesc< STR*OD::STRIDE, TVectorSlice<SZ, STR, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
@@ -561,8 +556,8 @@ template<size_t SZ, class OD>
 class TSubVector: public TVectorBase<SZ, TVectorDesc< OD::STRIDE, TSubVector<SZ, OD>, 
 	TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> > {
 public:
-	static const SIZE = SZ;
-	static const STRIDE = OD::STRIDE;
+	static const size_t SIZE = SZ;
+	static const size_t STRIDE = OD::STRIDE;
 	typedef void array_type;
 	typedef void const_array_type;
 	typedef TVectorDesc< OD::STRIDE, TSubVector<SZ, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
@@ -807,7 +802,7 @@ TYPENAME BD::ret_type operator * (const TYPENAME BD::element_type& a, const Vect
 	@param	b	aと同じ次元数のベクトル型
 	@return		要素型	*/
 template <class AD, class BD>
-typename AD::element_type operator * (const VectorImp<AD>& a, const VectorImp<BD>& b) {
+inline typename AD::element_type operator * (const VectorImp<AD>& a, const VectorImp<BD>& b) {
 	return a.dot(b);
 }
 
@@ -877,15 +872,6 @@ TYPENAME AD::ret_type operator ^ (const TVectorBase<3, AD>& a, const TVectorBase
 }
 
 //@}
-
-#ifdef _WIN32
- #ifdef _DEBUG
-  #pragma optimize ("", on)
-  #pragma auto_inline(off)
-  #pragma inline_recursion(off)
- #endif
- #pragma pack(pop)
-#endif
 
 }	//	namespace PTM
 #endif
