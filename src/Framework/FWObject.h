@@ -22,14 +22,14 @@ namespace Spr{;
 		FWObjectDesc desc;
 		FWObject(const FWObjectDesc& d=FWObjectDesc()); // コンストラクタ
 		//
-		PHSolidIf* phSolid;
-		GRFrameIf* grFrame;
+		UTRef< PHSolidIf > phSolid;
+		UTRef< GRFrameIf > grFrame;
 		//
-		bool AddChildObject(ObjectIf* o);
-		PHSolidIf* GetPHSolid(){ return phSolid; }
-		void SetPHSolid(PHSolidIf* s){ phSolid = s; }
-		GRFrameIf* GetGRFrame(){ return grFrame; }
-		void SetGRFrame(GRFrameIf* f){ grFrame = f; }
+		bool		AddChildObject(ObjectIf* o);
+		PHSolidIf*	GetPHSolid(){ return phSolid; }
+		void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
+		GRFrameIf*	GetGRFrame(){ return grFrame; }
+		void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
 
 		ObjectIf* GetChildObject(size_t pos){
 			if (pos==0) if (phSolid) return phSolid; else return grFrame;
