@@ -37,11 +37,6 @@
  #pragma warn -8027
 #endif
 
-#ifdef _WIN32
- #pragma inline_recursion(on)
- #pragma inline_depth(20)
-#endif
-
 
 namespace PTM {;
 

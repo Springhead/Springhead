@@ -15,9 +15,6 @@
 #ifndef PTM_PACK	//	単体で使用する場合は，namespace に入れない
 namespace Spr{;
 #endif
-#ifdef _WIN32
- #pragma pack(push,4)
-#endif
 
 /**	\addtogroup gpLinearAlgebra	*/
 //@{
@@ -296,9 +293,6 @@ bool IsUnitary(TMatrix3<T> r){
 }
 //@}
 
-#ifdef _WIN32
- #pragma pack(pop)
-#endif
 #ifndef PTM_PACK	//	単体で使用する場合は，namespace に入れない
 }
 #endif

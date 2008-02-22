@@ -102,7 +102,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 					DSTR << "Lines:(" << nLine0 << "+" << nLine1 << ")" << std::endl;
 					for(unsigned i=0; i<cutRing.lines.size(); ++i){
 						DSTR << cutRing.lines[i].dist << "\t" << cutRing.lines[i].normal << "\t";
-						Vec3d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
+						Vec2d pos = cutRing.lines[i].dist * cutRing.lines[i].normal;
 						DSTR << pos.X() << "\t" << pos.Y() << std::endl;
 					}
 

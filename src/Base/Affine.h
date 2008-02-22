@@ -166,14 +166,6 @@ void main(){
 namespace Spr {
 #endif
 
-#ifdef _WIN32
- #ifdef _DEBUG
-  #pragma optimize ("awgity", on)
-  #pragma auto_inline(on)
-  #pragma inline_recursion(on)
- #endif
-#endif
-
 #undef M_PI
 #ifdef __BORLANDC__
 #define M_PI 3.14159265358979323846
@@ -676,14 +668,6 @@ typedef TAffine<float> Affinef;
 typedef TAffine<double> Affined;
 //@}
 
-
-#ifdef _WIN32
- #ifdef _DEBUG
-  #pragma optimize ("", on)
-  #pragma auto_inline(off)
-  #pragma inline_recursion(off)
- #endif
-#endif
 
 #ifndef PTM_PACK	//	単体で使用する場合は，namespace に入れない
 }	//	namespace Spr

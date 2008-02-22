@@ -168,15 +168,6 @@ void main(){
 ///	Portable Template Matrixライブラリの名前空間
 namespace PTM{;
 
-#ifdef _WIN32
- #pragma pack(push, 4)
- #ifdef _DEBUG
-  #pragma optimize ("awgity", on)
-  #pragma auto_inline(on)
-  #pragma inline_recursion(on)
- #endif
-#endif
-
 /**	部分行列型作成のためのユーティリティークラス.
 	TSubMatrixDim<top, left, height, width> と次元を指定できる。*/
 template <size_t T, size_t L, size_t H, size_t W>
@@ -1398,15 +1389,6 @@ std::istream& operator >> (std::istream& is, MatrixImp<D>& m){
 	return is;
 }
 //@}
-
-#ifdef _WIN32
- #ifdef _DEBUG
-  #pragma optimize ("", on)
-  #pragma auto_inline(off)
-  #pragma inline_recursion(off)
- #endif
- #pragma pack(pop)
-#endif
 
 }	//	namespace PTM
 #endif

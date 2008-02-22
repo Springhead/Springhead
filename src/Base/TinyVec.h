@@ -13,9 +13,6 @@
 #ifndef PTM_PACK	//	単体で使用する場合は，namespace に入れない
 namespace Spr{;
 #endif
-#ifdef _WIN32
- #pragma pack(push, 4)
-#endif
 
 /**	\addtogroup gpLinearAlgebra	*/
 //@{
@@ -242,10 +239,6 @@ typedef TVec4<float> Vec4f;
 ///	double版4次元ベクトル
 typedef TVec4<double> Vec4d;
 //@}
-
-#ifdef _WIN32
-#pragma pack(pop)
-#endif
 
 #ifndef PTM_PACK	//	単体で使用する場合は，namespace に入れない
 }
