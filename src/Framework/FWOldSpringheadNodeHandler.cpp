@@ -355,7 +355,8 @@ public:
 		if (!meshes.size()) return;
 
 		for(unsigned i=0; i<meshes.size(); ++i){
-			Mesh& mesh = *(Mesh*)meshes[i][0]->data;
+			UTLoadedData* meshDataNode = meshes[i][0];
+			Mesh& mesh = *(Mesh*)meshDataNode->data;
 			CDConvexMeshDesc cmd;
 			for(unsigned j=0; j< mesh.vertices.size(); ++j){
 				cmd.vertices.push_back(mesh.vertices[j]);
@@ -381,7 +382,7 @@ public:
 				cmd.vertices[j] = afShape * cmd.vertices[j];
 			}
 			ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
-			ld->loadedObjects.push_back(obj);
+			meshDataNode->loadedObjects.push_back(obj);
 		}
 	}
 };

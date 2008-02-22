@@ -555,19 +555,39 @@ void UTLoadContext::LinkData(){
 	dataLinks.clear();
 }
 void UTLoadContext::LinkNode(UTLoadedData* ld){
-	for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
-		for(UTLoadedDatas::iterator ld2 = ld->linkTo.begin(); ld2 != ld->linkTo.end(); ++ld2){
-			for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
+	for(UTLoadedDatas::iterator ld2 = ld->linkTo.begin(); ld2 != ld->linkTo.end(); ++ld2){
+		for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
+			bool rv = false;
+			for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
 				//	DSTR << DCAST(NamedObject, *o1)->GetName() << "->" 
 				//	<< DCAST(NamedObject, *o2)->GetName() << std::endl; 
-				if (  !(*o1)->AddChildObject( (*o2)->Cast() )  ){
-					std::string err("Can not add referenced object '");
-					err.append((*ld2)->GetName());
-					err.append("' into '");
+				rv |= (*o1)->AddChildObject( (*o2)->Cast() );
+			}
+			if (!rv){
+				std::string err("Can not add referenced object '");
+				err.append((*ld2)->GetName());
+				NamedObjectIf* no = (*o2)->Cast();
+				if (no){
+					err.append("=");
+					err.append(no->GetName());
+				}
+				err.append(":");
+				err.append((*o2)->GetIfInfo()->ClassName());
+				err.append("' into '");
+				for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
 					err.append(ld->GetName());
-					err.append("'.");
-					ErrorMessage(ld->fileInfo, ld->filePos, err.c_str());
-				}				
+					no = (*o1)->Cast();
+					if (no){
+						err.append("=");
+						err.append(no->GetName());
+					}
+					err.append(":");
+					err.append((*o1)->GetIfInfo()->ClassName());
+					err.append("'");
+				}
+				err.append(".");
+				Message(ld->fileInfo, ld->filePos, err.c_str());
+				UTRef<ObjectIf> o = *o2;
 			}
 		}
 	}
