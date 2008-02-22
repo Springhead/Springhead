@@ -189,6 +189,8 @@ public:
 	まずロードする．
 	そのあと，オブジェクトを生成する．	*/
 class UTLoadContext: public UTFileContext{
+protected:
+	UTStack< UTRef<ObjectIf> > lostAndFound;
 public:	
 	//--------------------------------------------------------------------------
 	//	変数

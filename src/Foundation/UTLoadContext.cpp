@@ -559,8 +559,8 @@ void UTLoadContext::LinkNode(UTLoadedData* ld){
 		for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
 			bool rv = false;
 			for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
-				//	DSTR << DCAST(NamedObject, *o1)->GetName() << "->" 
-				//	<< DCAST(NamedObject, *o2)->GetName() << std::endl; 
+				DSTR << DCAST(NamedObject, *o1)->GetName() << "->" 
+				<< DCAST(NamedObject, *o2)->GetName() << std::endl; 
 				rv |= (*o1)->AddChildObject( (*o2)->Cast() );
 			}
 			if (!rv){
@@ -587,7 +587,7 @@ void UTLoadContext::LinkNode(UTLoadedData* ld){
 				}
 				err.append(".");
 				Message(ld->fileInfo, ld->filePos, err.c_str());
-				UTRef<ObjectIf> o = *o2;
+				lostAndFound.push_back(*o2);
 			}
 		}
 	}
@@ -657,6 +657,7 @@ void UTLoadContext::LinkNode(){
 	}
 	links.Execute(this);
 	links.clear();
+	lostAndFound.clear();
 }
 
 void UTLoadContext::PostTask(){	
