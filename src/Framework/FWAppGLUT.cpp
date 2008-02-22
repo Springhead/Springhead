@@ -67,15 +67,19 @@ void FWAppGLUT::GlutTimerFunc(int id){
 	
 		glutTimerFunc(timeStep, GlutTimerFunc, id);
 	}*/
-
+	
 	FWAppGLUT::instance->CallStep();
 	glutPostRedisplay();
 
 	// タイマ周期＝物理シミュレーションのインターバル
 	int timeStep=1;
-	if (FWAppGLUT::instance->GetSdk()->GetScene() && FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()){
-		timeStep = (int)(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
-		if (timeStep<1) timeStep = 1;
+	if(FWAppGLUT::instance)return;
+	if(FWAppGLUT::instance->GetSdk())return;
+	if(FWAppGLUT::instance->GetSdk()->GetScene()){
+		if(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()){
+			timeStep = (int)(FWAppGLUT::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
+			if (timeStep<1) timeStep = 1;
+		}
 	}
 	glutTimerFunc(timeStep, GlutTimerFunc, 0);
 }
@@ -133,7 +137,7 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	// ウィンドウIDを指定してタイマを始動
 	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
 	
-	FWWin* win = DBG_NEW FWWinGLUT(wid, fwSdk->CreateRender());
+	FWWin* win = new FWWinGLUT(wid, fwSdk->CreateRender());
 	AssignScene(win);
 	wins.push_back(win);
 	return win;
