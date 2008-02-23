@@ -13,14 +13,6 @@
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
 
-#include <HIS/HISpidarG6X.h>
-#include <HIS/HISpidarG6X3.h>
-#ifdef _WIN32		//	Win32版(普通はこっち)
- #include <Device/DRUsb20Simple.h>
- #include <Device/DRUsb20Sh4.h>
- #include <conio.h>
-#endif
-
 #include <GL/glut.h>
 #include <vector>
 #include <windows.h>
@@ -47,10 +39,7 @@ public:
 	bool								bStep;			//< シミュレーションを行うかどうか
 	Vec3f								hapticPosition;	//< 力覚ポインタの座標
 	Quaternionf							hapticRotation;	//< 力覚ポインタの回転
-	DVDeviceManager						devMan;			//< D/Aやカウンタなどのデバイスの管理
-	HISpidarG6X3						spidarG6;		//< SPIDARに対応するクラス
 	bool								flagDebugMode;	//< シーンをデバッグモードで描画するかのフラグ
-	bool								flagUseSpidar;	//< Spidarを使用するかどうか
 	const char*							filePass;		//< xFileが置いてあるフォルダへの相対パス
 	const char*							fileName;		//< ロードするファイル名
 	const char*							phCookieName;	//< クッキーの衝突判定形状の名前

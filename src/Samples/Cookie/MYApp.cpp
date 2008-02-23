@@ -26,7 +26,6 @@ MYApp::MYApp(){
 	nIter				= 50;
 	bStep				= true;
 	flagDebugMode		= true;
-	flagUseSpidar		= false;
 	camHeight			= -0.2f;
 	camTopAngle			= 0.0f;
 	hPointerName		= "soHapticPointer";
@@ -79,36 +78,12 @@ void MYApp::Init(int argc, char* argv[]){
 	cameraInfo.view[3][1] =  0.0;
 	cameraInfo.view[3][2] =  0.0;
 	cameraInfo.view[3][3] =  1.0;
-
-	if(flagUseSpidar){
-		devMan.RPool().Register(DBG_NEW DRUsb20Simple(10));	//< USB2.0版コントローラ 8モータ
-		devMan.RPool().Register(DBG_NEW DRUsb20Sh4(0));		//< Sh4版コントローラ 8モータ
-		devMan.RPool().Register(DBG_NEW DRUsb20Sh4(1));		//< Sh4版コントローラ 8モータ
-		devMan.RPool().Register(DBG_NEW DRUsb20Sh4(2));		//< Sh4版コントローラ 8モータ
-		devMan.Init();										//< デバイスの初期化
-		std::cout	<< "devMan : " << devMan;				//< 初期化の結果を表示
-		DSTR		<< "devMan : " << devMan;				//< 初期化の結果を表示
-
-		spidarG6.Init(devMan, false);						//	SPIDARの初期化，キャリブレーションもする．
-		spidarG6.Calib();									//< spidarのキャリブレーションを行う
-	}
 }
 
 //シミュレーションで毎ステップ呼ばれる関数実装
 void MYApp::Step(){
 	if(bStep){
 		if(!phScene)return;
-		if(flagUseSpidar){
-			spidarG6.Update(dt);
-			PHSolidIf* hPointerSolid	= DCAST(PHSolidIf, GetSdk()->GetScene()->GetPHScene()->FindObject(hPointerName));	// 力覚ポインタ表示用の剛体をとってくる
-			hapticPosition				= spidarG6.GetPos() * 50;															// 位置の読み出し Vec3fについては，自動生成マニュアルを参照
-			hapticRotation				= spidarG6.GetOri() * 50;															// 回転の読み出し(回転を入れるとなんか物が触れない状態)
-			if (hPointerSolid){
-				hPointerSolid->SetFramePosition(Vec3d(hapticPosition));															// 力覚ポインタ剛体に力覚ポインタの位置を指定
-				hPointerSolid->SetOrientation(Quaterniond(hapticRotation));														// 力覚ポインタ剛体に力覚ポインタの回転を指定			
-		
-			}
-		}
 		FWAppGLUT::Step();
 		if (phScene){
 			phScene->ClearForce();
