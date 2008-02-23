@@ -26,7 +26,7 @@ MYApp::MYApp(){
 	nIter				= 50;
 	bStep				= true;
 	flagDebugMode		= true;
-	camHeight			= -0.2f;
+	camHeight			= 0.3f;
 	camTopAngle			= 0.0f;
 	phCookieName		= "soCookie";
 	grCookieName		= "grFrameCookie";
@@ -117,7 +117,7 @@ bool MYApp::CopyTheCookie(const char* phName, const char* grName){
 			std::stringstream sout;
 			sout << "soCopiedCookie" << copiedCookies.size();
 			copiedCookies.back()->GetPHSolid()->SetName(sout.str().c_str());
-			copiedCookies.back()->GetPHSolid()->SetFramePosition(Vec3d(   (double)rand() / (double)RAND_MAX * 0.1, (double)rand() / (double)RAND_MAX * 0.05 - 0.3, (double)rand() / (double)RAND_MAX * -0.1 ));
+			copiedCookies.back()->GetPHSolid()->SetFramePosition(Vec3d(   (double)rand() / (double)RAND_MAX * 0.1, (double)rand() / (double)RAND_MAX * 0.05 + 0.03, (double)rand() / (double)RAND_MAX * -0.1 ));
 			copiedCookies.back()->GetPHSolid()->SetAngularVelocity(Vec3d( (double)rand() / (double)RAND_MAX * 2.9,  (double)rand() / (double)RAND_MAX * 0.7,		(double)rand() / (double)RAND_MAX * 1.7 ));
 			copiedCookies.back()->GetPHSolid()->SetOrientation(Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * 2.1, 'x') 
 															  * Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * 3.3, 'y')
