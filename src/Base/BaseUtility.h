@@ -61,6 +61,25 @@ struct UTEatWhite{
 };
 std::istream& operator >> (std::istream& is, const UTEatWhite& e);
 
+
+/**	\defgroup gpUTRef 参照カウンタ/参照ポインタクラス 
+参照カウンタは，複数のポインタで共有されたオブジェクトのメモリの開放を
+参照するポインタが無くなった時に自動的に行う仕組み．
+これを使うと delete を書く必要がなくなる．
+ポインタ
+@verbatim
+	T* p = new T;
+@endverbatim
+の代わりに，
+@verbatim
+	UTRef<T> p = new T;
+	UTRef<T> p2 = p;
+@endverbatim
+とすると，pとp2の両方が消えたときに， p/p2 が指すオブジェクトもdeleteされる．
+
+*/
+//@{
+
 ///	参照カウンタ．カウントが0になっても勝手に消えはしない．
 class SPR_DLL UTRefCount{
 	mutable int refCount;
@@ -185,6 +204,8 @@ public:
 	T* operator->() const {return Obj();}
 	bool operator <(const UTDeleteRef& r) const { return Obj() < r.Obj(); }
 };
+//@}
+
 
 ///	シングルトンクラス
 template <class T>
@@ -193,6 +214,11 @@ T& Singleton(){
 	return t;
 }
 
+/**	\defgroup gpExCont コンテナの拡張
+	stlのコンテナクラスを拡張したクラス類．
+	スタック，ツリー，
+*/
+//@{
 ///	スタックつき vector 
 template <class T, class CO=std::vector<T> >
 class UTStack: public CO{
@@ -301,7 +327,7 @@ public:
 		}
 	}
 };
-
+//@}
 	
 /* assert_cast
 		 SPR_DEBUG定義時はdynamic_cast、それ以外ではstatic_castとして働く。

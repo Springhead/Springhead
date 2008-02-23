@@ -8,13 +8,6 @@
 #ifndef PTMATRIX_TVECTOR_H
 #define PTMATRIX_TVECTOR_H
 
-/**	\defgroup gpLinearAlgebra ベクトル・行列・座標変換	*/
-//@{
-/**	@file TVector.h
-	テンプレートによるN次元ベクトルの定義.
-	要素の型とサイズをテンプレートの引数にすることで，
-	管理情報をメモリに持たずに，一般の行列を扱う．
-	配列をキャストしてベクトルにすることもできる．*/
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -22,8 +15,23 @@
 #include <stddef.h>
 #include <vector>
 
+
+/**	\defgroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
+
+/**	@file
+	C++ の template 機能を生かしたベクトルライブラリ．
+	メモリと管理情報(ベクトルのサイズなど)の持ち方で3種ある。
+	- TVector : 管理情報をテンプレートの引数にすることで，
+			余分なメモリを一切使わずに一般のベクトルを扱うことができるベクトルの型．
+			配列をキャストしてベクトルにすることもできる．
+	- VVector : 管理情報をメモリに持ち，サイズの変更ができるベクトルの型．
+	- EVector : 管理情報だけを持ち，データは外部の配列などを使うベクトルの型．
+	互いに内積などの演算を行うことができる．また，TMatrix, VMatrix, EMatrix 型の行列
+	との演算もできる．	*/
+
 //-----------------------------------------------------------------------------
-#ifndef TYPENAME
+#ifndef TYPENAME	//<	互換性確保のためのマクロ．typename をつけると動かないコンパイラもある．
 # define TYPENAME typename
 #endif
 
@@ -42,15 +50,13 @@ namespace PTM {;
 
 //-----------------------------------------------------------------------------
 
-///	ベクトル/行列の次元数の型 ( == size_t == unsigned long)
-
 template <class EXP, class RET, class E, class Z=E>
 class VectorDesc{
 public:
-	typedef EXP		exp_type;		///<	実体
-	typedef RET		ret_type;		///<	返り値の型
-	typedef E		element_type;	///<	要素の型
-	typedef Z		zero;			///<	zero(0) が 要素の型の0を返す型
+	typedef EXP		exp_type;			///<	実体
+	typedef RET		ret_type;			///<	返り値の型
+	typedef E		element_type;		///<	要素の型
+	typedef Z		zero;				///<	zero(0) が 要素の型の0を返す型
 };
 template <size_t STR, class EXP, class RET, class E, class Z=E>
 class TVectorDesc:public VectorDesc<EXP, RET, E, Z>{
@@ -80,17 +86,16 @@ void assign(VectorImp<AD>& a, const VectorImp<BD>& b) {
 template <class AD, class BD>
 void assign(TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	assert(a.size() == b.size());
-	a.item(0) = b.item(0);
-	a.item(1) = b.item(1);
+	a.item(0) = (TYPENAME AD::element_type)b.item(0);
+	a.item(1) = (TYPENAME AD::element_type)b.item(1);
 }
 ///	代入(a = b) 3要素専用
 template <class AD, class BD>
 void assign(TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	assert(a.size() == b.size());
-        typedef TYPENAME AD::element_type ET;
-	a.item(0) = ET(b.item(0));
-	a.item(1) = ET(b.item(1));
-	a.item(2) = ET(b.item(2));
+	a.item(0) = (TYPENAME AD::element_type)b.item(0);
+	a.item(1) = (TYPENAME AD::element_type)b.item(1);
+	a.item(2) = (TYPENAME AD::element_type)b.item(2);
 }
 ///	代入(a = b) 4要素専用
 template <class AD, class BD>
@@ -101,20 +106,25 @@ void assign(TVectorBase<4, AD>& a, const TVectorBase<4, BD>& b) {
 	a.item(2) = (TYPENAME AD::element_type)b.item(2);
 	a.item(3) = (TYPENAME AD::element_type)b.item(3);
 }
-/**	代入(*this = b).
-	@param b 同じサイズのベクトル.	*/
+/**	代入(a = b).
+	@param a ベクトル.
+	@param b 同じサイズのベクトル.
+	*/
 template <class AD>
 void assign(VectorImp<AD>& a, const TYPENAME AD::element_type* b) {
 	for(size_t i=0; i<a.size(); ++i) a.item(i) = b[i];
 }
-/**	加算(*this += b).
+
+/**	加算(a += b).
+	@param a ベクトル.
 	@param b 同じサイズのベクトル.	*/
 template <class AD, class BD>
 void add(VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() ==a. size());
 	for(size_t i=0; i<a.size(); ++i) a.item(i) += (TYPENAME AD::element_type) b.item(i);
 }
-/**	減算(*this -= b).
+/**	減算(a -= b).
+	@param a ベクトル.
 	@param b 同じサイズのベクトル.	*/
 template <class AD, class BD>
 void sub(VectorImp<AD>& a, const VectorImp<BD>& b){

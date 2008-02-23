@@ -240,7 +240,8 @@ void FIFileX::Init(){
 	using namespace Spr;
 	//	パーサの定義
 	//	本文用パーサ
-	start		= (str_p("xof 0302txt 0064") | str_p("xof 0303txt 0032") | ExpP("'xof 0303txt 0032'")) 
+	start		= (str_p("xof 0302txt 0064") | str_p("xof 0303txt 0032") | 
+					str_p("xof 0303txt 0064") | ExpP("'xof 0303txt 0032'")) 
 					>> *(temp | data | ExpP("template or data"));
 
 	temp		= str_p("template") >> id[&TempStart] >> ch_p('{') >> !uuid

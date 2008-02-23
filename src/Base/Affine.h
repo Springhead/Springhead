@@ -10,7 +10,7 @@
 
 /**	\addtogroup gpLinearAlgebra	*/
 //@{
-/** \page pageAffine @!JAAffine行列クラスの概要@!ENA Guide for Affine Matrix@!*
+/** \page pgAffine @!JAAffine行列クラス@!ENA Affine Matrix@!*
 	\section secAffineIntro @!JAはじめに@!ENIntroduction@!*
 		@!JA
 		このページはAffine行列クラス(Spr::TAffine, Spr::TAffine2)の説明です．
@@ -234,7 +234,7 @@ inline SC Det2(SC a, SC b, SC c, SC d){
 //	TAffine2
 
 /**	TAffine2行列(回転,拡大,平行移動を表す)行列.
-	概要は，\ref pageAffine 参照．
+	概要は，\ref pgAffine 参照．
 */
 template <class T>
 class TAffine2:public PTM::TMatrixBase<3,3,
@@ -348,7 +348,7 @@ public:
 //-----------------------------------------------------------------------------
 //	TAffine
 /**	TAffine行列(回転,拡大,平行移動を表す)行列.
-	概要は，\ref pageAffine 参照．	*/
+	概要は，\ref pgAffine 参照．	*/
 
 template <class T>
 class TAffine:public PTM::TMatrixBase<4,4,
