@@ -25,6 +25,7 @@ struct CDShapePairState{
 	Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
 	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
 	unsigned lastContactCount;	///<	最後に接触した時刻
+	CDShapePairState():lastContactCount(-2), depth(0){}
 };
 class CDShapePair: public CDShapePairState, public UTRefCount{
 public:
