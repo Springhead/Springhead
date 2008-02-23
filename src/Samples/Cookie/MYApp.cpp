@@ -117,16 +117,24 @@ bool MYApp::CopyTheCookie(const char* phName, const char* grName){
 			std::stringstream sout;
 			sout << "soCopiedCookie" << copiedCookies.size();
 			copiedCookies.back()->GetPHSolid()->SetName(sout.str().c_str());
-			copiedCookies.back()->GetPHSolid()->SetFramePosition(Vec3d(   (double)rand() / (double)RAND_MAX * 0.1, (double)rand() / (double)RAND_MAX * 0.05 + 0.03, (double)rand() / (double)RAND_MAX * -0.1 ));
-			copiedCookies.back()->GetPHSolid()->SetAngularVelocity(Vec3d( (double)rand() / (double)RAND_MAX * 2.9,  (double)rand() / (double)RAND_MAX * 0.7,		(double)rand() / (double)RAND_MAX * 1.7 ));
-			copiedCookies.back()->GetPHSolid()->SetOrientation(Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * 2.1, 'x') 
-															  * Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * 3.3, 'y')
-															  * Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * 7.3, 'z'));
+			copiedCookies.back()->GetPHSolid()->SetFramePosition(Vec3d((double)rand() / (double)RAND_MAX * 0.10 * cos((double)rand()), 
+																	   (double)rand() / (double)RAND_MAX * 0.05 + 0.025, 
+																	   (double)rand() / (double)RAND_MAX * 0.10 * sin((double)rand())
+																	  )
+																 );
+			copiedCookies.back()->GetPHSolid()->SetAngularVelocity(Vec3d((double)rand() / (double)RAND_MAX * 2.9, 
+																		 (double)rand() / (double)RAND_MAX * 0.7,
+																		 (double)rand() / (double)RAND_MAX * 1.7 
+																		 )
+																  );
+			copiedCookies.back()->GetPHSolid()->SetOrientation(Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * cos((double)rand()) + Rad(15) , 'x') 
+															  * Quaternionf::Rot(Rad((double)rand()), 'y')
+															  * Quaternionf::Rot(Rad((double)rand() / (double)RAND_MAX) * sin((double)rand()), 'z'));
 			sout.str("");
 			sout << "frCopiedCookie" << copiedCookies.size();
 			copiedCookies.back()->GetGRFrame()->SetName(sout.str().c_str());
-			DSTR		<< "Copy number of the Cookie : " << copiedCookies.size() << std::endl;
-			std::cout	<< "Copy number of the Cookie : " << copiedCookies.size() << std::endl;
+			DSTR		<< "Copy number of the biscuit : " << copiedCookies.size() << std::endl;
+			std::cout	<< "Copy number of the biscuit : " << copiedCookies.size() << std::endl;
 
 			return true;
 		}
