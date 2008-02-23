@@ -39,7 +39,7 @@ public:
 	int top;			///<	上端の座標
 	int parentWindow;	///<	子ウィンドウを作る場合は、親のID、そうでなければ0
 	UTString title;		///<	ウィンドウのタイトル文字列(トップレベルウィンドウのみ)
-	bool fullscreen;
+	bool fullscreen;	///<	フルスクリーンにするかどうか
 
 	FWWinDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
 		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){

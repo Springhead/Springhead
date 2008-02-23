@@ -11,6 +11,8 @@
 #include "FWOldSpringheadNode.h"
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
+#include <sstream>
+#include <windows.h>
 
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -121,12 +123,25 @@ void FWAppGLUT::Start(){
 
 FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	int wid=0;
-	if (d.parentWindow){
-		wid = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
-	}else{
-		glutInitWindowSize(d.width, d.height);
-		glutInitWindowPosition(d.left, d.top);
-		wid = glutCreateWindow(d.title.c_str());
+	if(d.fullscreen){	//< フルスクリーンの場合のウィンドウ生成
+		//memo:-------------------------------------------------------
+		// fullScreenを使用する場合にはウィンドウ破棄をする際に
+		// glutLeaveGameMode()を呼ばないと危険．by Toki
+		//------------------------------------------------------------
+		std::stringstream gameMode;
+		gameMode << d.width << "x" << d.height << ":32@60";
+		glutGameModeString(gameMode.str().c_str());
+		Sleep(100);
+		wid	= glutEnterGameMode();
+	}
+	else{				//< ウィンドウモードの場合の生成
+		if (d.parentWindow){
+			wid = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
+		}else{
+			glutInitWindowSize(d.width, d.height);
+			glutInitWindowPosition(d.left, d.top);
+			wid = glutCreateWindow(d.title.c_str());
+		}
 	}
 	int rv = glewInit();
 	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
