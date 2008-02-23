@@ -20,7 +20,7 @@
 //コンストラクタ・デストラクタ
 MYApp::MYApp(){
 	instance			= this;
-	filePass			= "./xFiles/";
+	filePath			= "./xFiles/";
 	fileName			= "sceneCookie.x";
 	dt					= 0.01;
 	nIter				= 50;
@@ -42,7 +42,7 @@ void MYApp::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
 	GetSdk()->Clear();
 	std::stringstream imputFileName;
-	imputFileName << filePass << fileName;
+	imputFileName << filePath << fileName;
 	GetSdk()->LoadScene(imputFileName.str().c_str());
 	if (GetSdk()->GetScene()){
 		phScene = GetSdk()->GetScene()->GetPHScene();
@@ -139,7 +139,7 @@ bool MYApp::CopyTheCookie(const char* phName, const char* grName){
 void MYApp::ResetScene(){
 	GetSdk()->Clear();
 	std::stringstream imputFileName;
-	imputFileName << filePass << fileName;
+	imputFileName << filePath << fileName;
 	GetSdk()->LoadScene(imputFileName.str().c_str());
 	phScene = GetSdk()->GetScene()->GetPHScene();
 	if(phScene){

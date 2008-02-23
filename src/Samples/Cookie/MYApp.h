@@ -38,7 +38,7 @@ public:
 	double								nIter;			//< LCP反復回数
 	bool								bStep;			//< シミュレーションを行うかどうか
 	bool								flagDebugMode;	//< シーンをデバッグモードで描画するかのフラグ
-	const char*							filePass;		//< xFileが置いてあるフォルダへの相対パス
+	const char*							filePath;		//< xFileが置いてあるフォルダへの相対パス
 	const char*							fileName;		//< ロードするファイル名
 	const char*							phCookieName;	//< クッキーの衝突判定形状の名前
 	const char*							grCookieName;	//< クッキーの見た目の名前
