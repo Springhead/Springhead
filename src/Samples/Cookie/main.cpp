@@ -13,7 +13,9 @@
  *					Press '1'				: Zoom in  of the top view.
  *					Press '2'				: Zoom out of the top view.
  *					Press '3'				: Rotate the top view.
- *					Press 'Esc', 'q', 'Q'	: Quit the program.
+ *					Press 'n'				: Reload the scene from the xfile.
+ *					Press 'SPACE'			: Change Display mode.
+ *					Press 'ESC', 'q', 'Q'	: Quit the program.
  ***********************************************************************************************/
 
 #include <Springhead.h>		//	Springheadのインタフェース

@@ -37,14 +37,11 @@ public:
 	double								dt;				//< 積分幅
 	double								nIter;			//< LCP反復回数
 	bool								bStep;			//< シミュレーションを行うかどうか
-	Vec3f								hapticPosition;	//< 力覚ポインタの座標
-	Quaternionf							hapticRotation;	//< 力覚ポインタの回転
 	bool								flagDebugMode;	//< シーンをデバッグモードで描画するかのフラグ
 	const char*							filePass;		//< xFileが置いてあるフォルダへの相対パス
 	const char*							fileName;		//< ロードするファイル名
 	const char*							phCookieName;	//< クッキーの衝突判定形状の名前
 	const char*							grCookieName;	//< クッキーの見た目の名前
-	const char*							hPointerName;	//< 力覚ポインタの名前
 	std::vector< UTRef< FWObjectIf > >	copiedCookies;	//< コピーされたクッキーを格納する配列
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

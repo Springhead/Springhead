@@ -28,7 +28,6 @@ MYApp::MYApp(){
 	flagDebugMode		= true;
 	camHeight			= -0.2f;
 	camTopAngle			= 0.0f;
-	hPointerName		= "soHapticPointer";
 	phCookieName		= "soCookie";
 	grCookieName		= "grFrameCookie";
 	fwScene				= NULL;
@@ -57,7 +56,7 @@ void MYApp::Init(int argc, char* argv[]){
 	windowDesc.height	= 600;
 	windowDesc.left		= 5;
 	windowDesc.top		= 5;
-	windowDesc.title	= "Haptic HDR Rendering";
+	windowDesc.title	= "Make Some Cookies !";
 	window				= CreateWin(windowDesc);
 	grRender			= window->render->Cast();
 
@@ -190,13 +189,6 @@ void MYApp::Keyboard(unsigned char key, int x, int y){
 			{
 				if(flagDebugMode)		flagDebugMode = false;
 				else if(!flagDebugMode) flagDebugMode = true;
-			}
-			break;
-		case 'c':
-			if(flagUseSpidar){
-				spidarG6.Calib();
-				DSTR		<< "Spidar Calibration" << std::endl;
-				std::cout	<< "Spidar Calibration" << std::endl;
 			}
 			break;
 		case 'm':
