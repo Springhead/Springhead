@@ -138,7 +138,9 @@ bool MYApp::CopyTheCookie(const char* phName, const char* grName){
 
 void MYApp::ResetScene(){
 	GetSdk()->Clear();
-	GetSdk()->LoadScene(fileName);
+	std::stringstream imputFileName;
+	imputFileName << filePass << fileName;
+	GetSdk()->LoadScene(imputFileName.str().c_str());
 	phScene = GetSdk()->GetScene()->GetPHScene();
 	if(phScene){
 		phScene->SetTimeStep(dt);
