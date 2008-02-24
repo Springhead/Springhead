@@ -25,6 +25,17 @@ public:
 	/** @brief 接触点の集合を返す
 	*/
 	virtual PHConstraintsIf* GetContactPoints() = 0;
+
+	/** @brief velCorrectionRateを書き換える
+		@param value 書き換え後の値
+	*/
+	virtual void SetVelCorrectionRate(double value) = 0;
+
+	/** @brief posCorrectionRateを書き換える
+		@param value 書き換え後の値
+	*/
+	virtual void SetPosCorrectionRate(double value) = 0;
+
 };
 
 struct PHGravityEngineIf : PHEngineIf{

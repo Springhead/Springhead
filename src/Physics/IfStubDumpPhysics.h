@@ -15,6 +15,12 @@ struct PHConstraintEngineIfStubTemplate: public PHEngineIfStubTemplate<IF, MIF, 
 	virtual PHConstraintsIf * GetContactPoints(){
 		return ((OBJ*)(MIF*)this)->GetContactPoints();
 	}
+	virtual void SetVelCorrectionRate(double value){
+		return ((OBJ*)(MIF*)this)->SetVelCorrectionRate(value);
+	}
+	virtual void SetPosCorrectionRate(double value){
+		return ((OBJ*)(MIF*)this)->SetPosCorrectionRate(value);
+	}
 };
 struct PHConstraintEngineIf;	class PHConstraintEngine;
 typedef PHConstraintEngineIfStubTemplate<PHConstraintEngineIf, ObjectIfBuf, PHConstraintEngine>	PHConstraintEngineIfStub;

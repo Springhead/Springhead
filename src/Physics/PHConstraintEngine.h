@@ -82,6 +82,8 @@ public:
 	void IterateCorrectionLCP();	///< Œë·C³LCP‚Ìˆê“x‚Ì”½•œ
 
 	virtual PHConstraintsIf* GetContactPoints();
+	virtual void SetVelCorrectionRate(double value){velCorrectionRate = value;}
+	virtual void SetPosCorrectionRate(double value){posCorrectionRate = value;}
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
