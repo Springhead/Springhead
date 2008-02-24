@@ -105,7 +105,7 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
  param	 	なし
  return 	なし
  */
-void display(){
+void __cdecl display(){
 	//	バッファクリア
 	render->ClearBuffer();
 	Affinef view;
@@ -248,7 +248,7 @@ void initialize(){
  param		<in/--> h　　高さ
  return		なし
  */
-void reshape(int w, int h){
+void __cdecl reshape(int w, int h){
 	glViewport(0, 0, w, h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -263,7 +263,7 @@ void reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void keyboard(unsigned char key, int x, int y){
+void __cdecl keyboard(unsigned char key, int x, int y){
 	switch (key) {
 		case ESC:		
 		case 'q':
@@ -395,7 +395,7 @@ void keyboard(unsigned char key, int x, int y){
 }	
 
 int xlast, ylast;
-void mouse(int button, int state, int x, int y){
+void __cdecl mouse(int button, int state, int x, int y){
 	xlast = x, ylast = y;
 	if(button == GLUT_LEFT_BUTTON)
 		bLeftButton = (state == GLUT_DOWN);
@@ -403,7 +403,7 @@ void mouse(int button, int state, int x, int y){
 		bRightButton = (state == GLUT_DOWN);
 }
 
-void motion(int x, int y){
+void __cdecl motion(int x, int y){
 	static bool bFirst = true;
 	int xrel = x - xlast, yrel = y - ylast;
 	xlast = x;
@@ -434,7 +434,7 @@ void motion(int x, int y){
  param	 	<in/--> id　　 タイマーの区別をするための情報
  return 	なし
  */
-void timer(int id){
+void __cdecl timer(int id){
 	/// 時刻のチェックと画面の更新を行う
 	float DT = 0.05f;
 //	int times = (int)(DT / scene->GetTimeStep());
@@ -451,7 +451,7 @@ void timer(int id){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.02;
