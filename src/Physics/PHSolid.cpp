@@ -173,8 +173,8 @@ void PHSolid::UpdateVelocity(double dt){
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
 		double dtinv = 1.0/dt;
-		force = dv.v() * dtinv;
-		torque = dv.w() * dtinv;
+		force = mass * dv.v() * dtinv;
+		torque = pose.Ori() * inertia * dv.w() * dtinv;
 		//oldVel = GetVelocity();
 		//oldAngVel = GetAngularVelocity();
 		SetVelocity       (GetOrientation() * v.v());
