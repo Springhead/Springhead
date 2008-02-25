@@ -169,13 +169,12 @@ void PHSolid::UpdateCachePenalty(int c){
 }
 
 void PHSolid::UpdateVelocity(double dt){
+	double dtinv = 1.0/dt;
+	force = mass * dv.v() * dtinv;
+	torque = pose.Ori() * (inertia * dv.w() * dtinv + v.w() % (inertia * v.w()))		//oldVel = GetVelocity();
 	SpatialVector vold = v;
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
-		double dtinv = 1.0/dt;
-		force = mass * dv.v() * dtinv;
-		torque = pose.Ori() * inertia * dv.w() * dtinv;
-		//oldVel = GetVelocity();
 		//oldAngVel = GetAngularVelocity();
 		SetVelocity       (GetOrientation() * v.v());
 		SetAngularVelocity(GetOrientation() * v.w());
