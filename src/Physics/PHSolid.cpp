@@ -347,7 +347,18 @@ PHFrameIf* PHSolid::GetFrame(int i){
 	if (i >= (int)frames.size()) return NULL;
 	return frames[i]->Cast();
 }
-void PHSolid::AddFrame(PHFrameIf* f){
+void PHSolid::AddFrame(PHFrameIf* fi){
+	PHFrame* f = fi->Cast();
+	if (f->shape){
+		CDShape* sh = DCAST(CDShape, f->shape);
+		for(int i=0; i<frames.size(); ++i){
+			if (frames[i]->shape == sh){
+				DSTR << sh->GetName() << "warning : yPHSolid::AddFrame(CDShapeIf* shape)zTried Adding the same shape twice. Skip registration." << std::endl;
+				return;
+			}
+		}
+	}
+
 	frames.push_back(f->Cast());
 	frames.back()->solid = this;
 	if (frames.back()->shape){

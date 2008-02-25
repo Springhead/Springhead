@@ -356,33 +356,43 @@ public:
 
 		for(unsigned i=0; i<meshes.size(); ++i){
 			UTLoadedData* meshDataNode = meshes[i][0];
-			Mesh& mesh = *(Mesh*)meshDataNode->data;
-			CDConvexMeshDesc cmd;
-			for(unsigned j=0; j< mesh.vertices.size(); ++j){
-				cmd.vertices.push_back(mesh.vertices[j]);
+			//	CDConvexMeshが生成済みかどうかチェック
+			CDConvexMesh* cm = NULL;
+			for(unsigned i=0; i<meshDataNode->loadedObjects.size(); ++i){
+				cm = meshDataNode->loadedObjects[i]->Cast();
+				if (cm) break;
 			}
-			UTLoadedData* ldMat = meshes[i][0]->FindDescendant("PhysicalMaterial");
-			if (ldMat){	//	物理マテリアルのロード
-				SetPHMaterial(cmd.material, *(PhysicalMaterial*)ldMat->data);
-			}
-			Affinef afShape;
-			for(unsigned j=1; j<meshes[i].size();++j){
-				if (meshes[i][j]->type->GetTypeName().compare("Frame")==0){
-					for(unsigned k=0; k<meshes[i][j]->children.size(); ++k){
-						UTString tn = meshes[i][j]->children[k]->type->GetTypeName();
-						if (tn.compare("FrameTransformMatrix") == 0) {
-							FrameTransformMatrix* ftm = 
-								(FrameTransformMatrix*) meshes[i][j]->children[k]->data;
-							afShape = ftm->matrix * afShape;
+			if (!cm){
+				//	未生成の場合だけ，ConvexMeshを作る
+
+				Mesh& mesh = *(Mesh*)meshDataNode->data;
+				CDConvexMeshDesc cmd;
+				for(unsigned j=0; j< mesh.vertices.size(); ++j){
+					cmd.vertices.push_back(mesh.vertices[j]);
+				}
+				UTLoadedData* ldMat = meshes[i][0]->FindDescendant("PhysicalMaterial");
+				if (ldMat){	//	物理マテリアルのロード
+					SetPHMaterial(cmd.material, *(PhysicalMaterial*)ldMat->data);
+				}
+				Affinef afShape;
+				for(unsigned j=1; j<meshes[i].size();++j){
+					if (meshes[i][j]->type->GetTypeName().compare("Frame")==0){
+						for(unsigned k=0; k<meshes[i][j]->children.size(); ++k){
+							UTString tn = meshes[i][j]->children[k]->type->GetTypeName();
+							if (tn.compare("FrameTransformMatrix") == 0) {
+								FrameTransformMatrix* ftm = 
+									(FrameTransformMatrix*) meshes[i][j]->children[k]->data;
+								afShape = ftm->matrix * afShape;
+							}
 						}
 					}
 				}
+				for (unsigned j=0; j<cmd.vertices.size(); ++j){
+					cmd.vertices[j] = afShape * cmd.vertices[j];
+				}
+				ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
+				meshDataNode->loadedObjects.push_back(obj);
 			}
-			for (unsigned j=0; j<cmd.vertices.size(); ++j){
-				cmd.vertices[j] = afShape * cmd.vertices[j];
-			}
-			ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
-			meshDataNode->loadedObjects.push_back(obj);
 		}
 	}
 };
