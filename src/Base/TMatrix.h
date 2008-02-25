@@ -7,9 +7,10 @@
  */
 #ifndef PTMATRIX_TMATRIX_H
 #define PTMATRIX_TMATRIX_H
+/**	\defgroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+//@{
 
-/** 
-@page pgPTM ポータブル テンプレート 行列クラスライブラリ
+/**	\defgroup gpPTM ポータブル テンプレート 行列クラスライブラリ
 
 @author 長谷川 晶一
 @date 2001年6月10日,2003年10月20日,2008年2月更新
@@ -27,18 +28,24 @@
 - EVector,EMatrix: データを自分で持たず，渡されたメモリを行列だと思って管理する.
 
 @subsection tmpM 特徴
-テンプレート版(TVector, TMatrix)は，全てをテンプレートで静的に解決しています．
+テンプレート版(TVector, TMatrix)は，テンプレートでコンパイル時に行列のサイズを決定しており，
 行列のサイズやポインタなどを保持するための管理領域を持ちません．そのため，
 <ul>
- <li> 配列をキャストして行列として使用することも可能．
- <li> 行列の掛け算などで，行列のサイズが合わない場合，コンパイル時にコンパイラがエラーを出力する．
+ <li> 配列をキャストして行列だと思って使うこと．
+ <li> 行列の掛け算などで行列のサイズが合わない場合，コンパイル時にコンパイラがエラーを出すこと．
 </ul>
+ことができます．
 また，様々な並び方のベクトル・行列をサポートしているので，
 <ul>
  <li> 行列の一部(部分行列，ベクトル，行ベクトル，列ベクトル)などを直接参照することができる(代入も可能)．
  <li> コスト0で行列の転置が取れる．
 </ul>
 といった特徴があります．
+
+また，デバッガで見たときにデータが見やすいよう，
+一番派生側のクラスがメンバ変数としてデータを持つようになっています．
+2次元，3次元，4次元のベクトルでは，x, y, z, w や r, g, b などの
+メンバ変数名でデータにアクセスすることができます．
 
 @subsection portM 移植性
 一応，
@@ -53,7 +60,7 @@
 - TNT，MTL の行列は管理領域をメモリに持つため，配列をキャストして行列として使用することができない．
 - 当時のVC6では，Blitz++ は使えなかった．今ならBlitz++が良いのかも．ちょっと大きいけど．
 - 当時は，部分行列，部分ベクトルへの参照を返す行列ライブラリは見つからなかった．
-
+.
 からです．
 	
 @section ptm_usage 使い方
@@ -63,23 +70,26 @@
 使用できます．
 @subsection sampleM サンプル
 簡単なサンプルです．適当なファイル名(たとえば sample.cpp) で保存してコンパイルしてください．
+gcc の場合 g++ を使ってください．
 @verbatim
 #include "TMatrix.h"    //  行列ライブラリのインクルードする．
 #include <iostream>
 using namespace PTM;    //  行列クラスはPTM名前空間の中で宣言されている．
-void main(){
-    TMatrixRow<2,2,float> mat;     //  2行2列の行列を宣言
-    mat[0][0] = 1;  mat[0][1] = 2;
-    mat[1][0] = 3;  mat[1][1] = 4;
-    TVector<2,float> vec;          //  2次元のベクトルを宣言
+int main(){
+    TMatrixRow<2,2,float> mat;              // 2行2列の行が詰った行列を宣言
+                                            // TMatrixColだと列が詰った行列になる
+    mat[0][0] = 1;  mat[0][1] = 2;          // 0行0列 = 1;  0行1列 = 2;
+    mat[1][0] = 3;  mat[1][1] = 4;          // 1行0列 = 3;  1行1列 = 4;
+    TVector<2,float> vec;                   // 2次元のベクトルを宣言
     vec[0] = 1; vec[1] = 0;
     std::cout << mat;
     std::cout << vec << std::endl;
-    std::cout << mat * vec << std::endl;	//	掛け算
-    std::cout << mat + mat << std::endl;	//	足し算
-    std::cout << mat - mat << std::endl;	//	引き算
-    std::cout << mat.trans() << std::endl;	//	転置
-    std::cout << mat.inv() << std::endl;	//	逆行列
+    std::cout << mat * vec << std::endl;    // 掛け算
+    std::cout << mat + mat << std::endl;    // 足し算
+    std::cout << mat - mat << std::endl;    // 引き算
+    std::cout << mat.trans() << std::endl;  // 転置
+    std::cout << mat.inv() << std::endl;    // 逆行列
+    return 0;
 }
 @endverbatim
 	@subsection vecfunc ベクトルの演算
@@ -143,16 +153,11 @@ void main(){
 	を改変して流用させていただきました．
 	自由にコードを使えるよう公開してくださってありがとうございます．
 	
-	@section secRefLA リファレンス
-		@ref gpLinearAlgebra
 */
-
+//@{
 
 //-----------------------------------------------------------------------------
 
-
-/**	\addtogroup gpLinearAlgebra	*/
-//@{
 /**	@file TMatrix.h
 	テンプレートによるN×M行列型の定義.
 	要素の型とサイズをテンプレートの引数にすることで，
@@ -661,7 +666,7 @@ public:
 	typedef TYPENAME desc::const_row_vector_ref	const_row_vector_ref;
 	typedef TYPENAME desc::col_vector_ref		col_vector_ref;
 	typedef TYPENAME desc::const_col_vector_ref	const_col_vector_ref;
-	typedef TYPENAME desc::trans_ref				trans_ref;
+	typedef TYPENAME desc::trans_ref			trans_ref;
 	typedef TYPENAME desc::const_trans_ref		const_trans_ref;
 	typedef TYPENAME desc::zero					zero;
 	typedef TYPENAME desc::unit					unit;
@@ -1387,6 +1392,7 @@ std::istream& operator >> (std::istream& is, MatrixImp<D>& m){
 	m.input(is);
 	return is;
 }
+//@}
 //@}
 
 }	//	namespace PTM

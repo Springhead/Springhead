@@ -15,8 +15,7 @@
 #include <stddef.h>
 #include <vector>
 
-
-/**	\defgroup gpLinearAlgebra ベクトル・行列・座標変換	*/
+/** \addtogroup gpLinearAlgebra */
 //@{
 
 /**	@file

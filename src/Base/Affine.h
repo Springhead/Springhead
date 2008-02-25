@@ -8,9 +8,9 @@
 #ifndef AFFINE_H
 #define AFFINE_H
 
-/**	\addtogroup gpLinearAlgebra	*/
+/** \addtogroup gpLinearAlgebra */
 //@{
-/** \page pgAffine @!JAAffine行列クラス@!ENA Affine Matrix@!*
+/** \defgroup gpAffine @!JAAffine行列クラス@!ENA Affine Matrix@!*
 	\section secAffineIntro @!JAはじめに@!ENIntroduction@!*
 		@!JA
 		このページはAffine行列クラス(Spr::TAffine, Spr::TAffine2)の説明です．
@@ -150,9 +150,13 @@ void main(){
     ftp://ftp.matsusaka-u.ac.jp/pub/algorithms<br>
 	奥村 晴彦 Haruhiko Okumura<br>
 	を改変して流用させていただきました．
-	自由にコードを使わせてくださって，ありがとうございます．
-	
+	自由にコードを使えるよう公開してくださってありがとうございます．
+
+	@section secRefLA リファレンス
+		@ref gpLinearAlgebra
 */
+//@{
+
 
 #include "TMatrix.h"
 #include "TMatrixUtility.h"
@@ -666,6 +670,7 @@ typedef TAffine2<double> Affine2d;
 typedef TAffine<float> Affinef;
 ///	double版3次元アフィン行列.
 typedef TAffine<double> Affined;
+//@}
 //@}
 
 

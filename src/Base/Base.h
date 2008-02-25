@@ -14,7 +14,7 @@
 	- 数学・ベクトル・行列ライブラリ
 		- @ref pgPTM n×m行列・n次元ベクトル (PTM::TMatrix, PTM::TVector)
 		- @ref pgAffine アフィン行列・2/3次元ベクトル (Spr::TVec2, Spr::TVec3, Spr::TAffine)
-	- rttiを使わない実行時型情報 (BaseTypeInfo.h)
+	- RTTIを使わない実行時型情報 (BaseTypeInfo.h)
 	- デバッグ支援機能 (BaseDebug.h)
 	- コンパイラ対応マクロ (Env.h)
 	- @ref gpBaseUtility その他のユーティリティー (BaseUtility.h)

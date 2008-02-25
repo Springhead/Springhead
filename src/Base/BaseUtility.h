@@ -20,21 +20,27 @@ namespace Spr {
 
 /**	@file	BaseUtility.h	その他のユーティリティークラス・関数．*/
 
+///	文字列．str::stringの別名
 typedef std::string UTString;
 inline bool operator < (const UTString& u1, const UTString& u2){
 	return u1.compare(u2) < 0;
 }
+/**	文字列(UTString)を比較する関数オブジェクト型．
+	set<UTString, UTStringLess> などを作るために使える．	*/
 struct UTStringLess{
 	bool operator ()(const UTString& t1, const UTString& t2) const{
 		return t1.compare(t2) < 0;
 	}
 };
 
+///	ポインタの中身が等しいか調べる関数オブジェクト型．
 template <class T>
 bool UTContentsEqual(const T& t1, const T& t2){
 	return *t1 == *t2;
 }
 
+/**	ポインタの中身を比較する関数オブジェクト型．
+	set< int*, UTContentsLess<int> > などに使える．*/
 template <class T>
 struct UTContentsLess{
 	bool operator ()(const T& t1, const T& t2) const{
@@ -42,6 +48,8 @@ struct UTContentsLess{
 	}
 };
 
+/**	クラスのメンバを比較する関数オブジェクト型．
+	set<C, UTMemberLess<C, C::member> > などに使える．*/
 template <class T, class M, M T::* m>
 struct UTMemberLess{
 	bool operator ()(const T& t1, const T& t2) const{
@@ -49,6 +57,7 @@ struct UTMemberLess{
 	}
 };
 
+///	ostreamに指定の数のスペースを出力するストリームオペレータ(std::endl などの仲間)
 class UTPadding{
 public:
 	int len;
@@ -56,6 +65,7 @@ public:
 };
 std::ostream& operator << (std::ostream& os, UTPadding p);
 
+///	istreamから，空白文字(スペース タブ 改行(CR LF) )を読み出すストリームオペレータ
 struct UTEatWhite{
 	UTEatWhite(){}
 };
@@ -80,7 +90,8 @@ std::istream& operator >> (std::istream& is, const UTEatWhite& e);
 */
 //@{
 
-///	参照カウンタ．カウントが0になっても勝手に消えはしない．
+/**	参照カウンタ．UTRef<T>で指されるクラスTは，
+	これを1つだけ継承する必要がある．	*/
 class SPR_DLL UTRefCount{
 	mutable int refCount;
 public:
@@ -108,7 +119,7 @@ public:
 };
 
 /**	参照カウンタ用のポインタ．自動的に参照カウンタを増減，
-	オブジェクトのdeleteをする．
+	カウンタが0になったら，オブジェクトをdeleteする．
 */
 template <class T>
 class UTRef{
@@ -159,7 +170,7 @@ public:
 	bool operator <(const UTRef& r) const { return Obj() < r.Obj(); }
 };
 
-/// UTRefの配列
+/// UTRefの配列．
 template<class T, class CO = std::vector< UTRef<T> > >
 class UTRefArray : public CO{
 public:
@@ -183,7 +194,8 @@ public:
 
 /**	一般オブジェクト用，自動delete ポインタ
 	ポインタが消えるときにオブジェクトをdeleteをする．
-*/
+	カウンタはついてないので，複数の UTDeleteRef でオブジェクトを
+	指すことはできない．*/
 template <class T>
 class UTDeleteRef{
 	T* obj;
@@ -207,7 +219,9 @@ public:
 //@}
 
 
-///	シングルトンクラス
+/**	シングルトンクラス．
+	プログラム内に，オブジェクトを1つだけ作りたく，
+	いつでも使いたい場合に利用するもの．*/
 template <class T>
 T& Singleton(){
 	static T t;
@@ -216,8 +230,7 @@ T& Singleton(){
 
 /**	\defgroup gpExCont コンテナの拡張
 	stlのコンテナクラスを拡張したクラス類．
-	スタック，ツリー，
-*/
+	スタック，ツリー，	*/
 //@{
 ///	スタックつき vector 
 template <class T, class CO=std::vector<T> >
@@ -329,10 +342,10 @@ public:
 };
 //@}
 	
-/* assert_cast
-		 SPR_DEBUG定義時はdynamic_cast、それ以外ではstatic_castとして働く。
-		 dynamic_castに失敗するとstd::bad_cast例外を発生する。
-*/
+/** 	assert_cast
+		SPR_DEBUG定義時はdynamic_cast、それ以外ではstatic_castとして働く。
+		dynamic_castに失敗するとstd::bad_cast例外を発生する。
+		RTTIを使うC++のdynamic_castを使用する．DCASTの類は使わない	*/
 template <class T, class U>
 inline T assert_cast(U u){
 #ifdef SPR_DEBUG
@@ -346,5 +359,4 @@ inline T assert_cast(U u){
 //@}
 
 }	//	namespace Spr
-
 #endif
