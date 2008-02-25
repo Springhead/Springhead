@@ -172,6 +172,9 @@ void PHSolid::UpdateVelocity(double dt){
 	SpatialVector vold = v;
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
+		double dtinv = 1.0/dt;
+		force = dv.v() * dtinv;
+		torque = dv.w() * dtinv;
 		//oldVel = GetVelocity();
 		//oldAngVel = GetAngularVelocity();
 		SetVelocity       (GetOrientation() * v.v());
