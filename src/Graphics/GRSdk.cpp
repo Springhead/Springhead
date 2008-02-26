@@ -26,28 +26,28 @@ void SPR_CDECL GRSdkIf::RegisterSdk(){
 	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
-	Sdk::RegisterFactory(new GRSdkFactory());
+	Sdk::RegisterFactory(DBG_NEW GRSdkFactory());
 	GRRegisterTypeDescs();
 
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRScene));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRScene));
 
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMesh));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRBlendMesh));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRBlendMesh));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRSphere));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRSphere));	
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRMaterial));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMesh));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMesh));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRBlendMesh));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRBlendMesh));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSphere));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSphere));	
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMaterial));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMaterial));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRLight));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRLight));
 
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRFrame));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRDummyFrame));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimationController));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimationSet));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimation));
-	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRCamera));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRFrame));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRDummyFrame));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRAnimationController));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRAnimationSet));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRAnimation));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRCamera));
 }
 
 //----------------------------------------------------------------------------

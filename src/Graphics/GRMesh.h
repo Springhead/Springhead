@@ -30,9 +30,9 @@ public:
 	void CreateList(GRRenderIf* r);
 private:
 	///	頂点フォーマットに合った頂点バッファ
-	float* vtxs;
-	int nVtxs;
-	float* blendedVtxs;
+	float*	vtxs;
+	int		nVtxs;
+	float*	blendedVtxs;
 	const GRVertexElement* vtxFormat;
 	int stride, normalOffset, positionOffset, texOffset;
 public:

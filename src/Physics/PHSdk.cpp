@@ -32,24 +32,24 @@ void PHSdkIf::RegisterSdk(){
 	if (!bFirst) return;
 	bFirst=false;
 
-	Sdk::RegisterFactory(new PHSdkFactory());
-	PHSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
+	Sdk::RegisterFactory(DBG_NEW PHSdkFactory());
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
 
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHRootNode));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHGear));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHHingeJoint));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJoint));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHBallJoint));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPathJoint));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPath));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSpring));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHHingeJointNode));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSliderJointNode));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHBallJointNode));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHPathJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSolid));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHRootNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHGear));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHHingeJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPath));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSpring));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHHingeJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJointNode));
 
-	PHSolidIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHFrame));
+	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
 
 	PHRegisterTypeDescs();
 	PHRegisterLoadHandlers();

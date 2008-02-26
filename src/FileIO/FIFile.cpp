@@ -260,7 +260,7 @@ void FIFile::SaveBlock(FISaveContext* sc){
 				case UTTypeDescFieldIt::F_BLOCK:{
 					PDEBUG_EVAL( DSTR << "=" << std::endl; )
 					void* blockData = field->GetAddress(base, pos);
-					sc->datas.Push(new UTLoadedData(NULL, field->type, blockData));
+					sc->datas.Push(DBG_NEW UTLoadedData(NULL, field->type, blockData));
 					sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
 					SaveBlock(sc);
 					sc->fieldIts.Pop();

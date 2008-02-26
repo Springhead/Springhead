@@ -30,12 +30,12 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 	FWRegisterTypeDescs();
 	FWRegisterOldSpringheadNode();
 
-	FWSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWScene));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(FWObject));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSdk));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHScene));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRSdk));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRScene));
+	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWScene));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWObject));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSdk));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSdk));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRScene));
 }
 
 FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){

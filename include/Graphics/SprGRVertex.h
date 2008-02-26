@@ -98,11 +98,11 @@ struct GRVertexElement {
 	static const GRVertexElement vfN3fP3f[];
 	static const GRVertexElement vfC4fN3fP3f[];
 	static const GRVertexElement vfT2fP3f[];
-	static const GRVertexElement vfT4fP4f[];			//new
+	static const GRVertexElement vfT4fP4f[];			//DBG_NEW
 	static const GRVertexElement vfT2fC4bP3f[];
 	static const GRVertexElement vfT2fN3fP3f[];
 	static const GRVertexElement vfT2fC4fN3fP3f[];
-	static const GRVertexElement vfT4fC4fN3fP4f[];		//new
+	static const GRVertexElement vfT4fC4fN3fP4f[];		//DBG_NEW
 	static const GRVertexElement* typicalFormats[];
 	//@}
 	

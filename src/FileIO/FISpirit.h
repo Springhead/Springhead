@@ -82,12 +82,12 @@ struct FISkipParser: boost::spirit::parser<FISkipParser>{
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
 	template <class T>
     FISkipParser(const T& p){
-		ptr_.reset(new boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
+		ptr_.reset(DBG_NEW boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 	}
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
 	template <class T>
     FISkipParser& operator=(const T& p){
-	    ptr_.reset(new boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
+	    ptr_.reset(DBG_NEW boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 		return *this;
 	}
     ///	スキップのためのパース
@@ -355,12 +355,12 @@ struct FIPTSkipParser: boost::spirit::parser< FIPTSkipParser >{
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
 	template <class T>
     FIPTSkipParser(const T& p){
-		ptr_.reset(new boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
+		ptr_.reset(DBG_NEW boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 	}
     ///	Scannerがテンプレートのパーサを受け取って，コンクリートなパーサに変換して保存．
 	template <class T>
     FIPTSkipParser& operator=(const T& p){
-	    ptr_.reset(new boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
+	    ptr_.reset(DBG_NEW boost::spirit::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 		return *this;
     }
     ///	スキップのためのパース
@@ -385,7 +385,7 @@ struct FIPTPhraseParser: public boost::spirit::parser< FIPTPhraseParser >{
 	FIPTPhraseParser(FIPTPhraseParser const& fp): ptr_(fp.ptr_? fp.ptr_->clone() : NULL){}
 	template <typename ParserT>
 	FIPTPhraseParser& operator=(ParserT const& p){
-	    ptr_.reset(new boost::spirit::impl::concrete_parser<ParserT, PhraseScannerT, Result>(p));
+	    ptr_.reset(DBG_NEW boost::spirit::impl::concrete_parser<ParserT, PhraseScannerT, Result>(p));
 		return *this;
 	}
     ///	パース
@@ -414,7 +414,7 @@ struct FIPTPhraseParserWithID: public boost::spirit::parser< FIPTPhraseParserWit
 	FIPTPhraseParserWithID(FIPTPhraseParserWithID const& fp): ptr_(fp.ptr_? fp.ptr_->clone() : NULL){}
 	template <typename ParserT>
 	FIPTPhraseParserWithID& operator=(ParserT const& p){
-	    ptr_.reset(new boost::spirit::impl::concrete_parser<ParserT, PhraseScannerT, Result>(p));
+	    ptr_.reset(DBG_NEW boost::spirit::impl::concrete_parser<ParserT, PhraseScannerT, Result>(p));
 		return *this;
 	}
 	Result parse(const PhraseScannerT& scan)const{

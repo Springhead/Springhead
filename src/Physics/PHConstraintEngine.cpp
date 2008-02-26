@@ -69,9 +69,15 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
 	}
 	local.Ez() =  local.Ex() ^ local.Ey();
-	if (local.det() < 0.99) {
+	if (local.det() < 0.9) {
 		DSTR << "Error: local coordinate error." << std::endl;
 		DSTR << local;
+		Vec3d a = Vec3d(local[0][0], local[1][0], local[2][0]);
+		Vec3d b = Vec3d(local[0][1], local[1][1], local[2][1]);
+		Vec3d c = Vec3d(local[0][2], local[1][2], local[2][2]);
+		DSTR << "dot(local[0], local[1]) :" << dot(a, b) << std::endl;
+		DSTR << "dot(local[1], local[2]) :" << dot(b, c) << std::endl;
+		DSTR << "dot(local[2], local[0]) :" << dot(c, a) << std::endl;
 		DSTR << "normal:" << normal << std::endl;
 		DSTR << "v1-v0:" << v1-v0 << std::endl;
 		assert(0);

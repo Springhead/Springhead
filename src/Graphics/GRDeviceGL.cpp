@@ -653,7 +653,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		ty = LoadBmpGetHeight(h);
 		nc = LoadBmpGetBytePerPixel(h);
 		int pictureSize = tx*ty*nc;
-		texbuf = new char[pictureSize * tz];
+		texbuf = DBG_NEW char[pictureSize * tz];
 		LoadBmpRelease(h);
 		//	ファイルのロード
 		for(int i=0; i<tz; ++i){
@@ -695,7 +695,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		tx = LoadBmpGetWidth(h);
 		ty = LoadBmpGetHeight(h);
 		nc = LoadBmpGetBytePerPixel(h);
-		texbuf = new char[tx*ty*nc];
+		texbuf = DBG_NEW char[tx*ty*nc];
 		LoadBmpGetBmp(h, texbuf);
 		LoadBmpRelease(h);
 

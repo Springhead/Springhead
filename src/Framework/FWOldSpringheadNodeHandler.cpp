@@ -429,7 +429,7 @@ public:
 		fc->objects.Push(fc->CreateObject(
 			GRAnimationIf::GetIfInfoStatic(), &ad, ld->GetName()));	
 		ld->loadedObjects.push_back(fc->objects.Top());
-		fc->postTasks.push_back(new LoadInitalPose(fc->objects.Top()->Cast()));
+		fc->postTasks.push_back(DBG_NEW LoadInitalPose(fc->objects.Top()->Cast()));
 	}
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Pop();
