@@ -2,6 +2,7 @@
 IF_IMP(GRBlendMesh, GRVisual);
 IF_IMP(GRVisual, NamedObject);
 IF_IMP(GRFrame, GRVisual);
+IF_IMP(GRDummyFrame, GRVisual);
 IF_IMP(GRAnimation, SceneObject);
 IF_IMP(GRAnimationSet, SceneObject);
 IF_IMP(GRAnimationController, SceneObject);

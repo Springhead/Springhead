@@ -55,6 +55,14 @@ struct GRFrameIf;	class GRFrame;
 typedef GRFrameIfStubTemplate<GRFrameIf, ObjectIfBuf, GRFrame>	GRFrameIfStub;
 typedef IfInitTemplate<GRFrameIfStub, GRFrame>	GRFrameIfInit;
 
+template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;
+template <class IF, class MIF, class OBJ>
+struct GRDummyFrameIfStubTemplate: public GRVisualIfStubTemplate<IF, MIF, OBJ> {
+};
+struct GRDummyFrameIf;	class GRDummyFrame;
+typedef GRDummyFrameIfStubTemplate<GRDummyFrameIf, ObjectIfBuf, GRDummyFrame>	GRDummyFrameIfStub;
+typedef IfInitTemplate<GRDummyFrameIfStub, GRDummyFrame>	GRDummyFrameIfInit;
+
 template <class IF, class MIF, class OBJ> struct SceneObjectIfStubTemplate;
 template <class IF, class MIF, class OBJ>
 struct GRAnimationIfStubTemplate: public SceneObjectIfStubTemplate<IF, MIF, OBJ> {

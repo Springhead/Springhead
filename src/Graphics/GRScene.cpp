@@ -106,7 +106,7 @@ size_t GRScene::NChildObject() const{
 ObjectIf* GRScene::GetChildObject(size_t pos){
 	if(pos < world->NChildObject())
 		return world->GetChildObject(pos);
-	if (pos == world->NChildObject()) return camera->Cast();
+	if (camera && pos == world->NChildObject()) return camera->Cast();
 	return animationController->Cast();
 }
 void GRScene::Render(GRRenderIf* r){
@@ -115,6 +115,4 @@ void GRScene::Render(GRRenderIf* r){
 	world->Rendered(r);
 	if (camera) camera->Rendered(r);
 }
-
-
 }

@@ -52,6 +52,23 @@ public:
 	void Print(std::ostream& os) const ;
 };
 
+/**	@class	GRDummyFrame
+    @brief	表示しないコンテナ．Visualをしまっておいて，後でプログラムから使うために使う　*/
+class GRDummyFrame: public GRVisual, public GRDummyFrameIfInit, public GRDummyFrameDesc{
+public:
+	OBJECTDEF(GRDummyFrame, GRVisual);
+	ACCESS_DESC(GRDummyFrame);
+	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
+	GRVisualIfs children;
+	GRDummyFrame(const GRDummyFrameDesc& desc=GRDummyFrameDesc()){}
+	GRSceneIf* GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
+	
+	virtual bool AddChildObject(ObjectIf* v);
+	virtual bool DelChildObject(ObjectIf* v);
+	virtual size_t NChildObject() const;
+	virtual ObjectIf* GetChildObject(size_t pos);
+};
+
 class GRAnimation: public SceneObject, public GRAnimationIfInit, public GRAnimationDesc{
 public:
 	OBJECTDEF(GRAnimation, SceneObject);

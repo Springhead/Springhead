@@ -106,6 +106,33 @@ void GRFrame::Print(std::ostream& os) const {
 
 
 //-----------------------------------------------------------------
+//	GRDummyFrame
+//
+IF_OBJECT_IMP(GRDummyFrame, GRVisual);
+bool GRDummyFrame::AddChildObject(ObjectIf* o){
+	GRVisualIf* v = o->Cast();
+	if (v){
+		children.push_back(v);
+		return true;
+	}
+	return false;
+}
+bool GRDummyFrame::DelChildObject(ObjectIf* v){
+	for(GRVisualIfs::iterator it = children.begin(); it != children.end(); ++it){
+		if (*it == v){
+			children.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+size_t GRDummyFrame::NChildObject() const{ return children.size(); }
+ObjectIf* GRDummyFrame::GetChildObject(size_t pos){
+	if (pos >= children.size()) return NULL; 
+	return children[pos];
+}
+
+//-----------------------------------------------------------------
 //	GRAnimation
 //
 IF_OBJECT_IMP(GRAnimation, SceneObject);

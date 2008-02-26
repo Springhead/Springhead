@@ -52,6 +52,16 @@
 	field->offset = int((char*)&(pGRFrameDesc->transform) - (char*)pGRFrameDesc);
 	db->RegisterDesc(desc);
 	
+	GRDummyFrameDesc* pGRDummyFrameDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("GRDummyFrameDesc");
+	desc->size = sizeof(GRDummyFrameDesc);
+	desc->ifInfo = GRDummyFrameIf::GetIfInfoStatic();
+	((IfInfo*)GRDummyFrameIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<GRDummyFrameDesc>;
+	field = desc->AddBase("GRVisualDesc");
+	field->offset = int((char*)(GRVisualDesc*)pGRDummyFrameDesc - (char*)pGRDummyFrameDesc);
+	db->RegisterDesc(desc);
+	
 	GRKey* pGRKey = NULL;
 	desc = DBG_NEW UTTypeDesc("GRKey");
 	desc->size = sizeof(GRKey);

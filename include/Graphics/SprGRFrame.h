@@ -74,6 +74,20 @@ struct GRFrameDesc:public GRVisualDesc{
 };
 
 
+/**	@brief	グラフィクスのシーングラフのダミーノード．
+	後でプログラムから使うために，Visualを入れておくためのコンテナ．
+	描画などをしないので安心してしまっておける．	*/
+struct GRDummyFrameIf: public GRVisualIf{
+	IF_DEF(GRDummyFrame);
+};
+/**	@brief GRDummyFrame のDesc．ダミーフレーム．
+	Meshなどを表示したくはないが，とりあえずロードだけしておき，
+	後でプログラムで参照したい場合，ダミーフレームに入れておけば
+	無駄な描画がされない．	*/
+struct GRDummyFrameDesc:public GRVisualDesc{
+	DESC_DEF_FOR_OBJECT(GRDummyFrame);
+};
+
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationIf: public SceneObjectIf{
 	IF_DEF(GRAnimation);
