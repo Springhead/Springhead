@@ -36,6 +36,11 @@ public:
 	*/
 	virtual void SetPosCorrectionRate(double value) = 0;
 
+	/** @brief contactCorrectionRate‚ğ‘‚«Š·‚¦‚é
+		@param value ‘‚«Š·‚¦Œã‚Ì’l
+	*/
+	virtual void SetContactCorrectionRate(double value) = 0;
+
 };
 
 struct PHGravityEngineIf : PHEngineIf{

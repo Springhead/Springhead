@@ -45,8 +45,9 @@ public:
 	int		numIter;					///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”
 	int		numIterCorrection;			///< Œë·C³LCP‚Ì”½•œ‰ñ”
 	int		numIterContactCorrection;	///< ÚG“_‚ÌŒë·C³LCP‚Ì”½•œ‰ñ”
-	double	velCorrectionRate;			///< Œë·C³”ä—¦
-	double	posCorrectionRate;
+	double	velCorrectionRate;			///< ‘¬“x‚ÌLCP‚ÅŠÖßS‘©‚ÌŒë·‚ğC³‚·‚éê‡‚ÌŒë·C³”ä—¦
+	double	posCorrectionRate;			///< ˆÊ’u‚ÌLCP‚ÅCŠÖßS‘©‚ÌŒë·‚ğC³‚·‚éê‡‚ÌŒë·C³”ä—¦
+	double  contactCorrectionRate;		///< ÚG‚ÌN“ü‰ğÁ‚Ì‚½‚ß‚ÌC‘¬“x‚ÌLCP‚Å‚Ì•â³”ä—¦D
 	double	shrinkRate;					///< LCP‰Šú’l‚ğ‘O‰ñ‚Ì‰ğ‚É‘Î‚µ‚Äk¬‚³‚¹‚é”ä—¦
 	double	shrinkRateCorrection;
 	double	freezeThreshold;			///< „‘Ì‚ªƒtƒŠ[ƒY‚·‚éè‡’l
@@ -84,6 +85,7 @@ public:
 	virtual PHConstraintsIf* GetContactPoints();
 	virtual void SetVelCorrectionRate(double value){velCorrectionRate = value;}
 	virtual void SetPosCorrectionRate(double value){posCorrectionRate = value;}
+	virtual void SetContactCorrectionRate(double value){contactCorrectionRate = value;}
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);

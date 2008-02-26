@@ -43,6 +43,7 @@ void SPR_CDECL GRSdkIf::RegisterSdk(){
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRLight));
 
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRFrame));
+	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRDummyFrame));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimationController));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimationSet));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(GRAnimation));
