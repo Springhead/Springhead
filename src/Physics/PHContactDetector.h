@@ -112,6 +112,9 @@ public:
 				shapePose[0][i], deltaPos[0][i],
 				shapePose[1][j], deltaPos[1][j]))
 			{
+				SaveDetectContinuously(sp, ct, shapePose[0][i], deltaPos[0][i],
+				shapePose[1][j], deltaPos[1][j]);
+				assert(0.9 < sp->normal.norm() && sp->normal.norm() < 1.1);
 				found = true;
 				OnContDetect(sp, engine, ct, dt);
 			}

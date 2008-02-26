@@ -430,6 +430,7 @@ final:
 		pb = kx*q[ids[id0]] + ky*q[ids[id1]];
 		dist = kx*w[ids[id0]].z + ky*w[ids[id1]].z;
 		normal = w2z.Conjugated() * v[ids[3]];
+		normal.unitize();
 	}else{
 		Matrix2d m;
 		m.Ex() = w[ids[0]].XY()-w[ids[1]].XY();
@@ -446,6 +447,7 @@ final:
 		pb = k.x*q[ids[1]] + k.y*q[ids[2]] + kz*q[ids[0]];
 		dist = k.x*w[ids[1]].z + k.y*w[ids[2]].z + kz*w[ids[0]].z;
 		normal = w2z.Conjugated() * v[ids[3]];
+		normal.unitize();
 	}
 	//	HASE_REPORT
 	//	DSTR << "CCDGJK dist:" << dist << "  " << pa << pb << std::endl;

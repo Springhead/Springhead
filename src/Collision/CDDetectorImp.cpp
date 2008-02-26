@@ -42,6 +42,7 @@ void SaveShape(std::ostream& file, CDShape* a);
 CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk);
 void SaveDetectContinuously(CDShapePair* sp, unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1){
 	std::ofstream file("DetectContinuouslySaveParam.txt");
+	file.precision(12);
 	file << sp->normal << std::endl;
 	file << sp->lastContactCount << std::endl;
 	SaveShape(file, sp->shape[0]);
@@ -64,6 +65,7 @@ void CallDetectContinuously(std::istream& file, PHSdkIf* sdk){
 	Vec3d delta0, delta1;
 	file >> pose0 >> delta0 >> pose1 >> delta1;
 	sp->DetectContinuously(ct, pose0, delta0, pose1, delta1);
+	DSTR << sp->normal << std::endl;
 }
 
 
@@ -104,6 +106,11 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 				dir, -DBL_MAX, end, normal, closestPoint[0], closestPoint[1], dist);
 			if (res <= 0) return false;
+			if (!(0.9 < normal.norm() && normal.norm() < 1.1)){
+				DSTR << "normal error in " << std::endl;
+				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+					dir, -DBL_MAX, end, normal, closestPoint[0], closestPoint[1], dist);
+			}
 
 			if (dist >= 0){	//	今回の移動で接触していれば
 				double toi = dist / end;
@@ -124,7 +131,6 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 			if (ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 				-dir, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], tmp) <= 0)
 				return false;	//	接触していない場合は抜ける。
-
 		}
 		/*	速度0の場合、または toi < 0 の場合、ここに来る。
 			このようなことが起こる原因には、次の可能性がある。

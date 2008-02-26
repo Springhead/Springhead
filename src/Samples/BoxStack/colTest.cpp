@@ -13,7 +13,7 @@
 using namespace Spr;
 void main(){
 	std::ifstream file;
-#if 1
+#if 0
 	file.open("ContFindCommonPointSaveParam.txt");
 	PHSdkIf* sdk = PHSdkIf::CreateSdk();
 	ContFindCommonPointCall(file, sdk);

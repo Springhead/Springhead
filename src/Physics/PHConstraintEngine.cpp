@@ -78,6 +78,9 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		DSTR << "dot(local[0], local[1]) :" << dot(a, b) << std::endl;
 		DSTR << "dot(local[1], local[2]) :" << dot(b, c) << std::endl;
 		DSTR << "dot(local[2], local[0]) :" << dot(c, a) << std::endl;
+		DSTR << "norm a :" << a.norm() << std::endl;
+		DSTR << "norm b :" << b.norm() << std::endl;
+		DSTR << "norm c :" << c.norm() << std::endl;
 		DSTR << "normal:" << normal << std::endl;
 		DSTR << "v1-v0:" << v1-v0 << std::endl;
 		assert(0);
