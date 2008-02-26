@@ -60,7 +60,7 @@ public:
 	ACCESS_DESC(GRDummyFrame);
 	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
 	GRVisualIfs children;
-	GRDummyFrame(const GRDummyFrameDesc& desc=GRDummyFrameDesc()){}
+	GRDummyFrame(const GRDummyFrameDesc& desc=GRDummyFrameDesc());
 	GRSceneIf* GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
 	
 	virtual bool AddChildObject(ObjectIf* v);

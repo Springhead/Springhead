@@ -64,7 +64,7 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 		}
 		// デフォルトネーム設定
 		if(strcmp(v->GetName(), "") == 0){
-			char name[256];
+			char name[256]="";
 			if(frame)
 				sprintf(name, "%s_frame%d", GetName(), children.size()-1);
 			if(mat)
@@ -109,6 +109,9 @@ void GRFrame::Print(std::ostream& os) const {
 //	GRDummyFrame
 //
 IF_OBJECT_IMP(GRDummyFrame, GRVisual);
+GRDummyFrame::GRDummyFrame(const GRDummyFrameDesc& desc):GRDummyFrameDesc(desc){	
+}
+
 bool GRDummyFrame::AddChildObject(ObjectIf* o){
 	GRVisualIf* v = o->Cast();
 	if (v){
