@@ -6,6 +6,8 @@ if "%1"=="DEBUG" set EXT=D
 if "%1"=="MFCRELEASE" set EXT=M
 if "%1"=="MFCDEBUG" set EXT=MD
 if "%2"=="7" set EXT=7%EXT%
+if "%2"=="8" set EXT=8%EXT%
+
 
 set OUTPUT=../Lib/win32/Springhead%EXT%.lib
 set INPUT=Base/Base%EXT%.lib Foundation/Foundation%EXT%.lib 
