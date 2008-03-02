@@ -62,15 +62,17 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		scene->CreateTreeNode(node, soFoot[i]);
 		jntFootGuide[i]->SetSpring(K);
 		jntFootGuide[i]->SetDamper(D);
-		jntFootGuide[i]->SetSpringOrigin(Rad(90.0));
+		jntFootGuide[i]->SetSpringOrigin(Rad(-90.0));
 	}
 	
 	// しばし待つ
+	//しばし待つ処理を入れるとPHConstraintEngineで落ちるからとりあえず外します．bt toki 2008.03.02
+/*
 	double dt = scene->GetTimeStep();
 	double T = 0.1;
 	for(double t = 0.0; t < T; t+=dt)
 		scene->Step();
-
+*/
 	// バネ解除
 	jntGuideBody[0]->SetSpring(0.0);
 	jntGuideBody[1]->SetSpring(0.0);
