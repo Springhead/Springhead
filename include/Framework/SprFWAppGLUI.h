@@ -27,17 +27,21 @@ public:
 };
 
 /** @brief GLUIを用いるアプリケーションクラス
+		   基本的にFWAppGLUIを自分のアプリケーションのクラスに継承させ，
+		   DesignGUIを必ずオーバーライドして使用する．
+		   必要に応じてDesignGUIから派生するコールバック関数をアプリケーションクラスに作成する必要がある．
+		   自分のアプリケーションクラスに作成するコールバックは，呼び出し規約に注意して作成すること．
+		   (クラス内の関数定義は必ず__thiscallになる)
 */
 class FWAppGLUI : public FWAppGLUT, public FWAppGLUIDesc{
 protected:
 	std::vector<GLUI*> guis;
 public:
 	~FWAppGLUI();
-	virtual void	Init(int argc, char* argv[]);
-	virtual void	DesignGUI() = 0;
-	virtual void	Display() = 0;
-	virtual void	Start();
-	virtual GLUI*	CreateGUI(int wid = 0, FWAppGLUIDesc desc = FWAppGLUIDesc());
+	virtual void		 Init(int argc, char* argv[]);
+	virtual void __cdecl DesignGUI() = 0;
+	virtual void		 Start();						// FWAppGLUTのStart()とは中身が異なるので消さないこと．
+	virtual GLUI*		 CreateGUI(int wid = 0, FWAppGLUIDesc desc = FWAppGLUIDesc());
 };
 
 }
