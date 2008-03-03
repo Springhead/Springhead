@@ -16,7 +16,6 @@
 namespace Spr{;
 
 class Object;
-class IfInfo;
 
 #if !defined SWIG
 
@@ -57,6 +56,7 @@ template <class T> XCastPtr<T>& CastToXCastPtr(const UTRef<T> ptr){
 
 
 struct ObjectIf;
+class IfInfo;
 class UTTypeDesc;
 
 /**	Factory (オブジェクトを生成するクラス)の基本クラス
@@ -143,13 +143,14 @@ public:																	\
 		return (I*)GetIfDynamic(I::GetIfInfoStatic());						\
 	}																		\
 
-#endif // !SWIG
-
 ///	ディスクリプタが持つべきメンバの宣言部．
 #define DESC_DEF_FOR_OBJECT(cls)										\
-	static IfInfo const* GetIfInfo(){									\
+public:																	\
+	const static IfInfo* GetIfInfo(){									\
 		return cls##If::GetIfInfoStatic();								\
 	}																	\
+
+#endif // !SWIG
 
 // Rubyなどのポートで使用されるキャスト
 #define IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}

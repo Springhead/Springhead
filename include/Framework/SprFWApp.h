@@ -190,14 +190,6 @@ public:
 	 */
 	virtual void SetCurrentWin(FWWin* win){}
 
-	/** @brief タイマを始動
-	 */
-	virtual void StartTimer(){}
-
-	/** @brief タイマを停止
-	 */
-	virtual void StopTimer(){}
-
 	/** @brief シミュレーションの実行
 		デフォルトではFWSdk::Stepが呼ばれる．
 	 */
@@ -223,13 +215,10 @@ public:
 	virtual void Reshape(int w, int h);
 
 	/** @brief キーボードイベントのハンドラ
-		@key キーコード．派生クラスに依存．
 	 */
 	virtual void Keyboard(unsigned char key, int x, int y){}
 
 	/** @brief マウスイベントのハンドラ
-		@param button	ボタンの種類．0:left 1:middle 2:right
-		@param state	ボタンの状態．0:down 1:up
 	 */
 	virtual void MouseButton(int button, int state, int x, int y);
 

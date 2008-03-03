@@ -41,8 +41,6 @@ protected:
 	static void SPR_CDECL GlutMouseFunc(int button, int state, int x, int y);
 	static void SPR_CDECL GlutMotionFunc(int x, int y);
 	static void SPR_CDECL AtExit();
-
-	bool	timerRunning;
 public:
 	~FWAppGLUT();
 	
@@ -59,9 +57,6 @@ public:
 	virtual void SetCurrentWin(FWWin* w);
 	///	カレントウィンドウを返す。
 	virtual FWWin* GetCurrentWin();
-
-	virtual void StartTimer();
-	virtual void StopTimer();
 
 	///	フレームワークをスタートする。
 	virtual void Start();
