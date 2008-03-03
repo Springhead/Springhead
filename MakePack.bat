@@ -1,7 +1,7 @@
 if exist pack\springhead2 rmdir /S /Q pack\springhead2
 if not exist pack mkdir pack
 cd pack
-svn export svn+ssh://springhead/home/svn/spr2/Springhead2/trunk ./Springhead2
+svn export .. ./Springhead2
 
 cd springhead2
 

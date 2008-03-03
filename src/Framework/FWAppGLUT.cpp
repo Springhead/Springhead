@@ -69,6 +69,8 @@ void FWAppGLUT::GlutTimerFunc(int id){
 	
 		glutTimerFunc(timeStep, GlutTimerFunc, id);
 	}*/
+	if(!instance->timerRunning)
+		return;
 	
 	FWAppGLUT::instance->CallStep();
 	glutPostRedisplay();
@@ -116,7 +118,7 @@ void FWAppGLUT::Start(){
 		CreateWin();
 		wins.back()->SetScene(GetSdk()->GetScene());
 	}
-	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+	StartTimer();
 	glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 	glutMainLoop();
 }
@@ -165,6 +167,13 @@ void FWAppGLUT::SetCurrentWin(FWWin* w){
 }
 FWWin* FWAppGLUT::GetCurrentWin(){
 	return GetWinFromId(glutGetWindow());
+}
+void FWAppGLUT::StartTimer(){
+	timerRunning = true;
+	glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
+}
+void FWAppGLUT::StopTimer(){
+	timerRunning = false;
 }
 void FWAppGLUT::Display(){
 	FWAppGL::Display();
