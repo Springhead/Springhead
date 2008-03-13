@@ -12,7 +12,7 @@ using namespace Spr;
 class MyApp;
 MyApp* app;
 
-#define TEST_CASE 0
+#define TEST_CASE 4
 
 //人間モデルのロード
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -35,6 +35,11 @@ MyApp* app;
 #define ANIMATION_SET_NAME "RunGround"
 #define FRAME_NUMBER 72
 
+#elif defined(TEST_CASE) && (TEST_CASE == 4)
+#define FILE_NAME "testkobito.x"
+#define ANIMATION_SET_NAME "push"
+#define FRAME_NUMBER 60
+
 #endif
 
 
@@ -54,6 +59,16 @@ public:
 		glutMainLoop();
 	}
 */
+	void Idle(){
+		GRAnimationControllerIf* anim = app->GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
+		anim->ResetPose();
+		static float time;
+		anim->BlendPose(ANIMATION_SET_NAME, time, 1);
+		time += 1;
+		if (time > FRAME_NUMBER - 1) time = 0;
+		Sleep(10);
+		glutPostRedisplay();
+	}
 	void Display(){
 		static int timing = 0;
 		FWWin* win = GetWin(0);
@@ -134,6 +149,7 @@ public:
 };
 MyApp app_;
 
+/*
 void idle(void){
 	Affinef afV;
 	afV.LookAt(Vec3f(10,0,0), Vec3f(0,1,0));
@@ -146,6 +162,7 @@ void idle(void){
 	Sleep(10);
 	glutPostRedisplay();
 }
+*/
 
 int SPR_CDECL main(int argc, char* argv[]){
 	app = &app_;
@@ -153,7 +170,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 #ifdef _DEBUG
 //	app->GetSdk()->SetDebugMode(true);
 #endif
-	glutIdleFunc(idle);
+	// glutIdleFunc(idle);
 	app->GetSdk()->Clear();
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
 	PHSceneIf* phscene = app->GetSdk()->GetScene()->GetPHScene();

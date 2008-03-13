@@ -32,6 +32,7 @@
 #include <sstream>
 #include <io.h>
 
+#include <boost/regex.hpp>
 
 
 namespace Spr {;
@@ -621,6 +622,7 @@ void GRDeviceGL::SetLighting(bool on){
 }
 /// テクスチャのロード（戻り値：テクスチャID）	
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
+static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	GRTexnameMap::iterator it = texnameMap.find(filename);
 	if (it != texnameMap.end()) return it->second;
@@ -632,19 +634,15 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	int tx=0, ty=0, tz=0, nc=0;
 	unsigned int texId=0;
 
-	int ext = filename.rfind('.');
-	int zeroLen;
-	for (zeroLen=0; filename[ext-zeroLen-1]=='0' ; ++zeroLen);
-	std::string id("_tex3d_");
-	int texD = ext-zeroLen - id.length();
-	if (zeroLen && filename.substr(texD, id.length()).compare("_tex3d_")==0){
+	boost::smatch results;
+	if (boost::regex_search(filename, results, Tex3DRegex)) {
 		//	3D textureの場合
 		//	ファイルの数を調べる
 		for(tz=0; ; ++tz){
 			std::ostringstream fnStr;
-			fnStr << filename.substr(0, ext-zeroLen)
-				<< std::setfill('0') << std::setw(zeroLen) << tz
-				<< filename.substr(ext);
+			fnStr << results.str(1)
+				<< std::setfill('0') << std::setw(results.str(2).length()) << tz
+				<< results.str(3);
 			if (_access(fnStr.str().c_str(), 0) != 0) break;
 		}
 		//	画像サイズを調べる
@@ -658,9 +656,9 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		//	ファイルのロード
 		for(int i=0; i<tz; ++i){
 			std::ostringstream fnStr;
-			fnStr << filename.substr(0, ext-zeroLen)
-				<< std::setfill('0') << std::setw(zeroLen) << i
-				<< filename.substr(ext);
+			fnStr << results.str(1)
+				<< std::setfill('0') << std::setw(results.str(2).length()) << tz
+				<< results.str(3);
 			int h = LoadBmpCreate(fnStr.str().c_str());
 			int x = LoadBmpGetWidth(h);
 			int y = LoadBmpGetHeight(h);

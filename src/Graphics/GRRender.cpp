@@ -10,15 +10,15 @@
 #pragma hdrstop
 #endif
 
+#include <iomanip>
+#include <sstream>
+#include "boost/regex.hpp"
+
 namespace Spr {;
 
+static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 bool GRMaterialDesc::Is3D() const{
-	int ext = texname.rfind('.');
-	int zeroLen;
-	for (zeroLen=0; texname[ext-zeroLen-1]=='0' ; ++zeroLen);
-	std::string id("_tex3d_");
-	int texD = ext-zeroLen - id.length();
-	return  zeroLen && texname.substr(texD, id.length()).compare("_tex3d_")==0 ;
+	return boost::regex_match(texname, Tex3DRegex);
 }
 
 

@@ -245,7 +245,8 @@ void GRMesh::CreateList(GRRenderIf* r){
 
 void GRMesh::Render(GRRenderIf* r){
 	if (skinWeights.size()){	//	SkinMesh‚Í–ˆ‰ñ•`‰æ‚·‚é•K—v‚ª‚ ‚é
-		if (r!=render || !list) CreateList(r);
+		// if (r!=render || !list) CreateList(r);
+		if (!vtxs) MakeBuffer();
 		render = r;
 		if (positionOffset>=0){
 			for(int v=0; v<nVtxs; ++v){
