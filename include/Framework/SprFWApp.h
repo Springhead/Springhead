@@ -50,7 +50,7 @@ public:
 	window ID, scene, renderを持つ．
 	実装されるのはFWWinGlutなので，FWAppGlutでの使用が前提．
  */
-class FWWin : public UTRefCount{
+class FWWin : public UTRefCount, public FWWinDesc{
 protected:
 	int id;
 public:	// protectedでよいが互換性のため一時的に
