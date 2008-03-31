@@ -96,6 +96,10 @@ void FWAppGLUT::GlutMotionFunc(int x, int y){
 	FWAppGLUT::instance->CallMouseMove(x, y);
 }
 
+void FWAppGLUT::GlutJoystickFunc(unsigned int buttonMask, int x, int y, int z){
+	FWAppGLUT::instance->CallJoystick(buttonMask, x, y, z);
+}
+
 void FWAppGLUT::AtExit(){
 	if(FWAppGLUT::instance && FWAppGLUT::instance->vfBridge)
 		FWAppGLUT::instance->vfBridge->AtExit();
@@ -149,6 +153,8 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
 	glutMouseFunc(FWAppGLUT::GlutMouseFunc);
 	glutMotionFunc(FWAppGLUT::GlutMotionFunc);
+	int pollInterval = 0.01;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
+	glutJoystickFunc(FWAppGLUT::GlutJoystickFunc, pollInterval);
 	// ウィンドウIDを指定してタイマを始動
 	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
 	

@@ -26,6 +26,7 @@ public:
 	virtual bool MouseMove(int x, int y) = 0;
 	virtual bool Step() = 0;
 	virtual bool Idle() = 0;
+	virtual bool Joystick(unsigned int buttonMask, int x, int y, int z) = 0;
 	virtual void AtExit() = 0;
 	virtual ~FWVFuncBridge(){}
 };
@@ -140,6 +141,10 @@ protected:
 		if(!vfBridge || !vfBridge->Idle())
 			Idle();
 	}
+	void CallJoystick(unsigned int buttonMask, int x, int y, int z){
+		if(!vfBridge || !vfBridge->Joystick(buttonMask, x, y, z))
+			Joystick(buttonMask, x, y, z);
+	}
 
 public:
 	UTRef<FWVFuncBridge>	vfBridge;
@@ -225,6 +230,10 @@ public:
 	/** @brief マウスイベントのハンドラ
 	 */
 	virtual void MouseMove(int x, int y);
+
+	/** @brif ジョイスティックのハンドラ
+	*/
+	virtual void Joystick(unsigned int buttonMask, int x, int y, int z){}
 
 	virtual ~FWApp();
 
