@@ -285,7 +285,7 @@ void RegisterTypeDescPhysics(UTTypeDescDb* db){
 	desc->access = DBG_NEW UTAccess<Spr::PHSceneState>;
 	field = desc->AddField("", "double", "timeStep", "");
 	field->offset = int((char*)&(pPHSceneState->timeStep) - (char*)pPHSceneState);
-	field = desc->AddField("", "unsigned int", "count", "");
+	field = desc->AddField("", "unsigned", "count", "");
 	field->offset = int((char*)&(pPHSceneState->count) - (char*)pPHSceneState);
 	db->RegisterDesc(desc);
 	Spr::PHSceneDesc* pPHSceneDesc = NULL;

@@ -113,7 +113,7 @@ void RegisterTypeDescCollision(UTTypeDescDb* db){
 	field->offset = int((char*)&(pCDShapePairSt->normal) - (char*)pCDShapePairSt);
 	field = desc->AddField("", "double", "depth", "");
 	field->offset = int((char*)&(pCDShapePairSt->depth) - (char*)pCDShapePairSt);
-	field = desc->AddField("", "unsigned int", "lastContactCount", "");
+	field = desc->AddField("", "unsigned", "lastContactCount", "");
 	field->offset = int((char*)&(pCDShapePairSt->lastContactCount) - (char*)pCDShapePairSt);
 	db->RegisterDesc(desc);
 }

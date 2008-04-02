@@ -106,7 +106,7 @@ void RegisterTypeDescGraphics(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("GRKey");
 	desc->size = sizeof(Spr::GRKey);
 	desc->access = DBG_NEW UTAccess<Spr::GRKey>;
-	field = desc->AddField("", "unsigned int", "time", "");
+	field = desc->AddField("", "unsigned", "time", "");
 	field->offset = int((char*)&(pGRKey->time) - (char*)pGRKey);
 	field = desc->AddField("vector", "float", "values", "");
 	field->offset = int((char*)&(pGRKey->values) - (char*)pGRKey);
@@ -251,13 +251,13 @@ void RegisterTypeDescGraphics(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("SFBlendLocation");
 	desc->size = sizeof(Spr::SFBlendLocation);
 	desc->access = DBG_NEW UTAccess<Spr::SFBlendLocation>;
-	field = desc->AddField("", "unsigned int", "uBlendMatrix", "");
+	field = desc->AddField("", "unsigned", "uBlendMatrix", "");
 	field->offset = int((char*)&(pSFBlendLocation->uBlendMatrix) - (char*)pSFBlendLocation);
-	field = desc->AddField("", "unsigned int", "aWeight", "");
+	field = desc->AddField("", "unsigned", "aWeight", "");
 	field->offset = int((char*)&(pSFBlendLocation->aWeight) - (char*)pSFBlendLocation);
-	field = desc->AddField("", "unsigned int", "aMatrixIndices", "");
+	field = desc->AddField("", "unsigned", "aMatrixIndices", "");
 	field->offset = int((char*)&(pSFBlendLocation->aMatrixIndices) - (char*)pSFBlendLocation);
-	field = desc->AddField("", "unsigned int", "aNumMatrix", "");
+	field = desc->AddField("", "unsigned", "aNumMatrix", "");
 	field->offset = int((char*)&(pSFBlendLocation->aNumMatrix) - (char*)pSFBlendLocation);
 	db->RegisterDesc(desc);
 	Spr::GRShaderFormat* pGRShaderFormat = NULL;

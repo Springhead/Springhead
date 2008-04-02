@@ -16,11 +16,11 @@ void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("Header");
 	desc->size = sizeof(SprOldSpringhead::Header);
 	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Header>;
-	field = desc->AddField("", "unsigned int", "major", "");
+	field = desc->AddField("", "unsigned", "major", "");
 	field->offset = int((char*)&(pHeader->major) - (char*)pHeader);
-	field = desc->AddField("", "unsigned int", "minor", "");
+	field = desc->AddField("", "unsigned", "minor", "");
 	field->offset = int((char*)&(pHeader->minor) - (char*)pHeader);
-	field = desc->AddField("", "unsigned int", "flags", "");
+	field = desc->AddField("", "unsigned", "flags", "");
 	field->offset = int((char*)&(pHeader->flags) - (char*)pHeader);
 	db->RegisterDesc(desc);
 	SprOldSpringhead::Frame* pFrame = NULL;
@@ -161,9 +161,9 @@ void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
 	desc->access = DBG_NEW UTAccess<SprOldSpringhead::SkinWeights>;
 	field = desc->AddField("", "string", "transformNodeName", "");
 	field->offset = int((char*)&(pSkinWeights->transformNodeName) - (char*)pSkinWeights);
-	field = desc->AddField("", "unsigned int", "nWeights", "");
+	field = desc->AddField("", "unsigned", "nWeights", "");
 	field->offset = int((char*)&(pSkinWeights->nWeights) - (char*)pSkinWeights);
-	field = desc->AddField("vector", "unsigned int", "vertexIndices", "");
+	field = desc->AddField("vector", "unsigned", "vertexIndices", "");
 	field->offset = int((char*)&(pSkinWeights->vertexIndices) - (char*)pSkinWeights);
 	field = desc->AddField("vector", "float", "weights", "");
 	field->offset = int((char*)&(pSkinWeights->weights) - (char*)pSkinWeights);
@@ -184,7 +184,7 @@ void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("FloatKeys");
 	desc->size = sizeof(SprOldSpringhead::FloatKeys);
 	desc->access = DBG_NEW UTAccess<SprOldSpringhead::FloatKeys>;
-	field = desc->AddField("", "unsigned int", "nValues", "");
+	field = desc->AddField("", "unsigned", "nValues", "");
 	field->offset = int((char*)&(pFloatKeys->nValues) - (char*)pFloatKeys);
 	field = desc->AddField("vector", "float", "values", "");
 	field->offset = int((char*)&(pFloatKeys->values) - (char*)pFloatKeys);
@@ -193,7 +193,7 @@ void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("TimedFloatKeys");
 	desc->size = sizeof(SprOldSpringhead::TimedFloatKeys);
 	desc->access = DBG_NEW UTAccess<SprOldSpringhead::TimedFloatKeys>;
-	field = desc->AddField("", "unsigned int", "time", "");
+	field = desc->AddField("", "unsigned", "time", "");
 	field->offset = int((char*)&(pTimedFloatKeys->time) - (char*)pTimedFloatKeys);
 	field = desc->AddField("", "FloatKeys", "tfkeys", "");
 	field->offset = int((char*)&(pTimedFloatKeys->tfkeys) - (char*)pTimedFloatKeys);
@@ -202,9 +202,9 @@ void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("AnimationKey");
 	desc->size = sizeof(SprOldSpringhead::AnimationKey);
 	desc->access = DBG_NEW UTAccess<SprOldSpringhead::AnimationKey>;
-	field = desc->AddField("", "unsigned int", "keyType", "");
+	field = desc->AddField("", "unsigned", "keyType", "");
 	field->offset = int((char*)&(pAnimationKey->keyType) - (char*)pAnimationKey);
-	field = desc->AddField("", "unsigned int", "nKeys", "");
+	field = desc->AddField("", "unsigned", "nKeys", "");
 	field->offset = int((char*)&(pAnimationKey->nKeys) - (char*)pAnimationKey);
 	field = desc->AddField("vector", "TimedFloatKeys", "keys", "");
 	field->offset = int((char*)&(pAnimationKey->keys) - (char*)pAnimationKey);
@@ -213,7 +213,7 @@ void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
 	desc = DBG_NEW UTTypeDesc("AnimTicksPerSecond");
 	desc->size = sizeof(SprOldSpringhead::AnimTicksPerSecond);
 	desc->access = DBG_NEW UTAccess<SprOldSpringhead::AnimTicksPerSecond>;
-	field = desc->AddField("", "unsigned int", "hz", "");
+	field = desc->AddField("", "unsigned", "hz", "");
 	field->offset = int((char*)&(pAnimTicksPerSecond->hz) - (char*)pAnimTicksPerSecond);
 	db->RegisterDesc(desc);
 	SprOldSpringhead::Scene* pScene = NULL;
