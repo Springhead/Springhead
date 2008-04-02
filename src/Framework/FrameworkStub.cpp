@@ -23,7 +23,6 @@
 #include "..\Foundation\UTPath.h"
 #include "..\Foundation\UTPreciseTimer.h"
 #include "..\Foundation\UTTypeDesc.h"
-#include "..\Framework\AccessDescDumpFramework.h"
 #include "..\Framework\Framework.h"
 #include "..\Framework\FWObject.h"
 #include "..\Framework\FWOldSpringheadNode.h"
