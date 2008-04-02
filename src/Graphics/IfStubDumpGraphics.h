@@ -281,6 +281,9 @@ struct GRRenderBaseIfStubTemplate: public ObjectIfStubTemplate<IF, MIF, OBJ> {
 	virtual unsigned int LoadTexture(const std::string filename){
 		return ((OBJ*)(MIF*)this)->LoadTexture(filename);
 	}
+	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char * tb){
+		return ((OBJ*)(MIF*)this)->SetTextureImage(id, components, xsize, ysize, format, tb);
+	}
 	virtual void InitShader(){
 		return ((OBJ*)(MIF*)this)->InitShader();
 	}
@@ -309,6 +312,9 @@ template <class IF, class MIF, class OBJ>
 struct GRRenderIfStubTemplate: public GRRenderBaseIfStubTemplate<IF, MIF, OBJ> {
 	virtual void SetDevice(GRDeviceIf * dev){
 		return ((OBJ*)(MIF*)this)->SetDevice(dev);
+	}
+	virtual GRDeviceIf * GetDevice(){
+		return ((OBJ*)(MIF*)this)->GetDevice();
 	}
 	virtual void SetCamera(const GRCameraDesc & cam){
 		return ((OBJ*)(MIF*)this)->SetCamera(cam);

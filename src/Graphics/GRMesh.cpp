@@ -214,6 +214,7 @@ void GRMesh::DrawBuffer(void* vtx){
 	}else{	// Xファイルからの materialList 指定がある場合、materialごとに描画
 		for(unsigned i=0; i < material.size(); ++i){
 			render->SetMaterial(*material[i]);
+
 			unsigned from=0, to=0;
 			for(; to<originalFaceIds.size(); ++to){
 				if (originalFaceIds[to] >= materialList.size()) continue;
@@ -244,6 +245,13 @@ void GRMesh::CreateList(GRRenderIf* r){
 }
 
 void GRMesh::Render(GRRenderIf* r){
+	bool usebuffer = false;
+	if (!materialList.empty()) {
+		for (int i=0; i<material.size(); ++i) {
+			if (material[i]->texname[0]==':') { usebuffer = true; break; }
+		}
+	}
+
 	if (skinWeights.size()){	//	SkinMeshは毎回描画する必要がある
 		// if (r!=render || !list) CreateList(r);
 		if (!vtxs) MakeBuffer();
@@ -271,6 +279,13 @@ void GRMesh::Render(GRRenderIf* r){
 
 		render->SetVertexFormat(vtxFormat);
 		DrawBuffer(blendedVtxs);
+	}else if (false /*usebuffer*/){	//	texture bufferを毎回書き変えたい場合．
+		if (r!=render) render = r;
+		if (render){
+			if (!vtxs) MakeBuffer();
+			render->SetVertexFormat(vtxFormat);
+			DrawBuffer(vtxs);
+		}
 	}else if (tex3d){	//	3d textureも strq をいじりたいので、毎回描画
 		if (r!=render) render = r;
 		if (render){

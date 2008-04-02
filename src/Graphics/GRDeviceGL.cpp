@@ -34,6 +34,7 @@
 
 #include <boost/regex.hpp>
 
+static bool enableDebugMessage = false;
 
 namespace Spr {;
 //----------------------------------------------------------------------------
@@ -518,15 +519,20 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_TEXTURE_3D);
 			glBindTexture(GL_TEXTURE_3D, texId);
+			if (enableDebugMessage){ std::cout << "1: glBindTexture(GL_TEXTURE_3D, " << texId << ");" << std::endl; }
 		}else{
 			int texId = LoadTexture(mat.texname);
+			// std::cout << " SetMaterial : id : " << texId << std::endl;
 			glDisable(GL_TEXTURE_3D);
 			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, texId);
+			if (enableDebugMessage){ std::cout << "2: glBindTexture(GL_TEXTURE_2D, " << texId << ");" << std::endl; }
 		}
 	}else{
 		glBindTexture(GL_TEXTURE_3D, 0);
+		if (enableDebugMessage){ std::cout << "3: glBindTexture(GL_TEXTURE_3D, " << 0 << ");" << std::endl; }
 		glBindTexture(GL_TEXTURE_2D, 0);
+		if (enableDebugMessage){ std::cout << "4: glBindTexture(GL_TEXTURE_2D, " << 0 << ");" << std::endl; }
 	}
 	currentMaterial = mat;
 }
@@ -620,10 +626,50 @@ void GRDeviceGL::SetLighting(bool on){
 	if (on) glEnable(GL_LIGHTING);
 	else glDisable(GL_LIGHTING);
 }
+
+void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){
+	unsigned int texId=0;
+
+	char *texbuf = NULL;
+	char *texbuf2 = NULL;
+	int tx=0, ty=0, tz=0, nc=0;
+
+	GRTexnameMap::iterator it = texnameMap.find(id);
+	if (it != texnameMap.end()) {
+		texId = it->second;
+
+		float bx = log((float)xsize)/log(2.0f);
+		bx = (int)bx + ((bx - (int)bx) > 0.5);
+		float by = log((float)ysize)/log(2.0f);
+		by = (int)by + ((by - (int)by) > 0.5);
+
+		tx = (int)(pow(2.0f, bx)) ; ty = (int)(pow(2.0f, by)); nc = 4;
+		texbuf  = DBG_NEW char[tx*ty*nc];
+
+		glDisable(GL_TEXTURE_3D);
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texId);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+		gluScaleImage((GLenum)format, xsize, ysize, GL_UNSIGNED_BYTE, tb, tx, ty, GL_UNSIGNED_BYTE, texbuf);
+
+		int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, (GLenum)format, GL_UNSIGNED_BYTE, texbuf);
+		if (rv){DSTR << "SetTextureImage :" << gluErrorString(rv) << std::endl;}
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		delete texbuf;
+	}
+}
+
 /// テクスチャのロード（戻り値：テクスチャID）	
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
 static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
+	if (enableDebugMessage) { std::cout << "GRDeviceGL::LoadTexture(" << filename.c_str() << ");" << std::endl; }
 	GRTexnameMap::iterator it = texnameMap.find(filename);
 	if (it != texnameMap.end()) return it->second;
 
@@ -675,6 +721,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glEnable(GL_TEXTURE_3D);
 		glGenTextures(1, (GLuint *)&texId);
 		glBindTexture(GL_TEXTURE_3D, texId);
+		if (enableDebugMessage){ std::cout << "7: glBindTexture(GL_TEXTURE_3D, " << texId << ");" << std::endl; }
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -684,18 +731,24 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
 
 		glBindTexture(GL_TEXTURE_3D, 0);
+		if (enableDebugMessage){ std::cout << "8: glBindTexture(GL_TEXTURE_3D, " << 0 << ");" << std::endl; }
 
 		delete texbuf;
 	}else{	
 		//	2D textureの場合
-		// paintLib でファイルをロード．
-		int h = LoadBmpCreate(filename.c_str());
-		tx = LoadBmpGetWidth(h);
-		ty = LoadBmpGetHeight(h);
-		nc = LoadBmpGetBytePerPixel(h);
-		texbuf = DBG_NEW char[tx*ty*nc];
-		LoadBmpGetBmp(h, texbuf);
-		LoadBmpRelease(h);
+		
+		bool loadFromFile = (filename.c_str()[0]!=':');
+		
+		if (loadFromFile) { 
+			// paintLib でファイルをロード．
+			int h = LoadBmpCreate(filename.c_str());
+			tx = LoadBmpGetWidth(h);
+			ty = LoadBmpGetHeight(h);
+			nc = LoadBmpGetBytePerPixel(h);
+			texbuf = DBG_NEW char[tx*ty*nc];
+			LoadBmpGetBmp(h, texbuf);
+			LoadBmpRelease(h);
+		}
 
 		// テクスチャの生成．
 		glDisable(GL_TEXTURE_3D);
@@ -707,14 +760,17 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-		int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
+
+		if (loadFromFile) {
+			int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
+			delete texbuf;
+			if (rv){
+				DSTR << gluErrorString(rv) << std::endl;
+				return 0;
+			}
+		}
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		delete texbuf;
-		if (rv){
-			DSTR << gluErrorString(rv) << std::endl;
-			return 0;
-		}
 	}
 	texnameMap[filename] = texId;
 	return texId;

@@ -303,6 +303,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	virtual void SetLighting(bool l)=0;
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename)=0;
+	/// テクスチャ画像の設定
+	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb)=0;
 	/// シェーダの初期化
 	virtual void InitShader()=0;
 	/// シェーダフォーマットの設定
@@ -322,6 +324,8 @@ struct GRRenderIf: public GRRenderBaseIf{
 	IF_DEF(GRRender);
 	///	デバイスの設定
 	virtual void SetDevice(GRDeviceIf* dev)=0;
+	///	デバイスの取得
+	virtual GRDeviceIf* GetDevice()=0;
 	///	カメラの設定
 	virtual void SetCamera(const GRCameraDesc& cam)=0;
 	///	カメラの設定

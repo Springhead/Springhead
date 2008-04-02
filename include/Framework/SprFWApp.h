@@ -66,6 +66,8 @@ public:
 	virtual UTString GetTitle(){ return UTString(); }
 	virtual void SetFullScreen(bool full = true){}
 	virtual bool GetFullScreen(){ return false; }
+	virtual int  GetWidth(){ return 0; }
+	virtual int  GetHeight(){ return 0; }
 
 	int			GetID() const{ return id; }
 	GRRenderIf*	GetRender(){ return render; }

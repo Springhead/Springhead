@@ -159,6 +159,8 @@ public:
 
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
+	/// テクスチャ画像の設定
+	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){}
 	/// シェーダの初期化
 	virtual void InitShader(){}
 	/// シェーダフォーマットの設定
@@ -252,6 +254,8 @@ public:
 	
 	///	デバイスの設定
 	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
+	///	デバイスの取得
+	virtual GRDeviceIf* GetDevice(){ return device; }
 	///	デバッグ表示
 	virtual void Print(std::ostream& os) const;
 	///	カメラの設定

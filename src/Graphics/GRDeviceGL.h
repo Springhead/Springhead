@@ -49,7 +49,6 @@ protected:
 	typedef std::map<std::string, unsigned int, UTStringLess> GRTexnameMap;
 	GRTexnameMap texnameMap;
 
-
 	/**
 	 *	@name	フォント変数
 	 *　　 新規に指定されたフォントはfontListに格納される。
@@ -156,6 +155,8 @@ public:
 	void SetLighting(bool on);
 	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename);
+	/// テクスチャ画像の設定
+	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb);
 	/// シェーダの初期化
 	virtual void InitShader();
 	/// シェーダフォーマットの設定
@@ -168,7 +169,6 @@ public:
 	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
 	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
 	virtual void GetShaderLocation(GRHandler shader, void* location);		
-	
 };
 
 }

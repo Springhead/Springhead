@@ -27,6 +27,7 @@ void FWWinGLUT::Position(int left, int top){
 }
 void FWWinGLUT::Reshape(int width, int height){
 	glutReshapeWindow(width, height); fullScreen = false;
+	this->width = width; this->height = height;
 }
 void FWWinGLUT::SetTitle(UTString t){
 	glutSetWindowTitle(t.c_str()); title = t;
