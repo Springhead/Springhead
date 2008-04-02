@@ -507,6 +507,9 @@ void Spr::GRRenderBaseIf::SetLighting(bool l){
 unsigned int Spr::GRRenderBaseIf::LoadTexture(const std::string filename){
 	return	((GRRenderBase*)(Object*)(ObjectIf*)this)->LoadTexture(filename);
 }
+void Spr::GRRenderBaseIf::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){
+	((GRRenderBase*)(Object*)(ObjectIf*)this)->SetTextureImage(id, components, xsize, ysize, format, tb);
+}
 void Spr::GRRenderBaseIf::InitShader(){
 	((GRRenderBase*)(Object*)(ObjectIf*)this)->InitShader();
 }
@@ -528,6 +531,9 @@ void Spr::GRRenderBaseIf::GetShaderLocation(Spr::GRHandler shader, void* locatio
 SPR_IFIMP1(GRRender, GRRenderBase);
 void Spr::GRRenderIf::SetDevice(Spr::GRDeviceIf* dev){
 	((GRRender*)(Object*)(ObjectIf*)this)->SetDevice(dev);
+}
+Spr::GRDeviceIf* Spr::GRRenderIf::GetDevice(){
+	return	((GRRender*)(Object*)(ObjectIf*)this)->GetDevice();
 }
 void Spr::GRRenderIf::SetCamera(const Spr::GRCameraDesc& cam){
 	((GRRender*)(Object*)(ObjectIf*)this)->SetCamera(cam);
