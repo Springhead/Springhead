@@ -7,6 +7,7 @@
  */
 #ifndef FISPIRIT_H
 #define FISPIRIT_H
+#ifndef SWIG
 /**	@File	boost::spirit を使うときに，
 	パーサの実装ファイル(.cpp)だけでインクルードして使うヘッダ．
 	FIPhraseParser と FISkipParserを定義する．
@@ -488,4 +489,5 @@ FIPTInfo FIPTParse(FIIteratorT const& first_, FIIteratorT const& last,
 # pragma option pop
 #endif
 
+#endif	//	SWIG
 #endif

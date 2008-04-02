@@ -18,9 +18,9 @@ namespace Spr{;
 class UTTypeInfo: public UTRefCount{
 public:
 	const char* className;
-	UTTypeInfo** base;
+	const UTTypeInfo** base;
 
-	UTTypeInfo(const char* cn, UTTypeInfo** b): className(cn), base(b){}
+	UTTypeInfo(const char* cn, const UTTypeInfo** b): className(cn), base(b){}
 	virtual bool Inherit(const UTTypeInfo* key) const ;
 	virtual bool Inherit(const char* str) const ;
 	virtual const char* ClassName() const = 0;
@@ -32,7 +32,7 @@ public:
 template <class T>
 class UTTypeInfoImp: public UTTypeInfo{
 public:
-	UTTypeInfoImp(const char* cn, UTTypeInfo** b): UTTypeInfo(cn, b){}
+	UTTypeInfoImp(const char* cn, const UTTypeInfo** b): UTTypeInfo(cn, b){}
 	virtual void* CreateInstance() const { return new T; }
 	virtual const char* ClassName() const { return className; }
 };
@@ -41,7 +41,7 @@ public:
 template <class T>
 class UTTypeInfoImpAbst: public UTTypeInfo{
 public:
-	UTTypeInfoImpAbst(const char* cn, UTTypeInfo** b): UTTypeInfo(cn, b){}
+	UTTypeInfoImpAbst(const char* cn, const UTTypeInfo** b): UTTypeInfo(cn, b){}
 	virtual void* CreateInstance() const { return 0; }
 	virtual const char* ClassName() const { return className; }
 };
@@ -59,65 +59,89 @@ protected:
 ///	実行時型情報を持つクラスが持つべきメンバの宣言部
 #define DEF_UTTYPEINFODEF(cls)							\
 public:													\
-	static UTTypeInfoImp<cls> typeInfo;					\
 	virtual const UTTypeInfo* GetTypeInfo() const {		\
-		return &typeInfo;								\
+		return GetTypeInfoStatic();						\
 	}													\
-	static const UTTypeInfo* GetTypeInfoStatic(){		\
-		return &typeInfo;								\
-	}													\
+	static const UTTypeInfo* GetTypeInfoStatic();		\
 
 ///	実行時型情報を持つクラスが持つべきメンバの宣言部．抽象クラス版
 #define DEF_UTTYPEINFOABSTDEF(cls)						\
 public:													\
-	static UTTypeInfoImpAbst<cls> typeInfo;				\
 	virtual const UTTypeInfo* GetTypeInfo() const {		\
-		return &typeInfo;								\
+		return GetTypeInfoStatic();						\
 	}													\
-	static const UTTypeInfo* GetTypeInfoStatic(){		\
-		return &typeInfo;								\
-	}													\
+	static const UTTypeInfo* GetTypeInfoStatic();		\
 
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．
 #define DEF_UTTYPEINFO(cls)									\
-	UTTypeInfo* cls##_BASE[] = {NULL};						\
-	UTTypeInfoImp<cls> cls::typeInfo = UTTypeInfoImp<cls>(#cls, cls##_BASE);
+	const UTTypeInfo* cls::GetTypeInfoStatic(){				\
+		static const UTTypeInfo* base[] = {NULL};			\
+		static UTTypeInfoImp<cls> info(#cls, base);			\
+		return &info;										\
+	}														\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．1つのクラス継承をする場合
-#define DEF_UTTYPEINFO1(cls, base1)							\
-	UTTypeInfo* cls##_BASE[] = {&base1::typeInfo, NULL};	\
-	UTTypeInfoImp<cls> cls::typeInfo = UTTypeInfoImp<cls>(#cls, cls##_BASE);
+#define DEF_UTTYPEINFO1(cls, base1)										\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
+		static const UTTypeInfo* base[] = {base1::GetTypeInfoStatic(),NULL};	\
+		static UTTypeInfoImp<cls> info(#cls, base);						\
+		return &info;													\
+	}																	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．2つのクラス継承をする場合
 #define DEF_UTTYPEINFO2(cls, base1, base2)									\
-	UTTypeInfo* cls##_BASE[] = {&base1::typeInfo, &base2::typeInfo, NULL};	\
-	UTTypeInfoImp<cls> cls::typeInfo = UTTypeInfoImp<cls>(#cls, cls##_BASE);
+	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+		static const UTTypeInfo* base[] = {										\
+			base1::GetTypeInfoStatic(), base2::GetTypeInfoStatic(),NULL};	\
+		static UTTypeInfoImp<cls> info(#cls, base);							\
+		return &info;														\
+	}																		\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．3つのクラス継承をする場合
-#define DEF_UTTYPEINFO3(cls, base1, base2, base3)												\
-	UTTypeInfo* cls##_BASE[] = {&base1::typeInfo, &base2::typeInfo, &base3::typeInfo, NULL};	\
-	UTTypeInfoImp<cls> cls::typeInfo = UTTypeInfoImp<cls>(#cls, cls##_BASE);
+#define DEF_UTTYPEINFO3(cls, base1, base2, base3)							\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+		static const UTTypeInfo* base[] = {										\
+			base1::GetTypeInfoStatic(), base2::GetTypeInfoStatic(),			\
+			base3::GetTypeInfoStatic(), NULL};								\
+		static UTTypeInfoImp<cls> info(#cls, base);							\
+		return &info;														\
+	}																		\
+
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版
-#define DEF_UTTYPEINFOABST(cls)								\
-	UTTypeInfo* cls##_BASE[] = {NULL};						\
-	UTTypeInfoImpAbst<cls> cls::typeInfo = UTTypeInfoImpAbst<cls>(#cls, cls##_BASE);
+#define DEF_UTTYPEINFOABST(cls)												\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+		static const UTTypeInfo* base[] = { NULL };								\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
+		return &info;														\
+	}																		\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版．1つのクラスを継承する場合
-#define DEF_UTTYPEINFOABST1(cls, base)						\
-	UTTypeInfo* cls##_BASE[] = {&base::typeInfo,NULL};		\
-	UTTypeInfoImpAbst<cls> cls::typeInfo = UTTypeInfoImpAbst<cls>(#cls, cls##_BASE);
+#define DEF_UTTYPEINFOABST1(cls, base1)										\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), NULL };	\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
+		return &info;														\
+	}																		\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版．2つのクラスを継承する場合
-#define DEF_UTTYPEINFOABST2(cls, base1, base2)									\
-	UTTypeInfo* cls##_BASE[] = {&base1::typeInfo, &base2::typeInfo, NULL};		\
-	UTTypeInfoImpAbst<cls> cls::typeInfo = UTTypeInfoImpAbst<cls>(#cls, cls##_BASE);
+#define DEF_UTTYPEINFOABST2(cls, base1, base2)								\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), 			\
+			base2::GetTypeInfoStatic(), NULL };								\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
+		return &info;														\
+	}																		\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版．2つのクラスを継承する場合
-#define DEF_UTTYPEINFOABST3(cls, base)															\
-	UTTypeInfo* cls##_BASE[] = {&base1::typeInfo, &base2::typeInfo, &base3::typeInfo, NULL};	\
-	UTTypeInfoImpAbst<cls> cls::typeInfo = UTTypeInfoImpAbst<cls>(#cls, cls##_BASE);
+#define DEF_UTTYPEINFOABST3(cls, base1, base2, base3)						\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), 			\
+			base2::GetTypeInfoStatic(), base3::GetTypeInfoStatic(), NULL };	\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
+		return &info;														\
+	}																		\
 
 #define GETCLASSNAME(p)		(p->GetTypeInfo()->className)
 #define GETCLASSNAMES(T)	(T::GetTypeInfoStatic()->className)

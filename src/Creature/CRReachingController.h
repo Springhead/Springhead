@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include "CRController.h"
 
@@ -20,7 +19,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 到達運動コントローラ
 */
-class CRReachingController : public CRController, public CRReachingControllerIfInit , public CRReachingControllerDesc {
+class CRReachingController : public CRController, public CRReachingControllerDesc {
 private:
 	/// 制御用のバネダンパ
 	PHSpringIf *springDirect, *springHinged;
@@ -54,7 +53,7 @@ private:
 	CRHingeHumanBodyIf* body;
 
 public:
-	OBJECTDEF(CRReachingController, CRController);
+	SPR_OBJECTDEF(CRReachingController);
 	ACCESS_DESC(CRReachingController);
 
 	CRReachingController(){}

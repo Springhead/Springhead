@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include "CRController.h"
 
@@ -20,7 +19,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 視線運動コントローラ
 */
-class CRGazeController : public CRController, public CRGazeControllerIfInit, public CRGazeControllerDesc {
+class CRGazeController : public CRController, public CRGazeControllerDesc {
 private:
 	/// 注視点
 	Vec3d pos, vel;
@@ -35,7 +34,7 @@ private:
 	CRNeckControllerIf* neckCtrl;
 
 public:
-	OBJECTDEF(CRGazeController, CRController);
+	SPR_OBJECTDEF(CRGazeController);
 	ACCESS_DESC_STATE(CRGazeController);
 
 	CRGazeController(){}

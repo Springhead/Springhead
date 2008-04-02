@@ -8,11 +8,11 @@
 #ifndef FWSCENE_H
 #define FWSCENE_H
 
+#include <Springhead.h>
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
-#include "IfStubFramework.h"
 
 namespace Spr{;
 
@@ -29,9 +29,9 @@ public:
 };
 
 ///	GraphicsとPhysicsのSceneをまとめたシーングラフ全体
-class FWScene : public Scene, public FWSceneIfInit, public FWSceneDesc {
+class FWScene : public Scene, public FWSceneDesc {
 public:
-	OBJECTDEF(FWScene, Scene);
+	SPR_OBJECTDEF(FWScene);
 	ACCESS_DESC(FWScene);
 	typedef std::vector< UTRef<FWObjectIf> > FWObjects;
 	FWObjects fwObjects;						///<	物理とグラフィックスのオブジェクトのリンク

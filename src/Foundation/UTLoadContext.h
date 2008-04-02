@@ -7,6 +7,7 @@
  */
 #ifndef UTLoadContext_H
 #define UTLoadContext_H
+#ifndef SWIGSPR
 
 #include <Foundation/Object.h>
 #include <Foundation/UTTypeDesc.h>
@@ -141,7 +142,7 @@ class UTLoadContext;
 ///	ロード後に処理をさせるために、ロード時に生成され、ロード後に実行される．
 class UTLoadTask:public NamedObject{
 public:
-	OBJECTDEF_NOIF(UTLoadTask, NamedObject);
+	SPR_OBJECTDEF_NOIF(UTLoadTask);
 	virtual ~UTLoadTask(){}
 	virtual void Execute(UTLoadContext* ctx){};
 };
@@ -281,4 +282,5 @@ protected:
 
 }
 
+#endif
 #endif	// UTLoadContext_H

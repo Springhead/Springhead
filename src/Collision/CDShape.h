@@ -10,17 +10,16 @@
 
 #include <SprCollision.h>
 #include <Foundation/Object.h>
-#include "IfStubCollision.h"
 
 namespace Spr{;
 
 /// 形状
 /// 形状自体は位置情報を持たない．位置情報は形状を参照する各剛体が持つ．
-class CDShape : public NamedObject, public CDShapeIfInit{
+class CDShape : public NamedObject{
 public:
 	PHMaterial material;
 
-	OBJECTDEF_ABST(CDShape, NamedObject);
+	SPR_OBJECTDEF_ABST(CDShape);
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
 	virtual float CalcVolume(){ return FLT_MAX; }
 	virtual Matrix3f CalcMomentOfInertia(){ return Matrix3f(); }

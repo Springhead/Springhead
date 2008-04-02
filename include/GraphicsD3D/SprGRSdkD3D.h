@@ -27,7 +27,7 @@ typedef void (SPR_CDECL *GRDeviceD3DListenerFunc)();
 
 /**	@brief	DirectXのレンダラー基本クラス */
 struct GRDeviceD3DIf: public GRDeviceIf{
-	IF_DEF(GRDeviceD3D);
+	SPR_IFDEF(GRDeviceD3D);
 	virtual void SetConfirmDeviceFunc(GRDeviceD3DConfirmDeviceFunc func)=0;
 	virtual void AddLostDeviceListener(GRDeviceD3DListenerFunc func)=0;
 	virtual void AddResetDeviceListener(GRDeviceD3DListenerFunc func)=0;
@@ -37,7 +37,7 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 
 /**	@brief	DirectXのデバッグ情報レンダラーの基本クラス */
 struct GRDebugRenderD3DIf:public GRDebugRenderIf{
-	IF_DEF(GRDebugRenderD3D);
+	SPR_IFDEF(GRDebugRenderD3D);
 };
 
 struct GRSdkD3DDesc{
@@ -45,7 +45,7 @@ struct GRSdkD3DDesc{
 
 /**	@brief	DirectXのグラフィックスSDKの基本クラス　 */
 struct GRSdkD3DIf: public SdkIf{
-	IF_DEF(GRSdkD3D);
+	SPR_IFDEF(GRSdkD3D);
 	virtual GRDeviceD3DIf* CreateDeviceD3D()=0;
 	virtual GRDebugRenderD3DIf* CreateDebugRenderD3D()=0;
 	virtual GRAnimationMeshIf* CreateAnimationMesh(const GRAnimationMeshDesc& desc)=0;

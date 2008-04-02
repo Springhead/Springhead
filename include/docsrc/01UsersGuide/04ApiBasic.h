@@ -21,6 +21,17 @@ int main(int argc, char* argv[]){
     :
 \endverbatim
 
+\section secCast 安全なキャスト
+APIクラス同士のキャストには， Cast()関数が便利です．
+\verbatim
+	ObjectIf* obj = CreatePHSdk();
+	PHSdkIf* phsdk = obj->Cast();	//	phsdk型にキャストされる，
+	GRSdkIf* grsdk = obj->Cast();	//	キャストできないので，grsdk=NULLになる．
+\endverbatim
+アップキャスト，ダウンキャスト共に安全です．
+Cast()関数は，オブジェクトが本当にそのAPIクラスを実装している場合だけキャストを実行し，
+できない場合は NULL を返します．
+
 \section secStateDesc ステートとデスクリプタ
 APIクラスのインスタンスを作るときには，デスクリプタという構造体を使って
 初期値を渡します．デスクリプタは，APIクラスの名前からIfをとってDescをつけた名前です．

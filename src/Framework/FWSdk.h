@@ -23,7 +23,7 @@ public:
 	}
 };
 
-class SPR_DLL FWSdk:public Sdk, public FWSdkIfInit{
+class SPR_DLL FWSdk:public Sdk{
 protected:
 	///	ÉVÅ[Éì
 	typedef std::vector< UTRef<FWSceneIf> > Scenes;
@@ -44,7 +44,7 @@ protected:
 	
 	bool debugMode;
 public:
-	OBJECTDEF(FWSdk, Sdk);
+	SPR_OBJECTDEF(FWSdk);
 	FWSdk();
 	~FWSdk();
 

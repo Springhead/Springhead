@@ -41,7 +41,7 @@ struct PHSceneState{
 	PHSceneState(){Init();}
 	void Init(){
 		timeStep = 0.005;
-		count = 0;
+		count;
 	}
 };
 /// 物理エンジンのシーンのデスクリプタ
@@ -66,28 +66,28 @@ struct PHSceneDesc: public PHSceneState{
 ///	シーン
 struct PHSceneIf : public SceneIf{
 public:
-	IF_DEF(PHScene);
+	SPR_IFDEF(PHScene);
 
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース
 	 */
-	virtual PHSdkIf* GetSdk()=0;
+	PHSdkIf* GetSdk();
 
 	/** @brief Solidを作成する
 		@param desc 作成するSolidのディスクリプタ
 		@return Solidのインタフェース
 	*/
-	virtual PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc())=0;
+	PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	
 	/** @brief Solidの数を取得する
 		@return Solidの数
 	 */
-	virtual int NSolids()const =0;
+	int NSolids()const;
 
 	/** @brief Solidを取得する
 		@return Solidのインタフェースの配列へのポインタ
 	 */
-	virtual PHSolidIf** GetSolids()=0;
+	PHSolidIf** GetSolids();
 
 	/** @brief 指定した剛体同士の接触のモードを設定する
 		@param lhs 組の片方の剛体へのポインタ
@@ -96,7 +96,7 @@ public:
 
 		剛体lhsと剛体rhsとの接触のモードをmodeに設定する．
 	  */
-	virtual void SetContactMode(PHSolidIf* lhs,	PHSolidIf* rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
+	void SetContactMode(PHSolidIf* lhs,	PHSolidIf* rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
 	/** @brief 指定した集合に含まれる全ての剛体同士の接触のモードを設定する
 		@param group 剛体へのポインタ配列の先頭アドレス
@@ -105,22 +105,22 @@ public:
 
 		group[0]からgroup[size-1]までの全ての剛体の組の接触のモードをmodeに設定する．
 	 */
-	virtual void SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
+	void SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
 	/** @brief 指定した剛体と他の剛体との全ての接触のモードを設定する
 		@param mode 接触のモード
 	 */
-	virtual void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
+	void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
 	/** @brief シーンが保有する全ての剛体同士の接触のモードを設定する
 		@param mode 接触のモード
 	 */
-	virtual void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP)=0;
+	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
 	///	@brief LCPソルバの計算回数の取得．MODE_LCPの場合の拘束力の繰り返し近似計算の回数．
-	virtual int GetNumIteration()=0;
+	int GetNumIteration();
 	///	@brief LCPソルバの計算回数の設定．
-	virtual void SetNumIteration(int n)=0;
+	void SetNumIteration(int n);
 	
 	/** @brief 関節を作成する
 		@param lhs 関節を取り付ける剛体
@@ -131,41 +131,41 @@ public:
 		descには作成したい関節の種類に対応するディスクリプタ（PHJointDescから派生する）を渡す．
 		lhsにソケットが，rhsにプラグが取り付けられる．
 	 */
-	virtual PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc)=0;
+	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
 	template <class T> PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const T& desc){
 		return CreateJoint(lhs, rhs, T::GetIfInfo(), desc);
 	}
 	
 	/** @brief 関節の数を取得する
 	 */
-	virtual int NJoints()const=0;
+	int NJoints()const;
 
 	/** @brief 関節を取得する
 	 */
-	virtual PHJointIf* GetJoint(int i)=0;
+	PHJointIf* GetJoint(int i);
 
 	/** @brief 接触拘束の数を取得する
 	 */
-	virtual int NContacts()const=0;
+	int NContacts()const;
 
 	/** @brief 接触拘束を取得する
 	 */
-	virtual PHContactPointIf* GetContact(int i)=0;
+	PHContactPointIf* GetContact(int i);
 
 	/** @brief ルートノードを作成する
 		@param root ルートノードとなる剛体
 		@return ルートノードのインタフェース
 		関節ツリーの根となるノードを作成する．
 	 */
-	virtual PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc())=0;
+	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 
 	/** @brief ルートノードの数
 	 */
-	virtual int NRootNodes()const=0;
+	int NRootNodes()const;
 
 	/** @brief ルートノードを取得する
 	 */
-	virtual PHRootNodeIf* GetRootNode(int i)=0;
+	PHRootNodeIf* GetRootNode(int i);
 
 	/** @brief ツリーノードを作成する
 		@param parent 親ノードのインタフェース
@@ -176,7 +176,7 @@ public:
 		CreateJointによって作成されていなければならない．
 		さらに，parentがソケット側，childがプラグ側である必要がある．
 	 */
-	virtual PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc())=0;
+	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
 
 	/** @brief ギアを作成する
 		@param lhs ギアで連動させる関節
@@ -188,96 +188,96 @@ public:
 		rhs->GetPosition() = desc.ratio * lhs->GetPosition()
 		を満たすように拘束される．
 	 */
-	virtual PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc())=0;
+	PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	
 	/** @brief ギアの数
 	 */
-	virtual int NGears()const=0;
+	int NGears()const;
 
 	/** @brief ギアを取得する
 	 */
-	virtual PHGearIf* GetGear(int i)=0;
+	PHGearIf* GetGear(int i);
 
 	/** @brief パスを作成する
 		@param desc パスのディスクリプタ
 		パスを作成する．
 		パスはPHPathJointの軌道を表現するために用いる．
 	 */
-	virtual PHPathIf* CreatePath(const PHPathDesc& desc = PHPathDesc())=0;
+	PHPathIf* CreatePath(const PHPathDesc& desc = PHPathDesc());
 
 	/** @brief パスの数
 	*/
-	virtual int NPaths() = 0;
+	int NPaths();
 
 	/** @brief パスを取得する
 	*/
-	virtual PHPathIf* GetPath(int i)=0;
+	PHPathIf* GetPath(int i);
 
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ
 	 */
-	virtual double GetTimeStep()const=0;
+	double GetTimeStep()const;
 	
 	/** @brief 積分ステップを設定する
 		@param dt 積分ステップ
 	 */
-	virtual void SetTimeStep(double dt)=0;
+	void SetTimeStep(double dt);
 	
 	/** @brief カウント数を取得する
 		@return カウント数
 		シーンが作成されてから現在までにStep()を実行した回数を返す．
 	 */
-	virtual unsigned GetCount()const=0;
+	unsigned GetCount()const;
 
 	/** @brief カウント数を設定する
 		@param count カウント数
 	 */
-	virtual void SetCount(unsigned count)=0;
+	void SetCount(unsigned count);
 	
 	/** @brief シーンの時刻を進める
 	 */
-	virtual void Step()=0;
-	virtual void ClearForce()=0;
-	virtual void GenerateForce()=0;
-	virtual void Integrate()=0;
+	void Step();
+	void ClearForce();
+	void GenerateForce();
+	void Integrate();
 
 	/** @brief シーンを空にする
 	 */
-	virtual void Clear()=0;
+	void Clear();
 
 	/** @brief 重力を設定する
 		@param accel 重力加速度ベクトル
 	 */
 	//ここに持たせるべきか要検討だが，Novodexはここ 
-	virtual void SetGravity(const Vec3d& accel)=0;
+	void SetGravity(const Vec3d& accel);
 	
 	/** @brief 重力を取得する
 		@return 重力加速度ベクトル
 	 */
-	virtual Vec3d GetGravity()=0;
+	Vec3d GetGravity();
 
-	virtual int NEngines() = 0;
+	int NEngines();
 	/** @brief i番目のエンジンを取得する
 		@param i エンジン番号のインデックス
 		@return 選択したエンジンへのポインタ
 	*/
-	virtual PHEngineIf* GetEngine(int i) = 0;
+	PHEngineIf* GetEngine(int i);
 
 	/** @brief ConstraintEngineを取得する
 		@return PHConstraintEngineへのポインタ
 	*/
-	virtual PHConstraintEngineIf* GetConstraintEngine() = 0;
+	PHConstraintEngineIf* GetConstraintEngine();
 
 	/** @brief GravityEnigneを取得する
 		@return GravityEngineへのポインタ
 	*/
-	virtual PHGravityEngineIf*	GetGravityEngine() = 0;
+	PHGravityEngineIf*	GetGravityEngine();
 
 	/** @brief PenaltyEngineを取得する
 		@return PenaltyEngineへのポインタ
 	*/
-	virtual PHPenaltyEngineIf*  GetPenaltyEngine() = 0;
+	PHPenaltyEngineIf*  GetPenaltyEngine();
 
 };
 

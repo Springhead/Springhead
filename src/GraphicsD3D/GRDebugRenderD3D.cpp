@@ -13,7 +13,7 @@
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDebugRenderD3D
-IF_OBJECT_IMP(GRDebugRenderD3D, GRDebugRender);
+IF_SPR_OBJECTIMP(GRDebugRenderD3D, GRDebugRender);
 
 /// シーン内の全てのオブジェクトをレンダリングする
 void GRDebugRenderD3D::DrawScene(PHSceneIf* scene){

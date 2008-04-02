@@ -43,7 +43,7 @@ CRTrunkFootAnimalBodyDesc::CRTrunkFootAnimalBodyDesc(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRTrunkFootAnimalBody
-IF_OBJECT_IMP(CRTrunkFootAnimalBody, CRBody);
+
 
 // --- --- ---
 void CRTrunkFootAnimalBody::Init(){

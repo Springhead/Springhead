@@ -16,9 +16,9 @@ namespace Spr{;
 
 class PHTreeNode;
 
-class PHConstraint : public SceneObject, public PHConstraintIfInit{
+class PHConstraint : public SceneObject{
 public:
-	OBJECTDEF_ABST(PHConstraint, SceneObject);
+	SPR_OBJECTDEF_ABST(PHConstraint);
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,
@@ -113,10 +113,10 @@ public:
 
 };
 
-class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject, public PHConstraintsIfInit{
+class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject{
 	
 public:
-	OBJECTDEF(PHConstraints, SceneObject);
+	SPR_OBJECTDEF(PHConstraints);
 	virtual PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){
 		for(iterator it = begin(); it != end(); it++)
 			if((*it)->solid[0] == DCAST(PHSolid, lhs) && (*it)->solid[1] == DCAST(PHSolid, rhs))

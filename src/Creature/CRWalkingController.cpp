@@ -12,8 +12,6 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRWalkingController, CRController);
-
 /////////////—V‹r§Œä‚ÌÀŒ±‚Ég—p‚µ‚Ä‚¢‚é•Ï”////
 /////////////////////////////////////////////////
 

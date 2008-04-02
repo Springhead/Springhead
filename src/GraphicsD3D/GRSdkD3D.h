@@ -24,7 +24,7 @@ protected:
 	typedef std::vector< UTRef<Object> > Objects;
 	Objects objects;
 public:
-	OBJECTDEF(GRSdkD3D, Sdk);
+	SPR_OBJECTDEF(GRSdkD3D, Sdk);
 	GRSdkD3D(const GRSdkD3DDesc& = GRSdkD3DDesc());
 	virtual GRDeviceD3DIf* CreateDeviceD3D();
 	virtual GRDebugRenderD3DIf* CreateDebugRenderD3D();

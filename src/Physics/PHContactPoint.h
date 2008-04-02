@@ -15,13 +15,13 @@ class PHShapePairForLCP;
 
 namespace Spr{;
 
-class PHContactPoint : public PHConstraint, public PHContactPointIfInit{
+class PHContactPoint : public PHConstraint{
 private:
 	static double correctionSpring;
 	static double correctionDamper;
 
 public:
-	OBJECTDEF(PHContactPoint, PHConstraint);
+	SPR_OBJECTDEF(PHContactPoint);
 	PHShapePairForLCP* shapePair;
 	Vec3d pos;
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}

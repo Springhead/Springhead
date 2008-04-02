@@ -12,7 +12,6 @@
 #include <Foundation/UTTypeDesc.h>
 #include <Foundation/UTLoadContext.h>
 #include <Foundation/UTLoadHandler.h>
-#include "IfStubFileIO.h"
 
 namespace Spr{;
 ///	FILoadContext
@@ -27,10 +26,10 @@ class FISdk;
 
 /**	ファイルローダー・セーバー
 */
-class FIFile:public Object, public FIFileIfInit{
+class FIFile:public Object{
 public:
 	FISdk* sdk;
-	OBJECTDEF_ABST(FIFile, Object);
+	SPR_OBJECTDEF_ABST(FIFile);
 	FISdk* GetSdk(){ return sdk; }
 	virtual bool Load(ObjectIfs& objs, const char* fn);
 	virtual void Load(FILoadContext* fc);

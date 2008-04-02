@@ -20,8 +20,6 @@
 
 namespace Spr{;
 
-IF_OBJECT_IMP(FIFileCOLLADA, FIFile);
-
 #define TRACE_PARSE
 #ifdef TRACE_PARSE
 # define PDEBUG(x)	x
@@ -205,10 +203,6 @@ static void RefSet(const char* b, const char* e){
 }
 
 
-}
-using namespace FileCOLLADA;
-
-
 class ExpectParser {
 	std::string msg; 
 public:
@@ -228,6 +222,10 @@ public:
 }; 
 
 typedef boost::spirit::functor_parser<ExpectParser> ExpP;
+
+
+}
+using namespace FileCOLLADA;
 
 
 FIFileCOLLADA::FIFileCOLLADA(){

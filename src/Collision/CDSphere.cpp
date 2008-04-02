@@ -18,7 +18,6 @@ namespace Spr{;
 	
 //----------------------------------------------------------------------------
 //	CDSphere
-IF_OBJECT_IMP(CDSphere, CDConvex);	
 	
 CDSphere::CDSphere() {
 }

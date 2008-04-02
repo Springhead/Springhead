@@ -1,23 +1,82 @@
-//	Do not edit. MakeTypeDesc.bat will update this file.
-	
-	CRBodyDesc* pCRBodyDesc = NULL;
+#include "..\..\include\Springhead.h"
+#include "..\..\include\base\Env.h"
+#include "..\..\include\Foundation\SprObject.h"
+#include "..\..\include\Foundation\SprScene.h"
+#include "..\..\include\Creature\SprCRBody.h"
+#include "..\..\include\Creature\SprCRController.h"
+#include "..\..\include\Creature\SprCRCreature.h"
+#include "..\..\include\Creature\SprCRInternalScene.h"
+#include "..\..\include\Creature\SprCRInverseKinematics.h"
+#include "..\..\include\Creature\SprCRSensor.h"
+#include "..\..\src\Base\BaseDebug.h"
+#include "..\..\src\Foundation\UTTypeDesc.h"
+#include "..\Foundation\Foundation.h"
+#include "..\Foundation\Object.h"
+#include "..\Foundation\Scene.h"
+#include "..\Foundation\UTBaseType.h"
+#include "..\Foundation\UTDllLoader.h"
+#include "..\Foundation\UTDllLoaderImpl.h"
+#include "..\Foundation\UTLoadContext.h"
+#include "..\Foundation\UTLoadHandler.h"
+#include "..\Foundation\UTMMTimer.h"
+#include "..\Foundation\UTPath.h"
+#include "..\Foundation\UTPreciseTimer.h"
+#include "..\Foundation\UTTypeDesc.h"
+#include "..\Creature\CRAttentionController.h"
+#include "..\Creature\CRBody.h"
+#include "..\Creature\CRController.h"
+#include "..\Creature\CRCreature.h"
+#include "..\Creature\CREseWalkingController.h"
+#include "..\Creature\CREyeController.h"
+#include "..\Creature\CRFLAnimalGene.h"
+#include "..\Creature\CRFLAnimalGeneData.h"
+#include "..\Creature\CRFLAnimalQL.h"
+#include "..\Creature\CRFourLegsAnimalBody.h"
+#include "..\Creature\CRGazeController.h"
+#include "..\Creature\CRGrabController.h"
+#include "..\Creature\CRHingeHumanBody.h"
+#include "..\Creature\CRInternalScene.h"
+#include "..\Creature\CRInverseKinematics.h"
+#include "..\Creature\CRNeckController.h"
+#include "..\Creature\CROpticalSensor.h"
+#include "..\Creature\CRReachingController.h"
+#include "..\Creature\CRSensor.h"
+#include "..\Creature\CRTravelController.h"
+#include "..\Creature\CRTrunkFootAnimalBody.h"
+#include "..\Creature\CRTrunkFootHumanBody.h"
+#include "..\Creature\CRTryStandingUpController.h"
+#include "..\Creature\CRWalkingController.h"
+#include "..\Creature\CRWCChangeAroundCenter.h"
+#include "..\Creature\CRWCFootForce.h"
+#include "..\Creature\CRWCGeneForce.h"
+#include "..\Creature\CRWCLandingSite.h"
+#include "..\Creature\CRWCTimeLeft.h"
+namespace Spr{
+
+void RegisterTypeDescCreature(UTTypeDescDb* db){
+	static bool bFirst=true;
+	if (!bFirst) return;
+	bFirst = false;
+
+	UTTypeDesc* desc;
+	UTTypeDesc::Field* field;
+	Spr::CRBodyDesc* pCRBodyDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRBodyDesc");
-	desc->size = sizeof(CRBodyDesc);
+	desc->size = sizeof(Spr::CRBodyDesc);
 	desc->ifInfo = CRBodyIf::GetIfInfoStatic();
 	((IfInfo*)CRBodyIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRBodyDesc>;
-	field = desc->AddField("CRCreatureJointOrder", "enum", "jointOrder",  "");
-	field->AddEnumConst("SOCKET_PARENT");
-	field->AddEnumConst("PLUG_PARENT");
-	field->offset = int((char*)(&pCRBodyDesc->jointOrder) - (char*)pCRBodyDesc);
+	desc->access = DBG_NEW UTAccess<Spr::CRBodyDesc>;
+	field = desc->AddField("CRCreatureJointOrder", "enum", "jointOrder", "");
+	field->AddEnumConst("SOCKET_PARENT", Spr::CRBodyDesc::SOCKET_PARENT);
+	field->AddEnumConst("PLUG_PARENT", Spr::CRBodyDesc::PLUG_PARENT);
+	field->offset = int((char*)&(pCRBodyDesc->jointOrder) - (char*)pCRBodyDesc);
 	db->RegisterDesc(desc);
-	
-	CRHingeHumanBodyDesc* pCRHingeHumanBodyDesc = NULL;
+	Spr::CRHingeHumanBodyDesc* pCRHingeHumanBodyDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRHingeHumanBodyDesc");
-	desc->size = sizeof(CRHingeHumanBodyDesc);
+	desc->size = sizeof(Spr::CRHingeHumanBodyDesc);
 	desc->ifInfo = CRHingeHumanBodyIf::GetIfInfoStatic();
 	((IfInfo*)CRHingeHumanBodyIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRHingeHumanBodyDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRHingeHumanBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRHingeHumanBodyDesc - (char*)pCRHingeHumanBodyDesc);
 	field = desc->AddField("", "double", "bodyMass", "");
@@ -239,13 +298,12 @@
 	field = desc->AddField("", "bool", "noLegs", "");
 	field->offset = int((char*)&(pCRHingeHumanBodyDesc->noLegs) - (char*)pCRHingeHumanBodyDesc);
 	db->RegisterDesc(desc);
-	
-	CRFourLegsAnimalBodyDesc* pCRFourLegsAnimalBodyDesc = NULL;
+	Spr::CRFourLegsAnimalBodyDesc* pCRFourLegsAnimalBodyDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRFourLegsAnimalBodyDesc");
-	desc->size = sizeof(CRFourLegsAnimalBodyDesc);
+	desc->size = sizeof(Spr::CRFourLegsAnimalBodyDesc);
 	desc->ifInfo = CRFourLegsAnimalBodyIf::GetIfInfoStatic();
 	((IfInfo*)CRFourLegsAnimalBodyIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRFourLegsAnimalBodyDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRFourLegsAnimalBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRFourLegsAnimalBodyDesc - (char*)pCRFourLegsAnimalBodyDesc);
 	field = desc->AddField("", "int", "soNSolids", "");
@@ -531,13 +589,12 @@
 	field = desc->AddField("", "bool", "flagRange", "");
 	field->offset = int((char*)&(pCRFourLegsAnimalBodyDesc->flagRange) - (char*)pCRFourLegsAnimalBodyDesc);
 	db->RegisterDesc(desc);
-	
-	CRTrunkFootHumanBodyDesc* pCRTrunkFootHumanBodyDesc = NULL;
+	Spr::CRTrunkFootHumanBodyDesc* pCRTrunkFootHumanBodyDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRTrunkFootHumanBodyDesc");
-	desc->size = sizeof(CRTrunkFootHumanBodyDesc);
+	desc->size = sizeof(Spr::CRTrunkFootHumanBodyDesc);
 	desc->ifInfo = CRTrunkFootHumanBodyIf::GetIfInfoStatic();
 	((IfInfo*)CRTrunkFootHumanBodyIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRTrunkFootHumanBodyDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRTrunkFootHumanBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRTrunkFootHumanBodyDesc - (char*)pCRTrunkFootHumanBodyDesc);
 	field = desc->AddField("", "double", "waistHeight", "");
@@ -575,13 +632,12 @@
 	field = desc->AddField("", "Vec2d", "rangeChestHead", "");
 	field->offset = int((char*)&(pCRTrunkFootHumanBodyDesc->rangeChestHead) - (char*)pCRTrunkFootHumanBodyDesc);
 	db->RegisterDesc(desc);
-	
-	CRTrunkFootAnimalBodyDesc* pCRTrunkFootAnimalBodyDesc = NULL;
+	Spr::CRTrunkFootAnimalBodyDesc* pCRTrunkFootAnimalBodyDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRTrunkFootAnimalBodyDesc");
-	desc->size = sizeof(CRTrunkFootAnimalBodyDesc);
+	desc->size = sizeof(Spr::CRTrunkFootAnimalBodyDesc);
 	desc->ifInfo = CRTrunkFootAnimalBodyIf::GetIfInfoStatic();
 	((IfInfo*)CRTrunkFootAnimalBodyIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRTrunkFootAnimalBodyDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRTrunkFootAnimalBodyDesc>;
 	field = desc->AddBase("CRBodyDesc");
 	field->offset = int((char*)(CRBodyDesc*)pCRTrunkFootAnimalBodyDesc - (char*)pCRTrunkFootAnimalBodyDesc);
 	field = desc->AddField("", "double", "waistHeight", "");
@@ -619,49 +675,48 @@
 	field = desc->AddField("", "Vec2d", "rangeChestHead", "");
 	field->offset = int((char*)&(pCRTrunkFootAnimalBodyDesc->rangeChestHead) - (char*)pCRTrunkFootAnimalBodyDesc);
 	db->RegisterDesc(desc);
-	
-	CRControllerDesc* pCRControllerDesc = NULL;
+	Spr::CRControllerDesc* pCRControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRControllerDesc");
-	desc->size = sizeof(CRControllerDesc);
+	desc->size = sizeof(Spr::CRControllerDesc);
 	desc->ifInfo = CRControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRControllerDesc>;
 	db->RegisterDesc(desc);
-	
-	CREyeControllerState* pCREyeControllerState = NULL;
+	Spr::CREyeControllerState* pCREyeControllerState = NULL;
 	desc = DBG_NEW UTTypeDesc("CREyeControllerState");
-	desc->size = sizeof(CREyeControllerState);
-	desc->access = DBG_NEW UTAccess<CREyeControllerState>;
-	field = desc->AddField("ControlState", "enum", "controlState",  "");
-	field->AddEnumConst("CS_SACCADE");
-	field->AddEnumConst("CS_PURSUIT");
-	field->offset = int((char*)(&pCREyeControllerState->controlState) - (char*)pCREyeControllerState);
-	db->RegisterDesc(desc);
-	
-	CREyeControllerDesc* pCREyeControllerDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CREyeControllerDesc");
-	desc->size = sizeof(CREyeControllerDesc);
+	desc->size = sizeof(Spr::CREyeControllerState);
 	desc->ifInfo = CREyeControllerIf::GetIfInfoStatic();
 	((IfInfo*)CREyeControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CREyeControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CREyeControllerState>;
+	field = desc->AddField("ControlState", "enum", "controlState", "");
+	field->AddEnumConst("CS_SACCADE", Spr::CREyeControllerState::CS_SACCADE);
+	field->AddEnumConst("CS_PURSUIT", Spr::CREyeControllerState::CS_PURSUIT);
+	field->offset = int((char*)&(pCREyeControllerState->controlState) - (char*)pCREyeControllerState);
+	db->RegisterDesc(desc);
+	Spr::CREyeControllerDesc* pCREyeControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CREyeControllerDesc");
+	desc->size = sizeof(Spr::CREyeControllerDesc);
+	desc->ifInfo = CREyeControllerIf::GetIfInfoStatic();
+	((IfInfo*)CREyeControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<Spr::CREyeControllerDesc>;
 	field = desc->AddBase("CREyeControllerState");
 	field->offset = int((char*)(CREyeControllerState*)pCREyeControllerDesc - (char*)pCREyeControllerDesc);
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCREyeControllerDesc - (char*)pCREyeControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRNeckControllerState* pCRNeckControllerState = NULL;
+	Spr::CRNeckControllerState* pCRNeckControllerState = NULL;
 	desc = DBG_NEW UTTypeDesc("CRNeckControllerState");
-	desc->size = sizeof(CRNeckControllerState);
-	desc->access = DBG_NEW UTAccess<CRNeckControllerState>;
-	db->RegisterDesc(desc);
-	
-	CRNeckControllerDesc* pCRNeckControllerDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRNeckControllerDesc");
-	desc->size = sizeof(CRNeckControllerDesc);
+	desc->size = sizeof(Spr::CRNeckControllerState);
 	desc->ifInfo = CRNeckControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRNeckControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRNeckControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRNeckControllerState>;
+	db->RegisterDesc(desc);
+	Spr::CRNeckControllerDesc* pCRNeckControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRNeckControllerDesc");
+	desc->size = sizeof(Spr::CRNeckControllerDesc);
+	desc->ifInfo = CRNeckControllerIf::GetIfInfoStatic();
+	((IfInfo*)CRNeckControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<Spr::CRNeckControllerDesc>;
 	field = desc->AddBase("CRNeckControllerState");
 	field->offset = int((char*)(CRNeckControllerState*)pCRNeckControllerDesc - (char*)pCRNeckControllerDesc);
 	field = desc->AddBase("CRControllerDesc");
@@ -671,13 +726,12 @@
 	field = desc->AddField("", "float", "upperAttractiveness", "");
 	field->offset = int((char*)&(pCRNeckControllerDesc->upperAttractiveness) - (char*)pCRNeckControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRReachingControllerDesc* pCRReachingControllerDesc = NULL;
+	Spr::CRReachingControllerDesc* pCRReachingControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRReachingControllerDesc");
-	desc->size = sizeof(CRReachingControllerDesc);
+	desc->size = sizeof(Spr::CRReachingControllerDesc);
 	desc->ifInfo = CRReachingControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRReachingControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRReachingControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRReachingControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRReachingControllerDesc - (char*)pCRReachingControllerDesc);
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
@@ -697,51 +751,48 @@
 	field = desc->AddField("", "float", "damperOri", "");
 	field->offset = int((char*)&(pCRReachingControllerDesc->damperOri) - (char*)pCRReachingControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRGazeControllerState* pCRGazeControllerState = NULL;
+	Spr::CRGazeControllerState* pCRGazeControllerState = NULL;
 	desc = DBG_NEW UTTypeDesc("CRGazeControllerState");
-	desc->size = sizeof(CRGazeControllerState);
-	desc->access = DBG_NEW UTAccess<CRGazeControllerState>;
-	db->RegisterDesc(desc);
-	
-	CRGazeControllerDesc* pCRGazeControllerDesc = NULL;
-	desc = DBG_NEW UTTypeDesc("CRGazeControllerDesc");
-	desc->size = sizeof(CRGazeControllerDesc);
+	desc->size = sizeof(Spr::CRGazeControllerState);
 	desc->ifInfo = CRGazeControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRGazeControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRGazeControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRGazeControllerState>;
+	db->RegisterDesc(desc);
+	Spr::CRGazeControllerDesc* pCRGazeControllerDesc = NULL;
+	desc = DBG_NEW UTTypeDesc("CRGazeControllerDesc");
+	desc->size = sizeof(Spr::CRGazeControllerDesc);
+	desc->ifInfo = CRGazeControllerIf::GetIfInfoStatic();
+	((IfInfo*)CRGazeControllerIf::GetIfInfoStatic())->desc = desc;
+	desc->access = DBG_NEW UTAccess<Spr::CRGazeControllerDesc>;
 	field = desc->AddBase("CRGazeControllerState");
 	field->offset = int((char*)(CRGazeControllerState*)pCRGazeControllerDesc - (char*)pCRGazeControllerDesc);
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRGazeControllerDesc - (char*)pCRGazeControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRAttentionControllerDesc* pCRAttentionControllerDesc = NULL;
+	Spr::CRAttentionControllerDesc* pCRAttentionControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRAttentionControllerDesc");
-	desc->size = sizeof(CRAttentionControllerDesc);
+	desc->size = sizeof(Spr::CRAttentionControllerDesc);
 	desc->ifInfo = CRAttentionControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRAttentionControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRAttentionControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRAttentionControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRAttentionControllerDesc - (char*)pCRAttentionControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRTryStandingUpControllerDesc* pCRTryStandingUpControllerDesc = NULL;
+	Spr::CRTryStandingUpControllerDesc* pCRTryStandingUpControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRTryStandingUpControllerDesc");
-	desc->size = sizeof(CRTryStandingUpControllerDesc);
+	desc->size = sizeof(Spr::CRTryStandingUpControllerDesc);
 	desc->ifInfo = CRTryStandingUpControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRTryStandingUpControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRTryStandingUpControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRTryStandingUpControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRTryStandingUpControllerDesc - (char*)pCRTryStandingUpControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRWalkingControllerDesc* pCRWalkingControllerDesc = NULL;
+	Spr::CRWalkingControllerDesc* pCRWalkingControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRWalkingControllerDesc");
-	desc->size = sizeof(CRWalkingControllerDesc);
+	desc->size = sizeof(Spr::CRWalkingControllerDesc);
 	desc->ifInfo = CRWalkingControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRWalkingControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRWalkingControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRWalkingControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRWalkingControllerDesc - (char*)pCRWalkingControllerDesc);
 	field = desc->AddField("", "double", "paramLdx", "");
@@ -795,33 +846,30 @@
 	field = desc->AddField("", "double", "miu", "");
 	field->offset = int((char*)&(pCRWalkingControllerDesc->miu) - (char*)pCRWalkingControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CREseWalkingControllerDesc* pCREseWalkingControllerDesc = NULL;
+	Spr::CREseWalkingControllerDesc* pCREseWalkingControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CREseWalkingControllerDesc");
-	desc->size = sizeof(CREseWalkingControllerDesc);
+	desc->size = sizeof(Spr::CREseWalkingControllerDesc);
 	desc->ifInfo = CREseWalkingControllerIf::GetIfInfoStatic();
 	((IfInfo*)CREseWalkingControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CREseWalkingControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CREseWalkingControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCREseWalkingControllerDesc - (char*)pCREseWalkingControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRTravelControllerDesc* pCRTravelControllerDesc = NULL;
+	Spr::CRTravelControllerDesc* pCRTravelControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRTravelControllerDesc");
-	desc->size = sizeof(CRTravelControllerDesc);
+	desc->size = sizeof(Spr::CRTravelControllerDesc);
 	desc->ifInfo = CRTravelControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRTravelControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRTravelControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRTravelControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRTravelControllerDesc - (char*)pCRTravelControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRGrabControllerDesc* pCRGrabControllerDesc = NULL;
+	Spr::CRGrabControllerDesc* pCRGrabControllerDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRGrabControllerDesc");
-	desc->size = sizeof(CRGrabControllerDesc);
+	desc->size = sizeof(Spr::CRGrabControllerDesc);
 	desc->ifInfo = CRGrabControllerIf::GetIfInfoStatic();
 	((IfInfo*)CRGrabControllerIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRGrabControllerDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRGrabControllerDesc>;
 	field = desc->AddBase("CRControllerDesc");
 	field->offset = int((char*)(CRControllerDesc*)pCRGrabControllerDesc - (char*)pCRGrabControllerDesc);
 	field = desc->AddField("", "double", "rateSpringSoften", "");
@@ -833,21 +881,19 @@
 	field = desc->AddField("", "double", "rateDamperHarden", "");
 	field->offset = int((char*)&(pCRGrabControllerDesc->rateDamperHarden) - (char*)pCRGrabControllerDesc);
 	db->RegisterDesc(desc);
-	
-	CRCreatureDesc* pCRCreatureDesc = NULL;
+	Spr::CRCreatureDesc* pCRCreatureDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRCreatureDesc");
-	desc->size = sizeof(CRCreatureDesc);
+	desc->size = sizeof(Spr::CRCreatureDesc);
 	desc->ifInfo = CRCreatureIf::GetIfInfoStatic();
 	((IfInfo*)CRCreatureIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRCreatureDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRCreatureDesc>;
 	db->RegisterDesc(desc);
-	
-	CRInternalSceneObjectDesc* pCRInternalSceneObjectDesc = NULL;
+	Spr::CRInternalSceneObjectDesc* pCRInternalSceneObjectDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRInternalSceneObjectDesc");
-	desc->size = sizeof(CRInternalSceneObjectDesc);
+	desc->size = sizeof(Spr::CRInternalSceneObjectDesc);
 	desc->ifInfo = CRInternalSceneObjectIf::GetIfInfoStatic();
 	((IfInfo*)CRInternalSceneObjectIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRInternalSceneObjectDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRInternalSceneObjectDesc>;
 	field = desc->AddField("pointer", "char", "type", "");
 	field->offset = int((char*)&(pCRInternalSceneObjectDesc->type) - (char*)pCRInternalSceneObjectDesc);
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
@@ -855,13 +901,12 @@
 	field = desc->AddField("", "Vec3f", "position", "");
 	field->offset = int((char*)&(pCRInternalSceneObjectDesc->position) - (char*)pCRInternalSceneObjectDesc);
 	db->RegisterDesc(desc);
-	
-	CRISAttractiveObjectDesc* pCRISAttractiveObjectDesc = NULL;
+	Spr::CRISAttractiveObjectDesc* pCRISAttractiveObjectDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRISAttractiveObjectDesc");
-	desc->size = sizeof(CRISAttractiveObjectDesc);
+	desc->size = sizeof(Spr::CRISAttractiveObjectDesc);
 	desc->ifInfo = CRISAttractiveObjectIf::GetIfInfoStatic();
 	((IfInfo*)CRISAttractiveObjectIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRISAttractiveObjectDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRISAttractiveObjectDesc>;
 	field = desc->AddBase("CRInternalSceneObjectDesc");
 	field->offset = int((char*)(CRInternalSceneObjectDesc*)pCRISAttractiveObjectDesc - (char*)pCRISAttractiveObjectDesc);
 	field = desc->AddField("", "float", "bottomupAttr", "");
@@ -877,13 +922,12 @@
 	field = desc->AddField("", "float", "uncertaintyDecRate", "");
 	field->offset = int((char*)&(pCRISAttractiveObjectDesc->uncertaintyDecRate) - (char*)pCRISAttractiveObjectDesc);
 	db->RegisterDesc(desc);
-	
-	CRISTravelPotentialObjectDesc* pCRISTravelPotentialObjectDesc = NULL;
+	Spr::CRISTravelPotentialObjectDesc* pCRISTravelPotentialObjectDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRISTravelPotentialObjectDesc");
-	desc->size = sizeof(CRISTravelPotentialObjectDesc);
+	desc->size = sizeof(Spr::CRISTravelPotentialObjectDesc);
 	desc->ifInfo = CRISTravelPotentialObjectIf::GetIfInfoStatic();
 	((IfInfo*)CRISTravelPotentialObjectIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRISTravelPotentialObjectDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRISTravelPotentialObjectDesc>;
 	field = desc->AddBase("CRInternalSceneObjectDesc");
 	field->offset = int((char*)(CRInternalSceneObjectDesc*)pCRISTravelPotentialObjectDesc - (char*)pCRISTravelPotentialObjectDesc);
 	field = desc->AddField("", "Vec2f", "strength", "");
@@ -891,99 +935,90 @@
 	field = desc->AddField("", "Vec2f", "decay", "");
 	field->offset = int((char*)&(pCRISTravelPotentialObjectDesc->decay) - (char*)pCRISTravelPotentialObjectDesc);
 	db->RegisterDesc(desc);
-	
-	CRInternalSceneDesc* pCRInternalSceneDesc = NULL;
+	Spr::CRInternalSceneDesc* pCRInternalSceneDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRInternalSceneDesc");
-	desc->size = sizeof(CRInternalSceneDesc);
+	desc->size = sizeof(Spr::CRInternalSceneDesc);
 	desc->ifInfo = CRInternalSceneIf::GetIfInfoStatic();
 	((IfInfo*)CRInternalSceneIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRInternalSceneDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRInternalSceneDesc>;
 	db->RegisterDesc(desc);
-	
-	CRIKControlDesc* pCRIKControlDesc = NULL;
+	Spr::CRIKControlDesc* pCRIKControlDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKControlDesc");
-	desc->size = sizeof(CRIKControlDesc);
+	desc->size = sizeof(Spr::CRIKControlDesc);
 	desc->ifInfo = CRIKControlIf::GetIfInfoStatic();
 	((IfInfo*)CRIKControlIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKControlDesc>;
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
 	field->offset = int((char*)&(pCRIKControlDesc->solid) - (char*)pCRIKControlDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKControlPosDesc* pCRIKControlPosDesc = NULL;
+	Spr::CRIKControlPosDesc* pCRIKControlPosDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKControlPosDesc");
-	desc->size = sizeof(CRIKControlPosDesc);
+	desc->size = sizeof(Spr::CRIKControlPosDesc);
 	desc->ifInfo = CRIKControlPosIf::GetIfInfoStatic();
 	((IfInfo*)CRIKControlPosIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlPosDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKControlPosDesc>;
 	field = desc->AddBase("CRIKControlDesc");
 	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlPosDesc - (char*)pCRIKControlPosDesc);
 	field = desc->AddField("", "Vec3d", "pos", "");
 	field->offset = int((char*)&(pCRIKControlPosDesc->pos) - (char*)pCRIKControlPosDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKControlOriDesc* pCRIKControlOriDesc = NULL;
+	Spr::CRIKControlOriDesc* pCRIKControlOriDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKControlOriDesc");
-	desc->size = sizeof(CRIKControlOriDesc);
+	desc->size = sizeof(Spr::CRIKControlOriDesc);
 	desc->ifInfo = CRIKControlOriIf::GetIfInfoStatic();
 	((IfInfo*)CRIKControlOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKControlOriDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKControlOriDesc>;
 	field = desc->AddBase("CRIKControlDesc");
 	field->offset = int((char*)(CRIKControlDesc*)pCRIKControlOriDesc - (char*)pCRIKControlOriDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKMovableDesc* pCRIKMovableDesc = NULL;
+	Spr::CRIKMovableDesc* pCRIKMovableDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovableDesc");
-	desc->size = sizeof(CRIKMovableDesc);
+	desc->size = sizeof(Spr::CRIKMovableDesc);
 	desc->ifInfo = CRIKMovableIf::GetIfInfoStatic();
 	((IfInfo*)CRIKMovableIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKMovableDesc>;
 	field = desc->AddField("", "float", "bias", "");
 	field->offset = int((char*)&(pCRIKMovableDesc->bias) - (char*)pCRIKMovableDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKMovableSolidPosDesc* pCRIKMovableSolidPosDesc = NULL;
+	Spr::CRIKMovableSolidPosDesc* pCRIKMovableSolidPosDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovableSolidPosDesc");
-	desc->size = sizeof(CRIKMovableSolidPosDesc);
+	desc->size = sizeof(Spr::CRIKMovableSolidPosDesc);
 	desc->ifInfo = CRIKMovableSolidPosIf::GetIfInfoStatic();
 	((IfInfo*)CRIKMovableSolidPosIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableSolidPosDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKMovableSolidPosDesc>;
 	field = desc->AddBase("CRIKMovableDesc");
 	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableSolidPosDesc - (char*)pCRIKMovableSolidPosDesc);
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
 	field->offset = int((char*)&(pCRIKMovableSolidPosDesc->solid) - (char*)pCRIKMovableSolidPosDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKMovableSolidOriDesc* pCRIKMovableSolidOriDesc = NULL;
+	Spr::CRIKMovableSolidOriDesc* pCRIKMovableSolidOriDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovableSolidOriDesc");
-	desc->size = sizeof(CRIKMovableSolidOriDesc);
+	desc->size = sizeof(Spr::CRIKMovableSolidOriDesc);
 	desc->ifInfo = CRIKMovableSolidOriIf::GetIfInfoStatic();
 	((IfInfo*)CRIKMovableSolidOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableSolidOriDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKMovableSolidOriDesc>;
 	field = desc->AddBase("CRIKMovableDesc");
 	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableSolidOriDesc - (char*)pCRIKMovableSolidOriDesc);
 	field = desc->AddField("pointer", "PHSolidIf", "solid", "");
 	field->offset = int((char*)&(pCRIKMovableSolidOriDesc->solid) - (char*)pCRIKMovableSolidOriDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKMovableBallJointOriDesc* pCRIKMovableBallJointOriDesc = NULL;
+	Spr::CRIKMovableBallJointOriDesc* pCRIKMovableBallJointOriDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovableBallJointOriDesc");
-	desc->size = sizeof(CRIKMovableBallJointOriDesc);
+	desc->size = sizeof(Spr::CRIKMovableBallJointOriDesc);
 	desc->ifInfo = CRIKMovableBallJointOriIf::GetIfInfoStatic();
 	((IfInfo*)CRIKMovableBallJointOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableBallJointOriDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKMovableBallJointOriDesc>;
 	field = desc->AddBase("CRIKMovableDesc");
 	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableBallJointOriDesc - (char*)pCRIKMovableBallJointOriDesc);
 	field = desc->AddField("pointer", "PHBallJointIf", "joint", "");
 	field->offset = int((char*)&(pCRIKMovableBallJointOriDesc->joint) - (char*)pCRIKMovableBallJointOriDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKMovable3HingeJointOriDesc* pCRIKMovable3HingeJointOriDesc = NULL;
+	Spr::CRIKMovable3HingeJointOriDesc* pCRIKMovable3HingeJointOriDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovable3HingeJointOriDesc");
-	desc->size = sizeof(CRIKMovable3HingeJointOriDesc);
+	desc->size = sizeof(Spr::CRIKMovable3HingeJointOriDesc);
 	desc->ifInfo = CRIKMovable3HingeJointOriIf::GetIfInfoStatic();
 	((IfInfo*)CRIKMovable3HingeJointOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovable3HingeJointOriDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKMovable3HingeJointOriDesc>;
 	field = desc->AddBase("CRIKMovableDesc");
 	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovable3HingeJointOriDesc - (char*)pCRIKMovable3HingeJointOriDesc);
 	field = desc->AddField("pointer", "PHHingeJointIf", "joint1", "");
@@ -993,33 +1028,472 @@
 	field = desc->AddField("pointer", "PHHingeJointIf", "joint3", "");
 	field->offset = int((char*)&(pCRIKMovable3HingeJointOriDesc->joint3) - (char*)pCRIKMovable3HingeJointOriDesc);
 	db->RegisterDesc(desc);
-	
-	CRIKMovableHingeJointOriDesc* pCRIKMovableHingeJointOriDesc = NULL;
+	Spr::CRIKMovableHingeJointOriDesc* pCRIKMovableHingeJointOriDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRIKMovableHingeJointOriDesc");
-	desc->size = sizeof(CRIKMovableHingeJointOriDesc);
+	desc->size = sizeof(Spr::CRIKMovableHingeJointOriDesc);
 	desc->ifInfo = CRIKMovableHingeJointOriIf::GetIfInfoStatic();
 	((IfInfo*)CRIKMovableHingeJointOriIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRIKMovableHingeJointOriDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRIKMovableHingeJointOriDesc>;
 	field = desc->AddBase("CRIKMovableDesc");
 	field->offset = int((char*)(CRIKMovableDesc*)pCRIKMovableHingeJointOriDesc - (char*)pCRIKMovableHingeJointOriDesc);
 	field = desc->AddField("pointer", "PHHingeJointIf", "joint", "");
 	field->offset = int((char*)&(pCRIKMovableHingeJointOriDesc->joint) - (char*)pCRIKMovableHingeJointOriDesc);
 	db->RegisterDesc(desc);
-	
-	CRSensorDesc* pCRSensorDesc = NULL;
+	Spr::CRSensorDesc* pCRSensorDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CRSensorDesc");
-	desc->size = sizeof(CRSensorDesc);
+	desc->size = sizeof(Spr::CRSensorDesc);
 	desc->ifInfo = CRSensorIf::GetIfInfoStatic();
 	((IfInfo*)CRSensorIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CRSensorDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CRSensorDesc>;
 	db->RegisterDesc(desc);
-	
-	CROpticalSensorDesc* pCROpticalSensorDesc = NULL;
+	Spr::CROpticalSensorDesc* pCROpticalSensorDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("CROpticalSensorDesc");
-	desc->size = sizeof(CROpticalSensorDesc);
+	desc->size = sizeof(Spr::CROpticalSensorDesc);
 	desc->ifInfo = CROpticalSensorIf::GetIfInfoStatic();
 	((IfInfo*)CROpticalSensorIf::GetIfInfoStatic())->desc = desc;
-	desc->access = DBG_NEW UTAccess<CROpticalSensorDesc>;
+	desc->access = DBG_NEW UTAccess<Spr::CROpticalSensorDesc>;
 	field = desc->AddBase("CRSensorDesc");
 	field->offset = int((char*)(CRSensorDesc*)pCROpticalSensorDesc - (char*)pCROpticalSensorDesc);
 	db->RegisterDesc(desc);
+	CRFLAnimalGeneData* pCRFLAnimalGeneData = NULL;
+	desc = DBG_NEW UTTypeDesc("CRFLAnimalGeneData");
+	desc->size = sizeof(CRFLAnimalGeneData);
+	desc->access = DBG_NEW UTAccess<CRFLAnimalGeneData>;
+	field = desc->AddField("", "Quaterniond", "goalDir", "");
+	field->offset = int((char*)&(pCRFLAnimalGeneData->goalDir) - (char*)pCRFLAnimalGeneData);
+	field = desc->AddField("$unnamed1$", "enum", "geneType", "");
+	field->offset = int((char*)&(pCRFLAnimalGeneData->geneType) - (char*)pCRFLAnimalGeneData);
+	db->RegisterDesc(desc);
+}
+
+SPR_IFIMP1(CRBody, SceneObject);
+void Spr::CRBodyIf::Init(){
+	((CRBody*)(Object*)(ObjectIf*)this)->Init();
+}
+int Spr::CRBodyIf::NSolids(){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->NSolids();
+}
+Spr::PHSolidIf* Spr::CRBodyIf::GetSolid(int i){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->GetSolid(i);
+}
+int Spr::CRBodyIf::NJoints(){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->NJoints();
+}
+Spr::PHJointIf* Spr::CRBodyIf::GetJoint(int i){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->GetJoint(i);
+}
+Spr::CRIKControlIf* Spr::CRBodyIf::CreateIKControl(const IfInfo* ii, const Spr::CRIKControlDesc& desc){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->CreateIKControl(ii, desc);
+}
+Spr::CRIKMovableIf* Spr::CRBodyIf::CreateIKMovable(const IfInfo* ii, const Spr::CRIKMovableDesc& desc){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->CreateIKMovable(ii, desc);
+}
+void Spr::CRBodyIf::CalcIK(){
+	((CRBody*)(Object*)(ObjectIf*)this)->CalcIK();
+}
+Vec3d Spr::CRBodyIf::GetCenterOfMass(){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->GetCenterOfMass();
+}
+double Spr::CRBodyIf::GetSumOfMass(){
+	return	((CRBody*)(Object*)(ObjectIf*)this)->GetSumOfMass();
+}
+SPR_IFIMP1(CRHingeHumanBody, CRBody);
+void Spr::CRHingeHumanBodyIf::SetUpperBodyStiffness(float stiffness){
+	((CRHingeHumanBody*)(Object*)(ObjectIf*)this)->SetUpperBodyStiffness(stiffness);
+}
+void Spr::CRHingeHumanBodyIf::KeepUpperBodyPose(){
+	((CRHingeHumanBody*)(Object*)(ObjectIf*)this)->KeepUpperBodyPose();
+}
+void Spr::CRHingeHumanBodyIf::ResetUpperBodyPose(){
+	((CRHingeHumanBody*)(Object*)(ObjectIf*)this)->ResetUpperBodyPose();
+}
+SPR_IFIMP1(CRFourLegsAnimalBody, CRBody);
+void Spr::CRFourLegsAnimalBodyIf::Init(){
+	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->Init();
+}
+Vec3d Spr::CRFourLegsAnimalBodyIf::GetUpperCenterOfMass(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->GetUpperCenterOfMass();
+}
+int Spr::CRFourLegsAnimalBodyIf::NSolids(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->NSolids();
+}
+int Spr::CRFourLegsAnimalBodyIf::NJoints(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->NJoints();
+}
+int Spr::CRFourLegsAnimalBodyIf::NBallJoints(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->NBallJoints();
+}
+int Spr::CRFourLegsAnimalBodyIf::NHingeJoints(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->NHingeJoints();
+}
+double Spr::CRFourLegsAnimalBodyIf::VSolid(int i){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->VSolid(i);
+}
+double Spr::CRFourLegsAnimalBodyIf::VSolids(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->VSolids();
+}
+double Spr::CRFourLegsAnimalBodyIf::GetTotalMass(){
+	return	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->GetTotalMass();
+}
+void Spr::CRFourLegsAnimalBodyIf::SetTotalMass(double value){
+	((CRFourLegsAnimalBody*)(Object*)(ObjectIf*)this)->SetTotalMass(value);
+}
+SPR_IFIMP1(CRTrunkFootHumanBody, CRBody);
+SPR_IFIMP1(CRTrunkFootAnimalBody, CRBody);
+SPR_IFIMP1(CRController, SceneObject);
+void Spr::CRControllerIf::Init(){
+	((CRController*)(Object*)(ObjectIf*)this)->Init();
+}
+void Spr::CRControllerIf::Step(){
+	((CRController*)(Object*)(ObjectIf*)this)->Step();
+}
+void Spr::CRControllerIf::SetEnable(bool enable){
+	((CRController*)(Object*)(ObjectIf*)this)->SetEnable(enable);
+}
+bool Spr::CRControllerIf::IsEnabled(){
+	return	((CRController*)(Object*)(ObjectIf*)this)->IsEnabled();
+}
+SPR_IFIMP1(CREyeController, CRController);
+void Spr::CREyeControllerIf::LookAt(Vec3f pos, Vec3f vel){
+	((CREyeController*)(Object*)(ObjectIf*)this)->LookAt(pos, vel);
+}
+bool Spr::CREyeControllerIf::IsSaccading(){
+	return	((CREyeController*)(Object*)(ObjectIf*)this)->IsSaccading();
+}
+SPR_IFIMP1(CRNeckController, CRController);
+void Spr::CRNeckControllerIf::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
+	((CRNeckController*)(Object*)(ObjectIf*)this)->LookAt(pos, vel, attractiveness);
+}
+SPR_IFIMP1(CRReachingController, CRController);
+Spr::PHSolidIf* Spr::CRReachingControllerIf::GetSolid(){
+	return	((CRReachingController*)(Object*)(ObjectIf*)this)->GetSolid();
+}
+void Spr::CRReachingControllerIf::SetTargetPos(Vec3f p, Vec3f v){
+	((CRReachingController*)(Object*)(ObjectIf*)this)->SetTargetPos(p, v);
+}
+void Spr::CRReachingControllerIf::SetTargetOri(Quaterniond q, Vec3f av){
+	((CRReachingController*)(Object*)(ObjectIf*)this)->SetTargetOri(q, av);
+}
+void Spr::CRReachingControllerIf::SetTargetTime(float t){
+	((CRReachingController*)(Object*)(ObjectIf*)this)->SetTargetTime(t);
+}
+void Spr::CRReachingControllerIf::Start(Spr::CRReachingControllerIf::ConstraintMode mode, float keeptime){
+	((CRReachingController*)(Object*)(ObjectIf*)this)->Start(mode, keeptime);
+}
+float Spr::CRReachingControllerIf::GetRemainingTime(){
+	return	((CRReachingController*)(Object*)(ObjectIf*)this)->GetRemainingTime();
+}
+Spr::CRReachingControllerIf::ReachState Spr::CRReachingControllerIf::GetReachState(){
+	return	((CRReachingController*)(Object*)(ObjectIf*)this)->GetReachState();
+}
+void Spr::CRReachingControllerIf::Reset(){
+	((CRReachingController*)(Object*)(ObjectIf*)this)->Reset();
+}
+SPR_IFIMP1(CRGazeController, CRController);
+void Spr::CRGazeControllerIf::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
+	((CRGazeController*)(Object*)(ObjectIf*)this)->LookAt(pos, vel, attractiveness);
+}
+SPR_IFIMP1(CRAttentionController, CRController);
+SPR_IFIMP1(CRTryStandingUpController, CRController);
+void Spr::CRTryStandingUpControllerIf::Init(){
+	((CRTryStandingUpController*)(Object*)(ObjectIf*)this)->Init();
+}
+void Spr::CRTryStandingUpControllerIf::Step(){
+	((CRTryStandingUpController*)(Object*)(ObjectIf*)this)->Step();
+}
+void Spr::CRTryStandingUpControllerIf::Sync(){
+	((CRTryStandingUpController*)(Object*)(ObjectIf*)this)->Sync();
+}
+SPR_IFIMP1(CRWalkingController, CRController);
+void Spr::CRWalkingControllerIf::SetSpeed(float speed){
+	((CRWalkingController*)(Object*)(ObjectIf*)this)->SetSpeed(speed);
+}
+void Spr::CRWalkingControllerIf::SetRotationAngle(float rot){
+	((CRWalkingController*)(Object*)(ObjectIf*)this)->SetRotationAngle(rot);
+}
+void Spr::CRWalkingControllerIf::SetRotationWorldCoordinate(double r){
+	((CRWalkingController*)(Object*)(ObjectIf*)this)->SetRotationWorldCoordinate(r);
+}
+void Spr::CRWalkingControllerIf::Stop(){
+	((CRWalkingController*)(Object*)(ObjectIf*)this)->Stop();
+}
+void Spr::CRWalkingControllerIf::Reverse(){
+	((CRWalkingController*)(Object*)(ObjectIf*)this)->Reverse();
+}
+void Spr::CRWalkingControllerIf::SetPos(Vec3f pos){
+	((CRWalkingController*)(Object*)(ObjectIf*)this)->SetPos(pos);
+}
+double Spr::CRWalkingControllerIf::GetBasicCycle(){
+	return	((CRWalkingController*)(Object*)(ObjectIf*)this)->GetBasicCycle();
+}
+bool Spr::CRWalkingControllerIf::IsCompleteFall(){
+	return	((CRWalkingController*)(Object*)(ObjectIf*)this)->IsCompleteFall();
+}
+SPR_IFIMP1(CREseWalkingController, CRController);
+void Spr::CREseWalkingControllerIf::SetSpeed(float speed){
+	((CREseWalkingController*)(Object*)(ObjectIf*)this)->SetSpeed(speed);
+}
+void Spr::CREseWalkingControllerIf::SetRotationAngle(float rot){
+	((CREseWalkingController*)(Object*)(ObjectIf*)this)->SetRotationAngle(rot);
+}
+void Spr::CREseWalkingControllerIf::SetPos(Vec3f pos){
+	((CREseWalkingController*)(Object*)(ObjectIf*)this)->SetPos(pos);
+}
+SPR_IFIMP1(CRTravelController, CRController);
+void Spr::CRTravelControllerIf::SetGoal(Vec3f goal){
+	((CRTravelController*)(Object*)(ObjectIf*)this)->SetGoal(goal);
+}
+SPR_IFIMP1(CRGrabController, CRController);
+bool Spr::CRGrabControllerIf::Reach(Spr::PHSolidIf* solid, float radius){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->Reach(solid, radius);
+}
+bool Spr::CRGrabControllerIf::IsReachable(Spr::PHSolidIf* solid){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsReachable(solid);
+}
+bool Spr::CRGrabControllerIf::IsReachable(Spr::PHSolidIf* solid, float safety){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsReachable(solid, safety);
+}
+bool Spr::CRGrabControllerIf::IsReachComplete(){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsReachComplete();
+}
+bool Spr::CRGrabControllerIf::Uphold(){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->Uphold();
+}
+bool Spr::CRGrabControllerIf::IsUpholdable(){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsUpholdable();
+}
+bool Spr::CRGrabControllerIf::IsUpholdComplete(){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsUpholdComplete();
+}
+bool Spr::CRGrabControllerIf::Place(Vec3d pos){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->Place(pos);
+}
+bool Spr::CRGrabControllerIf::IsPlaceable(Vec3d pos){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsPlaceable(pos);
+}
+bool Spr::CRGrabControllerIf::IsPlaceable(Vec3d pos, float safety){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsPlaceable(pos, safety);
+}
+bool Spr::CRGrabControllerIf::IsPlaceComplete(){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->IsPlaceComplete();
+}
+void Spr::CRGrabControllerIf::Abort(){
+	((CRGrabController*)(Object*)(ObjectIf*)this)->Abort();
+}
+void Spr::CRGrabControllerIf::AbortAll(){
+	((CRGrabController*)(Object*)(ObjectIf*)this)->AbortAll();
+}
+Spr::CRGrabControllerIf::CRGCControlState Spr::CRGrabControllerIf::GetControlState(){
+	return	((CRGrabController*)(Object*)(ObjectIf*)this)->GetControlState();
+}
+SPR_IFIMP1(CRCreature, SceneObject);
+void Spr::CRCreatureIf::Init(){
+	((CRCreature*)(Object*)(ObjectIf*)this)->Init();
+}
+void Spr::CRCreatureIf::Step(){
+	((CRCreature*)(Object*)(ObjectIf*)this)->Step();
+}
+void Spr::CRCreatureIf::ClearInternalScene(){
+	((CRCreature*)(Object*)(ObjectIf*)this)->ClearInternalScene();
+}
+void Spr::CRCreatureIf::SensorStep(){
+	((CRCreature*)(Object*)(ObjectIf*)this)->SensorStep();
+}
+void Spr::CRCreatureIf::InternalSceneStep(){
+	((CRCreature*)(Object*)(ObjectIf*)this)->InternalSceneStep();
+}
+void Spr::CRCreatureIf::ControllerStep(){
+	((CRCreature*)(Object*)(ObjectIf*)this)->ControllerStep();
+}
+Spr::CRBodyIf* Spr::CRCreatureIf::CreateBody(const IfInfo* ii, const Spr::CRBodyDesc& desc){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->CreateBody(ii, desc);
+}
+Spr::CRBodyIf* Spr::CRCreatureIf::GetBody(int i){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->GetBody(i);
+}
+int Spr::CRCreatureIf::NBodies(){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->NBodies();
+}
+Spr::CRSensorIf* Spr::CRCreatureIf::CreateSensor(const IfInfo* ii, const Spr::CRSensorDesc& desc){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->CreateSensor(ii, desc);
+}
+Spr::CRSensorIf* Spr::CRCreatureIf::GetSensor(int i){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->GetSensor(i);
+}
+int Spr::CRCreatureIf::NSensors(){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->NSensors();
+}
+Spr::CRControllerIf* Spr::CRCreatureIf::CreateController(const IfInfo* ii, const Spr::CRControllerDesc& desc){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->CreateController(ii, desc);
+}
+Spr::CRControllerIf* Spr::CRCreatureIf::GetController(int i){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->GetController(i);
+}
+int Spr::CRCreatureIf::NControllers(){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->NControllers();
+}
+Spr::CRInternalSceneIf* Spr::CRCreatureIf::CreateInternalScene(const Spr::CRInternalSceneDesc& desc){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->CreateInternalScene(desc);
+}
+Spr::CRInternalSceneIf* Spr::CRCreatureIf::GetInternalScene(){
+	return	((CRCreature*)(Object*)(ObjectIf*)this)->GetInternalScene();
+}
+SPR_IFIMP1(CRInternalSceneObject, SceneObject);
+bool Spr::CRInternalSceneObjectIf::IsA(const char* typestr){
+	return	((CRInternalSceneObject*)(Object*)(ObjectIf*)this)->IsA(typestr);
+}
+const char* Spr::CRInternalSceneObjectIf::GetISObjType(){
+	return	((CRInternalSceneObject*)(Object*)(ObjectIf*)this)->GetISObjType();
+}
+Spr::PHSolidIf* Spr::CRInternalSceneObjectIf::GetSolid(){
+	return	((CRInternalSceneObject*)(Object*)(ObjectIf*)this)->GetSolid();
+}
+Vec3f Spr::CRInternalSceneObjectIf::GetPos(){
+	return	((CRInternalSceneObject*)(Object*)(ObjectIf*)this)->GetPos();
+}
+void Spr::CRInternalSceneObjectIf::SetPos(Vec3d pos){
+	((CRInternalSceneObject*)(Object*)(ObjectIf*)this)->SetPos(pos);
+}
+SPR_IFIMP1(CRISAttractiveObject, CRInternalSceneObject);
+float Spr::CRISAttractiveObjectIf::GetTotalAttractiveness(){
+	return	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->GetTotalAttractiveness();
+}
+void Spr::CRISAttractiveObjectIf::AddBottomupAttr(float attr){
+	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->AddBottomupAttr(attr);
+}
+void Spr::CRISAttractiveObjectIf::ClearBottomupAttr(){
+	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->ClearBottomupAttr();
+}
+void Spr::CRISAttractiveObjectIf::SetTopdownAttr(float attr){
+	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->SetTopdownAttr(attr);
+}
+void Spr::CRISAttractiveObjectIf::IncUncertainty(){
+	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->IncUncertainty();
+}
+void Spr::CRISAttractiveObjectIf::DecUncertainty(){
+	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->DecUncertainty();
+}
+float Spr::CRISAttractiveObjectIf::GetUncertainty(){
+	return	((CRISAttractiveObject*)(Object*)(ObjectIf*)this)->GetUncertainty();
+}
+SPR_IFIMP1(CRISTravelPotentialObject, CRInternalSceneObject);
+Vec2f Spr::CRISTravelPotentialObjectIf::GetStrengthCoeff(){
+	return	((CRISTravelPotentialObject*)(Object*)(ObjectIf*)this)->GetStrengthCoeff();
+}
+void Spr::CRISTravelPotentialObjectIf::SetStrengthCoeff(Vec2f strength){
+	((CRISTravelPotentialObject*)(Object*)(ObjectIf*)this)->SetStrengthCoeff(strength);
+}
+Vec2f Spr::CRISTravelPotentialObjectIf::GetDecayCoeff(){
+	return	((CRISTravelPotentialObject*)(Object*)(ObjectIf*)this)->GetDecayCoeff();
+}
+void Spr::CRISTravelPotentialObjectIf::SetDecayCoeff(Vec2f decay){
+	((CRISTravelPotentialObject*)(Object*)(ObjectIf*)this)->SetDecayCoeff(decay);
+}
+Vec2f Spr::CRISTravelPotentialObjectIf::GetPotential(Vec2f currPos){
+	return	((CRISTravelPotentialObject*)(Object*)(ObjectIf*)this)->GetPotential(currPos);
+}
+SPR_IFIMP1(CRInternalScene, SceneObject);
+void Spr::CRInternalSceneIf::Step(){
+	((CRInternalScene*)(Object*)(ObjectIf*)this)->Step();
+}
+void Spr::CRInternalSceneIf::ClearAttractiveness(){
+	((CRInternalScene*)(Object*)(ObjectIf*)this)->ClearAttractiveness();
+}
+void Spr::CRInternalSceneIf::SortByAttractiveness(){
+	((CRInternalScene*)(Object*)(ObjectIf*)this)->SortByAttractiveness();
+}
+Spr::CRInternalSceneObjectIf* Spr::CRInternalSceneIf::FindObject(Spr::PHSolidIf* solid, Vec3f pos){
+	return	((CRInternalScene*)(Object*)(ObjectIf*)this)->FindObject(solid, pos);
+}
+Spr::CRInternalSceneObjectIf* Spr::CRInternalSceneIf::GetISObject(int i){
+	return	((CRInternalScene*)(Object*)(ObjectIf*)this)->GetISObject(i);
+}
+int Spr::CRInternalSceneIf::NObjects(){
+	return	((CRInternalScene*)(Object*)(ObjectIf*)this)->NObjects();
+}
+Spr::CRInternalSceneObjectIf* Spr::CRInternalSceneIf::CreateInternalSceneObject(const IfInfo* ii, const Spr::CRInternalSceneObjectDesc& desc){
+	return	((CRInternalScene*)(Object*)(ObjectIf*)this)->CreateInternalSceneObject(ii, desc);
+}
+SPR_IFIMP1(CRIKControl, SceneObject);
+void Spr::CRIKControlIf::SetGoal(Vec3d goal){
+	((CRIKControl*)(Object*)(ObjectIf*)this)->SetGoal(goal);
+}
+SPR_IFIMP1(CRIKControlPos, CRIKControl);
+SPR_IFIMP1(CRIKControlOri, CRIKControl);
+SPR_IFIMP1(CRIKMovable, SceneObject);
+void Spr::CRIKMovableIf::PrepareSolve(){
+	((CRIKMovable*)(Object*)(ObjectIf*)this)->PrepareSolve();
+}
+void Spr::CRIKMovableIf::ProceedSolve(){
+	((CRIKMovable*)(Object*)(ObjectIf*)this)->ProceedSolve();
+}
+PTM::VVector< double > Spr::CRIKMovableIf::GetValue(){
+	return	((CRIKMovable*)(Object*)(ObjectIf*)this)->GetValue();
+}
+void Spr::CRIKMovableIf::Move(){
+	((CRIKMovable*)(Object*)(ObjectIf*)this)->Move();
+}
+void Spr::CRIKMovableIf::AddIKControl(Spr::CRIKControlIf* control){
+	((CRIKMovable*)(Object*)(ObjectIf*)this)->AddIKControl(control);
+}
+SPR_IFIMP1(CRIKMovableSolidPos, CRIKMovable);
+SPR_IFIMP1(CRIKMovableSolidOri, CRIKMovable);
+SPR_IFIMP1(CRIKMovableBallJointOri, CRIKMovable);
+SPR_IFIMP1(CRIKMovable3HingeJointOri, CRIKMovable);
+SPR_IFIMP1(CRIKMovableHingeJointOri, CRIKMovable);
+SPR_IFIMP1(CRSensor, SceneObject);
+void Spr::CRSensorIf::Init(){
+	((CRSensor*)(Object*)(ObjectIf*)this)->Init();
+}
+void Spr::CRSensorIf::Step(){
+	((CRSensor*)(Object*)(ObjectIf*)this)->Step();
+}
+SPR_IFIMP1(CROpticalSensor, CRSensor);
+bool Spr::CROpticalSensorIf::IsVisible(Spr::PHSolidIf* solid){
+	return	((CROpticalSensor*)(Object*)(ObjectIf*)this)->IsVisible(solid);
+}
+bool Spr::CROpticalSensorIf::IsInCenter(Spr::PHSolidIf* solid){
+	return	((CROpticalSensor*)(Object*)(ObjectIf*)this)->IsInCenter(solid);
+}
+bool Spr::CROpticalSensorIf::IsVisible(Vec3f pos){
+	return	((CROpticalSensor*)(Object*)(ObjectIf*)this)->IsVisible(pos);
+}
+bool Spr::CROpticalSensorIf::IsInCenter(Vec3f pos){
+	return	((CROpticalSensor*)(Object*)(ObjectIf*)this)->IsInCenter(pos);
+}
+bool Spr::CROpticalSensorIf::IsSelfSolid(Spr::PHSolidIf* solid){
+	return	((CROpticalSensor*)(Object*)(ObjectIf*)this)->IsSelfSolid(solid);
+}
+SPR_OBJECTIMP1(CRAttentionController, CRController);
+SPR_OBJECTIMP1(CRBody, SceneObject);
+SPR_OBJECTIMP1(CRController, SceneObject);
+SPR_OBJECTIMP1(CRCreature, SceneObject);
+SPR_OBJECTIMP1(CREseWalkingController, CRController);
+SPR_OBJECTIMP1(CREyeController, CRController);
+SPR_OBJECTIMP1(CRFourLegsAnimalBody, CRBody);
+SPR_OBJECTIMP1(CRGazeController, CRController);
+SPR_OBJECTIMP1(CRGrabController, CRController);
+SPR_OBJECTIMP1(CRHingeHumanBody, CRBody);
+SPR_OBJECTIMP1(CRInternalSceneObject, SceneObject);
+SPR_OBJECTIMP1(CRISAttractiveObject, CRInternalSceneObject);
+SPR_OBJECTIMP1(CRISTravelPotentialObject, CRInternalSceneObject);
+SPR_OBJECTIMP1(CRInternalScene, SceneObject);
+SPR_OBJECTIMP1(CRIKControl, SceneObject);
+SPR_OBJECTIMP1(CRIKControlPos, CRIKControl);
+SPR_OBJECTIMP1(CRIKControlOri, CRIKControl);
+SPR_OBJECTIMP1(CRIKMovable, SceneObject);
+SPR_OBJECTIMP1(CRIKMovableSolidPos, CRIKMovable);
+SPR_OBJECTIMP1(CRIKMovableSolidOri, CRIKMovable);
+SPR_OBJECTIMP1(CRIKMovableBallJointOri, CRIKMovable);
+SPR_OBJECTIMP1(CRIKMovable3HingeJointOri, CRIKMovable);
+SPR_OBJECTIMP1(CRIKMovableHingeJointOri, CRIKMovable);
+SPR_OBJECTIMP1(CRNeckController, CRController);
+SPR_OBJECTIMP1(CROpticalSensor, CRSensor);
+SPR_OBJECTIMP1(CRReachingController, CRController);
+SPR_OBJECTIMP1(CRSensor, SceneObject);
+SPR_OBJECTIMP1(CRTravelController, CRController);
+SPR_OBJECTIMP1(CRTrunkFootAnimalBody, CRBody);
+SPR_OBJECTIMP1(CRTrunkFootHumanBody, CRBody);
+SPR_OBJECTIMP1(CRTryStandingUpController, CRController);
+SPR_OBJECTIMP1(CRWalkingController, CRController);
+}

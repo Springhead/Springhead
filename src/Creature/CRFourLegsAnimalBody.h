@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include <vector>
 
@@ -23,7 +22,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsAnimalBody
 // ボールやヒンジのジョイントを用いた哺乳類モデル・クラスの実装
-class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyIfInit, public CRFourLegsAnimalBodyDesc {
+class CRFourLegsAnimalBody : public CRBody, public CRFourLegsAnimalBodyDesc {
 private:
 	
 	std::vector<PHSolidIf*> upperBody;		//< 上体を構成する剛体の登録先の配列
@@ -57,7 +56,7 @@ private:
 	void SetUpperBody();					//< ボディの上体を構成する剛体を登録する
 	
 public:
-	OBJECTDEF(CRFourLegsAnimalBody, CRBody);
+	SPR_OBJECTDEF(CRFourLegsAnimalBody);
 	ACCESS_DESC(CRFourLegsAnimalBody);
 
 	CRFourLegsAnimalBody(){}

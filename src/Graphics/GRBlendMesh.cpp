@@ -9,8 +9,6 @@
 #include "GRBlendMesh.h"
 
 namespace Spr{;
-IF_OBJECT_IMP(GRBlendMesh, GRVisual);
-
 GRBlendMesh::GRBlendMesh(const GRBlendMeshDesc& desc):GRBlendMeshDesc(desc){
 	render = NULL;
 }

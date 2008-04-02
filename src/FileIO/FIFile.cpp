@@ -110,8 +110,6 @@ void FILoadContext::PushFileMap(const UTString fn){
 }
 
 
-IF_OBJECT_IMP_ABST(FIFile, Object);
-
 //#define PDEBUG_EVAL(x)	x
 #define PDEBUG_EVAL(x)
 

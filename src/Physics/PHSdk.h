@@ -9,7 +9,6 @@
 #define PHSDK_H
 #include <Foundation/Foundation.h>
 #include <Physics/SprPHSdk.h>
-#include "IfStubPhysics.h"
 
 namespace Spr {;
 
@@ -23,7 +22,7 @@ public:
 	}
 };
 
-class SPR_DLL PHSdk:public Sdk, public PHSdkIfInit{
+class SPR_DLL PHSdk:public Sdk{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
@@ -37,7 +36,7 @@ protected:
 	ObjectRefs objects;
 public:
 
-	OBJECTDEF(PHSdk, Sdk);
+	SPR_OBJECTDEF(PHSdk);
 	PHSdk(const PHSdkDesc& = PHSdkDesc());
 	~PHSdk();
 

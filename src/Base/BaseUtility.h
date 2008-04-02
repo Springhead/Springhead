@@ -249,7 +249,7 @@ public:
 };
 
 ///	ツリーのノード(親子両方向参照)
-template <class T, class CO=std DOUBLECOLON vector< UTRef<T> > >
+template <class T, class CO=std::vector< UTRef<T> > >
 class UTTreeNode{
 private:
 	void clear();

@@ -13,9 +13,9 @@
 
 namespace Spr{;
 
-class FIFileCOLLADA:public FIFile, public FIFileCOLLADAIfInit{
+class FIFileCOLLADA:public FIFile{
 public:
-	OBJECTDEF(FIFileCOLLADA, FIFile);
+	SPR_OBJECTDEF(FIFileCOLLADA);
 protected:
 	FIPhraseParser start, head, body, element, field, 
 		property, id, string, text, data, boolVal, iNum, rNum, str, exp;

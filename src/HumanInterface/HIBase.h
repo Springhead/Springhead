@@ -25,7 +25,7 @@ protected:
 	int updateStep;
 	bool isGood;
 public:
-	OBJECTDEF_ABST(HIBase, NamedObject);
+	SPR_OBJECTDEF_ABST(HIBase, NamedObject);
 	///
 	HIBase(){ updateStep = deviceUpdateStep; isGood=false;}
 
@@ -49,12 +49,12 @@ public:
 };
 class HIPosition:public HIBase{
 public:
-	OBJECTDEF(HIPosition, HIBase);
+	SPR_OBJECTDEF(HIPosition, HIBase);
 	virtual Vec3f GetPosition();
 };
 class HIOrientation:public HIBase{
 public:
-	OBJECTDEF(HIOrientation, HIBase);
+	SPR_OBJECTDEF(HIOrientation, HIBase);
 	virtual Quaternionf GetOrientation();
 };
 

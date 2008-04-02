@@ -16,8 +16,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHPath
-IF_OBJECT_IMP_ABST(PHPath, SceneObject)
-
 PHPath::PHPath(const PHPathDesc& desc){
 	SetDesc(&desc);
 }
@@ -184,8 +182,6 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 //----------------------------------------------------------------------------
 // PHPathJoint
 
-IF_OBJECT_IMP(PHPathJoint, PHJoint1D)
-
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 5;
@@ -283,8 +279,6 @@ void PHPathJoint::CompBias(){
 }*/
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHPathJointNode, PHTreeNode1D)
-
 void PHPathJointNode::CompJointJacobian(){
 	PHPathJoint* j = GetJoint();
 	Matrix6d Jq;

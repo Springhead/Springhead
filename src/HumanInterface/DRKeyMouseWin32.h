@@ -16,7 +16,7 @@ namespace Spr {;
 class DRKeyMouseWin32:public HIRealDevice, public 
 	DRKeyMouseWin32IfInit{
 public:
-	OBJECTDEF(DRKeyMouseWin32, HIRealDevice);
+	SPR_OBJECTDEF(DRKeyMouseWin32, HIRealDevice);
 	///	仮想デバイス(KeyMouse)
 	class KeyMouse:public DVKeyMouse{
 	protected:

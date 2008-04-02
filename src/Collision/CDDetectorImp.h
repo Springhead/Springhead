@@ -21,13 +21,13 @@ class CDFace;
 class CDConvex;
 
 /// Shapeの組の状態
-struct CDShapePairState{
+struct CDShapePairSt{
 	Vec3d normal;				///<	衝突の法線(0から1へ) (Global)
 	double depth;				///<	衝突の深さ：最近傍点を求めるために，2物体を動かす距離．
 	unsigned lastContactCount;	///<	最後に接触した時刻
-	CDShapePairState():lastContactCount(-2), depth(0){}
+	CDShapePairSt():lastContactCount(-2), depth(0){}
 };
-class CDShapePair: public CDShapePairState, public UTRefCount{
+class CDShapePair: public CDShapePairSt, public UTRefCount{
 public:
 	CDConvex* shape[2];			// 判定対象の形状
 	Posed shapePoseW[2];		// World系での形状の姿勢のキャッシュ
@@ -46,8 +46,8 @@ public:
 public:
 	CDShapePair(){
 	}
-	void SetState(const CDShapePairState& s){
-		(CDShapePairState&)*this = s;
+	void SetState(const CDShapePairSt& s){
+		(CDShapePairSt&)*this = s;
 	}	
 	///	接触判定
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);

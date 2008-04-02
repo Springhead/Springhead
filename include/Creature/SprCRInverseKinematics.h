@@ -18,67 +18,67 @@ namespace Spr{;
 // ------------------------------------------------------------------------------
 /// ボディをIKで動作させるための制御点
 struct CRIKControlIf : SceneObjectIf{
-	IF_DEF(CRIKControl);
+	SPR_IFDEF(CRIKControl);
 
 	/** @brief 目標地点を設定する
 	*/
-	virtual void SetGoal(Vec3d goal)= 0;
+	void SetGoal(Vec3d goal);
 };
 
 struct CRIKControlDesc{
-	DESC_DEF_FOR_OBJECT(CRIKControl);
+	SPR_DESCDEF(CRIKControl);
 
 	PHSolidIf* solid;  ///< 制御点のある剛体
 };
 
 // --- 位置制御点
 struct CRIKControlPosIf : CRIKControlIf{
-	IF_DEF(CRIKControlPos);
+	SPR_IFDEF(CRIKControlPos);
 };
 
 struct CRIKControlPosDesc : CRIKControlDesc{
-	DESC_DEF_FOR_OBJECT(CRIKControlPos);
+	SPR_DESCDEF(CRIKControlPos);
 
 	Vec3d pos;  ///< 制御点の位置（剛体ローカル座標系における）
 };
 
 // --- 姿勢制御点
 struct CRIKControlOriIf : CRIKControlIf{
-	IF_DEF(CRIKControlOri);
+	SPR_IFDEF(CRIKControlOri);
 };
 
 struct CRIKControlOriDesc : CRIKControlDesc{
-	DESC_DEF_FOR_OBJECT(CRIKControlOri);
+	SPR_DESCDEF(CRIKControlOri);
 };
 
 // ------------------------------------------------------------------------------
 /// ボディをIKで動作させるための制御対象（関節・剛体）
 struct CRIKMovableIf : SceneObjectIf{
-	IF_DEF(CRIKMovable);
+	SPR_IFDEF(CRIKMovable);
 
 	/** @brief IKの計算準備をする
 	*/
-	virtual void PrepareSolve()= 0;
+	void PrepareSolve();
 
 	/** @brief IKの計算繰返しの１ステップを実行する
 	*/
-	virtual void ProceedSolve()= 0;
+	void ProceedSolve();
 
 	/** @brief 計算結果を取得する
 	*/
-	virtual PTM::VVector<double> GetValue()= 0;
+	PTM::VVector<double> GetValue();
 
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
-	virtual void Move()= 0;
+	void Move();
 
 	/** @brief 制御点を追加する
 	*/
-	virtual void AddIKControl(CRIKControlIf* control)= 0;
+	void AddIKControl(CRIKControlIf* control);
 };
 
 struct CRIKMovableDesc{
-	DESC_DEF_FOR_OBJECT(CRIKMovable);
+	SPR_DESCDEF(CRIKMovable);
 
 	float bias;  ///< 動かしやすさの係数
 
@@ -87,44 +87,44 @@ struct CRIKMovableDesc{
 
 // --- 位置制御可能な剛体
 struct CRIKMovableSolidPosIf : CRIKMovableIf{
-	IF_DEF(CRIKMovableSolidPos);
+	SPR_IFDEF(CRIKMovableSolidPos);
 };
 
 struct CRIKMovableSolidPosDesc : CRIKMovableDesc{
-	DESC_DEF_FOR_OBJECT(CRIKMovableSolidPos);
+	SPR_DESCDEF(CRIKMovableSolidPos);
 
 	PHSolidIf* solid;  ///< 制御対象の剛体
 };
 
 // --- 姿勢制御可能な剛体
 struct CRIKMovableSolidOriIf : CRIKMovableIf{
-	IF_DEF(CRIKMovableSolidOri);
+	SPR_IFDEF(CRIKMovableSolidOri);
 };
 
 struct CRIKMovableSolidOriDesc : CRIKMovableDesc{
-	DESC_DEF_FOR_OBJECT(CRIKMovableSolidOri);
+	SPR_DESCDEF(CRIKMovableSolidOri);
 
 	PHSolidIf* solid;  ///< 制御対象の剛体
 };
 
 // --- 角度制御可能なボールジョイント
 struct CRIKMovableBallJointOriIf : CRIKMovableIf{
-	IF_DEF(CRIKMovableBallJointOri);
+	SPR_IFDEF(CRIKMovableBallJointOri);
 };
 
 struct CRIKMovableBallJointOriDesc : CRIKMovableDesc{
-	DESC_DEF_FOR_OBJECT(CRIKMovableBallJointOri);
+	SPR_DESCDEF(CRIKMovableBallJointOri);
 
 	PHBallJointIf* joint;  ///< 制御対象の関節
 };
 
 // --- 角度制御可能な三連ヒンジジョイント
 struct CRIKMovable3HingeJointOriIf : CRIKMovableIf{
-	IF_DEF(CRIKMovable3HingeJointOri);
+	SPR_IFDEF(CRIKMovable3HingeJointOri);
 };
 
 struct CRIKMovable3HingeJointOriDesc : CRIKMovableDesc{
-	DESC_DEF_FOR_OBJECT(CRIKMovable3HingeJointOri);
+	SPR_DESCDEF(CRIKMovable3HingeJointOri);
 	PHHingeJointIf *joint1;
 	PHHingeJointIf *joint2;
 	PHHingeJointIf* joint3;  ///< 制御対象の関節
@@ -132,11 +132,11 @@ struct CRIKMovable3HingeJointOriDesc : CRIKMovableDesc{
 
 // --- 角度制御可能なヒンジジョイント
 struct CRIKMovableHingeJointOriIf : CRIKMovableIf{
-	IF_DEF(CRIKMovableHingeJointOri);
+	SPR_IFDEF(CRIKMovableHingeJointOri);
 };
 
 struct CRIKMovableHingeJointOriDesc : CRIKMovableDesc{
-	DESC_DEF_FOR_OBJECT(CRIKMovableHingeJointOri);
+	SPR_DESCDEF(CRIKMovableHingeJointOri);
 
 	PHHingeJointIf *joint;  ///< 制御対象の関節
 };

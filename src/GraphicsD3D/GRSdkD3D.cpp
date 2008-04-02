@@ -19,7 +19,7 @@ GRSdkD3DIf* SPR_CDECL GRSdkD3DIf::CreateSdk(){
 
 //----------------------------------------------------------------------------
 //	GRSdkD3D
-IF_OBJECT_IMP(GRSdkD3D, Sdk);
+IF_SPR_OBJECTIMP(GRSdkD3D, Sdk);
 GRSdkD3D::GRSdkD3D(const GRSdkD3DDesc& desc):GRSdkD3DDesc(desc){
 }
 GRDeviceD3DIf* GRSdkD3D::CreateDeviceD3D(){

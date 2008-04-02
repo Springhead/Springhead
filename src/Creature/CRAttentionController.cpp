@@ -12,7 +12,7 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRAttentionController, CRController);
+
 
 void CRAttentionController::Init(){
 	CRController::Init();

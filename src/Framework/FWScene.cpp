@@ -17,8 +17,6 @@
 
 namespace Spr{;
 
-IF_OBJECT_IMP(FWScene, Scene);
-
 FWScene::FWScene(const FWSceneDesc& d/*=FWSceneDesc()*/)
 : phScene(NULL), grScene(NULL)
 {

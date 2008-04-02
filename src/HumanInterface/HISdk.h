@@ -31,7 +31,7 @@ protected:
 	UTRef<HIVirtualDevicePool> vpool;
 	UTRef<HIRealDevicePool> rpool;
 public:
-	OBJECTDEF(HISdk, Sdk);
+	SPR_OBJECTDEF(HISdk, Sdk);
 	HISdk(const HISdkDesc& = HISdkDesc());
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);

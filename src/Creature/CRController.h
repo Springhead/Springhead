@@ -11,14 +11,13 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief コントローラ
 */
-class CRController : public SceneObject, public CRControllerIfInit, public CRControllerDesc {
+class CRController : public SceneObject, public CRControllerDesc {
 protected:
 	/// 制御対象のクリーチャ
 	CRCreatureIf* creature;
@@ -30,7 +29,7 @@ protected:
 	bool isEnabled;
 
 public:
-	OBJECTDEF(CRController, SceneObject);
+	SPR_OBJECTDEF(CRController);
 	ACCESS_DESC(CRController);
 
 	CRController(){}

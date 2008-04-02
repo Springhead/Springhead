@@ -42,8 +42,6 @@ int CDVertexIDs::FindPos(int id) const {
 
 //----------------------------------------------------------------------------
 //	CDConvexMesh
-IF_OBJECT_IMP(CDConvexMesh, CDConvex);
-
 CDConvexMesh::CDConvexMesh(){
 }
 CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
@@ -268,7 +266,7 @@ Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 }
 
 CDFaceIf* CDConvexMesh::GetFace(size_t i){
-	return &faces.at(i);
+	return faces.at(i).Cast();
 }
 size_t CDConvexMesh::NFace(){
 	return faces.size();

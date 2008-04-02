@@ -9,7 +9,6 @@
 #define CRWALKINGCONTROLLER_H
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include <Springhead.h>		//	Springheadのインタフェース
 
@@ -25,7 +24,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意コントローラ
 */
-class CRWalkingController : public CRController, public CRWalkingControllerIfInit, public CRWalkingControllerDesc {
+class CRWalkingController : public CRController, public CRWalkingControllerDesc {
 private:
 	/// 依存する他のオブジェクトの例．必要なものを選んで記述．ただしCRControllerに既にあるものは不要．
 
@@ -162,7 +161,7 @@ private:
 
 
 public:
-	OBJECTDEF(CRWalkingController, CRController);
+	SPR_OBJECTDEF(CRWalkingController);
 	ACCESS_DESC(CRWalkingController);
 
 	CRWalkingController(){

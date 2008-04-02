@@ -11,13 +11,11 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDumpGraphics.h"
-
-
 namespace Spr{ 
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
 
+extern void RegisterTypeDescGraphics(UTTypeDescDb* db);
 void SPR_CDECL GRRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
@@ -26,7 +24,7 @@ void SPR_CDECL GRRegisterTypeDescs(){
 	UTRegisterTypeDescs();
 
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("Graphics");
-	#include "TypeDescDumpImpGraphics.h"
+	RegisterTypeDescGraphics(db);
 	db->Link();
 }
 }

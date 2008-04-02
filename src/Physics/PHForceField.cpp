@@ -14,8 +14,6 @@
 using namespace std;
 namespace Spr{
 
-IF_OBJECT_IMP(PHGravityEngine, PHEngine);
-
 void PHGravityEngine::Step(){
 	PHSolids::iterator it;
 	PHSolid* solid;

@@ -9,28 +9,26 @@
 #define CRINTERNALSCENE_H
 
 #include <Springhead.h>
-
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
-#include "AccessDescDumpCreature.h"
 
 #include <vector>
 #include <algorithm>
+#include "CreatureDecl.hpp"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 内部シーンを構成するオブジェクト
 */
-class CRInternalSceneObject : public SceneObject, public CRInternalSceneObjectIfInit {
+class CRInternalSceneObject : public SceneObject{
 
 protected:
 	/// 所属する内部シーン
 	CRInternalSceneIf* internalScene;
 
 public:
-	OBJECTDEF(CRInternalSceneObject, SceneObject);
-	ACCESS_DESC_CRInternalSceneObjectDesc_NOBASE;
+	SPR_OBJECTDEF(CRInternalSceneObject);
+	SPR_DECLMEMBEROF_CRInternalSceneObjectDesc;
 
 	CRInternalSceneObject(){}
 	CRInternalSceneObject(const CRInternalSceneObjectDesc& desc, CRInternalSceneIf* is) {
@@ -62,13 +60,13 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意をひきつける物体
 */
-class CRISAttractiveObject : public CRInternalSceneObject, public CRISAttractiveObjectIfInit {
+class CRISAttractiveObject : public CRInternalSceneObject{
 
 private:
 
 public:
-	OBJECTDEF(CRISAttractiveObject, CRInternalSceneObject);
-	ACCESS_DESC_CRISAttractiveObjectDesc(CRInternalSceneObject);
+	SPR_OBJECTDEF(CRISAttractiveObject);
+	SPR_DECLMEMBEROF_CRISAttractiveObjectDesc;
 
 	CRISAttractiveObject(){}
 	CRISAttractiveObject(const CRISAttractiveObjectDesc& desc, CRInternalSceneIf* is) 
@@ -109,13 +107,13 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 歩行のポテンシャルにかかわる物体
 */
-class CRISTravelPotentialObject : public CRInternalSceneObject, public CRISTravelPotentialObjectIfInit {
+class CRISTravelPotentialObject : public CRInternalSceneObject{
 
 private:
 
 public:
-	OBJECTDEF(CRISTravelPotentialObject, CRInternalSceneObject);
-	ACCESS_DESC_CRISTravelPotentialObjectDesc(CRInternalSceneObject);
+	SPR_OBJECTDEF(CRISTravelPotentialObject);
+	SPR_DECLMEMBEROF_CRISTravelPotentialObjectDesc;
 
 	CRISTravelPotentialObject(){}
 	CRISTravelPotentialObject(const CRISTravelPotentialObjectDesc& desc, CRInternalSceneIf* is) 
@@ -167,7 +165,7 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 内部シーン
 */
-class CRInternalScene : public SceneObject, public CRInternalSceneIfInit, public CRInternalSceneDesc {
+class CRInternalScene : public SceneObject, public CRInternalSceneDesc {
 
 private:
 	/// 持ち主たるCreature
@@ -182,8 +180,7 @@ private:
 	static bool LargerAttention(const CRInternalSceneObject* a, const CRInternalSceneObject* b);
 
 public:
-	OBJECTDEF(CRInternalScene, SceneObject);
-	ACCESS_DESC(CRInternalScene);
+	SPR_OBJECTDEF(CRInternalScene);
 
 	CRInternalScene(){}
 	CRInternalScene(const CRInternalSceneDesc& desc, CRCreatureIf* c=NULL) : CRInternalSceneDesc(desc) {

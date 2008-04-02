@@ -18,8 +18,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDCapsule
-IF_OBJECT_IMP(CDCapsule, CDConvex);	
-	
 CDCapsule::CDCapsule() {
 }
 

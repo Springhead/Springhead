@@ -12,8 +12,6 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRController, SceneObject);
-
 void CRController::Init(){
 	phScene = DCAST(PHSceneIf, GetScene());
 }

@@ -11,8 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
-
 #include "CRController.h"
 
 //@{
@@ -20,7 +18,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 偽歩行コントローラ
 */
-class CREseWalkingController : public CRController, public CREseWalkingControllerIfInit, public CREseWalkingControllerDesc {
+class CREseWalkingController : public CRController, public CREseWalkingControllerDesc {
 private:
 	/// 制御対象となるボディの腰の剛体
 	PHSolidIf* soWaist;
@@ -36,7 +34,7 @@ private:
 	float rotation;
 
 public:
-	OBJECTDEF(CREseWalkingController, CRController);
+	SPR_OBJECTDEF(CREseWalkingController);
 	ACCESS_DESC(CREseWalkingController);
 
 	CREseWalkingController(){

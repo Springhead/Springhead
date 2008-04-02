@@ -7,8 +7,8 @@
  */
 
 #include <Springhead.h>		//	Springheadのインタフェース
-
-#include <HumanInterface/HIBase.h>
+#include <Foundation/Object.h>
+#include <Foundation/Scene.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -17,6 +17,15 @@
 using namespace Spr;
 
 void main(){
+	UTRef<NameManager> nameMan = DBG_NEW NameManager;
+	UTRef<NamedObject> obj = DBG_NEW NamedObject;
+	NamedObjectIf* objIf = obj->Cast();
+	NameManagerIf* nameManIf = nameMan->Cast();
+	obj->SetNameManager(nameManIf);
+	objIf->SetName("firstObject");
+	nameManIf->Print(DSTR);
+
+	/*
 	HIPose* poseObj = new HIPose;
 	NamedObjectIf* nIf = poseObj->Cast();
 	HIOrientationIf* oriIf = poseObj->Cast();
@@ -30,4 +39,5 @@ void main(){
 
 	
 	delete poseObj;
+*/
 }

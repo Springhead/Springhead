@@ -8,16 +8,16 @@
 #ifndef FWOBJECT_H
 #define FWOBJECT_H
 
+#include <Springhead.h>
 #include <Framework/SprFWObject.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
-#include "IfStubFramework.h"
 
 namespace Spr{;
 
-	class FWObject : public SceneObject, public FWObjectIfInit, public FWObjectDesc {
+	class FWObject : public SceneObject, public FWObjectDesc {
     public:
-		OBJECTDEF(FWObject, NamedObject);
+		SPR_OBJECTDEF(FWObject);
 		ACCESS_DESC(FWObject);
 		FWObjectDesc desc;
 		FWObject(const FWObjectDesc& d=FWObjectDesc()); // コンストラクタ

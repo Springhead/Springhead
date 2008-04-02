@@ -26,6 +26,19 @@ struct MemCheck{
 };
 static MemCheck memCheck;
 
+
+//-------------------------------------------------------------------------
+//	IfInfo
+//
+bool IfInfo::Inherit(const IfInfo* info) const{
+	if (info == this) return true;
+	const IfInfo** base = baseList;
+	for(;*base; ++base){
+		if ((*base)->Inherit(info)) return true;
+	}
+	return false;
+}
+
 //-------------------------------------------------------------------------
 //	TypeInfoManager
 //
@@ -85,32 +98,6 @@ IfInfo* IfInfo::Find(const char* cname){
 	TypeInfoManager* tim = TypeInfoManager::Get();
 	return tim->FindIfInfo(cname);
 }
-
-IfInfo::IfInfo(const char* cn, IfInfo** b): className(cn), base(b){
-	id = ++maxId;
-}
-bool IfInfo::Inherit(const char* key) const {
-	if(strcmp(ClassName(),key)==0) return true;
-	IfInfo** pb = base;
-	while(*pb){
-		if ((*pb)->Inherit(key)) return true;
-		++pb;
-	}
-	return false;
-}
-bool IfInfo::Inherit(const IfInfo* key) const {
-#ifdef __BORLANDC__
-	if(strcmp(ClassName(),key->ClassName())==0) return true;
-#else
-	if(this == key) return true;
-#endif
-	IfInfo** pb = base;
-	while(*pb){
-		if ((*pb)->Inherit(key)) return true;
-		++pb;
-	}
-	return false;
-}
 void IfInfo::RegisterFactory(FactoryBase* f) const {
 	IfInfo* info = (IfInfo*) this;
 	info->factories.push_back(f);
@@ -126,14 +113,15 @@ FactoryBase* IfInfo::FindFactory(const IfInfo* info) const {
 
 //----------------------------------------------------------------------------
 //	Object
-IF_IMP_BASE(Object);
-OBJECT_IMP_BASE(Object);
-
-
 ObjectIf::~ObjectIf(){
-	delete (Object*)(ObjectIfBuf*)this;
+	assert(0);	//	An interface struct should not be deleted.
 }
-
+int ObjectIf::DelRef() const {
+	int rv = ((Object*)this)->DelRef();
+	if (rv) return rv;
+	delete (Object*)this;
+	return 1;
+}
 void Object::PrintHeader(std::ostream& os, bool bClose) const {
 	int w = os.width();
 	os.width(0);
@@ -185,8 +173,6 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 
 //----------------------------------------------------------------------------
 //	NamedObject
-IF_OBJECT_IMP(NamedObject, Object);
-
 NameManagerIf* NamedObject::GetNameManager(){
 	return nameManager->Cast();
 }
@@ -226,8 +212,6 @@ void NamedObject::SetName(const char* n){
 
 //----------------------------------------------------------------------------
 //	SceneObject
-IF_OBJECT_IMP(SceneObject, NamedObject);
-
 void SceneObject::SetScene(SceneIf* s){
 	SetNameManager(s);
 	nameManager->GetNameMap();
@@ -239,8 +223,6 @@ SceneIf* SceneObject::GetScene(){
 
 //----------------------------------------------------------------------------
 //	ObjectStates
-
-IF_OBJECT_IMP(ObjectStates, Object);
 
 size_t ObjectStates::CalcStateSize(ObjectIf* o){
 	size_t sz = o->GetStateSize();

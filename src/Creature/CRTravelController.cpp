@@ -12,8 +12,6 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRTravelController, CRController);
-
 void CRTravelController::Init(){
 	CRController::Init();
 

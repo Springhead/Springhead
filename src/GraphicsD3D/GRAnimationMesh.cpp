@@ -185,7 +185,7 @@ LPDIRECT3DTEXTURE9* GRAnimationMesh::AllocateHierarchy::AllocateTextures(DWORD N
 
 //----------------------------------------------------------------------------
 //	GRAnimationMesh
-IF_OBJECT_IMP(GRAnimationMesh, GRVisual);
+IF_SPR_OBJECTIMP(GRAnimationMesh, GRVisual);
 
 GRAnimationMesh::GRAnimationMesh(const GRAnimationMeshDesc& desc):GRAnimationMeshDesc(desc){
 	rootFrame = NULL;

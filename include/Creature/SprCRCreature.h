@@ -31,89 +31,89 @@ void SPR_CDECL CRRegisterTypeDescs();
 // ------------------------------------------------------------------------------
 /// クリーチャのインタフェース
 struct CRCreatureIf : SceneObjectIf{
-	IF_DEF(CRCreature);
+	SPR_IFDEF(CRCreature);
 
 	/** @brief 初期化を実行する
 	*/
-	virtual void Init()= 0;
+	void Init();
 
 	/** @brief 感覚→情報処理→運動 の１ステップを実行する
 	*/
-	virtual void Step()= 0;
+	void Step();
 
 	/** @brief 内部シーンのボトムアップ注意をリセットする
 	*/
-	virtual void ClearInternalScene()= 0;
+	void ClearInternalScene();
 
 	/** @brief センサーからの入力を行う
 	*/
-	virtual void SensorStep()= 0;
+	void SensorStep();
 
 	/** @brief 内部シーンの処理を行う
 	*/
-	virtual void InternalSceneStep()= 0;
+	void InternalSceneStep();
 
 	/** @brief 制御を行う
 	*/
-	virtual void ControllerStep()= 0;
+	void ControllerStep();
 
 	/** @brief ボディをつくる
 	*/
-	virtual CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc)= 0;
+	CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc);
 	template <class T> CRBodyIf* CreateBody(const T& desc){
 		return CreateBody(T::GetIfInfo(), desc);
 	}
 
 	/** @brief ボディを取得する
 	*/
-	virtual CRBodyIf* GetBody(int i)= 0;
+	CRBodyIf* GetBody(int i);
 
 	/** @brief ボディの数を取得する
 	*/
-	virtual int NBodies()= 0;
+	int NBodies();
 
 	/** @brief 感覚系を追加する（依存するセンサーは先にCreateしておく必要がある．要対策）
 	*/
-	virtual CRSensorIf* CreateSensor(const IfInfo* ii, const CRSensorDesc& desc)= 0;
+	CRSensorIf* CreateSensor(const IfInfo* ii, const CRSensorDesc& desc);
 	template <class T> CRSensorIf* CreateSensor(const T& desc){
 		return CreateSensor(T::GetIfInfo(), desc);
 	}
 
 	/** @brief 感覚系を取得する
 	*/
-	virtual CRSensorIf* GetSensor(int i)= 0;
+	CRSensorIf* GetSensor(int i);
 
 	/** @brief 感覚系の数を取得する
 	*/
-	virtual int NSensors()= 0;
+	int NSensors();
 
 	/** @brief 運動コントローラを追加する（依存するコントローラは先にCreateしておく必要がある．要対策）
 	*/
-	virtual CRControllerIf* CreateController(const IfInfo* ii, const CRControllerDesc& desc)= 0;
+	CRControllerIf* CreateController(const IfInfo* ii, const CRControllerDesc& desc);
 	template <class T> CRControllerIf* CreateController(const T& desc){
 		return CreateController(T::GetIfInfo(), desc);
 	}
 
 	/** @brief 運動コントローラを取得する
 	*/
-	virtual CRControllerIf* GetController(int i)= 0;
+	CRControllerIf* GetController(int i);
 
 	/** @brief 運動コントローラの数を取得する
 	*/
-	virtual int NControllers()= 0;
+	int NControllers();
 
 	/** @brief 内部シーンをつくる
 	*/
-	virtual CRInternalSceneIf* CreateInternalScene(const CRInternalSceneDesc& desc)= 0;
+	CRInternalSceneIf* CreateInternalScene(const CRInternalSceneDesc& desc);
 
 	/** @brief 内部シーンを取得する
 	*/
-	virtual CRInternalSceneIf* GetInternalScene()= 0;
+	CRInternalSceneIf* GetInternalScene();
 };
 
 /// クリーチャのデスクリプタ
 struct CRCreatureDesc{
-	DESC_DEF_FOR_OBJECT(CRCreature);
+	SPR_DESCDEF(CRCreature);
 
 	CRCreatureDesc(){
 	}

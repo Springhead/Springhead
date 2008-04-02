@@ -24,7 +24,7 @@ struct DRRealDeviceIf;
 
 /**	@brief	ヒューマンインタフェースの基本クラス	*/
 struct HIBaseIf: public NamedObjectIf{
-	IF_DEF(HIBase);
+	SPR_IFDEF(HIBase);
 	///	キャリブレーションの前に行う処理
 	virtual bool BeforeCalibration()=0;
 	///	キャリブレーション処理
@@ -46,19 +46,19 @@ struct HIBaseIf: public NamedObjectIf{
 
 /**	@brief	位置入力インタフェース	*/
 struct HIPositionIf: public HIBaseIf{
-	IF_DEF(HIPosition);
+	SPR_IFDEF(HIPosition);
 	virtual Vec3f GetPosition()=0;
 };
 
 /**	@brief	角度入力インタフェース	*/
 struct HIOrientationIf: public HIBaseIf{
-	IF_DEF(HIOrientation);
+	SPR_IFDEF(HIOrientation);
 	virtual Quaternionf GetOrientation()=0;
 };
 
 /**	@brief	姿勢(=位置＋角度)入力インタフェース	*/
 struct HIPoseIf: public HIPositionIf{
-	IF_DEF(HIPose);
+	SPR_IFDEF(HIPose);
 	virtual Quaternionf GetOrientation()=0;
 	virtual Posef GetPose()=0;
 };

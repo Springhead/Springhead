@@ -13,7 +13,7 @@
 namespace Spr{;
 bool UTTypeInfo::Inherit(const char* key) const {
 	if(strcmp(ClassName(),key)==0) return true;
-	UTTypeInfo** pb = base;
+	const UTTypeInfo** pb = base;
 	while(*pb){
 		if ((*pb)->Inherit(key)) return true;
 		++pb;
@@ -26,7 +26,7 @@ bool UTTypeInfo::Inherit(const UTTypeInfo* key) const {
 #else
 	if(this == key) return true;
 #endif
-	UTTypeInfo** pb = base;
+	const UTTypeInfo** pb = base;
 	while(*pb){
 		if ((*pb)->Inherit(key)) return true;
 		++pb;

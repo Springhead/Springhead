@@ -16,8 +16,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHConstraint
-IF_OBJECT_IMP_ABST(PHConstraint, SceneObject);
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //コンストラクタ
 PHConstraint::PHConstraint(){
 	solid[0] = solid[1] = NULL;
@@ -326,8 +324,5 @@ void PHConstraint::IterateCorrectionLCP(){
 		F[j] = Fnew[j];
 	}
 }
-//------------------------------------------------------------------------------------------
-//PHConstraints
-IF_OBJECT_IMP(PHConstraints, SceneObject);
 
 }

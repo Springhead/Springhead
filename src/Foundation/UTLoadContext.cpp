@@ -266,8 +266,6 @@ bool UTLoadedData::FindRoute(UTLoadedDatas& res, UTLoadedData* to, bool upward=t
 
 //---------------------------------------------------------------------------
 //	UTLoadTasks
-OBJECT_IMP(UTLoadTask, NamedObject);
-
 void UTLoadTasks::Execute(UTLoadContext* ctx){
 	for(iterator it = begin(); it!=end(); ++it){
 		(*it)->Execute(ctx);
@@ -757,4 +755,5 @@ void UTLoadContext::RegisterGroupToDb(const char* gp){
 	}
 }
 
+SPR_OBJECTIMP1(UTLoadTask, NamedObject);
 };

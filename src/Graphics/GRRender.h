@@ -15,13 +15,12 @@
 #include <SprGraphics.h>
 #include <Foundation/Scene.h>
 #include "GRFrame.h"
-#include "IfStubGraphics.h"
 
 namespace Spr{;
 
-class GRCamera:public GRVisual, public GRCameraIfInit, public GRCameraDesc{
+class GRCamera:public GRVisual, public GRCameraDesc{
 public:
-	OBJECTDEF(GRCamera, GRVisual);
+	SPR_OBJECTDEF(GRCamera);
 	ACCESS_DESC(GRCamera);
 	UTRef<GRFrameIf> frame;
 	GRCamera(const GRCameraDesc& desc=GRCameraDesc()):GRCameraDesc(desc), frame(NULL){}
@@ -33,9 +32,9 @@ public:
 	virtual void Render(GRRenderIf* render);	
 };
 
-class GRLight :public GRVisual, public GRLightIfInit, public GRLightDesc{
+class GRLight :public GRVisual, public GRLightDesc{
 public:
-	OBJECTDEF(GRLight, GRVisual);
+	SPR_OBJECTDEF(GRLight);
 	ACCESS_DESC(GRLight);
 	GRLight(const GRLightDesc& desc = GRLightDesc()):GRLightDesc(desc){}
 	virtual void Render(GRRenderIf* render);
@@ -43,9 +42,9 @@ public:
 };
 
 /**	@brief	グラフィックスの材質 */
-class GRMaterial :public GRVisual, public GRMaterialIfInit, public GRMaterialDesc{
+class GRMaterial :public GRVisual, public GRMaterialDesc{
 public:
-	OBJECTDEF(GRMaterial, GRVisual);
+	SPR_OBJECTDEF(GRMaterial);
 	ACCESS_DESC(GRMaterial);
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
 	GRMaterial(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p){
@@ -74,9 +73,9 @@ public:
 
 /**	@class	GRRenderBase
     @brief	グラフィックスレンダラー/デバイスの基本クラス　 */
-class GRRenderBase: public Object, public GRRenderBaseIfInit{
+class GRRenderBase: public Object{
 public:
-	OBJECTDEF_ABST(GRRenderBase, Object);
+	SPR_OBJECTDEF_ABST(GRRenderBase);
 	///	ビューポートの設定
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	///	バッファクリア
@@ -177,8 +176,8 @@ public:
 
 /**	@class	GRRender
     @brief	グラフィックスレンダラーの基本クラス（デバイスの切り分け）　 */
-class GRRender: public GRRenderBase, public GRRenderIfInit{
-	OBJECTDEF(GRRender, GRRenderBase);
+class GRRender: public GRRenderBase{
+	SPR_OBJECTDEF(GRRender);
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
 	GRCameraDesc camera;			///<	カメラ
@@ -267,9 +266,9 @@ public:
 
 /**	@class	GRDevice
     @brief	グラフィックス描画の実装　 */
-class GRDevice: public GRRenderBase, public GRDeviceIfInit{
+class GRDevice: public GRRenderBase{
 public:
-	OBJECTDEF_ABST(GRDevice, GRRenderBase);
+	SPR_OBJECTDEF_ABST(GRDevice);
 	virtual void Init(){}
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){

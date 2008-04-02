@@ -22,8 +22,9 @@ public:
 /**	凸多面体の面を表すクラス．CDConvexMesh が所有．
 	CDContactAnalysis で使われる．
 */
-class CDFace: public CDFaceIf{
+class CDFace:public Object{
 public:
+	SPR_OBJECTDEF(CDFace);
 	int vtxs[3];	///< 面の頂点ID
 
 	/// CDFaceの面のインデックス数
@@ -36,11 +37,11 @@ class CDFaces:public std::vector<CDFace>{
 };
 
 ///	凸多面体
-class CDConvexMesh : public CDConvex, public CDConvexMeshIfInit{
+class CDConvexMesh : public CDConvex{
 protected:
 	Vec3f center;
 public:
-	OBJECTDEF(CDConvexMesh, CDConvex);
+	SPR_OBJECTDEF(CDConvexMesh);
 
 	///	探索開始頂点番号
 	mutable int curPos;

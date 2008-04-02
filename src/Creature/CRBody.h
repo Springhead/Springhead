@@ -11,14 +11,13 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief ƒ{ƒfƒB
 */
-class CRBody : public SceneObject, public CRBodyIfInit, public CRBodyDesc {
+class CRBody : public SceneObject, public CRBodyDesc {
 protected:
 	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
 
@@ -50,7 +49,7 @@ protected:
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc);
 
 public:
-	OBJECTDEF(CRBody, SceneObject);
+	SPR_OBJECTDEF(CRBody);
 	ACCESS_DESC(CRBody);
 
 	CRBody(){}

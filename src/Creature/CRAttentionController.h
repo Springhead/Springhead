@@ -11,8 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
-
 #include "CRController.h"
 
 //@{
@@ -20,7 +18,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意コントローラ
 */
-class CRAttentionController : public CRController, public CRAttentionControllerIfInit, public CRAttentionControllerDesc {
+class CRAttentionController : public CRController, public CRAttentionControllerDesc {
 private:
 	/// 内部シーン
 	CRInternalSceneIf*  internalScene;
@@ -29,7 +27,7 @@ private:
 	CRGazeControllerIf* gazeCtrl;
 
 public:
-	OBJECTDEF(CRAttentionController, CRController);
+	SPR_OBJECTDEF(CRAttentionController);
 	ACCESS_DESC(CRAttentionController);
 
 	CRAttentionController(){

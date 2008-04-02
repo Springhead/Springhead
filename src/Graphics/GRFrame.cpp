@@ -10,15 +10,10 @@
 #include "GRMesh.h"
 
 namespace Spr{;
-//-----------------------------------------------------------------
-//	GRVisual
-//
-IF_OBJECT_IMP_ABST(GRVisual, SceneObject);
 
 //-----------------------------------------------------------------
 //	GRFrame
 //
-IF_OBJECT_IMP(GRFrame, GRVisual);
 GRFrame::GRFrame(const GRFrameDesc& desc):GRFrameDesc(desc){
 	parent = NULL;
 
@@ -108,7 +103,6 @@ void GRFrame::Print(std::ostream& os) const {
 //-----------------------------------------------------------------
 //	GRDummyFrame
 //
-IF_OBJECT_IMP(GRDummyFrame, GRVisual);
 GRDummyFrame::GRDummyFrame(const GRDummyFrameDesc& desc):GRDummyFrameDesc(desc){	
 }
 
@@ -138,7 +132,6 @@ ObjectIf* GRDummyFrame::GetChildObject(size_t pos){
 //-----------------------------------------------------------------
 //	GRAnimation
 //
-IF_OBJECT_IMP(GRAnimation, SceneObject);
 void GRAnimation::BlendPose(float time, float weight){
 	//	ターゲットに変換を加える
 	Affinef transform;
@@ -219,7 +212,6 @@ bool GRAnimation::AddChildObject(ObjectIf* o){
 //-----------------------------------------------------------------
 //	GRAnimationSet
 //
-IF_OBJECT_IMP(GRAnimationSet, SceneObject);
 bool GRAnimationSet::AddChildObject(ObjectIf* o){
 	GRAnimation* ani = o->Cast();
 	if (ani){
@@ -266,7 +258,6 @@ void GRAnimationSet::LoadInitialPose(){
 }
 
 
-IF_OBJECT_IMP(GRAnimationController, SceneObject);
 bool GRAnimationController::AddChildObject(ObjectIf* o){
 	GRAnimationSet* ani = o->Cast();
 	if (ani){

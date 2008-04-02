@@ -16,7 +16,6 @@ namespace Spr{
 
 //----------------------------------------------------------------------------
 //	PHFrame
-IF_OBJECT_IMP(PHFrame, NamedObject);
 PHFrame::PHFrame():shape(NULL), solid(NULL){
 }
 PHFrame::PHFrame(const PHFrameDesc& desc):PHFrameDesc(desc), shape(NULL), solid(NULL){
@@ -54,8 +53,6 @@ void PHFrame::SetPose(Posed p){
 
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
-IF_OBJECT_IMP(PHSolid, SceneObject);
-
 PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	integrationMode = PHINT_SIMPLETIC;
 	inertia_inv = inertia.inv();
@@ -349,9 +346,10 @@ PHFrameIf* PHSolid::GetFrame(int i){
 }
 void PHSolid::AddFrame(PHFrameIf* fi){
 	PHFrame* f = fi->Cast();
+	assert(f);
 	if (f->shape){
 		CDShape* sh = DCAST(CDShape, f->shape);
-		for(int i=0; i<frames.size(); ++i){
+		for(unsigned i=0; i<frames.size(); ++i){
 			if (frames[i]->shape == sh){
 				DSTR << sh->GetName() << "warning : yPHSolid::AddFrame(CDShapeIf* shape)zTried Adding the same shape twice. Skip registration." << std::endl;
 				return;
@@ -371,7 +369,7 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 }
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
-	for(int i=0; i<frames.size(); ++i){
+	for(unsigned i=0; i<frames.size(); ++i){
 		if (frames[i]->shape == sh){
 			DSTR << sh->GetName() << "warning : yPHSolid::AddShape(CDShapeIf* shape)zTried Adding the same shape twice. Skip registration." << std::endl;
 			return;
@@ -412,8 +410,6 @@ void PHSolid::AfterSetDesc(){
 //----------------------------------------------------------------------------
 //	PHSolidContainer
 //
-OBJECT_IMP(PHSolidContainer, PHEngine);
-
 PHSolidContainer::PHSolidContainer(){
 }
 
@@ -451,7 +447,6 @@ void PHSolidContainer::Step(){
 //----------------------------------------------------------------------------
 //	PHSolidInitializer
 //
-OBJECT_IMP(PHSolidInitializer, PHEngine);
 void PHSolidInitializer::Step(){
 		container->Reset();	
 }

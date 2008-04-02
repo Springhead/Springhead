@@ -12,8 +12,6 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CREseWalkingController, CRController);
-
 void CREseWalkingController::Init(){
 	CRController::Init();
 

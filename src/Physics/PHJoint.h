@@ -13,9 +13,9 @@
 
 namespace Spr{;
 
-class PHJoint : public PHConstraint, public PHJointIfInit{
+class PHJoint : public PHConstraint{
 public:
-	OBJECTDEF_ABST(PHJoint, PHConstraint);
+	SPR_OBJECTDEF_ABST(PHJoint);
 	
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
@@ -42,9 +42,9 @@ public:
 	}
 };
 
-class PHJoint1D : public PHJointND<1>, public PHJoint1DIfInit{
+class PHJoint1D : public PHJointND<1>{
 public:
-	OBJECTDEF_ABST(PHJoint1D, PHJoint);
+	SPR_OBJECTDEF_ABST(PHJoint1D);
 	
 	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
 	double	lower, upper;				///< 可動範囲の下限、上限

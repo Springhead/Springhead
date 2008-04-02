@@ -4,7 +4,6 @@
 #include <Springhead.h>
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
-#include <HumanInterface/HIBase.h>
 #include <gl/glut.h>
 
 using namespace Spr;
@@ -93,6 +92,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード
 	app->GetSdk()->LoadScene("save.x");
+	app->GetSdk()->SaveScene("save2.x");
 	
 	//	ロードしたシーンをウィンドウ２に表示するように設定
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";

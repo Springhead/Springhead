@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include <vector>
 
@@ -21,7 +20,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief クリーチャの実装
 */
-class CRCreature : public SceneObject, public CRCreatureIfInit, public CRCreatureDesc {
+class CRCreature : public SceneObject, public CRCreatureDesc {
 
 protected:
 	/** @brief 感覚系
@@ -41,7 +40,7 @@ protected:
 	std::vector< UTRef<CRBodyIf> > body;
 
 public:
-	OBJECTDEF(CRCreature, SceneObject);
+	SPR_OBJECTDEF(CRCreature);
 	ACCESS_DESC(CRCreature);
 
 	CRCreature(){

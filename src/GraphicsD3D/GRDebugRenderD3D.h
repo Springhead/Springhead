@@ -19,7 +19,7 @@ namespace Spr{;
 /**	@class	GRDebugRenderD3D
     @brief	DirectXのデバッグ情報レンダラーの実装　 */
 class GRDebugRenderD3D:public GRDebugRender, public GRDebugRenderD3DIfInit{
-	OBJECTDEF(GRDebugRenderD3D, GRDebugRender);
+	SPR_OBJECTDEF(GRDebugRenderD3D, GRDebugRender);
 public:
 	/**  シーン内の全てのオブジェクトをレンダリングする
 	     @param  scene		シーン  */

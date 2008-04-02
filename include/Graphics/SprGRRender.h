@@ -35,7 +35,7 @@ public:
 	unsigned long color;	///<	フォントの色
 	bool bItalic;			///<	イタリック体
 	GRFont(int h=20, const char* f=NULL){
-		height=h; width=0;
+		height=h; width;
 		face=f ? f : "";
 		weight = 400; color=0xffffffff; bItalic=false;
 	}
@@ -60,11 +60,11 @@ public:
 	
 /** @brief 光源のインタフェース		*/
 struct GRLightIf: public GRVisualIf{
-	IF_DEF(GRLight);
+	SPR_IFDEF(GRLight);
 };
 /**	@brief	光源		*/
 struct GRLightDesc : GRVisualDesc{
-	DESC_DEF_FOR_OBJECT(GRLight);
+	SPR_DESCDEF(GRLight);
     Vec4f ambient;		///<	環境光
     Vec4f diffuse;		///<	拡散光
     Vec4f specular;		///<	鏡面光
@@ -108,12 +108,12 @@ struct GRLightDesc : GRVisualDesc{
 
 /** @brief　材質のインタフェース　　	*/
 struct GRMaterialIf: public GRVisualIf{
-	IF_DEF(GRMaterial);
-	virtual bool IsOpaque() const = 0;
+	SPR_IFDEF(GRMaterial);
+	bool IsOpaque() const;
 };
 /**	@brief	材質	*/
 struct GRMaterialDesc : GRVisualDesc{
-	DESC_DEF_FOR_OBJECT(GRMaterial);
+	SPR_DESCDEF(GRMaterial);
 	Vec4f ambient;					///<	環境光に対する反射率
 	Vec4f diffuse;					///<	拡散光に対する反射率
 	Vec4f specular;					///<	鏡面光に対する反射率
@@ -147,13 +147,13 @@ struct GRFrameIf;
 struct GRCameraDesc;
 ///	カメラのインタフェース
 struct GRCameraIf: public GRVisualIf{
-	IF_DEF(GRCamera);
-	virtual GRFrameIf* GetFrame()=0;
-	virtual void SetFrame(GRFrameIf* fr)=0;
+	SPR_IFDEF(GRCamera);
+	GRFrameIf* GetFrame();
+	void SetFrame(GRFrameIf* fr);
 };
 /**	@brief	カメラの情報			*/
 struct GRCameraDesc : GRVisualDesc{
-	DESC_DEF_FOR_OBJECT(GRCamera);
+	SPR_DESCDEF(GRCamera);
 	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
 	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
@@ -167,7 +167,7 @@ typedef unsigned GRHandler;
 
 /**	@brief	グラフィックスレンダラーのインタフェース（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
-	IF_DEF(GRRenderBase);
+	SPR_IFDEF(GRRenderBase);
 
 	///	プリミティブの種類
 	enum TPrimitiveType {
@@ -222,142 +222,142 @@ struct GRRenderBaseIf: public ObjectIf{
 	/** @} */
 
 	///	ビューポートの設定
-	virtual void SetViewport(Vec2f pos, Vec2f sz)=0;
+	void SetViewport(Vec2f pos, Vec2f sz);
 	///	バッファクリア
-	virtual void ClearBuffer()=0;
+	void ClearBuffer();
 	///	レンダリングの開始前に呼ぶ関数
-	virtual void BeginScene()=0;
+	void BeginScene();
 	///	レンダリングの終了後に呼ぶ関数
-	virtual void EndScene()=0;
+	void EndScene();
 	///	カレントの視点行列をafvで置き換える
-	virtual void SetViewMatrix(const Affinef& afv)=0;
+	void SetViewMatrix(const Affinef& afv);
 	///	カレントの投影行列をafpで置き換える
-	virtual void SetProjectionMatrix(const Affinef& afp)=0;
+	void SetProjectionMatrix(const Affinef& afp);
 	///	カレントの投影行列を取得する
-	virtual void GetProjectionMatrix(const Affinef& afp)=0;
+	void GetProjectionMatrix(const Affinef& afp);
 	///	カレントのモデル行列をafwで置き換える
-	virtual void SetModelMatrix(const Affinef& afw)=0;
+	void SetModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列に対してafwを掛ける
-	virtual void MultModelMatrix(const Affinef& afw)=0;
+	void MultModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列をモデル行列スタックへ保存する
-	virtual void PushModelMatrix()=0;
+	void PushModelMatrix();
 	///	モデル行列スタックから取り出し、カレントのモデル行列とする
-	virtual void PopModelMatrix()=0;
+	void PopModelMatrix();
 	/// ブレンド変換行列の全要素を削除する
-	virtual void ClearBlendMatrix()=0;
+	void ClearBlendMatrix();
 	/// ブレンド変換行列を設定する
-	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id=0)=0;
+	bool SetBlendMatrix(const Affinef& afb, unsigned int id=0);
 	///	頂点フォーマットの指定
-	virtual void SetVertexFormat(const GRVertexElement* e)=0;
+	void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
-	virtual void SetVertexShader(void* shader){}
+	void SetVertexShader(void* shader);
 	///	頂点を指定してプリミティブを描画
-	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0)=0;
+	void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	///	頂点とインデックスを指定してプリミティブを描画
-	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0)=0;
+	void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
+	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count);
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}	///	球体を描画
+	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count);	///	球体を描画
 	/// 球体を描画
-	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true)=0;
+	void DrawSphere(float radius, int slices, int stacks, bool solid=true);
 	/// 円錐の描画
-	virtual void DrawCone(float radius, float height, int slice, bool solid=true)=0;
+	void DrawCone(float radius, float height, int slice, bool solid=true);
 	/// 円筒の描画
-	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true)=0;
+	void DrawCylinder(float radius, float height, int slice, bool solid=true);
 	
 	
 	///	DiplayList の作成(記録開始)
-	virtual int StartList()=0;
+	int StartList();
 	///	DiplayList の終了(記録終了)
-	virtual void EndList()=0;
+	void EndList();
 	///	DisplayListの表示
-	virtual void DrawList(int i)=0;
+	void DrawList(int i);
 	///	DisplayListの解放
-	virtual void ReleaseList(int i)=0;
+	void ReleaseList(int i);
 	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
-	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0)=0;
+	void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0);
 	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
-	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0)=0;
+	void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0);
 	///	描画の材質の設定
-	virtual void SetMaterial(const GRMaterialDesc& mat)=0;
-	virtual void SetMaterial(const GRMaterialIf* mat)=0;
+	void SetMaterial(const GRMaterialDesc& mat);
+	void SetMaterial(const GRMaterialIf* mat);
 	///	描画する点・線の太さの設定
-	virtual void SetLineWidth(float w)=0;
+	void SetLineWidth(float w);
 	///	光源スタックをPush
-	virtual void PushLight(const GRLightDesc& light)=0;
-	virtual void PushLight(const GRLightIf* light)=0;
+	void PushLight(const GRLightDesc& light);
+	void PushLight(const GRLightIf* light);
 	///	光源スタックをPop
-	virtual void PopLight()=0;
+	void PopLight();
 	///	デプスバッファへの書き込みを許可/禁止する
-	virtual void SetDepthWrite(bool b)=0;
+	void SetDepthWrite(bool b);
 	///	デプステストを有効/無効にする
-	virtual void SetDepthTest(bool b)=0;
+	void SetDepthTest(bool b);
 	///	デプスバッファ法に用いる判定条件を指定する
-	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f)=0;
+	void SetDepthFunc(GRRenderBaseIf::TDepthFunc f);
 	/// アルファブレンディングを有効/無効にする
-	virtual void SetAlphaTest(bool b)=0;
+	void SetAlphaTest(bool b);
 	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
-	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)=0;
+	void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
 	///	シェーディングON(glMaterial) or OFF（glColor)
-	virtual void SetLighting(bool l)=0;
+	void SetLighting(bool l);
 	/// テクスチャのロード（戻り値：テクスチャID）
-	virtual unsigned int LoadTexture(const std::string filename)=0;
+	unsigned int LoadTexture(const std::string filename);
 	/// テクスチャ画像の設定
 	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb)=0;
 	/// シェーダの初期化
-	virtual void InitShader()=0;
+	void InitShader();
 	/// シェーダフォーマットの設定
-	virtual void SetShaderFormat(GRShaderFormat::ShaderType type)=0;
+	void SetShaderFormat(GRShaderFormat::ShaderType type);
 	/// シェーダオブジェクトの作成
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader)=0;
+	bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
 	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
-	virtual GRHandler CreateShader()=0;
+	GRHandler CreateShader();
 	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
-	virtual bool ReadShaderSource(GRHandler shader, std::string file)=0;	
+	bool ReadShaderSource(GRHandler shader, std::string file);	
 	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
-	virtual void GetShaderLocation(GRHandler shader, void* location)=0;	
+	void GetShaderLocation(GRHandler shader, void* location);	
 };
 
 /**	@brief	グラフィックスレンダラーのインタフェース（デバイスの設定、カメラの設定） */
 struct GRRenderIf: public GRRenderBaseIf{
-	IF_DEF(GRRender);
+	SPR_IFDEF(GRRender);
 	///	デバイスの設定
-	virtual void SetDevice(GRDeviceIf* dev)=0;
+	void SetDevice(GRDeviceIf* dev);
 	///	デバイスの取得
 	virtual GRDeviceIf* GetDevice()=0;
 	///	カメラの設定
-	virtual void SetCamera(const GRCameraDesc& cam)=0;
+	void SetCamera(const GRCameraDesc& cam);
 	///	カメラの設定
-	virtual const GRCameraDesc& GetCamera()=0;
+	const GRCameraDesc& GetCamera();
 	///	スクリーン(ウィンドウ)サイズ変更時のViewportと射影行列を設定
-	virtual void Reshape(Vec2f pos, Vec2f screenSize)=0;
+	void Reshape(Vec2f pos, Vec2f screenSize);
 };
 
 /**	@brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */
 struct GRDeviceIf: public GRRenderBaseIf{
-	IF_DEF(GRDevice);
+	SPR_IFDEF(GRDevice);
 	///	初期化
-	virtual void Init()=0;
+	void Init();
 	///	デバッグ用の状態レポート
-	virtual void Print(std::ostream& os) const=0;
+	void Print(std::ostream& os) const;
 };
 
 /**	@brief	OpenGLのレンダラー基本クラス */
 struct GRDeviceGLIf: public GRDeviceIf{
-	IF_DEF(GRDeviceGL);
+	SPR_IFDEF(GRDeviceGL);
 };
 
 /**	@brief	DirectXのレンダラー基本クラス */
 /*
 struct GRDeviceD3DIf: public GRDeviceIf{
-	IF_DEF(GRDeviceD3D);
+	SPR_IFDEF(GRDeviceD3D);
 };
 */
 
 /**	@brief	デバッグ情報レンダラーのインタフェース */
 struct GRDebugRenderIf:public GRRenderIf{
-	IF_DEF(GRDebugRender);
+	SPR_IFDEF(GRDebugRender);
 	///	レンダラーで用意してある材質(24種類)
 	enum TMaterialSample {
 		RED,
@@ -389,17 +389,17 @@ struct GRDebugRenderIf:public GRRenderIf{
 
 	/**  @brief シーン内の全てのオブジェクトをレンダリングする
 	     @param  scene		シーン  */
-	virtual void DrawScene(PHSceneIf* scene)=0;
+	void DrawScene(PHSceneIf* scene);
 
 	/** @brief シーンのWorld座標系の座標軸をレンダリングする
 		@param  scene		シーン
 	*/
 	// 引数が冗長な気がしなくもないです・・・　		toki
-	virtual void DrawWorldAxis(PHSceneIf* scene) = 0;
+	void DrawWorldAxis(PHSceneIf* scene);
 
 	/**  @brief 剛体をレンダリングする
 	     @param	solid　　　	剛体  */
-	virtual void DrawSolid(PHSolidIf* solid)=0;
+	void DrawSolid(PHSolidIf* solid);
 	
 	/**  @brief 面をレンダリングをする
 		 @param	face　　　	面  
@@ -407,27 +407,30 @@ struct GRDebugRenderIf:public GRRenderIf{
 	//
 	// APIとして公開するのは変では？	tazz
 	//
-	//virtual void DrawFace(CDFaceIf* face, Vec3f * base)=0;
+	//void DrawFace(CDFaceIf* face, Vec3f * base);
 	
 	/**  @brief 指定したマテリアルを割り当てる
 	     @param matname		マテリアルサンプル  */
-	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname)=0;
+	void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
 
 	/**	 @brief 描画モードの設定
 		 @param solid 面描画
 		 @param wire ワイヤ描画
 	 */
-	virtual void SetRenderMode(bool solid = true, bool wire = false) = 0;
+	void SetRenderMode(bool solid = true, bool wire = false);
 	
 	/**	 @brief 各関節の座標軸の描画 */
-	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f) = 0;
+	void EnableRenderAxis(bool enable = true, float scale = 1.0f);
 
 	/**  @brief 各関節の力の描画 */
-	virtual void EnableRenderForce(bool enable = true, float scale = 1.0f) = 0;
+	void EnableRenderForce(bool enable = true, float scale = 1.0f);
 
 	/**  @brief 接触面の描画 */
-	virtual void EnableRenderContact(bool enable = true) = 0;
-
+	void EnableRenderContact(bool enable = true);
+	///	面の描画(塗りつぶしあり)
+	void DrawFaceSolid(CDFaceIf* face, Vec3f * base);
+	///	面の描画(ワイヤフレーム)	
+	void DrawFaceWire(CDFaceIf* face, Vec3f * base);
 };
 
 //@}

@@ -14,8 +14,6 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRNeckController, CRController);
-
 void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 	this->pos = pos;
 	this->vel = vel;

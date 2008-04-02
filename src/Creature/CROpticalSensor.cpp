@@ -12,8 +12,6 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CROpticalSensor, CRSensor);
-
 void CROpticalSensor::Init(){
 	CRSensor::Init();
 

@@ -12,8 +12,6 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRSensor, SceneObject);
-
 void CRSensor::Init(){
 	phScene = DCAST(PHSceneIf, GetScene());
 }

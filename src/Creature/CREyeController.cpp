@@ -229,8 +229,6 @@ Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CREyeController, CRController);
-
 void CREyeController::LookAt(Vec3f pos, Vec3f vel){
 	physicalEye.SetTarget(pos, vel);
 }

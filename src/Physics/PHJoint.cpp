@@ -16,15 +16,12 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHJoint
-IF_OBJECT_IMP_ABST(PHJoint, PHConstraint);
 PHJoint::PHJoint(){
 }
 
 
 //----------------------------------------------------------------------------
 // PHJoint1D
-IF_OBJECT_IMP_ABST(PHJoint1D, PHJoint);
-
 PHJoint1D::PHJoint1D(){
 	
 }	

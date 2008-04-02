@@ -21,8 +21,6 @@ const double epsilon2 = epsilon*epsilon;
 
 //----------------------------------------------------------------------------
 //	CDBox
-IF_OBJECT_IMP(CDBox, CDConvex);	
-
 CDBox::CDBox() {
 }
 
@@ -171,7 +169,7 @@ Vec3f* CDBox::GetVertices(){
 }
 
 CDFaceIf* CDBox::GetFace(size_t i){
-	return &qfaces.at(i);
+	return qfaces.at(i).Cast();
 }
 
 // íºï˚ëÃÇÃÉTÉCÉYÇê›íË

@@ -52,7 +52,6 @@ void SPR_CDECL GRSdkIf::RegisterSdk(){
 
 //----------------------------------------------------------------------------
 //	GRSdk
-IF_OBJECT_IMP(GRSdk, Sdk);
 GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 	GRSdkIf::RegisterSdk();
 }

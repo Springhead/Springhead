@@ -14,8 +14,6 @@
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRInternalSceneObject, SceneObject);
-
 bool CRInternalSceneObject::IsA(const char* typestr){
 	if (type) {
 		std::string mytype(type);
@@ -44,8 +42,6 @@ void CRInternalSceneObject::SetPos(Vec3d pos){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRISAttractiveObject, CRInternalSceneObject);
-
 float CRISAttractiveObject::GetTotalAttractiveness(){
 	return (float)(bottomupAttr + (topdownAttr * (1.0 - uncertainty)) + (unknownAttr * uncertainty));
 }
@@ -78,8 +74,6 @@ float CRISAttractiveObject::GetUncertainty(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRISTravelPotentialObject, CRInternalSceneObject);
-
 Vec2f CRISTravelPotentialObject::GetStrengthCoeff(){
 	return strength;
 }
@@ -124,8 +118,6 @@ bool CRInternalScene::LargerAttention(const CRInternalSceneObject* a, const CRIn
 		return true;
 	}
 }
-
-IF_OBJECT_IMP(CRInternalScene, SceneObject);
 
 void CRInternalScene::Step(){
 	for (unsigned int i=0; i<sceneObjects.size(); i++) {

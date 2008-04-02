@@ -34,22 +34,26 @@ namespace Spr{;
 
 ///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
-	IF_DEF(CDShape);
-	virtual float CalcVolume()=0;				///	体積を計算
-	virtual Matrix3f CalcMomentOfInertia()=0;	///	断面二次モーメント
+	SPR_IFDEF(CDShape);
+	float CalcVolume();				///	体積を計算
+	Matrix3f CalcMomentOfInertia();	///	断面二次モーメント
 };
 
 ///	凸形状の基本クラス
 struct CDConvexIf : public CDShapeIf{
-	IF_DEF(CDConvex);
+	SPR_IFDEF(CDConvex);
 };
 
 /**	面	*/
-struct CDFaceIf{
-	virtual int NIndex()=0;
-	virtual int* GetIndices()=0;
-protected:
-	virtual ~CDFaceIf() {};
+struct CDFaceIf: public ObjectIf{
+	SPR_IFDEF(CDFace);
+	int NIndex();
+	int* GetIndices();
+};
+struct CDQuadFaceIf: public ObjectIf{
+	SPR_IFDEF(CDQuadFace);
+	int NIndex();
+	int* GetIndices();
 };
 
 
@@ -71,27 +75,27 @@ struct CDShapeDesc{
 
 /**	凸形状のメッシュ*/
 struct CDConvexMeshIf: public CDConvexIf{
-	IF_DEF(CDConvexMesh);
-	virtual CDFaceIf* GetFace(size_t i)=0;
-	virtual size_t NFace()=0;
-	virtual Vec3f* GetVertices()=0;
-	virtual size_t NVertex()=0;
+	SPR_IFDEF(CDConvexMesh);
+	CDFaceIf* GetFace(size_t i);
+	size_t NFace();
+	Vec3f* GetVertices();
+	size_t NVertex();
 };
 /**	凸形状のメッシュのディスクリプタ	*/	
 struct CDConvexMeshDesc: public CDShapeDesc{
-	DESC_DEF_FOR_OBJECT(CDConvexMesh);
+	SPR_DESCDEF(CDConvexMesh);
 	CDConvexMeshDesc():CDShapeDesc(){}
 	std::vector<Vec3f> vertices;	///<	頂点の座標
 };
 	
 /** 球体　*/
 struct CDSphereIf: public CDConvexIf{
-	IF_DEF(CDSphere);
-	virtual float GetRadius()=0;
+	SPR_IFDEF(CDSphere);
+	float GetRadius();
 };	
 /** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
-	DESC_DEF_FOR_OBJECT(CDSphere);
+	SPR_DESCDEF(CDSphere);
 	CDSphereDesc():CDShapeDesc(){
 		radius = 1.0f;
 	}
@@ -100,13 +104,13 @@ struct CDSphereDesc: public CDShapeDesc{
 
 /** カプセル　*/
 struct CDCapsuleIf: public CDConvexIf{
-	IF_DEF(CDCapsule);
-	virtual float GetRadius()=0;
-	virtual float GetLength()=0;
+	SPR_IFDEF(CDCapsule);
+	float GetRadius();
+	float GetLength();
 };	
 /** カプセルのディスクリプタ　*/
 struct CDCapsuleDesc: public CDShapeDesc{
-	DESC_DEF_FOR_OBJECT(CDCapsule);
+	SPR_DESCDEF(CDCapsule);
 	CDCapsuleDesc():CDShapeDesc(){
 		radius = 1.0f;
 		length = 1.0f;
@@ -118,15 +122,15 @@ struct CDCapsuleDesc: public CDShapeDesc{
 	
 /** 直方体 */
 struct CDBoxIf: public CDConvexIf{
-	IF_DEF(CDBox);
-	virtual Vec3f GetBoxSize()=0;
-	virtual Vec3f* GetVertices()=0;
-	virtual CDFaceIf* GetFace(size_t i)=0;
-	virtual Vec3f SetBoxSize(Vec3f boxsize)=0;
+	SPR_IFDEF(CDBox);
+	Vec3f GetBoxSize();
+	Vec3f* GetVertices();
+	CDFaceIf* GetFace(size_t i);
+	Vec3f SetBoxSize(Vec3f boxsize);
 };
 /** 直方体のディスクリプタ */
 struct CDBoxDesc: public CDShapeDesc{
-	DESC_DEF_FOR_OBJECT(CDBox);
+	SPR_DESCDEF(CDBox);
 	CDBoxDesc():CDShapeDesc(){
 		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
 	}

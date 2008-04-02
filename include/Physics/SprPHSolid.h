@@ -21,10 +21,10 @@ namespace Spr{;
 struct PHFrameDesc{
 	Posed pose;
 };
-struct PHFrameIf: public NamedObjectIf{
-	IF_DEF(PHFrame);
-	virtual Posed GetPose()=0;
-	virtual void SetPose(Posed p)=0;
+struct PHFrameIf: public SceneObjectIf{
+	SPR_IFDEF(PHFrame);
+	Posed GetPose();
+	void SetPose(Posed p);
 };
 
 
@@ -57,192 +57,192 @@ struct PHSolidDesc: public PHSolidState{
 struct CDShapeIf; 
 ///	剛体のインタフェース
 struct PHSolidIf : public SceneObjectIf{
-	IF_DEF(PHSolid);
+	SPR_IFDEF(PHSolid);
 
 	/** @brief 力を質量中心に加える
 		@param f 力
 	 */
-	virtual void AddForce(Vec3d f)=0;
+	void AddForce(Vec3d f);
 	
 	/** @brief トルクを加える
 		@param t トルク
 	 */
-	virtual void AddTorque(Vec3d t)=0;
+	void AddTorque(Vec3d t);
 	
 	/**	@brief 力を指定した作用点に加える
 		@param f 力
 		@param r シーン座標系で表わした作用点の位置
 	 */
-	virtual void AddForce(Vec3d f, Vec3d r)=0;
+	void AddForce(Vec3d f, Vec3d r);
 
 	/**	@brief 質量を取得する
 		@return 質量
 	 */
-	virtual double		GetMass()=0;
+	double		GetMass();
 	
 	/** @brief 質量の逆数を取得する
 		@return 質量の逆数
 	 */
-	virtual double		GetMassInv()=0;
+	double		GetMassInv();
 	
 	/** @brief 質量を設定する
 		@param m 質量
 	 */
-	virtual void		SetMass(double m)=0;
+	void		SetMass(double m);
 	
 	/** @brief 質量中心を取得する
 		@return 質量中心の位置
 	 */
-	virtual Vec3d		GetCenterOfMass()=0;
+	Vec3d		GetCenterOfMass();
 	
 	/** @brief 質量中心を設定する
 		@param center 質量中心の位置
 	 */
-	virtual void		SetCenterOfMass(const Vec3d& center)=0;
+	void		SetCenterOfMass(const Vec3d& center);
 	
 	/** @brief 慣性テンソルを取得する
 		@return 慣性テンソル
 	 */
-	virtual Matrix3d	GetInertia()=0;
+	Matrix3d	GetInertia();
 	
 	/** @brief 慣性テンソルの逆数を取得する
 		@return 慣性テンソルの逆数
 	 */
-	virtual Matrix3d	GetInertiaInv()=0;
+	Matrix3d	GetInertiaInv();
 	
 	/** @brief 慣性テンソルを設定する
 		@param I 慣性テンソル
 	 */
-	virtual void		SetInertia(const Matrix3d& I)=0;
+	void		SetInertia(const Matrix3d& I);
 	
 	/** @brief 剛体の位置を取得する
 		@return シーンに対する剛体フレーム原点の位置
 	 */
-	virtual Vec3d		GetFramePosition() const =0;
+	Vec3d		GetFramePosition() const;
 	
 	/** @brief 剛体の位置を設定する
 		@param p シーンに対する剛体フレーム原点の位置
 	 */
-	virtual void		SetFramePosition(const Vec3d& p) =0;
+	void		SetFramePosition(const Vec3d& p);
 	
 	/** @brief 剛体の質量中心の位置を取得する
 		@return シーンに対する剛体の質量中心の位置
 	 */
-	virtual Vec3d		GetCenterPosition() const  =0;
+	Vec3d		GetCenterPosition() const ;
 	
 	/** @brief 剛体の位置を設定する
 		@param p シーンに対する剛体の質量中心の位置
 	 */
-	virtual void		SetCenterPosition(const Vec3d& p) =0;
+	void		SetCenterPosition(const Vec3d& p);
 	
 	/** @brief 剛体の前のステップからの並進移動量を返す
 		@return 前のステップからの並進移動量
 	 */
-	virtual Vec3d GetDeltaPosition(const Vec3d& p) const = 0;
+	Vec3d GetDeltaPosition(const Vec3d& p) const;
 
 	/** @brief 剛体の前のステップからの並進移動量を返す．
 		@param pos 重心からの相対位置．この位置の並進移動量を返す．
 		@return 前のステップからの並進移動量
 	*/
-	virtual Vec3d GetDeltaPosition() const = 0;
+	Vec3d GetDeltaPosition() const;
 
 	/** @brief 剛体の向きを取得する
 		@return シーンに対する剛体の向き
 	 */
-	virtual Quaterniond GetOrientation() const =0;
+	Quaterniond GetOrientation() const;
 	
 	/** @brief 剛体の向きを設定する
 		@param q シーンに対する剛体の向き
 	 */
-	virtual void		SetOrientation(const Quaterniond& q) =0;
+	void		SetOrientation(const Quaterniond& q);
 
 	/** @brief 剛体の位置と向きを取得する
 		@return シーンに対する剛体の位置と向き
 	 */
-	virtual Posed		GetPose() const = 0;
+	Posed		GetPose() const;
 	
 	/** @brief 剛体の位置を取得する
 		@return シーンに対する剛体の位置
 	*/
-	virtual Vec3d		GetPoseR() const = 0;
+	Vec3d		GetPoseR() const;
 
 	/** @brief	剛体の向きを取得する
 	*/
-	virtual Quaterniond GetPoseQ() const = 0;
+	Quaterniond GetPoseQ() const;
 
 	/** @brief 剛体の位置と向きを設定する
 		@param p シーンに対する剛体の位置と向き
 	 */
-	virtual void		SetPose(const Posed& p) = 0;
+	void		SetPose(const Posed& p);
 
 	/** @brief 剛体の速度を取得する
 		@return シーンに対する剛体の質量中心の速度
 	 */
-	virtual Vec3d		GetVelocity() const  =0;
+	Vec3d		GetVelocity() const ;
 
 	/** @brief 剛体の速度を設定する
 		@param v シーンに対する剛体の質量中心の速度
 	 */
-	virtual void		SetVelocity(const Vec3d& v) =0;
+	void		SetVelocity(const Vec3d& v);
 	/** @brief 剛体の角速度を取得する
 		@return シーンに対する剛体の角速度
 	 */
-	virtual Vec3d		GetAngularVelocity() const =0;
+	Vec3d		GetAngularVelocity() const;
 	
     /** @brief 剛体の角速度を設定する
 		@param av シーンに対する剛体の角速度
 	 */
-	virtual void		SetAngularVelocity(const Vec3d& av)=0;
+	void		SetAngularVelocity(const Vec3d& av);
     /** @brief 最後のステップで剛体に加わった力を取得する。
 		@return 剛体に加えられた力(World系)
 	*/
-	virtual Vec3d GetForce() const=0;
+	Vec3d GetForce() const;
     /** @brief 最後のステップで剛体に加わったトルクを取得する。
 		@return 剛体に加えられたトルク(World系、剛体の重心周り)
 	*/
-	virtual Vec3d GetTorque() const=0;
+	Vec3d GetTorque() const;
 	/** @brief 剛体に形状を登録する
 		@param shape 形状へのポインタ
 	 */
-	virtual void		AddShape(CDShapeIf* shape)=0;
+	void		AddShape(CDShapeIf* shape);
 	/** @brief 登録されている形状の個数を取得する
 		@return 形状の個数
 	 */
-	virtual int			NShape()=0;
+	int			NShape();
 	/**	@brief 登録されている形状を取得する
 		@param index 形状のインデックス
 		@return 形状へのポインタ
 		最初に登録された形状のインデックスは0，その次に登録された形状のインデックスは1，
 		以下同様．
 	 */
-	virtual CDShapeIf*	GetShape(int index)=0;
+	CDShapeIf*	GetShape(int index);
 	/** @brief 形状の位置と向きを取得する
 		@param index 対象とする形状のインデックス
 		@return 剛体に対する形状の位置と向き
 		インデックスについてはGetShapeを参照．
 	 */
-	virtual Posed		GetShapePose(int index)=0;
+	Posed		GetShapePose(int index);
 	/** @brief 形状の位置と向きを設定する
 		@param index 対象とする形状のインデックス
 		@param pose 剛体に対する形状の位置と向き
 		インデックスについてはGetShapeを参照．
 	 */
-	virtual void		SetShapePose(int index, const Posed& pose)=0;
+	void		SetShapePose(int index, const Posed& pose);
 	
 	/** @brief 重力を有効/無効化する
 		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
 	 */
-	virtual void		SetGravity(bool bOn)=0;
+	void		SetGravity(bool bOn);
 	/** @brief 物理法則に従うかどうかを有効/無効化する
 		@param bOn trueならば剛体は物理法則にしたがって運動する．
 		物理法則に従わない剛体も，SetPose，SetVelocityなどの関数による位置や速度の更新は
 		可能です．
 	 */
-	virtual void		SetDynamical(bool bOn)=0;
+	void		SetDynamical(bool bOn);
 	/** @brief 物理法則に従うかどうかを取得する
 		@return trueならば剛体は物理法則にしたがって運動する．
 	 */
-	virtual bool		IsDynamical()=0;
+	bool		IsDynamical();
 };
 
 //@}

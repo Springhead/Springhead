@@ -16,29 +16,29 @@ namespace Spr{;
 class UTTypeDescDb;
 ///	ファイルローダ・セーバ
 struct FIFileIf: public ObjectIf{
-	IF_DEF(FIFile);
+	SPR_IFDEF(FIFile);
 	///	ロード
-	virtual bool Load(ObjectIfs& objs, const char* fn)=0;
+	bool Load(ObjectIfs& objs, const char* fn);
 	///	セーブ
-	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
+	bool Save(const ObjectIfs& objs, const char* fn);
 };
 
 ///	DirectXファイルのファイルローダとセーバ
 struct FIFileXIf: public FIFileIf{
-	IF_DEF(FIFileX);
+	SPR_IFDEF(FIFileX);
 	///	ロード
-	virtual bool Load(ObjectIfs& objs, const char* fn)=0;
+	bool Load(ObjectIfs& objs, const char* fn);
 	///	セーブ
-	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
+	bool Save(const ObjectIfs& objs, const char* fn);
 };
 
 ///	COLLADAファイルのファイルローダとセーバ
 struct FIFileCOLLADAIf: public FIFileIf{
-	IF_DEF(FIFileCOLLADA);
+	SPR_IFDEF(FIFileCOLLADA);
 	///	ロード
-	virtual bool Load(ObjectIfs& objs, const char* fn)=0;
+	bool Load(ObjectIfs& objs, const char* fn);
 	///	セーブ
-	virtual bool Save(const ObjectIfs& objs, const char* fn)=0;
+	bool Save(const ObjectIfs& objs, const char* fn);
 };
 
 }

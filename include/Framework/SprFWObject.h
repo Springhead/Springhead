@@ -27,15 +27,15 @@ namespace Spr{
 		FWSceneIf::CreateObject‚ğg—p‚·‚éD
 	 */
 	struct FWObjectIf : SceneObjectIf {
-		IF_DEF(FWObject);
+		SPR_IFDEF(FWObject);
 		/// PHSolid‚ğæ“¾‚·‚é
-		virtual PHSolidIf* GetPHSolid() = 0;
+		PHSolidIf* GetPHSolid();
 		/// PHSolid‚ğİ’è‚·‚é
-		virtual void SetPHSolid(PHSolidIf* s) = 0;
+		void SetPHSolid(PHSolidIf* s);
 		/// GRFrame‚ğæ“¾‚·‚é
-		virtual GRFrameIf* GetGRFrame() = 0;
+		GRFrameIf* GetGRFrame();
 		/// GRFrame‚ğİ’è‚·‚é
-		virtual void SetGRFrame(GRFrameIf* f) = 0;
+		void SetGRFrame(GRFrameIf* f);
 	};
 
 }

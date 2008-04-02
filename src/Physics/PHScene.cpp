@@ -15,8 +15,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	PHScene
-IF_OBJECT_IMP(PHScene, Scene);
-
 PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }

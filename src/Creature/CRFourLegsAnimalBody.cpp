@@ -155,7 +155,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsAnimalBody
-IF_OBJECT_IMP(CRFourLegsAnimalBody, CRBody);
+
 	
 // --- --- ---
 void CRFourLegsAnimalBody::Init(){

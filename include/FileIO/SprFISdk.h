@@ -20,9 +20,9 @@ struct FIFileCOLLADAIf;
 
 ///	ファイル入出力SDK
 struct FISdkIf : public SdkIf{
-	IF_DEF(FISdk);
-	virtual FIFileXIf* CreateFileX()=0;
-	virtual FIFileCOLLADAIf* CreateFileCOLLADA()=0;
+	SPR_IFDEF(FISdk);
+	FIFileXIf* CreateFileX();
+	FIFileCOLLADAIf* CreateFileCOLLADA();
 	static  FISdkIf* SPR_CDECL CreateSdk();
 };
 

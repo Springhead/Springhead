@@ -24,21 +24,21 @@ namespace Spr{
 	class HIForceDevice6D;
 
 	struct FWSceneIf : SceneIf {
-		IF_DEF(FWScene);
+		SPR_IFDEF(FWScene);
 		
 		/// Physicsモジュールのシーンを取得する
-		virtual PHSceneIf*	GetPHScene() = 0;
+		PHSceneIf*	GetPHScene();
 		/** @brief Physicsモジュールのシーンを設定する
 			FWSceneの作成と同時に自動的に作成されるので、通常は呼び出す必要は無い．
 		*/	
-		virtual void		SetPHScene(PHSceneIf* s) = 0;
+		void		SetPHScene(PHSceneIf* s);
 
 		/// Graphicsモジュールのシーンを取得する
-		virtual GRSceneIf*	GetGRScene() = 0;
+		GRSceneIf*	GetGRScene();
 		/** @brief Graphicsモジュールのシーンを取得・設定する
 			FWSceneの作成と同時に自動的に作成されるので、通常は呼び出す必要は無い．
 		*/
-		virtual void		SetGRScene(GRSceneIf* s) = 0;
+		void		SetGRScene(GRSceneIf* s);
 
 		/** @brief Frameworkオブジェクトを作成する
 			PHSolidとGRFrameを関連付けるオブジェクトを作成する．
@@ -46,19 +46,19 @@ namespace Spr{
 			PHSceneIf::CreateSolidおよびGRSceneIf::CreateFrameにより作成される。
 			次に両者を参照するFWObjectが作成されFWSceneに登録される。
 		 */
-		virtual FWObjectIf*	CreateObject(const PHSolidDesc& soliddesc = PHSolidDesc(), const GRFrameDesc& framedesc = GRFrameDesc())=0;
-		virtual int NObject()const=0;
-		virtual FWObjectIf** GetObjects()=0;
+		FWObjectIf*	CreateObject(const PHSolidDesc& soliddesc = PHSolidDesc(), const GRFrameDesc& framedesc = GRFrameDesc());
+		int NObject()const;
+		FWObjectIf** GetObjects();
 
 		/** @brief オブジェクトを同期する
 			各FWObjectに対して、PHSolidの位置をGRFrameに反映させる。
 			通常はFWSceneIf::Stepによってシミュレーションが実行された後に呼ぶ。
 		 */
-		virtual void Sync() = 0;
+		void Sync();
 
 		/** @brief シミュレーションを実行する
 		 */
-		virtual void Step() = 0;
+		void Step();
 
 		/** @brief 描画する
 			@param grRender	レンダラ
@@ -67,9 +67,9 @@ namespace Spr{
 			描画が行われる。一方、debugがfalseの場合はシーングラフの形状データや
 			マテリアル、テクスチャを利用して描画が行われる。
 		 */
-		virtual void Draw(GRRenderIf* grRender, bool debug=false) = 0;
+		void Draw(GRRenderIf* grRender, bool debug=false);
 
-		virtual void AddHumanInterface(HIForceDevice6D* d)=0;
+		void AddHumanInterface(HIForceDevice6D* d);
 	};
 
 	FWSceneIf* SPR_CDECL CreateFWScene();

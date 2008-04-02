@@ -43,7 +43,7 @@ CRTrunkFootHumanBodyDesc::CRTrunkFootHumanBodyDesc(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRTrunkFootHumanBody
-IF_OBJECT_IMP(CRTrunkFootHumanBody, CRBody);
+
 
 // --- --- ---
 void CRTrunkFootHumanBody::Init(){

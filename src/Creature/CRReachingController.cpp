@@ -14,8 +14,6 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRReachingController, CRController);
-
 void CRReachingController::Init(){
 	CRController::Init();
 

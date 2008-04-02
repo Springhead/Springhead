@@ -19,7 +19,6 @@
 #include <Springhead.h>
 #include <Foundation/Object.h>
 
-#include "IfStubCreature.h"
 #include "CRController.h"
 #include "CRFLAnimalGene.h"
 #include "CRFLAnimalQL.h"
@@ -32,7 +31,6 @@ namespace Spr{;
 /** @brief 倒れたら立とうと努力するコントローラ
 */
 class CRTryStandingUpController : public CRController,
-								  public CRTryStandingUpControllerIfInit, 
 								  public CRTryStandingUpControllerDesc {
 
 
@@ -99,7 +97,7 @@ public:
 	//----------------------------------------------------------
 	// DCASTをできるようにするための仕組みが入っている。
 	// これを書かないとLNK2019 Errorになる。
-	OBJECTDEF(CRTryStandingUpController, CRController);
+	SPR_OBJECTDEF(CRTryStandingUpController);
 
 	//----------------------------------------------------------
 	// DESCの情報をこちら側にロードするための仕組みが入っている。

@@ -11,8 +11,6 @@
 
 
 namespace Spr{;
-IF_OBJECT_IMP(GRSphere, GRVisual);
-
 GRSphere::GRSphere(const GRSphereDesc& desc):GRSphereDesc(desc){
 	list = 0;
 	render = NULL;

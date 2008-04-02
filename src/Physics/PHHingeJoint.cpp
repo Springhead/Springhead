@@ -17,8 +17,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHingeJoint
-IF_OBJECT_IMP(PHHingeJoint, PHJoint1D)
-
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 5;
@@ -109,8 +107,6 @@ void PHHingeJoint::Projection(double& f, int k){
 }
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHHingeJointNode, PHTreeNode1D);
-
 void PHHingeJointNode::CompJointJacobian(){
 	J.col(0).SUBVEC(0, 3).clear();
 	J.col(0).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);

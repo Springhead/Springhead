@@ -28,60 +28,60 @@ struct CRIKMovableDesc;
 // ------------------------------------------------------------------------------
 /// クリーチャのボディモデルのインターフェイス
 struct CRBodyIf : SceneObjectIf{
-	IF_DEF(CRBody);
+	SPR_IFDEF(CRBody);
 
 	/** @brief 初期化を行う
 	*/
-	virtual void Init()= 0;
+	void Init();
 
 	/** @brief 剛体の数を得る
 	*/
-	virtual int NSolids()= 0;
+	int NSolids();
 
 	/** @brief i番目の剛体を得る
 	*/
-	virtual PHSolidIf* GetSolid(int i)= 0;
+	PHSolidIf* GetSolid(int i);
 
 	/** @brief 関節の数を得る
 	*/
-	virtual int NJoints()= 0;
+	int NJoints();
 
 	/** @brief i番目の関節を得る
 	*/
-	virtual PHJointIf* GetJoint(int i)= 0;
+	PHJointIf* GetJoint(int i);
 
 	/** @brief IK用の制御点を追加する
 	*/
-	virtual CRIKControlIf* CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc)= 0;
+	CRIKControlIf* CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
 	template <class T> CRIKControlIf* CreateIKControl(const T& desc){
 		return CreateIKControl(T::GetIfInfo(), desc);
 	}
 	
 	/** @brief IK用の可動物を追加する
 	*/
-	virtual CRIKMovableIf* CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc)= 0;
+	CRIKMovableIf* CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
 	template <class T> CRIKMovableIf* CreateIKMovable(const T& desc){
 		return CreateIKMovable(T::GetIfInfo(), desc);
 	}
 
 	/** @brief IKを計算する
 	*/
-	virtual void CalcIK() = 0;
+	void CalcIK();
 
 	/** @brief ボディの重心座標を得る
 	*/
-	virtual Vec3d GetCenterOfMass() = 0;
+	Vec3d GetCenterOfMass();
 
 	/** @brief ボディの質量を得る
 	*/
-	virtual double GetSumOfMass() = 0;
+	double GetSumOfMass();
 
 	
 };
 
 /// クリーチャのボディモデルのデスクリプタ
 struct CRBodyDesc{
-	DESC_DEF_FOR_OBJECT(CRBody);
+	SPR_DESCDEF(CRBody);
 
 	/// プラグ側を親剛体にするかソケット側を親剛体にするか
 	//enum CRHumanJointOrder{
@@ -97,25 +97,25 @@ struct CRBodyDesc{
 // ------------------------------------------------------------------------------
 /// ヒンジジョイント人体モデルのインターフェイス
 struct CRHingeHumanBodyIf : CRBodyIf {
-	IF_DEF(CRHingeHumanBody);
+	SPR_IFDEF(CRHingeHumanBody);
 
 	/** @brief 上半身の関節の堅さを変える
 		@param stifness 堅さ：デフォルトの堅さに対する倍数で指定
 	*/
-	virtual void SetUpperBodyStiffness(float stiffness)=0;
+	void SetUpperBodyStiffness(float stiffness);
 
 	/** @brief 上半身のポーズを保持する
 	*/
-	virtual void KeepUpperBodyPose()=0;
+	void KeepUpperBodyPose();
 
 	/** @brief 上半身のポーズを初期位置に戻す
 	*/
-	virtual void ResetUpperBodyPose()=0;
+	void ResetUpperBodyPose();
 };
 
 /// ヒンジジョイント人体モデルのデスクリプタ
 struct CRHingeHumanBodyDesc : CRBodyDesc {
-	DESC_DEF_FOR_OBJECT(CRHingeHumanBody);
+	SPR_DESCDEF(CRHingeHumanBody);
 
 	enum CRHumanSolids{
 		// Center
@@ -271,49 +271,49 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 // ------------------------------------------------------------------------------
 /// ４足動物モデルのインターフェイス
 struct CRFourLegsAnimalBodyIf : CRBodyIf {
-	IF_DEF(CRFourLegsAnimalBody);
+	SPR_IFDEF(CRFourLegsAnimalBody);
 
 	/** @brief 初期化を実行する
 	*/
-	virtual void Init() = 0;
+	void Init();
 	
 	/** @brief 状態の重心座標を返す
 	*/
-	virtual Vec3d GetUpperCenterOfMass() = 0;
+	Vec3d GetUpperCenterOfMass();
 
 	/** @brief 剛体の数を返す
 	*/
-	virtual int NSolids() = 0;
+	int NSolids();
 
 	/** @brief 関節の数を返す
 	*/
-	virtual int NJoints() = 0;
+	int NJoints();
 
 	/** @brief ボールジョイントの数を返す
 	*/
-	virtual int NBallJoints() = 0;
+	int NBallJoints();
 
 	/** @brief ヒンジジョイントの数を返す
 	*/
-	virtual int NHingeJoints() = 0;
+	int NHingeJoints();
 	/** @brief i番目の剛体の体積を返す
 	*/
-	virtual double VSolid(int i) = 0;
+	double VSolid(int i);
 	/** @brief 剛体の体積総和を返す
 	*/
-	virtual double VSolids() = 0;
+	double VSolids();
 	/** @brief ボディの総質量を返す
 	*/
-	virtual double	GetTotalMass() = 0;
+	double	GetTotalMass();
 	/** @brief ボディの総質量を設定する
 	*/
-	virtual void	SetTotalMass(double value) = 0;
+	void	SetTotalMass(double value);
 
 };
 
 /// 4足動物モデルのデスクリプタ
 struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
-	DESC_DEF_FOR_OBJECT(CRFourLegsAnimalBody);
+	SPR_DESCDEF(CRFourLegsAnimalBody);
 
 	enum CRAnimalSolids{
 		// Center part of the solids
@@ -502,13 +502,13 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 // ------------------------------------------------------------------------------
 /// おもに胴体と足のみの人体モデルのインターフェイス（歩行制御用）
 struct CRTrunkFootHumanBodyIf : CRBodyIf {
-	IF_DEF(CRTrunkFootHumanBody);
+	SPR_IFDEF(CRTrunkFootHumanBody);
 
 };
 
 /// 胴体・足人体モデルのデスクリプタ
 struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
-	DESC_DEF_FOR_OBJECT(CRTrunkFootHumanBody);
+	SPR_DESCDEF(CRTrunkFootHumanBody);
 
 	enum CRHumanSolids{
 		// 剛体
@@ -547,12 +547,12 @@ struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
 // ------------------------------------------------------------------------------
 /// おもに胴体と足のみの哺乳類モデルのインターフェイス（制御用）
 struct CRTrunkFootAnimalBodyIf : CRBodyIf{
-	IF_DEF(CRTrunkFootAnimalBody);
+	SPR_IFDEF(CRTrunkFootAnimalBody);
 };
 
 /// 胴体と足のみの哺乳類モデルのディスクリプタ
 struct CRTrunkFootAnimalBodyDesc : CRBodyDesc{
-	DESC_DEF_FOR_OBJECT(CRTrunkFootAnimalBody);
+	SPR_DESCDEF(CRTrunkFootAnimalBody);
 
 	enum CRAnimalSolids{
 		// 剛体

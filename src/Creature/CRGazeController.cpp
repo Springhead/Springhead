@@ -14,8 +14,6 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRGazeController, CRController);
-
 void CRGazeController::Init(){
 	CRController::Init();
 

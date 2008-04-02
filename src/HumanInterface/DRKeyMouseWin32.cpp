@@ -16,7 +16,7 @@ namespace Spr {;
 
 //	DRKeyMouseWin32
 
-IF_OBJECT_IMP(DRKeyMouseWin32, HIRealDevice);
+IF_SPR_OBJECTIMP(DRKeyMouseWin32, HIRealDevice);
 
 DRKeyMouseWin32::KeyMouse::KeyMouse(DRKeyMouseWin32* w):win32(w){
 	strcpy(name, Type());

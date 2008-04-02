@@ -39,7 +39,6 @@ static bool enableDebugMessage = false;
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDeviceGL
-IF_OBJECT_IMP(GRDeviceGL, GRDevice);
 /// èâä˙ê›íË
 void GRDeviceGL::Init(){
 	nLights = 0;

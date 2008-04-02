@@ -17,14 +17,14 @@ class GRMaterial;
 
 /** @class GRBlendMesh
 	@brief グラフィックスシーングラフでの座標系を表す．	*/
-class GRBlendMesh: public GRVisual, public GRBlendMeshIfInit, public GRBlendMeshDesc{
+class GRBlendMesh: public GRVisual, public GRBlendMeshDesc{
 	GRRenderIf* render;							///< レンダラー				
 	std::vector<unsigned int> list;				///< ディスプレイリストの識別子
 			
 	/// 頂点フォーマット、シェーダフォーマット に合わせ、ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
 public:
-	OBJECTDEF(GRBlendMesh, GRVisual);
+	SPR_OBJECTDEF(GRBlendMesh);
 	ACCESS_DESC(GRBlendMesh);
 
 	std::vector< UTRef<GRMaterial> > material;				///< マテリアル

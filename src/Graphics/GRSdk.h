@@ -33,14 +33,14 @@ public:
 
 /**	@class	GRSdk
     @brief	グラフィックスSDK　 */
-class SPR_DLL GRSdk:public Sdk, public GRSdkIfInit, public GRSdkDesc{
+class SPR_DLL GRSdk:public Sdk, public GRSdkDesc{
 protected:
 	typedef std::vector< UTRef<Object> > Objects;
 	typedef std::vector< UTRef<GRScene> > Scenes;
 	Objects objects;
 	Scenes scenes;
 public:
-	OBJECTDEF(GRSdk, Sdk);
+	SPR_OBJECTDEF(GRSdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
 	~GRSdk();
 	virtual GRDebugRenderIf* CreateDebugRender();

@@ -18,7 +18,7 @@
 
 namespace Spr{;
 
-UTTypeInfoImp<ObjectNames::ObjectKey> ObjectNames::ObjectKey::typeInfo("", NULL);
+SPR_OBJECTIMP1(ObjectNames::ObjectKey, NamedObject);
 ObjectNames::ObjectKey ObjectNames::key;
 ObjectNames::ObjectKey::ObjectKey(){
 	AddRef();
@@ -83,7 +83,6 @@ bool ObjectNamesLess::operator () (const NamedObject* o1, const NamedObject* o2)
 
 //----------------------------------------------------------------------------
 //	NameManager
-IF_OBJECT_IMP(NameManager, NamedObject);
 NameManager::NameManager(){
 }
 NameManager::~NameManager(){
@@ -206,10 +205,6 @@ NamedObjectIf* NameManager::FindObjectExact(UTString name, UTString cls){
 	return rv;
 }
 
-//----------------------------------------------------------------------------
-//	Scene
-IF_OBJECT_IMP(Scene, NameManager);
-
 
 //----------------------------------------------------------------------------
 //	SdkIf
@@ -223,7 +218,6 @@ SdkIf* SPR_CDECL SdkIf::CreateSdk(const IfInfo* info, const void* desc){
 }
 //----------------------------------------------------------------------------
 //	Sdk
-IF_OBJECT_IMP(Sdk, NameManager);
 std::vector< UTRef<FactoryBase> > Sdk::sdkFactories;
 void SPR_CDECL Sdk::RegisterFactory(FactoryBase* sdkFactory){
 	sdkFactories.push_back(sdkFactory);

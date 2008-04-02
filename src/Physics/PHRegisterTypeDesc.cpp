@@ -11,22 +11,21 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDumpPhysics.h"
-
 namespace Spr{ 
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
+extern void RegisterTypeDescCollision(UTTypeDescDb* db);
+extern void RegisterTypeDescPhysics(UTTypeDescDb* db);
 
 void SPR_CDECL PHRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;
-
 	UTRegisterTypeDescs();
-
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("Physics");
 	assert(db);
-	#include "TypeDescDumpImpPhysics.h"
+	RegisterTypeDescCollision(db);
+	RegisterTypeDescPhysics(db);
 	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");
 	db->Link();
 }

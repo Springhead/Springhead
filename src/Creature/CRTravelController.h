@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include "CRController.h"
 
@@ -20,7 +19,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 移動コントローラ（目標地点への移動，障害物回避）
 */
-class CRTravelController : public CRController, public CRTravelControllerIfInit, public CRTravelControllerDesc {
+class CRTravelController : public CRController, public CRTravelControllerDesc {
 private:
 	/// 下位のコントローラ：歩行コントローラ
 	// CREseWalkingControllerIf* walkCtrl;
@@ -39,7 +38,7 @@ private:
 	float maxSpeed;
 
 public:
-	OBJECTDEF(CRTravelController, CRController);
+	SPR_OBJECTDEF(CRTravelController);
 	ACCESS_DESC(CRTravelController);
 
 	CRTravelController(){

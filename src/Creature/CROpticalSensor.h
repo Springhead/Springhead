@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include <vector>
 #include <algorithm>
@@ -24,7 +23,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 視覚センサ
 */
-class CROpticalSensor : public CRSensor, public CROpticalSensorIfInit, public CROpticalSensorDesc {
+class CROpticalSensor : public CRSensor, public CROpticalSensorDesc {
 private:
 	/// 利用する剛体
 	PHSolidIf *soLEye, *soREye;
@@ -42,7 +41,7 @@ private:
 	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
-	OBJECTDEF(CROpticalSensor, CRSensor);
+	SPR_OBJECTDEF(CROpticalSensor);
 	ACCESS_DESC(CROpticalSensor);
 
 	CROpticalSensor(){}

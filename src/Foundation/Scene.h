@@ -27,9 +27,9 @@ public:
 	typedef std::map<UTString, UTString> TNameMap;
 	class ObjectKey:public NamedObject{
 	public:
+		SPR_OBJECTDEF_NOIF(ObjectNames::ObjectKey);
 		ObjectKey();
 		~ObjectKey();
-		DEF_UTTYPEINFODEF(ObjectKey);
 	};
 	TNameMap nameMap;
 	static ObjectKey key;
@@ -76,9 +76,9 @@ inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
 	ns.Print(os); return os;
 }
 
-class SPR_DLL NameManager:public NamedObject, public NameManagerIfInit{
+class SPR_DLL NameManager:public NamedObject{
 public:
-	OBJECTDEF(NameManager, NamedObject);
+	SPR_OBJECTDEF(NameManager);
 protected:
 	/*	名前とオブジェクトの対応表  */
 	ObjectNames names;
@@ -127,19 +127,19 @@ public:
 };
 
 /**	シーンの基本クラス	*/
-class SPR_DLL Scene:public NameManager, public SceneIfInit{
-	OBJECTDEF(Scene, NameManager);
+class SPR_DLL Scene:public NameManager{
+	SPR_OBJECTDEF(Scene);
 public:
 	///	コンストラクタ
 };
 
-class SPR_DLL Sdk:public NameManager, public SdkIfInit{
+class SPR_DLL Sdk:public NameManager{
 	UTRef<TypeInfoManager> typeInfoManager;	//	typeInfo/IfInfoがsdkが消える前に消えることを避ける。
 protected:
 	friend struct SdkIf;
 	static std::vector< UTRef<FactoryBase> > sdkFactories;
 public:
-	OBJECTDEF(Sdk, NameManager);
+	SPR_OBJECTDEF(Sdk);
 	static void SPR_CDECL RegisterFactory(FactoryBase* sdkFactory);
 public:
 	Sdk();

@@ -22,7 +22,7 @@ class HIRealDevice;
 ///	仮想デバイスの基本クラス．DA,カウンタなどの1チャンネルに相当する.
 class SPR_DLL HIVirtualDevice:public Object, public HIVirtualDeviceIfInit{
 public:
-	OBJECTDEF_ABST(HIVirtualDevice, Object);
+	SPR_OBJECTDEF_ABST(HIVirtualDevice, Object);
 
 	bool used;
 	virtual bool GetUsed(){return used;}

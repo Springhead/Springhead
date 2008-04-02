@@ -15,8 +15,6 @@ using namespace PTM;
 namespace Spr{;
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP_ABST(PHTreeNode, SceneObject);
-
 PHTreeNode::PHTreeNode():joint(0){
 	dZ.clear();
 }
@@ -240,8 +238,6 @@ void PHTreeNode::UpdatePosition(double dt){
 }
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHRootNode, PHTreeNode);
-
 bool PHRootNode::AddChildObject(ObjectIf* o){
 	if(PHTreeNode::AddChildObject(o))
 		return true;
@@ -671,8 +667,6 @@ void PHTreeNodeND<NDOF>::IterateLCP(){
 }
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP_ABST(PHTreeNode1D, PHTreeNode);
-
 PHTreeNode1D::PHTreeNode1D(){
 }
 

@@ -16,8 +16,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSliderJoint
-IF_OBJECT_IMP(PHSliderJoint, PHJoint1D)
-
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 2;
@@ -56,8 +54,6 @@ void PHSliderJoint::CompError(){
 }
 
 //-----------------------------------------------------------------------------
-IF_OBJECT_IMP(PHSliderJointNode, PHTreeNode1D);
-
 void PHSliderJointNode::CompJointJacobian(){
 	J.col(0).SUBVEC(0, 3) = Vec3d(0.0, 0.0, 1.0);
 	J.col(0).SUBVEC(3, 3).clear();

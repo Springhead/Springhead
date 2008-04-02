@@ -37,7 +37,7 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-IF_OBJECT_IMP(CRCreature, SceneObject);
+
 
 void CRCreature::Init(){
 	// 将来的には依存するセンサ・コントローラを先にInitするようコードしたほうがよさそうだ．(07/09/11, mitake)

@@ -124,7 +124,7 @@ CRHingeHumanBodyDesc::CRHingeHumanBodyDesc(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRHingeHumanBody
-IF_OBJECT_IMP(CRHingeHumanBody, CRBody);
+
 
 // --- --- ---
 void CRHingeHumanBody::Init(){

@@ -18,9 +18,6 @@
 
 namespace Spr{;
 
-IF_OBJECT_IMP(FIFileX, FIFile);
-
-
 //#define TRACE_PARSE
 #ifdef TRACE_PARSE
 # define PDEBUG(x)	x
@@ -207,9 +204,6 @@ static void TempEnd(char c){
 	PDEBUG(tdesc->Print(DSTR));
 	fileContext->typeDbs.Top()->RegisterDesc(tdesc);
 }
-}
-using namespace FileX;
-
 
 ///	XXX expected. のエラーメッセージを出すパーサ
 class ExpectParser {
@@ -230,6 +224,8 @@ public:
     }
 }; 
 typedef boost::spirit::functor_parser<ExpectParser> ExpP;
+}
+using namespace FileX;
 
 FIFileX::FIFileX(){
 	Init();

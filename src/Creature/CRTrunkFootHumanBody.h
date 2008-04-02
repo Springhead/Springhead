@@ -11,8 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
-
 #include <vector>
 
 #include "CRBody.h"
@@ -23,7 +21,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRTrunkFootHumanBody
 // ヒンジジョイントを用いた人体モデル・クラスの実装
-class CRTrunkFootHumanBody : public CRBody, public CRTrunkFootHumanBodyIfInit, public CRTrunkFootHumanBodyDesc {
+class CRTrunkFootHumanBody : public CRBody, public CRTrunkFootHumanBodyDesc {
 private:
 	void InitBody();
 	void CreateWaist();
@@ -36,7 +34,7 @@ private:
 	void InitContact();
 
 public:
-	OBJECTDEF(CRTrunkFootHumanBody, CRBody);
+	SPR_OBJECTDEF(CRTrunkFootHumanBody);
 	ACCESS_DESC(CRTrunkFootHumanBody);
 
 	CRTrunkFootHumanBody(){}

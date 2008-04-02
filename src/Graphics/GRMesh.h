@@ -17,7 +17,7 @@ class GRMaterial;
 
 /**	@class	GRMesh
     @brief	グラフィックスシーングラフでの座標系を表す． */
-class GRMesh: public GRVisual, public GRMeshIfInit, public GRMeshDesc{
+class GRMesh: public GRVisual, public GRMeshDesc{
 	UTRef<GRRenderIf> render;			///< レンダラー
 	unsigned int list;					///< ディスプレイリストの識別子
 
@@ -36,7 +36,7 @@ private:
 	const GRVertexElement* vtxFormat;
 	int stride, normalOffset, positionOffset, texOffset;
 public:
-	OBJECTDEF(GRMesh, GRVisual);
+	SPR_OBJECTDEF(GRMesh);
 	ACCESS_DESC(GRMesh);
 
 	bool tex3d;												///< 3次元テクスチャの場合 true

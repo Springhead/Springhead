@@ -22,8 +22,8 @@ class GRAnimationController;
 	シーングラフは，たとえばレンダラがOpenGLなら，displayList
 	を持っているし，D3Dならば ID3DXMeshを持っている．
 */
-class SPR_DLL GRScene:public Scene, public GRSceneIfInit, public GRSceneDesc{
-	OBJECTDEF(GRScene, Scene);
+class SPR_DLL GRScene:public Scene, public GRSceneDesc{
+	SPR_OBJECTDEF(GRScene);
 protected:
 	///	ルートノード
 	UTRef<GRFrame> world;

@@ -24,14 +24,15 @@ struct OnLimit{
 	}
 };
 
+class PHBallJoint;
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
-	OBJECTDEF(PHBallJointNode, PHTreeNode);
+	SPR_OBJECTDEF(PHBallJointNode);
 	/// スイング・ツイスト角の時間変化率から角速度へのヤコビアン
 	Matrix3d	Jst;
 
-	PHBallJoint* GetJoint(){return DCAST(PHBallJoint, PHTreeNodeND<3>::GetJoint());}
+	PHBallJoint* GetJoint(){return PHTreeNodeND<3>::GetJoint()->Cast();}
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void UpdateJointPosition(double dt);
@@ -44,9 +45,9 @@ public:
 	
 };
 
-class PHBallJoint : public PHJointND<3>, public PHBallJointIfInit{
+class PHBallJoint : public PHJointND<3>{
 
-	OBJECTDEF(PHBallJoint, PHJoint);
+	SPR_OBJECTDEF(PHBallJoint);
 
 	double			spring, damper;			///< バネ、ダンパ係数
 	Vec3d			limitDir;				///< 可動域の中心ベクトル（初期方向Z軸）

@@ -28,13 +28,13 @@ struct GRSdkDesc{
 
 /**	@brief	グラフィックスSDKの基本クラス　 */
 struct GRSdkIf: public SdkIf{
-	IF_DEF(GRSdk);
-	virtual GRDebugRenderIf* CreateDebugRender()=0;
-	virtual GRDeviceGLIf* CreateDeviceGL()=0;
-	virtual GRSceneIf* CreateScene(const GRSceneDesc& desc)=0;
-	virtual GRSceneIf* GetScene(size_t i)=0;
-	virtual size_t NScene()=0;
-	virtual void MergeScene(GRSceneIf* scene0, GRSceneIf* scene1)=0;
+	SPR_IFDEF(GRSdk);
+	GRDebugRenderIf* CreateDebugRender();
+	GRDeviceGLIf* CreateDeviceGL();
+	GRSceneIf* CreateScene(const GRSceneDesc& desc);
+	GRSceneIf* GetScene(size_t i);
+	size_t NScene();
+	void MergeScene(GRSceneIf* scene0, GRSceneIf* scene1);
 	static GRSdkIf* SPR_CDECL CreateSdk();
 	static void SPR_CDECL RegisterSdk();
 };

@@ -20,8 +20,6 @@ PHSpringDesc::PHSpringDesc(){
 
 //----------------------------------------------------------------------------
 // PHSpring
-IF_OBJECT_IMP(PHSpring, PHConstraint)
-
 PHSpring::PHSpring(const PHSpringDesc& desc){
 	SetDesc(&desc);
 }

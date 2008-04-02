@@ -10,7 +10,7 @@
 #include "HIMouse6D.h"
 
 namespace Spr {;
-IF_OBJECT_IMP(HIMouse6D, HIPose);
+IF_SPR_OBJECTIMP(HIMouse6D, HIPose);
 
 bool HIMouse6D::Init(HISdkIf* sdk, const void* desc){
 	HIVirtualDeviceIf* vd = sdk->RentVirtualDevice("KeyMouse");

@@ -12,10 +12,6 @@
 #endif
 
 namespace Spr{;
-//----------------------------------------------------------------------------
-//	CDShape
-IF_OBJECT_IMP_ABST(CDShape, NamedObject);
-
 
 
 }

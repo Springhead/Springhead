@@ -10,14 +10,15 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHSpatial.h>
+#include <Physics/PHJoint.h>
 
 namespace Spr{;
 
 ///	ツリーノードの基本クラス
 class PHRootNode;
-class PHTreeNode : public SceneObject, public PHTreeNodeIfInit, public UTTreeNode<PHTreeNode>, public PHTreeNodeDesc{
+class PHTreeNode : public SceneObject, public UTTreeNode<PHTreeNode>, public PHTreeNodeDesc{
 public:
-	OBJECTDEF_ABST(PHTreeNode, SceneObject);
+	SPR_OBJECTDEF_ABST(PHTreeNode);
 	
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject();
@@ -81,9 +82,9 @@ public:
 	PHConstraintEngine* engine;
 };
 
-class PHRootNode : public PHTreeNode, public PHRootNodeIfInit{
+class PHRootNode : public PHTreeNode{
 public:
-	OBJECTDEF(PHRootNode, PHTreeNode);
+	SPR_OBJECTDEF(PHRootNode);
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject();
@@ -112,6 +113,7 @@ protected:
 	SpatialMatrix		Iinv;
 };
 
+class PHGear;
 ///	N自由度の関節の基本クラス
 template<int NDOF>
 class PHTreeNodeND : public PHTreeNode{
@@ -175,9 +177,9 @@ public:
 
 ///	1自由度の関節
 class PHTreeNode1D;
-class PHTreeNode1D : public PHTreeNodeND<1>, public PHTreeNode1DIfInit{
+class PHTreeNode1D : public PHTreeNodeND<1>{
 public:
-	OBJECTDEF_ABST(PHTreeNode1D, PHTreeNode);
+	SPR_OBJECTDEF_ABST(PHTreeNode1D);
 	
 	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
 	virtual void	CompBias();

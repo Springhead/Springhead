@@ -18,7 +18,7 @@ class HIVirtualDevicePool;
 ///	実デバイスの基本クラス．ISAカード1枚などに相当する.
 class SPR_DLL HIRealDevice:public Object, public HIRealDeviceIfInit{
 public:
-	OBJECTDEF_ABST(HIRealDevice, Object);
+	SPR_OBJECTDEF_ABST(HIRealDevice, Object);
 	HIRealDevice(){}
 	virtual ~HIRealDevice(){}
 	///	デバイスの名前

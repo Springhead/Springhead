@@ -51,7 +51,7 @@ struct DVKeyMouseIf:public HIVirtualDeviceIf{
 		TOGGLE_ON = 2,
 		BOTH	= PRESS|TOGGLE_ON,
 	};
-	IF_DEF(DVKeyMouse);
+	SPR_IFDEF(DVKeyMouse);
 	///	デバイスの名前
 	virtual const char* Name() const =0;
 	///	ハンドラの設定
@@ -64,7 +64,7 @@ struct DVKeyMouseIf:public HIVirtualDeviceIf{
 
 ///	DRKeyMouseWin32
 struct DRKeyMouseWin32If:public HIRealDeviceIf{
-	IF_DEF(DRKeyMouseWin32);
+	SPR_IFDEF(DRKeyMouseWin32);
 };
 
 }	//	namespace Spr

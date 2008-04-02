@@ -13,7 +13,6 @@
 #include <string.h>
 
 using namespace Spr;
-using namespace PTM;
 
 class CRWCFootForce
 {

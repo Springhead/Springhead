@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include <vector>
 
@@ -23,7 +22,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRHingeHumanBody
 // ヒンジジョイントを用いた人体モデル・クラスの実装
-class CRHingeHumanBody : public CRBody, public CRHingeHumanBodyIfInit, public CRHingeHumanBodyDesc {
+class CRHingeHumanBody : public CRBody, public CRHingeHumanBodyDesc {
 private:
 	void InitBody();
 	void CreateWaist();
@@ -52,7 +51,7 @@ private:
 	void SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass);
 
 public:
-	OBJECTDEF(CRHingeHumanBody, CRBody);
+	SPR_OBJECTDEF(CRHingeHumanBody);
 	ACCESS_DESC(CRHingeHumanBody);
 
 	CRHingeHumanBody(){}

@@ -25,10 +25,10 @@ class Object;
 ///	同じ型へのキャスト
 ///	静的変換が可能な場合の If->Obj のキャスト
 template <class TO, class FROM> TO* DCastImp(TO* dmmy, FROM* p){
-	return TO::GetSelf(p);
+	return TO::GetMe(p);
 }
 template <class TO, class FROM> UTRef<TO> DCastImp(TO* dmmy, UTRef<FROM> p){
-	return TO::GetSelf(&*p);
+	return TO::GetMe(&*p);
 }
 
 #undef XCAST
@@ -80,71 +80,64 @@ public:
 	static int maxId;
 	///	desc型についての詳細な情報
 	UTTypeDesc* desc;
+	///	基本インタフェースリスト
+	const IfInfo** baseList;
+	///	対応するオブジェクトの型情報
+	const UTTypeInfo* objInfo;
 	///	クラス名
 	const char* className;
-	///	基本クラスたち
-	IfInfo** base;
 
 	typedef std::vector< UTRef<FactoryBase> > Factories;
 	///	子オブジェクトを生成するクラス(ファクトリー)
 	Factories factories;
 	///	コンストラクタ
-	IfInfo(const char* cn, IfInfo** b);
+	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):className(cn), baseList(bl), objInfo(o){id = ++maxId;}
 	///	デストラクタ
 	virtual ~IfInfo() {};
 	///	クラス名
 	virtual const char* ClassName() const =0;
-	///	key を継承しているかどうかチェック
-	bool Inherit(const char* key) const;
-	///	key を継承しているかどうかチェック
-	bool Inherit(const IfInfo* key) const;
 	///	ファクトリ(オブジェクトを生成するクラス)の登録
 	void RegisterFactory(FactoryBase* f) const ;
 	///	指定(info)のオブジェクトを作るファクトリを検索
 	FactoryBase* FindFactory(const IfInfo* info) const;
 	///
 	static IfInfo* Find(const char* cname);
+	///	infoを継承しているかどうか．
+	bool Inherit(const IfInfo* info) const;
 };
 ///	IfInfoの実装．1クラス1インスタンス
 template <class T>
 class IfInfoImp: public IfInfo{
 public:
-	IfInfoImp(const char* cn, IfInfo** b): IfInfo(cn, b){}
+	IfInfoImp(const char* cn, const IfInfo** b, const UTTypeInfo* o): IfInfo(cn, b, o){}
 	virtual const char* ClassName() const { return className; }
 	virtual void* CreateInstance() const{ return 0;}
+	static const UTTypeInfo* SPR_CDECL GetTypeInfo();
 };
 
 ///	インタフェースが持つべきメンバの宣言部．
-#define IF_DEF_FOR_OBJECTIF(cls)										\
+#define SPR_IFDEF_BASE(cls)												\
 public:																	\
-	static IfInfoImp<cls##If> ifInfo;	/*	Ifの型情報	*/				\
-	virtual const IfInfo* GetIfInfo() const {							\
-		return GetIfInfoStatic();										\
-	}																	\
+	const IfInfo* SPR_CDECL GetIfInfo() const ;							\
 	static const IfInfo* SPR_CDECL GetIfInfoStatic();					\
 	static void* operator new(size_t) {									\
-        assert(0);	/*	Don't allocate interfaces	*/					\
-        return (void*)1;												\
-    }																	\
-	static void operator delete(void* pv) { /*	nothing	to do */ }		\
-	/*	? -> If	*/														\
-	template <class O>													\
-	static cls##If* GetSelf(const O * p){								\
-		return p ? p->GetIf((cls##If*)0) : NULL;						\
+		assert(0);	/*	Don't allocate interfaces	*/					\
+		return (void*)1;												\
 	}																	\
-	/*	同型のIf -> If	*/												\
-	cls##If* GetIf(cls##If* i) const { return (cls##If*)this; }			\
+	static void operator delete(void* pv) { /*	nothing	to do */ }		\
 	/*	相互キャスト	*/												\
 	XCastPtr<cls##If>& Cast() const{									\
 		return *(XCastPtr<cls##If>*)(void*)this; }						\
-	/*	異型のIf -> Ifへの型変換 */										\
-	template <class I> I* GetIf(I*) const {									\
-		if (GetIfInfo()->Inherit(I::GetIfInfoStatic())) return (I*)this;	\
-		return (I*)GetIfDynamic(I::GetIfInfoStatic());						\
-	}																		\
+	/*	キャストの実装	*/												\
+	template <typename FROM> static cls##If* GetMe(FROM* f){			\
+		if ( f && f->GetObjectIf()->GetIfInfo()->Inherit(				\
+			cls##If::GetIfInfoStatic()) )								\
+			return (cls##If*)f->GetObjectIf();							\
+		return NULL;													\
+	}																	\
 
 ///	ディスクリプタが持つべきメンバの宣言部．
-#define DESC_DEF_FOR_OBJECT(cls)										\
+#define SPR_DESCDEF(cls)												\
 public:																	\
 	const static IfInfo* GetIfInfo(){									\
 		return cls##If::GetIfInfoStatic();								\
@@ -153,54 +146,60 @@ public:																	\
 #endif // !SWIG
 
 // Rubyなどのポートで使用されるキャスト
-#define IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}
+#define SPR_IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}
 
-#ifdef SWIG
-#define IF_DEF(cls)	IF_HLANG_CAST(cls)
+#ifdef SWIGSPR
+ #define SPR_IFDEF(cls)	SPR_IFDEF(cls)
 #else
-#define IF_DEF(cls)	IF_DEF_FOR_OBJECTIF(cls) IF_HLANG_CAST(cls)
+ #ifdef SWIG
+ #define SPR_IFDEF(cls)	SPR_IF_HLANG_CAST(cls)
+ #else
+ #define SPR_IFDEF(cls)	SPR_IFDEF_BASE(cls) SPR_IF_HLANG_CAST(cls)
+ #endif
 #endif
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
-	IF_DEF_FOR_OBJECTIF(Object);
-	virtual ~ObjectIf();
-	///	オブジェクト取得
-	virtual Object* GetObj(const UTTypeInfo* info) const =0;
-	///	動的なインタフェースの取得
-	virtual ObjectIf* GetIfDynamic(const IfInfo* info) const = 0;
+	SPR_IFDEF(Object);
+	~ObjectIf();
+#ifndef SWIGSPR
+	ObjectIf* GetObjectIf(){ return this; }
+	const ObjectIf* GetObjectIf() const { return this; }
+	//	DelRefのみオーバーライド．
+	//	単にObjectのDelRefを呼ぶのではなく， delete の制御が必要なため．
+	int DelRef() const ;
+#endif
+
 	///	デバッグ用の表示。子オブジェクトを含む。
-	virtual void Print(std::ostream& os) const =0;	
+	void Print(std::ostream& os) const;	
 	///	デバッグ用の表示。子オブジェクトを含まない。
-	virtual void PrintShort(std::ostream& os) const =0;	
+	void PrintShort(std::ostream& os) const;	
 
 	///	@name 参照カウンタ関係
 	//@{
 	///
-	virtual int AddRef()=0;
+	int AddRef();
 	///
-	virtual int DelRef()=0;
-	///
-	virtual int RefCount()=0;
+	int RefCount();
 	//@}
 
 
 	///	@name 子オブジェクト
 	//@{
 	///	子オブジェクトの数
-	virtual size_t NChildObject() const =0;
+	size_t NChildObject() const;
 	///	子オブジェクトの取得
-	virtual ObjectIf* GetChildObject(size_t pos) = 0;
-	virtual const ObjectIf* GetChildObject(size_t pos) const = 0;
+	ObjectIf* GetChildObject(size_t pos);
+	const ObjectIf* GetChildObject(size_t pos) const;
 	/**	子オブジェクトの追加．複数のオブジェクトの子オブジェクトとして追加してよい．
 		例えば，GRFrameはツリーを作るが，全ノードがGRSceneの子でもある．*/
-	virtual bool AddChildObject(ObjectIf* o)=0;
+	bool AddChildObject(ObjectIf* o);
 	///	子オブジェクトの削除
-	virtual bool DelChildObject(ObjectIf* o)=0;
+	bool DelChildObject(ObjectIf* o);
 	///	すべての子オブジェクトの削除と、プロパティのクリア
-	virtual void Clear()=0;
+	void Clear();
 	///	オブジェクトを作成し，AddChildObject()を呼ぶ．
-	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc)=0;
+	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	///	CreateObjectを呼び出すユーティリティ関数
 	template <class T> ObjectIf* CreateObject(const T& desc){
 		return CreateObject(desc.GetIfInfo(), &desc);
@@ -211,28 +210,28 @@ struct ObjectIf{
 	//@{
 	/**	デスクリプタの読み出し(参照版 NULLを返すこともある)．
 		これが実装されていなくても，ObjectIf::GetDesc()は実装されていることが多い．	*/
-	virtual const void* GetDescAddress() const = 0;
+	const void* GetDescAddress() const;
 	/**	デスクリプタの読み出し(コピー版 失敗する(falseを返す)こともある)．
 		ObjectIf::GetDescAddress() が実装されていなくても，こちらは実装されていることがある．	*/
-	virtual bool GetDesc(void* desc) const = 0;
+	bool GetDesc(void* desc) const;
 	/** デスクリプタの設定 */
-	virtual void SetDesc(const void* desc) = 0;
+	void SetDesc(const void* desc);
 	/**	デスクリプタのサイズ	*/
-	virtual size_t GetDescSize() const = 0;
+	size_t GetDescSize() const;
 	/**	状態の読み出し(参照版 NULLを返すこともある)．
 		これが実装されていなくても，ObjectIf::GetState()は実装されていることがある．	*/
-	virtual const void* GetStateAddress() const = 0;
+	const void* GetStateAddress() const;
 	/**	状態の読み出し(コピー版 失敗する(falseを返す)こともある)．
 		ObjectIf::GetStateAddress() が実装されていなくても，こちらは実装されていることがある．	*/
-	virtual bool GetState(void* state) const = 0;
+	bool GetState(void* state) const;
 	/**	状態の設定	*/
-	virtual void SetState(const void* state) = 0;
+	void SetState(const void* state);
 	/**	状態のサイズ	*/
-	virtual size_t GetStateSize() const = 0;
+	size_t GetStateSize() const;
 	/**	メモリブロックを状態型に初期化	*/
-	virtual void ConstructState(void* m) const = 0;
+	void ConstructState(void* m) const;
 	/**	状態型をメモリブロックに戻す	*/
-	virtual void DestructState(void* m) const = 0;
+	void DestructState(void* m) const;
 	//@}
 };
 
@@ -262,39 +261,39 @@ struct NameManagerIf;
 
 ///	名前を持つオブジェクトのインタフェース
 struct NamedObjectIf: public ObjectIf{
-	IF_DEF(NamedObject);
+	SPR_IFDEF(NamedObject);
 	///	名前の取得
-	virtual const char* GetName() const =0;
+	const char* GetName() const;
 	///	名前の設定
-	virtual void SetName(const char* n) =0;
+	void SetName(const char* n);
 	///	名前管理オブジェクトの取得
-	virtual NameManagerIf* GetNameManager() =0;
+	NameManagerIf* GetNameManager();
 };
 
 struct SceneIf;
 ///	シーングラフを構成するノードのインタフェース
 struct SceneObjectIf: NamedObjectIf{
-	IF_DEF(SceneObject);
+	SPR_IFDEF(SceneObject);
 	///	所属Sceneの取得
-	virtual SceneIf* GetScene() =0;
+	SceneIf* GetScene();
 };
 
 
 ///	オブジェクトツリーの状態をメモリ上に保存しておくクラス
 struct ObjectStatesIf: public ObjectIf{
-	IF_DEF(ObjectStates);
+	SPR_IFDEF(ObjectStates);
 
 	///	oとその子孫をセーブするために必要なメモリを確保する．
-	virtual void AllocateState(ObjectIf* o) = 0;
+	void AllocateState(ObjectIf* o);
 	///	状態のメモリを解放する
-	virtual void ReleaseState(ObjectIf* o) = 0;
+	void ReleaseState(ObjectIf* o);
 	///	状態のサイズを求める
-	virtual size_t CalcStateSize(ObjectIf* o) = 0;
+	size_t CalcStateSize(ObjectIf* o);
 
 	///	状態をセーブする．
-	virtual void SaveState(ObjectIf* o) = 0;
+	void SaveState(ObjectIf* o);
 	///	状態をロードする．
-	virtual void LoadState(ObjectIf* o) = 0;
+	void LoadState(ObjectIf* o);
 };
 ObjectStatesIf* SPR_CDECL CreateObjectStates();
 

@@ -26,7 +26,6 @@ void CRSimpleTestApp::Register(){
 	// Factory‚Ì“o˜^
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
-	CRRegisterFactories();
 
 	DSTR << "Register Complete." << endl;
 }
@@ -67,7 +66,7 @@ void CRSimpleTestApp::CreateScene(){
 
 void CRSimpleTestApp::CreateRender(int window){
 	grRender = grSdk->CreateDebugRender();
-	grDevice = grSdk->CreateDeviceGL(window);
+	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	grRender->SetDevice(grDevice);
 
@@ -122,7 +121,7 @@ void CRSimpleTestApp::Display(){
 				Vec3f* vtx_base = mesh->GetVertices();
 				for (size_t i_face=0; i_face<mesh->NFace(); i_face++) {
 					CDFaceIf* face = mesh->GetFace(i_face);
-					grRender->DrawFace(face, vtx_base);
+					grRender->DrawFaceSolid(face, vtx_base);
 				}
 			}
 

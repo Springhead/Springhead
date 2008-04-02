@@ -66,9 +66,6 @@
 # define finite _finite
 #endif
 
-//	for VC6 class view
-#define DOUBLECOLON ::
-
 //	for Visual C++ 's strange spec of stl.
 #if defined _MSC_VER
  #if _MSC_VER <= 1300
@@ -92,6 +89,14 @@
    #define _MAX max
   #endif
  #endif
+#endif
+
+//	SWIG—p
+#ifdef SWIGSPR
+namespace PTM{
+}
+namespace Spr{
+}
 #endif
 
 #endif

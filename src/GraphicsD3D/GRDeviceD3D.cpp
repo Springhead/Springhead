@@ -72,7 +72,7 @@ static void VFT2fN3fP3f_toFVF(void* p, void* vtx, int count)
 
 //----------------------------------------------------------------------------
 //	GRDeviceD3D
-IF_OBJECT_IMP(GRDeviceD3D, GRDevice);
+IF_SPR_OBJECTIMP(GRDeviceD3D, GRDevice);
 /// D3Dデバイス。GRDeviceD3D::GetD3DDevice()で取得。
 IDirect3DDevice9* GRDeviceD3D::s_d3ddevice;
 /// 初期設定

@@ -23,7 +23,7 @@ struct HISdkIf;
 
 ///	実デバイス．インタフェースカードとか，USBデバイスとか，
 struct HIRealDeviceIf:  public ObjectIf{
-	IF_DEF(HIRealDevice);
+	SPR_IFDEF(HIRealDevice);
 	///	デバイスの名前．クラスと対応するボードのIDなどから自動で決まる名前．設定不可．
 	virtual const char* Name()=0;
 	///	初期化
@@ -36,7 +36,7 @@ struct HIRealDeviceIf:  public ObjectIf{
 
 ///	バーチャルデバイス．A/D, D/Aの1チャンネル分とか，機能としてのデバイス．
 struct HIVirtualDeviceIf:  public ObjectIf{
-	IF_DEF(HIVirtualDevice);
+	SPR_IFDEF(HIVirtualDevice);
 public:
 	///	デバイスの名前
 	virtual const char* Name() const=0;

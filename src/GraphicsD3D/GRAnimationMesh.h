@@ -19,7 +19,7 @@ namespace Spr{;
 /**	@class	GRAnimationMesh
     @brief	キャラクタアニメーション用メッシュ */
 class GRAnimationMesh: public GRVisual, public GRAnimationMeshIfInit, public GRAnimationMeshDesc{
-	OBJECTDEF(GRAnimationMesh, GRVisual);
+	SPR_OBJECTDEF(GRAnimationMesh, GRVisual);
 protected:
 	struct Frame;
 	struct MeshContainer;

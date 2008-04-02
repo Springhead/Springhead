@@ -20,32 +20,32 @@ struct PHSolidIf;
 // ------------------------------------------------------------------------------
 /// 内部シーンを構成する物体のインタフェース
 struct CRInternalSceneObjectIf : SceneObjectIf{
-	IF_DEF(CRInternalSceneObject);
+	SPR_IFDEF(CRInternalSceneObject);
 
 	/** @brief 指定したtypeか判定する
 	*/
-	virtual bool IsA(const char* typestr)= 0;
+	bool IsA(const char* typestr);
 
 	/** @brief 種類を返す
 	*/
-	virtual const char* GetISObjType()= 0;
+	const char* GetISObjType();
 
 	/** @brief 剛体を返す
 	*/
-	virtual PHSolidIf* GetSolid()= 0;
+	PHSolidIf* GetSolid();
 
 	/** @brief 位置を返す
 	*/
-	virtual Vec3f GetPos()= 0;
+	Vec3f GetPos();
 
 	/** @brief 位置を設定する
 	*/
-	virtual void SetPos(Vec3d pos)= 0;
+	void SetPos(Vec3d pos);
 };
 
 /// 内部シーンを構成する物体のデスクリプタ
 struct CRInternalSceneObjectDesc{
-	DESC_DEF_FOR_OBJECT(CRInternalSceneObject);
+	SPR_DESCDEF(CRInternalSceneObject);
 
 	/// 種類
 	char* type;
@@ -66,40 +66,40 @@ struct CRInternalSceneObjectDesc{
 // ------------------------------------------------------------------------------
 /// 注意をひきつける物体のインタフェース
 struct CRISAttractiveObjectIf : CRInternalSceneObjectIf{
-	IF_DEF(CRISAttractiveObject);
+	SPR_IFDEF(CRISAttractiveObject);
 
 	/** @brief 総合的にこの物体が注意をひきつける度合を得る
 	*/
-	virtual float GetTotalAttractiveness()= 0;
+	float GetTotalAttractiveness();
 
 	/** @brief ボトムアップ注意の度合を加算する
 	*/
-	virtual void AddBottomupAttr(float attr)= 0;
+	void AddBottomupAttr(float attr);
 
 	/** @brief ボトムアップ注意の度合をリセットする
 	*/
-	virtual void ClearBottomupAttr()= 0;
+	void ClearBottomupAttr();
 
 	/** @brief トップダウン注意の度合を設定する
 	*/
-	virtual void SetTopdownAttr(float attr)= 0;
+	void SetTopdownAttr(float attr);
 
 	/** @brief 不確実性を増す
 	*/
-	virtual void IncUncertainty()= 0;
+	void IncUncertainty();
 
 	/** @brief 不確実性を減らす
 	*/
-	virtual void DecUncertainty()= 0;
+	void DecUncertainty();
 
 	/** @brief 不確実性を取得する
 	*/
-	virtual float GetUncertainty()= 0;
+	float GetUncertainty();
 };
 
 /// 注意をひきつける物体のデスクリプタ
 struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
-	DESC_DEF_FOR_OBJECT(CRISAttractiveObject);
+	SPR_DESCDEF(CRISAttractiveObject);
 
 	/// ボトムアップ性の注意の度合
 	float bottomupAttr;
@@ -132,7 +132,7 @@ struct CRISAttractiveObjectDesc : CRInternalSceneObjectDesc{
 // ------------------------------------------------------------------------------
 /// 歩行のポテンシャル制御にかかわる物体のインタフェース
 struct CRISTravelPotentialObjectIf : CRInternalSceneObjectIf{
-	IF_DEF(CRISTravelPotentialObject);
+	SPR_IFDEF(CRISTravelPotentialObject);
 
 	/*
 	** 距離rにおけるレナード・ジョーンズポテンシャル
@@ -141,28 +141,28 @@ struct CRISTravelPotentialObjectIf : CRInternalSceneObjectIf{
 
 	/** @brief ポテンシャルの強さの係数（A, B）を得る
 	*/
-	virtual Vec2f GetStrengthCoeff()= 0;
+	Vec2f GetStrengthCoeff();
 
 	/** @brief ポテンシャルの強さの係数（A, B）を設定する
 	*/
-	virtual void SetStrengthCoeff(Vec2f strength)= 0;
+	void SetStrengthCoeff(Vec2f strength);
 
 	/** @brief ポテンシャルの減衰の係数（n, m）を得る
 	*/
-	virtual Vec2f GetDecayCoeff()= 0;
+	Vec2f GetDecayCoeff();
 
 	/** @brief ポテンシャルの減衰の係数（n, m）を設定する
 	*/
-	virtual void SetDecayCoeff(Vec2f decay)= 0;
+	void SetDecayCoeff(Vec2f decay);
 
 	/** @brief ある位置に対応するポテンシャルを計算する
 	*/
-	virtual Vec2f GetPotential(Vec2f currPos)= 0;
+	Vec2f GetPotential(Vec2f currPos);
 };
 
 /// 歩行のポテンシャル制御にかかわる物体のデスクリプタ
 struct CRISTravelPotentialObjectDesc : CRInternalSceneObjectDesc{
-	DESC_DEF_FOR_OBJECT(CRISTravelPotentialObject);
+	SPR_DESCDEF(CRISTravelPotentialObject);
 
 	/// 強さの計数
 	Vec2f  strength;
@@ -178,37 +178,37 @@ struct CRISTravelPotentialObjectDesc : CRInternalSceneObjectDesc{
 // ------------------------------------------------------------------------------
 /// 内部シーンのインターフェース
 struct CRInternalSceneIf : SceneObjectIf{
-	IF_DEF(CRInternalScene);
+	SPR_IFDEF(CRInternalScene);
 
 	/** @brief ステップごとの処理を実行する
 	*/
-	virtual void Step()= 0;
+	void Step();
 
 	/** @brief Attractivenessをクリアする（本当はBottomupだけ）
 	*/
-	virtual void ClearAttractiveness()= 0;
+	void ClearAttractiveness();
 
 	/** @brief Attractivenessの大きい順にソートする
 	*/
-	virtual void SortByAttractiveness()= 0;
+	void SortByAttractiveness();
 
 	/** @brief 剛体solidの座標posに設定された注意を取得する
 		@param solid 剛体（剛体ではなく場所のみに設定された注意の場合NULL）
 		@param pos 剛体のローカル座標系における座標
 	*/
-	virtual CRInternalSceneObjectIf* FindObject(PHSolidIf* solid, Vec3f pos)= 0;
+	CRInternalSceneObjectIf* FindObject(PHSolidIf* solid, Vec3f pos);
 
 	/** @brief i番目の物体を取得する（Sort後に用いるとSortされた順序で取得できる）
 	*/
-	virtual CRInternalSceneObjectIf* GetISObject(int i)= 0;
+	CRInternalSceneObjectIf* GetISObject(int i);
 
 	/** @brief 物体の数
 	*/
-	virtual int NObjects()= 0;
+	int NObjects();
 
 	/** @brief オブジェクトを作成する
 	*/
-	virtual CRInternalSceneObjectIf* CreateInternalSceneObject(const IfInfo* ii, const CRInternalSceneObjectDesc& desc)= 0;
+	CRInternalSceneObjectIf* CreateInternalSceneObject(const IfInfo* ii, const CRInternalSceneObjectDesc& desc);
 	template <class T> CRInternalSceneObjectIf* CreateInternalSceneObject(const T& desc){
 		return CreateInternalSceneObject(T::GetIfInfo(), desc);
 	}
@@ -216,7 +216,7 @@ struct CRInternalSceneIf : SceneObjectIf{
 
 /// 内部シーンのデスクリプタ
 struct CRInternalSceneDesc{
-	DESC_DEF_FOR_OBJECT(CRInternalScene);
+	SPR_DESCDEF(CRInternalScene);
 
 	CRInternalSceneDesc(){
 	}

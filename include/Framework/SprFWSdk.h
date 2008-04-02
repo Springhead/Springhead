@@ -19,8 +19,8 @@ struct FWSdkDesc{
 };
 
 struct FWSceneIf;
-struct FWSdkIf : ObjectIf {
-	IF_DEF(FWSdk);
+struct FWSdkIf : SdkIf {
+	SPR_IFDEF(FWSdk);
 
 	/** @brief SDKオブジェクトを作成する
 	 */
@@ -30,7 +30,7 @@ struct FWSdkIf : ObjectIf {
 		空のシーンを作成し、シーンリストに追加する．
 		作成されたシーンはアクティブとなる．
 	 */
-	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc())=0;
+	FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
 
 	/** @brief シーンをファイルからロードする
 		@param filename ファイル名
@@ -38,80 +38,80 @@ struct FWSdkIf : ObjectIf {
 		ロード後は，ロードされたシーンがアクティブとなる．
 		ファイル中に複数のシーンが含まれていた場合は，最後にロードされたシーンがアクティブとなる．
 	 */
-	virtual bool LoadScene(UTString filename)=0;
+	bool LoadScene(UTString filename);
 
 	/** @brief シーンをファイルへセーブする
 		@param filename ファイル名
 	 */
-	virtual bool SaveScene(UTString filename)=0;
+	bool SaveScene(UTString filename);
 
 	/// シーンの個数を取得する
-	virtual int NScene() const=0;
+	int NScene() const;
 
 	/** @brief シーンを切り替える
 		@param scene
 		シーンsceneをアクティブにする
 	 */
-	virtual void	SwitchScene(FWSceneIf* scene)=0;
+	void	SwitchScene(FWSceneIf* scene);
 
 	/** @brief シーンを取得する
 		@param index 取得するシーンのインデックス．省略するとアクティブシーンを取得する．
 	 */
-	virtual FWSceneIf* GetScene(int index = -1)=0;
+	FWSceneIf* GetScene(int index = -1);
 
 	/** @brief シーンを混ぜる
 		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
 	 */
-	virtual void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1) = 0;
+	void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
 
 	/** @brief レンダラを作成する
 		レンダラを作成し，レンダラリストに追加する．
 		
 		＊引数でDeviceをGLかD3Dかを指定できるようにするべき
 	 */
-	virtual GRRenderIf*	CreateRender() = 0;
+	GRRenderIf*	CreateRender();
 	/** @brief レンダラの個数を取得する
 	 */
-	virtual int NRender() const = 0;
+	int NRender() const;
 	/** @brief レンダラを取得する
 	 */
-	virtual GRRenderIf* GetRender(int index = -1) = 0;
+	GRRenderIf* GetRender(int index = -1);
 	/** @brief レンダラをアクティブにする
 	 */
-	virtual void SwitchRender(GRRenderIf* render) = 0;
+	void SwitchRender(GRRenderIf* render);
 	
 	/// PHSdkオブジェクトを取得する
-	virtual PHSdkIf* GetPHSdk()=0;
+	PHSdkIf* GetPHSdk();
 
 	/// GRSdkオブジェクトを取得する
-	virtual GRSdkIf* GetGRSdk()=0;
+	GRSdkIf* GetGRSdk();
 
 	/// FISdkオブジェクトを取得する
-	virtual FISdkIf* GetFISdk()=0;
+	FISdkIf* GetFISdk();
 
 	/** @brief デバッグ描画モードの取得
 	 */
-	virtual bool GetDebugMode() = 0;
+	bool GetDebugMode();
 
 	/** @brief デバッグ描画モードの設定
 	 */
-	virtual void SetDebugMode(bool debug = true) = 0;
+	void SetDebugMode(bool debug = true);
 
 	/** @brief シミュレーションの実行
 	 */
-	virtual void Step()=0;
+	void Step();
 
 	/** @brief 描画を実行
 		アクティブなシーンとアクティブなレンダラを使って描画を行う．
 	 */
-	virtual void Draw() = 0;
+	void Draw();
 
 	/** @brief 描画領域のサイズを設定する
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
 		アクティブなレンダラの描画領域を設定する
 	 */
-	virtual void Reshape(int w, int h)=0;
+	void Reshape(int w, int h);
 
 	static void SPR_CDECL RegisterSdk();
 };

@@ -24,9 +24,6 @@ bool GRMaterialDesc::Is3D() const{
 
 //----------------------------------------------------------------------------
 //	GRRender
-IF_OBJECT_IMP_ABST(GRRenderBase, Object);
-IF_OBJECT_IMP(GRRender, GRRenderBase);
-
 void GRRender::Print(std::ostream& os) const{
 	device->Print(os);
 }
@@ -54,19 +51,13 @@ void GRRender::SetCamera(const GRCameraDesc& c){
 }
 
 //----------------------------------------------------------------------------
-//	GRDevice
-IF_OBJECT_IMP_ABST(GRDevice, GRRenderBase);
-
-//----------------------------------------------------------------------------
 //	GRMaterial
-IF_OBJECT_IMP(GRMaterial, GRVisual);
 void GRMaterial::Render(GRRenderIf* render){
 	render->SetMaterial(*this);
 }
 
 //----------------------------------------------------------------------------
 //	GRLight
-IF_OBJECT_IMP(GRLight, GRVisual);
 void GRLight::Render(GRRenderIf* render){
 	render->PushLight(*this);
 }
@@ -76,7 +67,6 @@ void GRLight::Rendered(GRRenderIf* render){
 
 //----------------------------------------------------------------------------
 //	GRCamera
-IF_OBJECT_IMP(GRCamera, GRVisual);
 size_t GRCamera::NChildObject() const {
 	return frame ? 1 : 0;
 }

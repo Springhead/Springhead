@@ -11,14 +11,13 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief Š´Šoˆ—
 */
-class CRSensor : public SceneObject, public CRSensorIfInit, public CRSensorDesc {
+class CRSensor : public SceneObject, public CRSensorDesc {
 protected:
 	/// ‚±‚ÌƒZƒ“ƒT‚Ì‚¿å‚½‚éCreature
 	CRCreatureIf* creature;
@@ -27,7 +26,7 @@ protected:
 	PHSceneIf* phScene;
 
 public:
-	OBJECTDEF(CRSensor, SceneObject);
+	SPR_OBJECTDEF(CRSensor);
 	ACCESS_DESC(CRSensor);
 
 	CRSensor(){}

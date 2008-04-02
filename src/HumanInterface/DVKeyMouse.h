@@ -14,7 +14,7 @@ namespace Spr {;
 ///	DVKeyMouse
 class SPR_DLL DVKeyMouse:public HIVirtualDevice, public DVKeyMouseIfInit{
 public:
-	OBJECTDEF_ABST(DVKeyMouse, HIVirtualDevice);
+	SPR_OBJECTDEF_ABST(DVKeyMouse, HIVirtualDevice);
 	///	デバイスの名前
 	virtual const char* Name() const =0;
 	///	デバイスの種類

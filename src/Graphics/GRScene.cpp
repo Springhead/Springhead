@@ -18,8 +18,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	GRScene
-IF_OBJECT_IMP(GRScene, Scene);
-
 GRScene::GRScene(const GRSceneDesc& desc):GRSceneDesc(desc){
 	Init();
 }

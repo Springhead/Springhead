@@ -11,8 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
-
 #include "CRController.h"
 
 //@{
@@ -187,7 +185,7 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief Šá‹…‰^“®ƒRƒ“ƒgƒ[ƒ‰‚ÌÀ‘•
 */
-class CREyeController : public CRController, public CREyeControllerIfInit, public CREyeControllerDesc {
+class CREyeController : public CRController, public CREyeControllerDesc {
 private:
 	/** @brief Ÿ‚Ì§Œäó‘Ô‚ğ‹‚ß‚é
 	*/
@@ -205,7 +203,7 @@ private:
 	CRSaccadeController saccadeCtrl;
 
 public:
-	OBJECTDEF(CREyeController, CRController);
+	SPR_OBJECTDEF(CREyeController);
 	ACCESS_DESC_STATE(CREyeController);
 
 	CREyeController(){}

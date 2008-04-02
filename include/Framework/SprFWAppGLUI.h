@@ -39,7 +39,7 @@ protected:
 public:
 	~FWAppGLUI();
 	virtual void		 Init(int argc, char* argv[]);
-	virtual void __cdecl DesignGUI() = 0;
+	virtual void SPR_CDECL DesignGUI() = 0;
 	virtual void		 Start();						// FWAppGLUTÇÃStart()Ç∆ÇÕíÜêgÇ™àŸÇ»ÇÈÇÃÇ≈è¡Ç≥Ç»Ç¢Ç±Ç∆ÅD
 	virtual GLUI*		 CreateGUI(int wid = 0, FWAppGLUIDesc desc = FWAppGLUIDesc());
 };

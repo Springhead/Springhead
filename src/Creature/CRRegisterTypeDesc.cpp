@@ -11,12 +11,8 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDumpCreature.h"
-
 namespace Spr{ 
-static UTTypeDesc* desc; 
-static UTTypeDesc::Field* field; 
-
+extern void RegisterTypeDescCreature(UTTypeDescDb* db);
 void SPR_CDECL CRRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
@@ -26,7 +22,7 @@ void SPR_CDECL CRRegisterTypeDescs(){
 
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("Creature");
 	assert(db);
-	#include "TypeDescDumpImpCreature.h"
+	RegisterTypeDescCreature(db);
 	db->Link();
 }
 }

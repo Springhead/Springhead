@@ -27,7 +27,7 @@ struct DRUsb20SimpleDesc{
 
 ///	物理シミュレーションSDK
 struct DRUsb20SimpleIf : public HIRealDeviceIf{
-	IF_DEF(DRUsb20Simple);
+	SPR_IFDEF(DRUsb20Simple);
 };
 
 //@}

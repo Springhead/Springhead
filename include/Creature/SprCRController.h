@@ -22,28 +22,28 @@ struct PHHingeJointIf;
 
 /// コントローラのインターフェイス
 struct CRControllerIf : SceneObjectIf{
-	IF_DEF(CRController);
+	SPR_IFDEF(CRController);
 
 	/** @brief 初期化を行う
 	*/
-	virtual void Init()= 0;
+	void Init();
 
 	/** @brief 制御処理を実行する
 	*/
-	virtual void Step()= 0;
+	void Step();
 
 	/** @breif 有効・無効を切り替える
 	*/
-	virtual void SetEnable(bool enable)= 0;
+	void SetEnable(bool enable);
 
 	/** @brief 有効・無効かを返す
 	*/
-	virtual bool IsEnabled()= 0;
+	bool IsEnabled();
 };
 
 /// コントローラのデスクリプタ
 struct CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRController);
+	SPR_DESCDEF(CRController);
 
 	CRControllerDesc(){
 	}
@@ -53,17 +53,17 @@ struct CRControllerDesc{
 
 /// 眼球運動コントローラのインターフェイス
 struct CREyeControllerIf : CRControllerIf{
-	IF_DEF(CREyeController);
+	SPR_IFDEF(CREyeController);
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 	*/
-	virtual void LookAt(Vec3f pos, Vec3f vel)= 0;
+	void LookAt(Vec3f pos, Vec3f vel);
 
 	/** @brief サッケード中かどうかを返す
 	*/
-	virtual bool IsSaccading()= 0;
+	bool IsSaccading();
 };
 
 /// 眼球運動コントローラのステート
@@ -76,7 +76,7 @@ struct CREyeControllerState{
 
 /// 眼球運動コントローラのデスクリプタ
 struct CREyeControllerDesc: public CREyeControllerState, public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CREyeController);
+	SPR_DESCDEF(CREyeController);
 
 	CREyeControllerDesc(){
 	}
@@ -86,13 +86,13 @@ struct CREyeControllerDesc: public CREyeControllerState, public CRControllerDesc
 
 /// 首運動コントローラのインターフェイス
 struct CRNeckControllerIf : CRControllerIf{
-	IF_DEF(CRNeckController);
+	SPR_IFDEF(CRNeckController);
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 	*/
-	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness)= 0;
+	void LookAt(Vec3f pos, Vec3f vel, float attractiveness);
 };
 
 /// 首運動コントローラのステート
@@ -101,7 +101,7 @@ struct CRNeckControllerState{
 
 /// 首運動コントローラのデスクリプタ
 struct CRNeckControllerDesc: public CRNeckControllerState, public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRNeckController);
+	SPR_DESCDEF(CRNeckController);
 
 	/// 首を動かしはじめるAttractivenessの閾値
 	float lowerAttractiveness;
@@ -118,30 +118,30 @@ struct CRNeckControllerDesc: public CRNeckControllerState, public CRControllerDe
 
 /// 到達運動コントローラのインターフェース
 struct CRReachingControllerIf : CRControllerIf{
-	IF_DEF(CRReachingController);
+	SPR_IFDEF(CRReachingController);
 
 	/** @brief 制御対象の剛体を返す
 	*/
-	virtual PHSolidIf* GetSolid()= 0;
+	PHSolidIf* GetSolid();
 
 	/** @brief 目標位置を設定する
 		（現在の実装では、到達運動の途中でも目標位置の変更は反映される。）
 		@param p 目標位置
 		@param v 目標の速度
 	*/
-	virtual void SetTargetPos(Vec3f p, Vec3f v)= 0;
+	void SetTargetPos(Vec3f p, Vec3f v);
 
 	/** @brief 目標姿勢を設定する
 		（現在の実装では、到達運動の途中でも目標姿勢の変更は反映される。）
 		@param q 目標姿勢
 		@param av 目標角速度
 	*/
-	virtual void SetTargetOri(Quaterniond q, Vec3f av)= 0;
+	void SetTargetOri(Quaterniond q, Vec3f av);
 
 	/** @brief 到達目標時間を設定する
 		@param t 目標到達時間
 	*/
-	virtual void SetTargetTime(float t)= 0;
+	void SetTargetTime(float t);
 
 	/** @brief 到達運動を開始する
 		（現在の実装では、到達運動の途中でもただちに新しい条件で運動を開始する。）
@@ -153,11 +153,11 @@ struct CRReachingControllerIf : CRControllerIf{
 		CM_P3R2,    // ３＋２自由度拘束（位置と向きを合わせるが、向きに１軸の自由度がある）
 		CM_P3R3,    // ３＋３自由度拘束（位置と向きを合わせる）
 	};
-	virtual void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime)=0;
+	void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime);
 
 	/** @brief 制御の残り時間を返す
 	*/
-	virtual float GetRemainingTime()= 0;
+	float GetRemainingTime();
 
 	/** @brief 到達状況を返す
 	*/
@@ -167,16 +167,16 @@ struct CRReachingControllerIf : CRControllerIf{
 		RS_SOLID_REACHED,      // 対象剛体も到達した
 		RS_STOP,               // 動作していない
 	};
-	virtual CRReachingControllerIf::ReachState GetReachState()= 0;
+	CRReachingControllerIf::ReachState GetReachState();
 
 	/** @brief 到達状態をやめる
 	*/
-	virtual void Reset()= 0;
+	void Reset();
 };
 
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRReachingController);
+	SPR_DESCDEF(CRReachingController);
 
 	PHSolidIf*  solid;    ///< 到達させたい剛体
 	Vec3f       reachPos; ///< 剛体内の到達させたいポイント
@@ -202,14 +202,14 @@ struct CRReachingControllerDesc : public CRControllerDesc{
 
 /// 視線コントローラ（眼球運動・首運動のコントローラの上位機構）のインターフェイス
 struct CRGazeControllerIf : CRControllerIf{
-	IF_DEF(CRGazeController);
+	SPR_IFDEF(CRGazeController);
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
 		@param vel 注視点の移動速度ベクトル
 		@param attractiveness 注意を引く度合い
 	*/
-	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness)= 0;
+	void LookAt(Vec3f pos, Vec3f vel, float attractiveness);
 };
 
 /// 視線コントローラのステート
@@ -218,7 +218,7 @@ struct CRGazeControllerState{
 
 /// 視線コントローラのデスクリプタ
 struct CRGazeControllerDesc: public CRGazeControllerState, public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRGazeController);
+	SPR_DESCDEF(CRGazeController);
 
 	CRGazeControllerDesc(){
 	}
@@ -228,13 +228,13 @@ struct CRGazeControllerDesc: public CRGazeControllerState, public CRControllerDe
 
 /// 注意コントローラのインタフェース
 struct CRAttentionControllerIf : CRControllerIf{
-	IF_DEF(CRAttentionController);
+	SPR_IFDEF(CRAttentionController);
 
 };
 
 /// 注意コントローラのデスクリプタ
 struct CRAttentionControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRAttentionController);
+	SPR_DESCDEF(CRAttentionController);
 
 	CRAttentionControllerDesc(){
 	}
@@ -243,24 +243,24 @@ struct CRAttentionControllerDesc : public CRControllerDesc{
 // ------------------------------------------------------------------------------
 /// 倒れたら立とうと努力するコントローラのインタフェース
 struct CRTryStandingUpControllerIf : CRControllerIf{
-	IF_DEF(CRTryStandingUpController);
+	SPR_IFDEF(CRTryStandingUpController);
 
 	/** @brief 初期化を行う
 	*/
-	virtual void Init() = 0;
+	void Init();
 
 	/** @brief 制御のシミュレーションをする
 	*/
-	virtual void Step() = 0;
+	void Step();
 
 	/** @brief 遺伝子情報のシンクロだけする
 	*/
-	virtual void Sync() =0;
+	void Sync() ;
 
 };
 /// 倒れたら立とうと努力するコントローラのデスクリプタ
 struct CRTryStandingUpControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRTryStandingUpController);
+	SPR_DESCDEF(CRTryStandingUpController);
 	
 	CRTryStandingUpControllerDesc(){
 	}
@@ -269,44 +269,44 @@ struct CRTryStandingUpControllerDesc : public CRControllerDesc{
 // ------------------------------------------------------------------------------
 /// 歩行コントローラのインタフェース
 struct CRWalkingControllerIf : CRControllerIf{
-	IF_DEF(CRWalkingController);
+	SPR_IFDEF(CRWalkingController);
 
 	/** @brief 歩行の速度を設定する
 	*/
-	virtual void SetSpeed(float speed)= 0;
+	void SetSpeed(float speed);
 
 	/** @brief 転回角度を設定する
 	*/
-	virtual void SetRotationAngle(float rot)= 0;
+	void SetRotationAngle(float rot);
 
 	/** @brief ワールド座標系の進行角度を設定する
 	*/
-	virtual void SetRotationWorldCoordinate(double r)= 0;
+	void SetRotationWorldCoordinate(double r);
 
 	/** @brief 静止する
 	*/
-	virtual void Stop()= 0;
+	void Stop();
 
 	/** @brief 後ろ向きに歩く
 	*/
-	virtual void Reverse()= 0;
+	void Reverse();
 
 	/** @brief 位置を設定する（初期状態決定のため）
 	*/
-	virtual void SetPos(Vec3f pos)= 0;
+	void SetPos(Vec3f pos);
 
 	/** @brief 基本歩行周期を取得
 	*/
-	virtual double GetBasicCycle()= 0;
+	double GetBasicCycle();
 
 	/** @brief 歩行の継続が不可能か？
 	*/
-	virtual bool IsCompleteFall()= 0;
+	bool IsCompleteFall();
 };
 
 /// 歩行コントローラのデスクリプタ
 struct CRWalkingControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRWalkingController);
+	SPR_DESCDEF(CRWalkingController);
 
 	/// 歩行コントローラの特性を決めるパラメータをここに記述．
 	/// 実行中に変化させるものや，ほかの要素（Bodyなど）から計算で求めるものは除く．
@@ -373,24 +373,24 @@ struct CRWalkingControllerDesc : public CRControllerDesc{
 // ------------------------------------------------------------------------------
 /// 偽歩行コントローラ：本当の歩行コントローラができるまでの中継ぎ
 struct CREseWalkingControllerIf : CRControllerIf{
-	IF_DEF(CREseWalkingController);
+	SPR_IFDEF(CREseWalkingController);
 
 	/** @brief 歩行の速度を設定する
 	*/
-	virtual void SetSpeed(float speed)= 0;
+	void SetSpeed(float speed);
 
 	/** @brief 転回角度を設定する
 	*/
-	virtual void SetRotationAngle(float rot)= 0;
+	void SetRotationAngle(float rot);
 
 	/** @brief 位置を設定する（初期状態決定のため）
 	*/
-	virtual void SetPos(Vec3f pos)= 0;
+	void SetPos(Vec3f pos);
 };
 
 /// 偽歩行コントローラのデスクリプタ
 struct CREseWalkingControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CREseWalkingController);
+	SPR_DESCDEF(CREseWalkingController);
 
 	CREseWalkingControllerDesc(){
 	}
@@ -399,16 +399,16 @@ struct CREseWalkingControllerDesc : public CRControllerDesc{
 // ------------------------------------------------------------------------------
 /// 移動コントローラ：目標地点への移動と障害物回避
 struct CRTravelControllerIf : CRControllerIf{
-	IF_DEF(CRTravelController);
+	SPR_IFDEF(CRTravelController);
 
 	/** @brief 目標地点を設定する
 	*/
-	virtual void SetGoal(Vec3f goal)= 0;
+	void SetGoal(Vec3f goal);
 };
 
 /// 移動コントローラのデスクリプタ
 struct CRTravelControllerDesc : public CRControllerDesc{
-	DESC_DEF_FOR_OBJECT(CRTravelController);
+	SPR_DESCDEF(CRTravelController);
 
 	CRTravelControllerDesc(){
 	}
@@ -417,64 +417,64 @@ struct CRTravelControllerDesc : public CRControllerDesc{
 // ------------------------------------------------------------------------------
 /// 把持コントローラ
 struct CRGrabControllerIf : CRControllerIf{
-	IF_DEF(CRGrabController);
+	SPR_IFDEF(CRGrabController);
 
 	/** @brief 物体の所へ手を伸ばしてつかむ．
 	*** @return true: Reach開始した． false: その物体へは手が届かない．
 	*/
-	virtual bool Reach(PHSolidIf* solid, float radius)= 0;
+	bool Reach(PHSolidIf* solid, float radius);
 
 	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
 	*/
-	virtual bool IsReachable(PHSolidIf* solid)= 0;
+	bool IsReachable(PHSolidIf* solid);
 
 	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
 	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
 	*/
-	virtual bool IsReachable(PHSolidIf* solid, float safety)= 0;
+	bool IsReachable(PHSolidIf* solid, float safety);
 
 	/** @brief Reachが完了したかどうかを返す
 	*/
-	virtual bool IsReachComplete()= 0;
+	bool IsReachComplete();
 
 	/** @brief 現在物体をつかんでいれば，その物体を手元に引き寄せ保持する．
 	*** @return true: Uphold開始した． false: 物体をつかんでいない(Reach未完了含む．)
 	*/
-	virtual bool Uphold()= 0;
+	bool Uphold();
 
 	/** @brief Upholdが可能かどうかを返す
 	*/
-	virtual bool IsUpholdable()= 0;
+	bool IsUpholdable();
 
 	/** @brief Upholdが完了したかどうかを返す
 	*/
-	virtual bool IsUpholdComplete()= 0;
+	bool IsUpholdComplete();
 
 	/** @brief 現在物体をつかんでいれば，その物体を特定の場所に置く．
 	*** @return true: Place開始した． false: その場所へは手が届かない，または物体を持ってない．
 	*/
-	virtual bool Place(Vec3d pos)= 0;
+	bool Place(Vec3d pos);
 
 	/** @brief Placeが可能かどうかを返す
 	*/
-	virtual bool IsPlaceable(Vec3d pos)= 0;
+	bool IsPlaceable(Vec3d pos);
 
 	/** @brief Placeが可能かどうかを返す
 	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
 	*/
-	virtual bool IsPlaceable(Vec3d pos, float safety)= 0;
+	bool IsPlaceable(Vec3d pos, float safety);
 
 	/** @brief Placeが完了したかどうかを返す
 	*/
-	virtual bool IsPlaceComplete()= 0;
+	bool IsPlaceComplete();
 
 	/** @brief 現在の動作を中断する
 	*/
-	virtual void Abort()= 0;
+	void Abort();
 
 	/** @brief すべての把持動作を中断する
 	*/
-	virtual void AbortAll()= 0;
+	void AbortAll();
 
 	/** @brief 現在の動作状態を返す
 	*/
@@ -484,12 +484,12 @@ struct CRGrabControllerIf : CRControllerIf{
 		CRGC_UPHOLD, CRGC_UPHOLD_COMPLETE,
 		CRGC_PLACE,  CRGC_PLACE_COMPLETE,
 	};
-	virtual CRGrabControllerIf::CRGCControlState GetControlState()= 0;
+	CRGrabControllerIf::CRGCControlState GetControlState();
 };
 
 /// 把持コントローラのデスクリプタ
 struct CRGrabControllerDesc : public CRControllerDesc {
-	DESC_DEF_FOR_OBJECT(CRGrabController);
+	SPR_DESCDEF(CRGrabController);
 
 	/// 体を柔らかくするためのバネダンパへの係数
 	double rateSpringSoften, rateDamperSoften;

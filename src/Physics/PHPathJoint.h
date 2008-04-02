@@ -11,6 +11,7 @@
 #include <SprPhysics.h>
 #include <Physics/PHSpatial.h>
 #include <Physics/PHConstraint.h>
+#include <Physics/PHTreeNode.h>
 
 namespace Spr{;
 
@@ -36,12 +37,12 @@ struct PHPathPointWithJacobian : public PHPathPoint{
 	Matrix6d	J;
 };
 
-class PHPath : public SceneObject, public PHPathIfInit, public std::vector<PHPathPointWithJacobian>{
+class PHPath : public SceneObject, public std::vector<PHPathPointWithJacobian>{
 	bool bReady;
 	bool bLoop;	//[-pi, pi]‚Ì–³ŒÀ‰ñ“]ŠÖß
 	iterator Find(double &s);
 public:
-	OBJECTDEF_ABST(PHPath, SceneObject);
+	SPR_OBJECTDEF_ABST(PHPath);
 	virtual bool GetDesc(void* desc)const;
 	virtual void SetDesc(const void* desc);
 
@@ -52,13 +53,14 @@ public:
 	void GetPose(double s, Posed& pose);
 	void GetJacobian(double s, Matrix6d& J);
 	void Rollover(double& s);
-	PHPath(const PHPathDesc& desc);
+	PHPath(const PHPathDesc& desc=PHPathDesc());
 };
 
-class PHPathJointNode : public PHTreeNode1D, public PHPathJointNodeIfInit{
+class PHPathJoint;
+class PHPathJointNode : public PHTreeNode1D{
 public:
-	OBJECTDEF(PHPathJointNode, PHTreeNode1D);
-	PHPathJoint* GetJoint(){return DCAST(PHPathJoint, PHTreeNode1D::GetJoint());}
+	SPR_OBJECTDEF(PHPathJointNode);
+	PHPathJoint* GetJoint(){return PHTreeNode1D::GetJoint()->Cast();}
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
@@ -67,8 +69,8 @@ public:
 	PHPathJointNode(const PHPathJointNodeDesc& desc = PHPathJointNodeDesc()){}
 };
 
-class PHPathJoint : public PHJoint1D, public PHPathJointIfInit{
-	OBJECTDEF(PHPathJoint, PHJoint1D);
+class PHPathJoint : public PHJoint1D{
+	SPR_OBJECTDEF(PHPathJoint);
 	UTRef<PHPath> path;
 public:
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}

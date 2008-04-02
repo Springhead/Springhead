@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include "CRController.h"
 
@@ -22,7 +21,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 把持コントローラ
 */
-class CRGrabController : public CRController, public CRGrabControllerIfInit, public CRGrabControllerDesc {
+class CRGrabController : public CRController, public CRGrabControllerDesc {
 private:
 	/// 下位のコントローラ：ReachingController
 	CRReachingControllerIf *reachLeft, *reachRight, *reachChest;
@@ -64,7 +63,7 @@ private:
 	GrabSpringMap grabSpringMap;
 
 public:
-	OBJECTDEF(CRGrabController, CRController);
+	SPR_OBJECTDEF(CRGrabController);
 	ACCESS_DESC(CRGrabController);
 
 	CRGrabController(){}

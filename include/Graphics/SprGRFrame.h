@@ -27,11 +27,11 @@ struct GRVisualDesc{
 
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
 struct GRVisualIf: public NamedObjectIf{
-	IF_DEF(GRVisual);
+	SPR_IFDEF(GRVisual);
 	///	レンダリング．子ノード，弟ノードのレンダリングより前に呼ばれる．
-	virtual void Render(GRRenderIf* r)=0;
+	void Render(GRRenderIf* r);
 	///	レンダリング終了処理．子ノード，弟ノードのレンダリングが終わってから呼ばれる．
-	virtual void Rendered(GRRenderIf* r)=0;
+	void Rendered(GRRenderIf* r);
 };
 		
 ///	DirectX の Frame の変換を表す FrameTransformMatrix ノードを読むためのDesc
@@ -42,34 +42,34 @@ struct GRFrameTransformMatrix{
 	
 /**	@brief	グラフィックスシーングラフのツリーのノード．座標系を持つ．*/
 struct GRFrameIf: public GRVisualIf{
-	IF_DEF(GRFrame);
+	SPR_IFDEF(GRFrame);
 
 	/** @brief 親フレームを取得する */
-	virtual GRFrameIf* GetParent()=0;
+	GRFrameIf* GetParent();
 
 	/** @brief 親フレームを設定する */
-	virtual void SetParent(GRFrameIf* fr)=0;
+	void SetParent(GRFrameIf* fr);
 
 	/** @brief 子ノードの数を取得 */
-	virtual int NChildren() = 0;
+	int NChildren();
 
 	/** @brief 子ノードの配列を取得 */
-	virtual GRVisualIf** GetChildren() = 0;
+	GRVisualIf** GetChildren();
 
 	/** @brief 親ノードとの相対変換を取得 */
-	virtual Affinef GetTransform()=0;
+	Affinef GetTransform();
 
 	/** @brief ワールドフレームとの相対変換を取得 */
-	virtual Affinef GetWorldTransform()=0;
+	Affinef GetWorldTransform();
 
 	/** @brief 親ノードとの相対変換を設定 */
-	virtual void SetTransform(const Affinef& af)=0;
+	void SetTransform(const Affinef& af);
 
-	virtual void Print(std::ostream& os) const =0;
+	void Print(std::ostream& os) const ;
 };
 ///	@brief GRFrame のDesc．座標系を指定する
 struct GRFrameDesc:public GRVisualDesc{
-	DESC_DEF_FOR_OBJECT(GRFrame);
+	SPR_DESCDEF(GRFrame);
 	Affinef transform;
 };
 
@@ -78,25 +78,25 @@ struct GRFrameDesc:public GRVisualDesc{
 	後でプログラムから使うために，Visualを入れておくためのコンテナ．
 	描画などをしないので安心してしまっておける．	*/
 struct GRDummyFrameIf: public GRVisualIf{
-	IF_DEF(GRDummyFrame);
+	SPR_IFDEF(GRDummyFrame);
 };
 /**	@brief GRDummyFrame のDesc．ダミーフレーム．
 	Meshなどを表示したくはないが，とりあえずロードだけしておき，
 	後でプログラムで参照したい場合，ダミーフレームに入れておけば
 	無駄な描画がされない．	*/
 struct GRDummyFrameDesc:public GRVisualDesc{
-	DESC_DEF_FOR_OBJECT(GRDummyFrame);
+	SPR_DESCDEF(GRDummyFrame);
 };
 
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationIf: public SceneObjectIf{
-	IF_DEF(GRAnimation);
+	SPR_IFDEF(GRAnimation);
 	///	アニメーション名と時刻で定まるボーンの変更を，重みをつけて現在のボーンの変換行列に適用する．
-	virtual void BlendPose(float time, float weight)=0;
+	void BlendPose(float time, float weight);
 	///	ボーンの変換行列を初期値に戻す．
-	virtual void ResetPose()=0;
+	void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
-	virtual void LoadInitialPose()=0;
+	void LoadInitialPose();
 };
 ///	@brief アニメーションのデスクリプタ XのAnimationに対応
 struct GRKey{
@@ -109,7 +109,7 @@ struct GRAnimationKey{
 	std::vector<GRKey> keys;		//	時刻と変換のセット
 };
 struct GRAnimationDesc{
-	DESC_DEF_FOR_OBJECT(GRAnimation);
+	SPR_DESCDEF(GRAnimation);
 	enum KeyType { ROTATION, SCALE, POSITION, MATRIX };
 	///	複数のAnimationKeyでひとつの変換を表す
 	std::vector<GRAnimationKey> keys;	
@@ -117,32 +117,32 @@ struct GRAnimationDesc{
 
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationSetIf: public SceneObjectIf{
-	IF_DEF(GRAnimationSet);
+	SPR_IFDEF(GRAnimationSet);
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
-	virtual void BlendPose(float time, float weight)=0;
+	void BlendPose(float time, float weight);
 	///	フレームの変換行列を初期値に戻す．
-	virtual void ResetPose()=0;
+	void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
-	virtual void LoadInitialPose()=0;
+	void LoadInitialPose();
 };
 ///	@brief アニメーションセットのデスクリプタ
 struct GRAnimationSetDesc{
-	DESC_DEF_FOR_OBJECT(GRAnimationSet);
+	SPR_DESCDEF(GRAnimationSet);
 };
 
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationControllerIf: public SceneObjectIf{
-	IF_DEF(GRAnimationController);
+	SPR_IFDEF(GRAnimationController);
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
-	virtual void BlendPose(UTString name, float time, float weight)=0;
+	void BlendPose(UTString name, float time, float weight);
 	///	フレームの変換行列を初期値に戻す．
-	virtual void ResetPose()=0;
+	void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
-	virtual void LoadInitialPose()=0;
+	void LoadInitialPose();
 };
 ///	@brief アニメーションコントローラのデスクリプタ
 struct GRAnimationControllerDesc{
-	DESC_DEF_FOR_OBJECT(GRAnimationController);
+	SPR_DESCDEF(GRAnimationController);
 };
 //@}
 }

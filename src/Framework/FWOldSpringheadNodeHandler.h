@@ -8,6 +8,8 @@
 #ifndef FWOLDSPRINGHEADNODEHANDLER_H
 #define FWOLDSPRINGHEADNODEHANDLER_H
 
+#if (!defined SWIG) || (defined SWIG_OLDNODEHANDLER)
+
 namespace SprOldSpringhead{;
 using namespace Spr;
 
@@ -243,4 +245,5 @@ struct Import{
 //@}
 
 }
+#endif
 #endif

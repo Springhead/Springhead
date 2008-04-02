@@ -17,8 +17,6 @@
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDebugRender
-IF_OBJECT_IMP(GRDebugRender, GRRender);
-
 /// コンストラクタ
 GRDebugRender::GRDebugRender(){
 	matSampleCount = 24;		// 24種類

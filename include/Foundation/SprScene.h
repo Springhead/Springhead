@@ -16,7 +16,7 @@
 namespace Spr{;
 
 struct NameManagerIf: public NamedObjectIf{
-	IF_DEF(NameManager);
+	SPR_IFDEF(NameManager);
 	template <class T> void FindObject(UTRef<T>& t, UTString name){
 		T* p;
 		FindObject(p, name);
@@ -26,15 +26,15 @@ struct NameManagerIf: public NamedObjectIf{
 		NamedObjectIf* p = FindObject(name,T::GetIfInfoStatic()->className);
 		t = DCAST(T, p);
 	}
-	virtual NamedObjectIf* FindObject(UTString name, UTString cls="")=0;
+	NamedObjectIf* FindObject(UTString name, UTString cls="");
 };
 
 struct SceneIf: public NameManagerIf{
-	IF_DEF(Scene);
+	SPR_IFDEF(Scene);
 };
 
 struct SdkIf: public NameManagerIf{
-	IF_DEF(Sdk);
+	SPR_IFDEF(Sdk);
 	static SdkIf* SPR_CDECL CreateSdk(const IfInfo* info, const void* desc);
 };
 

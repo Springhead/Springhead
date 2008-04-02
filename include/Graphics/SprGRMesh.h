@@ -22,11 +22,11 @@ namespace Spr{;
 
 /**	@brief	グラフィックスで使う表示用のMesh */
 struct GRMeshIf: public GRVisualIf{
-	IF_DEF(GRMesh);
+	SPR_IFDEF(GRMesh);
 };
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
 struct GRMeshDesc : GRVisualDesc{
-	DESC_DEF_FOR_OBJECT(GRMesh);
+	SPR_DESCDEF(GRMesh);
 	std::vector<Vec3f> positions;				///< 頂点の座標
 	std::vector<Vec3f> normals;					///< 頂点の法線
 	std::vector<Vec4f> colors;					///< 頂点の色

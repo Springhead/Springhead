@@ -22,20 +22,20 @@ struct CROpticalSensorIf;
 // ------------------------------------------------------------------------------
 /// センサのインタフェース
 struct CRSensorIf : SceneObjectIf{
-	IF_DEF(CRSensor);
+	SPR_IFDEF(CRSensor);
 
 	/** @brief 初期化を行う
 	*/
-	virtual void Init()= 0;
+	void Init();
 
 	/** @brief 感覚入力の処理を実行する
 	*/
-	virtual void Step()= 0;
+	void Step();
 };
 
 /// センサのデスクリプタ
 struct CRSensorDesc{
-	DESC_DEF_FOR_OBJECT(CRSensor);
+	SPR_DESCDEF(CRSensor);
 
 	CRSensorDesc(){
 	}
@@ -44,32 +44,32 @@ struct CRSensorDesc{
 // ------------------------------------------------------------------------------
 /// 視覚センサのインタフェース
 struct CROpticalSensorIf : CRSensorIf{
-	IF_DEF(CROpticalSensor);
+	SPR_IFDEF(CROpticalSensor);
 
 	/** @brief 視野内外判定を行う
 	*/
-	virtual bool IsVisible(PHSolidIf* solid)= 0;
+	bool IsVisible(PHSolidIf* solid);
 
 	/** @brief 中心視野内外判定を行う
 	*/
-	virtual bool IsInCenter(PHSolidIf* solid)= 0;
+	bool IsInCenter(PHSolidIf* solid);
 
 	/** @brief 視野内外判定を行う
 	*/
-	virtual bool IsVisible(Vec3f pos)= 0;
+	bool IsVisible(Vec3f pos);
 
 	/** @brief 中心視野内外判定を行う
 	*/
-	virtual bool IsInCenter(Vec3f pos)= 0;
+	bool IsInCenter(Vec3f pos);
 
 	/** @brief 自分自身の剛体かどうかを判定する
 	*/
-	virtual bool IsSelfSolid(PHSolidIf* solid)= 0;
+	bool IsSelfSolid(PHSolidIf* solid);
 };
 
 /// 視覚センサのデスクリプタ
 struct CROpticalSensorDesc : CRSensorDesc{
-	DESC_DEF_FOR_OBJECT(CROpticalSensor);
+	SPR_DESCDEF(CROpticalSensor);
 
 	CROpticalSensorDesc(){
 	}

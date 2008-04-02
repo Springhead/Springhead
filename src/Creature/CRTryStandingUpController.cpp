@@ -9,8 +9,6 @@
 
 namespace Spr{;
 
-IF_OBJECT_IMP(CRTryStandingUpController, CRController);
-
 //------------------------------------------------------------------------------------------
 // private Func:
 

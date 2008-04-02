@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include "CRController.h"
 
@@ -20,7 +19,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 首（頭部）運動コントローラ
 */
-class CRNeckController : public CRController, public CRNeckControllerIfInit, public CRNeckControllerDesc {
+class CRNeckController : public CRController, public CRNeckControllerDesc {
 private:
 	/// 注視点
 	Vec3d pos, vel;
@@ -38,7 +37,7 @@ private:
 	double origX, origZ;
 
 public:
-	OBJECTDEF(CRNeckController, CRController);
+	SPR_OBJECTDEF(CRNeckController);
 	ACCESS_DESC_STATE(CRNeckController);
 
 	CRNeckController(){}

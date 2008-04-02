@@ -15,9 +15,9 @@
 namespace Spr{;
 
 ///	ヒンジ関節のツリーノード
-class PHHingeJointNode : public PHTreeNode1D, public PHHingeJointNodeIfInit{
+class PHHingeJointNode : public PHTreeNode1D{
 public:
-	OBJECTDEF(PHHingeJointNode, PHTreeNode1D);
+	SPR_OBJECTDEF(PHHingeJointNode);
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
@@ -26,9 +26,9 @@ public:
 };
 
 ///	ヒンジ関節
-class PHHingeJoint : public PHJoint1D, public PHHingeJointIfInit{
+class PHHingeJoint : public PHJoint1D{
 public:
-	OBJECTDEF(PHHingeJoint, PHJoint1D);
+	SPR_OBJECTDEF(PHHingeJoint);
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
 	virtual void CompBias();
 	virtual void UpdateJointState();

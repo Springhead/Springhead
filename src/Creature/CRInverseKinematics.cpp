@@ -17,10 +17,6 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // êßå‰ì_
-IF_OBJECT_IMP(CRIKControl, SceneObject);
-
-// --- --- --- --- ---
-IF_OBJECT_IMP(CRIKControlPos, CRIKControl);
 
 Vec3d CRIKControlPos::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
@@ -35,8 +31,6 @@ Vec3d CRIKControlPos::GetTmpGoal(){
 }
 
 // --- --- --- --- ---
-IF_OBJECT_IMP(CRIKControlOri, CRIKControl);
-
 Vec3d CRIKControlOri::GetTmpGoal(){
 	Vec3d sorieul; solid->GetPose().Ori().ToEular(sorieul);
 	Vec3d dir = goal - sorieul;
@@ -51,8 +45,6 @@ Vec3d CRIKControlOri::GetTmpGoal(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // êßå‰ëŒè€
-IF_OBJECT_IMP(CRIKMovable, SceneObject);
-
 Matrix3d CrossMatrix(Vec3d v){
 	Matrix3d c = Matrix3d();
 	c[0][1] = -v[2];
@@ -137,8 +129,6 @@ PTM::VMatrixRow<double> CRIKMovable::CalcJacobian(CRIKControlIf* control){
 }
 
 // --- --- --- --- ---
-IF_OBJECT_IMP(CRIKMovableSolidPos, CRIKMovable);
-
 PTM::VMatrixRow<double> CRIKMovableSolidPos::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
@@ -162,8 +152,6 @@ PTM::VMatrixRow<double> CRIKMovableSolidPos::CalcJacobian(CRIKControlIf* control
 }
 
 // --- --- --- --- ---
-IF_OBJECT_IMP(CRIKMovableSolidOri, CRIKMovable);
-
 PTM::VMatrixRow<double> CRIKMovableSolidOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
@@ -179,8 +167,6 @@ PTM::VMatrixRow<double> CRIKMovableSolidOri::CalcJacobian(CRIKControlIf* control
 }
 
 // --- --- --- --- ---
-IF_OBJECT_IMP(CRIKMovableBallJointOri, CRIKMovable);
-
 PTM::VMatrixRow<double> CRIKMovableBallJointOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
@@ -205,8 +191,6 @@ PTM::VMatrixRow<double> CRIKMovableBallJointOri::CalcJacobian(CRIKControlIf* con
 }
 
 // --- --- --- --- ---
-IF_OBJECT_IMP(CRIKMovable3HingeJointOri, CRIKMovable);
-
 PTM::VMatrixRow<double> CRIKMovable3HingeJointOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){
@@ -250,8 +234,6 @@ void CRIKMovable3HingeJointOri::Move(){
 }
 
 // --- --- --- --- ---
-IF_OBJECT_IMP(CRIKMovableHingeJointOri, CRIKMovable);
-
 PTM::VMatrixRow<double> CRIKMovableHingeJointOri::CalcJacobian(CRIKControlIf* control){
 	CRIKControlPosIf* cpPos;
 	if (cpPos = DCAST(CRIKControlPosIf,control)){

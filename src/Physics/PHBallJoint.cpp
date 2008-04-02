@@ -36,8 +36,6 @@ PHBallJointDesc::PHBallJointDesc(){
 
 //----------------------------------------------------------------------------
 // PHBallJoint
-IF_OBJECT_IMP(PHBallJoint, PHJoint);
-
 PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 3;
@@ -275,8 +273,6 @@ void PHBallJoint::Projection(double& f, int k){
 
 //----------------------------------------------------------------------------
 // PHBallJointNode
-IF_OBJECT_IMP(PHBallJointNode, PHTreeNode)
-
 void PHBallJointNode::CompJointJacobian(){
 	PHBallJoint* j = GetJoint();
 	//SwingTwist& angle = (SwingTwist&)(j->position);

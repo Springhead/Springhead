@@ -27,7 +27,7 @@ struct HISdkDesc{
 
 ///	物理シミュレーションSDK
 struct HISdkIf : public NameManagerIf{
-	IF_DEF(HISdk);
+	SPR_IFDEF(HISdk);
 
 	///	SDKの初期化
 	virtual void Init()=0;

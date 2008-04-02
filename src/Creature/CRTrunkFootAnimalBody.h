@@ -11,8 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
-
 #include <vector>
 
 #include "CRBody.h"
@@ -23,7 +21,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRTrunkFootAnimalBody
 // ヒンジジョイントを用いた哺乳類モデル・クラスの実装（未実装：中身はTrunkFootHumanBody）
-class CRTrunkFootAnimalBody : public CRBody, public CRTrunkFootAnimalBodyIfInit, public CRTrunkFootAnimalBodyDesc {
+class CRTrunkFootAnimalBody : public CRBody, public CRTrunkFootAnimalBodyDesc {
 private:
 	void InitBody();
 	void CreateWaist();
@@ -36,7 +34,7 @@ private:
 	void InitContact();
 
 public:
-	OBJECTDEF(CRTrunkFootAnimalBody, CRBody);
+	SPR_OBJECTDEF(CRTrunkFootAnimalBody);
 	ACCESS_DESC(CRTrunkFootAnimalBody);
 
 	CRTrunkFootAnimalBody(){}

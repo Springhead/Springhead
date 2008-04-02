@@ -9,16 +9,15 @@
 #define FISdk_H
 #include <Foundation/Scene.h>
 #include <FileIO/SprFISdk.h>
-#include "IfStubFileIO.h"
 
 namespace Spr {;
 
 class FIFile;
-class SPR_DLL FISdk:public Sdk, public FISdkIfInit{
+class SPR_DLL FISdk:public Sdk{
 public:
 
 	std::vector< UTRef<FIFile> > files;
-	OBJECTDEF(FISdk, Object);
+	SPR_OBJECTDEF(FISdk);
 	FISdk();
 	~FISdk();
 	FIFileXIf* CreateFileX();

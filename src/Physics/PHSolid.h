@@ -79,12 +79,12 @@ enum PHIntegrationMode{
 };
 
 class PHSolid;
-class PHFrame: public NamedObject, public PHFrameIfInit, public PHFrameDesc{
+class PHFrame: public SceneObject, public PHFrameDesc{
 protected:
 	PHSolid* solid;
 	friend class PHSolid;
 public:
-	OBJECTDEF(PHFrame, NamedObject);
+	SPR_OBJECTDEF(PHFrame);
 
 	PHFrame();
 	PHFrame(const PHFrameDesc& desc);
@@ -101,7 +101,7 @@ class PHScene;
 class PHConstraintEngine;
 
 ///	剛体
-class PHSolid : public SceneObject, public PHSolidIfInit, public PHSolidDesc{
+class PHSolid : public SceneObject, public PHSolidDesc{
 protected:
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	bool		bFrozen;		///<	フリーズ状態か
@@ -154,7 +154,7 @@ public:
 	std::vector< UTRef<PHFrame> > frames;
 	PHBBox bbox;
 
-	OBJECTDEF(PHSolid, SceneObject);
+	SPR_OBJECTDEF(PHSolid);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	CDShapeIf* CreateAndAddShape(const IfInfo* info, const CDShapeDesc& desc);
@@ -321,7 +321,7 @@ public:
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHEngine{
-	OBJECTDEF_NOIF(PHSolidContainer, PHEngine);
+	SPR_OBJECTDEF_NOIF(PHSolidContainer);
 public:
 	PHSolidIfs solids;
 	///
@@ -344,7 +344,7 @@ public:
 
 /** SolidContainerのResetを呼ぶためだけのエンジン */
 class PHSolidInitializer : public PHEngine{
-	OBJECTDEF_NOIF(PHSolidInitializer, PHEngine);
+	SPR_OBJECTDEF_NOIF(PHSolidInitializer);
 public:
 	PHSolidContainer* container;
 	

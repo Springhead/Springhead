@@ -36,7 +36,7 @@ typedef void (SPR_CDECL *GRAnimationMeshDrawSubsetListenerFunc)(DWORD attribId, 
 
 /**	@brief	グラフィックスで使うキャラクタアニメーション表示用のMesh */
 struct GRAnimationMeshIf: public GRVisualIf{
-	IF_DEF(GRAnimationMesh);
+	SPR_IFDEF(GRAnimationMesh);
 	virtual void SetMotion(const std::string& name)=0;		///< モーションを選択
 	virtual void SetTime(double time)=0;					///< モーションの時刻を設定(単位は秒)
 	virtual void SetBlend(const std::vector<GRAnimationMeshBlendData>& data)=0;

@@ -14,7 +14,7 @@
 #endif
 
 namespace Spr{
-IF_OBJECT_IMP(CRBody, SceneObject);
+
 
 PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc){
 	PHJointIf* joint;

@@ -48,8 +48,6 @@ FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 
 //----------------------------------------------------------------------------
 //	FWSdk
-IF_OBJECT_IMP(FWSdk, Sdk);
-
 FWSdk::FWSdk(){
 	name="fwSdk";
 	CreateSdks();

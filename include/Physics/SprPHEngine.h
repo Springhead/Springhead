@@ -15,42 +15,42 @@ namespace Spr{;
 ///	エンジンの基本クラス
 struct PHEngineIf : public SceneObjectIf{
 public:
-	IF_DEF(PHEngine);
+	SPR_IFDEF(PHEngine);
 };
 
 struct PHConstraintEngineIf : PHEngineIf{
 public:
-	IF_DEF(PHConstraintEngine);
+	SPR_IFDEF(PHConstraintEngine);
 
 	/** @brief 接触点の集合を返す
 	*/
-	virtual PHConstraintsIf* GetContactPoints() = 0;
+	PHConstraintsIf* GetContactPoints();
 
 	/** @brief velCorrectionRateを書き換える
 		@param value 書き換え後の値
 	*/
-	virtual void SetVelCorrectionRate(double value) = 0;
+	void SetVelCorrectionRate(double value);
 
 	/** @brief posCorrectionRateを書き換える
 		@param value 書き換え後の値
 	*/
-	virtual void SetPosCorrectionRate(double value) = 0;
+	void SetPosCorrectionRate(double value);
 
 	/** @brief contactCorrectionRateを書き換える
 		@param value 書き換え後の値
 	*/
-	virtual void SetContactCorrectionRate(double value) = 0;
+	void SetContactCorrectionRate(double value);
 
 };
 
 struct PHGravityEngineIf : PHEngineIf{
 public:
-	IF_DEF(PHGravityEngine);
+	SPR_IFDEF(PHGravityEngine);
 };
 
 struct PHPenaltyEngineIf : PHEngineIf{
 public:
-	IF_DEF(PHPenaltyEngine);
+	SPR_IFDEF(PHPenaltyEngine);
 };
 //@}
 }

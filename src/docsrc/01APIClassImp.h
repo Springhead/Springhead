@@ -12,7 +12,7 @@ APIƒNƒ‰ƒX‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ÍCSpringhead2/include/SDKNAME ‚Éì‚è‚Ü‚·D
 APIƒNƒ‰ƒX‚ðéŒ¾‚·‚é‚É‚ÍC
 <pre>
  struct SceneObjectIf: NamedObjectIf{
- 	IF_DEF(SceneObject);
+ 	SPR_IFDEF(SceneObject);
  	///	Š‘®Scene‚ÌŽæ“¾
  	virtual SceneIf* GetScene() =0;
  };
@@ -20,21 +20,19 @@ APIƒNƒ‰ƒX‚ðéŒ¾‚·‚é‚É‚ÍC
 ‚Ì‚æ‚¤‚ÉC
 <ol>
  <li> Šî–{‚ÌƒCƒ“ƒ^ƒtƒF[ƒXƒNƒ‰ƒX‚ðŒp³‚·‚éD
- <li> IFDEF(ƒNƒ‰ƒX–¼)ƒƒ“ƒo‚ðŽ‚ÂD
+ <li> SPR_IFDEF(ƒNƒ‰ƒX–¼)ƒƒ“ƒo‚ðŽ‚ÂD
  <li> APIŠÖ”‚ðƒˆ‰¼‘zŠÖ”‚Æ‚µ‚ÄéŒ¾‚·‚éD
 </ol>
 ‚ð‚µ‚Ü‚·D
-
-\subsection secTypeInfoOfAPIClass APIƒNƒ‰ƒX‚ÌŒ^î•ñ
-APIƒNƒ‰ƒX‚ðéŒ¾‚µ‚½‚çCƒ‰ƒCƒuƒ‰ƒŠ‚Ìƒ\[ƒXƒtƒ@ƒCƒ‹
-Springhead2/src/SDKNAME/ƒIƒuƒWƒFƒNƒg–¼.cpp (PHSolid.cpp ‚È‚Ç)‚É
+SPR_IFDEF()‚ÍC‚¢‚­‚Â‚©‚Ìƒƒ“ƒo‚ÌéŒ¾‚ð‚Ü‚Æ‚ß‚½‚à‚Ì‚Å‚·D
+SPR_IFDEF()‚É‘Î‰ž‚·‚éŽÀ‘•‚ÍCSpringhead2/bin/swig/swig.exe ‚ªŽ©“®¶¬‚µ‚Ü‚·D
+Springhead2/src/SDKNAME/SDKNAMEStub.cpp
+‚ÉC
 <pre>
- IF_IMP(SceneObject, NamedObject)
+SPR_IFIMP?(ƒNƒ‰ƒX–¼, Šî–{ƒNƒ‰ƒX–¼);
 </pre>
-‚ð’è‹`‚µ‚Ü‚·D
-‚±‚Ìƒ}ƒNƒ‚ÍCƒNƒ‰ƒX‚ÌŒp³ŠÖŒW‚ðƒOƒ[ƒoƒ‹•Ï”‚Æ‚µ‚Ä•Û‘¶‚µ‚Ü‚·D
-ƒLƒƒƒXƒg‚Ìƒ}ƒNƒ DCAST ‚Í‚±‚Ìî•ñ‚ðŽg‚Á‚ÄƒLƒƒƒXƒg‚µ‚Ü‚·D
-
+‚Æ‚¢‚¤s‚ª‚Å‚«‚Ü‚·D‚±‚ê‚ÍSPR_IFDEF()‚É‘Î‰ž‚·‚éƒƒ“ƒo‚ÌŽÀ‘•‚É‚È‚è‚Ü‚·D
+Cast()ƒƒ“ƒoŠÖ”CDCAST()ƒ}ƒNƒ‚ª—˜—p‚·‚éŒ^î•ñ‚à‚±‚±‚É“ü‚è‚Ü‚·D
 
 \section secCreateImplementClass ŽÀ‘•ƒNƒ‰ƒX‚Ìì‚è•û
 APIƒNƒ‰ƒX‚ðì‚Á‚½‚çC‚»‚ê‚ðŽÀ‘•‚·‚éƒNƒ‰ƒX‚ðì‚è‚Ü‚·D
@@ -43,7 +41,7 @@ APIƒNƒ‰ƒX‚ðì‚Á‚½‚çC‚»‚ê‚ðŽÀ‘•‚·‚éƒNƒ‰ƒX‚ðì‚è‚Ü‚·D
 ŽÀ‘•ƒNƒ‰ƒX‚ÍC~
 <pre>
  class SceneObject:public NamedObject, SceneObjectIfInit{
- 	OBJECT_DEF(SceneObject);		///<	ƒNƒ‰ƒX–¼‚ÌŽæ“¾‚È‚Ç‚ÌŠî–{‹@”\‚ÌŽÀ‘•
+ 	SPR_OBJECTDEF(SceneObject);		///<	ƒNƒ‰ƒX–¼‚ÌŽæ“¾‚È‚Ç‚ÌŠî–{‹@”\‚ÌŽÀ‘•
  public:
  	virtual void SetScene(SceneIf* s);
  	virtual SceneIf* GetScene();
@@ -53,64 +51,50 @@ APIƒNƒ‰ƒX‚ðì‚Á‚½‚çC‚»‚ê‚ðŽÀ‘•‚·‚éƒNƒ‰ƒX‚ðì‚è‚Ü‚·D
 </pre>
 ‚Ì‚æ‚¤‚ÉCéŒ¾‚µ‚Ü‚·D
 
-\subsubsection secOBJECT_DEF OBJECT_DEFƒ}ƒNƒ
-ƒNƒ‰ƒX‚ÌéŒ¾‚Ì‚È‚©‚ÌOBJECT_DEF‚ÍC
-<ul>
- <li> Œ^î•ñ‚Ì‚½‚ß‚ÌStatic•Ï”(UTTypeInfo* typeInfo, GetTypeInfo(), GetTypeInfoStatic())
- <li> APIƒNƒ‰ƒX‚ðŽæ“¾‚·‚éƒƒ\ƒbƒh GetIf()
-</ul>
-‚ðéŒ¾‚µ‚Ü‚·D
-’ŠÛƒNƒ‰ƒX‚Ìê‡‚ÍCŽÀ‘Ì‰»‚Å‚«‚È‚¢‚Æ‚¢‚¤ƒGƒ‰[‚ª‚Å‚é‚Ì‚ÅC‘ã‚í‚è‚ÉOBJECT_DEF_ABST‚ðŽg‚¢‚Ü‚·D
+\subsubsection secOBJECT_DEF SPR_OBJECTDEF()ƒ}ƒNƒ
+ƒNƒ‰ƒX‚ÌéŒ¾‚Ì‚È‚©‚ÌSPR_OBJECTDEF()‚ÍC
+Œ^î•ñ‚Ì‚½‚ß‚ÌStaticŠÖ”(GetTypeInfo(), GetTypeInfoStatic())‚È‚Ç‚ðéŒ¾‚µ‚Ü‚·D
+’ŠÛƒNƒ‰ƒX‚Ìê‡‚ÍCŽÀ‘Ì‰»‚Å‚«‚È‚¢‚Æ‚¢‚¤ƒGƒ‰[‚ª‚Å‚é‚Ì‚ÅC‘ã‚í‚è‚ÉSPR_OBJECTDEF_ABST‚ðŽg‚¢‚Ü‚·D
+‚Ü‚½CƒCƒ“ƒ^ƒtƒF[ƒX‚ðŽ‚½‚È‚¢ƒNƒ‰ƒX‚Ìê‡‚ÍC‘ã‚í‚è‚ÉSPR_OBJECTDEF_NOIF‚ðŽg‚¢‚Ü‚·D
+
+SPR_OBJECTDEF()‚ÌŽÀ‘•‚àCSPR_IFDEF()‚Ìê‡‚Æ“¯—l‚ÉC
+ Springhead2/src/SDKNAME/SDKNAMEStub.cpp ‚ÉC
+<pre>
+SPR_OBJECTIMP?(ƒNƒ‰ƒX–¼, Šî–{ƒNƒ‰ƒX–¼);
+</pre>
+‚Æ‚¢‚¤s‚ª‚Å‚«‚Ü‚·D‚±‚ê‚ÍSPR_OBJECTDEF()‚É‘Î‰ž‚·‚éƒƒ“ƒo‚ÌŽÀ‘•‚É‚È‚è‚Ü‚·D
+Cast()ƒƒ“ƒoŠÖ”CDCAST()ƒ}ƒNƒ‚ª—˜—p‚·‚éŒ^î•ñ‚à‚±‚±‚É“ü‚è‚Ü‚·D
 
 \subsubsection secGetAPI API‚ÌŽæ“¾
-Object‚ÍCAPIƒNƒ‰ƒX‚Ì—Ìˆæ(ObjectIfBuf•”)‚ðŽ‚Á‚Ä‚¢‚Ü‚·D
-iAPIƒNƒ‰ƒX‚ÍC‰¼‘zŠÖ”ƒe[ƒuƒ‹‚Ö‚Ìƒ|ƒCƒ“ƒ^(vftableƒ|ƒCƒ“ƒ^)‚¾‚¯‚ðŽ‚¿‚Ü‚·D
-MSVC++7.1‚Ìê‡CObject‚Ìæ“ª‚©‚ç‚SƒoƒCƒg–Ú‚©‚ç‚Ì‚SƒoƒCƒg‚É‚È‚è‚Ü‚·Dj
-
-Object::GetIf() ‚Í this+4ƒoƒCƒg‚ðObjectIf*‚ÉƒLƒƒƒXƒg‚µ‚Ä•Ô‚µ‚Ü‚·D
-Object‚Ì’†‚É‚ ‚éAPIƒNƒ‰ƒX‚ÌƒAƒhƒŒƒX‚ð•Ô‚·‚í‚¯‚Å‚·D
-‹t‚ÉObjectIf::GetObj()‚ÍCthis-4ƒoƒCƒg‚ð•Ô‚µ‚Ü‚·D
-‚Å‚·‚Ì‚ÅCAPIƒNƒ‰ƒX‚Í•K‚¸ŽÀ‘•ƒNƒ‰ƒX‚Ì’†‚É‚È‚¯‚ê‚Î‚È‚è‚Ü‚¹‚ñD
-
-”h¶ƒNƒ‰ƒXC‚½‚Æ‚¦‚ÎPHSolid::GetIf() ‚à“¯—l‚Å‚·‚ªCPHSolidIf*‚ÉƒLƒƒƒXƒg‚µ‚Ä•Ô‚µ‚Ü‚·D
-
-\subsubsection secInitAPI API‚Æ‰Šú‰»
-ŽÀ‘•ƒNƒ‰ƒX‚ÍC
+Object::GetObjectIf() ‚Í this‚ðObjectIf*‚ÉƒLƒƒƒXƒg‚µ‚Ä•Ô‚µ‚Ü‚·D
+APIƒNƒ‰ƒX‚Í this‚ð
 <pre>
- class SceneObject:public NamedObject, SceneObjectIfInit{...}
+size_t ObjectIf::NChildObject() const {
+	return ((Object*)this)->NChildObject();
+}
 </pre>
-‚Ì‚æ‚¤‚ÉCŠî–{ŽÀ‘•ƒNƒ‰ƒX‚ðŒp³‚µ‚Ü‚·‚ªCAPIƒNƒ‰ƒX(SceneObjectIf“™)
-‚ÍŒp³‚µ‚Ü‚¹‚ñD‘ã‚í‚è‚ÉCƒCƒ“ƒ^ƒtƒF[ƒX‰Šú‰»ƒNƒ‰ƒX(SceneObjectIfInit“™)‚ð
-Œp³‚µ‚Ü‚·D
-SceneObjectIfInit‚ÍCƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÅObject‚ÌObjectIfBuf•”‚ðC³‚µ‚¢APIƒNƒ‰ƒX‚É‰Šú‰»‚µ‚Ü‚·D
-
-\subsubsection secConnectAPI API‚ÆŽÀ‘•‚ÌÚ‘±D
-SceneObjectIfInit‚ÍCObjectIfBuf•”‚ð‰Šú‰»‚·‚éÛ‚ÉCAPIƒNƒ‰ƒX(SceneObjectIf)‚É
-‰Šú‰»‚·‚é‚Ì‚Å‚Í‚È‚­CƒXƒ^ƒuƒNƒ‰ƒX(SceneObjectIfStub)‚É‰Šú‰»‚µ‚Ü‚·D
-‰Šú‰»ƒNƒ‰ƒX‚ÆƒXƒ^ƒuƒNƒ‰ƒX‚ÍCsrc/ƒ‰ƒCƒuƒ‰ƒŠ–¼/IfStubDumpƒ‰ƒCƒuƒ‰ƒŠ–¼.h ‚É‚ ‚è‚Ü‚·D
-ƒXƒ^ƒuƒNƒ‰ƒX‚ÍCŠeAPIŠÖ”‚ÌŒÄ‚Ño‚µ‚ðŽÀ‘•ŠÖ”‚ÌŒÄ‚Ño‚µ‚É‚Â‚È‚°‚Ä‚¢‚Ü‚·D
-ƒXƒ^ƒuƒNƒ‰ƒX‚Æ‰Šú‰»ƒNƒ‰ƒX‚Ìƒ\[ƒXƒR[ƒh‚ÍCAPIƒNƒ‰ƒX‚Ìƒ\[ƒXƒR[ƒh‚©‚çŽ©“®¶¬‚³‚ê‚Ü‚·D
-
-\section secImpImplementationClass ŽÀ‘•ƒNƒ‰ƒX‚Ì’è‹`
-\subsection secOBJECT_IMP OBJECT_IMPƒ}ƒNƒ
-OBJECT_DEF‚Å’è‹`‚µ‚½ƒƒ\ƒbƒh‚â•Ï”‚ÌŽÀ‘•‚ÍCƒ}ƒNƒ OBJECT_IMP ‚Å
-<pre>
- OBJECT_IMP(SceneObject, NamedObject);
-</pre>
-‚Ì‚æ‚¤‚És‚¢‚Ü‚·D’ŠÛƒNƒ‰ƒX‚Ìê‡‚ÍCOBJECT_IMP_ABST ‚ðŽg‚¢‚Ü‚·D
-
-APIƒNƒ‰ƒX‚Ì’è‹`‚É•K—v‚È IF_IMP ‚Æ OBEJCT_IMP‚ÍC—¼•û‚ð‚ ‚í‚¹‚½ƒ}ƒNƒ
-IF_OBJECT_IMPCIF_OBJECT_IMP_ABST‚ðŽg‚¤‚Æ1‰ñ‚Å‘‚¯‚Ü‚·D
+‚Ì‚æ‚¤‚ÉCthis‚ÌŒ^‚ðŽÀ‘•ƒNƒ‰ƒX‚É–ß‚µ‚ÄŠÖ”‚ðŒÄ‚Ño‚µ‚Ä‚¢‚Ü‚·D
 
 \subsection secImpAPIClass éŒ¾‚µ‚½API‚ÌŽÀ‘•
+‚Ü‚¸CSpringhead/src/SDKNAME/SceneObject.h ‚ÅC
+<pre>
+class SceenObject: public NamedObject{
+	SPR_OBJECTDEF(SceneObject);
+	virutal void SetScene(SceneIf* s);	// ŽÀ‘•‘¤‚ÌéŒ¾
+};
+</pre>
+‚Ì‚æ‚¤‚ÉCŠÖ”‚ðéŒ¾‚µC
+‚Ü‚¸CSpringhead/src/SDKNAME/SceneObject.cpp ‚ÅC
 <pre>
  void SceneObject::SetScene(SceneIf* s){
  	SetNameManager(s->GetObj<NameManager>());
  	nameManager->GetNameMap();
  }
 </pre>
-‚Ì‚æ‚¤‚ÉCéŒ¾‚µ‚½API‚ðŽÀ‘•‚µ‚Ü‚·DŠÖ”–¼‚Ì‚Ù‚©CŒ^–¼‚È‚Ç‚ªˆá‚Á‚Ä‚àC
-ƒI[ƒo[ƒ‰ƒCƒh‚Å‚«‚È‚¢‚Ì‚ÅC‚Ü‚Á‚½‚­“¯‚¶éŒ¾‚É‚È‚é‚æ‚¤‚É‹C‚ð‚Â‚¯‚Ä‚­‚¾‚³‚¢D
+‚Ì‚æ‚¤‚ÉCéŒ¾‚µ‚½API‚ðŽÀ‘•‚µ‚Ü‚·D
+APIƒNƒ‰ƒX‚¾‚¯‚É‚ ‚èCŽÀ‘•ƒNƒ‰ƒX‚É‚È‚¢ŠÖ”‚ª‚ ‚é‚ÆC
+Springhead2/src/SDKNAME/SDKNAMEStub.cpp ‚ðƒRƒ“ƒpƒCƒ‹‚·‚é‚Æ‚«‚ÉC
+ƒGƒ‰[‚É‚È‚è‚Ü‚·D
 
 \section secFileLoadSave ƒtƒ@ƒCƒ‹‚©‚ç‚Ìƒ[ƒhEƒtƒ@ƒCƒ‹‚Ö‚ÌƒZ[ƒu
 FileIO SDK(\ref pageFileIO) ‚Åƒ[ƒhEƒZ[ƒu‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ß‚É‚ÍCAPIƒNƒ‰ƒX‚Ì’è‹`‚É
@@ -118,6 +102,8 @@ FileIO SDK(\ref pageFileIO) ‚Åƒ[ƒhEƒZ[ƒu‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ß‚É‚ÍCAPIƒNƒ‰ƒ
 FileIO SDK ‚ÌÚ×‚ÍC\ref pageFileIOImp ‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢
 
 Ž©“®ƒ[ƒhEƒZ[ƒu‰Â”\‚ÈƒIƒuƒWƒFƒNƒg‚ð’è‹`‚·‚é‚É‚ÍC
+
+ˆÈ‰ºŽáŠ±ŒÃ‚¢D SPR_DECLMEMBEROFƒNƒ‰ƒX–¼‚ÉŒ¾‹y‚·‚×‚«
 <ol>
  <li>ƒ[ƒh‚µ‚½‚¢ƒf[ƒ^‚ðŠÜ‚ñ‚¾ƒfƒBƒXƒNƒŠƒvƒ^ (—á:PHSolidDesc)‚ðì‚è‚Ü‚·D
  <li>ƒCƒ“ƒ^ƒtƒF[ƒXƒNƒ‰ƒX (—áFPHSolidIf) ‚ðì‚è‚Ü‚·D

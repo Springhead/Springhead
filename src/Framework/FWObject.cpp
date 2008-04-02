@@ -14,9 +14,6 @@
 
 namespace Spr{;
 
-IF_IMP(FWObject, SceneObject);
-OBJECT_IMP(FWObject, SceneObject);
-
 FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 : desc(d), phSolid(NULL), grFrame(NULL)
 {

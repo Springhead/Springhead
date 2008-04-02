@@ -1,40 +1,49 @@
-//	Do not edit. MakeTypeDescForOldSpringheadHandler.bat will update this file.
-	
-	Header* pHeader = NULL;
+#include "..\..\include\Springhead.h"
+#include "..\..\include\base\Env.h"
+#include "..\..\src\Base\BaseDebug.h"
+#include "..\..\src\Foundation\UTTypeDesc.h"
+#include "..\Framework\FWOldSpringheadNodeHandler.h"
+namespace Spr{
+
+void RegisterTypeDescFWOldSpringhead(UTTypeDescDb* db){
+	static bool bFirst=true;
+	if (!bFirst) return;
+	bFirst = false;
+
+	UTTypeDesc* desc;
+	UTTypeDesc::Field* field;
+	SprOldSpringhead::Header* pHeader = NULL;
 	desc = DBG_NEW UTTypeDesc("Header");
-	desc->size = sizeof(Header);
-	desc->access = DBG_NEW UTAccess<Header>;
-	field = desc->AddField("", "int", "major", "");
+	desc->size = sizeof(SprOldSpringhead::Header);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Header>;
+	field = desc->AddField("", "unsigned int", "major", "");
 	field->offset = int((char*)&(pHeader->major) - (char*)pHeader);
-	field = desc->AddField("", "int", "minor", "");
+	field = desc->AddField("", "unsigned int", "minor", "");
 	field->offset = int((char*)&(pHeader->minor) - (char*)pHeader);
-	field = desc->AddField("", "int", "flags", "");
+	field = desc->AddField("", "unsigned int", "flags", "");
 	field->offset = int((char*)&(pHeader->flags) - (char*)pHeader);
 	db->RegisterDesc(desc);
-	
-	Frame* pFrame = NULL;
+	SprOldSpringhead::Frame* pFrame = NULL;
 	desc = DBG_NEW UTTypeDesc("Frame");
-	desc->size = sizeof(Frame);
-	desc->access = DBG_NEW UTAccess<Frame>;
+	desc->size = sizeof(SprOldSpringhead::Frame);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Frame>;
 	db->RegisterDesc(desc);
-	
-	FrameTransformMatrix* pFrameTransformMatrix = NULL;
+	SprOldSpringhead::FrameTransformMatrix* pFrameTransformMatrix = NULL;
 	desc = DBG_NEW UTTypeDesc("FrameTransformMatrix");
-	desc->size = sizeof(FrameTransformMatrix);
-	desc->access = DBG_NEW UTAccess<FrameTransformMatrix>;
+	desc->size = sizeof(SprOldSpringhead::FrameTransformMatrix);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::FrameTransformMatrix>;
 	field = desc->AddField("", "Affinef", "matrix", "");
 	field->offset = int((char*)&(pFrameTransformMatrix->matrix) - (char*)pFrameTransformMatrix);
 	db->RegisterDesc(desc);
-	
-	Light8* pLight8 = NULL;
+	SprOldSpringhead::Light8* pLight8 = NULL;
 	desc = DBG_NEW UTTypeDesc("Light8");
-	desc->size = sizeof(Light8);
-	desc->access = DBG_NEW UTAccess<Light8>;
-	field = desc->AddField("XLightType", "enum", "type",  "");
-	field->AddEnumConst("XLIGHT_POINT", 1);
-	field->AddEnumConst("XLIGHT_SPOT", 2);
-	field->AddEnumConst("XLIGHT_DIRECTIONAL", 3);
-	field->offset = int((char*)(&pLight8->type) - (char*)pLight8);
+	desc->size = sizeof(SprOldSpringhead::Light8);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Light8>;
+	field = desc->AddField("XLightType", "enum", "type", "");
+	field->AddEnumConst("XLIGHT_POINT", SprOldSpringhead::Light8::XLIGHT_POINT);
+	field->AddEnumConst("XLIGHT_SPOT", SprOldSpringhead::Light8::XLIGHT_SPOT);
+	field->AddEnumConst("XLIGHT_DIRECTIONAL", SprOldSpringhead::Light8::XLIGHT_DIRECTIONAL);
+	field->offset = int((char*)&(pLight8->type) - (char*)pLight8);
 	field = desc->AddField("", "Vec4f", "diffuse", "");
 	field->offset = int((char*)&(pLight8->diffuse) - (char*)pLight8);
 	field = desc->AddField("", "Vec4f", "specular", "");
@@ -60,11 +69,10 @@
 	field = desc->AddField("", "float", "spotCutoff", "");
 	field->offset = int((char*)&(pLight8->spotCutoff) - (char*)pLight8);
 	db->RegisterDesc(desc);
-	
-	Material* pMaterial = NULL;
+	SprOldSpringhead::Material* pMaterial = NULL;
 	desc = DBG_NEW UTTypeDesc("Material");
-	desc->size = sizeof(Material);
-	desc->access = DBG_NEW UTAccess<Material>;
+	desc->size = sizeof(SprOldSpringhead::Material);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Material>;
 	field = desc->AddField("", "Vec4f", "face", "");
 	field->offset = int((char*)&(pMaterial->face) - (char*)pMaterial);
 	field = desc->AddField("", "float", "power", "");
@@ -74,21 +82,19 @@
 	field = desc->AddField("", "Vec3f", "emissive", "");
 	field->offset = int((char*)&(pMaterial->emissive) - (char*)pMaterial);
 	db->RegisterDesc(desc);
-	
-	MeshFace* pMeshFace = NULL;
+	SprOldSpringhead::MeshFace* pMeshFace = NULL;
 	desc = DBG_NEW UTTypeDesc("MeshFace");
-	desc->size = sizeof(MeshFace);
-	desc->access = DBG_NEW UTAccess<MeshFace>;
+	desc->size = sizeof(SprOldSpringhead::MeshFace);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::MeshFace>;
 	field = desc->AddField("", "int", "nFaceVertexIndices", "");
 	field->offset = int((char*)&(pMeshFace->nFaceVertexIndices) - (char*)pMeshFace);
 	field = desc->AddField("vector", "int", "faceVertexIndices", "");
 	field->offset = int((char*)&(pMeshFace->faceVertexIndices) - (char*)pMeshFace);
 	db->RegisterDesc(desc);
-	
-	Mesh* pMesh = NULL;
+	SprOldSpringhead::Mesh* pMesh = NULL;
 	desc = DBG_NEW UTTypeDesc("Mesh");
-	desc->size = sizeof(Mesh);
-	desc->access = DBG_NEW UTAccess<Mesh>;
+	desc->size = sizeof(SprOldSpringhead::Mesh);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Mesh>;
 	field = desc->AddField("", "int", "nVertices", "");
 	field->offset = int((char*)&(pMesh->nVertices) - (char*)pMesh);
 	field = desc->AddField("vector", "Vec3f", "vertices", "");
@@ -98,11 +104,10 @@
 	field = desc->AddField("vector", "MeshFace", "faces", "");
 	field->offset = int((char*)&(pMesh->faces) - (char*)pMesh);
 	db->RegisterDesc(desc);
-	
-	MeshNormals* pMeshNormals = NULL;
+	SprOldSpringhead::MeshNormals* pMeshNormals = NULL;
 	desc = DBG_NEW UTTypeDesc("MeshNormals");
-	desc->size = sizeof(MeshNormals);
-	desc->access = DBG_NEW UTAccess<MeshNormals>;
+	desc->size = sizeof(SprOldSpringhead::MeshNormals);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::MeshNormals>;
 	field = desc->AddField("", "int", "nNormals", "");
 	field->offset = int((char*)&(pMeshNormals->nNormals) - (char*)pMeshNormals);
 	field = desc->AddField("vector", "Vec3f", "normals", "");
@@ -112,11 +117,10 @@
 	field = desc->AddField("vector", "MeshFace", "faceNormals", "");
 	field->offset = int((char*)&(pMeshNormals->faceNormals) - (char*)pMeshNormals);
 	db->RegisterDesc(desc);
-	
-	MeshMaterialList* pMeshMaterialList = NULL;
+	SprOldSpringhead::MeshMaterialList* pMeshMaterialList = NULL;
 	desc = DBG_NEW UTTypeDesc("MeshMaterialList");
-	desc->size = sizeof(MeshMaterialList);
-	desc->access = DBG_NEW UTAccess<MeshMaterialList>;
+	desc->size = sizeof(SprOldSpringhead::MeshMaterialList);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::MeshMaterialList>;
 	field = desc->AddField("", "int", "nMaterials", "");
 	field->offset = int((char*)&(pMeshMaterialList->nMaterials) - (char*)pMeshMaterialList);
 	field = desc->AddField("", "int", "nFaceIndexes", "");
@@ -124,125 +128,112 @@
 	field = desc->AddField("vector", "int", "faceIndexes", "");
 	field->offset = int((char*)&(pMeshMaterialList->faceIndexes) - (char*)pMeshMaterialList);
 	db->RegisterDesc(desc);
-	
-	TextureFilename* pTextureFilename = NULL;
+	SprOldSpringhead::TextureFilename* pTextureFilename = NULL;
 	desc = DBG_NEW UTTypeDesc("TextureFilename");
-	desc->size = sizeof(TextureFilename);
-	desc->access = DBG_NEW UTAccess<TextureFilename>;
+	desc->size = sizeof(SprOldSpringhead::TextureFilename);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::TextureFilename>;
 	field = desc->AddField("", "string", "filename", "");
 	field->offset = int((char*)&(pTextureFilename->filename) - (char*)pTextureFilename);
 	db->RegisterDesc(desc);
-	
-	MeshTextureCoords* pMeshTextureCoords = NULL;
+	SprOldSpringhead::MeshTextureCoords* pMeshTextureCoords = NULL;
 	desc = DBG_NEW UTTypeDesc("MeshTextureCoords");
-	desc->size = sizeof(MeshTextureCoords);
-	desc->access = DBG_NEW UTAccess<MeshTextureCoords>;
+	desc->size = sizeof(SprOldSpringhead::MeshTextureCoords);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::MeshTextureCoords>;
 	field = desc->AddField("", "int", "nTextureCoords", "");
 	field->offset = int((char*)&(pMeshTextureCoords->nTextureCoords) - (char*)pMeshTextureCoords);
 	field = desc->AddField("vector", "Vec2f", "textureCoords", "");
 	field->offset = int((char*)&(pMeshTextureCoords->textureCoords) - (char*)pMeshTextureCoords);
 	db->RegisterDesc(desc);
-	
-	XSkinMeshHeader* pXSkinMeshHeader = NULL;
+	SprOldSpringhead::XSkinMeshHeader* pXSkinMeshHeader = NULL;
 	desc = DBG_NEW UTTypeDesc("XSkinMeshHeader");
-	desc->size = sizeof(XSkinMeshHeader);
-	desc->access = DBG_NEW UTAccess<XSkinMeshHeader>;
-	field = desc->AddField("", "short", "nMaxSkinWeightsPerVertex", "");
+	desc->size = sizeof(SprOldSpringhead::XSkinMeshHeader);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::XSkinMeshHeader>;
+	field = desc->AddField("", "unsigned short", "nMaxSkinWeightsPerVertex", "");
 	field->offset = int((char*)&(pXSkinMeshHeader->nMaxSkinWeightsPerVertex) - (char*)pXSkinMeshHeader);
-	field = desc->AddField("", "short", "nMaxSkinWeightsPerFace", "");
+	field = desc->AddField("", "unsigned short", "nMaxSkinWeightsPerFace", "");
 	field->offset = int((char*)&(pXSkinMeshHeader->nMaxSkinWeightsPerFace) - (char*)pXSkinMeshHeader);
-	field = desc->AddField("", "short", "nBones", "");
+	field = desc->AddField("", "unsigned short", "nBones", "");
 	field->offset = int((char*)&(pXSkinMeshHeader->nBones) - (char*)pXSkinMeshHeader);
 	db->RegisterDesc(desc);
-	
-	SkinWeights* pSkinWeights = NULL;
+	SprOldSpringhead::SkinWeights* pSkinWeights = NULL;
 	desc = DBG_NEW UTTypeDesc("SkinWeights");
-	desc->size = sizeof(SkinWeights);
-	desc->access = DBG_NEW UTAccess<SkinWeights>;
+	desc->size = sizeof(SprOldSpringhead::SkinWeights);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::SkinWeights>;
 	field = desc->AddField("", "string", "transformNodeName", "");
 	field->offset = int((char*)&(pSkinWeights->transformNodeName) - (char*)pSkinWeights);
-	field = desc->AddField("", "int", "nWeights", "");
+	field = desc->AddField("", "unsigned int", "nWeights", "");
 	field->offset = int((char*)&(pSkinWeights->nWeights) - (char*)pSkinWeights);
-	field = desc->AddField("vector", "int", "vertexIndices", "");
+	field = desc->AddField("vector", "unsigned int", "vertexIndices", "");
 	field->offset = int((char*)&(pSkinWeights->vertexIndices) - (char*)pSkinWeights);
 	field = desc->AddField("vector", "float", "weights", "");
 	field->offset = int((char*)&(pSkinWeights->weights) - (char*)pSkinWeights);
 	field = desc->AddField("", "Affinef", "matrixOffset", "");
 	field->offset = int((char*)&(pSkinWeights->matrixOffset) - (char*)pSkinWeights);
 	db->RegisterDesc(desc);
-	
-	Animation* pAnimation = NULL;
+	SprOldSpringhead::Animation* pAnimation = NULL;
 	desc = DBG_NEW UTTypeDesc("Animation");
-	desc->size = sizeof(Animation);
-	desc->access = DBG_NEW UTAccess<Animation>;
+	desc->size = sizeof(SprOldSpringhead::Animation);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Animation>;
 	db->RegisterDesc(desc);
-	
-	AnimationSet* pAnimationSet = NULL;
+	SprOldSpringhead::AnimationSet* pAnimationSet = NULL;
 	desc = DBG_NEW UTTypeDesc("AnimationSet");
-	desc->size = sizeof(AnimationSet);
-	desc->access = DBG_NEW UTAccess<AnimationSet>;
+	desc->size = sizeof(SprOldSpringhead::AnimationSet);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::AnimationSet>;
 	db->RegisterDesc(desc);
-	
-	FloatKeys* pFloatKeys = NULL;
+	SprOldSpringhead::FloatKeys* pFloatKeys = NULL;
 	desc = DBG_NEW UTTypeDesc("FloatKeys");
-	desc->size = sizeof(FloatKeys);
-	desc->access = DBG_NEW UTAccess<FloatKeys>;
-	field = desc->AddField("", "int", "nValues", "");
+	desc->size = sizeof(SprOldSpringhead::FloatKeys);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::FloatKeys>;
+	field = desc->AddField("", "unsigned int", "nValues", "");
 	field->offset = int((char*)&(pFloatKeys->nValues) - (char*)pFloatKeys);
 	field = desc->AddField("vector", "float", "values", "");
 	field->offset = int((char*)&(pFloatKeys->values) - (char*)pFloatKeys);
 	db->RegisterDesc(desc);
-	
-	TimedFloatKeys* pTimedFloatKeys = NULL;
+	SprOldSpringhead::TimedFloatKeys* pTimedFloatKeys = NULL;
 	desc = DBG_NEW UTTypeDesc("TimedFloatKeys");
-	desc->size = sizeof(TimedFloatKeys);
-	desc->access = DBG_NEW UTAccess<TimedFloatKeys>;
-	field = desc->AddField("", "int", "time", "");
+	desc->size = sizeof(SprOldSpringhead::TimedFloatKeys);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::TimedFloatKeys>;
+	field = desc->AddField("", "unsigned int", "time", "");
 	field->offset = int((char*)&(pTimedFloatKeys->time) - (char*)pTimedFloatKeys);
 	field = desc->AddField("", "FloatKeys", "tfkeys", "");
 	field->offset = int((char*)&(pTimedFloatKeys->tfkeys) - (char*)pTimedFloatKeys);
 	db->RegisterDesc(desc);
-	
-	AnimationKey* pAnimationKey = NULL;
+	SprOldSpringhead::AnimationKey* pAnimationKey = NULL;
 	desc = DBG_NEW UTTypeDesc("AnimationKey");
-	desc->size = sizeof(AnimationKey);
-	desc->access = DBG_NEW UTAccess<AnimationKey>;
-	field = desc->AddField("", "int", "keyType", "");
+	desc->size = sizeof(SprOldSpringhead::AnimationKey);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::AnimationKey>;
+	field = desc->AddField("", "unsigned int", "keyType", "");
 	field->offset = int((char*)&(pAnimationKey->keyType) - (char*)pAnimationKey);
-	field = desc->AddField("", "int", "nKeys", "");
+	field = desc->AddField("", "unsigned int", "nKeys", "");
 	field->offset = int((char*)&(pAnimationKey->nKeys) - (char*)pAnimationKey);
 	field = desc->AddField("vector", "TimedFloatKeys", "keys", "");
 	field->offset = int((char*)&(pAnimationKey->keys) - (char*)pAnimationKey);
 	db->RegisterDesc(desc);
-	
-	AnimTicksPerSecond* pAnimTicksPerSecond = NULL;
+	SprOldSpringhead::AnimTicksPerSecond* pAnimTicksPerSecond = NULL;
 	desc = DBG_NEW UTTypeDesc("AnimTicksPerSecond");
-	desc->size = sizeof(AnimTicksPerSecond);
-	desc->access = DBG_NEW UTAccess<AnimTicksPerSecond>;
-	field = desc->AddField("", "int", "hz", "");
+	desc->size = sizeof(SprOldSpringhead::AnimTicksPerSecond);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::AnimTicksPerSecond>;
+	field = desc->AddField("", "unsigned int", "hz", "");
 	field->offset = int((char*)&(pAnimTicksPerSecond->hz) - (char*)pAnimTicksPerSecond);
 	db->RegisterDesc(desc);
-	
-	Scene* pScene = NULL;
+	SprOldSpringhead::Scene* pScene = NULL;
 	desc = DBG_NEW UTTypeDesc("Scene");
-	desc->size = sizeof(Scene);
-	desc->access = DBG_NEW UTAccess<Scene>;
+	desc->size = sizeof(SprOldSpringhead::Scene);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Scene>;
 	db->RegisterDesc(desc);
-	
-	Simulator* pSimulator = NULL;
+	SprOldSpringhead::Simulator* pSimulator = NULL;
 	desc = DBG_NEW UTTypeDesc("Simulator");
-	desc->size = sizeof(Simulator);
-	desc->access = DBG_NEW UTAccess<Simulator>;
+	desc->size = sizeof(SprOldSpringhead::Simulator);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Simulator>;
 	field = desc->AddField("", "double", "timeStep", "");
 	field->offset = int((char*)&(pSimulator->timeStep) - (char*)pSimulator);
 	field = desc->AddField("", "double", "decay", "");
 	field->offset = int((char*)&(pSimulator->decay) - (char*)pSimulator);
 	db->RegisterDesc(desc);
-	
-	Camera* pCamera = NULL;
+	SprOldSpringhead::Camera* pCamera = NULL;
 	desc = DBG_NEW UTTypeDesc("Camera");
-	desc->size = sizeof(Camera);
-	desc->access = DBG_NEW UTAccess<Camera>;
+	desc->size = sizeof(SprOldSpringhead::Camera);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Camera>;
 	field = desc->AddField("", "Affinef", "view", "");
 	field->offset = int((char*)&(pCamera->view) - (char*)pCamera);
 	field = desc->AddField("", "float", "width", "");
@@ -258,11 +249,10 @@
 	field = desc->AddField("", "float", "back", "");
 	field->offset = int((char*)&(pCamera->back) - (char*)pCamera);
 	db->RegisterDesc(desc);
-	
-	Solid* pSolid = NULL;
+	SprOldSpringhead::Solid* pSolid = NULL;
 	desc = DBG_NEW UTTypeDesc("Solid");
-	desc->size = sizeof(Solid);
-	desc->access = DBG_NEW UTAccess<Solid>;
+	desc->size = sizeof(SprOldSpringhead::Solid);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Solid>;
 	field = desc->AddField("", "float", "mass", "");
 	field->offset = int((char*)&(pSolid->mass) - (char*)pSolid);
 	field = desc->AddField("", "Matrix3f", "inertia", "");
@@ -274,11 +264,10 @@
 	field = desc->AddField("", "Vec3f", "center", "");
 	field->offset = int((char*)&(pSolid->center) - (char*)pSolid);
 	db->RegisterDesc(desc);
-	
-	Sphere* pSphere = NULL;
+	SprOldSpringhead::Sphere* pSphere = NULL;
 	desc = DBG_NEW UTTypeDesc("Sphere");
-	desc->size = sizeof(Sphere);
-	desc->access = DBG_NEW UTAccess<Sphere>;
+	desc->size = sizeof(SprOldSpringhead::Sphere);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Sphere>;
 	field = desc->AddField("", "float", "radius", "");
 	field->offset = int((char*)&(pSphere->radius) - (char*)pSphere);
 	field = desc->AddField("", "int", "slices", "");
@@ -286,11 +275,10 @@
 	field = desc->AddField("", "int", "stacks", "");
 	field->offset = int((char*)&(pSphere->stacks) - (char*)pSphere);
 	db->RegisterDesc(desc);
-	
-	PhysicalMaterial* pPhysicalMaterial = NULL;
+	SprOldSpringhead::PhysicalMaterial* pPhysicalMaterial = NULL;
 	desc = DBG_NEW UTTypeDesc("PhysicalMaterial");
-	desc->size = sizeof(PhysicalMaterial);
-	desc->access = DBG_NEW UTAccess<PhysicalMaterial>;
+	desc->size = sizeof(SprOldSpringhead::PhysicalMaterial);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::PhysicalMaterial>;
 	field = desc->AddField("", "float", "ns", "");
 	field->offset = int((char*)&(pPhysicalMaterial->ns) - (char*)pPhysicalMaterial);
 	field = desc->AddField("", "float", "nd", "");
@@ -304,47 +292,41 @@
 	field = desc->AddField("", "float", "d", "");
 	field->offset = int((char*)&(pPhysicalMaterial->d) - (char*)pPhysicalMaterial);
 	db->RegisterDesc(desc);
-	
-	SolidContainer* pSolidContainer = NULL;
+	SprOldSpringhead::SolidContainer* pSolidContainer = NULL;
 	desc = DBG_NEW UTTypeDesc("SolidContainer");
-	desc->size = sizeof(SolidContainer);
-	desc->access = DBG_NEW UTAccess<SolidContainer>;
+	desc->size = sizeof(SprOldSpringhead::SolidContainer);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::SolidContainer>;
 	db->RegisterDesc(desc);
-	
-	GravityEngine* pGravityEngine = NULL;
+	SprOldSpringhead::GravityEngine* pGravityEngine = NULL;
 	desc = DBG_NEW UTTypeDesc("GravityEngine");
-	desc->size = sizeof(GravityEngine);
-	desc->access = DBG_NEW UTAccess<GravityEngine>;
+	desc->size = sizeof(SprOldSpringhead::GravityEngine);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::GravityEngine>;
 	field = desc->AddField("", "Vec3f", "gravity", "");
 	field->offset = int((char*)&(pGravityEngine->gravity) - (char*)pGravityEngine);
 	db->RegisterDesc(desc);
-	
-	ContactInactive* pContactInactive = NULL;
+	SprOldSpringhead::ContactInactive* pContactInactive = NULL;
 	desc = DBG_NEW UTTypeDesc("ContactInactive");
-	desc->size = sizeof(ContactInactive);
-	desc->access = DBG_NEW UTAccess<ContactInactive>;
+	desc->size = sizeof(SprOldSpringhead::ContactInactive);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::ContactInactive>;
 	field = desc->AddField("", "int", "nSolids", "");
 	field->offset = int((char*)&(pContactInactive->nSolids) - (char*)pContactInactive);
 	field = desc->AddField("vector", "int", "solidIndexes", "");
 	field->offset = int((char*)&(pContactInactive->solidIndexes) - (char*)pContactInactive);
 	db->RegisterDesc(desc);
-	
-	ContactEngine* pContactEngine = NULL;
+	SprOldSpringhead::ContactEngine* pContactEngine = NULL;
 	desc = DBG_NEW UTTypeDesc("ContactEngine");
-	desc->size = sizeof(ContactEngine);
-	desc->access = DBG_NEW UTAccess<ContactEngine>;
+	desc->size = sizeof(SprOldSpringhead::ContactEngine);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::ContactEngine>;
 	db->RegisterDesc(desc);
-	
-	JointEngine* pJointEngine = NULL;
+	SprOldSpringhead::JointEngine* pJointEngine = NULL;
 	desc = DBG_NEW UTTypeDesc("JointEngine");
-	desc->size = sizeof(JointEngine);
-	desc->access = DBG_NEW UTAccess<JointEngine>;
+	desc->size = sizeof(SprOldSpringhead::JointEngine);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::JointEngine>;
 	db->RegisterDesc(desc);
-	
-	Joint* pJoint = NULL;
+	SprOldSpringhead::Joint* pJoint = NULL;
 	desc = DBG_NEW UTTypeDesc("Joint");
-	desc->size = sizeof(Joint);
-	desc->access = DBG_NEW UTAccess<Joint>;
+	desc->size = sizeof(SprOldSpringhead::Joint);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Joint>;
 	field = desc->AddField("", "int", "nType", "");
 	field->offset = int((char*)&(pJoint->nType) - (char*)pJoint);
 	field = desc->AddField("", "Vec3f", "prj", "");
@@ -376,11 +358,13 @@
 	field = desc->AddField("", "float", "fDValue", "");
 	field->offset = int((char*)&(pJoint->fDValue) - (char*)pJoint);
 	db->RegisterDesc(desc);
-	
-	Import* pImport = NULL;
+	SprOldSpringhead::Import* pImport = NULL;
 	desc = DBG_NEW UTTypeDesc("Import");
-	desc->size = sizeof(Import);
-	desc->access = DBG_NEW UTAccess<Import>;
+	desc->size = sizeof(SprOldSpringhead::Import);
+	desc->access = DBG_NEW UTAccess<SprOldSpringhead::Import>;
 	field = desc->AddField("", "string", "file", "");
 	field->offset = int((char*)&(pImport->file) - (char*)pImport);
 	db->RegisterDesc(desc);
+}
+
+}

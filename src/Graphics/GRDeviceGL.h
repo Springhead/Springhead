@@ -20,8 +20,8 @@ namespace Spr{;
 
 /**	@class	GRDeviceGL
     @brief	OpenGLによるグラフィックス描画の実装　 */
-class GRDeviceGL: public GRDevice, public GRDeviceGLIfInit{
-	OBJECTDEF(GRDeviceGL, GRDevice);
+class GRDeviceGL: public GRDevice{
+	SPR_OBJECTDEF(GRDeviceGL);
 protected:
 	int		nLights;					///< 光源の数
 	int		vertexFormatGl;				///< glInterleavedArraysで使う，GLの頂点フォーマットID

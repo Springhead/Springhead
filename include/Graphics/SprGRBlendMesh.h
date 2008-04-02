@@ -42,7 +42,7 @@ struct GRBlendMeshDesc{
 
 /**	@brief	グラフィックスで使う表示用のBlendMesh */
 struct GRBlendMeshIf: public GRVisualIf{
-	IF_DEF(GRBlendMesh);
+	SPR_IFDEF(GRBlendMesh);
 };
 
 

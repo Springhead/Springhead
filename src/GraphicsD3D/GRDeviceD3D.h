@@ -20,7 +20,7 @@ namespace Spr{;
 
 /**	Direct3Dによるグラフィックス描画の実装	*/
 class GRDeviceD3D: public GRDevice, public GRDeviceD3DIfInit{
-	OBJECTDEF(GRDeviceD3D, GRDevice);
+	SPR_OBJECTDEF(GRDeviceD3D, GRDevice);
 protected:
 	CComPtr<IDirect3D9>			direct3D;				///< Direct3D
 	CComPtr<IDirect3DDevice9>	d3ddevice;				///< Direct3Dデバイス

@@ -27,33 +27,33 @@ struct PHSdkDesc{
 
 ///	物理シミュレーションSDK
 struct PHSdkIf : public SdkIf{
-	IF_DEF(PHSdk);
+	SPR_IFDEF(PHSdk);
 	//	API
 	///	Sceneの作成
-	virtual PHSceneIf* CreateScene()=0;
+	PHSceneIf* CreateScene();
 	///	Sceneの作成
-	virtual PHSceneIf* CreateScene(const PHSceneDesc& desc)=0;
+	PHSceneIf* CreateScene(const PHSceneDesc& desc);
 	///	Sceneの数を取得
-	virtual int NScene()=0;
+	int NScene();
 	///	Sceneの取得
-	virtual PHSceneIf* GetScene(size_t i)=0;
+	PHSceneIf* GetScene(size_t i);
 	/// Sceneのマージ
-	virtual void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1)=0;
+	void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1);
 	/** @brief Shapeを作成する
 		@param desc 作成するShapeのディスクリプタ
 		@return Shapeのインタフェース
 	 */
-	virtual CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc)=0;
+	CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
 	template <class T> CDShapeIf* CreateShape(const T& desc){
 		return CreateShape(T::GetIfInfo(), desc);
 	}
 	
 	
 	///	Shapeの数
-	virtual int NShape()=0;
+	int NShape();
 
 	///	Shapeの取得
-	virtual CDShapeIf* GetShape(int i)=0;
+	CDShapeIf* GetShape(int i);
 
 	//	SDK生成、登録関数
 	///	PHSdkのインスタンスを作成

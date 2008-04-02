@@ -16,8 +16,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHGear
-IF_OBJECT_IMP(PHGear, SceneObject);
-
 PHGear::PHGear(const PHGearDesc& desc){
 	f = A = Ainv = b = 0.0;
 	joint[0] = joint[1] = NULL;

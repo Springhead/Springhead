@@ -20,9 +20,9 @@ class PHJoint1D;
 /**
 	ギア：１自由度関節を連動させる拘束
  */
-class PHGear : public SceneObject, public PHGearIfInit{
+class PHGear : public SceneObject{
 public:
-	OBJECTDEF(PHGear, SceneObject);
+	SPR_OBJECTDEF(PHGear);
 	PHScene*			scene;
 	PHConstraintEngine* engine;
 	PHJoint1D*		joint[2];		///< 連動させる関節

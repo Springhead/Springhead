@@ -19,13 +19,13 @@
 namespace Spr{;
 
 /// 剛体の組の状態
-struct PHSolidPairState{
+struct PHSolidPairSt{
 	bool bEnabled;
 };
 
 /// 剛体の組
 template<class TShapePair, class TEngine>
-class PHSolidPair : public PHSolidPairState, public UTRefCount{
+class PHSolidPair : public PHSolidPairSt, public UTRefCount{
 public:
 	typedef TShapePair shapepair_type;
 	typedef TEngine engine_type;
@@ -132,28 +132,28 @@ public:
 		return found;
 	}
 
-	void SetState(const PHSolidPairState& s){
-		*((PHSolidPairState*)this) = s;
+	void SetState(const PHSolidPairSt& s){
+		*((PHSolidPairSt*)this) = s;
 	}
 };
 
 ///	PHContactDetectorの状態
-struct PHContactDetectorState{
+struct PHContactDetectorSt{
 	size_t nSolidPair;	///<	SolidPairの数
 	size_t nShapePair;	///<	ShapePairの数
-	PHSolidPairState* SolidStates(){
+	PHSolidPairSt* SolidStates(){
 		char* ptr = ((char*)this) + sizeof(*this);
-		return (PHSolidPairState*)ptr;
+		return (PHSolidPairSt*)ptr;
 	}
-	CDShapePairState* ShapeStates(){
-		char* ptr = ((char*)this) + sizeof(*this) + nSolidPair*sizeof(PHSolidPairState);
-		return (CDShapePairState*)ptr;
+	CDShapePairSt* ShapeStates(){
+		char* ptr = ((char*)this) + sizeof(*this) + nSolidPair*sizeof(PHSolidPairSt);
+		return (CDShapePairSt*)ptr;
 	}
 	size_t GetSize(){
-		return sizeof(*this) + nSolidPair*sizeof(PHSolidPairState)
-			+ nShapePair*sizeof(CDShapePairState);
+		return sizeof(*this) + nSolidPair*sizeof(PHSolidPairSt)
+			+ nShapePair*sizeof(CDShapePairSt);
 	}
-	PHContactDetectorState(int n, int m):nSolidPair(n), nShapePair(m){}
+	PHContactDetectorSt(int n=0, int m=0):nSolidPair(n), nShapePair(m){}
 
 };
 
@@ -223,7 +223,7 @@ public:
 	 	if(!s)return false;
 		typename PHSolids::iterator is = find(solids.begin(), solids.end(), s);
 		if(is != solids.end()){
-			int idx = is - solids.begin();
+			int idx = (int)(is - solids.begin());
 			solids.erase(is);
 			solidPairs.erase_row(idx);
 			solidPairs.erase_col(idx);
@@ -244,19 +244,19 @@ public:
 	}
 
 	virtual size_t GetStateSize() const {
-		PHContactDetectorState s(NSolidPairs(), NShapePairs());
+		PHContactDetectorSt s(NSolidPairs(), NShapePairs());
 		return s.GetSize();
 	}
 	virtual void ConstructState(void* m) const {
-		new (m) PHContactDetectorState(NSolidPairs(), NShapePairs());
+		new (m) PHContactDetectorSt(NSolidPairs(), NShapePairs());
 	}
 	virtual void DestructState(void* m) const {
-		((PHContactDetectorState*)m)->~PHContactDetectorState();
+		((PHContactDetectorSt*)m)->~PHContactDetectorSt();
 	}
 	virtual bool GetState(void* s) const {
-		PHContactDetectorState* es = ((PHContactDetectorState*)s);
-		PHSolidPairState* solidStates = es->SolidStates();
-		CDShapePairState* shapeStates = es->ShapeStates();
+		PHContactDetectorSt* es = ((PHContactDetectorSt*)s);
+		PHSolidPairSt* solidStates = es->SolidStates();
+		CDShapePairSt* shapeStates = es->ShapeStates();
 		//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
 		int solidPos=0;
 		int shapePos=0;
@@ -264,11 +264,11 @@ public:
 		for(int j=0; j<solidPairs.width(); ++j){
 			for(int i=0; i<j; ++i){
 				sp = solidPairs.item(i, j);
-				solidStates[solidPos] = *(PHSolidPairState*)sp;
+				solidStates[solidPos] = *(PHSolidPairSt*)sp;
 				++solidPos;
 				for(int r = 0; r < sp->shapePairs.height(); ++r){
 					for(int c = 0; c < sp->shapePairs.width(); ++c){
-						shapeStates[shapePos] = *(CDShapePairState*)(sp->shapePairs.item(r, c));
+						shapeStates[shapePos] = *(CDShapePairSt*)(sp->shapePairs.item(r, c));
 						++shapePos;
 					}
 				}
@@ -277,9 +277,9 @@ public:
 		return true;
 	}
 	virtual void SetState(const void* s){
-		PHContactDetectorState* es = (PHContactDetectorState*)s;
-		PHSolidPairState* solidStates = es->SolidStates();
-		CDShapePairState* shapeStates = es->ShapeStates();
+		PHContactDetectorSt* es = (PHContactDetectorSt*)s;
+		PHSolidPairSt* solidStates = es->SolidStates();
+		CDShapePairSt* shapeStates = es->ShapeStates();
 		//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
 		int solidPos=0;
 		int shapePos=0;
@@ -346,7 +346,7 @@ public:
 		irhs = find(solids.begin(), solids.end(), (PHSolid*)(rhs->Cast()));
 		if(ilhs == solids.end() || irhs == solids.end())
 			return;
-		int i = ilhs - solids.begin(), j = irhs - solids.begin();
+		int i = (int)(ilhs - solids.begin()), j = (int)(irhs - solids.begin());
 		if(i > j)std::swap(i, j);
 		assert(i < solidPairs.height() && j < solidPairs.width());
 		solidPairs.item(i, j)->bEnabled = bEnable;

@@ -16,14 +16,14 @@ namespace Spr{;
 class GRMaterial;
 /**	@class	GRSphere
     @brief	グラフィックスシーングラフでの球オブジェクトを表す． */
-class GRSphere: public GRVisual, public GRSphereIfInit, public GRSphereDesc{
+class GRSphere: public GRVisual, public GRSphereDesc{
 	unsigned int list;				///< ディスプレイリストの識別子
 	GRRenderIf* render;
 	
 	/// ディスプレイリストを作成．
 	void CreateList(GRRenderIf* r);
 public:
-	OBJECTDEF(GRSphere, GRVisual);
+	SPR_OBJECTDEF(GRSphere);
 	ACCESS_DESC(GRSphere);
 	
 	UTRef<GRMaterial> material;		///< マテリアル

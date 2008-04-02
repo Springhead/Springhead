@@ -9,24 +9,23 @@
 #define GRFrame_H
 
 #include <SprGraphics.h>
-#include "IfStubGraphics.h"
 
 namespace Spr{;
 
 /**	@class	GRVisual
     @brief	 */
-class GRVisual: public SceneObject, public GRVisualIfInit{
+class GRVisual: public SceneObject{
 public:
-	OBJECTDEF_ABST(GRVisual, SceneObject);
+	SPR_OBJECTDEF_ABST(GRVisual);
 	virtual void Render(GRRenderIf* render){}
 	virtual void Rendered(GRRenderIf* render){}
 };
 
 /**	@class	GRFrame
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
-class GRFrame: public GRVisual, public GRFrameIfInit, public GRFrameDesc{
+class GRFrame: public GRVisual, public GRFrameDesc{
 public:
-	OBJECTDEF(GRFrame, GRVisual);
+	SPR_OBJECTDEF(GRFrame);
 	ACCESS_DESC(GRFrame);
 	GRFrame* parent;
 	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
@@ -54,9 +53,9 @@ public:
 
 /**	@class	GRDummyFrame
     @brief	表示しないコンテナ．Visualをしまっておいて，後でプログラムから使うために使う　*/
-class GRDummyFrame: public GRVisual, public GRDummyFrameIfInit, public GRDummyFrameDesc{
+class GRDummyFrame: public GRVisual, public GRDummyFrameDesc{
 public:
-	OBJECTDEF(GRDummyFrame, GRVisual);
+	SPR_OBJECTDEF(GRDummyFrame);
 	ACCESS_DESC(GRDummyFrame);
 	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
 	GRVisualIfs children;
@@ -69,9 +68,9 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 };
 
-class GRAnimation: public SceneObject, public GRAnimationIfInit, public GRAnimationDesc{
+class GRAnimation: public SceneObject, public GRAnimationDesc{
 public:
-	OBJECTDEF(GRAnimation, SceneObject);
+	SPR_OBJECTDEF(GRAnimation);
 	GRAnimation(GRAnimationDesc& d = GRAnimationDesc()){}
 	///
 	struct Target{
@@ -91,13 +90,13 @@ public:
 	virtual bool AddChildObject(ObjectIf* v);
 };
 
-class GRAnimationSet: public SceneObject, public GRAnimationSetIfInit{
+class GRAnimationSet: public SceneObject{
 	typedef std::vector< UTRef<GRAnimation> > Animations;
 	Animations animations;
 	std::vector<GRFrame*> roots;
 
 public:
-	OBJECTDEF(GRAnimationSet, SceneObject);
+	SPR_OBJECTDEF(GRAnimationSet);
 	GRAnimationSet(GRAnimationSetDesc& d = GRAnimationSetDesc()){}
 	///	子オブジェクト(animations)を返す
 	ObjectIf* GetChildObject(size_t p);
@@ -116,11 +115,11 @@ public:
 	virtual void LoadInitialPose();
 };
 
-class GRAnimationController: public SceneObject, GRAnimationControllerIfInit{
+class GRAnimationController: public SceneObject{
 public:
 	typedef std::map<UTString, UTRef<GRAnimationSet>, UTStringLess> Sets;
 	Sets sets;
-	OBJECTDEF(GRAnimationController, SceneObject);
+	SPR_OBJECTDEF(GRAnimationController);
 	GRAnimationController(const GRAnimationControllerDesc& d = GRAnimationControllerDesc()){}
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	virtual void BlendPose(UTString name, float time, float weight);

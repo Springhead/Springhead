@@ -1,8 +1,11 @@
+#ifdef DLLFUNC_STR
+
 /**	UTDllLoader.h を使用する際に，DLL関数のスタブをインプリメントする際に使用するヘッダ．
 	詳細は， UTDllLoader.h を参照
 */
 #ifndef DLLLOADER_ReportError
 #define DLLLOADER_ReportError
+
 static void ReportError(const char* pname){
 	DSTR << "Fail to find '" << pname << "'" << std::endl;
 }
@@ -48,3 +51,5 @@ static void ReportError(const char* pname){
 #undef DLLFUNC_ARGDEF
 #undef DLLFUNC_ARGCALL
 #undef DLLFUNC_CTYPE 
+
+#endif

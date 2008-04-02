@@ -12,12 +12,12 @@
 
 #include <Base/TQuaternion.h>
 #include <sstream>
-#include "TypeDescDumpFoundation.h"
 
 
 namespace Spr{ 
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
+extern void RegisterTypeDescFoundation(UTTypeDescDb* db);
 
 void SPR_CDECL UTRegisterTypeDescs(){
 	static bool bFirst=true;
@@ -38,6 +38,7 @@ void SPR_CDECL UTRegisterTypeDescs(){
 	db->RegisterDesc(new UTTypeDescNumber<DWORD>("DWORD"));
 	db->RegisterDesc(new UTTypeDescNumber<DWORD>("size_t"));
 	db->RegisterDesc(new UTTypeDescNumber<unsigned>("unsigned"));
+	db->RegisterDesc(new UTTypeDescNumber<unsigned>("unsigned int"));
 	db->RegisterDesc(new UTTypeDescNumber<DWORD>("enum"));
 
 	db->RegisterDesc(new UTTypeDescNumber<float>("float"));
@@ -46,9 +47,10 @@ void SPR_CDECL UTRegisterTypeDescs(){
 	typedef double DOUBLE;
 	db->RegisterDesc(new UTTypeDescNumber<float>("FLOAT"));
 	db->RegisterDesc(new UTTypeDescNumber<double>("DOUBLE"));
-
 	db->RegisterDesc(new UTTypeDescString("string"));
-	#include "TypeDescDumpImpFoundation.h"
+
+	RegisterTypeDescFoundation(db);
+
 	db->Link();
 }
 }

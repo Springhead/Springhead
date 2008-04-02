@@ -11,6 +11,8 @@
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHGear.h>
+#include <Physics/PHPathJoint.h>
+#include <Collision/CDDetectorImp.h>
 
 namespace Spr{;
 
@@ -35,11 +37,10 @@ public:
 	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 };
 
-class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>, public PHConstraintEngineIfInit{
+class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
-	//OBJECTDEF_NOIF(PHConstraintEngine, PHEngine);
-	OBJECTDEF(PHConstraintEngine, PHEngine);
+	SPR_OBJECTDEF(PHConstraintEngine);
 public:
 	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
 	int		numIter;					///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”

@@ -35,7 +35,7 @@ struct GRSphereDesc{
 
 ///	@brief	グラフィックスで使う表示用のSphere
 struct GRSphereIf: public GRVisualIf{
-	IF_DEF(GRSphere);
+	SPR_IFDEF(GRSphere);
 };
 
 

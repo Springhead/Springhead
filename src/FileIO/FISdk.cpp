@@ -22,8 +22,6 @@ FISdkIf* SPR_CDECL FISdkIf::CreateSdk(){
 
 //----------------------------------------------------------------------------
 //	FISdk
-IF_OBJECT_IMP(FISdk, NameManager);
-
 void SPR_CDECL FIRegisterTypeDescs();
 
 FISdk::FISdk(){

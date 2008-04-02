@@ -19,8 +19,9 @@ namespace Spr{;
 /**	立方体の面(四角形)を表すクラス．CDBoxが所有．
 	CDContactAnalysis で使われる．
 */
-class CDQuadFace: public CDFaceIf{
+class CDQuadFace: public Object{
 public:
+	SPR_OBJECTDEF(CDQuadFace);
 	int vtxs[4];	///< 面の頂点ID
 	Vec3f normal;	///< 面の法線
 
@@ -34,10 +35,10 @@ class CDQuadFaces:public std::vector<CDQuadFace>{
 };
 
 /// 直方体
-class CDBox: public CDConvex, public CDBoxIfInit{
+class CDBox: public CDConvex{
 public:
 	mutable int curPos;
-	OBJECTDEF(CDBox, CDConvex);
+	SPR_OBJECTDEF(CDBox);
 	
 	Vec3f boxsize;				/// 直方体のサイズ（各辺の長さ）
 	CDQuadFaces qfaces;			/// 面（四角形:quadrangular face）

@@ -11,30 +11,22 @@
 #pragma hdrstop
 #endif
 
-#include "TypeDescDumpFileIO.h"
-#include "TypeDescDumpCOLLADA.h"
-
-
 using namespace Spr;
 static UTTypeDesc* desc; 
 static UTTypeDesc::Field* field; 
 
 
 namespace Spr{ 
+extern void RegisterTypeDescFileIO(UTTypeDescDb* db);
+
 void SPR_CDECL FIRegisterTypeDescs(){
 	static bool bFirst=true;
 	if (!bFirst) return;
 	bFirst = false;
 
 	UTRegisterTypeDescs();
-
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("FileIO");
-	#include "TypeDescDumpImpFileIO.h"
-	db->Link();
-
-	db = UTTypeDescDbPool::Get("COLLADA");
-	using namespace SprCOLLADA;
-	#include "TypeDescDumpImpCOLLADA.h"
+	RegisterTypeDescFileIO(db);
 	db->Link();
 }
 

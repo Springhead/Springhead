@@ -28,22 +28,22 @@ struct GRSceneDesc{
 struct GRSdkIf;
 /**	@brief	グラフィックスシーングラフ */
 struct GRSceneIf: public SceneIf{
-	IF_DEF(GRScene);
+	SPR_IFDEF(GRScene);
 
 	///	シーンのレンダリング
-	virtual void Render(GRRenderIf* r)=0;
+	void Render(GRRenderIf* r);
 
 	///	ワールドフレームの取得
-	virtual GRFrameIf* GetWorld()=0;
+	GRFrameIf* GetWorld();
 
 	///	カメラの取得
-	virtual GRCameraIf* GetCamera()=0;
+	GRCameraIf* GetCamera();
 
 	///	アニメーションコントローラの取得
-	virtual GRAnimationControllerIf* GetAnimationController()=0;
+	GRAnimationControllerIf* GetAnimationController();
 
 	/// カメラの作成・設定
-	virtual void SetCamera(const GRCameraDesc& desc)=0;
+	void SetCamera(const GRCameraDesc& desc);
 
 	/** @brief ビジュアルの作成
 		@param desc ビジュアルのデスクリプタ
@@ -51,13 +51,13 @@ struct GRSceneIf: public SceneIf{
 		フレーム、メッシュ、マテリアル、あるいはライトを作成して親フレームparentの下に追加する。
 		parentがNULLの場合はワールドフレームが親となる。
 	 */
-	virtual GRVisualIf*  CreateVisual(
-		const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent = NULL)=0;
+	GRVisualIf*  CreateVisual(
+		const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent = NULL);
 
 	/** @brief このSceneをもつSDKを返す
 		@return SDKのインタフェース
 	*/	
-	virtual GRSdkIf* GetSdk()=0;
+	GRSdkIf* GetSdk();
 };
 
 

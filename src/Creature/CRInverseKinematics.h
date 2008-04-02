@@ -11,7 +11,6 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "IfStubCreature.h"
 
 #include <set>
 #include <vector>
@@ -21,7 +20,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 制御点
 */
-class CRIKControl : public SceneObject, public CRIKControlIfInit {
+class CRIKControl : public SceneObject{
 public:
 	/// 簡略表記用typedef
 	typedef std::set<CRIKControlIf*>           CSet;
@@ -39,7 +38,7 @@ public:
 	Vec3d goal;
 
 public:
-	OBJECTDEF(CRIKControl, SceneObject);
+	SPR_OBJECTDEF(CRIKControl);
 
 	/// このControlと連動するMovable
 	MSet linkedMovables;
@@ -77,13 +76,13 @@ public:
 
 /** @brief 位置制御点
 */
-class CRIKControlPos : public CRIKControl, CRIKControlPosIfInit {
+class CRIKControlPos : public CRIKControl{
 public:
 	/// 制御点の位置（剛体ローカル座標系）
 	Vec3d pos;
 
 public:
-	OBJECTDEF(CRIKControlPos, CRIKControl);
+	SPR_OBJECTDEF(CRIKControlPos);
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -102,10 +101,10 @@ public:
 
 /** @brief 姿勢制御点
 */
-class CRIKControlOri : public CRIKControl, CRIKControlOriIfInit {
+class CRIKControlOri : public CRIKControl{
 public:
 public:
-	OBJECTDEF(CRIKControlOri, CRIKControl);
+	SPR_OBJECTDEF(CRIKControlOri);
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -124,7 +123,7 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 制御対象
 */
-class CRIKMovable : public SceneObject, public CRIKMovableIfInit {
+class CRIKMovable : public SceneObject{
 protected:
 	/// 簡略表記用typedef
 	typedef std::set<CRIKControlIf*>           CSet;
@@ -147,7 +146,7 @@ protected:
 	std::vector< PTM::VMatrixRow<double> >  K;
 
 public:
-	OBJECTDEF(CRIKMovable, SceneObject);
+	SPR_OBJECTDEF(CRIKMovable);
 
 	/// このMovableを動かせるControl
 	CSet linkedControls;
@@ -207,13 +206,13 @@ public:
 
 /** @brief 位置制御可能な剛体
 */
-class CRIKMovableSolidPos : public CRIKMovable, public CRIKMovableSolidPosIfInit {
+class CRIKMovableSolidPos : public CRIKMovable{
 protected:
 	/// 制御対象の剛体
 	PHSolidIf* solid;
 
 public:
-	OBJECTDEF(CRIKMovableSolidPos, CRIKMovable);
+	SPR_OBJECTDEF(CRIKMovableSolidPos);
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -233,13 +232,13 @@ public:
 
 /** @brief 姿勢制御可能な剛体
 */
-class CRIKMovableSolidOri : public CRIKMovable, public CRIKMovableSolidOriIfInit {
+class CRIKMovableSolidOri : public CRIKMovable{
 protected:
 	/// 制御対象の剛体
 	PHSolidIf* solid;
 
 public:
-	OBJECTDEF(CRIKMovableSolidOri, CRIKMovable);
+	SPR_OBJECTDEF(CRIKMovableSolidOri);
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -259,13 +258,13 @@ public:
 
 /** @brief 角度制御可能なボールジョイント
 */
-class CRIKMovableBallJointOri : public CRIKMovable, public CRIKMovableBallJointOriIfInit {
+class CRIKMovableBallJointOri : public CRIKMovable{
 protected:
 	/// 制御対象の関節
 	PHBallJointIf* joint;
 
 public:
-	OBJECTDEF(CRIKMovableBallJointOri, CRIKMovable);
+	SPR_OBJECTDEF(CRIKMovableBallJointOri);
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -285,13 +284,13 @@ public:
 
 /** @brief 角度制御可能な三連ヒンジジョイント
 */
-class CRIKMovable3HingeJointOri : public CRIKMovable, public CRIKMovable3HingeJointOriIfInit {
+class CRIKMovable3HingeJointOri : public CRIKMovable{
 protected:
 	/// 制御対象の関節
 	PHHingeJointIf *joint1, *joint2, *joint3;
 
 public:
-	OBJECTDEF(CRIKMovable3HingeJointOri, CRIKMovable);
+	SPR_OBJECTDEF(CRIKMovable3HingeJointOri);
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -317,13 +316,13 @@ public:
 
 /** @brief 角度制御可能なヒンジジョイント
 */
-class CRIKMovableHingeJointOri : public CRIKMovable, public CRIKMovableHingeJointOriIfInit {
+class CRIKMovableHingeJointOri : public CRIKMovable{
 protected:
 	/// 制御対象の関節
 	PHHingeJointIf *joint;
 
 public:
-	OBJECTDEF(CRIKMovableHingeJointOri, CRIKMovable);
+	SPR_OBJECTDEF(CRIKMovableHingeJointOri);
 
 	/** @brief デフォルトコンストラクタ
 	*/

@@ -9,7 +9,6 @@
 #define PHEngine_H
 
 #include <Foundation/Object.h>
-#include "IfStubPhysics.h"
 #include <SprPhysics.h>
 
 namespace Spr {;
@@ -49,8 +48,8 @@ enum PHBehaviorPriority{
 
 class PHScene;
 ///	動作エンジンの基本クラス．
-class PHEngine:public SceneObject, public PHEngineIfInit{
-	OBJECTDEF(PHEngine, SceneObject);
+class PHEngine:public SceneObject{
+	SPR_OBJECTDEF(PHEngine);
 public:
 	///	実行順序を決めるプライオリティ値．小さいほど早い
 	virtual int GetPriority() const { return SGBP_FORCEGENERATOR; }

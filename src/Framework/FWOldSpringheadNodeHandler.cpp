@@ -91,12 +91,12 @@ public:
 // Springhead1のSimulatorタスク．
 class FWSimulatorTask: public UTLoadTask{
 public:
-	OBJECTDEF_NOIF(FWSimulatorTask, UTLoadTask);
+	SPR_OBJECTDEF_NOIF(FWSimulatorTask);
 	double timeStep;	// 積分ステップ
 	double decay;		// 剛体の速度の減衰率
 	void Execute(UTLoadContext* fc){}
 };
-OBJECT_IMP(FWSimulatorTask, UTLoadTask);
+SPR_OBJECTIMP1(FWSimulatorTask, UTLoadTask);
 
 // Springhead1のSimulator．
 class FWNodeHandlerSimulator: public UTLoadHandlerImp<Simulator>{
@@ -185,11 +185,11 @@ public:
 // DirectXのテクスチャファイル名タスク．
 class FWXTextureTask: public UTLoadTask{
 public:
-	OBJECTDEF_NOIF(FWXTextureTask, UTLoadTask);
+	SPR_OBJECTDEF_NOIF(FWXTextureTask);
 	UTString filename;					// テクスチャファイル名
 	void Execute(UTLoadContext* fc){}
 };
-OBJECT_IMP(FWXTextureTask, UTLoadTask);
+SPR_OBJECTIMP1(FWXTextureTask, UTLoadTask);
 
 // DirectXのテクスチャファイル名（Materialの内部タグ)．
 class FWNodeHandlerXTextureFilename: public UTLoadHandlerImp<TextureFilename>{
@@ -521,12 +521,12 @@ public:
 // Springhead1のContactInactiveのタスク．
 class FWContactInactiveTask: public UTLoadTask{
 public:
-	OBJECTDEF_NOIF(FWContactInactiveTask, UTLoadTask);
+	SPR_OBJECTDEF_NOIF(FWContactInactiveTask);
 	int nSolids;
 	std::vector<int> solidIndexes;
 	void Execute(UTLoadContext* fc){}
 };
-OBJECT_IMP(FWContactInactiveTask, UTLoadTask);
+SPR_OBJECTIMP1(FWContactInactiveTask, UTLoadTask);
 
 // Springhead1のContactInactive.
 class FWNodeHandlerContactInactive: public UTLoadHandlerImp<ContactInactive>{
@@ -544,14 +544,14 @@ public:
 // 古い物理マテリアル．ロード時の記録用．
 class FWPHMaterialTask: public UTLoadTask{
 public:
-	OBJECTDEF_NOIF(FWPHMaterialTask, UTLoadTask);
+	SPR_OBJECTDEF_NOIF(FWPHMaterialTask);
 	FWPHMaterialTask(): mu(0.2f), mu0(0.2f), e(0.2f){}
 	float mu;		///<	動摩擦摩擦係数
 	float mu0;		///<	静止摩擦係数
 	float e;		///<	跳ね返り係数	
 	void Execute(UTLoadContext* fc){}
 };
-OBJECT_IMP(FWPHMaterialTask, UTLoadTask);
+SPR_OBJECTIMP1(FWPHMaterialTask, UTLoadTask);
 
 // 古い物理マテリアル．
 class FWNodeHandlerPhysicalMaterial: public UTLoadHandlerImp<PhysicalMaterial>{
