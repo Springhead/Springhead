@@ -8,7 +8,6 @@
 #include <vector>
 
 namespace Spr {
-using namespace Spr;
 
 /**	3本糸のSPIDAR.
 	糸の長さから座標計算を行ったり、出力する力覚から各モータの
