@@ -25,13 +25,13 @@ struct HISdkIf;
 struct HIRealDeviceIf:  public ObjectIf{
 	SPR_IFDEF(HIRealDevice);
 	///	デバイスの名前．クラスと対応するボードのIDなどから自動で決まる名前．設定不可．
-	virtual const char* Name()=0;
+	const char* Name();
 	///	初期化
-	virtual bool Init()=0;
+	bool Init();
 	///	仮想デバイスの登録
-	virtual void Register(HISdkIf* sdk)=0;
+	void Register(HISdkIf* sdk);
 	///	状態の更新
-	virtual void Update()=0;
+	void Update();
 };
 
 ///	バーチャルデバイス．A/D, D/Aの1チャンネル分とか，機能としてのデバイス．
@@ -39,15 +39,15 @@ struct HIVirtualDeviceIf:  public ObjectIf{
 	SPR_IFDEF(HIVirtualDevice);
 public:
 	///	デバイスの名前
-	virtual const char* Name() const=0;
+	const char* Name() const;
 	///	デバイスの種類
-	virtual const char* Type() const=0;
+	const char* Type() const;
 	///	実デバイスへのポインタ
-	virtual HIRealDeviceIf* RealDevice()=0;
+	HIRealDeviceIf* RealDevice();
 	///	ダンプ出力
-	virtual void Print(std::ostream& o) const=0;
+	void Print(std::ostream& o) const;
 	///
-	virtual void Update()=0;
+	void Update();
 };
 
 //@}

@@ -1,3 +1,5 @@
+#ifndef SWIG
+
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
@@ -443,3 +445,6 @@ Tk3dInput;
 #endif
 
 #endif
+
+
+#endif	// ifndef SWIG

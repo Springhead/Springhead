@@ -10,7 +10,6 @@
 
 #include <Foundation/Object.h>
 #include <SprHumanInterface.h>
-#include <HumanInterface/IfStubHumanInterface.h>
 #include <set>
 
 
@@ -18,14 +17,14 @@ namespace Spr{;
 class HIRealDevice;
 
 ///	The base class of human interface classes.
-class SPR_DLL HIBase: public NamedObject, HIBaseIfInit{
+class SPR_DLL HIBase: public NamedObject{
 protected:
 	static std::set<HIRealDevice*> realDevices;
 	static int deviceUpdateStep;
 	int updateStep;
 	bool isGood;
 public:
-	SPR_OBJECTDEF_ABST(HIBase, NamedObject);
+	SPR_OBJECTDEF_ABST(HIBase);
 	///
 	HIBase(){ updateStep = deviceUpdateStep; isGood=false;}
 
@@ -49,23 +48,21 @@ public:
 };
 class HIPosition:public HIBase{
 public:
-	SPR_OBJECTDEF(HIPosition, HIBase);
+	SPR_OBJECTDEF(HIPosition);
 	virtual Vec3f GetPosition();
 };
 class HIOrientation:public HIBase{
 public:
-	SPR_OBJECTDEF(HIOrientation, HIBase);
+	SPR_OBJECTDEF(HIOrientation);
 	virtual Quaternionf GetOrientation();
 };
 
 #define DEF_IF_FOR_OBJ(IF, OBJ)	class OBJ;						\
 	struct IF##For##OBJ:public ObjectIfBufWithInit<IF##StubTemplate<IF, IF##For##OBJ, OBJ> >{}
 
-DEF_IF_FOR_OBJ(HIOrientationIf, HIPose);
-
-class HIPose:public HIPosition, HIPoseIfInit, HIOrientationIfForHIPose{
+class HIPose:public HIPosition{
 public:
-	OBJECTDEF2(HIPose, HIPosition, HIOrientationIf);
+	SPR_OBJECTDEF2(HIPose, HIPosition, HIOrientation);
 	virtual Quaternionf GetOrientation();
 	virtual Posef GetPose();
 };

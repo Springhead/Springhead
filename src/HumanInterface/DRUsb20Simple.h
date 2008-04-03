@@ -28,7 +28,7 @@ namespace Spr {
 ///	CyverseのUSB2.0(LDR-SPIDAR-AMP)のドライバ
 class SPR_DLL DRUsb20Simple : public HIRealDevice{
 public:
-	SPR_OBJECTDEF(DRUsb20Simple, HIRealDevice);
+	SPR_OBJECTDEF(DRUsb20Simple);
 	///	仮想デバイス(DA)
 	class VirtualDeviceDa:public DVDaBase{
 	protected:

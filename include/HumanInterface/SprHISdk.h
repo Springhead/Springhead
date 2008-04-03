@@ -30,23 +30,23 @@ struct HISdkIf : public NameManagerIf{
 	SPR_IFDEF(HISdk);
 
 	///	SDKの初期化
-	virtual void Init()=0;
+	void Init();
 	///	作成・登録したRealDevice/VirtualDevice/HumanInterfaceをすべて削除
-	virtual void Clear()=0;
-	///	Rent virtual device.
-	virtual HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL)=0;
+	void Clear();
+	///	Rent device.
+	HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL);
 	///	Return virutal device.
-	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf* dev)=0;
+	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
 	
 	///	Create and register real device.
-	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL)=0;
+	bool AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
 
 	///	Get real device.
-	virtual HIRealDeviceIf* FindRealDevice(const char* name=NULL)=0;
+	HIRealDeviceIf* FindRealDevice(const char* name=NULL);
 	///	ヒューマンインタフェースの作成
-	virtual UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* info, const void* desc)=0;
+	UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* info, const void* desc);
 	///	ヒューマンインタフェースの作成
-	virtual UTRef<HIBaseIf> CreateHumanInterface(const char* name, const char* desc)=0;
+	UTRef<HIBaseIf> CreateHumanInterface(const char* name, const char* desc);
 
 	//	SDK生成、登録関数
 	///	HISdkのインスタンスを作成
