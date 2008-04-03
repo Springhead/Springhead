@@ -550,7 +550,7 @@ SPR_IFIMP1(PHPathJoint, PHJoint1D);
 void Spr::PHPathJointIf::SetPosition(double q){
 	((PHPathJoint*)(Object*)(ObjectIf*)this)->SetPosition(q);
 }
-SPR_IFIMP1(PHBallJoint, PHConstraint);
+SPR_IFIMP1(PHBallJoint, PHJoint);
 void Spr::PHBallJointIf::SetSwingRange(Vec2d range){
 	((PHBallJoint*)(Object*)(ObjectIf*)this)->SetSwingRange(range);
 }
