@@ -332,7 +332,7 @@ struct PHPathJointDesc : public PHJoint1DDesc{
 };
 
 /// ボールジョイントのインタフェース
-struct PHBallJointIf : public PHConstraintIf{
+struct PHBallJointIf : public PHJointIf{
 	SPR_IFDEF(PHBallJoint);
 
 	

@@ -57,6 +57,9 @@ APIクラスを作ったら，それを実装するクラスを作ります．
 抽象クラスの場合は，実体化できないというエラーがでるので，代わりにSPR_OBJECTDEF_ABSTを使います．
 また，インタフェースを持たないクラスの場合は，代わりにSPR_OBJECTDEF_NOIFを使います．
 
+基本クラスがテンプレートクラスの場合，基本クラスリストの取得が上手く行きません．
+この場合，SPR_OBJECTDEF1(cls, base); のように，マクロで直接基本クラスを指定します．
+
 SPR_OBJECTDEF()の実装も，SPR_IFDEF()の場合と同様に，
  Springhead2/src/SDKNAME/SDKNAMEStub.cpp に，
 <pre>

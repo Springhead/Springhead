@@ -179,7 +179,7 @@ public:
 class PHTreeNode1D;
 class PHTreeNode1D : public PHTreeNodeND<1>{
 public:
-	SPR_OBJECTDEF_ABST(PHTreeNode1D);
+	SPR_OBJECTDEF_ABST1(PHTreeNode1D, PHTreeNode);
 	
 	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
 	virtual void	CompBias();
