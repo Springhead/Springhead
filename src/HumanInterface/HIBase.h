@@ -57,12 +57,9 @@ public:
 	virtual Quaternionf GetOrientation();
 };
 
-#define DEF_IF_FOR_OBJ(IF, OBJ)	class OBJ;						\
-	struct IF##For##OBJ:public ObjectIfBufWithInit<IF##StubTemplate<IF, IF##For##OBJ, OBJ> >{}
-
 class HIPose:public HIPosition{
 public:
-	SPR_OBJECTDEF2(HIPose, HIPosition, HIOrientation);
+	SPR_OBJECTDEF(HIPose);
 	virtual Quaternionf GetOrientation();
 	virtual Posef GetPose();
 };
