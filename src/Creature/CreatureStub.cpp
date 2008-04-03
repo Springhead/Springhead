@@ -10,6 +10,7 @@
 #include "..\..\include\Creature\SprCRSensor.h"
 #include "..\..\src\Base\BaseDebug.h"
 #include "..\..\src\Foundation\UTTypeDesc.h"
+#include "..\Foundation\AccessDescDumpFoundation.h"
 #include "..\Foundation\Foundation.h"
 #include "..\Foundation\Object.h"
 #include "..\Foundation\Scene.h"
