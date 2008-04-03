@@ -247,7 +247,7 @@ SPR_OBJECTIMP_ABST1(DVKeyMouse, HIVirtualDevice);
 SPR_OBJECTIMP_ABST1(HIBase, NamedObject);
 SPR_OBJECTIMP1(HIPosition, HIBase);
 SPR_OBJECTIMP1(HIOrientation, HIBase);
-SPR_OBJECTIMP2(HIPose, HIPosition, HIOrientation);
+SPR_OBJECTIMP1(HIPose, HIPosition);
 SPR_OBJECTIMP1(HIMouse6D, HIPose);
 SPR_OBJECTIMP_ABST1(HIRealDevice, Object);
 SPR_OBJECTIMP1(HISdk, Sdk);
