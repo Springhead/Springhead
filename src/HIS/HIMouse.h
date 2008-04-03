@@ -6,21 +6,21 @@
 #include <Device/DVDeviceManager.h>
 
 namespace Spr {;
+#define MK_LBUTTON          0x0001
+#define MK_RBUTTON          0x0002
+#define MK_SHIFT            0x0004
+#define MK_CONTROL          0x0008
+#define MK_MBUTTON          0x0010
 
 class SPR_DLL HIMouse: public HIForceDevice6D{
 public:
 	/// 押されているボタンの状態を示すフラグ
 	enum ButtonState{
 		NONE,
-		 #define MK_LBUTTON          0x0001
 		LBUTTON = MK_LBUTTON,
-		 #define MK_RBUTTON          0x0002
 		RBUTTON = MK_RBUTTON,
-		 #define MK_SHIFT            0x0004
 		SHIFT   = MK_SHIFT,
-		 #define MK_CONTROL          0x0008
 		CONTROL = MK_CONTROL,
-		 #define MK_MBUTTON          0x0010
 		MBUTTON = MK_MBUTTON,
 	} btnState;	
 
