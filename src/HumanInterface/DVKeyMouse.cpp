@@ -8,6 +8,4 @@
 #include <HumanInterface/DVKeyMouse.h>
 namespace Spr {;
 
-IF_SPR_OBJECTIMP_ABST(DVKeyMouse, HIVirtualDevice);
-
 }	//	namespace Spr

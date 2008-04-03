@@ -22,7 +22,7 @@ struct DVKeyMouseIf;
 ///	実デバイス．インタフェースカードとか，USBデバイスとか，
 struct HIMouse6DIf: public HIPoseIf{
 	SPR_IFDEF(HIMouse6D);
-	virtual DVKeyMouseIf* GetKeyMouse()=0;
+	DVKeyMouseIf* GetKeyMouse();
 };
 
 

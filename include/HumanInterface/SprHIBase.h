@@ -26,41 +26,41 @@ struct DRRealDeviceIf;
 struct HIBaseIf: public NamedObjectIf{
 	SPR_IFDEF(HIBase);
 	///	キャリブレーションの前に行う処理
-	virtual bool BeforeCalibration()=0;
+	bool BeforeCalibration();
 	///	キャリブレーション処理
-	virtual bool Calibration()=0;
+	bool Calibration();
 	///	キャリブレーションのあとに行う処理
-	virtual bool AfterCalibration()=0;
+	bool AfterCalibration();
 	///	ヒューマンインタフェースの依存関係を追加する
-	virtual void AddDeviceDependency(HIRealDeviceIf* rd)=0;
+	void AddDeviceDependency(HIRealDeviceIf* rd);
 	///	ヒューマンインタフェースの依存関係をクリアする
-	virtual void ClearDeviceDependency()=0;
+	void ClearDeviceDependency();
 	///	ヒューマンインタフェースの状態を更新する．
-	virtual void Update(float dt)=0;
+	void Update(float dt);
 	///	ヒューマンインタフェースが使用可能ならば true．
-	virtual bool IsGood()=0;
+	bool IsGood();
 	/**	ヒューマンインタフェースの初期化．
 		必要なデバイスをsdkから借りてきて，ヒューマンインタフェースを構成する	*/
-	virtual bool Init(HISdkIf* sdk, const void* desc)=0;
+	bool Init(HISdkIf* sdk, const void* desc);
 };
 
 /**	@brief	位置入力インタフェース	*/
 struct HIPositionIf: public HIBaseIf{
 	SPR_IFDEF(HIPosition);
-	virtual Vec3f GetPosition()=0;
+	Vec3f GetPosition();
 };
 
 /**	@brief	角度入力インタフェース	*/
 struct HIOrientationIf: public HIBaseIf{
 	SPR_IFDEF(HIOrientation);
-	virtual Quaternionf GetOrientation()=0;
+	Quaternionf GetOrientation();
 };
 
 /**	@brief	姿勢(=位置＋角度)入力インタフェース	*/
 struct HIPoseIf: public HIPositionIf{
 	SPR_IFDEF(HIPose);
-	virtual Quaternionf GetOrientation()=0;
-	virtual Posef GetPose()=0;
+	Quaternionf GetOrientation();
+	Posef GetPose();
 };
 
 //@}

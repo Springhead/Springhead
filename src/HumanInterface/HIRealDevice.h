@@ -10,15 +10,14 @@
 
 #include <SprHumanInterface.h>
 #include <Foundation/Object.h>
-#include <HumanInterface/IfStubHumanInterface.h>
 
 namespace Spr {;
 class HIVirtualDevicePool;
 
 ///	実デバイスの基本クラス．ISAカード1枚などに相当する.
-class SPR_DLL HIRealDevice:public Object, public HIRealDeviceIfInit{
+class SPR_DLL HIRealDevice:public Object{
 public:
-	SPR_OBJECTDEF_ABST(HIRealDevice, Object);
+	SPR_OBJECTDEF_ABST(HIRealDevice);
 	HIRealDevice(){}
 	virtual ~HIRealDevice(){}
 	///	デバイスの名前

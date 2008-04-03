@@ -1,3 +1,5 @@
+#ifndef SWIG
+
 extern "C"
 {
 	__declspec(dllexport) short __stdcall Adapio_Device_Open(short id);
@@ -19,3 +21,6 @@ extern "C"
 	__declspec(dllexport) short __stdcall Adapio_Adc_GetStatus(short id,short *Running, short *SampledNum);
 	__declspec(dllexport) short __stdcall Adapio_Adc_GetDatas(short id,short *databuf, short Len );
 }
+
+
+#endif	//	ifndef SWIG

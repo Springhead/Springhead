@@ -13,9 +13,9 @@
 
 namespace Spr {;
 
-class SPR_DLL HIMouse6D: public HIPose, public HIMouse6DIfInit, public DVKeyMouseHandler{
+class SPR_DLL HIMouse6D: public HIPose, public DVKeyMouseHandler{
 public:
-	SPR_OBJECTDEF(HIMouse6D, HIPose);
+	SPR_OBJECTDEF(HIMouse6D);
 
 	UTRef<DVKeyMouse> keyMouse;
 	DVKeyMouseHandler::ButtonState btnState;

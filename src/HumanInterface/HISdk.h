@@ -9,7 +9,6 @@
 #define HISDK_H
 #include <Foundation/Foundation.h>
 #include <HumanInterface/SprHISdk.h>
-#include "IfStubHumanInterface.h"
 
 namespace Spr {;
 
@@ -26,12 +25,12 @@ public:
 class HIVirtualDevicePool;
 class HIRealDevicePool;
 
-class SPR_DLL HISdk:public Sdk, HISdkIfInit{
+class SPR_DLL HISdk:public Sdk{
 protected:
 	UTRef<HIVirtualDevicePool> vpool;
 	UTRef<HIRealDevicePool> rpool;
 public:
-	SPR_OBJECTDEF(HISdk, Sdk);
+	SPR_OBJECTDEF(HISdk);
 	HISdk(const HISdkDesc& = HISdkDesc());
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);

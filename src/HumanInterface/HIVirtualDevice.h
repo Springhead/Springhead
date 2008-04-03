@@ -10,7 +10,6 @@
 
 #include <Foundation/Object.h>
 #include <SprHumanInterface.h>
-#include <HumanInterface/IfStubHumanInterface.h>
 
 namespace Spr {
 
@@ -20,9 +19,9 @@ namespace Spr {
 class HIRealDevice;
 
 ///	仮想デバイスの基本クラス．DA,カウンタなどの1チャンネルに相当する.
-class SPR_DLL HIVirtualDevice:public Object, public HIVirtualDeviceIfInit{
+class SPR_DLL HIVirtualDevice:public Object{
 public:
-	SPR_OBJECTDEF_ABST(HIVirtualDevice, Object);
+	SPR_OBJECTDEF_ABST(HIVirtualDevice);
 
 	bool used;
 	virtual bool GetUsed(){return used;}

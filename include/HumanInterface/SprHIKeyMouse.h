@@ -24,13 +24,13 @@ struct DVKeyMouseHandler{
 	/** マウスが動いたときの処理
 		@param keyState 押されているキー，ボタンの状態
 	*/
-	virtual bool OnMouseMove(int keyState, int x, int y, int zdelta){ return false; }
+	bool OnMouseMove(int keyState, int x, int y, int zdelta){ return false; }
 	///
-	virtual bool OnClick(int keyState, int x, int y){ return false; }
+	bool OnClick(int keyState, int x, int y){ return false; }
 	///
-	virtual bool OnDoubleClick(int keyState, int x, int y){ return false; }
+	bool OnDoubleClick(int keyState, int x, int y){ return false; }
 	///	キー処理
-	virtual bool OnKey(bool isDown, int vkey, int keyState, int x, int y){
+	bool OnKey(bool isDown, int vkey, int keyState, int x, int y){
 		return false;
 	}
 };
@@ -53,13 +53,13 @@ struct DVKeyMouseIf:public HIVirtualDeviceIf{
 	};
 	SPR_IFDEF(DVKeyMouse);
 	///	デバイスの名前
-	virtual const char* Name() const =0;
+	const char* Name() const ;
 	///	ハンドラの設定
-	virtual void SetHandler(DVKeyMouseHandler* h)=0;
+	void SetHandler(DVKeyMouseHandler* h);
 	///	マウスボタン・キーボード状態取得
-	virtual int GetKeyState(int key) = 0;
+	int GetKeyState(int key);
 	///	マウス位置取得関数	0が最新，1以上は過去の履歴を取得
-	virtual DVKeyMouseIf::DVMousePosition GetMousePosition(int count=0)=0;
+	DVKeyMouseIf::DVMousePosition GetMousePosition(int count=0);
 };
 
 ///	DRKeyMouseWin32

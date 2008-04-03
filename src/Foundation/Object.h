@@ -159,6 +159,7 @@ public:
 //@{
 #define SPR_OBJECTIMP0(cls)					DEF_UTTYPEINFO(cls)
 #define SPR_OBJECTIMP1(cls, base)			DEF_UTTYPEINFO1(cls, base)
+#define SPR_OBJECTIMP2(cls, b1,b2)			DEF_UTTYPEINFO2(cls, b1, b2)
 #define SPR_OBJECTIMP_ABST0(cls)			DEF_UTTYPEINFOABST(cls)
 #define SPR_OBJECTIMP_ABST1(cls, base)		DEF_UTTYPEINFOABST1(cls, base)
 //@}
