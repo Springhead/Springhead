@@ -44,7 +44,7 @@ public:
 
 class PHJoint1D : public PHJointND<1>{
 public:
-	SPR_OBJECTDEF_ABST(PHJoint1D);
+	SPR_OBJECTDEF_ABST1(PHJoint1D, PHJoint);
 	
 	bool	onLower, onUpper;			///< ‰Â“®”ÍˆÍ‚Ì‰ºŒÀAãŒÀ‚É’B‚µ‚Ä‚¢‚éê‡‚Étrue
 	double	lower, upper;				///< ‰Â“®”ÍˆÍ‚Ì‰ºŒÀAãŒÀ

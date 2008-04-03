@@ -891,11 +891,11 @@ void Spr::PHSolidIf::SetDynamical(bool bOn){
 bool Spr::PHSolidIf::IsDynamical(){
 	return	((PHSolid*)(Object*)(ObjectIf*)this)->IsDynamical();
 }
-SPR_OBJECTIMP0(PHBallJointNode);
-SPR_OBJECTIMP0(PHBallJoint);
+SPR_OBJECTIMP1(PHBallJointNode, PHTreeNode);
+SPR_OBJECTIMP1(PHBallJoint, PHJoint);
 SPR_OBJECTIMP_ABST1(PHConstraint, SceneObject);
 SPR_OBJECTIMP1(PHConstraints, SceneObject);
-SPR_OBJECTIMP0(PHConstraintEngine);
+SPR_OBJECTIMP1(PHConstraintEngine, PHEngine);
 SPR_OBJECTIMP1(PHContactPoint, PHConstraint);
 SPR_OBJECTIMP1(PHEngine, SceneObject);
 SPR_OBJECTIMP1(PHGravityEngine, PHEngine);
@@ -903,11 +903,11 @@ SPR_OBJECTIMP1(PHGear, SceneObject);
 SPR_OBJECTIMP1(PHHingeJointNode, PHTreeNode1D);
 SPR_OBJECTIMP1(PHHingeJoint, PHJoint1D);
 SPR_OBJECTIMP_ABST1(PHJoint, PHConstraint);
-SPR_OBJECTIMP_ABST0(PHJoint1D);
+SPR_OBJECTIMP_ABST1(PHJoint1D, PHJoint);
 SPR_OBJECTIMP_ABST1(PHPath, SceneObject);
 SPR_OBJECTIMP1(PHPathJointNode, PHTreeNode1D);
 SPR_OBJECTIMP1(PHPathJoint, PHJoint1D);
-SPR_OBJECTIMP0(PHPenaltyEngine);
+SPR_OBJECTIMP1(PHPenaltyEngine, PHEngine);
 SPR_OBJECTIMP1(PHScene, Scene);
 SPR_OBJECTIMP1(PHSdk, Sdk);
 SPR_OBJECTIMP1(PHSliderJointNode, PHTreeNode1D);

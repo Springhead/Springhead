@@ -114,7 +114,7 @@ protected:
 };
 
 class PHPenaltyEngine : public PHContactDetector<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
-	SPR_OBJECTDEF_NOIF(PHPenaltyEngine);
+	SPR_OBJECTDEF_NOIF1(PHPenaltyEngine, PHEngine);
 public:
 	int GetPriority() const {return SGBP_PENALTYENGINE;}
 	virtual void Step();

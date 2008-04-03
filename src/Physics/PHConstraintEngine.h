@@ -40,7 +40,7 @@ public:
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
-	SPR_OBJECTDEF(PHConstraintEngine);
+	SPR_OBJECTDEF1(PHConstraintEngine, PHEngine);
 public:
 	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
 	int		numIter;					///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”

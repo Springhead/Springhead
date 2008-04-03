@@ -28,7 +28,7 @@ class PHBallJoint;
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
-	SPR_OBJECTDEF(PHBallJointNode);
+	SPR_OBJECTDEF1(PHBallJointNode, PHTreeNode);
 	/// スイング・ツイスト角の時間変化率から角速度へのヤコビアン
 	Matrix3d	Jst;
 
@@ -46,8 +46,8 @@ public:
 };
 
 class PHBallJoint : public PHJointND<3>{
-
-	SPR_OBJECTDEF(PHBallJoint);
+public:
+	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
 
 	double			spring, damper;			///< バネ、ダンパ係数
 	Vec3d			limitDir;				///< 可動域の中心ベクトル（初期方向Z軸）

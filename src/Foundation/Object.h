@@ -125,9 +125,6 @@ public:
 
 #define DEF_UTTYPEINFOABSTDEF(cls)
 #define DEF_UTTYPEINFODEF(cls)
-#define SPR_OBJECTDEF_NOIF(cls)	SPR_OBJECTDEF_NOIF(cls)
-#define SPR_OBJECTDEF(cls)	SPR_OBJECTDEF(cls)
-
 
 #else
 
@@ -144,9 +141,17 @@ public:
 		return cls##If::GetIfInfoStatic();											\
 	}																				\
 
+#define SPR_OBJECTDEF_NOIF1(cls, base)		SPR_OBJECTDEF_NOIF(cls)
+#define SPR_OBJECTDEF1(cls, base)			SPR_OBJECTDEF(cls)
+#define SPR_OBJECTDEF_ABST_NOIF1(cls, base)	SPR_OBJECTDEF_ABST_NOIF(cls)
+#define SPR_OBJECTDEF_ABST1(cls, base)		SPR_OBJECTDEF_ABST(cls)
+
+#define SPR_OBJECTDEF_NOIF2(cls, b1, b2)		SPR_OBJECTDEF_NOIF(cls)
+#define SPR_OBJECTDEF2(cls, b1, b2)				SPR_OBJECTDEF(cls)
+#define SPR_OBJECTDEF_ABST_NOIF2(cls, b1, b2)	SPR_OBJECTDEF_ABST_NOIF(cls)
+#define SPR_OBJECTDEF_ABST2(cls, b1, b2)		SPR_OBJECTDEF_ABST(cls)
+
 #endif
-
-
 
 //@}
 
