@@ -5,6 +5,9 @@ cmd /v:on /c%0 LISTSRC %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto end
 
 :ListSrc
+del AccessDesc*.h
+del TypeDesc*.h
+del MakeTypeDesc*.txt
 set TARGET=%9 %8 %7 %6 %5 %4 %3 %2
 set MODULE=%2
 set MAKEFILE=%MODULE%Stub.mak.txt
