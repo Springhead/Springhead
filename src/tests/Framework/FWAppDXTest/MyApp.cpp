@@ -3,7 +3,6 @@
 #include <d3d9.h>
 
 MyApp::MyApp(){
-	//instance		= NULL;
 	hWnd			= NULL;
 	winClassName	= "SprFWAppDXTest";
 	windowName		= "Test Window";
