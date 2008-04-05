@@ -17,9 +17,9 @@ private:
 	int					left;			// ウィンドウのモニタ左端からの位置
 	int					width;			// ウィンドウの幅
 	int					height;			// ウィンドウの高さ
-
-public:
 	static MyApp*		instance;
+public:
+
 	//コンストラクタ
 	MyApp();
 	//デストラクタ
