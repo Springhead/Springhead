@@ -52,8 +52,7 @@ void SaveShape(std::ostream& file, CDShape* a){
 	if (box){
 		file << "box" << std::endl;
 		CDBoxDesc desc;
-		if(mesh)
-			mesh->GetDesc(&desc);
+		box->GetDesc(&desc);
 		SaveMaterial(file, desc.material);
 		file << desc.boxsize << std::endl;
 	}		
@@ -65,6 +64,14 @@ void SaveShape(std::ostream& file, CDShape* a){
 		SaveMaterial(file, desc.material);
 		file << desc.radius << std::endl;
 		file << desc.length << std::endl;
+	}		
+	CDSphere* sph = a->Cast();
+	if (sph){
+		file << "sph" << std::endl;
+		CDSphereDesc desc;
+		sph->GetDesc(&desc);
+		SaveMaterial(file, desc.material);
+		file << desc.radius << std::endl;
 	}		
 }
 CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
@@ -94,6 +101,12 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
 		file >> desc.radius;
 		file >> desc.length;
 		rv = sdk->CreateShape(CDCapsuleIf::GetIfInfoStatic(), desc)->Cast();
+	}
+	if( strcmp(type, "sph") == 0){
+		CDSphereDesc desc;
+		LoadMaterial(file, desc.material);			
+		file >> desc.radius;
+		rv = sdk->CreateShape(CDSphereIf::GetIfInfoStatic(), desc)->Cast();
 	}
 	return rv;
 }
@@ -284,6 +297,29 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	}
 	ids[3] = 3;
 	//	三角形 ids[0-1-2] の中にoがある．ids[0]が最後に更新した頂点w
+#if USERNAME==hase	//	長谷川専用デバッグコード．三角形が原点を含むことを確認
+	int sign[3];
+	double d[3];
+	for(int i=0; i<3; ++i){
+		Vec2d edge = w[ids[(i+1)%3]].XY() - w[ids[i]].XY();
+		Vec2d n = Vec2d(-edge.Y(), edge.X());
+		d[i] = n * w[ids[i]].XY();
+		double epsilon = 1e-5;
+		sign[i] = d[i] > epsilon ? 1 : d[i] < -epsilon ? -1 : 0;
+	}
+	if (sign[0] * sign[1] < 0 || sign[1] * sign[2] < 0){
+		DSTR << "tri: 0-2:" << std::endl;
+		for(int i=0; i<3; ++i){
+			DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+		}
+		DSTR << "dist: " << std::endl;
+		for(int i=0; i<3; ++i){
+			DSTR << d[i] << std::endl;
+		}
+		DSTR << "Error could not find a traiangle including origin." << std::endl;
+	}
+#endif
+	
 	//	三角形を小さくしていく
 	int notuse = -1;
 	int count = 0;
@@ -388,30 +424,88 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
 			std::swap(ids[notuse], ids[3]);
 		}else{
-			//	どの2点とw[3]で三角形を作れるか確認する -> w[3] を、残り2つで表現する
-			double min = 1e10;
-			int minId;
+			//	どの2点とw[3]で三角形を作れるか確認する -> 2点とw[3]が作る2辺が原点を挟むかどうか調べる．
+			double minDist = DBL_MAX;
+			int minId=-1;
 			for(int i=0; i<3; ++i){
-				Matrix2d m;	//	(w[i] w[i+1])  t(k1,k2) = w[3]
-				m.Ex() = w[ids[i]].XY();
-				m.Ey() = w[ids[(i+1)%3]].XY();
-				Vec2d k = m.inv() * w[ids[3]].XY();
-				if (k.x > k.y){
-					if (k.x < min){
-						min = k.x;
-						minId = i;
-					}
+				int sign;
+				if (cross(w[ids[(i+1)%3]].XY() - w[ids[i]].XY(), w[ids[3]].XY()-w[ids[i]].XY()) < 0){ 
+					sign = -1;
 				}else{
-					if (k.y < min){
-						min = k.y;
-						minId = i;
-					}
+					sign = 1;
+				}
+				Vec2d edge0 = (w[ids[(i+1)%3]].XY() - w[ids[i]].XY());
+				double edgeLen0 = edge0.norm();
+				double dist0 = sign * edge0 ^ w[ids[i]].XY();
+				if (edgeLen0 > epsilon) dist0 /= edgeLen0;
+				else dist0 = 0;
+
+				Vec2d edge1 = (w[ids[i]].XY() - w[ids[3]].XY());
+				double edgeLen1 = edge1.norm();
+				double dist1 = sign * edge1 ^ w[ids[3]].XY();
+				if (edgeLen1 > epsilon) dist1 /= edgeLen1;
+				else dist1 = 0;
+
+				Vec2d edge2 = (w[ids[(i+1)%3]].XY() - w[ids[3]].XY());
+				double edgeLen2 = edge2.norm();
+				double dist2 =  -sign * edge2 ^ w[ids[3]].XY();
+				if (edgeLen2 > epsilon) dist2 /= edgeLen2;
+				else dist2 = 0;
+				double dist = dist1>dist2 ? dist1 : dist2;
+				dist = dist0>dist ? dist0 : dist;
+				if (dist < minDist){
+					minDist = dist;
+					minId = i;
 				}
 			}
+/*			for(int i=0; i<4; ++i){
+				DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+			}
+*/
 			std::swap(ids[(minId+2)%3], ids[3]);
-			if (min > 1e-5){	//	異常。原点を含む三角形が見つからない
+			if (minDist > 1e-4){	//	異常。原点を含む三角形が見つからない
+				DSTR << "minId:" << minId << " minDist:" << minDist;
+				DSTR << std::endl;
+
 				//	デバッグ用処理
+				//	三角形が原点を含むことを確認
+				int sign[3];
+				double d[3];
+				for(int i=0; i<3; ++i){
+					Vec2d edge = w[ids[(i+1)%3]].XY() - w[ids[i]].XY();
+					Vec2d n = Vec2d(-edge.Y(), edge.X());
+					d[i] = n * w[ids[i]].XY();
+					double epsilon = 1e-5;
+					sign[i] = d[i] > epsilon ? 1 : d[i] < -epsilon ? -1 : 0;
+				}
+				if (sign[0] * sign[1] < 0 || sign[1] * sign[2] < 0){
+					DSTR << "new tri: 0-2:" << std::endl;
+					for(int i=0; i<3; ++i){
+						DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+					}
+					DSTR << "old tri: 0-2:" << std::endl;
+					for(int i=0; i<3; ++i){
+						if ((minId+2)%3 == i)
+							DSTR << w[ids[3]].X() << "\t" << w[ids[3]].Y() << std::endl;
+						else
+							DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+					}
+					DSTR << "dist: " << std::endl;
+					for(int i=0; i<3; ++i){
+						DSTR << d[i] << std::endl;
+					}
+					DSTR << "Error could not find a traiangle including origin." << std::endl;
+				}
+
 				DSTR << "No including traiangle found." << std::endl;
+#if USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
+				DSTR << "tri: 0-2; vtx:3" << std::endl;
+				for(int i=0; i<4; ++i){
+					DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+				}
+				DebugBreak();
+				ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
+#endif
 				ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 				goto final;
 			}
