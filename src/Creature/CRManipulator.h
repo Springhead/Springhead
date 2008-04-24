@@ -1,0 +1,45 @@
+#ifndef CRMANIPULATOR_H
+#define CRMANIPULATOR_H
+
+#include <Springhead.h>
+#include <Foundation/Object.h>
+
+#include <vector>
+
+#include "CRBody.h"
+
+using namespace Spr;
+
+//@{
+class CRManipulator : public CRBody, public CRManipulatorDesc {
+
+private:
+	PHSceneIf*									phScene;		// 手を置くシーンへのポインタ
+	std::vector< PHSolidIf* >					soFingersTop;	// 指先の剛体へのポインタの配列
+	std::vector< std::vector< PHSolidIf* > >	soFingers;		// 各指の剛体へのポインタを5本指に対して適用したもの
+	std::vector< std::vector< PHJointIf* > >	joFingers;		// 各指の関節へのポインタを5本指に対して適用したもの
+	std::vector< PHBallJointIf* >				joFingerTips;	// 各指の付け根関節へのポインタを5本指に対して適用したもの
+
+public:
+	CRManipulator();
+	CRManipulator(PHSceneIf* scene);
+	~CRManipulator();
+
+	void Init();						// 初期化（手の全体を生成する，変数への代入など）
+
+	bool CreateHand();					// 手を作成する
+	bool CreateThumb();					// 親指系を作成する(指番号 0 )
+	bool CreateIndexFinger();			// 人差し指系を作成する(指番号 1 )
+	bool CreateLongFinger();			// 中指系を作成する(指番号 2 )
+	bool CreateAnnularFinger();			// 薬指系を作成する(指番号 3 )
+	bool CreateDigitusFinger();			// 子指系を作成する(指番号 4 )
+
+	void Grip();						// 握る動作をさせる
+	void Release();						// 脱力したポーズをさせる（握っているものを放す）
+	void Rock();						// グーのポーズをさせる
+	void Paper();						// パーのポーズをさせる
+	void Scissors();					// チョキのポーズをさせる
+
+};
+
+#endif
