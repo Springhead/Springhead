@@ -495,7 +495,222 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 	CRFourLegsAnimalBodyDesc(bool enableRange = false, bool enableFMax = false);
 };
 
+// ------------------------------------------------------------------------------
+/// 手首から先の手モデルのインターフェイス
+struct CRManipulatorIf : CRBodyIf {
+	SPR_IFDEF(CRManipulator);
 
+	/** @brief 初期化を実行する
+	*/
+	void Init();
+
+	/** @brief 剛体の数を返す
+	*/
+	int NSolids();
+
+	/** @brief 関節の数を返す
+	*/
+	int NJoints();
+
+	/** @brief ボールジョイントの数を返す
+	*/
+	int NBallJoints();
+
+	/** @brief ヒンジジョイントの数を返す
+	*/
+	int NHingeJoints();
+	
+};
+
+/// 手首から先の手モデルのデスクリプタ
+struct CRManipulatorDesc : CRBodyDesc {
+	SPR_DESCDEF(CRManipulator);
+
+	enum CRFingerSolids{
+
+		///////////////////////////////////////////////////////////////////
+		//																 //
+		// < 剛体定義 >													 //
+		// ROOT：手のひらの付け根										 //
+		// 指番号：  [0]親指，[1]人差し指, [2]中指, [3]薬指, [4]小指	 //
+		// 指内番号：[0]付け根に近い方									 //
+		//																 //
+		///////////////////////////////////////////////////////////////////
+
+		// Center part of the solids
+		SO_ROOT = 0,
+		SO_FINGER_0_0, SO_FINGER_0_1, SO_FINGER_0_2,
+		SO_FINGER_1_0, SO_FINGER_1_1, SO_FINGER_1_2, SO_FINGER_1_3,
+		SO_FINGER_2_0, SO_FINGER_2_1, SO_FINGER_2_2, SO_FINGER_2_3,
+		SO_FINGER_3_0, SO_FINGER_3_1, SO_FINGER_3_2, SO_FINGER_3_3,
+		SO_FINGER_4_0, SO_FINGER_4_1, SO_FINGER_4_2, SO_FINGER_4_3,
+		
+		// -- The number of the solids
+		SO_NSOLIDS
+	};
+
+	enum CRFingerJoints{
+
+		///////////////////////////////////////////////////////////////////
+		//																 //
+		// < 関節定義 >													 //
+		// ROOT：手のひらの付け根										 //
+		// 関節番号：  [0]親指，[1]人差し指, [2]中指, [3]薬指, [4]小指	 //
+		// 関節内番号：[0]付け根に近い方								 //
+		//																 //
+		///////////////////////////////////////////////////////////////////
+
+		// -- Center part of the joints
+		JO_00 = 0, JO_01, JO_02,
+		JO_10,	   JO_11, JO_12, JO_13,
+		JO_20,	   JO_21, JO_22, JO_23,
+		JO_30,	   JO_31, JO_32, JO_33,
+		JO_40,	   JO_41, JO_42, JO_43,
+
+		// -- The number of the all joints (ball + hinge)
+		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)
+	};
+
+	int soNSolids;
+	int joNBallJoints;
+	int joNHingeJoints;
+	int joNJoints;
+
+	/// サイズに関するパラメータ
+	double bRoot;
+	double bFinger00, lFinger00, tFinger00;
+	double bFinger01, lFinger01, tFinger01;
+	double bFinger02, lFinger02, tFinger02;
+	double bFinger10, lFigner10, tFinger10;
+	double bFinger11, lFinger11, tFinger11;
+	double bFinger12, lFigner12, tFinger12;
+	double bFinger13, lFinger13, tFigner13;
+	double bFinger20, lFigner20, tFinger20;
+	double bFinger21, lFinger21, tFinger21;
+	double bFinger22, lFigner22, tFinger22;
+	double bFinger23, lFinger23, tFigner23;
+	double bFinger30, lFigner30, tFinger30;
+	double bFinger31, lFinger31, tFinger31;
+	double bFinger32, lFigner32, tFinger32;
+	double bFinger33, lFinger33, tFigner33;
+	double bFinger40, lFigner40, tFinger40;
+	double bFinger41, lFinger41, tFinger41;
+	double bFinger42, lFigner42, tFinger42;
+	double bFinger43, lFinger43, tFigner43;
+
+	/// 各BallJointのバネダンパ
+	double springWaistChest,   damperWaistChest;	//腰-胸
+	double springWaistTail,	   damperWaistTail;		//腰-尾
+	double springTail,		   damperTail;			//尾
+	double springChestNeck,	   damperChestNeck;     //胸-首
+	double springNeckHead,	   damperNeckHead;		//首-頭
+	double springShoulder,	   damperShoulder;		//肩
+	double springFrontAnkle,   damperFrontAnkle;	//かかと（前足）
+	double springHip,		   damperHip;			//尻
+	double springRearAnkle,    damperRearAnkle;		//かかと（後足）
+	
+	// 各HingeJointのバネダンパ
+	double springElbow,		   damperElbow;			//肘（前足）
+	double springFrontKnee,	   damperFrontKnee;		//膝（前足）
+	double springStifle,	   damperStifle;		//肘？（後足）
+	double springRearKnee,	   damperRearKnee;		//膝（後足）
+	
+	/// HingeJoint可動域制限
+	Vec2d  rangeElbow;
+	Vec2d  rangeFrontKnee;
+	Vec2d  rangeStifle;
+	Vec2d  rangeRearKnee;
+	
+	// BallJoint制御目標
+	Quaterniond goalWaistChest;
+	Quaterniond goalWaistTail;
+	Quaterniond goalTail;
+	Quaterniond goalChestNeck;
+	Quaterniond goalNeckHead;
+	Quaterniond goalShoulder;
+	Quaterniond goalFrontAnkle;
+	Quaterniond goalHip;
+	Quaterniond goalRearAnkle;
+
+	// HingeJoint制御目標
+	double originElbow;
+	double originFrontKnee;
+	double originStifle;
+	double originRearKnee;
+
+	// BallJoint可動域制限の中心
+	Vec3d limitDirWaistChest;
+	Vec3d limitDirWaistTail;
+	Vec3d limitDirTail;
+	Vec3d limitDirChestNeck;
+	Vec3d limitDirNeckHead;
+	Vec3d limitDirShoulder;
+	Vec3d limitDirFrontAnkle;
+	Vec3d limitDirHip;
+	Vec3d limitDirRearAnkle;
+
+	/// BallJointのswing可動域:
+	Vec2d limitSwingWaistChest;
+	Vec2d limitSwingWaistTail;
+	Vec2d limitSwingTail;
+	Vec2d limitSwingChestNeck;
+	Vec2d limitSwingNeckHead;
+	Vec2d limitSwingShoulder;
+	Vec2d limitSwingFrontAnkle;
+	Vec2d limitSwingHip;
+	Vec2d limitSwingRearAnkle;
+
+	/// BallJointのtwist可動域
+	Vec2d limitTwistWaistChest;
+	Vec2d limitTwistWaistTail;
+	Vec2d limitTwistTail;
+	Vec2d limitTwistChestNeck;
+	Vec2d limitTwistNeckHead;
+	Vec2d limitTwistShoulder;
+	Vec2d limitTwistFrontAnkle;
+	Vec2d limitTwistHip;
+	Vec2d limitTwistRearAnkle;
+
+	// 関節の出せる力の最大値
+	double fMaxWaistChest;
+	double fMaxChestNeck;
+	double fMaxNeckHead;
+	double fMaxWaistTail;
+	double fMaxTail12;
+	double fMaxTail23;
+	double fMaxLeftShoulder;
+	double fMaxLeftElbow;
+	double fMaxLeftFrontKnee;
+	double fMaxLeftFrontAnkle;
+	double fMaxLeftHip;
+	double fMaxLeftStifle;
+	double fMaxLeftRearKnee;
+	double fMaxLeftRearAnkle;
+	double fMaxRightShoulder;
+	double fMaxRightElbow;
+	double fMaxRightFrontKnee;
+	double fMaxRightFrontAnkle;
+	double fMaxRightHip;
+	double fMaxRightStifle;
+	double fMaxRightRearKnee;
+	double fMaxRightRearAnkle;
+
+	// 物体の摩擦係数
+	float materialMu;
+
+	/// 裏オプション
+	bool noLegs;
+	/// ダイナミカルを入れるかどうか
+	bool dynamicalMode;
+	/// 全体の体重
+	double totalMass;
+	/// fMaxを入れるかどうか
+	bool flagFMax;
+	/// 稼働域制限を入れるかどうか
+	bool flagRange;
+
+	CRManipulatorDesc(bool enableRange = false, bool enableFMax = false);
+};
 
 
 
