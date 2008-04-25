@@ -20,7 +20,6 @@ CRManipulator::~CRManipulator(){
 bool CRManipulator::Init(){
 	
 	if(CreateHand()){
-		continue;
 	}
 	else return false;
 
