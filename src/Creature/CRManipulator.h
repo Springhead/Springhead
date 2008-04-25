@@ -21,11 +21,18 @@ private:
 	std::vector< PHBallJointIf* >				joFingerTips;	// 各指の付け根関節へのポインタを5本指に対して適用したもの
 
 public:
+	SPR_OBJECTDEF(CRManipulator);
+	ACCESS_DESC(CRManipulator);
+
 	CRManipulator();
 	CRManipulator(PHSceneIf* scene);
 	~CRManipulator();
 
-	void Init();						// 初期化（手の全体を生成する，変数への代入など）
+	bool Init();						// 初期化（手の全体を生成する，変数への代入など）
+	int	 NSolids();
+	int	 NJoints();
+	int  NBallJoints();
+	int  NHingeJoints();
 
 	bool CreateHand();					// 手を作成する
 	bool CreateThumb();					// 親指系を作成する(指番号 0 )
@@ -39,6 +46,8 @@ public:
 	void Rock();						// グーのポーズをさせる
 	void Paper();						// パーのポーズをさせる
 	void Scissors();					// チョキのポーズをさせる
+
+	
 
 };
 

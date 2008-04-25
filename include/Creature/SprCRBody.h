@@ -502,7 +502,7 @@ struct CRManipulatorIf : CRBodyIf {
 
 	/** @brief 初期化を実行する
 	*/
-	void Init();
+	bool Init();
 
 	/** @brief 剛体の数を返す
 	*/
@@ -524,6 +524,7 @@ struct CRManipulatorIf : CRBodyIf {
 
 /// 手首から先の手モデルのデスクリプタ
 struct CRManipulatorDesc : CRBodyDesc {
+	
 	SPR_DESCDEF(CRManipulator);
 
 	enum CRFingerSolids{
@@ -576,7 +577,7 @@ struct CRManipulatorDesc : CRBodyDesc {
 	int joNHingeJoints;
 	int joNJoints;
 
-	/// サイズに関するパラメータ
+	/// サイズに関するパラメータ(breadth, length, thickness)
 	double bRoot;
 	double bFinger00, lFinger00, tFinger00;
 	double bFinger01, lFinger01, tFinger01;
@@ -599,111 +600,66 @@ struct CRManipulatorDesc : CRBodyDesc {
 	double bFinger43, lFinger43, tFigner43;
 
 	/// 各BallJointのバネダンパ
-	double springWaistChest,   damperWaistChest;	//腰-胸
-	double springWaistTail,	   damperWaistTail;		//腰-尾
-	double springTail,		   damperTail;			//尾
-	double springChestNeck,	   damperChestNeck;     //胸-首
-	double springNeckHead,	   damperNeckHead;		//首-頭
-	double springShoulder,	   damperShoulder;		//肩
-	double springFrontAnkle,   damperFrontAnkle;	//かかと（前足）
-	double springHip,		   damperHip;			//尻
-	double springRearAnkle,    damperRearAnkle;		//かかと（後足）
-	
-	// 各HingeJointのバネダンパ
-	double springElbow,		   damperElbow;			//肘（前足）
-	double springFrontKnee,	   damperFrontKnee;		//膝（前足）
-	double springStifle,	   damperStifle;		//肘？（後足）
-	double springRearKnee,	   damperRearKnee;		//膝（後足）
+	double spring00, damper00;
+	double spring01, damper01;
+	double spring02, damper02;
+	double spring10, damper10;
+	double spring11, damper11;
+	double spring12, damper12;
+	double spring13, damper13;
+	double spring20, damper20;
+	double spring21, damper21;
+	double spring22, damper22;
+	double spring23, damper23;
+	double spring30, damper30;
+	double spring31, damper31;
+	double spring32, damper32;
+	double spring33, damper33;
+	double spring40, damper40;
+	double spring41, damper41;
+	double spring42, damper42;
+	double spring43, damper43;
 	
 	/// HingeJoint可動域制限
-	Vec2d  rangeElbow;
-	Vec2d  rangeFrontKnee;
-	Vec2d  rangeStifle;
-	Vec2d  rangeRearKnee;
+	Vec2d  range01, range02;
+	Vec2d  range11, range12, range13;
+	Vec2d  range21, range22, range23;
+	Vec2d  range31, range32, range33;
+	Vec2d  range41, range42, range43;
 	
 	// BallJoint制御目標
-	Quaterniond goalWaistChest;
-	Quaterniond goalWaistTail;
-	Quaterniond goalTail;
-	Quaterniond goalChestNeck;
-	Quaterniond goalNeckHead;
-	Quaterniond goalShoulder;
-	Quaterniond goalFrontAnkle;
-	Quaterniond goalHip;
-	Quaterniond goalRearAnkle;
-
-	// HingeJoint制御目標
-	double originElbow;
-	double originFrontKnee;
-	double originStifle;
-	double originRearKnee;
-
-	// BallJoint可動域制限の中心
-	Vec3d limitDirWaistChest;
-	Vec3d limitDirWaistTail;
-	Vec3d limitDirTail;
-	Vec3d limitDirChestNeck;
-	Vec3d limitDirNeckHead;
-	Vec3d limitDirShoulder;
-	Vec3d limitDirFrontAnkle;
-	Vec3d limitDirHip;
-	Vec3d limitDirRearAnkle;
+	Quaterniond goalFinger0;
+	Quaterniond goalFinger1;
+	Quaterniond goalFinger2;
+	Quaterniond goalFigner3;
+	Quaterniond goalFinger4;
 
 	/// BallJointのswing可動域:
-	Vec2d limitSwingWaistChest;
-	Vec2d limitSwingWaistTail;
-	Vec2d limitSwingTail;
-	Vec2d limitSwingChestNeck;
-	Vec2d limitSwingNeckHead;
-	Vec2d limitSwingShoulder;
-	Vec2d limitSwingFrontAnkle;
-	Vec2d limitSwingHip;
-	Vec2d limitSwingRearAnkle;
+	Vec2d limitSwing00;
+	Vec2d limitSwing10;
+	Vec2d limitSwing20;
+	Vec2d limitSwing30;
+	Vec2d limitSwing40;
 
 	/// BallJointのtwist可動域
-	Vec2d limitTwistWaistChest;
-	Vec2d limitTwistWaistTail;
-	Vec2d limitTwistTail;
-	Vec2d limitTwistChestNeck;
-	Vec2d limitTwistNeckHead;
-	Vec2d limitTwistShoulder;
-	Vec2d limitTwistFrontAnkle;
-	Vec2d limitTwistHip;
-	Vec2d limitTwistRearAnkle;
+	Vec2d limitTwist00;
+	Vec2d limitTwist10;
+	Vec2d limitTwist20;
+	Vec2d limitTwist30;
+	Vec2d limitTwist40;
 
 	// 関節の出せる力の最大値
-	double fMaxWaistChest;
-	double fMaxChestNeck;
-	double fMaxNeckHead;
-	double fMaxWaistTail;
-	double fMaxTail12;
-	double fMaxTail23;
-	double fMaxLeftShoulder;
-	double fMaxLeftElbow;
-	double fMaxLeftFrontKnee;
-	double fMaxLeftFrontAnkle;
-	double fMaxLeftHip;
-	double fMaxLeftStifle;
-	double fMaxLeftRearKnee;
-	double fMaxLeftRearAnkle;
-	double fMaxRightShoulder;
-	double fMaxRightElbow;
-	double fMaxRightFrontKnee;
-	double fMaxRightFrontAnkle;
-	double fMaxRightHip;
-	double fMaxRightStifle;
-	double fMaxRightRearKnee;
-	double fMaxRightRearAnkle;
+	double fMaxFinger0;
+	double fMaxFinger1;
+	double fMaxFinger2;
+	double fMaxFinger3;
+	double fMaxFinger4;
 
 	// 物体の摩擦係数
 	float materialMu;
 
-	/// 裏オプション
-	bool noLegs;
 	/// ダイナミカルを入れるかどうか
 	bool dynamicalMode;
-	/// 全体の体重
-	double totalMass;
 	/// fMaxを入れるかどうか
 	bool flagFMax;
 	/// 稼働域制限を入れるかどうか
