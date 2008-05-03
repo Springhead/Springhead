@@ -369,12 +369,6 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 }
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
-	for(unsigned i=0; i<frames.size(); ++i){
-		if (frames[i]->shape == sh){
-			DSTR << sh->GetName() << "warning : yPHSolid::AddShape(CDShapeIf* shape)zTried Adding the same shape twice. Skip registration." << std::endl;
-			return;
-		}
-	}
 	frames.push_back(DBG_NEW PHFrame());
 	frames.back()->shape = sh;
 	CalcBBox();

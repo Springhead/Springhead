@@ -25,7 +25,6 @@ struct HIMouse6DIf: public HIPoseIf{
 	DVKeyMouseIf* GetKeyMouse();
 };
 
-
 //@}
 }
 #endif

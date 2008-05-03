@@ -23,8 +23,6 @@
 //////////////////////////////////////////////////////////////////////
 namespace Spr {;
 
-IF_SPR_OBJECTIMP(DRUsb20Simple, HIRealDevice);
-
 DRUsb20Simple::VirtualDeviceDa::VirtualDeviceDa(DRUsb20Simple* r, int c): realDevice(r), ch(c){
 	sprintf(name, "%s D/A Ch %d", realDevice->Name(), ch);
 }

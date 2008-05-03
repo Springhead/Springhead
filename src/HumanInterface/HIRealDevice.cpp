@@ -11,8 +11,6 @@
 
 namespace Spr {;
 
-IF_SPR_OBJECTIMP_ABST(HIRealDevice, Object);
-
 void HIRealDevice::Print(std::ostream& o) const{
 	int w = o.width();
 	o.width(0);

@@ -12,12 +12,11 @@
 #include <SprHumanInterface.h>
 #include <set>
 
-
 namespace Spr{;
 class HIRealDevice;
 
 ///	The base class of human interface classes.
-class SPR_DLL HIBase: public NamedObject{
+class HIBase: public NamedObject{
 protected:
 	static std::set<HIRealDevice*> realDevices;
 	static int deviceUpdateStep;
