@@ -17,8 +17,6 @@ namespace Spr {;
 //	HIBase
 //
 
-IF_SPR_OBJECTIMP_ABST(HIBase, NamedObject);
-
 
 std::set<HIRealDevice*> HIBase::realDevices;
 int HIBase::deviceUpdateStep;
@@ -46,7 +44,6 @@ void HIBase::Update(float dt){
 //-----------------------------------------------------------------
 //	HIPosition
 //
-IF_SPR_OBJECTIMP(HIPosition, HIBase);
 Vec3f HIPosition::GetPosition(){
 	return Vec3f();
 }
@@ -54,7 +51,6 @@ Vec3f HIPosition::GetPosition(){
 //-----------------------------------------------------------------
 //	HIOrientation
 //
-IF_SPR_OBJECTIMP(HIOrientation, HIBase);
 Quaternionf HIOrientation::GetOrientation(){
 	return Quaternionf();
 }
@@ -62,7 +58,6 @@ Quaternionf HIOrientation::GetOrientation(){
 //-----------------------------------------------------------------
 //	HIPose
 //
-IF_SPR_OBJECTIMP(HIPose, HIPosition);
 Quaternionf HIPose::GetOrientation(){
 	return Quaternionf();
 }

@@ -10,8 +10,6 @@
 
 namespace Spr {;
 
-IF_SPR_OBJECTIMP_ABST(HIVirtualDevice, Object);
-
 void HIVirtualDevice::Print(std::ostream& o) const{
 	int w = o.width();
 	o.width(0);

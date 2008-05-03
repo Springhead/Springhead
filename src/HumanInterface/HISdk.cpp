@@ -18,7 +18,6 @@ HISdkIf* SPR_CDECL HISdkIf::CreateSdk(){
 	return rv->Cast();
 }
 
-IF_SPR_OBJECTIMP(HISdk, Sdk);
 HISdk::HISdk(const HISdkDesc& desc){
 	vpool = new HIVirtualDevicePool;
 	rpool = new HIRealDevicePool;

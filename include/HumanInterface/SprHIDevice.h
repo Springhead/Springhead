@@ -50,6 +50,63 @@ public:
 	void Update();
 };
 
+struct DVAdBaseIf:public HIVirtualDeviceIf{
+	SPR_IFDEF(DVAdBase);
+public:
+	///	入力デジタル値の取得
+	int Digit();
+	///	入力電圧の取得
+	float Voltage();
+	///	デバイスの名前
+	const char* Name() const;
+	///	デバイスの種類
+	const char* Type() const;
+};
+struct DVDaBaseIf:public HIVirtualDeviceIf{
+	SPR_IFDEF(DVDaBase);
+public:
+	///	出力するデジタル値の設定
+	void Digit(int d);
+	///	出力電圧の設定
+	void Voltage(float volt);
+	///	デバイスの名前
+	const char* Name() const;
+	///	デバイスの種類
+	const char* Type();
+};
+struct DVCounterBaseIf:public HIVirtualDeviceIf{
+	SPR_IFDEF(DVCounterBase);
+public:
+	///	カウンタ値の設定
+	void Count(long count);
+	///	カウンタ値の読み出し
+	long Count();
+	///	デバイスの名前
+	const char* Name() const;
+	///	デバイスの種類
+	const char* Type() const;
+};
+
+///	入出力ポートのための定数の定義などだけを行う．
+struct DVPortEnum{
+	enum TLevel {LEVEL_LO, LEVEL_HI};
+	enum TDir {DIR_IN, DIR_OUT};
+};
+///
+struct DVPioBaseIf:public HIVirtualDeviceIf, public DVPortEnum{
+	SPR_IFDEF(DVPioBase);
+public:
+	///	ポートのロジックレベルの入力。Hi:true Lo:false
+	int Get();
+	///	ポートのロジックレベルの出力。Hi:true Lo:false
+	void Set(int l);
+	///	デバイスの名前
+	const char* Name() const;
+	///	デバイスの種類
+	const char* Type() const;
+};
+
+
 //@}
 }
 
