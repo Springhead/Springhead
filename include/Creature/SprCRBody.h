@@ -500,10 +500,6 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 struct CRManipulatorIf : CRBodyIf {
 	SPR_IFDEF(CRManipulator);
 
-	/** @brief ‰Šú‰»‚ğÀs‚·‚é
-	*/
-	bool Init();
-
 	/** @brief „‘Ì‚Ì”‚ğ•Ô‚·
 	*/
 	int NSolids();

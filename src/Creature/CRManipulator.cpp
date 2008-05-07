@@ -1,30 +1,9 @@
+#include <Springhead.h>
 #include "CRManipulator.h"
 
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// Cosntructer, Destructer
-CRManipulator::CRManipulator(){
-	;
-}
-
-CRManipulator::CRManipulator(PHSceneIf* scene){
-	phScene = scene;
-	Init();
-}
-
-CRManipulator::~CRManipulator(){
-	;
-}
-
+using namespace Spr;
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Functions In This Class
-bool CRManipulator::Init(){
-	
-	if(CreateHand()){
-	}
-	else return false;
-
-	return true;
-}
 
 bool CRManipulator::CreateHand(){
 
@@ -58,8 +37,8 @@ bool CRManipulator::CreateThumb(){
 	PHHingeJointDesc	hjDesc;
 	PHBallJointDesc		bjDesc;
 
-	phScene->CreateObject(PHSolidIf, sDesc);
-	phScene->CreateObject(PHSolidIf, sDesc);
+	phScene->CreateSolid(sDesc);
+	phScene->CreateSolid(sDesc);
 
 	return true;
 }
