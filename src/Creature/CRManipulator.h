@@ -8,7 +8,7 @@
 
 #include "CRBody.h"
 
-using namespace Spr;
+namespace Spr{;
 
 //@{
 class CRManipulator : public CRBody, public CRManipulatorDesc {
@@ -24,11 +24,20 @@ public:
 	SPR_OBJECTDEF(CRManipulator);
 	ACCESS_DESC(CRManipulator);
 
-	CRManipulator();
-	CRManipulator(PHSceneIf* scene);
-	~CRManipulator();
+	CRManipulator(){}
+	CRManipulator(const CRManipulatorDesc& desc, CRCreatureIf* c = NULL)
+		: CRManipulatorDesc(desc),
+		CRBody((const CRManipulatorDesc&)desc, c)
+	{
+		solids.resize(CRManipulatorDesc::SO_NSOLIDS);
+		joints.resize(CRManipulatorDesc::JO_NJOINTS);
 
-	bool Init();						// 初期化（手の全体を生成する，変数への代入など）
+		CreateHand();
+
+		Init();
+
+	}
+
 	int	 NSolids();
 	int	 NJoints();
 	int  NBallJoints();
@@ -47,8 +56,8 @@ public:
 	void Paper();						// パーのポーズをさせる
 	void Scissors();					// チョキのポーズをさせる
 
-	
-
 };
+
+}
 
 #endif
