@@ -41,6 +41,19 @@ public:
 	*/
 	void SetContactCorrectionRate(double value);
 
+	/** @brief HapticPointerとなる剛体を設定する．
+				衝突判定の際にHapticPointerの近傍の剛体は自動でリストされる．
+	*/
+	void SetHapticPointer(PHSolidIf* hP);
+
+	/** @brief HapticPointerの近傍物体の数を返す．
+	*/
+	int NNeighborSolids();
+
+	/** @brief HapticPointerのi番目の近傍物体を返す．
+	*/
+	PHSolidIf* GetNeighborSolid(int i);
+
 };
 
 struct PHGravityEngineIf : PHEngineIf{
