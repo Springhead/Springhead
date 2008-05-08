@@ -167,6 +167,9 @@ class PHContactDetector : public PHEngine{
 	};
 	typedef std::vector<Edge> Edges;
 
+	PHSolidIf* hapticPointer;					///<  力覚ポインタ．
+	std::vector<PHSolidIf*> neighborSolids;		///<  力覚ポインタ近傍の剛体．
+
 public:
 	typedef TShapePair shapepair_type;
 	typedef TSolidPair solidpair_type;
@@ -178,9 +181,14 @@ public:
 	PHSolidPairs				solidPairs;		///< 剛体の組の配列
 	std::vector<PHSolidIf*>		inactiveSolids; ///< 解析法を適用しない剛体の集合
 
+	PHContactDetector(){
+		hapticPointer = NULL;
+	}
+
 	virtual void Clear(){
 		solidPairs.clear();
 		solids.clear();
+		neighborSolids.clear();
 	}
 	
 	///< 解析法を適用しない剛体の追加
@@ -443,6 +451,7 @@ public:
 				2d. 得られた接触点情報をPHContactPointsに詰めていく
 		*/		
 		int N = solids.size();
+		neighborSolids.clear();
 
 		//1. BBoxレベルの衝突判定
 		Vec3f dir(0,0,1);
@@ -475,6 +484,13 @@ public:
 					if (f1 > f2) std::swap(f1, f2);
 					//2. SolidとSolidの衝突判定
 					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt);
+					// （近傍物体探索）HapticPointerの近傍物体であればリストに追加．
+					if (solidPairs.item(f1, f2)->solid[0] == hapticPointer->Cast()) {
+						neighborSolids.push_back(solidPairs.item(f1, f2)->solid[1]->Cast());
+					} else if (solidPairs.item(f1, f2)->solid[1] == hapticPointer->Cast()) {
+						neighborSolids.push_back(solidPairs.item(f1, f2)->solid[0]->Cast());
+					}
+
 				}
 				cur.insert(it->index);
 			}else{
@@ -482,6 +498,25 @@ public:
 			}
 		}
 		return found;
+	}
+
+	/** @brief HapticPointerとなる剛体を設定する．
+				衝突判定の際にHapticPointerの近傍の剛体は自動でリストされる．
+	*/
+	void SetHapticPointer(PHSolidIf* hP){
+		hapticPointer = hP;
+	}
+
+	/** @brief HapticPointerの近傍物体の数を返す．
+	*/
+	int NNeighborSolids(){
+		return neighborSolids.size();
+	}
+
+	/** @brief HapticPointerのi番目の近傍物体を返す．
+	*/
+	PHSolidIf* GetNeighborSolid(int i){
+		return neighborSolids[i];
 	}
 
 };
