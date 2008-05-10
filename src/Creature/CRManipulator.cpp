@@ -4,6 +4,26 @@
 using namespace Spr;
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // Functions In This Class
+int CRManipulator::NSolids(){
+	return solids.size();
+}
+int CRManipulator::NJoints(){
+	return joints.size();
+}
+int CRManipulator::NBallJoints(){
+	int count = 0;
+	for(int i = 0 ; i < joints.size() ; i ++ ){
+		if(DCAST(PHBallJointIf, joints[i])) count ++;
+	}
+	return count;
+}
+int CRManipulator::NHingeJoints(){
+	int count = 0;
+	for(int i = 0 ; i < joints.size() ; i ++ ){
+		if(DCAST(PHHingeJointIf, joints[i])) count ++;
+	}
+	return count;
+}
 
 bool CRManipulator::CreateHand(){
 

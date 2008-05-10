@@ -660,8 +660,6 @@ struct CRManipulatorDesc : CRBodyDesc {
 	bool flagFMax;
 	/// ‰Ò“­ˆæ§ŒÀ‚ğ“ü‚ê‚é‚©‚Ç‚¤‚©
 	bool flagRange;
-
-	CRManipulatorDesc(bool enableRange = false, bool enableFMax = false);
 };
 
 
