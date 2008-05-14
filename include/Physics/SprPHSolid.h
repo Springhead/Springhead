@@ -243,6 +243,14 @@ struct PHSolidIf : public SceneObjectIf{
 		@return trueならば剛体は物理法則にしたがって運動する．
 	 */
 	bool		IsDynamical();
+	/** @brief 位置，速度を更新するかどうかを有効/無効化する
+		@param bOn trueならば位置，速度の更新を無効化する．
+	 */
+	void		SetFrozen(bool bOn);
+	/** @brief 位置，速度を更新するかどうかを取得する
+		@param bOn trueならば位置，速度の更新を無効化する．
+	*/	
+	bool		IsFrozen();
 };
 
 //@}
