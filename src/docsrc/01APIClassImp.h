@@ -14,14 +14,14 @@ APIクラスを宣言するには，
  struct SceneObjectIf: NamedObjectIf{
  	SPR_IFDEF(SceneObject);
  	///	所属Sceneの取得
- 	virtual SceneIf* GetScene() =0;
+ 	virtual SceneIf* GetScene();
  };
 </pre>
 のように，
 <ol>
  <li> 基本のインタフェースクラスを継承する．
  <li> SPR_IFDEF(クラス名)メンバを持つ．
- <li> API関数を純粋仮想関数として宣言する．
+ <li> API関数を普通の関数として宣言する(virtual をつけてはいけない)．
 </ol>
 をします．
 SPR_IFDEF()は，いくつかのメンバの宣言をまとめたものです．
@@ -40,7 +40,7 @@ APIクラスを作ったら，それを実装するクラスを作ります．
 \subsection defImplementClass 実装クラスの宣言
 実装クラスは，~
 <pre>
- class SceneObject:public NamedObject, SceneObjectIfInit{
+ class SceneObject:public NamedObject{
  	SPR_OBJECTDEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
  public:
  	virtual void SetScene(SceneIf* s);
