@@ -87,7 +87,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	wd.left = 0; wd.top = 0; wd.width = 500; wd.title = "original scene";
 	FWWin* w1 = app->CreateWin(wd);
 	w1->scene = app->GetSdk()->GetScene(0);
-
+#if 0
 	//	シーンのセーブ
 	app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード
@@ -98,7 +98,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
 	FWWin* w2 = app->CreateWin(wd);
 	w2->scene = app->GetSdk()->GetScene(1);
-
+#endif
 	app->Start();
 	return 0;
 }

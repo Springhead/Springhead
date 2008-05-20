@@ -16,8 +16,9 @@
 
 \section secSpecialNodeDefList 特殊ノードの定義一覧
 
-\ref gpFIOldSpringheadNode<br>
-旧Springhead2のファイルをロードするための互換ノードです．
+\ref gpFWOldSpringheadNode<br>
+DirectXのXFileのノードや，旧Springheadのファイルをロードするための互換ノードです．
+メタセコイアなどのツールが作ったメッシュデータのXファイルのロードにも使っています．
 ロード時には，対応するSpringhead2のオブジェクトに変換されます．
 セーブ時には使われません．
 */
