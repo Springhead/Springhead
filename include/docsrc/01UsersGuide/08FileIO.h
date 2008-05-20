@@ -193,7 +193,6 @@ FIFileXを作成します．次のような手順になります．
 <table width=100% height="50" style="border:3px double #1841a5;">
 <tr><td><tt>
 　CDConvexMesh [ノード名] {																		<br>
-　　　　CONVEXMESH;;　　　　　　　　　　　　　　　　　　# [モデル形状タイプ]					<br>
 　　　　頂点座標リスト;																			<br>
 　　　　動摩擦摩擦係数; 静止摩擦係数; 跳ね返り係数;;　　# [物理シミュレーションに関係する材質]	<br>
 　}																								<br>
@@ -201,12 +200,10 @@ FIFileXを作成します．次のような手順になります．
 \endhtmlonly
 
 　次に示すのは，長さ \c 1 の立方体を，凸形状メッシュで定義した例です．
-<tt>[モデル形状タイプ]</tt>は \c "CONVEXMESH" に設定して下さい．
 \htmlonly
 <table width=100% height="50" style="border:3px double #1841a5;">
 <tr><td><tt>
 　CDConvexMesh meshBlock {																	<br>
-　　　　CONVEXMESH;;　　　　　　　　　　　　　　　　　　　　　　　　　　　 # type=mesh		<br>
 　　　　0.5; 0.5; 0.5;, 0.5; 0.5;-0.5;, -0.5; 0.5;0.5;, -0.5; 0.5;-0.5;, 					<br>
 　　　　0.5;-0.5; 0.5;, 0.5;-0.5;-0.5;, -0.5;-0.5;0.5;, -0.5;-0.5;-0.5;;					<br>
 　　　　0.2; 0.5; 0.6;;　　　　　　　　　　　　　　　　　　　　　　　　　　# phmaterial	<br>
@@ -219,12 +216,11 @@ FIFileXを作成します．次のような手順になります．
 \htmlonly 
 <h3><a class="anchor">(2)　球 </a></h3> 
 \endhtmlonly
-　球を定義するには，<tt>[型名]</tt>は \c "CDSphere" に，<tt>[モデル形状タイプ]</tt>は，\c "SPHERE" に設定して下さい．
+　球を定義するには，<tt>[型名]</tt>は \c "CDSphere" に設定して下さい．
 \htmlonly
 <table width=100% height="50" style="border:3px double #1841a5;">
 <tr><td><tt>
 　CDSphere [ノード名] {																				<br>
-　　　　SPHERE;;　　　　　　　　　　　　　　　　　　　　　 # [モデル形状タイプ]          			<br>
 　　　　半径;																						<br>
 　　　　動摩擦摩擦係数; 静止摩擦係数; 跳ね返り係数;;　　　 # [物理シミュレーションに関係する材質]	<br>
 　}																									<br>
@@ -236,7 +232,6 @@ FIFileXを作成します．次のような手順になります．
 <table width=100% height="50" style="border:3px double #1841a5;">
 <tr><td><tt>
 　CDSphere sphere {									<br>
-　　　　SPHERE;;　　　　　　　 //  type=sphere		<br>
 　　　　1.0;　　　　　　　　　 //  radius			<br>
 　　　　0.2; 0.5; 0.6;;　　　　//  phmaterial		<br>
 　}													<br>
@@ -248,12 +243,11 @@ FIFileXを作成します．次のような手順になります．
 \htmlonly 
 <h3><a class="anchor">(3)　直方体 </a></h3> 
 \endhtmlonly
-　直方体を定義するには，<tt>[型名]</tt>は \c "CDBox" に，<tt>[モデル形状タイプ]</tt>は，\c "BOX" に設定して下さい．
+　直方体を定義するには，<tt>[型名]</tt>は \c "CDBox" に設定して下さい．
 \htmlonly
 <table width=100% height="50" style="border:3px double #1841a5;">
 <tr><td><tt>
 　CDBox [ノード名] {																				<br>
-　　　　BOX;;　　　　　　　　　　　　　　　　　　　　　　　# モデル形状タイプ          				<br>
 　　　　直方体サイズ;																				<br>
 　　　　動摩擦摩擦係数; 静止摩擦係数; 跳ね返り係数;;　　　 # 物理シミュレーションに関係する材質	<br>
 　}																									<br>
@@ -265,7 +259,6 @@ FIFileXを作成します．次のような手順になります．
 <table width=100% height="50" style="border:3px double #1841a5;">
 <tr><td><tt>
   CDBox box {										<br>
-　　　　BOX;;　　　　　　　　　//  type=box			<br>
 　　　　1.0; 2.0; 3.0;;　　　　//  boxsize			<br>
 　　　　0.2; 0.5; 0.6;;　　　　//  phmaterial		<br>
 　}													<br>

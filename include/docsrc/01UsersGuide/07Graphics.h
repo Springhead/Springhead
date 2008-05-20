@@ -25,7 +25,7 @@
 \subsection subsec_CreateGRSdk	グラフィックスSDKの作成
 グラフィックス\c SDKを作成します．
 \verbatim
-    GRSdkIf* grSdk = CreateGRSdk();
+    GRSdkIf* grSdk = GRSdkIf::CreateSdk();
 \endverbatim
 <br><br>
 <div align="right">
@@ -52,14 +52,13 @@
 
 <!-------------------- レンダラー用デバイス -------------------------------------------------------------->
 \section sec_GRDevice	レンダラー用デバイス
-レンダリング用デバイスとして， \c OpenGL または <tt>Direct 3D</tt> を選択できます．
-ただし現時点では<tt> Direct 3D の API </tt>が実装されていませんので描画されません．
-今後対応する予定です．デバイスは， \c OpenGL を選択して下さい．
+レンダリング用デバイスをしています．
+今のところ OpenGL だけに対応しています．
 
 \subsection subsec_CreateGRDevice	レンダラー用デバイスの作成
 \c OpenGL レンダラー用デバイスを作成します．
 \verbatim
-    GRDeviceGLIf* grDevice = grSdk->CreateDeviceGL(window);
+    GRDeviceGLIf* grDevice = grSdk->CreateDeviceGL();
 \endverbatim
 <br>
 
@@ -108,8 +107,6 @@
 <div align="right">
 <a href="#pageGraphics">top of page</a>
 </div> 
-
-
 
 
 */

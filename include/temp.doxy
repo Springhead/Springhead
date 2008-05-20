@@ -2,7 +2,7 @@
 
 @INCLUDE = ./common.doxy
 
-INPUT      = ../src/FileIO/FIOldSpringheadNode.h ./docsrc/ \
+INPUT      = ../src/Framework/FWOldSpringheadNodeHandler.h ./docsrc/ \
 							./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual
