@@ -4,7 +4,7 @@
 #include <iomanip>
 using namespace Spr;
 
-int main(){
+int __cdecl main(){
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 	DRUsb20SimpleDesc usbSimpleDesc;
 	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
