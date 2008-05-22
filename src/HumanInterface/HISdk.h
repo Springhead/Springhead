@@ -52,8 +52,8 @@ public:
 	///	Register virutal device.
 	virtual void RegisterVirtualDevice(HIVirtualDeviceIf* dev);
 	///	ヒューマンインタフェースの作成
-	virtual UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* keyInfo, const void* desc);
-	virtual UTRef<HIBaseIf> CreateHumanInterface(const char* name, const char* desc);
+	virtual UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* keyInfo);
+	virtual UTRef<HIBaseIf> CreateHumanInterface(const char* name);
 	///	Create and register real device.
 	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
 

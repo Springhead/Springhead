@@ -45,6 +45,7 @@ public:
 ///	PIOの1端子を表す．
 class SPR_DLL DVPioBase:public HIVirtualDevice, public DVPortEnum{
 public:
+	SPR_OBJECTDEF_ABST(DVPioBase);
 	///	ポートのロジックレベルの入力。Hi:true Lo:false
 	virtual int Get()=0;
 	///	ポートのロジックレベルの出力。Hi:true Lo:false

@@ -27,6 +27,8 @@ public:
 	///
 	HIBase(){ updateStep = deviceUpdateStep; isGood=false;}
 
+	///	SDKの取得
+	HISdkIf* GetSdk();
 	///	キャリブレーションの前に行う処理
 	virtual bool BeforeCalibration(){ return true; }
 	///	キャリブレーション処理
@@ -43,7 +45,7 @@ public:
 	///	Clear the dependency list.
 	static void ClearDeviceDependency();
 	///	Init human interface
-	virtual bool Init(HISdkIf* sdk, const void* desc){ return false; }
+	virtual bool Init(const void* desc){ return false; }
 };
 class HIPosition:public HIBase{
 public:

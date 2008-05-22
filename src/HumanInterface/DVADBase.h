@@ -18,6 +18,7 @@ namespace Spr {
 ///	A/Dの1チャンネルを表す．
 class DVAdBase:public HIVirtualDevice{
 public:
+	SPR_OBJECTDEF_ABST(DVAdBase);
 	///	入力デジタル値の取得
 	virtual int Digit()=0;
 	///	入力電圧の取得

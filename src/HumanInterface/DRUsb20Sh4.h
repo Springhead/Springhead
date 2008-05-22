@@ -42,7 +42,7 @@ public:
 	};
 
 	///	コンストラクタ	chは背面のスイッチになる予定
-	DRUsb20Sh4(int ch);
+	DRUsb20Sh4(const DRUsb20Sh4Desc& d = DRUsb20Sh4Desc());
 	/// リセット
 	virtual void Reset();
 	///	virtual device の登録

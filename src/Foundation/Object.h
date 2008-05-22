@@ -185,7 +185,7 @@ public:
 	virtual bool GetDesc(void* d) const {											\
 		((cls*)this)->BeforeGetDesc(); *(cls##Desc*)d=*this; return true; }			\
 	virtual void SetDesc(const void* d) {											\
-		*this = *(const cls##Desc*)d; ((cls*)this)->AfterSetDesc();}				\
+		*(cls##Desc*)this = *(const cls##Desc*)d; ((cls*)this)->AfterSetDesc();}	\
 	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
 
 ///	ステートとデスクリプタをまとめて定義

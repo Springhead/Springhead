@@ -9,7 +9,10 @@
 #include "HIRealDevicePool.h"
 #include "HIVirtualDevicePool.h"
 #include "DRKeyMouseWin32.h"
+#include "DRUsb20Simple.h"
+#include "DRUsb20Sh4.h"
 #include "HIMouse6D.h"
+#include "HISpidarG.h"
 
 namespace Spr {;
 
@@ -24,6 +27,9 @@ HISdk::HISdk(const HISdkDesc& desc){
 
 
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(DRKeyMouseWin32));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(DRUsb20Simple));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(DRUsb20Sh4));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidarG));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HIMouse6D));
 
 	HIMouse6DIf::GetIfInfoStatic();
@@ -38,16 +44,15 @@ ObjectIf* HISdk::GetChildObject(size_t i){
 bool HISdk::AddChildObject(ObjectIf* o){
 	return false;
 }
-UTRef<HIBaseIf> HISdk::CreateHumanInterface(const IfInfo* keyInfo, const void* desc){
-	UTRef<ObjectIf> obj = CreateObject(keyInfo, desc);
+UTRef<HIBaseIf> HISdk::CreateHumanInterface(const IfInfo* keyInfo){
+	UTRef<ObjectIf> obj = CreateObject(keyInfo, NULL);
 	HIBaseIf* hi = obj->Cast();
-	if (hi->Init(Cast(), desc)) return hi;
+	return hi;
 	return NULL;
 }
-UTRef<HIBaseIf> HISdk::CreateHumanInterface(const char* name, const char* desc){
+UTRef<HIBaseIf> HISdk::CreateHumanInterface(const char* name){
 	IfInfo* info = IfInfo::Find(name);
-	//	hase TODO descのパーサを用意して，Desc構造体を作る
-	if (info) return CreateHumanInterface(info, NULL);
+	if (info) return CreateHumanInterface(info);
 	return NULL;
 }
 void HISdk::Init(){

@@ -87,7 +87,7 @@ protected:
 
 public:
 	///	コンストラクタ	chは背面のスイッチになる予定
-	DRUsb20Simple(int ch=10);
+	DRUsb20Simple(const DRUsb20SimpleDesc& d=DRUsb20SimpleDesc());
 	virtual ~DRUsb20Simple();
 
 	///	デバイスの名前

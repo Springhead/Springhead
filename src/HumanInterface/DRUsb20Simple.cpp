@@ -33,9 +33,9 @@ DRUsb20Simple::VirtualDevicePio::VirtualDevicePio(DRUsb20Simple* r, int c): real
 	sprintf(name, "%s PIO Ch %d", realDevice->Name(), ch);
 }
 
-DRUsb20Simple::DRUsb20Simple(int ch)
+DRUsb20Simple::DRUsb20Simple(const DRUsb20SimpleDesc& d)
 {
-	channel = ch;
+	channel = d.number;
 	sprintf(name, "Cyberse USB2.0 Simple #%d", channel);
 	hSpidar = NULL;
 	for(int i=0; i<8; i++){

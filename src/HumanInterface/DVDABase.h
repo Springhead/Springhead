@@ -18,6 +18,7 @@ namespace Spr {
 ///	D/Aの1チャンネルを表す．
 class SPR_DLL DVDaBase:public HIVirtualDevice{
 public:
+	SPR_OBJECTDEF_ABST(DVDaBase);
 	DVDaBase();
 	///	出力するデジタル値の設定
 	virtual void Digit(int d)=0;
