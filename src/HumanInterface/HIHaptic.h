@@ -26,13 +26,13 @@ public:
 	/**@name	デバイスの状態	*/
 	//@{
 	///	デバイスの現在位置を返す
-	virtual Vec3f GetPos()=0;
+	virtual Vec3f GetPosition()=0;
 	///	デバイスの向きを返す
-	virtual Quaternionf GetOri()=0;
+	virtual Quaternionf GetOrientation()=0;
 	///	デバイスの速度を返す
-	virtual Vec3f GetVel(){ return vel; }
+	virtual Vec3f GetVelocity(){ return vel; }
 	///	デバイスの角速度を返す
-	virtual Vec3f GetAngVel(){ return angVel; }
+	virtual Vec3f GetAngularVelocity(){ return angVel; }
 	///	デバイスの実際の提示トルクを返す
 	virtual Vec3f GetTorque()=0;
 	///	デバイスの実際の提示力を返す

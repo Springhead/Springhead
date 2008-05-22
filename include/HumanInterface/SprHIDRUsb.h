@@ -22,7 +22,7 @@ namespace Spr{;
 //	デスクリプタ
 struct DRUsb20SimpleDesc{
 	int number;
-	DRUsb20SimpleDesc(): number(0){}
+	DRUsb20SimpleDesc(): number(10){}
 };
 
 ///	
@@ -30,9 +30,8 @@ struct DRUsb20SimpleIf : public HIRealDeviceIf{
 	SPR_IFDEF(DRUsb20Simple);
 };
 
-struct DRUsb20Sh4Desc{
-	int number;
-	DRUsb20Sh4Desc(): number(0){}
+struct DRUsb20Sh4Desc: public DRUsb20SimpleDesc{
+	DRUsb20Sh4Desc(){number = 0;}
 };
 ///
 struct DRUsb20Sh4If : public HIRealDeviceIf{

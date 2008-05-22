@@ -21,6 +21,10 @@ namespace Spr {;
 std::set<HIRealDevice*> HIBase::realDevices;
 int HIBase::deviceUpdateStep;
 
+HISdkIf* HIBase::GetSdk(){
+	return GetNameManager()->Cast();
+}
+
 void HIBase::AddDeviceDependency(HIRealDeviceIf* rd){
 	realDevices.insert(rd->Cast());
 }

@@ -18,6 +18,7 @@ namespace Spr {
 ///	カウンタの1チャンネルを表す．
 class SPR_DLL DVCounterBase:public HIVirtualDevice{
 public:
+	SPR_OBJECTDEF_ABST(DVCounterBase);
 	DVCounterBase();
 	///	カウンタ値の設定
 	virtual void Count(long count)=0;

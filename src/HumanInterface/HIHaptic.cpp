@@ -10,8 +10,8 @@ HIForceInterface6D::HIForceInterface6D(){
 }
 void HIForceInterface6D::Update(float dt){
 	HIPose::Update(dt);
-	Vec3f pos = GetPos();
-	Quaternionf ori = GetOri();
+	Vec3f pos = GetPosition();
+	Quaternionf ori = GetOrientation();
 	Vec3f v = (pos - lastPos) / dt;
 	Vec3f av = (ori * lastOri.Inv()).Rotation() / dt;
 	vel = alpha*vel + (1-alpha)*v;

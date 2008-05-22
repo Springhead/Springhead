@@ -44,9 +44,9 @@ struct HISdkIf : public NameManagerIf{
 	///	Get real device.
 	HIRealDeviceIf* FindRealDevice(const char* name=NULL);
 	///	ヒューマンインタフェースの作成
-	UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* info, const void* desc);
+	UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* info);
 	///	ヒューマンインタフェースの作成
-	UTRef<HIBaseIf> CreateHumanInterface(const char* name, const char* desc);
+	UTRef<HIBaseIf> CreateHumanInterface(const char* name);
 
 	//	SDK生成、登録関数
 	///	HISdkのインスタンスを作成

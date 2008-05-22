@@ -23,8 +23,8 @@ namespace Spr{;
 struct DRRealDeviceIf;
 
 /**	@brief	SpidarG6の基本クラス	*/
-struct HISpidarG6If: public HIForceInterface6DIf{
-	SPR_IFDEF(HISpidarG6);
+struct HISpidarGIf: public HIForceInterface6DIf{
+	SPR_IFDEF(HISpidarG);
 	///	デバイスの実際の提示トルクを返す
 	Vec3f GetTorque();
 	///	デバイスの実際の提示力を返す
@@ -75,14 +75,18 @@ struct HISpidarMotorIf: public HIBaseIf{
 };
 
 ///	SpidarG6のデスクリプタ
-struct HISpidarG6Desc{
-	SPR_DESCDEF(HISpidarG6);
+struct HISpidarGDesc{
+	SPR_DESCDEF(HISpidarG);
 	std::vector<HISpidarMotorDesc> motors;
-	HISpidarG6Desc();
+	HISpidarGDesc();
+	HISpidarGDesc(char* type){Init(type);}
+	HISpidarGDesc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
+		Init(nMotor, motorPos, knotPos, vpn, lpp, minF, maxF);
+	}
 	///	パラメータによる初期化
 	void Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f);
 	///	SPIDARのタイプ指定による初期化
-	void Init(char* type="G6X3");
+	void Init(char* type);
 };
 
 

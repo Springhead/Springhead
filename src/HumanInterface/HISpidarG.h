@@ -10,7 +10,7 @@ namespace Spr {;
 
 /**	@JA	エンドエフェクタ(グリップ)が剛体で6自由度なSPIDAR．糸の本数は可変．
 	@EN	A SPIDAR with a 6DOF solid grip. The number of the strings is variable.@@*/
-class SPR_DLL HISpidarG6: public HIForceInterface6D, public HISpidarCalc6Dof{
+class SPR_DLL HISpidarG: public HIForceInterface6D, public HISpidarCalc6Dof{
 protected:
 	bool bGood;
 public:
@@ -18,12 +18,12 @@ public:
 	std::vector<DVPioBaseIf*> buttons;	///<	ボタン
 
 	///	デバイスのタイプ
-	SPR_OBJECTDEF(HISpidarG6);
+	SPR_OBJECTDEF(HISpidarG);
 
-	HISpidarG6();
-	virtual ~HISpidarG6();
+	HISpidarG();
+	virtual ~HISpidarG();
 	///	デバイスの初期化(使用前に呼ぶ)
-	virtual bool Init(HISdkIf* sdk, const void* desc);
+	virtual bool Init(const void* desc);
 	///	キャリブレーションの前に行う処理
 	virtual bool BeforeCalib(){ SetMinForce(); return true; }
 	///	キャリブレーション
@@ -32,9 +32,9 @@ public:
 	void SetMinForce();
 	
 	///	位置の取得
-	Vec3f GetPos(){ return pos; }
+	Vec3f GetPosition(){ return pos; }
 	///	角度の取得
-	Quaternionf GetOri(){ return ori; }
+	Quaternionf GetOrientation(){ return ori; }
 	
 	///	力の設定
 	void SetForce(const Vec3f& f){ SetForce(f, Vec3f()); }
@@ -49,7 +49,7 @@ public:
 	Vec3f GetTorque(){ return rotForce; }
 
 	/// ボタン情報の取得
-	int HISpidarG6::GetButton(int ch){
+	int HISpidarG::GetButton(int ch){
 		if(buttons[ch]) return buttons[ch]->Get();
 		else return 0;
 	}

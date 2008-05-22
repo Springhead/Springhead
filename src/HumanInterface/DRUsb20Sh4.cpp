@@ -23,7 +23,7 @@ DRUsb20Sh4::VirtualDeviceAd::VirtualDeviceAd(DRUsb20Sh4* r, int c): realDevice(r
 	sprintf(name, "%s A/D Ch %d", realDevice->Name(), ch);
 }
 
-DRUsb20Sh4::DRUsb20Sh4(int ch):DRUsb20Simple(ch){
+DRUsb20Sh4::DRUsb20Sh4(const DRUsb20Sh4Desc& d):DRUsb20Simple(d){
 	sprintf(name, "Cyberse USB2.0 SH4 #%d", channel);
 	adVoltPerDigit = 24.0f/4096.0f;
 }

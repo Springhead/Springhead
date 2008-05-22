@@ -41,7 +41,7 @@ struct HIBaseIf: public NamedObjectIf{
 	bool IsGood();
 	/**	ヒューマンインタフェースの初期化．
 		必要なデバイスをsdkから借りてきて，ヒューマンインタフェースを構成する	*/
-	bool Init(HISdkIf* sdk, const void* desc);
+	bool Init(const void* desc);
 };
 
 /**	@brief	位置入力インタフェース	*/

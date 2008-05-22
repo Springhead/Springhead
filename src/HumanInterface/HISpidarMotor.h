@@ -9,8 +9,10 @@
 namespace Spr {
 
 class SPR_DLL HISpidarMotor:public HIBase, public HISpidarMotorDesc{
-	SPR_OBJECTDEF(HISpidarMotor);
 public:
+	SPR_OBJECTDEF(HISpidarMotor);
+	ACCESS_DESC(HISpidarMotor);
+
 	//@{	デバイスアクセス
 	///	使用するD/A.
 	DVDaBaseIf* da;
