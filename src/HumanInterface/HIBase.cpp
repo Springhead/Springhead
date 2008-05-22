@@ -22,9 +22,7 @@ std::set<HIRealDevice*> HIBase::realDevices;
 int HIBase::deviceUpdateStep;
 
 void HIBase::AddDeviceDependency(HIRealDeviceIf* rd){
-	assert(0);
-	//	hase TODO ‚Ü‚¾ŽÀ‘•‚µ‚Ä‚È‚¢
-	//	realDevices.insert(rd);
+	realDevices.insert(rd->Cast());
 }
 void HIBase::ClearDeviceDependency(){
 	realDevices.clear();
