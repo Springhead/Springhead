@@ -4,6 +4,7 @@
 #include <iomanip>
 using namespace Spr;
 
+
 int __cdecl main(){
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 	DRUsb20SimpleDesc usbSimpleDesc;
