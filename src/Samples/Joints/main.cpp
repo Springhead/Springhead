@@ -91,7 +91,7 @@ UTRef<GRSdkIf> grSdk;
 UTRef<PHSceneIf> scene;		// Sceneインタフェース
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
-ObjectStates state;
+UTRef<ObjectStatesIf> state;
 
 double simulationPeriod = 50.0;
 Vec3d lookAt;
@@ -1066,13 +1066,13 @@ void keyboard(unsigned char key, int x, int y){
 			BuildScene();
 			break;
 		case ',':
-			state.SaveState(scene);
+			state->SaveState(scene);
 			break;
 		case '.':
-			state.LoadState(scene);
+			state->LoadState(scene);
 			break;
 		case '/':
-			state.ReleaseState(scene);
+			state->ReleaseState(scene);
 			break;
 		case 'x':
 			{
@@ -1203,6 +1203,7 @@ int main(int argc, char* argv[]){
 
 	phSdk = PHSdkIf::CreateSdk();
 	grSdk = GRSdkIf::CreateSdk();
+	state = ObjectStatesIf::Create();
 	// シーンオブジェクトの作成
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.05;
