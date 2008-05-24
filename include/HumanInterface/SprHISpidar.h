@@ -24,7 +24,7 @@ struct DRRealDeviceIf;
 
 /**	@brief	SpidarG6の基本クラス	*/
 struct HISpidarGIf: public HIForceInterface6DIf{
-	SPR_IFDEF(HISpidarG);
+	SPR_VIFDEF(HISpidarG);
 	///	デバイスの実際の提示トルクを返す
 	Vec3f GetTorque();
 	///	デバイスの実際の提示力を返す

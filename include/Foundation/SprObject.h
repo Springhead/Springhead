@@ -150,13 +150,17 @@ public:																	\
 
 #ifdef SWIGSPR
  #define SPR_IFDEF(cls)	SPR_IFDEF(cls)
+ #define SPR_VIFDEF(cls)	SPR_VIFDEF(cls)
 #else
+ #define SPR_VIFDEF(cls)	SPR_IFDEF(cls)
  #ifdef SWIG
  #define SPR_IFDEF(cls)	SPR_IF_HLANG_CAST(cls)
  #else
  #define SPR_IFDEF(cls)	SPR_IFDEF_BASE(cls) SPR_IF_HLANG_CAST(cls)
  #endif
 #endif
+
+#define SPR_OVERRIDEMEMBERFUNCOF(cls, base)	SPR_OVERRIDEMEMBERFUNCOF_##cls(base)
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{

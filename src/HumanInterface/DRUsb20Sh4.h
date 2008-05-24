@@ -27,6 +27,7 @@ class SPR_DLL DRUsb20Sh4 : public DRUsb20Simple{
 protected:
 	float adVoltPerDigit;
 public:
+	SPR_OBJECTDEF(DRUsb20Sh4);
 	///	仮想デバイス(DA)
 	class VirtualDeviceAd:public DVAdBase{
 	protected:
