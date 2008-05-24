@@ -263,6 +263,8 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
+ObjectStates states;
+
 void __cdecl keyboard(unsigned char key, int x, int y){
 	switch (key) {
 		case ESC:		
@@ -272,7 +274,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 		case 'r':
 			bStep = true;
 			break;
-		case 's':
+		case 'p':
 			bStep = false;
 			scene->Step();
 			break;
@@ -388,6 +390,18 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->AddShape(meshBox);
 				soBox.back()->SetFramePosition(Vec3f(0.0, 15.0, 10.0));
 				soBox.back()->SetVelocity(Vec3d(0.0, 0.0, -5.0));
+			}break;
+		case 's':
+			{
+				states.SaveState(scene);
+			}break;
+		case 'k':
+			{
+				states.ReleaseState(scene);
+			}break;
+		case 'l':
+			{
+				states.LoadState(scene);
 			}break;
 		default:
 			break;
