@@ -47,18 +47,18 @@ public:
 	///	Init human interface
 	virtual bool Init(const void* desc){ return false; }
 };
-class HIPosition:public HIBase{
+class HIPosition:public virtual HIBase{
 public:
 	SPR_OBJECTDEF(HIPosition);
 	virtual Vec3f GetPosition();
 };
-class HIOrientation:public HIBase{
+class HIOrientation:public virtual HIBase{
 public:
 	SPR_OBJECTDEF(HIOrientation);
 	virtual Quaternionf GetOrientation();
 };
 
-class HIPose:public HIPosition{
+class HIPose:public HIPosition, public HIOrientation{
 public:
 	SPR_OBJECTDEF(HIPose);
 	virtual Quaternionf GetOrientation();

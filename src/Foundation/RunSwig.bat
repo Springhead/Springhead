@@ -35,6 +35,7 @@ echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
 echo all: %MODULE%Stub.cpp>>%MAKEFILE%
 echo %MODULE%Stub.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
 echo 	swig\swig -spr -w312,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
+echo 	copy Spr%MODULE%Decl.hpp ..\..\include\%MODULE% >>%MAKEFILE%
 make -f%MAKEFILE%
 set PATH=%PATHORG%
 set PATHORG=

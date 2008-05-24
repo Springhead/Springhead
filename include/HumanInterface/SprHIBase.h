@@ -14,6 +14,7 @@
 #ifndef SPR_HIBase_H
 #define SPR_HIBase_H
 #include <HumanInterface/SprHIDevice.h>
+#include <HumanInterface/SprHumanInterfaceDecl.hpp>
 
 namespace Spr{;
 
@@ -46,19 +47,20 @@ struct HIBaseIf: public NamedObjectIf{
 
 /**	@brief	位置入力インタフェース	*/
 struct HIPositionIf: public HIBaseIf{
-	SPR_IFDEF(HIPosition);
+	SPR_VIFDEF(HIPosition);
 	Vec3f GetPosition();
 };
 
 /**	@brief	角度入力インタフェース	*/
 struct HIOrientationIf: public HIBaseIf{
-	SPR_IFDEF(HIOrientation);
+	SPR_VIFDEF(HIOrientation);
 	Quaternionf GetOrientation();
 };
 
 /**	@brief	姿勢(=位置＋角度)入力インタフェース	*/
 struct HIPoseIf: public HIPositionIf{
-	SPR_IFDEF(HIPose);
+	SPR_VIFDEF(HIPose);
+	SPR_OVERRIDEMEMBERFUNCOF(HIBaseIf, HIPositionIf);
 	Quaternionf GetOrientation();
 	Posef GetPose();
 };

@@ -63,6 +63,7 @@ public:													\
 		return GetTypeInfoStatic();						\
 	}													\
 	static const UTTypeInfo* GetTypeInfoStatic();		\
+	virtual void* cls::GetBaseAddress(const UTTypeInfo* to) const;	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの宣言部．抽象クラス版
 #define DEF_UTTYPEINFOABSTDEF(cls)						\
@@ -71,6 +72,7 @@ public:													\
 		return GetTypeInfoStatic();						\
 	}													\
 	static const UTTypeInfo* GetTypeInfoStatic();		\
+	virtual void* cls::GetBaseAddress(const UTTypeInfo* to) const;	\
 
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．
@@ -80,6 +82,10 @@ public:													\
 		static UTTypeInfoImp<cls> info(#cls, base);			\
 		return &info;										\
 	}														\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{		\
+		if (to==GetTypeInfoStatic()) return (cls*)this;		\
+		return NULL;										\
+	}														\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．1つのクラス継承をする場合
 #define DEF_UTTYPEINFO1(cls, base1)										\
@@ -88,60 +94,99 @@ public:													\
 		static UTTypeInfoImp<cls> info(#cls, base);						\
 		return &info;													\
 	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		return base1::GetBaseAddress(to);								\
+	}																	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．2つのクラス継承をする場合
-#define DEF_UTTYPEINFO2(cls, base1, base2)									\
-	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
-		static const UTTypeInfo* base[] = {										\
+#define DEF_UTTYPEINFO2(cls, base1, base2)								\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
+		static const UTTypeInfo* base[] = {								\
 			base1::GetTypeInfoStatic(), base2::GetTypeInfoStatic(),NULL};	\
-		static UTTypeInfoImp<cls> info(#cls, base);							\
-		return &info;														\
-	}																		\
+		static UTTypeInfoImp<cls> info(#cls, base);						\
+		return &info;													\
+	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		void* rv = base1::GetBaseAddress(to);							\
+		if (!rv) rv = base2::GetBaseAddress(to);						\
+		return rv;														\
+	}																	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．3つのクラス継承をする場合
-#define DEF_UTTYPEINFO3(cls, base1, base2, base3)							\
-	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
-		static const UTTypeInfo* base[] = {										\
-			base1::GetTypeInfoStatic(), base2::GetTypeInfoStatic(),			\
-			base3::GetTypeInfoStatic(), NULL};								\
-		static UTTypeInfoImp<cls> info(#cls, base);							\
-		return &info;														\
-	}																		\
+#define DEF_UTTYPEINFO3(cls, base1, base2, base3)						\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
+		static const UTTypeInfo* base[] = {								\
+			base1::GetTypeInfoStatic(), base2::GetTypeInfoStatic(),		\
+			base3::GetTypeInfoStatic(), NULL};							\
+		static UTTypeInfoImp<cls> info(#cls, base);						\
+		return &info;													\
+	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		void* rv = base1::GetBaseAddress(to);							\
+		if (!rv) rv = base2::GetBaseAddress(to);						\
+		if (!rv) rv = base3::GetBaseAddress(to);						\
+		return rv;														\
+	}																	\
 
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版
-#define DEF_UTTYPEINFOABST(cls)												\
-	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
-		static const UTTypeInfo* base[] = { NULL };								\
-		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
-		return &info;														\
-	}																		\
+#define DEF_UTTYPEINFOABST(cls)											\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
+		static const UTTypeInfo* base[] = { NULL };						\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);					\
+		return &info;													\
+	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		return NULL;													\
+	}																	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版．1つのクラスを継承する場合
-#define DEF_UTTYPEINFOABST1(cls, base1)										\
-	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
+#define DEF_UTTYPEINFOABST1(cls, base1)									\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), NULL };	\
-		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
-		return &info;														\
-	}																		\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);					\
+		return &info;													\
+	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		void* rv = base1::GetBaseAddress(to);							\
+		return rv;														\
+	}																	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版．2つのクラスを継承する場合
-#define DEF_UTTYPEINFOABST2(cls, base1, base2)								\
-	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
-		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), 			\
-			base2::GetTypeInfoStatic(), NULL };								\
-		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
-		return &info;														\
-	}																		\
+#define DEF_UTTYPEINFOABST2(cls, base1, base2)							\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
+		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), \
+			base2::GetTypeInfoStatic(), NULL };							\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);					\
+		return &info;													\
+	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		void* rv = base1::GetBaseAddress(to);							\
+		if (!rv) rv = base2::GetBaseAddress(to);						\
+		return rv;														\
+	}																	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．抽象クラス版．2つのクラスを継承する場合
-#define DEF_UTTYPEINFOABST3(cls, base1, base2, base3)						\
-	const UTTypeInfo* cls::GetTypeInfoStatic(){								\
-		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), 			\
+#define DEF_UTTYPEINFOABST3(cls, base1, base2, base3)					\
+	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
+		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), \
 			base2::GetTypeInfoStatic(), base3::GetTypeInfoStatic(), NULL };	\
-		static UTTypeInfoImpAbst<cls> info(#cls, base);						\
-		return &info;														\
-	}																		\
+		static UTTypeInfoImpAbst<cls> info(#cls, base);					\
+		return &info;													\
+	}																	\
+	void* cls::GetBaseAddress(const UTTypeInfo* to) const{				\
+		if (to==GetTypeInfoStatic()) return (cls*)this;					\
+		void* rv = base1::GetBaseAddress(to);							\
+		if (!rv) rv = base2::GetBaseAddress(to);						\
+		if (!rv) rv = base3::GetBaseAddress(to);						\
+		return rv;														\
+	}																	\
 
 #define GETCLASSNAME(p)		(p->GetTypeInfo()->className)
 #define GETCLASSNAMES(T)	(T::GetTypeInfoStatic()->className)

@@ -24,7 +24,7 @@ struct DRRealDeviceIf;
 
 /**	@brief	ヒューマンインタフェースの基本クラス	*/
 struct HIForceInterface6DIf: public HIPoseIf{
-	SPR_IFDEF(HIForceInterface6D);
+	SPR_VIFDEF(HIForceInterface6D);
 	///	デバイスの実際の提示トルクを返す
 	Vec3f GetTorque();
 	///	デバイスの実際の提示力を返す

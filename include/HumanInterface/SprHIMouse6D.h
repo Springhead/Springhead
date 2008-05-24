@@ -21,7 +21,7 @@ namespace Spr{;
 struct DVKeyMouseIf;
 ///	実デバイス．インタフェースカードとか，USBデバイスとか，
 struct HIMouse6DIf: public HIPoseIf{
-	SPR_IFDEF(HIMouse6D);
+	SPR_VIFDEF(HIMouse6D);
 	DVKeyMouseIf* GetKeyMouse();
 };
 

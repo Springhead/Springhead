@@ -55,7 +55,7 @@ public:
 
 #define SPR_IFIMP_COMMON(cls)										\
 	const IfInfo* SPR_CDECL cls##If::GetIfInfo() const {			\
-		cls* p = (cls*)(Object*)(ObjectIf*)(this);					\
+		cls* p = DCAST(cls, (Object*)(ObjectIf*)this);				\
 		return p->GetIfInfo();	/* ”h¶‚Ìî•ñ‚ª“¾‚ç‚ê‚é‚©‚à */		\
 	}																\
 	const UTTypeInfo* SPR_CDECL 									\
@@ -110,16 +110,13 @@ public:
 	}																				\
 	/*	ˆÙŒ^‚ÌIf‚©‚çObject‚Ö‚Ì“®“I•ÏŠ·	*/											\
 	static cls* GetMe(const ObjectIf* p) {											\
-		if (p && ((Object*)p)->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))	\
-			return (cls*)(Object*)p;												\
-		else return NULL;															\
+		return (cls*)((Object*)p)->GetBaseAddress(GetTypeInfoStatic());				\
 	}																				\
 	/*	ˆÙŒ^‚ÌObject‚©‚çObject‚Ö‚Ì“®“I•ÏŠ·	*/										\
 	static cls* GetMe(const Object* p) {											\
-		if (p && p->GetTypeInfo()->Inherit(cls::GetTypeInfoStatic()))				\
-			return (cls*)p;															\
-		else return NULL;															\
+		return (cls*)(p)->GetBaseAddress(GetTypeInfoStatic());						\
 	}																				\
+
 
 #ifdef SWIGSPR
 
