@@ -263,7 +263,7 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-ObjectStates states;
+UTRef<ObjectStates> states;
 
 void __cdecl keyboard(unsigned char key, int x, int y){
 	switch (key) {
@@ -393,15 +393,15 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			}break;
 		case 's':
 			{
-				states.SaveState(scene);
+				states->SaveState(scene);
 			}break;
 		case 'k':
 			{
-				states.ReleaseState(scene);
+				states->ReleaseState(scene);
 			}break;
 		case 'l':
 			{
-				states.LoadState(scene);
+				states->LoadState(scene);
 			}break;
 		default:
 			break;
@@ -471,6 +471,7 @@ int __cdecl main(int argc, char* argv[]){
 	dscene.timeStep = 0.02;
 	dscene.numIteration = 15;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
+	states = ObjectStatesIf::Create();
 
 	// soFloor用のdesc
 	desc.mass = 1e20f;

@@ -299,7 +299,7 @@ void ObjectStates::LoadState(ObjectIf* o, char*& s){
 	}
 }
 
-ObjectStatesIf* SPR_CDECL CreateObjectStates(){
+ObjectStatesIf* ObjectStatesIf::Create(){
 	ObjectStates* o = new ObjectStates;
 	return o->Cast();
 }
