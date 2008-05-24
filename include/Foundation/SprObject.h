@@ -283,7 +283,21 @@ struct SceneObjectIf: NamedObjectIf{
 };
 
 
-///	オブジェクトツリーの状態をメモリ上に保存しておくクラス
+/**	オブジェクトツリーの状態をメモリ上に保存するためのクラス．
+	SaveState(scene) のように呼び出すと，sceneの子孫全体の状態をメモリに保存する．
+	セーブした後，LoadState(scene) を呼び出すと，sceneの状態を保存時の状態に戻す．
+	セーブ後，シーンのオブジェクトの数や構造が変わってしまうと整合性がとれず，
+	メモリを破壊してしまうので注意が必要．
+
+	初めて SaveState(scene) を呼び出すと，まず内部で AllocateState(scene)を呼び出して
+	メモリを確保する．次に確保したメモリにオブジェクトの状態を保存する．
+	
+	セーブ・ロードに使い終わったときは，ReleaseState(scene)を呼び出してメモリを開放する
+	必要がある．ReleaseState(scene)は，AllocateState(scene)時とシーンの構造が同じでないと
+	整合性がとれず，メモリを破壊してしまう．
+
+	シーンの構造を変更するときは，一度ReleaseState()を呼び出して，再度セーブしなおす必要がある．
+*/
 struct ObjectStatesIf: public ObjectIf{
 	SPR_IFDEF(ObjectStates);
 
@@ -298,7 +312,7 @@ struct ObjectStatesIf: public ObjectIf{
 	void SaveState(ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
-	///	ObjectStateオブジェクトを作る
+	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* Create();
 };
 
