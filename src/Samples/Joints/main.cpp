@@ -76,6 +76,7 @@
 #include <sstream>
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <GL/glut.h>	
+#include <Foundation/Object.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -90,6 +91,7 @@ UTRef<GRSdkIf> grSdk;
 UTRef<PHSceneIf> scene;		// Sceneインタフェース
 UTRef<GRDebugRenderIf> render;
 UTRef<GRDeviceGLIf> device;
+ObjectStates state;
 
 double simulationPeriod = 50.0;
 Vec3d lookAt;
@@ -1062,6 +1064,15 @@ void keyboard(unsigned char key, int x, int y){
 			nodeTree.clear();
 			sceneNo = key - '0';
 			BuildScene();
+			break;
+		case ',':
+			state.SaveState(scene);
+			break;
+		case '.':
+			state.LoadState(scene);
+			break;
+		case '/':
+			state.ReleaseState(scene);
 			break;
 		case 'x':
 			{
