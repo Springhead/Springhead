@@ -142,7 +142,7 @@ public:
 
 	/** @brief ŠÖß‚ğæ“¾‚·‚é
 	 */
-	PHJointIf* GetJoint(int i);
+	PHConstraintIf* GetJoint(int i);
 
 	/** @brief ÚGS‘©‚Ì”‚ğæ“¾‚·‚é
 	 */

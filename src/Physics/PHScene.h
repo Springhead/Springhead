@@ -73,7 +73,7 @@ public:
 	virtual void			SetNumIteration(int n);
 	PHJointIf*				CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
 	int						NJoints() const;
-	PHJointIf*				GetJoint(int i);
+	PHConstraintIf*			GetJoint(int i);
 	int						NContacts() const;
 	PHContactPointIf*		GetContact(int i);
 	PHRootNodeIf*			CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());

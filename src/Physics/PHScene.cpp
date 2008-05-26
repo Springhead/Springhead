@@ -75,8 +75,8 @@ PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii
 int PHScene::NJoints()const{
 	return constraintEngine->joints.size();
 }
-PHJointIf* PHScene::GetJoint(int i){
-	return DCAST(PHJointIf, constraintEngine->joints[i]);
+PHConstraintIf* PHScene::GetJoint(int i){
+	return DCAST(PHConstraintIf, constraintEngine->joints[i]);
 }
 int PHScene::NContacts()const{
 	return constraintEngine->points.size();
