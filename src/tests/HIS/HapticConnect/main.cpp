@@ -95,10 +95,12 @@ void Synchronize(){
 			hprocess.neighborObjects[i].pointerPoint = bstack.neighborObjects[i].pointerPoint;
 			hprocess.neighborObjects[i].direction = bstack.neighborObjects[i].direction;
 			hprocess.neighborObjects[i].blocal = bstack.neighborObjects[i].blocal;
+			hprocess.neighborObjects[i].b = bstack.neighborObjects[i].b;
 		}
 
 		// 物理プロセスで使用する刻み時間
-		bstack.phscene->SetTimeStep(0.001f * (float)stepcount);
+		//bstack.phscene->SetTimeStep(0.001f * (float)stepcount);
+		//bstack.dt = 0.001f * (float)stepcount;
 		stepcount = 0;
 
 		// 同期終了のフラグ

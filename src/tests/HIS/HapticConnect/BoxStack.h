@@ -8,7 +8,6 @@
 #include <Physics/PHContactPoint.h>
 #include<Collision/CDDetectorImp.h>
 #include <Physics/PHSolid.h>
-#include <Base/TMatrix.h>
 
 using namespace Spr;
 using namespace PTM;
