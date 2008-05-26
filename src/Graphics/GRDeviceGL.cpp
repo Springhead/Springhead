@@ -691,18 +691,26 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			if (_access(fnStr.str().c_str(), 0) != 0) break;
 		}
 		//	画像サイズを調べる
-		int h = LoadBmpCreate(filename.c_str());
-		tx = LoadBmpGetWidth(h);
-		ty = LoadBmpGetHeight(h);
-		nc = LoadBmpGetBytePerPixel(h);
-		int pictureSize = tx*ty*nc;
-		texbuf = DBG_NEW char[pictureSize * tz];
-		LoadBmpRelease(h);
+		int pictureSize;
+		{
+			std::ostringstream fnStr;
+			fnStr << results.str(1)
+				<< std::setfill('0') << std::setw(results.str(2).length()) << 0
+				<< results.str(3);
+
+			int h = LoadBmpCreate(fnStr.str().c_str());
+			tx = LoadBmpGetWidth(h);
+			ty = LoadBmpGetHeight(h);
+			nc = LoadBmpGetBytePerPixel(h);
+			pictureSize = tx*ty*nc;
+			texbuf = DBG_NEW char[pictureSize * tz];
+			LoadBmpRelease(h);
+		}
 		//	ファイルのロード
 		for(int i=0; i<tz; ++i){
 			std::ostringstream fnStr;
 			fnStr << results.str(1)
-				<< std::setfill('0') << std::setw(results.str(2).length()) << tz
+				<< std::setfill('0') << std::setw(results.str(2).length()) << i
 				<< results.str(3);
 			int h = LoadBmpCreate(fnStr.str().c_str());
 			int x = LoadBmpGetWidth(h);
@@ -710,6 +718,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			int c = LoadBmpGetBytePerPixel(h);
 			if (x!=tx || y!=ty || c!=nc){
 				DSTR << "Error: Texture file '" << fnStr.str() << "' has an illegal format." << std::endl;
+				delete texbuf;
 				return 0;
 			}
 			LoadBmpGetBmp(h, texbuf+pictureSize*i);
