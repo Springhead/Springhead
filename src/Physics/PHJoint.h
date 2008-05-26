@@ -22,7 +22,6 @@ public:
 	
 	/// コンストラクタ
 	PHJoint();
-
 };
 
 template<int NDOF>

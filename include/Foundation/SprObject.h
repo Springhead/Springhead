@@ -25,10 +25,10 @@ class Object;
 ///	同じ型へのキャスト
 ///	静的変換が可能な場合の If->Obj のキャスト
 template <class TO, class FROM> TO* DCastImp(TO* dmmy, FROM* p){
-	return TO::GetMe(p);
+	return p ? TO::GetMe(p) : NULL;
 }
 template <class TO, class FROM> UTRef<TO> DCastImp(TO* dmmy, UTRef<FROM> p){
-	return TO::GetMe(&*p);
+	return p ? TO::GetMe(&*p) : NULL;
 }
 
 #undef XCAST
