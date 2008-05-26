@@ -423,7 +423,7 @@ struct PHBallJointDesc : public PHJointDesc{
 };
 
 /// バネダンパのインタフェース
-struct PHSpringIf : public PHConstraintIf{
+struct PHSpringIf : public PHJointIf{
 	SPR_IFDEF(PHSpring);
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
