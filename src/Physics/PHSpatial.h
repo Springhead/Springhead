@@ -122,6 +122,9 @@ inline SpatialVector operator*(const SpatialTransformTranspose& X, const Spatial
 	Vec3d tmp = X.q * V.v();
 	return SpatialVector(tmp, X.r % tmp + X.q * V.w());
 }
+inline SpatialVector operator/(const SpatialVector& lhs, double k){
+	return SpatialVector(lhs.v() / k, lhs.w() / k);
+}
 
 /// SpatialMatrix
 struct SpatialMatrix : public Matrix6d{
