@@ -263,7 +263,7 @@ void __cdecl reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-UTRef<ObjectStates> states;
+UTRef<ObjectStatesIf> states;
 
 void __cdecl keyboard(unsigned char key, int x, int y){
 	switch (key) {
