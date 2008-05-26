@@ -390,7 +390,9 @@ public:
 				for (unsigned j=0; j<cmd.vertices.size(); ++j){
 					cmd.vertices[j] = afShape * cmd.vertices[j];
 				}
+				fc->objects.Push(NULL);	//	ì¬‚µ‚½Mesh‚ðAddChildObject‚³‚ê‚é‚Æ2d“o˜^‚É‚È‚é‚Ì‚ÅC“o˜^‚Å‚«‚È‚¢‚æ‚¤‚ÉNULL‚ðPush()
 				ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
+				fc->objects.Pop();
 				meshDataNode->loadedObjects.push_back(obj);
 			}
 		}
