@@ -80,7 +80,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app->GetSdk()->GetPHSdk()->CreateShape(boxdesc));
 #else	//	シーンをファイルからロードするばあい。
-	app->GetSdk()->LoadScene("scene.x");
+	app->GetSdk()->LoadScene("import/import.x");
 #endif
 	//	ウィンドウ1にシーンを表示するよう設定
 	FWAppGLUTDesc wd;
