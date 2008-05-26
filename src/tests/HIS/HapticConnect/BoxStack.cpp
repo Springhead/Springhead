@@ -244,7 +244,7 @@ void BoxStack::PredictSimulation(){
 	TMatrixRow<6, 1, double> b;
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
-//		neighborObjects[i].phSolid
+//		neighborObjects[i].phSolidIf->AddF
 
 	}
 }
