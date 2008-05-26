@@ -240,12 +240,49 @@ void BoxStack::PredictSimulation(){
  // neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
 	states->ReleaseState(phscene);	// SaveStateする前に解放する
 	states->SaveState(phscene);		// 予測シミュレーションのために現在の剛体の状態を保存する．
-	TMatrixRow<6, 3, double> A;
-	TMatrixRow<6, 1, double> b;
+	SpatialVector currentvel, nextvel; 
+
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
-//		neighborObjects[i].phSolidIf->AddF
+		// 現在の速度を保存
+		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].b.v() = Vec3d(0.0, 0.0, 0.0);
+		neighborObjects[i].b.w() = Vec3d(0.0, 0.0, 0.0);
 
+		// 何も力を加えないでシミュレーションを1ステップ進める
+		FWAppGLUT::Step();
+		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].b = (nextvel - currentvel) / dt;
+		
+		//cout << "--------" << endl;
+		//cout << "current" << currentvel.v() << endl;
+		//cout << "next" << nextvel.v() << endl;
+		//cout << "diff" << nextvel.v() - currentvel.v() << endl;
+
+		// 単位力(1.0, 0.0, 0.0)を加える
+		states->LoadState(phscene);
+		neighborObjects[i].phSolidIf->AddForce(Vec3f(1.0, 0.0, 0.0));
+		FWAppGLUT::Step();
+		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+
+		// 単位力(0.0, 1.0, 0.0)を加える
+		states->LoadState(phscene);
+		neighborObjects[i].phSolidIf->AddForce(Vec3f(0.0, 1.0, 0.0));
+		FWAppGLUT::Step();
+		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+
+		// 単位力(0.0, 0.0 ,1.0)を加える
+		states->LoadState(phscene);
+		neighborObjects[i].phSolidIf->AddForce(Vec3f(0.0, 0.0, 1.0));
+		FWAppGLUT::Step();
+		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+
+		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
 	}
 }
 

@@ -80,7 +80,7 @@ void HapticProcess::Integrate(){
 		//neighborObjects[i].phSolid.dv.v() += accel * dt;
 		//neighborObjects[i].phSolid.dv.w() += angaccel * dt;
 		//cout << neighborObjects[i].phSolid.dv.v() << endl;
-		Vec3d vel = neighborObjects[i].phSolid.GetVelocity() + (minv * neighborObjects[i].phSolid.nextForce) * dt;
+		Vec3d vel = neighborObjects[i].phSolid.GetVelocity() + (minv * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b.v()) * dt;
 		neighborObjects[i].phSolid.SetVelocity(vel);
 		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel * dt);
 		neighborObjects[i].phSolid.SetUpdated(true);
