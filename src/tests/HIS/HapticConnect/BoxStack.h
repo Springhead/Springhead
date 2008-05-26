@@ -8,8 +8,10 @@
 #include <Physics/PHContactPoint.h>
 #include<Collision/CDDetectorImp.h>
 #include <Physics/PHSolid.h>
+#include <Base/TMatrix.h>
 
 using namespace Spr;
+using namespace PTM;
 using namespace std;
 
 struct PHSceneSolid{
@@ -39,6 +41,8 @@ public:
 	bool bsync;
 	vector<PHNeighborObject> neighborObjects;	///<近傍物体を格納する
 	vector<PHSceneSolid> sceneSolids;
+	// 予測シミュレーションに使う変数
+	UTRef<ObjectStatesIf> states;
 
 	vector<PHSolid> hapticsolids;
 

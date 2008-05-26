@@ -22,11 +22,12 @@ BoxStack::BoxStack(){
 void BoxStack::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
 
-	GetSdk()->Clear();											// SDKの作成
+	GetSdk()->Clear();															// SDKの作成
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneの作成
 	phscene = GetSdk()->GetScene()->GetPHScene();
+	states = ObjectStatesIf::Create();
 
-	DesignObject();												// 剛体を作成
+	DesignObject();																// 剛体を作成
 
 	phscene->SetGravity(gravity);				
 	phscene->SetTimeStep(dt);
@@ -183,14 +184,14 @@ void BoxStack::FindNearestObject(){
 	// シーンで新たに剛体が生成されたらローカルでシミュレーションしているかどうかの情報を加えsceneSolidsに格納する
 	sceneSolids.clear();
 	PHSolidIf** solids = phscene->GetSolids();
-	for(unsigned int i = 0; i < phscene->NSolids(); i++){
+	for(int i = 0; i < phscene->NSolids(); i++){
 		if(solids[i] == soPointer) continue;
 		sceneSolids.resize(sceneSolids.size() + 1);
 		sceneSolids.back().phSolidIf = solids[i];
 		sceneSolids.back().blocal = false;
 	}
 	// sceneSolidsで新しく増えた分をneighborObjectsに追加する
-	for(int i = neighborObjects.size(); i < sceneSolids.size(); i++){
+	for(unsigned i = (int)neighborObjects.size(); i < sceneSolids.size(); i++){
 		neighborObjects.resize(i + 1);
 		neighborObjects.back().phSolidIf = sceneSolids[i].phSolidIf;
 		neighborObjects.back().blocal = false;
@@ -198,11 +199,13 @@ void BoxStack::FindNearestObject(){
 	// GJKで近傍点を求め近傍物体を探す
 	// 近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
 	// blocalがすでにtrueだったらコピー済みなので近傍点だけコピーする
-	for(unsigned int i = 0; i < neighborObjects.size(); i++){
+	for(unsigned i = 0; i < (int)neighborObjects.size(); i++){
 		CDConvex* a = DCAST(CDConvex, neighborObjects[i].phSolidIf->GetShape(0));		// 剛体が持つ凸形状
-		CDConvex* b = DCAST(CDConvex, soPointer->GetShape(0));		// 力覚ポインタの凸形状
-		Posed a2w = neighborObjects[i].phSolidIf->GetPose();				// 剛体のワールド座標
-		Posed b2w = soPointer->GetPose();										// 力覚ポインタのワールド座標
+		CDConvex* b = DCAST(CDConvex, soPointer->GetShape(0));									// 力覚ポインタの凸形状
+		Posed a2w, b2w;																								// 剛体のワールド座標
+/*		if(neighborObjects[i].blocal) 	a2w = neighborObjects[i].phSolid.GetPose();				// blocalがtrueなら最新の情報でやる
+		else */								a2w = neighborObjects[i].phSolidIf->GetPose();
+		b2w = soPointer->GetPose();												// 力覚ポインタのワールド座標
 		Vec3d pa ,pb;																		// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 		pa = pb = Vec3d(0.0, 0.0, 0.0);
 		FindClosestPoints(a, b, a2w, b2w, pa, pb);								// GJKで近傍点の算出
@@ -235,7 +238,15 @@ void BoxStack::FindNearestObject(){
 
 void BoxStack::PredictSimulation(){
  // neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
+	states->ReleaseState(phscene);	// SaveStateする前に解放する
+	states->SaveState(phscene);		// 予測シミュレーションのために現在の剛体の状態を保存する．
+	TMatrixRow<6, 3, double> A;
+	TMatrixRow<6, 1, double> b;
+	for(unsigned i = 0; i < neighborObjects.size(); i++){
+		if(!neighborObjects[i].blocal) continue;
+//		neighborObjects[i].phSolid
 
+	}
 }
 
 void BoxStack::DisplayLineToNearestPoint(){
@@ -274,17 +285,30 @@ void BoxStack::DrawHapticSolids(){
 
 void BoxStack::Keyboard(unsigned char key){
 	switch (key) {
+		case 's':
+			states->SaveState(phscene);
+			DSTR << "Save State" << endl;
+			break;
+		case 'l':
+			states->LoadState(phscene);
+			DSTR << "Load State" << endl;
+			break;
+		case 'k':
+			states->ReleaseState(phscene);
+			DSTR << "Release State" << endl;
+			break;
 		case 'r':
 			bStep = true;
 			DSTR << "Run Simulation" << endl;
 			break;
-		case 's':
+		case 'e':
 			bStep = false;
 			DSTR << "Step Simulation" << endl;
 			phscene->Step();
 			break;
 		case ' ':
 			{
+				states->ReleaseState(phscene);
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshConvex);
 				soBox.back()->SetFramePosition(Vec3d(-1, 3, 4));
