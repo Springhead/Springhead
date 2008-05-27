@@ -41,7 +41,7 @@ struct PHSceneState{
 	PHSceneState(){Init();}
 	void Init(){
 		timeStep = 0.005;
-		count;
+		count = 0;
 	}
 };
 /// 物理エンジンのシーンのデスクリプタ

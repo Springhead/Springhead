@@ -38,7 +38,7 @@ using namespace Spr;
 
 #define ESC		27
 
-bool bStep = true;
+bool bStep = false;
 UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;
@@ -453,25 +453,27 @@ void __cdecl timer(int id){
 	float DT = 0.05f;
 //	int times = (int)(DT / scene->GetTimeStep());
 //	for(int i=0; i<times; ++i) 
-	if (bStep) scene->Step();
+	if (bStep){
+		scene->Step();
 
-	// SaveState, LoadStateを利用して1ステップ先の結果を見る
-	states->SaveState(scene);
-	int NSolids = scene->NSolids();
-	PHSolidIf** solids = scene->GetSolids();
-	std::vector<Vec3d> vel, nextvel;
-	std::cout << "----------" << std::endl;
-	for(int i = 0; i < NSolids; i++){
-		vel.push_back(solids[i]->GetVelocity());
-		std::cout << "vel" << vel[i] << std::endl;
- 	}
-	scene->Step();
-	for(int i = 0; i < NSolids; i++){
-		nextvel.push_back(solids[i]->GetVelocity());
-		std::cout << "nextvel" << nextvel[i] << std::endl;
-	}	
-	states->LoadState(scene);
-	states->ReleaseState(scene);
+		// SaveState, LoadStateを利用して1ステップ先の結果を見る
+		states->SaveState(scene);
+		int NSolids = scene->NSolids();
+		PHSolidIf** solids = scene->GetSolids();
+		std::vector<Vec3d> vel, nextvel;
+		std::cout << "----------" << std::endl;
+		for(int i = 0; i < NSolids; i++){
+			vel.push_back(solids[i]->GetVelocity());
+			std::cout << "vel" << vel[i] << std::endl;
+ 		}
+		scene->Step();
+		for(int i = 0; i < NSolids; i++){
+			nextvel.push_back(solids[i]->GetVelocity());
+			std::cout << "nextvel" << nextvel[i] << std::endl;
+		}	
+		states->LoadState(scene);
+		states->ReleaseState(scene);
+	}
 
 	glutPostRedisplay();
 	unsigned int msecs = static_cast<unsigned int>(1000*DT);

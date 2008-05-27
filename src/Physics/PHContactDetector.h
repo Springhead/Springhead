@@ -21,6 +21,7 @@ namespace Spr{;
 /// 剛体の組の状態
 struct PHSolidPairSt{
 	bool bEnabled;
+	PHSolidPairSt():bEnabled(false){}
 };
 
 /// 剛体の組
@@ -132,6 +133,9 @@ public:
 
 	void SetState(const PHSolidPairSt& s){
 		*((PHSolidPairSt*)this) = s;
+	}
+	void GetState(PHSolidPairSt& s){
+		s = *this;
 	}
 };
 
@@ -256,16 +260,18 @@ public:
 	}
 	virtual bool GetState(void* s) const {
 		PHContactDetectorSt* es = ((PHContactDetectorSt*)s);
+		es->nSolidPair = NSolidPairs();
+		es->nShapePair = NShapePairs();
 		PHSolidPairSt* solidStates = es->SolidStates();
 		CDShapePairSt* shapeStates = es->ShapeStates();
 		//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
 		int solidPos=0;
 		int shapePos=0;
 		TSolidPair* sp;
-		for(int j=0; j<solidPairs.width(); ++j){
+		for(int j=1; j<solidPairs.width(); ++j){
 			for(int i=0; i<j; ++i){
 				sp = solidPairs.item(i, j);
-				solidStates[solidPos] = *(PHSolidPairSt*)sp;
+				sp->GetState(solidStates[solidPos]);				
 				++solidPos;
 				for(int r = 0; r < sp->shapePairs.height(); ++r){
 					for(int c = 0; c < sp->shapePairs.width(); ++c){
@@ -279,13 +285,15 @@ public:
 	}
 	virtual void SetState(const void* s){
 		PHContactDetectorSt* es = (PHContactDetectorSt*)s;
+		assert(es->nSolidPair == NSolidPairs());
+		assert(es->nShapePair == NShapePairs());
 		PHSolidPairSt* solidStates = es->SolidStates();
 		CDShapePairSt* shapeStates = es->ShapeStates();
 		//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
 		int solidPos=0;
 		int shapePos=0;
 		TSolidPair* sp;
-		for(int j=0; j<solidPairs.width(); ++j){
+		for(int j=1; j<solidPairs.width(); ++j){
 			for(int i=0; i<j; ++i){
 				sp = solidPairs.item(i, j);
 				sp->SetState(solidStates[solidPos]);
