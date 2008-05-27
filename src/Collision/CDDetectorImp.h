@@ -29,6 +29,12 @@ struct CDShapePairSt{
 };
 class CDShapePair: public CDShapePairSt, public UTRefCount{
 public:
+	enum State{
+		NONE,		//	接触なし
+		NEW,		//	前回接触なしで今回接触
+		CONTINUE,	//	前回も接触
+	} state;
+
 	CDConvex* shape[2];			// 判定対象の形状
 	Posed shapePoseW[2];		// World系での形状の姿勢のキャッシュ
 
@@ -36,11 +42,6 @@ public:
 	Vec3d	closestPoint[2];		///< 最近傍点（ローカル座標系）
 	Vec3d	commonPoint;			///< 交差部分の内点（World座標系）
 	Vec3d	center;					///< 2つの最侵入点の中間の点
-	enum State{
-		NONE,		//	接触なし
-		NEW,		//	前回接触なしで今回接触
-		CONTINUE,	//	前回も接触
-	} state;
 	Vec3d iNormal;				///<	積分による法線
 
 public:

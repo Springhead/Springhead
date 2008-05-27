@@ -217,7 +217,8 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 }
 size_t PHScene::NChildObject() const{
 	//return engines.size();
-	return NSolids() + NJoints() + NRootNodes() + NGears() + NPaths();
+	return NSolids() + NJoints() + NRootNodes() + NGears() + NPaths()
+		+ NContacts();
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
 	//return engines[pos]->Cast();
@@ -230,6 +231,8 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	if(pos < (size_t)NGears()) return GetGear(pos);
 	pos -= NGears();
 	if(pos < (size_t)NPaths()) return GetPath(pos);
+	pos -= NPaths();
+	if(pos < (size_t)NContacts()) return GetContact(pos);
 	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
@@ -329,5 +332,38 @@ PHPenaltyEngineIf* PHScene::GetPenaltyEngine(){
 	return XCAST(penaltyEngine);
 }
 
+size_t PHScene::GetStateSize() const{
+	return sizeof(PHSceneState) + 
+		(constraintEngine ? constraintEngine->GetStateSize() : 0);
+}
+void PHScene::ConstructState(void* m) const{
+	new (m) PHSceneState();
+	char* p = (char*)m;
+	p += sizeof(PHSceneState);
+	new (p) PHContactDetectorSt();
+}
+void PHScene::DestructState(void* m) const{
+	char* p = (char*)m;
+	((PHSceneState*)p)->~PHSceneState();
+	p += sizeof(PHSceneState);
+	((PHContactDetectorSt*)p)->~PHContactDetectorSt();
+}
+bool PHScene::GetState(void* s) const{
+	char* p = (char*) s;
+	*(PHSceneState*)p = *this;
+	p += sizeof(PHSceneState);
+	if (constraintEngine){
+		constraintEngine->GetState(p);
+	}
+	return true;
+}
+void PHScene::SetState(const void* s){
+	const char* p = (char*) s;
+	*(PHSceneState*)this = *(const PHSceneState*)p;
+	p += sizeof(PHSceneState);
+	if (constraintEngine){
+		constraintEngine->SetState(p);
+	}	
+}
 
 }

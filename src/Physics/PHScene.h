@@ -117,7 +117,14 @@ public:
 	virtual bool			AddChildObject(ObjectIf* o);
 	virtual bool			DelChildObject(ObjectIf* o);	
 
-	ACCESS_DESC_STATE(PHScene);
+	ACCESS_DESC(PHScene);
+	virtual size_t GetStateSize() const;
+	virtual void ConstructState(void* m) const;
+	virtual void DestructState(void* m) const;
+	virtual const void* GetStateAddress() const { return NULL; } // not supported.
+	virtual bool GetState(void* s) const;
+	virtual void SetState(const void* s);
+
 protected:
 	virtual void BeforeGetDesc();
 };
