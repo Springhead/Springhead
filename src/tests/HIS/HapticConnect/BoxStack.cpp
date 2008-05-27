@@ -100,7 +100,7 @@ void BoxStack::DesignObject(){
 
 	// 力覚ポインタ
 	CDSphereDesc sd;
-	sd.radius = 1.0;
+	sd.radius = 0.5;//1.0;
 	CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 	soPointer = phscene->CreateSolid(desc);
 	soPointer->AddShape(sphere);//meshConvex);
@@ -120,13 +120,11 @@ void BoxStack::Start(){
 };
 
 void BoxStack::Step(){
-	if(bStep){
-		UpdateHapticPointer();
-		FWAppGLUT::Step();
-		FindNearestObject();	// 近傍物体の取得
-		PredictSimulation();
-		glutPostRedisplay();
-	}
+	UpdateHapticPointer();
+	if(bStep)	FWAppGLUT::Step();
+	FindNearestObject();	// 近傍物体の取得
+	PredictSimulation();
+	glutPostRedisplay();
  }
 
 void BoxStack::Display(){
@@ -213,7 +211,7 @@ void BoxStack::FindNearestObject(){
 		Vec3d wb = b2w * pb;															// 力覚ポインタ近傍点のワールド座標
 		Vec3d a2b = wb - wa;															// 剛体から力覚ポインタへのベクトル
 		Vec3d normal = a2b.unit();
-		if(a2b.norm() < 1.5){										// 近傍点までの長さから近傍物体を絞る
+		if(a2b.norm() < 1.0){										// 近傍点までの長さから近傍物体を絞る
 			if(a2b.norm() < 0.01){								// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める		
 				pa = pb = Vec3d(0.0, 0.0, 0.0);
 				Vec3d dir = -neighborObjects[i].direction;
@@ -238,8 +236,13 @@ void BoxStack::FindNearestObject(){
 
 void BoxStack::PredictSimulation(){
  // neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
+	for(unsigned i = 0; i < neighborObjects.size(); i++){
+		neighborObjects[i].phSolidIf->SetDynamical(true);
+		neighborObjects[i].phSolidIf->SetFrozen(false);
+	}
+	soFloor->SetDynamical(false);
 	states->ReleaseState(phscene);	// SaveStateする前に解放する
-	states->SaveState(phscene);		// 予測シミュレーションのために現在の剛体の状態を保存する．
+	states->SaveState(phscene);		// 予測シミュレーションのために現在の剛体の状態を保存する
 	SpatialVector currentvel, nextvel; 
 
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
@@ -249,40 +252,44 @@ void BoxStack::PredictSimulation(){
 		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		neighborObjects[i].b.v() = Vec3d(0.0, 0.0, 0.0);
 		neighborObjects[i].b.w() = Vec3d(0.0, 0.0, 0.0);
+		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
 
 		// 何も力を加えないでシミュレーションを1ステップ進める
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		neighborObjects[i].b = (nextvel - currentvel) / dt;
-		
-		//cout << "--------" << endl;
+		cout << "----------"<< endl;
 		//cout << "current" << currentvel.v() << endl;
-		//cout << "next" << nextvel.v() << endl;
-		//cout << "diff" << nextvel.v() - currentvel.v() << endl;
+		//cout << "nextvel" << nextvel.v() << endl;
+		cout << "force" << neighborObjects[i].b << endl;
 
 		// 単位力(1.0, 0.0, 0.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3f(1.0, 0.0, 0.0));
+		neighborObjects[i].phSolidIf->AddForce(Vec3d(1.0, 0.0, 0.0), cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].A.col(0) = (nextvel - currentvel) / dt - neighborObjects[i].b;
 
 		// 単位力(0.0, 1.0, 0.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3f(0.0, 1.0, 0.0));
+		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 1.0, 0.0), cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].A.col(1) = (nextvel - currentvel) / dt - neighborObjects[i].b;
 
 		// 単位力(0.0, 0.0 ,1.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3f(0.0, 0.0, 1.0));
+		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 0.0, 1.0), cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].A.col(2) = (nextvel - currentvel) / dt - neighborObjects[i].b;
 
 		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
+		//DSTR << neighborObjects[i].A << endl;
 	}
 }
 
@@ -322,21 +329,14 @@ void BoxStack::DrawHapticSolids(){
 
 void BoxStack::Keyboard(unsigned char key){
 	switch (key) {
-		case 's':
-			states->SaveState(phscene);
-			DSTR << "Save State" << endl;
-			break;
-		case 'l':
-			states->LoadState(phscene);
-			DSTR << "Load State" << endl;
-			break;
-		case 'k':
-			states->ReleaseState(phscene);
-			DSTR << "Release State" << endl;
-			break;
 		case 'r':
-			bStep = true;
-			DSTR << "Run Simulation" << endl;
+			if(bStep){
+				bStep = false;
+				DSTR << "Stop Simulation" << endl;
+			}else{
+				bStep = true;
+				DSTR << "Run Simulation" << endl;
+			}
 			break;
 		case 'e':
 			bStep = false;

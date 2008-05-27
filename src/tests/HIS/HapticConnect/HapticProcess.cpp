@@ -18,7 +18,7 @@ void HapticProcess::InitDevice(){
 	devMan.RPool().Register(new DRUsb20Sh4(0));	    // USB2.0版コントローラ 8モータ
 	devMan.RPool().Register(new DRUsb20Sh4(1));	    // USB2.0版コントローラ 8モータ
 	devMan.Init();														// デバイスの初期化
-	cout << devMan;												// 初期化の結果を表示
+	DSTR << devMan;												// 初期化の結果を表示
 
 	// SPIDARの初期化
 	spidarG6.Init(devMan, false);
@@ -52,10 +52,11 @@ void HapticProcess::HapticRendering(){
 		Vec3d ortho = f * neighborObjects[i].direction;
 		if(f < 0.0){
 			CalcForce(ortho);
-			neighborObjects[i].phSolid.AddForce(-addforce * 10);
+			neighborObjects[i].phSolid.AddForce(-addforce * 20, cPoint);	// 力覚レンダリングで計算した力を剛体に加える
 		}
 	}
 	if(bDisplayforce) spidarG6.SetForce(addforce);		// 力覚提示
+//	cout << "addforce" << addforce << endl;
 }
 
 void HapticProcess::CalcForce(Vec3d dis){
@@ -74,16 +75,15 @@ void HapticProcess::Integrate(){
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		double minv  = neighborObjects[i].phSolid.GetMassInv();
-		//Matrix3d inv = neighborObjects[i].phSolid.GetInertiaInv();
-		//Vec3d accel = minv * neighborObjects[i].phSolid.nextForce;
-		//Vec3d angaccel = inv * cross((neighborObjects[i].pointerPoint - neighborObjects[i].phSolid.GetCenterPosition()), neighborObjects[i].phSolid.nextForce); 
-		//neighborObjects[i].phSolid.dv.v() += accel * dt;
-		//neighborObjects[i].phSolid.dv.w() += angaccel * dt;
-		//cout << neighborObjects[i].phSolid.dv.v() << endl;
-		Vec3d vel = neighborObjects[i].phSolid.GetVelocity() + (minv * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b.v()) * dt;
-		neighborObjects[i].phSolid.SetVelocity(vel);
-		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel * dt);
-		neighborObjects[i].phSolid.SetUpdated(true);
+		SpatialVector vel;			// 剛体の速度（ワールド座標系）
+		vel.v() = neighborObjects[i].phSolid.GetVelocity();
+		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
+		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b) * dt;
+		neighborObjects[i].phSolid.SetVelocity(vel.v());
+//		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
+		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel.v() * dt);
+//		neighborObjects[i].phSolid.SetOrientation(neighborObjects[i].phSolid.GetOrientation() + Quaterniond::Rot(vel.w() * dt).unit());
+ 		neighborObjects[i].phSolid.SetUpdated(true);
 		neighborObjects[i].phSolid.Step();
 	}
 }
@@ -105,11 +105,11 @@ void HapticProcess::Keyboard(unsigned char key){
 			if(bDisplayforce){
 				bDisplayforce = false;
 				spidarG6.SetForce(Vec3d(0, 0, 0));
-				cout << "Force OFF" << endl;
+				DSTR << "Force OFF" << endl;
 			}else{
 				bDisplayforce = true;
 				spidarG6.SetForce(Vec3d(0, 0, 0));
-				cout << "Force ON" << endl;
+				DSTR << "Force ON" << endl;
 			}
 			break;
 		case 'c':

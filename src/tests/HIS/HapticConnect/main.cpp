@@ -17,6 +17,7 @@ BoxStack bstack;
 HapticProcess hprocess;	
 UTMMTimer timer;
 bool bsync = false;
+bool bhaptic = false;
 int stepcount = 0;
 void _cdecl CallBackPhysiclaProcess();
 void AppStart();
@@ -65,14 +66,19 @@ void Synchronize(){
 		// 力覚プロセスでの近傍物体のシミュレーション結果を物理プロセスに反映させる
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
 			// blocalがtrueな場合は結果を反映させる
-			if(hprocess.neighborObjects[i].blocal){
-				hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());
-				//hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
-				hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
-				//hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
+			if(bhaptic){
+				if(hprocess.neighborObjects[i].blocal){
+					hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());
+					//hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
+					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
+					//hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
+					hprocess.neighborObjects[i].phSolidIf->SetDynamical(true);
+					hprocess.neighborObjects[i].phSolidIf->SetFrozen(false);
+				}
+			}else{
+					hprocess.neighborObjects[i].phSolidIf->SetDynamical(false);
+					hprocess.neighborObjects[i].phSolidIf->SetFrozen(true);
 			}
-			hprocess.neighborObjects[i].phSolidIf->SetDynamical(true);
-			hprocess.neighborObjects[i].phSolidIf->SetFrozen(false);
 		}
 
 		// 物理プロセス->力覚プロセス
@@ -95,6 +101,7 @@ void Synchronize(){
 			hprocess.neighborObjects[i].pointerPoint = bstack.neighborObjects[i].pointerPoint;
 			hprocess.neighborObjects[i].direction = bstack.neighborObjects[i].direction;
 			hprocess.neighborObjects[i].blocal = bstack.neighborObjects[i].blocal;
+			hprocess.neighborObjects[i].A = bstack.neighborObjects[i].A;
 			hprocess.neighborObjects[i].b = bstack.neighborObjects[i].b;
 		}
 
@@ -106,7 +113,7 @@ void Synchronize(){
 		// 同期終了のフラグ
 		bsync = false;
 	}
-//	cout << stepcount << endl;
+//	DSTR << stepcount << endl;
 	stepcount++;
 };
 
@@ -116,6 +123,18 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 		case 'q':
 			timer.Release();
 			exit(0);
+			break;
+		case 'h':
+			if(bhaptic){
+				bhaptic = false;
+				DSTR << "Haptic Disconnect" << endl;
+			}else{
+				bhaptic = true;
+				DSTR << "Haptic Connect" << endl;
+			}
+			break;
+		case 'm':
+//			DSTR << "Esc, q" << 
 			break;
 		default:
 			bstack.Keyboard(key);
