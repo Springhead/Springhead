@@ -33,7 +33,7 @@ public:
 	
 	HapticProcess(){
 		dt = 0.001f;
-		K = 30;
+		K = 50;
 		D = 0;
 		bDisplayforce = false;
 		hpointer.SetDynamical(false);
