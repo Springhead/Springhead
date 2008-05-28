@@ -340,11 +340,12 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			s *= -1;
 		}
 		double improvement;
-		if (s.Z() > epsilon){
+		if (s.Z() > epsilon*10.0){
 			if (bDebug) DSTR << "TRI ";
 			//	三角形になる場合
 			notuse = -1;
 			lastTriV = v[ids[3]] = s.unit();	//	3角形の法線を使う
+
 			//	新しい w w[3] を求める
 			CalcSupport(ids[3]);
 			improvement = -(w[ids[3]] - w[ids[0]]) * v[ids[3]];
@@ -412,9 +413,16 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
 			}
 			DSTR << std::endl;
+			for(int j=0; j<3; ++j) DSTR << v[ids[3]][j] << "\t";
+			DSTR << std::endl;
+			for(int i=0; i<4; ++i){
+				for(int j=0; j<3; ++j) DSTR << w[ids[i]][j] << "\t";
+				DSTR << std::endl;
+			}
+			DSTR << std::endl;
 		}
 		if (bDebug) {
-			DSTR << "notuse" << notuse;
+			DSTR << "notuse:" << notuse;
 			for(int i=0; i<4; ++i) DSTR << " " << ids[i];
 			DSTR << std::endl;
 			DSTR << "Improvement: " << improvement << std::endl;
