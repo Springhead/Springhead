@@ -9,6 +9,15 @@
 #include <windows.h>
 #include <fstream>
 
+HapticProcess::HapticProcess(){
+	dt = 0.001f;
+	K = 50;
+	D = 0;
+	bDisplayforce = false;
+	hpointer.SetDynamical(false);
+	hpointer.SetFrozen(true);
+};
+
 void HapticProcess::Init(){
 	InitDevice();
 }
@@ -43,7 +52,7 @@ void HapticProcess::UpdateSpidar(){
 }
 
 void HapticProcess::HapticRendering(){
-	addforce = Vec3d(0.0, 0.0, 0.0); 
+	addforce = Vec3d(0.0, 0.0, 0.0);          
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;
@@ -52,11 +61,11 @@ void HapticProcess::HapticRendering(){
 		Vec3d ortho = f * neighborObjects[i].direction;
 		if(f < 0.0){
 			CalcForce(ortho);
-			neighborObjects[i].phSolid.AddForce(-addforce * 20, cPoint);	// 力覚レンダリングで計算した力を剛体に加える
+			neighborObjects[i].phSolid.AddForce(-addforce*10, cPoint);	// 力覚レンダリングで計算した力を剛体に加える
 		}
 	}
 	if(bDisplayforce) spidarG6.SetForce(addforce);		// 力覚提示
-//	cout << "addforce" << addforce << endl;
+//	cout << addforce << endl;
 }
 
 void HapticProcess::CalcForce(Vec3d dis){
@@ -71,10 +80,8 @@ void HapticProcess::LocalDynamics(){
 
 void HapticProcess::GenerateForce(){}
 void HapticProcess::Integrate(){
-	// ツリーに属さない剛体の更新
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
-		double minv  = neighborObjects[i].phSolid.GetMassInv();
 		SpatialVector vel;			// 剛体の速度（ワールド座標系）
 		vel.v() = neighborObjects[i].phSolid.GetVelocity();
 		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
@@ -89,15 +96,6 @@ void HapticProcess::Integrate(){
 }
 
 void HapticProcess::ClearForce(){}
-
-// ベクトルのノルムを返す
-// ベクトルの方向はaからb
-double HapticProcess::CalcDistance(Vec3d a2, Vec3d b){
-	Vec3d c = b - a2;
-	Vec3d d = a2 - b;
-//	if(c.unit ==  )
-	return c.norm();
-}
 
 void HapticProcess::Keyboard(unsigned char key){
 	switch(key){
