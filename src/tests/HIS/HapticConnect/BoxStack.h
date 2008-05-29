@@ -26,7 +26,8 @@ public:
 	GRDebugRenderIf* render;		
 	double dt;
 	Vec3d gravity;
-	double nIter;			
+	double nIter;
+	bool bGravity;
 	bool bStep;
 	// 剛体に使う変数
 	PHSolidDesc desc;
@@ -36,6 +37,8 @@ public:
 	PHSolid phpointer;
 	CDConvexMeshIf* meshFloor;
 	CDConvexMeshIf* meshConvex;
+	// 近傍物体探索に使う変数
+	double range;
 	//　プロセス間の同期に使う変数
 	bool bsync;
 	vector<PHNeighborObject> neighborObjects;	///<近傍物体を格納する

@@ -31,14 +31,7 @@ public:
 	double K;				///< ƒoƒlŒW”
 	double D;				///< ƒ_ƒ“ƒpŒW”
 	
-	HapticProcess(){
-		dt = 0.001f;
-		K = 50;
-		D = 0;
-		bDisplayforce = false;
-		hpointer.SetDynamical(false);
-		hpointer.SetFrozen(true);
-	};
+	HapticProcess();
 
 	void Init();
 	void InitDevice();
@@ -50,7 +43,6 @@ public:
 	void ClearForce();
 	void GenerateForce();
 	void Integrate();	
-	double CalcDistance(Vec3d a2, Vec3d b);
 	void Keyboard(unsigned char key);
 
 };

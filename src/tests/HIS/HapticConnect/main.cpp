@@ -4,6 +4,7 @@
 #include <iostream>
 #include <time.h>
 #include "Foundation/UTMMTimer.h"
+#include <Physics/PHConstraintEngine.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -17,7 +18,7 @@ BoxStack bstack;
 HapticProcess hprocess;	
 UTMMTimer timer;
 bool bsync = false;
-bool bhaptic = false;
+bool bhaptic = true;
 int stepcount = 0;
 void _cdecl CallBackPhysiclaProcess();
 void AppStart();
@@ -66,18 +67,27 @@ void Synchronize(){
 		// 力覚プロセスでの近傍物体のシミュレーション結果を物理プロセスに反映させる
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
 			// blocalがtrueな場合は結果を反映させる
+		PHConstraintEngine* engine = bstack.phscene->GetConstraintEngine()->Cast();
+		//if(engine->solidPairs.width() > 2){
+		//	DSTR << engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->state << ":::"
+		//		<< engine->solidPairs.item(0, 2)->solid[1]->GetCenterPosition() << ":::"
+		//		<< engine->solidPairs.item(0, 2)->solid[1]->GetVelocity() << ":::"
+		//		<<engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->normal << endl;
+		//}
 			if(bhaptic){
-				if(hprocess.neighborObjects[i].blocal){
+ 				if(hprocess.neighborObjects[i].blocal){
+//					DSTR << "-----------" << endl;
+//					DSTR << "physic" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() <<endl;
+//					DSTR << "haptic" << hprocess.neighborObjects[i].phSolid.GetVelocity() << endl;
 					hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());
 					//hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
 					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
 					//hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
-					hprocess.neighborObjects[i].phSolidIf->SetDynamical(true);
-					hprocess.neighborObjects[i].phSolidIf->SetFrozen(false);
+//					DSTR << "sync" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << endl;
+					//					cout << "----------"<< endl;
+					//cout << "scene" << bstack.neighborObjects[i].phSolidIf->GetVelocity() << endl;
+//					if(hprocess.neighborObjects.size() > 1)DSTR <<  "local" << hprocess.neighborObjects[1].phSolid.GetVelocity() << endl;
 				}
-			}else{
-					hprocess.neighborObjects[i].phSolidIf->SetDynamical(false);
-					hprocess.neighborObjects[i].phSolidIf->SetFrozen(true);
 			}
 		}
 
@@ -92,10 +102,6 @@ void Synchronize(){
 			if(bstack.neighborObjects[i].bfirstlocal){
 				hprocess.neighborObjects[i].phSolid = bstack.neighborObjects[i].phSolid;
 				bstack.neighborObjects[i].bfirstlocal = false;
-				hprocess.neighborObjects[i].phSolidIf->SetDynamical(false);
-				hprocess.neighborObjects[i].phSolidIf->SetFrozen(true);
-				hprocess.neighborObjects[i].phSolid.SetDynamical(true);
-				hprocess.neighborObjects[i].phSolid.SetFrozen(false);
 			}
 			hprocess.neighborObjects[i].closestPoint = bstack.neighborObjects[i].closestPoint;
 			hprocess.neighborObjects[i].pointerPoint = bstack.neighborObjects[i].pointerPoint;
