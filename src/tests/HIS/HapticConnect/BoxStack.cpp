@@ -233,9 +233,9 @@ void BoxStack::FindNearestObject(){
 				neighborObjects[i].bfirstlocal = true;
 			}
 			neighborObjects[i].blocal = true;				// 近傍物体なのでblocalをtrueにする
-			neighborObjects[i].closestPoint = pa;
-			neighborObjects[i].pointerPoint = pb;
-			neighborObjects[i].direction = normal;
+			neighborObjects[i].closestPoint = pa;			// 剛体近傍点のローカル座標
+			neighborObjects[i].pointerPoint = pb;		// 力覚ポインタ近傍点のローカル座標
+			neighborObjects[i].direction = normal;		// 剛体から力覚ポインタへの法線
 		}else{
 			neighborObjects[i].blocal = false;				// 近傍物体ではないのでblocalをfalseにする
 			neighborObjects[i].bfirstlocal = false;
@@ -245,8 +245,8 @@ void BoxStack::FindNearestObject(){
 
 void BoxStack::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
-	states->ReleaseState(phscene);	// SaveStateする前に解放する
-	states->SaveState(phscene);		// 予測シミュレーションのために現在の剛体の状態を保存する
+	states->ReleaseState(phscene);		// SaveStateする前に解放する
+	states->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
 	SpatialVector currentvel, nextvel; 
 
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
@@ -256,6 +256,10 @@ void BoxStack::PredictSimulation(){
 		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
+		Vec3d normal = neighborObjects[i].direction;
+		double nx = normal[0];
+		double ny = normal[1];
+		double nz = normal[2];
 
 		// 何も力を加えないでシミュレーションを1ステップ進める
 		FWAppGLUT::Step();
@@ -271,8 +275,6 @@ void BoxStack::PredictSimulation(){
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(Vec3d(1.0, 0.0, 0.0), cPoint);
 		PHSolid* solid = neighborObjects[i].phSolidIf->Cast();
-		solid->v.v() += solid->GetMassInv() * solid->nextForce * dt;
-		solid->v.w() += solid->GetInertiaInv() * solid->nextTorque * dt;
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -284,8 +286,6 @@ void BoxStack::PredictSimulation(){
 		// 単位力(0.0, 1.0, 0.0)を加える
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 1.0, 0.0), cPoint);
-		solid->v.v() += solid->GetMassInv() * solid->nextForce * dt;
-		solid->v.w() += solid->GetInertiaInv() * solid->nextTorque * dt;
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -298,8 +298,6 @@ void BoxStack::PredictSimulation(){
 		// 単位力(0.0, 0.0 ,1.0)を加える
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 0.0, 10.0), cPoint);
-		solid->v.v() += solid->GetMassInv() * solid->nextForce * dt;
-		solid->v.w() += solid->GetInertiaInv() * solid->nextTorque * dt;
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -308,7 +306,7 @@ void BoxStack::PredictSimulation(){
 		//DSTR << "current" << currentvel << endl;
 		//DSTR << "next" << nextvel<< endl;
 
-//		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
+		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
 //		DSTR << neighborObjects[i].A << endl;
 	}
 }
