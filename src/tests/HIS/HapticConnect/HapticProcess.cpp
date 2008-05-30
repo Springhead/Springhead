@@ -11,7 +11,7 @@
 
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
-	K = 50;
+	K = 30;
 	D = 0;
 	bDisplayforce = false;
 	hpointer.SetDynamical(false);
@@ -45,7 +45,7 @@ void HapticProcess::Step(){
 
 void HapticProcess::UpdateSpidar(){
 	spidarG6.Update(dt);
-	hpointer.SetFramePosition(spidarG6.GetPos() * 200);
+	hpointer.SetFramePosition(spidarG6.GetPos() * 500);
 	hpointer.SetOrientation(spidarG6.GetOri());
 	hpointer.SetVelocity(spidarG6.GetVel());
 	hpointer.SetAngularVelocity(spidarG6.GetAngVel());
