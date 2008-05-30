@@ -77,14 +77,14 @@ void BoxStack::DesignObject(){
 	{
 		// meshConvex(soBox)のメッシュ形状
 		CDConvexMeshDesc md;
-		md.vertices.push_back(Vec3d(-1,-1,-1));
-		md.vertices.push_back(Vec3d(-1,-1, 1));	
-		md.vertices.push_back(Vec3d(-1, 1,-1));	
-		md.vertices.push_back(Vec3d(-1, 1, 1));
-		md.vertices.push_back(Vec3d( 1,-1,-1));	
-		md.vertices.push_back(Vec3d( 1,-1, 1));
-		md.vertices.push_back(Vec3d( 1, 1,-1));
-		md.vertices.push_back(Vec3d( 1, 1, 1));
+		md.vertices.push_back(Vec3d(-1,-1,-1) * 2);
+		md.vertices.push_back(Vec3d(-1,-1, 1)* 2);	
+		md.vertices.push_back(Vec3d(-1, 1,-1)* 2);	
+		md.vertices.push_back(Vec3d(-1, 1, 1)* 2);
+		md.vertices.push_back(Vec3d( 1,-1,-1)* 2);	
+		md.vertices.push_back(Vec3d( 1,-1, 1)* 2);
+		md.vertices.push_back(Vec3d( 1, 1,-1)* 2);
+		md.vertices.push_back(Vec3d( 1, 1, 1)* 2);
 		meshConvex = DCAST(CDConvexMeshIf, GetSdk()->GetPHSdk()->CreateShape(md));
 		meshConvex->SetName("meshConvex");
 
@@ -290,14 +290,14 @@ void BoxStack::PredictSimulation(){
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		neighborObjects[i].A.col(1) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
-//		DSTR << "colum2" << neighborObjects[i].A.col(1) << endl;
-//		DSTR << "current" << currentvel << endl;
-//		DSTR << "next" << nextvel<< endl;
-//		DSTR << "diff" << nextvel - currentvel << endl;
+		DSTR << "colum2" << neighborObjects[i].A.col(1) << endl;
+		DSTR << "current" << currentvel << endl;
+		DSTR << "next" << nextvel<< endl;
+		DSTR << "diff" << nextvel - currentvel << endl;
 
 		// 単位力(0.0, 0.0 ,1.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 0.0, 1.0), cPoint);
+		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 0.0, 10.0), cPoint);
 		solid->v.v() += solid->GetMassInv() * solid->nextForce * dt;
 		solid->v.w() += solid->GetInertiaInv() * solid->nextTorque * dt;
 		FWAppGLUT::Step();
@@ -308,7 +308,7 @@ void BoxStack::PredictSimulation(){
 		//DSTR << "current" << currentvel << endl;
 		//DSTR << "next" << nextvel<< endl;
 
-		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
+//		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
 //		DSTR << neighborObjects[i].A << endl;
 	}
 }
@@ -323,9 +323,21 @@ void BoxStack::DisplayLineToNearestPoint(){
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
+		//glBegin(GL_LINES);
+		//glVertex3f(pPoint.X(), pPoint.Y(), pPoint.Z());
+		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		//glEnd();
 		glBegin(GL_LINES);
-		glVertex3f(pPoint.X(), pPoint.Y(), pPoint.Z());
 		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		glVertex3f(cPoint.X() + 3, cPoint.Y(), cPoint.Z());
+		glEnd();
+		glBegin(GL_LINES);
+		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		glVertex3f(cPoint.X(), cPoint.Y() + 3, cPoint.Z());
+		glEnd();
+		glBegin(GL_LINES);
+		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z() + 3);
 		glEnd();
 	}
 }
