@@ -58,8 +58,8 @@ void HapticProcess::HapticRendering(){
 		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;
 		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;
 		float	f = (pPoint-cPoint) * neighborObjects[i].direction;
-		Vec3d ortho = f * neighborObjects[i].direction;
 		if(f < 0.0){
+			Vec3d ortho = f * neighborObjects[i].direction;
 			CalcForce(ortho);
 			neighborObjects[i].phSolid.AddForce(-addforce*10, cPoint);	// 力覚レンダリングで計算した力を剛体に加える
 		}

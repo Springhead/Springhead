@@ -77,8 +77,8 @@ void Synchronize(){
 			if(bhaptic){
  				if(hprocess.neighborObjects[i].blocal){
 //					DSTR << "-----------" << endl;
-//					DSTR << "physic" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() <<endl;
-//					DSTR << "haptic" << hprocess.neighborObjects[i].phSolid.GetVelocity() << endl;
+					DSTR << "physic" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolidIf->GetCenterPosition() << endl;
+					DSTR << "haptic" << hprocess.neighborObjects[i].phSolid.GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolid.GetCenterPosition() << endl;
 					hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());
 					//hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
 					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
