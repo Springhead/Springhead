@@ -8,6 +8,7 @@
 #include <GL/glut.h>
 #include <windows.h>
 #include <Physics/PHConstraintEngine.h>
+#include <Base/TMatrix.h>
 
 BoxStack::BoxStack(){
 	dt = 0.05;
@@ -17,7 +18,7 @@ BoxStack::BoxStack(){
 	bStep = true;
 	phscene = NULL;
 	render = NULL;
-	range = 1.0;
+	range = 1.5;
 	neighborObjects.clear();
 }
 
@@ -123,8 +124,8 @@ void BoxStack::Start(){
 
 void BoxStack::Step(){
 	UpdateHapticPointer();
-	if(bStep)	FWAppGLUT::Step();
-	PHConstraintEngine* engine = phscene->GetConstraintEngine()->Cast();
+//	if(bStep)	FWAppGLUT::Step();
+//	PHConstraintEngine* engine = phscene->GetConstraintEngine()->Cast();
 	//if(engine->solidPairs.width() > 2){
 	//	DSTR << engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->state << ":::"
 	//		<< engine->solidPairs.item(0, 2)->solid[1]->GetCenterPosition() << ":::"
@@ -179,8 +180,8 @@ void BoxStack::UpdateHapticPointer(){
 	// cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる
 	soPointer->SetFramePosition(phpointer.GetFramePosition());//cameraInfo.view.Rot() * phpointer.GetFramePosition());				
 	soPointer->SetOrientation(phpointer.GetOrientation());					
-	soPointer->SetVelocity(phpointer.GetVelocity());
-	soPointer->SetAngularVelocity(phpointer.GetAngularVelocity());	
+	//soPointer->SetVelocity(phpointer.GetVelocity());
+	//soPointer->SetAngularVelocity(phpointer.GetAngularVelocity());	
 	soPointer->SetDynamical(false);
 };
 
@@ -247,67 +248,105 @@ void BoxStack::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
 	states->ReleaseState(phscene);		// SaveStateする前に解放する
 	states->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
-	SpatialVector currentvel, nextvel; 
 
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
-
+		
 		// 現在の速度を保存
 		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
-		Vec3d normal = neighborObjects[i].direction;
-		double nx = normal[0];
-		double ny = normal[1];
-		double nz = normal[2];
 
-		// 何も力を加えないでシミュレーションを1ステップ進める
-		FWAppGLUT::Step();
-		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].b = (nextvel - currentvel) / dt;
+		Vec3d rpjabs, vpjabs;
+		rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
+		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;	//接触点での速度
+		Vec3d rjabs, vjabs;
+		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
+		
+		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
+		Vec3d n, t[2], vjrel, vjrelproj;
+		n = -neighborObjects[i].direction;
+		vjrel = vjabs - vpjabs;
+		vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
+		double vjrelproj_norm = vjrelproj.norm();
+		if(vjrelproj_norm < 1.0e-10){
+			t[0] = n % Vec3d(1.0, 0.0, 0.0);	
+			if(t[0].norm() < 1.0e-10)
+				t[0] = n % Vec3d(0.0, 1.0, 0.0);
+			t[0].unitize();
+		}
+		else{
+			t[0] = vjrelproj / vjrelproj_norm;
+		}
+		t[1] = n % t[0];
+
+		//// 何も力を加えないでシミュレーションを1ステップ進める
+		//FWAppGLUT::Step();
+		//nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		//nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		//neighborObjects[i].b = (nextvel - currentvel) / dt;
 		//DSTR << "----------"<< endl;
 		//DSTR << "current" << currentvel.v() << endl;
 		//DSTR << "nextvel" << nextvel.v() << endl;
 		//DSTR << "b" << neighborObjects[i].b << endl;
 
+		TMatrixRow<6, 3, double> u;
+		TMatrixRow<3, 3, double> force;
 		// 単位力(1.0, 0.0, 0.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3d(1.0, 0.0, 0.0), cPoint);
+		neighborObjects[i].phSolidIf->AddForce(n, cPoint);
 		PHSolid* solid = neighborObjects[i].phSolidIf->Cast();
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].A.col(0) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
-		//DSTR << "colum1" << neighborObjects[i].A.col(0) << endl;
+		force.col(0) = n;
+		u.col(0) = (nextvel - currentvel) /dt - neighborObjects[i].b;
+		//		neighborObjects[i].A.col(0) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
+//		DSTR << "colum1" << neighborObjects[i].A.col(0) << endl;
+		//DSTR << "normal" <<-neighborObjects[i].direction << endl;
 		//DSTR << "current" << currentvel.v() << endl;
 		//DSTR << "nextvel" << nextvel.v() << endl;
+		//DSTR << "diff" << nextvel - currentvel << endl;
 
 		// 単位力(0.0, 1.0, 0.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 1.0, 0.0), cPoint);
+		neighborObjects[i].phSolidIf->AddForce(n + t[0] , cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].A.col(1) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
-		DSTR << "colum2" << neighborObjects[i].A.col(1) << endl;
-		DSTR << "current" << currentvel << endl;
-		DSTR << "next" << nextvel<< endl;
-		DSTR << "diff" << nextvel - currentvel << endl;
+		force.col(1) = n + t[0];
+		u.col(1) = (nextvel - currentvel) /dt - neighborObjects[i].b;
+//		neighborObjects[i].A.col(1) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
+		//DSTR << "colum2" << neighborObjects[i].A.col(1) << endl;
+		//DSTR << "current" << currentvel << endl;
+		//DSTR << "next" << nextvel<< endl;
+		//DSTR << "diff" << nextvel - currentvel << endl;
 
 		// 単位力(0.0, 0.0 ,1.0)を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(Vec3d(0.0, 0.0, 10.0), cPoint);
+		neighborObjects[i].phSolidIf->AddForce(n + t[1], cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].A.col(2) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
+		force.col(2) = n + t[1];
+		u.col(2) = (nextvel - currentvel) /dt - neighborObjects[i].b;
+		//		neighborObjects[i].A.col(2) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
 		//DSTR << "colum3" << neighborObjects[i].A.col(2) << endl;
 		//DSTR << "current" << currentvel << endl;
 		//DSTR << "next" << nextvel<< endl;
-
+		
+		neighborObjects[i].A = u  * force.inv();
 		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
-//		DSTR << neighborObjects[i].A << endl;
+		DSTR << "A" <<neighborObjects[i].A << endl;
+		DSTR << "b" << neighborObjects[i].b << endl;
+	}
+	if(bStep)	FWAppGLUT::Step();
+	for(unsigned i = 0; i < neighborObjects.size(); i++){
+		if(!neighborObjects[i].blocal) continue;
+		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].b = (nextvel - currentvel) / dt;
 	}
 }
 
@@ -325,17 +364,41 @@ void BoxStack::DisplayLineToNearestPoint(){
 		//glVertex3f(pPoint.X(), pPoint.Y(), pPoint.Z());
 		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
 		//glEnd();
+
+		Vec3d rpjabs, vpjabs;
+		rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
+		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;	//接触点での速度
+		Vec3d rjabs, vjabs;
+		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
+
+		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
+		Vec3d n, t[2], vjrel, vjrelproj;
+		n = -neighborObjects[i].direction;
+		vjrel = vjabs - vpjabs;
+		vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
+		double vjrelproj_norm = vjrelproj.norm();
+		if(vjrelproj_norm < 1.0e-10){
+			t[0] = n % Vec3d(1.0, 0.0, 0.0);	
+			if(t[0].norm() < 1.0e-10)
+				t[0] = n % Vec3d(0.0, 1.0, 0.0);
+			t[0].unitize();
+		}
+		else{
+			t[0] = vjrelproj / vjrelproj_norm;
+		}
+		t[1] = n % t[0];
 		glBegin(GL_LINES);
 		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		glVertex3f(cPoint.X() + 3, cPoint.Y(), cPoint.Z());
+		glVertex3f(cPoint.X() + n[0], cPoint.Y() + n[1], cPoint.Z()+ n[2]);
 		glEnd();
 		glBegin(GL_LINES);
 		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		glVertex3f(cPoint.X(), cPoint.Y() + 3, cPoint.Z());
+		glVertex3f(cPoint.X() + t[0][0], cPoint.Y() + t[0][1], cPoint.Z() + t[0][2]);
 		glEnd();
 		glBegin(GL_LINES);
 		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z() + 3);
+		glVertex3f(cPoint.X() + t[1][0], cPoint.Y() + t[1][1], cPoint.Z() + t[1][2]);
 		glEnd();
 	}
 }
