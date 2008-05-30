@@ -125,6 +125,9 @@ void Synchronize(){
 
 void _cdecl Keyboard(unsigned char key, int x, int y){
 		switch (key) {
+		case 0xe048:
+			cout << "up" << endl;
+			break;
 		case ESC:		
 		case 'q':
 			timer.Release();
