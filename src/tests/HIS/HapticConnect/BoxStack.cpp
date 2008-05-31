@@ -12,7 +12,7 @@
 
 BoxStack::BoxStack(){
 	dt = 0.05;
-	gravity =  Vec3d(0, -0.5, 0);//-9.8f, 0);
+	gravity =  Vec3d(0, -9.8f, 0);
 	nIter = 15;
 	bGravity = true;
 	bStep = true;
@@ -72,7 +72,7 @@ void BoxStack::DesignObject(){
 	soFloor->SetGravity(false);
 	
 	// soBox用のdesc
-	desc.mass = 1.0;
+	desc.mass = 20.0;
 	desc.inertia = 2.0 * Matrix3d::Unit();
 
 	{
@@ -124,7 +124,7 @@ void BoxStack::Start(){
 
 void BoxStack::Step(){
 	UpdateHapticPointer();
-	DSTR << "-----------------------" << endl;
+	DSTR << "-------------" << endl;
 	for(int i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		if(neighborObjects[i].phSolidIf == soFloor) continue;
@@ -299,6 +299,7 @@ void BoxStack::PredictSimulation(){
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].lastb = neighborObjects[i].b;
 		neighborObjects[i].b = (nextvel - currentvel) / dt;
 		if(neighborObjects[i].phSolidIf != soFloor) DSTR << "v3" << nextvel << endl;
 		//DSTR << "----------"<< endl;
@@ -311,7 +312,6 @@ void BoxStack::PredictSimulation(){
 		// 法線方向に力を加える
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(n, cPoint);
-		PHSolid* solid = neighborObjects[i].phSolidIf->Cast();
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -457,7 +457,10 @@ void BoxStack::Keyboard(unsigned char key){
 			{
 				states->ReleaseState(phscene);
 				soBox.push_back(phscene->CreateSolid(desc));
-				soBox.back()->AddShape(meshConvex);
+				 CDSphereDesc sd;																				// 球体ディスクリプタ(sd)
+				sd.radius = 3.0;																					// 球体の半径
+			    CDSphereIf* sphere = DCAST(CDSphereIf, GetSdk()->GetPHSdk()->CreateShape(sd));           // sd に基づいて, 球体形状(sphere1)を作成
+				soBox.back()->AddShape(sphere);//meshConvex);
 				soBox.back()->SetFramePosition(Vec3d(-1, 3, 4));
 				soBox.back()->SetOrientation(
 					Quaternionf::Rot(Rad(30), 'y') * 

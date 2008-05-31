@@ -87,11 +87,11 @@ void HapticProcess::Integrate(){
 		vel.v() = neighborObjects[i].phSolid.GetVelocity();
 		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
 		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce);// + neighborObjects[i].b) * dt;
-		if(stepcount == 1) vel += neighborObjects[i].b * 0.05;
+		if(stepcount == 1) vel += (neighborObjects[i].b + (neighborObjects[i].b - neighborObjects[i].lastb)) * 0.05;
 		neighborObjects[i].phSolid.SetVelocity(vel.v());
-//		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
+		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
 		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel.v() * dt);
-//		neighborObjects[i].phSolid.SetOrientation(neighborObjects[i].phSolid.GetOrientation() + Quaterniond::Rot(vel.w() * dt).unit());
+		neighborObjects[i].phSolid.SetOrientation((neighborObjects[i].phSolid.GetOrientation() * Quaterniond::Rot(vel.w() * dt)).unit());
  		neighborObjects[i].phSolid.SetUpdated(true);
 		neighborObjects[i].phSolid.Step();
 	}

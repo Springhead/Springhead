@@ -53,7 +53,6 @@ void AppStart(){
 };
 
 void Synchronize(){
-	cout << hprocess.stepcount << endl;
 	if(bsync){
 		//static int count;
 		//count++;
@@ -66,8 +65,8 @@ void Synchronize(){
 		// 力覚プロセス->物理プロセス
 		// 力覚プロセスでの近傍物体のシミュレーション結果を物理プロセスに反映させる
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
-			// blocalがtrueな場合は結果を反映させる
-		PHConstraintEngine* engine = bstack.phscene->GetConstraintEngine()->Cast();
+		// blocalがtrueな場合は結果を反映させる
+		//PHConstraintEngine* engine = bstack.phscene->GetConstraintEngine()->Cast();
 		//if(engine->solidPairs.width() > 2){
 		//	DSTR << engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->state << ":::"
 		//		<< engine->solidPairs.item(0, 2)->solid[1]->GetCenterPosition() << ":::"
@@ -75,15 +74,15 @@ void Synchronize(){
 		//		<<engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->normal << endl;
 		//}
 			if(bhaptic){
- 				if(hprocess.neighborObjects[i].blocal){
+				if(bstack.neighborObjects[i].blocal && !bstack.neighborObjects[i].bfirstlocal){
 					if(bstack.neighborObjects[i].phSolidIf != bstack.soFloor){
 						DSTR << "vphysic" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolidIf->GetCenterPosition() << endl;
 						DSTR << "vhaptic" << hprocess.neighborObjects[i].phSolid.GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolid.GetCenterPosition() << endl;
 					}
 					hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());// + bstack.neighborObjects[i].b.v() * bstack.dt);
-//					hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
+					hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
 					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
-//					hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
+					hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
 //					DSTR << "sync" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << endl;
 					//					cout << "----------"<< endl;
 					//cout << "scene" << bstack.neighborObjects[i].phSolidIf->GetVelocity() << endl;
@@ -110,6 +109,7 @@ void Synchronize(){
 			hprocess.neighborObjects[i].blocal = bstack.neighborObjects[i].blocal;
 			hprocess.neighborObjects[i].A = bstack.neighborObjects[i].A;
 			hprocess.neighborObjects[i].b = bstack.neighborObjects[i].b;
+			hprocess.neighborObjects[i].lastb = bstack.neighborObjects[i].lastb;
 		}
 
 		// 物理プロセスで使用する刻み時間
