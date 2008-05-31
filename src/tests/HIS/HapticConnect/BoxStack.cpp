@@ -72,8 +72,8 @@ void BoxStack::DesignObject(){
 	soFloor->SetGravity(false);
 	
 	// soBox用のdesc
-	desc.mass = 20.0;
-	desc.inertia = 2.0 * Matrix3d::Unit();
+	desc.mass = 5.0;
+	desc.inertia = 20.0 * Matrix3d::Unit();
 
 	{
 		// meshConvex(soBox)のメッシュ形状
@@ -127,12 +127,20 @@ void BoxStack::Step(){
 	DSTR << "-------------" << endl;
 	for(int i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
+		neighborObjects[i].lastvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		neighborObjects[i].lastvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+
 		if(neighborObjects[i].phSolidIf == soFloor) continue;
 		DSTR << "v1" << neighborObjects[i].phSolidIf->GetVelocity() << endl;
 	}
 	if(bStep)	FWAppGLUT::Step();
 	for(int i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
+		SpatialVector curvel;
+		curvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		curvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].curb = (curvel - neighborObjects[i].lastvel);
+
 		if(neighborObjects[i].phSolidIf == soFloor) continue;
 		DSTR << "v2" << neighborObjects[i].phSolidIf->GetVelocity() << endl;
 	}
@@ -183,7 +191,7 @@ void BoxStack::Display(){
 	curRender->BeginScene();
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
 	DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
-//	DrawHapticSolids();
+	DrawHapticSolids();
 	curRender->EndScene();
 	glutSwapBuffers();
 }
@@ -311,7 +319,7 @@ void BoxStack::PredictSimulation(){
 		TMatrixRow<3, 3, double> force;
 		// 法線方向に力を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(n, cPoint);
+		neighborObjects[i].phSolidIf->AddForce(n);//, cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -326,7 +334,7 @@ void BoxStack::PredictSimulation(){
 
 		// n + t[0]方向に力を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(n + t[0] , cPoint);
+		neighborObjects[i].phSolidIf->AddForce(n + t[0]);// , cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -340,7 +348,7 @@ void BoxStack::PredictSimulation(){
 
 		// n+t[1]方向力を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(n + t[1], cPoint);
+		neighborObjects[i].phSolidIf->AddForce(n + t[1]);//, cPoint);
 		FWAppGLUT::Step();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
@@ -415,18 +423,11 @@ void BoxStack::DisplayLineToNearestPoint(){
 
 void BoxStack::DrawHapticSolids(){
 	GLfloat purple[] = {1.0, 0.0, 1.0, 0.0};
-	GRRenderIf* render = GetCurrentWin()->GetRender();
+	GRDebugRenderIf* render = GetCurrentWin()->GetRender()->Cast();
 	for(unsigned int i = 0; i < hapticsolids.size(); i++){
-		render->PushModelMatrix();
-		Affinef hsolid;
-		Posed::Unit(hapticsolids[i].GetCenterPosition()).ToAffine(hsolid);
-		render->MultModelMatrix(hsolid);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, purple);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, purple);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, purple);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, purple);
-		glutSolidCube(1.0);
-		render->PopModelMatrix();
+		PHSolid* solid = &hapticsolids[i];		
+		PHSolidIf* solidIf = solid->Cast(); 
+		render->DrawSolid(solidIf);
 	}
 };
 

@@ -20,7 +20,9 @@ struct PHNeighborObject {
 	Vec3d direction;			///< 近傍物体から力覚ポインタへのベクトル // いまはこれを面の法線としてやってる 
 	TMatrixRow<6, 3, double> A;	///< LocalDynamicsで使う運動係数（ユーザの入力により変化）
 	SpatialVector b;						///< LocalDynamicsで使う運動係数（重力等の定数項）
+	SpatialVector curb;					///< 通常シミュレーションででた定数項
 	SpatialVector lastb;					///< 前回の運動係数の定数項
+	SpatialVector lastvel;
 };
 
 #endif
