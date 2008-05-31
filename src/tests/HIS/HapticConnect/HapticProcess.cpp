@@ -16,6 +16,7 @@ HapticProcess::HapticProcess(){
 	bDisplayforce = false;
 	hpointer.SetDynamical(false);
 	hpointer.SetFrozen(true);
+	stepcount = 1;
 };
 
 void HapticProcess::Init(){
@@ -85,7 +86,8 @@ void HapticProcess::Integrate(){
 		SpatialVector vel;			// 剛体の速度（ワールド座標系）
 		vel.v() = neighborObjects[i].phSolid.GetVelocity();
 		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
-		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b) * dt;
+		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce);// + neighborObjects[i].b) * dt;
+		if(stepcount == 1) vel += neighborObjects[i].b * 0.05;
 		neighborObjects[i].phSolid.SetVelocity(vel.v());
 //		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
 		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel.v() * dt);
