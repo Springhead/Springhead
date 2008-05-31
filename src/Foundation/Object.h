@@ -162,18 +162,29 @@ public:
 //@}
 
 
-///	ステートの作成と破棄の関数定義
-#define ACCESS_STATE_NOINHERIT(cls)													\
+///	ステートのアクセス用関数の定義
+#define ACCESS_STATE_PRIVATE(cls)													\
+	virtual size_t GetStateSize() const {											\
+		return sizeof(cls##State) + sizeof(cls##StatePrivate); }					\
+	virtual void ConstructState(void* m) const {									\
+		new(m) cls##State; new ((char*)m + sizeof(cls##State)) cls##StatePrivate; }	\
+	virtual void DestructState(void* m) const {										\
+		((cls##State*)m)->~cls##State();											\
+		((cls##StatePrivate*)((char*)m+sizeof(cls##State)))->~cls##StatePrivate(); }\
+	virtual bool GetState(void* s) const { *(cls##State*) s = *this;				\
+		*(cls##StatePrivate*)((char*)s+sizeof(cls##State)) = *this;	return true; }	\
+	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;		\
+		*(cls##StatePrivate*)this =													\
+			*(cls##StatePrivate*) ((char*)s + sizeof(cls##State) ); }				\
+
+#define ACCESS_STATE(cls)															\
 	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
 	virtual void ConstructState(void* m) const { new(m) cls##State;}				\
 	virtual void DestructState(void* m) const { ((cls##State*)m)->~cls##State(); }	\
-
-///	ステートの設定・取得を含めたアクセス用関数の定義
-#define ACCESS_STATE(cls)															\
-	ACCESS_STATE_NOINHERIT(cls)														\
 	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
 	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
+
 
 ///	デスクリプタの設定・取得などアクセス用関数の定義
 #define ACCESS_DESC(cls)															\
@@ -187,6 +198,7 @@ public:
 
 ///	ステートとデスクリプタをまとめて定義
 #define ACCESS_DESC_STATE(cls) ACCESS_STATE(cls) ACCESS_DESC(cls)
+#define ACCESS_DESC_STATE_PRIVATE(cls) ACCESS_STATE_PRIVATE(cls) ACCESS_DESC(cls)
 
 }	//	namespace Spr;
 
