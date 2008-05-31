@@ -19,7 +19,6 @@ HapticProcess hprocess;
 UTMMTimer timer;
 bool bsync = false;
 bool bhaptic = true;
-int stepcount = 0;
 void _cdecl CallBackPhysiclaProcess();
 void AppStart();
 void CallBackHapticProcess(void* arg);
@@ -54,6 +53,7 @@ void AppStart(){
 };
 
 void Synchronize(){
+	cout << hprocess.stepcount << endl;
 	if(bsync){
 		//static int count;
 		//count++;
@@ -76,13 +76,14 @@ void Synchronize(){
 		//}
 			if(bhaptic){
  				if(hprocess.neighborObjects[i].blocal){
-//					DSTR << "-----------" << endl;
-					DSTR << "physic" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolidIf->GetCenterPosition() << endl;
-					DSTR << "haptic" << hprocess.neighborObjects[i].phSolid.GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolid.GetCenterPosition() << endl;
-					hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());
-					//hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
+					if(bstack.neighborObjects[i].phSolidIf != bstack.soFloor){
+						DSTR << "vphysic" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolidIf->GetCenterPosition() << endl;
+						DSTR << "vhaptic" << hprocess.neighborObjects[i].phSolid.GetVelocity() << "::"<< hprocess.neighborObjects[i].phSolid.GetCenterPosition() << endl;
+					}
+					hprocess.neighborObjects[i].phSolidIf->SetVelocity(hprocess.neighborObjects[i].phSolid.GetVelocity());// + bstack.neighborObjects[i].b.v() * bstack.dt);
+//					hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
 					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
-					//hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
+//					hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
 //					DSTR << "sync" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << endl;
 					//					cout << "----------"<< endl;
 					//cout << "scene" << bstack.neighborObjects[i].phSolidIf->GetVelocity() << endl;
@@ -114,20 +115,16 @@ void Synchronize(){
 		// 物理プロセスで使用する刻み時間
 		//bstack.phscene->SetTimeStep(0.001f * (float)stepcount);
 		//bstack.dt = 0.001f * (float)stepcount;
-		stepcount = 0;
+		hprocess.stepcount = 0;
 
 		// 同期終了のフラグ
 		bsync = false;
 	}
-//	DSTR << stepcount << endl;
-	stepcount++;
+	hprocess.stepcount++;
 };
 
 void _cdecl Keyboard(unsigned char key, int x, int y){
 		switch (key) {
-		case 0xe048:
-			cout << "up" << endl;
-			break;
 		case ESC:		
 		case 'q':
 			timer.Release();

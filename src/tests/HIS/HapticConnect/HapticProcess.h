@@ -30,7 +30,9 @@ public:
 	Vec3d addforce;		///< ユーザへの提示力
 	double K;				///< バネ係数
 	double D;				///< ダンパ係数
-	
+	// 同期に使う変数
+	int stepcount;
+
 	HapticProcess();
 
 	void Init();

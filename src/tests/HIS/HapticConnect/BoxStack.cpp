@@ -12,13 +12,13 @@
 
 BoxStack::BoxStack(){
 	dt = 0.05;
-	gravity =  Vec3d(0, -9.8f, 0);
+	gravity =  Vec3d(0, -0.5, 0);//-9.8f, 0);
 	nIter = 15;
 	bGravity = true;
 	bStep = true;
 	phscene = NULL;
 	render = NULL;
-	range = 1.5;
+	range = 3.0;
 	neighborObjects.clear();
 }
 
@@ -124,7 +124,18 @@ void BoxStack::Start(){
 
 void BoxStack::Step(){
 	UpdateHapticPointer();
-//	if(bStep)	FWAppGLUT::Step();
+	DSTR << "-----------------------" << endl;
+	for(int i = 0; i < neighborObjects.size(); i++){
+		if(!neighborObjects[i].blocal) continue;
+		if(neighborObjects[i].phSolidIf == soFloor) continue;
+		DSTR << "v1" << neighborObjects[i].phSolidIf->GetVelocity() << endl;
+	}
+	if(bStep)	FWAppGLUT::Step();
+	for(int i = 0; i < neighborObjects.size(); i++){
+		if(!neighborObjects[i].blocal) continue;
+		if(neighborObjects[i].phSolidIf == soFloor) continue;
+		DSTR << "v2" << neighborObjects[i].phSolidIf->GetVelocity() << endl;
+	}
 //	PHConstraintEngine* engine = phscene->GetConstraintEngine()->Cast();
 	//if(engine->solidPairs.width() > 2){
 	//	DSTR << engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->state << ":::"
@@ -134,6 +145,7 @@ void BoxStack::Step(){
 	//}
 	FindNearestObject();	// 近傍物体の取得
 	PredictSimulation();
+//	if(bStep)	FWAppGLUT::Step();
 	glutPostRedisplay();
  }
 
@@ -253,39 +265,42 @@ void BoxStack::PredictSimulation(){
 		if(!neighborObjects[i].blocal) continue;
 		
 		// 現在の速度を保存
+		SpatialVector currentvel, nextvel; 
 		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
 
+		// 拘束座標系を作るための準備
 		Vec3d rpjabs, vpjabs;
-		rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
-		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;	//接触点での速度
+		rpjabs = cPoint - soPointer->GetCenterPosition();																							//力覚ポインタの中心から接触点までのベクトル
+		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;													//接触点での速度
 		Vec3d rjabs, vjabs;
-		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
 		vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
 		
 		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
 		Vec3d n, t[2], vjrel, vjrelproj;
 		n = -neighborObjects[i].direction;
-		vjrel = vjabs - vpjabs;
-		vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
+		vjrel = vjabs - vpjabs;										// 相対速度
+		vjrelproj = vjrel - (n * vjrel) * n;						// 相対速度ベクトルを法線に直交する平面に射影したベクトル
 		double vjrelproj_norm = vjrelproj.norm();
-		if(vjrelproj_norm < 1.0e-10){
-			t[0] = n % Vec3d(1.0, 0.0, 0.0);	
-			if(t[0].norm() < 1.0e-10)
-				t[0] = n % Vec3d(0.0, 1.0, 0.0);
-			t[0].unitize();
+		if(vjrelproj_norm < 1.0e-10){							// 射影ベクトルのノルムが小さいとき
+			t[0] = n % Vec3d(1.0, 0.0, 0.0);					// t[0]を法線とVec3d(1.0, 0.0, 0.0)の外積とする
+			if(t[0].norm() < 1.0e-10)								// それでもノルムが小さかったら
+				t[0] = n % Vec3d(0.0, 1.0, 0.0);				// t[0]を法線とVec3d(0.0, 1.0, 0.0)の外積とする
+			t[0].unitize();												// t[0]を単位ベクトルにする
 		}
 		else{
-			t[0] = vjrelproj / vjrelproj_norm;
+			t[0] = vjrelproj / vjrelproj_norm;					// ノルムが小さくなかったら，射影ベクトルのまま
 		}
-		t[1] = n % t[0];
+		t[1] = n % t[0];												// t[1]は法線とt[0]の外積できまる
 
-		//// 何も力を加えないでシミュレーションを1ステップ進める
-		//FWAppGLUT::Step();
-		//nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		//nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		//neighborObjects[i].b = (nextvel - currentvel) / dt;
+		// 何も力を加えないでシミュレーションを1ステップ進める
+		FWAppGLUT::Step();
+		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		neighborObjects[i].b = (nextvel - currentvel) / dt;
+		if(neighborObjects[i].phSolidIf != soFloor) DSTR << "v3" << nextvel << endl;
 		//DSTR << "----------"<< endl;
 		//DSTR << "current" << currentvel.v() << endl;
 		//DSTR << "nextvel" << nextvel.v() << endl;
@@ -293,7 +308,7 @@ void BoxStack::PredictSimulation(){
 
 		TMatrixRow<6, 3, double> u;
 		TMatrixRow<3, 3, double> force;
-		// 単位力(1.0, 0.0, 0.0)を加える
+		// 法線方向に力を加える
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(n, cPoint);
 		PHSolid* solid = neighborObjects[i].phSolidIf->Cast();
@@ -309,7 +324,7 @@ void BoxStack::PredictSimulation(){
 		//DSTR << "nextvel" << nextvel.v() << endl;
 		//DSTR << "diff" << nextvel - currentvel << endl;
 
-		// 単位力(0.0, 1.0, 0.0)を加える
+		// n + t[0]方向に力を加える
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(n + t[0] , cPoint);
 		FWAppGLUT::Step();
@@ -323,7 +338,7 @@ void BoxStack::PredictSimulation(){
 		//DSTR << "next" << nextvel<< endl;
 		//DSTR << "diff" << nextvel - currentvel << endl;
 
-		// 単位力(0.0, 0.0 ,1.0)を加える
+		// n+t[1]方向力を加える
 		states->LoadState(phscene);
 		neighborObjects[i].phSolidIf->AddForce(n + t[1], cPoint);
 		FWAppGLUT::Step();
@@ -336,17 +351,12 @@ void BoxStack::PredictSimulation(){
 		//DSTR << "current" << currentvel << endl;
 		//DSTR << "next" << nextvel<< endl;
 		
-		neighborObjects[i].A = u  * force.inv();
-		states->LoadState(phscene);			// 元のstateに戻しシミュレーションを進める
-		DSTR << "A" <<neighborObjects[i].A << endl;
-		DSTR << "b" << neighborObjects[i].b << endl;
-	}
-	if(bStep)	FWAppGLUT::Step();
-	for(unsigned i = 0; i < neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
-		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].b = (nextvel - currentvel) / dt;
+		neighborObjects[i].A = u  * force.inv();				// 運動係数Aの計算
+		states->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
+		if(neighborObjects[i].phSolidIf != soFloor){
+//			DSTR << "A" <<neighborObjects[i].A << endl;
+			DSTR << "b" << neighborObjects[i].b << endl;
+		}
 	}
 }
 
