@@ -38,7 +38,7 @@ using namespace Spr;
 
 #define ESC		27
 
-bool bStep = false;
+bool bStep = true;
 UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
 PHSceneIf* scene;

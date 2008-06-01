@@ -33,7 +33,7 @@
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
 #define EXIT_TIMER		12000			// 強制終了させるステップ数
-#define TEST_FILEX		"test6.x"		// ロードするXファイル
+#define TEST_FILEX		"protos.wrl"		// ロードするXファイル
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
@@ -248,6 +248,7 @@ void idle(){
 	}
 }
 
+
 /**
  brief		メイン関数
  param		<in/--> argc　　コマンドライン入力の個数
@@ -260,14 +261,14 @@ int main(int argc, char* argv[]){
 	FWSdkIf::RegisterSdk();
 
 	UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
-	FIFileXIf* fileX = fiSdk->CreateFileX();
+	FIFileVRMLIf* fileVRML = fiSdk->CreateFileVRML();
 	ObjectIfs objs;
 	if (argc>=2){
 		phSdk = PHSdkIf::CreateSdk();					//	PHSDKを用意して，
 		objs.push_back(phSdk);		
-		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
+		fileVRML->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
-		if (! fileX->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
+		if (! fileVRML->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
 			DSTR << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
 		}
@@ -284,7 +285,7 @@ int main(int argc, char* argv[]){
 //		objs.Push(phSdk->GetScenes()[0]);
 		objs.Push(phSdk);
 		if(grSdk) objs.Push(grSdk);
-		fileX->Save(objs, "out.x");
+		fileVRML->Save(objs, "out.x");
 	}
 	fiSdk = NULL;	//	ファイルローダのメモリを解放．
 	objs.clear();
