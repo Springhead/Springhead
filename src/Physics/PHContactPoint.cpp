@@ -145,9 +145,14 @@ void PHContactPoint::Projection(double& f, int k){
 		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	}
 	else{
 		//	“®–€ŽC‚ðŽŽ‚µ‚ÉŽÀ‘•‚µ‚Ä‚Ý‚éB
-		double fu = (shapePair->shape[0]->material.mu + shapePair->shape[1]->material.mu)
-			/ (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0)
-			* flim;	
+		double fu;
+		if (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0 == 0){
+			fu = 0;
+		}else{
+			fu = (shapePair->shape[0]->material.mu + shapePair->shape[1]->material.mu)
+				/ (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0)
+				* flim;	
+		}
 		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	ÃŽ~–€ŽC
 			if (f > flim) f = fu;
 			else if (f < -flim) f = -fu;
