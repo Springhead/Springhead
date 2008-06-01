@@ -6,11 +6,6 @@ namespace Spr {;
 //----------------------------------------------------------------------------
 //	DVPioBase
 
-///	入出力ポートのための定数の定義などだけを行う．
-class SPR_DLL DVPortEnum{
-	enum TLevel {LEVEL_LO, LEVEL_HI};
-	enum TDir {DIR_IN, DIR_OUT};
-};
 ///	入力ポートの1端子をあらわす．
 class SPR_DLL DVInputPortBase:public DVVirtualDevice, public DVPortEnum{
 public:
