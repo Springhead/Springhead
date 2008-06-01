@@ -53,7 +53,7 @@ ObjectIf* PHConstraint::GetChildObject(size_t i){
 	return solid[i]->Cast();
 }
 
-bool PHConstraint::GetDesc(void* desc){
+bool PHConstraint::GetDesc(void* desc) const{
 	((PHConstraintDesc*)desc)->poseSocket.Pos() = Xj[0].r;
 	((PHConstraintDesc*)desc)->poseSocket.Ori() = Xj[0].q;
 	((PHConstraintDesc*)desc)->posePlug.Pos()	= Xj[1].r;

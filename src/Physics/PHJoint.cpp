@@ -26,14 +26,15 @@ PHJoint1D::PHJoint1D(){
 	
 }	
 
-bool PHJoint1D::GetDesc(void* desc){
+bool PHJoint1D::GetDesc(void* desc) const{
+	PHJoint1D* th = (PHJoint1D*)this;
 	PHConstraint::GetDesc(desc);
-	GetRange(((PHJoint1DDesc*)desc)->lower, ((PHJoint1DDesc*)desc)->upper);
-	((PHJoint1DDesc*)desc)->spring			= GetSpring();
-	((PHJoint1DDesc*)desc)->damper			= GetDamper();
-	((PHJoint1DDesc*)desc)->origin			= GetSpringOrigin();
-	((PHJoint1DDesc*)desc)->desiredVelocity = GetDesiredVelocity();
-	((PHJoint1DDesc*)desc)->torque			= GetMotorTorque();
+	th->GetRange(((PHJoint1DDesc*)desc)->lower, ((PHJoint1DDesc*)desc)->upper);
+	((PHJoint1DDesc*)desc)->spring			= th->GetSpring();
+	((PHJoint1DDesc*)desc)->damper			= th->GetDamper();
+	((PHJoint1DDesc*)desc)->origin			= th->GetSpringOrigin();
+	((PHJoint1DDesc*)desc)->desiredVelocity = th->GetDesiredVelocity();
+	((PHJoint1DDesc*)desc)->torque			= th->GetMotorTorque();
 	((PHJoint1DDesc*)desc)->fMax			= fMax;
 	((PHJoint1DDesc*)desc)->fMin			= fMin;
 	return true;

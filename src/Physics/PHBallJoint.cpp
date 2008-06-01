@@ -52,7 +52,7 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 }
 
-bool PHBallJoint::GetDesc(void* desc){
+bool PHBallJoint::GetDesc(void* desc) const {
 	PHConstraint::GetDesc(desc);
 	((PHBallJointDesc*)desc)->spring		 = spring;
 	((PHBallJointDesc*)desc)->damper		 = damper;
@@ -60,7 +60,7 @@ bool PHBallJoint::GetDesc(void* desc){
 	((PHBallJointDesc*)desc)->limitTwist	 = limitTwist;
 	((PHBallJointDesc*)desc)->limitDir		 = limitDir;
 	((PHBallJointDesc*)desc)->goal			 = goal;
-	((PHBallJointDesc*)desc)->torque		 = GetMotorTorque();
+	((PHBallJointDesc*)desc)->torque		 = ((PHBallJoint*)this)->GetMotorTorque();
 	((PHBallJointDesc*)desc)->fMax			 = fMax;
 	((PHBallJointDesc*)desc)->fMin			 = fMin;
 	return true;
@@ -184,7 +184,7 @@ void PHBallJoint::CompBias(){
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
 	db.v() *= engine->velCorrectionRate;
 
-	Quaterniond propQ = Xjrel.q * goal.Inv();	
+	Quaterniond propQ = goal * Xjrel.q.Inv();	
 	Vec3d propV = propQ.RotationHalf();
 
 	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
@@ -199,7 +199,7 @@ void PHBallJoint::CompBias(){
 		dA.w()[1] = tmp * dtinv;
 		dA.w()[2] = tmp * dtinv;
 
-		db.w() = spring * propV * tmp;
+		db.w() = - spring * propV * tmp;
 	}
 	else{
 		//dA.w().clear();

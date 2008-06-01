@@ -80,7 +80,7 @@ public:
 	virtual double	GetTorqueMin(){return fMin / scene->GetTimeStep();}			///< f･⊿tから力の最小値[N]に戻して返す
 
 	/// 仮想関数のオーバライド
-	virtual bool	GetDesc(void* desc);										///< デスクリプタの情報を得るための関数
+	virtual bool	GetDesc(void* desc) const ;									///< デスクリプタの情報を得るための関数
 	virtual void	SetDesc(const void* desc);									///< デスクリプタを設定する関数
 	virtual void	AddMotorTorque(){f.w() = torque * scene->GetTimeStep();}	///< トルクを加える関数
 	virtual void	SetConstrainedIndex(bool* con);								///< 拘束をあたえるかどうかの判定
