@@ -2,8 +2,10 @@
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -11,8 +13,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -20,8 +24,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 

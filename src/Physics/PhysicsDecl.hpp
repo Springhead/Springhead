@@ -8,8 +8,10 @@ public:\
 		bEnabled = ((PHConstraintDesc*)ptr)->bEnabled;	\
 		poseSocket = ((PHConstraintDesc*)ptr)->poseSocket;	\
 		posePlug = ((PHConstraintDesc*)ptr)->posePlug;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((PHConstraintDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHConstraintDesc*)ptr)->poseSocket = poseSocket;	\
 		((PHConstraintDesc*)ptr)->posePlug = posePlug;	\
@@ -39,8 +41,10 @@ public:\
 		torque = ((PHJoint1DDesc*)ptr)->torque;	\
 		fMax = ((PHJoint1DDesc*)ptr)->fMax;	\
 		fMin = ((PHJoint1DDesc*)ptr)->fMin;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHJoint::GetDesc((PHJointDesc*)(PHJoint1DDesc*)ptr);	\
 		((PHJoint1DDesc*)ptr)->lower = lower;	\
 		((PHJoint1DDesc*)ptr)->upper = upper;	\
@@ -60,8 +64,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		bEnabled = ((PHTreeNodeDesc*)ptr)->bEnabled;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((PHTreeNodeDesc*)ptr)->bEnabled = bEnabled;	\
 		return true;	\
 	}\
@@ -71,8 +77,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode::SetDesc((PHTreeNodeDesc*)(PHRootNodeDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHTreeNode::GetDesc((PHTreeNodeDesc*)(PHRootNodeDesc*)ptr);	\
 		return true;	\
 	}\
@@ -82,8 +90,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode::SetDesc((PHTreeNodeDesc*)(PHTreeNode1DDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHTreeNode::GetDesc((PHTreeNodeDesc*)(PHTreeNode1DDesc*)ptr);	\
 		return true;	\
 	}\
@@ -93,8 +103,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode1D::SetDesc((PHTreeNode1DDesc*)(PHHingeJointNodeDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHTreeNode1D::GetDesc((PHTreeNode1DDesc*)(PHHingeJointNodeDesc*)ptr);	\
 		return true;	\
 	}\
@@ -104,8 +116,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode1D::SetDesc((PHTreeNode1DDesc*)(PHSliderJointNodeDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHTreeNode1D::GetDesc((PHTreeNode1DDesc*)(PHSliderJointNodeDesc*)ptr);	\
 		return true;	\
 	}\
@@ -115,8 +129,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode1D::SetDesc((PHTreeNode1DDesc*)(PHPathJointNodeDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHTreeNode1D::GetDesc((PHTreeNode1DDesc*)(PHPathJointNodeDesc*)ptr);	\
 		return true;	\
 	}\
@@ -126,8 +142,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode::SetDesc((PHTreeNodeDesc*)(PHBallJointNodeDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHTreeNode::GetDesc((PHTreeNodeDesc*)(PHBallJointNodeDesc*)ptr);	\
 		return true;	\
 	}\
@@ -138,8 +156,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		ratio = ((PHGearDesc*)ptr)->ratio;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((PHGearDesc*)ptr)->ratio = ratio;	\
 		return true;	\
 	}\
@@ -149,8 +169,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHHingeJointDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHHingeJointDesc*)ptr);	\
 		return true;	\
 	}\
@@ -160,8 +182,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
 		return true;	\
 	}\
@@ -174,8 +198,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		points = ((PHPathDesc*)ptr)->points;	\
 		bLoop = ((PHPathDesc*)ptr)->bLoop;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((PHPathDesc*)ptr)->points = points;	\
 		((PHPathDesc*)ptr)->bLoop = bLoop;	\
 		return true;	\
@@ -186,8 +212,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHPathJointDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHPathJointDesc*)ptr);	\
 		return true;	\
 	}\
@@ -215,8 +243,10 @@ public:\
 		torque = ((PHBallJointDesc*)ptr)->torque;	\
 		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
 		fMin = ((PHBallJointDesc*)ptr)->fMin;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHJoint::GetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
 		((PHBallJointDesc*)ptr)->spring = spring;	\
 		((PHBallJointDesc*)ptr)->damper = damper;	\
@@ -243,8 +273,10 @@ public:\
 		damper = ((PHSpringDesc*)ptr)->damper;	\
 		springOri = ((PHSpringDesc*)ptr)->springOri;	\
 		damperOri = ((PHSpringDesc*)ptr)->damperOri;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHConstraint::GetDesc((PHConstraintDesc*)(PHSpringDesc*)ptr);	\
 		((PHSpringDesc*)ptr)->spring = spring;	\
 		((PHSpringDesc*)ptr)->damper = damper;	\
@@ -262,7 +294,7 @@ public:\
 		timeStep = ((PHSceneState*)ptr)->timeStep;	\
 		count = ((PHSceneState*)ptr)->count;	\
 	}\
-	virtual bool GetState(const void* ptr){ \
+	virtual bool GetState(void* ptr) const { \
 		((PHSceneState*)ptr)->timeStep = timeStep;	\
 		((PHSceneState*)ptr)->count = count;	\
 		return true;	\
@@ -277,8 +309,10 @@ public:\
 		PHScene::SetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		gravity = ((PHSceneDesc*)ptr)->gravity;	\
 		numIteration = ((PHSceneDesc*)ptr)->numIteration;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHScene::GetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		((PHSceneDesc*)ptr)->gravity = gravity;	\
 		((PHSceneDesc*)ptr)->numIteration = numIteration;	\
@@ -289,8 +323,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -300,8 +336,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		pose = ((PHFrameDesc*)ptr)->pose;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((PHFrameDesc*)ptr)->pose = pose;	\
 		return true;	\
 	}\
@@ -325,7 +363,7 @@ public:\
 		nextForce = ((PHSolidState*)ptr)->nextForce;	\
 		nextTorque = ((PHSolidState*)ptr)->nextTorque;	\
 	}\
-	virtual bool GetState(const void* ptr){ \
+	virtual bool GetState(void* ptr) const { \
 		((PHSolidState*)ptr)->velocity = velocity;	\
 		((PHSolidState*)ptr)->angVelocity = angVelocity;	\
 		((PHSolidState*)ptr)->pose = pose;	\
@@ -349,8 +387,10 @@ public:\
 		inertia = ((PHSolidDesc*)ptr)->inertia;	\
 		center = ((PHSolidDesc*)ptr)->center;	\
 		dynamical = ((PHSolidDesc*)ptr)->dynamical;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		PHSolid::GetState((PHSolidState*)(PHSolidDesc*)ptr);	\
 		((PHSolidDesc*)ptr)->mass = mass;	\
 		((PHSolidDesc*)ptr)->inertia = inertia;	\

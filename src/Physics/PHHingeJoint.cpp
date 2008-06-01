@@ -22,19 +22,6 @@ PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	axisIndex[0] = 5;
 }
 
-bool PHHingeJoint::GetDesc(void* desc) const {
-	PHJoint1D::GetDesc(desc);
-	return true;
-}
-
-void PHHingeJoint::SetDesc(const void* desc){
-	PHJoint1D::SetDesc(desc);
-	
-	const PHHingeJointDesc& descHinge = *(const PHHingeJointDesc*)desc;
-
-	SetMotorTorque(descHinge.torque);
-}
-
 void PHHingeJoint::UpdateJointState(){
 	//軸方向の拘束は合致しているものと仮定して角度を見る
 	position[0] = Xjrel.q.Theta();
@@ -45,7 +32,7 @@ void PHHingeJoint::UpdateJointState(){
 
 void PHHingeJoint::CompBias(){
 //	DSTR << "spring " << spring << " goal " << origin*180/M_PI << endl;
-	double dtinv = 1.0 / scene->GetTimeStep();
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	if (engine->numIterCorrection==0){	//	Correction を速度LCPで行う場合
 		//	次のステップでの位置の誤差の予測値が0になるような速度を設定
 		//	dv * dt = x + v*dt
@@ -58,7 +45,7 @@ void PHHingeJoint::CompBias(){
 	}
 
 	if(mode == MODE_VELOCITY){
-		db.w().z = -vel_d;
+		db.w().z = -desiredVelocity;
 	}
 	else if(onLower || onUpper){
 		dA.w()[2] = 0;
@@ -70,7 +57,7 @@ void PHHingeJoint::CompBias(){
 		// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
 		// while(diff >  M_PI) diff -= 2 * M_PI;
 		// while(diff < -M_PI) diff += 2 * M_PI;
-		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.w().z = tmp * dtinv;
 		db.w().z = spring * (diff) * tmp;
 	}

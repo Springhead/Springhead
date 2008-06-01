@@ -29,6 +29,8 @@ class PHBallJoint;
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
 	SPR_OBJECTDEF1(PHBallJointNode, PHTreeNode);
+	SPR_DECLMEMBEROF_PHBallJointNodeDesc;
+
 	/// スイング・ツイスト角の時間変化率から角速度へのヤコビアン
 	Matrix3d	Jst;
 
@@ -48,19 +50,17 @@ public:
 class PHBallJoint : public PHJointND<3>{
 public:
 	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
-
-	double			spring, damper;			///< バネ、ダンパ係数
-	Vec3d			limitDir;				///< 可動域の中心ベクトル（初期方向Z軸）
+	SPR_DECLMEMBEROF_PHBallJointDesc;
+protected:
 	Vec2d			nowTheta;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:swingDir, .z:twist)
-	Vec2d			limitSwing;				///< swing角の範囲
-	Vec2d			limitTwist;				///< twist角の範囲
 	bool			anyLimit;				///< どこかのリミットにかかっているかどうかを調べるフラグ == (onLimit.onUpper || onLimit.onLower)
 	Matrix3d		Jc;						///< Socket座標系の速度・加速度　＝　Jc * 拘束座標系の速度、加速度
 	Matrix3d		Jcinv;					///< 拘束座標系の速度、加速度    ＝　Jcinv * Socket座標系の速度・加速度
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
-	Quaterniond		goal;					///< 制御目標
-	double			fMax, fMin;				///< 関節の出せる力の最大値、最小値
-
+	double			fMinDt, fMaxDt;
+	virtual void	AfterSetDesc();
+	virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
+	friend class PHBallJointNode;
 public:
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHJointDesc::BALLJOINT;}
@@ -74,15 +74,12 @@ public:
 	virtual Vec3d	GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
 	virtual Vec3d	GetAngle(){return position;}								///< 角度を返す関数
 	virtual Vec3d	GetVelocity(){return velocity;}								///< 速度を返す関数
-	virtual void	SetTorqueMax(double max){fMax = max * scene->GetTimeStep();}///< f･⊿tを最大力積値[N･sec]として登録する（引数はf[N]）
-	virtual double	GetTorqueMax(){return fMax / scene->GetTimeStep();}			///< f･⊿tから力の最大値[N]に戻して返す
-	virtual void	SetTorqueMin(double min){fMin = min * scene->GetTimeStep();}///< f･⊿tを最小力積値[N･sec]として登録する（引数はf[N]）
-	virtual double	GetTorqueMin(){return fMin / scene->GetTimeStep();}			///< f･⊿tから力の最小値[N]に戻して返す
-
+	virtual void	SetTorqueMax(double max){fMax = max; fMaxDt = fMax*GetScene()->GetTimeStep(); }
+	virtual double	GetTorqueMax(){return fMax;}
+	virtual void	SetTorqueMin(double min){fMin = min; fMinDt = fMin*GetScene()->GetTimeStep(); }
+	virtual double	GetTorqueMin(){return fMin;}
 	/// 仮想関数のオーバライド
-	virtual bool	GetDesc(void* desc) const ;									///< デスクリプタの情報を得るための関数
-	virtual void	SetDesc(const void* desc);									///< デスクリプタを設定する関数
-	virtual void	AddMotorTorque(){f.w() = torque * scene->GetTimeStep();}	///< トルクを加える関数
+	virtual void	AddMotorTorque(){f.w() = torque * GetScene()->GetTimeStep();}	///< トルクを加える関数
 	virtual void	SetConstrainedIndex(bool* con);								///< 拘束をあたえるかどうかの判定
 	virtual void	ModifyJacobian();
 	virtual void	CompBias();													///< 侵入量の判定

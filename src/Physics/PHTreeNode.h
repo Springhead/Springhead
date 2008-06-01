@@ -11,6 +11,7 @@
 #include <SprPhysics.h>
 #include <Physics/PHSpatial.h>
 #include <Physics/PHJoint.h>
+#include <Physics/PhysicsDecl.hpp>
 
 namespace Spr{;
 
@@ -85,6 +86,7 @@ public:
 class PHRootNode : public PHTreeNode{
 public:
 	SPR_OBJECTDEF(PHRootNode);
+	SPR_DECLMEMBEROF_PHRootNodeDesc;
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject();
@@ -176,10 +178,10 @@ public:
 };
 
 ///	1é©óRìxÇÃä÷êﬂ
-class PHTreeNode1D;
 class PHTreeNode1D : public PHTreeNodeND<1>{
 public:
 	SPR_OBJECTDEF_ABST1(PHTreeNode1D, PHTreeNode);
+	SPR_DECLMEMBEROF_PHTreeNode1DDesc;
 	
 	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
 	virtual void	CompBias();

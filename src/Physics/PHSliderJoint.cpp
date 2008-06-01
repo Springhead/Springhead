@@ -27,18 +27,18 @@ void PHSliderJoint::UpdateJointState(){
 }
 
 void PHSliderJoint::CompBias(){
-	double dtinv = 1.0 / scene->GetTimeStep();
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	db.v() = Xjrel.r * dtinv + vjrel.v();
 	db.v().z = 0.0;
 	db.w() = Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w();
 	db *= engine->velCorrectionRate;
 	if(mode == MODE_VELOCITY){
-		db.v().z = -vel_d;
+		db.v().z = -desiredVelocity;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
-		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
-		dA.v().z = tmp / scene->GetTimeStep();
+		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
+		dA.v().z = tmp / GetScene()->GetTimeStep();
 		db.v().z = spring * (diff) * tmp;
 	}
 }

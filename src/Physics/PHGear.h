@@ -9,7 +9,7 @@
 #define PHGEAR_H
 
 #include <SprPhysics.h>
-//#include <Physics/PHConstraint.h>
+#include <Physics/PhysicsDecl.hpp>
 
 namespace Spr{;
 
@@ -23,11 +23,12 @@ class PHJoint1D;
 class PHGear : public SceneObject{
 public:
 	SPR_OBJECTDEF(PHGear);
+	SPR_DECLMEMBEROF_PHGearDesc;
+
 	PHScene*			scene;
 	PHConstraintEngine* engine;
 	PHJoint1D*		joint[2];		///< ˜A“®‚³‚¹‚éŠÖß
 	bool			bArticulated;
-	double			ratio;
 	double			A, Ainv, b;
 	double			f;
 
@@ -35,10 +36,10 @@ public:
 	virtual bool DelChildObject(ObjectIf* o);
 	virtual size_t NChildObject()const{ return 2; }
 	virtual ObjectIf* GetChildObject(size_t pos);
-	void	SetDesc(const void* desc);
 	void	CompResponse(double f);
 	void	SetupLCP();
 	void	IterateLCP();
+	double GetRatio() const { return ratio; }
 	PHGear(const PHGearDesc& desc = PHGearDesc());
 };
 

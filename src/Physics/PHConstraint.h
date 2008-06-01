@@ -16,23 +16,19 @@ namespace Spr{;
 
 class PHTreeNode;
 
-class PHConstraint : public SceneObject{
+class PHConstraint : public SceneObject, public PHConstraintDesc{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
+	ACCESS_DESC(PHConstraint);
+
 	enum PHControlMode{
 		MODE_TORQUE,
 		MODE_POSITION,
 		MODE_VELOCITY
 	} mode;
 
-	PHScene*			scene;
 	PHConstraintEngine* engine;
 
-	/// çÑëÃÇ©ÇÁå©ÇΩä÷êﬂÇÃà íuÇ∆åXÇ´
-	Posed poseSocket;
-	Posed posePlug;
-
-	bool		bEnabled;			///< óLå¯âªÇ≥ÇÍÇƒÇ¢ÇÈèÍçáÇ…true
 	bool		bFeasible;			///< óºï˚ÇÃçÑëÃÇ™undynamicalÇ»èÍçátrue
 	bool		bArticulated;		///< ä÷êﬂånÇç\ê¨ÇµÇƒÇ¢ÇÈèÍçátrue
 	bool		bInactive[2];		///< çÑëÃÇ™âêÕñ@Ç…è]Ç§èÍçátrue	
@@ -68,6 +64,7 @@ public:
 	void		CompResponseMatrixABA();
 	void		SetupCorrectionLCP();
 	void		IterateCorrectionLCP();
+	virtual		PHSceneIf* GetScene() const;
 	
 	///îhê∂ÉNÉâÉXÇÃã@î\
 	virtual void		 AddMotorTorque(){}							///< çSë©óÕÇ…ä÷êﬂÉgÉãÉNï™Çâ¡éZ
@@ -104,13 +101,12 @@ public:
 	virtual Vec3d		 GetRelativePoseR(){return Xjrel.r;}
 	virtual Quaterniond	 GetRelativePoseQ(){return Xjrel.q;}
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
-	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v() / scene->GetTimeStep(); _t = f.w() / scene->GetTimeStep();}
+	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v() / GetScene()->GetTimeStep(); _t = f.w() / GetScene()->GetTimeStep();}
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
 	virtual ObjectIf*	 GetChildObject(size_t i);
-	virtual bool		 GetDesc(void* desc) const;
-	virtual void		 SetDesc(const void* desc);
-
+protected:
+	virtual void AfterSetDesc();
 };
 
 class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject{

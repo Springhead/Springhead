@@ -18,8 +18,10 @@ public:\
 		blends = ((GRBlendMeshDesc*)ptr)->blends;	\
 		matrixIndices = ((GRBlendMeshDesc*)ptr)->matrixIndices;	\
 		numMatrix = ((GRBlendMeshDesc*)ptr)->numMatrix;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((GRBlendMeshDesc*)ptr)->positions = positions;	\
 		((GRBlendMeshDesc*)ptr)->normals = normals;	\
 		((GRBlendMeshDesc*)ptr)->colors = colors;	\
@@ -35,8 +37,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -47,8 +51,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRFrameDesc*)ptr);	\
 		transform = ((GRFrameDesc*)ptr)->transform;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRFrameDesc*)ptr);	\
 		((GRFrameDesc*)ptr)->transform = transform;	\
 		return true;	\
@@ -59,8 +65,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRDummyFrameDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRDummyFrameDesc*)ptr);	\
 		return true;	\
 	}\
@@ -71,8 +79,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		keys = ((GRAnimationDesc*)ptr)->keys;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((GRAnimationDesc*)ptr)->keys = keys;	\
 		return true;	\
 	}\
@@ -81,8 +91,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -90,8 +102,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -110,8 +124,10 @@ public:\
 		colors = ((GRMeshDesc*)ptr)->colors;	\
 		texCoords = ((GRMeshDesc*)ptr)->texCoords;	\
 		faces = ((GRMeshDesc*)ptr)->faces;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRMeshDesc*)ptr);	\
 		((GRMeshDesc*)ptr)->positions = positions;	\
 		((GRMeshDesc*)ptr)->normals = normals;	\
@@ -150,8 +166,10 @@ public:\
 		spotFalloff = ((GRLightDesc*)ptr)->spotFalloff;	\
 		spotInner = ((GRLightDesc*)ptr)->spotInner;	\
 		spotCutoff = ((GRLightDesc*)ptr)->spotCutoff;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRLightDesc*)ptr);	\
 		((GRLightDesc*)ptr)->ambient = ambient;	\
 		((GRLightDesc*)ptr)->diffuse = diffuse;	\
@@ -185,8 +203,10 @@ public:\
 		emissive = ((GRMaterialDesc*)ptr)->emissive;	\
 		power = ((GRMaterialDesc*)ptr)->power;	\
 		texname = ((GRMaterialDesc*)ptr)->texname;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRMaterialDesc*)ptr);	\
 		((GRMaterialDesc*)ptr)->ambient = ambient;	\
 		((GRMaterialDesc*)ptr)->diffuse = diffuse;	\
@@ -210,8 +230,10 @@ public:\
 		center = ((GRCameraDesc*)ptr)->center;	\
 		front = ((GRCameraDesc*)ptr)->front;	\
 		back = ((GRCameraDesc*)ptr)->back;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRCameraDesc*)ptr);	\
 		((GRCameraDesc*)ptr)->size = size;	\
 		((GRCameraDesc*)ptr)->center = center;	\
@@ -224,8 +246,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -233,8 +257,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -248,8 +274,10 @@ public:\
 		radius = ((GRSphereDesc*)ptr)->radius;	\
 		slices = ((GRSphereDesc*)ptr)->slices;	\
 		stacks = ((GRSphereDesc*)ptr)->stacks;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((GRSphereDesc*)ptr)->radius = radius;	\
 		((GRSphereDesc*)ptr)->slices = slices;	\
 		((GRSphereDesc*)ptr)->stacks = stacks;	\

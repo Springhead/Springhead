@@ -23,16 +23,6 @@ namespace Spr{;
 
 /// 拘束のディスクリプタ
 struct PHConstraintDesc{
-	/// 拘束の種類
-	/*enum ConstraintType{
-		INVALID_CONSTRAINT,
-		CONTACT,
-		HINGEJOINT,
-		SLIDERJOINT,
-		BALLJOINT,
-		PATHJOINT,
-		SPRING
-	} type;*/
 	/// 有効/無効フラグ
 	bool bEnabled;
 	/// 剛体から見た関節の位置と傾き
@@ -54,8 +44,7 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	torque;			///< モータトルク
 	double	fMax;			///< 関節にかけられる最大の力
 	double	fMin;			///< 関節にかけられる最小の力
-
-	PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){}
+	PHJoint1DDesc();
 };
 
 
@@ -89,9 +78,13 @@ struct PHGearDesc{
 	}
 };
 
+struct PHSceneIf;
 /// 拘束のインタフェース
 struct PHConstraintIf : public SceneObjectIf{
 	SPR_IFDEF(PHConstraint);
+
+	/** @brief 所属するシーンの取得	 */
+	PHSceneIf* GetScene() const;
 
 	/** @brief 拘束を有効/無効化する
 		@param bEnable trueならば有効化，falseならば無効化する

@@ -18,6 +18,8 @@ namespace Spr{;
 class PHSliderJointNode : public PHTreeNode1D{
 public:
 	SPR_OBJECTDEF(PHSliderJointNode);
+	SPR_DECLMEMBEROF_PHSliderJointNodeDesc;
+
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
@@ -29,6 +31,8 @@ public:
 class PHSliderJoint : public PHJoint1D{
 public:
 	SPR_OBJECTDEF(PHSliderJoint);
+	SPR_DECLMEMBEROF_PHSliderJointDesc;
+
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
 	virtual void CompBias();
 	virtual void CompError();

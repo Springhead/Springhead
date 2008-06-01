@@ -52,35 +52,12 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 }
 
-bool PHBallJoint::GetDesc(void* desc) const {
-	PHConstraint::GetDesc(desc);
-	((PHBallJointDesc*)desc)->spring		 = spring;
-	((PHBallJointDesc*)desc)->damper		 = damper;
-	((PHBallJointDesc*)desc)->limitSwing	 = limitSwing;
-	((PHBallJointDesc*)desc)->limitTwist	 = limitTwist;
-	((PHBallJointDesc*)desc)->limitDir		 = limitDir;
-	((PHBallJointDesc*)desc)->goal			 = goal;
-	((PHBallJointDesc*)desc)->torque		 = ((PHBallJoint*)this)->GetMotorTorque();
-	((PHBallJointDesc*)desc)->fMax			 = fMax;
-	((PHBallJointDesc*)desc)->fMin			 = fMin;
-	return true;
-}
-
-void PHBallJoint::SetDesc(const void* desc){
-	PHConstraint::SetDesc(desc);
-	const PHBallJointDesc& descBall = *(const PHBallJointDesc*)desc;
-	
-	spring		  = descBall.spring;
-	damper		  = descBall.damper;
-	limitSwing	  = descBall.limitSwing;
-	limitTwist	  = descBall.limitTwist;
-	limitDir	  = descBall.limitDir;
-	goal		  = descBall.goal;
-	torque		  = descBall.torque;
-	fMax		  = descBall.fMax;
-	fMin		  = descBall.fMin;
-
-	SetMotorTorque(descBall.torque);
+void PHBallJoint::AfterSetDesc(){
+	if (GetScene()){
+		fMinDt = fMin * GetScene()->GetTimeStep();
+		fMaxDt = fMax * GetScene()->GetTimeStep();
+	}
+	PHJointND::AfterSetDesc();
 }
 
 void PHBallJoint::UpdateJointState(){
@@ -179,7 +156,7 @@ void PHBallJoint::ModifyJacobian(){
 
 void PHBallJoint::CompBias(){
 	
-	double dtinv = 1.0 / scene->GetTimeStep();
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
 	db.v() *= engine->velCorrectionRate;
@@ -194,7 +171,7 @@ void PHBallJoint::CompBias(){
 	
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
-		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.w()[0] = tmp * dtinv;
 		dA.w()[1] = tmp * dtinv;
 		dA.w()[2] = tmp * dtinv;
@@ -252,10 +229,10 @@ void PHBallJoint::Projection(double& f, int k){
 			f = max(0.0, f);
 		else if(onLimit[0].onUpper)
 			f = min(0.0, f);
-		else if(fMax < f)
-			f = fMax;
-		else if(f < fMin)
-			f = fMin;
+		else if(fMaxDt < f)
+			f = fMaxDt;
+		else if(f < fMinDt)
+			f = fMinDt;
 	}
 
 	if (k==5){
@@ -263,10 +240,10 @@ void PHBallJoint::Projection(double& f, int k){
 			f = max(0.0, f);
 		else if(onLimit[1].onUpper)
 			f = min(0.0, f);
-		else if(fMax < f)
-			f = fMax;
-		else if(f < fMin)
-			f = fMin;
+		else if(fMaxDt < f)
+			f = fMaxDt;
+		else if(f < fMinDt)
+			f = fMinDt;
 	}
 
 }

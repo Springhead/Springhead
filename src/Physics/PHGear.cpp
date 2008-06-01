@@ -23,11 +23,6 @@ PHGear::PHGear(const PHGearDesc& desc){
 	SetDesc(&desc);
 }
 
-void PHGear::SetDesc(const void* desc){
-	const PHGearDesc& geardesc = *(const PHGearDesc*)desc;
-	ratio = geardesc.ratio;
-}
-
 bool PHGear::AddChildObject(ObjectIf* o){
 	PHJoint1D* j = DCAST(PHJoint1D, o);
 	if(j){

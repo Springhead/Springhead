@@ -126,7 +126,7 @@ public:
 	virtual void SetState(const void* s);
 
 protected:
-	virtual void BeforeGetDesc();
+	virtual void BeforeGetDesc() const;
 };
 
 }
