@@ -19,8 +19,8 @@ using namespace std;
 class HapticProcess{
 public:
 	// SPIDAR,Device‚Ég‚¤•Ï”
-	static HISpidarG6X3 spidarG6;
 	DVDeviceManager devMan;
+	HISpidarG6X3 spidarG6;
 	// LocalDynamic‚Ég‚¤•Ï”
 	double dt;
 	PHSolid hpointer; 
