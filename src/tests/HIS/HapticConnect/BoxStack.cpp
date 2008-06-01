@@ -78,6 +78,7 @@ void BoxStack::DesignObject(){
 	{
 		// meshConvex(soBox)のメッシュ形状
 		CDConvexMeshDesc md;
+
 		md.vertices.push_back(Vec3d(-1,-1,-1) * 2);
 		md.vertices.push_back(Vec3d(-1,-1, 1)* 2);	
 		md.vertices.push_back(Vec3d(-1, 1,-1)* 2);	
@@ -190,8 +191,20 @@ void BoxStack::Display(){
 	curRender->ClearBuffer();
 	curRender->BeginScene();
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
+
+	//	光源の追加
+	GRLightDesc ld;
+	ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
+	ld.specular = Vec4f(1,1,1,1) * 0.8f;
+	ld.ambient = Vec4f(1,1,1,1) * 0.4f;
+	ld.position = Vec4f(1,1,1,0);
+	render->PushLight(ld);
+
 	DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
 	DrawHapticSolids();
+
+	render->PopLight();	//	光源の削除
+
 	curRender->EndScene();
 	glutSwapBuffers();
 }
@@ -424,6 +437,7 @@ void BoxStack::DisplayLineToNearestPoint(){
 void BoxStack::DrawHapticSolids(){
 	GLfloat purple[] = {1.0, 0.0, 1.0, 0.0};
 	GRDebugRenderIf* render = GetCurrentWin()->GetRender()->Cast();
+	render->SetMaterialSample(GRDebugRenderIf::GRAY);
 	for(unsigned int i = 0; i < hapticsolids.size(); i++){
 		PHSolid* solid = &hapticsolids[i];		
 		PHSolidIf* solidIf = solid->Cast(); 

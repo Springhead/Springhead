@@ -9,8 +9,6 @@
 #include <windows.h>
 #include <fstream>
 
-HISpidarG6X3 HapticProcess::spidarG6;
-
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
 	K = 30;

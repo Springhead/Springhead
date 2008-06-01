@@ -22,8 +22,8 @@ namespace Spr{;
 CDSphere::CDSphere() {
 }
 
-CDSphere::CDSphere(const CDSphereDesc& desc) {
-	radius = desc.radius;
+CDSphere::CDSphere(const CDSphereDesc& d):CDSphereDesc(d){
+	*(CDSphereDesc*)this = d;
 }
 
 // サポートポイントを求める
