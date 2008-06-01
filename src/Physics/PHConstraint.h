@@ -108,7 +108,7 @@ public:
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
 	virtual ObjectIf*	 GetChildObject(size_t i);
-	virtual bool		 GetDesc(void* desc);
+	virtual bool		 GetDesc(void* desc) const;
 	virtual void		 SetDesc(const void* desc);
 
 };

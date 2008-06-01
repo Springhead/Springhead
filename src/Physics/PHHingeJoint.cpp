@@ -22,7 +22,7 @@ PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	axisIndex[0] = 5;
 }
 
-bool PHHingeJoint::GetDesc(void* desc){
+bool PHHingeJoint::GetDesc(void* desc) const {
 	PHJoint1D::GetDesc(desc);
 	return true;
 }

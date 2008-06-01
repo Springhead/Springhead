@@ -95,7 +95,7 @@ UTRef<ObjectStatesIf> state;
 
 double simulationPeriod = 50.0;
 Vec3d lookAt;
-int sceneNo	= 7;							// シーン番号
+int sceneNo	= 6;							// シーン番号
 bool bAutoStep = true;	//	自動ステップ
 double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
 bool bLeftButton = false, bRightButton = false;

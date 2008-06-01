@@ -74,7 +74,7 @@ public:
 	virtual double	GetTorqueMin(){return fMin / scene->GetTimeStep();}				///< f･⊿tから力の最小値[N]に戻して返す
 
 	/// オーバライド
-	virtual bool	GetDesc(void* desc);
+	virtual bool	GetDesc(void* desc) const;
 	virtual void	SetDesc(const void* desc);
 	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque[0] * scene->GetTimeStep();}
 	virtual void	SetConstrainedIndex(bool* con);

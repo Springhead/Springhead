@@ -37,7 +37,7 @@ public:
 	}
 	virtual void	CompError();
 	virtual void	Projection(double& f, int k);
-	virtual bool	GetDesc(void* desc);
+	virtual bool	GetDesc(void* desc) const ;
 	virtual void	SetDesc(const void* desc);
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
