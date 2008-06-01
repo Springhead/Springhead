@@ -63,7 +63,7 @@ inline bool operator < (const PHEngine& e1, const PHEngine& e2){
 }
 
 ///	PHEngine‚Ì”z—ñ
-class PHEngines: std::vector< UTRef<PHEngine> >{
+class PHEngines: private std::vector< UTRef<PHEngine> >{
 public:
 	iterator initializer;
 	iterator forceGenerator;

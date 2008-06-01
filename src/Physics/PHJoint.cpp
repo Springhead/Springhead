@@ -70,10 +70,10 @@ void PHJoint1D::Projection(double& f, int k){
 			f = max(0.0, f);
 		if(onUpper)
 			f = min(0.0, f);
-		if(fMax < f)
-			f = max(0.0, f);
-		if(f < fMin)
-			f = min(0.0, f);
+		if(fMaxDt < f)
+			f = max(fMaxDt, f);
+		if(f < fMinDt)
+			f = min(fMaxDt, f);
 	}
 }
 

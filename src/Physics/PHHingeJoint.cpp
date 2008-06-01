@@ -74,25 +74,6 @@ void PHHingeJoint::CompError(){
 	B.w() = -qarc.Theta() * qarc.Axis();
 }
 
-void PHHingeJoint::Projection(double& f, int k){
-	//今の力積の状態に対して何らかの操作を与える．
-	//k:con[k]のkの部分(0～2:並進，3～5:回転)、fはそれに対応する力λのこと
-	//力λ = 0 にすることで関節の拘束が解除される．
-	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする．
-	//< fMax, fMinの条件では関節を拘束したいわけではないので，単なる上書きを行う．
-
-	if(k == 5){
-		if(onLower)
-			f = max(0.0, f);
-		else if(onUpper)
-			f = min(0.0, f);
-		if(fMax < f)					
-			f = fMax;
-		if(f < fMin)
-			f = fMin;
-	}
-}
-
 //-----------------------------------------------------------------------------
 void PHHingeJointNode::CompJointJacobian(){
 	J.col(0).SUBVEC(0, 3).clear();
