@@ -372,6 +372,7 @@ void BuildScene6(){
 	soBox[1] = scene->CreateSolid(solidDesc);
 	soBox[1]->AddShape(shapeBox);
 	scene->SetContactMode(soBox[0], soBox[1], PHSceneDesc::MODE_NONE);
+	scene->SetGravity(Vec3d());
 
 	jntLink.resize(1);
 	PHBallJointDesc desc;

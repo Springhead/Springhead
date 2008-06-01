@@ -186,13 +186,18 @@ void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 		if(renderForce){
 			con->GetConstraintForce(f, t);
 
+			SetLighting(false);
+			SetDepthTest(false);
+
 			GRMaterialDesc mat;
 			mat.ambient = mat.diffuse = Vec4f(1,0.7,0,1);
 			SetMaterial(mat);
-			SetLighting(false);
-			SetDepthTest(false);
 			DrawLine(Vec3d(), f * scaleForce);
+			
+			mat.ambient = mat.diffuse = Vec4f(0,0.5,0.2,1);
+			SetMaterial(mat);
 			DrawLine(Vec3d(), t * scaleForce);
+
 			SetDepthTest(true);
 			SetLighting(true);
 		}

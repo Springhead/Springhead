@@ -41,9 +41,9 @@ void PHScene::Init(){
 
 	count = 0;
 }
-void PHScene::BeforeGetDesc(){
+void PHScene::BeforeGetDesc() const{
 	if (gravityEngine)
-		gravity = gravityEngine->accel;
+		((PHScene*)this)->gravity = gravityEngine->accel;
 }
 PHSdkIf* PHScene::GetSdk(){
 	NameManagerIf* nm = GetNameManager();
@@ -69,8 +69,7 @@ CDShapeIf* PHScene::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc){
 	PHJoint* joint = constraintEngine->CreateJoint(ii, desc, lhs->Cast(), rhs->Cast());
-	joint->SetScene(Cast());
-	return joint->Cast();	
+	return joint->Cast();
 }
 int PHScene::NJoints()const{
 	return constraintEngine->joints.size();

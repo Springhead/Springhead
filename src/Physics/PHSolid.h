@@ -85,6 +85,7 @@ protected:
 	friend class PHSolid;
 public:
 	SPR_OBJECTDEF(PHFrame);
+	ACCESS_DESC(PHFrame);
 
 	PHFrame();
 	PHFrame(const PHFrameDesc& desc);

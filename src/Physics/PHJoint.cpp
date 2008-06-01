@@ -22,35 +22,18 @@ PHJoint::PHJoint(){
 
 //----------------------------------------------------------------------------
 // PHJoint1D
-PHJoint1D::PHJoint1D(){
-	
-}	
-
-bool PHJoint1D::GetDesc(void* desc) const{
-	PHJoint1D* th = (PHJoint1D*)this;
-	PHConstraint::GetDesc(desc);
-	th->GetRange(((PHJoint1DDesc*)desc)->lower, ((PHJoint1DDesc*)desc)->upper);
-	((PHJoint1DDesc*)desc)->spring			= th->GetSpring();
-	((PHJoint1DDesc*)desc)->damper			= th->GetDamper();
-	((PHJoint1DDesc*)desc)->origin			= th->GetSpringOrigin();
-	((PHJoint1DDesc*)desc)->desiredVelocity = th->GetDesiredVelocity();
-	((PHJoint1DDesc*)desc)->torque			= th->GetMotorTorque();
-	((PHJoint1DDesc*)desc)->fMax			= fMax;
-	((PHJoint1DDesc*)desc)->fMin			= fMin;
-	return true;
+PHJoint1DDesc::PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){
 }
 
-void PHJoint1D::SetDesc(const void* desc){
-	PHConstraint::SetDesc(desc);
-	const PHJoint1DDesc& desc1D = *(const PHJoint1DDesc*)desc;
-	SetRange(desc1D.lower, desc1D.upper);
-	SetSpring(desc1D.spring);
-	SetSpringOrigin(desc1D.origin);
-	SetDamper(desc1D.damper);
-	SetDesiredVelocity(desc1D.desiredVelocity);
-	SetMotorTorque(desc1D.torque);
-	fMax = desc1D.fMax;
-	fMin = desc1D.fMin;
+PHJoint1D::PHJoint1D(){	
+}	
+
+void PHJoint1D::AfterSetDesc(){
+	if (GetScene()){
+		fMinDt = fMin * GetScene()->GetTimeStep();
+		fMaxDt = fMax * GetScene()->GetTimeStep();
+	}
+	PHJointND<1>::AfterSetDesc();
 }
 
 void PHJoint1D::SetConstrainedIndex(bool* con){

@@ -43,10 +43,10 @@ void PHSpring::SetConstrainedIndexCorrection(bool* con){
 
 void PHSpring::CompBias(){
 	//rjrel
-	double dtinv = 1.0 / scene->GetTimeStep(), tmp;
+	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
 	for(int i = 0; i < 3; i++){
 		if (!constr[i]) continue;
-		tmp = 1.0 / (damper[i] + spring[i] * scene->GetTimeStep());
+		tmp = 1.0 / (damper[i] + spring[i] * GetScene()->GetTimeStep());
 		dA[i] = tmp * dtinv;
 		db[i] = spring[i] * Xjrel.r[i] * tmp;
 	}
@@ -55,7 +55,7 @@ void PHSpring::CompBias(){
 	if(springOri != 0.0 || damperOri != 0.0){
 		Quaterniond diff =  Xjrel.q; // * origin.Inv();
 		Vec3d prop = diff.RotationHalf();
-		double tmpInv = damperOri + springOri * scene->GetTimeStep();
+		double tmpInv = damperOri + springOri * GetScene()->GetTimeStep();
 		if (tmpInv > 1e-30){
 			tmp = 1.0/tmpInv;
 			dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);

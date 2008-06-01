@@ -135,7 +135,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 				pos = cutRing.local * pos;
 				section.push_back(pos);
 				PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
-				point->scene = DCAST(PHScene, engine->GetScene());
+				point->SetScene(engine->GetScene());
 				point->engine = engine;
 
 				if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
@@ -148,7 +148,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	if (nPoint == (int)engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
 		//	きっと1点で接触している．
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
-		point->scene = DCAST(PHScene, engine->GetScene());
+		point->SetScene(engine->GetScene());
 		point->engine = engine;
 
 		if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
@@ -208,7 +208,7 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 	else if(ii == PHSpringIf::GetIfInfoStatic())
 		joint = DBG_NEW PHSpring();
 	else assert(false);
-	
+	joint->SetScene(GetScene());
 	joint->SetDesc(&desc);
 	joint->solid[0] = lhs;
 	joint->solid[1] = rhs;
@@ -278,21 +278,19 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	
 	PHConstraint* con = DCAST(PHConstraint, o);
 	if(con){
-		con->scene = DCAST(PHScene, GetScene());
 		con->engine = this;
 		joints.push_back(con);
 		return true;
 	}
 	PHRootNode* root = DCAST(PHRootNode, o);
 	if(root){
-		root->Prepare(DCAST(PHScene, GetScene()), this);
+		root->Prepare(GetScene()->Cast(), this);
 		trees.push_back(root);
 		bGearNodeReady = false;
 		return true;
 	}
 	PHGear* gear = DCAST(PHGear, o);
 	if(gear){
-		gear->scene = DCAST(PHScene, GetScene());
 		gear->engine = this;
 		gears.push_back(gear);
 		bGearNodeReady = false;
@@ -436,8 +434,7 @@ void PHConstraintEngine::IterateCorrectionLCP(){
 }
 
 void PHConstraintEngine::UpdateSolids(){
-	PHScene* scene = DCAST(PHScene, GetScene());
-	double dt = scene->GetTimeStep();
+	double dt = GetScene()->GetTimeStep();
 
 	// ツリーに属さない剛体の更新
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
@@ -465,10 +462,8 @@ namespace Spr{
 
 void PHConstraintEngine::Step(){
 //	DSTR << "nContact:" <<  points.size() << std::endl;
-
-	PHScene* scene = DCAST(PHScene, GetScene());
-	unsigned int ct = scene->GetCount();
-	double dt = scene->GetTimeStep();
+	unsigned int ct = GetScene()->GetCount();
+	double dt = GetScene()->GetTimeStep();
 
 	// 必要ならばギアノードの更新
 	if(!bGearNodeReady){

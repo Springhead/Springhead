@@ -438,7 +438,7 @@ void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 
   	if(gearNode){
 		gearNode->sumXtrZplusIc += XtrZplusIc;
-		gearNode->sumtorque     += GetJoint()->torque;
+		gearNode->sumtorque     += GetJoint()->GetTorqueND();
 		gearNode->sumJtrZplusIc += JtrZplusIc;
 	}
 	if(gearNode == this)
@@ -446,7 +446,7 @@ void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 			sumXtrZplusIc + sumXtrIJ_sumJIJinv * (sumtorque * scene->GetTimeStep() - sumJtrZplusIc);
 	if(!gearNode)
 		GetParent()->Z +=
-			XtrZplusIc + XtrIJ_JIJinv * (GetJoint()->torque * scene->GetTimeStep() - JtrZplusIc);
+			XtrZplusIc + XtrIJ_JIJinv * (GetJoint()->GetTorqueND() * scene->GetTimeStep() - JtrZplusIc);
 }
 
 template<int NDOF>
@@ -469,10 +469,10 @@ void PHTreeNodeND<NDOF>::CompJointJacobian(){
 		// 直列ギア連動
 		if(GetParent() != gearNode->GetParent()){
 			for(int i = 0; i < NDOF; i++)
-				J.col(i) = Xcp * (const SpatialVector&)parentND->J.col(i) + gear->ratio * J.col(i);
+				J.col(i) = Xcp * (const SpatialVector&)parentND->J.col(i) + gear->GetRatio() * J.col(i);
 		}
 		// 並列ギア連動
-		else J = gear->ratio * J;
+		else J = gear->GetRatio() * J;
 	}
 }
 
@@ -480,14 +480,14 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompAccel(){
 	if(gearNode){
 		if(gearNode == this)
-			 accel = sumJIJinv * (GetJoint()->torque * scene->GetTimeStep() - sumXtrIJ.trans() * GetParent()->a - sumJtrZplusIc);
+			 accel = sumJIJinv * (GetJoint()->GetTorqueND() * scene->GetTimeStep() - sumXtrIJ.trans() * GetParent()->a - sumJtrZplusIc);
 		else if(GetParent() != gearNode->GetParent())
-			 accel = gear->ratio * parentND->accel;
-		else accel = gear->ratio * gearNode->accel;
+			 accel = gear->GetRatio() * parentND->accel;
+		else accel = gear->GetRatio() * gearNode->accel;
 		(Vec6d&)a = Xcg * gearNode->GetParent()->a + c + J * gearNode->accel;
 	}
 	else{
-		accel = JIJinv * (GetJoint()->torque * scene->GetTimeStep() - XtrIJ.trans() * GetParent()->a - JtrZplusIc);
+		accel = JIJinv * (GetJoint()->GetTorqueND() * scene->GetTimeStep() - XtrIJ.trans() * GetParent()->a - JtrZplusIc);
 		(Vec6d&)a = Xcp * GetParent()->a + c + J * accel;
 	}
 
@@ -504,10 +504,10 @@ void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate, bool bImpulse){
 			 daccel = sumJIJinv * (dtau - sumXtrIJ.trans() * GetParent()->da - JtrdZ);
 		}
 		else if(GetParent() != gearNode->GetParent()){
-			 daccel = gear->ratio * parentND->daccel;
+			 daccel = gear->GetRatio() * parentND->daccel;
 		}
 		else{
-			daccel = gear->ratio * gearNode->daccel;
+			daccel = gear->GetRatio() * gearNode->daccel;
 		}
 		(Vec6d&)da = Xcg * gearNode->GetParent()->da + J * gearNode->daccel;
 	}
@@ -560,8 +560,8 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::UpdateJointVelocity(double dt){
 	if(gearNode && gearNode != this){
 		if(GetParent() != gearNode->GetParent())
-			 GetJoint()->velocity = gear->ratio * parentND->GetJoint()->velocity;
-		else GetJoint()->velocity = gear->ratio * gearNode->GetJoint()->velocity;
+			 GetJoint()->velocity = gear->GetRatio() * parentND->GetJoint()->velocity;
+		else GetJoint()->velocity = gear->GetRatio() * gearNode->GetJoint()->velocity;
 	}
 	else GetJoint()->velocity += accel;
 }
@@ -569,8 +569,8 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::UpdateJointPosition(double dt){
 	if(gearNode && gearNode != this){
 		if(GetParent() != gearNode->GetParent())
-			 GetJoint()->position = gear->ratio * parentND->GetJoint()->position;
-		else GetJoint()->position = gear->ratio * gearNode->GetJoint()->position;
+			 GetJoint()->position = gear->GetRatio() * parentND->GetJoint()->position;
+		else GetJoint()->position = gear->GetRatio() * gearNode->GetJoint()->position;
 	}
 	else{
 		GetJoint()->position += GetJoint()->velocity * dt + vel;		
@@ -582,7 +582,7 @@ void PHTreeNodeND<NDOF>::CompResponse(const PTM::TVector<NDOF, double>& _dtau, b
 	if(gearNode){
 		if(gearNode == this)
 			 dtau = _dtau;
-		else gearNode->dtau = gear->ratio * _dtau;
+		else gearNode->dtau = gear->GetRatio() * _dtau;
 		(Vec6d&)gearNode->GetParent()->dZ = gearNode->sumXtrIJ_sumJIJinv * gearNode->dtau;
 		gearNode->GetParent()->CompBiasForceDiff(bUpdate, false);
 	}
@@ -676,7 +676,7 @@ void PHTreeNode1D::CompBias(){
 	double diff;
 	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
 	if(j->mode == PHJoint::MODE_VELOCITY){
-		db[0] = -j->vel_d;
+		db[0] = -j->GetDesiredVelocity();
 		return;
 	}
 
@@ -694,7 +694,7 @@ void PHTreeNode1D::CompBias(){
 		for(int i = 0; i < (int)gearChildren.size(); i++){
 			jchild = DCAST(PHJoint1D, gearChildren[i]->GetJoint());
 			if(!jchild)continue;	// 自由度の異なる関節との連動：起こり得ないはず
-			ratio = gearChildren[i]->gear->ratio;
+			ratio = gearChildren[i]->gear->GetRatio();
 			Di = ratio * ratio * jchild->damper;
 			Ki = ratio * ratio * jchild->spring;
 			D += Di;	// バネダンパ係数はギア比の自乗倍

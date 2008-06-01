@@ -213,7 +213,7 @@ void PHPathJoint::UpdateJointState(){
 	velocity[0] = vjrel.norm();
 	if(vjrel * J.row(5) < 0.0)
 		velocity[0] = -velocity[0];
-	position[0] += velocity[0] * scene->GetTimeStep();
+	position[0] += velocity[0] * GetScene()->GetTimeStep();
 	path->Rollover(position[0]);
 }
 
@@ -225,7 +225,7 @@ void PHPathJoint::ModifyJacobian(){
 }
 
 void PHPathJoint::CompBias(){
-	double dtinv = 1.0 / scene->GetTimeStep();
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	Posed p;
 	path->GetPose(position[0], p);
 	db.v() = ((Xjrel.r - p.Pos()) * dtinv/* + vjrel.v()*/);
@@ -239,13 +239,13 @@ void PHPathJoint::CompBias(){
 
 	double diff;
 	if(mode == MODE_VELOCITY){
-		db.w().z = -vel_d;
+		db.w().z = -desiredVelocity;
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		diff = GetPosition() - origin;
 		//while(diff >  M_PI) diff -= 2 * M_PI;
 		//while(diff < -M_PI) diff += 2 * M_PI;
-		double tmp = 1.0 / (damper + spring * scene->GetTimeStep());
+		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.w().z = tmp * dtinv;
 		db.w().z = spring * (diff) * tmp;
 	}

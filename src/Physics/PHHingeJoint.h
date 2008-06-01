@@ -18,6 +18,8 @@ namespace Spr{;
 class PHHingeJointNode : public PHTreeNode1D{
 public:
 	SPR_OBJECTDEF(PHHingeJointNode);
+	SPR_DECLMEMBEROF_PHHingeJointNodeDesc;
+
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
@@ -29,7 +31,8 @@ public:
 class PHHingeJoint : public PHJoint1D{
 public:
 	SPR_OBJECTDEF(PHHingeJoint);
-	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::HINGEJOINT;}
+	SPR_DECLMEMBEROF_PHHingeJointDesc;
+
 	virtual void CompBias();
 	virtual void UpdateJointState();
 	virtual PHTreeNode* CreateTreeNode(){
@@ -37,8 +40,6 @@ public:
 	}
 	virtual void	CompError();
 	virtual void	Projection(double& f, int k);
-	virtual bool	GetDesc(void* desc) const ;
-	virtual void	SetDesc(const void* desc);
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
 

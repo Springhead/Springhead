@@ -173,7 +173,7 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 
 //----------------------------------------------------------------------------
 //	NamedObject
-NameManagerIf* NamedObject::GetNameManager(){
+NameManagerIf* NamedObject::GetNameManager() const{
 	return nameManager->Cast();
 }
 void NamedObject::SetNameManager(NameManagerIf* s){
@@ -216,7 +216,7 @@ void SceneObject::SetScene(SceneIf* s){
 	SetNameManager(s);
 	nameManager->GetNameMap();
 }
-SceneIf* SceneObject::GetScene(){
+SceneIf* SceneObject::GetScene() const{
 	return (SceneIf*)GetNameManager();
 }
 

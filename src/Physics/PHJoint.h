@@ -10,6 +10,8 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHConstraint.h>
+#include <Physics/PhysicsDecl.hpp>
+
 
 namespace Spr{;
 
@@ -24,59 +26,59 @@ public:
 	PHJoint();
 };
 
+template<int NDOF> class PHTreeNodeND;
+
+
 template<int NDOF>
 class PHJointND : public PHJoint{
 public:
 	typedef	PTM::TVector<NDOF, double> coord_t;
 
 	int		axisIndex[NDOF];
-	coord_t position, velocity, torque;
+	coord_t position, velocity;
 	
-	//virtual void	SetMotorTorque(coord_t t){torque = t;}
-	//virtual coord_t GetMotorTorque(){return torque;}
 	PHJointND(){
 		position.clear();
 		velocity.clear();
-		torque.clear();
 	}
+protected:
+	virtual coord_t GetTorqueND() = 0;
+	friend class PHTreeNodeND<NDOF>;
 };
 
 class PHJoint1D : public PHJointND<1>{
+protected:
+	double  fMaxDt, fMinDt;				///< 関節の出せる力*dtの最大値、最小値
+	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
+	virtual void AfterSetDesc();
+	virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
+	friend class PHTreeNode1D;
 public:
 	SPR_OBJECTDEF_ABST1(PHJoint1D, PHJoint);
-	
-	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
-	double	lower, upper;				///< 可動範囲の下限、上限
-	double	pos_d, vel_d;				///< 目標変位、目標速度
-	double	spring, origin, damper;		///< バネ係数、バネ原点、ダンパ係数
-	double  fMax, fMin;					///< 関節の出せる力の最大値、最小値
+	SPR_DECLMEMBEROF_PHJoint1DDesc;
 
 	/// インタフェースの実装
-	virtual double	GetPosition(){return position[0];}
-	virtual double	GetVelocity(){return velocity[0];}
-	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque[0] = t;}
-	virtual double	GetMotorTorque(){return torque[0];}
+	virtual double	GetPosition() const {return position[0];}
+	virtual double	GetVelocity() const {return velocity[0];}
+	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}
+	virtual double	GetMotorTorque() const {return torque;}
 	virtual void	SetRange(double l, double u){lower = l, upper = u;}
-	virtual void	GetRange(double& l, double& u){l = lower, u = upper;}
-	//virtual void SetDesiredPosition(double p){mode = MODE_POSITION; pos_d = p;}
-	//virtual double GetDesiredPosition(){return pos_d;}
-	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; vel_d = v;}
-	virtual double	GetDesiredVelocity(){return vel_d;}
+	virtual void	GetRange(double& l, double& u) const {l = lower, u = upper;}
+	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; desiredVelocity = v;}
+	virtual double	GetDesiredVelocity() const {return desiredVelocity;}
 	virtual void	SetSpring(double K){spring = K;}
-	virtual double	GetSpring(){return spring;}
+	virtual double	GetSpring() const {return spring;}
 	virtual void	SetSpringOrigin(double org){origin = org;}
-	virtual double	GetSpringOrigin(){return origin;}
+	virtual double	GetSpringOrigin() const {return origin;}
 	virtual void	SetDamper(double D){damper = D;}
-	virtual double	GetDamper(){return damper;}
-	virtual void	SetTorqueMax(double max){fMax = max * scene->GetTimeStep();}	///< f･⊿tを最大力積値[N･sec]として登録する（引数はf[N]）
-	virtual double	GetTorqueMax(){return fMax / scene->GetTimeStep();}				///< f･⊿tから力の最大値[N]に戻して返す
-	virtual void	SetTorqueMin(double min){fMin = min * scene->GetTimeStep();}	///< f･⊿tを最小力積値[N･sec]として登録する（引数はf[N]）
-	virtual double	GetTorqueMin(){return fMin / scene->GetTimeStep();}				///< f･⊿tから力の最小値[N]に戻して返す
+	virtual double	GetDamper() const {return damper;}
+	virtual void	SetTorqueMax(double max){fMax = max; fMaxDt = fMax * GetScene()->GetTimeStep(); }
+	virtual double	GetTorqueMax(){return fMax;}
+	virtual void	SetTorqueMin(double min){fMin = min; fMinDt = fMin * GetScene()->GetTimeStep(); }
+	virtual double	GetTorqueMin(){return fMin;}
 
 	/// オーバライド
-	virtual bool	GetDesc(void* desc) const;
-	virtual void	SetDesc(const void* desc);
-	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque[0] * scene->GetTimeStep();}
+	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque * GetScene()->GetTimeStep();}
 	virtual void	SetConstrainedIndex(bool* con);
 	virtual void	SetConstrainedIndexCorrection(bool* con);
 	virtual void	Projection(double& f, int k);

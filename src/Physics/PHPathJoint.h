@@ -43,6 +43,7 @@ class PHPath : public SceneObject, public std::vector<PHPathPointWithJacobian>{
 	iterator Find(double &s);
 public:
 	SPR_OBJECTDEF_ABST(PHPath);
+
 	virtual bool GetDesc(void* desc)const;
 	virtual void SetDesc(const void* desc);
 
@@ -60,6 +61,7 @@ class PHPathJoint;
 class PHPathJointNode : public PHTreeNode1D{
 public:
 	SPR_OBJECTDEF(PHPathJointNode);
+	SPR_DECLMEMBEROF_PHPathJointNodeDesc;
 	PHPathJoint* GetJoint(){return PHTreeNode1D::GetJoint()->Cast();}
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
@@ -70,9 +72,11 @@ public:
 };
 
 class PHPathJoint : public PHJoint1D{
-	SPR_OBJECTDEF(PHPathJoint);
-	UTRef<PHPath> path;
 public:
+	SPR_OBJECTDEF(PHPathJoint);
+	SPR_DECLMEMBEROF_PHPathJointDesc;
+
+	UTRef<PHPath> path;
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHPathJointNode();

@@ -261,7 +261,7 @@ protected:
 	virtual void PrintFooter(std::ostream& os) const;
 
 	///	GetDesc()の前に呼ばれる
-	virtual void BeforeGetDesc(){}
+	virtual void BeforeGetDesc() const {}
 	///	SetDesc()のあとに呼ばれる
 	virtual void AfterSetDesc(){}
 
@@ -295,7 +295,7 @@ public:
 	///	NameManagerを設定
 	void SetNameManager(NameManagerIf* s);
 	///	NameManagerの取得
-	virtual NameManagerIf* GetNameManager();
+	virtual NameManagerIf* GetNameManager() const ;
 protected:
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 };
@@ -307,7 +307,7 @@ class SceneObject:public NamedObject{
 	SPR_OBJECTDEF(SceneObject);		///<	クラス名の取得などの基本機能の実装
 public:
 	virtual void SetScene(SceneIf* s);
-	virtual SceneIf* GetScene();
+	virtual SceneIf* GetScene() const;
 };
 
 ///	Objectへの参照の配列

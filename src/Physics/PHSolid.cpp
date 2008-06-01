@@ -102,7 +102,7 @@ Vec3d PHSolid::GetDeltaPosition() const {
 }
 Vec3d PHSolid::GetDeltaAngle() const {
 	PHScene* s = DCAST(PHScene, nameManager);
-	return angVel * s->GetTimeStep();
+	return Vec3d(angVel) * s->GetTimeStep();
 }
 Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 	PHScene* s = DCAST(PHScene, nameManager);
@@ -398,6 +398,7 @@ CDShapeIf* PHSolid::GetShape(int i){
 }
 void PHSolid::AfterSetDesc(){
 	SetInertia(inertia);
+	SceneObject::AfterSetDesc();
 }
 
 

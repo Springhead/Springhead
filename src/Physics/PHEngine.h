@@ -55,6 +55,8 @@ public:
 	virtual int GetPriority() const { return SGBP_FORCEGENERATOR; }
 	///	ŠÔ‚ğ dt i‚ß‚é
 	virtual void Step(){}
+	///
+	virtual PHSceneIf* GetScene(){ return SceneObject::GetScene()->Cast(); }
 };
 inline bool operator < (const PHEngine& e1, const PHEngine& e2){
 	return e1.GetPriority() < e2.GetPriority();

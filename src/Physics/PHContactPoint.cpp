@@ -87,7 +87,7 @@ double PHContactPoint::correctionDamper = 1000.0;
 void PHContactPoint::CompBias(){
 	//	correctionを位置LCPで別に行う場合は、速度を変更しての位置補正はしない。
 	if (engine->numIterContactCorrection) return;
-	double dtinv = 1.0 / scene->GetTimeStep();
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	double overlap = 0.01;
 
 #if 1
@@ -97,13 +97,13 @@ void PHContactPoint::CompBias(){
 	//	接触用の correctionRate
 	double contactCorrectionRate = 0;
 	//	速度が小さい場合は、跳ね返りなし。
-//	if (vjrel[0]*scene->GetTimeStep() > -0.001){
-	if (vjrel[0]*scene->GetTimeStep() > -0.1){
+//	if (vjrel[0]*GetScene()->GetTimeStep() > -0.001){
+	if (vjrel[0]*GetScene()->GetTimeStep() > -0.1){
 		e=0;
 		contactCorrectionRate = engine->contactCorrectionRate;
 	}
 	if (overlap > shapePair->depth) overlap = shapePair->depth;
-	db[0] = - contactCorrectionRate * (shapePair->depth - overlap) / scene->GetTimeStep() + e * vjrel[0];
+	db[0] = - contactCorrectionRate * (shapePair->depth - overlap) / GetScene()->GetTimeStep() + e * vjrel[0];
 #endif
 
 #if 0
@@ -131,7 +131,7 @@ void PHContactPoint::CompBias(){
 #endif
 
 #if 0
-	double tmp = 1.0 / (correctionDamper + correctionSpring * scene->GetTimeStep());
+	double tmp = 1.0 / (correctionDamper + correctionSpring * GetScene()->GetTimeStep());
 	dA[0] = tmp * dtinv;
 	db[0] = -correctionSpring * max(0.0, shapePair->depth - overlap) * tmp;
 #endif

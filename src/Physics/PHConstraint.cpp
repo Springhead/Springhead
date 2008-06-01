@@ -27,13 +27,16 @@ PHConstraint::PHConstraint(){
 	bArticulated = false;
 }
 
+PHSceneIf* PHConstraint::GetScene() const{
+	return SceneObject::GetScene()->Cast();
+}
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //インタフェース(PHConstraintIfの機能)の実装,オーバーライド   cf.SprPHJoint.h
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
-		//PHSolids::iterator it = (PHSolids::iterator) scene->constraintEngine->solids.Find(s);
-		//if(it == scene->constraintEngine->solids.end())
+		//PHSolids::iterator it = (PHSolids::iterator) GetScene()->constraintEngine->solids.Find(s);
+		//if(it == GetScene()->constraintEngine->solids.end())
 		//	return false;
 		if(!solid[0]){
 			solid[0] = s;
@@ -53,27 +56,13 @@ ObjectIf* PHConstraint::GetChildObject(size_t i){
 	return solid[i]->Cast();
 }
 
-bool PHConstraint::GetDesc(void* desc) const{
-	((PHConstraintDesc*)desc)->poseSocket.Pos() = Xj[0].r;
-	((PHConstraintDesc*)desc)->poseSocket.Ori() = Xj[0].q;
-	((PHConstraintDesc*)desc)->posePlug.Pos()	= Xj[1].r;
-	((PHConstraintDesc*)desc)->posePlug.Ori()   = Xj[1].q;
-	((PHConstraintDesc*)desc)->poseSocket		= poseSocket;
-	((PHConstraintDesc*)desc)->posePlug			= posePlug;
-	((PHConstraintDesc*)desc)->bEnabled			= bEnabled;
 
-	return true;
-}
-
-void PHConstraint::SetDesc(const void* desc){
-	const PHConstraintDesc& condesc = *(const PHConstraintDesc*)desc;
-	Xj[0].r    = condesc.poseSocket.Pos();
-	Xj[0].q    = condesc.poseSocket.Ori();
-	Xj[1].r    = condesc.posePlug.Pos();
-	Xj[1].q	   = condesc.posePlug.Ori();
-	poseSocket = condesc.poseSocket;
-	posePlug   = condesc.posePlug;
-	bEnabled   = condesc.bEnabled;
+void PHConstraint::AfterSetDesc(){
+	Xj[0].r    = poseSocket.Pos();
+	Xj[0].q    = poseSocket.Ori();
+	Xj[1].r    = posePlug.Pos();
+	Xj[1].q	   = posePlug.Ori();
+	SceneObject::AfterSetDesc();
 }
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -287,7 +276,7 @@ void PHConstraint::SetupCorrectionLCP(){
 	
 	// velocity updateによる影響を加算
 	B += (J[0] * (solid[0]->v + solid[0]->dv)
-			+ J[1] * (solid[1]->v + solid[1]->dv)) * scene->GetTimeStep();
+			+ J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
 	B *= engine->posCorrectionRate;
 		
 	// 拘束力初期値による位置変化量を計算
