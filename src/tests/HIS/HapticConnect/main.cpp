@@ -86,7 +86,7 @@ void Synchronize(){
 					dx.v() = hprocess.neighborObjects[i].phSolid.GetCenterPosition() - hprocess.neighborObjects[i].phSolidIf->GetCenterPosition();
 //					dx.w() = hprocess.neighborObjects[i].phSolid.GetOrientation() * Quaterniond::Rot(
 //						(hprocess.neighborObjects[i].phSolid.GetAngularVelocity() - hprocess.neighborObjects[i].phSolidIf->GetAngularVelocity())).unit();
-					double coeff_K = 1;
+					double coeff_K = 0.1;
 					double coeff_D = 0.001;
 					correction.v() = -coeff_K * dx.v() - coeff_D * dv.v();
 
