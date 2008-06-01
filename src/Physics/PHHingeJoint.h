@@ -39,7 +39,6 @@ public:
 		return DBG_NEW PHHingeJointNode();
 	}
 	virtual void	CompError();
-	virtual void	Projection(double& f, int k);
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
 

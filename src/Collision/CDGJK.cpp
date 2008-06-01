@@ -331,16 +331,17 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
 			DebugBreak();
+			bDebug = true;
 #endif
 		}
 		Vec3d s;		//	ŽOŠpŒ`‚Ì—LŒü–ÊÏ
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
-		if (s.Z() < 0){		//	‹tŒü‚«‚Ìê‡A‚Ð‚Á‚­‚è•Ô‚·
-			std::swap(ids[1], ids[2]);
-			s *= -1;
-		}
 		double improvement;
-		if (s.Z() > epsilon*10.0){
+		if (s.Z() > epsilon*10.0 || -s.Z() > epsilon*10.0){
+			if (s.Z() < 0){		//	‹tŒü‚«‚Ìê‡A‚Ð‚Á‚­‚è•Ô‚·
+				std::swap(ids[1], ids[2]);
+				s *= -1;
+			}
 			if (bDebug) DSTR << "TRI ";
 			//	ŽOŠpŒ`‚É‚È‚éê‡
 			notuse = -1;
@@ -405,7 +406,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				lastTriV = v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
 			}
 			CalcSupport(ids[3]);
-			improvement = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];			
+			double imp1 = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];
+			double imp2 = -(w[ids[3]] - w[ids[id1]]) * v[ids[3]];
+			improvement = min(imp1, imp2);			
 		}
 		if (bDebug){
 			DSTR << "v:" << v[ids[3]];
@@ -416,6 +419,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			for(int j=0; j<3; ++j) DSTR << v[ids[3]][j] << "\t";
 			DSTR << std::endl;
 			for(int i=0; i<4; ++i){
+				if (i==notuse) continue;
 				for(int j=0; j<3; ++j) DSTR << w[ids[i]][j] << "\t";
 				DSTR << std::endl;
 			}
