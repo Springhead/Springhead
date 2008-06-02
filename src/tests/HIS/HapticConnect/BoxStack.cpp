@@ -475,7 +475,8 @@ void BoxStack::Keyboard(unsigned char key){
 				 CDSphereDesc sd;																				// 球体ディスクリプタ(sd)
 				sd.radius = 3.0;																					// 球体の半径
 			    CDSphereIf* sphere = DCAST(CDSphereIf, GetSdk()->GetPHSdk()->CreateShape(sd));           // sd に基づいて, 球体形状(sphere1)を作成
-				soBox.back()->AddShape(sphere);//meshConvex);
+				soBox.back()->AddShape(sphere);
+				//soBox.back()->AddShape(meshConvex);
 				soBox.back()->SetFramePosition(Vec3d(-1, 3, 4));
 				soBox.back()->SetOrientation(
 					Quaternionf::Rot(Rad(30), 'y') * 
