@@ -94,7 +94,7 @@ void Synchronize(){
 					bstack.hapticsolids.push_back(hprocess.neighborObjects[i].phSolid);
 //					hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(hprocess.neighborObjects[i].phSolid.GetAngularVelocity());
 //					hprocess.neighborObjects[i].phSolid.SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition() + correction.v());
-//					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
+					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
 //					hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());	
 //					DSTR << "sync" << hprocess.neighborObjects[i].phSolidIf->GetVelocity() << endl;
 					//					cout << "----------"<< endl;
