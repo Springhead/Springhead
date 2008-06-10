@@ -67,5 +67,10 @@ struct DRKeyMouseWin32If:public HIRealDeviceIf{
 	SPR_IFDEF(DRKeyMouseWin32);
 };
 
+///	DRKeyMouseGLUT
+struct DRKeyMouseGLUTIf:public HIRealDeviceIf{
+	SPR_IFDEF(DRKeyMouseGLUT);
+};
+
 }	//	namespace Spr
 #endif

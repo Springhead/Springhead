@@ -76,6 +76,22 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 	if (!handler) return false;
 	MSG* msg = (MSG*)m;
 	bool bKeyDown = false;
+	int vk;
+	switch (msg->message){
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+		vk = VK_LBUTTON;
+		break;
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+		vk = VK_MBUTTON;
+		break;
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+		vk = VK_RBUTTON;
+		break;
+	}
+
 	switch (msg->message){
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
@@ -89,7 +105,7 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		int x = (short)LOWORD(msg->lParam);  // horizontal position of cursor 
 		int y = (short)HIWORD(msg->lParam);  // vertical position of cursor 
 		if (bKeyDown) SetCapture(msg->hwnd);
-		return handler->OnKey(bKeyDown, VK_LBUTTON, keyState, x, y);
+		return handler->OnKey(bKeyDown, vk, keyState, x, y);
 		}break;
 	case WM_MOUSEMOVE:{
 		unsigned fwKeys = msg->wParam;  // key flags 

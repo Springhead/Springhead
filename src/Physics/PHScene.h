@@ -102,6 +102,8 @@ public:
 	void					GenerateForce();
 	///	シーンの時刻を進める（力と速度を積分して，速度と位置を更新）
 	void					Integrate();
+	void					IntegratePart1();
+	void					IntegratePart2();
 	///	シーンを空にする．
 	void					Clear();
 	virtual void			SetGravity(const Vec3d& accel);
@@ -116,6 +118,7 @@ public:
 	virtual ObjectIf*		GetChildObject(size_t pos);
 	virtual bool			AddChildObject(ObjectIf* o);
 	virtual bool			DelChildObject(ObjectIf* o);	
+	virtual void			SetStateMode(bool bConstraints);
 
 	ACCESS_DESC(PHScene);
 	virtual size_t GetStateSize() const;

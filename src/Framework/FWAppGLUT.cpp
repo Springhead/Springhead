@@ -55,25 +55,7 @@ void FWAppGLUT::GlutIdleFunc(){
 	FWAppGLUT::instance->CallIdle();
 }
 
-void FWAppGLUT::GlutTimerFunc(int id){
-	// 渡されるidは対応するウィンドウのID
-	/*FWWin* win = FWAppGLUT::instance->GetWinFromId(id);
-	if (win){
-		FWAppGLUT::instance->SetCurrentWin(win);
-
-		FWAppGLUT::instance->CallStep();
-		glutPostRedisplay();
-	
-		// タイマ周期＝物理シミュレーションのインターバル
-		int timeStep = (int)(win->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
-		if (timeStep<1) timeStep = 1;
-	
-		glutTimerFunc(timeStep, GlutTimerFunc, id);
-	}*/
-	
-	FWAppGLUT::instance->CallStep();
-	glutPostRedisplay();
-
+void FWAppGLUT::GlutTimerFunc(int id){	
 	// タイマ周期＝物理シミュレーションのインターバル
 	int timeStep=1;
 	if(!FWAppGLUT::instance)return;
@@ -85,6 +67,9 @@ void FWAppGLUT::GlutTimerFunc(int id){
 		}
 	}
 	glutTimerFunc(timeStep, GlutTimerFunc, 0);
+
+	FWAppGLUT::instance->CallStep();
+	glutPostRedisplay();
 }
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	FWAppGLUT::instance->CallKeyboard(key, x, y);

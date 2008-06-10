@@ -5,9 +5,9 @@ cmd /v:on /c%0 LISTSRC %1 %2 %3 %4 %5 %6 %7 %8 %9
 goto end
 
 :ListSrc
-del AccessDesc*.h
-del TypeDesc*.h
-del MakeTypeDesc*.txt
+if exist AccessDesc*.h del AccessDesc*.h
+if exist TypeDesc*.h del TypeDesc*.h
+if exist MakeTypeDesc*.txt del MakeTypeDesc*.txt
 set TARGET=%9 %8 %7 %6 %5 %4 %3 %2
 set MODULE=%2
 set MAKEFILE=%MODULE%Stub.mak.txt
@@ -19,8 +19,8 @@ for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCI
 set SRCIMP=
 for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do set SRCIMP=!SRCIMP! ../%%p/%%f
 
-echo interface files:%SRCINTF%
-echo src files:%SRCIMP%
+rem echo interface files:%SRCINTF%
+rem echo src files:%SRCIMP%
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MODULE%.i
 echo %%module %MODULE%>> %MODULE%.i

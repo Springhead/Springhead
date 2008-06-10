@@ -16,7 +16,12 @@ namespace Spr{;
 
 class PHTreeNode;
 
-class PHConstraint : public SceneObject, public PHConstraintDesc{
+struct PHConstraintStatePrivate{
+	SpatialVector f;				///< S‘©—Í‚Ì—ÍÏ
+	SpatialVector F;				///< S‘©Œë·‚ðˆÊ’u‚ÌLCP‚Å•â³‚·‚éê‡‚Ì•â³—Ê*Ž¿—Ê
+};
+
+class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintStatePrivate{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
@@ -26,7 +31,6 @@ public:
 		MODE_POSITION,
 		MODE_VELOCITY
 	} mode;
-
 	PHConstraintEngine* engine;
 
 	bool		bFeasible;			///< —¼•û‚Ì„‘Ì‚ªundynamical‚Èê‡true
@@ -42,8 +46,6 @@ public:
 	SpatialMatrix		AinvJ[2];
 	SpatialMatrix		T[2];
 	
-	SpatialVector f;				///< S‘©—Í‚Ì—ÍÏ
-	SpatialVector F;				///< S‘©Œë·‚ðˆÊ’u‚ÌLCP‚Å•â³‚·‚éê‡‚Ì•â³—Ê*Ž¿—Ê
 	
 	SpatialVector b, db, B;			///< LCP‚ÌbƒxƒNƒgƒ‹‚Æ‚»‚Ì•â³—Ê
 	SpatialVector A, dA, Ainv;		///< LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚Æ‚»‚Ì•â³—ÊC‹t”

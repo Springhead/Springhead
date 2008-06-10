@@ -104,13 +104,12 @@ class PHConstraintEngine;
 struct PHSolidStatePrivate{
 protected:
 	bool		bFrozen;		///<	フリーズ状態か
+	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 };
-
 
 ///	剛体
 class PHSolid : public SceneObject, public PHSolidDesc, public PHSolidStatePrivate{
 protected:
-	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	Matrix3d	inertia_inv;	///<	慣性テンソルの逆数(Local系・キャッシュ)
 
 	///	積分方式

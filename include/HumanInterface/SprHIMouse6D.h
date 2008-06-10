@@ -19,7 +19,8 @@ namespace Spr{;
 //@{
 
 struct DVKeyMouseIf;
-///	実デバイス．インタフェースカードとか，USBデバイスとか，
+
+///	マウスとキーボードによるカメラ姿勢などの6自由度入力
 struct HIMouse6DIf: public HIPoseIf{
 	SPR_VIFDEF(HIMouse6D);
 	DVKeyMouseIf* GetKeyMouse();

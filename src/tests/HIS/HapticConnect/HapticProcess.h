@@ -27,11 +27,13 @@ public:
 	vector<PHNeighborObject> neighborObjects;
 	//　力提示に使う変数
 	bool bDisplayforce;	///< 力覚を提示するかどうか
-	Vec3d addforce;		///< ユーザへの提示力
+	bool bInter;		///< 提示面の法線を補間するかどうか
+	Vec3d displayforce;		///< ユーザへの提示力
 	double K;				///< バネ係数
 	double D;				///< ダンパ係数
 	// 同期に使う変数
 	int stepcount;
+	int countmax;
 
 	HapticProcess();
 
@@ -40,15 +42,10 @@ public:
 	void Step();
 	void UpdateSpidar();
 	void HapticRendering();
-	void CalcForce(Vec3d dis);
 	void LocalDynamics();
-	void ClearForce();
-	void GenerateForce();
-	void Integrate();	
 	void Keyboard(unsigned char key);
-
 };
-
+extern HapticProcess hprocess;
 
 
 #endif
