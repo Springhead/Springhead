@@ -175,7 +175,7 @@ PHConstraintEngine::PHConstraintEngine(){
 	posCorrectionRate	 = 0.3;		//< 0.5‚¾‚Æ‘å‚«‚·‚¬‚Ä”n‚ª”­U‚µ‚Ä‚µ‚Ü‚¤(07/12/30 toki)
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
-	freezeThreshold		 = 0.01;
+	freezeThreshold		 = 0.0;
 	contactCorrectionRate = 0.3;
 	bGearNodeReady = false;
 	bSaveConstraints = false;
