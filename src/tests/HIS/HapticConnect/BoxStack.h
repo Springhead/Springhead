@@ -21,6 +21,10 @@ struct PHSceneSolid{
 
 class BoxStack : public FWAppGLUT, public UTRefCount{
 public:
+	//　プロセス間の同期に使う変数
+	volatile bool bsync;
+	bool calcPhys;
+	volatile int hapticcount;
 	FWWin* window;
 	PHSceneIf* phscene;		
 	GRDebugRenderIf* render;		
@@ -37,23 +41,23 @@ public:
 	PHSolid phpointer;
 	CDConvexMeshIf* meshFloor;
 	CDConvexMeshIf* meshConvex;
+	CDBoxIf* meshBox;
+	CDSphereIf* meshSphere;
+	CDCapsuleIf* meshCapsule;
 	// 近傍物体探索に使う変数
 	double range;
-	//　プロセス間の同期に使う変数
-	bool bsync;
 	vector<PHNeighborObject> neighborObjects;	///<近傍物体を格納する
 	vector<PHSceneSolid> sceneSolids;
 	// 予測シミュレーションに使う変数
-	UTRef<ObjectStatesIf> states;
+	UTRef<ObjectStatesIf> states, states2;
 
 	vector<PHSolid> hapticsolids;
 
 	BoxStack();	
 	void Init(int argc, char* argv[]);				
 	void InitCameraView();										
-	void Start();
 	void DesignObject();
-	void Step();
+	void PhysicsStep();
 	void Display();		
 	void UpdateHapticPointer();
 	void FindNearestObject();
@@ -61,7 +65,11 @@ public:
 	void FindNearestPoint();
 	void DisplayLineToNearestPoint();
 	void DrawHapticSolids();
-	void Keyboard(unsigned char key);	
+	void Keyboard(unsigned char key);
+	void Idle();
+	void Step();
+
 }; 
+extern BoxStack bstack;
 
 #endif

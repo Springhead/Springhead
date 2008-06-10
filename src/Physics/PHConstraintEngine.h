@@ -37,6 +37,12 @@ public:
 	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 };
 
+struct PHConstraintsSt{
+	std::vector<PHConstraintStatePrivate> points;
+	std::vector<PHConstraintStatePrivate> joints;
+	std::vector<PHConstraintStatePrivate> gears;
+};
+
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
@@ -53,6 +59,7 @@ public:
 	double	shrinkRateCorrection;
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
+	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	
 	PHConstraintEngine();
 	~PHConstraintEngine();
@@ -65,6 +72,8 @@ public:
 	void		UpdateGearNode();
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 
+	virtual void StepPart1();		///< 
+	virtual void StepPart2();		///< 
 	//virtual void Dynamics(double dt, int ct);		///< 
 	//virtual void Correction(double dt, int ct);		///< 
 	void UpdateSolids();			///< 結果をSolidに反映する
@@ -90,6 +99,12 @@ public:
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
+
+	virtual size_t GetStateSize() const;
+	virtual void ConstructState(void* m) const;
+	virtual void DestructState(void* m) const ;
+	virtual bool GetState(void* s) const ;
+	virtual void SetState(const void* s);
 };
 
 }	//	namespace Spr

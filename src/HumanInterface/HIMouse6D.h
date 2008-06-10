@@ -25,12 +25,11 @@ public:
 	/// 
 	HIMouse6D(){ bGood = false; }
 	virtual ~HIMouse6D(){}
-	///	デバイスのタイプ
 
 	bool IsGood(){return bGood;}
 
 	/// マウスの初期化
-	virtual bool Init(HISdkIf* sdk, const void* desc);
+	virtual bool Init(const void* desc);
 
 	///	押されているボタンに応じてpos,oriを更新する。Shiftが押されているときはaxisを更新する。
 	void Update(float dt);

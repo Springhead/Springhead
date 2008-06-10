@@ -1,4 +1,5 @@
 #include "HapticProcess.h"
+#include "BoxStack.h"
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -9,14 +10,20 @@
 #include <windows.h>
 #include <fstream>
 
+bool vhaptic = false;
+
+HapticProcess hprocess;	
+
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
-	K = 30;
-	D = 0;
+	K = 20;
+	D = 0.1;
 	bDisplayforce = false;
+	bInter = true;
 	hpointer.SetDynamical(false);
 	hpointer.SetFrozen(true);
 	stepcount = 1;
+	countmax = 100;
 };
 
 void HapticProcess::Init(){
@@ -45,59 +52,90 @@ void HapticProcess::Step(){
 }
 
 void HapticProcess::UpdateSpidar(){
+	const float posScale = 200;
 	spidarG6.Update(dt);
-	hpointer.SetFramePosition(spidarG6.GetPos() * 500);
-	hpointer.SetOrientation(spidarG6.GetOri());
-	hpointer.SetVelocity(spidarG6.GetVel());
-	hpointer.SetAngularVelocity(spidarG6.GetAngVel());
+	hpointer.SetFramePosition(spidarG6.GetPos() * posScale);
+//	hpointer.SetOrientation(spidarG6.GetOri());
+	hpointer.SetVelocity(spidarG6.GetVel() * posScale);
+//	hpointer.SetAngularVelocity(spidarG6.GetAngVel());
 }
 
 void HapticProcess::HapticRendering(){
-	addforce = Vec3d(0.0, 0.0, 0.0);          
+	double vibA = -200;
+	double vibB = 120;
+	double vibW = 300;
+	static double vibT = 0;
+	static bool vibFlag = false;
+	Vec3d vibV = spidarG6.GetVel();
+	static Vec3d vibVo = vibV;
+	double vibforce = 0;
+
+	displayforce = Vec3d(0.0, 0.0, 0.0);								
+	bool noContact = true;
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
-		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;
-		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;
-		float	f = (pPoint-cPoint) * neighborObjects[i].direction;
-		if(f < 0.0){
-			Vec3d ortho = f * neighborObjects[i].direction;
-			CalcForce(ortho);
-			neighborObjects[i].phSolid.AddForce(-addforce*10);//, cPoint);	// 力覚レンダリングで計算した力を剛体に加える
+		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;			// 剛体の近傍点のワールド座標系
+		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;							// 力覚ポインタの近傍点のワールド座標系
+		Vec3d force_dir = pPoint - cPoint;
+		Vec3d interpolation_normal;
+		if(bInter){
+			interpolation_normal = (stepcount * neighborObjects[i].face_normal + (50 - stepcount) * neighborObjects[i].last_face_normal) / 50;															
+			if(stepcount > 50)	interpolation_normal = neighborObjects[i].face_normal;				
+		}else{
+			interpolation_normal = neighborObjects[i].face_normal;
+		}
+
+		float	f = force_dir * interpolation_normal;													// 剛体の面の法線と内積をとる
+		if(f < 0.0){																					// 内積が負なら力を計算
+			Vec3d ortho = f * interpolation_normal;														// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
+			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
+			Vec3d dvortho = dv.norm() * interpolation_normal;
+			Vec3d addforce = -K * ortho + D * dvortho;													// 提示力計算
+
+			if(!vibFlag){
+				vibT = 0;
+				vibVo = vibV;
+			}
+			vibFlag = true;
+			if(vhaptic){
+				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT); //振動計算
+			}
+
+			// 将来プロキシにして摩擦を加える
+			//Vec3d friction_dir = -interpolation_normal % (force_dir.unit() % interpolation_normal);	// 剛体に働く摩擦の方向ベクトル 
+			//Vec3d friction_force = force_dir * friction_dir * friction_dir;
+			//Vec3d max_friction_force =	0.5 *addforce.norm() * friction_dir.unit();					// 最大静止摩擦力
+			//if(friction_force.norm() - max_friction_force.norm() > 0){  
+			//	addforce += friction_force - friction_force;  											// 摩擦力を加える
+			//}
+			displayforce += addforce + (vibforce * addforce.unit());																			 
+			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);										// 計算した力を剛体に加える
+			neighborObjects[i].test_force_norm = addforce.norm();
+			noContact = false;
 		}
 	}
-	if(bDisplayforce) spidarG6.SetForce(addforce);		// 力覚提示
-//	cout << addforce << endl;
-}
+	if (noContact) vibFlag = false;
 
-void HapticProcess::CalcForce(Vec3d dis){
-	addforce += -K * dis;
-};
+	vibT += dt;
+	if(bDisplayforce) spidarG6.SetForce(displayforce);													// 力覚提示
+}
 
 void HapticProcess::LocalDynamics(){
-	GenerateForce();
-	Integrate();
-	ClearForce();
-}
-
-void HapticProcess::GenerateForce(){}
-void HapticProcess::Integrate(){
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
-		SpatialVector vel;			// 剛体の速度（ワールド座標系）
+		SpatialVector vel;																				// 剛体の速度（ワールド座標系）
 		vel.v() = neighborObjects[i].phSolid.GetVelocity();
 		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
-		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce);// + neighborObjects[i].b) * dt;
-		if(stepcount == 1) vel += (neighborObjects[i].b + (neighborObjects[i].curb - neighborObjects[i].lastb)) * 0.05;
-		neighborObjects[i].phSolid.SetVelocity(vel.v());
-//		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
+		if(stepcount == 1) vel += (neighborObjects[i].curb - neighborObjects[i].lastb) *  bstack.dt;		// 衝突の影響を反映
+		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b) * dt;	// 力覚ポインタからの力による速度変化
+		neighborObjects[i].phSolid.SetVelocity(vel.v());																		
+		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
 		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel.v() * dt);
-//		neighborObjects[i].phSolid.SetOrientation((neighborObjects[i].phSolid.GetOrientation() * Quaterniond::Rot(vel.w() * dt)).unit());
+		neighborObjects[i].phSolid.SetOrientation(( Quaterniond::Rot(vel.w() * dt) * neighborObjects[i].phSolid.GetOrientation()).unit());
  		neighborObjects[i].phSolid.SetUpdated(true);
 		neighborObjects[i].phSolid.Step();
 	}
 }
-
-void HapticProcess::ClearForce(){}
 
 void HapticProcess::Keyboard(unsigned char key){
 	switch(key){
@@ -112,10 +150,28 @@ void HapticProcess::Keyboard(unsigned char key){
 				DSTR << "Force ON" << endl;
 			}
 			break;
+		case 'o':
+			if(vhaptic){
+				vhaptic = false;
+				DSTR << "Vibration Disconnect" << endl;
+			}else{
+				vhaptic = true;
+				DSTR << "Vibration Connect" << endl;
+			}
+			break;
 		case 'c':
 			spidarG6.SetForce(Vec3d(0, 0, 0));
 			spidarG6.Calib();
 			DSTR << "Calibration" << endl;
+			break;
+		case 'i':
+			if(bInter){
+				bInter = false;
+				DSTR << "Use Current Face_Normal" << endl;
+			}else{
+				bInter = true;
+				DSTR << "Use Interpolate Face_Normal" << endl;
+			}
 			break;
 		default:
 			break;

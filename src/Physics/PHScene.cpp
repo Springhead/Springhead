@@ -166,6 +166,25 @@ void PHScene::Integrate(){
 	count++;
 }	
 #endif
+void PHScene::IntegratePart1(){
+	for(PHEngines::iterator it = engines.dynamicalSystem; *it!=constraintEngine && it!=engines.end2(); ++it){
+		(*it)->Step();		
+	}
+	constraintEngine->StepPart1();
+}
+void PHScene::IntegratePart2(){
+	constraintEngine->StepPart2();
+	PHEngines::iterator it;
+	for(it = engines.dynamicalSystem; it!=engines.end2(); ++it){
+		if (*it==constraintEngine){
+			++it;
+			break;
+		}
+	}
+	for(; it!=engines.end2(); ++it){
+		(*it)->Step();
+	}
+}
 	
 void PHScene::SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode mode){
 	penaltyEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_PENALTY);
@@ -339,13 +358,17 @@ void PHScene::ConstructState(void* m) const{
 	new (m) PHSceneState();
 	char* p = (char*)m;
 	p += sizeof(PHSceneState);
-	new (p) PHContactDetectorSt();
+	if (constraintEngine){
+		constraintEngine->ConstructState(p);
+	}
 }
 void PHScene::DestructState(void* m) const{
 	char* p = (char*)m;
 	((PHSceneState*)p)->~PHSceneState();
 	p += sizeof(PHSceneState);
-	((PHContactDetectorSt*)p)->~PHContactDetectorSt();
+	if (constraintEngine){
+		constraintEngine->DestructState(p);
+	}
 }
 bool PHScene::GetState(void* s) const{
 	char* p = (char*) s;
@@ -363,6 +386,9 @@ void PHScene::SetState(const void* s){
 	if (constraintEngine){
 		constraintEngine->SetState(p);
 	}	
+}
+void PHScene::SetStateMode(bool bConstraints){
+	constraintEngine->bSaveConstraints = bConstraints;
 }
 
 }

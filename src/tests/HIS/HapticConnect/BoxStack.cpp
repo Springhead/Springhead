@@ -1,4 +1,5 @@
 #include "BoxStack.h"
+#include "HapticProcess.h"
 #include <vector>
 #include <iostream>
 #include <sstream>
@@ -10,16 +11,25 @@
 #include <Physics/PHConstraintEngine.h>
 #include <Base/TMatrix.h>
 
+BoxStack bstack;
+
 BoxStack::BoxStack(){
+	bsync=false;
+	calcPhys=true;
 	dt = 0.05;
-	gravity =  Vec3d(0, -9.8f, 0);
+	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
 	bStep = true;
 	phscene = NULL;
 	render = NULL;
-	range = 3.0;
+	range = 1.5;
 	neighborObjects.clear();
+}
+namespace Spr{
+void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
+	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
+	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 }
 
 void BoxStack::Init(int argc, char* argv[]){
@@ -29,6 +39,7 @@ void BoxStack::Init(int argc, char* argv[]){
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneの作成
 	phscene = GetSdk()->GetScene()->GetPHScene();
 	states = ObjectStatesIf::Create();
+	states2 = ObjectStatesIf::Create();
 
 	DesignObject();																// 剛体を作成
 
@@ -65,6 +76,7 @@ void BoxStack::InitCameraView(){
 
 void BoxStack::DesignObject(){
 	// soFloor用のdesc
+	phscene->SetStateMode(true);
 	desc.mass = 1e20f;
 	desc.inertia *= 1e30f;
 	soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
@@ -72,21 +84,35 @@ void BoxStack::DesignObject(){
 	soFloor->SetGravity(false);
 	
 	// soBox用のdesc
-	desc.mass = 5.0;
-	desc.inertia = 20.0 * Matrix3d::Unit();
+	desc.mass = 0.05;
+	desc.inertia = 0.033 * Matrix3d::Unit();
+	{
+		CDBoxDesc bd;
+		bd.boxsize = Vec3f(2,2,2);
+		meshBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+		meshBox->SetName("meshBox");
+		CDSphereDesc sd;
+		sd.radius = 1.2;
+		meshSphere = XCAST(GetSdk()->GetPHSdk()->CreateShape(sd));
+		meshSphere->SetName("meshSphere");
+		CDCapsuleDesc cd;
+		cd.radius = 1;
+		cd.length = 1;
+		meshCapsule = XCAST(GetSdk()->GetPHSdk()->CreateShape(cd));
+		meshCapsule->SetName("meshCapsule");
+	}
 
 	{
 		// meshConvex(soBox)のメッシュ形状
 		CDConvexMeshDesc md;
-
-		md.vertices.push_back(Vec3d(-1,-1,-1) * 2);
-		md.vertices.push_back(Vec3d(-1,-1, 1)* 2);	
-		md.vertices.push_back(Vec3d(-1, 1,-1)* 2);	
-		md.vertices.push_back(Vec3d(-1, 1, 1)* 2);
-		md.vertices.push_back(Vec3d( 1,-1,-1)* 2);	
-		md.vertices.push_back(Vec3d( 1,-1, 1)* 2);
-		md.vertices.push_back(Vec3d( 1, 1,-1)* 2);
-		md.vertices.push_back(Vec3d( 1, 1, 1)* 2);
+		md.vertices.push_back(Vec3d(-1,-1,-1));
+		md.vertices.push_back(Vec3d(-1,-1, 1));	
+		md.vertices.push_back(Vec3d(-1, 1,-1));	
+		md.vertices.push_back(Vec3d(-1, 1, 1));
+		md.vertices.push_back(Vec3d( 1,-1,-1));	
+		md.vertices.push_back(Vec3d( 1,-1, 1));
+		md.vertices.push_back(Vec3d( 1, 1,-1));
+		md.vertices.push_back(Vec3d( 1, 1, 1));
 		meshConvex = DCAST(CDConvexMeshIf, GetSdk()->GetPHSdk()->CreateShape(md));
 		meshConvex->SetName("meshConvex");
 
@@ -94,12 +120,13 @@ void BoxStack::DesignObject(){
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 30;
 			md.vertices[i].z *= 20;
+			md.vertices[i].y *= 20;
 		}
 		meshFloor = DCAST(CDConvexMeshIf, GetSdk()->GetPHSdk()->CreateShape(md));
 		meshFloor->SetName("meshFloor");
 	}
 	soFloor->AddShape(meshFloor);
-	soFloor->SetFramePosition(Vec3d(0,-2.7,0));
+	soFloor->SetFramePosition(Vec3d(0,-20 - 0.7,0));
 	soFloor->SetName("solidFloor");
 
 	// 力覚ポインタ
@@ -115,65 +142,60 @@ void BoxStack::DesignObject(){
 	phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 }
 
-void BoxStack::Start(){
-	instance = this;
-	if (!NWin()){
-		CreateWin();
-		wins.back()->SetScene(GetSdk()->GetScene());
-	}
-};
-
+void BoxStack::Idle(){
+	PhysicsStep();
+}
 void BoxStack::Step(){
-	UpdateHapticPointer();
-	DSTR << "-------------" << endl;
-	for(int i = 0; i < neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
-		neighborObjects[i].lastvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		neighborObjects[i].lastvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-
-		if(neighborObjects[i].phSolidIf == soFloor) continue;
-		DSTR << "v1" << neighborObjects[i].phSolidIf->GetVelocity() << endl;
+}
+void BoxStack::PhysicsStep(){
+	if (bsync) return;
+	if (calcPhys){
+		UpdateHapticPointer();
+		for(unsigned i = 0; i < neighborObjects.size(); i++){
+			if(!neighborObjects[i].blocal) continue;
+			neighborObjects[i].lastvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+			neighborObjects[i].lastvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		}
+		if(bStep) {
+			phscene->Step();
+		}
+		for(unsigned i = 0; i < neighborObjects.size(); i++){
+			if(!neighborObjects[i].blocal) continue;
+			SpatialVector curvel;
+			curvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
+			curvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+			neighborObjects[i].curb = (curvel - neighborObjects[i].lastvel) / dt;
+		}
+		FindNearestObject();	// 近傍物体の取得
+		PredictSimulation();
+		glutPostRedisplay();
+		calcPhys = false;
 	}
-	if(bStep)	FWAppGLUT::Step();
-	for(int i = 0; i < neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
-		SpatialVector curvel;
-		curvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		curvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].curb = (curvel - neighborObjects[i].lastvel);
+	if (hapticcount < dt/hprocess.dt) return;
+	hapticcount -= dt/hprocess.dt;
+	bsync = true;
+	calcPhys = true;
 
-		if(neighborObjects[i].phSolidIf == soFloor) continue;
-		DSTR << "v2" << neighborObjects[i].phSolidIf->GetVelocity() << endl;
-	}
-//	PHConstraintEngine* engine = phscene->GetConstraintEngine()->Cast();
-	//if(engine->solidPairs.width() > 2){
-	//	DSTR << engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->state << ":::"
-	//		<< engine->solidPairs.item(0, 2)->solid[1]->GetCenterPosition() << ":::"
-	//		<< engine->solidPairs.item(0, 2)->solid[1]->GetVelocity() << ":::"
-	//		<<engine->solidPairs.item(0, 2)->shapePairs.item(0,0)->normal << endl;
+	static DWORD last;
+	//if (phscene->GetCount() % 10==0){
+	//	DWORD t = timeGetTime();
+	//	DSTR << phscene->GetCount() << " dt:" << t-last << std::endl;
+	//	last = t;
 	//}
-	FindNearestObject();	// 近傍物体の取得
-	PredictSimulation();
-//	if(bStep)	FWAppGLUT::Step();
-	glutPostRedisplay();
- }
+}
 
 void BoxStack::Display(){
-	// 物理シミュレーションを進める
-	Step();			
-
 	// 描画の設定
 	GetSdk()->SetDebugMode(true);
 	render = window->render->Cast();
 	render->SetRenderMode(true, false);
 //	render->EnableRenderAxis();
-//	render->EnableRenderForce();
-//	render->EnableRenderContact();
+	render->EnableRenderForce();
+	render->EnableRenderContact();
 
 	// カメラ座標の指定
 	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
-		//Affinef af = cam->GetFrame()->GetTransform();
 		cam->GetFrame()->SetTransform(cameraInfo.view);
 	}else{
 		window->render->SetViewMatrix(cameraInfo.view.inv());
@@ -201,7 +223,7 @@ void BoxStack::Display(){
 	render->PushLight(ld);
 
 	DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
-	DrawHapticSolids();
+//	DrawHapticSolids();
 
 	render->PopLight();	//	光源の削除
 
@@ -257,10 +279,14 @@ void BoxStack::FindNearestObject(){
 		if(a2b.norm() < range){									// 近傍点までの長さから近傍物体を絞る
 			if(a2b.norm() < 0.01){								// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める		
 				pa = pb = Vec3d(0.0, 0.0, 0.0);
-				Vec3d dir = -neighborObjects[i].direction;
-				if(dir = Vec3f(0.0, 0.0, 0.0) ) dir = -(soPointer->GetCenterPosition() - wa);
+				Vec3d dir = -neighborObjects[i].face_normal;
+				if(dir == Vec3f(0.0, 0.0, 0.0) ) dir = -(soPointer->GetCenterPosition() - wa);
 				double dist = 0.0;
-				int cp = ContFindCommonPoint(a, b, a2w, b2w, dir, -DBL_MAX, 0.0, normal, pa, pb, dist);
+				int cp = ContFindCommonPoint(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
+				if(cp != 1){
+					ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
+					DSTR << "contfindcommonpoint don not find contact point" << endl;
+				}
 			}
 			if(!neighborObjects[i].blocal){					// 初めて近傍物体になった時はシーンの剛体の中身を力覚プロセスで使う剛体としてコピーする
 				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);
@@ -268,8 +294,9 @@ void BoxStack::FindNearestObject(){
 			}
 			neighborObjects[i].blocal = true;				// 近傍物体なのでblocalをtrueにする
 			neighborObjects[i].closestPoint = pa;			// 剛体近傍点のローカル座標
-			neighborObjects[i].pointerPoint = pb;		// 力覚ポインタ近傍点のローカル座標
-			neighborObjects[i].direction = normal;		// 剛体から力覚ポインタへの法線
+			neighborObjects[i].pointerPoint = pb;			// 力覚ポインタ近傍点のローカル座標
+			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;
+			neighborObjects[i].face_normal = normal;		// 剛体から力覚ポインタへの法線
 		}else{
 			neighborObjects[i].blocal = false;				// 近傍物体ではないのでblocalをfalseにする
 			neighborObjects[i].bfirstlocal = false;
@@ -277,9 +304,17 @@ void BoxStack::FindNearestObject(){
 	}
 }
 
+//#define DIVIDE_STEP
+
 void BoxStack::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
-	states->ReleaseState(phscene);		// SaveStateする前に解放する
+#ifdef DIVIDE_STEP
+	states2->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
+	//	LCPの直前までシミュレーションしてその状態を保存
+	phscene->ClearForce();
+	phscene->GenerateForce();
+	phscene->IntegratePart1();
+#endif
 	states->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
 
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
@@ -287,9 +322,10 @@ void BoxStack::PredictSimulation(){
 		
 		// 現在の速度を保存
 		SpatialVector currentvel, nextvel; 
-		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();											// 現在の速度
+		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();									// 現在の角速度									
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
+		if(neighborObjects[i].test_force_norm == 0)	neighborObjects[i].test_force_norm = 1;		// テスト力が0なら1にする  
 
 		// 拘束座標系を作るための準備
 		Vec3d rpjabs, vpjabs;
@@ -298,10 +334,10 @@ void BoxStack::PredictSimulation(){
 		Vec3d rjabs, vjabs;
 		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
 		vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
-		
+
 		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
 		Vec3d n, t[2], vjrel, vjrelproj;
-		n = -neighborObjects[i].direction;
+		n = -neighborObjects[i].face_normal;
 		vjrel = vjabs - vpjabs;										// 相対速度
 		vjrelproj = vjrel - (n * vjrel) * n;						// 相対速度ベクトルを法線に直交する平面に射影したベクトル
 		double vjrelproj_norm = vjrelproj.norm();
@@ -317,67 +353,64 @@ void BoxStack::PredictSimulation(){
 		t[1] = n % t[0];												// t[1]は法線とt[0]の外積できまる
 
 		// 何も力を加えないでシミュレーションを1ステップ進める
-		FWAppGLUT::Step();
+#ifdef DIVIDE_STEP
+		phscene->IntegratePart2();
+#else
+		phscene->Step();
+#endif
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		neighborObjects[i].lastb = neighborObjects[i].b;
 		neighborObjects[i].b = (nextvel - currentvel) / dt;
-		if(neighborObjects[i].phSolidIf != soFloor) DSTR << "v3" << nextvel << endl;
-		//DSTR << "----------"<< endl;
-		//DSTR << "current" << currentvel.v() << endl;
-		//DSTR << "nextvel" << nextvel.v() << endl;
-		//DSTR << "b" << neighborObjects[i].b << endl;
 
 		TMatrixRow<6, 3, double> u;
 		TMatrixRow<3, 3, double> force;
 		// 法線方向に力を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(n);//, cPoint);
-		FWAppGLUT::Step();
+		force.col(0) = neighborObjects[i].test_force_norm * n;
+		neighborObjects[i].phSolidIf->AddForce(force.col(0), cPoint);
+#ifdef DIVIDE_STEP
+		phscene->IntegratePart2();
+#else
+		phscene->Step();
+#endif
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		force.col(0) = n;
 		u.col(0) = (nextvel - currentvel) /dt - neighborObjects[i].b;
-		//		neighborObjects[i].A.col(0) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
-//		DSTR << "colum1" << neighborObjects[i].A.col(0) << endl;
-		//DSTR << "normal" <<-neighborObjects[i].direction << endl;
-		//DSTR << "current" << currentvel.v() << endl;
-		//DSTR << "nextvel" << nextvel.v() << endl;
-		//DSTR << "diff" << nextvel - currentvel << endl;
 
 		// n + t[0]方向に力を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(n + t[0]);// , cPoint);
-		FWAppGLUT::Step();
+		force.col(1) = neighborObjects[i].test_force_norm * (n + t[0]);
+		neighborObjects[i].phSolidIf->AddForce(force.col(1), cPoint);
+		phscene->IntegratePart2();
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		force.col(1) = n + t[0];
 		u.col(1) = (nextvel - currentvel) /dt - neighborObjects[i].b;
-//		neighborObjects[i].A.col(1) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
-		//DSTR << "colum2" << neighborObjects[i].A.col(1) << endl;
-		//DSTR << "current" << currentvel << endl;
-		//DSTR << "next" << nextvel<< endl;
-		//DSTR << "diff" << nextvel - currentvel << endl;
 
 		// n+t[1]方向力を加える
 		states->LoadState(phscene);
-		neighborObjects[i].phSolidIf->AddForce(n + t[1]);//, cPoint);
-		FWAppGLUT::Step();
+		force.col(2) = neighborObjects[i].test_force_norm * (n + t[1]);
+		neighborObjects[i].phSolidIf->AddForce(force.col(2), cPoint);
+#ifdef DIVIDE_STEP
+		phscene->IntegratePart2();
+#else
+		phscene->Step();
+#endif
 		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		force.col(2) = n + t[1];
 		u.col(2) = (nextvel - currentvel) /dt - neighborObjects[i].b;
-		//		neighborObjects[i].A.col(2) = (nextvel - currentvel) / dt - neighborObjects[i].b;//(nextvel - currentvel) / dt - neighborObjects[i].b;
-		//DSTR << "colum3" << neighborObjects[i].A.col(2) << endl;
-		//DSTR << "current" << currentvel << endl;
-		//DSTR << "next" << nextvel<< endl;
 		
 		neighborObjects[i].A = u  * force.inv();				// 運動係数Aの計算
+#ifdef DIVIDE_STEP
+		states2->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
+#else
 		states->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
-		if(neighborObjects[i].phSolidIf != soFloor){
-//			DSTR << "A" <<neighborObjects[i].A << endl;
-			DSTR << "b" << neighborObjects[i].b << endl;
-		}
+#endif
+		//if(neighborObjects[i].phSolidIf != soFloor){
+		//	DSTR << "A" <<neighborObjects[i].A << endl;
+		//	DSTR << "b" << neighborObjects[i].b << endl;
+		//	DSTR << neighborObjects[i].test_force_norm << endl;
+		//}
 	}
 }
 
@@ -387,50 +420,53 @@ void BoxStack::DisplayLineToNearestPoint(){
 		if(!neighborObjects[i].blocal) continue;
 		Vec3d pPoint = soPointer->GetPose() * neighborObjects[i].pointerPoint;
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;
+		Vec3d normal = neighborObjects[i].face_normal;
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
-		//glBegin(GL_LINES);
-		//glVertex3f(pPoint.X(), pPoint.Y(), pPoint.Z());
-		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		//glEnd();
+		glDisable(GL_DEPTH_TEST);
+		glBegin(GL_LINES);
+		glVertex3f(pPoint.X() + normal[0], pPoint.Y() + normal[1], pPoint.Z() + normal[2]);
+		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		glEnd();
+		glEnable(GL_DEPTH_TEST);
 
-		Vec3d rpjabs, vpjabs;
-		rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
-		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;	//接触点での速度
-		Vec3d rjabs, vjabs;
-		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();	//剛体の中心から接触点までのベクトル
-		vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
+		//Vec3d rpjabs, vpjabs;
+		//rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
+		//vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;	//接触点での速度
+		//Vec3d rjabs, vjabs;
+		//rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();	//剛体の中心から接触点までのベクトル
+		//vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
 
 		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
-		Vec3d n, t[2], vjrel, vjrelproj;
-		n = -neighborObjects[i].direction;
-		vjrel = vjabs - vpjabs;
-		vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
-		double vjrelproj_norm = vjrelproj.norm();
-		if(vjrelproj_norm < 1.0e-10){
-			t[0] = n % Vec3d(1.0, 0.0, 0.0);	
-			if(t[0].norm() < 1.0e-10)
-				t[0] = n % Vec3d(0.0, 1.0, 0.0);
-			t[0].unitize();
-		}
-		else{
-			t[0] = vjrelproj / vjrelproj_norm;
-		}
-		t[1] = n % t[0];
-		glBegin(GL_LINES);
-		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		glVertex3f(cPoint.X() + n[0], cPoint.Y() + n[1], cPoint.Z()+ n[2]);
-		glEnd();
-		glBegin(GL_LINES);
-		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		glVertex3f(cPoint.X() + t[0][0], cPoint.Y() + t[0][1], cPoint.Z() + t[0][2]);
-		glEnd();
-		glBegin(GL_LINES);
-		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		glVertex3f(cPoint.X() + t[1][0], cPoint.Y() + t[1][1], cPoint.Z() + t[1][2]);
-		glEnd();
+		//Vec3d n, t[2], vjrel, vjrelproj;
+		//n = -neighborObjects[i].face_normal;
+		//vjrel = vjabs - vpjabs;
+		//vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
+		//double vjrelproj_norm = vjrelproj.norm();
+		//if(vjrelproj_norm < 1.0e-10){
+		//	t[0] = n % Vec3d(1.0, 0.0, 0.0);	
+		//	if(t[0].norm() < 1.0e-10)
+		//		t[0] = n % Vec3d(0.0, 1.0, 0.0);
+		//	t[0].unitize();
+		//}
+		//else{
+		//	t[0] = vjrelproj / vjrelproj_norm;
+		//}
+		//t[1] = n % t[0];
+		//glBegin(GL_LINES);
+		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		//glVertex3f(cPoint.X() + n[0], cPoint.Y() + n[1], cPoint.Z()+ n[2]);
+		//glEnd();
+		//glBegin(GL_LINES);
+		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		//glVertex3f(cPoint.X() + t[0][0], cPoint.Y() + t[0][1], cPoint.Z() + t[0][2]);
+		//glEnd();
+		//glBegin(GL_LINES);
+		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+		//glVertex3f(cPoint.X() + t[1][0], cPoint.Y() + t[1][1], cPoint.Z() + t[1][2]);
+		//glEnd();
 	}
 }
 
@@ -446,6 +482,8 @@ void BoxStack::DrawHapticSolids(){
 };
 
 void BoxStack::Keyboard(unsigned char key){
+	states->ReleaseState(phscene);
+	states2->ReleaseState(phscene);
 	switch (key) {
 		case 'r':
 			if(bStep){
@@ -470,14 +508,12 @@ void BoxStack::Keyboard(unsigned char key){
 			break;
 		case ' ':
 			{
-				states->ReleaseState(phscene);
+				// ConvexBox
+				desc.mass = 0.05;
+				desc.inertia = 0.033 * Matrix3d::Unit();
 				soBox.push_back(phscene->CreateSolid(desc));
-				 CDSphereDesc sd;																				// 球体ディスクリプタ(sd)
-				sd.radius = 3.0;																					// 球体の半径
-			    CDSphereIf* sphere = DCAST(CDSphereIf, GetSdk()->GetPHSdk()->CreateShape(sd));           // sd に基づいて, 球体形状(sphere1)を作成
-				soBox.back()->AddShape(sphere);
-				//soBox.back()->AddShape(meshConvex);
-				soBox.back()->SetFramePosition(Vec3d(-1, 3, 4));
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
 				soBox.back()->SetOrientation(
 					Quaternionf::Rot(Rad(30), 'y') * 
 					Quaternionf::Rot(Rad(10), 'x'));  
@@ -488,6 +524,136 @@ void BoxStack::Keyboard(unsigned char key){
 			phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			DSTR << "Create Box" << endl;
 			DSTR << "NSolids		" <<  phscene->NSolids() << endl;
+			break;
+		case 'v':
+			{
+				// MeshCapsule
+				desc.mass = 0.05;
+				desc.inertia = 0.001 * Matrix3d::Unit();
+				soBox.push_back(phscene->CreateSolid(desc));
+				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
+				soBox.back()->AddShape(meshCapsule);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+	//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				ostringstream os;
+				os << "capsule" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+			}
+			break;
+		case 'b':
+			{
+				// MeshSphere
+				desc.mass = 0.05;
+				desc.inertia = 0.001 * Matrix3d::Unit();
+				soBox.push_back(phscene->CreateSolid(desc));
+				soBox.back()->AddShape(meshSphere);
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				ostringstream os;
+				os << "sphere" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+			}
+			break;
+		case 'n':
+			{
+				// ConvxMesh
+				desc.mass = 0.1;
+				desc.inertia = 0.1 * Matrix3d::Unit();
+				soBox.push_back(phscene->CreateSolid(desc));
+				CDConvexMeshDesc md;
+				int nv = rand() % 100 + 50;
+				for(int i=0; i < nv; ++i){
+					Vec3d v;
+					for(int c=0; c<3; ++c){
+						v[c] = (rand() % 100 / 100.0 - 0.5) * 5 * 1.3;
+					}
+					md.vertices.push_back(v);
+				}
+				CDShapeIf* s = GetSdk()->GetPHSdk()->CreateShape(md);
+				soBox.back()->AddShape(s);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				ostringstream os;
+				os << "sphere" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+			}
+			break;
+		case 'm':
+			{
+				// Lump of Box
+				soBox.push_back(phscene->CreateSolid(desc));
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				soBox.back()->AddShape(meshBox);
+				Posed pose;
+				pose.Pos() = Vec3d(3, 0, 0);
+				soBox.back()->SetShapePose(1, pose);
+				pose.Pos() = Vec3d(-3, 0, 0);
+				soBox.back()->SetShapePose(2, pose);
+				pose.Pos() = Vec3d(0, 3, 0);
+				soBox.back()->SetShapePose(3, pose);
+				pose.Pos() = Vec3d(0, -3, 0);
+				soBox.back()->SetShapePose(4, pose);
+				pose.Pos() = Vec3d(0, 0, 3);
+				soBox.back()->SetShapePose(5, pose);
+				pose.Pos() = Vec3d(0, 0, -3);
+				soBox.back()->SetShapePose(6, pose);
+				
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+	//			soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				ostringstream os;
+				os << "box" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+			    phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);				
+			}
+			break;
+		case 'x':
+			{
+				// Wall
+				PHSolidDesc soliddesc;
+				soliddesc.mass = 0.05;
+				soliddesc.inertia = 0.033 * Matrix3d::Unit();
+				int wall_height = 4;
+				int numbox = 5;
+				for(int i = 0; i < wall_height; i++){
+					for(int j = 0; j < numbox; j++){
+						soBox.push_back(phscene->CreateSolid(soliddesc));
+						soBox.back()->AddShape(meshBox);
+						soBox.back()->SetFramePosition(Vec3d(-4.0 + (2.0 + 0.1) * j , (2.0 + 0.1) * (double)i, -2.0));  
+					}
+				}
+			}
+			break;
+		case 'z':
+			{
+				// Tower
+				PHSolidDesc soliddesc;
+				double tower_radius = 5;
+				int tower_height = 5;
+				int numbox = 5;
+				double theta;
+				for(int i = 0; i < tower_height; i++){
+					for(int j = 0; j < numbox; j++){
+						soBox.push_back(phscene->CreateSolid(soliddesc));
+						soBox.back()->AddShape(meshBox);
+						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)numbox;
+//						soBox.back()->SetFramePosition(Vec3f(0.5, 20, 0));
+						soBox.back()->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i), tower_radius * sin(theta)));
+						soBox.back()->SetOrientation(Quaterniond::Rot(-theta, 'y'));  
+					}
+				}
+			}
 			break;
 		default:
 			break;

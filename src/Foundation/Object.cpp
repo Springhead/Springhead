@@ -183,9 +183,17 @@ void NamedObject::SetNameManager(NameManagerIf* s){
 	}
 	nameManager = DCAST(NameManager, s);
 	if (name.length()){
-		nameManager->names.Add(this);
+		if (nameManager) nameManager->names.Add(this);
 	}
 }
+NamedObject::NamedObject(const NamedObject& n):nameManager(n.nameManager){
+}
+NamedObject& NamedObject::operator=(const NamedObject& n){
+	SetName("");
+	SetNameManager(n.nameManager->Cast());
+	return *this;
+}
+
 NamedObject::~NamedObject(){
 	if (nameManager && name.length()){
 		nameManager->names.Del(this);
@@ -203,11 +211,15 @@ void NamedObject::PrintHeader(std::ostream& os, bool bClose) const {
 }
 void NamedObject::SetName(const char* n){
 	if (name.compare(n) == 0) return;
-	assert(nameManager);
-	if (name.length()) nameManager->names.Del(this);
+	if (name.length()){
+		assert(nameManager);
+		nameManager->names.Del(this);
+	}
 	name = n;
-	assert(nameManager);
-	nameManager->names.Add(this);
+	if (name.length()) {
+		assert(nameManager);
+		nameManager->names.Add(this);
+	}
 }
 
 //----------------------------------------------------------------------------
@@ -233,6 +245,7 @@ size_t ObjectStates::CalcStateSize(ObjectIf* o){
 	return sz;
 }
 void ObjectStates::ReleaseState(ObjectIf* o){
+	if (!state) return;
 	char* s = state;
 	DestructState(o, s);
 	delete state;
@@ -288,6 +301,7 @@ void ObjectStates::LoadState(ObjectIf* o){
 	LoadState(o, s);
 }
 void ObjectStates::LoadState(ObjectIf* o, char*& s){
+	if (!state) return;
 //	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
 //	DSTR << o->GetIfInfo()->ClassName() << std::endl;
 

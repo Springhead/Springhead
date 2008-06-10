@@ -11,7 +11,8 @@
 
 namespace Spr {;
 
-bool HIMouse6D::Init(HISdkIf* sdk, const void* desc){
+bool HIMouse6D::Init(const void* desc){
+	HISdkIf* sdk = GetSdk();
 	HIVirtualDeviceIf* vd = sdk->RentVirtualDevice("KeyMouse");
 	keyMouse = DCAST(DVKeyMouse, vd);
 	if (!keyMouse) return false;

@@ -48,7 +48,6 @@ UTRef<HIBaseIf> HISdk::CreateHumanInterface(const IfInfo* keyInfo){
 	UTRef<ObjectIf> obj = CreateObject(keyInfo, NULL);
 	HIBaseIf* hi = obj->Cast();
 	return hi;
-	return NULL;
 }
 UTRef<HIBaseIf> HISdk::CreateHumanInterface(const char* name){
 	IfInfo* info = IfInfo::Find(name);

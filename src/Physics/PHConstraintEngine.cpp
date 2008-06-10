@@ -97,11 +97,11 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	int nLine1 = cutRing.lines.size() - nLine0;
 	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
-		cutRing.MakeRing();
+		cutRing.MakeRing();		
 		section.clear();
 		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
 			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
-			for(; vtx->neighbor[0] != cutRing.vtxs.end-1; vtx = vtx->neighbor[0]){
+			do{
 				assert(finite(vtx->dist));
 				if (vtx->dist < 1e-200){
 					DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
@@ -140,9 +140,9 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 
 				if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
 				if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
-
 				engine->points.push_back(point);
-			}
+				vtx = vtx->neighbor[0];
+			} while (vtx!=cutRing.vtxs.end-1);
 		}
 	}
 	if (nPoint == (int)engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
@@ -175,9 +175,10 @@ PHConstraintEngine::PHConstraintEngine(){
 	posCorrectionRate	 = 0.3;		//< 0.5だと大きすぎて馬が発振してしまう(07/12/30 toki)
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
-	freezeThreshold		 = 0.0;
+	freezeThreshold		 = 0.01;
 	contactCorrectionRate = 0.3;
 	bGearNodeReady = false;
+	bSaveConstraints = false;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -460,6 +461,40 @@ Spr::UTPreciseTimer ptimer;
 namespace Spr{
 #endif
 
+
+void PHConstraintEngine::StepPart1(){
+	unsigned int ct = GetScene()->GetCount();
+	double dt = GetScene()->GetTimeStep();
+	// 必要ならばギアノードの更新
+	if(!bGearNodeReady){
+		UpdateGearNode();
+		bGearNodeReady = true;
+	}
+	//交差を検知
+	points.clear();
+	if(bContactEnabled) ContDetect(ct, dt);
+}
+void PHConstraintEngine::StepPart2(){
+	double dt = GetScene()->GetTimeStep();
+	unsigned int ct = GetScene()->GetCount();
+
+	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
+		(*it)->UpdateCacheLCP(dt);
+	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
+		(*it)->UpdateState();
+	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+		(*it)->UpdateState();
+	
+	SetupLCP();
+	IterateLCP();
+
+	SetupCorrectionLCP();
+	IterateCorrectionLCP();
+
+	//位置・速度の更新
+	UpdateSolids();	
+}
+	
 void PHConstraintEngine::Step(){
 //	DSTR << "nContact:" <<  points.size() << std::endl;
 	unsigned int ct = GetScene()->GetCount();
@@ -513,5 +548,64 @@ PHConstraintsIf* PHConstraintEngine::GetContactPoints(){
 	return DCAST(PHConstraintsIf, &points);
 }
 
-}
 
+//	state関係の実装
+size_t PHConstraintEngine::GetStateSize() const{
+	return Detector::GetStateSize() + 
+		(bSaveConstraints ? sizeof(PHConstraintsSt) : 0);
+}
+void PHConstraintEngine::ConstructState(void* m) const{
+	char* p = (char*)m;
+	if (bSaveConstraints){
+		p += Detector::GetStateSize();
+		new (p) PHConstraintsSt;
+	}
+}
+void PHConstraintEngine::DestructState(void* m) const {
+	Detector::DestructState(m);
+	char* p = (char*)m;
+	if (bSaveConstraints){
+		p += Detector::GetStateSize();
+		((PHConstraintsSt*)p)->~PHConstraintsSt();
+	}
+}
+bool PHConstraintEngine::GetState(void* s) const {
+	Detector::GetState(s);
+	char* p = (char*)s;
+	if (bSaveConstraints){
+		PHConstraintsSt* st = (PHConstraintsSt*)(p + Detector::GetStateSize());
+		st->points.resize(points.size());
+		for(size_t i=0; i<points.size(); ++i){
+			points[i]->GetState(&st->points[i]);
+		}		
+		st->joints.resize(joints.size());
+		for(size_t i=0; i<joints.size(); ++i){
+			joints[i]->GetState(&st->gears[i]);
+		}
+		st->gears.resize(gears.size());
+		for(size_t i=0; i<gears.size(); ++i){
+			gears[i]->GetState(&st->gears[i]);
+		}
+	}
+	return true;
+}
+void PHConstraintEngine::SetState(const void* s){
+	Detector::SetState(s);
+	char* p = (char*)s;
+	if (bSaveConstraints){
+		PHConstraintsSt* st = (PHConstraintsSt*)(p + Detector::GetStateSize());
+		st->points.resize(points.size());
+		for(size_t i=0; i<points.size(); ++i){
+			points[i]->SetState(&st->points[i]);
+		}		
+		st->joints.resize(joints.size());
+		for(size_t i=0; i<joints.size(); ++i){
+			joints[i]->SetState(&st->gears[i]);
+		}
+		st->gears.resize(gears.size());
+		for(size_t i=0; i<gears.size(); ++i){
+			gears[i]->SetState(&st->gears[i]);
+		}
+	}
+}
+}

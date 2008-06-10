@@ -241,6 +241,8 @@ public:
 	void ClearForce();
 	void GenerateForce();
 	void Integrate();
+	void IntegratePart1();
+	void IntegratePart2();
 
 	/** @brief シーンを空にする
 	 */
@@ -278,6 +280,10 @@ public:
 		@return PenaltyEngineへのポインタ
 	*/
 	PHPenaltyEngineIf*  GetPenaltyEngine();
+	/** @brief 状態の保存 (ObjectStates の保存）に，
+		Constraints が持つ拘束力を含めるかどうか設定する．
+	*/
+	void SetStateMode(bool bConstraints);
 
 };
 

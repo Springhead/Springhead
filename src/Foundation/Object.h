@@ -185,6 +185,13 @@ public:
 	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
 
+#define ACCESS_PRIVATE(cls)															\
+	virtual size_t GetStateSize() const { return sizeof(cls##StatePrivate); }				\
+	virtual void ConstructState(void* m) const { new(m) cls##StatePrivate;}				\
+	virtual void DestructState(void* m) const { ((cls##StatePrivate*)m)->~cls##StatePrivate(); }	\
+	virtual const void* GetStateAddress() const { return (cls##StatePrivate*)this; }		\
+	virtual bool GetState(void* s) const { *(cls##StatePrivate*)s=*this; return true; }	\
+	virtual void SetState(const void* s){ *(cls##StatePrivate*)this = *(cls##StatePrivate*)s;}	\
 
 ///	デスクリプタの設定・取得などアクセス用関数の定義
 #define ACCESS_DESC(cls)															\
@@ -199,6 +206,7 @@ public:
 ///	ステートとデスクリプタをまとめて定義
 #define ACCESS_DESC_STATE(cls) ACCESS_STATE(cls) ACCESS_DESC(cls)
 #define ACCESS_DESC_STATE_PRIVATE(cls) ACCESS_STATE_PRIVATE(cls) ACCESS_DESC(cls)
+#define ACCESS_DESC_PRIVATE(cls) ACCESS_PRIVATE(cls) ACCESS_DESC(cls)
 
 }	//	namespace Spr;
 
@@ -287,6 +295,8 @@ protected:
 	NameManager* nameManager;		///<	名前の検索や重複管理をするもの．SceneやSDKなど．
 public:
 	NamedObject():nameManager(NULL){}
+	NamedObject(const NamedObject& n);
+	NamedObject& operator=(const NamedObject& n);
 	~NamedObject();
 	///	名前の取得
 	const char* GetName() const { return name.c_str(); }

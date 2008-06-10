@@ -91,17 +91,22 @@ void PHContactPoint::CompBias(){
 	double overlap = 0.01;
 
 #if 1
-	//	跳ね返り係数: 2物体の平均値を使う
-	double e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
-	
 	//	接触用の correctionRate
 	double contactCorrectionRate = 0;
+
+	double e;
 	//	速度が小さい場合は、跳ね返りなし。
 //	if (vjrel[0]*GetScene()->GetTimeStep() > -0.001){
 	if (vjrel[0]*GetScene()->GetTimeStep() > -0.1){
-		e=0;
+		e = 0;
 		contactCorrectionRate = engine->contactCorrectionRate;
+	}else{
+		//	跳ね返り係数: 2物体の平均値を使う
+		e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
+		//	跳ね返るときは補正なし
+		contactCorrectionRate = 0;
 	}
+
 	if (overlap > shapePair->depth) overlap = shapePair->depth;
 	db[0] = - contactCorrectionRate * (shapePair->depth - overlap) / GetScene()->GetTimeStep() + e * vjrel[0];
 #endif

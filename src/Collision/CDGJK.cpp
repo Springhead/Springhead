@@ -510,14 +510,14 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				}
 
 				DSTR << "No including traiangle found." << std::endl;
-#if USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
-				DSTR << "tri: 0-2; vtx:3" << std::endl;
-				for(int i=0; i<4; ++i){
-					DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
-				}
-				DebugBreak();
-				ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
-#endif
+//#if USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
+//				DSTR << "tri: 0-2; vtx:3" << std::endl;
+//				for(int i=0; i<4; ++i){
+//					DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+//				}
+//				DebugBreak();
+//				ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
+//#endif
 				ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
 				goto final;
 			}
@@ -800,8 +800,8 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 
 inline bool IsDegenerate(const Vec3d& w) {
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1){
-//		if ((allUsedBits & curPoint) && (p_q[i]-w).square() < 1e-6){
-		if ((allUsedBits & curPoint) && (p_q[i]-w).square() < epsilon2){
+		if ((allUsedBits & curPoint) && (p_q[i]-w).square() < 1e-6){
+//		if ((allUsedBits & curPoint) && (p_q[i]-w).square() < epsilon2){
 			return true;
 		}
 	}
@@ -828,7 +828,7 @@ void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		w = a2w * p[lastId]  -  b2w * q[lastId];
 		double supportDist = w*v/dist;
 		if (maxSupportDist < supportDist) maxSupportDist= supportDist;
-		if (dist - maxSupportDist <= dist * epsilon) break;
+		if (dist - maxSupportDist <= dist * epsilon*10) break;
 		if (IsDegenerate(w)) break;
 		p_q[lastId] = w;
 		allUsedBits = usedBits|lastBit;

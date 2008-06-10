@@ -59,6 +59,7 @@ Vec3f CDConvexMesh::GetCenter(){
 	return center;
 }
 
+
 bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();
 	//	’¸“_‚ª‚Ç‚Á‚¿‘¤‚É‚ ‚é‚©’²‚×‚éD

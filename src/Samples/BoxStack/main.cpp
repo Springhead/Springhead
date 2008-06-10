@@ -279,6 +279,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			scene->Step();
 			break;
 		case ' ':
+			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshConvex);
@@ -292,6 +293,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'c':
+			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
@@ -304,6 +306,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'd':
+			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshSphere);
@@ -315,6 +318,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'm':
+			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				CDConvexMeshDesc md;
@@ -336,6 +340,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'v':
+			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
@@ -367,10 +372,11 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'z':
+			states->ReleaseState(scene);
 			{
 				PHSolidDesc soliddesc;
 				double tower_radius = 10;
-				int tower_height = 10;
+				int tower_height = 5;
 				int numbox = 20;
 				double theta;
 				for(int i = 0; i < tower_height; i++){
@@ -385,6 +391,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				}
 			}break;
 		case 'x':
+			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
@@ -492,6 +499,7 @@ int __cdecl main(int argc, char* argv[]){
 	dscene.timeStep = 0.02;
 	dscene.numIteration = 15;
 	scene = sdk->CreateScene(dscene);				// ƒV[ƒ“‚Ìì¬
+	scene->SetStateMode(true);
 	states = ObjectStatesIf::Create();
 
 	// soFloor—p‚Ìdesc
@@ -579,7 +587,7 @@ int __cdecl main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	render = grSdk->CreateDebugRender();
 	render->SetRenderMode(true, false);
-	render->EnableRenderAxis();
+//	render->EnableRenderAxis();
 	render->EnableRenderForce();
 	render->EnableRenderContact();
 
