@@ -313,7 +313,7 @@ struct ObjectStatesIf: public ObjectIf{
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
 	///	ObjectStateオブジェクトを作成する．
-	static ObjectStatesIf* Create();
+	static ObjectStatesIf* SPR_CDECL Create();
 };
 
 }
