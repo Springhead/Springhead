@@ -56,12 +56,7 @@ ObjectIf* PHConstraint::GetChildObject(size_t i){
 	return solid[i]->Cast();
 }
 
-
 void PHConstraint::AfterSetDesc(){
-	Xj[0].r    = poseSocket.Pos();
-	Xj[0].q    = poseSocket.Ori();
-	Xj[1].r    = posePlug.Pos();
-	Xj[1].q	   = posePlug.Ori();
 	SceneObject::AfterSetDesc();
 }
 
@@ -78,6 +73,12 @@ void PHConstraint::UpdateState(){
 
 
 void PHConstraint::CompJacobian(){ // 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
+	// Xj[i] : 剛体の質量中心からソケット/プラグへの変換
+	Xj[0].r    = poseSocket.Pos() - solid[0]->center;
+	Xj[0].q    = poseSocket.Ori();
+	Xj[1].r    = posePlug.Pos() - solid[1]->center;
+	Xj[1].q	   = posePlug.Ori();
+
 	SpatialTransform X[2];
 	X[0].r = solid[0]->GetCenterPosition();
 	X[0].q = solid[0]->GetOrientation();
@@ -145,8 +146,9 @@ void PHConstraint::CompResponseMatrix(){
 	}
 	/** 最大の対角要素との比がepsよりも小さい対角要素がある場合，
 		数値的不安定性の原因となるのでその成分は拘束対象から除外する
+		＊epsを大きくとると，必要な拘束まで無効化されてしまうので、調整は慎重に。
 	 */
-	const double eps = 0.001, epsabs = 1.0e-10;
+	const double eps = 0.000001, epsabs = 1.0e-10;
 	double Amax = 0.0, Amin;
 	for(j = 0; j < 6; j++)
 		if(constr[j] && A[j] > Amax)
@@ -154,8 +156,10 @@ void PHConstraint::CompResponseMatrix(){
 	Amin = Amax * eps;
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
-		if(A[j] < Amin || A[j] < epsabs)
+		if(A[j] < Amin || A[j] < epsabs){
 			constr[j] = false;
+			DSTR << j << "-th constraint ill-conditioned! disabled." << endl;
+		}
 		else
 			Ainv[j] = 1.0 / (A[j] + dA[j]);
 	}

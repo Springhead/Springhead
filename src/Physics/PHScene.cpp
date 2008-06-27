@@ -98,6 +98,8 @@ PHRootNodeIf* PHScene::GetRootNode(int i){
 
 PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc){
 	PHTreeNode* node = constraintEngine->CreateTreeNode(desc, parent->Cast(), child->Cast());
+	if(!node)
+		return NULL;
 	node->SetScene(Cast());
 	return node->Cast();
 }
@@ -124,6 +126,20 @@ int PHScene::NPaths()const{
 PHPathIf* PHScene::GetPath(int i){
 	return constraintEngine->paths[i]->Cast();
 }
+PHRayIf* PHScene::CreateRay(const PHRayDesc& desc){
+	PHRay* ray = DBG_NEW PHRay();
+	ray->SetDesc(&desc);
+	ray->SetScene(Cast());
+	rays.push_back(ray);
+	return ray->Cast();
+}
+int PHScene::NRays()const{
+	return rays.size();
+}
+PHRayIf* PHScene::GetRay(int i){
+	return rays[i]->Cast();
+}
+
 void PHScene::Clear(){
 	engines.Clear();
 	Init();
@@ -236,7 +252,7 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 size_t PHScene::NChildObject() const{
 	//return engines.size();
 	return NSolids() + NJoints() + NRootNodes() + NGears() + NPaths()
-		+ NContacts();
+		+ NContacts() + NRays();
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
 	//return engines[pos]->Cast();
@@ -251,6 +267,8 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	if(pos < (size_t)NPaths()) return GetPath(pos);
 	pos -= NPaths();
 	if(pos < (size_t)NContacts()) return GetContact(pos);
+	pos -= NContacts();
+	if(pos < (size_t)NRays()) return GetRay(pos);
 	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
@@ -280,6 +298,11 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	PHPathIf* path = DCAST(PHPathIf, o);
 	if(path && constraintEngine->AddChildObject(o))
 		ok = true;
+	PHRayIf* ray = DCAST(PHRayIf, o);
+	if(ray){
+		rays.push_back(ray->Cast());
+		ok = true;
+	}
 	// MergeScene‚È‚Ç‚Å‘¼‚ÌScene‚©‚çˆÚ“®‚µ‚Ä‚­‚éê‡‚à‚ ‚é‚Ì‚ÅŠ—LŒ ‚ðXV‚·‚é
 	if(ok){
 		SceneObject* so = DCAST(SceneObject, o);
@@ -295,6 +318,8 @@ bool PHScene::AddChildObject(ObjectIf* o){
 				sprintf(name, "gear%d", NGears()-1);
 			if(path)
 				sprintf(name, "path%d", NPaths()-1);
+			if(ray)
+				sprintf(name, "ray%d", NRays() - 1);
 			so->SetName(name);
 		}
 	}
@@ -321,7 +346,16 @@ bool PHScene::DelChildObject(ObjectIf* o){
 	PHPathIf* path = DCAST(PHPathIf, o);
 	if(path)
 		return constraintEngine->DelChildObject(o);
-	
+	PHRayIf* ray = DCAST(PHRayIf, o);
+	if(ray){
+		PHRays::iterator it = find(rays.begin(), rays.end(), ray->Cast());
+		if(it != rays.end()){
+			rays.erase(it);
+			return true;
+		}
+		return false;
+	}
+
 	return false;
 }
 
@@ -389,6 +423,52 @@ void PHScene::SetState(const void* s){
 }
 void PHScene::SetStateMode(bool bConstraints){
 	constraintEngine->bSaveConstraints = bConstraints;
+}
+
+//----------------------------------------------------------------------------
+//	PHRay
+void PHRay::Apply(){
+	Vec3f ori, dir;
+	Vec3f point[2];
+	float offset[2];
+	int total = 0;
+	Posed p, pinv;
+
+	hits.clear();
+
+	PHScene* phScene = DCAST(PHScene, GetScene());
+	for(int i = 0; i < phScene->NSolids(); i++){
+		PHSolid* solid = DCAST(PHSolid, phScene->GetSolids()[i]);
+
+		for(int j = 0; j < (int)solid->NShape(); j++){
+			p = (solid->GetPose() * solid->GetShapePose(j));
+			pinv = p.Inv();
+			ori = pinv * origin;
+			dir = pinv.Ori() * direction;
+			CDShape* shape = solid->GetShape(j)->Cast();
+			int num = shape->LineIntersect(ori, dir, point, offset);
+			for(int k = 0; k < num; k++){
+				hits.push_back(PHRaycastHit());
+				hits.back().solid = solid->Cast();
+				hits.back().shape = shape->Cast();
+				hits.back().point = p * point[k];
+				hits.back().distance = offset[k];
+			}
+		}
+	}
+
+}
+
+PHRaycastHit* PHRay::GetNearest(){
+	PHRaycastHit* nearest = NULL;
+	float distMin = FLT_MAX;
+	for(int i = 0; i < (int)hits.size(); i++){
+		if(hits[i].distance < distMin){
+			nearest = &hits[i];
+			distMin = hits[i].distance;
+		}
+	}
+	return nearest;
 }
 
 }

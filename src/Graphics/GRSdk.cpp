@@ -109,11 +109,31 @@ bool GRSdk::AddChildObject(ObjectIf* o){
 			}
 			return true;
 		}
+		return false;
 	}
 	Object* obj = DCAST(Object, o);
 	assert(obj);
 	objects.push_back(obj);
 	return true;
+}
+bool GRSdk::DelChildObject(ObjectIf* o){
+	GRScene* s = DCAST(GRScene, o);
+	if (s){
+		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+		if (it != scenes.end()){
+			scenes.erase(it);
+			return true;
+		}
+		return false;
+	}
+	Object* obj = DCAST(Object, o);
+	assert(obj);
+	Objects::iterator it = std::find(objects.begin(), objects.end(), obj);
+	if(it != objects.end()){
+		objects.erase(it);
+		return true;
+	}
+	return false;
 }
 void GRSdk::Clear(){
 	Sdk::Clear();

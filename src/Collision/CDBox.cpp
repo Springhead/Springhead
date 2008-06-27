@@ -29,6 +29,20 @@ CDBox::CDBox(const CDBoxDesc& desc) {
 	boxsize = desc.boxsize;
 	Recalc();
 }
+bool CDBox::IsInside(const Vec3f& p){
+	Vec3f half = 0.5f * boxsize;
+	return -half.x < p.x && p.x < half.x &&
+		   -half.y < p.y && p.y < half.y &&
+		   -half.z < p.z && p.z < half.z;
+}
+float CDBox::CalcVolume(){
+	return boxsize.x * boxsize.y * boxsize.z;
+}
+Matrix3f CDBox::CalcMomentOfInertia(){
+	Vec3f sz = boxsize;
+	Vec3f sz2 = Vec3f(sz.x*sz.x, sz.y*sz.y, sz.z*sz.z);
+	return 1.0f/12.0f * Matrix3f::Diag(sz2.y + sz2.z, sz2.x + sz2.z, sz2.x + sz2.y);
+}
 
 void CDBox::Recalc(){
 	// ローカル座標系で、boxの位置を設定
@@ -78,6 +92,7 @@ void CDBox::Recalc(){
 	qfaces[5].vtxs[1] = 3;
 	qfaces[5].vtxs[2] = 7;
 	qfaces[5].vtxs[3] = 4;
+	curPos = 0;
 }
 
 // サポートポイントを求める

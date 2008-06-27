@@ -26,6 +26,7 @@ class CDFace:public Object{
 public:
 	SPR_OBJECTDEF(CDFace);
 	int vtxs[3];	///< 面の頂点ID
+	Vec3f	normal;
 
 	/// CDFaceの面のインデックス数
 	virtual int NIndex(){ return 3; }
@@ -39,7 +40,8 @@ class CDFaces:public std::vector<CDFace>{
 ///	凸多面体
 class CDConvexMesh : public CDConvex{
 protected:
-	Vec3f center;
+	/// 全頂点の平均
+	Vec3f average;
 public:
 	SPR_OBJECTDEF(CDConvexMesh);
 
@@ -61,6 +63,9 @@ public:
 
 	///	頂点から面や接続情報を生成する．
 	void CalcFace();
+
+	///
+	virtual bool IsInside(const Vec3f& p);
 	
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
@@ -73,16 +78,19 @@ public:
 	Vec3f* GetVertices();
 	size_t NVertex();
 
-	///	中心（大体真ん中）の位置を返す
-	virtual Vec3f GetCenter();
 	///
 	virtual bool GetDesc(void *desc) const;
+
+	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 
 protected:
 	///	同一平面上で接続されている3角形をマージする
 	void MergeFace();
-	///	中心座標を計算する。
-	void CalcCenter();
+	/// 面の法線を計算(Inside用)
+	void CalcFaceNormals();
+
+	///	平均座標を計算する。
+	void CalcAverage();
 
 };
 

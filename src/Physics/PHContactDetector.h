@@ -95,7 +95,7 @@ public:
 			for(int j = 0; j < solid[i]->NShape(); j++){
 				CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
 				Posed lp = solid[i]->GetShapePose(j);
-				Vec3d c = lp * convex->GetCenter();
+				Vec3d c = lp * convex->CalcCenterOfMass();
 				deltaPos[i][j] = solid[i]->GetDeltaPosition(c);
 				shapePose[i][j] = solid[i]->GetPose() * lp;
 				shapePose[i][j].Pos() -= deltaPos[i][j];

@@ -51,6 +51,12 @@ void PHFrame::SetPose(Posed p){
 	pose = p;
 }
 
+void PHFrame::CompInertia(){
+	mass = shape->material.density * shape->CalcVolume();
+	center = shape->CalcCenterOfMass();
+	inertia = shape->material.density * shape->CalcMomentOfInertia();
+}
+
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
 PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
@@ -399,6 +405,31 @@ void PHSolid::AfterSetDesc(){
 	SceneObject::AfterSetDesc();
 }
 
+void PHSolid::CompInertia(){
+	mass = 0.0;
+	center.clear();
+	
+	for(int i = 0; i < (int)frames.size(); i++){
+		frames[i]->CompInertia();
+		mass += frames[i]->mass;
+		center += frames[i]->mass * (frames[i]->pose * frames[i]->center);
+	}
+	
+	if(mass < 1.0e-12)
+		DSTR << "too small mass!" << std::endl;
+	else
+		center *= (1.0 / mass);
+	
+	Matrix3d R;
+	inertia.clear();
+	for(int i = 0; i < (int)frames.size(); i++){
+		frames[i]->pose.Ori().ToMatrix(R);
+		Matrix3f offset;
+		CDConvex::OffsetInertia(center - frames[i]->pose * frames[i]->center, offset);
+		inertia += R * frames[i]->inertia * R.trans() + frames[i]->mass * offset;
+	}
+
+}
 
 //----------------------------------------------------------------------------
 //	PHSolidContainer

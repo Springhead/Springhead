@@ -14,7 +14,7 @@
 
 namespace Spr{;
 	
-/// 球体
+/// カプセル
 class CDCapsule: public CDConvex, public CDCapsuleDesc{
 public:
 	SPR_OBJECTDEF(CDCapsule);
@@ -23,6 +23,9 @@ public:
 	//CDCapsule(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
 	//CDCapsule(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
 	CDCapsule(const CDCapsuleDesc& desc);
+	
+	virtual bool IsInside(const Vec3f& p);
+	virtual float CalcVolume();
 	
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;

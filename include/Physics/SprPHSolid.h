@@ -114,6 +114,10 @@ struct PHSolidIf : public SceneObjectIf{
 		@param I 慣性テンソル
 	 */
 	void		SetInertia(const Matrix3d& I);
+
+	/** @brief 形状と密度から重心，質量，慣性テンソルを自動的に設定する
+	 */
+	void		CompInertia();
 	
 	/** @brief 剛体の位置を取得する
 		@return シーンに対する剛体フレーム原点の位置

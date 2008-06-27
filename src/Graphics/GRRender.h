@@ -262,6 +262,11 @@ public:
 	const GRCameraDesc& GetCamera(){ return camera; }
 	///	スクリーンサイズとプロジェクション行列の設定
 	virtual void Reshape(Vec2f pos, Vec2f sz);
+	/// Viewportの基点座標の取得
+	Vec2f GetViewportPos(){ return viewportPos; }
+	/// Viewportのサイズの取得
+	Vec2f GetViewportSize(){ return viewportSize; }
+
 };
 
 /**	@class	GRDevice

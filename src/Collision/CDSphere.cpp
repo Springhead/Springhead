@@ -55,11 +55,14 @@ bool CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
 float CDSphere::GetRadius() {
 	return radius;
 }
+bool CDSphere::IsInside(const Vec3f& p){
+	return p.square() < radius * radius;
+}
 float CDSphere::CalcVolume(){
 	return float(4.0/3.0*M_PI*radius*radius*radius);
 }
 Matrix3f CDSphere::CalcMomentOfInertia(){
-	return Matrix3f();
+	return 0.4f * radius * radius * Matrix3f::Unit();
 }
 
 }	//	namespace Spr

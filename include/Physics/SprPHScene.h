@@ -30,6 +30,36 @@ struct PHConstraintEngineIf;
 struct PHGravityEngineIf;
 struct PHPenaltyEngineIf;
 
+/// Ray castの結果保存用
+struct PHRaycastHit{
+	PHSolidIf* solid;
+	CDShapeIf* shape;
+	Vec3f	 point;
+	float	 distance;
+//	PHRaycastResultEntry(){};
+//	PHRaycastResultEntry(PHSolidIf* sld, CDShapeIf* shp, const Vec3f& p, float o):solid(sld), shape(shp), point(p), offset(o){}
+};
+/*struct PHRaycastResult{
+	 std::vector<PHRaycastResultEntry> results;
+	 PHRaycastResultEntry* Nearest();
+};*/
+struct PHRayDesc{
+	Vec3d origin;
+	Vec3d direction;
+};
+struct PHRayIf : SceneObjectIf{
+public:
+	SPR_IFDEF(PHRay);
+	Vec3d	GetOrigin();
+	void	SetOrigin(const Vec3d& ori);
+	Vec3d	GetDirection();
+	void	SetDirection(const Vec3d& dir);
+	void	Apply();
+	int		NHits();
+	PHRaycastHit* GetHits();
+	PHRaycastHit* GetNearest();
+};
+
 typedef PHConstraintDesc PHJointDesc;
 
 /// 物理エンジンのシーンの状態
@@ -213,6 +243,17 @@ public:
 	*/
 	PHPathIf* GetPath(int i);
 
+	/** @brief raycastの光線を作成する
+	 */
+	PHRayIf* CreateRay(const PHRayDesc& desc = PHRayDesc());
+
+	/** @brief 光線の数
+	 */
+	int NRays();
+
+	/** @brief 光線を取得する
+	 */
+	PHRayIf* GetRay(int i);
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ
@@ -234,7 +275,7 @@ public:
 		@param count カウント数
 	 */
 	void SetCount(unsigned count);
-	
+
 	/** @brief シーンの時刻を進める
 	 */
 	void Step();

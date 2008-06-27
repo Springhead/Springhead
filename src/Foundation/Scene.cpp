@@ -38,7 +38,7 @@ bool ObjectNames::Add(NamedObject* obj){
 	int i=1;
 	do{
 		std::ostringstream ss;
-		ss << "_" << i << '\0';
+		ss << "_" << i;
 		obj->name = base + ss.str();
 		rv = insert(obj);
 		i++;

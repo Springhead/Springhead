@@ -55,9 +55,6 @@ bool CDConvexMesh::GetDesc(void *ptr) const {
 	desc->vertices = base;
 	return true;
 }
-Vec3f CDConvexMesh::GetCenter(){
-	return center;
-}
 
 
 bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
@@ -181,11 +178,18 @@ void CDConvexMesh::CalcFace(){
 		--i;
 		--pos;
 	}
-	//	面の頂点IDを振りなおす
+	// 平均座標の計算
+	CalcAverage();
+
+	//	面の頂点IDを振りなおす / 法線を計算
 	for(CDFaces::iterator it = faces.begin(); it != faces.end(); ++it){
 		for(int i=0; i<3; ++i){
 			it->vtxs[i] = vtxIds.FindPos(it->vtxs[i]);
 		}
+		it->normal = (base[it->vtxs[2]] - base[it->vtxs[0]]) % (base[it->vtxs[1]] - base[it->vtxs[0]]);
+		it->normal.unitize();
+		if(it->normal * (base[it->vtxs[0]] - average) < 0.0f)
+			it->normal *= -1.0f;
 	}
 	//	隣の頂点リストを作る．(GJKのSupportに使用)
 	neighbor.resize(vtxIds.size());
@@ -200,7 +204,7 @@ void CDConvexMesh::CalcFace(){
 	}
 	//	凸多面体の面のうち，半平面表現に必要な面だけを前半に集める．
 	MergeFace();
-	CalcCenter();
+	//CalcCenter();
 }
 void CDConvexMesh::MergeFace(){
 	//int nf = faces.size();
@@ -211,11 +215,12 @@ void CDConvexMesh::MergeFace(){
 			CDFace& b = faces[j];
 			Vec3f& pa = base[a.vtxs[0]];
 			Vec3f& pb = base[b.vtxs[0]];
-			Vec3f na =  ((base[a.vtxs[2]] - pa) ^ (base[a.vtxs[1]] - pa)).unit();
-			Vec3f nb =  ((base[b.vtxs[2]] - pb) ^ (base[b.vtxs[1]] - pb)).unit();
+			//Vec3f na =  ((base[a.vtxs[2]] - pa) ^ (base[a.vtxs[1]] - pa)).unit();
+			//Vec3f nb =  ((base[b.vtxs[2]] - pb) ^ (base[b.vtxs[1]] - pb)).unit();
 			float len;
-			len = pa*na - pb*na;
-			if (na*nb > 0.998f && (len>0?len:-len) < 1e-5f){
+			//len = pa*na - pb*na;
+			len = (pa - pb) * a.normal;
+			if (/*na*nb*/a.normal * b.normal > 0.998f && (len>0?len:-len) < 1e-5f){
 				erased.push_back(faces[i]);
 				faces.erase(faces.begin() + i);
 				i--;
@@ -227,12 +232,19 @@ void CDConvexMesh::MergeFace(){
 	faces.insert(faces.end(), erased.begin(), erased.end());
 	//	DSTR << "Poly faces:" << nf << "->" << faces.size() << std::endl;
 }
-void CDConvexMesh::CalcCenter(){
-	center = Vec3f();
+void CDConvexMesh::CalcAverage(){
+	average.clear();
 	for(unsigned i=0; i<base.size(); ++i){
-		center += base[i];
+		average += base[i];
 	}
-	center /= base.size();
+	average /= base.size();
+}
+bool CDConvexMesh::IsInside(const Vec3f& p){
+	for(int i = 0; i < (int)faces.size(); i++){
+		if(faces[i].normal * (base[faces[i].vtxs[0]] - p) < 0.0f)
+			return false;
+	}
+	return true;
 }
 
 Vec3f CDConvexMesh::Support(const Vec3f& v) const {
@@ -277,6 +289,48 @@ Vec3f* CDConvexMesh::GetVertices(){
 }
 size_t CDConvexMesh::NVertex(){
 	return base.size();
+}
+
+int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
+	// 全ての面との交差を調べる安易な実装
+	const float eps = 1.0e-10f;
+	Matrix2f A;
+	Vec2f b, x;
+	Vec3f p, u1, u2, diff;
+	int num = 0;
+
+	for(int i = 0; i < (int)faces.size(); i++){
+		const CDFace& f = faces[i];
+		const Vec3f& n = f.normal;
+		float tmp = n * dir;
+		if(abs(tmp) < eps)
+			continue;
+		// 直線と面の交点p
+		float s = ((base[f.vtxs[0]] - origin) * n) / tmp;
+		if(s < 0.0)
+			continue;
+		p = origin + dir * s;
+		// 3角形の内部にあるか
+		u1 = base[f.vtxs[1]] - base[f.vtxs[0]];
+		u2 = base[f.vtxs[2]] - base[f.vtxs[0]];
+		A[0][0] = u1.square();
+		A[0][1] = A[1][0] = u1 * u2;
+		A[1][1] = u2.square();
+		if(A.det() < eps)
+			continue;
+		diff = p - base[f.vtxs[0]];
+		b[0] = diff * u1;
+		b[1] = diff * u2;
+		x = A.inv() * b;	// 2次元だしいいか
+		if(0.0 <= x[0] && x[0] <= 1.0 && 0.0 <= x[1] && x[1] <= 1.0 && x[0] + x[1] <= 1.0){
+			result[num] = p;
+			offset[num] = s;
+			num++;
+		}
+		if(num == 2)		// 理屈上は3つ以上はあり得ないが念のため
+			break;
+	}
+	return num;
 }
 
 }

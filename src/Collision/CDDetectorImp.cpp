@@ -144,7 +144,7 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 			本法線の向きで、侵入量と法線、最近傍点を計算する。	
 		*/
 		//	仮法線（形状の中心を結ぶ向き）の計算
-		Vec3d tmpNormal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
+		Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
 		double norm = tmpNormal.norm();
 		if (norm > epsilon) tmpNormal /= norm;
 		else tmpNormal = Vec3d(0,1,0);
@@ -191,7 +191,7 @@ found:;
 void CDShapePair::CalcNormal(){
 	if (state == NEW){
 		//	凸形状の中心を離す向きを仮法線にする．
-		normal = shapePoseW[1]*shape[1]->GetCenter() - shapePoseW[0]*shape[0]->GetCenter();
+		normal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
 		double norm = normal.norm();
 		if (norm>epsilon) normal /= norm;
 		else normal = Vec3d(0,1,0);

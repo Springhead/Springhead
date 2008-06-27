@@ -24,6 +24,7 @@ public:
 	//CDSphere(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
 	//CDSphere(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
 	CDSphere(const CDSphereDesc& desc);
+	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();
 	virtual Matrix3f CalcMomentOfInertia();
 	
