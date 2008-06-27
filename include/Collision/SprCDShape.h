@@ -35,8 +35,9 @@ namespace Spr{;
 ///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	SPR_IFDEF(CDShape);
-	float CalcVolume();				///	体積を計算
-	Matrix3f CalcMomentOfInertia();	///	断面二次モーメント
+	float	CalcVolume();			///< 体積を計算
+	Vec3f	CalcCenterOfMass();		///< 質量中心
+	Matrix3f CalcMomentOfInertia();	///< 単位密度における質量中心に関する慣性行列
 };
 
 ///	凸形状の基本クラス
@@ -63,6 +64,7 @@ struct PHMaterial{
 	float mu;				///< 動摩擦摩擦係数
 	float mu0;				///< 静止摩擦係数
 	float e;				///< 跳ね返り係数
+	float density;			///< 密度
 };
 
 ///	形状のディスクリプタ(基本クラス)

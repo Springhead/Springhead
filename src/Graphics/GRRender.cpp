@@ -31,21 +31,17 @@ void GRRender::Reshape(Vec2f pos, Vec2f screen){
 	viewportPos = pos;
 	viewportSize = screen;
 	SetViewport(pos, screen);
-	Vec2f sz = camera.size;
-	if (sz.y==0) sz.y = sz.x*(viewportSize.y/viewportSize.x);
-	if (sz.x==0) sz.x = sz.y*(viewportSize.x/viewportSize.y);
 	Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
-		sz, camera.front, camera.back);
+		camera.size, camera.front, camera.back);
 	SetProjectionMatrix(afProj);
 }
 void GRRender::SetCamera(const GRCameraDesc& c){
 	if (memcmp(&camera,&c, sizeof(c)) != 0){
 		camera = c;
-		Vec2f sz = camera.size;
-		if (sz.y==0) sz.y = sz.x*(viewportSize.y/viewportSize.x);
-		if (sz.x==0) sz.x = sz.y*(viewportSize.x/viewportSize.y);
+		if (camera.size.y==0) camera.size.y = camera.size.x*(viewportSize.y/viewportSize.x);
+		if (camera.size.x==0) camera.size.x = camera.size.y*(viewportSize.x/viewportSize.y);
 		Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
-			sz, camera.front, camera.back);
+			camera.size, camera.front, camera.back);
 		SetProjectionMatrix(afProj);
 	}
 }

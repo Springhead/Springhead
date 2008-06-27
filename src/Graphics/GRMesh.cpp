@@ -207,6 +207,7 @@ void GRMesh::MakeBuffer(){
 }
 /// 同じマテリアルインデックスが続く場合は、それ毎に１つのディスプレイリストとして、登録する．
 void GRMesh::DrawBuffer(void* vtx){
+	if(faces.empty())return;
 	if (materialList.empty()){	// Mesh に material の指定がない場合
 		render->DrawIndexed(GRRenderIf::TRIANGLES, &*faces.begin(), vtx, faces.size());
 	}else{	// Xファイルからの materialList 指定がある場合、materialごとに描画
@@ -298,6 +299,7 @@ void GRMesh::Render(GRRenderIf* r){
 }
 void GRMesh::Rendered(GRRenderIf* r){
 }
+
 bool GRMesh::AddChildObject(ObjectIf* o){			
 	GRMaterial* m = o->Cast();
 	if (m){

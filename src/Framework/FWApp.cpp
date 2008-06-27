@@ -79,12 +79,73 @@ void FWApp::Reshape(int w, int h){
 
 void FWApp::MouseButton(int button, int state, int x, int y){
 	mouseInfo.lastPos.x = x, mouseInfo.lastPos.y = y;
-	if(button == 0 /*GLUT_LEFT_BUTTON*/ )
-		mouseInfo.left = (state == 0 /*GLUT_DOWN*/);
-	if(button == 2 /*GLUT_RIGHT_BUTTON*/)
-		mouseInfo.right = (state == 0/*GLUT_DOWN*/);
-	if(state == 0)
+	if(button == LEFT_BUTTON)
+		mouseInfo.left = (state == BUTTON_DOWN);
+	if(button == RIGHT_BUTTON)
+		mouseInfo.right = (state == BUTTON_DOWN);
+	if(state == BUTTON_DOWN)
 		mouseInfo.first = true;
+	int mod = GetModifier();
+	mouseInfo.shift = mod & ACTIVE_SHIFT;
+	mouseInfo.ctrl  = mod & ACTIVE_CTRL;
+	mouseInfo.alt   = mod & ACTIVE_ALT;
+
+	// カーソルで剛体を動かす
+	if(mouseInfo.left && mouseInfo.ctrl && fwSdk->GetScene()){
+		// カーソル座標をシーン座標に変換
+		const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
+		Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
+		Vec3f cursorPos(
+			cam.center.x + ((float)x - vpSize.x / 2.0f) * (cam.size.x / vpSize.x),
+			cam.center.y + (vpSize.y / 2.0f - (float)y) * (cam.size.y / vpSize.y),
+			-cam.front);
+		Vec3f ori, dir;
+		ori = cameraInfo.view.Pos();
+		dir = cameraInfo.view.Rot() * cursorPos;
+		// raycast
+		// 現在のシーンにPHRayが無ければ作成
+		PHSceneIf* phScene = fwSdk->GetScene()->GetPHScene();
+		DragInfo& info = dragInfo[fwSdk->GetScene()];
+		if(!info.ray){
+			info.ray = phScene->CreateRay();
+			info.cursor = phScene->CreateSolid();
+			info.cursor->SetDynamical(false);
+			phScene->SetContactMode(info.cursor, PHSceneDesc::MODE_NONE);
+			CDBoxDesc bd;
+			info.cursor->AddShape(fwSdk->GetPHSdk()->CreateShape(bd));
+		}
+		info.ray->SetOrigin(ori);
+		info.ray->SetDirection(dir);
+		info.ray->Apply();
+		if(info.ray->NHits()){
+			PHRaycastHit* hit = info.ray->GetNearest();
+			// カーソル剛体をヒット位置に移動
+			info.cursor->SetCenterPosition(hit->point);
+			// ヒット位置のカメラから見た距離（Z座標）を記憶
+			Vec3f pointCamera = cameraInfo.view.inv() * hit->point;
+			info.depth = pointCamera.z;
+			// ヒットした剛体とカーソル剛体をつなぐバネ
+			PHSpringDesc desc;
+			Posed pose;
+			pose.Pos() = hit->point;
+			desc.poseSocket = hit->solid->GetPose().Inv() * pose;
+			info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
+			const double K = 100.0, D = 10.0;
+			info.spring->SetSpring(Vec3d(K, K, K));
+			info.spring->SetDamper(Vec3d(D, D, D));
+		}
+	}
+
+	if(state == BUTTON_UP){
+		if(button == LEFT_BUTTON){
+			// ドラッグバネの削除
+			DragInfo& info = dragInfo[fwSdk->GetScene()];
+			if(info.spring){
+				fwSdk->GetScene()->GetPHScene()->DelChildObject(info.spring);
+				info.spring = NULL;
+			}
+		}
+	}
 }
 
 void FWApp::MouseMove(int x, int y){
@@ -95,21 +156,43 @@ void FWApp::MouseMove(int x, int y){
 		mouseInfo.first = false;
 		return;
 	}
+	bool cameraPosChange = false;
 	// 左ボタン
 	if(mouseInfo.left){
-		cameraInfo.rot.y += (float)xrel * 0.01f;
-		cameraInfo.rot.y =
-			Spr::max(cameraInfo.rotRangeY[0], Spr::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
-		cameraInfo.rot.x += (float)yrel * 0.01f;
-		cameraInfo.rot.x =
-			Spr::max(cameraInfo.rotRangeX[0], Spr::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
+		if(mouseInfo.ctrl){
+			DragInfo& info = dragInfo[fwSdk->GetScene()];
+			if(!info.spring)
+				return;
+			// カーソル位置の剛体を動かす
+			const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
+			Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
+			float ratio = info.depth / (-cam.front);
+			Vec3f rel(
+				 (float)xrel * (cam.size.x / vpSize.x) * ratio,
+				-(float)yrel * (cam.size.y / vpSize.y) * ratio,
+				 0.0f);
+			rel = cameraInfo.view.Rot() * rel;
+			info.cursor->SetCenterPosition(info.cursor->GetCenterPosition() + rel);
+		}
+		else{
+			// 視点移動
+			cameraInfo.rot.y += (float)xrel * 0.01f;
+			cameraInfo.rot.y =
+				Spr::max(cameraInfo.rotRangeY[0], Spr::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
+			cameraInfo.rot.x += (float)yrel * 0.01f;
+			cameraInfo.rot.x =
+				Spr::max(cameraInfo.rotRangeX[0], Spr::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
+			cameraPosChange = true;
+		}
 	}
 	// 右ボタン
 	if(mouseInfo.right){
+		// ズーム
 		cameraInfo.zoom *= (float)exp((double)yrel/10.0);
 		cameraInfo.zoom = Spr::max(cameraInfo.zoomRange[0], Spr::min(cameraInfo.zoom, cameraInfo.zoomRange[1]));
+		cameraPosChange = true;
 	}
-	if (mouseInfo.left || mouseInfo.right){
+	if(cameraPosChange){
 		cameraInfo.view  = Affinef();
 		cameraInfo.view.Pos() = cameraInfo.target + cameraInfo.zoom * Vec3f(
 			cos(cameraInfo.rot.x) * cos(cameraInfo.rot.y),

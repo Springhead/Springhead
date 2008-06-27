@@ -332,6 +332,11 @@ struct GRRenderIf: public GRRenderBaseIf{
 	const GRCameraDesc& GetCamera();
 	///	スクリーン(ウィンドウ)サイズ変更時のViewportと射影行列を設定
 	void Reshape(Vec2f pos, Vec2f screenSize);
+	/// Viewportの基点座標の取得
+	Vec2f GetViewportPos();
+	/// Viewportのサイズの取得
+	Vec2f GetViewportSize();
+
 };
 
 /**	@brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */

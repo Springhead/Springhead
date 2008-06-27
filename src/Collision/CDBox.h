@@ -14,8 +14,6 @@
 
 namespace Spr{;
 
-
-
 /**	立方体の面(四角形)を表すクラス．CDBoxが所有．
 	CDContactAnalysis で使われる．
 */
@@ -46,6 +44,11 @@ public:
 	
 	CDBox();
 	CDBox(const CDBoxDesc& desc);
+	
+	virtual bool IsInside(const Vec3f& p);
+	virtual float CalcVolume();
+	virtual Matrix3f CalcMomentOfInertia();
+	
 	///	サポートポイントを求める．
 	virtual Vec3f Support(const Vec3f& p) const;
 	///	切り口を求める．接触解析に使う．

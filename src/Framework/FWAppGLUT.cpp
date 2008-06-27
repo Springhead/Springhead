@@ -72,7 +72,7 @@ void FWAppGLUT::GlutTimerFunc(int id){
 	glutPostRedisplay();
 }
 void FWAppGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
-	FWAppGLUT::instance->CallKeyboard(key, x, y);
+	FWAppGLUT::instance->CallKeyboard((int)key, x, y);
 }
 
 void FWAppGLUT::GlutMouseFunc(int button, int state, int x, int y){
@@ -162,6 +162,10 @@ void FWAppGLUT::Display(){
 	FWAppGL::Display();
 	/// ダブルバッファモード時、カレントウィンドウのバッファ交換を行う
 	glutSwapBuffers();
+}
+
+int FWAppGLUT::GetModifier(){
+	return glutGetModifiers();
 }
 
 }

@@ -28,10 +28,12 @@ void PHSliderJoint::UpdateJointState(){
 
 void PHSliderJoint::CompBias(){
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
-	db.v() = Xjrel.r * dtinv + vjrel.v();
-	db.v().z = 0.0;
-	db.w() = Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w();
-	db *= engine->velCorrectionRate;
+	if (engine->numIterCorrection==0){	//	Correction ‚ð‘¬“xLCP‚Ås‚¤ê‡
+		db.v() = Xjrel.r * dtinv + vjrel.v();
+		db.v().z = 0.0;
+		db.w() = Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w();
+		db *= engine->velCorrectionRate;
+	}
 	if(mode == MODE_VELOCITY){
 		db.v().z = -desiredVelocity;
 	}

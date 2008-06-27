@@ -34,19 +34,16 @@ void GRFrame::Rendered(GRRenderIf* r){
 }
 void GRFrame::SetParent(GRFrameIf* fr){
 	if((GRFrameIf*)(parent->Cast()) == fr) return;
-	if(parent){
-		parent->DelChildObject(this->Cast());
-		parent=NULL;
-	}
+	UTRef<GRFrame> tmp = this->Cast();	// delete‘Îô
 	if (fr){
-		parent = DCAST(GRFrame, fr);
 		fr->AddChildObject(this->Cast());
 	}
 }
 bool GRFrame::AddChildObject(ObjectIf* o){
-	GRVisualIf* v = o->Cast();
+	GRVisual* v = o->Cast();
 	if (v){
-		children.push_back(v);
+		v->SetNameManager(GetNameManager());
+		children.push_back(v->Cast());
 		GRFrame*	frame	= DCAST(GRFrame, v);
 		GRMaterial* mat		= DCAST(GRMaterial, v);
 		GRLight*	light	= DCAST(GRLight, v);

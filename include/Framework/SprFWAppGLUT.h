@@ -65,6 +65,9 @@ public:
 
 	///	フレームワークをスタートする。
 	virtual void Start();
+
+	///
+	virtual int GetModifier();
 };
 
 

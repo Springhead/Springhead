@@ -10,6 +10,7 @@
 
 #include <Framework/SprFWSdk.h>
 #include <Framework/SprFWScene.h>
+#include <map>
 
 namespace Spr{;
 
@@ -21,7 +22,7 @@ public:
 	virtual void Link(void* pObj) = 0;
 	virtual bool Display() = 0;
 	virtual bool Reshape(int w, int h) = 0;
-	virtual bool Keyboard(unsigned char key, int x, int y) = 0;
+	virtual bool Keyboard(int key, int x, int y) = 0;
 	virtual bool MouseButton(int button, int state, int x, int y) = 0;
 	virtual bool MouseMove(int x, int y) = 0;
 	virtual bool Step() = 0;
@@ -87,17 +88,32 @@ typedef FWWinDesc FWAppGLUTDesc;
  */
 class FWApp{
 protected:
+	// 以下の定数はGLUTに合わせてある
+	enum MouseButtonType{
+		LEFT_BUTTON = 0,
+		MIDDLE_BUTTON = 1,
+		RIGHT_BUTTON = 2,
+	};
+	enum MouseButtonState{
+		BUTTON_DOWN = 0,
+		BUTTON_UP = 1,
+	};
+	enum ModifierMask{
+		ACTIVE_SHIFT = 1,
+		ACTIVE_CTRL = 2,
+		ACTIVE_ALT = 4,
+	};
 	/// マウス情報
-	class MouseInfo{
-	public:
-		TVec2<int> lastPos;	/// 前回のカーソル座標
-		bool left, right;	/// ボタン押し下げ
+	struct MouseInfo{
+		TVec2<int> lastPos;		/// 前回のカーソル座標
+		bool left, right;		/// ボタン押し下げ
+		bool shift, ctrl, alt;	/// コントロールキー状態
 		bool first;
 		MouseInfo():left(false), right(false), first(false){}
 	} mouseInfo;
 	/// カメラ情報
-	class CameraInfo{
-	public:
+	/// 本来はscene毎に個別に保持すべき。要修正
+	struct CameraInfo{
 		Vec3f target;		/// 中心点
 		Vec2f rot;			/// 経度角，緯度角
 		float zoom;			/// 拡大率（対象からの距離）
@@ -109,6 +125,16 @@ protected:
 			rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){}
 	} cameraInfo;
 
+	/// 剛体ドラッグ機能
+	struct DragInfo{
+		PHRayIf* ray;			/// カーソル下の剛体を特定するためのPHRay
+		PHSolidIf* cursor;		/// カーソル剛体
+		PHSpringIf* spring;
+		float	depth;
+		DragInfo():ray(NULL), cursor(NULL), spring(NULL), depth(0.0f){}
+	};
+	std::map<FWSceneIf*, DragInfo>	dragInfo;
+	
 	UTRef<FWSdkIf> fwSdk;
 	typedef std::vector< UTRef<FWWin> > Wins;
 	Wins wins;
@@ -123,7 +149,7 @@ protected:
 		if(!vfBridge || !vfBridge->Reshape(w, h))
 			Reshape(w, h);
 	}
-	void CallKeyboard(unsigned char key, int x, int y){
+	void CallKeyboard(int key, int x, int y){
 		if(!vfBridge || !vfBridge->Keyboard(key, x, y))
 			Keyboard(key, x, y);
 	}
@@ -147,6 +173,11 @@ protected:
 		if(!vfBridge || !vfBridge->Joystick(buttonMask, x, y, z))
 			Joystick(buttonMask, x, y, z);
 	}
+
+	/** @brief Ctrl, Shift, Altの状態を返す
+		個々の派生クラスで実装される
+	 */
+	virtual int GetModifier(){ return 0; }
 
 public:
 	UTRef<FWVFuncBridge>	vfBridge;
@@ -223,13 +254,14 @@ public:
 
 	/** @brief キーボードイベントのハンドラ
 	 */
-	virtual void Keyboard(unsigned char key, int x, int y){}
+	virtual void Keyboard(int key, int x, int y){}
 
 	/** @brief マウスイベントのハンドラ
 	 */
 	virtual void MouseButton(int button, int state, int x, int y);
 
 	/** @brief マウスイベントのハンドラ
+		デフォルトでは左ドラッグで視点変更，右ドラッグでズームイン/アウト
 	 */
 	virtual void MouseMove(int x, int y);
 

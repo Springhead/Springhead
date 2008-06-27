@@ -53,6 +53,7 @@ public:
 	virtual size_t NChildObject() const { return scenes.size() + objects.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 	virtual void Clear();
 };
 

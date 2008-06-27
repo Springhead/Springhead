@@ -21,8 +21,12 @@ public:
 
 	SPR_OBJECTDEF_ABST(CDShape);
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
+	virtual bool IsInside(const Vec3f& p){ return false; }
 	virtual float CalcVolume(){ return FLT_MAX; }
+	virtual Vec3f	CalcCenterOfMass(){ return Vec3f(); }
 	virtual Matrix3f CalcMomentOfInertia(){ return Matrix3f(); }
+
+	virtual int	LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){ return 0; }
 };
 
 }	//	namespace Spr

@@ -80,16 +80,21 @@ enum PHIntegrationMode{
 
 class PHSolid;
 class PHFrame: public SceneObject, public PHFrameDesc{
+	friend class PHSolid;
 protected:
 	PHSolid* solid;
-	friend class PHSolid;
+	CDShape* shape;
+
+	double		mass;
+	Vec3d		center;
+	Matrix3d	inertia;
 public:
 	SPR_OBJECTDEF(PHFrame);
 	ACCESS_DESC(PHFrame);
 
 	PHFrame();
 	PHFrame(const PHFrameDesc& desc);
-	CDShape* shape;
+	void	CompInertia();
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual bool AddChildObject(ObjectIf * o);
 	virtual size_t NChildObject() const;
@@ -201,6 +206,7 @@ public:
 		inertia_inv = Iinv;
 		inertia = Iinv.inv();
 	}
+	void		CompInertia();
 
 	///	Ï•ª•û®‚Ìæ“¾
 	PHIntegrationMode GetIntegrationMode(){ return integrationMode; }

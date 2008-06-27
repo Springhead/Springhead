@@ -22,14 +22,24 @@ class PHConstraintEngine;
 class PHGravityEngine;
 struct PHConstraintDesc;
 typedef PHConstraintDesc PHJointDesc;
+class PHScene;
 
-/**	シーングラフのトップノード．光源・視点を持つ．
-	レンダラとシーングラフの関係が深いため，
-	レンダラが違うとシーングラフはそのまま使用できない．
-	シーングラフは，たとえばレンダラがOpenGLなら，displayList
-	を持っているし，D3Dならば ID3DXMeshを持っている．
-	OpenGLのシーングラフをD3Dに変換するためには，一度Documentに
-	セーブして，D3D形式でロードしなければならない．	*/
+class SPR_DLL PHRay : public SceneObject, public PHRayDesc{
+	SPR_OBJECTDEF(PHRay);
+protected:
+	std::vector<PHRaycastHit>	hits;
+public:
+	Vec3d	GetOrigin(){ return origin; }
+	void	SetOrigin(const Vec3d& ori){ origin = ori; }
+	Vec3d	GetDirection(){ return direction; }
+	void	SetDirection(const Vec3d& dir){ direction = dir; }
+	void	Apply();
+	int		NHits(){ return (int)hits.size(); }
+	PHRaycastHit* GetHits(){ return &hits[0]; }
+	PHRaycastHit* GetNearest();
+};
+typedef std::vector< UTRef<PHRay> > PHRays;
+
 class SPR_DLL PHScene : public Scene, public PHSceneDesc{
 	SPR_OBJECTDEF(PHScene);
 	friend class PHConstraint;
@@ -40,6 +50,7 @@ protected:
 	PHPenaltyEngine*		penaltyEngine;
 	PHConstraintEngine*		constraintEngine;
 	PHGravityEngine*		gravityEngine;
+	PHRays					rays;
 public:
 	
 	friend class			PHSolid;
@@ -86,6 +97,10 @@ public:
 	PHPathIf*				CreatePath(const PHPathDesc& desc = PHPathDesc());
 	int						NPaths() const;
 	PHPathIf*				GetPath(int i);
+	PHRayIf*				CreateRay(const PHRayDesc& desc = PHRayDesc());
+	int						NRays() const;
+	PHRayIf*				GetRay(int i);
+
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}
 	/// 積分ステップを設定する
