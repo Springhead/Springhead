@@ -98,6 +98,8 @@
 	void SetCamera(const Spr::GRCameraDesc& cam){	base::SetCamera(cam);}	\
 	const Spr::GRCameraDesc& GetCamera(){	return	base::GetCamera();}	\
 	void Reshape(Vec2f pos, Vec2f screenSize){	base::Reshape(pos, screenSize);}	\
+	Vec2f GetViewportPos(){	return	base::GetViewportPos();}	\
+	Vec2f GetViewportSize(){	return	base::GetViewportSize();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRDeviceIf(base)	\
 	void Init(){	base::Init();}	\

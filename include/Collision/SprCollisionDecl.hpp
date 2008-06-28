@@ -1,5 +1,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CDShapeIf(base)	\
 	float CalcVolume(){	return	base::CalcVolume();}	\
+	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDConvexIf(base)	\

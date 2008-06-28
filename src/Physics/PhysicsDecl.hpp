@@ -285,6 +285,23 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHRayDesc \
+protected:\
+	Vec3d	origin;	\
+	Vec3d	direction;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		origin = ((PHRayDesc*)ptr)->origin;	\
+		direction = ((PHRayDesc*)ptr)->direction;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHRayDesc*)ptr)->origin = origin;	\
+		((PHRayDesc*)ptr)->direction = direction;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHSceneState \
 protected:\
 	double	timeStep;	\

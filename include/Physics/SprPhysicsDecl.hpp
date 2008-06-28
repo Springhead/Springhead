@@ -104,6 +104,16 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGearIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHRayIf(base)	\
+	Vec3d GetOrigin(){	return	base::GetOrigin();}	\
+	void SetOrigin(const Vec3d& ori){	base::SetOrigin(ori);}	\
+	Vec3d GetDirection(){	return	base::GetDirection();}	\
+	void SetDirection(const Vec3d& dir){	base::SetDirection(dir);}	\
+	void Apply(){	base::Apply();}	\
+	int NHits(){	return	base::NHits();}	\
+	Spr::PHRaycastHit* GetHits(){	return	base::GetHits();}	\
+	Spr::PHRaycastHit* GetNearest(){	return	base::GetNearest();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSceneIf(base)	\
 	Spr::PHSdkIf* GetSdk(){	return	base::GetSdk();}	\
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc){	return	base::CreateSolid(desc);}	\
@@ -130,6 +140,9 @@
 	Spr::PHPathIf* CreatePath(const Spr::PHPathDesc& desc){	return	base::CreatePath(desc);}	\
 	int NPaths(){	return	base::NPaths();}	\
 	Spr::PHPathIf* GetPath(int i){	return	base::GetPath(i);}	\
+	Spr::PHRayIf* CreateRay(const Spr::PHRayDesc& desc){	return	base::CreateRay(desc);}	\
+	int NRays(){	return	base::NRays();}	\
+	Spr::PHRayIf* GetRay(int i){	return	base::GetRay(i);}	\
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\
 	unsigned int GetCount()const{	return	base::GetCount();}	\
@@ -176,6 +189,7 @@
 	Matrix3d GetInertia(){	return	base::GetInertia();}	\
 	Matrix3d GetInertiaInv(){	return	base::GetInertiaInv();}	\
 	void SetInertia(const Matrix3d& I){	base::SetInertia(I);}	\
+	void CompInertia(){	base::CompInertia();}	\
 	Vec3d GetFramePosition()const{	return	base::GetFramePosition();}	\
 	void SetFramePosition(const Vec3d& p){	base::SetFramePosition(p);}	\
 	Vec3d GetCenterPosition()const{	return	base::GetCenterPosition();}	\
