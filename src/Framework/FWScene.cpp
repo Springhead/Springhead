@@ -193,7 +193,7 @@ void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
 		if (render){
 			GRCameraIf* cam = NULL;
 			if (grScene) cam = grScene->GetCamera();
-			if (cam) cam->Render(render);
+			//if (cam) cam->Render(render);
 			
 			GRLightDesc ld;
 			ld.diffuse = Vec4f(1,1,1,1) * 0.8f;

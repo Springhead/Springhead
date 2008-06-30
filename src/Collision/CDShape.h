@@ -20,6 +20,16 @@ public:
 	PHMaterial material;
 
 	SPR_OBJECTDEF_ABST(CDShape);
+	
+	void	SetStaticFriction(float mu0){ material.mu0 = mu0; }
+	float	GetStaticFriction(){ return material.mu0; }
+	void	SetDynamicFriction(float mu){ material.mu = mu; }
+	float	GetDynamicFriction(){ return material.mu; }
+	void	SetElasticity(float e){ material.e = e; }
+	float	GetElasticity(){ return material.e; }
+	void	SetDensity(float d){ material.density = d; }
+	float	GetDensity(){ return material.density; }
+
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
 	virtual bool IsInside(const Vec3f& p){ return false; }
 	virtual float CalcVolume(){ return FLT_MAX; }

@@ -88,28 +88,13 @@ typedef FWWinDesc FWAppGLUTDesc;
  */
 class FWApp{
 protected:
-	// 以下の定数はGLUTに合わせてある
-	enum MouseButtonType{
-		LEFT_BUTTON = 0,
-		MIDDLE_BUTTON = 1,
-		RIGHT_BUTTON = 2,
-	};
-	enum MouseButtonState{
-		BUTTON_DOWN = 0,
-		BUTTON_UP = 1,
-	};
-	enum ModifierMask{
-		ACTIVE_SHIFT = 1,
-		ACTIVE_CTRL = 2,
-		ACTIVE_ALT = 4,
-	};
 	/// マウス情報
 	struct MouseInfo{
-		TVec2<int> lastPos;		/// 前回のカーソル座標
-		bool left, right;		/// ボタン押し下げ
-		bool shift, ctrl, alt;	/// コントロールキー状態
+		TVec2<int> lastPos;			/// 前回のカーソル座標
+		bool left, middle, right;	/// ボタン押し下げ
+		bool shift, ctrl, alt;		/// コントロールキー状態
 		bool first;
-		MouseInfo():left(false), right(false), first(false){}
+		MouseInfo():left(false), middle(false), right(false), first(false){}
 	} mouseInfo;
 	/// カメラ情報
 	/// 本来はscene毎に個別に保持すべき。要修正
@@ -180,6 +165,22 @@ protected:
 	virtual int GetModifier(){ return 0; }
 
 public:
+	// 以下の定数はGLUTに合わせてある
+	enum MouseButtonType{
+		LEFT_BUTTON = 0,
+		MIDDLE_BUTTON = 1,
+		RIGHT_BUTTON = 2,
+	};
+	enum MouseButtonState{
+		BUTTON_DOWN = 0,
+		BUTTON_UP = 1,
+	};
+	enum ModifierMask{
+		ACTIVE_SHIFT = 1,
+		ACTIVE_CTRL = 2,
+		ACTIVE_ALT = 4,
+	};
+
 	UTRef<FWVFuncBridge>	vfBridge;
 
 	/** @brief SDKを取得する

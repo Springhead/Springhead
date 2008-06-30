@@ -81,6 +81,8 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 	mouseInfo.lastPos.x = x, mouseInfo.lastPos.y = y;
 	if(button == LEFT_BUTTON)
 		mouseInfo.left = (state == BUTTON_DOWN);
+	if(button == MIDDLE_BUTTON)
+		mouseInfo.middle = (state == BUTTON_DOWN);
 	if(button == RIGHT_BUTTON)
 		mouseInfo.right = (state == BUTTON_DOWN);
 	if(state == BUTTON_DOWN)
@@ -90,8 +92,9 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 	mouseInfo.ctrl  = mod & ACTIVE_CTRL;
 	mouseInfo.alt   = mod & ACTIVE_ALT;
 
-	// カーソルで剛体を動かす
-	if(mouseInfo.left && mouseInfo.ctrl && fwSdk->GetScene()){
+	// ctrl+left カーソルで剛体を動かす
+	// middle    カメラ平行移動
+	if(fwSdk->GetScene() && ((mouseInfo.left && mouseInfo.ctrl) || mouseInfo.middle)){
 		// カーソル座標をシーン座標に変換
 		const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
 		Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
@@ -125,14 +128,16 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 			Vec3f pointCamera = cameraInfo.view.inv() * hit->point;
 			info.depth = pointCamera.z;
 			// ヒットした剛体とカーソル剛体をつなぐバネ
-			PHSpringDesc desc;
-			Posed pose;
-			pose.Pos() = hit->point;
-			desc.poseSocket = hit->solid->GetPose().Inv() * pose;
-			info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
-			const double K = 100.0, D = 10.0;
-			info.spring->SetSpring(Vec3d(K, K, K));
-			info.spring->SetDamper(Vec3d(D, D, D));
+			if(mouseInfo.left && mouseInfo.ctrl){
+				PHSpringDesc desc;
+				Posed pose;
+				pose.Pos() = hit->point;
+				desc.poseSocket = hit->solid->GetPose().Inv() * pose;
+				info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
+				const double K = 100.0, D = 10.0;
+				info.spring->SetSpring(Vec3d(K, K, K));
+				info.spring->SetDamper(Vec3d(D, D, D));
+			}
 		}
 	}
 
@@ -175,7 +180,7 @@ void FWApp::MouseMove(int x, int y){
 			info.cursor->SetCenterPosition(info.cursor->GetCenterPosition() + rel);
 		}
 		else{
-			// 視点移動
+			// 視点移動(回転)
 			cameraInfo.rot.y += (float)xrel * 0.01f;
 			cameraInfo.rot.y =
 				Spr::max(cameraInfo.rotRangeY[0], Spr::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
@@ -184,6 +189,20 @@ void FWApp::MouseMove(int x, int y){
 				Spr::max(cameraInfo.rotRangeX[0], Spr::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
 			cameraPosChange = true;
 		}
+	}
+	// 中ボタン
+	if(mouseInfo.middle){
+		// 視点移動(平行移動)
+		DragInfo& info = dragInfo[fwSdk->GetScene()];
+		const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
+		Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
+		float ratio = info.depth / (-cam.front);
+		Vec3f rel(
+			-(float)xrel * (cam.size.x / vpSize.x) * ratio,
+			 (float)yrel * (cam.size.y / vpSize.y) * ratio,
+			 0.0f);
+		cameraInfo.target += cameraInfo.view.Rot() * rel;
+		cameraPosChange = true;
 	}
 	// 右ボタン
 	if(mouseInfo.right){
