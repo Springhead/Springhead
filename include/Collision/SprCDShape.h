@@ -35,6 +35,16 @@ namespace Spr{;
 ///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	SPR_IFDEF(CDShape);
+
+	void	SetStaticFriction(float mu0);
+	float	GetStaticFriction();
+	void	SetDynamicFriction(float mu);
+	float	GetDynamicFriction();
+	void	SetElasticity(float e);
+	float	GetElasticity();
+	void	SetDensity(float d);
+	float	GetDensity();
+
 	float	CalcVolume();			///< 体積を計算
 	Vec3f	CalcCenterOfMass();		///< 質量中心
 	Matrix3f CalcMomentOfInertia();	///< 単位密度における質量中心に関する慣性行列
