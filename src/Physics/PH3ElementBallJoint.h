@@ -27,7 +27,7 @@ public:
 	void	SetSecondDamper(double input)	{secondDamper = input;}
 
 	// このクラス内で再定義する（オーバーライドする）関数
-	virtual void	CompBias();		///< 侵入量の判定(オーバーライド)
+	void	CompBias();		///< 侵入量の判定(オーバーライド)
 
 	// コンストラクタ（引数付き）
 	PH3ElementBallJoint(const PH3ElementBallJointDesc& desc = PH3ElementBallJointDesc());				/// - コンストラクタ

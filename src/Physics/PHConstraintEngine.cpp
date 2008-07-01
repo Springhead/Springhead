@@ -204,6 +204,8 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 		joint = DBG_NEW PHSliderJoint();
 	else if(ii == PHBallJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHBallJoint();
+	else if(ii == PH3ElementBallJointIf::GetIfInfoStatic())
+		joint = DBG_NEW PH3ElementBallJoint();
 	else if(ii == PHPathJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHPathJoint();
 	else if(ii == PHSpringIf::GetIfInfoStatic())
