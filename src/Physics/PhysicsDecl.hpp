@@ -260,6 +260,22 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PH3ElementBallJointDesc \
+protected:\
+	double	secondDamper;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJoint::SetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
+		secondDamper = ((PH3ElementBallJointDesc*)ptr)->secondDamper;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJoint::GetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
+		((PH3ElementBallJointDesc*)ptr)->secondDamper = secondDamper;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHSpringDesc \
 protected:\
 	Vec3d	spring;	\
