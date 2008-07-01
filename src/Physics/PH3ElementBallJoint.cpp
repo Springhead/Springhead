@@ -13,6 +13,7 @@
 #pragma hdrstop
 #endif
 
+#include <iostream>
 using namespace PTM;
 using namespace std;
 
@@ -37,7 +38,6 @@ PH3ElementBallJoint::PH3ElementBallJoint(const PH3ElementBallJointDesc& desc){
 // オーバーライドされているのでPH3ElementBallJointを読んだ時には
 // PHBallJoint::CompBias()ではなくてこの関数だけこっちが呼ばれる。
 void PH3ElementBallJoint::CompBias(){
-	
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置

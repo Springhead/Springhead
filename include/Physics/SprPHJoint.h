@@ -417,6 +417,8 @@ struct PHBallJointDesc : public PHJointDesc{
 
 // ３要素モデルのボールジョイントのインタフェース
 struct PH3ElementBallJointIf : public PHBallJointIf{
+	
+	SPR_IFDEF(PH3ElementBallJoint);
 
 	/** @brief 二個目のダンパ係数を取得する
 		@return 二個目のダンパ係数

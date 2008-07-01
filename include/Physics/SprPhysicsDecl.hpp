@@ -77,6 +77,10 @@
 	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
 	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
+	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
+	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\
 	Vec3d GetSpring(){	return	base::GetSpring();}	\

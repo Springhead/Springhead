@@ -4,8 +4,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		jointOrder = ((CRBodyDesc*)ptr)->jointOrder;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((CRBodyDesc*)ptr)->jointOrder = jointOrder;	\
 		return true;	\
 	}\
@@ -233,8 +235,10 @@ public:\
 		rangeRightEyeY = ((CRHingeHumanBodyDesc*)ptr)->rangeRightEyeY;	\
 		rangeEyeX = ((CRHingeHumanBodyDesc*)ptr)->rangeEyeX;	\
 		noLegs = ((CRHingeHumanBodyDesc*)ptr)->noLegs;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRHingeHumanBodyDesc*)ptr);	\
 		((CRHingeHumanBodyDesc*)ptr)->bodyMass = bodyMass;	\
 		((CRHingeHumanBodyDesc*)ptr)->waistHeight = waistHeight;	\
@@ -635,8 +639,10 @@ public:\
 		totalMass = ((CRFourLegsAnimalBodyDesc*)ptr)->totalMass;	\
 		flagFMax = ((CRFourLegsAnimalBodyDesc*)ptr)->flagFMax;	\
 		flagRange = ((CRFourLegsAnimalBodyDesc*)ptr)->flagRange;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRFourLegsAnimalBodyDesc*)ptr);	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->soNSolids = soNSolids;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->joNBallJoints = joNBallJoints;	\
@@ -1063,8 +1069,10 @@ public:\
 		dynamicalMode = ((CRManipulatorDesc*)ptr)->dynamicalMode;	\
 		flagFMax = ((CRManipulatorDesc*)ptr)->flagFMax;	\
 		flagRange = ((CRManipulatorDesc*)ptr)->flagRange;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRManipulatorDesc*)ptr);	\
 		((CRManipulatorDesc*)ptr)->soNSolids = soNSolids;	\
 		((CRManipulatorDesc*)ptr)->joNBallJoints = joNBallJoints;	\
@@ -1246,8 +1254,10 @@ public:\
 		damperChestHead = ((CRTrunkFootHumanBodyDesc*)ptr)->damperChestHead;	\
 		rangeWaistChest = ((CRTrunkFootHumanBodyDesc*)ptr)->rangeWaistChest;	\
 		rangeChestHead = ((CRTrunkFootHumanBodyDesc*)ptr)->rangeChestHead;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRTrunkFootHumanBodyDesc*)ptr);	\
 		((CRTrunkFootHumanBodyDesc*)ptr)->waistHeight = waistHeight;	\
 		((CRTrunkFootHumanBodyDesc*)ptr)->waistBreadth = waistBreadth;	\
@@ -1308,8 +1318,10 @@ public:\
 		damperChestHead = ((CRTrunkFootAnimalBodyDesc*)ptr)->damperChestHead;	\
 		rangeWaistChest = ((CRTrunkFootAnimalBodyDesc*)ptr)->rangeWaistChest;	\
 		rangeChestHead = ((CRTrunkFootAnimalBodyDesc*)ptr)->rangeChestHead;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRTrunkFootAnimalBodyDesc*)ptr);	\
 		((CRTrunkFootAnimalBodyDesc*)ptr)->waistHeight = waistHeight;	\
 		((CRTrunkFootAnimalBodyDesc*)ptr)->waistBreadth = waistBreadth;	\
@@ -1335,8 +1347,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -1347,7 +1361,7 @@ public:\
 	virtual void SetState(const void* ptr){ \
 		controlState = ((CREyeControllerState*)ptr)->controlState;	\
 	}\
-	virtual bool GetState(const void* ptr){ \
+	virtual bool GetState(void* ptr) const { \
 		((CREyeControllerState*)ptr)->controlState = controlState;	\
 		return true;	\
 	}\
@@ -1358,8 +1372,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CREyeControllerDesc*)ptr);	\
 		CREyeController::SetState((CREyeControllerState*)(CREyeControllerDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CREyeControllerDesc*)ptr);	\
 		CREyeController::GetState((CREyeControllerState*)(CREyeControllerDesc*)ptr);	\
 		return true;	\
@@ -1370,7 +1386,7 @@ protected:\
 public:\
 	virtual void SetState(const void* ptr){ \
 	}\
-	virtual bool GetState(const void* ptr){ \
+	virtual bool GetState(void* ptr) const { \
 		return true;	\
 	}\
 
@@ -1384,8 +1400,10 @@ public:\
 		CRNeckController::SetState((CRNeckControllerState*)(CRNeckControllerDesc*)ptr);	\
 		lowerAttractiveness = ((CRNeckControllerDesc*)ptr)->lowerAttractiveness;	\
 		upperAttractiveness = ((CRNeckControllerDesc*)ptr)->upperAttractiveness;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRNeckControllerDesc*)ptr);	\
 		CRNeckController::GetState((CRNeckControllerState*)(CRNeckControllerDesc*)ptr);	\
 		((CRNeckControllerDesc*)ptr)->lowerAttractiveness = lowerAttractiveness;	\
@@ -1414,8 +1432,10 @@ public:\
 		damperPos = ((CRReachingControllerDesc*)ptr)->damperPos;	\
 		springOri = ((CRReachingControllerDesc*)ptr)->springOri;	\
 		damperOri = ((CRReachingControllerDesc*)ptr)->damperOri;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRReachingControllerDesc*)ptr);	\
 		((CRReachingControllerDesc*)ptr)->solid = solid;	\
 		((CRReachingControllerDesc*)ptr)->reachPos = reachPos;	\
@@ -1433,7 +1453,7 @@ protected:\
 public:\
 	virtual void SetState(const void* ptr){ \
 	}\
-	virtual bool GetState(const void* ptr){ \
+	virtual bool GetState(void* ptr) const { \
 		return true;	\
 	}\
 
@@ -1443,8 +1463,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRGazeControllerDesc*)ptr);	\
 		CRGazeController::SetState((CRGazeControllerState*)(CRGazeControllerDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRGazeControllerDesc*)ptr);	\
 		CRGazeController::GetState((CRGazeControllerState*)(CRGazeControllerDesc*)ptr);	\
 		return true;	\
@@ -1455,8 +1477,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRAttentionControllerDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRAttentionControllerDesc*)ptr);	\
 		return true;	\
 	}\
@@ -1466,8 +1490,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRTryStandingUpControllerDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRTryStandingUpControllerDesc*)ptr);	\
 		return true;	\
 	}\
@@ -1527,8 +1553,10 @@ public:\
 		pi = ((CRWalkingControllerDesc*)ptr)->pi;	\
 		footsize = ((CRWalkingControllerDesc*)ptr)->footsize;	\
 		miu = ((CRWalkingControllerDesc*)ptr)->miu;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRWalkingControllerDesc*)ptr);	\
 		((CRWalkingControllerDesc*)ptr)->paramLdx = paramLdx;	\
 		((CRWalkingControllerDesc*)ptr)->paramLdz = paramLdz;	\
@@ -1563,8 +1591,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CREseWalkingControllerDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CREseWalkingControllerDesc*)ptr);	\
 		return true;	\
 	}\
@@ -1574,8 +1604,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRTravelControllerDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRTravelControllerDesc*)ptr);	\
 		return true;	\
 	}\
@@ -1593,8 +1625,10 @@ public:\
 		rateDamperSoften = ((CRGrabControllerDesc*)ptr)->rateDamperSoften;	\
 		rateSpringHarden = ((CRGrabControllerDesc*)ptr)->rateSpringHarden;	\
 		rateDamperHarden = ((CRGrabControllerDesc*)ptr)->rateDamperHarden;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
 		((CRGrabControllerDesc*)ptr)->rateSpringSoften = rateSpringSoften;	\
 		((CRGrabControllerDesc*)ptr)->rateDamperSoften = rateDamperSoften;	\
@@ -1607,8 +1641,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -1622,8 +1658,10 @@ public:\
 		type = ((CRInternalSceneObjectDesc*)ptr)->type;	\
 		solid = ((CRInternalSceneObjectDesc*)ptr)->solid;	\
 		position = ((CRInternalSceneObjectDesc*)ptr)->position;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((CRInternalSceneObjectDesc*)ptr)->type = type;	\
 		((CRInternalSceneObjectDesc*)ptr)->solid = solid;	\
 		((CRInternalSceneObjectDesc*)ptr)->position = position;	\
@@ -1647,8 +1685,10 @@ public:\
 		uncertainty = ((CRISAttractiveObjectDesc*)ptr)->uncertainty;	\
 		uncertaintyIncRate = ((CRISAttractiveObjectDesc*)ptr)->uncertaintyIncRate;	\
 		uncertaintyDecRate = ((CRISAttractiveObjectDesc*)ptr)->uncertaintyDecRate;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRInternalSceneObject::GetDesc((CRInternalSceneObjectDesc*)(CRISAttractiveObjectDesc*)ptr);	\
 		((CRISAttractiveObjectDesc*)ptr)->bottomupAttr = bottomupAttr;	\
 		((CRISAttractiveObjectDesc*)ptr)->topdownAttr = topdownAttr;	\
@@ -1668,8 +1708,10 @@ public:\
 		CRInternalSceneObject::SetDesc((CRInternalSceneObjectDesc*)(CRISTravelPotentialObjectDesc*)ptr);	\
 		strength = ((CRISTravelPotentialObjectDesc*)ptr)->strength;	\
 		decay = ((CRISTravelPotentialObjectDesc*)ptr)->decay;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRInternalSceneObject::GetDesc((CRInternalSceneObjectDesc*)(CRISTravelPotentialObjectDesc*)ptr);	\
 		((CRISTravelPotentialObjectDesc*)ptr)->strength = strength;	\
 		((CRISTravelPotentialObjectDesc*)ptr)->decay = decay;	\
@@ -1680,8 +1722,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -1691,8 +1735,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		solid = ((CRIKControlDesc*)ptr)->solid;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((CRIKControlDesc*)ptr)->solid = solid;	\
 		return true;	\
 	}\
@@ -1704,8 +1750,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRIKControl::SetDesc((CRIKControlDesc*)(CRIKControlPosDesc*)ptr);	\
 		pos = ((CRIKControlPosDesc*)ptr)->pos;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKControl::GetDesc((CRIKControlDesc*)(CRIKControlPosDesc*)ptr);	\
 		((CRIKControlPosDesc*)ptr)->pos = pos;	\
 		return true;	\
@@ -1716,8 +1764,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRIKControl::SetDesc((CRIKControlDesc*)(CRIKControlOriDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKControl::GetDesc((CRIKControlDesc*)(CRIKControlOriDesc*)ptr);	\
 		return true;	\
 	}\
@@ -1728,8 +1778,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		bias = ((CRIKMovableDesc*)ptr)->bias;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		((CRIKMovableDesc*)ptr)->bias = bias;	\
 		return true;	\
 	}\
@@ -1741,8 +1793,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRIKMovable::SetDesc((CRIKMovableDesc*)(CRIKMovableSolidPosDesc*)ptr);	\
 		solid = ((CRIKMovableSolidPosDesc*)ptr)->solid;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKMovable::GetDesc((CRIKMovableDesc*)(CRIKMovableSolidPosDesc*)ptr);	\
 		((CRIKMovableSolidPosDesc*)ptr)->solid = solid;	\
 		return true;	\
@@ -1755,8 +1809,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRIKMovable::SetDesc((CRIKMovableDesc*)(CRIKMovableSolidOriDesc*)ptr);	\
 		solid = ((CRIKMovableSolidOriDesc*)ptr)->solid;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKMovable::GetDesc((CRIKMovableDesc*)(CRIKMovableSolidOriDesc*)ptr);	\
 		((CRIKMovableSolidOriDesc*)ptr)->solid = solid;	\
 		return true;	\
@@ -1769,8 +1825,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRIKMovable::SetDesc((CRIKMovableDesc*)(CRIKMovableBallJointOriDesc*)ptr);	\
 		joint = ((CRIKMovableBallJointOriDesc*)ptr)->joint;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKMovable::GetDesc((CRIKMovableDesc*)(CRIKMovableBallJointOriDesc*)ptr);	\
 		((CRIKMovableBallJointOriDesc*)ptr)->joint = joint;	\
 		return true;	\
@@ -1787,8 +1845,10 @@ public:\
 		joint1 = ((CRIKMovable3HingeJointOriDesc*)ptr)->joint1;	\
 		joint2 = ((CRIKMovable3HingeJointOriDesc*)ptr)->joint2;	\
 		joint3 = ((CRIKMovable3HingeJointOriDesc*)ptr)->joint3;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKMovable::GetDesc((CRIKMovableDesc*)(CRIKMovable3HingeJointOriDesc*)ptr);	\
 		((CRIKMovable3HingeJointOriDesc*)ptr)->joint1 = joint1;	\
 		((CRIKMovable3HingeJointOriDesc*)ptr)->joint2 = joint2;	\
@@ -1803,8 +1863,10 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRIKMovable::SetDesc((CRIKMovableDesc*)(CRIKMovableHingeJointOriDesc*)ptr);	\
 		joint = ((CRIKMovableHingeJointOriDesc*)ptr)->joint;	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRIKMovable::GetDesc((CRIKMovableDesc*)(CRIKMovableHingeJointOriDesc*)ptr);	\
 		((CRIKMovableHingeJointOriDesc*)ptr)->joint = joint;	\
 		return true;	\
@@ -1814,8 +1876,10 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -1824,8 +1888,10 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRSensor::SetDesc((CRSensorDesc*)(CROpticalSensorDesc*)ptr);	\
+		AfterSetDesc();	\
 	}\
-	virtual bool GetDesc(const void* ptr){ \
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		CRSensor::GetDesc((CRSensorDesc*)(CROpticalSensorDesc*)ptr);	\
 		return true;	\
 	}\
