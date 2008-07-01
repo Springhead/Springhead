@@ -415,6 +415,29 @@ struct PHBallJointDesc : public PHJointDesc{
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
 
+// ３要素モデルのボールジョイントのインタフェース
+struct PH3ElementBallJointIf : public PHBallJointIf{
+
+	/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	double  GetSecondDamper();
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param input 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(double input);
+};
+
+// ３要素モデルのボールジョイントのディスクリプタ
+struct PH3ElementBallJointDesc : public PHBallJointDesc{
+	SPR_DESCDEF(PH3ElementBallJoint);
+
+	double secondDamper;		// 二個目のダンパ係数
+
+	PH3ElementBallJointDesc();	// ディスクリプタのコンストラクタ
+};
+
 /// バネダンパのインタフェース
 struct PHSpringIf : public PHJointIf{
 	SPR_IFDEF(PHSpring);
@@ -458,6 +481,7 @@ struct PHSpringIf : public PHJointIf{
 	 */
 	double GetDamperOri();
 };
+
 /// バネダンパのディスクリプタ
 struct PHSpringDesc : public PHConstraintDesc{
 	SPR_DESCDEF(PHSpring);
