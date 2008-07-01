@@ -22,6 +22,7 @@
 #include "PHHingeJoint.h"
 #include "PHSliderJoint.h"
 #include "PHBallJoint.h"
+#include "PH3ElementBallJoint.h"
 #include "PHPathJoint.h"
 #include "PHSpring.h"
 #include "PHTreeNode.h"
