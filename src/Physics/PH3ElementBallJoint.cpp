@@ -53,7 +53,8 @@ void PH3ElementBallJoint::CompBias(){
 	
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
-		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
+		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep()) ;
+		//double tmp = 1.0 / (secondDamper + spring * GetScene()->GetTimeStep());
 		dA.w()[0] = tmp * dtinv;
 		dA.w()[1] = tmp * dtinv;
 		dA.w()[2] = tmp * dtinv;
