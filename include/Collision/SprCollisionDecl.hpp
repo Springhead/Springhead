@@ -1,4 +1,12 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CDShapeIf(base)	\
+	void SetStaticFriction(float mu0){	base::SetStaticFriction(mu0);}	\
+	float GetStaticFriction(){	return	base::GetStaticFriction();}	\
+	void SetDynamicFriction(float mu){	base::SetDynamicFriction(mu);}	\
+	float GetDynamicFriction(){	return	base::GetDynamicFriction();}	\
+	void SetElasticity(float e){	base::SetElasticity(e);}	\
+	float GetElasticity(){	return	base::GetElasticity();}	\
+	void SetDensity(float d){	base::SetDensity(d);}	\
+	float GetDensity(){	return	base::GetDensity();}	\
 	float CalcVolume(){	return	base::CalcVolume();}	\
 	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
