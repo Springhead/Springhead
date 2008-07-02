@@ -38,8 +38,8 @@ void MYApp::MyRenderInit(FWWin* window, int winNumber){
 	light[1].position = Vec4f(10.0, 20.0, -20.0, 1.0);
 	for(int i = 0 ; i < 2; i++){
 		render->PushLight(light[i]);
-		view[i].Pos() = Vec3f(6.0f*cos(Rad(camAngle[i])), 3.0f, 6.0f*sin(Rad(camAngle[i]))) * camZoom[i];	//カメラの座標を指定する
-		view[i].LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1000.0, 0.0));
+		//view[i].Pos() = Vec3f(6.0f*cos(Rad(camAngle[i])), 3.0f, 6.0f*sin(Rad(camAngle[i]))) * camZoom[i];	//カメラの座標を指定する
+		//view[i].LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1000.0, 0.0));
 	}
 	render->SetViewMatrix(view[winNumber].inv());
 }
@@ -50,22 +50,46 @@ void MYApp::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
 
 	GetSdk()->Clear();
-
-	for(int i = 0; i < 2 ; i++){
+	GetSdk()->SetDebugMode(true);
+	for(int i = 0; i < 1 ; i++){
 		FWAppGLUTDesc winDesc;
-		winDesc.width			= 480;
-		winDesc.height			= 320;
-		winDesc.left			= 10;
-		winDesc.top				= 30+360*i;
-		winDesc.parentWindow	= 0;
-		winDesc.fullscreen		= false;
-		winDesc.title			= winName[i];
+		{
+			winDesc.width			= 480;
+			winDesc.height			= 320;
+			winDesc.left			= 10;
+			winDesc.top				= 30+360*i;
+			winDesc.parentWindow	= 0;
+			winDesc.fullscreen		= false;
+			winDesc.title			= winName[i];
+		}
 		window[i] = CreateWin(winDesc);
 
-		fwScene[i] = GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
+		PHSceneDesc phDesc;
+		{
+			phDesc.timeStep			= dt;
+			phDesc.numIteration		= nIter;
+		}
+		fwScene[i] = GetSdk()->CreateScene(phDesc, GRSceneDesc());
+		
 		window[i]->SetScene(fwScene[i]);
-	
+
 		MyRenderInit(window[i], i);		
+	
+		PHSolidDesc descSolid;													//床の初期化用のディスクリプタの宣言
+		{
+			descSolid.dynamical = false;										//床だから物理法則を切る
+		}
+		
+		PHSolidIf* soFloor = window[i]->GetScene()->GetPHScene()->CreateSolid(descSolid);			//剛体インタフェースにディスクリプタの中身を渡した”剛体という概念”を登録する
+		soFloor->SetName("Floor");
+		CDBoxDesc descBox;														//床の衝突判定用のディスクリプタの宣言
+		{
+			descBox.boxsize			= Vec3f(30*i, 2, 30);						//箱のサイズの指定
+			descBox.material.mu		= (float) 1.0;
+			descBox.material.mu0	= (float) 1.0;
+		}
+		soFloor->AddShape(window[i]->GetScene()->GetPHScene()->GetSdk()->CreateShape(descBox));		//先ほど登録した”剛体という概念”に衝突判定できる実体を与える
+		soFloor->SetFramePosition(Vec3f(0, 0, 0));								//実体を持つ剛体の設置場所を指定する
 	}
 }
 
@@ -78,3 +102,14 @@ void MYApp::Keyboard(int key, int x, int y){
 		;
 	}
 }
+
+//void MYApp::Display(){
+//	if(!GetCurrentWin()->GetRender())return;
+//	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
+//	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
+//	fwSdk->GetRender()->ClearBuffer();
+//	fwSdk->GetRender()->BeginScene();
+//	if(fwSdk->GetScene())
+//		fwSdk->GetScene()->Draw(fwSdk->GetRender(), true);
+//	fwSdk->GetRender()->EndScene();
+//}
