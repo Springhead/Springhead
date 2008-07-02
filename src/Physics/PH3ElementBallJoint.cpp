@@ -13,7 +13,6 @@
 #pragma hdrstop
 #endif
 
-#include <iostream>
 using namespace PTM;
 using namespace std;
 
