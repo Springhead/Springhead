@@ -1,3 +1,10 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
 #include "MYApp.h"
 #include <Framework/SprFWAppGLUT.h>
 #include <GL/glew.h>
@@ -14,7 +21,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 3;
+	numWindow	= 10;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout;
 		sout << "Window " << i+1 << endl;
