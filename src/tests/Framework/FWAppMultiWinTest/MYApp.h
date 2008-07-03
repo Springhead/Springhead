@@ -1,3 +1,10 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
 #ifndef MYAPP_H
 #define MYAPP_H
 
@@ -15,14 +22,14 @@ private:
 	double					dt;				//< 積分幅
 	double					nIter;			//< LCP反復回数
 
-	int						numWindow;		//< ウィンドウの数
-	vector< FWWin* >		windows;		//< 作ったウィンドウ[0]:上画面，[1]:下画面
-	vector< FWSceneIf* >	fwScenes;		//< Physicsのシーングラフ[0]:上画面，[1]:下画面
-	vector< string >		winNames;		//< Windowの名前[0]:上画面，[1]:下画面
+	int						numWindow;		//< 作るウィンドウの数
+	vector< FWWin* >		windows;		//< 作ったウィンドウ
+	vector< FWSceneIf* >	fwScenes;		//< Physicsのシーングラフ
+	vector< string >		winNames;		//< Windowの名前
 
-	vector< float >			camAngles;		//< カメラの角度[0]:上画面，[1]:下画面
-	vector< float >			camZooms;		//< カメラの倍率[0]:上画面，[1]:下画面
-	vector< Affinef	>		views;			//< カメラ位置の回転・ズームを行う時の行列用の変数[0]:上画面，[1]:下画面
+	vector< float >			camAngles;		//< カメラの角度
+	vector< float >			camZooms;		//< カメラの倍率
+	vector< Affinef	>		views;			//< カメラ位置の回転・ズームを行う時の行列用の変数
 
 
 public:
