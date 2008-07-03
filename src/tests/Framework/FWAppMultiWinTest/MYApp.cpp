@@ -2,8 +2,11 @@
 #include <Framework/SprFWAppGLUT.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
+#include <iostream>
+#include <sstream>
 
 #define ESC 27
+using namespace std;
 
 //=======================================================================================================
 // コンストラクタ・デストラクタ
@@ -11,20 +14,20 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 5;
-	winName[0]  = "Window A";
-	winName[1]  = "Window B";
-	for(int i = 0; i < 2; i++){
-		window[i]	= NULL;
-		fwScene[i]	= NULL;
-		camAngle[i] = 0.0f;
-		camZoom[i]  = 2.0f;
+	numWindow	= 3;
+	for(int i = 0; i < numWindow; i++){
+		stringstream sout;
+		sout << "Window " << i+1 << endl;
+		winNames.push_back(sout.str());
+		camAngles.push_back(0.0f);
+		camZooms.push_back(2.0f);
+		views.push_back(Affinef());
 	}
 }
 
 //=======================================================================================================
 // クラス内の関数定義
-void MYApp::MyRenderInit(FWWin* window, int winNumber){
+void MYApp::MyRenderInit(FWWin* window, int num){
 	GRCameraDesc cam;
 	cam.size = Vec2f(0.05f, 0.0);
 	GRDebugRenderIf* render = window->render->Cast();
@@ -39,10 +42,10 @@ void MYApp::MyRenderInit(FWWin* window, int winNumber){
 	light[1].position = Vec4f(10.0, 20.0, -20.0, 1.0);
 	for(int i = 0 ; i < 2; i++){
 		render->PushLight(light[i]);
-		//view[i].Pos() = Vec3f(6.0f*cos(Rad(camAngle[i])), 3.0f, 6.0f*sin(Rad(camAngle[i]))) * camZoom[i];	//カメラの座標を指定する
-		//view[i].LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1000.0, 0.0));
+		//views[i].Pos() = Vec3f(6.0f*cos(Rad(camAngle[i])), 3.0f, 6.0f*sin(Rad(camAngle[i]))) * camZoom[i];	//カメラの座標を指定する
+		//views[i].LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1000.0, 0.0));
 	}
-	render->SetViewMatrix(view[winNumber].inv());
+	render->SetViewMatrix(views[num].inv());
 }
 //=======================================================================================================
 // 上位階層で宣言された関数のオーバーロード
@@ -57,36 +60,36 @@ void MYApp::Init(int argc, char* argv[]){
 		{
 			winDesc.width			= 480;
 			winDesc.height			= 320;
-			winDesc.left			= 10 + 480*(i/2);
-			winDesc.top				= 30 + 360*i;
+			winDesc.left			= 10 + 500*(i/2);
+			winDesc.top				= 30 + 360*(i%2);
 			winDesc.parentWindow	= 0;
 			winDesc.fullscreen		= false;
-			if(winName[i]){
-				winDesc.title		= winName[i];
+			if(winNames[i].size()){
+				winDesc.title		= winNames[i];
 			}else{
-				winDesc.title		= "window";
+				winDesc.title		= "Window";
 			}
 		}
-		window[i] = CreateWin(winDesc);
+		windows.push_back(CreateWin(winDesc));
 
 		PHSceneDesc phDesc;
 		{
 			phDesc.timeStep			= dt;
 			phDesc.numIteration		= nIter;
 		}
-		fwScene[i] = GetSdk()->CreateScene(phDesc, GRSceneDesc());
+		fwScenes.push_back(GetSdk()->CreateScene(phDesc, GRSceneDesc()));
 		
-		window[i]->SetScene(fwScene[i]);
-		window[i]->SetRender(GetSdk()->CreateRender());
-
-		MyRenderInit(window[i], i);		
+		windows[i]->SetScene(fwScenes[i]);
+		windows[i]->SetRender(GetSdk()->CreateRender());
+		
+		MyRenderInit(windows[i], i);		
 	
 		PHSolidDesc descSolid;													//床の初期化用のディスクリプタの宣言
 		{
 			descSolid.dynamical = false;										//床だから物理法則を切る
 		}
 		
-		PHSolidIf* soFloor = window[i]->GetScene()->GetPHScene()->CreateSolid(descSolid);			//剛体インタフェースにディスクリプタの中身を渡した”剛体という概念”を登録する
+		PHSolidIf* soFloor = windows[i]->GetScene()->GetPHScene()->CreateSolid(descSolid);			//剛体インタフェースにディスクリプタの中身を渡した”剛体という概念”を登録する
 		soFloor->SetName("Floor");
 		CDBoxDesc descBox;														//床の衝突判定用のディスクリプタの宣言
 		{
@@ -94,7 +97,7 @@ void MYApp::Init(int argc, char* argv[]){
 			descBox.material.mu		= (float) 1.0;
 			descBox.material.mu0	= (float) 1.0;
 		}
-		soFloor->AddShape(window[i]->GetScene()->GetPHScene()->GetSdk()->CreateShape(descBox));		//先ほど登録した”剛体という概念”に衝突判定できる実体を与える
+		soFloor->AddShape(windows[i]->GetScene()->GetPHScene()->GetSdk()->CreateShape(descBox));		//先ほど登録した”剛体という概念”に衝突判定できる実体を与える
 		soFloor->SetFramePosition(Vec3f(0, 0, 0));								//実体を持つ剛体の設置場所を指定する
 	}
 	return;
@@ -106,17 +109,16 @@ void MYApp::Keyboard(int key, int x, int y){
 	} else if(key == ESC){
 		exit(0);
 	} else{
-		;
 	}
 }
 
-//void MYApp::Display(){
-//	if(!GetCurrentWin()->GetRender())return;
-//	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
-//	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
-//	fwSdk->GetRender()->ClearBuffer();
-//	fwSdk->GetRender()->BeginScene();
-//	if(fwSdk->GetScene())
-//		fwSdk->GetScene()->Draw(fwSdk->GetRender(), true);
-//	fwSdk->GetRender()->EndScene();
-//}
+void MYApp::Display(){
+	if(!GetCurrentWin()->GetRender())return;
+	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
+	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
+	fwSdk->GetRender()->ClearBuffer();
+	fwSdk->GetRender()->BeginScene();
+	if(fwSdk->GetScene())
+		fwSdk->GetScene()->Draw(fwSdk->GetRender(), true);
+	fwSdk->GetRender()->EndScene();
+}

@@ -271,6 +271,11 @@ public:
 	*/
 	virtual void Joystick(unsigned int buttonMask, int x, int y, int z){}
 
+
+	/** @brief ƒJƒƒ‰î•ñ‚ğ•Ô‚·
+		@return camInfo
+	*/
+	virtual CameraInfo GetCameraInfo(){return cameraInfo;}
 	virtual ~FWApp();
 
 };
