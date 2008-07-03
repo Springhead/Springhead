@@ -1,6 +1,7 @@
 // FWAppGLtest.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 //
 
+#include <windows.h>
 #include <Springhead.h>
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
@@ -86,7 +87,18 @@ int SPR_CDECL main(int argc, char* argv[]){
 	FWAppGLUTDesc wd;
 	wd.left = 0; wd.top = 0; wd.width = 500; wd.title = "original scene";
 	FWWin* w1 = app->CreateWin(wd);
-	w1->scene = app->GetSdk()->GetScene(0);
+	
+	app->GetSdk()->SetScene(app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc()));
+	
+	w1->SetScene(app->GetSdk()->GetScene(0));
+	if(app->GetSdk()->GetScene(0))
+		w1->scene = app->GetSdk()->GetScene(0);
+	else{
+		DSTR		<< "[Error] : NO Scene we have." << std::endl;
+		std::cout	<< "[Error] : NO Scene we have." << std::endl;
+		Sleep(1000);
+		return -1;
+	}
 #if 0
 	//	シーンのセーブ
 	app->GetSdk()->SaveScene("save.x");
