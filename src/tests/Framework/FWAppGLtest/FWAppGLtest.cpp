@@ -99,7 +99,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 		Sleep(1000);
 		return -1;
 	}
-#if 1
+#if 0
 	//	シーンのセーブ
 	app->GetSdk()->SaveScene("save.x");
 	//	セーブしたシーンのロード

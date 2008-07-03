@@ -72,6 +72,7 @@ public:
 
 	int			GetID() const{ return id; }
 	GRRenderIf*	GetRender(){ return render; }
+	void		SetRender(GRRenderIf* data){render = data;}
 	FWSceneIf*  GetScene(){ return scene; }
 	void		SetScene(FWSceneIf* s){ scene = s; }
 
