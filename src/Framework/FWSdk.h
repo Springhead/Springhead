@@ -54,7 +54,6 @@ public:
 	virtual int NScene() const{	return (int)scenes.size(); }
 	virtual void SwitchScene(FWSceneIf* scene){ curScene = scene; }
 	virtual FWSceneIf* GetScene(int i = -1);
-	virtual void SetScene(FWSceneIf* fwScene);
 	virtual void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
 
 	virtual GRRenderIf*	CreateRender();

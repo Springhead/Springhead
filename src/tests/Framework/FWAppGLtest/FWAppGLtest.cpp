@@ -30,7 +30,7 @@ public:
 			}
 		}
 	}
-	void Keyboard(unsigned char key, int x, int y){
+	void Keyboard(int key, int x, int y){
 		if (key==0x1b){
 			delete app;
 			exit(0);
@@ -71,7 +71,10 @@ public:
 int SPR_CDECL main(int argc, char* argv[]){
 	app = new MyApp;
 	app->Init(argc, argv);
-	app->GetSdk()->Clear();
+
+	app->GetSdk()->Clear();	//	SDK全体を初期化
+
+	//	シーンの構築
 #if 0	//	シーンの構築をC++言語でやる場合
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
 	PHSceneIf* phscene = app->GetSdk()->GetScene()->GetPHScene();
@@ -83,33 +86,22 @@ int SPR_CDECL main(int argc, char* argv[]){
 #else	//	シーンをファイルからロードするばあい。
 	app->GetSdk()->LoadScene("import/import.x");
 #endif
-	//	ウィンドウ1にシーンを表示するよう設定
+	//	ウィンドウ1を作成
 	FWAppGLUTDesc wd;
 	wd.left = 0; wd.top = 0; wd.width = 500; wd.title = "original scene";
-	FWWin* w1 = app->CreateWin(wd);
-	
-	app->GetSdk()->SetScene(app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc()));
-	
-	w1->SetScene(app->GetSdk()->GetScene(0));
-	if(app->GetSdk()->GetScene(0))
-		w1->scene = app->GetSdk()->GetScene(0);
-	else{
-		DSTR		<< "[Error] : NO Scene we have." << std::endl;
-		std::cout	<< "[Error] : NO Scene we have." << std::endl;
-		Sleep(1000);
-		return -1;
-	}
-#if 0
+	FWWin* w0 = app->CreateWin(wd);	//	作成と同時に，シーン0 がウィンドウ0 に割り当てられる．
+
+#if 1
 	//	シーンのセーブ
 	app->GetSdk()->SaveScene("save.x");
-	//	セーブしたシーンのロード
+	//	セーブしたシーンのロード(2番目のシーン(シーン1)がロードされる)
 	app->GetSdk()->LoadScene("save.x");
 	app->GetSdk()->SaveScene("save2.x");
 	
-	//	ロードしたシーンをウィンドウ２に表示するように設定
+	//	ロードしたシーン1をウィンドウ1に表示するように設定
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
-	FWWin* w2 = app->CreateWin(wd);
-	w2->scene = app->GetSdk()->GetScene(1);
+	FWWin* w1 = app->CreateWin(wd);
+	w1->scene = app->GetSdk()->GetScene(1);
 #endif
 	app->Start();
 	return 0;
