@@ -24,6 +24,7 @@
 	int NScene()const{	return	base::NScene();}	\
 	void SwitchScene(Spr::FWSceneIf* scene){	base::SwitchScene(scene);}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\
+	void SetScene(Spr::FWSceneIf* fwScene){	base::SetScene(fwScene);}	\
 	void MergeScene(Spr::FWSceneIf* scene0, Spr::FWSceneIf* scene1){	base::MergeScene(scene0, scene1);}	\
 	GRRenderIf* CreateRender(){	return	base::CreateRender();}	\
 	int NRender()const{	return	base::NRender();}	\
