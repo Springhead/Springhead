@@ -42,7 +42,6 @@ public:
 	// 基底のクラスで宣言された関数のうちオーバーロードする関数
 	void Init(int argc, char* argv[]);
 	void Keyboard(int key, int x, int y);
-	void Display();
 	
 };
 

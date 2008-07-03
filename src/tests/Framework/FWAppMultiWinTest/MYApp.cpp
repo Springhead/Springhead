@@ -111,14 +111,3 @@ void MYApp::Keyboard(int key, int x, int y){
 	} else{
 	}
 }
-
-void MYApp::Display(){
-	if(!GetCurrentWin()->GetRender())return;
-	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
-	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
-	fwSdk->GetRender()->ClearBuffer();
-	fwSdk->GetRender()->BeginScene();
-	if(fwSdk->GetScene())
-		fwSdk->GetScene()->Draw(fwSdk->GetRender(), true);
-	fwSdk->GetRender()->EndScene();
-}
