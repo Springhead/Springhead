@@ -124,10 +124,6 @@ FWSceneIf* FWSdk::GetScene(int i){
 	return NULL;
 }
 
-void FWSdk::SetScene(FWSceneIf* fwScene){
-	scenes.push_back(fwScene);
-}
-
 void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	if(scene0 == scene1)
 		return;
@@ -161,7 +157,6 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 		curScene = scene0;
 
 	scenes.erase(it1);
-
 }
 
 GRRenderIf*	FWSdk::CreateRender(){

@@ -58,12 +58,6 @@ struct FWSdkIf : SdkIf {
 		@param index 取得するシーンのインデックス．省略するとアクティブシーンを取得する．
 	 */
 	FWSceneIf* GetScene(int index = -1);
-
-	/** @brief シーンを設定する
-		@param fwScene FWSdkに設定するFWScene
-	*/
-	void SetScene(FWSceneIf* fwScene);
-
 	/** @brief シーンを混ぜる
 		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
 	 */
