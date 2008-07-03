@@ -60,7 +60,6 @@ public:
 		if (cam && cam->GetFrame()){
 			//Affinef af = cam->GetFrame()->GetTransform();
 			cam->GetFrame()->SetTransform(cameraInfo.view);
-			DSTR << cameraInfo.view ;
 		}else{
 			wr->render->SetViewMatrix(cameraInfo.view.inv());
 		}
