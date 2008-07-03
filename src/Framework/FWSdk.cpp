@@ -16,6 +16,7 @@
 #pragma hdrstop
 #endif
 #include <stdlib.h>
+#include <vector>
 #include <GL/glut.h>
 
 using namespace std;
@@ -122,12 +123,17 @@ FWSceneIf* FWSdk::GetScene(int i){
 		return scenes[i];
 	return NULL;
 }
+
+void FWSdk::SetScene(FWSceneIf* fwScene){
+	scenes.push_back(fwScene);
+}
+
 void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	if(scene0 == scene1)
 		return;
 	DSTR << "merging " << scene0->GetName() << " and " << scene1->GetName() << endl;
 	
-	Scenes::iterator it0, it1;
+	FWScenes::iterator it0, it1;
 	it0 = find(scenes.begin(), scenes.end(), scene0);
 	it1 = find(scenes.begin(), scenes.end(), scene1);
 	if(it0 == scenes.end() || it1 == scenes.end())
@@ -208,7 +214,7 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 bool FWSdk::DelChildObject(ObjectIf* o){
 	FWSceneIf* s = DCAST(FWSceneIf, o);
 	if(s){
-		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
+		FWScenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if(it != scenes.end()){
 			scenes.erase(it);
 			if(curScene == s)
