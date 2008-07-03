@@ -11,6 +11,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
+	numWindow	= 5;
 	winName[0]  = "Window A";
 	winName[1]  = "Window B";
 	for(int i = 0; i < 2; i++){
@@ -51,16 +52,20 @@ void MYApp::Init(int argc, char* argv[]){
 
 	GetSdk()->Clear();
 	GetSdk()->SetDebugMode(true);
-	for(int i = 0; i < 1 ; i++){
+	for(int i = 0; i < numWindow ; i++){
 		FWAppGLUTDesc winDesc;
 		{
 			winDesc.width			= 480;
 			winDesc.height			= 320;
-			winDesc.left			= 10;
-			winDesc.top				= 30+360*i;
+			winDesc.left			= 10 + 480*(i/2);
+			winDesc.top				= 30 + 360*i;
 			winDesc.parentWindow	= 0;
 			winDesc.fullscreen		= false;
-			winDesc.title			= winName[i];
+			if(winName[i]){
+				winDesc.title		= winName[i];
+			}else{
+				winDesc.title		= "window";
+			}
 		}
 		window[i] = CreateWin(winDesc);
 
@@ -72,6 +77,7 @@ void MYApp::Init(int argc, char* argv[]){
 		fwScene[i] = GetSdk()->CreateScene(phDesc, GRSceneDesc());
 		
 		window[i]->SetScene(fwScene[i]);
+		window[i]->SetRender(GetSdk()->CreateRender());
 
 		MyRenderInit(window[i], i);		
 	
@@ -91,6 +97,7 @@ void MYApp::Init(int argc, char* argv[]){
 		soFloor->AddShape(window[i]->GetScene()->GetPHScene()->GetSdk()->CreateShape(descBox));		//æ‚Ù‚Ç“o˜^‚µ‚½h„‘Ì‚Æ‚¢‚¤ŠT”Oh‚ÉÕ“Ë”»’è‚Å‚«‚éÀ‘Ì‚ğ—^‚¦‚é
 		soFloor->SetFramePosition(Vec3f(0, 0, 0));								//À‘Ì‚ğ‚Â„‘Ì‚Ìİ’uêŠ‚ğw’è‚·‚é
 	}
+	return;
 }
 
 void MYApp::Keyboard(int key, int x, int y){
