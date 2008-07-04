@@ -21,7 +21,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 10;
+	numWindow	= 1;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout;
 		sout << "Window " << i+1 << endl;
@@ -78,14 +78,19 @@ void MYApp::Init(int argc, char* argv[]){
 			}
 		}
 		windows.push_back(CreateWin(winDesc));
-
-		PHSceneDesc phDesc;
-		{
-			phDesc.timeStep			= dt;
-			phDesc.numIteration		= nIter;
-		}
-		fwScenes.push_back(GetSdk()->CreateScene(phDesc, GRSceneDesc()));
 		
+		if(GetSdk()->LoadScene("sceneWindows.x"))
+			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
+		else{
+		
+			PHSceneDesc phDesc;
+			{
+				phDesc.timeStep			= dt;
+				phDesc.numIteration		= nIter;
+			}
+			fwScenes.push_back(GetSdk()->CreateScene(phDesc, GRSceneDesc()));
+
+		}
 		windows[i]->SetScene(fwScenes[i]);
 		windows[i]->SetRender(GetSdk()->CreateRender());
 		
@@ -107,6 +112,7 @@ void MYApp::Init(int argc, char* argv[]){
 		soFloor->AddShape(windows[i]->GetScene()->GetPHScene()->GetSdk()->CreateShape(descBox));		//æ‚Ù‚Ç“o˜^‚µ‚½h„‘Ì‚Æ‚¢‚¤ŠT”Oh‚ÉÕ“Ë”»’è‚Å‚«‚éŽÀ‘Ì‚ð—^‚¦‚é
 		soFloor->SetFramePosition(Vec3f(0, 0, 0));								//ŽÀ‘Ì‚ðŽ‚Â„‘Ì‚ÌÝ’uêŠ‚ðŽw’è‚·‚é
 	}
+	GetSdk()->SaveScene("sceneMultiWindow.x");
 	return;
 }
 
@@ -117,4 +123,26 @@ void MYApp::Keyboard(int key, int x, int y){
 		exit(0);
 	} else{
 	}
+}
+
+void MYApp::Display(){
+	
+		FWWin* wr = GetCurrentWin();
+
+		GetSdk()->SetDebugMode(true);
+		GRDebugRenderIf* r = wr->render->Cast();
+		r->SetRenderMode(false, true);
+		r->DrawWorldAxis(GetSdk()->GetScene()->GetPHScene());
+//		r->EnableRenderAxis();
+		r->EnableRenderForce();
+		r->EnableRenderContact();
+		
+		GRCameraIf* cam = wr->scene->GetGRScene()->GetCamera();
+		if (cam && cam->GetFrame()){
+			//Affinef af = cam->GetFrame()->GetTransform();
+			cam->GetFrame()->SetTransform(cameraInfo.view);
+		}else{
+			wr->render->SetViewMatrix(cameraInfo.view.inv());
+		}
+		FWAppGLUT::Display();
 }

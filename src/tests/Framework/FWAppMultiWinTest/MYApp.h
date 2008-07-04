@@ -31,7 +31,6 @@ private:
 	vector< float >			camZooms;		//< カメラの倍率
 	vector< Affinef	>		views;			//< カメラ位置の回転・ズームを行う時の行列用の変数
 
-
 public:
 	
 	// コンストラクタ
@@ -49,6 +48,7 @@ public:
 	// 基底のクラスで宣言された関数のうちオーバーロードする関数
 	void Init(int argc, char* argv[]);
 	void Keyboard(int key, int x, int y);
+	void Display();
 	
 };
 
