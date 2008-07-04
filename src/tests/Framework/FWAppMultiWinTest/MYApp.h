@@ -26,6 +26,7 @@ private:
 	vector< FWWin* >		windows;		//< 作ったウィンドウ
 	vector< FWSceneIf* >	fwScenes;		//< Physicsのシーングラフ
 	vector< string >		winNames;		//< Windowの名前
+	vector< string >		fileNames;		//< 読み込むファイルの名前
 
 	vector< float >			camAngles;		//< カメラの角度
 	vector< float >			camZooms;		//< カメラの倍率
