@@ -62,7 +62,17 @@ void MYApp::Init(int argc, char* argv[]){
 
 	GetSdk()->Clear();
 	GetSdk()->SetDebugMode(true);
+
 	for(int i = 0; i < numWindow ; i++){
+		
+		if(GetSdk()->LoadScene("sceneWindows.x")){
+			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
+			DSTR << "FWScene was loaded." << std::endl;
+		}
+		else{
+			DSTR << "NO scenes wa have." << std::endl;
+		}
+
 		FWAppGLUTDesc winDesc;
 		{
 			winDesc.width			= 480;
@@ -79,11 +89,7 @@ void MYApp::Init(int argc, char* argv[]){
 		}
 		windows.push_back(CreateWin(winDesc));
 		
-		if(GetSdk()->LoadScene("sceneWindows.x"))
-			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
-		else{
-			DSTR << "NO scenes wa have." << std::endl;
-		}
+
 		windows[i]->SetScene(fwScenes[i]);
 		//windows[i]->SetRender(GetSdk()->CreateRender());
 		
