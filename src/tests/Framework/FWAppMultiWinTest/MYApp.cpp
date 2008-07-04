@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "MYApp.h"
+#include <windows.h>
 #include <Framework/SprFWAppGLUT.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -23,9 +24,12 @@ MYApp::MYApp(){
 	nIter		= 20;
 	numWindow	= 3;
 	for(int i = 0; i < numWindow; i++){
-		stringstream sout;
-		sout << "Window " << i+1 << endl;
-		winNames.push_back(sout.str());
+		stringstream sout1;
+		sout1 << "Window " << i+1 << endl;
+		winNames.push_back(sout1.str());
+		stringstream sout2;
+		sout2 << "sceneWindow" << i+1 << ".x" << endl;
+		fileNames.push_back(sout2.str());
 		camAngles.push_back(0.0f);
 		camZooms.push_back(2.0f);
 		views.push_back(Affinef());
@@ -34,6 +38,16 @@ MYApp::MYApp(){
 
 //=======================================================================================================
 // クラス内の関数定義
+void MYApp::NumOfClassMembers(std::ostream& out){
+	out << "Show the sizes of te MYApp's vector members" << std::endl;
+	out << "numWindow		: " << numWindow		<< std::endl;
+	out << "windows.size    : " << windows.size()	<< std::endl;
+	out << "fwScenes		: " << fwScenes.size()	<< std::endl;
+	out << "winNames		: " << winNames.size()  << std::endl;
+	out << "camAngles		: " << camAngles.size()	<< std::endl;
+	out << "camZooms		: " << camZooms.size()	<< std::endl;
+	out << "views			: " << views.size()		<< std::endl;
+}
 
 //=======================================================================================================
 // 上位階層で宣言された関数のオーバーロード
@@ -45,13 +59,15 @@ void MYApp::Init(int argc, char* argv[]){
 	GetSdk()->SetDebugMode(true);
 
 	for(int i = 0; i < numWindow ; i++){
-		
-		if(GetSdk()->LoadScene("sceneWindow.x")){
+		DSTR << fileNames[i] << std::endl;
+		if(GetSdk()->LoadScene(fileNames[i].c_str())){
 			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
+			Sleep(1000);
 			DSTR << "FWScene was loaded." << std::endl;
 		}
 		else{
 			DSTR << "NO scenes wa have." << std::endl;
+			exit(0xff);
 		}
 
 		FWAppGLUTDesc winDesc;
@@ -75,17 +91,6 @@ void MYApp::Init(int argc, char* argv[]){
 	GetSdk()->SaveScene("sceneMultiWindow.x");
 	NumOfClassMembers(DSTR);
 	return;
-}
-
-void MYApp::NumOfClassMembers(std::ostream& out){
-	out << "Show the sizes of te MYApp's vector members" << std::endl;
-	out << "numWindow		: " << numWindow		<< std::endl;
-	out << "windows.size    : " << windows.size()	<< std::endl;
-	out << "fwScenes		: " << fwScenes.size()	<< std::endl;
-	out << "winNames		: " << winNames.size()  << std::endl;
-	out << "camAngles		: " << camAngles.size()	<< std::endl;
-	out << "camZooms		: " << camZooms.size()	<< std::endl;
-	out << "views			: " << views.size()		<< std::endl;
 }
 
 void MYApp::Keyboard(int key, int x, int y){
