@@ -21,7 +21,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 1;
+	numWindow	= 3;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout;
 		sout << "Window " << i+1 << endl;
@@ -58,14 +58,14 @@ void MYApp::MyRenderInit(FWWin* window, int num){
 // 上位階層で宣言された関数のオーバーロード
 
 void MYApp::Init(int argc, char* argv[]){
+	
 	FWAppGLUT::Init(argc, argv);
-
 	GetSdk()->Clear();
 	GetSdk()->SetDebugMode(true);
 
 	for(int i = 0; i < numWindow ; i++){
 		
-		if(GetSdk()->LoadScene("sceneWindows.x")){
+		if(GetSdk()->LoadScene("sceneWindow.x")){
 			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
 			DSTR << "FWScene was loaded." << std::endl;
 		}
@@ -88,31 +88,24 @@ void MYApp::Init(int argc, char* argv[]){
 			}
 		}
 		windows.push_back(CreateWin(winDesc));
-		
-
-		windows[i]->SetScene(fwScenes[i]);
-		//windows[i]->SetRender(GetSdk()->CreateRender());
-		
-		MyRenderInit(windows[i], i);		
-	
-		PHSolidDesc descSolid;													//床の初期化用のディスクリプタの宣言
-		{
-			descSolid.dynamical = false;										//床だから物理法則を切る
-		}
-		
-		PHSolidIf* soFloor = windows[i]->GetScene()->GetPHScene()->CreateSolid(descSolid);			//剛体インタフェースにディスクリプタの中身を渡した”剛体という概念”を登録する
-		soFloor->SetName("Floor");
-		CDBoxDesc descBox;														//床の衝突判定用のディスクリプタの宣言
-		{
-			descBox.boxsize			= Vec3f(30*i, 2, 30);						//箱のサイズの指定
-			descBox.material.mu		= (float) 1.0;
-			descBox.material.mu0	= (float) 1.0;
-		}
-		soFloor->AddShape(windows[i]->GetScene()->GetPHScene()->GetSdk()->CreateShape(descBox));		//先ほど登録した”剛体という概念”に衝突判定できる実体を与える
-		soFloor->SetFramePosition(Vec3f(0, 0, 0));								//実体を持つ剛体の設置場所を指定する
+		windows[i]->scene = fwScenes[i];
+		MyRenderInit(windows[i], i);
+		NumOfClassMembers(DSTR);
 	}
 	GetSdk()->SaveScene("sceneMultiWindow.x");
+
 	return;
+}
+
+void MYApp::NumOfClassMembers(std::ostream& out){
+	out << "Show the sizes of te MYApp's vector members" << std::endl;
+	out << "numWindow		: " << numWindow		<< std::endl;
+	out << "windows.size    : " << windows.size()	<< std::endl;
+	out << "fwScenes		: " << fwScenes.size()	<< std::endl;
+	out << "winNames		: " << winNames.size()  << std::endl;
+	out << "camAngles		: " << camAngles.size()	<< std::endl;
+	out << "camZooms		: " << camZooms.size()	<< std::endl;
+	out << "views			: " << views.size()		<< std::endl;
 }
 
 void MYApp::Keyboard(int key, int x, int y){
