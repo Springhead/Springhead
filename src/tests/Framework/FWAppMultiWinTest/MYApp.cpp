@@ -82,17 +82,10 @@ void MYApp::Init(int argc, char* argv[]){
 		if(GetSdk()->LoadScene("sceneWindows.x"))
 			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
 		else{
-		
-			PHSceneDesc phDesc;
-			{
-				phDesc.timeStep			= dt;
-				phDesc.numIteration		= nIter;
-			}
-			fwScenes.push_back(GetSdk()->CreateScene(phDesc, GRSceneDesc()));
-
+			DSTR << "NO scenes wa have." << std::endl;
 		}
 		windows[i]->SetScene(fwScenes[i]);
-		windows[i]->SetRender(GetSdk()->CreateRender());
+		//windows[i]->SetRender(GetSdk()->CreateRender());
 		
 		MyRenderInit(windows[i], i);		
 	
