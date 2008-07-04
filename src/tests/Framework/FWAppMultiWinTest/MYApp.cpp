@@ -22,7 +22,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 1;
+	numWindow	= 2;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout1;
 		sout1 << "Window " << i+1;
