@@ -37,7 +37,6 @@ public:
 	MYApp();
 
 	// このクラス内で新しく宣言する関数
-	void MyRenderInit(FWWin* window, int num);
 	void NumOfClassMembers(std::ostream& out);
 
 	// インタフェース関数

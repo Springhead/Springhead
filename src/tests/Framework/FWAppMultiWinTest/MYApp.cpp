@@ -34,26 +34,7 @@ MYApp::MYApp(){
 
 //=======================================================================================================
 // クラス内の関数定義
-void MYApp::MyRenderInit(FWWin* window, int num){
-	GRCameraDesc cam;
-	cam.size = Vec2f(0.05f, 0.0);
-	GRDebugRenderIf* render = window->render->Cast();
-	render->SetCamera(cam);
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-	GRLightDesc light[2];
-	light[0].position = Vec4f(10.0,  20.0, 20.0, 1.0);
-	light[1].position = Vec4f(10.0, 20.0, -20.0, 1.0);
-	for(int i = 0 ; i < 2; i++){
-		render->PushLight(light[i]);
-		//views[i].Pos() = Vec3f(6.0f*cos(Rad(camAngle[i])), 3.0f, 6.0f*sin(Rad(camAngle[i]))) * camZoom[i];	//カメラの座標を指定する
-		//views[i].LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1000.0, 0.0));
-	}
-	render->SetViewMatrix(views[num].inv());
-}
+
 //=======================================================================================================
 // 上位階層で宣言された関数のオーバーロード
 
@@ -89,11 +70,10 @@ void MYApp::Init(int argc, char* argv[]){
 		}
 		windows.push_back(CreateWin(winDesc));
 		windows[i]->scene = fwScenes[i];
-		MyRenderInit(windows[i], i);
-		NumOfClassMembers(DSTR);
+		views.push_back(GetCameraInfo().view);
 	}
 	GetSdk()->SaveScene("sceneMultiWindow.x");
-
+	NumOfClassMembers(DSTR);
 	return;
 }
 
