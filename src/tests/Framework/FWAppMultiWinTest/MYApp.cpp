@@ -22,13 +22,13 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 3;
+	numWindow	= 1;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout1;
-		sout1 << "Window " << i+1 << endl;
+		sout1 << "Window " << i+1;
 		winNames.push_back(sout1.str());
 		stringstream sout2;
-		sout2 << "sceneWindow" << i+1 << ".x" << endl;
+		sout2 << "window" << i+1 << ".x";
 		fileNames.push_back(sout2.str());
 		camAngles.push_back(0.0f);
 		camZooms.push_back(2.0f);
@@ -59,11 +59,9 @@ void MYApp::Init(int argc, char* argv[]){
 	GetSdk()->SetDebugMode(true);
 
 	for(int i = 0; i < numWindow ; i++){
-		DSTR << fileNames[i] << std::endl;
-		if(GetSdk()->LoadScene(fileNames[i].c_str())){
+
+		if(GetSdk()->LoadScene(fileNames[i])){
 			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
-			Sleep(1000);
-			DSTR << "FWScene was loaded." << std::endl;
 		}
 		else{
 			DSTR << "NO scenes wa have." << std::endl;
@@ -86,7 +84,7 @@ void MYApp::Init(int argc, char* argv[]){
 		}
 		windows.push_back(CreateWin(winDesc));
 		windows[i]->scene = fwScenes[i];
-		views.push_back(GetCameraInfo().view);
+		views.back() = GetCameraInfo().view;
 	}
 	GetSdk()->SaveScene("sceneMultiWindow.x");
 	NumOfClassMembers(DSTR);
