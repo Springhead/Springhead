@@ -21,6 +21,7 @@ class MYApp : public FWAppGLUT, public UTRefCount{
 private:
 	double					dt;				//< 積分幅
 	double					nIter;			//< LCP反復回数
+	bool					bTimer;
 
 	int						numWindow;		//< 作るウィンドウの数
 	vector< FWWin* >		windows;		//< 作ったウィンドウ
@@ -28,8 +29,6 @@ private:
 	vector< string >		winNames;		//< Windowの名前
 	vector< string >		fileNames;		//< 読み込むファイルの名前
 
-	vector< float >			camAngles;		//< カメラの角度
-	vector< float >			camZooms;		//< カメラの倍率
 	vector< Affinef	>		views;			//< カメラ位置の回転・ズームを行う時の行列用の変数
 
 public:
@@ -50,6 +49,7 @@ public:
 	void Init(int argc, char* argv[]);
 	void Keyboard(int key, int x, int y);
 	void Display();
+	void Step();
 	
 };
 

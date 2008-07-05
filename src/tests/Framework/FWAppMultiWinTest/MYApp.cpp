@@ -22,6 +22,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
+	bTimer		= true;
 	numWindow	= 3;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout1;
@@ -30,8 +31,6 @@ MYApp::MYApp(){
 		stringstream sout2;
 		sout2 << "window" << i+1 << ".x";
 		fileNames.push_back(sout2.str());
-		camAngles.push_back(0.0f);
-		camZooms.push_back(2.0f);
 		views.push_back(Affinef());
 	}
 }
@@ -44,8 +43,6 @@ void MYApp::NumOfClassMembers(std::ostream& out){
 	out << "windows.size    : " << windows.size()	<< std::endl;
 	out << "fwScenes		: " << fwScenes.size()	<< std::endl;
 	out << "winNames		: " << winNames.size()  << std::endl;
-	out << "camAngles		: " << camAngles.size()	<< std::endl;
-	out << "camZooms		: " << camZooms.size()	<< std::endl;
 	out << "views			: " << views.size()		<< std::endl;
 }
 
@@ -56,7 +53,6 @@ void MYApp::Init(int argc, char* argv[]){
 	
 	FWAppGLUT::Init(argc, argv);
 	GetSdk()->Clear();
-	GetSdk()->SetDebugMode(true);
 
 	for(int i = 0; i < numWindow ; i++){
 
@@ -72,7 +68,7 @@ void MYApp::Init(int argc, char* argv[]){
 
 		}
 		else{
-			DSTR << "[Error] : Cannot open " << fileNames[i] << " (MYApp.cpp l.75)" << std::endl;
+			DSTR << "[Error] : Cannot open " << fileNames[i] << ". (MYApp.cpp l.75)" << std::endl;
 			exit(0xff);
 		}
 
@@ -94,7 +90,6 @@ void MYApp::Init(int argc, char* argv[]){
 		windows[i]->scene = fwScenes[i];
 		views.back() = GetCameraInfo().view;
 	}
-	GetSdk()->SaveScene("sceneMultiWindow.x");
 	NumOfClassMembers(DSTR);
 	return;
 }
@@ -109,22 +104,32 @@ void MYApp::Keyboard(int key, int x, int y){
 }
 
 void MYApp::Display(){
-	FWWin* wr = GetCurrentWin();
+		FWWin* wr = GetCurrentWin();
 
-	GetSdk()->SetDebugMode(true);
-	GRDebugRenderIf* r = wr->render->Cast();
-	r->SetRenderMode(false, true);
-	r->DrawWorldAxis(GetSdk()->GetScene()->GetPHScene());
+// Mesh ‚ª‚ ‚éê‡‚Í#if _DEBUG‚Å‚­‚­‚é (from here)
+		GetSdk()->SetDebugMode(true);
+		GRDebugRenderIf* r = wr->render->Cast();
+		r->SetRenderMode(true, true);
 //		r->EnableRenderAxis();
-	r->EnableRenderForce();
-	r->EnableRenderContact();
-	
-	GRCameraIf* cam = wr->scene->GetGRScene()->GetCamera();
-	if (cam && cam->GetFrame()){
-		//Affinef af = cam->GetFrame()->GetTransform();
-		cam->GetFrame()->SetTransform(cameraInfo.view);
-	}else{
-		wr->render->SetViewMatrix(cameraInfo.view.inv());
+		r->EnableRenderForce();
+		r->EnableRenderContact();
+//#endif (to here)
+
+		GRCameraIf* cam = wr->scene->GetGRScene()->GetCamera();
+		if (cam && cam->GetFrame()){
+			//Affinef af = cam->GetFrame()->GetTransform();
+			cam->GetFrame()->SetTransform(cameraInfo.view);
+		}else{
+			wr->render->SetViewMatrix(cameraInfo.view.inv());
+		}
+		FWAppGLUT::Display();
+}
+
+void MYApp::Step(){
+	if(bTimer){
+		for(int i = 0; i < numWindow; i++){
+			SetCurrentWin(GetWin(i));
+			glutPostRedisplay();	
+		}
 	}
-	FWAppGLUT::Display();
 }
