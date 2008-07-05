@@ -22,7 +22,7 @@ MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
 	nIter		= 20;
-	numWindow	= 2;
+	numWindow	= 3;
 	for(int i = 0; i < numWindow; i++){
 		stringstream sout1;
 		sout1 << "Window " << i+1;
@@ -61,10 +61,18 @@ void MYApp::Init(int argc, char* argv[]){
 	for(int i = 0; i < numWindow ; i++){
 
 		if(GetSdk()->LoadScene(fileNames[i])){
-			fwScenes.push_back(GetSdk()->FindObject("fwScene")->Cast());
+			stringstream sout;
+			sout << "fwScene" << i+1;
+			if(GetSdk()->FindObject(sout.str()))
+				fwScenes.push_back(GetSdk()->FindObject(sout.str())->Cast());
+			else{
+				DSTR << "[Error] : NO scenes wa have. (MYApp.cpp l.69)" << std::endl;
+				exit(0xff);
+			}
+
 		}
 		else{
-			DSTR << "NO scenes wa have." << std::endl;
+			DSTR << "[Error] : Cannot open " << fileNames[i] << " (MYApp.cpp l.75)" << std::endl;
 			exit(0xff);
 		}
 
@@ -101,23 +109,22 @@ void MYApp::Keyboard(int key, int x, int y){
 }
 
 void MYApp::Display(){
-	
-		FWWin* wr = GetCurrentWin();
+	FWWin* wr = GetCurrentWin();
 
-		GetSdk()->SetDebugMode(true);
-		GRDebugRenderIf* r = wr->render->Cast();
-		r->SetRenderMode(false, true);
-		r->DrawWorldAxis(GetSdk()->GetScene()->GetPHScene());
+	GetSdk()->SetDebugMode(true);
+	GRDebugRenderIf* r = wr->render->Cast();
+	r->SetRenderMode(false, true);
+	r->DrawWorldAxis(GetSdk()->GetScene()->GetPHScene());
 //		r->EnableRenderAxis();
-		r->EnableRenderForce();
-		r->EnableRenderContact();
-		
-		GRCameraIf* cam = wr->scene->GetGRScene()->GetCamera();
-		if (cam && cam->GetFrame()){
-			//Affinef af = cam->GetFrame()->GetTransform();
-			cam->GetFrame()->SetTransform(cameraInfo.view);
-		}else{
-			wr->render->SetViewMatrix(cameraInfo.view.inv());
-		}
-		FWAppGLUT::Display();
+	r->EnableRenderForce();
+	r->EnableRenderContact();
+	
+	GRCameraIf* cam = wr->scene->GetGRScene()->GetCamera();
+	if (cam && cam->GetFrame()){
+		//Affinef af = cam->GetFrame()->GetTransform();
+		cam->GetFrame()->SetTransform(cameraInfo.view);
+	}else{
+		wr->render->SetViewMatrix(cameraInfo.view.inv());
+	}
+	FWAppGLUT::Display();
 }
