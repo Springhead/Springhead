@@ -77,6 +77,11 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	return scene;
 }
 bool FWSdk::LoadScene(UTString filename){
+
+	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
+	if(filename.at(filename.length()-1) == 0x0a){
+		filename.erase(filename.length()-1);
+	}
 	//	デフォルトの先祖オブジェクトをを設定
 	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
 	ObjectIfs objs;
