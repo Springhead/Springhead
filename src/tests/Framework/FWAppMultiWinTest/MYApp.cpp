@@ -127,8 +127,9 @@ void MYApp::Display(){
 
 void MYApp::Step(){
 	if(bTimer){
+		FWApp::Step();
 		for(int i = 0; i < numWindow; i++){
-			SetCurrentWin(GetWin(i));
+			SetCurrentWin(GetWin(i));	
 			glutPostRedisplay();	
 		}
 	}
