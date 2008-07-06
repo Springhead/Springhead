@@ -29,7 +29,7 @@ MYApp::MYApp(){
 		sout1 << "Window " << i+1;
 		winNames.push_back(sout1.str());
 		stringstream sout2;
-		sout2 << "window" << i+1 << ".x";
+		sout2 << "joint" << i+1 << ".x";
 		fileNames.push_back(sout2.str());
 		views.push_back(Affinef());
 	}
