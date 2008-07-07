@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRTrunkFootAnimalBody.h"
+#include "CRFourLegsTinyAnimalBody.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -14,7 +14,7 @@
 namespace Spr{
 
 //コンストラクタ
-CRTrunkFootAnimalBodyDesc::CRTrunkFootAnimalBodyDesc(){
+CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 		
 	jointOrder = PLUG_PARENT;
 
@@ -42,22 +42,22 @@ CRTrunkFootAnimalBodyDesc::CRTrunkFootAnimalBodyDesc(){
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRTrunkFootAnimalBody
+// CRFourLegsTinyAnimalBody
 
 
 // --- --- ---
-void CRTrunkFootAnimalBody::Init(){
+void CRFourLegsTinyAnimalBody::Init(){
 	CRBody::Init();
 }
 
 // --- --- ---
-void CRTrunkFootAnimalBody::InitBody(){
+void CRFourLegsTinyAnimalBody::InitBody(){
 	CreateWaist();
 	CreateChest();
 	CreateHead();
 }
 
-void CRTrunkFootAnimalBody::CreateWaist(){
+void CRFourLegsTinyAnimalBody::CreateWaist(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 
@@ -71,7 +71,7 @@ void CRTrunkFootAnimalBody::CreateWaist(){
 	// solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
 }
 
-void CRTrunkFootAnimalBody::CreateChest(){
+void CRFourLegsTinyAnimalBody::CreateChest(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -104,7 +104,7 @@ void CRTrunkFootAnimalBody::CreateChest(){
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
 
-void CRTrunkFootAnimalBody::CreateHead(){
+void CRFourLegsTinyAnimalBody::CreateHead(){
 	CDSphereDesc       sphereDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
@@ -133,17 +133,17 @@ void CRTrunkFootAnimalBody::CreateHead(){
 }
 
 // --- --- ---
-void CRTrunkFootAnimalBody::InitLegs(){
+void CRFourLegsTinyAnimalBody::InitLegs(){
 	CreateFoot(LEFTPART);
 	CreateFoot(RIGHTPART);
 }
 
-void CRTrunkFootAnimalBody::CreateFoot(LREnum lr){
+void CRFourLegsTinyAnimalBody::CreateFoot(LREnum lr){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
-	CRTrunkFootAnimalBodyDesc::CRAnimalSolids soNFoot;
+	CRFourLegsTinyAnimalBodyDesc::CRAnimalSolids soNFoot;
 	if (lr==LEFTPART) {
 		soNFoot = SO_LEFT_FOOT;
 	} else {
@@ -159,7 +159,7 @@ void CRTrunkFootAnimalBody::CreateFoot(LREnum lr){
 }
 
 // --- --- ---
-void CRTrunkFootAnimalBody::InitContact(){
+void CRFourLegsTinyAnimalBody::InitContact(){
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
@@ -172,7 +172,7 @@ void CRTrunkFootAnimalBody::InitContact(){
 	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);
-		if (DCAST(CRTrunkFootAnimalBodyIf,body)!=(this->Cast())) {
+		if (DCAST(CRFourLegsTinyAnimalBodyIf,body)!=(this->Cast())) {
 			for (int s=0; s<body->NSolids(); ++s) {
 				for (unsigned int j=0; j<solids.size(); ++j) {
 					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
