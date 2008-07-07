@@ -16,29 +16,28 @@ namespace Spr{
 //コンストラクタ
 CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 		
-	jointOrder = PLUG_PARENT;
+	jointOrder = SOCKET_PARENT;
 
-	waistHeight    = 0.2298;
-	waistBreadth   = 0.3067;
-	waistThickness = 0.2307;
+	bodyHeight    = 0.2298;
+	bodyBreadth   = 0.3067;
+	bodyThickness = 0.2307;
 
-	chestHeight    = 1.4020 - 1.2253 + 1.2253 - 1.0142;
-	chestBreadth   = 0.2887;
-	chestThickness = 0.2118;
+	frontLegsBreadth    = 1.4020 - 1.2253 + 1.2253 - 1.0142;
+	frontLegsHeight   = 0.2887;
+	frontLegsThickness = 0.2118;
 
-	neckLength   = 1.7219 - 1.4564 - 0.1732;
-	headDiameter = (float)0.2387;
+	rearLegsBreadth       = 0.2544;
+	rearLegsHeight      = 0.0994;
+	rearLegsThickness    = 0.0619;
 
-	footLength       = 0.2544;
-	footBreadth      = 0.0994;
-	footThickness    = 0.0619;
-
-	springWaistChest   = 100.0;  damperWaistChest   =  50.0;
-	springChestHead    = 100.0;  damperChestHead    =  50.0;
+	springFront   = 100.0;  damperFront   =  50.0;
+	springRear    = 100.0;  damperRear    =  50.0;
 
 	// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
-	rangeWaistChest   = Vec2d(Rad(0.0) , Rad(0.01));
-	rangeChestHead    = Vec2d(Rad(0.0) , Rad(0.01));
+	rangeFrontSwing   = Vec2d(Rad(-60.0) , Rad(60.0));
+	rangeFrontTwist	  = Vec2d(Rad(-60.0) , Rad(60.0));
+	rangeRearSwing    = Vec2d(Rad(-60.0) , Rad(60.0));
+	rangeRearTwist	  = Vec2d(Rad(-60.0) , Rad(60.0));
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -48,114 +47,102 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 // --- --- ---
 void CRFourLegsTinyAnimalBody::Init(){
 	CRBody::Init();
+	CreateBody();
 }
 
 // --- --- ---
-void CRFourLegsTinyAnimalBody::InitBody(){
-	CreateWaist();
-	CreateChest();
-	CreateHead();
-}
-
-void CRFourLegsTinyAnimalBody::CreateWaist(){
+void CRFourLegsTinyAnimalBody::CreateBody(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
 
 	// Solid
-	solidDesc.mass     = 0.17;
-	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
-	boxDesc.boxsize    = Vec3f(waistBreadth, waistHeight, waistThickness);
-	// boxDesc.boxsize = Vec3f(0.2307, 0.2298, 0.3067);
-	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
-	// solids[SO_WAIST]->SetOrientation(Quaternionf::Rot(Rad(0), 'y'));
+	solidDesc.mass     = 5.0;
+	solids[SO_BODY]   = phScene->CreateSolid(solidDesc);
+	boxDesc.boxsize    = Vec3f(bodyBreadth, bodyHeight, bodyThickness);
+	solids[SO_BODY]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[SO_BODY]->SetFramePosition(Vec3f(0,0,0));
+
+	solids[SO_BODY]->SetDynamical(false);
 }
 
-void CRFourLegsTinyAnimalBody::CreateChest(){
-	CDBoxDesc          boxDesc;
-	PHSolidDesc        solidDesc;
-	PHHingeJointDesc   hingeDesc;
+void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
+	CDBoxDesc			boxDesc;
+	PHSolidDesc			solidDesc;
+	PHBallJointDesc		ballDesc;
 
 	// Solid
-	// solidDesc.mass   = 0.252;
-	solidDesc.mass   = 0.44;
-	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
-	// boxDesc.boxsize  = Vec3f(0.2, 0.3879, 0.2749);
-	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
-	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
-
-	//腰部位と上半身の間の関節
-	{
-		PHHingeJointDesc hingeDesc;
-		// hingeDesc.posePlug.Pos() = Vec3d(0,0,0);
-		hingeDesc.posePlug.Pos() = Vec3d(0,waistHeight / 2.0,0);
-		hingeDesc.posePlug.Ori() = Quaterniond::Rot(Rad(0), 'x');
-		// hingeDesc.poseSocket.Pos() = Vec3d(0, -(chestHeight/2.0 + waistHeight/2.0), 0);
-		hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight/2.0, 0);
-		hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
-
-		hingeDesc.origin =   0.0;
-		hingeDesc.spring = 500.0;
-		hingeDesc.damper =  50.0;
-
-		joints[JO_WAIST_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], hingeDesc);
+	solidDesc.mass   = 1.5;
+	if(lr == RIGHTPART){
+		solids[SO_RIGHT_FRONT_LEG] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
+		solids[SO_RIGHT_FRONT_LEG]->AddShape(phSdk->CreateShape(boxDesc));
 	}
-
-	phScene->SetContactMode(solids[SO_CHEST], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
+	else{
+		solids[SO_LEFT_FRONT_LEG] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
+		solids[SO_LEFT_FRONT_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+	}
+	// 体幹と前脚間の関節
+	{
+		ballDesc.poseSocket.Pos() = Vec3d(lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
+		ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.posePlug.Pos() = Vec3d(0, -frontLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.spring = springFront;
+		ballDesc.damper = damperFront;
+	}
+	if(lr == RIGHTPART){
+		joints[JO_BODY_RIGHT_FRONT_LEG] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG], ballDesc);
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG], PHSceneDesc::MODE_NONE);
+	}
+	else{
+		joints[JO_BODY_LEFT_FRONT_LEG] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG], ballDesc);
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG], PHSceneDesc::MODE_NONE);
+	}
 }
 
-void CRFourLegsTinyAnimalBody::CreateHead(){
-	CDSphereDesc       sphereDesc;
-	PHSolidDesc        solidDesc;
-	PHHingeJointDesc   hingeDesc;
+void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
+	CDBoxDesc			boxDesc;
+	PHSolidDesc			solidDesc;
+	PHBallJointDesc		ballDesc;
 
 	// Solid
-	// solidDesc.mass    = 0.07;
-	solidDesc.mass    = 0.178;
-	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
-	sphereDesc.radius = (float)(headDiameter / 2.0);
-	// sphereDesc.radius = 0.2387/2.0;
-	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
-
-	//上半身と頭部の間の関節
-	hingeDesc                  = PHHingeJointDesc();
-    hingeDesc.posePlug.Pos()   = Vec3d(0.0, chestHeight/2.0 + neckLength/2.0, 0.0);
-	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
-	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter/2.0 - neckLength/2.0, 0.0);
-	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
-
-	hingeDesc.origin =   0.0;
-	hingeDesc.spring = 500.0;
-	hingeDesc.damper =  50.0;
-	joints[JO_CHEST_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);
-
-	phScene->SetContactMode(solids[SO_HEAD], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
+	solidDesc.mass   = 1.5;
+	if(lr == RIGHTPART){
+		solids[SO_RIGHT_REAR_LEG] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
+		solids[SO_RIGHT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+	}
+	else{
+		solids[SO_LEFT_REAR_LEG] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
+		solids[SO_LEFT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+	}
+	// 体幹と前脚間の関節
+	{
+		ballDesc.poseSocket.Pos() = Vec3d(lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
+		ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.posePlug.Pos()	  = Vec3d(0, -rearLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.spring = springFront;
+		ballDesc.damper = damperFront;
+	}
+	if(lr == RIGHTPART){
+		joints[JO_BODY_RIGHT_REAR_LEG] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG], ballDesc);
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG], PHSceneDesc::MODE_NONE);
+	}
+	else{
+		joints[JO_BODY_LEFT_REAR_LEG] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_REAR_LEG], ballDesc);
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_REAR_LEG], PHSceneDesc::MODE_NONE);
+	}
 }
 
 // --- --- ---
 void CRFourLegsTinyAnimalBody::InitLegs(){
-	CreateFoot(LEFTPART);
-	CreateFoot(RIGHTPART);
-}
-
-void CRFourLegsTinyAnimalBody::CreateFoot(LREnum lr){
-	CDBoxDesc          boxDesc;
-	PHSolidDesc        solidDesc;
-	PHHingeJointDesc   hingeDesc;
-
-	CRFourLegsTinyAnimalBodyDesc::CRAnimalSolids soNFoot;
-	if (lr==LEFTPART) {
-		soNFoot = SO_LEFT_FOOT;
-	} else {
-		soNFoot = SO_RIGHT_FOOT;
-	}
-
-	// Solid
-	solidDesc.mass   = 0.01;
-	solids[soNFoot]  = phScene->CreateSolid(solidDesc);
-	boxDesc.boxsize  = Vec3f(footBreadth, footThickness, footLength);
-    // boxDesc.boxsize = Vec3f(0.2544, 0.0619, 0.0994);
-	solids[soNFoot]->AddShape(phSdk->CreateShape(boxDesc));
+	CreateFrontLegs(LEFTPART);
+	CreateFrontLegs(RIGHTPART);
+	CreateRearLegs(LEFTPART);
+	CreateRearLegs(RIGHTPART);
 }
 
 // --- --- ---

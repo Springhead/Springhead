@@ -35,7 +35,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRTrunkFootHumanBodyIf(base)	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_CRTrunkFootAnimalBodyIf(base)	\
+#define SPR_OVERRIDEMEMBERFUNCOF_CRFourLegsTinyAnimalBodyIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRControllerIf(base)	\
 	void Init(){	base::Init();}	\
