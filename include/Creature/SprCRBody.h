@@ -20,6 +20,7 @@ struct PHJointIf;
 
 struct CRBodyIf;
 struct CRHingeHumanBodyIf;
+struct CRFourLegsAnimalBodyIf;
 struct CRIKControlIf;
 struct CRIKMovableIf;
 struct CRIKControlDesc;
@@ -711,46 +712,48 @@ struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
 
 // ------------------------------------------------------------------------------
 /// おもに胴体と足のみの哺乳類モデルのインターフェイス（制御用）
-struct CRTrunkFootAnimalBodyIf : CRBodyIf{
-	SPR_IFDEF(CRTrunkFootAnimalBody);
+struct CRFourLegsTinyAnimalBodyIf : CRBodyIf{
+	SPR_IFDEF(CRFourLegsTinyAnimalBody);
 };
 
 /// 胴体と足のみの哺乳類モデルのディスクリプタ
-struct CRTrunkFootAnimalBodyDesc : CRBodyDesc{
-	SPR_DESCDEF(CRTrunkFootAnimalBody);
+struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
+	SPR_DESCDEF(CRFourLegsTinyAnimalBody);
 
 	enum CRAnimalSolids{
 		// 剛体
-		SO_WAIST=0, SO_CHEST, SO_HEAD, SO_RIGHT_FOOT, SO_LEFT_FOOT,
+		SO_BODY=0, SO_RIGHT_FRONT_LEG, SO_LEFT_FRONT_LEG,
+		SO_RIGHT_REAR_LEG, SO_LEFT_REAR_LEG,
 		// 剛体の数
 		SO_NSOLIDS
 	};
 
 	enum CRAnimalJoints{
 		// 関節
-		JO_WAIST_CHEST=0, JO_CHEST_HEAD,
+		JO_BODY_RIGHT_FRONT_LEG, JO_BODY_LEFT_FRONT_LEG,
+		JO_BODY_RIGHT_REAR_LEG,  JO_BODY_LEFT_REAR_LEG,
 		// 関節の数
 		JO_NJOINTS
 	};
 
 	/// サイズに関するパラメータ
-	double waistHeight, waistBreadth, waistThickness;
-	double chestHeight, chestBreadth, chestThickness;
-	double neckLength;
-	float  headDiameter;
-	double footLength, footBreadth, footThickness;
+	double bodyHeight, bodyBreadth, bodyThickness;
+	double frontLegsBreadth, frontLegsHeight, frontLegsThickness;
+	double rearLegsBreadth, rearLegsHeight, rearLegsThickness;
 
 	/// 各関節のバネダンパ
-	double springWaistChest, damperWaistChest;
-	double springChestHead,    damperChestHead;
+	double springFront, damperFront;
+	double springRear,  damperRear;
 
 	/// 可動域制限
-	Vec2d rangeWaistChest;
-	Vec2d rangeChestHead;
+	Vec2d rangeFrontSwing;
+	Vec2d rangeFrontTwist;
+	Vec2d rangeRearSwing;
+	Vec2d rangeRearTwist;
 
-	CRTrunkFootAnimalBodyDesc();
+	CRFourLegsTinyAnimalBodyDesc();
 };
 
 }
 
-#endif//SPR_CRHingeHumanBodyIf_H
+#endif//SPR_CRBODY_H
