@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRTRUNKFOOTANIMALBODY_H
-#define CRTRUNKFOOTANIMALBODY_H
+#ifndef CRFOURLEGSTINYANIMALBODY_H
+#define CRFOURLEGSTINYANIMALBODY_H
 
 #include <Springhead.h>
 
@@ -19,9 +19,9 @@
 namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// CRTrunkFootAnimalBody
+// CRFourLegsTinyAnimalBody
 // ヒンジジョイントを用いた哺乳類モデル・クラスの実装（未実装：中身はTrunkFootHumanBody）
-class CRTrunkFootAnimalBody : public CRBody, public CRTrunkFootAnimalBodyDesc {
+class CRFourLegsTinyAnimalBody : public CRBody, public CRFourLegsTinyAnimalBodyDesc {
 private:
 	void InitBody();
 	void CreateWaist();
@@ -34,16 +34,16 @@ private:
 	void InitContact();
 
 public:
-	SPR_OBJECTDEF(CRTrunkFootAnimalBody);
-	ACCESS_DESC(CRTrunkFootAnimalBody);
+	SPR_OBJECTDEF(CRFourLegsTinyAnimalBody);
+	ACCESS_DESC(CRFourLegsTinyAnimalBody);
 
-	CRTrunkFootAnimalBody(){}
-	CRTrunkFootAnimalBody(const CRTrunkFootAnimalBodyDesc& desc, CRCreatureIf* c=NULL) 
-		: CRTrunkFootAnimalBodyDesc(desc) 
+	CRFourLegsTinyAnimalBody(){}
+	CRFourLegsTinyAnimalBody(const CRFourLegsTinyAnimalBodyDesc& desc, CRCreatureIf* c=NULL) 
+		: CRFourLegsTinyAnimalBodyDesc(desc) 
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
-		solids.resize(CRTrunkFootAnimalBodyDesc::SO_NSOLIDS);
-		joints.resize(CRTrunkFootAnimalBodyDesc::JO_NJOINTS);
+		solids.resize(CRFourLegsTinyAnimalBodyDesc::SO_NSOLIDS);
+		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
 
 		InitBody();
 		InitLegs();
@@ -60,4 +60,4 @@ public:
 }
 //@}
 
-#endif//CRTRUNKFOOTANIMALBODY_H
+#endif//CRFourLegsTinyAnimalBODY_H
