@@ -75,22 +75,25 @@ void HapticProcess::HapticRendering(){
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;			// 剛体の近傍点のワールド座標系
-		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;							// 力覚ポインタの近傍点のワールド座標系
+		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;									// 力覚ポインタの近傍点のワールド座標系
 		Vec3d force_dir = pPoint - cPoint;
-		Vec3d interpolation_normal;
+		Vec3d interpolation_normal;																								// 提示力計算にしようする法線（前回の法線との間を補間する）
 		if(bInter){
+			// 剛体の面の法線補間
+			// 前回の法線と現在の法線の間を補間しながら更新
 			interpolation_normal = (stepcount * neighborObjects[i].face_normal + (50 - stepcount) * neighborObjects[i].last_face_normal) / 50;															
 			if(stepcount > 50)	interpolation_normal = neighborObjects[i].face_normal;				
 		}else{
+			// 現在の法線を使う
 			interpolation_normal = neighborObjects[i].face_normal;
 		}
 
-		float	f = force_dir * interpolation_normal;													// 剛体の面の法線と内積をとる
-		if(f < 0.0){																					// 内積が負なら力を計算
-			Vec3d ortho = f * interpolation_normal;														// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
+		float	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
+		if(f < 0.0){																			// 内積が負なら力を計算
+			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
-			Vec3d addforce = -K * ortho + D * dvortho;													// 提示力計算
+			Vec3d addforce = -K * ortho + D * dvortho;						// 提示力計算
 
 			if(!vibFlag){
 				vibT = 0;
@@ -98,18 +101,10 @@ void HapticProcess::HapticRendering(){
 			}
 			vibFlag = true;
 			if(vhaptic){
-				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT); //振動計算
+				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
 			}
-
-			// 将来プロキシにして摩擦を加える
-			//Vec3d friction_dir = -interpolation_normal % (force_dir.unit() % interpolation_normal);	// 剛体に働く摩擦の方向ベクトル 
-			//Vec3d friction_force = force_dir * friction_dir * friction_dir;
-			//Vec3d max_friction_force =	0.5 *addforce.norm() * friction_dir.unit();					// 最大静止摩擦力
-			//if(friction_force.norm() - max_friction_force.norm() > 0){  
-			//	addforce += friction_force - friction_force;  											// 摩擦力を加える
-			//}
 			displayforce += addforce + (vibforce * addforce.unit());																			 
-			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);										// 計算した力を剛体に加える
+			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
 			neighborObjects[i].test_force_norm = addforce.norm();
 			noContact = false;
 		}
