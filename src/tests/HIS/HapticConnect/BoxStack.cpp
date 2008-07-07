@@ -88,7 +88,7 @@ void BoxStack::DesignObject(){
 	desc.inertia = 0.033 * Matrix3d::Unit();
 	{
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f(2,2,2);
+		bd.boxsize = Vec3f(2,2,2) ;
 		meshBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 		meshBox->SetName("meshBox");
 		CDSphereDesc sd;
@@ -406,11 +406,6 @@ void BoxStack::PredictSimulation(){
 #else
 		states->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
 #endif
-		//if(neighborObjects[i].phSolidIf != soFloor){
-		//	DSTR << "A" <<neighborObjects[i].A << endl;
-		//	DSTR << "b" << neighborObjects[i].b << endl;
-		//	DSTR << neighborObjects[i].test_force_norm << endl;
-		//}
 	}
 }
 
@@ -431,42 +426,6 @@ void BoxStack::DisplayLineToNearestPoint(){
 		glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
 		glEnd();
 		glEnable(GL_DEPTH_TEST);
-
-		//Vec3d rpjabs, vpjabs;
-		//rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
-		//vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;	//接触点での速度
-		//Vec3d rjabs, vjabs;
-		//rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();	//剛体の中心から接触点までのベクトル
-		//vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
-
-		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
-		//Vec3d n, t[2], vjrel, vjrelproj;
-		//n = -neighborObjects[i].face_normal;
-		//vjrel = vjabs - vpjabs;
-		//vjrelproj = vjrel - (n * vjrel) * n;		//相対速度ベクトルを法線に直交する平面に射影したベクトル
-		//double vjrelproj_norm = vjrelproj.norm();
-		//if(vjrelproj_norm < 1.0e-10){
-		//	t[0] = n % Vec3d(1.0, 0.0, 0.0);	
-		//	if(t[0].norm() < 1.0e-10)
-		//		t[0] = n % Vec3d(0.0, 1.0, 0.0);
-		//	t[0].unitize();
-		//}
-		//else{
-		//	t[0] = vjrelproj / vjrelproj_norm;
-		//}
-		//t[1] = n % t[0];
-		//glBegin(GL_LINES);
-		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		//glVertex3f(cPoint.X() + n[0], cPoint.Y() + n[1], cPoint.Z()+ n[2]);
-		//glEnd();
-		//glBegin(GL_LINES);
-		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		//glVertex3f(cPoint.X() + t[0][0], cPoint.Y() + t[0][1], cPoint.Z() + t[0][2]);
-		//glEnd();
-		//glBegin(GL_LINES);
-		//glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-		//glVertex3f(cPoint.X() + t[1][0], cPoint.Y() + t[1][1], cPoint.Z() + t[1][2]);
-		//glEnd();
 	}
 }
 
@@ -560,7 +519,7 @@ void BoxStack::Keyboard(unsigned char key){
 			break;
 		case 'n':
 			{
-				// ConvxMesh
+				// ConvexMesh
 				desc.mass = 0.1;
 				desc.inertia = 0.1 * Matrix3d::Unit();
 				soBox.push_back(phscene->CreateSolid(desc));
