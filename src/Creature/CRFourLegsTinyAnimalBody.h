@@ -24,6 +24,7 @@ namespace Spr{;
 class CRFourLegsTinyAnimalBody : public CRBody, public CRFourLegsTinyAnimalBodyDesc {
 private:
 	void CreateBody();
+	void CreateHead();
 	void CreateFrontLegs(LREnum lr);
 	void CreateRearLegs(LREnum lr);
 	void InitLegs();
@@ -43,6 +44,7 @@ public:
 		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
 	
 		CreateBody();
+		CreateHead();
 		InitLegs();
 		InitContact();
 
