@@ -722,7 +722,7 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 
 	enum CRAnimalSolids{
 		// çÑëÃ
-		SO_BODY=0, SO_RIGHT_FRONT_LEG, SO_LEFT_FRONT_LEG,
+		SO_BODY=0, SO_HEAD,SO_RIGHT_FRONT_LEG, SO_LEFT_FRONT_LEG,
 		SO_RIGHT_REAR_LEG, SO_LEFT_REAR_LEG,
 		// çÑëÃÇÃêî
 		SO_NSOLIDS
@@ -730,6 +730,7 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 
 	enum CRAnimalJoints{
 		// ä÷êﬂ
+		JO_BODY_HEAD=0,
 		JO_BODY_RIGHT_FRONT_LEG, JO_BODY_LEFT_FRONT_LEG,
 		JO_BODY_RIGHT_REAR_LEG,  JO_BODY_LEFT_REAR_LEG,
 		// ä÷êﬂÇÃêî

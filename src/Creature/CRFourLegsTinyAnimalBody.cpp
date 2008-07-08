@@ -65,6 +65,23 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	solids[SO_BODY]->SetDynamical(false);
 }
 
+void CRFourLegsTinyAnimalBody::CreateHead(){
+	CDSphereDesc	sphereDesc;
+	PHSolidDesc		solidDesc;
+	PHBallJointDesc	ballDesc;
+
+	// Solid
+	solidDesc.mass				= 0.1;
+	solids[SO_HEAD]				= phScene->CreateSolid(solidDesc);
+	sphereDesc.radius			= 0.3;
+	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
+	ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
+	ballDesc.spring				= 100;
+	ballDesc.damper				= 50;
+	joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
+	phScene->SetContactMode(solids[SO_BODY], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
+}
+
 void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
 	CDBoxDesc			boxDesc;
 	PHSolidDesc			solidDesc;
@@ -85,10 +102,10 @@ void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
 	// ëÃä≤Ç∆ëOãrä‘ÇÃä÷êﬂ
 	{
 		ballDesc.poseSocket.Pos()	= Vec3d(lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
-		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.posePlug.Pos()		= Vec3d(0, -frontLegsHeight / 2.0, 0);
-		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(90), 'x');
-		ballDesc.goal				= Vec3f(0.0, 1.0, 0.0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
 	}
@@ -119,13 +136,13 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
 		solids[SO_LEFT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
 	}
-	// ëÃä≤Ç∆ëOãrä‘ÇÃä÷êﬂ
+	// ëÃä≤Ç∆å„ãrä‘ÇÃä÷êﬂ
 	{
 		ballDesc.poseSocket.Pos()	= Vec3d(lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
-		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.posePlug.Pos()		= Vec3d(0, -rearLegsHeight / 2.0, 0);
-		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(90), 'x');
-		ballDesc.goal				= Vec3f(0.0, 1.0, 0.0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
 	}
