@@ -5,6 +5,7 @@
 #include <Springhead.h>
 #include <Physics/PHSolid.h>
 #include <Physics/PHContactPoint.h>
+#include<Collision/CDDetectorImp.h>
 #include <HIS/HISpidarG6X.h>
 #include <HIS/HISpidarG6X3.h>
 #ifdef _WIN32		//	Win32版(普通はこっち)
@@ -41,6 +42,7 @@ public:
 	void InitDevice();
 	void Step();
 	void UpdateSpidar();
+//	void FindNearestPoint();			// 物理の更新周波数を50Hzにしてみて，だめだったら使う
 	void HapticRendering();
 	void LocalDynamics();
 	void Keyboard(unsigned char key);

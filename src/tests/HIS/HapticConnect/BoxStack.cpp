@@ -16,7 +16,7 @@ BoxStack bstack;
 BoxStack::BoxStack(){
 	bsync=false;
 	calcPhys=true;
-	dt = 0.05;
+	dt = 0.02;	//0.05
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
@@ -304,7 +304,7 @@ void BoxStack::FindNearestObject(){
 	}
 }
 
-//#define DIVIDE_STEP
+#define DIVIDE_STEP
 
 void BoxStack::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
