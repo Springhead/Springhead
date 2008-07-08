@@ -96,6 +96,156 @@ void GRFrame::Print(std::ostream& os) const {
 	GRVisual::PrintFooter(os);
 }
 
+void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
+	Affinef aff = GetTransform();
+	// std::cout << "Aff : " << aff << std::endl;
+
+	// キーフレーム座標を追加
+	kfPositions.push_back(pos);
+
+	// 次元の取得
+	int nKeys	= kfPositions.size();
+	int nKeyDim	= pos.size();
+	int nMatDim	= nKeys + 1 + nKeyDim;
+
+	// 目標値ベクトルの次元・値設定と係数ベクトルの次元設定
+	for (int i=0; i<4; ++i) {
+		for (int j=0; j<4; ++j) {
+			PTM::VVector<float> p; p.resize(kfAffines[i][j].size()); p = kfAffines[i][j];
+			kfAffines[i][j].resize(nMatDim);
+			for (int q=0; q<p.size(); ++q) {
+				kfAffines[i][j][q] = p[q];
+			}
+			kfAffines[i][j][nKeys-1] = aff[i][j];
+			for (int k=nKeys+1; k<nMatDim; ++k) {
+				kfAffines[i][j][k] = 0;
+			}
+			kfCoeffs[i][j].resize(nMatDim);
+		}
+	}
+
+	// 計算用行列の用意
+	PTM::VMatrixCol<float> A;	A.resize(nMatDim, nMatDim);
+	/// 左上
+	for (int i=0; i<nKeys; ++i) {
+		for (int j=i; j<nKeys; ++j) {
+			A[i][j] = A[j][i] = (kfPositions[i] - kfPositions[j]).norm();
+		}
+	}
+	/// 右上中・左下中
+	for (int i=nKeys; i<nKeys+1; ++i) {
+		for (int j=0; j<nKeys; ++j) {
+			A[i][j] = A[j][i] = 1;
+		}
+	}
+	/// 右上・左下
+	for (int i=nKeys+1; i<nMatDim; ++i) {
+		for (int j=0; j<nKeys; ++j) {
+			int m = i - (nKeys+1);
+			A[i][j] = A[j][i] = kfPositions[j][m];
+		}
+	}
+	/// 右下
+	for (int i=nKeys; i<nMatDim; ++i) {
+		for (int j=nKeys; j<nMatDim; ++j) {
+			A[i][j] = 0;
+		}
+	}
+
+	// 逆行列計算
+	A = A.inv();
+
+	// 係数ベクトルの計算
+	for (int i=0; i<4; ++i) {
+		for (int j=0; j<4; ++j) {
+			kfCoeffs[i][j] = A * kfAffines[i][j];
+			/*
+			std::cout << "A : " << A << std::endl;
+			std::cout << "kAf : " << kfAffines[i][j] << std::endl;
+			std::cout << "kfC : " << kfCoeffs[i][j] << std::endl;
+			*/
+		}
+	}
+
+	// 子要素に再帰
+	for (int i=0; i<children.size(); ++i) {
+		GRFrame* fr = children[i]->Cast();
+		if (fr) {
+			fr->AddRBFKeyFrame(pos);
+		}
+	}
+}
+
+void GRFrame::BlendRBF(PTM::VVector<float> pos){
+	Affinef aff;
+
+	// 次元の取得
+	int nKeys	= kfPositions.size();
+	int nKeyDim	= pos.size();
+	int nMatDim	= nKeys + 1 + nKeyDim;
+
+	// 計算用ベクトルの用意
+	PTM::VVector<float> input; input.resize(nMatDim);
+	/// 左
+	for (int i=0; i<nKeys; ++i) {
+		input[i] = (kfPositions[i] - pos).norm();
+	}
+	/// 中
+	for (int i=nKeys; i<nKeys+1; ++i) {
+		input[i] = 1;
+	}
+	/// 右
+	for (int i=nKeys+1; i<nMatDim; ++i) {
+		int m = i - (nKeys+1);
+		input[i] = pos[m];
+	}
+
+	// ブレンド値の計算
+	// std::cout << "inp : " << input << std::endl;
+	for (int i=0; i<4; ++i) {
+		for (int j=0; j<4; ++j) {
+			aff[i][j] = PTM::dot(kfCoeffs[i][j], input);
+			// std::cout << "kfC : " << kfCoeffs[i][j] << std::endl;
+		}
+	}
+
+	// 正規直交化
+	aff.Ex() /= aff.Ex().norm();
+	aff.Ey() /= aff.Ey().norm();
+	aff.Ez() /= aff.Ez().norm();
+	for (int i=0; i<10; ++i) {
+		Vec3f u = PTM::cross(aff.Ey(), aff.Ez());
+		Vec3f v = PTM::cross(aff.Ez(), aff.Ex());
+		Vec3f w = PTM::cross(aff.Ex(), aff.Ey());
+		aff.Ex() = (aff.Ex()+u)/2.0f;
+		aff.Ey() = (aff.Ey()+v)/2.0f;
+		aff.Ez() = (aff.Ez()+w)/2.0f;
+		aff.Ex() /= aff.Ex().norm();
+		aff.Ey() /= aff.Ey().norm();
+		aff.Ez() /= aff.Ez().norm();
+		float r = 0.0f;
+		r += PTM::dot(aff.Ex(), aff.Ey())*PTM::dot(aff.Ex(), aff.Ey());
+		r += PTM::dot(aff.Ey(), aff.Ez())*PTM::dot(aff.Ey(), aff.Ez());
+		r += PTM::dot(aff.Ez(), aff.Ex())*PTM::dot(aff.Ez(), aff.Ex());
+		if (r < 0.000001) {
+			break;
+		}
+	}
+
+	// 変換行列のセット
+	SetTransform(aff);
+	// std::cout << this->GetName() << std::endl;
+	// std::cout << "Aff : " << aff << std::endl;
+
+	// 子要素に再帰
+	for (int i=0; i<children.size(); ++i) {
+		GRFrame* fr = children[i]->Cast();
+		if (fr) {
+			fr->BlendRBF(pos);
+		}
+	}
+}
+
 
 //-----------------------------------------------------------------
 //	GRDummyFrame
@@ -130,6 +280,9 @@ ObjectIf* GRDummyFrame::GetChildObject(size_t pos){
 //	GRAnimation
 //
 void GRAnimation::BlendPose(float time, float weight){
+	BlendPose(time, weight, false);
+}
+void GRAnimation::BlendPose(float time, float weight, bool add){
 	//	ターゲットに変換を加える
 	Affinef transform;
 	for(std::vector<GRAnimationKey>::iterator it = keys.begin(); it != keys.end(); ++it){
@@ -239,8 +392,11 @@ ObjectIf* GRAnimationSet::GetChildObject(size_t p){
 	return animations[p]->Cast();
 }
 void GRAnimationSet::BlendPose(float time, float weight){
+	BlendPose(time, weight, false);
+}
+void GRAnimationSet::BlendPose(float time, float weight, bool add){
 	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
-		(*it)->BlendPose(time, weight);
+		(*it)->BlendPose(time, weight, add);
 	}
 }
 void GRAnimationSet::ResetPose(){
@@ -285,9 +441,12 @@ ObjectIf* GRAnimationController::GetChildObject(size_t p){
 	return it->second->Cast();
 }
 void GRAnimationController::BlendPose(UTString name, float time, float weight){
+	BlendPose(name, time, weight, false);
+}
+void GRAnimationController::BlendPose(UTString name, float time, float weight, bool add){
 	Sets::iterator it = sets.find(name);
 	if (it != sets.end()){
-		it->second->BlendPose(time, weight);
+		it->second->BlendPose(time, weight, add);
 	}
 }
 void GRAnimationController::ResetPose(){
