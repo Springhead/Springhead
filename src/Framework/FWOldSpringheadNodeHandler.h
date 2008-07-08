@@ -105,10 +105,17 @@ struct MeshTextureCoords{
 
 //	DirectXのSkinメッシュのSkinWeight部のヘッダ
 struct XSkinMeshHeader{
+	int nMaxSkinWeightsPerVertex;
+	int nMaxSkinWeightsPerFace;
+	int nBones;
+};
+/*
+struct XSkinMeshHeader{
 	unsigned short nMaxSkinWeightsPerVertex;
 	unsigned short nMaxSkinWeightsPerFace;
 	unsigned short nBones;
 };
+*/
 
 //	DirectXのSkinメッシュのSkinWeight
 struct SkinWeights {

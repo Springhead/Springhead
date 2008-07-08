@@ -25,6 +25,8 @@
 */
 
 
+#include <windows.h>
+
 #include <Springhead.h>		//	Springheadのインタフェース
 #include <Physics/PHConstraintEngine.h>
 #include <ctime>

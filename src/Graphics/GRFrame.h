@@ -30,6 +30,7 @@ public:
 	GRFrame* parent;
 	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
 	GRVisualIfs children;
+
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 
 	GRSceneIf* GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
@@ -49,6 +50,12 @@ public:
 	virtual Affinef GetTransform(){ return transform; }
 	virtual void SetTransform(const Affinef& af){ transform = af; }
 	void Print(std::ostream& os) const ;
+
+	// Keyframe Blending based on Radial Basis Function 
+	std::vector< PTM::VVector<float> > kfPositions;
+	PTM::VVector<float> kfAffines[4][4], kfCoeffs[4][4];
+	void AddRBFKeyFrame(PTM::VVector<float> pos);
+	void BlendRBF(PTM::VVector<float> pos);
 };
 
 /**	@class	GRDummyFrame
@@ -82,6 +89,8 @@ public:
 	Targets targets;
 	///	
 	virtual void BlendPose(float time, float weight);
+	///	
+	virtual void BlendPose(float time, float weight, bool add);
 	///
 	virtual void ResetPose();
 	///
@@ -109,6 +118,8 @@ public:
 
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	virtual void BlendPose(float time, float weight);
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
+	virtual void BlendPose(float time, float weight, bool add);
 	///	ボーンをあらわすターゲットのフレームの行列を初期値に戻す．
 	virtual void ResetPose();
 	///
@@ -119,10 +130,13 @@ class GRAnimationController: public SceneObject{
 public:
 	typedef std::map<UTString, UTRef<GRAnimationSet>, UTStringLess> Sets;
 	Sets sets;
+	float buffer[16];
 	SPR_OBJECTDEF(GRAnimationController);
 	GRAnimationController(const GRAnimationControllerDesc& d = GRAnimationControllerDesc()){}
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	virtual void BlendPose(UTString name, float time, float weight);
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
+	virtual void BlendPose(UTString name, float time, float weight, bool add);
 	///	フレームの変換行列を初期値に戻す．
 	virtual void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
