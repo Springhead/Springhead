@@ -41,10 +41,12 @@ public:
 	{
 		solids.resize(CRFourLegsTinyAnimalBodyDesc::SO_NSOLIDS);
 		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
-
+	
+		CreateBody();
 		InitLegs();
-
 		InitContact();
+
+		Init();
 	}
 
 	/** @brief ‰Šú‰»‚ğÀs‚·‚é
