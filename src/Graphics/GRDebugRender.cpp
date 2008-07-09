@@ -55,11 +55,13 @@ GRDebugRender::GRDebugRender(){
 	modeWire = false;
 	renderAxis = false;
 	renderForce = false;
+	renderWorldAxis = false;
 }
 
 /// シーン内の全てのオブジェクトをレンダリングする
 void GRDebugRender::DrawScene(PHSceneIf* scene){
 	if (!scene) return;
+	if(renderWorldAxis) DrawWorldAxis(scene);
 	PHSolidIf **solids = scene->GetSolids();
 	for(int i = 0; i < scene->NSolids(); ++i){
 		SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
