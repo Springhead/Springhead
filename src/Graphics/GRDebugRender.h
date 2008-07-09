@@ -25,7 +25,7 @@ protected:
 	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)
 
 	bool	modeSolid, modeWire;				/// 描画モード
-	bool	renderAxis, renderForce, renderContact;
+	bool	renderWorldAxis, renderAxis, renderForce, renderContact;
 	float	scaleAxis, scaleForce;
 public:
 	/**  コンストラクタ  */
@@ -37,6 +37,9 @@ public:
 	virtual void DrawContact(PHContactPointIf* con);
 	virtual void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
 	virtual void SetRenderMode(bool solid = true, bool wire = false){ modeSolid = solid; modeWire = wire; }
+	virtual void EnableRenderWorldAxis( bool enable =  true){
+		renderWorldAxis = enable;
+	}
 	virtual void EnableRenderAxis(bool enable = true, float scale = 1.0f){
 		renderAxis = enable;
 		scaleAxis = scale;

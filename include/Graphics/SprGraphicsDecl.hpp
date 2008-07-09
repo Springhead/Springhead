@@ -113,6 +113,7 @@
 	void DrawSolid(PHSolidIf* solid){	base::DrawSolid(solid);}	\
 	void SetMaterialSample(Spr::GRDebugRenderIf::TMaterialSample matname){	base::SetMaterialSample(matname);}	\
 	void SetRenderMode(bool solid, bool wire){	base::SetRenderMode(solid, wire);}	\
+	void EnableRenderWorldAxis(bool enable){	base::EnableRenderWorldAxis(enable);}	\
 	void EnableRenderAxis(bool enable, float scale){	base::EnableRenderAxis(enable, scale);}	\
 	void EnableRenderForce(bool enable, float scale){	base::EnableRenderForce(enable, scale);}	\
 	void EnableRenderContact(bool enable){	base::EnableRenderContact(enable);}	\

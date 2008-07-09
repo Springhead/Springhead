@@ -424,6 +424,9 @@ struct GRDebugRenderIf:public GRRenderIf{
 	 */
 	void SetRenderMode(bool solid = true, bool wire = false);
 	
+	/** @brief ワールド座標系の座標軸を描画 */
+	void EnableRenderWorldAxis(bool enable = true);
+
 	/**	 @brief 各関節の座標軸の描画 */
 	void EnableRenderAxis(bool enable = true, float scale = 1.0f);
 
