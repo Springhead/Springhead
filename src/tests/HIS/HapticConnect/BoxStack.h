@@ -32,7 +32,6 @@ public:
 	Vec3d gravity;
 	double nIter;
 	bool bGravity;
-	bool bStep;
 	// çÑëÃÇ…égÇ§ïœêî
 	PHSolidDesc desc;
 	PHSolidIf* soFloor;
@@ -57,6 +56,7 @@ public:
 	void Init(int argc, char* argv[]);				
 	void InitCameraView();										
 	void DesignObject();
+	void Idle();
 	void PhysicsStep();
 	void Display();		
 	void UpdateHapticPointer();
@@ -66,8 +66,8 @@ public:
 	void DisplayLineToNearestPoint();
 	void DrawHapticSolids();
 	void Keyboard(unsigned char key);
-	void Idle();
 	void Step();
+
 
 }; 
 extern BoxStack bstack;

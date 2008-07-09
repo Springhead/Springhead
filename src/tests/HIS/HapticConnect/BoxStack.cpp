@@ -20,7 +20,6 @@ BoxStack::BoxStack(){
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
-	bStep = true;
 	phscene = NULL;
 	render = NULL;
 	range = 1.5;
@@ -156,9 +155,8 @@ void BoxStack::PhysicsStep(){
 			neighborObjects[i].lastvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 			neighborObjects[i].lastvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		}
-		if(bStep) {
-			phscene->Step();
-		}
+		phscene->Step();
+
 		for(unsigned i = 0; i < neighborObjects.size(); i++){
 			if(!neighborObjects[i].blocal) continue;
 			SpatialVector curvel;
@@ -185,6 +183,9 @@ void BoxStack::PhysicsStep(){
 }
 
 void BoxStack::Display(){
+	cout << "call display : " << GetSdk()->GetScene()->GetPHScene()->NSolids() << endl;
+	bstack.GetSdk()->Print(cout);
+
 	// •`‰æ‚ÌÝ’è
 	GetSdk()->SetDebugMode(true);
 	render = window->render->Cast();
@@ -208,10 +209,14 @@ void BoxStack::Display(){
 
 	GetSdk()->SwitchScene(curScene);
 	GetSdk()->SwitchRender(curRender);
-	
+
 	if(!curRender) return;
 	curRender->ClearBuffer();
 	curRender->BeginScene();
+
+	cout << "in display (2) " << endl;
+	// bstack.GetSdk()->Print(cout);
+	curScene->GetPHScene()->Print(cout);
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
 
 	//	ŒõŒ¹‚Ì’Ç‰Á
@@ -440,19 +445,11 @@ void BoxStack::DrawHapticSolids(){
 	}
 };
 
+
 void BoxStack::Keyboard(unsigned char key){
 	states->ReleaseState(phscene);
 	states2->ReleaseState(phscene);
 	switch (key) {
-		case 'r':
-			if(bStep){
-				bStep = false;
-				DSTR << "Stop Simulation" << endl;
-			}else{
-				bStep = true;
-				DSTR << "Run Simulation" << endl;
-			}
-			break;
 		case 'g':
 			if(bGravity){
 				bGravity = false;
