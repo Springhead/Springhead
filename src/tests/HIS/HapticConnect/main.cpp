@@ -103,67 +103,33 @@ void Synchronize(){
 };
 
 void Reset(){
-	DSTR << "Reset" << endl;
-	cout << "1" << endl;
 	timer.Release();
-	cout << "2" << endl;
-	Sleep(1000);
-	cout << "3" << endl;
+	// ©•ª‚Åì‚Á‚½vector‚ğ‰Šú‰»
 	bstack.soBox.clear();
-	cout << "4" << endl;
 	bstack.sceneSolids.clear();
-	cout << "5" << endl;
 	bstack.neighborObjects.clear();
-	cout << "6" << endl;
 	hprocess.neighborObjects.clear();
-	cout << "7" << endl;
 	bstack.bsync = false;
-	cout << "8" << endl;
 	bstack.calcPhys=true;
-	cout << "9" << endl;
 	bstack.hapticcount = 1;
-	cout << "10" << endl;
 	hprocess.stepcount = 1;
-	cout << "11" << endl;
 
-
+	// scene‚Ìƒ[ƒh
 	bstack.GetSdk()->Clear();															// SDK‚Ìì¬
-	cout << "12" << endl;
-	bstack.GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
-	cout << "13" << endl;
+	bstack.GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬
 	bstack.phscene = bstack.GetSdk()->GetScene()->GetPHScene();
-	cout << "14" << endl;
 	bstack.states = ObjectStatesIf::Create();
-	cout << "15" << endl;
 	bstack.states2 = ObjectStatesIf::Create();
-	cout << "16" << endl;
-
 	bstack.DesignObject();																// „‘Ì‚ğì¬
-	cout << "17" << endl;
 	bstack.phscene->SetGravity(bstack.gravity);				
-	cout << "18" << endl;
 	bstack.phscene->SetTimeStep(bstack.dt);
-	cout << "19" << endl;
 	bstack.phscene->SetNumIteration(bstack.nIter);
-	cout << "20" << endl;
-
-	timer.Create();
-	cout << "21" << endl;
-
 	bstack.GetCurrentWin()->SetScene(bstack.GetSdk()->GetScene());
 	// bstack.GetCurrentWin()->SetRender(bstack.GetSdk()->GetRender());
 
-	bstack.GetSdk()->Print(cout);
-	int ns = bstack.GetSdk()->GetScene()->GetPHScene()->NSolids();
-	cout << ns << endl;
-	for (int i=0; i<ns; ++i) {
-		PHSolidIf* so = bstack.GetSdk()->GetScene()->GetPHScene()->GetSolids()[i];
-		so->Print(cout);
-		cout << so->NShape() << " shapes." << endl;
-		for (int j=0; j<so->NShape(); ++j) {
-			so->GetShape(j)->Print(cout);
-		}
-	}
+	timer.Create();
+
+	DSTR << "Reset" << endl;
 }
 
 void _cdecl Keyboard(unsigned char key, int x, int y){
