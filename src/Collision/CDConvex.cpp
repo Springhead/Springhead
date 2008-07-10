@@ -58,12 +58,17 @@ void CDConvex::Analyze(){
 	AccumulateBoxels(bbmin, bbmax, vol * 0.001f);
 	volume = 0.0f;
 	center.clear();
-	for(int i = 0; i < (int)boxels.size(); i++){
-		volume += boxels[i].volume;
-		center += boxels[i].volume * boxels[i].pos;
-	}
-	center /= volume;
+	if(boxels.size()){
+		for(int i = 0; i < (int)boxels.size(); i++){
+			volume += boxels[i].volume;
+			center += boxels[i].volume * boxels[i].pos;
+		}
+		center /= volume;
 
+	}
+	else{
+		return;
+	}
 	moment.clear();
 	Matrix3f offset;
 	for(int i = 0; i < (int)boxels.size(); i++){
