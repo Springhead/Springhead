@@ -68,7 +68,7 @@ void HapticProcess::UpdateSpidar(){
 //		CDConvex* a = DCAST(CDConvex, neighborObjects[i].phSolidIf->GetShape(0));											// 剛体が持つ凸形状
 //		CDConvex* b = DCAST(CDConvex, hpointer.GetShape(0));																		// 力覚ポインタの凸形状
 //		Posed a2w, b2w;																																	// 剛体のワールド座標
-///*		if(neighborObjects[i].blocal) 	a2w = neighborObjects[i].phSolid.GetPose();													// blocalがtrueなら最新の情報でやる
+///*		if(neighborObjects[i].blocal) 	a2w = neighborObjects[i].phSolid.GetPose();												// blocalがtrueなら最新の情報でやる
 //		else */								a2w = neighborObjects[i].phSolidIf->GetPose();
 //		b2w = hpointer.GetPose();																													// 力覚ポインタのワールド座標
 //		Vec3d pa ,pb;																																		// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
