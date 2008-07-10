@@ -183,9 +183,6 @@ void BoxStack::PhysicsStep(){
 }
 
 void BoxStack::Display(){
-	cout << "call display : " << GetSdk()->GetScene()->GetPHScene()->NSolids() << endl;
-	bstack.GetSdk()->Print(cout);
-
 	// •`‰æ‚ÌÝ’è
 	GetSdk()->SetDebugMode(true);
 	render = window->render->Cast();
@@ -214,9 +211,6 @@ void BoxStack::Display(){
 	curRender->ClearBuffer();
 	curRender->BeginScene();
 
-	cout << "in display (2) " << endl;
-	// bstack.GetSdk()->Print(cout);
-	curScene->GetPHScene()->Print(cout);
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
 
 	//	ŒõŒ¹‚Ì’Ç‰Á
