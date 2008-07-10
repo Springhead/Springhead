@@ -49,7 +49,8 @@ public:
 	vector<PHSceneSolid> sceneSolids;
 	// 予測シミュレーションに使う変数
 	UTRef<ObjectStatesIf> states, states2;
-
+	//デバック表示に使う変数
+	bool bDebug;
 	vector<PHSolid> hapticsolids;
 
 	BoxStack();	

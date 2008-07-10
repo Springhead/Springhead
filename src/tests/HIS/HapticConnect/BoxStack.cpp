@@ -23,6 +23,7 @@ BoxStack::BoxStack(){
 	phscene = NULL;
 	render = NULL;
 	range = 1.5;
+	bDebug = false;
 	neighborObjects.clear();
 }
 namespace Spr{
@@ -186,10 +187,12 @@ void BoxStack::Display(){
 	// 描画の設定
 	GetSdk()->SetDebugMode(true);
 	render = window->render->Cast();
+
+	// 描画モードの設定
 	render->SetRenderMode(true, false);
-//	render->EnableRenderAxis();
-	render->EnableRenderForce();
-	render->EnableRenderContact();
+//	render->EnableRenderAxis(bDebug);
+	render->EnableRenderForce(bDebug);
+	render->EnableRenderContact(bDebug);
 
 	// カメラ座標の指定
 	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
@@ -220,10 +223,10 @@ void BoxStack::Display(){
 	ld.ambient = Vec4f(1,1,1,1) * 0.4f;
 	ld.position = Vec4f(1,1,1,0);
 	render->PushLight(ld);
-
-	DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
-//	DrawHapticSolids();
-
+	if(bDebug){
+		DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
+	//	DrawHapticSolids();
+	}
 	render->PopLight();	//	光源の削除
 
 	curRender->EndScene();
@@ -444,6 +447,15 @@ void BoxStack::Keyboard(unsigned char key){
 	states->ReleaseState(phscene);
 	states2->ReleaseState(phscene);
 	switch (key) {
+		case 'd':
+			if(bDebug){
+				bDebug = false;
+				DSTR << "Debug Mode OFF" << endl;
+			}else{
+				bDebug = true;
+				DSTR << "Debug Mode ON" << endl;
+			}
+			break;
 		case 'g':
 			if(bGravity){
 				bGravity = false;
