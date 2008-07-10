@@ -12,6 +12,7 @@ using namespace PTM;
 struct PHNeighborObject {
 	PHSolidIf* phSolidIf;				///< シーンがもつ近傍物体へのポインタ
 	PHSolid phSolid;					///< phSolidIf*の中身のコピー
+	bool bneighbor;
 	bool blocal;						///< 力覚プロセスでシミュレーションしているかどうか
 	bool bfirstlocal;					///< 初めて近傍物体になったかどうか
 	Vec3d closestPoint;					///< 近傍物体最近点(ローカル座標)
@@ -25,7 +26,8 @@ struct PHNeighborObject {
 	SpatialVector lastb;				///< 前回の予測シミュレーションで求めた運動係数の定数項
 	SpatialVector lastvel;
 	PHNeighborObject(){
-		phSolidIf = NULL;								
+		phSolidIf = NULL;	
+		bneighbor = false;
 		blocal = false;							
 		bfirstlocal = false;						
 		closestPoint = Vec3d(0.0, 0.0, 0.0);					

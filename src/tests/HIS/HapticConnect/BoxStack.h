@@ -6,6 +6,7 @@
 #include <Collision/CDDetectorImp.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHContactPoint.h>
+#include <Base/Combination.h>
 #include<Collision/CDDetectorImp.h>
 #include <Physics/PHSolid.h>
 
@@ -15,6 +16,7 @@ using namespace std;
 
 struct PHSceneSolid{
 	PHSolidIf* phSolidIf;
+	bool bneighbor;
 	bool blocal;
 	bool bfirstlocal;
 };
@@ -52,6 +54,18 @@ public:
 	//デバック表示に使う変数
 	bool bDebug;
 	vector<PHSolid> hapticsolids;
+
+	// AABBでソートするための変数，構造体
+	//typedef UTCombination< UTRef<TSolidPair> > PHSolidPairs;
+	//PHSolidPairs solidPairs;
+
+	struct Edge{
+		float edge;				///<	端の位置(グローバル系)
+		int	index;				///<	元の solidの位置
+		bool bMin;				///<	初端ならtrue
+		bool operator < (const Edge& s) const { return edge < s.edge; }
+	};
+	typedef std::vector<Edge> Edges;
 
 	BoxStack();	
 	void Init(int argc, char* argv[]);				

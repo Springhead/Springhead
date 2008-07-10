@@ -253,15 +253,70 @@ void BoxStack::FindNearestObject(){
 		if(solids[i] == soPointer) continue;
 		sceneSolids.resize(sceneSolids.size() + 1);
 		sceneSolids.back().phSolidIf = solids[i];
+		sceneSolids.back().bneighbor = false;
 		sceneSolids.back().blocal = false;
 	}
+
 	// sceneSolidsで新しく増えた分をneighborObjectsに追加する
+	//neighborObjectsをいちいちclearしてると，昔のneighborObjectsを保存する必要があるので 
+	//今はneighborObjectsにsceneのすべてのsolidを格納している．
 	for(unsigned i = (int)neighborObjects.size(); i < sceneSolids.size(); i++){
 		neighborObjects.resize(i + 1);
 		neighborObjects.back().phSolidIf = sceneSolids[i].phSolidIf;
 		neighborObjects.back().blocal = false;
 	}
-	// GJKで近傍点を求め近傍物体を探す
+		
+	// AABBで力覚ポインタ近傍の物体を絞る（実装中）
+	// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
+	// SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外		
+#if 1
+	//1. BBoxレベルの衝突判定
+	int N = neighborObjects.size();
+	Vec3f dir(0,0,1);
+	Edges edges;
+	edges.resize(2 * N);
+	Edges::iterator eit = edges.begin();
+	for(int i = 0; i < N; ++i){
+		neighborObjects[i].bneighbor = false;
+		DCAST(PHSolid, neighborObjects[i].phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+		Vec3d dPos = neighborObjects[i].phSolidIf->GetDeltaPosition();
+		float dLen = (float) (dPos * dir);
+		if (dLen < 0){
+			eit[0].edge += dLen;
+		}else{
+			eit[1].edge += dLen;
+		}
+		eit[0].index = i; eit[0].bMin = true;
+		eit[1].index = i; eit[1].bMin = false;
+		eit += 2;
+	}
+	sort(edges.begin(), edges.end());
+	//端から見ていって，接触の可能性があるノードの判定をする．
+	typedef set<int> SolidSet;
+	SolidSet cur;							//	現在のSolidのセット
+	bool found = false;
+
+	for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
+		if (it->bMin){						//	初端だったら，リスト内の物体と判定
+			for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
+				int f1 = it->index;
+				int f2 = *itf;
+				if (f1 > f2) std::swap(f1, f2);
+				// 近傍物体として決定
+				if(neighborObjects[f1].phSolidIf == soPointer){
+					neighborObjects[f2].bneighbor = true;
+				}else if(neighborObjects[f2].phSolidIf == soPointer){
+					neighborObjects[f1].bneighbor = true;
+				}
+			}
+			cur.insert(it->index);
+		}else{
+			cur.erase(it->index);			//	終端なので削除．
+		}
+	}
+#endif
+
+	// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
 	// 近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
 	// blocalがすでにtrueだったらコピー済みなので近傍点だけコピーする
 	for(unsigned i = 0; i < (int)neighborObjects.size(); i++){
