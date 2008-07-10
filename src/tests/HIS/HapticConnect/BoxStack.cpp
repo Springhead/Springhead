@@ -247,10 +247,10 @@ void BoxStack::FindNearestObject(){
 	// これをすべてのshapeをもつ剛体についてやる
 
 	// シーンで新たに剛体が生成されたらローカルでシミュレーションしているかどうかの情報を加えsceneSolidsに格納する
+	// sceneSolidsは力覚ポインタも持っている
 	sceneSolids.clear();
 	PHSolidIf** solids = phscene->GetSolids();
 	for(int i = 0; i < phscene->NSolids(); i++){
-		if(solids[i] == soPointer) continue;
 		sceneSolids.resize(sceneSolids.size() + 1);
 		sceneSolids.back().phSolidIf = solids[i];
 		sceneSolids.back().bneighbor = false;
@@ -260,9 +260,11 @@ void BoxStack::FindNearestObject(){
 	// sceneSolidsで新しく増えた分をneighborObjectsに追加する
 	//neighborObjectsをいちいちclearしてると，昔のneighborObjectsを保存する必要があるので 
 	//今はneighborObjectsにsceneのすべてのsolidを格納している．
+	//neighborObjectsは力覚ポインタを持つがblocalを常にfalseにしておく必要がある．
 	for(unsigned i = (int)neighborObjects.size(); i < sceneSolids.size(); i++){
 		neighborObjects.resize(i + 1);
 		neighborObjects.back().phSolidIf = sceneSolids[i].phSolidIf;
+		neighborObjects.back().bneighbor = false;
 		neighborObjects.back().blocal = false;
 	}
 		
@@ -277,6 +279,7 @@ void BoxStack::FindNearestObject(){
 	edges.resize(2 * N);
 	Edges::iterator eit = edges.begin();
 	for(int i = 0; i < N; ++i){
+		// ローカル判定をすべてfalseにする
 		neighborObjects[i].bneighbor = false;
 		DCAST(PHSolid, neighborObjects[i].phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 		Vec3d dPos = neighborObjects[i].phSolidIf->GetDeltaPosition();
@@ -316,10 +319,17 @@ void BoxStack::FindNearestObject(){
 	}
 #endif
 
+	for(int i = 0; i < neighborObjects.size(); i++){
+		if(neighborObjects[i].bneighbor) continue;
+		neighborObjects[i].bfirstlocal = false;			//近傍物体でないのでfalseにする
+		neighborObjects[i].blocal = false;
+	}
+
 	// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
-	// 近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
+	// 最近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
 	// blocalがすでにtrueだったらコピー済みなので近傍点だけコピーする
 	for(unsigned i = 0; i < (int)neighborObjects.size(); i++){
+		if(!neighborObjects[i].bneighbor) continue;															// 近傍でなければ次へ
 		CDConvex* a = DCAST(CDConvex, neighborObjects[i].phSolidIf->GetShape(0));		// 剛体が持つ凸形状
 		CDConvex* b = DCAST(CDConvex, soPointer->GetShape(0));									// 力覚ポインタの凸形状
 		Posed a2w, b2w;																								// 剛体のワールド座標
@@ -345,17 +355,17 @@ void BoxStack::FindNearestObject(){
 					DSTR << "contfindcommonpoint don not find contact point" << endl;
 				}
 			}
-			if(!neighborObjects[i].blocal){					// 初めて近傍物体になった時はシーンの剛体の中身を力覚プロセスで使う剛体としてコピーする
+			if(!neighborObjects[i].blocal){					// 初めて最近傍物体になった時はシーンの剛体の中身を力覚プロセスで使う剛体としてコピーする
 				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);
 				neighborObjects[i].bfirstlocal = true;
 			}
-			neighborObjects[i].blocal = true;				// 近傍物体なのでblocalをtrueにする
+			neighborObjects[i].blocal = true;				// 最近傍物体なのでblocalをtrueにする
 			neighborObjects[i].closestPoint = pa;			// 剛体近傍点のローカル座標
-			neighborObjects[i].pointerPoint = pb;			// 力覚ポインタ近傍点のローカル座標
+			neighborObjects[i].pointerPoint = pb;		// 力覚ポインタ近傍点のローカル座標
 			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;
 			neighborObjects[i].face_normal = normal;		// 剛体から力覚ポインタへの法線
 		}else{
-			neighborObjects[i].blocal = false;				// 近傍物体ではないのでblocalをfalseにする
+			neighborObjects[i].blocal = false;				// 最近傍物体ではないのでblocalをfalseにする
 			neighborObjects[i].bfirstlocal = false;
 		}
 	}
