@@ -130,7 +130,7 @@ void HapticProcess::HapticRendering(){
 			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
-			Vec3d addforce = -K * ortho + D * dvortho;						// 提示力計算
+			Vec3d addforce = -K * ortho + D * dvortho;// * ortho.norm();						// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
 
 			if(!vibFlag){
 				vibT = 0;
@@ -150,6 +150,7 @@ void HapticProcess::HapticRendering(){
 
 	vibT += dt;
 	if(bDisplayforce) spidarG6.SetForce(displayforce);													// 力覚提示
+//	DSTR  << displayforce.norm() << "::" << displayforce << endl;
 }
 
 void HapticProcess::LocalDynamics(){
