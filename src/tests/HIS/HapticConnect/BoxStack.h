@@ -78,6 +78,7 @@ public:
 	void FindNearestObject();
 	void PredictSimulation();
 	void FindNearestPoint();
+	void DisplayContactPlane();
 	void DisplayLineToNearestPoint();
 	void DrawHapticSolids();
 	void Keyboard(unsigned char key);

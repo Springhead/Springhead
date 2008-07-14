@@ -16,14 +16,14 @@ BoxStack bstack;
 BoxStack::BoxStack(){
 	bsync=false;
 	calcPhys=true;
-	dt = 0.02;	//0.05
+	dt = 0.02;	//0.05;
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
 	phscene = NULL;
 	render = NULL;
 	range = 1.5;
-	bDebug = false;
+	bDebug = true;
 	neighborObjects.clear();
 }
 namespace Spr{
@@ -48,7 +48,7 @@ void BoxStack::Init(int argc, char* argv[]){
 	phscene->SetNumIteration(nIter);
 
 	FWWinDesc windowDesc;
-	windowDesc.title = "HapticConnect";
+	windowDesc.title = "HapticConnect1.2";
 	window = CreateWin(windowDesc);
 	window->scene = GetSdk()->GetScene();
 
@@ -88,7 +88,7 @@ void BoxStack::DesignObject(){
 	desc.inertia = 0.033 * Matrix3d::Unit();
 	{
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f(2,2,2) ;
+		bd.boxsize = Vec3f(2,2,2)  ;
 		meshBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 		meshBox->SetName("meshBox");
 		CDSphereDesc sd;
@@ -224,6 +224,7 @@ void BoxStack::Display(){
 	ld.position = Vec4f(1,1,1,0);
 	render->PushLight(ld);
 	if(bDebug){
+		DisplayContactPlane();
 		DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
 	//	DrawHapticSolids();
 	}
@@ -476,6 +477,39 @@ void BoxStack::PredictSimulation(){
 	}
 }
 
+void BoxStack::DisplayContactPlane(){
+	GLfloat moon[] = {0.8,0.8,0.8};
+	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
+		if(!neighborObjects[i].blocal) continue;
+		Vec3d pPoint = soPointer->GetPose() * neighborObjects[i].pointerPoint;
+		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;
+		Vec3d normal = neighborObjects[i].face_normal;
+		Vec3d v1;
+		v1[0] = 1 / normal[0];
+		v1[1] = -1 / normal[1];
+		v1[2] = 1 / normal[2];
+		Vec3d v2;
+		// 法線ベクトルの向きによって外積の順番を考えないと面がうまく張れない．
+		if(normal[2]>0) v2 = normal % v1;
+		else v2 = v1 % normal;		
+		v1 = v1.unit();
+		v2 = v2.unit();
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
+		render->PushModelMatrix();
+		glBegin(GL_QUADS);
+			glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
+			glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
+			glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
+			glVertex3d(cPoint[0] + v1[0] - v2[0], cPoint[1] + v1[1] - v2[1], cPoint[2] + v1[2] - v2[2]);
+		glEnd();
+		render->PopModelMatrix();
+		glEnable(GL_DEPTH_TEST);
+	}
+}
+
 void BoxStack::DisplayLineToNearestPoint(){
 	GLfloat moon[]={0.8,0.8,0.8};
 	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
@@ -538,6 +572,7 @@ void BoxStack::Keyboard(unsigned char key){
 				// ConvexBox
 				desc.mass = 0.05;
 				desc.inertia = 0.033 * Matrix3d::Unit();
+				//desc.dynamical = false;
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
 				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
