@@ -499,11 +499,78 @@ void BoxStack::DisplayContactPlane(){
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
 		render->PushModelMatrix();
+		Vec3d offset = 0.02 * normal;
 		glBegin(GL_QUADS);
+			// ÚG–Êã–Ê
 			glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
 			glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
 			glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
 			glVertex3d(cPoint[0] + v1[0] - v2[0], cPoint[1] + v1[1] - v2[1], cPoint[2] + v1[2] - v2[2]);
+			// ‘¤–Ê1
+			glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
+							cPoint[1] + v1[1] + v2[1] + offset[1], 
+							cPoint[2] + v1[2] + v2[2] + offset[2]);
+			glVertex3d(cPoint[0] + v1[0] + v2[0], 
+							cPoint[1] + v1[1] + v2[1], 
+							cPoint[2] + v1[2] + v2[2]);
+			glVertex3d(cPoint[0] - v1[0] + v2[0], 
+							cPoint[1] - v1[1] + v2[1], 
+							cPoint[2] - v1[2] + v2[2]);
+			glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
+							cPoint[1] - v1[1] + v2[1] + offset[1], 
+							cPoint[2] - v1[2] + v2[2] + offset[2]);
+			// ‘¤–Ê2
+			glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
+							cPoint[1] - v1[1] + v2[1] + offset[1], 
+							cPoint[2] - v1[2] + v2[2] + offset[2]);
+			glVertex3d(cPoint[0] - v1[0] + v2[0], 
+							cPoint[1] - v1[1] + v2[1], 
+							cPoint[2] - v1[2] + v2[2]);
+			glVertex3d(cPoint[0] - v1[0] - v2[0], 
+							cPoint[1] - v1[1] - v2[1], 
+							cPoint[2] - v1[2] - v2[2]);
+			glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
+							cPoint[1] - v1[1] - v2[1] + offset[1], 
+							cPoint[2] - v1[2] - v2[2] + offset[2]);
+			// ‘¤–Ê3
+			glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
+							cPoint[1] - v1[1] - v2[1] + offset[1], 
+							cPoint[2] - v1[2] - v2[2] + offset[2]);
+			glVertex3d(cPoint[0] - v1[0] - v2[0], 
+							cPoint[1] - v1[1] - v2[1], 
+							cPoint[2] - v1[2] - v2[2]);
+			glVertex3d(cPoint[0] + v1[0] - v2[0], 
+							cPoint[1] + v1[1] - v2[1], 
+							cPoint[2] + v1[2] - v2[2]);
+			glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
+							cPoint[1] + v1[1] - v2[1] + offset[1], 
+							cPoint[2] + v1[2] - v2[2] + offset[2]);
+			// ‘¤–Ê4
+			glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
+							cPoint[1] + v1[1] - v2[1] + offset[1], 
+							cPoint[2] + v1[2] - v2[2] + offset[2]);
+			glVertex3d(cPoint[0] + v1[0] - v2[0], 
+							cPoint[1] + v1[1] - v2[1], 
+							cPoint[2] + v1[2] - v2[2]);
+			glVertex3d(cPoint[0] + v1[0] + v2[0], 
+							cPoint[1] + v1[1] + v2[1],
+							cPoint[2] + v1[2] + v2[2]);
+			glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
+							cPoint[1] + v1[1] + v2[1] + offset[1], 
+							cPoint[2] + v1[2] + v2[2] + offset[2]);
+			// ÚG–Ê‰º–Ê
+			glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
+							cPoint[1] - v1[1] + v2[1] + offset[1], 
+							cPoint[2] - v1[2] + v2[2] + offset[2]);
+			glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
+							cPoint[1] + v1[1] + v2[1] + offset[1], 
+							cPoint[2] + v1[2] + v2[2] + offset[2]);
+			glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
+							cPoint[1] + v1[1] - v2[1] + offset[1], 
+							cPoint[2] + v1[2] - v2[2] + offset[2]);
+			glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
+							cPoint[1] - v1[1] - v2[1] + offset[1], 
+							cPoint[2] - v1[2] - v2[2] + offset[2]);
 		glEnd();
 		render->PopModelMatrix();
 		glEnable(GL_DEPTH_TEST);
