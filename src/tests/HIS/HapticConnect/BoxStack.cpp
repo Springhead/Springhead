@@ -16,7 +16,7 @@ BoxStack bstack;
 BoxStack::BoxStack(){
 	bsync=false;
 	calcPhys=true;
-	dt = 0.02;	//0.05;
+	dt = 0.02;//0.05;
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
@@ -342,22 +342,23 @@ void BoxStack::FindNearestObject(){
 		Posed a2w, b2w;																								// 剛体のワールド座標
 /*		if(neighborObjects[i].blocal) 	a2w = neighborObjects[i].phSolid.GetPose();				// blocalがtrueなら最新の情報でやる
 		else */								a2w = neighborObjects[i].phSolidIf->GetPose();
-		b2w = soPointer->GetPose();												// 力覚ポインタのワールド座標
-		Vec3d pa ,pb;																		// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
+		b2w = soPointer->GetPose();																			// 力覚ポインタのワールド座標
+		Vec3d pa ,pb;																									// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 		pa = pb = Vec3d(0.0, 0.0, 0.0);
-		FindClosestPoints(a, b, a2w, b2w, pa, pb);								// GJKで近傍点の算出
-		Vec3d wa = a2w * pa;															// 剛体近傍点のワールド座標
-		Vec3d wb = b2w * pb;															// 力覚ポインタ近傍点のワールド座標
-		Vec3d a2b = wb - wa;															// 剛体から力覚ポインタへのベクトル
+		FindClosestPoints(a, b, a2w, b2w, pa, pb);															// GJKで近傍点の算出
+		Vec3d wa = a2w * pa;																						// 剛体近傍点のワールド座標
+		Vec3d wb = b2w * pb;																						// 力覚ポインタ近傍点のワールド座標
+		Vec3d a2b = wb - wa;																						// 剛体から力覚ポインタへのベクトル
 		Vec3d normal = a2b.unit();
-		if(a2b.norm() < range){									// 近傍点までの長さから近傍物体を絞る
-			if(a2b.norm() < 0.01){								// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める		
+		if(a2b.norm() < range){																					// 近傍点までの長さから近傍物体を絞る
+			if(a2b.norm() < 0.01){																				// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める		
 				pa = pb = Vec3d(0.0, 0.0, 0.0);
-				Vec3d dir = -neighborObjects[i].face_normal;
-				if(dir == Vec3f(0.0, 0.0, 0.0) ) dir = -(soPointer->GetCenterPosition() - wa);
+				Vec3d dir = -1.0 * neighborObjects[i].face_normal;
+				if(dir == Vec3d(0.0, 0.0, 0.0) ){
+					dir = -(soPointer->GetCenterPosition() - wa);
+				}
 				double dist = 0.0;
 				int cp = ContFindCommonPoint(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-//				DSTR << dist << endl;
 				if(cp != 1){
 					ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
 					DSTR << "ContFindCommonPoint do not find contact point" << endl;
@@ -368,19 +369,19 @@ void BoxStack::FindNearestObject(){
 				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);		// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
 				neighborObjects[i].face_normal = normal;														// 初めて最近傍物体になったので，前回の法線は使わない．										
 			}
-			neighborObjects[i].blocal = true;															// 最近傍物体なのでblocalをtrueにする
-			neighborObjects[i].closestPoint = pa;														// 剛体近傍点のローカル座標
-			neighborObjects[i].pointerPoint = pb;													// 力覚ポインタ近傍点のローカル座標
-			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;		// 前回の法線（法線の補間に使う）
-			neighborObjects[i].face_normal = normal;												// 剛体から力覚ポインタへの法線
+			neighborObjects[i].blocal = true;																		// 最近傍物体なのでblocalをtrueにする
+			neighborObjects[i].closestPoint = pa;																	// 剛体近傍点のローカル座標
+			neighborObjects[i].pointerPoint = pb;																// 力覚ポインタ近傍点のローカル座標
+			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;					// 前回の法線（法線の補間に使う）
+			neighborObjects[i].face_normal = normal;															// 剛体から力覚ポインタへの法線
 		}else{
-			neighborObjects[i].blocal = false;															// 最近傍物体ではないのでblocalをfalseにする
+			neighborObjects[i].blocal = false;																		// 最近傍物体ではないのでblocalをfalseにする
 			neighborObjects[i].bfirstlocal = false;
 		}
 	}
 }
 
-#define DIVIDE_STEP
+//#define DIVIDE_STEP
 
 void BoxStack::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
