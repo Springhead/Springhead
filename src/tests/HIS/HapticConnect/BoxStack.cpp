@@ -88,7 +88,7 @@ void BoxStack::DesignObject(){
 	desc.inertia = 0.033 * Matrix3d::Unit();
 	{
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f(2,2,2)  ;
+		bd.boxsize = Vec3f(2,2,2)*2.5  ;
 		meshBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 		meshBox->SetName("meshBox");
 		CDSphereDesc sd;
@@ -268,11 +268,11 @@ void BoxStack::FindNearestObject(){
 		neighborObjects.back().bneighbor = false;
 		neighborObjects.back().blocal = false;
 	}
-		
+
+#if 0		
 	// AABBで力覚ポインタ近傍の物体を絞る（実装中）
 	// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 	// SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外		
-#if 1
 	//1. BBoxレベルの衝突判定
 	int N = neighborObjects.size();
 	Vec3f dir(0,0,1);
@@ -318,13 +318,19 @@ void BoxStack::FindNearestObject(){
 			cur.erase(it->index);			//	終端なので削除．
 		}
 	}
-#endif
 
 	for(int i = 0; i < neighborObjects.size(); i++){
 		if(neighborObjects[i].bneighbor) continue;
 		neighborObjects[i].bfirstlocal = false;			//近傍物体でないのでfalseにする
 		neighborObjects[i].blocal = false;
 	}
+#else
+	// すべての物体についてGJKを行う
+	for(int i = 0; i < neighborObjects.size(); i++){
+		neighborObjects[i].bneighbor = true;
+		if(neighborObjects[i].phSolidIf == soPointer) neighborObjects[i].bneighbor = false;
+	}
+#endif
 
 	// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
 	// 最近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
@@ -351,22 +357,24 @@ void BoxStack::FindNearestObject(){
 				if(dir == Vec3f(0.0, 0.0, 0.0) ) dir = -(soPointer->GetCenterPosition() - wa);
 				double dist = 0.0;
 				int cp = ContFindCommonPoint(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
+//				DSTR << dist << endl;
 				if(cp != 1){
 					ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-					DSTR << "contfindcommonpoint don not find contact point" << endl;
+					DSTR << "ContFindCommonPoint do not find contact point" << endl;
 				}
 			}
-			if(!neighborObjects[i].blocal){					// 初めて最近傍物体になった時はシーンの剛体の中身を力覚プロセスで使う剛体としてコピーする
-				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);
+			if(!neighborObjects[i].blocal){																			// 初めて最近傍物体になった時
 				neighborObjects[i].bfirstlocal = true;
+				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);		// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
+				neighborObjects[i].face_normal = normal;														// 初めて最近傍物体になったので，前回の法線は使わない．										
 			}
-			neighborObjects[i].blocal = true;				// 最近傍物体なのでblocalをtrueにする
-			neighborObjects[i].closestPoint = pa;			// 剛体近傍点のローカル座標
-			neighborObjects[i].pointerPoint = pb;		// 力覚ポインタ近傍点のローカル座標
-			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;
-			neighborObjects[i].face_normal = normal;		// 剛体から力覚ポインタへの法線
+			neighborObjects[i].blocal = true;															// 最近傍物体なのでblocalをtrueにする
+			neighborObjects[i].closestPoint = pa;														// 剛体近傍点のローカル座標
+			neighborObjects[i].pointerPoint = pb;													// 力覚ポインタ近傍点のローカル座標
+			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;		// 前回の法線（法線の補間に使う）
+			neighborObjects[i].face_normal = normal;												// 剛体から力覚ポインタへの法線
 		}else{
-			neighborObjects[i].blocal = false;				// 最近傍物体ではないのでblocalをfalseにする
+			neighborObjects[i].blocal = false;															// 最近傍物体ではないのでblocalをfalseにする
 			neighborObjects[i].bfirstlocal = false;
 		}
 	}
@@ -501,7 +509,7 @@ void BoxStack::DisplayContactPlane(){
 		render->PushModelMatrix();
 		Vec3d offset = 0.02 * normal;
 		glBegin(GL_QUADS);
-			// 接触面上面
+			// 接触面底面
 			glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
 			glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
 			glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
@@ -558,7 +566,7 @@ void BoxStack::DisplayContactPlane(){
 			glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
 							cPoint[1] + v1[1] + v2[1] + offset[1], 
 							cPoint[2] + v1[2] + v2[2] + offset[2]);
-			// 接触面下面
+			// 接触面上面
 			glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 							cPoint[1] - v1[1] + v2[1] + offset[1], 
 							cPoint[2] - v1[2] + v2[2] + offset[2]);
@@ -613,6 +621,10 @@ void BoxStack::Keyboard(unsigned char key){
 	states->ReleaseState(phscene);
 	states2->ReleaseState(phscene);
 	switch (key) {
+		case 'a':
+			InitCameraView();
+			DSTR << "InitCameraView" << endl;
+			break;
 		case 'd':
 			if(bDebug){
 				bDebug = false;
@@ -637,15 +649,15 @@ void BoxStack::Keyboard(unsigned char key){
 		case ' ':
 			{
 				// ConvexBox
-				desc.mass = 0.05;
-				desc.inertia = 0.033 * Matrix3d::Unit();
+				desc.mass = 0.08;
+				desc.inertia = 0.033 * Matrix3d::Unit() * 10;
 				//desc.dynamical = false;
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
 				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
-				soBox.back()->SetOrientation(
-					Quaternionf::Rot(Rad(30), 'y') * 
-					Quaternionf::Rot(Rad(10), 'x'));  
+				//soBox.back()->SetOrientation(
+				//	Quaternionf::Rot(Rad(30), 'y') * 
+				//	Quaternionf::Rot(Rad(10), 'x'));  
 				ostringstream os;
 				os << "box" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
