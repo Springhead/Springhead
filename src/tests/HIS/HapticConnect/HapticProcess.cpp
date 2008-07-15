@@ -17,7 +17,7 @@ HapticProcess hprocess;
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
 	K = 20;
-	D = 0;//0.1;		// ダンパを，0にしたら床のがたがたがなくなった．
+	D = 0.01;		// ダンパを，0にしたら床のがたがたがなくなった．
 	bDisplayforce = false;
 	bInter = true;
 	hpointer.SetDynamical(false);
@@ -118,14 +118,15 @@ void HapticProcess::HapticRendering(){
 		if(bInter){
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
-			interpolation_normal = (stepcount * neighborObjects[i].face_normal + (50 - stepcount) * neighborObjects[i].last_face_normal) / 50;															
-			if(stepcount > 50)	interpolation_normal = neighborObjects[i].face_normal;
+			double synccount = bstack.dt / hprocess.dt;		// プロセスの刻み時間の比
+			interpolation_normal = (stepcount * neighborObjects[i].face_normal + ((double)synccount - stepcount) * neighborObjects[i].last_face_normal) / (double)synccount;															
+			if(stepcount > synccount)		interpolation_normal = neighborObjects[i].face_normal;
 			// デバックコード
 			double sp = neighborObjects[i].face_normal * neighborObjects[i].last_face_normal;
-			DSTR << neighborObjects[i].face_normal.norm() << ":::"  << neighborObjects[i].last_face_normal.norm() << endl;
-			DSTR << sp << endl;
+			//DSTR << neighborObjects[i].face_normal.norm() << ":::"  << neighborObjects[i].last_face_normal.norm() << endl;
+			//DSTR << sp << endl;
 			if(sp < 0.5){
-				DSTR << "sp < 0" << endl;
+//				DSTR << "sp < 0" << endl;
 			}
 		}else{
 			// 現在の法線を使う
@@ -133,7 +134,10 @@ void HapticProcess::HapticRendering(){
 		}
 
 		float	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
+		//DSTR << "-----------------" << endl;
+		//DSTR << f << endl;
 		if(f < 0.0){																			// 内積が負なら力を計算
+//			DSTR << "display force" << endl;
 			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
