@@ -126,7 +126,7 @@ void Reset(){
 	bstack.phscene->SetNumIteration(bstack.nIter);
 	bstack.GetCurrentWin()->SetScene(bstack.GetSdk()->GetScene());
 	// bstack.GetCurrentWin()->SetRender(bstack.GetSdk()->GetRender());
-
+	bstack.InitCameraView();
 	timer.Create();
 
 	DSTR << "Reset" << endl;
@@ -141,6 +141,7 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 			break;
 		case 'r':
 			Reset();
+			bstack.Keyboard(' ');
 			break;
 		case 'h':
 			if(bhaptic){

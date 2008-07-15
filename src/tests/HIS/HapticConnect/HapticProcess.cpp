@@ -17,7 +17,7 @@ HapticProcess hprocess;
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
 	K = 20;
-	D = 0.1;
+	D = 0;//0.1;		// ダンパを，0にしたら床のがたがたがなくなった．
 	bDisplayforce = false;
 	bInter = true;
 	hpointer.SetDynamical(false);
@@ -119,7 +119,14 @@ void HapticProcess::HapticRendering(){
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			interpolation_normal = (stepcount * neighborObjects[i].face_normal + (50 - stepcount) * neighborObjects[i].last_face_normal) / 50;															
-			if(stepcount > 50)	interpolation_normal = neighborObjects[i].face_normal;				
+			if(stepcount > 50)	interpolation_normal = neighborObjects[i].face_normal;
+			// デバックコード
+			double sp = neighborObjects[i].face_normal * neighborObjects[i].last_face_normal;
+			DSTR << neighborObjects[i].face_normal.norm() << ":::"  << neighborObjects[i].last_face_normal.norm() << endl;
+			DSTR << sp << endl;
+			if(sp < 0.5){
+				DSTR << "sp < 0" << endl;
+			}
 		}else{
 			// 現在の法線を使う
 			interpolation_normal = neighborObjects[i].face_normal;
@@ -140,7 +147,7 @@ void HapticProcess::HapticRendering(){
 			if(vhaptic){
 				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
 			}
-			displayforce += addforce + (vibforce * addforce.unit());																			 
+			displayforce += addforce + (vibforce * addforce.unit());			// ユーザへの提示力															 
 			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
 			neighborObjects[i].test_force_norm = addforce.norm();
 			noContact = false;
