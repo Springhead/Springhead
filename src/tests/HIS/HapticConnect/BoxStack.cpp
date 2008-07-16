@@ -23,7 +23,7 @@ BoxStack::BoxStack(){
 	phscene = NULL;
 	render = NULL;
 	range = 1.5;
-	bDebug = false;
+	bDebug = true;
 	neighborObjects.clear();
 }
 namespace Spr{
@@ -274,7 +274,7 @@ void BoxStack::FindNearestObject(){
 	// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 	// SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外		
 	//1. BBoxレベルの衝突判定
-	int N = neighborObjects.size();
+	size_t N = neighborObjects.size();
 	Vec3f dir(0,0,1);
 	Edges edges;
 	edges.resize(2 * N);
@@ -319,7 +319,7 @@ void BoxStack::FindNearestObject(){
 		}
 	}
 
-	for(int i = 0; i < neighborObjects.size(); i++){
+	for(size_t i = 0; i < neighborObjects.size(); i++){
 		if(neighborObjects[i].bneighbor) continue;
 		neighborObjects[i].bfirstlocal = false;			//近傍物体でないのでfalseにする
 		neighborObjects[i].blocal = false;
@@ -367,6 +367,11 @@ void BoxStack::FindNearestObject(){
 			if(!neighborObjects[i].blocal){																			// 初めて最近傍物体になった時
 				neighborObjects[i].bfirstlocal = true;
 				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);		// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
+#ifdef _DEBUG
+				if (neighborObjects[i].face_normal * normal < 0.8){
+					DSTR << "Too big change on normal" << normal << std::endl;
+				}
+#endif
 				neighborObjects[i].face_normal = normal;														// 初めて最近傍物体になったので，前回の法線は使わない．										
 			}
 			neighborObjects[i].blocal = true;																		// 最近傍物体なのでblocalをtrueにする
@@ -402,7 +407,10 @@ void BoxStack::PredictSimulation(){
 		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();											// 現在の速度
 		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();									// 現在の角速度									
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
-		if(neighborObjects[i].test_force_norm == 0)	neighborObjects[i].test_force_norm = 1;		// テスト力が0なら1にする  
+		const float minTestForce = 0.5;
+		if(neighborObjects[i].test_force_norm < minTestForce){
+			neighborObjects[i].test_force_norm = minTestForce;		// テスト力が0なら1にする 
+		}
 
 		// 拘束座標系を作るための準備
 		Vec3d rpjabs, vpjabs;
@@ -487,12 +495,12 @@ void BoxStack::PredictSimulation(){
 }
 
 void BoxStack::DisplayContactPlane(){
-	GLfloat moon[] = {0.8,0.8,0.8};
 	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		Vec3d pPoint = soPointer->GetPose() * neighborObjects[i].pointerPoint;
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;
 		Vec3d normal = neighborObjects[i].face_normal;
+#if 0
 		Vec3d v1;
 		v1[0] = 1 / normal[0];
 		v1[1] = -1 / normal[1];
@@ -503,14 +511,23 @@ void BoxStack::DisplayContactPlane(){
 		else v2 = v1 % normal;		
 		v1 = v1.unit();
 		v2 = v2.unit();
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
+#else
+		Vec3d v1(0,1,0);
+		v1 +=  Vec3d(0, 0, 0.5) - Vec3d(0, 0, 0.5)*normal*normal;
+		v1 -= v1*normal * normal;
+		v1.unitize();
+		Vec3d v2 = normal ^ v1;
+#endif
+		Vec4f moon(1.0, 1.0, 0.8, 0.3);
+		render->SetMaterial( GRMaterialDesc(moon) );
 		render->PushModelMatrix();
 		Vec3d offset = 0.02 * normal;
+		render->SetLighting( false );
+		render->SetAlphaTest(true);
+		render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
+		cPoint += offset/2;
 		glBegin(GL_QUADS);
-			// 接触面底面
+			// 接触面底面	
 			glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
 			glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
 			glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
@@ -581,6 +598,8 @@ void BoxStack::DisplayContactPlane(){
 							cPoint[1] - v1[1] - v2[1] + offset[1], 
 							cPoint[2] - v1[2] - v2[2] + offset[2]);
 		glEnd();
+		render->SetLighting( true);
+		render->SetAlphaTest(false);
 		render->PopModelMatrix();
 		glEnable(GL_DEPTH_TEST);
 	}
