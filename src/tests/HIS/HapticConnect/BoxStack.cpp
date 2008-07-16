@@ -23,7 +23,7 @@ BoxStack::BoxStack(){
 	phscene = NULL;
 	render = NULL;
 	range = 1.5;
-	bDebug = true;
+	bDebug = false;
 	neighborObjects.clear();
 }
 namespace Spr{
@@ -88,7 +88,7 @@ void BoxStack::DesignObject(){
 	desc.inertia = 0.033 * Matrix3d::Unit();
 	{
 		CDBoxDesc bd;
-		bd.boxsize = Vec3f(2,2,2)*2.5  ;
+		bd.boxsize = Vec3f(2,2,2);
 		meshBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 		meshBox->SetName("meshBox");
 		CDSphereDesc sd;
@@ -269,7 +269,7 @@ void BoxStack::FindNearestObject(){
 		neighborObjects.back().blocal = false;
 	}
 
-#if 0		
+#if 1		
 	// AABBで力覚ポインタ近傍の物体を絞る（実装中）
 	// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 	// SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外		
@@ -381,7 +381,7 @@ void BoxStack::FindNearestObject(){
 	}
 }
 
-//#define DIVIDE_STEP
+#define DIVIDE_STEP
 
 void BoxStack::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
