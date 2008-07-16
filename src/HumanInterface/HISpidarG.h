@@ -31,6 +31,11 @@ public:
 	///	最低張力を出力
 	void SetMinForce();
 	
+	///	モータ
+	HISpidarMotorIf* GetMotor(size_t i);
+	///	モータの数
+	size_t NMotor() const;
+	
 	///	位置の取得
 	Vec3f GetPosition(){ return pos; }
 	///	角度の取得

@@ -22,8 +22,16 @@ int __cdecl main(){
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	while(!kbhit()){
 		spg->Update(0.001f);
+#if 1
 		Posef pose = spg->GetPose();
 		std::cout << std::setprecision(2) << pose << std::endl;
+#endif
+#if 1
+		for(size_t i=0; i<spg->NMotor(); ++i){
+			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();
+		}
+		std::cout << std::endl;
+#endif
 	}
 	getch();
 /*
