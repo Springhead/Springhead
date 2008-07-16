@@ -102,4 +102,6 @@
 	Vec3f GetTorque(){	return	base::GetTorque();}	\
 	Vec3f GetForce(){	return	base::GetForce();}	\
 	void SetForce(const Vec3f& f, const Vec3f& t){	base::SetForce(f, t);}	\
+	Spr::HISpidarMotorIf* GetMotor(size_t i){	return	base::GetMotor(i);}	\
+	size_t NMotor()const{	return	base::NMotor();}	\
 

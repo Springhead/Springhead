@@ -22,17 +22,6 @@ namespace Spr{;
 
 struct DRRealDeviceIf;
 
-/**	@brief	SpidarG6の基本クラス	*/
-struct HISpidarGIf: public HIForceInterface6DIf{
-	SPR_VIFDEF(HISpidarG);
-	///	デバイスの実際の提示トルクを返す
-	Vec3f GetTorque();
-	///	デバイスの実際の提示力を返す
-	Vec3f GetForce();
-	///	デバイスの目標出力とトルク出力を設定する
-	void SetForce(const Vec3f& f, const Vec3f& t);
-};
-
 ///	@name	モータについての定数
 struct HISpidarMotorDesc{
 	//@{
@@ -74,7 +63,23 @@ struct HISpidarMotorIf: public HIBaseIf{
 
 };
 
-///	SpidarG6のデスクリプタ
+/**	@brief	SpidarG6の基本クラス	*/
+struct HISpidarGIf: public HIForceInterface6DIf{
+	SPR_VIFDEF(HISpidarG);
+	///	デバイスの実際の提示トルクを返す
+	Vec3f GetTorque();
+	///	デバイスの実際の提示力を返す
+	Vec3f GetForce();
+	///	デバイスの目標出力とトルク出力を設定する
+	void SetForce(const Vec3f& f, const Vec3f& t);
+
+	///	モータ
+	HISpidarMotorIf* GetMotor(size_t i);
+	///	モータの数
+	size_t NMotor() const;
+};
+
+	///	SpidarG6のデスクリプタ
 struct HISpidarGDesc{
 	SPR_DESCDEF(HISpidarG);
 	std::vector<HISpidarMotorDesc> motors;

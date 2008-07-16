@@ -179,5 +179,12 @@ void HISpidarG::MeasureWire(){
 		measuredLength[i] = motors[i].GetLength();
 	}	
 }
+HISpidarMotorIf* HISpidarG::GetMotor(size_t i){
+	return motors[i].Cast();
+}
+size_t HISpidarG::NMotor() const{
+	return motors.size();
+}
+
 
 }//	namespace Spr
