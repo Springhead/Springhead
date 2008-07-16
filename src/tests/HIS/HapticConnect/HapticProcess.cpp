@@ -16,8 +16,9 @@ HapticProcess hprocess;
 
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
-	K = 20;
+	K = 10;
 	D = 0.01;		// ダンパを，0にしたら床のがたがたがなくなった．
+	posScale = 500;
 	bDisplayforce = false;
 	bInter = true;
 	hpointer.SetDynamical(false);
@@ -53,7 +54,6 @@ void HapticProcess::Step(){
 }
 
 void HapticProcess::UpdateSpidar(){
-	const float posScale = 200;
 	spidarG6.Update(dt);
 	hpointer.SetFramePosition(spidarG6.GetPos() * posScale);
 //	hpointer.SetOrientation(spidarG6.GetOri());
@@ -122,12 +122,12 @@ void HapticProcess::HapticRendering(){
 			interpolation_normal = (stepcount * neighborObjects[i].face_normal + ((double)synccount - stepcount) * neighborObjects[i].last_face_normal) / (double)synccount;															
 			if(stepcount > synccount)		interpolation_normal = neighborObjects[i].face_normal;
 			// デバックコード
-			double sp = neighborObjects[i].face_normal * neighborObjects[i].last_face_normal;
+			//double sp = neighborObjects[i].face_normal * neighborObjects[i].last_face_normal;
 			//DSTR << neighborObjects[i].face_normal.norm() << ":::"  << neighborObjects[i].last_face_normal.norm() << endl;
 			//DSTR << sp << endl;
-			if(sp < 0.5){
-//				DSTR << "sp < 0" << endl;
-			}
+			//if(sp < 0.5){
+			//	DSTR << "sp < 0" << endl;
+			//}
 		}else{
 			// 現在の法線を使う
 			interpolation_normal = neighborObjects[i].face_normal;

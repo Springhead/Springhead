@@ -32,6 +32,7 @@ public:
 	Vec3d displayforce;		///< ユーザへの提示力
 	double K;				///< バネ係数
 	double D;				///< ダンパ係数
+	float posScale;
 	// 同期に使う変数
 	int stepcount;
 	int countmax;
