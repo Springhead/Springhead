@@ -30,6 +30,13 @@ public:
 	void	SetDensity(float d){ material.density = d; }
 	float	GetDensity(){ return material.density; }
 
+	void SetVibA(float vibA){material.vibA = vibA;}
+	float GetVibA(){return material.vibA;}
+	void SetVibB(float vibB){material.vibB = vibB;}
+	float GetVibB(){return material.vibB;}
+	void SetVibW(float vibW){material.vibW = vibW;}
+	float GetVibW(){return material.vibW;}
+
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
 	virtual bool IsInside(const Vec3f& p){ return false; }
 	virtual float CalcVolume(){ return FLT_MAX; }

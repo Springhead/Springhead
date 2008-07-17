@@ -14,8 +14,14 @@
 namespace Spr{;
 
 PHMaterial::PHMaterial(){
-	mu = mu0 = e = 0.4f;
+	mu = 0.4f;
+	mu0 = 0.4f;
+	e = 0.4f;
 	density = 1.0f;
+
+	vibA = 0;
+	vibB = 0;
+	vibW = 0;
 }
 
 }
