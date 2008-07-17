@@ -75,6 +75,10 @@ struct PHMaterial{
 	float mu0;				///< 静止摩擦係数
 	float e;				///< 跳ね返り係数
 	float density;			///< 密度
+
+	float vibA;
+	float vibB;
+	float vibW;
 };
 
 ///	形状のディスクリプタ(基本クラス)

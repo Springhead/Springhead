@@ -48,7 +48,6 @@ void HapticProcess::InitDevice(){
 
 void HapticProcess::Step(){
 	UpdateSpidar();
-//	FindNearestPoint();
 	HapticRendering();
 	LocalDynamics();
 }
@@ -60,42 +59,6 @@ void HapticProcess::UpdateSpidar(){
 	hpointer.SetVelocity(spidarG6.GetVel() * posScale);
 //	hpointer.SetAngularVelocity(spidarG6.GetAngVel());
 }
-
-//void HapticProcess::FindNearestPoint(){
-//	for(unsigned i = 0; i < neighborObjects.size(); i++){
-//		if(!neighborObjects[i].blocal) continue;																									// Localに剛体が入ってなかったらやめる
-//
-//		CDConvex* a = DCAST(CDConvex, neighborObjects[i].phSolidIf->GetShape(0));											// 剛体が持つ凸形状
-//		CDConvex* b = DCAST(CDConvex, hpointer.GetShape(0));																		// 力覚ポインタの凸形状
-//		Posed a2w, b2w;																																	// 剛体のワールド座標
-///*		if(neighborObjects[i].blocal) 	a2w = neighborObjects[i].phSolid.GetPose();												// blocalがtrueなら最新の情報でやる
-//		else */								a2w = neighborObjects[i].phSolidIf->GetPose();
-//		b2w = hpointer.GetPose();																													// 力覚ポインタのワールド座標
-//		Vec3d pa ,pb;																																		// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
-//		pa = pb = Vec3d(0.0, 0.0, 0.0);
-//		FindClosestPoints(a, b, a2w, b2w, pa, pb);																								// GJKで近傍点の算出
-//		Vec3d wa = a2w * pa;																															// 剛体近傍点のワールド座標
-//		Vec3d wb = b2w * pb;																															// 力覚ポインタ近傍点のワールド座標
-//		Vec3d a2b = wb - wa;																															// 剛体から力覚ポインタへのベクトル
-//		Vec3d normal = a2b.unit();
-//		// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める
-//		if(a2b.norm() < 0.01){																																
-//			pa = pb = Vec3d(0.0, 0.0, 0.0);
-//			Vec3d dir = -neighborObjects[i].face_normal;
-//			if(dir == Vec3f(0.0, 0.0, 0.0) ) dir = -(hpointer.GetCenterPosition() - wa);
-//			double dist = 0.0;
-//			int cp = ContFindCommonPoint(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-//			if(cp != 1){
-//				ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-//				DSTR << "contfindcommonpoint don not find contact point" << endl;
-//			}
-//		}
-//		neighborObjects[i].closestPoint = pa;			// 剛体近傍点のローカル座標
-//		neighborObjects[i].pointerPoint = pb;			// 力覚ポインタ近傍点のローカル座標
-//		neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;
-//		neighborObjects[i].face_normal = normal;		// 剛体から力覚ポインタへの法線
-//	}
-//}
 
 void HapticProcess::HapticRendering(){
 	double vibA = -200;
@@ -134,10 +97,7 @@ void HapticProcess::HapticRendering(){
 		}
 
 		float	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
-		//DSTR << "-----------------" << endl;
-		//DSTR << f << endl;
 		if(f < 0.0){																			// 内積が負なら力を計算
-//			DSTR << "display force" << endl;
 			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
