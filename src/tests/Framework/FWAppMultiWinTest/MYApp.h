@@ -23,13 +23,13 @@ private:
 	double					nIter;			//< LCP反復回数
 	bool					bTimer;
 
-	int						numWindow;		//< 作るウィンドウの数
-	vector< FWWin* >		windows;		//< 作ったウィンドウ
-	vector< FWSceneIf* >	fwScenes;		//< Physicsのシーングラフ
-	vector< string >		winNames;		//< Windowの名前
-	vector< string >		fileNames;		//< 読み込むファイルの名前
+	int								numWindow;		//< 作るウィンドウの数
+	vector< UTRef< FWWin > > 		windows;		//< 作ったウィンドウ
+	vector< UTRef< FWSceneIf > >	fwScenes;		//< Physicsのシーングラフ
+	vector< string >				winNames;		//< Windowの名前
+	vector< string >				fileNames;		//< 読み込むファイルの名前
 
-	vector< Affinef	>		views;			//< カメラ位置の回転・ズームを行う時の行列用の変数
+	vector< Affinef	>				views;			//< カメラ位置の回転・ズームを行う時の行列用の変数
 
 public:
 	
