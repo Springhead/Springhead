@@ -55,10 +55,6 @@ public:
 	bool bDebug;
 	vector<PHSolid> hapticsolids;
 
-	// AABBでソートするための変数，構造体
-	//typedef UTCombination< UTRef<TSolidPair> > PHSolidPairs;
-	//PHSolidPairs solidPairs;
-
 	struct Edge{
 		float edge;				///<	端の位置(グローバル系)
 		int	index;				///<	元の solidの位置
@@ -83,8 +79,6 @@ public:
 	void DrawHapticSolids();
 	void Keyboard(unsigned char key);
 	void Step();
-
-
 }; 
 extern BoxStack bstack;
 

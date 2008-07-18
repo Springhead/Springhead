@@ -45,6 +45,13 @@ struct CDShapeIf : public NamedObjectIf{
 	void	SetDensity(float d);
 	float	GetDensity();
 
+	void SetVibA(float vibA);
+	float GetVibA();
+	void SetVibB(float vibB);
+	float GetVibB();
+	void SetVibW(float vibW);
+	float GetVibW();
+	
 	float	CalcVolume();			///< 体積を計算
 	Vec3f	CalcCenterOfMass();		///< 質量中心
 	Matrix3f CalcMomentOfInertia();	///< 単位密度における質量中心に関する慣性行列

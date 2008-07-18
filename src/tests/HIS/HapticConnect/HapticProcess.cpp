@@ -61,9 +61,6 @@ void HapticProcess::UpdateSpidar(){
 }
 
 void HapticProcess::HapticRendering(){
-	double vibA = -200;
-	double vibB = 120;
-	double vibW = 300;
 	static double vibT = 0;
 	static bool vibFlag = false;
 	Vec3d vibV = spidarG6.GetVel();
@@ -84,13 +81,6 @@ void HapticProcess::HapticRendering(){
 			double synccount = bstack.dt / hprocess.dt;		// プロセスの刻み時間の比
 			interpolation_normal = (stepcount * neighborObjects[i].face_normal + ((double)synccount - stepcount) * neighborObjects[i].last_face_normal) / (double)synccount;															
 			if(stepcount > synccount)		interpolation_normal = neighborObjects[i].face_normal;
-			// デバックコード
-			//double sp = neighborObjects[i].face_normal * neighborObjects[i].last_face_normal;
-			//DSTR << neighborObjects[i].face_normal.norm() << ":::"  << neighborObjects[i].last_face_normal.norm() << endl;
-			//DSTR << sp << endl;
-			//if(sp < 0.5){
-			//	DSTR << "sp < 0" << endl;
-			//}
 		}else{
 			// 現在の法線を使う
 			interpolation_normal = neighborObjects[i].face_normal;
@@ -108,9 +98,21 @@ void HapticProcess::HapticRendering(){
 				vibVo = vibV;
 			}
 			vibFlag = true;
+#if 0
 			if(vhaptic){
+				double vibA = -200;
+				double vibB = 120;
+				double vibW = 300;
 				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
 			}
+#else
+			if(vhaptic){
+				double vibA = neighborObjects[i].phSolid.GetShape(0)->GetVibA();
+				double vibB = neighborObjects[i].phSolid.GetShape(0)->GetVibB();
+				double vibW = neighborObjects[i].phSolid.GetShape(0)->GetVibW();
+				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
+			}			
+#endif
 			displayforce += addforce + (vibforce * addforce.unit());			// ユーザへの提示力															 
 			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
 			neighborObjects[i].test_force_norm = addforce.norm();
@@ -120,8 +122,7 @@ void HapticProcess::HapticRendering(){
 	if (noContact) vibFlag = false;
 
 	vibT += dt;
-	if(bDisplayforce) spidarG6.SetForce(displayforce);													// 力覚提示
-//	DSTR  << displayforce.norm() << "::" << displayforce << endl;
+	if(bDisplayforce) spidarG6.SetForce(displayforce);								// 力覚提示
 }
 
 void HapticProcess::LocalDynamics(){
