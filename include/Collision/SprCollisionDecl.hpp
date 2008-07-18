@@ -7,6 +7,12 @@
 	float GetElasticity(){	return	base::GetElasticity();}	\
 	void SetDensity(float d){	base::SetDensity(d);}	\
 	float GetDensity(){	return	base::GetDensity();}	\
+	void SetVibA(float vibA){	base::SetVibA(vibA);}	\
+	float GetVibA(){	return	base::GetVibA();}	\
+	void SetVibB(float vibB){	base::SetVibB(vibB);}	\
+	float GetVibB(){	return	base::GetVibB();}	\
+	void SetVibW(float vibW){	base::SetVibW(vibW);}	\
+	float GetVibW(){	return	base::GetVibW();}	\
 	float CalcVolume(){	return	base::CalcVolume();}	\
 	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\

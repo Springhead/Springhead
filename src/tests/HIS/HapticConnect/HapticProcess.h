@@ -32,7 +32,7 @@ public:
 	Vec3d displayforce;		///< ユーザへの提示力
 	double K;				///< バネ係数
 	double D;				///< ダンパ係数
-	float posScale;
+	float posScale;		///<スパイダーの移動スケール
 	// 同期に使う変数
 	int stepcount;
 	int countmax;
@@ -43,12 +43,10 @@ public:
 	void InitDevice();
 	void Step();
 	void UpdateSpidar();
-//	void FindNearestPoint();			// 物理の更新周波数を50Hzにしてみて，だめだったら使う
 	void HapticRendering();
 	void LocalDynamics();
 	void Keyboard(unsigned char key);
 };
 extern HapticProcess hprocess;
-
 
 #endif
