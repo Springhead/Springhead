@@ -675,6 +675,9 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
 				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
+				soBox.back()->GetShape(0)->SetVibA(-200);
+				soBox.back()->GetShape(0)->SetVibB(120);
+				soBox.back()->GetShape(0)->SetVibW(300);
 				//soBox.back()->SetOrientation(
 				//	Quaternionf::Rot(Rad(30), 'y') * 
 				//	Quaternionf::Rot(Rad(10), 'x'));  
@@ -711,6 +714,10 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshSphere);
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->GetShape(0)->SetVibA(-100);
+				soBox.back()->GetShape(0)->SetVibB(120);
+				soBox.back()->GetShape(0)->SetVibW(300);
+				soBox.back()->GetShape(0)->SetElasticity(1.5);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				ostringstream os;

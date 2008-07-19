@@ -17,7 +17,7 @@ HapticProcess hprocess;
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
 	K = 10;
-	D = 0.01;		// ダンパを，0にしたら床のがたがたがなくなった．
+	D = 0.0;//0.005;		// ダンパを，0にしたら床のがたがたがなくなった．
 	posScale = 500;
 	bDisplayforce = false;
 	bInter = true;
