@@ -15,8 +15,14 @@
 #include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>
 #include <Physics/PHSolid.h>
+#include <Foundation/UTPreciseTimer.h>
 
 namespace Spr{;
+
+//#define REPORT_TIME 1
+#ifdef REPORT_TIME
+extern Spr::UTPreciseTimer ptimerForCd;
+#endif
 
 /// 剛体の組の状態
 struct PHSolidPairSt{
@@ -172,6 +178,9 @@ class PHContactDetector : public PHEngine{
 	typedef std::vector<Edge> Edges;
 
 public:
+#ifdef _DEBUG
+	int nMaxOverlapObject;
+#endif
 	typedef TShapePair shapepair_type;
 	typedef TSolidPair solidpair_type;
 	typedef TEngine engine_type;
@@ -408,6 +417,9 @@ public:
 				2c. 交差形状から法線を求め、法線に関して形状を射影し，その頂点を接触点とする
 				2d. 得られた接触点情報をPHContactPointsに詰めていく
 		*/		
+#ifdef REPORT_TIME
+		ptimerForCd.CountUS();
+#endif
 		int N = solids.size();
 
 		//1. BBoxレベルの衝突判定
@@ -421,11 +433,20 @@ public:
 			eit[1].index = i; eit[1].bMin = false;
 			eit += 2;
 		}
+#ifdef REPORT_TIME
+		DSTR << "  spt:" << ptimerForCd.CountUS();
+#endif
 		std::sort(edges.begin(), edges.end());
+#ifdef REPORT_TIME
+		DSTR << "  sort:" << ptimerForCd.CountUS();
+#endif
 		//端から見ていって，接触の可能性があるノードの判定をする．
 		typedef std::set<int> SolidSet;
 		SolidSet cur;							//	現在のSolidのセット
 		bool found = false;
+#ifdef _DEBUG
+		nMaxOverlapObject = 0;
+#endif
 		for(typename Edges::iterator it = edges.begin(); it != edges.end(); ++it){
 			if (it->bMin){						//	初端だったら，リスト内の物体と判定
 				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
@@ -433,13 +454,25 @@ public:
 					int f2 = *itf;
 					if (f1 > f2) std::swap(f1, f2);
 					//2. SolidとSolidの衝突判定
+#ifdef REPORT_TIME
+					ptimerForCd.Stop();
+#endif
 					found |= solidPairs.item(f1, f2)->Detect((TEngine*)this, ct, dt);
+#ifdef REPORT_TIME
+					ptimerForCd.Start();
+#endif
 				}
 				cur.insert(it->index);
+#ifdef _DEBUG
+				if (nMaxOverlapObject < cur.size()) nMaxOverlapObject = cur.size();
+#endif
 			}else{
 				cur.erase(it->index);			//	終端なので削除．
 			}
 		}
+#ifdef REPORT_TIME
+		DSTR << "  narrow:" << ptimerForCd.CountUS();
+#endif
 		return found;
 	}
 
@@ -453,6 +486,9 @@ public:
 				2c. 交差形状から法線を求め、法線に関して形状を射影し，その頂点を接触点とする
 				2d. 得られた接触点情報をPHContactPointsに詰めていく
 		*/		
+#ifdef REPORT_TIME
+		ptimerForCd.CountUS();
+#endif
 		int N = solids.size();
 
 		//1. BBoxレベルの衝突判定
@@ -473,11 +509,20 @@ public:
 			eit[1].index = i; eit[1].bMin = false;
 			eit += 2;
 		}
+#ifdef REPORT_TIME
+		DSTR << "  spt:" << ptimerForCd.CountUS();
+#endif
 		std::sort(edges.begin(), edges.end());
+#ifdef REPORT_TIME
+		DSTR << "  sort:" << ptimerForCd.CountUS();
+#endif
 		//端から見ていって，接触の可能性があるノードの判定をする．
 		typedef std::set<int> SolidSet;
 		SolidSet cur;							//	現在のSolidのセット
 		bool found = false;
+#ifdef _DEBUG
+		nMaxOverlapObject = 0;
+#endif
 		for(typename Edges::iterator it = edges.begin(); it != edges.end(); ++it){
 			if (it->bMin){						//	初端だったら，リスト内の物体と判定
 				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
@@ -485,13 +530,25 @@ public:
 					int f2 = *itf;
 					if (f1 > f2) std::swap(f1, f2);
 					//2. SolidとSolidの衝突判定
+#ifdef REPORT_TIME
+					ptimerForCd.Stop();
+#endif
 					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt); 
+#ifdef REPORT_TIME
+					ptimerForCd.Start();
+#endif
 				}
 				cur.insert(it->index);
+#ifdef _DEBUG
+				if (nMaxOverlapObject < cur.size()) nMaxOverlapObject = cur.size();
+#endif
 			}else{
 				cur.erase(it->index);			//	終端なので削除．
 			}
 		}
+#ifdef REPORT_TIME
+		DSTR << "  narrow:" << ptimerForCd.CountUS();
+#endif
 		return found;
 	}
 
