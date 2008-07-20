@@ -455,12 +455,12 @@ void PHConstraintEngine::UpdateSolids(){
 	}
 }
 
-//#define REPORT_TIME 1
 #ifdef REPORT_TIME
 }
 #include <Foundation/UTPreciseTimer.h>
-Spr::UTPreciseTimer ptimer;
 namespace Spr{
+UTPreciseTimer ptimer;
+UTPreciseTimer ptimerForCd;
 #endif
 
 
@@ -474,7 +474,9 @@ void PHConstraintEngine::StepPart1(){
 	}
 	//Œð·‚ðŒŸ’m
 	points.clear();
-	if(bContactEnabled) ContDetect(ct, dt);
+	if(bContactEnabled){
+		ContDetect(ct, dt);
+	}
 }
 void PHConstraintEngine::StepPart2(){
 	double dt = GetScene()->GetTimeStep();
@@ -512,9 +514,13 @@ void PHConstraintEngine::Step(){
 #ifdef REPORT_TIME
 	ptimer.CountUS();
 #endif
-	if(bContactEnabled)
+	if(bContactEnabled){
 		//Detect(ct, dt);
 		ContDetect(ct, dt);
+#ifdef _DEBUG
+		DSTR << "nMaxOverlapObject = " << nMaxOverlapObject << std::endl;
+#endif
+	}
 #ifdef REPORT_TIME
 	DSTR << " col:" << ptimer.CountUS();
 #endif
