@@ -22,7 +22,7 @@ BoxStack::BoxStack(){
 	bGravity = true;
 	phscene = NULL;
 	render = NULL;
-	range = 1.5;
+	range = 0.7;
 	bDebug = true;
 	neighborObjects.clear();
 }
@@ -134,7 +134,8 @@ void BoxStack::DesignObject(){
 	sd.radius = 0.5;//1.0;
 	CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 	soPointer = phscene->CreateSolid(desc);
-	soPointer->AddShape(sphere);//meshConvex);
+//	soPointer->AddShape(sphere);//meshConvex);
+	soPointer->AddShape(meshConvex);
 	soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
 	soPointer->SetDynamical(false);
 	// 力覚ポインタをspringhead2の接触計算から外す
@@ -238,8 +239,8 @@ void BoxStack::UpdateHapticPointer(){
 	// cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる
 	soPointer->SetFramePosition(phpointer.GetFramePosition());//cameraInfo.view.Rot() * phpointer.GetFramePosition());				
 	soPointer->SetOrientation(phpointer.GetOrientation());					
-	//soPointer->SetVelocity(phpointer.GetVelocity());
-	//soPointer->SetAngularVelocity(phpointer.GetAngularVelocity());	
+	soPointer->SetVelocity(phpointer.GetVelocity());
+	soPointer->SetAngularVelocity(phpointer.GetAngularVelocity());	
 	soPointer->SetDynamical(false);
 };
 
