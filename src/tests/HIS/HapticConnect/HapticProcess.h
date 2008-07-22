@@ -30,6 +30,7 @@ public:
 	bool bDisplayforce;	///< 力覚を提示するかどうか
 	bool bInter;		///< 提示面の法線を補間するかどうか
 	Vec3d displayforce;		///< ユーザへの提示力
+	Vec3d displaytorque;
 	double K;				///< バネ係数
 	double D;				///< ダンパ係数
 	float posScale;		///<スパイダーの移動スケール
