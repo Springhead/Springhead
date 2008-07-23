@@ -104,7 +104,7 @@ void BoxStack::DesignObject(){
 
 	{
 		// meshConvex(soBox)のメッシュ形状
-		CDConvexMeshDesc md;
+		CDConvexMeshInterpolateDesc md;
 		md.vertices.push_back(Vec3d(-1,-1,-1));
 		md.vertices.push_back(Vec3d(-1,-1, 1));	
 		md.vertices.push_back(Vec3d(-1, 1,-1));	
@@ -135,7 +135,8 @@ void BoxStack::DesignObject(){
 	CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 	soPointer = phscene->CreateSolid(desc);
 //	soPointer->AddShape(sphere);//meshConvex);
-	soPointer->AddShape(meshConvex);
+//	soPointer->AddShape(meshConvex);
+	soPointer->AddShape(meshCapsule);
 	soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
 	soPointer->SetDynamical(false);
 	// 力覚ポインタをspringhead2の接触計算から外す

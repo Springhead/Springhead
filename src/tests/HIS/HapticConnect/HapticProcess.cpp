@@ -13,7 +13,7 @@
 bool vhaptic = false;
 
 HapticProcess hprocess;	
-//#define TORQUE
+#define TORQUE
 
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
@@ -94,7 +94,7 @@ void HapticProcess::HapticRendering(){
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
 			Vec3d addforce = -K * ortho + D * dvortho;// * ortho.norm();						// ’ñ¦—ÍŒvZ (*ƒ_ƒ“ƒp‚Ì€‚Éortho‚Ìƒmƒ‹ƒ€‚ğ‚©‚¯‚Ä‚İ‚½)
-			Vec3d addtorque = addforce.norm() * (pPoint - hpointer.GetCenterPosition());
+			Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
 
 			if(!vibFlag){
 				vibT = 0;
