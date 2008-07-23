@@ -323,7 +323,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
-				CDConvexMeshInterpolateDesc md;
+				CDConvexMeshDesc md;
 				int nv = rand()%100 + 50;
 				for(int i=0; i < nv; ++i){
 					Vec3d v;
