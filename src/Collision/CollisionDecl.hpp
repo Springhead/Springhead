@@ -28,6 +28,19 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CDConvexMeshInterpolateDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CDConvexMesh::SetDesc((CDConvexMeshDesc*)(CDConvexMeshInterpolateDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CDConvexMesh::GetDesc((CDConvexMeshDesc*)(CDConvexMeshInterpolateDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CDSphereDesc \
 protected:\
 	float	radius;	\

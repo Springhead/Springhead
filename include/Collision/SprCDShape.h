@@ -108,7 +108,18 @@ struct CDConvexMeshDesc: public CDShapeDesc{
 	CDConvexMeshDesc():CDShapeDesc(){}
 	std::vector<Vec3f> vertices;	///<	頂点の座標
 };
-	
+
+/**	凸形状のメッシュ SupportPointの補完つき*/
+struct CDConvexMeshInterpolateIf: public CDConvexMeshIf{
+	SPR_IFDEF(CDConvexMeshInterpolate);
+};
+/**	凸形状のメッシュのディスクリプタ	*/	
+struct CDConvexMeshInterpolateDesc: public CDConvexMeshDesc{
+	SPR_DESCDEF(CDConvexMeshInterpolate);
+	CDConvexMeshInterpolateDesc():CDConvexMeshDesc(){}
+};
+
+
 /** 球体　*/
 struct CDSphereIf: public CDConvexIf{
 	SPR_IFDEF(CDSphere);

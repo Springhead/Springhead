@@ -33,6 +33,8 @@
 	Vec3f* GetVertices(){	return	base::GetVertices();}	\
 	size_t NVertex(){	return	base::NVertex();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_CDConvexMeshInterpolateIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_CDSphereIf(base)	\
 	float GetRadius(){	return	base::GetRadius();}	\
 
