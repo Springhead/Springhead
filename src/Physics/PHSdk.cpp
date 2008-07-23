@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
+#include <Collision/CDConvexMeshInterpolate.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -98,7 +99,9 @@ void PHSdk::MergeScene(PHSceneIf* scene0, PHSceneIf* scene1){
 	
 CDShapeIf* PHSdk::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 	CDShape* s = NULL;
-	if (ii == CDConvexMeshIf::GetIfInfoStatic()){
+	if (ii == CDConvexMeshInterpolateIf::GetIfInfoStatic()){
+		s = DBG_NEW CDConvexMeshInterpolate((const CDConvexMeshInterpolateDesc&)desc);
+	}else if (ii == CDConvexMeshIf::GetIfInfoStatic()){
 		s = DBG_NEW CDConvexMesh((const CDConvexMeshDesc&)desc);
 	}else if (ii == CDSphereIf::GetIfInfoStatic()){
 		s = DBG_NEW CDSphere((const CDSphereDesc&)desc);

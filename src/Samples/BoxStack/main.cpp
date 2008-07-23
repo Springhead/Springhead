@@ -323,7 +323,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			states->ReleaseState(scene);
 			{
 				soBox.push_back(scene->CreateSolid(desc));
-				CDConvexMeshDesc md;
+				CDConvexMeshInterpolateDesc md;
 				int nv = rand()%100 + 50;
 				for(int i=0; i < nv; ++i){
 					Vec3d v;
@@ -338,7 +338,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				std::ostringstream os;
-				os << "sphere" << (unsigned int)soBox.size();
+				os << "cmesh" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
 			}break;
 		case 'v':
