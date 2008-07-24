@@ -31,7 +31,7 @@ bool CDCapsule::IsInside(const Vec3f& p){
 }
 float CDCapsule::CalcVolume(){
 	return  4.0f/3.0f * M_PI * radius * radius * radius + 
-			M_PI * radius * radius * length;
+			(float)M_PI * radius * radius * length;
 }
 	
 // サポートポイントを求める

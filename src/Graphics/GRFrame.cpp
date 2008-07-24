@@ -113,7 +113,7 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 		for (int j=0; j<4; ++j) {
 			PTM::VVector<float> p; p.resize(kfAffines[i][j].size()); p = kfAffines[i][j];
 			kfAffines[i][j].resize(nMatDim);
-			for (int q=0; q<p.size(); ++q) {
+			for (unsigned q=0; q<p.size(); ++q) {
 				kfAffines[i][j][q] = p[q];
 			}
 			kfAffines[i][j][nKeys-1] = aff[i][j];
@@ -168,7 +168,7 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 	}
 
 	// 子要素に再帰
-	for (int i=0; i<children.size(); ++i) {
+	for (unsigned i=0; i<children.size(); ++i) {
 		GRFrame* fr = children[i]->Cast();
 		if (fr) {
 			fr->AddRBFKeyFrame(pos);
@@ -238,7 +238,7 @@ void GRFrame::BlendRBF(PTM::VVector<float> pos){
 	// std::cout << "Aff : " << aff << std::endl;
 
 	// 子要素に再帰
-	for (int i=0; i<children.size(); ++i) {
+	for (unsigned  i=0; i<children.size(); ++i) {
 		GRFrame* fr = children[i]->Cast();
 		if (fr) {
 			fr->BlendRBF(pos);

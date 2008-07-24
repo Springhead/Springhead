@@ -23,17 +23,17 @@
 
 namespace Spr{;
 void FWWinGLUT::Position(int left, int top){
-	glutPositionWindow(left, top); fullScreen = false;
+	glutPositionWindow(left, top); fullscreen = false;
 }
 void FWWinGLUT::Reshape(int width, int height){
-	glutReshapeWindow(width, height); fullScreen = false;
+	glutReshapeWindow(width, height); fullscreen = false;
 	this->width = width; this->height = height;
 }
 void FWWinGLUT::SetTitle(UTString t){
 	glutSetWindowTitle(t.c_str()); title = t;
 }
 void FWWinGLUT::FullScreen(){
-	glutFullScreen(); fullScreen = true;
+	glutFullScreen(); fullscreen = true;
 }
 
 //-----------------------------------------------------------------------
@@ -114,17 +114,12 @@ void FWAppGLUT::Start(){
 FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	int wid=0;
 	if(d.fullscreen){	//< フルスクリーンの場合のウィンドウ生成
-		//memo:-------------------------------------------------------
-		// fullScreenを使用する場合にはウィンドウ破棄をする際に
-		// glutLeaveGameMode()を呼ばないと危険．by Toki
-		//------------------------------------------------------------
 		std::stringstream gameMode;
 		gameMode << d.width << "x" << d.height << ":32@60";
 		glutGameModeString(gameMode.str().c_str());
 		Sleep(100);
 		wid	= glutEnterGameMode();
-	}
-	else{				//< ウィンドウモードの場合の生成
+	}else{				//< ウィンドウモードの場合の生成
 		if (d.parentWindow){
 			wid = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
 		}else{
@@ -133,7 +128,9 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 			wid = glutCreateWindow(d.title.c_str());
 		}
 	}
+	//	このWindowのglewコンテキストの初期化
 	int rv = glewInit();
+	//	windowに関連するコールバックの設定
 	glutDisplayFunc(FWAppGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWAppGLUT::GlutReshapeFunc);
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
@@ -141,16 +138,21 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	glutMotionFunc(FWAppGLUT::GlutMotionFunc);
 	int pollInterval = 0.01;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
 	glutJoystickFunc(FWAppGLUT::GlutJoystickFunc, pollInterval);
-	// ウィンドウIDを指定してタイマを始動
-	//glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, wid);
 	
-	FWWin* win = DBG_NEW FWWinGLUT(wid, fwSdk->CreateRender());
+	FWWin* win = DBG_NEW FWWinGLUT(wid, d, fwSdk->CreateRender());
 	AssignScene(win);
 	wins.push_back(win);
 	return win;
 }
 void FWAppGLUT::DestroyWin(FWWin* w){
-	glutDestroyWindow(w->GetID());
+	if (w->fullscreen){
+		glutLeaveGameMode();
+	}else{
+		glutDestroyWindow(w->GetID());
+	}
+	Wins::iterator it = std::find(wins.begin(), wins.end(), w);
+	assert(it != wins.end());
+	wins.erase(it);
 }
 void FWAppGLUT::SetCurrentWin(FWWin* w){
 	glutSetWindow(w->GetID());

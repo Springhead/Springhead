@@ -7,5 +7,14 @@
  */
 #include <HumanInterface/DVKeyMouse.h>
 namespace Spr {;
+bool DVKeyMouseHandler::OnMouseMove(int , int , int , int ){ return false; }
+///
+bool DVKeyMouseHandler::OnClick(int , int , int ){ return false; }
+///
+bool DVKeyMouseHandler::OnDoubleClick(int , int , int ){ return false; }
+///	ƒL[ˆ—
+bool DVKeyMouseHandler::OnKey(bool , int , int , int , int ){
+	return false;
+}
 
 }	//	namespace Spr

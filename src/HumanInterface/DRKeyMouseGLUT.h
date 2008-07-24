@@ -26,7 +26,7 @@ public:
 	class KeyMouse:public DVKeyMouse{
 	protected:
 		char name[100];
-		DRKeyMouseGLUT* win32;
+		DRKeyMouseGLUT* glut;
 	public:
 		KeyMouse(DRKeyMouseGLUT* w);
 		///	デバイスの名前
@@ -38,7 +38,7 @@ public:
 		///	マウス位置取得関数	0が最新，1以上は過去の履歴を取得
 		virtual DVKeyMouseIf::DVMousePosition GetMousePosition(int count=0);
 		///
-		virtual HIRealDeviceIf* RealDevice(){ return win32->Cast(); }
+		virtual HIRealDeviceIf* RealDevice(){ return glut->Cast(); }
 	};
 protected:
 	char name[100];
