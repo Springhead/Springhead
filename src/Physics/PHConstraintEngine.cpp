@@ -518,7 +518,7 @@ void PHConstraintEngine::Step(){
 		//Detect(ct, dt);
 		ContDetect(ct, dt);
 #ifdef _DEBUG
-		DSTR << "nMaxOverlapObject = " << nMaxOverlapObject << std::endl;
+//		DSTR << "nMaxOverlapObject = " << nMaxOverlapObject << std::endl;
 #endif
 	}
 #ifdef REPORT_TIME

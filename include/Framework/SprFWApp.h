@@ -59,16 +59,16 @@ public:	// protected‚Å‚æ‚¢‚ªŒİŠ·«‚Ì‚½‚ßˆê“I‚É
 	UTRef<GRRenderIf>	render;
 	UTRef<FWSceneIf>	scene;
 
-	FWWin(int wid, GRRenderIf* r):id(wid), render(r){}
+	FWWin(int wid, const FWWinDesc& d, GRRenderIf* r):id(wid), FWWinDesc(d), render(r){}
 public:
 	virtual void Position(int left, int top){}
 	virtual void Reshape(int width, int height){}
 	virtual void SetTitle(UTString title){}
 	virtual UTString GetTitle(){ return UTString(); }
-	virtual void SetFullScreen(bool full = true){}
-	virtual bool GetFullScreen(){ return false; }
-	virtual int  GetWidth(){ return 0; }
-	virtual int  GetHeight(){ return 0; }
+	virtual void SetFullScreen(bool full = true){ fullscreen = full; }
+	virtual bool GetFullScreen(){ return fullscreen; }
+	virtual int  GetWidth(){ return width; }
+	virtual int  GetHeight(){ return height; }
 
 	int			GetID() const{ return id; }
 	GRRenderIf*	GetRender(){ return render; }

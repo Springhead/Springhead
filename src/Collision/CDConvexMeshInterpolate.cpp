@@ -57,12 +57,12 @@ Vec3f CDConvexMeshInterpolate::Support(const Vec3f& v) const {
 	struct Near{
 		int id;
 		float dist;
-		Near(int i, double d):id(i), dist(d){
+		Near(int i, float d):id(i), dist(d){
 		}
 	};
 	typedef std::vector<Near> Nears;
 	Nears nears;
-	const float minDist = 0.001;
+	const float minDist = 0.001f;
 	float sum = minDist;
 	nears.push_back(Near(curPos, minDist));
 	for (unsigned i=0; i<cn.size(); ++i){

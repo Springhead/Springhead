@@ -24,15 +24,13 @@ struct DVKeyMouseHandler{
 	/** マウスが動いたときの処理
 		@param keyState 押されているキー，ボタンの状態
 	*/
-	bool OnMouseMove(int keyState, int x, int y, int zdelta){ return false; }
+	bool OnMouseMove(int keyState, int x, int y, int zdelta);
 	///
-	bool OnClick(int keyState, int x, int y){ return false; }
+	bool OnClick(int keyState, int x, int y);
 	///
-	bool OnDoubleClick(int keyState, int x, int y){ return false; }
+	bool OnDoubleClick(int keyState, int x, int y);
 	///	キー処理
-	bool OnKey(bool isDown, int vkey, int keyState, int x, int y){
-		return false;
-	}
+	bool OnKey(bool isDown, int vkey, int keyState, int x, int y);
 };
 
 

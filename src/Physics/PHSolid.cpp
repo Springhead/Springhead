@@ -426,7 +426,7 @@ void PHSolid::CompInertia(){
 		frames[i]->pose.Ori().ToMatrix(R);
 		Matrix3f offset;
 		CDConvex::OffsetInertia(center - frames[i]->pose * frames[i]->center, offset);
-		inertia += R * frames[i]->inertia * R.trans() + frames[i]->mass * offset;
+		inertia += R * frames[i]->inertia * R.trans() + (float)frames[i]->mass * offset;
 	}
 
 }

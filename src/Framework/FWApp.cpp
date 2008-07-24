@@ -88,9 +88,9 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 	if(state == BUTTON_DOWN)
 		mouseInfo.first = true;
 	int mod = GetModifier();
-	mouseInfo.shift = mod & ACTIVE_SHIFT;
-	mouseInfo.ctrl  = mod & ACTIVE_CTRL;
-	mouseInfo.alt   = mod & ACTIVE_ALT;
+	mouseInfo.shift = (mod & ACTIVE_SHIFT) != 0;
+	mouseInfo.ctrl  = (mod & ACTIVE_CTRL) != 0;
+	mouseInfo.alt   = (mod & ACTIVE_ALT) != 0;
 
 	// ctrl+left カーソルで剛体を動かす
 	// middle    カメラ平行移動

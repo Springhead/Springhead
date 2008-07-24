@@ -43,7 +43,26 @@ public:
 			bRun = true;
 		}
 		if (key=='f'){
-			app->GetSdk()->SaveScene("save.x");
+			GetSdk()->SaveScene("save.x");
+		}
+		if (key=='w'){
+			FWWin* win = GetCurrentWin();
+			FWSceneIf* s = win->GetScene();
+			if (GetCurrentWin()->GetFullScreen()){
+				DestroyWin(GetCurrentWin());
+				FWWinDesc wd;
+				wd.height = 600;
+				wd.width = 800;
+				win = CreateWin(wd);
+			}else{
+				DestroyWin(GetCurrentWin());
+				FWWinDesc wd;
+				wd.fullscreen = true;
+				wd.height = 768;
+				wd.width = 1024;
+				win = CreateWin(wd);				
+			}
+			win->SetScene(s);
 		}
 	}
 	void Display(){

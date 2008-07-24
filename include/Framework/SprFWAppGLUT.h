@@ -13,21 +13,13 @@
 namespace Spr{;
 
 class FWWinGLUT : public FWWin{
-	UTString  title;
-	bool	  fullScreen;
-	int       width;
-	int       height;
 public:
-	FWWinGLUT(int wid, GRRenderIf* r):FWWin(wid, r), fullScreen(false), width(0), height(0) {}
-
-	virtual void Position(int left, int top);
-	virtual void Reshape(int width, int height);
-	virtual void SetTitle(UTString t);
-	virtual UTString GetTitle(){ return title; }
-	virtual void FullScreen();
-	virtual bool IsFullScreen(){ return fullScreen; }
-	virtual int  GetWidth(){ return width; }
-	virtual int  GetHeight(){ return height; }
+	FWWinGLUT(int wid, const FWWinDesc& d, GRRenderIf* r):
+	  FWWin(wid, d, r){}
+	void FullScreen();
+	void Position(int left, int top);
+	void Reshape(int width, int height);
+	void SetTitle(UTString t);
 };
 
 /** @brief GLUTを用いるアプリケーションクラス
