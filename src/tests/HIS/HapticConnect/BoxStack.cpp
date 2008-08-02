@@ -25,6 +25,7 @@ BoxStack::BoxStack(){
 	range = 0.7;
 	bDebug = true;
 	neighborObjects.clear();
+	bStep = true;
 }
 namespace Spr{
 void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
@@ -168,7 +169,11 @@ void BoxStack::PhysicsStep(){
 			neighborObjects[i].lastvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
 			neighborObjects[i].lastvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 		}
-		phscene->Step();
+		if(bStep) phscene->Step();
+		else if (bOneStep){
+			phscene->Step();
+			bOneStep = false;
+		}
 
 		for(unsigned i = 0; i < neighborObjects.size(); i++){
 			if(!neighborObjects[i].blocal) continue;
@@ -652,7 +657,7 @@ void BoxStack::Keyboard(unsigned char key){
 	states->ReleaseState(phscene);
 	states2->ReleaseState(phscene);
 	switch (key) {
-		case 'a':
+		case 'w':
 			InitCameraView();
 			DSTR << "InitCameraView" << endl;
 			break;
@@ -676,6 +681,13 @@ void BoxStack::Keyboard(unsigned char key){
 				phscene->SetGravity(gravity);
 				DSTR << "Gravity ON" << endl;
 			}
+			break;
+		case 's':
+			bStep = false;
+			bOneStep = true;
+			break;
+		case 'a':
+			bStep = true;
 			break;
 		case ' ':
 			{
