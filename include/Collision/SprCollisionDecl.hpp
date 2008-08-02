@@ -7,6 +7,7 @@
 	float GetElasticity(){	return	base::GetElasticity();}	\
 	void SetDensity(float d){	base::SetDensity(d);}	\
 	float GetDensity(){	return	base::GetDensity();}	\
+	void SetVibration(float vibA, float vibB, float vibW){	base::SetVibration(vibA, vibB, vibW);}	\
 	void SetVibA(float vibA){	base::SetVibA(vibA);}	\
 	float GetVibA(){	return	base::GetVibA();}	\
 	void SetVibB(float vibB){	base::SetVibB(vibB);}	\

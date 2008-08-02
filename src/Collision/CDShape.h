@@ -30,6 +30,11 @@ public:
 	void	SetDensity(float d){ material.density = d; }
 	float	GetDensity(){ return material.density; }
 
+	void SetVibration(float vibA, float vibB, float vibW){
+		material.vibA = vibA;
+		material.vibB = vibB;
+		material.vibB = vibW;
+	}
 	void SetVibA(float vibA){material.vibA = vibA;}
 	float GetVibA(){return material.vibA;}
 	void SetVibB(float vibB){material.vibB = vibB;}
