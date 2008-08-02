@@ -508,7 +508,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_AMBIENT,   mat.ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat.diffuse);
-	glColor3fv(mat.diffuse);
+	glColor4fv(mat.diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR,  mat.specular);
 	glMaterialfv(GL_FRONT, GL_EMISSION,  mat.emissive);
 	glMaterialf (GL_FRONT, GL_SHININESS, mat.power);
