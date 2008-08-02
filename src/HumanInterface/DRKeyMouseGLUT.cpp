@@ -18,7 +18,7 @@ namespace Spr {;
 
 DRKeyMouseGLUT* DRKeyMouseGLUT::This;
 
-DRKeyMouseGLUT::KeyMouse::KeyMouse(DRKeyMouseGLUT* w):win32(w){
+DRKeyMouseGLUT::KeyMouse::KeyMouse(DRKeyMouseGLUT* w){
 	strcpy(name, Type());
 	strcat(name, "Win32");
 }
