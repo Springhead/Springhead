@@ -332,5 +332,16 @@ int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* re
 	}
 	return num;
 }
+void CDConvexMesh::Print(std::ostream& os) const{
+	PrintHeader(os, false);
+	int w = os.width();
+	os.width(0);
+
+	os << UTPadding(w+2) << "vtxs: " << base.size() << std::endl;
+	os << UTPadding(w+2) << "faces:" << faces.size() << std::endl;
+
+	os.width(w);
+	PrintFooter(os);
+}
 
 }
