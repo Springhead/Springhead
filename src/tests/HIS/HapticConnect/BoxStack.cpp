@@ -127,6 +127,7 @@ void BoxStack::DesignObject(){
 	}
 	soFloor->AddShape(meshFloor);
 	soFloor->SetFramePosition(Vec3d(0,-20 - 0.7,0));
+	soFloor->GetShape(0)->SetVibration(-100, 150, 150);
 	soFloor->SetName("solidFloor");
 
 	// 力覚ポインタ
@@ -134,9 +135,9 @@ void BoxStack::DesignObject(){
 	sd.radius = 0.5;//1.0;
 	CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 	soPointer = phscene->CreateSolid(desc);
-//	soPointer->AddShape(sphere);//meshConvex);
+	soPointer->AddShape(sphere);//meshConvex);
 //	soPointer->AddShape(meshConvex);
-	soPointer->AddShape(meshCapsule);
+//	soPointer->AddShape(meshCapsule);
 	soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
 	soPointer->SetDynamical(false);
 	// 力覚ポインタをspringhead2の接触計算から外す
@@ -677,9 +678,7 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
 				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
-				soBox.back()->GetShape(0)->SetVibA(-200);
-				soBox.back()->GetShape(0)->SetVibB(120);
-				soBox.back()->GetShape(0)->SetVibW(300);
+				soBox.back()->GetShape(0)->SetVibration(-200,120,300);
 				//soBox.back()->SetOrientation(
 				//	Quaternionf::Rot(Rad(30), 'y') * 
 				//	Quaternionf::Rot(Rad(10), 'x'));  
@@ -700,7 +699,8 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
 				soBox.back()->AddShape(meshCapsule);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
-	//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->GetShape(0)->SetVibration(-80,200,150);
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				ostringstream os;
 				os << "capsule" << (unsigned int)soBox.size();
@@ -716,9 +716,6 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshSphere);
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->GetShape(0)->SetVibA(-100);
-				soBox.back()->GetShape(0)->SetVibB(120);
-				soBox.back()->GetShape(0)->SetVibW(300);
 				soBox.back()->GetShape(0)->SetElasticity(1.5);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
@@ -747,6 +744,7 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.back()->AddShape(s);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->GetShape(0)->SetVibration(-100,60,100);
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				ostringstream os;
 				os << "sphere" << (unsigned int)soBox.size();

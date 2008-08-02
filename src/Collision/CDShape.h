@@ -33,7 +33,7 @@ public:
 	void SetVibration(float vibA, float vibB, float vibW){
 		material.vibA = vibA;
 		material.vibB = vibB;
-		material.vibB = vibW;
+		material.vibW = vibW;
 	}
 	void SetVibA(float vibA){material.vibA = vibA;}
 	float GetVibA(){return material.vibA;}
