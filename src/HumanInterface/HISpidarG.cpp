@@ -139,12 +139,12 @@ bool HISpidarG::Init(const void* pDesc){
 
 	SetMinForce();
 	BeforeCalibration();
-	Calib();
+	Calibration();
 	AfterCalibration();
 	bGood = true;
 	return true;
 }
-bool HISpidarG::Calib(){
+bool HISpidarG::Calibration(){
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
 	for(unsigned i=0; i<motors.size(); i++) motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
 	lengthDiffAve.clear();

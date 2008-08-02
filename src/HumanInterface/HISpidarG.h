@@ -25,9 +25,9 @@ public:
 	///	デバイスの初期化(使用前に呼ぶ)
 	virtual bool Init(const void* desc);
 	///	キャリブレーションの前に行う処理
-	virtual bool BeforeCalib(){ SetMinForce(); return true; }
+	virtual bool BeforeCalibration(){ SetMinForce(); return true; }
 	///	キャリブレーション
-	virtual bool Calib();
+	virtual bool Calibration();
 	///	最低張力を出力
 	void SetMinForce();
 	
