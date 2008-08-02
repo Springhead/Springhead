@@ -82,6 +82,7 @@ public:
 	virtual bool GetDesc(void *desc) const;
 
 	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
+	virtual void Print(std::ostream& os) const;
 
 protected:
 	///	同一平面上で接続されている3角形をマージする

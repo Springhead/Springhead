@@ -67,6 +67,7 @@ void CDConvex::Analyze(){
 
 	}
 	else{
+		valid = true;
 		return;
 	}
 	moment.clear();
