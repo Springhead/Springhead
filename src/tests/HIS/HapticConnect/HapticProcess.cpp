@@ -11,6 +11,7 @@
 #include <fstream>
 
 bool vhaptic = false;
+bool bproxy = false;
 
 HapticProcess hprocess;	
 #define TORQUE
@@ -67,10 +68,14 @@ void HapticProcess::HapticRendering(){
 	Vec3d vibV = spidarG6.GetVel();
 	static Vec3d vibVo = vibV;
 	double vibforce = 0;
+	static Vec3d proxy[100];
 
 	displayforce = Vec3d(0.0, 0.0, 0.0);		
 	displaytorque = Vec3d(0.0, 0.0, 0.0);
+
+//	bool proxyContact = false;
 	bool noContact = true;
+
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;			// 剛体の近傍点のワールド座標系
@@ -93,7 +98,12 @@ void HapticProcess::HapticRendering(){
 			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
-			Vec3d addforce = -K * ortho + D * dvortho;// * ortho.norm();						// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
+			static Vec3d addforce = Vec3d(0,0,0);
+			if(!bproxy){
+				addforce = -K * ortho + D * dvortho;// * ortho.norm();						// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
+			}else{
+				addforce = -K * (pPoint - (proxy[i]+neighborObjects[i].phSolid.GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
+			}
 			Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
 
 			if(!vibFlag){
@@ -116,13 +126,23 @@ void HapticProcess::HapticRendering(){
 				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
 			}			
 #endif
+			// proxy法での摩擦の計算
+			Vec3d posVec = pPoint - (proxy[i] + neighborObjects[i].phSolid.GetCenterPosition());
+			double posDot = dot(neighborObjects[i].face_normal,posVec);
+			Vec3d tVec = posDot * neighborObjects[i].face_normal;
+			Vec3d tanjent = posVec - tVec;
+			if(tanjent.norm() > abs(1.0 * posDot)){
+				proxy[i] += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
+			}
+
 			displayforce += addforce + (vibforce * addforce.unit());			// ユーザへの提示力		
 			displaytorque += addtorque;										 
 			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
 			neighborObjects[i].test_force_norm = addforce.norm();
 			noContact = false;
-		}
+		}else proxy[i] = pPoint - neighborObjects[i].phSolid.GetCenterPosition();
 	}
+
 	if (noContact) vibFlag = false;
 
 	vibT += dt;
@@ -171,6 +191,15 @@ void HapticProcess::Keyboard(unsigned char key){
 			}else{
 				vhaptic = true;
 				DSTR << "Vibration Connect" << endl;
+			}
+			break;
+		case 'p':
+			if(bproxy){
+				bproxy = false;
+				DSTR << "proxy mode stop" << endl;
+			}else{
+				bproxy = true;
+				DSTR << "proxy mode stert" << endl;
 			}
 			break;
 		case 'c':
