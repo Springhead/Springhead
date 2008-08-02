@@ -133,7 +133,7 @@ public:
 	}																				\
 
 #define	SPR_OBJECTDEF_ABST_NOIF(cls)	DEF_UTTYPEINFOABSTDEF(cls) OBJECTDEF_COMMON(cls)
-#define	SPR_OBJECTDEF_ABST(cls)	SPR_OBJECTDEF_ABST_NOIF(cls)							\
+#define	SPR_OBJECTDEF_ABST(cls)	SPR_OBJECTDEF_ABST_NOIF(cls)						\
 	virtual const IfInfo* GetIfInfo() {												\
 		return cls##If::GetIfInfoStatic();											\
 	}																				\
@@ -185,13 +185,13 @@ public:
 	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
 
-#define ACCESS_PRIVATE(cls)															\
-	virtual size_t GetStateSize() const { return sizeof(cls##StatePrivate); }				\
-	virtual void ConstructState(void* m) const { new(m) cls##StatePrivate;}				\
+#define ACCESS_PRIVATE(cls)																			\
+	virtual size_t GetStateSize() const { return sizeof(cls##StatePrivate); }						\
+	virtual void ConstructState(void* m) const { new(m) cls##StatePrivate;}							\
 	virtual void DestructState(void* m) const { ((cls##StatePrivate*)m)->~cls##StatePrivate(); }	\
-	virtual const void* GetStateAddress() const { return (cls##StatePrivate*)this; }		\
-	virtual bool GetState(void* s) const { *(cls##StatePrivate*)s=*this; return true; }	\
-	virtual void SetState(const void* s){ *(cls##StatePrivate*)this = *(cls##StatePrivate*)s;}	\
+	virtual const void* GetStateAddress() const { return (cls##StatePrivate*)this; }				\
+	virtual bool GetState(void* s) const { *(cls##StatePrivate*)s=*this; return true; }				\
+	virtual void SetState(const void* s){ *(cls##StatePrivate*)this = *(cls##StatePrivate*)s;}		\
 
 ///	デスクリプタの設定・取得などアクセス用関数の定義
 #define ACCESS_DESC(cls)															\
@@ -368,7 +368,17 @@ public:
 		return IF::GetIfInfoStatic();
 	}
 };
-///	ファクトリーの実装
+///	ファクトリーの実装(作り手オブジェクトが所有する場合、最後に作り手にAddChildObjectする)
+template <class T, class IF, class DESC>
+class FactoryImpTemplateOwned: public FactoryImpTemplate<T, IF, DESC>{
+public:
+	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
+		ObjectIf* rv = FactoryImpTemplate<T, IF, DESC>::Create(desc, parent);
+		if (rv) parent->AddChildObject(rv);
+		return rv;
+	}
+};
+///	ファクトリーの実装(デスクリプタがないオブジェクト用)
 template <class T, class IF>
 class FactoryImpTemplateNoDesc: public FactoryBase{
 public:
@@ -401,6 +411,7 @@ public:
 };
 
 #define FactoryImp(cls)	FactoryImpTemplate<cls, cls##If, cls##Desc>
+#define FactoryImpOwned(cls)	FactoryImpTemplateOwned<cls, cls##If, cls##Desc>
 #define FactoryImpNoDesc(cls)	FactoryImpTemplateNoDesc<cls, cls##If>
 
 ///	シーングラフの状態を保存．再生する仕組み
