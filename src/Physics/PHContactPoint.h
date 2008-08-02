@@ -16,10 +16,6 @@ class PHShapePairForLCP;
 namespace Spr{;
 
 class PHContactPoint : public PHConstraint{
-private:
-	static double correctionSpring;
-	static double correctionDamper;
-
 public:
 	SPR_OBJECTDEF(PHContactPoint);
 	PHShapePairForLCP* shapePair;
@@ -33,10 +29,6 @@ public:
 	PHContactPoint(){}
 	PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
-	static double GetCorrectionSpring(){return correctionSpring;}
-	static double GetCorrectionDamper(){return correctionDamper;}
-	static void   SetCorrectionSpring(double springV){correctionSpring = springV;}
-	static void   SetCorrectionDamper(double damperV){correctionDamper = damperV;}
 };
 
 }

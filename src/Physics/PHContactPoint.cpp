@@ -78,12 +78,6 @@ void PHContactPoint::SetConstrainedIndex(bool* con){
 	con[3] = con[4] = con[5] = false;
 }
 
-// double PHContactPoint::correctionSpring = 100.0;
-// double PHContactPoint::correctionDamper = 10.0;
-double PHContactPoint::correctionSpring = 1000.0;
-double PHContactPoint::correctionDamper = 1000.0;
-
-
 void PHContactPoint::CompBias(){
 	//	correctionを位置LCPで別に行う場合は、速度を変更しての位置補正はしない。
 	if (engine->numIterContactCorrection) return;
@@ -96,7 +90,6 @@ void PHContactPoint::CompBias(){
 
 	double e;
 	//	速度が小さい場合は、跳ね返りなし。
-//	if (vjrel[0]*GetScene()->GetTimeStep() > -0.001){
 	if (vjrel[0]*GetScene()->GetTimeStep() > -0.1){
 		e = 0;
 		contactCorrectionRate = engine->contactCorrectionRate;
