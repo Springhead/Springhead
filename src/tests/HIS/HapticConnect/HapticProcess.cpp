@@ -69,6 +69,7 @@ void HapticProcess::HapticRendering(){
 	static Vec3d vibVo = vibV;
 	double vibforce = 0;
 	static Vec3d proxy[100];
+//	static Vec3d proxyPos;
 
 	displayforce = Vec3d(0.0, 0.0, 0.0);		
 	displaytorque = Vec3d(0.0, 0.0, 0.0);
@@ -104,7 +105,7 @@ void HapticProcess::HapticRendering(){
 			}else{
 				addforce = -K * (pPoint - (proxy[i]+neighborObjects[i].phSolid.GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
 			}
-			Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
+			//Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
 
 			if(!vibFlag){
 				vibT = 0;
@@ -131,27 +132,32 @@ void HapticProcess::HapticRendering(){
 			double posDot = dot(neighborObjects[i].face_normal,posVec);
 			Vec3d tVec = posDot * neighborObjects[i].face_normal;
 			Vec3d tanjent = posVec - tVec;
-			if(tanjent.norm() > abs(1.0 * posDot)){
-				proxy[i] += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
+			double mu0 = neighborObjects[i].phSolidIf->GetShape(0)->GetStaticFriction();
+			double mu1 = neighborObjects[i].phSolidIf->GetShape(0)->GetDynamicFriction();
+			if(tanjent.norm() > abs(mu0 * posDot)){
+				proxy[i] += (tanjent.norm() - abs(mu1 * posDot)) * tanjent.unit();
+//				proxyPos += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
 			}
 
 			displayforce += addforce + (vibforce * addforce.unit());			// ユーザへの提示力		
-			displaytorque += addtorque;										 
+//			displaytorque += addtorque;										 
 			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
 			neighborObjects[i].test_force_norm = addforce.norm();
 			noContact = false;
-		}else proxy[i] = pPoint - neighborObjects[i].phSolid.GetCenterPosition();
+		}else{
+			proxy[i] = pPoint - neighborObjects[i].phSolid.GetCenterPosition();
+//			proxyPos = spidarG6.GetPos() * posscale;
+		}
 	}
 
 	if (noContact) vibFlag = false;
 
 	vibT += dt;
 #ifdef TORQUE
-	if(bDisplayforce) spidarG6.SetForce(displayforce, displaytorque);								// 力覚提示
+	if(bDisplayforce) spidarG6.SetForce(displayforce);//, displaytorque);								// 力覚提示
 #else
 	if(bDisplayforce) spidarG6.SetForce(displayforce);								// 力覚提示
 #endif
-
 }
 
 void HapticProcess::LocalDynamics(){
