@@ -45,6 +45,7 @@ struct CDShapeIf : public NamedObjectIf{
 	void	SetDensity(float d);
 	float	GetDensity();
 
+	void SetVibration(float vibA, float vibB, float vibW);
 	void SetVibA(float vibA);
 	float GetVibA();
 	void SetVibB(float vibB);
