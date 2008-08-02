@@ -53,6 +53,8 @@ public:
 	UTRef<ObjectStatesIf> states, states2;
 	//デバック表示に使う変数
 	bool bDebug;
+	bool bStep;
+	bool bOneStep;
 	vector<PHSolid> hapticsolids;
 
 	struct Edge{
