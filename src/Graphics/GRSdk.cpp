@@ -32,15 +32,15 @@ void SPR_CDECL GRSdkIf::RegisterSdk(){
 	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRScene));
 
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMesh));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMesh));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(GRMesh));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRBlendMesh));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRBlendMesh));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(GRBlendMesh));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSphere));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSphere));	
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(GRSphere));	
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMaterial));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRMaterial));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(GRMaterial));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRLight));
-	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRLight));
+	GRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(GRLight));
 
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRFrame));
 	GRSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRDummyFrame));
