@@ -68,6 +68,7 @@ public:
 	void InitCameraView();										
 	void DesignObject();
 	void Idle();
+	void Start();
 	void PhysicsStep();
 	void Display();		
 	void UpdateHapticPointer();
@@ -78,7 +79,6 @@ public:
 	void DisplayLineToNearestPoint();
 	void DrawHapticSolids();
 	void Keyboard(unsigned char key);
-	void Step();
 }; 
 extern BoxStack bstack;
 

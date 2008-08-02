@@ -148,8 +148,17 @@ void BoxStack::DesignObject(){
 void BoxStack::Idle(){
 	PhysicsStep();
 }
-void BoxStack::Step(){
+
+void BoxStack::Start(){
+	instance = this;
+	if (!NWin()){
+		CreateWin();
+		wins.back()->SetScene(GetSdk()->GetScene());
+	}
+	glutIdleFunc(FWAppGLUT::GlutIdleFunc);
+	glutMainLoop();
 }
+
 void BoxStack::PhysicsStep(){
 	if (bsync) return;
 	if (calcPhys){
@@ -489,12 +498,11 @@ void BoxStack::PredictSimulation(){
 		u.col(2) = (nextvel - currentvel) /dt - neighborObjects[i].b;
 		
 		neighborObjects[i].A = u  * force.inv();				// 運動係数Aの計算
+		states->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
+	}
 #ifdef DIVIDE_STEP
 		states2->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
-#else
-		states->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
 #endif
-	}
 }
 
 void BoxStack::DisplayContactPlane(){
