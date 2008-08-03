@@ -18,7 +18,8 @@ class HIRealDevice;
 ///	The base class of human interface classes.
 class HIBase: public NamedObject{
 protected:
-	static std::set<HIRealDevice*> realDevices;
+	struct RealDevices:public std::set<HIRealDevice*>{};
+	static RealDevices& GetRealDevices();
 	static int deviceUpdateStep;
 	int updateStep;
 	bool isGood;

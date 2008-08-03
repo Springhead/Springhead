@@ -82,7 +82,7 @@ void PHContactPoint::CompBias(){
 	//	correctionを位置LCPで別に行う場合は、速度を変更しての位置補正はしない。
 	if (engine->numIterContactCorrection) return;
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
-	double overlap = 0.01;
+	double overlap = 0.002;
 
 #if 1
 	//	接触用の correctionRate
