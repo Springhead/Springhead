@@ -283,6 +283,10 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 		case ' ':
 			states->ReleaseState(scene);
 			{
+				desc.inertia[0][0] = 0.01;
+				desc.inertia[1][1] = 0.03;
+				desc.inertia[2][2] = 0.02;
+				desc.angVelocity = Vec3d(10,10,10);
 				soBox.push_back(scene->CreateSolid(desc));
 				soBox.back()->AddShape(meshConvex);
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
@@ -578,7 +582,8 @@ int __cdecl main(int argc, char* argv[]){
 	soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
 	soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
 
-	scene->SetGravity(Vec3f(0,-30.0f, 0));	// d—Í‚ðÝ’è
+//	scene->SetGravity(Vec3f(0,-30.0f, 0));	// d—Í‚ðÝ’è
+	scene->SetGravity(Vec3f(0, 0, 0));	// d—Í‚ðÝ’è
 	scene->SetTimeStep(0.05);
 
 	glutInit(&argc, argv);
