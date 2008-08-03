@@ -103,6 +103,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
 			do{
 				assert(finite(vtx->dist));
+#ifdef _DEBUG
 				if (vtx->dist < 1e-200){
 					DSTR << "Error:  PHShapePairForLCP::EnumVertex() :  distance too small." << std::endl;
 					DSTR << vtx->dist << vtx->normal << std::endl;
@@ -129,7 +130,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 					shape[1]->FindCutRing(cutRing, shapePoseW[1]);
 					continue;
 				}
-
+#endif
 				Vec3d pos;
 				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
 				pos = cutRing.local * pos;
@@ -176,7 +177,7 @@ PHConstraintEngine::PHConstraintEngine(){
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
 	freezeThreshold		 = 0.0;
-	contactCorrectionRate = 0.3;
+	contactCorrectionRate = 0.1;
 	bGearNodeReady = false;
 	bSaveConstraints = false;
 }
