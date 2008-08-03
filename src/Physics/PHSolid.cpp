@@ -175,8 +175,8 @@ void PHSolid::UpdateVelocity(double dt){
 	SpatialVector vold = v;
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
-		DSTR << "v:" << v.w().norm();
-		DSTR << "dv:" << dv.w().norm() << std::endl;
+//		DSTR << "v:" << v.w().norm();
+//		DSTR << "dv:" << dv.w().norm() << std::endl;
 		v.w() *= 0.95;	
 		double vMax = 100;
 		if (v.w().norm() > 100) v.w() = v.w().unit() * vMax;
