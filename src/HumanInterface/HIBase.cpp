@@ -17,24 +17,25 @@ namespace Spr {;
 //	HIBase
 //
 
-
-std::set<HIRealDevice*> HIBase::realDevices;
 int HIBase::deviceUpdateStep;
-
+HIBase::RealDevices& HIBase::GetRealDevices(){
+	static RealDevices realDevices;
+	return realDevices;
+}
 HISdkIf* HIBase::GetSdk(){
 	return GetNameManager()->Cast();
 }
 
 void HIBase::AddDeviceDependency(HIRealDeviceIf* rd){
-	realDevices.insert(rd->Cast());
+	GetRealDevices().insert(rd->Cast());
 }
 void HIBase::ClearDeviceDependency(){
-	realDevices.clear();
+	GetRealDevices().clear();
 }
 void HIBase::Update(float dt){
 	updateStep ++;
 	if (updateStep > deviceUpdateStep){
-		for(std::set<HIRealDevice*>::iterator it = realDevices.begin(); it != realDevices.end(); ++it){
+		for(std::set<HIRealDevice*>::iterator it = GetRealDevices().begin(); it != GetRealDevices().end(); ++it){
 			(*it)->Update();
 		}
 		deviceUpdateStep = updateStep;
