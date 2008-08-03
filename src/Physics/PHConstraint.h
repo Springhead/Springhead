@@ -33,26 +33,31 @@ public:
 	} mode;
 	PHConstraintEngine* engine;
 
-	bool		bFeasible;			///< 両方の剛体がundynamicalな場合true
-	bool		bArticulated;		///< 関節系を構成している場合true
-	bool		bInactive[2];		///< 剛体が解析法に従う場合true	
-	PHSolid*			solid[2];	///< 拘束する剛体
-	SpatialTransform	Xj[2];		///< 剛体に対するソケット，プラグの位置と向き
-	SpatialTransform	Xjrel;		///< ソケットに対するプラグの位置と向き
-	SpatialVector		vjrel;		///< ソケットに対するプラグの相対速度
+	bool		bFeasible;				///< 両方の剛体がundynamicalな場合true
+	bool		bArticulated;			///< 関節系を構成している場合true
+	bool		bInactive[2];			///< 剛体が解析法に従う場合true	
+	PHSolid*			solid[2];		///< 拘束する剛体
+	SpatialTransform	Xj[2];			///< 剛体に対するソケット，プラグの位置と向き
+	SpatialTransform	Xjrel;			///< ソケットに対するプラグの位置と向き
+	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度
 	
-	SpatialTransform	Js[2];		///< 拘束ヤコビアン SpatialTranform形式
-	SpatialMatrix		J[2];		///< 拘束ヤコビアン 行列形式
+	SpatialTransform	Js[2];			///< 拘束ヤコビアン SpatialTranform形式
+	SpatialMatrix		J[2];			///< 拘束ヤコビアン 行列形式
 	SpatialMatrix		AinvJ[2];
 	SpatialMatrix		T[2];
 	
 	
-	SpatialVector b, db, B;			///< LCPのbベクトルとその補正量
-	SpatialVector A, dA, Ainv;		///< LCPのA行列の対角成分とその補正量，逆数
+	SpatialVector b, db, B;				///< LCPのbベクトルとその補正量
+	SpatialVector A, dA, Ainv;			///< LCPのA行列の対角成分とその補正量，逆数
 	SpatialVector scale;
 
-	bool		constr[6];			///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
-	bool		constrCorrection[6];///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
+	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
+	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
+
+	// 軌道追従制御用の変数，消さないで by Toki Aug. 2008
+	Quaterniond propQ,		prePropQ;	///< ある時の目標位置へのQuaternionと１時刻前の目標位置へのQuaternion
+	Quaterniond propQDot,	prePropQDot;///< ある目標位置へのQuaternionの一階微分と１時刻前の目標位置へのQuaternionの一階微分
+	Quaterniond propQWDot;				///< ある時の目標位置へのQuaternionの二階微分
 
 	///コンストラクタ
 	PHConstraint();
