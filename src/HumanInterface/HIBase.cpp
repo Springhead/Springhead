@@ -18,24 +18,27 @@ namespace Spr {;
 //
 
 int HIBase::deviceUpdateStep;
-HIBase::RealDevices& HIBase::GetRealDevices(){
-	static RealDevices realDevices;
-	return realDevices;
+static UTRef<HIBase::RealDevices> realDevices = DBG_NEW HIBase::RealDevices;
+UTRef<HIBase::RealDevices> HIBase::GetRealDevices(){
+	if (realDevices) return realDevices;
+	UTRef<RealDevices> rv = DBG_NEW RealDevices;
+	return rv;
 }
 HISdkIf* HIBase::GetSdk(){
 	return GetNameManager()->Cast();
 }
 
 void HIBase::AddDeviceDependency(HIRealDeviceIf* rd){
-	GetRealDevices().insert(rd->Cast());
+	GetRealDevices()->insert(rd->Cast());
 }
 void HIBase::ClearDeviceDependency(){
-	GetRealDevices().clear();
+	GetRealDevices()->clear();
 }
 void HIBase::Update(float dt){
 	updateStep ++;
 	if (updateStep > deviceUpdateStep){
-		for(std::set<HIRealDevice*>::iterator it = GetRealDevices().begin(); it != GetRealDevices().end(); ++it){
+		UTRef<HIBase::RealDevices> rd = GetRealDevices();
+		for(std::set<HIRealDevice*>::iterator it = rd->begin(); it != rd->end(); ++it){
 			(*it)->Update();
 		}
 		deviceUpdateStep = updateStep;

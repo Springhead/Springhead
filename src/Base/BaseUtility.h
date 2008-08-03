@@ -139,7 +139,7 @@ public:
 		Obj() = r.Obj();
 		if (Obj()) Obj()->AddRef();
 	}
-	~UTRef(){ if (Obj() && Obj()->DelRef() == 0) delete Obj(); }
+	~UTRef(){ if (Obj() && Obj()->DelRef() == 0) delete Obj(); obj=NULL;}
 /*	UTRef& operator =(T* t){
 		if (Obj() != t){
 			if (Obj() && Obj()->DelRef() == 0) delete Obj();
