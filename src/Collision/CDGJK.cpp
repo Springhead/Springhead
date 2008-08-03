@@ -402,8 +402,15 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			if (lastTriV.square() != 0){
 				v[ids[3]] = lastTriV;
 			}else{
-				//	初めてならば、2頂点を求めたときのsupport用法線の平均をつかう。
-				lastTriV = v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
+				//	//	初めてならば、2頂点を求めたときのsupport用法線の平均をつかう。
+				//	lastTriV = v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
+
+				//	hase08.08.03: 
+				//	上，怪しい．これも怪しいけど．平均じゃなくて，線分に垂直な平均では？ 
+				Vec3d ave = v[ids[id0]] + v[ids[id1]];
+				Vec3d line = (w[ids[id1]] - w[ids[id0]]).unit();
+				ave = ave - (ave * line) * line;
+				lastTriV = v[ids[3]] = ave.unit();
 			}
 			CalcSupport(ids[3]);
 			double imp1 = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];
@@ -526,8 +533,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	無事停止
 final:
 	if (notuse >=0){
-		int id0 = ids[(notuse+1)%3];
-		int id1 = ids[(notuse+2)%3];
+		int id0 = (notuse+1)%3;	//	hase08.08.03: ここにバグがありました．
+		int id1 = (notuse+2)%3;
 		double l0 = w[ids[id0]].XY().norm();
 		double l1 = w[ids[id1]].XY().norm();
 		double kx = l1 / (l0+l1);
