@@ -54,11 +54,6 @@ public:
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
 	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
 
-	// 軌道追従制御用の変数，消さないで by Toki Aug. 2008
-	Quaterniond propQ,		prePropQ;	///< ある時の目標位置へのQuaternionと１時刻前の目標位置へのQuaternion
-	Quaterniond propQDot,	prePropQDot;///< ある目標位置へのQuaternionの一階微分と１時刻前の目標位置へのQuaternionの一階微分
-	Quaterniond propQWDot;				///< ある時の目標位置へのQuaternionの二階微分
-
 	///コンストラクタ
 	PHConstraint();
 
