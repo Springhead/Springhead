@@ -161,15 +161,16 @@ void PHBallJoint::CompBias(){
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
 	db.v() *= engine->velCorrectionRate;
 
-	prePropQ	= propQ;
-	propQ		= goal * Xjrel.q.Inv();	
-	// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
-	prePropQDot = propQDot;
-	propQDot	= (propQ * prePropQ.Inv()) / GetScene()->GetTimeStep();
-	propQWDot	= (propQDot * prePropQDot.Inv()) / GetScene()->GetTimeStep();
-
+	// 位置制御の時の計算
+	Quaterniond propQ = goal * Xjrel.q.Inv();	
 	Vec3d propV = propQ.RotationHalf();
-
+	// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
+	preQd		= qd;
+	qd			= goal;
+	preQdDot	= qdDot;
+	qdDot		= (qd * preQd.Inv()) / GetScene()->GetTimeStep();
+	qdWDot		= (qdDot * preQdDot.Inv()) / GetScene()->GetTimeStep();
+	
 	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
 	if (anyLimit){
 		propV = Jcinv * propV;
@@ -184,12 +185,12 @@ void PHBallJoint::CompBias(){
 
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのは何故？
 		db.w() = -tmp * spring * propV;
-		// 軌道追従制御のbの追加部分，Quaternionの計算が変･･･？
+		// 軌道追従制御のbの追加部分，質量行列の扱いが変･･･
 	    /**
-		db.w() = tmp * (spring * -Xjrel.q.Inv().RotationHalf() 
-		              + solid[0]->GetMass() * propQWDot.RotationHalf() 
-					  + damper * -propQDot.RotationHalf() 
-					  + spring * -propV);
+		db.w() = tmp * (spring * -(qd * Xjrel.q.Inv()).RotationHalf() 
+		              + solid[0]->GetInertia() * qdWDot.RotationHalf()
+					  + solid[1]->GetInertia() * -qdWDot.RotationHalf()
+					  + damper * -qdDot.RotationHalf() );
 	    /**/
 	}
 	else{

@@ -58,6 +58,12 @@ protected:
 	Matrix3d		Jcinv;					///< 拘束座標系の速度、加速度    ＝　Jcinv * Socket座標系の速度・加速度
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	double			fMinDt, fMaxDt;
+	
+	// 軌道追従制御用の変数，消さないで by Toki Aug. 2008
+	Quaterniond qd,		preQd;		///< ある時刻の目標位置へのQuaternionと１時刻前の目標位置へのQuaternion
+	Quaterniond qdDot,	preQdDot;	///< ある時刻の目標位置へのQuaternionの一階微分と１時刻前の目標位置へのQuaternionの一階微分
+	Quaterniond qdWDot;				///< ある時刻の目標位置へのQuaternionの二階微分
+
 	virtual void	AfterSetDesc();
 	virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
 	friend class PHBallJointNode;
