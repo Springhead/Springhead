@@ -37,12 +37,16 @@ public:
 	bool		bArticulated;			///< 関節系を構成している場合true
 	bool		bInactive[2];			///< 剛体が解析法に従う場合true	
 	PHSolid*			solid[2];		///< 拘束する剛体
-	SpatialTransform	Xj[2];			///< 剛体に対するソケット，プラグの位置と向き
+	SpatialTransform	Xj[2];			///< 剛体の質量中心に対するソケット，プラグの位置と向き
 	SpatialTransform	Xjrel;			///< ソケットに対するプラグの位置と向き
 	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度
 	
-	SpatialTransform	Js[2];			///< 拘束ヤコビアン SpatialTranform形式
+	SpatialTransform	Js[2];			///< 拘束ヤコビアン SpatialTranform形式，
+												//[0]：親剛体中心からSocket座標系へ変換するヤコビアン
+												//[1]：子剛体中心からSocket座標系へ変換するのヤコビアン
 	SpatialMatrix		J[2];			///< 拘束ヤコビアン 行列形式
+												//[0]：親剛体の質量中心からSocket座標系へのヤコビアン
+												//[1]：子剛体の質量中心からPlug座標系経由でSocket座標系へのヤコビアン
 	SpatialMatrix		AinvJ[2];
 	SpatialMatrix		T[2];
 	
