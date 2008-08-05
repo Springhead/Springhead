@@ -158,12 +158,12 @@ void PHBallJoint::CompBias(){
 	
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
-	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
+	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
 	db.v() *= engine->velCorrectionRate;
-
 	// 位置制御の時の計算
-	Quaterniond propQ = goal * Xjrel.q.Inv();	
-	Vec3d propV = propQ.RotationHalf();
+	Quaterniond propQ = goal * Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
+	Vec3d propV = propQ.RotationHalf();			// 足りない角度の差を回転軸ベクトルに変換．
+
 	// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
 	preQd		= qd;
 	qd			= goal;
@@ -179,10 +179,17 @@ void PHBallJoint::CompBias(){
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
-		dA.w()[0] = tmp * dtinv;
-		dA.w()[1] = tmp * dtinv;
-		dA.w()[2] = tmp * dtinv;
+		/*****************************************************************************
+		w[t+1] = (A+dA) * λ[t+1] + (b+db)
+		のAの内，バネダンパを拘束するのは，BallJointの場合は回転の三軸についてなので，
+		SpatialVector dA.w()にtmp = (D + K⊿t)^{-1}を入れている．
+		dtinvをさらにかけるのは,pptなど表記とは違い，A=JM^{-1}J^T ⊿tのうち，
+		プログラム中で計算しているのは，A = JM^{-1}J^Tだけで，あとから
+		(A + dA)⊿tをしているため
+		******************************************************************************/
+		dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
+		DSTR << dA << std::endl;
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのは何故？
 		db.w() = -tmp * spring * propV;
 		// 軌道追従制御のbの追加部分，質量行列の扱いが変･･･
