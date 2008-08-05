@@ -66,6 +66,7 @@ void PHConstraint::UpdateState(){
 	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
   //if(!bArticulated){
 		CompJacobian();
+		//親剛体の中心から見た速度と，子剛体の中心から見た速度をSocket座標系から見た速度に両方直して，相対速度を取る．
 		vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
 		UpdateJointState();
 	//}
