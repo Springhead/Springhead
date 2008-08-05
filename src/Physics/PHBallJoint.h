@@ -52,10 +52,20 @@ public:
 	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
 	SPR_DECLMEMBEROF_PHBallJointDesc;
 protected:
+	
+	/*********************************************************
+	Socket座標系：親剛体についている関節の座標系
+	Plug座標系：子剛体についている関節の座標系
+	拘束座標系：毎ステップ更新する，拘束の条件に使う座標系
+	(x軸：拘束円の接線方向，
+	 y軸：limitDirの延長線上の一点と交わる直線，
+	 z軸：Socket座標系から見たPlug座標系のz軸の方向)
+	**********************************************************/
+
 	Vec2d			nowTheta;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:swingDir, .z:twist)
 	bool			anyLimit;				///< どこかのリミットにかかっているかどうかを調べるフラグ == (onLimit.onUpper || onLimit.onLower)
-	Matrix3d		Jc;						///< Socket座標系の速度・加速度　＝　Jc * 拘束座標系の速度、加速度
-	Matrix3d		Jcinv;					///< 拘束座標系の速度、加速度    ＝　Jcinv * Socket座標系の速度・加速度
+	Matrix3d		Jc;						///< 拘束座標系の速度・加速度　＝　Jc * Socket座標系から見たPlug座標系の速度、加速度
+	Matrix3d		Jcinv;					///< Socket座標系から見たPlug座標系の速度、加速度  ＝　Jcinv * 拘束座標系の速度・加速度
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	double			fMinDt, fMaxDt;
 	
