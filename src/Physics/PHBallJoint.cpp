@@ -185,7 +185,7 @@ void PHBallJoint::CompBias(){
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		/*****************************************************************************
 		w[t+1] = (A+dA) * λ[t+1] + (b+db)
-		のAの内，バネダンパを拘束するのは，BallJointの場合は回転の三軸についてなので，
+		のAの内，バネダンパを構成するのは，BallJointの場合は回転の三軸についてなので，
 		SpatialVector dA.w()にtmp = (D + K⊿t)^{-1}を入れている．
 		dtinvをさらにかけるのは,pptなど表記とは違い，A=JM^{-1}J^T ⊿tのうち，
 		プログラム中で計算しているのは，A = JM^{-1}J^Tだけで，あとから
