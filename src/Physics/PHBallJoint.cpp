@@ -162,7 +162,11 @@ void PHBallJoint::CompBias(){
 	db.v() *= engine->velCorrectionRate;
 	// 位置制御の時の計算
 	Quaterniond propQ = goal * Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
-	Vec3d propV = propQ.RotationHalf();			// 足りない角度の差を回転軸ベクトルに変換．
+	/*******************************************************************************************************
+	足りない角度の差を回転軸ベクトルに変換．propV(田崎さんの論文でいうq[t])に対してdb.w()を計算している.
+	自然長が0[rad]で，propV[rad]伸びた時に対しての角度バネを構成していると考えればいい．
+	********************************************************************************************************/
+	Vec3d propV = propQ.RotationHalf();			
 
 	// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
 	preQd		= qd;
@@ -189,7 +193,6 @@ void PHBallJoint::CompBias(){
 		******************************************************************************/
 		dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
-		DSTR << dA << std::endl;
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのは何故？
 		db.w() = -tmp * spring * propV;
 		// 軌道追従制御のbの追加部分，質量行列の扱いが変･･･
@@ -205,7 +208,9 @@ void PHBallJoint::CompBias(){
 		db.w().clear();
 	}
 	
+	// vJc : Jcによって写像される拘束座標系から見たPlugの角速度
 	Vec3d vJc = Jc * vjrel.w();
+
 	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
 	// nowTheta[0]: swing, nowTheta[1]: twist
 	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	

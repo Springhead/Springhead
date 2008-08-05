@@ -39,7 +39,7 @@ public:
 	PHSolid*			solid[2];		///< 拘束する剛体
 	SpatialTransform	Xj[2];			///< 剛体の質量中心に対するソケット，プラグの位置と向き
 	SpatialTransform	Xjrel;			///< ソケットに対するプラグの位置と向き
-	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度
+	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度,角速度
 	
 	SpatialTransform	Js[2];			///< 拘束ヤコビアン SpatialTranform形式，
 												//[0]：親剛体中心からSocket座標系へ変換するヤコビアン
