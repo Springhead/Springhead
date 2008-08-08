@@ -136,11 +136,13 @@ void PHConstraint::CompResponseMatrix(){
 				}
 			}
 			else{
+				// T = M^-1 * J^T
 				T[i].vv() = J[i].vv() * solid[i]->minv;
 				T[i].vw() = J[i].vw() * solid[i]->Iinv;
 				T[i].wv() = J[i].wv() * solid[i]->minv;
 				T[i].ww() = J[i].ww() * solid[i]->Iinv;
 				for(j = 0; j < 6; j++)
+					// A == 論文中のJ * M^-1 * J^T, Gaus Seidel法のD
 					A[j] += J[i].row(j) * T[i].row(j);
 			}
 		}
@@ -207,9 +209,9 @@ void PHConstraint::SetupLCP(){
 	// LCPのA行列の対角成分を計算
 	CompResponseMatrix();
 
-	// LCPのbベクトル
+	// LCPのbベクトル == プログラム中のvjrel,論文中のw[t], バネ・ダンパはdbで補正する
 	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
-	
+
 	// 拘束力初期値による速度変化量を計算
 	SpatialVector fs;
 	for(int i = 0; i < 2; i++){
