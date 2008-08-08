@@ -193,15 +193,17 @@ void PHBallJoint::CompBias(){
 		******************************************************************************/
 		dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
-		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのは何故？
+		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
 		db.w() = -tmp * spring * propV;
-		// 軌道追従制御のbの追加部分，質量行列の扱いが変･･･
-	    /**
-		db.w() = tmp * (spring * -(qd * Xjrel.q.Inv()).RotationHalf() 
-		              + solid[0]->GetInertia() * qdWDot.RotationHalf()
-					  + solid[1]->GetInertia() * -qdWDot.RotationHalf()
-					  + damper * -qdDot.RotationHalf() );
-	    /**/
+		/****
+		軌道追従制御のdb，慣性行列の扱いは相対加速度に対して，親剛体への反作用方向と子剛体への作用方向にかかる
+		拘束は回転方向なので，慣性行列のうちの慣性モーメントだけ引っ張ってくる
+		****
+		db.w() = tmp * ( (spring * -(qd * Xjrel.q.Inv()).RotationHalf())
+		              + (solid[0]->GetInertia() * qdWDot.RotationHalf())
+					  + (solid[1]->GetInertia() * -qdWDot.RotationHalf())
+					  + (damper * -qdDot.RotationHalf()) );
+		/**/
 	}
 	else{
 		//dA.w().clear();
