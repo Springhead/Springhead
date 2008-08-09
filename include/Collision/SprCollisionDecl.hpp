@@ -14,6 +14,9 @@
 	float GetVibB(){	return	base::GetVibB();}	\
 	void SetVibW(float vibW){	base::SetVibW(vibW);}	\
 	float GetVibW(){	return	base::GetVibW();}	\
+	void SetSpringDamper(float spring, float damper){	base::SetSpringDamper(spring, damper);}	\
+	float GetSpringK(){	return	base::GetSpringK();}	\
+	float GetDamperD(){	return	base::GetDamperD();}	\
 	float CalcVolume(){	return	base::CalcVolume();}	\
 	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
