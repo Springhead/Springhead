@@ -715,7 +715,6 @@ void BoxStack::Keyboard(unsigned char key){
 		case 'v':
 			{
 				// MeshCapsule
-				//0.0325
 				desc.mass = 0.05;
 				desc.inertia[0][0] = 0.0325;
 				desc.inertia[0][1] = 0.0;
@@ -788,7 +787,7 @@ void BoxStack::Keyboard(unsigned char key){
 				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			}
 			break;
-		case 'm':
+/*		case 'm':
 			{
 				// Lump of Box
 				soBox.push_back(phscene->CreateSolid(desc));
@@ -821,7 +820,7 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.back()->SetName(os.str().c_str());
 			    phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);				
 			}
-			break;
+			break;	*/
 		case 'x':
 			{
 				// Wall
@@ -841,12 +840,15 @@ void BoxStack::Keyboard(unsigned char key){
 
 					}
 				}
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			}
 			break;
 		case 'z':
 			{
 				// Tower
 				PHSolidDesc soliddesc;
+				soliddesc.mass = 0.05;
+				soliddesc.inertia = 0.0333 * Matrix3d::Unit();
 				double tower_radius = 5;
 				int tower_height = 5;
 				int numbox = 5;
@@ -859,8 +861,12 @@ void BoxStack::Keyboard(unsigned char key){
 //						soBox.back()->SetFramePosition(Vec3f(0.5, 20, 0));
 						soBox.back()->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i), tower_radius * sin(theta)));
 						soBox.back()->SetOrientation(Quaterniond::Rot(-theta, 'y'));  
+						soBox.back()->GetShape(0)->SetVibration(-200,120,300);
+						soBox.back()->GetShape(0)->SetStaticFriction(0.4);
+						soBox.back()->GetShape(0)->SetDynamicFriction(0.3);
 					}
 				}
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			}
 			break;
 		default:
