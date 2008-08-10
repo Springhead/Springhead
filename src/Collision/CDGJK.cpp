@@ -826,6 +826,7 @@ void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 	usedBits = 0;
 	allUsedBits = 0;
 
+	int count = 0;
 	while (usedBits < 15 && dist > epsilon) {
 		lastId = 0;
 		lastBit = 1;
@@ -841,6 +842,12 @@ void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		allUsedBits = usedBits|lastBit;
 		if (!CalcClosest(v)) break;
 		dist = v.norm();
+
+		count++;
+		if(count == 100){
+			DSTR << "Too many loop in FindClosestPoints!!" << std::endl;		
+			break;
+		}
 	}
 	CalcPoints(usedBits, pa, pb);
 }
