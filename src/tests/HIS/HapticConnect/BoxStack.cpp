@@ -692,13 +692,15 @@ void BoxStack::Keyboard(unsigned char key){
 		case ' ':
 			{
 				// ConvexBox
-				desc.mass = 0.08;
-				desc.inertia = 0.033 * Matrix3d::Unit() * 10;
+				desc.mass = 0.05;
+				desc.inertia = 0.0333 * Matrix3d::Unit();
 				//desc.dynamical = false;
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshBox);
 				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
 				soBox.back()->GetShape(0)->SetVibration(-200,120,300);
+				soBox.back()->GetShape(0)->SetStaticFriction(0.8);
+				soBox.back()->GetShape(0)->SetDynamicFriction(0.6);
 				//soBox.back()->SetOrientation(
 				//	Quaternionf::Rot(Rad(30), 'y') * 
 				//	Quaternionf::Rot(Rad(10), 'x'));  
@@ -713,13 +715,24 @@ void BoxStack::Keyboard(unsigned char key){
 		case 'v':
 			{
 				// MeshCapsule
+				//0.0325
 				desc.mass = 0.05;
-				desc.inertia = 0.001 * Matrix3d::Unit();
+				desc.inertia[0][0] = 0.0325;
+				desc.inertia[0][1] = 0.0;
+				desc.inertia[0][2] = 0.0;
+				desc.inertia[1][0] = 0.0;
+				desc.inertia[1][1] = 0.02;
+				desc.inertia[1][2] = 0.0;
+				desc.inertia[2][0] = 0.0;
+				desc.inertia[2][1] = 0.0;
+				desc.inertia[2][2] = 0.0325;
+
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
 				soBox.back()->AddShape(meshCapsule);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 				soBox.back()->GetShape(0)->SetVibration(-80,200,150);
+				soBox.back()->GetShape(0)->SetElasticity(0.1);
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				ostringstream os;
@@ -732,11 +745,11 @@ void BoxStack::Keyboard(unsigned char key){
 			{
 				// MeshSphere
 				desc.mass = 0.05;
-				desc.inertia = 0.001 * Matrix3d::Unit();
+				desc.inertia = 0.0288* Matrix3d::Unit();
 				soBox.push_back(phscene->CreateSolid(desc));
 				soBox.back()->AddShape(meshSphere);
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->GetShape(0)->SetElasticity(1.5);
+				soBox.back()->GetShape(0)->SetElasticity(0.4);
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				ostringstream os;
@@ -749,7 +762,7 @@ void BoxStack::Keyboard(unsigned char key){
 			{
 				// ConvexMesh
 				desc.mass = 0.1;
-				desc.inertia = 0.1 * Matrix3d::Unit();
+				desc.inertia = 0.36 * Matrix3d::Unit();
 				soBox.push_back(phscene->CreateSolid(desc));
 				CDConvexMeshDesc md;
 				int nv = rand() % 100 + 50;
@@ -765,6 +778,9 @@ void BoxStack::Keyboard(unsigned char key){
 				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
 //				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
 				soBox.back()->GetShape(0)->SetVibration(-100,60,100);
+				soBox.back()->GetShape(0)->SetStaticFriction(0.8);
+				soBox.back()->GetShape(0)->SetDynamicFriction(0.6);
+
 				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 				ostringstream os;
 				os << "sphere" << (unsigned int)soBox.size();
@@ -811,7 +827,7 @@ void BoxStack::Keyboard(unsigned char key){
 				// Wall
 				PHSolidDesc soliddesc;
 				soliddesc.mass = 0.05;
-				soliddesc.inertia = 0.033 * Matrix3d::Unit();
+				soliddesc.inertia = 0.0333 * Matrix3d::Unit();
 				int wall_height = 4;
 				int numbox = 5;
 				for(int i = 0; i < wall_height; i++){
@@ -819,6 +835,10 @@ void BoxStack::Keyboard(unsigned char key){
 						soBox.push_back(phscene->CreateSolid(soliddesc));
 						soBox.back()->AddShape(meshBox);
 						soBox.back()->SetFramePosition(Vec3d(-4.0 + (2.0 + 0.1) * j , (2.0 + 0.1) * (double)i, -2.0));  
+						soBox.back()->GetShape(0)->SetVibration(-200,120,300);
+						soBox.back()->GetShape(0)->SetStaticFriction(0.8);
+						soBox.back()->GetShape(0)->SetDynamicFriction(0.6);
+
 					}
 				}
 			}
