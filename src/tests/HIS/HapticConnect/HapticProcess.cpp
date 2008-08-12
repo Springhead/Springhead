@@ -65,7 +65,7 @@ void HapticProcess::UpdateSpidar(){
 void HapticProcess::HapticRendering(){
 	static double vibT = 0;
 	static bool vibFlag = false;
-	Vec3d vibV = spidarG6.GetVel();// * posScale;
+	Vec3d vibV = spidarG6.GetVel() * posScale;
 	static Vec3d vibVo = vibV;
 	double vibforce = 0;
 	static Vec3d proxy[100];
@@ -124,7 +124,7 @@ void HapticProcess::HapticRendering(){
 				double vibA = neighborObjects[i].phSolid.GetShape(0)->GetVibA();
 				double vibB = neighborObjects[i].phSolid.GetShape(0)->GetVibB();
 				double vibW = neighborObjects[i].phSolid.GetShape(0)->GetVibW();
-				vibforce = vibA * (vibVo /** 0.005 */* addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
+				vibforce = vibA * (vibVo * 0.003 * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
 			}			
 #endif
 			// proxy法での摩擦の計算
