@@ -21,6 +21,7 @@
 	void GetRelativePose(Posed& p){	base::GetRelativePose(p);}	\
 	Vec3d GetRelativePoseR(){	return	base::GetRelativePoseR();}	\
 	Quaterniond GetRelativePoseQ(){	return	base::GetRelativePoseQ();}	\
+	Quaternionf GetAbsolutePoseQ(){	return	base::GetAbsolutePoseQ();}	\
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w){	base::GetRelativeVelocity(v, w);}	\
 	void GetConstraintForce(Vec3d& f, Vec3d& t){	base::GetConstraintForce(f, t);}	\
 

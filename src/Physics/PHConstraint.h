@@ -37,6 +37,7 @@ public:
 	bool		bArticulated;			///< 関節系を構成している場合true
 	bool		bInactive[2];			///< 剛体が解析法に従う場合true	
 	PHSolid*			solid[2];		///< 拘束する剛体
+	SpatialTransform    X[2];			///< ワールド座標系の中心に対する親(子)剛体の位置と向き
 	SpatialTransform	Xj[2];			///< 剛体の質量中心に対するソケット，プラグの位置と向き
 	SpatialTransform	Xjrel;			///< ソケットに対するプラグの位置と向き
 	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度,角速度
@@ -106,6 +107,7 @@ public:
 	virtual void		 GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = Xjrel.q;}
 	virtual Vec3d		 GetRelativePoseR(){return Xjrel.r;}
 	virtual Quaterniond	 GetRelativePoseQ(){return Xjrel.q;}
+	virtual Quaterniond  GetAbsolutePoseQ(){return Xjrel.q * X[0].q;}
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
 	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v() / GetScene()->GetTimeStep(); _t = f.w() / GetScene()->GetTimeStep();}
 	virtual bool		 AddChildObject(ObjectIf* o);

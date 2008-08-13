@@ -124,6 +124,10 @@ struct PHConstraintIf : public SceneObjectIf{
 	*/
 	Quaterniond GetRelativePoseQ();
 	
+	/** @biref 拘束する剛体間のワールド座標系で見た向きを取得
+	*/
+	Quaternionf GetAbsolutePoseQ();
+	
 	/** @brief 拘束する剛体間の相対速度
 		@param v ソケットに対するプラグの速度
 		@param w ソケットに対するプラグの角速度
