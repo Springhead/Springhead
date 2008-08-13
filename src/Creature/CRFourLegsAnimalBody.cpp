@@ -1086,5 +1086,22 @@ void CRFourLegsAnimalBody::SetTotalMass(double value){
 	}		
 }
 
+double CRFourLegsAnimalBody::GetLegLength(int i){
+	
+	if((i == LEG_RIGHT_FRONT)||(i == LEG_LEFT_FRONT))    return ( breastboneHeight
+																+ radiusHeight
+																+ frontCannonBoneHeight);
+	else if((i == LEG_RIGHT_REAR)||(i == LEG_LEFT_REAR)) return ( femurHeight 
+																+ tibiaHeight
+																+ rearCannonBoneHeight);
+	else{
+		std::cout << "CRFourLegsAnimalBody::GetLegLength(int i)" << std::endl;
+		std::cout << "Unexpected param i : " << i << std::endl;
+		DSTR << "CRFourLegsAnimalBody::GetLegLength(int i)" << std::endl;
+		DSTR << "Unexpected param i : " << i << std::endl;
+		return -1;
+	}
+}
+
 }//end of the namespace Spr;
 

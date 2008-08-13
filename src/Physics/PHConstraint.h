@@ -107,7 +107,7 @@ public:
 	virtual void		 GetRelativePose(Posed& p){p.Pos() = Xjrel.r; p.Ori() = Xjrel.q;}
 	virtual Vec3d		 GetRelativePoseR(){return Xjrel.r;}
 	virtual Quaterniond	 GetRelativePoseQ(){return Xjrel.q;}
-	virtual Quaterniond  GetAbsolutePoseQ(){return Xjrel.q * X[0].q;}
+	virtual Quaterniond  GetAbsolutePoseQ(){return Xjrel.q * X[0].q;}	//< Socket‚ð‚Â‚¯‚éˆÊ’u‚à‹C‚É‚·‚é‚×‚«‚©H
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w){v = vjrel.v(); w = vjrel.w();}
 	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v() / GetScene()->GetTimeStep(); _t = f.w() / GetScene()->GetTimeStep();}
 	virtual bool		 AddChildObject(ObjectIf* o);

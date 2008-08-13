@@ -309,6 +309,9 @@ struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	/** @brief ボディの総質量を設定する
 	*/
 	void	SetTotalMass(double value);
+	/** @brief ボディの脚の長さを返す
+	*/
+	double GetLegLength(int i);
 
 };
 
@@ -360,6 +363,11 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 
 		// -- The number of the all joints (ball + hinge)
 		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)
+	};
+
+	enum CRAnimalLegs{
+		LEG_RIGHT_FRONT=0, LEG_LEFT_FRONT,
+		LEG_RIGHT_REAR, LEG_LEFT_REAR
 	};
 
 	int soNSolids;

@@ -88,6 +88,7 @@ public:
 	virtual double	VSolids();					//< 剛体の体積総和を返す
 	virtual double	GetTotalMass();				//< 総質量を返す
 	virtual void	SetTotalMass(double value);	//< 総質量を設定する
+	virtual double  GetLegLength(int i);		//< 脚の長さを返す[0]:右前，[1]:左前, [2]:右後, [3]:左後
 };
 
 }
