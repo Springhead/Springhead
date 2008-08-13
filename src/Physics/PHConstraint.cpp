@@ -80,7 +80,7 @@ void PHConstraint::CompJacobian(){ // S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ
 	Xj[1].r    = posePlug.Pos() - solid[1]->center;
 	Xj[1].q	   = posePlug.Ori();
 
-	SpatialTransform X[2];
+	//SpatialTransform X[2];
 	X[0].r = solid[0]->GetCenterPosition();
 	X[0].q = solid[0]->GetOrientation();
 	X[1].r = solid[1]->GetCenterPosition();
