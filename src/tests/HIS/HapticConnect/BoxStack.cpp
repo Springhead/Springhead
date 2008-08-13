@@ -23,7 +23,7 @@ BoxStack::BoxStack(){
 	phscene = NULL;
 	render = NULL;
 	range = 0.7;
-	bDebug = true;
+	bDebug = false;
 	neighborObjects.clear();
 	bStep = true;
 }

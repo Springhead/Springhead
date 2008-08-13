@@ -141,7 +141,7 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 			break;
 		case 'r':
 			Reset();
-			bstack.Keyboard(' ');
+			bstack.Keyboard('x');
 			break;
 		case 'h':
 			if(bhaptic){
