@@ -26,6 +26,7 @@
 	double VSolids(){	return	base::VSolids();}	\
 	double GetTotalMass(){	return	base::GetTotalMass();}	\
 	void SetTotalMass(double value){	base::SetTotalMass(value);}	\
+	double GetLegLength(int i){	return	base::GetLegLength(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRManipulatorIf(base)	\
 	int NSolids(){	return	base::NSolids();}	\
