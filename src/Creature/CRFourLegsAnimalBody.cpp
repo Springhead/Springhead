@@ -33,7 +33,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	tailBreadth				= 0.1;		tailHeight				= 0.2;		tailThickness				= 0.1;
 	neckBreadth				= 0.3;		neckHeight				= 1.2;		neckThickness				= 0.2;
 	headBreadth				= 0.25;		headHeight				= 0.7;		headThickness				= 0.4;
-	breastboneBreadth		= 0.21;		breastboneHeight		= 0.5;		breastboneThickness			= 0.2; 
+	breastboneBreadth		= 0.25;		breastboneHeight		= 0.5;		breastboneThickness			= 0.25; 
 	radiusBreadth			= 0.2;		radiusHeight			= 0.7;		radiusThickness				= 0.2;
 	frontCannonBoneBreadth	= 0.15;		frontCannonBoneHeight	= 0.6;		frontCannonBoneThickness	= 0.15;
 	frontToeBreadth			= 0.26;		frontToeHeight			= 0.1;		frontToeThickness			= 0.25;
@@ -65,13 +65,13 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	goalChestNeck	  = Quaterniond::Rot(Rad(  60), 'x');
 	goalNeckHead	  = Quaterniond::Rot(Rad(- 90), 'x');
 	goalShoulder	  = Quaterniond::Rot(Rad(-120), 'x');
-	goalHip			  = Quaterniond::Rot(Rad(- 60), 'x');
+	goalHip			  = Quaterniond::Rot(Rad(- 65), 'x');
 	//-------------------------------------------------------------------
 	// hinge joints are controled to these directions
 	originElbow		  = Rad(40);
 	originFrontKnee	  = Rad(0);
-	originStifle	  = Rad(-30);
-	originRearKnee	  = Rad(-5);
+	originStifle	  = Rad(-45);
+	originRearKnee	  = Rad(20);
 	//-------------------------------------------------------------------
 	// Range of ball joints
 	limitSwingWaistChest.upper	= Rad(5);
@@ -475,7 +475,7 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	boxDesc.material.mu0	= materialMu;
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, -chestThickness/3.0);
+	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, chestThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*breastboneBreadth/2.0, -breastboneHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(-90), 'x');
@@ -732,7 +732,7 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	boxDesc.material.mu0	= materialMu;
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
 	
-	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistHeight/2.0, -waistThickness/3.0);
+	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistHeight/2.0, waistThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*femurBreadth/2.0, -femurHeight/2.0, 0.0);
 	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(-90), 'x');

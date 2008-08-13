@@ -277,7 +277,11 @@ struct GRRenderBaseIf: public ObjectIf{
 	void ReleaseList(int i);
 	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
 	void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0);
-	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
+	/** @brief	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
+		@param  Vec3f pos				: World座標系での書き始めの位置，ビューポートをはみ出すと何も表示されなくなるので注意．
+				const std::string str	: 書く文字列(bitmapfontで書ける物のみ)
+				const GRFont& font		: フォントに関する設定
+	*/
 	void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0);
 	///	描画の材質の設定
 	void SetMaterial(const GRMaterialDesc& mat);
