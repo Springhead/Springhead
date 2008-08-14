@@ -52,13 +52,26 @@ void PH3ElementBallJoint::CompBias(){
 	
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
-		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep()) ;
-		//double tmp = 1.0 / (secondDamper + spring * GetScene()->GetTimeStep());
+		double D1 = damper;
+		double D2 = secondDamper;
+		double K = spring;
+		double h = GetScene()->GetTimeStep();
+		SpatialVector wt;
+		SpatialVector ft;
+
+		//double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep()) ;
+		double tmp =-(D1+D2+K)/(D2*(D1+K*h));
 		dA.w()[0] = tmp * dtinv;
 		dA.w()[1] = tmp * dtinv;
 		dA.w()[2] = tmp * dtinv;
 
-		db.w() = - spring * propV * tmp;
+		//db.w() = - spring * propV * tmp;
+		db.w()[0] = (D1*wt.w()[0]-(1+D1/D2)*ft.w()[0])/(D1+K*h);
+		db.w()[1] = (D1*wt.w()[1]-(1+D1/D2)*ft.w()[1])/(D1+K*h);
+		db.w()[2] = (D1*wt.w()[2]-(1+D1/D2)*ft.w()[2])/(D1+K*h);
+		//１ステップ前のwとfを用いるので、dbの計算後に次のステップに用いる現在のw,fを更新
+		wt=vjrel;
+		ft=f;
 	}
 	else{
 		//dA.w().clear();
