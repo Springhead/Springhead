@@ -211,6 +211,8 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 		joint = DBG_NEW PHPathJoint();
 	else if(ii == PHSpringIf::GetIfInfoStatic())
 		joint = DBG_NEW PHSpring();
+	else if(ii == PH3ElementIf::GetIfInfoStatic())
+		joint = DBG_NEW PH3Element();
 	else assert(false);
 	joint->SetScene(GetScene());
 	joint->SetDesc(&desc);

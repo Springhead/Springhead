@@ -25,6 +25,7 @@
 #include "PH3ElementBallJoint.h"
 #include "PHPathJoint.h"
 #include "PHSpring.h"
+#include "PH3Element.h"
 #include "PHTreeNode.h"
 #include "PHGear.h"
 
