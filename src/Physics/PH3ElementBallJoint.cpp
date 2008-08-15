@@ -56,8 +56,6 @@ void PH3ElementBallJoint::CompBias(){
 		double D2 = secondDamper;
 		double K = spring;
 		double h = GetScene()->GetTimeStep();
-		SpatialVector wt;
-		SpatialVector ft;
 
 		//double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep()) ;
 		double tmp =-(D1+D2+K)/(D2*(D1+K*h));
@@ -71,7 +69,7 @@ void PH3ElementBallJoint::CompBias(){
 		db.w()[2] = (D1*wt.w()[2]-(1+D1/D2)*ft.w()[2])/(D1+K*h);
 		//１ステップ前のwとfを用いるので、dbの計算後に次のステップに用いる現在のw,fを更新
 		wt=vjrel;
-		ft=f;
+		ft=f/h;
 	}
 	else{
 		//dA.w().clear();

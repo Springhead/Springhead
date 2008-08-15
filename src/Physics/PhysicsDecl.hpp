@@ -301,6 +301,22 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PH3ElementDesc \
+protected:\
+	Vec3d	secondDamper;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHSpring::SetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
+		secondDamper = ((PH3ElementDesc*)ptr)->secondDamper;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHSpring::GetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
+		((PH3ElementDesc*)ptr)->secondDamper = secondDamper;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHRayDesc \
 protected:\
 	Vec3d	origin;	\

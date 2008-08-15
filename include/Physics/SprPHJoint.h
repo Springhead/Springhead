@@ -498,6 +498,30 @@ struct PHSpringDesc : public PHConstraintDesc{
 	PHSpringDesc();
 };
 
+// 3要素モデルのインタフェース
+struct PH3ElementIf : public PHSpringIf{
+	
+	SPR_IFDEF(PH3Element);
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param secondDamper 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(const Vec3d& secondDamper);
+
+	/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	Vec3d	GetSecondDamper();
+};
+/// 3要素モデルのディスクリプタ
+struct PH3ElementDesc : public PHSpringDesc{
+	SPR_DESCDEF(PH3Element);
+
+	Vec3d		secondDamper;		// 二個目のダンパ係数
+	
+	PH3ElementDesc();
+};
+
 /// ツリーノードのインタフェース
 struct PHTreeNodeIf : public SceneObjectIf{
 	SPR_IFDEF(PHTreeNode);

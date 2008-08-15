@@ -92,6 +92,10 @@
 	void SetDamperOri(const double damper){	base::SetDamperOri(damper);}	\
 	double GetDamperOri(){	return	base::GetDamperOri();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementIf(base)	\
+	void SetSecondDamper(const Vec3d& secondDamper){	base::SetSecondDamper(secondDamper);}	\
+	Vec3d GetSecondDamper(){	return	base::GetSecondDamper();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
 
