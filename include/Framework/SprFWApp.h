@@ -71,6 +71,7 @@ public:
 	virtual int  GetHeight(){ return height; }
 
 	int			GetID() const{ return id; }
+	void		SetID(int newID){id = newID;}
 	GRRenderIf*	GetRender(){ return render; }
 	void		SetRender(GRRenderIf* data){render = data;}
 	FWSceneIf*  GetScene(){ return scene; }
