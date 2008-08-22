@@ -56,6 +56,7 @@ public:
 	SpatialVector A, dA, Ainv;			///< LCPのA行列の対角成分とその補正量，逆数
 	SpatialVector scale;
 	
+	SpatialTransform	xt;				///(3要素モデル専用)1ステップ前の距離
 	SpatialVector wt;					///(3要素モデル専用)1ステップ前の速さ
 	SpatialVector ft;					///(3要素モデル専用)1ステップ前の力
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる

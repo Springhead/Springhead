@@ -54,18 +54,27 @@ void PH3Element::CompBias(){
 	//	従来の計算手法での計算
 	/*for(int i = 0; i < 3; i++){
 		if (!constr[i]) continue;
-		tmp =-(D1[i]+D2[i]+K[i])/(D2[i]*(D1[i]+K[i]*h));
+		tmp =(D1[i]+D2[i]+K[i])/(D2[i]*(D1[i]+K[i]*h));
 		dA[i] = tmp * dtinv;
-		db[i] = (D1[i]*wt[i]-(1+D1[i]/D2[i])*ft[i])/(D1[i]+K[i]*h);
+		db[i] = (-D1[i]*wt[i]+(1+D1[i]/D2[i])*ft[i])/(D1[i]+K[i]*h);
 	}*/
 
 	//　レオロジーでの計算
-	for(int i = 0; i < 3; i++){
+	/*for(int i = 0; i < 3; i++){
 		if (!constr[i]) continue;
-		tmp =-(1/(K[i]*h+D1[i])+1/D2[i]);
+		tmp =(1/(K[i]*h+D1[i])+1/D2[i]);
 		dA[i] = tmp * dtinv;
 		db[i] = (-D1[i]*wt[i]+ft[i])/(K[i]*h+D1[i]);
+	}*/
+
+	//　マクスウェルモデル
+	for(int i = 0; i < 3; i++){
+		if (!constr[i]) continue;
+		tmp =1/(D1[i]*K[i]*h)-1/D1[i];
+		dA[i] = tmp * dtinv;
+		db[i] = ft[i]/(K[i]*h);
 	}
+
 
 	// 姿勢に対するバネ
 	if(springOri != 0.0 || damperOri != 0.0){
@@ -80,6 +89,7 @@ void PH3Element::CompBias(){
 	}
 
 	//１ステップ前のwとfを用いるので、dbの計算後に次のステップに用いる現在のw,fを更新
+		xt=Xjrel;
 		wt=vjrel;
 		ft=f/h;
 }
