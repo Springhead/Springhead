@@ -64,12 +64,12 @@ void PH3ElementBallJoint::CompBias(){
 		dA.w()[2] = tmp * dtinv;
 
 		//db.w() = - spring * propV * tmp;
-		db.w()[0] = (D1*wt.w()[0]-(1+D1/D2)*ft.w()[0])/(D1+K*h);
-		db.w()[1] = (D1*wt.w()[1]-(1+D1/D2)*ft.w()[1])/(D1+K*h);
-		db.w()[2] = (D1*wt.w()[2]-(1+D1/D2)*ft.w()[2])/(D1+K*h);
-		//１ステップ前のwとfを用いるので、dbの計算後に次のステップに用いる現在のw,fを更新
-		wt=vjrel;
-		ft=f/h;
+		//db.w()[0] = (D1*wt.w()[0]-(1+D1/D2)*ft.w()[0])/(D1+K*h);
+		//db.w()[1] = (D1*wt.w()[1]-(1+D1/D2)*ft.w()[1])/(D1+K*h);
+		//db.w()[2] = (D1*wt.w()[2]-(1+D1/D2)*ft.w()[2])/(D1+K*h);
+		////１ステップ前のwとfを用いるので、dbの計算後に次のステップに用いる現在のw,fを更新
+		//wt=vjrel;
+		//ft=f/h;
 	}
 	else{
 		//dA.w().clear();

@@ -44,6 +44,7 @@ void PH3Element::SetConstrainedIndexCorrection(bool* con){
 }
 
 void PH3Element::CompBias(){
+
 	//rjrel
 	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
 	Vec3d D1 = damper;
@@ -51,30 +52,30 @@ void PH3Element::CompBias(){
 	Vec3d K = spring;
 	double h = GetScene()->GetTimeStep();
 	
-	//	従来の計算手法での計算
-	/*for(int i = 0; i < 3; i++){
-		if (!constr[i]) continue;
-		tmp =(D1[i]+D2[i]+K[i])/(D2[i]*(D1[i]+K[i]*h));
-		dA[i] = tmp * dtinv;
-		db[i] = (-D1[i]*wt[i]+(1+D1[i]/D2[i])*ft[i])/(D1[i]+K[i]*h);
-	}*/
+	
+	//マクスウェルモデル
+	//ws=vjrel;
+	//for(int i = 0; i < 3; i++){
+	//	if (!constr[i]) continue;
+	//	//ばねの長さを更新
+	//	xs[1][i] = D1[i]/(D1[i]+K[i]*h)*(xs[0][i]+ws[i]*h);
+	//	tmp = (D1[i]+K[i]*h)/(D1[i]*K[i]*h);
+	//	dA[i] = tmp * dtinv;
+	//	db[i] = xs[0][i]/h;
+	//}
+	//xs[0]=xs[1];
 
-	//　レオロジーでの計算
-	/*for(int i = 0; i < 3; i++){
-		if (!constr[i]) continue;
-		tmp =(1/(K[i]*h+D1[i])+1/D2[i]);
-		dA[i] = tmp * dtinv;
-		db[i] = (-D1[i]*wt[i]+ft[i])/(K[i]*h+D1[i]);
-	}*/
-
-	//　マクスウェルモデル
+	//3要素モデル
+	ws=vjrel;
 	for(int i = 0; i < 3; i++){
 		if (!constr[i]) continue;
-		tmp =1/(D1[i]*K[i]*h)-1/D1[i];
-		dA[i] = tmp * dtinv;
-		db[i] = ft[i]/(K[i]*h);
+		//ばねの長さを更新
+		tmp = D2[i]-D1[i]+K[i]*h;
+		xs[1][i] = ((D2[i]-D1[i])/tmp)*xs[0][i] + (D2[i]*h/(D2[i]-D1[i]))*ws[i];		
+		dA[i] = (D2[i]-D1[i])*(D2[i]-D1[i])/(D1[i]*D2[i]*tmp) * dtinv;
+		db[i] = K[i]*(D2[i]-D1[i])*(D2[i]-D1[i])/(D2[i]*tmp*tmp) * xs[0][i];
 	}
-
+	xs[0]=xs[1];
 
 	// 姿勢に対するバネ
 	if(springOri != 0.0 || damperOri != 0.0){
@@ -88,10 +89,6 @@ void PH3Element::CompBias(){
 		}
 	}
 
-	//１ステップ前のwとfを用いるので、dbの計算後に次のステップに用いる現在のw,fを更新
-		xt=Xjrel;
-		wt=vjrel;
-		ft=f/h;
 }
 
 }
