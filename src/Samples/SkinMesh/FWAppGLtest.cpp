@@ -4,7 +4,7 @@
 #include <Springhead.h>
 #include <SprFramework.h>
 #include <Framework/SprFWAppGLUT.h>
-#include <HumanInterface/HIBase.h>
+//#include <HumanInterface/HIBase.h>
 #include <GL/glut.h>
 #include <windows.h>
 using namespace Spr;
@@ -110,7 +110,7 @@ public:
 		GRMaterialDesc material;
 		material.diffuse = Vec4f(1.0,0.8,0.4,1.0);
 		win->render->SetMaterial(material);
-			GRCameraIf* cam = GetSdk()->GetScene() ? GetSdk()->GetScene()->GetGRScene()->GetCamera() : NULL;
+			cam = GetSdk()->GetScene() ? GetSdk()->GetScene()->GetGRScene()->GetCamera() : NULL;
 		if (cam && cam->GetFrame()){
 			//Affinef cameraInfo.view = cam->GetFrame()->GetTransform();
 			cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -129,7 +129,7 @@ public:
 		FWAppGLUT::Step();
 		PHSolidIf* s = DCAST(PHSolidIf,  GetSdk()->GetScene()->FindObject("soBlock1"));
 	}
-	void Keyboard(unsigned char key, int x, int y){
+	void Keyboard(int key, int x, int y){
 		if (key==0x1b){
 			exit(0);
 		}
