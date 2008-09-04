@@ -12,13 +12,10 @@
 BoxStack bstack;
 
 BoxStack::BoxStack(){
-	calcPhys=true;
 	dt = 0.02;//0.05;
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
-	phscene = NULL;
-	render = NULL;
 	bDebug = false;
 	bStep = true;
 }
@@ -28,7 +25,7 @@ void BoxStack::Init(int argc, char* argv[]){
 
 	GetSdk()->Clear();															// SDK‚Ìì¬
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
-	phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
 	DesignObject();																// „‘Ì‚ðì¬
 
@@ -47,7 +44,7 @@ void BoxStack::Init(int argc, char* argv[]){
 void BoxStack::Reset(){
 	GetSdk()->Clear();															// SDK‚Ìì¬
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
-	phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
 	DesignObject();																// „‘Ì‚ðì¬
 
@@ -81,6 +78,7 @@ void BoxStack::DesignObject(){
 	// soFloor—p‚Ìdesc
 	desc.mass = 1e20f;
 	desc.inertia *= 1e30f;
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
 	soFloor->SetDynamical(false);
 	soFloor->SetGravity(false);
@@ -134,23 +132,19 @@ void BoxStack::DesignObject(){
 }
 
 void BoxStack::Step(){
-	if (calcPhys){
-		if(bStep) phscene->Step();
-		else if (bOneStep){
-			phscene->Step();
-			bOneStep = false;
-		}
-		glutPostRedisplay();
-		calcPhys = false;
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	if(bStep) phscene->Step();
+	else if (bOneStep){
+		phscene->Step();
+		bOneStep = false;
 	}
-	calcPhys = true;
 	glutPostRedisplay();
 }
 
 void BoxStack::Display(){
 	// •`‰æ‚ÌÝ’è
 	GetSdk()->SetDebugMode(true);
-	render = window->render->Cast();
+	GRDebugRenderIf* render = window->render->Cast();
 
 	// •`‰æƒ‚[ƒh‚ÌÝ’è
 	render->SetRenderMode(true, false);
@@ -194,6 +188,7 @@ void BoxStack::Display(){
 }
 
 void BoxStack::Keyboard(int key, int x, int y){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	switch (key) {
 		case ESC:
 		case  'q':

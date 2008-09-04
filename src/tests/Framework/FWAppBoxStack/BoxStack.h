@@ -15,11 +15,8 @@ using namespace std;
 
 class BoxStack : public FWAppGLUT, public UTRefCount{
 public:
-	//　プロセス間の同期に使う変数
-	bool calcPhys;
 	FWWin* window;
-	PHSceneIf* phscene;		
-	GRDebugRenderIf* render;		
+
 	double dt;
 	Vec3d gravity;
 	double nIter;
