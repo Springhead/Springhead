@@ -78,8 +78,8 @@ void display(){
 		Vec3d normal;
 		Vec3d pos[2];
 		double dist=0;
-		Vec3d range(0,-1,1);
-		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], range, normal, pos[0], pos[1], dist);
+		Vec3d dir(0,-1,1);
+		int res = ContFindCommonPoint(mesh[0], mesh[1], pose[0], pose[1], dir, 0, 1, normal, pos[0], pos[1], dist);
 		DSTR << "res:"  << res << " normal:" << normal << " dist:" << dist;
 		DSTR << " p:" << pose[0]*pos[0] << " q:" << pose[1]*pos[1] << std::endl;
 //		pose[1].Ori() = Quaterniond::Rot('z', Rad(5)) * pose[1].Ori();

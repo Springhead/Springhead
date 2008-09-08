@@ -57,7 +57,7 @@ void PHBallJoint::AfterSetDesc(){
 		fMinDt = fMin * GetScene()->GetTimeStep();
 		fMaxDt = fMax * GetScene()->GetTimeStep();
 	}
-	PHJointND::AfterSetDesc();
+	PHJointND<3>::AfterSetDesc();
 }
 
 void PHBallJoint::UpdateJointState(){

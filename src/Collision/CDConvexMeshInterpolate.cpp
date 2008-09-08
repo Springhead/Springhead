@@ -25,6 +25,12 @@ CDConvexMeshInterpolate::CDConvexMeshInterpolate(const CDConvexMeshInterpolateDe
 	CDConvexMesh(desc){
 }
 
+struct Near{
+	int id;
+	float dist;
+	Near(int i, float d):id(i), dist(d){
+	}
+};
 Vec3f CDConvexMeshInterpolate::Support(const Vec3f& v) const {
 	int lastPos = -1;
 	float h = base[curPos] * v;
@@ -54,12 +60,6 @@ Vec3f CDConvexMeshInterpolate::Support(const Vec3f& v) const {
 		h = d;
 	}
 	const std::vector<int>& cn = neighbor[curPos];
-	struct Near{
-		int id;
-		float dist;
-		Near(int i, float d):id(i), dist(d){
-		}
-	};
 	typedef std::vector<Near> Nears;
 	Nears nears;
 	const float minDist = 0.001f;
