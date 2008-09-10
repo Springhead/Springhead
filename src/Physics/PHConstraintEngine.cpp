@@ -518,8 +518,8 @@ void PHConstraintEngine::Step(){
 	ptimer.CountUS();
 #endif
 	if(bContactEnabled){
-		Detect(ct, dt);
-		//ContDetect(ct, dt);
+		//Detect(ct, dt);
+		ContDetect(ct, dt);
 #ifdef _DEBUG
 //		DSTR << "nMaxOverlapObject = " << nMaxOverlapObject << std::endl;
 #endif
