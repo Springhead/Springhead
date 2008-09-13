@@ -20,7 +20,7 @@ HapticProcess::HapticProcess(){
 	dt = 0.001f;
 	K = 10;
 	D = 0.0;//0.005;		// ダンパを，0にしたら床のがたがたがなくなった．
-	posScale = 500;
+	posScale = 300;
 	bDisplayforce = false;
 	bInter = true;
 	hpointer.SetDynamical(false);
