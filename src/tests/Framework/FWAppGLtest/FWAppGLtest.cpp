@@ -35,7 +35,7 @@ public:
 			delete app;
 			exit(0);
 		}
-		if (key=='s'){
+		if (key=='p'){
 			if (!bRun) FWAppGLUT::Step();
 			bRun = false;
 		}
