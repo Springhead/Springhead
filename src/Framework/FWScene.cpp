@@ -59,11 +59,11 @@ ObjectIf* FWScene::CreateObject(const IfInfo* info, const void* desc){
 	return rv;
 }
 
-FWObjectIf* FWScene::CreateObject(const PHSolidDesc& soliddesc, const GRFrameDesc& framedesc){
+FWObjectIf* FWScene::CreateFWObject(){
 	FWObjectDesc desc;
 	FWObjectIf* obj = DCAST(FWObjectIf, CreateObject(FWObjectIf::GetIfInfoStatic(), &desc));
-	obj->SetPHSolid(GetPHScene()->CreateSolid(soliddesc));
-	obj->SetGRFrame(DCAST(GRFrameIf, GetGRScene()->CreateVisual(framedesc.GetIfInfo(), framedesc)));
+	obj->SetPHSolid(NULL);
+	obj->SetGRFrame(NULL);
 	AddChildObject(obj);
 	return obj;
 }
