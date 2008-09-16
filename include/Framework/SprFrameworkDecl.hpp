@@ -9,7 +9,7 @@
 	void SetPHScene(PHSceneIf* s){	base::SetPHScene(s);}	\
 	GRSceneIf* GetGRScene(){	return	base::GetGRScene();}	\
 	void SetGRScene(GRSceneIf* s){	base::SetGRScene(s);}	\
-	Spr::FWObjectIf* CreateObject(const PHSolidDesc& soliddesc, const GRFrameDesc& framedesc){	return	base::CreateObject(soliddesc, framedesc);}	\
+	Spr::FWObjectIf* CreateFWObject(){	return	base::CreateFWObject();}	\
 	int NObject()const{	return	base::NObject();}	\
 	Spr::FWObjectIf** GetObjects(){	return	base::GetObjects();}	\
 	void Sync(){	base::Sync();}	\

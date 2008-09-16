@@ -40,13 +40,9 @@ namespace Spr{
 		*/
 		void		SetGRScene(GRSceneIf* s);
 
-		/** @brief Frameworkオブジェクトを作成する
-			PHSolidとGRFrameを関連付けるオブジェクトを作成する．
-			内部的には、まずdescにもとづいて新たなPHSolidおよびGRFrameが、それぞれ
-			PHSceneIf::CreateSolidおよびGRSceneIf::CreateFrameにより作成される。
-			次に両者を参照するFWObjectが作成されFWSceneに登録される。
+		/** @brief 空のFrameworkオブジェクトを作成する
 		 */
-		FWObjectIf*	CreateObject(const PHSolidDesc& soliddesc = PHSolidDesc(), const GRFrameDesc& framedesc = GRFrameDesc());
+		FWObjectIf*	CreateFWObject();
 		int NObject()const;
 		FWObjectIf** GetObjects();
 
