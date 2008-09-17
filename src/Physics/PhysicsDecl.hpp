@@ -228,6 +228,7 @@ protected:\
 	Vec2d	limitTwist;	\
 	Vec3d	limitDir;	\
 	Quaterniond	goal;	\
+	Quaterniond	desiredVelocity;	\
 	Vec3d	torque;	\
 	double	fMax;	\
 	double	fMin;	\
@@ -240,6 +241,7 @@ public:\
 		limitTwist = ((PHBallJointDesc*)ptr)->limitTwist;	\
 		limitDir = ((PHBallJointDesc*)ptr)->limitDir;	\
 		goal = ((PHBallJointDesc*)ptr)->goal;	\
+		desiredVelocity = ((PHBallJointDesc*)ptr)->desiredVelocity;	\
 		torque = ((PHBallJointDesc*)ptr)->torque;	\
 		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
 		fMin = ((PHBallJointDesc*)ptr)->fMin;	\
@@ -254,6 +256,7 @@ public:\
 		((PHBallJointDesc*)ptr)->limitTwist = limitTwist;	\
 		((PHBallJointDesc*)ptr)->limitDir = limitDir;	\
 		((PHBallJointDesc*)ptr)->goal = goal;	\
+		((PHBallJointDesc*)ptr)->desiredVelocity = desiredVelocity;	\
 		((PHBallJointDesc*)ptr)->torque = torque;	\
 		((PHBallJointDesc*)ptr)->fMax = fMax;	\
 		((PHBallJointDesc*)ptr)->fMin = fMin;	\

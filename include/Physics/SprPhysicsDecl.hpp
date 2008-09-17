@@ -77,6 +77,10 @@
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
 	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
+	void SetDesiredVelocity(Quaterniond q){	base::SetDesiredVelocity(q);}	\
+	Quaterniond GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
+	void SetTrajectoryVelocity(Quaterniond q){	base::SetTrajectoryVelocity(q);}	\
+	Quaterniond GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\

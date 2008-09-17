@@ -27,9 +27,10 @@ public:
 	ACCESS_DESC(PHConstraint);
 
 	enum PHControlMode{
-		MODE_TORQUE,
+		MODE_TORQUE=0,
 		MODE_POSITION,
-		MODE_VELOCITY
+		MODE_VELOCITY,
+		MODE_TRAJECTORY_TRACKING
 	} mode;
 	PHConstraintEngine* engine;
 

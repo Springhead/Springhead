@@ -44,7 +44,8 @@ void PHHingeJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 
-	if(mode == MODE_VELOCITY){
+	if(mode == MODE_VELOCITY || mode == MODE_TRAJECTORY_TRACKING){
+
 		db.w().z = -desiredVelocity;
 	}
 	else if(onLower || onUpper){
