@@ -39,6 +39,8 @@
 	double GetMotorTorque(){	return	base::GetMotorTorque();}	\
 	void SetDesiredVelocity(double v){	base::SetDesiredVelocity(v);}	\
 	double GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
+	void SetTrajectionVelocity(double v){	base::SetTrajectionVelocity(v);}	\
+	double GetTrajectionVelocity(){	return	base::GetTrajectionVelocity();}	\
 	void SetSpring(double spring){	base::SetSpring(spring);}	\
 	double GetSpring(){	return	base::GetSpring();}	\
 	void SetSpringOrigin(double origin){	base::SetSpringOrigin(origin);}	\

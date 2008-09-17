@@ -66,6 +66,8 @@ public:
 	virtual void	GetRange(double& l, double& u) const {l = lower, u = upper;}
 	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; desiredVelocity = v;}
 	virtual double	GetDesiredVelocity() const {return desiredVelocity;}
+	virtual void	SetTrajectionVelocity(double v){mode = MODE_TRAJECTORY_TRACKING; desiredVelocity = v;}
+	virtual double  GetTrajectionVelocity(){return desiredVelocity;}
 	virtual void	SetSpring(double K){spring = K;}
 	virtual double	GetSpring() const {return spring;}
 	virtual void	SetSpringOrigin(double org){origin = org;}
