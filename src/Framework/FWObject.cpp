@@ -21,9 +21,19 @@ FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 
 void FWObject::Sync(){
 	if (phSolid && grFrame){
-		Affinef af;
-		phSolid->GetPose().ToAffine(af);
-		DCAST(GRFrame, grFrame)->SetTransform(af);
+		if(phParentSolid){
+			//関節があるときのスキンメッシュの座標変換
+			Affinef af,afParent,afd;
+			phSolid->GetPose().ToAffine(af);
+			phParentSolid->GetPose().ToAffine(afParent);
+			afd=afParent.inv()*af;
+			DCAST(GRFrame, grFrame)->SetTransform(afd);
+
+		}else{
+			Affinef af;
+			phSolid->GetPose().ToAffine(af);
+			DCAST(GRFrame, grFrame)->SetTransform(af);
+		}
 	}else{
 		//DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
 	}

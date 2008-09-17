@@ -36,6 +36,11 @@ namespace Spr{
 		GRFrameIf* GetGRFrame();
 		/// GRFrame‚ğİ’è‚·‚é
 		void SetGRFrame(GRFrameIf* f);
+		/// PHParentSolid‚ğæ“¾‚·‚é
+		PHSolidIf* GetPHParentSolid();
+		/// PHParentSolid‚ğİ’è‚·‚é
+		void SetPHParentSolid(PHSolidIf* ps);
+
 	};
 
 }
