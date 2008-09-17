@@ -40,7 +40,7 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	spring;			///< バネ係数
 	double  origin;			///< バネ原点
 	double  damper;			///< ダンパ係数
-	double	desiredVelocity; ///< 目標速度
+	double	desiredVelocity;///< 目標速度
 	double	torque;			///< モータトルク
 	double	fMax;			///< 関節にかけられる最大の力
 	double	fMin;			///< 関節にかけられる最小の力
@@ -401,20 +401,36 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	double GetTorqueMin();
 
+	/** @brief 速度制御に切り替え，速度を設定する
+	*/
+	void  SetDesiredVelocity(Quaterniond q);
+
+	/** @brief 速度制御の目標速度を取得する
+	*/
+	Quaterniond GetDesiredVelocity();
+
+	/** @brief 軌道追従制御に切り替え，速度を設定する
+	*/
+	void SetTrajectoryVelocity(Quaterniond q);
+	
+	/** @brief 軌道追従制御の速度項を取得する
+	*/
+	Quaterniond GetTrajectoryVelocity();
 
 };
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
 	SPR_DESCDEF(PHBallJoint);
-	double			spring;		///< バネ係数
-	double			damper;		///< ダンパ係数
-	Vec2d			limitSwing; ///< swing角の可動域（[0] or .lower, [1] or .upper）
-	Vec2d			limitTwist;	///< twist角の可動域（[0] or .lower, [1] or .upper）
-	Vec3d			limitDir;	///< 可動域の中心ベクトル
-	Quaterniond		goal;		///< バネダンパの制御目標
-	Vec3d			torque;		///< モータトルク
-	double			fMax;		///< 関節にかけられる最大の力
-	double			fMin;		///< 関節にかけられる最小の力
+	double			spring;			 ///< バネ係数
+	double			damper;			 ///< ダンパ係数
+	Vec2d			limitSwing;		 ///< swing角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
+	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
+	Quaterniond		goal;			 ///< バネダンパの制御目標
+	Quaterniond		desiredVelocity; ///< 目標速度
+	Vec3d			torque;			 ///< モータトルク
+	double			fMax;			 ///< 関節にかけられる最大の力
+	double			fMin;			 ///< 関節にかけられる最小の力
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };

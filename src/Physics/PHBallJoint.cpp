@@ -22,16 +22,17 @@ namespace Spr{;
 
 PHBallJointDesc::PHBallJointDesc(){
 
-	spring		  = 0.0;
-	damper		  = 0.0;
-	limitSwing[0] = FLT_MAX;
-	limitSwing[1] = FLT_MAX;
-	limitTwist[0] = FLT_MAX;
-	limitTwist[1] = FLT_MAX;	
-	limitDir	  = Vec3d(0.0, 0.0, 1.0);
-	goal		  = Quaterniond(1, 0, 0, 0);
-	fMax		  = FLT_MAX;
-	fMin		  = -FLT_MAX;
+	spring			= 0.0;
+	damper			= 0.0;
+	limitSwing[0]	= FLT_MAX;
+	limitSwing[1]	= FLT_MAX;
+	limitTwist[0]	= FLT_MAX;
+	limitTwist[1]	= FLT_MAX;	
+	limitDir		= Vec3d(0.0, 0.0, 1.0);
+	goal			= Quaterniond(1, 0, 0, 0);
+	fMax			= FLT_MAX;
+	fMin			= -FLT_MAX;
+	desiredVelocity = Quaterniond(1, 0, 0, 0);
 }
 
 //----------------------------------------------------------------------------
@@ -168,18 +169,19 @@ void PHBallJoint::CompBias(){
 	********************************************************************************************************/
 	Vec3d propV = propQ.RotationHalf();			
 
-	// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
-	preQd		= qd;
-	qd			= goal;
-	preQdDot	= qdDot;
-	qdDot		= (qd * preQd.Inv()) / GetScene()->GetTimeStep();
-	qdWDot		= (qdDot * preQdDot.Inv()) / GetScene()->GetTimeStep();
-	
 	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
 	if (anyLimit){
 		propV = Jcinv * propV;
 	}
-	
+	if(mode == MODE_VELOCITY || mode == MODE_TRAJECTORY_TRACKING){
+		// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
+		preQd		= qd;
+		qd			= goal;
+		preQdDot	= desiredVelocity;
+		qdDot		= (qd * preQd.Inv()) / GetScene()->GetTimeStep();
+		qdWDot		= (qdDot * preQdDot.Inv()) / GetScene()->GetTimeStep();
+		db.w()		= -Jcinv * desiredVelocity.RotationHalf();
+	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
@@ -198,11 +200,13 @@ void PHBallJoint::CompBias(){
 		/****
 		軌道追従制御のdb，慣性行列の扱いは相対加速度に対して，親剛体への反作用方向と子剛体への作用方向にかかる
 		拘束は回転方向なので，慣性行列のうちの慣性モーメントだけ引っ張ってくる
-		****
-		db.w() = tmp * ( (spring * -(qd * Xjrel.q.Inv()).RotationHalf())
-		              + (solid[0]->GetInertia() * qdWDot.RotationHalf())
-					  + (solid[1]->GetInertia() * -qdWDot.RotationHalf())
-					  + (damper * -qdDot.RotationHalf()) );
+		****/
+		if(mode == MODE_TRAJECTORY_TRACKING){
+			db.w() = tmp * ( (spring * -(qd * Xjrel.q.Inv()).RotationHalf())
+						  + (solid[0]->GetInertia() * qdWDot.RotationHalf())
+						  + (solid[1]->GetInertia() * -qdWDot.RotationHalf())
+						  + (damper * -qdDot.RotationHalf()) );
+		}
 		/**/
 	}
 	else{
