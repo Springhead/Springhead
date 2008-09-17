@@ -24,12 +24,15 @@ namespace Spr{;
 		//
 		UTRef< PHSolidIf > phSolid;
 		UTRef< GRFrameIf > grFrame;
+		UTRef< PHSolidIf > phParentSolid;
 		//
 		bool		AddChildObject(ObjectIf* o);
 		PHSolidIf*	GetPHSolid(){ return phSolid; }
 		void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
 		GRFrameIf*	GetGRFrame(){ return grFrame; }
 		void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
+		PHSolidIf*	GetPHParentSolid(){ return phParentSolid; }
+		void		SetPHParentSolid(PHSolidIf* ps){ phParentSolid = ps; }
 
 		ObjectIf* GetChildObject(size_t pos){
 			if (pos==0) if (phSolid) return phSolid; else return grFrame;
