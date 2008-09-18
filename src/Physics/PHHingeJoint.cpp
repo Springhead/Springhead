@@ -20,6 +20,11 @@ namespace Spr{;
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 5;
+
+	// 軌道追従制御用の変数の初期化
+	qd		= preQd		= 0;
+	qdDot	= preQdDot	= 0;
+	qdWDot	= 0;
 }
 
 void PHHingeJoint::UpdateJointState(){
@@ -44,15 +49,19 @@ void PHHingeJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 
-	if(mode == MODE_VELOCITY || mode == MODE_TRAJECTORY_TRACKING){
-
+	if(mode == MODE_VELOCITY){
 		db.w().z = -desiredVelocity;
-	}
-	else if(onLower || onUpper){
+	} else if(mode == MODE_TRAJECTORY_TRACKING){
+		preQd		= qd;
+		qd			= origin;
+		preQdDot	= desiredVelocity;
+		qdDot		= (qd - preQd) / GetScene()->GetTimeStep();
+		qdWDot		= (qdDot - preQdDot) / GetScene()->GetTimeStep();
+	} else if(onLower || onUpper){
 		dA.w()[2] = 0;
 		db.w()[2] = (position[0] - origin) * dtinv * engine->velCorrectionRate;
 	}
-	else if(spring != 0.0 || damper != 0.0){
+	if(spring != 0.0 || damper != 0.0){
 		double diff;
 		diff = GetPosition() - origin;
 		// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
@@ -60,7 +69,15 @@ void PHHingeJoint::CompBias(){
 		// while(diff < -M_PI) diff += 2 * M_PI;
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.w().z = tmp * dtinv;
-		db.w().z = spring * (diff) * tmp;
+		//軌道追従制御のLCPは以下のようになる
+		if(mode == MODE_TRAJECTORY_TRACKING){
+			db.w().z = - tmp * ( spring * (qd - GetPosition())
+					 + (solid[0]->GetInertia()[2][2] * qdWDot)
+					 + (solid[1]->GetInertia()[2][2] * -qdWDot)
+					 + (damper * -qdDot));
+		}
+		// 普通の位置制御の場合
+		else db.w().z = tmp * spring * diff;
 	}
 
 }
