@@ -173,14 +173,16 @@ void PHBallJoint::CompBias(){
 	if (anyLimit){
 		propV = Jcinv * propV;
 	}
-	if(mode == MODE_VELOCITY || mode == MODE_TRAJECTORY_TRACKING){
+	if(mode == MODE_VELOCITY){
 		// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
+		db.w()		= -Jcinv * desiredVelocity.RotationHalf();
+	}
+	else if(mode == MODE_TRAJECTORY_TRACKING){
 		preQd		= qd;
 		qd			= goal;
 		preQdDot	= desiredVelocity;
 		qdDot		= (qd * preQd.Inv()) / GetScene()->GetTimeStep();
-		qdWDot		= (qdDot * preQdDot.Inv()) / GetScene()->GetTimeStep();
-		db.w()		= -Jcinv * desiredVelocity.RotationHalf();
+		qdWDot		= (qdDot * preQdDot.Inv()) / GetScene()->GetTimeStep();		
 	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
@@ -195,8 +197,6 @@ void PHBallJoint::CompBias(){
 		******************************************************************************/
 		dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
-		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
-		db.w() = -tmp * spring * propV;
 		/****
 		軌道追従制御のdb，慣性行列の扱いは相対加速度に対して，親剛体への反作用方向と子剛体への作用方向にかかる
 		拘束は回転方向なので，慣性行列のうちの慣性モーメントだけ引っ張ってくる
@@ -208,6 +208,8 @@ void PHBallJoint::CompBias(){
 						  + (damper * -qdDot.RotationHalf()) );
 		}
 		/**/
+		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
+		else db.w() = -tmp * spring * propV;
 	}
 	else{
 		//dA.w().clear();
