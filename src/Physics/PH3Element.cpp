@@ -44,38 +44,41 @@ void PH3Element::SetConstrainedIndexCorrection(bool* con){
 }
 
 void PH3Element::CompBias(){
-
-	//rjrel
+	
+		//rjrel
 	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
 	Vec3d D1 = damper;
-	Vec3d D2 = secondDamper;
 	Vec3d K = spring;
 	double h = GetScene()->GetTimeStep();
-	
-	
-	//マクスウェルモデル
-	//ws=vjrel;
-	//for(int i = 0; i < 3; i++){
-	//	if (!constr[i]) continue;
-	//	//ばねの長さを更新
-	//	xs[1][i] = D1[i]/(D1[i]+K[i]*h)*(xs[0][i]+ws[i]*h);
-	//	tmp = (D1[i]+K[i]*h)/(D1[i]*K[i]*h);
-	//	dA[i] = tmp * dtinv;
-	//	db[i] = xs[0][i]/h;
-	//}
-	//xs[0]=xs[1];
 
-	//3要素モデル
-	ws=vjrel;
-	for(int i = 0; i < 3; i++){
-		if (!constr[i]) continue;
-		//ばねの長さを更新
-		tmp = D2[i]-D1[i]+K[i]*h;
-		xs[1][i] = ((D2[i]-D1[i])/tmp)*xs[0][i] + (D2[i]*h/(D2[i]-D1[i]))*ws[i];		
-		dA[i] = (D2[i]-D1[i])*(D2[i]-D1[i])/(D1[i]*D2[i]*tmp) * dtinv;
-		db[i] = K[i]*(D2[i]-D1[i])*(D2[i]-D1[i])/(D2[i]*tmp*tmp) * xs[0][i];
+	if(secondDamper[0]!=0.0||secondDamper[1]!=0.0||secondDamper[2]!=0.0){
+		//3要素モデル
+		Vec3d D2 = secondDamper;
+		ws=vjrel;
+		for(int i = 0; i < 3; i++){
+			if (!constr[i]) continue;
+			//ばねの長さを更新
+			tmp = D2[i]-D1[i]+K[i]*h;
+			xs[1][i] = ((D2[i]-D1[i])/tmp)*xs[0][i] + (D2[i]*h/(D2[i]-D1[i]))*ws[i];		
+			dA[i] = (D2[i]-D1[i])*(D2[i]-D1[i])/(D1[i]*D2[i]*tmp) * dtinv;
+			db[i] = K[i]*(D2[i]-D1[i])*(D2[i]-D1[i])/(D2[i]*tmp*tmp) * xs[0][i];
+		}
+		xs[0]=xs[1];
+	}else	{
+		//マクスウェルモデル
+		ws=vjrel;
+		for(int i = 0; i < 3; i++){
+			if (!constr[i]) continue;
+			//ばねの長さを更新
+			xs[1][i] = D1[i]/(D1[i]+K[i]*h)*(xs[0][i]+ws[i]*h);
+			tmp = (D1[i]+K[i]*h)/(D1[i]*K[i]*h);
+			dA[i] = tmp * dtinv;
+			db[i] = xs[0][i]/h;
+		}
+		xs[0]=xs[1];
 	}
-	xs[0]=xs[1];
+
+	
 
 	// 姿勢に対するバネ
 	if(springOri != 0.0 || damperOri != 0.0){
