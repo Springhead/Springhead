@@ -109,7 +109,10 @@ protected:
 		Affinef view;
 		CameraInfo():
 			rot(Rad(0.0), Rad(20.0)), zoom(1.0f),
-			rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){}
+			rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){
+			UpdateView();
+		}
+		void UpdateView();
 	} cameraInfo;
 
 	/// 剛体ドラッグ機能

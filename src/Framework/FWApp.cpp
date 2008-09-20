@@ -211,14 +211,14 @@ void FWApp::MouseMove(int x, int y){
 		cameraInfo.zoom = Spr::max(cameraInfo.zoomRange[0], Spr::min(cameraInfo.zoom, cameraInfo.zoomRange[1]));
 		cameraPosChange = true;
 	}
-	if(cameraPosChange){
-		cameraInfo.view  = Affinef();
-		cameraInfo.view.Pos() = cameraInfo.target + cameraInfo.zoom * Vec3f(
-			cos(cameraInfo.rot.x) * cos(cameraInfo.rot.y),
-			sin(cameraInfo.rot.x),
-			cos(cameraInfo.rot.x) * sin(cameraInfo.rot.y));
-		cameraInfo.view.LookAtGL(cameraInfo.target, Vec3f(0.0f, 100.0f, 0.0f));
-	}
+	if(cameraPosChange) cameraInfo.UpdateView();
 }
-
+void FWApp::CameraInfo::UpdateView(){
+	view  = Affinef();
+	view.Pos() = target + zoom * Vec3f(
+		cos(rot.x) * cos(rot.y),
+		sin(rot.x),
+		cos(rot.x) * sin(rot.y));
+	view.LookAtGL(target, Vec3f(0.0f, 100.0f, 0.0f));
+}
 }
