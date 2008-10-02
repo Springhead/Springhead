@@ -179,10 +179,10 @@ void PHBallJoint::CompBias(){
 	}
 	else if(mode == MODE_TRAJECTORY_TRACKING){
 		preQd		= qd;
-		qd			= goal;
+		qd			= goal.RotationHalf();
 		preQdDot	= desiredVelocity;
-		qdDot		= (qd * preQd.Inv()) / GetScene()->GetTimeStep();
-		qdWDot		= (qdDot * preQdDot.Inv()) / GetScene()->GetTimeStep();		
+		qdDot		= (qd - preQd) / GetScene()->GetTimeStep();
+		qdWDot		= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
@@ -202,10 +202,10 @@ void PHBallJoint::CompBias(){
 		拘束は回転方向なので，慣性行列のうちの慣性モーメントだけ引っ張ってくる
 		****/
 		if(mode == MODE_TRAJECTORY_TRACKING){
-			db.w() = tmp * ( (spring * -(qd * Xjrel.q.Inv()).RotationHalf())
-						  + (solid[0]->GetInertia() * qdWDot.RotationHalf())
-						  + (solid[1]->GetInertia() * -qdWDot.RotationHalf())
-						  + (damper * -qdDot.RotationHalf()) );
+			db.w() = tmp * ( (spring * -(qd - Xjrel.q.Inv().RotationHalf()))
+						  + (solid[0]->GetInertia() * qdWDot)
+						  - (solid[1]->GetInertia() * qdWDot)
+						  + (damper * -qdDot) );
 		}
 		/**/
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
