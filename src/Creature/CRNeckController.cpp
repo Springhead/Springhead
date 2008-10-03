@@ -53,9 +53,9 @@ void CRNeckController::Step(){
 	/// Quaternion‚É•ÏŠ·
 	Quaterniond qtnTargetFromHead;
 	qtnTargetFromHead.RotationArc(vecTargetFromHead.unit(), Vec3d(0,0,-1));
-	/// EularŠp‚É•ÏŠ·
+	/// EulerŠp‚É•ÏŠ·
 	Vec3d eulTargetFromHead;
-	qtnTargetFromHead.ToEular(eulTargetFromHead);
+	qtnTargetFromHead.ToEuler(eulTargetFromHead);
 	double Z = eulTargetFromHead.Z(), X = eulTargetFromHead.X();
 
 	/// Attractiveness‚É‰‚¶‚½Š„‡‚ÉC³

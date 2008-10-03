@@ -70,9 +70,9 @@ protected:
 	double			fMinDt, fMaxDt;
 	
 	// 軌道追従制御用の変数，消さないで by Toki Aug. 2008
-	Vec3d qd,		preQd;		///< ある時刻の目標位置への回転軸ベクトルと１時刻前の目標位置への回転軸ベクトル
-	Vec3d qdDot,	preQdDot;	///< ある時刻の目標位置への回転軸ベクトルの一階微分と１時刻前の目標位置への回転軸ベクトルの一階微分
-	Vec3d qdWDot;				///< ある時刻の目標位置への回転軸ベクトルの二階微分
+	Vec3d qd,	 preQd;		///< ある時刻の目標位置への回転軸ベクトルと１時刻前の目標位置への回転軸ベクトル
+	Vec3d qdDot, preQdDot;	///< ある時刻の目標位置への回転軸ベクトルの一階微分と１時刻前の目標位置への回転軸ベクトルの一階微分
+	Vec3d qdWDot;			///< ある時刻の目標位置への回転軸ベクトルの二階微分
 
 	virtual void	AfterSetDesc();
 	virtual coord_t GetTorqueND(){ return (coord_t&)torque; }

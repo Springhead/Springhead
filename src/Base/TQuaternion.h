@@ -223,7 +223,7 @@ public:
 		mat[2][2] = AMET( 1.0 - 2.0 * (X()*X() + Y()*Y()) );
 	}
 	///	ƒIƒCƒ‰[Šp‚Ö•ÏŠ·
-	template <class VET> void ToEular(TVec3<VET>& v){
+	template <class VET> void ToEuler(TVec3<VET>& v){
 		ET poleCheck = X()*Y() + Z()*W();
 		VET heading = v[0];
 		VET attitude = v[1];
@@ -239,11 +239,11 @@ public:
 			attitude = asin(2*X()*Y() + 2*Z()*W());
 			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()*X() - 2*Z()*Z());
 		}
-		// ToEular‚ª(0,0,0)‚µ‚©•Ô‚µ‚Ä‚­‚ê‚È‚¢‚Ì‚Åmitake‚ªŸè‚É‘‚«‰Á‚¦‚½ (07/07/13)
+		// ToEuler‚ª(0,0,0)‚µ‚©•Ô‚µ‚Ä‚­‚ê‚È‚¢‚Ì‚Åmitake‚ªŸè‚É‘‚«‰Á‚¦‚½ (07/07/13)
 		v[0]=heading; v[1]=attitude; v[2]=bank;
 	}
 	///
-	template <class VET> void FromEular(const TVec3<VET>& v){
+	template <class VET> void FromEuler(const TVec3<VET>& v){
 		VET heading = v[0];	//	yaw		mech z  ->  CG y
 		VET attitude = v[1];	//	pitch	mech y  ->  CG x
 		VET bank = v[2];		//	roll	mech x  ->  CG z
