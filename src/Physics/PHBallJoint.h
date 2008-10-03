@@ -89,6 +89,7 @@ public:
 	virtual void		SetMotorTorque(const Vec3d& t){torque = t;}					///< モータのトルクを設定する関数
 	virtual Vec3d		GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
 	virtual Vec3d		GetAngle(){return position;}								///< 角度を返す関数
+	virtual Quaterniond GetPosition(){return Xjrel.q;}								///< 角度のクォータニオンを返す関数
 	virtual Vec3d		GetVelocity(){return velocity;}								///< 速度を返す関数
 	virtual void		SetTorqueMax(double max){fMax = max; fMaxDt = fMax*GetScene()->GetTimeStep(); }
 	virtual double		GetTorqueMax(){return fMax;}
