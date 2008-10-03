@@ -32,7 +32,6 @@ PHBallJointDesc::PHBallJointDesc(){
 	goal			= Quaterniond(1, 0, 0, 0);
 	fMax			= FLT_MAX;
 	fMin			= -FLT_MAX;
-	desiredVelocity = Quaterniond(1, 0, 0, 0);
 }
 
 //----------------------------------------------------------------------------
@@ -175,14 +174,21 @@ void PHBallJoint::CompBias(){
 	}
 	if(mode == MODE_VELOCITY){
 		// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
-		db.w()		= -Jcinv * desiredVelocity.RotationHalf();
+		db.w()		= -Jcinv * desiredVelocity;
 	}
 	else if(mode == MODE_TRAJECTORY_TRACKING){
-		preQd		= qd;
-		qd			= goal.RotationHalf();
-		preQdDot	= desiredVelocity;
-		qdDot		= (qd - preQd) / GetScene()->GetTimeStep();
-		qdWDot		= (qdDot - preQdDot) / GetScene()->GetTimeStep();
+		/**
+			3次元空間上の回転を表すための回転軸ベクトルpとその回転角度θ=|p|を定義すると
+			座標ベクトルuであらわされる点Aを回転軸p中心に角度θだけ回転した点A'の座標ベクトルu'は
+			以下の計算で求める事が出来る．
+			u'	= sinθ u x p + cosθ(u-(u・p)p)+(u・p)p
+				= sinθ u x p + cosθu + (1-cosθ)(u・p)p
+		*/
+		preQd			= qd;
+		goal.ToEuler(qd);
+		preQdDot		= vjrel.w();
+		qdDot			= desiredVelocity;
+		Vec3d diffQdWDotEuler = (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
@@ -200,6 +206,7 @@ void PHBallJoint::CompBias(){
 		/****
 		軌道追従制御のdb，慣性行列の扱いは相対加速度に対して，親剛体への反作用方向と子剛体への作用方向にかかる
 		拘束は回転方向なので，慣性行列のうちの慣性モーメントだけ引っ張ってくる
+		(Xjrel.q.Inv().RotationHalfが現在の関節の向きへの回転ベクトル)
 		****/
 		if(mode == MODE_TRAJECTORY_TRACKING){
 			db.w() = tmp * ( (spring * -(qd - Xjrel.q.Inv().RotationHalf()))

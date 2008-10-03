@@ -32,7 +32,7 @@ Vec3d CRIKControlPos::GetTmpGoal(){
 
 // --- --- --- --- ---
 Vec3d CRIKControlOri::GetTmpGoal(){
-	Vec3d sorieul; solid->GetPose().Ori().ToEular(sorieul);
+	Vec3d sorieul; solid->GetPose().Ori().ToEuler(sorieul);
 	Vec3d dir = goal - sorieul;
 	double epsilon = 0.1;
 	// std::cout << dir/dir.norm()*epsilon << std::endl;

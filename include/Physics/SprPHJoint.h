@@ -437,7 +437,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
 	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
 	Quaterniond		goal;			 ///< バネダンパの制御目標
-	Quaterniond		desiredVelocity; ///< 目標速度
+	Vec3d			desiredVelocity; ///< 目標速度(x軸，y軸，z軸：クォータニオンで書くと落ちる)
 	Vec3d			torque;			 ///< モータトルク
 	double			fMax;			 ///< 関節にかけられる最大の力
 	double			fMin;			 ///< 関節にかけられる最小の力

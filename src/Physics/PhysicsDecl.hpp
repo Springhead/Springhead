@@ -228,7 +228,7 @@ protected:\
 	Vec2d	limitTwist;	\
 	Vec3d	limitDir;	\
 	Quaterniond	goal;	\
-	Quaterniond	desiredVelocity;	\
+	Vec3d	desiredVelocity;	\
 	Vec3d	torque;	\
 	double	fMax;	\
 	double	fMin;	\
