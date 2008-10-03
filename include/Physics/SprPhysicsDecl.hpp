@@ -74,6 +74,7 @@
 	void SetMotorTorque(const Vec3d& torque){	base::SetMotorTorque(torque);}	\
 	Vec3d GetMotorTorque(){	return	base::GetMotorTorque();}	\
 	Vec3d GetAngle(){	return	base::GetAngle();}	\
+	Quaterniond GetPosition(){	return	base::GetPosition();}	\
 	Vec3d GetVelocity(){	return	base::GetVelocity();}	\
 	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\

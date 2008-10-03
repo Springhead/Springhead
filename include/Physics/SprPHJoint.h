@@ -388,6 +388,11 @@ struct PHBallJointIf : public PHJointIf{
 	 */
 	Vec3d GetAngle();
 
+	/**  @brief 関節変位を取得する
+		 @return Xjrel.q
+	*/
+	Quaterniond GetPosition();
+
 	/** @brief 関節速度を取得する
 		@return スイング方位角，スイング角，ツイスト角の時間変化率からなるベクトル
 	 */
