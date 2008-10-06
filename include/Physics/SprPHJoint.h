@@ -389,7 +389,7 @@ struct PHBallJointIf : public PHJointIf{
 	Vec3d GetAngle();
 
 	/**  @brief 関節変位を取得する
-		 @return Xjrel.q
+		 @return Xjrel.q(親剛体から見た子剛体の相対変位をQuaternionで表現したもの)
 	*/
 	Quaterniond GetPosition();
 
@@ -424,11 +424,11 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	Quaterniond GetDesiredVelocity();
 
-	/** @brief 軌道追従制御に切り替え，速度を設定する
+	/** @brief 軌道追従制御に切り替え，目標速度を設定する
 	*/
 	void SetTrajectoryVelocity(Quaterniond q);
 	
-	/** @brief 軌道追従制御の速度項を取得する
+	/** @brief 軌道追従制御の目標速度項を取得する
 	*/
 	Quaterniond GetTrajectoryVelocity();
 
