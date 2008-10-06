@@ -75,10 +75,12 @@ void CRFourLegsTinyAnimalBody::CreateHead(){
 	solids[SO_HEAD]				= phScene->CreateSolid(solidDesc);
 	sphereDesc.radius			= 0.3;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
+	solids[SO_HEAD]->SetName("soHead");
 	ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
 	ballDesc.spring				= 100;
 	ballDesc.damper				= 50;
 	joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
+	joints[JO_BODY_HEAD]->SetName("joNeck");
 	phScene->SetContactMode(solids[SO_BODY], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
 }
 
@@ -93,11 +95,13 @@ void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
 		solids[SO_RIGHT_FRONT_LEG] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
 		solids[SO_RIGHT_FRONT_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_RIGHT_FRONT_LEG]->SetName("soRightFrontLeg");
 	}
 	else{
 		solids[SO_LEFT_FRONT_LEG] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
 		solids[SO_LEFT_FRONT_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_LEFT_FRONT_LEG]->SetName("soLeftFrontLeg");
 	}
 	// ‘ÌŠ²‚Æ‘O‹rŠÔ‚ÌŠÖß
 	{
@@ -111,10 +115,12 @@ void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
 	}
 	if(lr == RIGHTPART){
 		joints[JO_BODY_RIGHT_FRONT_LEG] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG], ballDesc);
+		joints[JO_BODY_RIGHT_FRONT_LEG]->SetName("joRightShoulder");
 		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG], PHSceneDesc::MODE_NONE);
 	}
 	else{
 		joints[JO_BODY_LEFT_FRONT_LEG] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG], ballDesc);
+		joints[JO_BODY_LEFT_FRONT_LEG]->SetName("joLeftShoulder");
 		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG], PHSceneDesc::MODE_NONE);
 	}
 }
@@ -130,11 +136,13 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 		solids[SO_RIGHT_REAR_LEG] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
 		solids[SO_RIGHT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_RIGHT_REAR_LEG]->SetName("soRightRearLeg");
 	}
 	else{
 		solids[SO_LEFT_REAR_LEG] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
 		solids[SO_LEFT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_LEFT_REAR_LEG]->SetName("soLeftRearLeg");
 	}
 	// ‘ÌŠ²‚ÆŒã‹rŠÔ‚ÌŠÖß
 	{
@@ -148,10 +156,12 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 	}
 	if(lr == RIGHTPART){
 		joints[JO_BODY_RIGHT_REAR_LEG] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG], ballDesc);
+		joints[JO_BODY_RIGHT_REAR_LEG]->SetName("joRightHip");
 		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG], PHSceneDesc::MODE_NONE);
 	}
 	else{
 		joints[JO_BODY_LEFT_REAR_LEG] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_REAR_LEG], ballDesc);
+		joints[JO_BODY_LEFT_REAR_LEG]->SetName("joLeftHip");
 		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_REAR_LEG], PHSceneDesc::MODE_NONE);
 	}
 }
