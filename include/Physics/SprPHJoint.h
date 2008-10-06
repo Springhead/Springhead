@@ -206,12 +206,12 @@ struct PHJoint1DIf : public PHJointIf{
 	/** @brief 目標軌道の速度を設定する
 		@param v 目標軌道の速度
 	*/
-	void SetTrajectionVelocity(double v);
+	void SetTrajectoryVelocity(double v);
 
 	/** @brief 目標軌道の速度を取得する
 		@return 目標軌道の速度
 	*/
-	double GetTrajectionVelocity();
+	double GetTrajectoryVelocity();
 
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
