@@ -140,6 +140,10 @@ struct PHConstraintIf : public SceneObjectIf{
 		拘束力と拘束トルクをソケットのローカル座標系で返す
 	 */
 	void GetConstraintForce(Vec3d& f, Vec3d& t);
+
+	/* @brief 軌道追従制御を止める 
+	*/
+	void DisableTrajectoryVelocity();
 };
 
 /// 拘束の集合のインタフェース
@@ -418,19 +422,19 @@ struct PHBallJointIf : public PHJointIf{
 
 	/** @brief 速度制御に切り替え，速度を設定する
 	*/
-	void  SetDesiredVelocity(Quaterniond q);
+	void  SetDesiredVelocity(Vec3d q);
 
 	/** @brief 速度制御の目標速度を取得する
 	*/
-	Quaterniond GetDesiredVelocity();
+	Vec3d GetDesiredVelocity();
 
 	/** @brief 軌道追従制御に切り替え，目標速度を設定する
 	*/
-	void SetTrajectoryVelocity(Quaterniond q);
+	void SetTrajectoryVelocity(Vec3d q);
 	
 	/** @brief 軌道追従制御の目標速度項を取得する
 	*/
-	Quaterniond GetTrajectoryVelocity();
+	Vec3d GetTrajectoryVelocity();
 
 };
 /// ボールジョイントのディスクリプタ

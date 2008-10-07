@@ -95,10 +95,10 @@ public:
 	virtual double		GetTorqueMax(){return fMax;}
 	virtual void		SetTorqueMin(double min){fMin = min; fMinDt = fMin*GetScene()->GetTimeStep(); }
 	virtual double		GetTorqueMin(){return fMin;}
-	virtual void		SetDesiredVelocity(Quaterniond q){mode = MODE_VELOCITY; desiredVelocity = q;}
-	virtual Quaterniond	GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void		SetTrajectoryVelocity(Quaterniond q) {mode = MODE_TRAJECTORY_TRACKING; desiredVelocity = q;}
-	virtual Quaterniond GetTrajectoryVelocity() const {return desiredVelocity;}
+	virtual void		SetDesiredVelocity(Vec3d v){mode = MODE_VELOCITY; desiredVelocity = v;}
+	virtual Vec3d		GetDesiredVelocity() const {return desiredVelocity;}
+	virtual void		SetTrajectoryVelocity(Vec3d v) {mode = MODE_TRAJECTORY_TRACKING; desiredVelocity = v;}
+	virtual Vec3d		GetTrajectoryVelocity() const {return desiredVelocity;}
 
 	/// 仮想関数のオーバライド
 	virtual void	AddMotorTorque(){f.w() = torque * GetScene()->GetTimeStep();}	///< トルクを加える関数
