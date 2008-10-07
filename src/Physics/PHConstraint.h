@@ -117,6 +117,8 @@ public:
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
 	virtual ObjectIf*	 GetChildObject(size_t i);
+	virtual void		 DisableTrajectoryVelocity(){mode = MODE_POSITION;}
+
 protected:
 	virtual void AfterSetDesc();
 };

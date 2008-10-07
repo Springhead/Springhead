@@ -24,6 +24,7 @@
 	Quaternionf GetAbsolutePoseQ(){	return	base::GetAbsolutePoseQ();}	\
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w){	base::GetRelativeVelocity(v, w);}	\
 	void GetConstraintForce(Vec3d& f, Vec3d& t){	base::GetConstraintForce(f, t);}	\
+	void DisableTrajectoryVelocity(){	base::DisableTrajectoryVelocity();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
 	Spr::PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
@@ -80,10 +81,10 @@
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
 	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
-	void SetDesiredVelocity(Quaterniond q){	base::SetDesiredVelocity(q);}	\
-	Quaterniond GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
-	void SetTrajectoryVelocity(Quaterniond q){	base::SetTrajectoryVelocity(q);}	\
-	Quaterniond GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
+	void SetDesiredVelocity(Vec3d q){	base::SetDesiredVelocity(q);}	\
+	Vec3d GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
+	void SetTrajectoryVelocity(Vec3d q){	base::SetTrajectoryVelocity(q);}	\
+	Vec3d GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
