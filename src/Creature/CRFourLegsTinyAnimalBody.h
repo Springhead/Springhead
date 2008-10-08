@@ -27,6 +27,7 @@ private:
 	void CreateHead();
 	void CreateFrontLegs(LREnum lr);
 	void CreateRearLegs(LREnum lr);
+	void InitBody();
 	void InitLegs();
 
 	void InitContact();
@@ -43,8 +44,6 @@ public:
 		solids.resize(CRFourLegsTinyAnimalBodyDesc::SO_NSOLIDS);
 		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
 	
-		CreateBody();
-		CreateHead();
 		InitLegs();
 		InitContact();
 

@@ -282,14 +282,6 @@ struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	*/
 	Vec3d GetUpperCenterOfMass();
 
-	/** @brief 剛体の数を返す
-	*/
-	int NSolids();
-
-	/** @brief 関節の数を返す
-	*/
-	int NJoints();
-
 	/** @brief ボールジョイントの数を返す
 	*/
 	int NBallJoints();
@@ -370,10 +362,8 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 		LEG_RIGHT_REAR, LEG_LEFT_REAR
 	};
 
-	int soNSolids;
 	int joNBallJoints;
 	int joNHingeJoints;
-	int joNJoints;
 
 	/// サイズに関するパラメータ
 	double waistBreadth,	       waistHeight,			  waistThickness;
@@ -492,6 +482,8 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 
 	/// 裏オプション
 	bool noLegs;
+	bool noHead;
+
 	/// ダイナミカルを入れるかどうか
 	bool dynamicalMode;
 	/// 全体の体重
@@ -759,6 +751,10 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 	Vec2d rangeFrontTwist;
 	Vec2d rangeRearSwing;
 	Vec2d rangeRearTwist;
+
+	bool noLegs;
+	bool noHead;
+	bool onlyOneLeg;
 
 	CRFourLegsTinyAnimalBodyDesc();
 };
