@@ -65,7 +65,9 @@ public:
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
 		solids.resize(CRFourLegsAnimalBodyDesc::SO_NSOLIDS);
+		for(unsigned int i = 0; i < solids.size(); i++) solids[i] = NULL;
 		joints.resize(CRFourLegsAnimalBodyDesc::JO_NJOINTS);
+		for(unsigned int i = 0; i < joints.size(); i++) joints[i] = NULL;
 
 		InitBody();
 		InitHead();
@@ -80,8 +82,6 @@ public:
 	// インタフェースの実装
 	virtual void	Init();						//< 初期化を実行する
 	virtual Vec3d	GetUpperCenterOfMass();		//< 上体の剛体の重心を得る
-	virtual int		NSolids();					//< ボディに含まれている剛体の数を返す
-	virtual int		NJoints();					//< ボディに含まれている関節の数を返す
 	virtual int		NBallJoints();				//< ボディに含まれているボールジョイントの数を返す
 	virtual int		NHingeJoints();				//< ボディに含まれているヒンジジョイントの数を返す
 	virtual double	VSolid(int i);				//< i番目の剛体の体積を返す

@@ -20,8 +20,6 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 
 	//---------------------------------------------------------
 	// number of the joints or solids
-	soNSolids		= 0;
-	joNJoints		= 0;
 	joNBallJoints	= 0;
 	joNHingeJoints	= 0;
 	flagRange		= enableRange;
@@ -143,8 +141,10 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	// materialMu of All Solids 
 	materialMu = (float)1.0;
 	//-----------------------------------------------------------------------------------
-	// Do you want to make no legs?
+	// Do you want to make no legs or head?
 	noLegs = false;
+	noHead = false;
+
 	//-----------------------------------------------------------------------------------
 	// Dynamical 
 	dynamicalMode = false;
@@ -166,7 +166,7 @@ void CRFourLegsAnimalBody::Init(){
 void CRFourLegsAnimalBody::InitBody(){
 	CreateWaist();
 	CreateChest();
-	CreateTail();
+	if(! noLegs && ! noHead) CreateTail();
 }
 
 void CRFourLegsAnimalBody::CreateWaist(){
@@ -333,8 +333,10 @@ void CRFourLegsAnimalBody::CreateTail(){
 
 // --- --- ---
 void CRFourLegsAnimalBody::InitHead(){
-	CreateNeck();
-	CreateHead();
+	if(! noHead){
+		CreateNeck();
+		CreateHead();
+	}
 }
 
 void CRFourLegsAnimalBody::CreateNeck(){
@@ -1001,15 +1003,6 @@ Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(){
 	}
 
 	return centerPosOfUpperBlocks / totalWeightOfUpperPart;
-}
-
-int CRFourLegsAnimalBody::NSolids(){
-	soNSolids = solids.size();
-	return soNSolids;
-}
-int CRFourLegsAnimalBody::NJoints(){
-	joNJoints = joints.size();
-	return joNJoints;
 }
 int CRFourLegsAnimalBody::NBallJoints(){
 	int counterNBallJoint = 0;

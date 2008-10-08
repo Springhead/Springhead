@@ -354,10 +354,8 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRFourLegsAnimalBodyDesc \
 protected:\
-	int	soNSolids;	\
 	int	joNBallJoints;	\
 	int	joNHingeJoints;	\
-	int	joNJoints;	\
 	double	waistBreadth;	\
 	double	waistHeight;	\
 	double	waistThickness;	\
@@ -491,6 +489,7 @@ protected:\
 	double	fMaxRightRearAnkle;	\
 	float	materialMu;	\
 	bool	noLegs;	\
+	bool	noHead;	\
 	bool	dynamicalMode;	\
 	double	totalMass;	\
 	bool	flagFMax;	\
@@ -498,10 +497,8 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRFourLegsAnimalBodyDesc*)ptr);	\
-		soNSolids = ((CRFourLegsAnimalBodyDesc*)ptr)->soNSolids;	\
 		joNBallJoints = ((CRFourLegsAnimalBodyDesc*)ptr)->joNBallJoints;	\
 		joNHingeJoints = ((CRFourLegsAnimalBodyDesc*)ptr)->joNHingeJoints;	\
-		joNJoints = ((CRFourLegsAnimalBodyDesc*)ptr)->joNJoints;	\
 		waistBreadth = ((CRFourLegsAnimalBodyDesc*)ptr)->waistBreadth;	\
 		waistHeight = ((CRFourLegsAnimalBodyDesc*)ptr)->waistHeight;	\
 		waistThickness = ((CRFourLegsAnimalBodyDesc*)ptr)->waistThickness;	\
@@ -635,6 +632,7 @@ public:\
 		fMaxRightRearAnkle = ((CRFourLegsAnimalBodyDesc*)ptr)->fMaxRightRearAnkle;	\
 		materialMu = ((CRFourLegsAnimalBodyDesc*)ptr)->materialMu;	\
 		noLegs = ((CRFourLegsAnimalBodyDesc*)ptr)->noLegs;	\
+		noHead = ((CRFourLegsAnimalBodyDesc*)ptr)->noHead;	\
 		dynamicalMode = ((CRFourLegsAnimalBodyDesc*)ptr)->dynamicalMode;	\
 		totalMass = ((CRFourLegsAnimalBodyDesc*)ptr)->totalMass;	\
 		flagFMax = ((CRFourLegsAnimalBodyDesc*)ptr)->flagFMax;	\
@@ -644,10 +642,8 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRFourLegsAnimalBodyDesc*)ptr);	\
-		((CRFourLegsAnimalBodyDesc*)ptr)->soNSolids = soNSolids;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->joNBallJoints = joNBallJoints;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->joNHingeJoints = joNHingeJoints;	\
-		((CRFourLegsAnimalBodyDesc*)ptr)->joNJoints = joNJoints;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->waistBreadth = waistBreadth;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->waistHeight = waistHeight;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->waistThickness = waistThickness;	\
@@ -781,6 +777,7 @@ public:\
 		((CRFourLegsAnimalBodyDesc*)ptr)->fMaxRightRearAnkle = fMaxRightRearAnkle;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->materialMu = materialMu;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->noLegs = noLegs;	\
+		((CRFourLegsAnimalBodyDesc*)ptr)->noHead = noHead;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->dynamicalMode = dynamicalMode;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->totalMass = totalMass;	\
 		((CRFourLegsAnimalBodyDesc*)ptr)->flagFMax = flagFMax;	\
@@ -1298,6 +1295,9 @@ protected:\
 	Vec2d	rangeFrontTwist;	\
 	Vec2d	rangeRearSwing;	\
 	Vec2d	rangeRearTwist;	\
+	bool	noLegs;	\
+	bool	noHead;	\
+	bool	onlyOneLeg;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRFourLegsTinyAnimalBodyDesc*)ptr);	\
@@ -1318,6 +1318,9 @@ public:\
 		rangeFrontTwist = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeFrontTwist;	\
 		rangeRearSwing = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearSwing;	\
 		rangeRearTwist = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearTwist;	\
+		noLegs = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->noLegs;	\
+		noHead = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->noHead;	\
+		onlyOneLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->onlyOneLeg;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -1340,6 +1343,9 @@ public:\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeFrontTwist = rangeFrontTwist;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearSwing = rangeRearSwing;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearTwist = rangeRearTwist;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->noLegs = noLegs;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->noHead = noHead;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->onlyOneLeg = onlyOneLeg;	\
 		return true;	\
 	}\
 

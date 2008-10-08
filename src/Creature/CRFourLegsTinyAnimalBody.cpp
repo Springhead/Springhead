@@ -38,6 +38,11 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	rangeFrontTwist	  = Vec2d(Rad(-60.0) , Rad(60.0));
 	rangeRearSwing    = Vec2d(Rad(-60.0) , Rad(60.0));
 	rangeRearTwist	  = Vec2d(Rad(-60.0) , Rad(60.0));
+
+	noLegs = false;
+	noHead = false;
+	onlyOneLeg = false;
+
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -50,6 +55,11 @@ void CRFourLegsTinyAnimalBody::Init(){
 }
 
 // --- --- ---
+void CRFourLegsTinyAnimalBody::InitBody(){
+	CreateBody();
+	if(! noHead) CreateHead();
+}
+
 void CRFourLegsTinyAnimalBody::CreateBody(){
 	CDBoxDesc          boxDesc;
 	PHSolidDesc        solidDesc;
@@ -168,10 +178,14 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 
 // --- --- ---
 void CRFourLegsTinyAnimalBody::InitLegs(){
-	CreateFrontLegs(LEFTPART);
-	CreateFrontLegs(RIGHTPART);
-	CreateRearLegs(LEFTPART);
-	CreateRearLegs(RIGHTPART);
+	if(! noLegs){
+		CreateFrontLegs(LEFTPART);
+		if(! onlyOneLeg){
+			CreateFrontLegs(RIGHTPART);
+			CreateRearLegs(LEFTPART);
+			CreateRearLegs(RIGHTPART);
+		}
+	}
 }
 
 // --- --- ---

@@ -18,8 +18,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CRFourLegsAnimalBodyIf(base)	\
 	void Init(){	base::Init();}	\
 	Vec3d GetUpperCenterOfMass(){	return	base::GetUpperCenterOfMass();}	\
-	int NSolids(){	return	base::NSolids();}	\
-	int NJoints(){	return	base::NJoints();}	\
 	int NBallJoints(){	return	base::NBallJoints();}	\
 	int NHingeJoints(){	return	base::NHingeJoints();}	\
 	double VSolid(int i){	return	base::VSolid(i);}	\
