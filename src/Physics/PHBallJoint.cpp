@@ -185,10 +185,10 @@ void PHBallJoint::CompBias(){
 				= sinθ u x p + cosθu + (1-cosθ)(u・p)p
 		*/
 		preQd			= qd;
-		goal.ToEuler(qd);
-		preQdDot		= vjrel.w();
-		qdDot			= desiredVelocity;
-		Vec3d diffQdWDotEuler = (qdDot - preQdDot) / GetScene()->GetTimeStep();
+		qd = goal;
+		preQdDot		= Vec3d();//vjrel.w();
+		qdDot			= Vec3d();//desiredVelocity;
+		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
@@ -209,7 +209,8 @@ void PHBallJoint::CompBias(){
 		(Xjrel.q.Inv().RotationHalfが現在の関節の向きへの回転ベクトル)
 		****/
 		if(mode == MODE_TRAJECTORY_TRACKING){
-			db.w() = tmp * ( (spring * -(qd - Xjrel.q.Inv().RotationHalf()))
+			Quaterniond propQ = qd * Xjrel.q.Inv();
+			db.w() = tmp * ( (spring * -(propQ.RotationHalf()))
 						  + (solid[0]->GetInertia() * qdWDot)
 						  - (solid[1]->GetInertia() * qdWDot)
 						  + (damper * -qdDot) );
