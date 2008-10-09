@@ -21,9 +21,10 @@ namespace Spr{
 Vec3d CRIKControlPos::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
 	Vec3d dir = goal - spos;
-	double epsilon = 0.1;
+	double epsilon = 0.5;
 	// std::cout << dir/dir.norm()*epsilon << std::endl;
 	if (dir.norm() < epsilon) {
+		// return(Vec3d(0,0,0));
 		return(dir);
 	} else {
 		return(dir/dir.norm()*epsilon);
@@ -34,9 +35,10 @@ Vec3d CRIKControlPos::GetTmpGoal(){
 Vec3d CRIKControlOri::GetTmpGoal(){
 	Vec3d sorieul; solid->GetPose().Ori().ToEuler(sorieul);
 	Vec3d dir = goal - sorieul;
-	double epsilon = 0.1;
+	double epsilon = 0.2;
 	// std::cout << dir/dir.norm()*epsilon << std::endl;
 	if (dir.norm() < epsilon) {
+		// return(Vec3d(0,0,0));
 		return(dir);
 	} else {
 		return(dir/dir.norm()*epsilon);
@@ -257,7 +259,11 @@ PTM::VMatrixRow<double> CRIKMovableHingeJointOri::CalcJacobian(CRIKControlIf* co
 }
 
 void CRIKMovableHingeJointOri::Move(){
-	joint->SetSpringOrigin(joint->GetPosition() + value[0]);
+	static const double Pi = 3.141592653589;
+	double angle = joint->GetPosition() + value[0];
+	while (angle > +2*Pi) { angle -= 2*Pi; }
+	while (angle < -2*Pi) { angle += 2*Pi; }
+	joint->SetSpringOrigin(angle);
 }
 
 }

@@ -156,6 +156,9 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKControlIf(base)	\
 	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
+	Vec3d GetGoal(){	return	base::GetGoal();}	\
+	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\
+	Spr::PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKControlPosIf(base)	\
 
