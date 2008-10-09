@@ -228,10 +228,10 @@ public:
 		VET heading = v[0];
 		VET attitude = v[1];
 		VET bank = v[2];
-		if (poleCheck == 0.5){				//	north pole
+		if (poleCheck > 0.499){				//	north pole
 			heading = 2 * atan2(X(),W());
 			bank = 0;
-		}else if(poleCheck == -0.5){		//	south pole
+		}else if(poleCheck < -0.499){		//	south pole
 			heading = -2 * atan2(X(),W());
 			bank = 0;
 		}else{

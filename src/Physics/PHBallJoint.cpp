@@ -186,8 +186,10 @@ void PHBallJoint::CompBias(){
 		*/
 		preQd			= qd;
 		qd = goal;
-		preQdDot		= Vec3d();//vjrel.w();
-		qdDot			= Vec3d();//desiredVelocity;
+		preQdDot		= vjrel.w();
+		/* X-Y-Zの順の記述からSpringhead2内のEuler角の順番(Y-Z-X)に直す必要がある．*/
+		Vec3d rotation = Vec3d(desiredVelocity[1], desiredVelocity[2], desiredVelocity[0]); 
+		qdDot			= rotation;
 		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
