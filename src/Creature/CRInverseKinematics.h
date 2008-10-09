@@ -72,6 +72,14 @@ public:
 	/** @brief î‘çÜÇéÊìæÇ∑ÇÈ
 	*/
 	int  GetNumber(){ return number; }
+
+	/** @brief êßå‰ëŒè€ÇÃçÑëÃÇê›íËÇ∑ÇÈ
+	*/
+	void SetSolid(PHSolidIf* solid){ this->solid = solid; }
+
+	/** @brief êßå‰ëŒè€ÇÃçÑëÃÇéÊìæÇ∑ÇÈ
+	*/
+	PHSolidIf* GetSolid(){ return this->solid; }
 };
 
 /** @brief à íuêßå‰ì_

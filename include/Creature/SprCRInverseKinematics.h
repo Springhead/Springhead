@@ -23,6 +23,18 @@ struct CRIKControlIf : SceneObjectIf{
 	/** @brief 目標地点を設定する
 	*/
 	void SetGoal(Vec3d goal);
+
+	/** @brief 目標地点を取得する
+	*/
+	Vec3d GetGoal();
+
+	/** @brief 制御対象の剛体を設定する
+	*/
+	void SetSolid(PHSolidIf* solid);
+
+	/** @brief 制御対象の剛体を取得する
+	*/
+	PHSolidIf* GetSolid();
 };
 
 struct CRIKControlDesc{

@@ -64,9 +64,12 @@ void PHHingeJoint::CompBias(){
 	if(spring != 0.0 || damper != 0.0){
 		double diff;
 		diff = GetPosition() - origin;
+
 		// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
-		// while(diff >  M_PI) diff -= 2 * M_PI;
-		// while(diff < -M_PI) diff += 2 * M_PI;
+		//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
+		while(diff >  M_PI) diff -= 2 * M_PI;
+		while(diff < -M_PI) diff += 2 * M_PI;
+
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.w().z = tmp * dtinv;
 		//軌道追従制御のLCPは以下のようになる
