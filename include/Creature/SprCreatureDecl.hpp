@@ -170,6 +170,8 @@
 	PTM::VVector< double > GetValue(){	return	base::GetValue();}	\
 	void Move(){	base::Move();}	\
 	void AddIKControl(Spr::CRIKControlIf* control){	base::AddIKControl(control);}	\
+	void SetBias(float bias){	base::SetBias(bias);}	\
+	float GetBias(){	return	base::GetBias();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovableSolidPosIf(base)	\
 

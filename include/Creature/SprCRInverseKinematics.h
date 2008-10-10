@@ -87,12 +87,20 @@ struct CRIKMovableIf : SceneObjectIf{
 	/** @brief §Œä“_‚ğ’Ç‰Á‚·‚é
 	*/
 	void AddIKControl(CRIKControlIf* control);
+
+	/** @brief “®‚©‚µ‚É‚­‚³‚ğİ’è‚·‚é
+	*/
+	void SetBias(float bias);
+
+	/** @brief “®‚©‚µ‚É‚­‚³‚ğæ“¾‚·‚é
+	*/
+	float GetBias();
 };
 
 struct CRIKMovableDesc{
 	SPR_DESCDEF(CRIKMovable);
 
-	float bias;  ///< “®‚©‚µ‚â‚·‚³‚ÌŒW”
+	float bias;  ///< “®‚©‚µ‚É‚­‚³‚ÌŒW”
 
 	CRIKMovableDesc(){ bias = 1.0f; }
 };
