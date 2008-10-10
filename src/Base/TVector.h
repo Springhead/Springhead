@@ -790,6 +790,7 @@ TYPENAME AD::ret_type operator - (const VectorImp<AD>& a, const VectorImp<BD>& b
 	rv.sub(b);
 	return rv;
 }
+
 /**	スカラーとベクトルの積(return a * b).
 	@param	a	ベクトル型
 	@param	b	要素型
@@ -798,6 +799,17 @@ template <class BD>
 TYPENAME BD::ret_type operator * (const TYPENAME BD::element_type& a, const VectorImp<BD>& b) {
 	TYPENAME BD::ret_type r(b);
 	r.multi(a);
+	return r;
+}
+
+/**	スカラーとベクトルの積(return a * b).ベクトルとスカラーは可換なため．
+	@param	a	要素型
+	@param	b	ベクトル型
+	@return		ベクトル型	*/
+template <class BD>
+TYPENAME BD::ret_type operator * (const VectorImp<BD>& a, const TYPENAME BD::element_type& b) {
+	TYPENAME BD::ret_type r(a);
+	r.multi(b);
 	return r;
 }
 

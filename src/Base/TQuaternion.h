@@ -360,6 +360,21 @@ template <class T1, class T2>
 inline T1 dot(const TQuaternion<T1>& q1, const TQuaternion<T2>& q2) {
 	return q1.X() * q2.X() + q1.Y() * q2.Y() + q1.Z() * q2.Z() + q1.W() * q2.W();
 }
+
+/// 回転操作をせず，普通にQuaternionとベクトルの積を求める
+template<class ET, class BD>
+inline TQuaternion<ET> mult(const TQuaternion<ET>& q, const PTM::TVectorBase<3, BD>& v){
+	TQuaternion<ET> qv(0, ET(v[0]), ET(v[1]), ET (v[2]));
+	return q*qv;
+}
+
+/// 回転操作をせず，普通にベクトルとQuaternionの積を求める
+template<class BD, class ET>
+inline TQuaternion<ET> mult(const PTM::TVectorBase<3, BD>& v, const TQuaternion<ET>& q){
+	TQuaternion<ET> qv(0, ET(v[0]), ET(v[1]), ET (v[2]));
+	return qv*q;
+}
+
 template <class T1, class T2>
 TQuaternion<T1> interpolate(T1 t, const TQuaternion<T1>& q1, const TQuaternion<T2>& q2){
 	TQuaternion<T1> ret;
