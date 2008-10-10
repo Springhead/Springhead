@@ -73,7 +73,7 @@ void CRIKMovable::PrepareSolve(){
 
 	for(CSetIter it=linkedControls.begin(); it!=linkedControls.end(); ++it){
 		PTM::VMatrixRow<double> J; J.resize(ndof,ndof);
-		J = CalcJacobian(*it);
+		J = CalcJacobian(*it) * sqrt(bias);
 		// std::cout << "J : " << std::endl << J << std::endl;
 		JtJ += J.trans() * J;
 		Jtx += J.trans() * DCAST(CRIKControl,(*it))->GetTmpGoal();
@@ -252,7 +252,7 @@ PTM::VMatrixRow<double> CRIKMovableHingeJointOri::CalcJacobian(CRIKControlIf* co
  
 	CRIKControlOriIf* cpOri;
 	if (cpOri = DCAST(CRIKControlOriIf,control)){
-		 PTM::VMatrixRow<double> M; M.resize(3,1); return M; /// ìKêÿÇ»ÇÃÇï‘Ç∑
+		PTM::VMatrixRow<double> M; M.resize(3,1); return M; /// ìKêÿÇ»ÇÃÇï‘Ç∑
 	}
 
 	return PTM::VMatrixRow<double>();
@@ -260,7 +260,7 @@ PTM::VMatrixRow<double> CRIKMovableHingeJointOri::CalcJacobian(CRIKControlIf* co
 
 void CRIKMovableHingeJointOri::Move(){
 	static const double Pi = 3.141592653589;
-	double angle = joint->GetPosition() + value[0];
+	double angle = joint->GetPosition() + (value[0]);
 	while (angle > +2*Pi) { angle -= 2*Pi; }
 	while (angle < -2*Pi) { angle += 2*Pi; }
 	joint->SetSpringOrigin(angle);

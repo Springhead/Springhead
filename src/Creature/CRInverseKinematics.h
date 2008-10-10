@@ -145,7 +145,7 @@ protected:
 	/// 自由度
 	int ndof;
 
-	/// 動かしやすさ
+	/// 動かしにくさ
 	float bias;
 
 	// 計算用の一時変数
@@ -210,6 +210,14 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual PTM::VMatrixRow<double> CalcJacobian(CRIKControlIf* control);
+
+	/** @brief 動かしにくさを設定する
+	*/
+	void SetBias(float bias){ this->bias = bias; }
+
+	/** @brief 動かしにくさを取得する
+	*/
+	float GetBias(){ return bias; }
 };
 
 /** @brief 位置制御可能な剛体
