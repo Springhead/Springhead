@@ -12,14 +12,14 @@ int CRManipulator::NJoints(){
 }
 int CRManipulator::NBallJoints(){
 	int count = 0;
-	for(int i = 0 ; i < joints.size() ; i ++ ){
+	for(unsigned int i = 0 ; i < joints.size() ; i ++ ){
 		if(DCAST(PHBallJointIf, joints[i])) count ++;
 	}
 	return count;
 }
 int CRManipulator::NHingeJoints(){
 	int count = 0;
-	for(int i = 0 ; i < joints.size() ; i ++ ){
+	for(unsigned int i = 0 ; i < joints.size() ; i ++ ){
 		if(DCAST(PHHingeJointIf, joints[i])) count ++;
 	}
 	return count;
