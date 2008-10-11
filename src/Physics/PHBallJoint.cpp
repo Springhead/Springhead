@@ -185,11 +185,9 @@ void PHBallJoint::CompBias(){
 				= sinθ u x p + cosθu + (1-cosθ)(u・p)p
 		*/
 		preQd			= qd;
-		qd = goal;
+		qd				= goal;
 		preQdDot		= vjrel.w();
-		/* X-Y-Zの順の記述からSpringhead2内のEuler角の順番(Y-Z-X)に直す必要がある．*/
-		Vec3d rotation = Vec3d(desiredVelocity[1], desiredVelocity[2], desiredVelocity[0]); 
-		qdDot			= rotation;
+		qdDot			= desiredVelocity; 
 		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
