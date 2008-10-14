@@ -21,10 +21,12 @@ struct PHJointIf;
 struct CRBodyIf;
 struct CRHingeHumanBodyIf;
 struct CRFourLegsAnimalBodyIf;
+/*
 struct CRIKControlIf;
 struct CRIKMovableIf;
 struct CRIKControlDesc;
 struct CRIKMovableDesc;
+*/
 
 // ------------------------------------------------------------------------------
 /// クリーチャのボディモデルのインターフェイス
@@ -51,6 +53,7 @@ struct CRBodyIf : SceneObjectIf{
 	*/
 	PHJointIf* GetJoint(int i);
 
+	#if 0
 	/** @brief IK用の制御点を追加する
 	*/
 	CRIKControlIf* CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
@@ -68,6 +71,7 @@ struct CRBodyIf : SceneObjectIf{
 	/** @brief IKを計算する
 	*/
 	void CalcIK();
+	#endif
 
 	/** @brief ボディの重心座標を得る
 	*/

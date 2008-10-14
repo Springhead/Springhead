@@ -7,8 +7,6 @@
  */
 #include "CRBody.h"
 
-#include "CRInverseKinematics.h"
-
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -60,6 +58,7 @@ PHJointIf* CRBody::GetJoint(int i){
 	return joints[i];
 }
 
+#if 0
 CRIKControlIf* CRBody::CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc){
 	if (ii == CRIKControlPosIf::GetIfInfoStatic()) {
 		postureControls.push_back((DBG_NEW CRIKControlPos((const CRIKControlPosDesc&)desc))->Cast());
@@ -120,6 +119,7 @@ void CRBody::CalcIK(){
 		}
 	}
 }
+#endif
 
 Vec3d CRBody::GetCenterOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計

@@ -10,6 +10,35 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHPenaltyEngineIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKEngineIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKControlPointIf(base)	\
+	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
+	Vec3d GetGoal(){	return	base::GetGoal();}	\
+	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
+	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
+	void SetNumber(int i){	base::SetNumber(i);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKOriCtlIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKNodeIf(base)	\
+	void PrepareSolve(){	base::PrepareSolve();}	\
+	void ProceedSolve(){	base::ProceedSolve();}	\
+	PTM::VVector< double > GetDTheta(){	return	base::GetDTheta();}	\
+	void Move(){	base::Move();}	\
+	void AddControlPoint(Spr::PHIKControlPointIf* control){	base::AddControlPoint(control);}	\
+	void SetBias(float bias){	base::SetBias(bias);}	\
+	float GetBias(){	return	base::GetBias();}	\
+	void SetNumber(int i){	base::SetNumber(i);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKSolidIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKBallJointIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKHingeJointIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintIf(base)	\
 	Spr::PHSceneIf* GetScene()const{	return	base::GetScene();}	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\

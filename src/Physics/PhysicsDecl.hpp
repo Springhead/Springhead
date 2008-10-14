@@ -1,3 +1,108 @@
+#define SPR_DECLMEMBEROF_PHIKControlPointDesc \
+protected:\
+	PHSolidIf*	solid;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		solid = ((PHIKControlPointDesc*)ptr)->solid;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHIKControlPointDesc*)ptr)->solid = solid;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKPosCtlDesc \
+protected:\
+	Vec3d	pos;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKControlPoint::SetDesc((PHIKControlPointDesc*)(PHIKPosCtlDesc*)ptr);	\
+		pos = ((PHIKPosCtlDesc*)ptr)->pos;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKControlPoint::GetDesc((PHIKControlPointDesc*)(PHIKPosCtlDesc*)ptr);	\
+		((PHIKPosCtlDesc*)ptr)->pos = pos;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKOriCtlDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKControlPoint::SetDesc((PHIKControlPointDesc*)(PHIKOriCtlDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKControlPoint::GetDesc((PHIKControlPointDesc*)(PHIKOriCtlDesc*)ptr);	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKNodeDesc \
+protected:\
+	float	bias;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		bias = ((PHIKNodeDesc*)ptr)->bias;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHIKNodeDesc*)ptr)->bias = bias;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKSolidDesc \
+protected:\
+	PHSolidIf*	solid;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKSolidDesc*)ptr);	\
+		solid = ((PHIKSolidDesc*)ptr)->solid;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKSolidDesc*)ptr);	\
+		((PHIKSolidDesc*)ptr)->solid = solid;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKBallJointDesc \
+protected:\
+	PHBallJointIf*	joint;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKBallJointDesc*)ptr);	\
+		joint = ((PHIKBallJointDesc*)ptr)->joint;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKBallJointDesc*)ptr);	\
+		((PHIKBallJointDesc*)ptr)->joint = joint;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKHingeJointDesc \
+protected:\
+	PHHingeJointIf*	joint;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKHingeJointDesc*)ptr);	\
+		joint = ((PHIKHingeJointDesc*)ptr)->joint;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKHingeJointDesc*)ptr);	\
+		((PHIKHingeJointDesc*)ptr)->joint = joint;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHConstraintDesc \
 protected:\
 	bool	bEnabled;	\

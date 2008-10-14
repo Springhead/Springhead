@@ -4,9 +4,6 @@
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int NJoints(){	return	base::NJoints();}	\
 	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
-	Spr::CRIKControlIf* CreateIKControl(const IfInfo* ii, const Spr::CRIKControlDesc& desc){	return	base::CreateIKControl(ii, desc);}	\
-	Spr::CRIKMovableIf* CreateIKMovable(const IfInfo* ii, const Spr::CRIKMovableDesc& desc){	return	base::CreateIKMovable(ii, desc);}	\
-	void CalcIK(){	base::CalcIK();}	\
 	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
 	double GetSumOfMass(){	return	base::GetSumOfMass();}	\
 
@@ -153,35 +150,6 @@
 	Spr::CRInternalSceneObjectIf* GetISObject(int i){	return	base::GetISObject(i);}	\
 	int NObjects(){	return	base::NObjects();}	\
 	Spr::CRInternalSceneObjectIf* CreateInternalSceneObject(const IfInfo* ii, const Spr::CRInternalSceneObjectDesc& desc){	return	base::CreateInternalSceneObject(ii, desc);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKControlIf(base)	\
-	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
-	Vec3d GetGoal(){	return	base::GetGoal();}	\
-	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\
-	Spr::PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKControlPosIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKControlOriIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovableIf(base)	\
-	void PrepareSolve(){	base::PrepareSolve();}	\
-	void ProceedSolve(){	base::ProceedSolve();}	\
-	PTM::VVector< double > GetValue(){	return	base::GetValue();}	\
-	void Move(){	base::Move();}	\
-	void AddIKControl(Spr::CRIKControlIf* control){	base::AddIKControl(control);}	\
-	void SetBias(float bias){	base::SetBias(bias);}	\
-	float GetBias(){	return	base::GetBias();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovableSolidPosIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovableSolidOriIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovableBallJointOriIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovable3HingeJointOriIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRIKMovableHingeJointOriIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRSensorIf(base)	\
 	void Init(){	base::Init();}	\
