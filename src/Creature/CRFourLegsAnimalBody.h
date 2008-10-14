@@ -80,7 +80,6 @@ public:
 	}
 
 	// インタフェースの実装
-	virtual void	Init();						//< 初期化を実行する
 	virtual Vec3d	GetUpperCenterOfMass();		//< 上体の剛体の重心を得る
 	virtual int		NBallJoints();				//< ボディに含まれているボールジョイントの数を返す
 	virtual int		NHingeJoints();				//< ボディに含まれているヒンジジョイントの数を返す

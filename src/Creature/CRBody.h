@@ -48,6 +48,12 @@ protected:
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
 	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc);
 
+	/** @brief CDBoxのInertiaを計算する（慣性テンソルの対角要素には値が入って，慣性乗積は0）
+		@param CDBoxDesc::boxsize, PHSolidDesc::mass
+		@return 慣性テンソル
+	*/
+	Matrix3d CalcBoxInertia(Vec3d boxsize, double mass);
+
 public:
 	SPR_OBJECTDEF(CRBody);
 	ACCESS_DESC(CRBody);
