@@ -188,6 +188,7 @@ void PHBallJoint::CompBias(){
 		qd				= goal;
 		preQdDot		= vjrel.w();
 		qdDot			= desiredVelocity; 
+		DSTR << "ideal, real : " << vjrel.w() << ", " << desiredVelocity << std::endl;
 		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
@@ -211,8 +212,8 @@ void PHBallJoint::CompBias(){
 		if(mode == MODE_TRAJECTORY_TRACKING){
 			Quaterniond propQ = qd * Xjrel.q.Inv();
 			db.w() = tmp * ( (spring * -(propQ.RotationHalf()))
-						  + (solid[0]->GetInertia() * qdWDot)
-						  - (solid[1]->GetInertia() * qdWDot)
+						  /*+ (solid[0]->GetInertia() * qdWDot)
+						  - (solid[1]->GetInertia() * qdWDot)*/
 						  + (damper * -qdDot) );
 		}
 		/**/

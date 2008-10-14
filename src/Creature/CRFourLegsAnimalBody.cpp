@@ -177,7 +177,8 @@ void CRFourLegsAnimalBody::CreateWaist(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_WAIST]->SetInertia(CalcBoxInertia(Vec3d(waistBreadth, waistHeight, waistThickness), solids[SO_WAIST]->GetMass()));
+	solids[SO_WAIST]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
+
 	// define the position.
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_WAIST]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
@@ -202,7 +203,7 @@ void CRFourLegsAnimalBody::CreateChest(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_CHEST]->SetInertia(CalcBoxInertia(Vec3d(chestBreadth, chestHeight, chestThickness), solids[SO_CHEST]->GetMass()));
+	solids[SO_CHEST]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 	
 	// Joint -- [p]Waist - [c]Chest
 	ballDesc                  = PHBallJointDesc();
@@ -256,9 +257,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	solids[SO_TAIL1]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_TAIL2]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_TAIL1]->SetInertia(CalcBoxInertia(Vec3d(tailBreadth, tailHeight, tailThickness), solids[SO_TAIL1]->GetMass()));
-	solids[SO_TAIL2]->SetInertia(CalcBoxInertia(Vec3d(tailBreadth, tailHeight, tailThickness), solids[SO_TAIL2]->GetMass()));
-	solids[SO_TAIL3]->SetInertia(CalcBoxInertia(Vec3d(tailBreadth, tailHeight, tailThickness), solids[SO_TAIL3]->GetMass()));
+	solids[SO_TAIL1]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solids[SO_TAIL1]->GetMass()));
+	solids[SO_TAIL2]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solids[SO_TAIL2]->GetMass()));
+	solids[SO_TAIL3]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solids[SO_TAIL3]->GetMass()));
 
 	// define the connection
 	// [p]waist - [c]tail1
@@ -353,7 +354,7 @@ void CRFourLegsAnimalBody::CreateNeck(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_NECK]->SetInertia(CalcBoxInertia(Vec3d(neckBreadth, neckHeight, neckThickness), solids[SO_NECK]->GetMass()));
+	solids[SO_NECK]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 
 	// define the joint  [p]chest - [c]neck
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
@@ -395,7 +396,7 @@ void CRFourLegsAnimalBody::CreateHead(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[SO_HEAD]->SetInertia(CalcBoxInertia(Vec3d(headBreadth, headHeight, headThickness), solids[SO_HEAD]->GetMass()));
+	solids[SO_HEAD]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 
 	// define the connection  [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
@@ -477,7 +478,7 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	} else{
 		solids[soBreastbone]->SetName("soRightBreastbone");
 	}
-	solids[soBreastbone]->SetInertia(CalcBoxInertia(Vec3d(breastboneBreadth, breastboneHeight, breastboneThickness), solids[soBreastbone]->GetMass()));
+	solids[soBreastbone]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 	
 	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, chestThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
@@ -540,7 +541,7 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soRadius]->AddShape(phSdk->CreateShape(boxDesc));
-	solids[soRadius]->SetInertia(CalcBoxInertia(Vec3d(radiusBreadth, radiusHeight, radiusThickness), solids[soRadius]->GetMass()));
+	solids[soRadius]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 
 	//[p]breastbone - [c]radius
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, breastboneHeight/2.0, 0.0);
@@ -599,7 +600,8 @@ void CRFourLegsAnimalBody::CreateFrontCannonBone(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soCannonBone]->AddShape(phSdk->CreateShape(boxDesc));
-	
+	solids[soCannonBone]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
+
 	// [p]Radius - [c]CannonBone
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, radiusHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
@@ -659,6 +661,7 @@ void CRFourLegsAnimalBody::CreateFrontToeBones(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[soToe]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, frontCannonBoneHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'z');
@@ -736,7 +739,8 @@ void CRFourLegsAnimalBody::CreateFemur(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soFemur]->AddShape(phSdk->CreateShape(boxDesc));
-	
+	solids[soFemur]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
+
 	ballDesc.poseSocket.Pos() = Vec3f(lr*waistBreadth/2.0, -waistHeight/2.0, waistThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.posePlug.Pos()	  = Vec3f(-lr*femurBreadth/2.0, -femurHeight/2.0, 0.0);
@@ -793,7 +797,8 @@ void CRFourLegsAnimalBody::CreateTibia(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soTibia]->AddShape(phSdk->CreateShape(boxDesc));
-	
+	solids[soTibia]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
+
 	//[p]femur - [c]tibia
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, femurHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
@@ -852,6 +857,7 @@ void CRFourLegsAnimalBody::CreateRearCannonBone(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soCannonBone]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[soCannonBone]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 	
 	// [p]Tibia - [c]CannonBone
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, tibiaHeight/2.0, 0.0);
@@ -912,7 +918,8 @@ void CRFourLegsAnimalBody::CreateRearToeBones(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soToe]->AddShape(phSdk->CreateShape(boxDesc));
-	
+	solids[soToe]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
+
 	ballDesc.poseSocket.Pos()  = Vec3f(0.0, rearCannonBoneHeight/2.0, 0.0);
 	ballDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.posePlug.Pos()    = Vec3f(0.0, rearToeHeight/2.0, 0.0);
@@ -1091,10 +1098,10 @@ double CRFourLegsAnimalBody::GetLegLength(int i){
 																+ tibiaHeight
 																+ rearCannonBoneHeight);
 	else{
-		std::cout << "CRFourLegsAnimalBody::GetLegLength(int i)" << std::endl;
-		std::cout << "Unexpected param i : " << i << std::endl;
-		DSTR << "CRFourLegsAnimalBody::GetLegLength(int i)" << std::endl;
-		DSTR << "Unexpected param i : " << i << std::endl;
+		std::cout	<< "CRFourLegsAnimalBody::GetLegLength(int i)"	<< std::endl;
+		std::cout	<< "Unexpected param i : " << i					<< std::endl;
+		DSTR		<< "CRFourLegsAnimalBody::GetLegLength(int i)"	<< std::endl;
+		DSTR		<< "Unexpected param i : " << i					<< std::endl;
 		return -1;
 	}
 }
