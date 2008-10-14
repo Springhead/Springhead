@@ -257,6 +257,13 @@ struct PHSolidIf : public SceneObjectIf{
 	bool		IsFrozen();
 };
 
+struct PHSolidPairForLCPIf : public ObjectIf{
+	SPR_IFDEF(PHSolidPairForLCP);
+	
+	PHSolidIf* GetSolid(int i);
+	
+};
+
 //@}
 
 }	//	namespace Spr

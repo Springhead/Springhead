@@ -236,3 +236,6 @@
 	void SetFrozen(bool bOn){	base::SetFrozen(bOn);}	\
 	bool IsFrozen(){	return	base::IsFrozen();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHSolidPairForLCPIf(base)	\
+	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
+

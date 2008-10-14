@@ -57,7 +57,7 @@ public:
 };
 
 class PHPenaltyEngine;
-class PHSolidPairForPenalty : public PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine>{
+class PHSolidPairForPenalty : public PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine>, public Object{
 public:
 	typedef PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine> base_type;
 	typedef base_type::shapepair_type shapepair_type;
