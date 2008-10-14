@@ -156,12 +156,6 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsAnimalBody
 
-	
-// --- --- ---
-void CRFourLegsAnimalBody::Init(){
-	CRBody::Init();
-}
-
 // --- --- ---
 void CRFourLegsAnimalBody::InitBody(){
 	CreateWaist();
@@ -183,6 +177,7 @@ void CRFourLegsAnimalBody::CreateWaist(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[SO_WAIST]->SetInertia(CalcBoxInertia(Vec3d(waistBreadth, waistHeight, waistThickness), solids[SO_WAIST]->GetMass()));
 	// define the position.
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_WAIST]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
@@ -207,7 +202,8 @@ void CRFourLegsAnimalBody::CreateChest(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
-
+	solids[SO_CHEST]->SetInertia(CalcBoxInertia(Vec3d(chestBreadth, chestHeight, chestThickness), solids[SO_CHEST]->GetMass()));
+	
 	// Joint -- [p]Waist - [c]Chest
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, waistHeight / 2.0, 0.0);
@@ -260,6 +256,9 @@ void CRFourLegsAnimalBody::CreateTail(){
 	solids[SO_TAIL1]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_TAIL2]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_TAIL3]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[SO_TAIL1]->SetInertia(CalcBoxInertia(Vec3d(tailBreadth, tailHeight, tailThickness), solids[SO_TAIL1]->GetMass()));
+	solids[SO_TAIL2]->SetInertia(CalcBoxInertia(Vec3d(tailBreadth, tailHeight, tailThickness), solids[SO_TAIL2]->GetMass()));
+	solids[SO_TAIL3]->SetInertia(CalcBoxInertia(Vec3d(tailBreadth, tailHeight, tailThickness), solids[SO_TAIL3]->GetMass()));
 
 	// define the connection
 	// [p]waist - [c]tail1
@@ -354,6 +353,7 @@ void CRFourLegsAnimalBody::CreateNeck(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[SO_NECK]->SetInertia(CalcBoxInertia(Vec3d(neckBreadth, neckHeight, neckThickness), solids[SO_NECK]->GetMass()));
 
 	// define the joint  [p]chest - [c]neck
 	ballDesc.poseSocket.Pos() = Vec3f(0.0, chestHeight/2.0,  0.0);
@@ -395,6 +395,7 @@ void CRFourLegsAnimalBody::CreateHead(){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
+	solids[SO_HEAD]->SetInertia(CalcBoxInertia(Vec3d(headBreadth, headHeight, headThickness), solids[SO_HEAD]->GetMass()));
 
 	// define the connection  [p]neck - [c]head
 	ballDesc                   = PHBallJointDesc();
@@ -466,16 +467,17 @@ void CRFourLegsAnimalBody::CreateBreastBone(LREnum lr){
 	// [p]chest - [c]breastbone
 	solidDesc.mass = totalMass * VSolid(soBreastbone) / VSolids();
 	solids[soBreastbone] = phScene->CreateSolid(solidDesc);
-	if(lr == LEFTPART)
-		solids[soBreastbone]->SetName("soLeftBreastbone");
-	else
-		solids[soBreastbone]->SetName("soRightBreastbone");
-
 	
 	boxDesc.boxsize = Vec3f(breastboneBreadth, breastboneHeight, breastboneThickness);
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soBreastbone]->AddShape(phSdk->CreateShape(boxDesc));
+	if(lr == LEFTPART){
+		solids[soBreastbone]->SetName("soLeftBreastbone");
+	} else{
+		solids[soBreastbone]->SetName("soRightBreastbone");
+	}
+	solids[soBreastbone]->SetInertia(CalcBoxInertia(Vec3d(breastboneBreadth, breastboneHeight, breastboneThickness), solids[soBreastbone]->GetMass()));
 	
 	ballDesc.poseSocket.Pos() = Vec3f(lr*chestBreadth/2.0, chestHeight/2.2, chestThickness/3.0);
 	ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
@@ -538,7 +540,8 @@ void CRFourLegsAnimalBody::CreateRadius(LREnum lr){
 	boxDesc.material.mu		= materialMu;
 	boxDesc.material.mu0	= materialMu;
 	solids[soRadius]->AddShape(phSdk->CreateShape(boxDesc));
-	
+	solids[soRadius]->SetInertia(CalcBoxInertia(Vec3d(radiusBreadth, radiusHeight, radiusThickness), solids[soRadius]->GetMass()));
+
 	//[p]breastbone - [c]radius
 	hingeDesc.poseSocket.Pos() = Vec3f(0.0, breastboneHeight/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');

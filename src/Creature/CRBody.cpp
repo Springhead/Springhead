@@ -149,4 +149,12 @@ double CRBody::GetSumOfMass(){
 	return totalWeight;
 }
 
+Matrix3d CRBody::CalcBoxInertia(Vec3d boxsize, double mass){
+	double i_xx = 1.0 / 12.0 * (boxsize[1] * boxsize[1] + boxsize[2] * boxsize[2]) * mass;
+	double i_yy = 1.0 / 12.0 * (boxsize[2] * boxsize[2] + boxsize[0] * boxsize[0]) * mass;
+	double i_zz = 1.0 / 12.0 * (boxsize[0] * boxsize[0] + boxsize[1] * boxsize[1]) * mass;
+
+	return Matrix3d(i_xx, 0.0, 0.0, 0.0, i_yy, 0.0, 0.0, 0.0, i_zz);
+}
+
 }
