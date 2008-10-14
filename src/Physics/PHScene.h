@@ -11,6 +11,7 @@
 #include <Foundation/Scene.h>
 #include <Physics/PHEngine.h>
 #include <Physics/PHSolid.h>
+#include <Physics/PHIK.h>
 
 namespace Spr {;
 
@@ -50,6 +51,7 @@ protected:
 	PHPenaltyEngine*		penaltyEngine;
 	PHConstraintEngine*		constraintEngine;
 	PHGravityEngine*		gravityEngine;
+	PHIKEngine*				ikEngine;
 	PHRays					rays;
 public:
 	

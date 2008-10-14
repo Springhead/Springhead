@@ -39,6 +39,9 @@ void PHScene::Init(){
 	constraintEngine->numIter = numIteration;
 	engines.Add(constraintEngine);
 
+	ikEngine = DBG_NEW PHIKEngine;
+	engines.Add(ikEngine);
+
 	count = 0;
 }
 void PHScene::BeforeGetDesc() const{

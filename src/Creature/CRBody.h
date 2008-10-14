@@ -36,11 +36,13 @@ protected:
 	/// 所属するSdk
 	PHSdkIf*		phSdk;
 
+	#if 0
 	/// 位置・姿勢の制御点の集合
 	std::vector<CRIKControlIf*> postureControls;
 
 	/// 位置・姿勢の制御対象の集合
 	std::vector<CRIKMovableIf*> postureMovables;
+	#endif
 
 	
 	/** @brief 関節を作る
@@ -88,6 +90,7 @@ public:
 	*/
 	virtual PHJointIf*			GetJoint(int i);
 
+	#if 0
 	/** @brief IK用の制御点を追加する
 	*/
 	virtual CRIKControlIf*		CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
@@ -99,6 +102,7 @@ public:
 	/** @brief IKを計算する
 	*/
 	virtual void				CalcIK();
+	#endif
 
 	/** @brief ボディの重心座標を得る
 	*/
