@@ -32,7 +32,7 @@ struct PHSolidPairSt{
 
 /// 剛体の組
 template<class TShapePair, class TEngine>
-class PHSolidPair : public PHSolidPairSt, public UTRefCount{
+class PHSolidPair : public PHSolidPairSt{
 public:
 	typedef TShapePair shapepair_type;
 	typedef TEngine engine_type;
@@ -137,12 +137,15 @@ public:
 		return found;
 	}
 
-	void SetState(const PHSolidPairSt& s){
+	void SetSt(const PHSolidPairSt& s){
 		*((PHSolidPairSt*)this) = s;
 	}
-	void GetState(PHSolidPairSt& s){
+	void GetSt(PHSolidPairSt& s){
 		s = *this;
 	}
+
+	///指定したsolidを返す
+	PHSolidIf* GetSolid(int i){return solid[i]->Cast();}
 };
 
 ///	PHContactDetectorの状態
@@ -280,7 +283,7 @@ public:
 		for(int j=1; j<solidPairs.width(); ++j){
 			for(int i=0; i<j; ++i){
 				sp = solidPairs.item(i, j);
-				sp->GetState(solidStates[solidPos]);				
+				sp->GetSt(solidStates[solidPos]);				
 				++solidPos;
 				for(int r = 0; r < sp->shapePairs.height(); ++r){
 					for(int c = 0; c < sp->shapePairs.width(); ++c){
@@ -305,7 +308,7 @@ public:
 		for(int j=1; j<solidPairs.width(); ++j){
 			for(int i=0; i<j; ++i){
 				sp = solidPairs.item(i, j);
-				sp->SetState(solidStates[solidPos]);
+				sp->SetSt(solidStates[solidPos]);
 				++solidPos;
 				for(int r = 0; r < sp->shapePairs.height(); ++r){
 					for(int c = 0; c < sp->shapePairs.width(); ++c){
@@ -464,7 +467,7 @@ public:
 				}
 				cur.insert(it->index);
 #ifdef _DEBUG
-				if (nMaxOverlapObject < cur.size()) nMaxOverlapObject = cur.size();
+				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
 #endif
 			}else{
 				cur.erase(it->index);			//	終端なので削除．
@@ -540,7 +543,7 @@ public:
 				}
 				cur.insert(it->index);
 #ifdef _DEBUG
-				if (nMaxOverlapObject < cur.size()) nMaxOverlapObject = cur.size();
+				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
 #endif
 			}else{
 				cur.erase(it->index);			//	終端なので削除．
