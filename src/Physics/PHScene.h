@@ -103,6 +103,9 @@ public:
 	int						NRays() const;
 	PHRayIf*				GetRay(int i);
 
+	PHIKNodeIf*				CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc = PHIKNodeDesc());
+	PHIKControlPointIf*		CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc = PHIKControlPointDesc());
+
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}
 	/// 積分ステップを設定する

@@ -17,19 +17,28 @@
 
 namespace Spr{;
 
+class PHIKNode;
+class PHIKControlPoint;
+
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // IKエンジン
 // 
 class PHIKEngine : public PHEngine{
+public:
 	SPR_OBJECTDEF_NOIF(PHIKEngine);
 
 	std::vector<PHIKNodeIf*>			nodes;
 	std::vector<PHIKControlPointIf*>	controlpoints;
 
-public:
+	size_t numIter;
+	PHIKEngine():numIter(25){ }
+
 	int GetPriority() const {return SGBP_INVERSEKINEMATICS;}
 	void Step();
 	void Clear();
+
+	PHIKNode* CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc);
+	PHIKControlPoint* CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc);
 	virtual bool AddChildObject(ObjectIf* o);
 };
 
@@ -77,7 +86,13 @@ public:
 	/** @brief コンストラクタ
 	*/
 	PHIKNode(const PHIKNodeDesc& desc){
-		this->bias = desc.bias;
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		this->bias = ((PHIKNodeDesc*)d)->bias;
 	}
 
 	/** @brief IKの計算準備をする
@@ -139,9 +154,16 @@ public:
 
 	/** @brief コンストラクタ
 	*/
-	PHIKSolid(const PHIKSolidDesc& desc) : PHIKNode(desc){
+	PHIKSolid(const PHIKSolidDesc& desc) {
 		SetNDOF(3);
-		this->solid = desc.solid;
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		PHIKNode::SetDesc(d);
+		this->solid = ((PHIKSolidDesc*)d)->solid;
 	}
 
 	/** @brief 指定した制御点との間のヤコビアンを計算する
@@ -163,9 +185,16 @@ public:
 
 	/** @brief コンストラクタ
 	*/
-	PHIKBallJoint(const PHIKBallJointDesc& desc) : PHIKNode(desc){
+	PHIKBallJoint(const PHIKBallJointDesc& desc) {
 		SetNDOF(3);
-		this->joint = desc.joint;
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		PHIKNode::SetDesc(d);
+		this->joint = ((PHIKBallJointDesc*)d)->joint;
 	}
 
 	/** @brief 指定した制御点との間のヤコビアンを計算する
@@ -187,9 +216,16 @@ public:
 
 	/** @brief コンストラクタ
 	*/
-	PHIKHingeJoint(const PHIKHingeJointDesc& desc) : PHIKNode(desc){
+	PHIKHingeJoint(const PHIKHingeJointDesc& desc) {
 		SetNDOF(1);
-		this->joint = desc.joint;
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		PHIKNode::SetDesc(d);
+		this->joint = ((PHIKHingeJointDesc*)d)->joint;
 	}
 
 	/** @brief 計算結果に従って制御対象を動かす
@@ -236,7 +272,13 @@ public:
 	/** @brief コンストラクタ
 	*/
 	PHIKControlPoint(const PHIKControlPointDesc& desc){
-		this->solid = desc.solid;
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		this->solid = ((PHIKPosCtlDesc*)d)->solid;
 	}
 
 	/** @brief 目標地点を設定する
@@ -281,8 +323,15 @@ public:
 
 	/** @brief コンストラクタ
 	*/
-	PHIKPosCtl(const PHIKPosCtlDesc& desc) : PHIKControlPoint(desc) {
-		this->pos = desc.pos;
+	PHIKPosCtl(const PHIKPosCtlDesc& desc) {
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		PHIKControlPoint::SetDesc(d);
+		this->pos = ((PHIKPosCtlDesc*)d)->pos;
 	}
 
 	/** @brief 暫定目標地点を取得する
@@ -300,7 +349,14 @@ public:
 
 	/** @brief コンストラクタ
 	*/
-	PHIKOriCtl(const PHIKOriCtlDesc& desc) : PHIKControlPoint(desc) {
+	PHIKOriCtl(const PHIKOriCtlDesc& desc) {
+		SetDesc(&desc);
+	}
+
+	/** @brief デスクリプタを設定する
+	*/
+	virtual void SetDesc(const void* d){
+		PHIKControlPoint::SetDesc(d);
 	}
 
 	/** @brief 暫定目標地点を取得する
