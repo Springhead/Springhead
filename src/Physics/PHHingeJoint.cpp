@@ -49,40 +49,52 @@ void PHHingeJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 
-	if(mode == MODE_VELOCITY){
-		db.w().z = -desiredVelocity;
-	} else if(mode == MODE_TRAJECTORY_TRACKING){
+	if(mode == MODE_TRAJECTORY_TRACKING){
 		preQd		= qd;
 		qd			= origin;
 		preQdDot	= desiredVelocity;
 		qdDot		= (qd - preQd) / GetScene()->GetTimeStep();
 		qdWDot		= (qdDot - preQdDot) / GetScene()->GetTimeStep();
-	} else if(onLower || onUpper){
-		dA.w()[2] = 0;
-		db.w()[2] = (position[0] - origin) * dtinv * engine->velCorrectionRate;
 	}
-	if(spring != 0.0 || damper != 0.0){
-		double diff;
-		diff = GetPosition() - origin;
+	if(mode == MODE_VELOCITY){
+		db.w().z = -desiredVelocity;
+	}else if(spring != 0.0 || damper != 0.0){
+		if (onUpper&& GetVelocity()>0){
+		}else if (onLower && GetVelocity()<0){
+		}else{
+			double diff;
+			diff = GetPosition() - origin;
+			double springLim = 0;
+			double damper_ = damper;
+			double diffLim = 0;
+			if (onUpper){
+				diffLim = GetPosition() - upper;
+				springLim = 10000;
+				damper_   = 100;
+			} else if (onLower){
+				diffLim = GetPosition() - lower;
+				springLim = 10000;
+				damper_   = 100;
+			}
 
-		// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
-		//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
-		while(diff >  M_PI) diff -= 2 * M_PI;
-		while(diff < -M_PI) diff += 2 * M_PI;
+			// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
+			//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
+			while(diff >  M_PI) diff -= 2 * M_PI;
+			while(diff < -M_PI) diff += 2 * M_PI;
 
-		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
-		dA.w().z = tmp * dtinv;
-		//軌道追従制御のLCPは以下のようになる
-		if(mode == MODE_TRAJECTORY_TRACKING){
-			db.w().z = - tmp * ( spring * (qd - GetPosition())
-					 + (solid[0]->GetInertia()[2][2] * qdWDot)
-					 + (solid[1]->GetInertia()[2][2] * -qdWDot)
-					 + (damper * -qdDot));
+			double tmp = 1.0 / (damper_ + spring * GetScene()->GetTimeStep());
+			dA.w().z = tmp * dtinv;
+			//軌道追従制御のLCPは以下のようになる
+			if(mode == MODE_TRAJECTORY_TRACKING){
+				db.w().z = - tmp * (spring * (qd - GetPosition())
+						 + (solid[0]->GetInertia()[2][2] * qdWDot)
+						 + (solid[1]->GetInertia()[2][2] * -qdWDot)
+						 + (damper_ * -qdDot));
+			}
+			// 普通の位置制御の場合
+			else db.w().z = tmp * (spring*diff + springLim*diffLim);
 		}
-		// 普通の位置制御の場合
-		else db.w().z = tmp * spring * diff;
 	}
-
 }
 
 void PHHingeJoint::CompError(){

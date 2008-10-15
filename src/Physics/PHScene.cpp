@@ -40,7 +40,7 @@ void PHScene::Init(){
 	engines.Add(constraintEngine);
 
 	ikEngine = DBG_NEW PHIKEngine;
-	ikEngine->numIter = 10;
+	ikEngine->numIter = 25;
 	engines.Add(ikEngine);
 
 	count = 0;
