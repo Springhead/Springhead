@@ -209,9 +209,9 @@ void PHBallJoint::CompBias(){
 		****/
 		if(mode == MODE_TRAJECTORY_TRACKING){
 			db.w() = tmp * ( (spring * -propV)
-						  + (solid[0]->GetInertia() * qdWDot)
-						  - (solid[1]->GetInertia() * qdWDot)
-						  + (damper * -qdDot) );
+						  - (solid[0]->GetInertia() * qdWDot)
+						  + (solid[1]->GetInertia() * qdWDot)
+						  - (damper * qdDot) );
 		}
 		/**/
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
