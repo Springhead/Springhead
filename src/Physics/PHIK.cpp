@@ -23,8 +23,7 @@ void PHIKEngine::Step(){
 			nodes[i]->PrepareSolve();
 		}
 
-		size_t niterIK = 25;
-		for(size_t n=0; n<niterIK; n++){
+		for(size_t n=0; n<numIter; n++){
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->ProceedSolve();
 			}
@@ -48,6 +47,35 @@ void PHIKEngine::Clear(){
 		delete ct;
 	}
 	controlpoints.clear();
+}
+
+PHIKNode* PHIKEngine::CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc){
+	PHIKNode* iknode = NULL;
+	if (ii == PHIKSolidIf::GetIfInfoStatic()) {
+		iknode = DBG_NEW PHIKSolid();
+		DCAST(PHIKSolidIf,iknode)->SetDesc(&desc);
+	} else if (ii == PHIKBallJointIf::GetIfInfoStatic()) {
+		iknode = DBG_NEW PHIKBallJoint();
+		DCAST(PHIKBallJointIf,iknode)->SetDesc(&desc);
+	} else if (ii == PHIKHingeJointIf::GetIfInfoStatic()) {
+		iknode = DBG_NEW PHIKHingeJoint();
+		DCAST(PHIKHingeJointIf,iknode)->SetDesc(&desc);
+	}
+	AddChildObject(iknode->Cast());
+	return iknode;
+}
+
+PHIKControlPoint* PHIKEngine::CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc){
+	PHIKControlPoint* ikcontrolpoint = NULL;
+	if (ii == PHIKPosCtlIf::GetIfInfoStatic()) {
+		ikcontrolpoint = DBG_NEW PHIKPosCtl();
+		DCAST(PHIKPosCtlIf,ikcontrolpoint)->SetDesc(&desc);
+	} else if (ii == PHIKOriCtlIf::GetIfInfoStatic()) {
+		ikcontrolpoint = DBG_NEW PHIKOriCtl();
+		DCAST(PHIKOriCtlIf,ikcontrolpoint)->SetDesc(&desc);
+	}
+	AddChildObject(ikcontrolpoint->Cast());
+	return ikcontrolpoint;
 }
 
 bool PHIKEngine::AddChildObject(ObjectIf* o){

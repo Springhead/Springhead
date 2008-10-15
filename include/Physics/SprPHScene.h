@@ -18,6 +18,7 @@
 #include <Foundation/SprScene.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHJoint.h>
+#include <Physics/SprPHIK.h>
 
 namespace Spr{;
 
@@ -254,6 +255,21 @@ public:
 	/** @brief 光線を取得する
 	 */
 	PHRayIf* GetRay(int i);
+
+	/** @brief IKのノード（IKに用いることのできる可動物(=関節など)）を作成する．
+	 */
+	PHIKNodeIf* CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc = PHIKNodeDesc());
+	template <class T> PHIKNodeIf* CreateIKNode(const T& desc){
+		return CreateIKNode(T::GetIfInfo(), desc);
+	}
+
+	/** @brief IKの制御点を作成する．
+	 */
+	PHIKControlPointIf*	 CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc = PHIKControlPointDesc());
+	template <class T> PHIKControlPointIf* CreateIKControlPoint(const T& desc){
+		return CreateIKControlPoint(T::GetIfInfo(), desc);
+	}
+
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ

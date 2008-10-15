@@ -189,6 +189,8 @@
 	Spr::PHRayIf* CreateRay(const Spr::PHRayDesc& desc){	return	base::CreateRay(desc);}	\
 	int NRays(){	return	base::NRays();}	\
 	Spr::PHRayIf* GetRay(int i){	return	base::GetRay(i);}	\
+	Spr::PHIKNodeIf* CreateIKNode(const IfInfo* ii, const Spr::PHIKNodeDesc& desc){	return	base::CreateIKNode(ii, desc);}	\
+	Spr::PHIKControlPointIf* CreateIKControlPoint(const IfInfo* ii, const Spr::PHIKControlPointDesc& desc){	return	base::CreateIKControlPoint(ii, desc);}	\
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\
 	unsigned int GetCount()const{	return	base::GetCount();}	\

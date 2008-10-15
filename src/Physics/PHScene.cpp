@@ -40,6 +40,7 @@ void PHScene::Init(){
 	engines.Add(constraintEngine);
 
 	ikEngine = DBG_NEW PHIKEngine;
+	ikEngine->numIter = 10;
 	engines.Add(ikEngine);
 
 	count = 0;
@@ -146,6 +147,18 @@ PHRayIf* PHScene::GetRay(int i){
 void PHScene::Clear(){
 	engines.Clear();
 	Init();
+}
+
+PHIKNodeIf* PHScene::CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc){
+	PHIKNode* node = ikEngine->CreateIKNode(ii, desc)->Cast();
+	node->SetScene(Cast());
+	return node->Cast();
+}
+
+PHIKControlPointIf* PHScene::CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc){
+	PHIKControlPoint* controlpoint = ikEngine->CreateIKControlPoint(ii, desc)->Cast();
+	controlpoint->SetScene(Cast());
+	return controlpoint->Cast();
 }
 
 void PHScene::SetTimeStep(double dt){
