@@ -173,7 +173,6 @@ void PHBallJoint::CompBias(){
 		propV = Jcinv * propV;
 	}
 	if(mode == MODE_VELOCITY){
-		// この辺の目標軌道関数の微分とかの計算ってこれでいいんだろうか･･･？
 		db.w()		= -Jcinv * desiredVelocity;
 	}
 	else if(mode == MODE_TRAJECTORY_TRACKING){
@@ -187,7 +186,7 @@ void PHBallJoint::CompBias(){
 		preQd			= qd;
 		qd				= goal;
 		preQdDot		= vjrel.w();
-		qdDot			= desiredVelocity; 
+		qdDot			= desiredVelocity; //< desiredVelocityが不定なのがいけない．
 		DSTR << "ideal, real : " << vjrel.w() << ", " << desiredVelocity << std::endl;
 		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
@@ -210,11 +209,10 @@ void PHBallJoint::CompBias(){
 		(Xjrel.q.Inv().RotationHalfが現在の関節の向きへの回転ベクトル)
 		****/
 		if(mode == MODE_TRAJECTORY_TRACKING){
-			Quaterniond propQ = qd * Xjrel.q.Inv();
-			db.w() = tmp * ( (spring * -(propQ.RotationHalf()))
-						  /*+ (solid[0]->GetInertia() * qdWDot)
-						  - (solid[1]->GetInertia() * qdWDot)*/
-						  + (damper * -qdDot) );
+			db.w() = -tmp * ( (spring * propV) 
+						  + (solid[0]->GetInertia() * qdWDot)
+						  - (solid[1]->GetInertia() * qdWDot));
+						  /*+ (damper * -qdDot) );*/
 		}
 		/**/
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
