@@ -186,8 +186,7 @@ void PHBallJoint::CompBias(){
 		preQd			= qd;
 		qd				= goal;
 		preQdDot		= vjrel.w();
-		qdDot			= desiredVelocity; //< desiredVelocityが不定なのがいけない．
-		DSTR << "ideal, real : " << vjrel.w() << ", " << desiredVelocity << std::endl;
+		qdDot			= desiredVelocity;
 		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
 	}
 	// バネダンパが入っていたら構築する
