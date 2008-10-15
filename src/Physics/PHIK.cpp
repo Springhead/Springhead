@@ -10,6 +10,7 @@
 #pragma hdrstop
 #endif
 #include "PHIK.h"
+#include "Physics/PHJoint.h"
 
 using namespace std;
 namespace Spr{
