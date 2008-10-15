@@ -58,68 +58,6 @@ PHJointIf* CRBody::GetJoint(int i){
 	return joints[i];
 }
 
-#if 0
-CRIKControlIf* CRBody::CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc){
-	if (ii == CRIKControlPosIf::GetIfInfoStatic()) {
-		postureControls.push_back((DBG_NEW CRIKControlPos((const CRIKControlPosDesc&)desc))->Cast());
-		DCAST(CRIKControl,postureControls.back())->SetNumber(postureControls.size()-1);
-		return postureControls.back();
-
-	} else if (ii == CRIKControlOriIf::GetIfInfoStatic()) {
-		postureControls.push_back((DBG_NEW CRIKControlOri((const CRIKControlOriDesc&)desc))->Cast());
-		DCAST(CRIKControl,postureControls.back())->SetNumber(postureControls.size()-1);
-		return postureControls.back();
-
-	} else {
-		assert(0 && "想定されてない型");
-		return NULL;
-	}
-}
-
-CRIKMovableIf* CRBody::CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc){
-	if (ii == CRIKMovableSolidPosIf::GetIfInfoStatic()) {
-		postureMovables.push_back((DBG_NEW CRIKMovableSolidPos((const CRIKMovableSolidPosDesc&)desc))->Cast());
-		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
-		return postureMovables.back();
-
-	} else if (ii == CRIKMovableSolidOriIf::GetIfInfoStatic()) {
-		postureMovables.push_back((DBG_NEW CRIKMovableSolidOri((const CRIKMovableSolidOriDesc&)desc))->Cast());
-		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
-		return postureMovables.back();
-
-	} else if (ii == CRIKMovableBallJointOriIf::GetIfInfoStatic()) {
-		postureMovables.push_back((DBG_NEW CRIKMovableBallJointOri((const CRIKMovableBallJointOriDesc&)desc))->Cast());
-		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
-		return postureMovables.back();
-
-	} else if (ii == CRIKMovable3HingeJointOriIf::GetIfInfoStatic()) {
-		postureMovables.push_back((DBG_NEW CRIKMovable3HingeJointOri((const CRIKMovable3HingeJointOriDesc&)desc))->Cast());
-		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
-		return postureMovables.back();
-
-	} else if (ii == CRIKMovableHingeJointOriIf::GetIfInfoStatic()) {
-		postureMovables.push_back((DBG_NEW CRIKMovableHingeJointOri((const CRIKMovableHingeJointOriDesc&)desc))->Cast());
-		DCAST(CRIKMovable,postureMovables.back())->SetNumber(postureMovables.size()-1);
-		return postureMovables.back();
-
-	} else {
-		assert(0 && "想定されてない型");
-		return NULL;
-	}
-}
-
-void CRBody::CalcIK(){
-	for(unsigned int i=0; i<postureMovables.size(); ++i){
-		postureMovables[i]->PrepareSolve();
-	}
-	int niterIK = 25;
-	for(int n=0; n<niterIK; n++){
-		for(unsigned int i=0; i<postureMovables.size(); ++i){
-			postureMovables[i]->ProceedSolve();
-		}
-	}
-}
-#endif
 
 Vec3d CRBody::GetCenterOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計
