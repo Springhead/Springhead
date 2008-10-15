@@ -209,10 +209,10 @@ void PHBallJoint::CompBias(){
 		(Xjrel.q.Inv().RotationHalfが現在の関節の向きへの回転ベクトル)
 		****/
 		if(mode == MODE_TRAJECTORY_TRACKING){
-			db.w() = -tmp * ( (spring * propV) 
+			db.w() = tmp * ( (spring * -propV)
 						  + (solid[0]->GetInertia() * qdWDot)
-						  - (solid[1]->GetInertia() * qdWDot));
-						  /*+ (damper * -qdDot) );*/
+						  - (solid[1]->GetInertia() * qdWDot)
+						  + (damper * -qdDot) );
 		}
 		/**/
 		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
