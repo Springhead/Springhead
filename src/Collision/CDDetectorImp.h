@@ -27,7 +27,7 @@ struct CDShapePairSt{
 	unsigned lastContactCount;	///<	ÅŒã‚ÉÚG‚µ‚½Žž
 	CDShapePairSt():lastContactCount(-2), depth(0){}
 };
-class CDShapePair: public CDShapePairSt, public UTRefCount{
+class CDShapePair: public CDShapePairSt, public Object{
 public:
 	enum State{
 		NONE,		//	ÚG‚È‚µ

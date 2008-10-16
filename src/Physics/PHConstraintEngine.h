@@ -31,11 +31,15 @@ public:
 
 /// Solid‚Ì‘g
 class PHConstraintEngine;
+
 class PHSolidPairForLCP : public PHSolidPair<PHShapePairForLCP, PHConstraintEngine>, public Object{
 public:
 	SPR_OBJECTDEF(PHSolidPairForLCP);
 	virtual void OnDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
+	Vec3d GetClosestPoint(int i, int j){
+		return shapePairs.item(i, j)->closestPoint[0];
+	}
 };
 
 struct PHConstraintsSt{
