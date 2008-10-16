@@ -165,6 +165,8 @@
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc){	return	base::CreateSolid(desc);}	\
 	int NSolids()const{	return	base::NSolids();}	\
 	PHSolidIf** GetSolids(){	return	base::GetSolids();}	\
+	int NSolidPairs()const{	return	base::NSolidPairs();}	\
+	PHSolidPairForLCPIf* GetSolidPair(int i, int j){	return	base::GetSolidPair(i, j);}	\
 	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(lhs, rhs, mode);}	\
 	void SetContactMode(PHSolidIf** group, size_t length, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(group, length, mode);}	\
 	void SetContactMode(PHSolidIf* solid, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(solid, mode);}	\
@@ -269,5 +271,6 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSolidPairForLCPIf(base)	\
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
-	Vec3d GetClosestPoint(int i, int j){	return	base::GetClosestPoint(i, j);}	\
+	int GetContactState(int i, int j){	return	base::GetContactState(i, j);}	\
+	Vec3d GetCommonPoint(int i, int j){	return	base::GetCommonPoint(i, j);}	\
 

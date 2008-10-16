@@ -89,6 +89,9 @@ public:
 	PHConstraintIf*			GetJoint(int i);
 	int						NContacts() const;
 	PHContactPointIf*		GetContact(int i);
+	int						NSolidPairs() const;
+	PHSolidPairForLCPIf*	GetSolidPair(int i, int j);
+//	UTCombination<UTRef<PHSolidPairForLCPIf>>	GetSolidPair();
 	PHRootNodeIf*			CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 	int						NRootNodes() const;
 	PHRootNodeIf*			GetRootNode(int i);
