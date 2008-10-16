@@ -44,6 +44,7 @@ public:
 		solids.resize(CRFourLegsTinyAnimalBodyDesc::SO_NSOLIDS);
 		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
 	
+		InitBody();
 		InitLegs();
 		InitContact();
 

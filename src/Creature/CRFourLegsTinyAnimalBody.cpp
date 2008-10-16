@@ -179,11 +179,11 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 // --- --- ---
 void CRFourLegsTinyAnimalBody::InitLegs(){
 	if(! noLegs){
-		CreateFrontLegs(LEFTPART);
+		CreateFrontLegs(RIGHTPART);
 		if(! onlyOneLeg){
-			CreateFrontLegs(RIGHTPART);
-			CreateRearLegs(LEFTPART);
+			CreateFrontLegs(LEFTPART);
 			CreateRearLegs(RIGHTPART);
+			CreateRearLegs(LEFTPART);
 		}
 	}
 }
