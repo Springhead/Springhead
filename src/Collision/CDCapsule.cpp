@@ -30,7 +30,7 @@ bool CDCapsule::IsInside(const Vec3f& p){
 		   (p.x*p.x + p.y*p.y < radius * radius && -0.5f*length < p.z && p.z < 0.5f*length);
 }
 float CDCapsule::CalcVolume(){
-	return  4.0f/3.0f * M_PI * radius * radius * radius + 
+	return  4.0f/3.0f * (float)M_PI * radius * radius * radius + 
 			(float)M_PI * radius * radius * length;
 }
 	

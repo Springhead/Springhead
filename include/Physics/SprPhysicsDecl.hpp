@@ -269,4 +269,5 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSolidPairForLCPIf(base)	\
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
+	Vec3d GetClosestPoint(int i, int j){	return	base::GetClosestPoint(i, j);}	\
 

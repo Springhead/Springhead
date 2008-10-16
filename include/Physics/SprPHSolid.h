@@ -261,7 +261,7 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 	SPR_IFDEF(PHSolidPairForLCP);
 	
 	PHSolidIf* GetSolid(int i);
-	
+	Vec3d GetClosestPoint(int i, int j);
 };
 
 //@}
