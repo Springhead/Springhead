@@ -120,6 +120,16 @@ public:
 	 */
 	PHSolidIf** GetSolids();
 
+	/** @brief SolidPairの数を取得する
+		@return SolidPairの数
+	*/
+	int NSolidPairs()const;
+
+	/** @brief SolidPairを取得する
+		@return 
+	*/
+	PHSolidPairForLCPIf* GetSolidPair(int i, int j);
+
 	/** @brief 指定した剛体同士の接触のモードを設定する
 		@param lhs 組の片方の剛体へのポインタ
 		@param rhs 組のもう片方の剛体へのポインタ

@@ -88,6 +88,14 @@ PHContactPointIf* PHScene::GetContact(int i){
 	return DCAST(PHContactPointIf, constraintEngine->points[i]);
 }
 
+int	PHScene::NSolidPairs()const{
+	return (int)constraintEngine->solidPairs.size();
+}
+
+PHSolidPairForLCPIf* PHScene::GetSolidPair(int i, int j){
+	return constraintEngine->solidPairs.item(i, j)->Cast();
+}
+
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
 	PHRootNode* node = constraintEngine->CreateRootNode(desc, root->Cast());
 	node->SetScene(Cast());
