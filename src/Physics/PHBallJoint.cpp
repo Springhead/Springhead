@@ -161,11 +161,11 @@ void PHBallJoint::CompBias(){
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
 	db.v() *= engine->velCorrectionRate;
 	// 位置制御の時の計算
-	Quaterniond propQ = goal * Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
 	/*******************************************************************************************************
 	足りない角度の差を回転軸ベクトルに変換．propV(田崎さんの論文でいうq[t])に対してdb.w()を計算している.
 	自然長が0[rad]で，propV[rad]伸びた時に対しての角度バネを構成していると考えればいい．
 	********************************************************************************************************/
+	Quaterniond propQ = goal * Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
 	Vec3d propV = propQ.RotationHalf();			
 
 	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
@@ -175,20 +175,6 @@ void PHBallJoint::CompBias(){
 	if(mode == MODE_VELOCITY){
 		db.w()		= -Jcinv * desiredVelocity;
 	}
-	else if(mode == MODE_TRAJECTORY_TRACKING){
-		/**
-			3次元空間上の回転を表すための回転軸ベクトルpとその回転角度θ=|p|を定義すると
-			座標ベクトルuであらわされる点Aを回転軸p中心に角度θだけ回転した点A'の座標ベクトルu'は
-			以下の計算で求める事が出来る．
-			u'	= sinθ u x p + cosθ(u-(u・p)p)+(u・p)p
-				= sinθ u x p + cosθu + (1-cosθ)(u・p)p
-		*/
-		preQd			= qd;
-		qd				= goal;
-		preQdDot		= vjrel.w();
-		qdDot			= desiredVelocity;
-		qdWDot			= (qdDot - preQdDot) / GetScene()->GetTimeStep();
-	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
@@ -197,25 +183,19 @@ void PHBallJoint::CompBias(){
 		のAの内，バネダンパを構成するのは，BallJointの場合は回転の三軸についてなので，
 		SpatialVector dA.w()にtmp = (D + K⊿t)^{-1}を入れている．
 		dtinvをさらにかけるのは,pptなど表記とは違い，A=JM^{-1}J^T ⊿tのうち，
-		プログラム中で計算しているのは，A = JM^{-1}J^Tだけで，あとから
-		(A + dA)⊿tをしているため
+		プログラム中で計算しているのは，A = JM^{-1}J^Tだけ．
+		あとから(A + dA)⊿tをしているため
 		******************************************************************************/
 		dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
 		/****
-		軌道追従制御のdb，慣性行列の扱いは相対加速度に対して，親剛体への反作用方向と子剛体への作用方向にかかる
-		拘束は回転方向なので，慣性行列のうちの慣性モーメントだけ引っ張ってくる
-		(Xjrel.q.Inv().RotationHalfが現在の関節の向きへの回転ベクトル)
+		田崎さんの論文の式25のdbに相当する．
+		位置制御のみであれば，以下の式の1行目のみ．
+		軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
 		****/
-		if(mode == MODE_TRAJECTORY_TRACKING){
-			db.w() = tmp * ( (spring * -propV)
-						  - (solid[0]->GetInertia() * qdWDot)
-						  + (solid[1]->GetInertia() * qdWDot)
-						  - (damper * qdDot) );
-		}
-		/**/
-		// 位置制御のbの追加部分，ちゃんと動くけどマイナスが付くのはbが小さくなる方向に動かしたいから
-		else db.w() = -tmp * spring * propV;
+		db.w() = tmp * ((spring * -propV)
+					  - (damper * desiredVelocity)
+					  +  offset);
 	}
 	else{
 		//dA.w().clear();

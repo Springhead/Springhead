@@ -110,10 +110,14 @@
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
 	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
+	void SetGoal(Quaterniond g){	base::SetGoal(g);}	\
+	Quaterniond GetGoal(){	return	base::GetGoal();}	\
 	void SetDesiredVelocity(Vec3d q){	base::SetDesiredVelocity(q);}	\
 	Vec3d GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
 	void SetTrajectoryVelocity(Vec3d q){	base::SetTrajectoryVelocity(q);}	\
 	Vec3d GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
+	void SetOffset(Vec3d ofst){	base::SetOffset(ofst);}	\
+	Vec3d GetOffset(){	return	base::GetOffset();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
