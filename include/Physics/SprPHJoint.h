@@ -420,6 +420,14 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	double GetTorqueMin();
 
+	/** @brief 目標の向きを設定する
+	*/
+	void SetGoal(Quaterniond g);
+	
+	/** @brief 目標の向きを取得する
+	*/
+	Quaterniond GetGoal();
+
 	/** @brief 速度制御に切り替え，速度を設定する
 	*/
 	void  SetDesiredVelocity(Vec3d q);
@@ -436,6 +444,14 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	Vec3d GetTrajectoryVelocity();
 
+	/** @brief 定数項を設定する	
+	*/
+	void SetOffset(Vec3d ofst);
+
+	/**	@brief 定数項を取得する
+	*/
+	Vec3d GetOffset();
+
 };
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{
@@ -446,7 +462,8 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
 	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
 	Quaterniond		goal;			 ///< バネダンパの制御目標
-	Vec3d			desiredVelocity; ///< 目標速度(x軸，y軸，z軸：クォータニオンで書くと落ちる)
+	Vec3d			desiredVelocity; ///< 目標となる回転ベクトル
+	Vec3d			offset;			 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
 	Vec3d			torque;			 ///< モータトルク
 	double			fMax;			 ///< 関節にかけられる最大の力
 	double			fMin;			 ///< 関節にかけられる最小の力
