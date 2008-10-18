@@ -71,7 +71,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	solids[SO_BODY]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_BODY]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_BODY]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
-
+	solids[SO_BODY]->SetName("soWaist");
 	solids[SO_BODY]->SetDynamical(false);
 }
 
@@ -180,11 +180,11 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 void CRFourLegsTinyAnimalBody::InitLegs(){
 	if(! noLegs){
 		CreateFrontLegs(RIGHTPART);
-		if(! onlyOneLeg){
+		/*if(! onlyOneLeg){
 			CreateFrontLegs(LEFTPART);
 			CreateRearLegs(RIGHTPART);
 			CreateRearLegs(LEFTPART);
-		}
+		}*/
 	}
 }
 
