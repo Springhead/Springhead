@@ -82,8 +82,8 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	con[0] = con[1] = con[2] = true;				
 	con[3] = con[4] = con[5] = false;
 	
+	// 可動域のチェック
 	// 現在のSocketとPlugとの間の角度を計算
-
 	nowTheta[0]	= acos(dot(limitDir, Jc.Ez()));			///< Swing角の計算	
 	
 	Quaterniond qSwing;
@@ -134,10 +134,17 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 	   anyLimit = true;
 	else anyLimit = false;
 
+
 	// 上の計算を踏まえて毎回、回転軸の拘束条件の更新をする
-	con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
-	con[4] = spring != 0.0	    || damper != 0.0;
-	con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
+	if(mode == MODE_POSITION){
+		con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
+		con[4] = spring != 0.0	    || damper != 0.0;
+		con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
+	} else {
+		con[3] = onLimit[0].onUpper || onLimit[0].onLower;
+		con[4] = false;
+		con[5] = onLimit[1].onUpper || onLimit[1].onLower;
+	}
 }
 
 // ヤコビアンの角速度部分を座標変換してSwingTwist角の時間変化率へのヤコビアンにする

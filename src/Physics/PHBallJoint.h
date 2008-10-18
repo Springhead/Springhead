@@ -97,9 +97,9 @@ public:
 	virtual double		GetTorqueMin(){return fMin;}
 	virtual void		SetDesiredVelocity(Vec3d v){mode = MODE_VELOCITY; desiredVelocity = v;}
 	virtual Vec3d		GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void		SetTrajectoryVelocity(Vec3d v) {desiredVelocity = v;}
+	virtual void		SetTrajectoryVelocity(Vec3d v) {mode = MODE_POSITION; desiredVelocity = v;}
 	virtual Vec3d		GetTrajectoryVelocity() const {return desiredVelocity;}
-	virtual void		SetGoal(Quaterniond g){goal = g;}
+	virtual void		SetGoal(Quaterniond g){mode = MODE_POSITION; goal = g;}
 	virtual Quaterniond GetGoal(){return goal;}
 	virtual void		SetOffset(Vec3d ofst){offset = ofst;}
 	virtual Vec3d		GetOffset(){return offset;}

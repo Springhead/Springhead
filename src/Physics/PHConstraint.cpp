@@ -25,6 +25,7 @@ PHConstraint::PHConstraint(){
 	bInactive[0] = true;
 	bInactive[1] = true;
 	bArticulated = false;
+	mode = MODE_TORQUE;
 }
 
 PHSceneIf* PHConstraint::GetScene() const{
@@ -195,8 +196,16 @@ void PHConstraint::SetupLCP(){
 	// ABAの場合はここまで
 	if(bArticulated)return;
 
-	if(mode == MODE_TORQUE)
+	if(mode == MODE_TORQUE){
 		AddMotorTorque();
+		SpatialVector ft;
+		for(int i=0; i<6; ++i){
+			if (!constr[i]) ft[i]=f[i];
+		}
+		for(int i=0; i<2; ++i){
+			solid[i]->dv += T[i].trans() * ft;
+		}
+	}
 
 	// LCPの座標の取り方が特殊な関節はヤコビアンに座標変換をかける
 	ModifyJacobian();

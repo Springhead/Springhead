@@ -66,11 +66,11 @@ public:
 	virtual void	GetRange(double& l, double& u) const {l = lower, u = upper;}
 	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; desiredVelocity = v;}
 	virtual double	GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void	SetTrajectoryVelocity(double v){mode = MODE_TRAJECTORY_TRACKING; desiredVelocity = v;}
+	virtual void	SetTrajectoryVelocity(double v){mode = MODE_POSITION; desiredVelocity = v;}
 	virtual double  GetTrajectoryVelocity(){return desiredVelocity;}
 	virtual void	SetSpring(double K){spring = K;}
 	virtual double	GetSpring() const {return spring;}
-	virtual void	SetSpringOrigin(double org){origin = org;}
+	virtual void	SetSpringOrigin(double org){mode = MODE_POSITION; origin = org;}
 	virtual double	GetSpringOrigin() const {return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper() const {return damper;}
