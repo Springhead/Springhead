@@ -49,13 +49,13 @@ void PHHingeJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 
-	if(mode == MODE_TRAJECTORY_TRACKING){
-		preQd		= qd;
-		qd			= origin;
-		preQdDot	= desiredVelocity;
-		qdDot		= (qd - preQd) / GetScene()->GetTimeStep();
-		qdWDot		= (qdDot - preQdDot) / GetScene()->GetTimeStep();
-	}
+	//if(mode == MODE_TRAJECTORY_TRACKING){
+	//	preQd		= qd;
+	//	qd			= origin;
+	//	preQdDot	= desiredVelocity;
+	//	qdDot		= (qd - preQd) / GetScene()->GetTimeStep();
+	//	qdWDot		= (qdDot - preQdDot) / GetScene()->GetTimeStep();
+	//}
 	if(mode == MODE_VELOCITY){
 		db.w().z = -desiredVelocity;
 	}else if(spring != 0.0 || damper != 0.0){
@@ -85,14 +85,14 @@ void PHHingeJoint::CompBias(){
 			double tmp = 1.0 / (damper_ + spring * GetScene()->GetTimeStep());
 			dA.w().z = tmp * dtinv;
 			//‹O“¹’Ç]§Œä‚ÌLCP‚ÍˆÈ‰º‚Ì‚æ‚¤‚É‚È‚é
-			if(mode == MODE_TRAJECTORY_TRACKING){
+			/*if(mode == MODE_TRAJECTORY_TRACKING){
 				db.w().z = - tmp * (spring * (qd - GetPosition())
 						 + (solid[0]->GetInertia()[2][2] * qdWDot)
 						 + (solid[1]->GetInertia()[2][2] * -qdWDot)
 						 + (damper_ * -qdDot));
-			}
+			}*/
 			// •’Ê‚ÌˆÊ’u§Œä‚Ìê‡
-			else db.w().z = tmp * (spring*diff + springLim*diffLim);
+			db.w().z = tmp * (spring*diff + springLim*diffLim);
 		}
 	}
 }
