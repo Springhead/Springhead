@@ -10,8 +10,9 @@
 #pragma once
 
 namespace Spr{;
-/**	CPUクロックを利用した正確なタイマー	
-	東大舘研の梶本さんが作られた PreciseTimer.h を改変しました．	*/
+
+/** Precise timer using CPU clock
+    Modified from PreciseTimer.h written by Kajimoto in Tachi Lab. at Univ. of Tokyo. */
 
 union UTLargeInteger{
 	struct {
@@ -29,15 +30,16 @@ private:
 	bool startFlag;
 public:
 	UTPreciseTimer();
-	void Init(int period = 100);	///<	カウンタの初期化
-	void WaitUS(int time);			///<	μs単位で待つ
-	int CountUS();					///<	前回からの経過時間をμs単位で計測
-	void CountAndWaitUS(int time);	///<	前回からの経過時間をμs単位で計測し，全体としてus単位で待つ（一定ループ生成用）
-	//ストップウォッチ機能	
-	unsigned long Start();					///<	計測開始
-	unsigned long Stop();					///<	計測停止
-	unsigned long Clear();					///<	クリア
-	static unsigned long CPUFrequency(){	///<	CPUの周波数を返す．
+	void Init(int period = 100);	///< カウンタの初期化
+	void WaitUS(int time);			///< us単位で待つ
+	int CountUS();					///< 前回からの経過時間をus単位で計測
+	void CountAndWaitUS(int time);	///< 前回からの経過時間をus単位で計測し，全体としてus単位で待つ（一定ループ生成用）
+	
+	/// ストップウォッチ機能
+	unsigned long Start();	///< 計測開始
+	unsigned long Stop();	///< 計測停止
+	unsigned long Clear();	///< クリア
+	static unsigned long CPUFrequency(){	///< CPUの周波数を返す
 		return freq;
 	}
 };
