@@ -86,7 +86,7 @@ public:
 	virtual void		SetTwistRange(Vec2d  range)	{ limitTwist = range; }			///< ツイスト角の範囲を設定する関数
 	virtual void		GetTwistRange(Vec2d& range) { range = limitTwist; }			///< ツイスト角の範囲を得る関数
 
-	virtual void		SetMotorTorque(const Vec3d& t){torque = t;}					///< モータのトルクを設定する関数
+	virtual void		SetMotorTorque(const Vec3d& t){mode = MODE_TORQUE; torque = t;}					///< モータのトルクを設定する関数
 	virtual Vec3d		GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
 	virtual Vec3d		GetAngle(){return position;}								///< 角度を返す関数
 	virtual Quaterniond GetPosition(){return Xjrel.q;}								///< 角度のクォータニオンを返す関数

@@ -180,9 +180,9 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 void CRFourLegsTinyAnimalBody::InitLegs(){
 	if(! noLegs){
 		CreateFrontLegs(RIGHTPART);
-		/*if(! onlyOneLeg){
+		/*if(! onlyOneLeg){*/
 			CreateFrontLegs(LEFTPART);
-			CreateRearLegs(RIGHTPART);
+			/*CreateRearLegs(RIGHTPART);
 			CreateRearLegs(LEFTPART);
 		}*/
 	}
