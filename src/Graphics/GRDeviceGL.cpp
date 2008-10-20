@@ -301,8 +301,8 @@ void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid)
 		x=sin(t);
 		y=cos(t);
 		glNormal3f(x, y, 0.0);
-		glVertex3f(radius * x, radius * y,  height/2);
 		glVertex3f(radius * x, radius * y, -height/2);
+		glVertex3f(radius * x, radius * y,  height/2);
 		t += step;
 	}
 	glEnd();
@@ -398,11 +398,26 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 							font.face.c_str());				//	タイプフェイス
 		
 		assert(hFont);
-		HDC hDC = GetDC(0);
+		HDC hDC = wglGetCurrentDC();
 		// 0から256のコードの文字を、DisplayListのbase番目から登録.
 		// wglUseFontBitmaps()関数、使用して、生成したフォントをディスプレイリストに割当てる.
 		hOldFont = (HFONT)SelectObject(hDC, hFont);			
-		wglUseFontBitmaps(hDC, 0, range, fontBase);		
+		bool b = wglUseFontBitmaps(hDC, 0, range, fontBase);
+		if (!b){
+			DWORD e = GetLastError();
+			char* lpMsgBuf;
+			FormatMessage(
+		        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+		        FORMAT_MESSAGE_FROM_SYSTEM,
+		        NULL,
+				e,
+		        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+		        (LPSTR)&lpMsgBuf,
+		        0, NULL );
+			DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
+			DSTR << lpMsgBuf << std::endl;
+			LocalFree(lpMsgBuf);
+		}
 		SelectObject(hDC, hOldFont);
 		DeleteObject(hFont);		
 		// fontListへ登録
@@ -477,7 +492,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 							font.face.c_str());				//	タイプフェイス
 		
 		assert(hFont);
-		HDC hDC = GetDC(0);
+		HDC hDC = wglGetCurrentDC();
 		// 0から256のコードの文字を、DisplayListのbase番目から登録.
 		// wglUseFontBitmaps()関数、使用して、生成したフォントをディスプレイリストに割当てる.
 		hOldFont = (HFONT)SelectObject(hDC, hFont);			

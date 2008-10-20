@@ -173,6 +173,8 @@ struct CDBoxDesc: public CDShapeDesc{
 	CDBoxDesc():CDShapeDesc(){
 		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
 	}
+	CDBoxDesc(Vec3d bs):CDShapeDesc(),boxsize(bs){
+	}
 	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
 };	
 
