@@ -55,7 +55,7 @@ public:
 	/// ƒƒbƒVƒ…‚Ì•`‰æ
 	void DrawMesh(CDConvexMeshIf* mesh, bool solid);
 	/// À•W²‚Ì•`‰æ
-	//void DrawAxis(bool solid);
+	void DrawAxis(bool solid);
 	void DrawCoordinateAxis(bool solid);
 	/// ü•ª‚Ì•`‰æ
 	void DrawLine(const Vec3d& p0, const Vec3d& p1);

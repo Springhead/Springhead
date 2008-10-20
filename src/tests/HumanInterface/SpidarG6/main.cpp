@@ -20,13 +20,23 @@ int __cdecl main(){
 	sdk->Print(DSTR);
 	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic());
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	int t = 0;
 	while(!kbhit()){
+		t += 1;
 		spg->Update(0.001f);
 #if 1
 		Posef pose = spg->GetPose();
-		std::cout << std::setprecision(2) << pose << std::endl;
+//		std::cout << std::setprecision(2) << pose << std::endl;
+		Vec3f f;
+		if (pose.py < 0){
+			float a = 1000*pose.py;
+			float m = 0.00000000001;
+			if (a > m) a = m;
+			f.y = (t%5-2) * a;
+		}
+		spg->SetForce(f,Vec3f());
 #endif
-#if 1
+#if 0
 		for(size_t i=0; i<spg->NMotor(); ++i){
 			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();
 		}

@@ -21,6 +21,18 @@ bool GRMaterialDesc::Is3D() const{
 	return boost::regex_match(texname, Tex3DRegex);
 }
 
+bool GRFont::operator < (GRFont& f){
+	if (face < f.face) return true;
+	if (height < f.height) return true;
+	if (color < f.color) return true;
+	return false;
+}
+GRFont::GRFont(int h, const char* f){
+	height=h; width=0;
+	weight = 400; 
+	face=f ? f : "";
+	color=0xffffffff; bItalic=false;
+}
 
 //----------------------------------------------------------------------------
 //	GRRender

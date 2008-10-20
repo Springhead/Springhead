@@ -273,7 +273,6 @@ void GRDebugRender::DrawMesh(CDConvexMeshIf* mesh, bool solid){
 	}
 }
 
-/*
 void GRDebugRender::DrawAxis(bool solid){
 	this->PushModelMatrix();
 	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f));
@@ -282,33 +281,35 @@ void GRDebugRender::DrawAxis(bool solid){
 	DrawCone(0.2f, 0.3f, 8, solid);
 	this->PopModelMatrix();
 }
-*/
 
 void GRDebugRender::DrawCoordinateAxis(bool solid){
 	SetVertexFormat(GRVertexElement::vfP3f);
 	PushModelMatrix();
 	MultModelMatrix(Affinef::Scale(scaleAxis, scaleAxis, scaleAxis));
 	// シンプルに線分三本
+#if 1
 	float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
 	size_t idx[6] = {0, 1, 0, 2, 0, 3};
 	DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 6);
 	PopModelMatrix();
-	/*
+#elif 0
 	// 太さのある矢印
 	// z
+	SetMaterialSample(GRDebugRenderIf::BLUE);
 	DrawAxis(solid);
 	// x
-	this->PushModelMatrix();
-	this->MultModelMatrix(Affinef::Rot(0.5f*M_PI, 'y'));
+	SetMaterialSample(GRDebugRenderIf::RED);
+	PushModelMatrix();
+	MultModelMatrix(Affinef::Rot(0.5f*M_PI, 'y'));
 	DrawAxis(solid);
-	this->PopModelMatrix();
+	PopModelMatrix();
 	// y
-	this->PushModelMatrix();
-	this->MultModelMatrix(Affinef::Rot(-0.5f*M_PI, 'x'));
+	SetMaterialSample(GRDebugRenderIf::GREEN);
+	PushModelMatrix();
+	MultModelMatrix(Affinef::Rot(-0.5f*M_PI, 'x'));
 	DrawAxis(solid);
-	this->PopModelMatrix();	
-	*/
-	/*
+	PopModelMatrix();	
+#else
 	// 箱で表現
 	double length=0.5, width=length/10.0;
 	this->PushModelMatrix();
@@ -320,7 +321,7 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	this->PushModelMatrix();
 	glTranslatef(0, 0, length/2); glScalef(width, width, length); glutSolidCube(1.0);
 	this->PopModelMatrix();
-	*/
+#endif
 }
 
 void GRDebugRender::DrawLine(const Vec3d& p0, const Vec3d& p1){
