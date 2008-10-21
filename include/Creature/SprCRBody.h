@@ -759,7 +759,7 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 	bool noLegs;
 	bool noHead;
 	bool onlyOneLeg;
-
+	bool hingeDebug;
 	CRFourLegsTinyAnimalBodyDesc();
 };
 
