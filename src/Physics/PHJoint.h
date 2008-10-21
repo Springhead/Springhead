@@ -74,6 +74,7 @@ public:
 	virtual double	GetSpringOrigin() const {return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper() const {return damper;}
+	virtual void	SetOffsetForce(double dat){mode = MODE_POSITION; offsetForce = dat;}
 	virtual void	SetTorqueMax(double max){fMax = max; fMaxDt = fMax * GetScene()->GetTimeStep(); }
 	virtual double	GetTorqueMax(){return fMax;}
 	virtual void	SetTorqueMin(double min){fMin = min; fMinDt = fMin * GetScene()->GetTimeStep(); }

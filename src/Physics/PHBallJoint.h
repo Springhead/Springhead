@@ -101,8 +101,8 @@ public:
 	virtual Vec3d		GetTrajectoryVelocity() const {return desiredVelocity;}
 	virtual void		SetGoal(Quaterniond g){mode = MODE_POSITION; goal = g;}
 	virtual Quaterniond GetGoal(){return goal;}
-	virtual void		SetOffset(Vec3d ofst){offset = ofst;}
-	virtual Vec3d		GetOffset(){return offset;}
+	virtual void		SetOffsetForce(Vec3d ofst){offset = ofst;}
+	virtual Vec3d		GetOffsetForce(){return offset;}
 
 	/// 仮想関数のオーバライド
 	virtual void	AddMotorTorque(){f.w() = torque * GetScene()->GetTimeStep();}	///< トルクを加える関数
