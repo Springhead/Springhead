@@ -41,6 +41,7 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double  origin;			///< バネ原点
 	double  damper;			///< ダンパ係数
 	double	desiredVelocity;///< 目標速度
+	double	offsetForce;	///< 慣性項を計算して入れる場合に使用．
 	double	torque;			///< モータトルク
 	double	fMax;			///< 関節にかけられる最大の力
 	double	fMin;			///< 関節にかけられる最小の力
@@ -259,6 +260,11 @@ struct PHJoint1DIf : public PHJointIf{
 	 */
 	double	GetVelocity();
 	
+	/** @brief 定数項を代入する
+		@param 代入する値
+	*/
+	void	SetOffsetForce(double dat);
+
 	/** @brief 関節の出すことができる最大トルク(N)を設定する
 	*/
 	void SetTorqueMax(double max);
@@ -446,11 +452,11 @@ struct PHBallJointIf : public PHJointIf{
 
 	/** @brief 定数項を設定する	
 	*/
-	void SetOffset(Vec3d ofst);
+	void SetOffsetForce(Vec3d ofst);
 
 	/**	@brief 定数項を取得する
 	*/
-	Vec3d GetOffset();
+	Vec3d GetOffsetForce();
 
 };
 /// ボールジョイントのディスクリプタ

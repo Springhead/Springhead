@@ -79,6 +79,7 @@
 	double GetDamper(){	return	base::GetDamper();}	\
 	double GetPosition(){	return	base::GetPosition();}	\
 	double GetVelocity(){	return	base::GetVelocity();}	\
+	void SetOffsetForce(double dat){	base::SetOffsetForce(dat);}	\
 	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
@@ -116,8 +117,8 @@
 	Vec3d GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
 	void SetTrajectoryVelocity(Vec3d q){	base::SetTrajectoryVelocity(q);}	\
 	Vec3d GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
-	void SetOffset(Vec3d ofst){	base::SetOffset(ofst);}	\
-	Vec3d GetOffset(){	return	base::GetOffset();}	\
+	void SetOffsetForce(Vec3d ofst){	base::SetOffsetForce(ofst);}	\
+	Vec3d GetOffsetForce(){	return	base::GetOffsetForce();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\

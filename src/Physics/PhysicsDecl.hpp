@@ -131,6 +131,7 @@ protected:\
 	double	origin;	\
 	double	damper;	\
 	double	desiredVelocity;	\
+	double	offsetForce;	\
 	double	torque;	\
 	double	fMax;	\
 	double	fMin;	\
@@ -143,6 +144,7 @@ public:\
 		origin = ((PHJoint1DDesc*)ptr)->origin;	\
 		damper = ((PHJoint1DDesc*)ptr)->damper;	\
 		desiredVelocity = ((PHJoint1DDesc*)ptr)->desiredVelocity;	\
+		offsetForce = ((PHJoint1DDesc*)ptr)->offsetForce;	\
 		torque = ((PHJoint1DDesc*)ptr)->torque;	\
 		fMax = ((PHJoint1DDesc*)ptr)->fMax;	\
 		fMin = ((PHJoint1DDesc*)ptr)->fMin;	\
@@ -157,6 +159,7 @@ public:\
 		((PHJoint1DDesc*)ptr)->origin = origin;	\
 		((PHJoint1DDesc*)ptr)->damper = damper;	\
 		((PHJoint1DDesc*)ptr)->desiredVelocity = desiredVelocity;	\
+		((PHJoint1DDesc*)ptr)->offsetForce = offsetForce;	\
 		((PHJoint1DDesc*)ptr)->torque = torque;	\
 		((PHJoint1DDesc*)ptr)->fMax = fMax;	\
 		((PHJoint1DDesc*)ptr)->fMin = fMin;	\
