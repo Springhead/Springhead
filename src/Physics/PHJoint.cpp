@@ -22,7 +22,7 @@ PHJoint::PHJoint(){
 
 //----------------------------------------------------------------------------
 // PHJoint1D
-PHJoint1DDesc::PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){
+PHJoint1DDesc::PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), offsetForce(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){
 }
 
 PHJoint1D::PHJoint1D(){	
