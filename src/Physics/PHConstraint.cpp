@@ -196,17 +196,6 @@ void PHConstraint::SetupLCP(){
 	// ABAの場合はここまで
 	if(bArticulated)return;
 
-	if(mode == MODE_TORQUE){
-		AddMotorTorque();
-		SpatialVector ft;
-		for(int i=0; i<6; ++i){
-			if (!constr[i]) ft[i]=f[i];
-		}
-		for(int i=0; i<2; ++i){
-			solid[i]->dv += T[i].trans() * ft;
-		}
-	}
-
 	// LCPの座標の取り方が特殊な関節はヤコビアンに座標変換をかける
 	ModifyJacobian();
 
@@ -216,6 +205,19 @@ void PHConstraint::SetupLCP(){
 	
 	// LCPのA行列の対角成分を計算
 	CompResponseMatrix();
+
+	if(mode == MODE_TORQUE){
+		AddMotorTorque();
+		SpatialVector ft;
+		for(int i=0; i<6; ++i){
+			if (!constr[i]) ft[i]=f[i];
+		}
+		for(int i=0; i<2; ++i){
+			if(solid[i]->dynamical) {	
+				solid[i]->dv += T[i].trans() * ft;
+			}
+		}
+	}
 
 	// LCPのbベクトル == プログラム中のvjrel,論文中のw[t], バネ・ダンパはdbで補正する
 	b = J[0] * solid[0]->v + J[1] * solid[1]->v;
@@ -327,6 +329,15 @@ void PHConstraint::IterateCorrectionLCP(){
 		}
 		F[j] = Fnew[j];
 	}
+}
+
+void PHConstraint::GetRelativeVelocity(Vec3d &v, Vec3d &w){
+	for(int i = 0; i < 2; i++){
+		solid[i]->UpdateCacheLCP(GetScene()->GetTimeStep());
+	}
+	UpdateState();
+	v = vjrel.v(); 
+	w = vjrel.w();
 }
 
 }

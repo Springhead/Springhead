@@ -111,7 +111,7 @@ public:
 	virtual Vec3d		 GetRelativePoseR(){UpdateState();return Xjrel.r;}
 	virtual Quaterniond	 GetRelativePoseQ(){UpdateState();return Xjrel.q;}
 	virtual Quaterniond  GetAbsolutePoseQ(){UpdateState();return Xjrel.q * X[0].q;}	//< Socket‚ð‚Â‚¯‚éˆÊ’u‚à‹C‚É‚·‚é‚×‚«‚©H
-	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w){UpdateState();v = vjrel.v(); w = vjrel.w();}
+	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);//{UpdateCacheLCP(GetScene()->GetTimeStep()); UpdateState();v = vjrel.v(); w = vjrel.w();}
 	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t){_f = f.v() / GetScene()->GetTimeStep(); _t = f.w() / GetScene()->GetTimeStep();}
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
