@@ -1298,6 +1298,7 @@ protected:\
 	bool	noLegs;	\
 	bool	noHead;	\
 	bool	onlyOneLeg;	\
+	bool	hingeDebug;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRFourLegsTinyAnimalBodyDesc*)ptr);	\
@@ -1321,6 +1322,7 @@ public:\
 		noLegs = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->noLegs;	\
 		noHead = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->noHead;	\
 		onlyOneLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->onlyOneLeg;	\
+		hingeDebug = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->hingeDebug;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -1346,6 +1348,7 @@ public:\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->noLegs = noLegs;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->noHead = noHead;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->onlyOneLeg = onlyOneLeg;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->hingeDebug = hingeDebug;	\
 		return true;	\
 	}\
 

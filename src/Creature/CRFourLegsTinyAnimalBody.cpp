@@ -18,9 +18,9 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 		
 	jointOrder = SOCKET_PARENT;
 
-	bodyBreadth   = 1.2;
-	bodyHeight    = 2.0;
-	bodyThickness = 0.3;
+	bodyBreadth   = 0.5;
+	bodyHeight    = 0.8;
+	bodyThickness = 0.6;
 
 	frontLegsBreadth    = 0.1;
 	frontLegsHeight		= 1.0;
@@ -42,7 +42,7 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	noLegs = false;
 	noHead = false;
 	onlyOneLeg = false;
-
+	hingeDebug = false;
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -76,20 +76,37 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 }
 
 void CRFourLegsTinyAnimalBody::CreateHead(){
-	CDSphereDesc	sphereDesc;
 	PHSolidDesc		solidDesc;
-	PHBallJointDesc	ballDesc;
-
+	
 	// Solid
 	solidDesc.mass				= 0.1;
 	solids[SO_HEAD]				= phScene->CreateSolid(solidDesc);
-	sphereDesc.radius			= 0.3;
-	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 	solids[SO_HEAD]->SetName("soHead");
-	ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
-	ballDesc.spring				= 100;
-	ballDesc.damper				= 50;
-	joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
+
+	if(hingeDebug){
+		PHHingeJointDesc hingeDesc;
+		CDBoxDesc boxDesc;
+		Vec3d size = Vec3d(0.5, 1.5, 0.7);
+		boxDesc.boxsize = size;
+		solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
+		hingeDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight/2, 0.0);
+		hingeDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(90), 'y');
+		hingeDesc.posePlug.Pos()	= Vec3f(0.0, -size.y / 2, 0.0);
+		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(90), 'y');
+		hingeDesc.spring				= 100;
+		hingeDesc.damper				= 50;
+		joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], hingeDesc);
+	}
+	else{
+		CDSphereDesc	sphereDesc;
+		PHBallJointDesc	ballDesc;
+		sphereDesc.radius			= 0.3;
+		solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
+		ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
+		ballDesc.spring				= 100;
+		ballDesc.damper				= 50;
+		joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
+	}
 	joints[JO_BODY_HEAD]->SetName("joNeck");
 	phScene->SetContactMode(solids[SO_BODY], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
 }
