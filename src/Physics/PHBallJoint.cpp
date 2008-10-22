@@ -202,7 +202,7 @@ void PHBallJoint::CompBias(){
 		****/
 		db.w() = tmp * ((spring * -propV)
 					  - (damper * desiredVelocity)
-					  +  offset);
+					  -  offset);
 	}
 	else{
 		//dA.w().clear();
