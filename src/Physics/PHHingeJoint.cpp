@@ -80,7 +80,7 @@ void PHHingeJoint::CompBias(){
 			//ãOìπí«è]êßå‰ÇÃLCPÇÕà»â∫ÇÃÇÊÇ§Ç…Ç»ÇÈ
 			db.w().z = tmp * ((spring * diff + springLim*diffLim)
 						 - (damper_ * desiredVelocity) 
-						 - offsetForce );
+						 + offsetForce );
 			}
 	}
 }
