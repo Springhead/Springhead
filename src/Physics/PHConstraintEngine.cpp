@@ -201,6 +201,8 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 	PHJoint* joint = NULL;
 	if(ii == PHHingeJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHHingeJoint();
+	else if(ii == PH3ElementHingeJointIf::GetIfInfoStatic())
+		joint = DBG_NEW PH3ElementHingeJoint();
 	else if(ii == PHSliderJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHSliderJoint();
 	else if(ii == PHBallJointIf::GetIfInfoStatic())

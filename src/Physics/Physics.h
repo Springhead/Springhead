@@ -20,6 +20,7 @@
 #include "PHContactPoint.h"
 #include "PHJoint.h"
 #include "PHHingeJoint.h"
+#include "PH3ElementHingeJoint.h"
 #include "PHSliderJoint.h"
 #include "PHBallJoint.h"
 #include "PH3ElementBallJoint.h"

@@ -285,6 +285,22 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PH3ElementHingeJointDesc \
+protected:\
+	double	secondDamper;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHHingeJoint::SetDesc((PHHingeJointDesc*)(PH3ElementHingeJointDesc*)ptr);	\
+		secondDamper = ((PH3ElementHingeJointDesc*)ptr)->secondDamper;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHHingeJoint::GetDesc((PHHingeJointDesc*)(PH3ElementHingeJointDesc*)ptr);	\
+		((PH3ElementHingeJointDesc*)ptr)->secondDamper = secondDamper;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHSliderJointDesc \
 protected:\
 public:\
