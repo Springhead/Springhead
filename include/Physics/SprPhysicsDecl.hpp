@@ -87,6 +87,10 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementHingeJointIf(base)	\
+	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
+	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSliderJointIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHPathIf(base)	\

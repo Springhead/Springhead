@@ -293,6 +293,31 @@ struct PHHingeJointDesc : public PHJoint1DDesc{
 	PHHingeJointDesc(){}
 };
 
+// ３要素モデルのヒンジジョイントのインタフェース
+struct PH3ElementHingeJointIf : public PHHingeJointIf{
+	
+	SPR_IFDEF(PH3ElementHingeJoint);
+
+	/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	double  GetSecondDamper();
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param input 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(double input);
+};
+
+// ３要素モデルのボールジョイントのディスクリプタ
+struct PH3ElementHingeJointDesc : public PHHingeJointDesc{
+	SPR_DESCDEF(PH3ElementHingeJoint);
+
+	double secondDamper;		// 二個目のダンパ係数
+
+	PH3ElementHingeJointDesc();	// ディスクリプタのコンストラクタ
+};
+
 /// スライダのインタフェース
 struct PHSliderJointIf : public PHJoint1DIf{
 	SPR_IFDEF(PHSliderJoint);
