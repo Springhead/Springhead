@@ -75,7 +75,7 @@ void GRDeviceGL::BeginScene(){
 }
 /// レンダリングの終了後に呼ぶ関数
 void GRDeviceGL::EndScene(){
-	
+	glFinish();
 }
 ///	カレントの視点行列をafvで置き換える
 void GRDeviceGL::SetViewMatrix(const Affinef& afv){   
