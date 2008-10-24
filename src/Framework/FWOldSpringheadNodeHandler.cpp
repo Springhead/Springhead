@@ -124,6 +124,12 @@ public:
 		GRFrame* fr = DCAST(GRFrame, fc->objects.Top());
 		if (fr){
 			fr->transform = d.matrix;
+			//	左手系→右手系への変換
+			fr->transform.ExZ() *= -1;
+			fr->transform.EyZ() *= -1;
+			fr->transform.EzX() *= -1;
+			fr->transform.EzY() *= -1;
+			fr->transform.PosZ() *= -1;
 		}else{
 			fc->ErrorMessage(NULL, NULL, "FrameTransformMatrix must be inside of Frame node.");
 		}
@@ -241,6 +247,9 @@ public:
 		}
 		if (mesh){
 			mesh->positions = d.vertices;	// 頂点座標
+			for (unsigned i=0; i<mesh->positions.size(); ++i){
+				mesh->positions[i].z *= -1;	//	左手系→右手系変換
+			}
 			for (int f=0; f < d.nFaces; ++f){		
 				if ((d.faces[f].nFaceVertexIndices == 3) || (d.faces[f].nFaceVertexIndices == 4)) {
 					mesh->originalFaceIds.push_back(f);
@@ -269,6 +278,9 @@ public:
 			if (normalData){
 				MeshNormals* normalDesc = (MeshNormals* )normalData->data;
 				mesh->normals = normalDesc->normals;
+				for (unsigned i=0; i<mesh->normals.size(); ++i){
+					mesh->normals[i].z *= -1;	//	左手系→右手系変換
+				}
 				for (int f=0; f < normalDesc->nFaceNormals; ++f){
 					for (int i=0; i < normalDesc->faceNormals[f].nFaceVertexIndices; ++i){
 						mesh->faceNormals.push_back(	// 法線インデックス
@@ -368,7 +380,9 @@ public:
 				Mesh& mesh = *(Mesh*)meshDataNode->data;
 				CDConvexMeshDesc cmd;
 				for(unsigned j=0; j< mesh.vertices.size(); ++j){
-					cmd.vertices.push_back(mesh.vertices[j]);
+					Vec3f v = mesh.vertices[j];
+					v.z *= -1;	//	左手系→右手系
+					cmd.vertices.push_back(v);
 				}
 				UTLoadedData* ldMat = meshes[i][0]->FindDescendant("PhysicalMaterial");
 				if (ldMat){	//	物理マテリアルのロード
