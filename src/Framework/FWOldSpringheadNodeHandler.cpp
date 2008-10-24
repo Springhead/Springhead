@@ -256,9 +256,9 @@ public:
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
-					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[2] );
-					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[1] );
 					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[0] );
+					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[1] );
+					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[2] );
 
 					if (d.faces[f].nFaceVertexIndices == 4){
 						mesh->originalFaceIds.push_back(f);
@@ -337,6 +337,12 @@ public:
 						mesh->skinWeights.back().weights.push_back(sw->weights[i]);
 					}
 					mesh->skinWeights.back().offset = sw->matrixOffset;
+					mesh->skinWeights.back().offset.ExZ()*=-1;
+					mesh->skinWeights.back().offset.EyZ()*=-1;
+					mesh->skinWeights.back().offset.EzX()*=-1;
+					mesh->skinWeights.back().offset.EzY()*=-1;
+					mesh->skinWeights.back().offset.PosZ()*=-1;
+
 					fc->links.push_back( DBG_NEW UTLinkTask(mesh->Cast(), 
 						sw->transformNodeName, mesh->GetNameManager()) );
 				}
@@ -453,6 +459,7 @@ public:
 	
 };
 
+
 // DirectXÇÃAnimationKeyÅD
 class FWNodeHandlerXAnimationKey: public UTLoadHandlerImp<AnimationKey>{
 public:
@@ -467,6 +474,31 @@ public:
 			key.keys.push_back(GRKey());
 			key.keys.back().time = d.keys[i].time;
 			key.keys.back().values = d.keys[i].tfkeys.values;
+		}
+		if (key.keyType == GRAnimationDesc::ROTATION){
+			for(unsigned i=0; i<d.keys.size(); ++i){
+				key.keys[i].values[0]*=-1;
+				key.keys[i].values[3]*=-1;
+/*				Quaternionf* q =  (Quaternionf*)&key.keys[i].values[0];
+				Matrix3f m;
+				q->ToMatrix(m);
+				m.ExZ() *= -1;
+				m.EyZ() *= -1;
+				m.EzX() *= -1;
+				m.EzY() *= -1;
+				q->FromMatrix(m);
+				*/
+			}
+		}else if(key.keyType == GRAnimationDesc::POSITION){
+			for(unsigned i=0; i<d.keys.size(); ++i) key.keys[i].values[2] *= -1;
+		}else if(key.keyType == GRAnimationDesc::MATRIX){
+			for(unsigned i=0; i<d.keys.size(); ++i){
+				key.keys[i].values[    2] *= -1;
+				key.keys[i].values[4  +2] *= -1;
+				key.keys[i].values[4*2  ] *= -1;
+				key.keys[i].values[4*2+1] *= -1;
+				key.keys[i].values[4*3+2] *= -1;
+			}
 		}
 	}
 };
