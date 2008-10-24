@@ -179,7 +179,7 @@ void CRFourLegsAnimalBody::CreateWaist(){
 	solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
 	solids[SO_WAIST]->SetInertia(CalcBoxInertia(boxDesc.boxsize, solidDesc.mass));
 
-	solids[SO_WAIST]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
+	//solids[SO_WAIST]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
 
 	//d—ÍØ‚é‚©
 	solids[SO_WAIST]->SetDynamical(dynamicalMode);
