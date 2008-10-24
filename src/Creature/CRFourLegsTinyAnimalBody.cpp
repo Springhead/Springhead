@@ -103,8 +103,8 @@ void CRFourLegsTinyAnimalBody::CreateHead(){
 		sphereDesc.radius			= 0.3;
 		solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 		ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
-		ballDesc.spring				= 100;
-		ballDesc.damper				= 50;
+		ballDesc.spring				= 500;
+		ballDesc.damper				= 200;
 		joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
 	}
 	joints[JO_BODY_HEAD]->SetName("joNeck");
@@ -197,11 +197,11 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 void CRFourLegsTinyAnimalBody::InitLegs(){
 	if(! noLegs){
 		CreateFrontLegs(RIGHTPART);
-		/*if(! onlyOneLeg){*/
+		if(! onlyOneLeg){
 			CreateFrontLegs(LEFTPART);
-			/*CreateRearLegs(RIGHTPART);
+			CreateRearLegs(RIGHTPART);
 			CreateRearLegs(LEFTPART);
-		}*/
+		}
 	}
 }
 
