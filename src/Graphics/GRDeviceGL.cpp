@@ -71,10 +71,11 @@ void GRDeviceGL::ClearBuffer(){
 /// レンダリングの開始前に呼ぶ関数
 void GRDeviceGL::BeginScene(){
   /// GLでレンダリングする場合、特に処理する必要なし
+	
 }
 /// レンダリングの終了後に呼ぶ関数
 void GRDeviceGL::EndScene(){
-
+	
 }
 ///	カレントの視点行列をafvで置き換える
 void GRDeviceGL::SetViewMatrix(const Affinef& afv){   
