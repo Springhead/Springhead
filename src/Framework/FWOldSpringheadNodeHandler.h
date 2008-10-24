@@ -92,6 +92,12 @@ struct MeshMaterialList{
 	std::vector<int> faceIndexes;
 };
 
+///	DirectXのMeshの頂点色．
+struct MeshVertexColors{
+	int nVertices;
+	std::vector<Vec4f> vertexColors;
+};
+
 /// DirectXのテクスチャファイル名（Materialの内部タグ)．
 struct TextureFilename{
 	std::string filename;
