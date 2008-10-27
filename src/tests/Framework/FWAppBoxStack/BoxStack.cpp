@@ -131,7 +131,20 @@ void BoxStack::DesignObject(){
 	soFloor->SetName("solidFloor");
 }
 
+bool ContactCheck(unsigned time){
+	bool check;
+
+	if(time == ctime.lastContactCount){
+		check = true;
+	}else{
+		check = false;
+	}
+
+	return check;
+}
+
 void BoxStack::MakeContactList(){
+	CDShapePairSt ctime;
 	int NSolids = GetSdk()->GetScene()->GetPHScene()->NSolids();	// シーンに存在する全剛体数
 	PHSolidPairForLCPIf* pair;										// 剛体のペアをいれる変数pairを作る
 	DSTR << "******************" << endl;

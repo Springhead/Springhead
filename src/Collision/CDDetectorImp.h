@@ -29,8 +29,8 @@ struct CDShapePairSt{
 };
 class CDShapePair: public CDShapePairSt, public Object{
 public:
-	enum State{
-		NONE,		//	接触なし
+	enum State{		//	接触があった場合だけ値が有効なフラグ。接触の有無は lastContactCountとscene.countを比較しないと分からない。
+		NONE,		//	接触していないにも関わらず、列挙された。
 		NEW,		//	前回接触なしで今回接触
 		CONTINUE,	//	前回も接触
 	} state;
