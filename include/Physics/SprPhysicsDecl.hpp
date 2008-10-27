@@ -282,4 +282,5 @@
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int GetContactState(int i, int j){	return	base::GetContactState(i, j);}	\
 	Vec3d GetCommonPoint(int i, int j){	return	base::GetCommonPoint(i, j);}	\
+	unsigned int GetLastContactCount(int i, int j){	return	base::GetLastContactCount(i, j);}	\
 

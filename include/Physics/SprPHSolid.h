@@ -263,6 +263,13 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 	PHSolidIf* GetSolid(int i);
 	int	GetContactState(int i, int j);
 	Vec3d GetCommonPoint(int i, int j);
+
+	/** @brief 最後に接触したときのカウントを取得する
+		@param i,j:Shapeの番号．
+		ただしscene.countと比較する際に一定のズレがあるので注意.
+	*/
+	unsigned GetLastContactCount(int i, int j);
+	//double GetDimension(int i, int j);
 };
 
 //@}

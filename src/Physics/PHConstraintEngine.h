@@ -38,6 +38,7 @@ public:
 	virtual void OnDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 	int	GetContactState(int i, int j){return shapePairs.item(i, j)->state;}
+	unsigned GetLastContactCount(int i, int j){return shapePairs.item(i, j)->lastContactCount;}
 	Vec3d GetCommonPoint(int i, int j){
 		return shapePairs.item(i, j)->commonPoint;
 	}
