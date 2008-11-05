@@ -52,7 +52,7 @@ void PH3ElementBallJoint::CompBias(){
 	
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
-		if(secondDamper!=0.0){
+		/*if(secondDamper!=0.0){*/
 			//3要素モデル
 			double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
 			double D1 = damper;
@@ -78,29 +78,29 @@ void PH3ElementBallJoint::CompBias(){
 			//db.w() = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(xs[0].w()) ;
 			
 			xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
-		}else if(1){
-			//マクスウェルモデル
-			double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
-			double D1 = damper;
-			double D2 = secondDamper;
-			double K = spring;
-			double h = GetScene()->GetTimeStep();
-		
-			ws=vjrel;	//バネとダンパの並列部の速さ
-			tmp = (D1+K*h)/(D1*K*h);
-			xs[1] = D1/(D1+K*h)*(xs[0]+ws*h);	//バネとダンパの並列部の距離の更新		
-			dA.w()[0]= tmp * dtinv;;
-			dA.w()[1]= tmp * dtinv;;
-			dA.w()[2]= tmp * dtinv;;
+		//}else if(1){
+		//	//マクスウェルモデル
+		//	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
+		//	double D1 = damper;
+		//	double D2 = secondDamper;
+		//	double K = spring;
+		//	double h = GetScene()->GetTimeStep();
+		//
+		//	ws=vjrel;	//バネとダンパの並列部の速さ
+		//	tmp = (D1+K*h)/(D1*K*h);
+		//	xs[1] = D1/(D1+K*h)*(xs[0]+ws*h);	//バネとダンパの並列部の距離の更新		
+		//	dA.w()[0]= tmp * dtinv;;
+		//	dA.w()[1]= tmp * dtinv;;
+		//	dA.w()[2]= tmp * dtinv;;
 
-			db.w() = xs[0].w()/h ;
-			
-			xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+		//	db.w() = xs[0].w()/h ;
+		//	
+		//	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
 
-		}else{
-			//dA.w().clear();
-			db.w().clear();
-		}
+		//}else{
+		//	//dA.w().clear();
+		//	db.w().clear();
+		//}
 	}
 	
 	Vec3d vJc = Jc * vjrel.w();
