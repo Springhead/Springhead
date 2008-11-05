@@ -29,6 +29,8 @@ void FWObject::Sync(){
 			afd=afParent.inv()*af;
 			DCAST(GRFrame, grFrame)->SetTransform(afd);
 
+			
+
 		}else{
 			Affinef af;
 			phSolid->GetPose().ToAffine(af);

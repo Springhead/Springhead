@@ -54,7 +54,7 @@ void PH3ElementBallJoint::CompBias(){
 	if (spring != 0.0 || damper != 0.0){
 		if(secondDamper!=0.0){
 			//3要素モデル
-			double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
+			double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
 			double D1 = damper;
 			double D2 = secondDamper;
 			double K = spring;
@@ -62,12 +62,20 @@ void PH3ElementBallJoint::CompBias(){
 			
 			ws=vjrel;	//バネのダンパの並列部の速さ
 			tmp = D2-D1+K*h;
-			xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新		
-			dA.w()[0]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
-			dA.w()[1]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
-			dA.w()[2]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
+			tmp2=D2*K*h*(2*D1-D2)*(D2-D1)-tmp*D1*D2;
 
-			db.w() = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(xs[0].w()) ;
+			xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
+
+			dA.w()[0]= -tmp*(D2-D1)/tmp2 * dtinv;
+			dA.w()[1]= -tmp*(D2-D1)/tmp2 * dtinv;
+			dA.w()[2]= -tmp*(D2-D1)/tmp2 * dtinv;
+			db.w() = K*(2*D1-D2)*(D2-D1)/tmp2*(xs[0].w()) ;
+
+			//xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新		
+			//dA.w()[0]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
+			//dA.w()[1]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
+			//dA.w()[2]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
+			//db.w() = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(xs[0].w()) ;
 			
 			xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
 		}else if(1){
