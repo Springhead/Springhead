@@ -53,7 +53,6 @@
 	Quaternionf GetAbsolutePoseQ(){	return	base::GetAbsolutePoseQ();}	\
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w){	base::GetRelativeVelocity(v, w);}	\
 	void GetConstraintForce(Vec3d& f, Vec3d& t){	base::GetConstraintForce(f, t);}	\
-	void DisableTrajectoryVelocity(){	base::DisableTrajectoryVelocity();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
 	Spr::PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
@@ -61,6 +60,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHContactPointIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJointIf(base)	\
+	Spr::PHJointDesc::PHControlMode GetMode(){	return	base::GetMode();}	\
+	void SetMode(Spr::PHJointDesc::PHControlMode mode){	base::SetMode(mode);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJoint1DIf(base)	\
 	void SetRange(double lower, double upper){	base::SetRange(lower, upper);}	\

@@ -136,7 +136,7 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 
 
 	// 上の計算を踏まえて毎回、回転軸の拘束条件の更新をする
-	if(mode == MODE_POSITION){
+	if(mode == PHJointDesc::MODE_POSITION){
 		con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
 		con[4] = spring != 0.0	    || damper != 0.0;
 		con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
@@ -179,7 +179,7 @@ void PHBallJoint::CompBias(){
 	if (anyLimit){
 		propV = Jcinv * propV;
 	}
-	if(mode == MODE_VELOCITY){
+	if(mode == PHJointDesc::MODE_VELOCITY){
 		db.w()		= -Jcinv * desiredVelocity;
 	}
 	// バネダンパが入っていたら構築する

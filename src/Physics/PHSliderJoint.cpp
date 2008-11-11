@@ -34,7 +34,7 @@ void PHSliderJoint::CompBias(){
 		db.w() = Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv) + vjrel.w();
 		db *= engine->velCorrectionRate;
 	}
-	if(mode == MODE_VELOCITY){
+	if(mode == PHJointDesc::MODE_VELOCITY){
 		db.v().z = -desiredVelocity;
 	}
 	else if(spring != 0.0 || damper != 0.0){

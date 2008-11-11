@@ -123,6 +123,22 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHJointDesc \
+protected:\
+	enum Spr::PHJointDesc::PHControlMode	mode;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHConstraint::SetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
+		mode = ((PHJointDesc*)ptr)->mode;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHConstraint::GetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
+		((PHJointDesc*)ptr)->mode = mode;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHJoint1DDesc \
 protected:\
 	double	lower;	\
@@ -414,7 +430,7 @@ protected:\
 	double	damperOri;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		PHConstraint::SetDesc((PHConstraintDesc*)(PHSpringDesc*)ptr);	\
+		PHJoint::SetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
 		spring = ((PHSpringDesc*)ptr)->spring;	\
 		damper = ((PHSpringDesc*)ptr)->damper;	\
 		springOri = ((PHSpringDesc*)ptr)->springOri;	\
@@ -423,7 +439,7 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHConstraint::GetDesc((PHConstraintDesc*)(PHSpringDesc*)ptr);	\
+		PHJoint::GetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
 		((PHSpringDesc*)ptr)->spring = spring;	\
 		((PHSpringDesc*)ptr)->damper = damper;	\
 		((PHSpringDesc*)ptr)->springOri = springOri;	\

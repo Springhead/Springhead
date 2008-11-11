@@ -61,7 +61,8 @@ public:
 	PHRaycastHit* GetNearest();
 };
 
-typedef PHConstraintDesc PHJointDesc;
+//struct PHJointDesc: public PHConstraintDesc{
+//};
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{

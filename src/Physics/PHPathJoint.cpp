@@ -238,7 +238,7 @@ void PHPathJoint::CompBias(){
 	db *= engine->velCorrectionRate;
 
 	double diff;
-	if(mode == MODE_VELOCITY){
+	if(mode == PHJointDesc::MODE_VELOCITY){
 		db.w().z = -desiredVelocity;
 	}
 	else if(spring != 0.0 || damper != 0.0){
