@@ -22,7 +22,7 @@ class PHPenaltyEngine;
 class PHConstraintEngine;
 class PHGravityEngine;
 struct PHConstraintDesc;
-typedef PHConstraintDesc PHJointDesc;
+struct PHJointDesc;
 class PHScene;
 
 class SPR_DLL PHRay : public SceneObject, public PHRayDesc{

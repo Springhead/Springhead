@@ -49,9 +49,9 @@ void PHHingeJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 
-	if(mode == MODE_VELOCITY){
+	if(mode == PHJointDesc::MODE_VELOCITY){
 		db.w().z = -desiredVelocity;
-	}else if(spring != 0.0 || damper != 0.0){
+	}else if(mode == PHJointDesc::MODE_POSITION && (spring != 0.0 || damper != 0.0)){
 		if (onUpper&& GetVelocity()>0){
 		}else if (onLower && GetVelocity()<0){
 		}else{

@@ -86,7 +86,7 @@ public:
 	virtual void		SetTwistRange(Vec2d  range)	{ limitTwist = range; }			///< ツイスト角の範囲を設定する関数
 	virtual void		GetTwistRange(Vec2d& range) { range = limitTwist; }			///< ツイスト角の範囲を得る関数
 
-	virtual void		SetMotorTorque(const Vec3d& t){mode = MODE_TORQUE; torque = t;}					///< モータのトルクを設定する関数
+	virtual void		SetMotorTorque(const Vec3d& t){/*mode = MODE_TORQUE;*/ torque = t;}					///< モータのトルクを設定する関数
 	virtual Vec3d		GetMotorTorque(){return torque;}							///< モータのトルクを返す関数
 	virtual Vec3d		GetAngle(){return position;}								///< 角度を返す関数
 	virtual Quaterniond GetPosition(){return Xjrel.q;}								///< 角度のクォータニオンを返す関数
@@ -95,11 +95,11 @@ public:
 	virtual double		GetTorqueMax(){return fMax;}
 	virtual void		SetTorqueMin(double min){fMin = min; fMinDt = fMin*GetScene()->GetTimeStep(); }
 	virtual double		GetTorqueMin(){return fMin;}
-	virtual void		SetDesiredVelocity(Vec3d v){mode = MODE_VELOCITY; desiredVelocity = v;}
+	virtual void		SetDesiredVelocity(Vec3d v){/*mode = MODE_VELOCITY;*/ desiredVelocity = v;}
 	virtual Vec3d		GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void		SetTrajectoryVelocity(Vec3d v) {mode = MODE_POSITION; desiredVelocity = v;}
+	virtual void		SetTrajectoryVelocity(Vec3d v) {/*mode = MODE_POSITION;*/ desiredVelocity = v;}
 	virtual Vec3d		GetTrajectoryVelocity() const {return desiredVelocity;}
-	virtual void		SetGoal(Quaterniond g){mode = MODE_POSITION; goal = g;}
+	virtual void		SetGoal(Quaterniond g){/*mode = MODE_POSITION;*/ goal = g;}
 	virtual Quaterniond GetGoal(){return goal;}
 	virtual void		SetOffsetForce(Vec3d ofst){offset = ofst;}
 	virtual Vec3d		GetOffsetForce(){return offset;}

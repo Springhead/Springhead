@@ -26,11 +26,7 @@ public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
 
-	enum PHControlMode{
-		MODE_TORQUE=0,
-		MODE_POSITION,
-		MODE_VELOCITY,
-	} mode;
+
 	PHConstraintEngine* engine;
 
 	bool		bFeasible;				///< —¼•û‚Ì„‘Ì‚ªundynamical‚Èê‡true
@@ -116,7 +112,7 @@ public:
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
 	virtual ObjectIf*	 GetChildObject(size_t i);
-	virtual void		 DisableTrajectoryVelocity(){mode = MODE_POSITION;}
+	
 
 protected:
 	virtual void AfterSetDesc();

@@ -16,10 +16,10 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHJoint
-PHJoint::PHJoint(){
+PHJointDesc::PHJointDesc():mode(MODE_POSITION){
+};
+PHJoint::PHJoint(){	
 }
-
-
 //----------------------------------------------------------------------------
 // PHJoint1D
 PHJoint1DDesc::PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), offsetForce(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){
@@ -50,7 +50,7 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 	//  ÇªÇÍà»äOÇÃé©óRìxÇÕABAä÷êﬂÇ≈ÇÕÇ»Ç¢èÍçáÇ…true	
 	for(int i = 0; i < 6; i++){
 		if(i == axisIndex[0])
-			 con[i] = (onLower || onUpper || mode == MODE_VELOCITY || spring != 0.0 || damper != 0.0);
+			 con[i] = (onLower || onUpper || mode == PHJointDesc::MODE_VELOCITY || spring != 0.0 || damper != 0.0);
 		else con[i] = true;
 	}
 }

@@ -32,8 +32,16 @@ struct PHConstraintDesc{
 };
 
 /// 関節のディスクリプタ	<	何もメンバを追加しない場合は，typedefと別名定義を FIDesc.cppに追加で．
-typedef PHConstraintDesc	PHJointDesc;
-
+//typedef PHConstraintDesc	PHJointDesc;
+struct PHJointDesc : public PHConstraintDesc{
+	enum PHControlMode{
+		MODE_TORQUE=0,
+		MODE_POSITION,
+		MODE_VELOCITY,
+	} mode;
+	
+	PHJointDesc();
+};
 /// 1軸関節のディスクリプタ
 struct PHJoint1DDesc : public PHJointDesc{
 	double	lower, upper;	///< 可動範囲. lower < upperのときに有効となる
@@ -142,9 +150,6 @@ struct PHConstraintIf : public SceneObjectIf{
 	 */
 	void GetConstraintForce(Vec3d& f, Vec3d& t);
 
-	/* @brief 軌道追従制御を止める 
-	*/
-	void DisableTrajectoryVelocity();
 };
 
 /// 拘束の集合のインタフェース
@@ -167,6 +172,11 @@ struct PHContactPointIf : public PHConstraintIf{
 /// 関節のインタフェース
 struct PHJointIf : public PHConstraintIf{
 	SPR_IFDEF(PHJoint);
+
+	/**関節のControlModeの取得,設定する*/
+	PHJointDesc::PHControlMode	GetMode();
+	void	SetMode(PHJointDesc::PHControlMode mode);
+
 };
 
 /// 1軸関節のインタフェース
@@ -572,7 +582,7 @@ struct PHSpringIf : public PHJointIf{
 };
 
 /// バネダンパのディスクリプタ
-struct PHSpringDesc : public PHConstraintDesc{
+struct PHSpringDesc : public PHJointDesc{
 	SPR_DESCDEF(PHSpring);
 	Vec3d		spring;		///< バネ係数
 	Vec3d		damper;		///< ダンパ係数

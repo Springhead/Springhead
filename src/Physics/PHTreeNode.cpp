@@ -675,7 +675,7 @@ void PHTreeNode1D::CompBias(){
 	
 	double diff;
 	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
-	if(j->mode == PHJoint::MODE_VELOCITY){
+	if(j->mode == PHJointDesc::MODE_VELOCITY){
 		db[0] = -j->GetDesiredVelocity();
 		return;
 	}

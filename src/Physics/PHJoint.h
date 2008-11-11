@@ -18,10 +18,12 @@ namespace Spr{;
 class PHJoint : public PHConstraint{
 public:
 	SPR_OBJECTDEF_ABST(PHJoint);
-	
+	SPR_DECLMEMBEROF_PHJointDesc;
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
-	
+	//ControlModeを取得,設定する
+	virtual PHJointDesc::PHControlMode	GetMode() {return mode;}
+	virtual void	SetMode(PHJointDesc::PHControlMode mode) {this->mode = mode;}
 	/// コンストラクタ
 	PHJoint();
 };
@@ -60,21 +62,21 @@ public:
 	/// インタフェースの実装
 	virtual double	GetPosition() const {return position[0];}
 	virtual double	GetVelocity() const {return velocity[0];}
-	virtual void	SetMotorTorque(double t){mode = MODE_TORQUE; torque = t;}
+	virtual void	SetMotorTorque(double t){/*mode = MODE_TORQUE;*/ torque = t;}
 	virtual double	GetMotorTorque() const {return torque;}
 	virtual void	SetRange(double l, double u){lower = l, upper = u;}
 	virtual void	GetRange(double& l, double& u) const {l = lower, u = upper;}
-	virtual void	SetDesiredVelocity(double v){mode = MODE_VELOCITY; desiredVelocity = v;}
+	virtual void	SetDesiredVelocity(double v){/*mode = MODE_VELOCITY;*/ desiredVelocity = v;}
 	virtual double	GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void	SetTrajectoryVelocity(double v){mode = MODE_POSITION; desiredVelocity = v;}
+	virtual void	SetTrajectoryVelocity(double v){/*mode = MODE_POSITION;*/ desiredVelocity = v;}
 	virtual double  GetTrajectoryVelocity(){return desiredVelocity;}
 	virtual void	SetSpring(double K){spring = K;}
 	virtual double	GetSpring() const {return spring;}
-	virtual void	SetSpringOrigin(double org){mode = MODE_POSITION; origin = org;}
+	virtual void	SetSpringOrigin(double org){/*mode = MODE_POSITION;*/ origin = org;}
 	virtual double	GetSpringOrigin() const {return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper() const {return damper;}
-	virtual void	SetOffsetForce(double dat){mode = MODE_POSITION; offsetForce = dat;}
+	virtual void	SetOffsetForce(double dat){/*mode = MODE_POSITION;*/ offsetForce = dat;}
 	virtual void	SetTorqueMax(double max){fMax = max; fMaxDt = fMax * GetScene()->GetTimeStep(); }
 	virtual double	GetTorqueMax(){return fMax;}
 	virtual void	SetTorqueMin(double min){fMin = min; fMinDt = fMin * GetScene()->GetTimeStep(); }
