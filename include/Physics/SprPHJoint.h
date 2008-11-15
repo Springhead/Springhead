@@ -618,7 +618,19 @@ struct PH3ElementDesc : public PHSpringDesc{
 /// ツリーノードのインタフェース
 struct PHTreeNodeIf : public SceneObjectIf{
 	SPR_IFDEF(PHTreeNode);
+
+	/** @brief 有効・無効を切り替える
+	 */
 	void Enable(bool bEnable = true);
+
+	/** @brief 子ノードの数を取得する
+	 */
+	int NChildren();
+
+	/** @brief 子ノードを取得する
+	 */
+	PHTreeNodeIf* GetChild(int i);
+
 };
 /// ルートノードのインタフェース
 struct PHRootNodeIf : public PHTreeNodeIf{

@@ -107,7 +107,11 @@ public:
 	PHRayIf*				GetRay(int i);
 
 	PHIKNodeIf*				CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc = PHIKNodeDesc());
+	int						NIKNodes();
+	PHIKNodeIf*				GetIKNode(int i);
 	PHIKControlPointIf*		CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc = PHIKControlPointDesc());
+	int						NIKControlPoints();
+	PHIKControlPointIf*		GetIKControlPoint(int i);
 
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}

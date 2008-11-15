@@ -216,11 +216,9 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 	else if(ii == PH3ElementIf::GetIfInfoStatic())
 		joint = DBG_NEW PH3Element();
 	else assert(false);
-	joint->SetScene(GetScene());
 	joint->SetDesc(&desc);
 	joint->solid[0] = lhs;
 	joint->solid[1] = rhs;
-	AddChildObject(joint->Cast());
 	return joint;
 }
 
@@ -233,7 +231,6 @@ PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSol
 		return NULL;
 	
 	PHRootNode* root = DBG_NEW PHRootNode();
-	AddChildObject(root->Cast());
 	root->AddChildObject(solid->Cast());
 	return root;
 }
@@ -267,7 +264,6 @@ PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTre
 
 PHPath* PHConstraintEngine::CreatePath(const PHPathDesc& desc){
 	PHPath* path = DBG_NEW PHPath(desc);
-	AddChildObject(path->Cast());
 	return path;
 }
 
@@ -276,7 +272,6 @@ PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PHJoint1D* lhs, P
 	gear->joint[0] = lhs;
 	gear->joint[1] = rhs;
 	gear->SetDesc(&desc);
-	AddChildObject(gear->Cast());
 	return gear;
 }
 
