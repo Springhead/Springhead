@@ -62,7 +62,7 @@ PHIKNode* PHIKEngine::CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc){
 		iknode = DBG_NEW PHIKHingeJoint();
 		DCAST(PHIKHingeJointIf,iknode)->SetDesc(&desc);
 	}
-	AddChildObject(iknode->Cast());
+	//AddChildObject(iknode->Cast());
 	return iknode;
 }
 
@@ -75,7 +75,7 @@ PHIKControlPoint* PHIKEngine::CreateIKControlPoint(const IfInfo* ii, const PHIKC
 		ikcontrolpoint = DBG_NEW PHIKOriCtl();
 		DCAST(PHIKOriCtlIf,ikcontrolpoint)->SetDesc(&desc);
 	}
-	AddChildObject(ikcontrolpoint->Cast());
+	//AddChildObject(ikcontrolpoint->Cast());
 	return ikcontrolpoint;
 }
 

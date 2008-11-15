@@ -206,6 +206,10 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetViewport(Vec2f pos, Vec2f sz);
 	///	バッファクリア
 	void ClearBuffer();
+	/// 背景色の取得
+	void GetClearColor(Vec4f& color);
+	/// 背景色の設定
+	void SetClearColor(const Vec4f& color);
 	///	レンダリングの開始前に呼ぶ関数
 	void BeginScene();
 	///	レンダリングの終了後に呼ぶ関数
@@ -215,7 +219,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	カレントの投影行列をafpで置き換える
 	void SetProjectionMatrix(const Affinef& afp);
 	///	カレントの投影行列を取得する
-	void GetProjectionMatrix(const Affinef& afp);
+	void GetProjectionMatrix(Affinef& afp);
 	///	カレントのモデル行列をafwで置き換える
 	void SetModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列に対してafwを掛ける

@@ -64,12 +64,12 @@ void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
 }
 /// バッファクリア
 void GRDeviceGL::ClearBuffer(){
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 	glClearDepth(1.0); 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 /// レンダリングの開始前に呼ぶ関数
-void GRDeviceGL::BeginScene(){
+void GRDeviceGL::BeginScene(){		
   /// GLでレンダリングする場合、特に処理する必要なし
 	
 }
@@ -91,7 +91,7 @@ void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){
 	glMatrixMode(GL_MODELVIEW);
 }
 /// カレントの投影行列を取得する
-void GRDeviceGL::GetProjectionMatrix(const Affinef& afp){  
+void GRDeviceGL::GetProjectionMatrix(Affinef& afp){  
 	glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat *)&afp);
 }	
 /// カレントのモデル行列をafwで置き換える

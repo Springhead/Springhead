@@ -24,7 +24,10 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual size_t NChildObject();
 	virtual ObjectIf* GetChildObject(size_t i);
-	virtual void Enable(bool bEnable = true);
+
+	void Enable(bool bEnable = true);
+	int  NChildren(){ return (int)Children().size(); }
+	PHTreeNodeIf* GetChild(int i){ return Children()[i]->Cast(); }
 	
 	bool		Includes(PHTreeNode* node);		///< 自分以下にノードnodeがあるか
 	PHTreeNode*	FindBySolid(PHSolid* solid);	///< 自分以下のツリーでsolidを参照しているノードを探す

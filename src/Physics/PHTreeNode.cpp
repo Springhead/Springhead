@@ -29,10 +29,15 @@ bool PHTreeNode::AddChildObject(ObjectIf* o){
 	}
 	PHTreeNode* n = DCAST(PHTreeNode, o);
 	if(n){
-		AddChild(n);
+		char name[256];
+		if(strcmp(n->GetName(), "") == 0)
+			sprintf(name, "%s%d", GetName(), Children().size());
+		n->SetScene(GetScene());
+		n->SetName(name);
 		n->scene = scene;
 		n->engine = engine;
 		engine->bGearNodeReady = false;
+		AddChild(n);
 		return true;
 	}
 	return false;

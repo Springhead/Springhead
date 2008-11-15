@@ -145,6 +145,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
+	int NChildren(){	return	base::NChildren();}	\
+	Spr::PHTreeNodeIf* GetChild(int i){	return	base::GetChild(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHRootNodeIf(base)	\
 
@@ -202,7 +204,11 @@
 	int NRays(){	return	base::NRays();}	\
 	Spr::PHRayIf* GetRay(int i){	return	base::GetRay(i);}	\
 	Spr::PHIKNodeIf* CreateIKNode(const IfInfo* ii, const Spr::PHIKNodeDesc& desc){	return	base::CreateIKNode(ii, desc);}	\
+	int NIKNodes(){	return	base::NIKNodes();}	\
+	Spr::PHIKNodeIf* GetIKNode(int i){	return	base::GetIKNode(i);}	\
 	Spr::PHIKControlPointIf* CreateIKControlPoint(const IfInfo* ii, const Spr::PHIKControlPointDesc& desc){	return	base::CreateIKControlPoint(ii, desc);}	\
+	int NIKControlPoints(){	return	base::NIKControlPoints();}	\
+	Spr::PHIKControlPointIf* GetIKControlPoint(int i){	return	base::GetIKControlPoint(i);}	\
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\
 	unsigned int GetCount()const{	return	base::GetCount();}	\

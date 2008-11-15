@@ -274,6 +274,14 @@ public:
 		return CreateIKNode(T::GetIfInfo(), desc);
 	}
 
+	/** @brief IKノードの数
+	 */
+	int NIKNodes();
+
+	/** @brief IKノードを取得する
+	 */
+	PHIKNodeIf* GetIKNode(int i);
+
 	/** @brief IKの制御点を作成する．
 	 */
 	PHIKControlPointIf*	 CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc = PHIKControlPointDesc());
@@ -281,6 +289,13 @@ public:
 		return CreateIKControlPoint(T::GetIfInfo(), desc);
 	}
 
+	/** @brief IK制御点の数
+	 */
+	int NIKControlPoints();
+
+	/** @brief IK制御点を取得する
+	 */
+	PHIKControlPointIf* GetIKControlPoint(int i);
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ

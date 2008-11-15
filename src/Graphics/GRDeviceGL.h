@@ -87,7 +87,7 @@ public:
 	///	カレントの投影行列を取得する
 	virtual void SetProjectionMatrix(const Affinef& afp);
 	///	カレントの投影行列をafpで置き換える
-	virtual void GetProjectionMatrix(const Affinef& afp);
+	virtual void GetProjectionMatrix(Affinef& afp);
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列に対してafwを掛ける

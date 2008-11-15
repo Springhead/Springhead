@@ -45,11 +45,13 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_GRRenderBaseIf(base)	\
 	void SetViewport(Vec2f pos, Vec2f sz){	base::SetViewport(pos, sz);}	\
 	void ClearBuffer(){	base::ClearBuffer();}	\
+	void GetClearColor(Vec4f& color){	base::GetClearColor(color);}	\
+	void SetClearColor(const Vec4f& color){	base::SetClearColor(color);}	\
 	void BeginScene(){	base::BeginScene();}	\
 	void EndScene(){	base::EndScene();}	\
 	void SetViewMatrix(const Affinef& afv){	base::SetViewMatrix(afv);}	\
 	void SetProjectionMatrix(const Affinef& afp){	base::SetProjectionMatrix(afp);}	\
-	void GetProjectionMatrix(const Affinef& afp){	base::GetProjectionMatrix(afp);}	\
+	void GetProjectionMatrix(Affinef& afp){	base::GetProjectionMatrix(afp);}	\
 	void SetModelMatrix(const Affinef& afw){	base::SetModelMatrix(afw);}	\
 	void MultModelMatrix(const Affinef& afw){	base::MultModelMatrix(afw);}	\
 	void PushModelMatrix(){	base::PushModelMatrix();}	\

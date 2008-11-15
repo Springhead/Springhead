@@ -80,6 +80,10 @@ public:
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	///	バッファクリア
 	virtual void ClearBuffer(){}
+	/// 背景色の取得
+	virtual void GetClearColor(Vec4f& color){}
+	/// 背景色の設定
+	virtual void SetClearColor(const Vec4f& color){}
 	///	レンダリングの開始前に呼ぶ関数
 	virtual void BeginScene(){}
 	///	レンダリングの終了後に呼ぶ関数
@@ -89,7 +93,7 @@ public:
 	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp){}
 	///	カレントの投影行列を取得する
-	virtual void GetProjectionMatrix(const Affinef& afp){}
+	virtual void GetProjectionMatrix(Affinef& afp){}
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw){}
 	///	カレントのモデル行列に対してafwを掛ける
@@ -187,11 +191,13 @@ public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)																		\
 	virtual void SetViewport(Vec2f p, Vec2f s){ ptr SetViewport(p, s); }									\
 	virtual void ClearBuffer(){ ptr ClearBuffer(); }														\
+	virtual void GetClearColor(Vec4f& color){ ptr GetClearColor(color); }									\
+	virtual void SetClearColor(const Vec4f& color){ ptr SetClearColor(color); }								\
 	virtual void BeginScene(){ ptr BeginScene(); }															\
 	virtual void EndScene(){ ptr EndScene(); }																\
 	virtual void SetViewMatrix(const Affinef& afv){ ptr SetViewMatrix(afv); }								\
 	virtual void SetProjectionMatrix(const Affinef& afp){ ptr SetProjectionMatrix(afp); }					\
-	virtual void GetProjectionMatrix(const Affinef& afp){ ptr GetProjectionMatrix(afp); }					\
+	virtual void GetProjectionMatrix(Affinef& afp){ ptr GetProjectionMatrix(afp); }							\
 	virtual void SetModelMatrix(const Affinef& afw){ ptr SetModelMatrix(afw); }								\
 	virtual void MultModelMatrix(const Affinef& afw){ ptr MultModelMatrix(afw); }							\
 	virtual void PushModelMatrix(){ ptr PushModelMatrix(); }												\
@@ -272,9 +278,13 @@ public:
 /**	@class	GRDevice
     @brief	グラフィックス描画の実装　 */
 class GRDevice: public GRRenderBase{
+protected:
+	Vec4f	clearColor;		///< 背景色
 public:
 	SPR_OBJECTDEF_ABST(GRDevice);
 	virtual void Init(){}
+	virtual void GetClearColor(Vec4f& color){ color = clearColor; }
+	virtual void SetClearColor(const Vec4f& color){ clearColor = color; }
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){
 		if(mat) SetMaterial(*DCAST(GRMaterial, mat)); }

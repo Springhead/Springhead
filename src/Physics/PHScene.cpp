@@ -73,6 +73,7 @@ CDShapeIf* PHScene::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 
 PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc){
 	PHJoint* joint = constraintEngine->CreateJoint(ii, desc, lhs->Cast(), rhs->Cast());
+	AddChildObject(joint->Cast());
 	return joint->Cast();
 }
 int PHScene::NJoints()const{
@@ -98,7 +99,7 @@ PHSolidPairForLCPIf* PHScene::GetSolidPair(int i, int j){
 
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
 	PHRootNode* node = constraintEngine->CreateRootNode(desc, root->Cast());
-	node->SetScene(Cast());
+	AddChildObject(node->Cast());
 	return node->Cast();
 }
 int PHScene::NRootNodes()const{
@@ -118,7 +119,7 @@ PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, co
 
 PHGearIf* PHScene::CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc){
 	PHGear* gear = constraintEngine->CreateGear(desc, lhs->Cast(), rhs->Cast());
-	gear->SetScene(Cast());
+	AddChildObject(gear->Cast());
 	return gear->Cast();
 }
 int PHScene::NGears()const{
@@ -129,7 +130,7 @@ PHGearIf* PHScene::GetGear(int i){
 }
 PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
 	PHPath* path = constraintEngine->CreatePath(desc)->Cast();
-	path->SetScene(Cast());
+	AddChildObject(path->Cast());
 	return path->Cast();
 }
 int PHScene::NPaths()const{
@@ -141,8 +142,7 @@ PHPathIf* PHScene::GetPath(int i){
 PHRayIf* PHScene::CreateRay(const PHRayDesc& desc){
 	PHRay* ray = DBG_NEW PHRay();
 	ray->SetDesc(&desc);
-	ray->SetScene(Cast());
-	rays.push_back(ray);
+	AddChildObject(ray->Cast());
 	return ray->Cast();
 }
 int PHScene::NRays()const{
@@ -152,21 +152,32 @@ PHRayIf* PHScene::GetRay(int i){
 	return rays[i]->Cast();
 }
 
+PHIKNodeIf* PHScene::CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc){
+	PHIKNode* node = ikEngine->CreateIKNode(ii, desc)->Cast();
+	AddChildObject(node->Cast());
+	return node->Cast();
+}
+int PHScene::NIKNodes(){
+	return ikEngine->nodes.size();
+}
+PHIKNodeIf* PHScene::GetIKNode(int i){
+	return ikEngine->nodes[i];
+}
+PHIKControlPointIf* PHScene::CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc){
+	PHIKControlPoint* controlpoint = ikEngine->CreateIKControlPoint(ii, desc)->Cast();
+	AddChildObject(controlpoint->Cast());
+	return controlpoint->Cast();
+}
+int PHScene::NIKControlPoints(){
+	return ikEngine->controlpoints.size();
+}
+PHIKControlPointIf* PHScene::GetIKControlPoint(int i){
+	return ikEngine->controlpoints[i];
+}
+
 void PHScene::Clear(){
 	engines.Clear();
 	Init();
-}
-
-PHIKNodeIf* PHScene::CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc){
-	PHIKNode* node = ikEngine->CreateIKNode(ii, desc)->Cast();
-	node->SetScene(Cast());
-	return node->Cast();
-}
-
-PHIKControlPointIf* PHScene::CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc){
-	PHIKControlPoint* controlpoint = ikEngine->CreateIKControlPoint(ii, desc)->Cast();
-	controlpoint->SetScene(Cast());
-	return controlpoint->Cast();
 }
 
 void PHScene::SetTimeStep(double dt){
@@ -327,6 +338,13 @@ bool PHScene::AddChildObject(ObjectIf* o){
 		rays.push_back(ray->Cast());
 		ok = true;
 	}
+	PHIKNodeIf* ikNode = DCAST(PHIKNodeIf, o);
+	if(ikNode && ikEngine->AddChildObject(o))
+		ok = true;
+	PHIKControlPointIf* ikPoint = DCAST(PHIKControlPointIf, o);
+	if(ikPoint && ikEngine->AddChildObject(o))
+		ok = true;
+
 	// MergeScene‚È‚Ç‚Å‘¼‚ÌScene‚©‚çˆÚ“®‚µ‚Ä‚­‚éê‡‚à‚ ‚é‚Ì‚ÅŠ—LŒ ‚ðXV‚·‚é
 	if(ok){
 		SceneObject* so = DCAST(SceneObject, o);
@@ -336,14 +354,20 @@ bool PHScene::AddChildObject(ObjectIf* o){
 			char name[256];
 			if(solid)
 				sprintf(name, "solid%d", NSolids()-1);
-			if(con)
+			else if(con)
 				sprintf(name, "joint%d", NJoints()-1);
-			if(gear)
+			else if(node)
+				sprintf(name, "node%d", NRootNodes()-1);
+			else if(gear)
 				sprintf(name, "gear%d", NGears()-1);
-			if(path)
+			else if(path)
 				sprintf(name, "path%d", NPaths()-1);
-			if(ray)
+			else if(ray)
 				sprintf(name, "ray%d", NRays() - 1);
+			else if(ikNode)
+				sprintf(name, "iknode%d", NIKNodes()-1);
+			else if(ikPoint)
+				sprintf(name, "ikpoint%d", NIKControlPoints()-1);
 			so->SetName(name);
 		}
 	}
