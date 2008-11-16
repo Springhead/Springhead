@@ -623,6 +623,10 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	void Enable(bool bEnable = true);
 
+	/** @brief 有効・無効を返す
+	 */
+	bool IsEnabled();
+
 	/** @brief 子ノードの数を取得する
 	 */
 	int NChildren();
