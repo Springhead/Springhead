@@ -57,7 +57,7 @@ ObjectIf* PHTreeNode::GetChildObject(size_t i){
 void PHTreeNode::Enable(bool on){
 	bEnabled = on;
 	if(joint)
-		joint->bArticulated = !on;
+		joint->bArticulated = on;
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->Enable(on);
 }
@@ -617,6 +617,8 @@ void PHTreeNodeND<NDOF>::ModifyJacobian(){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::SetupLCP(){
+	if(!bEnabled)
+		return;
 	// ギア連動している場合，バネダンパの効果はギアトレイン先頭ノードに集約させる
 	if(gearNode && gearNode != this)
 		return;
@@ -654,6 +656,8 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::IterateLCP(){
+	if(!bEnabled)
+		return;
 	if(gearNode && gearNode != this)
 		return;
 

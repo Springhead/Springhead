@@ -136,6 +136,10 @@ void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
 		maxS += c;
 }
 
+bool PHSolid::IsArticulated(){
+	return treeNode && treeNode->IsEnabled();
+}
+
 void PHSolid::UpdateCacheLCP(double dt){
 	if(mass != 0)
 		minv = GetMassInv();
@@ -147,7 +151,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	v.w() = qc * GetAngularVelocity();
 	
 	// ƒcƒŠ[‚É‘®‚·‚éê‡‚ÍPHRootNode::SetupDynamics‚Ådv‚ªŒvZ‚³‚ê‚é
-	if(treeNode)return;
+	if(IsArticulated())return;
 	
 	if(IsDynamical() && !IsFrozen()){
 		dv.v() = minv * f.v() * dt;
@@ -478,7 +482,7 @@ void PHSolidContainer::Step(){
 //	PHSolidInitializer
 //
 void PHSolidInitializer::Step(){
-		container->Reset();	
+	container->Reset();	
 }
 
 }

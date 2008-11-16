@@ -172,8 +172,8 @@ PHConstraintEngine::PHConstraintEngine(){
 	numIter				 = 15;
 	numIterCorrection	 = 0;
 	numIterContactCorrection = 0;
-	velCorrectionRate	 = 0.3;		//< 0.5だと大きすぎて馬が発振してしまう
-	posCorrectionRate	 = 0.3;		//< 0.5だと大きすぎて馬が発振してしまう(07/12/30 toki)
+	velCorrectionRate	 = 0.3;
+	posCorrectionRate	 = 0.3;
 	shrinkRate			 = 0.7;
 	shrinkRateCorrection = 0.7;
 	freezeThreshold		 = 0.0;
@@ -441,7 +441,7 @@ void PHConstraintEngine::UpdateSolids(){
 
 	// ツリーに属さない剛体の更新
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
-		if(!(*is)->treeNode && !(*is)->IsUpdated()){
+		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
 			(*is)->UpdateVelocity(dt);
 			(*is)->UpdatePosition(dt);
 			(*is)->SetUpdated(true);
@@ -465,42 +465,7 @@ UTPreciseTimer ptimerForCd;
 
 
 void PHConstraintEngine::StepPart1(){
-	unsigned int ct = GetScene()->GetCount();
-	double dt = GetScene()->GetTimeStep();
-	// 必要ならばギアノードの更新
-	if(!bGearNodeReady){
-		UpdateGearNode();
-		bGearNodeReady = true;
-	}
-	//交差を検知
-	points.clear();
-	if(bContactEnabled){
-		ContDetect(ct, dt);
-	}
-}
-void PHConstraintEngine::StepPart2(){
-	double dt = GetScene()->GetTimeStep();
-	unsigned int ct = GetScene()->GetCount();
-
-	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
-		(*it)->UpdateCacheLCP(dt);
-	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
-		(*it)->UpdateState();
-	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
-		(*it)->UpdateState();
-	
-	SetupLCP();
-	IterateLCP();
-
-	SetupCorrectionLCP();
-	IterateCorrectionLCP();
-
-	//位置・速度の更新
-	UpdateSolids();	
-}
-	
-void PHConstraintEngine::Step(){
-//	DSTR << "nContact:" <<  points.size() << std::endl;
+	//	DSTR << "nContact:" <<  points.size() << std::endl;
 	unsigned int ct = GetScene()->GetCount();
 	double dt = GetScene()->GetTimeStep();
 
@@ -530,6 +495,11 @@ void PHConstraintEngine::Step(){
 #ifdef REPORT_TIME
 	ptimer.CountUS();
 #endif
+}
+
+void PHConstraintEngine::StepPart2(){
+	double dt = GetScene()->GetTimeStep();
+
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
 		(*it)->UpdateCacheLCP(dt);
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
@@ -550,6 +520,11 @@ void PHConstraintEngine::Step(){
 	IterateCorrectionLCP();
 	//位置・速度の更新
 	UpdateSolids();	
+}
+	
+void PHConstraintEngine::Step(){
+	StepPart1();
+	StepPart2();
 }
 
 PHConstraintsIf* PHConstraintEngine::GetContactPoints(){

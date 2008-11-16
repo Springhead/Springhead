@@ -65,7 +65,7 @@ void PHConstraint::AfterSetDesc(){
 //このクラス内の機能
 void PHConstraint::UpdateState(){
 	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
-  //if(!bArticulated){
+	//if(!bArticulated){
 		CompJacobian();
 		//親剛体の中心から見た速度と，子剛体の中心から見た速度をSocket座標系から見た速度に両方直して，相対速度を取る．
 		vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
@@ -115,15 +115,15 @@ void PHConstraint::CompResponseMatrix(){
 	int i, j;
 	A.clear();
 	PHRootNode* root[2];
-	if(solid[0]->treeNode)
+	if(solid[0]->IsArticulated())
 		root[0] = solid[0]->treeNode->GetRootNode();
-	if(solid[1]->treeNode)
+	if(solid[1]->IsArticulated())
 		root[1] = solid[1]->treeNode->GetRootNode();
 
 	SpatialVector df;
 	for(i = 0; i < 2; i++){
 		if(solid[i]->IsDynamical()){
-			if(solid[i]->treeNode){
+			if(solid[i]->IsArticulated()){
 				for(j = 0; j < 6; j++){
 					if(!constr[j])continue;
 					(Vec6d&)df = J[i].row(j);
@@ -131,7 +131,7 @@ void PHConstraint::CompResponseMatrix(){
 					A[j] += J[i].row(j) * solid[i]->treeNode->da;
 					int ic = !i;
 					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
-					if(solid[ic]->treeNode && root[i] == root[ic])
+					if(solid[ic]->IsArticulated() && root[i] == root[ic])
 						A[j] += J[ic].row(j) * solid[ic]->treeNode->da;
 				}
 			}
@@ -142,7 +142,7 @@ void PHConstraint::CompResponseMatrix(){
 				T[i].wv() = J[i].wv() * solid[i]->minv;
 				T[i].ww() = J[i].ww() * solid[i]->Iinv;
 				for(j = 0; j < 6; j++)
-					// A == 論文中のJ * M^-1 * J^T, Gaus Seidel法のD
+					// A == 論文中のJ * M^-1 * J^T, Gauss Seidel法のD
 					A[j] += J[i].row(j) * T[i].row(j);
 			}
 		}
@@ -226,7 +226,7 @@ void PHConstraint::SetupLCP(){
 	SpatialVector fs;
 	for(int i = 0; i < 2; i++){
 		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-		if(solid[i]->treeNode){
+		if(solid[i]->IsArticulated()){
 			(Vec6d&)fs = J[i].trans() * f;
 			solid[i]->treeNode->CompResponse(fs, true, false);
 		}
@@ -264,7 +264,7 @@ void PHConstraint::IterateLCP(){
 		df[j] = fnew[j] - f[j];
 		for(i = 0; i < 2; i++){
 			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-			if(solid[i]->treeNode){
+			if(solid[i]->IsArticulated()){
 				(Vec6d&)dfs = J[i].row(j) * df[j];
 				solid[i]->treeNode->CompResponse(dfs, true, false);
 			}
@@ -300,7 +300,7 @@ void PHConstraint::SetupCorrectionLCP(){
 	SpatialVector Fs;
 	for(int i = 0; i < 2; i++){
 		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-		if(solid[i]->treeNode){
+		if(solid[i]->IsArticulated()){
 			(Vec6d&)Fs = J[i].trans() * F;
 			solid[i]->treeNode->CompResponse(Fs, true, true);
 		}
@@ -321,7 +321,7 @@ void PHConstraint::IterateCorrectionLCP(){
 		dF[j] = Fnew[j] - F[j];
 		for(i = 0; i < 2; i++){
 			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-			if(solid[i]->treeNode){
+			if(solid[i]->IsArticulated()){
 				(Vec6d&)dFs = J[i].row(j) * dF[j];
 				solid[i]->treeNode->CompResponse(dFs, true, true);			
 			}

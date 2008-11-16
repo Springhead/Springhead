@@ -26,6 +26,7 @@ public:
 	virtual ObjectIf* GetChildObject(size_t i);
 
 	void Enable(bool bEnable = true);
+	bool IsEnabled(){ return bEnabled; }
 	int  NChildren(){ return (int)Children().size(); }
 	PHTreeNodeIf* GetChild(int i){ return Children()[i]->Cast(); }
 	

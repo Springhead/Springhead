@@ -145,6 +145,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
+	bool IsEnabled(){	return	base::IsEnabled();}	\
 	int NChildren(){	return	base::NChildren();}	\
 	Spr::PHTreeNodeIf* GetChild(int i){	return	base::GetChild(i);}	\
 

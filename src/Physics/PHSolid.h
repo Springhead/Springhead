@@ -145,6 +145,7 @@ public:
 	//void SetupCorrection();
 	void UpdateVelocity(double dt);
 	void UpdatePosition(double dt);
+	bool IsArticulated();
 	//@}
 	
 	///@name Penalty–@ŠÖ˜A•â••Ï”
