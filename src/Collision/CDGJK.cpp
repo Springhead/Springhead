@@ -178,6 +178,32 @@ inline char FindVacantId(char a, char b, char c){
 	return vacants[(int)bits];
 }
 
+inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
+	double det = p1.x*(p2.y-p3.y) + p2.x*(p3.y-p1.y) + p3.x*(p1.y-p2.y);
+	Vec3d r;
+	if (det){
+		double detInv = 1/det;
+		r.x = detInv * (p2.x*p3.y-p3.x*p2.y);
+		r.y = detInv * (p3.x*p1.y-p1.x*p3.y);
+		r.z = 1 - r.x - r.y;
+	}else{
+		if (p1*p2 < 0){
+			double a = p1*p1; double b = -p1*p2;
+			r.x = b/(a+b);
+			r.y = a/(a+b);
+		}else if (p2*p3 < 0){
+			double a = p2*p2; double b = -p2*p3;
+			r.y = b/(a+b);
+			r.z = a/(a+b);
+		}else if (p3*p1 < 0){
+			double a = p3*p3; double b = -p3*p1;
+			r.z = b/(a+b);
+			r.x = a/(a+b);
+		}
+	}
+	return r;
+}
+
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 #define CalcSupport(n)											\
 	p[n] = a->Support(a2z.Ori().Conjugated() * (v[n]));			\
@@ -324,6 +350,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	int notuse = -1;
 	int count = 0;
 	Vec3d lastTriV;
+	double lastZ = DBL_MAX;
 	while(1){
 		count ++;
 		if (count > 1000) {
@@ -336,7 +363,6 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		}
 		Vec3d s;		//	三角形の有向面積
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
-		double improvement;
 		if (s.Z() > epsilon*10.0 || -s.Z() > epsilon*10.0){
 			if (s.Z() < 0){		//	逆向きの場合、ひっくり返す
 				std::swap(ids[1], ids[2]);
@@ -349,7 +375,6 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 
 			//	新しい w w[3] を求める
 			CalcSupport(ids[3]);
-			improvement = -(w[ids[3]] - w[ids[0]]) * v[ids[3]];
 		}else{
 			if (bDebug) DSTR << "LINE";
 			int id0, id1;
@@ -413,9 +438,6 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				lastTriV = v[ids[3]] = ave.unit();
 			}
 			CalcSupport(ids[3]);
-			double imp1 = -(w[ids[3]] - w[ids[id0]]) * v[ids[3]];
-			double imp2 = -(w[ids[3]] - w[ids[id1]]) * v[ids[3]];
-			improvement = min(imp1, imp2);			
 		}
 		if (bDebug){
 			DSTR << "v:" << v[ids[3]];
@@ -431,16 +453,21 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				DSTR << std::endl;
 			}
 			DSTR << std::endl;
-		}
-		if (bDebug) {
+
 			DSTR << "notuse:" << notuse;
 			for(int i=0; i<4; ++i) DSTR << " " << ids[i];
 			DSTR << std::endl;
-			DSTR << "Improvement: " << improvement << std::endl;
+//			DSTR << "Improvement: " << improvement << std::endl;
 		}
-		if (improvement < epsilon) goto final;
-
 		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
+			int nid[3];
+			nid[0] = ids[(notuse+1)%3];
+			nid[1] = ids[(notuse+2)%3];
+			nid[2] = ids[3];
+			Vec3d dec = TriDecompose(w[nid[0]].XY(), w[nid[1]].XY(), w[nid[2]].XY());
+			double newZ = w[nid[0]].z * dec[0] + w[nid[1]].z * dec[1] + w[nid[2]].z * dec[2];
+			if (newZ >= lastZ) goto final;
+			lastZ = newZ;
 			std::swap(ids[notuse], ids[3]);
 		}else{
 			//	どの2点とw[3]で三角形を作れるか確認する -> 2点とw[3]が作る2辺が原点を挟むかどうか調べる．
@@ -481,6 +508,16 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
 			}
 */
+			//	ここで改善したかチェックする
+			int nid[3];
+			nid[0] = ids[minId];
+			nid[1] = ids[(minId+1)%3];
+			nid[2] = ids[3];
+			Vec3d dec = TriDecompose(w[nid[0]].XY(), w[nid[1]].XY(), w[nid[2]].XY());
+			double newZ = w[nid[0]].z * dec[0] + w[nid[1]].z * dec[1] + w[nid[2]].z * dec[2];
+			if (newZ >= lastZ) goto final;
+			lastZ = newZ;
+			//	この後では、もう戻れない。
 			std::swap(ids[(minId+2)%3], ids[3]);
 			if (minDist > 1e-4){	//	異常。原点を含む三角形が見つからない
 				DSTR << "minId:" << minId << " minDist:" << minDist;
