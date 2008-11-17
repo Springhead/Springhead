@@ -470,135 +470,54 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			lastZ = newZ;
 			std::swap(ids[notuse], ids[3]);
 		}else{
-			//	どの2点とw[3]で三角形を作れるか確認する -> 2点とw[3]が作る2辺が原点を挟むかどうか調べる．
-			double minDist = DBL_MAX;
-			int minId=-1;
-			for(int i=0; i<3; ++i){
-				int sign;
-				if (cross(w[ids[(i+1)%3]].XY() - w[ids[i]].XY(), w[ids[3]].XY()-w[ids[i]].XY()) < 0){ 
-					sign = -1;
-				}else{
-					sign = 1;
-				}
-				Vec2d edge0 = (w[ids[(i+1)%3]].XY() - w[ids[i]].XY());
-				double edgeLen0 = edge0.norm();
-				double dist0 = sign * edge0 ^ w[ids[i]].XY();
-				if (edgeLen0 > epsilon) dist0 /= edgeLen0;
-				else dist0 = 0;
-
-				Vec2d edge1 = (w[ids[i]].XY() - w[ids[3]].XY());
-				double edgeLen1 = edge1.norm();
-				double dist1 = sign * edge1 ^ w[ids[3]].XY();
-				if (edgeLen1 > epsilon) dist1 /= edgeLen1;
-				else dist1 = 0;
-
-				Vec2d edge2 = (w[ids[(i+1)%3]].XY() - w[ids[3]].XY());
-				double edgeLen2 = edge2.norm();
-				double dist2 =  -sign * edge2 ^ w[ids[3]].XY();
-				if (edgeLen2 > epsilon) dist2 /= edgeLen2;
-				else dist2 = 0;
-				double dist = dist1>dist2 ? dist1 : dist2;
-				dist = dist0>dist ? dist0 : dist;
-				if (dist < minDist){
-					minDist = dist;
-					minId = i;
-				}
+			//	どの2点とw[3]で三角形を作れるか確認する
+			Vec3d decs[3];
+			double minDec[3];
+			int i;
+			for(i=0; i<3; ++i){
+				int nid0 = ids[i];
+				int nid1 = ids[(i+1)%3];
+				int nid2 = ids[3];
+				decs[i] = TriDecompose(w[nid0].XY(), w[nid1].XY(), w[nid2].XY());
+				minDec[i] = min(decs[i][0], min(decs[i][1], decs[i][2]));
 			}
-/*			for(int i=0; i<4; ++i){
-				DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
+			if (minDec[0] > minDec[1]){
+				if (minDec[0] > minDec[2]) i = 0;
+				else i=2;
+			}else{
+				if (minDec[1] > minDec[2]) i = 1;
+				else i=2;
 			}
-*/
 			//	ここで改善したかチェックする
-			int nid[3];
-			nid[0] = ids[minId];
-			nid[1] = ids[(minId+1)%3];
-			nid[2] = ids[3];
-			Vec3d dec = TriDecompose(w[nid[0]].XY(), w[nid[1]].XY(), w[nid[2]].XY());
-			double newZ = w[nid[0]].z * dec[0] + w[nid[1]].z * dec[1] + w[nid[2]].z * dec[2];
+			int nid0 = ids[i];
+			int nid1 = ids[(i+1)%3];
+			int nid2 = ids[3];
+			Vec3d dec = decs[i];
+			double newZ = w[nid0].z * dec[0] + w[nid1].z * dec[1] + w[nid2].z * dec[2];
 			if (newZ >= lastZ) goto final;
 			lastZ = newZ;
-			//	この後では、もう戻れない。
-			std::swap(ids[(minId+2)%3], ids[3]);
-			if (minDist > 1e-4){	//	異常。原点を含む三角形が見つからない
-				DSTR << "minId:" << minId << " minDist:" << minDist;
-				DSTR << std::endl;
-
-				//	デバッグ用処理
-				//	三角形が原点を含むことを確認
-				int sign[3];
-				double d[3];
-				for(int i=0; i<3; ++i){
-					Vec2d edge = w[ids[(i+1)%3]].XY() - w[ids[i]].XY();
-					Vec2d n = Vec2d(-edge.Y(), edge.X());
-					d[i] = n * w[ids[i]].XY();
-					double epsilon = 1e-5;
-					sign[i] = d[i] > epsilon ? 1 : d[i] < -epsilon ? -1 : 0;
-				}
-				if (sign[0] * sign[1] < 0 || sign[1] * sign[2] < 0){
-					DSTR << "new tri: 0-2:" << std::endl;
-					for(int i=0; i<3; ++i){
-						DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
-					}
-					DSTR << "old tri: 0-2:" << std::endl;
-					for(int i=0; i<3; ++i){
-						if ((minId+2)%3 == i)
-							DSTR << w[ids[3]].X() << "\t" << w[ids[3]].Y() << std::endl;
-						else
-							DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
-					}
-					DSTR << "dist: " << std::endl;
-					for(int i=0; i<3; ++i){
-						DSTR << d[i] << std::endl;
-					}
-					DSTR << "Error could not find a traiangle including origin." << std::endl;
-				}
-
-				DSTR << "No including traiangle found." << std::endl;
-//#if USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
-//				DSTR << "tri: 0-2; vtx:3" << std::endl;
-//				for(int i=0; i<4; ++i){
-//					DSTR << w[ids[i]].X() << "\t" << w[ids[i]].Y() << std::endl;
-//				}
-//				DebugBreak();
-//				ContFindCommonPoint(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
-//#endif
-				ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);
-				goto final;
-			}
+			std::swap(ids[(i+2)%3], ids[3]);
 		}
 	}
 	//	無事停止
 final:
 	if (notuse >=0){
-		int id0 = (notuse+1)%3;	//	hase08.08.03: ここにバグがありました．
-		int id1 = (notuse+2)%3;
-		double l0 = w[ids[id0]].XY().norm();
-		double l1 = w[ids[id1]].XY().norm();
-		double kx = l1 / (l0+l1);
-		double ky = l0 / (l0+l1);
-		pa = kx*p[ids[id0]] + ky*p[ids[id1]];
-		pb = kx*q[ids[id0]] + ky*q[ids[id1]];
-		dist = kx*w[ids[id0]].z + ky*w[ids[id1]].z;
-		normal = w2z.Conjugated() * v[ids[3]];
-		normal.unitize();
+		int id0 = ids[(notuse+1)%3];	int id1 = ids[(notuse+2)%3];
+		double a = w[id0].norm();		double b = w[id1].norm();
+		double k0, k1;
+		if (a+b > 1e-10){ k0 = b/(a+b); k1 = a/(a+b); }
+		else {k0 =0.5; k1=0.5;}
+		pa = k0*p[id0] + k1*p[id1];
+		pb = k0*q[id0] + k1*q[id1];
+		dist = k0*w[id0].z + k1*w[id1].z;
 	}else{
-		Matrix2d m;
-		m.Ex() = w[ids[0]].XY()-w[ids[1]].XY();
-		m.Ey() = w[ids[0]].XY()-w[ids[2]].XY();
-		double det = m.det();
-		Vec2d k;
-		if (-epsilon2 < det && det < epsilon2){
-			k = Vec2f(0.5, 0.5);
-		}else{
-			k = m.inv() * w[ids[0]].XY();
-		}
-		double kz = 1-k.x-k.y;
-		pa = k.x*p[ids[1]] + k.y*p[ids[2]] + kz*p[ids[0]];
-		pb = k.x*q[ids[1]] + k.y*q[ids[2]] + kz*q[ids[0]];
-		dist = k.x*w[ids[1]].z + k.y*w[ids[2]].z + kz*w[ids[0]].z;
-		normal = w2z.Conjugated() * v[ids[3]];
-		normal.unitize();
+		Vec3d dec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
+		pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
+		pb = dec[0]*q[ids[1]] + dec[1]*q[ids[1]] + dec[2]*q[ids[1]];
+		dist = dec[0]*w[ids[0]].z + dec[1]*w[ids[1]].z + dec[2]*w[ids[2]].z;
 	}
+	normal = w2z.Conjugated() * v[ids[3]];
+	normal.unitize();
 	//	HASE_REPORT
 	//	DSTR << "CCDGJK dist:" << dist << "  " << pa << pb << std::endl;
 	static bool bSave = false;
