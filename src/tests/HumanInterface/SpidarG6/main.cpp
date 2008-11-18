@@ -24,19 +24,17 @@ int __cdecl main(){
 	while(!kbhit()){
 		t += 1;
 		spg->Update(0.001f);
-#if 1
-		Posef pose = spg->GetPose();
-//		std::cout << std::setprecision(2) << pose << std::endl;
-		Vec3f f;
-		if (pose.py < 0){
-			float a = 1000*pose.py;
-			float m = 0.00000000001;
-			if (a > m) a = m;
-			f.y = (t%5-2) * a;
-		}
-		spg->SetForce(f,Vec3f());
-#endif
 #if 0
+		Vec3f spgpos = spg->GetPosition();
+		std::cout << std::setprecision(2) << spgpos << std::endl;
+		Vec3f f(0.0, 0.0, 0.0);
+		if(spgpos.y < -0.015){
+			f[1] = 1.5;
+		}
+		spg->SetForce(f, Vec3f());
+#endif
+
+#if 1
 		for(size_t i=0; i<spg->NMotor(); ++i){
 			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();
 		}
