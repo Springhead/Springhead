@@ -60,17 +60,8 @@ void HapticProcess::UpdateSpidar(){
 }
 
 void HapticProcess::HapticRendering(){
-	static double vibT = 0;
-	static bool vibFlag = false;
-	Vec3d vibV = spidarG6.GetVel() * posScale;
-	static Vec3d vibVo = vibV;
-	double vibforce = 0;
-	static Vec3d proxy[100];
-
 	displayforce = Vec3d(0.0, 0.0, 0.0);		
 	displaytorque = Vec3d(0.0, 0.0, 0.0);
-
-	bool noContact = true;
 
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
