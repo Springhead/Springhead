@@ -20,7 +20,6 @@ PhysicsProcess::PhysicsProcess(){
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
-	phscene = NULL;
 	render = NULL;
 	range = 0.7;
 	bDebug = false;
@@ -39,7 +38,7 @@ void PhysicsProcess::Init(int argc, char* argv[]){
 
 	GetSdk()->Clear();															// SDKの作成
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneの作成
-	phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
 
@@ -68,10 +67,12 @@ void PhysicsProcess::InitCameraView(){
 }
 
 void PhysicsProcess::DesignObject(){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	phscene->SetStateMode(true);
 
 	PHSolidDesc desc;		// 剛体のディスクリプタ
 	CDBoxDesc bd;			// 直方体形状のディスクリプタ
+	CDSphereDesc sd;		// 球体のディスクリプタ
 
 	// 床の作成
 	{
@@ -82,22 +83,21 @@ void PhysicsProcess::DesignObject(){
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
 
-		bd.boxsize = Vec3f(30,20,20);
+		bd.boxsize = Vec3f(60, 40, 40);
 		CDBoxIf* shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 		shapeFloor->SetName("shapeFloor");
 		soFloor->AddShape(shapeFloor);
-		soFloor->SetFramePosition(Vec3d(0,-20 - 0.7,0));
+		soFloor->SetFramePosition(Vec3d(0, -20.7 ,0));
 		soFloor->GetShape(0)->SetVibration(-100, 150, 150);
 		soFloor->SetName("solidFloor");
 	}
 
 	// 力覚ポインタの作成
 	{
-		CDSphereDesc sd;
-		sd.radius = 0.5;//1.0;
-		CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 		soPointer = phscene->CreateSolid(desc);
-		soPointer->AddShape(sphere);
+		sd.radius = 0.5;//1.0;
+		CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+		soPointer->AddShape(shapePointer);
 		soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
 		soPointer->SetDynamical(false);
 		// 力覚ポインタをspringhead2の接触計算から外す
@@ -121,6 +121,7 @@ void PhysicsProcess::Start(){
 }
 
 void PhysicsProcess::PhysicsStep(){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	if (bsync) return;
 	if (calcPhys){
 		UpdateHapticPointer();
@@ -152,7 +153,7 @@ void PhysicsProcess::PhysicsStep(){
 	bsync = true;
 	calcPhys = true;
 
-	static DWORD last;
+	//static DWORD last;
 	//if (phscene->GetCount() % 10==0){
 	//	DWORD t = timeGetTime();
 	//	DSTR << phscene->GetCount() << " dt:" << t-last << std::endl;
@@ -163,7 +164,7 @@ void PhysicsProcess::PhysicsStep(){
 void PhysicsProcess::Display(){
 	// 描画の設定
 	GetSdk()->SetDebugMode(true);
-	render = window->render->Cast();
+	GRDebugRenderIf* render = window->render->Cast();
 
 	// 描画モードの設定
 	render->SetRenderMode(true, false);
@@ -227,6 +228,7 @@ void PhysicsProcess::FindNearestObject(){
 	// シーンで新たに剛体が生成されたらローカルでシミュレーションしているかどうかの情報を加えsceneSolidsに格納する
 	// sceneSolidsは力覚ポインタも持っている
 	sceneSolids.clear();
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene(); 
 	PHSolidIf** solids = phscene->GetSolids();
 	for(int i = 0; i < phscene->NSolids(); i++){
 		sceneSolids.resize(sceneSolids.size() + 1);
@@ -366,6 +368,7 @@ void PhysicsProcess::FindNearestObject(){
 #define DIVIDE_STEP
 
 void PhysicsProcess::PredictSimulation(){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
 #ifdef DIVIDE_STEP
 	states2->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
@@ -591,6 +594,7 @@ void PhysicsProcess::DisplayLineToNearestPoint(){
 }
 
 void PhysicsProcess::Keyboard(unsigned char key){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	states->ReleaseState(phscene);
 	states2->ReleaseState(phscene);
 	switch (key) {
@@ -634,26 +638,22 @@ void PhysicsProcess::Keyboard(unsigned char key){
 
 				desc.mass = 0.05;
 				desc.inertia = 0.0333 * Matrix3d::Unit();
-				soBox.push_back(phscene->CreateSolid(desc));
-				bd.boxsize = Vec3f(1, 1, 1);
+
+				PHSolidIf* soBox = phscene->CreateSolid(desc);
+				bd.boxsize = Vec3f(2, 2, 2);
 				CDBoxIf* shapeBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 				shapeBox->SetName("shapeBox");
 
-				soBox.back()->AddShape(shapeBox);
-				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
-				soBox.back()->GetShape(0)->SetVibration(-200,120,300);
-				soBox.back()->GetShape(0)->SetStaticFriction(0.8);
-				soBox.back()->GetShape(0)->SetDynamicFriction(0.6);
+				soBox->AddShape(shapeBox);
+				soBox->SetFramePosition(Vec3d(-1, 5, 4));
 				//soBox.back()->SetOrientation(
 				//	Quaternionf::Rot(Rad(30), 'y') * 
 				//	Quaternionf::Rot(Rad(10), 'x'));  
-				ostringstream os;
-				os << "box" << (unsigned int)soBox.size();
-				soBox.back()->SetName(os.str().c_str());
+				soBox->GetShape(0)->SetVibration(-200,120,300);
+				soBox->GetShape(0)->SetStaticFriction(0.8);
+				soBox->GetShape(0)->SetDynamicFriction(0.6);
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			}
-			phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			DSTR << "Create Box" << endl;
-			DSTR << "NSolids		" <<  phscene->NSolids() << endl;
 			break;
 		default:
 			break;

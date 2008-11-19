@@ -28,7 +28,6 @@ public:
 	bool calcPhys;
 	volatile int hapticcount;
 	FWWin* window;
-	PHSceneIf* phscene;		
 	GRDebugRenderIf* render;		
 	double dt;
 	Vec3d gravity;
@@ -36,7 +35,6 @@ public:
 	bool bGravity;
 	// „‘Ì‚Ég‚¤•Ï”
 	PHSolidIf* soPointer;
-	vector<PHSolidIf*> soBox;
 	PHSolid phpointer;
 
 	// ‹ß–T•¨‘Ì’Tõ‚Ég‚¤•Ï”

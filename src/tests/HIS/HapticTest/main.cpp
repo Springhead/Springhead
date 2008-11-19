@@ -102,7 +102,6 @@ void Synchronize(){
 void Reset(){
 	timer.Release();
 	// Ž©•ª‚Åì‚Á‚½vector‚ð‰Šú‰»
-	pprocess.soBox.clear();
 	pprocess.sceneSolids.clear();
 	pprocess.neighborObjects.clear();
 	hprocess.neighborObjects.clear();
@@ -114,13 +113,13 @@ void Reset(){
 	// scene‚Ìƒ[ƒh
 	pprocess.GetSdk()->Clear();															// SDK‚Ìì¬
 	pprocess.GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬
-	pprocess.phscene = pprocess.GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf* phscene = pprocess.GetSdk()->GetScene()->GetPHScene(); 
 	pprocess.states = ObjectStatesIf::Create();
 	pprocess.states2 = ObjectStatesIf::Create();
 	pprocess.DesignObject();																// „‘Ì‚ðì¬
-	pprocess.phscene->SetGravity(pprocess.gravity);				
-	pprocess.phscene->SetTimeStep(pprocess.dt);
-	pprocess.phscene->SetNumIteration(pprocess.nIter);
+	phscene->SetGravity(pprocess.gravity);				
+	phscene->SetTimeStep(pprocess.dt);
+	phscene->SetNumIteration(pprocess.nIter);
 	pprocess.GetCurrentWin()->SetScene(pprocess.GetSdk()->GetScene());
 	// pprocess.GetCurrentWin()->SetRender(pprocess.GetSdk()->GetRender());
 	pprocess.InitCameraView();
