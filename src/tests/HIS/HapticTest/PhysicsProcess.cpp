@@ -20,7 +20,6 @@ PhysicsProcess::PhysicsProcess(){
 	gravity =  Vec3d(0, -9.8f , 0);
 	nIter = 15;
 	bGravity = true;
-	render = NULL;
 	range = 0.7;
 	bDebug = false;
 	neighborObjects.clear();
@@ -39,14 +38,14 @@ void PhysicsProcess::Init(int argc, char* argv[]){
 	GetSdk()->Clear();															// SDKの作成
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneの作成
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	phscene->SetGravity(gravity);				
+	phscene->SetTimeStep(dt);
+	phscene->SetNumIteration(nIter);
+
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
 
 	DesignObject();																// 剛体を作成
-
-	phscene->SetGravity(gravity);				
-	phscene->SetTimeStep(dt);
-	phscene->SetNumIteration(nIter);
 
 	FWWinDesc windowDesc;
 	windowDesc.title = "HapticConnect1.2";
@@ -91,7 +90,6 @@ void PhysicsProcess::DesignObject(){
 		soFloor->GetShape(0)->SetVibration(-100, 150, 150);
 		soFloor->SetName("solidFloor");
 	}
-
 	// 力覚ポインタの作成
 	{
 		soPointer = phscene->CreateSolid(desc);
@@ -143,6 +141,7 @@ void PhysicsProcess::PhysicsStep(){
 			curvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
 			neighborObjects[i].curb = (curvel - neighborObjects[i].lastvel) / dt;
 		}
+		ExpandSolidInfo();
 		FindNearestObject();	// 近傍物体の取得
 		PredictSimulation();
 		glutPostRedisplay();
@@ -204,7 +203,6 @@ void PhysicsProcess::Display(){
 	if(bDebug){
 		DisplayContactPlane();
 		DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
-	//	DrawHapticSolids();
 	}
 	render->PopLight();	//	光源の削除
 
@@ -213,18 +211,15 @@ void PhysicsProcess::Display(){
 }
 
 void PhysicsProcess::UpdateHapticPointer(){
-	// cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる
-	soPointer->SetFramePosition(phpointer.GetFramePosition());//cameraInfo.view.Rot() * phpointer.GetFramePosition());				
+	soPointer->SetFramePosition(phpointer.GetFramePosition());				
+//	soPointer->SetFramePosition(cameraInfo.view.Rot() * phpointer.GetFramePosition());		// (未実装)cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる(*力覚も考えないといけん)			
 	soPointer->SetOrientation(phpointer.GetOrientation());					
 	soPointer->SetVelocity(phpointer.GetVelocity());
 	soPointer->SetAngularVelocity(phpointer.GetAngularVelocity());	
 	soPointer->SetDynamical(false);
 };
 
-void PhysicsProcess::FindNearestObject(){
-	// GJKを使って近傍物体と近傍物体の最近点を取得
-	// これをすべてのshapeをもつ剛体についてやる
-
+void PhysicsProcess::ExpandSolidInfo(){
 	// シーンで新たに剛体が生成されたらローカルでシミュレーションしているかどうかの情報を加えsceneSolidsに格納する
 	// sceneSolidsは力覚ポインタも持っている
 	sceneSolids.clear();
@@ -247,9 +242,13 @@ void PhysicsProcess::FindNearestObject(){
 		neighborObjects.back().bneighbor = false;
 		neighborObjects.back().blocal = false;
 	}
+}
 
+void PhysicsProcess::FindNearestObject(){
 #if 1		
-	// AABBで力覚ポインタ近傍の物体を絞る（実装中）
+	// GJKを使って近傍物体と近傍物体の最近点を取得
+	// これをすべてのshapeをもつ剛体についてやる
+	// AABBで力覚ポインタ近傍の物体を絞る
 	// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 	// SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外		
 	//1. BBoxレベルの衝突判定
@@ -487,6 +486,7 @@ void PhysicsProcess::DisplayContactPlane(){
 		Vec3d v2 = normal ^ v1;
 
 		Vec4f moon(1.0, 1.0, 0.8, 0.3);
+		GRDebugRenderIf* render = window->render->Cast();
 		render->SetMaterial( GRMaterialDesc(moon) );
 		render->PushModelMatrix();
 		Vec3d offset = 0.02 * normal;

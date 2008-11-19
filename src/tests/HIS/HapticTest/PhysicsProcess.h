@@ -21,14 +21,22 @@ struct PHSceneSolid{
 	bool bfirstlocal;
 };
 
+
+struct Edge{
+	float edge;				///<	端の位置(グローバル系)
+	int	index;				///<	元の solidの位置
+	bool bMin;				///<	初端ならtrue
+	bool operator < (const Edge& s) const { return edge < s.edge; }
+};
+typedef std::vector<Edge> Edges;
+
 class PhysicsProcess : public FWAppGLUT, public UTRefCount{
 public:
 	//　プロセス間の同期に使う変数
 	volatile bool bsync;
 	bool calcPhys;
 	volatile int hapticcount;
-	FWWin* window;
-	GRDebugRenderIf* render;		
+	FWWin* window;	
 	double dt;
 	Vec3d gravity;
 	double nIter;
@@ -49,14 +57,6 @@ public:
 	bool bOneStep;
 	vector<PHSolid> hapticsolids;
 
-	struct Edge{
-		float edge;				///<	端の位置(グローバル系)
-		int	index;				///<	元の solidの位置
-		bool bMin;				///<	初端ならtrue
-		bool operator < (const Edge& s) const { return edge < s.edge; }
-	};
-	typedef std::vector<Edge> Edges;
-
 	PhysicsProcess();	
 	void Init(int argc, char* argv[]);				
 	void InitCameraView();										
@@ -66,9 +66,9 @@ public:
 	void PhysicsStep();
 	void Display();		
 	void UpdateHapticPointer();
+	void ExpandSolidInfo();
 	void FindNearestObject();
 	void PredictSimulation();
-	void FindNearestPoint();
 	void DisplayContactPlane();
 	void DisplayLineToNearestPoint();
 	void Keyboard(unsigned char key);
