@@ -1,4 +1,4 @@
-#include "PhysicalProcess.h"
+#include "PhysicsProcess.h"
 #include "HapticProcess.h"
 #include <vector>
 #include <iostream>
@@ -11,9 +11,9 @@
 #include <Physics/PHConstraintEngine.h>
 #include <Base/TMatrix.h>
 
-BoxStack bstack;
+PhysicsProcess pprocess;
 
-BoxStack::BoxStack(){
+PhysicsProcess::PhysicsProcess(){
 	bsync=false;
 	calcPhys=true;
 	dt = 0.02;//0.05;
@@ -27,13 +27,14 @@ BoxStack::BoxStack(){
 	neighborObjects.clear();
 	bStep = true;
 }
+
 namespace Spr{
 void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 }
 
-void BoxStack::Init(int argc, char* argv[]){
+void PhysicsProcess::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
 
 	GetSdk()->Clear();															// SDKの作成
@@ -56,7 +57,7 @@ void BoxStack::Init(int argc, char* argv[]){
 	InitCameraView();
 }
 
-void BoxStack::InitCameraView(){
+void PhysicsProcess::InitCameraView(){
 	cameraInfo.view[0][0] = 0.9996;
 	cameraInfo.view[0][1] = 0.0107463;
 	cameraInfo.view[0][2] = -0.0261432;
@@ -75,7 +76,7 @@ void BoxStack::InitCameraView(){
 	cameraInfo.view[3][3] = 1;
 }
 
-void BoxStack::DesignObject(){
+void PhysicsProcess::DesignObject(){
 	// soFloor用のdesc
 	phscene->SetStateMode(true);
 	desc.mass = 1e20f;
@@ -146,11 +147,11 @@ void BoxStack::DesignObject(){
 	phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 }
 
-void BoxStack::Idle(){
+void PhysicsProcess::Idle(){
 	PhysicsStep();
 }
 
-void BoxStack::Start(){
+void PhysicsProcess::Start(){
 	instance = this;
 	if (!NWin()){
 		CreateWin();
@@ -160,7 +161,7 @@ void BoxStack::Start(){
 	glutMainLoop();
 }
 
-void BoxStack::PhysicsStep(){
+void PhysicsProcess::PhysicsStep(){
 	if (bsync) return;
 	if (calcPhys){
 		UpdateHapticPointer();
@@ -200,7 +201,7 @@ void BoxStack::PhysicsStep(){
 	//}
 }
 
-void BoxStack::Display(){
+void PhysicsProcess::Display(){
 	// 描画の設定
 	GetSdk()->SetDebugMode(true);
 	render = window->render->Cast();
@@ -251,7 +252,7 @@ void BoxStack::Display(){
 	glutSwapBuffers();
 }
 
-void BoxStack::UpdateHapticPointer(){
+void PhysicsProcess::UpdateHapticPointer(){
 	// cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる
 	soPointer->SetFramePosition(phpointer.GetFramePosition());//cameraInfo.view.Rot() * phpointer.GetFramePosition());				
 	soPointer->SetOrientation(phpointer.GetOrientation());					
@@ -260,7 +261,7 @@ void BoxStack::UpdateHapticPointer(){
 	soPointer->SetDynamical(false);
 };
 
-void BoxStack::FindNearestObject(){
+void PhysicsProcess::FindNearestObject(){
 	// GJKを使って近傍物体と近傍物体の最近点を取得
 	// これをすべてのshapeをもつ剛体についてやる
 
@@ -405,7 +406,7 @@ void BoxStack::FindNearestObject(){
 
 #define DIVIDE_STEP
 
-void BoxStack::PredictSimulation(){
+void PhysicsProcess::PredictSimulation(){
 	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
 #ifdef DIVIDE_STEP
 	states2->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
@@ -510,30 +511,19 @@ void BoxStack::PredictSimulation(){
 #endif
 }
 
-void BoxStack::DisplayContactPlane(){
+void PhysicsProcess::DisplayContactPlane(){
 	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
 		Vec3d pPoint = soPointer->GetPose() * neighborObjects[i].pointerPoint;
 		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;
 		Vec3d normal = neighborObjects[i].face_normal;
-#if 0
-		Vec3d v1;
-		v1[0] = 1 / normal[0];
-		v1[1] = -1 / normal[1];
-		v1[2] = 1 / normal[2];
-		Vec3d v2;
-		// 法線ベクトルの向きによって外積の順番を考えないと面がうまく張れない．
-		if(normal[2]>0) v2 = normal % v1;
-		else v2 = v1 % normal;		
-		v1 = v1.unit();
-		v2 = v2.unit();
-#else
 		Vec3d v1(0,1,0);
+
 		v1 +=  Vec3d(0, 0, 0.5) - Vec3d(0, 0, 0.5)*normal*normal;
 		v1 -= v1*normal * normal;
 		v1.unitize();
 		Vec3d v2 = normal ^ v1;
-#endif
+
 		Vec4f moon(1.0, 1.0, 0.8, 0.3);
 		render->SetMaterial( GRMaterialDesc(moon) );
 		render->PushModelMatrix();
@@ -621,7 +611,7 @@ void BoxStack::DisplayContactPlane(){
 	}
 }
 
-void BoxStack::DisplayLineToNearestPoint(){
+void PhysicsProcess::DisplayLineToNearestPoint(){
 	GLfloat moon[]={0.8,0.8,0.8};
 	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
 		if(!neighborObjects[i].blocal) continue;
@@ -641,19 +631,7 @@ void BoxStack::DisplayLineToNearestPoint(){
 	}
 }
 
-void BoxStack::DrawHapticSolids(){
-	GLfloat purple[] = {1.0, 0.0, 1.0, 0.0};
-	GRDebugRenderIf* render = GetCurrentWin()->GetRender()->Cast();
-	render->SetMaterialSample(GRDebugRenderIf::GRAY);
-	for(unsigned int i = 0; i < hapticsolids.size(); i++){
-		PHSolid* solid = &hapticsolids[i];		
-		PHSolidIf* solidIf = solid->Cast(); 
-		render->DrawSolid(solidIf);
-	}
-};
-
-
-void BoxStack::Keyboard(unsigned char key){
+void PhysicsProcess::Keyboard(unsigned char key){
 	states->ReleaseState(phscene);
 	states2->ReleaseState(phscene);
 	switch (key) {
@@ -711,163 +689,6 @@ void BoxStack::Keyboard(unsigned char key){
 			phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			DSTR << "Create Box" << endl;
 			DSTR << "NSolids		" <<  phscene->NSolids() << endl;
-			break;
-		case 'v':
-			{
-				// MeshCapsule
-				desc.mass = 0.05;
-				desc.inertia[0][0] = 0.0325;
-				desc.inertia[0][1] = 0.0;
-				desc.inertia[0][2] = 0.0;
-				desc.inertia[1][0] = 0.0;
-				desc.inertia[1][1] = 0.02;
-				desc.inertia[1][2] = 0.0;
-				desc.inertia[2][0] = 0.0;
-				desc.inertia[2][1] = 0.0;
-				desc.inertia[2][2] = 0.0325;
-
-				soBox.push_back(phscene->CreateSolid(desc));
-				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
-				soBox.back()->AddShape(meshCapsule);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
-				soBox.back()->GetShape(0)->SetVibration(-80,200,150);
-				soBox.back()->GetShape(0)->SetElasticity(0.1);
-//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
-				ostringstream os;
-				os << "capsule" << (unsigned int)soBox.size();
-				soBox.back()->SetName(os.str().c_str());
-				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			}
-			break;
-		case 'b':
-			{
-				// MeshSphere
-				desc.mass = 0.05;
-				desc.inertia = 0.0288* Matrix3d::Unit();
-				soBox.push_back(phscene->CreateSolid(desc));
-				soBox.back()->AddShape(meshSphere);
-//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->GetShape(0)->SetElasticity(0.4);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
-				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
-				ostringstream os;
-				os << "sphere" << (unsigned int)soBox.size();
-				soBox.back()->SetName(os.str().c_str());
-				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			}
-			break;
-		case 'n':
-			{
-				// ConvexMesh
-				desc.mass = 0.1;
-				desc.inertia = 0.36 * Matrix3d::Unit();
-				soBox.push_back(phscene->CreateSolid(desc));
-				CDConvexMeshDesc md;
-				int nv = rand() % 100 + 50;
-				for(int i=0; i < nv; ++i){
-					Vec3d v;
-					for(int c=0; c<3; ++c){
-						v[c] = (rand() % 100 / 100.0 - 0.5) * 5 * 1.3;
-					}
-					md.vertices.push_back(v);
-				}
-				CDShapeIf* s = GetSdk()->GetPHSdk()->CreateShape(md);
-				soBox.back()->AddShape(s);
-				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
-//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->GetShape(0)->SetVibration(-100,60,100);
-				soBox.back()->GetShape(0)->SetStaticFriction(0.8);
-				soBox.back()->GetShape(0)->SetDynamicFriction(0.6);
-
-				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
-				ostringstream os;
-				os << "sphere" << (unsigned int)soBox.size();
-				soBox.back()->SetName(os.str().c_str());
-				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			}
-			break;
-/*		case 'm':
-			{
-				// Lump of Box
-				soBox.push_back(phscene->CreateSolid(desc));
-				soBox.back()->AddShape(meshBox);
-				soBox.back()->AddShape(meshBox);
-				soBox.back()->AddShape(meshBox);
-				soBox.back()->AddShape(meshBox);
-				soBox.back()->AddShape(meshBox);
-				soBox.back()->AddShape(meshBox);
-				soBox.back()->AddShape(meshBox);
-				Posed pose;
-				pose.Pos() = Vec3d(3, 0, 0);
-				soBox.back()->SetShapePose(1, pose);
-				pose.Pos() = Vec3d(-3, 0, 0);
-				soBox.back()->SetShapePose(2, pose);
-				pose.Pos() = Vec3d(0, 3, 0);
-				soBox.back()->SetShapePose(3, pose);
-				pose.Pos() = Vec3d(0, -3, 0);
-				soBox.back()->SetShapePose(4, pose);
-				pose.Pos() = Vec3d(0, 0, 3);
-				soBox.back()->SetShapePose(5, pose);
-				pose.Pos() = Vec3d(0, 0, -3);
-				soBox.back()->SetShapePose(6, pose);
-				
-				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
-	//			soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
-				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
-				ostringstream os;
-				os << "box" << (unsigned int)soBox.size();
-				soBox.back()->SetName(os.str().c_str());
-			    phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);				
-			}
-			break;	*/
-		case 'x':
-			{
-				// Wall
-				PHSolidDesc soliddesc;
-				soliddesc.mass = 0.05;
-				soliddesc.inertia = 0.0333 * Matrix3d::Unit();
-				int wall_height = 4;
-				int numbox = 5;
-				for(int i = 0; i < wall_height; i++){
-					for(int j = 0; j < numbox; j++){
-						soBox.push_back(phscene->CreateSolid(soliddesc));
-						soBox.back()->AddShape(meshBox);
-						soBox.back()->SetFramePosition(Vec3d(-4.0 + (2.0 + 0.1) * j , (2.0 + 0.1) * (double)i, -2.0));  
-						soBox.back()->GetShape(0)->SetVibration(-200,120,300);
-						soBox.back()->GetShape(0)->SetStaticFriction(0.8);
-						soBox.back()->GetShape(0)->SetDynamicFriction(0.6);
-
-					}
-				}
-				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			}
-			break;
-		case 'z':
-			{
-				// Tower
-				PHSolidDesc soliddesc;
-				soliddesc.mass = 0.05;
-				soliddesc.inertia = 0.0333 * Matrix3d::Unit();
-				double tower_radius = 5;
-				int tower_height = 5;
-				int numbox = 5;
-				double theta;
-				for(int i = 0; i < tower_height; i++){
-					for(int j = 0; j < numbox; j++){
-						soBox.push_back(phscene->CreateSolid(soliddesc));
-						soBox.back()->AddShape(meshBox);
-						theta = ((double)j + (i % 2 ? 0.0 : 0.5)) * Rad(360) / (double)numbox;
-//						soBox.back()->SetFramePosition(Vec3f(0.5, 20, 0));
-						soBox.back()->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i), tower_radius * sin(theta)));
-						soBox.back()->SetOrientation(Quaterniond::Rot(-theta, 'y'));  
-						soBox.back()->GetShape(0)->SetVibration(-200,120,300);
-						soBox.back()->GetShape(0)->SetStaticFriction(0.4);
-						soBox.back()->GetShape(0)->SetDynamicFriction(0.3);
-					}
-				}
-				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			}
 			break;
 		default:
 			break;

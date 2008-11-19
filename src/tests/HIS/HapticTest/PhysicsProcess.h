@@ -21,7 +21,7 @@ struct PHSceneSolid{
 	bool bfirstlocal;
 };
 
-class BoxStack : public FWAppGLUT, public UTRefCount{
+class PhysicsProcess : public FWAppGLUT, public UTRefCount{
 public:
 	//　プロセス間の同期に使う変数
 	volatile bool bsync;
@@ -65,7 +65,7 @@ public:
 	};
 	typedef std::vector<Edge> Edges;
 
-	BoxStack();	
+	PhysicsProcess();	
 	void Init(int argc, char* argv[]);				
 	void InitCameraView();										
 	void DesignObject();
@@ -79,9 +79,8 @@ public:
 	void FindNearestPoint();
 	void DisplayContactPlane();
 	void DisplayLineToNearestPoint();
-	void DrawHapticSolids();
 	void Keyboard(unsigned char key);
 }; 
-extern BoxStack bstack;
+extern PhysicsProcess pprocess;
 
 #endif
