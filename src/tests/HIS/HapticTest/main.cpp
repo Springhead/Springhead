@@ -15,7 +15,6 @@
 using namespace std;
 
 UTMMTimer timer;
-bool bhaptic = true;
 
 void AppStart();
 void CallBackHapticProcess(void* arg);
@@ -47,18 +46,16 @@ void Synchronize(){
 		pprocess.hapticsolids.clear();
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
 		// blocal‚ªtrueCblocal‚ª‚Èê‡‚ÍŒ‹‰Ê‚ð”½‰f‚³‚¹‚é
-			if(bhaptic){
-				if(pprocess.neighborObjects[i].blocal && !pprocess.neighborObjects[i].bfirstlocal){
-					pprocess.hapticsolids.push_back(hprocess.neighborObjects[i].phSolid);
-					SpatialVector b = (pprocess.neighborObjects[i].b + (pprocess.neighborObjects[i].curb - pprocess.neighborObjects[i].lastb)) *  pprocess.dt;
-					Vec3d v = hprocess.neighborObjects[i].phSolid.GetVelocity() + b.v();
-					hprocess.neighborObjects[i].phSolidIf->SetVelocity(v);
-					Vec3d w = hprocess.neighborObjects[i].phSolid.GetAngularVelocity() + b.w();
-					hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(w);
-					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
-					hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());
-					pprocess.neighborObjects[i].test_force_norm = hprocess.neighborObjects[i].test_force_norm;
-				}
+			if(pprocess.neighborObjects[i].blocal && !pprocess.neighborObjects[i].bfirstlocal){
+				pprocess.hapticsolids.push_back(hprocess.neighborObjects[i].phSolid);
+				SpatialVector b = (pprocess.neighborObjects[i].b + (pprocess.neighborObjects[i].curb - pprocess.neighborObjects[i].lastb)) *  pprocess.dt;
+				Vec3d v = hprocess.neighborObjects[i].phSolid.GetVelocity() + b.v();
+				hprocess.neighborObjects[i].phSolidIf->SetVelocity(v);
+				Vec3d w = hprocess.neighborObjects[i].phSolid.GetAngularVelocity() + b.w();
+				hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(w);
+				hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
+				hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());
+				pprocess.neighborObjects[i].test_force_norm = hprocess.neighborObjects[i].test_force_norm;
 			}
 		}
 
@@ -142,15 +139,6 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 		case 'r':
 			Reset();
 			pprocess.Keyboard('x');
-			break;
-		case 'h':
-			if(bhaptic){
-				bhaptic = false;
-				DSTR << "Haptic Disconnect" << endl;
-			}else{
-				bhaptic = true;
-				DSTR << "Haptic Connect" << endl;
-			}
 			break;
 		default:
 			pprocess.Keyboard(key);

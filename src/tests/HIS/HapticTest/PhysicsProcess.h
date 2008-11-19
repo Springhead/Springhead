@@ -35,16 +35,10 @@ public:
 	double nIter;
 	bool bGravity;
 	// 剛体に使う変数
-	PHSolidDesc desc;
-	PHSolidIf* soFloor;
 	PHSolidIf* soPointer;
 	vector<PHSolidIf*> soBox;
 	PHSolid phpointer;
-	CDConvexMeshIf* meshFloor;
-	CDConvexMeshIf* meshConvex;
-	CDBoxIf* meshBox;
-	CDSphereIf* meshSphere;
-	CDCapsuleIf* meshCapsule;
+
 	// 近傍物体探索に使う変数
 	double range;
 	vector<PHNeighborObject> neighborObjects;	///<近傍物体を格納する

@@ -58,93 +58,52 @@ void PhysicsProcess::Init(int argc, char* argv[]){
 }
 
 void PhysicsProcess::InitCameraView(){
-	cameraInfo.view[0][0] = 0.9996;
-	cameraInfo.view[0][1] = 0.0107463;
-	cameraInfo.view[0][2] = -0.0261432;
-	cameraInfo.view[0][3] = -0.389004;
-	cameraInfo.view[1][0] = -6.55577e-010;
-	cameraInfo.view[1][1] = 0.924909;
-	cameraInfo.view[1][2] = 0.380188;
-	cameraInfo.view[1][3] = 5.65711;
-	cameraInfo.view[2][0] = 0.0282657;
-	cameraInfo.view[2][1] = -0.380037;
-	cameraInfo.view[2][2] = 0.92454;
-	cameraInfo.view[2][3] = 13.7569;
-	cameraInfo.view[3][0] = 0;
-	cameraInfo.view[3][1] = 0;
-	cameraInfo.view[3][2] = 0;
-	cameraInfo.view[3][3] = 1;
+	std::istringstream issView(
+		"((0.9996 0.0107463 -0.0261432 -0.389004)"
+		"(-6.55577e-010 0.924909 0.380188 5.65711)"
+		"(0.0282657 -0.380037 0.92454 13.7569)"
+		"(     0      0      0      1))"
+	);
+	issView >> cameraInfo.view;
 }
 
 void PhysicsProcess::DesignObject(){
-	// soFloor用のdesc
 	phscene->SetStateMode(true);
-	desc.mass = 1e20f;
-	desc.inertia *= 1e30f;
-	soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	soFloor->SetDynamical(false);
-	soFloor->SetGravity(false);
-	
-	// soBox用のdesc
-	desc.mass = 0.05;
-	desc.inertia = 0.033 * Matrix3d::Unit();
+
+	PHSolidDesc desc;		// 剛体のディスクリプタ
+	CDBoxDesc bd;			// 直方体形状のディスクリプタ
+
+	// 床の作成
 	{
-		CDBoxDesc bd;
-		bd.boxsize = Vec3f(2,2,2);
-		meshBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
-		meshBox->SetName("meshBox");
+		// soFloor用のdesc
+		desc.mass = 1e20f;
+		desc.inertia *= 1e30f;
+		PHSolidIf* soFloor = phscene->CreateSolid(desc);		
+		soFloor->SetDynamical(false);
+		soFloor->SetGravity(false);
+
+		bd.boxsize = Vec3f(30,20,20);
+		CDBoxIf* shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+		shapeFloor->SetName("shapeFloor");
+		soFloor->AddShape(shapeFloor);
+		soFloor->SetFramePosition(Vec3d(0,-20 - 0.7,0));
+		soFloor->GetShape(0)->SetVibration(-100, 150, 150);
+		soFloor->SetName("solidFloor");
+	}
+
+	// 力覚ポインタの作成
+	{
 		CDSphereDesc sd;
-		sd.radius = 1.2;
-		meshSphere = XCAST(GetSdk()->GetPHSdk()->CreateShape(sd));
-		meshSphere->SetName("meshSphere");
-		CDCapsuleDesc cd;
-		cd.radius = 1;
-		cd.length = 1;
-		meshCapsule = XCAST(GetSdk()->GetPHSdk()->CreateShape(cd));
-		meshCapsule->SetName("meshCapsule");
+		sd.radius = 0.5;//1.0;
+		CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+		soPointer = phscene->CreateSolid(desc);
+		soPointer->AddShape(sphere);
+		soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
+		soPointer->SetDynamical(false);
+		// 力覚ポインタをspringhead2の接触計算から外す
+		// 剛体が増えるたびにContactModeをNONEにしなけらばいけない(増えた剛体と接触計算をしてしまうため)
+		phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 	}
-
-	{
-		// meshConvex(soBox)のメッシュ形状
-		CDConvexMeshInterpolateDesc md;
-		md.vertices.push_back(Vec3d(-1,-1,-1));
-		md.vertices.push_back(Vec3d(-1,-1, 1));	
-		md.vertices.push_back(Vec3d(-1, 1,-1));	
-		md.vertices.push_back(Vec3d(-1, 1, 1));
-		md.vertices.push_back(Vec3d( 1,-1,-1));	
-		md.vertices.push_back(Vec3d( 1,-1, 1));
-		md.vertices.push_back(Vec3d( 1, 1,-1));
-		md.vertices.push_back(Vec3d( 1, 1, 1));
-		meshConvex = DCAST(CDConvexMeshIf, GetSdk()->GetPHSdk()->CreateShape(md));
-		meshConvex->SetName("meshConvex");
-
-		// meshFloor(soFloor)のメッシュ形状
-		for(unsigned i=0; i<md.vertices.size(); ++i){
-			md.vertices[i].x *= 30;
-			md.vertices[i].z *= 20;
-			md.vertices[i].y *= 20;
-		}
-		meshFloor = DCAST(CDConvexMeshIf, GetSdk()->GetPHSdk()->CreateShape(md));
-		meshFloor->SetName("meshFloor");
-	}
-	soFloor->AddShape(meshFloor);
-	soFloor->SetFramePosition(Vec3d(0,-20 - 0.7,0));
-	soFloor->GetShape(0)->SetVibration(-100, 150, 150);
-	soFloor->SetName("solidFloor");
-
-	// 力覚ポインタ
-	CDSphereDesc sd;
-	sd.radius = 0.5;//1.0;
-	CDSphereIf* sphere = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
-	soPointer = phscene->CreateSolid(desc);
-	soPointer->AddShape(sphere);//meshConvex);
-//	soPointer->AddShape(meshConvex);
-//	soPointer->AddShape(meshCapsule);
-	soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
-	soPointer->SetDynamical(false);
-	// 力覚ポインタをspringhead2の接触計算から外す
-	// 剛体が増えるたびにContactModeをNONEにしなけらばいけない(増えた剛体と接触計算をしてしまうため)
-	phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 }
 
 void PhysicsProcess::Idle(){
@@ -669,12 +628,18 @@ void PhysicsProcess::Keyboard(unsigned char key){
 			break;
 		case ' ':
 			{
-				// ConvexBox
+				// 立方体
+				PHSolidDesc desc;
+				CDBoxDesc bd;
+
 				desc.mass = 0.05;
 				desc.inertia = 0.0333 * Matrix3d::Unit();
-				//desc.dynamical = false;
 				soBox.push_back(phscene->CreateSolid(desc));
-				soBox.back()->AddShape(meshBox);
+				bd.boxsize = Vec3f(1, 1, 1);
+				CDBoxIf* shapeBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+				shapeBox->SetName("shapeBox");
+
+				soBox.back()->AddShape(shapeBox);
 				soBox.back()->SetFramePosition(Vec3d(-1, 5, 4));
 				soBox.back()->GetShape(0)->SetVibration(-200,120,300);
 				soBox.back()->GetShape(0)->SetStaticFriction(0.8);
