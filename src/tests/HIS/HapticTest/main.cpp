@@ -1,4 +1,4 @@
-#include "BoxStack.h"
+#include "PhysicsProcess.h"
 #include "HapticProcess.h"
 #include <GL/glut.h>
 #include <iostream>
@@ -37,96 +37,96 @@ void StartTimer(){
 };
 
 void Synchronize(){
-	if(bstack.bsync){
+	if(pprocess.bsync){
 		// 力覚ポインタの同期
-		bstack.phpointer = hprocess.hpointer;
-		bstack.UpdateHapticPointer();
+		pprocess.phpointer = hprocess.hpointer;
+		pprocess.UpdateHapticPointer();
 
 		// 力覚プロセス->物理プロセス
 		// 力覚プロセスでの近傍物体のシミュレーション結果を物理プロセスに反映させる
-		bstack.hapticsolids.clear();
+		pprocess.hapticsolids.clear();
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
 		// blocalがtrue，blocalがな場合は結果を反映させる
 			if(bhaptic){
-				if(bstack.neighborObjects[i].blocal && !bstack.neighborObjects[i].bfirstlocal){
-					bstack.hapticsolids.push_back(hprocess.neighborObjects[i].phSolid);
-					SpatialVector b = (bstack.neighborObjects[i].b + (bstack.neighborObjects[i].curb - bstack.neighborObjects[i].lastb)) *  bstack.dt;
+				if(pprocess.neighborObjects[i].blocal && !pprocess.neighborObjects[i].bfirstlocal){
+					pprocess.hapticsolids.push_back(hprocess.neighborObjects[i].phSolid);
+					SpatialVector b = (pprocess.neighborObjects[i].b + (pprocess.neighborObjects[i].curb - pprocess.neighborObjects[i].lastb)) *  pprocess.dt;
 					Vec3d v = hprocess.neighborObjects[i].phSolid.GetVelocity() + b.v();
 					hprocess.neighborObjects[i].phSolidIf->SetVelocity(v);
 					Vec3d w = hprocess.neighborObjects[i].phSolid.GetAngularVelocity() + b.w();
 					hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(w);
 					hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
 					hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());
-					bstack.neighborObjects[i].test_force_norm = hprocess.neighborObjects[i].test_force_norm;
+					pprocess.neighborObjects[i].test_force_norm = hprocess.neighborObjects[i].test_force_norm;
 				}
 			}
 		}
 
 		// 物理プロセス->力覚プロセス
 		// シーンで新しく生成された剛体を格納
-		for(size_t i = hprocess.neighborObjects.size(); i < bstack.neighborObjects.size(); i++){
+		for(size_t i = hprocess.neighborObjects.size(); i < pprocess.neighborObjects.size(); i++){
 			hprocess.neighborObjects.resize(hprocess.neighborObjects.size() + 1);
-			hprocess.neighborObjects.back() = bstack.neighborObjects[i];
+			hprocess.neighborObjects.back() = pprocess.neighborObjects[i];
 		}
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
 			// 初めて取得した近傍物体のみ行う
-			if(bstack.neighborObjects[i].bfirstlocal){
-				hprocess.neighborObjects[i].phSolid = bstack.neighborObjects[i].phSolid;
-				bstack.neighborObjects[i].bfirstlocal = false;
+			if(pprocess.neighborObjects[i].bfirstlocal){
+				hprocess.neighborObjects[i].phSolid = pprocess.neighborObjects[i].phSolid;
+				pprocess.neighborObjects[i].bfirstlocal = false;
 			}
-			hprocess.neighborObjects[i].closestPoint = bstack.neighborObjects[i].closestPoint;
-			hprocess.neighborObjects[i].pointerPoint = bstack.neighborObjects[i].pointerPoint;
-			hprocess.neighborObjects[i].face_normal = bstack.neighborObjects[i].face_normal;
-			hprocess.neighborObjects[i].last_face_normal = bstack.neighborObjects[i].last_face_normal;
-			hprocess.neighborObjects[i].blocal = bstack.neighborObjects[i].blocal;
-			hprocess.neighborObjects[i].A = bstack.neighborObjects[i].A;
-			hprocess.neighborObjects[i].b = bstack.neighborObjects[i].b;
-			hprocess.neighborObjects[i].curb = bstack.neighborObjects[i].curb;
-			hprocess.neighborObjects[i].lastb = bstack.neighborObjects[i].lastb;
+			hprocess.neighborObjects[i].closestPoint = pprocess.neighborObjects[i].closestPoint;
+			hprocess.neighborObjects[i].pointerPoint = pprocess.neighborObjects[i].pointerPoint;
+			hprocess.neighborObjects[i].face_normal = pprocess.neighborObjects[i].face_normal;
+			hprocess.neighborObjects[i].last_face_normal = pprocess.neighborObjects[i].last_face_normal;
+			hprocess.neighborObjects[i].blocal = pprocess.neighborObjects[i].blocal;
+			hprocess.neighborObjects[i].A = pprocess.neighborObjects[i].A;
+			hprocess.neighborObjects[i].b = pprocess.neighborObjects[i].b;
+			hprocess.neighborObjects[i].curb = pprocess.neighborObjects[i].curb;
+			hprocess.neighborObjects[i].lastb = pprocess.neighborObjects[i].lastb;
 		}
 
 		// 物理プロセスで使用する刻み時間
-		//bstack.phscene->SetTimeStep(0.001f * (float)stepcount);
-		//bstack.dt = 0.001f * (float)stepcount;
+		//pprocess.phscene->SetTimeStep(0.001f * (float)stepcount);
+		//pprocess.dt = 0.001f * (float)stepcount;
 		hprocess.stepcount = 0;
 
 		// 同期終了のフラグ
-		bstack.bsync = false;
+		pprocess.bsync = false;
 	}
 	if(hprocess.stepcount > hprocess.countmax) {
 		DSTR << "too many step" << endl;
 		hprocess.stepcount = 0;
-		bstack.bsync = false;
+		pprocess.bsync = false;
 	}
 	hprocess.stepcount++;
-	bstack.hapticcount++;
+	pprocess.hapticcount++;
 };
 
 void Reset(){
 	timer.Release();
 	// 自分で作ったvectorを初期化
-	bstack.soBox.clear();
-	bstack.sceneSolids.clear();
-	bstack.neighborObjects.clear();
+	pprocess.soBox.clear();
+	pprocess.sceneSolids.clear();
+	pprocess.neighborObjects.clear();
 	hprocess.neighborObjects.clear();
-	bstack.bsync = false;
-	bstack.calcPhys=true;
-	bstack.hapticcount = 1;
+	pprocess.bsync = false;
+	pprocess.calcPhys=true;
+	pprocess.hapticcount = 1;
 	hprocess.stepcount = 1;
 
 	// sceneのロード
-	bstack.GetSdk()->Clear();															// SDKの作成
-	bstack.GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	bstack.phscene = bstack.GetSdk()->GetScene()->GetPHScene();
-	bstack.states = ObjectStatesIf::Create();
-	bstack.states2 = ObjectStatesIf::Create();
-	bstack.DesignObject();																// 剛体を作成
-	bstack.phscene->SetGravity(bstack.gravity);				
-	bstack.phscene->SetTimeStep(bstack.dt);
-	bstack.phscene->SetNumIteration(bstack.nIter);
-	bstack.GetCurrentWin()->SetScene(bstack.GetSdk()->GetScene());
-	// bstack.GetCurrentWin()->SetRender(bstack.GetSdk()->GetRender());
-	bstack.InitCameraView();
+	pprocess.GetSdk()->Clear();															// SDKの作成
+	pprocess.GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	pprocess.phscene = pprocess.GetSdk()->GetScene()->GetPHScene();
+	pprocess.states = ObjectStatesIf::Create();
+	pprocess.states2 = ObjectStatesIf::Create();
+	pprocess.DesignObject();																// 剛体を作成
+	pprocess.phscene->SetGravity(pprocess.gravity);				
+	pprocess.phscene->SetTimeStep(pprocess.dt);
+	pprocess.phscene->SetNumIteration(pprocess.nIter);
+	pprocess.GetCurrentWin()->SetScene(pprocess.GetSdk()->GetScene());
+	// pprocess.GetCurrentWin()->SetRender(pprocess.GetSdk()->GetRender());
+	pprocess.InitCameraView();
 	timer.Create();
 
 	DSTR << "Reset" << endl;
@@ -141,7 +141,7 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 			break;
 		case 'r':
 			Reset();
-			bstack.Keyboard('x');
+			pprocess.Keyboard('x');
 			break;
 		case 'h':
 			if(bhaptic){
@@ -153,7 +153,7 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 			}
 			break;
 		default:
-			bstack.Keyboard(key);
+			pprocess.Keyboard(key);
 			hprocess.Keyboard(key);
 			break;
 	}
@@ -162,9 +162,9 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 int _cdecl main(int argc, char* argv[]){
 	Sleep(100);
 	hprocess.Init();
-	bstack.Init(argc, argv);
+	pprocess.Init(argc, argv);
 	StartTimer();
 	glutKeyboardFunc(Keyboard);
-	bstack.Start();
+	pprocess.Start();
 	return 0;
 }

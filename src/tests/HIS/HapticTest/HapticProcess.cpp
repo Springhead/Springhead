@@ -1,5 +1,5 @@
 #include "HapticProcess.h"
-#include "BoxStack.h"
+#include "PhysicsProcess.h"
 #include <iostream>
 #include <sstream>
 #include <cmath>
@@ -9,9 +9,6 @@
 #include <vector>
 #include <windows.h>
 #include <fstream>
-
-bool vhaptic = false;
-bool bproxy = false;
 
 HapticProcess hprocess;	
 #define TORQUE
@@ -69,12 +66,10 @@ void HapticProcess::HapticRendering(){
 	static Vec3d vibVo = vibV;
 	double vibforce = 0;
 	static Vec3d proxy[100];
-//	static Vec3d proxyPos;
 
 	displayforce = Vec3d(0.0, 0.0, 0.0);		
 	displaytorque = Vec3d(0.0, 0.0, 0.0);
 
-//	bool proxyContact = false;
 	bool noContact = true;
 
 	for(unsigned i = 0; i < neighborObjects.size(); i++){
@@ -83,16 +78,12 @@ void HapticProcess::HapticRendering(){
 		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;									// 力覚ポインタの近傍点のワールド座標系
 		Vec3d force_dir = pPoint - cPoint;
 		Vec3d interpolation_normal;																								// 提示力計算にしようする法線（前回の法線との間を補間する）
-		if(bInter){
-			// 剛体の面の法線補間
-			// 前回の法線と現在の法線の間を補間しながら更新
-			double synccount = bstack.dt / hprocess.dt;		// プロセスの刻み時間の比
-			interpolation_normal = (stepcount * neighborObjects[i].face_normal + ((double)synccount - stepcount) * neighborObjects[i].last_face_normal) / (double)synccount;															
-			if(stepcount > synccount)		interpolation_normal = neighborObjects[i].face_normal;
-		}else{
-			// 現在の法線を使う
-			interpolation_normal = neighborObjects[i].face_normal;
-		}
+
+		// 剛体の面の法線補間
+		// 前回の法線と現在の法線の間を補間しながら更新
+		double synccount = pprocess.dt / hprocess.dt;		// プロセスの刻み時間の比
+		interpolation_normal = (stepcount * neighborObjects[i].face_normal + ((double)synccount - stepcount) * neighborObjects[i].last_face_normal) / (double)synccount;															
+		if(stepcount > synccount)		interpolation_normal = neighborObjects[i].face_normal;
 
 		float	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
 		if(f < 0.0){																			// 内積が負なら力を計算
@@ -100,61 +91,18 @@ void HapticProcess::HapticRendering(){
 			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
 			static Vec3d addforce = Vec3d(0,0,0);
-			if(!bproxy){
-				addforce = -K * ortho + D * dvortho;// * ortho.norm();						// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
-			}else{
-				addforce = -K * (pPoint - (proxy[i]+neighborObjects[i].phSolid.GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
-			}
+			
+			addforce = -K * ortho + D * dvortho;// * ortho.norm();						// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
 			//Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
 
-			if(!vibFlag){
-				vibT = 0;
-				vibVo = vibV - neighborObjects[i].phSolid.GetVelocity() ;
-			}
-			vibFlag = true;
-#if 0
-			if(vhaptic){
-				double vibA = -200;
-				double vibB = 120;
-				double vibW = 300;
-				vibforce = vibA * (vibVo * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
-			}
-#else
-			if(vhaptic){
-				double vibA = neighborObjects[i].phSolid.GetShape(0)->GetVibA();
-				double vibB = neighborObjects[i].phSolid.GetShape(0)->GetVibB();
-				double vibW = neighborObjects[i].phSolid.GetShape(0)->GetVibW();
-				vibforce = vibA * (vibVo * 0.003 * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
-			}			
-#endif
-			// proxy法での摩擦の計算
-			Vec3d posVec = pPoint - (proxy[i] + neighborObjects[i].phSolid.GetCenterPosition());
-			double posDot = dot(neighborObjects[i].face_normal,posVec);
-			Vec3d tVec = posDot * neighborObjects[i].face_normal;
-			Vec3d tanjent = posVec - tVec;
-			double mu0 = neighborObjects[i].phSolidIf->GetShape(0)->GetStaticFriction();
-			double mu1 = neighborObjects[i].phSolidIf->GetShape(0)->GetDynamicFriction();
-			if(tanjent.norm() > abs(mu0 * posDot)){
-				proxy[i] += (tanjent.norm() - abs(mu1 * posDot)) * tanjent.unit();
-//				proxyPos += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
-			}
-
-			displayforce += addforce + (vibforce * addforce.unit());			// ユーザへの提示力		
+			displayforce += addforce;			// ユーザへの提示力		
 //			displaytorque += addtorque;										 
 			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
 			neighborObjects[i].test_force_norm = addforce.norm();
-			noContact = false;
-		}else{
-			proxy[i] = pPoint - neighborObjects[i].phSolid.GetCenterPosition();
-//			proxyPos = spidarG6.GetPos() * posscale;
 		}
 	}
-
-	if (noContact) vibFlag = false;
-
-	vibT += dt;
 #ifdef TORQUE
-	if(bDisplayforce) spidarG6.SetForce(displayforce);//, displaytorque);								// 力覚提示
+	if(bDisplayforce) spidarG6.SetForce(displayforce);//, displaytorque);		// 力覚提示
 #else
 	if(bDisplayforce) spidarG6.SetForce(displayforce);								// 力覚提示
 #endif
@@ -166,7 +114,7 @@ void HapticProcess::LocalDynamics(){
 		SpatialVector vel;																				// 剛体の速度（ワールド座標系）
 		vel.v() = neighborObjects[i].phSolid.GetVelocity();
 		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
-		if(stepcount == 1) vel += (neighborObjects[i].curb - neighborObjects[i].lastb) *  bstack.dt;		// 衝突の影響を反映
+		if(stepcount == 1) vel += (neighborObjects[i].curb - neighborObjects[i].lastb) *  pprocess.dt;		// 衝突の影響を反映
 		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b) * dt;	// 力覚ポインタからの力による速度変化
 		neighborObjects[i].phSolid.SetVelocity(vel.v());																		
 		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
@@ -190,37 +138,10 @@ void HapticProcess::Keyboard(unsigned char key){
 				DSTR << "Force ON" << endl;
 			}
 			break;
-		case 'o':
-			if(vhaptic){
-				vhaptic = false;
-				DSTR << "Vibration Disconnect" << endl;
-			}else{
-				vhaptic = true;
-				DSTR << "Vibration Connect" << endl;
-			}
-			break;
-		case 'p':
-			if(bproxy){
-				bproxy = false;
-				DSTR << "proxy mode stop" << endl;
-			}else{
-				bproxy = true;
-				DSTR << "proxy mode stert" << endl;
-			}
-			break;
 		case 'c':
 			spidarG6.SetForce(Vec3d(0, 0, 0));
 			spidarG6.Calib();
 			DSTR << "Calibration" << endl;
-			break;
-		case 'i':
-			if(bInter){
-				bInter = false;
-				DSTR << "Use Current Face_Normal" << endl;
-			}else{
-				bInter = true;
-				DSTR << "Use Interpolate Face_Normal" << endl;
-			}
 			break;
 		default:
 			break;
