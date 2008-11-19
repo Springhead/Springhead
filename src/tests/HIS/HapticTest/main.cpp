@@ -16,7 +16,6 @@ using namespace std;
 
 UTMMTimer timer;
 
-void AppStart();
 void CallBackHapticProcess(void* arg);
 void Synchronize();
 void _cdecl Keyboard(unsigned char key, int x, int y);
