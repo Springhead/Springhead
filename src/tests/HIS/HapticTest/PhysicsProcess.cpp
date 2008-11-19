@@ -650,8 +650,8 @@ void PhysicsProcess::Keyboard(unsigned char key){
 				//	Quaternionf::Rot(Rad(30), 'y') * 
 				//	Quaternionf::Rot(Rad(10), 'x'));  
 				soBox->GetShape(0)->SetVibration(-200,120,300);
-				soBox->GetShape(0)->SetStaticFriction(0.8);
-				soBox->GetShape(0)->SetDynamicFriction(0.6);
+				soBox->GetShape(0)->SetStaticFriction(1);//0.8);
+				soBox->GetShape(0)->SetDynamicFriction(1);//0.6);
 				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			}
 			break;
