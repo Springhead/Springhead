@@ -69,6 +69,7 @@ void Synchronize(){
 				hprocess.expandedObjects[i].phSolid = pprocess.expandedObjects[i].phSolid;
 				pprocess.expandedObjects[i].flag.bfirstlocal = false;
 			}
+			hprocess.expandedObjects[i].flag.blocal = pprocess.expandedObjects[i].flag.blocal;
 			hprocess.expandedObjects[i].syncInfo = pprocess.expandedObjects[i].syncInfo;
 		}
 
@@ -91,8 +92,7 @@ void Synchronize(){
 
 void Reset(){
 	timer.Release();
-	// ©•ª‚Åì‚Á‚½vector‚ğ‰Šú‰»
-	pprocess.sceneSolids.clear();
+	// ©•ª‚Åì‚Á‚½vector‚ğ‰Šú‰»;
 	pprocess.expandedObjects.clear();
 	hprocess.expandedObjects.clear();
 	pprocess.bsync = false;

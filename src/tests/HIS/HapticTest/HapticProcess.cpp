@@ -103,7 +103,6 @@ void HapticProcess::HapticRendering(){
 void HapticProcess::LocalDynamics(){
 	for(unsigned i = 0; i < expandedObjects.size(); i++){
 		if(!expandedObjects[i].flag.blocal) continue;
-		cout << expandedObjects[i].flag.blocal << endl;
 		SpatialVector vel;																				// 剛体の速度（ワールド座標系）
 		vel.v() = expandedObjects[i].phSolid.GetVelocity();
 		vel.w() = expandedObjects[i].phSolid.GetAngularVelocity();
