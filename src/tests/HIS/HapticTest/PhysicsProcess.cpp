@@ -224,7 +224,6 @@ void PhysicsProcess::UpdateHapticPointer(){
 void PhysicsProcess::ExpandSolidInfo(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene(); 
 	PHSolidIf** solids = phscene->GetSolids();
-	expandedObjects.clear();
 	for(unsigned i = (int)expandedObjects.size(); i < phscene->NSolids(); i++){
 		expandedObjects.resize(i + 1);
 		expandedObjects.back().phSolidIf = solids[i];
