@@ -42,41 +42,34 @@ void Synchronize(){
 
 		// 力覚プロセス->物理プロセス
 		// 力覚プロセスでの近傍物体のシミュレーション結果を物理プロセスに反映させる
-		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
+		for(unsigned i = 0; i < hprocess.expandedObjects.size(); i++){
 		// blocalがtrue，blocalがな場合は結果を反映させる
-			if(pprocess.neighborObjects[i].blocal && !pprocess.neighborObjects[i].bfirstlocal){
-				SpatialVector b = (pprocess.neighborObjects[i].b + (pprocess.neighborObjects[i].curb - pprocess.neighborObjects[i].lastb)) *  pprocess.dt;
-				Vec3d v = hprocess.neighborObjects[i].phSolid.GetVelocity() + b.v();
-				hprocess.neighborObjects[i].phSolidIf->SetVelocity(v);
-				Vec3d w = hprocess.neighborObjects[i].phSolid.GetAngularVelocity() + b.w();
-				hprocess.neighborObjects[i].phSolidIf->SetAngularVelocity(w);
-				hprocess.neighborObjects[i].phSolidIf->SetCenterPosition(hprocess.neighborObjects[i].phSolid.GetCenterPosition());
-				hprocess.neighborObjects[i].phSolidIf->SetOrientation(hprocess.neighborObjects[i].phSolid.GetOrientation());
-				pprocess.neighborObjects[i].test_force_norm = hprocess.neighborObjects[i].test_force_norm;
+			if(pprocess.expandedObjects[i].flag.blocal && !pprocess.expandedObjects[i].flag.bfirstlocal){
+				SpatialVector b = (pprocess.expandedObjects[i].syncInfo.motionCoeff.b + 
+					(pprocess.expandedObjects[i].syncInfo.motionCoeff.curb - pprocess.expandedObjects[i].syncInfo.motionCoeff.lastb)) *  pprocess.dt;
+				Vec3d v = hprocess.expandedObjects[i].phSolid.GetVelocity() + b.v();
+				hprocess.expandedObjects[i].phSolidIf->SetVelocity(v);
+				Vec3d w = hprocess.expandedObjects[i].phSolid.GetAngularVelocity() + b.w();
+				hprocess.expandedObjects[i].phSolidIf->SetAngularVelocity(w);
+				hprocess.expandedObjects[i].phSolidIf->SetCenterPosition(hprocess.expandedObjects[i].phSolid.GetCenterPosition());
+				hprocess.expandedObjects[i].phSolidIf->SetOrientation(hprocess.expandedObjects[i].phSolid.GetOrientation());
+				pprocess.expandedObjects[i].syncInfo.neighborPoint.test_force_norm = hprocess.expandedObjects[i].syncInfo.neighborPoint.test_force_norm;
 			}
 		}
 
 		// 物理プロセス->力覚プロセス
 		// シーンで新しく生成された剛体を格納
-		for(size_t i = hprocess.neighborObjects.size(); i < pprocess.neighborObjects.size(); i++){
-			hprocess.neighborObjects.resize(hprocess.neighborObjects.size() + 1);
-			hprocess.neighborObjects.back() = pprocess.neighborObjects[i];
+		for(size_t i = hprocess.expandedObjects.size(); i < pprocess.expandedObjects.size(); i++){
+			hprocess.expandedObjects.resize(hprocess.expandedObjects.size() + 1);
+			hprocess.expandedObjects.back() = pprocess.expandedObjects[i];
 		}
-		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
+		for(unsigned i = 0; i < hprocess.expandedObjects.size(); i++){
 			// 初めて取得した近傍物体のみ行う
-			if(pprocess.neighborObjects[i].bfirstlocal){
-				hprocess.neighborObjects[i].phSolid = pprocess.neighborObjects[i].phSolid;
-				pprocess.neighborObjects[i].bfirstlocal = false;
+			if(pprocess.expandedObjects[i].flag.bfirstlocal){
+				hprocess.expandedObjects[i].phSolid = pprocess.expandedObjects[i].phSolid;
+				pprocess.expandedObjects[i].flag.bfirstlocal = false;
 			}
-			hprocess.neighborObjects[i].closestPoint = pprocess.neighborObjects[i].closestPoint;
-			hprocess.neighborObjects[i].pointerPoint = pprocess.neighborObjects[i].pointerPoint;
-			hprocess.neighborObjects[i].face_normal = pprocess.neighborObjects[i].face_normal;
-			hprocess.neighborObjects[i].last_face_normal = pprocess.neighborObjects[i].last_face_normal;
-			hprocess.neighborObjects[i].blocal = pprocess.neighborObjects[i].blocal;
-			hprocess.neighborObjects[i].A = pprocess.neighborObjects[i].A;
-			hprocess.neighborObjects[i].b = pprocess.neighborObjects[i].b;
-			hprocess.neighborObjects[i].curb = pprocess.neighborObjects[i].curb;
-			hprocess.neighborObjects[i].lastb = pprocess.neighborObjects[i].lastb;
+			hprocess.expandedObjects[i].syncInfo = pprocess.expandedObjects[i].syncInfo;
 		}
 
 		// 物理プロセスで使用する刻み時間
@@ -100,8 +93,8 @@ void Reset(){
 	timer.Release();
 	// 自分で作ったvectorを初期化
 	pprocess.sceneSolids.clear();
-	pprocess.neighborObjects.clear();
-	hprocess.neighborObjects.clear();
+	pprocess.expandedObjects.clear();
+	hprocess.expandedObjects.clear();
 	pprocess.bsync = false;
 	pprocess.calcPhys=true;
 	pprocess.hapticcount = 1;

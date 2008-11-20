@@ -25,7 +25,7 @@ public:
 	// LocalDynamicに使う変数
 	double dt;
 	PHSolid hpointer; 
-	vector<PHNeighborObject> neighborObjects;
+	vector<ExpandedObject> expandedObjects;
 	//　力提示に使う変数
 	bool bDisplayforce;	///< 力覚を提示するかどうか
 	bool bInter;		///< 提示面の法線を補間するかどうか

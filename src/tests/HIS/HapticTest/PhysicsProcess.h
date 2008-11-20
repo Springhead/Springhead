@@ -47,7 +47,9 @@ public:
 
 	// 近傍物体探索に使う変数
 	double range;
-	vector<PHNeighborObject> neighborObjects;	///<近傍物体を格納する
+	vector<ExpandedObject> expandedObjects; 
+
+//	vector<PHNeighborObject> expandedObjects;	///<近傍物体を格納する
 	vector<PHSceneSolid> sceneSolids;
 	// 予測シミュレーションに使う変数
 	UTRef<ObjectStatesIf> states, states2;

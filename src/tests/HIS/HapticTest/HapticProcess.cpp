@@ -63,23 +63,24 @@ void HapticProcess::HapticRendering(){
 	displayforce = Vec3d(0.0, 0.0, 0.0);		
 	displaytorque = Vec3d(0.0, 0.0, 0.0);
 
-	for(unsigned i = 0; i < neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
-		Vec3d cPoint = neighborObjects[i].phSolid.GetPose() * neighborObjects[i].closestPoint;			// 剛体の近傍点のワールド座標系
-		Vec3d pPoint = hpointer.GetPose() * neighborObjects[i].pointerPoint;									// 力覚ポインタの近傍点のワールド座標系
+	for(unsigned i = 0; i < expandedObjects.size(); i++){
+		if(!expandedObjects[i].flag.blocal) continue;
+		Vec3d cPoint = expandedObjects[i].phSolid.GetPose() * expandedObjects[i].syncInfo.neighborPoint.closestPoint;			// 剛体の近傍点のワールド座標系
+		Vec3d pPoint = hpointer.GetPose() * expandedObjects[i].syncInfo.neighborPoint.pointerPoint;									// 力覚ポインタの近傍点のワールド座標系
 		Vec3d force_dir = pPoint - cPoint;
 		Vec3d interpolation_normal;																								// 提示力計算にしようする法線（前回の法線との間を補間する）
 
 		// 剛体の面の法線補間
 		// 前回の法線と現在の法線の間を補間しながら更新
 		double synccount = pprocess.dt / hprocess.dt;		// プロセスの刻み時間の比
-		interpolation_normal = (stepcount * neighborObjects[i].face_normal + ((double)synccount - stepcount) * neighborObjects[i].last_face_normal) / (double)synccount;															
-		if(stepcount > synccount)		interpolation_normal = neighborObjects[i].face_normal;
+		interpolation_normal = (stepcount * expandedObjects[i].syncInfo.neighborPoint.face_normal + 
+			((double)synccount - stepcount) * expandedObjects[i].syncInfo.neighborPoint.last_face_normal) / (double)synccount;															
+		if(stepcount > synccount)		interpolation_normal = expandedObjects[i].syncInfo.neighborPoint.face_normal;
 
 		float	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
 		if(f < 0.0){																			// 内積が負なら力を計算
 			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
-			Vec3d dv = neighborObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
+			Vec3d dv = expandedObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
 			static Vec3d addforce = Vec3d(0,0,0);
 			
@@ -88,8 +89,8 @@ void HapticProcess::HapticRendering(){
 
 			displayforce += addforce;			// ユーザへの提示力		
 //			displaytorque += addtorque;										 
-			neighborObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
-			neighborObjects[i].test_force_norm = addforce.norm();
+			expandedObjects[i].phSolid.AddForce(-addforce, cPoint);			// 計算した力を剛体に加える
+			expandedObjects[i].syncInfo.neighborPoint.test_force_norm = addforce.norm();
 		}
 	}
 #ifdef TORQUE
@@ -100,19 +101,20 @@ void HapticProcess::HapticRendering(){
 }
 
 void HapticProcess::LocalDynamics(){
-	for(unsigned i = 0; i < neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
+	for(unsigned i = 0; i < expandedObjects.size(); i++){
+		if(!expandedObjects[i].flag.blocal) continue;
+		cout << expandedObjects[i].flag.blocal << endl;
 		SpatialVector vel;																				// 剛体の速度（ワールド座標系）
-		vel.v() = neighborObjects[i].phSolid.GetVelocity();
-		vel.w() = neighborObjects[i].phSolid.GetAngularVelocity();
-		if(stepcount == 1) vel += (neighborObjects[i].curb - neighborObjects[i].lastb) *  pprocess.dt;		// 衝突の影響を反映
-		vel += (neighborObjects[i].A * neighborObjects[i].phSolid.nextForce + neighborObjects[i].b) * dt;	// 力覚ポインタからの力による速度変化
-		neighborObjects[i].phSolid.SetVelocity(vel.v());																		
-		neighborObjects[i].phSolid.SetAngularVelocity(vel.w());
-		neighborObjects[i].phSolid.SetCenterPosition(neighborObjects[i].phSolid.GetCenterPosition() + vel.v() * dt);
-		neighborObjects[i].phSolid.SetOrientation(( Quaterniond::Rot(vel.w() * dt) * neighborObjects[i].phSolid.GetOrientation()).unit());
- 		neighborObjects[i].phSolid.SetUpdated(true);
-		neighborObjects[i].phSolid.Step();
+		vel.v() = expandedObjects[i].phSolid.GetVelocity();
+		vel.w() = expandedObjects[i].phSolid.GetAngularVelocity();
+		if(stepcount == 1) vel += (expandedObjects[i].syncInfo.motionCoeff.curb - expandedObjects[i].syncInfo.motionCoeff.lastb) *  pprocess.dt;		// 衝突の影響を反映
+		vel += (expandedObjects[i].syncInfo.motionCoeff.A * expandedObjects[i].phSolid.nextForce + expandedObjects[i].syncInfo.motionCoeff.b) * dt;	// 力覚ポインタからの力による速度変化
+		expandedObjects[i].phSolid.SetVelocity(vel.v());																		
+		expandedObjects[i].phSolid.SetAngularVelocity(vel.w());
+		expandedObjects[i].phSolid.SetCenterPosition(expandedObjects[i].phSolid.GetCenterPosition() + vel.v() * dt);
+		expandedObjects[i].phSolid.SetOrientation(( Quaterniond::Rot(vel.w() * dt) * expandedObjects[i].phSolid.GetOrientation()).unit());
+ 		expandedObjects[i].phSolid.SetUpdated(true);
+		expandedObjects[i].phSolid.Step();
 	}
 }
 
