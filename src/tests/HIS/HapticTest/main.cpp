@@ -42,11 +42,9 @@ void Synchronize(){
 
 		// 力覚プロセス->物理プロセス
 		// 力覚プロセスでの近傍物体のシミュレーション結果を物理プロセスに反映させる
-		pprocess.hapticsolids.clear();
 		for(unsigned i = 0; i < hprocess.neighborObjects.size(); i++){
 		// blocalがtrue，blocalがな場合は結果を反映させる
 			if(pprocess.neighborObjects[i].blocal && !pprocess.neighborObjects[i].bfirstlocal){
-				pprocess.hapticsolids.push_back(hprocess.neighborObjects[i].phSolid);
 				SpatialVector b = (pprocess.neighborObjects[i].b + (pprocess.neighborObjects[i].curb - pprocess.neighborObjects[i].lastb)) *  pprocess.dt;
 				Vec3d v = hprocess.neighborObjects[i].phSolid.GetVelocity() + b.v();
 				hprocess.neighborObjects[i].phSolidIf->SetVelocity(v);
