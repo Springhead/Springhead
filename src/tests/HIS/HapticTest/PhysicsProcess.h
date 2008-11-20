@@ -1,5 +1,5 @@
-#ifndef PHYSICAL_PROCESS_H
-#define PHYSICAL_PROCESS_H
+#ifndef PHYSICS_PROCESS_H
+#define PHYSICS_PROCESS_H
 
 #include "Synchronization.h"
 #include <Framework/SprFWAppGLUT.h>
@@ -55,7 +55,6 @@ public:
 	bool bDebug;
 	bool bStep;
 	bool bOneStep;
-	vector<PHSolid> hapticsolids;
 
 	PhysicsProcess();	
 	void Init(int argc, char* argv[]);				

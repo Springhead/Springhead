@@ -217,7 +217,7 @@ void PhysicsProcess::UpdateHapticPointer(){
 	soPointer->SetVelocity(phpointer.GetVelocity());
 	soPointer->SetAngularVelocity(phpointer.GetAngularVelocity());	
 	soPointer->SetDynamical(false);
-};
+}
 
 void PhysicsProcess::ExpandSolidInfo(){
 	// シーンで新たに剛体が生成されたらローカルでシミュレーションしているかどうかの情報を加えsceneSolidsに格納する
@@ -244,8 +244,7 @@ void PhysicsProcess::ExpandSolidInfo(){
 	}
 }
 
-void PhysicsProcess::FindNearestObject(){
-#if 1		
+void PhysicsProcess::FindNearestObject(){	
 	// GJKを使って近傍物体と近傍物体の最近点を取得
 	// これをすべてのshapeをもつ剛体についてやる
 	// AABBで力覚ポインタ近傍の物体を絞る
@@ -302,13 +301,6 @@ void PhysicsProcess::FindNearestObject(){
 		neighborObjects[i].bfirstlocal = false;			//近傍物体でないのでfalseにする
 		neighborObjects[i].blocal = false;
 	}
-#else
-	// すべての物体についてGJKを行う
-	for(int i = 0; i < neighborObjects.size(); i++){
-		neighborObjects[i].bneighbor = true;
-		if(neighborObjects[i].phSolidIf == soPointer) neighborObjects[i].bneighbor = false;
-	}
-#endif
 
 	// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
 	// 最近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
