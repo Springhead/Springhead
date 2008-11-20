@@ -22,7 +22,7 @@ PhysicsProcess::PhysicsProcess(){
 	bGravity = true;
 	range = 0.7;
 	bDebug = false;
-	neighborObjects.clear();
+	expandedObjects.clear();
 	bStep = true;
 }
 
@@ -123,10 +123,12 @@ void PhysicsProcess::PhysicsStep(){
 	if (bsync) return;
 	if (calcPhys){
 		UpdateHapticPointer();
-		for(unsigned i = 0; i < neighborObjects.size(); i++){
-			if(!neighborObjects[i].blocal) continue;
-			neighborObjects[i].lastvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-			neighborObjects[i].lastvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
+		vector<SpatialVector> lastvel;
+		for(unsigned int i = 0; i < expandedObjects.size(); i++){
+			if(!expandedObjects[i].flag.blocal) continue;
+			lastvel.resize(i + 1);
+			lastvel.back().v() = expandedObjects[i].phSolidIf->GetVelocity();
+			lastvel.back().w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
 		}
 		if(bStep) phscene->Step();
 		else if (bOneStep){
@@ -134,12 +136,12 @@ void PhysicsProcess::PhysicsStep(){
 			bOneStep = false;
 		}
 
-		for(unsigned i = 0; i < neighborObjects.size(); i++){
-			if(!neighborObjects[i].blocal) continue;
+		for(unsigned i = 0; i < expandedObjects.size(); i++){
+			if(!expandedObjects[i].flag.blocal) continue;
 			SpatialVector curvel;
-			curvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-			curvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-			neighborObjects[i].curb = (curvel - neighborObjects[i].lastvel) / dt;
+			curvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
+			curvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
+			expandedObjects[i].syncInfo.motionCoeff.curb = (curvel - lastvel[i]) / dt;
 		}
 		ExpandSolidInfo();
 		FindNearestObject();	// 近傍物体の取得
@@ -220,27 +222,12 @@ void PhysicsProcess::UpdateHapticPointer(){
 }
 
 void PhysicsProcess::ExpandSolidInfo(){
-	// シーンで新たに剛体が生成されたらローカルでシミュレーションしているかどうかの情報を加えsceneSolidsに格納する
-	// sceneSolidsは力覚ポインタも持っている
-	sceneSolids.clear();
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene(); 
 	PHSolidIf** solids = phscene->GetSolids();
-	for(int i = 0; i < phscene->NSolids(); i++){
-		sceneSolids.resize(sceneSolids.size() + 1);
-		sceneSolids.back().phSolidIf = solids[i];
-		sceneSolids.back().bneighbor = false;
-		sceneSolids.back().blocal = false;
-	}
-
-	// sceneSolidsで新しく増えた分をneighborObjectsに追加する
-	//neighborObjectsをいちいちclearしてると，昔のneighborObjectsを保存する必要があるので 
-	//今はneighborObjectsにsceneのすべてのsolidを格納している．
-	//neighborObjectsは力覚ポインタを持つがblocalを常にfalseにしておく必要がある．
-	for(unsigned i = (int)neighborObjects.size(); i < sceneSolids.size(); i++){
-		neighborObjects.resize(i + 1);
-		neighborObjects.back().phSolidIf = sceneSolids[i].phSolidIf;
-		neighborObjects.back().bneighbor = false;
-		neighborObjects.back().blocal = false;
+	expandedObjects.clear();
+	for(unsigned i = (int)expandedObjects.size(); i < phscene->NSolids(); i++){
+		expandedObjects.resize(i + 1);
+		expandedObjects.back().phSolidIf = solids[i];
 	}
 }
 
@@ -251,16 +238,16 @@ void PhysicsProcess::FindNearestObject(){
 	// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 	// SolidのBBoxレベルでの交差判定(z軸ソート)．交差のおそれの無い組を除外		
 	//1. BBoxレベルの衝突判定
-	size_t N = neighborObjects.size();
+	size_t N = expandedObjects.size();
 	Vec3f dir(0,0,1);
 	Edges edges;
 	edges.resize(2 * N);
 	Edges::iterator eit = edges.begin();
 	for(int i = 0; i < N; ++i){
 		// ローカル判定をすべてfalseにする
-		neighborObjects[i].bneighbor = false;
-		DCAST(PHSolid, neighborObjects[i].phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-		Vec3d dPos = neighborObjects[i].phSolidIf->GetDeltaPosition();
+		expandedObjects[i].flag.bneighbor = false;
+		DCAST(PHSolid, expandedObjects[i].phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+		Vec3d dPos = expandedObjects[i].phSolidIf->GetDeltaPosition();
 		float dLen = (float) (dPos * dir);
 		if (dLen < 0){
 			eit[0].edge += dLen;
@@ -284,10 +271,10 @@ void PhysicsProcess::FindNearestObject(){
 				int f2 = *itf;
 				if (f1 > f2) std::swap(f1, f2);
 				// 近傍物体として決定
-				if(neighborObjects[f1].phSolidIf == soPointer){
-					neighborObjects[f2].bneighbor = true;
-				}else if(neighborObjects[f2].phSolidIf == soPointer){
-					neighborObjects[f1].bneighbor = true;
+				if(expandedObjects[f1].phSolidIf == soPointer){
+					expandedObjects[f2].flag.bneighbor = true;
+				}else if(expandedObjects[f2].phSolidIf == soPointer){
+					expandedObjects[f1].flag.bneighbor = true;
 				}
 			}
 			cur.insert(it->index);
@@ -296,22 +283,22 @@ void PhysicsProcess::FindNearestObject(){
 		}
 	}
 
-	for(size_t i = 0; i < neighborObjects.size(); i++){
-		if(neighborObjects[i].bneighbor) continue;
-		neighborObjects[i].bfirstlocal = false;			//近傍物体でないのでfalseにする
-		neighborObjects[i].blocal = false;
+	for(size_t i = 0; i < expandedObjects.size(); i++){
+		if(expandedObjects[i].flag.bneighbor) continue;
+		expandedObjects[i].flag.bfirstlocal = false;			//近傍物体でないのでfalseにする
+		expandedObjects[i].flag.blocal = false;
 	}
 
 	// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
 	// 最近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
 	// blocalがすでにtrueだったらコピー済みなので近傍点だけコピーする
-	for(unsigned i = 0; i < (int)neighborObjects.size(); i++){
-		if(!neighborObjects[i].bneighbor) continue;															// 近傍でなければ次へ
-		CDConvex* a = DCAST(CDConvex, neighborObjects[i].phSolidIf->GetShape(0));		// 剛体が持つ凸形状
+	for(unsigned i = 0; i < (int)expandedObjects.size(); i++){
+		if(!expandedObjects[i].flag.bneighbor) continue;															// 近傍でなければ次へ
+		CDConvex* a = DCAST(CDConvex, expandedObjects[i].phSolidIf->GetShape(0));		// 剛体が持つ凸形状
 		CDConvex* b = DCAST(CDConvex, soPointer->GetShape(0));									// 力覚ポインタの凸形状
 		Posed a2w, b2w;																								// 剛体のワールド座標
-/*		if(neighborObjects[i].blocal) 	a2w = neighborObjects[i].phSolid.GetPose();				// blocalがtrueなら最新の情報でやる
-		else */								a2w = neighborObjects[i].phSolidIf->GetPose();
+/*		if(expandedObjects[i].blocal) 	a2w = expandedObjects[i].phSolid.GetPose();				// blocalがtrueなら最新の情報でやる
+		else */								a2w = expandedObjects[i].phSolidIf->GetPose();
 		b2w = soPointer->GetPose();																			// 力覚ポインタのワールド座標
 		Vec3d pa ,pb;																									// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 		pa = pb = Vec3d(0.0, 0.0, 0.0);
@@ -323,7 +310,7 @@ void PhysicsProcess::FindNearestObject(){
 		if(a2b.norm() < range){																					// 近傍点までの長さから近傍物体を絞る
 			if(a2b.norm() < 0.01){																				// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める		
 				pa = pb = Vec3d(0.0, 0.0, 0.0);
-				Vec3d dir = -1.0 * neighborObjects[i].face_normal;
+				Vec3d dir = -1.0 * expandedObjects[i].syncInfo.neighborPoint.face_normal;
 				if(dir == Vec3d(0.0, 0.0, 0.0) ){
 					dir = -(soPointer->GetCenterPosition() - wa);
 				}
@@ -334,24 +321,24 @@ void PhysicsProcess::FindNearestObject(){
 					DSTR << "ContFindCommonPoint do not find contact point" << endl;
 				}
 			}
-			if(!neighborObjects[i].blocal){																			// 初めて最近傍物体になった時
-				neighborObjects[i].bfirstlocal = true;
-				neighborObjects[i].phSolid = *DCAST(PHSolid, neighborObjects[i].phSolidIf);		// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
+			if(!expandedObjects[i].flag.blocal){																			// 初めて最近傍物体になった時
+				expandedObjects[i].flag.bfirstlocal = true;
+				expandedObjects[i].phSolid = *DCAST(PHSolid, expandedObjects[i].phSolidIf);		// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
 #ifdef _DEBUG
-				if (neighborObjects[i].face_normal * normal < 0.8){
+				if (expandedObjects[i].syncInfo.neighborPoint.face_normal * normal < 0.8){
 					DSTR << "Too big change on normal" << normal << std::endl;
 				}
 #endif
-				neighborObjects[i].face_normal = normal;														// 初めて最近傍物体になったので，前回の法線は使わない．										
+				expandedObjects[i].syncInfo.neighborPoint.face_normal = normal;														// 初めて最近傍物体になったので，前回の法線は使わない．										
 			}
-			neighborObjects[i].blocal = true;																		// 最近傍物体なのでblocalをtrueにする
-			neighborObjects[i].closestPoint = pa;																	// 剛体近傍点のローカル座標
-			neighborObjects[i].pointerPoint = pb;																// 力覚ポインタ近傍点のローカル座標
-			neighborObjects[i].last_face_normal = neighborObjects[i].face_normal;					// 前回の法線（法線の補間に使う）
-			neighborObjects[i].face_normal = normal;															// 剛体から力覚ポインタへの法線
+			expandedObjects[i].flag.blocal = true;																		// 最近傍物体なのでblocalをtrueにする
+			expandedObjects[i].syncInfo.neighborPoint.closestPoint = pa;																	// 剛体近傍点のローカル座標
+			expandedObjects[i].syncInfo.neighborPoint.pointerPoint = pb;																// 力覚ポインタ近傍点のローカル座標
+			expandedObjects[i].syncInfo.neighborPoint.last_face_normal = expandedObjects[i].syncInfo.neighborPoint.face_normal;					// 前回の法線（法線の補間に使う）
+			expandedObjects[i].syncInfo.neighborPoint.face_normal = normal;															// 剛体から力覚ポインタへの法線
 		}else{
-			neighborObjects[i].blocal = false;																		// 最近傍物体ではないのでblocalをfalseにする
-			neighborObjects[i].bfirstlocal = false;
+			expandedObjects[i].flag.blocal = false;																		// 最近傍物体ではないのでblocalをfalseにする
+			expandedObjects[i].flag.bfirstlocal = false;
 		}
 	}
 }
@@ -370,17 +357,17 @@ void PhysicsProcess::PredictSimulation(){
 #endif
 	states->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
 
-	for(unsigned i = 0; i < neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
+	for(unsigned i = 0; i < expandedObjects.size(); i++){
+		if(!expandedObjects[i].flag.blocal) continue;
 		
 		// 現在の速度を保存
 		SpatialVector currentvel, nextvel; 
-		currentvel.v() = neighborObjects[i].phSolidIf->GetVelocity();											// 現在の速度
-		currentvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();									// 現在の角速度									
-		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;	// 力を加える点
+		currentvel.v() = expandedObjects[i].phSolidIf->GetVelocity();											// 現在の速度
+		currentvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();									// 現在の角速度									
+		Vec3d cPoint = expandedObjects[i].phSolidIf->GetPose() * expandedObjects[i].syncInfo.neighborPoint.closestPoint;	// 力を加える点
 		const float minTestForce = 0.5;
-		if(neighborObjects[i].test_force_norm < minTestForce){
-			neighborObjects[i].test_force_norm = minTestForce;		// テスト力が0なら1にする 
+		if(expandedObjects[i].syncInfo.neighborPoint.test_force_norm < minTestForce){
+			expandedObjects[i].syncInfo.neighborPoint.test_force_norm = minTestForce;		// テスト力が0なら1にする 
 		}
 
 		// 拘束座標系を作るための準備
@@ -388,12 +375,12 @@ void PhysicsProcess::PredictSimulation(){
 		rpjabs = cPoint - soPointer->GetCenterPosition();																							//力覚ポインタの中心から接触点までのベクトル
 		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;													//接触点での速度
 		Vec3d rjabs, vjabs;
-		rjabs = cPoint - neighborObjects[i].phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
-		vjabs = neighborObjects[i].phSolidIf->GetVelocity() + neighborObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
+		rjabs = cPoint - expandedObjects[i].phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
+		vjabs = expandedObjects[i].phSolidIf->GetVelocity() + expandedObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
 
 		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
 		Vec3d n, t[2], vjrel, vjrelproj;
-		n = -neighborObjects[i].face_normal;
+		n = -expandedObjects[i].syncInfo.neighborPoint.face_normal;
 		vjrel = vjabs - vpjabs;										// 相対速度
 		vjrelproj = vjrel - (n * vjrel) * n;						// 相対速度ベクトルを法線に直交する平面に射影したベクトル
 		double vjrelproj_norm = vjrelproj.norm();
@@ -414,49 +401,49 @@ void PhysicsProcess::PredictSimulation(){
 #else
 		phscene->Step();
 #endif
-		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		neighborObjects[i].lastb = neighborObjects[i].b;
-		neighborObjects[i].b = (nextvel - currentvel) / dt;
+		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
+		expandedObjects[i].syncInfo.motionCoeff.lastb = expandedObjects[i].syncInfo.motionCoeff.b;
+		expandedObjects[i].syncInfo.motionCoeff.b = (nextvel - currentvel) / dt;
 
 		TMatrixRow<6, 3, double> u;
 		TMatrixRow<3, 3, double> force;
 		// 法線方向に力を加える
 		states->LoadState(phscene);
-		force.col(0) = neighborObjects[i].test_force_norm * n;
-		neighborObjects[i].phSolidIf->AddForce(force.col(0), cPoint);
+		force.col(0) = expandedObjects[i].syncInfo.neighborPoint.test_force_norm * n;
+		expandedObjects[i].phSolidIf->AddForce(force.col(0), cPoint);
 #ifdef DIVIDE_STEP
 		phscene->IntegratePart2();
 #else
 		phscene->Step();
 #endif
-		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		u.col(0) = (nextvel - currentvel) /dt - neighborObjects[i].b;
+		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
+		u.col(0) = (nextvel - currentvel) /dt - expandedObjects[i].syncInfo.motionCoeff.b;
 
 		// n + t[0]方向に力を加える
 		states->LoadState(phscene);
-		force.col(1) = neighborObjects[i].test_force_norm * (n + t[0]);
-		neighborObjects[i].phSolidIf->AddForce(force.col(1), cPoint);
+		force.col(1) = expandedObjects[i].syncInfo.neighborPoint.test_force_norm * (n + t[0]);
+		expandedObjects[i].phSolidIf->AddForce(force.col(1), cPoint);
 		phscene->IntegratePart2();
-		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		u.col(1) = (nextvel - currentvel) /dt - neighborObjects[i].b;
+		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
+		u.col(1) = (nextvel - currentvel) /dt - expandedObjects[i].syncInfo.motionCoeff.b;
 
 		// n+t[1]方向力を加える
 		states->LoadState(phscene);
-		force.col(2) = neighborObjects[i].test_force_norm * (n + t[1]);
-		neighborObjects[i].phSolidIf->AddForce(force.col(2), cPoint);
+		force.col(2) = expandedObjects[i].syncInfo.neighborPoint.test_force_norm * (n + t[1]);
+		expandedObjects[i].phSolidIf->AddForce(force.col(2), cPoint);
 #ifdef DIVIDE_STEP
 		phscene->IntegratePart2();
 #else
 		phscene->Step();
 #endif
-		nextvel.v() = neighborObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = neighborObjects[i].phSolidIf->GetAngularVelocity();
-		u.col(2) = (nextvel - currentvel) /dt - neighborObjects[i].b;
+		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
+		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
+		u.col(2) = (nextvel - currentvel) /dt - expandedObjects[i].syncInfo.motionCoeff.b;
 		
-		neighborObjects[i].A = u  * force.inv();				// 運動係数Aの計算
+		expandedObjects[i].syncInfo.motionCoeff.A = u  * force.inv();				// 運動係数Aの計算
 		states->LoadState(phscene);								// 元のstateに戻しシミュレーションを進める
 	}
 #ifdef DIVIDE_STEP
@@ -465,11 +452,11 @@ void PhysicsProcess::PredictSimulation(){
 }
 
 void PhysicsProcess::DisplayContactPlane(){
-	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
-		Vec3d pPoint = soPointer->GetPose() * neighborObjects[i].pointerPoint;
-		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;
-		Vec3d normal = neighborObjects[i].face_normal;
+	for(unsigned int i = 0; i <  expandedObjects.size(); i++){
+		if(!expandedObjects[i].flag.blocal) continue;
+		Vec3d pPoint = soPointer->GetPose() * expandedObjects[i].syncInfo.neighborPoint.pointerPoint;
+		Vec3d cPoint = expandedObjects[i].phSolidIf->GetPose() * expandedObjects[i].syncInfo.neighborPoint.closestPoint;
+		Vec3d normal = expandedObjects[i].syncInfo.neighborPoint.face_normal;
 		Vec3d v1(0,1,0);
 
 		v1 +=  Vec3d(0, 0, 0.5) - Vec3d(0, 0, 0.5)*normal*normal;
@@ -567,11 +554,11 @@ void PhysicsProcess::DisplayContactPlane(){
 
 void PhysicsProcess::DisplayLineToNearestPoint(){
 	GLfloat moon[]={0.8,0.8,0.8};
-	for(unsigned int i = 0; i <  neighborObjects.size(); i++){
-		if(!neighborObjects[i].blocal) continue;
-		Vec3d pPoint = soPointer->GetPose() * neighborObjects[i].pointerPoint;
-		Vec3d cPoint = neighborObjects[i].phSolidIf->GetPose() * neighborObjects[i].closestPoint;
-		Vec3d normal = neighborObjects[i].face_normal;
+	for(unsigned int i = 0; i <  expandedObjects.size(); i++){
+		if(!expandedObjects[i].flag.blocal) continue;
+		Vec3d pPoint = soPointer->GetPose() * expandedObjects[i].syncInfo.neighborPoint.pointerPoint;
+		Vec3d cPoint = expandedObjects[i].phSolidIf->GetPose() * expandedObjects[i].syncInfo.neighborPoint.closestPoint;
+		Vec3d normal = expandedObjects[i].syncInfo.neighborPoint.face_normal;
 		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
