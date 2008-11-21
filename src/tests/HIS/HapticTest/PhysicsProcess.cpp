@@ -1,15 +1,9 @@
-#include "PhysicsProcess.h"
-#include "HapticProcess.h"
-#include <vector>
 #include <iostream>
 #include <sstream>
-#include <cmath>
-#include <ctime>
-#include <string>
 #include <GL/glut.h>
-#include <windows.h>
+#include "PhysicsProcess.h"
+#include "HapticProcess.h"
 #include <Physics/PHConstraintEngine.h>
-#include <Base/TMatrix.h>
 
 PhysicsProcess pprocess;
 
@@ -224,7 +218,7 @@ void PhysicsProcess::UpdateHapticPointer(){
 void PhysicsProcess::ExpandSolidInfo(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene(); 
 	PHSolidIf** solids = phscene->GetSolids();
-	for(unsigned i = (int)expandedObjects.size(); i < phscene->NSolids(); i++){
+	for(int i = (int)expandedObjects.size(); i < phscene->NSolids(); i++){
 		expandedObjects.resize(i + 1);
 		expandedObjects.back().phSolidIf = solids[i];
 	}
@@ -242,7 +236,7 @@ void PhysicsProcess::FindNearestObject(){
 	Edges edges;
 	edges.resize(2 * N);
 	Edges::iterator eit = edges.begin();
-	for(int i = 0; i < N; ++i){
+	for(int i = 0; i < (int)N; ++i){
 		// ƒ[ƒJƒ‹”»’è‚ð‚·‚×‚Äfalse‚É‚·‚é
 		expandedObjects[i].flag.bneighbor = false;
 		DCAST(PHSolid, expandedObjects[i].phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);

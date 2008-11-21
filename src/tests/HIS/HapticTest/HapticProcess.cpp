@@ -1,14 +1,5 @@
 #include "HapticProcess.h"
 #include "PhysicsProcess.h"
-#include <iostream>
-#include <sstream>
-#include <cmath>
-#include <ctime>
-#include <string>
-#include <GL/glut.h>
-#include <vector>
-#include <windows.h>
-#include <fstream>
 
 HapticProcess hprocess;	
 #define TORQUE
