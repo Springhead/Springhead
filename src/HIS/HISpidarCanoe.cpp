@@ -28,7 +28,7 @@ void HISpidarCanoe::MakeWireVec(){
 		mat.Ey() *= -1;
 		ori.from_matrix(mat);
 */
-		ori = Quaternionf::Rot(Rad(180), 'z') * ori;
+		ori = Quaternionf::Rot((float)Rad(180), 'z') * ori;
 		pos.x *= -1;
 		DSTR << "HISpdiarCanoe: reversed " << ori << std::endl;
 	}

@@ -40,7 +40,7 @@ void HISpidarCalc6Dof::Update()
 				matA[i][5]=wireMoment[i].Z();
 				lengthDiff[i] = calculatedLength[i]-measuredLength[i] - lengthDiffAve[i];
 			}
-			for(i=0;i<matATA.height();i++){
+			for(i=0;i<(int)matATA.height();i++){
 				matATA[i][i]=0.0f;
 				postureDiff[i]=0.0f;
 				for(k=0;k<nWire;k++) matATA[i][i]+=matA[k][i]*matA[k][i];
@@ -50,7 +50,7 @@ void HISpidarCalc6Dof::Update()
 					matATA[j][i]=matATA[i][j];
 				}
 			}
-			for(i=0;i<matATA.height();i++) {
+			for(i=0;i<(int)matATA.height();i++) {
 				for(k=0;k<nWire;k++) postureDiff[i]+=matA[k][i]*lengthDiff[k];
 				matATA[i][i]+=sigma;
 			}
