@@ -28,7 +28,6 @@ public:
 	vector<ExpandedObject> expandedObjects;
 	//　力提示に使う変数
 	bool bDisplayforce;	///< 力覚を提示するかどうか
-	bool bInter;		///< 提示面の法線を補間するかどうか
 	Vec3d displayforce;		///< ユーザへの提示力
 	Vec3d displaytorque;
 	double K;				///< バネ係数
@@ -36,7 +35,6 @@ public:
 	float posScale;		///<スパイダーの移動スケール
 	// 同期に使う変数
 	int stepcount;
-	int countmax;
 
 	HapticProcess();
 

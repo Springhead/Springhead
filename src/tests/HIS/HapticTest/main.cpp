@@ -11,6 +11,7 @@
 #endif
 
 #define ESC 27
+#define COUNT_MAX 100
 
 using namespace std;
 
@@ -81,7 +82,7 @@ void Synchronize(){
 		// “¯ŠúI—¹‚Ìƒtƒ‰ƒO
 		pprocess.bsync = false;
 	}
-	if(hprocess.stepcount > hprocess.countmax) {
+	if(hprocess.stepcount > COUNT_MAX) {
 		DSTR << "too many step" << endl;
 		hprocess.stepcount = 0;
 		pprocess.bsync = false;

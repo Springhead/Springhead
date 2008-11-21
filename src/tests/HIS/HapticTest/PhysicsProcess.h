@@ -21,14 +21,13 @@ struct PHSceneSolid{
 	bool bfirstlocal;
 };
 
-
 struct Edge{
 	float edge;				///<	端の位置(グローバル系)
 	int	index;				///<	元の solidの位置
 	bool bMin;				///<	初端ならtrue
 	bool operator < (const Edge& s) const { return edge < s.edge; }
 };
-typedef std::vector<Edge> Edges;
+typedef vector<Edge> Edges;
 
 class PhysicsProcess : public FWAppGLUT, public UTRefCount{
 public:
