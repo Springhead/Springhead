@@ -3,12 +3,6 @@
 
 #include "Synchronization.h"
 #include <Framework/SprFWAppGLUT.h>
-#include <Collision/CDDetectorImp.h>
-#include <Physics/PHContactDetector.h>
-#include <Physics/PHContactPoint.h>
-#include <Base/Combination.h>
-#include<Collision/CDDetectorImp.h>
-#include <Physics/PHSolid.h>
 
 using namespace Spr;
 using namespace PTM;

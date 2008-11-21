@@ -1,11 +1,7 @@
 #ifndef HAPTIC_PROCESS_H
 #define HAPTIC_PROCESS_H
 
-#include "Synchronization.h"
 #include <Springhead.h>
-#include <Physics/PHSolid.h>
-#include <Physics/PHContactPoint.h>
-#include<Collision/CDDetectorImp.h>
 #include <HIS/HISpidarG6X.h>
 #include <HIS/HISpidarG6X3.h>
 #ifdef _WIN32		//	Win32î≈(ïÅí ÇÕÇ±Ç¡Çø)
@@ -13,6 +9,7 @@
  #include <Device/DRUsb20Sh4.h>
  #include <conio.h>
 #endif
+#include "Synchronization.h"
 
 using namespace Spr;
 using namespace std;

@@ -1,10 +1,8 @@
+#include <iostream>
+#include <GL/glut.h>
 #include "PhysicsProcess.h"
 #include "HapticProcess.h"
-#include <GL/glut.h>
-#include <iostream>
-#include <time.h>
 #include "Foundation/UTMMTimer.h"
-#include <Physics/PHConstraintEngine.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
