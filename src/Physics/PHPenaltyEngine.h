@@ -119,6 +119,5 @@ public:
 	int GetPriority() const {return SGBP_PENALTYENGINE;}
 	virtual void Step();
 };
-
 }	//	namespace Spr
 #endif

@@ -162,6 +162,13 @@ struct PHConstraintsIf : public SceneObjectIf{
 		@return 剛体間に作用している拘束
 	*/
 	PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs);
+
+	/** @brief 指定された剛体の組に作用している総合的な力を返す
+		@param lhs 剛体その１
+		@param rhs 剛体その２
+		@return 剛体間に作用している総合的な力
+	*/
+	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs);
 };
 
 /// 接触点拘束のインタフェース

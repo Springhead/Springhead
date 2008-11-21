@@ -56,6 +56,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
 	Spr::PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
+	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::GetTotalForce(lhs, rhs);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHContactPointIf(base)	\
 
@@ -286,9 +287,15 @@
 	void SetFrozen(bool bOn){	base::SetFrozen(bOn);}	\
 	bool IsFrozen(){	return	base::IsFrozen();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHShapePairForLCPIf(base)	\
+	int NSectionVertexes(){	return	base::NSectionVertexes();}	\
+	Vec3d GetSectionVertex(int i){	return	base::GetSectionVertex(i);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSolidPairForLCPIf(base)	\
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int GetContactState(int i, int j){	return	base::GetContactState(i, j);}	\
 	Vec3d GetCommonPoint(int i, int j){	return	base::GetCommonPoint(i, j);}	\
 	unsigned int GetLastContactCount(int i, int j){	return	base::GetLastContactCount(i, j);}	\
+	double GetContactDepth(int i, int j){	return	base::GetContactDepth(i, j);}	\
+	Spr::PHShapePairForLCPIf* GetShapePair(int i, int j){	return	base::GetShapePair(i, j);}	\
 

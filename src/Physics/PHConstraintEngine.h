@@ -22,11 +22,16 @@ class PHRootNode;
 class PHConstraintEngine;
 
 ///	形状の組
-class PHShapePairForLCP : public CDShapePair{
+class PHShapePairForLCP: public CDShapePair{
 public:
+	SPR_OBJECTDEF(PHShapePairForLCP);
 	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．可視化のために保持
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
+	int NSectionVertexes(){return section.size();}		//(sectionの数を返す）
+	Vec3d GetSectionVertex(int i){return section[i];}	//(i番目のsectionを返す）
+//	double GetContactDimension(int NSection){
+//		for(i = 0; i < Nsection; i++){
 };
 
 /// Solidの組
@@ -39,9 +44,9 @@ public:
 	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
 	int	GetContactState(int i, int j){return shapePairs.item(i, j)->state;}
 	unsigned GetLastContactCount(int i, int j){return shapePairs.item(i, j)->lastContactCount;}
-	Vec3d GetCommonPoint(int i, int j){
-		return shapePairs.item(i, j)->commonPoint;
-	}
+	Vec3d GetCommonPoint(int i, int j){return shapePairs.item(i, j)->commonPoint;}
+	double GetContactDepth(int i, int j){return shapePairs.item(i, j)->depth;}
+	PHShapePairForLCPIf* GetShapePair(int i, int j){return shapePairs.item(i, j)->Cast();}
 };
 
 struct PHConstraintsSt{

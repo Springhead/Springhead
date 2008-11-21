@@ -21,6 +21,8 @@
 	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_CDShapePairIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_CDConvexIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDFaceIf(base)	\

@@ -28,6 +28,7 @@ struct CDShapePairSt{
 	CDShapePairSt():depth(0), lastContactCount(-2){}
 };
 class CDShapePair: public CDShapePairSt, public Object{
+	SPR_OBJECTDEF(CDShapePair);
 public:
 	enum State{		//	接触があった場合だけ値が有効なフラグ。接触の有無は lastContactCountとscene.countを比較しないと分からない。
 		NONE,		//	接触していないにも関わらず、列挙された。
@@ -42,14 +43,14 @@ public:
 	Vec3d	closestPoint[2];		///< 最近傍点（ローカル座標系）
 	Vec3d	commonPoint;			///< 交差部分の内点（World座標系）
 	Vec3d	center;					///< 2つの最侵入点の中間の点
-	Vec3d iNormal;				///<	積分による法線
+	Vec3d   iNormal;				///< 積分による法線
 
 public:
 	CDShapePair(){
 	}
 	void SetState(const CDShapePairSt& s){
 		(CDShapePairSt&)*this = s;
-	}	
+	}
 	///	接触判定
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	///	連続接触判定．同時に法線/中心なども計算してしまう．
