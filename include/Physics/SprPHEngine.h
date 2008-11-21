@@ -50,6 +50,7 @@ public:
 struct PHPenaltyEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHPenaltyEngine);
+
 };
 
 struct PHIKEngineIf : PHEngineIf{

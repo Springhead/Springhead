@@ -142,8 +142,26 @@ public:
 
 		return NULL;
 	}
-};
 
+	/// 指定された剛体の組に作用している総合的な力を返す
+	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs){
+		Vec3d total = Vec3f();
+		for(iterator it = begin(); it != end(); it++){
+			if((*it)->solid[0] == DCAST(PHSolid, lhs) && (*it)->solid[1] == DCAST(PHSolid, rhs)){
+				Vec3d _f , _t;
+				(*it)->GetConstraintForce(_f, _t);
+				SpatialVector __f;
+				__f.v() = _f; __f.w() = _t;
+				// DSTR << "J[0].tarns : " << ((*it)->J[0].trans()) << std::endl;
+				PTM::TVector<6,double> Jf = ((*it)->J[0].trans() * __f);
+				Vec3d Jfv;
+				for(int i=0; i<3; ++i){ Jfv[i] = Jf[i]; }
+				total += Jfv;
+			}
+		}
+		return total;
+	}
+};
 
 }
 

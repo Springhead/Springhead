@@ -62,6 +62,11 @@ struct CDShapeIf : public NamedObjectIf{
 	Matrix3f CalcMomentOfInertia();	///< 単位密度における質量中心に関する慣性行列
 };
 
+///	形状ペアの基本クラス
+struct CDShapePairIf : public ObjectIf{
+	SPR_IFDEF(CDShapePair);
+};
+
 ///	凸形状の基本クラス
 struct CDConvexIf : public CDShapeIf{
 	SPR_IFDEF(CDConvex);

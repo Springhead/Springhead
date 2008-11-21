@@ -257,11 +257,34 @@ struct PHSolidIf : public SceneObjectIf{
 	bool		IsFrozen();
 };
 
+struct PHShapePairForLCPIf : public ObjectIf{
+	SPR_IFDEF(PHShapePairForLCP);
+
+	/** @brief sectionの数を取得する
+	*/
+	int NSectionVertexes();
+
+	/** @brief i番目の交差断面の頂点座標を取得する
+		@param i:頂点座標の番号．
+	*/
+	Vec3d GetSectionVertex(int i);
+};
+
 struct PHSolidPairForLCPIf : public ObjectIf{
 	SPR_IFDEF(PHSolidPairForLCP);
 	
 	PHSolidIf* GetSolid(int i);
+
+	/** @brief 剛体同士の接触状態を取得する
+		@param i,j:Shapeの番号．
+		ただしFindBySolidPairとセットで使うこと.
+	*/
 	int	GetContactState(int i, int j);
+
+	/** @brief 剛体同士の接触座標（内点）を取得する
+		@param i,j:Shapeの番号．
+		ただしFindBySolidPairとセットで使うこと.
+	*/
 	Vec3d GetCommonPoint(int i, int j);
 
 	/** @brief 最後に接触したときのカウントを取得する
@@ -269,8 +292,18 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 		ただしscene.countと比較する際に一定のズレがあるので注意.
 	*/
 	unsigned GetLastContactCount(int i, int j);
-	//double GetDimension(int i, int j);
+
+	/** @brief 接触したときのめり込み量を取得する
+		@param i,j:Shapeの番号．
+	*/
+	double GetContactDepth(int i, int j);
+
+	/** @brief 接触したときの形状ペアを取得する
+		@param i,j:Shapeの番号．
+	*/
+	PHShapePairForLCPIf* GetShapePair(int i, int j);
 };
+
 
 //@}
 

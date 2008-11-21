@@ -146,6 +146,7 @@ public:
 
 	///w’è‚µ‚½solid‚ğ•Ô‚·
 	PHSolidIf* GetSolid(int i){return solid[i]->Cast();}
+
 };
 
 ///	PHContactDetector‚Ìó‘Ô
