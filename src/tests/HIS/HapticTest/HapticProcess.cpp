@@ -59,7 +59,7 @@ void HapticProcess::UpdateSpidar(){
 	hpointer.SetFramePosition(spidarG6->GetPosition() * posScale);
 	hpointer.SetOrientation(spidarG6->GetOrientation());
 	hpointer.SetVelocity(spidarG6->GetVelocity() * posScale);
-	hpointer.SetAngularVelocity(spidarG6->GetAngVel());
+	hpointer.SetAngularVelocity(spidarG6->GetAngularVelocity());
 }
 
 void HapticProcess::HapticRendering(){
