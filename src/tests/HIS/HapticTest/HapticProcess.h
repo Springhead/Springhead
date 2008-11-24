@@ -1,14 +1,10 @@
 #ifndef HAPTIC_PROCESS_H
 #define HAPTIC_PROCESS_H
 
+#include <conio.h>
 #include <Springhead.h>
-#include <HIS/HISpidarG6X.h>
-#include <HIS/HISpidarG6X3.h>
-#ifdef _WIN32		//	Win32”Å(•’Ê‚Í‚±‚Á‚¿)
- #include <Device/DRUsb20Simple.h>
- #include <Device/DRUsb20Sh4.h>
- #include <conio.h>
-#endif
+#include <HumanInterface/SprHIDRUsb.h>
+
 #include "Synchronization.h"
 
 using namespace Spr;
@@ -17,8 +13,8 @@ using namespace std;
 class HapticProcess{
 public:
 	// SPIDAR,Device‚Ég‚¤•Ï”
-	DVDeviceManager devMan;
-	HISpidarG6X3 spidarG6;
+//	DVDeviceManager devMan;
+	UTRef<HISpidarGIf>  spidarG6;
 	// LocalDynamic‚Ég‚¤•Ï”
 	double dt;
 	PHSolid hpointer; 

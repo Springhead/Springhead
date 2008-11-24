@@ -1,5 +1,6 @@
 #include <iostream>
 #include <GL/glut.h>
+#include <windows.h>
 #include "PhysicsProcess.h"
 #include "HapticProcess.h"
 #include "Foundation/UTMMTimer.h"

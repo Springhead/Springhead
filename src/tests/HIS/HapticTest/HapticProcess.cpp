@@ -16,22 +16,36 @@ HapticProcess::HapticProcess(){
 };
 
 void HapticProcess::Init(){
-	InitDevice();
+	UTRef<HISdkIf> hisdk = HISdkIf::CreateSdk();
+	DRUsb20SimpleDesc usbSimpleDesc;
+	hisdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+	DRUsb20Sh4Desc usb20Sh4Desc;
+	for(int i=0; i<10; ++i){
+		usb20Sh4Desc.number = i;
+		hisdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+	}
+	hisdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+
+	hisdk->Init();
+	hisdk->Print(DSTR);
+	spidarG6 = hisdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic());
+	spidarG6->Init(&HISpidarGDesc("SpidarG6X3R"));
+//	InitDevice();
 }
 
 void HapticProcess::InitDevice(){
-	// デバイスマネージャの初期化
-	devMan.RPool().Register(new DRUsb20Sh4(0));	    // USB2.0版コントローラ 8モータ
-	devMan.RPool().Register(new DRUsb20Sh4(1));	    // USB2.0版コントローラ 8モータ
-	devMan.Init();														// デバイスの初期化
-	DSTR << devMan;												// 初期化の結果を表示
+	//// デバイスマネージャの初期化
+	//devMan.RPool().Register(new DRUsb20Sh4(0));	    // USB2.0版コントローラ 8モータ
+	//devMan.RPool().Register(new DRUsb20Sh4(1));	    // USB2.0版コントローラ 8モータ
+	//devMan.Init();														// デバイスの初期化
+	//DSTR << devMan;												// 初期化の結果を表示
 
-	// SPIDARの初期化
-	spidarG6.Init(devMan, false);
-	for(int i = 0; i < 8; ++i){
-		spidarG6.motor[i].maxForce = 5.0f;
-	}
-	spidarG6.Calib();
+	//// SPIDARの初期化
+	//spidarG6->Init(devMan, false);
+	//for(int i = 0; i < 8; ++i){
+	//	spidarG6->motor[i].maxForce = 5.0f;
+	//}
+	//spidarG6->Calib();
 }
 
 void HapticProcess::Step(){
@@ -41,11 +55,11 @@ void HapticProcess::Step(){
 }
 
 void HapticProcess::UpdateSpidar(){
-	spidarG6.Update(dt);
-	hpointer.SetFramePosition(spidarG6.GetPos() * posScale);
-	hpointer.SetOrientation(spidarG6.GetOri());
-	hpointer.SetVelocity(spidarG6.GetVel() * posScale);
-	hpointer.SetAngularVelocity(spidarG6.GetAngVel());
+	spidarG6->Update((float)dt);
+	hpointer.SetFramePosition(spidarG6->GetPosition() * posScale);
+	hpointer.SetOrientation(spidarG6->GetOrientation());
+	hpointer.SetVelocity(spidarG6->GetVelocity() * posScale);
+	hpointer.SetAngularVelocity(spidarG6->GetAngVel());
 }
 
 void HapticProcess::HapticRendering(){
@@ -66,7 +80,7 @@ void HapticProcess::HapticRendering(){
 			((double)synccount - stepcount) * expandedObjects[i].syncInfo.neighborPoint.last_face_normal) / (double)synccount;															
 		if(stepcount > synccount)		interpolation_normal = expandedObjects[i].syncInfo.neighborPoint.face_normal;
 
-		float	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
+		double	f = force_dir * interpolation_normal;								// 剛体の面の法線と内積をとる
 		if(f < 0.0){																			// 内積が負なら力を計算
 			Vec3d ortho = f * interpolation_normal;								// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 			Vec3d dv = expandedObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
@@ -83,9 +97,9 @@ void HapticProcess::HapticRendering(){
 		}
 	}
 #ifdef TORQUE
-	if(bDisplayforce) spidarG6.SetForce(displayforce);//, displaytorque);		// 力覚提示
+	if(bDisplayforce) spidarG6->SetForce(displayforce, Vec3d());//, displaytorque);		// 力覚提示
 #else
-	if(bDisplayforce) spidarG6.SetForce(displayforce);								// 力覚提示
+	if(bDisplayforce) spidarG6->SetForce(displayforce);								// 力覚提示
 #endif
 }
 
@@ -111,17 +125,17 @@ void HapticProcess::Keyboard(unsigned char key){
 		case 'f':
 			if(bDisplayforce){
 				bDisplayforce = false;
-				spidarG6.SetForce(Vec3d(0, 0, 0));
+				spidarG6->SetForce(Vec3d(), Vec3d());
 				DSTR << "Force OFF" << endl;
 			}else{
 				bDisplayforce = true;
-				spidarG6.SetForce(Vec3d(0, 0, 0));
+				spidarG6->SetForce(Vec3d(),Vec3d());
 				DSTR << "Force ON" << endl;
 			}
 			break;
 		case 'c':
-			spidarG6.SetForce(Vec3d(0, 0, 0));
-			spidarG6.Calib();
+			spidarG6->SetForce(Vec3d(), Vec3d());
+			spidarG6->Calibration();
 			DSTR << "Calibration" << endl;
 			break;
 		default:
