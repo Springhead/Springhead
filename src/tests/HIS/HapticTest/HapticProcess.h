@@ -12,8 +12,7 @@ using namespace std;
 
 class HapticProcess{
 public:
-	// SPIDAR,Device‚Ég‚¤•Ï”
-//	DVDeviceManager devMan;
+	// SPIDAR‚Ég‚¤•Ï”
 	UTRef<HISpidarGIf>  spidarG6;
 	// LocalDynamic‚Ég‚¤•Ï”
 	double dt;
@@ -32,7 +31,6 @@ public:
 	HapticProcess();
 
 	void Init();
-	void InitDevice();
 	void Step();
 	void UpdateSpidar();
 	void HapticRendering();

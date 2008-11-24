@@ -598,13 +598,15 @@ void PhysicsProcess::Keyboard(unsigned char key){
 		case 's':
 			bStep = false;
 			bOneStep = true;
+			DSTR << "Stepwise Execution" << endl;
 			break;
 		case 'a':
 			bStep = true;
+			DSTR << "Play" << endl;
 			break;
 		case ' ':
 			{
-				// —§•û‘Ì
+				// Cube
 				PHSolidDesc desc;
 				CDBoxDesc bd;
 
@@ -625,6 +627,7 @@ void PhysicsProcess::Keyboard(unsigned char key){
 				soBox->GetShape(0)->SetStaticFriction(1);//0.8);
 				soBox->GetShape(0)->SetDynamicFriction(1);//0.6);
 				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+				DSTR << "Nobj:" << phscene->NSolids() << endl;
 			}
 			break;
 		default:

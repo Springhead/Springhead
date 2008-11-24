@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <GL/glut.h>
 #include <windows.h>
 #include "PhysicsProcess.h"
@@ -122,6 +123,7 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 		case ESC:		
 		case 'q':
 			timer.Release();
+			DSTR << "Quit Program" << endl;
 			exit(0);
 			break;
 		case 'r':
