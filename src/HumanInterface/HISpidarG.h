@@ -40,6 +40,10 @@ public:
 	Vec3f GetPosition(){ return pos; }
 	///	Šp“x‚Ìæ“¾
 	Quaternionf GetOrientation(){ return ori; }
+	///‘¬“x‚Ìæ“¾
+	Vec3f GetVelocity(){ return vel; }
+	///Šp‘¬“x‚Ìæ“¾
+	Vec3f GetAngularVelocity(){ return angVel;}
 	
 	///	—Í‚Ìİ’è
 	void SetForce(const Vec3f& f){ SetForce(f, Vec3f()); }

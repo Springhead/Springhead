@@ -91,6 +91,8 @@
 	Posef GetPose(){	return	base::GetPose();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HIForceInterface6DIf(base)	\
+	Vec3f GetVelocity(){	return	base::GetVelocity();}	\
+	Vec3f GetAngularVelocity(){	return	base::GetAngularVelocity();}	\
 	Vec3f GetTorque(){	return	base::GetTorque();}	\
 	Vec3f GetForce(){	return	base::GetForce();}	\
 	void SetForce(const Vec3f& f, const Vec3f& t){	base::SetForce(f, t);}	\
