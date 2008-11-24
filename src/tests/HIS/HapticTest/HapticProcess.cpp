@@ -28,24 +28,8 @@ void HapticProcess::Init(){
 
 	hisdk->Init();
 	hisdk->Print(DSTR);
-	spidarG6 = hisdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic());
+	spidarG6 = hisdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spidarG6->Init(&HISpidarGDesc("SpidarG6X3R"));
-//	InitDevice();
-}
-
-void HapticProcess::InitDevice(){
-	//// デバイスマネージャの初期化
-	//devMan.RPool().Register(new DRUsb20Sh4(0));	    // USB2.0版コントローラ 8モータ
-	//devMan.RPool().Register(new DRUsb20Sh4(1));	    // USB2.0版コントローラ 8モータ
-	//devMan.Init();														// デバイスの初期化
-	//DSTR << devMan;												// 初期化の結果を表示
-
-	//// SPIDARの初期化
-	//spidarG6->Init(devMan, false);
-	//for(int i = 0; i < 8; ++i){
-	//	spidarG6->motor[i].maxForce = 5.0f;
-	//}
-	//spidarG6->Calib();
 }
 
 void HapticProcess::Step(){
@@ -58,8 +42,8 @@ void HapticProcess::UpdateSpidar(){
 	spidarG6->Update((float)dt);
 	hpointer.SetFramePosition(spidarG6->GetPosition() * posScale);
 	hpointer.SetOrientation(spidarG6->GetOrientation());
-	hpointer.SetVelocity(Vec3f());//spidarG6->GetVelocity() * posScale);
-	hpointer.SetAngularVelocity(Vec3f());//spidarG6->GetAngularVelocity());
+	hpointer.SetVelocity(spidarG6->GetVelocity() * posScale);
+	hpointer.SetAngularVelocity(spidarG6->GetAngularVelocity());
 }
 
 void HapticProcess::HapticRendering(){
