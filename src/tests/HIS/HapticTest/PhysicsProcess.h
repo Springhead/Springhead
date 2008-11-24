@@ -8,13 +8,6 @@ using namespace Spr;
 using namespace PTM;
 using namespace std;
 
-struct PHSceneSolid{
-	PHSolidIf* phSolidIf;
-	bool bneighbor;
-	bool blocal;
-	bool bfirstlocal;
-};
-
 struct Edge{
 	float edge;				///<	端の位置(グローバル系)
 	int	index;				///<	元の solidの位置

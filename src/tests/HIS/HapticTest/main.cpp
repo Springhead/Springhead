@@ -20,7 +20,7 @@ void Synchronize();
 void _cdecl Keyboard(unsigned char key, int x, int y);
 
 void CallBackHapticProcess(void* arg){
-	if(hprocess.stepcount > COUNT_MAX) return;
+	if(hprocess.stepcount > 300) return;
 	hprocess.Step();
 	Synchronize();
 };
