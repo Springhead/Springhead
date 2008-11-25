@@ -212,28 +212,78 @@ void PHBallJoint::CompBias(){
 	// vJc : Jc‚É‚æ‚Á‚ÄŽÊ‘œ‚³‚ê‚éS‘©À•WŒn‚©‚çŒ©‚½Plug‚ÌŠp‘¬“x
 	Vec3d vJc = Jc * vjrel.w();
 
-	// ‰Â“®ˆæƒtƒ‰ƒO‚ÌŽw’èonLimit[0]: swing, onLimit[1]: twist
-	// nowTheta[0]: swing, nowTheta[1]: twist
-	// ‰Â“®ˆæ§ŒÀ‚ð‰z‚¦‚Ä‚¢‚½‚çAdA:ŠÖß‚ð_‚ç‚©‚­‚·‚é¬•ª‚ð0‚É‚·‚éAdb:N“ü‚µ‚Ä‚«‚½•ª‚¾‚¯Œ³‚É–ß‚·	
-	// xŽ²•ûŒü‚ÉS‘©‚ð‚©‚¯‚éê‡	
+		// ‰Â“®ˆæƒtƒ‰ƒO‚ÌŽw’èonLimit[0]: swing, onLimit[1]: twist
+		// nowTheta[0]: swing, nowTheta[1]: twist
+		// ‰Â“®ˆæ§ŒÀ‚ð‰z‚¦‚Ä‚¢‚½‚çAdA:ŠÖß‚ð_‚ç‚©‚­‚·‚é¬•ª‚ð0‚É‚·‚éAdb:N“ü‚µ‚Ä‚«‚½•ª‚¾‚¯Œ³‚É–ß‚·	
+		// xŽ²•ûŒü‚ÉS‘©‚ð‚©‚¯‚éê‡	
 	if(onLimit[0].onLower){
-		dA.w()[0] = 0;
-		db.w()[0] = (nowTheta[0] - limitSwing[0]) * dtinv * engine->velCorrectionRate;
+		double fCheck[2];	//S‘©—Í‚Ì‘å‚«‚³‚ð”ä‚×‚é
+		double dbLCP = (nowTheta[0] - limitSwing[0]) * dtinv * engine->velCorrectionRate;	//LCP‚É‚æ‚Á‚Ä‰Á‚í‚é—Í
+		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;	//“¯‚¶ŒvŽZ‚ð‚Ü‚Æ‚ß‚é
+		fCheck[0] = Ainv[3] * (dA.w()[0] * f.w()[0] + db.w()[0] + bSame + dbLCP);
+		if(A.w()[0] != 0){
+			fCheck[1] = 1 / A.w()[0] * (dbLCP + bSame);
+		}
+		else {fCheck[1] = fCheck[0];}
+		if(fCheck[0] > fCheck[1]){
+			dA.w()[0] = 0;
+			db.w()[0] = dbLCP;
+		}
+		else{
+			db.w()[0] += dbLCP;
+		}
 	}
 	
 	else if(onLimit[0].onUpper){
-		dA.w()[0] = 0;
-		db.w()[0] = (nowTheta[0] - limitSwing[1]) * dtinv * engine->velCorrectionRate;
+		double fCheck[2];	//S‘©—Í‚Ì‘å‚«‚³‚ð”ä‚×‚é
+		double dbLCP = (nowTheta[0] - limitSwing[1]) * dtinv * engine->velCorrectionRate;	//LCP‚É‚æ‚Á‚Ä‰Á‚í‚é—Í
+		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;	//“¯‚¶ŒvŽZ‚ð‚Ü‚Æ‚ß‚é
+		fCheck[0] = Ainv[3] * (dA.w()[0] * f.w()[0] + db.w()[0] + bSame + dbLCP);
+		fCheck[1] = 1 / A.w()[0] * (dbLCP + bSame);
+		if(fCheck[0] < fCheck[1]){
+			dA.w()[0] = 0;
+			db.w()[0] = dbLCP;
+		}
+		else{
+			db.w()[0] += dbLCP;
+		}
 	}
 
 	//zŽ²•ûŒü‚ÉS‘©‚ð‚©‚¯‚éê‡
 	if(onLimit[1].onLower && (vJc.z < 0)){
-		dA.w()[2] = 0;
-		db.w()[2] = (nowTheta[1] - limitTwist[0]) * dtinv * engine->velCorrectionRate;
+		double fCheck[2];	//S‘©—Í‚Ì‘å‚«‚³‚ð”ä‚×‚é
+		double dbLCP = (nowTheta[1] - limitTwist[0]) * dtinv * engine->velCorrectionRate;	//LCP‚É‚æ‚Á‚Ä‰Á‚í‚é—Í
+		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;	//“¯‚¶ŒvŽZ‚ð‚Ü‚Æ‚ß‚é
+		fCheck[0] = Ainv[5] * (dA.w()[2] * f.w()[2] + db.w()[2] + bSame + dbLCP);
+		if(A.w()[2] != 0){
+			fCheck[1] = 1 / A.w()[2] * (dbLCP + bSame);
+		}
+		else {fCheck[1] = fCheck[0];}
+		if(fCheck[0] > fCheck[1]){
+			dA.w()[2] = 0;
+			db.w()[2] = dbLCP;
+		}
+		else{
+			db.w()[2] += dbLCP;
+		}
 	}
+
 	else if(onLimit[1].onUpper && (vJc.z > 0)){
-		dA.w()[2] = 0;
-		db.w()[2] = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;
+		double fCheck[2];	//S‘©—Í‚Ì‘å‚«‚³‚ð”ä‚×‚é
+		double dbLCP = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;	//LCP‚É‚æ‚Á‚Ä‰Á‚í‚é—Í
+		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;	//“¯‚¶ŒvŽZ‚ð‚Ü‚Æ‚ß‚é
+		fCheck[0] = Ainv[5] * (dA.w()[2] * f.w()[2] + db.w()[2] + bSame + dbLCP);
+		if(A.w()[2] != 0){
+			fCheck[1] = 1 / A.w()[2] * (dbLCP + bSame);
+		}
+		else {fCheck[1] = fCheck[0];}
+		if(fCheck[0] < fCheck[1]){
+			dA.w()[2] = 0;
+			db.w()[2] = dbLCP;
+		}
+		else{
+			db.w()[2] += dbLCP;
+		}
 	}
 }
 
