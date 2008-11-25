@@ -20,11 +20,6 @@ PhysicsProcess::PhysicsProcess(){
 	bStep = true;
 }
 
-namespace Spr{
-void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
-	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
-	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
-}
 
 void PhysicsProcess::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
@@ -43,6 +38,7 @@ void PhysicsProcess::Init(int argc, char* argv[]){
 
 	FWWinDesc windowDesc;
 	windowDesc.title = "HapticConnect1.2";
+	FWWin* window;
 	window = CreateWin(windowDesc);
 	window->scene = GetSdk()->GetScene();
 
@@ -157,6 +153,7 @@ void PhysicsProcess::PhysicsStep(){
 }
 
 void PhysicsProcess::Display(){
+	FWWin* window = GetCurrentWin();
 	// •`‰æ‚ÌÝ’è
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = window->render->Cast();
@@ -458,7 +455,7 @@ void PhysicsProcess::DisplayContactPlane(){
 		Vec3d v2 = normal ^ v1;
 
 		Vec4f moon(1.0, 1.0, 0.8, 0.3);
-		GRDebugRenderIf* render = window->render->Cast();
+		GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 		render->SetMaterial( GRMaterialDesc(moon) );
 		render->PushModelMatrix();
 		Vec3d offset = 0.02 * normal;

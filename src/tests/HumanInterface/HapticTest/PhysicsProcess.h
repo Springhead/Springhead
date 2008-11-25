@@ -22,7 +22,6 @@ public:
 	volatile bool bsync;
 	bool calcPhys;
 	volatile int hapticcount;
-	FWWin* window;	
 	double dt;
 	Vec3d gravity;
 	double nIter;
@@ -35,8 +34,6 @@ public:
 	double range;
 	vector<ExpandedObject> expandedObjects; 
 
-//	vector<PHNeighborObject> expandedObjects;	///<近傍物体を格納する
-//	vector<PHSceneSolid> sceneSolids;
 	// 予測シミュレーションに使う変数
 	UTRef<ObjectStatesIf> states, states2;
 	//デバック表示に使う変数
