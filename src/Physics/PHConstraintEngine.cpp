@@ -332,6 +332,8 @@ void PHConstraintEngine::UpdateGearNode(){
 bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 	
 	// ＊相互依存するオブジェクトの削除が必要だが未実装
+	if(Detector::DelChildObject(o))
+		return true;
 	
 	PHJoint* joint = DCAST(PHJoint, o);
 	if(joint){
