@@ -217,72 +217,63 @@ void PHBallJoint::CompBias(){
 		// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
 		// x軸方向に拘束をかける場合	
 	if(onLimit[0].onLower){
-		double fCheck[2];	//拘束力の大きさを比べる
+		double fCheck;
 		double dbLCP = (nowTheta[0] - limitSwing[0]) * dtinv * engine->velCorrectionRate;	//LCPによって加わる力
-		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;	//同じ計算をまとめる
-		fCheck[0] = Ainv[3] * (dA.w()[0] * f.w()[0] + db.w()[0] + bSame + dbLCP);
-		if(A.w()[0] != 0){
-			fCheck[1] = 1 / A.w()[0] * (dbLCP + bSame);
-		}
-		else {fCheck[1] = fCheck[0];}
-		if(fCheck[0] > fCheck[1]){
-			dA.w()[0] = 0;
-			db.w()[0] = dbLCP;
+		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;
+		fCheck = (A.w().x + dA.w().x) * A.w()[0] *													//拘束しない時の速度と、拘束するときの速度の差を計算 
+					(A.w()[0] * (dA.w()[0] * f.w()[0] + db.w()[0]) - dA.w()[0] * (dbLCP + bSame));	//dA,db以外は過去の値を用いている
+		if(fCheck < 0 ){																			//拘束違反をしないなら拘束しない
+			db.w()[0] += dbLCP;
 		}
 		else{
-			db.w()[0] += dbLCP;
+			dA.w()[0] = 0;
+			db.w()[0] = dbLCP;
 		}
 	}
 	
 	else if(onLimit[0].onUpper){
-		double fCheck[2];	//拘束力の大きさを比べる
-		double dbLCP = (nowTheta[0] - limitSwing[1]) * dtinv * engine->velCorrectionRate;	//LCPによって加わる力
-		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;	//同じ計算をまとめる
-		fCheck[0] = Ainv[3] * (dA.w()[0] * f.w()[0] + db.w()[0] + bSame + dbLCP);
-		fCheck[1] = 1 / A.w()[0] * (dbLCP + bSame);
-		if(fCheck[0] < fCheck[1]){
-			dA.w()[0] = 0;
-			db.w()[0] = dbLCP;
+		double fCheck;
+		double dbLCP = (nowTheta[0] - limitSwing[1]) * dtinv * engine->velCorrectionRate;
+		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;
+		fCheck = (A.w().x + dA.w().x) * A.w()[0] *
+					(A.w()[0] * (dA.w()[0] * f.w()[0] + db.w()[0]) - dA.w()[0] * (dbLCP + bSame));
+		if(fCheck > 0 ){
+			db.w()[0] += dbLCP;
 		}
 		else{
-			db.w()[0] += dbLCP;
+			dA.w()[0] = 0;
+			db.w()[0] = dbLCP;
 		}
 	}
 
 	//z軸方向に拘束をかける場合
 	if(onLimit[1].onLower && (vJc.z < 0)){
-		double fCheck[2];	//拘束力の大きさを比べる
-		double dbLCP = (nowTheta[1] - limitTwist[0]) * dtinv * engine->velCorrectionRate;	//LCPによって加わる力
-		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;	//同じ計算をまとめる
-		fCheck[0] = Ainv[5] * (dA.w()[2] * f.w()[2] + db.w()[2] + bSame + dbLCP);
-		if(A.w()[2] != 0){
-			fCheck[1] = 1 / A.w()[2] * (dbLCP + bSame);
-		}
-		else {fCheck[1] = fCheck[0];}
-		if(fCheck[0] > fCheck[1]){
-			dA.w()[2] = 0;
-			db.w()[2] = dbLCP;
+		double fCheck;
+		double dbLCP = (nowTheta[1] - limitTwist[0]) * dtinv * engine->velCorrectionRate;
+		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;
+		fCheck = (A.w().z + dA.w().z) * A.w()[2] *
+					(A.w()[2] * (dA.w()[2] * f.w()[2] + db.w()[2]) - dA.w()[2] * (dbLCP + bSame));
+		if(fCheck > 0 ){
+			db.w()[2] += dbLCP;
 		}
 		else{
-			db.w()[2] += dbLCP;
+			dA.w()[2] = 0;
+			db.w()[2] = dbLCP;
 		}
 	}
 
 	else if(onLimit[1].onUpper && (vJc.z > 0)){
-		double fCheck[2];	//拘束力の大きさを比べる
-		double dbLCP = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;	//LCPによって加わる力
-		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;	//同じ計算をまとめる
-		fCheck[0] = Ainv[5] * (dA.w()[2] * f.w()[2] + db.w()[2] + bSame + dbLCP);
-		if(A.w()[2] != 0){
-			fCheck[1] = 1 / A.w()[2] * (dbLCP + bSame);
-		}
-		else {fCheck[1] = fCheck[0];}
-		if(fCheck[0] < fCheck[1]){
-			dA.w()[2] = 0;
-			db.w()[2] = dbLCP;
+		double fCheck;
+		double dbLCP = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;
+		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;
+		fCheck = (A.w().z + dA.w().z) * A.w()[2] *
+					(A.w()[2] * (dA.w()[2] * f.w()[2] + db.w()[2]) - dA.w()[2] * (dbLCP + bSame));	
+		if(fCheck > 0 ){																			
+			db.w()[2] += dbLCP;
 		}
 		else{
-			db.w()[2] += dbLCP;
+			dA.w()[2] = 0;
+			db.w()[2] = dbLCP;
 		}
 	}
 }
@@ -301,12 +292,15 @@ void PHBallJoint::Projection(double& f, int k){
 	//力λ = 0 にすることで関節の拘束が解除される．
 	//拘束条件が1→0に戻る時にLCPのλ(トルク)を無理やり0にしてw（速度・角速度）を求められるようにする．
 	//< fMaxDt, fMinDtの条件では関節を拘束したいわけではないので，単なる上書きを行う．
-
+	Quaterniond propQ = goal * Xjrel.q.Inv();
+	Vec3d propV = propQ.RotationHalf();
 	if (k==3){
-		if(onLimit[0].onLower)
+		if(onLimit[0].onLower){
 			f = max(0.0, f);
-		else if(onLimit[0].onUpper)
+		}
+		else if(onLimit[0].onUpper){
 			f = min(0.0, f);
+		}
 		else if(fMaxDt < f)
 			f = fMaxDt;
 		else if(f < fMinDt)
