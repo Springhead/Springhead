@@ -30,8 +30,19 @@ public:
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
 	int NSectionVertexes(){return section.size();}		//(sectionの数を返す）
 	Vec3d GetSectionVertex(int i){return section[i];}	//(i番目のsectionを返す）
-//	double GetContactDimension(int NSection){
-//		for(i = 0; i < Nsection; i++){
+
+	///	接触面積．接触形状の頂点座標から面積を計算
+	double GetContactDimension(){
+		Vec3d area;
+		unsigned int i;
+
+		for(i = 0; i < section.size()-2; i++){
+			Vec3d vec1 = section[i+1] - section[0];
+			Vec3d vec2 = section[i+2] - section[0];
+			area += cross(vec1, vec2);
+		}
+		return area.norm() / 2;
+	}
 };
 
 /// Solidの組
