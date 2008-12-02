@@ -268,6 +268,10 @@ struct PHShapePairForLCPIf : public ObjectIf{
 		@param i:’¸“_À•W‚Ì”Ô†D
 	*/
 	Vec3d GetSectionVertex(int i);
+
+	/** @brief Œğ·’f–Ê‚Ì–ÊÏ‚ğæ“¾‚·‚é
+	*/
+	double GetContactDimension();
 };
 
 struct PHSolidPairForLCPIf : public ObjectIf{
