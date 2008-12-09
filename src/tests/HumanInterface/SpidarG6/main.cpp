@@ -18,7 +18,7 @@ int __cdecl main(){
 
 	sdk->Init();
 	sdk->Print(DSTR);
-	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic());
+	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	int t = 0;
 	while(!kbhit()){
