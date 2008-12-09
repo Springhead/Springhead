@@ -132,7 +132,7 @@ public:
 	}
 	template <class E>
 	UTRef(const UTRef<E>& r){
-		Obj() = (T*)(E*)r;
+		Obj() = (E*)r;
 		if (Obj()) Obj()->AddRef();
 	}
 	UTRef(const UTRef<T>& r){
