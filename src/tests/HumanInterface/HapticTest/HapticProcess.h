@@ -13,6 +13,7 @@ using namespace std;
 class HapticProcess{
 public:
 	// SPIDAR‚Ég‚¤•Ï”
+	UTRef<HISdkIf>  hisdk;
 	UTRef<HISpidarGIf>  spidarG6;
 	// LocalDynamic‚Ég‚¤•Ï”
 	double dt;
