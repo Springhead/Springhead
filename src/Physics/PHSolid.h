@@ -300,7 +300,7 @@ public:
 	UTRef<PHSolidIf> Erase(const PHSolidIf* s){
 		iterator it = std::find(begin(), end(), s);
 		if (it == end()) return NULL;
-		UTRef<PHSolid> rv = *it;
+		UTRef<PHSolidIf> rv = *it;
 		erase(it);
 		return *it;
 	}
