@@ -16,7 +16,7 @@ HapticProcess::HapticProcess(){
 };
 
 void HapticProcess::Init(){
-	UTRef<HISdkIf> hisdk = HISdkIf::CreateSdk();
+	hisdk = HISdkIf::CreateSdk();
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hisdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
