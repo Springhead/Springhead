@@ -11,6 +11,8 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
+#include <Physics/PHConstraint.h>
+#include <Physics/PhysicsDecl.hpp>
 
 #include <vector>
 
@@ -52,7 +54,7 @@ private:
 	void CreateEye(LREnum lr);				//< 目を作成する（未実装）
 
 	void InitContact();						//< ボディ全ての剛体同士の接触を切る
-
+	void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ボディの制御モードを設定する．
 	void SetUpperBody();					//< ボディの上体を構成する剛体を登録する
 	
 public:
@@ -76,6 +78,7 @@ public:
 		InitEyes();
 		
 		InitContact();
+		InitControlMode();
 		Init();
 	}
 
