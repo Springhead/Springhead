@@ -32,6 +32,7 @@ PHBallJointDesc::PHBallJointDesc(){
 	goal			= Quaterniond(1, 0, 0, 0);
 	fMax			= FLT_MAX;
 	fMin			= -FLT_MAX;
+
 }
 
 //----------------------------------------------------------------------------
@@ -48,7 +49,8 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 		onLimit[i].onUpper = false;
 	}
 	anyLimit = false;
-	
+	fMaxDt			= FLT_MAX;
+	fMinDt			= -FLT_MAX;
 
 }
 
