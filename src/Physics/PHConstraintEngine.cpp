@@ -216,6 +216,7 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 	else if(ii == PH3ElementIf::GetIfInfoStatic())
 		joint = DBG_NEW PH3Element();
 	else assert(false);
+	joint->SetScene(GetScene());
 	joint->SetDesc(&desc);
 	joint->solid[0] = lhs;
 	joint->solid[1] = rhs;
