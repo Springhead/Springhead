@@ -7,6 +7,7 @@
 
 namespace Spr {;
 HIForceInterface6D::HIForceInterface6D(){
+	alpha = 0.8f;
 }
 void HIForceInterface6D::Update(float dt){
 	HIPose::Update(dt);
