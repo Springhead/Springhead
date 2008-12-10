@@ -11,6 +11,9 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
+#include <Physics/PHConstraint.h>
+#include <Physics/PhysicsDecl.hpp>
+
 #include <vector>
 
 #include "CRBody.h"
@@ -31,6 +34,7 @@ private:
 	void InitLegs();
 
 	void InitContact();
+	void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ボディの制御モードを設定する．
 
 public:
 	SPR_OBJECTDEF(CRFourLegsTinyAnimalBody);
@@ -47,7 +51,7 @@ public:
 		InitBody();
 		InitLegs();
 		InitContact();
-
+		InitControlMode();
 		Init();
 	}
 
