@@ -71,10 +71,12 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 	for(int i = 0; i < scene->NJoints(); ++i){
 		DrawConstraint(scene->GetJoint(i));
 	}
-	SetMaterialSample((GRDebugRenderIf::TMaterialSample)1);
-	for(int i = 0; i < scene->NContacts(); ++i){
-		DrawConstraint(scene->GetContact(i));
-		DrawContact(scene->GetContact(i));
+	if(renderContact){
+		SetMaterialSample((GRDebugRenderIf::TMaterialSample)1);
+		for(int i = 0; i < scene->NContacts(); ++i){
+			DrawConstraint(scene->GetContact(i));
+			DrawContact(scene->GetContact(i));
+		}
 	}
 }
 
