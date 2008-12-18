@@ -208,8 +208,8 @@ void BoxStack::Display(){
 	// 描画モードの設定
 	render->SetRenderMode(true, false);
 //	render->EnableRenderAxis(bDebug);
-	render->EnableRenderForce(bDebug);
-	render->EnableRenderContact(bDebug);
+	render->EnableRenderForce(false);
+	render->EnableRenderContact(false);
 
 	// カメラ座標の指定
 	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
@@ -241,9 +241,10 @@ void BoxStack::Display(){
 	ld.position = Vec4f(1,1,1,0);
 	render->PushLight(ld);
 	if(bDebug){
-		DisplayContactPlane();
+//		DisplayContactPlane();
 		DisplayLineToNearestPoint();			// 力覚ポインタと剛体の近傍点の間をつなぐ
-	//	DrawHapticSolids();
+		DrawLocalArea();
+		//	DrawHapticSolids();
 	}
 	render->PopLight();	//	光源の削除
 
@@ -652,6 +653,21 @@ void BoxStack::DrawHapticSolids(){
 	}
 };
 
+void BoxStack::DrawLocalArea(){
+		Vec4f moon(1.0, 1.0, 0.8, 0.3);
+		render->SetMaterial( GRMaterialDesc(moon) );
+		render->PushModelMatrix();
+		render->SetLighting( false );
+		render->SetAlphaTest(true);
+		render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
+				Vec3d pos = soPointer->GetFramePosition();
+		glTranslated(pos[0], pos[1], pos[2]); 
+		glutSolidSphere(range + 0.5, 10, 10);
+		render->SetLighting( true);
+		render->SetAlphaTest(false);
+		render->PopModelMatrix();
+		glEnable(GL_DEPTH_TEST);
+};
 
 void BoxStack::Keyboard(unsigned char key){
 	states->ReleaseState(phscene);

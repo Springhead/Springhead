@@ -80,6 +80,7 @@ public:
 	void DisplayContactPlane();
 	void DisplayLineToNearestPoint();
 	void DrawHapticSolids();
+	void DrawLocalArea();
 	void Keyboard(unsigned char key);
 }; 
 extern BoxStack bstack;
