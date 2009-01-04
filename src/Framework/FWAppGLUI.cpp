@@ -32,24 +32,16 @@ FWAppGLUI::~FWAppGLUI(){
 }
 
 //------------------------------------------------------------------
-void FWAppGLUI::Init(int argc, char* argv[]){
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	FWAppGL::Init(argc, argv);
-	atexit(FWAppGLUI::AtExit);
-}
-
 void FWAppGLUI::Start(){
 	instance = this;
 	if (!NWin()){
 		CreateWin();
+		wins.back()->SetScene(GetSdk()->GetScene());
 	}
+	// gluiを使うならFWAppGLUT::GlutTimerFuncはGLUI_Masterの管理下に置く必要がある
 	GLUI_Master.set_glutTimerFunc(1, FWAppGLUT::GlutTimerFunc, 0);
 	GLUI_Master.set_glutIdleFunc(FWAppGLUT::GlutIdleFunc);
 
-	if (!guis.size()){
-		CreateGUI(GetWin(0)->GetID());
-	}
 	glutMainLoop();
 }
 
