@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
+#include <Math.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -17,7 +18,6 @@ namespace Spr{;
 PH3ElementDesc::PH3ElementDesc(){
 	springOri = damperOri = 0.0;
 }
-
 //----------------------------------------------------------------------------
 // PH3Element
 //コンストラクタ
@@ -45,15 +45,23 @@ void PH3Element::SetConstrainedIndexCorrection(bool* con){
 
 void PH3Element::CompBias(){
 	
-		//rjrel
 	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
 	Vec3d D1 = damper;
 	Vec3d K = spring;
 	Vec3d D2 = secondDamper;
 	double h = GetScene()->GetTimeStep();
 
-		//3要素モデル	
-		ws=vjrel;
+	//3要素モデル	
+	ws=vjrel;
+	//cout<<fabs(f.v().y)<<endl;
+	//cout<<Xjrel.r.y<<endl;
+	cout<<"Xjrel"<<Xjrel.r.y<<endl;
+	cout<<"xss"<<xss[0].v().y<<endl;
+	cout<<"Xjrel-xss"<<Xjrel.r.y-xss[0].v().y<<endl;
+	cout<<"xs"<<xs[0].v().y<<endl;
+	cout<<"xd"<<xd[0].v().y<<endl;
+
+	if(f.v().y<-30){
 		for(int i = 0; i < 3; i++){
 			if (!constr[i]) continue;
 			//ばねの長さを更新
@@ -64,7 +72,32 @@ void PH3Element::CompBias(){
 			dA[i] = -tmp*(D2[i]-D1[i])/tmp2* dtinv;
 			db[i] = K[i]*(2*D1[i]-D2[i])*(D2[i]-D1[i])/tmp2*xs[0][i];
 		}
-		xs[0]=xs[1];
+	xd[0].v()=Xjrel.r-xss[0].v()-xs[0].v();
+	xs[0]=xs[1];
+	}else{
+		for(int i = 0; i < 3; i++){
+			if (!constr[i]) continue;
+			tmp = 1.0 / (damper[i] + spring[i] * GetScene()->GetTimeStep());
+			dA[i] = tmp * dtinv;
+			db[i] = spring[i] *( Xjrel.r[i] -xd[0].v()[i])* tmp;
+		}
+		xss[0].v()=Xjrel.r;
+	}
+
+
+	////3要素モデル	
+	//ws=vjrel;
+	//for(int i = 0; i < 3; i++){
+	//	if (!constr[i]) continue;
+	//	//ばねの長さを更新
+	//	tmp = D2[i]-D1[i]+K[i]*h;
+	//	tmp2=D2[i]*K[i]*h*(2*D1[i]-D2[i])*(D2[i]-D1[i])-tmp*D1[i]*D2[i];
+
+	//	xs[1][i] = ((D2[i]-D1[i])/tmp)*xs[0][i] + (D2[i]*h/tmp)*ws[i];		
+	//	dA[i] = -tmp*(D2[i]-D1[i])/tmp2* dtinv;
+	//	db[i] = K[i]*(2*D1[i]-D2[i])*(D2[i]-D1[i])/tmp2*xs[0][i];
+	//}
+	//xs[0]=xs[1];
 
 
 	//if(secondDamper[0]!=0.0||secondDamper[1]!=0.0||secondDamper[2]!=0.0){
