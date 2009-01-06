@@ -52,7 +52,9 @@ public:
 	SpatialVector A, dA, Ainv;			///< LCPのA行列の対角成分とその補正量，逆数
 	SpatialVector scale;
 	
-	SpatialVector xs[2];					///(3要素モデル専用)ばね部の距離
+	SpatialVector xs[2];				///(3要素モデル専用)ばね部の距離
+	SpatialVector xd[2];				///(3要素モデル専用)ダンパ部の距離
+	SpatialVector xss[2];				///(3要素モデル専用)3要素モデルに遷移する前のバネの長さ
 	SpatialVector ws;					///(3要素モデル専用)ばね部の速さ
 	SpatialVector fs;					///(3要素モデル専用)ばね部の力
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
