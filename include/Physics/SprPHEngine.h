@@ -40,6 +40,12 @@ public:
 		@param value ‘‚«Š·‚¦Œã‚Ì’l
 	*/
 	void SetContactCorrectionRate(double value);
+	
+	/** @brief bSaveConstraints‚ğ‘‚«Š·‚¦‚é
+		@param value ‘‚«Š·‚¦Œã‚Ì’l
+	*/
+	void SetBSaveConstraints(bool value);
+
 };
 
 struct PHGravityEngineIf : PHEngineIf{
