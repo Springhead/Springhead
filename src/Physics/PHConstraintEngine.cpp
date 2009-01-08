@@ -566,7 +566,7 @@ bool PHConstraintEngine::GetState(void* s) const {
 		}		
 		st->joints.resize(joints.size());
 		for(size_t i=0; i<joints.size(); ++i){
-			joints[i]->GetState(&st->gears[i]);
+			joints[i]->GetState(&st->joints[i]);
 		}
 		st->gears.resize(gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
@@ -586,7 +586,7 @@ void PHConstraintEngine::SetState(const void* s){
 		}		
 		st->joints.resize(joints.size());
 		for(size_t i=0; i<joints.size(); ++i){
-			joints[i]->SetState(&st->gears[i]);
+			joints[i]->SetState(&st->joints[i]);
 		}
 		st->gears.resize(gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
