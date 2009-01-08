@@ -119,6 +119,7 @@ public:
 	virtual void SetVelCorrectionRate(double value){velCorrectionRate = value;}
 	virtual void SetPosCorrectionRate(double value){posCorrectionRate = value;}
 	virtual void SetContactCorrectionRate(double value){contactCorrectionRate = value;}
+	virtual void SetBSaveConstraints(bool value){bSaveConstraints = value;}
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
