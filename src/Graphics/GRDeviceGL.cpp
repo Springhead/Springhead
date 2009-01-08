@@ -428,6 +428,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 	}
 
 	glDisable(GL_LIGHTING);
+	glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
 	glColor3f(((font.color >> 16) & 0xFF) / 255.0,
 			  ((font.color >>  8) & 0xFF) / 255.0,
 			  ((font.color >>  0) & 0xFF) / 255.0);
@@ -507,7 +508,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 	}
 
 	glDisable(GL_LIGHTING);
-	glBindTexture(GL_TEXTURE_3D,0);
+	glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
 	glColor3f(((font.color >> 16) & 0xFF) / 255.0,
 			  ((font.color >>  8) & 0xFF) / 255.0,
 			  ((font.color >>  0) & 0xFF) / 255.0);
