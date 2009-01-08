@@ -20,7 +20,7 @@ PHMaterial::PHMaterial(){
 	density = 1.0f;
 
 	springK = 20;
-	damperD = 0.0001;
+	damperD = 0.0001f;
 	vibA = 0;
 	vibB = 0;
 	vibW = 0;

@@ -97,8 +97,8 @@ void PHHingeJoint::CompError(){
 
 //-----------------------------------------------------------------------------
 void PHHingeJointNode::CompJointJacobian(){
-	J.col(0).SUBVEC(0, 3).clear();
-	J.col(0).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);
+	J.col(0).sub_vector(PTM::TSubVectorDim<0, 3>()).clear();
+	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNode1D::CompJointJacobian();
 }
 

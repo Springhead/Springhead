@@ -10,18 +10,17 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHContactDetector.h>
-#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 
 class PHTreeNode;
 
-struct PHConstraintStatePrivate{
+struct PHConstraintSt{
 	SpatialVector f;				///< 拘束力の力積
 	SpatialVector F;				///< 拘束誤差を位置のLCPで補正する場合の補正量*質量
 };
 
-class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintStatePrivate{
+class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintSt{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
@@ -52,11 +51,6 @@ public:
 	SpatialVector A, dA, Ainv;			///< LCPのA行列の対角成分とその補正量，逆数
 	SpatialVector scale;
 	
-	SpatialVector xs[2];				///(3要素モデル専用)ばね部の距離
-	SpatialVector xd[2];				///(3要素モデル専用)ダンパ部の距離
-	SpatialVector xss[2];				///(3要素モデル専用)3要素モデルに遷移する前のバネの長さ
-	SpatialVector ws;					///(3要素モデル専用)ばね部の速さ
-	SpatialVector fs;					///(3要素モデル専用)ばね部の力
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
 	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
 

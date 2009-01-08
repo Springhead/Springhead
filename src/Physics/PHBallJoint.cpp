@@ -165,6 +165,7 @@ void PHBallJoint::ModifyJacobian(){
 
 void PHBallJoint::CompBias(){
 	
+
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
@@ -331,14 +332,14 @@ void PHBallJointNode::CompJointJacobian(){
 	//Matrix3d test = Jst * Jcinv;
 	Quaterniond q = j->Xjrel.q;
 	for(int i = 0; i < 3; i++)
-		J.col(i).SUBVEC(0, 3).clear();
+		J.col(i).sub_vector(PTM::TSubVectorDim<0,3>()).clear();
 	/*J[0].w() = 2.0 * Vec3d(-q.x, -q.y, -q.z);
 	J[1].w() = 2.0 * Vec3d( q.w,  q.z, -q.y);
     J[2].w() = 2.0 * Vec3d(-q.z,  q.w,  q.x);
     J[3].w() = 2.0 * Vec3d( q.y, -q.x,  q.w);*/
-	J.col(0).SUBVEC(3, 3) = Vec3d(1.0, 0.0, 0.0);
-	J.col(1).SUBVEC(3, 3) = Vec3d(0.0, 1.0, 0.0);
-	J.col(2).SUBVEC(3, 3) = Vec3d(0.0, 0.0, 1.0);
+	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(1.0, 0.0, 0.0);
+	J.col(1).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 1.0, 0.0);
+	J.col(2).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNodeND<3>::CompJointJacobian();
 }
 

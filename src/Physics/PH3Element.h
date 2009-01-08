@@ -14,7 +14,23 @@
 
 namespace Spr{;
 
-class PH3Element : public PHJoint{
+struct SpatialVectorArray2{
+	SpatialVector v[2];
+	SpatialVector& operator[](int i){
+		return v[i];
+	}
+};
+struct PH3ElementState{
+	SpatialVectorArray2 xs;				///(3要素モデル専用)ばね部の距離
+};
+
+struct PH3ElementCommonData: public PH3ElementState{
+	SpatialVector xd[2];				///(3要素モデル専用)ダンパ部の距離
+	SpatialVector xss[2];				///(3要素モデル専用)3要素モデルに遷移する前のバネの長さ
+	SpatialVector ws;					///(3要素モデル専用)ばね部の速さ
+	SpatialVector fs;					///(3要素モデル専用)ばね部の力
+};
+class PH3Element : public PHJoint, public PH3ElementCommonData{
 	Vec3d spring, damper,secondDamper;
 	double springOri, damperOri;
 public:

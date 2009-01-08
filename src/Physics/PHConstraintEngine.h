@@ -61,9 +61,9 @@ public:
 };
 
 struct PHConstraintsSt{
-	std::vector<PHConstraintStatePrivate> points;
-	std::vector<PHConstraintStatePrivate> joints;
-	std::vector<PHConstraintStatePrivate> gears;
+	std::vector<PHConstraintSt> points;
+	std::vector<PHConstraintSt> joints;
+	std::vector<PHConstraintSt> gears;
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{

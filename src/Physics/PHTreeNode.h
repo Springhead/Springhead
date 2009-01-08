@@ -9,7 +9,6 @@
 #define PHTREENODE_H
 
 #include <SprPhysics.h>
-#include <Physics/PHSpatial.h>
 #include <Physics/PHJoint.h>
 #include <Physics/PhysicsDecl.hpp>
 
