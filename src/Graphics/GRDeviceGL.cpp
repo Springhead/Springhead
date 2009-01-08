@@ -330,6 +330,7 @@ void GRDeviceGL::ReleaseList(int list){
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし） .. Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 	glDisable(GL_LIGHTING);
+	
 	glRasterPos2fv(pos);
 	std::string::const_iterator iter;
 	for (iter = str.begin(); iter != str.end();	++iter) {
@@ -506,6 +507,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 	}
 
 	glDisable(GL_LIGHTING);
+	glBindTexture(GL_TEXTURE_3D,0);
 	glColor3f(((font.color >> 16) & 0xFF) / 255.0,
 			  ((font.color >>  8) & 0xFF) / 255.0,
 			  ((font.color >>  0) & 0xFF) / 255.0);
