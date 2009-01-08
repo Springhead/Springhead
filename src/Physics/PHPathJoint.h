@@ -9,7 +9,6 @@
 #define PHPATHJOINT_H
 
 #include <SprPhysics.h>
-#include <Physics/PHSpatial.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHTreeNode.h>
 

@@ -598,6 +598,7 @@ struct PHSpringDesc : public PHJointDesc{
 	PHSpringDesc();
 };
 
+
 // 3要素モデルのインタフェース
 struct PH3ElementIf : public PHSpringIf{
 	

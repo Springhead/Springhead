@@ -12,13 +12,16 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHBallJoint.h>
+#include <Physics/PH3Element.h>
 
 namespace Spr{
 
-class PH3ElementBallJoint : public PHBallJoint {
+
+class PH3ElementBallJoint : public PHBallJoint, public PH3ElementCommonData{
 public:
 	SPR_OBJECTDEF1(PH3ElementBallJoint, PHJoint);
 	SPR_DECLMEMBEROF_PH3ElementBallJointDesc;
+	ACCESS_STATE(PH3Element);
 protected:
 public:
 		

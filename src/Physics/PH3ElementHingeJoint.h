@@ -12,10 +12,11 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHHingeJoint.h>
+#include <Physics/PH3Element.h>
 
 namespace Spr{
 
-class PH3ElementHingeJoint : public PHHingeJoint {
+class PH3ElementHingeJoint : public PHHingeJoint, public PH3ElementCommonData{
 public:
 	SPR_OBJECTDEF1(PH3ElementHingeJoint, PHJoint);
 	SPR_DECLMEMBEROF_PH3ElementHingeJointDesc;

@@ -594,3 +594,15 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PH3ElementState \
+protected:\
+	Spr::SpatialVectorArray2	xs;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		xs = ((PH3ElementState*)ptr)->xs;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PH3ElementState*)ptr)->xs = xs;	\
+		return true;	\
+	}\
+

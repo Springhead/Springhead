@@ -541,6 +541,7 @@ size_t PHConstraintEngine::GetStateSize() const{
 		(bSaveConstraints ? sizeof(PHConstraintsSt) : 0);
 }
 void PHConstraintEngine::ConstructState(void* m) const{
+	Detector::ConstructState(m);
 	char* p = (char*)m;
 	if (bSaveConstraints){
 		p += Detector::GetStateSize();

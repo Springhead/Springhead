@@ -166,7 +166,6 @@ struct PHContactDetectorSt{
 			+ nShapePair*sizeof(CDShapePairSt);
 	}
 	PHContactDetectorSt(int n=0, int m=0):nSolidPair(n), nShapePair(m){}
-
 };
 
 template<class TShapePair, class TSolidPair, class TEngine>
