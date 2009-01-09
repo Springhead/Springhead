@@ -501,9 +501,9 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 };
 
 // ------------------------------------------------------------------------------
-/// 手首から先の手モデルのインターフェイス
-struct CRManipulatorIf : CRBodyIf {
-	SPR_IFDEF(CRManipulator);
+/// デバッグ用のヘビ状モデルのインターフェイス
+struct CRDebugLinkBodyIf : CRBodyIf {
+	SPR_IFDEF(CRDebugLinkBody);
 
 	/** @brief 剛体の数を返す
 	*/
@@ -523,55 +523,10 @@ struct CRManipulatorIf : CRBodyIf {
 	
 };
 
-/// 手首から先の手モデルのデスクリプタ
-struct CRManipulatorDesc : CRBodyDesc {
+/// デバッグ用のヘビ状モデルのデスクリプタ
+struct CRDebugLinkBodyDesc : CRBodyDesc {
 	
-	SPR_DESCDEF(CRManipulator);
-
-	enum CRFingerSolids{
-
-		///////////////////////////////////////////////////////////////////
-		//																 //
-		// < 剛体定義 >													 //
-		// ROOT：手のひらの付け根										 //
-		// 指番号：  [0]親指，[1]人差し指, [2]中指, [3]薬指, [4]小指	 //
-		// 指内番号：[0]付け根に近い方									 //
-		//																 //
-		///////////////////////////////////////////////////////////////////
-
-		// Center part of the solids
-		SO_ROOT = 0,
-		SO_FINGER_0_0, SO_FINGER_0_1, SO_FINGER_0_2,
-		SO_FINGER_1_0, SO_FINGER_1_1, SO_FINGER_1_2, SO_FINGER_1_3,
-		SO_FINGER_2_0, SO_FINGER_2_1, SO_FINGER_2_2, SO_FINGER_2_3,
-		SO_FINGER_3_0, SO_FINGER_3_1, SO_FINGER_3_2, SO_FINGER_3_3,
-		SO_FINGER_4_0, SO_FINGER_4_1, SO_FINGER_4_2, SO_FINGER_4_3,
-		
-		// -- The number of the solids
-		SO_NSOLIDS
-	};
-
-	enum CRFingerJoints{
-
-		///////////////////////////////////////////////////////////////////
-		//																 //
-		// < 関節定義 >													 //
-		// ROOT：手のひらの付け根										 //
-		// 関節番号：  [0]親指，[1]人差し指, [2]中指, [3]薬指, [4]小指	 //
-		// 関節内番号：[0]付け根に近い方								 //
-		//																 //
-		///////////////////////////////////////////////////////////////////
-
-		// -- Center part of the joints
-		JO_00 = 0, JO_01, JO_02,
-		JO_10,	   JO_11, JO_12, JO_13,
-		JO_20,	   JO_21, JO_22, JO_23,
-		JO_30,	   JO_31, JO_32, JO_33,
-		JO_40,	   JO_41, JO_42, JO_43,
-
-		// -- The number of the all joints (ball + hinge)
-		JO_NJOINTS								//(nHingeJoints = nJoints - nBallJoints - 1)
-	};
+	SPR_DESCDEF(CRDebugLinkBody);
 
 	int soNSolids;
 	int joNBallJoints;
@@ -579,92 +534,33 @@ struct CRManipulatorDesc : CRBodyDesc {
 	int joNJoints;
 
 	/// サイズに関するパラメータ(breadth, length, thickness)
-	double bRoot;
-	double bFinger00, lFinger00, tFinger00;
-	double bFinger01, lFinger01, tFinger01;
-	double bFinger02, lFinger02, tFinger02;
-	double bFinger10, lFigner10, tFinger10;
-	double bFinger11, lFinger11, tFinger11;
-	double bFinger12, lFigner12, tFinger12;
-	double bFinger13, lFinger13, tFigner13;
-	double bFinger20, lFigner20, tFinger20;
-	double bFinger21, lFinger21, tFinger21;
-	double bFinger22, lFigner22, tFinger22;
-	double bFinger23, lFinger23, tFigner23;
-	double bFinger30, lFigner30, tFinger30;
-	double bFinger31, lFinger31, tFinger31;
-	double bFinger32, lFigner32, tFinger32;
-	double bFinger33, lFinger33, tFigner33;
-	double bFinger40, lFigner40, tFinger40;
-	double bFinger41, lFinger41, tFinger41;
-	double bFinger42, lFigner42, tFinger42;
-	double bFinger43, lFinger43, tFigner43;
+	double breadth, length, thickness;
+
+	/// リンク一つの重さ
+	double mass;
 
 	/// 各BallJointのバネダンパ
-	double spring00, damper00;
-	double spring01, damper01;
-	double spring02, damper02;
-	double spring10, damper10;
-	double spring11, damper11;
-	double spring12, damper12;
-	double spring13, damper13;
-	double spring20, damper20;
-	double spring21, damper21;
-	double spring22, damper22;
-	double spring23, damper23;
-	double spring30, damper30;
-	double spring31, damper31;
-	double spring32, damper32;
-	double spring33, damper33;
-	double spring40, damper40;
-	double spring41, damper41;
-	double spring42, damper42;
-	double spring43, damper43;
-	
+	double spring, damper;
+
 	/// HingeJoint可動域制限
-	Vec2d  range01, range02;
-	Vec2d  range11, range12, range13;
-	Vec2d  range21, range22, range23;
-	Vec2d  range31, range32, range33;
-	Vec2d  range41, range42, range43;
+	Vec2d  range;
 	
 	// BallJoint制御目標
-	Quaterniond goalFinger0;
-	Quaterniond goalFinger1;
-	Quaterniond goalFinger2;
-	Quaterniond goalFigner3;
-	Quaterniond goalFinger4;
+	Quaterniond goal;
 
 	/// BallJointのswing可動域:
-	Vec2d limitSwing00;
-	Vec2d limitSwing10;
-	Vec2d limitSwing20;
-	Vec2d limitSwing30;
-	Vec2d limitSwing40;
+	Vec2d limitSwing;
 
 	/// BallJointのtwist可動域
-	Vec2d limitTwist00;
-	Vec2d limitTwist10;
-	Vec2d limitTwist20;
-	Vec2d limitTwist30;
-	Vec2d limitTwist40;
+	Vec2d limitTwist;
 
 	// 関節の出せる力の最大値
-	double fMaxFinger0;
-	double fMaxFinger1;
-	double fMaxFinger2;
-	double fMaxFinger3;
-	double fMaxFinger4;
-
-	// 物体の摩擦係数
-	float materialMu;
+	double fMax;
 
 	/// ダイナミカルを入れるかどうか
 	bool dynamicalMode;
-	/// fMaxを入れるかどうか
-	bool flagFMax;
-	/// 稼働域制限を入れるかどうか
-	bool flagRange;
+
+	CRDebugLinkBodyDesc(bool enableRange = false, bool enableFMax = false);
 };
 
 
