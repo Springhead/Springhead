@@ -23,7 +23,7 @@
 	void SetTotalMass(double value){	base::SetTotalMass(value);}	\
 	double GetLegLength(int i){	return	base::GetLegLength(i);}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_CRManipulatorIf(base)	\
+#define SPR_OVERRIDEMEMBERFUNCOF_CRDebugLinkBodyIf(base)	\
 	int NSolids(){	return	base::NSolids();}	\
 	int NJoints(){	return	base::NJoints();}	\
 	int NBallJoints(){	return	base::NBallJoints();}	\
