@@ -225,7 +225,7 @@ void GRDebugRender::DrawConstraint(PHConstraintIf* conif){
 }
 
 void GRDebugRender::DrawContact(PHContactPointIf* con){
-	if(!renderContact)
+	if(!renderContact || !con)
 		return;
 	PHContactPoint* c = con->Cast();
 	if(c->shapePair->section.size() < 3)

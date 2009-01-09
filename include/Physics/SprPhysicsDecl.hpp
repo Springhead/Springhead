@@ -5,7 +5,6 @@
 	void SetVelCorrectionRate(double value){	base::SetVelCorrectionRate(value);}	\
 	void SetPosCorrectionRate(double value){	base::SetPosCorrectionRate(value);}	\
 	void SetContactCorrectionRate(double value){	base::SetContactCorrectionRate(value);}	\
-	void SetBSaveConstraints(bool value){	base::SetBSaveConstraints(value);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGravityEngineIf(base)	\
 

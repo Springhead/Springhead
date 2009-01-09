@@ -533,8 +533,8 @@ struct CRDebugLinkBodyDesc : CRBodyDesc {
 	int joNHingeJoints;
 	int joNJoints;
 
-	/// サイズに関するパラメータ(breadth, length, thickness)
-	double breadth, length, thickness;
+	/// サイズに関するパラメータ(radius, length)
+	double radius, length;
 
 	/// リンク一つの重さ
 	double mass;
