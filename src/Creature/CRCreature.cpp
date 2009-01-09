@@ -27,6 +27,7 @@
 #include "CRFourLegsAnimalBody.h"
 #include "CRTrunkFootHumanBody.h"
 #include "CRFourLegsTinyAnimalBody.h"
+#include "CRDebugLinkBody.h"
 
 #include "CRInternalScene.h"
 
@@ -101,7 +102,10 @@ CRBodyIf* CRCreature::CreateBody(const IfInfo* ii, const CRBodyDesc& desc){
 	} else if (ii == CRFourLegsTinyAnimalBodyIf::GetIfInfoStatic()) {
 		body.push_back((DBG_NEW CRFourLegsTinyAnimalBody((const CRFourLegsTinyAnimalBodyDesc&)desc, this->Cast()))->Cast());
 
-	} else {
+	} else if(ii == CRDebugLinkBodyIf::GetIfInfoStatic()){
+		body.push_back((DBG_NEW CRDebugLinkBody((const CRDebugLinkBodyDesc&)desc, this->Cast()))->Cast());
+
+	}else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
 		return NULL;
 

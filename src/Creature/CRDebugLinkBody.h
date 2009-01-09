@@ -34,7 +34,10 @@ public:
 	CRDebugLinkBody(const CRDebugLinkBodyDesc& desc, CRCreatureIf* c =NULL)
 		: CRDebugLinkBodyDesc(desc), CRBody((const CRBodyDesc&)desc, c)
 	{
-		
+		CreateBody();
+		InitBody();
+		InitContact();
+		InitControlMode();
 	}
 	virtual void Init();
 	int NBallJoints(){return joNBallJoints;}

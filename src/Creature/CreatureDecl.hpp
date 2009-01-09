@@ -791,9 +791,8 @@ protected:\
 	int	joNBallJoints;	\
 	int	joNHingeJoints;	\
 	int	joNJoints;	\
-	double	breadth;	\
+	double	radius;	\
 	double	length;	\
-	double	thickness;	\
 	double	mass;	\
 	double	spring;	\
 	double	damper;	\
@@ -810,9 +809,8 @@ public:\
 		joNBallJoints = ((CRDebugLinkBodyDesc*)ptr)->joNBallJoints;	\
 		joNHingeJoints = ((CRDebugLinkBodyDesc*)ptr)->joNHingeJoints;	\
 		joNJoints = ((CRDebugLinkBodyDesc*)ptr)->joNJoints;	\
-		breadth = ((CRDebugLinkBodyDesc*)ptr)->breadth;	\
+		radius = ((CRDebugLinkBodyDesc*)ptr)->radius;	\
 		length = ((CRDebugLinkBodyDesc*)ptr)->length;	\
-		thickness = ((CRDebugLinkBodyDesc*)ptr)->thickness;	\
 		mass = ((CRDebugLinkBodyDesc*)ptr)->mass;	\
 		spring = ((CRDebugLinkBodyDesc*)ptr)->spring;	\
 		damper = ((CRDebugLinkBodyDesc*)ptr)->damper;	\
@@ -831,9 +829,8 @@ public:\
 		((CRDebugLinkBodyDesc*)ptr)->joNBallJoints = joNBallJoints;	\
 		((CRDebugLinkBodyDesc*)ptr)->joNHingeJoints = joNHingeJoints;	\
 		((CRDebugLinkBodyDesc*)ptr)->joNJoints = joNJoints;	\
-		((CRDebugLinkBodyDesc*)ptr)->breadth = breadth;	\
+		((CRDebugLinkBodyDesc*)ptr)->radius = radius;	\
 		((CRDebugLinkBodyDesc*)ptr)->length = length;	\
-		((CRDebugLinkBodyDesc*)ptr)->thickness = thickness;	\
 		((CRDebugLinkBodyDesc*)ptr)->mass = mass;	\
 		((CRDebugLinkBodyDesc*)ptr)->spring = spring;	\
 		((CRDebugLinkBodyDesc*)ptr)->damper = damper;	\
