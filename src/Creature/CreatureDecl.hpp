@@ -785,430 +785,64 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_CRManipulatorDesc \
+#define SPR_DECLMEMBEROF_CRDebugLinkBodyDesc \
 protected:\
 	int	soNSolids;	\
 	int	joNBallJoints;	\
 	int	joNHingeJoints;	\
 	int	joNJoints;	\
-	double	bRoot;	\
-	double	bFinger00;	\
-	double	lFinger00;	\
-	double	tFinger00;	\
-	double	bFinger01;	\
-	double	lFinger01;	\
-	double	tFinger01;	\
-	double	bFinger02;	\
-	double	lFinger02;	\
-	double	tFinger02;	\
-	double	bFinger10;	\
-	double	lFigner10;	\
-	double	tFinger10;	\
-	double	bFinger11;	\
-	double	lFinger11;	\
-	double	tFinger11;	\
-	double	bFinger12;	\
-	double	lFigner12;	\
-	double	tFinger12;	\
-	double	bFinger13;	\
-	double	lFinger13;	\
-	double	tFigner13;	\
-	double	bFinger20;	\
-	double	lFigner20;	\
-	double	tFinger20;	\
-	double	bFinger21;	\
-	double	lFinger21;	\
-	double	tFinger21;	\
-	double	bFinger22;	\
-	double	lFigner22;	\
-	double	tFinger22;	\
-	double	bFinger23;	\
-	double	lFinger23;	\
-	double	tFigner23;	\
-	double	bFinger30;	\
-	double	lFigner30;	\
-	double	tFinger30;	\
-	double	bFinger31;	\
-	double	lFinger31;	\
-	double	tFinger31;	\
-	double	bFinger32;	\
-	double	lFigner32;	\
-	double	tFinger32;	\
-	double	bFinger33;	\
-	double	lFinger33;	\
-	double	tFigner33;	\
-	double	bFinger40;	\
-	double	lFigner40;	\
-	double	tFinger40;	\
-	double	bFinger41;	\
-	double	lFinger41;	\
-	double	tFinger41;	\
-	double	bFinger42;	\
-	double	lFigner42;	\
-	double	tFinger42;	\
-	double	bFinger43;	\
-	double	lFinger43;	\
-	double	tFigner43;	\
-	double	spring00;	\
-	double	damper00;	\
-	double	spring01;	\
-	double	damper01;	\
-	double	spring02;	\
-	double	damper02;	\
-	double	spring10;	\
-	double	damper10;	\
-	double	spring11;	\
-	double	damper11;	\
-	double	spring12;	\
-	double	damper12;	\
-	double	spring13;	\
-	double	damper13;	\
-	double	spring20;	\
-	double	damper20;	\
-	double	spring21;	\
-	double	damper21;	\
-	double	spring22;	\
-	double	damper22;	\
-	double	spring23;	\
-	double	damper23;	\
-	double	spring30;	\
-	double	damper30;	\
-	double	spring31;	\
-	double	damper31;	\
-	double	spring32;	\
-	double	damper32;	\
-	double	spring33;	\
-	double	damper33;	\
-	double	spring40;	\
-	double	damper40;	\
-	double	spring41;	\
-	double	damper41;	\
-	double	spring42;	\
-	double	damper42;	\
-	double	spring43;	\
-	double	damper43;	\
-	Vec2d	range01;	\
-	Vec2d	range02;	\
-	Vec2d	range11;	\
-	Vec2d	range12;	\
-	Vec2d	range13;	\
-	Vec2d	range21;	\
-	Vec2d	range22;	\
-	Vec2d	range23;	\
-	Vec2d	range31;	\
-	Vec2d	range32;	\
-	Vec2d	range33;	\
-	Vec2d	range41;	\
-	Vec2d	range42;	\
-	Vec2d	range43;	\
-	Quaterniond	goalFinger0;	\
-	Quaterniond	goalFinger1;	\
-	Quaterniond	goalFinger2;	\
-	Quaterniond	goalFigner3;	\
-	Quaterniond	goalFinger4;	\
-	Vec2d	limitSwing00;	\
-	Vec2d	limitSwing10;	\
-	Vec2d	limitSwing20;	\
-	Vec2d	limitSwing30;	\
-	Vec2d	limitSwing40;	\
-	Vec2d	limitTwist00;	\
-	Vec2d	limitTwist10;	\
-	Vec2d	limitTwist20;	\
-	Vec2d	limitTwist30;	\
-	Vec2d	limitTwist40;	\
-	double	fMaxFinger0;	\
-	double	fMaxFinger1;	\
-	double	fMaxFinger2;	\
-	double	fMaxFinger3;	\
-	double	fMaxFinger4;	\
-	float	materialMu;	\
+	double	breadth;	\
+	double	length;	\
+	double	thickness;	\
+	double	mass;	\
+	double	spring;	\
+	double	damper;	\
+	Vec2d	range;	\
+	Quaterniond	goal;	\
+	Vec2d	limitSwing;	\
+	Vec2d	limitTwist;	\
+	double	fMax;	\
 	bool	dynamicalMode;	\
-	bool	flagFMax;	\
-	bool	flagRange;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		CRBody::SetDesc((CRBodyDesc*)(CRManipulatorDesc*)ptr);	\
-		soNSolids = ((CRManipulatorDesc*)ptr)->soNSolids;	\
-		joNBallJoints = ((CRManipulatorDesc*)ptr)->joNBallJoints;	\
-		joNHingeJoints = ((CRManipulatorDesc*)ptr)->joNHingeJoints;	\
-		joNJoints = ((CRManipulatorDesc*)ptr)->joNJoints;	\
-		bRoot = ((CRManipulatorDesc*)ptr)->bRoot;	\
-		bFinger00 = ((CRManipulatorDesc*)ptr)->bFinger00;	\
-		lFinger00 = ((CRManipulatorDesc*)ptr)->lFinger00;	\
-		tFinger00 = ((CRManipulatorDesc*)ptr)->tFinger00;	\
-		bFinger01 = ((CRManipulatorDesc*)ptr)->bFinger01;	\
-		lFinger01 = ((CRManipulatorDesc*)ptr)->lFinger01;	\
-		tFinger01 = ((CRManipulatorDesc*)ptr)->tFinger01;	\
-		bFinger02 = ((CRManipulatorDesc*)ptr)->bFinger02;	\
-		lFinger02 = ((CRManipulatorDesc*)ptr)->lFinger02;	\
-		tFinger02 = ((CRManipulatorDesc*)ptr)->tFinger02;	\
-		bFinger10 = ((CRManipulatorDesc*)ptr)->bFinger10;	\
-		lFigner10 = ((CRManipulatorDesc*)ptr)->lFigner10;	\
-		tFinger10 = ((CRManipulatorDesc*)ptr)->tFinger10;	\
-		bFinger11 = ((CRManipulatorDesc*)ptr)->bFinger11;	\
-		lFinger11 = ((CRManipulatorDesc*)ptr)->lFinger11;	\
-		tFinger11 = ((CRManipulatorDesc*)ptr)->tFinger11;	\
-		bFinger12 = ((CRManipulatorDesc*)ptr)->bFinger12;	\
-		lFigner12 = ((CRManipulatorDesc*)ptr)->lFigner12;	\
-		tFinger12 = ((CRManipulatorDesc*)ptr)->tFinger12;	\
-		bFinger13 = ((CRManipulatorDesc*)ptr)->bFinger13;	\
-		lFinger13 = ((CRManipulatorDesc*)ptr)->lFinger13;	\
-		tFigner13 = ((CRManipulatorDesc*)ptr)->tFigner13;	\
-		bFinger20 = ((CRManipulatorDesc*)ptr)->bFinger20;	\
-		lFigner20 = ((CRManipulatorDesc*)ptr)->lFigner20;	\
-		tFinger20 = ((CRManipulatorDesc*)ptr)->tFinger20;	\
-		bFinger21 = ((CRManipulatorDesc*)ptr)->bFinger21;	\
-		lFinger21 = ((CRManipulatorDesc*)ptr)->lFinger21;	\
-		tFinger21 = ((CRManipulatorDesc*)ptr)->tFinger21;	\
-		bFinger22 = ((CRManipulatorDesc*)ptr)->bFinger22;	\
-		lFigner22 = ((CRManipulatorDesc*)ptr)->lFigner22;	\
-		tFinger22 = ((CRManipulatorDesc*)ptr)->tFinger22;	\
-		bFinger23 = ((CRManipulatorDesc*)ptr)->bFinger23;	\
-		lFinger23 = ((CRManipulatorDesc*)ptr)->lFinger23;	\
-		tFigner23 = ((CRManipulatorDesc*)ptr)->tFigner23;	\
-		bFinger30 = ((CRManipulatorDesc*)ptr)->bFinger30;	\
-		lFigner30 = ((CRManipulatorDesc*)ptr)->lFigner30;	\
-		tFinger30 = ((CRManipulatorDesc*)ptr)->tFinger30;	\
-		bFinger31 = ((CRManipulatorDesc*)ptr)->bFinger31;	\
-		lFinger31 = ((CRManipulatorDesc*)ptr)->lFinger31;	\
-		tFinger31 = ((CRManipulatorDesc*)ptr)->tFinger31;	\
-		bFinger32 = ((CRManipulatorDesc*)ptr)->bFinger32;	\
-		lFigner32 = ((CRManipulatorDesc*)ptr)->lFigner32;	\
-		tFinger32 = ((CRManipulatorDesc*)ptr)->tFinger32;	\
-		bFinger33 = ((CRManipulatorDesc*)ptr)->bFinger33;	\
-		lFinger33 = ((CRManipulatorDesc*)ptr)->lFinger33;	\
-		tFigner33 = ((CRManipulatorDesc*)ptr)->tFigner33;	\
-		bFinger40 = ((CRManipulatorDesc*)ptr)->bFinger40;	\
-		lFigner40 = ((CRManipulatorDesc*)ptr)->lFigner40;	\
-		tFinger40 = ((CRManipulatorDesc*)ptr)->tFinger40;	\
-		bFinger41 = ((CRManipulatorDesc*)ptr)->bFinger41;	\
-		lFinger41 = ((CRManipulatorDesc*)ptr)->lFinger41;	\
-		tFinger41 = ((CRManipulatorDesc*)ptr)->tFinger41;	\
-		bFinger42 = ((CRManipulatorDesc*)ptr)->bFinger42;	\
-		lFigner42 = ((CRManipulatorDesc*)ptr)->lFigner42;	\
-		tFinger42 = ((CRManipulatorDesc*)ptr)->tFinger42;	\
-		bFinger43 = ((CRManipulatorDesc*)ptr)->bFinger43;	\
-		lFinger43 = ((CRManipulatorDesc*)ptr)->lFinger43;	\
-		tFigner43 = ((CRManipulatorDesc*)ptr)->tFigner43;	\
-		spring00 = ((CRManipulatorDesc*)ptr)->spring00;	\
-		damper00 = ((CRManipulatorDesc*)ptr)->damper00;	\
-		spring01 = ((CRManipulatorDesc*)ptr)->spring01;	\
-		damper01 = ((CRManipulatorDesc*)ptr)->damper01;	\
-		spring02 = ((CRManipulatorDesc*)ptr)->spring02;	\
-		damper02 = ((CRManipulatorDesc*)ptr)->damper02;	\
-		spring10 = ((CRManipulatorDesc*)ptr)->spring10;	\
-		damper10 = ((CRManipulatorDesc*)ptr)->damper10;	\
-		spring11 = ((CRManipulatorDesc*)ptr)->spring11;	\
-		damper11 = ((CRManipulatorDesc*)ptr)->damper11;	\
-		spring12 = ((CRManipulatorDesc*)ptr)->spring12;	\
-		damper12 = ((CRManipulatorDesc*)ptr)->damper12;	\
-		spring13 = ((CRManipulatorDesc*)ptr)->spring13;	\
-		damper13 = ((CRManipulatorDesc*)ptr)->damper13;	\
-		spring20 = ((CRManipulatorDesc*)ptr)->spring20;	\
-		damper20 = ((CRManipulatorDesc*)ptr)->damper20;	\
-		spring21 = ((CRManipulatorDesc*)ptr)->spring21;	\
-		damper21 = ((CRManipulatorDesc*)ptr)->damper21;	\
-		spring22 = ((CRManipulatorDesc*)ptr)->spring22;	\
-		damper22 = ((CRManipulatorDesc*)ptr)->damper22;	\
-		spring23 = ((CRManipulatorDesc*)ptr)->spring23;	\
-		damper23 = ((CRManipulatorDesc*)ptr)->damper23;	\
-		spring30 = ((CRManipulatorDesc*)ptr)->spring30;	\
-		damper30 = ((CRManipulatorDesc*)ptr)->damper30;	\
-		spring31 = ((CRManipulatorDesc*)ptr)->spring31;	\
-		damper31 = ((CRManipulatorDesc*)ptr)->damper31;	\
-		spring32 = ((CRManipulatorDesc*)ptr)->spring32;	\
-		damper32 = ((CRManipulatorDesc*)ptr)->damper32;	\
-		spring33 = ((CRManipulatorDesc*)ptr)->spring33;	\
-		damper33 = ((CRManipulatorDesc*)ptr)->damper33;	\
-		spring40 = ((CRManipulatorDesc*)ptr)->spring40;	\
-		damper40 = ((CRManipulatorDesc*)ptr)->damper40;	\
-		spring41 = ((CRManipulatorDesc*)ptr)->spring41;	\
-		damper41 = ((CRManipulatorDesc*)ptr)->damper41;	\
-		spring42 = ((CRManipulatorDesc*)ptr)->spring42;	\
-		damper42 = ((CRManipulatorDesc*)ptr)->damper42;	\
-		spring43 = ((CRManipulatorDesc*)ptr)->spring43;	\
-		damper43 = ((CRManipulatorDesc*)ptr)->damper43;	\
-		range01 = ((CRManipulatorDesc*)ptr)->range01;	\
-		range02 = ((CRManipulatorDesc*)ptr)->range02;	\
-		range11 = ((CRManipulatorDesc*)ptr)->range11;	\
-		range12 = ((CRManipulatorDesc*)ptr)->range12;	\
-		range13 = ((CRManipulatorDesc*)ptr)->range13;	\
-		range21 = ((CRManipulatorDesc*)ptr)->range21;	\
-		range22 = ((CRManipulatorDesc*)ptr)->range22;	\
-		range23 = ((CRManipulatorDesc*)ptr)->range23;	\
-		range31 = ((CRManipulatorDesc*)ptr)->range31;	\
-		range32 = ((CRManipulatorDesc*)ptr)->range32;	\
-		range33 = ((CRManipulatorDesc*)ptr)->range33;	\
-		range41 = ((CRManipulatorDesc*)ptr)->range41;	\
-		range42 = ((CRManipulatorDesc*)ptr)->range42;	\
-		range43 = ((CRManipulatorDesc*)ptr)->range43;	\
-		goalFinger0 = ((CRManipulatorDesc*)ptr)->goalFinger0;	\
-		goalFinger1 = ((CRManipulatorDesc*)ptr)->goalFinger1;	\
-		goalFinger2 = ((CRManipulatorDesc*)ptr)->goalFinger2;	\
-		goalFigner3 = ((CRManipulatorDesc*)ptr)->goalFigner3;	\
-		goalFinger4 = ((CRManipulatorDesc*)ptr)->goalFinger4;	\
-		limitSwing00 = ((CRManipulatorDesc*)ptr)->limitSwing00;	\
-		limitSwing10 = ((CRManipulatorDesc*)ptr)->limitSwing10;	\
-		limitSwing20 = ((CRManipulatorDesc*)ptr)->limitSwing20;	\
-		limitSwing30 = ((CRManipulatorDesc*)ptr)->limitSwing30;	\
-		limitSwing40 = ((CRManipulatorDesc*)ptr)->limitSwing40;	\
-		limitTwist00 = ((CRManipulatorDesc*)ptr)->limitTwist00;	\
-		limitTwist10 = ((CRManipulatorDesc*)ptr)->limitTwist10;	\
-		limitTwist20 = ((CRManipulatorDesc*)ptr)->limitTwist20;	\
-		limitTwist30 = ((CRManipulatorDesc*)ptr)->limitTwist30;	\
-		limitTwist40 = ((CRManipulatorDesc*)ptr)->limitTwist40;	\
-		fMaxFinger0 = ((CRManipulatorDesc*)ptr)->fMaxFinger0;	\
-		fMaxFinger1 = ((CRManipulatorDesc*)ptr)->fMaxFinger1;	\
-		fMaxFinger2 = ((CRManipulatorDesc*)ptr)->fMaxFinger2;	\
-		fMaxFinger3 = ((CRManipulatorDesc*)ptr)->fMaxFinger3;	\
-		fMaxFinger4 = ((CRManipulatorDesc*)ptr)->fMaxFinger4;	\
-		materialMu = ((CRManipulatorDesc*)ptr)->materialMu;	\
-		dynamicalMode = ((CRManipulatorDesc*)ptr)->dynamicalMode;	\
-		flagFMax = ((CRManipulatorDesc*)ptr)->flagFMax;	\
-		flagRange = ((CRManipulatorDesc*)ptr)->flagRange;	\
+		CRBody::SetDesc((CRBodyDesc*)(CRDebugLinkBodyDesc*)ptr);	\
+		soNSolids = ((CRDebugLinkBodyDesc*)ptr)->soNSolids;	\
+		joNBallJoints = ((CRDebugLinkBodyDesc*)ptr)->joNBallJoints;	\
+		joNHingeJoints = ((CRDebugLinkBodyDesc*)ptr)->joNHingeJoints;	\
+		joNJoints = ((CRDebugLinkBodyDesc*)ptr)->joNJoints;	\
+		breadth = ((CRDebugLinkBodyDesc*)ptr)->breadth;	\
+		length = ((CRDebugLinkBodyDesc*)ptr)->length;	\
+		thickness = ((CRDebugLinkBodyDesc*)ptr)->thickness;	\
+		mass = ((CRDebugLinkBodyDesc*)ptr)->mass;	\
+		spring = ((CRDebugLinkBodyDesc*)ptr)->spring;	\
+		damper = ((CRDebugLinkBodyDesc*)ptr)->damper;	\
+		range = ((CRDebugLinkBodyDesc*)ptr)->range;	\
+		goal = ((CRDebugLinkBodyDesc*)ptr)->goal;	\
+		limitSwing = ((CRDebugLinkBodyDesc*)ptr)->limitSwing;	\
+		limitTwist = ((CRDebugLinkBodyDesc*)ptr)->limitTwist;	\
+		fMax = ((CRDebugLinkBodyDesc*)ptr)->fMax;	\
+		dynamicalMode = ((CRDebugLinkBodyDesc*)ptr)->dynamicalMode;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		CRBody::GetDesc((CRBodyDesc*)(CRManipulatorDesc*)ptr);	\
-		((CRManipulatorDesc*)ptr)->soNSolids = soNSolids;	\
-		((CRManipulatorDesc*)ptr)->joNBallJoints = joNBallJoints;	\
-		((CRManipulatorDesc*)ptr)->joNHingeJoints = joNHingeJoints;	\
-		((CRManipulatorDesc*)ptr)->joNJoints = joNJoints;	\
-		((CRManipulatorDesc*)ptr)->bRoot = bRoot;	\
-		((CRManipulatorDesc*)ptr)->bFinger00 = bFinger00;	\
-		((CRManipulatorDesc*)ptr)->lFinger00 = lFinger00;	\
-		((CRManipulatorDesc*)ptr)->tFinger00 = tFinger00;	\
-		((CRManipulatorDesc*)ptr)->bFinger01 = bFinger01;	\
-		((CRManipulatorDesc*)ptr)->lFinger01 = lFinger01;	\
-		((CRManipulatorDesc*)ptr)->tFinger01 = tFinger01;	\
-		((CRManipulatorDesc*)ptr)->bFinger02 = bFinger02;	\
-		((CRManipulatorDesc*)ptr)->lFinger02 = lFinger02;	\
-		((CRManipulatorDesc*)ptr)->tFinger02 = tFinger02;	\
-		((CRManipulatorDesc*)ptr)->bFinger10 = bFinger10;	\
-		((CRManipulatorDesc*)ptr)->lFigner10 = lFigner10;	\
-		((CRManipulatorDesc*)ptr)->tFinger10 = tFinger10;	\
-		((CRManipulatorDesc*)ptr)->bFinger11 = bFinger11;	\
-		((CRManipulatorDesc*)ptr)->lFinger11 = lFinger11;	\
-		((CRManipulatorDesc*)ptr)->tFinger11 = tFinger11;	\
-		((CRManipulatorDesc*)ptr)->bFinger12 = bFinger12;	\
-		((CRManipulatorDesc*)ptr)->lFigner12 = lFigner12;	\
-		((CRManipulatorDesc*)ptr)->tFinger12 = tFinger12;	\
-		((CRManipulatorDesc*)ptr)->bFinger13 = bFinger13;	\
-		((CRManipulatorDesc*)ptr)->lFinger13 = lFinger13;	\
-		((CRManipulatorDesc*)ptr)->tFigner13 = tFigner13;	\
-		((CRManipulatorDesc*)ptr)->bFinger20 = bFinger20;	\
-		((CRManipulatorDesc*)ptr)->lFigner20 = lFigner20;	\
-		((CRManipulatorDesc*)ptr)->tFinger20 = tFinger20;	\
-		((CRManipulatorDesc*)ptr)->bFinger21 = bFinger21;	\
-		((CRManipulatorDesc*)ptr)->lFinger21 = lFinger21;	\
-		((CRManipulatorDesc*)ptr)->tFinger21 = tFinger21;	\
-		((CRManipulatorDesc*)ptr)->bFinger22 = bFinger22;	\
-		((CRManipulatorDesc*)ptr)->lFigner22 = lFigner22;	\
-		((CRManipulatorDesc*)ptr)->tFinger22 = tFinger22;	\
-		((CRManipulatorDesc*)ptr)->bFinger23 = bFinger23;	\
-		((CRManipulatorDesc*)ptr)->lFinger23 = lFinger23;	\
-		((CRManipulatorDesc*)ptr)->tFigner23 = tFigner23;	\
-		((CRManipulatorDesc*)ptr)->bFinger30 = bFinger30;	\
-		((CRManipulatorDesc*)ptr)->lFigner30 = lFigner30;	\
-		((CRManipulatorDesc*)ptr)->tFinger30 = tFinger30;	\
-		((CRManipulatorDesc*)ptr)->bFinger31 = bFinger31;	\
-		((CRManipulatorDesc*)ptr)->lFinger31 = lFinger31;	\
-		((CRManipulatorDesc*)ptr)->tFinger31 = tFinger31;	\
-		((CRManipulatorDesc*)ptr)->bFinger32 = bFinger32;	\
-		((CRManipulatorDesc*)ptr)->lFigner32 = lFigner32;	\
-		((CRManipulatorDesc*)ptr)->tFinger32 = tFinger32;	\
-		((CRManipulatorDesc*)ptr)->bFinger33 = bFinger33;	\
-		((CRManipulatorDesc*)ptr)->lFinger33 = lFinger33;	\
-		((CRManipulatorDesc*)ptr)->tFigner33 = tFigner33;	\
-		((CRManipulatorDesc*)ptr)->bFinger40 = bFinger40;	\
-		((CRManipulatorDesc*)ptr)->lFigner40 = lFigner40;	\
-		((CRManipulatorDesc*)ptr)->tFinger40 = tFinger40;	\
-		((CRManipulatorDesc*)ptr)->bFinger41 = bFinger41;	\
-		((CRManipulatorDesc*)ptr)->lFinger41 = lFinger41;	\
-		((CRManipulatorDesc*)ptr)->tFinger41 = tFinger41;	\
-		((CRManipulatorDesc*)ptr)->bFinger42 = bFinger42;	\
-		((CRManipulatorDesc*)ptr)->lFigner42 = lFigner42;	\
-		((CRManipulatorDesc*)ptr)->tFinger42 = tFinger42;	\
-		((CRManipulatorDesc*)ptr)->bFinger43 = bFinger43;	\
-		((CRManipulatorDesc*)ptr)->lFinger43 = lFinger43;	\
-		((CRManipulatorDesc*)ptr)->tFigner43 = tFigner43;	\
-		((CRManipulatorDesc*)ptr)->spring00 = spring00;	\
-		((CRManipulatorDesc*)ptr)->damper00 = damper00;	\
-		((CRManipulatorDesc*)ptr)->spring01 = spring01;	\
-		((CRManipulatorDesc*)ptr)->damper01 = damper01;	\
-		((CRManipulatorDesc*)ptr)->spring02 = spring02;	\
-		((CRManipulatorDesc*)ptr)->damper02 = damper02;	\
-		((CRManipulatorDesc*)ptr)->spring10 = spring10;	\
-		((CRManipulatorDesc*)ptr)->damper10 = damper10;	\
-		((CRManipulatorDesc*)ptr)->spring11 = spring11;	\
-		((CRManipulatorDesc*)ptr)->damper11 = damper11;	\
-		((CRManipulatorDesc*)ptr)->spring12 = spring12;	\
-		((CRManipulatorDesc*)ptr)->damper12 = damper12;	\
-		((CRManipulatorDesc*)ptr)->spring13 = spring13;	\
-		((CRManipulatorDesc*)ptr)->damper13 = damper13;	\
-		((CRManipulatorDesc*)ptr)->spring20 = spring20;	\
-		((CRManipulatorDesc*)ptr)->damper20 = damper20;	\
-		((CRManipulatorDesc*)ptr)->spring21 = spring21;	\
-		((CRManipulatorDesc*)ptr)->damper21 = damper21;	\
-		((CRManipulatorDesc*)ptr)->spring22 = spring22;	\
-		((CRManipulatorDesc*)ptr)->damper22 = damper22;	\
-		((CRManipulatorDesc*)ptr)->spring23 = spring23;	\
-		((CRManipulatorDesc*)ptr)->damper23 = damper23;	\
-		((CRManipulatorDesc*)ptr)->spring30 = spring30;	\
-		((CRManipulatorDesc*)ptr)->damper30 = damper30;	\
-		((CRManipulatorDesc*)ptr)->spring31 = spring31;	\
-		((CRManipulatorDesc*)ptr)->damper31 = damper31;	\
-		((CRManipulatorDesc*)ptr)->spring32 = spring32;	\
-		((CRManipulatorDesc*)ptr)->damper32 = damper32;	\
-		((CRManipulatorDesc*)ptr)->spring33 = spring33;	\
-		((CRManipulatorDesc*)ptr)->damper33 = damper33;	\
-		((CRManipulatorDesc*)ptr)->spring40 = spring40;	\
-		((CRManipulatorDesc*)ptr)->damper40 = damper40;	\
-		((CRManipulatorDesc*)ptr)->spring41 = spring41;	\
-		((CRManipulatorDesc*)ptr)->damper41 = damper41;	\
-		((CRManipulatorDesc*)ptr)->spring42 = spring42;	\
-		((CRManipulatorDesc*)ptr)->damper42 = damper42;	\
-		((CRManipulatorDesc*)ptr)->spring43 = spring43;	\
-		((CRManipulatorDesc*)ptr)->damper43 = damper43;	\
-		((CRManipulatorDesc*)ptr)->range01 = range01;	\
-		((CRManipulatorDesc*)ptr)->range02 = range02;	\
-		((CRManipulatorDesc*)ptr)->range11 = range11;	\
-		((CRManipulatorDesc*)ptr)->range12 = range12;	\
-		((CRManipulatorDesc*)ptr)->range13 = range13;	\
-		((CRManipulatorDesc*)ptr)->range21 = range21;	\
-		((CRManipulatorDesc*)ptr)->range22 = range22;	\
-		((CRManipulatorDesc*)ptr)->range23 = range23;	\
-		((CRManipulatorDesc*)ptr)->range31 = range31;	\
-		((CRManipulatorDesc*)ptr)->range32 = range32;	\
-		((CRManipulatorDesc*)ptr)->range33 = range33;	\
-		((CRManipulatorDesc*)ptr)->range41 = range41;	\
-		((CRManipulatorDesc*)ptr)->range42 = range42;	\
-		((CRManipulatorDesc*)ptr)->range43 = range43;	\
-		((CRManipulatorDesc*)ptr)->goalFinger0 = goalFinger0;	\
-		((CRManipulatorDesc*)ptr)->goalFinger1 = goalFinger1;	\
-		((CRManipulatorDesc*)ptr)->goalFinger2 = goalFinger2;	\
-		((CRManipulatorDesc*)ptr)->goalFigner3 = goalFigner3;	\
-		((CRManipulatorDesc*)ptr)->goalFinger4 = goalFinger4;	\
-		((CRManipulatorDesc*)ptr)->limitSwing00 = limitSwing00;	\
-		((CRManipulatorDesc*)ptr)->limitSwing10 = limitSwing10;	\
-		((CRManipulatorDesc*)ptr)->limitSwing20 = limitSwing20;	\
-		((CRManipulatorDesc*)ptr)->limitSwing30 = limitSwing30;	\
-		((CRManipulatorDesc*)ptr)->limitSwing40 = limitSwing40;	\
-		((CRManipulatorDesc*)ptr)->limitTwist00 = limitTwist00;	\
-		((CRManipulatorDesc*)ptr)->limitTwist10 = limitTwist10;	\
-		((CRManipulatorDesc*)ptr)->limitTwist20 = limitTwist20;	\
-		((CRManipulatorDesc*)ptr)->limitTwist30 = limitTwist30;	\
-		((CRManipulatorDesc*)ptr)->limitTwist40 = limitTwist40;	\
-		((CRManipulatorDesc*)ptr)->fMaxFinger0 = fMaxFinger0;	\
-		((CRManipulatorDesc*)ptr)->fMaxFinger1 = fMaxFinger1;	\
-		((CRManipulatorDesc*)ptr)->fMaxFinger2 = fMaxFinger2;	\
-		((CRManipulatorDesc*)ptr)->fMaxFinger3 = fMaxFinger3;	\
-		((CRManipulatorDesc*)ptr)->fMaxFinger4 = fMaxFinger4;	\
-		((CRManipulatorDesc*)ptr)->materialMu = materialMu;	\
-		((CRManipulatorDesc*)ptr)->dynamicalMode = dynamicalMode;	\
-		((CRManipulatorDesc*)ptr)->flagFMax = flagFMax;	\
-		((CRManipulatorDesc*)ptr)->flagRange = flagRange;	\
+		CRBody::GetDesc((CRBodyDesc*)(CRDebugLinkBodyDesc*)ptr);	\
+		((CRDebugLinkBodyDesc*)ptr)->soNSolids = soNSolids;	\
+		((CRDebugLinkBodyDesc*)ptr)->joNBallJoints = joNBallJoints;	\
+		((CRDebugLinkBodyDesc*)ptr)->joNHingeJoints = joNHingeJoints;	\
+		((CRDebugLinkBodyDesc*)ptr)->joNJoints = joNJoints;	\
+		((CRDebugLinkBodyDesc*)ptr)->breadth = breadth;	\
+		((CRDebugLinkBodyDesc*)ptr)->length = length;	\
+		((CRDebugLinkBodyDesc*)ptr)->thickness = thickness;	\
+		((CRDebugLinkBodyDesc*)ptr)->mass = mass;	\
+		((CRDebugLinkBodyDesc*)ptr)->spring = spring;	\
+		((CRDebugLinkBodyDesc*)ptr)->damper = damper;	\
+		((CRDebugLinkBodyDesc*)ptr)->range = range;	\
+		((CRDebugLinkBodyDesc*)ptr)->goal = goal;	\
+		((CRDebugLinkBodyDesc*)ptr)->limitSwing = limitSwing;	\
+		((CRDebugLinkBodyDesc*)ptr)->limitTwist = limitTwist;	\
+		((CRDebugLinkBodyDesc*)ptr)->fMax = fMax;	\
+		((CRDebugLinkBodyDesc*)ptr)->dynamicalMode = dynamicalMode;	\
 		return true;	\
 	}\
 
