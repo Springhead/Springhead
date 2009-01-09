@@ -20,9 +20,8 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 	joNHingeJoints = 0;
 	joNJoints = 0;
 
-	breadth = 0.7;
+	radius  = 0.7;
 	length  = 2.0;
-	thickness = 0.7;
 
 	mass = 2.0;
 
@@ -37,12 +36,15 @@ void CRDebugLinkBody::CreateBody(){
 	{
 		sDesc.mass = mass;
 	}
-	CDBoxDesc bDesc;
+	CDCapsuleDesc cDesc;
 	{
-		bDesc.boxsize = Vec3f(breadth, length, thickness);
+		cDesc.radius = radius;
+		cDesc.length = length;
 	}
-	solids.push_back(phScene->CreateSolid(sDesc));
-	solids.back()->AddShape(phSdk->CreateShape(bDesc));
+	for(unsigned int i = 0; i < soNSolids; i++){
+		solids.push_back(phScene->CreateSolid(sDesc));
+		solids.back()->AddShape(phSdk->CreateShape(cDesc));
+	}
 }
 
 void CRDebugLinkBody::InitBody(){}

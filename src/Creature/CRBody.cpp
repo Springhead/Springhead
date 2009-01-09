@@ -47,7 +47,7 @@ int CRBody::NSolids(){
 }
 
 PHSolidIf* CRBody::GetSolid(int i){
-	return solids[i];
+	return (i < solids.size()) ? solids[i] : NULL;
 }
 
 int CRBody::NJoints(){
@@ -55,7 +55,7 @@ int CRBody::NJoints(){
 }
 
 PHJointIf* CRBody::GetJoint(int i){
-	return joints[i];
+	return (i < joints.size()) ? joints[i] : NULL;
 }
 
 
