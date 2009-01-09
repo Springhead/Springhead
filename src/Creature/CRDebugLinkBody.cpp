@@ -20,12 +20,12 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 	joNHingeJoints = 0;
 	joNJoints = 0;
 
-	radius  = 0.7;
-	length  = 2.0;
+	radius  = 0.5;
+	length  = 1.2;
 
 	mass = 2.0;
 
-	spring = 10.0;
+	spring = 50.0;
 	damper = 5.0;
 
 	fMax = 50;
@@ -41,15 +41,49 @@ void CRDebugLinkBody::CreateBody(){
 		cDesc.radius = radius;
 		cDesc.length = length;
 	}
+	if(soNSolids <= 0) return;
 	for(unsigned int i = 0; i < soNSolids; i++){
 		solids.push_back(phScene->CreateSolid(sDesc));
 		solids.back()->AddShape(phSdk->CreateShape(cDesc));
+	}
+	joNJoints = soNSolids-1;
+	PHBallJointDesc bDesc;
+	{
+		bDesc.spring = spring;
+		bDesc.damper = damper;
+		bDesc.poseSocket.Pos() = Vec3d(0, 0, length/2);
+		bDesc.posePlug.Pos() = Vec3d(0, 0, -length/2);
+		bDesc.fMax = fMax;
+	}
+	for(unsigned int i = 0; i < joNJoints; i++){
+		joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], bDesc));
 	}
 }
 
 void CRDebugLinkBody::InitBody(){}
 
-void CRDebugLinkBody::InitContact(){}
+void CRDebugLinkBody::InitContact(){
+	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
+	for (unsigned int i=0; i<solids.size(); ++i) {
+		for (unsigned int j=0; j<solids.size(); ++j) {
+			if (i!=j) {
+				phScene->SetContactMode(solids[i], solids[j], PHSceneDesc::MODE_NONE);
+			}
+		}
+	}
+
+	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
+	for (int i=0; i<creature->NBodies(); ++i) {
+		CRBodyIf* body = creature->GetBody(i);
+		if (DCAST(CRFourLegsAnimalBodyIf,body)!=(this->Cast())) {
+			for (int s=0; s<body->NSolids(); ++s) {
+				for (unsigned int j=0; j<solids.size(); ++j) {
+					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
+				}
+			}
+		}
+	}
+}
 
 void CRDebugLinkBody::InitControlMode(PHJointDesc::PHControlMode m){}
 
