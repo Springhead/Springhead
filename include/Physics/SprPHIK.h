@@ -20,6 +20,14 @@ namespace Spr{;
 struct PHIKControlPointIf : SceneObjectIf{
 	SPR_IFDEF(PHIKControlPoint);
 
+	/** @brief —Í‚ğİ’è‚·‚é
+	*/
+	void SetForce(Vec3d force);
+
+	/** @brief —Í‚ğæ“¾‚·‚é
+	*/
+	Vec3d GetForce();
+
 	/** @brief –Ú•W’n“_‚ğİ’è‚·‚é
 	*/
 	void SetGoal(Vec3d goal);
