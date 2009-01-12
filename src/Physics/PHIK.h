@@ -14,6 +14,7 @@
 
 #include <vector>
 #include <set>
+#include <map>
 
 namespace Spr{;
 
@@ -67,6 +68,17 @@ protected:
 	PTM::VMatrixRow<double>  F;
 	std::vector< PTM::VMatrixRow<double> >  K;
 
+	// ヤコビアン
+	std::map< int,PTM::VMatrixRow<double> > Mj;
+
+	/** @brief 関係するすべての制御点とのヤコビアンをそれぞれ求める
+	*/
+	virtual void CalcAllJacobian();
+
+	/** @brief ヤコビアンをクリアする
+	*/
+	virtual void ClearJacobian();
+
 public:
 	SPR_OBJECTDEF(PHIKNode);
 
@@ -76,8 +88,14 @@ public:
 	/// このNodeと連動するNode
 	NSet linkedNodes;
 
-	/// 計算結果
+	/// IKのIterationの一回前の計算結果（収束判定用）
+	PTM::VVector<double> dTheta_prev;
+
+	/// IKの計算結果（角度）
 	PTM::VVector<double> dTheta;
+
+	/// IDの計算結果（トルク）
+	PTM::VVector<double> tau;
 
 	/** @brief デフォルトコンストラクタ
 	*/
@@ -176,17 +194,20 @@ protected:
 	/// 制御対象の関節
 	PHBallJointIf* joint;
 
+	/// IKの回転軸
+	Vec3d e1, e2;
+
 public:
 	SPR_OBJECTDEF(PHIKBallJoint);
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	PHIKBallJoint(){SetNDOF(3);}
+	PHIKBallJoint(){SetNDOF(2);}
 
 	/** @brief コンストラクタ
 	*/
 	PHIKBallJoint(const PHIKBallJointDesc& desc) {
-		SetNDOF(3);
+		SetNDOF(2);
 		SetDesc(&desc);
 	}
 
@@ -196,6 +217,10 @@ public:
 		PHIKNode::SetDesc(d);
 		this->joint = ((PHIKBallJointDesc*)d)->joint;
 	}
+
+	/** @brief 計算結果に従って制御対象を動かす
+	*/
+	virtual void Move();
 
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
@@ -259,6 +284,9 @@ public:
 	/// 目標値
 	Vec3d goal;
 
+	/// 力
+	Vec3d force;
+
 public:
 	SPR_OBJECTDEF(PHIKControlPoint);
 
@@ -273,6 +301,8 @@ public:
 	*/
 	PHIKControlPoint(const PHIKControlPointDesc& desc){
 		SetDesc(&desc);
+		goal	= Vec3d(0,0,0);
+		force	= Vec3d(0,0,0);
 	}
 
 	/** @brief デスクリプタを設定する
@@ -280,6 +310,14 @@ public:
 	virtual void SetDesc(const void* d){
 		this->solid = ((PHIKPosCtlDesc*)d)->solid;
 	}
+
+	/** @brief 力を設定する
+	*/
+	virtual void SetForce(Vec3d force){ this->force = force; }
+
+	/** @brief 力を取得する
+	*/
+	Vec3d GetForce(){ return force; }
 
 	/** @brief 目標地点を設定する
 	*/
