@@ -140,6 +140,7 @@ public:
 	PHConstraintEngineIf*	GetConstraintEngine();
 	PHGravityEngineIf*		GetGravityEngine();
 	PHPenaltyEngineIf*		GetPenaltyEngine();
+	PHIKEngineIf*			GetIKEngine();
 	ObjectIf*				CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t			NChildObject() const;
 	virtual ObjectIf*		GetChildObject(size_t pos);

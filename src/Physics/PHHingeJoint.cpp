@@ -72,8 +72,10 @@ void PHHingeJoint::CompBias(){
 
 			// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
 			//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
+			/*
 			while(diff >  M_PI) diff -= 2 * M_PI;
 			while(diff < -M_PI) diff += 2 * M_PI;
+			*/
 
 			double tmp = 1.0 / (damper_ + spring * GetScene()->GetTimeStep());
 			dA.w().z = tmp * dtinv;

@@ -19,6 +19,7 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>
+#include <Physics/SprPHEngine.h>
 
 namespace Spr{;
 
@@ -363,10 +364,16 @@ public:
 		@return PenaltyEngineへのポインタ
 	*/
 	PHPenaltyEngineIf*  GetPenaltyEngine();
+
 	/** @brief 状態の保存 (ObjectStates の保存）に，
 		Constraints が持つ拘束力を含めるかどうか設定する．
 	*/
 	void SetStateMode(bool bConstraints);
+
+	/** @brief IKEngineを取得する
+		@return IKEngineへのポインタ
+	*/
+	PHIKEngineIf*  GetIKEngine();
 
 };
 

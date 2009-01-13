@@ -26,17 +26,21 @@ class PHIKControlPoint;
 // 
 class PHIKEngine : public PHEngine{
 public:
-	SPR_OBJECTDEF_NOIF(PHIKEngine);
+	SPR_OBJECTDEF(PHIKEngine);
 
 	std::vector<PHIKNodeIf*>			nodes;
 	std::vector<PHIKControlPointIf*>	controlpoints;
 
+	bool bEnabled;
+
 	size_t numIter;
-	PHIKEngine():numIter(25){ }
+	PHIKEngine():numIter(25){ bEnabled = true; }
 
 	int GetPriority() const {return SGBP_INVERSEKINEMATICS;}
 	void Step();
 	void Clear();
+	void Enable(bool bEnabled){ this->bEnabled = bEnabled; };
+	void SetNumIter(int numIter){ this->numIter = numIter; };
 
 	PHIKNode* CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc);
 	PHIKControlPoint* CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc);

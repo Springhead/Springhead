@@ -432,6 +432,10 @@ PHPenaltyEngineIf* PHScene::GetPenaltyEngine(){
 	return XCAST(penaltyEngine);
 }
 
+PHIKEngineIf* PHScene::GetIKEngine(){
+	return XCAST(ikEngine);
+}
+
 size_t PHScene::GetStateSize() const{
 	return sizeof(PHSceneState) + 
 		(constraintEngine ? constraintEngine->GetStateSize() : 0);
