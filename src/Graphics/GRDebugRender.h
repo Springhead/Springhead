@@ -52,6 +52,8 @@ public:
 
 	/// カプセルの描画
 	void DrawCapsule(CDCapsuleIf* cap, bool solid);
+	/// 不均等カプセル (RoundCone)の描画
+	void DrawRoundCone(CDRoundConeIf* rc, bool solid);
 	/// メッシュの描画
 	void DrawMesh(CDConvexMeshIf* mesh, bool solid);
 	/// 座標軸の描画

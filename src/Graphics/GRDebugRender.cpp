@@ -155,6 +155,13 @@ void GRDebugRender::DrawSolid(PHSolidIf* so){
 			if(modeWire)
 				DrawCapsule(cap, false);
 		}
+		CDRoundConeIf* rc = DCAST(CDRoundConeIf, shape);
+		if (rc){
+			if(modeSolid)
+				DrawRoundCone(rc, true);
+			if(modeWire)
+				DrawRoundCone(rc, false);
+		}
 		CDBoxIf* box = DCAST(CDBoxIf, shape);
 		if (box){
 			Vec3f boxsize = box->GetBoxSize();
@@ -243,6 +250,20 @@ void GRDebugRender::DrawContact(PHContactPointIf* con){
 	DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
 	SetDepthTest(true);
 	SetLighting(true);
+}
+
+void GRDebugRender::DrawRoundCone(CDRoundConeIf* rc, bool solid){
+	Vec2d r = rc->GetRadius();
+	float l = rc->GetLength();
+	this->PushModelMatrix();
+	
+	DrawCylinder(((r[0] < r[1]) ? (r[0]) : (r[1])) * 0.8, l, 20, solid);
+
+	glTranslatef(0,0,-l/2);
+	solid ? glutSolidSphere(r[0], 20, 20) : glutWireSphere(r[0], 20, 20);
+	glTranslatef(0,0,l);
+	solid ? glutSolidSphere(r[1], 20, 20) : glutWireSphere(r[1], 20, 20);
+	this->PopModelMatrix();
 }
 
 void GRDebugRender::DrawCapsule(CDCapsuleIf* cap, bool solid){

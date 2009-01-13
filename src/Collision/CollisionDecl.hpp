@@ -76,6 +76,25 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CDRoundConeDesc \
+protected:\
+	Vec2f	radius;	\
+	float	length;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CDShape::SetDesc((CDShapeDesc*)(CDRoundConeDesc*)ptr);	\
+		radius = ((CDRoundConeDesc*)ptr)->radius;	\
+		length = ((CDRoundConeDesc*)ptr)->length;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CDShape::GetDesc((CDShapeDesc*)(CDRoundConeDesc*)ptr);	\
+		((CDRoundConeDesc*)ptr)->radius = radius;	\
+		((CDRoundConeDesc*)ptr)->length = length;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CDBoxDesc \
 protected:\
 	Vec3f	boxsize;	\

@@ -48,6 +48,10 @@
 	float GetRadius(){	return	base::GetRadius();}	\
 	float GetLength(){	return	base::GetLength();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_CDRoundConeIf(base)	\
+	Vec2f GetRadius(){	return	base::GetRadius();}	\
+	float GetLength(){	return	base::GetLength();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_CDBoxIf(base)	\
 	Vec3f GetBoxSize(){	return	base::GetBoxSize();}	\
 	Vec3f* GetVertices(){	return	base::GetVertices();}	\
