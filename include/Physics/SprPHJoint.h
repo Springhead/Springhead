@@ -326,7 +326,7 @@ struct PH3ElementHingeJointIf : public PHHingeJointIf{
 	void	SetSecondDamper(double input);
 };
 
-// ３要素モデルのボールジョイントのディスクリプタ
+// ３要素モデルのヒンジジョイントのディスクリプタ
 struct PH3ElementHingeJointDesc : public PHHingeJointDesc{
 	SPR_DESCDEF(PH3ElementHingeJoint);
 
@@ -540,6 +540,8 @@ struct PH3ElementBallJointDesc : public PHBallJointDesc{
 	SPR_DESCDEF(PH3ElementBallJoint);
 
 	double secondDamper;		// 二個目のダンパ係数
+	double yieldStress;			// 降伏応力
+	double hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 
 	PH3ElementBallJointDesc();	// ディスクリプタのコンストラクタ
 };
@@ -613,12 +615,34 @@ struct PH3ElementIf : public PHSpringIf{
 		@return 二個目のダンパ係数
 	 */
 	Vec3d	GetSecondDamper();
+
+	/** @brief 降伏応力を設定する
+		@param yieldStress 降伏応力
+	 */
+	void SetYieldStress(const double yS);
+	
+	/** @brief 降伏応力を取得する
+		@return 降伏応力
+	 */
+	double GetYieldStress();
+
+	/** @brief 降伏応力以下の場合にジョイントを硬くする倍率を設定する
+		@param hardnessRate 降伏応力以下の場合にジョイントを硬くする倍率
+	 */
+	void SetHardnessRate(const double hR);
+	
+	/** @brief 降伏応力以下の場合にジョイントを硬くする倍率を取得する
+		@return 降伏応力以下の場合にジョイントを硬くする倍率
+	 */
+	double GetHardnessRate();
 };
 /// 3要素モデルのディスクリプタ
 struct PH3ElementDesc : public PHSpringDesc{
 	SPR_DESCDEF(PH3Element);
 
 	Vec3d		secondDamper;		// 二個目のダンパ係数
+	double		yieldStress;		// 降伏応力
+	double		hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	
 	PH3ElementDesc();
 };

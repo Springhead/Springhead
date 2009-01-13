@@ -9,6 +9,8 @@
  *
  */
 #include "Physics.h"
+//#include "../../../Project\personal\Matunaga\HapticJointTest\BoxStack.h"
+#include <Math.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -24,6 +26,8 @@ PH3ElementBallJointDesc::PH3ElementBallJointDesc(){
 	
 	PHBallJointDesc();
 	secondDamper		  = 0.0;
+	yieldStress			=0.0;			// 降伏応力
+	hardnessRate		=1.0;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 
 }
 
@@ -49,58 +53,42 @@ void PH3ElementBallJoint::CompBias(){
 	if (anyLimit){
 		propV = Jcinv * propV;
 	}
-	
+
 	// バネダンパが入っていたら構築する
-	if (spring != 0.0 || damper != 0.0){
-		/*if(secondDamper!=0.0){*/
-			//3要素モデル
-			double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
-			double D1 = damper;
-			double D2 = secondDamper;
-			double K = spring;
-			double h = GetScene()->GetTimeStep();
-			
-			ws=vjrel;	//バネのダンパの並列部の速さ
-			tmp = D2-D1+K*h;
-			tmp2=D2*K*h*(2*D1-D2)*(D2-D1)-tmp*D1*D2;
+	if (spring != 0.0 || damper != 0.0 || secondDamper!=0.0){
+		//3要素モデル
+		double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
+		double D1 = damper;
+		double D2 = secondDamper;
+		double K = spring;
+		double h = GetScene()->GetTimeStep();
+		
+		//降伏応力以下ではジョイントを固くする
+		if(f.w().norm()>=yieldStress ){
+			K = spring;
+			D1 = damper;
+			D2=secondDamper;
+		}else{
+			K = spring;
+			D1 = damper;
+			D2= secondDamper*hardnessRate;
+		}
+		//3要素モデルの計算
+		ws=vjrel;	//バネのダンパの並列部の速さ
+		tmp = D2-D1+K*h;
+		tmp2=D2*K*h*(2*D1-D2)*(D2-D1)-tmp*D1*D2;
 
-			xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
+		xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
 
-			dA.w()[0]= -tmp*(D2-D1)/tmp2 * dtinv;
-			dA.w()[1]= -tmp*(D2-D1)/tmp2 * dtinv;
-			dA.w()[2]= -tmp*(D2-D1)/tmp2 * dtinv;
-			db.w() = K*(2*D1-D2)*(D2-D1)/tmp2*(xs[0].w()) ;
-
-			//xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新		
-			//dA.w()[0]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
-			//dA.w()[1]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
-			//dA.w()[2]= (D2-D1)*(D2-D1)/(D1*D2*tmp) * dtinv;
-			//db.w() = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(xs[0].w()) ;
-			
-			xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
-		//}else if(1){
-		//	//マクスウェルモデル
-		//	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
-		//	double D1 = damper;
-		//	double D2 = secondDamper;
-		//	double K = spring;
-		//	double h = GetScene()->GetTimeStep();
-		//
-		//	ws=vjrel;	//バネとダンパの並列部の速さ
-		//	tmp = (D1+K*h)/(D1*K*h);
-		//	xs[1] = D1/(D1+K*h)*(xs[0]+ws*h);	//バネとダンパの並列部の距離の更新		
-		//	dA.w()[0]= tmp * dtinv;;
-		//	dA.w()[1]= tmp * dtinv;;
-		//	dA.w()[2]= tmp * dtinv;;
-
-		//	db.w() = xs[0].w()/h ;
-		//	
-		//	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
-
-		//}else{
-		//	//dA.w().clear();
-		//	db.w().clear();
-		//}
+		dA.w()[0]= -tmp*(D2-D1)/tmp2 * dtinv;
+		dA.w()[1]= -tmp*(D2-D1)/tmp2 * dtinv;
+		dA.w()[2]= -tmp*(D2-D1)/tmp2 * dtinv;
+		db.w() = K*(2*D1-D2)*(D2-D1)/tmp2*(xs[0].w()) ;
+	
+		xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+	}else{
+			//dA.w().clear();
+			db.w().clear();
 	}
 	
 	Vec3d vJc = Jc * vjrel.w();

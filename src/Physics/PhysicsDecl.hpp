@@ -409,16 +409,22 @@ public:\
 #define SPR_DECLMEMBEROF_PH3ElementBallJointDesc \
 protected:\
 	double	secondDamper;	\
+	double	yieldStress;	\
+	double	hardnessRate;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJoint::SetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
 		secondDamper = ((PH3ElementBallJointDesc*)ptr)->secondDamper;	\
+		yieldStress = ((PH3ElementBallJointDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PH3ElementBallJointDesc*)ptr)->hardnessRate;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHBallJoint::GetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
 		((PH3ElementBallJointDesc*)ptr)->secondDamper = secondDamper;	\
+		((PH3ElementBallJointDesc*)ptr)->yieldStress = yieldStress;	\
+		((PH3ElementBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
 		return true;	\
 	}\
 
@@ -450,16 +456,22 @@ public:\
 #define SPR_DECLMEMBEROF_PH3ElementDesc \
 protected:\
 	Vec3d	secondDamper;	\
+	double	yieldStress;	\
+	double	hardnessRate;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHSpring::SetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
 		secondDamper = ((PH3ElementDesc*)ptr)->secondDamper;	\
+		yieldStress = ((PH3ElementDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PH3ElementDesc*)ptr)->hardnessRate;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHSpring::GetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
 		((PH3ElementDesc*)ptr)->secondDamper = secondDamper;	\
+		((PH3ElementDesc*)ptr)->yieldStress = yieldStress;	\
+		((PH3ElementDesc*)ptr)->hardnessRate = hardnessRate;	\
 		return true;	\
 	}\
 

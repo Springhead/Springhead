@@ -143,6 +143,10 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementIf(base)	\
 	void SetSecondDamper(const Vec3d& secondDamper){	base::SetSecondDamper(secondDamper);}	\
 	Vec3d GetSecondDamper(){	return	base::GetSecondDamper();}	\
+	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
+	double GetYieldStress(){	return	base::GetYieldStress();}	\
+	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
+	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\

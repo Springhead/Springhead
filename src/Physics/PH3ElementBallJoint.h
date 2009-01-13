@@ -28,6 +28,10 @@ public:
 	/// インタフェースの実装
 	double  GetSecondDamper()				{return secondDamper;}
 	void	SetSecondDamper(double input)	{secondDamper = input;}
+	double  GetYieldStress()				{return yieldStress;}
+	void	SetYieldStress(double input)	{yieldStress = input;}
+	double  GetHardnessRate()				{return hardnessRate;}
+	void	SetHardnessRate(double input)	{hardnessRate = input;}
 
 	// このクラス内で再定義する（オーバーライドする）関数
 	void	CompBias();		///< 侵入量の判定(オーバーライド)

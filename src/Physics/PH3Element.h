@@ -32,7 +32,8 @@ struct PH3ElementCommonData: public PH3ElementState{
 };
 class PH3Element : public PHJoint, public PH3ElementCommonData{
 	Vec3d spring, damper,secondDamper;
-	double springOri, damperOri;
+	double springOri, damperOri, yieldStress, hardnessRate;
+
 public:
 	SPR_OBJECTDEF(PH3Element);
 
@@ -52,6 +53,11 @@ public:
 	virtual void SetDesc(const void* desc);
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void SetConstrainedIndexCorrection(bool* con);
+
+	virtual void SetYieldStress(const double yS){yieldStress = yS;}
+	virtual double GetYieldStress(){return yieldStress;}
+	virtual void SetHardnessRate(const double hR){hardnessRate = hR;}
+	virtual double GetHardnessRate(){return hardnessRate;}
 
 	virtual void CompBias();
 
