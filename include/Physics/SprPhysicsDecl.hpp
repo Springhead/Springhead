@@ -11,8 +11,12 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHPenaltyEngineIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEngineIf(base)	\
+	void Enable(bool bEnabled){	base::Enable(bEnabled);}	\
+	void SetNumIter(int numIter){	base::SetNumIter(numIter);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKControlPointIf(base)	\
+	void SetForce(Vec3d force){	base::SetForce(force);}	\
+	Vec3d GetForce(){	return	base::GetForce();}	\
 	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
 	Vec3d GetGoal(){	return	base::GetGoal();}	\
 	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
@@ -234,6 +238,7 @@
 	Spr::PHGravityEngineIf* GetGravityEngine(){	return	base::GetGravityEngine();}	\
 	Spr::PHPenaltyEngineIf* GetPenaltyEngine(){	return	base::GetPenaltyEngine();}	\
 	void SetStateMode(bool bConstraints){	base::SetStateMode(bConstraints);}	\
+	Spr::PHIKEngineIf* GetIKEngine(){	return	base::GetIKEngine();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSdkIf(base)	\
 	Spr::PHSceneIf* CreateScene(){	return	base::CreateScene();}	\

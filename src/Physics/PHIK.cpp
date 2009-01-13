@@ -19,28 +19,30 @@ namespace Spr{
 // IKEngine
 
 void PHIKEngine::Step(){
-	// std::cout << " -- " << std::endl;
-	if (nodes.size() > 0 && controlpoints.size() > 0) {
-		for(size_t i=0; i<nodes.size(); ++i){
-			nodes[i]->PrepareSolve();
-		}
-
-		for(size_t n=0; n<numIter; n++){
+	if (bEnabled) {
+		// std::cout << " -- " << std::endl;
+		if (nodes.size() > 0 && controlpoints.size() > 0) {
 			for(size_t i=0; i<nodes.size(); ++i){
-				nodes[i]->ProceedSolve();
+				nodes[i]->PrepareSolve();
 			}
-			double diff = 0.0f;
-			for(size_t i=0; i<nodes.size(); ++i){
-				diff += (DCAST(PHIKNode,nodes[i])->dTheta - DCAST(PHIKNode,nodes[i])->dTheta_prev).norm();
-				// std::cout << n << "," << i << " : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
-			}
-			if (n > 0) {
-				// std::cout << "diff : " << diff << std::endl;
-			}
-		}
 
-		for(size_t i=0; i<nodes.size(); ++i){
-			nodes[i]->Move();
+			for(size_t n=0; n<numIter; n++){
+				for(size_t i=0; i<nodes.size(); ++i){
+					nodes[i]->ProceedSolve();
+					PTM::VVector<double> diff = (DCAST(PHIKNode,nodes[i])->dTheta_prev - DCAST(PHIKNode,nodes[i])->dTheta);
+					/*
+					std::cout << " -- -- -- " << std::endl;
+					std::cout << "dT   : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
+					std::cout << "dTp  : " << DCAST(PHIKNode,nodes[i])->dTheta_prev << std::endl;
+					std::cout << "diff : " << diff << std::endl;
+					std::cout << " -- -- -- " << std::endl;
+					*/
+				}
+			}
+
+			for(size_t i=0; i<nodes.size(); ++i){
+				nodes[i]->Move();
+			}
 		}
 	}
 }
@@ -164,13 +166,13 @@ Vec3d PHIKOriCtl::GetTmpGoal(){
 // --- --- --- --- ---
 void PHIKNode::SetNDOF(int n){
 	ndof = n;
-	iDx.resize(ndof);
-	iD.resize(ndof);
-	F.resize(ndof, ndof);
-	for(size_t i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); }
-	dTheta.resize(ndof);
-	dTheta_prev.resize(ndof);
-	tau.resize(ndof);
+	iDx.resize(ndof); iDx.clear();
+	iD.resize(ndof); iD.clear();
+	F.resize(ndof, ndof); F.clear();
+	for(size_t i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); K[i].clear(); }
+	dTheta.resize(ndof); dTheta.clear();
+	dTheta_prev.resize(ndof); dTheta_prev.clear();
+	tau.resize(ndof); tau.clear();
 }
 
 void PHIKNode::ClearJacobian(){
@@ -181,7 +183,7 @@ void PHIKNode::CalcAllJacobian(){
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
-		// std::cout << Mj[n] << std::endl;
+		// std::cout << number << "," << n << " : " << Mj[n] << std::endl;
 	}
 }
 
@@ -196,26 +198,13 @@ void PHIKNode::PrepareSolve(){
 
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
 		PTM::VMatrixRow<double> J; J.resize(ndof,ndof);
-		// J = CalcJacobian(*ctlpt) * sqrt(bias);
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		J = Mj[n] * sqrt(bias);
 		JtJ += J.trans() * J;
 		Jtx += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal();
 
-		/*
-		std::cout << " -- " << std::endl;
-		std::cout << "v : " << DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal() << std::endl;
-		std::cout << " -- " << std::endl;
-		*/
-
 		tau += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetForce();
 	}
-
-	/*
-	for(int i=0; i<ndof; i++){
-		iD[i] = JtJ[i][i] + 0.1;
-	}
-	*/
 
 	for(int i=0; i<ndof; i++){
 		if (JtJ[i][i]!=0) {
@@ -240,10 +229,18 @@ void PHIKNode::PrepareSolve(){
 	for(NSetIter node=linkedNodes.begin(); node!=linkedNodes.end(); ++node){
 		K[node_i].clear();
 		for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
-			K[node_i] += (CalcJacobian(*ctlpt).trans() * DCAST(PHIKNode,(*node))->CalcJacobian(*ctlpt));
+			int n = DCAST(PHIKControlPoint,*ctlpt)->number;
+			K[node_i] += (Mj[n].trans() * Mj[n]);
+			// std::cout << "M^T M : " << (Mj[n].trans() * Mj[n]) << std::endl;
 		}
 		++node_i;
 	}
+
+	/*
+	std::cout << "iD  : " << iD  << std::endl;
+	std::cout << "iDx : " << iDx << std::endl;
+	std::cout << "F   : " << F   << std::endl;
+	*/
 
 	dTheta.clear();
 	dTheta_prev.clear();
@@ -255,6 +252,7 @@ void PHIKNode::ProceedSolve(){
 	PTM::VVector<double> Kv; Kv.resize(ndof); Kv.clear();
 	int node_i=0;
 	for(NSetIter node=linkedNodes.begin(); node!=linkedNodes.end(); ++node){
+		// std::cout << "K[" << node_i << "] : " << K[node_i] << std::endl;
 		Kv += (K[node_i] * DCAST(PHIKNode,(*node))->dTheta);
 		++node_i;
 	}
@@ -264,7 +262,10 @@ void PHIKNode::ProceedSolve(){
 	for(int i=0; i<ndof; i++){ B[i] *= iD[i]; }
 	dTheta = iDx - B;
 
-	// std::cout << "v' : " << dTheta << std::endl;
+	/*
+	std::cout << "B   : " << B   << std::endl;
+	std::cout << "Kv  : " << Kv  << std::endl;
+	*/
 }
 
 void PHIKNode::AddControlPoint(PHIKControlPointIf* control){
@@ -310,58 +311,40 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 	PHIKPosCtlIf* cpPos;
 	if (cpPos = DCAST(PHIKPosCtlIf,control)){
 		PTM::VMatrixRow<double> M; M.resize(3,2);
+
+		// 関節の回転中心
 		PHBallJoint* j = DCAST(PHBallJoint,joint);
 		PHBallJointDesc d; j->GetDesc(&d);
 		Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
+
+		// エンドエフェクタ位置
 		PHIKPosCtl* cp = DCAST(PHIKPosCtl,cpPos);
 		Vec3d Pc = cp->solid->GetPose() * cp->pos;
 
-		/*
-		std::cout << "Pc : " << Pc << std::endl;
-		std::cout << "Pj : " << Pj << std::endl;
-		*/
-
+		// 関節回転中心<->エンドエフェクタ 軸
 		Vec3d e0 = (Pc - Pj);
 		if (e0.norm() != 0){
 			e0 = e0 / e0.norm();
 		} else {
 			e0 = Vec3d(1,0,0);
 		}
-		
+
+		// 回転軸を求める
 		if (PTM::dot(e0,Vec3d(1,0,0)) > Rad(10)) {
 			e1 = Vec3d(0,1,0);
 		} else {
 			e1 = Vec3d(1,0,0);
 		}
-		// std::cout << "e1: " << e1 << ", e0: " << e0 << std::endl;
 		e1 = e1 - (PTM::dot(e1,e0) * e0);
-		// std::cout << "e1: " << e1 << std::endl;
 		e1 = e1 / e1.norm();
 		e2 = PTM::cross(e0,e1);
-		// std::cout << "e2: " << e2 << std::endl;
 
-		/*
-		std::cout << "Pc : " << Pc << std::endl;
-		std::cout << "Pj : " << Pj << std::endl;
-		std::cout << "(Pc-Pj) : " << (Pc-Pj) << std::endl;
-		*/
-
+		// ヤコビアンを求める
 		Vec3d v1 = PTM::cross(e1,(Pc-Pj));
 		Vec3d v2 = PTM::cross(e2,(Pc-Pj));
 
-		/*
-		std::cout << "v1: " << v1 << std::endl;
-		std::cout << "v2: " << v2 << std::endl;
-		*/
-
 		M[0][0]=v1[0]; M[1][0]=v1[1]; M[2][0]=v1[2];
 		M[0][1]=v2[0]; M[1][1]=v2[1]; M[2][1]=v2[2];
-
-		/*
-		std::cout << " -- " << std::endl;
-		std::cout << M << std::endl;
-		std::cout << " -- " << std::endl;
-		*/
 
 		return M;
 	}
@@ -379,7 +362,20 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 void PHIKBallJoint::Move(){
 	// std::cout << dTheta << std::endl;
 
+	/*
+	for (int i=0; i<ndof; ++i) {
+		if (dTheta[i] > Rad(50)) {
+			dTheta[i] =  Rad(50);
+		} else if (dTheta[i] < Rad(-50)) {
+			dTheta[i] = Rad(-50);
+		}
+	}
+	*/
+
+	// 回転軸ベクトルにする
 	Vec3d dT = dTheta[0] * e1 + dTheta[1] * e2;
+
+	// Axis-Angle表現にする
 	double angle = dT.norm();
 	Vec3d axis = dT;
 	if (angle != 0) {
@@ -388,28 +384,22 @@ void PHIKBallJoint::Move(){
 		axis = Vec3d(1,0,0);
 	}
 
-	// std::cout << number << " : " << Deg(angle) << std::endl;
-
+	// Quaternionにする
 	Quaterniond dQ = Quaterniond::Rot(angle, axis);
 
+	// 関節のローカル座標をもとめる
 	PHBallJoint* j = DCAST(PHBallJoint,joint);
 	PHBallJointDesc d; j->GetDesc(&d);
 	Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
 	Quaterniond Qj = (j->solid[0]->GetPose() * d.poseSocket).Ori();
 
+	// 関節のローカル座標系にする
 	Quaterniond pos = Qj.Inv() * dQ * Qj * joint->GetPosition();
-	// Quaterniond pos = dQ * joint->GetPosition();
-	// pos = pos / pos.norm();
-	// std::cout << joint->GetPosition() << " -> " << pos << std::endl;
 
-	/*
-	Quaterniond q1 = Quaterniond(cos(dTheta[0]/2), e1[0]*sin(dTheta[0]/2), e1[1]*sin(dTheta[0]/2), e1[2]*sin(dTheta[0]/2));
-	Quaterniond q2 = Quaterniond(cos(dTheta[1]/2), e2[0]*sin(dTheta[1]/2), e2[1]*sin(dTheta[1]/2), e2[2]*sin(dTheta[1]/2));
-	Quaterniond pos = q2 * q1 * joint->GetPosition();
-	*/
-
+	// 関節を動かす
 	joint->SetGoal(pos);
 
+	// デバッグ表示（要改善）
 	PHSceneIf* phscene = this->GetScene()->Cast();
 	phscene->GetSolids()[5*number+0]->SetFramePosition(dT*0*2+Pj);
 	phscene->GetSolids()[5*number+1]->SetFramePosition(dT*1*2+Pj);
@@ -417,90 +407,7 @@ void PHIKBallJoint::Move(){
 	phscene->GetSolids()[5*number+3]->SetFramePosition(dT*3*2+Pj);
 	phscene->GetSolids()[5*number+4]->SetFramePosition(dT*4*2+Pj);
 
-	/*
-	dT = axis*0.1;
-	*/
-
-	/*
-	Vec3d dT1 = e1 * 0.1;
-	Vec3d dT2 = e2 * 0.1;
-	*/
-	/*
-	phscene->GetSolids()[6*number+0]->SetFramePosition(dT1*0*2+Pj);
-	phscene->GetSolids()[6*number+1]->SetFramePosition(dT1*2*2+Pj);
-	phscene->GetSolids()[6*number+2]->SetFramePosition(dT1*4*2+Pj);
-	phscene->GetSolids()[6*number+3]->SetFramePosition(dT2*0*2+Pj);
-	phscene->GetSolids()[6*number+4]->SetFramePosition(dT2*2*2+Pj);
-	phscene->GetSolids()[6*number+5]->SetFramePosition(dT2*4*2+Pj);
-	*/
-
 	return;
-	
-	/*
-	std::cout << " -- " << std::endl;
-	std::cout << "w : " << dTheta << std::endl;
-	std::cout << " -- " << std::endl;
-	*/
-
-	/*
-	Quaterniond dQ = Quaterniond();
-	dQ = Quaterniond::Rot(dTheta[0], 'x') * dQ;
-	dQ = Quaterniond::Rot(dTheta[1], 'y') * dQ;
-	dQ = Quaterniond::Rot(dTheta[1], 'z') * dQ;
-	Quaterniond pos = dQ * joint->GetPosition();
-	joint->SetGoal(pos);
-	*/
-
-	/*
-	Vec3d ex = Vec3d(1.00, 0.12, 0.21); ex = ex / ex.norm();
-	Vec3d ey = Vec3d(0.30, 1.00, 0.11); ey = ey / ey.norm();
-	Vec3d ez = Vec3d(0.25, 0.10, 1.00); ez = ez / ez.norm();
-
-	Quaterniond qx = Quaterniond(cos(dTheta[0]/2), ex[0]*sin(dTheta[0]/2), ex[1]*sin(dTheta[0]/2), ex[2]*sin(dTheta[0]/2));
-	Quaterniond qy = Quaterniond(cos(dTheta[1]/2), ey[0]*sin(dTheta[1]/2), ey[1]*sin(dTheta[1]/2), ey[2]*sin(dTheta[1]/2));
-	Quaterniond qz = Quaterniond(cos(dTheta[2]/2), ez[0]*sin(dTheta[2]/2), ez[1]*sin(dTheta[2]/2), ez[2]*sin(dTheta[2]/2));
-	Quaterniond pos = qx * qz * qy * joint->GetPosition();
-
-	joint->SetGoal(pos);
-
-	return;
-	*/
-
-	/*
-	/////////////////////////////////////////////////////////
-	Vec3d dT = Vec3d(dTheta[0],dTheta[1],dTheta[2]);
-	
-	double angle = dT.norm();
-	Vec3d  axis;
-	if (angle!=0) axis  = dT / angle;
-	else axis = Vec3d(0,0,0);
-
-	while (angle >  3.1415926) { angle -= 3.1415926; }
-	while (angle < -3.1415926) { angle += 3.1415926; }
-	dT = angle * axis;
-
-	PHBallJoint* j = DCAST(PHBallJoint,joint);
-	PHBallJointDesc d; j->GetDesc(&d);
-	Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
-	PHSceneIf* phscene = this->GetScene()->Cast();
-	phscene->GetSolids()[5*number+0]->SetFramePosition(dT*0*2+Pj);
-	phscene->GetSolids()[5*number+1]->SetFramePosition(dT*1*2+Pj);
-	phscene->GetSolids()[5*number+2]->SetFramePosition(dT*2*2+Pj);
-	phscene->GetSolids()[5*number+3]->SetFramePosition(dT*3*2+Pj);
-	phscene->GetSolids()[5*number+4]->SetFramePosition(dT*4*2+Pj);
-
-	//
-	Quaterniond dQ  = Quaterniond(cos(angle/2), axis[0]*sin(angle/2), axis[1]*sin(angle/2), axis[2]*sin(angle/2));
-	Quaterniond pos = dQ * joint->GetPosition();
-	//
-	Quaterniond dQ  = joint->GetPosition().Derivative(dT);
-	Quaterniond pos = dQ + joint->GetPosition();
-	//
-	if (pos.norm() != 0) {
-		pos = pos / pos.norm();
-	}
-	joint->SetGoal(pos);
-	*/
 }
 
 // --- --- --- --- ---
@@ -527,10 +434,18 @@ PTM::VMatrixRow<double> PHIKHingeJoint::CalcJacobian(PHIKControlPointIf* control
 }
 
 void PHIKHingeJoint::Move(){
+	// std::cout << dTheta << std::endl;
+
 	static const double Pi = 3.141592653589;
+
+	// 新しい回転角度
 	double angle  = joint->GetPosition() + (dTheta[0]);
+
+	// トルクを実現するためのオフセットの追加
 	double torque = tau[0];
 	angle += torque * Rad(16) / joint->GetSpring();
+
+	// 関節を動かす
 	joint->SetSpringOrigin(angle);
 }
 

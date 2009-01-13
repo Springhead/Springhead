@@ -55,6 +55,14 @@ public:
 
 struct PHIKEngineIf : PHEngineIf{
 public:
+	/** @brief 有効・無効を切り替える
+	*/
+	void Enable(bool bEnabled);
+
+	/** @brief 繰り返し回数をセットする
+	*/
+	void SetNumIter(int numIter);
+
 	SPR_IFDEF(PHIKEngine);
 };
 //@}
