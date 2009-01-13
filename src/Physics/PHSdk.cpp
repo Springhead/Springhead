@@ -107,6 +107,8 @@ CDShapeIf* PHSdk::CreateShape(const IfInfo* ii, const CDShapeDesc& desc){
 		s = DBG_NEW CDSphere((const CDSphereDesc&)desc);
 	}else if (ii == CDCapsuleIf::GetIfInfoStatic()){
 		s = DBG_NEW CDCapsule((const CDCapsuleDesc&)desc);
+	}else if (ii == CDRoundConeIf::GetIfInfoStatic()){
+		s = DBG_NEW CDRoundCone((const CDRoundConeDesc&)desc);
 	}else if (ii == CDBoxIf::GetIfInfoStatic()){
 		s = DBG_NEW CDBox((const CDBoxDesc&)desc);
 	}

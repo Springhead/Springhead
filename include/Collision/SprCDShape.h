@@ -163,6 +163,22 @@ struct CDCapsuleDesc: public CDShapeDesc{
 	float length;					///< カプセルの長さ Z軸向きが長い
 };	
 
+/** カプセルの両端のサイズが違うやつ　*/
+struct CDRoundConeIf: public CDConvexIf{
+	SPR_IFDEF(CDRoundCone);
+	Vec2f GetRadius();
+	float GetLength();
+};	
+/** カプセルのディスクリプタ　*/
+struct CDRoundConeDesc: public CDShapeDesc{
+	SPR_DESCDEF(CDRoundCone);
+	CDRoundConeDesc():CDShapeDesc(){
+		radius = Vec2f(1.0f, 1.0f);
+		length = 1.0f;
+	}
+	Vec2f radius;					///< カプセルの球の半径
+	float length;					///< カプセルの長さ Z軸向きが長い
+};	
 	
 /** 直方体 */
 struct CDBoxIf: public CDConvexIf{
