@@ -41,7 +41,6 @@ public:
 	}
 	virtual void Init();
 	int NBallJoints(){return joNBallJoints;}
-	int NJoints(){return joNJoints;}
 	int NHingeJoints(){return joNHingeJoints;}
 
 };
