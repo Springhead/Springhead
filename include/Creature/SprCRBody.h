@@ -505,14 +505,6 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 struct CRDebugLinkBodyIf : CRBodyIf {
 	SPR_IFDEF(CRDebugLinkBody);
 
-	/** @brief 剛体の数を返す
-	*/
-	int NSolids();
-
-	/** @brief 関節の数を返す
-	*/
-	int NJoints();
-
 	/** @brief ボールジョイントの数を返す
 	*/
 	int NBallJoints();

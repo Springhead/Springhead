@@ -24,8 +24,6 @@
 	double GetLegLength(int i){	return	base::GetLegLength(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRDebugLinkBodyIf(base)	\
-	int NSolids(){	return	base::NSolids();}	\
-	int NJoints(){	return	base::NJoints();}	\
 	int NBallJoints(){	return	base::NBallJoints();}	\
 	int NHingeJoints(){	return	base::NHingeJoints();}	\
 
