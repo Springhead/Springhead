@@ -3,11 +3,22 @@
  #pragma hdrstop
 #endif
 #include "HINovintFalcon.h"
-#include "novint/hdl.h"
 #include <WinBasis/WinBasis.h>
 #include <WinBasis/WBDllLoader.h>
 
 namespace Spr {;
+
+#define HDLAPIENTRY  __stdcall
+
+typedef int HDLDeviceHandle;
+#define HDL_INVALID_HANDLE -1
+
+typedef int HDLError;
+#define HDL_NO_ERROR 0x0                  /**< No errors on error stack */
+#define HDL_ERROR_STACK_OVERFLOW 0x01     /**< Overflow of error stack */
+#define HDL_ERROR_INIT_FAILED    0x10     /**< Device initialization error */
+
+#define HDAL_NOT_CALIBRATED    0x04
 
 extern "C"{
 //	DLLスタブの実装
@@ -103,6 +114,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(hHandle)							//	関数呼び出しの引数
 #include <WinBasis/WBDllLoaderImpl.h>
+
 
 
 HINovintFalcon::HINovintFalcon():deviceHandle(HDL_INVALID_HANDLE),button(0), good(false){
