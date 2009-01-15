@@ -24,6 +24,7 @@
 
 #include "CRBody.h"
 #include "CRHingeHumanBody.h"
+#include "CRBallHumanBody.h"
 #include "CRFourLegsAnimalBody.h"
 #include "CRTrunkFootHumanBody.h"
 #include "CRFourLegsTinyAnimalBody.h"
@@ -92,6 +93,9 @@ void CRCreature::ControllerStep(){
 CRBodyIf* CRCreature::CreateBody(const IfInfo* ii, const CRBodyDesc& desc){
 	if (ii == CRHingeHumanBodyIf::GetIfInfoStatic()) {
 		body.push_back((DBG_NEW CRHingeHumanBody((const CRHingeHumanBodyDesc&)desc, this->Cast()))->Cast());
+
+	} else if (ii == CRBallHumanBodyIf::GetIfInfoStatic()) {
+		body.push_back((DBG_NEW CRBallHumanBody((const CRBallHumanBodyDesc&)desc, this->Cast()))->Cast());
 
 	} else if (ii == CRTrunkFootHumanBodyIf::GetIfInfoStatic()) {
 		body.push_back((DBG_NEW CRTrunkFootHumanBody((const CRTrunkFootHumanBodyDesc&)desc, this->Cast()))->Cast());

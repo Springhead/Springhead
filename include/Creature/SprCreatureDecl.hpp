@@ -4,6 +4,8 @@
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int NJoints(){	return	base::NJoints();}	\
 	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
+	int NControlPoints(){	return	base::NControlPoints();}	\
+	PHIKControlPointIf* GetControlPoint(int i){	return	base::GetControlPoint(i);}	\
 	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
 	double GetSumOfMass(){	return	base::GetSumOfMass();}	\
 
@@ -11,6 +13,8 @@
 	void SetUpperBodyStiffness(float stiffness){	base::SetUpperBodyStiffness(stiffness);}	\
 	void KeepUpperBodyPose(){	base::KeepUpperBodyPose();}	\
 	void ResetUpperBodyPose(){	base::ResetUpperBodyPose();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_CRBallHumanBodyIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRFourLegsAnimalBodyIf(base)	\
 	void Init(){	base::Init();}	\

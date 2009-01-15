@@ -21,12 +21,6 @@ struct PHJointIf;
 struct CRBodyIf;
 struct CRHingeHumanBodyIf;
 struct CRFourLegsAnimalBodyIf;
-/*
-struct CRIKControlIf;
-struct CRIKMovableIf;
-struct CRIKControlDesc;
-struct CRIKMovableDesc;
-*/
 
 // ------------------------------------------------------------------------------
 /// クリーチャのボディモデルのインターフェイス
@@ -53,25 +47,13 @@ struct CRBodyIf : SceneObjectIf{
 	*/
 	PHJointIf* GetJoint(int i);
 
-	#if 0
-	/** @brief IK用の制御点を追加する
+	/** @brief IK制御点の数を得る
 	*/
-	CRIKControlIf* CreateIKControl(const IfInfo* ii, const CRIKControlDesc& desc);
-	template <class T> CRIKControlIf* CreateIKControl(const T& desc){
-		return CreateIKControl(T::GetIfInfo(), desc);
-	}
-	
-	/** @brief IK用の可動物を追加する
-	*/
-	CRIKMovableIf* CreateIKMovable(const IfInfo* ii, const CRIKMovableDesc& desc);
-	template <class T> CRIKMovableIf* CreateIKMovable(const T& desc){
-		return CreateIKMovable(T::GetIfInfo(), desc);
-	}
+	int NControlPoints();
 
-	/** @brief IKを計算する
+	/** @brief i番目のIK制御点を得る
 	*/
-	void CalcIK();
-	#endif
+	PHIKControlPointIf* GetControlPoint(int i);
 
 	/** @brief ボディの重心座標を得る
 	*/
@@ -80,8 +62,6 @@ struct CRBodyIf : SceneObjectIf{
 	/** @brief ボディの質量を得る
 	*/
 	double GetSumOfMass();
-
-	
 };
 
 /// クリーチャのボディモデルのデスクリプタ
@@ -270,6 +250,91 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 	bool noLegs;
 
 	CRHingeHumanBodyDesc();
+};
+
+
+// ------------------------------------------------------------------------------
+/// ボールジョイント人体モデルのインターフェイス
+struct CRBallHumanBodyIf : CRBodyIf {
+	SPR_IFDEF(CRBallHumanBody);
+};
+
+/// ボールジョイント人体モデルのデスクリプタ
+struct CRBallHumanBodyDesc : CRBodyDesc {
+	SPR_DESCDEF(CRBallHumanBody);
+
+	enum CRHumanSolids{
+		// Center
+		SO_WAIST=0,
+		SO_ABDOMEN, SO_CHEST, SO_NECK, SO_HEAD,
+
+		// Right
+		SO_RIGHT_UPPER_ARM, SO_RIGHT_LOWER_ARM, SO_RIGHT_HAND,
+		SO_RIGHT_UPPER_LEG, SO_RIGHT_LOWER_LEG, SO_RIGHT_FOOT,
+		SO_RIGHT_EYE,
+
+		// Left
+		SO_LEFT_UPPER_ARM, SO_LEFT_LOWER_ARM, SO_LEFT_HAND,
+		SO_LEFT_UPPER_LEG, SO_LEFT_LOWER_LEG, SO_LEFT_FOOT,
+		SO_LEFT_EYE,
+
+		// 剛体の数
+		SO_NSOLIDS
+	};
+
+	enum CRHumanJoints{
+		// -- Center
+		JO_WAIST_ABDOMEN=0, JO_ABDOMEN_CHEST,
+		JO_CHEST_NECK, JO_NECK_HEAD,
+
+		// -- Right
+		JO_RIGHT_SHOULDER, JO_RIGHT_ELBOW, JO_RIGHT_WRIST,
+		JO_RIGHT_WAIST_LEG, JO_RIGHT_KNEE, JO_RIGHT_ANKLE,
+		JO_RIGHT_EYE,
+
+		// -- Left
+		JO_LEFT_SHOULDER, JO_LEFT_ELBOW, JO_LEFT_WRIST,
+		JO_LEFT_WAIST_LEG, JO_LEFT_KNEE, JO_LEFT_ANKLE,
+		JO_LEFT_EYE,
+
+		// 関節の数
+		JO_NJOINTS
+	};
+
+	/// 体重
+	double bodyMass;
+
+	/// サイズに関するパラメータ
+	double waistHeight, waistBreadth, waistThickness;
+	double abdomenHeight, abdomenBreadth, abdomenThickness;
+	double chestHeight, chestBreadth, chestThickness;
+	double neckLength, neckDiameter;
+	double headBreadth, headHeight;
+	double upperArmLength, upperArmDiameter;
+	double lowerArmLength, lowerArmDiameter;
+	double handLength, handBreadth, handThickness;
+	double upperLegLength, upperLegDiameter, interLegDistance;
+	double lowerLegLength, lowerLegDiameter;
+	double footLength, footBreadth, footThickness, ankleToeDistance;
+	double vertexToEyeHeight, occiputToEyeDistance;
+	double eyeDiameter, interpupillaryBreadth;
+
+	/// 各関節のバネダンパ
+	double springWaistAbdomen, damperWaistAbdomen;
+	double springAbdomenChest, damperAbdomenChest;
+	double springChestNeck,    damperChestNeck;
+	double springNeckHead,     damperNeckHead;
+	double springShoulder,     damperShoulder;
+	double springElbow,        damperElbow;
+	double springWrist,        damperWrist;
+	double springWaistLeg,     damperWaistLeg;
+	double springKnee,         damperKnee;
+	double springAnkle,        damperAnkle;
+	double springEye,          damperEye;
+
+	// 可動域制限など（未実装）
+
+	CRBallHumanBodyDesc();
 };
 
 

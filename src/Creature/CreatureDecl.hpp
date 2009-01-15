@@ -352,6 +352,187 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CRBallHumanBodyDesc \
+protected:\
+	double	bodyMass;	\
+	double	waistHeight;	\
+	double	waistBreadth;	\
+	double	waistThickness;	\
+	double	abdomenHeight;	\
+	double	abdomenBreadth;	\
+	double	abdomenThickness;	\
+	double	chestHeight;	\
+	double	chestBreadth;	\
+	double	chestThickness;	\
+	double	neckLength;	\
+	double	neckDiameter;	\
+	double	headBreadth;	\
+	double	headHeight;	\
+	double	upperArmLength;	\
+	double	upperArmDiameter;	\
+	double	lowerArmLength;	\
+	double	lowerArmDiameter;	\
+	double	handLength;	\
+	double	handBreadth;	\
+	double	handThickness;	\
+	double	upperLegLength;	\
+	double	upperLegDiameter;	\
+	double	interLegDistance;	\
+	double	lowerLegLength;	\
+	double	lowerLegDiameter;	\
+	double	footLength;	\
+	double	footBreadth;	\
+	double	footThickness;	\
+	double	ankleToeDistance;	\
+	double	vertexToEyeHeight;	\
+	double	occiputToEyeDistance;	\
+	double	eyeDiameter;	\
+	double	interpupillaryBreadth;	\
+	double	springWaistAbdomen;	\
+	double	damperWaistAbdomen;	\
+	double	springAbdomenChest;	\
+	double	damperAbdomenChest;	\
+	double	springChestNeck;	\
+	double	damperChestNeck;	\
+	double	springNeckHead;	\
+	double	damperNeckHead;	\
+	double	springShoulder;	\
+	double	damperShoulder;	\
+	double	springElbow;	\
+	double	damperElbow;	\
+	double	springWrist;	\
+	double	damperWrist;	\
+	double	springWaistLeg;	\
+	double	damperWaistLeg;	\
+	double	springKnee;	\
+	double	damperKnee;	\
+	double	springAnkle;	\
+	double	damperAnkle;	\
+	double	springEye;	\
+	double	damperEye;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CRBody::SetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
+		bodyMass = ((CRBallHumanBodyDesc*)ptr)->bodyMass;	\
+		waistHeight = ((CRBallHumanBodyDesc*)ptr)->waistHeight;	\
+		waistBreadth = ((CRBallHumanBodyDesc*)ptr)->waistBreadth;	\
+		waistThickness = ((CRBallHumanBodyDesc*)ptr)->waistThickness;	\
+		abdomenHeight = ((CRBallHumanBodyDesc*)ptr)->abdomenHeight;	\
+		abdomenBreadth = ((CRBallHumanBodyDesc*)ptr)->abdomenBreadth;	\
+		abdomenThickness = ((CRBallHumanBodyDesc*)ptr)->abdomenThickness;	\
+		chestHeight = ((CRBallHumanBodyDesc*)ptr)->chestHeight;	\
+		chestBreadth = ((CRBallHumanBodyDesc*)ptr)->chestBreadth;	\
+		chestThickness = ((CRBallHumanBodyDesc*)ptr)->chestThickness;	\
+		neckLength = ((CRBallHumanBodyDesc*)ptr)->neckLength;	\
+		neckDiameter = ((CRBallHumanBodyDesc*)ptr)->neckDiameter;	\
+		headBreadth = ((CRBallHumanBodyDesc*)ptr)->headBreadth;	\
+		headHeight = ((CRBallHumanBodyDesc*)ptr)->headHeight;	\
+		upperArmLength = ((CRBallHumanBodyDesc*)ptr)->upperArmLength;	\
+		upperArmDiameter = ((CRBallHumanBodyDesc*)ptr)->upperArmDiameter;	\
+		lowerArmLength = ((CRBallHumanBodyDesc*)ptr)->lowerArmLength;	\
+		lowerArmDiameter = ((CRBallHumanBodyDesc*)ptr)->lowerArmDiameter;	\
+		handLength = ((CRBallHumanBodyDesc*)ptr)->handLength;	\
+		handBreadth = ((CRBallHumanBodyDesc*)ptr)->handBreadth;	\
+		handThickness = ((CRBallHumanBodyDesc*)ptr)->handThickness;	\
+		upperLegLength = ((CRBallHumanBodyDesc*)ptr)->upperLegLength;	\
+		upperLegDiameter = ((CRBallHumanBodyDesc*)ptr)->upperLegDiameter;	\
+		interLegDistance = ((CRBallHumanBodyDesc*)ptr)->interLegDistance;	\
+		lowerLegLength = ((CRBallHumanBodyDesc*)ptr)->lowerLegLength;	\
+		lowerLegDiameter = ((CRBallHumanBodyDesc*)ptr)->lowerLegDiameter;	\
+		footLength = ((CRBallHumanBodyDesc*)ptr)->footLength;	\
+		footBreadth = ((CRBallHumanBodyDesc*)ptr)->footBreadth;	\
+		footThickness = ((CRBallHumanBodyDesc*)ptr)->footThickness;	\
+		ankleToeDistance = ((CRBallHumanBodyDesc*)ptr)->ankleToeDistance;	\
+		vertexToEyeHeight = ((CRBallHumanBodyDesc*)ptr)->vertexToEyeHeight;	\
+		occiputToEyeDistance = ((CRBallHumanBodyDesc*)ptr)->occiputToEyeDistance;	\
+		eyeDiameter = ((CRBallHumanBodyDesc*)ptr)->eyeDiameter;	\
+		interpupillaryBreadth = ((CRBallHumanBodyDesc*)ptr)->interpupillaryBreadth;	\
+		springWaistAbdomen = ((CRBallHumanBodyDesc*)ptr)->springWaistAbdomen;	\
+		damperWaistAbdomen = ((CRBallHumanBodyDesc*)ptr)->damperWaistAbdomen;	\
+		springAbdomenChest = ((CRBallHumanBodyDesc*)ptr)->springAbdomenChest;	\
+		damperAbdomenChest = ((CRBallHumanBodyDesc*)ptr)->damperAbdomenChest;	\
+		springChestNeck = ((CRBallHumanBodyDesc*)ptr)->springChestNeck;	\
+		damperChestNeck = ((CRBallHumanBodyDesc*)ptr)->damperChestNeck;	\
+		springNeckHead = ((CRBallHumanBodyDesc*)ptr)->springNeckHead;	\
+		damperNeckHead = ((CRBallHumanBodyDesc*)ptr)->damperNeckHead;	\
+		springShoulder = ((CRBallHumanBodyDesc*)ptr)->springShoulder;	\
+		damperShoulder = ((CRBallHumanBodyDesc*)ptr)->damperShoulder;	\
+		springElbow = ((CRBallHumanBodyDesc*)ptr)->springElbow;	\
+		damperElbow = ((CRBallHumanBodyDesc*)ptr)->damperElbow;	\
+		springWrist = ((CRBallHumanBodyDesc*)ptr)->springWrist;	\
+		damperWrist = ((CRBallHumanBodyDesc*)ptr)->damperWrist;	\
+		springWaistLeg = ((CRBallHumanBodyDesc*)ptr)->springWaistLeg;	\
+		damperWaistLeg = ((CRBallHumanBodyDesc*)ptr)->damperWaistLeg;	\
+		springKnee = ((CRBallHumanBodyDesc*)ptr)->springKnee;	\
+		damperKnee = ((CRBallHumanBodyDesc*)ptr)->damperKnee;	\
+		springAnkle = ((CRBallHumanBodyDesc*)ptr)->springAnkle;	\
+		damperAnkle = ((CRBallHumanBodyDesc*)ptr)->damperAnkle;	\
+		springEye = ((CRBallHumanBodyDesc*)ptr)->springEye;	\
+		damperEye = ((CRBallHumanBodyDesc*)ptr)->damperEye;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CRBody::GetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
+		((CRBallHumanBodyDesc*)ptr)->bodyMass = bodyMass;	\
+		((CRBallHumanBodyDesc*)ptr)->waistHeight = waistHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->waistBreadth = waistBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->waistThickness = waistThickness;	\
+		((CRBallHumanBodyDesc*)ptr)->abdomenHeight = abdomenHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->abdomenBreadth = abdomenBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->abdomenThickness = abdomenThickness;	\
+		((CRBallHumanBodyDesc*)ptr)->chestHeight = chestHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->chestBreadth = chestBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->chestThickness = chestThickness;	\
+		((CRBallHumanBodyDesc*)ptr)->neckLength = neckLength;	\
+		((CRBallHumanBodyDesc*)ptr)->neckDiameter = neckDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->headBreadth = headBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->headHeight = headHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->upperArmLength = upperArmLength;	\
+		((CRBallHumanBodyDesc*)ptr)->upperArmDiameter = upperArmDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->lowerArmLength = lowerArmLength;	\
+		((CRBallHumanBodyDesc*)ptr)->lowerArmDiameter = lowerArmDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->handLength = handLength;	\
+		((CRBallHumanBodyDesc*)ptr)->handBreadth = handBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->handThickness = handThickness;	\
+		((CRBallHumanBodyDesc*)ptr)->upperLegLength = upperLegLength;	\
+		((CRBallHumanBodyDesc*)ptr)->upperLegDiameter = upperLegDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->interLegDistance = interLegDistance;	\
+		((CRBallHumanBodyDesc*)ptr)->lowerLegLength = lowerLegLength;	\
+		((CRBallHumanBodyDesc*)ptr)->lowerLegDiameter = lowerLegDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->footLength = footLength;	\
+		((CRBallHumanBodyDesc*)ptr)->footBreadth = footBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->footThickness = footThickness;	\
+		((CRBallHumanBodyDesc*)ptr)->ankleToeDistance = ankleToeDistance;	\
+		((CRBallHumanBodyDesc*)ptr)->vertexToEyeHeight = vertexToEyeHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->occiputToEyeDistance = occiputToEyeDistance;	\
+		((CRBallHumanBodyDesc*)ptr)->eyeDiameter = eyeDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->interpupillaryBreadth = interpupillaryBreadth;	\
+		((CRBallHumanBodyDesc*)ptr)->springWaistAbdomen = springWaistAbdomen;	\
+		((CRBallHumanBodyDesc*)ptr)->damperWaistAbdomen = damperWaistAbdomen;	\
+		((CRBallHumanBodyDesc*)ptr)->springAbdomenChest = springAbdomenChest;	\
+		((CRBallHumanBodyDesc*)ptr)->damperAbdomenChest = damperAbdomenChest;	\
+		((CRBallHumanBodyDesc*)ptr)->springChestNeck = springChestNeck;	\
+		((CRBallHumanBodyDesc*)ptr)->damperChestNeck = damperChestNeck;	\
+		((CRBallHumanBodyDesc*)ptr)->springNeckHead = springNeckHead;	\
+		((CRBallHumanBodyDesc*)ptr)->damperNeckHead = damperNeckHead;	\
+		((CRBallHumanBodyDesc*)ptr)->springShoulder = springShoulder;	\
+		((CRBallHumanBodyDesc*)ptr)->damperShoulder = damperShoulder;	\
+		((CRBallHumanBodyDesc*)ptr)->springElbow = springElbow;	\
+		((CRBallHumanBodyDesc*)ptr)->damperElbow = damperElbow;	\
+		((CRBallHumanBodyDesc*)ptr)->springWrist = springWrist;	\
+		((CRBallHumanBodyDesc*)ptr)->damperWrist = damperWrist;	\
+		((CRBallHumanBodyDesc*)ptr)->springWaistLeg = springWaistLeg;	\
+		((CRBallHumanBodyDesc*)ptr)->damperWaistLeg = damperWaistLeg;	\
+		((CRBallHumanBodyDesc*)ptr)->springKnee = springKnee;	\
+		((CRBallHumanBodyDesc*)ptr)->damperKnee = damperKnee;	\
+		((CRBallHumanBodyDesc*)ptr)->springAnkle = springAnkle;	\
+		((CRBallHumanBodyDesc*)ptr)->damperAnkle = damperAnkle;	\
+		((CRBallHumanBodyDesc*)ptr)->springEye = springEye;	\
+		((CRBallHumanBodyDesc*)ptr)->damperEye = damperEye;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CRFourLegsAnimalBodyDesc \
 protected:\
 	int	joNBallJoints;	\
