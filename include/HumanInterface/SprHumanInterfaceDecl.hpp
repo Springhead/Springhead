@@ -97,8 +97,15 @@
 	Vec3f GetForce(){	return	base::GetForce();}	\
 	void SetForce(const Vec3f& f, const Vec3f& t){	base::SetForce(f, t);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_HIForceInterface3DIf(base)	\
+	Vec3f GetVelocity(){	return	base::GetVelocity();}	\
+	Vec3f GetForce(){	return	base::GetForce();}	\
+	void SetForce(const Vec3f& f){	base::SetForce(f);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_HIMouse6DIf(base)	\
 	Spr::DVKeyMouseIf* GetKeyMouse(){	return	base::GetKeyMouse();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_HINovintFalconIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidarGIf(base)	\
 	Vec3f GetTorque(){	return	base::GetTorque();}	\
