@@ -22,7 +22,7 @@ namespace Spr{;
 
 struct DRRealDeviceIf;
 
-/**	@brief	ヒューマンインタフェースの基本クラス	*/
+/**	@brief	6自由度力覚インタフェースの基本クラス	*/
 struct HIForceInterface6DIf: public HIPoseIf{
 	SPR_VIFDEF(HIForceInterface6D);
 	///デバイスの速度を返す
@@ -37,6 +37,16 @@ struct HIForceInterface6DIf: public HIPoseIf{
 	void SetForce(const Vec3f& f, const Vec3f& t);
 };
 
+/**	@brief	3自由度力覚インタフェースの基本クラス	*/
+struct HIForceInterface3DIf: public HIPoseIf{
+	SPR_VIFDEF(HIForceInterface3D);
+	///デバイスの速度を返す
+	Vec3f GetVelocity();
+	///	デバイスの実際の提示力を返す
+	Vec3f GetForce();
+	///	デバイスの目標出力とトルク出力を設定する
+	void SetForce(const Vec3f& f);
+};
 
 //@}
 }

@@ -42,5 +42,36 @@ public:
 	//@}
 };
 
+
+//----------------------------------------------------------------------------
+//	HIForceInterface6D
+
+///	並進回転6自由度のデバイス
+class SPR_DLL HIForceInterface3D: public HIPosition{
+protected:
+	float alpha;
+	Vec3f vel;
+	Vec3f lastPos;
+public:
+	SPR_OBJECTDEF_ABST(HIForceInterface3D);
+	///
+	HIForceInterface3D();
+	///
+	virtual ~HIForceInterface3D(){}
+	virtual void Update(float dt);
+
+	/**@name	デバイスの状態	*/
+	//@{
+	///	デバイスの現在位置を返す
+	virtual Vec3f GetPosition()=0;
+	///	デバイスの速度を返す
+	virtual Vec3f GetVelocity(){ return vel; }
+	///	デバイスの実際の提示力を返す
+	virtual Vec3f GetForce()=0;
+	///	デバイスの目標出力とトルク出力を設定する
+	virtual void SetForce(const Vec3f& f)=0;
+	//@}
+};
+
 }	//	namespace Spr
 #endif

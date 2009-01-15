@@ -16,6 +16,7 @@
 #include <HumanInterface/SprHIMouse6D.h>
 #include <HumanInterface/SprHIHaptic.h>
 #include <HumanInterface/SprHISpidar.h>
+#include <HumanInterface/SprHINovint.h>
 
 
 #include <HumanInterface/SprHIDevice.h>
