@@ -37,23 +37,31 @@ float CDRoundCone::CalcVolume(){
 	
 // サポートポイントを求める
 Vec3f CDRoundCone::Support(const Vec3f& p) const {
+	// std::cout << "p : " << p << std::endl;
 	float dr = (radius[1]-radius[0]);
-	Vec3d d = Vec3d(-dr, 0, sqrt(length*length-(dr*dr))); d = d / d.norm();
+	Vec3d d = Vec3d(length,0,dr); d = d / d.norm();
 	float n = p.norm();
-	Vec3d q = p / p.norm();
+	Vec3d q;
 	Vec3f off;
 	if(n < 1.0e-10f){
 		off = Vec3f();
+		q = Vec3f();
 	}else{
 		off = n * p;
+		q = p / n;
 	}
+	// std::cout << "q : " << q << std::endl;
+	// std::cout << "d : " << d << std::endl;
 	if (q.Z() >= d.Z()){
 		off *= radius[0];
 		off.Z() += length*0.5f;
+		// std::cout << "r[0] : " << radius[0] << std::endl;
 	}else{
 		off *= radius[1];
 		off.Z() -= length*0.5f;
+		// std::cout << "r[1] : " << radius[1] << std::endl;
 	}
+	// std::cout << "off : " << off << std::endl;
 	return off;
 }
 
