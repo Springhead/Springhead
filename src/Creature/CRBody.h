@@ -81,6 +81,14 @@ public:
 	*/
 	virtual PHJointIf*			GetJoint(int i);
 
+	/** @brief IK制御点の数を得る
+	*/
+	int NControlPoints();
+
+	/** @brief i番目のIK制御点を得る
+	*/
+	PHIKControlPointIf* GetControlPoint(int i);
+
 	/** @brief ボディの重心座標を得る
 	*/
 	virtual Vec3d				GetCenterOfMass();

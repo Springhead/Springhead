@@ -58,6 +58,13 @@ PHJointIf* CRBody::GetJoint(int i){
 	return (i < joints.size()) ? joints[i] : NULL;
 }
 
+int CRBody::NControlPoints(){
+	return 0;
+}
+
+PHIKControlPointIf* CRBody::GetControlPoint(int i){
+	return NULL;
+}
 
 Vec3d CRBody::GetCenterOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計
