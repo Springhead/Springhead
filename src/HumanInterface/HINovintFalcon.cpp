@@ -129,7 +129,7 @@ bool testHDLError(char* str){
     if (err != HDL_NO_ERROR)
     {
 		// Display message.
-		DSTR << "Error: Novient Falcon - " << str << std::endl;
+		DSTR << "Error: Novint Falcon - " << str << std::endl;
 		return false;
     }
 	return true;
@@ -159,7 +159,7 @@ bool HINovintFalcon::Init(const void* desc){
 	// Check return value of the handle.
     if (deviceHandle == HDL_INVALID_HANDLE){
 		// There was an error trying to initialize the device.
-		DSTR << "Error: Novient Falcon - Could not open device." << std::endl;
+		DSTR << "Error: Novint Falcon - Could not open device." << std::endl;
 		return false;
     }
 
