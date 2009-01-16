@@ -3,8 +3,8 @@
  #pragma hdrstop
 #endif
 #include "HINovintFalcon.h"
-#include <WinBasis/WinBasis.h>
-#include <WinBasis/WBDllLoader.h>
+#include <Foundation/UTDllLoader.h>
+#include <windows.h>
 
 namespace Spr {;
 
@@ -22,7 +22,7 @@ typedef int HDLError;
 
 extern "C"{
 //	DLLスタブの実装
-static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
+static UTDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 
 //	__declspec(dllexport) HDLDeviceHandle HDLAPIENTRY hdlInitNamedDevice(const char* deviceName, const char* configPath = 0);
 #define DLLFUNC_RTYPE	HDLDeviceHandle						//	返り型
@@ -31,7 +31,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlInitNamedDevice@8"				//	関数名
 #define DLLFUNC_ARGDEF	(const char* deviceName, const char* configPath)	//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(deviceName, configPath)			//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) int HDLAPIENTRY hdlGetState();
 #define DLLFUNC_RTYPE	int									//	返り型
@@ -40,7 +40,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlGetState@0"					//	関数名
 #define DLLFUNC_ARGDEF	()									//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	()									//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlUninitDevice(HDLDeviceHandle hHandle);
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -49,7 +49,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlUninitDevice@4"				//	関数名
 #define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(hHandle)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlSetToolForce(double force[3]);
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -58,7 +58,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlSetToolForce@4"				//	関数名
 #define DLLFUNC_ARGDEF	(double force[3])					//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(force)								//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlToolPosition(double force[3]);
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -67,7 +67,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlToolPosition@4"				//	関数名
 #define DLLFUNC_ARGDEF	(double pos[3])						//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(pos)								//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlToolButtons(int* pButtons);
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -76,7 +76,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlToolButtons@4"					//	関数名
 #define DLLFUNC_ARGDEF	(int * pButtons)					//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(pButtons)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 }
 
 //	__declspec(dllexport) HDLError HDLAPIENTRY hdlGetError();
@@ -86,7 +86,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlGetError@0"					//	関数名
 #define DLLFUNC_ARGDEF	()									//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	()									//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void HDLAPIENTRY hdlStart();
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -95,7 +95,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlStart@0"						//	関数名
 #define DLLFUNC_ARGDEF	()									//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	()									//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void HDLAPIENTRY hdlStop();
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -104,7 +104,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"hdlStop"							//	関数名
 #define DLLFUNC_ARGDEF	()									//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	()									//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlMakeCurrent(HDLDeviceHandle hHandle);
 #define DLLFUNC_RTYPE	void								//	返り型
@@ -113,7 +113,7 @@ static WBDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_STR		"_hdlMakeCurrent@4"					//	関数名
 #define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(hHandle)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 
 
