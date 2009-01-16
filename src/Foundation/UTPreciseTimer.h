@@ -26,7 +26,7 @@ class UTPreciseTimer{
 private:
 	static unsigned long freq;
 	UTLargeInteger cycles2;
-	unsigned long stopWatch;
+	unsigned long stopWatch;		///<計測時間us単位
 	bool startFlag;
 public:
 	UTPreciseTimer();
@@ -36,9 +36,9 @@ public:
 	void CountAndWaitUS(int time);	///< 前回からの経過時間をus単位で計測し，全体としてus単位で待つ（一定ループ生成用）
 	
 	/// ストップウォッチ機能
-	unsigned long Start();	///< 計測開始
-	unsigned long Stop();	///< 計測停止
-	unsigned long Clear();	///< クリア
+	unsigned long Start();	///< 計測開始，開始時間（stopWatchの値）をus単位で返す
+	unsigned long Stop();	///< 計測停止，経過時間（stopWatchの値）をus単位で返す
+	unsigned long Clear();	///< クリア，stopWatchを0にする
 	static unsigned long CPUFrequency(){	///< CPUの周波数を返す
 		return freq;
 	}
