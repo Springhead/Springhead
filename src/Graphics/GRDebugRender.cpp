@@ -257,12 +257,37 @@ void GRDebugRender::DrawRoundCone(CDRoundConeIf* rc, bool solid){
 	float l = rc->GetLength();
 	this->PushModelMatrix();
 	
-	DrawCylinder(((r[0] < r[1]) ? (r[0]) : (r[1])) * 0.8, l, 20, solid);
+	// DrawCylinder(((r[0] < r[1]) ? (r[0]) : (r[1])) * 0.8, l, 20, solid);
+	float normal_Z = (r[1] - r[0]) / l;
+	if (-M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
+		float theta = acos(normal_Z);
+		float R0 =  r[0] * sin(theta);
+		float Z0 =  l/2.0 + r[0]*cos(theta);
+		float R1 =  r[1] * sin(theta);
+		float Z1 = -l/2.0 + r[1]*cos(theta);
+
+		int slice = 20;
+
+		// ‘¤–Ê‚ð•`‰æ
+		glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
+		float step = (float)(M_PI * 2.0f) / (float)slice;
+		float t = 0.0;
+		float x,y;
+		for (int i=0; i<=slice; i++) {
+			x=sin(t) * sin(theta);
+			y=cos(t) * sin(theta);
+			glNormal3f(x, y, cos(theta));
+			glVertex3f(R1 * x, R1 * y, Z1);
+			glVertex3f(R0 * x, R0 * y, Z0);
+			t += step;
+		}
+		glEnd();
+	}
 
 	glTranslatef(0,0,-l/2);
-	solid ? glutSolidSphere(r[0], 20, 20) : glutWireSphere(r[0], 20, 20);
-	glTranslatef(0,0,l);
 	solid ? glutSolidSphere(r[1], 20, 20) : glutWireSphere(r[1], 20, 20);
+	glTranslatef(0,0,l);
+	solid ? glutSolidSphere(r[0], 20, 20) : glutWireSphere(r[0], 20, 20);
 	this->PopModelMatrix();
 }
 

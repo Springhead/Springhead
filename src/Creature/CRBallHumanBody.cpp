@@ -29,10 +29,10 @@ CRBallHumanBodyDesc::CRBallHumanBodyDesc(){
 	chestBreadth   = 0.2887;
 	chestThickness = 0.2118;
 
-	neckLength   = 1.7219 - 1.4564 - 0.1732;
+	neckLength   = 1.7219 - 1.3882 - 0.2387;
 	neckDiameter = 0.3563 / 3.1415;
 
-	headBreadth = 0.1619;
+	headBreadth = 0.5699 / 3.1415; // 0.1619;
 	headHeight  = 0.2387;
 
 	upperArmLength   = 0.3406;
@@ -46,7 +46,7 @@ CRBallHumanBodyDesc::CRBallHumanBodyDesc(){
 	handThickness = 0.0275;
 
 	upperLegLength   = 0.4092;
-	upperLegDiameter = 0.1682;
+	upperLegDiameter = 0.5289 / 3.1415; //  0.1682;
 	interLegDistance = upperLegDiameter + 0.03; /// “K“–
 
 	lowerLegLength   = 0.3946;
@@ -365,12 +365,12 @@ void CRBallHumanBody::CreateEye(LREnum lr){
 	solids[soNEye]->AddShape(phSdk->CreateShape(sphereDesc));
 	sphereDesc.radius  = (float)(eyeDiameter/4.0);
 	solids[soNEye]->AddShape(phSdk->CreateShape(sphereDesc));
-	Posed pose=Posed(); pose.Pos() = Vec3d(0,0,eyeDiameter/3.0);
+	Posed pose=Posed(); pose.Pos() = Vec3d(0,0,-eyeDiameter/3.0);
 	solids[soNEye]->SetShapePose(1,pose);
 
 	// Joint -- Eye ([p]Head-[c]Eye)
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.posePlug.Pos()   = Vec3d(lr*interpupillaryBreadth/2.0, headHeight/2.0 - vertexToEyeHeight, headBreadth/2.0);
+	ballDesc.posePlug.Pos()   = Vec3d(lr*interpupillaryBreadth/2.0, headHeight/2.0 - vertexToEyeHeight, -headBreadth/2.0);
 	ballDesc.spring           = springEye;
 	ballDesc.damper           = damperEye;
 	joints[joNEye]            = CreateJoint(solids[soNEye], solids[SO_HEAD], ballDesc);
@@ -394,7 +394,7 @@ void CRBallHumanBody::CreateUpperLeg(LREnum lr){
 	PHSolidDesc        solidDesc;
 	PHBallJointDesc    ballDesc;
 
-	CRBallHumanBodyDesc::CRHumanSolids soNWaistLeg, soNUpperLeg;
+	CRBallHumanBodyDesc::CRHumanSolids soNUpperLeg;
 	CRBallHumanBodyDesc::CRHumanJoints joNWaistLeg;
 	if (lr==LEFTPART) {
 		soNUpperLeg = SO_LEFT_UPPER_LEG;
@@ -490,7 +490,7 @@ void CRBallHumanBody::CreateFoot(LREnum lr){
 	// Joint -- Ankle ([p]LowerLeg-[c]Foot)
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.posePlug.Pos()   = Vec3d(0.0, -lowerLegLength / 2.0, 0);
-	ballDesc.poseSocket.Pos() = Vec3d(0, footThickness / 2.0, (footLength/2.0 - ankleToeDistance));
+	ballDesc.poseSocket.Pos() = Vec3d(0, footThickness / 2.0, (ankleToeDistance - footLength/2.0));
 	SetJointSpringDamper(ballDesc, springAnkle, damperAnkle, solids[soNLowerLeg]->GetMass());
 	// ballDesc.spring           = springAnkleY;
 	// ballDesc.damper           = damperAnkleY;
@@ -532,8 +532,8 @@ void CRBallHumanBody::InitContact(){
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
-	ballDesc.spring = 1;//100000;
-	ballDesc.damper = 0.02;//  2000;
+	ballDesc.spring = 100000;
+	ballDesc.damper =   2000;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -547,7 +547,7 @@ void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double spr
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
-	hingeDesc.spring = 1;//100000;
-	hingeDesc.damper = 0.02;//  2000;
+	hingeDesc.spring = 100000;
+	hingeDesc.damper =   2000;
 }
 }

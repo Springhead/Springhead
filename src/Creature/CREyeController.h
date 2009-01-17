@@ -124,6 +124,7 @@ private:
 
 	/// 制御に使用する関節
 	PHHingeJointIf *joLEyeX, *joLEyeY, *joREyeX, *joREyeY;
+	PHBallJointIf  *joLEye,  *joREye;
 
 	/// 視標位置
 	Vec3d targetPos, targetVel;
@@ -131,6 +132,7 @@ private:
 	/** @brief 片目に関して制御
 	*/
 	void Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle);
+	void Control(PHBallJointIf*  jo, Vec2d angle);
 
 	/** @brief (0,0,-1)と成す角を、右手系でX軸・Y軸周りの回転として求める
 		@param v 入力ベクトル
@@ -141,6 +143,9 @@ private:
 public:
 	CRPhysicalEye(CRCreatureIf* c=NULL) {
 		creature = c;
+		soLEye = soREye = soHead = NULL;
+		joLEyeX = joLEyeY = joREyeX = joREyeY = NULL;
+		joLEye = joREye = NULL;
 	}
 
 	/** @brief 初期化を実行する
