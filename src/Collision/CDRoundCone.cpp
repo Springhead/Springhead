@@ -37,6 +37,39 @@ float CDRoundCone::CalcVolume(){
 	
 // サポートポイントを求める
 Vec3f CDRoundCone::Support(const Vec3f& p) const {
+	// Z軸前方がradius[0]、後方がradius[1]
+	float normal_Z = (radius[1] - radius[0]) / length;
+	// std::cout << Deg(acos(normal_Z)) << std::endl;
+	Vec3f dir;
+	if (p.norm()!=0) {
+		dir = p / p.norm();
+	} else {
+		dir = Vec3f(1,0,0);
+	}
+	// std::cout << normal_Z << ", " << dir.Z() << std::endl;
+
+	if (-M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
+		if (normal_Z < dir.Z()) {
+			// pの方がZ軸前方 → radius[0]を使用
+			// std::cout << "[0] : " << dir*radius[0] + Vec3f(0,0, length/2.0) << std::endl;
+			return dir*radius[0] + Vec3f(0,0, length/2.0);
+		} else {
+			// pの方がZ軸後方 → radius[1]を使用
+			// std::cout << "[1] : " << dir*radius[1] + Vec3f(0,0,-length/2.0) << std::endl;
+			return dir*radius[1] + Vec3f(0,0,-length/2.0);
+		}
+	} else {
+		// どちらかの球に包含されている
+		if (radius[1] < radius[0]) {
+			// std::cout << "[0]* : " << dir*radius[0] + Vec3f(0,0, length/2.0) << std::endl;
+			return dir*radius[0] + Vec3f(0,0, length/2.0);
+		} else {
+			// std::cout << "[1]* : " << dir*radius[1] + Vec3f(0,0,-length/2.0) << std::endl;
+			return dir*radius[1] + Vec3f(0,0,-length/2.0);
+		}
+	}
+
+	/*
 	// std::cout << "p : " << p << std::endl;
 	float dr = (radius[1]-radius[0]);
 	Vec3d d = Vec3d(length,0,dr); d = d / d.norm();
@@ -63,11 +96,44 @@ Vec3f CDRoundCone::Support(const Vec3f& p) const {
 	}
 	// std::cout << "off : " << off << std::endl;
 	return off;
+	*/
 }
 
 
 // 切り口を求める. 接触解析を行う.
 bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
+	//	切り口(ring.local)系での カプセルの向き
+	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
+	float normal_Z = (radius[1] - radius[0]) / length;
+	if (M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
+		float d = abs(-dir.X() - normal_Z);
+		if (d < 0.3f) { // 側面が接触面にほぼ平行な場合
+			float shrink = sqrt(1-d*d);	//	傾いているために距離が縮む割合
+			// float l_lat  = length * cos( Rad(90) - acos(normal_Z) );
+			float l_lat  = length;
+			float start  = -0.5f*l_lat*shrink;
+			float end    =  0.5f*l_lat*shrink;
+			
+			if (d > 1e-4) { // 完全な平行ではない場合
+				// 未実装
+			}
+
+			//	ringに線分を追加
+			ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), -start));
+			ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z()), end));
+			ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y()), 0));
+			ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y()), 0));
+			return true;
+		} else {
+			return false;
+		}
+
+	} else {
+		// どちらかが包含されてに球体になっている
+		return false;
+	}
+
+	/*
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	if (dir.X() < 0) dir = -dir;
@@ -98,6 +164,7 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	}else{
 		return false;
 	}
+	*/
 }
 
 Vec2f CDRoundCone::GetRadius() {
