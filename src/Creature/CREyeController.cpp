@@ -102,15 +102,23 @@ Vec2d CRPursuitController::GetREyeAngle(){
 // 
 void CRPhysicalEye::Init(){
 	for (int i=0; i<creature->NBodies(); ++i) {
-		CRHingeHumanBodyIf* body = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
-		if (body) {
-			soLEye  = body->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);	
-			soREye  = body->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);	
-			soHead  = body->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);	
-			joLEyeX = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_X));
-			joLEyeY = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_Y));	
-			joREyeX = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_X));	
-			joREyeY = DCAST(PHHingeJointIf, body->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y));	
+		CRHingeHumanBodyIf* hingeBody = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		if (hingeBody) {
+			soLEye  = hingeBody->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_EYE);	
+			soREye  = hingeBody->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_EYE);	
+			soHead  = hingeBody->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);	
+			joLEyeX = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_X));
+			joLEyeY = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_LEFT_EYE_Y));	
+			joREyeX = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_X));	
+			joREyeY = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_RIGHT_EYE_Y));	
+		}
+		CRBallHumanBodyIf* ballBody = DCAST(CRBallHumanBodyIf, creature->GetBody(i));
+		if (ballBody) {
+			soLEye  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_LEFT_EYE);	
+			soREye  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_RIGHT_EYE);	
+			soHead  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_HEAD);	
+			joLEye = DCAST(PHBallJointIf, ballBody->GetJoint(CRBallHumanBodyDesc::JO_LEFT_EYE));
+			joREye = DCAST(PHBallJointIf, ballBody->GetJoint(CRBallHumanBodyDesc::JO_RIGHT_EYE));	
 		}
 	}
 }
@@ -121,8 +129,13 @@ void CRPhysicalEye::SetTarget(Vec3d pos, Vec3d vel){
 }
 
 void CRPhysicalEye::Control(Vec2d angleLEye, Vec2d angleREye){
-	Control(joLEyeX, joLEyeY, angleLEye);
-	Control(joREyeX, joREyeY, angleREye);
+	if (joLEyeX && joLEyeY && joREyeX && joREyeY) {
+		Control(joLEyeX, joLEyeY, angleLEye);
+		Control(joREyeX, joREyeY, angleREye);
+	} else if (joLEye && joREye) {
+		Control(joLEye, angleLEye);
+		Control(joREye, angleREye);
+	}
 }
 
 Vec2d CRPhysicalEye::GetAxisL(){
@@ -219,6 +232,12 @@ void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angl
 			joY->SetSpringOrigin(angle[1]);
 		}
 	}
+}
+
+void CRPhysicalEye::Control(PHBallJointIf* jo, Vec2d angle){
+	// std::cout << Deg(angle[0]) << ", " << Deg(angle[1]) << std::endl;
+	Quaterniond q = Quaterniond::Rot(angle[1],'y') * Quaterniond::Rot(angle[0],'x');
+	jo->SetGoal(q);
 }
 
 Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
