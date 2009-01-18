@@ -8,9 +8,12 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+#pragma comment(lib, "winmm.lib")
+
 #include "UTPreciseTimer.h"
 #include <Base/BaseDebug.h>
 #include <Windows.h>
+#include <mmsystem.h>
 
 namespace Spr{;
 unsigned long UTPreciseTimer::freq;
