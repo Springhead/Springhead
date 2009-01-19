@@ -58,12 +58,20 @@ PHJointIf* CRBody::GetJoint(int i){
 	return (i < joints.size()) ? joints[i] : NULL;
 }
 
+int CRBody::NIKNodes(){
+	return ikNodes.size();
+}
+
+PHIKNodeIf* CRBody::GetIKNode(int i){
+	return (i < ikNodes.size()) ? ikNodes[i] : NULL;
+}
+
 int CRBody::NControlPoints(){
-	return 0;
+	return ikControlPoints.size();
 }
 
 PHIKControlPointIf* CRBody::GetControlPoint(int i){
-	return NULL;
+	return (i < ikControlPoints.size()) ? ikControlPoints[i] : NULL;
 }
 
 Vec3d CRBody::GetCenterOfMass(){

@@ -47,6 +47,14 @@ struct CRBodyIf : SceneObjectIf{
 	*/
 	PHJointIf* GetJoint(int i);
 
+	/** @brief IKノードの数を得る
+	*/
+	int NIKNodes();
+
+	/** @brief i番目のIKノードを得る
+	*/
+	PHIKNodeIf* GetIKNode(int i);
+
 	/** @brief IK制御点の数を得る
 	*/
 	int NControlPoints();

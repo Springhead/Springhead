@@ -194,6 +194,7 @@ void CRBallHumanBody::CreateAbdomen(){
 	// ballDesc.spring           = springWaistAbdomen;
 	// ballDesc.damper           = damperWaistAbdomen;
 	joints[JO_WAIST_ABDOMEN] = CreateJoint(solids[SO_ABDOMEN], solids[SO_WAIST], ballDesc);
+	CreateIKNode(JO_WAIST_ABDOMEN);
 
 	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
@@ -262,6 +263,7 @@ void CRBallHumanBody::CreateChest(){
 	// ballDesc.spring           = springAbdomenChest;
 	// ballDesc.damper           = damperAbdomenChest;
 	joints[JO_ABDOMEN_CHEST]  = CreateJoint(solids[SO_CHEST], solids[SO_ABDOMEN], ballDesc);
+	CreateIKNode(JO_ABDOMEN_CHEST);
 
 	phScene->SetContactMode(solids[SO_CHEST], solids[SO_ABDOMEN], PHSceneDesc::MODE_NONE);
 }
@@ -295,6 +297,7 @@ void CRBallHumanBody::CreateNeck(){
 	// ballDesc.spring           = springChestNeckX;
 	// ballDesc.damper           = damperChestNeckX;
 	joints[JO_CHEST_NECK] = CreateJoint(solids[SO_NECK], solids[SO_CHEST], ballDesc);
+	CreateIKNode(JO_CHEST_NECK);
 
 	phScene->SetContactMode(solids[SO_NECK], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
@@ -333,6 +336,7 @@ void CRBallHumanBody::CreateHead(){
 	// ballDesc.spring           = springNeckHeadX;
 	// ballDesc.damper           = damperNeckHeadX;
 	joints[JO_NECK_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_NECK], ballDesc);
+	CreateIKNode(JO_NECK_HEAD);
 
 	phScene->SetContactMode(solids[SO_HEAD], solids[SO_NECK], PHSceneDesc::MODE_NONE);
 }
@@ -386,6 +390,7 @@ void CRBallHumanBody::CreateUpperArm(LREnum lr){
 	// ballDesc.spring           = springShoulderZ;
 	// ballDesc.damper           = damperShoulderZ;
 	joints[joNShoulder]       = CreateJoint(solids[soNUpperArm], solids[SO_CHEST], ballDesc);
+	CreateIKNode(joNShoulder);
 
 	phScene->SetContactMode(solids[soNUpperArm], solids[SO_CHEST], PHSceneDesc::MODE_NONE);
 }
@@ -426,6 +431,7 @@ void CRBallHumanBody::CreateLowerArm(LREnum lr){
 	// hingeDesc.damper           = damperElbow;
 	hingeDesc.origin           = Rad(0);
 	joints[joNElbow] = CreateJoint(solids[soNLowerArm], solids[soNUpperArm], hingeDesc);
+	CreateIKNode(joNElbow);
 
 	phScene->SetContactMode(solids[soNLowerArm], solids[soNUpperArm], PHSceneDesc::MODE_NONE);
 }
@@ -446,7 +452,7 @@ void CRBallHumanBody::CreateHand(LREnum lr){
 	}
 
 	// Solid
-	solidDesc.mass     = 0.01 * bodyMass;
+	solidDesc.mass     = 0.05 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNHand]    = phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize    = Vec3f(handLength, handThickness, handBreadth);
@@ -460,6 +466,7 @@ void CRBallHumanBody::CreateHand(LREnum lr){
 	// ballDesc.spring           = springWristY;
 	// ballDesc.damper           = damperWristY;
 	joints[joNWrist]          = CreateJoint(solids[soNHand], solids[soNLowerArm], ballDesc);
+	CreateIKNode(joNWrist);
 
 	phScene->SetContactMode(solids[soNHand], solids[soNLowerArm], PHSceneDesc::MODE_NONE);
 }
@@ -555,6 +562,7 @@ void CRBallHumanBody::CreateUpperLeg(LREnum lr){
 	// ballDesc.spring           = springWaistLegZ;
 	// ballDesc.damper           = damperWaistLegZ;
 	joints[joNWaistLeg]       = CreateJoint(solids[soNUpperLeg], solids[SO_WAIST], ballDesc);
+	CreateIKNode(joNWaistLeg);
 
 	phScene->SetContactMode(solids[soNUpperLeg], solids[SO_WAIST], PHSceneDesc::MODE_NONE);
 }
@@ -620,6 +628,7 @@ void CRBallHumanBody::CreateLowerLeg(LREnum lr){
 	// hingeDesc.spring           = springKnee;
 	// hingeDesc.damper           = damperKnee;
 	joints[joNKnee] = CreateJoint(solids[soNLowerLeg], solids[soNUpperLeg], hingeDesc);
+	CreateIKNode(joNKnee);
 
 	phScene->SetContactMode(solids[soNLowerLeg], solids[soNUpperLeg], PHSceneDesc::MODE_NONE);
 }
@@ -654,6 +663,7 @@ void CRBallHumanBody::CreateFoot(LREnum lr){
 	// ballDesc.spring           = springAnkleY;
 	// ballDesc.damper           = damperAnkleY;
 	joints[joNAnkle]          = CreateJoint(solids[soNFoot], solids[soNLowerLeg], ballDesc);
+	CreateIKNode(joNAnkle);
 
 	phScene->SetContactMode(solids[soNFoot], solids[soNLowerLeg], PHSceneDesc::MODE_NONE);
 }
@@ -691,8 +701,8 @@ void CRBallHumanBody::InitContact(){
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
-	ballDesc.spring = 100000;
-	ballDesc.damper =   2000;
+	ballDesc.spring = 10000;
+	ballDesc.damper =  2000;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -706,7 +716,17 @@ void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double spr
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
-	hingeDesc.spring = 100000;
-	hingeDesc.damper =   2000;
+	hingeDesc.spring = 10000;
+	hingeDesc.damper =  2000;
+}
+
+void CRBallHumanBody::CreateIKNode(int n) {
+	if (DCAST(PHBallJointIf,joints[n])) {
+		PHIKBallJointDesc descIKNode; descIKNode.joint  = joints[n]->Cast();
+		ikNodes[n] = phScene->CreateIKNode(descIKNode);
+	} else if (DCAST(PHHingeJointIf,joints[n])) {
+		PHIKHingeJointDesc descIKNode; descIKNode.joint = joints[n]->Cast();
+		ikNodes[n] = phScene->CreateIKNode(descIKNode);
+	}
 }
 }

@@ -330,7 +330,7 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 		}
 
 		// 回転軸を求める
-		if (PTM::dot(e0,Vec3d(1,0,0)) > Rad(10)) {
+		if (abs(PTM::dot(e0,Vec3d(1,0,0))) > Rad(10)) {
 			e1 = Vec3d(0,1,0);
 		} else {
 			e1 = Vec3d(1,0,0);
@@ -360,6 +360,9 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 }
 
 void PHIKBallJoint::Move(){
+	if (linkedControlPoints.size() == 0) {
+		return;
+	}
 	// std::cout << dTheta << std::endl;
 
 	/*
@@ -400,12 +403,14 @@ void PHIKBallJoint::Move(){
 	joint->SetGoal(pos);
 
 	// デバッグ表示（要改善）
+	/*
 	PHSceneIf* phscene = this->GetScene()->Cast();
 	phscene->GetSolids()[5*number+0]->SetFramePosition(dT*0*2+Pj);
 	phscene->GetSolids()[5*number+1]->SetFramePosition(dT*1*2+Pj);
 	phscene->GetSolids()[5*number+2]->SetFramePosition(dT*2*2+Pj);
 	phscene->GetSolids()[5*number+3]->SetFramePosition(dT*3*2+Pj);
 	phscene->GetSolids()[5*number+4]->SetFramePosition(dT*4*2+Pj);
+	*/
 
 	return;
 }
@@ -434,6 +439,10 @@ PTM::VMatrixRow<double> PHIKHingeJoint::CalcJacobian(PHIKControlPointIf* control
 }
 
 void PHIKHingeJoint::Move(){
+	if (linkedControlPoints.size() == 0) {
+		return;
+	}
+
 	// std::cout << dTheta << std::endl;
 
 	static const double Pi = 3.141592653589;
