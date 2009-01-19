@@ -30,22 +30,57 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 
 	fMax = 50;
 }
-
-void CRDebugLinkBody::CreateBody(){
+void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 	PHSolidDesc sDesc;
 	{
 		sDesc.mass = mass;
 	}
-	CDCapsuleDesc cDesc;
-	{
-		cDesc.radius = radius;
-		cDesc.length = length;
+	if(m == MODE_SPHERE){
+		CDSphereDesc cDesc;
+		{
+			cDesc.radius = radius;
+			cDesc.material.mu  = 0.0;
+			cDesc.material.mu0 = 0.0;
+		}
+		for(unsigned int i = 0; i < soNSolids; i++){
+			solids.push_back(phScene->CreateSolid(sDesc));
+			solids.back()->AddShape(phSdk->CreateShape(cDesc));
+		}
 	}
+	else if(m == MODE_CAPSULE){
+		CDCapsuleDesc cDesc;
+		{
+			cDesc.radius = radius;
+			cDesc.length = length;
+			cDesc.material.mu  = 0.0;
+			cDesc.material.mu0 = 0.0;
+		}
+		for(unsigned int i = 0; i < soNSolids; i++){
+			solids.push_back(phScene->CreateSolid(sDesc));
+			solids.back()->AddShape(phSdk->CreateShape(cDesc));
+		}
+	}
+	else if(m == MODE_BOX){
+		CDBoxDesc cDesc;
+		{
+			cDesc.boxsize = Vec3f(radius, radius, length);
+			cDesc.material.mu  = 0.0;
+			cDesc.material.mu0 = 0.0;
+		}
+		for(unsigned int i = 0; i < soNSolids; i++){
+			solids.push_back(phScene->CreateSolid(sDesc));
+			solids.back()->AddShape(phSdk->CreateShape(cDesc));
+		}
+	}
+	else{
+		DSTR << "Undefined CollisionShape" << std::endl;
+	}
+}
+
+void CRDebugLinkBody::CreateBody(){
 	if(soNSolids <= 0) return;
-	for(unsigned int i = 0; i < soNSolids; i++){
-		solids.push_back(phScene->CreateSolid(sDesc));
-		solids.back()->AddShape(phSdk->CreateShape(cDesc));
-	}
+
+	SolidFactory(mode);
 	joNJoints = soNSolids-1;
 	PHBallJointDesc bDesc;
 	{

@@ -585,6 +585,9 @@ struct CRDebugLinkBodyDesc : CRBodyDesc {
 	
 	SPR_DESCDEF(CRDebugLinkBody);
 
+	enum CDShapeMode{
+		MODE_SPHERE=0, MODE_CAPSULE, MODE_BOX
+	} mode;
 	int soNSolids;
 	int joNBallJoints;
 	int joNHingeJoints;

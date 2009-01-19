@@ -22,6 +22,7 @@ namespace Spr{;
 class CRDebugLinkBody: public CRBody, public CRDebugLinkBodyDesc{
 
 private:
+	void SolidFactory(CDShapeMode m);
 	void CreateBody();
 	void InitBody();
 	void InitContact();
