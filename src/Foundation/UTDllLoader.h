@@ -17,7 +17,7 @@ static UTDllLoader dllLoader("filename.dll");	//	ƒOƒ[ƒoƒ‹•Ï”‚Åƒ[ƒ_[‚ğì‚é
 #define DLLFUNC_ARGCALL	(arg)					//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
 #include "UTDllLoaderImp.h"
 */
-class SPR_DLL UTDllLoader{
+class SPR_DLL UTDllLoader:public UTRefCount{
 	void* module;
 	char dllName[1024];
 	char addPath[1024];

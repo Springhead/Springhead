@@ -44,7 +44,6 @@ TBW
 #include <Device/DRRealDevice.h>
 
 #ifdef _WIN32
-#include <WinBasis/WBWin.h>
 #include <mmsystem.h>
 #endif
 

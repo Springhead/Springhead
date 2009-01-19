@@ -22,7 +22,9 @@ typedef int HDLError;
 
 extern "C"{
 //	DLLスタブの実装
-static UTDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
+
+UTDllLoader* HINovintFalcon::sDllLoader;
+#define dllLoader (*HINovintFalcon::sDllLoader)
 
 //	__declspec(dllexport) HDLDeviceHandle HDLAPIENTRY hdlInitNamedDevice(const char* deviceName, const char* configPath = 0);
 #define DLLFUNC_RTYPE	HDLDeviceHandle						//	返り型
@@ -115,13 +117,16 @@ static UTDllLoader dllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
 #define DLLFUNC_ARGCALL	(hHandle)							//	関数呼び出しの引数
 #include <Foundation/UTDllLoaderImpl.h>
 
+#undef dllLoader
 
 
 HINovintFalcon::HINovintFalcon():deviceHandle(HDL_INVALID_HANDLE),button(0), good(false){
 }
 HINovintFalcon::~HINovintFalcon(){
-	hdlUninitDevice(deviceHandle);
-	deviceHandle = HDL_INVALID_HANDLE;
+	if (dll){
+		hdlUninitDevice(deviceHandle);
+		deviceHandle = HDL_INVALID_HANDLE;
+	}
 }
 bool testHDLError(char* str){
     HDLError err = hdlGetError();
@@ -154,7 +159,9 @@ void calibrateFalcon(){
 	else DSTR << "Calibration failed!! make sure your Falcon is in order." << std::endl;
 }
 bool HINovintFalcon::Init(const void* desc){
-	dllLoader.Load();
+	if (!sDllLoader)  sDllLoader = DBG_NEW UTDllLoader("hdl.dll");	//	グローバル変数でローダーを作る．
+	dll = sDllLoader;
+	dll->Load();
 	deviceHandle = hdlInitNamedDevice(NULL, NULL);
 	// Check return value of the handle.
     if (deviceHandle == HDL_INVALID_HANDLE){

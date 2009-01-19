@@ -5,15 +5,19 @@
 
 namespace Spr {;
 
+class UTDllLoader; 
 /**	@JA	Novint社のFalcon。３自由度力覚インタフェース
 	@EN	A Novint company's Falcon interface. A 3 DOF haptic interface. @@*/
 class SPR_DLL HINovintFalcon: public HIForceInterface6D{
+public:
+	static UTDllLoader* sDllLoader;
 protected:
 	bool good;
 	Vec3d pos;
 	Vec3d force;
 	int button;
 	int deviceHandle;
+	UTRef<UTDllLoader> dll;
 public:
 	///	デバイスのタイプ
 	SPR_OBJECTDEF(HINovintFalcon);
