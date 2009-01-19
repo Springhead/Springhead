@@ -23,6 +23,7 @@ class CRDebugLinkBody: public CRBody, public CRDebugLinkBodyDesc{
 
 private:
 	void SolidFactory(CDShapeMode m);
+	void JointFactory(PHJointMode m);
 	void CreateBody();
 	void InitBody();
 	void InitContact();
