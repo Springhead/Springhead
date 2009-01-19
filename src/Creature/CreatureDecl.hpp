@@ -968,7 +968,8 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRDebugLinkBodyDesc \
 protected:\
-	enum Spr::CRDebugLinkBodyDesc::CDShapeMode	mode;	\
+	enum Spr::CRDebugLinkBodyDesc::CDShapeMode	shapeMode;	\
+	enum Spr::CRDebugLinkBodyDesc::PHJointMode	jointMode;	\
 	int	soNSolids;	\
 	int	joNBallJoints;	\
 	int	joNHingeJoints;	\
@@ -987,7 +988,8 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRDebugLinkBodyDesc*)ptr);	\
-		mode = ((CRDebugLinkBodyDesc*)ptr)->mode;	\
+		shapeMode = ((CRDebugLinkBodyDesc*)ptr)->shapeMode;	\
+		jointMode = ((CRDebugLinkBodyDesc*)ptr)->jointMode;	\
 		soNSolids = ((CRDebugLinkBodyDesc*)ptr)->soNSolids;	\
 		joNBallJoints = ((CRDebugLinkBodyDesc*)ptr)->joNBallJoints;	\
 		joNHingeJoints = ((CRDebugLinkBodyDesc*)ptr)->joNHingeJoints;	\
@@ -1008,7 +1010,8 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRDebugLinkBodyDesc*)ptr);	\
-		((CRDebugLinkBodyDesc*)ptr)->mode = mode;	\
+		((CRDebugLinkBodyDesc*)ptr)->shapeMode = shapeMode;	\
+		((CRDebugLinkBodyDesc*)ptr)->jointMode = jointMode;	\
 		((CRDebugLinkBodyDesc*)ptr)->soNSolids = soNSolids;	\
 		((CRDebugLinkBodyDesc*)ptr)->joNBallJoints = joNBallJoints;	\
 		((CRDebugLinkBodyDesc*)ptr)->joNHingeJoints = joNHingeJoints;	\

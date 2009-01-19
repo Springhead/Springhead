@@ -29,6 +29,8 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 	damper = 100.0;
 
 	fMax = 50;
+	shapeMode = MODE_CAPSULE;
+	jointMode = MODE_BALL;
 }
 void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 	PHSolidDesc sDesc;
@@ -41,6 +43,7 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 			cDesc.radius = radius;
 			cDesc.material.mu  = 0.0;
 			cDesc.material.mu0 = 0.0;
+			cDesc.material.e   = 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
 			solids.push_back(phScene->CreateSolid(sDesc));
@@ -54,6 +57,7 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 			cDesc.length = length;
 			cDesc.material.mu  = 0.0;
 			cDesc.material.mu0 = 0.0;
+			cDesc.material.e   = 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
 			solids.push_back(phScene->CreateSolid(sDesc));
@@ -66,6 +70,7 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 			cDesc.boxsize = Vec3f(radius, radius, length);
 			cDesc.material.mu  = 0.0;
 			cDesc.material.mu0 = 0.0;
+			cDesc.material.e   = 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
 			solids.push_back(phScene->CreateSolid(sDesc));
@@ -76,23 +81,43 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 		DSTR << "Undefined CollisionShape" << std::endl;
 	}
 }
-
+void CRDebugLinkBody::JointFactory(PHJointMode m){
+	joNJoints = soNSolids-1;
+	if(m == MODE_BALL){
+		PHBallJointDesc bDesc;
+		{
+			bDesc.spring = spring;
+			bDesc.damper = damper;
+			bDesc.poseSocket.Pos() = Vec3d(0, 0, length/2);
+			bDesc.posePlug.Pos() = Vec3d(0, 0, -length/2);
+			bDesc.fMax = fMax;
+		}
+		for(unsigned int i = 0; i < joNJoints; i++){
+			joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], bDesc));
+		}
+	}
+	else if(m == MODE_HINGE){
+		PHHingeJointDesc hDesc;
+		{
+			hDesc.spring = spring;
+			hDesc.damper = damper;
+			hDesc.poseSocket.Pos() = Vec3d(0, 0, length/2);
+			hDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
+			hDesc.posePlug.Pos() = Vec3d(0, 0, -length/2);
+			hDesc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'y');
+			hDesc.fMax = fMax;
+		}
+		for(unsigned int i = 0; i < joNJoints; i++){
+			joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], hDesc));
+		}
+	}
+}
 void CRDebugLinkBody::CreateBody(){
 	if(soNSolids <= 0) return;
 
-	SolidFactory(mode);
-	joNJoints = soNSolids-1;
-	PHBallJointDesc bDesc;
-	{
-		bDesc.spring = spring;
-		bDesc.damper = damper;
-		bDesc.poseSocket.Pos() = Vec3d(0, 0, length/2);
-		bDesc.posePlug.Pos() = Vec3d(0, 0, -length/2);
-		bDesc.fMax = fMax;
-	}
-	for(unsigned int i = 0; i < joNJoints; i++){
-		joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], bDesc));
-	}
+	SolidFactory(shapeMode);
+	JointFactory(jointMode);
+
 }
 
 void CRDebugLinkBody::InitBody(){}
