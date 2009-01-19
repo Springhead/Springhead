@@ -14,7 +14,6 @@
 #include "DVCounterBase.h"
 #include "DVDaBase.h"
 #include <HumanInterface/HIRealDevice.h>
-#include <WinBasis/WBWin.h>
 
 namespace Spr {
 

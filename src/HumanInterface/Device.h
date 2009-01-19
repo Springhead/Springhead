@@ -70,26 +70,10 @@
 
 #ifdef _WIN32
 
-// winsock.hとwinsock2.hの仕様で
-// winsock2.hが呼ばれその後にwinsock.hが呼ばれた場合、
-// あとに呼ばれたwinsock.hは無効化されるが
-// winsock.hが呼ばれた後にwinsock2.hが呼ばれた場合は
-// 両方が実行され同名変数の二重定義のエラーが起こってしまう。
-// 
-// もちろんこの仕様はwinsock.hに一行書き足せば直るが、
-// これを行うのはあまり良いことではないので敢えて行わない。
-// 
-// ここではWBWin.hでinclude<winsock2.h>を行っており、
-// windows.hでinclude<winsock.h>を行っている。
-// 前述したエラーを回避するために
-// このファイルではinclude<WinBasis/WBWin.h>を行った後、
-// include<windows.h>を行うことにする
-
- #include <WinBasis/WBWin.h>
- #include <WinBasis/WBPortIO.h>
- #include <WinBasis/WBWinDriver.h>
- #include <WinBasis/WBDllLoader.h>
-
+#include<winsock2.h>	//	windows.h の前にやらないと、 winsock1.hがincludeされる
+#ifndef _WIN32_WINNT
+ #define _WIN32_WINNT 0x0400
+#endif
  #include <windows.h>
 
  #include "DRContecIsaCounter.h"

@@ -21,7 +21,7 @@
 #include "DVDaBase.h"
 #include "DVPioBase.h"
 #include <HumanInterface/HIRealDevice.h>
-#include <WinBasis/WBWin.h>
+#include <windows.h>
 
 namespace Spr {
 

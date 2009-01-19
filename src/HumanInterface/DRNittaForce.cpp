@@ -7,6 +7,9 @@
  */
 #include "Device.h"
 #pragma hdrstop
+#include <Foundation/UTDllLoader.h>
+#include "DRPortIO.h"
+
 namespace Spr {
 
 
@@ -34,7 +37,7 @@ DRNittaForce::~DRNittaForce(){
 
 //	力センサのドライバDLL jr3.dll をロードする．
 
-static WBDllLoader dllLoader("jr3.dll");	//	グローバル変数でローダーを作る．
+static UTDllLoader dllLoader("jr3.dll");	//	グローバル変数でローダーを作る．
 
 //	int DllFunc(int arg)  の場合
 //	DWORD DllExport JR3read(short boardNumber, short address, short* data) ;
@@ -45,7 +48,7 @@ static WBDllLoader dllLoader("jr3.dll");	//	グローバル変数でローダーを作る．
 									//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(boardNumber, address, data)
 									//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 //	DWORD DllExport JR3write(short boardNumber, short address, short data) ;
 #define DLLFUNC_RTYPE	DWORD		//	返り値の型 voidの場合は定義してはならない．
 #define DLLFUNC_NAME	JR3write	//	関数名
@@ -54,7 +57,7 @@ static WBDllLoader dllLoader("jr3.dll");	//	グローバル変数でローダーを作る．
 									//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(boardNumber, address, data)
 									//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 void DRNittaForce::ReadReg(unsigned short a, unsigned short* d){
 	if (baseAdr != -1){

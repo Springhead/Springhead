@@ -5,11 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#ifndef _WIN32_WINNT
+ #define _WIN32_WINNT 0x0400
+#endif
 #include "Device.h"
 #pragma hdrstop
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseWin32.h>
-#include <Windows.h>
 #include <iomanip>
 
 namespace Spr {;

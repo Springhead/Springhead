@@ -6,13 +6,14 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Device.h"
+#include <Foundation/UTDllLoader.h>
 #pragma hdrstop
 //#include "DRAdapio.h"
 
 using namespace std;
 
 namespace Spr {
-static WBDllLoader dllLoader("TUADAPIO.DLL");	//	グローバル変数でローダーを作る．
+static UTDllLoader dllLoader("TUADAPIO.DLL");	//	グローバル変数でローダーを作る．
 	
 DRAdapio::DVDA::DVDA(DRAdapio* r, int c): realDevice(r), ch(c) {
 	sprintf(name, "%s D/A ch %d", realDevice->Name(), ch);
@@ -76,7 +77,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Device_Open"	//	関数名
 #define DLLFUNC_ARGDEF	(short id)				//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id)					//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void __stdcall Adapio_Device_Close(short id);
 #define DLLFUNC_CTYPE	__stdcall				//	呼び出し型
@@ -84,7 +85,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Device_Close"	//	関数名
 #define DLLFUNC_ARGDEF	(short id)				//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id)					//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_LowDirection(short id, unsigned char dir);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -93,7 +94,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_LowDirection"			//	関数名
 #define DLLFUNC_ARGDEF	(short id, unsigned char dir)		//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dir)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_HighDirection(short id,unsigned char dir);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -102,7 +103,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_HighDirection"			//	関数名
 #define DLLFUNC_ARGDEF	(short id, unsigned char dir)		//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dir)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_LowByteWrite(short id,unsigned char dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -111,7 +112,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_LowByteWrite"			//	関数名
 #define DLLFUNC_ARGDEF	(short id,unsigned char dat)		//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dat)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_HighByteWrite(short id,unsigned char dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -120,7 +121,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_HighByteWrite"			//	関数名
 #define DLLFUNC_ARGDEF	(short id,unsigned char dat)		//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dat)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_LowByteRead(short id,unsigned char *dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -129,7 +130,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_LowByteRead"			//	関数名
 #define DLLFUNC_ARGDEF	(short id, unsigned char* dat)		//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dat)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_HighByteRead(short id,unsigned char *dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -138,7 +139,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_HighByteRead"			//	関数名
 #define DLLFUNC_ARGDEF	(short id, unsigned char* dat)		//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dat)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_WordWrite(short id,int dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -147,7 +148,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_WordWrite"				//	関数名
 #define DLLFUNC_ARGDEF	(short id, int dat)					//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dat)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_WordRead(short id,int *dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -156,7 +157,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_WordRead"				//	関数名
 #define DLLFUNC_ARGDEF	(short id, int* dat)				//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, dat)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_Clock_Out(short id,int count );
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -165,7 +166,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_Clock_Out"				//	関数名
 #define DLLFUNC_ARGDEF	(short id, int count)				//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, count)							//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Pio_Clock_Stop(short id);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -174,7 +175,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Pio_Clock_Stop"				//	関数名
 #define DLLFUNC_ARGDEF	(short id)							//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id)								//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Dac_Out(short id,short ch,unsigned char dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -183,7 +184,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Dac_Out"					//	関数名
 #define DLLFUNC_ARGDEF	(short id, short ch, unsigned char dat)	//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, ch, dat)						//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Adc_SingleSample(short id,short ch,short *dat);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -192,7 +193,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Adc_SingleSample"			//	関数名
 #define DLLFUNC_ARGDEF	(short id, short ch, short *dat)	//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, ch, dat)						//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Adc_DigitalTrg(short id,short EndCh,short BufSize);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -201,7 +202,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Adc_DigitalTrg"				//	関数名
 #define DLLFUNC_ARGDEF	(short id,short EndCh,short BufSize)//	関数宣言時の引数
 #define DLLFUNC_ARGCALL	(id, EndCh, BufSize)				//	関数呼び出しの引数
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Adc_AnalogTrg(short id,short EndCh,short BufSize, short Threshold,short TrgCh ,short UpOrDown);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -210,7 +211,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Adc_AnalogTrg"				//	関数名
 #define DLLFUNC_ARGDEF	(short id,short EndCh,short BufSize, short Threshold,short TrgCh ,short UpOrDown)
 #define DLLFUNC_ARGCALL	(id, EndCh, BufSize, Threshold, TrgCh, UpOrDown)
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Adc_GetStatus(short id,short *Running, short *SampledNum);
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -219,7 +220,7 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Adc_GetStatus"
 #define DLLFUNC_ARGDEF	(short id,short *Running, short *SampledNum)
 #define DLLFUNC_ARGCALL	(id, Running, SampledNum)
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) short __stdcall Adapio_Adc_GetDatas(short id,short *databuf, short Len );
 #define DLLFUNC_RTYPE	short								//	返り型
@@ -228,6 +229,6 @@ extern "C" {
 #define DLLFUNC_STR		"Adapio_Adc_GetDatas"
 #define DLLFUNC_ARGDEF	(short id,short *databuf, short Len )
 #define DLLFUNC_ARGCALL	(id,databuf, Len)
-#include <WinBasis/WBDllLoaderImpl.h>
+#include <Foundation/UTDllLoaderImpl.h>
 }	//	extern "C"
 }	//	namespace Spr

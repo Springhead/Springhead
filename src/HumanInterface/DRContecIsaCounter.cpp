@@ -7,6 +7,7 @@
  */
 #include "Device.h"
 #pragma hdrstop
+#include "DRPortIO.h"
 
 
 namespace Spr {
