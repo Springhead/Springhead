@@ -51,6 +51,8 @@ private:
 	void SetJointSpringDamper(PHBallJointDesc  &ballDesc,  double springOrig, double damperOrig, double actuatorMass);
 	void SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass);
 
+	void CreateIKNode(int n);
+
 public:
 	SPR_OBJECTDEF(CRBallHumanBody);
 	ACCESS_DESC(CRBallHumanBody);
@@ -62,6 +64,7 @@ public:
 	{
 		solids.resize(CRBallHumanBodyDesc::SO_NSOLIDS);
 		joints.resize(CRBallHumanBodyDesc::JO_NJOINTS);
+		ikNodes.resize(CRBallHumanBodyDesc::JO_NJOINTS);
 
 		InitBody();
 		InitHead();

@@ -27,6 +27,12 @@ protected:
 	/// ボディを構成する関節
 	std::vector<PHJointIf*> joints;
 
+	/// IKノード
+	std::vector<PHIKNodeIf*> ikNodes;
+
+	/// 制御点
+	std::vector<PHIKControlPointIf*> ikControlPoints;
+
 	/// このセンサの持ち主たるCreature
 	CRCreatureIf*	creature;
 
@@ -80,6 +86,14 @@ public:
 	/** @brief i番目の関節を得る
 	*/
 	virtual PHJointIf*			GetJoint(int i);
+
+	/** @brief IKノードの数を得る
+	*/
+	int NIKNodes();
+
+	/** @brief i番目のIKノードを得る
+	*/
+	PHIKNodeIf* GetIKNode(int i);
 
 	/** @brief IK制御点の数を得る
 	*/

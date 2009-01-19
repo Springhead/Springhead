@@ -4,6 +4,8 @@
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int NJoints(){	return	base::NJoints();}	\
 	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
+	int NIKNodes(){	return	base::NIKNodes();}	\
+	PHIKNodeIf* GetIKNode(int i){	return	base::GetIKNode(i);}	\
 	int NControlPoints(){	return	base::NControlPoints();}	\
 	PHIKControlPointIf* GetControlPoint(int i){	return	base::GetControlPoint(i);}	\
 	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
