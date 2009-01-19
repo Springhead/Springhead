@@ -11,6 +11,7 @@ using namespace Spr;
 
 class MyApp;
 MyApp* app;
+int quitCount = 0;
 
 class MyApp: public FWAppGLUT{
 protected:
@@ -29,6 +30,8 @@ public:
 				glutPostRedisplay();
 			}
 		}
+		quitCount ++;
+		if (quitCount > 60*60) exit(0);
 	}
 	void Keyboard(int key, int x, int y){
 		if (key==0x1b){
