@@ -305,16 +305,17 @@ struct CRBallHumanBodyDesc : CRBodyDesc {
 	double bodyMass;
 
 	/// サイズに関するパラメータ
-	double waistHeight, waistBreadth, waistThickness;
-	double abdomenHeight, abdomenBreadth, abdomenThickness;
-	double chestHeight, chestBreadth, chestThickness;
-	double neckLength, neckDiameter;
-	double headBreadth, headHeight;
+	double waistLength, waistBreadth;
+	double abdomenLength, abdomenBreadth;
+	double chestLength, chestBreadth, bideltoidBreadth;
+	double neckLength, neckDiameter, neckPosZ, neckPosY;
+	double headBreadth, headHeight, bigonialBreadth;
 	double upperArmLength, upperArmDiameter;
 	double lowerArmLength, lowerArmDiameter;
 	double handLength, handBreadth, handThickness;
-	double upperLegLength, upperLegDiameter, interLegDistance;
-	double lowerLegLength, lowerLegDiameter;
+	double upperLegLength, upperLegDiameter, interLegDistance, legPosY;
+	double lowerLegLength, lowerLegDiameter, kneeDiameter, ankleDiameter;
+	double calfPosY, calfPosZ, calfDiameter;
 	double footLength, footBreadth, footThickness, ankleToeDistance;
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;

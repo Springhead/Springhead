@@ -355,19 +355,20 @@ public:\
 #define SPR_DECLMEMBEROF_CRBallHumanBodyDesc \
 protected:\
 	double	bodyMass;	\
-	double	waistHeight;	\
+	double	waistLength;	\
 	double	waistBreadth;	\
-	double	waistThickness;	\
-	double	abdomenHeight;	\
+	double	abdomenLength;	\
 	double	abdomenBreadth;	\
-	double	abdomenThickness;	\
-	double	chestHeight;	\
+	double	chestLength;	\
 	double	chestBreadth;	\
-	double	chestThickness;	\
+	double	bideltoidBreadth;	\
 	double	neckLength;	\
 	double	neckDiameter;	\
+	double	neckPosZ;	\
+	double	neckPosY;	\
 	double	headBreadth;	\
 	double	headHeight;	\
+	double	bigonialBreadth;	\
 	double	upperArmLength;	\
 	double	upperArmDiameter;	\
 	double	lowerArmLength;	\
@@ -378,8 +379,14 @@ protected:\
 	double	upperLegLength;	\
 	double	upperLegDiameter;	\
 	double	interLegDistance;	\
+	double	legPosY;	\
 	double	lowerLegLength;	\
 	double	lowerLegDiameter;	\
+	double	kneeDiameter;	\
+	double	ankleDiameter;	\
+	double	calfPosY;	\
+	double	calfPosZ;	\
+	double	calfDiameter;	\
 	double	footLength;	\
 	double	footBreadth;	\
 	double	footThickness;	\
@@ -414,19 +421,20 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
 		bodyMass = ((CRBallHumanBodyDesc*)ptr)->bodyMass;	\
-		waistHeight = ((CRBallHumanBodyDesc*)ptr)->waistHeight;	\
+		waistLength = ((CRBallHumanBodyDesc*)ptr)->waistLength;	\
 		waistBreadth = ((CRBallHumanBodyDesc*)ptr)->waistBreadth;	\
-		waistThickness = ((CRBallHumanBodyDesc*)ptr)->waistThickness;	\
-		abdomenHeight = ((CRBallHumanBodyDesc*)ptr)->abdomenHeight;	\
+		abdomenLength = ((CRBallHumanBodyDesc*)ptr)->abdomenLength;	\
 		abdomenBreadth = ((CRBallHumanBodyDesc*)ptr)->abdomenBreadth;	\
-		abdomenThickness = ((CRBallHumanBodyDesc*)ptr)->abdomenThickness;	\
-		chestHeight = ((CRBallHumanBodyDesc*)ptr)->chestHeight;	\
+		chestLength = ((CRBallHumanBodyDesc*)ptr)->chestLength;	\
 		chestBreadth = ((CRBallHumanBodyDesc*)ptr)->chestBreadth;	\
-		chestThickness = ((CRBallHumanBodyDesc*)ptr)->chestThickness;	\
+		bideltoidBreadth = ((CRBallHumanBodyDesc*)ptr)->bideltoidBreadth;	\
 		neckLength = ((CRBallHumanBodyDesc*)ptr)->neckLength;	\
 		neckDiameter = ((CRBallHumanBodyDesc*)ptr)->neckDiameter;	\
+		neckPosZ = ((CRBallHumanBodyDesc*)ptr)->neckPosZ;	\
+		neckPosY = ((CRBallHumanBodyDesc*)ptr)->neckPosY;	\
 		headBreadth = ((CRBallHumanBodyDesc*)ptr)->headBreadth;	\
 		headHeight = ((CRBallHumanBodyDesc*)ptr)->headHeight;	\
+		bigonialBreadth = ((CRBallHumanBodyDesc*)ptr)->bigonialBreadth;	\
 		upperArmLength = ((CRBallHumanBodyDesc*)ptr)->upperArmLength;	\
 		upperArmDiameter = ((CRBallHumanBodyDesc*)ptr)->upperArmDiameter;	\
 		lowerArmLength = ((CRBallHumanBodyDesc*)ptr)->lowerArmLength;	\
@@ -437,8 +445,14 @@ public:\
 		upperLegLength = ((CRBallHumanBodyDesc*)ptr)->upperLegLength;	\
 		upperLegDiameter = ((CRBallHumanBodyDesc*)ptr)->upperLegDiameter;	\
 		interLegDistance = ((CRBallHumanBodyDesc*)ptr)->interLegDistance;	\
+		legPosY = ((CRBallHumanBodyDesc*)ptr)->legPosY;	\
 		lowerLegLength = ((CRBallHumanBodyDesc*)ptr)->lowerLegLength;	\
 		lowerLegDiameter = ((CRBallHumanBodyDesc*)ptr)->lowerLegDiameter;	\
+		kneeDiameter = ((CRBallHumanBodyDesc*)ptr)->kneeDiameter;	\
+		ankleDiameter = ((CRBallHumanBodyDesc*)ptr)->ankleDiameter;	\
+		calfPosY = ((CRBallHumanBodyDesc*)ptr)->calfPosY;	\
+		calfPosZ = ((CRBallHumanBodyDesc*)ptr)->calfPosZ;	\
+		calfDiameter = ((CRBallHumanBodyDesc*)ptr)->calfDiameter;	\
 		footLength = ((CRBallHumanBodyDesc*)ptr)->footLength;	\
 		footBreadth = ((CRBallHumanBodyDesc*)ptr)->footBreadth;	\
 		footThickness = ((CRBallHumanBodyDesc*)ptr)->footThickness;	\
@@ -475,19 +489,20 @@ public:\
 		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
 		((CRBallHumanBodyDesc*)ptr)->bodyMass = bodyMass;	\
-		((CRBallHumanBodyDesc*)ptr)->waistHeight = waistHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->waistLength = waistLength;	\
 		((CRBallHumanBodyDesc*)ptr)->waistBreadth = waistBreadth;	\
-		((CRBallHumanBodyDesc*)ptr)->waistThickness = waistThickness;	\
-		((CRBallHumanBodyDesc*)ptr)->abdomenHeight = abdomenHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->abdomenLength = abdomenLength;	\
 		((CRBallHumanBodyDesc*)ptr)->abdomenBreadth = abdomenBreadth;	\
-		((CRBallHumanBodyDesc*)ptr)->abdomenThickness = abdomenThickness;	\
-		((CRBallHumanBodyDesc*)ptr)->chestHeight = chestHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->chestLength = chestLength;	\
 		((CRBallHumanBodyDesc*)ptr)->chestBreadth = chestBreadth;	\
-		((CRBallHumanBodyDesc*)ptr)->chestThickness = chestThickness;	\
+		((CRBallHumanBodyDesc*)ptr)->bideltoidBreadth = bideltoidBreadth;	\
 		((CRBallHumanBodyDesc*)ptr)->neckLength = neckLength;	\
 		((CRBallHumanBodyDesc*)ptr)->neckDiameter = neckDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->neckPosZ = neckPosZ;	\
+		((CRBallHumanBodyDesc*)ptr)->neckPosY = neckPosY;	\
 		((CRBallHumanBodyDesc*)ptr)->headBreadth = headBreadth;	\
 		((CRBallHumanBodyDesc*)ptr)->headHeight = headHeight;	\
+		((CRBallHumanBodyDesc*)ptr)->bigonialBreadth = bigonialBreadth;	\
 		((CRBallHumanBodyDesc*)ptr)->upperArmLength = upperArmLength;	\
 		((CRBallHumanBodyDesc*)ptr)->upperArmDiameter = upperArmDiameter;	\
 		((CRBallHumanBodyDesc*)ptr)->lowerArmLength = lowerArmLength;	\
@@ -498,8 +513,14 @@ public:\
 		((CRBallHumanBodyDesc*)ptr)->upperLegLength = upperLegLength;	\
 		((CRBallHumanBodyDesc*)ptr)->upperLegDiameter = upperLegDiameter;	\
 		((CRBallHumanBodyDesc*)ptr)->interLegDistance = interLegDistance;	\
+		((CRBallHumanBodyDesc*)ptr)->legPosY = legPosY;	\
 		((CRBallHumanBodyDesc*)ptr)->lowerLegLength = lowerLegLength;	\
 		((CRBallHumanBodyDesc*)ptr)->lowerLegDiameter = lowerLegDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->kneeDiameter = kneeDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->ankleDiameter = ankleDiameter;	\
+		((CRBallHumanBodyDesc*)ptr)->calfPosY = calfPosY;	\
+		((CRBallHumanBodyDesc*)ptr)->calfPosZ = calfPosZ;	\
+		((CRBallHumanBodyDesc*)ptr)->calfDiameter = calfDiameter;	\
 		((CRBallHumanBodyDesc*)ptr)->footLength = footLength;	\
 		((CRBallHumanBodyDesc*)ptr)->footBreadth = footBreadth;	\
 		((CRBallHumanBodyDesc*)ptr)->footThickness = footThickness;	\

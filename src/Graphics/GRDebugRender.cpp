@@ -272,11 +272,12 @@ void GRDebugRender::DrawRoundCone(CDRoundConeIf* rc, bool solid){
 		glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
 		float step = (float)(M_PI * 2.0f) / (float)slice;
 		float t = 0.0;
-		float x,y;
+		float x,y,st;
 		for (int i=0; i<=slice; i++) {
-			x=sin(t) * sin(theta);
-			y=cos(t) * sin(theta);
-			glNormal3f(x, y, cos(theta));
+			x=sin(t);
+			y=cos(t);
+			st = sin(theta);
+			glNormal3f(x*st, y*st, cos(theta));
 			glVertex3f(R1 * x, R1 * y, Z1);
 			glVertex3f(R0 * x, R0 * y, Z0);
 			t += step;
