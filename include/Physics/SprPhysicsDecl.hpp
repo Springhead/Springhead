@@ -17,15 +17,17 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKControlPointIf(base)	\
 	void SetForce(Vec3d force){	base::SetForce(force);}	\
 	Vec3d GetForce(){	return	base::GetForce();}	\
-	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
-	Vec3d GetGoal(){	return	base::GetGoal();}	\
 	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
 	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
 	void SetNumber(int i){	base::SetNumber(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
+	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
+	Vec3d GetGoal(){	return	base::GetGoal();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKOriCtlIf(base)	\
+	void SetGoal(Quaterniond goal){	base::SetGoal(goal);}	\
+	Quaterniond GetGoal(){	return	base::GetGoal();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKNodeIf(base)	\
 	void PrepareSolve(){	base::PrepareSolve();}	\
