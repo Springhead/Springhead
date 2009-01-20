@@ -103,11 +103,11 @@ struct GRMaterialDesc : GRVisualDesc{
 	std::string	texname;			///<	テクスチャファイル名
 
 	GRMaterialDesc(){
-		ambient = Vec4f(0.3, 0.3, 0.3, 1.0);
+		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);
 		diffuse = Vec4f(0.8, 0.8, 0.8, 1.0);
-		specular = Vec4f(0.0, 0.0, 0.0, 1.0);
-		emissive = Vec4f(0.2, 0.2, 0.2, 1.0);
-		power = 0.0;
+		specular = Vec4f(1.0, 1.0, 1.0, 1.0);
+		emissive = Vec4f(0.0, 0.0, 0.0, 1.0);
+		power = 20.0;
 	}
 	GRMaterialDesc(Vec4f a, Vec4f d, Vec4f s, Vec4f e, float p):
 		ambient(a), diffuse(d), specular(s), emissive(e), power(p){}
