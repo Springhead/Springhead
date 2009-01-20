@@ -199,7 +199,7 @@ protected:
 	PHBallJointIf* joint;
 
 	/// IKの回転軸
-	Vec3d e1, e2;
+	Vec3d e[3];
 
 public:
 	SPR_OBJECTDEF(PHIKBallJoint);
@@ -229,6 +229,19 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual PTM::VMatrixRow<double> CalcJacobian(PHIKControlPointIf* control);
+
+	/** @brief 制御点を追加する
+	    特に姿勢指定制御点が追加されたときにNDOFを2から3に上げるためにオーバーライド
+	*/
+	virtual void AddControlPoint(PHIKControlPointIf* control);
+
+	/** @brief 関係するすべての制御点とのヤコビアンをそれぞれ求める
+	*/
+	virtual void CalcAllJacobian();
+
+	/** @brief 回転軸を計算する
+	*/
+	virtual void CalcAxis();
 };
 
 class PHIKHingeJoint : public PHIKNode{
@@ -285,9 +298,6 @@ public:
 	/// 制御点のある剛体
 	PHSolidIf* solid;
 
-	/// 目標値
-	Vec3d goal;
-
 	/// 力
 	Vec3d force;
 
@@ -305,7 +315,6 @@ public:
 	*/
 	PHIKControlPoint(const PHIKControlPointDesc& desc){
 		SetDesc(&desc);
-		goal	= Vec3d(0,0,0);
 		force	= Vec3d(0,0,0);
 	}
 
@@ -323,17 +332,9 @@ public:
 	*/
 	Vec3d GetForce(){ return force; }
 
-	/** @brief 目標地点を設定する
-	*/
-	virtual void SetGoal(Vec3d goal){ this->goal = goal; }
-
-	/** @brief 目標地点を取得する
-	*/
-	Vec3d GetGoal(){ return goal; }
-
 	/** @brief 暫定目標地点を取得する
 	*/
-	virtual Vec3d GetTmpGoal(){ return goal; }
+	virtual Vec3d GetTmpGoal(){ return Vec3d(); }
 
 	/** @brief 番号を設定する
 	*/
@@ -353,6 +354,9 @@ public:
 };
 
 class PHIKPosCtl : public PHIKControlPoint{
+	/// 目標値
+	Vec3d goal;
+
 public:
 	/// 制御点の位置（剛体ローカル座標系）
 	Vec3d pos;
@@ -367,6 +371,7 @@ public:
 	*/
 	PHIKPosCtl(const PHIKPosCtlDesc& desc) {
 		SetDesc(&desc);
+		goal	= Vec3d(0,0,0);
 	}
 
 	/** @brief デスクリプタを設定する
@@ -379,15 +384,28 @@ public:
 	/** @brief 暫定目標地点を取得する
 	*/
 	virtual Vec3d GetTmpGoal();
+
+	/** @brief 目標地点を設定する
+	*/
+	virtual void SetGoal(Vec3d goal){ this->goal = goal; }
+
+	/** @brief 目標地点を取得する
+	*/
+	virtual Vec3d GetGoal(){ return goal; }
 };
 
 class PHIKOriCtl : public PHIKControlPoint{
+	/// 目標値
+	Quaterniond goal;
+
 public:
 	SPR_OBJECTDEF(PHIKOriCtl);
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	PHIKOriCtl(){}
+	PHIKOriCtl(){
+		goal	= Quaterniond();
+	}
 
 	/** @brief コンストラクタ
 	*/
@@ -404,6 +422,14 @@ public:
 	/** @brief 暫定目標地点を取得する
 	*/
 	virtual Vec3d GetTmpGoal();
+
+	/** @brief 目標地点を設定する
+	*/
+	virtual void SetGoal(Quaterniond goal){ this->goal = goal; }
+
+	/** @brief 目標地点を取得する
+	*/
+	virtual Quaterniond GetGoal(){ return goal; }
 };
 
 }

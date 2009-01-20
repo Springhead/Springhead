@@ -20,7 +20,7 @@ namespace Spr{
 
 void PHIKEngine::Step(){
 	if (bEnabled) {
-		// std::cout << " -- " << std::endl;
+		std::cout << " -- " << std::endl;
 		if (nodes.size() > 0 && controlpoints.size() > 0) {
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->PrepareSolve();
@@ -30,6 +30,7 @@ void PHIKEngine::Step(){
 				for(size_t i=0; i<nodes.size(); ++i){
 					nodes[i]->ProceedSolve();
 					PTM::VVector<double> diff = (DCAST(PHIKNode,nodes[i])->dTheta_prev - DCAST(PHIKNode,nodes[i])->dTheta);
+					// std::cout << n << "," << i << " : " << diff.norm() << std::endl;
 					/*
 					std::cout << " -- -- -- " << std::endl;
 					std::cout << "dT   : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
@@ -124,7 +125,7 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 	}
 
 	PHIKOriCtlIf* oc = o->Cast();
-	if(pc){
+	if(oc){
 		controlpoints.push_back(oc);
 		oc->SetNumber(controlpoints.size()-1);
 		return true;
@@ -150,13 +151,14 @@ Vec3d PHIKPosCtl::GetTmpGoal(){
 
 // --- --- --- --- ---
 Vec3d PHIKOriCtl::GetTmpGoal(){
-	Vec3d sorieul; solid->GetPose().Ori().ToEuler(sorieul);
-	Vec3d dir = goal - sorieul;
-	double epsilon = 1.0;
-	if (dir.norm() < epsilon) {
-		return(dir);
+	Quaterniond qS = solid->GetPose().Ori();
+	Quaterniond qG = (goal * qS.Inv());
+
+	double epsilon = Rad(10.0);
+	if (qG.Theta() < epsilon) {
+		return((qG.Axis() * qG.Theta()));
 	} else {
-		return(dir/dir.norm()*epsilon);
+		return((qG.Axis() * epsilon));
 	}
 }
 
@@ -307,10 +309,56 @@ PTM::VMatrixRow<double> PHIKSolid::CalcJacobian(PHIKControlPointIf* control){
 }
 
 // --- --- --- --- ---
+void PHIKBallJoint::CalcAllJacobian(){
+	CalcAxis();
+	PHIKNode::CalcAllJacobian();
+}
+
+void PHIKBallJoint::CalcAxis(){
+	e[0] = Vec3d(1,0,0);
+	e[1] = Vec3d(0,1,0);
+	e[2] = Vec3d(0,0,1);
+
+	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
+		PHIKPosCtlIf* cpPos;
+		if (cpPos = DCAST(PHIKPosCtlIf,(*ctlpt))){
+			// 関節の回転中心
+			PHBallJoint* j = DCAST(PHBallJoint,joint);
+			PHBallJointDesc d; j->GetDesc(&d);
+			Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
+
+			// エンドエフェクタ位置
+			PHIKPosCtl* cp = DCAST(PHIKPosCtl,cpPos);
+			Vec3d Pc = cp->solid->GetPose() * cp->pos;
+
+			// 関節回転中心<->エンドエフェクタ 軸
+			Vec3d e0 = (Pc - Pj);
+			if (e0.norm() != 0){
+				e0 = e0 / e0.norm();
+			} else {
+				e0 = Vec3d(1,0,0);
+			}
+
+			// 回転軸を求める
+			if (abs(PTM::dot(e0,Vec3d(1,0,0))) > Rad(10)) {
+				e[0] = Vec3d(0,1,0);
+			} else {
+				e[0] = Vec3d(1,0,0);
+			}
+			e[0] = e[0] - (PTM::dot(e[0],e0) * e0);
+			e[0] = e[0] / e[0].norm();
+			e[1] = PTM::cross(e0,e[0]);
+			e[2] = e0;
+
+			return;
+		}
+	}
+}
+
 PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control){
 	PHIKPosCtlIf* cpPos;
 	if (cpPos = DCAST(PHIKPosCtlIf,control)){
-		PTM::VMatrixRow<double> M; M.resize(3,2);
+		PTM::VMatrixRow<double> M; M.resize(3,ndof);
 
 		// 関節の回転中心
 		PHBallJoint* j = DCAST(PHBallJoint,joint);
@@ -321,30 +369,11 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 		PHIKPosCtl* cp = DCAST(PHIKPosCtl,cpPos);
 		Vec3d Pc = cp->solid->GetPose() * cp->pos;
 
-		// 関節回転中心<->エンドエフェクタ 軸
-		Vec3d e0 = (Pc - Pj);
-		if (e0.norm() != 0){
-			e0 = e0 / e0.norm();
-		} else {
-			e0 = Vec3d(1,0,0);
-		}
-
-		// 回転軸を求める
-		if (abs(PTM::dot(e0,Vec3d(1,0,0))) > Rad(10)) {
-			e1 = Vec3d(0,1,0);
-		} else {
-			e1 = Vec3d(1,0,0);
-		}
-		e1 = e1 - (PTM::dot(e1,e0) * e0);
-		e1 = e1 / e1.norm();
-		e2 = PTM::cross(e0,e1);
-
 		// ヤコビアンを求める
-		Vec3d v1 = PTM::cross(e1,(Pc-Pj));
-		Vec3d v2 = PTM::cross(e2,(Pc-Pj));
-
-		M[0][0]=v1[0]; M[1][0]=v1[1]; M[2][0]=v1[2];
-		M[0][1]=v2[0]; M[1][1]=v2[1]; M[2][1]=v2[2];
+		for (int i=0; i<ndof; ++i) {
+			Vec3d v = PTM::cross(e[i],(Pc-Pj));
+			M[0][i]=v[0]; M[1][i]=v[1]; M[2][i]=v[2];
+		}
 
 		return M;
 	}
@@ -352,7 +381,17 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 	PHIKOriCtlIf* cpOri;
 	if (cpOri = DCAST(PHIKOriCtlIf,control)){
 		PTM::VMatrixRow<double> M; M.resize(3,3); M.clear();
-		M[0][0]=1; M[1][1]=1; M[2][2]=1;
+
+		for (int i=0; i<3; ++i) {
+			for (int j=0; j<ndof; ++j) {
+				if (i==j) {
+					M[i][j]=1;
+				} else {
+					M[i][j]=0;
+				}
+			}
+		}
+
 		return M;
 	}
 
@@ -363,7 +402,7 @@ void PHIKBallJoint::Move(){
 	if (linkedControlPoints.size() == 0) {
 		return;
 	}
-	// std::cout << dTheta << std::endl;
+	std::cout << dTheta << std::endl;
 
 	/*
 	for (int i=0; i<ndof; ++i) {
@@ -376,7 +415,10 @@ void PHIKBallJoint::Move(){
 	*/
 
 	// 回転軸ベクトルにする
-	Vec3d dT = dTheta[0] * e1 + dTheta[1] * e2;
+	Vec3d dT = Vec3d();
+	for (int i=0; i<ndof; ++i) {
+		dT += dTheta[i] * e[i];
+	}
 
 	// Axis-Angle表現にする
 	double angle = dT.norm();
@@ -415,6 +457,15 @@ void PHIKBallJoint::Move(){
 	return;
 }
 
+void PHIKBallJoint::AddControlPoint(PHIKControlPointIf* control){
+	if (DCAST(PHIKOriCtlIf,control)) {
+		// 姿勢制御に荷担するボールジョイントは自由度を３に引き上げる
+		// （デフォルトではエンドエフェクタの位置を変えない回転軸を除いた
+		// 　２軸（ユニバーサルジョイント）になっている）
+		SetNDOF(3);
+	}
+	PHIKNode::AddControlPoint(control);
+}
 // --- --- --- --- ---
 PTM::VMatrixRow<double> PHIKHingeJoint::CalcJacobian(PHIKControlPointIf* control){
 	PHIKPosCtlIf* cpPos;

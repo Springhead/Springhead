@@ -44,7 +44,7 @@ CRBallHumanBodyDesc::CRBallHumanBodyDesc(){
 
 	bideltoidBreadth = wBideltoid;
 
-	headBreadth = 0.5699 / 3.1415;
+	headBreadth = 0.1619; // 0.5699 / 3.1415;
 	headHeight  = 0.2387;
 	
 	neckLength   = 1.5796 - 1.4564; // Ž¨‚Ì‚‚³ - èò’Å‚  // 1.7219 - 1.3882 - 0.2387;
@@ -188,8 +188,11 @@ void CRBallHumanBody::CreateAbdomen(){
 
 	// Joint -- [p]Waist-[c]Abdomen
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.posePlug.Pos()   = Vec3d(0,  waistLength / 2.0, 0);
+	ballDesc.posePlug.Pos()   = Vec3d(0,  waistLength, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(0, -abdomenLength / 2.0, 0);
+	ballDesc.limitDir         = Vec3d(0,0,1);
+	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
+	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(45));
 	SetJointSpringDamper(ballDesc, springWaistAbdomen, damperWaistAbdomen, solids[SO_WAIST]->GetMass());
 	// ballDesc.spring           = springWaistAbdomen;
 	// ballDesc.damper           = damperWaistAbdomen;
@@ -228,7 +231,7 @@ void CRBallHumanBody::CreateChest(){
 	// ’†S`• 
 	rcDesc.radius[0] = chestBreadth/2;
 	rcDesc.radius[1] = abdomenBreadth/2;
-	rcDesc.length    = chestBreadth/2;
+	rcDesc.length    = chestLength;
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
 	pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
 	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
@@ -257,8 +260,11 @@ void CRBallHumanBody::CreateChest(){
 
 	// Joint -- [p]Abdomen-[c]Chest
 	ballDesc                  = PHBallJointDesc();
-	ballDesc.posePlug.Pos()   = Vec3d(0,  abdomenLength / 2.0, 0);
-	ballDesc.poseSocket.Pos() = Vec3d(0, -chestLength / 2.0, 0);
+	ballDesc.posePlug.Pos()   = Vec3d(0,  abdomenLength/2, 0);
+	ballDesc.poseSocket.Pos() = Vec3d(0, -chestLength, 0);
+	ballDesc.limitDir         = Vec3d(0,0,1);
+	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
+	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(45));
 	SetJointSpringDamper(ballDesc, springAbdomenChest, damperAbdomenChest, solids[SO_ABDOMEN]->GetMass());
 	// ballDesc.spring           = springAbdomenChest;
 	// ballDesc.damper           = damperAbdomenChest;

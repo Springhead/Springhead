@@ -28,14 +28,6 @@ struct PHIKControlPointIf : SceneObjectIf{
 	*/
 	Vec3d GetForce();
 
-	/** @brief 目標地点を設定する
-	*/
-	void SetGoal(Vec3d goal);
-
-	/** @brief 目標地点を取得する
-	*/
-	Vec3d GetGoal();
-
 	/** @brief 制御対象の剛体を設定する
 	*/
 	void SetSolid(PHSolidIf* solid);
@@ -58,6 +50,14 @@ struct PHIKControlPointDesc{
 // --- 位置制御点
 struct PHIKPosCtlIf : PHIKControlPointIf{
 	SPR_IFDEF(PHIKPosCtl);
+
+	/** @brief 目標地点を設定する
+	*/
+	void SetGoal(Vec3d goal);
+
+	/** @brief 目標地点を取得する
+	*/
+	Vec3d GetGoal();
 };
 
 struct PHIKPosCtlDesc : PHIKControlPointDesc{
@@ -69,6 +69,14 @@ struct PHIKPosCtlDesc : PHIKControlPointDesc{
 // --- 姿勢制御点
 struct PHIKOriCtlIf : PHIKControlPointIf{
 	SPR_IFDEF(PHIKOriCtl);
+
+	/** @brief 目標地点を設定する
+	*/
+	void SetGoal(Quaterniond goal);
+
+	/** @brief 目標地点を取得する
+	*/
+	Quaterniond GetGoal();
 };
 
 struct PHIKOriCtlDesc : PHIKControlPointDesc{
