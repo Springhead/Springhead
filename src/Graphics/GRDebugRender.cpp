@@ -48,8 +48,8 @@ GRDebugRender::GRDebugRender(){
 	(itr++)->diffuse = Vec4f(0.398, 1.0, 0.797, 1.0);		// turquoise blue
 	(itr++)->diffuse = Vec4f(0.598, 1.0, 0.398, 1.0);		// emerald green
 	for(std::vector<GRMaterialDesc>::iterator it=matSample.begin(); it!= matSample.end(); ++it){
-		it->diffuse += Vec4f(0.5,0.5,0.5,1);
-		it->diffuse /= 2;
+		//it->diffuse += Vec4f(0.5,0.5,0.5,1);
+		//it->diffuse /= 2;
 	}
 	modeSolid = true;
 	modeWire = false;
