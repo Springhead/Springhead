@@ -27,6 +27,9 @@ private:
 	/// ’ˆÓ‚Ì“x‡
 	float attractiveness;
 
+	/// §Œä‚Ég‚¤IKp¨§Œä“_
+	PHIKOriCtlIf *cpHead;
+
 	/// §Œä‚É‚Â‚©‚¤„‘Ì
 	PHSolidIf *soHead, *soNeck, *soChest, *soAbdomen;
 

@@ -130,6 +130,7 @@ void CRBallHumanBody::CreateWaist(){
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
 	// boxDesc.boxsize    = Vec3f(waistBreadth, waistLength, waistBreadth);
 	// solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
+	CreateIKControlPoint(SO_WAIST);
 
 	int sn=0;
 
@@ -178,6 +179,7 @@ void CRBallHumanBody::CreateAbdomen(){
 	solids[SO_ABDOMEN] = phScene->CreateSolid(solidDesc);
 	// boxDesc.boxsize    = Vec3f(abdomenBreadth, abdomenHeight, abdomenThickness);
 	// solids[SO_ABDOMEN]->AddShape(phSdk->CreateShape(boxDesc));
+	CreateIKControlPoint(SO_ABDOMEN);
 
 	rcDesc.radius[0]   = abdomenBreadth/2;
 	rcDesc.radius[1]   = abdomenBreadth/2;
@@ -215,6 +217,7 @@ void CRBallHumanBody::CreateChest(){
 	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
 	// boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	// solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
+	CreateIKControlPoint(SO_CHEST);
 
 	int sn = 0;
 
@@ -289,6 +292,8 @@ void CRBallHumanBody::CreateNeck(){
 	solidDesc.mass  = 0.028 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[SO_NECK] = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(SO_NECK);
+
 	capsuleDesc.radius = neckDiameter/2;
 	capsuleDesc.length = neckLength;
 	solids[SO_NECK]->AddShape(phSdk->CreateShape(capsuleDesc));
@@ -299,6 +304,9 @@ void CRBallHumanBody::CreateNeck(){
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.posePlug.Pos()   = Vec3d(0, chestBreadth / 2.0, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(0, -neckLength / 2.0, 0);
+	ballDesc.limitDir         = Vec3d(0,0,1);
+	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
+	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(30));
 	SetJointSpringDamper(ballDesc, springChestNeck, damperChestNeck, solids[SO_CHEST]->GetMass());
 	// ballDesc.spring           = springChestNeckX;
 	// ballDesc.damper           = damperChestNeckX;
@@ -318,6 +326,8 @@ void CRBallHumanBody::CreateHead(){
 	solidDesc.mass    = 0.07 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(SO_HEAD);
+
 	// capsuleDesc.radius = (float)(headBreadth / 2.0);
 	// capsuleDesc.length = (float)(headHeight - headBreadth);
 	// solids[SO_HEAD]->AddShape(phSdk->CreateShape(capsuleDesc));
@@ -338,6 +348,9 @@ void CRBallHumanBody::CreateHead(){
 	ballDesc.poseSocket.Pos() = Vec3d(0, neckPosY, neckPosZ);
 	// ballDesc.poseSocket.Pos() = Vec3d(0, tragionDepth - headBreadth/2.0,  (headBreadth/2 - (occiputToNeckFront - neckDiameter/2)));
 	// ballDesc.poseSocket.Pos() = Vec3d(0, 0, 0);
+	ballDesc.limitDir         = Vec3d(0,0,1);
+	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
+	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(20));
 	SetJointSpringDamper(ballDesc, springNeckHead, damperNeckHead, solids[SO_NECK]->GetMass());
 	// ballDesc.spring           = springNeckHeadX;
 	// ballDesc.damper           = damperNeckHeadX;
@@ -378,6 +391,8 @@ void CRBallHumanBody::CreateUpperArm(LREnum lr){
 	solidDesc.mass      = 0.04 * bodyMass;
 	solidDesc.inertia   = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNUpperArm] = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNUpperArm);
+
 	rcDesc.radius[0]    = upperArmDiameter / 2.0;
 	rcDesc.radius[1]    = lowerArmDiameter / 2.0;
 	rcDesc.length       = upperArmLength;
@@ -420,6 +435,8 @@ void CRBallHumanBody::CreateLowerArm(LREnum lr){
 	solidDesc.mass      = 0.02 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNLowerArm] = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNLowerArm);
+
 	capsuleDesc.radius  = lowerArmDiameter / 2.0;
 	capsuleDesc.length  = lowerArmLength;
 	solids[soNLowerArm]->AddShape(phSdk->CreateShape(capsuleDesc));
@@ -461,6 +478,8 @@ void CRBallHumanBody::CreateHand(LREnum lr){
 	solidDesc.mass     = 0.05 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNHand]    = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNHand);
+
 	boxDesc.boxsize    = Vec3f(handLength, handThickness, handBreadth);
 	solids[soNHand]->AddShape(phSdk->CreateShape(boxDesc));
 
@@ -502,6 +521,8 @@ void CRBallHumanBody::CreateEye(LREnum lr){
 	solidDesc.mass     = 0.001 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * 0.001;
 	solids[soNEye]     = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNEye);
+
 	sphereDesc.radius  = (float)(eyeDiameter/2.0);
 	solids[soNEye]->AddShape(phSdk->CreateShape(sphereDesc));
 	sphereDesc.radius  = (float)(eyeDiameter/4.0);
@@ -550,6 +571,8 @@ void CRBallHumanBody::CreateUpperLeg(LREnum lr){
 	solidDesc.mass      = 0.06 * bodyMass;
 	solidDesc.inertia   = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNUpperLeg] = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNUpperLeg);
+
 	rcDesc.radius[0]    = upperLegDiameter / 2.0;
 	rcDesc.radius[1]    = kneeDiameter / 2.0;
 	rcDesc.length       = upperLegLength;
@@ -597,6 +620,8 @@ void CRBallHumanBody::CreateLowerLeg(LREnum lr){
 	solidDesc.mass      = 0.05 * bodyMass;
 	solidDesc.inertia   = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNLowerLeg] = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNLowerLeg);
+
 	// capsuleDesc.radius  = lowerLegDiameter / 2.0;
 	// capsuleDesc.length  = lowerLegLength;
 	// solids[soNLowerLeg]->AddShape(phSdk->CreateShape(capsuleDesc));
@@ -658,6 +683,8 @@ void CRBallHumanBody::CreateFoot(LREnum lr){
 	solidDesc.mass   = 0.01 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNFoot]  = phScene->CreateSolid(solidDesc);
+	CreateIKControlPoint(soNFoot);
+
 	boxDesc.boxsize  = Vec3f(footBreadth, footThickness, footLength);
 	solids[soNFoot]->AddShape(phSdk->CreateShape(boxDesc));
 
@@ -708,7 +735,7 @@ void CRBallHumanBody::InitContact(){
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
 	ballDesc.spring = 100000;
-	ballDesc.damper =  10000;
+	ballDesc.damper =  12000;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -723,7 +750,7 @@ void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double spr
 
 void CRBallHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
 	hingeDesc.spring = 100000;
-	hingeDesc.damper =  10000;
+	hingeDesc.damper =  12000;
 }
 
 void CRBallHumanBody::CreateIKNode(int n) {
@@ -734,5 +761,18 @@ void CRBallHumanBody::CreateIKNode(int n) {
 		PHIKHingeJointDesc descIKNode; descIKNode.joint = joints[n]->Cast();
 		ikNodes[n] = phScene->CreateIKNode(descIKNode);
 	}
+}
+
+void CRBallHumanBody::CreateIKControlPoint(int n) {
+	PHIKPosCtlDesc descIKCPPos;
+	descIKCPPos.solid = solids[n];
+	descIKCPPos.pos   = Vec3d(0,0,0);
+	ikControlPoints[2*n] = phScene->CreateIKControlPoint(descIKCPPos);
+	ikControlPoints[2*n]->Enable(false);
+
+	PHIKOriCtlDesc descIKCPOri;
+	descIKCPOri.solid = solids[n];
+	ikControlPoints[2*n+1] = phScene->CreateIKControlPoint(descIKCPOri);
+	ikControlPoints[2*n+1]->Enable(false);
 }
 }
