@@ -707,8 +707,8 @@ void CRBallHumanBody::InitContact(){
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
-	ballDesc.spring = 10000;
-	ballDesc.damper =  2000;
+	ballDesc.spring = 100000;
+	ballDesc.damper =  10000;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -722,8 +722,8 @@ void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double spr
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
-	hingeDesc.spring = 10000;
-	hingeDesc.damper =  2000;
+	hingeDesc.spring = 100000;
+	hingeDesc.damper =  10000;
 }
 
 void CRBallHumanBody::CreateIKNode(int n) {

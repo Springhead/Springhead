@@ -154,7 +154,7 @@ Vec3d PHIKOriCtl::GetTmpGoal(){
 	Quaterniond qS = solid->GetPose().Ori();
 	Quaterniond qG = (goal * qS.Inv());
 
-	double epsilon = Rad(10.0);
+	double epsilon = Rad(50.0);
 	if (qG.Theta() < epsilon) {
 		return((qG.Axis() * qG.Theta()));
 	} else {
@@ -183,6 +183,8 @@ void PHIKNode::ClearJacobian(){
 
 void PHIKNode::CalcAllJacobian(){
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
+		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
+
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
 		// std::cout << number << "," << n << " : " << Mj[n] << std::endl;
@@ -199,6 +201,8 @@ void PHIKNode::PrepareSolve(){
 	CalcAllJacobian();
 
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
+		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
+
 		PTM::VMatrixRow<double> J; J.resize(ndof,ndof);
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		J = Mj[n] * sqrt(bias);
@@ -231,6 +235,8 @@ void PHIKNode::PrepareSolve(){
 	for(NSetIter node=linkedNodes.begin(); node!=linkedNodes.end(); ++node){
 		K[node_i].clear();
 		for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
+			if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
+
 			int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 			K[node_i] += (Mj[n].trans() * Mj[n]);
 			// std::cout << "M^T M : " << (Mj[n].trans() * Mj[n]) << std::endl;
@@ -320,6 +326,8 @@ void PHIKBallJoint::CalcAxis(){
 	e[2] = Vec3d(0,0,1);
 
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
+		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
+
 		PHIKPosCtlIf* cpPos;
 		if (cpPos = DCAST(PHIKPosCtlIf,(*ctlpt))){
 			// ä÷êﬂÇÃâÒì]íÜêS

@@ -301,6 +301,9 @@ public:
 	/// 力
 	Vec3d force;
 
+	/// 有効・無効
+	bool isEnabled;
+
 public:
 	SPR_OBJECTDEF(PHIKControlPoint);
 
@@ -316,6 +319,7 @@ public:
 	PHIKControlPoint(const PHIKControlPointDesc& desc){
 		SetDesc(&desc);
 		force	= Vec3d(0,0,0);
+		isEnabled = true;
 	}
 
 	/** @brief デスクリプタを設定する
@@ -343,6 +347,10 @@ public:
 	/** @brief 番号を取得する
 	*/
 	int  GetNumber(){ return number; }
+
+	/** @brief 有効・無効を設定する
+	*/
+	void Enable(bool enable){ this->isEnabled = enable; }
 
 	/** @brief 制御対象の剛体を設定する
 	*/
