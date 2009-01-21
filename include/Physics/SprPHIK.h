@@ -39,6 +39,10 @@ struct PHIKControlPointIf : SceneObjectIf{
 	/** @brief ”Ô†‚ğİ’è‚·‚é
 	*/
 	void SetNumber(int i);
+
+	/** @brief —LŒøE–³Œø‚ğİ’è‚·‚é
+	*/
+	void Enable(bool enable);
 };
 
 struct PHIKControlPointDesc{

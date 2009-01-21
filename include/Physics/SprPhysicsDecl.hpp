@@ -20,6 +20,7 @@
 	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
 	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
 	void SetNumber(int i){	base::SetNumber(i);}	\
+	void Enable(bool enable){	base::Enable(enable);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
 	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
