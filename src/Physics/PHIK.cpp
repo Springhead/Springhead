@@ -20,7 +20,7 @@ namespace Spr{
 
 void PHIKEngine::Step(){
 	if (bEnabled) {
-		std::cout << " -- " << std::endl;
+		// std::cout << " -- " << std::endl;
 		if (nodes.size() > 0 && controlpoints.size() > 0) {
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->PrepareSolve();
@@ -410,7 +410,7 @@ void PHIKBallJoint::Move(){
 	if (linkedControlPoints.size() == 0) {
 		return;
 	}
-	std::cout << dTheta << std::endl;
+	// std::cout << dTheta << std::endl;
 
 	/*
 	for (int i=0; i<ndof; ++i) {
