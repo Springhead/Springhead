@@ -1209,9 +1209,11 @@ public:
 		if (this->height()*this->width()<h*w){
 			delete [] this->data;
 			this->data = new T[h*w];
-			this->height_ = h;
-			this->width_ = w;
 		}
+		// これは今まで上のif文の中にあったが、
+		// これでは行列を小さくResizeする事ができない。（mitake, 09/01/22）
+		this->height_ = h;
+		this->width_ = w;
 	}
 };
 
