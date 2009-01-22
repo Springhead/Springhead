@@ -67,6 +67,13 @@ protected:
 	/// 動かしにくさ
 	float bias;
 
+	/// 有効・無効
+	enum ENABLE_STATUS {
+		ES_NONE=0,
+		ES_NOORI,
+		ES_ORI,
+	} enableStat;
+
 	// 計算用の一時変数
 	PTM::VVector<double>     iDx, iD;
 	PTM::VMatrixRow<double>  F;
