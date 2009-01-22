@@ -167,14 +167,23 @@ Vec3d PHIKOriCtl::GetTmpGoal(){
 
 // --- --- --- --- ---
 void PHIKNode::SetNDOF(int n){
+	// std::cout << "SetNDOF to " << n << std::endl;
 	ndof = n;
 	iDx.resize(ndof); iDx.clear();
 	iD.resize(ndof); iD.clear();
 	F.resize(ndof, ndof); F.clear();
-	for(size_t i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); K[i].clear(); }
+	for(size_t i=0; i<K.size(); ++i){
+		// std::cout << "ndof = " << ndof << std::endl;
+		// std::cout << " before resize :  K[" << number << "," << i << "] : " << K[i] << std::endl;
+		K[i].resize(ndof, ndof);
+		// std::cout << " after resize  :  K[" << number << "," << i << "] : " << K[i] << std::endl;
+		K[i].clear();
+		// std::cout << " after clear   :  K[" << number << "," << i << "] : " << K[i] << std::endl;
+	}
 	dTheta.resize(ndof); dTheta.clear();
 	dTheta_prev.resize(ndof); dTheta_prev.clear();
 	tau.resize(ndof); tau.clear();
+	// std::cout << " --- " << std::endl;
 }
 
 void PHIKNode::ClearJacobian(){
@@ -265,6 +274,11 @@ void PHIKNode::PrepareSolve(){
 			if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
 
 			int n = DCAST(PHIKControlPoint,*ctlpt)->number;
+			/*
+			std::cout << "K    : " << K[node_i] << std::endl;
+			std::cout << "M'*M : " << (Mj[n].trans() * Mj[n]) << std::endl;
+			std::cout << " -- " << std::endl;
+			*/
 			K[node_i] += (Mj[n].trans() * Mj[n]);
 			// std::cout << "M^T M : " << (Mj[n].trans() * Mj[n]) << std::endl;
 		}
