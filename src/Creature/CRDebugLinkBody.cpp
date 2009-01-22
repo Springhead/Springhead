@@ -25,7 +25,7 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 
 	mass = 2.0;
 
-	spring = 5000.0;
+	spring = 500.0;
 	damper = 100.0;
 
 	fMax = 50;

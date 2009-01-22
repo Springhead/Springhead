@@ -1232,6 +1232,7 @@ public:
 };
 
 /**	行列型. VMatrixCol<float> m(3,3); のように使う
+	resize後に初期化されていないので使うときには注意する
 	@param	T	要素の型.	*/
 template <class T>
 class VMatrixCol:public EMatrixBaseCol< EMatrixDescCol<VMatrixCol<T>, EMatrixRow<T>, T> >{
