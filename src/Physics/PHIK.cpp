@@ -182,6 +182,33 @@ void PHIKNode::ClearJacobian(){
 }
 
 void PHIKNode::CalcAllJacobian(){
+	enableStat = ES_NONE;
+	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
+		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
+
+		if (DCAST(PHIKOriCtl,*ctlpt)) {
+			// Enabled‚ÈŽp¨§Œä“_‚ªŠÜ‚Ü‚ê‚é
+			enableStat = ES_ORI;
+		} else {
+			// Enabled‚ÈˆÊ’u§Œä“W‚ªŠÜ‚Ü‚ê‚é
+			if (enableStat==ES_NONE) {
+				enableStat = ES_NOORI;
+			}
+		}
+	}
+
+	if (DCAST(PHIKBallJointIf,this)) {
+		if (enableStat==ES_NOORI) {
+			if (ndof!=2) {
+				SetNDOF(2);
+			}
+		} else if (enableStat==ES_ORI) {
+			if (ndof!=3) {
+				SetNDOF(3);
+			}
+		}
+	}
+
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
 		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
 
@@ -192,13 +219,13 @@ void PHIKNode::CalcAllJacobian(){
 }
 
 void PHIKNode::PrepareSolve(){
+	ClearJacobian();
+	CalcAllJacobian();
+
 	PTM::VMatrixRow<double>	JtJ; JtJ.resize(ndof,ndof);	JtJ.clear();
 	PTM::VVector<double>	Jtx; Jtx.resize(ndof);		Jtx.clear();
 
 	tau.clear();
-
-	ClearJacobian();
-	CalcAllJacobian();
 
 	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
 		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
@@ -407,7 +434,7 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 }
 
 void PHIKBallJoint::Move(){
-	if (linkedControlPoints.size() == 0) {
+	if (enableStat==ES_NONE) {
 		return;
 	}
 	// std::cout << dTheta << std::endl;
@@ -498,7 +525,7 @@ PTM::VMatrixRow<double> PHIKHingeJoint::CalcJacobian(PHIKControlPointIf* control
 }
 
 void PHIKHingeJoint::Move(){
-	if (linkedControlPoints.size() == 0) {
+	if (enableStat==ES_NONE) {
 		return;
 	}
 
