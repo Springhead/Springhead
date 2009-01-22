@@ -526,8 +526,8 @@ void PHConstraintEngine::StepPart2(){
 }
 	
 void PHConstraintEngine::Step(){
-	StepPart1();
-	StepPart2();
+	StepPart1();	// ÚG”»’è
+	StepPart2();	// S‘©—ÍŒvZCÏ•ª
 }
 
 PHConstraintsIf* PHConstraintEngine::GetContactPoints(){
