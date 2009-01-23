@@ -22,6 +22,8 @@ namespace Spr{;
 class CRDebugLinkBody: public CRBody, public CRDebugLinkBodyDesc{
 
 private:
+	PHBallJointDesc InitBallJointDesc();
+	PHHingeJointDesc InitHingeJointDesc();
 	void SolidFactory(CDShapeMode m);
 	void JointFactory(PHJointMode m);
 	void CreateBody();

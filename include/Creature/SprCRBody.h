@@ -599,13 +599,13 @@ struct CRDebugLinkBodyDesc : CRBodyDesc {
 	} shapeMode;
 
 	enum PHJointMode{
-		MODE_BALL=0, MODE_HINGE
+		MODE_BALL=0, MODE_HINGE, MODE_MIXED
 	} jointMode;
 
-	int soNSolids;
-	int joNBallJoints;
-	int joNHingeJoints;
-	int joNJoints;
+	unsigned int soNSolids;
+	unsigned int joNBallJoints;
+	unsigned int joNHingeJoints;
+	unsigned int joNJoints;
 
 	/// サイズに関するパラメータ(radius, length)
 	double radius, length;
