@@ -272,6 +272,10 @@ struct PHShapePairForLCPIf : public ObjectIf{
 	/** @brief 交差断面の面積を取得する
 	*/
 	double GetContactDimension();
+
+	/** @brief 交差断面の単位法線ベクトルを取得する
+	*/
+	Vec3d GetNormalVector();
 };
 
 struct PHSolidPairForLCPIf : public ObjectIf{
