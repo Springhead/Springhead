@@ -25,13 +25,40 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 
 	mass = 2.0;
 
-	spring = 500.0;
-	damper = 100.0;
+	spring = 50000.0;
+	damper = 2000.0;
 
 	fMax = 50;
 	shapeMode = MODE_CAPSULE;
 	jointMode = MODE_BALL;
 }
+
+PHBallJointDesc CRDebugLinkBody::InitBallJointDesc(){
+	PHBallJointDesc desc;
+	{
+		desc.spring = spring;
+		desc.damper = damper;
+		desc.poseSocket.Pos() = Vec3d(0, 0, length/2);
+		desc.posePlug.Pos() = Vec3d(0, 0, -length/2);
+		desc.fMax = fMax;
+	}
+	return desc;
+}
+
+PHHingeJointDesc CRDebugLinkBody::InitHingeJointDesc(){
+	PHHingeJointDesc desc;
+	{
+		desc.spring = spring;
+		desc.damper = damper;
+		desc.poseSocket.Pos() = Vec3d(0, 0, length/2);
+		desc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
+		desc.posePlug.Pos() = Vec3d(0, 0, -length/2);
+		desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'y');
+		desc.fMax = fMax;
+	}
+	return desc;
+}
+
 void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 	PHSolidDesc sDesc;
 	{
@@ -84,40 +111,30 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 void CRDebugLinkBody::JointFactory(PHJointMode m){
 	joNJoints = soNSolids-1;
 	if(m == MODE_BALL){
-		PHBallJointDesc bDesc;
-		{
-			bDesc.spring = spring;
-			bDesc.damper = damper;
-			bDesc.poseSocket.Pos() = Vec3d(0, 0, length/2);
-			bDesc.posePlug.Pos() = Vec3d(0, 0, -length/2);
-			bDesc.fMax = fMax;
-		}
+		PHBallJointDesc bDesc = InitBallJointDesc();
 		for(unsigned int i = 0; i < joNJoints; i++){
 			joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], bDesc));
 		}
 	}
 	else if(m == MODE_HINGE){
-		PHHingeJointDesc hDesc;
-		{
-			hDesc.spring = spring;
-			hDesc.damper = damper;
-			hDesc.poseSocket.Pos() = Vec3d(0, 0, length/2);
-			hDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
-			hDesc.posePlug.Pos() = Vec3d(0, 0, -length/2);
-			hDesc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'y');
-			hDesc.fMax = fMax;
-		}
+		PHHingeJointDesc hDesc = InitHingeJointDesc();
 		for(unsigned int i = 0; i < joNJoints; i++){
 			joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], hDesc));
+		}
+	}
+	else if(m == MODE_MIXED){
+		PHBallJointDesc  bDesc = InitBallJointDesc();
+		PHHingeJointDesc hDesc = InitHingeJointDesc();
+		for(unsigned int i = 0; i < joNJoints; i++){
+			if(i % 2 == 0)	joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], bDesc));
+			else			joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], hDesc));
 		}
 	}
 }
 void CRDebugLinkBody::CreateBody(){
 	if(soNSolids <= 0) return;
-
 	SolidFactory(shapeMode);
 	JointFactory(jointMode);
-
 }
 
 void CRDebugLinkBody::InitBody(){}

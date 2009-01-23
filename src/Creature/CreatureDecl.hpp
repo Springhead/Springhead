@@ -991,10 +991,10 @@ public:\
 protected:\
 	enum Spr::CRDebugLinkBodyDesc::CDShapeMode	shapeMode;	\
 	enum Spr::CRDebugLinkBodyDesc::PHJointMode	jointMode;	\
-	int	soNSolids;	\
-	int	joNBallJoints;	\
-	int	joNHingeJoints;	\
-	int	joNJoints;	\
+	unsigned int	soNSolids;	\
+	unsigned int	joNBallJoints;	\
+	unsigned int	joNHingeJoints;	\
+	unsigned int	joNJoints;	\
 	double	radius;	\
 	double	length;	\
 	double	mass;	\
