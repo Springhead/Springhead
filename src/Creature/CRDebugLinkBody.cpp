@@ -25,8 +25,8 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 
 	mass = 2.0;
 
-	spring = 50000.0;
-	damper = 2000.0;
+	spring = 5000.0;
+	damper = 2 * sqrt(mass * spring);
 
 	fMax = 50;
 	shapeMode = MODE_CAPSULE;
