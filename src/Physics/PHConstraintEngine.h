@@ -35,7 +35,6 @@ public:
 	double GetContactDimension(){
 		Vec3d area;
 		unsigned int i;
-
 		for(i = 0; i < section.size()-2; i++){
 			Vec3d vec1 = section[i+1] - section[0];
 			Vec3d vec2 = section[i+2] - section[0];
@@ -43,6 +42,15 @@ public:
 		}
 		return area.norm() / 2;
 	}
+
+	/// 接触面の単位法線ベクトル
+	Vec3d GetNormalVector(){
+		Vec3d vec1 = section[1] - section[0];
+		Vec3d vec2 = section[2] - section[0];
+		Vec3d normal = cross(vec1, vec2);
+		return normal / normal.norm();
+	}
+
 };
 
 /// Solidの組
