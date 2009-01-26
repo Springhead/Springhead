@@ -15,32 +15,28 @@ namespace Spr{
 
 // コンストラクタ
 CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
-	soNSolids = 0;
-	joNBallJoints = 0;
-	joNHingeJoints = 0;
-	joNJoints = 0;
-
-	radius  = 0.5;
-	length  = 1.2;
-
-	mass = 2.0;
-
-	spring = 5000.0;
-	damper = 2 * sqrt(mass * spring);
-
-	fMax = 50;
-	shapeMode = MODE_CAPSULE;
-	jointMode = MODE_BALL;
+	soNSolids		= 0;
+	joNBallJoints	= 0;
+	joNHingeJoints	= 0;
+	joNJoints		= 0;
+	radius			= 0.5;
+	length			= 1.2;
+	mass			= 2.0;
+	spring			= 50.0;
+	damper			= 2 * sqrt(mass * spring);
+	fMax			= 50;
+	shapeMode		= MODE_CAPSULE;
+	jointMode		= MODE_BALL;
 }
 
 PHBallJointDesc CRDebugLinkBody::InitBallJointDesc(){
 	PHBallJointDesc desc;
 	{
-		desc.spring = spring;
-		desc.damper = damper;
-		desc.poseSocket.Pos() = Vec3d(0, 0, length/2);
-		desc.posePlug.Pos() = Vec3d(0, 0, -length/2);
-		desc.fMax = fMax;
+		desc.spring				= spring;
+		desc.damper				= damper;
+		desc.poseSocket.Pos()	= Vec3d(0, 0, length/2);
+		desc.posePlug.Pos()		= Vec3d(0, 0, -length/2);
+		desc.fMax				= fMax;
 	}
 	return desc;
 }
@@ -48,13 +44,13 @@ PHBallJointDesc CRDebugLinkBody::InitBallJointDesc(){
 PHHingeJointDesc CRDebugLinkBody::InitHingeJointDesc(){
 	PHHingeJointDesc desc;
 	{
-		desc.spring = spring;
-		desc.damper = damper;
-		desc.poseSocket.Pos() = Vec3d(0, 0, length/2);
-		desc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
-		desc.posePlug.Pos() = Vec3d(0, 0, -length/2);
-		desc.posePlug.Ori() = Quaterniond::Rot(Rad(90), 'y');
-		desc.fMax = fMax;
+		desc.spring				= spring;
+		desc.damper				= damper;
+		desc.poseSocket.Pos()	= Vec3d(0, 0, length/2);
+		desc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
+		desc.posePlug.Pos()		= Vec3d(0, 0, -length/2);
+		desc.posePlug.Ori()		= Quaterniond::Rot(Rad(90), 'y');
+		desc.fMax				= fMax;
 	}
 	return desc;
 }
@@ -67,10 +63,10 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 	if(m == MODE_SPHERE){
 		CDSphereDesc cDesc;
 		{
-			cDesc.radius = radius;
-			cDesc.material.mu  = 0.0;
-			cDesc.material.mu0 = 0.0;
-			cDesc.material.e   = 0.0;
+			cDesc.radius		= radius;
+			cDesc.material.mu	= 0.0;
+			cDesc.material.mu0	= 0.0;
+			cDesc.material.e	= 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
 			solids.push_back(phScene->CreateSolid(sDesc));
@@ -80,11 +76,11 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 	else if(m == MODE_CAPSULE){
 		CDCapsuleDesc cDesc;
 		{
-			cDesc.radius = radius;
-			cDesc.length = length;
-			cDesc.material.mu  = 0.0;
-			cDesc.material.mu0 = 0.0;
-			cDesc.material.e   = 0.0;
+			cDesc.radius		= radius;
+			cDesc.length		= length;
+			cDesc.material.mu	= 0.0;
+			cDesc.material.mu0	= 0.0;
+			cDesc.material.e	= 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
 			solids.push_back(phScene->CreateSolid(sDesc));
@@ -94,10 +90,10 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 	else if(m == MODE_BOX){
 		CDBoxDesc cDesc;
 		{
-			cDesc.boxsize = Vec3f(radius, radius, length);
-			cDesc.material.mu  = 0.0;
-			cDesc.material.mu0 = 0.0;
-			cDesc.material.e   = 0.0;
+			cDesc.boxsize		= Vec3f(radius, radius, length);
+			cDesc.material.mu	= 0.0;
+			cDesc.material.mu0	= 0.0;
+			cDesc.material.e	= 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
 			solids.push_back(phScene->CreateSolid(sDesc));
