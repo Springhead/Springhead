@@ -100,6 +100,8 @@ CRBallHumanBodyDesc::CRBallHumanBodyDesc(){
 	springKnee         = -1;        damperKnee         = -1;
 	springAnkle        = -1;        damperAnkle        = -1;
 	springEye          = 100000.0;  damperEye          =  2000.0;
+
+	shapeType = CRBallHumanBodyDesc::HST_ROUNDCONE;
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -119,8 +121,6 @@ void CRBallHumanBody::InitBody(){
 }
 
 void CRBallHumanBody::CreateWaist(){
-	// CDBoxDesc          boxDesc;
-	CDRoundConeDesc    rcDesc;
 	PHSolidDesc        solidDesc;
 	Posed              pose1, pose2, pose3;
 
@@ -128,48 +128,56 @@ void CRBallHumanBody::CreateWaist(){
 	solidDesc.mass     = 0.17 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[SO_WAIST]   = phScene->CreateSolid(solidDesc);
-	// boxDesc.boxsize    = Vec3f(waistBreadth, waistLength, waistBreadth);
-	// solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
 	CreateIKControlPoint(SO_WAIST);
 
+	// Shape
 	int sn=0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc    rcDesc;
 
-	// ˜`• 
-	rcDesc.radius[0]   = abdomenBreadth/2;
-	rcDesc.radius[1]   = waistBreadth/2;
-	rcDesc.length      = waistLength;
-	solids[SO_WAIST]->AddShape(phSdk->CreateShape(rcDesc));
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	solids[SO_WAIST]->SetShapePose(sn,pose2*pose1);
-	sn++;
+		// ˜`• 
+		rcDesc.radius[0]   = abdomenBreadth/2;
+		rcDesc.radius[1]   = waistBreadth/2;
+		rcDesc.length      = waistLength;
+		solids[SO_WAIST]->AddShape(phSdk->CreateShape(rcDesc));
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		solids[SO_WAIST]->SetShapePose(sn,pose2*pose1);
+		sn++;
 
-	// ˜`‘«
-	double cX = interLegDistance/2;
-	double cY = -legPosY;
-	double theta = atan(cX/cY);
-	rcDesc.radius[0]   = waistBreadth/2;
-	rcDesc.radius[1]   = upperLegDiameter/2;
-	rcDesc.length      = sqrt(cX*cX + cY*cY);
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	/// -- ¶‘«
-	pose3=Posed(); pose3.Ori() = Quaterniond::Rot(-theta,'z');
-	solids[SO_WAIST]->AddShape(phSdk->CreateShape(rcDesc));
-	solids[SO_WAIST]->SetShapePose(sn,pose3*pose2*pose1);
-	sn++;
-	/// -- ‰E‘«
-	pose3=Posed(); pose3.Ori() = Quaterniond::Rot(theta,'z');
-	solids[SO_WAIST]->AddShape(phSdk->CreateShape(rcDesc));
-	solids[SO_WAIST]->SetShapePose(sn,pose3*pose2*pose1);
-	sn++;
+		// ˜`‘«
+		double cX = interLegDistance/2;
+		double cY = -legPosY;
+		double theta = atan(cX/cY);
+		rcDesc.radius[0]   = waistBreadth/2;
+		rcDesc.radius[1]   = upperLegDiameter/2;
+		rcDesc.length      = sqrt(cX*cX + cY*cY);
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		/// -- ¶‘«
+		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(-theta,'z');
+		solids[SO_WAIST]->AddShape(phSdk->CreateShape(rcDesc));
+		solids[SO_WAIST]->SetShapePose(sn,pose3*pose2*pose1);
+		sn++;
+		/// -- ‰E‘«
+		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(theta,'z');
+		solids[SO_WAIST]->AddShape(phSdk->CreateShape(rcDesc));
+		solids[SO_WAIST]->SetShapePose(sn,pose3*pose2*pose1);
+		sn++;
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc        boxDesc;
+
+		boxDesc.boxsize  = Vec3f(waistBreadth, waistLength+waistBreadth, waistBreadth);
+		solids[SO_WAIST]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	solids[SO_WAIST]->SetFramePosition(Vec3f(0,0,0));
 }
 
 void CRBallHumanBody::CreateAbdomen(){
-	// CDBoxDesc          boxDesc;
-	CDRoundConeDesc    rcDesc;
 	PHSolidDesc        solidDesc;
 	PHBallJointDesc    ballDesc;
 
@@ -177,16 +185,24 @@ void CRBallHumanBody::CreateAbdomen(){
 	solidDesc.mass     = 0.028 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[SO_ABDOMEN] = phScene->CreateSolid(solidDesc);
-	// boxDesc.boxsize    = Vec3f(abdomenBreadth, abdomenHeight, abdomenThickness);
-	// solids[SO_ABDOMEN]->AddShape(phSdk->CreateShape(boxDesc));
 	CreateIKControlPoint(SO_ABDOMEN);
 
-	rcDesc.radius[0]   = abdomenBreadth/2;
-	rcDesc.radius[1]   = abdomenBreadth/2;
-	rcDesc.length      = abdomenLength;
-	solids[SO_ABDOMEN]->AddShape(phSdk->CreateShape(rcDesc));
-	Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	solids[SO_ABDOMEN]->SetShapePose(0,pose);
+	// Shape
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc    rcDesc;
+		rcDesc.radius[0]   = abdomenBreadth/2;
+		rcDesc.radius[1]   = abdomenBreadth/2;
+		rcDesc.length      = abdomenLength;
+		solids[SO_ABDOMEN]->AddShape(phSdk->CreateShape(rcDesc));
+		Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		solids[SO_ABDOMEN]->SetShapePose(0,pose);
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc          boxDesc;
+		boxDesc.boxsize    = Vec3f(abdomenBreadth, abdomenLength+abdomenBreadth, abdomenBreadth);
+		solids[SO_ABDOMEN]->AddShape(phSdk->CreateShape(boxDesc));
+		
+	}
 
 	// Joint -- [p]Waist-[c]Abdomen
 	ballDesc                  = PHBallJointDesc();
@@ -196,8 +212,6 @@ void CRBallHumanBody::CreateAbdomen(){
 	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
 	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(45));
 	SetJointSpringDamper(ballDesc, springWaistAbdomen, damperWaistAbdomen, solids[SO_WAIST]->GetMass());
-	// ballDesc.spring           = springWaistAbdomen;
-	// ballDesc.damper           = damperWaistAbdomen;
 	joints[JO_WAIST_ABDOMEN] = CreateJoint(solids[SO_ABDOMEN], solids[SO_WAIST], ballDesc);
 	CreateIKNode(JO_WAIST_ABDOMEN);
 
@@ -205,8 +219,6 @@ void CRBallHumanBody::CreateAbdomen(){
 }
 
 void CRBallHumanBody::CreateChest(){
-	// CDBoxDesc          boxDesc;
-	CDRoundConeDesc    rcDesc;
 	PHSolidDesc        solidDesc;
 	PHBallJointDesc    ballDesc;
 	Posed              pose1,pose2,pose3;
@@ -215,51 +227,61 @@ void CRBallHumanBody::CreateChest(){
 	solidDesc.mass   = 0.252 * bodyMass;
 	solidDesc.inertia  = Matrix3d::Unit() * solidDesc.mass;
 	solids[SO_CHEST] = phScene->CreateSolid(solidDesc);
-	// boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
-	// solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 	CreateIKControlPoint(SO_CHEST);
 
+	// Shape
 	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc    rcDesc;
 
-	// ’†S`Žñ•tª
-	rcDesc.radius[0] = neckDiameter/2;
-	rcDesc.radius[1] = chestBreadth/2;
-	rcDesc.length    = chestBreadth/2;
-	solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	solids[SO_CHEST]->SetShapePose(sn,pose2*pose1);
-	sn++;
+		// ’†S`Žñ•tª
+		rcDesc.radius[0] = neckDiameter/2;
+		rcDesc.radius[1] = chestBreadth/2;
+		rcDesc.length    = chestBreadth/2;
+		solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		solids[SO_CHEST]->SetShapePose(sn,pose2*pose1);
+		sn++;
 
-	// ’†S`• 
-	rcDesc.radius[0] = chestBreadth/2;
-	rcDesc.radius[1] = abdomenBreadth/2;
-	rcDesc.length    = chestLength;
-	solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	solids[SO_CHEST]->SetShapePose(sn,pose2*pose1);
-	sn++;
+		// ’†S`• 
+		rcDesc.radius[0] = chestBreadth/2;
+		rcDesc.radius[1] = abdomenBreadth/2;
+		rcDesc.length    = chestLength;
+		solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		solids[SO_CHEST]->SetShapePose(sn,pose2*pose1);
+		sn++;
 
-	// ’†S`Œ¨
-	double sX = bideltoidBreadth/2 - upperArmDiameter/2;
-	double sY = chestBreadth/2 - upperArmDiameter/2;
-	double theta = atan(sX/sY);
-	rcDesc.radius[0] = upperArmDiameter/2;
-	rcDesc.radius[1] = chestBreadth/2;
-	rcDesc.length    = sqrt(sX*sX + sY*sY);
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	/// -- ¶Œ¨
-	pose3=Posed(); pose3.Ori() = Quaterniond::Rot(theta,'z');
-	solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
-	solids[SO_CHEST]->SetShapePose(sn,pose3*pose2*pose1);
-	sn++;
-	// -- ‰EŒ¨
-	pose3=Posed(); pose3.Ori() = Quaterniond::Rot(-theta,'z');
-	solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
-	solids[SO_CHEST]->SetShapePose(sn,pose3*pose2*pose1);
-	sn++;
+		// ’†S`Œ¨
+		double sX = bideltoidBreadth/2 - upperArmDiameter/2;
+		double sY = chestBreadth/2 - upperArmDiameter/2;
+		double theta = atan(sX/sY);
+		rcDesc.radius[0] = upperArmDiameter/2;
+		rcDesc.radius[1] = chestBreadth/2;
+		rcDesc.length    = sqrt(sX*sX + sY*sY);
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		/// -- ¶Œ¨
+		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(theta,'z');
+		solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
+		solids[SO_CHEST]->SetShapePose(sn,pose3*pose2*pose1);
+		sn++;
+		// -- ‰EŒ¨
+		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(-theta,'z');
+		solids[SO_CHEST]->AddShape(phSdk->CreateShape(rcDesc));
+		solids[SO_CHEST]->SetShapePose(sn,pose3*pose2*pose1);
+		sn++;
+	
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc          boxDesc;
+
+		boxDesc.boxsize  = Vec3f(chestBreadth, chestLength+neckDiameter/2, chestBreadth);
+		solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	// Joint -- [p]Abdomen-[c]Chest
 	ballDesc                  = PHBallJointDesc();
@@ -269,8 +291,6 @@ void CRBallHumanBody::CreateChest(){
 	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
 	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(45));
 	SetJointSpringDamper(ballDesc, springAbdomenChest, damperAbdomenChest, solids[SO_ABDOMEN]->GetMass());
-	// ballDesc.spring           = springAbdomenChest;
-	// ballDesc.damper           = damperAbdomenChest;
 	joints[JO_ABDOMEN_CHEST]  = CreateJoint(solids[SO_CHEST], solids[SO_ABDOMEN], ballDesc);
 	CreateIKNode(JO_ABDOMEN_CHEST);
 
@@ -284,7 +304,6 @@ void CRBallHumanBody::InitHead(){
 }
 
 void CRBallHumanBody::CreateNeck(){
-	CDCapsuleDesc      capsuleDesc;
 	PHSolidDesc        solidDesc;
 	PHBallJointDesc    ballDesc;
 
@@ -294,11 +313,25 @@ void CRBallHumanBody::CreateNeck(){
 	solids[SO_NECK] = phScene->CreateSolid(solidDesc);
 	CreateIKControlPoint(SO_NECK);
 
-	capsuleDesc.radius = neckDiameter/2;
-	capsuleDesc.length = neckLength;
-	solids[SO_NECK]->AddShape(phSdk->CreateShape(capsuleDesc));
-	Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(90),'x');
-	solids[SO_NECK]->SetShapePose(0,pose);
+	// Shape
+	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDCapsuleDesc      capsuleDesc;
+
+		capsuleDesc.radius = neckDiameter/2;
+		capsuleDesc.length = neckLength;
+		solids[SO_NECK]->AddShape(phSdk->CreateShape(capsuleDesc));
+		Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(90),'x');
+		solids[SO_NECK]->SetShapePose(0,pose);
+		sn++;
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc boxDesc;
+		boxDesc.boxsize = Vec3d(neckDiameter, neckLength+neckDiameter, neckDiameter);
+		solids[SO_NECK]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	// Joint -- [p]Chest-[c]Neck
 	ballDesc                  = PHBallJointDesc();
@@ -308,8 +341,6 @@ void CRBallHumanBody::CreateNeck(){
 	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
 	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(30));
 	SetJointSpringDamper(ballDesc, springChestNeck, damperChestNeck, solids[SO_CHEST]->GetMass());
-	// ballDesc.spring           = springChestNeckX;
-	// ballDesc.damper           = damperChestNeckX;
 	joints[JO_CHEST_NECK] = CreateJoint(solids[SO_NECK], solids[SO_CHEST], ballDesc);
 	CreateIKNode(JO_CHEST_NECK);
 
@@ -317,8 +348,6 @@ void CRBallHumanBody::CreateNeck(){
 }
 
 void CRBallHumanBody::CreateHead(){
-	// CDCapsuleDesc     capsuleDesc;
-	CDRoundConeDesc   rcDesc;
 	PHSolidDesc       solidDesc;
 	PHBallJointDesc   ballDesc;
 
@@ -328,32 +357,40 @@ void CRBallHumanBody::CreateHead(){
 	solids[SO_HEAD]   = phScene->CreateSolid(solidDesc);
 	CreateIKControlPoint(SO_HEAD);
 
-	// capsuleDesc.radius = (float)(headBreadth / 2.0);
-	// capsuleDesc.length = (float)(headHeight - headBreadth);
-	// solids[SO_HEAD]->AddShape(phSdk->CreateShape(capsuleDesc));
-	rcDesc.radius[0] = headBreadth / 2.0;
-	rcDesc.radius[1] = bigonialBreadth / 2.0;
-	double Z = headBreadth/2 - bigonialBreadth/2 ;
-	double Y = headHeight - headBreadth/2 - bigonialBreadth/2;
-	double theta = atan(Y/Z);
-	rcDesc.length = sqrt(Z*Z + Y*Y);
-	solids[SO_HEAD]->AddShape(phSdk->CreateShape(rcDesc));
-	Posed pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
-	Posed pose2=Posed(); pose2.Ori() = Quaterniond::Rot(-theta,'x');
-	solids[SO_HEAD]->SetShapePose(0,pose2*pose1);
+	// Shape
+	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc   rcDesc;
+
+		rcDesc.radius[0] = headBreadth / 2.0;
+		rcDesc.radius[1] = bigonialBreadth / 2.0;
+		double Z = headBreadth/2 - bigonialBreadth/2 ;
+		double Y = headHeight - headBreadth/2 - bigonialBreadth/2;
+		double theta = atan(Y/Z);
+		rcDesc.length = sqrt(Z*Z + Y*Y);
+		solids[SO_HEAD]->AddShape(phSdk->CreateShape(rcDesc));
+		Posed pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
+		Posed pose2=Posed(); pose2.Ori() = Quaterniond::Rot(-theta,'x');
+		solids[SO_HEAD]->SetShapePose(0,pose2*pose1);
+		sn++;
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc boxDesc;
+
+		boxDesc.boxsize = Vec3d(headBreadth, headHeight, headBreadth);
+		solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	} 
 
 	// Joint -- [p]Neck-[c]Head
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.posePlug.Pos()   = Vec3d(0, neckLength / 2.0, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(0, neckPosY, neckPosZ);
-	// ballDesc.poseSocket.Pos() = Vec3d(0, tragionDepth - headBreadth/2.0,  (headBreadth/2 - (occiputToNeckFront - neckDiameter/2)));
-	// ballDesc.poseSocket.Pos() = Vec3d(0, 0, 0);
 	ballDesc.limitDir         = Vec3d(0,0,1);
 	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
 	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(20));
 	SetJointSpringDamper(ballDesc, springNeckHead, damperNeckHead, solids[SO_NECK]->GetMass());
-	// ballDesc.spring           = springNeckHeadX;
-	// ballDesc.damper           = damperNeckHeadX;
 	joints[JO_NECK_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_NECK], ballDesc);
 	CreateIKNode(JO_NECK_HEAD);
 
@@ -372,8 +409,6 @@ void CRBallHumanBody::InitArms(){
 }
 
 void CRBallHumanBody::CreateUpperArm(LREnum lr){
-	// CDCapsuleDesc      capsuleDesc;
-	CDRoundConeDesc    rcDesc;
 	PHSolidDesc        solidDesc;
 	PHBallJointDesc    ballDesc;
 
@@ -393,23 +428,33 @@ void CRBallHumanBody::CreateUpperArm(LREnum lr){
 	solids[soNUpperArm] = phScene->CreateSolid(solidDesc);
 	CreateIKControlPoint(soNUpperArm);
 
-	rcDesc.radius[0]    = upperArmDiameter / 2.0;
-	rcDesc.radius[1]    = lowerArmDiameter / 2.0;
-	rcDesc.length       = upperArmLength;
-	solids[soNUpperArm]->AddShape(phSdk->CreateShape(rcDesc));
-	// capsuleDesc.radius  = upperArmDiameter / 2.0;
-	// capsuleDesc.length  = upperArmLength;
-	// solids[soNUpperArm]->AddShape(phSdk->CreateShape(capsuleDesc));
-	Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-lr*90),'y');
-	solids[soNUpperArm]->SetShapePose(0,pose);
+	// Shape
+	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc    rcDesc;
+
+		rcDesc.radius[0]    = upperArmDiameter / 2.0;
+		rcDesc.radius[1]    = lowerArmDiameter / 2.0;
+		rcDesc.length       = upperArmLength;
+		solids[soNUpperArm]->AddShape(phSdk->CreateShape(rcDesc));
+		Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-lr*90),'y');
+		solids[soNUpperArm]->SetShapePose(0,pose);
+		sn++;
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc boxDesc;
+
+		boxDesc.boxsize = Vec3d(upperArmLength, upperArmDiameter, upperArmDiameter);
+		solids[soNUpperArm]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	// Joint -- Shoulder ([p]Chest-[c]UpperArm)
 	ballDesc                    = PHBallJointDesc();
 	ballDesc.posePlug.Pos() = Vec3d(lr*(bideltoidBreadth/2.0 - upperArmDiameter/2.0), chestBreadth/2.0-upperArmDiameter/2.0, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(-lr*upperArmLength/2.0, 0, 0);
 	SetJointSpringDamper(ballDesc, springShoulder, damperShoulder, solids[SO_CHEST]->GetMass());
-	// ballDesc.spring           = springShoulderZ;
-	// ballDesc.damper           = damperShoulderZ;
 	joints[joNShoulder]       = CreateJoint(solids[soNUpperArm], solids[SO_CHEST], ballDesc);
 	CreateIKNode(joNShoulder);
 
@@ -417,7 +462,6 @@ void CRBallHumanBody::CreateUpperArm(LREnum lr){
 }
 
 void CRBallHumanBody::CreateLowerArm(LREnum lr){
-	CDCapsuleDesc      capsuleDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 
@@ -437,11 +481,26 @@ void CRBallHumanBody::CreateLowerArm(LREnum lr){
 	solids[soNLowerArm] = phScene->CreateSolid(solidDesc);
 	CreateIKControlPoint(soNLowerArm);
 
-	capsuleDesc.radius  = lowerArmDiameter / 2.0;
-	capsuleDesc.length  = lowerArmLength;
-	solids[soNLowerArm]->AddShape(phSdk->CreateShape(capsuleDesc));
-	Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-lr*90),'y');
-	solids[soNLowerArm]->SetShapePose(0,pose);
+	// Shape
+	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDCapsuleDesc      capsuleDesc;
+
+		capsuleDesc.radius  = lowerArmDiameter / 2.0;
+		capsuleDesc.length  = lowerArmLength;
+		solids[soNLowerArm]->AddShape(phSdk->CreateShape(capsuleDesc));
+		Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-lr*90),'y');
+		solids[soNLowerArm]->SetShapePose(0,pose);
+		sn++;
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc boxDesc;
+
+		boxDesc.boxsize = Vec3d(lowerArmLength, lowerArmDiameter, lowerArmDiameter);
+		solids[soNLowerArm]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	// Joint -- Elbow ([p]UpperArm-[c]LowerArm)
 	hingeDesc                  = PHHingeJointDesc();
@@ -450,8 +509,6 @@ void CRBallHumanBody::CreateLowerArm(LREnum lr){
 	hingeDesc.poseSocket.Pos() = Vec3d(-lr*lowerArmLength/2.0, 0, 0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(lr*90), 'x');
 	SetJointSpringDamper(hingeDesc, springElbow, damperElbow, solids[soNUpperArm]->GetMass());
-	// hingeDesc.spring           = springElbow;
-	// hingeDesc.damper           = damperElbow;
 	hingeDesc.origin           = Rad(0);
 	joints[joNElbow] = CreateJoint(solids[soNLowerArm], solids[soNUpperArm], hingeDesc);
 	CreateIKNode(joNElbow);
@@ -488,8 +545,6 @@ void CRBallHumanBody::CreateHand(LREnum lr){
 	ballDesc.posePlug.Pos()   = Vec3d(lr*lowerArmLength/2.0, 0, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(-lr*handLength/2.0, 0, 0);
 	SetJointSpringDamper(ballDesc, springWrist, damperWrist, solids[soNLowerArm]->GetMass());
-	// ballDesc.spring           = springWristY;
-	// ballDesc.damper           = damperWristY;
 	joints[joNWrist]          = CreateJoint(solids[soNHand], solids[soNLowerArm], ballDesc);
 	CreateIKNode(joNWrist);
 
@@ -552,8 +607,6 @@ void CRBallHumanBody::InitLegs(){
 }
 
 void CRBallHumanBody::CreateUpperLeg(LREnum lr){
-	// CDCapsuleDesc      capsuleDesc;
-	CDRoundConeDesc    rcDesc;
 	PHSolidDesc        solidDesc;
 	PHBallJointDesc    ballDesc;
 
@@ -573,23 +626,32 @@ void CRBallHumanBody::CreateUpperLeg(LREnum lr){
 	solids[soNUpperLeg] = phScene->CreateSolid(solidDesc);
 	CreateIKControlPoint(soNUpperLeg);
 
-	rcDesc.radius[0]    = upperLegDiameter / 2.0;
-	rcDesc.radius[1]    = kneeDiameter / 2.0;
-	rcDesc.length       = upperLegLength;
-	solids[soNUpperLeg]->AddShape(phSdk->CreateShape(rcDesc));
-	// capsuleDesc.radius  = upperLegDiameter / 2.0;
-	// capsuleDesc.length  = upperLegLength;
-	// solids[soNUpperLeg]->AddShape(phSdk->CreateShape(capsuleDesc));
-	Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-90),'x');
-	solids[soNUpperLeg]->SetShapePose(0,pose);
+	// Shape
+	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc   rcDesc;
+
+		rcDesc.radius[0]    = upperLegDiameter / 2.0;
+		rcDesc.radius[1]    = kneeDiameter / 2.0;
+		rcDesc.length       = upperLegLength;
+		solids[soNUpperLeg]->AddShape(phSdk->CreateShape(rcDesc));
+		Posed pose=Posed(); pose.Ori() = Quaterniond::Rot(Rad(-90),'x');
+		solids[soNUpperLeg]->SetShapePose(0,pose);
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc boxDesc;
+
+		boxDesc.boxsize = Vec3d(upperLegDiameter, upperLegLength, upperLegDiameter);
+		solids[soNUpperLeg]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	// Joint -- WaistLeg ([p]Waist-[c]UpperLeg)
 	ballDesc                  = PHBallJointDesc();
 	ballDesc.posePlug.Pos()   = Vec3d(lr*interLegDistance/2.0, legPosY, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(0, upperLegLength / 2.0, 0.0);
 	SetJointSpringDamper(ballDesc, springWaistLeg, damperWaistLeg, solids[SO_WAIST]->GetMass());
-	// ballDesc.spring           = springWaistLegZ;
-	// ballDesc.damper           = damperWaistLegZ;
 	joints[joNWaistLeg]       = CreateJoint(solids[soNUpperLeg], solids[SO_WAIST], ballDesc);
 	CreateIKNode(joNWaistLeg);
 
@@ -597,8 +659,6 @@ void CRBallHumanBody::CreateUpperLeg(LREnum lr){
 }
 
 void CRBallHumanBody::CreateLowerLeg(LREnum lr){
-	// CDCapsuleDesc      capsuleDesc;
-	CDRoundConeDesc    rcDesc;
 	PHSolidDesc        solidDesc;
 	PHHingeJointDesc   hingeDesc;
 	Posed              pose1,pose2,pose3;
@@ -614,40 +674,48 @@ void CRBallHumanBody::CreateLowerLeg(LREnum lr){
 		joNKnee = JO_RIGHT_KNEE;
 	}
 
-	int sn=0;
-
 	// Solid
 	solidDesc.mass      = 0.05 * bodyMass;
 	solidDesc.inertia   = Matrix3d::Unit() * solidDesc.mass;
 	solids[soNLowerLeg] = phScene->CreateSolid(solidDesc);
 	CreateIKControlPoint(soNLowerLeg);
 
-	// capsuleDesc.radius  = lowerLegDiameter / 2.0;
-	// capsuleDesc.length  = lowerLegLength;
-	// solids[soNLowerLeg]->AddShape(phSdk->CreateShape(capsuleDesc));
+	// Shape
+	int sn = 0;
+	if (shapeType == CRBallHumanBodyDesc::HST_ROUNDCONE) {
+		CDRoundConeDesc   rcDesc;
 
-	rcDesc.radius[0]    = kneeDiameter/2;
-	rcDesc.radius[1]    = calfDiameter/2;
-	rcDesc.length       = sqrt(calfPosY*calfPosY + calfPosZ*calfPosZ);
-	theta               = atan(calfPosZ / calfPosY);
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90)+theta,'x');
-	pose3=Posed(); pose3.Pos() = Vec3d(0,lowerLegLength/2,0);
-	solids[soNLowerLeg]->AddShape(phSdk->CreateShape(rcDesc));
-	solids[soNLowerLeg]->SetShapePose(sn,pose3*pose2*pose1);
-	sn++;
+		rcDesc.radius[0]    = kneeDiameter/2;
+		rcDesc.radius[1]    = calfDiameter/2;
+		rcDesc.length       = sqrt(calfPosY*calfPosY + calfPosZ*calfPosZ);
+		theta               = atan(calfPosZ / calfPosY);
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90)+theta,'x');
+		pose3=Posed(); pose3.Pos() = Vec3d(0,lowerLegLength/2,0);
+		solids[soNLowerLeg]->AddShape(phSdk->CreateShape(rcDesc));
+		solids[soNLowerLeg]->SetShapePose(sn,pose3*pose2*pose1);
+		sn++;
 
-	double cY = lowerLegLength - calfPosY;
-	rcDesc.radius[0]    = calfDiameter/2;
-	rcDesc.radius[1]    = ankleDiameter/2;
-	rcDesc.length       = sqrt(cY*cY + calfPosZ*calfPosZ);
-	theta               = atan(calfPosZ / cY);
-	pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
-	pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90)-theta,'x');
-	pose3=Posed(); pose3.Pos() = Vec3d(0,-lowerLegLength/2,0);
-	solids[soNLowerLeg]->AddShape(phSdk->CreateShape(rcDesc));
-	solids[soNLowerLeg]->SetShapePose(sn,pose3*pose2*pose1);
-	sn++;
+		double cY = lowerLegLength - calfPosY;
+		rcDesc.radius[0]    = calfDiameter/2;
+		rcDesc.radius[1]    = ankleDiameter/2;
+		rcDesc.length       = sqrt(cY*cY + calfPosZ*calfPosZ);
+		theta               = atan(calfPosZ / cY);
+		pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
+		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90)-theta,'x');
+		pose3=Posed(); pose3.Pos() = Vec3d(0,-lowerLegLength/2,0);
+		solids[soNLowerLeg]->AddShape(phSdk->CreateShape(rcDesc));
+		solids[soNLowerLeg]->SetShapePose(sn,pose3*pose2*pose1);
+		sn++;
+
+	} else if (shapeType == CRBallHumanBodyDesc::HST_BOX) {
+		CDBoxDesc boxDesc;
+
+		boxDesc.boxsize = Vec3d(calfDiameter, lowerLegLength, calfDiameter);
+		solids[soNLowerLeg]->AddShape(phSdk->CreateShape(boxDesc));
+		sn++;
+
+	}
 
 	// Joint -- Knee ([p]UpperLeg-[c]LowerLeg)
 	hingeDesc                  = PHHingeJointDesc();
@@ -656,8 +724,6 @@ void CRBallHumanBody::CreateLowerLeg(LREnum lr){
 	hingeDesc.poseSocket.Pos() = Vec3d(0, lowerLegLength / 2.0, 0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
 	SetJointSpringDamper(hingeDesc, springKnee, damperKnee, solids[soNUpperLeg]->GetMass());
-	// hingeDesc.spring           = springKnee;
-	// hingeDesc.damper           = damperKnee;
 	joints[joNKnee] = CreateJoint(solids[soNLowerLeg], solids[soNUpperLeg], hingeDesc);
 	CreateIKNode(joNKnee);
 
@@ -693,8 +759,6 @@ void CRBallHumanBody::CreateFoot(LREnum lr){
 	ballDesc.posePlug.Pos()   = Vec3d(0.0, -lowerLegLength / 2.0, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(0, footThickness / 2.0, (ankleToeDistance - footLength/2.0));
 	SetJointSpringDamper(ballDesc, springAnkle, damperAnkle, solids[soNLowerLeg]->GetMass());
-	// ballDesc.spring           = springAnkleY;
-	// ballDesc.damper           = damperAnkleY;
 	joints[joNAnkle]          = CreateJoint(solids[soNFoot], solids[soNLowerLeg], ballDesc);
 	CreateIKNode(joNAnkle);
 

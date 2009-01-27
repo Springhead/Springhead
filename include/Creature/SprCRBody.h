@@ -343,6 +343,12 @@ struct CRBallHumanBodyDesc : CRBodyDesc {
 
 	// ‰Â“®ˆæ§ŒÀ‚È‚Çi–¢À‘•j
 
+	// Œ`ó‚ÉŠÖ‚·‚éİ’è
+	enum CRHumanShapeType {
+		HST_ROUNDCONE=0,
+		HST_BOX,
+	} shapeType;
+
 	CRBallHumanBodyDesc();
 };
 

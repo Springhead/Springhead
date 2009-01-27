@@ -417,6 +417,7 @@ protected:\
 	double	damperAnkle;	\
 	double	springEye;	\
 	double	damperEye;	\
+	enum Spr::CRBallHumanBodyDesc::CRHumanShapeType	shapeType;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
@@ -483,6 +484,7 @@ public:\
 		damperAnkle = ((CRBallHumanBodyDesc*)ptr)->damperAnkle;	\
 		springEye = ((CRBallHumanBodyDesc*)ptr)->springEye;	\
 		damperEye = ((CRBallHumanBodyDesc*)ptr)->damperEye;	\
+		shapeType = ((CRBallHumanBodyDesc*)ptr)->shapeType;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -551,6 +553,7 @@ public:\
 		((CRBallHumanBodyDesc*)ptr)->damperAnkle = damperAnkle;	\
 		((CRBallHumanBodyDesc*)ptr)->springEye = springEye;	\
 		((CRBallHumanBodyDesc*)ptr)->damperEye = damperEye;	\
+		((CRBallHumanBodyDesc*)ptr)->shapeType = shapeType;	\
 		return true;	\
 	}\
 
