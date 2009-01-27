@@ -235,15 +235,14 @@ void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angl
 }
 
 void CRPhysicalEye::Control(PHBallJointIf* jo, Vec2d angle){
-	// std::cout << Deg(angle[0]) << ", " << Deg(angle[1]) << std::endl;
+	std::cout << Deg(angle[0]) << ", " << Deg(angle[1]) << std::endl;
 	Quaterniond q = Quaterniond::Rot(angle[1],'y') * Quaterniond::Rot(angle[0],'x');
 	jo->SetGoal(q);
 }
 
 Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
-	double D1 = sqrt(v.Y()*v.Y()+v.Z()*v.Z());
-	double D2 = sqrt(v.X()*v.X()+v.Z()*v.Z());
-	return(Vec2d( atan2( v.Y()/D1, -v.Z()/D1), atan2(-v.X()/D2, -v.Z()/D2) ));
+	double d = sqrt(v.X()*v.X()+v.Z()*v.Z());
+	return(Vec2d( atan2(v.Y(), d), atan2(-v.X(), -v.Z()) ));
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
