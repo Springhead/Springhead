@@ -770,7 +770,11 @@ public:
 			}else{
 				if(sep[1]) os << sep[1];
 			}
-			row(i).print(os);
+			if (sep[3]){
+				row(i).print(os,&(sep[3]));
+			}else{
+				row(i).print(os);
+			}
 			if (i==height()-1){
 				if(sep[2]) os << sep[2];
 			}
