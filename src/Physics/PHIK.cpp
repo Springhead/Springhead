@@ -20,31 +20,99 @@ namespace Spr{
 
 void PHIKEngine::Step(){
 	if (bEnabled) {
-		// std::cout << " -- " << std::endl;
+		// DSTR << " -- " << std::endl;
 		if (nodes.size() > 0 && controlpoints.size() > 0) {
+
+			nDOFsInCol.resize(nodes.size());
+			for(size_t i=0; i<nDOFsInCol.size(); ++i){ nDOFsInCol[i] = 0; }
+
+			nDOFsInRow.resize(controlpoints.size());
+			for(size_t i=0; i<nDOFsInRow.size(); ++i){ nDOFsInRow[i] = 0; }
+
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->PrepareSolve();
 			}
 
+			int w=0; for(size_t i=0; i<nDOFsInCol.size(); ++i){ w+=nDOFsInCol[i]; }
+			int h=0; for(size_t j=0; j<nDOFsInRow.size(); ++j){ h+=nDOFsInRow[j]; }
+			Jc.resize(h,w);
+			v_.resize(h);
+			w_.resize(w);
+			// std::cout << "h: " << h << ",  w: " << w << std::endl;
+
+			int m=0;
+			for(size_t i=0; i<nDOFsInCol.size(); ++i){
+				int n=0;
+				for(size_t j=0; j<nDOFsInRow.size(); ++j){
+					for(size_t x=0; x<nDOFsInRow[j]; ++x) {
+						v_[n+x] = DCAST(PHIKControlPoint,controlpoints[j])->GetTmpGoal()[x];
+					}
+					
+					for(size_t x=0; x<nDOFsInRow[j]; ++x) {
+						for(size_t y=0; y<nDOFsInCol[i]; ++y) {
+							if (DCAST(PHIKNode,nodes[i])->Mj[j]) {
+								Jc[n+x][m+y] = DCAST(PHIKNode,nodes[i])->Mj[j][x][y];
+							} else {
+								Jc[n+x][m+y] = 0;
+							}
+						}
+					}
+
+					n += nDOFsInRow[j];
+				}
+				m += nDOFsInCol[i];
+			}
+
+			// std::cout << Jc << std::endl;
+			piJc = Jc.trans() * PTM::inv(Jc * Jc.trans());
+			// piJc = PTM::inv(Jc.trans() * Jc) * Jc.trans();
+			// std::cout << piJc << std::endl;
+
+			w_ = piJc * v_;
+
+			// std::cout << w_ << std::endl;
+			// std::cout << " -- " << std::endl;
+
+			{
+				int m=0;
+				for(size_t i=0; i<nDOFsInCol.size(); ++i){
+					for(size_t y=0; y<nDOFsInCol[i]; ++y) {
+						DCAST(PHIKNode,nodes[i])->dTheta[y] = w_[m+y];
+					}
+					m += nDOFsInCol[i];
+				}
+			}
+
+			/*
 			for(size_t n=0; n<numIter; n++){
 				for(size_t i=0; i<nodes.size(); ++i){
 					nodes[i]->ProceedSolve();
 					PTM::VVector<double> diff = (DCAST(PHIKNode,nodes[i])->dTheta_prev - DCAST(PHIKNode,nodes[i])->dTheta);
 					// std::cout << n << "," << i << " : " << diff.norm() << std::endl;
-					/*
-					std::cout << " -- -- -- " << std::endl;
-					std::cout << "dT   : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
-					std::cout << "dTp  : " << DCAST(PHIKNode,nodes[i])->dTheta_prev << std::endl;
-					std::cout << "diff : " << diff << std::endl;
-					std::cout << " -- -- -- " << std::endl;
-					*/
+					// std::cout << " -- -- -- " << std::endl;
+					// std::cout << "dT   : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
+					// std::cout << "dTp  : " << DCAST(PHIKNode,nodes[i])->dTheta_prev << std::endl;
+					// std::cout << "diff : " << diff << std::endl;
+					// std::cout << " -- -- -- " << std::endl;
 				}
 			}
+			*/
 
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->Move();
 			}
+
 		}
+		/*
+		DSTR << "J = [M_0_9, M_1_9, M_2_9, M_3_9, zeros(3,2), zeros(3,1), zeros(3,2); M_0_20, M_1_20, zeros(3,3), zeros(3,3), M_7_20, M_8_20, M_9_20];" << std::endl;
+		DSTR << "v = [v_9, v_20]';" << std::endl;
+		DSTR << "w = [w_0, w_1, w_2, w_3, w_7, w_9]';" << std::endl;
+		DSTR << "pv = J * (pinv(J) * v);" << std::endl;
+		DSTR << "iv = J * w;" << std::endl;
+		DSTR << "[pv-v, iv-v]" << std::endl;
+		DSTR << std::endl;
+		DSTR << std::endl;
+		*/
 	}
 }
 
@@ -141,7 +209,7 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 Vec3d PHIKPosCtl::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
 	Vec3d dir = goal - spos;
-	double epsilon = 1.0;
+	double epsilon = 0.5;
 	if (dir.norm() < epsilon) {
 		return(dir);
 	} else {
@@ -154,7 +222,7 @@ Vec3d PHIKOriCtl::GetTmpGoal(){
 	Quaterniond qS = solid->GetPose().Ori();
 	Quaterniond qG = (goal * qS.Inv());
 
-	double epsilon = Rad(50.0);
+	double epsilon = Rad(20.0);
 	if (qG.Theta() < epsilon) {
 		return((qG.Axis() * qG.Theta()));
 	} else {
@@ -223,7 +291,15 @@ void PHIKNode::CalcAllJacobian(){
 
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
-		// std::cout << number << "," << n << " : " << Mj[n] << std::endl;
+
+		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInCol[number] = ndof;
+		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInRow[n]      = 3;
+
+		/*
+		DSTR << "M_" << number << "_" << n << " = ";
+		Mj[n].print(DSTR, "[ ] ,;");
+		DSTR << ";" << std::endl;
+		*/
 	}
 }
 
@@ -244,6 +320,13 @@ void PHIKNode::PrepareSolve(){
 		J = Mj[n] * sqrt(bias);
 		JtJ += J.trans() * J;
 		Jtx += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal();
+
+		/*
+		DSTR << "v_" << DCAST(PHIKControlPoint,(*ctlpt))->number << " = ";
+		DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal().print(DSTR, "[,]");
+		DSTR << ";" << std::endl;
+		*/
+
 
 		tau += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetForce();
 	}
@@ -451,7 +534,14 @@ void PHIKBallJoint::Move(){
 	if (enableStat==ES_NONE) {
 		return;
 	}
-	// std::cout << dTheta << std::endl;
+
+	// std::cout << "dT : " << dTheta << std::endl;
+	
+	/*
+	DSTR << "w_" << number << " = ";
+	dTheta.print(DSTR, "[,]");
+	DSTR << ";" << std::endl;
+	*/
 
 	/*
 	for (int i=0; i<ndof; ++i) {
@@ -507,11 +597,12 @@ void PHIKBallJoint::Move(){
 }
 
 void PHIKBallJoint::AddControlPoint(PHIKControlPointIf* control){
+	SetNDOF(3);
 	if (DCAST(PHIKOriCtlIf,control)) {
 		// 姿勢制御に荷担するボールジョイントは自由度を３に引き上げる
 		// （デフォルトではエンドエフェクタの位置を変えない回転軸を除いた
 		// 　２軸（ユニバーサルジョイント）になっている）
-		SetNDOF(3);
+		// SetNDOF(3);
 	}
 	PHIKNode::AddControlPoint(control);
 }
