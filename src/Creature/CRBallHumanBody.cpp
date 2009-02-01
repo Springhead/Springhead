@@ -772,7 +772,7 @@ void CRBallHumanBody::InitContact(){
 	// phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
 
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
-	/**/
+	/*/
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {
@@ -795,6 +795,54 @@ void CRBallHumanBody::InitContact(){
 		}
 	}
 	/**/
+}
+
+void CRBallHumanBody::InitSolidPose(){
+	solids[0]->SetOrientation(Quaterniond(6.12323e-017, 0, 1, 0));
+	solids[1]->SetOrientation(Quaterniond(9.32919e-008, 7.83565e-006, 1, 1.05206e-005));
+	solids[2]->SetOrientation(Quaterniond(1.18068e-007, 8.70229e-006, 1, 1.45582e-005));
+	solids[3]->SetOrientation(Quaterniond(1.01858e-007, 6.72754e-006, 1, 2.09876e-005));
+	solids[4]->SetOrientation(Quaterniond(9.33107e-008, 6.72772e-006, 1, 2.46642e-005));
+	solids[5]->SetOrientation(Quaterniond::Rot(Rad(180),'y'));
+	solids[6]->SetOrientation(Quaterniond::Rot(Rad(180),'y'));
+	solids[7]->SetOrientation(Quaterniond::Rot(Rad(180),'y'));
+	solids[8]->SetOrientation(Quaterniond(6.56423e-010, 5.72576e-013, 1, 3.69463e-006));
+	solids[9]->SetOrientation(Quaterniond(-3.10898e-009, -7.08281e-009, 1, 7.32513e-006));
+	solids[10]->SetOrientation(Quaterniond(-3.11148e-009, -7.08281e-009, 1, 1.09413e-005));
+	solids[11]->SetOrientation(Quaterniond(-0.0194578, -0.00260339, 0.990938, -0.13288));
+	solids[12]->SetOrientation(Quaterniond::Rot(Rad(180),'y'));
+	solids[13]->SetOrientation(Quaterniond::Rot(Rad(180),'y'));
+	solids[14]->SetOrientation(Quaterniond::Rot(Rad(180),'y'));
+	solids[15]->SetOrientation(Quaterniond(6.56427e-010, -6.6942e-013, 1, 3.69463e-006));
+	solids[16]->SetOrientation(Quaterniond(-5.75832e-009, 9.62738e-010, 1, 7.32515e-006));
+	solids[17]->SetOrientation(Quaterniond(-5.76085e-009, 9.6274e-010, 1, 1.09413e-005));
+	solids[18]->SetOrientation(Quaterniond(0.0142138, 0.0019135, 0.991027, -0.132892));
+
+	/*
+	for (int i=0; i<SO_NSOLIDS; ++i) {
+		DCAST(PHIKOriCtlIf,ikControlPoints[2*SO_NSOLIDS+i])->SetGoal(solids[i]->GetPose().Ori());
+	}
+	*/
+
+	solids[0]->SetFramePosition(Vec3d(0, 0, 0)); 
+	solids[1]->SetFramePosition(Vec3d(1.17329e-006, 0.235371, 2.50466e-006)); 
+	solids[2]->SetFramePosition(Vec3d(3.93824e-006, 0.432906, 6.99487e-006)); 
+	solids[3]->SetFramePosition(Vec3d(6.8488e-006, 0.638779, 1.38837e-005)); 
+	solids[4]->SetFramePosition(Vec3d(8.45627e-006, 0.757086, 0.00757778)); 
+	solids[5]->SetFramePosition(Vec3d(-0.3537, 0.532354, 1.0018e-005)); 
+	solids[6]->SetFramePosition(Vec3d(-0.6623, 0.532005, 9.94903e-006)); 
+	solids[7]->SetFramePosition(Vec3d(-0.896, 0.531835, 9.659e-006)); 
+	solids[8]->SetFramePosition(Vec3d(-0.0691705, -0.207, -1.55974e-006)); 
+	solids[9]->SetFramePosition(Vec3d(-0.0691705, -0.6089, -5.97062e-006)); 
+	solids[10]->SetFramePosition(Vec3d(-0.0691705, -0.837152, 0.0737905)); 
+	solids[11]->SetFramePosition(Vec3d(-0.0309416, 0.750932, 0.0885275)); 
+	solids[12]->SetFramePosition(Vec3d(0.353713, 0.532349, 9.75737e-006)); 
+	solids[13]->SetFramePosition(Vec3d(0.662313, 0.531966, 9.76959e-006)); 
+	solids[14]->SetFramePosition(Vec3d(0.896013, 0.531771, 9.96697e-006)); 
+	solids[15]->SetFramePosition(Vec3d(0.0691705, -0.207, -1.55975e-006)); 
+	solids[16]->SetFramePosition(Vec3d(0.0691705, -0.6089, -5.97065e-006)); 
+	solids[17]->SetFramePosition(Vec3d(0.0691705, -0.837152, 0.0737905)); 
+	solids[18]->SetFramePosition(Vec3d(0.0309584, 0.750932, 0.0885275));
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
@@ -838,5 +886,12 @@ void CRBallHumanBody::CreateIKControlPoint(int n) {
 	descIKCPOri.solid = solids[n];
 	ikControlPoints[2*n+1] = phScene->CreateIKControlPoint(descIKCPOri);
 	ikControlPoints[2*n+1]->Enable(false);
+
+	// 標準姿勢指向制御（おためし -> やっぱだめかも）
+	/*
+	descIKCPOri.solid = solids[n];
+	ikControlPoints[2*SO_NSOLIDS+n] = phScene->CreateIKControlPoint(descIKCPOri);
+	ikControlPoints[2*SO_NSOLIDS+n]->Enable(true);
+	*/
 }
 }

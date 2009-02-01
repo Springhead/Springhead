@@ -47,6 +47,7 @@ private:
 	void CreateFoot(LREnum lr);
 
 	void InitContact();
+	void InitSolidPose();
 
 	void SetJointSpringDamper(PHBallJointDesc  &ballDesc,  double springOrig, double damperOrig, double actuatorMass);
 	void SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass);
@@ -74,6 +75,7 @@ public:
 		InitEyes();
 		InitLegs();
 
+		InitSolidPose();
 		InitContact();
 	}
 

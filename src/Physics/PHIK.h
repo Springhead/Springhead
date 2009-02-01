@@ -31,6 +31,13 @@ public:
 	std::vector<PHIKNodeIf*>			nodes;
 	std::vector<PHIKControlPointIf*>	controlpoints;
 
+	std::vector<int>  nDOFsInCol;
+	std::vector<int>  nDOFsInRow;
+	PTM::VMatrixRow<double>   Jc;
+	PTM::VMatrixRow<double> piJc;
+	PTM::VVector<double>      v_;
+	PTM::VVector<double>      w_;
+
 	bool bEnabled;
 
 	size_t numIter;
@@ -79,9 +86,6 @@ protected:
 	PTM::VMatrixRow<double>  F;
 	std::vector< PTM::VMatrixRow<double> >  K;
 
-	// ヤコビアン
-	std::map< int,PTM::VMatrixRow<double> > Mj;
-
 	/** @brief 関係するすべての制御点とのヤコビアンをそれぞれ求める
 	*/
 	virtual void CalcAllJacobian();
@@ -98,6 +102,9 @@ public:
 
 	/// このNodeと連動するNode
 	NSet linkedNodes;
+
+	// ヤコビアン
+	std::map< int,PTM::VMatrixRow<double> > Mj;
 
 	/// IKのIterationの一回前の計算結果（収束判定用）
 	PTM::VVector<double> dTheta_prev;
