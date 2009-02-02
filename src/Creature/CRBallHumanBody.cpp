@@ -887,11 +887,9 @@ void CRBallHumanBody::CreateIKControlPoint(int n) {
 	ikControlPoints[2*n+1] = phScene->CreateIKControlPoint(descIKCPOri);
 	ikControlPoints[2*n+1]->Enable(false);
 
-	// 標準姿勢指向制御（おためし -> やっぱだめかも）
-	/*
+	// 標準姿勢指向制御（おためし -> やっぱだめかも -> IK変えたのでもいちどおためし）
 	descIKCPOri.solid = solids[n];
 	ikControlPoints[2*SO_NSOLIDS+n] = phScene->CreateIKControlPoint(descIKCPOri);
-	ikControlPoints[2*SO_NSOLIDS+n]->Enable(true);
-	*/
+	ikControlPoints[2*SO_NSOLIDS+n]->Enable(false);
 }
 }
