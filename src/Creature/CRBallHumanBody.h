@@ -67,7 +67,7 @@ public:
 		solids.resize(CRBallHumanBodyDesc::SO_NSOLIDS);
 		joints.resize(CRBallHumanBodyDesc::JO_NJOINTS);
 		ikNodes.resize(CRBallHumanBodyDesc::JO_NJOINTS);
-		ikControlPoints.resize(2*CRBallHumanBodyDesc::SO_NSOLIDS);
+		ikControlPoints.resize(3*CRBallHumanBodyDesc::SO_NSOLIDS);
 
 		InitBody();
 		InitHead();

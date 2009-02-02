@@ -33,6 +33,7 @@ void PHIKEngine::Step(){
 				nodes[i]->PrepareSolve();
 			}
 
+			/*
 			int w=0; for(size_t i=0; i<nDOFsInCol.size(); ++i){ w+=nDOFsInCol[i]; }
 			int h=0; for(size_t j=0; j<nDOFsInRow.size(); ++j){ h+=nDOFsInRow[j]; }
 			Jc.resize(h,w);
@@ -62,28 +63,18 @@ void PHIKEngine::Step(){
 				}
 				m += nDOFsInCol[i];
 			}
+			*/
 
 			// std::cout << Jc << std::endl;
-			piJc = Jc.trans() * PTM::inv(Jc * Jc.trans());
+			// piJc = Jc.trans() * PTM::inv(Jc * Jc.trans());
 			// piJc = PTM::inv(Jc.trans() * Jc) * Jc.trans();
 			// std::cout << piJc << std::endl;
 
-			w_ = piJc * v_;
+			// w_ = piJc * v_;
 
 			// std::cout << w_ << std::endl;
 			// std::cout << " -- " << std::endl;
 
-			{
-				int m=0;
-				for(size_t i=0; i<nDOFsInCol.size(); ++i){
-					for(size_t y=0; y<nDOFsInCol[i]; ++y) {
-						DCAST(PHIKNode,nodes[i])->dTheta[y] = w_[m+y];
-					}
-					m += nDOFsInCol[i];
-				}
-			}
-
-			/*
 			for(size_t n=0; n<numIter; n++){
 				for(size_t i=0; i<nodes.size(); ++i){
 					nodes[i]->ProceedSolve();
@@ -96,6 +87,24 @@ void PHIKEngine::Step(){
 					// std::cout << " -- -- -- " << std::endl;
 				}
 			}
+
+			/*
+			std::cout << "d = 0" << std::endl;
+			{
+				int m=0;
+				for(size_t i=0; i<nDOFsInCol.size(); ++i){
+					for(size_t y=0; y<nDOFsInCol[i]; ++y) {
+						// std::cout << "it_w = " << DCAST(PHIKNode,nodes[i])->dTheta[y];
+						// std::cout << ";  ";
+						// DCAST(PHIKNode,nodes[i])->dTheta[y] = w_[m+y];
+						// std::cout << "pi_w = " << w_[m+y];
+						// std::cout << std::endl;
+						// std::cout << "d += (it_w - pi_w)**2 " << std::endl;
+					}
+					m += nDOFsInCol[i];
+				}
+			}
+			std::cout << "puts Math::sqrt(d)" << std::endl << std::endl;
 			*/
 
 			for(size_t i=0; i<nodes.size(); ++i){
@@ -209,7 +218,7 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 Vec3d PHIKPosCtl::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
 	Vec3d dir = goal - spos;
-	double epsilon = 0.5;
+	double epsilon = 1.0;
 	if (dir.norm() < epsilon) {
 		return(dir);
 	} else {
@@ -222,7 +231,7 @@ Vec3d PHIKOriCtl::GetTmpGoal(){
 	Quaterniond qS = solid->GetPose().Ori();
 	Quaterniond qG = (goal * qS.Inv());
 
-	double epsilon = Rad(20.0);
+	double epsilon = Rad(50.0);
 	if (qG.Theta() < epsilon) {
 		return((qG.Axis() * qG.Theta()));
 	} else {
@@ -317,7 +326,14 @@ void PHIKNode::PrepareSolve(){
 
 		PTM::VMatrixRow<double> J; J.resize(ndof,ndof);
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
+
+		/**/
+		// Mj[n] = Mj[n] * (1/sqrt(bias));
+		Mj[n] = Mj[n] * (sqrt(bias));
+		J = Mj[n];
+		/*/
 		J = Mj[n] * sqrt(bias);
+		/**/
 		JtJ += J.trans() * J;
 		Jtx += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal();
 
@@ -597,12 +613,11 @@ void PHIKBallJoint::Move(){
 }
 
 void PHIKBallJoint::AddControlPoint(PHIKControlPointIf* control){
-	SetNDOF(3);
 	if (DCAST(PHIKOriCtlIf,control)) {
 		// 姿勢制御に荷担するボールジョイントは自由度を３に引き上げる
 		// （デフォルトではエンドエフェクタの位置を変えない回転軸を除いた
 		// 　２軸（ユニバーサルジョイント）になっている）
-		// SetNDOF(3);
+		SetNDOF(3);
 	}
 	PHIKNode::AddControlPoint(control);
 }
