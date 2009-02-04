@@ -23,24 +23,26 @@ void PHIKEngine::Step(){
 		// DSTR << " -- " << std::endl;
 		if (nodes.size() > 0 && controlpoints.size() > 0) {
 
+			/*
 			nDOFsInCol.resize(nodes.size());
 			for(size_t i=0; i<nDOFsInCol.size(); ++i){ nDOFsInCol[i] = 0; }
 
 			nDOFsInRow.resize(controlpoints.size());
 			for(size_t i=0; i<nDOFsInRow.size(); ++i){ nDOFsInRow[i] = 0; }
+			*/
 
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->PrepareSolve();
 			}
 
-			/*
-			int w=0; for(size_t i=0; i<nDOFsInCol.size(); ++i){ w+=nDOFsInCol[i]; }
-			int h=0; for(size_t j=0; j<nDOFsInRow.size(); ++j){ h+=nDOFsInRow[j]; }
-			Jc.resize(h,w);
-			v_.resize(h);
-			w_.resize(w);
+			// int w=0; for(size_t i=0; i<nDOFsInCol.size(); ++i){ w+=nDOFsInCol[i]; }
+			// int h=0; for(size_t j=0; j<nDOFsInRow.size(); ++j){ h+=nDOFsInRow[j]; }
+			// Jc.resize(h,w);
+			// v_.resize(h);
+			// w_.resize(w);
 			// std::cout << "h: " << h << ",  w: " << w << std::endl;
 
+			/*
 			int m=0;
 			for(size_t i=0; i<nDOFsInCol.size(); ++i){
 				int n=0;
@@ -75,17 +77,22 @@ void PHIKEngine::Step(){
 			// std::cout << w_ << std::endl;
 			// std::cout << " -- " << std::endl;
 
-			for(size_t n=0; n<numIter; n++){
+			int iter = numIter;
+			if (iter < 0) { iter = 200; }
+			for(size_t n=0; n<iter; n++){
+				double dErr = 0;
 				for(size_t i=0; i<nodes.size(); ++i){
 					nodes[i]->ProceedSolve();
 					PTM::VVector<double> diff = (DCAST(PHIKNode,nodes[i])->dTheta_prev - DCAST(PHIKNode,nodes[i])->dTheta);
-					// std::cout << n << "," << i << " : " << diff.norm() << std::endl;
+					dErr += (diff.norm() * diff.norm());
 					// std::cout << " -- -- -- " << std::endl;
 					// std::cout << "dT   : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
 					// std::cout << "dTp  : " << DCAST(PHIKNode,nodes[i])->dTheta_prev << std::endl;
 					// std::cout << "diff : " << diff << std::endl;
 					// std::cout << " -- -- -- " << std::endl;
 				}
+				// std::cout << n << " : " << sqrt(dErr) << std::endl;
+				if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
 			}
 
 			/*
@@ -106,6 +113,23 @@ void PHIKEngine::Step(){
 			}
 			std::cout << "puts Math::sqrt(d)" << std::endl << std::endl;
 			*/
+
+			double d = 0;
+			for(size_t i=0; i<nodes.size(); ++i){
+				double sq_d = DCAST(PHIKNode,nodes[i])->dTheta.norm();
+				d += (sq_d * sq_d);
+			}
+			double limitation = 1.0;
+
+			// std::cout << sqrt(d) << std::endl;
+			double limit = Rad(355);
+			if (limit < sqrt(d)) {
+				limitation = (1 / sqrt(d)) * limit;
+			}
+
+			for(size_t i=0; i<nodes.size(); ++i){
+				// DCAST(PHIKNode,nodes[i])->dTheta = (DCAST(PHIKNode,nodes[i])->dTheta * limitation);
+			}
 
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->Move();
@@ -301,8 +325,10 @@ void PHIKNode::CalcAllJacobian(){
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
 
+		/*
 		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInCol[number] = ndof;
 		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInRow[n]      = 3;
+		*/
 
 		/*
 		DSTR << "M_" << number << "_" << n << " = ";
@@ -595,6 +621,12 @@ void PHIKBallJoint::Move(){
 
 	// 関節のローカル座標系にする
 	Quaterniond pos = Qj.Inv() * dQ * Qj * joint->GetPosition();
+	// Quaterniond pos = Qj.Inv() * dQ * Qj * jGoal;
+
+	Vec3d goal = pos.RotationHalf();
+	Vec3d orig = jGoal.RotationHalf();
+	Vec3d newGoal = (jSpring*orig + jSpring*10*goal) * (1/(jSpring + jSpring*10));
+	pos = Quaterniond::Rot(newGoal.norm(), newGoal.unit());
 
 	// 関節を動かす
 	joint->SetGoal(pos);
@@ -656,12 +688,14 @@ void PHIKHingeJoint::Move(){
 	// 新しい回転角度
 	double angle  = joint->GetPosition() + (dTheta[0]);
 
+	double newGoal = (jSpring*jGoal + jSpring*10*angle) * (1/(jSpring + jSpring*10));
+
 	// トルクを実現するためのオフセットの追加
 	double torque = tau[0];
-	angle += torque * Rad(16) / joint->GetSpring();
+	newGoal += torque * Rad(16) / joint->GetSpring();
 
 	// 関節を動かす
-	joint->SetSpringOrigin(angle);
+	joint->SetSpringOrigin(newGoal);
 }
 
 }

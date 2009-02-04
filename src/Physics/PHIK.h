@@ -212,6 +212,11 @@ protected:
 	/// 制御対象の関節
 	PHBallJointIf* joint;
 
+	/// 制御対象関節のバネダンパ初期値と基準姿勢
+	double			jSpring;
+	double			jDamper;
+	Quaterniond		jGoal;
+
 	/// IKの回転軸
 	Vec3d e[3];
 
@@ -234,6 +239,10 @@ public:
 	virtual void SetDesc(const void* d){
 		PHIKNode::SetDesc(d);
 		this->joint = ((PHIKBallJointDesc*)d)->joint;
+		PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
+		this->jSpring = dJ.spring;
+		this->jDamper = dJ.damper;
+		this->jGoal   = dJ.goal;
 	}
 
 	/** @brief 計算結果に従って制御対象を動かす
@@ -263,6 +272,11 @@ protected:
 	/// 制御対象の関節
 	PHHingeJointIf *joint;
 
+	/// 制御対象関節のバネダンパ初期値と基準姿勢
+	double		jSpring;
+	double		jDamper;
+	double		jGoal;
+
 public:
 	SPR_OBJECTDEF(PHIKHingeJoint);
 
@@ -282,6 +296,9 @@ public:
 	virtual void SetDesc(const void* d){
 		PHIKNode::SetDesc(d);
 		this->joint = ((PHIKHingeJointDesc*)d)->joint;
+		this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
+		this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
+		this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetSpringOrigin();
 	}
 
 	/** @brief 計算結果に従って制御対象を動かす
