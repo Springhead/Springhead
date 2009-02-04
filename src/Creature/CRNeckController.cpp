@@ -39,8 +39,9 @@ void CRNeckController::Init(){
 
 		CRBallHumanBodyIf* ballBody = DCAST(CRBallHumanBodyIf, creature->GetBody(i));
 		if (ballBody) {
-			soHead = ballBody->GetSolid(CRBallHumanBodyDesc::SO_HEAD);
-			cpHead = DCAST(PHIKOriCtlIf,ballBody->GetControlPoint(2*CRBallHumanBodyDesc::SO_HEAD+1));
+			soHead  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_HEAD);
+			soChest = ballBody->GetSolid(CRBallHumanBodyDesc::SO_CHEST);
+			cpHead  = DCAST(PHIKOriCtlIf,ballBody->GetControlPoint(2*CRBallHumanBodyDesc::SO_HEAD+1));
 		}
 	}
 
@@ -52,9 +53,33 @@ void CRNeckController::Step(){
 	CRController::Step();
 
 	if (cpHead) {
+		/*/
+		/// 頭からみたターゲットの位置（グローバル）
+		Vec3d dt  = (pos - soHead->GetPose().Pos());
+		/// 胸剛体上の座標系に変換
+		Vec3d etL = (soChest->GetPose().Ori().Inv() * dt).unit();
+		/// y軸周りの回転角を算出
+		Vec3d exz = etL; exz[1] = 0; exz = exz.unit();
+		double tY = acos(PTM::dot(exz, Vec3d(0,0,-1)));
+		if (exz[0] > 0) { tY = -tY; }
+		/// x軸周りの回転角を算出
+		Vec3d eyz = Quaterniond::Rot(-tY,'y') * etL;
+		double tX = acos(PTM::dot(eyz, Vec3d(0,0,-1)));
+		if (eyz[1] < 0) { tX = -tX; }
+		/// 頭の回転を計算（胸剛体ローカル）
+		Quaterniond qHL = Quaterniond::Rot(tY,'y') * Quaterniond::Rot(tX,'x');
+		/// 頭の回転を計算（グローバル）
+		Quaterniond qHG = soChest->GetPose().Ori() * qHL;
+
+		cpHead->SetGoal(qHG);
+		/**/
+
+		/**/
 		Vec3d rot = PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), (pos-(soHead->GetPose().Pos())).unit());
 		Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
 		cpHead->SetGoal(qt*soHead->GetPose().Ori());
+		/**/
+
 		/*
 		std::cout << rot << std::endl;
 		std::cout << qt*soHead->GetPose().Ori() << std::endl;

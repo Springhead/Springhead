@@ -846,8 +846,8 @@ void CRBallHumanBody::InitSolidPose(){
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
-	ballDesc.spring = 100000;
-	ballDesc.damper =  12000;
+	ballDesc.spring = 10000;
+	ballDesc.damper =  1200;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -861,8 +861,8 @@ void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double spr
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
-	hingeDesc.spring = 100000;
-	hingeDesc.damper =  12000;
+	hingeDesc.spring = 10000;
+	hingeDesc.damper =  1200;
 }
 
 void CRBallHumanBody::CreateIKNode(int n) {
@@ -887,7 +887,7 @@ void CRBallHumanBody::CreateIKControlPoint(int n) {
 	ikControlPoints[2*n+1] = phScene->CreateIKControlPoint(descIKCPOri);
 	ikControlPoints[2*n+1]->Enable(false);
 
-	// 標準姿勢指向制御（おためし -> やっぱだめかも -> IK変えたのでもいちどおためし）
+	// 標準姿勢指向制御（おためし -> やっぱだめかも -> IK変えたのでもいちどおためし -> やっぱだめだー）
 	descIKCPOri.solid = solids[n];
 	ikControlPoints[2*SO_NSOLIDS+n] = phScene->CreateIKControlPoint(descIKCPOri);
 	ikControlPoints[2*SO_NSOLIDS+n]->Enable(false);
