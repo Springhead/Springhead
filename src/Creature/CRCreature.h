@@ -119,6 +119,12 @@ public:
 	/** @brief “à•”ƒV[ƒ“‚ğæ“¾‚·‚é
 	*/
 	virtual CRInternalSceneIf* GetInternalScene();
+
+	/** @brief Body‚ğ’Ç‰Á‚·‚é
+	*/
+	void AddBody(CRBodyIf* b) {
+		this->body.push_back(b->Cast());
+	}
 };
 }
 //@}
