@@ -324,6 +324,10 @@ void PHIKNode::CalcAllJacobian(){
 
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
+		/*
+		std::cout << "M_" << number << "_" << n << " = ";
+		std::cout << Mj[n] << std::endl;
+		*/
 
 		/*
 		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInCol[number] = ndof;
@@ -331,9 +335,9 @@ void PHIKNode::CalcAllJacobian(){
 		*/
 
 		/*
-		DSTR << "M_" << number << "_" << n << " = ";
+		std::cout << "M_" << number << "_" << n << " = ";
 		Mj[n].print(DSTR, "[ ] ,;");
-		DSTR << ";" << std::endl;
+		std::cout << ";" << std::endl;
 		*/
 	}
 }
@@ -568,6 +572,8 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 
 		return M;
 	}
+
+	std::cout << "??!!" << std::endl;
 
 	return PTM::VMatrixRow<double>();
 }
