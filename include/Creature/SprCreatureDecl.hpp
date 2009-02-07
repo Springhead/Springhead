@@ -166,3 +166,10 @@
 	bool IsInCenter(Vec3f pos){	return	base::IsInCenter(pos);}	\
 	bool IsSelfSolid(Spr::PHSolidIf* solid){	return	base::IsSelfSolid(solid);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_CRTouchSensorIf(base)	\
+	int NContacts(){	return	base::NContacts();}	\
+	Spr::PHSolidIf* GetContactSolidMe(int n){	return	base::GetContactSolidMe(n);}	\
+	Spr::PHSolidIf* GetContactSolidOther(int n){	return	base::GetContactSolidOther(n);}	\
+	double GetContactPressure(int n){	return	base::GetContactPressure(n);}	\
+	Vec3d GetContactPos(int n){	return	base::GetContactPos(n);}	\
+

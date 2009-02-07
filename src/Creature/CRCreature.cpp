@@ -9,6 +9,7 @@
 
 #include "CRSensor.h"
 #include "CROpticalSensor.h"
+#include "CRTouchSensor.h"
 
 #include "CRController.h"
 #include "CRAttentionController.h"
@@ -129,6 +130,9 @@ int CRCreature::NBodies(){
 CRSensorIf* CRCreature::CreateSensor(const IfInfo* ii, const CRSensorDesc& desc){
 	if (ii == CROpticalSensorIf::GetIfInfoStatic()) {
 		sensors.push_back((DBG_NEW CROpticalSensor((const CROpticalSensorDesc&)desc, this->Cast()))->Cast());
+
+	} else if (ii == CRTouchSensorIf::GetIfInfoStatic()) {
+		sensors.push_back((DBG_NEW CRTouchSensor((const CRTouchSensorDesc&)desc, this->Cast()))->Cast());
 
 	} else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");

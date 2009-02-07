@@ -1604,3 +1604,16 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CRTouchSensorDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CRSensor::SetDesc((CRSensorDesc*)(CRTouchSensorDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CRSensor::GetDesc((CRSensorDesc*)(CRTouchSensorDesc*)ptr);	\
+		return true;	\
+	}\
+

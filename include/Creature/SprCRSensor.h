@@ -75,6 +75,40 @@ struct CROpticalSensorDesc : CRSensorDesc{
 	}
 };
 
+// ------------------------------------------------------------------------------
+/// 触覚センサのインタフェース
+struct CRTouchSensorIf : CRSensorIf{
+	SPR_IFDEF(CRTouchSensor);
+
+	/** @brief 現在の接触の個数を返す
+	*/
+	int NContacts();
+
+	/** @brief 接触している剛体（自分の）を返す
+	*/
+	PHSolidIf* GetContactSolidMe(int n);
+
+	/** @brief 接触している剛体（相手の）を返す
+	*/
+	PHSolidIf* GetContactSolidOther(int n);
+
+	/** @brief 接触圧力の大きさを返す
+	*/
+	double GetContactPressure(int n);
+
+	/** @brief 接触地点（グローバル座標）を返す
+	*/
+	Vec3d GetContactPos(int n);
+};
+
+/// 触覚センサのデスクリプタ
+struct CRTouchSensorDesc : CRSensorDesc{
+	SPR_DESCDEF(CRTouchSensor);
+
+	CRTouchSensorDesc(){
+	}
+};
+
 //@}
 
 }
