@@ -6,6 +6,8 @@
 	void SetPosCorrectionRate(double value){	base::SetPosCorrectionRate(value);}	\
 	void SetContactCorrectionRate(double value){	base::SetContactCorrectionRate(value);}	\
 	void SetUpdateAllSolidState(bool flag){	base::SetUpdateAllSolidState(flag);}	\
+	void SetShrinkRate(double data){	base::SetShrinkRate(data);}	\
+	void SetShrinkRateCorrection(double data){	base::SetShrinkRateCorrection(data);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGravityEngineIf(base)	\
 

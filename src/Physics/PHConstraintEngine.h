@@ -91,7 +91,7 @@ public:
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
-	bool	bUpdateAllState;
+	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
 
 	PHConstraintEngine();
 	~PHConstraintEngine();
@@ -109,6 +109,7 @@ public:
 	//virtual void Dynamics(double dt, int ct);		///< 
 	//virtual void Correction(double dt, int ct);		///< 
 	void UpdateSolids();			///< 結果をSolidに反映する
+	void UpdateOnlyVelocity();		///< 結果の速度のみをSolidに反映させ，位置はそのまま．
 	void Clear();
 
 	PHConstraints	points;			///< 接触点の配列
@@ -130,7 +131,8 @@ public:
 	virtual void SetContactCorrectionRate(double value){contactCorrectionRate = value;}
 	virtual void SetBSaveConstraints(bool value){bSaveConstraints = value;}
 	virtual void SetUpdateAllSolidState(bool flag){bUpdateAllState = flag;}
-
+	virtual void SetShrinkRate(double data){shrinkRate = data;}
+	virtual void SetShrinkRateCorrection(double data){shrinkRateCorrection = data;}
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
 

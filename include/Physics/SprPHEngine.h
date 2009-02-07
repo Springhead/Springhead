@@ -44,6 +44,15 @@ public:
 	/** @brief 剛体の速度だけ更新するフラグを設定する
 	*/
 	void SetUpdateAllSolidState(bool flag);
+
+	/** @brief shrinkRateの値を設定する
+	*/
+	void SetShrinkRate(double data);
+	
+	/** @brief shrinkRateCorrectionの値を設定する
+	*/
+	void SetShrinkRateCorrection(double data);
+
 };
 
 struct PHGravityEngineIf : PHEngineIf{
