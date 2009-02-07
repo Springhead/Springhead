@@ -62,6 +62,14 @@ struct PHIKPosCtlIf : PHIKControlPointIf{
 	/** @brief 目標地点を取得する
 	*/
 	Vec3d GetGoal();
+
+	/** @brief 制御点の位置を設定する
+	*/
+	void SetPos(Vec3d pos);
+
+	/** @brief 制御点の位置を取得する
+	*/
+	Vec3d GetPos();
 };
 
 struct PHIKPosCtlDesc : PHIKControlPointDesc{

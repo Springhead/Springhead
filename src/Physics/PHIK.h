@@ -431,6 +431,14 @@ public:
 	/** @brief 目標地点を取得する
 	*/
 	virtual Vec3d GetGoal(){ return goal; }
+
+	/** @brief 制御点の位置を設定する
+	*/
+	virtual void SetPos(Vec3d pos){ this->pos = pos; }
+
+	/** @brief 制御点の位置を取得する
+	*/
+	virtual Vec3d GetPos(){ return pos; }
 };
 
 class PHIKOriCtl : public PHIKControlPoint{
