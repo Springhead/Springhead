@@ -91,7 +91,8 @@ public:
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
-	
+	bool	bUpdateAllState;
+
 	PHConstraintEngine();
 	~PHConstraintEngine();
 	
@@ -128,6 +129,7 @@ public:
 	virtual void SetPosCorrectionRate(double value){posCorrectionRate = value;}
 	virtual void SetContactCorrectionRate(double value){contactCorrectionRate = value;}
 	virtual void SetBSaveConstraints(bool value){bSaveConstraints = value;}
+	virtual void SetUpdateAllSolidState(bool flag){bUpdateAllState = flag;}
 
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
