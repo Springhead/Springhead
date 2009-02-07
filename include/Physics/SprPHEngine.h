@@ -40,6 +40,10 @@ public:
 		@param value 書き換え後の値
 	*/
 	void SetContactCorrectionRate(double value);
+
+	/** @brief 剛体の速度だけ更新するフラグを設定する
+	*/
+	void SetUpdateAllSolidState(bool flag);
 };
 
 struct PHGravityEngineIf : PHEngineIf{

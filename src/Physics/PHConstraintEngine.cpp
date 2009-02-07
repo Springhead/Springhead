@@ -174,12 +174,13 @@ PHConstraintEngine::PHConstraintEngine(){
 	numIterContactCorrection = 0;
 	velCorrectionRate	 = 0.3;
 	posCorrectionRate	 = 0.3;
-	shrinkRate			 = 0.7;
-	shrinkRateCorrection = 0.7;
+	shrinkRate			 = 0;//0.7;
+	shrinkRateCorrection = 0;//0.7;
 	freezeThreshold		 = 0.0;
 	contactCorrectionRate = 0.1;
 	bGearNodeReady = false;
 	bSaveConstraints = false;
+	bUpdateAllState = true;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -446,7 +447,9 @@ void PHConstraintEngine::UpdateSolids(){
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
 		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
 			(*is)->UpdateVelocity(dt);
-			(*is)->UpdatePosition(dt);
+			if(bUpdateAllState){
+				(*is)->UpdatePosition(dt);
+			}
 			(*is)->SetUpdated(true);
 		}
 	}
@@ -454,7 +457,9 @@ void PHConstraintEngine::UpdateSolids(){
 	// ツリーに属する剛体の更新
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 		(*it)->UpdateVelocity(dt);
-		(*it)->UpdatePosition(dt);
+		if(bUpdateAllState){
+			(*it)->UpdatePosition(dt);
+		}
 	}
 }
 

@@ -183,7 +183,8 @@ void PHBallJoint::CompBias(){
 		propV = Jcinv * propV;
 	}
 	if(mode == PHJointDesc::MODE_VELOCITY){
-		db.w()		= -Jcinv * desiredVelocity;
+		if(anyLimit)db.w() = -Jcinv * desiredVelocity;
+		else		db.w() = - desiredVelocity;
 	}
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0){
