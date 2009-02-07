@@ -25,6 +25,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
 	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
 	Vec3d GetGoal(){	return	base::GetGoal();}	\
+	void SetPos(Vec3d pos){	base::SetPos(pos);}	\
+	Vec3d GetPos(){	return	base::GetPos();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKOriCtlIf(base)	\
 	void SetGoal(Quaterniond goal){	base::SetGoal(goal);}	\
