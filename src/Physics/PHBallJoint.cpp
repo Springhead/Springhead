@@ -142,6 +142,10 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 		con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
 		con[4] = spring != 0.0	    || damper != 0.0;
 		con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
+	} else if (mode == PHJointDesc::MODE_VELOCITY){
+		con[3] = true;
+		con[4] = true;
+		con[5] = true;
 	} else {
 		con[3] = onLimit[0].onUpper || onLimit[0].onLower;
 		con[4] = false;
@@ -164,12 +168,11 @@ void PHBallJoint::ModifyJacobian(){
 }
 
 void PHBallJoint::CompBias(){
-	
-
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
 	db.v() *= engine->velCorrectionRate;
+
 	// 位置制御の時の計算
 	/*******************************************************************************************************
 	足りない角度の差を回転軸ベクトルに変換．propV(田崎さんの論文でいうq[t])に対してdb.w()を計算している.
@@ -177,40 +180,38 @@ void PHBallJoint::CompBias(){
 	********************************************************************************************************/
 	Quaterniond propQ = goal * Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
 	Vec3d propV = propQ.RotationHalf();			
-
 	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
 	if (anyLimit){
 		propV = Jcinv * propV;
 	}
+
+
 	if(mode == PHJointDesc::MODE_VELOCITY){
 		if(anyLimit)db.w() = -Jcinv * desiredVelocity;
 		else		db.w() = - desiredVelocity;
-	}
-	// バネダンパが入っていたら構築する
-	if (spring != 0.0 || damper != 0.0){
-		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
-		/*****************************************************************************
-		w[t+1] = (A+dA) * λ[t+1] + (b+db)
-		のAの内，バネダンパを構成するのは，BallJointの場合は回転の三軸についてなので，
-		SpatialVector dA.w()にtmp = (D + K⊿t)^{-1}を入れている．
-		dtinvをさらにかけるのは,pptなど表記とは違い，A=JM^{-1}J^T ⊿tのうち，
-		プログラム中で計算しているのは，A = JM^{-1}J^Tだけ．
-		あとから(A + dA)⊿tをしているため
-		******************************************************************************/
-		dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
+	}else if (mode == PHJointDesc::MODE_POSITION){
+		// バネダンパが入っていたら構築する
+		if (spring != 0.0 || damper != 0.0){
+			double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
+			/*****************************************************************************
+			w[t+1] = (A+dA) * λ[t+1] + (b+db)
+			のAの内，バネダンパを構成するのは，BallJointの場合は回転の三軸についてなので，
+			SpatialVector dA.w()にtmp = (D + K⊿t)^{-1}を入れている．
+			dtinvをさらにかけるのは,pptなど表記とは違い，A=JM^{-1}J^T ⊿tのうち，
+			プログラム中で計算しているのは，A = JM^{-1}J^Tだけ．
+			あとから(A + dA)⊿tをしているため
+			******************************************************************************/
+			dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
-		/****
-		田崎さんの論文の式25のdbに相当する．
-		位置制御のみであれば，以下の式の1行目のみ．
-		軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
-		****/
-		db.w() = tmp * ((spring * -propV)
-					  - (damper * desiredVelocity)
-					  +  offset);
-	}
-	else{
-		//dA.w().clear();
-		db.w().clear();
+			/****
+			田崎さんの論文の式25のdbに相当する．
+			位置制御のみであれば，以下の式の1行目のみ．
+			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
+			****/
+			db.w() = tmp * ((spring * -propV)
+						  - (damper * desiredVelocity)
+						  +  offset);
+		}
 	}
 	
 	// vJc : Jcによって写像される拘束座標系から見たPlugの角速度

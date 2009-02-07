@@ -174,8 +174,8 @@ PHConstraintEngine::PHConstraintEngine(){
 	numIterContactCorrection = 0;
 	velCorrectionRate	 = 0.3;
 	posCorrectionRate	 = 0.3;
-	shrinkRate			 = 0;//0.7;
-	shrinkRateCorrection = 0;//0.7;
+	shrinkRate			 = 0.7;
+	shrinkRateCorrection = 0.7;
 	freezeThreshold		 = 0.0;
 	contactCorrectionRate = 0.1;
 	bGearNodeReady = false;
@@ -463,6 +463,23 @@ void PHConstraintEngine::UpdateSolids(){
 	}
 }
 
+void PHConstraintEngine::UpdateOnlyVelocity(){
+	double dt = GetScene()->GetTimeStep();
+
+	// ツリーに属さない剛体の更新
+	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
+		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
+			(*is)->UpdateVelocity(dt);
+			(*is)->SetUpdated(true);
+		}
+	}
+
+	// ツリーに属する剛体の更新
+	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
+		(*it)->UpdateVelocity(dt);	
+	}
+}
+
 #ifdef REPORT_TIME
 }
 #include <Foundation/UTPreciseTimer.h>
@@ -527,7 +544,8 @@ void PHConstraintEngine::StepPart2(){
 	SetupCorrectionLCP();
 	IterateCorrectionLCP();
 	//位置・速度の更新
-	UpdateSolids();	
+	if(bUpdateAllState) UpdateSolids();	
+	else UpdateOnlyVelocity();
 }
 	
 void PHConstraintEngine::Step(){
