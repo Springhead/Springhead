@@ -33,6 +33,8 @@ public:
 	/// ただし、球体に関しては、切り口は求めない。接触解析時には最近傍の１点さえあればいい。
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
+	/// 表面上の点pにおける曲率半径を求める
+	virtual double CurvatureRadius(Vec3d p);
 	
 	Vec2f GetRadius();
 	float GetLength();

@@ -22,8 +22,10 @@
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDShapePairIf(base)	\
+	Spr::CDShapeIf* GetShape(int i){	return	base::GetShape(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDConvexIf(base)	\
+	double CurvatureRadius(Vec3d p){	return	base::CurvatureRadius(p);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDFaceIf(base)	\
 	int NIndex(){	return	base::NIndex();}	\

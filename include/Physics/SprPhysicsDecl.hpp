@@ -309,6 +309,7 @@
 	Vec3d GetSectionVertex(int i){	return	base::GetSectionVertex(i);}	\
 	double GetContactDimension(){	return	base::GetContactDimension();}	\
 	Vec3d GetNormalVector(){	return	base::GetNormalVector();}	\
+	Spr::CDShapeIf* GetShape(int i){	return	base::GetShape(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSolidPairForLCPIf(base)	\
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\

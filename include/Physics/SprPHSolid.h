@@ -276,6 +276,9 @@ struct PHShapePairForLCPIf : public ObjectIf{
 	/** @brief 交差断面の単位法線ベクトルを取得する
 	*/
 	Vec3d GetNormalVector();
+
+	/// 形状を取得する
+	CDShapeIf* GetShape(int i);
 };
 
 struct PHSolidPairForLCPIf : public ObjectIf{

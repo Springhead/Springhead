@@ -39,66 +39,30 @@ float CDRoundCone::CalcVolume(){
 Vec3f CDRoundCone::Support(const Vec3f& p) const {
 	// Z²‘O•û‚ªradius[0]AŒã•û‚ªradius[1]
 	float normal_Z = (radius[1] - radius[0]) / length;
-	// std::cout << Deg(acos(normal_Z)) << std::endl;
 	Vec3f dir;
 	if (p.norm()!=0) {
 		dir = p / p.norm();
 	} else {
 		dir = Vec3f(1,0,0);
 	}
-	// std::cout << normal_Z << ", " << dir.Z() << std::endl;
 
 	if (-M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
 		if (normal_Z < dir.Z()) {
 			// p‚Ì•û‚ªZ²‘O•û ¨ radius[0]‚ğg—p
-			// std::cout << "[0] : " << dir*radius[0] + Vec3f(0,0, length/2.0) << std::endl;
 			return dir*radius[0] + Vec3f(0,0, length/2.0);
 		} else {
 			// p‚Ì•û‚ªZ²Œã•û ¨ radius[1]‚ğg—p
-			// std::cout << "[1] : " << dir*radius[1] + Vec3f(0,0,-length/2.0) << std::endl;
 			return dir*radius[1] + Vec3f(0,0,-length/2.0);
 		}
 	} else {
 		// ‚Ç‚¿‚ç‚©‚Ì‹…‚É•ïŠÜ‚³‚ê‚Ä‚¢‚é
 		if (radius[1] < radius[0]) {
-			// std::cout << "[0]* : " << dir*radius[0] + Vec3f(0,0, length/2.0) << std::endl;
 			return dir*radius[0] + Vec3f(0,0, length/2.0);
 		} else {
-			// std::cout << "[1]* : " << dir*radius[1] + Vec3f(0,0,-length/2.0) << std::endl;
 			return dir*radius[1] + Vec3f(0,0,-length/2.0);
 		}
 	}
-
-	/*
-	// std::cout << "p : " << p << std::endl;
-	float dr = (radius[1]-radius[0]);
-	Vec3d d = Vec3d(length,0,dr); d = d / d.norm();
-	float n = p.norm();
-	Vec3d q;
-	Vec3f off;
-	if(n < 1.0e-10f){
-		off = Vec3f();
-		q = Vec3f();
-	}else{
-		off = n * p;
-		q = p / n;
-	}
-	// std::cout << "q : " << q << std::endl;
-	// std::cout << "d : " << d << std::endl;
-	if (q.Z() >= d.Z()){
-		off *= radius[0];
-		off.Z() += length*0.5f;
-		// std::cout << "r[0] : " << radius[0] << std::endl;
-	}else{
-		off *= radius[1];
-		off.Z() -= length*0.5f;
-		// std::cout << "r[1] : " << radius[1] << std::endl;
-	}
-	// std::cout << "off : " << off << std::endl;
-	return off;
-	*/
 }
-
 
 // Ø‚èŒû‚ğ‹‚ß‚é. ÚG‰ğÍ‚ğs‚¤.
 bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
@@ -132,39 +96,61 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		// ‚Ç‚¿‚ç‚©‚ª•ïŠÜ‚³‚ê‚Ä‚É‹…‘Ì‚É‚È‚Á‚Ä‚¢‚é
 		return false;
 	}
+}
+
+double CDRoundCone::CurvatureRadius(Vec3d p){
+	Vec2d	r = radius;
+	double	l = length;
+
+	// RoundCone‚Ì‘¤–Ê‚ÌŠp“xi‘¤–Ê‚ªZ²‚É‚’¼‚È‚Æ‚«0‹A•½s(‚Â‚Ü‚èƒJƒvƒZƒ‹Œ^)‚Ì‚Æ‚«90‹j
+	double theta = acos((r[1]-r[0])/l);
+	// ÚG“_‚ÌZÀ•W
+	double Zc = p[2];
 
 	/*
-	//	Ø‚èŒû(ring.local)Œn‚Å‚Ì ƒJƒvƒZƒ‹‚ÌŒü‚«
-	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
-	if (dir.X() < 0) dir = -dir;
-	
-	if (dir.X() < 0.3f){		//	ƒJƒvƒZƒ‹‚ªÚG–Ê‚É‘å‘Ì•½s‚Èê‡
-		float shrink = sqrt(1-dir.X()*dir.X());	//	ŒX‚¢‚Ä‚¢‚é‚½‚ß‚É‹——£‚ªk‚ŞŠ„‡
-		float start = -0.5f*length*shrink;
-		float end = 0.5f*length*shrink;
-		if (dir.X() > 1e-4){	//	Š®‘S‚É•½s‚Å‚È‚¢ê‡
-			Vec3f center = ring.localInv * toW.Pos();
-			float is = -(center.X()-radius[0]/shrink) / dir.X() * shrink;	//	ÚG–Ê‚Æ’†Sü‚ğ”¼Œa‚¸‚ç‚µ‚½ü‚Æ‚ÌŒğ“_
-			if (is < end) end = is;
-
-			if (end+0.001 < start){
-				DSTR << "CDRoundCone::FindCutRing() may have a problem" << std::endl;
-			}
-//			assert(end + 0.001 >= start);
-
-			if (end <= start) return false;
-		}
-
-		//	ring‚Éü•ª‚ğ’Ç‰Á
-		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), -start));
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z()), end));
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y()), 0));
-		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y()), 0));
-		return true;
-	}else{
-		return false;
-	}
+	ÚG“_‚ª‚Ç‚¿‚ç‚©‚Ì‹…‘Ì‚É‚ ‚éê‡F
 	*/
+	if (Zc > (r[0]*cos(theta) + l/2.0)) {
+		return r[0];
+	} else if (Zc < (r[1]*cos(theta) - l/2.0)) {
+		return r[1];
+	}
+
+	/*
+	ÚG“_‚ª‹…‘Ì‚Æ‹…‘Ì‚ÌŠÔ‚É‚ ‚éê‡F
+	ÚG“_‚ğ’Ê‚èAÚG“_‚ÌˆÊ’u‚Å‘¤–Ê‚Æ’¼Œğ‚·‚é’f–Ê‚É‚¨‚¯‚éRoundCone‚ÌØ’f‚ğl‚¦‚éB
+	‚»‚Ì’f–Ê‚Í‘È‰~‚Æ‚È‚èA‚»‚Ì‘È‰~‚ÌÅ¬‹È—¦”¼Œai’·²‚Ì’[‚É‚¨‚¯‚é‹È—¦”¼Œaj‚ª‹‚ß‚é‚à‚Ì‚Æ‚È‚éB
+	*/
+
+	/// -- RoundCone‚ğ‰„’·‚µ‚½‰~‚Ì’¸“_‚ÌZÀ•W
+	double Z0 = l/2*(r[1]+r[0])/(r[1]-r[0]);
+
+	/// -- Z-RÀ•WŒn‚ÅŒ©‚½‚Æ‚«‚Ì‘¤–Ê‚ÌŒX‚«
+	double M1 = tan(Rad(90) - theta);
+	/// -- Z-RÀ•WŒn‚ÅŒ©‚½‚Æ‚«‚Ì’f–Ê‚ÌŒX‚«
+	double M2 = tan(theta);
+
+	/// -- Ø’f–Ê‚ÌŒü‚±‚¤‘¤‚Ì“_
+	double Za = (M1*Z0-M2*Zc)/(M1-M2);
+	Vec2d pA = Vec2d(Za, -M1*Za + M1*Z0);
+	/// -- Ø’f–Ê‚Ì‚±‚Á‚¿‘¤‚Ì“_
+	double Zb = (M1*Z0+M2*Zc)/(M1+M2);
+	Vec2d pB = Vec2d(Zb,  M1*Zb - M1*Z0);
+	/// -- RoundCone‚ğ‰„’·‚µ‚½‰~‚Ì’¸“_
+	Vec2d p0 = Vec2d(Z0, 0);
+
+	/// -- Ø’f‘È‰~‚Ì‘å‚«‚³‚ğl‚¦‚é‚½‚ß‚ÌOŠpŒ`‚ÌO•Ó
+	double Ta = (pB - p0).norm(), Tb = (pA - p0).norm(), Tc = (pA - pB).norm();
+	/// -- Ø’f‘È‰~‚Ì’·²”¼Œa
+	double eL = Tc/2;
+	/// -- Ø’f‘È‰~‚Ì’†S‚©‚çÅ“_‚Ü‚Å‚Ì‹——£i’·²”¼Œa‚©‚çTa,Tb,Tc‚©‚ç‚È‚éOŠpŒ`‚Ì“àÚ‰~”¼Œa‚ğˆø‚¢‚½‚à‚Ì‚É‚È‚éj
+	double f = eL - (Ta*Tc)/(Ta+Tb+Tc);
+	/// -- Ø’f‘È‰~‚Ì’Z²”¼Œa
+	double eS = sqrt(eL*eL - f*f);
+	/// -- Ø’f‘È‰~‚ÌÅ¬‹È—¦”¼Œa
+	double Rmin = eS*eS / eL;
+
+	return Rmin;
 }
 
 Vec2f CDRoundCone::GetRadius() {
