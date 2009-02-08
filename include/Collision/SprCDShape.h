@@ -65,11 +65,15 @@ struct CDShapeIf : public NamedObjectIf{
 ///	形状ペアの基本クラス
 struct CDShapePairIf : public ObjectIf{
 	SPR_IFDEF(CDShapePair);
+
+	/// 形状を取得する
+	CDShapeIf* GetShape(int i);
 };
 
 ///	凸形状の基本クラス
 struct CDConvexIf : public CDShapeIf{
 	SPR_IFDEF(CDConvex);
+	double CurvatureRadius(Vec3d p); ///< 表面上の点pにおける曲率半径
 };
 
 /**	面	*/

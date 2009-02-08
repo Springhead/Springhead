@@ -58,6 +58,9 @@ public:
 
 	///	法線の計算
 	void CalcNormal();
+
+	/// 形状を取得する
+	CDShapeIf* GetShape(int i){ return shape[i]->Cast(); }
 };
 //	デバッグ用ツール
 void CallDetectContinuously(std::istream& file, PHSdkIf* sdk);
