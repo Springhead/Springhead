@@ -38,6 +38,7 @@ struct PHJointDesc : public PHConstraintDesc{
 		MODE_TORQUE=0,
 		MODE_POSITION,
 		MODE_VELOCITY,
+		MODE_TRAJ,
 	} mode;
 	
 	PHJointDesc();

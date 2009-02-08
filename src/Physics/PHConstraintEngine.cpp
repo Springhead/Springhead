@@ -447,9 +447,7 @@ void PHConstraintEngine::UpdateSolids(){
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
 		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
 			(*is)->UpdateVelocity(dt);
-			if(bUpdateAllState){
-				(*is)->UpdatePosition(dt);
-			}
+			(*is)->UpdatePosition(dt);
 			(*is)->SetUpdated(true);
 		}
 	}
@@ -457,9 +455,7 @@ void PHConstraintEngine::UpdateSolids(){
 	// ツリーに属する剛体の更新
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 		(*it)->UpdateVelocity(dt);
-		if(bUpdateAllState){
-			(*it)->UpdatePosition(dt);
-		}
+		(*it)->UpdatePosition(dt);
 	}
 }
 

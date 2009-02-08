@@ -142,7 +142,7 @@ void PHBallJoint::SetConstrainedIndex(bool* con){
 		con[3] = onLimit[0].onUpper || onLimit[0].onLower || spring != 0.0 || damper != 0.0;
 		con[4] = spring != 0.0	    || damper != 0.0;
 		con[5] = onLimit[1].onUpper || onLimit[1].onLower || spring != 0.0 || damper != 0.0;
-	} else if (mode == PHJointDesc::MODE_VELOCITY){
+	} else if (mode == PHJointDesc::MODE_VELOCITY || mode == PHJointDesc::MODE_TRAJ){
 		con[3] = true;
 		con[4] = true;
 		con[5] = true;
@@ -185,10 +185,16 @@ void PHBallJoint::CompBias(){
 		propV = Jcinv * propV;
 	}
 
-
 	if(mode == PHJointDesc::MODE_VELOCITY){
-		if(anyLimit)db.w() = -Jcinv * desiredVelocity;
-		else		db.w() = - desiredVelocity;
+		if(anyLimit)
+			db.w() = -Jcinv * desiredVelocity;
+		else
+			db.w() = - desiredVelocity;
+	}else if(mode == PHJointDesc::MODE_TRAJ){
+		if(anyLimit)
+			db.w() = -Jcinv * (desiredVelocity + spring * propV);
+		else
+			db.w() = - (desiredVelocity + spring * propV);
 	}else if (mode == PHJointDesc::MODE_POSITION){
 		// バネダンパが入っていたら構築する
 		if (spring != 0.0 || damper != 0.0){
