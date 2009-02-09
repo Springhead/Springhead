@@ -694,6 +694,10 @@ struct CRTrunkFootHumanBodyDesc : CRBodyDesc {
 /// おもに胴体と足のみの哺乳類モデルのインターフェイス（制御用）
 struct CRFourLegsTinyAnimalBodyIf : CRBodyIf{
 	SPR_IFDEF(CRFourLegsTinyAnimalBody);
+
+	Vec2d GetSwingLimit();
+
+	Vec2d GetTwistLimit();
 };
 
 /// 胴体と足のみの哺乳類モデルのディスクリプタ
@@ -702,17 +706,21 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 
 	enum CRAnimalSolids{
 		// 剛体
-		SO_BODY=0, SO_HEAD,SO_RIGHT_FRONT_LEG, SO_LEFT_FRONT_LEG,
-		SO_RIGHT_REAR_LEG, SO_LEFT_REAR_LEG,
+		SO_BODY=0,
+		SO_RIGHT_FRONT_LEG_0, SO_LEFT_FRONT_LEG_0,	//< 0が胴体側
+		SO_RIGHT_FRONT_LEG_1, SO_LEFT_FRONT_LEG_1,	//< 1が足先側
+		SO_RIGHT_REAR_LEG_0, SO_LEFT_REAR_LEG_0,
+		SO_RIGHT_REAR_LEG_1, SO_LEFT_REAR_LEG_1,
 		// 剛体の数
 		SO_NSOLIDS
 	};
 
 	enum CRAnimalJoints{
 		// 関節
-		JO_BODY_HEAD=0,
-		JO_BODY_RIGHT_FRONT_LEG, JO_BODY_LEFT_FRONT_LEG,
-		JO_BODY_RIGHT_REAR_LEG,  JO_BODY_LEFT_REAR_LEG,
+		JO_BODY_RIGHT_FRONT_LEG_0=0, JO_BODY_LEFT_FRONT_LEG_0,
+		JO_BODY_RIGHT_FRONT_LEG_1, JO_BODY_LEFT_FRONT_LEG_1,
+		JO_BODY_RIGHT_REAR_LEG_0,  JO_BODY_LEFT_REAR_LEG_0,
+		JO_BODY_RIGHT_REAR_LEG_1,  JO_BODY_LEFT_REAR_LEG_1,
 		// 関節の数
 		JO_NJOINTS
 	};
