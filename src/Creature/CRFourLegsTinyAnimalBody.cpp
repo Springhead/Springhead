@@ -30,8 +30,8 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	rearLegsHeight      = 1.0;
 	rearLegsThickness   = 0.1;
 
-	springFront   = 10.0;  damperFront   =  5.0;
-	springRear    = 10.0;  damperRear    =  5.0;
+	springFront   = 1.0;  damperFront   =  5.0;
+	springRear    = 1.0;  damperRear    =  5.0;
 
 	// Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø
 	rangeFrontSwing   = Vec2d(Rad(-60.0) , Rad(60.0));
@@ -103,8 +103,8 @@ void CRFourLegsTinyAnimalBody::CreateHead(){
 		sphereDesc.radius			= 0.3;
 		solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 		ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
-		ballDesc.spring				= 500;
-		ballDesc.damper				= 200;
+		ballDesc.spring				= 1;
+		ballDesc.damper				= 10;
 		joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
 	}
 	joints[JO_BODY_HEAD]->SetName("joNeck");
