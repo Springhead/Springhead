@@ -27,10 +27,13 @@ namespace Spr{;
 class CRFourLegsTinyAnimalBody : public CRBody, public CRFourLegsTinyAnimalBodyDesc {
 private:
 	void CreateBody();
-	void CreateHead();
 	void CreateFrontLegs(LREnum lr);
 	void CreateRearLegs(LREnum lr);
 	void InitBody();
+	void InitFrontLeg0(LREnum lr);
+	void InitFrontLeg1(LREnum lr);
+	void InitRearLeg0(LREnum lr);
+	void InitRearLeg1(LREnum lr);
 	void InitLegs();
 
 	void InitContact();
@@ -58,6 +61,8 @@ public:
 	/** @brief èâä˙âªÇé¿çsÇ∑ÇÈ
 	*/
 	virtual void Init();
+	virtual Vec2d GetSwingLimit(){return rangeFrontSwing;}
+	virtual Vec2d GetTwistLimit(){return rangeFrontTwist;}
 
 };
 

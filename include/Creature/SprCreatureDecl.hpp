@@ -36,6 +36,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CRTrunkFootHumanBodyIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRFourLegsTinyAnimalBodyIf(base)	\
+	Vec2d GetSwingLimit(){	return	base::GetSwingLimit();}	\
+	Vec2d GetTwistLimit(){	return	base::GetTwistLimit();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRControllerIf(base)	\
 	void Init(){	base::Init();}	\

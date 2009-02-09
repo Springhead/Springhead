@@ -18,17 +18,17 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 		
 	jointOrder = SOCKET_PARENT;
 
-	bodyBreadth   = 0.5;
-	bodyHeight    = 0.8;
+	bodyBreadth   = 2.5;
+	bodyHeight    = 3.8;
 	bodyThickness = 0.6;
 
-	frontLegsBreadth    = 0.1;
-	frontLegsHeight		= 1.0;
-	frontLegsThickness	= 0.1;
+	frontLegsBreadth    = 0.9;
+	frontLegsHeight		= 1.2;
+	frontLegsThickness	= 0.9;
 
-	rearLegsBreadth     = 0.1;
-	rearLegsHeight      = 1.0;
-	rearLegsThickness   = 0.1;
+	rearLegsBreadth     = 0.9;
+	rearLegsHeight      = 1.2;
+	rearLegsThickness   = 0.9;
 
 	springFront   = 1.0;  damperFront   =  5.0;
 	springRear    = 1.0;  damperRear    =  5.0;
@@ -57,7 +57,6 @@ void CRFourLegsTinyAnimalBody::Init(){
 // --- --- ---
 void CRFourLegsTinyAnimalBody::InitBody(){
 	CreateBody();
-	if(! noHead) CreateHead();
 }
 
 void CRFourLegsTinyAnimalBody::CreateBody(){
@@ -74,44 +73,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	solids[SO_BODY]->SetName("soWaist");
 	solids[SO_BODY]->SetDynamical(false);
 }
-
-void CRFourLegsTinyAnimalBody::CreateHead(){
-	PHSolidDesc		solidDesc;
-	
-	// Solid
-	solidDesc.mass				= 0.1;
-	solids[SO_HEAD]				= phScene->CreateSolid(solidDesc);
-	solids[SO_HEAD]->SetName("soHead");
-
-	if(hingeDebug){
-		PHHingeJointDesc hingeDesc;
-		CDBoxDesc boxDesc;
-		Vec3d size = Vec3d(0.5, 1.5, 0.7);
-		boxDesc.boxsize = size;
-		solids[SO_HEAD]->AddShape(phSdk->CreateShape(boxDesc));
-		hingeDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight/2, 0.0);
-		hingeDesc.poseSocket.Ori()  = Quaterniond::Rot(Rad(90), 'y');
-		hingeDesc.posePlug.Pos()	= Vec3f(0.0, -size.y / 2, 0.0);
-		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(90), 'y');
-		hingeDesc.spring				= 100;
-		hingeDesc.damper				= 50;
-		joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], hingeDesc);
-	}
-	else{
-		CDSphereDesc	sphereDesc;
-		PHBallJointDesc	ballDesc;
-		sphereDesc.radius			= 0.3;
-		solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
-		ballDesc.poseSocket.Pos()	= Vec3f(0.0, bodyHeight / 2.0, 0.0);
-		ballDesc.spring				= 1;
-		ballDesc.damper				= 10;
-		joints[JO_BODY_HEAD] = CreateJoint(solids[SO_BODY], solids[SO_HEAD], ballDesc);
-	}
-	joints[JO_BODY_HEAD]->SetName("joNeck");
-	phScene->SetContactMode(solids[SO_BODY], solids[SO_HEAD], PHSceneDesc::MODE_NONE);
-}
-
-void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
+void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){	
 	CDBoxDesc			boxDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
@@ -119,16 +81,16 @@ void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
 	// Solid
 	solidDesc.mass   = 1.5;
 	if(lr == RIGHTPART){
-		solids[SO_RIGHT_FRONT_LEG] = phScene->CreateSolid(solidDesc);
+		solids[SO_RIGHT_FRONT_LEG_0] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
-		solids[SO_RIGHT_FRONT_LEG]->AddShape(phSdk->CreateShape(boxDesc));
-		solids[SO_RIGHT_FRONT_LEG]->SetName("soRightFrontLeg");
+		solids[SO_RIGHT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_RIGHT_FRONT_LEG_0]->SetName("soRightFrontLeg0");
 	}
 	else{
-		solids[SO_LEFT_FRONT_LEG] = phScene->CreateSolid(solidDesc);
+		solids[SO_LEFT_FRONT_LEG_0] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
-		solids[SO_LEFT_FRONT_LEG]->AddShape(phSdk->CreateShape(boxDesc));
-		solids[SO_LEFT_FRONT_LEG]->SetName("soLeftFrontLeg");
+		solids[SO_LEFT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_LEFT_FRONT_LEG_0]->SetName("soLeftFrontLeg0");
 	}
 	// ‘ÌŠ²‚Æ‘O‹rŠÔ‚ÌŠÖß
 	{
@@ -141,18 +103,17 @@ void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
 		ballDesc.damper				= damperFront;
 	}
 	if(lr == RIGHTPART){
-		joints[JO_BODY_RIGHT_FRONT_LEG] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG], ballDesc);
-		joints[JO_BODY_RIGHT_FRONT_LEG]->SetName("joRightShoulder");
-		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG], PHSceneDesc::MODE_NONE);
+		joints[JO_BODY_RIGHT_FRONT_LEG_0] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG_0], ballDesc);
+		joints[JO_BODY_RIGHT_FRONT_LEG_0]->SetName("joRightShoulder");
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG_0], PHSceneDesc::MODE_NONE);
 	}
 	else{
-		joints[JO_BODY_LEFT_FRONT_LEG] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG], ballDesc);
-		joints[JO_BODY_LEFT_FRONT_LEG]->SetName("joLeftShoulder");
-		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG], PHSceneDesc::MODE_NONE);
+		joints[JO_BODY_LEFT_FRONT_LEG_0] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG_0], ballDesc);
+		joints[JO_BODY_LEFT_FRONT_LEG_0]->SetName("joLeftShoulder");
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_FRONT_LEG_0], PHSceneDesc::MODE_NONE);
 	}
 }
-
-void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
+void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr){
 	CDBoxDesc			boxDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
@@ -160,16 +121,57 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 	// Solid
 	solidDesc.mass   = 1.5;
 	if(lr == RIGHTPART){
-		solids[SO_RIGHT_REAR_LEG] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
-		solids[SO_RIGHT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
-		solids[SO_RIGHT_REAR_LEG]->SetName("soRightRearLeg");
+		solids[SO_RIGHT_FRONT_LEG_1] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
+		solids[SO_RIGHT_FRONT_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_RIGHT_FRONT_LEG_1]->SetName("soRightFrontLeg1");
 	}
 	else{
-		solids[SO_LEFT_REAR_LEG] = phScene->CreateSolid(solidDesc);
+		solids[SO_LEFT_FRONT_LEG_1] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
+		solids[SO_LEFT_FRONT_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_LEFT_FRONT_LEG_1]->SetName("soLeftFrontLeg1");
+	}
+	// ‘ÌŠ²‚Æ‘O‹rŠÔ‚ÌŠÖß
+	{
+		ballDesc.poseSocket.Pos()	= Vec3d(0, frontLegsHeight/2.0, 0);
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.posePlug.Pos()		= Vec3d(0, -frontLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.spring				= springFront;
+		ballDesc.damper				= damperFront;
+	}
+	if(lr == RIGHTPART){
+		joints[JO_BODY_RIGHT_FRONT_LEG_1] = CreateJoint(solids[SO_RIGHT_FRONT_LEG_0], solids[SO_RIGHT_FRONT_LEG_1], ballDesc);
+		joints[JO_BODY_RIGHT_FRONT_LEG_1]->SetName("joRightElbow");
+		phScene->SetContactMode(solids[SO_RIGHT_FRONT_LEG_0], solids[SO_RIGHT_FRONT_LEG_1], PHSceneDesc::MODE_NONE);
+	}
+	else{
+		joints[JO_BODY_LEFT_FRONT_LEG_1] =  CreateJoint(solids[SO_LEFT_FRONT_LEG_0], solids[SO_LEFT_FRONT_LEG_1], ballDesc);
+		joints[JO_BODY_LEFT_FRONT_LEG_1]->SetName("joLeftElbow");
+		phScene->SetContactMode(solids[SO_LEFT_FRONT_LEG_0], solids[SO_LEFT_FRONT_LEG_1], PHSceneDesc::MODE_NONE);
+	}
+
+}
+void CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr){
+	CDBoxDesc			boxDesc;
+	PHSolidDesc			solidDesc;
+	PHBallJointDesc		ballDesc;
+
+	// Solid
+	solidDesc.mass   = 1.5;
+	if(lr == RIGHTPART){
+		solids[SO_RIGHT_REAR_LEG_0] = phScene->CreateSolid(solidDesc);
 		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
-		solids[SO_LEFT_REAR_LEG]->AddShape(phSdk->CreateShape(boxDesc));
-		solids[SO_LEFT_REAR_LEG]->SetName("soLeftRearLeg");
+		solids[SO_RIGHT_REAR_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_RIGHT_REAR_LEG_0]->SetName("soRightRearLeg0");
+	}
+	else{
+		solids[SO_LEFT_REAR_LEG_0] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
+		solids[SO_LEFT_REAR_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_LEFT_REAR_LEG_0]->SetName("soLeftRearLeg0");
 	}
 	// ‘ÌŠ²‚ÆŒã‹rŠÔ‚ÌŠÖß
 	{
@@ -182,15 +184,65 @@ void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
 		ballDesc.damper				= damperFront;
 	}
 	if(lr == RIGHTPART){
-		joints[JO_BODY_RIGHT_REAR_LEG] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG], ballDesc);
-		joints[JO_BODY_RIGHT_REAR_LEG]->SetName("joRightHip");
-		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG], PHSceneDesc::MODE_NONE);
+		joints[JO_BODY_RIGHT_REAR_LEG_0] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG_0], ballDesc);
+		joints[JO_BODY_RIGHT_REAR_LEG_0]->SetName("joRightHip");
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG_0], PHSceneDesc::MODE_NONE);
 	}
 	else{
-		joints[JO_BODY_LEFT_REAR_LEG] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_REAR_LEG], ballDesc);
-		joints[JO_BODY_LEFT_REAR_LEG]->SetName("joLeftHip");
-		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_REAR_LEG], PHSceneDesc::MODE_NONE);
+		joints[JO_BODY_LEFT_REAR_LEG_0] =  CreateJoint(solids[SO_BODY], solids[SO_LEFT_REAR_LEG_0], ballDesc);
+		joints[JO_BODY_LEFT_REAR_LEG_0]->SetName("joLeftHip");
+		phScene->SetContactMode(solids[SO_BODY], solids[SO_LEFT_REAR_LEG_0], PHSceneDesc::MODE_NONE);
 	}
+}
+void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr){
+	CDBoxDesc			boxDesc;
+	PHSolidDesc			solidDesc;
+	PHBallJointDesc		ballDesc;
+
+	// Solid
+	solidDesc.mass   = 1.5;
+	if(lr == RIGHTPART){
+		solids[SO_RIGHT_REAR_LEG_1] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
+		solids[SO_RIGHT_REAR_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_RIGHT_REAR_LEG_1]->SetName("soRightRearLeg1");
+	}
+	else{
+		solids[SO_LEFT_REAR_LEG_1] = phScene->CreateSolid(solidDesc);
+		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
+		solids[SO_LEFT_REAR_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		solids[SO_LEFT_REAR_LEG_1]->SetName("soLeftRearLeg1");
+	}
+	// ‘ÌŠ²‚ÆŒã‹rŠÔ‚ÌŠÖß
+	{
+		ballDesc.poseSocket.Pos()	= Vec3d(0, rearLegsHeight / 2.0, 0);
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.posePlug.Pos()		= Vec3d(0, -rearLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.spring				= springFront;
+		ballDesc.damper				= damperFront;
+	}
+	if(lr == RIGHTPART){
+		joints[JO_BODY_RIGHT_REAR_LEG_1] = CreateJoint(solids[SO_RIGHT_REAR_LEG_0], solids[SO_RIGHT_REAR_LEG_1], ballDesc);
+		joints[JO_BODY_RIGHT_REAR_LEG_1]->SetName("joRightRearElbow");
+		phScene->SetContactMode(solids[SO_RIGHT_REAR_LEG_0], solids[SO_RIGHT_REAR_LEG_1], PHSceneDesc::MODE_NONE);
+	}
+	else{
+		joints[JO_BODY_LEFT_REAR_LEG_1] =  CreateJoint(solids[SO_LEFT_REAR_LEG_0], solids[SO_LEFT_REAR_LEG_1], ballDesc);
+		joints[JO_BODY_LEFT_REAR_LEG_1]->SetName("joLeftRearElbow");
+		phScene->SetContactMode(solids[SO_LEFT_REAR_LEG_0], solids[SO_LEFT_REAR_LEG_1], PHSceneDesc::MODE_NONE);
+	}
+}
+
+void CRFourLegsTinyAnimalBody::CreateFrontLegs(LREnum lr){
+	InitFrontLeg0(lr);
+	InitFrontLeg1(lr);
+}
+
+void CRFourLegsTinyAnimalBody::CreateRearLegs(LREnum lr){
+	InitRearLeg0(lr);
+	InitRearLeg1(lr);
 }
 
 // --- --- ---
