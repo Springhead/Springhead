@@ -41,21 +41,21 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	rearToeBreadth			= 0.26;		rearToeHeight			= 0.1;		rearToeThickness			= 0.25;
 	//------------------------------------------------------------------
 	// spring and damper of ball joints
-	springWaistChest   =  500.0; damperWaistChest	= 200.0;
-	springWaistTail    =   10.0; damperWaistTail	=	0.1;
-	springTail		   =   10.0; damperTail			=	0.1;
-	springChestNeck    =  100.0; damperChestNeck	=  20.0;
-	springNeckHead	   =  100.0; damperNeckHead		=  20.0;
-	springShoulder	   =   50.0; damperShoulder		=  20.0;
-	springFrontAnkle   = 1000.0; damperFrontAnkle	=  20.0;
-	springHip		   =   50.0; damperHip			=  20.0;
-	springRearAnkle	   = 1000.0; damperRearAnkle	=  20.0;
+	springWaistChest   =  1.0;/*500.0;*/ damperWaistChest	= 200.0;
+	springWaistTail    =  10.0;/* 10.0;*/ damperWaistTail	=	0.1;
+	springTail		   =  10.0;/* 10.0;*/ damperTail			=	0.1;
+	springChestNeck    =  30.0;/*100.0;*/ damperChestNeck	=  20.0;
+	springNeckHead	   =  10.0;/*100.0;*/ damperNeckHead		=  20.0;
+	springShoulder	   =  20.0;/* 50.0;*/ damperShoulder		=  20.0;
+	springFrontAnkle   = 10.0;/*1000.0;*/ damperFrontAnkle	=  20.0;
+	springHip		   =  30.0;/* 50.0;*/ damperHip			=  20.0;
+	springRearAnkle	   = 10.0;/*1000.0;*/ damperRearAnkle	=  20.0;
 	//-------------------------------------------------------------------
 	// spring and damper of hinge joints
-	springElbow		   =   50.0; damperElbow		= 20.0;
-	springFrontKnee	   =   50.0; damperFrontKnee	= 20.0;
-	springStifle	   =   50.0; damperStifle		= 20.0;
-	springRearKnee	   =   50.0; damperRearKnee		= 20.0;
+	springElbow		   =   10.0;/*50.0;*/ damperElbow		= 20.0;
+	springFrontKnee	   =   10.0;/*50.0;*/ damperFrontKnee	= 20.0;
+	springStifle	   =   10.0;/*50.0;*/ damperStifle		= 20.0;
+	springRearKnee	   =   10.0;/*50.0;*/ damperRearKnee		= 20.0;
 	//-------------------------------------------------------------------
 	// ball joints are conrtroled to these directions
 	goalWaistTail	  = Quaterniond::Rot(Rad(  60), 'x');
@@ -150,7 +150,7 @@ CRFourLegsAnimalBodyDesc::CRFourLegsAnimalBodyDesc(bool enableRange, bool enable
 	dynamicalMode = false;
 	//-----------------------------------------------------------------------------------
 	// Total Mass
-	totalMass = 10.0;
+	totalMass = 1.0;
 }	
 	
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

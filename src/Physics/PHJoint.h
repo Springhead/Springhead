@@ -36,7 +36,7 @@ class PHJointND : public PHJoint{
 public:
 	typedef	PTM::TVector<NDOF, double> coord_t;
 
-	int		axisIndex[NDOF];
+	int		axisIndex[NDOF];		//< ‰½”Ô–Ú‚ÌŽ²‚ªS‘©‚³‚ê‚é‚©
 	coord_t position, velocity;
 	
 	PHJointND(){

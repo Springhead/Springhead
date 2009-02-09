@@ -51,38 +51,43 @@ void PHHingeJoint::CompBias(){
 
 	if(mode == PHJointDesc::MODE_VELOCITY){
 		db.w().z = -desiredVelocity;
-	}else if(mode == PHJointDesc::MODE_POSITION && (spring != 0.0 || damper != 0.0)){
-		if (onUpper&& GetVelocity()>0){
-		}else if (onLower && GetVelocity()<0){
-		}else{
-			double diff;
-			diff = GetPosition() - origin;
-			double springLim = 0;
-			double damper_ = damper;
-			double diffLim = 0;
-			if (onUpper){
-				diffLim = GetPosition() - upper;
-				springLim = 10000;
-				damper_   = 100;
-			} else if (onLower){
-				diffLim = GetPosition() - lower;
-				springLim = 10000;
-				damper_   = 100;
+	}else if(mode == PHJointDesc::MODE_TRAJ){
+		double diff = origin - GetPosition();
+		db.w().z = -(desiredVelocity + spring * diff);
+	}else if(mode == PHJointDesc::MODE_POSITION){
+		if(spring != 0.0 || damper != 0.0){
+			if (onUpper&& GetVelocity()>0){
+			}else if (onLower && GetVelocity()<0){
+			}else{
+				double diff;
+				diff = GetPosition() - origin;
+				double springLim = 0;
+				double damper_ = damper;
+				double diffLim = 0;
+				if (onUpper){
+					diffLim = GetPosition() - upper;
+					springLim = 10000;
+					damper_   = 100;
+				} else if (onLower){
+					diffLim = GetPosition() - lower;
+					springLim = 10000;
+					damper_   = 100;
+				}
+
+				// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
+				//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
+				/*
+				while(diff >  M_PI) diff -= 2 * M_PI;
+				while(diff < -M_PI) diff += 2 * M_PI;
+				*/
+
+				double tmp = 1.0 / (damper_ + spring * GetScene()->GetTimeStep());
+				dA.w().z = tmp * dtinv;
+				//軌道追従制御のLCPは以下のようになる
+				db.w().z = tmp * ((spring * diff + springLim*diffLim)
+							 - (damper_ * desiredVelocity) 
+							 + offsetForce );
 			}
-
-			// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
-			//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
-			/*
-			while(diff >  M_PI) diff -= 2 * M_PI;
-			while(diff < -M_PI) diff += 2 * M_PI;
-			*/
-
-			double tmp = 1.0 / (damper_ + spring * GetScene()->GetTimeStep());
-			dA.w().z = tmp * dtinv;
-			//軌道追従制御のLCPは以下のようになる
-			db.w().z = tmp * ((spring * diff + springLim*diffLim)
-						 - (damper_ * desiredVelocity) 
-						 + offsetForce );
 		}
 	}
 }

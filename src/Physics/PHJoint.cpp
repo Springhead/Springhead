@@ -50,7 +50,7 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 	//  ‚»‚êˆÈŠO‚Ì©—R“x‚ÍABAŠÖß‚Å‚Í‚È‚¢ê‡‚Étrue	
 	for(int i = 0; i < 6; i++){
 		if(i == axisIndex[0])
-			 con[i] = (onLower || onUpper || mode == PHJointDesc::MODE_VELOCITY || spring != 0.0 || damper != 0.0);
+			con[i] = (onLower || onUpper || mode == PHJointDesc::MODE_VELOCITY || mode == PHJointDesc::MODE_TRAJ || spring != 0.0 || damper != 0.0);
 		else con[i] = true;
 	}
 }
