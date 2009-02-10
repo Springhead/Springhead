@@ -21,10 +21,10 @@ int __cdecl main(){
 	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	int t = 0;
-	while(!kbhit()){
+	while(!_kbhit()){
 		t += 1;
 		spg->Update(0.001f);
-#if 0
+#if 1
 		Vec3f spgpos = spg->GetPosition();
 		std::cout << std::setprecision(2) << spgpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);
@@ -32,16 +32,14 @@ int __cdecl main(){
 			f[1] = 1.5;
 		}
 		spg->SetForce(f, Vec3f());
-#endif
-
-#if 1
+#else if
 		for(size_t i=0; i<spg->NMotor(); ++i){
 			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();
 		}
 		std::cout << std::endl;
 #endif
 	}
-	getch();
+	_getch();
 /*
 	DRKeyMouseWin32If* wif = DCAST(DRKeyMouseWin32If, sdk->FindRealDevice("KeyMouseWin32"));
 	wif->Update();	
