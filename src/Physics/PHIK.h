@@ -74,6 +74,9 @@ protected:
 	/// 動かしにくさ
 	float bias;
 
+	/// 駆動用のバネダンパ（関節本来のバネダンパは原点への引き戻しとして作用する）
+	double spring, damper;
+
 	/// 有効・無効
 	enum ENABLE_STATUS {
 		ES_NONE=0,
@@ -128,7 +131,9 @@ public:
 	/** @brief デスクリプタを設定する
 	*/
 	virtual void SetDesc(const void* d){
-		this->bias = ((PHIKNodeDesc*)d)->bias;
+		this->bias		= ((PHIKNodeDesc*)d)->bias;
+		this->spring	= ((PHIKNodeDesc*)d)->spring;
+		this->damper	= ((PHIKNodeDesc*)d)->damper;
 	}
 
 	/** @brief IKの計算準備をする
@@ -174,6 +179,22 @@ public:
 	/** @brief 動かしにくさを取得する
 	*/
 	float GetBias(){ return bias; }
+
+	/** @brief 駆動のためのバネ係数を設定する
+	*/
+	void SetSpring(double spring){ this->spring = spring; }
+
+	/** @brief 駆動のためのバネ係数を取得
+	*/
+	double GetSpring(){ return spring; }
+
+	/** @brief 駆動のためのダンパ係数を設定する
+	*/
+	void SetDamper(double damper){ this->damper = damper; }
+
+	/** @brief 駆動のためのダンパ係数を取得
+	*/
+	double GetDamper(){ return damper; }
 };
 
 class PHIKSolid : public PHIKNode{
