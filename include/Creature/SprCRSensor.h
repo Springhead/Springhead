@@ -99,6 +99,14 @@ struct CRTouchSensorIf : CRSensorIf{
 	/** @brief 接触地点（グローバル座標）を返す
 	*/
 	Vec3d GetContactPos(int n);
+
+	/** @brief 接触している剛体（自分の）を返す
+	*/
+	PHSolidIf* GetContactMySolid(int n);
+
+	/** @brief 接触している剛体（相手の）を返す
+	*/
+	PHSolidIf* GetContactOthersSolid(int n);
 };
 
 /// 触覚センサのデスクリプタ

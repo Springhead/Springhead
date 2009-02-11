@@ -71,6 +71,14 @@ public:
 	/** @brief 接触地点（グローバル座標）を返す
 	*/
 	virtual Vec3d GetContactPos(int n){ return contactList[n].pos; }
+
+	/** @brief 接触している剛体（自分の）を返す
+	*/
+	virtual PHSolidIf* GetContactMySolid(int n){ return contactList[n].soMe; }
+
+	/** @brief 接触している剛体（相手の）を返す
+	*/
+	virtual PHSolidIf* GetContactOthersSolid(int n){ return contactList[n].soOther; }
 };
 }
 //@}

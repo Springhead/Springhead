@@ -174,4 +174,6 @@
 	Spr::PHSolidIf* GetContactSolidOther(int n){	return	base::GetContactSolidOther(n);}	\
 	double GetContactPressure(int n){	return	base::GetContactPressure(n);}	\
 	Vec3d GetContactPos(int n){	return	base::GetContactPos(n);}	\
+	Spr::PHSolidIf* GetContactMySolid(int n){	return	base::GetContactMySolid(n);}	\
+	Spr::PHSolidIf* GetContactOthersSolid(int n){	return	base::GetContactOthersSolid(n);}	\
 
