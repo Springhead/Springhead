@@ -44,14 +44,20 @@ public:\
 #define SPR_DECLMEMBEROF_PHIKNodeDesc \
 protected:\
 	float	bias;	\
+	double	spring;	\
+	double	damper;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		bias = ((PHIKNodeDesc*)ptr)->bias;	\
+		spring = ((PHIKNodeDesc*)ptr)->spring;	\
+		damper = ((PHIKNodeDesc*)ptr)->damper;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((PHIKNodeDesc*)ptr)->bias = bias;	\
+		((PHIKNodeDesc*)ptr)->spring = spring;	\
+		((PHIKNodeDesc*)ptr)->damper = damper;	\
 		return true;	\
 	}\
 

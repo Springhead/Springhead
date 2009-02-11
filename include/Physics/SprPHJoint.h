@@ -477,6 +477,26 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	Quaterniond GetGoal();
 
+	/** @brief バネ係数を設定する
+		@param spring バネ係数
+	 */
+	void	SetSpring(double spring);
+
+	/** @brief バネ係数を取得する
+		@return バネ係数
+	 */
+	double	GetSpring();
+
+	/** @brief ダンパ係数を設定する
+		@param damper ダンパ係数
+	 */
+	void	SetDamper(double damper);
+
+	/** @brief ダンパ係数を取得する
+		@return ダンパ係数
+	 */
+	double	GetDamper();
+
 	/** @brief 速度制御に切り替え，速度を設定する
 	*/
 	void  SetDesiredVelocity(Vec3d q);

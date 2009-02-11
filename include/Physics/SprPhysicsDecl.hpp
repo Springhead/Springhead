@@ -44,6 +44,10 @@
 	void SetBias(float bias){	base::SetBias(bias);}	\
 	float GetBias(){	return	base::GetBias();}	\
 	void SetNumber(int i){	base::SetNumber(i);}	\
+	void SetSpring(double spring){	base::SetSpring(spring);}	\
+	double GetSpring(){	return	base::GetSpring();}	\
+	void SetDamper(double damper){	base::SetDamper(damper);}	\
+	double GetDamper(){	return	base::GetDamper();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKSolidIf(base)	\
 
@@ -131,6 +135,10 @@
 	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
 	void SetGoal(Quaterniond g){	base::SetGoal(g);}	\
 	Quaterniond GetGoal(){	return	base::GetGoal();}	\
+	void SetSpring(double spring){	base::SetSpring(spring);}	\
+	double GetSpring(){	return	base::GetSpring();}	\
+	void SetDamper(double damper){	base::SetDamper(damper);}	\
+	double GetDamper(){	return	base::GetDamper();}	\
 	void SetDesiredVelocity(Vec3d q){	base::SetDesiredVelocity(q);}	\
 	Vec3d GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
 	void SetTrajectoryVelocity(Vec3d q){	base::SetTrajectoryVelocity(q);}	\

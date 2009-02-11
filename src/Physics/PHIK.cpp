@@ -631,10 +631,13 @@ void PHIKBallJoint::Move(){
 
 	Vec3d goal = pos.RotationHalf();
 	Vec3d orig = jGoal.RotationHalf();
-	Vec3d newGoal = (jSpring*orig + jSpring*10*goal) * (1/(jSpring + jSpring*10));
+	// Vec3d newGoal = (jSpring*orig + jSpring*10*goal) * (1/(jSpring + jSpring*10));
+	Vec3d newGoal = (jSpring*orig + spring*goal) * (1/(jSpring + spring));
 	pos = Quaterniond::Rot(newGoal.norm(), newGoal.unit());
 
 	// 関節を動かす
+	joint->SetSpring(jSpring + spring);
+	joint->SetDamper(jDamper + damper);
 	joint->SetGoal(pos);
 
 	// デバッグ表示（要改善）
@@ -694,13 +697,16 @@ void PHIKHingeJoint::Move(){
 	// 新しい回転角度
 	double angle  = joint->GetPosition() + (dTheta[0]);
 
-	double newGoal = (jSpring*jGoal + jSpring*10*angle) * (1/(jSpring + jSpring*10));
+	// double newGoal = (jSpring*jGoal + jSpring*10*angle) * (1/(jSpring + jSpring*10));
+	double newGoal = (jSpring*jGoal + spring*angle) * (1/(jSpring + spring));
 
 	// トルクを実現するためのオフセットの追加
 	double torque = tau[0];
 	newGoal += torque * Rad(16) / joint->GetSpring();
 
 	// 関節を動かす
+	joint->SetSpring(jSpring + spring);
+	joint->SetDamper(jDamper + damper);
 	joint->SetSpringOrigin(newGoal);
 }
 

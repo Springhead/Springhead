@@ -101,6 +101,12 @@ public:
 	virtual Vec3d		GetTrajectoryVelocity() const {return desiredVelocity;}
 	virtual void		SetGoal(Quaterniond g){/*mode = MODE_POSITION;*/ goal = g;}
 	virtual Quaterniond GetGoal(){return goal;}
+
+	virtual void		SetSpring(double spring){ this->spring = spring; }
+	virtual double		GetSpring(){ return spring; }
+	virtual void		SetDamper(double damper){ this->damper = damper; }
+	virtual double		GetDamper(){ return damper; }
+
 	virtual void		SetOffsetForce(Vec3d ofst){offset = ofst;}
 	virtual Vec3d		GetOffsetForce(){return offset;}
 

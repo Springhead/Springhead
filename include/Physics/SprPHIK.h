@@ -131,12 +131,30 @@ struct PHIKNodeIf : SceneObjectIf{
 	/** @brief 番号を設定する
 	*/
 	void SetNumber(int i);
+
+	/** @brief 駆動のためのバネ係数を設定する
+	*/
+	void SetSpring(double spring);
+
+	/** @brief 駆動のためのバネ係数を取得
+	*/
+	double GetSpring();
+
+	/** @brief 駆動のためのダンパ係数を設定する
+	*/
+	void SetDamper(double damper);
+
+	/** @brief 駆動のためのダンパ係数を取得
+	*/
+	double GetDamper();
 };
 
 struct PHIKNodeDesc{
 	SPR_DESCDEF(PHIKNode);
 
-	float bias;  ///< 動かしにくさの係数
+	float	bias;	///< 動かしにくさの係数
+	double	spring;	///< 駆動用バネのバネ係数
+	double	damper;	///< 駆動用バネのダンパ係数
 
 	PHIKNodeDesc(){ bias = 1.0f; }
 };
