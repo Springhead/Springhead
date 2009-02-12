@@ -107,6 +107,10 @@ struct CRTouchSensorIf : CRSensorIf{
 	/** @brief 接触している剛体（相手の）を返す
 	*/
 	PHSolidIf* GetContactOthersSolid(int n);
+
+	/** @brief 接触力を返す
+	*/
+	Vec3f GetContactForce(int n);
 };
 
 /// 触覚センサのデスクリプタ

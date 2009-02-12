@@ -29,6 +29,7 @@ class CRTouchSensor : public CRSensor, public CRTouchSensorDesc {
 		Vec3d		pos;
 		PHSolidIf*	soMe;
 		PHSolidIf*	soOther;
+		Vec3d		force;
 	};
 
 	std::vector<Contact> contactList;
@@ -79,6 +80,10 @@ public:
 	/** @brief ÚG‚µ‚Ä‚¢‚é„‘Ìi‘Šè‚Ìj‚ğ•Ô‚·
 	*/
 	virtual PHSolidIf* GetContactOthersSolid(int n){ return contactList[n].soOther; }
+
+	/** @brief ÚG—Í‚ğ•Ô‚·
+	*/
+	virtual Vec3f GetContactForce(int n){ return contactList[n].force; }
 };
 }
 //@}
