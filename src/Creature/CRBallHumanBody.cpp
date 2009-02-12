@@ -209,7 +209,7 @@ void CRBallHumanBody::CreateAbdomen(){
 	ballDesc.posePlug.Pos()   = Vec3d(0,  waistLength, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(0, -abdomenLength / 2.0, 0);
 	ballDesc.limitDir         = Vec3d(0,0,1);
-	ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
+	// ballDesc.limitTwist       = Vec2d(Rad(-45), Rad(45));
 	ballDesc.limitSwing       = Vec2d(Rad(0), Rad(45));
 	SetJointSpringDamper(ballDesc, springWaistAbdomen, damperWaistAbdomen, solids[SO_WAIST]->GetMass());
 	joints[JO_WAIST_ABDOMEN] = CreateJoint(solids[SO_ABDOMEN], solids[SO_WAIST], ballDesc);
@@ -772,7 +772,7 @@ void CRBallHumanBody::InitContact(){
 	// phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
 
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
-	/*/
+	/**/
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {
@@ -846,8 +846,8 @@ void CRBallHumanBody::InitSolidPose(){
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
-	ballDesc.spring = 10000;
-	ballDesc.damper =  1200;
+	ballDesc.spring =  10;
+	ballDesc.damper =   5;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -861,8 +861,8 @@ void CRBallHumanBody::SetJointSpringDamper(PHBallJointDesc &ballDesc, double spr
 }
 
 void CRBallHumanBody::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
-	hingeDesc.spring = 10000;
-	hingeDesc.damper =  1200;
+	hingeDesc.spring =  10;
+	hingeDesc.damper =   5;
 }
 
 void CRBallHumanBody::CreateIKNode(int n) {

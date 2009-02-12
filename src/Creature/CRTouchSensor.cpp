@@ -84,6 +84,7 @@ void CRTouchSensor::Step() {
 						contact.pos		= solidPair->GetCommonPoint(s, t);
 						contact.soMe	= soMe;
 						contact.soOther	= soOther;
+						contact.force	= force;
 						if (nSectionVtx != 0) {
 							contact.dimension	= shapePair->GetContactDimension();
 							contact.normal		= shapePair->GetNormalVector();

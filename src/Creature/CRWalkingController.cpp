@@ -58,8 +58,8 @@ void CRWalkingController::Init(){
 	*/
 	PHSpringDesc descSpring;
 	{
-		descSpring.spring    = Vec3d(1,1,1) * 5000.0f;
-		descSpring.damper    = Vec3d(1,1,1) *   10.0f;
+		descSpring.spring    = Vec3d(1,1,1) * 10000.0f;
+		descSpring.damper    = Vec3d(1,1,1) *   60.0f;
 		descSpring.springOri = 1000.0f;
 		descSpring.damperOri =   50.0f;
 	}
