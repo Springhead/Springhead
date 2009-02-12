@@ -1264,38 +1264,14 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRReachingControllerDesc \
 protected:\
-	Spr::PHSolidIf*	solid;	\
-	Vec3f	reachPos;	\
-	Quaterniond	fixOri;	\
-	float	limitForce;	\
-	float	springPos;	\
-	float	damperPos;	\
-	float	springOri;	\
-	float	damperOri;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRReachingControllerDesc*)ptr);	\
-		solid = ((CRReachingControllerDesc*)ptr)->solid;	\
-		reachPos = ((CRReachingControllerDesc*)ptr)->reachPos;	\
-		fixOri = ((CRReachingControllerDesc*)ptr)->fixOri;	\
-		limitForce = ((CRReachingControllerDesc*)ptr)->limitForce;	\
-		springPos = ((CRReachingControllerDesc*)ptr)->springPos;	\
-		damperPos = ((CRReachingControllerDesc*)ptr)->damperPos;	\
-		springOri = ((CRReachingControllerDesc*)ptr)->springOri;	\
-		damperOri = ((CRReachingControllerDesc*)ptr)->damperOri;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRReachingControllerDesc*)ptr);	\
-		((CRReachingControllerDesc*)ptr)->solid = solid;	\
-		((CRReachingControllerDesc*)ptr)->reachPos = reachPos;	\
-		((CRReachingControllerDesc*)ptr)->fixOri = fixOri;	\
-		((CRReachingControllerDesc*)ptr)->limitForce = limitForce;	\
-		((CRReachingControllerDesc*)ptr)->springPos = springPos;	\
-		((CRReachingControllerDesc*)ptr)->damperPos = damperPos;	\
-		((CRReachingControllerDesc*)ptr)->springOri = springOri;	\
-		((CRReachingControllerDesc*)ptr)->damperOri = damperOri;	\
 		return true;	\
 	}\
 

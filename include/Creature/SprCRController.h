@@ -120,82 +120,23 @@ struct CRNeckControllerDesc: public CRNeckControllerState, public CRControllerDe
 struct CRReachingControllerIf : CRControllerIf{
 	SPR_IFDEF(CRReachingController);
 
-	/** @brief 制御対象の剛体を返す
+	/** @brief 目標位置の再設定
+		@param pos 目標位置
 	*/
-	PHSolidIf* GetSolid();
+	void SetPos(Vec3f pos);
 
-	/** @brief 目標位置を設定する
-		（現在の実装では、到達運動の途中でも目標位置の変更は反映される。）
-		@param p 目標位置
-		@param v 目標の速度
-	*/
-	void SetTargetPos(Vec3f p, Vec3f v);
-
-	/** @brief 目標姿勢を設定する
-		（現在の実装では、到達運動の途中でも目標姿勢の変更は反映される。）
-		@param q 目標姿勢
-		@param av 目標角速度
-	*/
-	void SetTargetOri(Quaterniond q, Vec3f av);
-
-	/** @brief 到達目標時間を設定する
+	/** @brief 位置を到達させる
+		@param ikcp 到達させる制御点
+		@param pos 目標位置
+		@param v 目標速度
 		@param t 目標到達時間
 	*/
-	void SetTargetTime(float t);
-
-	/** @brief 到達運動を開始する
-		（現在の実装では、到達運動の途中でもただちに新しい条件で運動を開始する。）
-		@param mode 到達の拘束モード
-		@param keeptime 到達運動終了後に保持を続ける時間（負なら保持を続ける）
-	*/
-	enum ConstraintMode {
-		CM_P3R0=0,  // ３自由度拘束（位置のみを合わせる）
-		CM_P3R2,    // ３＋２自由度拘束（位置と向きを合わせるが、向きに１軸の自由度がある）
-		CM_P3R3,    // ３＋３自由度拘束（位置と向きを合わせる）
-	};
-	void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime);
-
-	/** @brief 制御の残り時間を返す
-	*/
-	float GetRemainingTime();
-
-	/** @brief 到達状況を返す
-	*/
-	enum ReachState {
-		RS_NOTHING_REACHED=0,  // 目標剛体も対象剛体も到達していない
-		RS_TARGET_REACHED,     // 目標剛体は到達した（対象剛体はまだ追いついていない）
-		RS_SOLID_REACHED,      // 対象剛体も到達した
-		RS_STOP,               // 動作していない
-	};
-	CRReachingControllerIf::ReachState GetReachState();
-
-	/** @brief 到達状態をやめる
-	*/
-	void Reset();
+	void Reach(PHIKPosCtlIf* ikcp, Vec3d pose, Vec3d v, float t);
 };
 
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingControllerDesc : public CRControllerDesc{
 	SPR_DESCDEF(CRReachingController);
-
-	PHSolidIf*  solid;    ///< 到達させたい剛体
-	Vec3f       reachPos; ///< 剛体内の到達させたいポイント
-	Quaterniond fixOri;   ///< HingeJointを入れる向き
-
-	float limitForce; ///< 力の最大値
-	float springPos;  ///< 位置制御のバネ係数
-	float damperPos;  ///< 位置制御のダンパ係数
-	float springOri;  ///< 姿勢制御のバネ係数
-	float damperOri;  ///< 姿勢制御のダンパ係数
-
-	CRReachingControllerDesc(){
-		solid = NULL;
-		limitForce = 1000.0f;
-		springPos = 500.0f;  damperPos =  20.0f;
-		springOri = 500.0f;  damperOri =  20.0f;
-		reachPos = Vec3f(0,0,0);
-		fixOri = Quaterniond();
-	}
 };
 
 // ------------------------------------------------------------------------------

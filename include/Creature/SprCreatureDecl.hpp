@@ -53,14 +53,8 @@
 	void LookAt(Vec3f pos, Vec3f vel, float attractiveness){	base::LookAt(pos, vel, attractiveness);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRReachingControllerIf(base)	\
-	Spr::PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
-	void SetTargetPos(Vec3f p, Vec3f v){	base::SetTargetPos(p, v);}	\
-	void SetTargetOri(Quaterniond q, Vec3f av){	base::SetTargetOri(q, av);}	\
-	void SetTargetTime(float t){	base::SetTargetTime(t);}	\
-	void Start(Spr::CRReachingControllerIf::ConstraintMode mode, float keeptime){	base::Start(mode, keeptime);}	\
-	float GetRemainingTime(){	return	base::GetRemainingTime();}	\
-	Spr::CRReachingControllerIf::ReachState GetReachState(){	return	base::GetReachState();}	\
-	void Reset(){	base::Reset();}	\
+	void SetPos(Vec3f pos){	base::SetPos(pos);}	\
+	void Reach(PHIKPosCtlIf* ikcp, Vec3d pose, Vec3d v, float t){	base::Reach(ikcp, pose, v, t);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGazeControllerIf(base)	\
 	void LookAt(Vec3f pos, Vec3f vel, float attractiveness){	base::LookAt(pos, vel, attractiveness);}	\

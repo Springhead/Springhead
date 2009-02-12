@@ -21,36 +21,20 @@ namespace Spr{;
 */
 class CRReachingController : public CRController, public CRReachingControllerDesc {
 private:
-	/// 制御用のバネダンパ
-	PHSpringIf *springDirect, *springHinged;
-
-	/// 制御用の仮目標剛体
-	PHSolidIf  *soTargetDirect, *soTargetHinged;
-
 	/// 経過時間
 	float time;
 
 	/// 到達目標時間
 	float period;
 
-	/// 達成後の待機時間
-	float offset;
-
 	/// 最終目標位置・速度・姿勢・角速度
-	Vec3f finalPos, finalVel, finalAngV;
-	Quaterniond finalQuat;
-
-	/// 目標剛体のローカル座標
-	Vec3f localPos;
-
-	/// 制御モード
-	CRReachingControllerIf::ConstraintMode constraintMode;
+	Vec3f fP, fV;
 
 	/// 有効かどうか
 	bool bActive;
 
-	/// 制御対象のボディ
-	CRHingeHumanBodyIf* body;
+	/// 制御対象のikcp
+	PHIKPosCtlIf* ikcp;
 
 public:
 	SPR_OBJECTDEF(CRReachingController);
@@ -61,6 +45,7 @@ public:
 		: CRController((const CRControllerDesc&)desc, c)
 		, CRReachingControllerDesc(desc)
 	{
+		bActive = false;
 	}
 
 	/** @ brief 初期化を実行する
@@ -71,44 +56,13 @@ public:
 	*/
 	virtual void Step();
 
-	/** @brief 制御対象の剛体を返す
+	/** @brief 位置を到達させる
 	*/
-	virtual PHSolidIf* GetSolid();
+	virtual void Reach(PHIKPosCtlIf* ikcp, Vec3d pos, Vec3d v, float t);
 
-	/** @brief 目標位置を設定する
-		@param p 目標位置
-		@param v 目標の速度
+	/** @brief 目標位置の再設定
 	*/
-	virtual void SetTargetPos(Vec3f p, Vec3f v);
-
-	/** @brief 目標姿勢を設定する
-		@param q 目標姿勢
-		@param av 目標角速度
-	*/
-	virtual void SetTargetOri(Quaterniond q, Vec3f av);
-
-	/** @brief 到達目標時間を設定する
-		@param t 目標到達時間
-	*/
-	virtual void SetTargetTime(float t);
-
-	/** @brief 到達運動を開始する
-		@param mode 到達の拘束モード
-		@param keeptime 到達運動終了後に保持を続ける時間（負なら保持を続ける）
-	*/
-	virtual void Start(CRReachingControllerIf::ConstraintMode mode, float keeptime);
-
-	/** @brief 制御の残り時間を返す
-	*/
-	virtual float GetRemainingTime();
-
-	/** @brief 到達状況を返す
-	*/
-	virtual CRReachingControllerIf::ReachState GetReachState();
-
-	/** @brief 到達状態をやめる
-	*/
-	virtual void Reset();
+	void SetPos(Vec3f pos){ fP = pos; }
 };
 }
 //@}
