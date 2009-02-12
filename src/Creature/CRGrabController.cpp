@@ -17,6 +17,7 @@ namespace Spr{
 void CRGrabController::Init(){
 	CRController::Init(); 
 
+	/*
 	// §Œä‚É—p‚¢‚éBody‚Æ‚»‚Ì„‘Ì‚ÌŽæ“¾
 	CRHingeHumanBodyIf* hiBody=NULL;
 	CRTrunkFootHumanBodyIf* tfBody=NULL;
@@ -67,9 +68,11 @@ void CRGrabController::Init(){
 
 	// ‰Šúó‘Ô‚ÌÝ’è
 	controlState = CRGrabControllerIf::CRGC_STANDBY;
+	*/
 }
 
 void CRGrabController::Step(){
+	/*
 	int RSSR = CRReachingControllerIf::RS_SOLID_REACHED;
 	if (controlState==CRGrabControllerIf::CRGC_REACH) {
 		// Žè‚Ì‚Ð‚ç‚ÌŒü‚«‚ðXV‚µ‘±‚¯‚é
@@ -111,9 +114,12 @@ void CRGrabController::Step(){
 			controlState = CRGrabControllerIf::CRGC_PLACE_COMPLETE;
 		}
 	}
+	*/
 }
 
 bool CRGrabController::Reach(PHSolidIf* solid, float radius){
+	return false;
+	/*
 	if (!IsReachable(solid, (float)0.9)) {
 		// ‚Æ‚Ç‚©‚È‚¢
 		return false;
@@ -176,22 +182,30 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 
 	controlState = CRGrabControllerIf::CRGC_REACH;
 	return true;
+	*/
 }
 
 bool CRGrabController::IsReachable(PHSolidIf* solid){
-	return IsReachable(solid, 1.0f);
+	return false;
+	// return IsReachable(solid, 1.0f);
 }
 
 bool CRGrabController::IsReachable(PHSolidIf* solid, float safety){
+	return false;
+	/*
 	float distance = (solid->GetPose().Pos() - soWaist->GetPose().Pos()).norm();
 	return(distance < (reachableDistance*safety));
+	*/
 }
 
 bool CRGrabController::IsReachComplete(){
-	return(controlState==CRGrabControllerIf::CRGC_REACH_COMPLETE);
+	return false;
+	// return(controlState==CRGrabControllerIf::CRGC_REACH_COMPLETE);
 }
 
 bool CRGrabController::Uphold(){
+	return false;
+	/*
 	if (!IsUpholdable()) {
 		// ‚Ü‚¾’Í‚ñ‚Å‚È‚¢
 		return false;
@@ -214,17 +228,22 @@ bool CRGrabController::Uphold(){
 
 	controlState = CRGrabControllerIf::CRGC_UPHOLD;
 	return true;
+	*/
 }
 
 bool CRGrabController::IsUpholdable(){
-	return(controlState==CRGrabControllerIf::CRGC_REACH_COMPLETE);
+	return false;
+	// return(controlState==CRGrabControllerIf::CRGC_REACH_COMPLETE);
 }
 
 bool CRGrabController::IsUpholdComplete(){
-	return(controlState==CRGrabControllerIf::CRGC_UPHOLD_COMPLETE);
+	return false;
+	// return(controlState==CRGrabControllerIf::CRGC_UPHOLD_COMPLETE);
 }
 
 bool CRGrabController::Place(Vec3d pos){
+	return false;
+	/*
 	if (!IsPlaceable(pos)) {
 		return false;
 	}
@@ -252,26 +271,35 @@ bool CRGrabController::Place(Vec3d pos){
 	controlState = CRGrabControllerIf::CRGC_PLACE;
 
 	return true;
+	*/
 }
 
 bool CRGrabController::IsPlaceable(Vec3d pos){
-	return IsPlaceable(pos, 1.0f);
+	return false;
+	// return IsPlaceable(pos, 1.0f);
 }
 
 bool CRGrabController::IsPlaceable(Vec3d pos, float safety){
+	return false;
+	/*
 	if (controlState!=CRGrabControllerIf::CRGC_UPHOLD_COMPLETE && controlState!=CRGrabControllerIf::CRGC_PLACE) {
 		return false;
 	}
 	float distance = (pos - soWaist->GetPose().Pos()).norm();
 	return(distance < (reachableDistance*safety));
+	*/
 }
 
 bool CRGrabController::IsPlaceComplete(){
+	return false;
+	/*
 	return(controlState==CRGrabControllerIf::CRGC_PLACE_COMPLETE
 		|| controlState==CRGrabControllerIf::CRGC_STANDBY);
+	*/
 }
 
 void CRGrabController::Abort(){
+	/*
 	int RSSR = CRReachingControllerIf::RS_SOLID_REACHED;
 	if (controlState==CRGrabControllerIf::CRGC_REACH) {
 		AbortAll();
@@ -293,9 +321,11 @@ void CRGrabController::Abort(){
 	}
 	// DCAST(CRHingeHumanBodyIf,body)->ResetUpperBodyPose();
 	// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(1.0);
+	*/
 }
 
 void CRGrabController::AbortAll(){
+	/*
 	if (grabSpring.first && grabSpring.second) {
 		grabSpring.first->Enable(false);
 		grabSpring.second->Enable(false);
@@ -311,9 +341,11 @@ void CRGrabController::AbortAll(){
 	// DCAST(CRHingeHumanBodyIf,body)->ResetUpperBodyPose();
 	// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(1.0);
 	controlState = CRGrabControllerIf::CRGC_STANDBY;
+	*/
 }
 
 CRGrabControllerIf::CRGCControlState CRGrabController::GetControlState(){
-	return controlState;
+	// return controlState;
+	return((CRGrabControllerIf::CRGCControlState)0);
 }
 }

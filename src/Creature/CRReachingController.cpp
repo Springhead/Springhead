@@ -16,44 +16,6 @@ namespace Spr{
 // 
 void CRReachingController::Init(){
 	CRController::Init();
-
-	// 目標位置用剛体の作成
-	{
-		// 目標位置と制御対象剛体を直接結合する剛体
-		PHSolidDesc solidDesc;
-		solidDesc.mass = 1.0;
-		soTargetDirect = phScene->CreateSolid(solidDesc);
-		soTargetDirect->SetDynamical(false);
-	}
-	{
-		// 目標位置と制御対象剛体を１軸関節を介して結合する剛体
-		PHSolidDesc solidDesc;
-		solidDesc.mass = 1.0;
-		soTargetHinged = phScene->CreateSolid(solidDesc);
-		PHHingeJointDesc jointDesc;
-		{
-			jointDesc.posePlug.Ori()   = fixOri;
-			jointDesc.poseSocket.Ori() = fixOri;
-		}
-		phScene->CreateJoint(soTargetDirect, soTargetHinged, jointDesc);
-	}
-
-	// 目標位置用剛体と制御対象をバネで結合
-	{
-		PHSpringDesc springDesc;
-		{
-			springDesc.posePlug.Pos() = reachPos;
-			springDesc.spring = Vec3d(1,1,1) * springPos;
-			springDesc.damper = Vec3d(1,1,1) * damperPos;
-			springDesc.springOri = 1000.0f;
-			springDesc.damperOri =   50.0f;
-			springDesc.bEnabled = false;
-		}
-		springDirect = DCAST(PHSpringIf, phScene->CreateJoint(soTargetDirect, solid, springDesc));
-		springHinged = DCAST(PHSpringIf, phScene->CreateJoint(soTargetHinged, solid, springDesc));
-	}
-
-	Reset();
 }
 
 void CRReachingController::Step(){
@@ -61,11 +23,7 @@ void CRReachingController::Step(){
 
 	double dt = phScene->GetTimeStep();
 	if(bActive){
-		if (period+(offset<0 ? 0 : offset) < time) {
-			if (0 <= offset) {
-				Reset();
-			}
-		} else {
+		if (time < period) {
 			time += (float)dt;
 		}
 
@@ -79,88 +37,19 @@ void CRReachingController::Step(){
 			length = 0;
 			deltaLength = 0;
 		}
-		Vec3f dir = solid->GetPose().Pos()-finalPos;
-		pos = finalPos + dir*length;
-		vel = dir*deltaLength;
-
-		soTargetDirect->SetFramePosition(pos);
-		soTargetDirect->SetVelocity(vel);
-		soTargetDirect->SetOrientation(finalQuat);
+		Vec3f dir = ikcp->GetSolid()->GetPose().Pos()-fP;
+		pos = fP + dir*length;
+		ikcp->SetGoal(pos);
 	}
 }
 
-PHSolidIf* CRReachingController::GetSolid(){
-	return solid;
-}
-
-void CRReachingController::SetTargetPos(Vec3f p, Vec3f v){
-	finalPos = p;
-	finalVel = v;
-}
-
-void CRReachingController::SetTargetOri(Quaterniond q, Vec3f av){
-	finalQuat = q;
-	finalAngV = av;
-}
-
-void CRReachingController::SetTargetTime(float t){
-	period = t;
-}
-
-void CRReachingController::Start(CRReachingControllerIf::ConstraintMode mode, float keeptime){
-	time     = 0.0f;
-	offset   = keeptime;
-
-	soTargetDirect->SetFramePosition(solid->GetPose().Pos());
-	soTargetHinged->SetFramePosition(solid->GetPose().Pos());
-
-	if (mode==CRReachingControllerIf::CM_P3R0) {
-		springDirect->SetSpringOri(0);
-		springDirect->SetDamperOri(0);
-		springDirect->Enable(true);
-		springHinged->Enable(false);
-
-	} else if (mode==CRReachingControllerIf::CM_P3R2) {
-		springDirect->Enable(false);
-		springHinged->Enable(true);
-
-	} else if (mode==CRReachingControllerIf::CM_P3R3) {
-		springDirect->SetSpringOri(springOri);
-		springDirect->SetDamperOri(damperOri);
-		springDirect->Enable(true);
-		springHinged->Enable(false);
-
-	} else {
-		return;
-
-	}
+void CRReachingController::Reach(PHIKPosCtlIf* ikcp, Vec3d pos, Vec3d v, float t){
+	this->time		= 0.0f;
+	this->ikcp		= ikcp;
+	this->fP		= pos;
+	this->fV		= v;
+	this->period	= t;
 
 	bActive = true;
-}
-
-float CRReachingController::GetRemainingTime(){
-	float remaining = period - time;
-	return((remaining > 0) ? remaining : 0);
-}
-
-CRReachingControllerIf::ReachState CRReachingController::GetReachState(){
-	std::cout << ((solid->GetPose() * reachPos) - finalPos).norm() << std::endl;
-	if (!bActive) {
-		return CRReachingControllerIf::RS_STOP;
-	} else if (time < period) {
-		return CRReachingControllerIf::RS_NOTHING_REACHED;
-	} else if (((solid->GetPose() * reachPos) - finalPos).norm() > 0.09) {
-		return CRReachingControllerIf::RS_TARGET_REACHED;
-	} else {
-		return CRReachingControllerIf::RS_SOLID_REACHED;
-	}
-}
-
-void CRReachingController::Reset(){
-	bActive = false;
-	time    = 0.0f;
-	offset  = 0.0f;
-	springDirect->Enable(false);
-	springHinged->Enable(false);
 }
 }
