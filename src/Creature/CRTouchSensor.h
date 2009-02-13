@@ -22,17 +22,7 @@ namespace Spr{;
 /** @brief 感覚処理
 */
 class CRTouchSensor : public CRSensor, public CRTouchSensorDesc {
-	struct Contact {
-		double		dimension;
-		Vec3d		normal;
-		double		pressure;
-		Vec3d		pos;
-		PHSolidIf*	soMe;
-		PHSolidIf*	soOther;
-		Vec3d		force;
-	};
-
-	std::vector<Contact> contactList;
+	std::vector<CRContactInfo> contactList;
 
 public:
 	SPR_OBJECTDEF(CRTouchSensor);
@@ -57,33 +47,9 @@ public:
 	*/
 	virtual int NContacts(){ return contactList.size(); }
 
-	/** @brief 接触している剛体（自分の）を返す
+	/** @brief 接触情報を返す
 	*/
-	virtual PHSolidIf* GetContactSolidMe(int n){ return contactList[n].soMe; }
-
-	/** @brief 接触している剛体（相手の）を返す
-	*/
-	virtual PHSolidIf* GetContactSolidOther(int n){ return contactList[n].soOther; }
-
-	/** @brief 接触圧力の大きさを返す
-	*/
-	virtual double GetContactPressure(int n){ return contactList[n].pressure; }
-
-	/** @brief 接触地点（グローバル座標）を返す
-	*/
-	virtual Vec3d GetContactPos(int n){ return contactList[n].pos; }
-
-	/** @brief 接触している剛体（自分の）を返す
-	*/
-	virtual PHSolidIf* GetContactMySolid(int n){ return contactList[n].soMe; }
-
-	/** @brief 接触している剛体（相手の）を返す
-	*/
-	virtual PHSolidIf* GetContactOthersSolid(int n){ return contactList[n].soOther; }
-
-	/** @brief 接触力を返す
-	*/
-	virtual Vec3f GetContactForce(int n){ return contactList[n].force; }
+	virtual CRContactInfo GetContact(int n){ return contactList[n]; }
 };
 }
 //@}
