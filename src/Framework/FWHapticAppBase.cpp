@@ -147,11 +147,11 @@ void FWHapticAppBase::FindNearestObjectFromHapticPointer(PHSolidIf* hPointer){
 	std::sort(edges.begin(), edges.end());
 	//端から見ていって，接触の可能性があるノードの判定をする．
 	typedef std::set<int> SolidSet;
-	SolidSet cur;							//	現在のSolidのセット
+	SolidSet cur;																											//	現在のSolidのセット
 	bool found = false;
 
 	for(Edges::iterator it = edges.begin(); it != edges.end(); ++it){
-		if (it->bMin){						//	初端だったら，リスト内の物体と判定
+		if (it->bMin){																										//	初端だったら，リスト内の物体と判定
 			for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
 				int f1 = it->index;
 				int f2 = *itf;
@@ -165,7 +165,7 @@ void FWHapticAppBase::FindNearestObjectFromHapticPointer(PHSolidIf* hPointer){
 			}
 			cur.insert(it->index);
 		}else{
-			cur.erase(it->index);			//	終端なので削除．
+			cur.erase(it->index);																						//	終端なので削除．
 		}
 	}
 
@@ -230,13 +230,23 @@ void FWHapticAppBase::FindNearestObjectFromHapticPointer(PHSolidIf* hPointer){
 	}
 }
 
+void FWHapticAppBase::UpdateHapticPointer(int i, PHSolid hapticInterface){
+	PHSolidIf* hPointer = GetHapticPointer(i);
+	hPointer->SetFramePosition(hapticInterface.GetFramePosition());				
+//	hPointer->SetFramePosition(cameraInfo.view.Rot() * phpointer.GetFramePosition());		// (未実装)cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる(*力覚も考えないといけん)			
+	hPointer->SetOrientation(hapticInterface.GetOrientation());					
+	hPointer->SetVelocity(hapticInterface.GetVelocity());
+	hPointer->SetAngularVelocity(hapticInterface.GetAngularVelocity());	
+	hPointer->SetDynamical(false);
+}	
+
 // protected変数へのアクセス
 void FWHapticAppBase::AddHapticPointer(PHSolidIf* ps){
 	hapticPointers.push_back(ps);
 }
 
-PHSolidIf** FWHapticAppBase::GetHapticPointers(){
-	return hapticPointers.empty() ? NULL : (PHSolidIf**)&*hapticPointers.begin();
+PHSolidIf* FWHapticAppBase::GetHapticPointer(int i){
+	return hapticPointers[i];
 }
 
 FWExpandedPHSolid** FWHapticAppBase::GetFWExpandedPHSolids(){

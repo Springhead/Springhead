@@ -16,17 +16,25 @@ namespace Spr{;
 
 class FWHapticBase{
 protected:
-	UTRef<HIForceInterface6DIf> hapticDevice;
+	UTRef<HIForceInterface6DIf> hapticInterface;
 	PHSolid hapticPointer;
+	int loopCounter;
 	float posScale;
-	double timeStep;
+	double hapticTimeStep;
+	double physicTimeStep;
 public:
 	FWHapticBase();
-	void InitHumanInterface(const IfInfo* info, void* desc);
-	HIForceInterface6DIf* GetHumanInterface();	
+	void InitHumanInterface(const IfInfo* info, void* desc);	
 	virtual void UpdateHumanInterface();
 	virtual void HapticRendering();
 	virtual void Keyboard(int key, int x, int y);
+	
+	void SetHapticTimeStep(double dt);
+	double GetHapticTimeStep();
+	void SetPhysicTimeStep(double dt);
+	double GetPhysicTimeStep();
+	HIForceInterface6DIf* GetHumanInterface();
+	int GetLoopCount();
 };
 
 }
