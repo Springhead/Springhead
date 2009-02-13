@@ -80,7 +80,7 @@ void CRTouchSensor::Step() {
 						double		depth			= solidPair->GetContactDepth(s, t);
 						int			nSectionVtx		= shapePair->NSectionVertexes();
 
-						Contact contact;
+						CRContactInfo contact;
 						contact.pos		= solidPair->GetCommonPoint(s, t);
 						contact.soMe	= soMe;
 						contact.soOther	= soOther;

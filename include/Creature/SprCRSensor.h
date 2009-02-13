@@ -77,6 +77,16 @@ struct CROpticalSensorDesc : CRSensorDesc{
 
 // ------------------------------------------------------------------------------
 /// 触覚センサのインタフェース
+struct CRContactInfo {
+	double		dimension;
+	Vec3d		normal;
+	double		pressure;
+	Vec3d		pos;
+	PHSolidIf*	soMe;
+	PHSolidIf*	soOther;
+	Vec3d		force;
+};
+
 struct CRTouchSensorIf : CRSensorIf{
 	SPR_IFDEF(CRTouchSensor);
 
@@ -84,33 +94,9 @@ struct CRTouchSensorIf : CRSensorIf{
 	*/
 	int NContacts();
 
-	/** @brief 接触している剛体（自分の）を返す
+	/** @brief 接触情報を返す
 	*/
-	PHSolidIf* GetContactSolidMe(int n);
-
-	/** @brief 接触している剛体（相手の）を返す
-	*/
-	PHSolidIf* GetContactSolidOther(int n);
-
-	/** @brief 接触圧力の大きさを返す
-	*/
-	double GetContactPressure(int n);
-
-	/** @brief 接触地点（グローバル座標）を返す
-	*/
-	Vec3d GetContactPos(int n);
-
-	/** @brief 接触している剛体（自分の）を返す
-	*/
-	PHSolidIf* GetContactMySolid(int n);
-
-	/** @brief 接触している剛体（相手の）を返す
-	*/
-	PHSolidIf* GetContactOthersSolid(int n);
-
-	/** @brief 接触力を返す
-	*/
-	Vec3f GetContactForce(int n);
+	CRContactInfo GetContact(int n);
 };
 
 /// 触覚センサのデスクリプタ
@@ -120,7 +106,6 @@ struct CRTouchSensorDesc : CRSensorDesc{
 	CRTouchSensorDesc(){
 	}
 };
-
 //@}
 
 }

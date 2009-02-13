@@ -164,11 +164,5 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRTouchSensorIf(base)	\
 	int NContacts(){	return	base::NContacts();}	\
-	Spr::PHSolidIf* GetContactSolidMe(int n){	return	base::GetContactSolidMe(n);}	\
-	Spr::PHSolidIf* GetContactSolidOther(int n){	return	base::GetContactSolidOther(n);}	\
-	double GetContactPressure(int n){	return	base::GetContactPressure(n);}	\
-	Vec3d GetContactPos(int n){	return	base::GetContactPos(n);}	\
-	Spr::PHSolidIf* GetContactMySolid(int n){	return	base::GetContactMySolid(n);}	\
-	Spr::PHSolidIf* GetContactOthersSolid(int n){	return	base::GetContactOthersSolid(n);}	\
-	Vec3f GetContactForce(int n){	return	base::GetContactForce(n);}	\
+	Spr::CRContactInfo GetContact(int n){	return	base::GetContact(n);}	\
 
