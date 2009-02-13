@@ -41,12 +41,13 @@ public:
 	virtual void DebugDisplay(GRDebugRenderIf* render);		///< デバック表示にしたときに呼ばれる関数
 	virtual FWExpandedPHSolid** ExpandPHSolidInfo();			///< シーンが持つPHSolidに力覚提示に必要な情報を付加する
 	virtual void FindNearestObjectFromHapticPointer(PHSolidIf * hPointer);			///< 力覚ポインタ近傍の物体を見つける
+	virtual void UpdateHapticPointer(int i, PHSolid hapticInterface);						///< 力覚インタフェースの状態を力覚ポインタに設定
 	virtual void SyncHapticProcess() = 0;								///< HapticProcessと同期する関数
 	virtual void Keyboard(int key, int x, int y) = 0;					///< glutKeyboarcFunc()が呼ぶ関数
 
 	// protected変数へのアクセス
 	void AddHapticPointer(PHSolidIf* ps);
-	PHSolidIf** GetHapticPointers();
+	PHSolidIf* GetHapticPointer(int i);
 	FWExpandedPHSolid** GetFWExpandedPHSolids();
 	int GetNExpandedPHSolids();
 

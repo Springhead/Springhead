@@ -32,25 +32,45 @@ void FWHapticBase::InitHumanInterface(const IfInfo* info = HISpidarGIf::GetIfInf
 	
 	hisdk->Init();
 	hisdk->Print(DSTR);
-	hapticDevice = hisdk->CreateHumanInterface(info)->Cast();
-	hapticDevice->Init(desc);
+	hapticInterface = hisdk->CreateHumanInterface(info)->Cast();
+	hapticInterface->Init(desc);
 	DSTR << "Init Human Interface Done" << std::endl;
 }
 
 HIForceInterface6DIf* FWHapticBase::GetHumanInterface(){
-	return hapticDevice;
+	return hapticInterface;
+}
+
+void FWHapticBase::SetHapticTimeStep(double dt){
+	hapticTimeStep = dt;
+}
+
+double FWHapticBase::GetHapticTimeStep(){
+	return hapticTimeStep;
+}
+
+void FWHapticBase::SetPhysicTimeStep(double dt){
+	physicTimeStep = dt;
+}
+
+double FWHapticBase::GetPhysicTimeStep(){
+	return physicTimeStep;
 }
 
 void FWHapticBase::UpdateHumanInterface(){
-	hapticDevice->Update((float)timeStep);
-	hapticPointer.SetFramePosition(hapticDevice->GetPosition() * posScale);
-	hapticPointer.SetOrientation(hapticDevice->GetOrientation());
-	hapticPointer.SetVelocity(hapticDevice->GetVelocity() * posScale);
-	hapticPointer.SetAngularVelocity(hapticDevice->GetAngularVelocity());
+	hapticInterface->Update((float)GetHapticTimeStep());
+	hapticPointer.SetFramePosition(hapticInterface->GetPosition() * posScale);
+	hapticPointer.SetOrientation(hapticInterface->GetOrientation());
+	hapticPointer.SetVelocity(hapticInterface->GetVelocity() * posScale);
+	hapticPointer.SetAngularVelocity(hapticInterface->GetAngularVelocity());
 }
 
 void FWHapticBase::HapticRendering(){}
 void FWHapticBase::Keyboard(int key, int x, int y){
+}
+
+int FWHapticBase::GetLoopCount(){
+	return loopCounter;
 }
 
 }
