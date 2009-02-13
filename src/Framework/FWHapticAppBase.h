@@ -16,13 +16,14 @@
 
 namespace Spr{;
 
+typedef 	std::vector<PHSolidIf*> HapticPointers;
 
 class FWHapticAppBase : public FWAppGLUT, public UTRefCount{
 protected:
 	// 変数
-	std::vector<PHSolidIf*> hapticPointers;
-//	std::vector<ExpandedPHSolid> eSolids;
-	std::vector<ExpandedPHSolid> expandedPHSolids;
+	HapticPointers hapticPointers;
+	FWExpandedPHSolids expandedPHSolids;
+	double localRange;
 	// フラグ
 	bool bDebug;
 public:
@@ -38,17 +39,16 @@ public:
 	virtual void Step() = 0;												///< シミュレーションステップ
 	virtual void Display();													///< 描画関数(glutPostRedisplay()で呼ばれる
 	virtual void DebugDisplay(GRDebugRenderIf* render);		///< デバック表示にしたときに呼ばれる関数
+	virtual FWExpandedPHSolid** ExpandPHSolidInfo();			///< シーンが持つPHSolidに力覚提示に必要な情報を付加する
+	virtual void FindNearestObjectFromHapticPointer(PHSolidIf * hPointer);			///< 力覚ポインタ近傍の物体を見つける
 	virtual void SyncHapticProcess() = 0;								///< HapticProcessと同期する関数
-	virtual void ExpandPHSolidInfo() = 0;							///< シーンが持つPHSolidに力覚提示に必要な情報を付加する
-	virtual void FindNearestObjectFromHapticPointer() = 0;	///< 力覚ポインタ近傍の物体を見つける
-//	virtual void TestSimulation();											///< テストシミュレーション
 	virtual void Keyboard(int key, int x, int y) = 0;					///< glutKeyboarcFunc()が呼ぶ関数
 
 	// protected変数へのアクセス
 	void AddHapticPointer(PHSolidIf* ps);
-	std::vector<PHSolidIf*> GetHapticPointers();
-	void AddExpandedPHSolids(ExpandedPHSolid es);
-	std::vector<ExpandedPHSolid>* GetExpandedPHSolids();
+	PHSolidIf** GetHapticPointers();
+	FWExpandedPHSolid** GetFWExpandedPHSolids();
+	int GetNExpandedPHSolids();
 
 	// フラグを切り替えるための関数
 	void SetDebugMode(bool bD);

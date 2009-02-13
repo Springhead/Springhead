@@ -168,17 +168,17 @@ struct PHContactDetectorSt{
 	PHContactDetectorSt(int n=0, int m=0):nSolidPair(n), nShapePair(m){}
 };
 
+// AABBでソートするための構造体
+struct Edge{
+	float edge;				///<	端の位置(グローバル系)
+	int	index;				///<	元の solidの位置
+	bool bMin;				///<	初端ならtrue
+	bool operator < (const Edge& s) const { return edge < s.edge; }
+};
+typedef std::vector<Edge> Edges;
+
 template<class TShapePair, class TSolidPair, class TEngine>
 class PHContactDetector : public PHEngine{
-
-	// AABBでソートするための構造体
-	struct Edge{
-		float edge;				///<	端の位置(グローバル系)
-		int	index;				///<	元の solidの位置
-		bool bMin;				///<	初端ならtrue
-		bool operator < (const Edge& s) const { return edge < s.edge; }
-	};
-	typedef std::vector<Edge> Edges;
 
 public:
 #ifdef _DEBUG
