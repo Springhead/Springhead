@@ -10,8 +10,6 @@ public:
 	virtual void InitCameraView();
 	virtual void Idle();
 	virtual void SyncHapticProcess();
-	virtual void ExpandPHSolidInfo();
-	virtual void FindNearestObjectFromHapticPointer();
 };
 
 }

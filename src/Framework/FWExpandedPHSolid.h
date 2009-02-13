@@ -50,15 +50,18 @@ struct SyncInfo{
 	struct NeighborPoint neighborPoint;
 };
 
-struct ExpandedPHSolid{
+class FWExpandedPHSolid{
+public:
 	PHSolidIf* phSolidIf;
 	PHSolid haSolid;
 	struct SyncInfo syncInfo;
 	struct Flag flag;
-	ExpandedPHSolid(){
+	FWExpandedPHSolid(){
 		phSolidIf = NULL;
 	}
 };
+
+typedef std::vector<FWExpandedPHSolid> FWExpandedPHSolids;
 
 
 #endif
