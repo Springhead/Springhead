@@ -222,12 +222,12 @@ public:
 		mat[1][2] = AMET( 2.0 * (Y()*Z() - X()*W()) );
 		mat[2][2] = AMET( 1.0 - 2.0 * (X()*X() + Y()*Y()) );
 	}
-	///	オイラー角へ変換
+	///	オイラー角(Y軸(heading), X軸(attitude), Z軸(bank)の順のオイラー角)へ変換
 	template <class VET> void ToEuler(TVec3<VET>& v){
 		ET poleCheck = X()*Y() + Z()*W();
-		VET heading = v[0];
-		VET attitude = v[1];
-		VET bank = v[2];
+		VET& heading = v[0];
+		VET& attitude = v[1];
+		VET& bank = v[2];
 		if (poleCheck > 0.499){				//	north pole
 			heading = 2 * atan2(X(),W());
 			bank = 0;
@@ -239,12 +239,10 @@ public:
 			attitude = asin(2*X()*Y() + 2*Z()*W());
 			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()*X() - 2*Z()*Z());
 		}
-		// ToEulerが(0,0,0)しか返してくれないのでmitakeが勝手に書き加えた (07/07/13)
-		v[0]=heading; v[1]=attitude; v[2]=bank;
 	}
-	///
+	///	オイラー角(Y軸(heading), X軸(attitude), Z軸(bank)の順のオイラー角)から変換
 	template <class VET> void FromEuler(const TVec3<VET>& v){
-		VET heading = v[0];	//	yaw		mech z  ->  CG y
+		VET heading = v[0];		//	yaw		mech z  ->  CG y
 		VET attitude = v[1];	//	pitch	mech y  ->  CG x
 		VET bank = v[2];		//	roll	mech x  ->  CG z
 
