@@ -23,21 +23,6 @@ namespace Spr{;
 /**	Quaternion/4元数．3x3行列の代わりに回転を表すために使える．
 	4変数で済む．補間や微分・積分がやりやすい．<br>
 	TVec3との掛け算は，回転変換でオーバーロードされている．
-
-	
-	そのうち入れたい，オイラー角への変換．
-	heading = atan2(2*qy*qw-2*qx*qz , 1 - 2*qy2 - 2*qz2)
-	attitude = asin(2*qx*qy + 2*qz*qw) 
-	bank = atan2(2*qx*qw-2*qy*qz , 1 - 2*qx2 - 2*qz2)
-
-	except when qx*qy + qz*qw = 0.5 (north pole)
-	which gives:
-	heading = 2 * atan2(x,w)
-	bank = 0
-	and when qx*qy + qz*qw = -0.5 (south pole)
-	which gives:
-	heading = -2 * atan2(x,w)
-	bank = 0 
 */
 template<class ET>
 class TQuaternion:public PTM::TVectorBase<4, TVecDesc<TQuaternion<ET>, ET> >{
@@ -222,7 +207,12 @@ public:
 		mat[1][2] = AMET( 2.0 * (Y()*Z() - X()*W()) );
 		mat[2][2] = AMET( 1.0 - 2.0 * (X()*X() + Y()*Y()) );
 	}
-	///	オイラー角(Y軸(heading), X軸(attitude), Z軸(bank)の順のオイラー角)へ変換
+	///	オイラー角(Y軸(heading), Z軸(attitude), X軸(bank)の順のオイラー角)へ変換
+	/*	オイラー角は関節の順番によっていろいろな定義がある。
+		ここでは、Y軸→Z軸→X軸の順を考えている。
+		heading, attitude, bankの呼び名は、車が右を向いている場合を考えると、
+		納得いくと思います。
+	*/
 	template <class VET> void ToEuler(TVec3<VET>& v){
 		ET poleCheck = X()*Y() + Z()*W();
 		VET& heading = v[0];
@@ -240,11 +230,11 @@ public:
 			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()*X() - 2*Z()*Z());
 		}
 	}
-	///	オイラー角(Y軸(heading), X軸(attitude), Z軸(bank)の順のオイラー角)から変換
+	///	オイラー角(Y軸(heading), Z軸(attitude), X軸(bank)の順のオイラー角)から変換
 	template <class VET> void FromEuler(const TVec3<VET>& v){
-		VET heading = v[0];		//	yaw		mech z  ->  CG y
-		VET attitude = v[1];	//	pitch	mech y  ->  CG x
-		VET bank = v[2];		//	roll	mech x  ->  CG z
+		VET heading = v[0];
+		VET attitude = v[1];
+		VET bank = v[2];
 
 		ET c1 = cos(heading / 2);
 		ET c2 = cos(attitude / 2);
@@ -279,18 +269,19 @@ public:
 		}
 	}
 
-	///オイラー角で指定
-	void Euler(ET yaw, ET pitch, ET roll) {
-		ET cosYaw	= cos(yaw / 2);
-		ET sinYaw	= sin(yaw / 2);
-		ET cosPitch	= cos(pitch / 2);
-		ET sinPitch	= sin(pitch / 2);
-		ET cosRoll	= cos(roll / 2);
-		ET sinRoll	= sin(roll / 2);
-		W() = cosRoll * cosPitch * cosYaw - sinRoll * sinPitch * sinYaw;
-		X() = cosRoll * sinPitch * sinYaw + sinRoll * cosPitch * cosYaw;
-		Y() = cosRoll * cosPitch * sinYaw + sinRoll * sinPitch * cosYaw;
-		Z() = cosRoll * sinPitch * cosYaw - sinRoll * cosPitch * sinYaw;
+	///オイラー角で指定 (FromEulerとまったく同じ)
+	void Euler(ET heading, ET attitude, ET bank) {
+		ET c1 = cos(heading / 2);
+		ET s1 = sin(heading / 2);
+		ET c2 = cos(attitude / 2);
+		ET s2 = sin(attitude / 2);
+		ET c3 = cos(bank / 2);
+		ET s3 = sin(bank / 2);
+		
+		W() = c1*c2*c3 - s1*s2*s3;
+		X() = s1*s2*c3 + c1*c2*s3;
+		Y() = s1*c2*c3 + c1*s2*s3;
+		Z() = c1*s2*c3 - s1*c2*s3;
 	}
 
 	/** @brief 角速度からquaternionの時間微分を計算
