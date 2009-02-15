@@ -74,6 +74,7 @@ struct CDShapePairIf : public ObjectIf{
 struct CDConvexIf : public CDShapeIf{
 	SPR_IFDEF(CDConvex);
 	double CurvatureRadius(Vec3d p); ///< 表面上の点pにおける曲率半径
+	Vec3d Normal(Vec3d p); ///< 表面上の点pにおける法線
 };
 
 /**	面	*/

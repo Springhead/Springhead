@@ -50,6 +50,8 @@ public:
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
 	/// 表面上の点pにおける曲率半径を求める
 	virtual double CurvatureRadius(Vec3d p){ return 1e+10; } /// 平面とした場合の値。現時点ではRoundConeについてのみ実装されている(09/02/08, mitake)
+	///< 表面上の点pにおける法線
+	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } /// 現時点ではRoundConeについてのみ実装されている(09/02/14, mitake)
 
 	virtual float CalcVolume(){
 		if(!valid)Analyze();

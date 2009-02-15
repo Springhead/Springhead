@@ -37,19 +37,26 @@ void CRReachingController::Step(){
 			length = 0;
 			deltaLength = 0;
 		}
-		Vec3f dir = ikcp->GetSolid()->GetPose().Pos()-fP;
+		Vec3f dir = (ikcp->GetSolid()->GetPose() * ikcp->GetPos())-fP;
 		pos = fP + dir*length;
 		ikcp->SetGoal(pos);
 	}
 }
 
-void CRReachingController::Reach(PHIKPosCtlIf* ikcp, Vec3d pos, Vec3d v, float t){
+void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	this->time		= 0.0f;
 	this->ikcp		= ikcp;
 	this->fP		= pos;
 	this->fV		= v;
 	this->period	= t;
 
+	ikcp->Enable(true);
 	bActive = true;
 }
+
+void CRReachingController::Stop(){
+	ikcp->Enable(false);
+	bActive = false;
+}
+
 }

@@ -152,6 +152,10 @@ public:
 	*/
 	virtual void Move(){}
 
+	/** @brief 自然位置に戻る
+	*/
+	virtual void MoveNatural(){}
+
 	/** @brief 制御点を追加する
 	*/
 	virtual void AddControlPoint(PHIKControlPointIf* control);
@@ -270,6 +274,10 @@ public:
 	*/
 	virtual void Move();
 
+	/** @brief 自然位置に戻る
+	*/
+	virtual void MoveNatural();
+
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual PTM::VMatrixRow<double> CalcJacobian(PHIKControlPointIf* control);
@@ -325,6 +333,10 @@ public:
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move();
+
+	/** @brief 自然位置に戻る
+	*/
+	virtual void MoveNatural();
 
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
@@ -402,7 +414,7 @@ public:
 
 	/** @brief 有効・無効を設定する
 	*/
-	void Enable(bool enable){ this->isEnabled = enable; }
+	void Enable(bool enable);
 
 	/** @brief 制御対象の剛体を設定する
 	*/
