@@ -250,14 +250,6 @@ public:
 	//@{
 	///	データからオブジェクトを作成
 	ObjectIf* CreateObject(const IfInfo* info,  const void* data, UTString name="");
-	///	
-	UTLoadedData* FindAncestor(UTString tn);
-	///	
-	UTLoadedData* FindDescendant(UTString tn);
-	///
-	UTLoadedData* FindLinkAncestor(UTString tn);
-	///
-	UTLoadedData* FindLinkDescendant(UTString tn);
 
 	//@}
 	void LinkData();

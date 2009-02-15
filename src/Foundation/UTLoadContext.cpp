@@ -153,7 +153,7 @@ void UTLoadedData::Print(std::ostream& os){
 
 UTLoadedData* UTLoadedData::FindAncestor(UTString tn){
 	UTLoadedData* rv = parent;
-	while(rv && rv->type->GetTypeName().compare(tn)!=0) rv = rv->parent;
+	while(rv && rv->type &&rv->type->GetTypeName().compare(tn)!=0) rv = rv->parent;
 	return rv;
 }
 UTLoadedData* UTLoadedData::FindDescendant(UTString tn){
@@ -648,6 +648,8 @@ void UTLoadContext::CreateSceneRecursive(){
 		objects.Pop();										//	スタックをPop
 	}
 }
+
+
 
 void UTLoadContext::LinkNode(){
 	for(UTLoadedDataRefs::iterator it = loadedDatas.begin(); it!=loadedDatas.end(); ++it){
