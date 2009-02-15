@@ -40,6 +40,7 @@
 	void ProceedSolve(){	base::ProceedSolve();}	\
 	PTM::VVector< double > GetDTheta(){	return	base::GetDTheta();}	\
 	void Move(){	base::Move();}	\
+	void MoveNatural(){	base::MoveNatural();}	\
 	void AddControlPoint(Spr::PHIKControlPointIf* control){	base::AddControlPoint(control);}	\
 	void SetBias(float bias){	base::SetBias(bias);}	\
 	float GetBias(){	return	base::GetBias();}	\

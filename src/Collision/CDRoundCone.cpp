@@ -98,6 +98,25 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	}
 }
 
+Vec3d CDRoundCone::Normal(Vec3d p){
+	Vec2d	r = radius;
+	double	l = length;
+
+	// RoundConeの側面の角度（側面がZ軸に垂直なとき0°、平行(つまりカプセル型)のとき90°）
+	double theta = acos((r[1]-r[0])/l);
+
+	if ( (p[2] > (r[0]*cos(theta) + l/2.0)) || (p[2] < (r[1]*cos(theta) - l/2.0)) ) {
+		// 接触点がどちらかの球体にある場合：
+		return p.unit();
+	} else {
+		// 接触点が球体と球体の間にある場合：
+		Vec3d pNormal = p;
+		pNormal[2] = 0; pNormal = pNormal.unit() * sin(theta);
+		pNormal[2] = cos(theta);
+		return pNormal;
+	}
+}
+
 double CDRoundCone::CurvatureRadius(Vec3d p){
 	Vec2d	r = radius;
 	double	l = length;

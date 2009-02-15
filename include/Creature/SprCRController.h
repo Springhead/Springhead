@@ -126,17 +126,43 @@ struct CRReachingControllerIf : CRControllerIf{
 	void SetPos(Vec3f pos);
 
 	/** @brief 位置を到達させる
-		@param ikcp 到達させる制御点
 		@param pos 目標位置
 		@param v 目標速度
 		@param t 目標到達時間
 	*/
-	void Reach(PHIKPosCtlIf* ikcp, Vec3d pose, Vec3d v, float t);
+	void Start(Vec3d pose, Vec3d v, float t);
+
+	/** @brief 到達状態を解除する
+	*/
+	void Stop();
+
+	/** @brief IK制御点の設定
+	*/
+	void SetIKCP(PHIKPosCtlIf* ikcp);
+
+	/** @brief IK制御点の取得
+	*/
+	PHIKPosCtlIf* GetIKCP();
 };
 
 /// 到達運動コントローラのデスクリプタ
 struct CRReachingControllerDesc : public CRControllerDesc{
 	SPR_DESCDEF(CRReachingController);
+};
+
+/// 到達運動コントローラの集合体のインターフェース
+struct CRReachingControllersIf : CRControllerIf{
+	SPR_IFDEF(CRReachingControllers);
+
+	/** @brief 到達運動コントローラを取得する
+		@param solid 到達対象の剛体
+	*/
+	CRReachingControllerIf* GetReachingController(PHSolidIf* solid);
+};
+
+/// 到達運動コントローラのデスクリプタ
+struct CRReachingControllersDesc : public CRControllerDesc{
+	SPR_DESCDEF(CRReachingControllers);
 };
 
 // ------------------------------------------------------------------------------

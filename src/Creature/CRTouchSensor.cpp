@@ -81,22 +81,22 @@ void CRTouchSensor::Step() {
 						int			nSectionVtx		= shapePair->NSectionVertexes();
 
 						CRContactInfo contact;
-						contact.pos		= solidPair->GetCommonPoint(s, t);
-						contact.soMe	= soMe;
-						contact.soOther	= soOther;
-						contact.force	= force;
+						contact.pos			= solidPair->GetCommonPoint(s, t);
+						contact.soMe		= soMe;
+						contact.soOther		= soOther;
+						contact.force		= force;
 						if (nSectionVtx != 0) {
-							contact.dimension	= shapePair->GetContactDimension();
 							contact.normal		= shapePair->GetNormalVector();
+							contact.dimension	= shapePair->GetContactDimension();
 							contact.pressure	= fabs(force.dot(contact.normal));
 						} else {
 							// ÚG–Ê‚Ì‹È—¦”¼Œa
 							CDConvexIf* sh1 = shapePair->GetShape(0)->Cast();
-							Quaterniond q1 = (so1->GetShapePose(0) * so1->GetPose()).Inv();
+							Posed q1 = (so1->GetShapePose(0) * so1->GetPose()).Inv();
 							double r1 = sh1->CurvatureRadius(q1 * contact.pos);
 
 							CDConvexIf* sh2 = shapePair->GetShape(1)->Cast();
-							Quaterniond q2 = (so2->GetShapePose(1) * so2->GetPose()).Inv();
+							Posed q2 = (so2->GetShapePose(1) * so2->GetPose()).Inv();
 							double r2 = sh2->CurvatureRadius(q2 * contact.pos);
 
 							// Hertz‚ÌÚGŒöŽ®
@@ -106,6 +106,11 @@ void CRTouchSensor::Step() {
 							double a = pow((3.0/4.0)*P*( 2*(1-v*v)/E )/(1/r1 + 1/r2), 1/3.0);
 							double pMax = 3*P/(2*3.1415926*a*a);
 
+							if (so1 == soMe) {
+								contact.normal = q1.Ori().Inv() * sh1->Normal(q1 * contact.pos);
+							} else {
+								contact.normal = q2.Ori().Inv() * sh2->Normal(q2 * contact.pos);
+							}
 							contact.dimension	= 1e-4;
 							contact.pressure	= pMax;
 						}

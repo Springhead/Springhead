@@ -116,6 +116,10 @@ struct PHIKNodeIf : SceneObjectIf{
 	*/
 	void Move();
 
+	/** @brief é©ëRà íuÇ…ñﬂÇÈ
+	*/
+	void MoveNatural();
+
 	/** @brief êßå‰ì_Çí«â¡Ç∑ÇÈ
 	*/
 	void AddControlPoint(PHIKControlPointIf* control);

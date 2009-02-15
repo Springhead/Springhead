@@ -54,7 +54,13 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRReachingControllerIf(base)	\
 	void SetPos(Vec3f pos){	base::SetPos(pos);}	\
-	void Reach(PHIKPosCtlIf* ikcp, Vec3d pose, Vec3d v, float t){	base::Reach(ikcp, pose, v, t);}	\
+	void Start(Vec3d pose, Vec3d v, float t){	base::Start(pose, v, t);}	\
+	void Stop(){	base::Stop();}	\
+	void SetIKCP(PHIKPosCtlIf* ikcp){	base::SetIKCP(ikcp);}	\
+	PHIKPosCtlIf* GetIKCP(){	return	base::GetIKCP();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_CRReachingControllersIf(base)	\
+	Spr::CRReachingControllerIf* GetReachingController(Spr::PHSolidIf* solid){	return	base::GetReachingController(solid);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGazeControllerIf(base)	\
 	void LookAt(Vec3f pos, Vec3f vel, float attractiveness){	base::LookAt(pos, vel, attractiveness);}	\

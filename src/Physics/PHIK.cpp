@@ -238,6 +238,15 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKControlPoint
 
+void PHIKControlPoint::Enable(bool enable){
+	this->isEnabled = enable;
+	if (!enable) {
+		for(NSetIter node=linkedNodes.begin(); node!=linkedNodes.end(); ++node){
+			(*node)->MoveNatural();
+		}
+	}
+}
+
 // --- --- --- --- ---
 Vec3d PHIKPosCtl::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
@@ -653,6 +662,12 @@ void PHIKBallJoint::Move(){
 	return;
 }
 
+void PHIKBallJoint::MoveNatural(){
+	joint->SetSpring(jSpring);
+	joint->SetDamper(jDamper);
+	joint->SetGoal(jGoal);
+}
+
 void PHIKBallJoint::AddControlPoint(PHIKControlPointIf* control){
 	if (DCAST(PHIKOriCtlIf,control)) {
 		// 姿勢制御に荷担するボールジョイントは自由度を３に引き上げる
@@ -708,6 +723,12 @@ void PHIKHingeJoint::Move(){
 	joint->SetSpring(jSpring + spring);
 	joint->SetDamper(jDamper + damper);
 	joint->SetSpringOrigin(newGoal);
+}
+
+void PHIKHingeJoint::MoveNatural(){
+	joint->SetSpring(jSpring);
+	joint->SetDamper(jDamper);
+	joint->SetSpringOrigin(jGoal);
 }
 
 }

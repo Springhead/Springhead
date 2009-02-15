@@ -167,6 +167,9 @@ CRControllerIf* CRCreature::CreateController(const IfInfo* ii, const CRControlle
 	} else if (ii == CRReachingControllerIf::GetIfInfoStatic()) {
 		controllers.push_back((DBG_NEW CRReachingController((const CRReachingControllerDesc&)desc, this->Cast()))->Cast());
 
+	} else if (ii == CRReachingControllersIf::GetIfInfoStatic()) {
+		controllers.push_back((DBG_NEW CRReachingControllers((const CRReachingControllersDesc&)desc, this->Cast()))->Cast());
+
 	} else if (ii == CRWalkingControllerIf::GetIfInfoStatic()) {
 		controllers.push_back((DBG_NEW CRWalkingController((const CRWalkingControllerDesc&)desc, this->Cast()))->Cast());
 

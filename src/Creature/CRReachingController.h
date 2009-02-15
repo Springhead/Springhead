@@ -33,12 +33,12 @@ private:
 	/// 有効かどうか
 	bool bActive;
 
-	/// 制御対象のikcp
-	PHIKPosCtlIf* ikcp;
-
 public:
 	SPR_OBJECTDEF(CRReachingController);
 	ACCESS_DESC(CRReachingController);
+
+	/// 制御対象のikcp
+	PHIKPosCtlIf* ikcp;
 
 	CRReachingController(){}
 	CRReachingController(const CRReachingControllerDesc& desc, CRCreatureIf* c=NULL) 
@@ -46,6 +46,7 @@ public:
 		, CRReachingControllerDesc(desc)
 	{
 		bActive = false;
+		std::cout << "!!! : " << phScene->GetTimeStep() << std::endl;
 	}
 
 	/** @ brief 初期化を実行する
@@ -58,11 +59,72 @@ public:
 
 	/** @brief 位置を到達させる
 	*/
-	virtual void Reach(PHIKPosCtlIf* ikcp, Vec3d pos, Vec3d v, float t);
+	virtual void Start(Vec3d pos, Vec3d v, float t);
+
+	/** @brief 到達状態を解除する
+	*/
+	virtual void Stop();
 
 	/** @brief 目標位置の再設定
 	*/
-	void SetPos(Vec3f pos){ fP = pos; }
+	virtual void SetPos(Vec3f pos){ fP = pos; }
+
+	/** @brief IK制御点の設定
+	*/
+	virtual void SetIKCP(PHIKPosCtlIf* ikcp){ this->ikcp = ikcp; }
+
+	/** @brief IK制御点の取得
+	*/
+	virtual PHIKPosCtlIf* GetIKCP(){ return this->ikcp; }
+};
+
+/** @brief 到達運動コントローラの集合体
+*/
+class CRReachingControllers : public CRController, public CRReachingControllersDesc {
+private:
+	std::vector<CRReachingControllerIf*> controllers;
+
+public:
+	SPR_OBJECTDEF(CRReachingControllers);
+	ACCESS_DESC(CRReachingControllers);
+
+	CRReachingControllers(){}
+	CRReachingControllers(const CRReachingControllersDesc& desc, CRCreatureIf* c=NULL) 
+		: CRController((const CRControllerDesc&)desc, c)
+		, CRReachingControllersDesc(desc)
+	{
+	}
+
+	/** @brief 到達運動コントローラを取得する
+	*/
+	CRReachingControllerIf* GetReachingController(PHSolidIf* solid){
+		for (size_t i=0; i<controllers.size(); ++i) {
+			CRReachingController* ct = controllers[i]->Cast();
+			if (ct && ct->ikcp->GetSolid() == solid) {
+				return controllers[i];
+			}
+		}
+
+		{
+			CRReachingControllerDesc reachDesc;
+			CRReachingControllerIf*  reachCtl = creature->CreateController(reachDesc)->Cast();
+			controllers.push_back(reachCtl);
+			
+			for (size_t i=0; i<creature->NBodies(); ++i) {
+				CRBodyIf* body = creature->GetBody(i);
+				for (size_t j=0; j<body->NControlPoints(); ++j) {
+					PHIKPosCtlIf* posCtl = body->GetControlPoint(j)->Cast();
+					if (posCtl && posCtl->GetSolid() == solid) {
+						reachCtl->SetIKCP(posCtl);
+						return reachCtl;
+					}
+				}
+			}
+		}
+
+		return NULL;
+	}
+
 };
 }
 //@}

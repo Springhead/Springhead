@@ -26,6 +26,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDConvexIf(base)	\
 	double CurvatureRadius(Vec3d p){	return	base::CurvatureRadius(p);}	\
+	Vec3d Normal(Vec3d p){	return	base::Normal(p);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDFaceIf(base)	\
 	int NIndex(){	return	base::NIndex();}	\

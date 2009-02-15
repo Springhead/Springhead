@@ -34,7 +34,10 @@ public:
 
 	CRController(){}
 	CRController(const CRControllerDesc& desc, CRCreatureIf* c=NULL) : CRControllerDesc(desc) {
-		if(c!=NULL && c->GetScene()){SetScene(c->GetScene());}
+		if(c!=NULL && c->GetScene()){
+			SetScene(c->GetScene());
+			phScene = c->GetScene()->Cast();
+		}
 		creature = c;
 	}
 

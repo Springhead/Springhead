@@ -1275,6 +1275,19 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CRReachingControllersDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CRController::SetDesc((CRControllerDesc*)(CRReachingControllersDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CRController::GetDesc((CRControllerDesc*)(CRReachingControllersDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CRGazeControllerState \
 protected:\
 public:\

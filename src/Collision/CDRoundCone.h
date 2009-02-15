@@ -35,6 +35,8 @@ public:
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	/// 表面上の点pにおける曲率半径を求める
 	virtual double CurvatureRadius(Vec3d p);
+	///< 表面上の点pにおける法線
+	virtual Vec3d Normal(Vec3d p);
 	
 	Vec2f GetRadius();
 	float GetLength();
