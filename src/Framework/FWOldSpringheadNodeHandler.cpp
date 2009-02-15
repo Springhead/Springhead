@@ -21,6 +21,7 @@
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Framework/FWSdk.h>
+#include <Framework/FWPHBone.h>
 #include <Collision/CDConvexMesh.h>
 
 #include <Framework/FWOldSpringheadNode.h>
@@ -1014,6 +1015,59 @@ public:
 	}
 };
 
+class FWNodeHandlerPHBoneGenerator:public UTLoadHandlerImp<PHBoneGenerator>{
+public:
+	class BoneCreator: public UTLoadTask{
+	private:
+		std::vector<Affinef> af;
+		FWSdkIf* fwSdk;
+		PHScene* phScene;
+		UTLoadedData* ldMesh;
+	public:
+		FWPHBone phBone;
+
+		BoneCreator(UTLoadedData* lm, PHScene* p): phScene(p), ldMesh(lm){}
+
+		void Execute(UTLoadContext* fc){
+			//FrameTransformMatrixÇÃéÊìæ
+			GRMesh* mesh = NULL;
+			for(int i=0; !mesh && i<ldMesh->loadedObjects.size(); ++i){
+				mesh = ldMesh->loadedObjects[i]->Cast();
+			}
+			if (mesh){
+				for(int i=0 ;i<mesh->skinWeights.size(); ++i){
+					af.push_back(mesh->skinWeights[i].frame->GetWorldTransform());
+					std::string name = mesh->skinWeights[i].frame->GetName();
+					//DSTR << name << std::endl << af[i] << std::endl;
+				}
+			}
+			//FWSdkÇÃéÊìæ
+			fwSdk = phScene->GetSdk()->GetNameManager()->Cast();
+			
+			//PHBoneÇÃèÄîı
+			phBone.SetPHScne(phScene);
+			phBone.SetfwSdk(fwSdk);
+			phBone.SetAffine(af);
+
+			//phBone.PHBoneCreate();
+			//phBone.DisplayBonePoint();
+			af.clear();
+			phBone.Clear();	
+		}
+	};
+
+	FWNodeHandlerPHBoneGenerator():UTLoadHandlerImp<Desc>("PHBoneGenerator"){}
+
+	void AfterCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
+		//PHSceneÇÃéÊìæ
+		PHScene* phScene = FindPHScene(fc);
+		for(int i=0; i<ld->linkTo.size(); ++i){
+			UTLoadedData* ldMesh = ld->linkTo[i];
+			fc->postTasks.push_back(DBG_NEW BoneCreator(ldMesh, phScene));
+		}
+	}
+};
+
 }
 
 
@@ -1045,5 +1099,6 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerJointEngine);
 	handlers->insert(DBG_NEW FWNodeHandlerJoint);
 	handlers->insert(DBG_NEW FWNodeHandlerImport);
+	handlers->insert(DBG_NEW FWNodeHandlerPHBoneGenerator);
 }
 }

@@ -255,6 +255,9 @@ struct Import{
 	std::string file;	
 };
 
+struct PHBoneGenerator{
+};
+
 //@}
 
 }
