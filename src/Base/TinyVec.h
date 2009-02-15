@@ -225,15 +225,20 @@ public:
 protected:
 	void set_default(){this->clear();}
 };
-
+/// int版2次元ベクトル
+typedef TVec2<int> Vec2i;
 ///	float版2次元ベクトル
 typedef TVec2<float> Vec2f;
 ///	double版2次元ベクトル
 typedef TVec2<double> Vec2d;
+/// int版3次元ベクトル
+typedef TVec3<int>	Vec3i;
 ///	float版3次元ベクトル
 typedef TVec3<float> Vec3f;
 ///	double版3次元ベクトル
 typedef TVec3<double> Vec3d;
+/// int版4次元ベクトル
+typedef TVec4<int> Vec4i;
 ///	float版4次元ベクトル
 typedef TVec4<float> Vec4f;
 ///	double版4次元ベクトル
