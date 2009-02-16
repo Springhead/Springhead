@@ -46,7 +46,6 @@ public:
 		, CRReachingControllerDesc(desc)
 	{
 		bActive = false;
-		std::cout << "!!! : " << phScene->GetTimeStep() << std::endl;
 	}
 
 	/** @ brief ‰Šú‰»‚ðŽÀs‚·‚é
