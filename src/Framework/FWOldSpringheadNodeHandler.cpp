@@ -1020,6 +1020,7 @@ public:
 	class BoneCreator: public UTLoadTask{
 	private:
 		std::vector<Affinef> af;
+		std::vector<GRFrame*> grfBone;
 		FWSdkIf* fwSdk;
 		PHScene* phScene;
 		UTLoadedData* ldMesh;
@@ -1037,6 +1038,7 @@ public:
 			if (mesh){
 				for(int i=0 ;i<mesh->skinWeights.size(); ++i){
 					af.push_back(mesh->skinWeights[i].frame->GetWorldTransform());
+					grfBone.push_back(mesh->skinWeights[i].frame);
 					std::string name = mesh->skinWeights[i].frame->GetName();
 					//DSTR << name << std::endl << af[i] << std::endl;
 				}
@@ -1045,12 +1047,16 @@ public:
 			fwSdk = phScene->GetSdk()->GetNameManager()->Cast();
 			
 			//PHBone‚Ì€”õ
-			phBone.SetPHScne(phScene);
+			PHSceneIf* phSceneIf =phScene->Cast();
+			phBone.SetPHScne(phSceneIf);
 			phBone.SetfwSdk(fwSdk);
 			phBone.SetAffine(af);
+			phBone.SetGRFrameBone(grfBone);
+			
 
-			//phBone.PHBoneCreate();
+			phBone.FWPHBoneCreate();
 			//phBone.DisplayBonePoint();
+			//phBone.DisplayPHBoneCenter();
 			af.clear();
 			phBone.Clear();	
 		}

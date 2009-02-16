@@ -31,25 +31,57 @@
 namespace SprOldSpringhead{
 using namespace Spr;
 
+struct BoneData{
+	BoneData();
+	Vec3d  centerPoint;
+	double length;
+	CDBoxIf* shapeBone;
+	PHSolidIf* solid;
+	GRFrame* grFrame;
+	FWObjectIf* fwObject;
+};
+
+struct BoneJointData{
+	BoneJointData();
+	double K;
+	double D1;
+	double D2;
+	double yieldStress;
+	double hardnessRate;
+	Vec3f SocketPos;
+	Vec3f PlugPos;
+};
+
 class FWPHBone{
 private:
 	std::vector<Affinef> af;
+	std::vector<FWObjectIf*> fwoBone;
 	std::vector<PHSolidIf*> soBone;
-	std::vector<CDBoxIf*> shapeBone;
+	std::vector<GRFrame*> grfBone;
+	std::vector<PHJointIf*> Joint;
 	std::vector<Vec3d> bonePoint;
 	PHSolidDesc	desc;
 	FWSdkIf* fwSdk;
-	PHScene* phScene;
+	PHSceneIf* phScene;
 
 public:
 	FWPHBone();
 	void FWPHBoneCreate();
-	void DisplayBonePoint();
-	void SetPHScne(PHScene* s){phScene=s;}
+	void FWJointCreate();
+	void FWSkinMeshAdapt();
+	void SetPHScne(PHSceneIf* s){phScene=s;}
 	void SetfwSdk(FWSdkIf* s){fwSdk=s;}
 	void SetAffine(std::vector<Affinef> a);
+	void SetGRFrameBone(std::vector<GRFrame*> f){grfBone=f;}
+	void DisplayBonePoint();
+	void DisplayPHBoneCenter();
 	void Clear();
+	std::vector<BoneData> bone;
+	BoneData boneData;
+	std::vector<BoneJointData> boneJoint;
+	BoneJointData boneJointData;
 };
+
 
 }
 #endif
