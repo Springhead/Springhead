@@ -118,6 +118,10 @@ Vec3d CDRoundCone::Normal(Vec3d p){
 }
 
 double CDRoundCone::CurvatureRadius(Vec3d p){
+	/// 下記の計算は現時点でバグもち。
+	/// RoundConeの両端の半径が同じであるときにINDになる
+	/// いずれ修正すること！ ('09/02/17, mitake)
+
 	Vec2d	r = radius;
 	double	l = length;
 

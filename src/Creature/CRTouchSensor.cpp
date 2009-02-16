@@ -36,8 +36,8 @@ void CRTouchSensor::Step() {
 			// 自分の体を構成する剛体 と それ以外の剛体 のペアのみに限定
 			bool iIsMe = false, jIsMe = false;
 			for (int n=0; n<body->NSolids(); ++n) {
-				if (body->GetSolid(n) == phScene->GetSolids()[i]) { iIsMe = true; }
-				if (body->GetSolid(n) == phScene->GetSolids()[j]) { jIsMe = true; }
+				if (body->GetSolid(n) && body->GetSolid(n) == phScene->GetSolids()[i]) { iIsMe = true; }
+				if (body->GetSolid(n) && body->GetSolid(n) == phScene->GetSolids()[j]) { jIsMe = true; }
 				if (iIsMe && jIsMe) { break; }
 			}
 			if ((iIsMe && jIsMe) || (!iIsMe && !jIsMe)) { continue; }
@@ -60,7 +60,7 @@ void CRTouchSensor::Step() {
 			Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(so1, so2);
 
 			for (int s=0; s<so1->NShape(); ++s) {
-				for (int t=s+1; t<so2->NShape(); ++t) {
+				for (int t=0; t<so2->NShape(); ++t) {
 
 					// この方法だと同じ剛体の異なるShapeについての接触は
 					// 異なるContactとなる。
@@ -74,7 +74,9 @@ void CRTouchSensor::Step() {
 					int			contactStat	= solidPair->GetContactState(s, t);
 					unsigned	lastContCnt	= solidPair->GetLastContactCount(s, t);
 
-					if (contactStat == 1 || (contactStat == 2 && lastContCnt == sceneCnt)) {
+
+					if (contactStat == 1 || (contactStat == 2 && (lastContCnt == sceneCnt-1))) {
+
 						totalForce += force;
 
 						double		depth			= solidPair->GetContactDepth(s, t);
@@ -92,11 +94,13 @@ void CRTouchSensor::Step() {
 						} else {
 							// 接触面の曲率半径
 							CDConvexIf* sh1 = shapePair->GetShape(0)->Cast();
-							Posed q1 = (so1->GetShapePose(0) * so1->GetPose()).Inv();
+							int i1=0; for (; i1<so1->NShape(); ++i1) { if (so1->GetShape(i1)==sh1) break; }
+							Posed q1 = so1->GetShapePose(i1).Inv() * so1->GetPose().Inv();
 							double r1 = sh1->CurvatureRadius(q1 * contact.pos);
 
 							CDConvexIf* sh2 = shapePair->GetShape(1)->Cast();
-							Posed q2 = (so2->GetShapePose(1) * so2->GetPose()).Inv();
+							int i2=0; for (; i2<so2->NShape(); ++i2) { if (so2->GetShape(i2)==sh2) break; }
+							Posed q2 = so2->GetShapePose(i2).Inv() * so2->GetPose().Inv();
 							double r2 = sh2->CurvatureRadius(q2 * contact.pos);
 
 							// Hertzの接触公式
