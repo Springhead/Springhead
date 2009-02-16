@@ -892,4 +892,25 @@ void CRBallHumanBody::CreateIKControlPoint(int n) {
 	ikControlPoints[2*SO_NSOLIDS+n] = phScene->CreateIKControlPoint(descIKCPOri);
 	ikControlPoints[2*SO_NSOLIDS+n]->Enable(false);
 }
+
+int CRBallHumanBody::NBallJoints(){
+	int counterNBallJoint = 0;
+	for(unsigned int i = 0; i < joints.size(); i++){
+		if(DCAST(PHBallJointIf, joints[i]))
+			counterNBallJoint ++;
+	}
+	joNBallJoints = counterNBallJoint;
+	return joNBallJoints;
+}	
+
+int CRBallHumanBody::NHingeJoints(){
+	int counterNHingeJoint = 0;
+	for(unsigned int i = 0; i< joints.size(); i++){
+		if(DCAST(PHHingeJointIf, joints[i]))
+			 counterNHingeJoint ++;
+	}
+	joNHingeJoints = counterNHingeJoint;
+	return joNHingeJoints;
+}
+
 }

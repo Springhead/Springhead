@@ -17,6 +17,8 @@
 	void ResetUpperBodyPose(){	base::ResetUpperBodyPose();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBallHumanBodyIf(base)	\
+	int NBallJoints(){	return	base::NBallJoints();}	\
+	int NHingeJoints(){	return	base::NHingeJoints();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRFourLegsAnimalBodyIf(base)	\
 	void Init(){	base::Init();}	\

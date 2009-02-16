@@ -265,6 +265,13 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 /// ボールジョイント人体モデルのインターフェイス
 struct CRBallHumanBodyIf : CRBodyIf {
 	SPR_IFDEF(CRBallHumanBody);
+	/** @brief ボールジョイントの数を返す
+	*/
+	int NBallJoints();
+
+	/** @brief ヒンジジョイントの数を返す
+	*/
+	int NHingeJoints();
 };
 
 /// ボールジョイント人体モデルのデスクリプタ
@@ -308,7 +315,10 @@ struct CRBallHumanBodyDesc : CRBodyDesc {
 		// 関節の数
 		JO_NJOINTS
 	};
-
+	
+	///Jointの数
+	int joNBallJoints;
+	int joNHingeJoints;
 	/// 体重
 	double bodyMass;
 

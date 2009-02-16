@@ -354,6 +354,8 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRBallHumanBodyDesc \
 protected:\
+	int	joNBallJoints;	\
+	int	joNHingeJoints;	\
 	double	bodyMass;	\
 	double	waistLength;	\
 	double	waistBreadth;	\
@@ -421,6 +423,8 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
+		joNBallJoints = ((CRBallHumanBodyDesc*)ptr)->joNBallJoints;	\
+		joNHingeJoints = ((CRBallHumanBodyDesc*)ptr)->joNHingeJoints;	\
 		bodyMass = ((CRBallHumanBodyDesc*)ptr)->bodyMass;	\
 		waistLength = ((CRBallHumanBodyDesc*)ptr)->waistLength;	\
 		waistBreadth = ((CRBallHumanBodyDesc*)ptr)->waistBreadth;	\
@@ -490,6 +494,8 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRBallHumanBodyDesc*)ptr);	\
+		((CRBallHumanBodyDesc*)ptr)->joNBallJoints = joNBallJoints;	\
+		((CRBallHumanBodyDesc*)ptr)->joNHingeJoints = joNHingeJoints;	\
 		((CRBallHumanBodyDesc*)ptr)->bodyMass = bodyMass;	\
 		((CRBallHumanBodyDesc*)ptr)->waistLength = waistLength;	\
 		((CRBallHumanBodyDesc*)ptr)->waistBreadth = waistBreadth;	\
