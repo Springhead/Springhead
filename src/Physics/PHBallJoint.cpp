@@ -214,9 +214,9 @@ void PHBallJoint::CompBias(){
 			位置制御のみであれば，以下の式の1行目のみ．
 			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
 			****/
-			db.w() = tmp * ((spring * -propV)
-						  - (damper * desiredVelocity)
-						  +  offset);
+			db.w() = tmp * (- spring * propV
+						  - damper * desiredVelocity
+						  - offset);
 		}
 	}
 	
