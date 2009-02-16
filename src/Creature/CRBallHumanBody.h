@@ -82,6 +82,10 @@ public:
 	/** @brief 初期化を実行する
 	*/
 	virtual void Init();
+
+	// インタフェースの実装
+	virtual int		NBallJoints();				//< ボディに含まれているボールジョイントの数を返す
+	virtual int		NHingeJoints();				//< ボディに含まれているヒンジジョイントの数を返す
 };
 
 }
