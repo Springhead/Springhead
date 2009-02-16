@@ -28,6 +28,20 @@
 namespace SprOldSpringhead{
 using namespace Spr;
 
+BoneData::BoneData(){
+	centerPoint=Vec3d(0.0,0.0,0.0);
+	length=0.0;
+}
+BoneJointData::BoneJointData(){
+	K				= 0.01;
+	D1				= 0.1;
+	D2				= 10;
+	yieldStress		= 0.1;
+	hardnessRate	= 1e3;
+	SocketPos		=Vec3f(0.0,0.0,0.0);
+	PlugPos			=Vec3f(0.0,0.0,0.0);
+}
+
 FWPHBone::FWPHBone(){
 }
 
@@ -36,28 +50,73 @@ void FWPHBone::FWPHBoneCreate(){
 	desc.mass = 0.05;
 	desc.inertia = 0.033 * Matrix3d::Unit();
 	CDBoxDesc dBox;
-	//soBoneの作成
-	soBone.push_back(phScene->CreateSolid(desc));
-	int Num=soBone.size()-1;
-	{
-		soBone[Num]->SetDynamical(false);
-		soBone[Num]->SetGravity(false);
-		soBone[Num]->SetFramePosition(Vec3d(2*Num, 0.0, 0.0));
-	}
-	//shapeBoneの作成	
-	{
-		dBox.boxsize = Vec3f(1.0,0.5,1.5);
-		shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(dBox)));
-	}
 
-	soBone[Num]->AddShape(shapeBone[Num]);
+	for(int i=0; i<bone.size(); ++i){
+		//soBoneの作成
+		soBone.push_back(phScene->CreateSolid(desc));
+		bone[i].solid=soBone[i];
+		{
+			if(i==0){
+				bone[i].solid->SetDynamical(false);
+			}else{
+				bone[i].solid->SetDynamical(true);
+			}
+			bone[i].solid->SetFramePosition(bone[i].centerPoint);
+		}
+		//shapeBoneの作成	
+		{
+			dBox.boxsize=(Vec3d(0.1,0.1,bone[i].length));
+			bone[i].shapeBone=XCAST(fwSdk->GetPHSdk()->CreateShape(dBox));
+		}
+		bone[i].solid->AddShape(bone[i].shapeBone);
+	}
+	FWJointCreate();
+	FWSkinMeshAdapt();
 }
+void FWPHBone::FWJointCreate(){
+	std::vector<PH3ElementBallJointDesc> d3Ball;
+	PH3ElementBallJointDesc _d3Ball;
+
+	if (boneJoint.size()){
+		for(int i=0 ;i<boneJoint.size(); ++i){
+			d3Ball.push_back(_d3Ball);
+			{
+				d3Ball[i].poseSocket.Pos()	= boneJoint[i].SocketPos;
+				d3Ball[i].posePlug.Pos()	= boneJoint[i].PlugPos;
+				d3Ball[i].spring			= boneJoint[i].K;
+				d3Ball[i].damper			= boneJoint[i].D1;
+				d3Ball[i].secondDamper		= boneJoint[i].D2;
+				d3Ball[i].yieldStress		= boneJoint[i].yieldStress;
+				d3Ball[i].hardnessRate		= boneJoint[i].hardnessRate;
+			}
+		}
+		for(int i=0;i<boneJoint.size();i++){
+			phScene->SetContactMode(bone[i].solid, bone[i+1].solid, PHSceneDesc::MODE_NONE);
+			phScene->CreateJoint(bone[i].solid,bone[i+1].solid, d3Ball[i]);
+			Joint.push_back( phScene->CreateJoint( soBone[i], soBone[i+1], d3Ball[i]) );
+		}
+	}
+}
+
+void FWPHBone::FWSkinMeshAdapt(){
+
+	for(int i=0; i<bone.size(); ++i){
+		fwoBone.push_back(fwSdk->GetScene()->CreateFWObject());
+		bone[i].fwObject=fwoBone[i];
+		bone[i].grFrame=grfBone[i];
+		//PHとGRを連動させる
+		bone[i].fwObject->SetPHSolid(bone[i].solid);
+		bone[i].fwObject->SetGRFrame(bone[i].grFrame->Cast());
+	}
+}
+
 void FWPHBone::DisplayBonePoint(){
 	CDSphereDesc dSphere;
 	CDSphereIf* shapeSphere;
 	std::vector<PHSolidIf*> soSphere;
-	//soSphereの作成
+
 	for(int i=0; i<bonePoint.size(); ++i){
+		//soSphereの作成
 		soSphere.push_back(phScene->CreateSolid(desc));
 		{
 			soSphere[i]->SetDynamical(false);
@@ -72,8 +131,28 @@ void FWPHBone::DisplayBonePoint(){
 	}
 }
 
+void FWPHBone::DisplayPHBoneCenter(){
+	CDBoxDesc dBoxD;
+	CDBoxIf* shapeBoxD;
+	std::vector<PHSolidIf*> soBoxD;
+	for(int i=0; i<bone.size(); ++i){
+		//soBoxDの作成
+		soBoxD.push_back(phScene->CreateSolid(desc));
+		{
+			soBoxD[i]->SetDynamical(false);
+			soBoxD[i]->SetFramePosition(bone[i].centerPoint);
+		}
+		//shapeBoxDの作成	
+		{
+			dBoxD.boxsize=(Vec3d(0.1,0.1,0.1));
+			shapeBoxD=XCAST(fwSdk->GetPHSdk()->CreateShape(dBoxD));
+		}
+		soBoxD[i]->AddShape(shapeBoxD);
+	}
+}
 void FWPHBone::SetAffine(std::vector<Affinef> a){
 	af.swap(a);
+	//アフィン行列から3次元座標を算出
 	Vec3d BonePoint;
 	if (af.size()){
 		for(int i=0 ;i<af.size(); ++i){
@@ -82,11 +161,29 @@ void FWPHBone::SetAffine(std::vector<Affinef> a){
 			//DSTR << i << std::endl << bonePoint[i] << std::endl;
 		}
 	}
+	//3次元座標からPHBoneの剛体情報を算出
+	if (bonePoint.size()){
+		for(int i=0 ;i<bonePoint.size()-2; ++i){
+			bone.push_back(boneData);
+			bone[i].centerPoint = (bonePoint[i+2]+bonePoint[i+1])*0.5;
+			Vec3d length = bonePoint[i+2]-bonePoint[i+1];
+			bone[i].length = length.norm();
+			//DSTR<< i << std::endl << bone[i].centerPoint << bone[i].length << std::endl;
+		}
+	}
+	//PHBoneの剛体情報からJointのソケット・プラグの位置を算出
+	if (bone.size()){
+		for(int i=0 ;i<bone.size()-1; ++i){
+			boneJoint.push_back(boneJointData);
+			boneJoint[i].SocketPos = Vec3f(0.0,0.0, bone[i].length/2);
+			boneJoint[i].PlugPos = Vec3f(0.0,0.0,-bone[i+1].length/2);
+		}
+	}
+
 }
 void FWPHBone::Clear(){
 	af.clear();
-	soBone.clear();
-	shapeBone.clear();
+	bonePoint.clear();
 }
 
 }
