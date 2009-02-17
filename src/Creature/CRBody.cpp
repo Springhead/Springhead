@@ -58,6 +58,24 @@ PHJointIf* CRBody::GetJoint(int i){
 	return (i < joints.size()) ? joints[i] : NULL;
 }
 
+int CRBody::NBallJoints(){
+	int counterNBallJoint = 0;
+	for(unsigned int i = 0; i < joints.size(); i++){
+		if(DCAST(PHBallJointIf, joints[i]))
+			counterNBallJoint ++;
+	}
+	return counterNBallJoint;
+}	
+
+int CRBody::NHingeJoints(){
+	int counterNHingeJoint = 0;
+	for(unsigned int i = 0; i< joints.size(); i++){
+		if(DCAST(PHHingeJointIf, joints[i]))
+			 counterNHingeJoint ++;
+	}
+	return counterNHingeJoint;
+}
+
 int CRBody::NIKNodes(){
 	return ikNodes.size();
 }

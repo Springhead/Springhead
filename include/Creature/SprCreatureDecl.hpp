@@ -4,6 +4,8 @@
 	Spr::PHSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int NJoints(){	return	base::NJoints();}	\
 	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
+	int NBallJoints(){	return	base::NBallJoints();}	\
+	int NHingeJoints(){	return	base::NHingeJoints();}	\
 	int NIKNodes(){	return	base::NIKNodes();}	\
 	PHIKNodeIf* GetIKNode(int i){	return	base::GetIKNode(i);}	\
 	int NControlPoints(){	return	base::NControlPoints();}	\
@@ -17,14 +19,10 @@
 	void ResetUpperBodyPose(){	base::ResetUpperBodyPose();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBallHumanBodyIf(base)	\
-	int NBallJoints(){	return	base::NBallJoints();}	\
-	int NHingeJoints(){	return	base::NHingeJoints();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRFourLegsAnimalBodyIf(base)	\
 	void Init(){	base::Init();}	\
 	Vec3d GetUpperCenterOfMass(){	return	base::GetUpperCenterOfMass();}	\
-	int NBallJoints(){	return	base::NBallJoints();}	\
-	int NHingeJoints(){	return	base::NHingeJoints();}	\
 	double VSolid(int i){	return	base::VSolid(i);}	\
 	double VSolids(){	return	base::VSolids();}	\
 	double GetTotalMass(){	return	base::GetTotalMass();}	\
@@ -32,8 +30,6 @@
 	double GetLegLength(int i){	return	base::GetLegLength(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRDebugLinkBodyIf(base)	\
-	int NBallJoints(){	return	base::NBallJoints();}	\
-	int NHingeJoints(){	return	base::NHingeJoints();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRTrunkFootHumanBodyIf(base)	\
 

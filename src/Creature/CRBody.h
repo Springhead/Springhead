@@ -87,6 +87,14 @@ public:
 	*/
 	virtual PHJointIf*			GetJoint(int i);
 
+	/** @brief ボールジョイントの数を返す
+	*/
+	virtual int NBallJoints();
+
+	/** @brief ヒンジジョイントの数を返す
+	*/
+	virtual int NHingeJoints();
+
 	/** @brief IKノードの数を得る
 	*/
 	int NIKNodes();
