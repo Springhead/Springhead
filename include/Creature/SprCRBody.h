@@ -47,6 +47,14 @@ struct CRBodyIf : SceneObjectIf{
 	*/
 	PHJointIf* GetJoint(int i);
 
+	/** @brief ボールジョイントの数を返す
+	*/
+	int NBallJoints();
+
+	/** @brief ヒンジジョイントの数を返す
+	*/
+	int NHingeJoints();
+
 	/** @brief IKノードの数を得る
 	*/
 	int NIKNodes();
@@ -265,13 +273,6 @@ struct CRHingeHumanBodyDesc : CRBodyDesc {
 /// ボールジョイント人体モデルのインターフェイス
 struct CRBallHumanBodyIf : CRBodyIf {
 	SPR_IFDEF(CRBallHumanBody);
-	/** @brief ボールジョイントの数を返す
-	*/
-	int NBallJoints();
-
-	/** @brief ヒンジジョイントの数を返す
-	*/
-	int NHingeJoints();
 };
 
 /// ボールジョイント人体モデルのデスクリプタ
@@ -376,13 +377,6 @@ struct CRFourLegsAnimalBodyIf : CRBodyIf {
 	*/
 	Vec3d GetUpperCenterOfMass();
 
-	/** @brief ボールジョイントの数を返す
-	*/
-	int NBallJoints();
-
-	/** @brief ヒンジジョイントの数を返す
-	*/
-	int NHingeJoints();
 	/** @brief i番目の剛体の体積を返す
 	*/
 	double VSolid(int i);
@@ -595,14 +589,6 @@ struct CRFourLegsAnimalBodyDesc : CRBodyDesc {
 struct CRDebugLinkBodyIf : CRBodyIf {
 	SPR_IFDEF(CRDebugLinkBody);
 
-	/** @brief ボールジョイントの数を返す
-	*/
-	int NBallJoints();
-
-	/** @brief ヒンジジョイントの数を返す
-	*/
-	int NHingeJoints();
-	
 };
 
 /// デバッグ用のヘビ状モデルのデスクリプタ
