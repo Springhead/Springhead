@@ -11,6 +11,7 @@ int (*StartScilabOrg)(char *SCIpath,char *ScilabStartup,int *Stacksize);
 
 #define SC_IMP_STACKVAR(x) SC##x* p##x
 SC_IMP_STACKVAR(stack);
+SC_IMP_STACKVAR(vstk);
 SC_IMP_STACKVAR(recu);
 SC_IMP_STACKVAR(iop);
 SC_IMP_STACKVAR(errgst);
@@ -28,18 +29,28 @@ bool StartScilab(char* SCIpath, char *ScilabStartup,int *Stacksize){
 	if (!StartScilabOrg) return false;
 
 #define SC_INIT_STACKVAR(x) *(void**)&p##x = SWIGDLL_GETPROC(#x "_");
-	SC_INIT_STACKPTR(stack);
-	SC_INIT_STACKPTR(recu);
-	SC_INIT_STACKPTR(iop);
-	SC_INIT_STACKPTR(errgst);
-	SC_INIT_STACKPTR(com);
-	SC_INIT_STACKPTR(adre);
-	SC_INIT_STACKPTR(intersci);
-	SC_INIT_STACKPTR(cha1);
-	SC_INIT_STACKPTR(dbg);
-#undef SC_INIT_STACKPTR
+	SC_INIT_STACKVAR(stack);
+	SC_INIT_STACKVAR(vstk);
+	SC_INIT_STACKVAR(recu);
+	SC_INIT_STACKVAR(iop);
+	SC_INIT_STACKVAR(errgst);
+	SC_INIT_STACKVAR(com);
+	SC_INIT_STACKVAR(adre);
+	SC_INIT_STACKVAR(intersci);
+	SC_INIT_STACKVAR(cha1);
+	SC_INIT_STACKVAR(dbg);
+#undef SC_INIT_STACKVAR
 
 	return StartScilabOrg(SCIpath, ScilabStartup, Stacksize) != 0;
 }
 
+}
+
+namespace Spr{
+SCMatrix ScilabMatrix(const char* name){
+	int n, m, lp;
+	Scilab::cmatptr_((char*)name, &m, &n, &lp, strlen(name));
+	SCMatrix rv(m, n, m, Scilab::stk(lp));
+	return rv;
+}
 }

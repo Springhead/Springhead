@@ -7,7 +7,8 @@ bool WriteMatrix(char* n, int* mA, int* nA, double* A){
 	return cwritemat_(n, mA, nA, A, (long)strlen(n)) != 0;
 }
 double* GetMatrixptr(char* s, int* m, int* n, int* lp){
-	return (double*)cmatptr_(s, m, n, lp, (long)strlen(s));
+	cmatptr_(s, m, n, lp, (long)strlen(s));
+	return stk(*lp);
 }
 bool ReadMatrix(char* s, int* m, int* n, double* buf){
 	return creadmat_(s, m, n, buf, (long)strlen(s)) != 0;
@@ -62,6 +63,16 @@ int main(){
 			cxtmp=NULL;
 		}
 	}
+	{
+		SCMatrix A = ScilabMatrix("A");
+		SCMatrix b = ScilabMatrix("b");
+		SCMatrix x = ScilabMatrix("x");
+		std::cout << A << x << " = " << b;
 
-
+		SendScilabJob("y=A+A;");
+		SCMatrix y = ScilabMatrix("y");
+		std::cout << "y=" << y;
+		A = y;
+		SendScilabJob("disp(A);");
+	}
 }
