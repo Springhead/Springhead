@@ -13,7 +13,7 @@ set MODULE=%2
 set MAKEFILE=%MODULE%Stub.mak.txt
 rem makefile‚Ìì¬‚ÆMake‚ÌŽÀs
 set PATHORG=%PATH%;
-set PATH=%SPRINGHEAD2%\bin
+set PATH=%SPRINGHEAD2%\bin;%SPRINGHEAD2%\bin\swig
 set SRCINTF=
 for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCINTF! ../../include/%%p/%%f
 set SRCIMP=
@@ -34,7 +34,7 @@ for %%p in (%SRCIMP%) do echo %%include "%%p">> %MODULE%.i
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
 echo all: %MODULE%Stub.cpp>>%MAKEFILE%
 echo %MODULE%Stub.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
-echo 	swig\swig -spr -w312,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
+echo 	swig -spr -w312,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
 echo 	copy Spr%MODULE%Decl.hpp ..\..\include\%MODULE% >>%MAKEFILE%
 make -f%MAKEFILE%
 set PATH=%PATHORG%

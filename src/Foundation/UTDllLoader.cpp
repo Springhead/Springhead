@@ -63,27 +63,24 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	if (addPathIn) strcpy(addPath, addPathIn);
 	if (module && !dllNameIn && !addPathIn) return true;
 	Cleanup();
-	char dll[1024];
-	if(!GetEnv(dll, dllName))
-		return false;
-	char path[1024];
-	strcpy(path, addPath);
-	char* token = strtok(path, ";");
-	while(token){
-		char fname[1024];
-		GetEnv(fname, token);
-		strcat(fname, "\\");
-		strcat(fname, dll);
+	char dll[1024*10];
+	if(!GetEnv(dll, dllName)) return false;
+	char path[1024*20];
+	if(!GetEnv(path, addPath)) return false;
+	char pathOrg[1024*10];
+	GetEnvironmentVariable("PATH", pathOrg, 1024*20);
+	strcat(path, ";");
+	strcat(path, pathOrg);
+	SetEnvironmentVariable("PATH", path);
+
 #ifdef _WIN32	
-		module = LoadLibrary(fname);
+	module = LoadLibrary(dll);
 #else
-		module = dlopen(fname, RTLD_LAZY);
+	module = dlopen(dll, RTLD_LAZY);
 #endif		
-		if (module){
-			DSTR << "Module '" << fname << "' was loaded." << std::endl;
-			return true;
-		}
-		token = strtok(NULL, ";");
+	if (module){
+		DSTR << "Module '" << dll << "' was loaded." << std::endl;
+		return true;
 	}
 #ifdef _WIN32		
 	module = LoadLibrary(dllName);
@@ -95,6 +92,8 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	}else{
 		DSTR << "Unable to load '" << dllName << "'." << std::endl;
 	}
+	SetEnvironmentVariable("PATH", pathOrg);
+
 	return module != NULL;
 }
 void UTDllLoader::Cleanup(){
