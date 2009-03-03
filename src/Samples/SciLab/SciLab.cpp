@@ -1,6 +1,7 @@
 #include <SciLab/SprSciLab.h>
 #include <Base/Affine.h>
 using namespace Spr;
+using namespace Scilab;
 
 bool WriteMatrix(char* n, int* mA, int* nA, double* A){
 	return cwritemat_(n, mA, nA, A, (long)strlen(n)) != 0;
