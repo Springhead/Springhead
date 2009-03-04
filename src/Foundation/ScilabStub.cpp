@@ -45,12 +45,3 @@ bool StartScilab(char* SCIpath, char *ScilabStartup,int *Stacksize){
 }
 
 }
-
-namespace Spr{
-SCMatrix ScilabMatrix(const char* name){
-	int n, m, lp;
-	Scilab::cmatptr_((char*)name, &m, &n, &lp, strlen(name));
-	SCMatrix rv(m, n, m, Scilab::stk(lp));
-	return rv;
-}
-}
