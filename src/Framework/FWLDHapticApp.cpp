@@ -8,6 +8,9 @@
 
 #include <Framework/FWLDHapticApp.h>
 
+// LDHapticProcessの実装
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FWLDHapticProcess::Step(){}
 
 void FWLDHapticProcess::LocalDynamics(){
@@ -40,6 +43,9 @@ int FWLDHapticProcess::GetNExpandedPHSolids(){
 	return expandedPHSolids.size();
 }
 
+// FWLDHapticAppの実装
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 void FWLDHapticApp::CallBack(){
 	if(hprocess.GetLoopCount() > 300) return;
 	hprocess.Step();
@@ -51,11 +57,11 @@ void FWLDHapticApp::Step(){
 	if (calcPhys){
 		UpdateHapticPointer();
 		vector<SpatialVector> lastvel;
-		for(unsigned int i = 0; i < expandedObjects.size(); i++){
-			if(!expandedObjects[i].flag.blocal) continue;
+		for(unsigned int i = 0; i < esolids.size(); i++){
+			if(!esolids[i]->flag.blocal) continue;
 			lastvel.resize(i + 1);
-			lastvel.back().v() = expandedObjects[i].phSolidIf->GetVelocity();
-			lastvel.back().w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
+			lastvel.back().v() = esolids[i]->phSolidIf->GetVelocity();
+			lastvel.back().w() = esolids[i]->phSolidIf->GetAngularVelocity();
 		}
 		if(bStep) GetPHScene()->Step();
 		else if (bOneStep){
@@ -63,12 +69,12 @@ void FWLDHapticApp::Step(){
 			bOneStep = false;
 		}
 
-		for(unsigned i = 0; i < expandedObjects.size(); i++){
-			if(!expandedObjects[i].flag.blocal) continue;
+		for(unsigned i = 0; i < esolids.size(); i++){
+			if(!esolids[i]->flag.blocal) continue;
 			SpatialVector curvel;
-			curvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
-			curvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
-			expandedObjects[i].syncInfo.motionCoeff.curb = (curvel - lastvel[i]) / pdt;
+			curvel.v() = esolids[i]->phSolidIf->GetVelocity();
+			curvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
+			esolids[i]->syncInfo.motionCoeff.curb = (curvel - lastvel[i]) / pdt;
 		}
 		ExpandSolidInfo();
 		FindNearestObject();	// 近傍物体の取得
@@ -80,9 +86,13 @@ void FWLDHapticApp::Step(){
 	bsync = true;
 	calcPhys = true;
 }*/
+
 /*
-void TFWLDHapticApp::TestSimulation(){
-	// neighborObjetsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
+void FWLDHapticApp::TestSimulation(){
+	// expandedPHSolidsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
+	PHSolidIf* hpointer = GetHapticPointer(0);
+	FWExpandedPHSolid* esolids = GetFWExpandedPHSolids(); 
+	int Nesolids = GetNExpandedPHSolids();
 #ifdef DIVIDE_STEP
 	states2->SaveState(GetPHScene());			// 予測シミュレーションのために現在の剛体の状態を保存する
 	//	LCPの直前までシミュレーションしてその状態を保存
@@ -92,30 +102,30 @@ void TFWLDHapticApp::TestSimulation(){
 #endif
 	states->SaveState(GetPHScene());			// 予測シミュレーションのために現在の剛体の状態を保存する
 
-	for(unsigned i = 0; i < expandedObjects.size(); i++){
-		if(!expandedObjects[i].flag.blocal) continue;
+	for(int i = 0; i < Nesolids; i++){
+		if(!esolids[i]->flag.blocal) continue;
 		
 		// 現在の速度を保存
 		SpatialVector currentvel, nextvel; 
-		currentvel.v() = expandedObjects[i].phSolidIf->GetVelocity();											// 現在の速度
-		currentvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();									// 現在の角速度									
-		Vec3d cPoint = expandedObjects[i].phSolidIf->GetPose() * expandedObjects[i].syncInfo.neighborPoint.closestPoint;	// 力を加える点
+		currentvel.v() = esolids[i]->phSolidIf->GetVelocity();											// 現在の速度
+		currentvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();									// 現在の角速度									
+		Vec3d cPoint = esolids[i]->phSolidIf->GetPose() * esolids[i]->syncInfo.neighborPoint.closestPoint;	// 力を加える点
 		const float minTestForce = 0.5;
-		if(expandedObjects[i].syncInfo.neighborPoint.test_force_norm < minTestForce){
-			expandedObjects[i].syncInfo.neighborPoint.test_force_norm = minTestForce;		// テスト力が0なら1にする 
+		if(esolids[i]->syncInfo.neighborPoint.test_force_norm < minTestForce){
+			esolids[i]->syncInfo.neighborPoint.test_force_norm = minTestForce;		// テスト力が0なら1にする 
 		}
 
 		// 拘束座標系を作るための準備
 		Vec3d rpjabs, vpjabs;
-		rpjabs = cPoint - soPointer->GetCenterPosition();																							//力覚ポインタの中心から接触点までのベクトル
-		vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;													//接触点での速度
+		rpjabs = cPoint - hpointer->GetCenterPosition();																							//力覚ポインタの中心から接触点までのベクトル
+		vpjabs = hpointer->GetVelocity() + hpointer->GetAngularVelocity() % rpjabs;													//接触点での速度
 		Vec3d rjabs, vjabs;
-		rjabs = cPoint - expandedObjects[i].phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
-		vjabs = expandedObjects[i].phSolidIf->GetVelocity() + expandedObjects[i].phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
+		rjabs = cPoint - esolids[i]->phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
+		vjabs = esolids[i]->phSolidIf->GetVelocity() + esolids[i]->phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
 
 		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
 		Vec3d n, t[2], vjrel, vjrelproj;
-		n = -expandedObjects[i].syncInfo.neighborPoint.face_normal;
+		n = -esolids[i]->syncInfo.neighborPoint.face_normal;
 		vjrel = vjabs - vpjabs;										// 相対速度
 		vjrelproj = vjrel - (n * vjrel) * n;						// 相対速度ベクトルを法線に直交する平面に射影したベクトル
 		double vjrelproj_norm = vjrelproj.norm();
@@ -136,49 +146,49 @@ void TFWLDHapticApp::TestSimulation(){
 #else
 		GetPHScene()->Step();
 #endif
-		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
-		expandedObjects[i].syncInfo.motionCoeff.lastb = expandedObjects[i].syncInfo.motionCoeff.b;
-		expandedObjects[i].syncInfo.motionCoeff.b = (nextvel - currentvel) / pdt;
+		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
+		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
+		esolids[i]->syncInfo.motionCoeff.lastb = esolids[i]->syncInfo.motionCoeff.b;
+		esolids[i]->syncInfo.motionCoeff.b = (nextvel - currentvel) / pdt;
 
 		TMatrixRow<6, 3, double> u;
 		TMatrixRow<3, 3, double> force;
 		// 法線方向に力を加える
 		states->LoadState(GetPHScene());
-		force.col(0) = expandedObjects[i].syncInfo.neighborPoint.test_force_norm * n;
-		expandedObjects[i].phSolidIf->AddForce(force.col(0), cPoint);
+		force.col(0) = esolids[i]->syncInfo.neighborPoint.test_force_norm * n;
+		esolids[i]->phSolidIf->AddForce(force.col(0), cPoint);
 #ifdef DIVIDE_STEP
 		GetPHScene()->IntegratePart2();
 #else
 		GetPHScene()->Step();
 #endif
-		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
-		u.col(0) = (nextvel - currentvel) /pdt - expandedObjects[i].syncInfo.motionCoeff.b;
+		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
+		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
+		u.col(0) = (nextvel - currentvel) /pdt - esolids[i]->syncInfo.motionCoeff.b;
 
 		// n + t[0]方向に力を加える
 		states->LoadState(GetPHScene());
-		force.col(1) = expandedObjects[i].syncInfo.neighborPoint.test_force_norm * (n + t[0]);
-		expandedObjects[i].phSolidIf->AddForce(force.col(1), cPoint);
+		force.col(1) = esolids[i]->syncInfo.neighborPoint.test_force_norm * (n + t[0]);
+		esolids[i]->phSolidIf->AddForce(force.col(1), cPoint);
 		GetPHScene()->IntegratePart2();
-		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
-		u.col(1) = (nextvel - currentvel) /pdt - expandedObjects[i].syncInfo.motionCoeff.b;
+		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
+		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
+		u.col(1) = (nextvel - currentvel) /pdt - esolids[i]->syncInfo.motionCoeff.b;
 
 		// n+t[1]方向力を加える
 		states->LoadState(GetPHScene());
-		force.col(2) = expandedObjects[i].syncInfo.neighborPoint.test_force_norm * (n + t[1]);
-		expandedObjects[i].phSolidIf->AddForce(force.col(2), cPoint);
+		force.col(2) = esolids[i]->syncInfo.neighborPoint.test_force_norm * (n + t[1]);
+		esolids[i]->phSolidIf->AddForce(force.col(2), cPoint);
 #ifdef DIVIDE_STEP
 		GetPHScene()->IntegratePart2();
 #else
 		GetPHScene()->Step();
 #endif
-		nextvel.v() = expandedObjects[i].phSolidIf->GetVelocity();
-		nextvel.w() = expandedObjects[i].phSolidIf->GetAngularVelocity();
-		u.col(2) = (nextvel - currentvel) /pdt - expandedObjects[i].syncInfo.motionCoeff.b;
+		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
+		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
+		u.col(2) = (nextvel - currentvel) /pdt - esolids[i]->syncInfo.motionCoeff.b;
 		
-		expandedObjects[i].syncInfo.motionCoeff.A = u  * force.inv();				// 運動係数Aの計算
+		esolids[i]->syncInfo.motionCoeff.A = u  * force.inv();				// 運動係数Aの計算
 		states->LoadState(GetPHScene());								// 元のstateに戻しシミュレーションを進める
 	}
 #ifdef DIVIDE_STEP
