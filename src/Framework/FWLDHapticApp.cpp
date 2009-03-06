@@ -40,7 +40,7 @@ FWExpandedPHSolid** FWLDHapticProcess::GetFWExpandedPHSoilds(){
 }
 
 int FWLDHapticProcess::GetNExpandedPHSolids(){
-	return expandedPHSolids.size();
+	return (int)expandedPHSolids.size();
 }
 
 // FWLDHapticApp‚ÌŽÀ‘•
@@ -51,41 +51,60 @@ void FWLDHapticApp::CallBack(){
 	hprocess.Step();
 	SyncHapticProcess();
 }
-/*
+
+void FWLDHapticApp::ResetScene(){
+	expandedPHSolids.clear();
+	hprocess.expandedPHSolids.clear();
+	bSync = false;
+	bCalcPhys = true;
+	hapticcount = 1;
+	hprocess.ResetHapticProcess();
+	states = ObjectStatesIf::Create();
+	states2 = ObjectStatesIf::Create();
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	phscene->Clear();
+	phscene->SetTimeStep(GetPhysicTimeStep());
+	phscene->SetNumIteration(nIter);
+	BuildScene();
+}
+
 void FWLDHapticApp::Step(){
-	if (bsync) return;
-	if (calcPhys){
-		UpdateHapticPointer();
-		vector<SpatialVector> lastvel;
-		for(unsigned int i = 0; i < esolids.size(); i++){
+	if (bSync) return;
+	double pdt = GetPhysicTimeStep();
+	double hdt = GetHapticTimeStep();
+	if (bCalcPhys){
+		UpdateHapticPointer(GetHapticPointer(), GetHapticInterface());
+		int Nesolids = GetNExpandedPHSolids();
+		FWExpandedPHSolid** esolids = GetFWExpandedPHSolids();
+		std::vector<SpatialVector> lastvel;
+		for(int i = 0; i < Nesolids; i++){
 			if(!esolids[i]->flag.blocal) continue;
 			lastvel.resize(i + 1);
 			lastvel.back().v() = esolids[i]->phSolidIf->GetVelocity();
 			lastvel.back().w() = esolids[i]->phSolidIf->GetAngularVelocity();
 		}
-		if(bStep) GetPHScene()->Step();
+		if(bStep) GetSdk()->GetScene()->GetPHScene()->Step();
 		else if (bOneStep){
-			GetPHScene()->Step();
+			GetSdk()->GetScene()->GetPHScene()->Step();
 			bOneStep = false;
 		}
-
-		for(unsigned i = 0; i < esolids.size(); i++){
+		for(int i = 0; i < Nesolids; i++){
 			if(!esolids[i]->flag.blocal) continue;
 			SpatialVector curvel;
 			curvel.v() = esolids[i]->phSolidIf->GetVelocity();
 			curvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
 			esolids[i]->syncInfo.motionCoeff.curb = (curvel - lastvel[i]) / pdt;
 		}
-		ExpandSolidInfo();
-		FindNearestObject();	// ‹ß–T•¨‘Ì‚ÌŽæ“¾
-		PredictSimulation();
-		calcPhys = false;
+		ExpandPHSolidInfo();
+		FindNearestObjectFromHapticPointer(GetHapticPointer());	// ‹ß–T•¨‘Ì‚ÌŽæ“¾
+		TestSimulation();
+		bCalcPhys = false;
 	}
 	if (hapticcount < pdt/hdt) return;
 	hapticcount -= pdt/hdt;
-	bsync = true;
-	calcPhys = true;
-}*/
+	bSync = true;
+	bCalcPhys = true;
+}
 
 /*
 void FWLDHapticApp::TestSimulation(){

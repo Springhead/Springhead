@@ -37,6 +37,10 @@ void FWHapticBase::InitHumanInterface(const IfInfo* info = HISpidarGIf::GetIfInf
 	DSTR << "Init Human Interface Done" << std::endl;
 }
 
+void FWHapticBase::ResetHapticProcess(){
+	loopCounter = 1;
+}
+
 HIForceInterface6DIf* FWHapticBase::GetHumanInterface(){
 	return hapticInterface;
 }

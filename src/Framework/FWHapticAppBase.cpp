@@ -20,6 +20,8 @@ namespace Spr{;
 
 FWHapticAppBase::FWHapticAppBase(){
 	localRange = 0.5;
+	bStep = true;
+	bOneStep = false;
 	bDebug = false;
 }
 
@@ -28,7 +30,7 @@ void FWHapticAppBase::Init(int argc, char* argv[]){
 	GetSdk()->Clear();
 
 	FWWinDesc windowDesc;
-	windowDesc.title = "(c)Springhead2    FWHaptic";
+	windowDesc.title = "(c)Springhead2    FWHapticApp";
 	FWWin* window = CreateWin(windowDesc);
 	window->scene = GetSdk()->GetScene();
 }
@@ -230,23 +232,30 @@ void FWHapticAppBase::FindNearestObjectFromHapticPointer(PHSolidIf* hPointer){
 	}
 }
 
-void FWHapticAppBase::UpdateHapticPointer(int i, PHSolid hapticInterface){
-	PHSolidIf* hPointer = GetHapticPointer(i);
-	hPointer->SetFramePosition(hapticInterface.GetFramePosition());				
+void FWHapticAppBase::UpdateHapticPointer(PHSolidIf* hPointer, PHSolid hInterface){
+	hPointer->SetFramePosition(hInterface.GetFramePosition());				
 //	hPointer->SetFramePosition(cameraInfo.view.Rot() * phpointer.GetFramePosition());		// (未実装)cameraInfo.view.Rot()をかけて力覚ポインタの操作をカメラを回転にあわせる(*力覚も考えないといけん)			
-	hPointer->SetOrientation(hapticInterface.GetOrientation());					
-	hPointer->SetVelocity(hapticInterface.GetVelocity());
-	hPointer->SetAngularVelocity(hapticInterface.GetAngularVelocity());	
+	hPointer->SetOrientation(hInterface.GetOrientation());					
+	hPointer->SetVelocity(hInterface.GetVelocity());
+	hPointer->SetAngularVelocity(hInterface.GetAngularVelocity());	
 	hPointer->SetDynamical(false);
 }	
 
 // protected変数へのアクセス
-void FWHapticAppBase::AddHapticPointer(PHSolidIf* ps){
-	hapticPointers.push_back(ps);
+double FWHapticAppBase::GetHapticTimeStep(){
+	return hapticTimeStep;
 }
 
-PHSolidIf* FWHapticAppBase::GetHapticPointer(int i){
-	return hapticPointers[i];
+double FWHapticAppBase::GetPhysicTimeStep(){
+	return physicTimeStep;
+}
+
+PHSolid FWHapticAppBase::GetHapticInterface(){
+	return hapticInterface;
+}
+
+PHSolidIf* FWHapticAppBase::GetHapticPointer(){
+	return hapticPointer;
 }
 
 FWExpandedPHSolid** FWHapticAppBase::GetFWExpandedPHSolids(){

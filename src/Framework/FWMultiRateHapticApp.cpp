@@ -7,7 +7,10 @@
 
 namespace Spr{;
 
-FWMultiRateHapticApp::FWMultiRateHapticApp(){}
+FWMultiRateHapticApp::FWMultiRateHapticApp(){
+	bSync = false;
+	bCalcPhys = true;
+}
 
 void FWMultiRateHapticApp::InitCameraView(){
 	std::istringstream issView(
