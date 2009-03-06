@@ -24,7 +24,8 @@ protected:
 	double physicTimeStep;
 public:
 	FWHapticBase();
-	void InitHumanInterface(const IfInfo* info, void* desc);	
+	void InitHumanInterface(const IfInfo* info, void* desc);
+	void ResetHapticProcess();
 	virtual void UpdateHumanInterface();
 	virtual void HapticRendering();
 	virtual void Keyboard(int key, int x, int y);

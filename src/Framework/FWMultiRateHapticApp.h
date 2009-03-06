@@ -5,6 +5,10 @@
 
 namespace Spr{;
 class FWMultiRateHapticApp : public FWHapticAppBase{
+protected:
+	volatile int hapticcount;
+	bool bSync;
+	bool bCalcPhys;
 public:
 	FWMultiRateHapticApp();
 	virtual void InitCameraView();

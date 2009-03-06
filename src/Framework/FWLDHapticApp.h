@@ -25,9 +25,11 @@ class FWLDHapticApp : public FWMultiRateHapticApp{
 public:
 	UTRef<ObjectStatesIf> states, states2;
 	FWLDHapticProcess hprocess;
-	void CallBack();
-	void Step();
-	void TestSimulation();
+	virtual void ResetScene();
+	virtual void CallBack();
+	virtual void Step();
+	virtual void TestSimulation();
 };
+
 
 #endif
