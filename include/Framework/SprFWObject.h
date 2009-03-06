@@ -11,7 +11,7 @@
 #include <Foundation/SprScene.h>
 #include <Physics/SprPHSolid.h>
 #include <Graphics/SprGRFrame.h>
-
+#include <Base/Affine.h>
 namespace Spr{
 
 	struct FWSceneIf;
@@ -40,6 +40,19 @@ namespace Spr{
 		PHSolidIf* GetPHParentSolid();
 		/// PHParentSolid‚ğİ’è‚·‚é
 		void SetPHParentSolid(PHSolidIf* ps);
+		/// PHAncestorSolid‚ğæ“¾‚·‚é
+		PHSolidIf* GetPHAncestorSolid();
+		/// PHAncestorSolid‚ğİ’è‚·‚é
+		void SetPHAncestorSolid(PHSolidIf* ps);
+		/// PHAncestorSolid2‚ğæ“¾‚·‚é
+		PHSolidIf* GetPHAncestorSolid2();
+		/// PHAncestorSolid2‚ğİ’è‚·‚é
+		void SetPHAncestorSolid2(PHSolidIf* ps);
+		/// GRParentAffine‚ğæ“¾‚·‚é
+		Affinef GetGRParentAffine();
+		/// GRParentAffine‚ğİ’è‚·‚é
+		void SetGRParentAffine(Affinef af);
+
 
 	};
 

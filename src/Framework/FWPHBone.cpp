@@ -52,6 +52,7 @@ void FWPHBone::FWPHBoneCreate(){
 	CDBoxDesc dBox;
 
 	for(int i=0; i<bone.size(); ++i){
+		Posed pose;
 		//soBoneの作成
 		soBone.push_back(phScene->CreateSolid(desc));
 		bone[i].solid=soBone[i];
@@ -59,10 +60,19 @@ void FWPHBone::FWPHBoneCreate(){
 			if(i==0){
 				bone[i].solid->SetDynamical(false);
 			}else{
-				bone[i].solid->SetDynamical(true);
+				bone[i].solid->SetDynamical(false);
 			}
-			bone[i].solid->SetFramePosition(bone[i].centerPoint);
+			//bone[i].solid->SetFramePosition(bone[i].centerPoint);
+			pose.FromAffine(bone[i].worldTransformAffine);
+			pose.PosZ()+=bone[i].length/2;
+			bone[i].solid->SetPose(pose);
 		}
+			if(i==0){
+				ancestorBone.push_back(boneData);
+				soAncestorBone.push_back(phScene->CreateSolid(desc));
+				ancestorBone[0].solid=soAncestorBone[0];
+				ancestorBone[0].solid->SetPose(pose);
+			}
 		//shapeBoneの作成	
 		{
 			dBox.boxsize=(Vec3d(0.1,0.1,bone[i].length));
@@ -70,7 +80,7 @@ void FWPHBone::FWPHBoneCreate(){
 		}
 		bone[i].solid->AddShape(bone[i].shapeBone);
 	}
-	FWJointCreate();
+	//FWJointCreate();
 	FWSkinMeshAdapt();
 }
 void FWPHBone::FWJointCreate(){
@@ -102,11 +112,35 @@ void FWPHBone::FWSkinMeshAdapt(){
 
 	for(int i=0; i<bone.size(); ++i){
 		fwoBone.push_back(fwSdk->GetScene()->CreateFWObject());
+		if(i==0){
+			fwoAncestorBone.push_back(fwSdk->GetScene()->CreateFWObject());
+			ancestorBone[0].fwObject	= fwoAncestorBone[0];
+			ancestorBone[0].grFrame		= grfBone[0];
+
+			ancestorBone[0].fwObject->SetPHSolid(ancestorBone[0].solid);
+			ancestorBone[0].fwObject->SetPHAncestorSolid(ancestorBone[0].solid);
+			ancestorBone[0].fwObject->SetGRFrame(ancestorBone[0].grFrame->Cast());
+		}
+
 		bone[i].fwObject=fwoBone[i];
-		bone[i].grFrame=grfBone[i];
+		bone[i].grFrame=grfBone[i+1];
 		//PHとGRを連動させる
 		bone[i].fwObject->SetPHSolid(bone[i].solid);
+		if(i==0){
+			bone[i].fwObject->SetPHAncestorSolid2(bone[i].solid);
+		}else{
+			bone[i].fwObject->SetPHParentSolid(bone[i-1].solid);
+		}
+		//bone[i].fwObject->SetGRParentAffine(bone[i].grParentAffine);
 		bone[i].fwObject->SetGRFrame(bone[i].grFrame->Cast());
+
+		Affinef afs;
+		bone[i].solid->GetPose().ToAffine(afs);
+		std::cout<<"Solid"<<i<<std::endl<<afs<<std::endl;
+		std::cout<<"GRFrame"<<i<<std::endl;
+		bone[i].grFrame->GetObjectIf()->Print(std::cout);
+		std::cout<<std::endl;
+		std::cout<<"ParentAffine"<<i<<std::endl<<bone[i].grParentAffine<<std::endl;
 	}
 }
 
@@ -151,6 +185,17 @@ void FWPHBone::DisplayPHBoneCenter(){
 	}
 }
 void FWPHBone::SetAffine(std::vector<Affinef> a){
+	//af.swap(a);
+	////剛体のアフィン行列の１つ上の階層のアフィン行列を取得する
+	//if (af.size()){
+	//	for(int i=0 ;i<bone.size(); ++i){
+	//		bone[i].grParentAffine=af[i];
+	//		DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
+	//	}
+	//}
+
+}
+void FWPHBone::SetWorldAffine(std::vector<Affinef> a){
 	af.swap(a);
 	//アフィン行列から3次元座標を算出
 	Vec3d BonePoint;
@@ -161,6 +206,7 @@ void FWPHBone::SetAffine(std::vector<Affinef> a){
 			//DSTR << i << std::endl << bonePoint[i] << std::endl;
 		}
 	}
+
 	//3次元座標からPHBoneの剛体情報を算出
 	if (bonePoint.size()){
 		for(int i=0 ;i<bonePoint.size()-2; ++i){
@@ -171,12 +217,26 @@ void FWPHBone::SetAffine(std::vector<Affinef> a){
 			//DSTR<< i << std::endl << bone[i].centerPoint << bone[i].length << std::endl;
 		}
 	}
+	//アフィン行列を剛体に保存
+	if (af.size()){
+		for(int i=0 ;i<bone.size(); ++i){
+			bone[i].worldTransformAffine=af[i+1];
+			//DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
+		}
+	}
 	//PHBoneの剛体情報からJointのソケット・プラグの位置を算出
 	if (bone.size()){
 		for(int i=0 ;i<bone.size()-1; ++i){
 			boneJoint.push_back(boneJointData);
 			boneJoint[i].SocketPos = Vec3f(0.0,0.0, bone[i].length/2);
 			boneJoint[i].PlugPos = Vec3f(0.0,0.0,-bone[i+1].length/2);
+		}
+	}
+	//剛体のアフィン行列の１つ上の階層のアフィン行列を取得する
+	if (af.size()){
+		for(int i=0 ;i<bone.size(); ++i){
+			bone[i].grParentAffine=af[i];
+			DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
 		}
 	}
 

@@ -33,11 +33,13 @@ using namespace Spr;
 
 struct BoneData{
 	BoneData();
-	Vec3d  centerPoint;
-	double length;
-	CDBoxIf* shapeBone;
-	PHSolidIf* solid;
-	GRFrame* grFrame;
+	Vec3d		centerPoint;
+	double		length;
+	CDBoxIf*	shapeBone;
+	PHSolidIf*	solid;
+	GRFrame*	grFrame;
+	Affinef		grParentAffine;
+	Affinef		worldTransformAffine;
 	FWObjectIf* fwObject;
 };
 
@@ -55,8 +57,11 @@ struct BoneJointData{
 class FWPHBone{
 private:
 	std::vector<Affinef> af;
+	std::vector<Affinef> afWT;
 	std::vector<FWObjectIf*> fwoBone;
+	std::vector<FWObjectIf*> fwoAncestorBone;
 	std::vector<PHSolidIf*> soBone;
+	std::vector<PHSolidIf*> soAncestorBone;
 	std::vector<GRFrame*> grfBone;
 	std::vector<PHJointIf*> Joint;
 	std::vector<Vec3d> bonePoint;
@@ -72,11 +77,13 @@ public:
 	void SetPHScne(PHSceneIf* s){phScene=s;}
 	void SetfwSdk(FWSdkIf* s){fwSdk=s;}
 	void SetAffine(std::vector<Affinef> a);
+	void SetWorldAffine(std::vector<Affinef> a);
 	void SetGRFrameBone(std::vector<GRFrame*> f){grfBone=f;}
 	void DisplayBonePoint();
 	void DisplayPHBoneCenter();
 	void Clear();
 	std::vector<BoneData> bone;
+	std::vector<BoneData> ancestorBone;
 	BoneData boneData;
 	std::vector<BoneJointData> boneJoint;
 	BoneJointData boneJointData;
