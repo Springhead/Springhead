@@ -17,7 +17,9 @@ namespace Spr{
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEngine
-
+PHIKEngine::PHIKEngine():numIter(25){ 
+	bEnabled = false; 
+}
 void PHIKEngine::Step(){
 	if (bEnabled) {
 		// DSTR << " -- " << std::endl;

@@ -41,7 +41,7 @@ public:
 	bool bEnabled;
 
 	size_t numIter;
-	PHIKEngine():numIter(25){ bEnabled = true; }
+	PHIKEngine();
 
 	int GetPriority() const {return SGBP_INVERSEKINEMATICS;}
 	void Step();
