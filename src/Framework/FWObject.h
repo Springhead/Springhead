@@ -28,6 +28,8 @@ namespace Spr{;
 		UTRef< PHSolidIf > phAncestorSolid;
 		UTRef< PHSolidIf > phAncestorSolid2;
 		Affinef			   grParentAffine;
+		double			   solidLength;
+		int				   bonePositionFlag;
 		//
 		bool		AddChildObject(ObjectIf* o);
 		PHSolidIf*	GetPHSolid(){ return phSolid; }
@@ -36,12 +38,10 @@ namespace Spr{;
 		void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
 		PHSolidIf*	GetPHParentSolid(){ return phParentSolid; }
 		void		SetPHParentSolid(PHSolidIf* ps){ phParentSolid = ps; }
-		PHSolidIf*	GetPHAncestorSolid(){ return phAncestorSolid; }
-		void		SetPHAncestorSolid(PHSolidIf* ps){ phAncestorSolid = ps; }
-		PHSolidIf*	GetPHAncestorSolid2(){ return phAncestorSolid2; }
-		void		SetPHAncestorSolid2(PHSolidIf* ps){ phAncestorSolid2 = ps; }
-		Affinef		GetGRParentAffine(){ return grParentAffine; }
-		void		SetGRParentAffine(Affinef af){ grParentAffine = af; }
+		double		GetSolidLength(){ return solidLength; }
+		void		SetSolidLength(double l){ solidLength = l; }
+		int			GetbonePositionFlag(){ return bonePositionFlag; }
+		void		SetbonePositionFlag(int f){ bonePositionFlag = f; }
 
 
 		ObjectIf* GetChildObject(size_t pos){

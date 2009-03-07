@@ -36,22 +36,21 @@ namespace Spr{
 		GRFrameIf* GetGRFrame();
 		/// GRFrameを設定する
 		void SetGRFrame(GRFrameIf* f);
+
+		/*ボーン付きXファイル専用*/////////
 		/// PHParentSolidを取得する
 		PHSolidIf* GetPHParentSolid();
 		/// PHParentSolidを設定する
 		void SetPHParentSolid(PHSolidIf* ps);
-		/// PHAncestorSolidを取得する
-		PHSolidIf* GetPHAncestorSolid();
-		/// PHAncestorSolidを設定する
-		void SetPHAncestorSolid(PHSolidIf* ps);
-		/// PHAncestorSolid2を取得する
-		PHSolidIf* GetPHAncestorSolid2();
-		/// PHAncestorSolid2を設定する
-		void SetPHAncestorSolid2(PHSolidIf* ps);
-		/// GRParentAffineを取得する
-		Affinef GetGRParentAffine();
-		/// GRParentAffineを設定する
-		void SetGRParentAffine(Affinef af);
+		/// solidLengthを取得する
+		double GetSolidLength();
+		/// solidLengthを設定する
+		void SetSolidLength(double l);
+		/// bonePositionFlagを取得する
+		int GetbonePositionFlag();
+		/// bonePositionFlagを設定する
+		void SetbonePositionFlag(int f);
+
 
 
 	};

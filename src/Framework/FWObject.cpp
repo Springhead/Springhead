@@ -21,35 +21,33 @@ FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 
 void FWObject::Sync(){
 	if (phSolid && grFrame){
-		if(phAncestorSolid){
-			//ボーン付きXファイルの最初のBone(剛体に適応させるとき
-			Affinef af;
-			Matrix3d matrix;
-			phSolid->GetPose().ToAffine(af);
-			af.Rot()=matrix;
-			DCAST(GRFrame, grFrame)->SetTransform(af);
-		}else if(phAncestorSolid2){
-			Affinef af;
-			phSolid->GetPose().ToAffine(af);
-			af.Trn()=Vec3d(0,0,0);
-			DCAST(GRFrame, grFrame)->SetTransform(af);
-		}else if(phParentSolid){
-			//関節があるときのスキンメッシュの座標変換
-			Affinef af,afParent,afd;
-			phSolid->GetPose().ToAffine(af);
-			phParentSolid->GetPose().ToAffine(afParent);
-			afd=afParent.inv()*af;
-			DCAST(GRFrame, grFrame)->SetTransform(afd);
-		}else if(grParentAffine){
-			Affinef af,afd,T;
-			phSolid->GetPose().ToAffine(af);	//現在の剛体のアフィン行列afを取得
-			//T=T.Rot(Rad(180), 'y');
-			//afd=grParentAffine.inv()*af*T;
-			//DSTR<<"Transform1"<<std::endl<<DCAST(GRFrame, grFrame)->GetTransform()<<std::endl;
-			DCAST(GRFrame, grFrame)->SetTransform(afd);  //FwObjectに剛体と共にセットされているgrFrameのアフィン行列を現在の剛体のアフィン行列に書き換える
-			DSTR<<"Transform2"<<std::endl<<DCAST(GRFrame, grFrame)->GetTransform()<<std::endl;
-			DSTR<<"Solidaf"<<std::endl<<af<<std::endl;
-			DSTR<<"grParentAffine"<<std::endl<<grParentAffine<<std::endl;
+		if(solidLength){
+			//ボーン付きXファイルを使用する場合
+			if(bonePositionFlag==1){
+				//ボーン１　（並行行列のみのアフィン行列更新）
+				Affinef af;
+				Matrix3d matrix;
+				//phSolid->GetPose().ToAffine(af);
+				//af.Rot()=matrix;									//回転成分の初期化
+				//af.PosZ()-=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+				DCAST(GRFrame, grFrame)->SetTransform(af);
+			}else if(bonePositionFlag==2){
+				//ボーン２　（回転行列のみのアフィン行列更新）
+				Affinef af,afParent,afd;
+				phSolid->GetPose().ToAffine(af);
+				afParent=grFrame->GetParent()->GetWorldTransform();
+				afd=afParent.inv()*af;
+				afd.PosZ()-=solidLength/2;
+				DCAST(GRFrame, grFrame)->SetTransform(afd);
+			}else if(bonePositionFlag==0){
+				//ボーン１，２以外のボーン（アフィン行列の更新）
+				Affinef af,afParent,afd;
+				phSolid->GetPose().ToAffine(af);						
+				afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
+				afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
+				afd.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+				DCAST(GRFrame, grFrame)->SetTransform(afd);
+			}
 		}else{
 			Affinef af;
 			phSolid->GetPose().ToAffine(af);

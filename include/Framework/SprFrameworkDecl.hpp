@@ -5,12 +5,10 @@
 	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
 	PHSolidIf* GetPHParentSolid(){	return	base::GetPHParentSolid();}	\
 	void SetPHParentSolid(PHSolidIf* ps){	base::SetPHParentSolid(ps);}	\
-	PHSolidIf* GetPHAncestorSolid(){	return	base::GetPHAncestorSolid();}	\
-	void SetPHAncestorSolid(PHSolidIf* ps){	base::SetPHAncestorSolid(ps);}	\
-	PHSolidIf* GetPHAncestorSolid2(){	return	base::GetPHAncestorSolid2();}	\
-	void SetPHAncestorSolid2(PHSolidIf* ps){	base::SetPHAncestorSolid2(ps);}	\
-	Affinef GetGRParentAffine(){	return	base::GetGRParentAffine();}	\
-	void SetGRParentAffine(Affinef af){	base::SetGRParentAffine(af);}	\
+	double GetSolidLength(){	return	base::GetSolidLength();}	\
+	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
+	int GetbonePositionFlag(){	return	base::GetbonePositionFlag();}	\
+	void SetbonePositionFlag(int f){	base::SetbonePositionFlag(f);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSceneIf(base)	\
 	PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
