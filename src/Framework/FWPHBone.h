@@ -38,7 +38,7 @@ struct BoneData{
 	CDBoxIf*	shapeBone;
 	PHSolidIf*	solid;
 	GRFrame*	grFrame;
-	Affinef		grParentAffine;
+	Affinef		transformAffine;
 	Affinef		worldTransformAffine;
 	FWObjectIf* fwObject;
 };
