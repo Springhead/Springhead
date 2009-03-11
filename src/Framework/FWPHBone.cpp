@@ -111,7 +111,6 @@ void FWPHBone::FWJointCreate(){
 void FWPHBone::FWSkinMeshAdapt(){
 
 	for(int i=0; i<bone.size(); ++i){
-		fwoBone.push_back(fwSdk->GetScene()->CreateFWObject());
 		//ボーン１の設定をする（並行行列のみのアフィン行列更新）
 		if(i==0){
 			fwoAncestorBone.push_back(fwSdk->GetScene()->CreateFWObject());
@@ -120,10 +119,11 @@ void FWPHBone::FWSkinMeshAdapt(){
 			ancestorBone[0].length		= bone[0].length;
 
 			ancestorBone[0].fwObject->SetPHSolid(ancestorBone[0].solid);
-			ancestorBone[i].fwObject->SetbonePositionFlag(1);
+			ancestorBone[0].fwObject->SetbonePositionFlag(1);
 			ancestorBone[0].fwObject->SetSolidLength(ancestorBone[0].length);
 			ancestorBone[0].fwObject->SetGRFrame(ancestorBone[0].grFrame->Cast());
 		}
+		fwoBone.push_back(fwSdk->GetScene()->CreateFWObject());
 
 		bone[i].fwObject=fwoBone[i];
 		bone[i].grFrame=grfBone[i+1];
@@ -132,6 +132,10 @@ void FWPHBone::FWSkinMeshAdapt(){
 		if(i==0){
 			//ボーン２の設定をする（回転行列のみのアフィン行列更新）
 			bone[i].fwObject->SetbonePositionFlag(2);
+			bone[i].fwObject->SetSolidLength(bone[i].length);
+		}else if(i==1){
+			//ボーン３の設定（アフィン行列）
+			bone[i].fwObject->SetbonePositionFlag(3);
 			bone[i].fwObject->SetSolidLength(bone[i].length);
 		}else{
 			//ボーン１，２以外のボーンの設定（アフィン行列）
