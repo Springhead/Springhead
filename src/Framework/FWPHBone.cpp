@@ -46,6 +46,7 @@ FWPHBone::FWPHBone(){
 }
 
 void FWPHBone::FWPHBoneCreate(){
+	double wide =0.5;
 	//desc
 	desc.mass = 0.05;
 	desc.inertia = 0.033 * Matrix3d::Unit();
@@ -75,7 +76,7 @@ void FWPHBone::FWPHBoneCreate(){
 			}
 		//shapeBone�̍쐬	
 		{
-			dBox.boxsize=(Vec3d(0.1,0.1,bone[i].length));
+			dBox.boxsize=(Vec3d(wide,wide,bone[i].length));
 			bone[i].shapeBone=XCAST(fwSdk->GetPHSdk()->CreateShape(dBox));
 		}
 		bone[i].solid->AddShape(bone[i].shapeBone);

@@ -17,6 +17,8 @@ namespace Spr{;
 FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 : desc(d), phSolid(NULL), grFrame(NULL)
 {
+	solidLength=0;
+	bonePositionFlag=0;
 }
 
 void FWObject::Sync(){
@@ -29,21 +31,15 @@ void FWObject::Sync(){
 				Matrix3d matrix;
 				phSolid->GetPose().ToAffine(af);
 				af.Rot()=matrix;									//回転成分の初期化
-				//af.PosZ()-=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
 				DCAST(GRFrame, grFrame)->SetTransform(af);
 			}else if(bonePositionFlag==2){
 				//ボーン２　（回転行列のみのアフィン行列更新）
 				Affinef af,afParent,afd,afl,AF;
 				phSolid->GetPose().ToAffine(af);
 				afParent=grFrame->GetParent()->GetWorldTransform();
-					/*DSTR<<"phSolid"<<std::endl<<af<<std::endl;
-					DSTR<<"afParent"<<std::endl<<afParent<<std::endl;*/
 				afd=afParent.inv()*af;
-					DSTR<<"afd"<<std::endl<<afd<<std::endl;
 				afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
 				AF=afd*afl;
-					//DSTR<<"solidLength"<<std::endl<<solidLength/2<<std::endl;
-					//DSTR<<"afdz"<<std::endl<<afd<<std::endl;
 				DCAST(GRFrame, grFrame)->SetTransform(AF);
 			}else if(bonePositionFlag==3){
 				//ボーン３
