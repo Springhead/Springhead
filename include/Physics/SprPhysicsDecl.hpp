@@ -3,11 +3,16 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintEngineIf(base)	\
 	PHConstraintsIf* GetContactPoints(){	return	base::GetContactPoints();}	\
 	void SetVelCorrectionRate(double value){	base::SetVelCorrectionRate(value);}	\
+	double GetVelCorrectionRate(){	return	base::GetVelCorrectionRate();}	\
 	void SetPosCorrectionRate(double value){	base::SetPosCorrectionRate(value);}	\
+	double GetPosCorrectionRate(){	return	base::GetPosCorrectionRate();}	\
 	void SetContactCorrectionRate(double value){	base::SetContactCorrectionRate(value);}	\
+	double GetContactCorrectionRate(){	return	base::GetContactCorrectionRate();}	\
 	void SetUpdateAllSolidState(bool flag){	base::SetUpdateAllSolidState(flag);}	\
 	void SetShrinkRate(double data){	base::SetShrinkRate(data);}	\
+	double GetShrinkRate(){	return	base::GetShrinkRate();}	\
 	void SetShrinkRateCorrection(double data){	base::SetShrinkRateCorrection(data);}	\
+	double GetShrinkRateCorrection(){	return	base::GetShrinkRateCorrection();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGravityEngineIf(base)	\
 

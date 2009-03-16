@@ -126,21 +126,26 @@ public:
 	void IterateCorrectionLCP();	///< Œë·C³LCP‚Ìˆê“x‚Ì”½•œ
 
 	virtual PHConstraintsIf* GetContactPoints();
-	virtual void SetVelCorrectionRate(double value){velCorrectionRate = value;}
-	virtual void SetPosCorrectionRate(double value){posCorrectionRate = value;}
-	virtual void SetContactCorrectionRate(double value){contactCorrectionRate = value;}
-	virtual void SetBSaveConstraints(bool value){bSaveConstraints = value;}
-	virtual void SetUpdateAllSolidState(bool flag){bUpdateAllState = flag;}
-	virtual void SetShrinkRate(double data){shrinkRate = data;}
-	virtual void SetShrinkRateCorrection(double data){shrinkRateCorrection = data;}
-	virtual bool AddChildObject(ObjectIf* o);
-	virtual bool DelChildObject(ObjectIf* o);
+	virtual void	SetVelCorrectionRate(double value){velCorrectionRate = value;}
+	virtual double	GetVelCorrectionRate(){return velCorrectionRate;}
+	virtual void	SetPosCorrectionRate(double value){posCorrectionRate = value;}
+	virtual double	GetPosCorrectionRate(){return posCorrectionRate;}
+	virtual void	SetContactCorrectionRate(double value){contactCorrectionRate = value;}
+	virtual double	GetContactCorrectionRate(){return contactCorrectionRate;}
+	virtual void	SetBSaveConstraints(bool value){bSaveConstraints = value;}
+	virtual void	SetUpdateAllSolidState(bool flag){bUpdateAllState = flag;}
+	virtual void	SetShrinkRate(double data){shrinkRate = data;}
+	virtual double	GetShrinkRate(){return shrinkRate;}
+	virtual void	SetShrinkRateCorrection(double data){shrinkRateCorrection = data;}
+	virtual double	GetShrinkRateCorrection(){return shrinkRateCorrection;}
+	virtual bool	AddChildObject(ObjectIf* o);
+	virtual bool	DelChildObject(ObjectIf* o);
 
-	virtual size_t GetStateSize() const;
-	virtual void ConstructState(void* m) const;
-	virtual void DestructState(void* m) const ;
-	virtual bool GetState(void* s) const ;
-	virtual void SetState(const void* s);
+	virtual size_t	GetStateSize() const;
+	virtual void	ConstructState(void* m) const;
+	virtual void	DestructState(void* m) const ;
+	virtual bool	GetState(void* s) const ;
+	virtual void	SetState(const void* s);
 };
 
 }	//	namespace Spr
