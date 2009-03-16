@@ -11,6 +11,7 @@
 
 #include <Springhead.h>
 #include <Physics/PHSolid.h>
+#include <Framework/FWExpandedPHSolid.h>
 
 namespace Spr{;
 
@@ -18,6 +19,7 @@ class FWHapticBase{
 protected:
 	UTRef<HIForceInterface6DIf> hapticInterface;
 	PHSolid hapticPointer;
+	FWExpandedPHSolids expandedPHSolids;
 	int loopCounter;
 	float posScale;
 	double hapticTimeStep;
@@ -30,6 +32,8 @@ public:
 	virtual void HapticRendering();
 	virtual void Keyboard(int key, int x, int y);
 	
+	FWExpandedPHSolid** GetFWExpandedPHSolids();
+
 	void SetHapticTimeStep(double dt);
 	double GetHapticTimeStep();
 	void SetPhysicTimeStep(double dt);

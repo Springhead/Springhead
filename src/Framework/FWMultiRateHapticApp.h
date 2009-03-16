@@ -2,6 +2,7 @@
 #define FWMULTIRATE_HAPTIC_APP_H
 
 #include <Framework/FWHapticAppBase.h>
+#include <Framework/FWHapticBase.h>
 
 namespace Spr{;
 class FWMultiRateHapticApp : public FWHapticAppBase{
@@ -13,7 +14,7 @@ public:
 	FWMultiRateHapticApp();
 	virtual void InitCameraView();
 	virtual void Idle();
-	virtual void SyncHapticProcess();
+	virtual void SyncHapticProcess(FWHapticBase* hprocess);
 };
 
 }

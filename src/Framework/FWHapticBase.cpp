@@ -41,6 +41,11 @@ void FWHapticBase::ResetHapticProcess(){
 	loopCounter = 1;
 }
 
+FWExpandedPHSolid** FWHapticBase::GetFWExpandedPHSolids(){
+	return expandedPHSolids.empty() ? NULL : (FWExpandedPHSolid**)&*expandedPHSolids.begin();
+}
+
+
 HIForceInterface6DIf* FWHapticBase::GetHumanInterface(){
 	return hapticInterface;
 }
