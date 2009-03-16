@@ -49,7 +49,7 @@ int FWLDHapticProcess::GetNExpandedPHSolids(){
 void FWLDHapticApp::CallBack(){
 	if(hprocess.GetLoopCount() > 300) return;
 	hprocess.Step();
-	SyncHapticProcess();
+	SyncHapticProcess(&hprocess);
 }
 
 void FWLDHapticApp::ResetScene(){
@@ -106,111 +106,113 @@ void FWLDHapticApp::Step(){
 	bCalcPhys = true;
 }
 
-/*
+
 void FWLDHapticApp::TestSimulation(){
 	// expandedPHSolidsのblocalがtrueの物体に対して単位力を加え，接触しているすべての物体について，運動係数を計算する
-	PHSolidIf* hpointer = GetHapticPointer(0);
-	FWExpandedPHSolid* esolids = GetFWExpandedPHSolids(); 
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSolidIf* hpointer = GetHapticPointer();
+	FWExpandedPHSolid** esolids = GetFWExpandedPHSolids(); 
 	int Nesolids = GetNExpandedPHSolids();
+
 #ifdef DIVIDE_STEP
-	states2->SaveState(GetPHScene());			// 予測シミュレーションのために現在の剛体の状態を保存する
+	states2->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
 	//	LCPの直前までシミュレーションしてその状態を保存
-	GetPHScene()->ClearForce();
-	GetPHScene()->GenerateForce();
-	GetPHScene()->IntegratePart1();
+	phscene->ClearForce();
+	phscene->GenerateForce();
+	phscene->IntegratePart1();
 #endif
-	states->SaveState(GetPHScene());			// 予測シミュレーションのために現在の剛体の状態を保存する
+	states->SaveState(phscene);			// 予測シミュレーションのために現在の剛体の状態を保存する
 
 	for(int i = 0; i < Nesolids; i++){
 		if(!esolids[i]->flag.blocal) continue;
-		
 		// 現在の速度を保存
 		SpatialVector currentvel, nextvel; 
-		currentvel.v() = esolids[i]->phSolidIf->GetVelocity();											// 現在の速度
-		currentvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();									// 現在の角速度									
+		currentvel.v() = esolids[i]->phSolidIf->GetVelocity();																	// 現在の速度
+		currentvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();														// 現在の角速度									
 		Vec3d cPoint = esolids[i]->phSolidIf->GetPose() * esolids[i]->syncInfo.neighborPoint.closestPoint;	// 力を加える点
-		const float minTestForce = 0.5;
+		const float minTestForce = 0.5;																									// 最小テスト力
 		if(esolids[i]->syncInfo.neighborPoint.test_force_norm < minTestForce){
-			esolids[i]->syncInfo.neighborPoint.test_force_norm = minTestForce;		// テスト力が0なら1にする 
+			esolids[i]->syncInfo.neighborPoint.test_force_norm = minTestForce;											// テスト力が0なら1にする 
 		}
 
 		// 拘束座標系を作るための準備
 		Vec3d rpjabs, vpjabs;
-		rpjabs = cPoint - hpointer->GetCenterPosition();																							//力覚ポインタの中心から接触点までのベクトル
-		vpjabs = hpointer->GetVelocity() + hpointer->GetAngularVelocity() % rpjabs;													//接触点での速度
+		rpjabs = cPoint - hpointer->GetCenterPosition();																				//力覚ポインタの中心から接触点までのベクトル
+		vpjabs = hpointer->GetVelocity() + hpointer->GetAngularVelocity() % rpjabs;										//接触点での速度
 		Vec3d rjabs, vjabs;
-		rjabs = cPoint - esolids[i]->phSolidIf->GetCenterPosition();																	//剛体の中心から接触点までのベクトル
-		vjabs = esolids[i]->phSolidIf->GetVelocity() + esolids[i]->phSolidIf->GetAngularVelocity() % rjabs;	//接触点での速度
+		rjabs = cPoint - esolids[i]->phSolidIf->GetCenterPosition();																//剛体の中心から接触点までのベクトル
+		vjabs = esolids[i]->phSolidIf->GetVelocity() + esolids[i]->phSolidIf->GetAngularVelocity() % rjabs;		//接触点での速度
 
 		//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
 		Vec3d n, t[2], vjrel, vjrelproj;
 		n = -esolids[i]->syncInfo.neighborPoint.face_normal;
-		vjrel = vjabs - vpjabs;										// 相対速度
-		vjrelproj = vjrel - (n * vjrel) * n;						// 相対速度ベクトルを法線に直交する平面に射影したベクトル
+		vjrel = vjabs - vpjabs;															// 相対速度
+		vjrelproj = vjrel - (n * vjrel) * n;											// 相対速度ベクトルを法線に直交する平面に射影したベクトル
 		double vjrelproj_norm = vjrelproj.norm();
-		if(vjrelproj_norm < 1.0e-10){							// 射影ベクトルのノルムが小さいとき
-			t[0] = n % Vec3d(1.0, 0.0, 0.0);					// t[0]を法線とVec3d(1.0, 0.0, 0.0)の外積とする
-			if(t[0].norm() < 1.0e-10)								// それでもノルムが小さかったら
-				t[0] = n % Vec3d(0.0, 1.0, 0.0);				// t[0]を法線とVec3d(0.0, 1.0, 0.0)の外積とする
-			t[0].unitize();												// t[0]を単位ベクトルにする
+		if(vjrelproj_norm < 1.0e-10){												// 射影ベクトルのノルムが小さいとき
+			t[0] = n % Vec3d(1.0, 0.0, 0.0);										// t[0]を法線とVec3d(1.0, 0.0, 0.0)の外積とする
+			if(t[0].norm() < 1.0e-10)													// それでもノルムが小さかったら
+				t[0] = n % Vec3d(0.0, 1.0, 0.0);									// t[0]を法線とVec3d(0.0, 1.0, 0.0)の外積とする
+			t[0].unitize();																	// t[0]を単位ベクトルにする
 		}
 		else{
-			t[0] = vjrelproj / vjrelproj_norm;					// ノルムが小さくなかったら，射影ベクトルのまま
+			t[0] = vjrelproj / vjrelproj_norm;										// ノルムが小さくなかったら，射影ベクトルのまま
 		}
-		t[1] = n % t[0];												// t[1]は法線とt[0]の外積できまる
+		t[1] = n % t[0];																	// t[1]は法線とt[0]の外積できまる
 
 		// 何も力を加えないでシミュレーションを1ステップ進める
 #ifdef DIVIDE_STEP
-		GetPHScene()->IntegratePart2();
+		phscene->IntegratePart2();
 #else
-		GetPHScene()->Step();
+		phscene->Step();
 #endif
 		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
 		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
 		esolids[i]->syncInfo.motionCoeff.lastb = esolids[i]->syncInfo.motionCoeff.b;
-		esolids[i]->syncInfo.motionCoeff.b = (nextvel - currentvel) / pdt;
+		esolids[i]->syncInfo.motionCoeff.b = (nextvel - currentvel) / GetPhysicTimeStep();
 
 		TMatrixRow<6, 3, double> u;
 		TMatrixRow<3, 3, double> force;
 		// 法線方向に力を加える
-		states->LoadState(GetPHScene());
+		states->LoadState(phscene
+			);
 		force.col(0) = esolids[i]->syncInfo.neighborPoint.test_force_norm * n;
 		esolids[i]->phSolidIf->AddForce(force.col(0), cPoint);
 #ifdef DIVIDE_STEP
 		GetPHScene()->IntegratePart2();
 #else
-		GetPHScene()->Step();
+		phscene->Step();
 #endif
 		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
 		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
-		u.col(0) = (nextvel - currentvel) /pdt - esolids[i]->syncInfo.motionCoeff.b;
+		u.col(0) = (nextvel - currentvel) /GetPhysicTimeStep() - esolids[i]->syncInfo.motionCoeff.b;
 
 		// n + t[0]方向に力を加える
-		states->LoadState(GetPHScene());
+		states->LoadState(phscene);
 		force.col(1) = esolids[i]->syncInfo.neighborPoint.test_force_norm * (n + t[0]);
 		esolids[i]->phSolidIf->AddForce(force.col(1), cPoint);
-		GetPHScene()->IntegratePart2();
+		phscene->IntegratePart2();
 		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
 		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
-		u.col(1) = (nextvel - currentvel) /pdt - esolids[i]->syncInfo.motionCoeff.b;
+		u.col(1) = (nextvel - currentvel) /GetPhysicTimeStep() - esolids[i]->syncInfo.motionCoeff.b;
 
 		// n+t[1]方向力を加える
-		states->LoadState(GetPHScene());
+		states->LoadState(phscene);
 		force.col(2) = esolids[i]->syncInfo.neighborPoint.test_force_norm * (n + t[1]);
 		esolids[i]->phSolidIf->AddForce(force.col(2), cPoint);
 #ifdef DIVIDE_STEP
 		GetPHScene()->IntegratePart2();
 #else
-		GetPHScene()->Step();
+		phscene->Step();
 #endif
 		nextvel.v() = esolids[i]->phSolidIf->GetVelocity();
 		nextvel.w() = esolids[i]->phSolidIf->GetAngularVelocity();
-		u.col(2) = (nextvel - currentvel) /pdt - esolids[i]->syncInfo.motionCoeff.b;
+		u.col(2) = (nextvel - currentvel) /GetPhysicTimeStep() - esolids[i]->syncInfo.motionCoeff.b;
 		
 		esolids[i]->syncInfo.motionCoeff.A = u  * force.inv();				// 運動係数Aの計算
-		states->LoadState(GetPHScene());								// 元のstateに戻しシミュレーションを進める
+		states->LoadState(phscene);													// 元のstateに戻しシミュレーションを進める
 	}
 #ifdef DIVIDE_STEP
-		states2->LoadState(GetPHScene());								// 元のstateに戻しシミュレーションを進める
+		states2->LoadState(GetPHScene());										// 元のstateに戻しシミュレーションを進める
 #endif
-}*/
+}
