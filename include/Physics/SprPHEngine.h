@@ -31,15 +31,30 @@ public:
 	*/
 	void SetVelCorrectionRate(double value);
 
+	/** @brief velCorrectionRateを取得する
+		@return value velCorrectionRateの値
+	*/
+	double GetVelCorrectionRate();
+
 	/** @brief posCorrectionRateを書き換える
 		@param value 書き換え後の値
 	*/
 	void SetPosCorrectionRate(double value);
 
+	/** @brief posCorrectionRateを取得する
+		@return value posCorrectionRateの値
+	*/
+	double GetPosCorrectionRate();
+
 	/** @brief contactCorrectionRateを書き換える
 		@param value 書き換え後の値
 	*/
 	void SetContactCorrectionRate(double value);
+
+	/** @brief contactCorrectionRateを取得する
+		@return value contactCorrectionRateの値
+	*/
+	double GetContactCorrectionRate();
 
 	/** @brief 剛体の速度だけ更新するフラグを設定する
 	*/
@@ -49,9 +64,19 @@ public:
 	*/
 	void SetShrinkRate(double data);
 	
+	/** @brief shrinkRateを取得する
+		@return value shrinkCorrectionRateの値
+	*/
+	double GetShrinkRate();
+
 	/** @brief shrinkRateCorrectionの値を設定する
 	*/
 	void SetShrinkRateCorrection(double data);
+
+	/** @brief shrinkRateCorrectionを取得する
+		@return value shrinkRateCorrectionの値
+	*/
+	double GetShrinkRateCorrection();
 
 };
 
