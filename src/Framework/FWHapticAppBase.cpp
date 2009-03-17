@@ -254,6 +254,10 @@ PHSolid FWHapticAppBase::GetHapticInterface(){
 	return hapticInterface;
 }
 
+void FWHapticAppBase::SetHapticPointer(PHSolidIf* hpointer){
+	hapticPointer = hpointer;
+}
+
 PHSolidIf* FWHapticAppBase::GetHapticPointer(){
 	return hapticPointer;
 }

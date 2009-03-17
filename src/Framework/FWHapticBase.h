@@ -19,12 +19,13 @@ class FWHapticBase{
 protected:
 	UTRef<HIForceInterface6DIf> hapticInterface;
 	PHSolid hapticPointer;
-	FWExpandedPHSolids expandedPHSolids;
-	int loopCounter;
 	float posScale;
 	double hapticTimeStep;
 	double physicTimeStep;
 public:
+	FWExpandedPHSolids expandedPHSolids;
+	int loopCounter;
+	
 	FWHapticBase();
 	void InitHumanInterface(const IfInfo* info, void* desc);
 	void ResetHapticProcess();

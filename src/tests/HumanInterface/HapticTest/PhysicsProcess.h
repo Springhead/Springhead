@@ -8,14 +8,6 @@ using namespace Spr;
 using namespace PTM;
 using namespace std;
 
-struct Edge{
-	float edge;				///<	端の位置(グローバル系)
-	int	index;				///<	元の solidの位置
-	bool bMin;				///<	初端ならtrue
-	bool operator < (const Edge& s) const { return edge < s.edge; }
-};
-typedef vector<Edge> Edges;
-
 class PhysicsProcess : public FWAppGLUT, public UTRefCount{
 public:
 	//　プロセス間の同期に使う変数
