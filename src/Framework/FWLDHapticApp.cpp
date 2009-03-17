@@ -49,7 +49,7 @@ int FWLDHapticProcess::GetNExpandedPHSolids(){
 void FWLDHapticApp::CallBack(){
 	if(hprocess.GetLoopCount() > 300) return;
 	hprocess.Step();
-	SyncHapticProcess(&hprocess);
+	SyncHapticProcess();
 }
 
 void FWLDHapticApp::ResetScene(){

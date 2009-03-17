@@ -56,6 +56,7 @@ public:
 	void SetPhysicTimeSetp();
 	double GetPhysicTimeStep();
 	PHSolid GetHapticInterface();
+	void SetHapticPointer(PHSolidIf* hpointer);
 	PHSolidIf* GetHapticPointer();										///< HapticPointer‚ð•Ô‚·
 	FWExpandedPHSolid** GetFWExpandedPHSolids();			///< ExpandedPHSolids‚ð•Ô‚·
 	int GetNExpandedPHSolids();											///< ExpandedPHSolids‚Ì”‚ð•Ô‚·
