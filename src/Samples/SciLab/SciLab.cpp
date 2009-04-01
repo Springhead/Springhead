@@ -4,6 +4,8 @@ using namespace Spr;
 
 int main(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
+
+	//	s—ñ‚Ì“Ç‚Ý‘‚«
 	Matrix2f A;
 	A.Ex() = Vec2f(1,2);
 	A.Ey() = Vec2f(3,4);
@@ -34,7 +36,17 @@ int main(){
 	std::cout << "y = 2*A is done by C++ code" << std::endl;
 	std::cout << "y=";
 	ScilabJob("disp(y);");
-	ScilabEnd();
 	std::cout << A;
 	std::cout << y;
+	ScilabJob("clear;");
+
+	//	ƒOƒ‰ƒt•`‰æ
+	ScilabJob("t = 0:0.01:2*3.141592653;");
+	ScilabJob("x = sin(t);");
+	ScilabJob("y = cos(t);");
+	ScilabJob("plot2d(x, y);");
+	for(int i=0; i<100000; ++i){
+		ScilabJob("");
+	}
+	ScilabEnd();
 }
