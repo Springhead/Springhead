@@ -1219,8 +1219,8 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("Joints");
 
 	render = grSdk->CreateDebugRender();
-	render->SetRenderMode(false, true);
-	render->EnableRenderAxis();
+	render->SetRenderMode(true, false);
+	//render->EnableRenderAxis();
 	render->EnableRenderForce();
 	device = grSdk->CreateDeviceGL();
 
