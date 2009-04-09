@@ -53,7 +53,7 @@ namespace Spr{;
 			return phSolid ? (grFrame ? 2 : 1) : (grFrame ? 1 : 0);
 		}
 
-		void Sync();
+		virtual void Sync();
     };
 
 }
