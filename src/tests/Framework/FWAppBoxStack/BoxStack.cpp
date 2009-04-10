@@ -131,59 +131,6 @@ void BoxStack::DesignObject(){
 	soFloor->SetName("solidFloor");
 }
 
-bool ContactCheck(unsigned time){
-	bool check;
-
-	if(time == ctime.lastContactCount){
-		check = true;
-	}else{
-		check = false;
-	}
-
-	return check;
-}
-
-void BoxStack::MakeContactList(){
-	CDShapePairSt ctime;
-	int NSolids = GetSdk()->GetScene()->GetPHScene()->NSolids();	// シーンに存在する全剛体数
-	PHSolidPairForLCPIf* pair;										// 剛体のペアをいれる変数pairを作る
-	DSTR << "******************" << endl;
-	DSTR << NSolids << endl;
-#if 1
-	/*剛体が一個増えると行と列が1つずつ増える配列に剛体のペアが格納されているので，
-	  配列の(i, j)番目を指定して，剛体ペアをとってくる．
-	*/
-	for(int i = 0; i < NSolids; i++){ 
-		for(int j = i+1; j < NSolids; j++){
-			DSTR << "------------------" << endl;
-			// (i, j)番目の剛体ペアへのポインタを取得して，自分で作ったpairに代入
-			pair = GetSdk()->GetScene()->GetPHScene()->GetSolidPair(i, j);
-			DSTR << "pair"<< i << j << " " << pair << endl;
-			/* 剛体はいくつもshape(形状)をもてるので，形状同士の接触をみる．
-			   このプログラムではBoxしか出さないので剛体は1つの形状しかもってない．
-			   だから引数には(0, 0)がはいってる．
-			   contactが0のとき，接触なし
-						1のとき，始めて接触
-						2のとき，すでに接触
-				接触していないときは，接触点をとってこれない．
-		   */	
-			int contact = pair->GetContactState(0, 0);
-			if(contact == 1){
-				DSTR << "Contact!!" << endl;
-				// 接触点の表示これも(0, 0)は剛体の形状の組み合わせ
-				DSTR << "CommonPoint" << pair->GetCommonPoint(0, 0) << endl;
-			}else if(contact == 2){
-				DSTR << "Already Contact" << endl;
-				DSTR << "CommonPoint" << pair->GetCommonPoint(0, 0) << endl;
-			}else{
-				DSTR << "Not Contact" << endl;
-			}
-
-		}
-	}
-#endif
-}
-
 void BoxStack::Step(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	if(bStep) phscene->Step();
@@ -191,7 +138,6 @@ void BoxStack::Step(){
 		phscene->Step();
 		bOneStep = false;
 	}
-	MakeContactList();
 	glutPostRedisplay();
 }
 
