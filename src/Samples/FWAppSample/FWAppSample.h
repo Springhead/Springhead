@@ -1,46 +1,20 @@
-#ifndef FWAPPSAMPLE_H
-#define FWAPPSAMPLE_H
+#ifndef FWAPPSAMPLE_H								// ヘッダファイルを作る時のおまじない
+#define FWAPPSAMPLE_H								// 同上
 
-#include <Springhead.h>
-#include <Framework/SprFWAppGLUT.h>
+#include <Springhead.h>								// SpringheadのIf型を使うためのヘッダファイル
+#include <Framework/SprFWAppGLUT.h>		// Frameworkクラスが宣言されているヘッダファイル
 
-using namespace Spr;
-using namespace PTM;
-using namespace std;
+using namespace Spr;									// Springheadの名前空間
 
 class FWAppSample : public FWAppGLUT, public UTRefCount{
 public:
-	FWWin* window;
-
-	double dt;
-	Vec3d gravity;
-	double nIter;
-	bool bGravity;
-	// 剛体に使う変数
-	PHSolidDesc desc;
-	PHSolidIf* soFloor;
-	PHSolidIf* soPointer;
-	vector<PHSolidIf*> soBox;
-	CDConvexMeshIf* meshFloor;
-	CDConvexMeshIf* meshConvex;
-	CDBoxIf* meshBox;
-	CDSphereIf* meshSphere;
-	CDCapsuleIf* meshCapsule;
-	//デバック表示に使う変数
-	bool bDebug;
-	bool bStep;
-	bool bOneStep;
-
-	FWAppSample();	
-	void Init(int argc, char* argv[]);		
-	void Reset();
-	void InitCameraView();										
-	void DesignObject();
-	void Step();
-	void Display();		
-	void Keyboard(int key, int x, int y);
-	void MakeContactList();
+	FWAppSample();								// コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
+	void Init(int argc, char* argv[]);		// GLUTの初期化
+	void InitCameraView();						// カメラ座標				
+	void BuildObject();							// 物体を作成
+	void Step();									// シミュレーションを1ステップ進める
+	void Display();								// 描画
+	void Keyboard(int key, int x, int y);	// キーボード関数
 }; 
-extern FWAppSample bstack;
 
 #endif

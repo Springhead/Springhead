@@ -1,7 +1,8 @@
 #include "FWAppSample.h"
 
+FWAppSample app;
 int _cdecl main(int argc, char* argv[]){
-	bstack.Init(argc, argv);
-	bstack.Start();
+	app.Init(argc, argv);
+	app.Start();
 	return 0;
 }
