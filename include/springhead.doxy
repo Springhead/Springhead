@@ -20,7 +20,7 @@ IMAGE_PATH  = ./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual
 
-CHM_FILE               = ..\springhead.chm
+CHM_FILE               = ..\Springhead.chm
 GENERATE_HTMLHELP      = YES
 
 ALLEXTERNALS = YES

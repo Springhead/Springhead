@@ -12,4 +12,4 @@ IMAGE_PATH             = ./docsrc/01UsersGuide \
 #EXAMPLE_RECURSIVE      = YES
 
 GENERATE_HTMLHELP      = YES
-CHM_FILE               = ..\springhead_docsrc.chm
+CHM_FILE               = springhead_docsrc.chm
