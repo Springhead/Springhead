@@ -5,16 +5,16 @@
 
 #define ESC 27
 
-FWAppSample::FWAppSample(){}
+FWAppSample::FWAppSample():bDrawInfo(true){}
 
 void FWAppSample::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
 
-	GetSdk()->Clear();															// SDKの作成
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneの作成
+	GetSdk()->Clear();										// SDKの作成
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
-	BuildObject();																// 剛体を作成
+	BuildObject();											// 剛体を作成
 
 	FWWinDesc windowDesc;
 	windowDesc.title = "FWAppFWAppSample";
@@ -25,6 +25,7 @@ void FWAppSample::Init(int argc, char* argv[]){
 }
 
 void FWAppSample::InitCameraView(){
+	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
 		"(-6.55577e-010 0.924909 0.380188 5.65711)"
@@ -81,9 +82,9 @@ void FWAppSample::Display(){
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 	render->SetRenderMode(true, false);
-	//render->EnableRenderAxis(bDebug);
-	//render->EnableRenderForce(bDebug);
-	render->EnableRenderContact(false);
+	render->EnableRenderAxis(bDrawInfo);
+	render->EnableRenderForce(bDrawInfo);
+	render->EnableRenderContact(bDrawInfo);
 
 	// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
@@ -103,8 +104,11 @@ void FWAppSample::Display(){
 
 void FWAppSample::Keyboard(int key, int x, int y){
 	switch (key) {
+		case 'i':
+			bDrawInfo = !bDrawInfo;
+			break;
 		case ESC:
-		case  'q':
+		case 'q':
 			exit(0);
 			break;
 		default:
