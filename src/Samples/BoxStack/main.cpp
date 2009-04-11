@@ -6,7 +6,8 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- Springhead2/src/Samples/BoxStack/main.cpp
+\page pageBoxStack キー入力で箱を生成して積み上げるサンプル
+Springhead2/src/Samples/BoxStack
 
 【概要】
   ・ユーザのキー入力に対してボックスを生成し、積み上げる。

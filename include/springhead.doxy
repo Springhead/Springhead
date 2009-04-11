@@ -4,13 +4,18 @@
 
 INPUT      = ./ \
 				../src/Framework/FWOldSpringheadNode.h \
-				../src/Samples/First/doc.h 
+				../src/Samples/doc.h
+				../src/example-list.txt
 
 EXCLUDE    = ../src/docsrc/
 
+EXAMPLE_PATH           = ./ ../src/Samples/
+EXAMPLE_PATTERNS       = *.cpp
+EXAMPLE_RECURSIVE      = YES
+
 
 GENERATE_TAGFILE       = ./html/springhead.tag
-TAGFILES=
+TAGFILES               = ../src/Samples/html/SamplesDoc.tag
 IMAGE_PATH  = ./docsrc/01UsersGuide \
 							./docsrc/02Tutorial \
 							./docsrc/03ReferenceManual

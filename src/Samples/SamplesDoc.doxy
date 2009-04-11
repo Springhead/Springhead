@@ -1,0 +1,10 @@
+@INCLUDE = ../include/common.doxy
+INPUT = Samples
+FILE_PATTERNS          = doc.h main.cpp
+
+HTML_OUTPUT = ./Samples/html
+GENERATE_TAGFILE       = ./Samples/html/SamplesDoc.tag
+
+GENERATE_HTMLHELP      = YES
+CHM_FILE               = ../springheadSamples.chm
+TAGFILES               = ../include/html/springhead.tag=../../../include/html
