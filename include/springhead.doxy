@@ -7,7 +7,7 @@ INPUT      = ./ \
 				../src/Samples/doc.h ../src/Samples
 FILE_PATTERNS          = *.h *.dox main.cpp
 
-EXCLUDE    = ../src/docsrc/
+EXCLUDE    = ./Scilab ./GL ./html
 
 EXAMPLE_PATH           = ./ ../src/Samples/
 EXAMPLE_PATTERNS       = *.cpp
