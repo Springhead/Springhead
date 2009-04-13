@@ -15,7 +15,7 @@
 
 namespace Spr{;
 
-/** \addtogroup gpPhysics */
+/** \addtogroup gpPhysics •¨—ƒGƒ“ƒWƒ“SDK */
 //@{
 
 struct PHSceneIf;

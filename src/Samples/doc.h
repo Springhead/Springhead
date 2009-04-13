@@ -1,5 +1,5 @@
 /** 
-\mainpage Springheadのサンプルプログラム
+\page pageSamples Springheadのサンプルプログラム
 \contents
 
 Springheadのサンプルは、/src/Samples/ 以下にあります。

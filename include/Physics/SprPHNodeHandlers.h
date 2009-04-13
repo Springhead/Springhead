@@ -10,7 +10,7 @@
 #include <Foundation/SprObject.h>
 
 namespace Spr {;
-/** \addtogroup gpPhyscis	*/
+/** \addtogroup gpPhysics 	*/
 //@{
 ///	‚¨Œİ‚¢‚ÉÕ“Ë‚µ‚È‚¢„‘Ì‚ğİ’è
 struct PHInactiveSolids{
