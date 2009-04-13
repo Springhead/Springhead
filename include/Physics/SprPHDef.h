@@ -10,7 +10,7 @@
 #include <Foundation/SprScene.h>
 
 namespace Spr {;
-/** \addtogroup gpPhysics 物理エンジンクラス	*/
+/** \addtogroup gpPhysics	*/
 //@{
 
 inline bool approx(const double x, const double y){

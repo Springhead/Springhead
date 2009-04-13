@@ -15,7 +15,7 @@
 
 namespace Spr{;
 
-/** \addtogroup gpPhysics */
+/** \addtogroup gpHumanInterface ヒューマンインタフェースSDK */
 //@{
 
 struct PHSceneIf;
