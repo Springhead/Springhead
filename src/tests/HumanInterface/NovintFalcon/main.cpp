@@ -10,7 +10,7 @@ int __cdecl main(){
 	UTRef<HIForceInterface6DIf> intf = sdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
 	intf->Init(NULL);
 	int t = 0;
-	while(!kbhit()){
+	for(int i=0; !kbhit() && i<100000; ++i){
 		t += 1;
 		intf->Update(0.001f);
 #if 1
@@ -24,5 +24,5 @@ int __cdecl main(){
 #endif
 
 	}
-	getch();
+	if (kbhit()) getch();
 }

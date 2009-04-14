@@ -21,7 +21,7 @@ int __cdecl main(){
 	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	int t = 0;
-	while(!_kbhit()){
+	for(int i=0; !kbhit() && i<100000; ++i){
 		t += 1;
 		spg->Update(0.001f);
 #if 1
@@ -39,7 +39,7 @@ int __cdecl main(){
 		std::cout << std::endl;
 #endif
 	}
-	_getch();
+	if(kbhit()) _getch();
 /*
 	DRKeyMouseWin32If* wif = DCAST(DRKeyMouseWin32If, sdk->FindRealDevice("KeyMouseWin32"));
 	wif->Update();	
