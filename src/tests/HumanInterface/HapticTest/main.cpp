@@ -119,7 +119,7 @@ void Reset(){
 
 	static int quit;
 	quit ++;
-	if (quit > 10000){
+	if (quit > 100000){
 		timer.Release();
 		DSTR << "Quit Program" << endl;
 		exit(0);
