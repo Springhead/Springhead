@@ -116,6 +116,14 @@ void Reset(){
 	timer.Create();
 
 	DSTR << "Reset" << endl;
+
+	static int quit;
+	quit ++;
+	if (quit > 10000){
+		timer.Release();
+		DSTR << "Quit Program" << endl;
+		exit(0);
+	}
 }
 
 void _cdecl Keyboard(unsigned char key, int x, int y){
