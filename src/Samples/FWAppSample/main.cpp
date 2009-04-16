@@ -12,8 +12,8 @@
  - \ref pageFramework ‚Æ \ref pagePhysics ‚Ì‚Ý‚ðŽg—p
 */
 
-FWAppSample app;
 int _cdecl main(int argc, char* argv[]){
+	FWAppSample app;
 	app.Init(argc, argv);
 	app.Start();
 	return 0;

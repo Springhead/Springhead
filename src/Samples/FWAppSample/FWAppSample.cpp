@@ -5,23 +5,21 @@
 
 #define ESC 27
 
-FWAppSample::FWAppSample():bDrawInfo(true){}
+FWAppSample::FWAppSample(){
+	bDrawInfo = true;
+}
 
 void FWAppSample::Init(int argc, char* argv[]){
-	FWAppGLUT::Init(argc, argv);
-
-	GetSdk()->Clear();										// SDKの作成
+	FWAppGLUT::Init(argc, argv);										// Sdkの作成
+	GetSdk()->Clear();														// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
-	BuildObject();											// 剛体を作成
+	FWWinDesc windowDesc;												// GLのウィンドウディスクリプタ
+	windowDesc.title = "FWAppSample";								// ウィンドウのタイトル
+	CreateWin(windowDesc);												// ウィンドウの作成
+	InitCameraView();														// カメラビューの初期化
 
-	FWWinDesc windowDesc;
-	windowDesc.title = "FWAppFWAppSample";
-	CreateWin(windowDesc);
-	GetCurrentWin()->scene = GetSdk()->GetScene();
-
-	InitCameraView();
+	BuildObject();																// 剛体を作成
 }
 
 void FWAppSample::InitCameraView(){
@@ -72,8 +70,7 @@ void FWAppSample::BuildObject(){
 }
 
 void FWAppSample::Step(){
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	phscene->Step();
+	GetSdk()->Step();
 	glutPostRedisplay();
 }
 
@@ -102,8 +99,17 @@ void FWAppSample::Display(){
 	glutSwapBuffers();
 }
 
+void FWAppSample::Reset(){
+	GetSdk()->GetScene()->GetPHScene()->Clear();
+	BuildObject();
+	InitCameraView();
+}
+
 void FWAppSample::Keyboard(int key, int x, int y){
 	switch (key) {
+		case 'r':
+			Reset();
+			break;
 		case 'i':
 			bDrawInfo = !bDrawInfo;
 			break;
