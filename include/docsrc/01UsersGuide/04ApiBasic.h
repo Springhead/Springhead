@@ -28,7 +28,8 @@ APIクラス同士のキャストには， Cast()関数が便利です．
 	PHSdkIf* phsdk = obj->Cast();	//	phsdk型にキャストされる，
 	GRSdkIf* grsdk = obj->Cast();	//	キャストできないので，grsdk=NULLになる．
 \endverbatim
-アップキャスト，ダウンキャスト共に安全です．
+
+アップキャスト，ダウンキャスト共に安全です．
 Cast()関数は，オブジェクトが本当にそのAPIクラスを実装している場合だけキャストを実行し，
 できない場合は NULL を返します．
 
