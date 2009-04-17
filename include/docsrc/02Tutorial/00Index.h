@@ -6,6 +6,7 @@
  - \subpage pageLibraryList
  - \subpage pageSimpleExample
  - \subpage pageNewProject
+ - \subpage pageUseFramework
  
 から構成されます．<br>以上の項目から確認したい項目をクリックしていただくか，
 このページの上から順に読み進めていただくことで，
@@ -26,6 +27,9 @@ Springhead2を使って自分のプログラムを作る方法が分かります．
 
 \ref pageNewProject
 では，VisualC++を使って新しく自分のプログラムを作る方法を説明しています．
+
+\ref pageUseFramework
+では，SpringheadのFrameworkを用いてWindows環境から簡単にプログラムを作る方法を説明しています．
 <br>
 
 */
