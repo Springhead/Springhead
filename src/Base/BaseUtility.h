@@ -140,15 +140,7 @@ public:
 		if (Obj()) Obj()->AddRef();
 	}
 	~UTRef(){ if (Obj() && Obj()->DelRef() == 0) delete Obj(); obj=NULL;}
-/*	UTRef& operator =(T* t){
-		if (Obj() != t){
-			if (Obj() && Obj()->DelRef() == 0) delete Obj();
-			Obj() = t;
-			if (Obj()) Obj()->AddRef();
-		}
-		return *this;
-	}
-*/	template <class E>
+	template <class E>
 	UTRef& operator =(const UTRef<E>& r){
 		if (Obj() != r){
 			if (Obj() && Obj()->DelRef() == 0) delete Obj();
@@ -261,11 +253,6 @@ public:
 	///
 	UTTreeNode():parent(NULL){}
 	virtual ~UTTreeNode(){
-/*		for(CO::iterator it = children.begin(); it != children.end(); ++it){
-			(*it)->parent = NULL;
-		}
-		children.clear();
-*/
 		while(children.size()){
 			 children.back()->parent = NULL;
 			 children.pop_back();
