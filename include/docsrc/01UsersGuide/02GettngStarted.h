@@ -6,7 +6,8 @@
 
 
 \section secRequirement		動作環境
-本プログラムは以下いずれかの環境で動作します．<br>
+本プログラムは以下いずれの環境でも動作するように書いています．
+ただし，現在毎日動作確認をしている環境はVisual Studio 2005だけです．<br>
           <td width="64%"> 
             <table width="100%" border="0" cellspacing="1" cellpadding="2" bgcolor="#305C78">
               <tr> 
@@ -45,7 +46,7 @@
 ここでは仮に \c C:\\Home\\C\\Project\\Springhead2 とします．<br>
 下記にそれぞれの環境での構築方法を記載しています．
   
-\subsection secVcInstall	Visual C++ .NET 2003 + DirectX SDK 9.0
+\subsection secVcInstall	Visual C++ .NET 2005 (+ DirectX SDK の予定)
 \htmlonly
 <strong>
 <font color="gray">
@@ -56,11 +57,11 @@
 \endhtmlonly
 <br>
 
-\par 　　(1) 　 Visual C++ .NET 2003 のインストール
-	<tt>Visual C++ .NET 2003</tt> をインストールして下さい．<br><br>
+\par 　　(1) 　 Visual C++ .NET 2005 のインストール
+	<tt>Visual C++ .NET 2005</tt> をインストールして下さい．<br><br>
 
-\par 　　(2) 　 DirectX SDK 9.0 のインストール
-	<tt>DirectX SDK 9.0</tt> をインストールして下さい．
+\par 　　(2) 　 DirectX SDK のインストール
+	<tt>DirectX SDK </tt> をインストールして下さい．
 	<tt>Microsoft</tt> のダウンロードサイトから手に入れることができます．
 	インストール先は \c C:\\DXSDK として下さい．<br><br>
 
@@ -151,18 +152,17 @@
 
 
 
-\section secTest		サンプルを動かす
+\section secSample	サンプルを動かす
 サンプル・プログラムを動かしてみましょう．<br>
-\c Springhead2 では，動作可能なテスト用プログラム \c tests およびサンプルプログラム
-\c Samples を用意しています（参照 ： \ref directory)．
-ここでは例として，テスト用プログラム \c tests の
-<a href="../../src/html/_2tests_2Graphics_2GRSimple_2main_8cpp-example.html">GRSimple</a>
+\c Springhead2 では，テスト用プログラム \c tests およびサンプルプログラム
+\c Samples (\ref pageSamples) を用意しています．
+ここでは例として，サンプルプログラム \c Samples の \ref pageFWAppSample
 を実行する方法を紹介します．<br>
 
-\subsection secVcTest			Visual C++ .NET 2003 + DirectX SDK 9.0
+\subsection secVcTest			Visual C++ .NET 2005 ( + DirectX)
 <ol>
-	<li> \c GRSimple ディレクトリにあるソリューションファイルを開きます．
-	<li> ソリューションエクスプローラで，\c GRSimple がスタートアッププロジェクトに
+	<li> \c FWAppSample ディレクトリにあるソリューションファイルを開きます．
+	<li> ソリューションエクスプローラで，\c FWAppSample がスタートアッププロジェクトに
 		 設定されていることを確認します．</li>
 	<li> アプリケーションを実行します．</li>
 </ol>
@@ -170,10 +170,10 @@
 
 \subsection secCygwinTest		Cygwin
 <ol>
-	<li> \c GRSimple ディレクトリへ移動し，\c GRSimple.exe があることを確認します．</li>
+	<li> \c FWAppSample ディレクトリへ移動し，\c FWAppSample.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し，アプリケーションを起動します．<br>
  		\code
-　% ./GRSimple.exe
+　% ./FWAppSample.exe
  		\endcode
 	</li>
 </ol>
@@ -181,10 +181,10 @@
 
 \subsection secLinuxTest		RedHat Linux 9
 <ol>
-	<li> \c GRSimple ディレクトリへ移動し，\c GRSimple.exe があることを確認します．</li>
+	<li> \c FWAppSample ディレクトリへ移動し，\c FWAppSample.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し，アプリケーションを起動します．<br>
  		\code
-　% ./GRSimple.exe
+　% ./FWAppSample.exe
  		\endcode
 	</li>
 </ol>
@@ -192,10 +192,10 @@
 
 \subsection secMacTest			Mac OS X（PowerPC，Aquq）
 <ol>
-	<li> \c GRSimple ディレクトリへ移動し，\c GRSimple.exe があることを確認します．</li>
+	<li> \c FWAppSample ディレクトリへ移動し，\c FWAppSample.exe があることを確認します．</li>
 	<li> 以下のコマンドを実行し，アプリケーションを起動します．<br>
  		\code
-　% ./GRSimple.exe
+　% ./FWAppSample.exe
  		\endcode
 	</li>
 </ol>
