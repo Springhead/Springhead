@@ -6,7 +6,8 @@
  - \subpage pageLibraryList
  - \subpage pageSimpleExample
  - \subpage pageNewProject
- - \subpage pageUseFramework
+ - \subpage pageFWAppGLUT
+ - \subpage pageFWAppGLUI
  
 から構成されます．<br>以上の項目から確認したい項目をクリックしていただくか，
 このページの上から順に読み進めていただくことで，
@@ -28,8 +29,11 @@ Springhead2を使って自分のプログラムを作る方法が分かります．
 \ref pageNewProject
 では，VisualC++を使って新しく自分のプログラムを作る方法を説明しています．
 
-\ref pageUseFramework
-では，SpringheadのFrameworkを用いてWindows環境から簡単にプログラムを作る方法を説明しています．
+\ref pageFWAppGLUT
+では，Framework内のFWAppGLUTを用いてGLUTを使ったプログラムを作る方法を説明しています．
+
+\ref pageFWAppGLUI
+では，Framework内のFWAppGLUIを用いてGLUT+GLUIを使ったプログラムを作る方法を説明しています．
 <br>
 
 */
