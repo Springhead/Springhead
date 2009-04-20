@@ -1,4 +1,4 @@
-/** \page pageFWAppGLUI Frameworkを使ったGLUTアプリケーション
+/** \page pageFWAppGLUI Frameworkを使ったGLUIアプリケーション
 
 \contents
 
@@ -25,6 +25,8 @@ public:
 	void DesignGUI();
 	
 	// 必要に応じてFWAppGLUTの仮想関数をオーバーライドする．
+	void Init(int argc, char* argv[]); //< Init関数は必ずオーバーライドする
+	void ....
 
 public:
 	// 自分で作ったメンバ関数を追加
@@ -50,9 +52,13 @@ static void MYGUI::CallHoge(int control){
 	((*MYGUI)instance)->RealHoge(control);
 }
 void MYGUI::RealHoge(int control){
-
+	...;
 }
 
+void MYGUI::Init(int argc, char* argv[]){
+	FWAppGLUT::Init(argc, argv);
+	DesignGUI();
+}
 //:::::::::::::::::::::::::::::::::::::::::
 	// FWAppGLUTと同じ
 //:::::::::::::::::::::::::::::::::::::::::
@@ -64,7 +70,7 @@ in main.cpp
 \verbatim
 
 #include <Springhead.h>
-#include "MYApp.h"
+#include "MYGUI.h"
 
 int main(int argc, char* argv[]){
 	MYGUI gui;
