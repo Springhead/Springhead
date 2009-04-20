@@ -1,4 +1,5 @@
 #include "FWAppSample.h"
+#include "SampleModel.h"
 #include <iostream>
 #include <sstream>
 #include <GL/glut.h>
@@ -67,6 +68,8 @@ void FWAppSample::BuildObject(){
 		soBox->AddShape(shapeBox);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
+
+	CreateRoundCone(GetSdk());
 }
 
 void FWAppSample::Step(){
@@ -102,7 +105,7 @@ void FWAppSample::Display(){
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
 	BuildObject();
-	InitCameraView();
+//	InitCameraView();
 }
 
 void FWAppSample::Keyboard(int key, int x, int y){
