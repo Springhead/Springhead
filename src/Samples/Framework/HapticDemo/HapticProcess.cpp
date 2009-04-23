@@ -4,6 +4,9 @@
 HapticProcess hprocess;	
 #define TORQUE
 
+bool vhaptic = false;
+bool bproxy = false;
+
 HapticProcess::HapticProcess(){
 	dt = 0.001f;
 	K = 10;
@@ -47,6 +50,14 @@ void HapticProcess::UpdateSpidar(){
 }
 
 void HapticProcess::HapticRendering(){
+	static double vibT = 0;
+	static bool vibFlag = false;
+	Vec3d vibV = spidarG6->GetVelocity() * posScale;
+	static Vec3d vibVo = vibV;
+	double vibforce = 0;
+	static Vec3d proxy[100];
+	bool noContact = true;
+
 	displayforce = Vec3d(0.0, 0.0, 0.0);		
 	displaytorque = Vec3d(0.0, 0.0, 0.0);
 
@@ -70,16 +81,48 @@ void HapticProcess::HapticRendering(){
 			Vec3d dv = expandedObjects[i].phSolid.GetPointVelocity(cPoint) - hpointer.GetPointVelocity(pPoint);
 			Vec3d dvortho = dv.norm() * interpolation_normal;
 			static Vec3d addforce = Vec3d(0,0,0);
-			
-			addforce = -K * ortho + D * dvortho;// * ortho.norm();						// ’ñŽ¦—ÍŒvŽZ (*ƒ_ƒ“ƒp‚Ì€‚Éortho‚Ìƒmƒ‹ƒ€‚ð‚©‚¯‚Ä‚Ý‚½)
+			if(!bproxy){
+				addforce = -K * ortho + D * dvortho;// * ortho.norm();						// ’ñŽ¦—ÍŒvŽZ (*ƒ_ƒ“ƒp‚Ì€‚Éortho‚Ìƒmƒ‹ƒ€‚ð‚©‚¯‚Ä‚Ý‚½)
+			}else{
+				addforce = -K * (pPoint - (proxy[i]+expandedObjects[i].phSolid.GetCenterPosition())) + D * dvortho;	// ’ñŽ¦—ÍŒvŽZ(proxy)
+			}
 			//Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
 
-			displayforce += addforce;			// ƒ†[ƒU‚Ö‚Ì’ñŽ¦—Í		
+			if(!vibFlag){
+				vibT = 0;
+				vibVo = vibV - expandedObjects[i].phSolid.GetVelocity() ;
+			}
+			vibFlag = true;
+			if(vhaptic){
+				double vibA = expandedObjects[i].phSolid.GetShape(0)->GetVibA();
+				double vibB = expandedObjects[i].phSolid.GetShape(0)->GetVibB();
+				double vibW = expandedObjects[i].phSolid.GetShape(0)->GetVibW();
+				vibforce = vibA * (vibVo * 0.003 * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//U“®ŒvŽZ
+			}			
+
+			// proxy–@‚Å‚Ì–€ŽC‚ÌŒvŽZ
+			Vec3d posVec = pPoint - (proxy[i] + expandedObjects[i].phSolid.GetCenterPosition());
+			double posDot = dot(expandedObjects[i].syncInfo.neighborPoint.face_normal,posVec);
+			Vec3d tVec = posDot * expandedObjects[i].syncInfo.neighborPoint.face_normal;
+			Vec3d tanjent = posVec - tVec;
+			double mu0 = expandedObjects[i].phSolidIf->GetShape(0)->GetStaticFriction();
+			double mu1 = expandedObjects[i].phSolidIf->GetShape(0)->GetDynamicFriction();
+			if(tanjent.norm() > abs(mu0 * posDot)){
+				proxy[i] += (tanjent.norm() - abs(mu1 * posDot)) * tanjent.unit();
+//				proxyPos += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
+			}
+
+			displayforce += addforce + (vibforce * addforce.unit());			// ƒ†[ƒU‚Ö‚Ì’ñŽ¦—Í		
 //			displaytorque += addtorque;										 
 			expandedObjects[i].phSolid.AddForce(-addforce, cPoint);			// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é
 			expandedObjects[i].syncInfo.neighborPoint.test_force_norm = addforce.norm();
+			noContact = false;
 		}
 	}
+
+	if (noContact) vibFlag = false;
+
+	vibT += dt;
 #ifdef TORQUE
 	if(bDisplayforce) spidarG6->SetForce(displayforce, Vec3d());//, displaytorque);		// —ÍŠo’ñŽ¦
 #else
@@ -121,6 +164,24 @@ void HapticProcess::Keyboard(unsigned char key){
 			spidarG6->SetForce(Vec3d(), Vec3d());
 			spidarG6->Calibration();
 			DSTR << "Calibration" << endl;
+			break;
+		case 'o':
+			if(vhaptic){
+				vhaptic = false;
+				DSTR << "Vibration Disconnect" << endl;
+			}else{
+				vhaptic = true;
+				DSTR << "Vibration Connect" << endl;
+			}
+			break;
+		case 'p':
+			if(bproxy){
+				bproxy = false;
+				DSTR << "proxy mode stop" << endl;
+			}else{
+				bproxy = true;
+				DSTR << "proxy mode stert" << endl;
+			}
 			break;
 		default:
 			break;
