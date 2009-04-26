@@ -125,7 +125,10 @@ void MYApp::Display(){
 		FWAppGLUT::Display();
 }
 
+int exitCount = 0;
 void MYApp::Step(){
+	exitCount ++;
+	if (exitCount > 60/dt) exit(0);
 	if(bTimer){
 		FWApp::Step();
 		for(int i = 0; i < numWindow; i++){
