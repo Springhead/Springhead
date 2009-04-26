@@ -143,10 +143,14 @@ LRESULT CALLBACK MyApp::MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
     return DefWindowProc( hWnd, msg, wParam, lParam );
 }
 
+int exitCount = 0;
 void MyApp::dx9MainLoop(){
+	exitCount ++;
+	if (exitCount > 60*60) exit(0);
+	
 	MSG msg;
 	ZeroMemory( &msg, sizeof(msg) );
-
+	
 	while( GetMessage( &msg, NULL, 0, 0 ) ){
             TranslateMessage( &msg );
             DispatchMessage( &msg );
