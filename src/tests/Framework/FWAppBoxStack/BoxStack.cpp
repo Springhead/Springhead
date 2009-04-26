@@ -141,7 +141,7 @@ void BoxStack::Step(){
 	}
 	glutPostRedisplay();
 	exitCount ++;
-	if (exitCount > 10000) exit(0);
+	if (exitCount > 60.0/dt) exit(0);
 }
 
 void BoxStack::Display(){
