@@ -131,6 +131,7 @@ void BoxStack::DesignObject(){
 	soFloor->SetName("solidFloor");
 }
 
+int exitCount = 0;
 void BoxStack::Step(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	if(bStep) phscene->Step();
@@ -139,6 +140,8 @@ void BoxStack::Step(){
 		bOneStep = false;
 	}
 	glutPostRedisplay();
+	exitCount ++;
+	if (exitCount > 10000) exit(0);
 }
 
 void BoxStack::Display(){
@@ -188,6 +191,7 @@ void BoxStack::Display(){
 }
 
 void BoxStack::Keyboard(int key, int x, int y){
+	exitCount = 0;
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	switch (key) {
 		case ESC:
