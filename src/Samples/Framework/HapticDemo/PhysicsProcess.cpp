@@ -626,6 +626,13 @@ void PhysicsProcess::Keyboard(unsigned char key){
 				DSTR << "Nobj:" << phscene->NSolids() << endl;
 			}
 			break;
+		case 'c':
+			{
+				CreateJointBox(GetSdk());
+				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+				DSTR << "Nobj:" << phscene->NSolids() << endl;
+			}
+			break;
 		case 'v':
 			{
 				CreateCapsule(GetSdk());
