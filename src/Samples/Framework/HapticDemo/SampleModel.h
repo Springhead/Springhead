@@ -12,6 +12,7 @@ PHSolidIf* CreateCapsule(FWSdkIf* fwSdk);
 PHSolidIf* CreateRoundCone(FWSdkIf* fwSdk);
 PHSolidIf* CreatePolyhedron(FWSdkIf* fwSdk);
 PHSolidIf* CreateLumpBox(FWSdkIf* fwSdk);
+PHJointIf* CreateJointBox(FWSdkIf* fwSdk);
 void CreateWall(FWSdkIf* fwSdk);
 void CreateTower(FWSdkIf* fwSdk);
 

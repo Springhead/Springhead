@@ -7,6 +7,25 @@ CDShapeIf* CreateShapeBox(FWSdkIf* fwSdk){
 	return shapeBox;
 }
 
+PHJointIf* CreateJointBox(FWSdkIf* fwSdk){
+	static int count=0;
+	PHBallJointDesc desc;
+	{
+		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.5f, 0.0f);
+		desc.posePlug.Pos()	= Vec3f(0.0f, 1.5f, 0.0f);
+		desc.spring			= 8;
+		desc.damper			= 2;
+	}
+	PHSolidIf* soBox1=CreateBox(fwSdk);
+	PHSolidIf* soBox2=CreateBox(fwSdk);
+	PHJointIf* joint = fwSdk->GetScene()->GetPHScene()->CreateJoint( soBox1, soBox2, desc);
+	//fwSdk->GetScene()->GetPHScene()->SetContactMode(soBox1, soBox2, PHSceneDesc::MODE_NONE);
+	soBox1->SetDynamical(false);
+	soBox1->SetFramePosition(Vec3d(-1+count*2, 6, 0));
+	count++;
+	return joint;
+}
+
 PHSolidIf* CreateBox(FWSdkIf* fwSdk){
 	PHSolidDesc desc;
 	desc.mass = 0.05;
