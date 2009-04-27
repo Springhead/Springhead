@@ -74,6 +74,8 @@ protected:
 	Vec3d qdDot, preQdDot;	///< ある時刻の目標位置への回転軸ベクトルの一階微分と１時刻前の目標位置への回転軸ベクトルの一階微分
 	Vec3d qdWDot;			///< ある時刻の目標位置への回転軸ベクトルの二階微分
 
+	virtual void	ControlCheck(double dtinv);	//< 制御をかけるかのチェック
+	virtual void	MovableCheck(double dtinv);	//< 可動域をかけるかのチェック
 	virtual void	AfterSetDesc();
 	virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
 	friend class PHBallJointNode;
@@ -112,12 +114,12 @@ public:
 
 	/// 仮想関数のオーバライド
 	virtual void	AddMotorTorque(){f.w() = torque * GetScene()->GetTimeStep();}	///< トルクを加える関数
-	virtual void	SetConstrainedIndex(bool* con);								///< 拘束をあたえるかどうかの判定
+	virtual void	SetConstrainedIndex(bool* con);		///< 拘束をあたえるかどうかの判定
 	virtual void	ModifyJacobian();
-	virtual void	CompBias();													///< 侵入量の判定
-	virtual void	Projection(double& f, int k);								///< LCPで力を拘束するのかどうかの判定をする関数（onLimit[0]がtrueになっている時に働く） 
-	virtual void	UpdateJointState();											///< joint情報（Socketに対するPlugの向きベクトル）の更新
-	virtual void	CompError();												///< エラー判定
+	virtual void	CompBias();							///< 侵入量の判定
+	virtual void	Projection(double& f, int k);		///< LCPで力を拘束するのかどうかの判定をする関数（onLimit[0]がtrueになっている時に働く） 
+	virtual void	UpdateJointState();					///< joint情報（Socketに対するPlugの向きベクトル）の更新
+	virtual void	CompError();						///< エラー判定
 	
 	virtual PHTreeNode*		CreateTreeNode(){
 		return DBG_NEW PHBallJointNode();
