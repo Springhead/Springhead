@@ -60,14 +60,14 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	
 	if (dir.X() < 0.3f){		//	カプセルが接触面に大体平行な場合
 		float shrink = sqrt(1-dir.X()*dir.X());	//	傾いているために距離が縮む割合
-		float start = -0.5f*length*shrink;
-		float end = 0.5f*length*shrink;
+		float start = -0.0f*length*shrink;	//-0.5f*length*shrink;
+		float end = 1.0f*length*shrink;		//0.5f*length*shrink;
 		if (dir.X() > 1e-4){	//	完全に平行でない場合
 			Vec3f center = ring.localInv * toW.Pos();
 			float is = -(center.X()-radius/shrink) / dir.X() * shrink;	//	接触面と中心線を半径ずらした線との交点
 			if (is < end) end = is;
 
-			if (end+0.001 < start){
+			if (end+1e-4 < start){//0.001 < start){
 				DSTR << "CDCapsule::FindCutRing() may have a problem" << std::endl;
 			}
 //			assert(end + 0.001 >= start);
