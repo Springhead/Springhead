@@ -167,23 +167,17 @@ void PHBallJoint::ModifyJacobian(){
 	}
 }
 
-void PHBallJoint::CompBias(){
-	double dtinv = 1.0 / GetScene()->GetTimeStep();
-	
-	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
-	db.v() *= engine->velCorrectionRate;
-
-	// 位置制御の時の計算
+void PHBallJoint::ControlCheck(double dtinv){
+	// 位置制御の計算
 	/*******************************************************************************************************
 	足りない角度の差を回転軸ベクトルに変換．propV(田崎さんの論文でいうq[t])に対してdb.w()を計算している.
 	自然長が0[rad]で，propV[rad]伸びた時に対しての角度バネを構成していると考えればいい．
 	********************************************************************************************************/
 	Quaterniond propQ = goal * Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
-	Vec3d propV = propQ.RotationHalf();			
+	Vec3d propV = propQ.RotationHalf();
 	// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
-	if (anyLimit){
+	if (anyLimit)
 		propV = Jcinv * propV;
-	}
 
 	if(mode == PHJointDesc::MODE_VELOCITY){
 		if(anyLimit)
@@ -215,21 +209,23 @@ void PHBallJoint::CompBias(){
 			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
 			****/
 			db.w() = tmp * (- spring * propV
-						  - damper * desiredVelocity
-						  - offset);
+						 -    damper * desiredVelocity
+						 -    offset);
 		}
 	}
-	
+}
+
+void PHBallJoint::MovableCheck(double dtinv){
 	// vJc : Jcによって写像される拘束座標系から見たPlugの角速度
 	Vec3d vJc = Jc * vjrel.w();
 
-		// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
-		// nowTheta[0]: swing, nowTheta[1]: twist
-		// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
-		// x軸方向に拘束をかける場合	
+	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
+	// nowTheta[0]: swing, nowTheta[1]: twist
+	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
+	// x軸方向に拘束をかける場合	
 	if(onLimit[0].onLower){
 		double fCheck;
-		double dbLCP = (nowTheta[0] - limitSwing[0]) * dtinv * engine->velCorrectionRate;	//LCPによって加わる力
+		double dbLCP = (nowTheta[0] - limitSwing[0]) * dtinv * engine->GetVelCorrectionRate();	//LCPによって加わる力
 		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;
 		fCheck = (A.w().x + dA.w().x) * A.w()[0] *													//拘束しない時の速度と、拘束するときの速度の差を計算 
 					(A.w()[0] * (dA.w()[0] * f.w()[0] + db.w()[0]) - dA.w()[0] * (dbLCP + bSame));	//dA,db以外は過去の値を用いている
@@ -244,7 +240,7 @@ void PHBallJoint::CompBias(){
 	
 	else if(onLimit[0].onUpper){
 		double fCheck;
-		double dbLCP = (nowTheta[0] - limitSwing[1]) * dtinv * engine->velCorrectionRate;
+		double dbLCP = (nowTheta[0] - limitSwing[1]) * dtinv * engine->GetVelCorrectionRate();
 		double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;
 		fCheck = (A.w().x + dA.w().x) * A.w()[0] *
 					(A.w()[0] * (dA.w()[0] * f.w()[0] + db.w()[0]) - dA.w()[0] * (dbLCP + bSame));
@@ -260,7 +256,7 @@ void PHBallJoint::CompBias(){
 	//z軸方向に拘束をかける場合
 	if(onLimit[1].onLower && (vJc.z < 0)){
 		double fCheck;
-		double dbLCP = (nowTheta[1] - limitTwist[0]) * dtinv * engine->velCorrectionRate;
+		double dbLCP = (nowTheta[1] - limitTwist[0]) * dtinv * engine->GetVelCorrectionRate();
 		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;
 		fCheck = (A.w().z + dA.w().z) * A.w()[2] *
 					(A.w()[2] * (dA.w()[2] * f.w()[2] + db.w()[2]) - dA.w()[2] * (dbLCP + bSame));
@@ -275,7 +271,7 @@ void PHBallJoint::CompBias(){
 
 	else if(onLimit[1].onUpper && (vJc.z > 0)){
 		double fCheck;
-		double dbLCP = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;
+		double dbLCP = (nowTheta[1] - limitTwist[1]) * dtinv * engine->GetVelCorrectionRate();
 		double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;
 		fCheck = (A.w().z + dA.w().z) * A.w()[2] *
 					(A.w()[2] * (dA.w()[2] * f.w()[2] + db.w()[2]) - dA.w()[2] * (dbLCP + bSame));	
@@ -287,6 +283,18 @@ void PHBallJoint::CompBias(){
 			db.w()[2] = dbLCP;
 		}
 	}
+}
+void PHBallJoint::CompBias(){
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
+	
+	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
+	db.v() *= engine->velCorrectionRate;
+
+	// 関節の制御を行う場合，行列A,ベクトルbを補正
+	ControlCheck(dtinv);
+	// 関節の可動域は制御よりも優先される．
+	// 条件に応じて行列A,ベクトルbを補正
+	MovableCheck(dtinv);
 }
 
 void PHBallJoint::CompError(){
@@ -306,12 +314,10 @@ void PHBallJoint::Projection(double& f, int k){
 	Quaterniond propQ = goal * Xjrel.q.Inv();
 	Vec3d propV = propQ.RotationHalf();
 	if (k==3){
-		if(onLimit[0].onLower){
+		if(onLimit[0].onLower)
 			f = max(0.0, f);
-		}
-		else if(onLimit[0].onUpper){
+		else if(onLimit[0].onUpper)
 			f = min(0.0, f);
-		}
 		else if(fMaxDt < f)
 			f = fMaxDt;
 		else if(f < fMinDt)
