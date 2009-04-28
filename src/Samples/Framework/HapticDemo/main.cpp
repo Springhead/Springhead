@@ -131,8 +131,10 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 //			pprocess.Keyboard('x');
 			break;
 		default:
+			timer.Release();
 			pprocess.Keyboard(key);
 			hprocess.Keyboard(key);
+			timer.Create();
 			break;
 	}
 };

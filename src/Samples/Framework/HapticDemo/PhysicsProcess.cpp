@@ -81,6 +81,7 @@ void PhysicsProcess::DesignObject(){
 		soFloor->GetShape(0)->SetVibration(-100, 150, 150);
 		soFloor->SetName("solidFloor");
 	}
+	CreateJointBox(GetSdk());
 	// 力覚ポインタの作成
 	{
 		soPointer = phscene->CreateSolid(desc);
@@ -626,13 +627,6 @@ void PhysicsProcess::Keyboard(unsigned char key){
 				DSTR << "Nobj:" << phscene->NSolids() << endl;
 			}
 			break;
-		case 'c':
-			{
-				CreateJointBox(GetSdk());
-				phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-				DSTR << "Nobj:" << phscene->NSolids() << endl;
-			}
-			break;
 		case 'v':
 			{
 				CreateCapsule(GetSdk());
@@ -675,7 +669,6 @@ void PhysicsProcess::Keyboard(unsigned char key){
 				DSTR << "Nobj:" << phscene->NSolids() << endl;
 			}
 			break;
-
 		default:
 			break;
 	}
