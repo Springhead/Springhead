@@ -7,25 +7,6 @@ CDShapeIf* CreateShapeBox(FWSdkIf* fwSdk){
 	return shapeBox;
 }
 
-PHJointIf* CreateJointBox(FWSdkIf* fwSdk){
-	static int count=0;
-	PHBallJointDesc desc;
-	{
-		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.5f, 0.0f);
-		desc.posePlug.Pos()	= Vec3f(0.0f, 1.5f, 0.0f);
-		desc.spring			= 8;
-		desc.damper			= 2;
-	}
-	PHSolidIf* soBox1=CreateBox(fwSdk);
-	PHSolidIf* soBox2=CreateBox(fwSdk);
-	PHJointIf* joint = fwSdk->GetScene()->GetPHScene()->CreateJoint( soBox1, soBox2, desc);
-	//fwSdk->GetScene()->GetPHScene()->SetContactMode(soBox1, soBox2, PHSceneDesc::MODE_NONE);
-	soBox1->SetDynamical(false);
-	soBox1->SetFramePosition(Vec3d(-1+count*2, 6, 0));
-	count++;
-	return joint;
-}
-
 PHSolidIf* CreateBox(FWSdkIf* fwSdk){
 	PHSolidDesc desc;
 	desc.mass = 0.05;
@@ -196,5 +177,26 @@ void CreateTower(FWSdkIf* fwSdk){
 			phSolid->SetFramePosition(Vec3d(tower_radius * cos(theta), 2.0 * ((double)i), tower_radius * sin(theta)));
 			phSolid->SetOrientation(Quaterniond::Rot(-theta, 'y'));  
 		}
+	}
+}
+
+void CreateJointBox(FWSdkIf* fwSdk){
+	PHBallJointDesc desc;
+	{
+		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.0f, 0.0f);
+		desc.posePlug.Pos()	= Vec3f(0.0f, 1.0f, 0.0f);
+		desc.spring			= 3;
+		desc.damper		= 2;
+	}
+	PHSolidIf* rootSolid = CreateBox(fwSdk);
+	rootSolid->SetDynamical(false);
+	float posy = 15;
+	rootSolid->SetFramePosition(Vec3d(-5, posy, 0));
+	for(int i = 1; i < 6; i++){
+		PHSolidIf* nodeSolid = CreateBox(fwSdk);
+		fwSdk->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
+		nodeSolid->SetFramePosition(Vec3d(0, posy - 2 * i, 0));
+		fwSdk->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
+		rootSolid = nodeSolid;
 	}
 }
