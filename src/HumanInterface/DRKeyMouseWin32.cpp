@@ -13,6 +13,7 @@
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseWin32.h>
 #include <iomanip>
+#include <WinUser.h>
 
 namespace Spr {;
 
