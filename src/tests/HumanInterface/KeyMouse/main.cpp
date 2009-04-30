@@ -16,7 +16,7 @@ int __cdecl main(){
 	wif->Update();
 	UTRef<HIMouse6DIf> mouse6D = sdk->CreateHumanInterface("HIMouse6D")->Cast();
 	mouse6D->Init(NULL);
-	for(int i=0; i<100; ++i){
+	for(int i=0; i<1000; ++i){
 		if (mouse6D->GetKeyMouse()->GetKeyState('Q') & DVKeyMouseIf::PRESS) return 0;
 		for(int i=0; i<200; ++i){
 			if (mouse6D->GetKeyMouse()->GetKeyState(i) & DVKeyMouseIf::PRESS){
