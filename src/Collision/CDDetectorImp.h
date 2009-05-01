@@ -74,10 +74,22 @@ bool FASTCALL BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
 bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
+
 /**	GJKで共有点を見つける．連続版
 	startからendの間に接触点があるか調べる。
 	@return 0:まったく接触なし。-2:startより前に接触あり。-1: endより先に接触あり。
 	1: 接触あり。
+	@param a     凸形状 a
+	@param b     凸形状 b
+	@param a2w   World系から見た凸形状aの座標系
+	@param b2w   World系から見た凸形状bの座標系
+	@param dir   ２物体の相対速度の方向ベクトル。World系。単位ベクトルでなければならない。
+	@param start 区間の始点：a2w.pos + dir*start に aがあり、 b2wの点にbがある状態から、
+	@param end   区間の終点：a2w.pos + dir*end に aがあり、b2wの点にbがある状態までを判定。
+	@param normal 接触の法線（出力）
+	@param pa	物体 a 上の接触点。物体a系。（出力）
+	@param pb	物体 b 上の接触点。物体b系。（出力）
+	@param dist 衝突位置：a2w.pos + dir*dist に aがあり、 b2w.pos にbがあるときに衝突が起こった。
 */
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end, 
