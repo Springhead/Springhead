@@ -65,26 +65,27 @@ void PhysicsProcess::DesignObject(){
 
 	// 床の作成
 	{
-		// soFloor用のdesc
-		desc.mass = 1e20f;
-		desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		
-		soFloor->SetDynamical(false);
-		soFloor->SetGravity(false);
-
-		bd.boxsize = Vec3f(60, 40, 40);
-		CDBoxIf* shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
-		shapeFloor->SetName("shapeFloor");
-		soFloor->AddShape(shapeFloor);
-		soFloor->SetFramePosition(Vec3d(0, -20.7 ,0));
-		soFloor->GetShape(0)->SetVibration(-100, 150, 150);
-		soFloor->SetName("solidFloor");
+		for(int i = 0; i < 3; i++){
+			for(int j = 0; j < 3; j++){
+				desc.mass = 1e20f;
+				desc.inertia *= 1e30f;
+				PHSolidIf* soFloor = phscene->CreateSolid(desc);		
+				soFloor->SetDynamical(false);
+				soFloor->SetGravity(false);
+				bd.boxsize = Vec3f(2, 5, 2);
+				CDBoxIf* shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+				soFloor->AddShape(shapeFloor);
+				soFloor->SetFramePosition(Vec3d(-2 + 2*i, -5 ,2 - 2*j));
+				if(i == 1 && j == 1) soFloor->SetFramePosition(Vec3d(-2 + 2*i, -10, 2 - 2*j));
+			}
+		}
 	}
 	// 力覚ポインタの作成
 	{
 		soPointer = phscene->CreateSolid(desc);
 		sd.radius = 0.5;//1.0;
-		CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+		bd.boxsize = Vec3f(2, 2, 2);
+		CDShapeIf* shapePointer = GetSdk()->GetPHSdk()->CreateShape(bd);//sd);
 		soPointer->AddShape(shapePointer);
 		soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
 		soPointer->SetDynamical(false);
