@@ -82,6 +82,7 @@ void PhysicsProcess::DesignObject(){
 		soFloor->SetName("solidFloor");
 	}
 	CreateJointBox(GetSdk());
+	Create3ElementJointBox(GetSdk());
 	// 力覚ポインタの作成
 	{
 		soPointer = phscene->CreateSolid(desc);

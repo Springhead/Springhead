@@ -200,3 +200,28 @@ void CreateJointBox(FWSdkIf* fwSdk){
 		rootSolid = nodeSolid;
 	}
 }
+
+void Create3ElementJointBox(FWSdkIf* fwSdk){
+	PH3ElementBallJointDesc desc;
+	{
+		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.0f, 0.0f);
+		desc.posePlug.Pos()	= Vec3f(0.0f, 1.0f, 0.0f);
+		desc.spring			= 3+5;
+		desc.damper		= 0.001*2000;
+		desc.secondDamper = 0.01*1000;
+	}
+	PHSolidIf* rootSolid = CreateBox(fwSdk);
+	rootSolid->SetMass(0.001);
+	rootSolid->SetDynamical(false);
+	double posy = 15;
+	Vec3d pos = Vec3d(5, posy, 0);
+	rootSolid->SetFramePosition(pos);
+	for(int i = 1; i < 6; i++){
+		PHSolidIf* nodeSolid = CreateBox(fwSdk);
+		nodeSolid->SetMass(0.001);
+		fwSdk->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
+		nodeSolid->SetFramePosition(Vec3d(5, posy - 2 * i, 0));
+		fwSdk->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
+		rootSolid = nodeSolid;
+	}
+}
