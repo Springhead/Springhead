@@ -15,5 +15,6 @@ PHSolidIf* CreateLumpBox(FWSdkIf* fwSdk);
 void CreateWall(FWSdkIf* fwSdk);
 void CreateTower(FWSdkIf* fwSdk);
 void CreateJointBox(FWSdkIf* fwSdk);
+void Create3ElementJointBox(FWSdkIf* fwSdk);
 
 #endif
