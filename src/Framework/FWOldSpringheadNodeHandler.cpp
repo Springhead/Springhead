@@ -22,6 +22,7 @@
 #include <Framework/FWScene.h>
 #include <Framework/FWSdk.h>
 #include <Framework/FWPHBone.h>
+#include <Framework/FWBone.h>
 #include <Collision/CDConvexMesh.h>
 
 #include <Framework/FWOldSpringheadNode.h>
@@ -1027,6 +1028,7 @@ public:
 		UTLoadedData* ldMesh;
 	public:
 		FWPHBone phBone;
+		FWBoneCreate	 bone;
 
 		BoneCreator(UTLoadedData* lm, PHScene* p): phScene(p), ldMesh(lm){}
 
@@ -1062,6 +1064,8 @@ public:
 			//phBone.DisplayPHBoneCenter();
 			af.clear();
 			phBone.Clear();	
+			
+			/*bone.BoneCreate(mesh,phScene);*/
 		}
 	};
 
