@@ -32,30 +32,64 @@
 #include <Collision/CDConvexMesh.h>
 
 namespace Spr{;
-
-	//struct BoneJointData{
-	//	BoneJointData();
-	//	double K;
-	//	double D1;
-	//	double D2;
-	//	double yieldStress;
-	//	double hardnessRate;
-	//	Vec3f SocketPos;
-	//	Vec3f PlugPos;
-	//};
+class FWBone;
+	struct BoneJoint{
+		BoneJoint();
+		double K;
+		double D1;
+		double D2;
+		double yieldStress;
+		double hardnessRate;
+		Vec3f SocketPos;
+		Vec3f PlugPos;
+	};
 
 	class FWBone : public FWObject{
 	private:
+
+	public:
 		Vec3d		centerPoint;
 		double		length;
 		CDBoxIf*	shapeBone;
 		Affinef		transformAffine;
 		Affinef		worldTransformAffine;
-	public:
 		FWBone();
 		void Sync();
     };
 
+	class FWBoneCreate{
+	private:
+		GRMesh* mesh;
+		std::vector<Affinef> af;
+		std::vector<Affinef> afWT;
+		std::vector<GRFrame*> grfBone;
+		std::vector<FWObjectIf*> fwoBone;
+		std::vector<FWObjectIf*> fwoAncestorBone;
+		std::vector<PHSolidIf*> soBone;
+		std::vector<PHSolidIf*> soAncestorBone;
+		std::vector<PHJointIf*> Joint;
+		std::vector<Vec3d> bonePoint;
+		std::vector<FWBone> bone;
+		FWBone bone_;
+		std::vector<BoneJoint> boneJoint;
+		FWSdkIf* fwSdk;
+		PHScene* phScene;
+		PHSceneIf* phSceneIf;
+		void SetFWBone();
+	public:
+		void BoneCreate(GRMesh* m,PHScene* s);
+		void FWPHBoneCreate();
+		void FWJointCreate();
+		void FWSkinMeshAdapt();
+		void SetPHScne(PHSceneIf* s){phSceneIf=s;}
+		void SetfwSdk(FWSdkIf* s){fwSdk=s;}
+		void SetAffine(std::vector<Affinef> a);
+		void SetWorldAffine(std::vector<Affinef> a);
+		void SetGRFrameBone(std::vector<GRFrame*> f){grfBone=f;}
+		void DisplayBonePoint();
+		void DisplayPHBoneCenter();
+	};
+		
 }
 
 #endif
