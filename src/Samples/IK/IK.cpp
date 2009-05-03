@@ -21,7 +21,7 @@ IK::IK(){
 	bDebug		= false;
 	bStep		= true;
 	bOneStep	= false;
-	bIK			= false;
+	bIK			= true;
 
 	gravity		= Vec3d(0.0, -9.8, 0.0);
 }
@@ -45,6 +45,12 @@ void IK::Init(int argc, char* argv[]){
 void IK::Reset(int sceneNum){
 	GetSdk()->Clear();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
+
+	bGravity	= true;
+	bDebug		= false;
+	bStep		= true;
+	bOneStep	= false;
+	bIK			= true;
 
 	BuildScene(sceneNum);
 
@@ -276,8 +282,11 @@ void IK::BuildScene(int sceneNum){
 	}
 
 	// Scene‚ÌÝ’è
-	phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+	/// IK‚ÌÝ’è
 	phScene->GetIKEngine()->SetNumIter(10);
+	phScene->GetIKEngine()->Enable(bIK);
+	/// ‚»‚Ì‘¼‚ÌÝ’è
+	phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 	phScene->SetGravity(gravity);
 	phScene->SetTimeStep(0.01);
 	phScene->SetNumIteration(15);
