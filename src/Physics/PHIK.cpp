@@ -643,8 +643,10 @@ void PHIKBallJoint::Move(){
 	Vec3d goal = pos.RotationHalf();
 	Vec3d orig = jGoal.RotationHalf();
 	// Vec3d newGoal = (jSpring*orig + jSpring*10*goal) * (1/(jSpring + jSpring*10));
+
 	Vec3d newGoal = (jSpring*orig + spring*goal) * (1/(jSpring + spring));
-	pos = Quaterniond::Rot(newGoal.norm(), newGoal.unit());
+
+	pos = Quaterniond::Rot(newGoal.norm(), (newGoal.norm()!=0)?(newGoal.unit()):(Vec3d(1,0,0)));
 
 	// ŠÖß‚ð“®‚©‚·
 	joint->SetSpring(jSpring + spring);
