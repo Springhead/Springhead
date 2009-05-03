@@ -66,8 +66,8 @@ void IK::BuildScene(int sceneNum){
 	PHSdkIf*	phSdk	= GetSdk()->GetPHSdk();
 	PHSceneIf*	phScene	= GetSdk()->GetScene()->GetPHScene();
 
+	// ボールジョイント２つの直線状リンク
 	if (sceneNum == 0) {
-		// ボールジョイント２つの直線状リンク
 		PHSolidDesc			descSolid;
 		CDBoxDesc			descBox;
 		PHBallJointDesc		descBallJoint;
@@ -131,6 +131,142 @@ void IK::BuildScene(int sceneNum){
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
+		///// 制御点を指し示す剛体
+		descSolid.dynamical = false;
+		descSolid.mass = 1.0;
+		soPosCtl1 = phScene->CreateSolid(descSolid);
+		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
+		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
+	}
+
+	// ボールジョイント５つの直線状リンク
+	if (sceneNum == 1) {
+		PHSolidDesc			descSolid;
+		CDBoxDesc			descBox;
+		PHBallJointDesc		descBallJoint;
+		PHIKBallJointDesc	descIKBall;
+		PHIKPosCtlDesc		descIKPos;
+
+		/// -- ルート剛体
+		///// 剛体
+		descSolid.dynamical = false;
+		descSolid.mass = 1.0;
+		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
+		///// 形状
+		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
+		so1->AddShape(phSdk->CreateShape(descBox));
+
+		/// -- 一つ目のリンク
+		///// 剛体
+		descSolid.dynamical = true;
+		descSolid.mass = 1.0;
+		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
+		///// 形状
+		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
+		so2->AddShape(phSdk->CreateShape(descBox));
+		///// 関節
+		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
+		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
+		descBallJoint.spring = 1000.0f;
+		descBallJoint.damper =   20.0f;
+		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
+		///// IKノード
+		descIKBall.joint = jo1->Cast();
+		descIKBall.spring = 100000.0f;
+		descIKBall.damper =   2000.0f;
+		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
+
+		/// -- 二つ目のリンク
+		///// 剛体
+		descSolid.dynamical = true;
+		descSolid.mass = 1.0;
+		PHSolidIf* so3 = phScene->CreateSolid(descSolid);
+		///// 形状
+		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
+		so3->AddShape(phSdk->CreateShape(descBox));
+		///// 関節
+		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
+		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
+		descBallJoint.spring = 1000.0f;
+		descBallJoint.damper =   20.0f;
+		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
+		///// IKノード
+		descIKBall.joint = jo2->Cast();
+		descIKBall.spring = 100000.0f;
+		descIKBall.damper =   2000.0f;
+		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
+
+		/// -- 三つ目のリンク
+		///// 剛体
+		descSolid.dynamical = true;
+		descSolid.mass = 1.0;
+		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
+		///// 形状
+		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
+		so4->AddShape(phSdk->CreateShape(descBox));
+		///// 関節
+		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
+		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
+		descBallJoint.spring = 1000.0f;
+		descBallJoint.damper =   20.0f;
+		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
+		///// IKノード
+		descIKBall.joint = jo3->Cast();
+		descIKBall.spring = 100000.0f;
+		descIKBall.damper =   2000.0f;
+		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
+
+		/// -- 四つ目のリンク
+		///// 剛体
+		descSolid.dynamical = true;
+		descSolid.mass = 1.0;
+		PHSolidIf* so5 = phScene->CreateSolid(descSolid);
+		///// 形状
+		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
+		so5->AddShape(phSdk->CreateShape(descBox));
+		///// 関節
+		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
+		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
+		descBallJoint.spring = 1000.0f;
+		descBallJoint.damper =   20.0f;
+		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
+		///// IKノード
+		descIKBall.joint = jo4->Cast();
+		descIKBall.spring = 100000.0f;
+		descIKBall.damper =   2000.0f;
+		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
+
+		/// -- 五つ目のリンク
+		///// 剛体
+		descSolid.dynamical = true;
+		descSolid.mass = 1.0;
+		PHSolidIf* so6 = phScene->CreateSolid(descSolid);
+		///// 形状
+		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
+		so6->AddShape(phSdk->CreateShape(descBox));
+		///// 関節
+		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
+		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
+		descBallJoint.spring = 1000.0f;
+		descBallJoint.damper =   20.0f;
+		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
+		///// IKノード
+		descIKBall.joint = jo5->Cast();
+		descIKBall.spring = 100000.0f;
+		descIKBall.damper =   2000.0f;
+		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
+
+		/// -- IK制御点
+		///// 制御点の作成
+		descIKPos.solid = so6;
+		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
+		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		///// ノードへの登録
+		ikNode1->AddControlPoint(ikPosCtl1);
+		ikNode2->AddControlPoint(ikPosCtl1);
+		ikNode3->AddControlPoint(ikPosCtl1);
+		ikNode4->AddControlPoint(ikPosCtl1);
+		ikNode5->AddControlPoint(ikPosCtl1);
 		///// 制御点を指し示す剛体
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
@@ -276,6 +412,7 @@ void IK::Keyboard(int key, int x, int y){
 				ikPosCtl1->SetGoal(goal);
 			}
 			break;
+
 		case 'j':
 			{
 				Vec3d goal = ikPosCtl1->GetGoal();
@@ -291,6 +428,7 @@ void IK::Keyboard(int key, int x, int y){
 				ikPosCtl1->SetGoal(goal);
 			}
 			break;
+
 		case 'k':
 			{
 				Vec3d goal = ikPosCtl1->GetGoal();
@@ -306,6 +444,7 @@ void IK::Keyboard(int key, int x, int y){
 				ikPosCtl1->SetGoal(goal);
 			}
 			break;
+
 		case 'o':
 			{
 				Vec3d goal = ikPosCtl1->GetGoal();
@@ -313,6 +452,14 @@ void IK::Keyboard(int key, int x, int y){
 				ikPosCtl1->SetGoal(goal);
 
 			}
+			break;
+
+		case '1':
+			Reset(0);
+			break;
+
+		case '2':
+			Reset(1);
 			break;
 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
