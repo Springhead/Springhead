@@ -7,7 +7,7 @@
 #define ESC 27
 
 FWAppSample::FWAppSample(){
-	bDrawInfo = true;
+	bDrawInfo = false;
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
@@ -68,8 +68,6 @@ void FWAppSample::BuildObject(){
 		soBox->AddShape(shapeBox);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
-
-	CreateRoundCone(GetSdk());
 }
 
 void FWAppSample::Step(){
@@ -105,20 +103,19 @@ void FWAppSample::Display(){
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
 	BuildObject();
-//	InitCameraView();
 }
 
 void FWAppSample::Keyboard(int key, int x, int y){
 	switch (key) {
-		case 'r':
-			Reset();
-			break;
-		case 'i':
-			bDrawInfo = !bDrawInfo;
-			break;
 		case ESC:
 		case 'q':
 			exit(0);
+			break;
+		case 'r':
+			Reset();
+			break;
+		case 'd':
+			bDrawInfo = !bDrawInfo;
 			break;
 		default:
 			break;
