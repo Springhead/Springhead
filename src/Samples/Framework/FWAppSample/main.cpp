@@ -6,7 +6,7 @@
 - プログラムの機能
  - 床の上に箱が載っているだけのシーン。
  - 描画は \ref pagePhysics のデバッグ表示のみ。
- - i キーで、接触力や接触部情報の表示のON/OFF。
+ - d キーで、接触力や接触部情報の表示のON/OFF。
 - ソースについて
  - シーンの構築は、C++言語でAPIを呼び出して行う。
  - \ref pageFramework と \ref pagePhysics のみを使用
