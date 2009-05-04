@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #ifndef _WIN32_WINNT
- #define _WIN32_WINNT 0x0400
+ #define _WIN32_WINNT 0x0500
 #endif
 #include "Device.h"
 #pragma hdrstop
