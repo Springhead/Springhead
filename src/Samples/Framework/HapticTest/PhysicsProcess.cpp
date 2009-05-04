@@ -62,7 +62,7 @@ void PhysicsProcess::DesignObject(){
 	PHSolidDesc desc;		// 剛体のディスクリプタ
 	CDBoxDesc bd;			// 直方体形状のディスクリプタ
 	CDSphereDesc sd;		// 球体のディスクリプタ
-
+#if 1
 	// 床の作成
 	{
 		for(int i = 0; i < 3; i++){
@@ -80,19 +80,44 @@ void PhysicsProcess::DesignObject(){
 			}
 		}
 	}
+#endif
 	// 力覚ポインタの作成
 	{
 		soPointer = phscene->CreateSolid(desc);
-		sd.radius = 0.5;//1.0;
+		sd.radius = 0.05;//1.0;
 		bd.boxsize = Vec3f(2, 2, 2);
 		CDShapeIf* shapePointer = GetSdk()->GetPHSdk()->CreateShape(bd);//sd);
 		soPointer->AddShape(shapePointer);
 		soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
 		soPointer->SetDynamical(false);
-		// 力覚ポインタをspringhead2の接触計算から外す
-		// 剛体が増えるたびにContactModeをNONEにしなけらばいけない(増えた剛体と接触計算をしてしまうため)
-		phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 	}
+
+#if 0
+	{
+	PHSolidIf* soBox;
+	desc.mass = 0.01;
+	desc.inertia *= 0.033;
+	soBox = phscene->CreateSolid(desc);		
+	bd.boxsize = Vec3f(2, 2, 2);
+	CDBoxIf* shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+	soBox->AddShape(shapeFloor);
+	soBox->SetFramePosition(Vec3d(0, 10 ,0));
+	PHBallJointDesc jointdesc;
+	jointdesc.poseSocket.Pos() = Vec3f(0.0f, -3, 0.0f);
+	jointdesc.posePlug.Pos() = Vec3f(0.0f, 3, 0.0f);
+	jointdesc.spring = 0;
+	jointdesc.damper = 0;
+	GetSdk()->GetScene()->GetPHScene()->CreateJoint(soPointer, soBox, jointdesc);
+	PHSolidIf* soBox2 = phscene->CreateSolid(desc);		
+	soBox2->AddShape(shapeFloor);
+	soBox2->SetFramePosition(Vec3d(0, 0 ,0));
+	GetSdk()->GetScene()->GetPHScene()->CreateJoint(soBox, soBox2, jointdesc);	
+	//		GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, soBox, PHSceneDesc::MODE_NONE);	
+	}
+#endif
+	// 力覚ポインタをspringhead2の接触計算から外す
+	// 剛体が増えるたびにContactModeをNONEにしなけらばいけない(増えた剛体と接触計算をしてしまうため)
+	phscene->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 }
 
 void PhysicsProcess::Idle(){

@@ -119,6 +119,7 @@ void Reset(){
 }
 
 void _cdecl Keyboard(unsigned char key, int x, int y){
+	timer.Release();
 		switch (key) {
 		case ESC:		
 		case 'q':
@@ -134,7 +135,8 @@ void _cdecl Keyboard(unsigned char key, int x, int y){
 			pprocess.Keyboard(key);
 			hprocess.Keyboard(key);
 			break;
-	}
+		}
+	timer.Create();
 };
 
 int _cdecl main(int argc, char* argv[]){
