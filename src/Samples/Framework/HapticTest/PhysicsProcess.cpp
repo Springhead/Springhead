@@ -37,7 +37,7 @@ void PhysicsProcess::Init(int argc, char* argv[]){
 	DesignObject();																// „‘Ì‚ðì¬
 
 	FWWinDesc windowDesc;
-	windowDesc.title = "HapticConnect1.2";
+	windowDesc.title = "HapticTest";
 	FWWin* window;
 	window = CreateWin(windowDesc);
 	window->scene = GetSdk()->GetScene();
@@ -72,11 +72,14 @@ void PhysicsProcess::DesignObject(){
 				PHSolidIf* soFloor = phscene->CreateSolid(desc);		
 				soFloor->SetDynamical(false);
 				soFloor->SetGravity(false);
-				bd.boxsize = Vec3f(2, 5, 2);
+				bd.boxsize = Vec3f(2, 4, 2);
 				CDBoxIf* shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
 				soFloor->AddShape(shapeFloor);
-				soFloor->SetFramePosition(Vec3d(-2 + 2*i, -5 ,2 - 2*j));
-				if(i == 1 && j == 1) soFloor->SetFramePosition(Vec3d(-2 + 2*i, -10, 2 - 2*j));
+				soFloor->SetFramePosition(Vec3d(-2 + 2*i, 0 ,2 - 2*j));
+				if(i == 1 && j == 1){
+					//soFloor->SetFramePosition(Vec3d(-2 + 2*i, -10, 2 - 2*j));
+					soFloor->SetFramePosition(Vec3d(-100, -100, -100));
+				}
 			}
 		}
 	}
@@ -85,7 +88,7 @@ void PhysicsProcess::DesignObject(){
 	{
 		soPointer = phscene->CreateSolid(desc);
 		sd.radius = 0.05;//1.0;
-		bd.boxsize = Vec3f(2, 2, 2);
+		bd.boxsize = Vec3f(2, 3, 2);
 		CDShapeIf* shapePointer = GetSdk()->GetPHSdk()->CreateShape(bd);//sd);
 		soPointer->AddShape(shapePointer);
 		soPointer->SetFramePosition(Vec3d(0, 3.0, 0));  
