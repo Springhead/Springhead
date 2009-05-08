@@ -23,6 +23,10 @@ struct OnLimit{
 		return i==0 ? onLower : onUpper;
 	}
 };
+struct limitLine{
+	double SwingLow[15][5];
+	double SwingUp[15][5];
+};
 
 class PHBallJoint;
 ///	ボールジョイントに対応するツリーノード
@@ -62,13 +66,20 @@ protected:
 	 z軸：Socket座標系から見たPlug座標系のz軸の方向)
 	**********************************************************/
 
-	Vec2d			nowTheta;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:swingDir, .z:twist)
+	Vec3d			nowTheta;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:twist, .z:swingDir)
 	bool			anyLimit;				///< どこかのリミットにかかっているかどうかを調べるフラグ == (onLimit.onUpper || onLimit.onLower)
 	Matrix3d		Jc;						///< 拘束座標系の速度・加速度　＝　Jc * Socket座標系から見たPlug座標系の速度、加速度
 	Matrix3d		Jcinv;					///< Socket座標系から見たPlug座標系の速度、加速度  ＝　Jcinv * 拘束座標系の速度・加速度
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	double			fMinDt, fMaxDt;
-	
+	limitLine		LimitLine;				///< 拘束範囲の指定
+	int				limitCount[2];				///< 上の配列のいくつまで入っているのか数える
+	double			Irrupt;					///< 侵入量
+	Vec3d			tanLine;
+	int				FunNum;
+	Matrix3d		limDir;					///< 初期の拘束座標系 (x軸,y軸,z軸( = limitDir))
+	Vec3d			BefPos;					///< 前回の位置
+
 	// 軌道追従制御用の変数，消さないで by Toki Aug. 2008
 	Quaterniond qd,	 preQd;		///< ある時刻の目標位置への回転軸ベクトルと１時刻前の目標位置への回転軸ベクトル
 	Vec3d qdDot, preQdDot;	///< ある時刻の目標位置への回転軸ベクトルの一階微分と１時刻前の目標位置への回転軸ベクトルの一階微分
@@ -111,6 +122,9 @@ public:
 
 	virtual void		SetOffsetForce(Vec3d ofst){offset = ofst;}
 	virtual Vec3d		GetOffsetForce(){return offset;}
+	virtual bool		SetConstLine(char* fileName , int i);///< 拘束点の入力
+	virtual double		GetConstLine(int Num, int way){return LimitLine.SwingUp[Num][way];}///拘束点の座標の取得
+	virtual void		SetTwistPole(Vec2d range){ PoleTwist = range; }		///< ConstLineと使うTwist角の範囲制限
 
 	/// 仮想関数のオーバライド
 	virtual void	AddMotorTorque(){f.w() = torque * GetScene()->GetTimeStep();}	///< トルクを加える関数
