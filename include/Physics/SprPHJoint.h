@@ -425,6 +425,21 @@ struct PHBallJointIf : public PHJointIf{
 		（デフォルトで可動域制限は無効になっている）
 	 */
 	void GetTwistRange(Vec2d& range);
+	/** @brief 極値でのツイスト角の可動範囲を設定する。ConstLineとともに使用
+		@param lower 最小ツイスト角度
+		@param upper 最大ツイスト角度
+		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
+		（デフォルトで可動域制限は無効になっている）
+	 */
+	void SetTwistPole(Vec2d range);
+	/**@brief 拘束位置を設定する
+	   @param 拘束位置のファイルを読み込む
+    */
+	bool SetConstLine(char* fileName, int i);
+	/**@brief 拘束位置を取得する
+	   @param [way][0]スイング方位角　[1]スイング角　[2]ツイスト角min　[3]ツイスト角max　[4]傾き
+    */
+	double GetConstLine(int Num, int way);
 
 	/** @brief モータトルクを設定する
 		@param torque モータトルク
@@ -536,6 +551,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec3d			torque;			 ///< モータトルク
 	double			fMax;			 ///< 関節にかけられる最大の力
 	double			fMin;			 ///< 関節にかけられる最小の力
+	Vec2d			PoleTwist;
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };

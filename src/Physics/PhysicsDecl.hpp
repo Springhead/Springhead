@@ -379,6 +379,7 @@ protected:\
 	Vec3d	torque;	\
 	double	fMax;	\
 	double	fMin;	\
+	Vec2d	PoleTwist;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
@@ -393,6 +394,7 @@ public:\
 		torque = ((PHBallJointDesc*)ptr)->torque;	\
 		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
 		fMin = ((PHBallJointDesc*)ptr)->fMin;	\
+		PoleTwist = ((PHBallJointDesc*)ptr)->PoleTwist;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -409,6 +411,7 @@ public:\
 		((PHBallJointDesc*)ptr)->torque = torque;	\
 		((PHBallJointDesc*)ptr)->fMax = fMax;	\
 		((PHBallJointDesc*)ptr)->fMin = fMin;	\
+		((PHBallJointDesc*)ptr)->PoleTwist = PoleTwist;	\
 		return true;	\
 	}\
 

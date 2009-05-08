@@ -130,6 +130,9 @@
 	void GetSwingRange(Vec2d& range){	base::GetSwingRange(range);}	\
 	void SetTwistRange(Vec2d range){	base::SetTwistRange(range);}	\
 	void GetTwistRange(Vec2d& range){	base::GetTwistRange(range);}	\
+	void SetTwistPole(Vec2d range){	base::SetTwistPole(range);}	\
+	bool SetConstLine(char* fileName, int i){	return	base::SetConstLine(fileName, i);}	\
+	double GetConstLine(int Num, int way){	return	base::GetConstLine(Num, way);}	\
 	void SetMotorTorque(const Vec3d& torque){	base::SetMotorTorque(torque);}	\
 	Vec3d GetMotorTorque(){	return	base::GetMotorTorque();}	\
 	Vec3d GetAngle(){	return	base::GetAngle();}	\
