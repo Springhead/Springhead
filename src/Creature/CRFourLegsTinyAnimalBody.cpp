@@ -64,7 +64,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	PHSolidDesc        solidDesc;
 
 	// Solid
-	solidDesc.mass		= 5.0;
+	solidDesc.mass		= 25.0;
 	solids[SO_BODY]		= phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize		= Vec3f(bodyBreadth, bodyHeight, bodyThickness);
 	solids[SO_BODY]->AddShape(phSdk->CreateShape(boxDesc));
