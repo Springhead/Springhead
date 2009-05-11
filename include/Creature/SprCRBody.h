@@ -633,8 +633,12 @@ struct CRDebugLinkBodyDesc : CRBodyDesc {
 	// 関節の出せる力の最大値
 	double fMax;
 
-	/// ダイナミカルを入れるかどうか
-	bool dynamicalMode;
+	/// 静止摩擦
+	double mu0;
+
+	/// 動摩擦
+	double mu;
+
 
 	CRDebugLinkBodyDesc(bool enableRange = false, bool enableFMax = false);
 };

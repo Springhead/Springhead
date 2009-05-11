@@ -25,6 +25,8 @@ CRDebugLinkBodyDesc::CRDebugLinkBodyDesc(bool enableRange, bool enableFMax){
 	spring			= 50.0;
 	damper			= 2 * sqrt(mass * spring);
 	fMax			= 50;
+	mu0				= 1.0;
+	mu				= 1.0;
 	shapeMode		= MODE_CAPSULE;
 	jointMode		= MODE_BALL;
 }
@@ -64,8 +66,8 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 		CDSphereDesc cDesc;
 		{
 			cDesc.radius		= radius;
-			cDesc.material.mu	= 0.0;
-			cDesc.material.mu0	= 0.0;
+			cDesc.material.mu	= mu;
+			cDesc.material.mu0	= mu0;
 			cDesc.material.e	= 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
@@ -78,8 +80,8 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 		{
 			cDesc.radius		= radius;
 			cDesc.length		= length;
-			cDesc.material.mu	= 0.0;
-			cDesc.material.mu0	= 0.0;
+			cDesc.material.mu	= mu;
+			cDesc.material.mu0	= mu0;
 			cDesc.material.e	= 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
@@ -91,8 +93,8 @@ void CRDebugLinkBody::SolidFactory(CDShapeMode m){
 		CDBoxDesc cDesc;
 		{
 			cDesc.boxsize		= Vec3f(radius, radius, length);
-			cDesc.material.mu	= 0.0;
-			cDesc.material.mu0	= 0.0;
+			cDesc.material.mu	= mu;
+			cDesc.material.mu0	= mu0;
 			cDesc.material.e	= 0.0;
 		}
 		for(unsigned int i = 0; i < soNSolids; i++){
