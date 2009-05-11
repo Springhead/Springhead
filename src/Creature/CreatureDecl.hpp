@@ -1014,7 +1014,8 @@ protected:\
 	Vec2d	limitSwing;	\
 	Vec2d	limitTwist;	\
 	double	fMax;	\
-	bool	dynamicalMode;	\
+	double	mu0;	\
+	double	mu;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRDebugLinkBodyDesc*)ptr);	\
@@ -1034,7 +1035,8 @@ public:\
 		limitSwing = ((CRDebugLinkBodyDesc*)ptr)->limitSwing;	\
 		limitTwist = ((CRDebugLinkBodyDesc*)ptr)->limitTwist;	\
 		fMax = ((CRDebugLinkBodyDesc*)ptr)->fMax;	\
-		dynamicalMode = ((CRDebugLinkBodyDesc*)ptr)->dynamicalMode;	\
+		mu0 = ((CRDebugLinkBodyDesc*)ptr)->mu0;	\
+		mu = ((CRDebugLinkBodyDesc*)ptr)->mu;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -1056,7 +1058,8 @@ public:\
 		((CRDebugLinkBodyDesc*)ptr)->limitSwing = limitSwing;	\
 		((CRDebugLinkBodyDesc*)ptr)->limitTwist = limitTwist;	\
 		((CRDebugLinkBodyDesc*)ptr)->fMax = fMax;	\
-		((CRDebugLinkBodyDesc*)ptr)->dynamicalMode = dynamicalMode;	\
+		((CRDebugLinkBodyDesc*)ptr)->mu0 = mu0;	\
+		((CRDebugLinkBodyDesc*)ptr)->mu = mu;	\
 		return true;	\
 	}\
 
