@@ -58,7 +58,7 @@ public:
 		cls* p = DCAST(cls, (Object*)(ObjectIf*)this);				\
 		return p->GetIfInfo();	/* 派生の情報が得られるかも */		\
 	}																\
-	const UTTypeInfo* SPR_CDECL 									\
+	template<> const UTTypeInfo* SPR_CDECL 							\
 		IfInfoImp<cls##If>::GetTypeInfo(){							\
 		return cls::GetTypeInfoStatic();							\
 	}																\
@@ -110,7 +110,7 @@ public:
 	}																				\
 	/*	異型のIfからObjectへの動的変換	*/											\
 	static cls* GetMe(const ObjectIf* p) {											\
-		return (cls*)((Object*)p)->GetBaseAddress(GetTypeInfoStatic());				\
+		return (cls*)(((Object*)p)->GetBaseAddress(GetTypeInfoStatic()));			\
 	}																				\
 	/*	異型のObjectからObjectへの動的変換	*/										\
 	static cls* GetMe(const Object* p) {											\
@@ -288,7 +288,7 @@ class NameManager;
 /**	名前を持つObject型．
 	SDKやSceneに所有される．	*/
 class NamedObject: public Object{
-	SPR_OBJECTDEF(NamedObject);			///<	クラス名の取得などの基本機能の実装
+	SPR_OBJECTDEF(NamedObject);			///<	クラス名の取得などの基本機能の実装.
 protected:
 	friend class ObjectNames;
 	UTString name;					///<	名前

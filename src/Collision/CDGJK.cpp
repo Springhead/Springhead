@@ -21,7 +21,7 @@ static bool bDebug;
 #include "CDDetectorImp.h"
 #include <Foundation/Scene.h>
 #include <fstream>
-#include <windows.h>
+//#include <windows.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -357,7 +357,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 #if 1	//	USERNAME==hase	//	長谷川専用デバッグコード。現在当たり判定Debug中。			
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
-			DebugBreak();
+			//DebugBreak();
 			bDebug = true;
 #endif
 		}

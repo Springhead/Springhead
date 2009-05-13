@@ -24,8 +24,7 @@ PHConstraint::PHConstraint(){
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
-	bArticulated = false;
-	
+	bArticulated = false;	
 }
 
 PHSceneIf* PHConstraint::GetScene() const{
@@ -62,7 +61,7 @@ void PHConstraint::AfterSetDesc(){
 }
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//このクラス内の機能
+//このクラス内の機能.
 void PHConstraint::UpdateState(){
 	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
 	//if(!bArticulated){
@@ -248,7 +247,7 @@ void PHConstraint::IterateLCP(){
 									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 
 		// とりあえず落ちないように間に合わせのコード
-		if (!_finite(fnew[j])) fnew[j] = f[j];
+		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j];
 
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);

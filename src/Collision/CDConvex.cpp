@@ -47,7 +47,8 @@ bool CDConvex::IsBoxInside(const Vec3f& bbmin, const Vec3f& bbmax){
 
 void CDConvex::Analyze(){
 	// ボクセル近似でイナーシャと重心を計算
-	Vec3f bbmin, bbmax;
+	Vec3f bbmin( FLT_MAX,  FLT_MAX,  FLT_MAX);
+	Vec3f bbmax(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 	CalcBBox(bbmin, bbmax, Posed());
 	
 //	g_count = 0;

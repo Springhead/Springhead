@@ -30,7 +30,9 @@
 #include "GRLoadBmp.h"
 #include <iomanip>
 #include <sstream>
+#ifdef _MSC_VER
 #include <io.h>
+#endif
 
 #include <boost/regex.hpp>
 
@@ -649,8 +651,7 @@ void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize
 	unsigned int texId=0;
 
 	char *texbuf = NULL;
-	char *texbuf2 = NULL;
-	int tx=0, ty=0, tz=0, nc=0;
+	int tx=0, ty=0, nc=0;
 
 	GRTexnameMap::iterator it = texnameMap.find(id);
 	if (it != texnameMap.end()) {
@@ -707,7 +708,11 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			fnStr << results.str(1)
 				<< std::setfill('0') << std::setw(results.str(2).length()) << tz
 				<< results.str(3);
+#ifdef _MSC_VER
 			if (_access(fnStr.str().c_str(), 0) != 0) break;
+#else
+#warning not supported for linux
+#endif
 		}
 		//	‰æ‘œƒTƒCƒY‚ð’²‚×‚é
 		int pictureSize;

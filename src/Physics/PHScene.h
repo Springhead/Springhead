@@ -68,7 +68,7 @@ public:
 	~PHScene(){}
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-	//このクラス内での機能
+	//このクラス内での機能.
 	PHEngines*				GetEngines();
 	CDShapeIf*				CreateShape(const IfInfo* ii, const CDShapeDesc& desc);	
 	

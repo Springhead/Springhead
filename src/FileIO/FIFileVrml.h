@@ -5,7 +5,6 @@
 #pragma hdrstop
 #endif
 
-#include "FIFileVRML.h"
 #include <Foundation/UTLoadHandler.h>
 #include <fstream>
 #include <sstream>

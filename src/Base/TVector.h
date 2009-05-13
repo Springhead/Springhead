@@ -462,7 +462,7 @@ public:
 	typedef TYPENAME desc::ret_type ret_type;								\
 	/*	コピーコンストラクタ	*/											\
 	THIS& operator =(const THIS& b){										\
-		assign(b); return *this;											\
+		this->exp().assign(b); return *this;											\
 	}																		\
 	/*  ベクトル b を代入	*/												\
 	template <class D>														\
@@ -493,7 +493,7 @@ public:
 		this->init_buffer(); this->assign(b);}								\
 	/*  要素数が等しい配列 p による初期化	*/								\
 	THIS(const element_type* p){											\
-		assign(p);															\
+		this->assign(p);															\
 	}																		\
 	/*	デフォルトコンストラクタ	*/										\
 	THIS(){ this->init_buffer(); this->set_default(); }			\
@@ -614,7 +614,7 @@ public:
 	template <class D>
 	VVector(const VectorImp<D>& b){
 		init_buffer();
-		assign(b);
+		this->assign(b);
 	}
 	///	
 	~VVector(){

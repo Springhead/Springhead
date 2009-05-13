@@ -15,8 +15,8 @@
 
 
 namespace Spr{ 
-static UTTypeDesc* desc; 
-static UTTypeDesc::Field* field; 
+//static UTTypeDesc* desc; 
+//static UTTypeDesc::Field* field; 
 extern void RegisterTypeDescFoundation(UTTypeDescDb* db);
 
 void SPR_CDECL UTRegisterTypeDescs(){

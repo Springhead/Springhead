@@ -63,7 +63,7 @@ public:													\
 		return GetTypeInfoStatic();						\
 	}													\
 	static const UTTypeInfo* GetTypeInfoStatic();		\
-	virtual void* cls::GetBaseAddress(const UTTypeInfo* to) const;	\
+	virtual void* /*cls::*/GetBaseAddress(const UTTypeInfo* to) const;	\
 
 ///	実行時型情報を持つクラスが持つべきメンバの宣言部．抽象クラス版
 #define DEF_UTTYPEINFOABSTDEF(cls)						\
@@ -72,7 +72,7 @@ public:													\
 		return GetTypeInfoStatic();						\
 	}													\
 	static const UTTypeInfo* GetTypeInfoStatic();		\
-	virtual void* cls::GetBaseAddress(const UTTypeInfo* to) const;	\
+	virtual void* /*cls::*/GetBaseAddress(const UTTypeInfo* to) const;	\
 
 
 ///	実行時型情報を持つクラスが持つべきメンバの実装．

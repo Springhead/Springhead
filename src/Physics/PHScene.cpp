@@ -396,7 +396,7 @@ bool PHScene::DelChildObject(ObjectIf* o){
 		return constraintEngine->DelChildObject(o);
 	PHRayIf* ray = DCAST(PHRayIf, o);
 	if(ray){
-		PHRays::iterator it = find(rays.begin(), rays.end(), ray->Cast());
+		PHRays::iterator it = find(rays.begin(), rays.end(), (PHRay*)ray->Cast());
 		if(it != rays.end()){
 			rays.erase(it);
 			return true;
@@ -483,7 +483,6 @@ void PHRay::Apply(){
 	Vec3f ori, dir;
 	Vec3f point[2];
 	float offset[2];
-	int total = 0;
 	Posed p, pinv;
 
 	hits.clear();

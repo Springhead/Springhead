@@ -272,8 +272,8 @@ public:
 	}
 	virtual bool GetState(void* s) const {
 		PHContactDetectorSt* es = ((PHContactDetectorSt*)s);
-		es->nSolidPair = NSolidPairs();
-		es->nShapePair = NShapePairs();
+		es->nSolidPair = (size_t)NSolidPairs();
+		es->nShapePair = (size_t)NShapePairs();
 		PHSolidPairSt* solidStates = es->SolidStates();
 		CDShapePairSt* shapeStates = es->ShapeStates();
 		//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存
@@ -297,8 +297,8 @@ public:
 	}
 	virtual void SetState(const void* s){
 		PHContactDetectorSt* es = (PHContactDetectorSt*)s;
-		assert(es->nSolidPair == NSolidPairs());
-		assert(es->nShapePair == NShapePairs());
+		assert(es->nSolidPair == (size_t)NSolidPairs());
+		assert(es->nShapePair == (size_t)NShapePairs());
 		PHSolidPairSt* solidStates = es->SolidStates();
 		CDShapePairSt* shapeStates = es->ShapeStates();
 		//	solidPairs.item(i,j)　の i<j部分を使っているのでそこだけ保存

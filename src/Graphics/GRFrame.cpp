@@ -424,7 +424,7 @@ bool GRAnimationController::DelChildObject(ObjectIf* o){
 	GRAnimationSet* ani = o->Cast();
 	if (ani){
 		Sets::iterator it = sets.find(ani->GetName());
-		if (it->second == o->Cast()){
+		if (it->second == ani){
 			sets.erase(it);
 			return true;
 		}

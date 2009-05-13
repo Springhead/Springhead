@@ -9,7 +9,7 @@
 #include <Foundation/Foundation.h>
 #include "FISdk.h"
 #include "FIFileX.h"
-#include "FIFileVRML.h"
+#include "FIFileVrml.h"
 #include "FIFileCOLLADA.h"
 #include "FISpirit.h"
 #include "FISaveContext.h"

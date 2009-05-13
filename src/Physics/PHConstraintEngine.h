@@ -108,8 +108,8 @@ public:
 	virtual void StepPart2();		///< 
 	//virtual void Dynamics(double dt, int ct);		///< 
 	//virtual void Correction(double dt, int ct);		///< 
-	void UpdateSolids();			///< 結果をSolidに反映する
-	void UpdateOnlyVelocity();		///< 結果の速度のみをSolidに反映させ，位置はそのまま．
+	void UpdateSolids(bool bVelOnly);	///< 結果をSolidに反映する. bVelOnly == trueならば結果の速度のみをSolidに反映させ，位置はそのまま．
+	void UpdateOnlyVelocity();			///< obsolete. UpdateSolids(true)を使用のこと
 	void Clear();
 
 	PHConstraints	points;			///< 接触点の配列

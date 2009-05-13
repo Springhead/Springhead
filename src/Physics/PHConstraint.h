@@ -10,6 +10,7 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHContactDetector.h>
+#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 
@@ -57,7 +58,7 @@ public:
 	///コンストラクタ
 	PHConstraint();
 
-	///このクラス内の機能
+	///このクラス内の機能.
 	void		CompJacobian();
 	void		SetupLCP();
 	void		IterateLCP();
@@ -68,7 +69,7 @@ public:
 	void		IterateCorrectionLCP();
 	virtual		PHSceneIf* GetScene() const;
 	
-	///派生クラスの機能
+	///派生クラスの機能.
 	virtual void		 AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
 	virtual void		 SetConstrainedIndex(bool* con){}			///< どの自由度を速度拘束するかを設定
 	virtual void		 SetConstrainedIndexCorrection(bool* con){	///< どの自由度を位置拘束するかを設定
@@ -83,6 +84,8 @@ public:
 	
 	/// インタフェースの実装
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){ assert(0); return PHConstraintDesc::INVALID_CONSTRAINT; }
+	virtual PHSolidIf* GetSocketSolid(){ return solid[0]->Cast(); }
+	virtual PHSolidIf* GetPlugSolid(){ return solid[1]->Cast(); }
 	virtual void GetSocketPose(Posed& pose){pose = poseSocket;}
 	virtual void SetSocketPose(const Posed& pose){
 		poseSocket = pose;
@@ -115,7 +118,6 @@ protected:
 };
 
 class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject{
-	
 public:
 	SPR_OBJECTDEF(PHConstraints);
 	virtual PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){

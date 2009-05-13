@@ -4,15 +4,24 @@
 # include <windows.h>
 # include <io.h>
 # include <direct.h>
+#else
+# include <string.h>
+# ifdef __CYGWIN__
+# include <sys/unistd.h>
+# else
+# include <unistd.h>
+# endif
 #endif
 
 namespace Spr {;
 void UTPath::Path(UTString p){
+#ifdef _MSC_VER
 	for(unsigned i=0; i<p.length(); ++i){
 		if (p[i] == '/'){
 			p[i] = '\\';
 		}
 	}
+#endif
 	path = p;
 }
 bool UTPath::Search(UTString file){
@@ -32,35 +41,45 @@ bool UTPath::Search(UTString file){
 	return true;
 }
 UTString UTPath::File(){
+#ifdef _MSC_VER		
 	char buf[1024];
 	char buf2[1024];
-#ifdef _MSC_VER		
 	_splitpath(path.c_str(), NULL, NULL, buf, buf2);
-#else
-
-#endif	
 	UTString file = buf;
 	file += buf2;
 	return file;
+#else
+	const char* pos = strrchr(path.c_str(), '/');
+	if(pos == NULL)
+	  return path;
+	return UTString(++pos);
+#endif
 }
 UTString UTPath::Main(){
-	char buf[1024];
 #ifdef _MSC_VER			
+	char buf[1024];
 	_splitpath(path.c_str(), NULL, NULL, buf, NULL);
-#else
-
-#endif		
 	UTString m = buf;
 	return m;
+#else
+	UTString file = File();
+	const char* pos = strrchr(file.c_str(), '.');
+	if(pos == NULL)
+	  return file;
+	return UTString(file.c_str(), pos);
+#endif
 }
 UTString UTPath::Ext(){
-	char buf[1024];
 #ifdef _MSC_VER				
+	char buf[1024];
 	_splitpath(path.c_str(), NULL, NULL, NULL, buf);
-#else
-
-#endif			
 	return UTString(buf);
+#else
+	const char* pos = strrchr(path.c_str(), '.');
+	if(pos == NULL)
+	  return UTString("");
+	return UTString(pos);
+#endif
 }
 UTString UTPath::Drive(){
 	if (path.length() >=2 && path[0]=='\\' && path[1]=='\\'){
@@ -77,14 +96,20 @@ UTString UTPath::Drive(){
 	}
 }
 UTString UTPath::Dir(){
-	if ((path.length() >=2 && path[0]=='\\' && path[1]=='\\')
+  char delim;
+#ifdef _MSC_VER
+  delim = '\\';
+#else
+  delim = '/';
+#endif
+	if ((path.length() >=2 && path[0]==delim && path[1]==delim)
 		|| (path.length() >=2 && path[1]==':')){
-		int b = path.find('\\', 2);
-		int e = path.find_last_of('\\');
+		int b = path.find(delim, 2);
+		int e = path.find_last_of(delim);
 		if (e == (int)path.npos) return "";
 		return path.substr(b, e-b+1);
 	}else{
-		int e = path.find_last_of('\\');
+		int e = path.find_last_of(delim);
 		if (e == (int)path.npos) return "";
 		return path.substr(0, e+1);
 	}
@@ -93,18 +118,20 @@ UTString UTPath::GetCwd(){
 	char buf[1024];
 #ifdef _MSC_VER		
 	GetCurrentDirectory(sizeof(buf), buf);
-#else	
-	
-#endif	
 	UTString rv(buf);
-	rv += "\\";
+	rv += '\\';
+#else	
+	getcwd(buf, sizeof(buf));
+	UTString rv(buf);
+	rv += '/';
+#endif	
 	return rv;
 }
 bool UTPath::SetCwd(UTString cwd){
 #ifdef _MSC_VER		
 	return SetCurrentDirectory(cwd.c_str())!=0;
 #else		
-	return false;
+	return (chdir(cwd.c_str()) == 0);
 #endif		
 }
 UTString UTPath::FullPath(){

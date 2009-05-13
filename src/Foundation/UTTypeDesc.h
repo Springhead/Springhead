@@ -138,12 +138,12 @@ public:
 		void AddEnumConst(std::string name, int val);
 		void AddEnumConst(std::string name);
 		///	フィールドのアドレスを計算
-		const void* UTTypeDesc::Field::GetAddress(const void* base, int pos);
-		void* UTTypeDesc::Field::GetAddress(void* base, int pos){
+		const void* /*UTTypeDesc::Field::*/GetAddress(const void* base, int pos);
+		void* /*UTTypeDesc::Field::*/GetAddress(void* base, int pos){
 			return (void*)GetAddress((const void*)base, pos); 
 		}
 		///	フィールドのアドレスを計算．vectorを拡張する．
-		void* UTTypeDesc::Field::GetAddressEx(void* base, int pos);
+		void* /*UTTypeDesc::Field::*/GetAddressEx(void* base, int pos);
 		///	フィールドがstd::vectorの場合，vector::size() を呼び出す．
 		size_t VectorSize(const void * base){ 
 			return type->access->VectorSize(((char*)base)+offset); 
@@ -202,10 +202,9 @@ public:
 	friend class UTTypeDescDb;
 public:
 	///	コンストラクタ
-	UTTypeDesc():size(0), ifInfo(NULL), bPrimitive(false){}
+	UTTypeDesc():size(0), bPrimitive(false), ifInfo(NULL){}
 	///	コンストラクタ
-	UTTypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), 
-		ifInfo(NULL), bPrimitive(false){}
+	UTTypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), bPrimitive(false), ifInfo(NULL){}
 	///	
 	virtual ~UTTypeDesc(){}
 	///

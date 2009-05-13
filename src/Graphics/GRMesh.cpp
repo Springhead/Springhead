@@ -7,7 +7,7 @@
  */
 #include "Graphics.h"
 #include "GRMesh.h"
-#include <gl/glut.h>
+#include <GL/glut.h>
 
 
 namespace Spr{;
@@ -217,7 +217,7 @@ void GRMesh::DrawBuffer(void* vtx){
 			unsigned from=0, to=0;
 			for(; to<originalFaceIds.size(); ++to){
 				if (originalFaceIds[to] >= materialList.size()) continue;
-				if (materialList[originalFaceIds[to]] == i) continue;
+				if (materialList[originalFaceIds[to]] == (int)i) continue;
 				if (from < to){
 					render->DrawIndexed(GRRenderIf::TRIANGLES, 
 						&*faces.begin() + 3*from, vtx, (to-from)*3);

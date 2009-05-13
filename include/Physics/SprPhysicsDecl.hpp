@@ -62,6 +62,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKHingeJointIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintIf(base)	\
+	PHSolidIf* GetSocketSolid(){	return	base::GetSocketSolid();}	\
+	PHSolidIf* GetPlugSolid(){	return	base::GetPlugSolid();}	\
 	Spr::PHSceneIf* GetScene()const{	return	base::GetScene();}	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\

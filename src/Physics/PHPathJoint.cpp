@@ -125,8 +125,8 @@ void PHPath::CompJacobian(){
 		v = pd.Pos();
 		qd = pd.Ori();
 		w = (it->pose.Ori()).AngularVelocity(qd);		//1/2 * w * q = qd		=> 2 * qd * q~ = w
-		it->J.row(5).sub_vector(PTM::TSubVectorDim<0, 3>()) =  v;
-		it->J.row(5).sub_vector(PTM::TSubVectorDim<3, 3>()) =  w;
+		it->J.row(5).SUBVEC(0,3) =  v;
+		it->J.row(5).SUBVEC(3,3) =  w;
 		//double ninv = 1.0 / it->J.row(5).norm();
 		//it->J.row(5).unitize();// *= ninv;
 		Orthogonalize(it->J);
