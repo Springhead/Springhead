@@ -34,9 +34,28 @@ public:
 	std::string face;		///<	タイプフェイス
 	unsigned long color;	///<	フォントの色
 	bool bItalic;			///<	イタリック体
-	GRFont(int h=20, const char* f=NULL);
+	GRFont(int h=20, const char* f=NULL){
+		height=h;
+		face=f ? f : "";
+		weight = 400; color=0xffffffff; bItalic=false;
+	}
 	void SetColor(unsigned long c){ color = c; }
-	bool operator < (GRFont& f);
+	bool operator < (GRFont& f){
+		if (face < f.face) return true;
+		if (height < f.height) return true;
+		if (color < f.color) return true;
+		return false;
+	}
+	GRFont& operator=(const GRFont& rhs) {
+		if (this==&rhs)	return *this;
+		height	= rhs.height;
+		width	= rhs.width;
+		weight	= rhs.weight;
+		face	= rhs.face;
+		color	= rhs.color;
+		bItalic	= rhs.bItalic;
+		return *this;
+	}
 };
 	
 /** @brief 光源のインタフェース		*/

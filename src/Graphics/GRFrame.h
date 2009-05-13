@@ -78,7 +78,7 @@ public:
 class GRAnimation: public SceneObject, public GRAnimationDesc{
 public:
 	SPR_OBJECTDEF(GRAnimation);
-	GRAnimation(GRAnimationDesc& d = GRAnimationDesc()){}
+	GRAnimation(const GRAnimationDesc& d = GRAnimationDesc()){}
 	///
 	struct Target{
 		GRFrameIf* target;
@@ -106,7 +106,7 @@ class GRAnimationSet: public SceneObject{
 
 public:
 	SPR_OBJECTDEF(GRAnimationSet);
-	GRAnimationSet(GRAnimationSetDesc& d = GRAnimationSetDesc()){}
+	GRAnimationSet(const GRAnimationSetDesc& d = GRAnimationSetDesc()){}
 	///	子オブジェクト(animations)を返す
 	ObjectIf* GetChildObject(size_t p);
 	///	GRAnimationの追加

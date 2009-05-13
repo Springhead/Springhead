@@ -12,7 +12,9 @@
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
 #include <sstream>
+#ifdef _MSC_VER
 #include <windows.h>
+#endif
 
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -117,7 +119,9 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 		std::stringstream gameMode;
 		gameMode << d.width << "x" << d.height << ":32@60";
 		glutGameModeString(gameMode.str().c_str());
+#ifdef _MSC_VER
 		Sleep(100);
+#endif
 		wid	= glutEnterGameMode();
 	}else{				//< ウィンドウモードの場合の生成
 		if (d.parentWindow){
@@ -136,7 +140,7 @@ FWWin* FWAppGLUT::CreateWin(const FWWinDesc& d){
 	glutKeyboardFunc(FWAppGLUT::GlutKeyboardFunc);
 	glutMouseFunc(FWAppGLUT::GlutMouseFunc);
 	glutMotionFunc(FWAppGLUT::GlutMotionFunc);
-	int pollInterval = 0.01;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
+	int pollInterval = 10;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
 	glutJoystickFunc(FWAppGLUT::GlutJoystickFunc, pollInterval);
 	
 	FWWin* win = DBG_NEW FWWinGLUT(wid, d, fwSdk->CreateRender());

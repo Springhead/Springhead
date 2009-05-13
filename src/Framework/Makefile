@@ -15,29 +15,32 @@ TARGET_LIB	:= lib$(TARGET_NAME).a
 
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
-	
+
 
 ################################################################
 #	build management
 ################################################################
 
-all: $(TARGET_LIB)
+all: swig $(TARGET_LIB)
+
+swig:
+	runswigframework
 
 $(TARGET_LIB): $(OBJS)
 		-$(RM) $@
 		$(AR) $(ARFLAGS) $@ $(OBJS)	
 		$(RANLIB) $@
-	
+
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-			
+
 clean:
 	-$(RM) $(OBJS) $(TARGET_LIB)
-	
+
 realclean: clean
 	-$(RM) $(REALCLEAN_TARGET)
-	
-			
+
+
 ################################################################
 #	THE END
 ################################################################

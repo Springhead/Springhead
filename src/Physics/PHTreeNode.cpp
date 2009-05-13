@@ -234,8 +234,9 @@ void PHTreeNode::UpdatePosition(double dt){
 	SpatialTransform Xp(sp->GetCenterPosition(), sp->GetOrientation());
 	SpatialTransform Xc = Xcp * Xp;
 	Xc.q.unitize();
-	s->SetCenterPosition(Xc.r);
+	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
 	s->SetOrientation(Xc.q);
+	s->SetCenterPosition(Xc.r);
 	s->SetUpdated(true);
 	
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)

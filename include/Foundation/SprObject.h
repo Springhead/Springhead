@@ -91,7 +91,7 @@ public:
 	///	子オブジェクトを生成するクラス(ファクトリー)
 	Factories factories;
 	///	コンストラクタ
-	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):className(cn), baseList(bl), objInfo(o){id = ++maxId;}
+	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):baseList(bl), objInfo(o), className(cn){id = ++maxId;}
 	///	デストラクタ
 	virtual ~IfInfo() {};
 	///	クラス名

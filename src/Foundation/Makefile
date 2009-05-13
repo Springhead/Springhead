@@ -19,29 +19,33 @@ FILTEROUT	= \
 SRCS		= $(wildcard *.cpp)
 SRCS		:= $(filter-out $(FILTEROUT), $(SRCS))
 OBJS 		= ${SRCS:.cpp=.o}
-	
+
 
 ################################################################
 #	build management
 ################################################################
 
-all: $(TARGET_LIB)
+all: swig $(TARGET_LIB)
+
+swig:
+	$(TOP_DIR)/src/Foundation/runswig Foundation
+
 
 $(TARGET_LIB): $(OBJS)
 		-$(RM) $@
 		$(AR) $(ARFLAGS) $@ $(OBJS)	
 		$(RANLIB) $@
-	
+
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
-			
+
 clean:
-	-$(RM) $(OBJS) $(TARGET_LIB)
-	
+	-$(RM) $(OBJS) $(TARGET_LIB) $(TARGET_NAME)Stub.cpp
+
 realclean: clean
 	-$(RM) $(REALCLEAN_TARGET)
-	
-			
+
+
 ################################################################
 #	THE END
 ################################################################

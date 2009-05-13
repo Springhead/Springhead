@@ -41,6 +41,8 @@ public:
 	double GetPhysicTimeStep();
 	HIForceInterface6DIf* GetHumanInterface();
 	int GetLoopCount();
+
+	virtual ~FWHapticBase(){}
 };
 
 }

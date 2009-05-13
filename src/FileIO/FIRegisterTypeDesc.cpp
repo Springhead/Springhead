@@ -12,8 +12,8 @@
 #endif
 
 using namespace Spr;
-static UTTypeDesc* desc; 
-static UTTypeDesc::Field* field; 
+//static UTTypeDesc* desc; 
+//static UTTypeDesc::Field* field; 
 
 
 namespace Spr{ 

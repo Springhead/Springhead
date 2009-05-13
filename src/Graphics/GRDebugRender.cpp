@@ -348,16 +348,16 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	DrawAxis(solid);
 	// x
 	SetMaterialSample(GRDebugRenderIf::RED);
-	PushModelMatrix();
-	MultModelMatrix(Affinef::Rot(0.5f*M_PI, 'y'));
+	this->PushModelMatrix();
+	this->MultModelMatrix(Affinef::Rot(0.5f*M_PI, 'y'));
 	DrawAxis(solid);
-	PopModelMatrix();
+	this->PopModelMatrix();
 	// y
 	SetMaterialSample(GRDebugRenderIf::GREEN);
-	PushModelMatrix();
-	MultModelMatrix(Affinef::Rot(-0.5f*M_PI, 'x'));
+	this->PushModelMatrix();
+	this->MultModelMatrix(Affinef::Rot(-0.5f*M_PI, 'x'));
 	DrawAxis(solid);
-	PopModelMatrix();	
+	this->PopModelMatrix();	
 #else
 	// ” ‚Å•\Œ»
 	double length=0.5, width=length/10.0;

@@ -93,6 +93,14 @@ struct PHSceneIf;
 struct PHConstraintIf : public SceneObjectIf{
 	SPR_IFDEF(PHConstraint);
 
+	/** @brief ソケット側の剛体を取得する
+	 */
+	PHSolidIf* GetSocketSolid();
+
+	/** @brief プラグ側の剛体を取得する
+	 */
+	PHSolidIf* GetPlugSolid();
+
 	/** @brief 所属するシーンの取得	 */
 	PHSceneIf* GetScene() const;
 

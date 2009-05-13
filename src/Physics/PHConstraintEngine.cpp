@@ -440,14 +440,15 @@ void PHConstraintEngine::IterateCorrectionLCP(){
 	}
 }
 
-void PHConstraintEngine::UpdateSolids(){
+void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	double dt = GetScene()->GetTimeStep();
 
 	// ツリーに属さない剛体の更新
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
 		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
 			(*is)->UpdateVelocity(dt);
-			(*is)->UpdatePosition(dt);
+			if(!bVelOnly)
+				(*is)->UpdatePosition(dt);
 			(*is)->SetUpdated(true);
 		}
 	}
@@ -455,25 +456,14 @@ void PHConstraintEngine::UpdateSolids(){
 	// ツリーに属する剛体の更新
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 		(*it)->UpdateVelocity(dt);
-		(*it)->UpdatePosition(dt);
+		if(!bVelOnly)
+			(*it)->UpdatePosition(dt);
 	}
 }
 
+// ほとんど同じ処理のためフラグ処理にしました．aliasしてますがobsoleteとします tazz
 void PHConstraintEngine::UpdateOnlyVelocity(){
-	double dt = GetScene()->GetTimeStep();
-
-	// ツリーに属さない剛体の更新
-	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
-		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
-			(*is)->UpdateVelocity(dt);
-			(*is)->SetUpdated(true);
-		}
-	}
-
-	// ツリーに属する剛体の更新
-	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
-		(*it)->UpdateVelocity(dt);	
-	}
+	UpdateSolids(true);
 }
 
 #ifdef REPORT_TIME
@@ -540,8 +530,7 @@ void PHConstraintEngine::StepPart2(){
 	SetupCorrectionLCP();
 	IterateCorrectionLCP();
 	//位置・速度の更新
-	if(bUpdateAllState) UpdateSolids();	
-	else UpdateOnlyVelocity();
+	UpdateSolids(!bUpdateAllState);
 }
 	
 void PHConstraintEngine::Step(){

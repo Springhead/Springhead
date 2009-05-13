@@ -57,7 +57,7 @@ public:
 	///	z成分
 	const element_type& Z() const { return z; }
 	///
-	const vector_type& V() const {return sub_vector(vector_type());}
+	const vector_type& V() const {return this->sub_vector(vector_type());}
 
 	///	z成分
 	element_type& W(){ return w; }
@@ -68,7 +68,7 @@ public:
 	///	z成分
 	element_type& Z(){ return z; }
 	/// 
-	vector_type& V() {return sub_vector(1,vector_type());}
+	vector_type& V() {return this->sub_vector(1,vector_type());}
 	/// 回転ベクトル．0..PIの範囲で回転ベクトルを返す．
 	TVec3<ET> RotationHalf() {
 		TQuaternion<ET> tmp;
@@ -86,13 +86,13 @@ public:
 		return r;
 	}
 	///	回転ベクトル2． 0..2PIの範囲で回転ベクトルを返す．	angle から関数名変更
-	TVec3<ET> Rotation() {
+	TVec3<ET> Rotation(){
 		//	W() = cos(theta/2) なので
 		TVec3<ET> r;
 		if (W() < -1) W() = -1;
 		if (W() > 1) W() = 1;
 		ET theta = (ET)( acos(W()) * 2 );
-		r = sub_vector(1, vector_type());
+		r = this->sub_vector(1, vector_type());
 		ET len = r.norm();
 		if (len > 1e-20){
 			r = r/len;
@@ -102,7 +102,7 @@ public:
 	}
 
 	/// 回転軸
-	TVec3<ET> Axis(){
+	TVec3<ET> Axis()const{
 		TVec3<ET> r;
 		r = sub_vector(1, vector_type());
 		ET len = r.norm();
@@ -118,7 +118,7 @@ public:
 	}
 
 	/// 回転角度 (angleに関数名を変更する予定)
-	ET Theta(){
+	ET Theta()const{
 		/// 数値誤差でWが1.0を上回るとエラーする場合がある
 		double w = W();
 		w = min(w,  1.0);
@@ -213,7 +213,7 @@ public:
 		heading, attitude, bankの呼び名は、車が右を向いている場合を考えると、
 		納得いくと思います。
 	*/
-	template <class VET> void ToEuler(TVec3<VET>& v){
+	template <class VET> void ToEuler(TVec3<VET>& v)const{
 		ET poleCheck = X()*Y() + Z()*W();
 		VET& heading = v[0];
 		VET& attitude = v[1];
@@ -249,8 +249,7 @@ public:
 		Z() = c1*s2*c3 - s1*c2*s3;
 	}
 	///lhsを回転してrhsに一致させるクウォータニオン
-	void RotationArc(const TVec3<ET>& lhs, const TVec3<ET>& rhs)
-	{
+	void RotationArc(const TVec3<ET>& lhs, const TVec3<ET>& rhs){
 		TVec3<ET> v0, v1, c;
 		ET d, s;
 		v0 = lhs.unit();
@@ -291,7 +290,7 @@ public:
 		ただしwは回転元（ワールド）座標系から見た回転先（ローカル）座標系の角速度を
 		回転元座標系で表わしたもの．
 	 */
-	TQuaternion<ET> Derivative(const TVec3<ET>& w){
+	TQuaternion<ET> Derivative(const TVec3<ET>& w)const{
 		return 0.5 * TQuaternion<ET>(0.0, w.X(), w.Y(), w.Z()) * *this;
 	}
 
@@ -303,7 +302,7 @@ public:
 		ただしwは回転元（ワールド）座標系から見た回転先（ローカル）座標系の角速度を
 		回転元座標系で表わしたもの．
 	 */
-	TVec3<ET> AngularVelocity(const TQuaternion<ET>& qd){
+	TVec3<ET> AngularVelocity(const TQuaternion<ET>& qd)const{
 		return 2.0 * (qd * Conjugated()).V();
 	}
 
@@ -440,8 +439,8 @@ public:
 	///	要素のアクセス
 	TVec3<ET>& Pos() { return *(TVec3<ET>*)(data+4); }
 	const TVec3<ET>& Pos() const { return *(TVec3<ET>*)(data+4); }
-	TQuaternion<ET>& Ori() { return *(TQuaternion<ET>*)(data); }
-	const TQuaternion<ET>& Ori() const { return *(TQuaternion<ET>*)(data); }
+	TQuaternion<ET>& Ori() { return *(TQuaternion<ET>*)(void*)(data); }
+	const TQuaternion<ET>& Ori() const { return *(TQuaternion<ET>*)(void*)(data); }
 	ET& W(){return w;}
 	const ET& W() const{return w;}
 	ET& X(){return x;}

@@ -24,7 +24,7 @@ RM				= rm -rf
 # ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
 LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/  
-LDFLAGS.GL 		= -lglut32 -lglu32 -lglew32 -lopengl32  -lm
+LDFLAGS.GL 		= -lglut32 -lglu32 -lglew32 -lopengl32 -lboost_regex -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
 ARFLAGS			= r

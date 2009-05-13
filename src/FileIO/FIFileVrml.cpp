@@ -34,7 +34,7 @@ static void OnBeginProto(const char* first, const char* last){
 	protoInfoStack.Push(TProtoInfo());
 	protoInfoStack.Top().protoId= std::string(first, last);
 }
-static void OnEndProto(const char* first, const char* last){
+/*static */void OnEndProto(const char* first, const char* last){
 	DSTR << "endProto" << std::endl;
 	TProtoInfo info= protoInfoStack.Top();
 	protoInfoStack.Pop();

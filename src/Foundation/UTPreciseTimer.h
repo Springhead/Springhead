@@ -35,7 +35,7 @@ public:
 	int CountUS();					///< 前回からの経過時間をus単位で計測
 	void CountAndWaitUS(int time);	///< 前回からの経過時間をus単位で計測し，全体としてus単位で待つ（一定ループ生成用）
 	
-	/// ストップウォッチ機能
+	/// ストップウォッチ機能.
 	unsigned long Start();	///< 計測開始，開始時間（stopWatchの値）をus単位で返す
 	unsigned long Stop();	///< 計測停止，経過時間（stopWatchの値）をus単位で返す
 	unsigned long Clear();	///< クリア，stopWatchを0にする

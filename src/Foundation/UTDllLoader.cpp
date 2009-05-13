@@ -3,6 +3,7 @@
 #endif
 #include "UTDllLoader.h"
 #include <Base/BaseDebug.h>
+#include <stdlib.h>
 #ifdef _WIN32	
 # include <Windows.h>
 #else
@@ -63,15 +64,17 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	if (addPathIn) strcpy(addPath, addPathIn);
 	if (module && !dllNameIn && !addPathIn) return true;
 	Cleanup();
-	char dll[1024*10];
+	const size_t len = 1024*10;
+	char dll[len];
+	char path[len];
+	char pathOrg[len];
+	char pathNew[len];
+	
 	if(!GetEnv(dll, dllName)) return false;
-	char path[1024*20];
 	if(!GetEnv(path, addPath)) return false;
-	char pathOrg[1024*10];
-	GetEnvironmentVariable("PATH", pathOrg, 1024*20);
-	strcat(path, ";");
-	strcat(path, pathOrg);
-	SetEnvironmentVariable("PATH", path);
+	sprintf(pathOrg, "PATH=%s", getenv("PATH"));
+	sprintf(pathNew, "PATH=%s;%s", path, getenv("PATH"));
+	putenv(pathNew);
 
 #ifdef _WIN32	
 	module = LoadLibrary(dll);
@@ -92,7 +95,7 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	}else{
 		DSTR << "Unable to load '" << dllName << "'." << std::endl;
 	}
-	SetEnvironmentVariable("PATH", pathOrg);
+	putenv(pathOrg);
 
 	return module != NULL;
 }

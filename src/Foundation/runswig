@@ -1,0 +1,63 @@
+#!/bin/bash
+
+if [ -f AccessDesc*.h ]; then
+	rm -f AccessDesc*.h
+fi
+if [ -f TypeDesc*.h ]; then
+	rm -f TypeDesc*.h
+fi
+if [ -f MakeTypeDesc*.txt ]; then
+	rm -f MakeTypeDesc*.txt
+fi
+
+topdir="../.."
+
+SWIG_LIB=$topdir/bin/swig/Lib
+export SWIG_LIB
+
+target="$9 $8 $7 $6 $5 $4 $3 $2 $1"
+module=$1
+makefile="${module}Stub.mak.txt"
+
+srcintf=
+for p in $target 
+do
+  srcintf="$srcintf ../../include/$p/*.h"
+done
+
+srcimp=
+for p in $target 
+do
+  srcimp="$srcimp ../$p/*.h"
+done
+
+echo interface files: $srcintf
+echo src files: $srcimp
+
+echo "#	Do not edit. RunSwig.bat will update this file." > $module.i
+echo "%module ${module}" >> $module.i
+echo "%include \"../../include/Springhead.h\"" >> $module.i
+echo "%include \"../../include/Base/Env.h\"" >> $module.i
+
+for p in $srcintf
+do
+  echo "%include \"$p\"" >> $module.i
+done
+
+echo "%include \"../../src/Base/BaseDebug.h\"" >> $module.i
+echo "%include \"../../src/Foundation/UTTypeDesc.h\"" >> $module.i
+
+for p in $srcimp
+do
+  echo "%include \"$p\"" >> $module.i
+done
+
+echo "#	Do not edit. RunSwig.bat will update this file." > $makefile
+echo "all: ${module}Stub.cpp" >> $makefile
+echo "${module}Stub.cpp: $srcintf $srcimp" >> $makefile
+echo "	${topdir}/bin/swig/swig -spr -w312,401,402 -DSWIG_${module} -c++ -v ${module}.i" >> $makefile
+echo "	cp Spr${module}Decl.hpp ../../include/${module}" >> $makefile
+
+make -f$makefile
+
+

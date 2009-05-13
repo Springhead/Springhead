@@ -818,32 +818,32 @@ protected:
 	/*  s—ñ b ‚ğ‘ã“ü	*/													\
 	template <class B>														\
 	THIS& operator =(const PTM::MatrixImp<B>& b){							\
-		assign(b); return *this;											\
+		this->assign(b); return *this;										\
 	}																		\
 	THIS& operator =(const THIS& b){										\
-		assign(b); return *this;											\
+		this->assign(b); return *this;										\
 	}																		\
 	/**	+=‰‰Zq(*this = *this + b).										\
 		@param	b	ŸŒ³‚ª“™‚µ‚¢s—ñ	*/									\
 	template <class B>														\
 	this_type& operator +=(const PTM::MatrixImp<B>& b){						\
-		add(b); return *this;												\
+		this->add(b); return *this;											\
 	}																		\
 	/**	-=‰‰Zq(*this = *this - b). @param	b	ŸŒ³‚ª“™‚µ‚¢s—ñ	*/		\
 	template <class B>														\
 	this_type& operator -=(const PTM::MatrixImp<B>& b){						\
-		sub(b); return *this;												\
+		this->sub(b); return *this;											\
 	}																		\
 	/**	- ‰‰Zq (return -*this).	*/										\
 	ret_type operator- () { ret_type r(*this); r*=-1; return r; }			\
 	/**	*=‰‰Zq(*this = b * *this). @param	b	—v‘fŒ^	*/					\
 	this_type operator*= (element_type b){									\
-		multi(b);															\
+		this->multi(b);														\
 		return *this;														\
 	}																		\
 	/**	/=‰‰Zq(*this = *this / b). @param	b	—v‘fŒ^	*/					\
 	this_type operator/= (element_type b){									\
-		div(b);																\
+		this->div(b);														\
 		return *this;														\
 	}																		\
 

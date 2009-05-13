@@ -59,7 +59,7 @@ public:	// protectedでよいが互換性のため一時的に
 	UTRef<GRRenderIf>	render;
 	UTRef<FWSceneIf>	scene;
 
-	FWWin(int wid, const FWWinDesc& d, GRRenderIf* r):id(wid), FWWinDesc(d), render(r){}
+	FWWin(int wid, const FWWinDesc& d, GRRenderIf* r):FWWinDesc(d), id(wid), render(r){}
 public:
 	virtual void Position(int left, int top){}
 	virtual void Reshape(int width, int height){}
@@ -77,6 +77,7 @@ public:
 	FWSceneIf*  GetScene(){ return scene; }
 	void		SetScene(FWSceneIf* s){ scene = s; }
 
+	virtual ~FWWin(){}
 };
 typedef FWWinDesc FWAppGLUTDesc;
 
@@ -111,7 +112,7 @@ protected:
 		void UpdateView();
 	} cameraInfo;
 
-	/// 剛体ドラッグ機能
+	/// 剛体ドラッグ機能.
 	struct DragInfo{
 		PHRayIf* ray;			/// カーソル下の剛体を特定するためのPHRay
 		PHSolidIf* cursor;		/// カーソル剛体

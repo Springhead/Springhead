@@ -7,7 +7,7 @@
  */
 
 #include <Framework/FWHapticBase.h>
-#include <conio.h>
+//#include <conio.h>
 #include <HumanInterface/SprHIDRUsb.h>
 
 #ifdef USE_HDRSTOP

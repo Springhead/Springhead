@@ -16,9 +16,9 @@ namespace Spr{
 
 //----------------------------------------------------------------------------
 //	PHFrame
-PHFrame::PHFrame():shape(NULL), solid(NULL){
+PHFrame::PHFrame():solid(NULL), shape(NULL){
 }
-PHFrame::PHFrame(const PHFrameDesc& desc):PHFrameDesc(desc), shape(NULL), solid(NULL){
+PHFrame::PHFrame(const PHFrameDesc& desc):PHFrameDesc(desc), solid(NULL), shape(NULL){
 }
 
 ObjectIf* PHFrame::GetChildObject(size_t pos){
@@ -199,8 +199,9 @@ void PHSolid::UpdateVelocity(double dt){
 }
 void PHSolid::UpdatePosition(double dt){
 	if(IsFrozen())return;
-	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
+	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
+	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
 	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
 }
