@@ -103,11 +103,7 @@ public:
 	}
 
 	/// ‰ñ“]Ž²
-<<<<<<< .mine
-	TVec3<ET> Axis() const{
-=======
 	TVec3<ET> Axis()const{
->>>>>>> .r3858
 		TVec3<ET> r;
 		r = sub_vector(1, vector_type());
 		ET len = r.norm();
