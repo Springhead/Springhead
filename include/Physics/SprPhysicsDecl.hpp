@@ -322,6 +322,7 @@
 	bool IsDynamical(){	return	base::IsDynamical();}	\
 	void SetFrozen(bool bOn){	base::SetFrozen(bOn);}	\
 	bool IsFrozen(){	return	base::IsFrozen();}	\
+	Spr::PHTreeNodeIf* GetTreeNode(){	return	base::GetTreeNode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHShapePairForLCPIf(base)	\
 	int NSectionVertexes(){	return	base::NSectionVertexes();}	\

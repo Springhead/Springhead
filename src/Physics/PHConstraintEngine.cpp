@@ -261,6 +261,8 @@ PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTre
 	node->AddChildObject(joint->Cast());
 	parent->AddChildObject(node->Cast());
 
+	node->Enable(parent->IsEnabled());
+
 	return node;
 }
 

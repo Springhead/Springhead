@@ -120,8 +120,8 @@ protected:
 	///	積分方式
 	PHIntegrationMode integrationMode;
 
-	//オイラーの運動方程式
-	//慣性行列は対角行列を前提．
+	/// オイラーの運動方程式
+	/// 慣性行列は対角行列を前提．
 	Vec3d	Euler(const Matrix3d& I, const Vec3d& t, const Vec3d& w){
 		return Vec3d(
 			(t[0] - (I[2][2] - I[1][1]) * w.Y() * w.Z()) / I[0][0],
@@ -133,14 +133,14 @@ public:
 	//@{
 	PHScene*	scene;
 	PHConstraintEngine* engine;
-	PHTreeNode*	treeNode;	/// 関節系を構成している場合の対応するノード
+	PHTreeNode*	treeNode;	///< 関節系を構成している場合の対応するノード
 	double		minv;		///< 質量の逆数
 	Matrix3d	Iinv;		///< 慣性行列の逆行列
 	SpatialVector f;		///< ローカル座標での外力
-	SpatialVector v;		/// ローカル座標での現在の速度
-	//Vec3d		dv0, dw0;	/// 拘束力以外の外力による速度変化量
-	SpatialVector dv;		/// 拘束力による速度変化量
-	SpatialVector dV;		/// Correctionによる移動量，回転量
+	SpatialVector v;		///< ローカル座標での現在の速度
+	//Vec3d		dv0, dw0;	///< 拘束力以外の外力による速度変化量
+	SpatialVector dv;		///< 拘束力による速度変化量
+	SpatialVector dV;		///< Correctionによる移動量，回転量
 	void UpdateCacheLCP(double dt);
 	//void SetupCorrection();
 	void UpdateVelocity(double dt);
@@ -288,8 +288,9 @@ public:
 	bool		IsDynamical(){return dynamical;}
 	void		SetFrozen(bool bOn){bFrozen = bOn;}
 	bool		IsFrozen(){return bFrozen;}
+	PHTreeNodeIf* GetTreeNode();
 
-		ACCESS_DESC_STATE_PRIVATE(PHSolid);
+	ACCESS_DESC_STATE_PRIVATE(PHSolid);
 
 protected:
 	virtual void AfterSetDesc();

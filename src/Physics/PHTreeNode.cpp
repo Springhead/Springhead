@@ -104,6 +104,10 @@ void PHTreeNode::ResetGearNode(){
 
 void PHTreeNode::CompSpatialTransform(){
 	Xcp = joint->Xj[1].inv() * joint->Xjrel * joint->Xj[0];
+	//DSTR << (Posed&)joint->Xj[0] << std::endl;
+	//DSTR << (Posed&)joint->Xj[1] << std::endl;
+	//DSTR << (Posed&)joint->Xjrel << std::endl;
+	DSTR << std::endl;
 	Xcj = joint->Xj[1].inv() * SpatialTransform(Vec3d(), joint->Xjrel.q);
 }
 

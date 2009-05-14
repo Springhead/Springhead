@@ -439,7 +439,12 @@ void PHSolid::CompInertia(){
 		CDConvex::OffsetInertia(center - frames[i]->pose * frames[i]->center, offset);
 		inertia += R * frames[i]->inertia * R.trans() + (float)frames[i]->mass * offset;
 	}
+}
 
+PHTreeNodeIf* PHSolid::GetTreeNode(){
+	if(treeNode)
+		return treeNode->Cast();
+	return NULL;
 }
 
 //----------------------------------------------------------------------------

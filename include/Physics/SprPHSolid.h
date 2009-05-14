@@ -55,6 +55,8 @@ struct PHSolidDesc: public PHSolidState{
 };
 
 struct CDShapeIf; 
+struct PHTreeNodeIf;
+
 ///	剛体のインタフェース
 struct PHSolidIf : public SceneObjectIf{
 	SPR_IFDEF(PHSolid);
@@ -255,6 +257,12 @@ struct PHSolidIf : public SceneObjectIf{
 		@param bOn trueならば位置，速度の更新を無効化する．
 	*/	
 	bool		IsFrozen();
+	/** @brief ツリーノードを取得する
+		CreateRootNode，CreateTreeNodeによってツリーノードが割り当てられている場合，
+		そのノードを返す．それ以外の場合はNULLを返す．
+	 */
+	PHTreeNodeIf* GetTreeNode();
+
 };
 
 struct PHShapePairForLCPIf : public ObjectIf{
