@@ -243,7 +243,7 @@ void PHConstraint::IterateLCP(){
 	int i, j;
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
-		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
+		fnew[j] = f[j] - 1.5 * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
 									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 
 		// ‚Æ‚è‚ ‚¦‚¸—‚¿‚È‚¢‚æ‚¤‚ÉŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh

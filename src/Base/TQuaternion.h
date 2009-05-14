@@ -57,7 +57,7 @@ public:
 	///	z成分
 	const element_type& Z() const { return z; }
 	///
-	const vector_type& V() const {return this->sub_vector(vector_type());}
+	const vector_type& V() const {return this->sub_vector(1,vector_type());}
 
 	///	z成分
 	element_type& W(){ return w; }
@@ -69,6 +69,7 @@ public:
 	element_type& Z(){ return z; }
 	/// 
 	vector_type& V() {return this->sub_vector(1,vector_type());}
+
 	/// 回転ベクトル．0..PIの範囲で回転ベクトルを返す．
 	TVec3<ET> RotationHalf() {
 		TQuaternion<ET> tmp;
@@ -102,7 +103,11 @@ public:
 	}
 
 	/// 回転軸
+<<<<<<< .mine
+	TVec3<ET> Axis() const{
+=======
 	TVec3<ET> Axis()const{
+>>>>>>> .r3858
 		TVec3<ET> r;
 		r = sub_vector(1, vector_type());
 		ET len = r.norm();

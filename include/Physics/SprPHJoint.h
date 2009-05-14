@@ -358,6 +358,8 @@ struct PHSliderJointDesc : public PHJoint1DDesc{
 struct PHPathPoint{
 	double	s;			///< スカラーパラメータ
 	Posed	pose;		///< 位置と傾き
+	PHPathPoint(){}
+	PHPathPoint(double _s, Posed _pose):s(_s), pose(_pose){}
 };
 /// パスのディスクリプタ
 struct PHPathDesc{
