@@ -727,8 +727,11 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 
 	/// サイズに関するパラメータ
 	double bodyHeight, bodyBreadth, bodyThickness;
-	double frontLegsBreadth, frontLegsHeight, frontLegsThickness;
-	double rearLegsBreadth, rearLegsHeight, rearLegsThickness;
+
+	Vec2d upperSizes;
+	Vec2d lowerSizes;
+	float upperLength;
+	float lowerLength;
 
 	/// 各関節のバネダンパ
 	double springFront, damperFront;
