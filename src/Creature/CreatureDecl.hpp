@@ -1132,12 +1132,10 @@ protected:\
 	double	bodyHeight;	\
 	double	bodyBreadth;	\
 	double	bodyThickness;	\
-	double	frontLegsBreadth;	\
-	double	frontLegsHeight;	\
-	double	frontLegsThickness;	\
-	double	rearLegsBreadth;	\
-	double	rearLegsHeight;	\
-	double	rearLegsThickness;	\
+	Vec2d	upperSizes;	\
+	Vec2d	lowerSizes;	\
+	float	upperLength;	\
+	float	lowerLength;	\
 	double	springFront;	\
 	double	damperFront;	\
 	double	springRear;	\
@@ -1156,12 +1154,10 @@ public:\
 		bodyHeight = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyHeight;	\
 		bodyBreadth = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyBreadth;	\
 		bodyThickness = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyThickness;	\
-		frontLegsBreadth = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->frontLegsBreadth;	\
-		frontLegsHeight = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->frontLegsHeight;	\
-		frontLegsThickness = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->frontLegsThickness;	\
-		rearLegsBreadth = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rearLegsBreadth;	\
-		rearLegsHeight = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rearLegsHeight;	\
-		rearLegsThickness = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rearLegsThickness;	\
+		upperSizes = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->upperSizes;	\
+		lowerSizes = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerSizes;	\
+		upperLength = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->upperLength;	\
+		lowerLength = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerLength;	\
 		springFront = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->springFront;	\
 		damperFront = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->damperFront;	\
 		springRear = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->springRear;	\
@@ -1182,12 +1178,10 @@ public:\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyHeight = bodyHeight;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyBreadth = bodyBreadth;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyThickness = bodyThickness;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->frontLegsBreadth = frontLegsBreadth;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->frontLegsHeight = frontLegsHeight;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->frontLegsThickness = frontLegsThickness;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rearLegsBreadth = rearLegsBreadth;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rearLegsHeight = rearLegsHeight;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rearLegsThickness = rearLegsThickness;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->upperSizes = upperSizes;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerSizes = lowerSizes;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->upperLength = upperLength;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerLength = lowerLength;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->springFront = springFront;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->damperFront = damperFront;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->springRear = springRear;	\

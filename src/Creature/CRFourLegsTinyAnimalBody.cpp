@@ -22,13 +22,11 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	bodyHeight    = 3.8;
 	bodyThickness = 0.6;
 
-	frontLegsBreadth    = 0.9;
-	frontLegsHeight		= 1.2;
-	frontLegsThickness	= 0.9;
+	upperSizes = Vec2d(0.4, 0.2);
+	lowerSizes = Vec2d(0.2, 0.1);
+	upperLength = 1.0;
+	lowerLength = 1.4;
 
-	rearLegsBreadth     = 0.9;
-	rearLegsHeight      = 1.2;
-	rearLegsThickness   = 0.9;
 
 	springFront   = 1.0;  damperFront   =  5.0;
 	springRear    = 1.0;  damperRear    =  5.0;
@@ -64,7 +62,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	PHSolidDesc        solidDesc;
 
 	// Solid
-	solidDesc.mass		= 100.0;
+	solidDesc.mass		= 1000.0;
 	solids[SO_BODY]		= phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize		= Vec3f(bodyBreadth, bodyHeight, bodyThickness);
 	solids[SO_BODY]->AddShape(phSdk->CreateShape(boxDesc));
@@ -75,7 +73,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	solids[SO_BODY]->SetDynamical(false);
 }
 void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){	
-	CDBoxDesc			boxDesc;
+	CDRoundConeDesc		rcDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -83,21 +81,23 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){
 	solidDesc.mass   = 1.5;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_FRONT_LEG_0] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
-		solids[SO_RIGHT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius	 = upperSizes;
+		rcDesc.length	 = upperLength;
+		solids[SO_RIGHT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_RIGHT_FRONT_LEG_0]->SetName("soRightFrontLeg0");
 	}
 	else{
 		solids[SO_LEFT_FRONT_LEG_0] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
-		solids[SO_LEFT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = upperSizes;
+		rcDesc.length = upperLength;
+		solids[SO_LEFT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_LEFT_FRONT_LEG_0]->SetName("soLeftFrontLeg0");
 	}
 	// ëÃä≤Ç∆ëOãrä‘ÇÃä÷êﬂ
 	{
-		ballDesc.poseSocket.Pos()	= Vec3d(lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
+		ballDesc.poseSocket.Pos()	= Vec3d(lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.posePlug.Pos()		= Vec3d(0, -frontLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0, upperLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
@@ -115,7 +115,7 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){
 	}
 }
 void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr){
-	CDBoxDesc			boxDesc;
+	CDRoundConeDesc		rcDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -123,21 +123,23 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr){
 	solidDesc.mass   = 1.5;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_FRONT_LEG_1] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
-		solids[SO_RIGHT_FRONT_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = lowerSizes;
+		rcDesc.length = lowerLength;
+		solids[SO_RIGHT_FRONT_LEG_1]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_RIGHT_FRONT_LEG_1]->SetName("soRightFrontLeg1");
 	}
 	else{
 		solids[SO_LEFT_FRONT_LEG_1] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(frontLegsBreadth, frontLegsHeight, frontLegsThickness);
-		solids[SO_LEFT_FRONT_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = lowerSizes;
+		rcDesc.length = lowerLength;
+		solids[SO_LEFT_FRONT_LEG_1]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_LEFT_FRONT_LEG_1]->SetName("soLeftFrontLeg1");
 	}
-	// ëÃä≤Ç∆ëOãrä‘ÇÃä÷êﬂ
+	// ëOãr-ëOë´ä‘ÇÃä÷êﬂ
 	{
-		ballDesc.poseSocket.Pos()	= Vec3d(0, frontLegsHeight/2.0, 0);
+		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.posePlug.Pos()		= Vec3d(0, -frontLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0, lowerLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
@@ -156,7 +158,7 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr){
 
 }
 void CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr){
-	CDBoxDesc			boxDesc;
+	CDRoundConeDesc		rcDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -164,21 +166,23 @@ void CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr){
 	solidDesc.mass   = 1.5;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_REAR_LEG_0] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
-		solids[SO_RIGHT_REAR_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = upperSizes;
+		rcDesc.length = upperLength;
+		solids[SO_RIGHT_REAR_LEG_0]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_RIGHT_REAR_LEG_0]->SetName("soRightRearLeg0");
 	}
 	else{
 		solids[SO_LEFT_REAR_LEG_0] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
-		solids[SO_LEFT_REAR_LEG_0]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = upperSizes;
+		rcDesc.length = upperLength;
+		solids[SO_LEFT_REAR_LEG_0]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_LEFT_REAR_LEG_0]->SetName("soLeftRearLeg0");
 	}
 	// ëÃä≤Ç∆å„ãrä‘ÇÃä÷êﬂ
 	{
-		ballDesc.poseSocket.Pos()	= Vec3d(lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
+		ballDesc.poseSocket.Pos()	= Vec3d(lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.posePlug.Pos()		= Vec3d(0, -rearLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0, upperLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
@@ -196,7 +200,7 @@ void CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr){
 	}
 }
 void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr){
-	CDBoxDesc			boxDesc;
+	CDRoundConeDesc		rcDesc;
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -204,21 +208,23 @@ void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr){
 	solidDesc.mass   = 1.5;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_REAR_LEG_1] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
-		solids[SO_RIGHT_REAR_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = lowerSizes;
+		rcDesc.length = lowerLength;
+		solids[SO_RIGHT_REAR_LEG_1]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_RIGHT_REAR_LEG_1]->SetName("soRightRearLeg1");
 	}
 	else{
 		solids[SO_LEFT_REAR_LEG_1] = phScene->CreateSolid(solidDesc);
-		boxDesc.boxsize  = Vec3f(rearLegsBreadth, rearLegsHeight, rearLegsThickness);
-		solids[SO_LEFT_REAR_LEG_1]->AddShape(phSdk->CreateShape(boxDesc));
+		rcDesc.radius = lowerSizes;
+		rcDesc.length = lowerLength;
+		solids[SO_LEFT_REAR_LEG_1]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_LEFT_REAR_LEG_1]->SetName("soLeftRearLeg1");
 	}
-	// ëÃä≤Ç∆å„ãrä‘ÇÃä÷êﬂ
+	//å„ãr-å„ë´ä‘ÇÃä÷êﬂ
 	{
-		ballDesc.poseSocket.Pos()	= Vec3d(0, rearLegsHeight / 2.0, 0);
+		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength / 2.0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.posePlug.Pos()		= Vec3d(0, -rearLegsHeight / 2.0, 0);
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0,  lowerLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
@@ -283,7 +289,8 @@ void CRFourLegsTinyAnimalBody::InitContact(){
 }
 
 void CRFourLegsTinyAnimalBody::InitControlMode(PHJointDesc::PHControlMode m){
-	for(int i = 0; i < joints.size(); i++){
+	int njoints = joints.size();
+	for(int i = 0; i < njoints; i++){
 		if(joints[i]){joints[i]->SetMode(m);}
 	}
 }
