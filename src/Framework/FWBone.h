@@ -33,7 +33,11 @@
 
 namespace Spr{;
 class FWBone;
-	struct BoneJoint{
+class BoneJoint;
+class FWBoneCreate;
+
+	class BoneJoint{
+	public:
 		BoneJoint();
 		double K;
 		double D1;
@@ -51,8 +55,10 @@ class FWBone;
 		Vec3d		centerPoint;
 		double		length;
 		CDBoxIf*	shapeBone;
-		Affinef		transformAffine;
 		Affinef		worldTransformAffine;
+		FWBone*		parentBone;
+		PHJointIf*  joint;
+		BoneJoint	jointData;
 		FWBone();
 		void Sync();
     };
@@ -60,32 +66,38 @@ class FWBone;
 	class FWBoneCreate{
 	private:
 		GRMesh* mesh;
-		std::vector<Affinef> af;
-		std::vector<Affinef> afWT;
-		std::vector<GRFrame*> grfBone;
-		std::vector<FWObjectIf*> fwoBone;
-		std::vector<FWObjectIf*> fwoAncestorBone;
-		std::vector<PHSolidIf*> soBone;
-		std::vector<PHSolidIf*> soAncestorBone;
-		std::vector<PHJointIf*> Joint;
-		std::vector<Vec3d> bonePoint;
-		std::vector<FWBone> bone;
-		FWBone bone_;
-		std::vector<BoneJoint> boneJoint;
 		FWSdkIf* fwSdk;
 		PHScene* phScene;
 		PHSceneIf* phSceneIf;
+		std::vector<FWBone*> bone;
+		FWBone* bone_;
+		std::vector<PHSolidIf*> soBone;
+		std::vector<CDBoxIf*> shapeBone;
+		std::vector<PHJointIf*> joint;
+		//FWBoneCreateを使うのに必要な値を設定するためのインタフェース
+		void SetMesh(GRMesh* m){mesh=m;};
+		GRMesh* GetMesh(){return mesh;};
+		void SetPHScene(PHScene* p){phScene=p;};
+		PHScene* GetPHScene(){return phScene;};
+		//FWBoneに情報を代入するための関数
 		void SetFWBone();
+		bool BoneDetector(GRFrameIf* frame1,GRFrameIf* frame2);
+		Vec3d BonePosition(GRFrameIf* frame1,GRFrameIf* frame2);
+		double BoneLength(GRFrameIf* frame1,GRFrameIf* frame2);
+		CDBoxIf* BoneShape(GRFrameIf* frame1,GRFrameIf* frame2);
+		FWBone* ParentBone(GRFrameIf* frame1);
+		//FWBoneに代入された情報を使ってシーンを作成する関数
+		void GenerateBone();
+		void SetBoneJoint();
+		void ContactCanceler();
 	public:
-		void BoneCreate(GRMesh* m,PHScene* s);
+		void Boot(GRMesh* m,PHScene* s);
 		void FWPHBoneCreate();
 		void FWJointCreate();
 		void FWSkinMeshAdapt();
 		void SetPHScne(PHSceneIf* s){phSceneIf=s;}
 		void SetfwSdk(FWSdkIf* s){fwSdk=s;}
 		void SetAffine(std::vector<Affinef> a);
-		void SetWorldAffine(std::vector<Affinef> a);
-		void SetGRFrameBone(std::vector<GRFrame*> f){grfBone=f;}
 		void DisplayBonePoint();
 		void DisplayPHBoneCenter();
 	};

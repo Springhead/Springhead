@@ -11,10 +11,18 @@
 #pragma hdrstop
 #endif
 
+using namespace std;
 namespace Spr{;
 
 BoneJoint::BoneJoint()
 {
+	K				= 0.01;
+	D1				= 0.1;
+	D2				= 10;
+	yieldStress		= 0.1;
+	hardnessRate	= 1e3;
+	SocketPos		=Vec3f(0.0,0.0,0.0);
+	PlugPos			=Vec3f(0.0,0.0,0.0);
 }
 
 FWBone::FWBone()
@@ -67,143 +75,176 @@ void FWBone::Sync(){
 	}
 }
 
-
-
-void FWBoneCreate::BoneCreate(GRMesh* m, PHScene* s){
-	mesh=m;
-	phScene=s;
-	SetFWBone();
-}
-
-void FWBoneCreate::SetFWBone(){
-	if (mesh){
-		for(int i=0 ;i<mesh->skinWeights.size(); ++i){
-			GRFrameIf* grFrame =mesh->skinWeights[i].frame->Cast();
-			GRFrameIf* grParentFrame=mesh->skinWeights[i].frame->GetParent();
-		/*	GRFrameIf* grChildFrame=mesh->skinWeights[i].frame->GetChildren();*/
-			std::string name	= grFrame->GetName();
-			std::string nameP	= grParentFrame->GetName();
-			std::string namePP	= grParentFrame->GetParent()->GetName();
-			DSTR << "  Parent:"<< nameP << "now:"<<name << std::endl;
-			Vec3d point			= grFrame->GetWorldTransform()*Vec3d(0.0,0.0,0.0);
-			Vec3d parentPoint	= grParentFrame->GetWorldTransform()*Vec3d(0.0,0.0,0.0);
-			if(!(nameP=="Root")){//Bone1以外
-				if(!(namePP=="Root")){
-					bone.push_back(bone_);
-					bone[bone.size()-1].centerPoint = (point+parentPoint)*0.5;
-				}else{}
-			}
-		}
-	}
+//Bootを呼べばすべての処理が自動で行われる-------------------------------------------------------
+/*NodeHandlerでBoneCreateを呼んでボーン作成し適合させる*/
+void FWBoneCreate::Boot(GRMesh* mesh, PHScene* phScene){
+	/*MeshとPHSceneを最初に設定,以降の関数は代入されている事を前提とする*/
+	SetMesh(mesh);
+	SetPHScene(phScene);
 	//FWSdkの取得
 	fwSdk = phScene->GetSdk()->GetNameManager()->Cast();
 	//phSceneIfの取得
 	phSceneIf =phScene->Cast();
+
+	SetFWBone();		//Xファイルの情報をFWBoneデータ構造に変換
+	SetBoneJoint();		//FWBoneのデータから親に対するジョイントのプラグ，ソケットの位置測りFWBoneに代入
+	GenerateBone();		//シーンに剛体を作成
+	FWJointCreate();	//シーンにジョイントを作成
+	ContactCanceler();	//連なる剛体の接触を切る
 }
 
-void FWBoneCreate::SetWorldAffine(std::vector<Affinef> a){
-	af.swap(a);
-	//アフィン行列から3次元座標を算出
-	Vec3d BonePoint;
-	if (af.size()){
-		for(int i=0 ;i<af.size(); ++i){
-			BonePoint=af[i]*Vec3d(0.0,0.0,0.0);
-			bonePoint.push_back(BonePoint);
-			//DSTR << i << std::endl << bonePoint[i] << std::endl;
+//Xファイルの情報をFWBoneデータ構造に変換--------------------------------------------------------
+/*FWBoneを作成し数値を代入*/
+void FWBoneCreate::SetFWBone(){
+	if (mesh){
+		for(unsigned int i=0 ;i<mesh->skinWeights.size()-1; ++i){
+			GRFrameIf* frame1 =mesh->skinWeights[i].frame->Cast();
+			GRFrameIf* frame2 =mesh->skinWeights[i+1].frame->Cast();
+			if(BoneDetector(frame1,frame2)==true){
+				bone_= new FWBone;
+				bone.push_back(bone_);
+				bone.back()->centerPoint			= BonePosition(frame1,frame2);
+				bone.back()->length					= BoneLength(frame1,frame2);
+				bone.back()->shapeBone				= BoneShape(frame1,frame2);
+				bone.back()->parentBone				= ParentBone(frame1);
+				bone.back()->grFrame				= frame1;
+				bone.back()->worldTransformAffine	= frame1->GetWorldTransform();
+			}
 		}
 	}
-
-	//3次元座標からPHBoneの剛体情報を算出
-	if (bonePoint.size()){
-		for(int i=0 ;i<bonePoint.size()-2; ++i){
-			bone.push_back(bone_);
-			bone[i].centerPoint = (bonePoint[i+2]+bonePoint[i+1])*0.5;
-			Vec3d length = bonePoint[i+2]-bonePoint[i+1];
-			bone[i].length = length.norm();
-			//DSTR<< i << std::endl << bone[i].centerPoint << bone[i].length << std::endl;
-		}
-	}
-	//アフィン行列を剛体に保存
-	if (af.size()){
-		for(int i=0 ;i<bone.size(); ++i){
-			bone[i].worldTransformAffine=af[i+1];
-			//DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
-		}
-	}
-	////PHBoneの剛体情報からJointのソケット・プラグの位置を算出
-	//if (bone.size()){
-	//	for(int i=0 ;i<bone.size()-1; ++i){
-	//		boneJoint.push_back(boneJointData);
-	//		boneJoint[i].SocketPos = Vec3f(0.0,0.0, -bone[i].length/2);
-	//		boneJoint[i].PlugPos = Vec3f(0.0,0.0,bone[i+1].length/2);
-	//	}
-	//}
-
 }
 
-void FWBoneCreate::FWPHBoneCreate(){
-	//double wide =0.5;
-	////desc
-	//desc.mass = 0.05;
-	//desc.inertia = 0.033 * Matrix3d::Unit();
-	//CDBoxDesc dBox;
-
-	//for(int i=0; i<bone.size(); ++i){
-	//	Posed pose;
-	//	//soBoneの作成
-	//	soBone.push_back(phScene->CreateSolid(desc));
-	//	bone[i].solid=soBone[i];
-	//	{
-	//		if(i==0){
-	//			bone[i].solid->SetDynamical(false);
-	//		}else{
-	//			bone[i].solid->SetDynamical(true);
-	//		}
-	//		//bone[i].solid->SetFramePosition(bone[i].centerPoint);
-	//		pose.FromAffine(bone[i].worldTransformAffine);
-	//		pose.PosZ()+=bone[i].length/2;
-	//		bone[i].solid->SetPose(pose);
-	//	}
-	//		if(i==0){
-	//			ancestorBone.push_back(boneData);
-	//			soAncestorBone.push_back(phScene->CreateSolid(desc));
-	//			ancestorBone[0].solid=soAncestorBone[0];
-	//			ancestorBone[0].solid->SetPose(pose);
-	//		}
-	//	//shapeBoneの作成	
-	//	{
-	//		dBox.boxsize=(Vec3d(wide,wide,bone[i].length));
-	//		bone[i].shapeBone=XCAST(fwSdk->GetPHSdk()->CreateShape(dBox));
-	//	}
-	//	bone[i].solid->AddShape(bone[i].shapeBone);
-	//}
-	//FWJointCreate();
-	//FWSkinMeshAdapt();
+/*2つのgrFrameがつながっているかどうかを検出し，FWBoneを作成する場所を探す*/
+bool FWBoneCreate::BoneDetector(GRFrameIf* frame1,GRFrameIf* frame2){
+	bool Flag=false;
+	std::string name1		= frame1->GetName();
+	std::string name2Parent	= frame2->GetParent()->GetName();
+	if(!(name1=="Root")){//Rootは作成しない
+		if(name1==name2Parent){//frame1とframe2がつながっている時true
+			Flag=true;
+		}
+	}
+	return Flag;
 }
+/*2つのgrFrameから中間地点を算出*/
+Vec3d FWBoneCreate::BonePosition(GRFrameIf* frame1,GRFrameIf* frame2){
+	Vec3d point1	= frame1->GetWorldTransform()*Vec3d(0.0,0.0,0.0);
+	Vec3d point2	= frame2->GetWorldTransform()*Vec3d(0.0,0.0,0.0);
+	return (point1+point2)*0.5;
+}
+/*2つのgrFrameから距離を作成*/
+double FWBoneCreate::BoneLength(GRFrameIf* frame1,GRFrameIf* frame2){
+	Vec3d point1= frame1->GetWorldTransform()*Vec3d(0.0,0.0,0.0);
+	Vec3d point2= frame2->GetWorldTransform()*Vec3d(0.0,0.0,0.0);
+	Vec3d length= point2-point1;
+	return length.norm();
+}
+/*2つのgrFrameからshapeを作成*/
+CDBoxIf* FWBoneCreate::BoneShape(GRFrameIf* frame1,GRFrameIf* frame2){
+	double wide=0.5;
+	double length=BoneLength(frame1,frame2);
+	CDBoxDesc dBox;
+	dBox.boxsize=Vec3d(wide,wide,length);
+	shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(dBox)));
+	return shapeBone[shapeBone.size()-1];
+}
+/*親boneを設定*/
+FWBone* FWBoneCreate::ParentBone(GRFrameIf* frame1){
+	FWBone* parentBone=NULL;
+	std::string parentName=frame1->GetParent()->GetName();
+	for(unsigned int i=0 ;i<bone.size()-1; ++i){
+		DSTR<<bone[bone.size()-2-i]->grFrame->GetName()<<endl;
+		if(parentName==bone[bone.size()-2-i]->grFrame->GetName()){
+			parentBone=bone[bone.size()-2-i];
+			break;
+		}
+	}
+	return parentBone;
+}
+/*親boneに対するBoneJointデータを設定*/
+void FWBoneCreate::SetBoneJoint(){
+	if (bone.size()){
+		for(unsigned int i=0 ;i<bone.size(); ++i){
+			if(!(bone[i]->parentBone==NULL)){
+				bone[i]->jointData.SocketPos=Vec3f(0.0,0.0, -bone[i]->parentBone->length/2);
+				bone[i]->jointData.PlugPos=Vec3f(0.0,0.0, bone[i]->length/2);
+			}
+		}
+	}
+}
+//ボーンの作成-----------------------------------------------------------------------------------
+/*FWBoneの情報を使ってシーンを作成*/
+void FWBoneCreate::GenerateBone(){
+	for(unsigned int i=0; i<bone.size(); ++i){
+		//soBoneの作成
+		PHSolidDesc	desc;
+		desc.mass = 0.05;
+		desc.inertia = 0.033 * Matrix3d::Unit();
+		soBone.push_back(phScene->CreateSolid(desc));
+		bone[i]->phSolid=soBone[i];
+		{
+			if(i==0){
+				bone[i]->phSolid->SetDynamical(false);
+			}else{
+				bone[i]->phSolid->SetDynamical(true);
+			}
+			//ボーンの初期位置を設定
+			Posed pose,pose2;
+			pose.PosZ()=-bone[i]->length/2;
+			pose2.FromAffine(bone[i]->worldTransformAffine);
+			pose=pose2*pose;
+			bone[i]->phSolid->SetPose(pose);
+		}
+		//shapeBoneの作成
+		if(i>0){
+			bone[i]->phSolid->AddShape(bone[i]->shapeBone);
+		}
+	}
+}
+/*ジョイントを作成*/
 void FWBoneCreate::FWJointCreate(){
-	//std::vector<PH3ElementBallJointDesc> d3Ball;
-	//PH3ElementBallJointDesc _d3Ball;
-
-	//if (boneJoint.size()){
-	//	for(int i=0 ;i<boneJoint.size(); ++i){
-	//		d3Ball.push_back(_d3Ball);
-	//		{
-	//			d3Ball[i].poseSocket.Pos()	= boneJoint[i].SocketPos;
-	//			d3Ball[i].posePlug.Pos()	= boneJoint[i].PlugPos;
-	//			d3Ball[i].spring			= boneJoint[i].K;
-	//			d3Ball[i].damper			= boneJoint[i].D1;
-	//			d3Ball[i].secondDamper		= boneJoint[i].D2;
-	//			d3Ball[i].yieldStress		= boneJoint[i].yieldStress;
-	//			d3Ball[i].hardnessRate		= boneJoint[i].hardnessRate;
-	//		}
-	//	}
-	//	for(int i=0;i<boneJoint.size();i++){
-	//		phScene->SetContactMode(bone[i].solid, bone[i+1].solid, PHSceneDesc::MODE_NONE);
-	//		phScene->CreateJoint(bone[i].solid,bone[i+1].solid, d3Ball[i]);
-	//		Joint.push_back( phScene->CreateJoint( soBone[i], soBone[i+1], d3Ball[i]) );
-	//	}
-	//}
+	if (bone.size()){
+		for(int i=0 ;i<bone.size(); ++i){
+			if(!(bone[i]->parentBone==NULL)){
+				PH3ElementBallJointDesc d3Ball;
+				{
+					d3Ball.poseSocket.Pos()	= bone[i]->jointData.SocketPos;
+					d3Ball.posePlug.Pos()	= bone[i]->jointData.PlugPos;
+					d3Ball.spring			= bone[i]->jointData.K;
+					d3Ball.damper			= bone[i]->jointData.D1;
+					d3Ball.secondDamper		= bone[i]->jointData.D2;
+					d3Ball.yieldStress		= bone[i]->jointData.yieldStress;
+					d3Ball.hardnessRate		= bone[i]->jointData.hardnessRate;
+				}
+				phSceneIf->SetContactMode(bone[i]->parentBone->phSolid, bone[i]->phSolid, PHSceneDesc::MODE_NONE);
+				joint.push_back( phSceneIf->CreateJoint(bone[i]->parentBone->phSolid, bone[i]->phSolid, d3Ball));
+				bone[i]->joint=joint.back();
+			}
+		}
+	}
 }
+/*接触判定の設定(隣合う剛体の接触を切る)*/
+void FWBoneCreate::ContactCanceler(){
+	if (bone.size()){
+		for(int i=0 ;i<bone.size(); ++i){
+			if(!(bone[i]->parentBone==NULL)){
+				//親子の接触を切る
+				phSceneIf->SetContactMode(bone[i]->parentBone->phSolid, bone[i]->phSolid, PHSceneDesc::MODE_NONE);
+				//同じ親をもつ剛体の接触を切る
+				for(int j=0 ;j<bone.size(); ++j){
+					if(!(bone[j]->parentBone==NULL)){
+						if(!(j==i)){
+							if(bone[i]->parentBone->grFrame->GetName()==bone[j]->parentBone->grFrame->GetName()){
+								phSceneIf->SetContactMode(bone[i]->phSolid, bone[j]->phSolid, PHSceneDesc::MODE_NONE);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
 
 void FWBoneCreate::FWSkinMeshAdapt(){
 
@@ -290,12 +331,12 @@ void FWBoneCreate::DisplayPHBoneCenter(){
 
 void FWBoneCreate::SetAffine(std::vector<Affinef> a){
 	//アフィン行列を剛体に保存
-	if (af.size()){
-		for(int i=0 ;i<bone.size(); ++i){
-			bone[i].transformAffine=af[i+1];
-			//DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
-		}
-	}
+	//if (af.size()){
+	//	for(int i=0 ;i<bone.size(); ++i){
+	//		bone[i].transformAffine=af[i+1];
+	//		//DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
+	//	}
+	//}
 }
 
 
