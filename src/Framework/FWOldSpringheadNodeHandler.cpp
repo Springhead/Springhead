@@ -1038,34 +1038,36 @@ public:
 			for(int i=0; !mesh && i<ldMesh->loadedObjects.size(); ++i){
 				mesh = ldMesh->loadedObjects[i]->Cast();
 			}
-			if (mesh){
-				for(int i=0 ;i<mesh->skinWeights.size(); ++i){
-					af.push_back(mesh->skinWeights[i].frame->GetTransform());
-					afWT.push_back(mesh->skinWeights[i].frame->GetWorldTransform());
-					grfBone.push_back(mesh->skinWeights[i].frame);
-					std::string name = mesh->skinWeights[i].frame->GetName();
-					//DSTR << name << std::endl << af[i] << std::endl;
-				}
-			}
-			//FWSdkÇÃéÊìæ
-			fwSdk = phScene->GetSdk()->GetNameManager()->Cast();
-			
-			//PHBoneÇÃèÄîı
-			PHSceneIf* phSceneIf =phScene->Cast();
-			phBone.SetPHScne(phSceneIf);
-			phBone.SetfwSdk(fwSdk);
-			phBone.SetWorldAffine(afWT);
-			phBone.SetAffine(af);
-			phBone.SetGRFrameBone(grfBone);
-			
+			//ãåÉoÅ[ÉWÉáÉì-------------------------------------------------
+			//if (mesh){
+			//	for(int i=0 ;i<mesh->skinWeights.size(); ++i){
+			//		af.push_back(mesh->skinWeights[i].frame->GetTransform());
+			//		afWT.push_back(mesh->skinWeights[i].frame->GetWorldTransform());
+			//		grfBone.push_back(mesh->skinWeights[i].frame);
+			//		std::string name = mesh->skinWeights[i].frame->GetName();
+			//		//DSTR << name << std::endl << af[i] << std::endl;
+			//	}
+			//}
+			////FWSdkÇÃéÊìæ
+			//fwSdk = phScene->GetSdk()->GetNameManager()->Cast();
+			//
+			////PHBoneÇÃèÄîı
+			//PHSceneIf* phSceneIf =phScene->Cast();
+			//phBone.SetPHScne(phSceneIf);
+			//phBone.SetfwSdk(fwSdk);
+			//phBone.SetWorldAffine(afWT);
+			//phBone.SetAffine(af);
+			//phBone.SetGRFrameBone(grfBone);
+			//
 
-			phBone.FWPHBoneCreate();
-			//phBone.DisplayBonePoint();
-			//phBone.DisplayPHBoneCenter();
-			af.clear();
-			phBone.Clear();	
+			//phBone.FWPHBoneCreate();
+			////phBone.DisplayBonePoint();
+			////phBone.DisplayPHBoneCenter();
+			//af.clear();
+			//phBone.Clear();
+			//--------------------------------------------------------------
 			
-			/*bone.BoneCreate(mesh,phScene);*/
+			bone.Boot(mesh,phScene);
 		}
 	};
 
