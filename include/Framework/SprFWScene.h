@@ -12,6 +12,7 @@
 #include <Physics/SprPHScene.h>
 #include <Graphics/SprGRScene.h>
 #include <Graphics/SprGRRender.h>
+#include <Framework/SprFWBone.h>
 
 namespace Spr{
 
@@ -66,6 +67,12 @@ namespace Spr{
 		void Draw(GRRenderIf* grRender, bool debug=false);
 
 		void AddHumanInterface(HIForceDevice6D* d);
+
+		//ボーンの設定
+		void SetFWBones(FWBoneIf* b);
+		/** @brief 作成したFWBoneをシーンに保存する
+		 */
+		std::vector< UTRef<FWBoneIf> > GetFWBones();
 	};
 
 	FWSceneIf* SPR_CDECL CreateFWScene();
