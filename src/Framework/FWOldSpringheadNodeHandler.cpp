@@ -1027,7 +1027,6 @@ public:
 		PHScene* phScene;
 		UTLoadedData* ldMesh;
 	public:
-		FWPHBone phBone;
 		FWBoneCreate	 bone;
 
 		BoneCreator(UTLoadedData* lm, PHScene* p): phScene(p), ldMesh(lm){}
