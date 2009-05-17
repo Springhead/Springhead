@@ -216,4 +216,11 @@ void FWScene::AddHumanInterface(HIForceDevice6D* d){
 	//	humanInterfaces.push_back(d);
 }
 
+void FWScene::SetFWBones(FWBoneIf* b){
+	fwBones.push_back(b);
+}
+
+std::vector< UTRef<FWBoneIf> > FWScene::GetFWBones(){
+	return fwBones;
+}
 }

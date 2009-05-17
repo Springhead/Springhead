@@ -40,6 +40,8 @@ public:
 	
 	Vec2f GetRadius();
 	float GetLength();
+	void SetRadius(Vec2f r);
+	void SetLength(float l);
 };
 
 	

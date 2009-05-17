@@ -25,13 +25,11 @@ BoneJoint::BoneJoint()
 	PlugPos			=Vec3f(0.0,0.0,0.0);
 }
 
-FWBone::FWBone()
+FWBone::FWBone(const FWBoneDesc& d/*=FWObjectDesc()*/)
+: desc(d)
 {
-
 }
 
-void FWBone::Sync(){
-}
 
 //Bootを呼べばすべての処理が自動で行われる-------------------------------------------------------
 /*NodeHandlerでBoneCreateを呼んでボーン作成し適合させる*/
@@ -204,7 +202,6 @@ void FWBoneCreate::ContactCanceler(){
 	}
 }
 
-
 void FWBoneCreate::FWSkinMeshAdapt(){
 	for(int i=0; i<bone.size(); ++i){
 		//ボーン１の設定をする（並行行列のみのアフィン行列更新）
@@ -212,6 +209,7 @@ void FWBoneCreate::FWSkinMeshAdapt(){
 		fwObject[i]->SetPHSolid(bone[i]->phSolid);
 		fwObject[i]->SetGRFrame(bone[i]->grFrame);
 		fwObject[i]->SetSolidLength(bone[i]->length);
+		fwSdk->GetScene()->SetFWBones(DCAST(FWBoneIf,bone[i]));
 	}
 }
 

@@ -30,6 +30,7 @@
 #include <Framework/FWScene.h>
 #include <Framework/FWSdk.h>
 #include <Collision/CDConvexMesh.h>
+#include <Framework/SprFWBone.h>
 
 namespace Spr{;
 class FWBone;
@@ -48,10 +49,13 @@ class FWBoneCreate;
 		Vec3f PlugPos;
 	};
 
-	class FWBone : public FWObject{
-	private:
-
+	class FWBone : public FWObject,public FWBoneDesc{
 	public:
+		SPR_OBJECTDEF(FWBone);
+		ACCESS_DESC(FWBone);
+		FWBoneDesc desc;
+		FWBone(const FWBoneDesc& d=FWBoneDesc()); // コンストラクタ
+
 		Vec3d		centerPoint;
 		double		length;
 		CDRoundConeIf*	shapeBone;
@@ -59,8 +63,13 @@ class FWBoneCreate;
 		FWBone*		parentBone;
 		PHJointIf*  joint;
 		BoneJoint	jointData;
-		FWBone();
-		void Sync();
+		
+		CDRoundConeIf*	GetShape(){return shapeBone;}
+		void			SetShapeRadius(double r1,double r2){
+							shapeBone->SetRadius(Vec2f(r1,r2));
+						}
+		PHJointIf*		GetJoint(){return joint;} 
+		
     };
 
 	class FWBoneCreate{

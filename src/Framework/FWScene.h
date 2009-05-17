@@ -11,6 +11,7 @@
 #include <Springhead.h>
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
+#include <Framework/SprFWBone.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
 
@@ -34,7 +35,9 @@ public:
 	SPR_OBJECTDEF(FWScene);
 	ACCESS_DESC(FWScene);
 	typedef std::vector< UTRef<FWObjectIf> > FWObjects;
+	typedef std::vector< UTRef<FWBoneIf> >	 FWBones;
 	FWObjects fwObjects;						///<	物理とグラフィックスのオブジェクトのリンク
+	FWBones	  fwBones;							///<	物理とグラフィックスのBoneのリンク
 	UTRef<PHSceneIf> phScene;					///<	物理シミュレーション用のシーン
 	UTRef<GRSceneIf> grScene;					///<	グラフィックス用のシーン
 	typedef std::vector< UTRef<HIForceDevice6D> > FWHumanInterfaces;
@@ -71,6 +74,8 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual NamedObjectIf* FindObject(UTString name, UTString cls);
 	virtual void AddHumanInterface(HIForceDevice6D* d);
+	virtual void SetFWBones(FWBoneIf* b);
+	virtual std::vector< UTRef<FWBoneIf> > GetFWBones();
 };
 
 
