@@ -182,5 +182,11 @@ Vec2f CDRoundCone::GetRadius() {
 float CDRoundCone::GetLength() {
 	return length;
 }
+void CDRoundCone::SetRadius(Vec2f r) {
+	radius=r;
+}
+void CDRoundCone::SetLength(float l) {
+	length=l;
+}
 
 }	//	namespace Spr
