@@ -26,6 +26,12 @@ namespace Spr{;
 // ヒンジジョイントを用いた哺乳類モデル・クラスの実装（未実装：中身はTrunkFootHumanBody）
 class CRFourLegsTinyAnimalBody : public CRBody, public CRFourLegsTinyAnimalBodyDesc {
 private:
+	double massFF;		//< 前足の質量
+	double massFL;		//< 前脚の質量
+	double massRF;		//< 後足の質量
+	double massRL;		//< 後脚の質量
+	double massBody;	//< 体幹の質量
+
 	void CreateBody();
 	void CreateFrontLegs(LREnum lr);
 	void CreateRearLegs(LREnum lr);
@@ -43,14 +49,24 @@ public:
 	SPR_OBJECTDEF(CRFourLegsTinyAnimalBody);
 	ACCESS_DESC(CRFourLegsTinyAnimalBody);
 
-	CRFourLegsTinyAnimalBody(){}
+	CRFourLegsTinyAnimalBody(){
+		massFF		= 10;
+		massFL		= 20;
+		massRF		= 10;
+		massRL		= 20;
+		massBody	= 50;
+	}
 	CRFourLegsTinyAnimalBody(const CRFourLegsTinyAnimalBodyDesc& desc, CRCreatureIf* c=NULL) 
 		: CRFourLegsTinyAnimalBodyDesc(desc) 
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
 		solids.resize(CRFourLegsTinyAnimalBodyDesc::SO_NSOLIDS);
 		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
-	
+		massFF		= 1.5;
+		massFL		= 1.5;
+		massRF		= 1.5;
+		massRL		= 1.5;
+		massBody	= 10;
 		InitBody();
 		InitLegs();
 		InitContact();

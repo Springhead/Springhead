@@ -121,7 +121,15 @@ public:
 	virtual double		GetDamper(){ return damper; }
 
 	virtual void		SetOffsetForce(Vec3d ofst){offset = ofst;}
-	virtual Vec3d		GetOffsetForce(){return offset;}
+	virtual Vec3d		GetOffsetForce(){
+							Vec3d ans;
+							if(anyLimit)
+								ans = Vec3d();
+							else
+								GetConstraintForce(Vec3d(), ans);
+							return ans;
+						}
+	virtual bool		IsLimit(){return anyLimit;}
 	virtual bool		SetConstLine(char* fileName , int i);///< S‘©“_‚Ì“ü—Í
 	virtual double		GetConstLine(int Num, int way){return LimitLine.SwingUp[Num][way];}///S‘©“_‚ÌÀ•W‚ÌŽæ“¾
 	virtual void		SetTwistPole(Vec2d range){ PoleTwist = range; }		///< ConstLine‚ÆŽg‚¤TwistŠp‚Ì”ÍˆÍ§ŒÀ

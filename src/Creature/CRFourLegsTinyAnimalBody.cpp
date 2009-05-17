@@ -32,10 +32,10 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	springRear    = 1.0;  damperRear    =  5.0;
 
 	// Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø
-	rangeFrontSwing   = Vec2d(Rad(-60.0) , Rad(60.0));
-	rangeFrontTwist	  = Vec2d(Rad(-60.0) , Rad(60.0));
-	rangeRearSwing    = Vec2d(Rad(-60.0) , Rad(60.0));
-	rangeRearTwist	  = Vec2d(Rad(-60.0) , Rad(60.0));
+	rangeFrontSwing   = Vec2d(FLT_MAX , FLT_MAX);
+	rangeFrontTwist	  = Vec2d(FLT_MAX , FLT_MAX);
+	rangeRearSwing    = Vec2d(FLT_MAX , FLT_MAX);
+	rangeRearTwist	  = Vec2d(FLT_MAX , FLT_MAX);
 
 	noLegs = false;
 	noHead = false;
@@ -62,7 +62,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	PHSolidDesc        solidDesc;
 
 	// Solid
-	solidDesc.mass		= 1000.0;
+	solidDesc.mass		= massBody;
 	solids[SO_BODY]		= phScene->CreateSolid(solidDesc);
 	boxDesc.boxsize		= Vec3f(bodyBreadth, bodyHeight, bodyThickness);
 	solids[SO_BODY]->AddShape(phSdk->CreateShape(boxDesc));
@@ -78,7 +78,7 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){
 	PHBallJointDesc		ballDesc;
 
 	// Solid
-	solidDesc.mass   = 1.5;
+	solidDesc.mass   = massFL;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_FRONT_LEG_0] = phScene->CreateSolid(solidDesc);
 		rcDesc.radius	 = upperSizes;
@@ -102,6 +102,8 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
+		ballDesc.limitSwing			= rangeFrontSwing;
+		ballDesc.limitTwist			= rangeFrontTwist;
 	}
 	if(lr == RIGHTPART){
 		joints[JO_BODY_RIGHT_FRONT_LEG_0] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_FRONT_LEG_0], ballDesc);
@@ -120,7 +122,7 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr){
 	PHBallJointDesc		ballDesc;
 
 	// Solid
-	solidDesc.mass   = 1.5;
+	solidDesc.mass   = massFF;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_FRONT_LEG_1] = phScene->CreateSolid(solidDesc);
 		rcDesc.radius = lowerSizes;
@@ -144,6 +146,8 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr){
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
+		ballDesc.limitSwing			= rangeFrontSwing;
+		ballDesc.limitTwist			= rangeFrontTwist;
 	}
 	if(lr == RIGHTPART){
 		joints[JO_BODY_RIGHT_FRONT_LEG_1] = CreateJoint(solids[SO_RIGHT_FRONT_LEG_0], solids[SO_RIGHT_FRONT_LEG_1], ballDesc);
@@ -163,7 +167,7 @@ void CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr){
 	PHBallJointDesc		ballDesc;
 
 	// Solid
-	solidDesc.mass   = 1.5;
+	solidDesc.mass   = massRL;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_REAR_LEG_0] = phScene->CreateSolid(solidDesc);
 		rcDesc.radius = upperSizes;
@@ -187,6 +191,8 @@ void CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr){
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
+		ballDesc.limitSwing			= rangeRearSwing;
+		ballDesc.limitTwist			= rangeRearTwist;
 	}
 	if(lr == RIGHTPART){
 		joints[JO_BODY_RIGHT_REAR_LEG_0] = CreateJoint(solids[SO_BODY], solids[SO_RIGHT_REAR_LEG_0], ballDesc);
@@ -205,7 +211,7 @@ void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr){
 	PHBallJointDesc		ballDesc;
 
 	// Solid
-	solidDesc.mass   = 1.5;
+	solidDesc.mass   = massRF;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_REAR_LEG_1] = phScene->CreateSolid(solidDesc);
 		rcDesc.radius = lowerSizes;
@@ -229,6 +235,8 @@ void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr){
 		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
+		ballDesc.limitSwing			= rangeRearSwing;
+		ballDesc.limitTwist			= rangeRearTwist;
 	}
 	if(lr == RIGHTPART){
 		joints[JO_BODY_RIGHT_REAR_LEG_1] = CreateJoint(solids[SO_RIGHT_REAR_LEG_0], solids[SO_RIGHT_REAR_LEG_1], ballDesc);

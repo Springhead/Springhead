@@ -34,7 +34,7 @@ PHBallJointDesc::PHBallJointDesc(){
 	fMax			= FLT_MAX;
 	fMin			= -FLT_MAX;
 	PoleTwist		= Vec2d(FLT_MAX,FLT_MAX);
-
+	offset			= Vec3d();
 }
 
 //----------------------------------------------------------------------------

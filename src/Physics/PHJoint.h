@@ -62,21 +62,33 @@ public:
 	/// インタフェースの実装
 	virtual double	GetPosition() const {return position[0];}
 	virtual double	GetVelocity() const {return velocity[0];}
-	virtual void	SetMotorTorque(double t){/*mode = MODE_TORQUE;*/ torque = t;}
+	virtual void	SetMotorTorque(double t){torque = t;}
 	virtual double	GetMotorTorque() const {return torque;}
 	virtual void	SetRange(double l, double u){lower = l, upper = u;}
 	virtual void	GetRange(double& l, double& u) const {l = lower, u = upper;}
-	virtual void	SetDesiredVelocity(double v){/*mode = MODE_VELOCITY;*/ desiredVelocity = v;}
+	virtual void	SetDesiredVelocity(double v){desiredVelocity = v;}
 	virtual double	GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void	SetTrajectoryVelocity(double v){/*mode = MODE_POSITION;*/ desiredVelocity = v;}
+	virtual void	SetTrajectoryVelocity(double v){desiredVelocity = v;}
 	virtual double  GetTrajectoryVelocity(){return desiredVelocity;}
 	virtual void	SetSpring(double K){spring = K;}
 	virtual double	GetSpring() const {return spring;}
-	virtual void	SetSpringOrigin(double org){/*mode = MODE_POSITION;*/ origin = org;}
+	virtual void	SetSpringOrigin(double org){ origin = org;}
 	virtual double	GetSpringOrigin() const {return origin;}
 	virtual void	SetDamper(double D){damper = D;}
 	virtual double	GetDamper() const {return damper;}
-	virtual void	SetOffsetForce(double dat){/*mode = MODE_POSITION;*/ offsetForce = dat;}
+	virtual void	SetOffsetForce(double dat){offsetForce = dat;}
+	virtual double	GetOffsetForce(){
+		double ans = 0;
+		if(onLower || onUpper)
+			ans = 0.0;
+		else{
+			Vec3d f, t;
+			GetConstraintForce(f, t);
+			ans = t.Z();
+		}
+		return ans;
+	}
+	virtual bool	IsLimit(){return (onLower||onUpper);}
 	virtual void	SetTorqueMax(double max){fMax = max; fMaxDt = fMax * GetScene()->GetTimeStep(); }
 	virtual double	GetTorqueMax(){return fMax;}
 	virtual void	SetTorqueMin(double min){fMin = min; fMinDt = fMin * GetScene()->GetTimeStep(); }
