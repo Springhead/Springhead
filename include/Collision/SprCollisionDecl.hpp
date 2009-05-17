@@ -54,6 +54,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CDRoundConeIf(base)	\
 	Vec2f GetRadius(){	return	base::GetRadius();}	\
 	float GetLength(){	return	base::GetLength();}	\
+	void SetRadius(Vec2f r){	base::SetRadius(r);}	\
+	void SetLength(float l){	base::SetLength(l);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDBoxIf(base)	\
 	Vec3f GetBoxSize(){	return	base::GetBoxSize();}	\

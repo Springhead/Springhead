@@ -173,6 +173,8 @@ struct CDRoundConeIf: public CDConvexIf{
 	SPR_IFDEF(CDRoundCone);
 	Vec2f GetRadius();
 	float GetLength();
+	void  SetRadius(Vec2f r);
+	void  SetLength(float l);
 };	
 /** RoundConeのディスクリプタ　*/
 struct CDRoundConeDesc: public CDShapeDesc{

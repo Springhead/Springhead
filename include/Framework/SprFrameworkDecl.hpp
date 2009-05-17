@@ -18,6 +18,8 @@
 	void Step(){	base::Step();}	\
 	void Draw(GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
+	void SetFWBones(FWBoneIf* b){	base::SetFWBones(b);}	\
+	std::vector< UTRef< FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
@@ -39,4 +41,9 @@
 	void Step(){	base::Step();}	\
 	void Draw(){	base::Draw();}	\
 	void Reshape(int w, int h){	base::Reshape(w, h);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWBoneIf(base)	\
+	CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
+	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
+	PHJointIf* GetJoint(){	return	base::GetJoint();}	\
 
