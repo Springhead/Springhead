@@ -291,6 +291,11 @@ struct PHJoint1DIf : public PHJointIf{
 	*/
 	void	SetOffsetForce(double dat);
 
+	/** @brief 補正力を得る
+		@return 補正値
+	*/
+	double	GetOffsetForce();
+
 	/** @brief 関節の出すことができる最大トルク(N)を設定する
 	*/
 	void SetTorqueMax(double max);
@@ -307,6 +312,10 @@ struct PHJoint1DIf : public PHJointIf{
 	*/
 	double GetTorqueMin();
 
+	/** @brief 可動域にかかっているかどうかを取得する
+		@return かかっていればtrue
+	*/
+	bool IsLimit();
 };
 
 /// ヒンジのインタフェース
@@ -546,6 +555,10 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	Vec3d GetOffsetForce();
 
+	/** @brief 可動域にかかっているかどうかを取得する
+		@return かかっていればtrue
+	*/
+	bool IsLimit();
 };
 /// ボールジョイントのディスクリプタ
 struct PHBallJointDesc : public PHJointDesc{

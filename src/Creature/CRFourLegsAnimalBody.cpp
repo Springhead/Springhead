@@ -985,7 +985,8 @@ void CRFourLegsAnimalBody::InitContact(){
 
 }
 void CRFourLegsAnimalBody::InitControlMode(PHJointDesc::PHControlMode m){
-	for(int i = 0; i < joints.size(); i++){
+	int njoints = joints.size();
+	for(int i = 0; i < njoints; i++){
 		if(joints[i])joints[i]->SetMode(m);
 	}
 }
@@ -1016,7 +1017,8 @@ Vec3d CRFourLegsAnimalBody::GetUpperCenterOfMass(){
 }
 int CRFourLegsAnimalBody::NBallJoints(){
 	int counterNBallJoint = 0;
-	for(unsigned int i = 0; i < joints.size(); i++){
+	int njoints = joints.size();
+	for(int i = 0; i < njoints; i++){
 		if(DCAST(PHBallJointIf, joints[i]))
 			counterNBallJoint ++;
 	}
@@ -1026,7 +1028,8 @@ int CRFourLegsAnimalBody::NBallJoints(){
 
 int CRFourLegsAnimalBody::NHingeJoints(){
 	int counterNHingeJoint = 0;
-	for(unsigned int i = 0; i< joints.size(); i++){
+	int njoints = joints.size();
+	for(int i = 0; i < njoints; i++){
 		if(DCAST(PHHingeJointIf, joints[i]))
 			 counterNHingeJoint ++;
 	}
