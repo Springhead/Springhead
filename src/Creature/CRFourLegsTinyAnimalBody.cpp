@@ -69,7 +69,7 @@ void CRFourLegsTinyAnimalBody::CreateBody(){
 	solids[SO_BODY]->SetFramePosition(Vec3f(0,0,0));
 	solids[SO_BODY]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
 	solids[SO_BODY]->SetName("soWaist");
-	solids[SO_BODY]->SetInertia(Matrix3d(100000, 10000, 10000, 10000, 100000, 10000, 10000, 10000, 100000));
+	//solids[SO_BODY]->SetInertia(Matrix3d(100000, 10000, 10000, 10000, 100000, 10000, 10000, 10000, 100000));
 	solids[SO_BODY]->SetDynamical(false);
 }
 void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){	
