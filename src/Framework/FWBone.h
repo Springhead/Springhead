@@ -54,7 +54,7 @@ class FWBoneCreate;
 	public:
 		Vec3d		centerPoint;
 		double		length;
-		CDBoxIf*	shapeBone;
+		CDRoundConeIf*	shapeBone;
 		Affinef		worldTransformAffine;
 		FWBone*		parentBone;
 		PHJointIf*  joint;
@@ -65,37 +65,38 @@ class FWBoneCreate;
 
 	class FWBoneCreate{
 	private:
-		GRMesh* mesh;
-		FWSdkIf* fwSdk;
-		PHScene* phScene;
-		PHSceneIf* phSceneIf;
-		std::vector<FWObjectIf*> fwObject;
-		std::vector<FWBone*> bone;
-		FWBone* bone_;
-		std::vector<PHSolidIf*> soBone;
-		std::vector<CDBoxIf*> shapeBone;
-		std::vector<PHJointIf*> joint;
+		GRMesh*						mesh;
+		FWSdkIf*					fwSdk;
+		PHScene*					phScene;
+		PHSceneIf*					phSceneIf;
+		std::vector<FWObjectIf*>	fwObject;
+		std::vector<FWBone*>		bone;
+		FWBone*						bone_;
+		std::vector<PHSolidIf*>		soBone;
+		std::vector<CDRoundConeIf*>		shapeBone;
+		std::vector<PHJointIf*>		joint;
 		//FWBoneCreateを使うのに必要な値を設定するためのインタフェース
-		void SetMesh(GRMesh* m){mesh=m;};
-		GRMesh* GetMesh(){return mesh;};
-		void SetPHScene(PHScene* p){phScene=p;};
-		PHScene* GetPHScene(){return phScene;};
+		void		SetMesh(GRMesh* m){mesh=m;};
+		GRMesh*		GetMesh(){return mesh;};
+		void		SetPHScene(PHScene* p){phScene=p;};
+		PHScene*	GetPHScene(){return phScene;};
 		//FWBoneに情報を代入するための関数
-		void SetFWBone();
-		bool BoneDetector(GRFrameIf* frame1,GRFrameIf* frame2);
-		Vec3d BonePosition(GRFrameIf* frame1,GRFrameIf* frame2);
-		double BoneLength(GRFrameIf* frame1,GRFrameIf* frame2);
-		CDBoxIf* BoneShape(GRFrameIf* frame1,GRFrameIf* frame2);
-		FWBone* ParentBone(GRFrameIf* frame1);
+		void		SetFWBone();
+		bool		BoneDetector(GRFrameIf* frame1,GRFrameIf* frame2);
+		Vec3d		BonePosition(GRFrameIf* frame1,GRFrameIf* frame2);
+		double		BoneLength(GRFrameIf* frame1,GRFrameIf* frame2);
+		//CDBoxIf*	BoneShape(GRFrameIf* frame1,GRFrameIf* frame2);
+		CDRoundConeIf* BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2);
+		FWBone*		ParentBone(GRFrameIf* frame1);
 		//FWBoneに代入された情報を使ってシーンを作成する関数
-		void GenerateBone();
-		void SetBoneJoint();
-		void ContactCanceler();
-		void FWPHBoneCreate();
-		void FWJointCreate();
-		void FWSkinMeshAdapt();
+		void		GenerateBone();
+		void		SetBoneJoint();
+		void		ContactCanceler();
+		void		FWPHBoneCreate();
+		void		FWJointCreate();
+		void		FWSkinMeshAdapt();
 	public:
-		void Boot(GRMesh* m,PHScene* s);
+		void		Boot(GRMesh* m,PHScene* s);
 
 	};
 		

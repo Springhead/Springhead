@@ -31,48 +31,6 @@ FWBone::FWBone()
 }
 
 void FWBone::Sync(){
-	//if (phSolid && grFrame){
-	//	if(solidLength){
-	//		//ボーン付きXファイルを使用する場合
-	//		if(bonePositionFlag==1){
-	//			//ボーン１　（並行行列のみのアフィン行列更新）
-	//			Affinef af;
-	//			Matrix3d matrix;
-	//			phSolid->GetPose().ToAffine(af);
-	//			af.Rot()=matrix;									//回転成分の初期化
-	//			DCAST(GRFrame, grFrame)->SetTransform(af);
-	//		}else if(bonePositionFlag==2){
-	//			//ボーン２　（回転行列のみのアフィン行列更新）
-	//			Affinef af,afParent,afd,afl,AF;
-	//			phSolid->GetPose().ToAffine(af);
-	//			afParent=grFrame->GetParent()->GetWorldTransform();
-	//			afd=afParent.inv()*af;
-	//			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-	//			AF=afd*afl;
-	//			DCAST(GRFrame, grFrame)->SetTransform(AF);
-	//		}else if(bonePositionFlag==3){
-	//			//ボーン３
-	//			Affinef af,afParent,afd,afl,AF;
-	//			phSolid->GetPose().ToAffine(af);
-	//			afParent=grFrame->GetParent()->GetWorldTransform();
-	//			afd=afParent.inv()*af;
-	//			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-	//			AF=afd*afl;
-	//			DCAST(GRFrame, grFrame)->SetTransform(AF);
-	//		}else if(bonePositionFlag==0){
-	//			//ボーン１，２以外のボーン（アフィン行列の更新）
-	//			Affinef af,afParent,afd,afl,AF;
-	//			phSolid->GetPose().ToAffine(af);	
-	//			afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
-	//			afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
-	//			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-	//			AF=afd*afl;
-	//			DCAST(GRFrame, grFrame)->SetTransform(AF);
-	//		}else{
-	//			DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
-	//		}
-	//	}
-	//}
 }
 
 //Bootを呼べばすべての処理が自動で行われる-------------------------------------------------------
@@ -106,7 +64,7 @@ void FWBoneCreate::SetFWBone(){
 				bone.push_back(bone_);
 				bone.back()->centerPoint			= BonePosition(frame1,frame2);
 				bone.back()->length					= BoneLength(frame1,frame2);
-				bone.back()->shapeBone				= BoneShape(frame1,frame2);
+				bone.back()->shapeBone				= BoneShapeCone(frame1,frame2);
 				bone.back()->parentBone				= ParentBone(frame1);
 				bone.back()->grFrame				= frame1;
 				bone.back()->worldTransformAffine	= frame1->GetWorldTransform();
@@ -140,13 +98,14 @@ double FWBoneCreate::BoneLength(GRFrameIf* frame1,GRFrameIf* frame2){
 	Vec3d length= point2-point1;
 	return length.norm();
 }
-/*2つのgrFrameからshapeを作成*/
-CDBoxIf* FWBoneCreate::BoneShape(GRFrameIf* frame1,GRFrameIf* frame2){
+/*2つのgrFrameからshape(ラウンドコーン）を作成*/
+CDRoundConeIf* FWBoneCreate::BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2){
 	double wide=0.5;
 	double length=BoneLength(frame1,frame2);
-	CDBoxDesc dBox;
-	dBox.boxsize=Vec3d(wide,wide,length);
-	shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(dBox)));
+	CDRoundConeDesc desc;
+	desc.length=length;
+	desc.radius=Vec2f(wide,wide);
+	shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(desc)));
 	return shapeBone[shapeBone.size()-1];
 }
 /*親boneを設定*/
@@ -217,7 +176,6 @@ void FWBoneCreate::FWJointCreate(){
 					d3Ball.yieldStress		= bone[i]->jointData.yieldStress;
 					d3Ball.hardnessRate		= bone[i]->jointData.hardnessRate;
 				}
-				phSceneIf->SetContactMode(bone[i]->parentBone->phSolid, bone[i]->phSolid, PHSceneDesc::MODE_NONE);
 				joint.push_back( phSceneIf->CreateJoint(bone[i]->parentBone->phSolid, bone[i]->phSolid, d3Ball));
 				bone[i]->joint=joint.back();
 			}
@@ -256,7 +214,5 @@ void FWBoneCreate::FWSkinMeshAdapt(){
 		fwObject[i]->SetSolidLength(bone[i]->length);
 	}
 }
-
-
 
 }
