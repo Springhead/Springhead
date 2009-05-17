@@ -31,48 +31,48 @@ FWBone::FWBone()
 }
 
 void FWBone::Sync(){
-	if (phSolid && grFrame){
-		if(solidLength){
-			//ボーン付きXファイルを使用する場合
-			if(bonePositionFlag==1){
-				//ボーン１　（並行行列のみのアフィン行列更新）
-				Affinef af;
-				Matrix3d matrix;
-				phSolid->GetPose().ToAffine(af);
-				af.Rot()=matrix;									//回転成分の初期化
-				DCAST(GRFrame, grFrame)->SetTransform(af);
-			}else if(bonePositionFlag==2){
-				//ボーン２　（回転行列のみのアフィン行列更新）
-				Affinef af,afParent,afd,afl,AF;
-				phSolid->GetPose().ToAffine(af);
-				afParent=grFrame->GetParent()->GetWorldTransform();
-				afd=afParent.inv()*af;
-				afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-				AF=afd*afl;
-				DCAST(GRFrame, grFrame)->SetTransform(AF);
-			}else if(bonePositionFlag==3){
-				//ボーン３
-				Affinef af,afParent,afd,afl,AF;
-				phSolid->GetPose().ToAffine(af);
-				afParent=grFrame->GetParent()->GetWorldTransform();
-				afd=afParent.inv()*af;
-				afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-				AF=afd*afl;
-				DCAST(GRFrame, grFrame)->SetTransform(AF);
-			}else if(bonePositionFlag==0){
-				//ボーン１，２以外のボーン（アフィン行列の更新）
-				Affinef af,afParent,afd,afl,AF;
-				phSolid->GetPose().ToAffine(af);	
-				afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
-				afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
-				afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-				AF=afd*afl;
-				DCAST(GRFrame, grFrame)->SetTransform(AF);
-			}else{
-				DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
-			}
-		}
-	}
+	//if (phSolid && grFrame){
+	//	if(solidLength){
+	//		//ボーン付きXファイルを使用する場合
+	//		if(bonePositionFlag==1){
+	//			//ボーン１　（並行行列のみのアフィン行列更新）
+	//			Affinef af;
+	//			Matrix3d matrix;
+	//			phSolid->GetPose().ToAffine(af);
+	//			af.Rot()=matrix;									//回転成分の初期化
+	//			DCAST(GRFrame, grFrame)->SetTransform(af);
+	//		}else if(bonePositionFlag==2){
+	//			//ボーン２　（回転行列のみのアフィン行列更新）
+	//			Affinef af,afParent,afd,afl,AF;
+	//			phSolid->GetPose().ToAffine(af);
+	//			afParent=grFrame->GetParent()->GetWorldTransform();
+	//			afd=afParent.inv()*af;
+	//			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+	//			AF=afd*afl;
+	//			DCAST(GRFrame, grFrame)->SetTransform(AF);
+	//		}else if(bonePositionFlag==3){
+	//			//ボーン３
+	//			Affinef af,afParent,afd,afl,AF;
+	//			phSolid->GetPose().ToAffine(af);
+	//			afParent=grFrame->GetParent()->GetWorldTransform();
+	//			afd=afParent.inv()*af;
+	//			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+	//			AF=afd*afl;
+	//			DCAST(GRFrame, grFrame)->SetTransform(AF);
+	//		}else if(bonePositionFlag==0){
+	//			//ボーン１，２以外のボーン（アフィン行列の更新）
+	//			Affinef af,afParent,afd,afl,AF;
+	//			phSolid->GetPose().ToAffine(af);	
+	//			afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
+	//			afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
+	//			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+	//			AF=afd*afl;
+	//			DCAST(GRFrame, grFrame)->SetTransform(AF);
+	//		}else{
+	//			DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
+	//		}
+	//	}
+	//}
 }
 
 //Bootを呼べばすべての処理が自動で行われる-------------------------------------------------------
@@ -91,6 +91,7 @@ void FWBoneCreate::Boot(GRMesh* mesh, PHScene* phScene){
 	GenerateBone();		//シーンに剛体を作成
 	FWJointCreate();	//シーンにジョイントを作成
 	ContactCanceler();	//連なる剛体の接触を切る
+	FWSkinMeshAdapt();	//FWObjectに代入し，スキンメッシュを適合する
 }
 
 //Xファイルの情報をFWBoneデータ構造に変換--------------------------------------------------------
@@ -247,96 +248,13 @@ void FWBoneCreate::ContactCanceler(){
 
 
 void FWBoneCreate::FWSkinMeshAdapt(){
-
-	//for(int i=0; i<bone.size(); ++i){
-	//	//ボーン１の設定をする（並行行列のみのアフィン行列更新）
-	//	if(i==0){
-	//		fwoAncestorBone.push_back(fwSdk->GetScene()->CreateFWObject());
-	//		ancestorBone[0].fwObject	= fwoAncestorBone[0];
-	//		ancestorBone[0].grFrame		= grfBone[0];
-	//		ancestorBone[0].length		= bone[0].length;
-
-	//		ancestorBone[0].fwObject->SetPHSolid(ancestorBone[0].solid);
-	//		ancestorBone[0].fwObject->SetbonePositionFlag(1);
-	//		ancestorBone[0].fwObject->SetSolidLength(ancestorBone[0].length);
-	//		ancestorBone[0].fwObject->SetGRFrame(ancestorBone[0].grFrame->Cast());
-	//	}
-	//	fwoBone.push_back(fwSdk->GetScene()->CreateFWObject());
-
-	//	bone[i].fwObject=fwoBone[i];
-	//	bone[i].grFrame=grfBone[i+1];
-	//	//PHとGRを連動させる
-	//	bone[i].fwObject->SetPHSolid(bone[i].solid);
-	//	if(i==0){
-	//		//ボーン２の設定をする（回転行列のみのアフィン行列更新）
-	//		bone[i].fwObject->SetbonePositionFlag(2);
-	//		bone[i].fwObject->SetSolidLength(bone[i].length);
-	//	}else if(i==1){
-	//		//ボーン３の設定（アフィン行列）
-	//		bone[i].fwObject->SetbonePositionFlag(3);
-	//		bone[i].fwObject->SetSolidLength(bone[i].length);
-	//	}else{
-	//		//ボーン１，２以外のボーンの設定（アフィン行列）
-	//		bone[i].fwObject->SetbonePositionFlag(0);
-	//		bone[i].fwObject->SetSolidLength(bone[i].length);
-	//	}
-	//	bone[i].fwObject->SetGRFrame(bone[i].grFrame->Cast());
-
-	//	Affinef afs;
-	//	bone[i].solid->GetPose().ToAffine(afs);
-	//	bone[i].grFrame->GetObjectIf()->Print(std::cout);
-	//}
-}
-
-void FWBoneCreate::DisplayBonePoint(){
-	//CDSphereDesc dSphere;
-	//CDSphereIf* shapeSphere;
-	//std::vector<PHSolidIf*> soSphere;
-
-	//for(int i=0; i<bonePoint.size(); ++i){
-	//	//soSphereの作成
-	//	soSphere.push_back(phScene->CreateSolid(desc));
-	//	{
-	//		soSphere[i]->SetDynamical(false);
-	//		soSphere[i]->SetFramePosition(bonePoint[i]);
-	//	}
-	//	//shapeBoneの作成	
-	//	{
-	//		dSphere.radius=0.1;
-	//		shapeSphere=XCAST(fwSdk->GetPHSdk()->CreateShape(dSphere));
-	//	}
-	//	soSphere[i]->AddShape(shapeSphere);
-	//}
-}
-
-void FWBoneCreate::DisplayPHBoneCenter(){
-	//CDBoxDesc dBoxD;
-	//CDBoxIf* shapeBoxD;
-	//std::vector<PHSolidIf*> soBoxD;
-	//for(int i=0; i<bone.size(); ++i){
-	//	//soBoxDの作成
-	//	soBoxD.push_back(phScene->CreateSolid(desc));
-	//	{
-	//		soBoxD[i]->SetDynamical(false);
-	//		soBoxD[i]->SetFramePosition(bone[i].centerPoint);
-	//	}
-	//	//shapeBoxDの作成	
-	//	{
-	//		dBoxD.boxsize=(Vec3d(0.1,0.1,0.1));
-	//		shapeBoxD=XCAST(fwSdk->GetPHSdk()->CreateShape(dBoxD));
-	//	}
-	//	soBoxD[i]->AddShape(shapeBoxD);
-	//}
-}
-
-void FWBoneCreate::SetAffine(std::vector<Affinef> a){
-	//アフィン行列を剛体に保存
-	//if (af.size()){
-	//	for(int i=0 ;i<bone.size(); ++i){
-	//		bone[i].transformAffine=af[i+1];
-	//		//DSTR << i << std::endl << bone[i].grParentAffine << std::endl;
-	//	}
-	//}
+	for(int i=0; i<bone.size(); ++i){
+		//ボーン１の設定をする（並行行列のみのアフィン行列更新）
+		fwObject.push_back(fwSdk->GetScene()->CreateFWObject());
+		fwObject[i]->SetPHSolid(bone[i]->phSolid);
+		fwObject[i]->SetGRFrame(bone[i]->grFrame);
+		fwObject[i]->SetSolidLength(bone[i]->length);
+	}
 }
 
 

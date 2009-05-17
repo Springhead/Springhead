@@ -37,19 +37,11 @@ namespace Spr{
 		/// GRFrameを設定する
 		void SetGRFrame(GRFrameIf* f);
 
-		/*ボーン付きXファイル専用*/////////
-		/// PHParentSolidを取得する
-		PHSolidIf* GetPHParentSolid();
-		/// PHParentSolidを設定する
-		void SetPHParentSolid(PHSolidIf* ps);
+		///ボーン付きXファイル専用
 		/// solidLengthを取得する
 		double GetSolidLength();
 		/// solidLengthを設定する
 		void SetSolidLength(double l);
-		/// bonePositionFlagを取得する
-		int GetbonePositionFlag();
-		/// bonePositionFlagを設定する
-		void SetbonePositionFlag(int f);
 
 
 

@@ -69,6 +69,7 @@ class FWBoneCreate;
 		FWSdkIf* fwSdk;
 		PHScene* phScene;
 		PHSceneIf* phSceneIf;
+		std::vector<FWObjectIf*> fwObject;
 		std::vector<FWBone*> bone;
 		FWBone* bone_;
 		std::vector<PHSolidIf*> soBone;
@@ -90,16 +91,12 @@ class FWBoneCreate;
 		void GenerateBone();
 		void SetBoneJoint();
 		void ContactCanceler();
-	public:
-		void Boot(GRMesh* m,PHScene* s);
 		void FWPHBoneCreate();
 		void FWJointCreate();
 		void FWSkinMeshAdapt();
-		void SetPHScne(PHSceneIf* s){phSceneIf=s;}
-		void SetfwSdk(FWSdkIf* s){fwSdk=s;}
-		void SetAffine(std::vector<Affinef> a);
-		void DisplayBonePoint();
-		void DisplayPHBoneCenter();
+	public:
+		void Boot(GRMesh* m,PHScene* s);
+
 	};
 		
 }
