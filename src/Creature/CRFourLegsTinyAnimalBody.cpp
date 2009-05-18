@@ -27,7 +27,6 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	upperLength = 1.0;
 	lowerLength = 1.4;
 
-
 	springFront   = 1.0;  damperFront   =  5.0;
 	springRear    = 1.0;  damperRear    =  5.0;
 
@@ -81,9 +80,9 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr){
 	solidDesc.mass   = massFL;
 	if(lr == RIGHTPART){
 		solids[SO_RIGHT_FRONT_LEG_0] = phScene->CreateSolid(solidDesc);
-		rcDesc.radius	 = upperSizes;
-		rcDesc.length	 = upperLength;
-		solids[SO_RIGHT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(rcDesc));
+			rcDesc.radius	 = upperSizes;
+			rcDesc.length	 = upperLength;
+			solids[SO_RIGHT_FRONT_LEG_0]->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_RIGHT_FRONT_LEG_0]->SetName("soRightFrontLeg0");
 	}
 	else{
