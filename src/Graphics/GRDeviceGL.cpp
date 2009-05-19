@@ -283,6 +283,7 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	else glDisable(GL_COLOR_MATERIAL);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
+	glFinish();	//スキンウェイトのある頂点の場合，途中で書き換えがあるので，データ書き換え中に描画されないようにする．
 }
 void GRDeviceGL::DrawSphere(float radius, int slices, int stacks, bool solid){
 	if(solid)
