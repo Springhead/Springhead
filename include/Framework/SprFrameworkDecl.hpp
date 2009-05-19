@@ -43,6 +43,10 @@
 	void Reshape(int w, int h){	base::Reshape(w, h);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWBoneIf(base)	\
+	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
+	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
+	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
+	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
 	CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
 	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
 	PHJointIf* GetJoint(){	return	base::GetJoint();}	\

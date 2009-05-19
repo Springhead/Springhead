@@ -136,13 +136,13 @@ void FWBoneCreate::GenerateBone(){
 	for(unsigned int i=0; i<bone.size(); ++i){
 		//soBone�̍쐬
 		PHSolidDesc	desc;
-		desc.mass = 0.05;
+		desc.mass = 0.0005;
 		desc.inertia = 0.033 * Matrix3d::Unit();
 		soBone.push_back(phScene->CreateSolid(desc));
 		bone[i]->phSolid=soBone[i];
 		{
 			if(i==0){
-				bone[i]->phSolid->SetDynamical(false);
+				bone[i]->phSolid->SetDynamical(true);
 			}else{
 				bone[i]->phSolid->SetDynamical(true);
 			}
