@@ -29,8 +29,19 @@ namespace Spr{
 	struct FWBoneIf : SceneObjectIf {
 		SPR_IFDEF(FWBone);
 
+		/// PHSolid‚ğæ“¾‚·‚é
+		PHSolidIf* GetPHSolid();
+		/// PHSolid‚ğİ’è‚·‚é
+		void SetPHSolid(PHSolidIf* s);
+		/// GRFrame‚ğæ“¾‚·‚é
+		GRFrameIf* GetGRFrame();
+		/// GRFrame‚ğİ’è‚·‚é
+		void SetGRFrame(GRFrameIf* f);
+		/// CDRoundConeIf‚ğæ“¾‚·‚é
 		CDRoundConeIf* GetShape();
+		/// CDRoundConeIf‚ÌRadius‚ğİ’è‚·‚é
 		void		   SetShapeRadius(double r1,double r2);
+		///@joint‚ğæ“¾‚·‚é
 		PHJointIf*	   GetJoint();
 
 
