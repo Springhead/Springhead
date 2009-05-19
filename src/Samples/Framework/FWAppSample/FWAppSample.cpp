@@ -14,6 +14,7 @@ void FWAppSample::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);										// Sdkの作成
 	GetSdk()->Clear();														// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);
 
 	FWWinDesc windowDesc;												// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWAppSample";								// ウィンドウのタイトル
@@ -58,7 +59,7 @@ void FWAppSample::BuildObject(){
 	// 箱(物理法則に従う，運動が変化)
 	{
 		// 剛体(soBox)の作成
-		desc.mass = 0.05;
+		desc.mass = 0.5;
 		desc.inertia *= 0.033;
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
 		// 形状(shapeBox)の作成
