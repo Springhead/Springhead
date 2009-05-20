@@ -64,6 +64,11 @@ public:
 		if(counter) return counter->Count() * lengthPerPulse;
 		else return 0;
 	}
+	/// エンコーダのカウンタ値の読みだし
+	int GetCount(){
+		if(counter) return counter->Count();
+		else return 0;
+	}
 	///	速度の計測
 	float GetVelocity();
 	///	モータ定数のキャリブレーションのための計測 (100回くらいこれを呼んでから)

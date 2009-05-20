@@ -7,6 +7,7 @@
 
 namespace Spr {
 
+
 HISpidarMotor::HISpidarMotor(){
 	maxForce = 20.0f;
 	minForce = 0.5f;
@@ -91,5 +92,4 @@ void HISpidarMotor::GetVdd(){
 	}
 	vdd /= MEASURE_TIMES;
 }
-
 }	//	namespace Spr
