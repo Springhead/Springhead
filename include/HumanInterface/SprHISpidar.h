@@ -60,6 +60,8 @@ struct HISpidarMotorIf: public HIBaseIf{
 	void Calibrate(bool bUpdate);
 	///	電源電圧の計測
 	void GetVdd();
+	///	 エンコーダのカウント値を返す
+	int GetCount();
 
 };
 
