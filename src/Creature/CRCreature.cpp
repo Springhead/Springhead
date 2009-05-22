@@ -21,7 +21,6 @@
 #include "CREseWalkingController.h"
 #include "CRTravelController.h"
 #include "CRGrabController.h"
-#include "CRTryStandingUpController.h"
 
 #include "CRBody.h"
 #include "CRHingeHumanBody.h"
@@ -182,8 +181,6 @@ CRControllerIf* CRCreature::CreateController(const IfInfo* ii, const CRControlle
 	} else if (ii == CRGrabControllerIf::GetIfInfoStatic()) {
 		controllers.push_back((DBG_NEW CRGrabController((const CRGrabControllerDesc&)desc, this->Cast()))->Cast());
 
-	} else if (ii == CRTryStandingUpControllerIf::GetIfInfoStatic()){
-		controllers.push_back((DBG_NEW CRTryStandingUpController((const CRTryStandingUpControllerDesc&)desc, this->Cast()))->Cast());
 	} else {
 		assert(0 && "‘z’è‚³‚ê‚Ä‚È‚¢Œ^");
 
