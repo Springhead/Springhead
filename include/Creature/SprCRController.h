@@ -208,32 +208,6 @@ struct CRAttentionControllerDesc : public CRControllerDesc{
 };
 
 // ------------------------------------------------------------------------------
-/// 倒れたら立とうと努力するコントローラのインタフェース
-struct CRTryStandingUpControllerIf : CRControllerIf{
-	SPR_IFDEF(CRTryStandingUpController);
-
-	/** @brief 初期化を行う
-	*/
-	void Init();
-
-	/** @brief 制御のシミュレーションをする
-	*/
-	void Step();
-
-	/** @brief 遺伝子情報のシンクロだけする
-	*/
-	void Sync() ;
-
-};
-/// 倒れたら立とうと努力するコントローラのデスクリプタ
-struct CRTryStandingUpControllerDesc : public CRControllerDesc{
-	SPR_DESCDEF(CRTryStandingUpController);
-	
-	CRTryStandingUpControllerDesc(){
-	}
-};
-
-// ------------------------------------------------------------------------------
 /// 歩行コントローラのインタフェース
 struct CRWalkingControllerIf : CRControllerIf{
 	SPR_IFDEF(CRWalkingController);

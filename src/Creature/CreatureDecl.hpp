@@ -1358,19 +1358,6 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_CRTryStandingUpControllerDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		CRController::SetDesc((CRControllerDesc*)(CRTryStandingUpControllerDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		CRController::GetDesc((CRControllerDesc*)(CRTryStandingUpControllerDesc*)ptr);	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_CRWalkingControllerDesc \
 protected:\
 	double	paramLdx;	\

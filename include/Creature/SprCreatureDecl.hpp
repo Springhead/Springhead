@@ -65,11 +65,6 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRAttentionControllerIf(base)	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_CRTryStandingUpControllerIf(base)	\
-	void Init(){	base::Init();}	\
-	void Step(){	base::Step();}	\
-	void Sync(){	base::Sync();}	\
-
 #define SPR_OVERRIDEMEMBERFUNCOF_CRWalkingControllerIf(base)	\
 	void SetSpeed(float speed){	base::SetSpeed(speed);}	\
 	void SetRotationAngle(float rot){	base::SetRotationAngle(rot);}	\
