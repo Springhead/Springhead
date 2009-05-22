@@ -1129,6 +1129,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRFourLegsTinyAnimalBodyDesc \
 protected:\
+	enum Spr::CRFourLegsTinyAnimalBodyDesc::CRTinyJointsMode	jointType;	\
 	double	bodyHeight;	\
 	double	bodyBreadth;	\
 	double	bodyThickness;	\
@@ -1136,6 +1137,11 @@ protected:\
 	Vec2d	lowerSizes;	\
 	float	upperLength;	\
 	float	lowerLength;	\
+	double	massFF;	\
+	double	massFL;	\
+	double	massRF;	\
+	double	massRL;	\
+	double	massBody;	\
 	double	springFront;	\
 	double	damperFront;	\
 	double	springRear;	\
@@ -1144,13 +1150,18 @@ protected:\
 	Vec2d	rangeFrontTwist;	\
 	Vec2d	rangeRearSwing;	\
 	Vec2d	rangeRearTwist;	\
-	bool	noLegs;	\
-	bool	noHead;	\
-	bool	onlyOneLeg;	\
-	bool	hingeDebug;	\
+	Vec2d	rangeUpperFront;	\
+	Vec2d	rangeLowerFront;	\
+	Vec2d	rangeUpperRear;	\
+	Vec2d	rangeLowerRear;	\
+	bool	rfLeg;	\
+	bool	lfLeg;	\
+	bool	rrLeg;	\
+	bool	lrLeg;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRFourLegsTinyAnimalBodyDesc*)ptr);	\
+		jointType = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->jointType;	\
 		bodyHeight = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyHeight;	\
 		bodyBreadth = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyBreadth;	\
 		bodyThickness = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyThickness;	\
@@ -1158,6 +1169,11 @@ public:\
 		lowerSizes = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerSizes;	\
 		upperLength = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->upperLength;	\
 		lowerLength = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerLength;	\
+		massFF = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->massFF;	\
+		massFL = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->massFL;	\
+		massRF = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->massRF;	\
+		massRL = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->massRL;	\
+		massBody = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->massBody;	\
 		springFront = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->springFront;	\
 		damperFront = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->damperFront;	\
 		springRear = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->springRear;	\
@@ -1166,15 +1182,20 @@ public:\
 		rangeFrontTwist = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeFrontTwist;	\
 		rangeRearSwing = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearSwing;	\
 		rangeRearTwist = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearTwist;	\
-		noLegs = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->noLegs;	\
-		noHead = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->noHead;	\
-		onlyOneLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->onlyOneLeg;	\
-		hingeDebug = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->hingeDebug;	\
+		rangeUpperFront = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeUpperFront;	\
+		rangeLowerFront = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeLowerFront;	\
+		rangeUpperRear = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeUpperRear;	\
+		rangeLowerRear = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeLowerRear;	\
+		rfLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rfLeg;	\
+		lfLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->lfLeg;	\
+		rrLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->rrLeg;	\
+		lrLeg = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->lrLeg;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRFourLegsTinyAnimalBodyDesc*)ptr);	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->jointType = jointType;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyHeight = bodyHeight;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyBreadth = bodyBreadth;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyThickness = bodyThickness;	\
@@ -1182,6 +1203,11 @@ public:\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerSizes = lowerSizes;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->upperLength = upperLength;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->lowerLength = lowerLength;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->massFF = massFF;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->massFL = massFL;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->massRF = massRF;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->massRL = massRL;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->massBody = massBody;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->springFront = springFront;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->damperFront = damperFront;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->springRear = springRear;	\
@@ -1190,10 +1216,14 @@ public:\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeFrontTwist = rangeFrontTwist;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearSwing = rangeRearSwing;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeRearTwist = rangeRearTwist;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->noLegs = noLegs;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->noHead = noHead;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->onlyOneLeg = onlyOneLeg;	\
-		((CRFourLegsTinyAnimalBodyDesc*)ptr)->hingeDebug = hingeDebug;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeUpperFront = rangeUpperFront;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeLowerFront = rangeLowerFront;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeUpperRear = rangeUpperRear;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rangeLowerRear = rangeLowerRear;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rfLeg = rfLeg;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->lfLeg = lfLeg;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->rrLeg = rrLeg;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->lrLeg = lrLeg;	\
 		return true;	\
 	}\
 

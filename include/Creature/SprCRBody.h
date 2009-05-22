@@ -704,49 +704,48 @@ struct CRFourLegsTinyAnimalBodyIf : CRBodyIf{
 struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 	SPR_DESCDEF(CRFourLegsTinyAnimalBody);
 
-	enum CRAnimalSolids{
-		// 剛体
-		SO_BODY=0,
-		SO_RIGHT_FRONT_LEG_0, SO_LEFT_FRONT_LEG_0,	//< 0が胴体側
-		SO_RIGHT_FRONT_LEG_1, SO_LEFT_FRONT_LEG_1,	//< 1が足先側
-		SO_RIGHT_REAR_LEG_0, SO_LEFT_REAR_LEG_0,
-		SO_RIGHT_REAR_LEG_1, SO_LEFT_REAR_LEG_1,
-		// 剛体の数
-		SO_NSOLIDS
-	};
+	// どの種類の関節で脚を構成するか
+	enum CRTinyJointsMode{
+		HINGE_MODE = 0,
+		BALL_MODE,
+	} jointType;
 
-	enum CRAnimalJoints{
-		// 関節
-		JO_BODY_RIGHT_FRONT_LEG_0=0, JO_BODY_LEFT_FRONT_LEG_0,
-		JO_BODY_RIGHT_FRONT_LEG_1, JO_BODY_LEFT_FRONT_LEG_1,
-		JO_BODY_RIGHT_REAR_LEG_0,  JO_BODY_LEFT_REAR_LEG_0,
-		JO_BODY_RIGHT_REAR_LEG_1,  JO_BODY_LEFT_REAR_LEG_1,
-		// 関節の数
-		JO_NJOINTS
-	};
-
-	/// サイズに関するパラメータ
+	/// 体幹に関するパラメータ
 	double bodyHeight, bodyBreadth, bodyThickness;
 
-	Vec2d upperSizes;
-	Vec2d lowerSizes;
-	float upperLength;
-	float lowerLength;
+	Vec2d upperSizes;	//< 脚のRoundConeのサイズ（親側，子側）
+	Vec2d lowerSizes;	//< 足のRoundConeのサイズ（親側，子側）
+	float upperLength;	//< 脚のRoundConeを構成する2球間の距離
+	float lowerLength;	//< 足のRoundConeを構成する2球間の距離
+
+	// 質量に関するパラメータ
+	double massFF;		//< 前足の質量
+	double massFL;		//< 前脚の質量
+	double massRF;		//< 後足の質量
+	double massRL;		//< 後脚の質量
+	double massBody;	//< 体幹の質量
 
 	/// 各関節のバネダンパ
 	double springFront, damperFront;
 	double springRear,  damperRear;
 
-	/// 可動域制限
+	/// 可動域制限（BallJointの場合）
 	Vec2d rangeFrontSwing;
 	Vec2d rangeFrontTwist;
 	Vec2d rangeRearSwing;
 	Vec2d rangeRearTwist;
+	
+	/// 可動域制限（HingeJointの場合）
+	Vec2d rangeUpperFront;
+	Vec2d rangeLowerFront;
+	Vec2d rangeUpperRear;
+	Vec2d rangeLowerRear;
 
-	bool noLegs;
-	bool noHead;
-	bool onlyOneLeg;
-	bool hingeDebug;
+	bool rfLeg; //< 右前足を作成するか
+	bool lfLeg; //< 左前足を作成するか
+	bool rrLeg; //< 右後足を作成するか
+	bool lrLeg; //< 左後足を作成するか
+
 	CRFourLegsTinyAnimalBodyDesc();
 };
 

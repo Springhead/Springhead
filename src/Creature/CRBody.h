@@ -22,16 +22,16 @@ protected:
 	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
 
 	/// ボディを構成する剛体
-	std::vector<PHSolidIf*> solids;	
+	std::vector< UTRef<PHSolidIf> > solids;	
 	
 	/// ボディを構成する関節
-	std::vector<PHJointIf*> joints;
+	std::vector< UTRef<PHJointIf> > joints;
 
 	/// IKノード
-	std::vector<PHIKNodeIf*> ikNodes;
+	std::vector< UTRef<PHIKNodeIf> > ikNodes;
 
 	/// 制御点
-	std::vector<PHIKControlPointIf*> ikControlPoints;
+	std::vector< UTRef<PHIKControlPointIf> > ikControlPoints;
 
 	/// このセンサの持ち主たるCreature
 	CRCreatureIf*	creature;
