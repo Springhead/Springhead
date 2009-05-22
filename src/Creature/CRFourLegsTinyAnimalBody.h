@@ -26,21 +26,15 @@ namespace Spr{;
 // ヒンジジョイントを用いた哺乳類モデル・クラスの実装（未実装：中身はTrunkFootHumanBody）
 class CRFourLegsTinyAnimalBody : public CRBody, public CRFourLegsTinyAnimalBodyDesc {
 private:
-	double massFF;		//< 前足の質量
-	double massFL;		//< 前脚の質量
-	double massRF;		//< 後足の質量
-	double massRL;		//< 後脚の質量
-	double massBody;	//< 体幹の質量
-
-	void CreateBody();
-	void CreateFrontLegs(LREnum lr);
-	void CreateRearLegs(LREnum lr);
-	void InitBody();
-	void InitFrontLeg0(LREnum lr);
-	void InitFrontLeg1(LREnum lr);
-	void InitRearLeg0(LREnum lr);
-	void InitRearLeg1(LREnum lr);
-	void InitLegs();
+	PHSolidIf* CreateBody();
+	void CreateFrontLegs(LREnum lr, PHSolidIf* sBody);
+	void CreateRearLegs( LREnum lr, PHSolidIf* sBody);
+	PHSolidIf* InitBody();
+	PHSolidIf* InitFrontLeg0(LREnum lr, PHSolidIf* sBody);
+	void InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0);
+	PHSolidIf* InitRearLeg0(LREnum lr, PHSolidIf* sBody);
+	void InitRearLeg1(LREnum lr, PHSolidIf* sLeg0);
+	void InitLegs(PHSolidIf* sBody);
 
 	void InitContact();
 	void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ボディの制御モードを設定する．
@@ -49,26 +43,13 @@ public:
 	SPR_OBJECTDEF(CRFourLegsTinyAnimalBody);
 	ACCESS_DESC(CRFourLegsTinyAnimalBody);
 
-	CRFourLegsTinyAnimalBody(){
-		massFF		= 10;
-		massFL		= 20;
-		massRF		= 10;
-		massRL		= 20;
-		massBody	= 50;
-	}
+	CRFourLegsTinyAnimalBody(){}
 	CRFourLegsTinyAnimalBody(const CRFourLegsTinyAnimalBodyDesc& desc, CRCreatureIf* c=NULL) 
 		: CRFourLegsTinyAnimalBodyDesc(desc) 
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
-		solids.resize(CRFourLegsTinyAnimalBodyDesc::SO_NSOLIDS);
-		joints.resize(CRFourLegsTinyAnimalBodyDesc::JO_NJOINTS);
-		massFF		= 1.5;
-		massFL		= 1.5;
-		massRF		= 1.5;
-		massRL		= 1.5;
-		massBody	= 10;
-		InitBody();
-		InitLegs();
+		PHSolidIf* b = InitBody();
+		InitLegs(b);
 		InitContact();
 		InitControlMode();
 		Init();
