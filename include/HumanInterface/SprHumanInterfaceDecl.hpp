@@ -79,6 +79,7 @@
 	void GetCalibrationData(float dt){	base::GetCalibrationData(dt);}	\
 	void Calibrate(bool bUpdate){	base::Calibrate(bUpdate);}	\
 	void GetVdd(){	base::GetVdd();}	\
+	int GetCount(){	return	base::GetCount();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HIPositionIf(base)	\
 	Vec3f GetPosition(){	return	base::GetPosition();}	\
