@@ -64,15 +64,16 @@ class FWBoneCreate;
 		PHJointIf*  joint;
 		BoneJoint	jointData;
 		
-		PHSolidIf*	GetPHSolid(){ return phSolid; }
-		void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
-		GRFrameIf*	GetGRFrame(){ return grFrame; }
-		void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
+		PHSolidIf*		GetPHSolid(){ return phSolid; }
+		void			SetPHSolid(PHSolidIf* s){ phSolid = s; }
+		GRFrameIf*		GetGRFrame(){ return grFrame; }
+		void			SetGRFrame(GRFrameIf* f){ grFrame = f; }
 		CDRoundConeIf*	GetShape(){return shapeBone;}
 		void			SetShapeRadius(double r1,double r2){
-							shapeBone->SetRadius(Vec2f(r1,r2));
+						shapeBone->SetWidth(Vec2f(r1,r2));
 						}
 		PHJointIf*		GetJoint(){return joint;} 
+		void			SetJointKDD2(double K,double D, double D2);
 		
     };
 

@@ -50,4 +50,5 @@
 	CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
 	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
 	PHJointIf* GetJoint(){	return	base::GetJoint();}	\
+	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
 

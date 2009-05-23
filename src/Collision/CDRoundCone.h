@@ -42,6 +42,8 @@ public:
 	float GetLength();
 	void SetRadius(Vec2f r);
 	void SetLength(float l);
+	//lengthを変えないでカプセルの太さだけ変更する
+	void SetWidth(Vec2f r);
 };
 
 	

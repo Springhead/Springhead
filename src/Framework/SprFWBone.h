@@ -43,10 +43,8 @@ namespace Spr{
 		void		   SetShapeRadius(double r1,double r2);
 		///@joint‚ğæ“¾‚·‚é
 		PHJointIf*	   GetJoint();
-
-
-
-
+		///  joint‚ÌK,D,D2‚ğİ’è‚·‚é
+		void		   SetJointKDD2(double K,double D, double D2);
 	};
 
 }

@@ -56,6 +56,7 @@
 	float GetLength(){	return	base::GetLength();}	\
 	void SetRadius(Vec2f r){	base::SetRadius(r);}	\
 	void SetLength(float l){	base::SetLength(l);}	\
+	void SetWidth(Vec2f r){	base::SetWidth(r);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDBoxIf(base)	\
 	Vec3f GetBoxSize(){	return	base::GetBoxSize();}	\
