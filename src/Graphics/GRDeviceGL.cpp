@@ -283,7 +283,10 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	else glDisable(GL_COLOR_MATERIAL);
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
-	glFinish();	//スキンウェイトのある頂点の場合，途中で書き換えがあるので，データ書き換え中に描画されないようにする．
+	//naga
+	//glFinish()はスキンウェイトのある頂点の場合，途中で書き換えがあるので，データ書き換え中に描画されないようにする．
+	//しかし，著しく処理が重くなる可能性がある．画面がちらつくのを我慢するか，処理が重くなるのを我慢するか注意する必要がある．
+	//glFinish();	
 }
 void GRDeviceGL::DrawSphere(float radius, int slices, int stacks, bool solid){
 	if(solid)
