@@ -29,7 +29,12 @@ FWBone::FWBone(const FWBoneDesc& d/*=FWObjectDesc()*/)
 : desc(d)
 {
 }
-
+void FWBone::SetJointKDD2(double K,double D, double D2){
+	PH3ElementBallJointIf* ball=joint->Cast();
+	ball->SetSpring(K);
+	ball->SetDamper(D);
+	ball->SetSecondDamper(D2);
+}
 
 //Bootを呼べばすべての処理が自動で行われる-------------------------------------------------------
 /*NodeHandlerでBoneCreateを呼んでボーン作成し適合させる*/
@@ -99,9 +104,10 @@ double FWBoneCreate::BoneLength(GRFrameIf* frame1,GRFrameIf* frame2){
 /*2つのgrFrameからshape(ラウンドコーン）を作成*/
 CDRoundConeIf* FWBoneCreate::BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2){
 	double wide=0.5;
+	double lengthRate=0.8;
 	double length=BoneLength(frame1,frame2);
 	CDRoundConeDesc desc;
-	desc.length=length;
+	desc.length=length*lengthRate;
 	desc.radius=Vec2f(wide,wide);
 	shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(desc)));
 	return shapeBone[shapeBone.size()-1];
