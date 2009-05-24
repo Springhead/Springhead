@@ -1,7 +1,6 @@
 #include <iostream>
+#include <conio.h>
 #include <GL/glut.h>						/// UTMMtimer.hを使うのに必要
-#include <windows.h>
-#include <Springhead.h>	
 #include "Foundation/UTMMTimer.h"
 
 void CallBackHoge(void* arg){
@@ -26,7 +25,6 @@ int _cdecl main(int argc, char* argv[]){
 	timer1.Create();							/// マルチメディアタイマスタート
 	timer2.Create();
 
-	if(getchar()){
-		return 0;
-	}
+	while(!_kbhit()){}
+	return 0;
 }
