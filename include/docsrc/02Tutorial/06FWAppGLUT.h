@@ -21,22 +21,35 @@ in MYApp.h
 #include <Framework/SprFWAppGLUT.h>
 
 class MYApp : public FWAppGLUT{
-	
-	public:
-		// 必要に応じて以下の仮想関数をオーバーライドする．
-		// これらは，SprFWApp.hで仮想関数として定義されている．
-		void Display();
-		void Reshape(int w, int h);
-		void Keyboard(int key, int x, int y);
-		void MouseButton(int button, int state, int x, int y);
-		void MouseMove(int x, int y);
-		void Step();
-		void Idle();
-		void Joystick(unsinged int buttonMask, int x, int y, int z);
 
-	public:
+private:
+	MYApp();
+	~MYApp();
+	
+	// 必要に応じて以下の仮想関数をオーバーライドする．
+	// これらは，SprFWApp.hで仮想関数として定義されている．
+	void Display();
+	void Reshape(int w, int h);
+	void Keyboard(int key, int x, int y);
+	void MouseButton(int button, int state, int x, int y);
+	void MouseMove(int x, int y);
+	void Step();
+	void Idle();
+	void Joystick(unsinged int buttonMask, int x, int y, int z);
+
+public:
+	// インスタンス生成関数
+	static MYApp* GetInstance(){
+		// instance is a static variable declared in class FWAppGLUT.
+		if(!instance) instance = new MYApp();
+		return (MYApp*)instance;
+	}
+
+	void Init(int argc, char* argv[]);
+	void Start();
+public:
 		// 自分で作ったメンバ関数を追加
-	private:
+private:
 		// 自分で作ったメンバ関数やメンバ変数を追加
 };
 \endverbatim
@@ -83,12 +96,20 @@ in main.cpp
 #include <Springhead.h>
 #include "MYApp.h"
 
-int main(int argc, char* argv[]){
-	MYApp app;
-	app.Init(argc, argv);
-	app.Start();
+ 
+// Global空間で変数を定義しないと，デストラクタが呼ばれない．
+// なぜなら，glutから抜ける時にexit関数を使用するほか無いため．
+// （main関数が正常に最後まで走らない．）
+// またコンストラクタをpublicにして実体を生成すると，
+// 複数個のMYApp型の変数が定義出来てしまう可能性があり危険．
+MYApp* app = MYApp::GetInstance();
 
-	return 0;
+int main(int argc, char* argv[]){
+	
+	app->Init(argc, argv);
+	app->Start();
+
+	return 0; // ここまで来ないから，ローカル宣言だとデストラクタが呼ばれない．
 }
 \endverbatim
 </div>

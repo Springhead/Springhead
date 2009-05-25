@@ -22,10 +22,18 @@ in MYGUI.h
 
 class MYGUI : public FWAppGLUI{
 
-public:
+private:
 	GLUI* glui;
 	// GUIに関する関数を必ずオーバーライドする
 	void DesignGUI();
+public:
+
+	// インスタンス生成関数
+	static MYGUI* GetInstance(){
+		// instance is a static variable declared in class FWAppGLUT.
+		if(!instance) instance = new MYGUI();
+		return (MYGUI*)instance;
+	}
 	
 	// 必要に応じてFWAppGLUTの仮想関数をオーバーライドする．
 	void Init(int argc, char* argv[]); //< Init関数は必ずオーバーライドする
@@ -75,10 +83,16 @@ in main.cpp
 #include <Springhead.h>
 #include "MYGUI.h"
 
+// Global空間で変数を定義しないと，デストラクタが呼ばれない．
+// なぜなら，glutから抜ける時にexit関数を使用するほか無いため．
+// （main関数が正常に最後まで走らない．）
+// またコンストラクタをpublicにして実体を生成すると，
+// 複数個のMYGUI型の変数が定義出来てしまう可能性があり危険．
+MYGUI* gui = MYGUI::GetInstance();
+
 int main(int argc, char* argv[]){
-	MYGUI gui;
-	gui.Init(argc, argv);
-	gui.Start();
+	gui->Init(argc, argv);
+	gui->Start();
 
 	return 0;
 }
