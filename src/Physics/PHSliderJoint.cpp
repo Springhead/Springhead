@@ -16,11 +16,18 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSliderJoint
+PHSliderJointDesc::PHSliderJointDesc(){
+	bConstraintY = true;
+}
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 2;
 }
-
+void PHSliderJoint::SetConstrainedIndex(bool *con){
+	if(!bConstraintY){
+		con[1] = false;
+	}
+}
 void PHSliderJoint::UpdateJointState(){
 	position[0] = Xjrel.r.z;
 	velocity[0] = vjrel.v().z;
@@ -42,6 +49,9 @@ void PHSliderJoint::CompBias(){
 		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.v().z = tmp / GetScene()->GetTimeStep();
 		db.v().z = spring * (diff) * tmp;
+	}else{
+		dA.v().z = 0;
+		db.v().z = 0;
 	}
 }
 

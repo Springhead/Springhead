@@ -360,7 +360,10 @@ struct PHSliderJointIf : public PHJoint1DIf{
 /// スライダのディスクリプタ
 struct PHSliderJointDesc : public PHJoint1DDesc{
 	SPR_DESCDEF(PHSliderJoint);
-	PHSliderJointDesc(){}
+	
+	bool bConstraintY;
+	
+	PHSliderJointDesc();
 };
 
 /// パス上の1つの点

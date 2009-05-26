@@ -325,14 +325,17 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHSliderJointDesc \
 protected:\
+	bool	bConstraintY;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
+		bConstraintY = ((PHSliderJointDesc*)ptr)->bConstraintY;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
+		((PHSliderJointDesc*)ptr)->bConstraintY = bConstraintY;	\
 		return true;	\
 	}\
 
