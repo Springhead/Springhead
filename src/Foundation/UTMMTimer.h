@@ -19,14 +19,14 @@ public:
 
 protected:
 	static unsigned resolution;		///<	タイマーの時間精度
-	unsigned interval;				///<	タイマーの時間間隔
-	MMTimerFunc* func;			///<	時間が来るたびに呼ばれるコールバック関数．
-	void* arg;					///<	コールバック関数に渡す引数
+	unsigned interval;					///<	タイマーの時間間隔
+	MMTimerFunc* func;				///<	時間が来るたびに呼ばれるコールバック関数．
+	void* arg;								///<	コールバック関数に渡す引数
 	unsigned timerID;
-	volatile bool bCreated;		///<	タイマーが動作しているかどうか
-	volatile bool bThread;		///<	タイマーがスレッドとして擬似動作しているかどうか
-    volatile bool bRun;			///<	コールバック関数が実行中かどうか
-	void* hThread;				///<	擬似動作用スレッド
+	volatile bool bCreated;				///<	タイマーが動作しているかどうか
+	volatile bool bThread;				///<	タイマーがスレッドとして擬似動作しているかどうか
+    volatile bool bRun;					///<	コールバック関数が実行中かどうか
+	void* hThread;						///<	擬似動作用スレッド
 	static void SPR_STDCALL TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long);
 	static unsigned long SPR_STDCALL ThreadCallback(void* arg);
 	void BeginPeriod();
@@ -35,21 +35,23 @@ protected:
 	public:
 	volatile int heavy;
 
-	UTMMTimer();					///<	コンストラクタ
-	~UTMMTimer();					///<	デストラクタ
-	unsigned Resolution();				///<	タイマーの時間精度
+	UTMMTimer();							///<	コンストラクタ
+	~UTMMTimer();							///<	デストラクタ
+
+	unsigned Resolution();					///<	タイマーの時間精度
 	void Resolution(unsigned res);		///<	タイマーの時間精度の設定
-	unsigned Interval();				///<	タイマーの時間間隔
-	void Interval(unsigned i);			///<	タイマーの時間間隔の設定
+	unsigned Interval();						///<	タイマーの時間間隔
+	void Interval(unsigned i);				///<	タイマーの時間間隔の設定
 	void Set(MMTimerFunc* f, void* arg);
-									///<	コールバック関数の設定
-	bool Create();					///<	タイマー動作開始
-	bool Thread();					///<	タイマー擬似動作開始
+													///<	コールバック関数の設定
+	void Init(unsigned int r, unsigned int i, MMTimerFunc* f, void* arg);				///< 時間精度，間隔，コールバック関数を一度で設定 
+	bool Create();								///<	タイマー動作開始
+	bool Thread();							///<	タイマー擬似動作開始
 	bool IsCreated(){return bCreated;}
-									///<	タイマーが動作しているかどうか
+													///<	タイマーが動作しているかどうか
 	bool IsThread(){return bThread;}
-									///<	タイマーが擬似動作しているかどうか
-	void Release();					///<	タイマーの停止
+													///<	タイマーが擬似動作しているかどうか
+	void Release();							///<	タイマーの停止
 };
 
 }	//	namespace Spr
