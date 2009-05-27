@@ -536,11 +536,13 @@ public:
 #ifdef REPORT_TIME
 					ptimerForCd.Stop();
 #endif
+					// 全ての剛体の組み合わせについて接触検知を行う
 					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt); 
 #ifdef REPORT_TIME
 					ptimerForCd.Start();
 #endif
 				}
+				// 初めはitfが無いからここから始まる
 				cur.insert(it->index);
 #ifdef _DEBUG
 				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
