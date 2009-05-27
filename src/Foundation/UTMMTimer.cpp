@@ -153,5 +153,9 @@ void UTMMTimer::Set(MMTimerFunc* f, void* a)
 	func = f;
 	arg = a;
 	}
-
+void UTMMTimer::Init(unsigned int r, unsigned int i, MMTimerFunc* f, void* arg){
+	Resolution(r);
+	Interval(i);
+	Set(f, arg);
+}
 }	//	namespace Spr
