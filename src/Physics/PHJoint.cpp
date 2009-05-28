@@ -25,7 +25,11 @@ PHJoint::PHJoint(){
 PHJoint1DDesc::PHJoint1DDesc():lower(0.0), upper(0.0), spring(0.0), origin(0.0), damper(0.0), desiredVelocity(0.0), torque(0.0), offsetForce(0.0), fMax(FLT_MAX), fMin(-FLT_MAX){
 }
 
-PHJoint1D::PHJoint1D(){	
+PHJoint1D::PHJoint1D(){
+	fMaxDt = DBL_MAX;
+	fMinDt = -DBL_MAX;
+	onLower = false;
+	onUpper = false;
 }	
 
 void PHJoint1D::AfterSetDesc(){
@@ -37,7 +41,7 @@ void PHJoint1D::AfterSetDesc(){
 }
 
 void PHJoint1D::SetConstrainedIndex(bool* con){
-	//可動範囲
+	//可動範囲．毎ステップfalseに初期化して，その後の判定でtrueにする
 	onLower = onUpper = false;
 	if(lower < upper){
 		double theta = GetPosition();
