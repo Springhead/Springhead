@@ -24,6 +24,7 @@ PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
 	axisIndex[0] = 2;
 }
 void PHSliderJoint::SetConstrainedIndex(bool *con){
+	onUpper = onLower = false;
 	if(!bConstraintY){
 		con[1] = false;
 	}
