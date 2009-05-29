@@ -14,7 +14,7 @@
 void FWLDHapticProcess::Step(){}
 
 void FWLDHapticProcess::LocalDynamics(){
-	FWExpandedPHSolid** esolids = GetFWExpandedPHSoilds();
+	FWExpandedPHSolid** esolids = GetFWExpandedPHSolids();
 	int Nesolids = GetNExpandedPHSolids();
 	double hdt = GetHapticTimeStep();
 	double pdt = GetPhysicTimeStep();
@@ -35,16 +35,13 @@ void FWLDHapticProcess::LocalDynamics(){
 	}
 }
 
-FWExpandedPHSolid** FWLDHapticProcess::GetFWExpandedPHSoilds(){
-	return expandedPHSolids.empty() ? NULL : (FWExpandedPHSolid**)&*expandedPHSolids.begin();
-}
-
-int FWLDHapticProcess::GetNExpandedPHSolids(){
-	return (int)expandedPHSolids.size();
-}
 
 // FWLDHapticApp‚ÌŽÀ‘•
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+FWLDHapticApp::FWLDHapticApp(){
+	hapticProcess = &hprocess;
+}
 
 void FWLDHapticApp::CallBack(){
 	if(hprocess.GetLoopCount() > 300) return;
@@ -61,19 +58,17 @@ void FWLDHapticApp::ResetScene(){
 	hprocess.ResetHapticProcess();
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf* phscene = GetScene()->GetPHScene();
 	phscene->Clear();
-	phscene->SetTimeStep(GetPhysicTimeStep());
+	phscene->SetTimeStep(pdt);
 	phscene->SetNumIteration(nIter);
 	BuildScene();
 }
 
 void FWLDHapticApp::Step(){
 	if (bSync) return;
-	double pdt = GetPhysicTimeStep();
-	double hdt = GetHapticTimeStep();
 	if (bCalcPhys){
-		UpdateHapticPointer(GetHapticPointer(), GetHapticInterface());
+		UpdateHapticPointer();
 		int Nesolids = GetNExpandedPHSolids();
 		FWExpandedPHSolid** esolids = GetFWExpandedPHSolids();
 		std::vector<SpatialVector> lastvel;

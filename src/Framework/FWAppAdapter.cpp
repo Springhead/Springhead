@@ -6,24 +6,45 @@
 #define ESC 27
 #define ENTER 13
 
+/*MMTimeで呼ぶコールバック関数*/
+/////////////////////////////////////////////////////////////////////////
+FWAppImp* callbackimp;
+void MMTimerCallBack(void* arg){
+	static int dtimer = 1;
+	if(dtimer > 50){
+		glutPostRedisplay();
+		dtimer = 1;
+	}
+	dtimer++;
+	callbackimp->CallBack();
+}
+
+/*FWAppAdapterの実装*/
+////////////////////////////////////////////////////////////////////////////
 FWAppAdapter::FWAppAdapter(){
 	imp = NULL;
 	bDebug = false;
 	bHaptic = false;
 }
 
-void FWAppAdapter::AddScene(FWAppImp* scene){
-	imps.push_back(scene);
+int FWAppAdapter::GetNImp(){return (int)imps.size();}
+int FWAppAdapter::GetCurrentImpID(){ return impId; }
+
+void FWAppAdapter::AddImp(FWAppImp* i){
+	imps.push_back(i);
 	imps.back()->SetAdapter(this);
 }
+
+void FWAppAdapter::SetCallBackImp(FWAppImp* i){ callbackimp = i; }
 
 void FWAppAdapter::SwitchImp(int i){
 	impId = i;
 	imp = imps[i];
+	SetCallBackImp(imp);
 	DSTR << "Change to " << imp->GetSceneName() << endl;
 }
 
-void FWAppAdapter::InitHapticDevice(){
+void FWAppAdapter::InitHapticInterface(){
 	DSTR << "Init Haptic Device" << endl;
 	hisdk = HISdkIf::CreateSdk();
 	DRUsb20SimpleDesc usbSimpleDesc;
@@ -41,13 +62,13 @@ void FWAppAdapter::InitHapticDevice(){
 	spidarG6->Init(&HISpidarGDesc("SpidarG6X3R"));
 
 	for(int i = 0; i < (int)imps.size(); i++){
-		imps[i]->SetSpidar(spidarG6);
+		imps[i]->SetHapticInterface(spidarG6);
 	}
 	DSTR << "Init Haptic Device Done." << endl;
 }
 
 void FWAppAdapter::Init(int argc, char* argv[]){
-	InitHapticDevice();
+	InitHapticInterface();
 	// 各シーンの初期化
 	FWAppGLUT::Init(argc, argv);
 	GetSdk()->Clear(); 
@@ -63,7 +84,7 @@ void FWAppAdapter::Init(int argc, char* argv[]){
 	windowDesc.left = 250;
 	windowDesc.width = 1200;
 	windowDesc.height= 900;
-	windowDesc.title = "Constant";
+	windowDesc.title = "FWApp";
 	FWWin* window = CreateWin(windowDesc);
 	window->scene = imp->GetScene();
 	InitCameraView();
@@ -88,10 +109,6 @@ void FWAppAdapter::InitCameraView(){
 
 // glutMainLoopで呼ぶのはIdle()のみ
 void FWAppAdapter::Start(){
-	timer.Release();
-	Keyboard('f', 0, 0);
-	timer.Create();
-
 	instance = this;
 	if (!NWin()){
 		CreateWin();

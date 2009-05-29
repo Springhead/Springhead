@@ -6,25 +6,24 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#ifndef FWLD_Haptic_App_H 
-#define FWLD_Haptic_App_H
+#ifndef FW_LD_Haptic_App_H 
+#define FW_LD_Haptic_App_H
 
-#include <Framework/FWHapticBase.h>
+#include <Framework/FWHapticProcessBase.h>
 #include <Framework/FWMultiRateHapticApp.h>
 
-class FWLDHapticProcess : public FWHapticBase{
+class FWLDHapticProcess : public FWHapticProcessBase{
 public:
 	FWExpandedPHSolids expandedPHSolids;
 	void Step();
 	void LocalDynamics();
-	FWExpandedPHSolid** GetFWExpandedPHSoilds();
-	int GetNExpandedPHSolids();
 };
 
 class FWLDHapticApp : public FWMultiRateHapticApp{
 public:
 	UTRef<ObjectStatesIf> states, states2;
 	FWLDHapticProcess hprocess;
+	FWLDHapticApp();
 	virtual void ResetScene();
 	virtual void CallBack();
 	virtual void Step();

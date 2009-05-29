@@ -15,16 +15,10 @@ class FWAppImpDesc{
 public:
 	string sceneName;									// シーンの名前
 	double pdt;
-	double nIter;
+	int nIter;
 	Vec3d gravity;
 	double range;
-	FWAppImpDesc(){
-		sceneName = "";									// シーンの名前
-		pdt = 0.05f;
-		nIter = 45;
-		gravity =  Vec3d(0, -9.8f, 0);
-		range = 0.7;
-	}
+	FWAppImpDesc();
 };
 
 class FWAppImp :public FWAppImpDesc{
@@ -40,17 +34,21 @@ public:
 	FWSdkIf* GetSdk();									// FWSdkIfの取得
 	void SetScene(FWSceneIf* s);					// FWSceneIfの設定
 	FWSceneIf* GetScene();							// FWSceneIfの取得
-	void SetSpidar(HISpidarGIf* s);					// HISpidarGIfの設定
-	HISpidarGIf* GetSpidar();							// HISpidarGIfの取得
+	void SetHapticInterface(HISpidarGIf* s);		// HISpidarGIfの設定
+	HISpidarGIf* GetHapticInterface();				// HISpidarGIfの取得
 	string GetSceneName();							// シーンの名前を取得
+
+	//デバック表示に使う変数
+	bool bDebug;
+	bool bStep;
+	bool bOneStep;
 
 	// シミュレーション関係
 	virtual void Init();									// シーンの作成
 	virtual void ResetScene();							// シーンのリセット
-	virtual void BuildScene();							// 初期シーンの構築 
+	virtual void BuildScene();							// 初期シーンの構築
 	virtual void Idle();									// glutIdleFuncで呼ばれる
 	virtual void Step();									// シミュレーションを進める
-	virtual void UpdateHapticPointer();				// 力覚ポインタの位置，姿勢の更新								
 	virtual void CallBack();								// MultiMediaTimerでのコールバック
 	virtual void DebugMode(bool bDebug, GRDebugRenderIf* render);		// DebugModeがtrueの時の処理
 	virtual void Keyboard(int key, int x, int y);	// キーボード

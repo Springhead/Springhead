@@ -6,8 +6,8 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#ifndef FWHAPTIC_BASE_H
-#define FWHAPTIC_BASE_H
+#ifndef FW_HAPTIC_PROCESS_BASE_H
+#define FW_HAPTIC_PROCESS_BASE_H
 
 #include <Springhead.h>
 #include <Physics/PHSolid.h>
@@ -15,7 +15,7 @@
 
 namespace Spr{;
 
-class FWHapticBase{
+class FWHapticProcessBase{
 protected:
 	UTRef<HIForceInterface6DIf> hapticInterface;
 	PHSolid hapticPointer;
@@ -26,23 +26,26 @@ public:
 	FWExpandedPHSolids expandedPHSolids;
 	int loopCounter;
 	
-	FWHapticBase();
+	FWHapticProcessBase();
+
+	void SetHapticTimeStep(double dt);
+	double GetHapticTimeStep();
+	void SetPhysicTimeStep(double dt);
+	double GetPhysicTimeStep();
+	void SetHapticInterface(HISpidarGIf* s);
+	HIForceInterface6DIf* GetHapticInterface();
+	PHSolid GetHapticPointer();
+	int GetNExpandedPHSolids();
+	FWExpandedPHSolid** GetFWExpandedPHSolids();
+
+	int GetLoopCount();
+
 	void InitHumanInterface(const IfInfo* info, void* desc);
 	void ResetHapticProcess();
 	virtual void UpdateHumanInterface();
 	virtual void HapticRendering();
 	virtual void Keyboard(int key, int x, int y);
 	
-	FWExpandedPHSolid** GetFWExpandedPHSolids();
-
-	void SetHapticTimeStep(double dt);
-	double GetHapticTimeStep();
-	void SetPhysicTimeStep(double dt);
-	double GetPhysicTimeStep();
-	HIForceInterface6DIf* GetHumanInterface();
-	int GetLoopCount();
-
-	virtual ~FWHapticBase(){}
 };
 
 }
